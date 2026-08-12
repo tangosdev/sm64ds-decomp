@@ -5,7 +5,7 @@
 #include "decl_common.h"
 #include "MeshColliderBase.h"
 /* recovered: shared common types, renamed to Class_Method */
-/* daBtn_c::OnHitByMegaChar - recovered from vtable slot identity */
+/* daBtn_c::OnHitByMegaChar - verified 2004/b56 byte-match (ov079), strict-reloc */
 extern "C" {
 extern void _ZN6Player16IncMegaKillCountEv(void* thiz);
 extern void func_02012694(int a, void* v);

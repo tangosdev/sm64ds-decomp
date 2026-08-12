@@ -3,7 +3,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daHuwa_c::Kill - recovered from vtable slot identity */
+/* daHuwa_c::Kill - verified 2004/b56 byte-match (ov081), strict-reloc */
 extern int func_ov081_02125488();
 extern int data_ov081_02128e64[];
 int func_ov081_02124e64(char *c){

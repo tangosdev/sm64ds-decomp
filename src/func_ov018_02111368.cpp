@@ -2,7 +2,7 @@
 // @symbol func_ov018_02111368
 // recovered name: daObjSm_Lift_c_Behavior
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjSm_Lift_c::Behavior - recovered from vtable slot identity */
+/* daObjSm_Lift_c::Behavior - verified 2004/b56 byte-match (ov018), strict-reloc */
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned short u16;

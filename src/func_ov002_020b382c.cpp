@@ -2,7 +2,7 @@
 // @symbol func_ov002_020b382c
 // recovered name: BigBrickBlock_OnGroundPounded
 /* recovered: renamed to Class_Method */
-/* daObjBlockL_c::OnGroundPounded - recovered from vtable slot identity */
+/* daObjBlockL_c::OnGroundPounded - verified 2004/b56 byte-match (ov002), strict-reloc */
 struct Arg { char pad[8]; int f8; };
 struct Obj {
   virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();

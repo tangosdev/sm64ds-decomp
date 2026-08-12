@@ -3,7 +3,7 @@
 #include "daObjFl_Coin_c.h"
 // recovered name: daObjFl_Coin_c_InitResources
 /* recovered: renamed to Class_Method */
-/* daObjFl_Coin_c::InitResources - recovered from vtable slot identity */
+/* daObjFl_Coin_c::InitResources - verified 2004/b56 byte-match (ov064), strict-reloc */
 int func_ov064_02119284(char *p)
 {
     struct daObjFl_Coin_c *self = (struct daObjFl_Coin_c *)(void *)p;

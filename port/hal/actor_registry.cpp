@@ -51,6 +51,13 @@
 #include <cstdlib>
 #include <cstring>
 
+#ifdef _WIN32
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#else
+#include "host_platform_linux.h"
+#endif
+
 extern "C" {
 
 /* storage: hal/actor_vtables.cpp (actorID -> SpawnInfo*) */
@@ -360,9 +367,378 @@ static void port_list_trace(const char *name, int *list)
    unset. */
 extern "C" void port_bob_debug_watch(void);
 
+/* ---- SM64DS_POUND_PROBE: the ground-pound dispatch, on demand --------------
+   SM64DS_POUND_PROBE=<classId>[:<frame>] runs ONE real ground-pound hit on the
+   first live actor of that class, through the ROM's own hit path, on the given
+   frame (default 240). Unset, nothing below runs and nothing below is reached.
+
+   The path is func_ov002_020ef2a4, which Player::St_GroundPound_Main calls with
+   the player's WithMeshClsn and the player: it asks the collider whether the
+   player is on the ground, reads the floor ClsnResult's ClsnID, resolves that
+   id with Actor::FindWithID and dispatches vtable slot 21, OnGroundPounded, on
+   what it finds. Everything except the collider is the live game: the actor is
+   a real spawn with its real vtable, the argument is the real Player, and the
+   dispatch is the ROM function's own `call dword ptr [edx+0x54]`.
+
+   The collider is a zeroed scratch record, not the player's, so the probe can
+   name the target without having to stand on it: set the on-ground bit the
+   accessor reads and write the target's unique id where the floor result keeps
+   its ClsnID. The unique id is found by asking Actor::FindWithID, so no field
+   offset is assumed here. */
+extern "C" {
+int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
+void *_ZNK12WithMeshClsn14GetFloorResultEv(void *c);
+void *_ZN5Actor10FindWithIDEj(unsigned id);
+int func_ov002_020ef2a4(void *clsn, void *arg);
+int func_ov002_020eee3c(void *clsn, void *arg);
+int _ZNK12WithMeshClsn8IsOnWallEv(void *c);
+void *_ZNK12WithMeshClsn13GetWallResultEv(void *c);
+/* the CEILING third of the same family, for SM64DS_POUND_PROBE=<id>:<f>:28.
+   func_ov002_020eeca8 is func_ov002_020ef2a4 with the hit-ceiling accessors in
+   place of the floor pair and slot 28, OnHitFromUnderneath, in place of slot
+   21 (`a->m70(arg)`, vtable+0x70). It is the ROM function the player's ceiling
+   collision runs; the head-bonk raycast (unmatched/Player_HeadBonk.cpp) is the
+   other site and reaches the same slot with the same __thiscall contract.
+   func_02035638 is the hit-ceiling accessor (`c[0x90] & 0x10`) and
+   func_0203567c the ceiling ClsnResult (`c + 0x30`) -- both matched src, so
+   the flag bit and the record offset below are read off the ROM's own
+   accessors rather than assumed. */
+int func_ov002_020eeca8(void *clsn, void *arg);
+int func_02035638(void *c);
+void *func_0203567c(void *c);
+unsigned _ZNK10ClsnResult9GetClsnIDEv(void *r);
+/* the block's own refusal test and the closest-player cache it consults */
+int func_ov102_02149078(void *self);
+void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern signed char data_0209f2f8;      /* current level */
+extern void *data_0209b458;            /* the closest-player cache itself */
+}
+
+/* Gate 203's read-back. The QuestionBlock/ExclamationBlock keeps its state
+   index at +0x3e8 and the character that hit it at +0x3f2; state 1 is the
+   bounce and state 2 is spent. Printing those two across the hit is what
+   distinguishes "the box opened" from "the frame did not crash". */
+static void pp_qblock_state(const char *when, void *o)
+{
+    if (!o)
+        return;
+    /* +0x9c and +0xa8 are the recoil the slot-28 body writes BEFORE it
+       consults the refusal test, so they separate "the body never ran" from
+       "the body ran and was refused" without guessing which. */
+    std::fprintf(stderr, "[pound]   %-6s block state %d  ch %u  recoil "
+                 "%08x/%08x\n", when,
+                 *(int *)((char *)o + 0x3e8),
+                 *(unsigned char *)((char *)o + 0x3f2),
+                 *(unsigned *)((char *)o + 0x9c),
+                 *(unsigned *)((char *)o + 0xa8));
+    std::fflush(stderr);
+}
+
+/* After the hit, follow the block for a while: entering state 1 only proves
+   the trigger fired, and the payout happens when the bounce runs out and
+   func_ov102_021498e0 spawns the content and parks it in state 2. */
+static void *g_qb_watch;
+static int g_qb_watch_left;
+
+static void pp_qblock_follow(void)
+{
+    static int last = -99;
+    if (!g_qb_watch || g_qb_watch_left <= 0)
+        return;
+    --g_qb_watch_left;
+    int st = *(int *)((char *)g_qb_watch + 0x3e8);
+    if (st != last) {
+        last = st;
+        std::fprintf(stderr, "[pound]   watch  block state -> %d (%d frames "
+                     "left)\n", st, g_qb_watch_left);
+        std::fflush(stderr);
+    }
+    if (g_qb_watch_left == 0) {
+        std::fprintf(stderr, "[pound]   watch  FINAL block state %d\n", st);
+        std::fflush(stderr);
+        g_qb_watch = 0;
+    }
+}
+
+static void *pp_first_of_class(unsigned id)
+{
+    int n = 0;
+    for (int *node = (int *)(size_t)data_020a4b78[0]; node && n++ < 4096;
+         node = (int *)(size_t)node[1]) {
+        char *o = (char *)(size_t)node[2];
+        if (o && *(unsigned short *)(o + 0xc) == (unsigned short)id)
+            return o;
+    }
+    return 0;
+}
+
+static unsigned pp_unique_id_of(void *actor)
+{
+    for (unsigned u = 0; u < 65536u; ++u)
+        if (_ZN5Actor10FindWithIDEj(u) == actor)
+            return u;
+    return 0xffffffffu;
+}
+
+/* Nineteen filler virtuals put the twentieth at vtable+0x4c, so MSVC emits
+   the same `call dword ptr [reg+0x4c]` for it that the ROM's three Yoshi
+   call sites emit for slot 19. Declared, never defined: only the call is
+   wanted, and the object is always a real actor with a real vtable. */
+struct PpEggSlot {
+    virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3();
+    virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7();
+    virtual void v8(); virtual void v9(); virtual void v10(); virtual void v11();
+    virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
+    virtual void v16(); virtual void v17(); virtual void v18();
+    virtual int OnTurnIntoEgg(void *player);          /* vtable + 0x4c */
+};
+
+/* SM64DS_VT_AUDIT=<frame> prints, once, the slot-21 entry of every class
+   actually alive on this level, as a module-relative offset. Resolving those
+   offline against walk_window.map and checking each for `ret 4` is a complete
+   audit of what the level can really dispatch, which a scan of vtable-fill
+   code shapes is not: a fill can write a slot through a register the scanner
+   does not model, and only the live table settles it. */
+static void port_vt_audit(void)
+{
+    static int armed = -1, at = 0;
+    static long frame;
+    if (armed < 0) {
+        const char *e = std::getenv("SM64DS_VT_AUDIT");
+        armed = 0;
+        if (e) { at = (int)std::strtol(e, 0, 0); armed = at > 0; }
+    }
+    if (!armed || ++frame != at)
+        return;
+    armed = 0;
+    unsigned char seen[PORT_ACTOR_IDS];
+    std::memset(seen, 0, sizeof seen);
+    char *base = (char *)(size_t)GetModuleHandleA(0);
+    int n = 0;
+
+    /* The set this audit walks has to be the set the CALLER can reach.
+       func_ov002_020cef84 reaches its target through Actor::FindWithID, not
+       through the behaviour list, and the two are different registries: an
+       actor can be findable without being on the behaviour list. Enumerating
+       by asking FindWithID for every id is exact and assumes nothing about
+       the list's layout. Printed with the same [vt] shape. */
+    for (unsigned u = 0; u < 8192u; ++u) {
+        char *o = (char *)_ZN5Actor10FindWithIDEj(u);
+        if (!o) continue;
+        unsigned id = *(unsigned short *)(o + 0xc);
+        char **vt = *(char ***)o;
+        std::printf("[vtfind] uid %5u id %3u %-28s vt %p", u, id,
+                    id < PORT_ACTOR_IDS ? port_actor_class_name(id) : "?",
+                    (void *)vt);
+        if (!vt) { std::printf(" NO VTABLE\n"); continue; }
+        for (int s = 18; s <= 31; ++s)
+            std::printf(" %d:+%08x", s, (unsigned)(size_t)(vt[s] - base));
+        std::printf("\n");
+    }
+
+    for (int *node = (int *)(size_t)data_020a4b78[0]; node && n++ < 4096;
+         node = (int *)(size_t)node[1]) {
+        char *o = (char *)(size_t)node[2];
+        if (!o) continue;
+        unsigned id = *(unsigned short *)(o + 0xc);
+        if (id >= PORT_ACTOR_IDS || seen[id]) continue;
+        seen[id] = 1;
+        char **vt = *(char ***)o;
+        if (!vt) { std::printf("[vt] id %3u %-24s NO VTABLE\n", id,
+                               port_actor_class_name(id)); continue; }
+        std::printf("[vt] id %3u %-28s vt %p", id,
+                    port_actor_class_name(id), (void *)vt);
+        for (int s = 18; s <= 31; ++s)
+            std::printf(" %d:+%08x", s, (unsigned)(size_t)(vt[s] - base));
+        std::printf("\n");
+    }
+    std::fflush(stdout);
+}
+
+static void port_pound_probe(void)
+{
+    static int armed = -1, at = 240, slot = 21;
+    static unsigned want;
+    static long frame;
+    if (armed < 0) {
+        const char *e = std::getenv("SM64DS_POUND_PROBE");
+        armed = 0;
+        if (e) {
+            char *end;
+            want = (unsigned)std::strtoul(e, &end, 0);
+            if (end != e) {
+                armed = 1;
+                if (*end == ':') {
+                    at = (int)std::strtol(end + 1, &end, 0);
+                    if (*end == ':')
+                        slot = (int)std::strtol(end + 1, 0, 0);
+                }
+            }
+        }
+    }
+    if (!armed || ++frame != at)
+        return;
+    armed = 0;
+
+    void *target = pp_first_of_class(want);
+    void *player = pp_first_of_class(191);
+    if (!target || !player) {
+        std::fprintf(stderr, "[pound] frame %ld: class %u %s, player %s -- "
+                     "nothing to hit\n", frame, want, target ? "up" : "ABSENT",
+                     player ? "up" : "ABSENT");
+        std::fflush(stderr);
+        return;
+    }
+    /* SM64DS_POUND_PROBE=<id>:<frame>:19 dispatches slot 19, OnTurnIntoEgg,
+       instead of the pound. Slot 19 has no single ROM entry point the way
+       slot 21 has func_ov002_020ef2a4 -- the three call sites are Yoshi's --
+       so the shadow class below reproduces the call site rather than reusing
+       one: nineteen filler virtuals put the twentieth at vtable+0x4c, and
+       MSVC emits the same `call dword ptr [reg+0x4c]` with the Player in the
+       one pushed slot. Same contract, same instruction. */
+    if (slot == 19) {
+        /* Two readbacks, one per class. POWER_STAR's body stores the argument
+           it was handed at +0x438, so that word says whether the argument
+           survived the veneer; every Actor has shouldBeKilled at +0xf, which
+           is what BabyPenguin's OnTurnIntoEgg exists to set. */
+        int star = (want == 178);
+        unsigned arg0 = star ? *(unsigned *)((char *)target + 0x438) : 0u;
+        unsigned char kill0 = *((unsigned char *)target + 0xf);
+        std::fprintf(stderr, "[pound] frame %ld: class %u %s actor %p, player "
+                     "%p -- dispatching slot 19 (OnTurnIntoEgg)\n", frame, want,
+                     port_actor_class_name(want), target, player);
+        std::fflush(stderr);
+        int r = ((PpEggSlot *)target)->OnTurnIntoEgg(player);
+        unsigned char kill1 = *((unsigned char *)target + 0xf);
+        std::fprintf(stderr, "[pound] RETURNED %d -- frame survived; "
+                     "shouldBeKilled %u -> %u\n", r, kill0, kill1);
+        if (star)
+            std::fprintf(stderr, "[pound] POWER_STAR +0x438 %08x -> %08x "
+                         "(player is %p; a module code address there is the "
+                         "dropped-argument bug)\n", arg0,
+                         *(unsigned *)((char *)target + 0x438), player);
+        std::fflush(stderr);
+        return;
+    }
+
+    unsigned uid = pp_unique_id_of(target);
+    if (uid == 0xffffffffu) {
+        std::fprintf(stderr, "[pound] class %u actor %p has no unique id\n",
+                     want, target);
+        std::fflush(stderr);
+        return;
+    }
+
+    static unsigned char clsn[512];
+    std::memset(clsn, 0, sizeof clsn);
+    int hit;
+    if (slot == 28) {
+        /* The CEILING third: whatever the player's head is under gets
+           OnHitFromUnderneath(player). This is the exclamation/question
+           block's own opening trigger. Flag and record offset both come from
+           the matched accessors, not from a guess: func_02035638 tests
+           c[0x90] & 0x10 and func_0203567c returns c + 0x30. */
+        *(unsigned char *)(clsn + 0x90) |= 0x10u;   /* hit-ceiling */
+        void *res = func_0203567c(clsn);
+        if (!res || !func_02035638(clsn)) {
+            std::fprintf(stderr, "[pound] scratch collider will not report a "
+                         "ceiling (res %p, flags %02x)\n", res,
+                         *(unsigned char *)(clsn + 0x90));
+            std::fflush(stderr);
+            return;
+        }
+        *(unsigned *)((char *)res + 0x1c) = uid;
+        if (_ZNK10ClsnResult9GetClsnIDEv(res) != uid) {
+            std::fprintf(stderr, "[pound] ceiling ClsnID readback %u != uid "
+                         "%u -- the rig would dispatch on the wrong actor\n",
+                         _ZNK10ClsnResult9GetClsnIDEv(res), uid);
+            std::fflush(stderr);
+            return;
+        }
+        std::fprintf(stderr, "[pound] frame %ld: class %u %s actor %p uid %u, "
+                     "player %p -- dispatching slot 28 "
+                     "(OnHitFromUnderneath) through func_ov002_020eeca8\n",
+                     frame, want, port_actor_class_name(want), target, uid,
+                     player);
+        std::fflush(stderr);
+        pp_qblock_state("before", target);
+        /* The refusal test the five hit slots all consult, read directly so a
+           refusal is distinguishable from a dispatch that never landed. Its
+           own inputs are printed beside it: the level it switches on, the
+           cached closest player, and the +0x706 byte it actually tests. */
+        {
+            void *cp_arg = _ZN5Actor13ClosestPlayerEv(target);
+            std::fprintf(stderr, "[pound]   gate   func_ov102_02149078 -> %d "
+                         "| level %d | cache %p | ClosestPlayer(this) %p "
+                         "+0x706 %u | player %p +0x706 %u\n",
+                         func_ov102_02149078(target), (int)data_0209f2f8,
+                         (void *)data_0209b458, cp_arg,
+                         cp_arg ? *(unsigned char *)((char *)cp_arg + 0x706) : 0u,
+                         player, *(unsigned char *)((char *)player + 0x706));
+            std::fflush(stderr);
+        }
+        hit = func_ov002_020eeca8(clsn, player);
+        std::fprintf(stderr, "[pound] RETURNED %d -- the caller's frame "
+                     "survived the dispatch\n", hit);
+        pp_qblock_state("after", target);
+        /* and follow it: state 1 is the bounce, and the block reaches state 2
+           only by running func_ov102_021498e0 to its end, which is where the
+           content is actually spawned. */
+        g_qb_watch = target;
+        g_qb_watch_left = 90;
+        return;
+    }
+    if (slot == 25) {
+        /* The WALL half of the same pair. func_ov002_020eee3c is what
+           func_ov002_020ef2a4 is, with IsOnWall/GetWallResult in place of the
+           floor pair and slot 25, OnPushed, in place of slot 21: whatever the
+           player is pushing against gets OnPushed(player). Walking into a
+           thing, which is why it reaches players far more often than a pound
+           does. */
+        *(unsigned char *)(clsn + 0x90) |= 0x8u;  /* WithMeshClsn::IsOnWall */
+        void *res = _ZNK12WithMeshClsn13GetWallResultEv(clsn);
+        if (!res || !_ZNK12WithMeshClsn8IsOnWallEv(clsn)) {
+            std::fprintf(stderr, "[pound] scratch collider will not report a "
+                         "wall (res %p, flags %02x)\n", res,
+                         *(unsigned char *)(clsn + 0x90));
+            std::fflush(stderr);
+            return;
+        }
+        *(unsigned *)((char *)res + 0x1c) = uid;
+        std::fprintf(stderr, "[pound] frame %ld: class %u %s actor %p uid %u, "
+                     "player %p -- dispatching slot 25 through "
+                     "func_ov002_020eee3c\n", frame, want,
+                     port_actor_class_name(want), target, uid, player);
+        std::fflush(stderr);
+        hit = func_ov002_020eee3c(clsn, player);
+    } else {
+        *(unsigned *)(clsn + 0x10) |= 0x10u;      /* WithMeshClsn::IsOnGround */
+        void *res = _ZNK12WithMeshClsn14GetFloorResultEv(clsn);
+        if (!res || !_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
+            std::fprintf(stderr, "[pound] scratch collider will not report "
+                         "ground (res %p)\n", res);
+            std::fflush(stderr);
+            return;
+        }
+        *(unsigned *)((char *)res + 0x1c) = uid;  /* ClsnResult::GetClsnID */
+        std::fprintf(stderr, "[pound] frame %ld: class %u %s actor %p uid %u, "
+                     "player %p -- dispatching slot 21 through "
+                     "func_ov002_020ef2a4\n", frame, want,
+                     port_actor_class_name(want), target, uid, player);
+        std::fflush(stderr);
+        hit = func_ov002_020ef2a4(clsn, player);
+    }
+    std::fprintf(stderr, "[pound] RETURNED %d -- the caller's frame survived "
+                 "the dispatch\n", hit);
+    std::fflush(stderr);
+}
+
 extern "C" void port_actor_tick(void)
 {
     port_bob_debug_watch();
+    port_pound_probe();
+    pp_qblock_follow();
+    port_vt_audit();
     data_02099f24[0] = 4;
     port_list_trace("cleanup", data_020a4ba8);
     func_02043fdc(data_020a4ba8);

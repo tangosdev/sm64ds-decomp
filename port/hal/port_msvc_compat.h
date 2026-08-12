@@ -34,6 +34,10 @@
 /* __debugbreak(): MSVC intrinsic for an immediate trap. GCC/Clang spell it
    __builtin_trap(). Used by the unreached-stub bodies (ARMRestoreContext etc.). */
 #define __debugbreak() __builtin_trap()
+/* __int64: MSVC's 64-bit integer keyword, spelled by the dtor-seat TUs where a
+   slot's storage has to be exactly eight bytes wide. long long is the same
+   width on every target this port builds for. */
+#define __int64 long long
 #endif /* !_MSC_VER */
 
 /* PORT_ALIGN(n): a standalone alignment specifier (not the grouped-section case).

@@ -2,7 +2,7 @@
 // @symbol func_ov080_02126124
 // recovered name: CrazedCrate_Kill
 /* recovered: renamed to Class_Method */
-/* daBttBk_c::Kill - recovered from vtable slot identity */
+/* daBttBk_c::Kill - verified 2004/b56 byte-match (ov080), strict-reloc */
 void func_ov080_02126124(u32* c){
   *(int*)((char*)c+0x140)=0;
   *(int*)((char*)c+0x144)=0;

@@ -3,7 +3,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjBk_Ukisima_c::InitResources - recovered from vtable slot identity */
+/* daObjBk_Ukisima_c::InitResources - verified 2004/b56 byte-match (ov015), strict-reloc */
 struct Arg { void *m[3]; };
 
 extern int func_ov002_020b676c(unsigned char *self, struct Arg *a, short arg2);

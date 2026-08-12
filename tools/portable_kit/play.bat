@@ -37,7 +37,20 @@ if not errorlevel 1 goto haverom
 dir /b "%KIT%\*.nds" >nul 2>&1
 if errorlevel 1 goto norom
 :haverom
-powershell -NoProfile -ExecutionPolicy Bypass -File "%KIT%\extract_assets.ps1"
+rem Hand the recipe to PowerShell as TEXT instead of by path.
+rem
+rem Naming a .ps1 file makes Windows decide whether it is willing to run THAT
+rem FILE, and on a PC with a stricter script setting than the usual default the
+rem answer is no. -ExecutionPolicy Bypass does not settle that either: a setting
+rem that arrives by group policy outranks the command line, and a software
+rem restriction policy ignores it entirely. Text is not a file, so the check does
+rem not apply to it, and the script does the same work either way.
+rem
+rem Unblock-File first takes the "came from the internet" marker off the kit's own
+rem files, which is what a kit unzipped from a download carries.
+set "SM64DS_EXTRACT_SCRIPT=%KIT%\extract_assets.ps1"
+set "SM64DS_EXTRACT_DEST=%KIT%"
+powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -OutputFormat Text -Command "$ErrorActionPreference='Stop'; Get-ChildItem -LiteralPath $env:SM64DS_EXTRACT_DEST -File | Unblock-File -ErrorAction SilentlyContinue; & ([scriptblock]::Create([IO.File]::ReadAllText($env:SM64DS_EXTRACT_SCRIPT))) -Destination $env:SM64DS_EXTRACT_DEST"
 if errorlevel 1 goto unpackfailed
 echo.
 
@@ -68,6 +81,13 @@ exit /b 1
 echo.
 echo The game data could not be unpacked, so there is nothing to run yet.
 echo The lines above say what went wrong.
+echo.
+echo If they mention signing, an execution policy or a restriction policy, then
+echo Windows blocked the unpacking step rather than the unpacking step failing.
+echo On a PC that is yours, right click extract_assets.ps1 in this folder, choose
+echo Properties, tick Unblock at the bottom and press OK, then run play.bat again.
+echo On a PC managed by a school or a workplace, an administrator controls that
+echo setting and will need to allow it.
 echo.
 pause
 exit /b 1

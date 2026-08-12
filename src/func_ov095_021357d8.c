@@ -4,7 +4,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjSeesaw_c::OnGroundPounded - recovered from vtable slot identity */
+/* daObjSeesaw_c::OnGroundPounded - verified 2004/b56 byte-match (ov095), strict-reloc */
 #pragma opt_propagation off
 extern int Vec3_Dist(void *a, void *b);
 extern s16 Vec3_HorzAngle(void *a, void *b);

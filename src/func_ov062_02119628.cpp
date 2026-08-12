@@ -2,9 +2,9 @@
 // @symbol func_ov062_02119628
 // recovered name: Koopa_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
-/* daNknk_c::OnTurnIntoEgg - recovered from vtable slot identity */
+/* daNknk_c::OnTurnIntoEgg - verified 2004/b56 byte-match (ov062), strict-reloc */
 /* func_ov062_02119628 at 0x02119628 (ov062), size 0x80
- * Matched byte-for-byte with mwccarm 1.2/sp2p3.
+ * Matched byte-for-byte with mwccarm 2004/b56.
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
 extern "C" {

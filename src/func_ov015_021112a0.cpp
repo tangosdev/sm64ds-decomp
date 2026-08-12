@@ -4,7 +4,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjBkBillboard_c::InitResources - recovered from vtable slot identity */
+/* daObjBkBillboard_c::InitResources - verified 2004/b56 byte-match (ov015), strict-reloc */
 struct BMD_File;
 struct SharedFilePtr;
 

@@ -144,6 +144,13 @@ enum {
     VK_F3     = 256 + SDL_SCANCODE_F3,
     VK_F4     = 256 + SDL_SCANCODE_F4,
     VK_F5     = 256 + SDL_SCANCODE_F5,
+    /* F6/F7 are unbound today; F8/F9 are the save-state snapshot and restore
+       (walk_window's key_live block). Filled in as a run rather than only the
+       two that are bound, so the next binding does not have to come back here. */
+    VK_F6     = 256 + SDL_SCANCODE_F6,
+    VK_F7     = 256 + SDL_SCANCODE_F7,
+    VK_F8     = 256 + SDL_SCANCODE_F8,
+    VK_F9     = 256 + SDL_SCANCODE_F9,
     VK_LBUTTON = 1  /* handled specially in the async-key wrapper below */
 };
 

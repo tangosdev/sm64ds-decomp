@@ -2,7 +2,7 @@
 // @symbol func_ov062_0211a740
 // recovered name: Koopa_Kill
 /* recovered: shared common types, renamed to Class_Method */
-/* daNknk_c::Kill - recovered from vtable slot identity */
+/* daNknk_c::Kill - verified 2004/b56 byte-match (ov062), strict-reloc */
 typedef short s16;
 typedef unsigned short u16;
 typedef unsigned char u8;

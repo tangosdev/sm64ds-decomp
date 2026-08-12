@@ -3,7 +3,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjC0_Switch_c::InitResources - recovered from vtable slot identity */
+/* daObjC0_Switch_c::InitResources - verified 2004/b56 byte-match (ov012), strict-reloc */
 typedef int Fix12;
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);

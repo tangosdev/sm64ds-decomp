@@ -1,7 +1,7 @@
 // @symbol func_ov084_0212e998
 // recovered name: FirePiranhaPlantBig_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
-/* daFPkn_c::OnAimedAtWithEgg - recovered from vtable slot identity */
+/* daFPkn_c::OnAimedAtWithEgg - verified 2004/b56 byte-match (ov084), strict-reloc */
 int func_ov084_0212e998(void* c) {
     int flags = *(int*)((char*)c + 0x18c);
     if (flags & 1) {

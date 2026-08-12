@@ -6,7 +6,7 @@
 extern void* data_020a0eac;
 extern int data_ov018_02113a74[];
 /* recovered: renamed to Class_Method */
-/* daSCre_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* daSCre_c::OnYoshiTryEat - verified 2004/b56 byte-match (ov018), strict-reloc */
 int *func_ov018_021126f8(int *t)
 {
     t[0] = (int)data_ov018_02113a74;

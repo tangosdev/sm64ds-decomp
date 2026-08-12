@@ -4,7 +4,7 @@
 #include "decl_common.h"
 extern int RockPillar_ClsnFile[];
 /* recovered: renamed to Class_Method */
-/* daObjKi_Hasira_c::CleanupResources - recovered from vtable slot identity */
+/* daObjKi_Hasira_c::CleanupResources - verified 2004/b56 byte-match (ov016), strict-reloc */
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern int RockPillar_ModelFile[];
 int func_ov016_02112ae4(void *t)

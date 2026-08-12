@@ -3,7 +3,10 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjHatenaBlock_c::OnHitByMegaChar - recovered from vtable slot identity */
+/* daObjHatenaBlock_c::OnHitByMegaChar
+ * func_ov102_02149710 at 0x02149710
+ * Byte-matched with mwccarm 2004/b56 (ov102), strict-reloc verified.
+ */
 extern void _ZN6Player16IncMegaKillCountEv(void *p);
 void func_ov102_02149710(void *c, void *player)
 {

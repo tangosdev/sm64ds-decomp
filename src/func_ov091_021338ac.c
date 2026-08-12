@@ -5,7 +5,7 @@
 #include "daObjPile_c.h"
 // recovered name: daObjPile_c_InitResources
 /* recovered: renamed to Class_Method */
-/* daObjPile_c::InitResources - recovered from vtable slot identity */
+/* daObjPile_c::InitResources - verified 2004/b56 byte-match (ov091), strict-reloc */
 typedef int Fix12;
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);

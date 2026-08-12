@@ -146,7 +146,15 @@ int *BowserPuzzleManager_Spawn(void);  /* .c factory, installs c1d8 itself */
 /* the two derived vtables, HOST arrays this file fills; 31 slots each. `int[]`
    with C linkage matches the `extern int _ZTV..[]` decls in include/decl_common.h
    that the .c factories and D-tors read (the montymole reading). */
-int _ZTV19BowserPuzzleManager[31];
+/* THIRTY-TWO, not 31: the Manager is a Platform subclass (ov064 0x0211c25c)
+   and its slot 31 is Platform::Kill. Thirty-one is the plain Actor width --
+   which is what the Piece below really is. The "31 because Platform" premise
+   that put both at 31 came from hal/actor_classes_wf.cpp's header and is
+   corrected there. */
+int _ZTV19BowserPuzzleManager[32];
+/* 31 and correct: the Piece's table ends at slot 30, and the code word one
+   past it (func_ov064_02119ea0) is a pointer-to-member pair with its own dsd
+   symbol, not a slot. */
 int _ZTV17BowserPuzzlePiece[31];
 }
 
@@ -261,6 +269,11 @@ static int __fastcall bp_aimed_actor(void *s, void *)
 /* Fill slots 1..30 of a Manager/Piece table with the shared bodies. The caller
    writes 0/3/6/9/16/17/29 and (for the Piece) slot 12. Slot 12 defaults to
    ActorBase::OnPendingDestroy here; the Piece caller overrides it. */
+/* slot 31 of a Platform table, ov002 0x020ee55c, already in the build */
+extern "C" void _ZN8Platform4KillEv(void *self);
+static int __fastcall bp_kill(void *s, void *)
+{ _ZN8Platform4KillEv(s); return 0; }
+
 static void bp_fill_shared_0_30(void **vt)
 {
     vt[1]  = (void *)bp_binit;
@@ -318,6 +331,8 @@ extern "C" void hal_fill_bowser_puzzle_manager_vtable(void)
     vt[16] = (void *)mgr_d1;
     vt[17] = (void *)mgr_d0;
     /* slot 12 keeps bp_pdes_base -- the Manager defaults to ActorBase's own. */
+    /* slot 31, the Platform tail; the Manager does not override it */
+    vt[31] = (void *)bp_kill;
 }
 
 /* ---- the id-79 SHELL table is a HOST ARRAY (the ov080/ov095 rule: derived
@@ -327,7 +342,7 @@ extern "C" void hal_fill_bowser_puzzle_manager_vtable(void)
    registry wrapper below reseats the vptr onto this array -- a real
    placeholder-to-host reseat, the Bully treatment. Slots 3/9 are the ActorBase
    defaults per relocs. */
-static int port_bp_shell_vtable[31];
+static int port_bp_shell_vtable[31];   /* vtspan: data_ov064_0211c1d8 */
 static int __fastcall shl_init(void *s, void *)
 { return func_ov064_02119284(s); }
 static int __fastcall shl_clean(void *s, void *)

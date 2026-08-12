@@ -155,6 +155,21 @@ void hal_fill_pushblock_vtable(void);
 extern unsigned char MugenBgm_SpawnInfo[];              /* ov002 0x0210b560, +4 reads 351 */
 void *MugenBgm_Spawn(void);                             /* ov002 0x020f1f40 */
 void hal_fill_mugen_bgm_vtable(void);
+/* ---- gate 202: CLOCK_HAND_SHORT (292) + CLOCK_HAND_LONG (293) +
+   CLOCK_PENDULUM (294), ov013 (level 5), a fresh per-symbol mount
+   (ov013_syms.txt) joining the existing whole level mount. Both hands share
+   ONE vtable (HandLong_Spawn installs _ZTV22ClockPaintingHandShort too,
+   reloc-verified; InitResources picks the hand off the actor id) so both
+   hand rows use the same fill. All three fills are in
+   hal/actor_classes_ov013.cpp. */
+extern unsigned char ClockPaintingHandShort_SpawnInfo[]; /* ov013 0x021121dc, word[1] reads 292 */
+void *ClockPaintingHandShort_Spawn(void);                /* ov013 0x0211163c */
+extern unsigned char ClockPaintingHandLong_SpawnInfo[];  /* ov013 0x021121c0, word[1] reads 293 */
+void *ClockPaintingHandLong_Spawn(void);                 /* ov013 0x02111674 */
+void hal_fill_clock_hand_vtable(void);
+extern unsigned char ClockPaintingPendulum_SpawnInfo[];  /* ov013 0x02112104, word[1] reads 294 */
+void *ClockPaintingPendulum_Spawn(void);                 /* ov013 0x02111384 */
+void hal_fill_clock_pendulum_vtable(void);
 /* ---- gate 18: ov085, the first ACTOR overlay ----
    Not the engine overlay and not the level's -- six classes several levels
    share, of which the castle grounds names two. The SpawnInfo records come
@@ -1007,6 +1022,13 @@ void hal_fill_sliding_box_vtable(void);          /* fills _ZTV23FloatOnWaterPlat
       hal_fill_pushblock_vtable}, \
      {351, "MUGEN_BGM", MugenBgm_SpawnInfo, MugenBgm_Spawn, \
       hal_fill_mugen_bgm_vtable}, \
+     /* ---- gate 202: the 2F clock-painting furniture trio, ov013 ---- */ \
+     {292, "CLOCK_HAND_SHORT", ClockPaintingHandShort_SpawnInfo, \
+      ClockPaintingHandShort_Spawn, hal_fill_clock_hand_vtable}, \
+     {293, "CLOCK_HAND_LONG", ClockPaintingHandLong_SpawnInfo, \
+      ClockPaintingHandLong_Spawn, hal_fill_clock_hand_vtable}, \
+     {294, "CLOCK_PENDULUM", ClockPaintingPendulum_SpawnInfo, \
+      ClockPaintingPendulum_Spawn, hal_fill_clock_pendulum_vtable}, \
     /* ---- gate 149: HAUNTED_CHAIR (326), Big Boo's Haunt (ov020, level 12) ---- */ \
     {326, "HAUNTED_CHAIR", HauntedChair_SpawnInfo, HauntedChair_Spawn, \
      hal_fill_haunted_chair_vtable}, \

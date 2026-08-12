@@ -4,7 +4,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daPeach_c::Kill - recovered from vtable slot identity */
+/* daPeach_c::Kill - verified 2004/b56 byte-match (ov085), strict-reloc */
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void func_ov085_0212bc78(void *c, void *p);

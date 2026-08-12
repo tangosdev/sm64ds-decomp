@@ -6,7 +6,7 @@
 #include "daBDonketu_c.h"
 // recovered name: daBDonketu_c_AfterClsn
 /* recovered: renamed to Class_Method */
-/* daBDonketu_c::AfterClsn - recovered from vtable slot identity */
+/* daBDonketu_c::AfterClsn - verified 2004/b56 byte-match (ov064), strict-reloc */
 extern "C" {
 extern void _ZN5Actor14TriplePoofDustEv(void*);
 extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(void*,void*,unsigned int,void*,unsigned int);

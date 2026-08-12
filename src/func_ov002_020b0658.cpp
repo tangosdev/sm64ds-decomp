@@ -2,7 +2,7 @@
 // @symbol func_ov002_020b0658
 // recovered name: daBar_c_Behavior
 /* recovered: renamed to Class_Method */
-/* daBar_c::Behavior - recovered from vtable slot identity */
+/* daBar_c::Behavior - verified 2004/b56 byte-match (ov002), strict-reloc */
 extern "C" {
 extern int _ZN12CylinderClsn5ClearEv(void*);
 extern int _ZN12CylinderClsn6UpdateEv(void*);

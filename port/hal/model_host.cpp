@@ -253,7 +253,14 @@ void *_ZTV5Model[8];
 void *_ZTV9Animation[8];
 void *_ZTV9ModelAnim[10];
 void *VTable_Animation_ModelAnimThunk[8];
-void *_ZTV16MeshColliderBase[13];   /* base: never dispatched in the gates */
+// _ZTV16MeshColliderBase: the STORAGE (C2 installs it as the vptr, and C2 rides
+// slice_gate8, which every collision-carrying target links). The gates that
+// carry the MeshColliderBase src cluster (slice_gate16) SEAT the real matched
+// bodies into these slots at boot via hal_fill_meshcolliderbase_vtable in
+// hal/meshcolliderbase_vtable.cpp -- that fill is the reference edge that pulls
+// the cluster into the link; targets without the cluster keep the zeroed base
+// (it is never dispatched there).
+void *_ZTV16MeshColliderBase[13];
 unsigned char data_020a0c78[8]; /* the default CLPS ENTRY (8-byte storage,
                                    func_02037e9c fills it on first lookup) */
 

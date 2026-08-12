@@ -1,6 +1,8 @@
 -Wl,--defsym,ActorBase_MarkForDestruction=_ZN9ActorBase18MarkForDestructionEv
 -Wl,--defsym,AnimLoadFile=_ZN9Animation8LoadFileER13SharedFilePtr
+-Wl,--defsym,G=data_020a0ea0
 -Wl,--defsym,G0=data_020a0eac_c
+-Wl,--defsym,HEAP=data_020a0eac_c
 -Wl,--defsym,IceSheet_ClsnFile=data_ov018_02113c7c
 -Wl,--defsym,IceSheet_ModelFile=data_ov018_02113c84
 -Wl,--defsym,PARTICLE_SYS_TRACKER=data_0209ee74
@@ -10,6 +12,7 @@
 -Wl,--defsym,STAR_MARKERS=data_0209f40c
 -Wl,--defsym,SignPost_ClsnFile=data_ov002_0210e05c
 -Wl,--defsym,SignPost_ModelFile=data_ov002_0210e064
+-Wl,--defsym,VT=data_ov002_021081e4
 -Wl,--defsym,Vec3_DistSq=func_0203cf94
 -Wl,--defsym,WithMeshClsn_IsOnGround=_ZNK12WithMeshClsn10IsOnGroundEv
 -Wl,--defsym,_Z10Vec3_EqualPvS_=Vec3_Equal
@@ -40,9 +43,7 @@
 -Wl,--defsym,_ZN12WithMeshClsn4InitEP5ActoriiPvi=_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_
 -Wl,--defsym,_ZN13MontyMoleRockD0Ev=func_ov078_02123804
 -Wl,--defsym,_ZN13RaycastGround12SetObjAndPosERK7Vector3Pv=_ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor
--Wl,--defsym,_ZN14BlendModelAnim7SetAnimER8BCA_Fileiiit=_ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt
 -Wl,--defsym,_ZN14StarMarkerFace27SpawnRedCoinStarIfNecessaryEv=_ZN10StarMarker27SpawnRedCoinStarIfNecessaryEv
--Wl,--defsym,_ZN15ModelRenderFace6RenderEPK7Vector3=_ZN5Model6RenderEPK7Vector3
 -Wl,--defsym,_ZN16PlayerMetalWario14InitMetalWarioEv=_ZN6Player14InitMetalWarioEv
 -Wl,--defsym,_ZN3G3i13PerspectiveW_EiiiiiibP9Matrix4x3=_ZN3G3i13PerspectiveW_E5Fix12IiES1_S1_S1_S1_S1_bP9Matrix4x3
 -Wl,--defsym,_ZN3OAM6RenderEbP7OamAttriiiiiiii=_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii
@@ -78,6 +79,7 @@
 -Wl,--defsym,_ZTV15daObj_Mip_Key_c=_ZTV9RabbitKey
 -Wl,--defsym,_ZTV17daObjBk_Botaosi_c=_ZTV13PoleBillboard
 -Wl,--defsym,_ZTV18daObjBkBillboard_c=data_ov015_02114360
+-Wl,--defsym,_ZTV18daObjClockHuriko_c=data_ov013_02112128
 -Wl,--defsym,_ZTV18daObjHatenaBlock_c=_ZTV13QuestionBlock
 -Wl,--defsym,_ZTV18daWater_Hakidasi_c=_ZTV17BowserPuzzlePiece
 -Wl,--defsym,_ZTV23daObjRotateUpdownLift_c=_ZTV25RotatingUpDownPlatformUtm
@@ -103,13 +105,17 @@
 -Wl,--defsym,_ZTV9daPgBby_c=_ZTV11BabyPenguin
 -Wl,--defsym,_ZTV9daRFlag_c=_ZTV9KoopaFlag
 -Wl,--defsym,_ZTV9daSCoin_c=data_ov002_0210b030
+-Wl,--defsym,_ZdlPvj=_ZdlPv
+-Wl,--defsym,__sinit_ov045_02112280=data_ov013_02112280
 -Wl,--defsym,base_dtor_MovingCylinderClsn=_ZN12CylinderClsnD2Ev
 -Wl,--defsym,base_dtor_MovingCylinderClsnWithPos=_ZN18MovingCylinderClsnD2Ev
 -Wl,--defsym,data_020a0eac=data_020a0eac_c
 -Wl,--defsym,data_ov000_020ab3c4=func_ov001_020ab3c4
 -Wl,--defsym,data_ov000_020aba70=_ZN3OAM7NUMBERSE
 -Wl,--defsym,data_ov034_02114538=data_ov015_02114538
+-Wl,--defsym,data_ov051_021116b0=data_ov013_021116b0
 -Wl,--defsym,data_ov052_02111e84=func_ov010_02111e84
+-Wl,--defsym,data_ov054_02111238=func_ov013_02111238
 -Wl,--defsym,data_ov071_02122ecc_d=data_ov071_02122ecc
 -Wl,--defsym,data_ov073_02122f88=data_ov071_02122f88
 -Wl,--defsym,data_ov075_0211c800=data_ov064_0211c800

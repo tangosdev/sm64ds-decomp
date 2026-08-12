@@ -176,7 +176,14 @@ static void ov12_fill_shared(void **vt)
     vt[28] = (void *)ov12_under;
     vt[29] = (void *)ov12_aimed;
     vt[30] = (void *)ov12_trap30;
-    vt[31] = (void *)_ZTV8Platform[31];   /* the shared Platform::Kill default */
+    /* the shared Platform::Kill default, COPIED out of the base table rather
+       than named. ORDERING IS LOAD-BEARING: both callers run
+       hal_fill_platform_vtable first, which is what puts a real thunk at
+       _ZTV8Platform[31]. It was a [20] array until the vtable-sizing pass, so
+       this read was out of bounds and installed whatever followed as slot 31
+       of two ov012 tables; it yields the real thunk now. A future reordering
+       that fills these before Platform would silently reinstall a null. */
+    vt[31] = (void *)_ZTV8Platform[31];
 }
 
 // ============================================================================

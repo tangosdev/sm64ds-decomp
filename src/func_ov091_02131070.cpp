@@ -2,7 +2,7 @@
 // @symbol func_ov091_02131070
 // recovered name: RotatingUpDownPlatformUtm_Kill
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjRotateUpdownLift_c::Kill - recovered from vtable slot identity */
+/* daObjRotateUpdownLift_c::Kill - verified 2004/b56 byte-match (ov091), strict-reloc */
 extern "C" {
 struct Vector3 { int x,y,z; };
 }

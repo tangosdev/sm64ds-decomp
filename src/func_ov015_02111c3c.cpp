@@ -2,9 +2,9 @@
 // @symbol func_ov015_02111c3c
 // recovered name: KnockDownPlank_Kill
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjBk_Dossunbar_c::Kill - recovered from vtable slot identity */
+/* daObjBk_Dossunbar_c::Kill - verified 2004/b56 byte-match (ov015), strict-reloc */
 // func_ov015_02111c3c at 0x02111c3c
-// Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov015).
+// Matched byte-for-byte with mwccarm 2004/b56 (ov015).
 struct Vector3 { int x, y, z; };
 
 extern "C" {

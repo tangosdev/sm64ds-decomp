@@ -4,10 +4,9 @@
 #include "decl_Actor.h"
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjBlockS_c::Kill - recovered from vtable slot identity */
-/* func_ov098_02139070 at 0x02139070
- *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
+/* daObjBlockS_c::Kill
+ * func_ov098_02139070 at 0x02139070
+ * Byte-matched with mwccarm 2004/b56 (ov098), strict-reloc verified.
  */
 
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);

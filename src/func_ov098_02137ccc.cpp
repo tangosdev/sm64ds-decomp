@@ -2,9 +2,9 @@
 // @symbol func_ov098_02137ccc
 // recovered name: ArrowSignRight_Kill
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjYajirusi_c::Kill - recovered from vtable slot identity */
+/* daObjYajirusi_c::Kill - verified 2004/b56 byte-match (ov098), strict-reloc */
 // func_ov098_02137ccc at 0x020bb3b8
-// Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
+// Matched byte-for-byte with mwccarm 2004/b56 (ov002).
 struct Vector3 { int x, y, z; };
 
 extern "C" {

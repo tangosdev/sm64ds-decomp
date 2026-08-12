@@ -4,7 +4,7 @@
 #include "daObjSm_Lift_c.h"
 // recovered name: daObjSm_Lift_c_InitResources
 /* recovered: renamed to Class_Method */
-/* daObjSm_Lift_c::InitResources - recovered from vtable slot identity */
+/* daObjSm_Lift_c::InitResources - verified 2004/b56 byte-match (ov018), strict-reloc */
 struct PathPtr { char b[8]; };
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);

@@ -157,7 +157,7 @@ int _ZN10LavaBubble8BehaviorEv(void *self);
    int[] with C linkage to match the extern int _ZTV*[] spellings the factories
    and dtors read (the montymole reading). The Amilift table is spelled only by
    its RTTI wildcard _ZTV17daObjFl_Amilift_c (decl_common.h, int[]). */
-int _ZTV17daObjFl_Amilift_c[32];
+int _ZTV17daObjFl_Amilift_c[32];   /* vtspan: data_ov064_0211bc68 */
 int _ZTV10LavaBubble[31];
 }
 

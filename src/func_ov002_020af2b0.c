@@ -4,10 +4,10 @@
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
-/* da1up_c::OnTurnIntoEgg - recovered from vtable slot identity */
+/* da1up_c::OnTurnIntoEgg - verified 2004/b56 byte-match (ov002), strict-reloc */
 /* func_ov002_020af2b0 at 0x020af2b0
  *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
+ * Matched byte-for-byte with mwccarm 2004/b56 (ov002).
  */
 struct Vec { Fix12i x, y, z; };
 struct Vector3_16;

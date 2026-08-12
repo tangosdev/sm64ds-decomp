@@ -1,7 +1,7 @@
 // @symbol func_ov072_02121fa0
 // recovered name: BabyPenguin_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
-/* daPgBby_c::OnTurnIntoEgg - recovered from vtable slot identity */
+/* daPgBby_c::OnTurnIntoEgg - verified 2004/b56 byte-match (ov072), strict-reloc */
 /* func_ov072_02121fa0 @ 0x2121fa0 (ov072) -- tail-call veneer to _ZN9ActorBase18MarkForDestructionEv (0x2043824).
  * ldr ip, [pc]; bx ip; .word 0x2043824
  */

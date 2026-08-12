@@ -26,6 +26,14 @@ static char *g_lo, *g_hi;
    makes every carve offset identical from one run to the next. */
 enum { ARENA_ALIGN = 0x10000 };
 
+/* The aligned base of the arena, i.e. g_lo as it stood the instant arena_init
+   ran, before any carve advanced it. g_lo itself is the live carve cursor and
+   moves; g_base does not. The save-state code (hal/lk6_savestate.cpp) needs the
+   fixed base and the fixed ceiling to bound the region it snapshots, plus the
+   live cursor as a value it captures and restores like any other allocator
+   state. */
+static char *g_base;
+
 static void arena_init(void)
 {
     if (!g_lo) {
@@ -38,7 +46,20 @@ static void arena_init(void)
         g_lo = (char *)(((size_t)base + (ARENA_ALIGN - 1))
                         & ~(size_t)(ARENA_ALIGN - 1));
         g_hi = g_lo + size;
+        g_base = g_lo;
     }
+}
+
+extern "C" {
+/* Read-only arena window accessors for the save-state layer. base and end are
+   fixed for the process lifetime; cursor is the live low-water carve pointer
+   that func_02058cd0/func_02058d58 move. All three return 0 before the first
+   carve forces arena_init, which is why the save-state code calls
+   port_arena_base() (it runs arena_init) before reading any of them. */
+void *port_arena_base(void)   { arena_init(); return g_base; }
+void *port_arena_end(void)    { arena_init(); return g_hi; }
+void *port_arena_cursor(void) { arena_init(); return g_lo; }
+void  port_arena_set_cursor(void *p) { g_lo = (char *)p; }
 }
 
 extern "C" {

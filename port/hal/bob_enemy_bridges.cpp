@@ -397,7 +397,6 @@ unsigned char *data_0209f344;
    with whatever type its TU happened to declare. */
 #pragma comment(linker, "/alternatename:__ZN13MontyMoleRockD0Ev=_func_ov078_02123804")
 #pragma comment(linker, "/alternatename:_WithMeshClsn_IsOnGround=__ZNK12WithMeshClsn10IsOnGroundEv")
-#pragma comment(linker, "/alternatename:?SetAnim@BlendModelAnim@@QAEHAAUBCA_File@@HHHG@Z=__ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt")
 #pragma comment(linker, "/alternatename:?data_ov078_0212710c@@3UPMF@@A=_data_ov078_0212710c")
 #pragma comment(linker, "/alternatename:?data_ov078_0212709c@@3PADA=_data_ov078_0212709c")
 #pragma comment(linker, "/alternatename:?data_ov078_02126ee8@@3PAPAHA=_data_ov078_02126ee8")
@@ -418,3 +417,43 @@ unsigned char *data_0209f344;
 #pragma comment(linker, "/alternatename:?data_ov078_02126f30@@3PAHA=_data_ov078_02126f30")
 #pragma comment(linker, "/alternatename:?data_02082128@@3UMatrix4x3@@A=_data_02082128")
 #pragma comment(linker, "/alternatename:?data_ov062_0211e03c@@3USharedFilePtr@@A=_data_ov062_0211e03c")
+
+/* BlendModelAnim::SetAnim takes THIS FILE'S SECOND RULE, not its first.
+   func_ov078_02123bc4 (the king's throw state) declares a local shadow
+   `struct BlendModelAnim { int SetAnim(BCA_File &, int, int, Fix12, unsigned
+   short); }` and calls it as a METHOD, so the reference MSVC emits is
+   __thiscall: the object goes in ecx and only the five declared arguments are
+   pushed. The matched body, src/_ZN14BlendModelAnim7SetAnimER8BCA_Fileii
+   5Fix12IiEt.cpp, is extern "C" and therefore cdecl: it reads SIX arguments
+   off the stack and never looks at ecx.
+
+   This pair used to be joined with an /alternatename, which the linker accepts
+   and which is silently wrong -- an alias relabels a symbol, it cannot bridge
+   ecx-vs-stack. Every call through the method spelling landed one stack slot
+   out: the body took the caller's BCA_File* as its `this` and the caller's
+   numBlendFrames literal as its BCA_File*, wrote that literal over the real
+   animation file's +0x60, then dereferenced it. The king's throw passes 4, so
+   the read came out at 0x00000006 and faulted -- level 6's most-reported
+   crash, and the reason the king froze and vanished. ov062 and ov066 spell
+   the same method the same way and were queued behind the same defect.
+
+   A real definition against a shadow class of the same name is what actually
+   converts the convention. */
+struct BCA_File;
+struct BlendModelAnim {
+    int SetAnim(BCA_File &file, int numBlendFrames, int flags, int speed,
+                unsigned short startFrame);
+};
+extern "C" void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+    void *thiz, void *file, int numBlendFrames, int flags, int speed,
+    unsigned short startFrame);
+
+int BlendModelAnim::SetAnim(BCA_File &file, int numBlendFrames, int flags,
+                            int speed, unsigned short startFrame)
+{
+    _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
+        this, &file, numBlendFrames, flags, speed, startFrame);
+    /* the ROM body sets no return value and every caller of this spelling
+       discards it; func_ov078_02123bc4 returns its own literal 1. */
+    return 0;
+}

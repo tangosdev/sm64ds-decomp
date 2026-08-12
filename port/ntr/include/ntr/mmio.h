@@ -35,8 +35,33 @@ constexpr uintptr_t OAM_BASE  = 0x07000000u, OAM_SIZE  = 0x00000800u;  // sprite
 // literals rather than through a symbol, so nothing else brings it in.
 constexpr uintptr_t SHARED_BASE = 0x027ff000u, SHARED_SIZE = 0x00001000u;
 
-// Bring every region up. Idempotent; false if any fixed mapping failed.
+// Bring every region up. Idempotent; false if any REQUIRED fixed mapping failed
+// (main RAM is the one that is not required -- see io.cpp).
 bool io_init();
+
+// Reserve the fixed ranges above. Idempotent, and callable before the CRT has
+// initialised, which is the whole point: it runs from a TLS callback at process
+// start so the ranges are claimed before the CRT heap, the static initialisers
+// and anything this program loads for itself have had a chance to take them.
+// io_init() calls it too, so a range lost early still gets a later attempt.
+//   stage 1 = the TLS callback, stage 2 = io_init.
+void io_reserve(int stage);
+
+// Failure-path reporting. Empty or zero on a healthy start.
+//   io_reserve_detail()      one technical block for the log: which ranges were
+//                            lost and, where it can be named, the module or
+//                            allocation that was sitting in them.
+//   io_reserve_player_text() the same failure in plain language, for a player.
+//   io_reserve_lost_mask()   bit per lost range, zero when all came up.
+//   io_reserve_attempts()    reservation passes run (1 on a clean start).
+//   io_reserve_stage()       where the first pass ran, 1 or 2 as above.
+//   io_reserve_stage_won()   where the last missing range finally came up.
+const char *io_reserve_detail();
+const char *io_reserve_player_text();
+unsigned io_reserve_lost_mask();
+unsigned io_reserve_attempts();
+int io_reserve_stage();
+int io_reserve_stage_won();
 
 // Host pointer to a DS address. Valid only inside a mapped region.
 inline void *host_ptr(uint32_t addr) { return reinterpret_cast<void *>(addr); }

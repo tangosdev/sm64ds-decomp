@@ -2,7 +2,10 @@
 // @symbol func_ov098_02139e44
 // recovered name: Crate_OnGroundPounded
 /* recovered: renamed to Class_Method */
-/* daObjBlockS_c::OnGroundPounded - recovered from vtable slot identity */
+/* daObjBlockS_c::OnGroundPounded
+ * func_ov098_02139e44 at 0x02139e44
+ * Byte-matched with mwccarm 2004/b56 (ov098), strict-reloc verified.
+ */
 struct Base {
     virtual void v0();
     virtual void v1();

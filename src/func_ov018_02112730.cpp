@@ -2,7 +2,7 @@
 // @symbol func_ov018_02112730
 // recovered name: daSCre_c_Behavior
 /* recovered: shared common types, renamed to Class_Method */
-/* daSCre_c::Behavior - recovered from vtable slot identity */
+/* daSCre_c::Behavior - verified 2004/b56 byte-match (ov018), strict-reloc */
 struct Vector3 { int x,y,z; };
 struct Vector3_16 { short x,y,z; };
 struct Actor {

@@ -3,7 +3,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daDonketu_c::Kill - recovered from vtable slot identity */
+/* daDonketu_c::Kill - verified 2004/b56 byte-match (ov064), strict-reloc */
 int func_ov064_021171b0(char* self){
     if(*(unsigned short*)(self+0x100) < 0xa){
         *(int*)(self+0x98) = 0;

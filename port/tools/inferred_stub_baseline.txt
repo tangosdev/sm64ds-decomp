@@ -1,0 +1,21 @@
+# inferred_stub_baseline.txt
+#
+# The frozen allowlist of SEATED inferred vtable stub bodies: src/ bodies
+# that carry the marker
+#
+#     recovered from vtable slot identity
+#
+# and whose @symbol is both in the port build's active TU set and named by a
+# port/hal vtable fill. These are behavioral guesses, not ROM verified
+# decompilations. This list is a RATCHET: it can only SHRINK.
+#
+# port/tools/inferred_stub_guard.py fails the build if the live seated set
+# holds any symbol not on this list, meaning a new guess got seated. When a
+# guessed body becomes a faithful decomp (its marker removed) or is dropped
+# from every vtable fill, it leaves the live set and this baseline may be
+# tightened with:  python port/tools/inferred_stub_guard.py --update
+# Never add a symbol here by hand to unblock a build.
+#
+# One symbol per line, sorted.
+func_ov084_0212b344
+func_ov100_021455a0

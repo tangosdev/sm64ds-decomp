@@ -2,7 +2,7 @@
 // @symbol func_ov072_02120a08
 // recovered name: daBgSnwmn_c_Behavior
 /* recovered: shared common types, renamed to Class_Method */
-/* daBgSnwmn_c::Behavior - recovered from vtable slot identity */
+/* daBgSnwmn_c::Behavior - verified 2004/b56 byte-match (ov072), strict-reloc */
 struct Vector3 { int x, y, z; };
 extern "C" {
 void _ZN9Animation7AdvanceEv(void *self);

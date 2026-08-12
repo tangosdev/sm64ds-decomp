@@ -13,6 +13,10 @@ typedef void (*PortBpFn)(void *);
 
 /* No null guard, matching the matched src exactly (see
  * BabyPenguin_StateEnter.cpp's header). */
+/* PORT_HOST_ABI: mwcc pointer-to-member dispatch on a deliberately
+   incomplete class (the SoundObject/Cap/MrBlizzard-state treatment); the
+   "tick" half (pp+1) mirror of BabyPenguin_StateEnter's pp+0. MSVC's PMF
+   representation there does not reproduce the ROM's {function,delta} pair. */
 void func_ov072_02121cdc(char *c)
 {
     PortBabyPenguinPair *p = *(PortBabyPenguinPair **)(c + 0x35c);

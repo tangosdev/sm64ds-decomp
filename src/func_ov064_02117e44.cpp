@@ -5,7 +5,7 @@
 #include "decl_PathPtr.h"
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjFl_Amilift_c::InitResources - recovered from vtable slot identity */
+/* daObjFl_Amilift_c::InitResources - verified 2004/b56 byte-match (ov064), strict-reloc */
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;

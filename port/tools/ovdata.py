@@ -677,12 +677,30 @@ def main():
                     want.add(v)
         if not want:
             break
+        # How far past a discovered target a gap must reach. The fixed +0x18
+        # guess truncates any record longer than 24 bytes when it is the LAST
+        # target in a run -- interior targets get covered incidentally by the
+        # next target's extension, so the shortfall only ever bites the tail.
+        # That cost the Bowser puzzle its 14th piece: the per-piece state
+        # scripts at ov064 0x0211bfd8 are 28-byte records whose -1 terminator
+        # sits at +26, so the last one (0x0211c144) lost its terminator, the
+        # script cursor ran off the end of the array, and Manager::Behavior got
+        # an out-of-range state index. Size each target by its own symbol
+        # extent (symbols.txt next-symbol delta, the rule named mounts already
+        # use); keep +0x18 as a floor so nothing that fit before shrinks.
+        sym_addrs = [a for a, _ in syms]
+
+        def target_end(t):
+            i = bisect.bisect_right(sym_addrs, t)
+            nxt = sym_addrs[i] if i < len(sym_addrs) else None
+            return max(t + 0x18, nxt) if nxt is not None else t + 0x18
+
         runs = []
         for t in sorted(want):
             if runs and t - runs[-1][1] <= 0x100:
-                runs[-1][1] = t + 0x18
+                runs[-1][1] = max(runs[-1][1], target_end(t))
             else:
-                runs.append([t, t + 0x18])
+                runs.append([t, target_end(t)])
         for s, e in runs:
             name = "port_%s_gap_%08x" % (ov, s)
             blob = data[s - base:e - base]

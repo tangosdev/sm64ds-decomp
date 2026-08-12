@@ -3,7 +3,7 @@
 #include "daSCoin_c.h"
 // recovered name: daSCoin_c_InitResources
 /* recovered: renamed to Class_Method */
-/* daSCoin_c::InitResources - recovered from vtable slot identity */
+/* daSCoin_c::InitResources - verified 2004/b56 byte-match (ov002), strict-reloc */
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* actor, int radius, int height, unsigned int flags, unsigned int vulnFlags);
 extern void _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern int data_ov002_0210d9a8;

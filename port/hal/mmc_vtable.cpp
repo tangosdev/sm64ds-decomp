@@ -33,10 +33,18 @@ int _ZN18MovingMeshCollider10DetectClsnER13RaycastGround(void *self, void *g);
 int _ZN18MovingMeshCollider10DetectClsnER11RaycastLine(void *self, void *r);
 int _ZN18MovingMeshCollider10DetectClsnER10SphereClsn(void *self, void *s);
 extern unsigned char data_020a0d0c[], data_020a0d1c[], data_020a0d60[];
+/* BATCH-3 LINKAGE SEAT: the MovingMeshCollider's OWN deleting dtor (D0, arm9
+   0x0203a444, 2004/b56 byte-match). The seed table copies MeshCollider's D0
+   into slot 0, which is the wrong class body for a moving collider; this seats
+   MMC's own. Flat-C `MMC *D0(MMC *this)` (this on the stack), so slot 0 takes
+   the ecx->arg adapter below rather than the body directly. */
+void *_ZN18MovingMeshColliderD0Ev(void *self);
 }
 
 typedef MovingMeshCollider MMC;
 
+static void __fastcall mmc_dtor(void *s, void *)
+{ _ZN18MovingMeshColliderD0Ev(s); }
 static void __fastcall mmc_v08(void *s, void *)
 { ((MMC *)s)->MMC::Virtual08(); }
 static void __fastcall mmc_norm(void *s, void *, s16 tri, Vector3 *res)
@@ -120,6 +128,15 @@ static void __fastcall mmc_beforeclsn(void *s, void *, ClsnResult *res,
    (0x02099434): [2]Virtual08 [3]GetSurfaceInfo [4]GetNormal [5]GetTriangleOrigin
    [6]DetectClsn(RaycastGround) [7](RaycastLine) [8](SphereClsn) [9]BeforeClsn
    [10]TransformPos [11]GetAngularVelY [12]GetVelocity. */
+/* MovingMeshCollider's OWN deleting dtor, cdecl for GCC dispatch. The MSVC path
+   below seats the same body at its folded dtor slot 0; on Itanium there are two
+   dtor slots and the deleting one is [1], so that is where this goes, leaving
+   the seed copy's MeshCollider D1 at [0].
+   Read off the ROM rather than assumed: _ZTV18MovingMeshCollider (0x02099434)
+   relocates slot 0 -> 0x0203a470 (D1, complete) and slot 1 -> 0x0203a444 (D0,
+   deleting), with the first real virtual at slot 2 -- which is also why the
+   fill below starts at [2]. */
+static void mmcL_dtor(void *s) { _ZN18MovingMeshColliderD0Ev(s); }
 static void mmcL_v08(void *s) { ((MMC *)s)->MMC::Virtual08(); }
 static void mmcL_norm(void *s, s16 tri, Vector3 *res) { ((MMC *)s)->MMC::GetNormal(tri, *res); }
 static void mmcL_orig(void *s, s16 tri, Vector3 *res) { ((MMC *)s)->MMC::GetTriangleOrigin(tri, *res); }
@@ -140,6 +157,7 @@ static void mmcL_beforeclsn(void *s, ClsnResult *res, Actor *actor, Vector3 *pos
 extern "C" void hal_fill_moving_mesh_collider_vtable(void)
 {
 #ifndef _WIN32
+    _ZTV18MovingMeshCollider[1]  = (void *)mmcL_dtor;
     _ZTV18MovingMeshCollider[2]  = (void *)mmcL_v08;
     /* [3] GetSurfaceInfo is NOT overridden by MovingMeshCollider -- the seed
        copy from _ZTV12MeshCollider already carries MeshCollider's, leave it. */
@@ -154,6 +172,9 @@ extern "C" void hal_fill_moving_mesh_collider_vtable(void)
     _ZTV18MovingMeshCollider[12] = (void *)mmcL_vel;
     return;
 #endif
+    /* Batch-3: slot 0 gets MovingMeshCollider's OWN deleting dtor, replacing
+       the MeshCollider D0 the seed copy left there (the wrong class body). */
+    _ZTV18MovingMeshCollider[0] = (void *)mmc_dtor;
     _ZTV18MovingMeshCollider[2] = (void *)mmc_v08;
     _ZTV18MovingMeshCollider[3] = (void *)mmc_norm;
     _ZTV18MovingMeshCollider[4] = (void *)mmc_orig;

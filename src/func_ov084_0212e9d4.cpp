@@ -2,7 +2,7 @@
 // @symbol func_ov084_0212e9d4
 // recovered name: FirePiranhaPlantBig_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
-/* daFPkn_c::OnTurnIntoEgg - recovered from vtable slot identity */
+/* daFPkn_c::OnTurnIntoEgg - verified 2004/b56 byte-match (ov084), strict-reloc */
 extern "C" {
 int _ZN5Actor15GivePlayerCoinsER6Playerhj(void *thisp, void *player, unsigned char count, unsigned int z);
 int _ZN5Actor24KillAndTrackInDeathTableEv(void *thisp);

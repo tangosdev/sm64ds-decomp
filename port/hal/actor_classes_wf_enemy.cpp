@@ -194,7 +194,8 @@ int *_ZN5WhompD1Ev(int *self);
 int *_ZN5WhompD0Ev(int *self);
 void func_ov079_02123e60(char *self, void *player);  /* slot 27 */
 int func_ov079_02123b60(char *self);                 /* slot 29 */
-void func_ov079_02123b54(void);                      /* slot 30 */
+void func_ov079_02123b54(void);                      /* slot 30 veneer */
+void func_ov079_02123d4c(int *out, char *self);      /* slot 30, the body */
 void *_ZTV5Whomp[31];
 }
 
@@ -215,8 +216,16 @@ static int __fastcall whomp_mega(void *s, void *, void *p)
 { func_ov079_02123e60((char *)s, p); return 0; }
 static int __fastcall whomp_aimed(void *s, void *)
 { return func_ov079_02123b60((char *)s); }
-static int __fastcall whomp_s30(void *, void *)
-{ func_ov079_02123b54(); return 0; }
+/* Slot 30 is OnAimedAtWithEggReturnVec(), which returns a Vector3 BY VALUE:
+   MSVC passes the hidden result pointer as the one stack argument and the
+   callee returns it in eax and pops it. func_ov079_02123b54 is the ROM's
+   `ldr ip,[pc]; bx ip` veneer, which forwards r0/r1 untouched to
+   func_ov079_02123d4c(out, self); the veneer's x86 transcription is declared
+   void(void) and so drops both, which is why this dispatches the veneer's
+   one target directly. Written with two parameters the thunk popped nothing
+   and wrote through whatever the stale stack word pointed at. */
+static void *__fastcall whomp_s30(void *s, void *, void *out)
+{ func_ov079_02123d4c((int *)out, (char *)s); return out; }
 
 extern "C" void port_whomp_states_seat(void);   /* port/unmatched/Whomp_Behavior */
 
@@ -311,7 +320,18 @@ int func_ov079_02126f64(void *self);          /* slot 9  */
 int *func_ov079_02126dbc(int *self);          /* slot 16 */
 int *func_ov079_02126e00(int *self);          /* slot 17 */
 void func_ov079_02126ecc(char *self, void *player); /* slot 27 */
-unsigned char data_ov079_02127fb8[31 * 4];    /* the host vtable BillBlaster_Spawn installs */
+int func_ov079_02126e58(char *self);          /* slot 31, its own Kill */
+/* THIRTY-TWO slots, not 31. BillBlaster is a dBgActor_c (Platform) subclass,
+   so its table has Platform's tail slot, and here it is the class's OWN Kill
+   (ov079 0x02126e58: a poof particle, dust, bank-3 sound 0xf, then
+   ActorBase::MarkForDestruction). At 31 * 4 bytes slot 31 lay past the end and
+   nothing ever wrote it -- the same wild call as the ROTATING_BRIDGE repro in
+   hal/actor_classes_wf.cpp, in Whomp's Fortress, on a Bill Blaster that gets
+   killed.
+   Declared as bytes rather than void*[] because BillBlaster_Spawn installs it
+   through a char* face; the count is the slot count times four, so it moves
+   with the slot count. */
+unsigned char data_ov079_02127fb8[32 * 4];    /* the host vtable BillBlaster_Spawn installs */
 }
 
 static int __fastcall blz_init(void *s, void *)
@@ -328,6 +348,11 @@ static int __fastcall blz_d0(void *s, void *)
 { return (int)(size_t)func_ov079_02126e00((int *)s); }
 static int __fastcall blz_mega(void *s, void *, void *p)
 { func_ov079_02126ecc((char *)s, p); return 0; }
+/* slot 31, the Platform tail. BillBlaster overrides Platform::Kill with its
+   own body, which IS in the build (slice_gate64), so this runs the real thing
+   rather than declining. */
+static int __fastcall blz_kill(void *s, void *)
+{ return func_ov079_02126e58((char *)s); }
 
 static void hal_fill_bill_blaster_vtable(void)
 {
@@ -340,6 +365,7 @@ static void hal_fill_bill_blaster_vtable(void)
     vt[16] = (void *)blz_d1;
     vt[17] = (void *)blz_d0;
     vt[27] = (void *)blz_mega;
+    vt[31] = (void *)blz_kill;
 }
 
 // ============================================================================

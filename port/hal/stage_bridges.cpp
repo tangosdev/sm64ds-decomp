@@ -312,6 +312,23 @@ extern signed char data_0209f2f8;                /* current level id */
 extern int data_0209f294[], data_0209f2c4[], data_0209f20c[];
 extern unsigned char *data_0209f340;             /* the level's area info */
 }
+/* The lazy load's trigger, hoisted to file scope so the level change can arm
+   it. -2 is "nothing loaded yet", a value no data_0209f2f8 ever takes.
+
+   THE LEVEL ID ALONE IS NOT A GOOD ENOUGH TRIGGER, and a SELF-WARP is why:
+   level A -> level A leaves data_0209f2f8 unchanged, so the guard below never
+   fires, while the boot in between has released and re-loaded that level's
+   BTA. The surviving slots then point at transformers built over the freed
+   copy of the file -- precisely the aliasing this guard exists to prevent, in
+   the one case the guard cannot see. port_level_stage_reseat arms it
+   explicitly per entry rather than leaving it to be inferred. */
+static int port_stage_anims_loaded_level = -2;
+
+extern "C" void port_stage_anims_rearm(void)
+{
+    port_stage_anims_loaded_level = -2;
+}
+
 extern "C" void port_stage_advance_anims(void *self)
 {
     unsigned char *info = data_0209f340;
@@ -320,7 +337,7 @@ extern "C" void port_stage_advance_anims(void *self)
     const unsigned n = info[0x14];               /* area count */
     char *slots = (char *)self + 0x8bc;          /* stride 0xc: anim, flag */
 
-    static int loaded_level = -2;
+    int &loaded_level = port_stage_anims_loaded_level;
     if (loaded_level != (int)data_0209f2f8) {
         loaded_level = (int)data_0209f2f8;
         for (unsigned i = 0; i < n; ++i)

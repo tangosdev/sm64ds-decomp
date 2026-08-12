@@ -6,7 +6,7 @@
 #include "daSCoin_c.h"
 // recovered name: daSCoin_c_Behavior
 /* recovered: renamed to Class_Method */
-/* daSCoin_c::Behavior - recovered from vtable slot identity */
+/* daSCoin_c::Behavior - verified 2004/b56 byte-match (ov002), strict-reloc */
 class ActorBase {
 public:
     void MarkForDestruction();

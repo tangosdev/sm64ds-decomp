@@ -4,7 +4,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjClockHuriko_c::InitResources - recovered from vtable slot identity */
+/* daObjClockHuriko_c::InitResources - verified 2004/b56 byte-match (ov013), strict-reloc */
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);

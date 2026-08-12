@@ -3,7 +3,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daBmb_c::OnTurnIntoEgg - recovered from vtable slot identity */
+/* daBmb_c::OnTurnIntoEgg - verified 2004/b56 byte-match (ov102), strict-reloc */
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* pos);
 extern void GiveCoins(int who, int count);
 extern void _ZN6Player4HealEi(void* player, int amount);

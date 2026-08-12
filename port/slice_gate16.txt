@@ -116,6 +116,15 @@ src/_ZN13BigBrickBlock6RenderEv.cpp
 src/_ZN13BigBrickBlock16CleanupResourcesEv.cpp
 src/_ZN13BigBrickBlockD1Ev.c
 src/_ZN13BigBrickBlockD0Ev.c
+# The combat tail the ov002 relocations put on this table: slot 21
+# OnGroundPounded (0x02108b30 -> 0x020b382c) and the slot 31 Kill it
+# delegates to (0x02108b58 -> 0x020b38a0). Slot 22 OnAttacked1
+# (0x020b37ec) and slot 23 OnAttacked2 (0x020b3788) are deliberately NOT
+# here; see hal/actor_classes.cpp for why they stay trapped.
+src/func_ov002_020b382c.cpp
+src/func_ov002_020b38a0.c
+# Kill delegates to this one leaf (no further calls of its own).
+src/func_ov002_020b363c.c
 # ...and the ring it closes over: the MovingMeshCollider face, the Platform
 # helpers its lifecycle drives, and the event/star bits it reads.
 src/_ZN18MovingMeshColliderD1Ev.c
@@ -226,11 +235,29 @@ src/_ZN10SphereClsnD1Ev.c
 src/_ZN11ShadowModelD1Ev.c
 src/_ZN12WithMeshClsnD1Ev.c
 src/_ZN16MeshColliderBase10BeforeClsnER10ClsnResultP5ActorR7Vector3P10Vector3_16S7_.cpp
+# BATCH 2 LINKAGE SEAT: the rest of the MeshColliderBase base cluster. Its
+# vtable (_ZTV16MeshColliderBase) is seated with these real matched bodies in
+# hal/meshcolliderbase_vtable.cpp; the already-linked base ctor C2 installs the
+# vptr, so naming the bodies there pulls them in. BeforeClsn (slot 9) was
+# already above. Slots 3/4/5 are pure-virtual nulls (no body). Every one of
+# these is a 2004/b56 byte-match, sizes 0x4..0x38, real ARM entries.
+src/_ZN16MeshColliderBaseD2Ev.c
+src/_ZN16MeshColliderBaseD0Ev.c
+src/_ZN16MeshColliderBase9Virtual08Ev.cpp
+src/_ZN16MeshColliderBase10DetectClsnER13RaycastGround.cpp
+src/_ZN16MeshColliderBase10DetectClsnER11RaycastLine.cpp
+src/_ZN16MeshColliderBase10DetectClsnER10SphereClsn.cpp
+src/_ZN16MeshColliderBase12TransformPosERK7Vector3RS0_.cpp
+src/_ZN16MeshColliderBase14GetAngularVelYEv.cpp
+src/_ZN16MeshColliderBase11GetVelocityER7Vector3.cpp
 # _ZN5Actor13DistToCPlayerEv: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
 # (wired in CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument
 # and relies on `this` being live in ARM r0; cdecl drops it, so the host copy passes
 # `this` explicitly. See that file's header. (FarthestPlayer is in the same copy.)
-src/_ZN5Actor15IsPlayerInRangeEi.c
+# _ZN5Actor15IsPlayerInRangeEi: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
+# (wired in CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument
+# and relies on `this` being live in ARM r0; cdecl drops it, so ClosestPlayer measures
+# from garbage+0x5c. That is the RABBIT fault in crash 9e164e92 (read at 0x0000005c).
 src/_ZN5Actor19DisappearPoofDustAtERK7Vector3.c
 src/_ZN5Actor24KillAndTrackInDeathTableEv.c
 src/_ZN6Player14IsFrontSlidingEv.cpp
@@ -313,3 +340,128 @@ src/_ZNK12WithMeshClsn12TouchesWaterEv.cpp
 # host body calls, both matched and tiny (0x18/0x2c)
 src/func_ov002_020bec84.c
 src/func_ov002_020bec9c.cpp
+# BATCH 3 LINKAGE SEAT: the concrete MeshCollider destructor pair. D0 (deleting,
+# 0x0203982c) is seated into slot 0 of _ZTV12MeshCollider at boot by
+# hal/meshcollider_dtor_seat.cpp; D1 (complete, 0x02039864) is kept referenced
+# there. Both 2004/b56 byte-matches. walk_window family only (this slice), since
+# their ROM bodies drag func callees the gate-8/9 smoke targets do not carry and
+# never dispatch (they never delete the level collider).
+src/_ZN12MeshColliderD0Ev.c
+src/_ZN12MeshColliderD1Ev.c
+# BATCH 3 LINKAGE SEAT 2: MovingMeshCollider's own deleting dtor (D0,
+# 0x0203a444, 2004/b56 byte-match), seated into slot 0 of _ZTV18MovingMeshCollider
+# by hal/mmc_vtable.cpp, replacing the wrong-class MeshCollider D0 the seed copy
+# left there. Edge live via SIGN_POST / BLACK_BRICK_BLOCK, which Enable an MMC.
+src/_ZN18MovingMeshColliderD0Ev.c
+# LANE-LK1 LINKAGE SEAT: ExpandingHeap's VMax pair (VMaxAllocationUnitSize
+# 0x0203c5f8, VMaxAllocatableSize 0x0203c5d0) and the allocator's
+# MaxAllocatableSize (0x0204e0f8) they both forward to, all 2004/b56
+# byte-matches. Seated into slots 10/11 of _ZTV13ExpandingHeap at boot by
+# hal/lk1_eh_vmax_seat.cpp, walk_window family only: MaxAllocatableSize calls
+# cstd::abs (gate 4b), which the minimal root-heap targets do not link, so
+# those keep the traps.
+src/_ZN13ExpandingHeap22VMaxAllocationUnitSizeEv.cpp
+src/_ZN13ExpandingHeap19VMaxAllocatableSizeEv.cpp
+src/_ZN22ExpandingHeapAllocator18MaxAllocatableSizeEi.cpp
+# LINKAGE SEAT (lk2): Platform's own destructor pair -- the two bodies the
+# ROM's base table at ov002 0x0210ae38 carries in slots 16/17 (D1 spelled
+# D2Ev by config, D0 deleting). Seated into both hosted storage names
+# (_ZTV10dBgActor_c and _ZTV8Platform) at boot by
+# hal/lk2_platform_dtor_seat.cpp; the base table is only installed
+# mid-teardown and nothing dispatches through it, so the seat replaces the
+# trap prefill with the ROM's own contents. walk_window family only.
+src/_ZN8PlatformD2Ev.c
+src/_ZN8PlatformD0Ev.c
+# LINKAGE SEAT (lk2): Player::OnYoshiTryEat (ov002 0x020e69b8), the Player's
+# own slot 18 body, a real MSVC method TU (returns 1: Yoshi cannot eat the
+# Player). Seated into slot 18 of the Player table (data_ov002_0210a83c) by
+# hal/level_boot.cpp, which until now kept the trap there because this body
+# was in no slice and forwarding to Actor's would run the wrong code.
+src/_ZN6Player13OnYoshiTryEatEv.cpp
+# LINKAGE SEAT (lk2): the Enemy base table's own deleting destructor
+# (_ZN5EnemyD0Ev, ov002 0x020aed3c), seated into slot 17 of
+# data_ov002_021081e4 by hal_fill_enemy_base_vtable (hal/actor_classes.cpp)
+# next to the already-linked D2 at 16. The base table is installed only
+# mid-teardown and never dispatched through; the seat gives the hosted
+# storage the ROM's contents. Its VT/HEAP placeholders are settled in
+# hal/cxx_aliases.cpp (Enemy base vtable, game heap word).
+src/_ZN5EnemyD0Ev.c
+# LANE-LK4 LINKAGE SEAT: the model family's own deleting dtors (D0), seated
+# into slot 0 of the five hosted primary tables at boot by
+# hal/model_dtor_seat.cpp (Model 0x02016ce0, Animation 0x02015cc4,
+# BlendModelAnim 0x02016644, plus ModelAnim and ModelAnim2), replacing the
+# no-op fillers (ModelAnim family) and the never-written nulls (Model,
+# Animation). Every callee is already linked: the D1/D2 chain came with the
+# class slices, func_0203cbc0 / Memory::operator_delete2 with the gate-16
+# MeshCollider dtor pair. walk_window family only; the secondary
+# Animation-subobject thunk tables keep their no-ops (this-adjust bodies,
+# not these primary-this D0s).
+src/_ZN5ModelD0Ev.c
+src/_ZN9AnimationD0Ev.c
+src/_ZN9ModelAnimD0Ev.c
+src/_ZN10ModelAnim2D0Ev.c
+src/_ZN14BlendModelAnimD0Ev.c
+# LANE-LK4 LINKAGE SEAT 2: ExpandingHeap's dtor chain and its last two
+# allocator forwarders, closing the class. D1 (0x0203c9f0), D0 (0x0203c9c0)
+# and VDestroy (0x0203c72c) are flat .c; VDeallocateAll (0x0203c4b0) and
+# VMemoryLeft (0x0203c5ac) are MSVC methods bridged to the flat-C allocator
+# bodies by hal/lk4_eh_dtor_seat.cpp, which seats slots 0/1/2/5/12 of
+# _ZTV13ExpandingHeap at boot (walk_window family only). The audited closure
+# rides along: Heap::D2 (the D0/D1 callee), HeapAllocator::Destroy/Remove
+# (the VDestroy chain) and the ExpandingHeapAllocator DeallocateAll/
+# InvokeDeallocate pair. Every deeper callee was already linked.
+src/_ZN13ExpandingHeapD1Ev.c
+src/_ZN13ExpandingHeapD0Ev.c
+src/_ZN13ExpandingHeap8VDestroyEv.c
+src/_ZN13ExpandingHeap14VDeallocateAllEv.cpp
+src/_ZN13ExpandingHeap11VMemoryLeftEv.cpp
+src/_ZN4HeapD2Ev.c
+src/_ZN13HeapAllocator7DestroyEv.cpp
+src/_ZN13HeapAllocator6RemoveEv.cpp
+src/_ZN22ExpandingHeapAllocator13DeallocateAllEPPFvPvPS_jEj.cpp
+src/_ZN22ExpandingHeapAllocator16InvokeDeallocateEPvPS_j.cpp
+# LANE-LK4 LINKAGE SEAT 3: the solid-heap face, the batch the header note
+# above deferred by name (slots 13/14 "pull the whole Heap:: allocator face
+# in"). The closure was audited first: every member is a matched TU or was
+# already linked, no host-ABI floor, no hardware poke, no inferred body.
+# hal/lk4_solidheap_seat.cpp hosts _ZTV9SolidHeap (sixteen slots, the Heap
+# shape) and data_020a0ea8 (Memory::tmpHeapPtr), fills the table with
+# SolidHeap's own matched bodies, and seats ActorBase::Virtual34/Virtual38
+# (the per-instance heap hooks) into slots 13/14 of _ZTV5Actor at boot,
+# after the registry install's STAR_CAMERA fill trapped them. walk_window
+# family only.
+src/_ZN9ActorBase9Virtual34Ejj.cpp
+src/_ZN9ActorBase9Virtual38Ejj.cpp
+src/_ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i.cpp
+src/_ZN4Heap23SetupSolidHeapAsDefaultEjPS_i.c
+src/_ZN4Heap15CreateSolidHeapEjPS_i.c
+src/_ZN4Heap24CreateSolidHeapAllocatorEPvjj.c
+src/_ZN4Heap10SetDefaultEv.cpp
+# _ZN4Heap11ResizeToFitEv: C++ inside a .c, rides GATE16_SYMS (hostgen).
+src/_ZN4Heap20RestoreFromTemporaryEv.c
+src/_ZN4Heap8_DestroyEv.cpp
+src/_ZN4Heap7DestroyEv.cpp
+src/_ZN9SolidHeapC1EPvjP4HeapP18SolidHeapAllocator.c
+src/_ZN18SolidHeapAllocatorC1EPvj.c
+src/_ZN9SolidHeapD1Ev.c
+src/_ZN9SolidHeapD0Ev.c
+src/_ZN9SolidHeap8VDestroyEv.c
+src/_ZN9SolidHeap9VAllocateEjj.cpp
+src/_ZN9SolidHeap11VDeallocateEPv.cpp
+src/_ZN9SolidHeap14VDeallocateAllEv.cpp
+src/_ZN9SolidHeap7VIntactEv.cpp
+src/_ZN9SolidHeap7VRescueEv.cpp
+src/_ZN9SolidHeap11VReallocateEPvj.cpp
+src/_ZN9SolidHeap7VSizeofEPv.cpp
+src/_ZN9SolidHeap22VMaxAllocationUnitSizeEv.cpp
+src/_ZN9SolidHeap19VMaxAllocatableSizeEv.cpp
+src/_ZN9SolidHeap11VMemoryLeftEv.cpp
+src/_ZN9SolidHeap10VSetNodeIDEj.cpp
+src/_ZN9SolidHeap10VGetNodeIDEv.cpp
+src/_ZN9SolidHeap12VResizeToFitEv.c
+src/func_0204ebb8.c
+src/_ZN18SolidHeapAllocator10MemoryLeftEi.c
+src/_ZN18SolidHeapAllocator14TryResizeToFitEv.c
+src/_ZN4Heap6RescueEv.cpp
+src/_ZN18SolidHeapAllocator8AllocateEji.c
+src/_ZN18SolidHeapAllocator10ReallocateEPvj.c

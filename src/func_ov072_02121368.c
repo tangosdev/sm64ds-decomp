@@ -4,7 +4,7 @@
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_WithMeshClsn.h"
 /* recovered: shared common types, renamed to Class_Method */
-/* daBgSnwmn_c::Kill - recovered from vtable slot identity */
+/* daBgSnwmn_c::Kill - verified 2004/b56 byte-match (ov072), strict-reloc */
 extern s16 data_02082214[];
 extern int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);
 

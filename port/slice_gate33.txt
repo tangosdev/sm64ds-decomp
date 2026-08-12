@@ -111,7 +111,10 @@ src/_ZN11CommonModel12SetPolygonIDEj.cpp
 src/_ZN11CommonModel13Func_020160ACEj.cpp
 # the red coin's own star: what the eighth one collected calls
 src/_ZN10StarMarker27SpawnRedCoinStarIfNecessaryEv.cpp
-src/_ZN5Actor18HorzAngleToFPlayerEv.c
+# _ZN5Actor18HorzAngleToFPlayerEv: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
+# (wired in CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument
+# and relies on `this` being live in ARM r0; cdecl drops it, so ClosestPlayer measures
+# from garbage+0x5c. That is the RABBIT fault in crash 9e164e92 (read at 0x0000005c).
 # the seven helpers the states and the collect path close over
 src/func_ov002_020b1328.c
 src/func_ov002_020b1674.cpp
@@ -243,6 +246,24 @@ src/func_ov002_020f03c4.c
 # both binaries, so only the left factory and the destructor are new here.
 src/ArrowSignLeft_Spawn.c
 src/_ZN14ArrowSignRightD1Ev.c
+# The sign's own interaction bodies, matched src, were in no slice so slots 27
+# and 31 declined by name. Now enrolled and seated through as_mega / as_kill in
+# hal/actor_classes_bob_world.cpp. Slot 27 OnHitByMegaChar (0x02137d80) is
+# thiscall (ret 4, two linked dispatchers at walk_window 0x45345e and 0x485fd3);
+# slot 31 Kill (0x02137ccc) is thiscall with no arg (ret 0). Neither body
+# dispatches a further vtable slot, so both closures are closed and their
+# callees (Player::IncMegaKillCount, Platform::KillByMegaChar, func_02012694 for
+# 27; Particle::System::NewSimple, Actor::DisappearPoofDustAt, Sound::PlayBank3,
+# ActorBase::MarkForDestruction for 31) were already linked. Slot 22 OnAttacked1
+# (0x02137d40) is now seated through as_atk1 (thiscall, ret 4). Its raw src
+# tail-dispatches slot 31 through a cdecl function-pointer idiom that mismatches
+# slot 31's thiscall veneer, a false-fix one call deep, so it is NOT sliced;
+# src/func_ov098_02137d40.cpp -- HOST COPY: unmatched/ArrowSign_OnAttacked1.cpp
+# (the inner slot-31 dispatch remodelled as a C++ virtual so the site is
+# thiscall and lands on as_kill). The Player_HeadBonk pattern.
+src/func_ov098_02137d80.c
+src/func_ov098_02137ccc.cpp
+port/unmatched/ArrowSign_OnAttacked1.cpp
 
 # WATER_BOMB (208) x2 -- _ZTV9WaterBomb, RTTI daWbm_c
 src/WaterBomb_Spawn.c
@@ -314,6 +335,15 @@ src/func_ov002_020b7f2c.cpp
 src/func_ov002_020b7f7c.c
 src/func_ov002_020b9f00.c
 src/func_ov002_020b9f80.cpp
+# EXCLAMATION_SWITCH's own OnGroundPounded (StarSwitch_OnGroundPounded, ov002
+# 0x020b9fec). Matched src, size 0x30, closes over func_ov002_020ba4d8 alone
+# (the state INIT dispatcher, host-copied in ExclamationSwitch_StateDispatch.cpp
+# and already linked). Its one linked dispatch site is thiscall (walk_window.exe
+# 0x45de24: mov ecx,this / push pounder / call [edx+0x54] / no caller cleanup),
+# so hal seats it through a 3-param __fastcall veneer that emits ret 4, the same
+# shape ssb_pounded and bbb_pounded already ship. Was in no slice, so slot 21
+# declined on ac_trap21; a ground pound is how this switch is pressed.
+src/func_ov002_020b9fec.c
 src/func_ov002_020ba01c.cpp
 # func_ov002_020ba4d8 and func_ov002_020ba520 (the EXCLAMATION_SWITCH's two
 # state dispatchers) are EXCLUDED here: they form a pointer-to-member over an

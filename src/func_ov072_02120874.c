@@ -6,7 +6,7 @@
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
 /* recovered: vtable identified, renamed to Class_Method */
-/* daBgSnwmn_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* daBgSnwmn_c::OnYoshiTryEat - verified 2004/b56 byte-match (ov072), strict-reloc */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *G0;

@@ -4,6 +4,13 @@
 // defining TUs compile them as real methods against the shared headers.
 // Same hop as gate 9 (cxxname_bridge.cpp), split into its own TU because
 // Player.h drags a wider include surface than the gate-9 file wants.
+/* PORT_ALIGN / PORT_GROUPED_DECL live here. The Linux build force-includes
+   this header from CMake, so a TU using those macros compiles there without
+   naming it -- but MSVC never gets the force-include, so the include has to
+   be explicit or the Windows build fails on an undefined macro. The header is
+   include-guarded and its keyword shims are inside #ifndef _MSC_VER, so this
+   is inert on Windows beyond the two macro definitions. */
+#include "port_msvc_compat.h"
 #include <cstdio>
 #include <cstdlib>
 

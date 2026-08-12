@@ -65,6 +65,13 @@
 // (currInterp = 0x1000) rather than its start, which is the outcome the port
 // wants anyway -- IsAtEnd, the predicate a scene transition waits on, reads
 // true immediately instead of waiting on a fade that can never render.
+/* PORT_ALIGN / PORT_GROUPED_DECL live here. The Linux build force-includes
+   this header from CMake, so a TU using those macros compiles there without
+   naming it -- but MSVC never gets the force-include, so the include has to
+   be explicit or the Windows build fails on an undefined macro. The header is
+   include-guarded and its keyword shims are inside #ifndef _MSC_VER, so this
+   is inert on Windows beyond the two macro definitions. */
+#include "port_msvc_compat.h"
 #include <cstdio>
 #include <cstdlib>
 #include <new>

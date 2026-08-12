@@ -25,6 +25,13 @@ src/_ZN14MovingBarSmall16CleanupResourcesEv.cpp
 src/_ZN14MovingBarSmall8BehaviorEv.c
 src/_ZN14MovingBarSmall6RenderEv.cpp
 src/_ZN14MovingBarSmallD1Ev.c
+# Seat B (PAIR): TOWER_STEP slot 31 Kill (0x0211233c) and slot 27
+# OnHitByMegaChar (0x021123a0). The slot-27 body credits the mega kill then
+# virtual-dispatches its OWN slot 31 (ldr [r0]; ldr [r1,#0x7c]; blx r1), so the
+# Kill body it lands on must be the real thiscall body seated in the same table.
+# Both are matched ov015 src, in no prior slice; seat together.
+src/func_ov015_0211233c.cpp
+src/func_ov015_021123a0.cpp
 
 # Gate 61: ROTATING_BRIDGE (id 51). Its factory installs vtable 0x02114714, so
 # an id-51 object runs the _ZN9TowerStep* lifecycle. Factory + the five
@@ -52,6 +59,12 @@ src/_ZN13PoleBillboard16CleanupResourcesEv.cpp
 src/_ZN13PoleBillboard8BehaviorEv.cpp
 src/_ZN13PoleBillboard6RenderEv.cpp
 src/_ZN13PoleBillboardD1Ev.c
+# Seat A: KNOCK_DOWN_PLANK slot 27 OnHitByMegaChar (0x021113c0). A leaf
+# dispatcher: it credits the mega kill through the helper at 0x020bee44 (already
+# in the link) and writes two fields, no vtable dispatch, no ClosestPlayer. This
+# class already seats slot 31 as Platform::Kill (wf_kill), so slot 27 is
+# standalone and needs no pairing.
+src/func_ov015_021113c0.cpp
 
 # Gate 63: ROTATING_PLATFORM_WF (id 50) installs the unnamed table
 # 0x021147e8 and runs the plain-C func_ov015_02112c* lifecycle; its Behavior and
@@ -99,6 +112,13 @@ src/func_ov015_02111e60.c
 src/func_ov015_02111dd4.c
 src/func_ov015_02111d8c.c
 src/func_ov015_02111d28.c
+# Seat C (PAIR): MOVING_BAR_BIG/SMALL slot 31 Kill (0x02111c3c) and slot 27
+# OnHitByMegaChar (0x02111cb8), the same shape as Seat B: the slot-27 body
+# dispatches its own slot 31 through the object's vptr (ldr [r0]; ldr [r1,#0x7c];
+# blx r1), so both are seated together over the one host table so the dispatch
+# lands on a real thiscall Kill body.
+src/func_ov015_02111c3c.cpp
+src/func_ov015_02111cb8.cpp
 
 # Helper closure the two platforms' InitResources/Behavior reach: two ov015
 # helpers and the two MeshColliderBase update paths their MovingMeshCollider

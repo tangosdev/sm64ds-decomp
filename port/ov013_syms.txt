@@ -1,0 +1,121 @@
+# Gate 202: ov013 (level 5, castle second floor -- already whole-mounted per
+# gate 117/PORT_LEVEL_OVERLAYS) joins the per-symbol mounts too, the ov012/
+# gate-199 shape: CLOCK_HAND_SHORT (292), CLOCK_HAND_LONG (293) and
+# CLOCK_PENDULUM (294) -- the 2F clock-painting furniture -- reach their
+# SpawnInfo records, their SharedFilePtrs and the hand-step table by name.
+# WHOLE rodata+data+bss span (0xb4c bytes combined; the whole span costs
+# nothing over a hand-picked subset and avoids discovering misses one link
+# error at a time). Sections per delinks.txt: .rodata 0x021116ac-0x021116b8,
+# .data 0x02111780-0x02112280, .bss 0x02112280-0x021122c0 (bss_size 64).
+#
+# EIGHT SYMBOLS LEFT OUT ON PURPOSE (two host arrays the fills own):
+#   data_ov013_02112128 + data_ov013_02112138/02112158/02112178/02112198
+#     (0x02112128..0x021121a4, CLOCK_PENDULUM's 31-slot vtable, unnamed by
+#     dsd and split five ways -- ONE host array data_ov013_02112128[31] in
+#     hal/actor_classes_ov013.cpp spans all five; nothing references the
+#     interior names)
+#   _ZTV22ClockPaintingHandShort == _ZTV12daObjClock_c (0x02112200) +
+#     data_ov013_02112258 (0x02112200..0x0211227c, the SHARED 31-slot hand
+#     vtable, split two ways -- one host array _ZTV22ClockPaintingHandShort[31])
+# dsd's ".p__sinit_*" pointer entries are also left out (not C identifiers;
+# the port calls the two sinits by name from actor_overlays.cpp).
+#
+# ==== MANDATORY WINDOW-ALIAS CHECK (the gate-199 rule) ====================
+# All three SpawnInfo addresses are flagged `ambiguous` in config/arm9/
+# overlays/ov013/symbols.txt, and the ARM9 SPAWN TABLE entries resolve
+#   0x02090cf4 (id 292) to:0x021121dc module:overlays(10,12,13,18,24,...)
+#   0x02090cf8 (id 293) to:0x021121c0 module:overlays(10,12,13,16,24,25,...)
+#   0x02090cfc (id 294) to:0x02112104 module:overlays(12,13,24,27,33,...)
+# -- the SAME DS addresses cited by a dozen overlays sharing this window,
+# never co-resident. RESOLVED by reading the raw bytes out of extracted/
+# overlays/overlay_0013.bin (base 0x021111a0, ov013's own dump, the one
+# loaded when Mario is on the second floor):
+#   0x021121dc word[0]=0x0211163c (ClockPaintingHandShort_Spawn, INSIDE
+#     ov013), word[1]=0x00a20124 -> id 0x124=292
+#   0x021121c0 word[0]=0x02111674 (ClockPaintingHandLong_Spawn),
+#     word[1]=0x00a30125 -> id 0x125=293
+#   0x02112104 word[0]=0x02111384 (ClockPaintingPendulum_Spawn),
+#     word[1]=0x00a40126 -> id 0x126=294
+# Every record's spawn word lands inside ov013 itself and every id byte
+# matches its spawn-table slot ((addr-0x02090864)/4). The ambiguity is the
+# usual dsd static-export artifact; ov013's own mounted bytes are the ones
+# resident on level 5.
+#
+# ==== CLOSURE (the castle2-scope "generic stubs" claim is STALE) ==========
+# The scope correction warned CLOCK_PENDULUM's Behavior/Render were generic
+# stubs. They are NOT in the current tree: every own vtable slot of all
+# three classes is matched src, zero rows for any trio address in
+# nearmiss/db.jsonl, no NONMATCHING markers.
+#
+# CLOCK_PENDULUM (daObjClockHuriko_c per RTTI; typeinfo 0x021120e0), a
+# 31-slot Actor table at 0x02112128 (the ccm/IceSlideManager/gate-200 base
+# family exactly -- every base slot address verified against arm9
+# symbols.txt, slot 12 = 0x02043ac0 ActorBase::OnPendingDestroy, 13/14 =
+# Virtual34/38 traps, 15 = OnHeapCreated, 30 = OnAimedAtWithEggReturnVec):
+#   0 Init 0x0211133c (func_ov013_0211133c), 3 Clean 0x02111214,
+#   6 Behavior 0x021112a8 (the pendulum swing: +-8/frame accel, PlayBank3
+#   0x16 at the +-0x10 extremes), 9 Render 0x02111280 (plain-Model slot-5
+#   bare-call shape over +0xd4 -- _ZTV5Model[5] is dual-filled, serves from
+#   src unchanged, the Tree/RotatingFirebar precedent, NOT the ModelAnim
+#   collision), 16 D1 0x021111a0, 17 D0 0x021111d0. D1/D0 store the OWN
+#   table then run Model +0xd4 / Actor::D2 (+Deallocate in D0) -- HOST
+#   THUNKS in the fill, member chain read from the matched D0 body; both
+#   TUs stay byte-locked in src/ as proof.
+#   DSD DECOY NOTE: func_ov013_021111d0's recovered-name comment says
+#   "OnYoshiTryEat" -- reloc derivation puts it at slot 17 and its body is
+#   a textbook D0 (set vptr, Model dtor, Actor::D2, Deallocate on the game
+#   heap). The same slot-identity decoy gate 199 hit on SwitchPillar's D0.
+#
+# CLOCK_HAND_SHORT + CLOCK_HAND_LONG share ONE vtable (0x02112200,
+# _ZTV22ClockPaintingHandShort == RTTI _ZTV12daObjClock_c, typeinfo
+# 0x021121a4; both Spawns install it, reloc-verified), same 31-slot family:
+#   0 Init 0x021115cc (id==0x125 picks hand index 0=long, else 1=short;
+#   Model::LoadFile off data_ov013_021116b0[index]), 3 Clean 0x02111478,
+#   6 Behavior 0x021114cc (step table data_ov013_021116ac, shorts
+#   {-0x180,-0x20}; the index-0 branch also writes the clock-speed selector
+#   data_0209f2c0 from the hand angle when its area shows), 9 Render
+#   0x021114a4 (same plain-Model slot-5 shape, from src), 16 D1 0x021113bc,
+#   17 D0 0x021113ec (both store the OWN table -- host thunks, same chain).
+#
+# WINDOW-ALIAS NAMES INSIDE THE RECOVERED SOURCE (aliased in the gate file,
+# never duplicated): Pendulum's Init reaches its SharedFilePtr as
+# "__sinit_ov045_02112280" and its matrix helper as "data_ov054_02111238";
+# HandShort's Init reaches the file-pointer table as "data_ov051_021116b0".
+# All three are ov013's own 0x02112280 / func 0x02111238 / 0x021116b0 --
+# other overlays' dsd exports won the naming race at those window addresses.
+#
+# THE SINITS (both self-contained, verified by reading their bodies: three
+# SharedFilePtrs total, no PMF table): __sinit_ov013_021116b8 builds the
+# pendulum's SFP (file 1459) at bss 0x02112280; __sinit_ov013_021116f8
+# builds the long hand's (file 1457) at 0x0211229c and the short hand's
+# (file 1458) at 0x02112294. rodata data_ov013_021116b0 = {0x0211229c,
+# 0x02112294} -- intra-mount pointers the per-mount patch pass rebases.
+data_ov013_021116ac:0x4 data_ov013_021116b0:0x8
+data_ov013_02111780:0x4 data_ov013_02111784:0x8 data_ov013_0211178c:0x8
+data_ov013_02111794:0x8 data_ov013_0211179c:0x8 data_ov013_021117a4:0x8
+data_ov013_021117ac:0x8 data_ov013_021117b4:0x8 data_ov013_021117bc:0x8
+data_ov013_021117c4:0x8 data_ov013_021117cc:0x8 data_ov013_021117d4:0x8
+data_ov013_021117dc:0x8 data_ov013_021117e4:0x8 data_ov013_021117ec:0xc
+data_ov013_021117f8:0xc data_ov013_02111804:0x10 data_ov013_02111814:0x10
+data_ov013_02111824:0x10 data_ov013_02111834:0x10 data_ov013_02111844:0x1c
+data_ov013_02111860:0x30 data_ov013_02111890:0x40 data_ov013_021118d0:0x3c
+data_ov013_0211190c:0xc data_ov013_02111918:0x10 data_ov013_02111928:0x4
+data_ov013_0211192c:0x18 data_ov013_02111944:0x1c data_ov013_02111960:0xc
+data_ov013_0211196c:0x28 data_ov013_02111994:0x38 data_ov013_021119cc:0x70
+data_ov013_02111a3c:0x10 data_ov013_02111a4c:0xc data_ov013_02111a58:0x20
+data_ov013_02111a78:0x44 data_ov013_02111abc:0x18 data_ov013_02111ad4:0x10
+data_ov013_02111ae4:0x10 data_ov013_02111af4:0x20 data_ov013_02111b14:0x20
+data_ov013_02111b34:0x10 data_ov013_02111b44:0x20 data_ov013_02111b64:0x4
+data_ov013_02111b68:0x4 data_ov013_02111b6c:0x8 data_ov013_02111b74:0x14
+data_ov013_02111b88:0xc data_ov013_02111b94:0x40 data_ov013_02111bd4:0xc
+data_ov013_02111be0:0x40 data_ov013_02111c20:0x34 data_ov013_02111c54:0x74
+data_ov013_02111cc8:0x60 data_ov013_02111d28:0xf0 data_ov013_02111e18:0x100
+data_ov013_02111f18:0xa8 data_ov013_02111fc0:0xcc data_ov013_0211208c:0x18
+data_ov013_021120a4:0x18 data_ov013_021120bc:0x1c data_ov013_021120d8:0x8
+data_ov013_021120e0:0xc data_ov013_021120ec:0xc data_ov013_021120f8:0xc
+ClockPaintingPendulum_SpawnInfo:0x14 data_ov013_02112118:0x10
+data_ov013_021121a4:0xc data_ov013_021121b0:0x8 data_ov013_021121b8:0x8
+ClockPaintingHandLong_SpawnInfo:0x1c ClockPaintingHandShort_SpawnInfo:0x1c
+data_ov013_021121f8:0x8 data_ov013_0211227c:0x4
+data_ov013_02112280:0x8 data_ov013_02112288:0xc data_ov013_02112294:0x8
+data_ov013_0211229c:0x8 data_ov013_021122a4:0xc data_ov013_021122b0:0x10

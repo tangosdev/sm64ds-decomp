@@ -3,7 +3,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Platform.h"
 /* recovered: renamed to Class_Method */
-/* daObjYajirusi_c::OnHitByMegaChar - recovered from vtable slot identity */
+/* daObjYajirusi_c::OnHitByMegaChar - verified 2004/b56 byte-match (ov098), strict-reloc */
 extern int func_02012694();
 extern void _ZN6Player16IncMegaKillCountEv(void*);
 void func_ov098_02137d80(void* a, void* b){

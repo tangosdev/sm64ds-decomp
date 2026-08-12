@@ -3,10 +3,10 @@
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjIceBlock_c::Kill - recovered from vtable slot identity */
+/* daObjIceBlock_c::Kill - verified 2004/b56 byte-match (ov081), strict-reloc */
 /* func_ov081_02127cf4 at 0x02127cf4
  *
- * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov081).
+ * Matched byte-for-byte with mwccarm 2004/b56 (ov081).
  */
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const struct Vector3* pos);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);

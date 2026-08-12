@@ -1,0 +1,63 @@
+# Gate 203: the QUESTION_BLOCK / EXCLAMATION_BLOCK's five HIT slots -- the
+# vtable tail that answers "the player just hit me" -- ov102 0x021496a4,
+# 0x02149710, 0x02149770, 0x021497c8 and 0x02149820, plus the one helper they
+# all share.
+#
+# THE DEFECT THIS CLOSES. Gate 23 mounted the class, its state machine and its
+# six own slots, and gate 180 hosted state 1's main half so the bounce and the
+# content spawn run. Gate 128 registered EXCLAMATION_BLOCK (21) on the same
+# vtable. What none of them did was seat the five slots that START the bounce:
+# hal_fill_question_block_vtable left 21/22/24/27/28 on ac_trapNN, because
+# their bodies were in no slice. A trapped slot calls port_actor_slot_decline,
+# the quarantine net catches the fault and freezes the actor for the rest of
+# the level. So the box never opened -- not because the state table was
+# missing (it is mounted, seated and byte-checked at boot by
+# port_question_block_states_seat) but because the ROM's own entry into state
+# 1 was replaced by a fault. Slot 28 is the one that matters most: it is
+# OnHitFromUnderneath, punching the block from below by jumping into it, which
+# is how a player is meant to open one.
+#
+# WHAT THE ROM'S SLOT 28 DOES, read off the overlay's own table.
+# _ZTV13QuestionBlock is ov102 0x0214e47c; the reloc at 0x0214e47c + 28*4 =
+# 0x0214e4ec lands on 0x021496a4 (config/arm9/overlays/ov102/relocs.txt).
+# That body (src/func_ov102_021496a4.c) is:
+#     if (state == 1) return;              /* already bouncing, ignore */
+#     vel.y = -0x8000; ...   = 0x1e000;    /* the block's own recoil */
+#     if (func_ov102_02149078(c)) return;  /* refused: see below */
+#     self[0x3f2] = arg[8];                /* WHICH character hit it */
+#     func_ov102_02149da8(c, 1);           /* enter state 1 -- the bounce */
+# func_ov102_02149da8 is already hosted (unmatched/QuestionBlock_States.cpp)
+# and state 1's main is already hosted (unmatched/QuestionBlock_BounceDispatch
+# .cpp, gate 180), which is the whole rest of the opening. The byte at
+# +0x3f2 that this slot writes is exactly the `ch` that
+# func_ov102_021498e0 reads back to pick the content row, so dropping this
+# slot did not merely skip an animation, it skipped the input to the payout.
+#
+# The other four are the same body with a different trigger, and every one of
+# them ends in the same func_ov102_02149da8(c, 1): 21 OnGroundPounded
+# (0x02149820), 22 OnAttacked1 (0x021497c8), 24 OnKicked (0x02149770) and 27
+# OnHitByMegaChar (0x02149710, which also credits Player::IncMegaKillCount).
+# They are sliced together because they share one closure and because leaving
+# any of them trapped keeps the same permanent-freeze bug alive under a
+# different button -- a player who ground-pounds the block first would still
+# be stuck at a dead object.
+#
+# ---- the five slot bodies -------------------------------------------------
+src/func_ov102_021496a4.c
+src/func_ov102_02149710.c
+src/func_ov102_02149770.c
+src/func_ov102_021497c8.c
+src/func_ov102_02149820.c
+
+# ---- transitive closure ----------------------------------------------------
+# func_ov102_02149078 is the shared refusal test all five consult: on level
+# 0x15 it compares the block's own +0x3e0 against the water line
+# (data_0209f32c), otherwise it lets level 0x21 through and asks the closest
+# player whether it is holding something (+0x706). Its own callees --
+# Actor::ClosestPlayer (slice_gate9/33), data_0209f2f8 and data_0209f32c
+# (arm9 mounts) -- are already in the link, as is
+# Player::IncMegaKillCount (slice_gate32) for slot 27.
+# func_ov102_02149078: r0-passthrough. Calls Actor::ClosestPlayer() with no
+# argument (this rode ARM r0). HOST COPY passes `self` explicitly at
+# port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp. Byte-locked src unchanged.
+# src/func_ov102_02149078.c

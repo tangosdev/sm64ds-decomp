@@ -661,7 +661,7 @@ src/func_ov002_020c2270.cpp
 src/func_ov002_020c5d0c.c
 src/func_ov002_020c5dec.cpp
 src/func_ov002_020c607c.cpp
-src/func_ov002_020cef84.cpp
+# src/func_ov002_020cef84.cpp -- HOST COPY: unmatched/Player_HeadBonk.cpp (slot 28 dispatch remodelled as a C++ virtual so both call sites are thiscall)
 src/func_ov002_020d0580.cpp
 src/func_ov002_020d06c0.cpp
 src/func_ov002_020d225c.c
@@ -983,8 +983,8 @@ src/func_ov002_020dbd94.c
 src/func_ov002_020dbe70.c
 src/func_ov002_020dbf4c.c
 src/func_ov002_020dd8f4.c
-src/func_ov002_020eeeb8.cpp
-src/func_ov002_020ef070.cpp
+# src/func_ov002_020eeeb8.cpp -- HOST COPY: unmatched/Actor_OnKickedDispatch.cpp (slot 24 dispatch remodelled as a C++ virtual so the site is thiscall)
+# src/func_ov002_020ef070.cpp -- HOST COPY: unmatched/Actor_OnAttacked2Dispatch.cpp (slot 23 dispatch remodelled as a C++ virtual so the site is thiscall)
 src/func_ov002_020d8838.c
 src/_ZN6Player15St_Balloon_MainEv.cpp
 src/_ZN6Player15St_Balloon_InitEv.cpp

@@ -51,3 +51,11 @@ src/func_02037e2c.c
 src/func_02037e38.c
 src/func_02037de8.c
 src/func_02037e9c.c
+# BATCH 3 LINKAGE SEAT: MeshCollider::DetectClsn(RaycastGround&) (ITCM
+# 0x01ffd3f8, 2004/b56 byte-match) seated into slot 6 of the concrete
+# _ZTV12MeshCollider table (hal/clsn_vtable.cpp), replacing the stack-RaycastLine
+# adapter. Every clsn target links this slice, so the qualified dispatch resolves
+# everywhere. The dtor pair (D0/D1) is seated separately in the walk_window
+# family only (hal/meshcollider_dtor_seat.cpp), because its ROM body drags
+# func callees the gate-8/9 smoke targets do not carry and never dispatch.
+src/_ZN12MeshCollider10DetectClsnER13RaycastGround.cpp

@@ -4,7 +4,7 @@
 #include "daObjSm_Lift_c.h"
 // recovered name: daObjSm_Lift_c_OnHitByMegaChar
 /* recovered: renamed to Class_Method */
-/* daObjSm_Lift_c::OnHitByMegaChar - recovered from vtable slot identity */
+/* daObjSm_Lift_c::OnHitByMegaChar - verified 2004/b56 byte-match (ov018), strict-reloc */
 struct Player {
     void IncMegaKillCount();
 };

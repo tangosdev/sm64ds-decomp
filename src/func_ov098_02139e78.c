@@ -1,7 +1,10 @@
 // @symbol func_ov098_02139e78
 // recovered name: Crate_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
-/* daObjBlockS_c::OnTurnIntoEgg - recovered from vtable slot identity */
+/* daObjBlockS_c::OnTurnIntoEgg
+ * func_ov098_02139e78 at 0x02139e78
+ * Byte-matched with mwccarm 2004/b56 (ov098), strict-reloc verified.
+ */
 extern int _ZN6Player15IsCollectingCapEv(char* player);
 extern void _ZN5Actor15GivePlayerCoinsER6Playerhj(char* self, char* player, unsigned char n, unsigned int j);
 extern void _ZN6Player20RegisterEggCoinCountEjbb(char* player, unsigned int n, char b1, char b2);

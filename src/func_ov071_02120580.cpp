@@ -2,7 +2,7 @@
 // @symbol func_ov071_02120580
 // recovered name: Scuttlebug_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
-/* daSpd_c::OnTurnIntoEgg - recovered from vtable slot identity */
+/* daSpd_c::OnTurnIntoEgg - verified 2004/b56 byte-match (ov071), strict-reloc */
 extern "C" {
 extern int _ZN6Player15IsCollectingCapEv(void* p);
 extern void _ZN5Actor15GivePlayerCoinsER6Playerhj(void* a, void* p, unsigned char h, unsigned int j);

@@ -2,7 +2,7 @@
 // @symbol func_ov018_021128e0
 // recovered name: IceSheet_OnGroundPounded
 /* recovered: renamed to Class_Method */
-/* daObjIceBoard_c::OnGroundPounded - recovered from vtable slot identity */
+/* daObjIceBoard_c::OnGroundPounded - verified 2004/b56 byte-match (ov018), strict-reloc */
 struct C {
   virtual void p00(); virtual void p01(); virtual void p02(); virtual void p03();
   virtual void p04(); virtual void p05(); virtual void p06(); virtual void p07();

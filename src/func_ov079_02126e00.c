@@ -6,7 +6,7 @@
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
 /* recovered: vtable identified, renamed to Class_Method */
-/* daObjBkKillerdai_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* daObjBkKillerdai_c::OnYoshiTryEat - verified 2004/b56 byte-match (ov079), strict-reloc */
 extern void *G0;
 int *func_ov079_02126e00(int *t)
 {

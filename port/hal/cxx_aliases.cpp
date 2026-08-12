@@ -1009,6 +1009,16 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self);  /* Linux: real sym
 #pragma comment(linker, "/alternatename:?G0@@3PAHA=_data_ov002_0210e064")
 #pragma comment(linker, "/alternatename:?G1@@3PAHA=_data_ov002_0210e05c")
 #pragma comment(linker, "/alternatename:_G0=_data_020a0eac")
+/* VT/HEAP, the other two shared-header placeholder names, settled the same
+   way for their ONE linked reader: src/_ZN5EnemyD0Ev.c (the Enemy base
+   table's deleting destructor, seated by hal_fill_enemy_base_vtable). Its
+   ROM relocs are the Enemy base vtable ov002 0x021081e4 for the vptr store
+   and the 0x020a0eac game heap word for the Memory::Deallocate argument.
+   These names are SINGLE in this build, the actor_classes_bob_enemy.cpp
+   caveat: a second VT-spelling TU cannot join a target that links this
+   reader, its store would land on the Enemy's objects. */
+#pragma comment(linker, "/alternatename:_VT=_data_ov002_021081e4")
+#pragma comment(linker, "/alternatename:_HEAP=_data_020a0eac")
 /* SignPost::CleanupResources carried from main names its two SharedFilePtrs
    by role instead of G0/G1: SignPost_ModelFile = 0x0210e064 (released first,
    ROM order) and SignPost_ClsnFile = 0x0210e05c (main's ov002 symbols.txt
@@ -1428,9 +1438,23 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self);  /* Linux: real sym
    real method per include/Platform.h, but its matched body
    (src/_ZN8Platform14KillByMegaCharER6Player.c, already in the build since
    gate 64) is plain C linkage -- the flat ROM name, not MSVC's re-mangling
-   of the local declaration. Alias the mangled name the local struct produces
-   onto the real C body. */
-#pragma comment(linker, "/alternatename:?KillByMegaChar@Platform@@QAEXAAUPlayer@@@Z=__ZN8Platform14KillByMegaCharER6Player")
+   of the local declaration.
+
+   The local declaration makes that reference __thiscall while the C body is
+   cdecl, so this takes a real definition and NOT an /alternatename. An alias
+   relabels a symbol; it cannot move the object out of ecx onto the stack.
+   Aliased, the body would have read the caller's Player pointer as its own
+   this and taken whatever sat above it as the Player. Same defect class as
+   BlendModelAnim::SetAnim in hal/bob_enemy_bridges.cpp, which is what froze
+   KING_BOB_OMB on level 6. */
+struct Player;
+struct Platform { void KillByMegaChar(Player &player); };
+extern "C" void _ZN8Platform14KillByMegaCharER6Player(void *self, void *player);
+
+void Platform::KillByMegaChar(Player &player)
+{
+    _ZN8Platform14KillByMegaCharER6Player(this, &player);
+}
 /* gate 191: src/_ZN7SkiLift6RenderEv.cpp (MotherPenguin's own Render, under
    the SkiLift misnomer) declares a LOCAL `struct Model { void Render(Vector3
    const *); };` -- non-virtual -- and calls it through a qualified dispatch.
@@ -1496,9 +1520,23 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self);  /* Linux: real sym
    LOCAL shadow class declaring it `bool TryGrab(Actor&)` -- MSVC mangles
    the RETURN TYPE in, producing ?TryGrab@Player@@QAE_NAAUActor@@@Z (_N =
    bool). The real body (src/_ZN6Player7TryGrabER5Actor.cpp, gate 10,
-   already in the build) is extern "C", flat, returns plain int -- same
-   ABI-level truthy return, different label only. */
-#pragma comment(linker, "/alternatename:?TryGrab@Player@@QAE_NAAUActor@@@Z=__ZN6Player7TryGrabER5Actor")
+   already in the build) is extern "C", flat, and returns plain int.
+
+   The return label really is the harmless half. The CALLING CONVENTION is
+   not: the shadow class makes the reference __thiscall, the body is cdecl,
+   and an /alternatename cannot bridge ecx-vs-stack. Aliased, the body read
+   the caller's Actor pointer as its own this and whatever sat above it as
+   the Actor. Same defect class as BlendModelAnim::SetAnim in
+   hal/bob_enemy_bridges.cpp, which is what froze KING_BOB_OMB on level 6, so
+   this gets a real definition too. */
+struct Actor;
+struct Player { bool TryGrab(Actor &actor); };
+extern "C" int _ZN6Player7TryGrabER5Actor(void *self, void *actor);
+
+bool Player::TryGrab(Actor &actor)
+{
+    return _ZN6Player7TryGrabER5Actor(this, &actor) != 0;
+}
 /* gate 193: func_ov072_021218dc.cpp (BabyPenguin's own state-machine
    body, matched src) declares data_ov072_02122cac/02122ca4 as `extern
    void*[]` OUTSIDE any extern "C" block, so MSVC mangles them; ovdata.py's

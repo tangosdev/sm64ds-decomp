@@ -58,7 +58,119 @@ function Write-Prog([int]$pct, [string]$phase) {
     Write-Host ("##PROGRESS {0} {1}" -f $pct, $phase)
 }
 
+# Machine-readable failure reason, for the same host that parses the progress
+# markers. One line, '##REASON <text>', printed immediately before the human
+# narration of the same failure.
+#
+# This exists because the launcher shows the player ONE line when extraction
+# fails, and it used to have nothing to show but the exit code. Anything that
+# ends this script non-zero must come through here first, so "Extraction failed
+# (exit code 1)" is never the whole story again.
+#
+# Control characters are stripped, not just newlines: several of these messages
+# quote text taken straight out of the file the player supplied, and a file that
+# is not a cartridge dump quotes raw binary. A stray carriage return would split
+# the marker into two lines and the launcher would show half a sentence. Length
+# is capped for the same reason, because this ends up on one line of a small
+# window.
+function Write-Reason([string]$text) {
+    $one = (($text -replace '[^ -~]', ' ') -replace '\s+', ' ').Trim()
+    if ($one.Length -gt 400) { $one = $one.Substring(0, 397) + '...' }
+    Write-Host ("##REASON {0}" -f $one)
+}
+
+# What the script is doing right now, in a few words that fit the sentence
+# "... failed while $script:Doing", plus the file it is doing it to. The trap
+# below uses both to say WHERE an unexpected failure happened, which is the
+# difference between "access denied" and "access denied while writing the
+# unpacked files".
+$script:Doing = 'starting up'
+$script:DoingPath = ''
+
+# True if a file is a cloud placeholder whose bytes are not on this PC yet
+# (OneDrive "Files On-Demand" and the like). Windows 11 puts the Desktop inside
+# OneDrive by default, so a kit unzipped to the Desktop is very often in a synced
+# folder, and a ROM dropped into it can be a stub Windows has to download before
+# anything can read it. These are the documented attributes: OFFLINE,
+# RECALL_ON_OPEN, RECALL_ON_DATA_ACCESS.
+#
+# Only ever used to EXPLAIN a read that already failed. A placeholder that
+# downloads on demand works fine, so this must never block a healthy install.
+function Test-CloudPlaceholder([string]$path) {
+    try {
+        $a = [int][IO.File]::GetAttributes($path)
+        return (($a -band 0x1000) -ne 0) -or (($a -band 0x40000) -ne 0) -or (($a -band 0x400000) -ne 0)
+    } catch { return $false }
+}
+
+# Turns a PowerShell error into one plain sentence that names a cause and a next
+# step. PowerShell wraps every failure from a .NET call in a
+# MethodInvocationException, so unwrap to the real exception first, otherwise
+# everything looks like "Exception calling WriteAllBytes".
+function Get-PlainReason($errorRecord, [string]$doing, [string]$path) {
+    $ex = $errorRecord.Exception
+    while ($ex -and $ex.InnerException -and
+           ($ex -is [Management.Automation.MethodInvocationException])) {
+        $ex = $ex.InnerException
+    }
+    $where = if ($doing) { " while $doing" } else { "" }
+    $code = 0
+    try { $code = [int]$ex.HResult -band 0xFFFF } catch { }
+
+    if ($ex -is [IO.PathTooLongException]) {
+        return ("A file path was too long$where. Move the kit closer to the top of the " +
+                "drive (for example C:\SM64DS) and press Play again.")
+    }
+    if ($ex -is [UnauthorizedAccessException]) {
+        return ("Windows refused permission$where. This usually means the kit is in a " +
+                "protected folder (Program Files), or security software is blocking it. " +
+                "Move the kit to a normal folder (your Desktop or Documents), or allow it " +
+                "in your antivirus, then press Play again.")
+    }
+    if ($ex -is [OutOfMemoryException]) {
+        return "Ran out of memory$where. Close other programs and press Play again."
+    }
+    if ($ex -is [IO.IOException]) {
+        # ERROR_DISK_FULL (112), ERROR_HANDLE_DISK_FULL (39).
+        if ($code -eq 112 -or $code -eq 39) {
+            return ("The disk is full$where. Free up some space (about 100 MB is plenty) " +
+                    "and press Play again.")
+        }
+        # ERROR_SHARING_VIOLATION (32), ERROR_LOCK_VIOLATION (33).
+        if ($code -eq 32 -or $code -eq 33) {
+            return ("Another program is holding a file open$where. Close the game, any " +
+                    "antivirus scan and any open folder window, then press Play again.")
+        }
+        # The cloud filter range (362 to 395) is what OneDrive and similar report
+        # when a placeholder cannot be downloaded.
+        if (($code -ge 362 -and $code -le 395) -or ($path -and (Test-CloudPlaceholder $path))) {
+            return ("A file is stored online only and Windows could not download it$where. " +
+                    "This happens with OneDrive (or similar) when a file is not kept on " +
+                    'this PC. Right-click the kit folder and your .nds file, choose "Always ' +
+                    'keep on this device", wait for it to finish, then press Play again.')
+        }
+    }
+    $msg = if ($ex) { $ex.Message } else { "$errorRecord" }
+    return "The unpack step failed$where. Windows reported: $msg"
+}
+
+# Anything that reaches this trap is a failure nobody wrote a message for: a
+# permission, disk or cloud-sync problem inside a .NET call, or a bug in this
+# script. Left alone, PowerShell prints a multi-line error record to stderr and
+# exits 1, and that exit code was all the player ever saw. Say it in one plain
+# line first, then still print the technical detail so the log keeps it.
+trap {
+    $reason = Get-PlainReason $_ $script:Doing $script:DoingPath
+    Write-Reason $reason
+    Write-Host ""
+    Write-Host $reason -ForegroundColor Red
+    Write-Host ""
+    Write-Host ("Technical detail: " + $_.Exception.Message)
+    exit 1
+}
+
 function Stop-Politely($text) {
+    Write-Reason $text
     Write-Host ""
     Write-Host $text -ForegroundColor Red
     Write-Host ""
@@ -67,8 +179,37 @@ function Stop-Politely($text) {
     exit 1
 }
 
+# Same as Stop-Politely, for a failure that is NOT about the player's dump: no
+# room on the disk, no permission to write, a kit that arrived incomplete. The
+# "you need to supply a cartridge dump" trailer would be a wrong answer there,
+# and a confidently wrong answer is worse than a bare exit code.
+function Stop-Blocked($text) {
+    Write-Reason $text
+    Write-Host ""
+    Write-Host $text -ForegroundColor Red
+    Write-Host ""
+    exit 1
+}
+
 if (-not $Destination) {
     $Destination = if ($PSScriptRoot) { $PSScriptRoot } else { (Get-Location).Path }
+}
+
+# ------------------------------------------------------ can we write here at all
+# Everything below writes a couple of thousand files into $Destination. Prove we
+# can write ONE first. A kit unzipped into Program Files, a folder marked
+# read-only, or a folder an antivirus is holding shut all fail here, in a
+# sentence, instead of failing a minute later in the middle of the dump with a
+# .NET stack trace and an exit code.
+$script:Doing = 'checking that the kit folder can be written to'
+$script:DoingPath = $Destination
+$probe = Join-Path $Destination ".write-probe-$PID"
+try {
+    [void][IO.Directory]::CreateDirectory($Destination)
+    [IO.File]::WriteAllBytes($probe, [byte[]]@(0))
+    [IO.File]::Delete($probe)
+} catch {
+    Stop-Blocked (Get-PlainReason $_ "checking that the kit folder can be written to" $Destination)
 }
 
 # ---------------------------------------------------------------- find the rom
@@ -106,23 +247,39 @@ if (-not $Rom) {
     $Rom = $found[0].FullName
 }
 if (-not (Test-Path -LiteralPath $Rom -PathType Leaf)) {
-    Stop-Politely "No such file: $Rom"
+    Stop-Politely ("The .nds file is not there any more: $Rom. Put your Super Mario 64 DS " +
+                   "dump back in the folder next to the launcher and press Play again.")
 }
 $Rom = (Resolve-Path -LiteralPath $Rom).Path
 
 Write-Step "Reading $([IO.Path]::GetFileName($Rom))"
-$romBytes = [IO.File]::ReadAllBytes($Rom)
+# The launcher has already read the first few hundred bytes of this file to
+# check the header, so "it opened once" proves nothing about the rest of it. This
+# is the first read of the WHOLE dump, and it is where an online-only OneDrive
+# placeholder, a half-copied file or an antivirus block actually shows up.
+$script:Doing = 'reading your .nds file'
+$script:DoingPath = $Rom
+try {
+    $romBytes = [IO.File]::ReadAllBytes($Rom)
+} catch {
+    Stop-Politely (Get-PlainReason $_ "reading your .nds file" $Rom)
+}
 
 # ------------------------------------------------------- check it is the game
 # Cartridge header: 12-byte internal title, 4-byte game code, then the table
 # offsets. A wrong file trips one of these long before it can write nonsense.
 if ($romBytes.Length -lt 0x4000) {
-    Stop-Politely "That file is only $($romBytes.Length) bytes -- too small to be a DS cartridge dump."
+    Stop-Politely "That file is only $($romBytes.Length) bytes, too small to be a DS cartridge dump."
 }
 $title = [Text.Encoding]::ASCII.GetString($romBytes, 0x00, 12).TrimEnd([char]0)
 $code  = [Text.Encoding]::ASCII.GetString($romBytes, 0x0C, 4)
 if ($title -ne 'S.MARIO64DS' -or $code -notlike 'ASM?') {
-    Stop-Politely "That is not a Super Mario 64 DS dump (it says title '$title', game code '$code')."
+    # Whatever this file is, those 16 bytes are not text, so show them as
+    # something printable rather than pasting binary into a message box.
+    $shownTitle = ($title -replace '[^ -~]', '.')
+    $shownCode  = ($code -replace '[^ -~]', '.')
+    Stop-Politely ("That is not a Super Mario 64 DS dump (it says title '$shownTitle', " +
+                   "game code '$shownCode'). Use a dump of a Super Mario 64 DS cartridge.")
 }
 
 $regions = @{ 'E' = 'North America'; 'P' = 'Europe'; 'J' = 'Japan';
@@ -203,6 +360,14 @@ while ($queue.Count -gt 0) {
         $type = $romBytes[$o]; $o++
         if ($type -eq 0) { break }
         $len = $type -band 0x7F
+        # The name, and the 2-byte directory id that follows a directory entry,
+        # both have to fit inside the file. Without this a damaged table walks off
+        # the end and dies inside GetString, which is an argument-range error with
+        # nothing in it for a player.
+        $needs = $len + $(if ($type -band 0x80) { 2 } else { 0 })
+        if (($o + $needs) -gt $romBytes.Length) {
+            Stop-Politely "This dump's file name table is damaged. Re-dump the cartridge."
+        }
         $name = [Text.Encoding]::ASCII.GetString($romBytes, $o, $len); $o += $len
         if ($type -band 0x80) {
             $sub = [int]([BitConverter]::ToUInt16($romBytes, $o) -band 0x0FFF); $o += 2
@@ -221,7 +386,53 @@ if ($paths.Count -eq 0) {
 
 # --------------------------------------------------------------- write them out
 $filesRoot = Join-Path $Destination 'extracted\dsd\files'
+
+# Add up what we are about to write, and check every entry points inside the
+# file, BEFORE writing anything. Two failures get caught here that used to be
+# discovered the hard way: a dump whose file table points past its own end (an
+# argument-range error from Array.Copy, roughly halfway through the dump), and a
+# disk with no room for the result (a disk-full IOException, also halfway
+# through, having already written whatever fitted).
+$script:Doing = 'checking the dump''s file table'
+$script:DoingPath = $Rom
+$needBytes = [long]0
+foreach ($pair in $paths.GetEnumerator()) {
+    $id = $pair.Key
+    if ($id -lt 0 -or $id -ge $fatCount) {
+        Stop-Politely ("This dump is damaged: its file name table names a file (" +
+                       "$($pair.Value)) that its file allocation table does not have. " +
+                       "Re-dump the cartridge.")
+    }
+    $length = [long]$fatEnd[$id] - [long]$fatStart[$id]
+    if ($length -lt 0 -or ([long]$fatStart[$id] + $length) -gt $romBytes.Length) {
+        Stop-Politely ("This dump is damaged: its file table points at data past the end " +
+                       "of the file (file $id, '$($pair.Value)'). Re-dump the cartridge.")
+    }
+    $needBytes += $length
+}
+
+# Free space. Skipped, never fatal, if the drive cannot be measured (a network
+# path, a substituted drive): a check we cannot make must not stop a good install.
+$script:Doing = 'checking free disk space'
+$script:DoingPath = $Destination
+try {
+    $root = [IO.Path]::GetPathRoot([IO.Path]::GetFullPath($Destination))
+    $free = (New-Object IO.DriveInfo $root).AvailableFreeSpace
+    $wantBytes = $needBytes + 16MB      # the dump, plus room for romdata.bin and slack
+    if ($free -lt $wantBytes) {
+        Stop-Blocked ("There is not enough free space on $root to unpack the game data. " +
+                      "About $([math]::Round($wantBytes / 1MB)) MB is needed and " +
+                      "$([math]::Round($free / 1MB)) MB is free. Free up some space and " +
+                      "press Play again.")
+    }
+} catch [Management.Automation.MethodInvocationException] {
+    Write-Warn "    (could not measure free disk space here; carrying on)"
+} catch [ArgumentException] {
+    Write-Warn "    (could not measure free disk space here; carrying on)"
+}
+
 Write-Step "Writing $($paths.Count) files to $filesRoot"
+$script:Doing = 'writing the unpacked files'
 $madeDirs = New-Object 'System.Collections.Generic.HashSet[string]'
 $written = 0
 $bytes = [long]0
@@ -230,6 +441,7 @@ foreach ($pair in $paths.GetEnumerator()) {
     $id = $pair.Key
     $relative = $pair.Value.Replace('/', '\')
     $target = Join-Path $filesRoot $relative
+    $script:DoingPath = $target
     $dir = [IO.Path]::GetDirectoryName($target)
     if ($madeDirs.Add($dir)) { [void][IO.Directory]::CreateDirectory($dir) }
     $length = [int]($fatEnd[$id] - $fatStart[$id])
@@ -311,6 +523,11 @@ if ($ovtSize -lt 32) { Stop-Politely "This dump has no ARM9 overlays. Re-dump th
 $ov0Ram    = [BitConverter]::ToUInt32($romBytes, $ovtOffset + 4)
 $ov0FileId = [int][BitConverter]::ToUInt32($romBytes, $ovtOffset + 24)
 $ov0Flags  = [int]([BitConverter]::ToUInt32($romBytes, $ovtOffset + 28) -shr 24)
+$script:Doing = 'reading overlay 0 out of the dump'
+if ($ov0FileId -lt 0 -or $ov0FileId -ge $fatCount) {
+    Stop-Politely ("This dump is damaged: its overlay table points at a file its file " +
+                   "allocation table does not have. Re-dump the cartridge.")
+}
 $ov0Length = [int]($fatEnd[$ov0FileId] - $fatStart[$ov0FileId])
 $ov0 = New-Object 'byte[]' $ov0Length
 [Array]::Copy($romBytes, [int]$fatStart[$ov0FileId], $ov0, 0, $ov0Length)
@@ -381,6 +598,8 @@ foreach ($pair in $paths.GetEnumerator()) {
 }
 
 $assetsDir = Join-Path $Destination 'build\assets'
+$script:Doing = 'writing the asset catalogue'
+$script:DoingPath = $assetsDir
 [void][IO.Directory]::CreateDirectory($assetsDir)
 $utf8 = New-Object Text.UTF8Encoding $false
 [IO.File]::WriteAllText((Join-Path $assetsDir 'files.tsv'), $fileRows.ToString(), $utf8)
@@ -401,21 +620,41 @@ if (-not (Test-Path -LiteralPath $recipePath)) {
     $recipePath = Join-Path $Destination 'build\assets\romdata.recipe.tsv'
 }
 if (-not (Test-Path -LiteralPath $recipePath)) {
-    Write-Warn "No romdata.recipe.tsv next to this script -- skipping romdata.bin."
-    Write-Warn "The game will refuse to start without it; re-download the kit."
+    # This used to be a warning that still exited 0. It never could be: without
+    # romdata.bin the game refuses to start, so a "successful" run that skipped it
+    # just moved the failure somewhere with less to say about it.
+    Stop-Blocked ("This kit is incomplete: romdata.recipe.tsv is missing, so the game data " +
+                  "cannot be rebuilt. Download the kit again and unpack the whole zip into " +
+                  "one folder (keep the files together).")
 } else {
-    $recipeLines = [IO.File]::ReadAllLines($recipePath)
+    $script:Doing = 'reading romdata.recipe.tsv from the kit'
+    $script:DoingPath = $recipePath
+    try {
+        $recipeLines = [IO.File]::ReadAllLines($recipePath)
+    } catch {
+        Stop-Blocked (Get-PlainReason $_ "reading romdata.recipe.tsv from the kit" $recipePath)
+    }
     if ($recipeLines.Count -lt 2 -or $recipeLines[0] -notmatch '^# romdata-recipe v1 ([0-9a-f]{64}) (\d+)$') {
-        Stop-Politely "romdata.recipe.tsv is damaged. Re-download the kit."
+        Stop-Blocked ("This kit's romdata.recipe.tsv is damaged, so the game data cannot be " +
+                      "rebuilt. Download the kit again.")
     }
     $wantSha = $Matches[1]
     $blobTotal = [int]$Matches[2]
 
     # Which images the recipe needs, and where the overlays sit in the dump.
+    # Only the header was ever checked, so a truncated or re-saved recipe reached
+    # the assembler as blank and half-width lines and died on a null field. Check
+    # the shape of every row here, where the answer is "your copy of the kit is
+    # damaged" rather than an argument-null error from inside a loop.
     $needed = New-Object 'System.Collections.Generic.HashSet[string]'
     foreach ($line in $recipeLines) {
-        if ($line.StartsWith('#')) { continue }
-        [void]$needed.Add($line.Split("`t")[2])
+        if ($line.StartsWith('#') -or $line.Trim().Length -eq 0) { continue }
+        $f = $line.Split("`t")
+        if ($f.Count -lt 4) {
+            Stop-Blocked ("This kit's romdata.recipe.tsv is damaged (a line is incomplete), " +
+                          "so the game data cannot be rebuilt. Download the kit again.")
+        }
+        [void]$needed.Add($f[2])
     }
     $ovByName = @{}
     for ($i = 0; $i -lt [int]($ovtSize / 32); $i++) {
@@ -427,7 +666,9 @@ if (-not (Test-Path -LiteralPath $recipePath)) {
         )
     }
 
-    Write-Step "Rebuilding romdata.bin ($($needed.Count) images to decompress -- the slow part, please wait)"
+    Write-Step "Rebuilding romdata.bin ($($needed.Count) images to decompress, the slow part, please wait)"
+    $script:Doing = 'rebuilding the game data from the dump'
+    $script:DoingPath = $Rom
     $images = @{}
     # Image decompression spans 80..97. Announce each image before decompressing
     # it (the decompress itself is silent and can be a second or two), so the bar
@@ -452,7 +693,16 @@ if (-not (Test-Path -LiteralPath $recipePath)) {
                                "it has no overlay '$src'.")
             }
             $fileId = $ovByName[$src][0]
+            if ($fileId -lt 0 -or $fileId -ge $fatCount) {
+                Stop-Politely ("This dump is damaged: its overlay table points at a file its " +
+                               "file allocation table does not have (overlay '$src'). " +
+                               "Re-dump the cartridge.")
+            }
             $length = [int]($fatEnd[$fileId] - $fatStart[$fileId])
+            if ($length -lt 0 -or ([long]$fatStart[$fileId] + $length) -gt $romBytes.Length) {
+                Stop-Politely ("This dump is damaged: overlay '$src' runs past the end of the " +
+                               "file. Re-dump the cartridge.")
+            }
             $raw = New-Object 'byte[]' $length
             [Array]::Copy($romBytes, [int]$fatStart[$fileId], $raw, 0, $length)
             if ($ovByName[$src][1] -band 1) {
@@ -468,11 +718,17 @@ if (-not (Test-Path -LiteralPath $recipePath)) {
     # Assemble. The buffer starts zeroed, so a range past its image's end
     # simply keeps its zeros.
     Write-Prog 98 "Assembling and checking romdata.bin"
+    $script:Doing = 'assembling romdata.bin'
+    $script:DoingPath = ''
     $blob = New-Object 'byte[]' $blobTotal
     foreach ($line in $recipeLines) {
-        if ($line.StartsWith('#')) { continue }
+        if ($line.StartsWith('#') -or $line.Trim().Length -eq 0) { continue }
         $f = $line.Split("`t")
         $off = [int]$f[0]; $size = [int]$f[1]; $img = $images[$f[2]]; $srcOff = [int]$f[3]
+        if ($off -lt 0 -or $size -lt 0 -or $srcOff -lt 0 -or ($off + $size) -gt $blobTotal) {
+            Stop-Blocked ("This kit's romdata.recipe.tsv is damaged (a line is out of range), " +
+                          "so the game data cannot be rebuilt. Download the kit again.")
+        }
         $have = [Math]::Min($size, [Math]::Max(0, $img.Length - $srcOff))
         if ($have -gt 0) { [Array]::Copy($img, $srcOff, $blob, $off, $have) }
     }
@@ -480,19 +736,35 @@ if (-not (Test-Path -LiteralPath $recipePath)) {
     $sha = [BitConverter]::ToString(
         [Security.Cryptography.SHA256]::Create().ComputeHash($blob)).Replace('-', '').ToLowerInvariant()
     if ($sha -ne $wantSha) {
-        Stop-Politely ("The rebuilt romdata.bin does not match its checksum -- this dump is " +
-                       "Super Mario 64 DS but not the revision this build was made from ($code).")
+        # The header said ASMP, so this is a European cartridge dump, and it still
+        # did not rebuild. What is left is a dump that is not a byte-for-byte copy
+        # of the retail cartridge: a patched or translated ROM, a trimmed one, or
+        # a bad dump. Say that, because "checksum mismatch" sends people looking
+        # for the wrong problem.
+        Stop-Politely ("This is a European dump (game code $code), but its contents do not " +
+                       "match the cartridge this build was made from. That usually means the " +
+                       "file has been modified (a patch, a translation or a trimmed dump) or " +
+                       "the dump is faulty. Use an untouched dump of your own retail " +
+                       "cartridge, then press Play again.")
     }
+    $script:Doing = 'writing the rebuilt game data'
+    $script:DoingPath = (Join-Path $assetsDir 'romdata.bin')
     [IO.File]::WriteAllBytes((Join-Path $assetsDir 'romdata.bin'), $blob)
     Write-Step "    romdata.bin verified ($blobTotal bytes, checksum OK)"
 
     # The game verifies romdata.bin at boot against romdata.manifest, which the
     # kit ships next to this script; put it where the game looks.
+    $script:Doing = 'copying romdata.manifest into place'
     $manifestSrc = Join-Path $Destination 'romdata.manifest'
+    $script:DoingPath = $manifestSrc
     if (Test-Path -LiteralPath $manifestSrc) {
         Copy-Item -LiteralPath $manifestSrc (Join-Path $assetsDir 'romdata.manifest') -Force
     } elseif (-not (Test-Path -LiteralPath (Join-Path $assetsDir 'romdata.manifest'))) {
-        Write-Warn "No romdata.manifest in the kit -- the game will refuse to start; re-download the kit."
+        # Also a warning that exited 0 once, and also guaranteed to strand the
+        # player at a game that refuses to start.
+        Stop-Blocked ("This kit is incomplete: romdata.manifest is missing, so the game " +
+                      "would refuse to start. Download the kit again and unpack the whole " +
+                      "zip into one folder (keep the files together).")
     }
 }
 

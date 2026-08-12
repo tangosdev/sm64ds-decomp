@@ -92,9 +92,17 @@ static void hmc_trap_report(void *self, int slot)
 #define HMC_TRAP(n) \
     static int __fastcall hmc_trap##n(void *s, void *) \
     { hmc_trap_report(s, n); return 0; }
-HMC_TRAP(13) HMC_TRAP(14) HMC_TRAP(20) HMC_TRAP(22) HMC_TRAP(23) HMC_TRAP(24)
+HMC_TRAP(13) HMC_TRAP(14) HMC_TRAP(20) HMC_TRAP(22)
 HMC_TRAP(25) HMC_TRAP(26) HMC_TRAP(27) HMC_TRAP(28) HMC_TRAP(29) HMC_TRAP(30)
 #undef HMC_TRAP
+/* Slots 23/24 take the three-parameter shape so they emit `ret 4`: their one
+   dispatch site each is now thiscall (Actor_OnAttacked2Dispatch.cpp /
+   Actor_OnKickedDispatch.cpp), which pushes one argument the callee must pop.
+   Body identical to the HMC_TRAP shape; only the pop contract widens. */
+static int __fastcall hmc_trap23(void *s, void *, void *)
+{ hmc_trap_report(s, 23); return 0; }
+static int __fastcall hmc_trap24(void *s, void *, void *)
+{ hmc_trap_report(s, 24); return 0; }
 
 // ---- the shared half -------------------------------------------------------
 static int __fastcall hmc_binit(void *s, void *)
@@ -137,7 +145,16 @@ static int __fastcall crate_yoshi(void *s, void *)
 /* slot 19's second argument arrives on the stack, the cap_egg reading */
 static int __fastcall crate_egg(void *s, void *, void *o)
 { func_ov098_02139e78((char *)s, (char *)o); return 0; }
-static int __fastcall crate_pounded(void *s, void *)
+/* Slot 21 is OnGroundPounded(Actor &other), and its argument arrives the way
+   slot 19's does: on the stack. The ov098 body reads only r0 and ignores the
+   pounder, but the HOST caller still pushes it, because the slot's
+   declaration in include/Actor.h has the parameter. A __fastcall thunk
+   carries its first two parameters in ecx/edx and pops nothing; only a
+   declared THIRD parameter lands on the stack and makes the thunk `ret 4`.
+   Written with two, the pushed word outlives the call, the caller's epilogue
+   pops one slot short, and its `ret` takes the saved EBP -- a stack address
+   -- as the return address. Declare the argument, ignore it like the ROM. */
+static int __fastcall crate_pounded(void *s, void *, void *)
 { func_ov098_02139e44(s); return 0; }
 static int __fastcall crate_kill(void *s, void *)
 { func_ov098_02139070((char *)s); return 0; }

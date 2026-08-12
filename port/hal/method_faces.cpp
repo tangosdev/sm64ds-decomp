@@ -1,3 +1,46 @@
+// ===========================================================================
+// C-linkage forwarder faces are LOAD-BEARING PLUMBING, not boilerplate.
+//
+// Every function below is a one-line forwarder that reads as trivial. Each one
+// stands between the ROM's calling convention and the host's, and a face that
+// looks correct can be silently wrong in three ways. All three have shipped or
+// nearly shipped from this file; none is hypothetical.
+//
+//   1. WRONG TARGET. A face can forward to a plausible SIBLING instead of the
+//      intended function. _Z14ApproachLinearRsss (below) forwarded to
+//      ApproachLinear2, a near-identical copy 140 lines away that differs only
+//      in whether it wraps to s16. It worked on every scalar and hung only on
+//      angles, so it passed review and shipped (signs spinning forever). 156
+//      src TUs reach ApproachLinear through this one face.
+//
+//   2. DROPPED RECEIVER. A method face reached in the zero-argument ()-form
+//      drops the `this` the ROM delivered in a register. Actor::FarthestPlayer
+//      calls _ZN5Actor13ClosestPlayerEv() with no receiver, so ClosestPlayer
+//      reads this+0x5c off a null or garbage base. For a direct ClosestPlayer
+//      reader that is a crash (the rabbit soft-lock); for FarthestPlayer it is
+//      a SILENT wrong result, which is worse.
+//
+//   3. MIS-BRIDGED RECEIVER. A face entered by a thunk (or tail-called into)
+//      with the object pushed on the stack must move it into ECX before the
+//      real __thiscall body. Actor::OnTurnIntoEgg is a jmp tail-call into the
+//      extern-C _ZN5Actor24KillAndTrackInDeathTableEv face (below), which is
+//      correct only because that bridge is sized right. A cdecl body entered
+//      with `this` still in ECX (or an aliased __thiscall body entered from a
+//      cdecl frame) is the 2026-08-07 door-open crash; see the gate-22 note.
+//
+// PER-FACE REVIEW CHECKLIST. Verify each from the EMITTED bytes, never from the
+// C signature (a different-signature sibling compiles fine through a face):
+//   (a) TARGET  -- the call goes to the intended function, not a plausible
+//                  sibling of the same shape.
+//   (b) ARITY   -- the argument count matches the ROM callee's; a wrong-arity
+//                  sibling still compiles clean.
+//   (c) RECEIVER-- `this` is delivered: passed as the first argument for a
+//                  dropped-receiver face, bridged into ECX for a thiscall face.
+//
+// These read as plumbing, reviewers skim plumbing, and each of the three above
+// shipped or nearly shipped. Meet the class before you skim the next forwarder.
+// ===========================================================================
+//
 // C-linkage faces for METHOD-form definitions (gate 10/11 Behavior ring).
 //
 // The defining src files compile real methods against the shared headers;
@@ -26,6 +69,12 @@
 #include "WithMeshClsn.h"
 
 extern "C++" int ApproachLinear2(short &x, short target, short step);
+/* src/_Z14ApproachLinearRsss.cpp -- a DIFFERENT function from ApproachLinear2,
+   not a spelling of it. ApproachLinear wraps the difference back to s16
+   (`(short)(x - target)`) both before and after the step, so on an ANGLE it
+   turns the short way round and still recognises a crossing that happens
+   through the s16 wrap. ApproachLinear2 compares in int and does neither. */
+extern "C++" int ApproachLinear(short &x, short target, short step);
 
 extern "C" {
 
@@ -315,8 +364,21 @@ extern "C" void _ZN6Player17St_PunchKick_InitEv(void *self);  /* Linux: real sym
 #endif /* _WIN32 */
 #pragma comment(linker, "/alternatename:?_ZN6Player14St_OnWall_InitEv@@YAXPAD@Z=__ZN6Player14St_OnWall_InitEv")
 #pragma comment(linker, "/alternatename:?_ZN6Player17St_PunchKick_InitEv@@YAXPAX@Z=__ZN6Player17St_PunchKick_InitEv")
+/* This face used to call ApproachLinear2 -- a copy of the body two hundred
+   lines up, where that IS the right callee. The two ROM functions differ only
+   on angles that wrap, so every caller that gates a state change on the
+   arrival flag could stall: ApproachLinear2 turns the long way round and, when
+   the crossing lands through the s16 wrap, never reports arrival at all. That
+   is the SignPost read loop turning the player forever instead of opening its
+   message box (sub-state 2, step 0x800, target = sign yaw + 0x8000: any sign
+   placed within +/-0x800 of yaw 0 hangs for 25% to 99.95% of approach angles).
+   156 src/ TUs reach ApproachLinear through this face. */
+#ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of ApproachLinear(short&,short,short), so once the body forwards to that method -- as it must, the ApproachLinear2 call it used to make is the SignPost turn-forever bug -- the face calls itself on GCC. It was only safe on Linux while it called the WRONG function. Keep the converter on MSVC; on Linux bind to the real src/ TU. */
 extern "C" int _Z14ApproachLinearRsss(short *x, short target, short step)
-{ return ApproachLinear2(*x, target, step); }
+{ return ApproachLinear(*x, target, step); }
+#else
+extern "C" int _Z14ApproachLinearRsss(short *x, short target, short step);  /* Linux: real symbol from src/ */
+#endif /* _WIN32 */
 #ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
 extern "C" int _ZN6Player15IsCollectingCapEv(char *self)
 { return ((Player *)self)->Player::IsCollectingCap(); }

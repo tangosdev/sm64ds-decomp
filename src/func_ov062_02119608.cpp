@@ -2,7 +2,7 @@
 // @symbol func_ov062_02119608
 // recovered name: Koopa_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
-/* daNknk_c::OnAimedAtWithEgg - recovered from vtable slot identity */
+/* daNknk_c::OnAimedAtWithEgg - verified 2004/b56 byte-match (ov062), strict-reloc */
 extern "C" int func_ov062_02119608(void *c) {
     unsigned short v = *(unsigned short*)((char*)c + 0xc);
     int r;

@@ -1,7 +1,7 @@
 // @symbol func_ov081_021261b8
 // recovered name: MrBlizzard_Kill
 /* recovered: renamed to Class_Method */
-/* daSnowman_c::Kill - recovered from vtable slot identity */
+/* daSnowman_c::Kill - verified 2004/b56 byte-match (ov081), strict-reloc */
 int func_ov081_021261b8(char *p)
 {
     *(int *)(p + 0x388) = 0;

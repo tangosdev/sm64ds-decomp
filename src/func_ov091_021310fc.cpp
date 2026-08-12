@@ -4,7 +4,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Platform.h"
 /* recovered: renamed to Class_Method */
-/* daObjRotateUpdownLift_c::OnHitByMegaChar - recovered from vtable slot identity */
+/* daObjRotateUpdownLift_c::OnHitByMegaChar - verified 2004/b56 byte-match (ov091), strict-reloc */
 extern "C" {
 extern void _ZN6Player16IncMegaKillCountEv(void*);
 extern void func_02012694(int a, void* b);

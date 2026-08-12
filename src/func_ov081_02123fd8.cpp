@@ -2,7 +2,7 @@
 // @symbol func_ov081_02123fd8
 // recovered name: Spindrift_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
-/* daHuwa_c::OnTurnIntoEgg - recovered from vtable slot identity */
+/* daHuwa_c::OnTurnIntoEgg - verified 2004/b56 byte-match (ov081), strict-reloc */
 extern "C" {
 extern int _ZN6Player15IsCollectingCapEv(void *p);
 extern void _ZN6Player20RegisterEggCoinCountEjbb(void *p, unsigned int a, char b, char c);

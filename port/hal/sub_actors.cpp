@@ -80,8 +80,8 @@ int _ZN7Minimap8BehaviorEv(void *self);
    dMap_c is the Minimap's -- the ROM class names, which is what the matched
    constructors write, rather than the config names _ZTV8dMeter_c sits under. */
 void *_ZTV7dBase_c[18];
-void *_ZTV8dMeter_c[18];
-void *_ZTV6dMap_c[18];
+void *_ZTV8dMeter_c[18];   /* vtspan: _ZTV3HUD */
+void *_ZTV6dMap_c[18];   /* vtspan: _ZTV7Minimap */
 
 const char *port_actor_class_name(unsigned id);
 void port_scene_canary(const char *where);

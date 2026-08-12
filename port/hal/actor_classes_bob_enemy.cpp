@@ -45,6 +45,7 @@ void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
 int _ZN5Actor14BeforeBehaviorEv(void *self);               /* slot 7  */
 int _ZN5Actor12BeforeRenderEv(void *self);                 /* slot 10 */
 int _ZN5Actor13OnYoshiTryEatEv(void *self);                /* slot 18 */
+int _ZN5Actor16OnAimedAtWithEggEv(void *self);             /* slot 29 default */
 /* ...and Actor's own tail, slots 20 through 28. Every one is a two-line ROM
    body: Virtual50 answers VS_FAIL and the eight combat hooks do nothing, which
    is what a class that does not care about being hit inherits. */
@@ -57,6 +58,7 @@ void _ZN5Actor8OnPushedERS_(void *self, void *o);          /* slot 25 */
 void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
 void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
 void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
+void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -86,7 +88,7 @@ static void e31_trap_report(void *self, int slot)
 #define E31_TRAP(n) \
     static int __fastcall e31_trap##n(void *s, void *) \
     { e31_trap_report(s, n); return 0; }
-E31_TRAP(13) E31_TRAP(14) E31_TRAP(16) E31_TRAP(17) E31_TRAP(19) E31_TRAP(30)
+E31_TRAP(13) E31_TRAP(14) E31_TRAP(16) E31_TRAP(17) E31_TRAP(30)
 #undef E31_TRAP
 
 static int __fastcall e31_binit(void *s, void *)
@@ -117,6 +119,18 @@ static int __fastcall e31_yoshi(void *s, void *)
 { return _ZN5Actor13OnYoshiTryEatEv(s); }
 static int __fastcall e31_v50(void *s, void *)
 { return _ZN5Actor9Virtual50Ev(s); }
+/* slot 29, Actor::OnAimedAtWithEgg -- the INHERITED default for every class in
+   this gate that has no egg-aim body of its own. Read the ROM tables + 0x74
+   with relocs applied (_ZTV10ChainChomp, _ZTV13KoopaTheQuick, _ZTV9KoopaFlag,
+   _ZTV11BobOmbBuddy, _ZTV15ChainChompFence, _ZTV11daObjPile_c) and slot 29
+   lands on arm9 0x02010124, Actor::OnAimedAtWithEgg -- the same default bbh's
+   bbh_aimed and painting's pt_aimed seat. It returns the egg auto-aim lock-on
+   radius (81920 == 20.0 in 20.12); the caller reads it thiscall (this in ecx,
+   no stack args, ret 0), so this veneer forwards ecx and cleans nothing. The
+   three classes with their own body (BobOmb, Goomba, KingBobOmb) overwrite it
+   below; the six without inherit this, where a trap used to sit. */
+static int __fastcall e31_aimed(void *s, void *)
+{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
 static int __fastcall e31_pounded(void *s, void *, void *o)
 { _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall e31_atk1(void *s, void *, void *o)
@@ -133,6 +147,14 @@ static int __fastcall e31_mega(void *s, void *, void *p)
 { _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall e31_under(void *s, void *, void *o)
 { _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+/* slot 19, OnTurnIntoEgg(Player &player): the caller PUSHES the player, so the
+   three-parameter veneer pops it. The ROM reloc at each of these tables + 0x4c
+   lands on arm9 0x02010154, Actor::OnTurnIntoEgg (a tail-call veneer to
+   KillAndTrackInDeathTable). Seating it lets Yoshi swallow-and-respawn as the
+   ROM does; trapping it froze the actor forever. Classes with their OWN egg
+   body (BobOmb, Goomba) override this slot below. */
+static int __fastcall e31_turn_egg(void *s, void *, void *p)
+{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
 
 /* The shared half of a 31-slot table: Actor's four Before/After pairs,
    ActorBase::OnHeapCreated, Actor::OnYoshiTryEat, Virtual50 and the eight
@@ -155,7 +177,7 @@ static void ac31_fill_shared(void **vt)
     vt[16] = (void *)e31_trap16;
     vt[17] = (void *)e31_trap17;
     vt[18] = (void *)e31_yoshi;
-    vt[19] = (void *)e31_trap19;
+    vt[19] = (void *)e31_turn_egg;
     vt[20] = (void *)e31_v50;
     vt[21] = (void *)e31_pounded;
     vt[22] = (void *)e31_atk1;
@@ -165,7 +187,8 @@ static void ac31_fill_shared(void **vt)
     vt[26] = (void *)e31_cannon;
     vt[27] = (void *)e31_mega;
     vt[28] = (void *)e31_under;
-    vt[29] = (void *)e31_trap19;   /* overwritten by every class here */
+    vt[29] = (void *)e31_aimed;    /* Actor::OnAimedAtWithEgg, the ROM default;
+                                      classes with their own body override it */
     vt[30] = (void *)e31_trap30;
 }
 
@@ -460,13 +483,18 @@ void *_ZN10ChainChompD1Ev(void *self);
 void *_ZN10ChainChompD0Ev(void *self);
 void *_ZTV10ChainChomp[31];
 
+void _ZN8Platform4KillEv(void *self);                   /* slot 31 */
 int _ZN15ChainChompFence13InitResourcesEv(void *self);  /* face: below */
 int _ZN15ChainChompFence8BehaviorEv(void *self);        /* face: below */
 int _ZN15ChainChompFence6RenderEv(void *self);          /* host copy */
 int _ZN15ChainChompFence16CleanupResourcesEv(void *self); /* face: below */
 int *_ZN15ChainChompFenceD1Ev(int *self);
 int *_ZN15ChainChompFenceD0Ev(int *self);
-void *_ZTV15ChainChompFence[31];
+/* THIRTY-TWO, not 31: the fence is a Platform subclass (ov014 0x021148b0) and
+   its slot 31 is Platform::Kill. Thirty-one is the plain Actor width. dsd left
+   an ambiguous symbol at word 1, so the next-symbol bound reads 1 here and the
+   reloc run is what says 32. */
+void *_ZTV15ChainChompFence[32];
 }
 
 static int __fastcall cc_init(void *s, void *)
@@ -511,6 +539,8 @@ static int __fastcall ccf_behavior(void *s, void *)
 static int __fastcall ccf_render(void *s, void *)
 { port_actor_render_probe("CHAIN_CHOMP_FENCE", (char *)s + 0xd4);
   return _ZN15ChainChompFence6RenderEv(s); }
+static int __fastcall ccf_kill(void *s, void *)
+{ _ZN8Platform4KillEv(s); return 0; }
 static int __fastcall ccf_d1(void *s, void *)
 { return (int)(size_t)_ZN15ChainChompFenceD1Ev((int *)s); }
 static int __fastcall ccf_d0(void *s, void *)
@@ -528,6 +558,9 @@ extern "C" void hal_fill_chain_chomp_fence_vtable(void)
     vt[9] = (void *)ccf_render;
     vt[16] = (void *)ccf_d1;
     vt[17] = (void *)ccf_d0;
+    /* slot 31, the Platform tail; the fence does not override it. pile_kill is
+       the same one-line forward to _ZN8Platform4KillEv the stump takes. */
+    vt[31] = (void *)ccf_kill;
 }
 
 // ============================================================================
@@ -672,7 +705,10 @@ extern "C" void hal_fill_koopa_the_quick_vtable(void)
 //
 // He overrides two of Actor's tail slots as well as the usual six: 12
 // (OnPendingDestroy, a four-byte body) and 29 (OnAimedAtWithEgg). Slots 18 and
-// 19 stay Actor's, so Yoshi cannot swallow him.
+// 19 stay Actor's: the ROM reloc at his table + 0x4c lands on arm9 0x02010154,
+// Actor::OnTurnIntoEgg (the swallow-and-track handler), so keeping the default
+// is what lets Yoshi swallow him and have him respawn, as the ROM does.
+// ac31_fill_shared seats that default (e31_turn_egg).
 //
 // HIS STATE IS A POINTER, not an index -- +0x420 holds the address of a
 // two-PMF record and eighteen of them live in ov078's bss. Both dispatchers

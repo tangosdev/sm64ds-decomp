@@ -346,7 +346,10 @@ src/_ZN5Actor15HugeLandingDustEb.c
 src/_ZN5Actor11LandingDustEb.c
 src/_ZN5Actor13LandingDustAtER7Vector3b.cpp
 src/_ZN5Enemy24AngleAwayFromWallOrCliffER12WithMeshClsnRs.cpp
-src/func_ov084_02129cf4.c
+# func_ov084_02129cf4: r0-passthrough. Calls Actor::ClosestPlayer() with no
+# argument (this rode ARM r0). HOST COPY passes `c` explicitly at
+# port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp. Byte-locked src unchanged.
+# src/func_ov084_02129cf4.c
 # One ov074 body: the goomba's knocked-back state asks the GOOMBOSS overlay for
 # a launch vector. ov074 is not mounted -- this is CODE only, and the function
 # reads nothing out of its own overlay's data.

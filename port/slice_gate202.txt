@@ -1,0 +1,45 @@
+# Gate 202: CLOCK_HAND_SHORT (292) + CLOCK_HAND_LONG (293) + CLOCK_PENDULUM
+# (294), ov013 (level 5, the castle second floor's clock-painting furniture).
+# Per-symbol ov013 mount (port/ov013_syms.txt) joining the existing whole
+# level mount. Full slot derivation, the mandatory window-alias check, the
+# closure verdict (castle2-scope's "generic stubs" claim is stale -- every
+# own slot is matched src) and dsd's OnYoshiTryEat-vs-D0 decoy are all in
+# port/ov013_syms.txt's own header. The fill is hal/actor_classes_ov013.cpp.
+#
+# DROPPED from this slice, host thunks instead (the gate-199/200 treatment):
+#   - src/func_ov013_021111a0.c / src/func_ov013_021111d0.c (Pendulum's own
+#     D1/D0 -- both store the own table then run Model +0xd4 / Actor::D2;
+#     D0 also frees on the game heap via the "G0"/"VT0" resolver names the
+#     host cannot link)
+#   - src/_ZN22ClockPaintingHandShortD1Ev.cpp (a real MSVC destructor over
+#     local struct decls, unlinkable against the host seams) /
+#     src/_ZN22ClockPaintingHandShortD0Ev.c (stores _ZTV12daObjClock_c)
+# All four stay byte-locked in src/ as the matched proof; the thunks spell
+# the same member chain, read out of the two matched D0 bodies.
+#
+# BOTH Renders ride FROM SRC: plain-Model slot-5 bare-call shadows over
+# +0xd4 (_ZTV5Model[5] is dual-filled, the Tree/ov072/l7 precedent), NOT
+# the ModelAnim collision.
+#
+# CLOCK_PENDULUM's factory + own slots (all extern-C func_ov013 TUs)
+src/ClockPaintingPendulum_Spawn.c
+src/func_ov013_0211133c.cpp
+src/func_ov013_02111214.c
+src/func_ov013_021112a8.c
+src/func_ov013_02111280.cpp
+# the shared matrix helpers (Behavior/Init tails; 02111238 is the
+# pendulum's, 02111430 the hands' -- byte-identical shapes, both matched)
+src/func_ov013_02111238.c
+src/func_ov013_02111430.c
+# CLOCK_HAND factories + the shared class's own slots (real C++ methods
+# against ClockPaintingHandShort.h, faced in the gate file)
+src/ClockPaintingHandShort_Spawn.c
+src/ClockPaintingHandLong_Spawn.c
+src/_ZN22ClockPaintingHandShort13InitResourcesEv.cpp
+src/_ZN22ClockPaintingHandShort16CleanupResourcesEv.cpp
+src/_ZN22ClockPaintingHandShort8BehaviorEv.cpp
+src/_ZN22ClockPaintingHandShort6RenderEv.cpp
+# ---- the two self-contained SharedFilePtr sinits (three SFPs total, no
+# PMF table, confirmed by reading their bodies) ----
+src/__sinit_ov013_021116b8.c
+src/__sinit_ov013_021116f8.c

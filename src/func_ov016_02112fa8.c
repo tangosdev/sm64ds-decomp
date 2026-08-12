@@ -3,7 +3,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjKi_Ita_c::InitResources - recovered from vtable slot identity */
+/* daObjKi_Ita_c::InitResources - verified 2004/b56 byte-match (ov016), strict-reloc */
 
 int func_ov016_02112fa8(void *self)
 {

@@ -5,7 +5,7 @@
 #include "decl_MovingCylinderClsn.h"
 #include "decl_common.h"
 /* recovered: vtable identified, renamed to Class_Method */
-/* daBar_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* daBar_c::OnYoshiTryEat - verified 2004/b56 byte-match (ov002), strict-reloc */
 extern void *G0;
 int *func_ov002_020b0600(int *t)
 {

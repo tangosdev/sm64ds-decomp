@@ -7,6 +7,13 @@
 //
 // Base-class vtable symbols the ctor chain installs and then overwrites
 // (never dispatched between installs) are plain storage.
+/* PORT_ALIGN / PORT_GROUPED_DECL live here. The Linux build force-includes
+   this header from CMake, so a TU using those macros compiles there without
+   naming it -- but MSVC never gets the force-include, so the include has to
+   be explicit or the Windows build fails on an undefined macro. The header is
+   include-guarded and its keyword shims are inside #ifndef _MSC_VER, so this
+   is inert on Windows beyond the two macro definitions. */
+#include "port_msvc_compat.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -52,8 +59,16 @@ static int __fastcall sl_heap(void *self, void *)
         fprintf(stderr, "FATAL: ArrowSignRight vtable slot %d trap\n", n); \
         abort(); }
 ATRAP(13) ATRAP(14) ATRAP(16) ATRAP(17)
+/* The interaction tail. _ZTV14ArrowSignRight is a 32-slot Platform table in
+   the ROM (ov098 0x0213c3d8; the next-symbol bound reads 23 and is wrong),
+   and this array was [20], so a tail dispatch read past the end. The registry
+   fill in hal/actor_classes_bob_world.cpp writes real bodies over 18..31 for
+   the game; these traps are what the gate-9 smoke -- which builds this table
+   and never runs the registry -- gets instead of adjacent memory. */
+ATRAP(18) ATRAP(19) ATRAP(20) ATRAP(21) ATRAP(22) ATRAP(23) ATRAP(24)
+ATRAP(25) ATRAP(26) ATRAP(27) ATRAP(28) ATRAP(29) ATRAP(30) ATRAP(31)
 
-extern "C" void *_ZTV14ArrowSignRight[20] = {
+extern "C" void *_ZTV14ArrowSignRight[32] = {
     (void *)sl_init,     /* 0  InitResources */
     (void *)sl_binit,    /* 1  BeforeInitResources */
     (void *)sl_ainit,    /* 2  AfterInitResources */
@@ -70,12 +85,24 @@ extern "C" void *_ZTV14ArrowSignRight[20] = {
     (void *)a_trap13, (void *)a_trap14,
     (void *)sl_heap,     /* 15 OnHeapCreated */
     (void *)a_trap16, (void *)a_trap17,
-    0, 0,
+    (void *)a_trap18, (void *)a_trap19,
+    /* 20..30 Actor's own interaction list, 31 the sign's own Kill (ov098
+       0x02137ccc). The registry fill seats them; until it runs they trap. */
+    (void *)a_trap20, (void *)a_trap21, (void *)a_trap22, (void *)a_trap23,
+    (void *)a_trap24, (void *)a_trap25, (void *)a_trap26, (void *)a_trap27,
+    (void *)a_trap28, (void *)a_trap29, (void *)a_trap30, (void *)a_trap31,
 };
 
 // Base vtables the ctor chain installs transiently: storage only.
 extern "C" {
-void *_ZTV8Platform[20];   /* ov002 0x0210ae38, dBgActor_c in the ROM's RTTI */
+/* ov002 0x0210ae38, dBgActor_c in the ROM's RTTI. THIRTY-TWO words: 18..30
+   are Actor's own list and 31 is Platform::Kill. It was [20], so a Platform
+   destructor that dispatched anything past 19 while this vptr was installed
+   read the next symbol. hal_fill_platform_vtable (hal/actor_classes.cpp)
+   fills it now, the same contents it gives _ZTV10dBgActor_c -- the two host
+   arrays stand in for the SAME ROM table and only differ in which name a
+   destructor TU spells. */
+void *_ZTV8Platform[32];
 int data_0208e4b8[20];   /* ActorBase-era vtable-ish install in Actor ctor */
 /* _ZTV5Actor, the base Actor vtable. 31 slots (the full Actor table, not the
    20-slot ActorBase shape): STAR_CAMERA (gate 90) is a bare Actor that leaves
@@ -98,7 +125,10 @@ void _ZN9ActorBase9SceneNodeC1Ev(void *node);
 int func_0203b438(void *a, void *b, void *c);
 int func_02043810(void *p);
 
-int data_02099edc[8];           /* the transient ActorBase vtable install */
+/* the transient ActorBase vtable install. EIGHTEEN words -- ActorBase's own
+   virtual list runs 0..17 (arm9 0x02099edc) -- and this was [8], so a ctor-time
+   dispatch of anything from OnPendingDestroy up read past the end. */
+int data_02099edc[18];
 int data_02099e70[1];           /* next unique actor id */
 int data_020a4b60[1];
 unsigned short data_020a4b54;   /* PENDING ACTOR ID (the spawn context) */
@@ -345,7 +375,10 @@ int data_0209f34c;
    the derived class's own factory two lines later. The same treatment
    _ZTV5Actor and _ZTV12ActorDerived already have: real storage so the store
    lands somewhere, never dispatched through. */
-void *data_ov002_021081e4[20];
+/* 31 words, not 20: it is a full Actor table (ov002 0x021081e4) and the last
+   slot is Actor::OnAimedAtWithEggReturnVec. Storage only, but a short array
+   is a short array. */
+void *data_ov002_021081e4[31];
 
 unsigned char data_02092128[0x40];
 /* 0x0209f318 is a Camera POINTER, not storage -- every declaration of it

@@ -69,5 +69,11 @@ src/func_ov064_021175cc.cpp
 src/__sinit_ov064_0211ae00.c
 src/__sinit_ov064_0211aee0.c
 src/__sinit_ov064_0211b0e4.c
-src/_ZN5Actor15IsPlayerInRangeE5Fix12IiES1_S1_i.c
-src/_ZN5Actor15IsPlayerInRangeERK7Vector3i.c
+# _ZN5Actor15IsPlayerInRangeE5Fix12IiES1_S1_i: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
+# (wired in CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument
+# and relies on `this` being live in ARM r0; cdecl drops it, so ClosestPlayer measures
+# from garbage+0x5c. That is the RABBIT fault in crash 9e164e92 (read at 0x0000005c).
+# _ZN5Actor15IsPlayerInRangeERK7Vector3i: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
+# (wired in CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument
+# and relies on `this` being live in ARM r0; cdecl drops it, so ClosestPlayer measures
+# from garbage+0x5c. That is the RABBIT fault in crash 9e164e92 (read at 0x0000005c).

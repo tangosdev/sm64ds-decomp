@@ -1,7 +1,7 @@
 // @symbol func_ov002_020b067c
 // recovered name: daBar_c_InitResources
 /* recovered: renamed to Class_Method */
-/* daBar_c::InitResources - recovered from vtable slot identity */
+/* daBar_c::InitResources - verified 2004/b56 byte-match (ov002), strict-reloc */
 extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(char* c, int a, int b, int d, int e);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(char* thiz, char* actor, int b, int d, unsigned int e, unsigned int f);
 

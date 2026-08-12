@@ -4,7 +4,7 @@
 #include "daObjPile_c.h"
 // recovered name: daObjPile_c_OnGroundPounded
 /* recovered: renamed to Class_Method */
-/* daObjPile_c::OnGroundPounded - recovered from vtable slot identity */
+/* daObjPile_c::OnGroundPounded - verified 2004/b56 byte-match (ov091), strict-reloc */
 extern "C" {
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* v);
 extern void func_ov091_021334b8(void* c, int f);

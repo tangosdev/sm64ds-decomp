@@ -41,6 +41,13 @@
 // come from WithMeshClsn's own tracking through the hosted sphere pass. No
 // harness stands in for anything in the physics loop.
 //
+// Interactive keyboard and mouse only act while this window is the FOREGROUND
+// one. Alt-tab away and the stick and the buttons go to neutral that frame;
+// come back and whatever was still held has to be released before it counts
+// again, so no press made in another window arrives here late. None of the
+// scripted input paths go through that gate: a selftest, SM64DS_PROBE_INPUT and
+// the SM64DS_SELFTEST_* probes drive a hidden, unfocused run exactly as before.
+//
 // Env: SM64DS_LEGACY_BOOT=1 the pre-gate-14 harness staging instead of the
 //                           level's own boot (hand-built spawn context, KCL
 //                           mounted by hand, no entrance record)
@@ -102,6 +109,11 @@
 //      SM64DS_BONE_PROBE=1..3  the per-frame bone rotation dump; =3 checks
 //                           every bone against an independent shortest-path
 //                           reference. See the probe for what it measured.
+//      SM64DS_INPUT_NOFOCUSGATE=1  read the interactive keyboard whether this
+//                           window has focus or not, the way it worked before
+//                           the gate. Nothing in the tree sets it. It is here
+//                           so a harness that genuinely wants background key
+//                           reads has a documented switch instead of a patch.
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
@@ -120,6 +132,9 @@
    `WinApi` function-pointer table (SDL-backed), and QPC/Sleep. The Win32
    dynamic-loader block that follows is compiled ONLY on _WIN32. */
 #include "hal/host_platform_linux.h"
+/* readlink("/proc/self/exe") in port_startup_error_path, the stand-in for
+   GetModuleFileNameA. */
+#include <unistd.h>
 static WinApi W;
 /* XInput has no SDL analog wired in this lane; keyboard is the input floor.
    A null pad pointer makes every `XInputGetState_ && ...` guard fall through. */
@@ -252,6 +267,7 @@ static bool winapi_load(void)
 #define PORT_FAULT_PROBE_STRONG_GLOBALS
 #include "fault_probe.h"
 #include "overlay_font.h"
+#include "hal/host_settings.h"   /* settings.json, the launcher's file */
 
 typedef unsigned int u32;
 
@@ -408,6 +424,14 @@ extern int data_0209f43c[];          /* the Clipper (hal/camera_bridges) */
 extern int data_020a4b78[];          /* the behaviour processing list */
 int _ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh(void *clipper, void *pos,
                                                     int clip, unsigned char *h);
+/* the two matrix calls VirtualDoor::Behavior itself uses to put the Player in
+   an exit's local frame and to take a local point back out to the world */
+void MulVec3Mat4x3(const void *in, const void *m, void *out);
+void InvMat4x3(const void *in, void *out);
+/* three of the Camera's nineteen states, for the exit probe: the one
+   Camera::InitResources boots into, the one the ROM's own "follow him again"
+   (func_0200d5c0) picks, and the one Camera::LookAtExit parks in. */
+extern int data_0209b008[], data_0209b078[], data_0209b0f8[];
 extern void *data_0209f318;          /* the Camera singleton */
 extern signed char data_02092120;    /* currently shown area, -1 = none */
 extern unsigned char data_0209f250;  /* local player index */
@@ -456,6 +480,11 @@ unsigned _ZN5Stage11GetSkyboxIDEv(void);  /* the LVL_Overlay's skybox bits */
 extern int data_0209f320;                 /* the Stage's ModelComponents */
 int port_stage_path_guard(void *player);
 void port_stage_a2_seat(void);
+/* in-memory save state (hal/lk6_savestate.cpp): F8/F9 and the debug menu.
+   save/load return 1 when they acted, has() drives the menu label. */
+int lk6_savestate_save(void);
+int lk6_savestate_load(void);
+int lk6_savestate_has(void);
 /* the actor registry and the ROM's own processing lists (hal/actor_registry) */
 void port_actor_tick(void);          /* phases 4/2/3: cleanup, init, behaviour */
 /* gate 31: the level handoff (hal/level_change.cpp). port_level_change_poll
@@ -501,6 +530,9 @@ void port_input_probe_trace_msg(int frame);
 void port_input_probe_trace_cannon(int frame);
 void port_input_probe_buddy_trigger(int frame);
 void port_input_probe_sign_trigger(int frame);
+void port_probe_alcheck(void);
+void port_probe_sign_yaw(void);
+void port_probe_chomp(int frame);
 /* the scene-fade request the title-select hands off with. Recorded by the port
    in hal/level_change.cpp and acted on by this frame loop. */
 int port_scene_fade_pending(int *sceneId);
@@ -515,6 +547,12 @@ void port_particle_counts(int *systems, int *particles);
 void port_actor_scene_pass(void);    /* phase 1: scene-tree housekeeping */
 void port_actor_census(void);
 void port_actor_lists_probe(void);
+/* the [lvl-perf] level-entry spans (hal/level_boot.cpp). The harness owns the
+   census and boot-dump brackets and the emit on the direct boot; the warp
+   path's brackets and emit live in hal/level_change.cpp. */
+double port_lvlperf_now(void);
+void port_lvlperf_note(int span, double ms);
+void port_lvlperf_emit(void);
 /* gate 35, the course loop (hal/star_flow.cpp): the boot seat plus one probe
    per thing the gate has to be able to show moving. */
 void port_course_seat(void);
@@ -550,6 +588,9 @@ void port_bob_spawn_report(void);
 /* the bottom screen (hal/sub_screen.cpp): the OAM lifecycle, the engine-B
    scan-out and the corner panel it lands in. TAB toggles the panel. */
 void hal_sub_screen_init(void *hwnd, int zoom);
+/* the focus gate (hal/sub_screen.cpp): 1 when this window is the foreground
+   one, so an interactive key read can be trusted to be meant for this program */
+int hal_window_focused(void);
 void hal_sub_screen_frame_begin(void);
 void hal_sub_screen_present(unsigned int *dst, int w, int h);
 void hal_sub_screen_probe(void);
@@ -570,6 +611,82 @@ extern "C" void *data_0209f324;   /* WIPES, the seven-wipe array */
 extern "C" signed char data_02092110;    /* the staged next level */
 extern "C" unsigned char data_0209f268;  /* the staged next entrance */
 extern "C" unsigned char data_0209f26c;  /* why we are leaving (2 = death) */
+
+/* ---- THE EXIT PROBE: the painting warp, reproducible without a keyboard ----
+   Two players walked into the Snowman's Land painting on castle_2f and the
+   build does not host Snowman's Land, so the level change was declined and
+   they were left with no control inside the wall. Reproducing that by hand
+   means holding W at the right painting for the right number of frames; this
+   makes it one env var and one frame number.
+
+   SM64DS_EXIT_PROBE=1 dumps the level's EXIT actors (349, class VirtualDoor)
+   once the level is up: index, world position, which level the record sends
+   you to, and whether the record is a WALL painting (rotX 0, the exit that
+   seeds the pull-in counter) or a tilted FLOOR hole (rotX != 0, the exit that
+   fires the load and the wipe immediately). The index is what ENTER takes.
+
+   SM64DS_EXIT_ENTER=<index>[,<frame>] walks the Player into that exit. The
+   ROM's trigger is a SIGN CHANGE of the Player's Z in the exit's own local
+   frame while he is inside the box, so the probe puts him in the box on the
+   near side for one frame and just past the plane on the next -- the two
+   frames a walk produces, through the same VirtualDoor::Behavior test. It
+   writes nothing but the Player's position, and never touches the exit. */
+static char *port_exit_nth(int idx)
+{
+    int n = 0;
+    for (int *node = (int *)(size_t)data_020a4b78[0]; node;
+         node = (int *)(size_t)node[1]) {
+        char *o = (char *)(size_t)node[2];
+        if (!o || *(unsigned short *)(o + 0xc) != 349)
+            continue;
+        if (n++ == idx)
+            return o;
+    }
+    return 0;
+}
+
+static void port_exit_dump(void)
+{
+    int n = 0;
+    for (int *node = (int *)(size_t)data_020a4b78[0]; node;
+         node = (int *)(size_t)node[1]) {
+        char *o = (char *)(size_t)node[2];
+        if (!o || *(unsigned short *)(o + 0xc) != 349)
+            continue;
+        const unsigned p1 = *(unsigned *)(o + 8);
+        const int rotX = *(short *)(o + 0x8c);
+        fprintf(stderr, "[exit] %2d at (%d,%d,%d) -> level %d entrance %d  "
+                "rotX %d rotY %d  box x+-%d y0..%d  %s\n",
+                n, *(int *)(o + 0x5c) >> 12, *(int *)(o + 0x60) >> 12,
+                *(int *)(o + 0x64) >> 12,
+                (int)(signed char)(p1 >> 24), (int)((p1 >> 16) & 0xff),
+                rotX, *(short *)(o + 0x8e),
+                *(int *)(o + 0x80) >> 12, *(int *)(o + 0x84) >> 12,
+                rotX ? "FLOOR HOLE (tilted: loads at once)"
+                     : "WALL PAINTING (pull-in)");
+        ++n;
+    }
+    fprintf(stderr, "[exit] %d exits on this level\n", n);
+}
+
+/* Put `player` at local (0, y, z) in exit `ex`'s frame, or -- with `beside` --
+   one box-width to the side of it, where the exit's own x test turns him away
+   but its Behavior still records where he is. */
+static void port_exit_place(char *ex, char *player, int z, int beside)
+{
+    int local[3], inv[12];
+    MulVec3Mat4x3(player + 0x5c, ex + 0xd4, local);
+    local[0] = beside ? *(int *)(ex + 0x80) * 2 : 0;
+    /* local y 0 is the bottom of the trigger box, which for a painting is
+       where it meets the floor -- a walking player's own height. Snapping to
+       the middle of the box instead drops him in from mid-air and every
+       reading afterwards has a fall in it that a walk does not. */
+    if (local[1] < 0 || local[1] > *(int *)(ex + 0x84))
+        local[1] = 0;
+    local[2] = z;
+    InvMat4x3(ex + 0xd4, inv);
+    MulVec3Mat4x3(local, inv, player + 0x5c);
+}
 
 #ifdef NTR_HIRES
 static const int ZOOM = 1;
@@ -1067,6 +1184,8 @@ enum {
     MENU_OVERLAY,
     MENU_CAMERA,
     MENU_RECORDER,
+    MENU_SAVESTATE,     /* enter: snapshot the game into the in-memory slot */
+    MENU_LOADSTATE,     /* enter: restore the in-memory slot (F9's twin) */
     MENU_COUNT
 };
 
@@ -1190,6 +1309,10 @@ static void menu_draw(ntr::Framebuffer &fb)
     snprintf(ln[MENU_CAMERA], sizeof ln[0], "camera            %s",
              cam_mode_name(cam_mode));
     snprintf(ln[MENU_RECORDER], sizeof ln[0], "recorder          %s", g_playlog);
+    snprintf(ln[MENU_SAVESTATE], sizeof ln[0], "save state        F8   %s",
+             lk6_savestate_has() ? "(slot in use, overwrite)" : "(slot empty)");
+    snprintf(ln[MENU_LOADSTATE], sizeof ln[0], "load state        F9   %s",
+             lk6_savestate_has() ? "(restore slot)" : "(no state saved)");
 
     for (i = 0; i < MENU_COUNT; ++i) {
         const int lw = (int)strlen(ln[i]) * OVL_ADVANCE * OVL_SCALE;
@@ -1378,9 +1501,133 @@ static void push_camera(const float eye_w[3], const float at_w[3])
    number; -1 is its weak fallback for harnesses without a frame loop. */
 extern "C" int port_last_frame = -1;
 
+/* The buffered stdout's last mile (see the setvbuf note in main). The exit
+   probe's RtlExitUserProcess detour ends every orderly exit in
+   NtTerminateProcess, which skips the CRT's own stream teardown -- measured
+   as the end-of-run census and the "selftest:" line simply missing from a
+   captured stdout. atexit callbacks run inside exit() BEFORE that detour
+   fires, so this one gets the buffer out on every return from main. */
+static void stdout_flush_atexit(void) { fflush(stdout); }
+
+/* The host program entry point (window + ntr bring-up + frame loop). It
+   name-collides with the ROM's boot spine src/main.c, which is the DS init
+   sequence and runs as its own decomp TU, not as this launcher shell. The
+   machine-read PORT_HOST_ABI tag sits directly above int main(void) below so
+   linkage.py's reason binder reaches it. */
+/* ---- startup_error.txt: the only channel a failed START has ----------------
+   A crash mid-session leaves crash.txt, a playlog and a report the player can
+   send. A failure BEFORE the window opens leaves none of that: the process
+   exits cleanly, so there is no dump, and the launcher only ever saw an exit
+   code. That is how the fixed-address failure in ntr/io.cpp reached us as four
+   lines of stderr and nothing else, and why one player could not start the game
+   at all with nothing on screen to say why.
+
+   So a startup failure writes one plain-language file next to the exe. The
+   launcher reads it after a non-zero exit and shows it (SM64DSLauncher's
+   MainForm), which is the same shape as the extraction failure path: the child
+   says what went wrong in words, the launcher is the thing with a window to put
+   them in. Raw Win32 and a static buffer, the same discipline crash.txt and
+   exit.txt keep, because this runs on a path where the process is already
+   known to be in trouble. */
+static void port_startup_error_path(char *path, unsigned cap)
+{
+#ifdef _WIN32
+    DWORD n = GetModuleFileNameA(0, path, cap);
+    while (n && path[n - 1] != 92 /* '\\' */)
+        --n;
+    lstrcpynA(path + n, "startup_error.txt", (int)(cap - n));
+#else
+    /* Same contract: the file sits next to the executable, so the launcher
+       finds it without being told where. /proc/self/exe is the Linux answer to
+       GetModuleFileNameA. If the readlink fails there is no exe directory to
+       speak of, so fall back to the working directory rather than write into
+       whatever partial path was left in the buffer. */
+    ssize_t n = readlink("/proc/self/exe", path, cap - 1);
+    if (n <= 0)
+        n = 0;
+    path[n] = 0;
+    while (n && path[n - 1] != '/')
+        --n;
+    snprintf(path + n, cap - (unsigned)n, "startup_error.txt");
+#endif
+}
+
+static void port_startup_error_clear(void)
+{
+    char path[MAX_PATH + 32];
+    port_startup_error_path(path, sizeof path);
+#ifdef _WIN32
+    DeleteFileA(path);
+#else
+    remove(path);
+#endif
+}
+
+static void port_startup_error_write(const char *text)
+{
+    char path[MAX_PATH + 32];
+    port_startup_error_path(path, sizeof path);
+#ifdef _WIN32
+    HANDLE f;
+    f = CreateFileA(path, GENERIC_WRITE, FILE_SHARE_READ, 0, CREATE_ALWAYS,
+                    FILE_ATTRIBUTE_NORMAL, 0);
+    if (f != INVALID_HANDLE_VALUE) {
+        DWORD wr;
+        WriteFile(f, text, (DWORD)lstrlenA(text), &wr, 0);
+        FlushFileBuffers(f);
+        CloseHandle(f);
+    }
+#else
+    /* Linux: plain stdio rather than five more Win32 stubs in the platform
+       shim. The raw-Win32 discipline the comment above describes is about
+       staying off the CRT on a process already in trouble on Windows, where
+       the CRT may be the thing that is broken; on Linux fopen is the base
+       layer, so there is nothing lower to drop to. Same file, same place. */
+    FILE *f = fopen(path, "wb");
+    if (f) {
+        fwrite(text, 1, strlen(text), f);
+        fflush(f);
+        fclose(f);
+    }
+#endif
+}
+
+/* Also say it on screen, for the player who double-clicked the exe instead of
+   using the launcher. user32 is loaded here rather than imported, for the same
+   reason winapi_load below does it: a static import chain maps the desktop heap
+   before main and that mapping can land in the DS ranges. By the time this runs
+   the reservation has already been decided, so loading it now costs nothing.
+   SM64DS_NO_DIALOG=1 suppresses the box for automated runs, which must never
+   block on a modal nobody is there to dismiss. */
+static void port_startup_error_show(const char *text)
+{
+    if (getenv("SM64DS_NO_DIALOG") || getenv("SM64DS_WINDOW_SELFTEST"))
+        return;
+#ifdef _WIN32
+    HMODULE u32;
+    int (WINAPI *mb)(HWND, LPCSTR, LPCSTR, UINT);
+    u32 = LoadLibraryA("user32.dll");
+    if (!u32)
+        return;
+    mb = (int(WINAPI *)(HWND, LPCSTR, LPCSTR, UINT))
+         GetProcAddress(u32, "MessageBoxA");
+    if (mb)
+        mb(0, text, "Super Mario 64 DS could not start", 0x10 /* MB_ICONERROR */);
+#else
+    /* Linux: no user32, and nothing to raise a modal with. The reason still has
+       to reach the player, and a startup failure means there is no window to
+       print into, so stderr is the whole channel. The env guards above are
+       checked first so an automated run stays silent on both platforms. */
+    fprintf(stderr, "Super Mario 64 DS could not start: %s\n", text);
+#endif
+}
+
 /* PORT_HOST_ABI: the host program entry point (window + ntr bring-up + frame
    loop). Name-collides with the ROM's boot spine src/main.c, which is the DS
-   init sequence and runs as its own decomp TU, not as this launcher shell. */
+   init sequence and runs as its own decomp TU, not as this launcher shell. The
+   host process needs its own main() to open the window and pump frames; the
+   ROM's void main(void) links as a decomp TU that the host boot path calls,
+   not as the process entry point. */
 int main(void)
 {
     /* fault_probe.h has been included here since gate 4 and was never armed,
@@ -1439,7 +1686,26 @@ int main(void)
        healthy [fx] boot line, which is this same stomp class again. */
     if (getenv("PORT_WATCH_TRACKER"))
         port_watch_words(&data_0209ee74, 1);
-    setvbuf(stdout, NULL, _IONBF, 0);
+    /* STDOUT IS FULLY BUFFERED, ON PURPOSE. It was unbuffered here for years,
+       and that made every printf its own blocking WriteFile against whatever
+       the sink is -- 2-6ms a line on a healthy console, worse on a degraded
+       one, forever if QuickEdit has a selection holding the console lock. A
+       level entry prints ~248 lines (the census, the spawn-skip lines, the
+       [clsn] CLPS dump), so the same 600-frame CCM selftest measured 2540ms
+       to a file, 7579ms to a console, and 22s to an undrained pipe. The 64KB
+       full buffer decouples the game loop from sink latency: the boot's
+       lines go out in ONE write at the fflush below the boot block, and the
+       frame loop flushes once per frame (one write, not hundreds).
+       What this does NOT buffer: stderr. Every FATAL, fault dump and trace
+       goes to stderr, which stays unbuffered (the flight recorder below
+       re-asserts that), so a hard crash still leaves the whole trail; the
+       most a fault can strand in this buffer is the current frame's stdout,
+       and orderly exits flush it through stdout_flush_atexit above (the CRT
+       teardown flush never runs here: the exit probe's detour terminates
+       first). */
+    static char stdout_buf[1 << 16];
+    setvbuf(stdout, stdout_buf, _IOFBF, sizeof stdout_buf);
+    atexit(stdout_flush_atexit);
     /* FLIGHT RECORDER (Tango's ask): every diagnostic this program
        writes to stderr -- unhosted states, spawn skips, fault dumps
        with registers and stack, the traces below -- lands in a
@@ -1471,7 +1737,40 @@ int main(void)
             fprintf(stderr, "[recorder] session start\n");
         }
     }
-    if (!ntr::io_init()) { fprintf(stderr, "io_init failed\n"); return 2; }
+    /* A stale file from an earlier run must never be read as this run's verdict.
+       Clear it before the decision, write it only if the decision goes badly. */
+    port_startup_error_clear();
+    if (!ntr::io_init()) {
+        /* THE FAILURE A PLAYER USED TO GET IN SILENCE. Three places now, all of
+           them cheap because none of it runs unless the start already failed:
+           the technical block goes to the log for us, the plain sentence goes
+           in a file for the launcher, and the same sentence goes on screen for
+           someone running the exe directly. */
+        fprintf(stderr, "io_init failed\n");
+        fputs(ntr::io_reserve_detail(), stderr);
+        {
+            const char *say = ntr::io_reserve_player_text();
+            if (say[0]) {
+                port_startup_error_write(say);
+                port_startup_error_show(say);
+            }
+        }
+        return 2;
+    }
+    /* Which stage actually won the fixed ranges, and how many passes it took.
+       One line, always, because "it wins more often now" is not a claim a log
+       can be read for afterwards, and the stage number is. 1 = the TLS callback
+       at process start, 2 = here in main, which is where it used to happen. A
+       stage 2 on a healthy machine means the early claim lost and the retry
+       rescued it, which is worth seeing in a player's log. */
+    fprintf(stderr, "[io] fixed ranges: stage %d, %u attempt(s), lost %02x\n",
+            ntr::io_reserve_stage_won(), ntr::io_reserve_attempts(),
+            ntr::io_reserve_lost_mask());
+    /* A start that SURVIVED a lost range still needs the record. Losing main
+       memory is not fatal, but it is the difference between two runs of the same
+       build and it is the shape a later mystery crash grows out of, so the same
+       block that a fatal loss prints goes in the log here too. */
+    if (ntr::io_reserve_lost_mask()) fputs(ntr::io_reserve_detail(), stderr);
     if (!winapi_load()) { fprintf(stderr, "winapi_load failed\n"); return 2; }
     pacer_begin();
 #ifdef PORT_ROM_CLEAN
@@ -1515,8 +1814,13 @@ int main(void)
        still accepted and is now a no-op. */
     const int real_boot = getenv("SM64DS_LEGACY_BOOT") == 0;
     const int boot_spawns = real_boot && getenv("SM64DS_BOOT_NOSPAWN") == 0;
-    if (real_boot)
+    if (real_boot) {
+        /* [lvl-perf] span 3: the boot-dump printf blocks, timed apart from
+           the boot so time-inside-printf is its own number */
+        const double t0 = port_lvlperf_now();
         port_level_probe();
+        port_lvlperf_note(3, port_lvlperf_now() - t0);
+    }
     /* SM64DS_MENU=1 opens the debug menu at boot, which is the only way to
        see it in a selftest frame: a selftest reads no live keys, so F5 never
        arrives. It pauses the tick like any other open menu. */
@@ -1574,7 +1878,11 @@ int main(void)
         }
         void *lvl = port_stage_a_boot(g_mc, boot_spawns);
         level_bmd = *(unsigned short *)((char *)lvl + 8);
-        port_stage_a_probe(g_mc);
+        {
+            const double t0 = port_lvlperf_now();
+            port_stage_a_probe(g_mc);
+            port_lvlperf_note(3, port_lvlperf_now() - t0);
+        }
         /* PORT_WATCH_FADER=1: who writes the INSTALLED fader's vtable
            pointer. LoadEntranceObjects installs it during this boot (the
            r0 ride-through, port/unmatched/LoadEntranceObjects.cpp), and
@@ -1595,9 +1903,16 @@ int main(void)
                Fired here, after the entrance made the player and before the
                census, so an env-spawned class is counted with the rest. */
             port_debug_spawn_env();
-            port_actor_census();
+            {
+                const double t0 = port_lvlperf_now();
+                port_actor_census();
+                port_lvlperf_note(2, port_lvlperf_now() - t0);
+            }
             port_actor_lists_probe();
         }
+        /* the direct boot's one [lvl-perf] line; a warp's comes from
+           hal/level_change.cpp at the end of the change */
+        port_lvlperf_emit();
     }
 
     void *player;
@@ -2029,12 +2344,57 @@ int main(void)
        through here and reads released -- the scripted probes
        (SM64DS_SELFTEST_* above and below) are the only input a selftest
        has. The pad and the mouse-look are gated the same way where they
-       are read. */
-    auto key_live = [&](int vk) { return !selftest && W.GetAsyncKeyState_(vk) < 0; };
+       are read.
+
+       SECOND GATE, focus: the same machine-global read meant that a player who
+       alt-tabbed and typed somewhere else kept walking Mario around, and that a
+       direction held at the moment they left stayed held forever.
+       hal_window_focused() is false whenever this window is not the foreground
+       one, and then every interactive key here reads RELEASED. That is also the
+       release: the pad words further down are rebuilt from these reads every
+       frame, so the frame focus goes away is the frame the stick and the
+       buttons go to neutral, with no separate teardown to keep in step.
+
+       Nothing a player pressed while away arrives late either. There is no
+       queue to replay -- these are level reads, not messages -- but a key still
+       physically down on the way back would otherwise read as a fresh press and
+       fire the edge latches (F1, F3, F4, the menu). So on the focus-regained
+       edge every key is marked STALE, and a stale key keeps reading released
+       until it is seen physically up. Pressing it again after that works
+       normally.
+
+       key_stale is indexed by virtual-key code, which is what every caller
+       passes and is 0..255 by definition; the bounds test is there because this
+       lambda is the one place that would turn a typo into a stray write. */
+    unsigned char key_stale[256] = {0};
+    int focus_was = 1;   /* launch focused = launch unchanged */
+    auto key_live = [&](int vk) -> int {
+        if (selftest) return 0;
+        if (!hal_window_focused()) return 0;
+        const int down = W.GetAsyncKeyState_(vk) < 0;
+        if ((unsigned)vk < 256) {
+            if (!down) { key_stale[vk] = 0; return 0; }
+            if (key_stale[vk]) return 0;
+        }
+        return down;
+    };
     int frame = 0;
     float cam_yaw = 0.0f;   /* camera heading around Mario, radians */
     float cam_pitch = 0.13f; /* camera tilt above level, radians (R/F) */
     const int trace_cam = getenv("SM64DS_TRACE_CAM") != 0;
+    /* Which way the camera turns when the player pushes a camera control to
+       the right, as a signed step on the camera's heading. -1 by default:
+       push right, pan right. settings.json's SwapCameraTurnDirection returns
+       +1, which is what this program did before. Read once at boot, like the
+       volume, so it takes effect the next time the player presses Play.
+
+       EVERY horizontal camera control below multiplies by this one value --
+       Q and E, the right stick, the bumpers, the mouse, and all three camera
+       modes -- so no two of them can end up disagreeing about which way is
+       right. See port/hal/host_settings.h for the measurement the default
+       comes from; the DS has none of these controls, so there was never a
+       hardware binding to be faithful to. */
+    const int cam_turn = host_camera_turn_sign();
     /* SM64DS_DECEL_PROBE=1 (under a selftest): hold the stick and the dash
        button until DECEL_RELEASE, then let go of both and log the horizontal
        speed every frame until it reaches zero. The point is the SHAPE of the
@@ -2070,6 +2430,10 @@ int main(void)
     hal_sub_screen_init(hwnd, ZOOM);
     hal_sub_screen_probe();
 
+    /* boot complete: everything the boot queued in the stdout buffer goes to
+       the sink here, in one write (see the setvbuf note above) */
+    fflush(stdout);
+
     static ntr::Framebuffer fb;
     MSG msg;
     for (;;) {
@@ -2082,6 +2446,16 @@ int main(void)
         }
         ph_begin(&t_frame);
         ph_begin(&t_phase);
+        /* the focus edge, read once a frame BEFORE any key is. Coming back,
+           every key starts stale, so whatever the player was holding in the
+           other window has to be released before this one will see it. Going
+           away needs no work: key_live is already returning released, which is
+           what empties the pad words below. */
+        if (!selftest) {
+            const int now = hal_window_focused();
+            if (now && !focus_was) memset(key_stale, 1, sizeof key_stale);
+            focus_was = now;
+        }
         {
             const int now = key_live(VK_F3);
             if (now && !overlay_edge) g_overlay_on = !g_overlay_on;
@@ -2101,6 +2475,25 @@ int main(void)
                 an_pivot_live = 0;   /* do not ease across it */
             }
             chr_edge = now;
+        }
+        /* F8 SNAPSHOTS the game, F9 RESTORES it. Their own edge latches, up
+           here at the top of the frame after the message drain and before this
+           frame's tick, which is the between-frames point the save state wants:
+           the previous tick is fully complete and nothing is mid-update. A load
+           with no prior save is a safe no-op (lk6_savestate_load says so and
+           does nothing). Deliberately outside the menu's held-mask below so
+           they work during live play whether or not the menu is open, and so
+           the menu never swallows them. */
+        {
+            static int save_edge, load_edge;
+            const int save_now = key_live(VK_F8);
+            const int load_now = key_live(VK_F9);
+            if (save_now && !save_edge) lk6_savestate_save();
+            if (load_now && !load_edge) {
+                if (lk6_savestate_load()) an_pivot_live = 0;  /* no ease across */
+            }
+            save_edge = save_now;
+            load_edge = load_now;
         }
         /* drain what the window procedure collected. Unconditionally, so a
            drag taken in DS-exact mode does not pile up and dump into the rig
@@ -2172,12 +2565,16 @@ int main(void)
             static unsigned menu_prev;
             unsigned held = 0;
             unsigned edge;
-            if (W.GetAsyncKeyState_(VK_F5) < 0)     held |= 1u << 0;
-            if (W.GetAsyncKeyState_(VK_UP) < 0)     held |= 1u << 1;
-            if (W.GetAsyncKeyState_(VK_DOWN) < 0)   held |= 1u << 2;
-            if (W.GetAsyncKeyState_(VK_LEFT) < 0)   held |= 1u << 3;
-            if (W.GetAsyncKeyState_(VK_RIGHT) < 0)  held |= 1u << 4;
-            if (W.GetAsyncKeyState_(VK_RETURN) < 0) held |= 1u << 5;
+            /* through key_live, not the raw read, so the menu is behind the
+               focus gate and the stale-key latch with everything else. Under a
+               selftest this block never runs at all, so routing it here changes
+               nothing an automated run sees. */
+            if (key_live(VK_F5))     held |= 1u << 0;
+            if (key_live(VK_UP))     held |= 1u << 1;
+            if (key_live(VK_DOWN))   held |= 1u << 2;
+            if (key_live(VK_LEFT))   held |= 1u << 3;
+            if (key_live(VK_RIGHT))  held |= 1u << 4;
+            if (key_live(VK_RETURN)) held |= 1u << 5;
             if (pad_live) {
                 if (pad.buttons & 0x0001) held |= 1u << 1;   /* d-pad up    */
                 if (pad.buttons & 0x0002) held |= 1u << 2;   /* d-pad down  */
@@ -2331,6 +2728,19 @@ int main(void)
                                     cam_mode_name(cam_mode));
                         }
                         break;
+                    case MENU_SAVESTATE:
+                        /* enter/right only: snapshot into the slot. Same call
+                           F8 makes; the menu pauses the tick, which is as safe
+                           a between-frames point as the top-of-loop latch. */
+                        if (edge & (1u << 5)) lk6_savestate_save();
+                        break;
+                    case MENU_LOADSTATE:
+                        /* enter/right only: restore the slot. A no-op with no
+                           saved state. */
+                        if (edge & (1u << 5)) {
+                            if (lk6_savestate_load()) an_pivot_live = 0;
+                        }
+                        break;
                     default:
                         break;
                     }
@@ -2402,7 +2812,10 @@ int main(void)
                a press this frame still lands on top of it. */
             if (cam && !fc_dist_owned) fc_dist = fc_cam_dist(cam);
             {
-                const int r = fc_stick_rate(stick_rx, CAM_STEP) + mouse_dyaw;
+                /* stick and mouse are both a rightward push measured to the
+                   right, so both take cam_turn as-is */
+                const int r = (fc_stick_rate(stick_rx, CAM_STEP) + mouse_dyaw)
+                              * cam_turn;
                 if (r) { fc_yaw = (short)(fc_yaw + r); rig_touched = 1; }
             }
             {
@@ -2415,8 +2828,13 @@ int main(void)
                 if (t < -0x1000) t = -0x1000;    /* a little from below */
                 fc_pitch = (short)t;
             }
-            if (key_live('Q')) { fc_yaw -= CAM_STEP / 2; rig_touched = 1; }
-            if (key_live('E')) { fc_yaw += CAM_STEP / 2; rig_touched = 1; }
+            {
+                /* Q pushes left, E pushes right, off the same sign as the
+                   stick so the keyboard and the pad cannot disagree */
+                const int qe = (CAM_STEP / 2) * cam_turn;
+                if (key_live('Q')) { fc_yaw = (short)(fc_yaw - qe); rig_touched = 1; }
+                if (key_live('E')) { fc_yaw = (short)(fc_yaw + qe); rig_touched = 1; }
+            }
             {
                 int zoom = 0;
                 if (pad_live && (pad.buttons & 0x0100)) zoom -= 1;   /* LB */
@@ -2466,14 +2884,17 @@ int main(void)
             if (pad.lx < -12000 || (pad.buttons & 4)) dx -= 1;
             if (pad.lx > 12000 || (pad.buttons & 8)) dx += 1;
             if (pad.rx < -10000 || pad.rx > 10000) {
-                cam_yaw += 0.045f * (pad.rx / 32768.0f);
+                cam_yaw += cam_turn * 0.045f * (pad.rx / 32768.0f);
                 orbiting = 1;
             }
             if (pad.ry > 10000 && cam_pitch < 0.85f) cam_pitch += 0.02f;
             if (pad.ry < -10000 && cam_pitch > -0.15f) cam_pitch -= 0.02f;
         }
-        if (key_live('Q')) { cam_yaw -= 0.045f; orbiting = 1; }
-        if (key_live('E')) { cam_yaw += 0.045f; orbiting = 1; }
+        /* the pre-Camera-actor dev rig (SM64DS_OLD_CAMERA). It never reaches a
+           player, but it takes cam_turn too so nobody debugging in it has to
+           remember that this one camera turns the other way. */
+        if (key_live('Q')) { cam_yaw -= cam_turn * 0.045f; orbiting = 1; }
+        if (key_live('E')) { cam_yaw += cam_turn * 0.045f; orbiting = 1; }
         if (key_live('R') && cam_pitch < 0.85f)
             cam_pitch += 0.02f;
         if (key_live('F') && cam_pitch > -0.15f)
@@ -2703,18 +3124,31 @@ int main(void)
                it is written -- the Camera actor is left following Mario so
                there is something clean to hand back to. */
             if (real_camera && cam_mode == CAM_DS) {
-                if (key_live('Q')) btn |= 0x200;
-                if (key_live('E')) btn |= 0x100;
+                /* The two bits func_02009e70 reads, picked by the same
+                   cam_turn the rig steps its heading with, so DS mode and
+                   analog mode turn the same way for the same push. 0x100
+                   raises the heading (the ROM adds +0x400 for it) and 0x200
+                   lowers it, and a rising heading is the view panning left,
+                   so a rightward push takes 0x200 by default. Which host
+                   control feeds which bit is the port's own choice: the DS
+                   had L and R and none of these controls. */
+                const unsigned cam_bit_right = (cam_turn > 0) ? 0x100u : 0x200u;
+                const unsigned cam_bit_left  = (cam_turn > 0) ? 0x200u : 0x100u;
+                if (key_live('Q')) btn |= cam_bit_left;
+                if (key_live('E')) btn |= cam_bit_right;
                 if (key_live('C')) btn |= 0x4000;
-                if (stick_rx < -10000) btn |= 0x200;
-                if (stick_rx > 10000) btn |= 0x100;
+                if (stick_rx < -10000) btn |= cam_bit_left;
+                if (stick_rx > 10000) btn |= cam_bit_right;
                 if (pad_live) {
-                    if (pad.buttons & 0x0100) btn |= 0x200;  /* LB -> cam L */
-                    if (pad.buttons & 0x0200) btn |= 0x100;  /* RB -> cam R */
+                    if (pad.buttons & 0x0100) btn |= cam_bit_left;   /* LB */
+                    if (pad.buttons & 0x0200) btn |= cam_bit_right;  /* RB */
                 }
-                /* orbit probe: hold the rotate-right bit from frame 20 --
-                   the camera's own heading and the angle it publishes must
-                   both move, and W must keep walking away from the lens */
+                /* orbit probe: hold one of func_02009e70's own rotate bits
+                   from frame 20 -- the camera's heading and the angle it
+                   publishes must both move, and W must keep walking away
+                   from the lens. Deliberately the raw bit and not
+                   cam_bit_right: this probes the ROM's reader, so it must
+                   not move when a player's binding preference does. */
                 if (selftest && getenv("SM64DS_SELFTEST_ORBIT") && frame >= 20)
                     btn |= 0x100;
             }
@@ -3196,6 +3630,107 @@ int main(void)
                         "entrance %d reason %d\n", (int)port_course_next_sublevel(),
                         (int)data_0209f268, (int)data_0209f26c);
             }
+
+            /* ---- SM64DS_EXIT_PROBE / SM64DS_EXIT_ENTER (see the top of the
+               file). The dump waits for the level to be up; the entry is the
+               two frames a walk into the painting produces. Once it has
+               fired, one line a frame says whether the Player still has
+               control and what the exit's pull counter is doing, which is
+               the whole of the soft lock in two numbers. */
+            static int ex_dumped, ex_idx = -2, ex_frame, ex_fired;
+            if (ex_idx == -2) {
+                const char *e = getenv("SM64DS_EXIT_ENTER");
+                ex_idx = -1;
+                if (e) {
+                    ex_frame = 60;
+                    sscanf(e, "%d,%d", &ex_idx, &ex_frame);
+                }
+            }
+            if (!ex_dumped && frame == 30 &&
+                (getenv("SM64DS_EXIT_PROBE") || ex_idx >= 0)) {
+                ex_dumped = 1;
+                port_exit_dump();
+                /* Camera state pointer is +0x138 and the flags word is +0x154.
+                   Bit 0x10 of that word is the lock Camera::LookAtExit sets
+                   after its own ChangeState, and Camera::ChangeState refuses
+                   every later state change while it is set. */
+                fprintf(stderr, "[exit] camera states: boot %p, follow "
+                        "(func_0200d5c0) %p, look-at-exit %p; camera is in "
+                        "%p flags %08x\n",
+                        (void *)data_0209b008, (void *)data_0209b078,
+                        (void *)data_0209b0f8,
+                        data_0209f318 ? *(void **)((char *)data_0209f318
+                                                   + 0x138) : 0,
+                        data_0209f318 ? *(unsigned *)((char *)data_0209f318
+                                                      + 0x154) : 0);
+            }
+            /* Three writes. The PRIME, two frames early, puts him on the near
+               side but OUTSIDE the box in x: the exit's Behavior records his
+               z (its +0x88) without the box test passing, so the teleport in
+               from wherever he spawned cannot itself read as a crossing --
+               without it the first reading is a spurious entry and every
+               number after it has a warp in it that a walk does not.
+               Then the near side inside the box, EX_SETTLE frames for the
+               game's own collision to land him on the floor there, then one
+               stride past the plane, which is the trigger.
+               A floor hole needs no push: he falls through its plane on his
+               own during the settle, which is the real way in, so the last
+               write is skipped once he has already been taken over. */
+            enum { EX_SETTLE = 12 };
+            if (ex_idx >= 0 && player &&
+                (frame == ex_frame - 2 || frame == ex_frame ||
+                 frame == ex_frame + EX_SETTLE)) {
+                char *ex = port_exit_nth(ex_idx);
+                const int taken = *(unsigned char *)(c + 0x6f6) != 0;
+                if (ex && !(frame == ex_frame + EX_SETTLE && taken)) {
+                    /* +-0x30000 is 48 units, about one walking stride, so the
+                       last two writes straddle the plane the way a stride
+                       does. */
+                    port_exit_place(ex, c, frame == ex_frame + EX_SETTLE
+                                               ? -0x30000 : 0x30000,
+                                    frame == ex_frame - 2);
+                    ex_fired = 1;
+                    fprintf(stderr, "[exit] f%d placed %s -> world "
+                            "(%d,%d,%d)\n", frame,
+                            frame == ex_frame - 2 ? "beside the box (prime)"
+                            : frame == ex_frame ? "in front of the plane"
+                                                : "one stride past the plane",
+                            *(int *)(c + 0x5c) >> 12,
+                            *(int *)(c + 0x60) >> 12,
+                            *(int *)(c + 0x64) >> 12);
+                }
+            }
+            if (ex_fired && player) {
+                char *ex = port_exit_nth(ex_idx);
+                int local[3] = {0, 0, 0};
+                if (ex)
+                    MulVec3Mat4x3(c + 0x5c, ex + 0xd4, local);
+                int evy = 0, tw = 0;
+                const int blend = port_fader_blend_state(&evy, &tw);
+                fprintf(stderr, "[exit-watch] f%d pos(%d,%d,%d) localz %d "
+                        "ctrl_disabled %u nocontrol %u kind %u state %p "
+                        "step %u | exit pull %d lastz %d | pending %d | "
+                        "screen %s\n",
+                        frame, *(int *)(c + 0x5c) >> 12,
+                        *(int *)(c + 0x60) >> 12, *(int *)(c + 0x64) >> 12,
+                        local[2] >> 12,
+                        *(unsigned char *)(c + 0x6f6),
+                        *(unsigned char *)(c + 0x709),
+                        *(unsigned char *)(c + 0x70a),
+                        *(void **)(c + 0x370), *(unsigned char *)(c + 0x6e3),
+                        ex ? *(int *)(ex + 0x98) >> 12 : 0,
+                        ex ? *(int *)(ex + 0x88) >> 12 : 0,
+                        (int)data_02092110,
+                        !blend ? "clear" : evy >= 16
+                            ? (tw ? "COVERED white" : "COVERED black")
+                            : (tw ? "fading white" : "fading black"));
+                if (data_0209f318)
+                    fprintf(stderr, "[exit-cam] f%d state %p flags %08x%s\n",
+                            frame, *(void **)((char *)data_0209f318 + 0x138),
+                            *(unsigned *)((char *)data_0209f318 + 0x154),
+                            (*(unsigned *)((char *)data_0209f318 + 0x154)
+                             & 0x10) ? "  LOCKED (LookAtExit)" : "");
+            }
         }
 
         /* ---- THE LEVEL HANDOFF (gate 31) -------------------------------
@@ -3483,6 +4018,9 @@ int main(void)
                his state-0 main runs the real StartTalk. SM64DS_BUDDY_TRIGGER. */
             port_input_probe_buddy_trigger(frame);
             port_input_probe_sign_trigger(frame);   /* TEMPORARY: SM64DS_SIGN_TRIGGER */
+            port_probe_alcheck();
+            port_probe_sign_yaw();
+            port_probe_chomp(frame);
             port_actor_tick();
         } else if (*(void **)(c + 0x370)) {
             hal_player_behavior(player);
@@ -3593,7 +4131,7 @@ int main(void)
                         "[cam-in] f%03d rx=%6d ry=%6d fc=%d yaw=%04x "
                         "pitch=%04x dist=%d held=%04x edge=%04x fl=%08x "
                         "a17c=%04x a186=%04x a19e=%04x turn=%u wall=%u "
-                        "pub=%04x\n",
+                        "pub=%04x mario=%04x\n",
                         frame, stick_rx, stick_ry, cam_mode,
                         (unsigned short)fc_yaw, (unsigned short)fc_pitch,
                         fc_dist >> 12,
@@ -3605,7 +4143,15 @@ int main(void)
                         (unsigned short)*(short *)((char *)cam + 0x19e),
                         *(unsigned short *)((char *)cam + 0x1a0),
                         *(unsigned char *)((char *)cam + 0x1a6),
-                        (unsigned short)*(short *)((char *)data_020a1164));
+                        (unsigned short)*(short *)((char *)data_020a1164),
+                        /* Mario's own facing. Paired with `pub` this is what
+                           says which world direction is SCREEN-right: the
+                           walk is camera-relative, so facing minus pub is the
+                           stick direction the game resolved, and its offset
+                           from the straight-ahead 0x8000 has the sign of the
+                           side being pushed. Nothing reads it, it just makes
+                           the camera binding measurable without a screenshot. */
+                        (unsigned short)*(short *)(c + 0x8e));
         }
         ph_end(PH_CAMERA, t_phase);
         /* no speed clamp: the accel tables get real input-mode data now
@@ -4664,6 +5210,8 @@ int main(void)
         ++frame;   /* counts in live mode too -- the [cam-in]-style live
                       diagnostics carry a real frame number */
         port_last_frame = frame;   /* fault_probe.h: crash.txt/exit.txt context */
+        /* the frame's stdout, one write; the setvbuf note above is why */
+        fflush(stdout);
         if (selftest && frame >= selftest) {
             for (int k = 0; k < g_amb_n; ++k) {
                 char *o = (char *)g_amb[k].o;

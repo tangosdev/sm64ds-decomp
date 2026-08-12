@@ -6,7 +6,7 @@
 #include "daObjBkKillerdai_c.h"
 // recovered name: daObjBkKillerdai_c_OnHitByMegaChar
 /* recovered: renamed to Class_Method */
-/* daObjBkKillerdai_c::OnHitByMegaChar - recovered from vtable slot identity */
+/* daObjBkKillerdai_c::OnHitByMegaChar - verified 2004/b56 byte-match (ov079), strict-reloc */
 extern "C" {
 extern void _ZN6Player16IncMegaKillCountEv(void*);
 void func_ov079_02126ecc(char *c, void *p){

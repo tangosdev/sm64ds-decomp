@@ -98,6 +98,11 @@ bool g_ready;
    frame and show up as a BMP diff nobody can reproduce. The selftest drives
    its own input; the panel adds none. */
 bool g_headless;
+/* SM64DS_INPUT_NOFOCUSGATE=1 puts the interactive keyboard back on the
+   machine-global reads it used before the focus gate. Nothing in the tree
+   sets it; it exists so a harness that really does want keys read with the
+   window in the background has a documented way to say so. */
+bool g_nofocusgate;
 int g_x0, g_y0;            // panel origin in framebuffer pixels
 int g_div = 2;             // panel downscale divisor (SM64DS_SUB_SCALE)
 int g_zoom = 1;
@@ -107,6 +112,7 @@ HWND g_hwnd;
 BOOL(WINAPI *GetCursorPos_)(POINT *);
 BOOL(WINAPI *ScreenToClient_)(HWND, POINT *);
 SHORT(WINAPI *GetAsyncKeyState_)(int);
+HWND(WINAPI *GetForegroundWindow_)(void);
 #else
 /* Linux: bound to the SDL-backed shim. ScreenToClient is identity because SDL
    reports the cursor in window (client) coordinates already. */
@@ -114,6 +120,12 @@ static BOOL  (*GetCursorPos_)(POINT *)    = port_lin_GetCursorPos;
 static BOOL   ScreenToClient_lin(HWND, POINT *) { return TRUE; }
 static BOOL  (*ScreenToClient_)(HWND, POINT *) = ScreenToClient_lin;
 static short (*GetAsyncKeyState_)(int)    = port_lin_GetAsyncKeyState;
+/* No focus gate on Linux yet: SDL reports focus through its own event
+   stream, not a user32 call. Left null deliberately so
+   hal_window_focused takes its documented fail-open path (`!Get
+   ForegroundWindow_ -> return 1`) and the Linux window never locks
+   itself out of its own input. */
+static HWND (*GetForegroundWindow_)(void) = 0;
 typedef short SHORT;
 #endif
 
@@ -158,6 +170,31 @@ void poll_touch(void)
 
 extern "C" {
 
+/* THE FOCUS GATE'S ONE QUESTION: is this program's window the one the player
+   is actually typing into?
+
+   It has to be asked because GetAsyncKeyState reports PHYSICAL key state for
+   the whole session, foreground or not. Without this, a player who alt-tabbed
+   into a chat window and typed kept walking Mario around behind them, and a
+   held direction stayed held forever.
+
+   Everything INTERACTIVE routes its keyboard reads through here. Nothing
+   scripted does: SM64DS_WINDOW_SELFTEST kills the live reads a layer up,
+   SM64DS_PROBE_INPUT ORs its bits straight into the pad mirror, and the
+   SM64DS_SELFTEST_* probes write the stick and the buttons by hand. A hidden,
+   unfocused, automated run therefore sees exactly what it saw before.
+
+   Two deliberate fail-open cases, so this can never be what silently locks a
+   run out of its own input: no window yet (g_hwnd unset, which is every
+   binary that does not open one) and no GetForegroundWindow (never on
+   Windows, but the whole user32 surface here is loaded by name). */
+int hal_window_focused(void)
+{
+    if (g_nofocusgate) return 1;
+    if (!g_hwnd || !GetForegroundWindow_) return 1;
+    return GetForegroundWindow_() == g_hwnd ? 1 : 0;
+}
+
 /* Armed once, before the first frame. hwnd and zoom are the window's, so the
    touch bridge can turn a client pixel into a DS pixel. */
 void hal_sub_screen_init(void *hwnd, int zoom)
@@ -166,6 +203,7 @@ void hal_sub_screen_init(void *hwnd, int zoom)
     g_zoom = zoom > 0 ? zoom : 1;
     g_on = env_flag("SM64DS_SUB_PANEL", 1) != 0;
     g_headless = std::getenv("SM64DS_WINDOW_SELFTEST") != 0;
+    g_nofocusgate = std::getenv("SM64DS_INPUT_NOFOCUSGATE") != 0;
 
 #ifdef _WIN32
     if (HMODULE u = LoadLibraryA("user32.dll")) {
@@ -173,6 +211,8 @@ void hal_sub_screen_init(void *hwnd, int zoom)
         ScreenToClient_ = (decltype(ScreenToClient_))GetProcAddress(u, "ScreenToClient");
         GetAsyncKeyState_ =
             (decltype(GetAsyncKeyState_))GetProcAddress(u, "GetAsyncKeyState");
+        GetForegroundWindow_ =
+            (decltype(GetForegroundWindow_))GetProcAddress(u, "GetForegroundWindow");
     }
 #endif
     /* Linux: the three pointers are already bound to the SDL shim at file scope. */
@@ -324,11 +364,19 @@ void hal_sub_screen_frame_begin(void)
         }
     }
 
+    /* TAB is interactive keyboard, so it is gated on focus like the rest. The
+       latch is ARMED rather than cleared while the window is in the
+       background: a TAB pressed elsewhere and still down on the way back
+       reads as already-held, so it cannot toggle the panel on arrival. */
     static int tab_was;
     if (GetAsyncKeyState_ && !g_headless) {
-        const int tab = (GetAsyncKeyState_(VK_TAB) & 0x8000) != 0;
-        if (tab && !tab_was) g_on = !g_on;
-        tab_was = tab;
+        if (!hal_window_focused()) {
+            tab_was = 1;
+        } else {
+            const int tab = (GetAsyncKeyState_(VK_TAB) & 0x8000) != 0;
+            if (tab && !tab_was) g_on = !g_on;
+            tab_was = tab;
+        }
     }
     OAM::Reset();
     poll_touch();

@@ -5,6 +5,17 @@ project(sm64ds-port C CXX)
 # guard them; the Linux port gets the equivalent -m32 / -fno-omit-frame-pointer
 # from PORT_LINUX_M32 below. The Windows build is byte-for-byte unchanged.
 if(MSVC)
+    # Link the static CRT so shipped exes never depend on the VC++ redist (CMP0091).
+    # Release 0.1.6 shipped dynamically linked because nothing pinned this and CMake
+    # defaults to the DLL runtime, so a player without the redist could not start the
+    # game at all, and that failure produces no crash dump and never reaches intake.
+    # This must stay GLOBAL and stay above the targets: a per-target property on the
+    # shipped exe alone would leave the test harnesses on the dynamic default, and a
+    # harness linked differently from the shipped artifact resolves addresses that do
+    # not match what players run. The generator expression keeps the debug CRT for
+    # Debug builds, so heap and iterator assertions still fire while chasing
+    # allocator bugs; plain "MultiThreaded" would silently link the release CRT there.
+    set(CMAKE_MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} /MAP")
     add_compile_options(/Oy-)
 endif()
@@ -49,6 +60,30 @@ if(NOT MSVC)
     # vtable-slot shims and __thiscall/__stdcall casts compile on GCC/Clang
     # without editing each file's include list. MSVC never sees this.
     add_compile_options(-include "${CMAKE_CURRENT_SOURCE_DIR}/hal/port_msvc_compat.h")
+endif()
+
+# Test-only fault injection: SM64DS_TEST_QUARANTINE, the hook in
+# port/unmatched/func_02043fdc.cpp that force-freezes an actor by raising the
+# access violation a real per-actor decline raises. A proof run needs it to
+# reproduce a quarantine on demand; a player must never carry a way to force a
+# fault on an arbitrary actor id read out of the environment, so it is OFF
+# unless a build asks for it by name. build-port.cmd forwards its arguments to
+# cmake:
+#
+#     build-port.cmd -DPORT_TEST_HOOKS=ON
+#
+# It is a cache variable, so a tree configured for a proof STAYS a proof tree;
+# configure a fresh build directory (or pass -DPORT_TEST_HOOKS=OFF) for anything
+# that ships. The warning is there so a proof binary is identifiable from the
+# build log and not only from the source.
+option(PORT_TEST_HOOKS
+       "compile the SM64DS_TEST_QUARANTINE fault-injection hook (TEST BUILDS ONLY)"
+       OFF)
+if(PORT_TEST_HOOKS)
+    add_compile_definitions(PORT_TEST_HOOKS=1)
+    message(WARNING
+        "PORT_TEST_HOOKS=ON: these binaries carry the SM64DS_TEST_QUARANTINE "
+        "fault-injection hook and are TEST ONLY. Do not ship them.")
 endif()
 
 # Gate 1: compile the manifest slice out of ../src plus the HAL, link the
@@ -672,6 +707,27 @@ if(MSVC)
     target_compile_options(smoke_actor PRIVATE /wd4311 /wd4312 /wd4068)
 endif()
 
+# Save-state verification (lane lk6): the same actor world as smoke_actor, plus
+# hal/lk6_savestate.cpp, driving save -> diverge -> load -> byte-exact compare.
+add_executable(smoke_savestate tests/smoke_savestate.cpp
+    hal/lk6_savestate.cpp hal/auto_bss.cpp
+    hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
+    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
+    hal/cxxname_bridge.cpp hal/megachar_stub.cpp
+    ${SLICE2_SOURCES} ${SLICE3A_SOURCES} ${SLICE3B_SOURCES} ${SLICE4B_SOURCES}
+    ${SLICE7_SOURCES} ${SLICE8_SOURCES} ${SLICE9_SOURCES} ${GATE8_EXTRA_SOURCES}
+    ${GATE4A_GEN} ${GATE4B_GEN} ${GATE8_GEN} ${GATE9_GEN} "${ROMDATA_C}")
+target_include_directories(smoke_savestate PRIVATE
+    "${CMAKE_CURRENT_SOURCE_DIR}"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../include")
+target_link_libraries(smoke_savestate PRIVATE ntr)
+target_compile_definitions(smoke_savestate PRIVATE SM64DS_PLATFORM_PC
+    PORT_REPO_ROOT="${PORT_REPO_ROOT_ABS}")
+if(MSVC)
+    target_compile_options(smoke_savestate PRIVATE /wd4311 /wd4312 /wd4068)
+endif()
+
 # Gate 10: Player spawns and stands (the walking campaign).
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate10.txt" SLICE10_LINES)
 set(SLICE10_SOURCES "")
@@ -688,6 +744,21 @@ endforeach()
 # edits, nothing else). Replaces src/func_ov002_020e5948.c, commented out
 # of slice_gate10.txt.
 list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/TexSeq_Caller_ov002_020e5948.cpp")
+# Slot 28 has two dispatch sites and the two matched transcriptions disagree
+# on calling convention; see unmatched/Player_HeadBonk.cpp. This copy is
+# src/func_ov002_020cef84.cpp with the dispatch remodelled as a C++ virtual
+# so both sites are thiscall, which is what lets slot 28 hold a real body.
+list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Player_HeadBonk.cpp")
+# Slots 23 and 24 have exactly one dispatch site each, and both model the vtable
+# as plain cdecl function pointers while every seated slot-23/24 body is
+# thiscall; see unmatched/Actor_OnAttacked2Dispatch.cpp and
+# unmatched/Actor_OnKickedDispatch.cpp. These copies are
+# src/func_ov002_020ef070.cpp and src/func_ov002_020eeeb8.cpp with the dispatch
+# remodelled as a C++ virtual so each site is thiscall, which is what lets slots
+# 23/24 hold real bodies (and stops the base ac_atk2/ac_kicked seats over-popping
+# on every dispatch). Both src lines are commented out of slice_gate10.txt.
+list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Actor_OnAttacked2Dispatch.cpp")
+list(APPEND SLICE10_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Actor_OnKickedDispatch.cpp")
 
 # Two Actor entry points are C++ inside a .c, but a different shape from the
 # hostgen cases below: each is a real METHOD against Actor.h, so hostgen's
@@ -1098,6 +1169,15 @@ list(APPEND PORT_ACTOR_OVERLAYS ov094)
 # host arrays hal/actor_classes_ov012.cpp fills. See port/ov012_syms.txt and
 # port/slice_gate199.txt.
 list(APPEND PORT_ACTOR_OVERLAYS ov012)
+# gate 202: ov013 (level 5's own overlay, already whole-mounted per gate 117)
+# joins the per-symbol mounts too -- CLOCK_HAND_SHORT (292), CLOCK_HAND_LONG
+# (293) and CLOCK_PENDULUM (294) reach their SpawnInfo records, their
+# SharedFilePtrs and the hand-step table by name, the ov012/gate-199 shape.
+# Their two vtables (data_ov013_02112128 for the pendulum, unnamed and
+# five-way split by dsd; _ZTV22ClockPaintingHandShort == _ZTV12daObjClock_c
+# shared by BOTH hands) are host arrays hal/actor_classes_ov013.cpp fills.
+# See port/ov013_syms.txt and port/slice_gate202.txt.
+list(APPEND PORT_ACTOR_OVERLAYS ov013)
 # ov084 joins for gate 32: the first ENEMY overlay, GOOMBA and BOB_OMB_BUDDY.
 # ...and ov014, ov062 and ov091 with them. ov014 is a LEVEL overlay (Bob-omb
 # Battlefield's own) and is mounted a second time here, per symbol, because
@@ -1226,11 +1306,19 @@ list(APPEND SLICE18_SOURCES
 # slice_gate18.txt.
 list(APPEND SLICE18_SOURCES
      "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/RabbitKey_StateSeat.cpp")
-# r0-passthrough: func_ov085_0212e4a4 (a LakituBro state) calls Actor::ClosestPlayer()
-# with no argument, relying on `this` riding ARM r0. Host copy passes `self`; src line
-# commented out in slice_gate18.txt. (frame-0 castle-grounds crash fix)
+# r0-passthrough: func_ov085_0212b8dc (the RABBIT's state Main, daMip_c) calls
+# Actor::ClosestPlayer() with no argument, relying on `this` riding ARM r0. Host
+# copy passes `c`; src line commented out in slice_gate18.txt. (the actor-187
+# RABBIT null-this +0x5c crash, reachable once slot 19 made the rabbit swallowable)
 list(APPEND SLICE18_SOURCES
-     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov085_ClosestPlayer_e4a4.cpp")
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov085_Rabbit_b8dc.cpp")
+# r0-passthrough: four LakituBro (daC_Jugem_c) state bodies -- func_ov085_
+# 0212d9b8/dd10/e310/e4a4 -- each call Actor::ClosestPlayer() with no argument,
+# relying on `this` riding ARM r0. Host copies pass each body's own receiver; src
+# lines commented out in slice_gate18.txt. e4a4 (caught/grab state) is the site
+# caught taking a leaked receiver on a level-1 run.
+list(APPEND SLICE18_SOURCES
+     "${CMAKE_CURRENT_SOURCE_DIR}/unmatched/Ov085_LakituBro_ClosestPlayer.cpp")
 
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate19.txt" SLICE19_LINES)
 set(SLICE19_SOURCES "")
@@ -1482,7 +1570,14 @@ set(GATE32_HOST_SOURCES
     # ...and for the eleventh, the widest one yet: KING_BOB_OMB keeps the
     # ADDRESS of a two-PMF record rather than an index, so both his setter and
     # his Behavior do pointer arithmetic on a type MSVC doubles
-    unmatched/KingBobOmb_States.cpp)
+    unmatched/KingBobOmb_States.cpp
+    # r0-passthrough overlay readers: func_ov084_02129cf4 (gate 32),
+    # func_ov084_0212f204 (gate 70), func_ov094_02136024 (gate 194) and
+    # func_ov102_02149078 (gate 203) each call Actor::ClosestPlayer() with no
+    # argument (this rode ARM r0). Host copies pass each body's own receiver; src
+    # lines commented out in their slice gates. Grouped here because all four ship
+    # on the same three targets this GATE32 host set is added to.
+    unmatched/Actor_ClosestPlayer_OverlayReaders.cpp)
 
 # The header/definition collisions in this gate's closure: decl_common.h
 # declares each of these `(void*)` and its own TU defines it `(char*)`, which
@@ -2264,6 +2359,23 @@ foreach(line IN LISTS SLICE180_LINES)
     list(APPEND SLICE180_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# Gate 203: the QUESTION_BLOCK / EXCLAMATION_BLOCK's five HIT slots -- the
+# vtable tail that ENTERS state 1, which gate 180 then runs. Gate 23 left
+# slots 21/22/24/27/28 on ac_trapNN because their ov102 bodies were in no
+# slice, so hitting the block raised a fault the quarantine net caught and the
+# actor froze instead of opening. Slot 28 (0x021496a4) is OnHitFromUnderneath,
+# the jump-into-it-from-below hit that is how the box is meant to be opened.
+# See slice_gate203.txt and the QUESTION_BLOCK section in hal/actor_classes.cpp.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate203.txt" SLICE203_LINES)
+set(SLICE203_SOURCES "")
+foreach(line IN LISTS SLICE203_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE203_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
 # Gate 188: Jolly Roger Bay's six MOVER classes' matched lifecycle closure. The
 # host copies (the three slot-5 renders + Unagi's PMF dispatch/Behavior + the
 # body-segment near-miss) are unmatched/{Jrb_Renders,Unagi_StateDispatch,
@@ -2367,6 +2479,20 @@ foreach(line IN LISTS SLICE200_LINES)
         continue()
     endif()
     list(APPEND SLICE200_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# Gate 202: CLOCK_HAND_SHORT (292) + CLOCK_HAND_LONG (293) + CLOCK_PENDULUM
+# (294), ov013 (level 5, the 2F clock-painting furniture). Per-symbol ov013
+# mount (port/ov013_syms.txt). The fill is hal/actor_classes_ov013.cpp; the
+# four D1/D0 TUs are host thunks there, everything else rides from src.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_gate202.txt" SLICE202_LINES)
+set(SLICE202_SOURCES "")
+foreach(line IN LISTS SLICE202_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE202_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
 # Gates 64-69: ov079's four static initialisers plus the six enemy classes'
@@ -2480,7 +2606,10 @@ endforeach()
 set(GATE16_SYMS _ZN5Actor22BeforeCleanupResourcesEv
     func_ov002_020aefb8
     # Gate 33: the WARP's Behavior is C++ inside a .c -- the same case.
-    func_ov002_020ec410)
+    func_ov002_020ec410
+    # Lane lk4 seat 3: Heap::ResizeToFit is a virtual shadow class inside a
+    # .c -- the same case again.
+    _ZN4Heap11ResizeToFitEv)
 set(GATE16_GEN "")
 foreach(sym IN LISTS GATE16_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
@@ -2521,7 +2650,7 @@ list(APPEND SLICE16_SOURCES
 # member-function pointer.
 add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
     hal/cxxname_bridge.cpp hal/megachar_stub.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp hal/level_boot.cpp hal/cannon_probe.cpp hal/message_boot.cpp hal/message_gen_text.cpp hal/actor_registry.cpp hal/actor_classes.cpp hal/actor_classes_bob_world.cpp hal/actor_faces_bob.cpp hal/actor_class_faces.cpp hal/mmc_vtable.cpp hal/ov009_boot.cpp hal/actor_overlays.cpp hal/sub_screen.cpp hal/sub_actors.cpp hal/stage_bridges.cpp hal/level_change.cpp hal/star_flow.cpp hal/oam_lists.cpp hal/blend_vtable.cpp hal/particle_vtable.cpp hal/particle_bridges.cpp unmatched/Particle_RideThroughs.cpp
     ${CAMERA_HOST_SOURCES} ${LEVELBOOT_HOST_SOURCES} ${SOUND_HOST_SOURCES}
@@ -2540,7 +2669,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES}
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_StateTick.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_StateTick.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -2553,7 +2682,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
     hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp unmatched/BowserPuzzle_Render.cpp
     hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp
-    ${SLICE180_SOURCES}
+    ${SLICE180_SOURCES} ${SLICE203_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -2573,12 +2702,23 @@ if(MSVC)
 endif()
 
 # Gate 12: the interactive window (same stack, windowed loop).
-add_executable(walk_window tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
+#
+# tests/io_pressure.cpp is the negative control for ntr/io.cpp's fixed-address
+# reservation: it takes 0x02000000 before the game asks for it, so the failure a
+# player hit can be reproduced on demand against THIS binary rather than against
+# a special build of it. Inert unless SM64DS_IO_PRESSURE_AT is set in the
+# environment, and nothing in the tree sets it.
+add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
     # dialogue pipeline (2026-08-08): the box pump (Stage::UpdateMessage's
     # dialogue arm), the engine-A 2D-over-3D compositor, and the headless probe.
     hal/message_pump.cpp hal/message_compositor.cpp hal/message_probe.cpp hal/message_gen_text.cpp hal/input_probe.cpp
+    # the launcher's settings.json, read by the game (camera turn direction)
+    hal/host_settings.cpp
+    # in-memory save state (lane lk6): F8/F9 snapshot and restore of the hosted
+    # DS arena plus the out-of-arena game globals.
+    hal/lk6_savestate.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
     hal/cxxname_bridge.cpp hal/megachar_stub.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp hal/level_boot.cpp hal/cannon_probe.cpp hal/message_boot.cpp hal/actor_registry.cpp hal/actor_classes.cpp hal/actor_classes_bob_world.cpp hal/actor_faces_bob.cpp hal/actor_class_faces.cpp hal/mmc_vtable.cpp hal/ov009_boot.cpp hal/actor_overlays.cpp hal/sub_actors.cpp hal/sub_screen.cpp hal/stage_bridges.cpp hal/level_change.cpp hal/star_flow.cpp hal/oam_lists.cpp hal/blend_vtable.cpp hal/particle_vtable.cpp hal/particle_bridges.cpp unmatched/Particle_RideThroughs.cpp
     ${CAMERA_HOST_SOURCES} ${LEVELBOOT_HOST_SOURCES} ${SOUND_HOST_SOURCES}
@@ -2599,7 +2739,7 @@ add_executable(walk_window tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_OV_DAT
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES}
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_StateTick.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_StateTick.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -2612,7 +2752,7 @@ add_executable(walk_window tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_OV_DAT
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
     hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp unmatched/BowserPuzzle_Render.cpp
     hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp
-    ${SLICE180_SOURCES}
+    ${SLICE180_SOURCES} ${SLICE203_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp
@@ -2670,8 +2810,13 @@ endif()
 add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
     # dialogue pipeline (2026-08-08): pump, engine-A compositor, headless probe.
     hal/message_pump.cpp hal/message_compositor.cpp hal/message_probe.cpp hal/message_gen_text.cpp hal/input_probe.cpp
+    # the launcher's settings.json, read by the game (camera turn direction)
+    hal/host_settings.cpp
+    # in-memory save state (lane lk6): F8/F9 snapshot and restore of the hosted
+    # DS arena plus the out-of-arena game globals.
+    hal/lk6_savestate.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
-    hal/model_host.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
+    hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
     hal/cxxname_bridge.cpp hal/megachar_stub.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp hal/level_boot.cpp hal/cannon_probe.cpp hal/message_boot.cpp hal/actor_registry.cpp hal/actor_classes.cpp hal/actor_classes_bob_world.cpp hal/actor_faces_bob.cpp hal/actor_class_faces.cpp hal/mmc_vtable.cpp hal/ov009_boot.cpp hal/actor_overlays.cpp hal/sub_actors.cpp hal/sub_screen.cpp hal/stage_bridges.cpp hal/level_change.cpp hal/star_flow.cpp hal/oam_lists.cpp hal/blend_vtable.cpp hal/particle_vtable.cpp hal/particle_bridges.cpp unmatched/Particle_RideThroughs.cpp
     ${CAMERA_HOST_SOURCES} ${LEVELBOOT_HOST_SOURCES} ${SOUND_HOST_SOURCES}
@@ -2692,7 +2837,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE40_SOURCES} ${SLICE41_SOURCES} ${SLICE42_SOURCES}
     hal/actor_classes_painting.cpp ${SLICE50_SOURCES} hal/actor_classes_wf.cpp
     unmatched/Cap_StateDispatch.cpp unmatched/ExclamationSwitch_StateDispatch.cpp ${SLICE51_SOURCES} ${SLICE59_SOURCES} ${SLICE78_SOURCES} ${SLICE79_SOURCES} ${SLICE82_SOURCES} ${SLICE83_SOURCES} ${SLICE64_SOURCES} ${GATE64_GEN} ${SLICE89_SOURCES} ${SLICE102_SOURCES} ${SLICE103_SOURCES} ${SLICE128_SOURCES} ${SLICE121_SOURCES} ${SLICE122_SOURCES} ${SLICE123_SOURCES}
-    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_StateTick.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp
+    hal/actor_classes_ccm.cpp ${SLICE142_SOURCES} ${SLICE190_SOURCES} ${SLICE191_SOURCES} unmatched/SoundObject_Behavior.cpp unmatched/OneUpLogo_InitResources.cpp unmatched/MotherPenguin_InitResources.cpp unmatched/MotherPenguin_AfterClsnSeat.cpp unmatched/MotherPenguin_Behavior.cpp hal/actor_classes_ov081.cpp ${SLICE192_SOURCES} unmatched/MrBlizzard_StateDispatch.cpp unmatched/MrBlizzard_Behavior.cpp hal/actor_classes_ov072.cpp ${SLICE193_SOURCES} unmatched/Snowman_InitResources.cpp unmatched/BabyPenguin_StateEnter.cpp unmatched/BabyPenguin_StateTick.cpp unmatched/BabyPenguin_InitResources.cpp unmatched/BabyPenguin_LandTransition.cpp hal/actor_classes_ov094.cpp ${SLICE194_SOURCES} unmatched/HootTheOwl_StateDispatch.cpp hal/actor_classes_ov012.cpp ${SLICE199_SOURCES} hal/actor_classes_ov002g200.cpp ${SLICE200_SOURCES} unmatched/PushBlock_StateDispatch.cpp hal/actor_classes_ov013.cpp ${SLICE202_SOURCES}
     hal/actor_classes_bbh.cpp ${SLICE149_SOURCES}
     hal/actor_classes_hmc.cpp ${SLICE172_SOURCES} unmatched/Crate_StateDispatch.cpp
     hal/actor_classes_updownlift.cpp ${SLICE173_SOURCES} unmatched/UpDownLiftBbh_Behavior.cpp
@@ -2705,7 +2850,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     unmatched/Unagi_StateDispatch.cpp unmatched/Unagi_BodyChain.cpp unmatched/Jrb_Aliases.cpp
     hal/actor_classes_bowserpuzzle.cpp ${SLICE179_SOURCES} unmatched/BowserPuzzle_StateDispatch.cpp unmatched/BowserPuzzle_Render.cpp
     hal/actor_classes_koopa_chuckya.cpp hal/koopa_chuckya_faces.cpp ${SLICE182_SOURCES} unmatched/KoopaChuckya_StateDispatch.cpp unmatched/Koopa_Render.cpp
-    ${SLICE180_SOURCES}
+    ${SLICE180_SOURCES} ${SLICE203_SOURCES}
     hal/actor_classes_l7.cpp ${SLICE_L7_SOURCES} ${GATE_L7_GEN} unmatched/PiranhaPlant_States.cpp
     unmatched/WaterBomb_StateDispatch.cpp unmatched/WaterBomb_State0.cpp
     unmatched/KnockDownPlank_Behavior.cpp unmatched/FallBlockWf_InitVeneer.cpp

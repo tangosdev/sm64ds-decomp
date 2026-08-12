@@ -34,7 +34,10 @@ src/func_ov084_0212f2dc.c
 src/func_ov084_0212f298.c
 # the piranha's own closure: the two per-frame helpers Behavior calls, the
 # spawn/init helpers and the aim path
-src/func_ov084_0212f204.c
+# func_ov084_0212f204: r0-passthrough. Calls Actor::ClosestPlayer() with no
+# argument (this rode ARM r0). HOST COPY passes `r4` explicitly at
+# port/unmatched/Actor_ClosestPlayer_OverlayReaders.cpp. Byte-locked src unchanged.
+# src/func_ov084_0212f204.c
 src/func_ov084_0212ec60.c
 src/func_ov084_0212ebb4.c
 src/func_ov084_0212ef00.c

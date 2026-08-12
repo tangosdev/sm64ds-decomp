@@ -33,9 +33,57 @@
  * conditional-cast shift-pair split vs load-hoist collision). Semantics are
  * exact, so the body below is the near-miss C, the cannon-lid precedent.
  * It walks the player to the sign, turns both, then hands off to
- * Player::ShowMessage2 -- which the port declines until the Message gate
- * lands, so with dialogue absent a sign read approaches and idles rather
- * than aborting. Replace with matched src the day the floor breaks.
+ * Player::ShowMessage2. Replace with matched src the day the floor breaks.
+ *
+ * THE OLD NOTE HERE SAID ShowMessage2 IS DECLINED AND THAT A SIGN READ
+ * "APPROACHES AND IDLES". THAT HAS BEEN FALSE SINCE 2026-08-08: the decline
+ * was removed, the matched src is back in slice_gate10, and hal/message_pump.cpp
+ * ticks Message::UpdateWindow + Message::Update every frame, so the box really
+ * opens. Traced live (SM64DS_SIGN_TRIGGER=1 SM64DS_TRACE_SIGN=1, level 3): the
+ * read state runs sub 0 turn for 15 frames, sub 1 walk, sub 2 face for 15
+ * frames, then ShowMessage2 fires and the box reaches state 7 and stays there
+ * until dismissed. Anyone debugging the reported sign soft-lock should not
+ * start from "the message is declined", because it is not.
+ *
+ * SUB-STATE 1 HAS NO TIMEOUT AND NO ABORT. It drives the PLAYER'S POSITION
+ * (Vec3_ApproachHorz on player+0x5c, 0xa000 per frame toward a point 0x78000
+ * in front of the sign), and Vec3_ApproachHorz writes x/z DIRECTLY and is
+ * collision-blind -- its arrival test is horizontal length only. So the walk
+ * can only fail to arrive if something writes the player's position back
+ * between sign ticks.
+ *
+ * MEASURED, AND IT DOES NOT -- but read the rig before trusting the number.
+ *
+ * FIRST ATTEMPT, WHICH DOES NOT COUNT: eight approach directions at radius 700
+ * around the level-3 sign, walk arrived every time, achieved step always the
+ * full 0xa000. That measurement was taken on a player who never leaves
+ * St_LevelEnter (0x020c7838) on level 3: speed 0 every frame, no movement
+ * state, full stick ignored. He could not have contended for his position
+ * under any conditions, so "nothing contests the write" was true of a case
+ * incapable of contesting it. A rig that cannot fail the test does not pass it.
+ *
+ * REDONE WHERE THE PLAYER REALLY MOVES (level 1, SM64DS_SELFTEST_DASH, speed
+ * 131072 = 32 units/frame in the frame before entry): ENTERING THE TALK ZEROES
+ * HIS SPEED. spd goes 131072 -> 0 on the entry frame and stays 0 for the whole
+ * walk, and the achieved step is the full 0xa000 every frame. So residual
+ * momentum cannot fight the walk either: the talk takes his velocity before
+ * sub 1 starts. Making the no-timeout loop fire needs a third party that moves
+ * him WITHOUT going through his speed (a moving platform, a moving collider),
+ * not momentum and not terrain.
+ *
+ * THE REPORTED SOFT-LOCK IS THEREFORE STILL UNEXPLAINED, and specifically the
+ * ROTATION is: sub 0 turns for 15 frames and converges, sub 2 turns for 15 and
+ * converges, and sub 0 cannot chase an unstable angle because the read point
+ * is 0x78000 (120 units) out and the proximity escape fires at 0x32000 (200),
+ * so the player can never be near enough to that point to destabilise
+ * Vec3_HorzAngle while still in sub 0. Three hypotheses tested, all negative.
+ * Do not treat this machine as the known cause.
+ *
+ * STILL UNTESTED, and it is what the third reporter actually described
+ * ("quickly trying to read"): RE-ENTRANCY. Triggering the read repeatedly, or
+ * during the transition, or cancelling and re-entering. The probe in
+ * hal/input_probe.cpp latches on `entered` and fires once, so it cannot
+ * produce that case; testing it needs a rig that can re-arm.
  */
 #include <cstdio>
 #include <cstdlib>

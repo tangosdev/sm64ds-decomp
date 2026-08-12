@@ -4,7 +4,10 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjHatenaBlock_c::OnGroundPounded - recovered from vtable slot identity */
+/* daObjHatenaBlock_c::OnGroundPounded
+ * func_ov102_02149820 at 0x02149820
+ * Byte-matched with mwccarm 2004/b56 (ov102), strict-reloc verified.
+ */
 void func_ov102_02149820(void *c, void *x) {
     if (*(int *)((char *)c + 0x3e8) == 1) return;
     int r = func_ov102_02149078(c);

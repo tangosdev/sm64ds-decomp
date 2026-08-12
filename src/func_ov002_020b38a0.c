@@ -4,7 +4,7 @@
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjBlockL_c::Kill - recovered from vtable slot identity */
+/* daObjBlockL_c::Kill - verified 2004/b56 byte-match (ov002), strict-reloc */
 extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3j(char *thiz, s8 *ref, u32 b, const struct Vector3 *v, u32 j);
 extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16ii(u32 a, u32 b, const struct Vector3 *v, const void *v16, s32 e, s32 f);
 extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(char *thiz, const struct Vector3 *v, u32 n, s32 f, short s);

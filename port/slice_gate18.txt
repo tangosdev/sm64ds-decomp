@@ -105,7 +105,11 @@ src/func_ov085_0212b4b4.c
 src/func_ov085_0212b75c.cpp
 src/func_ov085_0212b86c.c
 src/func_ov085_0212b8a0.c
-src/func_ov085_0212b8dc.cpp
+# r0-passthrough: func_ov085_0212b8dc (the RABBIT's state Main) calls
+# Actor::ClosestPlayer() with no argument, relying on `this` riding ARM r0. Host
+# copy port/unmatched/Ov085_Rabbit_b8dc.cpp passes `c`; the byte-locked src is
+# unchanged. (the actor-187 RABBIT null-this +0x5c crash)
+# src/func_ov085_0212b8dc.cpp
 src/func_ov085_0212bc14.c
 src/func_ov085_0212bc78.cpp
 src/func_ov085_0212bcc8.c
@@ -172,11 +176,16 @@ src/func_ov085_0212d5dc.cpp
 src/func_ov085_0212d724.c
 src/func_ov085_0212d73c.c
 src/func_ov085_0212d8ec.c
-src/func_ov085_0212d9b8.c
+# LakituBro r0-passthrough set: func_ov085_0212d9b8/dd10/e310/e4a4 each call
+# Actor::ClosestPlayer() with no argument (this rode ARM r0). HOST COPIES pass the
+# state body's own receiver at port/unmatched/Ov085_LakituBro_ClosestPlayer.cpp.
+# e4a4 is the caught/grab state caught taking a leaked receiver on a level-1 run.
+# The four byte-locked sources are unchanged.
+# src/func_ov085_0212d9b8.c
 src/func_ov085_0212db04.cpp
 src/func_ov085_0212dbdc.c
 src/func_ov085_0212dcfc.c
-src/func_ov085_0212dd10.cpp
+# src/func_ov085_0212dd10.cpp  -- HOST COPY (Ov085_LakituBro_ClosestPlayer.cpp)
 src/func_ov085_0212ddc4.cpp
 src/func_ov085_0212de5c.cpp
 src/func_ov085_0212df84.cpp
@@ -184,12 +193,12 @@ src/func_ov085_0212e078.cpp
 src/func_ov085_0212e180.c
 src/func_ov085_0212e19c.c
 src/func_ov085_0212e2ec.c
-src/func_ov085_0212e310.cpp
+# src/func_ov085_0212e310.cpp  -- HOST COPY (Ov085_LakituBro_ClosestPlayer.cpp)
 src/func_ov085_0212e480.c
-# func_ov085_0212e4a4: HOST COPY at unmatched/Ov085_ClosestPlayer_e4a4.cpp (wired in
-# CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument and relies
-# on `this` riding ARM r0; the host copy passes `self` explicitly. r0-passthrough class.
-# src/func_ov085_0212e4a4.c
+# src/func_ov085_0212e4a4.c  -- HOST COPY (Ov085_LakituBro_ClosestPlayer.cpp,
+# which covers this body and three sibling LakituBro states. The linux lane
+# wrote its own copy of the same fix for this one body; dropped in favour of
+# this one so only one definition of func_ov085_0212e4a4 links.)
 src/func_ov085_0212e59c.c
 src/func_ov085_0212e5ac.c
 src/func_ov085_0212e720.c
@@ -205,7 +214,10 @@ src/func_ov085_0212e858.c
 # the THUMB bit -- see the alias in hal/method_faces.cpp.
 src/Vec3_ApproachHorz.c
 src/_ZN5Actor11UpdateCarryER6PlayerRK7Vector3.cpp
-src/_ZN5Actor18HorzAngleToCPlayerEv.c
+# _ZN5Actor18HorzAngleToCPlayerEv: HOST COPY at unmatched/Actor_ClosestPlayerWrappers.cpp
+# (wired in CMakeLists). The matched C calls Actor::ClosestPlayer() with no argument
+# and relies on `this` being live in ARM r0; cdecl drops it, so ClosestPlayer measures
+# from garbage+0x5c. That is the RABBIT fault in crash 9e164e92 (read at 0x0000005c).
 src/_ZN6Camera6SetPosERK7Vector3.c
 src/_ZN6Camera9SetLookAtERK7Vector3.c
 src/_ZN6Player12GetTalkStateEv.cpp

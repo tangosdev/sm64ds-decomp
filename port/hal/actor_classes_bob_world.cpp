@@ -8,6 +8,22 @@
 // file, so this one merges with the enemy stream without either touching the
 // other's statics.
 //
+// ---- THE WIDTH IS 31 OR 32, NEVER 20 ---------------------------------------
+//
+// Twelve arrays here were written [20]. Every ROM table is 31 words (a plain
+// Actor subclass, ending at Actor::OnAimedAtWithEggReturnVec) or 32 (a
+// Platform subclass, slot 31 being Platform::Kill). BRICK_BLOCK is the
+// confirmed level-3 crash and STATIC_ROCK the level-8 one -- STATIC_ROCK
+// shares _ZTV13FortressTower, and that one is a 32-slot Platform table read
+// as 20. Every width below comes from port/tools/vtspan.py, which walks the
+// reloc run; the next-symbol bound truncates for four of them (_ZTV9WaterBomb
+// reads as 7 words and is 31).
+//
+// Slots 20..29 are Actor's own interaction list, all matched arm9 bodies
+// already in the build, and bw_fill_shared writes them for every table. Slot
+// 30 returns a Vector3 by value: the sret contract is unproved and the body
+// is in no slice, so it declines by name.
+//
 // ---- how the roster was established ---------------------------------------
 //
 // Bob-omb Battlefield is level 6 and ov014; see the header of
@@ -70,6 +86,20 @@ void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a);  /* slot 2  */
 int _ZN5Actor14BeforeBehaviorEv(void *self);                   /* slot 7  */
 int _ZN5Actor12BeforeRenderEv(void *self);                     /* slot 10 */
 int _ZN5Actor13OnYoshiTryEatEv(void *self);                    /* slot 18 */
+/* Actor's own interaction list, slots 20..29, plus the Platform tail. All
+   matched arm9 bodies already in the build (slice_gate32, slice_gate50). */
+int  _ZN5Actor9Virtual50Ev(void *self);                        /* slot 20 */
+void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);      /* slot 21 */
+void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);          /* slot 22 */
+void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);          /* slot 23 */
+void _ZN5Actor8OnKickedERS_(void *self, void *o);              /* slot 24 */
+void _ZN5Actor8OnPushedERS_(void *self, void *o);              /* slot 25 */
+void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
+void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
+void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
+void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);   /* slot 19 */
+int  _ZN5Actor16OnAimedAtWithEggEv(void *self);                /* slot 29 */
+void _ZN8Platform4KillEv(void *self);                          /* slot 31 */
 extern int data_02099f24[];               /* the frame phase */
 extern unsigned char data_020a4b4c;       /* the spawn spine's own step */
 const char *port_actor_class_name(unsigned id);
@@ -132,7 +162,48 @@ static int __fastcall bw_trap13(void *s, void *) { bw_trap_report(s, 13); return
 static int __fastcall bw_trap14(void *s, void *) { bw_trap_report(s, 14); return 0; }
 static int __fastcall bw_trap16(void *s, void *) { bw_trap_report(s, 16); return 0; }
 static int __fastcall bw_trap17(void *s, void *) { bw_trap_report(s, 17); return 0; }
-static int __fastcall bw_trap19(void *s, void *) { bw_trap_report(s, 19); return 0; }
+/* slot 19, OnTurnIntoEgg(Player &player): the caller PUSHES the player, so the
+   three-parameter veneer pops it. The ROM reloc at each of these tables + 0x4c
+   lands on arm9 0x02010154, Actor::OnTurnIntoEgg, a tail-call veneer to
+   KillAndTrackInDeathTable, so Yoshi swallowing one kills AND tracks it for
+   respawn. Trapping the slot froze the actor forever instead. */
+static int __fastcall bw_turn_egg(void *s, void *, void *p)
+{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+/* The interaction-tail traps. Slot 30 declines for every table here (its ROM
+   body returns a Vector3 by value and the sret contract is unproved); the
+   others are for classes that OVERRIDE one of Actor's tail bodies with one
+   that is in no slice, where forwarding to Actor's would run the wrong code.
+   Their own `ret` is unreachable -- port_actor_slot_decline aborts or raises
+   for the quarantine handler -- so the two-parameter shape is dead code. */
+#define BW_TRAP(n)     static int __fastcall bw_trap##n(void *s, void *)     { bw_trap_report(s, n); return 0; }
+BW_TRAP(21) BW_TRAP(22) BW_TRAP(27) BW_TRAP(29) BW_TRAP(30) BW_TRAP(31)
+#undef BW_TRAP
+
+/* Actor's own interaction tail. Slots 21..28 take an argument the __thiscall
+   caller PUSHED, so each thunk needs the dummy edx AND the named parameter. */
+static int __fastcall bw_v50(void *s, void *)
+{ return _ZN5Actor9Virtual50Ev(s); }
+static int __fastcall bw_pounded(void *s, void *, void *o)
+{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+static int __fastcall bw_atk1(void *s, void *, void *o)
+{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+static int __fastcall bw_atk2(void *s, void *, void *o)
+{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+static int __fastcall bw_kicked(void *s, void *, void *o)
+{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+static int __fastcall bw_pushed(void *s, void *, void *o)
+{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+static int __fastcall bw_cannon(void *s, void *, void *o)
+{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+static int __fastcall bw_mega(void *s, void *, void *p)
+{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+static int __fastcall bw_under(void *s, void *, void *o)
+{ _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+static int __fastcall bw_egg(void *s, void *)
+{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+/* slot 31, the Platform tail; only the Platform tables below write it */
+static int __fastcall bw_kill(void *s, void *)
+{ _ZN8Platform4KillEv(s); return 0; }
 
 static void bw_fill_shared(void **vt)
 {
@@ -148,7 +219,20 @@ static void bw_fill_shared(void **vt)
     vt[14] = (void *)bw_trap14;
     vt[15] = (void *)bw_heap;
     vt[18] = (void *)bw_yoshi;
-    vt[19] = (void *)bw_trap19;
+    vt[19] = (void *)bw_turn_egg;
+    /* Actor's interaction tail, in every table here; the two classes that
+       override one of these rewrite their own slot below. */
+    vt[20] = (void *)bw_v50;
+    vt[21] = (void *)bw_pounded;
+    vt[22] = (void *)bw_atk1;
+    vt[23] = (void *)bw_atk2;
+    vt[24] = (void *)bw_kicked;
+    vt[25] = (void *)bw_pushed;
+    vt[26] = (void *)bw_cannon;
+    vt[27] = (void *)bw_mega;
+    vt[28] = (void *)bw_under;
+    vt[29] = (void *)bw_egg;
+    vt[30] = (void *)bw_trap30;
 }
 
 // ---- CommonModel, the first time it is hosted ------------------------------
@@ -261,7 +345,7 @@ int _ZN4Coin16CleanupResourcesEv(char *self);
 int _ZN4Coin8BehaviorEv(void *self);            /* port/unmatched */
 int func_ov002_020b2a90(void);                  /* OnYoshiTryEat */
 void func_ov002_020b2a34(char *self, int arg);  /* OnTurnIntoEgg */
-void *_ZTV4Coin[20];
+void *_ZTV4Coin[31];
 void port_coin_states_seat(void);               /* port/unmatched */
 /* the five member destructors the D1 body runs, in reverse order */
 void _ZN12WithMeshClsnD1Ev(void *);
@@ -462,7 +546,7 @@ void _ZN5ModelD1Ev(void *);
 #include "BrickBlock.h"
 extern "C" {
 int _ZN10BrickBlock13InitResourcesEv(char *self);
-void *_ZTV10BrickBlock[20];
+void *_ZTV10BrickBlock[31];
 }
 static int __fastcall mmbt_init(void *s, void *)
 { return _ZN10BrickBlock13InitResourcesEv((char *)s); }
@@ -505,7 +589,7 @@ extern "C" void hal_fill_mega_mushroom_block_tag_vtable(void)
 extern "C" {
 int _ZN11CannonHatch8BehaviorEv(char *self);
 int *_ZN11CannonHatchD1Ev(int *self);
-void *_ZTV11CannonHatch[20];
+void *_ZTV11CannonHatch[32];
 }
 #pragma comment(linker, "/alternatename:__ZTV20daObjCannonShutter_c=__ZTV11CannonHatch")
 static int __fastcall ch_init(void *s, void *)
@@ -533,6 +617,8 @@ extern "C" void hal_fill_cannon_hatch_vtable(void)
     vt[12] = (void *)bw_pdes_base;
     vt[16] = (void *)ch_d1;
     vt[17] = (void *)bw_trap17;
+    /* 32 slots; slot 31 is Platform::Kill, not overridden in the ROM table. */
+    vt[31] = (void *)bw_kill;
 }
 
 // ---- SHUTTER_BOB (40, ov014) x2 --------------------------------------------
@@ -559,48 +645,11 @@ extern "C" {
 int func_ov002_020babf0(void *self);            /* the Platform model render */
 int *_ZN10ShutterBobD1Ev(int *self);            /* .c, C linkage */
 int *_ZN10ShutterBobD0Ev(int *self);            /* .c, C linkage */
-/* the base Actor interaction virtuals, slots 20..28 -- all matched no-op stubs
-   the A-press path dispatches (the bbh/bob_enemy shared-table mapping). */
-int  _ZN5Actor9Virtual50Ev(void *self);                      /* slot 20 */
-void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);    /* slot 21 */
-void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);        /* slot 22 */
-void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);        /* slot 23 */
-void _ZN5Actor8OnKickedERS_(void *self, void *o);            /* slot 24 */
-void _ZN5Actor8OnPushedERS_(void *self, void *o);            /* slot 25 */
-void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* slot 26 */
-void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* slot 27 */
-void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* slot 28 */
 /* 32, not 20: the ROM's table is the full Platform width, and construction can
    dispatch a slot past 19. A [20] host array leaves 20..31 reading adjacent
    memory -- a wild call. */
 void *_ZTV10ShutterBob[32];
 }
-static int __fastcall shb_trap20(void *s, void *) { bw_trap_report(s, 20); return 0; }
-static int __fastcall shb_trap21(void *s, void *) { bw_trap_report(s, 21); return 0; }
-static int __fastcall shb_trap22(void *s, void *) { bw_trap_report(s, 22); return 0; }
-static int __fastcall shb_trap23(void *s, void *) { bw_trap_report(s, 23); return 0; }
-static int __fastcall shb_trap24(void *s, void *) { bw_trap_report(s, 24); return 0; }
-static int __fastcall shb_trap25(void *s, void *) { bw_trap_report(s, 25); return 0; }
-static int __fastcall shb_trap26(void *s, void *) { bw_trap_report(s, 26); return 0; }
-static int __fastcall shb_trap27(void *s, void *) { bw_trap_report(s, 27); return 0; }
-static int __fastcall shb_trap28(void *s, void *) { bw_trap_report(s, 28); return 0; }
-static int __fastcall shb_trap29(void *s, void *) { bw_trap_report(s, 29); return 0; }
-static int __fastcall shb_trap30(void *s, void *) { bw_trap_report(s, 30); return 0; }
-static int __fastcall shb_trap31(void *s, void *) { bw_trap_report(s, 31); return 0; }
-/* slots 20..28: the base Actor interaction virtuals the A-press path dispatches
-   into the shutter (Virtual50 + the eight combat hooks). All matched no-op base
-   stubs -- the bbh/bob_enemy shared-table mapping. Verified live: with these
-   trapped, FAULTS_FATAL aborted on slot 25 (OnPushed) then slot 23 (OnAttacked2)
-   as the probe pushed into the shutter. Hosted, not trapped. */
-static int __fastcall shb_v50(void *s, void *)          { return _ZN5Actor9Virtual50Ev(s); }
-static int __fastcall shb_pounded(void *s, void *, void *o) { _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
-static int __fastcall shb_atk1(void *s, void *, void *o)    { _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
-static int __fastcall shb_atk2(void *s, void *, void *o)    { _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
-static int __fastcall shb_kicked(void *s, void *, void *o)  { _ZN5Actor8OnKickedERS_(s, o); return 0; }
-static int __fastcall shb_pushed(void *s, void *, void *o)  { _ZN5Actor8OnPushedERS_(s, o); return 0; }
-static int __fastcall shb_cannon(void *s, void *, void *o)  { _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
-static int __fastcall shb_mega(void *s, void *, void *p)    { _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
-static int __fastcall shb_under(void *s, void *, void *o)   { _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
 /* the destructors spell the class's own table by its RTTI name */
 #pragma comment(linker, "/alternatename:__ZTV14daObjBSwdoor_c=__ZTV10ShutterBob")
 /* InitResources reads data_ov014_021145c4 as a C++ `extern int`, which MSVC
@@ -638,24 +687,12 @@ extern "C" void hal_fill_shutter_bob_vtable(void)
     vt[12] = (void *)bw_pdes_base;
     vt[16] = (void *)shb_d1;
     vt[17] = (void *)shb_d0;
-    /* the Platform tail (20..31): the Actor interaction virtuals plus
-       Platform::Kill. Slots 20..28 are the base Virtual50 + eight combat hooks
-       the A-press interaction path dispatches into the shutter -- hosted with
-       the base no-op stubs (the bbh/bob_enemy mapping). 29 (OnAimedAtWithEgg),
-       30 (OnAimedAtWithEggReturnVec) and 31 (Platform::Kill) stay trapped: no
-       observed path reaches them, so they name themselves if one ever does. */
-    vt[20] = (void *)shb_v50;
-    vt[21] = (void *)shb_pounded;
-    vt[22] = (void *)shb_atk1;
-    vt[23] = (void *)shb_atk2;
-    vt[24] = (void *)shb_kicked;
-    vt[25] = (void *)shb_pushed;
-    vt[26] = (void *)shb_cannon;
-    vt[27] = (void *)shb_mega;
-    vt[28] = (void *)shb_under;
-    vt[29] = (void *)shb_trap29;
-    vt[30] = (void *)shb_trap30;
-    vt[31] = (void *)shb_trap31;
+    /* The Platform tail. ShutterBob overrides NOTHING in 20..31: the ROM table
+       carries Actor's own bodies at 20..30 and Platform::Kill at 31, so the
+       shared fill's tail is already right and only Kill is left to write.
+       Slots 29 and 31 used to trap on the reading that nothing reaches them;
+       the ROM says what they are, so they run it. */
+    vt[31] = (void *)bw_kill;
 }
 
 // ---- SEESAW_BOB (39, ov095) x1 ---------------------------------------------
@@ -707,9 +744,15 @@ static int __fastcall ssb_render(void *s, void *)
     port_actor_render_probe("SEESAW_BOB", (char *)s + 0xd4);
     return _ZN9SeesawBob6RenderEv(s);
 }
-/* slot 21 takes a second argument (the pounder) in r1; the __fastcall thunk's
-   second slot carries it, so the ov095 body reads it straight. */
-static int __fastcall ssb_pounded(void *s, void *pounder)
+/* Slot 21 takes a second argument (the pounder) in r1 on the ROM side. On the
+   host it does NOT ride the __fastcall thunk's second slot: that slot is edx,
+   a register, and the caller of a thiscall vtable slot puts everything past
+   `this` on the STACK. A two-parameter thunk therefore read edx as the
+   pounder and, worse, popped nothing, so the caller's epilogue came up one
+   slot short and returned to its own saved EBP. The third parameter is the
+   pushed word, and declaring it both delivers the real pounder and makes the
+   thunk `ret 4`, the same shape crate_egg and whomp_mega already use. */
+static int __fastcall ssb_pounded(void *s, void *, void *pounder)
 { func_ov095_021357d8((char *)s, (char *)pounder); return 0; }
 static int __fastcall ssb_d1(void *s, void *)
 { return (int)(size_t)_ZN9SeesawBobD1Ev((int *)s); }
@@ -727,20 +770,13 @@ extern "C" void hal_fill_seesaw_bob_vtable(void)
     vt[12] = (void *)bw_pdes_base;
     vt[16] = (void *)ssb_d1;
     vt[17] = (void *)ssb_d0;
-    /* the Platform tail (20..31): base Actor virtuals, except slot 21 which
-       SeesawBob overrides. Trapped per slot otherwise. */
-    vt[20] = (void *)shb_trap20;
+    /* The Platform tail. SeesawBob overrides exactly one of it -- slot 21,
+       OnGroundPounded (ov095 0x021357d8, the rider's weight tilting the
+       plank), which IS in the build. The rest are Actor's own bodies plus
+       Platform::Kill, which is what the ROM table holds; the shared fill wrote
+       20..30 already. */
     vt[21] = (void *)ssb_pounded;
-    vt[22] = (void *)shb_trap22;
-    vt[23] = (void *)shb_trap23;
-    vt[24] = (void *)shb_trap24;
-    vt[25] = (void *)shb_trap25;
-    vt[26] = (void *)shb_trap26;
-    vt[27] = (void *)shb_trap27;
-    vt[28] = (void *)shb_trap28;
-    vt[29] = (void *)shb_trap29;
-    vt[30] = (void *)shb_trap30;
-    vt[31] = (void *)shb_trap31;
+    vt[31] = (void *)bw_kill;
 }
 
 // ---- CAP (269, ov002) -------------------------------------------------------
@@ -763,7 +799,7 @@ void _ZN13WaterfallMist16OnPendingDestroyEv(char *c);
 int *_ZN13WaterfallMistD1Ev(int *self);
 int func_ov002_020b8270(void);
 void func_ov002_020b81e0(char *self, int arg);
-void *_ZTV13WaterfallMist[20];
+void *_ZTV13WaterfallMist[31];
 }
 static int __fastcall cap_init(void *s, void *)
 { return ((WaterfallMist *)s)->WaterfallMist::InitResources(); }
@@ -816,7 +852,7 @@ extern "C" void hal_fill_cap_vtable(void)
 extern "C" {
 int _ZN7Seaweed16CleanupResourcesEv(char *self);
 int _ZN7Seaweed8BehaviorEv(char *self);
-void *_ZTV7Seaweed[20];
+void *_ZTV7Seaweed[31];
 }
 static int __fastcall hh_init(void *s, void *)
 { return ((Seaweed *)s)->Seaweed::InitResources(); }
@@ -871,7 +907,7 @@ extern "C" void hal_fill_healing_heart_vtable(void)
 extern "C" {
 int _ZN10StarSwitch13InitResourcesEv(char *self);
 int *_ZN10StarSwitchD1Ev(int *self);
-void *_ZTV10StarSwitch[20];
+void *_ZTV10StarSwitch[32];
 }
 #pragma comment(linker, "/alternatename:__ZTV13daObjSwitch_c=__ZTV10StarSwitch")
 static int __fastcall xs_init(void *s, void *)
@@ -887,6 +923,19 @@ static int __fastcall xs_render(void *s, void *)
 }
 static int __fastcall xs_d1(void *s, void *)
 { return (int)(size_t)_ZN10StarSwitchD1Ev((int *)s); }
+/* Slot 21, OnGroundPounded. The switch has its OWN body (ov002 0x020b9fec,
+   StarSwitch_OnGroundPounded), not Actor's do-nothing: a ground pound is how
+   this switch fires its event. The ROM body takes only `this` and ignores the
+   pounder, but the slot's one linked dispatcher is thiscall and PUSHES the
+   pounder (walk_window.exe 0x45de24: `mov ecx,this / push [ebp+0xc] /
+   call [edx+0x54]`, and it does NO `add esp` afterwards, so the callee pops the
+   word). A three-parameter __fastcall veneer reads `this` from ecx, names the
+   pushed pounder so MSVC emits `ret 4`, and drops it -- the same shape
+   ssb_pounded and bbb_pounded already ship. A two-parameter thunk would read
+   edx as the pounder, pop nothing, and return the caller one slot short. */
+extern "C" void func_ov002_020b9fec(char *self);   /* slice_gate33 */
+static int __fastcall xs_pounded(void *s, void *, void *)
+{ func_ov002_020b9fec((char *)s); return 0; }
 extern "C" void port_exclamation_switch_states_seat(void);  /* port/unmatched */
 extern "C" void hal_fill_exclamation_switch_vtable(void)
 {
@@ -905,6 +954,13 @@ extern "C" void hal_fill_exclamation_switch_vtable(void)
     vt[12] = (void *)bw_pdes_base;
     vt[16] = (void *)xs_d1;
     vt[17] = (void *)bw_trap17;
+    /* 32 slots. Slot 21 (OnGroundPounded) is the switch's own body, ov002
+       0x020b9fec -- matched src, now enrolled in slice_gate33 -- seated through
+       the thiscall veneer xs_pounded (ret 4, matching the sole linked dispatch
+       site at 0x45de24). A ground pound now runs the body instead of declining.
+       Slot 31 is Platform::Kill. */
+    vt[21] = (void *)xs_pounded;
+    vt[31] = (void *)bw_kill;
 }
 
 // ---- INVISIBLE_SECRET (329, ov002) x5 --------------------------------------
@@ -938,7 +994,7 @@ int *func_ov002_020f03c4(int *self);     /* D1 */
 /* The vtable is HOST STORAGE the registry fills, not mounted ROM bytes, so
    the name dsd gave the address is declared here rather than emitted by
    ovdata. The factory spells it by its RTTI name. */
-void *data_ov002_0210b030[20];
+void *data_ov002_0210b030[31];
 }
 #pragma comment(linker, "/alternatename:__ZTV9daSCoin_c=_data_ov002_0210b030")
 static int __fastcall is_init(void *s, void *)
@@ -988,7 +1044,7 @@ int func_ov002_020b0650(void);         /* slot 9  Render */
 void func_ov002_020b064c(void);        /* slot 12 OnPendingDestroy */
 int *func_ov002_020b05d0(int *self);   /* slot 16 D1 */
 int *func_ov002_020b0600(int *self);   /* slot 17 D0 */
-void *data_ov002_02108480[20];
+void *data_ov002_02108480[31];
 }
 #pragma comment(linker, "/alternatename:__ZTV7daBar_c=_data_ov002_02108480")
 static int __fastcall ip_init(void *s, void *)
@@ -1037,7 +1093,7 @@ extern "C" void hal_fill_invisible_pole_vtable(void)
 extern "C" {
 int _ZN14ArrowSignRight13InitResourcesEv(char *self);
 int *_ZN14ArrowSignRightD1Ev(int *self);
-extern void *_ZTV14ArrowSignRight[20];
+extern void *_ZTV14ArrowSignRight[32];
 }
 static int __fastcall as_init(void *s, void *)
 { return _ZN14ArrowSignRight13InitResourcesEv((char *)s); }
@@ -1052,6 +1108,49 @@ static int __fastcall as_render(void *s, void *)
 }
 static int __fastcall as_d1(void *s, void *)
 { return (int)(size_t)_ZN14ArrowSignRightD1Ev((int *)s); }
+/* Slot 27, OnHitByMegaChar(Player &). The sign has its OWN body (ov098
+   0x02137d80, ArrowSignRight_OnHitByMegaChar), not Actor's do-nothing. Both of
+   the slot's linked dispatch sites are thiscall and PUSH the mega char: the two
+   sites are func_ov002_020eed24 (walk_window.exe 0x45345e: `mov ecx,this /
+   push [ebp+0xc] / call [edx+0x6c]`, then `mov eax,1 / pop / ret`, NO add esp)
+   and func_ov102_02149ccc (0x485fd3: `mov ecx,esi / push edi / call [eax+0x6c]
+   / pop edi / pop esi`, again no caller cleanup). The callee pops the word, so
+   a three-parameter __fastcall veneer reads `this` from ecx, names the pushed
+   char to force `ret 4`, and forwards -- the same shape xs_pounded/ssb_pounded
+   ship. The body's closure (Player::IncMegaKillCount, func_02012694,
+   Platform::KillByMegaChar) is all linked and dispatches no further vtable slot,
+   so the chain terminates here. */
+extern "C" void func_ov098_02137d80(void *self, void *player);  /* slice_gate33 */
+static int __fastcall as_mega(void *s, void *, void *player)
+{ func_ov098_02137d80(s, player); return 0; }
+/* Slot 31, Kill(). The sign has its OWN Kill (ov098 0x02137ccc,
+   ArrowSignRight_Kill -- a poof-dust + Sound::PlayBank3 + MarkForDestruction
+   body), not the generic Platform::Kill. Every linked slot-31 dispatch site is
+   thiscall with NO stack argument: the object's vptr is loaded, `this` is put in
+   ecx, and `call [reg+0x7c]` runs with nothing pushed and no caller cleanup
+   (e.g. walk_window.exe 0x4cc1db: `mov ecx,esi / mov eax,[esi] / call
+   [eax+0x7c]`). Platform::Kill takes only `this` and returns void, so a
+   two-parameter __fastcall veneer (this in ecx, the dummy edx, `ret 0`) matches.
+   The body closes over Particle::System::NewSimple, Actor::DisappearPoofDustAt,
+   Sound::PlayBank3 and ActorBase::MarkForDestruction -- all linked, none a
+   vtable dispatch, so the chain terminates here. */
+extern "C" int func_ov098_02137ccc(char *self);  /* slice_gate33 */
+static int __fastcall as_kill(void *s, void *)
+{ return func_ov098_02137ccc((char *)s); }
+/* Slot 22, OnAttacked1(Actor &). The sign has its OWN body (ov098 0x02137d40,
+   ArrowSignRight_OnAttacked1). Its one linked dispatcher (func_ov002_020ef228,
+   walk_window.exe 0x481474) is thiscall and PUSHES the attacker, so a
+   three-parameter __fastcall veneer reads `this` from ecx, names the pushed
+   argument to force `ret 4`, and forwards -- the bw_atk1 shape. The body's only
+   closure is a tail-dispatch of its OWN slot 31 (Kill); the raw src models that
+   inner call as a cdecl function-pointer idiom, which mismatches slot 31's
+   thiscall veneer. The HOST COPY unmatched/ArrowSign_OnAttacked1.cpp remodels
+   the inner dispatch as a C++ thiscall virtual so it lands on as_kill correctly,
+   the Player_HeadBonk treatment. With that the chain closes on the already
+   linked slot-31 body. */
+extern "C" void func_ov098_02137d40(void *self, char *o);  /* HOST COPY, slice_gate33 */
+static int __fastcall as_atk1(void *s, void *, void *o)
+{ func_ov098_02137d40(s, (char *)o); return 0; }
 extern "C" void hal_fill_arrow_sign_vtable(void)
 {
     void **vt = _ZTV14ArrowSignRight;
@@ -1064,6 +1163,30 @@ extern "C" void hal_fill_arrow_sign_vtable(void)
     vt[12] = (void *)bw_pdes_base;
     vt[16] = (void *)as_d1;
     vt[17] = (void *)bw_trap17;
+    /* 32 slots (ov098 0x0213c3d8; the next-symbol bound reads 23 and is
+       wrong). Three of the tail are the sign's own bodies, matched in src.
+       Slot 27 (OnHitByMegaChar, 0x02137d80) and slot 31 (Kill, 0x02137ccc) are
+       now enrolled in slice_gate33 and seated through the veneers above: slot
+       27's two linked dispatchers are thiscall (ret 4), slot 31's are thiscall
+       with no arg (ret 0), each read from the linked binary, and neither body
+       dispatches a further vtable slot so both chains are closed.
+
+       SLOT 22 (OnAttacked1, 0x02137d40) is NOW SEATED. Its one linked
+       dispatcher (func_ov002_020ef228, walk_window.exe 0x481474) is thiscall,
+       so the ret-4 as_atk1 veneer balances the OUTER call. The recovered body
+       tail-dispatches slot 31 through a plain function-pointer idiom
+       (`c->vt->f[0x7c/4](c)`, a `int(*)(void*)`), which MSVC compiles as a
+       CDECL indirect call: it PUSHES c, loads the vtable (not `this` in ecx),
+       `call [reg+0x7c]`, then cleans the pushed word. That did not match slot
+       31's thiscall veneer (as_kill, ret 0), a false-fix one call deep. The
+       HOST COPY unmatched/ArrowSign_OnAttacked1.cpp models the inner dispatch
+       as a real C++ thiscall virtual so MSVC emits `mov ecx,reg / call
+       [reg+0x7c]` with nothing pushed -- byte for byte what slot 31's linked
+       dispatchers emit -- and the chain closes on the already linked slot-31
+       body. The Player_HeadBonk treatment. */
+    vt[22] = (void *)as_atk1;
+    vt[27] = (void *)as_mega;
+    vt[31] = (void *)as_kill;
 }
 
 // ---- WATER_BOMB (208, ov098) x2 -- REGISTERED (gate 55) --------------------
@@ -1102,7 +1225,7 @@ extern "C" void hal_fill_arrow_sign_vtable(void)
 #include "WaterBomb.h"
 extern "C" {
 int *_ZN9WaterBombD1Ev(int *self);
-void *_ZTV9WaterBomb[20];
+void *_ZTV9WaterBomb[31];
 }
 static int __fastcall wb_init(void *s, void *)
 { return ((WaterBomb *)s)->WaterBomb::InitResources(); }
@@ -1141,7 +1264,7 @@ extern "C" void hal_fill_water_bomb_vtable(void)
 #include "RollingIronBall.h"
 extern "C" {
 int *_ZN15RollingIronBallD1Ev(int *self);
-void *_ZTV15RollingIronBall[20];
+void *_ZTV15RollingIronBall[31];
 }
 static int __fastcall rib_init(void *s, void *)
 { return ((RollingIronBall *)s)->RollingIronBall::InitResources(); }
@@ -1167,6 +1290,9 @@ extern "C" void hal_fill_rolling_iron_ball_vtable(void)
     vt[12] = (void *)bw_pdes_base;
     vt[16] = (void *)rib_d1;
     vt[17] = (void *)bw_trap17;
+    /* 31 slots, a plain Actor table. Slot 29 (OnAimedAtWithEgg) is the ball's
+       own body (ov100 0x02141fa8), matched in src and in no slice. */
+    vt[29] = (void *)bw_trap29;
 }
 
 // ---- WARP_PIPE (298, ov102) ------------------------------------------------
@@ -1189,7 +1315,7 @@ extern "C" void hal_fill_rolling_iron_ball_vtable(void)
 #include "FortressTower.h"
 extern "C" {
 int *_ZN13FortressTowerD1Ev(int *self);
-void *_ZTV13FortressTower[20];
+void *_ZTV13FortressTower[32];
 }
 #pragma comment(linker, "/alternatename:__ZTV15daObjSimpleBg_c=__ZTV13FortressTower")
 static int __fastcall wp_init(void *s, void *)
@@ -1217,6 +1343,9 @@ extern "C" void hal_fill_warp_pipe_vtable(void)
     vt[12] = (void *)bw_pdes_base;
     vt[16] = (void *)wp_d1;
     vt[17] = (void *)bw_trap17;
+    /* 32 slots -- this is also STATIC_ROCK's table (id 61, Jolly Roger Bay
+       x33), the confirmed level-8 crash. Slot 31 is Platform::Kill. */
+    vt[31] = (void *)bw_kill;
 }
 
 // ---- WARP (347, ov002) x4 --------------------------------------------------
@@ -1244,7 +1373,7 @@ int func_ov002_020ec410(char *self);     /* Behavior */
 int func_ov002_020ec408(char *self);     /* Render */
 void func_ov002_020ec404(char *self);    /* OnPendingDestroy */
 int *func_ov002_020ec388(int *self);     /* D1 */
-void *data_ov002_0210acbc[20];
+void *data_ov002_0210acbc[31];
 }
 #pragma comment(linker, "/alternatename:__ZTV11daWarpkun_c=_data_ov002_0210acbc")
 static int __fastcall warp_init(void *s, void *)

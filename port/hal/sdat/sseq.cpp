@@ -38,6 +38,13 @@ struct Track {
     int transpose, bend, bendRange;
     int priority;
     int noteWait;           // C7: notes block the track for their duration
+    // A note played with duration 0 under noteWait blocks the track until the
+    // CHANNELS it owns have ended, rather than for a tick count. That is what
+    // keeps the SEQARC one-shots ("program change, note, end of track")
+    // sounding: the track does not reach its 0xff until the sample is done.
+    // SND_seq.c calls it noteFinishWait; it is set at the note-on (line 939)
+    // and cleared at the top of the track's main loop (lines 867 to 871).
+    int noteFinishWait;
     int tie;
     int cmpFlag;
     int mono;
@@ -56,11 +63,29 @@ struct Player {
 
 Player g_pl[SD_PLAYERS];
 
-// One live note per mixer channel.
+// A mixer channel while a TRACK owns it. This is SND_seq.c's channelLLHead
+// list turned inside out: the list is per track there, and here the ownership
+// is recorded against the channel, which is the same relation read the other
+// way round.
+//
+// OWNERSHIP OUTLIVES THE RELEASE, and that is the point. The ROM keeps a
+// channel on its track's list from SND_AllocExChannel until the channel
+// manager is finished with it and calls ChannelCallback with status 1
+// (SND_seq.c line 653), which is well after the note was released -- the
+// release tail is still the track's channel. noteFinishWait reads exactly
+// that: it blocks the track while it still owns ANY channel.
+//
+// So `active` means OWNED, not sounding, and `released` says whether the
+// note-off has already been sent. reap_finished_channels is the callback.
 struct NoteSlot {
-    int active;
+    int active;             // this channel belongs to (player, track)
+    int released;           // the note-off has been sent; the tail is running
     int player, track;
-    int ticks;              // -1 = tied, released explicitly
+    // -1 means "no scheduled note-off", and it is ONE meaning, not two.
+    // SND_seq.c line 929 passes (length > 0) ? length : -1, so a duration-0
+    // note and a tied note get the same lifetime; the track is what ends
+    // either of them. Splitting them was this file's bug, not the ROM's.
+    int ticks;
     int basePan;            // pan before the player's own bias
     int baseDb10;           // volume before the player's own attenuation
 };
@@ -91,33 +116,101 @@ sd_u32 read_varlen(const sd_u8 *seq, sd_u32 &pc)
     return v;
 }
 
-void note_off(int ch, int release, const char *why)
+// SND_ReleaseExChannel: send the note-off and let the tail run. The channel
+// STAYS the track's until it actually ends -- see NoteSlot.
+void note_release(int ch, const char *why)
+{
+    if (ch < 0 || ch >= SD_CHANNELS) return;
+    if (g_note[ch].released) return;
+    g_note[ch].released = 1;
+    sd_mix_release(ch, why);
+}
+
+// TrackFreeChannels: the track lets go of the channel. The sound is not
+// stopped by this -- a released channel finishes its tail on its own, and the
+// ROM's TrackStop is exactly TrackReleaseChannels followed by this.
+void note_detach(int ch)
 {
     if (ch < 0 || ch >= SD_CHANNELS) return;
     g_note[ch].active = 0;
-    if (release) sd_mix_release(ch, why); else sd_mix_kill(ch, why);
+}
+
+// ChannelCallback with status 1 (SND_seq.c line 653): the channel manager has
+// finished with the channel, so it comes off its track's list. The port has no
+// callback out of the mixer, so the sequencer polls instead -- once per
+// sequencer tick, sixteen tests. Without this nothing ever un-owns a channel
+// and noteFinishWait would block its track forever.
+void reap_finished_channels(void)
+{
+    for (int i = 0; i < SD_CHANNELS; i++)
+        if (g_note[i].active && !sd_mix_active(i))
+            g_note[i].active = 0;
+}
+
+int track_has_channel(int p, int t)
+{
+    for (int i = 0; i < SD_CHANNELS; i++)
+        if (g_note[i].active && g_note[i].player == p && g_note[i].track == t)
+            return 1;
+    return 0;
 }
 
 // Kill everything a player owns.
 void player_silence(int p)
 {
     for (int i = 0; i < SD_CHANNELS; i++)
-        if (g_note[i].active && g_note[i].player == p)
-            note_off(i, 1, "player stopped out from under the note");
+        if (g_note[i].active && g_note[i].player == p) {
+            note_release(i, "player stopped out from under the note");
+            note_detach(i);
+        }
 }
 
-// Kill what ONE TRACK owns: the abnormal-death path. Tied notes outlive
-// their track on purpose (every SEQARC one-shot is "program, note, end"
-// and rings past 0xff until its sample ends), so a track that dies from a
-// desynced stream has to take its voices with it, or the garbage note it
-// keyed on the way out rings forever -- which is what the loud static in
-// the 2026-08-05 play session was.
-void track_silence(int p, int t)
+// TrackStop: TrackReleaseChannels then TrackFreeChannels (SND_seq.c line 618).
+// Every channel the track owns, with no test of any kind on the note -- a tied
+// note and a duration-0 note are released by the same line, because they are
+// the same thing to the ROM.
+//
+// This is where a track ENDS, and every way out of a track comes through here:
+// the 0xff the stream asked for (PlayerStopTrack on TrackMain's -1, line 1268)
+// and the abnormal deaths below. A track that dies from a desynced stream has
+// to take its voices with it or the garbage note it keyed on the way out rings
+// forever, which is what the loud static in the 2026-08-05 play session was.
+void track_stop(int p, int t, const char *why)
 {
     for (int i = 0; i < SD_CHANNELS; i++)
-        if (g_note[i].active && g_note[i].player == p && g_note[i].track == t)
-            note_off(i, 1, "track died and took its voices with it");
+        if (g_note[i].active && g_note[i].player == p && g_note[i].track == t) {
+            note_release(i, why);
+            note_detach(i);
+        }
 }
+
+// THE COIN. SEQARC 3 entry 0x11 is the chime Actor::GivePlayerCoins plays on
+// every coin:
+//
+//     PROG 19 ... TRANSPOSE 24
+//     NOTE 46 dur 2 / NOTE 58 dur 7 / NOTE 51 dur 5
+//     TIE 1
+//     NOTE 63 dur 25
+//     PRIO 16
+//     NOTE 63 dur 30
+//     END
+//
+// TIE is set and never cleared, so its last two notes are started with no
+// scheduled note-off, and before track_stop ran at 0xff the end of the track
+// left them sounding. In the castle banks program 19 is a one-shot sample, so
+// they ran out by themselves and nothing showed. In every COURSE bank (32..55,
+// and Bob-omb Battlefield is 0x21) program 19 is a LOOPING SWAV -- 15024
+// samples with its loop point at 7544 -- and a looping sample that is never
+// released does not end. It sat at priority 64 until some later sound happened
+// to steal its channel, which is why it sounded random rather than constant:
+// quiet spot, it droned; busy spot, it was gone at once.
+//
+// Note what does NOT fix it: releasing only the tied notes. The durations are
+// nonzero here, so this chime reaches its 0xff either way -- but SEQARC 2 entry
+// 231 is PROG 17 / TIE 1 / NOTE 60 dur 0 / END on a looping SWAV, an intended
+// sustained drone, and it NEVER reaches its 0xff because noteFinishWait parks
+// the track on a channel that never ends. The two are told apart by that, not
+// by the tie.
 
 void start_note(Player &pl, int pi, int ti, Track &tk, int note, int vel,
                 int ticks)
@@ -210,7 +303,13 @@ void start_note(Player &pl, int pi, int ti, Track &tk, int note, int vel,
     // envelope or its sample ends. Every sound effect in the SEQARCs is
     // written that way (a lone "program change, note, end of track"), so
     // treating 0 as a one-tick note cut all of them to a click.
-    g_note[ch].ticks = (tk.tie || ticks <= 0) ? -1 : ticks;
+    //
+    // SND_seq.c line 929: (length > 0) ? length : -1, and SND_NoteOn is handed
+    // -1 outright when the track is tied. Duration 0 and TIE reach the same
+    // place. -1 is "no scheduled note-off"; the TRACK ends the note, at its
+    // 0xff (track_stop) or by being blocked on it (noteFinishWait).
+    g_note[ch].ticks    = (tk.tie || ticks <= 0) ? -1 : ticks;
+    g_note[ch].released = 0;
 }
 
 // Execute one track until it must wait. Returns 0 if the track ended.
@@ -221,6 +320,14 @@ int run_track(Player &pl, int pi, int ti)
 
     for (int guard = 0; guard < 4096; guard++) {
         if (!tk.active) return 0;
+        // SND_seq.c lines 867 to 871, and it comes BEFORE the tick wait for
+        // the same reason it does there: a track parked on a duration-0 note
+        // is waiting on its CHANNELS, not on a count. It comes back to life
+        // the tick after reap_finished_channels takes its last one away.
+        if (tk.noteFinishWait) {
+            if (track_has_channel(pi, ti)) return 1;
+            tk.noteFinishWait = 0;
+        }
         if (tk.wait > 0) return 1;
 
         // Prefix state for 0xA0/0xA1/0xA2.
@@ -279,7 +386,13 @@ int run_track(Player &pl, int pi, int ti)
             int vel = s[tk.pc++];
             sd_u32 dur = argVarlen();
             if (condition) start_note(pl, pi, ti, tk, op, vel, (int)dur);
-            if (condition && tk.noteWait) tk.wait = (int)dur;
+            // SND_seq.c lines 936 to 939. Duration 0 does not mean "wait no
+            // time", it means "wait for the note itself", and that is what
+            // holds a one-shot's track open until its sample has finished.
+            if (condition && tk.noteWait) {
+                tk.wait = (int)dur;
+                if (dur == 0) tk.noteFinishWait = 1;
+            }
             continue;
         }
 
@@ -331,7 +444,11 @@ int run_track(Player &pl, int pi, int ti)
             // track deaths started at legit SEQARC entries.
             if (condition) {
                 if (tk.sp > 0) tk.pc = tk.stack[--tk.sp];
-                else { tk.active = 0; return 0; }
+                else {
+                    track_stop(pi, ti, "track ended (0xfd, no caller)");
+                    tk.active = 0;
+                    return 0;
+                }
             }
             break;
         case 0xd4:                              // loop start
@@ -351,6 +468,7 @@ int run_track(Player &pl, int pi, int ti)
             }
             break;
         case 0xff:                              // end of track
+            track_stop(pi, ti, "track ended (0xff)");
             tk.active = 0;
             return 0;
         case 0xfe:                              // alloc tracks (bitmask)
@@ -427,7 +545,7 @@ int run_track(Player &pl, int pi, int ti)
                             op, pi, ti, (unsigned)(tk.pc - 1),
                             (const void *)pl.seq, rel);
                 }
-                track_silence(pi, ti);
+                track_stop(pi, ti, "track died on a desynced stream");
                 tk.active = 0;
                 return 0;
             }
@@ -436,7 +554,7 @@ int run_track(Player &pl, int pi, int ti)
     // A track that never yields is malformed; stop it rather than hang.
     fprintf(stderr, "[sseq] player %d track %d ran 4096 commands without a "
             "wait -- stopped\n", pi, ti);
-    track_silence(pi, ti);
+    track_stop(pi, ti, "track ran away without a wait");
     tk.active = 0;
     return 0;
 }
@@ -593,6 +711,11 @@ void sd_seq_set_pan(int p, int v)
 
 void sd_seq_frame(void)
 {
+    // Channels that ended since the last tick come off their tracks first, so
+    // a track parked in noteFinishWait sees the release in the same tick the
+    // mixer finished it.
+    reap_finished_channels();
+
     for (int p = 0; p < SD_PLAYERS; p++) {
         Player &pl = g_pl[p];
         if (!pl.active) continue;
@@ -602,12 +725,15 @@ void sd_seq_frame(void)
             pl.tempoCount -= 240;
 
             // Note durations are in sequencer TICKS, so they expire here --
-            // inside the tempo loop -- not once per 192 Hz frame.
+            // inside the tempo loop -- not once per 192 Hz frame. A note with
+            // ticks < 0 has no scheduled note-off at all (duration 0 or TIE);
+            // one already released is running its tail and still belongs to
+            // its track, but there is nothing left to count down.
             for (int i = 0; i < SD_CHANNELS; i++) {
                 if (!g_note[i].active || g_note[i].player != p) continue;
-                if (g_note[i].ticks < 0) continue;      // tied
+                if (g_note[i].ticks < 0 || g_note[i].released) continue;
                 if (--g_note[i].ticks <= 0)
-                    note_off(i, 1, "note duration expired");
+                    note_release(i, "note duration expired");
             }
 
             int any = 0;
@@ -619,17 +745,24 @@ void sd_seq_frame(void)
                 if (tk.active) any = 1;
             }
             if (!any) {
-                // Every track ended. Leave the player marked active until
-                // its tails finish so a release is not cut short.
-                int ringing = 0;
-                for (int i = 0; i < SD_CHANNELS; i++)
-                    if (g_note[i].active && g_note[i].player == p) ringing = 1;
-                if (!ringing) {
-                    SD_VT("play %2d finished: sequence ended and its tails "
-                          "are silent\n", p);
-                    pl.active = 0;
-                    break;
-                }
+                // Every track ended, so every track has been through
+                // track_stop and let go of its channels: this is
+                // PlayerStepTicks returning "not playing" and PlayerStop
+                // following it (SND_seq.c lines 588 and 1274).
+                //
+                // The status bit clears HERE, with the tails still sounding.
+                // playerStatus is ply->flags.active (line 102) and nothing in
+                // it looks at the channels. There used to be a "is anything
+                // still ringing" test guarding this, and it is gone rather
+                // than merely unused: every path that clears tk.active runs
+                // track_stop first, so no channel can still be owned by this
+                // player once its last track is inactive, and the test could
+                // never have been true. The tails are not cut by any of it --
+                // they are detached, so the next sound to take this slot
+                // cannot silence them either.
+                SD_VT("play %2d finished: sequence ended, tails detached\n", p);
+                pl.active = 0;
+                break;
             }
         }
     }

@@ -161,7 +161,7 @@ int _ZN9PowerStar8BehaviorEv(void *self);          /* host copy */
 int *_ZN9PowerStarD1Ev(int *self);
 int *_ZN9PowerStarD0Ev(int *self);
 int func_ov002_020e8ee8(void *self);               /* slot 18 override */
-int func_ov002_020e8edc(void *self);               /* slot 19 override */
+int func_ov002_020e8edc(void *self, void *player); /* slot 19 override */
 void *_ZTV9PowerStar[31];
 void port_power_star_states_seat(void);   /* port/unmatched/PowerStar_States */
 
@@ -256,8 +256,16 @@ static int __fastcall ps_d0(void *s, void *)
 { return (int)(size_t)_ZN9PowerStarD0Ev((int *)s); }
 static int __fastcall ps_yoshi(void *s, void *)
 { return func_ov002_020e8ee8(s); }
-static int __fastcall ps_s19(void *s, void *)
-{ return func_ov002_020e8edc(s); }
+/* Slot 19 is OnTurnIntoEgg(Player &player): the pushed player has to be
+   declared so the thunk pops it, the way ps_yoshi's argument-free slot 18
+   does not have to, and it has to be FORWARDED. func_ov002_020e8edc is the
+   ROM's `ldr ip,[pc]; bx ip` veneer onto func_ov002_020e8e80(c, a), and a
+   veneer is a tail jump on the host too, so whatever this pushes is what
+   the body reads. Pushing only self left the body's `a` reading this
+   thunk's own return address, which it stored at +0x438 and passed on to
+   func_ov002_020e8ef0. */
+static int __fastcall ps_s19(void *s, void *, void *player)
+{ return func_ov002_020e8edc(s, player); }
 static int __fastcall ps_aimed(void *s, void *)
 { return _ZN5Actor16OnAimedAtWithEggEv(s); }
 

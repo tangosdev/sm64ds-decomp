@@ -2,7 +2,7 @@
 // @symbol func_ov064_0211915c
 // recovered name: daObjFl_Coin_c_Behavior
 /* recovered: renamed to Class_Method */
-/* daObjFl_Coin_c::Behavior - recovered from vtable slot identity */
+/* daObjFl_Coin_c::Behavior - verified 2004/b56 byte-match (ov064), strict-reloc */
 extern int _ZN5Actor13DistToCPlayerEv(void *self);
 
 int func_ov064_0211915c(char *a)

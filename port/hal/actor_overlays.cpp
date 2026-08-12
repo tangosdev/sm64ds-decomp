@@ -922,6 +922,15 @@ void port_ov012_pack_check(void);
 void port_ov012_syms_patch(void);
 void __sinit_ov012_02111a88(void);
 void __sinit_ov012_02111af4(void);
+/* gate 202: ov013 per-symbol -- the clock trio's two sinits, both
+   self-contained (three SharedFilePtrs total -- the pendulum's file 1459,
+   the long hand's 1457, the short hand's 1458 -- no PMF table, verified by
+   reading their bodies). ov013 is already whole-mounted
+   (PORT_LEVEL_OVERLAYS, gate 117); same dual-mount shape as ov012. */
+void port_ov013_pack_check(void);
+void port_ov013_syms_patch(void);
+void __sinit_ov013_021116b8(void);
+void __sinit_ov013_021116f8(void);
 }
 
 extern "C" void port_actor_overlays_sinits(void)
@@ -1187,4 +1196,13 @@ extern "C" void port_actor_overlays_sinits(void)
     port_ov012_syms_patch();
     __sinit_ov012_02111a88();   /* SWITCH_PILLAR */
     __sinit_ov012_02111af4();   /* BASEMENT_WATER */
+
+    /* gate 202: ov013's two own-class sinits (the clock trio -- three
+       SharedFilePtrs total, no PMF table, verified by reading their
+       bodies). ov013 is also whole-mounted (PORT_LEVEL_OVERLAYS) for the
+       level's own object-table walks. */
+    port_ov013_pack_check();
+    port_ov013_syms_patch();
+    __sinit_ov013_021116b8();   /* CLOCK_PENDULUM's SharedFilePtr */
+    __sinit_ov013_021116f8();   /* the two CLOCK_HAND SharedFilePtrs */
 }

@@ -34,6 +34,7 @@ void _ZN5Actor18AfterInitResourcesEj(void *self, unsigned a); /* slot 2 */
 int _ZN5Actor14BeforeBehaviorEv(void *self);               /* slot 7  */
 int _ZN5Actor12BeforeRenderEv(void *self);                 /* slot 10 */
 int _ZN5Actor13OnYoshiTryEatEv(void *self);                /* slot 18 */
+int _ZN5Actor16OnAimedAtWithEggEv(void *self);             /* slot 29 default */
 int _ZN5Actor9Virtual50Ev(void *self);                     /* slot 20 */
 void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);  /* slot 21 */
 void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);      /* slot 22 */
@@ -43,6 +44,7 @@ void _ZN5Actor8OnPushedERS_(void *self, void *o);          /* slot 25 */
 void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
 void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
 void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
+void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
 
 extern int data_02099f24[];          /* the frame phase the lists are in */
 extern unsigned char data_020a4b4c;  /* the spawn spine's own step */
@@ -70,7 +72,7 @@ static void l7_trap_report(void *self, int slot)
 #define L7_TRAP(n) \
     static int __fastcall l7_trap##n(void *s, void *) \
     { l7_trap_report(s, n); return 0; }
-L7_TRAP(13) L7_TRAP(14) L7_TRAP(16) L7_TRAP(17) L7_TRAP(19) L7_TRAP(30)
+L7_TRAP(13) L7_TRAP(14) L7_TRAP(16) L7_TRAP(17) L7_TRAP(30)
 #undef L7_TRAP
 
 static int __fastcall l7_binit(void *s, void *)
@@ -97,6 +99,17 @@ static int __fastcall l7_yoshi(void *s, void *)
 { return _ZN5Actor13OnYoshiTryEatEv(s); }
 static int __fastcall l7_v50(void *s, void *)
 { return _ZN5Actor9Virtual50Ev(s); }
+/* slot 29, Actor::OnAimedAtWithEgg -- the INHERITED default for every class in
+   this gate that has no egg-aim body of its own. Read the ROM platform tables +
+   0x74 with relocs applied (_ZTV17SlidingPlatformWf + 0x74 lands on arm9
+   0x02010124, _ZTV25RotatingUpDownPlatformUtm + 0x74 the same), which is
+   Actor::OnAimedAtWithEgg -- the same default bob_enemy's e31_aimed seats. It is
+   a distinct ROM function from Virtual50 (slot 20, arm9 0x0201014c); the caller
+   reads it thiscall (this in ecx, no stack args, ret 0), so this veneer forwards
+   ecx and cleans nothing. The three classes with their own body (Thwomp,
+   FirePiranhaPlantBig, PiranhaPlant) overwrite it below. */
+static int __fastcall l7_aimed(void *s, void *)
+{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
 static int __fastcall l7_pounded(void *s, void *, void *o)
 { _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
 static int __fastcall l7_atk1(void *s, void *, void *o)
@@ -113,11 +126,18 @@ static int __fastcall l7_mega(void *s, void *, void *p)
 { _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
 static int __fastcall l7_under(void *s, void *, void *o)
 { _ZN5Actor19OnHitFromUnderneathERS_(s, o); return 0; }
+/* slot 19, OnTurnIntoEgg(Player &player): the caller PUSHES the player, so the
+   three-parameter veneer pops it. The ROM reloc at each of these tables + 0x4c
+   lands on arm9 0x02010154, Actor::OnTurnIntoEgg (a tail-call veneer to
+   KillAndTrackInDeathTable). Seating it lets Yoshi swallow-and-respawn as the
+   ROM does; trapping it froze the actor forever. */
+static int __fastcall l7_turn_egg(void *s, void *, void *p)
+{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
 
 /* The shared half of a 31/32-slot Actor table: Actor's four Before/After pairs,
-   ActorBase::OnHeapCreated, Actor::OnYoshiTryEat, Virtual50 and the eight combat
-   hooks, plus the traps. A caller writes its own 0/3/6/9/16/17 and whichever of
-   12/18/19/27/29/31 it overrides. */
+   ActorBase::OnHeapCreated, Actor::OnYoshiTryEat, Virtual50 (slot 20), the eight
+   combat hooks, Actor::OnAimedAtWithEgg (slot 29 default) and the traps. A caller
+   writes its own 0/3/6/9/16/17 and whichever of 12/18/19/27/29/31 it overrides. */
 static void l7_fill_shared(void **vt)
 {
     vt[1] = (void *)l7_binit;
@@ -135,7 +155,7 @@ static void l7_fill_shared(void **vt)
     vt[16] = (void *)l7_trap16;
     vt[17] = (void *)l7_trap17;
     vt[18] = (void *)l7_yoshi;
-    vt[19] = (void *)l7_trap19;
+    vt[19] = (void *)l7_turn_egg;
     vt[20] = (void *)l7_v50;
     vt[21] = (void *)l7_pounded;
     vt[22] = (void *)l7_atk1;
@@ -145,7 +165,8 @@ static void l7_fill_shared(void **vt)
     vt[26] = (void *)l7_cannon;
     vt[27] = (void *)l7_mega;
     vt[28] = (void *)l7_under;
-    vt[29] = (void *)l7_v50;    /* overwritten where a class has its own */
+    vt[29] = (void *)l7_aimed;  /* Actor::OnAimedAtWithEgg, the ROM default;
+                                   classes with their own body override it */
     vt[30] = (void *)l7_trap30;
 }
 
@@ -578,8 +599,15 @@ int _ZN19FirePiranhaPlantBig8BehaviorEv(void *self);  /* Linux: real symbol from
 // MovingCylinderClsnWithPos at +0x3e8.
 //
 // A 31-slot Enemy table. It overrides slot 12 (its own OnPendingDestroy) and
-// slot 29 (func_ov084_0212ec58, OnAimedAtWithEgg); slots 18/19 stay Actor's, so
-// Yoshi cannot swallow it.
+// slot 29 (func_ov084_0212ec58, OnAimedAtWithEgg); slots 18/19 stay Actor's.
+//
+// The old comment here read "slots 18/19 stay Actor's, so Yoshi cannot swallow
+// it." That is BACKWARDS. The ROM reloc at this table + 0x4c lands on arm9
+// 0x02010154, which is Actor::OnTurnIntoEgg -- the swallow-and-track handler,
+// a tail-call veneer to KillAndTrackInDeathTable. Keeping slot 19 as Actor's
+// default is precisely what LETS Yoshi eat the plant and respawn it, exactly as
+// Nintendo shipped it. l7_fill_shared seats that default (l7_turn_egg), so the
+// plant is swallowable here with no per-class override.
 //
 // ITS BEHAVIOR IS A POINTER-TO-MEMBER over a COMPLETE class, which MSVC narrows
 // to a 4-byte stride against the ROM's 8-byte state table, so Behavior is a host

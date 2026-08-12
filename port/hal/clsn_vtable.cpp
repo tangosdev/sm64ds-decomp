@@ -15,6 +15,15 @@
 
 extern "C" int g_sphere_dbg[16];   /* port/unmatched/MeshCollider_DetectClsn_Sphere.cpp */
 
+// BATCH-3 LINKAGE SEAT bridge. The real MeshCollider::DetectClsn(RaycastGround&)
+// body (now seated in slot 6) reads/writes the shared prism SurfaceInfo global
+// data_020a0cec, which it references with C++ type (mangled
+// ?data_020a0cec@@3USurfaceInfo@@A). The global is DEFINED once, flat-C, in
+// port/unmatched/MeshCollider_DetectClsn_Sphere.cpp (_data_020a0cec). Bridge the
+// typed reference to the flat definition, the same /alternatename mechanism the
+// MeshColliderBase seat uses for its method bodies. One storage, both names.
+#pragma comment(linker, "/alternatename:?data_020a0cec@@3USurfaceInfo@@A=_data_020a0cec")
+
 static void __fastcall slot_v08(void *self, void *)
 { ((MeshCollider *)self)->MeshCollider::Virtual08(); }
 static void __fastcall slot_surf(void *self, void *, s16 tri, SurfaceInfo *res)
@@ -56,55 +65,26 @@ static void __fastcall slot_beforeclsn(void *self, void *, ClsnResult *res,
 }
 
 /* Ground overload (ROM slot 6) -- MeshCollider::DetectClsn(RaycastGround &),
-   ITCM 0x01ffd3f8, 0x498 bytes, unmatched. Adapter: a stack RaycastLine
-   straight down from the ground ray's own position by the ground ray's own
-   reach, walked by the hosted line walk, hit fields copied back. Both
-   endpoints come from the caller -- a RaycastGround HAS no endpoints, it is
-   pos + reach -- so the only invented number here is the fallback when the
-   caller left reach at zero. Ground layout evidence: BgCh head 0x10,
-   ClsnResult 0x10, pos Vec3 0x38 (func_020374d4 writes it), reach 0x4c
-   (Player::InitResources writes td*2 there).
+   ITCM 0x01ffd3f8, 0x498 bytes. BATCH-3 LINKAGE SEAT: this now dispatches the
+   REAL matched body (src/_ZN12MeshCollider10DetectClsnER13RaycastGround.cpp,
+   2004/b56 byte-match), replacing the earlier stack-RaycastLine adapter. The
+   TU rides slice_gate8 (and GATE8_EXTRA_SOURCES for the gate-8/9 smoke
+   targets), so the qualified call resolves in every target that links this
+   table, and naming it here is the reference edge that pulls it in.
 
-   NOT the tunneling path, contrary to the note this comment used to carry.
-   WithMeshClsn's continuous update never builds a RaycastGround; it sweeps
-   RaycastLine segments from the actor's PREV POS, and the fast falls that
-   passed through thin decks did so because prev pos was stale, not because
-   this adapter shortened anything. Gate 15 (the real BeforeBehavior) fixed
-   that: a 2100-unit fall at 75 units/frame now stops on the bridge deck. */
-static int __fastcall slot_ground(void *self, void *, unsigned char *g)
+   The real body IS the downward ground probe (its own octree march through the
+   (x, z) column), so the adapter that synthesised a vertical RaycastLine is no
+   longer needed: it built the same query the ROM body runs natively, only via
+   the hosted line walk. The shim is now the same one-line qualified dispatch as
+   slot_ray; the RaycastGround the caller passed carries its own pos and reach
+   (BgCh head 0x10, ClsnResult 0x10, pos Vec3 0x38, reach 0x4c) and the body
+   fills the result fields in place. */
+static int __fastcall slot_ground(void *self, void *, RaycastGround *g)
 {
-    unsigned char line[0x64];
-    memset(line, 0, sizeof line);
-    memcpy(line, g, 0x10);                       /* BgCh flags ride along */
-    memcpy(line + 0x38, g + 0x38, 12);           /* lineStart = pos */
-    memcpy(line + 0x54, g + 0x38, 12);           /* lineEnd = pos ... */
-    int reach = *(int *)(g + 0x4c);
-    if (reach <= 0) reach = 0xA0000;             /* 160 units default */
-    *(int *)(line + 0x58) -= reach;              /* ... straight down */
-    *(int *)(line + 0x60) = 0x7FFFFFF;           /* best-dist seed */
-    int hit = ((MeshCollider *)self)->MeshCollider::DetectClsn(
-        *(RaycastLine *)line);
+    int hit = ((MeshCollider *)self)->MeshCollider::DetectClsn(*g);
     if (getenv("PORT_TRACE_CLSN"))
-        fprintf(stderr, "  [ground] start(%d,%d,%d) reach=%d head4=%d "
-                        "-> hit=%d y=%d\n",
-                ((int *)(line + 0x38))[0], ((int *)(line + 0x38))[1],
-                ((int *)(line + 0x38))[2], reach, line[4], hit,
-                ((int *)(line + 0x54))[1]);
-    if (hit) {
-        /* hit fields only: SurfaceInfo (+0x14, 20 bytes) and tri (+0x28).
-           NEVER the whole result head -- the old 0x1c-byte copy from the
-           un-ctor'd stack line clobbered the ground result's vtable,
-           clsn slot (0x18 = empty sentinel) and objID (-1 = no actor),
-           and the zeros sent UpdateExtraContinous walking slot 0xffff
-           and FindWithID hunting actor 0 */
-        memcpy(g + 0x14, line + 0x14, 20);
-        *(unsigned short *)(g + 0x28) = *(unsigned short *)(line + 0x28);
-        /* ground result fields (func_02037464 resets them: y at +0x44
-           seeded 0x80000000, flag at +0x48) */
-        if (((int *)(line + 0x54))[1] > *(int *)(g + 0x44))
-            *(int *)(g + 0x44) = ((int *)(line + 0x54))[1];
-        g[0x48] = 1;
-    }
+        fprintf(stderr, "  [ground] real DetectClsn(RaycastGround) -> hit=%d\n",
+                hit);
     return hit;
 }
 
@@ -220,7 +200,7 @@ static int __fastcall slot_sphere(void *self, void *, void *sph)
         fprintf(stderr, "FATAL: MeshCollider vtable slot %d dispatched " \
                         "with no filler (clsn_vtable.cpp)\n", n); \
         abort(); }
-TRAP(0) TRAP(1) TRAP(6) TRAP(8) TRAP(10) TRAP(11) TRAP(12)
+TRAP(0) TRAP(1) TRAP(8) TRAP(10) TRAP(11) TRAP(12)
 
 #ifndef _WIN32
 /* Linux/Itanium: the collision vtable is dispatched by GCC virtual calls
@@ -243,7 +223,7 @@ static void slotL_orig(void *self, s16 tri, Vector3 *res)
 static int  slotL_ray(void *self, RaycastLine *ray)
 { return ((MeshCollider *)self)->MeshCollider::DetectClsn(*ray); }
 static int  slotL_ground(void *self, unsigned char *g)
-{ return slot_ground(self, 0, g); }        /* reuse the ground->line adapter */
+{ return slot_ground(self, 0, (RaycastGround *)g); }  /* ground->line adapter */
 static int  slotL_sphere(void *self, void *sph)
 { return slot_sphere(self, 0, sph); }
 static void slotL_beforeclsn(void *self, ClsnResult *res, Actor *actor,
@@ -267,13 +247,16 @@ static void slotL_trap(void *)
 // (the DetectClsn trio) are emitted in REVERSE declaration order.
 #ifdef _WIN32
 extern "C" void *_ZTV12MeshCollider[13] = {
-    (void *)slot_trap0,         /* 0: scalar deleting dtor */
+    (void *)slot_trap0,         /* 0: scalar deleting dtor (real D0 seated at
+                                       boot by hal_seat_meshcollider_dtor in the
+                                       walk_window family; smoke targets never
+                                       delete the level collider, keep the trap) */
     (void *)slot_v08,           /* 1: Virtual08 */
     (void *)slot_surf,          /* 2: GetSurfaceInfo */
     (void *)slot_norm,          /* 3: GetNormal -- the walk's hot slot */
     (void *)slot_orig,          /* 4: GetTriangleOrigin */
     (void *)slot_trap1,         /* 5: GetTriangleOrigin (ROM numbering) */
-    (void *)slot_ground,        /* 6: DetectClsn(RaycastGround) - adapter */
+    (void *)slot_ground,        /* 6: DetectClsn(RaycastGround) - real body */
     (void *)slot_ray,           /* 7: DetectClsn(RaycastLine) */
     (void *)slot_sphere,        /* 8: DetectClsn(SphereClsn) - stub */
     (void *)slot_beforeclsn,    /* 9: BeforeClsn - the platform-carry seat */

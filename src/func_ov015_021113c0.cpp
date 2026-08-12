@@ -2,7 +2,7 @@
 // @symbol func_ov015_021113c0
 // recovered name: PoleBillboard_OnHitByMegaChar
 /* recovered: renamed to Class_Method */
-/* daObjBk_Botaosi_c::OnHitByMegaChar - recovered from vtable slot identity */
+/* daObjBk_Botaosi_c::OnHitByMegaChar - verified 2004/b56 byte-match (ov015), strict-reloc */
 struct Player {
     void IncMegaKillCount();
 };

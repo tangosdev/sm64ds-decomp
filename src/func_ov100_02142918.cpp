@@ -3,7 +3,7 @@
 // @symbol func_ov100_02142918
 // recovered name: Butterfly_Kill
 /* recovered: renamed to Class_Method */
-/* daBtfly_c::Kill - recovered from vtable slot identity */
+/* daBtfly_c::Kill - verified 2004/b56 byte-match (ov100), strict-reloc */
 extern "C" {
 void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void* self, void* c);
 int func_020ad660(void* a, void* b, void* d, int e);

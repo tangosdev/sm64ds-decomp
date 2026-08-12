@@ -3,7 +3,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjBk_Ukisima_c::CleanupResources - recovered from vtable slot identity */
+/* daObjBk_Ukisima_c::CleanupResources - verified 2004/b56 byte-match (ov015), strict-reloc */
 // Cross-overlay tail-call veneer. #pragma long_calls forces mwccarm to emit the pooled
 // `ldr ip,[pc]; bx ip` indirect tail-call (a plain near `b` otherwise) that the ROM uses
 // to reach another overlay. Loads the data pointer into r1; this stays in r0.

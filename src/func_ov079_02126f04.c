@@ -3,7 +3,7 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjBkKillerdai_c::CleanupResources - recovered from vtable slot identity */
+/* daObjBkKillerdai_c::CleanupResources - verified 2004/b56 byte-match (ov079), strict-reloc */
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern void* data_ov079_02127f64[];
 extern void* data_ov079_02128300;

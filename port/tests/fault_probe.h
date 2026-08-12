@@ -24,6 +24,49 @@ typedef struct _EXCEPTION_POINTERS EXCEPTION_POINTERS;
 #endif
 #include <stdio.h>
 
+/* A stack word is only a RETURN ADDRESS if it points at code. The probe used
+   to accept any word inside the module's [base, base+0x200000) window, but that
+   window also covers the module's .data/.rdata/.bss: a data pointer parked on
+   the stack (e.g. &ac_trap_report's static msg[128], a constant .data address)
+   would be printed as a "module return word", and the crash classifier keys
+   families on the FIRST such word -- so a data address seeded bogus families
+   (the +0019be40 cluster, byte-identical across builds because it is data, not
+   shifting code). This predicate gates labelling on executability: a candidate
+   is a return address only if its page is COMMITTED and carries an EXECUTE
+   protection (PAGE_EXECUTE / _READ / _READWRITE / _WRITECOPY). .data/.rdata/
+   .bss (RW or RO), heap, and stack pages fail it and are no longer labelled.
+   VirtualQuery is used rather than parsing PE section headers because it needs
+   no module bookkeeping the probe does not already have and reflects the real
+   runtime page protection of whatever module the word lands in. Cost is one
+   syscall per candidate; the scans cap at 96/512 words so this stays cheap, and
+   it only runs in the crash path. */
+static int port_addr_is_exec(uintptr_t addr)
+{
+#ifdef _WIN32
+    MEMORY_BASIC_INFORMATION mbi;
+    if (VirtualQuery((LPCVOID)addr, &mbi, sizeof mbi) != sizeof mbi)
+        return 0;
+    if (mbi.State != MEM_COMMIT)
+        return 0;
+    return (mbi.Protect & (PAGE_EXECUTE | PAGE_EXECUTE_READ |
+                           PAGE_EXECUTE_READWRITE | PAGE_EXECUTE_WRITECOPY))
+           != 0;
+#else
+    /* Linux: crash forensics is a later lane (see the header note at the top of
+       this file), and the POSIX answer here is parsing /proc/self/maps for the
+       x permission, which belongs with the rest of that work.
+       Answering 0 rather than 1 in the meantime is the deliberate direction: 0
+       means no stack word is ever LABELLED a return address, so Linux
+       backtraces are unlabelled. 1 would label data addresses as code, which is
+       precisely the bug this predicate was added to fix -- it is what seeded the
+       bogus +0019be40 family. An unlabelled backtrace is missing information; a
+       wrongly labelled one is misinformation that reaches the crash classifier
+       and invents families. */
+    (void)addr;
+    return 0;
+#endif
+}
+
 /* The ROM's list walker (func_02043fdc) parks the node it is processing in
    data_020a4b68 before every callback, so at fault time node[2] names the
    actor whose phase code was running -- the question every actor-phase crash
@@ -85,7 +128,8 @@ static LONG WINAPI port_fault_probe(EXCEPTION_POINTERS *ep)
             if (IsBadReadPtr(sp + i, 4)) break;
             v = sp[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000)
+                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                port_addr_is_exec((uintptr_t)v))
                 fprintf(stderr, "  stack[%02d] +0x%08x\n", i,
                         (unsigned)(v - (unsigned)(uintptr_t)base));
         }
@@ -250,6 +294,35 @@ extern int port_last_frame;
 #endif
 #endif
 #endif
+
+#ifdef _MSC_VER
+/* Non-zero only while a test harness is deliberately raising a fault it means
+   to catch: port/unmatched/func_02043fdc.cpp's SM64DS_TEST_QUARANTINE hook,
+   which exists only in a PORT_TEST_HOOKS build. port_crash_write_file below
+   writes nothing while it is set -- see the note there for why suppressing
+   beats tagging. The definition is deliberately a duplicate of the one in that
+   file rather than an extern: nothing defines the symbol strongly, both
+   definitions are selectany with the same initialiser, so the linker folds them
+   into one object that both sides read and write, and a target that links
+   either file alone still resolves it. */
+#ifdef __cplusplus
+extern "C" __declspec(selectany) int port_fault_synthetic = 0;
+#else
+__declspec(selectany) int port_fault_synthetic = 0;
+#endif
+
+#else
+/* GCC has no __declspec(selectany). The ELF equivalent of "duplicate
+   definitions fold into one" is a weak definition, and the contract is the
+   same: this header and func_02043fdc.cpp may both define the symbol, the
+   linker keeps one object both sides read and write, and a target linking
+   either file alone still resolves it. */
+#ifdef __cplusplus
+extern "C" __attribute__((weak)) int port_fault_synthetic = 0;
+#else
+__attribute__((weak)) int port_fault_synthetic = 0;
+#endif
+#endif  /* _MSC_VER */
 
 #ifdef _WIN32
 /* The crash-dump directory, resolved once at boot from %TEMP%. */
@@ -498,7 +571,8 @@ static void port_rich_dump(EXCEPTION_POINTERS *ep, unsigned code,
             if (IsBadReadPtr(sp + i, 4)) break;
             v = sp[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000) {
+                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                port_addr_is_exec((uintptr_t)v)) {
                 PORT_RD_STR("\r\n  +");
                 PORT_RD_HEX(v - (unsigned)(uintptr_t)base);
                 ++shown;
@@ -512,7 +586,8 @@ static void port_rich_dump(EXCEPTION_POINTERS *ep, unsigned code,
         for (i = 0; i < nn; ++i) {
             unsigned v = (unsigned)(uintptr_t)frames[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000) {
+                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                port_addr_is_exec((uintptr_t)v)) {
                 PORT_RD_STR("\r\n  +");
                 PORT_RD_HEX(v - (unsigned)(uintptr_t)base);
             }
@@ -560,6 +635,17 @@ static void port_crash_write_file(EXCEPTION_POINTERS *ep)
     static char path[MAX_PATH + 16];
     static char buf[2048];
     static volatile LONG once;
+    /* A SYNTHETIC FAULT IS NOT A CRASH REPORT. port_fault_synthetic is set only
+       while the SM64DS_TEST_QUARANTINE hook (port/unmatched/func_02043fdc.cpp,
+       and only in a PORT_TEST_HOOKS build) is deliberately raising an access
+       violation it intends to catch. Writing for it would cost real evidence
+       twice over: it would spend the one-shot `once` latch below, so the crash
+       the operator was actually hunting later in the same run would write
+       nothing, and it would push a fabricated dump into the rolling five-deep
+       player crash directory that the report intake reads. Check it BEFORE the
+       latch so a suppressed fault leaves the latch unclaimed. */
+    if (port_fault_synthetic)
+        return;
     if (InterlockedExchange((volatile LONG *)&once, 1))
         return;                          /* first crash wins; no re-entry */
     {
@@ -613,7 +699,8 @@ static void port_crash_write_file(EXCEPTION_POINTERS *ep)
             if (IsBadReadPtr(sp + i, 4)) break;
             v = sp[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000) {
+                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                port_addr_is_exec((uintptr_t)v)) {
                 PORT_CRASH_STR("\r\n  +");
                 PORT_CRASH_HEX(v - (unsigned)(uintptr_t)base);
                 ++printed;
@@ -850,7 +937,8 @@ static DWORD WINAPI port_watchdog_thread(LPVOID p)
             if (IsBadReadPtr(sp + i, 4)) break;
             v = sp[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000)
+                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                port_addr_is_exec((uintptr_t)v))
                 fprintf(stderr, "  stack[%02d] +0x%08x\n", i,
                         (unsigned)(v - (unsigned)(uintptr_t)base));
         }
@@ -891,7 +979,8 @@ static LONG WINAPI port_watch_handler(EXCEPTION_POINTERS *ep)
             if (IsBadReadPtr(sp + i, 4)) break;
             v = sp[i];
             if (v >= (unsigned)(uintptr_t)base &&
-                v < (unsigned)(uintptr_t)base + 0x200000) {
+                v < (unsigned)(uintptr_t)base + 0x200000 &&
+                port_addr_is_exec((uintptr_t)v)) {
                 fprintf(stderr, "    caller? +0x%08x\n",
                         (unsigned)(v - (unsigned)(uintptr_t)base));
                 ++printed;

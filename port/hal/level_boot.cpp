@@ -705,6 +705,35 @@ extern "C" int port_level_has_own_sinits(void)
    the block near the file's end that also declares it for a2_seat's use. */
 extern "C" void port_ov009_sinits(void);
 
+/* STATIC_ROCK (id 61, x33 -- JRB's biggest class) reads its CLPS collision block
+   out of the ov102 factory table data_ov102_0214e190[idx*0xc]; idx 0 is
+   STATIC_ROCK and that word points at DS 0x02113ccc, a "CLPS" record inside the
+   loaded level overlay. That overlay base (0x021111a0) is shared by eleven level
+   overlays, so the pointer is ambiguous cross-mount and ovdata.py --cross keeps
+   it RAW rather than guess a level (see port/tools/ovdata.py, "AN AMBIGUOUS DS
+   RANGE IS DROPPED, NOT GUESSED AT"). Left raw, MeshCollider::GetSurfaceInfo ->
+   func_020381cc dereferences a DS address the host never mapped -- the SIG-CLSN
+   crash. STATIC_ROCK only spawns in Jolly Roger Bay, so the level that owns that
+   block is always ov016: rebase the one word to ov016's mounted copy right after
+   ov016's whole-mount patch runs, per JRB mount, the ov089_keymodels_fixup
+   pattern. The other two idx-0 table words (0214e188/0214e18c, model + KCL
+   fileptrs) target ov102 itself and are rebased by the normal per-mount pass. */
+extern "C" unsigned char data_ov102_0214e190[];
+static void port_jrb_staticrock_clps_seat(void)
+{
+    unsigned *w = (unsigned *)(data_ov102_0214e190 + 0);
+    if (*w == 0x02113ccc)
+        *w = (unsigned)(size_t)port_ov016_at(0x02113ccc);
+    else if (*w < 0x02000000u || *w >= 0x02400000u)
+        return;   /* already host-rebased (idempotent re-entry) */
+    else {
+        std::fprintf(stderr, "FATAL: STATIC_ROCK CLPS seat: data_ov102_"
+                     "0214e190[0] holds %08x, ROM says 02113ccc -- WRONG "
+                     "BYTES\n", *w);
+        std::abort();
+    }
+}
+
 /* IDEMPOTENT PER LEVEL, and gate 31 is why. d->patch() rewrites the overlay
    image's own pointers in place, which is not something that can be done
    twice: a second pass would rebase already-rebased words. The cache was an
@@ -720,6 +749,10 @@ static void *port_level_mount_at(int idx)
         return mounted[idx];
     const PortLevelDesc *d = &port_level_table[idx];
     d->patch();
+    /* JRB owns STATIC_ROCK's cross-mount CLPS pointer; seat it now that ov016's
+       image is mounted and port_ov016_at can resolve the DS address to host. */
+    if (d->patch == port_ov016_patch)
+        port_jrb_staticrock_clps_seat();
     void *lvl = d->at(d->lvl_overlay);
     if (!lvl) {
         std::fprintf(stderr, "FATAL: %s mount: 0x%08x outside the overlay "
@@ -975,6 +1008,23 @@ void *LoadFile(int handle)
     return s->filePtr;
 }
 
+/* Pin the slot behind `handle` as PERSISTENT, so the per-level teardown
+   (port_level_reset_host) leaves it loaded across level changes. The message
+   bank is loaded once at game boot through this same table (message_boot.cpp),
+   not per level, and its section pointers stay pinned in globals for the whole
+   run; freeing its image on the first level change would leave the message
+   system reading a freed block. Everything else in the table is a level's own
+   file, dropped on the change (and the KCL freed). `pad` carries the flag (it
+   is otherwise unused, and the ROM's SharedFilePtr has nothing there either). */
+void port_loadfile_pin_persistent(int handle)
+{
+    for (int i = 0; i < g_loadfile_used; ++i)
+        if ((int)g_loadfile_slot[i].fileID == handle) {
+            g_loadfile_slot[i].pad = 1;
+            return;
+        }
+}
+
 /* Method faces: the three MeshCollider helpers the boot calls by their
    Itanium names while their definitions are real MSVC members. */
 #ifdef _WIN32 /* LINUX: this extern-C name IS the Itanium mangling of the C++ method it forwards to -> self-recurse on GCC. Keep the __cdecl->__thiscall converter on MSVC; on Linux fall to a plain decl and bind to the real src/ TU. */
@@ -1104,9 +1154,81 @@ extern "C" void port_boot_course_sound(int level);   /* hal/star_flow.cpp:
 extern "C" int data_0209d70c[];   /* hal/auto_bss.cpp */
 extern "C" void port_message_archive_seat(void);
 
+/* ---- [lvl-perf]: what a level entry costs ---------------------------------
+   Four QPC-bracketed spans, accumulated across one entry and printed as ONE
+   stderr line (so it lands in the playlog) by port_lvlperf_emit:
+
+       [lvl-perf] teardown=Xms boot=Yms census=Zms print=Wms
+
+   teardown is the level-change pre-boot span (level_change.cpp, zero on a
+   direct boot), boot is port_stage_a_boot below, census is port_actor_census,
+   and print is the boot-dump probe block (port_level_probe +
+   port_stage_a_probe) -- timed apart from the boot proper so time spent
+   INSIDE printf is its own number. That split is the point: the entry stall
+   this line was built to watch was stdout itself (an unbuffered console
+   costs 2-6ms PER LINE and a level entry prints ~248 of them; the setvbuf
+   note in walk_window.cpp has the measurements). A handful of QPC reads per
+   level entry, nothing per frame. QPC hand-declared so this file stays out
+   of windows.h. */
+#ifdef _WIN32
+extern "C" __declspec(dllimport) int __stdcall
+QueryPerformanceCounter(long long *);
+extern "C" __declspec(dllimport) int __stdcall
+QueryPerformanceFrequency(long long *);
+#else
+/* Linux: CLOCK_MONOTONIC, presented through the same two-call shape so
+   port_lvlperf_now below is identical on both platforms. Counting in
+   nanoseconds makes the frequency a constant, and monotonic is the right clock
+   for a span measurement -- a wall-clock step would make a level entry look
+   arbitrarily fast or slow. Declared here for the same reason the Win32 pair
+   is: to keep this file out of a platform header. */
+#include <ctime>
+static inline int QueryPerformanceFrequency(long long *f)
+{ *f = 1000000000LL; return 1; }
+static inline int QueryPerformanceCounter(long long *c)
+{
+    struct timespec ts;
+    clock_gettime(CLOCK_MONOTONIC, &ts);
+    *c = (long long)ts.tv_sec * 1000000000LL + ts.tv_nsec;
+    return 1;
+}
+#endif
+
+static double g_lvlperf_ms[4];   /* teardown, boot, census, print */
+
+extern "C" double port_lvlperf_now(void)
+{
+    static long long freq;
+    long long c;
+    if (!freq)
+        QueryPerformanceFrequency(&freq);
+    QueryPerformanceCounter(&c);
+    return c * 1000.0 / freq;
+}
+
+extern "C" void port_lvlperf_note(int span, double ms)
+{
+    if (span >= 0 && span < 4)
+        g_lvlperf_ms[span] += ms;
+}
+
+extern "C" void port_lvlperf_emit(void)
+{
+    std::fprintf(stderr,
+                 "[lvl-perf] teardown=%.1fms boot=%.1fms census=%.1fms "
+                 "print=%.1fms\n", g_lvlperf_ms[0], g_lvlperf_ms[1],
+                 g_lvlperf_ms[2], g_lvlperf_ms[3]);
+    g_lvlperf_ms[0] = g_lvlperf_ms[1] = g_lvlperf_ms[2] = g_lvlperf_ms[3] = 0;
+}
+
+/* SM64DS_MM_STALE=1 probe; defined beside port_level_reset_host below. */
+static void port_minimap_stale_probe(const char *when);
+
 void *port_stage_a_boot(void *mc, int spawn)
 {
+    const double lvlperf_t0 = port_lvlperf_now();
     g_stage_mc = mc;
+    port_minimap_stale_probe("boot entry");
     /* Defensive: clear the quarantine freeze set on the LOAD side too. The
        teardown path (level_change.cpp) already resets it, but a future exit
        path that bypasses teardown would otherwise carry stale frozen actor
@@ -1277,6 +1399,8 @@ void *port_stage_a_boot(void *mc, int spawn)
        banks the level has already claimed, so it cannot run before the loads
        above. Everything it needs is up by now. */
     port_particle_boot();
+    port_minimap_stale_probe("boot done");
+    port_lvlperf_note(1, port_lvlperf_now() - lvlperf_t0);
     return o;
 }
 
@@ -1294,6 +1418,14 @@ void hal_camera_slots_harness_owned(void);
 void port_actor_registry_install(void);
 void port_actor_lists_seat(void);
 void hal_fill_moving_mesh_collider_vtable(void);
+void hal_fill_meshcolliderbase_vtable(void);
+void hal_seat_meshcollider_dtor(void);
+void hal_seat_expandingheap_vmax(void);
+void hal_seat_platform_dtors(void);
+void hal_fill_enemy_base_vtable(void);
+void hal_seat_expandingheap_dtors(void);
+void hal_seat_model_family_dtors(void);
+void hal_seat_solidheap(void);
 void port_ov009_sinits(void);
 void port_actor_overlays_sinits(void);
 extern void *data_0209f318;
@@ -1431,19 +1563,120 @@ static void __fastcall ps_pdes(void *s, void *)
 static int __fastcall ps_d1(void *s, void *)
 { return (int)(size_t)_ZN6PlayerD2Ev(s); }
 
-static const char *const hal_player_slot_name[20] = {
+/* ---- THE PLAYER'S TABLE IS THIRTY-ONE SLOTS, AND ONLY TWENTY WERE SEEDED --
+   data_ov002_0210a83c is _ZTV6Player, and it comes from the ov002 per-symbol
+   mount -- so slots 20..30 held the ROM's own DS addresses. Real storage, real
+   contents, and on host those resolve outside .text. The seed loop below
+   stopped at 20, so nothing ever overwrote them, and dispatching slot 25 on
+   the Player jumped to a DS address: exit -1073741819.
+
+   This table is invisible to a DECLARATION sweep twice over. It carries a
+   plain data name rather than a _ZTV name, the same blind spot that hid
+   BILL_BLASTER's table (ov079 0x02127fb8); and there is no array declaration
+   here at all, because the width lives in a loop bound. Only comparing what a
+   fill WRITES against the ROM span finds it, which is what
+   port/tools/vtspan.py --fills does.
+
+   Slots 20..30 are Actor's own interaction list, the same addresses every
+   other Actor table carries, and every body is already in the build. Slot 19
+   is Actor::OnTurnIntoEgg (arm9 0x02010154, slice_gate50) and was trapped for
+   want of seating rather than for a reason.
+
+   THERE IS NO SLOT 31. The Player is a plain Actor, not a Platform, and dsd's
+   next symbol (data_ov002_0210a8b8) sits exactly 31 words along -- writing one
+   would run off the end of the mounted symbol.
+
+   Reachability of the tail is UNPROVEN and is not claimed here: the wall and
+   floor dispatchers run on the player's own collider and look up what the
+   player is TOUCHING, so the Player cannot be its own target through them.
+   Something else would have to name the Player through a collision result.
+   The ROM says what belongs in these slots either way. */
+extern "C" {
+void _ZN5Actor13OnTurnIntoEggER6Player(void *self, void *p);       /* 19 */
+int  _ZN5Actor9Virtual50Ev(void *self);                            /* 20 */
+void _ZN5Actor15OnGroundPoundedERS_(void *self, void *o);          /* 21 */
+void _ZN5Actor11OnAttacked1ERS_(void *self, void *o);              /* 22 */
+void _ZN5Actor11OnAttacked2ERS_(void *self, void *o);              /* 23 */
+void _ZN5Actor8OnKickedERS_(void *self, void *o);                  /* 24 */
+void _ZN5Actor8OnPushedERS_(void *self, void *o);                  /* 25 */
+void _ZN5Actor24OnHitByCannonBlastedCharERS_(void *self, void *o); /* 26 */
+void _ZN5Actor15OnHitByMegaCharER6Player(void *self, void *p);     /* 27 */
+/* 28 is declared but deliberately NOT forwarded -- see the slot-28 note in
+   hal_fill_player_vtable. Kept so the list reads as the ROM's own. */
+void _ZN5Actor19OnHitFromUnderneathERS_(void *self, void *o);      /* 28 */
+int  _ZN5Actor16OnAimedAtWithEggEv(void *self);                    /* 29 */
+/* 18 is the Player's OWN body (ov002 0x020e69b8), not Actor's: a real MSVC
+   method TU (src/_ZN6Player13OnYoshiTryEatEv.cpp, slice_gate16) whose whole
+   body is `return 1` -- Yoshi cannot eat the Player. Flat name bridged to the
+   method the TU emits; the mangling was read out of the compiled obj. */
+int  _ZN6Player13OnYoshiTryEatEv(void *self);                      /* 18 */
+}
+#pragma comment(linker, "/alternatename:__ZN6Player13OnYoshiTryEatEv=?OnYoshiTryEat@Player@@UAEHXZ")
+/* 19 and 21..28 take their argument PUSHED by the __thiscall caller, so each
+   thunk needs the dummy edx AND the named parameter or the caller's frame runs
+   short. */
+static int __fastcall ps_yoshi18(void *s, void *)
+{ return _ZN6Player13OnYoshiTryEatEv(s); }
+static int __fastcall ps_egg19(void *s, void *, void *p)
+{ _ZN5Actor13OnTurnIntoEggER6Player(s, p); return 0; }
+static int __fastcall ps_v50(void *s, void *)
+{ return _ZN5Actor9Virtual50Ev(s); }
+static int __fastcall ps_pounded(void *s, void *, void *o)
+{ _ZN5Actor15OnGroundPoundedERS_(s, o); return 0; }
+static int __fastcall ps_atk1(void *s, void *, void *o)
+{ _ZN5Actor11OnAttacked1ERS_(s, o); return 0; }
+static int __fastcall ps_atk2(void *s, void *, void *o)
+{ _ZN5Actor11OnAttacked2ERS_(s, o); return 0; }
+static int __fastcall ps_kicked(void *s, void *, void *o)
+{ _ZN5Actor8OnKickedERS_(s, o); return 0; }
+static int __fastcall ps_pushed(void *s, void *, void *o)
+{ _ZN5Actor8OnPushedERS_(s, o); return 0; }
+static int __fastcall ps_cannon(void *s, void *, void *o)
+{ _ZN5Actor24OnHitByCannonBlastedCharERS_(s, o); return 0; }
+static int __fastcall ps_mega(void *s, void *, void *p)
+{ _ZN5Actor15OnHitByMegaCharER6Player(s, p); return 0; }
+static int __fastcall ps_aimed(void *s, void *)
+{ return _ZN5Actor16OnAimedAtWithEggEv(s); }
+
+/* SLOT 28 ONLY, and the distinction matters to a player. ps_trap below
+   abort()s, which takes the process down. The actor tables instead RAISE,
+   through port_actor_slot_decline (port/unmatched/func_02043fdc.cpp), and
+   port_dispatch_guarded's __except catches that: the actor freezes, a dump is
+   filed, the level keeps running. Slot 28 wants the second behaviour, because
+   an abort here would be a REGRESSION against what players already survive.
+
+   Scoped to this one seat on purpose. Every other trapping Player slot has
+   aborted all along, and converting this file's whole trap convention is a
+   broad behaviour change that has no business riding a hotfix. */
+extern "C" void port_actor_slot_decline(const char *what);
+static int __fastcall ps_decline28(void *, void *)
+{
+    std::fprintf(stderr,
+                 "UNHOSTED: Player vtable slot 28 (OnHitFromUnderneath) is not "
+                 "hosted -- two call sites, two conventions\n");
+    port_actor_slot_decline("unhosted vtable slot 28 on the Player");
+    return 0;
+}
+
+#define HAL_PLAYER_SLOTS 31
+static const char *const hal_player_slot_name[HAL_PLAYER_SLOTS] = {
     "InitResources", "BeforeInitResources", "AfterInitResources",
     "CleanupResources", "BeforeCleanupResources", "AfterCleanupResources",
     "Behavior", "BeforeBehavior", "AfterBehavior",
     "Render", "BeforeRender", "AfterRender",
     "OnPendingDestroy", "Virtual34", "Virtual38", "OnHeapCreated",
-    "~Player (D1)", "~Player (D0)", "OnYoshiTryEat", "OnTurnIntoEgg"};
+    "~Player (D1)", "~Player (D0)", "OnYoshiTryEat", "OnTurnIntoEgg",
+    "Virtual50", "OnGroundPounded", "OnAttacked1", "OnAttacked2",
+    "OnKicked", "OnPushed", "OnHitByCannonBlastedChar", "OnHitByMegaChar",
+    "OnHitFromUnderneath", "OnAimedAtWithEgg", "OnAimedAtWithEggReturnVec"};
 static int hal_player_trap_slot;
 static int __fastcall ps_trap(void *, void *)
 {
     std::fprintf(stderr, "FATAL: Player vtable slot %d (%s) is not hosted\n",
                  hal_player_trap_slot,
-                 hal_player_slot_name[hal_player_trap_slot & 19]);
+                 (unsigned)hal_player_trap_slot < HAL_PLAYER_SLOTS
+                     ? hal_player_slot_name[hal_player_trap_slot]
+                     : "out of range");
     std::abort();
     return 0;
 }
@@ -1451,7 +1684,7 @@ static int __fastcall ps_trap(void *, void *)
 extern "C" void hal_fill_player_vtable(void)
 {
     void **vt = (void **)data_ov002_0210a83c;
-    for (int i = 0; i < 20; ++i)
+    for (int i = 0; i < HAL_PLAYER_SLOTS; ++i)
         vt[i] = (void *)ps_trap;
     vt[0] = (void *)ps_init;
     vt[1] = (void *)ps_binit;
@@ -1467,6 +1700,63 @@ extern "C" void hal_fill_player_vtable(void)
     vt[5] = (void *)ps_aclean;
     vt[12] = (void *)ps_pdes;
     vt[16] = (void *)ps_d1;
+    /* 18..29, the ROM's own contents. 17 (D0) keeps the trap on purpose, per
+       the note above. 18 is the Player's OWN OnYoshiTryEat (ov002 0x020e69b8),
+       seated now that its TU rides slice_gate16 -- while it was in no slice
+       the slot trapped, since forwarding to Actor's would run the wrong code
+       rather than less code. 30 keeps the trap -- its ROM body returns a
+       Vector3 by value and the sret contract is unproved, the reading every
+       other table in the port takes. */
+    vt[18] = (void *)ps_yoshi18;
+    vt[19] = (void *)ps_egg19;
+    vt[20] = (void *)ps_v50;
+    vt[21] = (void *)ps_pounded;
+    vt[22] = (void *)ps_atk1;
+    vt[23] = (void *)ps_atk2;
+    vt[24] = (void *)ps_kicked;
+    vt[25] = (void *)ps_pushed;
+    vt[26] = (void *)ps_cannon;
+    vt[27] = (void *)ps_mega;
+    /* SLOT 28 DECLINES, and it is the one slot here that cannot be seated at
+       all with a single thunk. Actor slot 28 has TWO call sites in this binary
+       with INCOMPATIBLE conventions:
+
+         thiscall  func_ov002_020eeca8+0x44   call [reg+0x70]
+                   -- `this` in ecx, the argument pushed, CALLEE pops
+         cdecl     func_ov002_020cef84+0x23f  mov eax,[reg+0x70]; call eax;
+                                              add esp,8
+                   -- (self, a) both pushed, CALLER pops 8
+
+       A __fastcall thunk that forwards Actor::OnHitFromUnderneath emits
+       `ret 4`. That satisfies the thiscall site and BREAKS the cdecl one: the
+       caller pushes 8, the callee pops 4, the caller pops 8, and esp ends four
+       bytes high. It also reads `this` from ecx while the cdecl site passed it
+       on the stack, so it gets the wrong argument as well. No single word in
+       this slot satisfies both conventions.
+
+       That trade is bad in the direction that matters. An unseated slot is a
+       null/DS-address call: loud, named in a dump, and caught. A four-byte
+       stack imbalance escapes the quarantine net entirely and fails later with
+       nothing attached to it. So this declines by name until the call is
+       modelled uniformly -- strictly better than either failure.
+
+       FOLLOW-UP, not done here and wanting its own review: a host copy of
+       func_ov002_020cef84 in port/unmatched modelling that call as a C++
+       virtual, so both sites become thiscall and the slot can hold the real
+       body. That is the port's established pattern and leaves src untouched.
+
+       It DECLINES rather than TRAPS. ps_trap abort()s, and an abort here
+       would be worse for a player than the unseated slot they have today: an
+       unseated slot is an execute-at-null that the quarantine net catches, so
+       the level survives with a dump. ps_decline28 raises the same catchable
+       fault the actor tables raise, so this slot is named and attributed like
+       a trap AND survivable like the quarantine. Best of the three outcomes,
+       and the only one that is not a regression against the live build.
+
+       Derived from binary arithmetic on the cons build rather than from a
+       repro, and recorded that way on purpose. */
+    vt[28] = (void *)ps_decline28;
+    vt[29] = (void *)ps_aimed;
 }
 
 /* The per-frame tick the ROM's processing list runs on every actor:
@@ -1784,6 +2074,44 @@ extern "C" void port_stage_a2_seat(void)
        spawn. hal/clsn_vtable.cpp has already seeded it with MeshCollider's. */
     hal_fill_moving_mesh_collider_vtable();
 
+    /* Batch-2 linkage seat: the MeshColliderBase base table's own matched
+       bodies. C2 installs the vptr; this fill names the bodies so they link.
+       Present only in the slice_gate16 targets (walk_window family). */
+    hal_fill_meshcolliderbase_vtable();
+
+    /* Batch-3 linkage seat: the concrete MeshCollider's own deleting dtor (D0)
+       into slot 0 of _ZTV12MeshCollider, and D1 kept referenced. walk_window
+       family only; the gate-8/9 smoke targets keep the trap (they never delete
+       the level collider). */
+    hal_seat_meshcollider_dtor();
+
+    /* Lane-lk1 linkage seat: ExpandingHeap's VMax pair into slots 10/11 of
+       _ZTV13ExpandingHeap. walk_window family only; the pair's allocator
+       callee needs gate 4b's cstd::abs, which the minimal root-heap targets
+       do not link, so those keep the traps (no caller evidence anywhere). */
+    hal_seat_expandingheap_vmax();
+
+    /* Linkage seat: Platform's own destructor pair into slots 16/17 of the
+       hosted base table (both storage names), the bodies the ROM's table at
+       ov002 0x0210ae38 carries there. walk_window family only, next to the
+       collider seats above; the base table is only installed mid-teardown and
+       nothing dispatches through it, so the seat is the ROM's contents where
+       the trap prefill stood. hal/lk2_platform_dtor_seat.cpp. */
+    hal_seat_platform_dtors();
+
+    /* Linkage seat: the Enemy base table (data_ov002_021081e4), same reading
+       as the Platform base pair -- installed only mid-teardown, never
+       dispatched through; the fill gives it the shared half plus the class's
+       own destructor pair, the ROM's contents. hal/actor_classes.cpp. */
+    hal_fill_enemy_base_vtable();
+
+    /* Lane-lk4 linkage seat: ExpandingHeap's dtor chain (D1/D0/VDestroy) and
+       its last two allocator forwarders (VDeallocateAll/VMemoryLeft) into
+       slots 0/1/2/5/12, closing the class. walk_window family only; the D0
+       closure needs Memory::operator_delete2 (gate 16), which the minimal
+       root-heap targets do not link, so those keep the traps. */
+    hal_seat_expandingheap_dtors();
+
     /* The LEVEL overlay's own static initialisers, where the DS runs them:
        after the overlay is mounted and before anything spawns. Every
        SharedFilePtr the level's own actors load through is constructed there,
@@ -1813,6 +2141,22 @@ extern "C" void port_stage_a2_seat(void)
     hal_fill_camera_vtable();
     hal_camera_slots_harness_owned();
     port_actor_registry_install();
+
+    /* Lane-lk4 linkage seat: the model family's own deleting dtors (D0) into
+       slot 0 of the five hosted primary tables. AFTER the registry install on
+       purpose: King Bob-omb's registry fill rewrites the BlendModelAnim slot
+       with its no-op, and this seat has to win every level boot. walk_window
+       family only (hal/model_dtor_seat.cpp rides the same targets as the
+       MeshCollider dtor seat). */
+    hal_seat_model_family_dtors();
+
+    /* Lane-lk4 linkage seat: the solid-heap face. SolidHeap's own sixteen
+       slot table filled with its matched bodies, and ActorBase::Virtual34/38
+       (the per-instance heap hooks) into slots 13/14 of _ZTV5Actor, after
+       the registry install's STAR_CAMERA fill trapped them. walk_window
+       family only (hal/lk4_solidheap_seat.cpp). */
+    hal_seat_solidheap();
+
     std::printf("[a2] scene root %p\n", port_stage_object());
 }
 
@@ -2075,39 +2419,232 @@ void _ZN5Stage18ResetMeshCollidersEv(void);
 int port_level_mount_register(int level, void *(*fn)(void));
 unsigned port_level_ds_overlay(int level);
 void port_actor_census_reset(void);      /* hal/actor_registry.cpp */
+void port_stage_anims_rearm(void);       /* hal/stage_bridges.cpp: re-arm the
+                                            texture-transformer reload, which
+                                            keys off the level id and so cannot
+                                            see a self-warp */
+}
+
+// ---- SM64DS_MM_STALE=1: what the minimap inherits across a level change -----
+//
+// GetMinimapID reads two independent things the ROM hands it FRESH on every
+// level and the port, which keeps one Stage alive across levels, does not:
+//
+//   1. the level AREA TABLE at Stage+0x8bc (stride 0xc). Its +8 word is the
+//      head of the per-area MINIMAP-CHANGE list that LoadSimpleObjects builds
+//      through LoadMinimapChangeObject, and GetMinimapID walks that list --
+//      `sub ecx,dword ptr [eax]` at GetMinimapID+0x33 is the node deref.
+//   2. the three MARKER ARRAYS Minimap::Behavior hands GetMinimapID as `obj`:
+//      data_0209f40c (12 star markers), data_0209f3e8 (9 stars),
+//      data_0209f3a4 (8 spike bombs). Stage::InitResources zeroes all three
+//      on every entry (src/_ZN5Stage13InitResourcesEv.cpp:284..300).
+//
+// The probe prints both at the top of the boot, BEFORE anything this level
+// loads has run, so a non-zero line is by definition the previous level's.
+extern "C" {
+extern int data_0209f40c[];
+extern unsigned char data_0209f3e8[];
+extern unsigned char data_0209f3a4[];
+extern void *data_0209f314;
+extern void *data_0209f354;          /* the VIEW-OBJECT table pointer */
+extern unsigned char data_0209f1f8;  /* and its count */
+}
+
+static void port_minimap_stale_probe(const char *when)
+{
+    static int on = -1;
+    if (on < 0)
+        on = std::getenv("SM64DS_MM_STALE") != 0;
+    if (!on)
+        return;
+
+    const char *area = (const char *)data_0209f314;
+    int heads = 0, flags = 0, anims = 0;
+    if (area) {
+        for (int i = 0; i < 8; ++i) {
+            if (*(void **)(area + i * 0xc + 0)) ++anims;
+            if (*(unsigned char *)(area + i * 0xc + 4)) ++flags;
+            if (*(void **)(area + i * 0xc + 8)) ++heads;
+        }
+    }
+    int m40c = 0, m3e8 = 0, m3a4 = 0;
+    for (int i = 0; i < 12; ++i) if (data_0209f40c[i]) ++m40c;
+    for (int i = 0; i < 9; ++i)  if (((void **)data_0209f3e8)[i]) ++m3e8;
+    for (int i = 0; i < 8; ++i)  if (((void **)data_0209f3a4)[i]) ++m3a4;
+
+    std::fprintf(stderr,
+                 "[mm-stale] %s: area table %p anim=%d flag=%d CHANGELIST=%d | "
+                 "markers f40c=%d f3e8=%d f3a4=%d | viewobj f354=%p f1f8=%d\n",
+                 when, (void *)area, anims, flags, heads, m40c, m3e8, m3a4,
+                 data_0209f354, (int)data_0209f1f8);
+    if (area)
+        for (int i = 0; i < 8; ++i)
+            if (*(void **)(area + i * 0xc + 8))
+                std::fprintf(stderr, "[mm-stale]   area %d change-list head "
+                             "%p\n", i, *(void **)(area + i * 0xc + 8));
+    std::fflush(stderr);
+}
+
+/* ---- freeing the level's KCL image (the biggest slice of the ~108KB-per-
+   re-entry game-heap leak) -----------------------------------------------------
+   LoadFile allocates one game-heap block per handle through fs_hand_out ->
+   Memory::Allocate. Almost every image is owned by something the teardown
+   already frees: an actor's cleanup frees the ones it loaded, and
+   port_level_stage_reseat frees the Stage's own level Model (+0x86c) and skybox
+   (+0x9bc), which frees the BMDs behind them. The one image NOTHING frees is the
+   level's KCL: Stage::LoadClsnAndObjects loads it straight through this table and
+   registers it into the persistent Stage's MeshCollider, and the port resets
+   that registry (Stage::ResetMeshColliders) without freeing the image. So the
+   castle grounds re-entering itself leaked its KCL -- main_castle.kcl, 71732
+   bytes in the heap -- every cycle. That is the bulk of the drift the [lvl]
+   line reported (108168 bytes total, actor census steady at 51).
+
+   This frees EXACTLY that one image and drops the rest, because the KCL is the
+   only slot whose owner is the port itself. The KCL's OV0 handle is the level's
+   own datum: LVL_Overlay+0x0a (PortLvlOverlay.kclFileId), read from the ROM's
+   own overlay for the level being torn down (data_0209f2f8, the current level,
+   before port_level_latch advances it). Trying to free MORE than the KCL is
+   what an earlier draft got wrong: releasing every still-allocated slot freed
+   the level Model's and skybox's BMD images out from under the reseat that was
+   about to hand them back, corrupting the allocator's free list (the next
+   MemoryLeft walk faulted). Freeing precisely the one orphaned handle avoids
+   guessing.
+
+   A guard on the block's own header keeps this safe against a double free even
+   so: a live ExpandingHeapAllocator block carries the used-node magic 0x5544 in
+   the two bytes at userPtr-0x10 (src/ExpandingHeapAllocator AllocateNode ->
+   CreateNode(...,0x5544)). If the KCL image was somehow already freed, the magic
+   no longer reads 0x5544 and the release is skipped. SM64DS_TRACE_LEVEL=1
+   reports what it did.
+
+   RESOLVE EARLY, FREE LATE -- and the split is not cosmetic. The Stage's
+   MeshCollider registry POINTS AT this image (LoadClsnAndObjects registered it),
+   and Stage::ResetMeshColliders is what clears that registry. That reset runs in
+   port_level_stage_reseat, LATER than port_level_reset_host. Freeing the image
+   in reset_host, as an earlier draft did, returns the block to the allocator
+   while the registry is still holding a live pointer into it: six clean
+   re-entries happened not to dereference it in that window, but any future
+   teardown, collision query or trace that walked the registry between reset_host
+   and ResetMeshColliders would read freed memory -- a rare, unreproducible
+   crash. So this is split in two:
+
+     port_level_capture_kcl()  -- runs in port_level_reset_host, BEFORE
+       port_level_latch advances data_0209f2f8. It resolves the handle from the
+       level being torn down (its own LVL_Overlay, +0x0a) and COPIES the slot's
+       SharedFilePtr aside. It frees nothing. The resolution must happen here,
+       from the old level's overlay, because the latch is about to point
+       data_0209f2f8 at the incoming level -- reading kclFileId after the latch
+       would name the WRONG level's KCL.
+
+     port_level_free_captured_kcl()  -- runs in port_level_stage_reseat, AFTER
+       Stage::ResetMeshColliders() has emptied the registry. By construction the
+       registry no longer references the image, so the free has no live pointer
+       to invalidate. SharedFilePtr::Release operates entirely on the passed
+       struct (fileID, numRefs, filePtr -> Memory::Deallocate; src), so the
+       aside copy frees the right block even though reset_host has since zeroed
+       the live table slot. The 0x5544 magic guard rides on the captured filePtr.
+
+   Splitting this way keeps the ROM-shaped resolution order (handle named from
+   the outgoing level) while making the free order safe by construction (image
+   returned only after the last thing pointing at it is cleared). The KCL alone
+   was measured stable across repeated re-entries (heap held to a fixed baseline,
+   no fault, census 51); the rest of the table is dropped as before, its images
+   the owners' to free. */
+extern "C" void *port_level_overlay(int level);   /* hal/level_change.cpp */
+
+/* The KCL slot captured in port_level_reset_host (from the outgoing level) and
+   freed in port_level_stage_reseat, after ResetMeshColliders clears the registry
+   that points at the image. A copy, not an index: reset_host zeroes the live
+   table slot before the free runs, but SharedFilePtr::Release only needs the
+   struct's own fields, so the aside copy frees the right block. */
+static PortSharedFilePtr g_pending_kcl;
+static int g_have_pending_kcl;
+
+/* Resolve the outgoing level's KCL handle and stash its slot for a late free.
+   Called from port_level_reset_host BEFORE port_level_latch, so data_0209f2f8
+   still names the level being torn down. Frees nothing. */
+static void port_level_capture_kcl(void)
+{
+    const int trace = std::getenv("SM64DS_TRACE_LEVEL") != 0;
+    g_have_pending_kcl = 0;
+    const int level = (int)data_0209f2f8;
+    PortLvlOverlay *ov = (PortLvlOverlay *)port_level_overlay(level);
+    if (!ov)
+        return;
+    const unsigned kcl = ov->kclFileId;
+    for (int i = 0; i < g_loadfile_used; ++i) {
+        if (g_loadfile_slot[i].fileID != kcl)
+            continue;
+        g_pending_kcl = g_loadfile_slot[i];   /* copy fileID/numRefs/filePtr */
+        g_have_pending_kcl = 1;
+        if (trace)
+            std::printf("  [lvl] captured the level's KCL for a late free: "
+                        "handle %u ptr %p\n", kcl,
+                        (void *)g_loadfile_slot[i].filePtr);
+        return;
+    }
+    if (trace)
+        std::printf("  [lvl] no KCL slot for handle %u to capture\n", kcl);
+}
+
+/* Free the KCL image captured by port_level_capture_kcl. Called from
+   port_level_stage_reseat AFTER Stage::ResetMeshColliders() has emptied the
+   registry, so nothing live points into the block being returned. */
+static void port_level_free_captured_kcl(void)
+{
+    if (!g_have_pending_kcl)
+        return;
+    const int trace = std::getenv("SM64DS_TRACE_LEVEL") != 0;
+    g_have_pending_kcl = 0;
+    char *fp = g_pending_kcl.filePtr;
+    const unsigned short mg = fp ? *(unsigned short *)(fp - 0x10) : 0;
+    if (fp && mg == 0x5544) {
+        if (trace)
+            std::printf("  [lvl] releasing the level's KCL: handle %u ptr "
+                        "%p size %u (registry cleared, nothing else owns it)\n",
+                        (unsigned)g_pending_kcl.fileID, (void *)fp,
+                        *(unsigned *)(fp - 0xc));
+        _ZN13SharedFilePtr7ReleaseEv(&g_pending_kcl);
+    } else if (trace) {
+        std::printf("  [lvl] KCL handle %u already reclaimed (magic %04x); "
+                    "not freeing\n", (unsigned)g_pending_kcl.fileID, mg);
+    }
 }
 
 extern "C" void port_level_reset_host(void)
 {
-    /* THE SLOTS ARE DROPPED, NOT RELEASED, and that is a measured decision
-       rather than a shortcut. SharedFilePtr::Release ends in func_02017c24,
-       which hands filePtr back with Memory::Deallocate. Doing that here
-       faulted inside ExpandingHeapAllocator::UnlinkNode on the level's third
-       handle (1944, the level's icg/icl pair) every time -- the block was
-       already off the heap, so something else on the level owns that image
-       and gives it back during its own cleanup.
+    /* Capture the outgoing level's KCL slot (the one LoadFile image the port
+       itself orphans -- see port_level_capture_kcl) for a late free. It resolves
+       the handle HERE, before port_level_latch advances data_0209f2f8, but the
+       image is not returned to the allocator until port_level_stage_reseat has
+       run Stage::ResetMeshColliders and emptied the registry that points at it. */
+    port_level_capture_kcl();
 
-       Which owner is the open question and it is worth answering, because
-       until it is, the images behind these handles are what a level change
-       leaks. The measurement is in the [lvl] line the change prints: heap
-       free before, after the teardown, and after the next level is up. On the
-       castle grounds re-entering itself the net is the number to watch, and
-       SM64DS_TRACE_LEVEL=1 names every slot it drops. A double free is a
-       corrupted heap two transitions later with no trail; a leak is a number
-       that goes down by a known amount. This takes the second one on purpose
-       until the ownership is settled. */
+    /* THE HANDLE TABLE, dropped not released. Every OTHER image here is owned by
+       something the teardown frees (an actor, or the Stage's Model/skybox that
+       port_level_stage_reseat hands back); releasing them here would double-free
+       the owner's block. The slots are zeroed so the next level starts with an
+       empty table and re-loads its own files. */
     const int trace = std::getenv("SM64DS_TRACE_LEVEL") != 0;
+    int keep = 0;
     for (int i = 0; i < g_loadfile_used; ++i) {
+        if (g_loadfile_slot[i].pad) {           /* persistent (message bank) */
+            if (keep != i) g_loadfile_slot[keep] = g_loadfile_slot[i];
+            ++keep;
+            continue;
+        }
         if (trace)
-            std::printf("  [lvl] dropping file slot %d: handle %u refs %u "
-                        "ptr %p\n", i, g_loadfile_slot[i].fileID,
-                        g_loadfile_slot[i].numRefs,
+            std::printf("  [lvl] dropping file slot %d: handle %u ptr %p\n", i,
+                        g_loadfile_slot[i].fileID,
                         (void *)g_loadfile_slot[i].filePtr);
+    }
+    for (int i = keep; i < g_loadfile_used; ++i) {
         g_loadfile_slot[i].fileID = 0;
         g_loadfile_slot[i].numRefs = 0;
         g_loadfile_slot[i].filePtr = 0;
+        g_loadfile_slot[i].pad = 0;
     }
-    g_loadfile_used = 0;
+    g_loadfile_used = keep;
 
     g_entrance_entries = 0;
     g_entrance_count = 0;
@@ -2126,6 +2663,105 @@ extern "C" void port_level_reset_host(void)
     data_0209f338[0] = 0;
     data_020a0d84[0] = 0;
     data_020a0d88[0] = 0;
+
+    /* THE THREE MARKER ARRAYS, and they are the ROM's own lines rather than
+       port hygiene. Stage::InitResources zeroes eight things in one block
+       (src/_ZN5Stage13InitResourcesEv.cpp:284..307):
+
+           for (i = 0; i < 0xC; i++) data_0209f40c[i] = 0;
+           for (i = 0; i < 9;   i++) data_0209f3e8[i] = 0;
+           func_ov001_020ab2e4();
+           for (i = 0; i < 8;   i++) data_0209f3a4[i] = 0;
+           data_0209f1f8 = 0; data_0209f2d0 = 0; data_0209f258 = 0;
+           data_0209f2e8 = 0; data_0209f25c = 0; data_0209f338 = 0;
+
+       The port hand-rolls the boot and skips InitResources, so this function is
+       where that block lands -- and it carried the five scalars and not the
+       three ARRAYS. The three are the only entries in the block that hold ACTOR
+       POINTERS: SetStarMarker/PowerStar::AddStarMarker file into f40c, ov001
+       and func_0202a8e0 into f3e8, AddSpikeBomb into f3a4. Minimap::Behavior
+       walks all three every frame; f40c and f3e8 it hands to GetMinimapID as
+       `obj`, while the f3a4 loop reads o->+0xcc itself and never calls it --
+       a stale pointer is dereferenced either way, just down two paths.
+
+       GetMinimapID reads obj->+0xcc as an AREA INDEX -- a signed byte. Left
+       stale, a slot still points at an actor the previous level's teardown
+       destroyed, and +0xcc is whatever the freed block now holds.
+
+       The crash dump reads the whole chain out: edx 8 at the fault, so the
+       byte came back 8, and the area table is EIGHT entries (Stage+0x8bc,
+       0x60 bytes), so index 8 is one past the end and lands on the level
+       MeshCollider at Stage+0x91c. Its word at +8 was ffffffff, which is the
+       eax the faulting instruction dereferences -- GetMinimapID+0x33,
+       `sub ecx,dword ptr [eax]`, "access 00000000 at ffffffff".
+
+       A direct boot never sees it because BSS starts zeroed, which is exactly
+       why this only ever showed up on the warp path. THREE OF THE FOURTEEN
+       MEASURABLE levels leave a live pointer in f40c when they are torn down
+       (6, 7 and 14; level 10 is unmeasurable because warping out of it
+       hard-faults for an unrelated reason), so the exposure is wider than the
+       one pair that actually faults; which pairs pull the trigger depends on
+       what the next level's allocator puts in the freed block.
+
+       AND THE ROM REALLY DOES DEPEND ON THIS ZEROING, which is worth stating
+       carefully because the obvious stronger claim is false. Slots ARE cleared
+       on the way out in general: UntrackStar does SetStarMarker(slot, 0, 2),
+       and PowerStar, Coin and QuestionBlock all call it from their cleanups.
+       What has no such path is the actor that faults here -- Whomp::
+       InitResources calls Actor::TrackStar to file itself in, and no Whomp
+       file anywhere calls UntrackStar. Its slot is only ever emptied by the
+       InitResources loop above, so a port that skips that loop keeps a Whomp
+       pointer alive into the next level.
+
+       Not carried, and why. func_ov001_020ab2e4 is in ov001, which the port
+       does not mount.
+
+       data_0209f1f8 (the view-object count) is the interesting one, and the
+       first version of this comment got its reason wrong. It said the count is
+       "written by LoadViewObjects on every boot before anything reads it".
+       That is not a guarantee: LoadViewObjects is a SUB-TABLE loader, so it
+       runs only when the level DECLARES a type-4 table, and it re-seats the
+       POINTER data_0209f354 as well as the count (func_0202b0c4 writes both).
+       A destination with no view objects would therefore inherit both from the
+       level it replaced, and Camera::InitResources loops i < data_0209f1f8
+       through GetViewObj -> &data_0209f354[i].
+
+       Measured rather than argued: all fifteen mounted levels declare one and
+       re-seat both (counts 5, 11, 3, 6, 15, 4, 7, 1, 1, 4, 1, 21, 1, 2, 2), so
+       the carry is real at boot entry and overwritten by boot done on every
+       pair that exists today. LATENT, not live -- and it arms itself the day
+       someone mounts a level without view objects. Left out of this commit to
+       keep the diff to the fault it is about; it is the ROM's own line
+       (InitResources:302) and a one-line follow-up. */
+    {
+        extern int data_0209f40c[];
+        extern unsigned char data_0209f3e8[];
+        extern unsigned char data_0209f3a4[];
+        for (int i = 0; i < 12; ++i) data_0209f40c[i] = 0;
+        for (int i = 0; i < 9;  ++i) ((void **)data_0209f3e8)[i] = 0;
+        for (int i = 0; i < 8;  ++i) ((void **)data_0209f3a4)[i] = 0;
+    }
+
+    /* NO AREA IS SHOWING YET, which is Stage::InitResources:211 and belongs on
+       every level entry rather than once a process. The port ran it in
+       port_stage_a2_seat, so a warp carried the PREVIOUS level's area index
+       into the new level and it lands in two places:
+
+         ChangeArea, which the new level's Camera::InitResources calls, reads
+         `if (data_02092120 >= 0) HideArea(data_02092120)` -- clearing the
+         showing flag of whatever area the OLD level happened to be in, in the
+         NEW level's table, before ShowArea turns the right one on.
+
+         GetMinimapID's first line, which falls back to data_02092120 whenever
+         the object it is handed carries a negative area byte.
+
+       Both read a number the new level never chose. -1 is the ROM's own value
+       and it makes ChangeArea skip the hide, which is the behaviour a direct
+       boot already gets. */
+    {
+        extern signed char data_02092120;
+        data_02092120 = -1;
+    }
 }
 
 // ---- the Stage, between two levels -----------------------------------------
@@ -2175,6 +2811,70 @@ extern "C" void port_level_stage_reseat(void *stagev)
     char *stage = (char *)stagev;
 
     _ZN5Stage18ResetMeshCollidersEv();
+
+    /* The registry that pointed at the outgoing level's KCL image is now empty,
+       so it is safe to return that image to the allocator. port_level_reset_host
+       captured it (from the level being torn down) before the latch; free it
+       here, after the reset, so nothing live points into the block. */
+    port_level_free_captured_kcl();
+
+    /* THE AREA TABLE, the third level-owned member of the Stage and the one
+       this function was missing. Stage+0x8bc, stride 0xc, eight entries: the
+       extent is the Stage's own layout (include/Stage.h -- unk_8bc then
+       pad_8bd[0x5f], the next member being the level MeshCollider at +0x91c),
+       so 0x60 bytes, and the stride is the one ShowArea/HideArea/
+       IsAreaShowing, LoadMinimapChangeObject and port_stage_advance_anims all
+       index by. Per entry: a TextureTransformer* at +0, the "this area is
+       showing" flag at +4, and at +8 the head of the per-area MINIMAP-CHANGE
+       list.
+
+       On the ROM this needs no code. The Stage is destroyed and rebuilt per
+       level, so Stage::InitResources always finds the table zeroed, and
+       Stage::CleanupResources sets data_0209f314 = 0 so GetMinimapID's own
+       `if (table == 0) return the LVL_Overlay default` guard covers the gap in
+       between. The port keeps ONE Stage alive across levels on purpose
+       (hal/level_change.cpp says why), so it owes that freshness by hand --
+       which is what this whole function is, and it already does exactly this
+       for the level Model at +0x86c and the skybox at +0x9bc.
+
+       THIS IS NOT THE CRASH FIX, and the ablation says so rather than the
+       reasoning. Running the 7 -> 10 repro four times over the two clears in
+       this commit, one knob each: with only this memset the MINIMAP still
+       faults, with only the marker-array clear in port_level_reset_host it
+       does not. The faulting `obj` is a stale marker, not a stale list node.
+
+       What this one is for is the +8 word on its own terms. LoadSimpleObjects
+       builds the per-area minimap-change list through LoadMinimapChangeObject
+       on every boot, appending to whatever head it finds, and nothing ever
+       frees a node. Carried across a change it appends the new level's nodes
+       onto the previous level's, so the list grows without bound for a
+       session and GetMinimapID answers out of the wrong level's entries.
+       Four levels leave one behind (SM64DS_MM_STALE=1 over a boot of each:
+       7 and 13 and 15 leave one, 12 leaves five).
+
+       THE +0 SLOTS ARE NOT FREE, and an earlier draft of this comment claimed
+       they were. port_stage_advance_anims (hal/stage_bridges.cpp) is the ONLY
+       caller of Stage::LoadTextureTransformers in the port, and it re-loads
+       only when the level id CHANGES. Zero the slots without arming it and a
+       SELF-WARP -- level A to level A, where the id does not change -- leaves
+       every slot null with nothing left to refill them. Measured on levels 13,
+       7 and 1: one reload line in the whole run, and anim=0 after the second
+       entry where the first left 2, 1 and 1. That is texture animation dead
+       for the rest of the session.
+
+       So the memset is PAIRED WITH THE ARM rather than narrowed to the +4 and
+       +8 words. Narrowing would also have kept the fault fixed and the
+       animation alive, but it would have carried the previous boot's
+       transformer POINTERS across an entry that released and re-loaded the BTA
+       behind them -- a dangling walk of the same shape as the one this commit
+       is about. On the ROM the whole record is fresh, because
+       Stage::InitResources calls LoadTextureTransformers on every entry (src
+       line 388) into a Stage that was just constructed. Zero it all and reload
+       it all is the ROM's own shape, and it also closes the self-warp
+       aliasing that predates this commit -- the case the level-id guard was
+       never able to see. */
+    std::memset(stage + 0x8bc, 0, 0x60);
+    port_stage_anims_rearm();
 
     /* the level model, in place */
     _ZN5ModelD2Ev(stage + 0x86c);
