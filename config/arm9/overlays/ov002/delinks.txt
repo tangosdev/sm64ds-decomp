@@ -383,11 +383,11 @@ src/VirtualDoor_Spawn.c:
     complete
     .text start:0x020b0980 end:0x020b09b0
 
-src/_ZN11VirtualDoorD1Ev.cpp:
+src/_ZN4ExitD1Ev.cpp:
     complete
     .text start:0x020b09b0 end:0x020b09d4
 
-src/_ZN11VirtualDoorD0Ev.c:
+src/_ZN4ExitD0Ev.c:
     complete
     .text start:0x020b09d4 end:0x020b0a0c
 
@@ -395,23 +395,23 @@ src/func_ov002_020b0a0c.c:
     complete
     .text start:0x020b0a0c end:0x020b0a70
 
-src/_ZN11VirtualDoor16CleanupResourcesEv.cpp:
+src/_ZN4Exit16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b0a70 end:0x020b0a78
 
-src/_ZN11VirtualDoor16OnPendingDestroyEv.cpp:
+src/_ZN4Exit16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020b0a78 end:0x020b0a7c
 
-src/_ZN11VirtualDoor6RenderEv.cpp:
+src/_ZN4Exit6RenderEv.cpp:
     complete
     .text start:0x020b0a7c end:0x020b0a84
 
-src/_ZN11VirtualDoor8BehaviorEv.cpp:
+src/_ZN4Exit8BehaviorEv.cpp:
     complete
     .text start:0x020b0a84 end:0x020b0d88
 
-src/_ZN11VirtualDoor13InitResourcesEv.cpp:
+src/_ZN4Exit13InitResourcesEv.cpp:
     complete
     .text start:0x020b0d88 end:0x020b0f24
 
