@@ -804,7 +804,7 @@ extern int _ZTV8daYegg_c[];
 extern int _ZTV9ArrowLift[];
 extern int _ZTV9BlueFlame[];
 extern int _ZTV9Butterfly[];
-extern int _ZTV9CameraTag[];
+extern int _ZTV11VirtualDoor[];
 extern int _ZTV9DorrieCap[];
 extern int _ZTV9HugeWater[];
 extern int _ZTV9KoopaFlag[];

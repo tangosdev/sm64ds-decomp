@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN9CameraTag13InitResourcesEv
+// @symbol _ZN11VirtualDoor13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "CameraTag.h"
+#include "VirtualDoor.h"
 
 
-int CameraTag::InitResources()
+int VirtualDoor::InitResources()
 {
   mScaleX=(((mParam&0xf)+1)*0x64000)>>1;
   mScaleY=(((mParam>>4&0xf)+1)*0x64000);

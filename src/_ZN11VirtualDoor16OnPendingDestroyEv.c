@@ -1,3 +1,3 @@
-void _ZN9CameraTag16OnPendingDestroyEv(void)
+void _ZN11VirtualDoor16OnPendingDestroyEv(void)
 {
 }

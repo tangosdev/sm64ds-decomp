@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
-// @symbol _ZN9CameraTag8BehaviorEv
+// @symbol _ZN11VirtualDoor8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "CameraTag.h"
+#include "VirtualDoor.h"
 struct Vec3 { Fix12i x, y, z; };
 
 extern "C" {
@@ -15,7 +15,7 @@ extern u8 data_0209f250;
 extern char* data_0209f394[];
 extern char data_020a0ebc;
 
-int CameraTag::Behavior()
+int VirtualDoor::Behavior()
 {
     char* obj;
     struct Vec3 d;

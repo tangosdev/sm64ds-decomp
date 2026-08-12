@@ -1,4 +1,4 @@
-int _ZN9CameraTag16CleanupResourcesEv(void)
+int _ZN11VirtualDoor16CleanupResourcesEv(void)
 {
     return 1;
 }
