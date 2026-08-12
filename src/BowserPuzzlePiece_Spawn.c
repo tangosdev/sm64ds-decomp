@@ -4,10 +4,10 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV19BowserPuzzleManager */
+/* resolved: VT = _ZTV17BowserPuzzlePiece */
 int *BowserPuzzlePiece_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(828);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV19BowserPuzzleManager; }
+    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV17BowserPuzzlePiece; }
     return p;
 }

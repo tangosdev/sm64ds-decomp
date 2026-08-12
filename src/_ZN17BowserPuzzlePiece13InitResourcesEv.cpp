@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN19BowserPuzzleManager13InitResourcesEv
+// @symbol _ZN17BowserPuzzlePiece13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "BowserPuzzleManager.h"
+#include "BowserPuzzlePiece.h"
 struct SharedFilePtr { int x; };
 struct BMD_File;
 struct KCL_File;
@@ -21,7 +21,7 @@ extern SharedFilePtr* data_ov064_0211adc8[];
 extern SharedFilePtr data_ov064_0211c800;
 extern CLPS_Block data_ov064_0211baac;
 
-void BowserPuzzleManager::InitResources()
+void BowserPuzzlePiece::InitResources()
 {
     unk_337 = unk_008 & 0xf;
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4,
