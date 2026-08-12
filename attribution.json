@@ -44,6 +44,8 @@
     "src/func_ov084_021298d0.c": "tangosdev",
     "src/func_ov084_021298d0.cpp": "tangosdev",
     "src/func_ov084_0212d564.c": "ruspecial",
-    "src/func_ov084_0212d564.cpp": "ruspecial"
+    "src/func_ov084_0212d564.cpp": "ruspecial",
+    "src/_ZN12MetalNetLift16CleanupResourcesEv.cpp": "tangosdev",
+    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": "tangosdev"
   }
 }
