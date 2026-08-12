@@ -55,11 +55,11 @@ func_ov022_021123d0 kind:function(arm,size=0x64) addr:0x021123d0
 func_ov022_02112434 kind:function(arm,size=0x14) addr:0x02112434
 func_ov022_02112448 kind:function(arm,size=0x14) addr:0x02112448
 FallBlockLll_Spawn kind:function(arm,size=0x3c) addr:0x0211245c
-_ZN12FallBlockLllD1Ev kind:function(arm,size=0x50) addr:0x02112498
-_ZN12FallBlockLllD0Ev kind:function(arm,size=0x64) addr:0x021124e8
-_ZN12FallBlockLll16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x0211254c
-_ZN12FallBlockLll8BehaviorEv kind:function(arm,size=0x30) addr:0x02112560
-_ZN12FallBlockLll13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112590
+_ZN13RollingLogLllD1Ev kind:function(arm,size=0x50) addr:0x02112498
+_ZN13RollingLogLllD0Ev kind:function(arm,size=0x64) addr:0x021124e8
+_ZN13RollingLogLll16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x0211254c
+_ZN13RollingLogLll8BehaviorEv kind:function(arm,size=0x30) addr:0x02112560
+_ZN13RollingLogLll13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112590
 RollingLogLll_Spawn kind:function(arm,size=0x3c) addr:0x021125a4
 _ZN11VolcanoFireD1Ev kind:function(arm,size=0x30) addr:0x021125e0
 _ZN11VolcanoFireD0Ev kind:function(arm,size=0x44) addr:0x02112610
@@ -244,7 +244,7 @@ _ZTI13daObjMaruta_c kind:data(any) addr:0x02114350
 _ZTS13daObjMaruta_c kind:data(any) addr:0x0211435c
 _ZTS15daObjFlMaruta_c kind:data(any) addr:0x0211436c
 RollingLogLll_SpawnInfo kind:data(any) addr:0x02114380 ambiguous
-_ZTV12FallBlockLll kind:data(any) addr:0x021143a4
+_ZTV13RollingLogLll kind:data(any) addr:0x021143a4
 data_ov022_021143fc kind:data(any) addr:0x021143fc ambiguous
 data_ov022_02114424 kind:data(any) addr:0x02114424
 data_ov022_0211442c kind:data(any) addr:0x0211442c
