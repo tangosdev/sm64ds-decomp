@@ -1095,7 +1095,7 @@ src/WaterfallMist_Spawn.c:
     complete
     .text start:0x020b6ee8 end:0x020b6f18
 
-src/_ZN13WaterfallMistD1Ev.c:
+src/_ZN13WaterfallMistD1Ev.cpp:
     complete
     .text start:0x020b6f18 end:0x020b6f68
 

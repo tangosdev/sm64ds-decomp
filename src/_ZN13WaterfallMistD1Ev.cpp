@@ -1,21 +1,23 @@
+//cpp
 // @symbol _ZN13WaterfallMistD1Ev
-/* recovered: named members + shared header, vtable identified, globals resolved, declarations from a shared header */
-#include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
-#include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
-#include "decl_common.h"
-/* recovered: named members + shared header, vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV13WaterfallMist */
-extern void _ZN5EnemyD2Ev(void *);
-int *_ZN13WaterfallMistD1Ev(int *t)
+/* recovered: real C++ destructor -- the compiler emits all but one line of it
+ *
+ * One vtable store and five teardowns. Four of them are the compiler's: the members
+ * this class declares, destroyed in reverse declaration order, then Enemy.
+ *
+ * The CapIcon call is the exception, and it is written out for the same reason as in
+ * CapEnemy -- that type's destructor is still spelt func_ov001_020ab3a0 rather than
+ * CapIcon::~CapIcon, so the compiler has nothing to emit. Putting it in the body is
+ * not a workaround for the ordering: a destructor body runs BEFORE every member
+ * destructor, and mCapIcon is the last member, so "first statement of the body" and
+ * "first member destroyed" are the same position. That is exactly where the ROM
+ * calls it.
+ */
+#include "WaterfallMist.h"
+
+extern "C" void func_ov001_020ab3a0(CapIcon *icon);
+
+WaterfallMist::~WaterfallMist()
 {
-    t[0] = (int)_ZTV13WaterfallMist;
-    func_ov001_020ab3a0((char *)t + 0x3d0);
-    _ZN11ShadowModelD1Ev((char *)t + 0x364);
-    _ZN9ModelAnimD1Ev((char *)t + 0x300);
-    _ZN12WithMeshClsnD1Ev((char *)t + 0x144);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0x110);
-    _ZN5EnemyD2Ev(t);
-    return t;
+    func_ov001_020ab3a0(&mCapIcon);
 }

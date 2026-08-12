@@ -36,9 +36,9 @@ int WaterfallMist::InitResources()
     int flag;
     int v;
 
-    mType = mParam & 0xff;
-    mModelIndex = (mParam >> 8) & 0xf;
-    unk_400 = (mParam >> 0xc) & 0xf;
+    mType = param1 & 0xff;
+    mModelIndex = (param1 >> 8) & 0xf;
+    unk_400 = (param1 >> 0xc) & 0xf;
 
     if (mType == 0xff)
         mType = 0;
@@ -102,14 +102,14 @@ int WaterfallMist::InitResources()
     unk_3c8 = mPosY;
     unk_3cc = mPosZ;
 
-    unk_09c = -0x1000;
-    unk_0a0 = -0x1e000;
+    mVertAccel = -0x1000;
+    mTerminalVelocity = -0x1e000;
 
     switch (mType) {
     default:
         break;
     case 0:
-        *(s32 *)(((long long)((char *)&unk_12c))) |= 0x8000;
+        *(s32 *)(((long long)((char *)&mMovingCylinderClsn.vulnFlags))) |= 0x8000;
         unk_400 = 4;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df64);
         break;
@@ -118,7 +118,7 @@ int WaterfallMist::InitResources()
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df84);
         break;
     case 2:
-        *(s32 *)(((long long)((char *)&unk_12c))) |= 0x8000;
+        *(s32 *)(((long long)((char *)&mMovingCylinderClsn.vulnFlags))) |= 0x8000;
         unk_400 = 4;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df04);
         break;
@@ -152,15 +152,15 @@ int WaterfallMist::InitResources()
         break;
     case 14:
         unk_400 = 2;
-        unk_114 = 0x32000;
-        unk_118 = 0x32000;
-        mParam -= 0xa;
+        mMovingCylinderClsn.radius = 0x32000;
+        mMovingCylinderClsn.height = 0x32000;
+        param1 -= 0xa;
         mType = 4;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
     case 17:
-        unk_114 = 0x32000;
-        unk_118 = 0x32000;
+        mMovingCylinderClsn.radius = 0x32000;
+        mMovingCylinderClsn.height = 0x32000;
         flag = 1;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
@@ -169,8 +169,8 @@ int WaterfallMist::InitResources()
     case 8:
     case 9:
         unk_400 = 0xff;
-        unk_114 = 0x32000;
-        unk_118 = 0x32000;
+        mMovingCylinderClsn.radius = 0x32000;
+        mMovingCylinderClsn.height = 0x32000;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
     case 5:
@@ -182,13 +182,13 @@ int WaterfallMist::InitResources()
         unk_400 = 3;
         /* fallthrough */
     case 4:
-        unk_114 = 0x32000;
-        unk_118 = 0x32000;
+        mMovingCylinderClsn.radius = 0x32000;
+        mMovingCylinderClsn.height = 0x32000;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
     }
 
-    unk_35c = 0x1000;
+    mModelAnim.speed = 0x1000;
 
     if (unk_400 != 0xff) {
         if (flag != 0)
@@ -198,6 +198,6 @@ int WaterfallMist::InitResources()
         func_ov001_020ab228(((char *)this) + 0x3d0, ((char *)this), mModelIndex & 0xff, unk_400, v);
     }
 
-    mParam &= 0xfff;
+    param1 &= 0xfff;
     return 1;
 }

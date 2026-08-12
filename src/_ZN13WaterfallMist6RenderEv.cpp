@@ -9,7 +9,7 @@ extern "C" int data_ov002_0210df54;
 
 int WaterfallMist::Render()
 {
-    int b = (unk_0b0 & 0x40000) ? 1 : 0;
+    int b = (mFlags & 0x40000) ? 1 : 0;
     if (b) return 1;
     if (unk_3ff == 1 || mScaleX < 0x100) return 1;
 
