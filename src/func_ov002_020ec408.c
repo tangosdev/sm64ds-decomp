@@ -1,8 +1,9 @@
-// @symbol func_ov002_020ec408
+//cpp
+// @symbol _ZN4Warp6RenderEv
+#include "Warp.h"
 // recovered name: daWarpkun_c_Render
 /* recovered: renamed to Class_Method */
 /* daWarpkun_c::Render - recovered from vtable slot identity */
-int func_ov002_020ec408(void)
-{
+s32 Warp::Render() {
     return 1;
 }

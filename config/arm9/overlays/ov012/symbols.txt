@@ -1,9 +1,9 @@
 _ZN12SwitchPillarD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN12SwitchPillarD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 func_ov012_0211123c kind:function(arm,size=0xb0) addr:0x0211123c
-func_ov012_021112ec kind:function(arm,size=0x38) addr:0x021112ec
-func_ov012_02111324 kind:function(arm,size=0x28) addr:0x02111324
-func_ov012_0211134c kind:function(arm,size=0x24) addr:0x0211134c
+_ZN12SwitchPillar16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x021112ec
+_ZN12SwitchPillar6RenderEv kind:function(arm,size=0x28) addr:0x02111324
+_ZN12SwitchPillar8BehaviorEv kind:function(arm,size=0x24) addr:0x0211134c
 func_ov012_02111370 kind:function(arm,size=0xb0) addr:0x02111370
 SwitchPillar_Spawn kind:function(arm,size=0x30) addr:0x02111420
 _ZN13BasementWaterD1Ev kind:function(arm,size=0x4c) addr:0x02111450

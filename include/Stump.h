@@ -20,6 +20,9 @@ struct Stump : Platform {
     u8  pad_320[0x10];
 
     virtual ~Stump();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char Stump_size_must_be_0x330[sizeof(Stump) == 0x330 ? 1 : -1];

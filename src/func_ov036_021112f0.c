@@ -1,15 +1,19 @@
-// @symbol func_ov036_021112f0
+//cpp
+// @symbol _ZN16SwingingPlatform8BehaviorEv
+#include "SwingingPlatform.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjRcBuranko_c.h"
 // recovered name: daObjRcBuranko_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daObjRcBuranko_c::Behavior - recovered from vtable slot identity */
+extern "C" {
 extern int func_ov036_0211123c(char *t);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
 extern int _ZN8Platform19UpdateClsnPosAndRotEv(char *c);
+}
 
-int func_ov036_021112f0(char *c)
-{
+s32 SwingingPlatform::Behavior() {
+    char * c = (char *)this;
     struct daObjRcBuranko_c *self = (struct daObjRcBuranko_c *)(void *)c;
     if (self->unk_090 < 0) {
         short *p = (short *)(((int)c + 0x31e));

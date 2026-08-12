@@ -19,6 +19,10 @@
 struct Submarine : Platform {
 
     virtual ~Submarine();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   InitResources();         /* slot  0 */
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char Submarine_size_must_be_0x320[sizeof(Submarine) == 0x320 ? 1 : -1];

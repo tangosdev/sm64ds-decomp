@@ -1,6 +1,7 @@
-// @symbol func_ov065_02117ee0
+//cpp
+// @symbol _ZN5Swoop13OnYoshiTryEatEv
+#include "Swoop.h"
 /* recovered: renamed to Class_Method */
-int func_ov065_02117ee0(void)
-{
+s32 Swoop::OnYoshiTryEat() {
     return 4;
 }
