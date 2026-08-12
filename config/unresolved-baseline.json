@@ -726,18 +726,6 @@
     "func_020beb6c"
    ]
   },
-  "ov006:0x0210a8c0": {
-   "name": "func_ov006_0210a8c0",
-   "missing": [
-    "func_020ad494"
-   ]
-  },
-  "ov006:0x0210a900": {
-   "name": "func_ov006_0210a900",
-   "missing": [
-    "func_020ad494"
-   ]
-  },
   "ov006:0x0210a954": {
    "name": "func_ov006_0210a954",
    "missing": [
@@ -764,7 +752,7 @@
    ]
   },
   "ov006:0x0210d1fc": {
-   "name": "func_ov006_0210d1fc",
+   "name": "_ZN12dScMgSlot1_c13InitResourcesEv",
    "missing": [
     "func_020bc860",
     "func_020bc878",
@@ -812,7 +800,7 @@
    ]
   },
   "ov006:0x021203fc": {
-   "name": "func_ov006_021203fc",
+   "name": "_ZN13dScMgTeresa_c13InitResourcesEv",
    "missing": [
     "func_020bc880",
     "func_020bc884"
