@@ -12,7 +12,7 @@ src/_ZN9SpindriftD0Ev.c:
     complete
     .text start:0x02123788 end:0x021237e4
 
-src/func_ov081_021237e4.c:
+src/_ZN9Spindrift16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021237e4 end:0x021237ec
 
@@ -47,7 +47,7 @@ src/func_ov081_02123fd8.cpp:
     complete
     .text start:0x02123fd8 end:0x02124038
 
-src/func_ov081_02124038.c:
+src/_ZN9Spindrift13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02124038 end:0x02124040
 

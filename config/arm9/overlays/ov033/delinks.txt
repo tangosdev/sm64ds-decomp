@@ -16,19 +16,19 @@ src/func_ov033_0211123c.c:
     complete
     .text start:0x0211123c end:0x02111280
 
-src/func_ov033_02111280.c:
+src/_ZN9TinyCover16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111280 end:0x021112c4
 
-src/func_ov033_021112c4.cpp:
+src/_ZN9TinyCover6RenderEv.cpp:
     complete
     .text start:0x021112c4 end:0x021112ec
 
-src/func_ov033_021112ec.cpp:
+src/_ZN9TinyCover8BehaviorEv.cpp:
     complete
     .text start:0x021112ec end:0x02111310
 
-src/func_ov033_02111310.cpp:
+src/_ZN9TinyCover13InitResourcesEv.cpp:
     complete
     .text start:0x02111310 end:0x021113a4
 

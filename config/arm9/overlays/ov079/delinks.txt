@@ -24,7 +24,7 @@ src/func_ov079_02123b54.c:
     complete
     .text start:0x02123b54 end:0x02123b60
 
-src/func_ov079_02123b60.c:
+src/_ZN5Whomp16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02123b60 end:0x02123bcc
 

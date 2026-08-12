@@ -16,15 +16,15 @@ src/func_ov012_0211123c.c:
     complete
     .text start:0x0211123c end:0x021112ec
 
-src/func_ov012_021112ec.c:
+src/_ZN12SwitchPillar16CleanupResourcesEv.cpp:
     complete
     .text start:0x021112ec end:0x02111324
 
-src/func_ov012_02111324.cpp:
+src/_ZN12SwitchPillar6RenderEv.cpp:
     complete
     .text start:0x02111324 end:0x0211134c
 
-src/func_ov012_0211134c.cpp:
+src/_ZN12SwitchPillar8BehaviorEv.cpp:
     complete
     .text start:0x0211134c end:0x02111370
 
