@@ -1,34 +1,35 @@
-// @symbol func_ov006_020ecee4
-// recovered name: dScMgHanachan_c_Render
-/* recovered: renamed to Class_Method, declarations from a shared header */
+//cpp
+// @symbol _ZN15dScMgHanachan_c6RenderEv
+/* dScMgHanachan_c::Render -- 0x4660 is read here as a raw {int,int} pair
+   (the same field Behavior calls through as a pointer-to-member-function;
+   see the class header). */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgHanachan_c::Render - recovered from vtable slot identity */
 #pragma opt_common_subs off
+#include "dScMgHanachan_c.h"
 
-extern void func_ov004_020b1e34(void *a, int b, int c, int d);
-extern int GetGameLanguage(void);
-extern void DrawOamSprite(void *a, int b, int c, int d);
-extern void func_ov004_020b2220(int a, int b, void *c, int d, int e, int f, int g);
+extern "C" void func_ov004_020b1e34(void *a, int b, int c, int d);
+extern "C" int GetGameLanguage(void);
+extern "C" void DrawOamSprite(void *a, int b, int c, int d);
+extern "C" void func_ov004_020b2220(int a, int b, void *c, int d, int e, int f, int g);
 
 typedef struct { int a; int b; } Pair;
 
 #define PAIR0(s) ((Pair *)(int)((char *)(s) + 0x4660))
 #define PAIR1(s) ((Pair *)(int)((char *)(s) + 0x4660))
 
-extern Pair data_ov006_0213c9ac;
-extern Pair data_ov006_0213c994;
-extern Pair data_ov006_0213ca3c;
-extern Pair data_ov006_0213ca34;
-extern Pair data_ov006_0213ca2c;
+extern "C" Pair data_ov006_0213c9ac;
+extern "C" Pair data_ov006_0213c994;
+extern "C" Pair data_ov006_0213ca3c;
+extern "C" Pair data_ov006_0213ca34;
+extern "C" Pair data_ov006_0213ca2c;
 
-int func_ov006_020ecee4(void *a0)
+s32 dScMgHanachan_c::Render()
 {
-    char *self = (char *)a0;
+    char *self = (char *)this;
     int i;
     char *arr;
 
-    func_ov004_020b1e34(a0, 0xe0, 0x14, 1);
+    func_ov004_020b1e34(self, 0xe0, 0x14, 1);
     func_ov006_020ea670();
     func_ov006_020ea350();
 

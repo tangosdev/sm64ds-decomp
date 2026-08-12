@@ -1,16 +1,18 @@
 //cpp
-#include "types.h"
-// @symbol func_ov006_020edb04
-// recovered name: dScMgHanachan_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN15dScMgHanachan_c13InitResourcesEv
+/* dScMgHanachan_c::InitResources -- 0xa8/0xac are inherited from
+   dScMgBase_c (0xac is inside its own pad_0ac, not a named field there
+   either) so they stay raw offsets on a char* or Obj* cast of `this`. Slot 18
+   stays an unmigrated raw extern "C" helper (see the class header), so
+   calling it here still goes through the same local vtable-shim struct the
+   pre-migration source already used, rather than a named method. */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgHanachan_c::InitResources - recovered from vtable slot identity */
+#include "dScMgHanachan_c.h"
+
 extern "C" void *LoadFile(int handle);
 extern "C" void DecompressLZ16(void *src, void *dst);
 extern "C" void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 extern "C" void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-
 
 struct Obj {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
@@ -23,10 +25,11 @@ struct Obj {
     int unkAC;
 };
 
-extern "C" int func_ov006_020edb04(Obj *obj)
+s32 dScMgHanachan_c::InitResources()
 {
     void *a;
     void *b;
+    Obj *obj = (Obj *)this;
 
     func_ov006_020edcb0();
     a = LoadFile(0xcb);

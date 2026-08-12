@@ -1,10 +1,14 @@
-// @symbol func_ov006_020ecec8
-// recovered name: dScMgHanachan_c_CleanupResources
-/* recovered: renamed to Class_Method */
-/* dScMgHanachan_c::CleanupResources - recovered from vtable slot identity */
-extern void func_ov004_020ad90c(void *);
-int func_ov006_020ecec8(void *t)
+//cpp
+// @symbol _ZN15dScMgHanachan_c16CleanupResourcesEv
+/* dScMgHanachan_c::CleanupResources -- slot 3, the ActorBase/Scene-level
+   virtual (see include/ActorBase.h), not one of dScMgBase_c's usual six
+   overrides. */
+#include "dScMgHanachan_c.h"
+
+extern "C" void func_ov004_020ad90c(void *);
+
+s32 dScMgHanachan_c::CleanupResources()
 {
-    func_ov004_020ad90c(t);
+    func_ov004_020ad90c(this);
     return 1;
 }

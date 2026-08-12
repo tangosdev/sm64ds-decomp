@@ -3006,11 +3006,11 @@ src/MgPsycheOut_Spawn.cpp:
     complete
     .text start:0x020ea1f0 end:0x020ea280
 
-src/func_ov006_020ea280.c:
+src/_ZN15dScMgHanachan_cD1Ev.cpp:
     complete
     .text start:0x020ea280 end:0x020ea2c8
 
-src/func_ov006_020ea2c8.cpp:
+src/_ZN15dScMgHanachan_cD0Ev.cpp:
     complete
     .text start:0x020ea2c8 end:0x020ea324
 
@@ -3177,15 +3177,15 @@ src/func_ov006_020ecdb8.c:
     complete
     .text start:0x020ecdb8 end:0x020ecec8
 
-src/func_ov006_020ecec8.c:
+src/_ZN15dScMgHanachan_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020ecec8 end:0x020ecee4
 
-src/func_ov006_020ecee4.c:
+src/_ZN15dScMgHanachan_c6RenderEv.cpp:
     complete
     .text start:0x020ecee4 end:0x020ed18c
 
-src/func_ov006_020ed18c.cpp:
+src/_ZN15dScMgHanachan_c8BehaviorEv.cpp:
     complete
     .text start:0x020ed18c end:0x020ed270
 
@@ -3236,7 +3236,7 @@ src/func_ov006_020ed8a4.c:
 src/func_ov006_020eda48.c:
     .text start:0x020eda48 end:0x020edb04
 
-src/func_ov006_020edb04.cpp:
+src/_ZN15dScMgHanachan_c13InitResourcesEv.cpp:
     complete
     .text start:0x020edb04 end:0x020edcb0
 

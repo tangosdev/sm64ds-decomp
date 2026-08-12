@@ -1,17 +1,20 @@
 //cpp
-// @symbol func_ov006_020ed18c
-// recovered name: dScMgHanachan_c_Behavior
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN15dScMgHanachan_c8BehaviorEv
+/* dScMgHanachan_c::Behavior -- 0x4660 stores a value read/called as a
+   pointer-to-member-function (see the class header); the local incomplete
+   type C is only there to get the PMF calling convention, same idiom the
+   pre-migration source already used. 0x4678 is this class's own 15x0x98
+   array (see the class header). */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgHanachan_c::Behavior - recovered from vtable slot identity */
-
+#include "dScMgHanachan_c.h"
 
 struct C;
 typedef void (C::*PMF)();
 
-extern "C" int func_ov006_020ed18c(char *c)
+s32 dScMgHanachan_c::Behavior()
 {
+    char *c = (char *)this;
+
     data_ov006_02141fcc = data_ov006_02141fcc + 0x800;
     (((C *)c)->*(*(PMF *)(c + 0x4660)))();
     int i = 0;

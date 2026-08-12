@@ -774,8 +774,8 @@ func_ov006_020e9d1c kind:function(arm,size=0xe4) addr:0x020e9d1c
 func_ov006_020e9e00 kind:function(arm,size=0x70) addr:0x020e9e00
 func_ov006_020e9e70 kind:function(arm,size=0x380) addr:0x020e9e70
 MgPsycheOut_Spawn kind:function(arm,size=0x90) addr:0x020ea1f0
-func_ov006_020ea280 kind:function(arm,size=0x48) addr:0x020ea280
-func_ov006_020ea2c8 kind:function(arm,size=0x5c) addr:0x020ea2c8
+_ZN15dScMgHanachan_cD1Ev kind:function(arm,size=0x48) addr:0x020ea280
+_ZN15dScMgHanachan_cD0Ev kind:function(arm,size=0x5c) addr:0x020ea2c8
 func_ov006_020ea324 kind:function(arm,size=0x2c) addr:0x020ea324
 func_ov006_020ea350 kind:function(arm,size=0x80) addr:0x020ea350
 func_ov006_020ea3d0 kind:function(arm,size=0x220) addr:0x020ea3d0
@@ -818,9 +818,9 @@ func_ov006_020ec9c0 kind:function(arm,size=0x1c0) addr:0x020ec9c0
 func_ov006_020ecb80 kind:function(arm,size=0x24) addr:0x020ecb80
 func_ov006_020ecba4 kind:function(arm,size=0x214) addr:0x020ecba4
 func_ov006_020ecdb8 kind:function(arm,size=0x110) addr:0x020ecdb8
-func_ov006_020ecec8 kind:function(arm,size=0x1c) addr:0x020ecec8
-func_ov006_020ecee4 kind:function(arm,size=0x2a8) addr:0x020ecee4
-func_ov006_020ed18c kind:function(arm,size=0xe4) addr:0x020ed18c
+_ZN15dScMgHanachan_c16CleanupResourcesEv kind:function(arm,size=0x1c) addr:0x020ecec8
+_ZN15dScMgHanachan_c6RenderEv kind:function(arm,size=0x2a8) addr:0x020ecee4
+_ZN15dScMgHanachan_c8BehaviorEv kind:function(arm,size=0xe4) addr:0x020ed18c
 func_ov006_020ed270 kind:function(arm,size=0x4) addr:0x020ed270
 func_ov006_020ed274 kind:function(arm,size=0x8c) addr:0x020ed274
 func_ov006_020ed300 kind:function(arm,size=0x28) addr:0x020ed300
@@ -833,7 +833,7 @@ func_ov006_020ed81c kind:function(arm,size=0x28) addr:0x020ed81c
 func_ov006_020ed844 kind:function(arm,size=0x60) addr:0x020ed844
 func_ov006_020ed8a4 kind:function(arm,size=0x1a4) addr:0x020ed8a4
 func_ov006_020eda48 kind:function(arm,size=0xbc) addr:0x020eda48
-func_ov006_020edb04 kind:function(arm,size=0x1ac) addr:0x020edb04
+_ZN15dScMgHanachan_c13InitResourcesEv kind:function(arm,size=0x1ac) addr:0x020edb04
 func_ov006_020edcb0 kind:function(arm,size=0x168) addr:0x020edcb0
 MgWhichWiggler_Spawn kind:function(arm,size=0x68) addr:0x020ede18
 func_ov006_020ede80 kind:function(arm,size=0x40) addr:0x020ede80
@@ -3697,6 +3697,7 @@ _ZTI15dScMgHanachan_c kind:data(any) addr:0x0213ca7c
 _ZTS15dScMgHanachan_c kind:data(any) addr:0x0213ca88
 data_ov006_0213ca9c kind:data(any) addr:0x0213ca9c
 data_ov006_0213cab8 kind:data(any) addr:0x0213cab8
+_ZTV15dScMgHanachan_c kind:data(any) addr:0x0213cab8
 data_ov006_0213cb48 kind:data(any) addr:0x0213cb48
 data_ov006_0213cb4c kind:data(any) addr:0x0213cb4c
 data_ov006_0213cb54 kind:data(any) addr:0x0213cb54
