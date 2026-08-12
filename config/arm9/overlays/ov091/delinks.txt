@@ -242,7 +242,7 @@ src/func_ov091_02133254.cpp:
     complete
     .text start:0x02133254 end:0x021333fc
 
-src/_ZN5StumpD1Ev.c:
+src/_ZN5StumpD1Ev.cpp:
     complete
     .text start:0x021333fc end:0x02133440
 

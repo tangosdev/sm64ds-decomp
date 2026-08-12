@@ -1055,7 +1055,7 @@ src/func_ov002_020b6c54.c:
     complete
     .text start:0x020b6c54 end:0x020b6d28
 
-src/_ZN18PoppingLavaBubblesD1Ev.c:
+src/_ZN18PoppingLavaBubblesD1Ev.cpp:
     complete
     .text start:0x020b6d28 end:0x020b6d4c
 
@@ -1565,7 +1565,7 @@ src/SignPost_Spawn.c:
     complete
     .text start:0x020bc3c8 end:0x020bc414
 
-src/_ZN7SeaweedD1Ev.c:
+src/_ZN7SeaweedD1Ev.cpp:
     complete
     .text start:0x020bc414 end:0x020bc444
 
@@ -4486,7 +4486,7 @@ src/Tree_Spawn.cpp:
     complete
     .text start:0x020ec32c end:0x020ec388
 
-src/_ZN4WarpD1Ev.c:
+src/_ZN4WarpD1Ev.cpp:
     complete
     .text start:0x020ec388 end:0x020ec3b8
 
@@ -5692,7 +5692,7 @@ src/Fireball_Spawn.c:
     complete
     .text start:0x020f9304 end:0x020f934c
 
-src/_ZN11SoundObjectD1Ev.c:
+src/_ZN11SoundObjectD1Ev.cpp:
     complete
     .text start:0x020f934c end:0x020f9370
 
