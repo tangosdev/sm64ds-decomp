@@ -5,13 +5,13 @@
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV14MovingBarSmall */
+/* resolved: VT0 = _ZTV9TowerStep */
 int *TowerStep_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(916);
     if (p) {
         _ZN8PlatformC2Ev(p);
-        p[0] = (int)_ZTV14MovingBarSmall;
+        p[0] = (int)_ZTV9TowerStep;
         _ZN11ShadowModelC1Ev((char *)p + 0x320);
     }
     return p;

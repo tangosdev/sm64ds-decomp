@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN14MovingBarSmallD1Ev
+// @symbol _ZN9TowerStepD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Two vtable stores and three destructor calls, every one a consequence of
- * `struct MovingBarSmall : Platform`: its own vptr, then Platform's -- inlined,
+ * `struct TowerStep : Platform`: its own vptr, then Platform's -- inlined,
  * because Platform's destructor is defined in its class body -- then
  * Platform's Model and MovingMeshCollider, then Actor. This class adds no
  * member with a destructor of its own.
  */
-#include "MovingBarSmall.h"
+#include "TowerStep.h"
 
-MovingBarSmall::~MovingBarSmall()
+TowerStep::~TowerStep()
 {
 }

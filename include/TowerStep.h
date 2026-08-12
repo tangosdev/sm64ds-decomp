@@ -1,5 +1,5 @@
-#ifndef MOVINGBARSMALL_H
-#define MOVINGBARSMALL_H
+#ifndef TOWERSTEP_H
+#define TOWERSTEP_H
 
 #include "types.h"
 
@@ -18,7 +18,7 @@
 #include "Platform.h"
 #include "ShadowModel.h"
 
-struct MovingBarSmall : Platform {
+struct TowerStep : Platform {
     u8  pad_31e[0x2];
     ShadowModel mShadowModel;         /* 0x320 */
     u8  pad_348[0x30];
@@ -33,20 +33,20 @@ struct MovingBarSmall : Platform {
     u8 unk_392;                       /* 0x392 */
 
     /* --- vtable --- */
-    virtual ~MovingBarSmall();
+    virtual ~TowerStep();
 
     int CleanupResources();
     int Render();
 };
 
-typedef char MovingBarSmall_size_must_be_0x394[sizeof(MovingBarSmall) == 0x394 ? 1 : -1];
+typedef char MovingBarSmall_size_must_be_0x394[sizeof(TowerStep) == 0x394 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct MovingBarSmall {
+struct TowerStep {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
@@ -84,4 +84,4 @@ struct MovingBarSmall {
 
 #endif /* __cplusplus */
 
-#endif /* MOVINGBARSMALL_H */
+#endif /* TOWERSTEP_H */

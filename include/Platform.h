@@ -27,7 +27,7 @@
  *
  *     PyramidTop      daObjDlPyramid_c   Model                      @ 0x320
  *     BasementWater    daObjC0Water_c     TextureTransformer         @ 0x320
- *     MovingBarSmall  daObjBk_Lift_c     ShadowModel                @ 0x320
+ *     TowerStep  daObjBk_Lift_c     ShadowModel                @ 0x320
  *     WallSign        daObjKanban_c      MovingCylinderClsnWithPos  @ 0x320
  *
  * Each is read straight off that class's destructor, which destroys its own

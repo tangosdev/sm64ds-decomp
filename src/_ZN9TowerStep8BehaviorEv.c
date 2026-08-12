@@ -10,7 +10,7 @@ extern void func_020393a4(void *p, int v);
 extern void func_02039394(void *p, int v);
 extern void func_ov015_021123c8(void *self);
 
-int _ZN14MovingBarSmall8BehaviorEv(char *self)
+int _ZN9TowerStep8BehaviorEv(char *self)
 {
     int kind = *(int *)(self + 8) & 0xff;
 
