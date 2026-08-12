@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN10DonutBlock13InitResourcesEv
+// @symbol _ZN21ArmedRotatingPlatform13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "DonutBlock.h"
+#include "ArmedRotatingPlatform.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
@@ -16,7 +16,7 @@ extern "C" {
 extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 }
 
-int DonutBlock::InitResources()
+int ArmedRotatingPlatform::InitResources()
 {
   void* mdl;
   void* kcl;

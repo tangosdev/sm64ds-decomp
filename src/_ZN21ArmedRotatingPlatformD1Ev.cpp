@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN10DonutBlockD1Ev
+// @symbol _ZN21ArmedRotatingPlatformD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Two vtable stores and three destructor calls, every one a consequence of
- * `struct DonutBlock : Platform`: its own vptr, then Platform's -- inlined,
+ * `struct ArmedRotatingPlatform : Platform`: its own vptr, then Platform's -- inlined,
  * because Platform's destructor is defined in its class body -- then
- * Platform's Model and MovingMeshCollider, then Actor. DonutBlock adds one
+ * Platform's Model and MovingMeshCollider, then Actor. ArmedRotatingPlatform adds one
  * s16, which has no destructor.
  */
-#include "DonutBlock.h"
+#include "ArmedRotatingPlatform.h"
 
-DonutBlock::~DonutBlock()
+ArmedRotatingPlatform::~ArmedRotatingPlatform()
 {
 }

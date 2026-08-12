@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN10DonutBlockD0Ev
+// @symbol _ZN21ArmedRotatingPlatformD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
  * D0 is vtable slot 17: destroy through this class and its Platform base --
@@ -7,11 +7,11 @@
  * heap. The deallocation is Actor's inline operator delete, so nothing here
  * mentions a heap either.
  *
- * The body is the same `~DonutBlock()` the D1 file declares; mwcc emits D2, D0
+ * The body is the same `~ArmedRotatingPlatform()` the D1 file declares; mwcc emits D2, D0
  * and D1 together and objisolate keeps whichever one the file is bound to.
  */
-#include "DonutBlock.h"
+#include "ArmedRotatingPlatform.h"
 
-DonutBlock::~DonutBlock()
+ArmedRotatingPlatform::~ArmedRotatingPlatform()
 {
 }

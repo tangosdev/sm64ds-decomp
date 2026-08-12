@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN10DonutBlock8BehaviorEv
+// @symbol _ZN21ArmedRotatingPlatform8BehaviorEv
 /* recovered: named members + shared header, real C++ method
  *
  * Spin by unk_31e a frame; stop and switch the collider off once the actor is
@@ -14,11 +14,11 @@
  * IsClsnInRange keeps its mangled spelling: the name carries Fix12<int> by
  * value, wall 6az, so a real call would not reproduce the call site.
  */
-#include "DonutBlock.h"
+#include "ArmedRotatingPlatform.h"
 
 extern "C" bool _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 
-int DonutBlock::Behavior()
+int ArmedRotatingPlatform::Behavior()
 {
     /* `+=`, not `mAngleY = mAngleY + ...`: the compound form CSEs the field
        address into a register and reuses it for the load and the store, which
