@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN8PoleLift6RenderEv
+// @symbol _ZN17ExtendingPlatform6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "PoleLift.h"
+#include "ExtendingPlatform.h"
 struct Args { int a, b, c; };
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(Args*); };
 struct Derived { char pad[0xd8]; Base base; };
@@ -9,7 +9,7 @@ extern "C" {
 extern int func_0203aad0(int *p);
 }
 
-int PoleLift::Render()
+int ExtendingPlatform::Render()
 {
   Args s;
   s.a = 0x1000;

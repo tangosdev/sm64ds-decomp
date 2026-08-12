@@ -1,3 +1,3 @@
-void _ZN8PoleLift16OnPendingDestroyEv(void)
+void _ZN17ExtendingPlatform16OnPendingDestroyEv(void)
 {
 }

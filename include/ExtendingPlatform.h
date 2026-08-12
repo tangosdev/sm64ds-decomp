@@ -1,13 +1,13 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class PoleLift: 6 matched functions, 5 evidenced fields.
+ * class ExtendingPlatform: 6 matched functions, 5 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef POLELIFT_H
-#define POLELIFT_H
+#ifndef EXTENDINGPLATFORM_H
+#define EXTENDINGPLATFORM_H
 #include "types.h"
 #include "Model.h"
 
-struct PoleLift {
+struct ExtendingPlatform {
     u8  pad_000[0x8e];
     s16 unk_08e;            /* 0x08e */
     u8  pad_090[0x44];
