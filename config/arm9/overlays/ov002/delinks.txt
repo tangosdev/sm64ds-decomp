@@ -319,31 +319,31 @@ src/InvisiblePole_Spawn.c:
     complete
     .text start:0x020b0710 end:0x020b0748
 
-src/_ZN13InvisiblePoleD1Ev.cpp:
+src/_ZN9CameraTagD1Ev.cpp:
     complete
     .text start:0x020b0748 end:0x020b076c
 
-src/_ZN13InvisiblePoleD0Ev.c:
+src/_ZN9CameraTagD0Ev.c:
     complete
     .text start:0x020b076c end:0x020b07a4
 
-src/_ZN13InvisiblePole16CleanupResourcesEv.cpp:
+src/_ZN9CameraTag16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b07a4 end:0x020b07ac
 
-src/_ZN13InvisiblePole16OnPendingDestroyEv.cpp:
+src/_ZN9CameraTag16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020b07ac end:0x020b07b0
 
-src/_ZN13InvisiblePole6RenderEv.cpp:
+src/_ZN9CameraTag6RenderEv.cpp:
     complete
     .text start:0x020b07b0 end:0x020b07b8
 
-src/_ZN13InvisiblePole8BehaviorEv.cpp:
+src/_ZN9CameraTag8BehaviorEv.cpp:
     complete
     .text start:0x020b07b8 end:0x020b07c0
 
-src/_ZN13InvisiblePole13InitResourcesEv.cpp:
+src/_ZN9CameraTag13InitResourcesEv.cpp:
     complete
     .text start:0x020b07c0 end:0x020b07c8
 
