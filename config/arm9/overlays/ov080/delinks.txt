@@ -190,7 +190,7 @@ src/CrazedCrate_Spawn.c:
     complete
     .text start:0x021253b4 end:0x02125404
 
-src/_ZN8PaintingD1Ev.c:
+src/_ZN8PaintingD1Ev.cpp:
     complete
     .text start:0x02125404 end:0x02125428
 

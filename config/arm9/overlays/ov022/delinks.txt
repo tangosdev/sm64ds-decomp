@@ -4,7 +4,7 @@
     .ctor       start:0x021130f8 end:0x02113120 kind:rodata align:4
     .data       start:0x02113140 end:0x02114500 kind:data align:32
     .bss        start:0x02114500 end:0x021146a0 kind:bss align:32
-src/_ZN11VolcanoRingD1Ev.c:
+src/_ZN11VolcanoRingD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
@@ -94,7 +94,7 @@ src/FloatOnLavaPlatform_Spawn.c:
     complete
     .text start:0x02111950 end:0x02111980
 
-src/_ZN10LavaBridgeD1Ev.c:
+src/_ZN10LavaBridgeD1Ev.cpp:
     complete
     .text start:0x02111980 end:0x021119c4
 
@@ -126,7 +126,7 @@ src/LavaBridge_Spawn.c:
     complete
     .text start:0x02111c7c end:0x02111cac
 
-src/_ZN10LavaSeesawD1Ev.c:
+src/_ZN10LavaSeesawD1Ev.cpp:
     complete
     .text start:0x02111cac end:0x02111cf0
 
