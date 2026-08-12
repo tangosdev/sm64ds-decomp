@@ -5,7 +5,7 @@
 extern int func_ov002_020b66a8(void *thisp, void *data);
 extern char data_ov029_02113fd4[];
 
-int _ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv(void *thisp)
+int _ZN19RotatingPlatformWdw16CleanupResourcesEv(void *thisp)
 {
     return func_ov002_020b66a8(thisp, data_ov029_02113fd4);
 }

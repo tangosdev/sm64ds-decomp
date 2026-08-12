@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN8Squasher13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_FloatOnWaterPlatformWdwRectangle.h"
+#include "decl_RotatingPlatformWdw.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Squasher.h"
@@ -24,7 +24,7 @@ int Squasher::InitResources()
   _ZN11ShadowModel10InitCuboidEv((char*)&mShadowModel);
   func_ov023_02111308(((char*)this));
   _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
-  int kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&_ZN32FloatOnWaterPlatformWdwRectangleD1Ev);
+  int kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&_ZN19RotatingPlatformWdwD1Ev);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, (struct Matrix4x3*)((char*)&(*(u8 *)&mClsnMat)), 0x1000, (*(u16 *)&mAngleY), &data_ov064_0211ba4c);
   func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
   ((MeshColliderBase *)(&mMeshCollider))->Enable((Actor *)(((char*)this)));
