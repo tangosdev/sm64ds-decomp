@@ -11,15 +11,15 @@ _ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv kind:function(arm,size=0xcc)
 func_ov029_021116c4 kind:function(arm,size=0x20) addr:0x021116c4
 func_ov029_021116e4 kind:function(arm,size=0x14) addr:0x021116e4
 ArrowLift_Spawn kind:function(arm,size=0x30) addr:0x021116f8
-_ZN9ArrowLiftD1Ev kind:function(arm,size=0x38) addr:0x02111728
-_ZN9ArrowLiftD0Ev kind:function(arm,size=0x4c) addr:0x02111760
+_ZN12WaterDiamondD1Ev kind:function(arm,size=0x38) addr:0x02111728
+_ZN12WaterDiamondD0Ev kind:function(arm,size=0x4c) addr:0x02111760
 func_ov029_021117ac kind:function(arm,size=0xa4) addr:0x021117ac
 func_ov029_02111850 kind:function(arm,size=0x78) addr:0x02111850
 func_ov029_021118c8 kind:function(arm,size=0x40) addr:0x021118c8
-_ZN9ArrowLift16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111908
-_ZN9ArrowLift6RenderEv kind:function(arm,size=0x28) addr:0x0211192c
-_ZN9ArrowLift8BehaviorEv kind:function(arm,size=0xb0) addr:0x02111954
-_ZN9ArrowLift13InitResourcesEv kind:function(arm,size=0x80) addr:0x02111a04
+_ZN12WaterDiamond16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111908
+_ZN12WaterDiamond6RenderEv kind:function(arm,size=0x28) addr:0x0211192c
+_ZN12WaterDiamond8BehaviorEv kind:function(arm,size=0xb0) addr:0x02111954
+_ZN12WaterDiamond13InitResourcesEv kind:function(arm,size=0x80) addr:0x02111a04
 WaterDiamond_Spawn kind:function(arm,size=0x40) addr:0x02111a84
 func_ov029_02111ac4 kind:function(arm,size=0x44) addr:0x02111ac4
 func_ov029_02111b08 kind:function(arm,size=0x58) addr:0x02111b08
@@ -190,7 +190,7 @@ _ZTI15daObjWc_Obj03_c kind:data(any) addr:0x02113d70
 _ZTS15daObjWc_Obj03_c kind:data(any) addr:0x02113d7c
 WaterDiamond_SpawnInfo kind:data(any) addr:0x02113d90 ambiguous
 data_ov029_02113da8 kind:data(any) addr:0x02113da8 ambiguous
-_ZTV9ArrowLift kind:data(any) addr:0x02113db4
+_ZTV12WaterDiamond kind:data(any) addr:0x02113db4
 _ZTV15daObjWc_Obj03_c kind:data(any) addr:0x02113db4
 data_ov029_02113dc4 kind:data(any) addr:0x02113dc4 ambiguous
 data_ov029_02113e00 kind:data(any) addr:0x02113e00 ambiguous
