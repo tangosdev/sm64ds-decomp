@@ -1,5 +1,5 @@
 {
- "eligible": 10817,
+ "eligible": 10819,
  "unresolved": {
   "arm9:0x02008b4c": {
    "name": "func_02008b4c",
@@ -529,13 +529,13 @@
    ]
   },
   "ov006:0x020e3578": {
-   "name": "func_ov006_020e3578",
+   "name": "_ZN14dScMgCurling_c13InitResourcesEv",
    "missing": [
     "func_020adc74"
    ]
   },
   "ov006:0x020e6894": {
-   "name": "func_ov006_020e6894",
+   "name": "_ZN15dScMgCurling2_c13InitResourcesEv",
    "missing": [
     "func_020adc74"
    ]
@@ -596,7 +596,7 @@
    ]
   },
   "ov006:0x020f3460": {
-   "name": "func_ov006_020f3460",
+   "name": "_ZN12dScMgLuigi_c13InitResourcesEv",
    "missing": [
     "func_020adc74",
     "func_020bc864",
@@ -1620,12 +1620,6 @@
    "name": "func_ov100_02142918",
    "missing": [
     "func_020ad660"
-   ]
-  },
-  "ov100:0x021442dc": {
-   "name": "UnchainedChomp_Spawn",
-   "missing": [
-    "func_020aed98"
    ]
   },
   "ov100:0x02145080": {
