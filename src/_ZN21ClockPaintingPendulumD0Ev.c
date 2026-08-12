@@ -1,16 +1,18 @@
-// @symbol func_ov013_021111d0
-// recovered name: daObjClockHuriko_c_OnYoshiTryEat
+// @symbol _ZN21ClockPaintingPendulumD0Ev
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_common.h"
-extern int data_ov013_02112128[];
+extern int _ZTV21ClockPaintingPendulum[];
 /* recovered: vtable identified, renamed to Class_Method */
-/* daObjClockHuriko_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
+   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
+   vtable, destroys the members and calls Memory::Deallocate; no eat handler
+   does any of that. */
 extern void *data_020a0eac;
-int *func_ov013_021111d0(int *t)
+int *_ZN21ClockPaintingPendulumD0Ev(int *t)
 {
-    t[0] = (int)data_ov013_02112128;
+    t[0] = (int)_ZTV21ClockPaintingPendulum;
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);

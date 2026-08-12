@@ -1,5 +1,4 @@
 // @symbol func_ov018_021126f8
-// recovered name: daSCre_c_OnYoshiTryEat
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_common.h"

@@ -4,15 +4,15 @@
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
 #include "decl_common.h"
-extern int data_ov013_02112128[];
+extern int _ZTV21ClockPaintingPendulum[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = data_ov013_02112128 */
+/* vtable identified: VT0 = _ZTV21ClockPaintingPendulum */
 int *ClockPaintingPendulum_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(296);
     if (p) {
         _ZN5ActorC2Ev(p);
-        p[0] = (int)data_ov013_02112128;
+        p[0] = (int)_ZTV21ClockPaintingPendulum;
         _ZN5ModelC1Ev((char *)p + 0xd4);
     }
     return p;
