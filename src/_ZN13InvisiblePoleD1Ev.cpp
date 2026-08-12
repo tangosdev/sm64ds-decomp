@@ -1,15 +1,14 @@
+//cpp
 // @symbol _ZN13InvisiblePoleD1Ev
-/* recovered: vtable identified, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_MovingCylinderClsn.h"
-#include "decl_common.h"
-extern int _ZTV13InvisiblePole[];
-/* recovered: vtable identified */
-/* vtable identified: VT0 = _ZTV13InvisiblePole */
-int *_ZN13InvisiblePoleD1Ev(int *t)
+/* recovered: real C++ destructor -- the compiler emits the whole body
+ *
+ * Vtable slot 16. One vtable store and two teardowns, none of them written here: the
+ * single member in reverse declaration order, then Actor. This body IS the evidence
+ * for the header above it -- MovingCylinderClsn is 0x34 and starts at 0xd4, which
+ * closes exactly on the 0x108 the factory allocates.
+ */
+#include "InvisiblePole.h"
+
+InvisiblePole::~InvisiblePole()
 {
-    t[0] = (int)_ZTV13InvisiblePole;
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
-    return t;
 }
