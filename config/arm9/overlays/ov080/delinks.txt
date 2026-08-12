@@ -274,23 +274,23 @@ src/func_ov080_02126a54.c:
     complete
     .text start:0x02126a54 end:0x02126bfc
 
-src/func_ov080_02126bfc.c:
+src/_ZN8Painting16CleanupResourcesEv.cpp:
     complete
     .text start:0x02126bfc end:0x02126c1c
 
-src/func_ov080_02126c1c.c:
+src/_ZN8Painting16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02126c1c end:0x02126c20
 
-src/func_ov080_02126c20.cpp:
+src/_ZN8Painting6RenderEv.cpp:
     complete
     .text start:0x02126c20 end:0x02126c60
 
-src/func_ov080_02126c60.cpp:
+src/_ZN8Painting8BehaviorEv.cpp:
     complete
     .text start:0x02126c60 end:0x02126ca0
 
-src/func_ov080_02126ca0.cpp:
+src/_ZN8Painting13InitResourcesEv.cpp:
     complete
     .text start:0x02126ca0 end:0x02126f8c
 
