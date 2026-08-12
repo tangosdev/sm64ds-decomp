@@ -1,14 +1,14 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class ArrowLift: 5 matched functions, 8 evidenced fields.
+ * class WaterDiamond: 5 matched functions, 8 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef ARROWLIFT_H
-#define ARROWLIFT_H
+#ifndef WATERDIAMOND_H
+#define WATERDIAMOND_H
 #include "types.h"
 #include "Model.h"
 #include "MovingCylinderClsn.h"
 
-struct ArrowLift {
+struct WaterDiamond {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x54];
@@ -21,7 +21,7 @@ struct ArrowLift {
     Model mModel;            /* 0x0d4 */
     /* MovingCylinderClsn member, named by the class's own destructor calling
        MovingCylinderClsn's D1 at +0x124 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9ArrowLiftD0Ev.c] */
+       checks. Was a u8 marker. [_ZN12WaterDiamondD0Ev.c] */
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x124 */
     s32 unk_158;            /* 0x158 */
     s8  unk_15c;            /* 0x15c */
