@@ -43,15 +43,15 @@ _ZN14KnockDownPlank8BehaviorEv kind:function(arm,size=0x6c) addr:0x02112090
 _ZN14KnockDownPlank13InitResourcesEv kind:function(arm,size=0x134) addr:0x021120fc
 MovingBarBig_Spawn kind:function(arm,size=0x30) addr:0x02112230
 MovingBarSmall_Spawn kind:function(arm,size=0x30) addr:0x02112260
-_ZN14MovingBarSmallD1Ev kind:function(arm,size=0x4c) addr:0x02112290
-_ZN14MovingBarSmallD0Ev kind:function(arm,size=0x60) addr:0x021122dc
+_ZN9TowerStepD1Ev kind:function(arm,size=0x4c) addr:0x02112290
+_ZN9TowerStepD0Ev kind:function(arm,size=0x60) addr:0x021122dc
 func_ov015_0211233c kind:function(arm,size=0x64) addr:0x0211233c
 func_ov015_021123a0 kind:function(arm,size=0x28) addr:0x021123a0
 func_ov015_021123c8 kind:function(arm,size=0x9c) addr:0x021123c8
-_ZN14MovingBarSmall16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112464
-_ZN14MovingBarSmall6RenderEv kind:function(arm,size=0x28) addr:0x021124a8
-_ZN14MovingBarSmall8BehaviorEv kind:function(arm,size=0x1cc) addr:0x021124d0
-_ZN14MovingBarSmall13InitResourcesEv kind:function(arm,size=0x24c) addr:0x0211269c
+_ZN9TowerStep16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112464
+_ZN9TowerStep6RenderEv kind:function(arm,size=0x28) addr:0x021124a8
+_ZN9TowerStep8BehaviorEv kind:function(arm,size=0x1cc) addr:0x021124d0
+_ZN9TowerStep13InitResourcesEv kind:function(arm,size=0x24c) addr:0x0211269c
 func_ov015_021128e8 kind:function(arm,size=0x10) addr:0x021128e8
 func_ov015_021128f8 kind:function(arm,size=0x14) addr:0x021128f8
 TowerStep_Spawn kind:function(arm,size=0x38) addr:0x0211290c
@@ -235,7 +235,7 @@ data_ov015_021145e4 kind:data(any) addr:0x021145e4 ambiguous
 _ZTI14daObjBk_Lift_c kind:data(any) addr:0x0211460c
 _ZTS14daObjBk_Lift_c kind:data(any) addr:0x02114618
 TowerStep_SpawnInfo kind:data(any) addr:0x0211462c ambiguous
-_ZTV14MovingBarSmall kind:data(any) addr:0x02114650
+_ZTV9TowerStep kind:data(any) addr:0x02114650
 _ZTV14daObjBk_Lift_c kind:data(any) addr:0x02114650
 _ZTI17daObjBk_Rotebar_c kind:data(any) addr:0x021146d0
 _ZTS17daObjBk_Rotebar_c kind:data(any) addr:0x021146dc
