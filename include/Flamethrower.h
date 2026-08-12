@@ -28,6 +28,7 @@ struct Flamethrower {
 #ifdef __cplusplus
     /* methods */
     int InitResources();
+    int Behavior();
 #endif
 };
 
