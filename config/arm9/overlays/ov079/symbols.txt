@@ -45,8 +45,8 @@ _ZN10BulletBill6RenderEv kind:function(arm,size=0x3c) addr:0x02126a48
 _ZN10BulletBill8BehaviorEv kind:function(arm,size=0x1c0) addr:0x02126a84
 _ZN10BulletBill13InitResourcesEv kind:function(arm,size=0x120) addr:0x02126c44
 BulletBill_Spawn kind:function(arm,size=0x58) addr:0x02126d64
-func_ov079_02126dbc kind:function(arm,size=0x44) addr:0x02126dbc
-func_ov079_02126e00 kind:function(arm,size=0x58) addr:0x02126e00
+_ZN11BillBlasterD1Ev kind:function(arm,size=0x44) addr:0x02126dbc
+_ZN11BillBlasterD0Ev kind:function(arm,size=0x58) addr:0x02126e00
 func_ov079_02126e58 kind:function(arm,size=0x74) addr:0x02126e58
 func_ov079_02126ecc kind:function(arm,size=0x38) addr:0x02126ecc
 func_ov079_02126f04 kind:function(arm,size=0x60) addr:0x02126f04
@@ -108,7 +108,7 @@ data_ov079_02127f64 kind:data(any) addr:0x02127f64
 _ZTI18daObjBkKillerdai_c kind:data(any) addr:0x02127f70
 _ZTS18daObjBkKillerdai_c kind:data(any) addr:0x02127f7c
 BillBlaster_SpawnInfo kind:data(any) addr:0x02127f94 ambiguous
-data_ov079_02127fb8 kind:data(any) addr:0x02127fb8
+_ZTV11BillBlaster kind:data(any) addr:0x02127fb8
 data_ov079_02127fec kind:data(any) addr:0x02127fec ambiguous
 data_ov079_02128008 kind:data(any) addr:0x02128008 ambiguous
 _ZTI14daObjBk_Kabe_c kind:data(any) addr:0x02128038

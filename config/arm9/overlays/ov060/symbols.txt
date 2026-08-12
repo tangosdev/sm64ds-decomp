@@ -116,8 +116,8 @@ _ZN18BowserFireSeaArena6RenderEv kind:function(arm,size=0x2c) addr:0x02117b9c
 _ZN18BowserFireSeaArena8BehaviorEv kind:function(arm,size=0x68) addr:0x02117bc8
 _ZN18BowserFireSeaArena13InitResourcesEv kind:function(arm,size=0xac) addr:0x02117c30
 BowserFireSeaArena_Spawn kind:function(arm,size=0x40) addr:0x02117cdc
-func_ov060_02117d1c kind:function(arm,size=0x44) addr:0x02117d1c
-func_ov060_02117d60 kind:function(arm,size=0x58) addr:0x02117d60
+_ZN17BowserSkyPlatformD1Ev kind:function(arm,size=0x44) addr:0x02117d1c
+_ZN17BowserSkyPlatformD0Ev kind:function(arm,size=0x58) addr:0x02117d60
 func_ov060_02117db8 kind:function(arm,size=0x328) addr:0x02117db8
 func_ov060_021180e0 kind:function(arm,size=0xd4) addr:0x021180e0
 func_ov060_021181b4 kind:function(arm,size=0x34) addr:0x021181b4
@@ -249,7 +249,7 @@ _ZTI10daKpa3Bg_c kind:data(any) addr:0x0211a948
 _ZTS10daKpa3Bg_c kind:data(any) addr:0x0211a954
 BowserSkyPlatform_SpawnInfo kind:data(any) addr:0x0211a964 ambiguous
 data_ov060_0211a980 kind:data(any) addr:0x0211a980
-data_ov060_0211a9b0 kind:data(any) addr:0x0211a9b0
+_ZTV17BowserSkyPlatform kind:data(any) addr:0x0211a9b0
 data_ov060_0211aa30 kind:data(any) addr:0x0211aa30
 data_ov060_0211aa38 kind:data(any) addr:0x0211aa38
 data_ov060_0211aa40 kind:data(any) addr:0x0211aa40

@@ -3,11 +3,11 @@
     .ctor       start:0x02111ae8 end:0x02111af8 kind:rodata align:4
     .data       start:0x02111b00 end:0x021125e0 kind:data align:32
     .bss        start:0x021125e0 end:0x02112720 kind:bss align:32
-src/func_ov043_021111a0.c:
+src/_ZN11DiamondLiftD1Ev.c:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/func_ov043_021111e4.c:
+src/_ZN11DiamondLiftD0Ev.c:
     complete
     .text start:0x021111e4 end:0x0211123c
 
@@ -31,11 +31,11 @@ src/DiamondLift_Spawn.c:
     complete
     .text start:0x021113cc end:0x021113fc
 
-src/func_ov043_021113fc.c:
+src/_ZN11RickshawBdwD1Ev.c:
     complete
     .text start:0x021113fc end:0x0211144c
 
-src/func_ov043_0211144c.c:
+src/_ZN11RickshawBdwD0Ev.c:
     complete
     .text start:0x0211144c end:0x021114b0
 
