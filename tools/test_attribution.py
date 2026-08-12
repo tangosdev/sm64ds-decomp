@@ -205,3 +205,89 @@ class Composite(GitFixture):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class RenameReplay(GitFixture):
+    """`prepush_attribution.project` must REPLAY renames in commit order.
+
+    The bug these cover: the steps used to be composed into one {old: final} map and
+    chased forward, which is right for a file that really moved A -> B -> C and wrong
+    for a permutation, where step 2 only means what it means because step 1 already
+    vacated the name.
+    """
+
+    def setUp(self):
+        super().setUp()
+        sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+        import prepush_attribution as PA
+        self.PA = PA
+        self._saved_pa = PA.REPO
+        PA.REPO = self.repo
+
+    def tearDown(self):
+        self.PA.REPO = self._saved_pa
+        super().tearDown()
+
+    def steps(self):
+        return self.PA.renames_between("main", "HEAD")
+
+    def test_a_two_class_swap_keeps_every_credit(self):
+        """A -> B while B -> C. Composed, this said A's credit landed on C."""
+        self.write("src/b.c", CLEAN)
+        self.write("src/a.c", CLEAN + "// a\n")
+        self.commit("author", "start")
+        self.git("branch", "base")
+        self.move("src/b.c", "src/c.c")
+        self.commit("renamer", "b -> c")
+        self.move("src/a.c", "src/b.c")
+        self.commit("renamer", "a -> b")
+
+        steps = self.PA.renames_between("base", "HEAD")
+        self.assertEqual(steps, [("b", "c"), ("a", "b")])
+
+        before = {"a": ("src/a", "alice"), "b": ("src/b", "bob")}
+        state, origin = self.PA.project(before, steps)
+        # bob's work is now called c, alice's is now called b, and neither lost credit
+        self.assertEqual(state["c"], ("src/b", "bob"))
+        self.assertEqual(state["b"], ("src/a", "alice"))
+        self.assertNotIn("a", state)
+        self.assertEqual(origin["c"], "b")
+        self.assertEqual(origin["b"], "a")
+
+    def test_composing_would_have_been_wrong(self):
+        """Pin the exact failure: forward-chasing sends a's credit to c."""
+        steps = [("b", "c"), ("a", "b")]
+        composed = {}
+        for old, new in steps:
+            composed[old] = new
+        for start in list(composed):
+            seen, cur = {start}, composed[start]
+            while cur in composed and cur not in seen:
+                seen.add(cur)
+                cur = composed[cur]
+            composed[start] = cur
+        self.assertEqual(composed["a"], "c")          # the bug, preserved as a fact
+        state, _ = self.PA.project({"a": ("src/a", "alice"), "b": ("src/b", "bob")}, steps)
+        self.assertEqual(state["c"], ("src/b", "bob"))   # replay disagrees, and is right
+
+    def test_a_genuine_chain_still_composes_correctly(self):
+        """A -> B -> C in that order really is one file moving twice."""
+        steps = [("a", "b"), ("b", "c")]
+        state, origin = self.PA.project({"a": ("src/a", "alice")}, steps)
+        self.assertEqual(state["c"], ("src/a", "alice"))
+        self.assertEqual(origin["c"], "a")
+        self.assertNotIn("a", state)
+        self.assertNotIn("b", state)
+
+    def test_a_rewrite_and_move_in_one_commit_is_still_a_loss(self):
+        """The gate keeps its teeth: no R record, so no step, so the name is lost."""
+        self.write("src/a.c", CLEAN)
+        self.commit("author", "start")
+        self.git("branch", "base2")
+        (self.repo / "src/a.c").unlink()
+        self.write("src/z.c", "int totally_different(void){return 42;}\n")
+        self.commit("renamer", "rewrite and move at once")
+        steps = self.PA.renames_between("base2", "HEAD")
+        state, _ = self.PA.project({"a": ("src/a", "alice")}, steps)
+        self.assertIn("a", state)          # never vacated -> reported lost
+        self.assertNotIn("z", state)

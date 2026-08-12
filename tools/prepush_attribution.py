@@ -129,8 +129,8 @@ def renames_between(base, head):
     reported as changed rather than waved through. Verified by rewriting and moving
     a file in one commit: still 1 lost, still exit 1.
 
-    Renames are collected **per commit and then composed**, not from one base..head
-    diff. That matters for exactly the sequence THE RULE prescribes: rewrite in one
+    Renames are collected **per commit and returned in order**, not from one
+    base..head diff, and are replayed rather than composed -- see project(). That matters for exactly the sequence THE RULE prescribes: rewrite in one
     commit, move in the next. Across the whole range those two show up as a single
     change whose similarity can fall under git's 50% threshold -- which it did for 3
     of 8 real cases, the small files whose comments were rewritten most. Per commit,
@@ -150,17 +150,39 @@ def renames_between(base, head):
             if old != new:
                 steps.append((old, new))
 
-    # Compose chains so A->B->C reports A->C, and stop on cycles defensively.
-    out = {}
+    return steps
+
+
+def project(before_by_name, steps):
+    """Replay `steps` in COMMIT ORDER onto a moving {name: credit} map.
+
+    This used to compose the steps into a single {old: final} map and chase it
+    forward, which is right for a file that really moved A -> B -> C over time and
+    WRONG for a permutation. Renaming a family of classes so each takes the next
+    one's name produces, in this order:
+
+        commit 1   VirtualDoor -> Exit
+        commit 3   CameraTag   -> VirtualDoor
+
+    Chased forward, those compose to `CameraTag -> Exit`: the map says CameraTag's
+    credit ended up on Exit, when Exit's credit is VirtualDoor's and CameraTag's is
+    on VirtualDoor. Every name in the cycle then reads as CREDIT CHANGED even though
+    git recorded an R100 for each step and no author lost anything. Order is the
+    whole point -- step 2 only means what it means because step 1 already vacated
+    the name.
+
+    Replaying is also strictly stricter than composing, not looser: a rewrite-and-
+    move in one commit is still not a rename to git, so it contributes no step, the
+    old name is still projected as present, and it is still reported lost.
+    """
+    state = dict(before_by_name)
+    origin = {name: name for name in state}
     for old, new in steps:
-        out[old] = new
-    for start in list(out):
-        seen, cur = {start}, out[start]
-        while cur in out and cur not in seen:
-            seen.add(cur)
-            cur = out[cur]
-        out[start] = cur
-    return out
+        if old not in state:
+            continue
+        state[new] = state.pop(old)
+        origin[new] = origin.pop(old, old)
+    return state, origin
 
 
 def main():
@@ -184,32 +206,28 @@ def main():
     before_by_name = {basename_key(s): (s, w) for s, w in before.items()}
     after_by_name = {basename_key(s): (s, w) for s, w in after.items()}
 
-    renamed = renames_between(args.base, args.head)
+    steps = renames_between(args.base, args.head)
+    # Where each name's credit SHOULD have ended up, following git's own rename
+    # detection step by step. Comparing `after` against this instead of against
+    # `before` is what lets a deliberate symbol correction pass while a
+    # rewrite-and-move in one commit still fails.
+    projected, origin = project(before_by_name, steps)
 
     changed, lost, moved_ok, renamed_ok = [], [], [], []
     for name, (new_stem, new_who) in after_by_name.items():
-        if name not in before_by_name:
+        if name not in projected:
             continue                                   # genuinely new work
-        old_stem, old_who = before_by_name[name]
+        old_stem, old_who = projected[name]
+        came_from = origin.get(name, name)
         if old_who != new_who:
             changed.append((name, old_stem, new_stem, old_who, new_who))
+        elif came_from != name:
+            renamed_ok.append((came_from, name, old_stem, new_stem, old_who))
         elif old_stem != new_stem:
             moved_ok.append((name, old_stem, new_stem, old_who))
-    for name, (old_stem, old_who) in before_by_name.items():
-        if name in after_by_name:
-            continue
-        # A deliberate symbol correction renames the file. Follow git's own rename
-        # detection rather than calling it a loss -- but only when the credit is
-        # genuinely unchanged; a rename that moved credit is still a failure.
-        target = renamed.get(name)
-        if target and target in after_by_name:
-            new_stem, new_who = after_by_name[target]
-            if new_who == old_who:
-                renamed_ok.append((name, target, old_stem, new_stem, old_who))
-            else:
-                changed.append((name, old_stem, new_stem, old_who, new_who))
-            continue
-        lost.append((name, old_stem, old_who))
+    for name, (old_stem, old_who) in projected.items():
+        if name not in after_by_name:
+            lost.append((origin.get(name, name), old_stem, old_who))
 
     for name, old_stem, new_stem, old_who, new_who in changed:
         print(f"  CREDIT CHANGED  {name}")
