@@ -37,14 +37,14 @@
  * from. Left as padding; the first descendant that touches it will need
  * to split the pad, the same way MgBounceAndPounce did for dScMgBase_c.
  *
- * THE DESTRUCTOR IS NOT DEFINED INLINE, same reasoning as dScMgBase_c.h's
- * own note: its body is non-trivial (member destruction plus an implicit
- * chain to ~dScMgBase_c()), and mwcc does not inline a body this size into
- * a different translation unit. Defined for real in
- * src/_ZN19dScMgSingle3DBase_cD1Ev.cpp and .../_D0Ev.cpp instead. No
- * separate operator delete copy is needed -- dScMgBase_c, this class's
- * IMMEDIATE base, already provides one (see its own header note), and
- * mwcc's inline-D0 route only needs to reach the immediate base. */
+ * THE DESTRUCTOR IS NOW DEFINED INLINE (fixed after this file's first
+ * landing, #1421) -- same fix, same reason, as include/Scene.h's own note:
+ * this class has 13 direct RTTI children and every one needs to inline
+ * this destructor's body to reproduce its own D1. See the class body's own
+ * note for the measurement that caught it. No separate operator delete
+ * copy is needed -- dScMgBase_c, this class's IMMEDIATE base, already
+ * provides one (see its own header note), and mwcc's inline-D0 route only
+ * needs to reach the immediate base. */
 #ifndef DSCMGSINGLE3DBASE_C_H
 #define DSCMGSINGLE3DBASE_C_H
 #include "dScMgBase_c.h"
@@ -116,8 +116,25 @@ typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1]
 
 struct dScMgSingle3DBase_c : dScMgBase_c {
     /* Declared first, deliberately -- see dScMgBase_c.h's own KEY FUNCTION
-       note for why. Overrides slots 16 (D1) and 17 (D0). */
-    virtual ~dScMgSingle3DBase_c();
+       note for why. Overrides slots 16 (D1) and 17 (D0).
+
+       DEFINED INLINE -- same fix, same reason, as include/Scene.h's own
+       note: this class has 13 direct RTTI children, and every one of them
+       inlines THIS destructor's vptr store + mSysTracker destruction +
+       chain to ~dScMgBase_c(), the same way Stage inlines Scene's. Measured
+       directly on dScMgMemory_c (one of the 8 in this slice): a merely
+       declared `virtual ~dScMgSingle3DBase_c();` compiles a derived
+       destructor that references `_ZN19dScMgSingle3DBase_cD2Ev` as an
+       undefined external -- no such symbol exists anywhere in the ROM.
+       The RAW (pre-migration) recovered destructors confirm why: e.g.
+       func_ov006_020f3834 (dScMgMemory_c's own D1, before this slice)
+       destroys `_ZN8Particle10SysTrackerD1Ev(c+0x471c)` -- THIS class's
+       own member -- directly inline, then calls `_ZN11dScMgBase_cD2Ev(c)`
+       directly, with no call to any dScMgSingle3DBase_c-specific
+       destructor at all. The out-of-line definition landed in #1421
+       because that slice never tested a real descendant; it is a latent
+       bug this slice fixes, not a design change. */
+    virtual ~dScMgSingle3DBase_c() {}
 
     /* --- re-overrides of dScMgBase_c's own virtuals, same signature,
            in _ZTV order. Slots 26 and 33 are new at this class; both are
