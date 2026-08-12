@@ -1,11 +1,16 @@
 //cpp
-// @symbol _ZN5Bully6RenderEv
-/* recovered: named members + shared header, real C++ method */
-#include "Bully.h"
-struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
-struct Derived { char pad[0x110]; Base base; };
+// @symbol _ZN7daOts_c6RenderEv
+/* recovered: named members + shared header, real C++ method -- vtable slot 9
+ *
+ * WAS _ZN5Bully6RenderEv, and misattributed the same way as CleanupResources: slot 9
+ * holds 0x02116cf0 in daOts_c, Bully AND ChillBully. BigBully is the only one of the
+ * three that overrides it (0x0211764c), which is exactly the pattern of an inherited
+ * method with one child that replaces it.
+ */
+#include "daOts_c.h"
 
-int Bully::Render()
+int daOts_c::Render()
 {
- Base *b = &((Derived *)this)->base; b->m(0); return 1;
+    mModelAnim.Render(0);
+    return 1;
 }

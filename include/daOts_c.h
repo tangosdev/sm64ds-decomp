@@ -16,9 +16,15 @@
  *
  * FOUR WITNESSES, which is one more than a leaf class ever gets:
  *
- *   func_ov064_02115ee0 (ov064, 0x48) -- this class's own destructor, still unnamed.
- *   It stores data_ov064_0211b768 and destroys ShadowModel 0x370, MovingCylinderClsn
- *   0x33c, WithMeshClsn 0x174, ModelAnim 0x110, then chains to _ZN5EnemyD2Ev.
+ *   _ZN7daOts_cD1Ev (ov064 0x02115ee0, 0x48) -- this class's own destructor. It stores
+ *   data_ov064_0211b768 and destroys ShadowModel 0x370, MovingCylinderClsn 0x33c,
+ *   WithMeshClsn 0x174, ModelAnim 0x110, then chains to _ZN5EnemyD2Ev. D0 at
+ *   0x02115f28 is the same plus Memory::Deallocate.
+ *
+ *   An out-of-line D1/D0 pair and the inline destructor below are not in conflict:
+ *   mwcc inlines a virtual destructor at every direct-call site AND emits one
+ *   out-of-line copy for the vtable to point at. The children inline it (no `bl`
+ *   anywhere), and slots 16/17 of _ZTV7daOts_c hold these two addresses.
  *
  *   Bully_Spawn, BigBully_Spawn and ChillBully_Spawn are the SAME function apart
  *   from the allocation size and the last instruction. Each stores TWO vtables --
@@ -49,12 +55,16 @@
  *   slot 29 OnAimedAtWithEgg 0x02115f84 in all four, so also this class's.
  *   slot 16/17               the destructor pair, one per class.
  *
- * NAMING DEFECT, recorded not fixed: the tree calls 0x02116ca0 and 0x02116cf0
- * `_ZN5Bully16CleanupResourcesEv` and `_ZN5Bully6RenderEv`. The table above says they
- * are daOts_c's -- Bully does not override either, it inherits them. Correcting that
- * is a ROM-symbol rename with its own blast radius and nothing here depends on it, so
- * the names stand for now and this note is the record. 0x02115f84 is still
- * func_ov064_02115f84 and is this class's OnAimedAtWithEgg.
+ * THE NAMING DEFECT THIS NOTE USED TO RECORD IS NOW FIXED. The tree called 0x02116ca0
+ * and 0x02116cf0 `_ZN5Bully16CleanupResourcesEv` and `_ZN5Bully6RenderEv`; the table
+ * above says they are daOts_c's, because Bully does not override either -- it inherits
+ * them. Both are renamed, and so are the three placeholders: 0x02115f84 (which carried
+ * a `daBDonketu_c::OnAimedAtWithEgg -- recovered from vtable slot identity` comment,
+ * naming a BASE's method after a CHILD) and the destructor pair.
+ *
+ * The blast radius turned out to be five files and five symbol lines: no source
+ * anywhere referenced any of the five by name, which is what makes a misattributed
+ * ROM symbol so easy to leave in place and so cheap to correct.
  *
  * The two pure-virtual slots are deliberately NOT declared `= 0` below. Nothing in
  * the ROM needs them to be: this class's vtable is never emitted (see the inline
@@ -83,6 +93,13 @@ struct daOts_c : Enemy {
        merely including this header does not emit _ZTV7daOts_c. Same reasoning, same
        wording, as include/Platform.h. */
     virtual ~daOts_c() {}
+
+    /* The three slots this class owns outright, each named by the diff above rather
+       than by any one child's source. InitResources and Behavior are the pure-virtual
+       pair and stay undeclared, for the reason given above the struct. */
+    virtual int CleanupResources();     /* slot  3 */
+    virtual int Render();               /* slot  9 */
+    virtual int OnAimedAtWithEgg();     /* slot 29 -- still a C file, see its source */
 };
 
 typedef char daOts_c_size_must_be_0x398[sizeof(daOts_c) == 0x398 ? 1 : -1];
