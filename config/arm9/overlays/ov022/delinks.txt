@@ -245,11 +245,11 @@ src/_ZN12FallBlockLll13InitResourcesEv.cpp:
 src/RollingLogLll_Spawn.c:
     .text start:0x021125a4 end:0x021125e0
 
-src/_ZN13RollingLogLllD1Ev.cpp:
+src/_ZN11VolcanoFireD1Ev.cpp:
     complete
     .text start:0x021125e0 end:0x02112610
 
-src/_ZN13RollingLogLllD0Ev.c:
+src/_ZN11VolcanoFireD0Ev.c:
     complete
     .text start:0x02112610 end:0x02112654
 
@@ -269,15 +269,15 @@ src/func_ov022_02112790.cpp:
     complete
     .text start:0x02112790 end:0x021127e0
 
-src/_ZN13RollingLogLll16CleanupResourcesEv.c:
+src/_ZN11VolcanoFire16CleanupResourcesEv.c:
     complete
     .text start:0x021127e0 end:0x02112800
 
-src/_ZN13RollingLogLll8BehaviorEv.cpp:
+src/_ZN11VolcanoFire8BehaviorEv.cpp:
     complete
     .text start:0x02112800 end:0x021128b8
 
-src/_ZN13RollingLogLll13InitResourcesEv.cpp:
+src/_ZN11VolcanoFire13InitResourcesEv.cpp:
     complete
     .text start:0x021128b8 end:0x02112918
 
