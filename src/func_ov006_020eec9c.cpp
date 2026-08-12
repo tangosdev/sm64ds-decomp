@@ -5,7 +5,10 @@
 #include "decl_Player.h"
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* dScMgJump2_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
+   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
+   vtable, destroys the members and calls Memory::Deallocate; no eat handler
+   does any of that. */
 extern "C" {
 extern int __destroy_arr(void*, int, int, void*);
 extern void _ZN8Particle10SysTrackerD1Ev(void *);
