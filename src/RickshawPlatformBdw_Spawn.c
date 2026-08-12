@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 extern int data_ov002_02109278[];
-extern int _ZTV11RickshawBdw[];
+extern int _ZTV19RickshawPlatformBdw[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = data_ov002_02109278 */
 int *RickshawPlatformBdw_Spawn(void)
@@ -13,7 +13,7 @@ int *RickshawPlatformBdw_Spawn(void)
     if (p) {
         _ZN8PlatformC2Ev(p);
         p[0] = (int)data_ov002_02109278;
-        p[0] = (int)_ZTV11RickshawBdw;
+        p[0] = (int)_ZTV19RickshawPlatformBdw;
     }
     return p;
 }
