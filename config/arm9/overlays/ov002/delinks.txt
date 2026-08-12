@@ -1095,11 +1095,11 @@ src/WaterfallMist_Spawn.c:
     complete
     .text start:0x020b6ee8 end:0x020b6f18
 
-src/_ZN13WaterfallMistD1Ev.cpp:
+src/_ZN15daObjMarioCap_cD1Ev.cpp:
     complete
     .text start:0x020b6f18 end:0x020b6f68
 
-src/_ZN13WaterfallMistD0Ev.c:
+src/_ZN15daObjMarioCap_cD0Ev.c:
     complete
     .text start:0x020b6f68 end:0x020b6fcc
 
@@ -1195,23 +1195,23 @@ src/func_ov002_020b8270.c:
     complete
     .text start:0x020b8270 end:0x020b8284
 
-src/_ZN13WaterfallMist16CleanupResourcesEv.cpp:
+src/_ZN15daObjMarioCap_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b8284 end:0x020b8394
 
-src/_ZN13WaterfallMist16OnPendingDestroyEv.c:
+src/_ZN15daObjMarioCap_c16OnPendingDestroyEv.c:
     complete
     .text start:0x020b8394 end:0x020b83c4
 
-src/_ZN13WaterfallMist6RenderEv.cpp:
+src/_ZN15daObjMarioCap_c6RenderEv.cpp:
     complete
     .text start:0x020b83c4 end:0x020b84a8
 
-src/_ZN13WaterfallMist8BehaviorEv.cpp:
+src/_ZN15daObjMarioCap_c8BehaviorEv.cpp:
     complete
     .text start:0x020b84a8 end:0x020b86d0
 
-src/_ZN13WaterfallMist13InitResourcesEv.cpp:
+src/_ZN15daObjMarioCap_c13InitResourcesEv.cpp:
     .text start:0x020b86d0 end:0x020b8b98
 
 src/Cap_Spawn.c:
