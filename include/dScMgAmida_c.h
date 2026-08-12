@@ -71,15 +71,26 @@ typedef char dScMgAmida_c_Piece_size_must_be_0x18[sizeof(dScMgAmida_c_Piece) == 
    `Base::m_90()` -- the shim's exact shape varies per pre-migration file,
    all landing on the same byte offset, vtable_ptr+0x90 = 36*4). Declared
    here as a real virtual method (`Unk36`, a placeholder name -- its true
-   ROM identity is not tree-wide reconstructed) and called as a normal
-   `this->Unk36()` from the three real methods; verified by build that mwcc
-   places it at the SAME compiled vtable slot (36) the shim already used,
-   producing byte-identical `bl` sequences to the pre-migration source (see
-   notes -- unlike dScMgSlot1_c's OnHitByMegaChar/OnHitFromUnderneath, whose
-   compiler-computed slot does NOT match their true ROM position 27/28,
-   Unk36 is the class's ONLY new slot with nothing else competing for
-   dScMgBase_c's un-declared 18-35 range ahead of it in declaration order,
-   so it lands correctly without needing any filler declarations).
+   ROM identity is not tree-wide reconstructed) -- but MEASURED, not
+   assumed, that calling it as a normal `this->Unk36()` does NOT reproduce
+   the ROM: it compiled Render 0xc bytes larger (0x2ac vs 0x2a0), because
+   mwcc's own compiled slot for Unk36 (appended after dScMgBase_c's
+   compiler-visible virtuals, which stop at Scene/ActorBase's own count --
+   dScMgBase_c.h leaves slots 18-35 undeclared) does NOT land on true ROM
+   slot 36 the way it accidentally does for a class's first-and-only new
+   slot when that slot is 18 (dScMgCoin_c's OnYoshiTryEat, etc.) -- Amida's
+   slot 36 is 18 slots further out, past all of dScMgBase_c's undeclared
+   ones, so the coincidence that makes slot 18 "just work" does not extend
+   here. That single size delta cascaded through the rest of the module
+   (dsd does not hard-fail a declared-vs-compiled size mismatch, ~1400
+   unrelated-looking functions afterward all mismatched) -- caught by
+   rombuild, traced via final_link.o.xMAP. So all three call sites keep the
+   pre-migration source's exact vtable-shim dispatch (see each method's own
+   file), even though Unk36 is declared as a real virtual method here --
+   unlike dScMgSlot1_c's OnHitByMegaChar/OnHitFromUnderneath, whose
+   compiler-computed slot also doesn't match their true ROM position 27/28
+   but is harmless there because neither is called from within Slot1's own
+   migrated methods.
 
    THE DESTRUCTOR IS NON-TRIVIAL: unlike most siblings, this class explicitly
    destroys FOUR arrays via __destroy_arr, in this exact order, in BOTH D1
