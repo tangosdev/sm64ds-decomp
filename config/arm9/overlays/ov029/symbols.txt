@@ -39,14 +39,14 @@ _ZN32FloatOnWaterPlatformWdwRectangleD0Ev kind:function(arm,size=0x64) addr:0x02
 _ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112134
 _ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv kind:function(arm,size=0x20) addr:0x02112148
 RotatingPlatformWdw_Spawn kind:function(arm,size=0x3c) addr:0x02112168
-_ZN19RotatingPlatformWdwD1Ev kind:function(arm,size=0x4c) addr:0x021121a4
-_ZN19RotatingPlatformWdwD0Ev kind:function(arm,size=0x60) addr:0x021121f0
+_ZN9WDW_WaterD1Ev kind:function(arm,size=0x4c) addr:0x021121a4
+_ZN9WDW_WaterD0Ev kind:function(arm,size=0x60) addr:0x021121f0
 func_ov029_02112250 kind:function(arm,size=0x64) addr:0x02112250
 func_ov029_021122b4 kind:function(arm,size=0x28) addr:0x021122b4
-_ZN19RotatingPlatformWdw16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021122dc
-_ZN19RotatingPlatformWdw6RenderEv kind:function(arm,size=0x34) addr:0x02112320
-_ZN19RotatingPlatformWdw8BehaviorEv kind:function(arm,size=0x17c) addr:0x02112354
-_ZN19RotatingPlatformWdw13InitResourcesEv kind:function(arm,size=0x128) addr:0x021124d0
+_ZN9WDW_Water16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021122dc
+_ZN9WDW_Water6RenderEv kind:function(arm,size=0x34) addr:0x02112320
+_ZN9WDW_Water8BehaviorEv kind:function(arm,size=0x17c) addr:0x02112354
+_ZN9WDW_Water13InitResourcesEv kind:function(arm,size=0x128) addr:0x021124d0
 WDW_Water_Spawn kind:function(arm,size=0x38) addr:0x021125f8
 _ZN20SwitchActivatedPlankD1Ev kind:function(arm,size=0x4c) addr:0x02112630
 _ZN20SwitchActivatedPlankD0Ev kind:function(arm,size=0x60) addr:0x0211267c
@@ -217,7 +217,7 @@ _ZTV32FloatOnWaterPlatformWdwRectangle kind:data(any) addr:0x02114018
 _ZTI14daObjWc_Mizu_c kind:data(any) addr:0x02114098
 _ZTS14daObjWc_Mizu_c kind:data(any) addr:0x021140a4
 WDW_Water_SpawnInfo kind:data(any) addr:0x021140b8 ambiguous
-_ZTV19RotatingPlatformWdw kind:data(any) addr:0x021140dc
+_ZTV9WDW_Water kind:data(any) addr:0x021140dc
 _ZTV14daObjWc_Mizu_c kind:data(any) addr:0x021140dc
 data_ov029_021140ec kind:data(any) addr:0x021140ec ambiguous
 data_ov029_021140f8 kind:data(any) addr:0x021140f8 ambiguous
