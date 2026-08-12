@@ -5,9 +5,10 @@
 # commit per file. details/ chunks on the chaos-data branch are preserved (they need
 # the ROM; refreshed locally).
 #
-# NOTE: the push to main at the end of this job has been REJECTED since 2026-08-06 --
-# see the ssh-key comment below. Only the chaos-data half currently lands. That is why
-# langmode-baseline.json is banked there and not here.
+# The push to main was rejected between 2026-08-06 and 2026-08-07 and recovered on
+# 2026-08-08 (c23948eef); see the ssh-key comment below. Both halves land normally now.
+# langmode-baseline.json stays banked on chaos-data anyway, for the merge-conflict
+# reason given at its own step, not because this push is broken.
 name: update-chaos-data
 
 on:
@@ -60,18 +61,20 @@ jobs:
           # key. A deploy key can push; it cannot approve or merge a pull request, which
           # is the hole that closes.
           #
-          # BROKEN SINCE 2026-08-06. The paragraph above describes the intent, not the
-          # state. Ruleset "main: review gate" (id 20487553) has bypass_actors: null --
-          # the deploy key is NOT exempt -- so the push to main is rejected:
+          # This broke once and the failure mode is worth keeping. Between 2026-08-06 and
+          # 2026-08-07 the ruleset "main: review gate" (id 20487553) had bypass_actors:
+          # null, so the deploy key was NOT exempt and every push to main was rejected:
           #     GH013 ... - Changes must be made through a pull request.
-          # Every run since has failed on the last step, freezing README/treemap/
-          # contributions.json/provenance on main. contributions.json pays the DELTA
-          # between refreshes, so matches landed since then are uncredited until it lands.
+          # Every run failed on its last step, freezing README/treemap/contributions/
+          # provenance on main for two days. It went unnoticed because everything above
+          # the "Push if changed" step kept working, so the viewer stayed current while
+          # main did not. Fixed by adding a DeployKey bypass actor to that ruleset;
+          # refreshes have landed normally since 2026-08-08 (c23948eef).
           #
-          # The fix is to add a DeployKey bypass actor to that ruleset, which needs repo
-          # ADMIN; andrewboudreau has push but not admin, so it is blocked on the owner
-          # (tangosdev). Everything above the "Push if changed" step still works, which
-          # is why the viewer stayed current and this went unnoticed for two days.
+          # What made it expensive rather than cosmetic: contributions.json pays the
+          # DELTA between refreshes, so every match that landed during the outage was
+          # uncredited until the first successful refresh caught up. If this job starts
+          # failing on its last step again, check that ruleset's bypass_actors first.
           ssh-key: ${{ secrets.CHAOS_PUSH_KEY }}
       - uses: actions/checkout@v4
         with:
