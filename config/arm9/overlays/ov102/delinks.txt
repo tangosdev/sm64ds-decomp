@@ -278,6 +278,10 @@ src/func_ov102_0214b444.cpp:
     complete
     .text start:0x0214b444 end:0x0214b53c
 
+src/func_ov102_0214b53c.c:
+    complete
+    .text start:0x0214b53c end:0x0214b988
+
 src/func_ov102_0214b988.cpp:
     complete
     .text start:0x0214b988 end:0x0214ba30
