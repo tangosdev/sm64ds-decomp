@@ -5,18 +5,18 @@ func_ov015_02111254 kind:function(arm,size=0x24) addr:0x02111254
 func_ov015_02111278 kind:function(arm,size=0x28) addr:0x02111278
 func_ov015_021112a0 kind:function(arm,size=0x3c) addr:0x021112a0
 PoleBillboard_Spawn kind:function(arm,size=0x38) addr:0x021112dc
-_ZN13PoleBillboardD1Ev kind:function(arm,size=0x4c) addr:0x02111314
-_ZN13PoleBillboardD0Ev kind:function(arm,size=0x60) addr:0x02111360
+_ZN14KnockDownPlankD1Ev kind:function(arm,size=0x4c) addr:0x02111314
+_ZN14KnockDownPlankD0Ev kind:function(arm,size=0x60) addr:0x02111360
 func_ov015_021113c0 kind:function(arm,size=0x3c) addr:0x021113c0
 func_ov015_021113fc kind:function(arm,size=0xc) addr:0x021113fc
 func_ov015_02111408 kind:function(arm,size=0xc) addr:0x02111408
 func_ov015_02111414 kind:function(arm,size=0xdc) addr:0x02111414
 func_ov015_021114f0 kind:function(arm,size=0x17c) addr:0x021114f0
 func_ov015_0211166c kind:function(arm,size=0x48) addr:0x0211166c
-_ZN13PoleBillboard16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021116b4
-_ZN13PoleBillboard6RenderEv kind:function(arm,size=0x28) addr:0x021116f8
-_ZN13PoleBillboard8BehaviorEv kind:function(arm,size=0x240) addr:0x02111720
-_ZN13PoleBillboard13InitResourcesEv kind:function(arm,size=0x208) addr:0x02111960
+_ZN14KnockDownPlank16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021116b4
+_ZN14KnockDownPlank6RenderEv kind:function(arm,size=0x28) addr:0x021116f8
+_ZN14KnockDownPlank8BehaviorEv kind:function(arm,size=0x240) addr:0x02111720
+_ZN14KnockDownPlank13InitResourcesEv kind:function(arm,size=0x208) addr:0x02111960
 KnockDownPlank_Spawn kind:function(arm,size=0x38) addr:0x02111b68
 _ZN9MovingBarD1Ev kind:function(arm,size=0x44) addr:0x02111ba0
 _ZN9MovingBarD0Ev kind:function(arm,size=0x58) addr:0x02111be4
@@ -204,7 +204,7 @@ data_ov015_02114380 kind:data(any) addr:0x02114380 ambiguous
 _ZTI17daObjBk_Botaosi_c kind:data(any) addr:0x021143dc
 _ZTS17daObjBk_Botaosi_c kind:data(any) addr:0x021143e8
 KnockDownPlank_SpawnInfo kind:data(any) addr:0x021143fc ambiguous
-_ZTV13PoleBillboard kind:data(any) addr:0x02114420
+_ZTV14KnockDownPlank kind:data(any) addr:0x02114420
 _ZTV17daObjBk_Botaosi_c kind:data(any) addr:0x02114420
 data_ov015_02114458 kind:data(any) addr:0x02114458 ambiguous
 data_ov015_02114498 kind:data(any) addr:0x02114498 ambiguous
