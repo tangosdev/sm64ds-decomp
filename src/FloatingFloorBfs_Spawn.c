@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 extern int data_ov002_0210912c[];
-extern int data_ov045_02112f50[];
+extern int _ZTV16FloatingFloorBfs[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = data_ov002_0210912c */
 int *FloatingFloorBfs_Spawn(void)
@@ -13,7 +13,7 @@ int *FloatingFloorBfs_Spawn(void)
     if (p) {
         _ZN8PlatformC2Ev(p);
         p[0] = (int)data_ov002_0210912c;
-        p[0] = (int)data_ov045_02112f50;
+        p[0] = (int)_ZTV16FloatingFloorBfs;
     }
     return p;
 }
