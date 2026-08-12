@@ -1,8 +1,8 @@
 //cpp
 #include "types.h"
-// @symbol _ZN29FloatOnWaterPlatformWdwSquare8BehaviorEv
+// @symbol _ZN9ArrowLift8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "FloatOnWaterPlatformWdwSquare.h"
+#include "ArrowLift.h"
 extern "C" {
 extern void func_02012694(int a, void* p);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
@@ -11,7 +11,7 @@ extern int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void* self, int a, i
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
 }
 
-int FloatOnWaterPlatformWdwSquare::Behavior()
+int ArrowLift::Behavior()
 {
     switch (((u8*)this)[0x327]) {
     case 0:

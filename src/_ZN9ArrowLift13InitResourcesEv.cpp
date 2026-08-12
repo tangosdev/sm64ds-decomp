@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv
+// @symbol _ZN9ArrowLift13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FloatOnWaterPlatformWdwSquare.h"
+#include "ArrowLift.h"
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 struct MeshCollider { int d; };
@@ -24,7 +24,7 @@ extern SharedFilePtr data_ov029_02114248;
 extern CLPS_Block data_ov029_0211302c;
 extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 
-int FloatOnWaterPlatformWdwSquare::InitResources()
+int ArrowLift::InitResources()
 {
     char* c = ((char*)this);
     {

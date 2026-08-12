@@ -702,7 +702,7 @@ extern int _ZTV23daObjRotateUpdownLift_c[];
 extern int _ZTV24daPropeller_Heyho_Fire_c[];
 extern int _ZTV25RotatingUpDownPlatformUtm[];
 extern int _ZTV25SlideDecorationSilverStar[];
-extern int _ZTV29FloatOnWaterPlatformWdwSquare[];
+extern int _ZTV9ArrowLift[];
 extern int _ZTV3Amp[];
 extern int _ZTV3Boo[];
 extern int _ZTV3Key[];

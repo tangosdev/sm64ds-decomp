@@ -4,10 +4,10 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV29FloatOnWaterPlatformWdwSquare */
+/* resolved: VT = _ZTV9ArrowLift */
 int *ArrowLift_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(808);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV29FloatOnWaterPlatformWdwSquare; }
+    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV9ArrowLift; }
     return p;
 }
