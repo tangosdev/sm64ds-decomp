@@ -1,8 +1,9 @@
-// @symbol func_ov081_021237e4
+//cpp
+// @symbol _ZN9Spindrift16OnAimedAtWithEggEv
+#include "Spindrift.h"
 // recovered name: Spindrift_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daHuwa_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-int func_ov081_021237e4(void)
-{
+s32 Spindrift::OnAimedAtWithEgg() {
     return 245760;
 }

@@ -1,8 +1,9 @@
-// @symbol func_ov090_02132618
+//cpp
+// @symbol _ZN7Skeeter16OnAimedAtWithEggEv
+#include "Skeeter.h"
 // recovered name: Skeeter_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daMenbo_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-int func_ov090_02132618(void)
-{
+s32 Skeeter::OnAimedAtWithEgg() {
     return 131072;
 }

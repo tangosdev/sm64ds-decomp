@@ -22,6 +22,11 @@ struct Seaweed : Actor {
     ModelAnim              mModelAnim;   /* 0x0d4 */
 
     virtual ~Seaweed();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   InitResources();         /* slot  0 */
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Behavior();              /* slot  6 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char Seaweed_size_must_be_0x138[sizeof(Seaweed) == 0x138 ? 1 : -1];

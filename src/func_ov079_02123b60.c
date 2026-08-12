@@ -1,9 +1,15 @@
-// @symbol func_ov079_02123b60
+//cpp
+// @symbol _ZN5Whomp16OnAimedAtWithEggEv
+#include "Whomp.h"
 // recovered name: Whomp_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daBtn_c::OnAimedAtWithEgg - recovered from vtable slot identity */
+extern "C" {
 extern short data_02082214[];
-int func_ov079_02123b60(char* c){
+}
+
+s32 Whomp::OnAimedAtWithEgg() {
+    char* c = (char*)this;
     int idx;
     if(*(unsigned char*)(c+0x414)!=0){
         idx = ((int)*(unsigned short*)(c+0x8c) >> 4);
