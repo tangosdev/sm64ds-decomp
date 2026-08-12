@@ -632,7 +632,7 @@ extern int _ZTV16daObjPushblock_c[];
 extern int _ZTV16daObjRcBuranko_c[];
 extern int _ZTV16daObjRc_Tikuwa_c[];
 extern int _ZTV17BigMovingIceBlock[];
-extern int _ZTV17BowserPuzzlePiece[];
+extern int _ZTV9JetStream[];
 extern int _ZTV9SpikeBomb[];
 extern int _ZTV16SpinningPlatform[];
 extern int _ZTV17SlidingPlatformWf[];

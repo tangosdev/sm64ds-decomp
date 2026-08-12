@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN17BowserPuzzlePiece13InitResourcesEv
+// @symbol _ZN9JetStream13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "BowserPuzzlePiece.h"
+#include "JetStream.h"
 #include "MovingCylinderClsn.h"
 typedef int Fix12i;
 struct SharedFilePtr;
@@ -22,7 +22,7 @@ extern SharedFilePtr data_ov002_0210d9a8;
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f220;
 
-s32 BowserPuzzlePiece::InitResources()
+s32 JetStream::InitResources()
 {
     Model::LoadFile(data_ov002_0210da10);
     Model::LoadFile(data_ov002_0210d9a8);

@@ -1,5 +1,5 @@
-#ifndef BOWSERPUZZLEPIECE_H
-#define BOWSERPUZZLEPIECE_H
+#ifndef JETSTREAM_H
+#define JETSTREAM_H
 
 #include "types.h"
 
@@ -18,7 +18,7 @@
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
-struct BowserPuzzlePiece : Enemy {
+struct JetStream : Enemy {
     MovingCylinderClsn mMovingCylinderClsn;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x144 */
     u8  pad_300[0x14];
@@ -26,7 +26,7 @@ struct BowserPuzzlePiece : Enemy {
     s32 unk_318;                      /* 0x318 */
 
     /* --- vtable --- */
-    virtual ~BowserPuzzlePiece();
+    virtual ~JetStream();
 
     virtual s32 Behavior();
     virtual s32 CleanupResources();
@@ -35,14 +35,14 @@ struct BowserPuzzlePiece : Enemy {
     virtual s32 Render();
 };
 
-typedef char BowserPuzzlePiece_size_must_be_0x31c[sizeof(BowserPuzzlePiece) == 0x31c ? 1 : -1];
+typedef char BowserPuzzlePiece_size_must_be_0x31c[sizeof(JetStream) == 0x31c ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct BowserPuzzlePiece {
+struct JetStream {
     u8  pad_000[0x8];
     u32 unk_008;            /* 0x008 */
     u8  pad_00c[0x80];
@@ -88,4 +88,4 @@ struct BowserPuzzlePiece {
 
 #endif /* __cplusplus */
 
-#endif /* BOWSERPUZZLEPIECE_H */
+#endif /* JETSTREAM_H */
