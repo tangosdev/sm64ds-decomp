@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
-// @symbol _ZN19RotatingPlatformWdw13InitResourcesEv
+// @symbol _ZN9WDW_Water13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RotatingPlatformWdw.h"
+#include "WDW_Water.h"
 #include "MeshColliderBase.h"
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
@@ -21,7 +21,7 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern u8 data_0209f2c0[];
 extern int data_0209f32c;
 
-int RotatingPlatformWdw::InitResources()
+int WDW_Water::InitResources()
 {
     void *m;
     void *k;

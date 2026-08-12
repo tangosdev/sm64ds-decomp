@@ -1,5 +1,5 @@
-#ifndef ROTATINGPLATFORMWDW_H
-#define ROTATINGPLATFORMWDW_H
+#ifndef WDW_WATER_H
+#define WDW_WATER_H
 
 #include "types.h"
 
@@ -18,7 +18,7 @@
 #include "Platform.h"
 #include "TextureTransformer.h"
 
-struct RotatingPlatformWdw : Platform {
+struct WDW_Water : Platform {
     u8  pad_31e[0x2];
     TextureTransformer mTextureTransformer;/* 0x320 */
     s32 mTargetPosY;                  /* 0x334 */
@@ -30,7 +30,7 @@ struct RotatingPlatformWdw : Platform {
     s32 unk_344;                      /* 0x344 */
 
     /* --- vtable --- */
-    virtual ~RotatingPlatformWdw();
+    virtual ~WDW_Water();
 
     int Behavior();
     int CleanupResources();
@@ -38,14 +38,14 @@ struct RotatingPlatformWdw : Platform {
     int Render();
 };
 
-typedef char RotatingPlatformWdw_size_must_be_0x348[sizeof(RotatingPlatformWdw) == 0x348 ? 1 : -1];
+typedef char RotatingPlatformWdw_size_must_be_0x348[sizeof(WDW_Water) == 0x348 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct RotatingPlatformWdw {
+struct WDW_Water {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x54];
@@ -79,4 +79,4 @@ struct RotatingPlatformWdw {
 
 #endif /* __cplusplus */
 
-#endif /* ROTATINGPLATFORMWDW_H */
+#endif /* WDW_WATER_H */
