@@ -14,15 +14,15 @@ _ZN15FireSeaElevator6RenderEv kind:function(arm,size=0x28) addr:0x021115f0
 _ZN15FireSeaElevator8BehaviorEv kind:function(arm,size=0x120) addr:0x02111618
 _ZN15FireSeaElevator13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111738
 PoleLift_Spawn kind:function(arm,size=0x38) addr:0x02111808
-_ZN8PoleLiftD1Ev kind:function(arm,size=0x38) addr:0x02111840
-_ZN8PoleLiftD0Ev kind:function(arm,size=0x4c) addr:0x02111878
+_ZN17ExtendingPlatformD1Ev kind:function(arm,size=0x38) addr:0x02111840
+_ZN17ExtendingPlatformD0Ev kind:function(arm,size=0x4c) addr:0x02111878
 func_ov045_021118c4 kind:function(arm,size=0x34) addr:0x021118c4
 func_ov045_021118f8 kind:function(arm,size=0x40) addr:0x021118f8
-_ZN8PoleLift16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111938
-_ZN8PoleLift16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111970
-_ZN8PoleLift6RenderEv kind:function(arm,size=0x4c) addr:0x02111974
-_ZN8PoleLift8BehaviorEv kind:function(arm,size=0x70) addr:0x021119c0
-_ZN8PoleLift13InitResourcesEv kind:function(arm,size=0xa4) addr:0x02111a30
+_ZN17ExtendingPlatform16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x02111938
+_ZN17ExtendingPlatform16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111970
+_ZN17ExtendingPlatform6RenderEv kind:function(arm,size=0x4c) addr:0x02111974
+_ZN17ExtendingPlatform8BehaviorEv kind:function(arm,size=0x70) addr:0x021119c0
+_ZN17ExtendingPlatform13InitResourcesEv kind:function(arm,size=0xa4) addr:0x02111a30
 ExtendingPlatform_Spawn kind:function(arm,size=0x40) addr:0x02111ad4
 func_ov045_02111b14 kind:function(arm,size=0x50) addr:0x02111b14
 func_ov045_02111b64 kind:function(arm,size=0x64) addr:0x02111b64
@@ -136,7 +136,7 @@ _ZTV18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112dbc
 _ZTI17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e3c
 _ZTS17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e48
 ExtendingPlatform_SpawnInfo kind:data(any) addr:0x02112e5c ambiguous
-_ZTV8PoleLift kind:data(any) addr:0x02112e80
+_ZTV17ExtendingPlatform kind:data(any) addr:0x02112e80
 _ZTV17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e80
 _ZTI19daObjKm2_Ukishima_c kind:data(any) addr:0x02112efc
 data_ov045_02112f08 kind:data(any) addr:0x02112f08
