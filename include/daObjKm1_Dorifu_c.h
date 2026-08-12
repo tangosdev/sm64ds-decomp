@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RickshawPlatformBdw: 4 matched functions, 2 evidenced fields.
+ * class daObjKm1_Dorifu_c: 4 matched functions, 2 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef RICKSHAWPLATFORMBDW_H
-#define RICKSHAWPLATFORMBDW_H
+#ifndef DAOBJKM1_DORIFU_C_H
+#define DAOBJKM1_DORIFU_C_H
 #include "types.h"
 
-struct RickshawPlatformBdw {
+struct daObjKm1_Dorifu_c {
     u8  pad_000[0xd4];
     u8  mModel;            /* 0x0d4 */
     u8  pad_0d5[0x4f];
