@@ -58,6 +58,8 @@
     "src/_ZN14dScMgMCarlo2_cD0Ev.cpp": "tangosdev",
     "src/_ZN14dScMgMCarlo2_cD1Ev.cpp": "tangosdev",
     "src/_ZN15dScMgRoulette_cD0Ev.cpp": "tangosdev",
-    "src/_ZN15dScMgRoulette_cD1Ev.cpp": "tangosdev"
+    "src/_ZN15dScMgRoulette_cD1Ev.cpp": "tangosdev",
+    "src/_ZN12MetalNetLift16CleanupResourcesEv.cpp": "tangosdev",
+    "src/_ZN12MetalNetLift13InitResourcesEv.cpp": "tangosdev"
   }
 }
