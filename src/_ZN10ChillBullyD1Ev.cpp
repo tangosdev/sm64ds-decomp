@@ -1,23 +1,18 @@
-// @symbol func_ov027_021115c4
-/* recovered: vtable identified, declarations from a shared header */
-#include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
-#include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
-#include "decl_common.h"
-extern int data_ov027_02113930[];
-extern int data_ov064_0211b768[];
-/* recovered: vtable identified */
-/* vtable identified: VT0 = data_ov027_02113930 */
-extern void _ZN5EnemyD2Ev(void *);
-int *func_ov027_021115c4(int *t)
+//cpp
+// @symbol _ZN10ChillBullyD1Ev
+/* recovered: real C++ destructor -- the compiler emits the whole body
+ *
+ * Vtable slot 16, and previously func_ov027_021115c4. Two vtable stores and five
+ * destructor calls, none of them written here: its own vptr, then daOts_c's --
+ * inlined, because that class's destructor is defined in its class body -- then the
+ * base's four members in reverse declaration order, then Enemy. ChillBully adds no
+ * member with a destructor of its own, only two bytes.
+ *
+ * Byte-for-byte the same shape as Bully's and BigBully's, which is what three
+ * siblings sharing a base look like.
+ */
+#include "ChillBully.h"
+
+ChillBully::~ChillBully()
 {
-    t[0] = (int)data_ov027_02113930;
-    t[0] = (int)data_ov064_0211b768;
-    _ZN11ShadowModelD1Ev((char *)t + 0x370);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0x33c);
-    _ZN12WithMeshClsnD1Ev((char *)t + 0x174);
-    _ZN9ModelAnimD1Ev((char *)t + 0x110);
-    _ZN5EnemyD2Ev(t);
-    return t;
 }

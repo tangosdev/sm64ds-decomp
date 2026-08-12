@@ -7,12 +7,12 @@ _ZN10SlidingIce8BehaviorEv kind:function(arm,size=0x13c) addr:0x02111304
 _ZN10SlidingIce13InitResourcesEv kind:function(arm,size=0x124) addr:0x02111440
 SlidingIce_Spawn kind:function(arm,size=0x30) addr:0x02111564
 SlidingIceSpawner_Spawn kind:function(arm,size=0x30) addr:0x02111594
-func_ov027_021115c4 kind:function(arm,size=0x54) addr:0x021115c4
-func_ov027_02111618 kind:function(arm,size=0x68) addr:0x02111618
+_ZN10ChillBullyD1Ev kind:function(arm,size=0x54) addr:0x021115c4
+_ZN10ChillBullyD0Ev kind:function(arm,size=0x68) addr:0x02111618
 func_ov027_02111680 kind:function(arm,size=0x70) addr:0x02111680
 func_ov027_021116f0 kind:function(arm,size=0x80) addr:0x021116f0
-func_ov027_02111770 kind:function(arm,size=0xac) addr:0x02111770
-func_ov027_0211181c kind:function(arm,size=0x50) addr:0x0211181c
+_ZN10ChillBully8BehaviorEv kind:function(arm,size=0xac) addr:0x02111770
+_ZN10ChillBully13InitResourcesEv kind:function(arm,size=0x50) addr:0x0211181c
 ChillBully_Spawn kind:function(arm,size=0x5c) addr:0x0211186c
 func_ov027_021118c8 kind:function(arm,size=0x5c) addr:0x021118c8
 func_ov027_02111924 kind:function(arm,size=0x70) addr:0x02111924
@@ -134,6 +134,7 @@ data_ov027_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov027_021138f4 kind:data(any) addr:0x021138f4
 data_ov027_021138fc kind:data(any) addr:0x021138fc ambiguous
 data_ov027_02113930 kind:data(any) addr:0x02113930
+_ZTV10ChillBully kind:data(any) addr:0x02113930
 data_ov027_02113934 kind:data(any) addr:0x02113934 ambiguous
 data_ov027_02113980 kind:data(any) addr:0x02113980 ambiguous
 data_ov027_02113998 kind:data(any) addr:0x02113998 ambiguous

@@ -1,26 +1,31 @@
 //cpp
 // @symbol func_ov027_021116f0
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+/* ChillBully's star drop, shared with the Behavior above it.
+ *
+ * It used to carry the recovered name `daIDonketu_c::AfterClsn`, attributed "from
+ * vtable slot identity" -- but this address is in NO slot of ChillBully's vtable.
+ * All 31 were checked against daOts_c's and Enemy's; the four this class overrides
+ * are 0 (InitResources), 6 (Behavior) and 16/17 (the destructor pair). So the name
+ * is withdrawn and the placeholder kept until something actually names it.
+ */
+#include "ChillBully.h"
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
-#include "daIDonketu_c.h"
-// recovered name: daIDonketu_c_AfterClsn
-/* recovered: renamed to Class_Method */
-/* daIDonketu_c::AfterClsn - recovered from vtable slot identity */
+
 extern "C" {
-extern void _ZN5Actor14TriplePoofDustEv(void*);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void*,void*,unsigned int,void*,unsigned int);
-int func_ov027_021116f0(char* c){
-    struct daIDonketu_c *self = (struct daIDonketu_c *)(void *)c;
-  int r=func_ov064_0211616c(c);
-  if(r==0) return r;
-  _ZN5Actor14TriplePoofDustEv(c);
-  int v[3];
-  v[0]=self->unk_05c;
-  v[1]=self->unk_060;
-  v[2]=self->unk_064;
-  v[1]+=0x64000;
-  _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(
-    c, c+0x3fb, (self->unk_3fa|0x40)&0xff, v, 4);
+extern int func_ov064_0211616c(void *);
+
+int func_ov027_021116f0(char *c)
+{
+    ChillBully *self = (ChillBully *)(void *)c;
+    int r = func_ov064_0211616c(c);
+    if (r == 0) return r;
+    self->TriplePoofDust();
+    int v[3];
+    v[0] = self->mPosX;
+    v[1] = self->mPosY;
+    v[2] = self->mPosZ;
+    v[1] += 0x64000;
+    self->UntrackAndSpawnStar(self->mStarSlot, (self->mStarIdx | 0x40) & 0xff,
+                              *(const Vector3 *)v, 4);
 }
 }

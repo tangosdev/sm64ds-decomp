@@ -1,21 +1,25 @@
-// @symbol func_ov027_02111618
-// recovered name: daIDonketu_c_OnYoshiTryEat
-/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN10ChillBullyD0Ev
+/* ChillBully's deleting destructor -- vtable SLOT 17, previously
+ * func_ov027_02111618.
+ *
+ * It used to carry the recovered name `daIDonketu_c::OnYoshiTryEat`, which was
+ * off by one slot: OnYoshiTryEat is slot 18 and this class does not override it
+ * (slot 18 is still _ZN5Actor13OnYoshiTryEatEv). The body settles it anyway -- it
+ * tears the object down and then calls Memory::Deallocate, which no eat handler does.
+ */
 #include "decl_ModelAnim.h"
 #include "decl_MovingCylinderClsn.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
-extern int data_ov027_02113930[];
-extern int data_ov064_0211b768[];
-/* recovered: vtable identified, renamed to Class_Method */
-/* daIDonketu_c::OnYoshiTryEat - recovered from vtable slot identity */
+extern int _ZTV10ChillBully[];
+extern int _ZTV7daOts_c[];
 extern void _ZN5EnemyD2Ev(void *);
 extern void *data_020a0eac;
-int *func_ov027_02111618(int *t)
+int *_ZN10ChillBullyD0Ev(int *t)
 {
-    t[0] = (int)data_ov027_02113930;
-    t[0] = (int)data_ov064_0211b768;
+    t[0] = (int)_ZTV10ChillBully;
+    t[0] = (int)_ZTV7daOts_c;
     _ZN11ShadowModelD1Ev((char *)t + 0x370);
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x33c);
     _ZN12WithMeshClsnD1Ev((char *)t + 0x174);

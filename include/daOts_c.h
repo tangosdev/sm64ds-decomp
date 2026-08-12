@@ -39,6 +39,28 @@
  * referenced by no child source at all -- so it stays the children's padding rather
  * than being annexed into the base on no evidence.
  */
+/* THE VTABLE, all 31 slots diffed against Enemy's and against all three children's:
+ *
+ *   slot 0  InitResources    LITERAL ZERO here -- pure virtual. All three children
+ *   slot 6  Behavior         override both, which is why they must.
+ *   slot 3  CleanupResources 0x02116ca0 in ALL FOUR tables, so it is this class's.
+ *   slot 9  Render           0x02116cf0 here, in Bully and in ChillBully; BigBully
+ *                            is the only one that overrides it.
+ *   slot 29 OnAimedAtWithEgg 0x02115f84 in all four, so also this class's.
+ *   slot 16/17               the destructor pair, one per class.
+ *
+ * NAMING DEFECT, recorded not fixed: the tree calls 0x02116ca0 and 0x02116cf0
+ * `_ZN5Bully16CleanupResourcesEv` and `_ZN5Bully6RenderEv`. The table above says they
+ * are daOts_c's -- Bully does not override either, it inherits them. Correcting that
+ * is a ROM-symbol rename with its own blast radius and nothing here depends on it, so
+ * the names stand for now and this note is the record. 0x02115f84 is still
+ * func_ov064_02115f84 and is this class's OnAimedAtWithEgg.
+ *
+ * The two pure-virtual slots are deliberately NOT declared `= 0` below. Nothing in
+ * the ROM needs them to be: this class's vtable is never emitted (see the inline
+ * destructor note), and declaring them would change what the children emit for no
+ * gain. The zero words are the evidence; the declaration would only restate it.
+ */
 struct daOts_c : Enemy {
     ModelAnim           mModelAnim;             /* 0x110 */
     WithMeshClsn        mWithMeshClsn;          /* 0x174 */
