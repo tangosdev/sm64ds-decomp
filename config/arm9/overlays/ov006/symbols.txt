@@ -1790,8 +1790,8 @@ func_ov006_021243ec kind:function(arm,size=0x1bc) addr:0x021243ec
 func_ov006_021245a8 kind:function(arm,size=0x174) addr:0x021245a8
 MgTrampolineTerror_Spawn kind:function(arm,size=0x18c) addr:0x0212471c
 func_ov006_021248a8 kind:function(arm,size=0x60) addr:0x021248a8
-func_ov006_02124908 kind:function(arm,size=0x74) addr:0x02124908
-func_ov006_0212497c kind:function(arm,size=0x88) addr:0x0212497c
+_ZN10dScMgBSC_cD1Ev kind:function(arm,size=0x74) addr:0x02124908
+_ZN10dScMgBSC_cD0Ev kind:function(arm,size=0x88) addr:0x0212497c
 func_ov006_02124a04 kind:function(arm,size=0x4) addr:0x02124a04
 func_ov006_02124a08 kind:function(arm,size=0xdc) addr:0x02124a08
 func_ov006_02124ae4 kind:function(arm,size=0x74) addr:0x02124ae4
@@ -4338,7 +4338,7 @@ data_ov006_0213fe58 kind:data(any) addr:0x0213fe58
 data_ov006_0213fe68 kind:data(any) addr:0x0213fe68
 data_ov006_0213fe78 kind:data(any) addr:0x0213fe78
 data_ov006_0213fe8c kind:data(any) addr:0x0213fe8c
-data_ov006_0213fec8 kind:data(any) addr:0x0213fec8
+_ZTV10dScMgBSC_c kind:data(any) addr:0x0213fec8
 data_ov006_0213ff58 kind:data(any) addr:0x0213ff58
 data_ov006_0213ff60 kind:data(any) addr:0x0213ff60
 data_ov006_0213ff68 kind:data(any) addr:0x0213ff68
