@@ -1,14 +1,14 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BowserPuzzleManager: 5 matched functions, 14 evidenced fields.
+ * class BowserPuzzlePiece: 5 matched functions, 14 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef BOWSERPUZZLEMANAGER_H
-#define BOWSERPUZZLEMANAGER_H
+#ifndef BOWSERPUZZLEPIECE_H
+#define BOWSERPUZZLEPIECE_H
 #include "types.h"
 #include "Model.h"
 #include "MovingMeshCollider.h"
 
-struct BowserPuzzleManager {
+struct BowserPuzzlePiece {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
     u8  pad_00c[0x82];
@@ -19,7 +19,7 @@ struct BowserPuzzleManager {
     Model mModel;            /* 0x0d4 */
     /* MovingMeshCollider member, named by the class's own destructor calling
        MovingMeshCollider's D1 at +0x124 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN19BowserPuzzleManagerD1Ev.c] */
+       checks. Was a u8 marker. [_ZN17BowserPuzzlePieceD1Ev.c] */
     MovingMeshCollider mMovingMeshCollider;            /* 0x124 */
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x37];
