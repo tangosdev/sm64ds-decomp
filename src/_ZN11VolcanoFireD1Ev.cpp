@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN13RollingLogLllD1Ev
+// @symbol _ZN11VolcanoFireD1Ev
 
 struct Actor {
     char pad[0xd0];
@@ -8,11 +8,11 @@ struct Actor {
 
 struct MovingCylinderClsn { char pad[0x4]; ~MovingCylinderClsn(); };
 
-struct RollingLogLll : Actor {
+struct VolcanoFire : Actor {
     MovingCylinderClsn m0;   /* 0xd4 */
-    virtual ~RollingLogLll();
+    virtual ~VolcanoFire();
 };
 
-RollingLogLll::~RollingLogLll()
+VolcanoFire::~VolcanoFire()
 {
 }

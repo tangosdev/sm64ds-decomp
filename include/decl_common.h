@@ -520,7 +520,7 @@ extern int _ZTV14KnockDownPlank[];
 extern int _ZTV13PrincessPeach[];
 extern int _ZTV13QuestionBlock[];
 extern int _ZTV13RacingPenguin[];
-extern int _ZTV13RollingLogLll[];
+extern int _ZTV11VolcanoFire[];
 extern int _ZTV13RollingLogTtm[];
 extern int _ZTV13TTC_MovingBar[];
 extern int _ZTV13TreasureChest[];

@@ -1,4 +1,4 @@
-// @symbol _ZN13RollingLogLllD0Ev
+// @symbol _ZN11VolcanoFireD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_MovingCylinderClsn.h"
@@ -6,7 +6,7 @@
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV21daObj_volcanoCannon_c */
 extern void *data_020a0eac;
-int *_ZN13RollingLogLllD0Ev(int *t)
+int *_ZN11VolcanoFireD0Ev(int *t)
 {
     t[0] = (int)_ZTV21daObj_volcanoCannon_c;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);

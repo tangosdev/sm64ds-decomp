@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN13RollingLogLll8BehaviorEv
+// @symbol _ZN11VolcanoFire8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "RollingLogLll.h"
+#include "VolcanoFire.h"
 typedef int Fix12i;
 struct Vector3_16f;
 struct CylinderClsn;
@@ -17,7 +17,7 @@ extern "C" void _ZN12CylinderClsn6UpdateEv(void* c);
 extern "C" unsigned int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
     unsigned int a, unsigned int b, Fix12i c, Fix12i d, Fix12i e, const Vector3_16f* f);
 
-int RollingLogLll::Behavior()
+int VolcanoFire::Behavior()
 {
     char* c = ((char*)this);
     C* o = (C*)c;
