@@ -81,8 +81,8 @@ _ZN10LavaBubble8BehaviorEv kind:function(arm,size=0x188) addr:0x02118850
 _ZN10LavaBubble13InitResourcesEv kind:function(arm,size=0x130) addr:0x021189d8
 func_ov064_02118b08 kind:function(arm,size=0x8) addr:0x02118b08
 LavaBubble_Spawn kind:function(arm,size=0x40) addr:0x02118b10
-_ZN19BowserPuzzleManagerD1Ev kind:function(arm,size=0x44) addr:0x02118b50
-_ZN19BowserPuzzleManagerD0Ev kind:function(arm,size=0x58) addr:0x02118b94
+_ZN17BowserPuzzlePieceD1Ev kind:function(arm,size=0x44) addr:0x02118b50
+_ZN17BowserPuzzlePieceD0Ev kind:function(arm,size=0x58) addr:0x02118b94
 func_ov064_02118bec kind:function(arm,size=0x24) addr:0x02118bec
 func_ov064_02118c10 kind:function(arm,size=0x38) addr:0x02118c10
 func_ov064_02118c48 kind:function(arm,size=0x8c) addr:0x02118c48
@@ -96,11 +96,11 @@ func_ov064_02118e24 kind:function(arm,size=0xc0) addr:0x02118e24
 func_ov064_02118ee4 kind:function(arm,size=0xc0) addr:0x02118ee4
 func_ov064_02118fa4 kind:function(arm,size=0x6c) addr:0x02118fa4
 func_ov064_02119010 kind:function(arm,size=0x3c) addr:0x02119010
-_ZN19BowserPuzzleManager16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x0211904c
-_ZN19BowserPuzzleManager6RenderEv kind:function(arm,size=0x28) addr:0x02119088
-_ZN19BowserPuzzleManager8BehaviorEv kind:function(arm,size=0xac) addr:0x021190b0
+_ZN17BowserPuzzlePiece16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x0211904c
+_ZN17BowserPuzzlePiece6RenderEv kind:function(arm,size=0x28) addr:0x02119088
+_ZN17BowserPuzzlePiece8BehaviorEv kind:function(arm,size=0xac) addr:0x021190b0
 func_ov064_0211915c kind:function(arm,size=0x4c) addr:0x0211915c
-_ZN19BowserPuzzleManager13InitResourcesEv kind:function(arm,size=0xdc) addr:0x021191a8
+_ZN17BowserPuzzlePiece13InitResourcesEv kind:function(arm,size=0xdc) addr:0x021191a8
 func_ov064_02119284 kind:function(arm,size=0x18) addr:0x02119284
 func_ov064_0211929c kind:function(arm,size=0x20) addr:0x0211929c
 func_ov064_021192bc kind:function(arm,size=0x14) addr:0x021192bc
@@ -263,7 +263,7 @@ BowserPuzzlePiece_SpawnInfo kind:data(any) addr:0x0211c160
 BowserPuzzleManager_SpawnInfo kind:data(any) addr:0x0211c17c
 data_ov064_0211c198 kind:data(any) addr:0x0211c198
 data_ov064_0211c1d8 kind:data(any) addr:0x0211c1d8
-_ZTV19BowserPuzzleManager kind:data(any) addr:0x0211c25c
+_ZTV17BowserPuzzlePiece kind:data(any) addr:0x0211c25c
 data_ov064_0211c2dc kind:data(any) addr:0x0211c2dc
 data_ov064_0211c2e4 kind:data(any) addr:0x0211c2e4
 _ZTI18daWater_Hakidasi_c kind:data(any) addr:0x0211c2ec
