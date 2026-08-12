@@ -1,11 +1,11 @@
 //cpp
 #include "types.h"
-// @symbol _ZN13RollingLogTtm13InitResourcesEv
+// @symbol _ZN5Ukiki13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_SaveData.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RollingLogTtm.h"
+#include "Ukiki.h"
 #define false 0
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
@@ -25,7 +25,7 @@ extern char data_ov002_0210da40;
 extern char data_ov002_0210d9a0;
 extern char data_ov002_0210d9c0;
 
-int RollingLogTtm::InitResources()
+int Ukiki::InitResources()
 {
     int i;
     int b;

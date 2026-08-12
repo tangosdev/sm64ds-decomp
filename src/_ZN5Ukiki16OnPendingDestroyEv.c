@@ -1,3 +1,3 @@
-void _ZN13RollingLogTtm16OnPendingDestroyEv(void)
+void _ZN5Ukiki16OnPendingDestroyEv(void)
 {
 }

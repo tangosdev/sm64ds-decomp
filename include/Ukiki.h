@@ -1,15 +1,15 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RollingLogTtm: 5 matched functions, 27 evidenced fields.
+ * class Ukiki: 5 matched functions, 27 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef ROLLINGLOGTTM_H
-#define ROLLINGLOGTTM_H
+#ifndef UKIKI_H
+#define UKIKI_H
 #include "types.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 #include "MovingCylinderClsn.h"
 
-struct RollingLogTtm {
+struct Ukiki {
     u8  pad_000[0xc];
     u16 mActorID;            /* 0x00c */
     u8  pad_00e[0x4e];
@@ -35,11 +35,11 @@ struct RollingLogTtm {
     ModelAnim mModelAnim;            /* 0x0d4 */
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x138 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN13RollingLogTtmD0Ev.c] */
+       checks. Was a u8 marker. [_ZN5UkikiD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x138 */
     /* MovingCylinderClsn member, named by the class's own destructor calling
        MovingCylinderClsn's D1 at +0x160 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN13RollingLogTtmD0Ev.c] */
+       checks. Was a u8 marker. [_ZN5UkikiD0Ev.c] */
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x160 */
     u8  mWithMeshClsn;            /* 0x194 */
     u8  pad_195[0x1eb];

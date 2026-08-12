@@ -1,11 +1,11 @@
 //cpp
 #include "types.h"
-// @symbol _ZN13RollingLogTtm8BehaviorEv
+// @symbol _ZN5Ukiki8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_SaveData.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RollingLogTtm.h"
+#include "Ukiki.h"
 struct Vector3;
 struct Vector3_16;
 struct Actor;
@@ -28,7 +28,7 @@ struct VObj {
     virtual void v3();
 };
 
-int RollingLogTtm::Behavior()
+int Ukiki::Behavior()
 {
     char *c = (char *)((Actor *)this);
     if (_ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(((Actor *)this), 0x5dc000) != 0 &&

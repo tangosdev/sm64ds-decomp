@@ -9,7 +9,7 @@ extern struct SharedFilePtr data_ov002_0210d9c0;
 extern struct SharedFilePtr data_ov030_02115d00;
 extern struct SharedFilePtr *data_ov030_02114824[10];
 
-int _ZN13RollingLogTtm16CleanupResourcesEv(void)
+int _ZN5Ukiki16CleanupResourcesEv(void)
 {
     int i;
     _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da40);
