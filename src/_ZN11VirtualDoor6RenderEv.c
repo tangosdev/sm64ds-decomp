@@ -1,4 +1,4 @@
-int _ZN9CameraTag6RenderEv(void)
+int _ZN11VirtualDoor6RenderEv(void)
 {
     return 1;
 }

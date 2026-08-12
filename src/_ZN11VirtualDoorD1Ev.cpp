@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN9CameraTagD1Ev
+// @symbol _ZN11VirtualDoorD1Ev
 
 struct Actor {
     virtual ~Actor();
 };
 
 
-struct CameraTag : Actor {
-    virtual ~CameraTag();
+struct VirtualDoor : Actor {
+    virtual ~VirtualDoor();
 };
 
-CameraTag::~CameraTag()
+VirtualDoor::~VirtualDoor()
 {
 }

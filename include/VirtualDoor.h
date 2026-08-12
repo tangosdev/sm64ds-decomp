@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class CameraTag: 4 matched functions, 7 evidenced fields.
+ * class VirtualDoor: 4 matched functions, 7 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef CAMERATAG_H
-#define CAMERATAG_H
+#ifndef VIRTUALDOOR_H
+#define VIRTUALDOOR_H
 #include "types.h"
 
-struct CameraTag {
+struct VirtualDoor {
     u8  pad_000[0x8];
     u32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
