@@ -577,7 +577,7 @@ extern int _ZTV14daRedBombhei_c[];
 extern int _ZTV14daWater_Ring_c[];
 extern int _ZTV15BookShotSpawner[];
 extern int _ZTV15ChainChompFence[];
-extern int _ZTV15FireSeaElevator[];
+extern int _ZTV8PoleLift[];
 extern int _ZTV15IceSlideManager[];
 extern int _ZTV6Number[];
 extern int _ZTV15RecRoomCupboard;

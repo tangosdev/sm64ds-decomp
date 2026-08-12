@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN15FireSeaElevator16CleanupResourcesEv
+// @symbol _ZN8PoleLift16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FireSeaElevator.h"
+#include "PoleLift.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
 extern int data_ov045_021131b0[];
 
-int FireSeaElevator::CleanupResources()
+int PoleLift::CleanupResources()
 {
     ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     ((SharedFilePtr *)(data_ov045_021131b0))->Release();

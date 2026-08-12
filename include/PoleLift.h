@@ -1,5 +1,5 @@
-#ifndef FIRESEAELEVATOR_H
-#define FIRESEAELEVATOR_H
+#ifndef POLELIFT_H
+#define POLELIFT_H
 
 #include "types.h"
 
@@ -18,13 +18,13 @@
 #include "Platform.h"
 #include "MovingCylinderClsn.h"
 
-struct FireSeaElevator : Platform {
+struct PoleLift : Platform {
     u8  pad_31e[0x2];
     MovingCylinderClsn mMovingCylinderClsn;/* 0x320 */
     u16 unk_354;                      /* 0x354 */
 
     /* --- vtable --- */
-    virtual ~FireSeaElevator();
+    virtual ~PoleLift();
 
     int Behavior();
     int CleanupResources();
@@ -32,14 +32,14 @@ struct FireSeaElevator : Platform {
     int Render();
 };
 
-typedef char FireSeaElevator_size_must_be_0x358[sizeof(FireSeaElevator) == 0x358 ? 1 : -1];
+typedef char FireSeaElevator_size_must_be_0x358[sizeof(PoleLift) == 0x358 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct FireSeaElevator {
+struct PoleLift {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
     u8  pad_00c[0x82];
@@ -52,11 +52,11 @@ struct FireSeaElevator {
     u8  pad_125[0x1fb];
     /* MovingCylinderClsn member, named by the class's own destructor calling
        MovingCylinderClsn's D1 at +0x320 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN15FireSeaElevatorD1Ev.c] */
+       checks. Was a u8 marker. [_ZN8PoleLiftD1Ev.c] */
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x320 */
     u16 unk_354;            /* 0x354 */
 };
 
 #endif /* __cplusplus */
 
-#endif /* FIRESEAELEVATOR_H */
+#endif /* POLELIFT_H */

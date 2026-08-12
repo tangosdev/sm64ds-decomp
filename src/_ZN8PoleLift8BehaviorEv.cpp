@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN15FireSeaElevator8BehaviorEv
+// @symbol _ZN8PoleLift8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "FireSeaElevator.h"
+#include "PoleLift.h"
 extern "C" {
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
@@ -11,7 +11,7 @@ extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 }
 extern short data_02082214[];
 
-int FireSeaElevator::Behavior()
+int PoleLift::Behavior()
 {
     _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
     _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
