@@ -36,21 +36,21 @@ src/UkikiCage_Spawn.c:
     complete
     .text start:0x02111524 end:0x0211155c
 
-src/_ZN9UkikiCageD1Ev.c:
+src/_ZN13RollingLogTtmD1Ev.c:
     .text start:0x0211155c end:0x021115ac
 
-src/_ZN9UkikiCageD0Ev.c:
+src/_ZN13RollingLogTtmD0Ev.c:
     .text start:0x021115ac end:0x02111610
 
-src/_ZN9UkikiCage16CleanupResourcesEv.c:
+src/_ZN13RollingLogTtm16CleanupResourcesEv.c:
     complete
     .text start:0x02111610 end:0x02111624
 
-src/_ZN9UkikiCage8BehaviorEv.c:
+src/_ZN13RollingLogTtm8BehaviorEv.c:
     complete
     .text start:0x02111624 end:0x02111638
 
-src/_ZN9UkikiCage13InitResourcesEv.c:
+src/_ZN13RollingLogTtm13InitResourcesEv.c:
     complete
     .text start:0x02111638 end:0x0211164c
 
