@@ -148,19 +148,19 @@ src/FloatOnWaterPlatformWdwRectangle_Spawn.c:
     complete
     .text start:0x02112044 end:0x02112080
 
-src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.c:
+src/_ZN19RotatingPlatformWdwD1Ev.c:
     complete
     .text start:0x02112080 end:0x021120d0
 
-src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c:
+src/_ZN19RotatingPlatformWdwD0Ev.c:
     complete
     .text start:0x021120d0 end:0x02112134
 
-src/_ZN32FloatOnWaterPlatformWdwRectangle16CleanupResourcesEv.c:
+src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.c:
     complete
     .text start:0x02112134 end:0x02112148
 
-src/_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv.c:
+src/_ZN19RotatingPlatformWdw13InitResourcesEv.c:
     complete
     .text start:0x02112148 end:0x02112168
 
