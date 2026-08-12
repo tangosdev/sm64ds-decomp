@@ -56,11 +56,11 @@ src/ArrowLift_Spawn.c:
     complete
     .text start:0x021116f8 end:0x02111728
 
-src/_ZN9ArrowLiftD1Ev.cpp:
+src/_ZN12WaterDiamondD1Ev.cpp:
     complete
     .text start:0x02111728 end:0x02111760
 
-src/_ZN9ArrowLiftD0Ev.c:
+src/_ZN12WaterDiamondD0Ev.c:
     complete
     .text start:0x02111760 end:0x021117ac
 
@@ -76,19 +76,19 @@ src/func_ov029_021118c8.c:
     complete
     .text start:0x021118c8 end:0x02111908
 
-src/_ZN9ArrowLift16CleanupResourcesEv.c:
+src/_ZN12WaterDiamond16CleanupResourcesEv.c:
     complete
     .text start:0x02111908 end:0x0211192c
 
-src/_ZN9ArrowLift6RenderEv.cpp:
+src/_ZN12WaterDiamond6RenderEv.cpp:
     complete
     .text start:0x0211192c end:0x02111954
 
-src/_ZN9ArrowLift8BehaviorEv.cpp:
+src/_ZN12WaterDiamond8BehaviorEv.cpp:
     complete
     .text start:0x02111954 end:0x02111a04
 
-src/_ZN9ArrowLift13InitResourcesEv.cpp:
+src/_ZN12WaterDiamond13InitResourcesEv.cpp:
     complete
     .text start:0x02111a04 end:0x02111a84
 
