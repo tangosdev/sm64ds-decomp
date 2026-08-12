@@ -4641,7 +4641,7 @@ src/_ZN8YoshiEgg8BehaviorEv.cpp:
     complete
     .text start:0x020ee010 end:0x020ee144
 
-src/_ZN8YoshiEgg13InitResourcesEv.c:
+src/_ZN8YoshiEgg13InitResourcesEv.cpp:
     complete
     .text start:0x020ee144 end:0x020ee3d8
 
