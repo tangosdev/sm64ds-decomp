@@ -1,4 +1,4 @@
-// @symbol _ZN8PoleLiftD0Ev
+// @symbol _ZN17ExtendingPlatformD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ExtendingMeshCollider.h"
@@ -7,7 +7,7 @@
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV17daObjKm2_Nobiru_c */
 extern void *data_020a0eac;
-int *_ZN8PoleLiftD0Ev(int *t)
+int *_ZN17ExtendingPlatformD0Ev(int *t)
 {
     t[0] = (int)_ZTV17daObjKm2_Nobiru_c;
     _ZN21ExtendingMeshColliderD1Ev((char *)t + 0x158);

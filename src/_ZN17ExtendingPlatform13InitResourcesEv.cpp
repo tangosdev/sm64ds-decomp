@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN8PoleLift13InitResourcesEv
+// @symbol _ZN17ExtendingPlatform13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "PoleLift.h"
+#include "ExtendingPlatform.h"
 #include "MeshColliderBase.h"
 typedef int Fix12;
 extern "C" {
@@ -13,7 +13,7 @@ extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern int _ZN21ExtendingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, Fix12, short, void*);
 }
 
-int PoleLift::InitResources()
+int ExtendingPlatform::InitResources()
 {
   void* mdl;
   void* kcl;
