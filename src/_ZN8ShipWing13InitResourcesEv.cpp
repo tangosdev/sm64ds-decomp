@@ -1,16 +1,16 @@
 //cpp
-// @symbol _ZN18RotatingPlatformRr13InitResourcesEv
+// @symbol _ZN8ShipWing13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RotatingPlatformRr.h"
+#include "ShipWing.h"
 typedef short s16;
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 }
 
-int RotatingPlatformRr::InitResources()
+int ShipWing::InitResources()
 {
   void* mdl = _ZN5Model8LoadFileER13SharedFilePtr(data_ov036_02114070);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, mdl, 1, -1);

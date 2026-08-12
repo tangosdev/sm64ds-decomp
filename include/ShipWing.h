@@ -1,13 +1,13 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RotatingPlatformRr: 5 matched functions, 11 evidenced fields.
+ * class ShipWing: 5 matched functions, 11 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef ROTATINGPLATFORMRR_H
-#define ROTATINGPLATFORMRR_H
+#ifndef SHIPWING_H
+#define SHIPWING_H
 #include "types.h"
 #include "CommonModel.h"
 
-struct RotatingPlatformRr {
+struct ShipWing {
     u8  pad_000[0x8];
     u32 unk_008;            /* 0x008 */
     u8  pad_00c[0x80];
@@ -17,7 +17,7 @@ struct RotatingPlatformRr {
     u8  pad_092[0x42];
     /* CommonModel member, named by the class's own destructor calling
        CommonModel's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN18RotatingPlatformRrD0Ev.c] */
+       checks. Was a u8 marker. [_ZN8ShipWingD0Ev.c] */
     CommonModel mCommonModel;            /* 0x0d4 */
     s16 unk_110;            /* 0x110 */
     s16 unk_112;            /* 0x112 */
