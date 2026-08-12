@@ -15,10 +15,10 @@ _ZN11RickshawBdwD0Ev kind:function(arm,size=0x64) addr:0x02111568
 _ZN11RickshawBdw16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021115cc
 _ZN11RickshawBdw13InitResourcesEv kind:function(arm,size=0x14) addr:0x021115e0
 RickshawPlatformBdw_Spawn kind:function(arm,size=0x3c) addr:0x021115f4
-_ZN19RickshawPlatformBdwD1Ev kind:function(arm,size=0x80) addr:0x02111630
-_ZN19RickshawPlatformBdwD0Ev kind:function(arm,size=0x94) addr:0x021116b0
-_ZN19RickshawPlatformBdw16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111744
-_ZN19RickshawPlatformBdw13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111758
+_ZN17daObjKm1_Dorifu_cD1Ev kind:function(arm,size=0x80) addr:0x02111630
+_ZN17daObjKm1_Dorifu_cD0Ev kind:function(arm,size=0x94) addr:0x021116b0
+_ZN17daObjKm1_Dorifu_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111744
+_ZN17daObjKm1_Dorifu_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111758
 StairsBdw_Spawn kind:function(arm,size=0x90) addr:0x0211176c
 __sinit_ov043_021117fc kind:function(arm,size=0x6c) addr:0x021117fc
 __sinit_ov043_02111868 kind:function(arm,size=0x6c) addr:0x02111868
@@ -113,7 +113,7 @@ data_ov043_021124f8 kind:data(any) addr:0x021124f8 ambiguous
 StairsBdw_SpawnInfo kind:data(any) addr:0x021124fc ambiguous
 data_ov043_02112518 kind:data(any) addr:0x02112518
 data_ov043_02112530 kind:data(any) addr:0x02112530 ambiguous
-_ZTV19RickshawPlatformBdw kind:data(any) addr:0x0211255c
+_ZTV17daObjKm1_Dorifu_c kind:data(any) addr:0x0211255c
 data_ov043_02112570 kind:data(any) addr:0x02112570 ambiguous
 data_ov043_02112590 kind:data(any) addr:0x02112590 ambiguous
 data_ov043_021125cc kind:data(any) addr:0x021125cc ambiguous
