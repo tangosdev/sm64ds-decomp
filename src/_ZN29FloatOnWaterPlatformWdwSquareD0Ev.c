@@ -1,10 +1,10 @@
-// @symbol func_ov029_021111f0
+// @symbol _ZN29FloatOnWaterPlatformWdwSquareD0Ev
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
-extern int data_ov029_02113c2c[];
+extern int _ZTV29FloatOnWaterPlatformWdwSquare[];
 extern int data_ov002_02108fdc[];
 extern int _ZTV8Platform[];
 /* recovered: vtable identified, renamed to Class_Method */
@@ -13,9 +13,9 @@ extern int _ZTV8Platform[];
    vtable, destroys the members and calls Memory::Deallocate; no eat handler
    does any of that. */
 extern void *data_020a0eac;
-int *func_ov029_021111f0(int *t)
+int *_ZN29FloatOnWaterPlatformWdwSquareD0Ev(int *t)
 {
-    t[0] = (int)data_ov029_02113c2c;
+    t[0] = (int)_ZTV29FloatOnWaterPlatformWdwSquare;
     t[0] = (int)data_ov002_02108fdc;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);

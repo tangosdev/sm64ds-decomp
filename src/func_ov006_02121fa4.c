@@ -5,10 +5,6 @@
 #include "dScMgTrampoline_c.h"
 // recovered name: dScMgTrampoline_c_OnYoshiTryEat_02121fa4
 /* recovered: renamed to Class_Method */
-/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
-   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
-   vtable, destroys the members and calls Memory::Deallocate; no eat handler
-   does any of that. */
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile void *reg,
     unsigned short a, unsigned short b, int c, unsigned short d);
 extern void func_ov006_020d0b04(int a);

@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 extern int data_ov002_02108fdc[];
-extern int data_ov029_02113f44[];
+extern int _ZTV32FloatOnWaterPlatformWdwRectangle[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = data_ov002_02108fdc */
 int *FloatOnWaterPlatformWdwRectangle_Spawn(void)
@@ -13,7 +13,7 @@ int *FloatOnWaterPlatformWdwRectangle_Spawn(void)
     if (p) {
         _ZN8PlatformC2Ev(p);
         p[0] = (int)data_ov002_02108fdc;
-        p[0] = (int)data_ov029_02113f44;
+        p[0] = (int)_ZTV32FloatOnWaterPlatformWdwRectangle;
     }
     return p;
 }
