@@ -203,11 +203,11 @@ src/func_ov064_02117c24.c:
     complete
     .text start:0x02117c24 end:0x02117cc4
 
-src/func_ov064_02117cc4.c:
+src/_ZN12MetalNetLift16CleanupResourcesEv.cpp:
     complete
     .text start:0x02117cc4 end:0x02117cfc
 
-src/func_ov064_02117cfc.cpp:
+src/_ZN12MetalNetLift6RenderEv.cpp:
     complete
     .text start:0x02117cfc end:0x02117d24
 
@@ -215,7 +215,7 @@ src/func_ov064_02117d24.cpp:
     complete
     .text start:0x02117d24 end:0x02117e44
 
-src/func_ov064_02117e44.cpp:
+src/_ZN12MetalNetLift13InitResourcesEv.cpp:
     complete
     .text start:0x02117e44 end:0x02117fb4
 
@@ -327,7 +327,7 @@ src/_ZN10LavaBubble13InitResourcesEv.cpp:
     complete
     .text start:0x021189d8 end:0x02118b08
 
-src/func_ov064_02118b08.c:
+src/_ZN10LavaBubble13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02118b08 end:0x02118b10
 
@@ -407,7 +407,7 @@ src/_ZN17BowserPuzzlePiece8BehaviorEv.cpp:
     complete
     .text start:0x021190b0 end:0x0211915c
 
-src/func_ov064_0211915c.c:
+src/_ZN19BowserPuzzleManager8BehaviorEv.cpp:
     complete
     .text start:0x0211915c end:0x021191a8
 
@@ -415,7 +415,7 @@ src/_ZN17BowserPuzzlePiece13InitResourcesEv.cpp:
     complete
     .text start:0x021191a8 end:0x02119284
 
-src/func_ov064_02119284.c:
+src/_ZN19BowserPuzzleManager13InitResourcesEv.cpp:
     complete
     .text start:0x02119284 end:0x0211929c
 

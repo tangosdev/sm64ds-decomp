@@ -139,7 +139,7 @@ src/_ZN7Chuckya13InitResourcesEv.cpp:
     complete
     .text start:0x02117334 end:0x02117470
 
-src/func_ov062_02117470.c:
+src/_ZN7Chuckya16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02117470 end:0x02117478
 
@@ -278,7 +278,7 @@ src/_ZN5Koopa13InitResourcesEv.cpp:
     complete
     .text start:0x02119420 end:0x02119608
 
-src/func_ov062_02119608.cpp:
+src/_ZN5Koopa16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02119608 end:0x02119628
 
@@ -286,7 +286,7 @@ src/func_ov062_02119628.cpp:
     complete
     .text start:0x02119628 end:0x021196a8
 
-src/func_ov062_021196a8.c:
+src/_ZN5Koopa13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021196a8 end:0x021196bc
 
@@ -490,7 +490,7 @@ src/_ZN6Klepto13InitResourcesEv.cpp:
     complete
     .text start:0x0211cb4c end:0x0211ce78
 
-src/func_ov062_0211ce78.c:
+src/_ZN6Klepto16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0211ce78 end:0x0211ce80
 
