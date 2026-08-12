@@ -1,8 +1,12 @@
 // @symbol _ZN8YoshiEgg13InitResourcesEv
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: named members + shared header */
-#include "YoshiEgg.h"
+/* NO #include "YoshiEgg.h" here, deliberately. This file is C, it reaches every
+   field through a raw offset and names not one member, so the header bought it
+   nothing -- and once YoshiEgg became a real Enemy subclass the header stopped
+   being C at all (`struct Enemy : Actor`, `extern "C"`), which is a syntax error
+   in a .c file. Dropping the unused include is the whole fix; converting this
+   function to a real method is a separate job, and a larger one. */
 
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
 extern int  _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);

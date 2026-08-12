@@ -20,7 +20,7 @@ int YoshiEgg::Behavior()
     Vec3 vmid;
     Vec3 vout;
     func_ov002_020ed684(((char *)this));
-    _ZN9Animation7AdvanceEv((char *)&mAnimation);
+    mModelAnim.Advance();
     if (unk_3f0 != 1) {
         if (*(unsigned char *)(*(char **)((char *)&mPlayer) + 0x6f5) < 0xa) {
             short *ang;

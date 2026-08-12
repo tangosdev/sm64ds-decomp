@@ -4518,7 +4518,7 @@ src/Warp_Spawn.c:
     complete
     .text start:0x020ec534 end:0x020ec56c
 
-src/_ZN8YoshiEggD1Ev.c:
+src/_ZN8YoshiEggD1Ev.cpp:
     complete
     .text start:0x020ec56c end:0x020ec5b4
 

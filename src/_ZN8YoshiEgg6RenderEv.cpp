@@ -17,7 +17,7 @@ extern "C" {
 
 int YoshiEgg::Render()
 {
-  int b = (int)((unk_0b0 & 0x40000) != 0);
+  int b = (int)((mFlags & 0x40000) != 0);
   if(b) return 1;
   if(_ZN6Player16IsInsideOfCannonEv(*(void**)((char*)&mPlayer))) return 1;
   if(*(unsigned char*)(*(char**)((char*)&mPlayer)+0x6f5) < 1) return 1;
