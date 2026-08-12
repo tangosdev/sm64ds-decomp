@@ -175,7 +175,7 @@ src/BigBully_Spawn.c:
     complete
     .text start:0x0211791c end:0x02117978
 
-src/_ZN12MetalNetLiftD1Ev.c:
+src/_ZN12MetalNetLiftD1Ev.cpp:
     complete
     .text start:0x02117978 end:0x021179bc
 
@@ -343,7 +343,7 @@ src/_ZN17BowserPuzzlePieceD0Ev.c:
     complete
     .text start:0x02118b94 end:0x02118bec
 
-src/_ZN19BowserPuzzleManagerD1Ev.c:
+src/_ZN19BowserPuzzleManagerD1Ev.cpp:
     complete
     .text start:0x02118bec end:0x02118c10
 

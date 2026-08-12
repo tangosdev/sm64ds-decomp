@@ -4,7 +4,7 @@
     .ctor       start:0x02111b60 end:0x02111b68 kind:rodata align:4
     .data       start:0x02111b80 end:0x021124a0 kind:data align:32
     .bss        start:0x021124a0 end:0x02112500 kind:bss align:32
-src/_ZN12SwitchPillarD1Ev.c:
+src/_ZN12SwitchPillarD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111e4
 
