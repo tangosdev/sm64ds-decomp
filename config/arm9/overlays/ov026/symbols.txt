@@ -7,15 +7,15 @@ func_ov026_02111308 kind:function(arm,size=0x28) addr:0x02111308
 func_ov026_02111330 kind:function(arm,size=0x268) addr:0x02111330
 func_ov026_02111598 kind:function(arm,size=0xe0) addr:0x02111598
 func_ov026_02111678 kind:function(arm,size=0x50) addr:0x02111678
-func_ov026_021116c8 kind:function(arm,size=0x44) addr:0x021116c8
-func_ov026_0211170c kind:function(arm,size=0x58) addr:0x0211170c
+_ZN13BowserShutterD1Ev kind:function(arm,size=0x44) addr:0x021116c8
+_ZN13BowserShutterD0Ev kind:function(arm,size=0x58) addr:0x0211170c
 func_ov026_02111764 kind:function(arm,size=0x44) addr:0x02111764
 func_ov026_021117a8 kind:function(arm,size=0x28) addr:0x021117a8
 func_ov026_021117d0 kind:function(arm,size=0x8) addr:0x021117d0
 func_ov026_021117d8 kind:function(arm,size=0xb0) addr:0x021117d8
 BowserShutter_Spawn kind:function(arm,size=0x30) addr:0x02111888
-func_ov026_021118b8 kind:function(arm,size=0x44) addr:0x021118b8
-func_ov026_021118fc kind:function(arm,size=0x58) addr:0x021118fc
+_ZN9SubmarineD1Ev kind:function(arm,size=0x44) addr:0x021118b8
+_ZN9SubmarineD0Ev kind:function(arm,size=0x58) addr:0x021118fc
 func_ov026_02111954 kind:function(arm,size=0x44) addr:0x02111954
 func_ov026_02111998 kind:function(arm,size=0x28) addr:0x02111998
 func_ov026_021119c0 kind:function(arm,size=0xb0) addr:0x021119c0
@@ -180,7 +180,7 @@ _ZTS21daObjWlKoopaShutter_c kind:data(any) addr:0x02113b68
 data_ov026_02113b7c kind:data(any) addr:0x02113b7c ambiguous
 BowserShutter_SpawnInfo kind:data(any) addr:0x02113b80 ambiguous
 data_ov026_02113b90 kind:data(any) addr:0x02113b90 ambiguous
-data_ov026_02113ba4 kind:data(any) addr:0x02113ba4
+_ZTV13BowserShutter kind:data(any) addr:0x02113ba4
 data_ov026_02113c08 kind:data(any) addr:0x02113c08 ambiguous
 data_ov026_02113c14 kind:data(any) addr:0x02113c14 ambiguous
 data_ov026_02113c20 kind:data(any) addr:0x02113c20 ambiguous
@@ -188,7 +188,7 @@ _ZTI18daObjWlSubmarine_c kind:data(any) addr:0x02113c24
 data_ov026_02113c28 kind:data(any) addr:0x02113c28 ambiguous
 _ZTS18daObjWlSubmarine_c kind:data(any) addr:0x02113c30
 Submarine_SpawnInfo kind:data(any) addr:0x02113c48 ambiguous
-data_ov026_02113c6c kind:data(any) addr:0x02113c6c
+_ZTV9Submarine kind:data(any) addr:0x02113c6c
 data_ov026_02113ccc kind:data(any) addr:0x02113ccc ambiguous
 data_ov026_02113cd4 kind:data(any) addr:0x02113cd4 ambiguous
 data_ov026_02113cec kind:data(any) addr:0x02113cec

@@ -1,5 +1,5 @@
-func_ov022_021111a0 kind:function(arm,size=0x44) addr:0x021111a0
-func_ov022_021111e4 kind:function(arm,size=0x58) addr:0x021111e4
+_ZN11VolcanoRingD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN11VolcanoRingD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 func_ov022_0211123c kind:function(arm,size=0x48) addr:0x0211123c
 func_ov022_02111284 kind:function(arm,size=0x28) addr:0x02111284
 func_ov022_021112ac kind:function(arm,size=0x1f0) addr:0x021112ac
@@ -7,8 +7,8 @@ func_ov022_0211149c kind:function(arm,size=0xbc) addr:0x0211149c
 func_ov022_02111558 kind:function(arm,size=0xc) addr:0x02111558
 func_ov022_02111564 kind:function(arm,size=0x14) addr:0x02111564
 VolcanoRing_Spawn kind:function(arm,size=0x30) addr:0x02111578
-func_ov022_021115a8 kind:function(arm,size=0x50) addr:0x021115a8
-func_ov022_021115f8 kind:function(arm,size=0x64) addr:0x021115f8
+_ZN19RotatingPlatformLllD1Ev kind:function(arm,size=0x50) addr:0x021115a8
+_ZN19RotatingPlatformLllD0Ev kind:function(arm,size=0x64) addr:0x021115f8
 func_ov022_0211165c kind:function(arm,size=0x14) addr:0x0211165c
 func_ov022_02111670 kind:function(arm,size=0x18) addr:0x02111670
 RotatingPlatformLll_Spawn kind:function(arm,size=0x3c) addr:0x02111688
@@ -21,16 +21,16 @@ _ZN19FloatOnLavaPlatform13InitResourcesEv kind:function(arm,size=0xac) addr:0x02
 func_ov022_0211191c kind:function(arm,size=0x20) addr:0x0211191c
 func_ov022_0211193c kind:function(arm,size=0x14) addr:0x0211193c
 FloatOnLavaPlatform_Spawn kind:function(arm,size=0x30) addr:0x02111950
-func_ov022_02111980 kind:function(arm,size=0x44) addr:0x02111980
-func_ov022_021119c4 kind:function(arm,size=0x58) addr:0x021119c4
+_ZN10LavaBridgeD1Ev kind:function(arm,size=0x44) addr:0x02111980
+_ZN10LavaBridgeD0Ev kind:function(arm,size=0x58) addr:0x021119c4
 func_ov022_02111a1c kind:function(arm,size=0x48) addr:0x02111a1c
 func_ov022_02111a64 kind:function(arm,size=0x44) addr:0x02111a64
 func_ov022_02111aa8 kind:function(arm,size=0x28) addr:0x02111aa8
 func_ov022_02111ad0 kind:function(arm,size=0x10c) addr:0x02111ad0
 func_ov022_02111bdc kind:function(arm,size=0xa0) addr:0x02111bdc
 LavaBridge_Spawn kind:function(arm,size=0x30) addr:0x02111c7c
-func_ov022_02111cac kind:function(arm,size=0x44) addr:0x02111cac
-func_ov022_02111cf0 kind:function(arm,size=0x58) addr:0x02111cf0
+_ZN10LavaSeesawD1Ev kind:function(arm,size=0x44) addr:0x02111cac
+_ZN10LavaSeesawD0Ev kind:function(arm,size=0x58) addr:0x02111cf0
 func_ov022_02111d48 kind:function(arm,size=0x48) addr:0x02111d48
 func_ov022_02111d90 kind:function(arm,size=0x44) addr:0x02111d90
 func_ov022_02111dd4 kind:function(arm,size=0x28) addr:0x02111dd4
@@ -193,7 +193,7 @@ _ZTI14daObjFl_Ring_c kind:data(any) addr:0x02113cd4
 _ZTS14daObjFl_Ring_c kind:data(any) addr:0x02113ce0
 data_ov022_02113cec kind:data(any) addr:0x02113cec ambiguous
 VolcanoRing_SpawnInfo kind:data(any) addr:0x02113cf4 ambiguous
-data_ov022_02113d18 kind:data(any) addr:0x02113d18
+_ZTV11VolcanoRing kind:data(any) addr:0x02113d18
 data_ov022_02113d30 kind:data(any) addr:0x02113d30 ambiguous
 data_ov022_02113d90 kind:data(any) addr:0x02113d90 ambiguous
 _ZTI16daObjFl_Koma_D_c kind:data(any) addr:0x02113d98
@@ -201,7 +201,7 @@ data_ov022_02113da4 kind:data(any) addr:0x02113da4
 data_ov022_02113da8 kind:data(any) addr:0x02113da8 ambiguous
 _ZTS16daObjFl_Koma_D_c kind:data(any) addr:0x02113db0
 RotatingPlatformLll_SpawnInfo kind:data(any) addr:0x02113dc4 ambiguous
-data_ov022_02113de8 kind:data(any) addr:0x02113de8
+_ZTV19RotatingPlatformLll kind:data(any) addr:0x02113de8
 data_ov022_02113e00 kind:data(any) addr:0x02113e00 ambiguous
 data_ov022_02113e50 kind:data(any) addr:0x02113e50 ambiguous
 _ZTI15daObjFl_Block_c kind:data(any) addr:0x02113e68
@@ -213,13 +213,13 @@ data_ov022_02113f20 kind:data(any) addr:0x02113f20 ambiguous
 _ZTI16daObjFl_London_c kind:data(any) addr:0x02113f2c
 _ZTS16daObjFl_London_c kind:data(any) addr:0x02113f38
 LavaBridge_SpawnInfo kind:data(any) addr:0x02113f4c ambiguous
-data_ov022_02113f70 kind:data(any) addr:0x02113f70
+_ZTV10LavaBridge kind:data(any) addr:0x02113f70
 data_ov022_02113f78 kind:data(any) addr:0x02113f78 ambiguous
 _ZTI16daObjFl_Seesaw_c kind:data(any) addr:0x02113ff0
 data_ov022_02113ff4 kind:data(any) addr:0x02113ff4 ambiguous
 _ZTS16daObjFl_Seesaw_c kind:data(any) addr:0x02113ffc
 LavaSeesaw_SpawnInfo kind:data(any) addr:0x02114010 ambiguous
-data_ov022_02114034 kind:data(any) addr:0x02114034
+_ZTV10LavaSeesaw kind:data(any) addr:0x02114034
 _ZTI17daObjFl_Ukiyuka_c kind:data(any) addr:0x021140b4
 data_ov022_021140b8 kind:data(any) addr:0x021140b8 ambiguous
 _ZTS17daObjFl_Ukiyuka_c kind:data(any) addr:0x021140c0
