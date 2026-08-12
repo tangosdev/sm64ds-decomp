@@ -4,11 +4,11 @@
     .ctor       start:0x02112e6c end:0x02112e78 kind:rodata align:4
     .data       start:0x02112e80 end:0x02113bc0 kind:data align:32
     .bss        start:0x02113bc0 end:0x02113cc0 kind:bss align:32
-src/func_ov018_021111a0.c:
+src/_ZN7SkiLiftD1Ev.c:
     complete
     .text start:0x021111a0 end:0x021111e4
 
-src/func_ov018_021111e4.c:
+src/_ZN7SkiLiftD0Ev.c:
     complete
     .text start:0x021111e4 end:0x0211123c
 
@@ -140,11 +140,11 @@ src/MotherPenguin_Spawn.c:
     complete
     .text start:0x0211267c end:0x021126d4
 
-src/func_ov018_021126d4.c:
+src/_ZN15PowerStarCreateD1Ev.c:
     complete
     .text start:0x021126d4 end:0x021126f8
 
-src/func_ov018_021126f8.c:
+src/_ZN15PowerStarCreateD0Ev.c:
     complete
     .text start:0x021126f8 end:0x02112730
 

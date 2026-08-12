@@ -1,5 +1,5 @@
-func_ov029_021111a0 kind:function(arm,size=0x50) addr:0x021111a0
-func_ov029_021111f0 kind:function(arm,size=0x64) addr:0x021111f0
+_ZN29FloatOnWaterPlatformWdwSquareD1Ev kind:function(arm,size=0x50) addr:0x021111a0
+_ZN29FloatOnWaterPlatformWdwSquareD0Ev kind:function(arm,size=0x64) addr:0x021111f0
 func_ov029_02111254 kind:function(arm,size=0xec) addr:0x02111254
 FloatOnWaterPlatformWdwSquare_Spawn kind:function(arm,size=0x3c) addr:0x02111340
 _ZN9ArrowLiftD1Ev kind:function(arm,size=0x44) addr:0x0211137c
@@ -21,8 +21,8 @@ _ZN12WaterDiamond6RenderEv kind:function(arm,size=0x28) addr:0x0211192c
 _ZN12WaterDiamond8BehaviorEv kind:function(arm,size=0xb0) addr:0x02111954
 _ZN12WaterDiamond13InitResourcesEv kind:function(arm,size=0x80) addr:0x02111a04
 WaterDiamond_Spawn kind:function(arm,size=0x40) addr:0x02111a84
-func_ov029_02111ac4 kind:function(arm,size=0x44) addr:0x02111ac4
-func_ov029_02111b08 kind:function(arm,size=0x58) addr:0x02111b08
+_ZN8CageLiftD1Ev kind:function(arm,size=0x44) addr:0x02111ac4
+_ZN8CageLiftD0Ev kind:function(arm,size=0x58) addr:0x02111b08
 func_ov029_02111b60 kind:function(arm,size=0x44) addr:0x02111b60
 func_ov029_02111ba4 kind:function(arm,size=0x28) addr:0x02111ba4
 func_ov029_02111bcc kind:function(arm,size=0x1a0) addr:0x02111bcc
@@ -30,8 +30,8 @@ func_ov029_02111d6c kind:function(arm,size=0xd4) addr:0x02111d6c
 func_ov029_02111e40 kind:function(arm,size=0x20) addr:0x02111e40
 func_ov029_02111e60 kind:function(arm,size=0x14) addr:0x02111e60
 CageLift_Spawn kind:function(arm,size=0x30) addr:0x02111e74
-func_ov029_02111ea4 kind:function(arm,size=0x50) addr:0x02111ea4
-func_ov029_02111ef4 kind:function(arm,size=0x64) addr:0x02111ef4
+_ZN32FloatOnWaterPlatformWdwRectangleD1Ev kind:function(arm,size=0x50) addr:0x02111ea4
+_ZN32FloatOnWaterPlatformWdwRectangleD0Ev kind:function(arm,size=0x64) addr:0x02111ef4
 func_ov029_02111f58 kind:function(arm,size=0xec) addr:0x02111f58
 FloatOnWaterPlatformWdwRectangle_Spawn kind:function(arm,size=0x3c) addr:0x02112044
 _ZN19RotatingPlatformWdwD1Ev kind:function(arm,size=0x50) addr:0x02112080
@@ -176,7 +176,7 @@ FloatOnWaterPlatformWdwSquare_SpawnInfo kind:data(any) addr:0x02113c08 ambiguous
 data_ov029_02113c14 kind:data(any) addr:0x02113c14 ambiguous
 data_ov029_02113c20 kind:data(any) addr:0x02113c20 ambiguous
 data_ov029_02113c28 kind:data(any) addr:0x02113c28 ambiguous
-data_ov029_02113c2c kind:data(any) addr:0x02113c2c
+_ZTV29FloatOnWaterPlatformWdwSquare kind:data(any) addr:0x02113c2c
 data_ov029_02113c48 kind:data(any) addr:0x02113c48 ambiguous
 _ZTI15daObjWc_Obj02_c kind:data(any) addr:0x02113cac
 _ZTS15daObjWc_Obj02_c kind:data(any) addr:0x02113cb8
@@ -198,13 +198,13 @@ _ZTI15daObjWc_Obj05_c kind:data(any) addr:0x02113e30
 _ZTS15daObjWc_Obj05_c kind:data(any) addr:0x02113e3c
 CageLift_SpawnInfo kind:data(any) addr:0x02113e50 ambiguous
 data_ov029_02113e6c kind:data(any) addr:0x02113e6c ambiguous
-data_ov029_02113e74 kind:data(any) addr:0x02113e74
+_ZTV8CageLift kind:data(any) addr:0x02113e74
 data_ov029_02113e88 kind:data(any) addr:0x02113e88 ambiguous
 _ZTI14daObjWcObj06_c kind:data(any) addr:0x02113ef4
 data_ov029_02113f00 kind:data(any) addr:0x02113f00
 _ZTS14daObjWcObj06_c kind:data(any) addr:0x02113f0c
 FloatOnWaterPlatformWdwRectangle_SpawnInfo kind:data(any) addr:0x02113f20 ambiguous
-data_ov029_02113f44 kind:data(any) addr:0x02113f44
+_ZTV32FloatOnWaterPlatformWdwRectangle kind:data(any) addr:0x02113f44
 data_ov029_02113f4c kind:data(any) addr:0x02113f4c ambiguous
 data_ov029_02113f78 kind:data(any) addr:0x02113f78 ambiguous
 data_ov029_02113fc4 kind:data(any) addr:0x02113fc4
