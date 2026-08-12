@@ -187,7 +187,7 @@ src/_ZN14UnchainedChomp13InitResourcesEv.cpp:
     complete
     .text start:0x02144088 end:0x021442d4
 
-src/func_ov100_021442d4.c:
+src/_ZN14UnchainedChomp16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021442d4 end:0x021442dc
 

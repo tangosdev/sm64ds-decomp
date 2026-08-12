@@ -266,11 +266,11 @@ src/func_ov091_02133648.cpp:
     complete
     .text start:0x02133648 end:0x021336cc
 
-src/func_ov091_021336cc.c:
+src/_ZN5Stump16CleanupResourcesEv.cpp:
     complete
     .text start:0x021336cc end:0x02133710
 
-src/func_ov091_02133710.cpp:
+src/_ZN5Stump6RenderEv.cpp:
     complete
     .text start:0x02133710 end:0x02133738
 
