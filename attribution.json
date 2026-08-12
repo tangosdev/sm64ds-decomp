@@ -8,8 +8,8 @@
     "mitch.cairns": "mitchellcairns"
   },
   "overrides": {
-    "src/_ZN13PoleBillboard8BehaviorEv.c": "lunavyqo",
-    "src/_ZN13PoleBillboard8BehaviorEv.cpp": "lunavyqo",
+    "src/_ZN14KnockDownPlank8BehaviorEv.c": "lunavyqo",
+    "src/_ZN14KnockDownPlank8BehaviorEv.cpp": "lunavyqo",
     "src/_ZN14BlueCoinSwitch13InitResourcesEv.c": "lunavyqo",
     "src/_ZN15TtcRotatingGear8BehaviorEv.c": "lunavyqo",
     "src/_ZN15TtcRotatingGear8BehaviorEv.cpp": "lunavyqo",
