@@ -161,15 +161,66 @@ recurred a third time) -- fixed by declaring the real signature locally
 instead of including `decl_common.h` in that file at all; and an attribution-
 gate failure from doing a rename and content rewrite in the same commit,
 fixed by always splitting into a pure-`git mv` commit followed by a content
-commit (see [[attribution-gate]]). **Seven leaf children remain**
-(`dScMgAmida_c`, `dScMgCoin_c`, `dScMgHanachan_c`, `dScMgPachinko_c`,
-`dScMgSlot1_c`, `dScMgSmartball_c`, `dScMgTeresa_c`), plus
-`dScMgSingle3DBase_c` (second intermediate base, 13 further grandchildren)
-and `dScMgD3DBase_c`'s own 4 real children. `dScMgHanachan_c`,
-`dScMgSlot1_c`, `dScMgCoin_c`, `dScMgPachinko_c` were deliberately skipped
-across the last two batches (field layout ambiguity / odd slot naming /
-already-partial state / a suspicious `Spawn`-named vtable slot) -- worth a
-closer look before including them in a future slice.
+commit (see [[attribution-gate]]).
+
+**Update (2026-08-11, PR #1404 + #1413): twelve of the 13 direct leaf
+children are now real.** `dScMgCoin_c`, `dScMgPachinko_c`, `dScMgTeresa_c`,
+`dScMgHanachan_c`, `dScMgSlot1_c`, and `dScMgAmida_c` joined the six from
+PR #1400. Three of these needed something genuinely new:
+
+- `dScMgHanachan_c` and `dScMgAmida_c` both have NON-TRIVIAL destructors --
+  real bodies (not the usual empty `{}`) doing explicit `__destroy_arr`
+  calls on member arrays, same idiom `dScMgBase_c`'s own D1/D2 already use
+  for `touchIcon_0f4`. Amida's own `0x4768` array is individually
+  field-accessed and got a real named struct (`dScMgAmida_c_Piece`)
+  instead of raw bytes.
+- `dScMgSlot1_c` has an embedded polymorphic subobject at `0x4660`
+  (`dScMgSlot1_c::betIcon_c : dThIcon_c`, confirmed via `build/rtti.json`
+  independently of `dScMgBase_c`'s own `TouchIcon_c`/`dThIcon_c` pair) --
+  D1/D0 write its two vtables by hand. It ALSO has a real slot (6,
+  `Behavior`) with **no matched source anywhere in the tree** -- simply
+  left undeclared; the ROM's real vtable word for that slot is untouched
+  since a class's `_ZTV` symbol here is always an alias for pre-existing
+  ROM-sourced data, never compiler-synthesized from the C++ definition, so
+  omitting an override is link-safe even though it would NOT be safe in an
+  ordinary from-scratch C++ program.
+- `dScMgAmida_c` has a brand-new own vtable slot (36) that IS genuinely
+  called, virtually, from three of its own real methods -- unlike every
+  other sibling's "leave 18+ alone" precedent. **Measured, not assumed**,
+  that calling it through real `this->` virtual dispatch does NOT
+  reproduce the ROM (compiles 0xc bytes larger, cascading to ~1400
+  unrelated-looking mismatches across the whole module) -- the compiler's
+  own slot for a class's first new virtual lands correctly only when nothing
+  else competes ahead of it in declaration order (works by coincidence for
+  a class whose only new slot is 18; breaks for slot 36, which sits past
+  `dScMgBase_c`'s entire undeclared 18-35 range). Fixed by keeping the
+  pre-migration vtable-shim-struct dispatch at all three call sites while
+  still declaring the method for documentation purposes.
+
+**`dScMgSmartball_c` is a genuine blocker, not a migration problem**: its
+own `InitResources` (slot 0, ov006:0x02118b70, 0x8dc bytes) has never been
+decompiled -- no source file, no `delinks.txt` entry, served raw from the
+ROM gap object. This needs original asm-to-C matching work before it can
+even be considered for a struct-to-class migration; skipped entirely.
+
+**A severe shared-worktree hazard hit mid-batch**, worth its own emphasis:
+`C:\tmp\sm64ds-mgleaves` had accumulated stale, uncommitted state from
+unrelated past sessions (old stashes going back to 2026-08-03, a dangling
+BooCage.h merge conflict from an already-merged PR). Debugging this while
+a genuinely concurrent process held a file lock on `build/src/` produced
+real Windows file-lock errors (`OS error 32`) AND a red herring that looked
+exactly like a code regression (~1400 mismatching functions, later
+understood to actually BE a real bug at that moment -- see Amida's Unk36
+finding above -- not corruption). The reliable fix was not debugging in
+place: cherry-pick the verified commits into a brand-new `wt-setup.ps1`
+worktree and re-verify there. See [[concurrent-builds-fake-failures]].
+
+**One leaf child remains truly unclaimed: none** -- of the 13 direct
+children, 12 are real and 1 (`dScMgSmartball_c`) is blocked on separate
+matching work. Still open: `dScMgSingle3DBase_c` (second intermediate
+base, 13 further grandchildren) and `dScMgD3DBase_c`'s own 4 real
+children (`dScMgJump_c`, `dScMgJump2_c`, `dScMgTrampoline_c`,
+`dScMgTrampoline2_c`).
 
 ## 3. A tree-wide comment defect, found here, not yet fixed anywhere
 
