@@ -76,15 +76,15 @@ src/_ZN9SubmarineD0Ev.c:
     complete
     .text start:0x021118fc end:0x02111954
 
-src/func_ov026_02111954.c:
+src/_ZN9Submarine16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111954 end:0x02111998
 
-src/func_ov026_02111998.cpp:
+src/_ZN9Submarine6RenderEv.cpp:
     complete
     .text start:0x02111998 end:0x021119c0
 
-src/func_ov026_021119c0.c:
+src/_ZN9Submarine13InitResourcesEv.cpp:
     complete
     .text start:0x021119c0 end:0x02111a70
 

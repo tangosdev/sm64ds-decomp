@@ -15,15 +15,15 @@ src/func_ov036_0211123c.c:
     complete
     .text start:0x0211123c end:0x02111284
 
-src/func_ov036_02111284.c:
+src/_ZN16SwingingPlatform16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111284 end:0x021112c8
 
-src/func_ov036_021112c8.cpp:
+src/_ZN16SwingingPlatform6RenderEv.cpp:
     complete
     .text start:0x021112c8 end:0x021112f0
 
-src/func_ov036_021112f0.c:
+src/_ZN16SwingingPlatform8BehaviorEv.cpp:
     complete
     .text start:0x021112f0 end:0x0211137c
 
