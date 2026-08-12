@@ -1,17 +1,17 @@
-// @symbol _ZN21ArmedRotatingPlatformD0Ev
+// @symbol _ZN16daObjRc_Dorifu_cD0Ev
 /* recovered: named members + shared header */
-#include "ArmedRotatingPlatform.h"
+#include "daObjRc_Dorifu_c.h"
 extern int __destroy_arr(void *p, int a, int b, void *f);
 extern int _ZN18MovingMeshColliderD1Ev(void *p);
 extern int _ZN5ModelD1Ev(void *p);
 extern int _ZN5ActorD2Ev(void *p);
 extern int _ZN6Memory10DeallocateEPvP4Heap(void *p, void *h);
-extern int _ZTV21ArmedRotatingPlatform[];
+extern int _ZTV16daObjRc_Dorifu_c[];
 extern int data_ov002_02108d94[];
 extern int _ZTV8Platform[];
 extern int *data_020a0eac;
-int _ZN21ArmedRotatingPlatformD0Ev(struct ArmedRotatingPlatform *self) {
-    *(int**)(((char *)self)) = _ZTV21ArmedRotatingPlatform;
+int _ZN16daObjRc_Dorifu_cD0Ev(struct daObjRc_Dorifu_c *self) {
+    *(int**)(((char *)self)) = _ZTV16daObjRc_Dorifu_c;
     *(int**)(((char *)self)) = data_ov002_02108d94;
     __destroy_arr(((char *)self)+0x4b0, 5, 0x1c8, _ZN18MovingMeshColliderD1Ev);
     __destroy_arr(((char *)self)+0x320, 5, 0x50, _ZN5ModelD1Ev);
