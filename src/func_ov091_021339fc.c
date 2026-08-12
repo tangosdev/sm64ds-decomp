@@ -5,7 +5,7 @@
 #include "decl_SaveData.h"
 
 extern void *_ZN5Actor10FindWithIDEj(u32 id);
-extern void func_020aea30(void *c, void *a, u32 unused);
+extern void func_ov002_020aea30(void *c, void *a, u32 unused);
 extern void _ZN5Actor8PoofDustEv(void *a);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *a);
 extern void _ZN6Player16IncMegaKillCountEv(void *p);
@@ -27,7 +27,7 @@ void func_ov091_021339fc(char *c)
         fl = *(u32 *)(c + 0x130);
         if ((fl & 0x40000) != 0) {
             *(u32 *)(c + 0x10c) = 4;
-            func_020aea30(c, a, 0);
+            func_ov002_020aea30(c, a, 0);
             return;
         }
         if ((fl & 0x2000) != 0) {
