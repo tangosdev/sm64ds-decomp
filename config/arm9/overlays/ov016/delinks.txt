@@ -120,11 +120,11 @@ src/ShipDown_Spawn.c:
     complete
     .text start:0x021129d0 end:0x02112a00
 
-src/func_ov016_02112a00.c:
+src/_ZN10RockPillarD1Ev.c:
     complete
     .text start:0x02112a00 end:0x02112a44
 
-src/func_ov016_02112a44.c:
+src/_ZN10RockPillarD0Ev.c:
     complete
     .text start:0x02112a44 end:0x02112a9c
 
@@ -152,11 +152,11 @@ src/RockPillar_Spawn.c:
     complete
     .text start:0x02112ec4 end:0x02112ef4
 
-src/func_ov016_02112ef4.c:
+src/_ZN23FloatOnWaterPlatformJrbD1Ev.c:
     complete
     .text start:0x02112ef4 end:0x02112f44
 
-src/func_ov016_02112f44.c:
+src/_ZN23FloatOnWaterPlatformJrbD0Ev.c:
     complete
     .text start:0x02112f44 end:0x02112fa8
 

@@ -1,5 +1,5 @@
-func_ov012_021111a0 kind:function(arm,size=0x44) addr:0x021111a0
-func_ov012_021111e4 kind:function(arm,size=0x58) addr:0x021111e4
+_ZN12SwitchPillarD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN12SwitchPillarD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 func_ov012_0211123c kind:function(arm,size=0xb0) addr:0x0211123c
 func_ov012_021112ec kind:function(arm,size=0x38) addr:0x021112ec
 func_ov012_02111324 kind:function(arm,size=0x28) addr:0x02111324
@@ -96,7 +96,7 @@ data_ov012_0211229c kind:data(any) addr:0x0211229c ambiguous
 _ZTI16daObjC0_Switch_c kind:data(any) addr:0x02112300
 _ZTS16daObjC0_Switch_c kind:data(any) addr:0x0211230c
 SwitchPillar_SpawnInfo kind:data(any) addr:0x02112320 ambiguous
-data_ov012_02112344 kind:data(any) addr:0x02112344
+_ZTV12SwitchPillar kind:data(any) addr:0x02112344
 data_ov012_02112358 kind:data(any) addr:0x02112358 ambiguous
 data_ov012_02112368 kind:data(any) addr:0x02112368 ambiguous
 _ZTI14daObjC0Water_c kind:data(any) addr:0x021123c4
