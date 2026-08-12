@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN5Stump13InitResourcesEv
+// @symbol _ZN6Fwoosh13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Stump.h"
+#include "Fwoosh.h"
 extern "C" {
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *thiz, void *actor, int fix, int t, unsigned int a, unsigned int b);
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, int fix, int t, void *v, int t2);
@@ -20,7 +20,7 @@ extern char data_ov091_0213567c[];
 extern char data_ov091_02135684[];
 extern char data_ov091_021356d0[];
 
-int Stump::InitResources()
+int Fwoosh::InitResources()
 {
     mVariant = (*(s32 *)&param1) & 0xff;
     mTerminalVelocity = -0x1e000;

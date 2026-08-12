@@ -2,7 +2,7 @@ extern unsigned char IsAreaShowing(int idx);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void _ZN11CommonModel6RenderEPK7Vector3(int self, int v);
 
-int _ZN4Door6RenderEv(int c)
+int _ZN8StarDoor6RenderEv(int c)
 {
     if (IsAreaShowing((signed char)*(short*)(c + 0x8c)) != 0 ||
         IsAreaShowing((signed char)*(short*)(c + 0x90)) != 0) {

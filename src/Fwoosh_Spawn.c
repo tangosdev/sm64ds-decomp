@@ -7,13 +7,13 @@
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV5Stump */
+/* resolved: VT0 = _ZTV6Fwoosh */
 int *Fwoosh_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(888);
     if (p) {
         _ZN5EnemyC2Ev(p);
-        p[0] = (int)_ZTV5Stump;
+        p[0] = (int)_ZTV6Fwoosh;
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0x110);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x144);
         _ZN9ModelAnimC1Ev((char *)p + 0x300);

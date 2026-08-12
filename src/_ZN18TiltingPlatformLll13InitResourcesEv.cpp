@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN12MetalNetLift13InitResourcesEv
+// @symbol _ZN18TiltingPlatformLll13InitResourcesEv
 /* recovered: shared header, real C++ method
  *
  * Cross-overlay tail-call veneer. #pragma long_calls forces mwccarm to emit
@@ -8,18 +8,18 @@
  * pointer into r1; this stays in r0.
  *
  * The real body is ov002's, shared with the other platform classes; all
- * MetalNetLift contributes is its own table. That is why the method touches
+ * TiltingPlatformLll contributes is its own table. That is why the method touches
  * no field of its own.
  */
 #pragma long_calls on
-#include "MetalNetLift.h"
+#include "TiltingPlatformLll.h"
 
 extern "C" {
 extern int func_ov002_020b6244(void *thisp, void *data);
 extern char data_ov064_0211adb0[];
 }
 
-int MetalNetLift::InitResources()
+int TiltingPlatformLll::InitResources()
 {
     return func_ov002_020b6244(this, data_ov064_0211adb0);
 }

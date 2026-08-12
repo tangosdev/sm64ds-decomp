@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN17RotatingClockHand8BehaviorEv
+// @symbol _ZN16SpinningPlatform8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RotatingClockHand.h"
+#include "SpinningPlatform.h"
 extern "C" {
 extern int DecIfAbove0_Short(char *p);
 extern int RandomIntInternal(char *p);
@@ -15,7 +15,7 @@ extern void _ZN8Platform19UpdateClsnPosAndRotEv(char *c);
 extern unsigned char data_0209f2c0[];
 extern int data_0209e650[];
 
-int RotatingClockHand::Behavior()
+int SpinningPlatform::Behavior()
 {
     unsigned char idx = data_0209f2c0[0];
     mPrevAngleX = data_ov035_02112b80[idx];

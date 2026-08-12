@@ -1,5 +1,5 @@
-#ifndef TINYCOVER_H
-#define TINYCOVER_H
+#ifndef TINYWATER_H
+#define TINYWATER_H
 
 #include "types.h"
 
@@ -18,7 +18,7 @@
 #include "Platform.h"
 #include "TextureTransformer.h"
 
-struct TinyCover : Platform {
+struct TinyWater : Platform {
     u8  pad_31e[0x2];
     TextureTransformer mTextureTransformer;/* 0x320 */
     s32 unk_334;                      /* 0x334 */
@@ -26,7 +26,7 @@ struct TinyCover : Platform {
     u8 unk_33c;                       /* 0x33c */
 
     /* --- vtable --- */
-    virtual ~TinyCover();
+    virtual ~TinyWater();
 
     int Behavior();
     int CleanupResources();
@@ -34,14 +34,14 @@ struct TinyCover : Platform {
     int Render();
 };
 
-typedef char TinyCover_size_must_be_0x340[sizeof(TinyCover) == 0x340 ? 1 : -1];
+typedef char TinyCover_size_must_be_0x340[sizeof(TinyWater) == 0x340 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct TinyCover {
+struct TinyWater {
     u8  pad_000[0x60];
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x2a];
@@ -56,7 +56,7 @@ struct TinyCover {
     u8  pad_125[0x1fb];
     /* TextureTransformer member, named by the class's own destructor calling
        TextureTransformer's D1 at +0x320 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9TinyCoverD1Ev.c] */
+       checks. Was a u8 marker. [_ZN9TinyWaterD1Ev.c] */
     TextureTransformer mTextureTransformer;            /* 0x320 */
     s32 unk_334;            /* 0x334 */
     u8  pad_338[0x4];
@@ -65,4 +65,4 @@ struct TinyCover {
 
 #endif /* __cplusplus */
 
-#endif /* TINYCOVER_H */
+#endif /* TINYWATER_H */

@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN4DoorD1Ev
+// @symbol _ZN8StarDoorD1Ev
 
 struct Actor {
     char pad[0xd0];
@@ -8,11 +8,11 @@ struct Actor {
 
 struct CommonModel { char pad[0x4]; ~CommonModel(); };
 
-struct Door : Actor {
+struct StarDoor : Actor {
     CommonModel m0;   /* 0xd4 */
-    virtual ~Door();
+    virtual ~StarDoor();
 };
 
-Door::~Door()
+StarDoor::~StarDoor()
 {
 }

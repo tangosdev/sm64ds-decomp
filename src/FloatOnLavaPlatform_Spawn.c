@@ -4,10 +4,10 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV19RotatingPlatformLll */
+/* resolved: VT = _ZTV19FloatOnLavaPlatform */
 int *FloatOnLavaPlatform_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(808);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV19RotatingPlatformLll; }
+    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV19FloatOnLavaPlatform; }
     return p;
 }

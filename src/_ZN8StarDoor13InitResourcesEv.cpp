@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN4Door13InitResourcesEv
+// @symbol _ZN8StarDoor13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "Door.h"
+#include "StarDoor.h"
 struct SharedFilePtr;
 struct BMD_File;
 
@@ -14,7 +14,7 @@ extern unsigned char data_0209f250[];
 extern int data_0209f394[];
 extern int data_ov100_02148974[];
 
-int Door::InitResources()
+int StarDoor::InitResources()
 {
     unsigned char *c = (unsigned char *)((void *)this);
     struct BMD_File *f;

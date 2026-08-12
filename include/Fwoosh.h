@@ -1,5 +1,5 @@
-#ifndef STUMP_H
-#define STUMP_H
+#ifndef FWOOSH_H
+#define FWOOSH_H
 
 #include "types.h"
 
@@ -19,7 +19,7 @@
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
-struct Stump : Enemy {
+struct Fwoosh : Enemy {
     MovingCylinderClsn mMovingCylinderClsn;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x144 */
     ModelAnim mModelAnim;             /* 0x300 */
@@ -27,7 +27,7 @@ struct Stump : Enemy {
     s32 mVariant;                     /* 0x374 */
 
     /* --- vtable --- */
-    virtual ~Stump();
+    virtual ~Fwoosh();
 
     int Behavior();
     int CleanupResources();
@@ -35,14 +35,14 @@ struct Stump : Enemy {
     int Render();
 };
 
-typedef char Stump_size_must_be_0x378[sizeof(Stump) == 0x378 ? 1 : -1];
+typedef char Stump_size_must_be_0x378[sizeof(Fwoosh) == 0x378 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct Stump {
+struct Fwoosh {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
     u8  pad_00c[0x94];
@@ -52,11 +52,11 @@ struct Stump {
     u8  pad_0b4[0x5c];
     /* MovingCylinderClsn member, named by the class's own destructor calling
        MovingCylinderClsn's D1 at +0x110 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN5StumpD1Ev.c] */
+       checks. Was a u8 marker. [_ZN6FwooshD1Ev.c] */
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x110 */
     /* WithMeshClsn member, named by the class's own destructor calling
        WithMeshClsn's D1 at +0x144 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN5StumpD1Ev.c] */
+       checks. Was a u8 marker. [_ZN6FwooshD1Ev.c] */
     WithMeshClsn mWithMeshClsn;            /* 0x144 */
     u8  mModelAnim;            /* 0x300 */
     u8  pad_301[0x5b];
@@ -67,4 +67,4 @@ struct Stump {
 
 #endif /* __cplusplus */
 
-#endif /* STUMP_H */
+#endif /* FWOOSH_H */

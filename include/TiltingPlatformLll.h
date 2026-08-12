@@ -3,7 +3,7 @@
  *
  *   sizeof 0x368       MetalNetLift_Spawn asks ActorBase::operator new for
  *                      872 bytes and constructs a Platform in them.
- *   Model     0x0d4    ~MetalNetLift calls _ZN5ModelD1Ev at +0xd4, and D1
+ *   Model     0x0d4    ~TiltingPlatformLll calls _ZN5ModelD1Ev at +0xd4, and D1
  *                      rather than D2, so it is the type and not a base.
  *   MovingMeshCollider 0x124   same, _ZN18MovingMeshColliderD1Ev at +0x124.
  *                      Its own size assert (0x1c8) closes it at 0x2ec.
@@ -18,21 +18,21 @@
  * generated headers -- the spawner proves a Platform is constructed in the
  * storage, but Platform's own layout is not recovered here.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef METALNETLIFT_H
-#define METALNETLIFT_H
+#ifndef TILTINGPLATFORMLLL_H
+#define TILTINGPLATFORMLLL_H
 #include "types.h"
 #include "Model.h"
 #include "MovingMeshCollider.h"
 #include "PathPtr.h"
 
-struct MetalNetLift {
+struct TiltingPlatformLll {
     u8  pad_000[0xd4];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. */
     Model mModel;            /* 0x0d4 */
     /* MovingMeshCollider member, named by the class's own destructor calling
        MovingMeshCollider's D1 at +0x124 -- a relocation the ROM build
-       checks. [_ZN12MetalNetLiftD1Ev.c] */
+       checks. [_ZN18TiltingPlatformLllD1Ev.c] */
     MovingMeshCollider mMovingMeshCollider;            /* 0x124 */
     u8  pad_2ec[0x74];
     /* PathPtr member, named by MetalNetLift_Spawn calling _ZN7PathPtrC1Ev at

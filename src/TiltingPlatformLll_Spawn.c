@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 extern int data_ov002_02109084[];
-extern int _ZTV12MetalNetLift[];
+extern int _ZTV18TiltingPlatformLll[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = data_ov002_02109084 */
 int *TiltingPlatformLll_Spawn(void)
@@ -13,7 +13,7 @@ int *TiltingPlatformLll_Spawn(void)
     if (p) {
         _ZN8PlatformC2Ev(p);
         p[0] = (int)data_ov002_02109084;
-        p[0] = (int)_ZTV12MetalNetLift;
+        p[0] = (int)_ZTV18TiltingPlatformLll;
     }
     return p;
 }

@@ -1,4 +1,4 @@
-// @symbol _ZN17RotatingClockHandD0Ev
+// @symbol _ZN16SpinningPlatformD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -9,7 +9,7 @@ extern int _ZTV8Platform[];
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV16daObjCtMecha11_c; VT1 = _ZTV8Platform */
 extern void *data_020a0eac;
-int *_ZN17RotatingClockHandD0Ev(int *t)
+int *_ZN16SpinningPlatformD0Ev(int *t)
 {
     t[0] = (int)_ZTV16daObjCtMecha11_c;
     _ZN11ShadowModelD1Ev((char *)t + 0x328);

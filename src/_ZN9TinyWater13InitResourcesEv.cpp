@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN9TinyCover13InitResourcesEv
+// @symbol _ZN9TinyWater13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "TinyCover.h"
+#include "TinyWater.h"
 #include "MeshColliderBase.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
@@ -17,7 +17,7 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern int _ZN5Event6GetBitEj(unsigned int n);
 }
 
-int TinyCover::InitResources()
+int TinyWater::InitResources()
 {
     void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov033_021124f0);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, 0x14);

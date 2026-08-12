@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN9Submarine8BehaviorEv
+// @symbol _ZN9Whirlpool8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Submarine.h"
+#include "Whirlpool.h"
 typedef int (*dummy)();
 class C;
 typedef int (C::*PMF)();
@@ -18,7 +18,7 @@ extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callba
 extern void _ZN9Animation7AdvanceEv(void* thiz);
 }
 
-int Submarine::Behavior()
+int Whirlpool::Behavior()
 {
     volatile int v[3];
     int x, y, z;

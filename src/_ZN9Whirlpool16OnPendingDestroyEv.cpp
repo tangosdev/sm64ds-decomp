@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN9Submarine16OnPendingDestroyEv
+// @symbol _ZN9Whirlpool16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
  * ActorBase slot 12. Empty in the ROM: four bytes, `bx lr`.
  */
-#include "Submarine.h"
+#include "Whirlpool.h"
 
-void Submarine::OnPendingDestroy()
+void Whirlpool::OnPendingDestroy()
 {
 }

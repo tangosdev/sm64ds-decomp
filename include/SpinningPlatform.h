@@ -1,13 +1,13 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RotatingClockHand: 6 matched functions, 13 evidenced fields.
+ * class SpinningPlatform: 6 matched functions, 13 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef ROTATINGCLOCKHAND_H
-#define ROTATINGCLOCKHAND_H
+#ifndef SPINNINGPLATFORM_H
+#define SPINNINGPLATFORM_H
 #include "types.h"
 #include "Model.h"
 
-struct RotatingClockHand {
+struct SpinningPlatform {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */

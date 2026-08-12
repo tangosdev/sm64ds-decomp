@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN9Submarine13InitResourcesEv
+// @symbol _ZN9Whirlpool13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Submarine.h"
+#include "Whirlpool.h"
 struct SharedFilePtr;
 struct BMD_File;
 struct BTA_File;
@@ -23,7 +23,7 @@ extern struct FilePtr4 data_ov026_02113f0c;
 extern struct FilePtr4 data_ov026_02113f04;
 extern struct BTA_File data_ov026_02112f40;
 
-int Submarine::InitResources()
+int Whirlpool::InitResources()
 {
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(*(struct SharedFilePtr *)&data_ov026_02113f0c);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x114, bmd, 1, -1);

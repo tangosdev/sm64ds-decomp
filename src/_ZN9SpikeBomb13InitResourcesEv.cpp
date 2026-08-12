@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN17BowserSkyPlatform13InitResourcesEv
+// @symbol _ZN9SpikeBomb13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "BowserSkyPlatform.h"
+#include "SpikeBomb.h"
 
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
@@ -14,7 +14,7 @@ extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern int Vec3_HorzLen(const Vector3 *v);
 }
 
-int BowserSkyPlatform::InitResources()
+int SpikeBomb::InitResources()
 {
     Vector3 v;
     Vector3 z;

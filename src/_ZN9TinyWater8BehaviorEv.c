@@ -7,7 +7,7 @@ extern void _ZN9Animation7AdvanceEv();
 extern void _ZN8Platform21UpdateModelPosAndRotYEv();
 extern void _ZN8Platform19UpdateClsnPosAndRotEv();
 
-int _ZN9TinyCover8BehaviorEv(int *t)
+int _ZN9TinyWater8BehaviorEv(int *t)
 {
     if (_ZN5Event6GetBitEj(0xe)) {
         if (t[0x18] <= t[0xcd]) {

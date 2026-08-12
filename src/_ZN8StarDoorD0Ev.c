@@ -1,11 +1,11 @@
-// @symbol _ZN4DoorD0Ev
+// @symbol _ZN8StarDoorD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV12daStarGate_c */
 extern void *data_020a0eac;
-int *_ZN4DoorD0Ev(int *t)
+int *_ZN8StarDoorD0Ev(int *t)
 {
     t[0] = (int)_ZTV12daStarGate_c;
     _ZN11CommonModelD1Ev((char *)t + 0xd4);

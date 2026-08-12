@@ -32,7 +32,7 @@ extern SharedFilePtr data_ov065_0211d9d4;
 extern SharedFilePtr data_ov065_0211d9cc;
 extern CLPS_Block func_02112118;
 
-extern "C" int _ZN14TtcMovingCubeA13InitResourcesEv(char *c)
+extern "C" int _ZN14TTC_MovingBeam13InitResourcesEv(char *c)
 {
     BMD_File *bmd;
     KCL_File *kcl;

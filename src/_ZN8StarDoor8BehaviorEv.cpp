@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN4Door8BehaviorEv
+// @symbol _ZN8StarDoor8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "Door.h"
+#include "StarDoor.h"
 struct Base {};
 typedef void (Base::*PMF)(int);
 struct CallbackNode {
@@ -22,7 +22,7 @@ extern int func_ov100_02145f00(char *c);
    Verified against the ROM: the single BL at 0x021460e4 is 0xebffff85,
    which targets 0x02145f00. */
 
-int Door::Behavior()
+int StarDoor::Behavior()
 {
     int res = func_ov100_02145f00(((char *)this));
     CallbackNode *node = *(CallbackNode**)((char*)&unk_110);

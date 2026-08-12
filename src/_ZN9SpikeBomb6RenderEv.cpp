@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN17BowserSkyPlatform6RenderEv
+// @symbol _ZN9SpikeBomb6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "BowserSkyPlatform.h"
+#include "SpikeBomb.h"
 struct Sub {
     virtual void v0();
     virtual void v1();
@@ -11,7 +11,7 @@ struct Sub {
     virtual void m(int);
 };
 
-int BowserSkyPlatform::Render()
+int SpikeBomb::Render()
 {
     if (unk_170 != 0) return 1;
     if (unk_1ae < 8) return 1;

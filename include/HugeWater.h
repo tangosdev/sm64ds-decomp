@@ -1,5 +1,5 @@
-#ifndef HUGECOVER_H
-#define HUGECOVER_H
+#ifndef HUGEWATER_H
+#define HUGEWATER_H
 
 #include "types.h"
 
@@ -18,12 +18,12 @@
 #include "Platform.h"
 #include "TextureTransformer.h"
 
-struct HugeCover : Platform {
+struct HugeWater : Platform {
     u8  pad_31e[0x2];
     TextureTransformer mTextureTransformer;/* 0x320 */
 
     /* --- vtable --- */
-    virtual ~HugeCover();
+    virtual ~HugeWater();
 
     int Behavior();
     int CleanupResources();
@@ -31,14 +31,14 @@ struct HugeCover : Platform {
     int Render();
 };
 
-typedef char HugeCover_size_must_be_0x334[sizeof(HugeCover) == 0x334 ? 1 : -1];
+typedef char HugeCover_size_must_be_0x334[sizeof(HugeWater) == 0x334 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct HugeCover {
+struct HugeWater {
     u8  pad_000[0xd4];
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. The marker's pad stopped
@@ -54,4 +54,4 @@ struct HugeCover {
 
 #endif /* __cplusplus */
 
-#endif /* HUGECOVER_H */
+#endif /* HUGEWATER_H */

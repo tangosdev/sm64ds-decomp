@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN19RotatingPlatformLll8BehaviorEv
+// @symbol _ZN19FloatOnLavaPlatform8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RotatingPlatformLll.h"
+#include "FloatOnLavaPlatform.h"
 extern void func_020393a4(int* p, int v);
 
-int RotatingPlatformLll::Behavior()
+int FloatOnLavaPlatform::Behavior()
 {
     func_020393a4((int*)((char*)&(*(u8 *)&mMeshCollider)), 0x150000);
     if (unk_324) {

@@ -1,7 +1,7 @@
 /* Seeded from matched-function evidence by tools/gen_header.py, then given its
  * real base and real member types by hand.
  *
- * class BowserSkyPlatform: 5 matched functions.
+ * class SpikeBomb: 5 matched functions.
  *
  * Two sub-objects, each checked twice -- once by that class's own size assertion,
  * once by closing exactly on the next named field:
@@ -19,8 +19,8 @@
  * asks ActorBase::operator new for 812 bytes.
  *
  * Field NAMES for the unk_ entries are placeholders. */
-#ifndef BOWSERSKYPLATFORM_H
-#define BOWSERSKYPLATFORM_H
+#ifndef SPIKEBOMB_H
+#define SPIKEBOMB_H
 #include "types.h"
 #include "Model.h"
 #include "MovingCylinderClsnWithPos.h"
@@ -29,7 +29,7 @@
 
 #include "Actor.h"
 
-struct BowserSkyPlatform : Actor {
+struct SpikeBomb : Actor {
     u8  pad_0d0[0x4];
     /* Named by the class's own destructor calling Model's D1 at +0x0d4 -- a
        relocation the ROM build checks. */
@@ -49,7 +49,7 @@ struct BowserSkyPlatform : Actor {
     u8  pad_1af[0x17d];
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    virtual ~BowserSkyPlatform();       /* slots 16 (D1), 17 (D0) */
+    virtual ~SpikeBomb();       /* slots 16 (D1), 17 (D0) */
 
     /* --- non-virtual --- */
     int CleanupResources();
@@ -59,11 +59,11 @@ struct BowserSkyPlatform : Actor {
 };
 
 typedef char BowserSkyPlatform_size_must_be_0x32c[
-    sizeof(BowserSkyPlatform) == 0x32c ? 1 : -1];
+    sizeof(SpikeBomb) == 0x32c ? 1 : -1];
 
 #else
 
-struct BowserSkyPlatform {
+struct SpikeBomb {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
@@ -75,7 +75,7 @@ struct BowserSkyPlatform {
     u8  pad_08c[0x48];
     /* Model member, named by the class's own destructor calling
        Model's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN17BowserSkyPlatformD0Ev.c] */
+       checks. Was a u8 marker. [_ZN9SpikeBombD0Ev.c] */
     Model mModel;            /* 0x0d4 */
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;       /* 0x124 */
     u8  pad_164[0xc];

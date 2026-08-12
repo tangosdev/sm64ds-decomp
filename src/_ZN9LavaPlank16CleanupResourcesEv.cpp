@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN19FloatingFloorLllBig16CleanupResourcesEv
+// @symbol _ZN9LavaPlank16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FloatingFloorLllBig.h"
+#include "LavaPlank.h"
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
 extern int FloatingFloorLllBig_ClsnFile[];
 extern int FloatingFloorLllBig_ModelFile[];
 
-int FloatingFloorLllBig::CleanupResources()
+int LavaPlank::CleanupResources()
 {
     if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
         ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();

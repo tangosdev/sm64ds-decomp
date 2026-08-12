@@ -1,3 +1,3 @@
-void _ZN5Stump16OnPendingDestroyEv(void)
+void _ZN6Fwoosh16OnPendingDestroyEv(void)
 {
 }

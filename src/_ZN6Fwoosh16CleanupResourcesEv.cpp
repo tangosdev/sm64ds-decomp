@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN5Stump16CleanupResourcesEv
+// @symbol _ZN6Fwoosh16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "Stump.h"
+#include "Fwoosh.h"
 extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
 }
@@ -12,7 +12,7 @@ extern struct SharedFilePtr data_ov091_02135674;
 extern struct SharedFilePtr data_ov091_0213567c;
 extern struct SharedFilePtr data_ov091_02135684;
 
-int Stump::CleanupResources()
+int Fwoosh::CleanupResources()
 {
     if (mVariant == 1) return 1;
     _ZN13SharedFilePtr7ReleaseEv(&data_ov002_0210da40);

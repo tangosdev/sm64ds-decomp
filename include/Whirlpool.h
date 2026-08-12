@@ -1,9 +1,9 @@
-#ifndef SUBMARINE_H
-#define SUBMARINE_H
+#ifndef WHIRLPOOL_H
+#define WHIRLPOOL_H
 
 #include "types.h"
 
-/* Derives from Enemy, on the evidence of its own destructor: `_ZN9SubmarineD1Ev`
+/* Derives from Enemy, on the evidence of its own destructor: `_ZN9WhirlpoolD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
  * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
@@ -32,7 +32,7 @@
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
 
-struct Submarine : Enemy {
+struct Whirlpool : Enemy {
     s32                          unk_110;               /* 0x110 */
     ModelAnim                    mModelAnim;            /* 0x114 */
     TextureTransformer           mTextureTransformer;   /* 0x178 */
@@ -45,7 +45,7 @@ struct Submarine : Enemy {
     u8  pad_1b9[0x3];
 
     /* --- vtable --- */
-    virtual ~Submarine();
+    virtual ~Whirlpool();
 
     int Behavior();
     int InitResources();
@@ -54,6 +54,6 @@ struct Submarine : Enemy {
     void OnPendingDestroy();
 };
 
-typedef char Submarine_size_must_be_0x1bc[sizeof(Submarine) == 0x1bc ? 1 : -1];
+typedef char Submarine_size_must_be_0x1bc[sizeof(Whirlpool) == 0x1bc ? 1 : -1];
 
-#endif /* SUBMARINE_H */
+#endif /* WHIRLPOOL_H */

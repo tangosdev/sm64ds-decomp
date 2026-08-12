@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN19RotatingPlatformLll13InitResourcesEv
+// @symbol _ZN19FloatOnLavaPlatform13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RotatingPlatformLll.h"
+#include "FloatOnLavaPlatform.h"
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
@@ -19,7 +19,7 @@ extern "C" {
 extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 }
 
-int RotatingPlatformLll::InitResources()
+int FloatOnLavaPlatform::InitResources()
 {
   void* mdl;
   void* kcl;

@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN17BowserSkyPlatformD1Ev
+// @symbol _ZN9SpikeBombD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * The stand-in structs this file used to carry (`struct Actor { char pad[0xd0]; }`,
@@ -12,8 +12,8 @@
  * The ROM destroys 0x124 then 0x0d4 -- reverse declaration order -- then chains to
  * Actor. That order is the evidence the declaration order is right.
  */
-#include "BowserSkyPlatform.h"
+#include "SpikeBomb.h"
 
-BowserSkyPlatform::~BowserSkyPlatform()
+SpikeBomb::~SpikeBomb()
 {
 }

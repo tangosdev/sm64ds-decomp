@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN9HugeCover13InitResourcesEv
+// @symbol _ZN9HugeWater13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "HugeCover.h"
+#include "HugeWater.h"
 #include "MeshColliderBase.h"
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct BTA_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block; struct Actor;
-/* Model and ModelBase are the real classes now, through HugeCover.h. */
+/* Model and ModelBase are the real classes now, through HugeWater.h. */
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);
@@ -24,7 +24,7 @@ extern BTA_File data_ov032_02112f64;
 extern SharedFilePtr data_ov032_02113af4;
 extern CLPS_Block data_ov032_02112fb8;
 
-int HugeCover::InitResources()
+int HugeWater::InitResources()
 {
     char* c = ((char*)this);
     {

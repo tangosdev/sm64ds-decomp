@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN14TtcMovingCubeAD1Ev
+// @symbol _ZN14TTC_MovingBeamD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Two vtable stores and three destructor calls, every one a consequence of
- * `struct TtcMovingCubeA : Platform`: its own vptr, then Platform's -- inlined,
+ * `struct TTC_MovingBeam : Platform`: its own vptr, then Platform's -- inlined,
  * because Platform's destructor is defined in its class body -- then
  * Platform's Model and MovingMeshCollider, then Actor. This class adds no
  * member with a destructor of its own.
  */
-#include "TtcMovingCubeA.h"
+#include "TTC_MovingBeam.h"
 
-TtcMovingCubeA::~TtcMovingCubeA()
+TTC_MovingBeam::~TTC_MovingBeam()
 {
 }

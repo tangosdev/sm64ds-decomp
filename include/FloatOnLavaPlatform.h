@@ -1,5 +1,5 @@
-#ifndef ROTATINGPLATFORMLLL_H
-#define ROTATINGPLATFORMLLL_H
+#ifndef FLOATONLAVAPLATFORM_H
+#define FLOATONLAVAPLATFORM_H
 
 #include "types.h"
 
@@ -17,13 +17,13 @@
 
 #include "Platform.h"
 
-struct RotatingPlatformLll : Platform {
+struct FloatOnLavaPlatform : Platform {
     u8  pad_31e[0x2];
     s32 unk_320;                      /* 0x320 */
     u8 unk_324;                       /* 0x324 */
 
     /* --- vtable --- */
-    virtual ~RotatingPlatformLll();
+    virtual ~FloatOnLavaPlatform();
 
     int Behavior();
     int CleanupResources();
@@ -31,14 +31,14 @@ struct RotatingPlatformLll : Platform {
     int Render();
 };
 
-typedef char RotatingPlatformLll_size_must_be_0x328[sizeof(RotatingPlatformLll) == 0x328 ? 1 : -1];
+typedef char RotatingPlatformLll_size_must_be_0x328[sizeof(FloatOnLavaPlatform) == 0x328 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct RotatingPlatformLll {
+struct FloatOnLavaPlatform {
     u8  pad_000[0x60];
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x2a];
@@ -55,4 +55,4 @@ struct RotatingPlatformLll {
 
 #endif /* __cplusplus */
 
-#endif /* ROTATINGPLATFORMLLL_H */
+#endif /* FLOATONLAVAPLATFORM_H */

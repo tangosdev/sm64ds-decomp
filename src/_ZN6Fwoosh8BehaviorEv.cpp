@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN5Stump8BehaviorEv
+// @symbol _ZN6Fwoosh8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Stump.h"
+#include "Fwoosh.h"
 struct WithMeshClsn;
 struct CylinderClsn;
 struct Enemy;
@@ -21,7 +21,7 @@ extern void _ZN9Animation7AdvanceEv(void *thiz);
 }
 
 
-int Stump::Behavior()
+int Fwoosh::Behavior()
 {
     char *c = (char *)((Enemy *)this);
     if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((Enemy *)this), (WithMeshClsn *)(c + 0x144)) != 0) {

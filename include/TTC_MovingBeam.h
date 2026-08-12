@@ -1,5 +1,5 @@
-#ifndef TTCMOVINGCUBEA_H
-#define TTCMOVINGCUBEA_H
+#ifndef TTC_MOVINGBEAM_H
+#define TTC_MOVINGBEAM_H
 
 #include "types.h"
 
@@ -18,7 +18,7 @@
 #include "Platform.h"
 #include "ShadowModel.h"
 
-struct TtcMovingCubeA : Platform {
+struct TTC_MovingBeam : Platform {
     u8  pad_31e[0x2];
     s32 unk_320;                      /* 0x320 */
     s32 unk_324;                      /* 0x324 */
@@ -28,21 +28,21 @@ struct TtcMovingCubeA : Platform {
     ShadowModel mShadowModel;         /* 0x334 */
 
     /* --- vtable --- */
-    virtual ~TtcMovingCubeA();
+    virtual ~TTC_MovingBeam();
 
     int CleanupResources();
     int InitResources();
     int Render();
 };
 
-typedef char TtcMovingCubeA_size_must_be_0x35c[sizeof(TtcMovingCubeA) == 0x35c ? 1 : -1];
+typedef char TtcMovingCubeA_size_must_be_0x35c[sizeof(TTC_MovingBeam) == 0x35c ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct TtcMovingCubeA {
+struct TTC_MovingBeam {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
@@ -61,7 +61,7 @@ struct TtcMovingCubeA {
     Model mModel;            /* 0x0d4 */
     /* MovingMeshCollider member, named by the class's own destructor calling
        MovingMeshCollider's D1 at +0x124 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN14TtcMovingCubeAD1Ev.c] */
+       checks. Was a u8 marker. [_ZN14TTC_MovingBeamD1Ev.c] */
     MovingMeshCollider mMeshCollider;            /* 0x124 */
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x33];
@@ -75,4 +75,4 @@ struct TtcMovingCubeA {
 
 #endif /* __cplusplus */
 
-#endif /* TTCMOVINGCUBEA_H */
+#endif /* TTC_MOVINGBEAM_H */

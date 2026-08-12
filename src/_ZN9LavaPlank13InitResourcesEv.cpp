@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN19FloatingFloorLllBig13InitResourcesEv
+// @symbol _ZN9LavaPlank13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FloatingFloorLllBig.h"
+#include "LavaPlank.h"
 typedef short s16;
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
@@ -16,7 +16,7 @@ extern int func_020393d4(void*, void*);
 extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 }
 
-int FloatingFloorLllBig::InitResources()
+int LavaPlank::InitResources()
 {
   void* mdl;
   void* kcl;

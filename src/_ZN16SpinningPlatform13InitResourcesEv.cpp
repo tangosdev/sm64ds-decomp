@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN17RotatingClockHand13InitResourcesEv
+// @symbol _ZN16SpinningPlatform13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RotatingClockHand.h"
+#include "SpinningPlatform.h"
 struct BMD_File; struct KCL_File; struct Actor; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr;
 /* ModelBase is the real class now, through this actor's header. */
@@ -26,7 +26,7 @@ extern "C" CLPS_Block data_ov035_02112238;
 
 struct V3 { int x, y, z; };
 
-int RotatingClockHand::InitResources()
+int SpinningPlatform::InitResources()
 {
     void *mf = ModelLoadFile(&data_ov035_02112cb0);
     ((ModelBase*)((char *)&mModel))->SetFile((BMD_File*)mf, 1, -1);

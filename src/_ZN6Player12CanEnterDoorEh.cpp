@@ -7,7 +7,7 @@
 // rank to this=r4/door=r5, while virtual dispatch keeps the natural
 // reverse-arg homing (door=r4, this=r5) the ROM has. See
 // notes/mwccarm-codegen.md 6bc.
-struct Door {
+struct StarDoor {
     virtual int v00(); virtual int v01(); virtual int v02(); virtual int v03();
     virtual int v04(); virtual int v05(); virtual int v06(); virtual int v07();
     virtual int v08(); virtual int v09(); virtual int v10(); virtual int v11();
@@ -36,9 +36,9 @@ int Player::CanEnterDoor(unsigned char door)
       IsState(*(State *)data_ov002_02110154) ||
       IsState(*(State *)data_ov002_0211022c) ||
       IsState(*(State *)data_ov002_0211043c)) {
-    if (*(struct Door **)&mObjInMouth != 0) {
-      if ((*(struct Door **)&mObjInMouth)->GetType() == 6 ||
-          (*(struct Door **)&mObjInMouth)->GetType() == 1) {
+    if (*(struct StarDoor **)&mObjInMouth != 0) {
+      if ((*(struct StarDoor **)&mObjInMouth)->GetType() == 6 ||
+          (*(struct StarDoor **)&mObjInMouth)->GetType() == 1) {
         _ZN6Player11ChangeStateERNS_5StateE(this, data_ov002_0211004c);
       }
       return 0;
