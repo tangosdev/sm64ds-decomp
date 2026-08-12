@@ -5246,10 +5246,10 @@ src/func_ov006_0210a6e4.cpp:
 src/func_ov006_0210a708.c:
     .text start:0x0210a708 end:0x0210a8c0
 
-src/func_ov006_0210a8c0.c:
+src/_ZN12dScMgSlot1_cD1Ev.cpp:
     .text start:0x0210a8c0 end:0x0210a900
 
-src/func_ov006_0210a900.cpp:
+src/_ZN12dScMgSlot1_cD0Ev.cpp:
     .text start:0x0210a900 end:0x0210a954
 
 src/func_ov006_0210a954.cpp:
@@ -5373,11 +5373,11 @@ src/func_ov006_0210c478.c:
     complete
     .text start:0x0210c478 end:0x0210c4b8
 
-src/func_ov006_0210c4b8.c:
+src/_ZN12dScMgSlot1_c19OnHitFromUnderneathER5Actor.cpp:
     complete
     .text start:0x0210c4b8 end:0x0210c4dc
 
-src/func_ov006_0210c4dc.c:
+src/_ZN12dScMgSlot1_c15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x0210c4dc end:0x0210c500
 
@@ -5393,11 +5393,11 @@ src/func_ov006_0210c674.c:
     complete
     .text start:0x0210c674 end:0x0210c6c0
 
-src/_ZN3OAM7SECONDSE.cpp:
+src/_ZN12dScMgSlot1_c6RenderEv.cpp:
     complete
     .text start:0x0210c6c0 end:0x0210c9e0
 
-src/func_ov006_0210d1fc.cpp:
+src/_ZN12dScMgSlot1_c13InitResourcesEv.cpp:
     .text start:0x0210d1fc end:0x0210d6b8
 
 src/func_ov006_0210d6b8.cpp:

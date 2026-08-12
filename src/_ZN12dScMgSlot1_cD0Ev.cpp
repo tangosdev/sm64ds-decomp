@@ -1,18 +1,19 @@
 //cpp
-// @symbol func_ov006_0210a900
-// recovered name: dScMgSlot1_c_OnYoshiTryEat
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgSlot1_c::OnYoshiTryEat - recovered from vtable slot identity */
-struct Heap;
-namespace Memory { void Deallocate(void* p, Heap* h); }
-extern Heap* data_020a0eac;
-extern "C" void* func_ov006_0210a900(char* c) {
-    *(void**)c = &data_ov006_0213eb40;
-    *(void**)(c + 0x4660) = &data_ov006_0213e5d4;
-    *(void**)(c + 0x4660) = (void*)&func_020ad494;
-    _ZN11dScMgBase_cD2Ev(c);
-    Memory::Deallocate(c, data_020a0eac);
-    return c;
+// @symbol _ZN12dScMgSlot1_cD0Ev
+/* Real out-of-line definition, identical body to
+   src/_ZN12dScMgSlot1_cD1Ev.cpp -- see that file's note and
+   include/dScMgSlot1_c.h's own note. dScMgBase_c's own operator delete
+   (its immediate base) covers the Memory::Deallocate call the
+   pre-migration source made explicitly; no per-class copy needed, same
+   precedent as every other dScMgBase_c leaf's D0. The tree-wide
+   OnYoshiTryEat mislabel on this class landed HERE (its source comment
+   said "recovered name: dScMgSlot1_c_OnYoshiTryEat") rather than on the
+   real OnYoshiTryEat-shaped slot 18 helper -- this body is the textbook D0
+   shape (vtable writes, base D2, Deallocate), not gameplay logic. */
+#include "dScMgSlot1_c.h"
+
+dScMgSlot1_c::~dScMgSlot1_c()
+{
+    *(void **)((char *)this + 0x4660) = &data_ov006_0213e5d4;
+    *(void **)((char *)this + 0x4660) = (void *)&func_020ad494;
 }

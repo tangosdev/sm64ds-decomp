@@ -1,11 +1,21 @@
-// @symbol func_ov006_0210c4b8
-// recovered name: dScMgSlot1_c_OnHitFromUnderneath
-/* recovered: renamed to Class_Method, declarations from a shared header */
+//cpp
+// @symbol _ZN12dScMgSlot1_c19OnHitFromUnderneathER5Actor
+/* dScMgSlot1_c::OnHitFromUnderneath -- slot 28, signature copied from
+   include/Actor.h's own slot 28 (see include/dScMgSlot1_c.h's file banner
+   for why that's the right signature even though nothing in this
+   hierarchy branch declares it yet). Calls straight into dScMgBase_c's own
+   OnHitFromUnderneath (func_ov004_020af04c, itself unmigrated). The
+   `other` parameter is unused -- same as Actor::OnHitFromUnderneath's own
+   trivial stub (src/_ZN5Actor19OnHitFromUnderneathERS_.cpp): the ROM sets
+   no r0 here either, so the declared `int` return and the pre-migration
+   `void` return compile to the same bytes. */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgSlot1_c::OnHitFromUnderneath - recovered from vtable slot identity */
-extern void func_ov004_020af04c(void* self);
-void func_ov006_0210c4b8(void* c) {
-    func_ov004_020af04c(c);
+#include "dScMgSlot1_c.h"
+
+extern "C" void func_ov004_020af04c(void* self);
+
+int dScMgSlot1_c::OnHitFromUnderneath(Actor &other)
+{
+    func_ov004_020af04c(this);
     SetSubBg1Offset(0x100, 0);
 }

@@ -1,4 +1,15 @@
 //cpp
+// @symbol _ZN12dScMgSlot1_c6RenderEv
+/* dScMgSlot1_c::Render -- the recovered symbol at this address
+   (_ZN3OAM7SECONDSE, i.e. "OAM::SECONDS") was a name-recovery-heuristic
+   artifact, not a real name; this function genuinely is Render (see
+   include/dScMgSlot1_c.h's file banner). `((UnkVtbl*)(this+0x4660))
+   ->Virtual4()` is a real virtual call through the embedded betIcon_c
+   subobject at 0x4660 -- see the header banner for what that subobject is.
+   `this+0xa8` is inherited from further up the hierarchy than dScMgBase_c,
+   so it stays a raw offset on an unsigned char* cast. */
+#include "dScMgSlot1_c.h"
+
 struct UnkVtbl {
     virtual void Virtual0();
     virtual void Virtual4();
@@ -17,8 +28,11 @@ extern void func_ov004_020af868(void* a0, int a1, int a2, int a3, int a4, void* 
 extern void func_ov006_0210c234(unsigned char* o);
 
 #pragma opt_strength_reduction off
-int _ZN3OAM7SECONDSE(unsigned char* t)
+}
+
+s32 dScMgSlot1_c::Render()
 {
+    unsigned char* t = (unsigned char*)this;
     int i, pos, x, j;
     unsigned char* cur = t;
     unsigned char b;
@@ -66,5 +80,4 @@ int _ZN3OAM7SECONDSE(unsigned char* t)
     func_ov006_0210c234(t + 0x4684);
     func_ov006_0210c234(t + 0x4690);
     return 1;
-}
 }

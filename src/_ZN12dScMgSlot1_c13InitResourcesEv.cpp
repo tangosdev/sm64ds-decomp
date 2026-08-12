@@ -1,11 +1,15 @@
 //cpp
+// @symbol _ZN12dScMgSlot1_c13InitResourcesEv
+/* dScMgSlot1_c::InitResources -- `this+8` is inherited from further up the
+   hierarchy than dScMgBase_c (see include/dScMgSlot1_c.h's file banner), so
+   it stays a raw offset on a char* cast rather than a named field. Slot 18
+   stays an unmigrated raw extern "C" helper (see the class header), so
+   calling it here still goes through the same local vtable-shim struct the
+   pre-migration source already used, rather than a named method. */
 #include "types.h"
-// @symbol func_ov006_0210d1fc
-// recovered name: dScMgSlot1_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgSlot1_c::InitResources - recovered from vtable slot identity */
+#include "dScMgSlot1_c.h"
+
 extern "C" {
 
 extern u32 LoadCompressedFileAt(int fileID, void *target);
@@ -55,9 +59,9 @@ struct Obj {
     virtual void m48(int a);   /* vtable offset 0x48 */
 };
 
-extern "C" int func_ov006_0210d1fc(void *arg0)
+s32 dScMgSlot1_c::InitResources()
 {
-    char *c = (char *)arg0;
+    char *c = (char *)this;
     volatile unsigned short fill;
     int i, j;
 

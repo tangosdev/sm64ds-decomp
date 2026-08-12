@@ -1366,8 +1366,8 @@ func_ov006_0210a664 kind:function(arm,size=0x34) addr:0x0210a664
 func_ov006_0210a698 kind:function(arm,size=0x4c) addr:0x0210a698
 func_ov006_0210a6e4 kind:function(arm,size=0x24) addr:0x0210a6e4
 func_ov006_0210a708 kind:function(arm,size=0x1b8) addr:0x0210a708
-func_ov006_0210a8c0 kind:function(arm,size=0x40) addr:0x0210a8c0
-func_ov006_0210a900 kind:function(arm,size=0x54) addr:0x0210a900
+_ZN12dScMgSlot1_cD1Ev kind:function(arm,size=0x40) addr:0x0210a8c0
+_ZN12dScMgSlot1_cD0Ev kind:function(arm,size=0x54) addr:0x0210a900
 func_ov006_0210a954 kind:function(arm,size=0x54) addr:0x0210a954
 func_ov006_0210a9a8 kind:function(arm,size=0x68) addr:0x0210a9a8
 func_ov006_0210aa10 kind:function(arm,size=0x2c) addr:0x0210aa10
@@ -1399,14 +1399,14 @@ func_ov006_0210c354 kind:function(arm,size=0x20) addr:0x0210c354
 func_ov006_0210c374 kind:function(arm,size=0x9c) addr:0x0210c374
 func_ov006_0210c410 kind:function(arm,size=0x68) addr:0x0210c410
 func_ov006_0210c478 kind:function(arm,size=0x40) addr:0x0210c478
-func_ov006_0210c4b8 kind:function(arm,size=0x24) addr:0x0210c4b8
-func_ov006_0210c4dc kind:function(arm,size=0x24) addr:0x0210c4dc
+_ZN12dScMgSlot1_c19OnHitFromUnderneathER5Actor kind:function(arm,size=0x24) addr:0x0210c4b8
+_ZN12dScMgSlot1_c15OnHitByMegaCharER6Player kind:function(arm,size=0x24) addr:0x0210c4dc
 func_ov006_0210c500 kind:function(arm,size=0x138) addr:0x0210c500
 func_ov006_0210c638 kind:function(arm,size=0x3c) addr:0x0210c638
 func_ov006_0210c674 kind:function(arm,size=0x4c) addr:0x0210c674
-_ZN3OAM7SECONDSE kind:function(arm,size=0x320) addr:0x0210c6c0
+_ZN12dScMgSlot1_c6RenderEv kind:function(arm,size=0x320) addr:0x0210c6c0
 func_ov006_0210c9e0 kind:function(arm,size=0x81c) addr:0x0210c9e0
-func_ov006_0210d1fc kind:function(arm,size=0x4bc) addr:0x0210d1fc
+_ZN12dScMgSlot1_c13InitResourcesEv kind:function(arm,size=0x4bc) addr:0x0210d1fc
 func_ov006_0210d6b8 kind:function(arm,size=0x88) addr:0x0210d6b8
 func_ov006_0210d740 kind:function(arm,size=0xa0) addr:0x0210d740
 func_ov006_0210d7e0 kind:function(arm,size=0xb4) addr:0x0210d7e0
@@ -4093,6 +4093,7 @@ data_ov006_0213ea20 kind:data(any) addr:0x0213ea20
 data_ov006_0213ea60 kind:data(any) addr:0x0213ea60
 data_ov006_0213eaa8 kind:data(any) addr:0x0213eaa8
 data_ov006_0213eb40 kind:data(any) addr:0x0213eb40
+_ZTV12dScMgSlot1_c kind:data(any) addr:0x0213eb40
 MgBingoBallSlotsShot_SpawnInfo kind:data(any) addr:0x0213ebd0 ambiguous
 _ZTI21cMgSmartball_object_c kind:data(any) addr:0x0213ebd8
 _ZTI21cMgSmartball_pakkun_c kind:data(any) addr:0x0213ebe0
