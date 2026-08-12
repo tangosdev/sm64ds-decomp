@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
-// @symbol _ZN19RotatingPlatformWdw8BehaviorEv
+// @symbol _ZN9WDW_Water8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RotatingPlatformWdw.h"
+#include "WDW_Water.h"
 #include "MeshColliderBase.h"
 extern "C" {
 extern int IsAreaShowing(int idx);
@@ -14,7 +14,7 @@ extern void _ZN9Animation7AdvanceEv(void *a);
 extern s16 data_02082214[];
 extern int data_0209f32c;
 
-int RotatingPlatformWdw::Behavior()
+int WDW_Water::Behavior()
 {
     int t;
     s16 *q;
