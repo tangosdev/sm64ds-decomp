@@ -19,13 +19,13 @@ _ZN18RotatingPlatformRr6RenderEv kind:function(arm,size=0x24) addr:0x0211169c
 _ZN18RotatingPlatformRr8BehaviorEv kind:function(arm,size=0x194) addr:0x021116c0
 _ZN18RotatingPlatformRr13InitResourcesEv kind:function(arm,size=0xb0) addr:0x02111854
 ShipWing_Spawn kind:function(arm,size=0x38) addr:0x02111904
-_ZN8ShipWingD1Ev kind:function(arm,size=0x4c) addr:0x0211193c
-_ZN8ShipWingD0Ev kind:function(arm,size=0x60) addr:0x02111988
-_ZN8ShipWing16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021119e8
-_ZN8ShipWing16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111a2c
-_ZN8ShipWing6RenderEv kind:function(arm,size=0x34) addr:0x02111a30
-_ZN8ShipWing8BehaviorEv kind:function(arm,size=0x154) addr:0x02111a64
-_ZN8ShipWing13InitResourcesEv kind:function(arm,size=0xec) addr:0x02111bb8
+_ZN10DonutBlockD1Ev kind:function(arm,size=0x4c) addr:0x0211193c
+_ZN10DonutBlockD0Ev kind:function(arm,size=0x60) addr:0x02111988
+_ZN10DonutBlock16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021119e8
+_ZN10DonutBlock16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111a2c
+_ZN10DonutBlock6RenderEv kind:function(arm,size=0x34) addr:0x02111a30
+_ZN10DonutBlock8BehaviorEv kind:function(arm,size=0x154) addr:0x02111a64
+_ZN10DonutBlock13InitResourcesEv kind:function(arm,size=0xec) addr:0x02111bb8
 func_ov036_02111ca4 kind:function(arm,size=0x20) addr:0x02111ca4
 func_ov036_02111cc4 kind:function(arm,size=0x14) addr:0x02111cc4
 DonutBlock_Spawn kind:function(arm,size=0x3c) addr:0x02111cd8
@@ -184,7 +184,7 @@ data_ov036_02113ccc kind:data(any) addr:0x02113ccc ambiguous
 DonutBlock_SpawnInfo kind:data(any) addr:0x02113cd4 ambiguous
 data_ov036_02113cec kind:data(any) addr:0x02113cec ambiguous
 data_ov036_02113cf4 kind:data(any) addr:0x02113cf4 ambiguous
-_ZTV8ShipWing kind:data(any) addr:0x02113cf8
+_ZTV10DonutBlock kind:data(any) addr:0x02113cf8
 _ZTV16daObjRc_Tikuwa_c kind:data(any) addr:0x02113cf8
 data_ov036_02113d30 kind:data(any) addr:0x02113d30 ambiguous
 data_ov036_02113d78 kind:data(any) addr:0x02113d78
