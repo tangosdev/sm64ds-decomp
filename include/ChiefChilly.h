@@ -63,6 +63,8 @@ struct ChiefChilly : Enemy {
 
     virtual ~ChiefChilly();
 
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     virtual s32 InitResources();
     virtual s32 CleanupResources();
     virtual s32 Behavior();

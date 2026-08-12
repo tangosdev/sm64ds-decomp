@@ -1,7 +1,9 @@
-// @symbol func_ov002_020f92e4
+//cpp
+// @symbol _ZN8Fireball13OnYoshiTryEatEv
+#include "Fireball.h"
 /* recovered: renamed to Class_Method */
-int func_ov002_020f92e4(char *p)
-{
+s32 Fireball::OnYoshiTryEat() {
+    char * p = (char *)this;
     unsigned char b = *(unsigned char *)(p + 0x36d);
     if (b != 0 && b != 4)
         return 5;

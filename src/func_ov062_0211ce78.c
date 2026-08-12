@@ -1,8 +1,9 @@
-// @symbol func_ov062_0211ce78
+//cpp
+// @symbol _ZN6Klepto16OnAimedAtWithEggEv
+#include "Klepto.h"
 // recovered name: Klepto_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daJango_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-int func_ov062_0211ce78(void)
-{
+s32 Klepto::OnAimedAtWithEgg() {
     return 458752;
 }

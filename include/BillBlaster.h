@@ -20,6 +20,10 @@ struct BillBlaster : Platform {
     u8  pad_320[0x4];
 
     virtual ~BillBlaster();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   InitResources();         /* slot  0 */
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char BillBlaster_size_must_be_0x324[sizeof(BillBlaster) == 0x324 ? 1 : -1];

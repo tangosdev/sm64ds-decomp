@@ -20,6 +20,9 @@ struct BowserPuzzleManager : Actor {
     u8  pad_0d0[0x8];
 
     virtual ~BowserPuzzleManager();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   InitResources();         /* slot  0 */
+    virtual s32   Behavior();              /* slot  6 */
 };
 
 typedef char BowserPuzzleManager_size_must_be_0xd8[sizeof(BowserPuzzleManager) == 0xd8 ? 1 : -1];

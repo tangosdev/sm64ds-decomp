@@ -1,6 +1,7 @@
 //cpp
 #include "types.h"
-// @symbol func_ov080_02126ca0
+// @symbol _ZN8Painting13InitResourcesEv
+#include "Painting.h"
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
@@ -20,8 +21,8 @@ extern "C" void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b,
 extern Disp data_ov080_02128628[];
 extern int data_0209caa0[];
 
-extern "C" int func_ov080_02126ca0(char* c)
-{
+s32 Painting::InitResources() {
+    char* c = (char*)this;
     struct daPicGate_c *self = (struct daPicGate_c *)(void *)c;
     unsigned int m = (unsigned char)((*(unsigned int*)(c + 8) >> 0xd) & 3);
 

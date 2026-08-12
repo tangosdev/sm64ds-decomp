@@ -38,6 +38,8 @@ struct BulletBill : Enemy {
 
     virtual ~BulletBill();
 
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     int Behavior();
     int CleanupResources();
     int InitResources();

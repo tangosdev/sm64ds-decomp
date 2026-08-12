@@ -1,5 +1,6 @@
 //cpp
-// @symbol func_ov029_02111d6c
+// @symbol _ZN8CageLift13InitResourcesEv
+#include "CageLift.h"
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
@@ -18,8 +19,8 @@ extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
 extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 
-int func_ov029_02111d6c(char* c)
-{
+s32 CageLift::InitResources() {
+    char* c = (char*)this;
     struct daObjWc_Obj05_c *self = (struct daObjWc_Obj05_c *)(void *)c;
     void* f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_0211428c);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, f, 1, -1);

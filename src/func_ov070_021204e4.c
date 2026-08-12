@@ -1,8 +1,9 @@
-// @symbol func_ov070_021204e4
+//cpp
+// @symbol _ZN6FlyGuy16OnAimedAtWithEggEv
+#include "FlyGuy.h"
 // recovered name: FlyGuy_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daPropeller_Heyho_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-int func_ov070_021204e4(void)
-{
+s32 FlyGuy::OnAimedAtWithEgg() {
     return 176128;
 }

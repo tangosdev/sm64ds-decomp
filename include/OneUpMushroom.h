@@ -49,6 +49,8 @@ struct OneUpMushroom : Enemy {
     /* --- vtable --- */
     virtual ~OneUpMushroom();
 
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
+
     /* --- non-virtual --- */
     int Behavior();
     int CleanupResources();

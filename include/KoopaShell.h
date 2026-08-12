@@ -55,6 +55,8 @@ struct KoopaShell : Enemy {
 
     virtual ~KoopaShell();
 
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
+
     int Behavior();
     int CleanupResources();
     int InitResources();

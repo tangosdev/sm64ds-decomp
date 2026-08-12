@@ -1,7 +1,9 @@
 //cpp
-// @symbol func_ov084_0212e9f8
+// @symbol _ZN19FirePiranhaPlantBig13OnYoshiTryEatEv
+#include "FirePiranhaPlantBig.h"
 /* recovered: renamed to Class_Method */
-extern "C" int func_ov084_0212e9f8(void *c) {
+s32 FirePiranhaPlantBig::OnYoshiTryEat() {
+    void * c = (void *)this;
     unsigned short v = *(unsigned short*)((char*)c + 0xc);
     int r;
     if (v == 0xfc) r = 1; else r = 0;

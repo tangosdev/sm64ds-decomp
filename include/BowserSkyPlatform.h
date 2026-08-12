@@ -20,6 +20,10 @@ struct BowserSkyPlatform : Platform {
     u8  pad_320[0xc];
 
     virtual ~BowserSkyPlatform();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Behavior();              /* slot  6 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char BowserSkyPlatform_size_must_be_0x32c[sizeof(BowserSkyPlatform) == 0x32c ? 1 : -1];

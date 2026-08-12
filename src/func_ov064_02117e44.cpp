@@ -1,5 +1,6 @@
 //cpp
-// @symbol func_ov064_02117e44
+// @symbol _ZN12MetalNetLift13InitResourcesEv
+#include "MetalNetLift.h"
 // recovered name: daObjFl_Amilift_c_InitResources
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
 #include "decl_PathPtr.h"
@@ -35,8 +36,8 @@ extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResul
 
 struct V3 { int x, y, z; };
 
-extern "C" int func_ov064_02117e44(char *self)
-{
+s32 MetalNetLift::InitResources() {
+    char * self = (char *)this;
     BMD_File *bmd;
     KCL_File *kcl;
     V3 nodeA;

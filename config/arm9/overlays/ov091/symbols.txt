@@ -85,9 +85,9 @@ _ZN6Fwoosh16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02134180
 _ZN6Fwoosh6RenderEv kind:function(arm,size=0x68) addr:0x02134184
 _ZN6Fwoosh8BehaviorEv kind:function(arm,size=0x138) addr:0x021341ec
 _ZN6Fwoosh13InitResourcesEv kind:function(arm,size=0x160) addr:0x02134324
-func_ov091_02134484 kind:function(arm,size=0x8) addr:0x02134484
+_ZN6Fwoosh16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02134484
 func_ov091_0213448c kind:function(arm,size=0xc) addr:0x0213448c
-func_ov091_02134498 kind:function(arm,size=0x8) addr:0x02134498
+_ZN6Fwoosh13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02134498
 Fwoosh_Spawn kind:function(arm,size=0x48) addr:0x021344a0
 data_ov091_021344e8 kind:data(any) addr:0x021344e8
 data_ov091_021344f4 kind:data(any) addr:0x021344f4

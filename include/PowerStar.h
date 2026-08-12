@@ -57,6 +57,8 @@ struct PowerStar : Enemy {
     /* --- vtable --- */
     virtual ~PowerStar();
 
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
+
     void AddStarMarker();
     int Behavior();
     int CleanupResources();
