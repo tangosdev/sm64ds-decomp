@@ -190,11 +190,11 @@ src/CrazedCrate_Spawn.c:
     complete
     .text start:0x021253b4 end:0x02125404
 
-src/func_ov080_02125404.c:
+src/_ZN8PaintingD1Ev.c:
     complete
     .text start:0x02125404 end:0x02125428
 
-src/func_ov080_02125428.c:
+src/_ZN8PaintingD0Ev.c:
     complete
     .text start:0x02125428 end:0x02125460
 

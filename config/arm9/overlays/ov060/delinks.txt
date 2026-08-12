@@ -471,11 +471,11 @@ src/BowserFireSeaArena_Spawn.c:
     complete
     .text start:0x02117cdc end:0x02117d1c
 
-src/func_ov060_02117d1c.c:
+src/_ZN17BowserSkyPlatformD1Ev.c:
     complete
     .text start:0x02117d1c end:0x02117d60
 
-src/func_ov060_02117d60.c:
+src/_ZN17BowserSkyPlatformD0Ev.c:
     complete
     .text start:0x02117d60 end:0x02117db8
 

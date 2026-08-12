@@ -4,11 +4,11 @@
     .ctor       start:0x02112e68 end:0x02112e88 kind:rodata align:4
     .data       start:0x02112ea0 end:0x02114220 kind:data align:32
     .bss        start:0x02114220 end:0x02114360 kind:bss align:32
-src/func_ov029_021111a0.c:
+src/_ZN29FloatOnWaterPlatformWdwSquareD1Ev.c:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/func_ov029_021111f0.c:
+src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c:
     complete
     .text start:0x021111f0 end:0x02111254
 
@@ -96,11 +96,11 @@ src/WaterDiamond_Spawn.c:
     complete
     .text start:0x02111a84 end:0x02111ac4
 
-src/func_ov029_02111ac4.c:
+src/_ZN8CageLiftD1Ev.c:
     complete
     .text start:0x02111ac4 end:0x02111b08
 
-src/func_ov029_02111b08.c:
+src/_ZN8CageLiftD0Ev.c:
     complete
     .text start:0x02111b08 end:0x02111b60
 
@@ -132,11 +132,11 @@ src/CageLift_Spawn.c:
     complete
     .text start:0x02111e74 end:0x02111ea4
 
-src/func_ov029_02111ea4.c:
+src/_ZN32FloatOnWaterPlatformWdwRectangleD1Ev.c:
     complete
     .text start:0x02111ea4 end:0x02111ef4
 
-src/func_ov029_02111ef4.c:
+src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c:
     complete
     .text start:0x02111ef4 end:0x02111f58
 
