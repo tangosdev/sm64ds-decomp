@@ -70,8 +70,8 @@ _ZN13OneUpMushroom8BehaviorEv kind:function(arm,size=0xd8) addr:0x020b00e8
 _ZN13OneUpMushroom13InitResourcesEv kind:function(arm,size=0x370) addr:0x020b01c0
 MegaMushroom_Spawn kind:function(arm,size=0x50) addr:0x020b0530
 OneUpMushroom_Spawn kind:function(arm,size=0x50) addr:0x020b0580
-func_ov002_020b05d0 kind:function(arm,size=0x30) addr:0x020b05d0
-func_ov002_020b0600 kind:function(arm,size=0x44) addr:0x020b0600
+_ZN13InvisiblePoleD1Ev kind:function(arm,size=0x30) addr:0x020b05d0
+_ZN13InvisiblePoleD0Ev kind:function(arm,size=0x44) addr:0x020b0600
 func_ov002_020b0644 kind:function(arm,size=0x8) addr:0x020b0644
 func_ov002_020b064c kind:function(arm,size=0x4) addr:0x020b064c
 func_ov002_020b0650 kind:function(arm,size=0x8) addr:0x020b0650
@@ -142,8 +142,8 @@ _ZN11WingFeather6RenderEv kind:function(arm,size=0x48) addr:0x020b2e54
 _ZN11WingFeather8BehaviorEv kind:function(arm,size=0x280) addr:0x020b2e9c
 _ZN11WingFeather13InitResourcesEv kind:function(arm,size=0x12c) addr:0x020b311c
 WingFeather_Spawn kind:function(arm,size=0x50) addr:0x020b3248
-func_ov002_020b3298 kind:function(arm,size=0x30) addr:0x020b3298
-func_ov002_020b32c8 kind:function(arm,size=0x44) addr:0x020b32c8
+_ZN6BubbleD1Ev kind:function(arm,size=0x30) addr:0x020b3298
+_ZN6BubbleD0Ev kind:function(arm,size=0x44) addr:0x020b32c8
 func_ov002_020b330c kind:function(arm,size=0x38) addr:0x020b330c
 func_ov002_020b3344 kind:function(arm,size=0x98) addr:0x020b3344
 func_ov002_020b33dc kind:function(arm,size=0x13c) addr:0x020b33dc
@@ -262,8 +262,8 @@ func_ov002_020b6ac8 kind:function(arm,size=0x48) addr:0x020b6ac8
 func_ov002_020b6b10 kind:function(arm,size=0x28) addr:0x020b6b10
 func_ov002_020b6b38 kind:function(arm,size=0x11c) addr:0x020b6b38
 func_ov002_020b6c54 kind:function(arm,size=0xd4) addr:0x020b6c54
-func_ov002_020b6d28 kind:function(arm,size=0x24) addr:0x020b6d28
-func_ov002_020b6d4c kind:function(arm,size=0x38) addr:0x020b6d4c
+_ZN18PoppingLavaBubblesD1Ev kind:function(arm,size=0x24) addr:0x020b6d28
+_ZN18PoppingLavaBubblesD0Ev kind:function(arm,size=0x38) addr:0x020b6d4c
 func_ov002_020b6d84 kind:function(arm,size=0x4c) addr:0x020b6d84
 func_ov002_020b6dd0 kind:function(arm,size=0x8) addr:0x020b6dd0
 PoppingLavaBubbles_Spawn kind:function(arm,size=0x30) addr:0x020b6dd8
@@ -303,8 +303,8 @@ _ZN15daObjMarioCap_c6RenderEv kind:function(arm,size=0xe4) addr:0x020b83c4
 _ZN15daObjMarioCap_c8BehaviorEv kind:function(arm,size=0x228) addr:0x020b84a8
 _ZN15daObjMarioCap_c13InitResourcesEv kind:function(arm,size=0x4c8) addr:0x020b86d0
 Cap_Spawn kind:function(arm,size=0x58) addr:0x020b8b98
-func_ov002_020b8bf0 kind:function(arm,size=0x4c) addr:0x020b8bf0
-func_ov002_020b8c3c kind:function(arm,size=0x60) addr:0x020b8c3c
+_ZN9PushBlockD1Ev kind:function(arm,size=0x4c) addr:0x020b8bf0
+_ZN9PushBlockD0Ev kind:function(arm,size=0x60) addr:0x020b8c3c
 func_ov002_020b8c9c kind:function(arm,size=0x78) addr:0x020b8c9c
 func_ov002_020b8d14 kind:function(arm,size=0x28) addr:0x020b8d14
 func_ov002_020b8d3c kind:function(arm,size=0x2c) addr:0x020b8d3c
@@ -391,8 +391,8 @@ _ZN8SignPost6RenderEv kind:function(arm,size=0x74) addr:0x020bbe30
 _ZN8SignPost8BehaviorEv kind:function(arm,size=0x39c) addr:0x020bbea4
 _ZN8SignPost13InitResourcesEv kind:function(arm,size=0x188) addr:0x020bc240
 SignPost_Spawn kind:function(arm,size=0x4c) addr:0x020bc3c8
-func_ov002_020bc414 kind:function(arm,size=0x30) addr:0x020bc414
-func_ov002_020bc444 kind:function(arm,size=0x44) addr:0x020bc444
+_ZN7SeaweedD1Ev kind:function(arm,size=0x30) addr:0x020bc414
+_ZN7SeaweedD0Ev kind:function(arm,size=0x44) addr:0x020bc444
 func_ov002_020bc488 kind:function(arm,size=0x40) addr:0x020bc488
 func_ov002_020bc4c8 kind:function(arm,size=0x30) addr:0x020bc4c8
 func_ov002_020bc4f8 kind:function(arm,size=0x28) addr:0x020bc4f8
@@ -1128,8 +1128,8 @@ _ZN4Tree6RenderEv kind:function(arm,size=0x134) addr:0x020ec0a4
 _ZN4Tree8BehaviorEv kind:function(arm,size=0x54) addr:0x020ec1d8
 _ZN4Tree13InitResourcesEv kind:function(arm,size=0x100) addr:0x020ec22c
 Tree_Spawn kind:function(arm,size=0x5c) addr:0x020ec32c
-func_ov002_020ec388 kind:function(arm,size=0x30) addr:0x020ec388
-func_ov002_020ec3b8 kind:function(arm,size=0x44) addr:0x020ec3b8
+_ZN4WarpD1Ev kind:function(arm,size=0x30) addr:0x020ec388
+_ZN4WarpD0Ev kind:function(arm,size=0x44) addr:0x020ec3b8
 func_ov002_020ec3fc kind:function(arm,size=0x8) addr:0x020ec3fc
 func_ov002_020ec404 kind:function(arm,size=0x4) addr:0x020ec404
 func_ov002_020ec408 kind:function(arm,size=0x8) addr:0x020ec408
@@ -1215,8 +1215,8 @@ func_ov002_020effb8 kind:function(arm,size=0x310) addr:0x020effb8
 func_ov002_020f02c8 kind:function(arm,size=0x44) addr:0x020f02c8
 func_ov002_020f030c kind:function(arm,size=0x50) addr:0x020f030c
 func_ov002_020f035c kind:function(arm,size=0x68) addr:0x020f035c
-func_ov002_020f03c4 kind:function(arm,size=0x30) addr:0x020f03c4
-func_ov002_020f03f4 kind:function(arm,size=0x44) addr:0x020f03f4
+_ZN15InvisibleSecretD1Ev kind:function(arm,size=0x30) addr:0x020f03c4
+_ZN15InvisibleSecretD0Ev kind:function(arm,size=0x44) addr:0x020f03f4
 func_ov002_020f0438 kind:function(arm,size=0xe4) addr:0x020f0438
 func_ov002_020f051c kind:function(arm,size=0xd8) addr:0x020f051c
 func_ov002_020f05f4 kind:function(arm,size=0xa8) addr:0x020f05f4
@@ -1695,7 +1695,7 @@ _ZTV7da1up_c kind:data(any) addr:0x021083c8
 _ZTS7daBar_c kind:data(any) addr:0x02108444
 _ZTI7daBar_c kind:data(any) addr:0x02108450
 InvisiblePole_SpawnInfo kind:data(any) addr:0x0210845c
-data_ov002_02108480 kind:data(any) addr:0x02108480
+_ZTV13InvisiblePole kind:data(any) addr:0x02108480
 _ZTI10daCamTag_c kind:data(any) addr:0x021084fc
 _ZTS10daCamTag_c kind:data(any) addr:0x02108508
 CameraTag_SpawnInfo kind:data(any) addr:0x02108518
@@ -1732,7 +1732,7 @@ _ZTV11daFeather_c kind:data(any) addr:0x021088a8
 _ZTI12daObjAbuku_c kind:data(any) addr:0x02108924
 _ZTS12daObjAbuku_c kind:data(any) addr:0x02108930
 Bubble_SpawnInfo kind:data(any) addr:0x02108940
-data_ov002_02108964 kind:data(any) addr:0x02108964
+_ZTV6Bubble kind:data(any) addr:0x02108964
 data_ov002_021089e0 kind:data(any) addr:0x021089e0
 _ZTI10dBgActor_c kind:data(any) addr:0x021089ec
 _ZTI13daObjBlockL_c kind:data(any) addr:0x021089f8
@@ -1798,7 +1798,7 @@ data_ov002_02109320 kind:data(any) addr:0x02109320
 _ZTI11daObjLava_c kind:data(any) addr:0x021093a0
 _ZTS11daObjLava_c kind:data(any) addr:0x021093ac
 PoppingLavaBubbles_SpawnInfo kind:data(any) addr:0x021093bc
-data_ov002_021093e0 kind:data(any) addr:0x021093e0
+_ZTV18PoppingLavaBubbles kind:data(any) addr:0x021093e0
 _ZTI16daObjWaterfall_c kind:data(any) addr:0x0210945c
 _ZTS16daObjWaterfall_c kind:data(any) addr:0x02109468
 WaterfallMist_SpawnInfo kind:data(any) addr:0x0210947c
@@ -1828,7 +1828,7 @@ _ZTV15daObjMarioCap_c kind:data(any) addr:0x021095f0
 _ZTI16daObjPushblock_c kind:data(any) addr:0x0210966c
 _ZTS16daObjPushblock_c kind:data(any) addr:0x02109678
 PushBlock_SpawnInfo kind:data(any) addr:0x0210968c
-data_ov002_021096b0 kind:data(any) addr:0x021096b0
+_ZTV9PushBlock kind:data(any) addr:0x021096b0
 data_ov002_02109730 kind:data(any) addr:0x02109730
 data_ov002_02109738 kind:data(any) addr:0x02109738
 data_ov002_02109740 kind:data(any) addr:0x02109740
@@ -1883,7 +1883,7 @@ _ZTV15daObjTatefuda_c kind:data(any) addr:0x02109af8
 _ZTI13daObjWakame_c kind:data(any) addr:0x02109b78
 _ZTS13daObjWakame_c kind:data(any) addr:0x02109b84
 Seaweed_SpawnInfo kind:data(any) addr:0x02109b94
-data_ov002_02109bb8 kind:data(any) addr:0x02109bb8
+_ZTV7Seaweed kind:data(any) addr:0x02109bb8
 _ZTI12daObjHeart_c kind:data(any) addr:0x02109c34
 _ZTS12daObjHeart_c kind:data(any) addr:0x02109c40
 HealingHeart_SpawnInfo kind:data(any) addr:0x02109c50
@@ -2209,7 +2209,7 @@ _ZTV4Tree kind:data(any) addr:0x0210ac00
 _ZTI11daWarpkun_c kind:data(any) addr:0x0210ac7c
 _ZTS11daWarpkun_c kind:data(any) addr:0x0210ac88
 Warp_SpawnInfo kind:data(any) addr:0x0210ac98
-data_ov002_0210acbc kind:data(any) addr:0x0210acbc
+_ZTV4Warp kind:data(any) addr:0x0210acbc
 data_ov002_0210ad38 kind:data(any) addr:0x0210ad38
 data_ov002_0210ad40 kind:data(any) addr:0x0210ad40
 data_ov002_0210ad48 kind:data(any) addr:0x0210ad48
@@ -2242,7 +2242,7 @@ _ZTV8PathLift kind:data(any) addr:0x0210af70
 _ZTS9daSCoin_c kind:data(any) addr:0x0210aff4
 _ZTI9daSCoin_c kind:data(any) addr:0x0210b000
 InvisibleSecret_SpawnInfo kind:data(any) addr:0x0210b00c
-data_ov002_0210b030 kind:data(any) addr:0x0210b030
+_ZTV15InvisibleSecret kind:data(any) addr:0x0210b030
 _ZTI13daObjNumber_c kind:data(any) addr:0x0210b0ac
 _ZTS13daObjNumber_c kind:data(any) addr:0x0210b0b8
 Number_SpawnInfo kind:data(any) addr:0x0210b0c8
