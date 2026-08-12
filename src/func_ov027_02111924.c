@@ -9,10 +9,6 @@
 extern int data_ov027_02113a90[];
 extern int _ZTV8Platform[];
 /* recovered: vtable identified, renamed to Class_Method */
-/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
-   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
-   vtable, destroys the members and calls Memory::Deallocate; no eat handler
-   does any of that. */
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *data_020a0eac;
 int *func_ov027_02111924(int *t)

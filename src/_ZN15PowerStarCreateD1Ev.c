@@ -1,2 +1,2 @@
-extern int data_ov018_02113a74[]; extern int _ZN5ActorD2Ev();
-int func_ov018_021126d4(int *x) { x[0] = (int)data_ov018_02113a74; _ZN5ActorD2Ev(x); return (int)x; }
+extern int _ZTV15PowerStarCreate[]; extern int _ZN5ActorD2Ev();
+int _ZN15PowerStarCreateD1Ev(int *x) { x[0] = (int)_ZTV15PowerStarCreate; _ZN5ActorD2Ev(x); return (int)x; }
