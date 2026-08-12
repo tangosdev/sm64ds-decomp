@@ -1,3 +1,4 @@
+//cpp
 #include "types.h"
 // @symbol func_ov006_02109834
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
@@ -21,6 +22,7 @@ typedef struct Obj9 {
     Racer racers[3]; /* 0x51a8 */
 } Obj9;
 
+extern "C" {
 extern int data_020a0db0;
 
 extern void func_ov004_020b1bc8(char *, int, int, int);
@@ -29,7 +31,9 @@ extern void func_ov004_020b2220(int, int, int, int, int, int, int);
 extern void Camera_UpdateMatrices(char *);
 extern void func_ov006_020c0aa8(char *);
 extern void func_ov006_020c1804(char *);
+}
 
+extern "C" int func_ov006_02109834(char *c);
 int func_ov006_02109834(char *c)
 {
     struct dScMgRoulette_c *self = (struct dScMgRoulette_c *)(void *)c;

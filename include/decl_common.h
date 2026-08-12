@@ -3023,7 +3023,6 @@ extern void*data_ov006_0213cfa0;
 extern void*_ZTV13MgMemoryMatch[];
 extern void*_ZTV14MgMemoryMaster[];
 extern void*data_ov006_0213d664[];
-extern void*data_ov006_0213e39c[];
 extern void*data_ov006_0213e5d4;
 extern void*data_ov006_0213e96c[];
 extern void*data_ov006_0213e9a4[];

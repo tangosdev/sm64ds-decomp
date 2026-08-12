@@ -6,7 +6,7 @@ extern "C" void func_ov006_020c1d80(char* p);
 extern "C" void func_020733a8(void* p, int a, int b, void* d, void* e);
 extern "C" void _ZN5ModelC1Ev(char* p);
 extern int _ZTV19dScMgSingle3DBase_c[];
-extern int data_ov006_0213e39c[];
+extern int _ZTV15dScMgRoulette_c[];
 extern int func_ov006_021079c8[];
 extern int func_ov006_0210a4ac[];
 
@@ -16,7 +16,7 @@ extern "C" void* MgMushroomRoulette_Spawn(void){
     func_ov004_020b2adc();
     *(int*)c = (int)_ZTV19dScMgSingle3DBase_c;
     _ZN8Particle10SysTrackerC1Ev(c + 0x471c);
-    *(int*)c = (int)data_ov006_0213e39c;
+    *(int*)c = (int)_ZTV15dScMgRoulette_c;
     func_ov006_020c1d80(c + 0x4f38);
     func_020733a8(c + 0x51a8, 5, 0x34, func_ov006_0210a4ac, func_ov006_021079c8);
     char* m = c + 0x530c;

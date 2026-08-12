@@ -1315,8 +1315,8 @@ _ZN12dScMgPanel_c6RenderEv kind:function(arm,size=0x4c) addr:0x0210730c
 _ZN12dScMgPanel_c8BehaviorEv kind:function(arm,size=0x58) addr:0x02107358
 _ZN12dScMgPanel_c13InitResourcesEv kind:function(arm,size=0x4a8) addr:0x021073b0
 MgPuzzlePanelPuzzlePanic_Spawn kind:function(arm,size=0x34) addr:0x02107858
-func_ov006_0210788c kind:function(arm,size=0x94) addr:0x0210788c
-func_ov006_02107920 kind:function(arm,size=0xa8) addr:0x02107920
+_ZN15dScMgRoulette_cD1Ev kind:function(arm,size=0x94) addr:0x0210788c
+_ZN15dScMgRoulette_cD0Ev kind:function(arm,size=0xa8) addr:0x02107920
 func_ov006_021079c8 kind:function(arm,size=0x4) addr:0x021079c8
 func_ov006_021079cc kind:function(arm,size=0xa0) addr:0x021079cc
 func_ov006_02107a6c kind:function(arm,size=0xa8) addr:0x02107a6c
@@ -4023,7 +4023,7 @@ data_ov006_0213e354 kind:data(any) addr:0x0213e354
 data_ov006_0213e370 kind:data(any) addr:0x0213e370
 data_ov006_0213e374 kind:data(any) addr:0x0213e374
 data_ov006_0213e378 kind:data(any) addr:0x0213e378
-data_ov006_0213e39c kind:data(any) addr:0x0213e39c
+_ZTV15dScMgRoulette_c kind:data(any) addr:0x0213e39c
 data_ov006_0213e42c kind:data(any) addr:0x0213e42c
 _ZTV19dScMgSingle3DBase_c kind:data(any) addr:0x0213e448
 data_ov006_0213e4d8 kind:data(any) addr:0x0213e4d8

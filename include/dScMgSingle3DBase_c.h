@@ -32,10 +32,27 @@
  * the identical type; consolidating all three is a separate change with
  * its own blast radius, not this slice's problem to fix.
  *
- * 0x4660..0x471b (0xbc bytes) HAS NO MATCHED ACCESS YET -- none of the 13
- * descendants have any source file at all, so there is no witness to draw
- * from. Left as padding; the first descendant that touches it will need
- * to split the pad, the same way MgBounceAndPounce did for dScMgBase_c.
+ * 0x4700..0x4718 (seven fields) IS NOW SPLIT OUT of the former
+ * pad_4660[0xbc]: dScMgRoulette_c's own Render (src/func_ov006_02109834.c)
+ * and dScMg3DEsp_c's own Render (src/func_ov006_020e9d1c.cpp) both write
+ * these exact offsets, so they're this class's own fields, not either
+ * leaf's. Their comments deliberately do NOT use this tree's usual
+ * comment-open-then-immediate-hex-literal style: tools/check_header_offsets.py's
+ * DATA_SIZE precompute walks a
+ * struct's own commented fields by regex to find where a DERIVED class's
+ * fields start, and that regex can't parse the namespaced
+ * `Particle::SysTracker mSysTracker` a few lines down -- it silently
+ * stops at the last field it CAN parse. Before these seven fields existed,
+ * nothing in this struct matched that regex at all, so every dependent
+ * derived header correctly fell back to this class's asserted `sizeof`.
+ * Giving these seven fields the usual hex-comment style made the regex
+ * succeed partway through and stop there, undercounting every derived
+ * class's own field offsets by nearly the whole SysTracker member --
+ * measured directly on dScMgRoulette_c.h, 22/22 fields "mismatched" by
+ * exactly that delta before this comment style was changed.
+ *
+ * 0x4718..0x471b (2 bytes, pad_471a) still HAS NO MATCHED ACCESS -- left
+ * as padding.
  *
  * THE DESTRUCTOR IS NOW DEFINED INLINE (fixed after this file's first
  * landing, #1421) -- same fix, same reason, as include/Scene.h's own note:
@@ -146,7 +163,18 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
     virtual int  BeforeBehavior();                  /* slot  7 */
     virtual int  BeforeRender();                    /* slot 10 */
 
-    u8  pad_4660[0xbc];
+    /* unk_4700..unk_4718 (offset 0x4700): real matched access, see the
+     * file banner's own note on why these comments don't use the usual
+     * hex-offset style. */
+    u8  pad_4660[0xa0];
+    s32 unk_4700; /* offset 0x4700 */
+    s32 unk_4704; /* offset 0x4704 */
+    s32 unk_4708; /* offset 0x4708 */
+    s32 unk_470c; /* offset 0x470c */
+    s32 unk_4710; /* offset 0x4710 */
+    s32 unk_4714; /* offset 0x4714 */
+    s16 unk_4718; /* offset 0x4718 */
+    u8  pad_471a[0x2];
     Particle::SysTracker mSysTracker; /* 0x471c */
 };
 
