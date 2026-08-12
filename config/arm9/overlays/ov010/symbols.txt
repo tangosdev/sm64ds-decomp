@@ -1,5 +1,5 @@
-func_ov010_021111a0 kind:function(arm,size=0x4c) addr:0x021111a0
-func_ov010_021111ec kind:function(arm,size=0x60) addr:0x021111ec
+_ZN4TrapD1Ev kind:function(arm,size=0x4c) addr:0x021111a0
+_ZN4TrapD0Ev kind:function(arm,size=0x60) addr:0x021111ec
 func_ov010_0211124c kind:function(arm,size=0x10) addr:0x0211124c
 func_ov010_0211125c kind:function(arm,size=0x28) addr:0x0211125c
 func_ov010_02111284 kind:function(arm,size=0x30) addr:0x02111284
@@ -118,7 +118,7 @@ data_ov010_02112aa8 kind:data(any) addr:0x02112aa8 ambiguous
 _ZTS14daObjC1_Trap_c kind:data(any) addr:0x02112aac
 Trap_SpawnInfo kind:data(any) addr:0x02112ac0 ambiguous
 data_ov010_02112adc kind:data(any) addr:0x02112adc ambiguous
-data_ov010_02112ae4 kind:data(any) addr:0x02112ae4
+_ZTV4Trap kind:data(any) addr:0x02112ae4
 data_ov010_02112b08 kind:data(any) addr:0x02112b08 ambiguous
 _ZTI15daObjC1Hikari_c kind:data(any) addr:0x02112b64
 _ZTS15daObjC1Hikari_c kind:data(any) addr:0x02112b70

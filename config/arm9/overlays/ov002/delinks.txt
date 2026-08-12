@@ -287,11 +287,11 @@ src/OneUpMushroom_Spawn.c:
     complete
     .text start:0x020b0580 end:0x020b05d0
 
-src/func_ov002_020b05d0.c:
+src/_ZN13InvisiblePoleD1Ev.c:
     complete
     .text start:0x020b05d0 end:0x020b0600
 
-src/func_ov002_020b0600.c:
+src/_ZN13InvisiblePoleD0Ev.c:
     complete
     .text start:0x020b0600 end:0x020b0644
 
@@ -575,11 +575,11 @@ src/WingFeather_Spawn.c:
     complete
     .text start:0x020b3248 end:0x020b3298
 
-src/func_ov002_020b3298.c:
+src/_ZN6BubbleD1Ev.c:
     complete
     .text start:0x020b3298 end:0x020b32c8
 
-src/func_ov002_020b32c8.c:
+src/_ZN6BubbleD0Ev.c:
     complete
     .text start:0x020b32c8 end:0x020b330c
 
@@ -1055,11 +1055,11 @@ src/func_ov002_020b6c54.c:
     complete
     .text start:0x020b6c54 end:0x020b6d28
 
-src/func_ov002_020b6d28.c:
+src/_ZN18PoppingLavaBubblesD1Ev.c:
     complete
     .text start:0x020b6d28 end:0x020b6d4c
 
-src/func_ov002_020b6d4c.c:
+src/_ZN18PoppingLavaBubblesD0Ev.c:
     complete
     .text start:0x020b6d4c end:0x020b6d84
 
@@ -1218,11 +1218,11 @@ src/Cap_Spawn.c:
     complete
     .text start:0x020b8b98 end:0x020b8bf0
 
-src/func_ov002_020b8bf0.c:
+src/_ZN9PushBlockD1Ev.c:
     complete
     .text start:0x020b8bf0 end:0x020b8c3c
 
-src/func_ov002_020b8c3c.c:
+src/_ZN9PushBlockD0Ev.c:
     complete
     .text start:0x020b8c3c end:0x020b8c9c
 
@@ -1565,11 +1565,11 @@ src/SignPost_Spawn.c:
     complete
     .text start:0x020bc3c8 end:0x020bc414
 
-src/func_ov002_020bc414.c:
+src/_ZN7SeaweedD1Ev.c:
     complete
     .text start:0x020bc414 end:0x020bc444
 
-src/func_ov002_020bc444.c:
+src/_ZN7SeaweedD0Ev.c:
     complete
     .text start:0x020bc444 end:0x020bc488
 
@@ -4486,11 +4486,11 @@ src/Tree_Spawn.cpp:
     complete
     .text start:0x020ec32c end:0x020ec388
 
-src/func_ov002_020ec388.c:
+src/_ZN4WarpD1Ev.c:
     complete
     .text start:0x020ec388 end:0x020ec3b8
 
-src/func_ov002_020ec3b8.c:
+src/_ZN4WarpD0Ev.c:
     complete
     .text start:0x020ec3b8 end:0x020ec3fc
 
@@ -4833,11 +4833,11 @@ src/func_ov002_020f035c.c:
     complete
     .text start:0x020f035c end:0x020f03c4
 
-src/func_ov002_020f03c4.c:
+src/_ZN15InvisibleSecretD1Ev.c:
     complete
     .text start:0x020f03c4 end:0x020f03f4
 
-src/func_ov002_020f03f4.c:
+src/_ZN15InvisibleSecretD0Ev.c:
     complete
     .text start:0x020f03f4 end:0x020f0438
 

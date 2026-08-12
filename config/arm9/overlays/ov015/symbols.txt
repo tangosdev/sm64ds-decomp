@@ -1,5 +1,5 @@
-func_ov015_021111a0 kind:function(arm,size=0x30) addr:0x021111a0
-func_ov015_021111d0 kind:function(arm,size=0x44) addr:0x021111d0
+_ZN13PoleBillboardD1Ev kind:function(arm,size=0x30) addr:0x021111a0
+_ZN13PoleBillboardD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 func_ov015_02111214 kind:function(arm,size=0x40) addr:0x02111214
 func_ov015_02111254 kind:function(arm,size=0x24) addr:0x02111254
 func_ov015_02111278 kind:function(arm,size=0x28) addr:0x02111278
@@ -62,8 +62,8 @@ _ZN14RotatingBridge6RenderEv kind:function(arm,size=0x28) addr:0x02112a24
 _ZN14RotatingBridge8BehaviorEv kind:function(arm,size=0xb8) addr:0x02112a4c
 _ZN14RotatingBridge13InitResourcesEv kind:function(arm,size=0x9c) addr:0x02112b04
 RotatingBridge_Spawn kind:function(arm,size=0x30) addr:0x02112ba0
-func_ov015_02112bd0 kind:function(arm,size=0x50) addr:0x02112bd0
-func_ov015_02112c20 kind:function(arm,size=0x64) addr:0x02112c20
+_ZN18RotatingPlatformWfD1Ev kind:function(arm,size=0x50) addr:0x02112bd0
+_ZN18RotatingPlatformWfD0Ev kind:function(arm,size=0x64) addr:0x02112c20
 func_ov015_02112c84 kind:function(arm,size=0x14) addr:0x02112c84
 func_ov015_02112c98 kind:function(arm,size=0x20) addr:0x02112c98
 RotatingPlatformWf_Spawn kind:function(arm,size=0x3c) addr:0x02112cb8
@@ -199,7 +199,7 @@ _ZTI18daObjBkBillboard_c kind:data(any) addr:0x02114318
 _ZTS18daObjBkBillboard_c kind:data(any) addr:0x02114324
 PoleBillboard_SpawnInfo kind:data(any) addr:0x0211433c ambiguous
 data_ov015_02114350 kind:data(any) addr:0x02114350 ambiguous
-data_ov015_02114360 kind:data(any) addr:0x02114360
+_ZTV13PoleBillboard kind:data(any) addr:0x02114360
 data_ov015_02114380 kind:data(any) addr:0x02114380 ambiguous
 _ZTI17daObjBk_Botaosi_c kind:data(any) addr:0x021143dc
 _ZTS17daObjBk_Botaosi_c kind:data(any) addr:0x021143e8
@@ -248,7 +248,7 @@ _ZTI17daObjBk_Ukisima_c kind:data(any) addr:0x02114798
 data_ov015_021147a4 kind:data(any) addr:0x021147a4
 _ZTS17daObjBk_Ukisima_c kind:data(any) addr:0x021147b0
 RotatingPlatformWf_SpawnInfo kind:data(any) addr:0x021147c4 ambiguous
-data_ov015_021147e8 kind:data(any) addr:0x021147e8
+_ZTV18RotatingPlatformWf kind:data(any) addr:0x021147e8
 data_ov015_02114824 kind:data(any) addr:0x02114824 ambiguous
 data_ov015_02114860 kind:data(any) addr:0x02114860 ambiguous
 _ZTI20daObjBk_Fall_Block_c kind:data(any) addr:0x02114868
