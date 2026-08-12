@@ -5,7 +5,10 @@
 #include "dScMgBSC_c.h"
 // recovered name: dScMgBSC_c_OnYoshiTryEat_02125364
 /* recovered: renamed to Class_Method */
-/* dScMgBSC_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
+   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
+   vtable, destroys the members and calls Memory::Deallocate; no eat handler
+   does any of that. */
 extern void func_ov004_020b66d4(void);
 void func_ov006_02125364(char* c, int mode){
     struct dScMgBSC_c *self = (struct dScMgBSC_c *)(void *)c;

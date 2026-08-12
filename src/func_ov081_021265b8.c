@@ -1,6 +1,9 @@
 // @symbol func_ov081_021265b8
 /* recovered: renamed to Class_Method */
-/* daGmch_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
+   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
+   vtable, destroys the members and calls Memory::Deallocate; no eat handler
+   does any of that. */
 int func_ov081_021265b8(void)
 {
     return 6;
