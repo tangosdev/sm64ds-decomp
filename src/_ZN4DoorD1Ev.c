@@ -1,14 +1,14 @@
-// @symbol func_ov100_021443f4
+// @symbol _ZN4DoorD1Ev
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ModelAnim.h"
 #include "decl_common.h"
-extern int data_ov100_02148188[];
+extern int _ZTV4Door[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = data_ov100_02148188 */
-int *func_ov100_021443f4(int *t)
+/* vtable identified: VT0 = _ZTV4Door */
+int *_ZN4DoorD1Ev(int *t)
 {
-    t[0] = (int)data_ov100_02148188;
+    t[0] = (int)_ZTV4Door;
     _ZN9ModelAnimD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);
     return t;
