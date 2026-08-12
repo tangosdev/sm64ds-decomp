@@ -6,11 +6,11 @@ func_ov030_02111350 kind:function(arm,size=0x34) addr:0x02111350
 func_ov030_02111384 kind:function(arm,size=0x8c) addr:0x02111384
 func_ov030_02111410 kind:function(arm,size=0x114) addr:0x02111410
 UkikiCage_Spawn kind:function(arm,size=0x38) addr:0x02111524
-_ZN9UkikiCageD1Ev kind:function(arm,size=0x50) addr:0x0211155c
-_ZN9UkikiCageD0Ev kind:function(arm,size=0x64) addr:0x021115ac
-_ZN9UkikiCage16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111610
-_ZN9UkikiCage8BehaviorEv kind:function(arm,size=0x14) addr:0x02111624
-_ZN9UkikiCage13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111638
+_ZN13RollingLogTtmD1Ev kind:function(arm,size=0x50) addr:0x0211155c
+_ZN13RollingLogTtmD0Ev kind:function(arm,size=0x64) addr:0x021115ac
+_ZN13RollingLogTtm16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111610
+_ZN13RollingLogTtm8BehaviorEv kind:function(arm,size=0x14) addr:0x02111624
+_ZN13RollingLogTtm13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111638
 RollingLogTtm_Spawn kind:function(arm,size=0x3c) addr:0x0211164c
 _ZN5UkikiD1Ev kind:function(arm,size=0x48) addr:0x02111688
 _ZN5UkikiD0Ev kind:function(arm,size=0x5c) addr:0x021116d0
@@ -112,7 +112,7 @@ _ZTI15daObjHmMaruta_c kind:data(any) addr:0x021159f8
 data_ov030_02115a04 kind:data(any) addr:0x02115a04
 _ZTS15daObjHmMaruta_c kind:data(any) addr:0x02115a10
 RollingLogTtm_SpawnInfo kind:data(any) addr:0x02115a24
-_ZTV9UkikiCage kind:data(any) addr:0x02115a48
+_ZTV13RollingLogTtm kind:data(any) addr:0x02115a48
 data_ov030_02115ac8 kind:data(any) addr:0x02115ac8
 data_ov030_02115ad0 kind:data(any) addr:0x02115ad0
 data_ov030_02115ad8 kind:data(any) addr:0x02115ad8
