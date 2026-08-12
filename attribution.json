@@ -46,6 +46,18 @@
     "src/func_ov084_0212d564.c": "ruspecial",
     "src/func_ov084_0212d564.cpp": "ruspecial",
     "src/_ZN19dScMgSingle3DBase_cD1Ev.cpp": "tangosdev",
-    "src/_ZN19dScMgSingle3DBase_cD0Ev.cpp": "tangosdev"
+    "src/_ZN19dScMgSingle3DBase_cD0Ev.cpp": "tangosdev",
+    "src/_ZN10dScMgBSC_cD0Ev.cpp": "tangosdev",
+    "src/_ZN10dScMgBSC_cD1Ev.cpp": "tangosdev",
+    "src/_ZN11dScMgCard_cD0Ev.cpp": "tangosdev",
+    "src/_ZN11dScMgCard_cD1Ev.cpp": "tangosdev",
+    "src/_ZN12dScMg3DEsp_cD0Ev.cpp": "tangosdev",
+    "src/_ZN12dScMg3DEsp_cD1Ev.cpp": "tangosdev",
+    "src/_ZN12dScMgSound_cD0Ev.cpp": "tangosdev",
+    "src/_ZN12dScMgSound_cD1Ev.cpp": "tangosdev",
+    "src/_ZN14dScMgMCarlo2_cD0Ev.cpp": "tangosdev",
+    "src/_ZN14dScMgMCarlo2_cD1Ev.cpp": "tangosdev",
+    "src/_ZN15dScMgRoulette_cD0Ev.cpp": "tangosdev",
+    "src/_ZN15dScMgRoulette_cD1Ev.cpp": "tangosdev"
   }
 }
