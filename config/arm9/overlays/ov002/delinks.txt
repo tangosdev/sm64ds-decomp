@@ -287,7 +287,7 @@ src/OneUpMushroom_Spawn.c:
     complete
     .text start:0x020b0580 end:0x020b05d0
 
-src/_ZN13InvisiblePoleD1Ev.c:
+src/_ZN13InvisiblePoleD1Ev.cpp:
     complete
     .text start:0x020b05d0 end:0x020b0600
 
@@ -295,23 +295,23 @@ src/_ZN13InvisiblePoleD0Ev.c:
     complete
     .text start:0x020b0600 end:0x020b0644
 
-src/func_ov002_020b0644.c:
+src/_ZN13InvisiblePole16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b0644 end:0x020b064c
 
-src/func_ov002_020b064c.c:
+src/_ZN13InvisiblePole16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020b064c end:0x020b0650
 
-src/func_ov002_020b0650.c:
+src/_ZN13InvisiblePole6RenderEv.cpp:
     complete
     .text start:0x020b0650 end:0x020b0658
 
-src/func_ov002_020b0658.cpp:
+src/_ZN13InvisiblePole8BehaviorEv.cpp:
     complete
     .text start:0x020b0658 end:0x020b067c
 
-src/func_ov002_020b067c.c:
+src/_ZN13InvisiblePole13InitResourcesEv.cpp:
     complete
     .text start:0x020b067c end:0x020b0710
 
