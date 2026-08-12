@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN11VirtualDoorD1Ev
+// @symbol _ZN4ExitD1Ev
 
 struct Actor {
     virtual ~Actor();
 };
 
 
-struct VirtualDoor : Actor {
-    virtual ~VirtualDoor();
+struct Exit : Actor {
+    virtual ~Exit();
 };
 
-VirtualDoor::~VirtualDoor()
+Exit::~Exit()
 {
 }

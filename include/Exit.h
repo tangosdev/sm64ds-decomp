@@ -1,11 +1,11 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class VirtualDoor: 4 matched functions, 12 evidenced fields.
+ * class Exit: 4 matched functions, 12 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen.
  *
  * HAND-EXTENDED 2026-08-09 from all five methods. Do not regenerate over this.
  *
- * VirtualDoor is a TRIGGER VOLUME, not a moving actor -- it never moves and
+ * Exit is a TRIGGER VOLUME, not a moving actor -- it never moves and
  * never draws (Render is `return 1`). So it inherits Actor's motion and scale
  * slots and uses them for something else entirely. The names below are Actor's,
  * kept deliberately so this header does not contradict include/Actor.h, but
@@ -33,12 +33,12 @@
  *                    0x20000 further along local -z until it clamps at
  *                    -0x300000.
  */
-#ifndef VIRTUALDOOR_H
-#define VIRTUALDOOR_H
+#ifndef EXIT_H
+#define EXIT_H
 #include "types.h"
 #include "math/Matrix.h"
 
-struct VirtualDoor {
+struct Exit {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
