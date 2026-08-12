@@ -4,7 +4,7 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 extern int data_ov002_021091d4[];
-extern int data_ov036_02113b74[];
+extern int _ZTV18RotatingPlatformRr[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = data_ov002_021091d4 */
 int *RotatingPlatformRr_Spawn(void)
@@ -13,7 +13,7 @@ int *RotatingPlatformRr_Spawn(void)
     if (p) {
         _ZN8PlatformC2Ev(p);
         p[0] = (int)data_ov002_021091d4;
-        p[0] = (int)data_ov036_02113b74;
+        p[0] = (int)_ZTV18RotatingPlatformRr;
     }
     return p;
 }

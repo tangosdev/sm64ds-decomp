@@ -1,2 +1,2 @@
-extern int data_ov064_0211c1d8[]; extern int _ZN5ActorD2Ev();
-int func_ov064_02118bec(int *x) { x[0] = (int)data_ov064_0211c1d8; _ZN5ActorD2Ev(x); return (int)x; }
+extern int _ZTV19BowserPuzzleManager[]; extern int _ZN5ActorD2Ev();
+int _ZN19BowserPuzzleManagerD1Ev(int *x) { x[0] = (int)_ZTV19BowserPuzzleManager; _ZN5ActorD2Ev(x); return (int)x; }

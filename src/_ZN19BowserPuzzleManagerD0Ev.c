@@ -1,13 +1,13 @@
-// @symbol func_ov064_02118c10
+// @symbol _ZN19BowserPuzzleManagerD0Ev
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_common.h"
 extern void* data_020a0eac;
-extern int data_ov064_0211c1d8[];
+extern int _ZTV19BowserPuzzleManager[];
 /* recovered: renamed to Class_Method */
-int *func_ov064_02118c10(int *t)
+int *_ZN19BowserPuzzleManagerD0Ev(int *t)
 {
-    t[0] = (int)data_ov064_0211c1d8;
+    t[0] = (int)_ZTV19BowserPuzzleManager;
     _ZN5ActorD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
