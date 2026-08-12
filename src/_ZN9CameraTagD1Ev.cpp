@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN13InvisiblePoleD1Ev
+// @symbol _ZN9CameraTagD1Ev
 
 struct Actor {
     virtual ~Actor();
 };
 
 
-struct InvisiblePole : Actor {
-    virtual ~InvisiblePole();
+struct CameraTag : Actor {
+    virtual ~CameraTag();
 };
 
-InvisiblePole::~InvisiblePole()
+CameraTag::~CameraTag()
 {
 }
