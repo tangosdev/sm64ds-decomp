@@ -220,27 +220,27 @@ src/TowerStep_Spawn.c:
     complete
     .text start:0x0211290c end:0x02112944
 
-src/_ZN9TowerStepD1Ev.cpp:
+src/_ZN14RotatingBridgeD1Ev.cpp:
     complete
     .text start:0x02112944 end:0x02112988
 
-src/_ZN9TowerStepD0Ev.cpp:
+src/_ZN14RotatingBridgeD0Ev.cpp:
     complete
     .text start:0x02112988 end:0x021129e0
 
-src/_ZN9TowerStep16CleanupResourcesEv.cpp:
+src/_ZN14RotatingBridge16CleanupResourcesEv.cpp:
     complete
     .text start:0x021129e0 end:0x02112a24
 
-src/_ZN9TowerStep6RenderEv.cpp:
+src/_ZN14RotatingBridge6RenderEv.cpp:
     complete
     .text start:0x02112a24 end:0x02112a4c
 
-src/_ZN9TowerStep8BehaviorEv.cpp:
+src/_ZN14RotatingBridge8BehaviorEv.cpp:
     complete
     .text start:0x02112a4c end:0x02112b04
 
-src/_ZN9TowerStep13InitResourcesEv.cpp:
+src/_ZN14RotatingBridge13InitResourcesEv.cpp:
     complete
     .text start:0x02112b04 end:0x02112ba0
 
