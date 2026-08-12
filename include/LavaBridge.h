@@ -19,6 +19,10 @@
 struct LavaBridge : Platform {
 
     virtual ~LavaBridge();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Behavior();              /* slot  6 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char LavaBridge_size_must_be_0x320[sizeof(LavaBridge) == 0x320 ? 1 : -1];

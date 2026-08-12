@@ -68,6 +68,8 @@ struct daObjMarioCap_c : Enemy {
 
     virtual ~daObjMarioCap_c();
 
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
+
     /* methods */
     int Behavior();
     int CleanupResources();

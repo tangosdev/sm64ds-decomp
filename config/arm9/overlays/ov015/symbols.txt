@@ -1,8 +1,8 @@
 _ZN13PoleBillboardD1Ev kind:function(arm,size=0x30) addr:0x021111a0
 _ZN13PoleBillboardD0Ev kind:function(arm,size=0x44) addr:0x021111d0
 func_ov015_02111214 kind:function(arm,size=0x40) addr:0x02111214
-func_ov015_02111254 kind:function(arm,size=0x24) addr:0x02111254
-func_ov015_02111278 kind:function(arm,size=0x28) addr:0x02111278
+_ZN13PoleBillboard16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02111254
+_ZN13PoleBillboard6RenderEv kind:function(arm,size=0x28) addr:0x02111278
 func_ov015_021112a0 kind:function(arm,size=0x3c) addr:0x021112a0
 PoleBillboard_Spawn kind:function(arm,size=0x38) addr:0x021112dc
 _ZN14KnockDownPlankD1Ev kind:function(arm,size=0x4c) addr:0x02111314

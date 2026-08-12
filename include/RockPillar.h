@@ -20,6 +20,9 @@ struct RockPillar : Platform {
     u8  pad_320[0x8];
 
     virtual ~RockPillar();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Render();                /* slot  9 */
 };
 
 typedef char RockPillar_size_must_be_0x328[sizeof(RockPillar) == 0x328 ? 1 : -1];

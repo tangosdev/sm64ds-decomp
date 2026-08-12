@@ -1,8 +1,9 @@
-// @symbol func_ov062_02117470
+//cpp
+// @symbol _ZN7Chuckya16OnAimedAtWithEggEv
+#include "Chuckya.h"
 // recovered name: Chuckya_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daHolhei_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-int func_ov062_02117470(void)
-{
+s32 Chuckya::OnAimedAtWithEgg() {
     return 827392;
 }

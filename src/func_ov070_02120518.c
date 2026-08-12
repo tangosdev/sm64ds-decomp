@@ -1,6 +1,7 @@
-// @symbol func_ov070_02120518
+//cpp
+// @symbol _ZN6FlyGuy13OnYoshiTryEatEv
+#include "FlyGuy.h"
 /* recovered: renamed to Class_Method */
-int func_ov070_02120518(void)
-{
+s32 FlyGuy::OnYoshiTryEat() {
     return 5;
 }
