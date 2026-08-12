@@ -1,14 +1,14 @@
 //cpp
 #include "types.h"
-// @symbol _ZN13WaterfallMist8BehaviorEv
+// @symbol _ZN15daObjMarioCap_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "WaterfallMist.h"
+#include "daObjMarioCap_c.h"
 struct WithMeshClsn;
 /* NOT the real Enemy, and deliberately no longer named one. This stand-in exists to
    give the pointer-to-member below a representation: a PMF on a non-polymorphic,
    single-base class is laid out differently from one on the real Enemy, so the shape
    here is codegen, not decoration. Borrowing the name worked only while this file
-   included no header that defined the real class; with WaterfallMist.h in scope it
+   included no header that defined the real class; with daObjMarioCap_c.h in scope it
    became a redefinition, and letting the PMF bind to the real Enemy makes mwccarm
    abort with an internal compiler error rather than a diagnostic. */
 struct MistPmfSelf { char pad[0x800]; };
@@ -41,7 +41,7 @@ extern void _ZN12CylinderClsn5ClearEv(void *thiz);
 extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
 }
 
-int WaterfallMist::Behavior()
+int daObjMarioCap_c::Behavior()
 {
     char *c = (char *)((MistPmfSelf *)this);
 

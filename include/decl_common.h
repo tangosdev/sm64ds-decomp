@@ -525,7 +525,6 @@ extern int _ZTV13RollingLogTtm[];
 extern int _ZTV13TTC_MovingBar[];
 extern int _ZTV13TreasureChest[];
 extern int _ZTV13UpDownLiftBbh[];
-extern int _ZTV13WaterfallMist[];
 extern int _ZTV13dScGameOver_c[];
 extern int _ZTV13dScMgTeresa_c[];
 extern int _ZTV13daLinelift2_c[];

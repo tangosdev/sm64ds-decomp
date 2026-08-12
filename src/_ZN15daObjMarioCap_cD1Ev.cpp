@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN13WaterfallMistD1Ev
+// @symbol _ZN15daObjMarioCap_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits all but one line of it
  *
  * One vtable store and five teardowns. Four of them are the compiler's: the members
@@ -13,11 +13,11 @@
  * "first member destroyed" are the same position. That is exactly where the ROM
  * calls it.
  */
-#include "WaterfallMist.h"
+#include "daObjMarioCap_c.h"
 
 extern "C" void func_ov001_020ab3a0(CapIcon *icon);
 
-WaterfallMist::~WaterfallMist()
+daObjMarioCap_c::~daObjMarioCap_c()
 {
     func_ov001_020ab3a0(&mCapIcon);
 }

@@ -8,13 +8,13 @@
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV13WaterfallMist */
+/* resolved: VT0 = _ZTV15daObjMarioCap_c */
 int *Cap_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(1040);
     if (p) {
         _ZN5EnemyC2Ev(p);
-        p[0] = (int)_ZTV13WaterfallMist;
+        p[0] = (int)_ZTV15daObjMarioCap_c;
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0x110);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x144);
         _ZN9ModelAnimC1Ev((char *)p + 0x300);

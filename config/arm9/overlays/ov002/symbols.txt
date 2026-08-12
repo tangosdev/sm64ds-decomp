@@ -272,8 +272,8 @@ _ZN18PoppingLavaBubblesD0Ev kind:function(arm,size=0x38) addr:0x020b6e2c
 _ZN18PoppingLavaBubbles8BehaviorEv kind:function(arm,size=0x48) addr:0x020b6e64
 _ZN18PoppingLavaBubbles13InitResourcesEv kind:function(arm,size=0x3c) addr:0x020b6eac
 WaterfallMist_Spawn kind:function(arm,size=0x30) addr:0x020b6ee8
-_ZN13WaterfallMistD1Ev kind:function(arm,size=0x50) addr:0x020b6f18
-_ZN13WaterfallMistD0Ev kind:function(arm,size=0x64) addr:0x020b6f68
+_ZN15daObjMarioCap_cD1Ev kind:function(arm,size=0x50) addr:0x020b6f18
+_ZN15daObjMarioCap_cD0Ev kind:function(arm,size=0x64) addr:0x020b6f68
 func_ov002_020b6fcc kind:function(arm,size=0x21c) addr:0x020b6fcc
 func_ov002_020b71e8 kind:function(arm,size=0x8) addr:0x020b71e8
 func_ov002_020b71f0 kind:function(arm,size=0x10) addr:0x020b71f0
@@ -297,11 +297,11 @@ func_ov002_020b7f2c kind:function(arm,size=0x50) addr:0x020b7f2c
 func_ov002_020b7f7c kind:function(arm,size=0x264) addr:0x020b7f7c
 func_ov002_020b81e0 kind:function(arm,size=0x90) addr:0x020b81e0
 func_ov002_020b8270 kind:function(arm,size=0x14) addr:0x020b8270
-_ZN13WaterfallMist16CleanupResourcesEv kind:function(arm,size=0x110) addr:0x020b8284
-_ZN13WaterfallMist16OnPendingDestroyEv kind:function(arm,size=0x30) addr:0x020b8394
-_ZN13WaterfallMist6RenderEv kind:function(arm,size=0xe4) addr:0x020b83c4
-_ZN13WaterfallMist8BehaviorEv kind:function(arm,size=0x228) addr:0x020b84a8
-_ZN13WaterfallMist13InitResourcesEv kind:function(arm,size=0x4c8) addr:0x020b86d0
+_ZN15daObjMarioCap_c16CleanupResourcesEv kind:function(arm,size=0x110) addr:0x020b8284
+_ZN15daObjMarioCap_c16OnPendingDestroyEv kind:function(arm,size=0x30) addr:0x020b8394
+_ZN15daObjMarioCap_c6RenderEv kind:function(arm,size=0xe4) addr:0x020b83c4
+_ZN15daObjMarioCap_c8BehaviorEv kind:function(arm,size=0x228) addr:0x020b84a8
+_ZN15daObjMarioCap_c13InitResourcesEv kind:function(arm,size=0x4c8) addr:0x020b86d0
 Cap_Spawn kind:function(arm,size=0x58) addr:0x020b8b98
 func_ov002_020b8bf0 kind:function(arm,size=0x4c) addr:0x020b8bf0
 func_ov002_020b8c3c kind:function(arm,size=0x60) addr:0x020b8c3c
@@ -1824,7 +1824,6 @@ data_ov002_021095a4 kind:data(any) addr:0x021095a4
 _ZTI15daObjMarioCap_c kind:data(any) addr:0x021095ac
 _ZTS15daObjMarioCap_c kind:data(any) addr:0x021095b8
 Cap_SpawnInfo kind:data(any) addr:0x021095cc ambiguous
-_ZTV13WaterfallMist kind:data(any) addr:0x021095f0
 _ZTV15daObjMarioCap_c kind:data(any) addr:0x021095f0
 _ZTI16daObjPushblock_c kind:data(any) addr:0x0210966c
 _ZTS16daObjPushblock_c kind:data(any) addr:0x02109678

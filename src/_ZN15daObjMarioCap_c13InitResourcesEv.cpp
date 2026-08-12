@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
-// @symbol _ZN13WaterfallMist13InitResourcesEv
+// @symbol _ZN15daObjMarioCap_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "WaterfallMist.h"
+#include "daObjMarioCap_c.h"
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *sfp);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *bmd, int a, int b);
@@ -31,7 +31,7 @@ extern char data_ov002_0210de30;
 extern char data_ov002_0210de38;
 extern char data_ov002_0210df54;
 
-int WaterfallMist::InitResources()
+int daObjMarioCap_c::InitResources()
 {
     int flag;
     int v;

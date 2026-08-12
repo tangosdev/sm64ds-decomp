@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN13WaterfallMist16CleanupResourcesEv
+// @symbol _ZN15daObjMarioCap_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "WaterfallMist.h"
+#include "daObjMarioCap_c.h"
 #include "SharedFilePtr.h"
 extern "C" {
 }
@@ -21,7 +21,7 @@ extern void* data_ov002_0210de18;
 extern void* data_ov002_0210de30;
 extern void* data_ov002_0210de38;
 
-int WaterfallMist::CleanupResources()
+int daObjMarioCap_c::CleanupResources()
 {
   int i = mModelIndex;
   if (i >= 3) return 1;

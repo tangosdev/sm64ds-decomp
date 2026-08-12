@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN13WaterfallMist6RenderEv
+// @symbol _ZN15daObjMarioCap_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "WaterfallMist.h"
-// _ZN13WaterfallMist6RenderEv at 0x020b83c4
+#include "daObjMarioCap_c.h"
+// _ZN15daObjMarioCap_c6RenderEv at 0x020b83c4
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 extern "C" int _ZN5Model6RenderEPK7Vector3(void *, const void *);
 extern "C" int data_ov002_0210df54;
 
-int WaterfallMist::Render()
+int daObjMarioCap_c::Render()
 {
     int b = (mFlags & 0x40000) ? 1 : 0;
     if (b) return 1;
