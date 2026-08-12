@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN13InvisiblePole16OnPendingDestroyEv
+// @symbol _ZN9CameraTag16OnPendingDestroyEv
 /* recovered: shared header, real C++ method
  *
  * Empty in the ROM -- a single `bx lr`.
  */
-#include "InvisiblePole.h"
+#include "CameraTag.h"
 
-void InvisiblePole::OnPendingDestroy()
+void CameraTag::OnPendingDestroy()
 {
 }

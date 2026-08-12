@@ -1,5 +1,5 @@
 /* Hand-written from matched-function evidence:
- * class InvisiblePole, ov002 0x020b0710-0x020b07c8 (8 functions, no other class
+ * class CameraTag, ov002 0x020b0710-0x020b07c8 (8 functions, no other class
  * in the TU -- tu_map.py).
  *
  * ALL FIVE of its virtual overrides are STUBS -- InitResources, Behavior,
@@ -22,11 +22,11 @@
  *
  * Field NAMES are placeholders - renaming cannot change codegen.
  */
-#ifndef INVISIBLEPOLE_H
-#define INVISIBLEPOLE_H
+#ifndef CAMERATAG_H
+#define CAMERATAG_H
 #include "types.h"
 
-struct InvisiblePole {
+struct CameraTag {
     u8  pad_000[0xd4];
     /* MovingCylinderClsn, 0x34 bytes, running to the end of the object. Kept
        as a byte marker: nothing in this class ever looks inside it. */

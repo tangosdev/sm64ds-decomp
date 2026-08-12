@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN13InvisiblePole16CleanupResourcesEv
+// @symbol _ZN9CameraTag16CleanupResourcesEv
 /* recovered: shared header, real C++ method
  *
  * `return 1`. InitResources claimed nothing, so there is nothing to release --
  * the pair stays balanced by both doing nothing.
  */
-#include "InvisiblePole.h"
+#include "CameraTag.h"
 
-int InvisiblePole::CleanupResources()
+int CameraTag::CleanupResources()
 {
     return 1;
 }

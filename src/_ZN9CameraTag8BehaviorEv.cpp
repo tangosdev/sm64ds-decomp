@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN13InvisiblePole8BehaviorEv
+// @symbol _ZN9CameraTag8BehaviorEv
 /* recovered: shared header, real C++ method
  *
  * `return 1`. The pole never moves and never thinks; it is queried, not
  * ticked.
  */
-#include "InvisiblePole.h"
+#include "CameraTag.h"
 
-int InvisiblePole::Behavior()
+int CameraTag::Behavior()
 {
     return 1;
 }
