@@ -4,15 +4,15 @@
     .ctor       start:0x0211b72c end:0x0211b758 kind:rodata align:4
     .data       start:0x0211b760 end:0x0211c660 kind:data align:32
     .bss        start:0x0211c660 end:0x0211ca00 kind:bss align:32
-src/func_ov064_02115ee0.c:
+src/_ZN7daOts_cD1Ev.c:
     complete
     .text start:0x02115ee0 end:0x02115f28
 
-src/func_ov064_02115f28.c:
+src/_ZN7daOts_cD0Ev.c:
     complete
     .text start:0x02115f28 end:0x02115f84
 
-src/func_ov064_02115f84.c:
+src/_ZN7daOts_c16OnAimedAtWithEggEv.c:
     complete
     .text start:0x02115f84 end:0x02115f98
 
@@ -83,11 +83,11 @@ src/func_ov064_02116bac.cpp:
     complete
     .text start:0x02116bac end:0x02116ca0
 
-src/_ZN5Bully16CleanupResourcesEv.cpp:
+src/_ZN7daOts_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02116ca0 end:0x02116cf0
 
-src/_ZN5Bully6RenderEv.cpp:
+src/_ZN7daOts_c6RenderEv.cpp:
     complete
     .text start:0x02116cf0 end:0x02116d1c
 
