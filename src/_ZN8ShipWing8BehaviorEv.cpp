@@ -1,16 +1,16 @@
 //cpp
 #include "types.h"
-// @symbol _ZN18RotatingPlatformRr8BehaviorEv
+// @symbol _ZN8ShipWing8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "RotatingPlatformRr.h"
+#include "ShipWing.h"
 extern s16 data_02082214[];
 extern "C" {
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* v);
 }
 
-int RotatingPlatformRr::Behavior()
+int ShipWing::Behavior()
 {
     s16 a = unk_116 << 10;
     if (unk_118 == 0) {

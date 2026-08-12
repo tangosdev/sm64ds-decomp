@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN18RotatingPlatformRrD1Ev
+// @symbol _ZN8ShipWingD1Ev
 
 struct Actor {
     char pad[0xd0];
@@ -8,11 +8,11 @@ struct Actor {
 
 struct CommonModel { char pad[0x4]; ~CommonModel(); };
 
-struct RotatingPlatformRr : Actor {
+struct ShipWing : Actor {
     CommonModel m0;   /* 0xd4 */
-    virtual ~RotatingPlatformRr();
+    virtual ~ShipWing();
 };
 
-RotatingPlatformRr::~RotatingPlatformRr()
+ShipWing::~ShipWing()
 {
 }
