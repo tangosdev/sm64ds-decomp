@@ -1,11 +1,22 @@
 //cpp
-#include "types.h"
-// @symbol func_ov006_020d5384
-/* recovered: renamed to Class_Method, RTTI class fields named */
+// @symbol _ZN12dScMgAmida_c13InitResourcesEv
+/* dScMgAmida_c::InitResources -- MEASURED, not guessed: calling Unk36() as a
+   normal virtual method compiles Render 0xc bytes larger than the ROM (see
+   _ZN12dScMgAmida_c6RenderEv.cpp's note for the full story -- traced via
+   final_link.o.xMAP, not assumed). Render is the only one of the three
+   callers actually proven to grow, but this file and Behavior's keep the
+   pre-migration source's vtable-shim struct dispatch too (`Obj::v90()`)
+   rather than leaving three call sites on two different dispatch
+   conventions for the same slot -- the fallback the migration recipe calls
+   for when virtual dispatch and the shim produce different bytes. Unk36 is
+   still a real declared virtual method (see the class header banner).
+   unk_0bc is dScMgBase_c's own inherited field, but it falls inside that
+   class's pad_0bc (not a named field there either), so it stays a raw
+   char* offset, same precedent every other dScMgBase_c leaf's
+   inherited-but-unnamed-field access uses. */
+#include "decl_common.h"
 #include "dScMgAmida_c.h"
-// recovered name: dScMgAmida_c_InitResources
-/* recovered: renamed to Class_Method */
-/* dScMgAmida_c::InitResources - recovered from vtable slot identity */
+
 struct Obj {
     virtual void v00();
     virtual void v04();
@@ -47,49 +58,41 @@ struct Obj {
 };
 
 extern "C" {
-    int _ZN6Memory8AllocateEj(u32 size);
-    void *func_02054efc(void);
     void MultiStore16(u16 val, void *dst, int nbytes);
     void *_ZN3G2S13GetBG0CharPtrEv(void);
-    void func_ov004_020af2f8(void *self, int a, int b, int c);
-    int func_02054d88(void);
     u32 LoadCompressedFileAt(u16 fileID, void *target);
     int LoadFile(int handle);
     void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);
     void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-    void Deallocate(void *ptr);
     void *_ZN2G212GetBG3ScrPtrEv(void);
-    void *_ZN3G2S13GetBG3CharPtrEv(void);
     void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
     void *_ZN3G2S12GetBG3ScrPtrEv(void);
     void *_ZN3G2S12GetBG2ScrPtrEv(void);
     void _ZN3G2x13SetBlendAlphaEPVttttt(void *p, u16 a, u16 b, u16 c, u16 d);
-    int GetOwnerLanguage(void);
     void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
     void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-    void func_ov006_020d3ba0(void *self);
 
     extern s32 data_0208ee44;
     extern u8 data_0209d45c;
     extern u8 data_0209d454;
 }
 
-extern "C" int func_ov006_020d5384(Obj *c)
+s32 dScMgAmida_c::InitResources()
 {
-    struct dScMgAmida_c *self = (struct dScMgAmida_c *)(void *)c;
+    Obj *c = (Obj *)this;
     volatile u16 sp4;
     volatile u16 sp6;
     void *f;
 
-    self->unk_470c = _ZN6Memory8AllocateEj(0x15800);
-    self->unk_4710 = _ZN6Memory8AllocateEj(0x15800);
+    unk_470c = (u8 *)_ZN6Memory8AllocateEj(0x15800);
+    unk_4710 = (u8 *)_ZN6Memory8AllocateEj(0x15800);
 
     if (c->v90() != 0) {
-        self->unk_4700 = 0x78;
-        self->unk_53e4 = 2;
+        unk_4700 = 0x78;
+        unk_53e4 = 2;
     } else {
-        self->unk_4700 = 0x98;
-        self->unk_53e4 = 2;
+        unk_4700 = 0x98;
+        unk_53e4 = 2;
     }
 
     data_0208ee44 = 1;
@@ -111,7 +114,7 @@ extern "C" int func_ov006_020d5384(Obj *c)
     sp6 = 0;
     MultiStore16((u16)sp6, f, 0x6000);
 
-    func_ov004_020af2f8(c, 1, 0, 2);
+    func_ov004_020af2f8((char *)this, 1, 0, 2);
 
     *(volatile u16 *)0x400000e = (*(volatile u16 *)0x400000e & 0x43) | 0x140c;
     *(volatile u16 *)0x400000e &= ~0x40;
@@ -194,8 +197,8 @@ extern "C" int func_ov006_020d5384(Obj *c)
         Deallocate(f);
     }
 
-    self->unk_53d4 = 0;
-    self->unk_53e8 = self->unk_0bc * 5;
-    func_ov006_020d3ba0(c);
+    unk_53d4 = 0;
+    unk_53e8 = *(int *)((char *)this + 0xbc) * 5;
+    func_ov006_020d3ba0((char *)this);
     return 1;
 }

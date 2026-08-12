@@ -1,71 +1,49 @@
 //cpp
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef short s16;
-typedef unsigned int u32;
-typedef long long s64;
+// @symbol _ZN12dScMgAmida_c8BehaviorEv
+/* dScMgAmida_c::Behavior -- MEASURED, not guessed: calling Unk36() as a
+   normal virtual method compiles Render 0xc bytes larger than the ROM (see
+   _ZN12dScMgAmida_c6RenderEv.cpp's note for the full story -- traced via
+   final_link.o.xMAP, not assumed). So this file ALSO keeps the
+   pre-migration source's vtable-shim struct dispatch (`VtObj::m36()`,
+   VIRT() macro) even though Unk36 is a real declared virtual method (see
+   the class header banner) -- the fallback the migration recipe calls for
+   when virtual dispatch and the shim produce different bytes. The
+   macro-based raw offset access (I/B/H/IA on `char *c`) is otherwise kept
+   exactly as recovered -- this class's own fields (0x46d0 on) sit at the
+   identical byte offsets in the real struct, so the macros still reach the
+   right bytes. */
+#include "decl_common.h"
+#include "dScMgAmida_c.h"
 
 extern "C" {
-void func_ov006_020d3ba0(char *c);
 void func_ov006_020d36a4(char *c);
 void func_ov006_020d1a3c(char *c);
 void func_ov006_020d1958(char *c);
 void func_ov006_020d1ba0(char *c);
 void func_ov006_020d27dc(char *c);
 void FreeGfxSlotsById(int a);
-void func_ov004_020adb1c(int a);
-void func_ov004_020b0a54(int a);
 int Vec2_Len(int *v);
-int func_0203d434(int *v);
-void func_0203d630(int *v, int m);
 int RandomIntInternal(int *seed);
 }
+
+struct VtObj {
+    virtual void d00(); virtual void d01(); virtual void d02(); virtual void d03();
+    virtual void d04(); virtual void d05(); virtual void d06(); virtual void d07();
+    virtual void d08(); virtual void d09(); virtual void d10(); virtual void d11();
+    virtual void d12(); virtual void d13(); virtual void d14(); virtual void d15();
+    virtual void d16(); virtual void d17(); virtual void d18(); virtual void d19();
+    virtual void d20(); virtual void d21(); virtual void d22(); virtual void d23();
+    virtual void d24(); virtual void d25(); virtual void d26(); virtual void d27();
+    virtual void d28(); virtual void d29(); virtual void d30(); virtual void d31();
+    virtual void d32(); virtual void d33(); virtual void d34(); virtual void d35();
+    virtual int m36();
+};
 
 extern u8 data_020a0e40[];
 extern u8 data_020a0de8[];
 extern u8 data_020a0de9[];
 extern int data_0209d4b8;
 extern s16 data_02082214[];
-
-struct VtObj {
-    virtual void d00();
-    virtual void d01();
-    virtual void d02();
-    virtual void d03();
-    virtual void d04();
-    virtual void d05();
-    virtual void d06();
-    virtual void d07();
-    virtual void d08();
-    virtual void d09();
-    virtual void d10();
-    virtual void d11();
-    virtual void d12();
-    virtual void d13();
-    virtual void d14();
-    virtual void d15();
-    virtual void d16();
-    virtual void d17();
-    virtual void d18();
-    virtual void d19();
-    virtual void d20();
-    virtual void d21();
-    virtual void d22();
-    virtual void d23();
-    virtual void d24();
-    virtual void d25();
-    virtual void d26();
-    virtual void d27();
-    virtual void d28();
-    virtual void d29();
-    virtual void d30();
-    virtual void d31();
-    virtual void d32();
-    virtual void d33();
-    virtual void d34();
-    virtual void d35();
-    virtual int m36();
-};
 
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 #define I(o)  (*(int*)(c+(o)))
@@ -80,8 +58,9 @@ struct VtObj {
 
 #pragma opt_strength_reduction off
 
-extern "C" int func_ov006_020d4b7c(char *c)
+s32 dScMgAmida_c::Behavior()
 {
+    char *c = (char *)this;
     int i2;
     char *p;
     int *vp;

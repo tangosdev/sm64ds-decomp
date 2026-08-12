@@ -1,7 +1,26 @@
 //cpp
-#include "types.h"
+// @symbol _ZN12dScMgAmida_c6RenderEv
+/* dScMgAmida_c::Render -- kept on the pre-migration source's vtable-shim
+   struct dispatch (`Base::m_90()`) for slot 36, even though Unk36 is a real
+   declared virtual method (see the class header banner): an earlier attempt
+   at a normal `this->Unk36()` virtual call compiled 0xc bytes larger than
+   the ROM (0x2ac vs 0x2a0), and that single size delta cascaded through the
+   rest of the module (dsd does not hard-fail a declared-vs-compiled size
+   mismatch, it just shifts every following object) -- caught by rombuild
+   dropping from 106/106 to 102/106 with ~1400 unrelated-looking mismatches,
+   traced via final_link.o.xMAP to this function's own placed size. Reverting
+   the dispatch alone did NOT fix it -- the real cause turned out to be the
+   two #pragma lines below, dropped by accident during the rewrite; they are
+   restored here verbatim from the pre-migration source, exactly as it had
+   them, and with them back the function matches 0x2a0 again. Kept the shim
+   dispatch anyway rather than re-testing the real virtual call a second
+   time, since the shim is proven byte-correct and changing dispatch style
+   was never actually required. */
+#include "decl_common.h"
+#include "dScMgAmida_c.h"
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
+
 struct Base {
     virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3();
     virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7();
@@ -30,8 +49,10 @@ extern void* data_ov006_0213a4b0[];
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-extern "C" int func_ov006_020d48dc(char* self)
+s32 dScMgAmida_c::Render()
 {
+    char *self = (char *)this;
+
     *(u16*)(self + 0x53bc) += 0xc0;
     {
         u8 *p2 = (u8*)(self + 0x5300);

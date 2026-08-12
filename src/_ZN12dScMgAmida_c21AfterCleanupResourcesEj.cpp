@@ -1,13 +1,21 @@
 //cpp
-// @symbol func_ov006_020d5924
-// recovered name: dScMgAmida_c_AfterCleanupResources
-/* recovered: renamed to Class_Method */
-/* dScMgAmida_c::AfterCleanupResources - recovered from vtable slot identity */
-extern "C" { void* _ZN11dScMgBase_c21AfterCleanupResourcesEj(void*, int); }
-namespace Memory { void Deallocate(void*); }
-extern "C" void* func_ov006_020d5924(char* c, int r1){
-  if(r1!=2) return c;
-  Memory::Deallocate(*(void**)(c+0x4000+0x70c));
-  Memory::Deallocate(*(void**)(c+0x4000+0x710));
-  return _ZN11dScMgBase_c21AfterCleanupResourcesEj(c, r1);
+// @symbol _ZN12dScMgAmida_c21AfterCleanupResourcesEj
+/* dScMgAmida_c::AfterCleanupResources -- the recovered source locally
+   declared the base override as returning void*; the real dScMgBase_c.h
+   override returns void, so this now calls dScMgBase_c::AfterCleanupResources
+   as a plain statement instead of returning it, same fix dScMgLuigi_c's own
+   slot 5 needed. The early `if (vfSuccess != 2) return` is preserved exactly
+   as recovered -- the base-class call is skipped too when vfSuccess != 2,
+   not just the two Deallocate calls. */
+#include "dScMgAmida_c.h"
+
+namespace Memory { void Deallocate(void *); }
+
+void dScMgAmida_c::AfterCleanupResources(u32 vfSuccess)
+{
+    if (vfSuccess != 2)
+        return;
+    Memory::Deallocate(unk_470c);
+    Memory::Deallocate(unk_4710);
+    dScMgBase_c::AfterCleanupResources(vfSuccess);
 }

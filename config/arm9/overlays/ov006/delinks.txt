@@ -1343,11 +1343,11 @@ src/func_ov006_020d100c.c:
     complete
     .text start:0x020d100c end:0x020d1018
 
-src/func_ov006_020d1018.c:
+src/_ZN12dScMgAmida_cD1Ev.cpp:
     complete
     .text start:0x020d1018 end:0x020d10b8
 
-src/func_ov006_020d10b8.cpp:
+src/_ZN12dScMgAmida_cD0Ev.cpp:
     complete
     .text start:0x020d10b8 end:0x020d116c
 
@@ -1359,7 +1359,7 @@ src/func_ov006_020d1170.c:
     complete
     .text start:0x020d1170 end:0x020d1188
 
-src/func_ov006_020d1188.c:
+src/_ZN12dScMgAmida_c5Unk36Ev.cpp:
     complete
     .text start:0x020d1188 end:0x020d11a0
 
@@ -1415,11 +1415,11 @@ src/func_ov006_020d47f4.c:
     complete
     .text start:0x020d47f4 end:0x020d48dc
 
-src/func_ov006_020d48dc.cpp:
+src/_ZN12dScMgAmida_c6RenderEv.cpp:
     complete
     .text start:0x020d48dc end:0x020d4b7c
 
-src/func_ov006_020d4b7c.cpp:
+src/_ZN12dScMgAmida_c8BehaviorEv.cpp:
     complete
     .text start:0x020d4b7c end:0x020d52f0
 
@@ -1427,11 +1427,11 @@ src/func_ov006_020d52f0.c:
     complete
     .text start:0x020d52f0 end:0x020d5384
 
-src/func_ov006_020d5384.cpp:
+src/_ZN12dScMgAmida_c13InitResourcesEv.cpp:
     complete
     .text start:0x020d5384 end:0x020d5924
 
-src/func_ov006_020d5924.cpp:
+src/_ZN12dScMgAmida_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x020d5924 end:0x020d5974
 

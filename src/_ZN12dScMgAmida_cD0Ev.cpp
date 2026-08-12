@@ -1,22 +1,22 @@
 //cpp
-// @symbol func_ov006_020d10b8
-// recovered name: dScMgAmida_c_OnYoshiTryEat
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgAmida_c::OnYoshiTryEat - recovered from vtable slot identity */
-extern "C" void __destroy_arr(void* p, int a, int b, void* fn);
-extern "C" void NullDestructor_0203d47c(void);
-extern "C" void* data_020a0eac;
-struct Heap;
-namespace Memory { void Deallocate(void*, Heap*); }
-extern "C" void* func_ov006_020d10b8(void* c) {
-    *(int**)c = &data_ov006_0213b918;
-    __destroy_arr((char*)c + 0x4768, 0x80, 0x18, (void*)&func_ov006_020d116c);
-    __destroy_arr((char*)c + 0x4744, 4, 8, (void*)&NullDestructor_0203d47c);
-    __destroy_arr((char*)c + 0x4724, 4, 8, (void*)&NullDestructor_0203d47c);
-    __destroy_arr((char*)c + 0x4660, 4, 8, (void*)&NullDestructor_0203d47c);
-    _ZN11dScMgBase_cD2Ev(c);
-    Memory::Deallocate(c, (Heap*)data_020a0eac);
-    return c;
+// @symbol _ZN12dScMgAmida_cD0Ev
+/* Real out-of-line definition, identical body to
+   _ZN12dScMgAmida_cD1Ev.cpp -- see that file's note and
+   include/dScMgAmida_c.h's own class banner. dScMgBase_c's own operator
+   delete (its immediate base) covers the Memory::Deallocate call the
+   pre-migration source made explicitly; no per-class copy needed, same
+   precedent as every other dScMgBase_c leaf's D0. The tree-wide
+   OnYoshiTryEat mislabel on this class landed HERE too (its source comment
+   said "recovered name: dScMgAmida_c_OnYoshiTryEat") rather than on the
+   real OnYoshiTryEat-shaped slot 18 helper -- this body is the textbook D0
+   shape (vtable write, four array destroys, base D2, Deallocate), not
+   gameplay logic, same mislabel dScMgHanachan_c's own D0 carried. */
+#include "dScMgAmida_c.h"
+
+dScMgAmida_c::~dScMgAmida_c()
+{
+    __destroy_arr((char *)this + 0x4768, 0x80, 0x18, (void *)func_ov006_020d116c);
+    __destroy_arr((char *)this + 0x4744, 4, 8, (void *)NullDestructor_0203d47c);
+    __destroy_arr((char *)this + 0x4724, 4, 8, (void *)NullDestructor_0203d47c);
+    __destroy_arr((char *)this + 0x4660, 4, 8, (void *)NullDestructor_0203d47c);
 }
