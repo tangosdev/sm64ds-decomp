@@ -30,17 +30,45 @@ struct YoshiEgg : Enemy {
        function's `this`, which is an object address -- so the word is a Player *. It
        says nothing about the 0x60 below it, which stays explicit padding. */
     Player             *mPlayer;                /* 0x38c */
-    u8  pad_390[0x60];
-    s32 unk_3f0;                                /* 0x3f0 */
-    u8  pad_3f4[0x2c];
+    u8  pad_390[0x30];
+    /* InitResources copies the actor's own position here once, and nothing
+       migrated writes it again. */
+    s32 mSpawnPosX;                             /* 0x3c0 */
+    s32 mSpawnPosY;                             /* 0x3c4 */
+    s32 mSpawnPosZ;                             /* 0x3c8 */
+    u8  pad_3cc[0x18];
+    /* TWO s16 triples, and InitResources seeds BOTH from mAngleX/Y/Z with the
+       same three loads. Nothing in any migrated function tells them apart, so
+       neither gets a name it has not earned. */
+    s16 unk_3e4;                                /* 0x3e4 */
+    s16 unk_3e6;                                /* 0x3e6 */
+    s16 unk_3e8;                                /* 0x3e8 */
+    s16 unk_3ea;                                /* 0x3ea */
+    s16 unk_3ec;                                /* 0x3ec */
+    s16 unk_3ee;                                /* 0x3ee */
+    s32 unk_3f0;                                /* 0x3f0 -- param1 & 3; picks the
+                                                   collision size, and Behavior
+                                                   treats 1 as its own case */
+    u8  pad_3f4[0x8];
+    s32 unk_3fc[5];                             /* 0x3fc -- zeroed as a run of five */
+    u8  pad_410[0xf];
+    u8  unk_41f;                                /* 0x41f */
+    /* Behavior indexes unk_421 with unk_420 and stops at 5, which is what makes
+       the array five wide and puts the byte at 0x426 outside it. */
     u8  unk_420;                                /* 0x420 */
-    u8  pad_421[0xb];
+    u8  unk_421[5];                             /* 0x421 */
+    u8  pad_426[0x1];
+    u8  mStarSlot;                              /* 0x427 -- Actor::TrackStar's answer,
+                                                   the same shape as ChillBully's */
+    u8  unk_428;                                /* 0x428 -- param1 >> 4 */
+    u8  pad_429[0x3];
 
     virtual ~YoshiEgg();
 
     /* methods */
     int Behavior();
     int CleanupResources();
+    int InitResources();
     int Render();
 };
 

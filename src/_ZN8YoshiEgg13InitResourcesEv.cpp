@@ -1,100 +1,119 @@
+//cpp
 // @symbol _ZN8YoshiEgg13InitResourcesEv
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_common.h"
-/* NO #include "YoshiEgg.h" here, deliberately. This file is C, it reaches every
-   field through a raw offset and names not one member, so the header bought it
-   nothing -- and once YoshiEgg became a real Enemy subclass the header stopped
-   being C at all (`struct Enemy : Actor`, `extern "C"`), which is a syntax error
-   in a .c file. Dropping the unused include is the whole fix; converting this
-   function to a real method is a separate job, and a larger one. */
+/* recovered: named members + shared header, real C++ method
+ *
+ * Vtable slot 0. This was the last YoshiEgg function still written as a C free
+ * function reaching every field through a raw offset -- it named not one member,
+ * which is why it could not even include its own header once YoshiEgg became a
+ * real Enemy subclass.
+ */
+#include "YoshiEgg.h"
+#include "SharedFilePtr.h"
 
-extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
-extern int  _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
-extern int  _ZN11ShadowModel12InitCylinderEv(void *self);
-extern int  _ZN11ShadowModel10InitCuboidEv(void *self);
-extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int n, int speed, unsigned int flags);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *actor, int r, int h, unsigned int d, unsigned int e);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int r, int h, void *p, int q);
-extern unsigned char _ZN5Actor9TrackStarEjj(void *self, unsigned int a, unsigned int b);
-extern int  func_ov002_020ec654(void *p);
-extern int  func_ov002_020ec628(void *p);
-extern int  func_ov002_020ec610(void *p);
-extern void LoadBlueCoinModel(void *p);
-
+extern "C" {
+/* ov002's egg model table. Each entry is a SharedFilePtr, whose +4 is the file
+   the shared loader put there; index 1 is the variant that also gets the cuboid
+   shadow rather than the cylinder. */
+extern char *data_ov002_021000a0[];
 extern char data_ov002_0210e6b0[];
 extern char data_ov002_0210eb78[];
 
+/* All three carry Fix12<int> parameters, so their definitions stay mangled free
+   functions -- see the note in include/ShadowModel.h about CW homing class-typed
+   by-value parameters. A CALL is unaffected, it emits the same symbol either way.
+   extern "C" so the reference is mangled once and not twice. */
+void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
+        MovingCylinderClsn *self, Actor *actor, int radius, int height, u32 d, u32 e);
+void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+        WithMeshClsn *self, Actor *actor, int radius, int height, void *a, void *b);
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+        ModelAnim *self, void *animFile, int flags, int speed, u32 startFrame);
+
+unsigned char _ZN5Actor9TrackStarEjj(Actor *self, u32 star, u32 kind);
+
+int func_ov002_020ec654(void *self);
+int func_ov002_020ec628(void *self);
+int func_ov002_020ec610(void *self);
+void LoadBlueCoinModel(void *self);
+}
+
 #pragma opt_strength_reduction off
 
-int _ZN8YoshiEgg13InitResourcesEv(void *c)
+int YoshiEgg::InitResources()
 {
-    char *o = (char *)c;
     int idx;
     int i;
 
-    *(unsigned char *)(o + 0x428) = (unsigned char)((unsigned int)*(int *)(o + 8) >> 4);
+    unk_428 = (u8)(param1 >> 4);
+
     idx = 0;
-    if (func_ov002_020ec654(c) != 0)
+    if (func_ov002_020ec654((char *)this) != 0)
         idx = 1;
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov002_0210e6b0);
-    _ZN9Animation8LoadFileER13SharedFilePtr(data_ov002_0210eb78);
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(o + 0x300,
-            *(void **)(data_ov002_021000a0[idx] + 4), 1, -1) == 0)
+
+    Animation::LoadFile(*(SharedFilePtr *)data_ov002_0210e6b0);
+    Animation::LoadFile(*(SharedFilePtr *)data_ov002_0210eb78);
+    if (mModelAnim.SetFile(*(BMD_File **)(data_ov002_021000a0[idx] + 4), 1, -1) == 0)
         return 0;
 
-    if (func_ov002_020ec654(c) == 0) {
-        if (_ZN11ShadowModel12InitCylinderEv(o + 0x364) == 0)
+    /* The predicate is asked a SECOND time rather than reusing idx: the ROM calls
+       0x020ec654 twice, and folding it into the index above loses a bl. */
+    if (func_ov002_020ec654((char *)this) == 0) {
+        if (mShadowModel.InitCylinder() == 0)
             return 0;
     } else {
-        if (_ZN11ShadowModel10InitCuboidEv(o + 0x364) == 0)
+        if (mShadowModel.InitCuboid() == 0)
             return 0;
     }
 
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(o + 0x300,
-        *(void **)(data_ov002_0210eb78 + 4), 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
+        &mModelAnim, *(void **)(data_ov002_0210eb78 + 4), 0, 0x1000, 0);
 
-    *(char *)(o + 0xcc) = -1;
-    *(int *)(o + 0x3c0) = *(int *)(o + 0x5c);
-    *(int *)(o + 0x3c4) = *(int *)(o + 0x60);
-    *(int *)(o + 0x3c8) = *(int *)(o + 0x64);
-    *(int *)(o + 0x9c) = -0x2000;
-    *(int *)(o + 0xa0) = -0x3c000;
-    *(int *)(o + 0x3f0) = *(int *)(o + 8) & 3;
+    mAreaId = -1;
+    mSpawnPosX = mPosX;
+    mSpawnPosY = mPosY;
+    mSpawnPosZ = mPosZ;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
+    unk_3f0 = param1 & 3;
 
-    switch (*(int *)(o + 0x3f0)) {
+    switch (unk_3f0) {
     case 0:
     case 1:
-        *(int *)(o + 0x80) = 0x1000;
-        *(int *)(o + 0x84) = 0x1000;
-        *(int *)(o + 0x88) = 0x1000;
-        _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(o + 0x110, c, 0x46000, 0x8c000, 0x200002, 0xa08000);
-        _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(o + 0x144, c, 0x28000, 0x28000, 0, 0);
+        mScaleX = 0x1000;
+        mScaleY = 0x1000;
+        mScaleZ = 0x1000;
+        _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
+            &mMovingCylinderClsn, this, 0x46000, 0x8c000, 0x200002, 0xa08000);
+        _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+            &mWithMeshClsn, this, 0x28000, 0x28000, 0, 0);
         break;
     case 2:
-        *(int *)(o + 0x80) = 0x2000;
-        *(int *)(o + 0x84) = 0x2000;
-        *(int *)(o + 0x88) = 0x2000;
-        _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(o + 0x110, c, 0x78000, 0xa0000, 0x200002, 0xa08000);
-        _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(o + 0x144, c, 0x64000, 0x64000, 0, 0);
+        mScaleX = 0x2000;
+        mScaleY = 0x2000;
+        mScaleZ = 0x2000;
+        _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
+            &mMovingCylinderClsn, this, 0x78000, 0xa0000, 0x200002, 0xa08000);
+        _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+            &mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
         break;
     default:
         break;
     }
 
     for (i = 0; i < 5; i++)
-        *(int *)(o + i * 4 + 0x3fc) = 0;
+        unk_3fc[i] = 0;
 
-    *(short *)(o + 0x3ea) = *(short *)(o + 0x8c);
-    *(short *)(o + 0x3ec) = *(short *)(o + 0x8e);
-    *(short *)(o + 0x3ee) = *(short *)(o + 0x90);
-    *(short *)(o + 0x3e4) = *(short *)(o + 0x8c);
-    *(short *)(o + 0x3e6) = *(short *)(o + 0x8e);
-    *(short *)(o + 0x3e8) = *(short *)(o + 0x90);
-    *(unsigned char *)(o + 0x41f) = 0xf;
+    unk_3ea = mAngleX;
+    unk_3ec = mAngleY;
+    unk_3ee = mAngleZ;
+    unk_3e4 = mAngleX;
+    unk_3e6 = mAngleY;
+    unk_3e8 = mAngleZ;
+    unk_41f = 0xf;
 
-    if (func_ov002_020ec628(c) != 0)
-        LoadBlueCoinModel(c);
-    if (func_ov002_020ec610(c) != 0)
-        *(unsigned char *)(o + 0x427) = _ZN5Actor9TrackStarEjj(c, 0, 1);
+    if (func_ov002_020ec628((char *)this) != 0)
+        LoadBlueCoinModel((char *)this);
+    if (func_ov002_020ec610((char *)this) != 0)
+        mStarSlot = _ZN5Actor9TrackStarEjj(this, 0, 1);
     return 1;
 }

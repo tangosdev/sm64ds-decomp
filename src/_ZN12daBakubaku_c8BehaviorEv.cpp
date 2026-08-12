@@ -1,63 +1,68 @@
 //cpp
 // @symbol _ZN12daBakubaku_c8BehaviorEv
-/* Vtable slot 6, previously func_ov032_021121b4. RENAMED ONLY -- the body is not
- * migrated to a real method, because the `PMF` above is a pointer-to-member on an
- * INCOMPLETE class and its representation depends on that incompleteness. Giving
- * Klass a real definition is a codegen change, not a cleanup. Kept extern "C" so
- * the mangled name is emitted verbatim rather than mangled a second time. */
-struct Klass; typedef void (Klass::*PMF)();
-struct M { char pad[8]; PMF pmf; };
-struct CylinderClsn;
-struct WithMeshClsn;
-struct ModelAnim;
+/* recovered: named members + shared header, real C++ method -- vtable slot 6
+ *
+ * THE POINTER-TO-MEMBER SHADOW BELOW STAYS, and it is the whole reason this file
+ * looks the way it does. mState points at a state-table entry whose +8 is a
+ * pointer-to-member; a PMF's representation depends on what the compiler knows
+ * about the class it belongs to, so `Klass` must stay INCOMPLETE. Giving it a
+ * definition -- or, worse, naming it daBakubaku_c -- makes mwccarm abort with an
+ * internal compiler error rather than a diagnostic.
+ *
+ * What was wrong before was only the NAME: the stand-in never had to be called
+ * Klass or to sit in the way of the real class. Everything else in this function
+ * migrated once the header named its fields.
+ */
+#include "daBakubaku_c.h"
+#include "CylinderClsn.h"
+#include "Player.h"
+
+/* Deliberately never defined. See above. */
+struct Klass;
+typedef void (Klass::*PMF)();
+struct StateEntry { char pad[8]; PMF handler; };
+
 extern "C" {
-int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void *self, WithMeshClsn *wm, ModelAnim *ma, unsigned int j);
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, CylinderClsn *cc);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
-void func_ov032_02112044(char *c);
-void _ZN9Animation7AdvanceEv(void *self);
-void func_ov032_021113fc(void *self);
-void _ZN12CylinderClsn5ClearEv(CylinderClsn *self);
-void *_ZN5Actor13ClosestPlayerEv(void *self);
-void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
+void func_ov032_02112044(daBakubaku_c *self);
+void func_ov032_021113fc(daBakubaku_c *self);
 extern char data_ov032_02113aac[];
 }
 
-extern "C" int _ZN12daBakubaku_c8BehaviorEv(char *c)
+s32 daBakubaku_c::Behavior()
 {
-    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, (WithMeshClsn *)(c + 0x190), (ModelAnim *)(c + 0x34c), 3) != 0)
+    if (UpdateKillByInvincibleChar(mWithMeshClsn, mModelAnim, 3) != 0)
         return 1;
 
-    DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    DecIfAbove0_Short((unsigned short *)(c + 0x42a));
+    DecIfAbove0_Short((unsigned short *)&unk_100);
+    DecIfAbove0_Short(&unk_42a);
 
-    M *m = *(M **)(c + 0x3b0);
-    if (m->pmf != 0)
-        (((Klass *)c)->*(m->pmf))();
+    StateEntry *state = (StateEntry *)mState;
+    if (state->handler != 0)
+        (((Klass *)this)->*(state->handler))();
 
-    *(short *)(c + 0x8c) = *(short *)(c + 0x92);
-    *(short *)(c + 0x8e) = *(short *)(c + 0x94);
-    *(short *)(c + 0x90) = *(short *)(c + 0x96);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, (CylinderClsn *)(c + 0x110));
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, (WithMeshClsn *)(c + 0x190), 0);
-    func_ov032_02112044(c);
+    mAngleX = mPrevAngleX;
+    mAngleY = mPrevAngleY;
+    mAngleZ = mPrevAngleZ;
+    UpdatePos(&mBodyClsn);
+    UpdateWMClsn(mWithMeshClsn, 0);
+    func_ov032_02112044(this);
 
-    if (*(void **)(c + 0x3b0) != (void *)data_ov032_02113aac) {
-        *(int *)(c + 0x3a8) = 0x1000;
+    if (mState != (void *)data_ov032_02113aac) {
+        mModelAnim.speed = 0x1000;
     } else {
-        *(int *)(c + 0x3a8) = 0x2000;
+        mModelAnim.speed = 0x2000;
     }
 
-    _ZN9Animation7AdvanceEv(c + 0x39c);
-    func_ov032_021113fc(c);
-    _ZN12CylinderClsn5ClearEv((CylinderClsn *)(c + 0x110));
-    _ZN12CylinderClsn5ClearEv((CylinderClsn *)(c + 0x150));
+    mModelAnim.Advance();
+    func_ov032_021113fc(this);
+    mBodyClsn.Clear();
+    mHeadClsn.Clear();
 
-    void *p = _ZN5Actor13ClosestPlayerEv(c);
-    if (p != 0 && *(unsigned char *)((char *)p + 0x6fb) == 0) {
-        _ZN12CylinderClsn6UpdateEv((CylinderClsn *)(c + 0x110));
-        _ZN12CylinderClsn6UpdateEv((CylinderClsn *)(c + 0x150));
+    Player *p = ClosestPlayer();
+    if (p != 0 && p->unk_6fb == 0) {
+        mBodyClsn.Update();
+        mHeadClsn.Update();
     }
 
     return 1;

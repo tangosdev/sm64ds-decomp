@@ -30,29 +30,45 @@
  * ov027 and ov032 overlap, so resolve inside ov032 or the table will answer for the
  * wrong overlay.
  *
- * SIZE 0x438, the factory's own literal. The members account for 0x110..0x3dc and the
- * 0x5c above that is this class's own, still unevidenced: none of its eight functions
- * touches it through anything but a raw offset, so it stays padding rather than
- * becoming invented fields.
+ * SIZE 0x438, the factory's own literal. The members account for 0x110..0x3dc; four
+ * fields of the 0x5c above that are now evidenced and named below, and the rest stays
+ * padding rather than becoming invented fields.
  *
- * THE 4-BYTE GAP AT 0x3b0 IS REAL, not a mistake: ModelAnim is 0x64 and starts at
- * 0x34c, so it ends at 0x3b0, but both witnesses put ShadowModel at 0x3b4.
+ * THE 4-BYTE "GAP" AT 0x3b0 IS NOT A GAP. ModelAnim is 0x64 and starts at 0x34c, so it
+ * ends at 0x3b0 and both witnesses put ShadowModel at 0x3b4 -- but the word between
+ * them is a live field, not alignment. Neither structor touches it, which is why the
+ * two witnesses could not see it; Behavior reads it every frame. That is the general
+ * shape of this correction: a ctor/dtor pair pins the MEMBERS, and only the ordinary
+ * methods can pin the scalars between them.
  */
 struct daBakubaku_c : Enemy {
     MovingCylinderClsnWithPos  mBodyClsn;       /* 0x110 */
     MovingCylinderClsnWithPos  mHeadClsn;       /* 0x150 */
     WithMeshClsn               mWithMeshClsn;   /* 0x190 */
     ModelAnim                  mModelAnim;      /* 0x34c */
-    u8                         pad_3b0[0x4];
+    /* NOT padding after all. Behavior loads this WORD, reads a pointer-to-member
+       out of the thing it points at and calls it on `this`, then compares the word
+       itself against data_ov032_02113aac to pick a speed -- so it is the behaviour
+       state the actor is currently in. Left void * on purpose: the table's element
+       type is the incomplete-class pointer-to-member whose REPRESENTATION Behavior
+       depends on, and completing it is a codegen change (see that file). */
+    void                      *mState;          /* 0x3b0 */
     ShadowModel                mShadowModel;    /* 0x3b4 */
-    u8                         pad_3dc[0x5c];
+    u8                         pad_3dc[0x30];
+    /* InitResources copies the actor's own position here once, and nothing else
+       that is migrated writes it. */
+    s32                        mSpawnPosX;      /* 0x40c */
+    s32                        mSpawnPosY;      /* 0x410 */
+    s32                        mSpawnPosZ;      /* 0x414 */
+    u8                         pad_418[0x12];
+    u16                        unk_42a;         /* 0x42a -- Behavior ticks it down */
+    u8                         pad_42c[0xc];
 
     virtual ~daBakubaku_c();
 
-    /* The eight slots it overrides, found by diffing all 31 against Enemy's. The two
-       still spelt as free functions in their own files are Behavior and
-       InitResources; they are named here because the vtable names them, not because
-       the bodies have been migrated yet. */
+    /* The slots it overrides, found by diffing all 31 against Enemy's. All six bodies
+       are now real methods -- Behavior and InitResources were the last two still
+       written as free functions over raw offsets, and both reproduce unchanged. */
     virtual s32  InitResources();       /* slot  0 */
     virtual s32  CleanupResources();    /* slot  3 */
     virtual s32  Behavior();            /* slot  6 */
