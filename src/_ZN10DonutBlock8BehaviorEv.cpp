@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN8ShipWing8BehaviorEv
+// @symbol _ZN10DonutBlock8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "ShipWing.h"
+#include "DonutBlock.h"
 #include "MeshColliderBase.h"
 extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
@@ -14,7 +14,7 @@ int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* p, int a, int b);
 void _ZN8Platform19UpdateClsnPosAndRotEv(void* p);
 }
 
-int ShipWing::Behavior()
+int DonutBlock::Behavior()
 {
     switch (mState) {
     case 0:

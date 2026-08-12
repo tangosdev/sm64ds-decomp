@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN8ShipWing13InitResourcesEv
+// @symbol _ZN10DonutBlock13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "ShipWing.h"
+#include "DonutBlock.h"
 extern "C" {
 int _ZN5Model8LoadFileER13SharedFilePtr(void*);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
@@ -17,7 +17,7 @@ int _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void*,void*,int,i
 extern void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 }
 
-int ShipWing::InitResources()
+int DonutBlock::InitResources()
 {
   int m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov036_0211408c);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, m, 1, -1);

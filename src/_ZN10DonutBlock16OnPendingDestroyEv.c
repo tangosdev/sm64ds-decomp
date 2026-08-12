@@ -1,3 +1,3 @@
-void _ZN8ShipWing16OnPendingDestroyEv(void)
+void _ZN10DonutBlock16OnPendingDestroyEv(void)
 {
 }
