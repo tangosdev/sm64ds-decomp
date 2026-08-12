@@ -7,12 +7,12 @@ func_ov045_021113ec kind:function(arm,size=0xbc) addr:0x021113ec
 func_ov045_021114a8 kind:function(arm,size=0x20) addr:0x021114a8
 func_ov045_021114c8 kind:function(arm,size=0x14) addr:0x021114c8
 FireSeaElevator_Spawn kind:function(arm,size=0x30) addr:0x021114dc
-_ZN15FireSeaElevatorD1Ev kind:function(arm,size=0x4c) addr:0x0211150c
-_ZN15FireSeaElevatorD0Ev kind:function(arm,size=0x60) addr:0x02111558
-_ZN15FireSeaElevator16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x021115b8
-_ZN15FireSeaElevator6RenderEv kind:function(arm,size=0x28) addr:0x021115f0
-_ZN15FireSeaElevator8BehaviorEv kind:function(arm,size=0x120) addr:0x02111618
-_ZN15FireSeaElevator13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111738
+_ZN8PoleLiftD1Ev kind:function(arm,size=0x4c) addr:0x0211150c
+_ZN8PoleLiftD0Ev kind:function(arm,size=0x60) addr:0x02111558
+_ZN8PoleLift16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x021115b8
+_ZN8PoleLift6RenderEv kind:function(arm,size=0x28) addr:0x021115f0
+_ZN8PoleLift8BehaviorEv kind:function(arm,size=0x120) addr:0x02111618
+_ZN8PoleLift13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111738
 PoleLift_Spawn kind:function(arm,size=0x38) addr:0x02111808
 _ZN17ExtendingPlatformD1Ev kind:function(arm,size=0x38) addr:0x02111840
 _ZN17ExtendingPlatformD0Ev kind:function(arm,size=0x4c) addr:0x02111878
@@ -131,7 +131,7 @@ data_ov045_02112d48 kind:data(any) addr:0x02112d48 ambiguous
 _ZTI18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d74
 _ZTS18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112d80
 PoleLift_SpawnInfo kind:data(any) addr:0x02112d98 ambiguous
-_ZTV15FireSeaElevator kind:data(any) addr:0x02112dbc
+_ZTV8PoleLift kind:data(any) addr:0x02112dbc
 _ZTV18daObjKm2_Ami_Bou_c kind:data(any) addr:0x02112dbc
 _ZTI17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e3c
 _ZTS17daObjKm2_Nobiru_c kind:data(any) addr:0x02112e48
