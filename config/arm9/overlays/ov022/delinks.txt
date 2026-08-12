@@ -106,15 +106,15 @@ src/func_ov022_02111a1c.c:
     complete
     .text start:0x02111a1c end:0x02111a64
 
-src/func_ov022_02111a64.c:
+src/_ZN10LavaBridge16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111a64 end:0x02111aa8
 
-src/func_ov022_02111aa8.cpp:
+src/_ZN10LavaBridge6RenderEv.cpp:
     complete
     .text start:0x02111aa8 end:0x02111ad0
 
-src/func_ov022_02111ad0.c:
+src/_ZN10LavaBridge8BehaviorEv.cpp:
     complete
     .text start:0x02111ad0 end:0x02111bdc
 
@@ -138,11 +138,11 @@ src/func_ov022_02111d48.c:
     complete
     .text start:0x02111d48 end:0x02111d90
 
-src/func_ov022_02111d90.c:
+src/_ZN10LavaSeesaw16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111d90 end:0x02111dd4
 
-src/func_ov022_02111dd4.cpp:
+src/_ZN10LavaSeesaw6RenderEv.cpp:
     complete
     .text start:0x02111dd4 end:0x02111dfc
 
