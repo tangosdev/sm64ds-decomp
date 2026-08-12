@@ -5,7 +5,10 @@
 extern void* data_020a0eac;
 extern int data_ov018_02113a74[];
 /* recovered: renamed to Class_Method */
-/* daSCre_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
+   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
+   vtable, destroys the members and calls Memory::Deallocate; no eat handler
+   does any of that. */
 int *func_ov018_021126f8(int *t)
 {
     t[0] = (int)data_ov018_02113a74;

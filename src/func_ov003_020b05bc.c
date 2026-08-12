@@ -2,7 +2,10 @@
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: vtable identified, renamed to Class_Method */
-/* dScGameOver_c::OnYoshiTryEat - recovered from vtable slot identity */
+/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
+   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
+   vtable, destroys the members and calls Memory::Deallocate; no eat handler
+   does any of that. */
 extern void _ZN9ActorBaseD2Ev(void *);
 extern void *GAME_HEAP_PTR;
 int *func_ov003_020b05bc(int *t)
