@@ -1,5 +1,5 @@
-func_ov033_021111a0 kind:function(arm,size=0x44) addr:0x021111a0
-func_ov033_021111e4 kind:function(arm,size=0x58) addr:0x021111e4
+_ZN9TinyCoverD1Ev kind:function(arm,size=0x44) addr:0x021111a0
+_ZN9TinyCoverD0Ev kind:function(arm,size=0x58) addr:0x021111e4
 func_ov033_0211123c kind:function(arm,size=0x44) addr:0x0211123c
 func_ov033_02111280 kind:function(arm,size=0x44) addr:0x02111280
 func_ov033_021112c4 kind:function(arm,size=0x28) addr:0x021112c4
@@ -106,7 +106,7 @@ data_ov033_0211233c kind:data(any) addr:0x0211233c
 _ZTS13daObjTtFuta_c kind:data(any) addr:0x02112348
 TinyCover_SpawnInfo kind:data(any) addr:0x02112358 ambiguous
 data_ov033_02112368 kind:data(any) addr:0x02112368 ambiguous
-data_ov033_0211237c kind:data(any) addr:0x0211237c
+_ZTV9TinyCover kind:data(any) addr:0x0211237c
 data_ov033_021123e4 kind:data(any) addr:0x021123e4 ambiguous
 data_ov033_021123f4 kind:data(any) addr:0x021123f4 ambiguous
 _ZTI14daObjTtWater_c kind:data(any) addr:0x021123fc

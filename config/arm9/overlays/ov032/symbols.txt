@@ -22,8 +22,8 @@ _ZN12daBakubaku_c8BehaviorEv kind:function(arm,size=0x128) addr:0x021121b4
 _ZN12daBakubaku_c13InitResourcesEv kind:function(arm,size=0x168) addr:0x021122dc
 _ZN12daBakubaku_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02112444
 func_ov032_0211244c kind:function(arm,size=0x5c) addr:0x0211244c
-func_ov032_021124a8 kind:function(arm,size=0x44) addr:0x021124a8
-func_ov032_021124ec kind:function(arm,size=0x58) addr:0x021124ec
+_ZN9HugeCoverD1Ev kind:function(arm,size=0x44) addr:0x021124a8
+_ZN9HugeCoverD0Ev kind:function(arm,size=0x58) addr:0x021124ec
 func_ov032_02112544 kind:function(arm,size=0x44) addr:0x02112544
 func_ov032_02112588 kind:function(arm,size=0x28) addr:0x02112588
 func_ov032_021125b0 kind:function(arm,size=0x24) addr:0x021125b0
@@ -135,7 +135,7 @@ _ZTS13daObjTdFuta_c kind:data(any) addr:0x021138ac
 HugeCover_SpawnInfo kind:data(any) addr:0x021138bc ambiguous
 data_ov032_021138c4 kind:data(any) addr:0x021138c4 ambiguous
 data_ov032_021138d8 kind:data(any) addr:0x021138d8 ambiguous
-data_ov032_021138e0 kind:data(any) addr:0x021138e0
+_ZTV9HugeCover kind:data(any) addr:0x021138e0
 data_ov032_021138f0 kind:data(any) addr:0x021138f0 ambiguous
 data_ov032_021138fc kind:data(any) addr:0x021138fc ambiguous
 data_ov032_02113934 kind:data(any) addr:0x02113934 ambiguous

@@ -100,11 +100,11 @@ src/func_ov032_0211244c.c:
     complete
     .text start:0x0211244c end:0x021124a8
 
-src/func_ov032_021124a8.c:
+src/_ZN9HugeCoverD1Ev.c:
     complete
     .text start:0x021124a8 end:0x021124ec
 
-src/func_ov032_021124ec.c:
+src/_ZN9HugeCoverD0Ev.c:
     complete
     .text start:0x021124ec end:0x02112544
 

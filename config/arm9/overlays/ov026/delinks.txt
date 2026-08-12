@@ -40,11 +40,11 @@ src/func_ov026_02111678.c:
     complete
     .text start:0x02111678 end:0x021116c8
 
-src/func_ov026_021116c8.c:
+src/_ZN13BowserShutterD1Ev.c:
     complete
     .text start:0x021116c8 end:0x0211170c
 
-src/func_ov026_0211170c.c:
+src/_ZN13BowserShutterD0Ev.c:
     complete
     .text start:0x0211170c end:0x02111764
 
@@ -68,11 +68,11 @@ src/BowserShutter_Spawn.c:
     complete
     .text start:0x02111888 end:0x021118b8
 
-src/func_ov026_021118b8.c:
+src/_ZN9SubmarineD1Ev.c:
     complete
     .text start:0x021118b8 end:0x021118fc
 
-src/func_ov026_021118fc.c:
+src/_ZN9SubmarineD0Ev.c:
     complete
     .text start:0x021118fc end:0x02111954
 
