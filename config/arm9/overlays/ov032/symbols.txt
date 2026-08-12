@@ -1,5 +1,5 @@
-func_ov032_021111a0 kind:function(arm,size=0x50) addr:0x021111a0
-func_ov032_021111f0 kind:function(arm,size=0x64) addr:0x021111f0
+_ZN12daBakubaku_cD1Ev kind:function(arm,size=0x50) addr:0x021111a0
+_ZN12daBakubaku_cD0Ev kind:function(arm,size=0x64) addr:0x021111f0
 func_ov032_02111254 kind:function(arm,size=0xfc) addr:0x02111254
 func_ov032_02111350 kind:function(arm,size=0xac) addr:0x02111350
 func_ov032_021113fc kind:function(arm,size=0x224) addr:0x021113fc
@@ -15,12 +15,12 @@ func_ov032_02111e24 kind:function(arm,size=0x178) addr:0x02111e24
 func_ov032_02111f9c kind:function(arm,size=0x58) addr:0x02111f9c
 func_ov032_02111ff4 kind:function(arm,size=0x50) addr:0x02111ff4
 func_ov032_02112044 kind:function(arm,size=0xe0) addr:0x02112044
-func_ov032_02112124 kind:function(arm,size=0x3c) addr:0x02112124
-func_ov032_02112160 kind:function(arm,size=0x4) addr:0x02112160
-func_ov032_02112164 kind:function(arm,size=0x50) addr:0x02112164
-func_ov032_021121b4 kind:function(arm,size=0x128) addr:0x021121b4
-func_ov032_021122dc kind:function(arm,size=0x168) addr:0x021122dc
-func_ov032_02112444 kind:function(arm,size=0x8) addr:0x02112444
+_ZN12daBakubaku_c16CleanupResourcesEv kind:function(arm,size=0x3c) addr:0x02112124
+_ZN12daBakubaku_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02112160
+_ZN12daBakubaku_c6RenderEv kind:function(arm,size=0x50) addr:0x02112164
+_ZN12daBakubaku_c8BehaviorEv kind:function(arm,size=0x128) addr:0x021121b4
+_ZN12daBakubaku_c13InitResourcesEv kind:function(arm,size=0x168) addr:0x021122dc
+_ZN12daBakubaku_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x02112444
 func_ov032_0211244c kind:function(arm,size=0x5c) addr:0x0211244c
 func_ov032_021124a8 kind:function(arm,size=0x44) addr:0x021124a8
 func_ov032_021124ec kind:function(arm,size=0x58) addr:0x021124ec
@@ -127,6 +127,7 @@ data_ov032_02113800 kind:data(any) addr:0x02113800 ambiguous
 data_ov032_02113804 kind:data(any) addr:0x02113804 ambiguous
 data_ov032_02113820 kind:data(any) addr:0x02113820 ambiguous
 data_ov032_02113824 kind:data(any) addr:0x02113824
+_ZTV12daBakubaku_c kind:data(any) addr:0x02113824
 data_ov032_0211382c kind:data(any) addr:0x0211382c ambiguous
 _ZTI13daObjTdFuta_c kind:data(any) addr:0x021138a0
 data_ov032_021138a8 kind:data(any) addr:0x021138a8 ambiguous

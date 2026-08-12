@@ -4,11 +4,11 @@
     .ctor       start:0x02112e94 end:0x02112ea0 kind:rodata align:4
     .data       start:0x02112ec0 end:0x02113a40 kind:data align:32
     .bss        start:0x02113a40 end:0x02113b20 kind:bss align:32
-src/func_ov032_021111a0.c:
+src/_ZN12daBakubaku_cD1Ev.cpp:
     complete
     .text start:0x021111a0 end:0x021111f0
 
-src/func_ov032_021111f0.c:
+src/_ZN12daBakubaku_cD0Ev.c:
     complete
     .text start:0x021111f0 end:0x02111254
 
@@ -72,27 +72,27 @@ src/func_ov032_02112044.cpp:
     complete
     .text start:0x02112044 end:0x02112124
 
-src/func_ov032_02112124.c:
+src/_ZN12daBakubaku_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112124 end:0x02112160
 
-src/func_ov032_02112160.c:
+src/_ZN12daBakubaku_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02112160 end:0x02112164
 
-src/func_ov032_02112164.cpp:
+src/_ZN12daBakubaku_c6RenderEv.cpp:
     complete
     .text start:0x02112164 end:0x021121b4
 
-src/func_ov032_021121b4.cpp:
+src/_ZN12daBakubaku_c8BehaviorEv.cpp:
     complete
     .text start:0x021121b4 end:0x021122dc
 
-src/func_ov032_021122dc.c:
+src/_ZN12daBakubaku_c13InitResourcesEv.c:
     complete
     .text start:0x021122dc end:0x02112444
 
-src/func_ov032_02112444.c:
+src/_ZN12daBakubaku_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02112444 end:0x0211244c
 

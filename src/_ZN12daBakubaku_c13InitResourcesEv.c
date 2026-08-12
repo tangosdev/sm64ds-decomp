@@ -1,3 +1,6 @@
+// @symbol _ZN12daBakubaku_c13InitResourcesEv
+/* Vtable slot 0, previously func_ov032_021122dc. RENAMED ONLY -- still a C file
+ * spelling the mangled name directly, the same way _ZN8CapEnemyD0Ev.c does. */
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern void _ZN11ShadowModel12InitCylinderEv(void*);
@@ -12,7 +15,7 @@ extern int data_ov032_02113a48[];
 extern int data_ov032_021137cc[];
 extern int data_ov032_021137d8[];
 extern void* data_ov032_02113a8c;
-int func_ov032_021122dc(char* c) {
+int _ZN12daBakubaku_c13InitResourcesEv(char* c) {
     int v0[3];
     int v1[3];
     void* f;

@@ -1,4 +1,10 @@
 //cpp
+// @symbol _ZN12daBakubaku_c8BehaviorEv
+/* Vtable slot 6, previously func_ov032_021121b4. RENAMED ONLY -- the body is not
+ * migrated to a real method, because the `PMF` above is a pointer-to-member on an
+ * INCOMPLETE class and its representation depends on that incompleteness. Giving
+ * Klass a real definition is a codegen change, not a cleanup. Kept extern "C" so
+ * the mangled name is emitted verbatim rather than mangled a second time. */
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct CylinderClsn;
@@ -18,7 +24,7 @@ void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
 extern char data_ov032_02113aac[];
 }
 
-extern "C" int func_ov032_021121b4(char *c)
+extern "C" int _ZN12daBakubaku_c8BehaviorEv(char *c)
 {
     if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, (WithMeshClsn *)(c + 0x190), (ModelAnim *)(c + 0x34c), 3) != 0)
         return 1;
