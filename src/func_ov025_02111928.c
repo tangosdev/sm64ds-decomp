@@ -6,10 +6,6 @@
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
 /* recovered: vtable identified, renamed to Class_Method */
-/* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
-   OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
-   vtable, destroys the members and calls Memory::Deallocate; no eat handler
-   does any of that. */
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *G0;
 int *func_ov025_02111928(int *t)
