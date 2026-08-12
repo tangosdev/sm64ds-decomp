@@ -7,14 +7,14 @@ _ZN16RotatingCogSmall13InitResourcesEv kind:function(arm,size=0x17c) addr:0x0211
 RotatingCogSmall_Spawn kind:function(arm,size=0x30) addr:0x0211165c
 func_ov035_0211168c kind:function(arm,size=0x30) addr:0x0211168c
 RotatingClockHand_Spawn kind:function(arm,size=0x30) addr:0x021116bc
-_ZN17RotatingClockHandD1Ev kind:function(arm,size=0x4c) addr:0x021116ec
-_ZN17RotatingClockHandD0Ev kind:function(arm,size=0x60) addr:0x02111738
+_ZN16SpinningPlatformD1Ev kind:function(arm,size=0x4c) addr:0x021116ec
+_ZN16SpinningPlatformD0Ev kind:function(arm,size=0x60) addr:0x02111738
 func_ov035_02111798 kind:function(arm,size=0x110) addr:0x02111798
 func_ov035_021118a8 kind:function(arm,size=0x48) addr:0x021118a8
-_ZN17RotatingClockHand16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021118f0
-_ZN17RotatingClockHand6RenderEv kind:function(arm,size=0x28) addr:0x02111934
-_ZN17RotatingClockHand8BehaviorEv kind:function(arm,size=0x13c) addr:0x0211195c
-_ZN17RotatingClockHand13InitResourcesEv kind:function(arm,size=0x100) addr:0x02111a98
+_ZN16SpinningPlatform16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021118f0
+_ZN16SpinningPlatform6RenderEv kind:function(arm,size=0x28) addr:0x02111934
+_ZN16SpinningPlatform8BehaviorEv kind:function(arm,size=0x13c) addr:0x0211195c
+_ZN16SpinningPlatform13InitResourcesEv kind:function(arm,size=0x100) addr:0x02111a98
 SpinningPlatform_Spawn kind:function(arm,size=0x38) addr:0x02111b98
 data_ov035_02111bd0 kind:data(any) addr:0x02111bd0
 data_ov035_02111bd4 kind:data(any) addr:0x02111bd4
@@ -111,7 +111,7 @@ data_ov035_02112b84 kind:data(any) addr:0x02112b84 ambiguous
 _ZTI16daObjCtMecha11_c kind:data(any) addr:0x02112b88
 _ZTS16daObjCtMecha11_c kind:data(any) addr:0x02112b94
 SpinningPlatform_SpawnInfo kind:data(any) addr:0x02112ba8 ambiguous
-_ZTV17RotatingClockHand kind:data(any) addr:0x02112bcc
+_ZTV16SpinningPlatform kind:data(any) addr:0x02112bcc
 _ZTV16daObjCtMecha11_c kind:data(any) addr:0x02112bcc
 data_ov035_02112bdc kind:data(any) addr:0x02112bdc ambiguous
 data_ov035_02112bec kind:data(any) addr:0x02112bec ambiguous

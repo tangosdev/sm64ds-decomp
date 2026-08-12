@@ -39,11 +39,11 @@ src/RotatingClockHand_Spawn.c:
     complete
     .text start:0x021116bc end:0x021116ec
 
-src/_ZN17RotatingClockHandD1Ev.c:
+src/_ZN16SpinningPlatformD1Ev.c:
     complete
     .text start:0x021116ec end:0x02111738
 
-src/_ZN17RotatingClockHandD0Ev.c:
+src/_ZN16SpinningPlatformD0Ev.c:
     complete
     .text start:0x02111738 end:0x02111798
 
@@ -55,19 +55,19 @@ src/func_ov035_021118a8.c:
     complete
     .text start:0x021118a8 end:0x021118f0
 
-src/_ZN17RotatingClockHand16CleanupResourcesEv.cpp:
+src/_ZN16SpinningPlatform16CleanupResourcesEv.cpp:
     complete
     .text start:0x021118f0 end:0x02111934
 
-src/_ZN17RotatingClockHand6RenderEv.cpp:
+src/_ZN16SpinningPlatform6RenderEv.cpp:
     complete
     .text start:0x02111934 end:0x0211195c
 
-src/_ZN17RotatingClockHand8BehaviorEv.cpp:
+src/_ZN16SpinningPlatform8BehaviorEv.cpp:
     complete
     .text start:0x0211195c end:0x02111a98
 
-src/_ZN17RotatingClockHand13InitResourcesEv.cpp:
+src/_ZN16SpinningPlatform13InitResourcesEv.cpp:
     .text start:0x02111a98 end:0x02111b98
 
 src/SpinningPlatform_Spawn.c:

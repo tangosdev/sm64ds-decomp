@@ -79,8 +79,8 @@ func_ov100_021454c8 kind:function(arm,size=0x88) addr:0x021454c8
 func_ov100_02145550 kind:function(arm,size=0x50) addr:0x02145550
 func_ov100_021455a0 kind:function(arm,size=0x2fc) addr:0x021455a0
 Door_Spawn kind:function(arm,size=0x38) addr:0x0214589c
-_ZN4DoorD1Ev kind:function(arm,size=0x30) addr:0x021458d4
-_ZN4DoorD0Ev kind:function(arm,size=0x44) addr:0x02145904
+_ZN8StarDoorD1Ev kind:function(arm,size=0x30) addr:0x021458d4
+_ZN8StarDoorD0Ev kind:function(arm,size=0x44) addr:0x02145904
 func_ov100_02145948 kind:function(arm,size=0x40) addr:0x02145948
 func_ov100_02145988 kind:function(arm,size=0x12c) addr:0x02145988
 func_ov100_02145ab4 kind:function(arm,size=0x5c) addr:0x02145ab4
@@ -93,11 +93,11 @@ func_ov100_02145e10 kind:function(arm,size=0x64) addr:0x02145e10
 func_ov100_02145e74 kind:function(arm,size=0x8c) addr:0x02145e74
 func_ov100_02145f00 kind:function(arm,size=0x68) addr:0x02145f00
 func_ov100_02145f68 kind:function(arm,size=0x54) addr:0x02145f68
-_ZN4Door16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02145fbc
-_ZN4Door16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02145fe0
-_ZN4Door6RenderEv kind:function(arm,size=0xf8) addr:0x02145fe4
-_ZN4Door8BehaviorEv kind:function(arm,size=0x50) addr:0x021460dc
-_ZN4Door13InitResourcesEv kind:function(arm,size=0xa8) addr:0x0214612c
+_ZN8StarDoor16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02145fbc
+_ZN8StarDoor16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02145fe0
+_ZN8StarDoor6RenderEv kind:function(arm,size=0xf8) addr:0x02145fe4
+_ZN8StarDoor8BehaviorEv kind:function(arm,size=0x50) addr:0x021460dc
+_ZN8StarDoor13InitResourcesEv kind:function(arm,size=0xa8) addr:0x0214612c
 StarDoor_Spawn kind:function(arm,size=0x38) addr:0x021461d4
 _ZN4FishD1Ev kind:function(arm,size=0x30) addr:0x0214620c
 _ZN4FishD0Ev kind:function(arm,size=0x44) addr:0x0214623c
@@ -205,7 +205,7 @@ _ZTI12daStarGate_c kind:data(any) addr:0x02148374
 _ZTS12daStarGate_c kind:data(any) addr:0x02148380
 data_ov100_02148390 kind:data(any) addr:0x02148390
 StarDoor_SpawnInfo kind:data(any) addr:0x021483a8
-_ZTV4Door kind:data(any) addr:0x021483cc
+_ZTV8StarDoor kind:data(any) addr:0x021483cc
 _ZTV12daStarGate_c kind:data(any) addr:0x021483cc
 data_ov100_02148448 kind:data(any) addr:0x02148448
 data_ov100_02148450 kind:data(any) addr:0x02148450

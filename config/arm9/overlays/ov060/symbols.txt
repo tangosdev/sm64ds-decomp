@@ -128,8 +128,8 @@ func_ov060_021182b0 kind:function(arm,size=0x11c) addr:0x021182b0
 func_ov060_021183cc kind:function(arm,size=0x28) addr:0x021183cc
 func_ov060_021183f4 kind:function(arm,size=0x14) addr:0x021183f4
 BowserSkyPlatform_Spawn kind:function(arm,size=0x30) addr:0x02118408
-_ZN17BowserSkyPlatformD1Ev kind:function(arm,size=0x38) addr:0x02118438
-_ZN17BowserSkyPlatformD0Ev kind:function(arm,size=0x4c) addr:0x02118470
+_ZN9SpikeBombD1Ev kind:function(arm,size=0x38) addr:0x02118438
+_ZN9SpikeBombD0Ev kind:function(arm,size=0x4c) addr:0x02118470
 func_ov060_021184bc kind:function(arm,size=0x88) addr:0x021184bc
 func_ov060_02118544 kind:function(arm,size=0x80) addr:0x02118544
 func_ov060_021185c4 kind:function(arm,size=0xcc) addr:0x021185c4
@@ -139,10 +139,10 @@ func_ov060_02118728 kind:function(arm,size=0x10c) addr:0x02118728
 func_ov060_02118834 kind:function(arm,size=0xb4) addr:0x02118834
 func_ov060_021188e8 kind:function(arm,size=0x88) addr:0x021188e8
 func_ov060_02118970 kind:function(arm,size=0x140) addr:0x02118970
-_ZN17BowserSkyPlatform16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02118ab0
-_ZN17BowserSkyPlatform6RenderEv kind:function(arm,size=0x58) addr:0x02118ad4
-_ZN17BowserSkyPlatform8BehaviorEv kind:function(arm,size=0x88) addr:0x02118b2c
-_ZN17BowserSkyPlatform13InitResourcesEv kind:function(arm,size=0x108) addr:0x02118bb4
+_ZN9SpikeBomb16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x02118ab0
+_ZN9SpikeBomb6RenderEv kind:function(arm,size=0x58) addr:0x02118ad4
+_ZN9SpikeBomb8BehaviorEv kind:function(arm,size=0x88) addr:0x02118b2c
+_ZN9SpikeBomb13InitResourcesEv kind:function(arm,size=0x108) addr:0x02118bb4
 SpikeBomb_Spawn kind:function(arm,size=0x40) addr:0x02118cbc
 _ZN16BowserShockwavesD1Ev kind:function(arm,size=0x68) addr:0x02118cfc
 _ZN16BowserShockwavesD0Ev kind:function(arm,size=0x7c) addr:0x02118d64
@@ -257,7 +257,7 @@ data_ov060_0211aa48 kind:data(any) addr:0x0211aa48
 _ZTS9daKirai_c kind:data(any) addr:0x0211aa50
 _ZTI9daKirai_c kind:data(any) addr:0x0211aa5c
 SpikeBomb_SpawnInfo kind:data(any) addr:0x0211aa68
-_ZTV17BowserSkyPlatform kind:data(any) addr:0x0211aa8c
+_ZTV9SpikeBomb kind:data(any) addr:0x0211aa8c
 _ZTV9daKirai_c kind:data(any) addr:0x0211aa8c
 _ZTS9daFRing_c kind:data(any) addr:0x0211ab08
 _ZTI9daFRing_c kind:data(any) addr:0x0211ab14

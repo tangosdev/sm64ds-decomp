@@ -321,11 +321,11 @@ src/Door_Spawn.c:
     complete
     .text start:0x0214589c end:0x021458d4
 
-src/_ZN4DoorD1Ev.cpp:
+src/_ZN8StarDoorD1Ev.cpp:
     complete
     .text start:0x021458d4 end:0x02145904
 
-src/_ZN4DoorD0Ev.c:
+src/_ZN8StarDoorD0Ev.c:
     complete
     .text start:0x02145904 end:0x02145948
 
@@ -377,23 +377,23 @@ src/func_ov100_02145f68.cpp:
     complete
     .text start:0x02145f68 end:0x02145fbc
 
-src/_ZN4Door16CleanupResourcesEv.c:
+src/_ZN8StarDoor16CleanupResourcesEv.c:
     complete
     .text start:0x02145fbc end:0x02145fe0
 
-src/_ZN4Door16OnPendingDestroyEv.c:
+src/_ZN8StarDoor16OnPendingDestroyEv.c:
     complete
     .text start:0x02145fe0 end:0x02145fe4
 
-src/_ZN4Door6RenderEv.c:
+src/_ZN8StarDoor6RenderEv.c:
     complete
     .text start:0x02145fe4 end:0x021460dc
 
-src/_ZN4Door8BehaviorEv.cpp:
+src/_ZN8StarDoor8BehaviorEv.cpp:
     complete
     .text start:0x021460dc end:0x0214612c
 
-src/_ZN4Door13InitResourcesEv.cpp:
+src/_ZN8StarDoor13InitResourcesEv.cpp:
     complete
     .text start:0x0214612c end:0x021461d4
 

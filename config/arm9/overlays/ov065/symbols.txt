@@ -129,13 +129,13 @@ _ZN15TtcRotatingGear8BehaviorEv kind:function(arm,size=0x190) addr:0x0211b8f8
 _ZN15TtcRotatingGear13InitResourcesEv kind:function(arm,size=0xf4) addr:0x0211ba88
 TtcMovingCubeB_Spawn kind:function(arm,size=0x30) addr:0x0211bb7c
 TtcMovingCubeA_Spawn kind:function(arm,size=0x30) addr:0x0211bbac
-_ZN14TtcMovingCubeAD1Ev kind:function(arm,size=0x4c) addr:0x0211bbdc
-_ZN14TtcMovingCubeAD0Ev kind:function(arm,size=0x60) addr:0x0211bc28
+_ZN14TTC_MovingBeamD1Ev kind:function(arm,size=0x4c) addr:0x0211bbdc
+_ZN14TTC_MovingBeamD0Ev kind:function(arm,size=0x60) addr:0x0211bc28
 func_ov065_0211bc88 kind:function(arm,size=0x98) addr:0x0211bc88
-_ZN14TtcMovingCubeA16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211bd20
-_ZN14TtcMovingCubeA6RenderEv kind:function(arm,size=0x28) addr:0x0211bd64
-_ZN14TtcMovingCubeA8BehaviorEv kind:function(arm,size=0x178) addr:0x0211bd8c
-_ZN14TtcMovingCubeA13InitResourcesEv kind:function(arm,size=0x13c) addr:0x0211bf04
+_ZN14TTC_MovingBeam16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211bd20
+_ZN14TTC_MovingBeam6RenderEv kind:function(arm,size=0x28) addr:0x0211bd64
+_ZN14TTC_MovingBeam8BehaviorEv kind:function(arm,size=0x178) addr:0x0211bd8c
+_ZN14TTC_MovingBeam13InitResourcesEv kind:function(arm,size=0x13c) addr:0x0211bf04
 TTC_MovingBeam_Spawn kind:function(arm,size=0x38) addr:0x0211c040
 data_ov065_0211c078 kind:data(any) addr:0x0211c078
 data_ov065_0211c080 kind:data(any) addr:0x0211c080
@@ -261,7 +261,7 @@ _ZTI16daObjCtMecha09_c kind:data(any) addr:0x0211d514
 data_ov065_0211d520 kind:data(any) addr:0x0211d520
 _ZTS16daObjCtMecha09_c kind:data(any) addr:0x0211d530
 TTC_MovingBeam_SpawnInfo kind:data(any) addr:0x0211d544 ambiguous
-_ZTV14TtcMovingCubeA kind:data(any) addr:0x0211d568
+_ZTV14TTC_MovingBeam kind:data(any) addr:0x0211d568
 _ZTV16daObjCtMecha09_c kind:data(any) addr:0x0211d568
 data_ov065_0211d600 kind:bss addr:0x0211d600
 data_ov065_0211d608 kind:bss addr:0x0211d608

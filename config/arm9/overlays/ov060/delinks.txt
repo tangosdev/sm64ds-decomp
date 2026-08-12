@@ -518,11 +518,11 @@ src/BowserSkyPlatform_Spawn.c:
     complete
     .text start:0x02118408 end:0x02118438
 
-src/_ZN17BowserSkyPlatformD1Ev.cpp:
+src/_ZN9SpikeBombD1Ev.cpp:
     complete
     .text start:0x02118438 end:0x02118470
 
-src/_ZN17BowserSkyPlatformD0Ev.cpp:
+src/_ZN9SpikeBombD0Ev.cpp:
     complete
     .text start:0x02118470 end:0x021184bc
 
@@ -562,19 +562,19 @@ src/func_ov060_02118970.c:
     complete
     .text start:0x02118970 end:0x02118ab0
 
-src/_ZN17BowserSkyPlatform16CleanupResourcesEv.cpp:
+src/_ZN9SpikeBomb16CleanupResourcesEv.cpp:
     complete
     .text start:0x02118ab0 end:0x02118ad4
 
-src/_ZN17BowserSkyPlatform6RenderEv.cpp:
+src/_ZN9SpikeBomb6RenderEv.cpp:
     complete
     .text start:0x02118ad4 end:0x02118b2c
 
-src/_ZN17BowserSkyPlatform8BehaviorEv.cpp:
+src/_ZN9SpikeBomb8BehaviorEv.cpp:
     complete
     .text start:0x02118b2c end:0x02118bb4
 
-src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp:
+src/_ZN9SpikeBomb13InitResourcesEv.cpp:
     complete
     .text start:0x02118bb4 end:0x02118cbc
 

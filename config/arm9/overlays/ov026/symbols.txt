@@ -20,19 +20,19 @@ func_ov026_02111954 kind:function(arm,size=0x44) addr:0x02111954
 func_ov026_02111998 kind:function(arm,size=0x28) addr:0x02111998
 func_ov026_021119c0 kind:function(arm,size=0xb0) addr:0x021119c0
 Submarine_Spawn kind:function(arm,size=0x30) addr:0x02111a70
-_ZN9SubmarineD1Ev kind:function(arm,size=0x38) addr:0x02111aa0
-_ZN9SubmarineD0Ev kind:function(arm,size=0x4c) addr:0x02111ad8
+_ZN9WhirlpoolD1Ev kind:function(arm,size=0x38) addr:0x02111aa0
+_ZN9WhirlpoolD0Ev kind:function(arm,size=0x4c) addr:0x02111ad8
 func_ov026_02111b24 kind:function(arm,size=0x190) addr:0x02111b24
 func_ov026_02111cb4 kind:function(arm,size=0x98) addr:0x02111cb4
 func_ov026_02111d4c kind:function(arm,size=0x18c) addr:0x02111d4c
 func_ov026_02111ed8 kind:function(arm,size=0x8) addr:0x02111ed8
 func_ov026_02111ee0 kind:function(arm,size=0x50) addr:0x02111ee0
 func_ov026_02111f30 kind:function(arm,size=0x74) addr:0x02111f30
-_ZN9Submarine16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x02111fa4
-_ZN9Submarine16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111fd4
-_ZN9Submarine6RenderEv kind:function(arm,size=0x34) addr:0x02111fd8
-_ZN9Submarine8BehaviorEv kind:function(arm,size=0xe0) addr:0x0211200c
-_ZN9Submarine13InitResourcesEv kind:function(arm,size=0xd0) addr:0x021120ec
+_ZN9Whirlpool16CleanupResourcesEv kind:function(arm,size=0x30) addr:0x02111fa4
+_ZN9Whirlpool16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111fd4
+_ZN9Whirlpool6RenderEv kind:function(arm,size=0x34) addr:0x02111fd8
+_ZN9Whirlpool8BehaviorEv kind:function(arm,size=0xe0) addr:0x0211200c
+_ZN9Whirlpool13InitResourcesEv kind:function(arm,size=0xd0) addr:0x021120ec
 Whirlpool_Spawn kind:function(arm,size=0x40) addr:0x021121bc
 _ZN12WaterSuctionD1Ev kind:function(arm,size=0x38) addr:0x021121fc
 _ZN12WaterSuctionD0Ev kind:function(arm,size=0x4c) addr:0x02112234
@@ -198,7 +198,7 @@ data_ov026_02113d04 kind:data(any) addr:0x02113d04
 _ZTI18daWater_Tatumaki_c kind:data(any) addr:0x02113d0c
 _ZTS18daWater_Tatumaki_c kind:data(any) addr:0x02113d18
 Whirlpool_SpawnInfo kind:data(any) addr:0x02113d30 ambiguous
-_ZTV9Submarine kind:data(any) addr:0x02113d54
+_ZTV9Whirlpool kind:data(any) addr:0x02113d54
 _ZTV18daWater_Tatumaki_c kind:data(any) addr:0x02113d54
 data_ov026_02113d90 kind:data(any) addr:0x02113d90 ambiguous
 data_ov026_02113da8 kind:data(any) addr:0x02113da8 ambiguous

@@ -231,19 +231,19 @@ src/MetalNetLift_Spawn.c:
     complete
     .text start:0x02117fe8 end:0x02118020
 
-src/_ZN12MetalNetLiftD1Ev.c:
+src/_ZN18TiltingPlatformLllD1Ev.c:
     complete
     .text start:0x02118020 end:0x02118070
 
-src/_ZN12MetalNetLiftD0Ev.c:
+src/_ZN18TiltingPlatformLllD0Ev.c:
     complete
     .text start:0x02118070 end:0x021180d4
 
-src/_ZN12MetalNetLift16CleanupResourcesEv.cpp:
+src/_ZN18TiltingPlatformLll16CleanupResourcesEv.cpp:
     complete
     .text start:0x021180d4 end:0x021180e8
 
-src/_ZN12MetalNetLift13InitResourcesEv.cpp:
+src/_ZN18TiltingPlatformLll13InitResourcesEv.cpp:
     complete
     .text start:0x021180e8 end:0x021180fc
 

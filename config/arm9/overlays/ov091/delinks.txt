@@ -286,11 +286,11 @@ src/Stump_Spawn.c:
     complete
     .text start:0x02133938 end:0x02133968
 
-src/_ZN5StumpD1Ev.cpp:
+src/_ZN6FwooshD1Ev.cpp:
     complete
     .text start:0x02133968 end:0x021339a8
 
-src/_ZN5StumpD0Ev.cpp:
+src/_ZN6FwooshD0Ev.cpp:
     complete
     .text start:0x021339a8 end:0x021339fc
 
@@ -326,23 +326,23 @@ src/func_ov091_02134094.c:
     complete
     .text start:0x02134094 end:0x02134108
 
-src/_ZN5Stump16CleanupResourcesEv.cpp:
+src/_ZN6Fwoosh16CleanupResourcesEv.cpp:
     complete
     .text start:0x02134108 end:0x02134180
 
-src/_ZN5Stump16OnPendingDestroyEv.c:
+src/_ZN6Fwoosh16OnPendingDestroyEv.c:
     complete
     .text start:0x02134180 end:0x02134184
 
-src/_ZN5Stump6RenderEv.cpp:
+src/_ZN6Fwoosh6RenderEv.cpp:
     complete
     .text start:0x02134184 end:0x021341ec
 
-src/_ZN5Stump8BehaviorEv.cpp:
+src/_ZN6Fwoosh8BehaviorEv.cpp:
     complete
     .text start:0x021341ec end:0x02134324
 
-src/_ZN5Stump13InitResourcesEv.cpp:
+src/_ZN6Fwoosh13InitResourcesEv.cpp:
     complete
     .text start:0x02134324 end:0x02134484
 

@@ -55,10 +55,10 @@ func_ov064_02117e44 kind:function(arm,size=0x170) addr:0x02117e44
 func_ov064_02117fb4 kind:function(arm,size=0x20) addr:0x02117fb4
 func_ov064_02117fd4 kind:function(arm,size=0x14) addr:0x02117fd4
 MetalNetLift_Spawn kind:function(arm,size=0x38) addr:0x02117fe8
-_ZN12MetalNetLiftD1Ev kind:function(arm,size=0x50) addr:0x02118020
-_ZN12MetalNetLiftD0Ev kind:function(arm,size=0x64) addr:0x02118070
-_ZN12MetalNetLift16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021180d4
-_ZN12MetalNetLift13InitResourcesEv kind:function(arm,size=0x14) addr:0x021180e8
+_ZN18TiltingPlatformLllD1Ev kind:function(arm,size=0x50) addr:0x02118020
+_ZN18TiltingPlatformLllD0Ev kind:function(arm,size=0x64) addr:0x02118070
+_ZN18TiltingPlatformLll16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021180d4
+_ZN18TiltingPlatformLll13InitResourcesEv kind:function(arm,size=0x14) addr:0x021180e8
 TiltingPlatformLll_Spawn kind:function(arm,size=0x3c) addr:0x021180fc
 _ZN15RotatingFirebarD1Ev kind:function(arm,size=0x5c) addr:0x02118138
 _ZN15RotatingFirebarD0Ev kind:function(arm,size=0x70) addr:0x02118194
@@ -220,7 +220,7 @@ data_ov064_0211bc68 kind:data(any) addr:0x0211bc68
 _ZTI14daObjFl_Gura_c kind:data(any) addr:0x0211bce8
 _ZTS14daObjFl_Gura_c kind:data(any) addr:0x0211bcf4
 TiltingPlatformLll_SpawnInfo kind:data(any) addr:0x0211bd08
-_ZTV12MetalNetLift kind:data(any) addr:0x0211bd2c
+_ZTV18TiltingPlatformLll kind:data(any) addr:0x0211bd2c
 data_ov064_0211bdac kind:data(any) addr:0x0211bdac
 _ZTI15daObjFl_KomaU_c kind:data(any) addr:0x0211bdcc
 _ZTS15daObjFl_KomaU_c kind:data(any) addr:0x0211bdd8

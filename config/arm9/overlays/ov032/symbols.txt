@@ -29,12 +29,12 @@ func_ov032_02112588 kind:function(arm,size=0x28) addr:0x02112588
 func_ov032_021125b0 kind:function(arm,size=0x24) addr:0x021125b0
 func_ov032_021125d4 kind:function(arm,size=0x94) addr:0x021125d4
 HugeCover_Spawn kind:function(arm,size=0x30) addr:0x02112668
-_ZN9HugeCoverD1Ev kind:function(arm,size=0x4c) addr:0x02112698
-_ZN9HugeCoverD0Ev kind:function(arm,size=0x60) addr:0x021126e4
-_ZN9HugeCover16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112744
-_ZN9HugeCover6RenderEv kind:function(arm,size=0x34) addr:0x02112788
-_ZN9HugeCover8BehaviorEv kind:function(arm,size=0x34) addr:0x021127bc
-_ZN9HugeCover13InitResourcesEv kind:function(arm,size=0xc8) addr:0x021127f0
+_ZN9HugeWaterD1Ev kind:function(arm,size=0x4c) addr:0x02112698
+_ZN9HugeWaterD0Ev kind:function(arm,size=0x60) addr:0x021126e4
+_ZN9HugeWater16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02112744
+_ZN9HugeWater6RenderEv kind:function(arm,size=0x34) addr:0x02112788
+_ZN9HugeWater8BehaviorEv kind:function(arm,size=0x34) addr:0x021127bc
+_ZN9HugeWater13InitResourcesEv kind:function(arm,size=0xc8) addr:0x021127f0
 HugeWater_Spawn kind:function(arm,size=0x38) addr:0x021128b8
 data_ov032_021128f0 kind:data(any) addr:0x021128f0
 data_ov032_021128f4 kind:data(any) addr:0x021128f4
@@ -143,7 +143,7 @@ _ZTI14daObjTdWater_c kind:data(any) addr:0x02113960
 data_ov032_0211396c kind:data(any) addr:0x0211396c
 HugeWater_SpawnInfo kind:data(any) addr:0x02113980 ambiguous
 data_ov032_02113998 kind:data(any) addr:0x02113998 ambiguous
-_ZTV9HugeCover kind:data(any) addr:0x021139a4
+_ZTV9HugeWater kind:data(any) addr:0x021139a4
 _ZTV14daObjTdWater_c kind:data(any) addr:0x021139a4
 data_ov032_021139b0 kind:data(any) addr:0x021139b0 ambiguous
 data_ov032_021139f4 kind:data(any) addr:0x021139f4 ambiguous

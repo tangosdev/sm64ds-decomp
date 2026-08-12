@@ -69,8 +69,8 @@ func_ov091_02133710 kind:function(arm,size=0x28) addr:0x02133710
 func_ov091_02133738 kind:function(arm,size=0x174) addr:0x02133738
 func_ov091_021338ac kind:function(arm,size=0x8c) addr:0x021338ac
 Stump_Spawn kind:function(arm,size=0x30) addr:0x02133938
-_ZN5StumpD1Ev kind:function(arm,size=0x40) addr:0x02133968
-_ZN5StumpD0Ev kind:function(arm,size=0x54) addr:0x021339a8
+_ZN6FwooshD1Ev kind:function(arm,size=0x40) addr:0x02133968
+_ZN6FwooshD0Ev kind:function(arm,size=0x54) addr:0x021339a8
 func_ov091_021339fc kind:function(arm,size=0x270) addr:0x021339fc
 func_ov091_02133c6c kind:function(arm,size=0xb0) addr:0x02133c6c
 func_ov091_02133d1c kind:function(arm,size=0x14) addr:0x02133d1c
@@ -80,11 +80,11 @@ func_ov091_02133f60 kind:function(arm,size=0xac) addr:0x02133f60
 func_ov091_0213400c kind:function(arm,size=0x38) addr:0x0213400c
 func_ov091_02134044 kind:function(arm,size=0x50) addr:0x02134044
 func_ov091_02134094 kind:function(arm,size=0x74) addr:0x02134094
-_ZN5Stump16CleanupResourcesEv kind:function(arm,size=0x78) addr:0x02134108
-_ZN5Stump16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02134180
-_ZN5Stump6RenderEv kind:function(arm,size=0x68) addr:0x02134184
-_ZN5Stump8BehaviorEv kind:function(arm,size=0x138) addr:0x021341ec
-_ZN5Stump13InitResourcesEv kind:function(arm,size=0x160) addr:0x02134324
+_ZN6Fwoosh16CleanupResourcesEv kind:function(arm,size=0x78) addr:0x02134108
+_ZN6Fwoosh16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02134180
+_ZN6Fwoosh6RenderEv kind:function(arm,size=0x68) addr:0x02134184
+_ZN6Fwoosh8BehaviorEv kind:function(arm,size=0x138) addr:0x021341ec
+_ZN6Fwoosh13InitResourcesEv kind:function(arm,size=0x160) addr:0x02134324
 func_ov091_02134484 kind:function(arm,size=0x8) addr:0x02134484
 func_ov091_0213448c kind:function(arm,size=0xc) addr:0x0213448c
 func_ov091_02134498 kind:function(arm,size=0x8) addr:0x02134498
@@ -164,7 +164,7 @@ data_ov091_02135364 kind:data(any) addr:0x02135364
 _ZTI10daHyuhyu_c kind:data(any) addr:0x0213536c
 _ZTS10daHyuhyu_c kind:data(any) addr:0x02135378
 Fwoosh_SpawnInfo kind:data(any) addr:0x02135388 ambiguous
-_ZTV5Stump kind:data(any) addr:0x021353ac
+_ZTV6Fwoosh kind:data(any) addr:0x021353ac
 _ZTV10daHyuhyu_c kind:data(any) addr:0x021353ac
 data_ov091_02135440 kind:bss addr:0x02135440
 data_ov091_02135448 kind:bss addr:0x02135448

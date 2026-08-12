@@ -128,27 +128,27 @@ src/HugeCover_Spawn.c:
     complete
     .text start:0x02112668 end:0x02112698
 
-src/_ZN9HugeCoverD1Ev.cpp:
+src/_ZN9HugeWaterD1Ev.cpp:
     complete
     .text start:0x02112698 end:0x021126e4
 
-src/_ZN9HugeCoverD0Ev.cpp:
+src/_ZN9HugeWaterD0Ev.cpp:
     complete
     .text start:0x021126e4 end:0x02112744
 
-src/_ZN9HugeCover16CleanupResourcesEv.cpp:
+src/_ZN9HugeWater16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112744 end:0x02112788
 
-src/_ZN9HugeCover6RenderEv.cpp:
+src/_ZN9HugeWater6RenderEv.cpp:
     complete
     .text start:0x02112788 end:0x021127bc
 
-src/_ZN9HugeCover8BehaviorEv.cpp:
+src/_ZN9HugeWater8BehaviorEv.cpp:
     complete
     .text start:0x021127bc end:0x021127f0
 
-src/_ZN9HugeCover13InitResourcesEv.cpp:
+src/_ZN9HugeWater13InitResourcesEv.cpp:
     complete
     .text start:0x021127f0 end:0x021128b8
 

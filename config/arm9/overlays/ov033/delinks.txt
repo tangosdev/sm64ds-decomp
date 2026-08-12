@@ -36,27 +36,27 @@ src/TinyCover_Spawn.c:
     complete
     .text start:0x021113a4 end:0x021113d4
 
-src/_ZN9TinyCoverD1Ev.cpp:
+src/_ZN9TinyWaterD1Ev.cpp:
     complete
     .text start:0x021113d4 end:0x02111420
 
-src/_ZN9TinyCoverD0Ev.cpp:
+src/_ZN9TinyWaterD0Ev.cpp:
     complete
     .text start:0x02111420 end:0x02111480
 
-src/_ZN9TinyCover16CleanupResourcesEv.cpp:
+src/_ZN9TinyWater16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111480 end:0x021114c4
 
-src/_ZN9TinyCover6RenderEv.cpp:
+src/_ZN9TinyWater6RenderEv.cpp:
     complete
     .text start:0x021114c4 end:0x021114f8
 
-src/_ZN9TinyCover8BehaviorEv.c:
+src/_ZN9TinyWater8BehaviorEv.c:
     complete
     .text start:0x021114f8 end:0x021115bc
 
-src/_ZN9TinyCover13InitResourcesEv.cpp:
+src/_ZN9TinyWater13InitResourcesEv.cpp:
     complete
     .text start:0x021115bc end:0x02111690
 

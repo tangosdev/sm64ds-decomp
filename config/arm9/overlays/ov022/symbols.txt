@@ -12,12 +12,12 @@ func_ov022_021115f8 kind:function(arm,size=0x64) addr:0x021115f8
 func_ov022_0211165c kind:function(arm,size=0x14) addr:0x0211165c
 func_ov022_02111670 kind:function(arm,size=0x18) addr:0x02111670
 RotatingPlatformLll_Spawn kind:function(arm,size=0x3c) addr:0x02111688
-_ZN19RotatingPlatformLllD1Ev kind:function(arm,size=0x44) addr:0x021116c4
-_ZN19RotatingPlatformLllD0Ev kind:function(arm,size=0x58) addr:0x02111708
-_ZN19RotatingPlatformLll16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111760
-_ZN19RotatingPlatformLll6RenderEv kind:function(arm,size=0x28) addr:0x021117a4
-_ZN19RotatingPlatformLll8BehaviorEv kind:function(arm,size=0xa4) addr:0x021117cc
-_ZN19RotatingPlatformLll13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111870
+_ZN19FloatOnLavaPlatformD1Ev kind:function(arm,size=0x44) addr:0x021116c4
+_ZN19FloatOnLavaPlatformD0Ev kind:function(arm,size=0x58) addr:0x02111708
+_ZN19FloatOnLavaPlatform16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111760
+_ZN19FloatOnLavaPlatform6RenderEv kind:function(arm,size=0x28) addr:0x021117a4
+_ZN19FloatOnLavaPlatform8BehaviorEv kind:function(arm,size=0xa4) addr:0x021117cc
+_ZN19FloatOnLavaPlatform13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111870
 func_ov022_0211191c kind:function(arm,size=0x20) addr:0x0211191c
 func_ov022_0211193c kind:function(arm,size=0x14) addr:0x0211193c
 FloatOnLavaPlatform_Spawn kind:function(arm,size=0x30) addr:0x02111950
@@ -43,12 +43,12 @@ _ZN21FloatingFloorLllSmall16CleanupResourcesEv kind:function(arm,size=0x20) addr
 _ZN21FloatingFloorLllSmall13InitResourcesEv kind:function(arm,size=0x78) addr:0x02112040
 FloatingFloorLllSmall_Spawn kind:function(arm,size=0x3c) addr:0x021120b8
 FloatingFloorLllBig_Spawn kind:function(arm,size=0x3c) addr:0x021120f4
-_ZN19FloatingFloorLllBigD1Ev kind:function(arm,size=0x44) addr:0x02112130
-_ZN19FloatingFloorLllBigD0Ev kind:function(arm,size=0x58) addr:0x02112174
-_ZN19FloatingFloorLllBig16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021121cc
-_ZN19FloatingFloorLllBig6RenderEv kind:function(arm,size=0x28) addr:0x02112210
-_ZN19FloatingFloorLllBig8BehaviorEv kind:function(arm,size=0x74) addr:0x02112238
-_ZN19FloatingFloorLllBig13InitResourcesEv kind:function(arm,size=0xa4) addr:0x021122ac
+_ZN9LavaPlankD1Ev kind:function(arm,size=0x44) addr:0x02112130
+_ZN9LavaPlankD0Ev kind:function(arm,size=0x58) addr:0x02112174
+_ZN9LavaPlank16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x021121cc
+_ZN9LavaPlank6RenderEv kind:function(arm,size=0x28) addr:0x02112210
+_ZN9LavaPlank8BehaviorEv kind:function(arm,size=0x74) addr:0x02112238
+_ZN9LavaPlank13InitResourcesEv kind:function(arm,size=0xa4) addr:0x021122ac
 LavaPlank_Spawn kind:function(arm,size=0x30) addr:0x02112350
 func_ov022_02112380 kind:function(arm,size=0x50) addr:0x02112380
 func_ov022_021123d0 kind:function(arm,size=0x64) addr:0x021123d0
@@ -208,7 +208,7 @@ _ZTI15daObjFl_Block_c kind:data(any) addr:0x02113e68
 data_ov022_02113e6c kind:data(any) addr:0x02113e6c ambiguous
 _ZTS15daObjFl_Block_c kind:data(any) addr:0x02113e74
 FloatOnLavaPlatform_SpawnInfo kind:data(any) addr:0x02113e88 ambiguous
-_ZTV19RotatingPlatformLll kind:data(any) addr:0x02113eac
+_ZTV19FloatOnLavaPlatform kind:data(any) addr:0x02113eac
 data_ov022_02113f20 kind:data(any) addr:0x02113f20 ambiguous
 _ZTI16daObjFl_London_c kind:data(any) addr:0x02113f2c
 _ZTS16daObjFl_London_c kind:data(any) addr:0x02113f38
@@ -232,7 +232,7 @@ data_ov022_0211417c kind:data(any) addr:0x0211417c ambiguous
 _ZTI15daObjFl_UkiKi_c kind:data(any) addr:0x021141ac
 _ZTS15daObjFl_UkiKi_c kind:data(any) addr:0x021141b8
 LavaPlank_SpawnInfo kind:data(any) addr:0x021141cc ambiguous
-_ZTV19FloatingFloorLllBig kind:data(any) addr:0x021141f0
+_ZTV9LavaPlank kind:data(any) addr:0x021141f0
 _ZTI20daObjFl_Fall_Block_c kind:data(any) addr:0x02114270
 data_ov022_0211427c kind:data(any) addr:0x0211427c
 _ZTS20daObjFl_Fall_Block_c kind:data(any) addr:0x02114288
