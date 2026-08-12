@@ -32,11 +32,11 @@ src/PoleBillboard_Spawn.c:
     complete
     .text start:0x021112dc end:0x02111314
 
-src/_ZN13PoleBillboardD1Ev.cpp:
+src/_ZN14KnockDownPlankD1Ev.cpp:
     complete
     .text start:0x02111314 end:0x02111360
 
-src/_ZN13PoleBillboardD0Ev.cpp:
+src/_ZN14KnockDownPlankD0Ev.cpp:
     complete
     .text start:0x02111360 end:0x021113c0
 
@@ -60,15 +60,15 @@ src/func_ov015_0211166c.c:
     complete
     .text start:0x0211166c end:0x021116b4
 
-src/_ZN13PoleBillboard16CleanupResourcesEv.cpp:
+src/_ZN14KnockDownPlank16CleanupResourcesEv.cpp:
     complete
     .text start:0x021116b4 end:0x021116f8
 
-src/_ZN13PoleBillboard6RenderEv.cpp:
+src/_ZN14KnockDownPlank6RenderEv.cpp:
     complete
     .text start:0x021116f8 end:0x02111720
 
-src/_ZN13PoleBillboard8BehaviorEv.cpp:
+src/_ZN14KnockDownPlank8BehaviorEv.cpp:
     complete
     .text start:0x02111720 end:0x02111960
 
