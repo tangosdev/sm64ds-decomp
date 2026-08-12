@@ -672,7 +672,7 @@ extern int _ZTV19BowserPuzzleManager[];
 extern int _ZTV19FirePiranhaPlantBig[];
 extern int _ZTV9LavaPlank[];
 extern int _ZTV19OrangeBallBillboard[];
-extern int _ZTV19RickshawPlatformBdw[];
+extern int _ZTV17daObjKm1_Dorifu_c[];
 extern int _ZTV19FloatOnLavaPlatform[];
 extern int _ZTV9WDW_Water[];
 extern int _ZTV19daObjBk_Dossunbar_c[];

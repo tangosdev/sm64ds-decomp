@@ -4,7 +4,7 @@ extern void* _ZN9ActorBasenwEj(unsigned);
 extern void _ZN8PlatformC2Ev(void*);
 extern void func_020733a8(void*,int,int,void*,void*);
 extern int data_ov002_02108d94[];
-extern int _ZTV19RickshawPlatformBdw[];
+extern int _ZTV17daObjKm1_Dorifu_c[];
 extern void _ZN5ModelD1Ev(void*);
 extern void _ZN5ModelC1Ev(void*);
 extern void _ZN18MovingMeshColliderD1Ev(void*);
@@ -16,7 +16,7 @@ void* StairsBdw_Spawn(void){
     *(int*)c = (int)data_ov002_02108d94;
     func_020733a8(c+0x320, 5, 0x50, (void*)_ZN5ModelC1Ev, (void*)_ZN5ModelD1Ev);
     func_020733a8(c+0x4b0, 5, 0x1c8, (void*)_ZN18MovingMeshColliderC1Ev, (void*)_ZN18MovingMeshColliderD1Ev);
-    *(int*)c = (int)_ZTV19RickshawPlatformBdw;
+    *(int*)c = (int)_ZTV17daObjKm1_Dorifu_c;
   }
   return c;
 }
