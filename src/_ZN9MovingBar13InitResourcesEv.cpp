@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN14KnockDownPlank13InitResourcesEv
+// @symbol _ZN9MovingBar13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "KnockDownPlank.h"
+#include "MovingBar.h"
 extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
@@ -17,7 +17,7 @@ extern int data_ov015_02114534[];
 extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 }
 
-int KnockDownPlank::InitResources()
+int MovingBar::InitResources()
 {
   int b = (*(unsigned short*)((char*)&actorID) == 0x35) ? 1 : 0;
   if(b) *(int*)((char*)&mVariant) = 1; else *(int*)((char*)&mVariant) = 0;
