@@ -3014,7 +3014,6 @@ extern void*data_ov006_02139d24[2];
 extern void*data_ov006_0213ac30;
 extern void*data_ov006_0213ac3c;
 extern void*data_ov006_0213b22c[];
-extern void*data_ov006_0213bdb4[];
 extern void*data_ov006_0213c154[];
 extern void*data_ov006_0213c844;
 extern void*data_ov006_0213ca9c[];

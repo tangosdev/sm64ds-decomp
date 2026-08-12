@@ -1,3 +1,4 @@
+//cpp
 // @symbol func_ov006_020db720
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
@@ -8,14 +9,21 @@
 /* dScMgCard_c::OnTurnIntoEgg - recovered from vtable slot identity */
 typedef short s16;
 
+extern "C" {
 extern void FreeGfxSlotsById(int arg);
 extern int func_ov006_020c1718(void* p);
 extern void func_ov004_020b56c8(int a);
+/* already the mangled Itanium name in the ROM's own symbols.txt --
+   extern "C" here means "use literally", not "C linkage" (see
+   double-mangling-defect memory note: a C++ TU re-mangles a bare
+   `extern` unless told not to, and this name is already the target). */
 extern int _Z15ApproachLinear2Rsss(s16* r, s16 t, s16 s);
 
 extern s16 data_ov004_020bf9e4;
 extern void* func_020beb68;
+}
 
+extern "C" int func_ov006_020db720(char* c);
 int func_ov006_020db720(char* c)
 {
     struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;

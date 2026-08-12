@@ -1752,11 +1752,11 @@ src/MgSortOrSplode_Spawn.c:
     complete
     .text start:0x020d9574 end:0x020d95a4
 
-src/func_ov006_020d95a4.cpp:
+src/_ZN11dScMgCard_cD1Ev.cpp:
     complete
     .text start:0x020d95a4 end:0x020d9638
 
-src/func_ov006_020d9638.cpp:
+src/_ZN11dScMgCard_cD0Ev.cpp:
     complete
     .text start:0x020d9638 end:0x020d96e0
 

@@ -447,8 +447,8 @@ _ZN14dScMgBomroom_c6RenderEv kind:function(arm,size=0x50) addr:0x020d9160
 _ZN14dScMgBomroom_c8BehaviorEv kind:function(arm,size=0x94) addr:0x020d91b0
 _ZN14dScMgBomroom_c13InitResourcesEv kind:function(arm,size=0x330) addr:0x020d9244
 MgSortOrSplode_Spawn kind:function(arm,size=0x30) addr:0x020d9574
-func_ov006_020d95a4 kind:function(arm,size=0x94) addr:0x020d95a4
-func_ov006_020d9638 kind:function(arm,size=0xa8) addr:0x020d9638
+_ZN11dScMgCard_cD1Ev kind:function(arm,size=0x94) addr:0x020d95a4
+_ZN11dScMgCard_cD0Ev kind:function(arm,size=0xa8) addr:0x020d9638
 func_ov006_020d96e0 kind:function(arm,size=0x10) addr:0x020d96e0
 func_ov006_020d96f0 kind:function(arm,size=0x1c) addr:0x020d96f0
 func_ov006_020d970c kind:function(arm,size=0x80) addr:0x020d970c
@@ -3472,7 +3472,7 @@ data_ov006_0213bd18 kind:data(any) addr:0x0213bd18
 data_ov006_0213bd30 kind:data(any) addr:0x0213bd30
 data_ov006_0213bd48 kind:data(any) addr:0x0213bd48
 data_ov006_0213bd64 kind:data(any) addr:0x0213bd64
-data_ov006_0213bdb4 kind:data(any) addr:0x0213bdb4
+_ZTV11dScMgCard_c kind:data(any) addr:0x0213bdb4
 data_ov006_0213be44 kind:data(any) addr:0x0213be44
 data_ov006_0213be4c kind:data(any) addr:0x0213be4c
 data_ov006_0213be54 kind:data(any) addr:0x0213be54

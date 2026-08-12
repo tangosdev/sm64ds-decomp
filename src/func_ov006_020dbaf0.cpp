@@ -49,7 +49,9 @@ extern "C" {
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern u32 *data_ov006_02134028;
-extern char *data_ov004_020beb68;
+/* data_ov004_020beb68 comes from dScMgBase_c.h (void*) now that this file
+   includes the real class chain -- not redeclared here, see its own use
+   below. */
 
 extern void func_ov006_0210a534(char *);
 extern void *LoadFile(int);
@@ -123,7 +125,7 @@ int func_ov006_020dbaf0(char *c)
     {
         int r = func_ov004_020ad878();
         if (data_ov004_020beb68 != 0)
-            *(int *)(data_ov004_020beb68 + 0xb4) = r;
+            *(int *)((char *)data_ov004_020beb68 + 0xb4) = r;
     }
     self->unk_5398 = 0;
     func_ov004_020b682c();
