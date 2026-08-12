@@ -1540,8 +1540,8 @@ func_ov006_02118b70 kind:function(arm,size=0x8dc) addr:0x02118b70
 func_ov006_0211944c kind:function(arm,size=0x3d8) addr:0x0211944c
 MgBingoBallSlotsShot_Spawn kind:function(arm,size=0xdc) addr:0x02119824
 func_ov006_02119900 kind:function(arm,size=0x4) addr:0x02119900
-func_ov006_02119904 kind:function(arm,size=0x54) addr:0x02119904
-func_ov006_02119958 kind:function(arm,size=0x68) addr:0x02119958
+_ZN12dScMgSound_cD1Ev kind:function(arm,size=0x54) addr:0x02119904
+_ZN12dScMgSound_cD0Ev kind:function(arm,size=0x68) addr:0x02119958
 func_ov006_021199c0 kind:function(arm,size=0x58) addr:0x021199c0
 func_ov006_02119a18 kind:function(arm,size=0x70) addr:0x02119a18
 func_ov006_02119a88 kind:function(arm,size=0x20) addr:0x02119a88
@@ -4242,7 +4242,7 @@ data_ov006_0213f74c kind:data(any) addr:0x0213f74c
 data_ov006_0213f76c kind:data(any) addr:0x0213f76c
 data_ov006_0213f794 kind:data(any) addr:0x0213f794
 data_ov006_0213f7e8 kind:data(any) addr:0x0213f7e8
-data_ov006_0213f844 kind:data(any) addr:0x0213f844
+_ZTV12dScMgSound_c kind:data(any) addr:0x0213f844
 data_ov006_0213f8d4 kind:data(any) addr:0x0213f8d4
 data_ov006_0213f8dc kind:data(any) addr:0x0213f8dc
 data_ov006_0213f8e4 kind:data(any) addr:0x0213f8e4

@@ -5913,10 +5913,10 @@ src/func_ov006_02119900.c:
     complete
     .text start:0x02119900 end:0x02119904
 
-src/func_ov006_02119904.cpp:
+src/_ZN12dScMgSound_cD1Ev.cpp:
     .text start:0x02119904 end:0x02119958
 
-src/func_ov006_02119958.cpp:
+src/_ZN12dScMgSound_cD0Ev.cpp:
     complete
     .text start:0x02119958 end:0x021199c0
 
