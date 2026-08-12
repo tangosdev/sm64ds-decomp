@@ -65,6 +65,8 @@ struct Key : Enemy {
     /* --- vtable --- */
     virtual ~Key();
 
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
+
     int Behavior();
     int CleanupResources();
     int InitResources();

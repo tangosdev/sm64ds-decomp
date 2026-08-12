@@ -59,6 +59,8 @@ struct Chuckya : Enemy {
     /* --- vtable --- */
     virtual ~Chuckya();
 
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     int Behavior();
     int CleanupResources();
     int InitResources();

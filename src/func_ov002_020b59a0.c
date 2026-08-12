@@ -1,6 +1,7 @@
-// @symbol func_ov002_020b59a0
+//cpp
+// @symbol _ZN9BlueFlame13OnYoshiTryEatEv
+#include "BlueFlame.h"
 /* recovered: renamed to Class_Method */
-int func_ov002_020b59a0(void)
-{
+s32 BlueFlame::OnYoshiTryEat() {
     return 5;
 }

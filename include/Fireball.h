@@ -51,6 +51,8 @@ struct Fireball : Enemy {
     /* --- vtable --- */
     virtual ~Fireball();
 
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
+
     int Behavior();
     int InitResources();
     int Render();

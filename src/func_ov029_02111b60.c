@@ -1,13 +1,18 @@
-// @symbol func_ov029_02111b60
+//cpp
+// @symbol _ZN8CageLift16CleanupResourcesEv
+#include "CageLift.h"
 // recovered name: daObjWc_Obj05_c_CleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daObjWc_Obj05_c::CleanupResources - recovered from vtable slot identity */
+extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern int data_ov029_0211428c[];
-int func_ov029_02111b60(void *t)
-{
+}
+
+s32 CageLift::CleanupResources() {
+    void * t = (void *)this;
     if (_ZN16MeshColliderBase9IsEnabledEv((char *)t + 0x124)) {
         _ZN16MeshColliderBase7DisableEv((char *)t + 0x124);
     }

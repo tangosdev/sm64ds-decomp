@@ -1,5 +1,6 @@
 //cpp
-// @symbol func_ov079_02127090
+// @symbol _ZN11BillBlaster13InitResourcesEv
+#include "BillBlaster.h"
 // recovered name: daObjBkKillerdai_c_InitResources
 /* recovered: renamed to Class_Method */
 /* daObjBkKillerdai_c::InitResources - recovered from vtable slot identity */
@@ -22,8 +23,8 @@ extern unsigned char data_0209f220;
 int func_ov079_02127090(void *self);
 }
 
-int func_ov079_02127090(void *self)
-{
+s32 BillBlaster::InitResources() {
+    void * self = (void *)this;
     char *c = (char*)self;
     void *m;
     signed char st;

@@ -1,8 +1,11 @@
-// @symbol func_ov084_0212e998
+//cpp
+// @symbol _ZN19FirePiranhaPlantBig16OnAimedAtWithEggEv
+#include "FirePiranhaPlantBig.h"
 // recovered name: FirePiranhaPlantBig_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
 /* daFPkn_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-int func_ov084_0212e998(void* c) {
+s32 FirePiranhaPlantBig::OnAimedAtWithEgg() {
+    void* c = (void*)this;
     int flags = *(int*)((char*)c + 0x18c);
     if (flags & 1) {
         return *(int*)((char*)c + 0x204) * 100;

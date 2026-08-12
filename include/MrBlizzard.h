@@ -43,6 +43,8 @@ struct MrBlizzard : Enemy {
     /* --- vtable --- */
     virtual ~MrBlizzard();
 
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     int Behavior();
     int InitResources();
     int Render();

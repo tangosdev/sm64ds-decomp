@@ -22,6 +22,8 @@ struct BlueFlame : Actor {
     MovingCylinderClsn     mMovingCylinderClsn; /* 0x0e4 */
 
     virtual ~BlueFlame();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   OnYoshiTryEat();         /* slot 18 */
 };
 
 typedef char BlueFlame_size_must_be_0x118[sizeof(BlueFlame) == 0x118 ? 1 : -1];
