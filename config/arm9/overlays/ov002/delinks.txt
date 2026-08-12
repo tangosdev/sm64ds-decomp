@@ -1075,19 +1075,19 @@ src/PoppingLavaBubbles_Spawn.c:
     complete
     .text start:0x020b6dd8 end:0x020b6e08
 
-src/_ZN18PoppingLavaBubblesD1Ev.cpp:
+src/_ZN13WaterfallMistD1Ev.cpp:
     complete
     .text start:0x020b6e08 end:0x020b6e2c
 
-src/_ZN18PoppingLavaBubblesD0Ev.c:
+src/_ZN13WaterfallMistD0Ev.c:
     complete
     .text start:0x020b6e2c end:0x020b6e64
 
-src/_ZN18PoppingLavaBubbles8BehaviorEv.cpp:
+src/_ZN13WaterfallMist8BehaviorEv.cpp:
     complete
     .text start:0x020b6e64 end:0x020b6eac
 
-src/_ZN18PoppingLavaBubbles13InitResourcesEv.cpp:
+src/_ZN13WaterfallMist13InitResourcesEv.cpp:
     complete
     .text start:0x020b6eac end:0x020b6ee8
 
@@ -1258,11 +1258,11 @@ src/PushBlock_Spawn.c:
     complete
     .text start:0x020b910c end:0x020b9148
 
-src/_ZN9PushBlockD1Ev.cpp:
+src/_ZN11PowerFlowerD1Ev.cpp:
     complete
     .text start:0x020b9148 end:0x020b9198
 
-src/_ZN9PushBlockD0Ev.c:
+src/_ZN11PowerFlowerD0Ev.c:
     complete
     .text start:0x020b9198 end:0x020b91fc
 
@@ -1310,19 +1310,19 @@ src/func_ov002_020b9a1c.c:
     complete
     .text start:0x020b9a1c end:0x020b9a7c
 
-src/_ZN9PushBlock16CleanupResourcesEv.c:
+src/_ZN11PowerFlower16CleanupResourcesEv.c:
     complete
     .text start:0x020b9a7c end:0x020b9aac
 
-src/_ZN9PushBlock6RenderEv.cpp:
+src/_ZN11PowerFlower6RenderEv.cpp:
     complete
     .text start:0x020b9aac end:0x020b9b70
 
-src/_ZN9PushBlock8BehaviorEv.cpp:
+src/_ZN11PowerFlower8BehaviorEv.cpp:
     complete
     .text start:0x020b9b70 end:0x020b9c00
 
-src/_ZN9PushBlock13InitResourcesEv.cpp:
+src/_ZN11PowerFlower13InitResourcesEv.cpp:
     complete
     .text start:0x020b9c00 end:0x020b9e04
 
@@ -1597,11 +1597,11 @@ src/Seaweed_Spawn.c:
     complete
     .text start:0x020bc5a8 end:0x020bc5e0
 
-src/_ZN7SeaweedD1Ev.cpp:
+src/_ZN12HealingHeartD1Ev.cpp:
     complete
     .text start:0x020bc5e0 end:0x020bc618
 
-src/_ZN7SeaweedD0Ev.c:
+src/_ZN12HealingHeartD0Ev.c:
     complete
     .text start:0x020bc618 end:0x020bc664
 
@@ -1609,19 +1609,19 @@ src/func_ov002_020bc664.c:
     complete
     .text start:0x020bc664 end:0x020bc6a4
 
-src/_ZN7Seaweed16CleanupResourcesEv.c:
+src/_ZN12HealingHeart16CleanupResourcesEv.c:
     complete
     .text start:0x020bc6a4 end:0x020bc6d4
 
-src/_ZN7Seaweed6RenderEv.cpp:
+src/_ZN12HealingHeart6RenderEv.cpp:
     complete
     .text start:0x020bc6d4 end:0x020bc6fc
 
-src/_ZN7Seaweed8BehaviorEv.c:
+src/_ZN12HealingHeart8BehaviorEv.c:
     complete
     .text start:0x020bc6fc end:0x020bc81c
 
-src/_ZN7Seaweed13InitResourcesEv.cpp:
+src/_ZN12HealingHeart13InitResourcesEv.cpp:
     complete
     .text start:0x020bc81c end:0x020bc8b4
 
@@ -4868,11 +4868,11 @@ src/InvisibleSecret_Spawn.c:
     complete
     .text start:0x020f085c end:0x020f0894
 
-src/_ZN15InvisibleSecretD1Ev.cpp:
+src/_ZN6NumberD1Ev.cpp:
     complete
     .text start:0x020f0894 end:0x020f08cc
 
-src/_ZN15InvisibleSecretD0Ev.c:
+src/_ZN6NumberD0Ev.c:
     complete
     .text start:0x020f08cc end:0x020f0918
 
@@ -4880,19 +4880,19 @@ src/func_ov002_020f0918.c:
     complete
     .text start:0x020f0918 end:0x020f093c
 
-src/_ZN15InvisibleSecret16CleanupResourcesEv.cpp:
+src/_ZN6Number16CleanupResourcesEv.cpp:
     complete
     .text start:0x020f093c end:0x020f0994
 
-src/_ZN15InvisibleSecret6RenderEv.cpp:
+src/_ZN6Number6RenderEv.cpp:
     complete
     .text start:0x020f0994 end:0x020f0a60
 
-src/_ZN15InvisibleSecret8BehaviorEv.cpp:
+src/_ZN6Number8BehaviorEv.cpp:
     complete
     .text start:0x020f0a60 end:0x020f0bd4
 
-src/_ZN15InvisibleSecret13InitResourcesEv.cpp:
+src/_ZN6Number13InitResourcesEv.cpp:
     complete
     .text start:0x020f0bd4 end:0x020f0d90
 

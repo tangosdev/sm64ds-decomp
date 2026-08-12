@@ -167,11 +167,11 @@ src/FloatOnWaterPlatformJrb_Spawn.c:
     complete
     .text start:0x02112fbc end:0x02112ff8
 
-src/_ZN23FloatOnWaterPlatformJrbD1Ev.c:
+src/_ZN10SlidingBoxD1Ev.c:
     complete
     .text start:0x02112ff8 end:0x02113044
 
-src/_ZN23FloatOnWaterPlatformJrbD0Ev.c:
+src/_ZN10SlidingBoxD0Ev.c:
     complete
     .text start:0x02113044 end:0x021130a4
 
@@ -179,19 +179,19 @@ src/func_ov016_021130a4.c:
     complete
     .text start:0x021130a4 end:0x021130ec
 
-src/_ZN23FloatOnWaterPlatformJrb16CleanupResourcesEv.cpp:
+src/_ZN10SlidingBox16CleanupResourcesEv.cpp:
     complete
     .text start:0x021130ec end:0x02113130
 
-src/_ZN23FloatOnWaterPlatformJrb6RenderEv.cpp:
+src/_ZN10SlidingBox6RenderEv.cpp:
     complete
     .text start:0x02113130 end:0x02113158
 
-src/_ZN23FloatOnWaterPlatformJrb8BehaviorEv.c:
+src/_ZN10SlidingBox8BehaviorEv.c:
     complete
     .text start:0x02113158 end:0x02113434
 
-src/_ZN23FloatOnWaterPlatformJrb13InitResourcesEv.cpp:
+src/_ZN10SlidingBox13InitResourcesEv.cpp:
     complete
     .text start:0x02113434 end:0x02113510
 

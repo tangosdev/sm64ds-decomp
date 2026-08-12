@@ -36,27 +36,27 @@ src/SwitchPillar_Spawn.c:
     complete
     .text start:0x02111420 end:0x02111450
 
-src/_ZN12SwitchPillarD1Ev.cpp:
+src/_ZN13BasementWaterD1Ev.cpp:
     complete
     .text start:0x02111450 end:0x0211149c
 
-src/_ZN12SwitchPillarD0Ev.cpp:
+src/_ZN13BasementWaterD0Ev.cpp:
     complete
     .text start:0x0211149c end:0x021114fc
 
-src/_ZN12SwitchPillar16CleanupResourcesEv.cpp:
+src/_ZN13BasementWater16CleanupResourcesEv.cpp:
     complete
     .text start:0x021114fc end:0x02111540
 
-src/_ZN12SwitchPillar6RenderEv.cpp:
+src/_ZN13BasementWater6RenderEv.cpp:
     complete
     .text start:0x02111540 end:0x02111574
 
-src/_ZN12SwitchPillar8BehaviorEv.cpp:
+src/_ZN13BasementWater8BehaviorEv.cpp:
     complete
     .text start:0x02111574 end:0x0211164c
 
-src/_ZN12SwitchPillar13InitResourcesEv.cpp:
+src/_ZN13BasementWater13InitResourcesEv.cpp:
     complete
     .text start:0x0211164c end:0x02111730
 

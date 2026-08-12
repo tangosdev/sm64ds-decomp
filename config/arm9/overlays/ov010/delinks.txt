@@ -71,11 +71,11 @@ src/Trap_Spawn.c:
     complete
     .text start:0x02111998 end:0x021119d0
 
-src/_ZN4TrapD1Ev.cpp:
+src/_ZN9LightBeamD1Ev.cpp:
     complete
     .text start:0x021119d0 end:0x02111a08
 
-src/_ZN4TrapD0Ev.c:
+src/_ZN9LightBeamD0Ev.c:
     complete
     .text start:0x02111a08 end:0x02111a54
 
@@ -83,19 +83,19 @@ src/func_ov010_02111a54.c:
     complete
     .text start:0x02111a54 end:0x02111a94
 
-src/_ZN4Trap16CleanupResourcesEv.c:
+src/_ZN9LightBeam16CleanupResourcesEv.c:
     complete
     .text start:0x02111a94 end:0x02111ab8
 
-src/_ZN4Trap6RenderEv.cpp:
+src/_ZN9LightBeam6RenderEv.cpp:
     complete
     .text start:0x02111ab8 end:0x02111ae0
 
-src/_ZN4Trap8BehaviorEv.cpp:
+src/_ZN9LightBeam8BehaviorEv.cpp:
     complete
     .text start:0x02111ae0 end:0x02111d20
 
-src/_ZN4Trap13InitResourcesEv.cpp:
+src/_ZN9LightBeam13InitResourcesEv.cpp:
     complete
     .text start:0x02111d20 end:0x02111dd0
 
