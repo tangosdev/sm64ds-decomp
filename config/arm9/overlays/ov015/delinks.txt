@@ -76,11 +76,11 @@ src/KnockDownPlank_Spawn.c:
     complete
     .text start:0x02111b68 end:0x02111ba0
 
-src/_ZN14KnockDownPlankD1Ev.cpp:
+src/_ZN9MovingBarD1Ev.cpp:
     complete
     .text start:0x02111ba0 end:0x02111be4
 
-src/_ZN14KnockDownPlankD0Ev.cpp:
+src/_ZN9MovingBarD0Ev.cpp:
     complete
     .text start:0x02111be4 end:0x02111c3c
 
@@ -152,19 +152,19 @@ src/func_ov015_02111fb8.c:
     complete
     .text start:0x02111fb8 end:0x02112004
 
-src/_ZN14KnockDownPlank16CleanupResourcesEv.cpp:
+src/_ZN9MovingBar16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112004 end:0x02112068
 
-src/_ZN14KnockDownPlank6RenderEv.cpp:
+src/_ZN9MovingBar6RenderEv.cpp:
     complete
     .text start:0x02112068 end:0x02112090
 
-src/_ZN14KnockDownPlank8BehaviorEv.cpp:
+src/_ZN9MovingBar8BehaviorEv.cpp:
     complete
     .text start:0x02112090 end:0x021120fc
 
-src/_ZN14KnockDownPlank13InitResourcesEv.cpp:
+src/_ZN9MovingBar13InitResourcesEv.cpp:
     complete
     .text start:0x021120fc end:0x02112230
 
