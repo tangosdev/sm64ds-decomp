@@ -687,7 +687,7 @@ extern int _ZTV20daObjCtRotateBlock_c[];
 extern int _ZTV20daObjFl_Fall_Block_c[];
 extern int _ZTV20daObjKm3_Kaitendai_c[];
 extern int _ZTV20daObjTh_Fall_Block_c[];
-extern int _ZTV21ArmedRotatingPlatform[];
+extern int _ZTV16daObjRc_Dorifu_c[];
 extern int _ZTV21MegaMushroomCreateTag[];
 extern int _ZTV21daObjDlPyramidDummy_c[];
 extern int _ZTV21daObjKm1_Kurumajiku_c[];

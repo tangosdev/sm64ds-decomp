@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class ArmedRotatingPlatform: 4 matched functions, 2 evidenced fields.
+ * class daObjRc_Dorifu_c: 4 matched functions, 2 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef ARMEDROTATINGPLATFORM_H
-#define ARMEDROTATINGPLATFORM_H
+#ifndef DAOBJRC_DORIFU_C_H
+#define DAOBJRC_DORIFU_C_H
 #include "types.h"
 
-struct ArmedRotatingPlatform {
+struct daObjRc_Dorifu_c {
     u8  pad_000[0xd4];
     u8  mModel;            /* 0x0d4 */
     u8  pad_0d5[0x4f];
