@@ -286,7 +286,7 @@ take over, ping the claimant first.
 | ov002 func_ov002_020aefb8 (0x020aefb8, size 0x108) | lunavyqo (Grok) | 2026-07-24 | **done** — all listed functions verified matched in committed src/ (repo doctor sweep 2026-07-25); batch4 near-miss refine (prev div=21) |
 | ov075 func_ov075_02117d80 (0x02117d80, size 0x104) | lunavyqo (Grok) | 2026-07-24 | **active** — batch4 near-miss refine (prev div=5) |
 | ov002 func_ov002_020d708c (0x020d708c, size 0x100) | lunavyqo (Grok) | 2026-07-24 | **active** — batch6 near-miss div=19 |
-| ov080 func_ov080_02125460 (0x02125460, size 0xfc) | lunavyqo (Grok) | 2026-07-24 | **active** — batch6 near-miss div=5 |
+| ov080 func_ov080_02125460 (0x02125460, size 0xfc) | lunavyqo | 2026-08-12 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_propagation off` + struct Ov080Mat with `union { u32 w; } param` + G3_TexImageParam/G3_TexPlttBase inlines (param.w extracts); from near-miss div=5→0; API clm_6d2bd1c7b3ef kept |
 | ov002 func_ov002_020d8944 (0x020d8944, size 0x10c) | lunavyqo (Grok) | 2026-07-24 | **active** — batch2 match from near-miss div=15 |
 | ov063 func_ov063_021162c8 (0x021162c8, size 0x108) | lunavyqo (Grok) | 2026-07-24 | **done** — all listed functions verified matched in committed src/ (repo doctor sweep 2026-07-25); batch2 match from near-miss div=12 |
 | ov002 func_ov002_020f1468 (0x020f1468, size 0x110) + ov006 func_ov006_02124fd8 (0x02124fd8, size 0x10c) | lunavyqo (Grok) | 2026-07-24 | **done** — both verified byte-identical + linkcheck VERIFIED (mwccarm 1.2/sp2p3); batch1 |
