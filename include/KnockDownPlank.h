@@ -1,5 +1,5 @@
-#ifndef POLEBILLBOARD_H
-#define POLEBILLBOARD_H
+#ifndef KNOCKDOWNPLANK_H
+#define KNOCKDOWNPLANK_H
 
 #include "types.h"
 
@@ -18,7 +18,7 @@
 #include "Platform.h"
 #include "ShadowModel.h"
 
-struct PoleBillboard : Platform {
+struct KnockDownPlank : Platform {
     u8  pad_31e[0x2];
     ShadowModel mShadowModel;         /* 0x320 */
     u8  pad_348[0x30];
@@ -35,20 +35,20 @@ struct PoleBillboard : Platform {
     u8 unk_397;                       /* 0x397 */
 
     /* --- vtable --- */
-    virtual ~PoleBillboard();
+    virtual ~KnockDownPlank();
 
     int CleanupResources();
     int Render();
 };
 
-typedef char PoleBillboard_size_must_be_0x398[sizeof(PoleBillboard) == 0x398 ? 1 : -1];
+typedef char PoleBillboard_size_must_be_0x398[sizeof(KnockDownPlank) == 0x398 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct PoleBillboard {
+struct KnockDownPlank {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
@@ -79,4 +79,4 @@ struct PoleBillboard {
 
 #endif /* __cplusplus */
 
-#endif /* POLEBILLBOARD_H */
+#endif /* KNOCKDOWNPLANK_H */

@@ -516,7 +516,7 @@ extern int _ZTV13KoopaTheQuick[];
 extern int _ZTV13MontyMoleRock[];
 extern int _ZTV13OneUpMushroom[];
 extern int _ZTV13PeachPainting[];
-extern int _ZTV13PoleBillboard[];
+extern int _ZTV14KnockDownPlank[];
 extern int _ZTV13PrincessPeach[];
 extern int _ZTV13QuestionBlock[];
 extern int _ZTV13RacingPenguin[];

@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN13PoleBillboard6RenderEv
+// @symbol _ZN14KnockDownPlank6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "PoleBillboard.h"
+#include "KnockDownPlank.h"
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 struct Derived { char pad[0xd4]; Base base; };
 
-int PoleBillboard::Render()
+int KnockDownPlank::Render()
 {
  Base *b = &((Derived *)this)->base; b->m(0); return 1;
 }
