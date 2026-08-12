@@ -4,10 +4,10 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV10DonutBlock */
+/* resolved: VT = _ZTV21ArmedRotatingPlatform */
 int *ArmedRotatingPlatform_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(800);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV10DonutBlock; }
+    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV21ArmedRotatingPlatform; }
     return p;
 }

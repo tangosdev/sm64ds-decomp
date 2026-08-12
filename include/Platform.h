@@ -1,7 +1,7 @@
 /* Seeded from matched-function evidence by tools/gen_header.py, then given its
  * real base and real member types by hand.
  *
- * class Platform: 9 matched functions. The base of a large family -- DonutBlock,
+ * class Platform: 9 matched functions. The base of a large family -- ArmedRotatingPlatform,
  * PyramidTop, RickshawBs, ShutterBob, ShutterHmc, SlidingIce and others -- whose
  * destructors all inline this one's body, which is why it is declared inline
  * below.
@@ -35,7 +35,7 @@
  *
  * One layout satisfies all five: data ends 0x31e, sizeof 0x320. The four above
  * align up from 0x31e to 0x320; BowserFireSeaArena puts its OWN three s16 at
- * 0x31e/0x320/0x322 so its Model lands at 0x324; DonutBlock puts a single s16
+ * 0x31e/0x320/0x322 so its Model lands at 0x324; ArmedRotatingPlatform puts a single s16
  * at 0x31e, in this class's tail padding, and its Behavior reads this+0x31e
  * and reproduces. Ending at 0x324 satisfies BowserFireSeaArena and contradicts
  * the other four.

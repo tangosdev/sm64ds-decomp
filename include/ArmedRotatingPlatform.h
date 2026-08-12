@@ -1,5 +1,5 @@
-#ifndef DONUTBLOCK_H
-#define DONUTBLOCK_H
+#ifndef ARMEDROTATINGPLATFORM_H
+#define ARMEDROTATINGPLATFORM_H
 
 #include "types.h"
 
@@ -7,7 +7,7 @@
  *
  * Everything this header used to declare below 0x31e was Actor's and
  * Platform's, restated. It derives from Platform now, which the destructor
- * evidences the usual way -- it stores DonutBlock's vtable, then Platform's,
+ * evidences the usual way -- it stores ArmedRotatingPlatform's vtable, then Platform's,
  * then destroys the MovingMeshCollider at 0x124 and the Model at 0xd4 and
  * chains to Actor. Those three are Platform's own.
  *
@@ -21,11 +21,11 @@
 
 #include "Platform.h"
 
-struct DonutBlock : Platform {
+struct ArmedRotatingPlatform : Platform {
     s16 unk_31e;            /* 0x31e - per-frame yaw step; see InitResources */
 
     /* --- vtable --- */
-    virtual ~DonutBlock();
+    virtual ~ArmedRotatingPlatform();
 
     int Behavior();
     int CleanupResources();
@@ -33,8 +33,8 @@ struct DonutBlock : Platform {
     int Render();
 };
 
-typedef char DonutBlock_size_must_be_0x320[sizeof(DonutBlock) == 0x320 ? 1 : -1];
+typedef char DonutBlock_size_must_be_0x320[sizeof(ArmedRotatingPlatform) == 0x320 ? 1 : -1];
 
 #endif /* __cplusplus */
 
-#endif /* DONUTBLOCK_H */
+#endif /* ARMEDROTATINGPLATFORM_H */
