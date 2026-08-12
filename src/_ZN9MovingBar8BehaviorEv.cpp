@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN14KnockDownPlank8BehaviorEv
+// @symbol _ZN9MovingBar8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
-#include "KnockDownPlank.h"
+#include "MovingBar.h"
 struct C;
 typedef void (C::*PMF)();
 struct TabEnt { PMF pmf; };
@@ -16,7 +16,7 @@ struct C {
     int idx;
 };
 
-int KnockDownPlank::Behavior()
+int MovingBar::Behavior()
 {
     (((C *)this)->*(data_ov015_021149ec[((C *)this)->idx].pmf))();
     _ZN8Platform21UpdateModelPosAndRotYEv(((C *)this));

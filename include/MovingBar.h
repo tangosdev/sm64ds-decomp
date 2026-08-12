@@ -1,5 +1,5 @@
-#ifndef KNOCKDOWNPLANK_H
-#define KNOCKDOWNPLANK_H
+#ifndef MOVINGBAR_H
+#define MOVINGBAR_H
 
 #include "types.h"
 
@@ -17,7 +17,7 @@
 
 #include "Platform.h"
 
-struct KnockDownPlank : Platform {
+struct MovingBar : Platform {
     u8  pad_31e[0x2];
     s32 unk_320;                      /* 0x320 */
     s32 unk_324;                      /* 0x324 */
@@ -25,7 +25,7 @@ struct KnockDownPlank : Platform {
     s32 mVariant;                     /* 0x32c */
 
     /* --- vtable --- */
-    virtual ~KnockDownPlank();
+    virtual ~MovingBar();
 
     int Behavior();
     int CleanupResources();
@@ -33,14 +33,14 @@ struct KnockDownPlank : Platform {
     int Render();
 };
 
-typedef char KnockDownPlank_size_must_be_0x330[sizeof(KnockDownPlank) == 0x330 ? 1 : -1];
+typedef char KnockDownPlank_size_must_be_0x330[sizeof(MovingBar) == 0x330 ? 1 : -1];
 
 #else
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
    can never be migrated. Same arrangement as include/ShadowModel.h. */
-struct KnockDownPlank {
+struct MovingBar {
     u8  pad_000[0xc];
     /* 0x00c..0x05c is ActorBase's, and ActorBase.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
@@ -87,4 +87,4 @@ struct KnockDownPlank {
 
 #endif /* __cplusplus */
 
-#endif /* KNOCKDOWNPLANK_H */
+#endif /* MOVINGBAR_H */
