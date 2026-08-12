@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN12FallBlockLll13InitResourcesEv
+// @symbol _ZN13RollingLogLll13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FallBlockLll.h"
+#include "RollingLogLll.h"
 
-int FallBlockLll::InitResources()
+int RollingLogLll::InitResources()
 {
     return func_ov080_021274ac(((void *)this), data_ov022_02112c9c);
 }
