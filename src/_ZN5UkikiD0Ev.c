@@ -1,4 +1,4 @@
-// @symbol _ZN13RollingLogTtmD0Ev
+// @symbol _ZN5UkikiD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ModelAnim.h"
@@ -9,7 +9,7 @@
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV7daMky_c */
 extern void *data_020a0eac;
-int *_ZN13RollingLogTtmD0Ev(int *t)
+int *_ZN5UkikiD0Ev(int *t)
 {
     t[0] = (int)_ZTV7daMky_c;
     _ZN12WithMeshClsnD1Ev((char *)t + 0x194);
