@@ -48,19 +48,19 @@ src/_ZN13BowserShutterD0Ev.c:
     complete
     .text start:0x0211170c end:0x02111764
 
-src/func_ov026_02111764.c:
+src/_ZN13BowserShutter16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111764 end:0x021117a8
 
-src/func_ov026_021117a8.cpp:
+src/_ZN13BowserShutter6RenderEv.cpp:
     complete
     .text start:0x021117a8 end:0x021117d0
 
-src/func_ov026_021117d0.c:
+src/_ZN13BowserShutter8BehaviorEv.cpp:
     complete
     .text start:0x021117d0 end:0x021117d8
 
-src/func_ov026_021117d8.c:
+src/_ZN13BowserShutter13InitResourcesEv.cpp:
     complete
     .text start:0x021117d8 end:0x02111888
 

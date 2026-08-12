@@ -185,7 +185,7 @@ src/_ZN10MrBlizzard8BehaviorEv.cpp:
 src/_ZN10MrBlizzard13InitResourcesEv.cpp:
     .text start:0x02125ba0 end:0x02125eb8
 
-src/func_ov081_02125eb8.c:
+src/_ZN10MrBlizzard16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02125eb8 end:0x02125ec0
 

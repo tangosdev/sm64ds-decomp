@@ -491,15 +491,15 @@ src/func_ov060_021181b4.c:
     complete
     .text start:0x021181b4 end:0x021181e8
 
-src/func_ov060_021181e8.c:
+src/_ZN17BowserSkyPlatform16CleanupResourcesEv.cpp:
     complete
     .text start:0x021181e8 end:0x0211822c
 
-src/func_ov060_0211822c.cpp:
+src/_ZN17BowserSkyPlatform6RenderEv.cpp:
     complete
     .text start:0x0211822c end:0x02118254
 
-src/func_ov060_02118254.cpp:
+src/_ZN17BowserSkyPlatform8BehaviorEv.cpp:
     complete
     .text start:0x02118254 end:0x021182b0
 

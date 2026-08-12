@@ -16,11 +16,11 @@ src/func_ov015_02111214.c:
     complete
     .text start:0x02111214 end:0x02111254
 
-src/func_ov015_02111254.c:
+src/_ZN13PoleBillboard16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111254 end:0x02111278
 
-src/func_ov015_02111278.cpp:
+src/_ZN13PoleBillboard6RenderEv.cpp:
     complete
     .text start:0x02111278 end:0x021112a0
 

@@ -11,19 +11,19 @@ src/_ZN11DiamondLiftD0Ev.c:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/func_ov043_0211123c.c:
+src/_ZN11DiamondLift16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211123c end:0x02111280
 
-src/func_ov043_02111280.cpp:
+src/_ZN11DiamondLift6RenderEv.cpp:
     complete
     .text start:0x02111280 end:0x021112a8
 
-src/func_ov043_021112a8.cpp:
+src/_ZN11DiamondLift8BehaviorEv.cpp:
     complete
     .text start:0x021112a8 end:0x02111320
 
-src/func_ov043_02111320.c:
+src/_ZN11DiamondLift13InitResourcesEv.cpp:
     complete
     .text start:0x02111320 end:0x021113cc
 
