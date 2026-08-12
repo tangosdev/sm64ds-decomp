@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN9TowerStepD1Ev
+// @symbol _ZN14RotatingBridgeD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Two vtable stores and three destructor calls, every one a consequence of
- * `struct TowerStep : Platform`: its own vptr, then Platform's -- inlined,
+ * `struct RotatingBridge : Platform`: its own vptr, then Platform's -- inlined,
  * because Platform's destructor is defined in its class body -- then
  * Platform's Model and MovingMeshCollider, then Actor. This class adds no
  * member with a destructor of its own.
  */
-#include "TowerStep.h"
+#include "RotatingBridge.h"
 
-TowerStep::~TowerStep()
+RotatingBridge::~RotatingBridge()
 {
 }

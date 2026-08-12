@@ -4,10 +4,10 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV9TowerStep */
+/* resolved: VT = _ZTV14RotatingBridge */
 int *RotatingBridge_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(804);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV9TowerStep; }
+    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV14RotatingBridge; }
     return p;
 }
