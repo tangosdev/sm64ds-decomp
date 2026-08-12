@@ -57,11 +57,11 @@ src/_ZN9UkikiCage13InitResourcesEv.c:
 src/RollingLogTtm_Spawn.c:
     .text start:0x0211164c end:0x02111688
 
-src/_ZN13RollingLogTtmD1Ev.cpp:
+src/_ZN5UkikiD1Ev.cpp:
     complete
     .text start:0x02111688 end:0x021116d0
 
-src/_ZN13RollingLogTtmD0Ev.c:
+src/_ZN5UkikiD0Ev.c:
     complete
     .text start:0x021116d0 end:0x0211172c
 
@@ -209,23 +209,23 @@ src/func_ov030_021141a8.c:
     complete
     .text start:0x021141a8 end:0x021141c4
 
-src/_ZN13RollingLogTtm16CleanupResourcesEv.c:
+src/_ZN5Ukiki16CleanupResourcesEv.c:
     complete
     .text start:0x021141c4 end:0x0211422c
 
-src/_ZN13RollingLogTtm16OnPendingDestroyEv.c:
+src/_ZN5Ukiki16OnPendingDestroyEv.c:
     complete
     .text start:0x0211422c end:0x02114230
 
-src/_ZN13RollingLogTtm6RenderEv.cpp:
+src/_ZN5Ukiki6RenderEv.cpp:
     complete
     .text start:0x02114230 end:0x02114278
 
-src/_ZN13RollingLogTtm8BehaviorEv.cpp:
+src/_ZN5Ukiki8BehaviorEv.cpp:
     complete
     .text start:0x02114278 end:0x02114378
 
-src/_ZN13RollingLogTtm13InitResourcesEv.cpp:
+src/_ZN5Ukiki13InitResourcesEv.cpp:
     complete
     .text start:0x02114378 end:0x021145d4
 
