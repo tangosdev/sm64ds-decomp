@@ -944,8 +944,8 @@ _ZN12dScMgLuigi_c6RenderEv kind:function(arm,size=0x54) addr:0x020f33c0
 _ZN12dScMgLuigi_c8BehaviorEv kind:function(arm,size=0x4c) addr:0x020f3414
 _ZN12dScMgLuigi_c13InitResourcesEv kind:function(arm,size=0x3a0) addr:0x020f3460
 MgWanted_Spawn kind:function(arm,size=0x34) addr:0x020f3800
-_ZN13MgMemoryMatchD1Ev kind:function(arm,size=0x54) addr:0x020f3834
-_ZN13MgMemoryMatchD0Ev kind:function(arm,size=0x68) addr:0x020f3888
+_ZN13dScMgMemory_cD1Ev kind:function(arm,size=0x54) addr:0x020f3834
+_ZN13dScMgMemory_cD0Ev kind:function(arm,size=0x68) addr:0x020f3888
 func_ov006_020f38f0 kind:function(arm,size=0x3c) addr:0x020f38f0
 func_ov006_020f392c kind:function(arm,size=0x38) addr:0x020f392c
 func_ov006_020f3964 kind:function(arm,size=0x64) addr:0x020f3964
@@ -991,8 +991,8 @@ func_ov006_020f5324 kind:function(arm,size=0x64) addr:0x020f5324
 func_ov006_020f5388 kind:function(arm,size=0x5c) addr:0x020f5388
 func_ov006_020f53e4 kind:function(arm,size=0x120) addr:0x020f53e4
 MgMemoryMatch_Spawn kind:function(arm,size=0x60) addr:0x020f5504
-_ZN14MgMemoryMasterD1Ev kind:function(arm,size=0x54) addr:0x020f5564
-_ZN14MgMemoryMasterD0Ev kind:function(arm,size=0x68) addr:0x020f55b8
+_ZN14dScMgMemory2_cD1Ev kind:function(arm,size=0x54) addr:0x020f5564
+_ZN14dScMgMemory2_cD0Ev kind:function(arm,size=0x68) addr:0x020f55b8
 func_ov006_020f5620 kind:function(arm,size=0x3c) addr:0x020f5620
 func_ov006_020f565c kind:function(arm,size=0x38) addr:0x020f565c
 func_ov006_020f5694 kind:function(arm,size=0x64) addr:0x020f5694
@@ -3797,7 +3797,7 @@ data_ov006_0213d0d8 kind:data(any) addr:0x0213d0d8
 data_ov006_0213d108 kind:data(any) addr:0x0213d108
 data_ov006_0213d138 kind:data(any) addr:0x0213d138
 data_ov006_0213d168 kind:data(any) addr:0x0213d168
-_ZTV13MgMemoryMatch kind:data(any) addr:0x0213d1b8
+_ZTV13dScMgMemory_c kind:data(any) addr:0x0213d1b8
 data_ov006_0213d248 kind:data(any) addr:0x0213d248
 data_ov006_0213d250 kind:data(any) addr:0x0213d250
 data_ov006_0213d258 kind:data(any) addr:0x0213d258
@@ -3837,7 +3837,7 @@ data_ov006_0213d384 kind:data(any) addr:0x0213d384
 data_ov006_0213d3c4 kind:data(any) addr:0x0213d3c4
 data_ov006_0213d40c kind:data(any) addr:0x0213d40c
 data_ov006_0213d45c kind:data(any) addr:0x0213d45c
-_ZTV14MgMemoryMaster kind:data(any) addr:0x0213d4d4
+_ZTV14dScMgMemory2_c kind:data(any) addr:0x0213d4d4
 data_ov006_0213d564 kind:data(any) addr:0x0213d564
 data_ov006_0213d568 kind:data(any) addr:0x0213d568
 data_ov006_0213d56c kind:data(any) addr:0x0213d56c

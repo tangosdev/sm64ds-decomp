@@ -3652,10 +3652,11 @@ src/MgWanted_Spawn.c:
     complete
     .text start:0x020f3800 end:0x020f3834
 
-src/_ZN13MgMemoryMatchD1Ev.cpp:
+src/_ZN13dScMgMemory_cD1Ev.cpp:
+    complete
     .text start:0x020f3834 end:0x020f3888
 
-src/_ZN13MgMemoryMatchD0Ev.cpp:
+src/_ZN13dScMgMemory_cD0Ev.cpp:
     complete
     .text start:0x020f3888 end:0x020f38f0
 
@@ -3831,10 +3832,11 @@ src/MgMemoryMatch_Spawn.c:
     complete
     .text start:0x020f5504 end:0x020f5564
 
-src/_ZN14MgMemoryMasterD1Ev.cpp:
+src/_ZN14dScMgMemory2_cD1Ev.cpp:
+    complete
     .text start:0x020f5564 end:0x020f55b8
 
-src/_ZN14MgMemoryMasterD0Ev.cpp:
+src/_ZN14dScMgMemory2_cD0Ev.cpp:
     complete
     .text start:0x020f55b8 end:0x020f5620
 

@@ -1,8 +1,11 @@
+//cpp
 // @symbol func_ov006_020f52c4
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgMemory_c.h"
+
+extern "C" {
 // recovered name: dScMgMemory_c_OnYoshiTryEat_020f52c4
 /* recovered: renamed to Class_Method */
 extern void func_ov004_020b66d4(void *o);
@@ -22,4 +25,5 @@ void func_ov006_020f52c4(char *c)
     func_ov004_020b66d4(o);
     func_020bc7d4 = 1;
     self->unk_533b = (unsigned char)v;
+}
 }

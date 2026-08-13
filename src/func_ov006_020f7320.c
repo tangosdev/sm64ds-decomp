@@ -1,6 +1,9 @@
+//cpp
 // @symbol func_ov006_020f7320
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgMemory2_c.h"
+
+extern "C" {
 // recovered name: dScMgMemory2_c_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
 /* dScMgMemory2_c::OnTurnIntoEgg - recovered from vtable slot identity */
@@ -15,4 +18,5 @@ int func_ov006_020f7320(char* c) {
         FreeGfxSlotsById(0x1d);
     }
     return self->unk_53d4 == 4;
+}
 }
