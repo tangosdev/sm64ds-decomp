@@ -6,7 +6,7 @@ void _ZN5ModelC1Ev(void* p);
 void func_020733a8(void* arr, int count, int size, void* ctor, void* dtor);
 }
 extern void* _ZTV19dScMgSingle3DBase_c;
-extern void* data_ov006_0214000c;
+extern void* _ZTV15dScMgSnowball_c;
 extern "C" {
 void func_0203d738(void*);
 void NullDestructor_0203d47c(void*);
@@ -17,7 +17,7 @@ extern "C" void* func_ov006_021295ac(char* t){
   func_ov004_020b2adc(t);
   *(void**)t = &_ZTV19dScMgSingle3DBase_c;
   _ZN8Particle10SysTrackerC1Ev(t + 0x471c);
-  *(void**)t = &data_ov006_0214000c;
+  *(void**)t = &_ZTV15dScMgSnowball_c;
   _ZN5ModelC1Ev(t + 0xaba4);
   *(int*)(t + 0xabf4) = 0;
   func_020733a8(t + 0xacd8, 0x80, 8, (void*)func_0203d738, (void*)NullDestructor_0203d47c);

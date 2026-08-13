@@ -1,9 +1,12 @@
+//cpp
 #include "types.h"
 // @symbol func_ov006_020f8a3c
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgMCarlo_c.h"
+
+extern "C" {
 // recovered name: dScMgMCarlo_c_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
 /* dScMgMCarlo_c::OnTurnIntoEgg - recovered from vtable slot identity */
@@ -76,4 +79,5 @@ int func_ov006_020f8a3c(char* c)
         break;
     }
     return 0;
+}
 }

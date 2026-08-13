@@ -118,9 +118,17 @@ struct dScMgBase_c : Scene {
     u32 unk_0bc;            /* 0x0bc -- real matched access, dScMg3DEsp_c's own
                                 OnYoshiTryEat (src/func_ov006_020e9c20.c) reads
                                 and writes it as a 4-byte int */
-    u8  pad_0c0[0x3];
+    u16 unk_0c0;            /* 0x0c0 -- real matched access, dScMgFlower_c's own
+                                Behavior (src/func_ov006_0212ac74.c) writes it as a
+                                2-byte value; split out of the former pad_0c0[0x3]
+                                by the first descendant to touch it */
+    u8  pad_0c2[0x1];
     u8  unk_0c3;            /* 0x0c3 */
-    u8  pad_0c4[0x4];
+    u8  unk_0c4;            /* 0x0c4 -- real matched access, same file and same
+                                function as unk_0c0: a one-shot init flag tested
+                                and set alongside unk_0c3. Split out of the former
+                                pad_0c4[0x4]. */
+    u8  pad_0c5[0x3];
     s32 unk_0c8;            /* 0x0c8 */
     u8  pad_0cc[0x24];
     s32 unk_0f0;            /* 0x0f0 */

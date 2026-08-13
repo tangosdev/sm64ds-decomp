@@ -1,9 +1,12 @@
+//cpp
 #include "types.h"
 // @symbol func_ov006_02128fb8
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgSnowball_c.h"
+
+extern "C" {
 // recovered name: dScMgSnowball_c_OnKicked
 /* recovered: renamed to Class_Method */
 /* dScMgSnowball_c::OnKicked - recovered from vtable slot identity */
@@ -38,4 +41,5 @@ int func_ov006_02128fb8(char *c)
         }
     }
     return func_ov004_020ae140(c) != 0;
+}
 }

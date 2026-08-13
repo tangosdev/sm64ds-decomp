@@ -1,9 +1,12 @@
+//cpp
 #include "types.h"
 // @symbol func_ov006_0212ac74
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgFlower_c.h"
+
+extern "C" {
 // recovered name: dScMgFlower_c_Behavior
 /* recovered: renamed to Class_Method */
 /* dScMgFlower_c::Behavior - recovered from vtable slot identity */
@@ -250,4 +253,5 @@ int func_ov006_0212ac74(char *c)
     }
     func_ov006_020c3d18(c + 0x51f8);
     return 1;
+}
 }

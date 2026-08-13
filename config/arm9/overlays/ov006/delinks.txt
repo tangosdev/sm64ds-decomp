@@ -2132,11 +2132,11 @@ src/MgCoincentration_Spawn.cpp:
     complete
     .text start:0x020de940 end:0x020de988
 
-src/func_ov006_020de988.cpp:
+src/_ZN10dScMgCup_cD1Ev.cpp:
     complete
     .text start:0x020de988 end:0x020dea1c
 
-src/func_ov006_020dea1c.cpp:
+src/_ZN10dScMgCup_cD0Ev.cpp:
     complete
     .text start:0x020dea1c end:0x020deac4
 
@@ -4026,10 +4026,10 @@ src/MgMemoryMaster_Spawn.c:
     complete
     .text start:0x020f75d4 end:0x020f7634
 
-src/func_ov006_020f7634.cpp:
+src/_ZN13dScMgMCarlo_cD1Ev.cpp:
     .text start:0x020f7634 end:0x020f76a8
 
-src/func_ov006_020f76a8.cpp:
+src/_ZN13dScMgMCarlo_cD0Ev.cpp:
     complete
     .text start:0x020f76a8 end:0x020f7730
 
@@ -6961,11 +6961,11 @@ src/MgLuckyStars_Spawn.cpp:
     complete
     .text start:0x021255f8 end:0x0212568c
 
-src/func_ov006_0212568c.cpp:
+src/_ZN15dScMgSnowball_cD1Ev.cpp:
     complete
     .text start:0x0212568c end:0x0212573c
 
-src/func_ov006_0212573c.cpp:
+src/_ZN15dScMgSnowball_cD0Ev.cpp:
     complete
     .text start:0x0212573c end:0x02125800
 
@@ -7119,11 +7119,11 @@ src/MgSnowballSlalom_Spawn.cpp:
     complete
     .text start:0x0212a520 end:0x0212a554
 
-src/func_ov006_0212a554.c:
+src/_ZN13dScMgFlower_cD1Ev.cpp:
     complete
     .text start:0x0212a554 end:0x0212a5c8
 
-src/func_ov006_0212a5c8.cpp:
+src/_ZN13dScMgFlower_cD0Ev.cpp:
     complete
     .text start:0x0212a5c8 end:0x0212a650
 

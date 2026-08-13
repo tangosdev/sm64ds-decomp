@@ -1,9 +1,12 @@
+//cpp
 #include "types.h"
 // @symbol func_ov006_02127d10
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgSnowball_c.h"
+
+extern "C" {
 // recovered name: dScMgSnowball_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMgSnowball_c::Render - recovered from vtable slot identity */
@@ -164,4 +167,5 @@ int func_ov006_02127d10(char *c)
     func_ov006_02129690(c);
     func_ov006_02125804(c);
     return 1;
+}
 }
