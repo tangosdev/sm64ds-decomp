@@ -306,6 +306,7 @@ src/_ZN11dScMgBase_c8BehaviorEv.cpp:
     .text start:0x020b0618 end:0x020b0620
 
 src/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp:
+    complete
     .text start:0x020b0620 end:0x020b0840
 
 src/_ZN11dScMgBase_c21AfterCleanupResourcesEj.cpp:
@@ -317,6 +318,7 @@ src/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp:
     .text start:0x020b08f0 end:0x020b0930
 
 src/_ZN11dScMgBase_c19BeforeInitResourcesEv.cpp:
+    complete
     .text start:0x020b0930 end:0x020b0a38
 
 src/func_ov004_020b0a38.c:

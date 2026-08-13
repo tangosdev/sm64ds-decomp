@@ -4121,6 +4121,7 @@ src/func_ov006_020f8ed8.c:
     .text start:0x020f8ed8 end:0x020f8ef4
 
 src/_ZN14dScMgMCarlo2_cD1Ev.cpp:
+    complete
     .text start:0x020f8ef4 end:0x020f8f68
 
 src/_ZN14dScMgMCarlo2_cD0Ev.cpp:
@@ -5914,6 +5915,7 @@ src/func_ov006_02119900.c:
     .text start:0x02119900 end:0x02119904
 
 src/_ZN12dScMgSound_cD1Ev.cpp:
+    complete
     .text start:0x02119904 end:0x02119958
 
 src/_ZN12dScMgSound_cD0Ev.cpp:
