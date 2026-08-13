@@ -39,6 +39,7 @@ take over, ping the claimant first.
 
 
 | Range | Who | Claimed | Status |
+| ov071 func_ov071_021211e0 (0x021211e0, size 0x314) | lunavyqo | 2026-08-13 | **released** — near-miss **div=7** (match.py words, size-exact 0x314). Levers: yoff-first first/third vectors; Vector3_16 copy for angles; materialized spawn bool; volatile y-x-z stores. Residual pure r0↔r1 on case-7 player pointer (p7/x vs y). Permuter ~1300it score 50 floor. tip in nearmiss/db.jsonl; API clm_580f9b4ced52 released |
 | ov006 func_ov006_020f3e68 (0x020f3e68, size 0xa8) | lunavyqo | 2026-08-13 | **released** — retry no_progress FLOOR **words=23**. m2c=override+do-while; sibling 020f3f10 C++ method 999; probes: i@r4 with 1 table, 2nd u16 table+walk locks i@sb. 6h/IV-pragmas/goto/bool no beat. no ghidra dump. API clm_0e9bc9f7bfbd released |
 | ov009 func_ov009_0211145c (0x0211145c, size 0x17c) | lunavyqo | 2026-08-13 | **released** — no_progress FLOOR **div=3** (2004/b56). 2nd pass: assign-as-arg0 puts s in r0 but couples it to the sound id (div=6 / +4B); ToId/return-type/real Actor methods/pragma-after/6ax stay at 3. No ghidra scaffold. API clm_03d20e783f11 released |
 | ov006 func_ov006_020ee994 (0x020ee994, size 0x168) | lunavyqo | 2026-08-13 | **released** — no_progress FLOOR(const-hoist) after m2c rewrite + permuter 465it. Best still tip align rep=6 size 0x170. Reducible loop always hoists seed/#0xa/last-ptr on 2004/b56. API clm_486939d6344b released |
