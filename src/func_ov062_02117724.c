@@ -6,8 +6,9 @@ extern void _ZN8Particle19SetSelfDestructFlagEj(int id);
 extern char *_ZN8Particle6System12FromUniqueIDEj(int id);
 extern s16 data_02082214[];
 
+// 6f: keep constant live / flip coloring
 #pragma opt_propagation off
-void func_ov062_02117724(char *t, unsigned int a1, unsigned int a2, unsigned int a3, unsigned short a4)
+void func_ov062_02117724(char *t, unsigned int a1, unsigned int a2, unsigned int a3, unsigned short a4) /* uxth vs a1-a3: ROM compares h<=a4 after a halfword arg */
 {
     unsigned int h = (unsigned int)(*(int *)(t + 0x358) << 4) >> 16;
     if ((h >= a1 && h <= a2) || (h >= a3 && h <= a4)) {
@@ -25,7 +26,7 @@ void func_ov062_02117724(char *t, unsigned int a1, unsigned int a2, unsigned int
         pos.z = *(int *)(t + 0x64);
         iscb = *(unsigned short *)(t + 0xc) == 0xcb;
         k = iscb ? 0xf : 0xa;
-        *(volatile int *)&pos.y = pos.y + (k << 12);
+        *(volatile int *)&pos.y = pos.y + (k << 12); /* pin y add dest */
         if (h <= a2) {
             int i2, i1, v, w;
             idx = (unsigned short)ang >> 4;

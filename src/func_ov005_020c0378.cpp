@@ -30,6 +30,7 @@ void _ZN5Scene9SetFadersEP15FaderBrightness(void* p);
 void func_0202ec9c(void* p, int v);
 int _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
 void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 n);
+// 6e: preheader emission order
 #pragma opt_loop_invariants off
 void func_ov005_020c0378(char* c)
 {

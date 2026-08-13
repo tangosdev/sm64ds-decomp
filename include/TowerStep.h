@@ -36,6 +36,7 @@ struct TowerStep : Platform {
     virtual ~TowerStep();
 
     int CleanupResources();
+    int Behavior();
     int Render();
 };
 

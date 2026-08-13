@@ -3,13 +3,14 @@
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 #include "Flamethrower.h"
+// 6e: keep pointer-induction un-reduced
 #pragma opt_strength_reduction off
 extern "C" {
 extern signed char data_0209f2f8;
 extern short data_02082214[];
 extern short data_ov095_02136f98[];
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const Vector3 *v, u32 e);
+extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const Vector3 *v, s16 e);
 extern void MulVec3Mat4x3(int *v, void *m, int *dst);
 extern void Vec3_Add(int *out, int *a, int *b);
 extern char *_ZN5Actor10FindWithIDEj(u32 id);
@@ -39,7 +40,7 @@ int Flamethrower::Behavior()
     int j;
     int in[3];
     int dst[3];
-    volatile int part[3];
+    volatile int part[3]; /* y-add interleave pin; not a live value */
     int sum[3];
     int sum2[3];
     int y;

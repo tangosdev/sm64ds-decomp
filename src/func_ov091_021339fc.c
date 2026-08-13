@@ -12,7 +12,7 @@ extern void _ZN6Player16IncMegaKillCountEv(void *p);
 extern void func_02012694(int a, void *p);
 extern int _ZN6Player15IsCollectingCapEv(void *p);
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *p, u32 a, u32 b, u32 c2);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 flags, Vector3 *pos, Vector3_16 *rot, int a, int b);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 flags, Vector3 *pos, Vector3_16 *rot, s8 a, s16 b);
 
 void func_ov091_021339fc(char *c)
 {

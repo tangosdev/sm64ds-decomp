@@ -20,7 +20,9 @@ extern int data_0208ee44;
 extern u16 data_020a0e5a[];
 extern u8 data_0209b2f0[];
 
+// 6e: keep pointer-induction un-reduced
 #pragma opt_strength_reduction off
+// 6e: EBB-local CSE
 #pragma opt_common_subs off
 void func_ov075_0211867c(char *self)
 {

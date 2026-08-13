@@ -13,7 +13,7 @@ extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int 
 extern void _ZN9Animation7AdvanceEv(void *self);
 extern int _ZN9Animation8FinishedEv(void *self);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
-    unsigned int actorID, unsigned int param, Vector3 *pos, void *rot, int areaID, int deathTableID);
+    unsigned int actorID, unsigned int param, Vector3 *pos, void *rot, s8 areaID, s16 deathTableID);
 extern void _ZN5Actor8PoofDustEv(void *self);
 extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(
     void *self, signed char *starFlag, unsigned int starID, Vector3 *pos, unsigned int how);

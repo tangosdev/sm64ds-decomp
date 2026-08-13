@@ -37,6 +37,7 @@ struct KnockDownPlank : Platform {
     /* --- vtable --- */
     virtual ~KnockDownPlank();
 
+    int InitResources();
     int CleanupResources();
     int Render();
 };

@@ -1,9 +1,10 @@
 #include "types.h"
-#include "math/Matrix.h"
+
+struct Off9 { int v[9]; };
 
 extern int data_0208a170;
 extern int data_ov005_020c2260[];
-extern Matrix3x3 data_ov005_020c2464;
+extern struct Off9 data_ov005_020c2464; /* 9-entry screen-offset table, not a matrix */
 extern int data_ov005_020c23a0[];
 extern int data_ov005_020c2310[];
 
@@ -23,7 +24,7 @@ extern int func_ov005_020c00b4(void *self, int n);
 void func_ov005_020c16e4(char *self)
 {
     int i;
-    int sp4;
+    int rowB;
     int j;
     int n1;
     int n2;
@@ -34,9 +35,9 @@ void func_ov005_020c16e4(char *self)
     int pInit;
     int qInit;
     int resetVal;
-    volatile u16 valA;
-    volatile u16 valB;
-    int tbl[9];
+    volatile u16 valA; /* pin MultiStore16 src */
+    volatile u16 valB; /* pin MultiStore16 src */
+    struct Off9 tbl;
     char *f;
     int fill;
     int nbytes;
@@ -66,7 +67,7 @@ void func_ov005_020c16e4(char *self)
     plttSize = t;
 
     do {
-        *(Matrix3x3 *)tbl = data_ov005_020c2464;
+        tbl = data_ov005_020c2464;
         if (func_ov005_020c00b4(self, data_0208a170 + j) == 0) {
             int off;
             int row;
@@ -74,7 +75,7 @@ void func_ov005_020c16e4(char *self)
             int destOff;
             char *scr;
 
-            off = tbl[i];
+            off = tbl.v[i];
             row = n1;
             do {
                 col = n2;
@@ -83,7 +84,7 @@ void func_ov005_020c16e4(char *self)
                     char *dstp;
                     scr = (char *)_ZN3G2S12GetBG0ScrPtrEv();
                     dstp = scr + destOff;
-                    dstp = destOff ? dstp : dstp;
+                    dstp = destOff ? dstp : dstp; /* register-dest pin; arms identical */
                     valA = (u16)fill;
                     MultiStore16(valA, dstp, nbytes);
                     destOff += 2;
@@ -125,8 +126,8 @@ void func_ov005_020c16e4(char *self)
 
             ((int *)(self + 0x68))[i] = *(int *)(self + 0x64);
 
-            off = tbl[i];
-            sp4 = pInit;
+            off = tbl.v[i];
+            rowB = pInit;
             p = pInit;
             do {
                 q = qInit;
@@ -136,7 +137,7 @@ void func_ov005_020c16e4(char *self)
                     idx = *(int *)(self + 0x64);
                     scr = (char *)_ZN3G2S12GetBG0ScrPtrEv();
                     dstp = scr + destOff;
-                    dstp = idx ? dstp : dstp;
+                    dstp = idx ? dstp : dstp; /* register-dest pin; arms identical */
                     valB = (u16)(q + (p + ((idx % 4) * 6 + ((idx / 4) * 0x120 + (idx << 12)))));
                     MultiStore16(valB, dstp, nbytes);
                     destOff += 2;
@@ -145,8 +146,8 @@ void func_ov005_020c16e4(char *self)
                 } while (q < 6);
                 off += 0x1a;
                 p += 0x20;
-                sp4 += 1;
-            } while (sp4 < 9);
+                rowB += 1;
+            } while (rowB < 9);
 
             {
                 int *slot = (int *)(self + 0x64);

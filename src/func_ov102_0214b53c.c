@@ -19,14 +19,15 @@ extern s16 data_02082214[];
 
 void func_ov102_0214b53c(char *c)
 {
-  volatile u16 tmp[6];
+  volatile u16 tmp[6]; /* angle-home pins */
   Vector3 p;
-  volatile Vector3 dead;
-  int new_var2;
+  volatile Vector3 dead; /* stack-layout placeholder; never a live value */
+  int x0;
   Vector3 d;
-  int new_var3;
-  char *new_var;
+  int xSaved;
+  char *pPos;
   char *src;
+  /* chained u32 masks: pin the compare dest; u32 form is invisible to the u64 ratchet */
   if (((((((((*((u8 *) (c + 0x3f5))) == 2) && ((src = *((char **) (c + 0xc8))) != 0)) & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 0xFFFFFFFFu) & 0xFFFFFFFFu)
   {
     *((Matrix4x3 *) (c + 0x31c)) = *((Matrix4x3 *) src);
@@ -93,10 +94,10 @@ void func_ov102_0214b53c(char *c)
     {
       int dy = *((int *) (((char *) (&d)) + 4));
       int dx = *((int *) (((char *) (&d)) + 0));
-      new_var2 = dx;
+      x0 = dx;
       p.y = dy;
       int dz = *((int *) (((char *) (&d)) + 8));
-      p.x = new_var2;
+      p.x = x0;
       p.z = dz;
     }
     int haveMtx3 = (int) (((*((u32 *) (c + 0xb0))) & 0x4000) != 0);
@@ -123,24 +124,24 @@ void func_ov102_0214b53c(char *c)
           dead.z = dz;
           data_020a0e68 = *((Matrix4x3 *) (((char *) *((int *) (c + 0xd0))) + off5ec));
           {
-            int tx = *(volatile int *) ((char *) &data_020a0e68 + 0x24);
+            int tx = *(volatile int *) ((char *) &data_020a0e68 + 0x24); /* pin mtx translation loads */
             int ty = *(volatile int *) ((char *) &data_020a0e68 + 0x28);
             int tz = *(volatile int *) ((char *) &data_020a0e68 + 0x2c);
             p.x = tx;
             p.z = tz;
-            new_var = (char *) &p;
+            pPos = (char *) &p;
             p.y = ty;
-            Vec3_LslInPlace((Vector3 *) new_var, 3);
+            Vec3_LslInPlace((Vector3 *) pPos, 3);
           }
           char *p2 = *((char **) (c + 0xd0));
-          u16 a8c = *((volatile u16 *) (p2 + 0x8c));
+          u16 a8c = *((volatile u16 *) (p2 + 0x8c)); /* pin angle loads */
           u16 a8e = *((volatile u16 *) (p2 + 0x8e));
           tmp[1] = a8e;
           tmp[0] = a8c;
-          new_var3 = p.x;
-          new_var2 = *((volatile u16 *) (p2 + 0x90));
+          xSaved = p.x;
+          x0 = *((volatile u16 *) (p2 + 0x90));
           s16 angY = (s16) tmp[1];
-          tmp[2] = (u16) new_var2;
+          tmp[2] = (u16) x0;
           u16 v580 = *((volatile u16 *) (p2 + 0x580));
           tmp[4] = *((u16 *) (p2 + 0x582));
           tmp[3] = v580;
@@ -155,7 +156,7 @@ void func_ov102_0214b53c(char *c)
             p.y = py;
             p.y = py + (((int) data_02082214[(v582 >> 4) * 2]) * 0x1e);
             int idxX2 = (ang8e >> 4) * 2;
-            p.x = new_var3 + (((int) data_02082214[idxX2]) * 0x3c);
+            p.x = xSaved + (((int) data_02082214[idxX2]) * 0x3c);
             p.z = p.z + (((int) data_02082214[idxX2 + 1]) * 0x3c);
           }
         }
