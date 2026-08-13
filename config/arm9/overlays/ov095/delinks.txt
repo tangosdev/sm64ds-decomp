@@ -152,6 +152,10 @@ src/_ZN12FlamethrowerD0Ev.cpp:
     complete
     .text start:0x02136884 end:0x021368f0
 
+src/_ZN12Flamethrower8BehaviorEv.cpp:
+    complete
+    .text start:0x021368f0 end:0x02136d60
+
 src/_ZN12Flamethrower13InitResourcesEv.cpp:
     complete
     .text start:0x02136d60 end:0x02136ed4

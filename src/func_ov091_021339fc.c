@@ -1,42 +1,33 @@
 // @symbol func_ov091_021339fc
-/* recovered: shared common types, declarations from a shared header */
+#include "common.h"
 #include "decl_Enemy.h"
 #include "decl_Player.h"
 #include "decl_SaveData.h"
-/* recovered: shared common types */
-#include "common.h"
-// NONMATCHING: hand-written asm, not a C decompilation. Byte-exact via an asm hatch on a
-// proven mwccarm 1.2 register-allocation/scheduling wall; does NOT count as matched. Reverts
-// to a draft until someone reproduces the bytes from real C.
-typedef unsigned char u8;
-typedef unsigned short u16;
-typedef unsigned int u32;
-
-
 
 extern void *_ZN5Actor10FindWithIDEj(u32 id);
-extern void func_020aea30(void *c, void *a, u32 unused);
+extern void func_ov002_020aea30(void *c, void *a, u32 unused);
 extern void _ZN5Actor8PoofDustEv(void *a);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *a);
 extern void _ZN6Player16IncMegaKillCountEv(void *p);
 extern void func_02012694(int a, void *p);
 extern int _ZN6Player15IsCollectingCapEv(void *p);
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *p, u32 a, u32 b, u32 c2);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 flags, struct Vector3 *pos, short *rot, int a, int b);
+extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 flags, Vector3 *pos, Vector3_16 *rot, int a, int b);
 
 void func_ov091_021339fc(char *c)
 {
     char *a;
     u32 fl;
-    u32 id = *(u32*)(c + 0x134);
+    u32 id = *(u32 *)(c + 0x134);
 
-    if (id == 0) return;
-    a = (char*)_ZN5Actor10FindWithIDEj(id);
-    if (*(u32*)(c + 0x374) == 0) {
-        fl = *(u32*)(c + 0x130);
+    if (id == 0)
+        return;
+    a = (char *)_ZN5Actor10FindWithIDEj(id);
+    if (*(u32 *)(c + 0x374) == 0) {
+        fl = *(u32 *)(c + 0x130);
         if ((fl & 0x40000) != 0) {
-            *(u32*)(c + 0x10c) = 4;
-            func_020aea30(c, a, 0);
+            *(u32 *)(c + 0x10c) = 4;
+            func_ov002_020aea30(c, a, 0);
             return;
         }
         if ((fl & 0x2000) != 0) {
@@ -45,15 +36,17 @@ void func_ov091_021339fc(char *c)
             return;
         }
         {
-            int b = (int)(*(u16*)(a + 0xc) == 0xbf);
-            if (b == 0) return;
+            int b = (int)(*(u16 *)(a + 0xc) == 0xbf);
+            if (b == 0)
+                return;
         }
-        if (*(u8*)(a + 0x6f9) == 1) {
+        if (*(u8 *)(a + 0x6f9) == 1) {
             _ZN5Actor8PoofDustEv(c);
             _ZN9ActorBase18MarkForDestructionEv(c);
             return;
         }
-        if ((fl & 0x10) == 0) return;
+        if ((fl & 0x10) == 0)
+            return;
         _ZN5Actor8PoofDustEv(c);
         _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc(c, a, 0);
         _ZN6Player16IncMegaKillCountEv(a);
@@ -63,45 +56,53 @@ void func_ov091_021339fc(char *c)
     }
 
     {
-        int b = (int)(*(u16*)(a + 0xc) == 0xbf);
-        if (b == 0) return;
+        int b = (int)(*(u16 *)(a + 0xc) == 0xbf);
+        if (b == 0)
+            return;
     }
-    if (*(u8*)(a + 0x6f9) != 0) return;
-    if (*(u8*)(a + 0x703) != 0) return;
-    if (_ZN6Player15IsCollectingCapEv(a) != 0) return;
-    _ZN6Player8BlowAwayEs(a, *(short*)(c + 0x94));
+    if (*(u8 *)(a + 0x6f9) != 0)
+        return;
+    if (*(u8 *)(a + 0x703) != 0)
+        return;
+    if (_ZN6Player15IsCollectingCapEv(a) != 0)
+        return;
+    _ZN6Player8BlowAwayEs(a, *(s16 *)(c + 0x94));
     {
-        u8 hat = *(u8*)(a + 0x6d9);
-        if (*(u8*)(a + 0x6ff) != 0) return;
-        if (*(u8*)(a + 0x6fd) != 0) return;
+        u8 capFlag = *(u8 *)(a + 0x6ff);
+        u8 hat = *(u8 *)(a + 0x6d9);
+        if (capFlag != 0)
+            return;
+        if (*(u8 *)(a + 0x6fd) != 0)
+            return;
         {
-        u32 newHat, curHat0;
-        asm {
-            ldr curHat0, [a, #8]
-            mov newHat, #1
-        }
-        if (hat != curHat0) {
-            _ZN6Player18SetNewHatCharacterEjjb(a, hat, 0, 0);
-        } else {
-            if (_ZN8SaveData16HasPlayerLostCapEv() != 0) return;
-            _ZN8SaveData13PlayerLoseCapEv();
-        }
-        {
-            u32 curHat1 = *(u32*)(a + 8);
-            short rot[3];
-            void *spawned;
-            rot[0] = 0;
-            rot[1] = 0;
-            rot[2] = 0;
-            rot[1] = *(short*)(c + 0x94);
-            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
-                0x10d, newHat | (curHat1 << 8), (struct Vector3*)(c + 0x5c), rot, *(signed char*)(c + 0xcc), -1);
-            if (spawned == 0) return;
-            *(u32*)((char*)spawned + 0x98) = 0x32000;
-            *(u32*)((char*)spawned + 0xa4) = 0;
-            *(u32*)((char*)spawned + 0xa8) = 0x14000;
-            *(u32*)((char*)spawned + 0xac) = 0;
-        }
+            u32 cur = *(u32 *)(a + 8);
+            u32 param = 1;
+            if (hat != cur) {
+                _ZN6Player18SetNewHatCharacterEjjb(a, hat, 0, 0);
+            } else {
+                if (_ZN8SaveData16HasPlayerLostCapEv() != 0)
+                    return;
+                _ZN8SaveData13PlayerLoseCapEv();
+            }
+            {
+                u32 curHat1 = *(u32 *)(a + 8);
+                Vector3_16 rot;
+                void *spawned;
+                rot.x = 0;
+                rot.y = 0;
+                rot.z = 0;
+                rot.y = *(s16 *)(c + 0x94);
+                param = param | (curHat1 << 8);
+                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+                    0x10d, param, (Vector3 *)(c + 0x5c), &rot,
+                    *(s8 *)(c + 0xcc), -1);
+                if (spawned == 0)
+                    return;
+                *(u32 *)((char *)spawned + 0x98) = 0x32000;
+                *(u32 *)((char *)spawned + 0xa4) = 0;
+                *(u32 *)((char *)spawned + 0xa8) = 0x14000;
+                *(u32 *)((char *)spawned + 0xac) = 0;
+            }
         }
     }
 }

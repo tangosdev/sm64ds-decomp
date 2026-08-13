@@ -72,6 +72,10 @@ src/_ZN14KnockDownPlank8BehaviorEv.cpp:
     complete
     .text start:0x02111720 end:0x02111960
 
+src/_ZN14KnockDownPlank13InitResourcesEv.cpp:
+    complete
+    .text start:0x02111960 end:0x02111b68
+
 src/KnockDownPlank_Spawn.c:
     complete
     .text start:0x02111b68 end:0x02111ba0
@@ -203,6 +207,10 @@ src/_ZN9TowerStep16CleanupResourcesEv.cpp:
 src/_ZN9TowerStep6RenderEv.cpp:
     complete
     .text start:0x021124a8 end:0x021124d0
+
+src/_ZN9TowerStep8BehaviorEv.cpp:
+    complete
+    .text start:0x021124d0 end:0x0211269c
 
 src/_ZN9TowerStep13InitResourcesEv.cpp:
     complete

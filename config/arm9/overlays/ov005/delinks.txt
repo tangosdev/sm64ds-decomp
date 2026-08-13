@@ -87,6 +87,10 @@ src/func_ov005_020c1688.c:
     complete
     .text start:0x020c1688 end:0x020c16e4
 
+src/func_ov005_020c16e4.c:
+    complete
+    .text start:0x020c16e4 end:0x020c1a20
+
 src/func_ov005_020c1a20.c:
     complete
     .text start:0x020c1a20 end:0x020c21ec

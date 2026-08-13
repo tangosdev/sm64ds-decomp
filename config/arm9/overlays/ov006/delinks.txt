@@ -3881,6 +3881,10 @@ src/func_ov006_020f5a64.cpp:
     complete
     .text start:0x020f5a64 end:0x020f5b98
 
+src/func_ov006_020f5b98.c:
+    complete
+    .text start:0x020f5b98 end:0x020f5c40
+
 src/func_ov006_020f5c40.cpp:
     complete
     .text start:0x020f5c40 end:0x020f5cb4
