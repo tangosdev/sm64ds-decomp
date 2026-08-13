@@ -1,5 +1,5 @@
 {
- "eligible": 10821,
+ "eligible": 10854,
  "unresolved": {
   "arm9:0x02008b4c": {
    "name": "func_02008b4c",
@@ -100,18 +100,6 @@
     "_ll_udiv"
    ]
   },
-  "arm9:0x02023be0": {
-   "name": "_ZN5Stage20RenderBouncingArrowsEv",
-   "missing": [
-    "func_020abd88"
-   ]
-  },
-  "arm9:0x020250d0": {
-   "name": "_ZN5Stage12RenderNumberEhiibi",
-   "missing": [
-    "func_020aba70"
-   ]
-  },
   "arm9:0x020251d0": {
    "name": "_ZN5Stage9PS_RenderEv",
    "missing": [
@@ -135,13 +123,6 @@
    "name": "_ZN5Stage14GraphCallback2EP12SceneRelated",
    "missing": [
     "reg_G2S_DB_BG3PA"
-   ]
-  },
-  "arm9:0x0202b8a4": {
-   "name": "_ZN5Stage6RenderEv",
-   "missing": [
-    "func_020ab9c8",
-    "func_020abad8"
    ]
   },
   "arm9:0x0202df70": {
@@ -348,12 +329,6 @@
     "_ll_udiv"
    ]
   },
-  "ov002:0x020c8a4c": {
-   "name": "func_ov002_020c8a4c",
-   "missing": [
-    "_ZN6Player7SetAnimEjiij"
-   ]
-  },
   "ov002:0x020dc560": {
    "name": "func_ov002_020dc560",
    "missing": [
@@ -388,30 +363,6 @@
     "_ull_mod"
    ]
   },
-  "ov002:0x020fbe38": {
-   "name": "_ZN3HUD15RenderLifeCountEv",
-   "missing": [
-    "func_020ab948",
-    "func_020ab9c8",
-    "func_020aba70"
-   ]
-  },
-  "ov002:0x020fc458": {
-   "name": "_ZN3HUD15RenderStarCountEv",
-   "missing": [
-    "func_020ab9c8",
-    "func_020aba70",
-    "func_020abad0"
-   ]
-  },
-  "ov002:0x020fc81c": {
-   "name": "_ZN3HUD15RenderCoinCountEv",
-   "missing": [
-    "func_020ab9c8",
-    "func_020aba70",
-    "func_020abad8"
-   ]
-  },
   "ov002:0x020feef4": {
    "name": "_ZN6Bullet13InitResourcesEv",
    "missing": [
@@ -420,30 +371,6 @@
     "_Z50_ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jjPcP5Actoriijj",
     "_Z58_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_PcP5ActoriiP10Vector3_16i",
     "func_0211d610"
-   ]
-  },
-  "ov003:0x020adfc8": {
-   "name": "func_ov003_020adfc8",
-   "missing": [
-    "func_020ab9c8",
-    "func_020aba70",
-    "func_020abad8"
-   ]
-  },
-  "ov003:0x020ae0b0": {
-   "name": "func_ov003_020ae0b0",
-   "missing": [
-    "func_020ab9c8",
-    "func_020aba70",
-    "func_020abad0"
-   ]
-  },
-  "ov003:0x020ae238": {
-   "name": "func_ov003_020ae238",
-   "missing": [
-    "func_020ab948",
-    "func_020ab9c8",
-    "func_020aba70"
    ]
   },
   "ov004:0x020b2cb8": {
@@ -478,12 +405,6 @@
    "missing": [
     "g0",
     "g1"
-   ]
-  },
-  "ov006:0x020c3bc8": {
-   "name": "func_ov006_020c3bc8",
-   "missing": [
-    "func_020c3adc"
    ]
   },
   "ov006:0x020db720": {
@@ -603,12 +524,6 @@
     "func_020bc888"
    ]
   },
-  "ov006:0x020f3834": {
-   "name": "_ZN13MgMemoryMatchD1Ev",
-   "missing": [
-    "_ZN10SysTrackerD1Ev"
-   ]
-  },
   "ov006:0x020f4888": {
    "name": "func_ov006_020f4888",
    "missing": [
@@ -628,12 +543,6 @@
     "func_020bc7d4"
    ]
   },
-  "ov006:0x020f5564": {
-   "name": "_ZN14MgMemoryMasterD1Ev",
-   "missing": [
-    "_ZN10SysTrackerD1Ev"
-   ]
-  },
   "ov006:0x020f6538": {
    "name": "func_ov006_020f6538",
    "missing": [
@@ -651,12 +560,6 @@
    "name": "func_ov006_020f74b4",
    "missing": [
     "func_020bc7d4"
-   ]
-  },
-  "ov006:0x020f7634": {
-   "name": "func_ov006_020f7634",
-   "missing": [
-    "_ZN10SysTrackerD1Ev"
    ]
   },
   "ov006:0x020f7c10": {
@@ -718,12 +621,6 @@
    "name": "func_ov006_0210a708",
    "missing": [
     "func_020beb6c"
-   ]
-  },
-  "ov006:0x0210a954": {
-   "name": "func_ov006_0210a954",
-   "missing": [
-    "_ZN10SysTrackerD1Ev"
    ]
   },
   "ov006:0x0210bdb0": {
@@ -865,12 +762,6 @@
    "missing": [
     "overlay_100",
     "overlay_102"
-   ]
-  },
-  "ov014:0x02112d1c": {
-   "name": "ChainChomp_Spawn",
-   "missing": [
-    "func_020aed98"
    ]
   },
   "ov015:0x02112c84": {
@@ -1047,12 +938,6 @@
     "_ZTV7daDkk_c"
    ]
   },
-  "ov027:0x021127a4": {
-   "name": "_ZN13SnowmanBreath8BehaviorEv",
-   "missing": [
-    "_Z33_ZN5Sound8PlayLongEjjjRK7Vector3sijjPvj"
-   ]
-  },
   "ov029:0x021124d0": {
    "name": "_ZN9WDW_Water13InitResourcesEv",
    "missing": [
@@ -1084,12 +969,6 @@
    "missing": [
     "_Z32_ZN5Actor10PoofDustAtERK7Vector3PvPK7Vector3",
     "_Z45_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3hPvPajPK7Vector3j"
-   ]
-  },
-  "ov034:0x021136a4": {
-   "name": "Wiggler_Spawn",
-   "missing": [
-    "func_020aed98"
    ]
   },
   "ov035:0x021114e0": {
@@ -1404,29 +1283,11 @@
     "data_ov071_02122ecc_d"
    ]
   },
-  "ov073:0x02121ec8": {
-   "name": "ChiefChilly_Spawn",
-   "missing": [
-    "func_020aed98"
-   ]
-  },
   "ov074:0x02121e98": {
    "name": "_ZN8Goomboss13InitResourcesEv",
    "missing": [
     "func_021123f4",
     "func_021124ac"
-   ]
-  },
-  "ov074:0x02122764": {
-   "name": "ExplosionGoomba_Spawn",
-   "missing": [
-    "func_020aed98"
-   ]
-  },
-  "ov074:0x02122838": {
-   "name": "Goomboss_Spawn",
-   "missing": [
-    "func_020aed98"
    ]
   },
   "ov075:0x02116f40": {
