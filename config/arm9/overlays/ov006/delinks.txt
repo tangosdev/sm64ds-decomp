@@ -6442,6 +6442,10 @@ src/func_ov006_0211e8a8.c:
     complete
     .text start:0x0211e8a8 end:0x0211ea70
 
+src/func_ov006_0211ea70.c:
+    complete
+    .text start:0x0211ea70 end:0x0211eb90
+
 src/func_ov006_0211eb90.c:
     complete
     .text start:0x0211eb90 end:0x0211ebdc
