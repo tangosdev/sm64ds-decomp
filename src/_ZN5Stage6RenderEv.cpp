@@ -66,8 +66,8 @@ extern "C" {
     extern AnimMgr* data_0209f340;
     extern char* data_0209f318;
     extern char* data_0209f394[];
-    extern OamAttr func_020abad8;
-    extern OamAttr func_020ab9c8;
+    extern OamAttr _ZN3OAM4COINE;
+    extern OamAttr _ZN3OAM5TIMESE;
 }
 
 struct Stage {
@@ -146,8 +146,8 @@ int Stage::Render() {
         int v = (SublevelToLevel(data_02092124) < 0xf) ? 0x80 : 0x70;
         if (data_0209f2b0 != 0)
             v += 0x10;
-        OAM::Render(0, &func_020abad8, 0x68, v, -1, -1, 0);
-        OAM::Render(0, &func_020ab9c8, 0x78, v + 8, -1, -1, 0);
+        OAM::Render(0, &_ZN3OAM4COINE, 0x68, v, -1, -1, 0);
+        OAM::Render(0, &_ZN3OAM5TIMESE, 0x78, v + 8, -1, -1, 0);
         RenderNumber(data_0209f260, 0x80, v, 1, 8);
     }
     LC_Render();

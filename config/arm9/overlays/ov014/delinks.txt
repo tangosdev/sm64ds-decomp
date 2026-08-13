@@ -140,6 +140,7 @@ src/_ZN10ChainChomp13InitResourcesEv.cpp:
     .text start:0x02112b14 end:0x02112d1c
 
 src/ChainChomp_Spawn.cpp:
+    complete
     .text start:0x02112d1c end:0x02112e0c
 
 src/_ZN15ChainChompFenceD1Ev.cpp:

@@ -7,9 +7,9 @@ extern signed char data_0209f2f4;
 
 struct OamAttr;
 
-extern OamAttr* func_020ab948[];
-extern OamAttr func_020ab9c8;
-extern OamAttr* func_020aba70[];
+extern OamAttr* _ZN3OAM10LIFE_ICONSE[];
+extern OamAttr _ZN3OAM5TIMESE;
+extern OamAttr* _ZN3OAM7NUMBERSE[];
 
 struct HUDInfo {
     char pad[0x6d9];
@@ -39,27 +39,27 @@ void HUD::RenderLifeCount()
     unsigned char state = data_ov002_02111178;
 
     if (state >= 3 && state < 6) {
-        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, func_020ab948[info->field_6d9], xBase, 0xa, -1, 1, 0x1000, 0x1000, 0, -1);
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, xBase + 0x10, 0xa, -1, 1, 0);
+        _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(0, _ZN3OAM10LIFE_ICONSE[info->field_6d9], xBase, 0xa, -1, 1, 0x1000, 0x1000, 0, -1);
+        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, xBase + 0x10, 0xa, -1, 1, 0);
         CalculateDigits((unsigned short)data_0209f2f4);
         int x = xBase + 0x18;
         for (int i = 0; i < 3; i++) {
             signed char d = digits[i];
             if (d >= 0) {
-                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[d], x, 2, -1, 1, 0);
+                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[d], x, 2, -1, 1, 0);
                 x += 9;
             }
         }
     } else {
-        _ZN3OAM9RenderSubEP7OamAttriiii(func_020ab948[info->field_6d9], xBase, 0xa, -1, 1);
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &func_020ab9c8, xBase + 0x10, 0xa, -1, 1, 0);
+        _ZN3OAM9RenderSubEP7OamAttriiii(_ZN3OAM10LIFE_ICONSE[info->field_6d9], xBase, 0xa, -1, 1);
+        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &_ZN3OAM5TIMESE, xBase + 0x10, 0xa, -1, 1, 0);
         CalculateDigits((unsigned short)data_0209f2f4);
         int i;
         int x = xBase + 0x18;
         for (i = 0; i < 3; i++) {
             signed char d = digits[i];
             if (d >= 0) {
-                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, func_020aba70[d], x, 2, -1, 1, 0);
+                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, _ZN3OAM7NUMBERSE[d], x, 2, -1, 1, 0);
                 x += 9;
             }
         }

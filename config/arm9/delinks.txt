@@ -3780,6 +3780,7 @@ src/_ZN5Stage7VE_InitEv.cpp:
     .text start:0x02023a80 end:0x02023be0
 
 src/_ZN5Stage20RenderBouncingArrowsEv.cpp:
+    complete
     .text start:0x02023be0 end:0x02023db8
 
 src/_ZN5Stage9LC_RenderEv.cpp:
@@ -3795,6 +3796,7 @@ src/_ZN5Stage16CheckCameraInputEv.cpp:
     .text start:0x02024c70 end:0x020250d0
 
 src/_ZN5Stage12RenderNumberEhiibi.cpp:
+    complete
     .text start:0x020250d0 end:0x020251d0
 
 src/_ZN5Stage9PS_RenderEv.cpp:
@@ -4179,6 +4181,7 @@ src/_ZN5Stage16OnPendingDestroyEv.cpp:
     .text start:0x0202b8a0 end:0x0202b8a4
 
 src/_ZN5Stage6RenderEv.cpp:
+    complete
     .text start:0x0202b8a4 end:0x0202bbbc
 
 src/_ZN5Stage8BehaviorEv.cpp:

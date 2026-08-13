@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void* _ZN9ActorBasenwEj(unsigned int);
-extern void func_020aed98(void*);
+extern void _ZN5EnemyC2Ev(void*);
 extern void func_020733a8(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void _ZN9ModelAnimC1Ev(void*);
 extern void _ZN15MaterialChangerC1Ev(void*);
@@ -18,7 +18,7 @@ extern void* _ZTV8Goomboss[];
 void* Goomboss_Spawn(void){
   char* p=(char*)_ZN9ActorBasenwEj(0x610);
   if(p){
-    func_020aed98(p);
+    _ZN5EnemyC2Ev(p);
     *(void***)p=(void**)_ZTV8Goomboss;
     func_020733a8(p+0x110, 4, 0x40, _ZN25MovingCylinderClsnWithPosC1Ev, _ZN25MovingCylinderClsnWithPosD1Ev);
     _ZN9ModelAnimC1Ev(p+0x210);

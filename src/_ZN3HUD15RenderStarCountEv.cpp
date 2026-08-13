@@ -39,9 +39,9 @@ extern unsigned char data_0209f2ac;
 extern unsigned char data_0209f2d4;
 extern int data_020a0db0;
 
-extern struct OamAttr* func_020aba70[];
-extern struct OamAttr func_020ab9c8;
-extern struct OamAttr func_020abad0;
+extern struct OamAttr* _ZN3OAM7NUMBERSE[];
+extern struct OamAttr _ZN3OAM5TIMESE;
+extern struct OamAttr _ZN3OAM10POWER_STARE;
 
 extern unsigned char NumStars(void);
 extern void _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int b, struct OamAttr* attr, int x, int y, int a, int c, struct Matrix2x2* m);
@@ -57,12 +57,12 @@ void HUD::RenderStarCount()
         CalculateDigits((unsigned short)data_0209f310[data_0209f250]);
         for (i = 2; i >= 0; i--) {
             if (mDigits[i] >= 0) {
-                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[mDigits[i]], x, 2, -1, 1, 0);
+                _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
                 x -= 9;
             }
         }
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, x, 10, -1, 1, 0);
-        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abad0, x - 16, 10, -1, 1, 0);
+        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
+        _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
         return;
     }
 
@@ -87,22 +87,22 @@ void HUD::RenderStarCount()
             }
             for (i = 2; i >= 0; i--) {
                 if (mDigits[i] >= 0) {
-                    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, func_020aba70[mDigits[i]], x, 2, -1, 1, 0);
+                    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
                     x -= 9;
                 }
             }
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020ab9c8, x, 10, -1, 1, 0);
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &func_020abad0, x - 16, 10, -1, 1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(0, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
             return;
         }
     }
 
     for (i = 2; i >= 0; i--) {
         if (mDigits[i] >= 0) {
-            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, func_020aba70[mDigits[i]], x, 2, -1, 1, 0);
+            _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, _ZN3OAM7NUMBERSE[mDigits[i]], x, 2, -1, 1, 0);
             x -= 9;
         }
     }
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &func_020ab9c8, x, 10, -1, 1, 0);
-    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &func_020abad0, x - 16, 10, -1, 1, 0);
+    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &_ZN3OAM5TIMESE, x, 10, -1, 1, 0);
+    _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(1, &_ZN3OAM10POWER_STARE, x - 16, 10, -1, 1, 0);
 }

@@ -188,6 +188,7 @@ src/_ZN11ChiefChilly16OnAimedAtWithEggEv.cpp:
     .text start:0x02121ec0 end:0x02121ec8
 
 src/ChiefChilly_Spawn.cpp:
+    complete
     .text start:0x02121ec8 end:0x02121f90
 
 src/_ZN8CccArenaD1Ev.c:
