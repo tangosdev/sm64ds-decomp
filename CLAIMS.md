@@ -37,10 +37,10 @@ take over, ping the claimant first.
 
 ## Claims
 
-
 | Range | Who | Claimed | Status |
 | ov062 func_ov062_02117724 (0x02117724, size 0x270) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: non-volatile Vector3 + volatile y-store + first-arm load/sub interleave; from near-miss div=5→0; API clm_732122bd2dde kept |
 | ov009 func_ov009_0211145c (0x0211145c, size 0x17c) | lunavyqo | 2026-08-13 | **released** — no_progress FLOOR **div=3** (2004/b56). 2nd pass: assign-as-arg0 puts s in r0 but couples it to the sound id (div=6 / +4B); ToId/return-type/real Actor methods/pragma-after/6ax stay at 3. No ghidra scaffold. API clm_03d20e783f11 released |
+| ov075 func_ov075_021190a4 (0x021190a4, size 0xf8) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); lever: `char*` param (6z.3) + ROM timer `if>0` RMW-return else expire; scratch from ARM/IDA; API clm_3711933c33f6 kept |
 | ov006 func_ov006_020ee994 (0x020ee994, size 0x168) | lunavyqo | 2026-08-13 | **released** — no_progress FLOOR(const-hoist) after m2c rewrite + permuter 465it. Best still tip align rep=6 size 0x170. Reducible loop always hoists seed/#0xa/last-ptr on 2004/b56. API clm_486939d6344b released |
 | ov006 func_ov006_020d01e0 (0x020d01e0, size 0x800) | lunavyqo (Grok) | 2026-08-08 | **released** — near-miss improved **319→228→209** (size 0x804, frame 0xd4, smull-only). Levers: prop off; half via c+0x58; w2 early; pad[3]; volatile f3/ip for smull. Residual: va y-first, half/loop sched, +4B. tip in nearmiss/db.jsonl; CLAIMS.md only (API key 401) |
 | ov006 func_ov006_020da174 (0x020da174, size 0x2ac) | lunavyqo (Grok) | 2026-08-08 | **released** — near-miss improved **253→24** (match.py words, size-exact 0x2ac). Levers: ROM max/second-max + rank remap -2/-1/0; int return; u64-mask hist base for add r3,sp,#8; flag store1/store0 fallthrough. Residual pure regperm: prologue i/p r8↔r7 order, bubble #0x30 r8 vs r3, flag counter r7 vs r2 (+ cmp cascade). permuter base score 160 floor. tip in nearmiss/db.jsonl; CLAIMS.md only (API key 401) |
