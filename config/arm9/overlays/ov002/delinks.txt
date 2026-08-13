@@ -175,7 +175,7 @@ src/func_ov002_020af2b0.c:
     complete
     .text start:0x020af2b0 end:0x020af3a0
 
-src/func_ov002_020af3a0.c:
+src/_ZN13OneUpMushroom13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020af3a0 end:0x020af3a8
 
@@ -867,7 +867,7 @@ src/func_ov002_020b599c.c:
     complete
     .text start:0x020b599c end:0x020b59a0
 
-src/func_ov002_020b59a0.c:
+src/_ZN9BlueFlame13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020b59a0 end:0x020b59a8
 
@@ -1055,7 +1055,7 @@ src/func_ov002_020b6c54.c:
     complete
     .text start:0x020b6c54 end:0x020b6d28
 
-src/_ZN18PoppingLavaBubblesD1Ev.c:
+src/_ZN18PoppingLavaBubblesD1Ev.cpp:
     complete
     .text start:0x020b6d28 end:0x020b6d4c
 
@@ -1067,7 +1067,7 @@ src/func_ov002_020b6d84.c:
     complete
     .text start:0x020b6d84 end:0x020b6dd0
 
-src/func_ov002_020b6dd0.c:
+src/_ZN18PoppingLavaBubbles13InitResourcesEv.cpp:
     complete
     .text start:0x020b6dd0 end:0x020b6dd8
 
@@ -1191,7 +1191,7 @@ src/func_ov002_020b81e0.c:
     complete
     .text start:0x020b81e0 end:0x020b8270
 
-src/func_ov002_020b8270.c:
+src/_ZN15daObjMarioCap_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020b8270 end:0x020b8284
 
@@ -1565,7 +1565,7 @@ src/SignPost_Spawn.c:
     complete
     .text start:0x020bc3c8 end:0x020bc414
 
-src/_ZN7SeaweedD1Ev.c:
+src/_ZN7SeaweedD1Ev.cpp:
     complete
     .text start:0x020bc414 end:0x020bc444
 
@@ -1577,19 +1577,19 @@ src/func_ov002_020bc488.c:
     complete
     .text start:0x020bc488 end:0x020bc4c8
 
-src/func_ov002_020bc4c8.c:
+src/_ZN7Seaweed16CleanupResourcesEv.cpp:
     complete
     .text start:0x020bc4c8 end:0x020bc4f8
 
-src/func_ov002_020bc4f8.cpp:
+src/_ZN7Seaweed6RenderEv.cpp:
     complete
     .text start:0x020bc4f8 end:0x020bc520
 
-src/func_ov002_020bc520.c:
+src/_ZN7Seaweed8BehaviorEv.cpp:
     complete
     .text start:0x020bc520 end:0x020bc540
 
-src/func_ov002_020bc540.cpp:
+src/_ZN7Seaweed13InitResourcesEv.cpp:
     complete
     .text start:0x020bc540 end:0x020bc5a8
 
@@ -4311,7 +4311,7 @@ src/func_ov002_020e8edc.c:
     complete
     .text start:0x020e8edc end:0x020e8ee8
 
-src/func_ov002_020e8ee8.c:
+src/_ZN9PowerStar13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020e8ee8 end:0x020e8ef0
 
@@ -4486,7 +4486,7 @@ src/Tree_Spawn.cpp:
     complete
     .text start:0x020ec32c end:0x020ec388
 
-src/_ZN4WarpD1Ev.c:
+src/_ZN4WarpD1Ev.cpp:
     complete
     .text start:0x020ec388 end:0x020ec3b8
 
@@ -4494,15 +4494,15 @@ src/_ZN4WarpD0Ev.c:
     complete
     .text start:0x020ec3b8 end:0x020ec3fc
 
-src/func_ov002_020ec3fc.c:
+src/_ZN4Warp16CleanupResourcesEv.cpp:
     complete
     .text start:0x020ec3fc end:0x020ec404
 
-src/func_ov002_020ec404.c:
+src/_ZN4Warp16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020ec404 end:0x020ec408
 
-src/func_ov002_020ec408.c:
+src/_ZN4Warp6RenderEv.cpp:
     complete
     .text start:0x020ec408 end:0x020ec410
 
@@ -4510,7 +4510,7 @@ src/func_ov002_020ec410.cpp:
     complete
     .text start:0x020ec410 end:0x020ec4c4
 
-src/func_ov002_020ec4c4.c:
+src/_ZN4Warp13InitResourcesEv.cpp:
     complete
     .text start:0x020ec4c4 end:0x020ec534
 
@@ -5684,7 +5684,7 @@ src/_ZN8Fireball13InitResourcesEv.cpp:
     complete
     .text start:0x020f9204 end:0x020f92e4
 
-src/func_ov002_020f92e4.c:
+src/_ZN8Fireball13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020f92e4 end:0x020f9304
 
@@ -5692,7 +5692,7 @@ src/Fireball_Spawn.c:
     complete
     .text start:0x020f9304 end:0x020f934c
 
-src/_ZN11SoundObjectD1Ev.c:
+src/_ZN11SoundObjectD1Ev.cpp:
     complete
     .text start:0x020f934c end:0x020f9370
 

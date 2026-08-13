@@ -1,9 +1,9 @@
 _ZN15FireSeaElevatorD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN15FireSeaElevatorD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-func_ov045_0211123c kind:function(arm,size=0x38) addr:0x0211123c
-func_ov045_02111274 kind:function(arm,size=0x28) addr:0x02111274
-func_ov045_0211129c kind:function(arm,size=0x150) addr:0x0211129c
-func_ov045_021113ec kind:function(arm,size=0xbc) addr:0x021113ec
+_ZN15FireSeaElevator16CleanupResourcesEv kind:function(arm,size=0x38) addr:0x0211123c
+_ZN15FireSeaElevator6RenderEv kind:function(arm,size=0x28) addr:0x02111274
+_ZN15FireSeaElevator8BehaviorEv kind:function(arm,size=0x150) addr:0x0211129c
+_ZN15FireSeaElevator13InitResourcesEv kind:function(arm,size=0xbc) addr:0x021113ec
 func_ov045_021114a8 kind:function(arm,size=0x20) addr:0x021114a8
 func_ov045_021114c8 kind:function(arm,size=0x14) addr:0x021114c8
 FireSeaElevator_Spawn kind:function(arm,size=0x30) addr:0x021114dc

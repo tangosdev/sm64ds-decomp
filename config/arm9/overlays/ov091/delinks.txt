@@ -242,7 +242,7 @@ src/func_ov091_02133254.cpp:
     complete
     .text start:0x02133254 end:0x021333fc
 
-src/_ZN5StumpD1Ev.c:
+src/_ZN5StumpD1Ev.cpp:
     complete
     .text start:0x021333fc end:0x02133440
 
@@ -266,11 +266,11 @@ src/func_ov091_02133648.cpp:
     complete
     .text start:0x02133648 end:0x021336cc
 
-src/func_ov091_021336cc.c:
+src/_ZN5Stump16CleanupResourcesEv.cpp:
     complete
     .text start:0x021336cc end:0x02133710
 
-src/func_ov091_02133710.cpp:
+src/_ZN5Stump6RenderEv.cpp:
     complete
     .text start:0x02133710 end:0x02133738
 
@@ -346,7 +346,7 @@ src/_ZN6Fwoosh13InitResourcesEv.cpp:
     complete
     .text start:0x02134324 end:0x02134484
 
-src/func_ov091_02134484.c:
+src/_ZN6Fwoosh16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02134484 end:0x0213448c
 
@@ -354,7 +354,7 @@ src/func_ov091_0213448c.c:
     complete
     .text start:0x0213448c end:0x02134498
 
-src/func_ov091_02134498.c:
+src/_ZN6Fwoosh13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02134498 end:0x021344a0
 

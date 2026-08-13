@@ -290,7 +290,7 @@ src/_ZN19FirePiranhaPlantBig13InitResourcesEv.cpp:
     complete
     .text start:0x0212e774 end:0x0212e998
 
-src/func_ov084_0212e998.c:
+src/_ZN19FirePiranhaPlantBig16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0212e998 end:0x0212e9d4
 
@@ -298,7 +298,7 @@ src/func_ov084_0212e9d4.cpp:
     complete
     .text start:0x0212e9d4 end:0x0212e9f8
 
-src/func_ov084_0212e9f8.cpp:
+src/_ZN19FirePiranhaPlantBig13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0212e9f8 end:0x0212ea18
 
@@ -330,7 +330,7 @@ src/func_ov084_0212ec04.c:
     complete
     .text start:0x0212ec04 end:0x0212ec58
 
-src/func_ov084_0212ec58.c:
+src/_ZN12PiranhaPlant16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0212ec58 end:0x0212ec60
 

@@ -85,7 +85,7 @@ src/_ZN7Skeeter13InitResourcesEv.cpp:
     complete
     .text start:0x0213235c end:0x02132618
 
-src/func_ov090_02132618.c:
+src/_ZN7Skeeter16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02132618 end:0x02132620
 
@@ -93,7 +93,7 @@ src/func_ov090_02132620.cpp:
     complete
     .text start:0x02132620 end:0x0213264c
 
-src/func_ov090_0213264c.c:
+src/_ZN7Skeeter13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0213264c end:0x02132654
 

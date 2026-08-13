@@ -49,6 +49,8 @@ struct RollingRock : Enemy {
     /* --- vtable --- */
     virtual ~RollingRock();
 
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     int Behavior();
     int InitResources();
     int Render();

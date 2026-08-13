@@ -102,11 +102,11 @@ src/_ZN8BookShot13InitResourcesEv.cpp:
 src/_ZN15BookShotSpawner13InitResourcesEv.cpp:
     .text start:0x02112768 end:0x021127a4
 
-src/func_ov020_021127a4.cpp:
+src/_ZN8BookShot16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021127a4 end:0x021127cc
 
-src/func_ov020_021127cc.c:
+src/_ZN8BookShot13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021127cc end:0x021127f4
 
