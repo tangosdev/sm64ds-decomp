@@ -1368,8 +1368,8 @@ func_ov006_0210a6e4 kind:function(arm,size=0x24) addr:0x0210a6e4
 func_ov006_0210a708 kind:function(arm,size=0x1b8) addr:0x0210a708
 _ZN12dScMgSlot1_cD1Ev kind:function(arm,size=0x40) addr:0x0210a8c0
 _ZN12dScMgSlot1_cD0Ev kind:function(arm,size=0x54) addr:0x0210a900
-func_ov006_0210a954 kind:function(arm,size=0x54) addr:0x0210a954
-func_ov006_0210a9a8 kind:function(arm,size=0x68) addr:0x0210a9a8
+_ZN12dScMgSlot3_cD1Ev kind:function(arm,size=0x54) addr:0x0210a954
+_ZN12dScMgSlot3_cD0Ev kind:function(arm,size=0x68) addr:0x0210a9a8
 func_ov006_0210aa10 kind:function(arm,size=0x2c) addr:0x0210aa10
 func_ov006_0210aa3c kind:function(arm,size=0x24) addr:0x0210aa3c
 func_ov006_0210aa60 kind:function(arm,size=0xa8) addr:0x0210aa60
@@ -4092,7 +4092,7 @@ data_ov006_0213e9a4 kind:data(any) addr:0x0213e9a4
 data_ov006_0213e9e0 kind:data(any) addr:0x0213e9e0
 data_ov006_0213ea20 kind:data(any) addr:0x0213ea20
 data_ov006_0213ea60 kind:data(any) addr:0x0213ea60
-data_ov006_0213eaa8 kind:data(any) addr:0x0213eaa8
+_ZTV12dScMgSlot3_c kind:data(any) addr:0x0213eaa8
 data_ov006_0213eb40 kind:data(any) addr:0x0213eb40
 _ZTV12dScMgSlot1_c kind:data(any) addr:0x0213eb40
 MgBingoBallSlotsShot_SpawnInfo kind:data(any) addr:0x0213ebd0 ambiguous

@@ -1,3 +1,4 @@
+//cpp
 #include "types.h"
 // @symbol func_ov006_0210b648
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
@@ -7,22 +8,25 @@
 // recovered name: dScMgSlot3_c_Render
 /* recovered: renamed to Class_Method */
 /* dScMgSlot3_c::Render - recovered from vtable slot identity */
+extern "C" {
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern void func_ov004_020b1bc8(char *a0, int a1, int a2, int a3);
 extern void func_ov004_020b1e34(char *a0, int a1, int a2, int a3);
 extern int GetGameLanguage(void);
+}
 
 typedef struct T4fe4 {
     char pad[0x4fe4];
     int vals[3];
 } T4fe4;
 
-extern char *data_ov006_0213e5ec[];
+extern "C" char *data_ov006_0213e5ec[];
 
 #pragma opt_strength_reduction off
 
-int func_ov006_0210b648(char *c)
+extern "C" int func_ov006_0210b648(char *c);
+extern "C" int func_ov006_0210b648(char *c)
 {
     struct dScMgSlot3_c *self = (struct dScMgSlot3_c *)(void *)c;
     int i, j;
