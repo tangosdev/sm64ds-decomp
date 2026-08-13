@@ -63,7 +63,7 @@ int Flamethrower::Behavior()
     switch (*((u8 *)(self + 0x464))) {
     case 0:
         if (*((u8 *)(self + 0x465)) != 0) {
-            p = (u8 *)((int)(((long long)((int)(self + 0x465))) & 0xffffffffffffffffLL));
+            p = (u8 *)((self + 0x400) + 0x65);
             *p = (u8)(*p - 1);
         }
         if (DecIfAbove0_Short((u16 *)(self + 0x466)) == 0) {
@@ -73,7 +73,7 @@ int Flamethrower::Behavior()
         break;
     case 1:
         if ((int)(*((u8 *)(self + 0x465))) < (count - 1)) {
-            p = (u8 *)((int)(((long long)((int)(self + 0x465))) & 0xffffffffffffffffLL));
+            p = (u8 *)((self + 0x400) + 0x65);
             *p = (u8)(*p + 1);
         }
         if (DecIfAbove0_Short((u16 *)(self + 0x466)) == 0) {

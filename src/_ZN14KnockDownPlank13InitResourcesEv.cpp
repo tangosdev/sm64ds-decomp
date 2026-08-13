@@ -50,7 +50,7 @@ extern "C" int _ZN14KnockDownPlank13InitResourcesEv(char* self)
         *(short*)(self + 0x8e),
         &data_ov015_02113574);
 
-    *(short*)((long long)(int)(self + 0x8e) & 0xFFFFFFFFFFFFFFFFLL) += 0x8000;
+    *(short*)(self + 0x8e) += 0x8000;
     zero = 0;
     a.z = -0xfa000; a.x = zero; a.y = zero; b.x = zero; b.y = zero; b.z = zero;
 
