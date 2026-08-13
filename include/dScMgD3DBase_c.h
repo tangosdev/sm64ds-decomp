@@ -1,0 +1,118 @@
+/* class dScMgD3DBase_c, real ROM name confirmed by tools/rtti_extract.py:
+ * dScMgD3DBase_c : dScMgBase_c, single edge, offset 0 (build/rtti.json).
+ * Read straight out of the ROM: the vptr value is ov006:0x0213c62c, the
+ * RTTI pointer one word below it is 0x0213c5c8 = _ZTI14dScMgD3DBase_c, and
+ * that record's _ZTS string reads "14dScMgD3DBase_c".
+ *
+ * THIS FILE WAS include/MgBounceAndPounce.h, AND THE COINED NAME WAS WRONG
+ * ABOUT THE LEVEL OF THE HIERARCHY, NOT JUST THE SPELLING. That name was
+ * assigned believing this was one minigame. It is the shared base of FOUR:
+ * dScMgJump_c, dScMgJump2_c, dScMgTrampoline_c, dScMgTrampoline2_c.
+ *
+ * THE OLD HEADER INHERITED THAT ERROR AND MODELLED THIS CLASS WITH ONE
+ * CHILD'S FIELDS. It declared mModel at 0x501c, a 3*0xb8 table at 0x506c
+ * and a 6*0xf0 table at 0x5294, and asserted sizeof == 0x5834 "from
+ * MgBounceAndPounce_Spawn's own operator new(0x5834) -- the third and
+ * strongest confirmation". All four belong to dScMgJump_c.
+ *
+ * MgBounceAndPounce_Spawn IS dScMgJump_c's FACTORY, and its own body says
+ * so: it writes THIS class's vtable, and then writes data_ov006_0213cbe4 --
+ * dScMgJump_c's own vtable, confirmed by RTTI -- and only AFTER that derived
+ * vptr store does it construct the Model at 0x501c and the two tables.
+ * Everything a factory builds after the derived vptr store belongs to the
+ * derived class. 0x5834 is dScMgJump_c's size.
+ *
+ * WHERE THIS CLASS ACTUALLY ENDS: 0x5004.
+ *
+ * From below, two witnesses. Each of the four children's own D1 destroys
+ * its own members, then stores THIS class's vtable, then destroys
+ * mSysTracker at 0x47e4, then chains to _ZN11dScMgBase_cD2Ev -- nothing of
+ * this class's is destroyed after mSysTracker, and
+ * 0x47e4 + sizeof(Particle::SysTracker) (0x81c) = 0x5000 exactly. Then this
+ * class's OWN BeforeInitResources writes a 4-byte 0 at 0x5000, which is the
+ * only member it has past mSysTracker and the reason this file does not
+ * stop at 0x5000 (the first draft of it did; the write is what caught it).
+ *
+ * From above, the bound is dScMgJump_c's: a Jump helper
+ * (src/func_ov006_020ee2c4.c) writes 0x5004 and 0x5014, and no method of
+ * THIS class touches either. Its three siblings begin at 0x500c instead, so
+ * 0x5004..0x500c is Jump's alone.
+ *
+ * That 0x5004 boundary is the tightest reading the base's own code
+ * supports, and it is deliberately the conservative one: a child can always
+ * declare padding it does not use, but it cannot un-inherit a field. If a
+ * later witness shows 0x5004 or 0x5008 is shared base state after all, the
+ * boundary moves -- and all four children would fail build_pin at once,
+ * which is exactly the safety net that makes the conservative choice cheap.
+ *
+ * The old size assert never caught the error because the three misplaced
+ * members are raw `u8` arrays with trivial destructors -- declaring them
+ * changed no byte of this class's own D1, and a `sizeof` assert only checks
+ * the number against itself.
+ *
+ * THE DESTRUCTOR IS DEFINED INLINE, and that IS correct -- verified against
+ * a real descendant rather than assumed, because this tree has been bitten
+ * both ways (an out-of-line base destructor emitting a call to a D2 that
+ * exists nowhere, and an inline one the ROM actually calls as a real `bl`).
+ * All four children's own D1s contain this class's vptr store, mSysTracker
+ * destruction and the chain to dScMgBase_c's D2 written out INLINE, with no
+ * call to any dScMgD3DBase_c-specific destructor. Own copy of
+ * operator delete for the same reason: mwcc only inlines a D0 route through
+ * the class itself or its IMMEDIATE base.
+ *
+ * Note the contrast one level up, and it is not a contradiction: this class
+ * inlines into ITS children, while dScMgBase_c's own destructor is NOT
+ * inlined into this one (the ROM's 0x38-byte D1 here calls
+ * _ZN11dScMgBase_cD2Ev as a real `bl`). mwcc inlines a trivial destructor
+ * unconditionally and refuses one with real statements across a TU
+ * boundary. See include/dScMgBase_c.h's own note.
+ */
+#ifndef DSCMGD3DBASE_C_H
+#define DSCMGD3DBASE_C_H
+#include "dScMgBase_c.h"
+#include "Stage.h"
+
+struct dScMgD3DBase_c : dScMgBase_c {
+    /* Declared first -- see include/Scene.h's KEY FUNCTION note. Overrides
+       slots 16 (D1) and 17 (D0). DEFINED INLINE, see the file banner. */
+    virtual ~dScMgD3DBase_c() {}
+
+    /* Own copy, same reason dScMgBase_c has one -- unlocks D0 for the four
+       descendants. */
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
+
+    /* --- overrides. 1, 2, 5, 7, 10 re-override slots dScMgBase_c already
+           gave a body; 11 (AfterRender) is the first override below Scene's
+           own default (dScMgBase_c never touched it). --- */
+    virtual bool BeforeInitResources();                /* slot  1 */
+    virtual void AfterInitResources(u32 vfSuccess);    /* slot  2 */
+    virtual void AfterCleanupResources(u32 vfSuccess); /* slot  5 */
+    virtual int  BeforeBehavior();                     /* slot  7 */
+    virtual int  BeforeRender();                       /* slot 10 */
+    virtual void AfterRender(u32 vfSuccess);           /* slot 11 */
+
+    /* Nine more of dScMgBase_c's own 18 new slots (18-35) are overridden
+       here too (slots 24-31, 33 per tools/rtti_vtables.py --own
+       dScMgD3DBase_c) -- left undeclared, same as dScMgBase_c.h's own slots
+       18-35: their targets are matched source but dScMgBase_c hasn't named
+       or given signatures to the slots they'd be overriding yet, and a
+       derived override can't be declared before its base is. */
+
+    u8   pad_465d[0x187];             /* dScMgBase_c's own data ends 0x465d; the
+                                          Itanium ABI lets a derived class reuse a
+                                          polymorphic base's tail padding (see
+                                          include/dScMgBase_c.h's size note) */
+    Particle::SysTracker mSysTracker; /* 0x47e4 -- AfterInitResources initialises
+                                          it, BeforeBehavior updates it, and all
+                                          four children destroy it inline */
+    s32  unk_5000;                    /* 0x5000 -- real matched access, this
+                                          class's own BeforeInitResources writes
+                                          it as a 4-byte 0 */
+};
+
+/* 0x47e4 + 0x81c = 0x5000, plus unk_5000 = 0x5004. See the file banner for
+   both bounds. If this is short, all four children's fields land on the
+   wrong bytes and build_pin says so at once. */
+typedef char dScMgD3DBase_c_size_must_be_0x5004[sizeof(dScMgD3DBase_c) == 0x5004 ? 1 : -1];
+
+#endif

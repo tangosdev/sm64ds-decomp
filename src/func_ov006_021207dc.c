@@ -5,7 +5,7 @@ extern void func_ov006_02120938(void);
 extern void func_ov006_020d1008(void);
 extern void func_ov006_020ccfc8(void);
 extern void *data_ov006_0213fb34[];
-extern void *_ZTV17MgBounceAndPounce[];
+extern void *_ZTV14dScMgD3DBase_c[];
 
 void *func_ov006_021207dc(void *thiz)
 {
@@ -14,7 +14,7 @@ void *func_ov006_021207dc(void *thiz)
     __destroy_arr(c + 0x5cd0, 5, 0x24, (void *)func_ov006_02120938);
     __destroy_arr(c + 0x534c, 3, 0x32c, (void *)func_ov006_020d1008);
     __destroy_arr(c + 0x500c, 4, 0xd0, (void *)func_ov006_020ccfc8);
-    *(void **)c = _ZTV17MgBounceAndPounce;
+    *(void **)c = _ZTV14dScMgD3DBase_c;
     _ZN8Particle10SysTrackerD1Ev(c + 0x47e4);
     _ZN11dScMgBase_cD2Ev(c);
     return c;

@@ -679,8 +679,8 @@ _ZN15dScMgCurling2_c6RenderEv kind:function(arm,size=0x4c) addr:0x020e67f0
 _ZN15dScMgCurling2_c8BehaviorEv kind:function(arm,size=0x58) addr:0x020e683c
 _ZN15dScMgCurling2_c13InitResourcesEv kind:function(arm,size=0x360) addr:0x020e6894
 func_ov006_020e6bf4 kind:function(arm,size=0x34) addr:0x020e6bf4
-_ZN17MgBounceAndPounceD1Ev kind:function(arm,size=0x38) addr:0x020e6c28
-_ZN17MgBounceAndPounceD0Ev kind:function(arm,size=0x4c) addr:0x020e6c60
+_ZN14dScMgD3DBase_cD1Ev kind:function(arm,size=0x38) addr:0x020e6c28
+_ZN14dScMgD3DBase_cD0Ev kind:function(arm,size=0x4c) addr:0x020e6c60
 func_ov006_020e6cac kind:function(arm,size=0x78) addr:0x020e6cac
 func_ov006_020e6d24 kind:function(arm,size=0x68) addr:0x020e6d24
 func_ov006_020e6d8c kind:function(arm,size=0xc) addr:0x020e6d8c
@@ -692,12 +692,12 @@ func_ov006_020e6e3c kind:function(arm,size=0x10) addr:0x020e6e3c
 func_ov006_020e6e4c kind:function(arm,size=0x8) addr:0x020e6e4c
 func_ov006_020e6e54 kind:function(arm,size=0x24) addr:0x020e6e54
 func_ov006_020e6e78 kind:function(arm,size=0xe8) addr:0x020e6e78
-_ZN17MgBounceAndPounce21AfterCleanupResourcesEj kind:function(arm,size=0xac) addr:0x020e6f60
-_ZN17MgBounceAndPounce11AfterRenderEj kind:function(arm,size=0x34) addr:0x020e700c
-_ZN17MgBounceAndPounce12BeforeRenderEv kind:function(arm,size=0x34) addr:0x020e7040
-_ZN17MgBounceAndPounce14BeforeBehaviorEv kind:function(arm,size=0x4c) addr:0x020e7074
-_ZN17MgBounceAndPounce18AfterInitResourcesEj kind:function(arm,size=0x24) addr:0x020e70c0
-_ZN17MgBounceAndPounce19BeforeInitResourcesEv kind:function(arm,size=0x2c) addr:0x020e70e4
+_ZN14dScMgD3DBase_c21AfterCleanupResourcesEj kind:function(arm,size=0xac) addr:0x020e6f60
+_ZN14dScMgD3DBase_c11AfterRenderEj kind:function(arm,size=0x34) addr:0x020e700c
+_ZN14dScMgD3DBase_c12BeforeRenderEv kind:function(arm,size=0x34) addr:0x020e7040
+_ZN14dScMgD3DBase_c14BeforeBehaviorEv kind:function(arm,size=0x4c) addr:0x020e7074
+_ZN14dScMgD3DBase_c18AfterInitResourcesEj kind:function(arm,size=0x24) addr:0x020e70c0
+_ZN14dScMgD3DBase_c19BeforeInitResourcesEv kind:function(arm,size=0x2c) addr:0x020e70e4
 func_ov006_020e7110 kind:function(arm,size=0x14) addr:0x020e7110
 func_ov006_020e7124 kind:function(arm,size=0x19c) addr:0x020e7124
 func_ov006_020e72c0 kind:function(arm,size=0x104) addr:0x020e72c0
@@ -3610,7 +3610,7 @@ _ZTS14dScMgD3DBase_c kind:data(any) addr:0x0213c5d4
 data_ov006_0213c5e8 kind:data(any) addr:0x0213c5e8
 data_ov006_0213c5fc kind:data(any) addr:0x0213c5fc
 data_ov006_0213c610 kind:data(any) addr:0x0213c610
-_ZTV17MgBounceAndPounce kind:data(any) addr:0x0213c62c
+_ZTV14dScMgD3DBase_c kind:data(any) addr:0x0213c62c
 data_ov006_0213c67c kind:data(any) addr:0x0213c67c ambiguous
 data_ov006_0213c6bc kind:data(any) addr:0x0213c6bc
 data_ov006_0213c6c4 kind:data(any) addr:0x0213c6c4

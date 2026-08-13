@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN17MgBounceAndPounce11AfterRenderEj
+// @symbol _ZN14dScMgD3DBase_c11AfterRenderEj
 /* recovered: named members + shared header, real C++ method */
-#include "MgBounceAndPounce.h"
+#include "dScMgD3DBase_c.h"
 
 extern "C" void _ZN5Scene11AfterRenderEj(void *self, unsigned int result);
 
-void MgBounceAndPounce::AfterRender(unsigned int arg)
+void dScMgD3DBase_c::AfterRender(unsigned int arg)
 {
     volatile unsigned short *reg = (volatile unsigned short *)0x04000006;
     int v = *reg;

@@ -4,7 +4,7 @@ extern void *_ZN9ActorBasenwEj(unsigned int sz);
 extern int func_ov004_020b2adc(void *p);
 extern void _ZN8Particle10SysTrackerC1Ev(void *);
 extern void func_020733a8(void *p, int a, int b, void *f1, void *f2);
-extern int _ZTV17MgBounceAndPounce[];
+extern int _ZTV14dScMgD3DBase_c[];
 extern int data_ov006_0213fc7c[];
 extern void func_ov006_020ca604();
 extern void _ZN6Player29TryExitCharacterDoorWithIntroEv();
@@ -26,7 +26,7 @@ extern "C" void *MgTrampolineTerror_Spawn(void)
     if (p) {
         char *it;
         func_ov004_020b2adc(p);
-        *(int *)p = (int)_ZTV17MgBounceAndPounce;
+        *(int *)p = (int)_ZTV14dScMgD3DBase_c;
         *(short *)(p + 0x4664) = 0;
         it = p + 0x466c;
         {

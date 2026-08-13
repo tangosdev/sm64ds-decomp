@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN17MgBounceAndPounce21AfterCleanupResourcesEj
+// @symbol _ZN14dScMgD3DBase_c21AfterCleanupResourcesEj
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MgBounceAndPounce.h"
+#include "dScMgD3DBase_c.h"
 extern "C" {
 extern void Ov004_Deallocate(void* x);
 extern void _ZN11dScMgBase_c21AfterCleanupResourcesEj(void* a, int b);
@@ -11,7 +11,7 @@ extern void _ZN11dScMgBase_c21AfterCleanupResourcesEj(void* a, int b);
 extern void* data_ov006_02141a48;
 extern unsigned char data_0209f5f8;
 
-void MgBounceAndPounce::AfterCleanupResources(unsigned int b_)
+void dScMgD3DBase_c::AfterCleanupResources(unsigned int b_)
 {
     int b = (int)b_;
 

@@ -9,7 +9,7 @@ extern "C" {
 extern int __destroy_arr(void*, int, int, void*);
 extern void _ZN8Particle10SysTrackerD1Ev(void *);
 extern void func_ov006_020c6f3c();
-extern void *_ZTV17MgBounceAndPounce[];
+extern void *_ZTV14dScMgD3DBase_c[];
 extern void *data_020a0eac;
 void *func_ov006_020eec9c(char *c);
 void *func_ov006_020eec9c(char *c) {
@@ -18,7 +18,7 @@ void *func_ov006_020eec9c(char *c) {
     __destroy_arr(c + 0x57d4, 0x10, 0x24, (void*)&func_ov006_020eed64);
     __destroy_arr(c + 0x5234, 6, 0xf0, (void*)&func_ov006_020c6f3c);
     __destroy_arr(c + 0x500c, 3, 0xb8, (void*)&func_ov006_020c893c);
-    *(void ***)c = _ZTV17MgBounceAndPounce;
+    *(void ***)c = _ZTV14dScMgD3DBase_c;
     _ZN8Particle10SysTrackerD1Ev(c + 0x47e4);
     _ZN11dScMgBase_cD2Ev(c);
     _ZN6Memory10DeallocateEPvP4Heap(c, *(void **)&data_020a0eac);

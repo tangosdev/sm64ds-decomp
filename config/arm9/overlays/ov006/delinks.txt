@@ -2632,11 +2632,11 @@ src/func_ov006_020e6bf4.c:
     complete
     .text start:0x020e6bf4 end:0x020e6c28
 
-src/_ZN17MgBounceAndPounceD1Ev.cpp:
+src/_ZN14dScMgD3DBase_cD1Ev.cpp:
     complete
     .text start:0x020e6c28 end:0x020e6c60
 
-src/_ZN17MgBounceAndPounceD0Ev.cpp:
+src/_ZN14dScMgD3DBase_cD0Ev.cpp:
     complete
     .text start:0x020e6c60 end:0x020e6cac
 
@@ -2683,27 +2683,27 @@ src/func_ov006_020e6e54.c:
 src/func_ov006_020e6e78.cpp:
     .text start:0x020e6e78 end:0x020e6f60
 
-src/_ZN17MgBounceAndPounce21AfterCleanupResourcesEj.cpp:
+src/_ZN14dScMgD3DBase_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x020e6f60 end:0x020e700c
 
-src/_ZN17MgBounceAndPounce11AfterRenderEj.cpp:
+src/_ZN14dScMgD3DBase_c11AfterRenderEj.cpp:
     complete
     .text start:0x020e700c end:0x020e7040
 
-src/_ZN17MgBounceAndPounce12BeforeRenderEv.cpp:
+src/_ZN14dScMgD3DBase_c12BeforeRenderEv.cpp:
     complete
     .text start:0x020e7040 end:0x020e7074
 
-src/_ZN17MgBounceAndPounce14BeforeBehaviorEv.cpp:
+src/_ZN14dScMgD3DBase_c14BeforeBehaviorEv.cpp:
     complete
     .text start:0x020e7074 end:0x020e70c0
 
-src/_ZN17MgBounceAndPounce18AfterInitResourcesEj.cpp:
+src/_ZN14dScMgD3DBase_c18AfterInitResourcesEj.cpp:
     complete
     .text start:0x020e70c0 end:0x020e70e4
 
-src/_ZN17MgBounceAndPounce19BeforeInitResourcesEv.cpp:
+src/_ZN14dScMgD3DBase_c19BeforeInitResourcesEv.cpp:
     complete
     .text start:0x020e70e4 end:0x020e7110
 

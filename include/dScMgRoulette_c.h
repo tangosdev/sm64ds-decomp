@@ -27,9 +27,12 @@
  * the user body, which can't reproduce this interleaving (array/table
  * destruction sandwiched functionally between the two models' declared
  * order). Left as raw bytes with explicit destructor calls in the
- * measured order instead, same reasoning as MgBounceAndPounce's own
- * mModel note (include/MgBounceAndPounce.h) -- a typed member here would
- * cost an auto-generated call the body's own explicit ordering contradicts.
+ * measured order instead: a typed member here would cost an auto-generated
+ * call the body's own explicit ordering contradicts. (This note used to
+ * cite include/MgBounceAndPounce.h's own mModel field for the same
+ * reasoning. That field turned out to belong to dScMgJump_c rather than to
+ * the base, and left with it when the base was renamed dScMgD3DBase_c; the
+ * reasoning stands on its own.)
  *
  * OWN TAIL, 0x53bc..0x5400: sixteen fields are real matched access
  * (src files 021095cc.c, 02109834.c, 0210a194.cpp -- dScMgRoulette_c's

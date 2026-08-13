@@ -5,7 +5,7 @@ extern int func_ov004_020b2adc(void *p);
 extern void _ZN8Particle10SysTrackerC1Ev(void *);
 extern void _ZN5ModelC1Ev(void *);
 extern void func_020733a8(void *p, int a, int b, void *f1, void *f2);
-extern int _ZTV17MgBounceAndPounce[];
+extern int _ZTV14dScMgD3DBase_c[];
 extern int data_ov006_0213cbe4[];
 extern void func_ov006_020c893c();
 extern void func_ov006_020c8a04();
@@ -19,7 +19,7 @@ extern "C" void *MgBounceAndPounce_Spawn(void)
     if (p) {
         char *it;
         func_ov004_020b2adc(p);
-        *(int *)p = (int)_ZTV17MgBounceAndPounce;
+        *(int *)p = (int)_ZTV14dScMgD3DBase_c;
         *(short *)(p + 0x4664) = 0;
         it = p + 0x466c;
         {

@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN17MgBounceAndPounce12BeforeRenderEv
+// @symbol _ZN14dScMgD3DBase_c12BeforeRenderEv
 /* recovered: real C++ method; class identity is preserved by compiler mangling */
 #include "decl_Particle.h"
-#include "MgBounceAndPounce.h"
+#include "dScMgD3DBase_c.h"
 
 extern "C" int _ZN11dScMgBase_c12BeforeRenderEv(void *self);
 
-int MgBounceAndPounce::BeforeRender()
+int dScMgD3DBase_c::BeforeRender()
 {
     if (_ZN11dScMgBase_c12BeforeRenderEv(this) == 0) {
         return 0;

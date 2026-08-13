@@ -4,7 +4,7 @@ void func_ov004_020b2adc(void *p);
 void func_020733a8(void *o, int a, int b, void *f1, void *f2);
 void _ZN8Particle10SysTrackerC1Ev(void *p);
 void _ZN5ModelC1Ev(void *p);
-extern char _ZTV17MgBounceAndPounce[];
+extern char _ZTV14dScMgD3DBase_c[];
 extern char data_ov006_0213ccfc[];
 void func_ov006_020c893c();
 void func_ov006_020c8a04();
@@ -20,7 +20,7 @@ void *_ZN8PathLift17BaseInitResourcesEv()
         char *e;
         char *end;
         func_ov004_020b2adc(p);
-        *(char **)p = _ZTV17MgBounceAndPounce;
+        *(char **)p = _ZTV14dScMgD3DBase_c;
         *(u16 *)(p + 0x4664) = 0;
         e = p + 0x466c;
         end = p;
