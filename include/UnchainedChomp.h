@@ -53,6 +53,8 @@ struct UnchainedChomp : Enemy {
 
     virtual ~UnchainedChomp();
 
+    virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+
     /* methods */
     int Behavior();
     int Render();

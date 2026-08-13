@@ -1,9 +1,9 @@
 _ZN11DiamondLiftD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN11DiamondLiftD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-func_ov043_0211123c kind:function(arm,size=0x44) addr:0x0211123c
-func_ov043_02111280 kind:function(arm,size=0x28) addr:0x02111280
-func_ov043_021112a8 kind:function(arm,size=0x78) addr:0x021112a8
-func_ov043_02111320 kind:function(arm,size=0xac) addr:0x02111320
+_ZN11DiamondLift16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211123c
+_ZN11DiamondLift6RenderEv kind:function(arm,size=0x28) addr:0x02111280
+_ZN11DiamondLift8BehaviorEv kind:function(arm,size=0x78) addr:0x021112a8
+_ZN11DiamondLift13InitResourcesEv kind:function(arm,size=0xac) addr:0x02111320
 DiamondLift_Spawn kind:function(arm,size=0x30) addr:0x021113cc
 _ZN11RickshawBdwD1Ev kind:function(arm,size=0x50) addr:0x021113fc
 _ZN11RickshawBdwD0Ev kind:function(arm,size=0x64) addr:0x0211144c
