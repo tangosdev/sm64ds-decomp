@@ -39,6 +39,7 @@ take over, ping the claimant first.
 
 
 | Range | Who | Claimed | Status |
+| ov015 _ZN9TowerStep8BehaviorEv (0x021124d0, size 0x1cc) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: inverted ternary `(y<lim)?lim:y` / `(y>lim)?lim:y` for movge/movle clamp dest; named flag=`(y>=bound)` for movge/movlt pair; API clm_a38121a04346 kept |
 | ov006 func_ov006_020f3e68 (0x020f3e68, size 0xa8) | lunavyqo | 2026-08-13 | **released** — retry no_progress FLOOR **words=23**. m2c=override+do-while; sibling 020f3f10 C++ method 999; probes: i@r4 with 1 table, 2nd u16 table+walk locks i@sb. 6h/IV-pragmas/goto/bool no beat. no ghidra dump. API clm_0e9bc9f7bfbd released |
 | ov009 func_ov009_0211145c (0x0211145c, size 0x17c) | lunavyqo | 2026-08-13 | **released** — no_progress FLOOR **div=3** (2004/b56). 2nd pass: assign-as-arg0 puts s in r0 but couples it to the sound id (div=6 / +4B); ToId/return-type/real Actor methods/pragma-after/6ax stay at 3. No ghidra scaffold. API clm_03d20e783f11 released |
 | ov006 func_ov006_020ee994 (0x020ee994, size 0x168) | lunavyqo | 2026-08-13 | **released** — no_progress FLOOR(const-hoist) after m2c rewrite + permuter 465it. Best still tip align rep=6 size 0x170. Reducible loop always hoists seed/#0xa/last-ptr on 2004/b56. API clm_486939d6344b released |
