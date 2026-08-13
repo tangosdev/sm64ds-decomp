@@ -23,8 +23,10 @@
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
  *
- * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
- * is not independent evidence about the ROM.
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `HeaveHo_Spawn` calls
+ * `ActorBase::operator new(1068)` -- 0x42c -- and stores `_ZTV7HeaveHo`,
+ * so that literal IS this class's sizeof. The observed fields only span to
+ * 0x428; the difference is trailing space no source reads.
  */
 
 #include "Enemy.h"
@@ -53,7 +55,7 @@ struct HeaveHo : Enemy {
     s32                          unk_418;               /* 0x418 */
     u8  pad_41c[0xa];
     u8                           unk_426;               /* 0x426 */
-    u8  pad_427[0x1];
+    u8  pad_427[0x5];
 
     /* --- vtable --- */
     virtual ~HeaveHo();
@@ -65,6 +67,6 @@ struct HeaveHo : Enemy {
     void OnPendingDestroy();
 };
 
-typedef char HeaveHo_size_must_be_0x428[sizeof(HeaveHo) == 0x428 ? 1 : -1];
+typedef char HeaveHo_size_must_be_0x42c[sizeof(HeaveHo) == 0x42c ? 1 : -1];
 
 #endif /* HEAVEHO_H */

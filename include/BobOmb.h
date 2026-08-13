@@ -23,8 +23,10 @@
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
  *
- * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
- * is not independent evidence about the ROM.
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `BobOmb_Spawn` calls
+ * `ActorBase::operator new(1024)` -- 0x400 -- and stores `_ZTV6BobOmb`,
+ * so that literal IS this class's sizeof. The observed fields only span to
+ * 0x3f8; the difference is trailing space no source reads.
  */
 
 #include "Enemy.h"
@@ -64,7 +66,7 @@ struct BobOmb : Enemy {
     u8                           unk_3f4;               /* 0x3f4 */
     u8                           unk_3f5;               /* 0x3f5 */
     u8                           unk_3f6;               /* 0x3f6 */
-    u8  pad_3f7[0x1];
+    u8  pad_3f7[0x9];
 
     /* --- vtable --- */
     virtual ~BobOmb();
@@ -78,6 +80,6 @@ struct BobOmb : Enemy {
     int Render();
 };
 
-typedef char BobOmb_size_must_be_0x3f8[sizeof(BobOmb) == 0x3f8 ? 1 : -1];
+typedef char BobOmb_size_must_be_0x400[sizeof(BobOmb) == 0x400 ? 1 : -1];
 
 #endif /* BOBOMB_H */

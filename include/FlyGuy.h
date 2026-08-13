@@ -18,8 +18,10 @@
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
  *
- * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
- * is not independent evidence about the ROM.
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `FlyGuy_Spawn` calls
+ * `ActorBase::operator new(1000)` -- 0x3e8 -- and stores `_ZTV6FlyGuy`,
+ * so that literal IS this class's sizeof. The observed fields only span to
+ * 0x3e4; the difference is trailing space no source reads.
  */
 
 #include "Enemy.h"
@@ -53,6 +55,7 @@ struct FlyGuy : Enemy {
     u16                          unk_3cc;               /* 0x3cc */
     u8  pad_3ce[0x12];
     s32                          unk_3e0;               /* 0x3e0 */
+    u8  pad_3e4[0x4];
 
     /* --- vtable --- */
     virtual ~FlyGuy();
@@ -67,6 +70,6 @@ struct FlyGuy : Enemy {
     int Render();
 };
 
-typedef char FlyGuy_size_must_be_0x3e4[sizeof(FlyGuy) == 0x3e4 ? 1 : -1];
+typedef char FlyGuy_size_must_be_0x3e8[sizeof(FlyGuy) == 0x3e8 ? 1 : -1];
 
 #endif /* FLYGUY_H */

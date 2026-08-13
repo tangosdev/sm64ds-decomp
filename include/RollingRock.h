@@ -18,8 +18,10 @@
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
  *
- * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
- * is not independent evidence about the ROM.
+ * SIZE IS THE ROM'S OWN, not a rounded-up field span: `RollingRock_Spawn` calls
+ * `ActorBase::operator new(968)` -- 0x3c8 -- and stores `_ZTV11RollingRock`,
+ * so that literal IS this class's sizeof. The observed fields only span to
+ * 0x3c4; the difference is trailing space no source reads.
  */
 
 #include "Enemy.h"
@@ -44,7 +46,7 @@ struct RollingRock : Enemy {
     u8                           unk_3c0;               /* 0x3c0 */
     u8                           unk_3c1;               /* 0x3c1 */
     u8                           unk_3c2;               /* 0x3c2 */
-    u8  pad_3c3[0x1];
+    u8  pad_3c3[0x5];
 
     /* --- vtable --- */
     virtual ~RollingRock();
@@ -57,6 +59,6 @@ struct RollingRock : Enemy {
     int CleanupResources();
 };
 
-typedef char RollingRock_size_must_be_0x3c4[sizeof(RollingRock) == 0x3c4 ? 1 : -1];
+typedef char RollingRock_size_must_be_0x3c8[sizeof(RollingRock) == 0x3c8 ? 1 : -1];
 
 #endif /* ROLLINGROCK_H */
