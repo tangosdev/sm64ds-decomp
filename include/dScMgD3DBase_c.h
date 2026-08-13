@@ -16,7 +16,7 @@
  * strongest confirmation". All four belong to dScMgJump_c.
  *
  * MgBounceAndPounce_Spawn IS dScMgJump_c's FACTORY, and its own body says
- * so: it writes THIS class's vtable, and then writes data_ov006_0213cbe4 --
+ * so: it writes THIS class's vtable, and then writes _ZTV11dScMgJump_c --
  * dScMgJump_c's own vtable, confirmed by RTTI -- and only AFTER that derived
  * vptr store does it construct the Model at 0x501c and the two tables.
  * Everything a factory builds after the derived vptr store belongs to the
@@ -98,10 +98,39 @@ struct dScMgD3DBase_c : dScMgBase_c {
        or given signatures to the slots they'd be overriding yet, and a
        derived override can't be declared before its base is. */
 
-    u8   pad_465d[0x187];             /* dScMgBase_c's own data ends 0x465d; the
+    u8   pad_465d[0x3];               /* dScMgBase_c's own data ends 0x465d; the
                                           Itanium ABI lets a derived class reuse a
                                           polymorphic base's tail padding (see
                                           include/dScMgBase_c.h's size note) */
+    s32  unk_4660;                    /* 0x4660 */
+    u16  unk_4664;                    /* 0x4664 -- both factories zero it right
+                                          after the base constructor */
+    u8   pad_4666[0x6];               /* 0x4666 */
+    /* 0x466c..0x47e4 is TWO ELEMENTS OF 0xbc, not flat state, and all four
+       factories say so: each runs `e = p + 0x466c; do { e += 0xbc; } while
+       (e != p + 0x47e4);`, and 0x47e4 - 0x466c = 0x178 = 2 * 0xbc. The
+       fourteen fields below prove the stride independently -- 0x470c..0x4724
+       and 0x47c8..0x47e0 are the SAME seven offsets within each element
+       (+0xa0..+0xb8), and all four children reference all fourteen. Kept as
+       flat names for now because the eight files that read them spell them
+       this way; typing it as a real array is its own change. */
+    u8   pad_466c[0xa0];              /* 0x466c -- element 0, head */
+    s32  unk_470c;                    /* 0x470c */
+    s32  unk_4710;                    /* 0x4710 */
+    s32  unk_4714;                    /* 0x4714 */
+    s32  unk_4718;                    /* 0x4718 */
+    s32  unk_471c;                    /* 0x471c */
+    s32  unk_4720;                    /* 0x4720 */
+    u16  unk_4724;                    /* 0x4724 */
+    u8   pad_4726[0xa2];              /* 0x4726 -- element 1, head */
+    s32  unk_47c8;                    /* 0x47c8 */
+    s32  unk_47cc;                    /* 0x47cc */
+    s32  unk_47d0;                    /* 0x47d0 */
+    s32  unk_47d4;                    /* 0x47d4 */
+    s32  unk_47d8;                    /* 0x47d8 */
+    s32  unk_47dc;                    /* 0x47dc */
+    u16  unk_47e0;                    /* 0x47e0 */
+    u8   pad_47e2[0x2];               /* 0x47e2 */
     Particle::SysTracker mSysTracker; /* 0x47e4 -- AfterInitResources initialises
                                           it, BeforeBehavior updates it, and all
                                           four children destroy it inline */

@@ -3253,11 +3253,11 @@ src/func_ov006_020ede80.c:
     complete
     .text start:0x020ede80 end:0x020edec0
 
-src/func_ov006_020edec0.cpp:
+src/_ZN11dScMgJump_cD1Ev.cpp:
     complete
     .text start:0x020edec0 end:0x020edf54
 
-src/func_ov006_020edf54.cpp:
+src/_ZN11dScMgJump_cD0Ev.cpp:
     complete
     .text start:0x020edf54 end:0x020edffc
 
@@ -3324,11 +3324,11 @@ src/MgBounceAndPounce_Spawn.cpp:
     complete
     .text start:0x020eeafc end:0x020eebe8
 
-src/func_ov006_020eebe8.cpp:
+src/_ZN12dScMgJump2_cD1Ev.cpp:
     complete
     .text start:0x020eebe8 end:0x020eec9c
 
-src/func_ov006_020eec9c.cpp:
+src/_ZN12dScMgJump2_cD0Ev.cpp:
     complete
     .text start:0x020eec9c end:0x020eed64
 
@@ -6554,11 +6554,11 @@ src/MgHideAndBooSeek_Spawn.c:
     complete
     .text start:0x021207a8 end:0x021207dc
 
-src/func_ov006_021207dc.c:
+src/_ZN17dScMgTrampoline_cD1Ev.cpp:
     complete
     .text start:0x021207dc end:0x02120880
 
-src/func_ov006_02120880.cpp:
+src/_ZN17dScMgTrampoline_cD0Ev.cpp:
     complete
     .text start:0x02120880 end:0x02120938
 
@@ -6729,11 +6729,11 @@ src/func_ov006_021225a8.c:
     complete
     .text start:0x021225a8 end:0x021225ac
 
-src/func_ov006_021225ac.c:
+src/_ZN18dScMgTrampoline2_cD1Ev.cpp:
     complete
     .text start:0x021225ac end:0x021226b0
 
-src/func_ov006_021226b0.cpp:
+src/_ZN18dScMgTrampoline2_cD0Ev.cpp:
     complete
     .text start:0x021226b0 end:0x021227c8
 

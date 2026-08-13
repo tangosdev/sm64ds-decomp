@@ -1,9 +1,12 @@
+//cpp
 #include "types.h"
 // @symbol func_ov006_020e72c0
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgTrampoline2_c.h"
+
+extern "C" {
 // recovered name: dScMgTrampoline2_c_Kill
 /* recovered: renamed to Class_Method */
 /* dScMgTrampoline2_c::Kill - recovered from vtable slot identity */
@@ -46,4 +49,5 @@ void func_ov006_020e72c0(char *c) {
   }
   LoadCompressedFileAt(0x5b, _ZN3G2S12GetBG1ScrPtrEv());
   _ZN2GX15SetBankForSubBGEt(self->unk_0a0);
+}
 }

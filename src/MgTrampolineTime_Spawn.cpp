@@ -5,7 +5,7 @@ extern int func_ov004_020b2adc(void *p);
 extern void _ZN8Particle10SysTrackerC1Ev(void *);
 extern void func_020733a8(void *p, int a, int b, void *f1, void *f2);
 extern int _ZTV14dScMgD3DBase_c[];
-extern int data_ov006_0213fb34[];
+extern int _ZTV17dScMgTrampoline_c[];
 extern void func_ov006_020ccfc8();
 extern void func_ov006_020cd12c();
 extern void func_ov006_020d1008();
@@ -32,7 +32,7 @@ extern "C" void *MgTrampolineTime_Spawn(void)
             } while (it != end);
         }
         _ZN8Particle10SysTrackerC1Ev(p + 0x47e4);
-        *(int *)p = (int)data_ov006_0213fb34;
+        *(int *)p = (int)_ZTV17dScMgTrampoline_c;
         func_020733a8(p + 0x500c, 4, 0xd0,
                       (void *)func_ov006_020cd12c,
                       (void *)func_ov006_020ccfc8);

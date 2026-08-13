@@ -105,7 +105,10 @@ struct dScMgBase_c : Scene {
 
     u8  pad_050[0xc];
     s32 unk_05c;            /* 0x05c */
-    u8  pad_060[0x44];
+    u8  pad_060[0x40];
+    s32 unk_0a0;            /* 0x0a0 -- real matched access, dScMgTrampoline2_c's
+                                own AfterRender (src/func_ov006_020e6cac.c); split
+                                out of the former pad_060[0x44] */
     s32 unk_0a4;            /* 0x0a4 */
     s32 unk_0a8;            /* 0x0a8 */
     s32 unk_0ac;            /* 0x0ac -- real matched access, e.g. dScMgCard_c's own

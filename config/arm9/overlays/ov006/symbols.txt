@@ -837,8 +837,8 @@ _ZN15dScMgHanachan_c13InitResourcesEv kind:function(arm,size=0x1ac) addr:0x020ed
 func_ov006_020edcb0 kind:function(arm,size=0x168) addr:0x020edcb0
 MgWhichWiggler_Spawn kind:function(arm,size=0x68) addr:0x020ede18
 func_ov006_020ede80 kind:function(arm,size=0x40) addr:0x020ede80
-func_ov006_020edec0 kind:function(arm,size=0x94) addr:0x020edec0
-func_ov006_020edf54 kind:function(arm,size=0xa8) addr:0x020edf54
+_ZN11dScMgJump_cD1Ev kind:function(arm,size=0x94) addr:0x020edec0
+_ZN11dScMgJump_cD0Ev kind:function(arm,size=0xa8) addr:0x020edf54
 func_ov006_020edffc kind:function(arm,size=0x38) addr:0x020edffc
 func_ov006_020ee034 kind:function(arm,size=0x248) addr:0x020ee034
 func_ov006_020ee27c kind:function(arm,size=0x44) addr:0x020ee27c
@@ -856,8 +856,8 @@ func_ov006_020ee690 kind:function(arm,size=0x24c) addr:0x020ee690
 func_ov006_020ee8dc kind:function(arm,size=0xb8) addr:0x020ee8dc
 func_ov006_020ee994 kind:function(arm,size=0x168) addr:0x020ee994
 MgBounceAndPounce_Spawn kind:function(arm,size=0xec) addr:0x020eeafc
-func_ov006_020eebe8 kind:function(arm,size=0xb4) addr:0x020eebe8
-func_ov006_020eec9c kind:function(arm,size=0xc8) addr:0x020eec9c
+_ZN12dScMgJump2_cD1Ev kind:function(arm,size=0xb4) addr:0x020eebe8
+_ZN12dScMgJump2_cD0Ev kind:function(arm,size=0xc8) addr:0x020eec9c
 func_ov006_020eed64 kind:function(arm,size=0x4) addr:0x020eed64
 func_ov006_020eed68 kind:function(arm,size=0x60) addr:0x020eed68
 func_ov006_020eedc8 kind:function(arm,size=0x74) addr:0x020eedc8
@@ -1704,8 +1704,8 @@ _ZN13dScMgTeresa_c6RenderEv kind:function(arm,size=0x64) addr:0x02120348
 _ZN13dScMgTeresa_c8BehaviorEv kind:function(arm,size=0x50) addr:0x021203ac
 _ZN13dScMgTeresa_c13InitResourcesEv kind:function(arm,size=0x3ac) addr:0x021203fc
 MgHideAndBooSeek_Spawn kind:function(arm,size=0x34) addr:0x021207a8
-func_ov006_021207dc kind:function(arm,size=0xa4) addr:0x021207dc
-func_ov006_02120880 kind:function(arm,size=0xb8) addr:0x02120880
+_ZN17dScMgTrampoline_cD1Ev kind:function(arm,size=0xa4) addr:0x021207dc
+_ZN17dScMgTrampoline_cD0Ev kind:function(arm,size=0xb8) addr:0x02120880
 func_ov006_02120938 kind:function(arm,size=0x4) addr:0x02120938
 func_ov006_0212093c kind:function(arm,size=0x70) addr:0x0212093c
 func_ov006_021209ac kind:function(arm,size=0x6c) addr:0x021209ac
@@ -1748,8 +1748,8 @@ func_ov006_02122198 kind:function(arm,size=0x184) addr:0x02122198
 func_ov006_0212231c kind:function(arm,size=0x174) addr:0x0212231c
 MgTrampolineTime_Spawn kind:function(arm,size=0x118) addr:0x02122490
 func_ov006_021225a8 kind:function(arm,size=0x4) addr:0x021225a8
-func_ov006_021225ac kind:function(arm,size=0x104) addr:0x021225ac
-func_ov006_021226b0 kind:function(arm,size=0x118) addr:0x021226b0
+_ZN18dScMgTrampoline2_cD1Ev kind:function(arm,size=0x104) addr:0x021225ac
+_ZN18dScMgTrampoline2_cD0Ev kind:function(arm,size=0x118) addr:0x021226b0
 func_ov006_021227c8 kind:function(arm,size=0x4c) addr:0x021227c8
 func_ov006_02122814 kind:function(arm,size=0x68) addr:0x02122814
 func_ov006_0212287c kind:function(arm,size=0x40) addr:0x0212287c
@@ -3713,7 +3713,7 @@ _ZTI11dScMgJump_c kind:data(any) addr:0x0213cb98
 _ZTS11dScMgJump_c kind:data(any) addr:0x0213cba4
 data_ov006_0213cbb4 kind:data(any) addr:0x0213cbb4
 data_ov006_0213cbc8 kind:data(any) addr:0x0213cbc8
-data_ov006_0213cbe4 kind:data(any) addr:0x0213cbe4
+_ZTV11dScMgJump_c kind:data(any) addr:0x0213cbe4
 data_ov006_0213cc74 kind:data(any) addr:0x0213cc74
 MgBounceAndTrounce_SpawnInfo kind:data(any) addr:0x0213cc7c ambiguous
 data_ov006_0213cc84 kind:data(any) addr:0x0213cc84
@@ -3725,7 +3725,7 @@ data_ov006_0213ccb0 kind:data(any) addr:0x0213ccb0
 _ZTS12dScMgJump2_c kind:data(any) addr:0x0213ccbc
 data_ov006_0213cccc kind:data(any) addr:0x0213cccc
 data_ov006_0213cce0 kind:data(any) addr:0x0213cce0
-data_ov006_0213ccfc kind:data(any) addr:0x0213ccfc
+_ZTV12dScMgJump2_c kind:data(any) addr:0x0213ccfc
 data_ov006_0213cd8c kind:data(any) addr:0x0213cd8c
 data_ov006_0213cd94 kind:data(any) addr:0x0213cd94
 data_ov006_0213cd9c kind:data(any) addr:0x0213cd9c
@@ -4289,7 +4289,7 @@ data_ov006_0213fadc kind:data(any) addr:0x0213fadc
 _ZTS17dScMgTrampoline_c kind:data(any) addr:0x0213faf0
 data_ov006_0213fb04 kind:data(any) addr:0x0213fb04
 data_ov006_0213fb18 kind:data(any) addr:0x0213fb18
-data_ov006_0213fb34 kind:data(any) addr:0x0213fb34
+_ZTV17dScMgTrampoline_c kind:data(any) addr:0x0213fb34
 data_ov006_0213fbc4 kind:data(any) addr:0x0213fbc4
 MgTrampolineTerror_SpawnInfo kind:data(any) addr:0x0213fbc8 ambiguous
 data_ov006_0213fbd0 kind:data(any) addr:0x0213fbd0
@@ -4304,7 +4304,7 @@ data_ov006_0213fc20 kind:data(any) addr:0x0213fc20
 data_ov006_0213fc34 kind:data(any) addr:0x0213fc34
 data_ov006_0213fc48 kind:data(any) addr:0x0213fc48
 _ZTS18dScMgTrampoline2_c kind:data(any) addr:0x0213fc5c
-data_ov006_0213fc7c kind:data(any) addr:0x0213fc7c
+_ZTV18dScMgTrampoline2_c kind:data(any) addr:0x0213fc7c
 data_ov006_0213fd0c kind:data(any) addr:0x0213fd0c
 data_ov006_0213fd14 kind:data(any) addr:0x0213fd14
 data_ov006_0213fd1c kind:data(any) addr:0x0213fd1c
