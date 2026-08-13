@@ -118,17 +118,24 @@ struct dScMgBase_c : Scene {
     u32 unk_0bc;            /* 0x0bc -- real matched access, dScMg3DEsp_c's own
                                 OnYoshiTryEat (src/func_ov006_020e9c20.c) reads
                                 and writes it as a 4-byte int */
-    u16 unk_0c0;            /* 0x0c0 -- real matched access, dScMgFlower_c's own
-                                Behavior (src/func_ov006_0212ac74.c) writes it as a
-                                2-byte value; split out of the former pad_0c0[0x3]
-                                by the first descendant to touch it */
+    u16 unk_0c0;            /* 0x0c0 -- a 16-bit counter. WIDTH AND SIGNEDNESS come
+                                from this class's OWN render path, not from a
+                                descendant: src/_ZN11dScMgBase_c12BeforeRenderEv.cpp
+                                passes `this` to func_ov004_020b0de0, which
+                                increments it and compares it UNSIGNED against 0x30
+                                and 0x18. Split out of the former pad_0c0[0x3]. */
     u8  pad_0c2[0x1];
     u8  unk_0c3;            /* 0x0c3 */
-    u8  unk_0c4;            /* 0x0c4 -- real matched access, same file and same
-                                function as unk_0c0: a one-shot init flag tested
-                                and set alongside unk_0c3. Split out of the former
+    u8  unk_0c4;            /* 0x0c4 -- a 1-byte counter, compared `< 4U` in that
+                                same base render path. Split out of the former
                                 pad_0c4[0x4]. */
     u8  pad_0c5[0x3];
+    /* Both were already spelled by raw offset in roughly 25 pre-existing ov006
+       files -- dScMgFlower_c's, dScMgSnowball_c's and dScMgMCarlo_c's own
+       Behaviors all carry the identical `if (0xc4 == 0) { 0xc3 = 1; 0xc4 = 1;
+       *(s16*)0xc0 = 0; }` idiom. Naming them here is what lets those files stop
+       spelling raw offsets; it is not a discovery, and an earlier draft of this
+       comment wrongly called dScMgFlower_c "the first descendant to touch it". */
     s32 unk_0c8;            /* 0x0c8 */
     u8  pad_0cc[0x24];
     s32 unk_0f0;            /* 0x0f0 */

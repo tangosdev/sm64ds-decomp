@@ -12,9 +12,14 @@
  * TABLE at 0x4f38, constructed by func_ov006_020c221c and destroyed by
  * func_ov006_020c21e4 -- the same construct/destroy pair shape five
  * siblings use at this same offset (see include/dScMgCard_c.h's own note).
- * Its size is NOT independently evidenced: nothing reads inside it, so the
- * only bound is the first field that follows (0x4ff0), giving 0xb8. Left
- * opaque rather than guessed at, exactly as dScMgCard_c.h leaves its own.
+ * Nothing reads inside the table itself, so its size is bounded only by
+ * what follows it, and that bound is 0xac, not the 0xb8 the first draft of
+ * this header claimed: a THREE-ELEMENT s32 array sits at 0x4fe4, indexed by
+ * five of this class's own files (func_ov006_0210b648.c's own local
+ * `struct T4fe4 { char pad[0x4fe4]; int vals[3]; }` names it outright, and
+ * 0210bdb0.cpp, 0210af64.c, 0210adac.c and 0210ab08.c all index it as
+ * `[i]` or `+ i*4`). It closes exactly on unk_4ff0. Left opaque up to
+ * there rather than guessed at, as dScMgCard_c.h leaves its own.
  *
  * OWN TAIL, 0x4ff0..0x5043: seventeen fields carried over verbatim from
  * this header's previous auto-generated form, all real matched access out
@@ -37,7 +42,8 @@ extern "C" int func_ov006_020c21e4(char *t); /* decl_common.h's own signature */
 struct dScMgSlot3_c : dScMgSingle3DBase_c {
     virtual ~dScMgSlot3_c();
 
-    u8  pad_4f38[0xb8];     /* 0x4f38 -- opaque table, see file banner */
+    u8  pad_4f38[0xac];     /* 0x4f38 -- opaque table, see file banner */
+    s32 unk_4fe4[3];        /* 0x4fe4 -- indexed array, see file banner */
     s32 unk_4ff0;           /* 0x4ff0 */
     u8  pad_4ff4[0xc];      /* 0x4ff4 */
     s32 unk_5000;           /* 0x5000 */

@@ -4027,6 +4027,7 @@ src/MgMemoryMaster_Spawn.c:
     .text start:0x020f75d4 end:0x020f7634
 
 src/_ZN13dScMgMCarlo_cD1Ev.cpp:
+    complete
     .text start:0x020f7634 end:0x020f76a8
 
 src/_ZN13dScMgMCarlo_cD0Ev.cpp:
@@ -5253,6 +5254,7 @@ src/_ZN12dScMgSlot1_cD0Ev.cpp:
     .text start:0x0210a900 end:0x0210a954
 
 src/_ZN12dScMgSlot3_cD1Ev.cpp:
+    complete
     .text start:0x0210a954 end:0x0210a9a8
 
 src/_ZN12dScMgSlot3_cD0Ev.cpp:

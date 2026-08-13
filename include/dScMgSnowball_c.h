@@ -32,10 +32,24 @@
  * they are the same element type as each other; mArray3's is its own
  * (func_ov006_0212968c / func_ov006_02125800).
  *
- * TWO UNEVIDENCED GAPS remain and are left as padding rather than guessed
- * at: 0xb0d8..0xb5d8 (0x500, between mArray1 and mArray2) and
- * 0xbe94..0xc59c (0x708, past the last constructed member). Neither has
- * any matched access anywhere in the tree.
+ * THE 0xb0d8..0xb5d8 REGION IS FOUR PARALLEL ARRAYS, not padding, and they
+ * tile the 0x500 exactly: Snowball's own Render (src/func_ov006_02127d10.c)
+ * indexes 0xb0d8 as `*(int*)(c + i*4 + ...)`, 0xb2d8 and 0xb358 as
+ * `*(u8*)(c + i + ...)`, and 0xb3d8 as `*(int*)(c + i*4 + ...)`; 0x80
+ * elements each gives 0x200 + 0x80 + 0x80 + 0x200 = 0x500, landing on
+ * mArray2. src/func_ov006_02125bbc.c writes the first two the same way.
+ *
+ * 0xbe94..0xc59c IS A FIFTH ARRAY, and it is why this class has NO trailing
+ * slack at all: src/func_ov006_02129690.c already carries the full element
+ * layout (two s32 then three u8 at +0x1e/0x1f/0x20, stride 0x24) as a local
+ * `Elem arr[50]` at exactly this offset, and 50 * 0x24 = 0x708 closes
+ * precisely on the allocation literal. At least eight further ov006 files
+ * index it. Unlike the other four arrays neither structor touches it, so
+ * its element type is trivially constructible -- which is exactly why the
+ * structors alone could never have found it.
+ *
+ * So the field span and the `operator new` literal now AGREE for this
+ * class. The size does not rest on the literal alone.
  *
  * unk_4628, which the old auto-generated header declared, is dScMgBase_c's
  * own and is already declared there; it is dropped from this file, not
@@ -72,7 +86,10 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   unk_abf4;         /* 0xabf4 -- the constructor's own `= 0` write */
     u8    pad_abf8[0xe0];   /* 0xabf8 */
     u8    mArray1[0x400];   /* 0xacd8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c */
-    u8    pad_b0d8[0x500];  /* 0xb0d8 -- no matched access, see file banner */
+    s32   unk_b0d8[0x80];   /* 0xb0d8 -- parallel array, see file banner */
+    u8    unk_b2d8[0x80];   /* 0xb2d8 */
+    u8    unk_b358[0x80];   /* 0xb358 */
+    s32   unk_b3d8[0x80];   /* 0xb3d8 */
     u8    mArray2[0x400];   /* 0xb5d8 -- 0x80 * 8, elem dtor NullDestructor_0203d47c */
     s32   unk_b9d8;         /* 0xb9d8 */
     s32   unk_b9dc;         /* 0xb9dc */
@@ -87,7 +104,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     s32   unk_ba0c;         /* 0xba0c */
     s32   unk_ba10;         /* 0xba10 */
     u8    mArray3[0x480];   /* 0xba14 -- 0x20 * 0x24, elem dtor func_ov006_02125800 */
-    u8    pad_be94[0x708];  /* 0xbe94 -- no matched access, see file banner */
+    u8    mArray4[0x708];   /* 0xbe94 -- 50 * 0x24, trivial elements, see file banner */
 };
 
 typedef char dScMgSnowball_c_size_must_be_0xc59c[sizeof(dScMgSnowball_c) == 0xc59c ? 1 : -1];

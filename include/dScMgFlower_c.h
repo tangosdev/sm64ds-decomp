@@ -27,10 +27,11 @@
  * THREE FIELDS THE OLD HEADER DECLARED BELOW 0x4f38 ARE NOT DROPPED BUT
  * MOVED: unk_0c0, unk_0c3 and unk_0c4 are dScMgBase_c's own, two levels
  * up. unk_0c3 was already declared there; unk_0c0 and unk_0c4 were sitting
- * inside that header's pad_0c0/pad_0c4 and are split out by this slice --
- * dScMgFlower_c's own Behavior (src/func_ov006_0212ac74.c) is the first
- * descendant to touch either, which is the same "first descendant that
- * touches it" shape #1433 already used twice on this header.
+ * inside that header's pad_0c0/pad_0c4 and are split out by this slice.
+ * This class is NOT the first to touch them -- roughly 25 ov006 files
+ * already spell the same idiom by raw offset, including two of this
+ * slice's own siblings -- so the width and signedness in dScMgBase_c.h are
+ * taken from that class's OWN render path instead. See its note.
  *
  * THE DESTRUCTOR IS NOT DEFINED INLINE -- a leaf, no RTTI descendants of
  * its own. Defined for real in src/_ZN13dScMgFlower_cD1Ev.cpp; D0Ev.cpp
