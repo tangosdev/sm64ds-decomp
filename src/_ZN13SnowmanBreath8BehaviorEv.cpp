@@ -14,8 +14,7 @@ extern int _ZN6Player9StartTalkER9ActorBaseb(void *self, void *actor, int b);
    //cpp file mangles it a second time -- this one was reaching the linker as
    _Z48_ZN6Player11ShowMessage... and sat in the unresolved baseline. Byte
    gates cannot see it, because relocations compare as wildcards; only
-   check_references does. (_ZN5Sound8PlayLongEjjjRK7Vector3s below has the
-   same defect and is left for whoever owns that symbol.) */
+   check_references does. */
 extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *self, void *actor,
                                                             unsigned int msg,
                                                             const Vector3 *pos,
@@ -24,10 +23,12 @@ extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *self, void *ac
 }
 extern "C" {
 extern int _ZN6Player12GetTalkStateEv(void *self);
-}
+/* Same double-mangle defect as ShowMessage above: outside this block the
+   bare `extern` reached the linker as _Z33_ZN5Sound8PlayLongEjjjRK7Vector3sijjPvj. */
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(int handle, unsigned int a,
                                              unsigned int b, void *pos,
                                              unsigned int c);
+}
 
 int SnowmanBreath::Behavior()
 {

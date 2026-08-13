@@ -5,7 +5,16 @@
 /* recovered: shared common types */
 #include "common.h"
 
-struct Player { unsigned int SetAnim(unsigned int, int, int, unsigned int); };
+/* The ROM's Player::SetAnim takes Fix12<int> third, so its symbol is
+   _ZN6Player7SetAnimEji5Fix12IiEj. A local `struct Player` declaring
+   `SetAnim(unsigned, int, int, unsigned)` mangles to _ZN6Player7SetAnimEjiij,
+   which exists in no module -- invisible to the byte gate, because relocated
+   words compare as wildcards. Same extern "C" idiom the rest of the tree uses
+   for this symbol (src/_ZN6Player12St_Hurt_InitEv.cpp). */
+extern "C" {
+extern unsigned int _ZN6Player7SetAnimEji5Fix12IiEj(char* thiz, unsigned int anim,
+                                                    int a, int fix, unsigned int b);
+}
 extern "C" short Vec3_HorzAngle(const Vector3*, const Vector3*);
 extern "C" void func_020731dc(void*, void*, void*);
 extern "C" void Vec3_RotateYAndTranslate(Vector3*, const Vector3*, int, const Vector3*);
@@ -19,7 +28,7 @@ extern "C" int func_ov002_020c8a4c(char* self);
 int func_ov002_020c8a4c(char* self) {
     int spd = *(int*)(self + 0x98) >> 3;
     if (spd < 0x400) spd = 0x400;
-    ((Player*)self)->SetAnim(0x48, 0, spd, 0);
+    _ZN6Player7SetAnimEji5Fix12IiEj(self, 0x48, 0, spd, 0);
     *(short*)(self + 0x94) = Vec3_HorzAngle((Vector3*)(self + 0x5c), (Vector3*)(self + 0x744));
     *(short*)(self + 0x8e) = *(short*)(self + 0x94);
     if (func_02053274((Vector3*)(self + 0x5c), (Vector3*)(self + 0x744)) < 0xa000) {
