@@ -22,6 +22,27 @@ Bird_SpawnInfo:0x1c CastleWater_SpawnInfo:0x1c MetalNet_SpawnInfo:0x1c Flag_Spaw
 
 # ---- .data: the three CLPS blocks and the water's texture animation ----
 data_ov009_02112bc4 data_ov009_02112bf8 data_ov009_02112c38
+# The moat water's BTA translate track, and why its size is spelled out.
+#
+# The castle-grounds water is a texgen-mode-1 material whose S/T translation
+# comes from a 91-frame BTA track: src/func_020469e8.c reads tableC[idx+frame],
+# TextureTransformer::Update supplies the frame and Animation::Advance wraps it
+# modulo the BTA header's 91. The track is ONE contiguous run of 91 Fix12 words
+# at 0x021122ec (0..0x1000, the full texture wrap) ending exactly where
+# __sinit_ov009_02112458 begins.
+#
+# Nothing named it, so it reached the host as a SYNTHETIC GAP BLOCK -- and a gap
+# block is sized by the next entry in dsd's symbols.txt. dsd guessed six
+# `ambiguous` boundaries inside this array, the first at 0x02112320, so the
+# block stopped thirteen words in. From animation frame 13 the track ran off its
+# own array into whatever the linker placed next: the neighbouring gap block,
+# whose leading bytes are the ASCII "water_mat" and a row of REBASED HOST
+# POINTERS. Those pointer values travelled into the geometry stream as the
+# water's texture-matrix translation, so a host address was deciding pixels --
+# the same source at a different image base put a different address there, the
+# UV moved by exactly one 32-texel period, and the walk_window selftest BMP
+# changed with the layout. Naming the array with its ROM extent pins it.
+data_ov009_021122ec:0x16c
 # the four {function, delta} pairs __sinit_ov009_02112458 copies into the
 # Bird's own behaviour table
 data_ov009_021138fc data_ov009_02113904 data_ov009_0211390c data_ov009_02113914
