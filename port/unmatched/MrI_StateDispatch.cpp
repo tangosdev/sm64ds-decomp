@@ -28,7 +28,7 @@
  *   record 2 (+0x20) <- data_ov071_02122cb0 (enter) , data_ov071_02122cc8 (main)
  *
  * and the six source words, read raw out of extracted/overlays/overlay_0071.bin
- * at base 0x0211f000 (NOT the stale 0x0211f600 in overlays.yaml -- see the
+ * at base 0x0211f000 (= overlays.yaml's base_address 34729984 -- see the
  * base derivation in unmatched/MrI_StateMains.cpp), are:
  *
  *   02122ca8 -> 021214f4 / 0    state 1 enter   matched src

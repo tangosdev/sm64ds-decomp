@@ -1122,7 +1122,8 @@ extern "C" void port_actor_overlays_sinits(void)
     /* run linkw wave 7, lane w7b: the same order one class over. MrI's SIX
        state SOURCE PMFs (data_ov071_02122ca8/cb0/cb8/cc0/cc8/cd0) must be
        seated over their host bodies BEFORE __sinit_ov071_021228c8 copies them
-       into data_ov071_02123088 -- that sinit is the very next call below. */
+       into data_ov071_02123088 -- that sinit runs below (after
+       __sinit_ov071_021226ac, which is the next call; ordering holds). */
     port_mri_states_seat();
     __sinit_ov071_021226ac();
     __sinit_ov071_021228c8();

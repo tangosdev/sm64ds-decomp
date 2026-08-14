@@ -20,17 +20,18 @@
  *     func_ov071_021211e0 kind:function(arm,size=0x314) addr:0x021211e0
  * and each size closes exactly on the next symbol (0x0212110c and 0x021214f4).
  *
- * THE OVERLAY BASE IS 0x0211f000, NOT the 0x0211f600 that
- * extracted/dsd/arm9_overlays/overlays.yaml's `base_address: 34729984` says.
- * The yaml entry is stale by 0x600 and reading the bytes at that base would
- * have produced garbage for every listing below. The base is pinned three
+ * THE OVERLAY BASE IS 0x0211f000 -- which IS overlays.yaml's
+ * `base_address: 34729984` (34729984 == 0x0211f000; the yaml is correct).
+ * A wrong hand-converted hex gloss (0x0211f600) circulated in this lane's
+ * brief; reading bytes at THAT base would have produced garbage for every
+ * listing below. The base is pinned three
  * ways, all agreeing: config/arm9/overlays/ov071/delinks.txt opens
  * `.text start:0x0211f000` and closes `.bss end:0x02123100`; the image span
  * 0x02122f80 - 0x0211f000 = 0x3f80 = 16256 is exactly the yaml's own
  * `ram_size` AND the byte length of extracted/overlays/overlay_0071.bin; and
  * the bss span 0x02123100 - 0x02122f80 = 0x180 = 384 is exactly the yaml's
- * `bss_size`. At base 0x0211f600 the symbol func_ov071_0211f0a4 would sit
- * BELOW the overlay. File offset used throughout: addr - 0x0211f000.
+ * `bss_size`. At the glossed 0x0211f600 the symbol func_ov071_0211f0a4 would
+ * sit BELOW the overlay. File offset used throughout: addr - 0x0211f000.
  *
  * ---- VERIFICATION RECORD ---------------------------------------------------
  * Method: disassemble the ROM span out of extracted/overlays/overlay_0071.bin
@@ -79,7 +80,7 @@
  * random values in +-(1<<28) -- 0 mismatches. So `/` and `%` are the exact
  * transcription and the magic does not need to be reproduced.
  *
- * CALL TARGETS: eighteen distinct, every one resolved BY ADDRESS from the
+ * CALL TARGETS: nineteen distinct, every one resolved BY ADDRESS from the
  * listing, and every arity taken from the ROM's own register/stack use rather
  * than from a C prototype (C linkage would hide an arity mismatch silently):
  *
@@ -102,7 +103,7 @@
  *   02015c3c  Animation::Advance          (this), r0
  *   02015bcc  Animation::Finished         (this) -> int, r0
  *   0200f658  Actor::DetectRaycastClsn    (this, Vector3*, Vector3*, bool)
- *   plus four ov071 siblings, all matched src and all in this lane's slice:
+ *   plus six ov071 siblings, all matched src and all in this lane's slice:
  *   02120a20, 021209c8, 02120860, 0212070c, 02120b14, 02121634.
  *
  * The two arm9 data symbols were already mounted before this lane: the trig

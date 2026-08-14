@@ -31,14 +31,15 @@
 // exactly the trap the double test exists for. So the syms header's "198/199"
 // is a mis-attribution and "262?" was one class short.
 //
-// THE OVERLAY BASE the byte reads use is 0x0211f000, NOT the 0x0211f600 that
-// extracted/dsd/arm9_overlays/overlays.yaml records as base_address 34729984.
-// The yaml is stale by 0x600. Pinned three ways that agree, all in
+// THE OVERLAY BASE the byte reads use is 0x0211f000 -- which IS the yaml's
+// base_address 34729984 (34729984 == 0x0211f000; the yaml is correct, a
+// wrong hex gloss in the lane brief said 0x0211f600).
+// Pinned three ways that agree, all in
 // config/arm9/overlays/ov071/delinks.txt and the yaml's own size fields:
 // .text start:0x0211f000, .bss end:0x02123100; image 0x02122f80-0x0211f000 =
 // 0x3f80 = 16256 = ram_size = the byte length of overlay_0071.bin; bss
-// 0x02123100-0x02122f80 = 0x180 = 384 = bss_size. At 0x0211f600 the symbol
-// func_ov071_0211f0a4 would sit below the overlay.
+// 0x02123100-0x02122f80 = 0x180 = 384 = bss_size. At the glossed 0x0211f600
+// the symbol func_ov071_0211f0a4 would sit below the overlay.
 //
 // ---- 263 IS A FREE SHARE OF 262'S FILL -------------------------------------
 // MrI_Spawn (0x02121a1c) and BigMrI_Spawn (0x021219cc) are the SAME function
