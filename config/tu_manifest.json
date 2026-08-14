@@ -98,6 +98,96 @@
           "symbol_addresses_match": "NOT RUN",
           "module_reproduces": "NOT RUN",
           "rom_build_passes": "NOT RUN"
+        },
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-failed",
+          "scratch": "build/tu/ov045-PoleLift/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": false
+          },
+          "tuRange": null,
+          "objectAudit": {
+            "counts": {
+              "HOMELESS": 11,
+              "COLLIDES-GAP": 2,
+              "LICENSED": 7,
+              "COLLIDES-SRC": 2
+            },
+            "emittedTextOrderIsRomAscending": false,
+            "nonLicensedSymbols": [
+              "HOMELESS _ZTS5Actor STB_LOPROC .data size=0x7",
+              "HOMELESS _ZTI9ActorBase STB_LOPROC .data size=0x8",
+              "HOMELESS _ZTS9ActorBase STB_LOPROC .data size=0xb",
+              "HOMELESS _ZTS8Platform STB_LOPROC .data size=0xa",
+              "HOMELESS _ZTS8PoleLift STB_LOPROC .data size=0xa",
+              "HOMELESS _ZTI8Platform STB_LOPROC .data size=0xc",
+              "HOMELESS _ZTI5Actor STB_LOPROC .data size=0xc",
+              "HOMELESS _ZTI12ActorDerived STB_LOPROC .data size=0xc",
+              "HOMELESS _ZTS12ActorDerived STB_LOPROC .data size=0xf",
+              "HOMELESS _ZTI8PoleLift STB_LOPROC .data size=0xc",
+              "COLLIDES-GAP _ZTV8PoleLift STB_GLOBAL .data size=0x84 already at ov045:0x02112dbc",
+              "HOMELESS _ZN8PoleLiftD2Ev STB_GLOBAL .text size=0x4c",
+              "COLLIDES-GAP _ZTV8Platform STB_LOPROC .data size=0x84 already at ov002:0x0210ae38",
+              "COLLIDES-SRC _ZN8PlatformD0Ev STB_LOPROC .text size=0x4c already at ov002:0x020ee464",
+              "COLLIDES-SRC _ZN8PlatformD1Ev STB_LOPROC .text size=0x38 already at ov002:0x020ee42c"
+            ],
+            "unlicensedSections": [
+              {
+                "name": ".data",
+                "size": 7
+              },
+              {
+                "name": ".data",
+                "size": 8
+              },
+              {
+                "name": ".data",
+                "size": 10
+              },
+              {
+                "name": ".data",
+                "size": 10
+              },
+              {
+                "name": ".data",
+                "size": 11
+              },
+              {
+                "name": ".data",
+                "size": 12
+              },
+              {
+                "name": ".data",
+                "size": 12
+              },
+              {
+                "name": ".data",
+                "size": 12
+              },
+              {
+                "name": ".data",
+                "size": 12
+              },
+              {
+                "name": ".data",
+                "size": 15
+              },
+              {
+                "name": ".data",
+                "size": 132
+              },
+              {
+                "name": ".data",
+                "size": 132
+              }
+            ]
+          },
+          "symbolCheckNewVsBaseline": null,
+          "linkerOutput": "mwldarm.exe: Multiply-defined: \"virtual table for PoleLift\" in PoleLift.o\nmwldarm.exe: Previously defined in _dsd_gap@ov045_3.o\nmwldarm.exe: Multiply-defined: \"virtual table for Platform\" in PoleLift.o\nmwldarm.exe: Previously defined in _dsd_gap@ov002_13.o\n\nErrors caused tool to abort."
         }
       },
       "unlicensed_output_observed": {
@@ -324,7 +414,7 @@
       "module": "ov002",
       "source": "src_tu/stage/LevelObjects.cpp",
       "promoted_source": "src/stage/LevelObjects.cpp",
-      "status": "text-verified",
+      "status": "link-verified",
       "boundary_confidence": "high",
       "boundary_evidence": [
         "contiguous linker run: 0x020fe190..0x020fea4c, seventeen functions abutting exactly with no foreign symbol inside the span",
@@ -500,6 +590,40 @@
           "add_an_unexpected_helper": "DETECTED -- an extra _Z30LevelObjects_unexpected_helperi .text section appears",
           "omit_a_declared_function": "DETECTED -- LoadViewObjects absent from the emitted set",
           "note": "run on copies in a scratch directory; src_tu/ was never mutated"
+        },
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-verified",
+          "scratch": "build/tu/ov002-LevelObjects/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": true,
+            "checkModules": true,
+            "checkSymbols": false,
+            "rom": true
+          },
+          "tuRange": {
+            "start": "0x020fe190",
+            "end": "0x020fea4c",
+            "differingBytes": 0,
+            "firstDiff": null
+          },
+          "objectAudit": {
+            "counts": {
+              "LICENSED": 17,
+              "COLLIDES-SRC": 2
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [
+              "COLLIDES-SRC _ZN8Vector3sD1Ev STB_LOPROC .text size=0x4 already at arm9:0x02011508",
+              "COLLIDES-SRC _ZN7Vector3D1Ev STB_LOPROC .text size=0x4 already at arm9:0x020072c0"
+            ],
+            "unlicensedSections": []
+          },
+          "symbolCheckNewVsBaseline": [],
+          "linkerOutput": null
         }
       },
       "unlicensed_output_observed": {

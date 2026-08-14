@@ -32,12 +32,16 @@ compilation or byte comparison.
 """
 import argparse
 import collections
+import concurrent.futures
+import hashlib
 import io
 import json
 import pathlib
 import re
+import shutil
 import subprocess
 import sys
+import time
 
 from elftools.elf.elffile import ELFFile
 from elftools.elf.relocation import RelocationSection
@@ -53,10 +57,15 @@ import modules as MOD           # noqa: E402
 import objisolate as OI         # noqa: E402
 import reloc_audit as RA        # noqa: E402
 import relocs as RL             # noqa: E402
+import rombuild as RB           # noqa: E402
+import rombuild_cache as RBK    # noqa: E402
+import rombuild_check as RBC    # noqa: E402
+import rombuild_profile as RP   # noqa: E402
 import srcpath as SP            # noqa: E402
 import tu_map as TM             # noqa: E402
 
 TU_MAP = REPO / "build" / "tu_map.json"
+BASELINE_LINK = REPO / "build" / "tu" / "_baseline" / "link"
 MANIFEST = REPO / "config" / "tu_manifest.json"
 SRC_TU = REPO / "src_tu"
 BUILD_TU = REPO / "build" / "tu"
@@ -1245,18 +1254,909 @@ def cmd_verify(args):
     return 0 if text_verified else 1
 
 
-# ============================================================================= stubs
+# ========================================================== `linkcheck` -- scratch delinks
+
+_SEC_LINE_RE = re.compile(r'^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)')
+
+
+def parse_delinks_file(path):
+    """(header_lines, [(entry_path, [body_lines])]) preserving every line verbatim.
+
+    enroll.read_delinks answers "which entries carry `complete`" and throws the text
+    away; a scratch splice has to rewrite the file, so it needs the lines back. This
+    is the same grammar (unindented `path:` opens an entry, indented lines belong to
+    it, leading indented lines before the first entry are the module section header)
+    read losslessly instead."""
+    header, entries, cur = [], [], None
+    for line in path.read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            if cur is not None:
+                cur[1].append(line)
+            else:
+                header.append(line)
+            continue
+        if line[0].isspace():
+            (cur[1] if cur is not None else header).append(line)
+        else:
+            cur = (line.strip().rstrip(":"), [])
+            entries.append(cur)
+    return header, entries
+
+
+def entry_sections(body_lines):
+    """[(name, start, end)] for one delinks entry body."""
+    out = []
+    for line in body_lines:
+        m = _SEC_LINE_RE.match(line)
+        if m:
+            out.append((m.group(1), int(m.group(2), 16), int(m.group(3), 16)))
+    return out
+
+
+def entry_is_complete(body_lines):
+    return any(l.strip() == "complete" for l in body_lines)
+
+
+def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy):
+    """Replace the per-function entries tiling [span_start, span_end) with ONE TU entry.
+
+    Refuses -- returns (None, [reasons]) -- rather than producing a plausible-looking
+    scratch config, because every failure mode here is silent downstream: dsd fills any
+    range it has no object for with retail ROM bytes, so a mis-spliced delinks tree
+    links clean and compares green while contributing nothing (see
+    notes/unbuildable-files-invisible.md and layout_check's L1). The checks are:
+
+      * every entry whose .text starts inside the span is fully inside it;
+      * no entry straddles either boundary;
+      * their .text ranges tile the span exactly -- abutting, no gap, no overlap;
+      * every one of them carries `complete` (otherwise the substitution would ALSO
+        be enrolling ranges the current build serves from ROM bytes, and a green
+        result would be measuring two changes at once);
+      * none of them declares a non-.text section (this round licenses .text only);
+      * the set equals the manifest's own `legacy_source` list.
+    """
+    header, entries = parse_delinks_file(delinks_path)
+    reasons = []
+    inside, straddling = [], []
+    for idx, (rel, body) in enumerate(entries):
+        secs = entry_sections(body)
+        if not secs:
+            continue
+        lo = min(s[1] for s in secs)
+        hi = max(s[2] for s in secs)
+        if hi <= span_start or lo >= span_end:
+            continue
+        if lo < span_start or hi > span_end:
+            straddling.append((rel, lo, hi))
+            continue
+        inside.append((idx, rel, secs))
+    for rel, lo, hi in straddling:
+        reasons.append(f"entry {rel} (0x{lo:08x}..0x{hi:08x}) straddles the TU boundary")
+    if not inside:
+        reasons.append(f"no delinks entry lies inside 0x{span_start:08x}..0x{span_end:08x}")
+        return None, reasons
+
+    tiles = sorted((s1, s2, rel, name) for _i, rel, secs in inside for (name, s1, s2) in secs)
+    for name, rel in [(n, r) for _s1, _s2, r, n in tiles if n != ".text"]:
+        reasons.append(f"entry {rel} declares a non-.text section {name}; this round "
+                       f"licenses .text only (plan sec 8)")
+    cursor = span_start
+    for s1, s2, rel, _n in tiles:
+        if s1 != cursor:
+            reasons.append(f"range gap/overlap at 0x{cursor:08x}: next entry {rel} starts "
+                           f"at 0x{s1:08x}")
+        cursor = max(cursor, s2)
+    if cursor != span_end:
+        reasons.append(f"entries stop at 0x{cursor:08x}, TU span ends at 0x{span_end:08x}")
+
+    incomplete = [rel for _i, rel, _s in inside if not entry_is_complete(entries[_i][1])]
+    for rel in incomplete:
+        reasons.append(f"entry {rel} is NOT `complete` today (dsd serves it from ROM bytes); "
+                       f"substituting the TU would change enrollment and byte provenance "
+                       f"in the same step")
+
+    got = {rel for _i, rel, _s in inside}
+    want = {p.replace("\\", "/") for p in expected_legacy}
+    if got != want:
+        for rel in sorted(want - got):
+            reasons.append(f"manifest names legacy source {rel}, which is not a delinks "
+                           f"entry inside the span")
+        for rel in sorted(got - want):
+            reasons.append(f"delinks entry {rel} lies inside the span but the manifest "
+                           f"does not list it as a legacy source")
+    if reasons:
+        return None, reasons
+
+    first = min(i for i, _r, _s in inside)
+    drop = {i for i, _r, _s in inside}
+    out = list(header)
+    for idx, (rel, body) in enumerate(entries):
+        if idx == first:
+            out.append(f"{tu_rel}:")
+            out.append("    complete")
+            out.append(f"    .text start:0x{span_start:08x} end:0x{span_end:08x}")
+            out.append("")
+            continue
+        if idx in drop:
+            continue
+        out.append(f"{rel}:")
+        out.extend(body)
+    delinks_path.write_text("\n".join(out).rstrip("\n") + "\n", encoding="utf-8", newline="\n")
+    return sorted(rel for _i, rel, _s in inside), []
+
+
+_all_syms_index = None
+
+
+def all_symbol_homes():
+    """{name: [(module, addr), ...]} across EVERY checked-in symbols.txt.
+
+    reloc_audit.build_name_index answers a different question and keeps only the
+    first module per name (`setdefault`), which is right for its fallback lookup and
+    wrong here: this needs every licensed home a name has, because one of them being
+    outside the TU's span is exactly what makes the linker see a duplicate."""
+    global _all_syms_index
+    if _all_syms_index is None:
+        idx = collections.defaultdict(list)
+        for module, path in RL.iter_symbol_files(include_itcm_dtcm=True):
+            for name, (mod, addr) in RL.iter_syms_pairs(path, module):
+                idx[name].append((mod, addr))
+        _all_syms_index = dict(idx)
+    return _all_syms_index
+
+
+def complete_ranges(config_root):
+    """{module: [(start, end)]} for every `complete` delinks entry in a config tree.
+
+    Used to tell a colliding symbol's OTHER definition apart: inside a complete range
+    it comes from an isolated per-function source object (binding preserved from
+    mwcc, so a vague-linkage pair is legal), outside one it comes from a dsd gap
+    object, which defines every carved-out symbol STB_GLOBAL -- and a strong
+    definition makes any second definition a hard multiply-defined error."""
+    out = {}
+    for dl in sorted(pathlib.Path(config_root).rglob("delinks.txt")):
+        label = ("arm9" if dl.parent == pathlib.Path(config_root)
+                 else dl.parent.name)
+        rows = []
+        for _rel, body in parse_delinks_file(dl)[1]:
+            if entry_is_complete(body):
+                rows.extend((a, b) for _n, a, b in entry_sections(body))
+        out[label] = rows
+    return out
+
+
+def audit_tu_object(obj_bytes, entry, span_start, span_end, ranges=None):
+    """What the linker is about to be handed, judged against the config, BEFORE linking.
+
+    plan sec 4.5 -- "a compiled object is eligible only when every defined function,
+    object, content section, relocation and range is expected by its manifest. Extra
+    output is a failure, not something the linker may silently ignore." mwldarm's own
+    error list is truncated (it aborts after the first few), so the mechanical audit
+    is better evidence than the link log about WHICH extras exist.
+
+    Buckets every defined symbol as:
+      LICENSED  named by the manifest, address inside the TU span;
+      COLLIDES  the config gives this name a home OUTSIDE the span, so a delink gap
+                object or another enrolled source already defines it -- multiply
+                defined under `-nodead`;
+      HOMELESS  no symbols.txt anywhere names it, so it has no licensed address and
+                the linker must invent one inside the TU's contribution.
+    """
+    inv = elf_inventory(obj_bytes)
+    homes = all_symbol_homes()
+    licensed = {f["symbol"] for f in entry["functions"]}
+    licensed |= {d["symbol"] for d in entry.get("data", [])}
+    licensed |= {d["symbol"] for d in entry.get("bss", [])}
+    secname = {s["index"]: s["name"] for s in inv["sections"]}
+    rows = []
+    for s in inv["symbols"]:
+        if s["type"] not in ("STT_FUNC", "STT_OBJECT") or s["name"].startswith("$"):
+            continue
+        name = s["name"]
+        where = homes.get(name, [])
+        outside = [(m, a) for (m, a) in where if not (span_start <= a < span_end)]
+        gap = any(not any(lo <= a < hi for lo, hi in (ranges or {}).get(m, []))
+                  for m, a in outside)
+        if name in licensed:
+            verdict = "LICENSED"
+        elif outside:
+            verdict = "COLLIDES-GAP" if gap else "COLLIDES-SRC"
+        else:
+            verdict = "HOMELESS"
+        rows.append({"name": name, "bind": s["bind"], "type": s["type"], "size": s["size"],
+                     "section": secname.get(s["shndx"], "?"), "verdict": verdict,
+                     "homes": [f"{m}:0x{a:08x}" for m, a in outside]})
+    extra_secs = [s for s in inv["sections"]
+                  if s["size"] and s["type"] in OI.CONTENT and s["name"] != ".text"
+                  and not any(s["name"].startswith(p) for p in OI.IGNORE)]
+    # Emission order: the licensed functions' .text sections must come out in ROM
+    # address order, because the LCF selects `<stem>.o(.text)` and mwldarm lays those
+    # sections down in object order. A swap here is invisible to per-function
+    # comparison and fatal to a whole-range link (pilot #2 sec 7's first control).
+    ordinal = {f["symbol"]: int(f["address"], 16) for f in entry["functions"]}
+    emitted = sorted((s["shndx"], s["name"]) for s in inv["symbols"]
+                     if s["name"] in ordinal and isinstance(s["shndx"], int))
+    order_ok = [ordinal[n] for _i, n in emitted] == sorted(ordinal[n] for _i, n in emitted)
+    return rows, extra_secs, emitted, order_ok
+
+
+def print_object_audit(rows, extra_secs, emitted, order_ok, entry):
+    buckets = collections.Counter(r["verdict"] for r in rows)
+    print(f"      defined symbols: {buckets['LICENSED']} LICENSED, "
+          f"{buckets['COLLIDES-GAP']} COLLIDES-GAP (fatal: the other definition is a dsd "
+          f"gap object's, which is STB_GLOBAL), {buckets['COLLIDES-SRC']} COLLIDES-SRC "
+          f"(tolerated only while BOTH definitions are vague-linkage), "
+          f"{buckets['HOMELESS']} HOMELESS")
+    for r in sorted(rows, key=lambda r: (r["verdict"], r["name"])):
+        if r["verdict"] == "LICENSED":
+            continue
+        detail = (f"  already defined at {', '.join(r['homes'])}" if r["homes"]
+                  else "  no symbols.txt anywhere names it")
+        print(f"      {r['verdict']:12} {r['name']:38} {r['bind']:10} {r['section']:8} "
+              f"size 0x{r['size']:x}{detail}")
+    unlicensed_secs = [s for s in extra_secs
+                       if s["name"] not in {x["name"] for x in entry.get("sections", [])}]
+    if unlicensed_secs:
+        total = sum(s["size"] for s in unlicensed_secs)
+        kinds = collections.Counter(s["name"] for s in unlicensed_secs)
+        print(f"      unlicensed content sections: {len(unlicensed_secs)} "
+              f"({dict(kinds)}), {total} bytes total")
+    print(f"      emitted .text order of the licensed functions: "
+          f"{'ROM-ascending, as required' if order_ok else 'NOT ROM-ascending'}")
+    if not order_ok:
+        print(f"        emitted: {[n for _i, n in emitted]}")
+    return buckets
+
+
+class ReadOnlyObjectCache(RBK.ObjectCache):
+    """rombuild's object cache, used for hits only.
+
+    A scratch link needs every one of the ~10,800 enrolled sources compiled, and the
+    tree's warm cache turns that from minutes of mwccarm into a file copy. Writing to
+    it would be harmless in principle -- entries are content-addressed, so a scratch
+    build stores exactly what a real build would -- but the assignment's rule is that
+    a linkcheck touches nothing under build/ outside its own scratch subtree, and an
+    LRU `prune` from a throwaway run could evict a real build's entries. So `put` and
+    `prune` are no-ops and the -MD scratch directory moves into the TU's own tree.
+    The one remaining write is fetch()'s `os.utime` on a served object, which only
+    refreshes that entry's LRU timestamp."""
+
+    def __init__(self, root, repo, scratch_dir, enabled=True):
+        self._scratch = pathlib.Path(scratch_dir)
+        self._scratch.mkdir(parents=True, exist_ok=True)
+        super().__init__(root, repo, enabled=enabled)
+
+    @property
+    def scratch(self):
+        return self._scratch
+
+    def put(self, *_a, **_k):
+        return None
+
+    def prune(self, *_a, **_k):
+        return 0
+
+
+def _run_dsd(cmd, what, quiet_patterns=()):
+    """rombuild.run, but returning the failure instead of raising, so linkcheck can
+    report a phase failure as a linkcheck verdict rather than a traceback."""
+    t0 = time.time()
+    try:
+        out = RB.run(cmd, what, quiet_patterns=quiet_patterns)
+        return True, out, time.time() - t0
+    except RB.BuildError as exc:
+        return False, exc.output, time.time() - t0
+
+
+def module_dir_in(config_root, module):
+    if module == "arm9":
+        return pathlib.Path(config_root)
+    if module in ("itcm", "dtcm"):
+        return pathlib.Path(config_root) / module
+    return pathlib.Path(config_root) / "overlays" / module
+
+
+def module_base(delinks_path):
+    header, _entries = EN.read_delinks(delinks_path)
+    secs = EN.sections(header)
+    return min(s[1] for s in secs) if secs else None
+
+
+def compare_range(built, retail, base, start, end, label, rows=None):
+    """Byte-compare one linked address range. Returns (ok, ndiff, first_diff_addr)."""
+    lo, hi = start - base, end - base
+    if lo < 0 or hi > len(built) or hi > len(retail):
+        print(f"  {label}: RANGE OUT OF BOUNDS (built {len(built)} bytes, "
+              f"retail {len(retail)} bytes, want [{lo}, {hi}))")
+        return False, hi - lo, start
+    b, r = built[lo:hi], retail[lo:hi]
+    diffs = [i for i in range(hi - lo) if b[i] != r[i]]
+    if not diffs:
+        print(f"  {label}: 0x{start:08x}..0x{end:08x}  {hi - lo} bytes  IDENTICAL")
+        return True, 0, None
+    print(f"  {label}: 0x{start:08x}..0x{end:08x}  {hi - lo} bytes  "
+          f"{len(diffs)} DIFFER, first at 0x{base + lo + diffs[0]:08x}")
+    return False, len(diffs), base + lo + diffs[0]
+
 
 def cmd_linkcheck(args):
-    print("tools/tubuild.py linkcheck: NOT YET IMPLEMENTED "
-         "(plan sec 7.6 -- a later phase; see the plan's Phase D/section 9).")
-    return 2
+    data = load_manifest()
+    entry = manifest_entry(data, args.id) if args.id else None
+    if args.id and entry is None:
+        raise SystemExit(f"no manifest entry for {args.id!r} in "
+                         f"{MANIFEST.relative_to(REPO).as_posix()}")
+    baseline = bool(args.baseline)
+    if entry is None and not baseline:
+        raise SystemExit("linkcheck needs a TU id (or --baseline for the control run)")
+
+    module = entry["module"] if entry else (args.module or "ov002")
+    tu_id = entry["id"] if entry else "_baseline"
+    # One canonical baseline tree for the whole repository, not one per module: the
+    # control run substitutes nothing, so its result is module-independent and every
+    # TU run diffs against the same artefact.
+    scratch = (BASELINE_LINK if baseline else BUILD_TU / sanitize_id(tu_id) / "link")
+    cfg_root = scratch / "config" / "arm9"
+    report = {"id": tu_id, "baseline": baseline, "module": module,
+              "scratch": scratch.relative_to(REPO).as_posix(), "phases": {}}
+
+    print(f"=== tubuild linkcheck {tu_id}"
+          f"{'  [BASELINE CONTROL -- no TU substitution]' if baseline else ''} ===")
+    print(f"scratch tree: {scratch.relative_to(REPO).as_posix()}")
+    print("real config/ and the shared build/ outputs are read-only for this command; "
+          "everything written below lives under that scratch tree (build/ is gitignored).\n")
+
+    for tool in (RB.DSD, RB.MW / RB.VERSION / "mwccarm.exe",
+                 RB.MW / RB.LD_VERSION / "mwldarm.exe"):
+        if not tool.is_file():
+            raise SystemExit(f"missing {tool} - see notes/setup-mwccarm.md")
+    if not (REPO / "extracted" / "dsd" / "config.yaml").is_file():
+        raise SystemExit("no extracted ROM - run tools/unpack.py on your own dump first")
+
+    # ---------------------------------------------------------------- scratch config
+    print("[1/8] scratch configuration")
+    if scratch.exists() and args.clean:
+        shutil.rmtree(scratch)
+    scratch.mkdir(parents=True, exist_ok=True)
+    profile = RP.prepare_profile("stock", out_root=scratch / "config", build_root=scratch)
+    print(f"      copied config/arm9 -> {cfg_root.relative_to(REPO).as_posix()} "
+          f"({len(profile['modReplacements'])} mod entr(y/ies) redirected to src/, "
+          f"{len(profile['modGapFallbacks'])} demoted to ROM gap bytes -- "
+          f"rombuild_profile.prepare_profile, the same stock semantics as a real build)")
+
+    span_start = span_end = None
+    replaced = []
+    if not baseline:
+        text_secs = [s for s in entry.get("sections", []) if s["name"] == ".text"]
+        if len(text_secs) != 1:
+            raise SystemExit(f"{tu_id}: expected exactly one licensed .text section, "
+                             f"got {len(text_secs)}")
+        span_start = int(text_secs[0]["start"], 16)
+        span_end = int(text_secs[0]["end"], 16)
+        dl = module_dir_in(cfg_root, module) / "delinks.txt"
+        if not dl.is_file():
+            raise SystemExit(f"no delinks.txt for module {module} at {dl}")
+        replaced, reasons = splice_tu_entry(
+            dl, span_start, span_end, entry["source"],
+            [f["legacy_source"] for f in entry["functions"]])
+        if reasons:
+            print("\nREFUSED -- the scratch delinks substitution is not safe:")
+            for r in reasons:
+                print(f"  {r}")
+            return 1
+        print(f"      spliced {len(replaced)} per-function entr(y/ies) in "
+              f"{module}/delinks.txt into one:")
+        print(f"        {entry['source']}:  .text start:0x{span_start:08x} "
+              f"end:0x{span_end:08x}  complete")
+
+    # dsd's linker script selects contributions by object BASENAME, so a shadow TU
+    # whose stem collides with any other enrolled or delinked object would be
+    # mislinked silently. Checked here rather than assumed.
+    if not baseline:
+        stem = pathlib.Path(entry["source"]).stem
+        clash = [p for p in RB.enrolled(cfg_root, extra_roots=("src_tu",))
+                 if pathlib.PurePosixPath(p).stem == stem and p != entry["source"]]
+        if clash:
+            print(f"\nREFUSED -- object basename {stem}.o is claimed by {clash}")
+            return 1
+
+    # ------------------------------------------------------------------ dsd delink/lcf
+    print("[2/8] dsd delink")
+    ok, out, dt = _run_dsd([str(RB.DSD), "delink", "-c", str(profile["configYaml"])],
+                           "dsd delink", quiet_patterns=("No module for relocation",))
+    report["phases"]["delink"] = {"ok": ok, "seconds": round(dt, 1)}
+    if not ok:
+        print(out[:4000])
+        return 1
+    print(f"      ok ({dt:.1f}s)")
+
+    print("[3/8] dsd lcf")
+    ok, out, dt = _run_dsd([str(RB.DSD), "lcf", "-c", str(profile["configYaml"])], "dsd lcf")
+    report["phases"]["lcf"] = {"ok": ok, "seconds": round(dt, 1)}
+    if not ok:
+        print(out[:4000])
+        return 1
+    print(f"      ok ({dt:.1f}s) -> {(scratch / 'arm9.lcf').relative_to(REPO).as_posix()}, "
+          f"{(scratch / 'objects.txt').relative_to(REPO).as_posix()}")
+
+    # ------------------------------------------------------------------------ compile
+    srcs = RB.enrolled(cfg_root, extra_roots=("src_tu",))
+    vers = RB.versions()
+    if not baseline:
+        pin, note = resolve_tu_version(entry)
+        used = vers.get(pathlib.Path(entry["source"]).stem, RB.VERSION)
+        print(f"[4/8] mwccarm: {len(srcs)} enrolled source file(s), -j{args.jobs}")
+        print(f"      shadow TU pin: legacy sources agree on {pin or '?'}"
+              f"{' (' + note + ')' if note else ''}; the scratch build compiles "
+              f"{entry['source']} as {used} (rombuild keys the version override on the "
+              f"FILE STEM, so a promoted TU would need its own "
+              f"config/rombuild-versions.txt line if it ever diverges)")
+        if pin and pin != used:
+            print(f"      REFUSED -- pin disagreement: legacy {pin} vs scratch build {used}")
+            return 1
+    else:
+        print(f"[4/8] mwccarm: {len(srcs)} enrolled source file(s), -j{args.jobs}")
+
+    cache = ReadOnlyObjectCache(REPO / "build" / "objcache", REPO, scratch / "cachetmp",
+                                enabled=not args.no_cache)
+    init_srcs = RB.init_section_sources()
+    syms = RB.enrolled_symbols()
+    t0 = time.time()
+    failures, outcomes = [], collections.Counter()
+    with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
+        for rel, err, outcome in ex.map(
+                lambda s: RB.compile_one(s, vers, cache, init_srcs, syms, build_root=scratch),
+                srcs):
+            outcomes[outcome] += 1
+            if err:
+                failures.append((rel, err))
+    dt = time.time() - t0
+    report["phases"]["compile"] = {"ok": not failures, "seconds": round(dt, 1),
+                                   "outcomes": dict(outcomes)}
+    print(f"      {outcomes['hit']} reused from cache, "
+          f"{outcomes['miss'] + outcomes['uncacheable']} compiled, "
+          f"{outcomes['error']} failed ({dt:.1f}s)")
+    if failures:
+        for rel, err in failures[:10]:
+            print(f"      FAIL {rel}: {err}")
+        return 1
+
+    # ------------------------------------------------- pre-link licensing audit
+    if not baseline:
+        print("[4b/8] licensing audit of the shadow object (plan sec 4.5), before the link")
+        tu_obj = scratch / pathlib.Path(entry["source"]).with_suffix(".o")
+        if not tu_obj.is_file():
+            print(f"      !! no object at {tu_obj}")
+            return 1
+        rows, extra_secs, emitted, order_ok = audit_tu_object(
+            tu_obj.read_bytes(), entry, span_start, span_end, complete_ranges(cfg_root))
+        buckets = print_object_audit(rows, extra_secs, emitted, order_ok, entry)
+        report["objectAudit"] = {
+            "counts": dict(buckets), "orderOk": order_ok,
+            "nonLicensed": [r for r in rows if r["verdict"] != "LICENSED"],
+            "unlicensedSections": [{"name": s["name"], "size": s["size"]}
+                                   for s in extra_secs],
+        }
+        homeless_strong = [r for r in rows
+                           if r["verdict"] == "HOMELESS" and r["bind"] == "STB_GLOBAL"]
+        if buckets["COLLIDES-GAP"]:
+            print(f"      PREDICTION: mwldarm will abort with {buckets['COLLIDES-GAP']} "
+                  f"multiply-defined symbol(s). Running the link anyway so the verdict is "
+                  f"measured rather than asserted.")
+        if homeless_strong:
+            print(f"      PREDICTION: {len(homeless_strong)} STB_GLOBAL symbol(s) with no "
+                  f"licensed address ("
+                  f"{', '.join(r['name'] + ' ' + hex(r['size']) for r in homeless_strong)}"
+                  f") cannot be deadstripped under `-nodead`, so they take space inside "
+                  f"the TU's own linked contribution.")
+        if not order_ok:
+            print("      PREDICTION: the licensed functions are NOT emitted in ROM address "
+                  "order, so the linked range cannot reproduce even if everything above "
+                  "were resolved.")
+
+    # -------------------------------------------------------------------------- link
+    print("[5/8] mwldarm (scratch module link)")
+    ok, out, dt = _run_dsd([*RB.launcher(), str(RB.MW / RB.LD_VERSION / "mwldarm.exe"),
+                            *RB.LDFLAGS.split(), f"@{scratch / 'objects.txt'}",
+                            str(scratch / "arm9.lcf"), "-o", str(scratch / "final_link.o")],
+                           "mwldarm")
+    report["phases"]["link"] = {"ok": ok, "seconds": round(dt, 1)}
+    if not ok:
+        print(f"      LINK FAILED ({dt:.1f}s):")
+        print(out[:4000])
+        report["phases"]["link"]["output"] = out[:4000]
+        report["result"] = "link-failed"
+        _write_link_report(scratch, report)
+        _record_linkcheck(data, entry, report, baseline)
+        return 1
+    print(f"      ok ({dt:.1f}s) -> {(scratch / 'final_link.o').relative_to(REPO).as_posix()}")
+
+    stray = sorted(p.name for p in (REPO / "build").glob("*.bin"))
+    if stray:
+        print(f"      !! module images appeared at build/*.bin: {stray} -- the scratch "
+              f"redirection leaked; investigate before trusting this run")
+        report["strayOutputs"] = stray
+
+    # ------------------------------------------------------- linked-range comparison
+    print("[6/8] linked range + module byte comparison")
+    mdir = module_dir_in(cfg_root, module)
+    built_p, retail_p = RBC.module_binaries(mdir, cfg_root, scratch / "build")
+    range_ok = True
+    if not built_p or not built_p.is_file():
+        print(f"      no built module image at {built_p}")
+        range_ok = False
+    else:
+        built, retail = built_p.read_bytes(), retail_p.read_bytes()
+        base = module_base(mdir / "delinks.txt")
+        print(f"      module {module}: built {len(built)} bytes, retail {len(retail)} bytes, "
+              f"base 0x{base:08x}")
+        if not baseline:
+            range_ok, ndiff, first = compare_range(built, retail, base, span_start,
+                                                   span_end, f"TU range {tu_id}")
+            report["tuRange"] = {"start": f"0x{span_start:08x}", "end": f"0x{span_end:08x}",
+                                 "differingBytes": ndiff,
+                                 "firstDiff": f"0x{first:08x}" if first else None}
+            print("      per-declared-function, inside the linked range:")
+            for f in sorted(entry["functions"], key=lambda x: int(x["address"], 16)):
+                a, s = int(f["address"], 16), int(f["size"], 16)
+                lo, hi = a - base, a - base + s
+                nd = sum(1 for x, y in zip(built[lo:hi], retail[lo:hi]) if x != y) \
+                    if 0 <= lo and hi <= min(len(built), len(retail)) else s
+                print(f"        {'MATCH' if nd == 0 else 'DIFF '}  {f['symbol']:52} "
+                      f"0x{a:08x} size 0x{s:03x}"
+                      f"{'' if nd == 0 else f'  {nd} byte(s) differ'}")
+
+    analysis = RBC.analyze(cfg_root, "stock", scratch / "build")
+    RBC.print_report(analysis)
+    report["analysis"] = {k: analysis[k] for k in
+                          ("passed", "moduleFidelity", "sourceBuild", "missingModuleBinaries")}
+    report["analysis"]["failures"] = analysis["failures"][:40]
+    bad_modules = [m["module"] for m in analysis["moduleFidelity"]["results"] if not m["exact"]]
+    if bad_modules:
+        print(f"      modules NOT byte-exact: {bad_modules}")
+
+    ok, out, dt = _run_dsd([str(RB.DSD), "check", "modules", "-c",
+                            str(profile["configYaml"]), "-f"], "dsd check modules")
+    report["phases"]["checkModules"] = {"ok": ok, "seconds": round(dt, 1)}
+    print(f"      dsd check modules --fail: {'PASS' if ok else 'FAIL'}")
+    if not ok:
+        print("      " + "\n      ".join(out.splitlines()[-12:]))
+
+    # -------------------------------------------------------------- dsd check symbols
+    print("[7/8] dsd check symbols --fail")
+    ok, out, dt = _run_dsd([str(RB.DSD), "check", "symbols", "-c", str(profile["configYaml"]),
+                            "-e", str(scratch / "final_link.o"), "-f", "-m", "12"],
+                           "dsd check symbols")
+    errors = sorted({l.strip() for l in out.splitlines() if "[ERROR]" in l})
+    report["phases"]["checkSymbols"] = {"ok": ok, "seconds": round(dt, 1),
+                                        "errors": errors, "output": out[-4000:]}
+    print(f"      {'PASS' if ok else 'FAIL'} ({dt:.1f}s), {len(errors)} error line(s)")
+    tail = [l for l in out.splitlines() if l.strip()]
+    for line in tail[-25:]:
+        print(f"      | {line}")
+    symbols_ok = ok
+    # rombuild.py has never run this check, and the baseline control shows why: it does
+    # not pass on an untouched tree. So the gate that can mean something for a TU is
+    # "no error this run that the baseline did not already have" -- the same
+    # reproduce-on-main discipline notes/stale-baseline-gates.md insists on.
+    base_errors, symbols_new = None, None
+    if not baseline:
+        base = BASELINE_LINK / "linkcheck.json"
+        if base.is_file():
+            try:
+                base_errors = json.loads(base.read_text(encoding="utf-8")) \
+                    ["phases"]["checkSymbols"]["errors"]
+            except (ValueError, KeyError, TypeError):
+                base_errors = None
+        if base_errors is None:
+            print("      no baseline symbol-check artefact at "
+                  f"{base.relative_to(REPO).as_posix()}; run `linkcheck --baseline` first "
+                  f"or this check cannot distinguish a pre-existing failure from yours")
+        else:
+            symbols_new = [e for e in errors if e not in set(base_errors)]
+            gone = [e for e in base_errors if e not in set(errors)]
+            print(f"      vs baseline ({len(base_errors)} pre-existing error line(s)): "
+                  f"{len(symbols_new)} NEW, {len(gone)} resolved")
+            for e in symbols_new[:15]:
+                print(f"      NEW | {e}")
+    report["symbolsNew"] = symbols_new
+
+    # ------------------------------------------------------------------- ROM build
+    module_ok = bool(analysis["passed"]) and range_ok and not bad_modules
+    rom_ok = None
+    if args.no_rom:
+        print("[8/8] full ROM build skipped (--no-rom)")
+    elif not module_ok:
+        print("[8/8] full ROM build skipped -- the module did not pass (plan sec 7.6 runs "
+              "it only 'when the module passes')")
+    else:
+        print("[8/8] dsd rom config + rom build")
+        rom_out = scratch / "sm64ds-tu.nds"
+        ok, out, dt = _run_dsd([str(RB.DSD), "rom", "config", "--elf",
+                                str(scratch / "final_link.o"), "--config",
+                                str(profile["configYaml"])], "dsd rom config")
+        if ok:
+            ok, out, dt2 = _run_dsd([str(RB.DSD), "rom", "build", "--config",
+                                     str(scratch / "build" / "rom_config.yaml"),
+                                     "--rom", str(rom_out)], "dsd rom build",
+                                    quiet_patterns=("Compressing arm9 overlay",))
+            dt += dt2
+        rom_ok = ok
+        report["phases"]["rom"] = {"ok": ok, "seconds": round(dt, 1)}
+        if ok and rom_out.is_file():
+            digest = hashlib.sha256(rom_out.read_bytes()).hexdigest()
+            print(f"      ok ({dt:.1f}s) -> {rom_out.relative_to(REPO).as_posix()}  "
+                  f"{rom_out.stat().st_size} bytes  sha256 {digest}")
+            report["rom"] = {"bytes": rom_out.stat().st_size, "sha256": digest}
+            stock = REPO / "build" / "sm64ds.nds"
+            if stock.is_file():
+                same = hashlib.sha256(stock.read_bytes()).hexdigest() == digest
+                print(f"      vs this tree's last stock build/sm64ds.nds: "
+                      f"{'IDENTICAL' if same else 'DIFFERS'}")
+                report["rom"]["matchesStockRom"] = same
+        else:
+            print(f"      FAILED ({dt:.1f}s)")
+            print("      " + "\n      ".join(out.splitlines()[-15:]))
+
+    # ------------------------------------------------------------------------ verdict
+    if baseline:
+        symbols_verdict = symbols_ok
+    elif symbols_new is not None:
+        symbols_verdict = not symbols_new
+    else:
+        symbols_verdict = symbols_ok
+    verified = bool(module_ok and symbols_verdict and (rom_ok is not False))
+    report["result"] = "link-verified" if verified else "failed"
+    print()
+    if baseline:
+        print(f"BASELINE CONTROL: modules {'PASS' if module_ok else 'FAIL'}, "
+              f"dsd check symbols --fail {'PASS' if symbols_ok else 'FAIL'}, "
+              f"ROM {'built' if rom_ok else 'not built' if rom_ok is False else 'skipped'}.")
+        print("This is the same scratch pipeline with NO TU substitution: anything failing "
+              "here is pre-existing and belongs to the tree, not to any TU.")
+    elif verified:
+        if symbols_ok:
+            sym_phrase = "dsd check symbols --fail passes"
+        elif symbols_new is not None:
+            sym_phrase = (f"dsd check symbols --fail still FAILS on {len(errors)} "
+                          f"pre-existing error(s) that the baseline control also has "
+                          f"(0 new, so not attributable to this TU -- but the check is "
+                          f"NOT green and cannot be reported as such)")
+        else:
+            sym_phrase = "dsd check symbols --fail FAILED with no baseline to compare to"
+        print(f"Result: LINK-VERIFIED. The whole {tu_id} .text range "
+              f"0x{span_start:08x}..0x{span_end:08x} reproduces from one object, every "
+              f"module is byte-exact, {sym_phrase}"
+              f"{', and the full ROM builds' if rom_ok else ''}.")
+    else:
+        print("Result: NOT link-verified (see the phases above).")
+    _write_link_report(scratch, report)
+    _record_linkcheck(data, entry, report, baseline)
+    return 0 if verified else 1
+
+
+def _write_link_report(scratch, report):
+    path = scratch / "linkcheck.json"
+    path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n")
+    print(f"report -> {path.relative_to(REPO).as_posix()} (gitignored)")
+
+
+def _record_linkcheck(data, entry, report, baseline):
+    """Record the run on the manifest entry. Promotes shadow->link-verified on a pass;
+    NEVER downgrades an earned status on a failure -- a linkcheck failure says nothing
+    about whether the text-only result still holds, and pilot #1's report predicted its
+    own linkcheck failure while its 7/7 text result stood."""
+    if baseline or entry is None:
+        return
+    audit = report.get("objectAudit") or {}
+    entry.setdefault("verification", {})["linkcheck"] = {
+        "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, "
+                 "mwldarm link, linked-range and module byte comparison, dsd check symbols "
+                 "--fail, full ROM build",
+        "result": report["result"],
+        "scratch": report["scratch"] + " (gitignored)",
+        "phases": {k: v.get("ok") for k, v in report["phases"].items()},
+        "tuRange": report.get("tuRange"),
+        "objectAudit": {
+            "counts": audit.get("counts"),
+            "emittedTextOrderIsRomAscending": audit.get("orderOk"),
+            "nonLicensedSymbols": [
+                f"{r['verdict']} {r['name']} {r['bind']} {r['section']} size=0x{r['size']:x}"
+                + (f" already at {', '.join(r['homes'])}" if r["homes"] else "")
+                for r in audit.get("nonLicensed", [])],
+            "unlicensedSections": audit.get("unlicensedSections"),
+        },
+        "symbolCheckNewVsBaseline": report.get("symbolsNew"),
+        "linkerOutput": report["phases"].get("link", {}).get("output"),
+    }
+    if report["result"] == "link-verified" and entry.get("status") == "text-verified":
+        entry["status"] = "link-verified"
+    save_manifest(data)
+
+
+# ==================================================================== `promote --dry-run`
+
+# Tracked files a promotion may have to follow, checked for both the legacy source
+# PATHS and their file STEMS. Scanned rather than assumed, and split by what a hit
+# MEANS: a live-state file has to be edited so the gate keyed on it keeps working,
+# while the two provenance logs are address-keyed history whose records must survive
+# a promotion with only their `srcPath` field retargeted (tools/cpp_rename.py does
+# exactly that for renames) -- deleting a record would erase who matched a function.
+_PROMOTE_TRACKERS_LIVE = (
+    "config/rombuild-versions.txt", "config/rombuild-exclude.txt",
+    "config/layout-known-issues.txt", "config/converted-baseline.json",
+    "config/unresolved-baseline.json", "config/port_linkage.json",
+    "attribution.json", "contributions.json", "langmode-baseline.json",
+    "stranding-baseline.json", "CLAIMS.md",
+)
+_PROMOTE_TRACKERS_HISTORY = (
+    "config/match_provenance.jsonl", "config/match_attempts.jsonl",
+)
 
 
 def cmd_promote(args):
-    print("tools/tubuild.py promote: NOT YET IMPLEMENTED "
-         "(plan sec 7.7 -- a later phase; requires linkcheck first).")
-    return 2
+    if not args.dry_run:
+        print("tools/tubuild.py promote: only --dry-run is implemented.\n"
+              "The mutating path deletes enrolled src/ files and edits tracked\n"
+              "config/**/delinks.txt, which plan sec 7.7 requires to be an explicit,\n"
+              "reviewable change; it is deliberately not available yet. Re-run with\n"
+              "--dry-run to see exactly what it would do.")
+        return 2
+
+    data = load_manifest()
+    entry = manifest_entry(data, args.id)
+    if entry is None:
+        raise SystemExit(f"no manifest entry for {args.id!r}")
+
+    status = entry.get("status")
+    ok_status = status in ("link-verified", "data-verified")
+    module = entry["module"]
+    src = REPO / entry["source"]
+    dest_rel = entry.get("promoted_source")
+    dest = REPO / dest_rel if dest_rel else None
+    text_secs = [s for s in entry.get("sections", []) if s["name"] == ".text"]
+    span = (int(text_secs[0]["start"], 16), int(text_secs[0]["end"], 16)) if text_secs else None
+    legacy = [f["legacy_source"] for f in entry["functions"]]
+
+    print(f"=== tubuild promote --dry-run {entry['id']} ===")
+    print("NOTHING IS WRITTEN BY THIS COMMAND.\n")
+    print(f"manifest status        : {status}"
+          f"{'' if ok_status else '   <<< promotion would be REFUSED (plan sec 7.7 requires link-verified or better)'}")
+    print(f"module                 : {module}")
+    if span:
+        print(f"licensed .text         : 0x{span[0]:08x}..0x{span[1]:08x} "
+              f"({span[1] - span[0]} bytes, {len(entry['functions'])} function(s))")
+
+    print("\n-- 1. move the shadow source to its permanent path")
+    print(f"   git mv {entry['source']}  ->  {dest_rel}")
+    print(f"      source exists       : {src.is_file()}")
+    if dest is not None:
+        print(f"      destination exists  : {dest.is_file()}"
+              f"{'   <<< COLLISION' if dest.is_file() else ''}")
+        print(f"      destination dir     : {dest.parent.relative_to(REPO).as_posix()}"
+              f"{'  (exists)' if dest.parent.is_dir() else '  (WOULD BE CREATED -- new src/ subdirectory)'}")
+        stem = dest.stem
+        others = [p.relative_to(REPO).as_posix() for p in SP.iter_sources()
+                  if p.stem == stem and p != dest]
+        print(f"      layout_check L2 (stem {stem!r} unique under src/): "
+              f"{'OK' if not others else 'VIOLATION ' + str(others)}")
+        cls = SP.class_of(stem)
+        print(f"      layout_check L4 (srcpath.class_of({stem!r}) = {cls!r}): "
+              f"{'not a class-named stem, no split-class risk' if cls is None else 'check other homes for ' + cls}")
+
+    print(f"\n-- 2. delete the {len(legacy)} superseded one-function source(s)")
+    for rel in legacy:
+        p = REPO / rel
+        print(f"   git rm {rel}"
+              f"{'' if p.is_file() else '   <<< ALREADY ABSENT'}")
+
+    print(f"\n-- 3. edit config/arm9/{'overlays/' + module if module.startswith('ov') else module}/delinks.txt")
+    dl = module_dir_in(CFG_ARM9, module) / "delinks.txt"
+    print(f"   file: {dl.relative_to(REPO).as_posix()}")
+    if span:
+        _, entries = parse_delinks_file(dl)
+        inside = []
+        for rel, body in entries:
+            secs = entry_sections(body)
+            if secs and span[0] <= min(s[1] for s in secs) < span[1]:
+                inside.append((rel, secs, entry_is_complete(body)))
+        print(f"   REMOVE {len(inside)} entr(y/ies):")
+        for rel, secs, comp in inside:
+            rng = ", ".join(f"{n} 0x{a:08x}..0x{b:08x}" for n, a, b in secs)
+            print(f"     - {rel}   [{rng}]{'  complete' if comp else '  (NOT complete)'}")
+        print("   INSERT 1 entry in their place:")
+        print(f"     + {dest_rel}:")
+        print("     +     complete")
+        print(f"     +     .text start:0x{span[0]:08x} end:0x{span[1]:08x}")
+        stale = [rel for rel, _s, _c in inside if rel not in legacy]
+        missing = [rel for rel in legacy if rel not in {r for r, _s, _c in inside}]
+        if stale or missing:
+            print(f"   !! manifest/delinks disagreement: extra={stale} missing={missing}")
+
+    print("\n-- 4. source-path indexes and tracked ledgers")
+    print("   tools/srcpath.py: no edit needed (it rglobs src/, so the moved file is found"
+          " automatically and the deleted stems simply stop resolving).")
+    print(f"   CONSEQUENCE, not a file edit: srcpath.path_for() stops resolving "
+          f"{len(legacy)} symbol(s), so tools/enroll.py + tools/eligible.py stop counting "
+          f"them as individually eligible. rombuild_check's `complete` entry count drops "
+          f"by {len(legacy) - 1} while sourceBytes is unchanged -- plan sec 13 item 7 is "
+          f"about BYTES and is satisfied, but any function-count metric moves.")
+    stems = [pathlib.PurePosixPath(l).stem for l in legacy]
+
+    def scan(group):
+        out = []
+        for rel in group:
+            p = REPO / rel
+            if not p.is_file():
+                continue
+            text = p.read_text(encoding="utf-8", errors="ignore")
+            found = [l for l in legacy if l in text]
+            found_stems = [s for s in stems if s in text]
+            if found or found_stems:
+                out.append((rel, found, found_stems))
+        return out
+
+    live_hits = scan(_PROMOTE_TRACKERS_LIVE)
+    if live_hits:
+        for rel, found, found_stems in live_hits:
+            print(f"   EDIT {rel}: {len(found)} path reference(s), {len(found_stems)} stem "
+                  f"reference(s)")
+            for x in (found + found_stems)[:6]:
+                print(f"        {x}")
+    else:
+        print(f"   scanned {len(_PROMOTE_TRACKERS_LIVE)} tracked live-state ledger/baseline "
+              f"file(s) for the legacy paths and stems: no references, none needs editing.")
+    for rel, found, found_stems in scan(_PROMOTE_TRACKERS_HISTORY):
+        print(f"   RETARGET (do NOT delete records) {rel}: {len(found)} `srcPath` "
+              f"reference(s), {len(found_stems)} stem reference(s)")
+        for x in (found + found_stems)[:6]:
+            print(f"        {x}")
+    print("   port/: port/tools reads the ROM-build outputs and src/ by path; a new "
+          "src/ subdirectory may need adding to port/CMakeLists.txt's source globs "
+          "(not checked mechanically here).")
+
+    print("\n-- 4b. contributor attribution -- the structural cost of a promotion")
+    try:
+        import chaos_db_ci as CDB
+        owners = CDB.first_matchers()
+    except Exception as exc:                                     # noqa: BLE001
+        print(f"   could not run chaos_db_ci.first_matchers(): {exc}")
+        owners = None
+    if owners is not None:
+        by_author = collections.defaultdict(list)
+        for rel in legacy:
+            by_author[owners.get(rel, "(no lineage found)")].append(rel)
+        print(f"   the gate's own computation (chaos_db_ci.first_matchers, the same one "
+              f"tools/prepush_attribution.py runs) credits these {len(legacy)} files to "
+              f"{len(by_author)} contributor(s):")
+        for who, rels in sorted(by_author.items(), key=lambda kv: (-len(kv[1]), kv[0])):
+            print(f"     {who:20} {len(rels)} file(s)")
+        print(f"   A TU promotion is a {len(legacy)}-delete + 1-add collapse. Git can pair "
+              f"at most ONE delete with the add as a rename, and only if similarity "
+              f"survives; the other {len(legacy) - 1} lineages END, and the pusher becomes "
+              f"the owner of the merged file. This is NOT the rewrite-then-move hazard "
+              f"prepush_attribution.py documents, which a two-commit split fixes -- a "
+              f"many-to-one collapse has no commit arrangement that preserves N lineages, "
+              f"so `CREDIT LOST` is structural for this workstream and needs an explicit "
+              f"policy (an attribution.json override keyed on the surviving path, or the "
+              f"attribution-override label) BEFORE the first real promotion.")
+    print("   Related, and NOT triggered by this TU but by any key-function TU: dsd "
+          "derives vtable/typeinfo ownership from the mangled class name in the "
+          "delinks.txt PATH, so replacing src/_ZN<Class>D1Ev.cpp with src/<dir>/<Class>.cpp "
+          "changes that derivation (see notes/vtable-rename-must-move-atomically.md).")
+
+    print("\n-- 5. manifest")
+    print(f"   {MANIFEST.relative_to(REPO).as_posix()}: entry {entry['id']} "
+          f"status {status} -> promoted, source -> {dest_rel}")
+
+    print("\n-- 6. validation a real promotion would then run")
+    print("   python tools/layout_check.py")
+    print("   python tools/eligible.py            (expect the eligible NAME LIST to lose "
+          "the superseded stems; diff names, not counts)")
+    print("   python tools/rombuild.py            (module fidelity + source fidelity)")
+    print(f"   python tools/tubuild.py linkcheck {entry['id']}   (now against the real tree)")
+
+    print("\nDRY RUN COMPLETE -- no file was created, moved, deleted or edited.")
+    return 0 if ok_status else 1
 
 
 # =================================================================================== main
@@ -1297,12 +2197,26 @@ def main():
     p.add_argument("--version", default=None)
     p.set_defaults(func=cmd_verify)
 
-    p = sub.add_parser("linkcheck", help="NOT YET IMPLEMENTED (plan sec 7.6)")
+    p = sub.add_parser("linkcheck", help="scratch dsd delink/lcf + real mwldarm link, "
+                                         "linked-range/module comparison, dsd check "
+                                         "symbols --fail, ROM build (plan sec 7.6)")
     p.add_argument("id", nargs="?")
+    p.add_argument("--baseline", action="store_true",
+                   help="run the identical scratch pipeline with NO TU substitution -- the "
+                        "control that says whether a failure belongs to the TU or the harness")
+    p.add_argument("--module", default=None, help="module for --baseline without an id")
+    p.add_argument("-j", "--jobs", type=int, default=RB.default_jobs())
+    p.add_argument("--no-cache", action="store_true",
+                   help="compile every enrolled file instead of reusing build/objcache hits")
+    p.add_argument("--no-rom", action="store_true", help="stop after the module comparison")
+    p.add_argument("--clean", action="store_true",
+                   help="delete this TU's scratch tree before running")
     p.set_defaults(func=cmd_linkcheck)
 
-    p = sub.add_parser("promote", help="NOT YET IMPLEMENTED (plan sec 7.7)")
-    p.add_argument("id", nargs="?")
+    p = sub.add_parser("promote", help="plan sec 7.7 -- only --dry-run is implemented")
+    p.add_argument("id")
+    p.add_argument("--dry-run", action="store_true",
+                   help="print every planned file move/deletion and config edit, and exit")
     p.set_defaults(func=cmd_promote)
 
     args = ap.parse_args()

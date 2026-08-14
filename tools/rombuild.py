@@ -162,12 +162,21 @@ def run(cmd, what, quiet_patterns=()):
     return out
 
 
-def enrolled(config_root=CONFIG_ROOT):
+def enrolled(config_root=CONFIG_ROOT, extra_roots=()):
     """Every `src/` file carved out by a `complete` file entry in a delinks.txt.
 
     A file entry is an unindented path ending in ':'; the indented lines that follow
     hold `complete` and its section ranges. Without `complete`, dsd supplies the range
     from ROM bytes instead, so the file is configured but not yet source-built.
+
+    `extra_roots` widens the set of allowed top-level source directories beyond
+    `src/` and `mods/`, for a caller that has deliberately generated a scratch
+    delinks tree naming sources elsewhere -- `tools/tubuild.py linkcheck` passes
+    ("src_tu",) so a shadow TU can be linked without ever being written into the
+    tracked config. It defaults to empty, so the production build's allowlist is
+    unchanged and a tracked delinks.txt naming anything but src/ or mods/ still
+    fails exactly as before. Every other safety check (no absolute path, no `..`,
+    no escape from the repository, no symlink anywhere on the path) still applies.
     """
     files, path, saw_complete = [], None, False
     for delinks in sorted(pathlib.Path(config_root).rglob("delinks.txt")):
@@ -188,7 +197,7 @@ def enrolled(config_root=CONFIG_ROOT):
     for rel in sorted(set(files)):
         pure = pathlib.PurePosixPath(rel.replace("\\", "/"))
         if (pure.is_absolute() or ".." in pure.parts or len(pure.parts) < 2
-                or pure.parts[0] not in ("src", "mods")
+                or pure.parts[0] not in ("src", "mods", *extra_roots)
                 or pure.suffix not in (".c", ".cpp")):
             raise BuildError("profile", 1, f"unsafe complete delinks source path: {rel}")
         raw_target = REPO / pathlib.Path(*pure.parts)
@@ -317,16 +326,20 @@ def retarget_text_section(obj, section=".init"):
     return False
 
 
-def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None):
+def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_root=None):
     """Compile one enrolled source file to the object path dsd's objects.txt names.
 
     Returns (rel, error-or-None, outcome), where outcome is how the object was
     obtained: "hit" straight from the cache, "miss" compiled and stored,
     "uncacheable" compiled but not storable, "error" failed to compile. See
     rombuild_cache for why a hit reproduces the compile exactly.
+
+    `build_root` must match the config's `build_path`, because that is what dsd's
+    generated objects.txt names -- it defaults to this repository's `build/`, the
+    only value the production build ever uses.
     """
     src = REPO / rel
-    obj = BUILD / pathlib.Path(rel).with_suffix(".o")
+    obj = (pathlib.Path(build_root) if build_root else BUILD) / pathlib.Path(rel).with_suffix(".o")
     obj.parent.mkdir(parents=True, exist_ok=True)
     version = (vers or {}).get(pathlib.Path(rel).stem, VERSION)
     flags = CFLAGS

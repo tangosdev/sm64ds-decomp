@@ -33,13 +33,29 @@ class ProfileError(RuntimeError):
     pass
 
 
-def _rewrite_config_paths(path, source_root, generated_root):
-    """Retarget paths that were relative to config/arm9 to the generated tree."""
+def _rewrite_config_paths(path, source_root, generated_root,
+                          source_build=None, target_build=None):
+    """Retarget paths that were relative to config/arm9 to the generated tree.
+
+    ``source_build``/``target_build`` additionally re-root every path that pointed
+    inside the repository's ``build/`` at a different build directory, so a caller
+    can run a completely isolated link whose delink objects, module images, linker
+    script and object list never touch the shared ``build/`` outputs.  Both default
+    to None, which leaves the current behaviour (targets preserved, only the
+    relative spelling changes) exactly as it was.
+    """
     lines = []
     for line in path.read_text(encoding="utf-8").splitlines():
         m = PATH_LINE.match(line)
         if m and m.group(2).startswith("."):
             target = (source_root / m.group(2)).resolve()
+            if source_build is not None and target_build is not None:
+                try:
+                    inner = target.relative_to(pathlib.Path(source_build).resolve())
+                except ValueError:
+                    pass
+                else:
+                    target = (pathlib.Path(target_build).resolve() / inner)
             rel = pathlib.Path(os.path.relpath(target, generated_root)).as_posix()
             line = f"{m.group(1)}{rel}{m.group(3)}"
         lines.append(line)
@@ -126,31 +142,43 @@ def _stock_delinks(generated_root, repo):
     return replacements, gap_fallbacks
 
 
-def prepare_profile(profile="stock", repo=REPO, source_config=SOURCE_CONFIG, build=BUILD):
+def prepare_profile(profile="stock", repo=REPO, source_config=SOURCE_CONFIG, build=BUILD,
+                    out_root=None, build_root=None):
     """Return metadata for a fresh generated build profile.
 
     ``configYaml`` and ``configRoot`` are pathlib paths.  The remaining fields are JSON
     serializable and are also written beside the generated config for diagnostics.
+
+    ``out_root`` places the generated config tree somewhere other than
+    ``build/rombuild-config/<profile>/``, and ``build_root`` re-roots everything the
+    build writes (delink objects, module images, linker script, object list) under a
+    different directory.  Both default to None, reproducing the shared-``build/``
+    layout rombuild.py has always used; ``tools/tubuild.py linkcheck`` sets them so a
+    scratch link cannot disturb the real build's outputs.
     """
     if profile not in PROFILES:
         raise ProfileError(f"unknown ROM-build profile {profile!r}; choose from {PROFILES}")
     repo = pathlib.Path(repo).resolve()
     source_config = pathlib.Path(source_config).resolve()
     build = pathlib.Path(build).resolve()
+    effective_build = pathlib.Path(build_root).resolve() if build_root else build
     if not (source_config / "config.yaml").is_file():
         raise ProfileError(f"missing source config: {source_config / 'config.yaml'}")
     symlinks = [p for p in source_config.rglob("*") if p.is_symlink()]
     if symlinks:
         raise ProfileError(f"config tree contains a symlink: {symlinks[0]}")
 
-    generated_root = build / "rombuild-config" / profile / "arm9"
-    profile_parent = generated_root.parent
+    profile_parent = (pathlib.Path(out_root).resolve() if out_root
+                      else build / "rombuild-config" / profile)
+    generated_root = profile_parent / "arm9"
     if profile_parent.exists():
         shutil.rmtree(profile_parent)
     generated_root.parent.mkdir(parents=True, exist_ok=True)
     shutil.copytree(source_config, generated_root)
-    _rewrite_config_paths(generated_root / "config.yaml", source_config, generated_root)
-    _validate_generated_config(generated_root / "config.yaml", generated_root, repo, build)
+    _rewrite_config_paths(generated_root / "config.yaml", source_config, generated_root,
+                          source_build=build, target_build=effective_build)
+    _validate_generated_config(generated_root / "config.yaml", generated_root, repo,
+                               effective_build)
     replacements, gap_fallbacks = (_stock_delinks(generated_root, repo)
                                    if profile == "stock" else ([], []))
 
@@ -160,6 +188,7 @@ def prepare_profile(profile="stock", repo=REPO, source_config=SOURCE_CONFIG, bui
         "generated": True,
         "configRoot": generated_root,
         "configYaml": generated_root / "config.yaml",
+        "buildRoot": effective_build,
         "modReplacements": replacements,
         "modGapFallbacks": gap_fallbacks,
     }

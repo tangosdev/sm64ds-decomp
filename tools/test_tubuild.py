@@ -182,11 +182,79 @@ def test_compile_report_matches_the_pilots_object_inventory():
 
 # ------------------------------------------------------------------------------ CLI
 
-def test_linkcheck_and_promote_are_clearly_stubbed_not_silently_missing():
-    for cmd in ("linkcheck", "promote"):
-        code, out = _run(cmd, "ov045/PoleLift")
-        assert code != 0
-        assert "NOT YET IMPLEMENTED" in out
+def test_promote_refuses_to_mutate_without_dry_run():
+    """The mutating half of `promote` deletes enrolled src/ files and edits tracked
+    delinks.txt. Until that lands it must refuse loudly, not half-execute."""
+    code, out = _run("promote", "ov045/PoleLift")
+    assert code != 0
+    assert "only --dry-run is implemented" in out
+
+
+def test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explains():
+    """plan sec 7.7: promotion is refused unless every required gate is green -- and
+    the dry run still has to PRINT the plan, because seeing what a promotion would do
+    is the point of a dry run even when it would be refused."""
+    code, out = _run("promote", "ov045/PoleLift", "--dry-run")
+    assert code != 0, "text-verified is not enough to promote"
+    assert "promotion would be REFUSED" in out
+    assert "git mv src_tu/actors/PoleLift.cpp" in out
+    assert "git rm src/_ZN8PoleLift6RenderEv.cpp" in out
+    assert "NOTHING IS WRITTEN BY THIS COMMAND" in out
+    assert "DRY RUN COMPLETE" in out
+    assert (REPO / "src_tu" / "actors" / "PoleLift.cpp").is_file()
+    assert (REPO / "src" / "_ZN8PoleLift6RenderEv.cpp").is_file()
+
+
+def test_linkcheck_refuses_a_tu_whose_legacy_entries_are_not_complete():
+    """ov045/FallBlockBfs is text-verified but NONE of its five delinks entries carries
+    `complete`, so dsd serves that whole range from ROM bytes today. Substituting a TU
+    there would enroll five ranges and consolidate them in one step, and a green result
+    would not say which change earned it. This must refuse before it links -- and it is
+    the cheap half of linkcheck, so it is the part a test suite can afford to run."""
+    code, out = _run("linkcheck", "ov045/FallBlockBfs", timeout=600)
+    assert code != 0
+    assert "REFUSED" in out
+    assert "NOT `complete` today" in out
+
+
+def test_splice_refuses_a_span_it_cannot_tile_exactly():
+    """The substitution is silent when wrong: dsd fills any range it has no object for
+    with retail ROM bytes, so an off-by-one span still links and still compares green
+    while contributing nothing. Checked on a scratch COPY of a real delinks.txt."""
+    import json
+    sys.path.insert(0, str(TOOLS))
+    import tubuild as T
+
+    manifest = json.loads((REPO / "config" / "tu_manifest.json").read_text(encoding="utf-8"))
+    entry = next(e for e in manifest["entries"] if e["id"] == "ov002/LevelObjects")
+    sec = next(s for s in entry["sections"] if s["name"] == ".text")
+    start, end = int(sec["start"], 16), int(sec["end"], 16)
+    legacy = [f["legacy_source"] for f in entry["functions"]]
+    real = REPO / "config" / "arm9" / "overlays" / "ov002" / "delinks.txt"
+
+    with tempfile.TemporaryDirectory() as td:
+        good = pathlib.Path(td) / "good.txt"
+        shutil.copyfile(real, good)
+        replaced, reasons = T.splice_tu_entry(good, start, end, entry["source"], legacy)
+        assert reasons == [], reasons
+        assert len(replaced) == len(legacy)
+        assert f"{entry['source']}:" in good.read_text(encoding="utf-8")
+
+        # End four bytes short: the last function is now half in, half out.
+        short = pathlib.Path(td) / "short.txt"
+        shutil.copyfile(real, short)
+        replaced, reasons = T.splice_tu_entry(short, start, end - 4, entry["source"], legacy)
+        assert replaced is None and reasons
+        assert short.read_bytes() == real.read_bytes(), "a refusal must not edit the file"
+
+        # Right span, but the manifest claims a function the span does not hold.
+        wrong = pathlib.Path(td) / "wrong.txt"
+        shutil.copyfile(real, wrong)
+        replaced, reasons = T.splice_tu_entry(wrong, start, end, entry["source"],
+                                              legacy + ["src/not_in_this_tu.cpp"])
+        assert replaced is None
+        assert any("not a delinks entry inside the span" in r for r in reasons), reasons
+        assert wrong.read_bytes() == real.read_bytes()
 
 
 def test_unknown_id_fails_closed_with_a_clear_reason():

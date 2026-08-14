@@ -47,16 +47,29 @@ def module_label(d, config_root):
     return rel
 
 
-def module_binaries(d, config_root=CONFIG):
-    """(built, retail) binary paths for a module config directory."""
+def module_binaries(d, config_root=CONFIG, build_root=None):
+    """(built, retail) binary paths for a module config directory.
+
+    `build_root` is where the link deposited its module images -- `build/build/`
+    for the production build, and a scratch directory for an isolated link such as
+    `tools/tubuild.py linkcheck`'s. The retail side always comes from `extracted/`.
+
+    None means "this module's BUILD", resolved at CALL time and deliberately not as a
+    default argument value: tools/test_rombuild_check.py rebinds `RBC.BUILD` to a
+    temporary directory in setUp, and a default bound at def time would freeze the
+    real one and silently compare the tests' fake config against this repository's
+    actual module images.
+    """
+    build_root = pathlib.Path(build_root) if build_root is not None else BUILD
     rel = _arm9_relative(d, config_root)
     if rel == ".":
-        return BUILD / "arm9.bin", EXTRACTED / "arm9" / "arm9.bin"
+        return build_root / "arm9.bin", EXTRACTED / "arm9" / "arm9.bin"
     if rel in ("itcm", "dtcm"):
-        return BUILD / f"{rel}.bin", EXTRACTED / "arm9" / f"{rel}.bin"
+        return build_root / f"{rel}.bin", EXTRACTED / "arm9" / f"{rel}.bin"
     m = re.fullmatch(r"overlays/(ov\d+)", rel)
     if m:
-        return BUILD / f"arm9_{m.group(1)}.bin", EXTRACTED / "arm9_overlays" / f"{m.group(1)}.bin"
+        return (build_root / f"arm9_{m.group(1)}.bin",
+                EXTRACTED / "arm9_overlays" / f"{m.group(1)}.bin")
     return None, None
 
 
@@ -116,8 +129,9 @@ def _diff_counts(built, retail, allowed=()):
     return differing + extra, unexpected + extra
 
 
-def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock"):
+def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock", build_root=None):
     config_root = pathlib.Path(config_root).resolve()
+    build_root = pathlib.Path(build_root) if build_root is not None else BUILD
     failures, intentional, module_results = [], [], []
     missing_bins = []
     per_module_bad = collections.Counter()
@@ -130,7 +144,7 @@ def analyze(config_root=DEFAULT_CONFIG_ROOT, profile="stock"):
         if not dl.is_file():
             continue
         entries = complete_entries(dl)
-        built_p, retail_p = module_binaries(d, config_root)
+        built_p, retail_p = module_binaries(d, config_root, build_root)
         label = module_label(d, config_root)
         if not built_p or not built_p.is_file() or not retail_p.is_file():
             missing_bins.append(label)
@@ -267,9 +281,11 @@ def main():
     ap.add_argument("--config-root", default=str(DEFAULT_CONFIG_ROOT),
                     help="ARM9 config directory used for the build")
     ap.add_argument("--profile", choices=("stock", "mods"), default="stock")
+    ap.add_argument("--build-root", default=None,
+                    help="where the link wrote its module images (default build/build)")
     ap.add_argument("--show", type=int, default=12)
     args = ap.parse_args()
-    report = analyze(args.config_root, args.profile)
+    report = analyze(args.config_root, args.profile, args.build_root)
     print_report(report, args.show)
     if args.out:
         pathlib.Path(args.out).write_text(
