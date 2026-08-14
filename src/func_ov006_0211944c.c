@@ -128,7 +128,7 @@ void func_ov006_0211944c(char *c, int mode)
         int *p = *(int **)(c + 0x4000 + 0x778);
         if (p != 0) {
             if (p != 0) {
-                *p = (int)data_ov006_0213ed74;
+                *p = (int)_ZTV19cMgSmartball_slot_c;
                 __destroy_arr((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
                 __destroy_arr((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
                 *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
