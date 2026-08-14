@@ -637,6 +637,28 @@ void *RedFlame_Spawn(void);                         /* ov002 0x020b59e0 (matched
 extern unsigned char Scuttlebug_SpawnInfo[];        /* ov071 0x02122c08, +4 reads 255 */
 void *Scuttlebug_Spawn(void);                       /* ov071 0x02120618 (matched src) */
 void hal_fill_scuttlebug_vtable(void);
+/* ---- run linkw wave 7, lane w7b: THE MR. I FAMILY, ov071's second cast ----
+   MR_I (262) and BIG_MR_I (263) are ONE class behind ONE vtable -- MrI_Spawn
+   and BigMrI_Spawn are the same 0x50-byte function twice, both `new(0x218)`
+   storing _ZTV3MrI, and MrI::InitResources tells the two apart by the actor's
+   own id (0x106 -> scale 0x1000, 0x107 -> 0x2000). So 263 is a FREE SHARE of
+   262's fill and carries a null filler in its row, the RED_FLAME shape.
+   MR_I_PROJECTILE (264) is the shot MrI's state 1 fires through
+   Actor::Spawn(0x108); it needs its own vtable and row or every shot would
+   meet the pre-spawn gate as an unregistered id.
+   ov071 was already mounted (gate 176); the fill is hal/actor_classes_ov071.cpp,
+   the closure slice_w7b.txt, the two per-frame state MAINs + the two PMF
+   dispatchers + the record seat + the slot-5 Render in port/unmatched/MrI_*.cpp.
+   Ids re-derived from ACTOR_SPAWN_TABLE + each record's +4 halfword, NOT from
+   port/ov071_syms.txt's header comment, which mis-attributes them to 198/199. */
+extern unsigned char MrI_SpawnInfo[];               /* ov071 0x02122cf0, +4 reads 262 */
+extern unsigned char BigMrI_SpawnInfo[];            /* ov071 0x02122d0c, +4 reads 263 */
+extern unsigned char MrI_Projectile_SpawnInfo[];    /* ov071 0x02122dc4, +4 reads 264 */
+void *MrI_Spawn(void);                              /* ov071 0x02121a1c (matched src) */
+void *BigMrI_Spawn(void);                           /* ov071 0x021219cc (matched src) */
+void *MrI_Projectile_Spawn(void);                   /* ov071 0x02121f9c (matched src) */
+void hal_fill_mri_vtable(void);
+void hal_fill_mri_projectile_vtable(void);
 /* ---- gate 177: ov064's first mount -- BULLY (215), BIG_BULLY (216),
    ROTATING_FIREBAR (81), Lethal Lava Land's no-PMF trio. The bullies'
    factories leave the vptr on the BASE table (VT1), so the registry rows
@@ -1256,6 +1278,13 @@ void hal_fill_path_lift_vtable(void);            /* fills data_ov100_0214857c, 3
     /* ---- gate 176: SCUTTLEBUG (255), ov071's first mount ---- */ \
     {255, "SCUTTLEBUG", Scuttlebug_SpawnInfo, Scuttlebug_Spawn, \
      hal_fill_scuttlebug_vtable}, \
+    /* ---- run linkw wave 7, lane w7b: the MR. I family (ov071) -- MR_I \
+       carries the fill, BIG_MR_I reuses it (one class, one vtable, the \
+       RED_FLAME shape), MR_I_PROJECTILE has its own ---- */ \
+    {262, "MR_I", MrI_SpawnInfo, MrI_Spawn, hal_fill_mri_vtable}, \
+    {263, "BIG_MR_I", BigMrI_SpawnInfo, BigMrI_Spawn, 0}, \
+    {264, "MR_I_PROJECTILE", MrI_Projectile_SpawnInfo, MrI_Projectile_Spawn, \
+     hal_fill_mri_projectile_vtable}, \
     /* ---- gate 177: ov064's Bully family + firebar (Lethal Lava Land) ---- */ \
     {215, "BULLY", Bully_SpawnInfo, port_factory_bully, hal_fill_bully_vtable}, \
     {216, "BIG_BULLY", BigBully_SpawnInfo, port_factory_big_bully, \

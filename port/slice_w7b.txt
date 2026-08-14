@@ -1,0 +1,91 @@
+# RUN LINKW WAVE 7, lane w7b: THE MR. I FAMILY out of ov071 -- MR_I (262) and
+# BIG_MR_I (263), which share ONE class and ONE vtable (_ZTV3MrI), plus
+# MR_I_PROJECTILE (264), the shot MrI state 1 fires.
+#
+# ov071 needs NO new mount: gate 176 (SCUTTLEBUG 255) stood the overlay up
+# per-symbol and wave 5 lane w5-A added COFFIN. This lane appends only two
+# .rodata pointer words to port/ov071_syms.txt (data_ov071_021226a0 and
+# data_ov071_021226a4:0x8, the SharedFilePtr pointer table MrI's InitResources
+# and CleanupResources index) -- every other datum the closure touches was
+# already mounted.
+#
+# WHY 264 IS IN THIS SLICE AND NOT A SEPARATE GATE: MrI's state 1 MAIN
+# (func_ov071_021211e0, 0x021213cc..0x021213d4) calls
+# Actor::Spawn(0x108, ...) -- 0x108 is 264. Registering 262/263 without 264
+# would hand the pre-spawn gate an unregistered id every time a Mr. I fires,
+# so the projectile is part of the family's closure, not an extra.
+#
+# EXCLUDED from the slice, host-copied in port/unmatched/:
+#   func_ov071_02120d30 -- MrI state 2 MAIN; NO src/ TU exists at all.
+#                          MrI_StateMains.cpp (0x3dc, verified copy)
+#   func_ov071_021211e0 -- MrI state 1 MAIN; NO src/ TU exists at all.
+#                          MrI_StateMains.cpp (0x314, verified copy)
+#   func_ov071_021215c0 -- the MAIN dispatcher; `c->pp + 1` is an mwcc 8-byte
+#                          PMF stride MSVC makes 4, so the host `+1` lands on
+#                          the delta word. MrI_StateDispatch.cpp
+#   func_ov071_021215fc -- the ENTER dispatcher, same wrong stride modelled.
+#                          MrI_StateDispatch.cpp
+#   _ZN3MrI6RenderEv    -- ModelAnim slot-5 collision (the Whomp/Fish/
+#                          Scuttlebug case): the matched TU dispatches slot 5
+#                          of a local six-virtual shadow, which is
+#                          ModelAnim::Render in ROM order but Virtual18 in the
+#                          host's MSVC-ordered _ZTV9ModelAnim. MrI_Render.cpp
+# EXCLUDED, host thunks in the fill (hal/actor_classes_ov071.cpp):
+#   _ZN3MrID1Ev            -- auto-emitted-member-dtor form, the flame/
+#                             Scuttlebug D1 treatment; the thunk runs the D0
+#                             chain minus the final Memory::Deallocate.
+#   _ZN14MrI_ProjectileD1Ev -- same form, same treatment.
+#
+# The two vtables _ZTV3MrI and _ZTV14MrI_Projectile stay OUT (host arrays the
+# registry fills, the ov095/ov080 rule). The state records __sinit_ov071_021228c8
+# builds carry DS code addresses; the seat over the SIX source PMFs
+# (data_ov071_02122ca8/cb0/cb8/cc0/cc8/cd0, all already mounted) rewrites them
+# to host bodies before that sinit copies them into data_ov071_02123088.
+#
+# ONE BODY IS NONMATCHING-BUT-DECOMPILED: src/_ZN3MrI13InitResourcesEv.c is
+# banked "NONMATCHING: constant / value (div=6). Logic verified correct vs ROM".
+# It is real behaviour rather than a stub, so it rides the slice; it also needs
+# LANGUAGE CXX (a //cpp marker over extern "C" blocks and reference params),
+# wired in port/CMakeLists.txt beside the gate-176 func_ov071_0211f7d4.c entry.
+#
+# Cross-overlay reach: ov002 only (the engine overlay, always mounted) --
+# data_ov002_0210da38, the blue-coin model SharedFilePtr MrI loads and releases.
+# Everything else the closure names is ov071's own or arm9, and every ov071
+# callee is in this file (checked by scanning the closure for func_ov071_*
+# references: the only two that resolve outside it are the two dispatchers
+# above, by design).
+
+# ---- MR_I / BIG_MR_I (262 / 263), one class ---------------------------------
+src/MrI_Spawn.c
+src/BigMrI_Spawn.c
+src/_ZN3MrID0Ev.c
+src/_ZN3MrI13InitResourcesEv.c
+src/_ZN3MrI16CleanupResourcesEv.cpp
+src/_ZN3MrI16OnPendingDestroyEv.c
+src/_ZN3MrI8BehaviorEv.cpp
+src/func_ov071_02121634.c
+src/func_ov071_0212070c.c
+src/func_ov071_02120860.cpp
+src/func_ov071_021209c8.cpp
+src/func_ov071_02120a20.c
+src/func_ov071_02120a48.cpp
+src/func_ov071_02120b14.cpp
+src/func_ov071_02120c90.cpp
+src/func_ov071_0212110c.c
+src/func_ov071_021214f4.c
+src/func_ov071_0212152c.c
+src/func_ov071_02121570.c
+
+# ---- MR_I_PROJECTILE (264) --------------------------------------------------
+src/MrI_Projectile_Spawn.c
+src/_ZN14MrI_ProjectileD0Ev.c
+src/_ZN14MrI_Projectile13InitResourcesEv.cpp
+src/_ZN14MrI_Projectile16CleanupResourcesEv.c
+src/_ZN14MrI_Projectile16OnPendingDestroyEv.c
+src/_ZN14MrI_Projectile6RenderEv.cpp
+src/_ZN14MrI_Projectile8BehaviorEv.cpp
+src/func_ov071_02121b00.c
+src/func_ov071_02121b08.c
+src/func_ov071_02121b50.c
+src/func_ov071_02121ba4.cpp
+src/func_ov071_02121c6c.cpp

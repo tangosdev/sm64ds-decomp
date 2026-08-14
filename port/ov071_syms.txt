@@ -76,3 +76,44 @@ data_ov071_021230e0 data_ov071_021230ec:0x14
 # readback in overlay_0071.bin: w0 = 0x02122670 = Coffin_Spawn, +4 reads 64.
 # Span 0x1c by the next symbol (data_ov071_02122ecc, the state table).
 Coffin_SpawnInfo
+
+# ---------------------------------------------------------------------------
+# run linkw wave 7 (lane w7b): THE MR. I FAMILY joins -- MR_I (262), BIG_MR_I
+# (263) and MR_I_PROJECTILE (264).
+#
+# THE HEADER COMMENT AT THE TOP OF THIS FILE IS WRONG about the ids and is left
+# in place only so this correction has something to point at. It says ov071
+# carries "MrI/BigMrI (198/199, the eyeball), MrI_Projectile (262?)". Re-derived
+# from the ROM by the double test the shared ov070/071/073/074 window makes
+# mandatory -- the spawnFunc must land INSIDE ov071 AND the record's +4 id
+# halfword must match -- the real map is:
+#
+#   id  spawn-table slot        SpawnInfo   word[0]                  +4 reads
+#   262 0x02090c7c -> 0x02122cf0 MrI        0x02121a1c MrI_Spawn          262
+#   263 0x02090c80 -> 0x02122d0c BigMrI     0x021219cc BigMrI_Spawn       263
+#   264 0x02090c84 -> 0x02122dc4 MrI_Proj   0x02121f9c MrI_Projectile_S.  264
+#
+# Ids 198 and 199 DO point at records inside this overlay's window, but their
+# word[0] spawnFuncs land OUTSIDE ov071 -- another module sharing the window,
+# which is precisely the trap the double test exists for.
+#
+# Each record is pinned to its real 0x1c. MrI_SpawnInfo would take 0x1c from the
+# next symbol anyway; the other two would take 0x24 (the next symbol is the
+# class's VTABLE, which is a HOST array deliberately left out of this mount) and
+# would over-size into a host/ROM gap -- the Scuttlebug_SpawnInfo lesson.
+MrI_SpawnInfo:0x1c
+BigMrI_SpawnInfo:0x1c
+MrI_Projectile_SpawnInfo:0x1c
+
+# The .rodata pointer table MrI's InitResources and CleanupResources index, the
+# only data this lane adds. .rodata is 0x021226a0..0x021226ac (3 words) and the
+# config names only the first two of them:
+#   021226a0 -> 0x02123048  the anim SharedFilePtr   (Animation::LoadFile)
+#   021226a4 -> 0x02123038  the texseq SharedFilePtr }  CleanupResources walks
+#   021226a8 -> 0x02123040  the texseq SharedFilePtr }  (&data..21226a4)[i], i<2
+# so data_ov071_021226a4 must carry BOTH words as one object -- it is indexed as
+# a two-element array by both methods. Its next-symbol delta would run to
+# 0x02122b30 (the .ctor section, past all four sinit bodies), so it is pinned to
+# its real 0x8. All three pointees (02123038/40/48) were already mounted above.
+data_ov071_021226a0
+data_ov071_021226a4:0x8

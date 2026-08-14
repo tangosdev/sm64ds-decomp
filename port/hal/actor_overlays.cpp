@@ -837,6 +837,7 @@ void __sinit_ov071_021228c8(void);
 void __sinit_ov071_02122a1c(void);
 void __sinit_ov071_02122a64(void);
 void port_scuttlebug_states_seat(void);
+void port_mri_states_seat(void);   /* wave 7 lane w7b, unmatched/MrI_StateDispatch.cpp */
 }
 
 /* ---- gate 177: ov064, Lethal Lava Land's actor overlay, first mount ----
@@ -1118,6 +1119,11 @@ extern "C" void port_actor_overlays_sinits(void)
     port_ov071_pack_check();
     port_ov071_syms_patch();
     port_scuttlebug_states_seat();
+    /* run linkw wave 7, lane w7b: the same order one class over. MrI's SIX
+       state SOURCE PMFs (data_ov071_02122ca8/cb0/cb8/cc0/cc8/cd0) must be
+       seated over their host bodies BEFORE __sinit_ov071_021228c8 copies them
+       into data_ov071_02123088 -- that sinit is the very next call below. */
+    port_mri_states_seat();
     __sinit_ov071_021226ac();
     __sinit_ov071_021228c8();
     __sinit_ov071_02122a1c();
