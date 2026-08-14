@@ -1453,9 +1453,9 @@ _ZN20cMgSmartball_dokan_c14RestoreInitialEv kind:function(arm,size=0xc) addr:0x0
 func_ov006_02110bc0 kind:function(arm,size=0x48) addr:0x02110bc0
 func_ov006_02110c08 kind:function(arm,size=0x220) addr:0x02110c08
 func_ov006_02110e28 kind:function(arm,size=0x204) addr:0x02110e28
-func_ov006_0211102c kind:function(arm,size=0x118) addr:0x0211102c
-START_INTRO_MINIMAP_ZOOM kind:function(arm,size=0xac) addr:0x02111144
-func_ov006_021111f0 kind:function(arm,size=0x30) addr:0x021111f0
+_ZN24cMgSmartball_propeller_c6UpdateEv kind:function(arm,size=0x118) addr:0x0211102c
+_ZN24cMgSmartball_propeller_c12SaveSnapshotEv kind:function(arm,size=0xac) addr:0x02111144
+_ZN24cMgSmartball_propeller_c14RestoreInitialEv kind:function(arm,size=0x30) addr:0x021111f0
 func_ov006_02111220 kind:function(arm,size=0x48) addr:0x02111220
 func_ov006_02111268 kind:function(arm,size=0xe4) addr:0x02111268
 func_ov006_0211134c kind:function(arm,size=0x214) addr:0x0211134c
@@ -4115,7 +4115,7 @@ _ZTV19cMgSmartball_ball_c kind:data(any) addr:0x0213ec98
 _ZTV20cMgSmartball_dokan_c kind:data(any) addr:0x0213ecac
 data_ov006_0213ecb8 kind:data(any) addr:0x0213ecb8
 data_ov006_0213eccc kind:data(any) addr:0x0213eccc
-data_ov006_0213ece8 kind:data(any) addr:0x0213ece8
+_ZTV24cMgSmartball_propeller_c kind:data(any) addr:0x0213ece8
 data_ov006_0213ecfc kind:data(any) addr:0x0213ecfc
 _ZTV21cMgSmartball_object_c kind:data(any) addr:0x0213ed10
 _ZTV19cMgSmartball_wing_c kind:data(any) addr:0x0213ed24

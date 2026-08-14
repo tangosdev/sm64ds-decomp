@@ -5589,15 +5589,15 @@ src/func_ov006_02110e28.c:
     complete
     .text start:0x02110e28 end:0x0211102c
 
-src/func_ov006_0211102c.c:
+src/_ZN24cMgSmartball_propeller_c6UpdateEv.cpp:
     complete
     .text start:0x0211102c end:0x02111144
 
-src/START_INTRO_MINIMAP_ZOOM.c:
+src/_ZN24cMgSmartball_propeller_c12SaveSnapshotEv.cpp:
     complete
     .text start:0x02111144 end:0x021111f0
 
-src/func_ov006_021111f0.c:
+src/_ZN24cMgSmartball_propeller_c14RestoreInitialEv.cpp:
     complete
     .text start:0x021111f0 end:0x02111220
 
