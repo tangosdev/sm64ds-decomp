@@ -1029,6 +1029,42 @@ list(APPEND PORT_LEVEL_OVERLAYS ov045)
 # prior level mounts, so this mount cannot flip a resolved target raw; the
 # cross-pass counts are re-measured in this lane's report.
 list(APPEND PORT_LEVEL_OVERLAYS ov046)
+# run linkw wave 7 (lane w7-c): the other two koopaN_boss arenas, so all three
+# boss arenas are mounted. Every number below was re-derived on this lane from
+# extracted/arm9_dec.bin (base 0x02004000) and the raw overlay images, and the
+# whole pipeline was re-validated first: all 52 words of data_02092208 dumped
+# and checked against the seventeen already-mounted rows, 17/17 exact.
+#
+# ov044 = LEVEL 36, Bowser in the Dark World arena (data/stage/koopa1_boss),
+# course 15. data_020758c8[36] (word at 0x02075958) = 0x2c = 44 -- level+8, and
+# the +8 is a READ: all 52 words are contiguous 8..59. LVL_Overlay
+# data_02092208[36] (word at 0x02092298) = 0x021113b0. OV0 handles at +8 read
+# out of extracted/overlays/overlay_0044.bin (offset 0x210; ov044 is
+# compressed:true, so the dsd export is the compressed image and its halfwords
+# are noise): bmd 0x076b / kcl 0x0769 / icg 0x076c / icl 0x076d, resolved
+# DIRECTLY through build/assets/handles.tsv (delta 0) to koopa1_boss_all.bmd
+# (1899, 4411 bytes) / koopa1_boss.kcl (1897, 1624) / koopa1_boss_icg.bin
+# (1900, 13728) / koopa1_boss_icl.bin (1901, 512). SUBLEVEL_LEVEL_TABLE[36]
+# (byte at 0x020752bc) = 0x0f = course 15; subCount 1, flags 0.
+list(APPEND PORT_LEVEL_OVERLAYS ov044)
+# ov048 = LEVEL 40, Bowser in the Sky arena (data/stage/koopa3_boss), course 17.
+# data_020758c8[40] (word at 0x02075968) = 0x30 = 48. LVL_Overlay
+# data_02092208[40] (word at 0x020922a8) = 0x02111624. OV0 handles at +8 out of
+# extracted/overlays/overlay_0048.bin (offset 0x484; compressed:true as well):
+# bmd 0x0787 / kcl 0x0785 / icg 0x0788 / icl 0x0789 -> koopa3_boss_all.bmd
+# (1927, 7228) / koopa3_boss.kcl (1925, 1889) / koopa3_boss_icg.bin (1928,
+# 15028) / koopa3_boss_icl.bin (1929, 512). SUBLEVEL_LEVEL_TABLE[40] (byte at
+# 0x020752c0) = 0x11 = course 17; subCount 1, flags 0.
+#
+# Shared-window note (the ov045 calibration two blocks up, asked before the
+# mount rather than after): ov044 is 0x021111a0..0x021116a0 (code 1248 + bss 32)
+# and ov048 is 0x021111a0..0x02111900 (code 1888, bss 0). Both are strictly
+# inside windows the seventeen prior level mounts already contest -- ov009 runs
+# to 0x02113ee0 and ov016 to 0x02114ea0 -- so neither mount can flip a target
+# from resolved to raw. The cross-pass counts are re-measured in this lane's
+# report; the raw total grows because two more images add addresses, which is
+# not a regression.
+list(APPEND PORT_LEVEL_OVERLAYS ov048)
 set(LEVEL_OV_DATA "")
 foreach(ovn IN LISTS PORT_LEVEL_OVERLAYS)
     set(ovn_out "${CMAKE_BINARY_DIR}/host-src/${ovn}_data.c")
@@ -1250,6 +1286,19 @@ list(APPEND PORT_ACTOR_OVERLAYS ov060)
 # block, which BowserFireSeaArena::InitResources reaches by name under a
 # shared-window spelling. See port/ov046_syms.txt's header.
 list(APPEND PORT_ACTOR_OVERLAYS ov046)
+# run linkw wave 7 (lane w7-c): ov044 (level 36's own overlay, whole-mounted
+# this same lane) joins the per-symbol mounts too, because the arena's ONE
+# non-ov060 class -- ORANGE_BALL_BILLBOARD / daObjKb1Billboard_c (301), the
+# sixteen orange balls ringing the arena -- lives in the LEVEL overlay and
+# reaches its SpawnInfo and its two bss cells by name. Same dual-mount shape as
+# ov012/ov013/ov021/ov045/ov046. Its one vtable (0x02111604, 31 slots, pinned by
+# both the reloc run and the .data/.bss boundary) is a host array
+# hal/actor_classes_ov044.cpp fills; the mount bring-up and the single sinit run
+# from the registry fill (the ov045/ov060 lane-ownership pattern -- no lane owns
+# hal/actor_overlays.cpp this wave). See port/ov044_syms.txt and
+# port/slice_w7c.txt. ov048 (level 40) gets NO per-symbol half: its whole cast
+# is ov060's and nothing in ov048 is reached by name.
+list(APPEND PORT_ACTOR_OVERLAYS ov044)
 # run linkw wave 5 (lane w5-c): ov070, the Amp/FlameChomp/FlameChompFire pack
 # (level 37's roaming enemies; FlyGuy rides the mount unregistered). Fresh
 # per-symbol mount, ids re-read from the raw overlay image; the four vtables
@@ -1613,6 +1662,22 @@ foreach(line IN LISTS SLICE_W6F_LINES)
         continue()
     endif()
     list(APPEND SLICE_W6F_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+
+# run linkw wave 7, lane w7-c: ORANGE_BALL_BILLBOARD (301, ov044) -- level 36's
+# only cast item that was not already registered, plus the fill/registry host
+# file. Level 40 needs no slice: its three ids are all ov060, all landed in
+# wave 6. One TU is held out (the shadow-class MSVC destructor); the header of
+# port/slice_w7c.txt carries the reason and the closure walk. Same one-owner
+# contract as the lane slices above.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w7c.txt" SLICE_W7C_LINES)
+set(SLICE_W7C_SOURCES "")
+foreach(line IN LISTS SLICE_W7C_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_W7C_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
 # run linkw wave 6, lane w6-D: PATH_LIFT (31) and the PathLift base branch --
@@ -3028,6 +3093,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     ${SLICE_W6A_SOURCES}
     ${SLICE_W5C_SOURCES} ${SQRTUNIT_GEN} ${OV70GEN}
     ${SLICE_W5B_SOURCES} ${SLICE_W5A_SOURCES} ${SLICE_W6D_SOURCES}
+    ${SLICE_W7C_SOURCES}
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES} ${SLICE25_SOURCES} ${SLICE26_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE33_SOURCES} ${GATE6_GEN} ${SLICE31_SOURCES} ${SLICE35_SOURCES}
     ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE32_SOURCES}
@@ -3103,6 +3169,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     ${SLICE_W6A_SOURCES}
     ${SLICE_W5C_SOURCES} ${SQRTUNIT_GEN} ${OV70GEN}
     ${SLICE_W5B_SOURCES} ${SLICE_W5A_SOURCES} ${SLICE_W6D_SOURCES}
+    ${SLICE_W7C_SOURCES}
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
     ${SLICE33_SOURCES} ${GATE6_GEN}
@@ -3209,6 +3276,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     ${SLICE_W6A_SOURCES}
     ${SLICE_W5C_SOURCES} ${SQRTUNIT_GEN} ${OV70GEN}
     ${SLICE_W5B_SOURCES} ${SLICE_W5A_SOURCES} ${SLICE_W6D_SOURCES}
+    ${SLICE_W7C_SOURCES}
     ${SLICE21_SOURCES} ${SLICE22_SOURCES} ${SLICE23_SOURCES}
     ${SLICE25_SOURCES} ${SLICE27_SOURCES} ${SLICE28_SOURCES} ${SLICE26_SOURCES}
     ${SLICE33_SOURCES} ${GATE6_GEN}
