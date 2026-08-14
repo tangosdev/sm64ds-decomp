@@ -64,7 +64,7 @@
     "src/_ZN12SwitchPillar8BehaviorEv.cpp": "tangosdev",
     "src/_ZN21cMgSmartball_object_c6UpdateEv.cpp": "tangosdev",
     "src/_ZN21cMgSmartball_object_c12SaveSnapshotEv.cpp": "tangosdev",
-    "src/_ZN21cMgSmartball_object_c14RestoreInitialEv.cpp": "tangosdev"
+    "src/_ZN21cMgSmartball_object_c14RestoreInitialEv.cpp": "tangosdev",
     "src/_ZN11dScMgJump_cD1Ev.cpp": "tangosdev",
     "src/_ZN11dScMgJump_cD0Ev.cpp": "tangosdev",
     "src/_ZN12dScMgJump2_cD1Ev.cpp": "tangosdev",
@@ -72,6 +72,9 @@
     "src/_ZN17dScMgTrampoline_cD1Ev.cpp": "tangosdev",
     "src/_ZN17dScMgTrampoline_cD0Ev.cpp": "tangosdev",
     "src/_ZN18dScMgTrampoline2_cD1Ev.cpp": "tangosdev",
-    "src/_ZN18dScMgTrampoline2_cD0Ev.cpp": "tangosdev"
+    "src/_ZN18dScMgTrampoline2_cD0Ev.cpp": "tangosdev",
+    "src/func_ov006_02114720.c": "tangosdev",
+    "src/func_ov006_02114724.c": "tangosdev",
+    "src/func_ov006_02114738.c": "tangosdev"
   }
 }
