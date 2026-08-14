@@ -72,8 +72,17 @@ extern signed char data_0209f2f8;       /* current level */
 extern unsigned char data_0209d454;
 /* TouchInfo data_020a0de8[4]: {u8 touched, u8 held, u8 x, u8 y} per slot, in
    DS bottom-screen pixels. Stage::CheckCameraInput and every TouchArea read
-   it; nothing on the host was writing it. */
-extern unsigned char data_020a0de8[];
+   it; nothing on the host was writing it.
+
+   THE FOUR NAMES ARE ONE BLOCK. dsd named a symbol at each of slot 0's four
+   bytes, and readers reach the fields through whichever name they were
+   decompiled with -- Message::Update reads `held` as data_020a0de9[idx*4] and
+   `y` as data_020a0deb[idx*4]. hal/auto_bss.cpp hosts all four over the one
+   16-byte run so a write here reaches every one of them; the touch probe
+   below is what proves it. */
+extern unsigned char data_020a0de8[];   /* +0 touched */
+extern unsigned char data_020a0de9[];   /* +1 held    */
+extern unsigned char data_020a0deb[];   /* +3 y       */
 /* Stage::CheckCameraInput's own inputs and outputs */
 void _ZN5Stage16CheckCameraInputEv(void);
 extern int data_0209f498[];      /* the Ctrl[4] block, stride 0x18 */
@@ -117,6 +126,102 @@ int env_flag(const char *name, int dflt)
     return v ? std::atoi(v) : dflt;
 }
 
+/* ---- SM64DS_TOUCH_PROBE: a scripted stylus, and what the four names read ---
+ *
+ * The stylus record is FOUR DS symbols over ONE 16-byte block -- data_020a0de8
+ * .. data_020a0deb at +0/+1/+2/+3 of TouchInfo[4] (hal/auto_bss.cpp carries the
+ * layout and its evidence). poll_touch writes the record through the FIRST
+ * name; Message::Update reads `held` and `y` through the SECOND and FOURTH.
+ * Whether those are the same bytes is a LINK-TIME property no compiler
+ * diagnostic covers, and a headless run has no mouse, so without this hook the
+ * question cannot be asked of a running binary at all.
+ *
+ *   SM64DS_TOUCH_PROBE="58-59:120:150,60,100-101:33:44,199-201"
+ *
+ * Comma-separated entries, the same grammar as SM64DS_PROBE_INPUT:
+ *
+ *   <frame>[-<frame>]:<x>:<y>   force a press at those DS pixels on those
+ *                               frames, and log
+ *   <frame>[-<frame>]           log only, no press
+ *
+ * One stderr line per listed frame:
+ *
+ *   [touch] f59 poke=(1,120,150) pre={de8=1 de9=0 dea=.. deb=150}
+ *           post={de8=1 de9=1 dea=.. deb=150} d=(1,3) block=01 01 78 96 ...
+ *
+ * `pre` is what the names read on ENTRY to the poll -- which is what a
+ * save-state restore left behind when the load frame is a logged frame --
+ * and `post` is after the write. `d` is (&de9-&de8, &deb-&de8) and MUST read
+ * (1,3): those numbers ARE the bug. Hosted as separate arrays they are two
+ * unrelated addresses and de9/deb read zero on every frame forever.
+ *
+ * THE READS ARE VOLATILE ON PURPOSE. MSVC treats two named globals as
+ * disjoint objects, so a load through data_020a0de9 in the same function as a
+ * store through data_020a0de8 folds to the old value even across translation
+ * units (measured: the plain read prints 0 where the volatile read prints 2).
+ * The game path cannot hit that -- the one writer only stores and every
+ * reader only loads -- but a probe that writes and reads in one function can,
+ * and a probe that lies about the fix is worse than no probe. src/ already
+ * carries the same shape: Stage::LC_Update declares data_020a0dea/deb
+ * volatile.
+ *
+ * The probe's own state is host bookkeeping and deliberately NOT in .dsstate:
+ * a save-state load must not rewind the script that is testing it. */
+struct TouchProbeEnt {
+    int f0, f1, x, y, poke;
+};
+TouchProbeEnt g_tp[32];
+int g_tp_n = -1;            /* -1 = env not read yet, 0 = probe off */
+int g_tp_frame;             /* polls since the first one */
+int g_tp_cur = -1;          /* the frame being polled, for the camera log */
+
+void touch_probe_parse(void)
+{
+    g_tp_n = 0;
+    const char *s = std::getenv("SM64DS_TOUCH_PROBE");
+    if (!s) return;
+    while (*s && g_tp_n < (int)(sizeof g_tp / sizeof *g_tp)) {
+        TouchProbeEnt e = {0, 0, 0, 0, 0};
+        e.f0 = std::atoi(s);
+        while (*s && *s != '-' && *s != ':' && *s != ',') ++s;
+        if (*s == '-') {
+            ++s;
+            e.f1 = std::atoi(s);
+            while (*s && *s != ':' && *s != ',') ++s;
+        } else {
+            e.f1 = e.f0;
+        }
+        if (*s == ':') {
+            ++s;
+            e.x = std::atoi(s);
+            while (*s && *s != ':' && *s != ',') ++s;
+            if (*s == ':') {
+                ++s;
+                e.y = std::atoi(s);
+                while (*s && *s != ',') ++s;
+            }
+            e.poke = 1;
+        }
+        g_tp[g_tp_n++] = e;
+        while (*s && *s != ',') ++s;
+        if (*s == ',') ++s;
+    }
+}
+
+const TouchProbeEnt *touch_probe_at(int f)
+{
+    for (int i = 0; i < g_tp_n; ++i)
+        if (f >= g_tp[i].f0 && f <= g_tp[i].f1) return &g_tp[i];
+    return 0;
+}
+
+/* one byte, read the way a reader in another TU reads it -- see the note on
+   volatile above */
+unsigned char tp_rd(const unsigned char *p, int i)
+{
+    return *(const volatile unsigned char *)(p + i);
+}
+
 // The stylus, from the mouse. `touched` is "down now", `held` adds "and it was
 // down last frame too" -- the pair Stage::CheckCameraInput tests together to
 // tell a press from a hold.
@@ -137,12 +242,48 @@ void poll_touch(void)
             }
         }
     }
+    if (g_tp_n < 0) touch_probe_parse();
+    const int f = g_tp_frame++;
+    g_tp_cur = f;
+    const TouchProbeEnt *tp = g_tp_n > 0 ? touch_probe_at(f) : 0;
+    unsigned char pre8 = 0, pre9 = 0, preb = 0;
+    if (tp) {
+        /* what the three names read BEFORE this poll writes anything: slot 0,
+           in Message::Update's own shape (data_020a0deX[idx * 4], idx = 0) */
+        pre8 = tp_rd(data_020a0de8, 0);
+        pre9 = tp_rd(data_020a0de9, 0);
+        preb = tp_rd(data_020a0deb, 0);
+        if (tp->poke) {
+            down = 1;
+            sx = (unsigned char)tp->x;
+            sy = (unsigned char)tp->y;
+        }
+    }
+
     const unsigned char was = data_020a0de8[0];
     data_020a0de8[0] = down;
     data_020a0de8[1] = (unsigned char)(down && was);
     if (down) {
         data_020a0de8[2] = sx;
         data_020a0de8[3] = sy;
+    }
+
+    if (tp) {
+        const unsigned char *b = data_020a0de8;
+        std::fprintf(stderr,
+            "[touch] f%d poke=%s(%u,%u,%u) pre={de8=%u de9=%u deb=%u} "
+            "post={de8=%u de9=%u deb=%u} d=(%d,%d) block=%02x%02x%02x%02x "
+            "%02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x\n",
+            f, tp->poke ? "yes" : "no", down, sx, sy,
+            pre8, pre9, preb,
+            tp_rd(data_020a0de8, 0), tp_rd(data_020a0de9, 0),
+            tp_rd(data_020a0deb, 0),
+            (int)(data_020a0de9 - data_020a0de8),
+            (int)(data_020a0deb - data_020a0de8),
+            tp_rd(b, 0), tp_rd(b, 1), tp_rd(b, 2), tp_rd(b, 3),
+            tp_rd(b, 4), tp_rd(b, 5), tp_rd(b, 6), tp_rd(b, 7),
+            tp_rd(b, 8), tp_rd(b, 9), tp_rd(b, 10), tp_rd(b, 11),
+            tp_rd(b, 12), tp_rd(b, 13), tp_rd(b, 14), tp_rd(b, 15));
     }
 }
 
@@ -442,6 +583,24 @@ void hal_sub_camera_input(void)
     _ZN5Stage16CheckCameraInputEv();
     *(unsigned short *)data_0209f49c |= *(const unsigned short *)(ctrl + 4);
     *(unsigned short *)data_0209f49e |= *(const unsigned short *)(ctrl + 6);
+
+    /* SM64DS_TOUCH_PROBE: what a REAL reader made of the record this frame.
+       Stage::CheckCameraInput is matched ROM code from src/, it reads the
+       stylus through data_020a0de8[i].{touched,held,x,y}, and these two
+       halfwords are its entire output -- so a rotate bit here is the whole
+       write-to-read path proven end to end, not a probe reading its own
+       write back. It runs after poll_touch in the same frame. */
+    if (g_tp_n > 0 && touch_probe_at(g_tp_cur))
+        std::fprintf(stderr, "[touch] f%d cam: Ctrl+4 held=%04x Ctrl+6 "
+                     "pressed=%04x  f49c=%04x f49e=%04x  gate(+0x154)=%08x\n",
+                     g_tp_cur, *(const unsigned short *)(ctrl + 4),
+                     *(const unsigned short *)(ctrl + 6),
+                     *(const unsigned short *)data_0209f49c,
+                     *(const unsigned short *)data_0209f49e,
+                     data_0209f318
+                         ? *(const unsigned *)((const char *)data_0209f318 +
+                                               0x154)
+                         : 0u);
 
     static int said;
     if (!said++) {
