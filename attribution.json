@@ -61,6 +61,9 @@
     "src/_ZN15dScMgRoulette_cD1Ev.cpp": "tangosdev",
     "src/_ZN12MetalNetLift16CleanupResourcesEv.cpp": "tangosdev",
     "src/_ZN12MetalNetLift13InitResourcesEv.cpp": "tangosdev",
-    "src/_ZN12SwitchPillar8BehaviorEv.cpp": "tangosdev"
+    "src/_ZN12SwitchPillar8BehaviorEv.cpp": "tangosdev",
+    "src/_ZN21cMgSmartball_object_c6UpdateEv.cpp": "tangosdev",
+    "src/_ZN21cMgSmartball_object_c12SaveSnapshotEv.cpp": "tangosdev",
+    "src/_ZN21cMgSmartball_object_c14RestoreInitialEv.cpp": "tangosdev"
   }
 }
