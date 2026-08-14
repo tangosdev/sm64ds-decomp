@@ -27,3 +27,13 @@ config/match_attempts.jsonl   merge=union
 # same claim are harmless (and the claims API is taking over live locking anyway).
 nearmiss/db.jsonl merge=union
 CLAIMS.md         merge=union
+
+# Same shape again: tools/tiers_ratchet.py appends one row per file that left the
+# CONVERTED set, with the reason the byte match required it. Append-only, keyed by
+# path, read by humans -- a union of two sides is the right LOCAL merge resolution.
+#
+# NOTE: this driver only runs on a local `git merge`. GitHub's own merge (what actually
+# lands a PR) does not honor merge=union and will still show a real conflict the instant
+# two PRs touch this file's tail concurrently -- land PRs that append here one at a time,
+# same as the other union-merged ledgers above.
+config/converted-backslide-exceptions.jsonl merge=union

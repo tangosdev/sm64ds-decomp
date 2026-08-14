@@ -41,6 +41,9 @@ import re
 import sys
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "tools"))
+import delaunder  # noqa: E402  (code_mask only -- no compiler, no ROM; see _code_only)
+
 SRC = REPO / "src"
 README = REPO / "README.md"
 README_START = "<!-- tiers:start -->"
@@ -54,6 +57,9 @@ LINKED_STAMP = REPO / "config" / "port_linkage.json"
 # only if it passes all five. These regexes are the pinned definition of the
 # tier: changing one silently redefines the published percentage, so change them
 # in a PR that says what moved and why, never as a drive-by.
+#
+# Three of them run over `_code_only(text)`, not raw text, so a comment that names
+# a defect no longer scores as the defect. See _code_only for the measurement.
 #
 # The bar was set on 2026-08-07 and is deliberately strict. Softer readings were
 # considered and rejected: "includes a shared header" scores 28.9% but measures
@@ -103,16 +109,51 @@ def _defined_symbol(path, text):
     return os.path.splitext(os.path.basename(path))[0]
 
 
+def _code_only(text):
+    """`text` with comments and string/char literals blanked to spaces.
+
+    Three of the five criteria are questions about CODE, and asking them of raw file
+    text answers a different question: whether the subject is MENTIONED anywhere. A
+    comment that explains why an offset cast was needed, or names the mangled symbol a
+    function used to be called, scored exactly like the defect it describes -- so
+    documenting your own cleanup made the file look dirtier, and the cheapest way to
+    improve the tier was to delete the explanation. That is the same inversion
+    langmode_audit.py already had to fix for its launder metric (see the comment at its
+    delaunder.find_sites call), and it is why that metric now reads code too.
+
+    Measured on this tree, masking flips 1,310 file-criterion readings, every one of
+    them fail -> pass: 1,291 no_mangled_refs, 14 no_unk_field, 3 no_raw_offset, 2
+    no_codegen_trick. Blanking only ever REMOVES text, so it can turn a failure into a
+    pass but never the reverse, which was checked rather than assumed. The headline
+    CONVERTED count does not move at all (426 before, 426 after) because every affected
+    file already fails a different criterion -- usually real_name, since a file whose
+    stem is `_ZN...` is the very thing that also mentions mangled names in prose. So
+    this fixes the published per-criterion breakdown without redefining the published
+    percentage, which is the only shape of change this file's header permits quietly.
+
+    Two criteria deliberately keep reading RAW text: `real_name` looks for the
+    `// @symbol` marker, which is a comment by construction, and `shared_header` looks
+    for `#include "..."`, whose argument is a string literal.
+
+    delaunder.code_mask is the masker rather than a second copy of one; it is imported
+    for that alone and needs no compiler or ROM (langmode_audit.py imports the same
+    module in a CI job that installs no build dependencies).
+    """
+    keep = delaunder.code_mask(text)
+    return "".join(c if k else " " for c, k in zip(text, keep))
+
+
 def score_file(path, text):
     """The five criteria for one source file, plus the header reading."""
     sym = _defined_symbol(path, text)
+    code = _code_only(text)
     return {
         "real_name": not (PLACEHOLDER.match(sym) or MANGLED.match(sym)),
-        "no_raw_offset": not RAW_OFFSET.search(text),
-        "no_unk_field": not UNK_FIELD.search(text),
-        "no_codegen_trick": not (LAUNDER.search(text) or VOLATILE.search(text)
-                                 or ASM.search(text)),
-        "no_mangled_refs": not MANGLED_REF.search(text),
+        "no_raw_offset": not RAW_OFFSET.search(code),
+        "no_unk_field": not UNK_FIELD.search(code),
+        "no_codegen_trick": not (LAUNDER.search(code) or VOLATILE.search(code)
+                                 or ASM.search(code)),
+        "no_mangled_refs": not MANGLED_REF.search(code),
         "shared_header": bool(SHARED_HEADER.search(text)),
     }
 
