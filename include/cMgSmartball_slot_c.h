@@ -6,8 +6,8 @@
  *
  * SIZE 0x88, from _Znwj(0x88) in func_ov006_02115b0c. Base ends at 0x34, so
  * this class adds 0x54 bytes. This class's own four functions never touch
- * the base's contested 0x31/0x32 span, so no raw cast is needed anywhere
- * here (unlike wing_c/ana_c).
+ * the base's 0x31-0x33 region, so no raw cast is needed anywhere here
+ * (unlike wing_c/ana_c/board_c).
  *
  * FIELD EVIDENCE. The constructor (func_ov006_021101bc) placement-constructs
  * two 3-element, 8-byte-stride arrays via func_020733a8(this+0x34,3,8,...)
