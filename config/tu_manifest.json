@@ -1,0 +1,252 @@
+{
+  "schema_version": 1,
+  "about": "Recovered translation-unit membership and licensed ranges. See notes/translation-unit-reconstruction-plan.md section 6 for the entry schema and section 13 for the invariants this file is meant to carry. Nothing here is enrolled: no entry in this manifest affects the ROM build, and config/**/delinks.txt remains the sole authority over what is compiled.",
+  "entries": [
+    {
+      "id": "ov045/PoleLift",
+      "module": "ov045",
+      "source": "src_tu/actors/PoleLift.cpp",
+      "promoted_source": "src/actors/PoleLift.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x0211150c..0x02111840, seven functions with no foreign symbol inside the span",
+        "single class label over the whole run (PoleLift, RTTI name daObjKm2_Ami_Bou_c); the neighbours on both sides carry different class labels (FireSeaElevator_Spawn ends at 0x0211150c, _ZN17ExtendingPlatformD1Ev begins at 0x02111840)",
+        "sinit count corroboration: build/tu_map.json records ov045 as 41 functions in 6 candidate TUs with 6 static initialisers and 6 .ctor entries, sinit_vs_tu 'ok', corroborated true, all 5 internal boundaries high",
+        "static-initialiser attribution: __sinit_ov045_02112214 is the only one of the six that touches this TU's two .bss SharedFilePtr statics (0x021131a8, 0x021131b0)",
+        "build/tu_map.json unit record lists exactly these seven symbols for the span"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x0211150c",
+          "end": "0x02111840"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN8PoleLiftD1Ev",
+          "address": "0x0211150c",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN8PoleLiftD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN8PoleLiftD0Ev",
+          "address": "0x02111558",
+          "size": "0x00000060",
+          "legacy_source": "src/_ZN8PoleLiftD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN8PoleLift16CleanupResourcesEv",
+          "address": "0x021115b8",
+          "size": "0x00000038",
+          "legacy_source": "src/_ZN8PoleLift16CleanupResourcesEv.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN8PoleLift6RenderEv",
+          "address": "0x021115f0",
+          "size": "0x00000028",
+          "legacy_source": "src/_ZN8PoleLift6RenderEv.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "_ZN8PoleLift8BehaviorEv",
+          "address": "0x02111618",
+          "size": "0x00000120",
+          "legacy_source": "src/_ZN8PoleLift8BehaviorEv.cpp",
+          "ordinal": 4
+        },
+        {
+          "symbol": "_ZN8PoleLift13InitResourcesEv",
+          "address": "0x02111738",
+          "size": "0x000000d0",
+          "legacy_source": "src/_ZN8PoleLift13InitResourcesEv.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "PoleLift_Spawn",
+          "address": "0x02111808",
+          "size": "0x00000038",
+          "legacy_source": "src/PoleLift_Spawn.c",
+          "ordinal": 6
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "verification": {
+        "round": "text-only, per-function; no link, no module compare, no ROM build",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off -i include",
+        "object": "build/tu/ov045-PoleLift/PoleLift.o (gitignored)",
+        "comparison": "tools/match.py extract_func + compare, relocation-aware; ROM bytes from extracted/overlays/overlay_0045.bin via tools/modules.py",
+        "functions_matched": 7,
+        "functions_declared": 7,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_correct_size": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "no_pragma_opt_workarounds": "PASS -- no #pragma of any kind in the seven legacy sources or in the consolidated file",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- the object defines three .text symbols beyond the manifest (_ZN8PoleLiftD2Ev, _ZN8PlatformD1Ev, _ZN8PlatformD0Ev); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinals 2..6 are emitted in ROM order; ordinals 0 and 1 are not, and cannot be fixed by source ordering",
+          "no_constructor_or_destructor_variants": "WAIVED -- not tested. This TU is the key-function TU of a class with a virtual destructor and does emit D0/D1/D2.",
+          "no_unexpected_vtable_rtti_or_data_emission": "WAIVED -- not tested. Vtable, RTTI and Platform's out-of-line destructors are emitted and inventoried below; their correctness is explicitly NOT verified this round.",
+          "all_content_sections_licensed": "WAIVED -- deferred to the data phase (plan section 11 difficulty 6 of 7)",
+          "relocation_destinations_verified": "NOT RUN -- no link performed; one relocation convention conflict was found and fixed at source level, see notes",
+          "symbol_addresses_match": "NOT RUN",
+          "module_reproduces": "NOT RUN",
+          "rom_build_passes": "NOT RUN"
+        }
+      },
+      "unlicensed_output_observed": {
+        "note": "Present in the compiled object as a side effect of compiling the class's key function in one TU. Inventoried, not licensed, not verified. Promotion is refused on this alone.",
+        "text": [
+          {
+            "symbol": "_ZN8PoleLiftD2Ev",
+            "size": "0x4c",
+            "binding": "STB_GLOBAL",
+            "in_rom": false,
+            "note": "byte-identical to _ZN8PoleLiftD1Ev; no ROM symbol and no caller"
+          },
+          {
+            "symbol": "_ZN8PlatformD1Ev",
+            "size": "0x38",
+            "binding": "STB_LOPROC",
+            "in_rom": true,
+            "rom_address": "0x020ee42c",
+            "note": "lives in ov002, not in this range; vague-linkage copy"
+          },
+          {
+            "symbol": "_ZN8PlatformD0Ev",
+            "size": "0x4c",
+            "binding": "STB_LOPROC",
+            "in_rom": true,
+            "note": "vague-linkage copy"
+          }
+        ],
+        "data": [
+          {
+            "symbol": "_ZTV8PoleLift",
+            "size": "0x84",
+            "binding": "STB_GLOBAL",
+            "rom_symbol_address": "0x02112dbc",
+            "note": "the ROM symbol names the slot array; the compiler's symbol names the vtable object, which starts 8 bytes earlier at 0x02112db4"
+          },
+          {
+            "symbol": "_ZTV8Platform",
+            "size": "0x84",
+            "binding": "STB_LOPROC"
+          },
+          {
+            "symbol": "_ZTI8PoleLift",
+            "size": "0xc",
+            "binding": "STB_LOPROC",
+            "rom_symbol": "_ZTI18daObjKm2_Ami_Bou_c",
+            "rom_symbol_address": "0x02112d74"
+          },
+          {
+            "symbol": "_ZTS8PoleLift",
+            "size": "0xa",
+            "binding": "STB_LOPROC"
+          },
+          {
+            "symbol": "_ZTI8Platform",
+            "size": "0xc",
+            "binding": "STB_LOPROC"
+          },
+          {
+            "symbol": "_ZTS8Platform",
+            "size": "0xa",
+            "binding": "STB_LOPROC"
+          },
+          {
+            "symbol": "_ZTI5Actor",
+            "size": "0xc",
+            "binding": "STB_LOPROC"
+          },
+          {
+            "symbol": "_ZTS5Actor",
+            "size": "0x7",
+            "binding": "STB_LOPROC"
+          },
+          {
+            "symbol": "_ZTI12ActorDerived",
+            "size": "0xc",
+            "binding": "STB_LOPROC"
+          },
+          {
+            "symbol": "_ZTS12ActorDerived",
+            "size": "0xf",
+            "binding": "STB_LOPROC"
+          },
+          {
+            "symbol": "_ZTI9ActorBase",
+            "size": "0x8",
+            "binding": "STB_LOPROC"
+          },
+          {
+            "symbol": "_ZTS9ActorBase",
+            "size": "0xb",
+            "binding": "STB_LOPROC"
+          }
+        ],
+        "bss": [],
+        "init": [],
+        "rodata": [],
+        "ctor": []
+      },
+      "tu_owned_but_out_of_scope": {
+        "note": "Believed to belong to this TU in the ROM. Not declared, not compiled from source, not verified. Listed so a later data phase has a starting inventory rather than a fresh search.",
+        "data": [
+          {
+            "symbol": "_ZTI18daObjKm2_Ami_Bou_c",
+            "address": "0x02112d74"
+          },
+          {
+            "symbol": "PoleLift_SpawnInfo",
+            "address": "0x02112d98",
+            "note": "config marks this one 'ambiguous'"
+          },
+          {
+            "symbol": "_ZTV8PoleLift",
+            "address": "0x02112dbc"
+          },
+          {
+            "symbol": "data_ov045_02112510",
+            "address": "0x02112510",
+            "note": "the CLPS_Block InitResources hands to MovingMeshCollider::SetFile; ownership not established"
+          }
+        ],
+        "bss": [
+          {
+            "symbol": "data_ov045_021131a8",
+            "address": "0x021131a8",
+            "note": "SharedFilePtr; the collider file. NOT the symbol named PoleLift_ClsnFile."
+          },
+          {
+            "symbol": "data_ov045_021131b0",
+            "address": "0x021131b0",
+            "note": "SharedFilePtr; the model file. NOT the symbol named PoleLift_ModelFile."
+          }
+        ],
+        "init": [
+          {
+            "symbol": "__sinit_ov045_02112214",
+            "address": "0x02112214",
+            "size": "0x6c",
+            "evidence": "the only one of ov045's six static initialisers that references 0x021131a8 and 0x021131b0"
+          }
+        ]
+      },
+      "notes": [
+        "Pilot for notes/translation-unit-reconstruction-plan.md section 18, steps 2 through 5. Report: notes/tu-reconstruction-pilot-report.md.",
+        "All seven functions reproduce their ROM bytes when compiled together. The legacy one-function sources under src/ are untouched and remain the enrolled owners of this range.",
+        "One source-level change was forced by consolidation and one relocation-convention conflict was found by it: PoleLift_Spawn's vptr store had to become (int)(_ZTV8PoleLift + 2). See the report's 'What consolidation forced' section.",
+        "PoleLift_ClsnFile (0x021131d0) and PoleLift_ModelFile (0x021131d8) carry this class's name but are referenced by none of these seven functions, and __sinit_ov045_02112280 rather than this TU's initialiser touches them. Those names are probably misattributed; that is a data-phase question and nothing here depends on it.",
+        "Promotion is refused. Requires: a licensed home for _ZN8PoleLiftD2Ev, a scratch link proving the whole 0x0211150c..0x02111840 range, and the vtable/RTTI/init/bss phases."
+      ]
+    }
+  ]
+}
