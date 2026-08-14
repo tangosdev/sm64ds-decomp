@@ -5605,15 +5605,15 @@ src/func_ov006_02111220.c:
     complete
     .text start:0x02111220 end:0x02111268
 
-src/func_ov006_02111268.c:
+src/_ZN21cMgSmartball_spring_c6UpdateEv.cpp:
     complete
     .text start:0x02111268 end:0x0211134c
 
-src/func_ov006_0211134c.c:
+src/_ZN21cMgSmartball_spring_c12SaveSnapshotEv.cpp:
     complete
     .text start:0x0211134c end:0x02111560
 
-src/func_ov006_02111560.c:
+src/_ZN21cMgSmartball_spring_c14RestoreInitialEv.cpp:
     complete
     .text start:0x02111560 end:0x0211157c
 
