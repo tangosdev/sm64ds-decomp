@@ -82,6 +82,7 @@ extern unsigned char data_0209d454;
    below is what proves it. */
 extern unsigned char data_020a0de8[];   /* +0 touched */
 extern unsigned char data_020a0de9[];   /* +1 held    */
+extern unsigned char data_020a0dea[];   /* +2 x       */
 extern unsigned char data_020a0deb[];   /* +3 y       */
 /* Stage::CheckCameraInput's own inputs and outputs */
 void _ZN5Stage16CheckCameraInputEv(void);
@@ -146,14 +147,15 @@ int env_flag(const char *name, int dflt)
  *
  * One stderr line per listed frame:
  *
- *   [touch] f59 poke=(1,120,150) pre={de8=1 de9=0 dea=.. deb=150}
- *           post={de8=1 de9=1 dea=.. deb=150} d=(1,3) block=01 01 78 96 ...
+ *   [touch] f59 poke=yes(1,120,150) pre={de8=1 de9=0 dea=120 deb=150}
+ *           post={de8=1 de9=1 dea=120 deb=150} d=(1,2,3) block=01017896 ...
  *
  * `pre` is what the names read on ENTRY to the poll -- which is what a
  * save-state restore left behind when the load frame is a logged frame --
- * and `post` is after the write. `d` is (&de9-&de8, &deb-&de8) and MUST read
- * (1,3): those numbers ARE the bug. Hosted as separate arrays they are two
- * unrelated addresses and de9/deb read zero on every frame forever.
+ * and `post` is after the write. `d` is (&de9-&de8, &dea-&de8, &deb-&de8)
+ * and MUST read (1,2,3): those three numbers ARE the bug. Hosted as separate
+ * arrays they read (32,-,64) -- unrelated addresses, dea not hosted at all --
+ * and de9/deb read zero on every frame forever.
  *
  * THE READS ARE VOLATILE ON PURPOSE. MSVC treats two named globals as
  * disjoint objects, so a load through data_020a0de9 in the same function as a
@@ -246,12 +248,13 @@ void poll_touch(void)
     const int f = g_tp_frame++;
     g_tp_cur = f;
     const TouchProbeEnt *tp = g_tp_n > 0 ? touch_probe_at(f) : 0;
-    unsigned char pre8 = 0, pre9 = 0, preb = 0;
+    unsigned char pre8 = 0, pre9 = 0, prea = 0, preb = 0;
     if (tp) {
-        /* what the three names read BEFORE this poll writes anything: slot 0,
+        /* what the four names read BEFORE this poll writes anything: slot 0,
            in Message::Update's own shape (data_020a0deX[idx * 4], idx = 0) */
         pre8 = tp_rd(data_020a0de8, 0);
         pre9 = tp_rd(data_020a0de9, 0);
+        prea = tp_rd(data_020a0dea, 0);
         preb = tp_rd(data_020a0deb, 0);
         if (tp->poke) {
             down = 1;
@@ -271,14 +274,16 @@ void poll_touch(void)
     if (tp) {
         const unsigned char *b = data_020a0de8;
         std::fprintf(stderr,
-            "[touch] f%d poke=%s(%u,%u,%u) pre={de8=%u de9=%u deb=%u} "
-            "post={de8=%u de9=%u deb=%u} d=(%d,%d) block=%02x%02x%02x%02x "
+            "[touch] f%d poke=%s(%u,%u,%u) pre={de8=%u de9=%u dea=%u deb=%u} "
+            "post={de8=%u de9=%u dea=%u deb=%u} d=(%d,%d,%d) "
+            "block=%02x%02x%02x%02x "
             "%02x%02x%02x%02x %02x%02x%02x%02x %02x%02x%02x%02x\n",
             f, tp->poke ? "yes" : "no", down, sx, sy,
-            pre8, pre9, preb,
+            pre8, pre9, prea, preb,
             tp_rd(data_020a0de8, 0), tp_rd(data_020a0de9, 0),
-            tp_rd(data_020a0deb, 0),
+            tp_rd(data_020a0dea, 0), tp_rd(data_020a0deb, 0),
             (int)(data_020a0de9 - data_020a0de8),
+            (int)(data_020a0dea - data_020a0de8),
             (int)(data_020a0deb - data_020a0de8),
             tp_rd(b, 0), tp_rd(b, 1), tp_rd(b, 2), tp_rd(b, 3),
             tp_rd(b, 4), tp_rd(b, 5), tp_rd(b, 6), tp_rd(b, 7),

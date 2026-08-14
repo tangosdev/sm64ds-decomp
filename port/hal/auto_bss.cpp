@@ -117,9 +117,60 @@ int data_0209fc68[8];
 int data_020a0d84[8];
 int data_020a0d88[8];
 int data_020a0db0[8];
-int data_020a0de8[8];
-int data_020a0de9[8];
-int data_020a0deb[8];
+/* ---- THE STYLUS RECORD, 0x020a0de8 .. 0x020a0df7 -------------------------
+   ONE 16-byte block, not three independent arrays.
+
+   On hardware this is TouchInfo[4] -- one 4-byte record per controller,
+   {u8 touched, u8 held, u8 x, u8 y} -- and dsd named a symbol at each of the
+   FIRST record's four bytes, because code reached the fields through separate
+   addresses. config/arm9/symbols.txt has the four one byte apart
+
+       data_020a0de8 0x020a0de8   (+0 touched)
+       data_020a0de9 0x020a0de9   (+1 held)
+       data_020a0dea 0x020a0dea   (+2 x)
+       data_020a0deb 0x020a0deb   (+3 y)
+
+   the next named symbol is data_020a0df8, and delinks.txt puts all of it in
+   .bss (0x0209b000..0x020aa420), so the block is exactly 16 bytes = 4
+   records and there are no image bytes to read: the LAYOUT evidence is the
+   readers. Every one of them indexes ITS OWN name by slot*4 --
+   Message::Update's data_020a0de9[idx * 4], Stage::CheckCameraInput's
+   data_020a0de8[i].held, TouchArea_Update's data_020a0dea[i4] -- so the four
+   names have to BE the same storage, one byte apart.
+
+   WHAT WAS HERE BEFORE. The link sweep grew three separate `int [8]` arrays
+   (de8, de9, deb) and nothing at all for dea. hal/sub_screen.cpp writes the
+   packed record through data_020a0de8, so Message::Update's
+   data_020a0de9[idx*4] and data_020a0deb[idx*4] read two other arrays that
+   nothing ever writes: measured with SM64DS_TOUCH_PROBE before this change,
+   the block held 01 01 78 96 while de9 and deb read 0, and the two names sat
+   +32 and +64 bytes from de8 instead of +1 and +3. `held` and `y` were zero
+   on every frame of every run. Same class as the pad pair data_020a0e58 /
+   data_020a0e5a that hal/input_probe.cpp works around by writing both; this
+   fixes the storage instead.
+
+   HOW THE LAYOUT IS RESTORED. The mechanism tools/ovdata.py uses to
+   reproduce ROM spacing and dsstate_guard names in its own fix-it text: one
+   ordered .dsstate$<family><NNNN> slot per symbol, each with its ROM
+   alignment, so the linker concatenates the four into one contiguous run.
+   $touch0000..0003 sorts after the $aaa sentinel and before $zzz, so the run
+   stays inside the captured span -- the stylus record is DS state a save
+   state has to roll back. Sizes are the DS symbol spacing (next symbol minus
+   this one) and the LAST name owns the rest of the block, which is ovdata's
+   rule too.
+
+   DO NOT give these "sizes that look right" (de8[16], de9[16], ...). They
+   OVERLAP by construction, and MSVC treats two named globals as disjoint
+   objects: a TU that stores through one and loads through another IN THE
+   SAME FUNCTION can have the load folded away. Nothing in the game path can
+   hit it -- the one writer only stores, every reader only loads -- and
+   sub_screen's probe reads volatile for exactly this reason. */
+__pragma(section(".dsstate$touch0000", read, write)) __declspec(allocate(".dsstate$touch0000")) __declspec(align(1)) unsigned char data_020a0de8[1] = { 0 };
+__pragma(section(".dsstate$touch0001", read, write)) __declspec(allocate(".dsstate$touch0001")) __declspec(align(1)) unsigned char data_020a0de9[1] = { 0 };
+__pragma(section(".dsstate$touch0002", read, write)) __declspec(allocate(".dsstate$touch0002")) __declspec(align(1)) unsigned char data_020a0dea[1] = { 0 };
+/* the last name carries the tail of the block: 0x020a0deb..0x020a0df7, which
+   is slot 0's y plus records 1..3 */
+__pragma(section(".dsstate$touch0003", read, write)) __declspec(allocate(".dsstate$touch0003")) __declspec(align(1)) unsigned char data_020a0deb[13] = { 0 };
 int data_020a0e5a[8];
 /* data_020a1052 moved to hal/camera_bridges.cpp: it is a field INSIDE the
    local comms record at data_020a1040, not storage of its own */

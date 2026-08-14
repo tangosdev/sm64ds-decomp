@@ -488,6 +488,11 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
 #pragma comment(linker, "/alternatename:?data_020a0db0@@3HA=_data_020a0db0")
 #pragma comment(linker, "/alternatename:?data_020a0de8@@3PAEA=_data_020a0de8")
 #pragma comment(linker, "/alternatename:?data_020a0de9@@3PAEA=_data_020a0de9")
+/* the third byte of the stylus record (x). It had no host storage at all until
+   hal/auto_bss.cpp hosted the block properly, so no .cpp reader of it could
+   ever have linked; the route is here so the next slice of a TouchArea TU that
+   declares it outside extern "C" resolves like its three siblings. */
+#pragma comment(linker, "/alternatename:?data_020a0dea@@3PAEA=_data_020a0dea")
 #pragma comment(linker, "/alternatename:?data_020a0deb@@3PAEA=_data_020a0deb")
 #pragma comment(linker, "/alternatename:?data_020a0e5a@@3EA=_data_020a0e5a")
 #pragma comment(linker, "/alternatename:?data_ov002_020ff128@@3PAGA=_data_ov002_020ff128")
