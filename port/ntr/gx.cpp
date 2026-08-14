@@ -913,6 +913,133 @@ static void tri_report() {
                kv.second.v1);
 }
 
+/* --- submitted-geometry trace ----------------------------------------------
+   SM64DS_GX_TRACE=<path> writes the COMPLETE triangle list the raster is about
+   to consume. It exists to answer one question, and only that question: when
+   two builds of the same source produce different pixels, did the GAME submit
+   different geometry, or did the RASTER turn identical geometry into different
+   pixels?
+
+   So the trace is deliberately address-free. Not one host pointer reaches the
+   file: triangles are named by their index in submission order, and a bound
+   texture is named by a hash of its DECODED TEXELS rather than by the heap
+   address the decode happens to sit at. A trace that carried pointers would
+   differ on every line the moment the image layout moved, which is exactly the
+   comparison it is meant to make.
+
+   Floats print as %a -- the exact bits, not a rounded decimal. A one-ulp
+   difference in a vertex position is the whole answer here and %f hides it.
+
+   FRAME SELECTION. The file is truncated and rewritten on every render, so
+   when the run ends it holds the LAST frame -- which is the frame walk_window
+   dumps its BMP from. SM64DS_GX_TRACE_FRAME=<n> pins it to one render index
+   instead (the index counts gx_render calls from 0 and is printed in the
+   header). SM64DS_GX_HASH=1 prints the per-frame triangle-count and list hash
+   on stderr without writing any file, which is the cheap way to find the FIRST
+   frame at which two runs diverge before dumping that frame in full. */
+namespace {
+
+uint32_t fnv_bytes(uint32_t h, const void *p, size_t n) {
+    const unsigned char *b = static_cast<const unsigned char *>(p);
+    for (size_t i = 0; i < n; ++i) h = (h ^ b[i]) * 16777619u;
+    return h;
+}
+
+/* Content identity of a bound texture. Cached per dump against the pointer,
+   because the pointer is a stable key WITHIN one frame and the decoded texels
+   never change once cached -- but the pointer itself never leaves this
+   function. gx_invalidate_textures can recycle an address across frames, so
+   the cache is rebuilt each frame rather than kept. */
+struct TexHashCache {
+    std::map<const uint32_t *, uint32_t> m;
+    uint32_t of(const GxTriangle &t) {
+        if (!t.tex || t.tw <= 0 || t.th <= 0) return 0;
+        auto it = m.find(t.tex);
+        if (it != m.end()) return it->second;
+        const uint32_t h = fnv_bytes(2166136261u, t.tex,
+                                     static_cast<size_t>(t.tw) * t.th *
+                                         sizeof(uint32_t));
+        m.emplace(t.tex, h);
+        return h;
+    }
+};
+
+/* Every field the raster reads, in order, with the texture reduced to its
+   content hash. This is the exact input the rasteriser is a pure function of,
+   so two runs with equal hashes cannot produce different pixels. */
+uint32_t tri_list_hash(TexHashCache &tc) {
+    uint32_t h = 2166136261u;
+    for (const GxTriangle &t : g.tris) {
+        for (int k = 0; k < 3; ++k) {
+            const GxVertex &v = t.v[k];
+            h = fnv_bytes(h, &v.x, sizeof v.x);
+            h = fnv_bytes(h, &v.y, sizeof v.y);
+            h = fnv_bytes(h, &v.z, sizeof v.z);
+            h = fnv_bytes(h, &v.w, sizeof v.w);
+            h = fnv_bytes(h, &v.u, sizeof v.u);
+            h = fnv_bytes(h, &v.v, sizeof v.v);
+            h = fnv_bytes(h, &v.color, sizeof v.color);
+        }
+        const uint32_t th_ = tc.of(t);
+        h = fnv_bytes(h, &th_, sizeof th_);
+        h = fnv_bytes(h, &t.tw, sizeof t.tw);
+        h = fnv_bytes(h, &t.th, sizeof t.th);
+        h = fnv_bytes(h, &t.cull, sizeof t.cull);
+        h = fnv_bytes(h, &t.alpha, sizeof t.alpha);
+        h = fnv_bytes(h, &t.wrap, sizeof t.wrap);
+        h = fnv_bytes(h, &t.translucent, sizeof t.translucent);
+        h = fnv_bytes(h, &t.mode, sizeof t.mode);
+        h = fnv_bytes(h, &t.polyid, sizeof t.polyid);
+        h = fnv_bytes(h, &t.dbg_tex, sizeof t.dbg_tex);
+    }
+    return h;
+}
+
+void gx_trace(int index) {
+    static int on = -1;
+    static const char *path;
+    static int want_frame = -1;
+    static int hash_on = 0;
+    if (on < 0) {
+        path = getenv("SM64DS_GX_TRACE");
+        on = path ? 1 : 0;
+        if (const char *f = getenv("SM64DS_GX_TRACE_FRAME")) want_frame = atoi(f);
+        hash_on = getenv("SM64DS_GX_HASH") ? 1 : 0;
+    }
+    if (!on && !hash_on) return;
+
+    TexHashCache tc;
+    if (hash_on)
+        fprintf(stderr, "[gxh] f%d tris=%u h=%08x\n", index,
+                static_cast<unsigned>(g.tris.size()), tri_list_hash(tc));
+    if (!on) return;
+    if (want_frame >= 0 && index != want_frame) return;
+
+    FILE *f = fopen(path, "wb");
+    if (!f) return;
+    fprintf(f, "# gx trace: render index %d, %u triangles, list hash %08x\n",
+            index, static_cast<unsigned>(g.tris.size()), tri_list_hash(tc));
+    fprintf(f, "# t <i> pass=<translucent> mode= id= cull= alpha= wrap= "
+               "dbg=<TEXIMAGE_PARAM> tex=<texel content hash> tw= th=\n");
+    fprintf(f, "# v<k> x y z w u v (all %%a) c=<AARRGGBB>\n");
+    for (size_t i = 0; i < g.tris.size(); ++i) {
+        const GxTriangle &t = g.tris[i];
+        fprintf(f,
+                "t %u pass=%u mode=%u id=%u cull=%u alpha=%u wrap=%u "
+                "dbg=%08x tex=%08x tw=%d th=%d\n",
+                static_cast<unsigned>(i), t.translucent, t.mode, t.polyid,
+                t.cull, t.alpha, t.wrap, t.dbg_tex, tc.of(t), t.tw, t.th);
+        for (int k = 0; k < 3; ++k) {
+            const GxVertex &v = t.v[k];
+            fprintf(f, " v%d %a %a %a %a %a %a c=%08x\n", k, v.x, v.y, v.z,
+                    v.w, v.u, v.v, v.color);
+        }
+    }
+    fclose(f);
+}
+
+}  // namespace
+
 // One texel coordinate under the DS wrap rules (GBATEK TEXIMAGE_PARAM 16-19):
 // repeat clear = CLAMP to the edge texel; repeat set = wrap; flip on top of
 // repeat mirrors every other tile. `repeat && !flip` is the exact expression
@@ -1038,6 +1165,9 @@ void gx_render(Framebuffer &fb) {
     std::chrono::steady_clock::time_point t_enter;
     if (tm) t_enter = std::chrono::steady_clock::now();
     tri_report();
+    /* the submitted list, before anything rasterises it (see gx_trace) */
+    static int g_render_index = 0;
+    gx_trace(g_render_index++);
     /* Depth clear: 768KB at the window's 2x tier, every frame. 1e30f is not a
        repeating byte pattern so memset cannot do it, but one row can be built
        scalar and the rest copied from it, which is memcpy's problem rather

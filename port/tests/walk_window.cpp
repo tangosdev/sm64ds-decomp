@@ -919,6 +919,24 @@ static double ovl_now_ms(void)
     QueryPerformanceCounter(&n);
     return n.QuadPart * 1000.0 / g_clk.qpf.QuadPart;
 }
+/* SM64DS_FB_TRACE=1: a hash of the whole framebuffer at each of the four
+   stages that write it -- the 3D raster, the engine-A message composite, the
+   bottom-screen panel and the master-brightness fade. When two builds produce
+   different BMPs, the first stage whose hash differs, on the first frame it
+   differs, is the whole localisation: it separates "the 3D raster drew
+   something else" from "a 2D layer landed somewhere else" without a single
+   pixel dump. Off by default and free when off. */
+static void fb_stage_hash(int frame, const char *stage, const ntr::Framebuffer &fb)
+{
+    static int on = -1;
+    if (on < 0) on = getenv("SM64DS_FB_TRACE") ? 1 : 0;
+    if (!on) return;
+    unsigned h = 2166136261u;
+    const unsigned char *b = (const unsigned char *)&fb.px[0][0];
+    for (size_t i = 0; i < sizeof fb.px; ++i) h = (h ^ b[i]) * 16777619u;
+    fprintf(stderr, "[fbh] f%d %s %08x\n", frame, stage, h);
+}
+
 static void ph_begin(double *slot) { *slot = ovl_now_ms(); }
 static void ph_end(int idx, double start)
 {
@@ -5619,18 +5637,21 @@ int main(void)
         for (int y = 1; y < ntr::SCREEN_H; ++y)
             memcpy(fb.px[y], fb.px[0], ntr::SCREEN_W * sizeof(fb.px[0][0]));
         ntr::gx_render(fb);
+        fb_stage_hash(frame, "raster", fb);
         /* ENGINE-A 2D OVER 3D. The top screen is engine A: its 2D BGs and OBJ
            layer composite over the 3D frame in hardware. The dialogue box lives
            there (BG3 + the cursor OBJ), so raster engine A's 2D and write only
            the covered pixels over the 3D framebuffer. Before the fade composite,
            so the box dims with the master-brightness blend the same as the DS. */
         port_message_composite_engine_a(&fb);
+        fb_stage_hash(frame, "msg", fb);
         ph_end(PH_RASTER, t_phase);
         /* Bottom of the DS 2D frame: upload the shadows the game filled,
            rasterise engine B, and drop it into the corner at 1:1 DS pixels.
            With the panel toggled off this writes nothing. Before the overlay,
            so F3 text stays readable over the panel. */
         hal_sub_screen_present(&fb.px[0][0], ntr::SCREEN_W, ntr::SCREEN_H);
+        fb_stage_hash(frame, "sub", fb);
 
         /* THE FADE COMPOSITE. The DS master-brightness blend (MASTER_BRIGHT,
            reached through BLDCNT/BLDY at 0x4000050/0x4000054 for the main
@@ -5668,6 +5689,8 @@ int main(void)
                 }
             }
         }
+
+        fb_stage_hash(frame, "fade", fb);
 
         /* THE OVERLAY GOES HERE: after the raster owns the frame and before
            the blit hands it to GDI, so it is in the pixels rather than over
