@@ -11,14 +11,15 @@
  * behaviour; nothing beyond "state used for that gating" is evidenced, so
  * they keep unk_ names.
  *
- * ONE FIELD DOES NOT APPEAR BELOW: offset 0x32, a signed 16-bit angle eased
- * toward 0x3000 by SaveSnapshot and zeroed by RestoreInitial and the
- * constructor, lives INSIDE THE BASE CLASS's own tail padding
- * (cMgSmartball_object_c::pad_031, bytes 0x31-0x33) -- it is not part of
- * this child's 0x34+ region at all. It is accessed with an explicit
- * `(char*)this + 0x32` cast in every .cpp that touches it rather than a
- * named member, so this header does not claim a field that, byte for byte,
- * belongs to the base.
+ * ONE FIELD DOES NOT APPEAR BELOW: offset 0x32, a 16-bit angle eased toward
+ * 0x3000 by SaveSnapshot and zeroed by RestoreInitial and the constructor,
+ * belongs to the BASE -- it sits below 0x34. Migrating this class is what
+ * turned it up: the base header used to call bytes 0x31-0x33 padding, and
+ * they are not padding (11 files touch 0x31, 43 touch 0x32). That is fixed
+ * in cMgSmartball_object_c.h now, where the contested signedness is
+ * recorded. This class still reaches the byte with an explicit
+ * `(char*)this + 0x32` cast rather than the base's name, because the name's
+ * type is not yet settled and the cast states exactly what the ROM does.
  *
  * THE TAIL FROM 0x45 TO 0x87 IS AN EXPLICIT PAD, and it is UNMODELLED, NOT
  * UNREAD. func_ov006_0210d93c -- a free helper called from both
@@ -42,6 +43,8 @@ struct cMgSmartball_wing_c : cMgSmartball_object_c {
     s32 unk_034;
     s32 unk_038;
     u8  unk_03c;
+    u8  pad_03d[0x3];  /* explicit: the compiler inserts this either way, but
+                          an implicit gap is a gap nobody has looked at */
     s32 unk_040;
     u8  unk_044;
     u8  pad_045[0x43]; /* 0x45..0x87 -- unmodelled, not unread; see above */

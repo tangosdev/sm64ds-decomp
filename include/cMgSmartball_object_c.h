@@ -63,7 +63,18 @@ struct cMgSmartball_object_c {
                           field of the class */
     s32 unk_02c;      /* 0x02c -- the constructor's second argument */
     u8  unk_030;      /* 0x030 -- constructor sets it to 1 */
-    u8  pad_031[0x3]; /* 0x031 -- rounds up to the 0x34 boundary */
+    u8  unk_031;      /* 0x031 -- a 0/1 flag; 11 files read or write it */
+    s16 unk_032;      /* 0x032 -- 16 bits wide, 43 files touch it. SIGNEDNESS
+                          IS CONTESTED and the declaration below is the more
+                          common reading, not a settled one: func_ov006_0210d898
+                          compares it signed against 0x3000 and
+                          func_ov006_0210e014 does signed += 0x200 on it, but
+                          func_ov006_0211102c reads it UNSIGNED to index a sine
+                          table (>> 4, which is lsr not asr -- a real codegen
+                          difference). Nothing names it yet, so nothing depends
+                          on this choice; the first caller to use the name must
+                          re-derive it. cMgSmartball_ana_c muddies it further by
+                          storing a u8 0/1 into the low byte only. */
 };
 
 typedef char cMgSmartball_object_c_size_must_be_0x34[sizeof(cMgSmartball_object_c) == 0x34 ? 1 : -1];
