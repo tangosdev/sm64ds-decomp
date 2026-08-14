@@ -1408,8 +1408,8 @@ _ZN12dScMgSlot1_c6RenderEv kind:function(arm,size=0x320) addr:0x0210c6c0
 func_ov006_0210c9e0 kind:function(arm,size=0x81c) addr:0x0210c9e0
 _ZN12dScMgSlot1_c13InitResourcesEv kind:function(arm,size=0x4bc) addr:0x0210d1fc
 func_ov006_0210d6b8 kind:function(arm,size=0x88) addr:0x0210d6b8
-func_ov006_0210d740 kind:function(arm,size=0xa0) addr:0x0210d740
-func_ov006_0210d7e0 kind:function(arm,size=0xb4) addr:0x0210d7e0
+_ZN16dScMgSmartball_cD1Ev kind:function(arm,size=0xa0) addr:0x0210d740
+_ZN16dScMgSmartball_cD0Ev kind:function(arm,size=0xb4) addr:0x0210d7e0
 func_ov006_0210d894 kind:function(arm,size=0x4) addr:0x0210d894
 func_ov006_0210d898 kind:function(arm,size=0x24) addr:0x0210d898
 func_ov006_0210d8bc kind:function(arm,size=0x80) addr:0x0210d8bc
@@ -4138,7 +4138,7 @@ _ZTS21cMgSmartball_kinoko_c kind:data(any) addr:0x0213ee80
 _ZTS24cMgSmartball_propeller_c kind:data(any) addr:0x0213ee98
 _ZTS25cMgSmartball_pushswitch_c kind:data(any) addr:0x0213eeb4
 data_ov006_0213eed0 kind:data(any) addr:0x0213eed0
-data_ov006_0213eefc kind:data(any) addr:0x0213eefc
+_ZTV16dScMgSmartball_c kind:data(any) addr:0x0213eefc
 data_ov006_0213ef8c kind:data(any) addr:0x0213ef8c
 data_ov006_0213efb8 kind:data(any) addr:0x0213efb8
 data_ov006_0213efe4 kind:data(any) addr:0x0213efe4

@@ -1031,7 +1031,6 @@ extern int data_ov006_0213ed60[];
 extern int data_ov006_0213ed74[];
 extern int data_ov006_0213ed88[];
 extern int data_ov006_0213ed9c[];
-extern int data_ov006_0213eefc;
 extern int data_ov006_0213fa9c;
 extern int data_ov006_0213fb18[];
 extern int _ZTV17dScMgTrampoline_c;

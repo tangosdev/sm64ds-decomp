@@ -5413,11 +5413,11 @@ src/_ZN12dScMgSlot1_c13InitResourcesEv.cpp:
 src/func_ov006_0210d6b8.cpp:
     .text start:0x0210d6b8 end:0x0210d740
 
-src/func_ov006_0210d740.c:
+src/_ZN16dScMgSmartball_cD1Ev.cpp:
     complete
     .text start:0x0210d740 end:0x0210d7e0
 
-src/func_ov006_0210d7e0.cpp:
+src/_ZN16dScMgSmartball_cD0Ev.cpp:
     complete
     .text start:0x0210d7e0 end:0x0210d894
 
