@@ -1,0 +1,109 @@
+# slice_w8a.txt -- lane-owned slice for the linkage campaign (run linkw,
+# wave 8, lane w8-a: THE STAGE CLASS CLOSURE, first landed piece). One matched
+# src TU per line, path relative to the repo root, comments with #. ONE OWNER
+# (lane w8-a).
+#
+# WHAT THIS SLICE IS. The arc's goal is that Stage::InitResources, Stage::Render
+# and Stage::Behavior run the ROM's own class in walk_window and the hand-written
+# subset port_stage_a_boot retires. The measurement that sizes that job is a
+# throwaway probe: wire every src/_ZN5Stage* TU that no slice already names --
+# 29 files -- into walk_window and read the link.
+#
+#     walk_window.exe : fatal error LNK1120: 171 unresolved externals
+#
+# EIGHT of the 29 are landable now and are below, with the one callee they drag
+# that no slice already names. Seven of the eight need nothing at all beyond
+# what today's link already provides; the eighth, Stage::UpdateMenuButtons,
+# needs four globals from the storage batch (hal/w8a_stage_storage.cpp) that
+# lands with it.
+#
+# THE OTHER TWENTY-ONE, each with the blocker that holds it out. No TU is held
+# out for taste; several have more than one blocker and the first is named.
+#
+#   ov002 BSS the ov002 mount does not carry (the pause/VS sprite templates at
+#   0x0210caf4..0x0210d420 and the OAM::PAUSE family) -- a row in
+#   port/ov002_syms.txt, which this lane does not own:
+#       Stage::LC_Render, Stage::PS_Render, Stage::RenderVsModeCountdown,
+#       Stage::RenderVsModeNewStar
+#
+#   arm9 .rodata / .data, which wants REAL ROM BYTES through the romdata
+#   emitter and NOT zero storage (data_020755b8, data_020755c0/c4/c8/cc,
+#   data_02075610, data_020756d0/f0, data_0208ee3c/40, data_02092778):
+#       Stage::PS_UpdateSaveMenu, Stage::PS_UpdateOptionsMenu,
+#       Stage::PS_UpdateOkAndBackButtons, Stage::RenderNumber,
+#       Stage::CleanupResources, Stage::PS_Update
+#
+#   data_020a0dea, byte +2 of the TouchInfo block hal/auto_bss.cpp already
+#   hosts -- see the blocked note in hal/w8a_stage_storage.cpp:
+#       Stage::LC_Update, Stage::VE_Update
+#
+#   a C-name face onto a matched TU that is itself unwired, plus that TU's own
+#   closure (Sound::PauseMusic and Sound::UnpauseMusic reach data_0208e424 in
+#   .data; G3X::SetFogTable reaches src/Copy32Bytes.c, which is ARM asm MSVC
+#   cannot assemble; Message::DisplayVsExitText reaches func_020341a8, which
+#   reaches data_0208f174 and data_02092818 in .data):
+#       Stage::PS_Cleanup, Stage::PS_Init (.c and .cpp both), Stage::RenderFog,
+#       Stage::VE_Init, Stage::Behavior, Stage::Render
+#
+#   NOT HOSTABLE AT ALL. Stage::GraphCallback2's whole body takes the address
+#   of reg_G2S_DB_BG3PA and MSVC cannot put a global at 0x04001030.
+#   hal/sub_actors.cpp's port_minimap_affine_update is its stand-in and says so:
+#       Stage::GraphCallback2
+#
+#   GENUINELY UNMATCHED -- the arc's only one. Stage::CleanupResources calls
+#   FaderWipe::~FaderWipe and src/ carries NO matched TU for it:
+#       Stage::CleanupResources (also blocked above)
+#
+#   AND ONE HELD OUT FOR A REASON WORTH READING TWICE.
+#   src/_ZN5Stage13UpdateMessageEv.cpp CLOSES against today's link with nothing
+#   added -- and its object exports four EMPTY STUBS of real game functions
+#   alongside the one it matched: ?UpdateWindow@Message@@SA_NXZ,
+#   ?Update@Message@@SAXXZ, ?DisplaySaving@Message@@SAXG@Z and
+#   ?SaveCurrentFile@SaveData@@SAXXZ, each a `{}` or `return 0` the matcher
+#   wrote to isolate the function. Nothing references those manglings today, so
+#   linking it is inert NOW and a silent wrong-binding the first time anything
+#   does. Its dialogue arm already runs from hal/message_pump.cpp besides.
+#
+# NOTHING HERE IS DISPATCHED. Every body below is reached by an explicit
+# /include: root in hal/w8a_stage_faces.cpp, not by a call: the ROM reaches all
+# of them through _ZTV5Stage, and that table is still trap-filled by
+# hal/stage_bridges.cpp, which this lane does not own. Read that file's header
+# before quoting the linkage number.
+
+# ---- the Stage bodies (8) -------------------------------------------------
+
+# _ZTV5Stage slot 1. Its whole body is Scene::ResetFadersAndSound plus two
+# flag stores; both are already in the link.
+src/_ZN5Stage19BeforeInitResourcesEv.cpp
+
+# _ZTV5Stage slot 12.
+src/_ZN5Stage16OnPendingDestroyEv.cpp
+
+# _ZTV5Stage slots 16 and 17 -- ~Stage (D2/D1) and the deleting ~Stage (D0).
+# These two are what REVIVE src/_ZN8Particle10SysTrackerD1Ev.cpp and
+# src/func_02021b98.cpp: both were already compiled into walk_window by earlier
+# slices and both were being discarded by /OPT:REF because nothing named them.
+# The Stage destructors name them, so they come back with no new slice line --
+# the two TUs of this piece reached by real ROM code rather than a directive,
+# and the reason this slice's nine lines move linkage by eleven.
+src/_ZN5StageD2Ev.c
+src/_ZN5StageD0Ev.c
+
+# The Stage's SceneRelated graphics block, slot 1: Particle::RenderAll.
+src/_ZN5Stage14GraphCallback1Ev.c
+
+# Stage::Behavior's two pause gates. IsPauseDisabled's only callee is
+# func_ov002_020bd8ac, below.
+src/_ZN5Stage8CanPauseEv.c
+src/_ZN5Stage15IsPauseDisabledEv.c
+
+# The pause / VS / level-clear menu button rows. This is the one body in the
+# slice that needs the storage batch: data_0209f244, data_0209f2b4,
+# data_0209f2e0 and the four-slot data_0209f360[0..3], all hosted by
+# hal/w8a_stage_storage.cpp in this same piece.
+src/_ZN5Stage17UpdateMenuButtonsEb.c
+
+# ---- the one callee those eight drag that no slice already names (1) ------
+
+# Stage::IsPauseDisabled's only callee.
+src/func_ov002_020bd8ac.c
