@@ -31,17 +31,29 @@ data_ov009_02112bc4 data_ov009_02112bf8 data_ov009_02112c38
 # at 0x021122ec (0..0x1000, the full texture wrap) ending exactly where
 # __sinit_ov009_02112458 begins.
 #
-# Nothing named it, so it reached the host as a SYNTHETIC GAP BLOCK -- and a gap
-# block is sized by the next entry in dsd's symbols.txt. dsd guessed six
-# `ambiguous` boundaries inside this array, the first at 0x02112320, so the
-# block stopped thirteen words in. From animation frame 13 the track ran off its
-# own array into whatever the linker placed next: the neighbouring gap block,
-# whose leading bytes are the ASCII "water_mat" and a row of REBASED HOST
-# POINTERS. Those pointer values travelled into the geometry stream as the
-# water's texture-matrix translation, so a host address was deciding pixels --
-# the same source at a different image base put a different address there, the
-# UV moved by exactly one 32-texel period, and the walk_window selftest BMP
-# changed with the layout. Naming the array with its ROM extent pins it.
+# Nothing named the track, so the only thing hosting it was a SYNTHETIC GAP
+# BLOCK covering the BTA's header region: port_ov009_gap_0211222c, which starts
+# at 0x0211222c (tableB) and reaches the track 0xc0 further in. A gap block is
+# sized by the next entry in dsd's symbols.txt, and dsd guessed ELEVEN
+# `ambiguous` boundaries inside the track's span -- the first at 0x02112320 --
+# so the block ended there, 0xf4 bytes long, and the hosted track was thirteen
+# of its ninety-one words.
+#
+# From animation frame 13 the read ran off that block into whatever the linker
+# placed next: the neighbouring gap block, whose leading bytes are the ASCII
+# "water_mat" and a row of REBASED HOST POINTERS. Those pointer values travelled
+# into the geometry stream as the water's texture-matrix translation, so a host
+# address was deciding pixels -- the same source at a different image base put a
+# different address there, the UV moved by exactly one 32-texel period, and the
+# walk_window selftest BMP changed with the layout. Naming the array with its
+# ROM extent pins it.
+#
+# SIDE EFFECT, measured: sizing this symbol reshapes the gap runs around it.
+# port_ov009_gap_02112228 grows 24 -> 96 bytes, port_ov009_gap_0211222c shrinks
+# 244 -> 40, and a zeroed pk009_gap_02112458[1900] pad appears up to
+# data_ov009_02112bc4. Net hosted coverage is +312 bytes of real track and -100
+# bytes of unreferenced neighbour span [0x02112288, 0x021122ec). The track also
+# moves out of ordinary .data into .dsstate, so save states now capture it.
 data_ov009_021122ec:0x16c
 # the four {function, delta} pairs __sinit_ov009_02112458 copies into the
 # Bird's own behaviour table
