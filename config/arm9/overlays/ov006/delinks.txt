@@ -5565,15 +5565,15 @@ src/func_ov006_021108bc.c:
     complete
     .text start:0x021108bc end:0x02110928
 
-src/func_ov006_02110928.c:
+src/_ZN20cMgSmartball_dokan_c6UpdateEv.cpp:
     complete
     .text start:0x02110928 end:0x02110a20
 
-src/func_ov006_02110a20.cpp:
+src/_ZN20cMgSmartball_dokan_c12SaveSnapshotEv.cpp:
     complete
     .text start:0x02110a20 end:0x02110bb4
 
-src/func_ov006_02110bb4.c:
+src/_ZN20cMgSmartball_dokan_c14RestoreInitialEv.cpp:
     complete
     .text start:0x02110bb4 end:0x02110bc0
 
