@@ -26,7 +26,7 @@ import sys
 
 # Every mounted level, port_level_table[] in hal/level_boot.cpp -- a new
 # level mount adds its id here or the battery silently under-tests.
-LEVELS = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 37, 38)
+LEVELS = (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 36, 37, 38, 40)
 SELFTEST_FRAMES = "300"
 STEP_TIMEOUT = 600
 

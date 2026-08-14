@@ -184,9 +184,64 @@ static int port_host_abi_blocked(unsigned id)
     /* The PAINTING's levels-4/5/13 skip came off 2026-08-08: the mis-strided
        PMF dispatch behind those faults is hosted in
        port/unmatched/Painting_Dispatch.cpp now (see the long note above),
-       and all three levels boot their paintings through it. Nothing is
-       host-ABI-blocked at the moment; the hook stays for the next case. */
-    (void)id;
+       and all three levels boot their paintings through it. */
+
+    /* run linkw wave 7 (lane w7-c): BOWSER_SKY_PLATFORM (167) on LEVEL 40, the
+       Bowser in the Sky arena -- the second case this hook exists for, and it
+       is a HOST BOOT-ORDER limit rather than a class defect. Level 40 is the
+       only level in all fifty-two that places id 167, so the class had never
+       actually spawned until this lane mounted the arena; it is fault-free
+       everywhere it is reachable, which is nowhere else.
+
+       MEASURED, not reasoned. Its InitResources (src/func_ov060_021182b0.cpp,
+       daKpa3Bg_c::InitResources) calls CopyTexPalFromLevelModel(this + 0xdc),
+       and src/CopyTexPalFromLevelModel.c opens on
+
+           struct Entry* sbase = data_0209f320->entries;
+
+       -- a load through data_0209f320 + 4. data_0209f320 is the Stage's
+       ModelComponents pointer, and its ONLY writer is Stage::LoadModel
+       (src/_ZN5Stage9LoadModelEv.cpp, last line). The fault caught under
+       SM64DS_FAULTS_FATAL is exactly that load:
+
+           FAULT code c0000005 at +0x0008e07f accessing 00000004, eax=00000000
+           _CopyTexPalFromLevelModel+0xf
+             <- _func_ov060_021182b0+0x44  <- ?skyplat_init  <- Actor::Spawn
+             <- LoadStandardObjects <- LoadObjects <- Stage::LoadClsnAndObjects
+             <- _port_stage_a_boot+0x211  <- _main+0x797
+
+       THE ROM RUNS THE TWO THE OTHER WAY ROUND. Stage::InitResources
+       (src/_ZN5Stage13InitResourcesEv.cpp) is
+           :361  Stage::LoadModel(thiz);
+           :363  Stage::LoadClsnAndObjects(...);
+       so on the DS data_0209f320 is seated before any actor initialises. The
+       host harness inverts them: port/tests/walk_window.cpp calls
+       port_stage_a_boot (which runs LoadClsnAndObjects) at :2099 and
+       Stage::LoadModel only at :2265 -- confirmed on this tree by print order,
+       not by reading (level 36's log has [census] on line 31 and "level model
+       loaded by Stage::LoadModel ... components 3003AF24" on line 59). The
+       level-change path has the same inversion (:4362 boot, :4382 LoadModel).
+
+       AND IT CANNOT BE FIXED FROM port_stage_a_boot. Calling Stage::LoadModel
+       early there would leave the harness's own call as a SECOND one, and a
+       second Stage::LoadModel is not idempotent: LoadAndSetFile -> the port's
+       cached LoadFile(handle) -> func_02016ff4, which calls
+       Model::UpdateFileOffsets UNCONDITIONALLY, and that function rebases the
+       BMD's file-relative offsets IN PLACE (`file.bones = REBASE(file.bones)`,
+       src/_ZN5Model17UpdateFileOffsetsER8BMD_File.cpp). A duplicate pass adds
+       the base a second time and sends every pointer in the level model out of
+       the file -- on EVERY level, not just this one. So the fix is one line in
+       port/tests/walk_window.cpp (hoist the LoadModel call above the boot, the
+       ROM's own order), and that file is reserved to another owner.
+
+       Until then id 167 is declined ON LEVEL 40 ONLY. The arena boots, exits 0
+       under FAULTS_FATAL, and the census names the ten skipped platforms rather
+       than the port faking them. Nothing else changes: no other level places
+       167, and the class's registry row, vtable fill and ov060 mount are
+       untouched. */
+    if (id == 167 && port_level_id() == 40)
+        return 1;
+
     return 0;
 }
 
