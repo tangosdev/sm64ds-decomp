@@ -61,6 +61,14 @@
     "src/_ZN15dScMgRoulette_cD1Ev.cpp": "tangosdev",
     "src/_ZN12MetalNetLift16CleanupResourcesEv.cpp": "tangosdev",
     "src/_ZN12MetalNetLift13InitResourcesEv.cpp": "tangosdev",
-    "src/_ZN12SwitchPillar8BehaviorEv.cpp": "tangosdev"
+    "src/_ZN12SwitchPillar8BehaviorEv.cpp": "tangosdev",
+    "src/_ZN11dScMgJump_cD1Ev.cpp": "tangosdev",
+    "src/_ZN11dScMgJump_cD0Ev.cpp": "tangosdev",
+    "src/_ZN12dScMgJump2_cD1Ev.cpp": "tangosdev",
+    "src/_ZN12dScMgJump2_cD0Ev.cpp": "tangosdev",
+    "src/_ZN17dScMgTrampoline_cD1Ev.cpp": "tangosdev",
+    "src/_ZN17dScMgTrampoline_cD0Ev.cpp": "tangosdev",
+    "src/_ZN18dScMgTrampoline2_cD1Ev.cpp": "tangosdev",
+    "src/_ZN18dScMgTrampoline2_cD0Ev.cpp": "tangosdev"
   }
 }
