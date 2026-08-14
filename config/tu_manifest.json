@@ -336,7 +336,60 @@
         "One source-level change was forced by consolidation and one relocation-convention conflict was found by it: PoleLift_Spawn's vptr store had to become (int)(_ZTV8PoleLift + 2). See the report's 'What consolidation forced' section.",
         "PoleLift_ClsnFile (0x021131d0) and PoleLift_ModelFile (0x021131d8) carry this class's name but are referenced by none of these seven functions, and __sinit_ov045_02112280 rather than this TU's initialiser touches them. Those names are probably misattributed; that is a data-phase question and nothing here depends on it.",
         "Promotion is refused. Requires: a licensed home for _ZN8PoleLiftD2Ev, a scratch link proving the whole 0x0211150c..0x02111840 range, and the vtable/RTTI/init/bss phases."
-      ]
+      ],
+      "partial_isolation": {
+        "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+        "delinksChanged": false,
+        "derivedObjects": 7,
+        "contributionEquivalent": "7/7",
+        "comparedFields": [
+          "keptSection",
+          "keptBytes",
+          "relocs",
+          "defined",
+          "mapping",
+          "live",
+          "undefReferenced"
+        ],
+        "substitutedObjectPaths": [
+          "src/_ZN8PoleLiftD1Ev.cpp",
+          "src/_ZN8PoleLiftD0Ev.cpp",
+          "src/_ZN8PoleLift16CleanupResourcesEv.cpp",
+          "src/_ZN8PoleLift6RenderEv.cpp",
+          "src/_ZN8PoleLift8BehaviorEv.cpp",
+          "src/_ZN8PoleLift13InitResourcesEv.cpp",
+          "src/PoleLift_Spawn.c"
+        ],
+        "extraInertImports": 78,
+        "extraImportsWithNoHome": [],
+        "result": "partial-link-verified",
+        "phases": {
+          "delink": true,
+          "lcf": true,
+          "compile": true,
+          "link": true,
+          "checkModules": true,
+          "checkSymbols": false,
+          "rom": true
+        },
+        "tuRange": {
+          "start": "0x0211150c",
+          "end": "0x02111840",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        "moduleFidelityPassed": true,
+        "symbolCheckNewVsBaseline": [],
+        "rom": {
+          "bytes": 16777216,
+          "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+          "matchesStockRom": true
+        },
+        "scratch": "build/tu/ov045-PoleLift/link-partial (gitignored)",
+        "state": "partial-link-verified",
+        "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+        "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+      }
     },
     {
       "id": "ov045/FallBlockBfs",
@@ -407,6 +460,27 @@
         "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
         "functions_matched": 5,
         "functions_declared": 5
+      },
+      "partial_isolation": {
+        "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
+        "derivedObjects": 5,
+        "contributionEquivalent": "5/5",
+        "comparedFields": [
+          "keptSection",
+          "keptBytes",
+          "relocs",
+          "defined",
+          "mapping",
+          "live",
+          "undefReferenced"
+        ],
+        "legacyEntriesComplete": "0/5",
+        "extraInertImports": 19,
+        "extraImportsWithNoHome": [],
+        "artefacts": "build/tu/ov045-FallBlockBfs/partial/partial.json (gitignored)",
+        "state": "contribution-equivalent",
+        "stateMeaning": "every derived object's linker-visible contribution -- kept section header and bytes, its relocations by symbol name, every defined symbol, every content section still carrying bytes, and every relocation-referenced import -- is byte-identical to what the current per-function compile+isolate pipeline produces for the same function",
+        "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
       }
     },
     {
@@ -695,7 +769,70 @@
         "SEVENTEEN functions, not the plan's 'approximately 5-15'. The evidence puts the boundary where it is; splitting it to hit the count would have been an invented cut.",
         "Consolidation forced FOUR declaration conflicts that per-file compilation had been hiding, where pilot #1 found none: data_0209caa0's element type (int[] vs u8[]), data_0209f5c0's type (ActorBase* vs void*), Actor::Spawn's spelling (real static method vs hand-spelled extern \"C\" alias, with four mutually inconsistent copies of the alias), and func_0203accc's ARITY (decl_common.h's 1 argument vs a local 3-argument declaration -- the one no cast could reconcile). All four resolutions are byte-free; see the report.",
         "Promotion is refused. Requires: a licensed home for the two vague-linkage Vector3 destructors, a scratch link proving the whole 0x020fe190..0x020fea4c range, and the .data phase for the dispatch table."
-      ]
+      ],
+      "partial_isolation": {
+        "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+        "delinksChanged": false,
+        "derivedObjects": 17,
+        "contributionEquivalent": "17/17",
+        "comparedFields": [
+          "keptSection",
+          "keptBytes",
+          "relocs",
+          "defined",
+          "mapping",
+          "live",
+          "undefReferenced"
+        ],
+        "substitutedObjectPaths": [
+          "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp",
+          "src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp",
+          "src/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z23LoadMinimapScaleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z22LoadMinimapTileObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z15LoadExitObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z15LoadDoorObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z14LoadFogObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z23LoadTeleportDestObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z25LoadTeleportSourceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z15LoadViewObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z15LoadPathObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z19LoadPathNodeObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z19LoadStandardObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
+          "src/_Z17LoadSimpleObjectsRN11LVL_Overlay11ObjSubTableEij.cpp"
+        ],
+        "extraInertImports": 58,
+        "extraImportsWithNoHome": [],
+        "result": "partial-link-verified",
+        "phases": {
+          "delink": true,
+          "lcf": true,
+          "compile": true,
+          "link": true,
+          "checkModules": true,
+          "checkSymbols": false,
+          "rom": true
+        },
+        "tuRange": {
+          "start": "0x020fe190",
+          "end": "0x020fea4c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        "moduleFidelityPassed": true,
+        "symbolCheckNewVsBaseline": [],
+        "rom": {
+          "bytes": 16777216,
+          "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+          "matchesStockRom": true
+        },
+        "scratch": "build/tu/ov002-LevelObjects/link-partial (gitignored)",
+        "state": "partial-link-verified",
+        "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+        "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+      }
     }
   ]
 }

@@ -67,6 +67,30 @@ class Isolate(unittest.TestCase):
         self.assertIn("_ZTV1P", plan["externalise"])
         self.assertIn("_ZN1PD0Ev", plan["dead"])
 
+    def test_derive_is_isolate_without_the_write(self):
+        """`derive` must be `isolate`'s reduction as a pure function of bytes.
+
+        Translation-unit reconstruction reduces ONE compiled object N times, once per
+        function it contributes (plan sec 9), which an in-place mutator cannot do: the
+        first call consumes the input. That only works if the two agree exactly -- if
+        `derive` drifted from `isolate`, the derived objects would stop being comparable
+        to the ones the ROM build produces, which is the only evidence that makes the
+        substitution safe."""
+        obj = self.build("struct P { int p[4]; virtual ~P(); virtual void f(); };\n"
+                         "P::~P(){}\n")
+        raw = obj.read_bytes()
+        out, plan = OI.derive(raw, "_ZN1PD1Ev")
+        self.assertIsNone(plan["error"])
+        self.assertEqual(obj.read_bytes(), raw, "derive must not touch the file")
+        self.assertEqual(OI.derive(raw, "_ZN1PD1Ev")[0], out, "derive must be pure")
+        OI.isolate(obj, "_ZN1PD1Ev")
+        self.assertEqual(obj.read_bytes(), out, "isolate and derive must agree")
+        # The reduction the TU case actually needs: the SAME untouched input reduced to
+        # a different function, which is only expressible without the in-place write.
+        other, plan2 = OI.derive(raw, "_ZN1PD0Ev")
+        self.assertIsNone(plan2["error"])
+        self.assertNotEqual(other, out)
+
     def test_vtable_addend_is_corrected_to_zero(self):
         """8 -> 0, because the ROM symbol is already past the preamble."""
         from elftools.elf.elffile import ELFFile

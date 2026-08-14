@@ -180,6 +180,40 @@ def test_compile_report_matches_the_pilots_object_inventory():
     assert (REPO / "build" / "tu" / "ov045-PoleLift" / "PoleLift.o").is_file()
 
 
+# ---------------------------------------------------------------- partial isolation
+
+def test_partial_reproduces_the_production_per_function_objects():
+    """plan sec 9 / phase D, as a check.
+
+    The claim under test is the one that lets a consolidated source become canonical
+    without whole-range linking: compile the TU ONCE, reduce it once per licensed
+    function, and each derived object is what the current per-function
+    compile+isolate pipeline already produces. A DIFFERS line here means the
+    consolidated source is no longer a drop-in for the seven objects the ROM build
+    makes today, whatever the byte comparison in `verify` says.
+
+    `--no-record` so the tracked manifest is not rewritten by running the suite.
+    """
+    if not _toolchain():
+        return
+    code, out = _run("partial", "ov045/PoleLift", "--no-record", timeout=600)
+    assert code == 0, out
+    for sym in ("_ZN8PoleLiftD1Ev", "_ZN8PoleLiftD0Ev",
+                "_ZN8PoleLift16CleanupResourcesEv", "_ZN8PoleLift6RenderEv",
+                "_ZN8PoleLift8BehaviorEv", "_ZN8PoleLift13InitResourcesEv",
+                "PoleLift_Spawn"):
+        line = next((l for l in out.splitlines() if f" {sym} " in l), None)
+        assert line and "IDENTICAL" in line, (sym, line, out)
+    assert "contribution equivalence: 7/7" in out
+    assert "7/7 CONTRIBUTION-EQUIVALENT" in out
+    # The one class of difference partial isolation DOES introduce: extra imports, from
+    # one merged symbol table serving all seven reductions. They are inert only while
+    # something in the link defines them; a name with no home at all is a real risk and
+    # must stay empty for this TU.
+    assert ("imports with no symbols.txt home anywhere AND not already imported by the "
+            "objects being replaced: none") in out
+
+
 # ------------------------------------------------------------------------------ CLI
 
 def test_promote_refuses_to_mutate_without_dry_run():

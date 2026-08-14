@@ -13,8 +13,13 @@ Subcommands:
     python tools/tubuild.py create  ov062/Chuckya     # generate a shadow .cpp
     python tools/tubuild.py compile ov045/PoleLift    # compile with the pinned toolchain
     python tools/tubuild.py verify  ov045/PoleLift    # byte + relocation verification
-    python tools/tubuild.py linkcheck ...             # NOT YET IMPLEMENTED (plan sec 7.6)
-    python tools/tubuild.py promote   ...             # NOT YET IMPLEMENTED (plan sec 7.7)
+    python tools/tubuild.py partial ov045/PoleLift    # one TU compile -> N derived
+                                                      #   per-function objects, each
+                                                      #   compared against the object the
+                                                      #   current build makes (plan sec 9)
+    python tools/tubuild.py linkcheck ov002/LevelObjects           # whole-range link
+    python tools/tubuild.py linkcheck ov045/PoleLift --partial     # N-object link
+    python tools/tubuild.py promote   ...             # only --dry-run (plan sec 7.7)
 
 This tool never touches src/, config/**/delinks.txt, or runs real
 `eligible.py --apply` / `rombuild.py`. It only reads production state (the
@@ -1297,14 +1302,17 @@ def entry_is_complete(body_lines):
     return any(l.strip() == "complete" for l in body_lines)
 
 
-def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy):
-    """Replace the per-function entries tiling [span_start, span_end) with ONE TU entry.
+def span_entries(delinks_path, span_start, span_end, expected_legacy):
+    """(header, entries, inside, reasons) for the delinks entries tiling a TU span.
 
-    Refuses -- returns (None, [reasons]) -- rather than producing a plausible-looking
-    scratch config, because every failure mode here is silent downstream: dsd fills any
-    range it has no object for with retail ROM bytes, so a mis-spliced delinks tree
-    links clean and compares green while contributing nothing (see
-    notes/unbuildable-files-invisible.md and layout_check's L1). The checks are:
+    The read-only half of `splice_tu_entry`, factored out because the partial-isolation
+    path (plan sec 9) needs exactly these checks and none of the rewriting: it leaves
+    delinks.txt alone and substitutes per-function OBJECTS instead, so it must still
+    know that the N entries it is about to overwrite are the N the manifest names, are
+    `complete` today, and tile the span exactly. Two callers, one definition of "this
+    span is safe to act on".
+
+    `reasons` is empty iff the span is safe. The checks are:
 
       * every entry whose .text starts inside the span is fully inside it;
       * no entry straddles either boundary;
@@ -1334,7 +1342,7 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy)
         reasons.append(f"entry {rel} (0x{lo:08x}..0x{hi:08x}) straddles the TU boundary")
     if not inside:
         reasons.append(f"no delinks entry lies inside 0x{span_start:08x}..0x{span_end:08x}")
-        return None, reasons
+        return header, entries, inside, reasons
 
     tiles = sorted((s1, s2, rel, name) for _i, rel, secs in inside for (name, s1, s2) in secs)
     for name, rel in [(n, r) for _s1, _s2, r, n in tiles if n != ".text"]:
@@ -1364,6 +1372,21 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy)
         for rel in sorted(got - want):
             reasons.append(f"delinks entry {rel} lies inside the span but the manifest "
                            f"does not list it as a legacy source")
+    return header, entries, inside, reasons
+
+
+def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy):
+    """Replace the per-function entries tiling [span_start, span_end) with ONE TU entry.
+
+    Refuses -- returns (None, [reasons]) -- rather than producing a plausible-looking
+    scratch config, because every failure mode here is silent downstream: dsd fills any
+    range it has no object for with retail ROM bytes, so a mis-spliced delinks tree
+    links clean and compares green while contributing nothing (see
+    notes/unbuildable-files-invisible.md and layout_check's L1). `span_entries` holds
+    the checks; this adds the rewrite.
+    """
+    header, entries, inside, reasons = span_entries(delinks_path, span_start, span_end,
+                                                    expected_legacy)
     if reasons:
         return None, reasons
 
@@ -1508,6 +1531,427 @@ def print_object_audit(rows, extra_secs, emitted, order_ok, entry):
     return buckets
 
 
+# ====================================== partial TU isolation (plan sec 9, phase D)
+#
+# The whole-range substitution above hands the linker ONE object for the TU's entire
+# .text span. For a key-function TU that cannot work yet, and the reason is not a
+# matching problem: the merged object emits its class's vtable STB_GLOBAL, dsd's
+# ROM-derived gap object ALSO defines that symbol STB_GLOBAL, and mwldarm aborts
+# multiply-defined. ov045/PoleLift's linkcheck records exactly that.
+#
+# Plan sec 9's route sidesteps vtable ownership entirely instead of solving it:
+# compile the consolidated .cpp ONCE, then reduce that single object N times -- once
+# per licensed function -- and hand the linker the N derived objects in the same
+# positions the N per-function objects occupy today. Each reduction drops every
+# section but one, so the vtable/RTTI .data is dropped and its symbols are
+# externalised, exactly as objisolate already does for the per-function build. The
+# collision cannot arise because no derived object defines a vtable.
+#
+# What that buys, and it is the whole point: the consolidated source can become
+# canonical WITHOUT whole-range linking, so vtable/data ownership (phase F) stops
+# being a prerequisite and becomes a later, separate improvement.
+
+def derive_function_objects(obj_bytes, entry):
+    """{symbol: (derived_bytes_or_None, objisolate plan)} for every manifest function.
+
+    N reductions of ONE compiled object, via objisolate.derive -- the same plan() that
+    decides what the per-function build keeps, drops, externalises and re-addends. This
+    function adds no selection logic of its own; if it did, the derived object would
+    stop being comparable to the production one, which is the only evidence that makes
+    the substitution safe."""
+    out = {}
+    for f in sorted(entry["functions"], key=lambda x: x["ordinal"]):
+        out[f["symbol"]] = OI.derive(obj_bytes, f["symbol"])
+    return out
+
+
+def contribution(raw, keep_symbol):
+    """Everything mwldarm consumes from an object that contributes `keep_symbol`.
+
+    Deliberately NOT the whole file. Two objects built from different sources can never
+    be byte-identical as FILES -- section indices, string-table order, the symbol table's
+    size and the file's length all differ -- and comparing files would make the real
+    question ("does the linker see the same thing?") unanswerable. So this extracts the
+    link-visible surface and nothing else:
+
+      kept        the section the LCF's `<stem>.o(.text)` selector actually places:
+                  its name, type, flags, alignment, size and bytes;
+      relocs      the fixups applied to it, as (offset, type, SYMBOL NAME, addend) --
+                  by name, because a symbol INDEX is a property of the object's own
+                  table and means nothing to another object;
+      defined     every symbol this object defines, with its binding, type, value,
+                  size and the name+size of the section it lives in. A definition in a
+                  zeroed section still resolves for anyone who imports it, so a
+                  size-0-in-an-empty-section entry is reported rather than filtered;
+      mapping     $a/$t/$d ARM EABI mapping symbols inside the kept section, kept
+                  separate because they repeat by name across sections;
+      live        every content section still carrying bytes -- the check that the
+                  object contributes no surplus anywhere else;
+      undef       imports. Split by whether a kept-section relocation names them:
+                  a referenced import is load-bearing, an unreferenced one is inert
+                  (the tree already ships those today -- every isolated destructor
+                  object imports `_ZN<Class>D2Ev`, which nothing in the ROM defines).
+    """
+    elf = ELFFile(io.BytesIO(raw))
+    secs = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return None
+    keep = None
+    for s in symtab.iter_symbols():
+        if (s.name == keep_symbol and s["st_shndx"] != "SHN_UNDEF"
+                and s["st_info"]["type"] == "STT_FUNC"):
+            keep = s["st_shndx"]
+    if not isinstance(keep, int):
+        return None
+    ks = secs[keep]
+
+    relocs = []
+    for s in secs:
+        if isinstance(s, RelocationSection) and s.header["sh_info"] == keep:
+            for r in s.iter_relocations():
+                sym = symtab.get_symbol(r["r_info_sym"])
+                relocs.append((r["r_offset"], r["r_info_type"], sym.name,
+                               r["r_addend"] if s.is_RELA() else None))
+
+    defined, mapping, undef = {}, [], []
+    for s in symtab.iter_symbols():
+        if not s.name:
+            continue
+        shndx = s["st_shndx"]
+        if shndx == "SHN_UNDEF":
+            undef.append(s.name)
+            continue
+        secname = secs[shndx].name if isinstance(shndx, int) else str(shndx)
+        secsize = secs[shndx].header["sh_size"] if isinstance(shndx, int) else -1
+        row = (s["st_info"]["bind"], s["st_info"]["type"], s["st_value"], s["st_size"],
+               secname, secsize)
+        if s.name.startswith("$"):
+            if shndx == keep:
+                mapping.append((s.name, *row))
+            continue
+        defined[s.name] = row
+
+    live = sorted((x.name, x.header["sh_size"], x.header["sh_addralign"],
+                   x.header["sh_flags"])
+                  for x in secs if x.header["sh_type"] in OI.CONTENT
+                  and x.header["sh_size"]
+                  and not any(x.name.startswith(p) for p in OI.IGNORE))
+    referenced = {n for _o, _t, n, _a in relocs}
+    return {
+        "keptSection": (ks.name, ks.header["sh_type"], ks.header["sh_flags"],
+                        ks.header["sh_addralign"], ks.header["sh_size"]),
+        "keptIndex": keep,
+        "keptBytes": ks.data(),
+        "relocs": relocs,
+        "defined": defined,
+        "mapping": sorted(mapping),
+        "live": live,
+        "undefReferenced": sorted(n for n in undef if n in referenced),
+        "undefInert": sorted(n for n in undef if n not in referenced),
+    }
+
+
+# The fields whose equality means "the linker sees the same contribution". `keptIndex`
+# is excluded on purpose and is reported instead: a section's INDEX is internal to its
+# own object (the derived object keeps the merged object's numbering, e.g. 28 where the
+# single-file compile emitted 5), and dsd's linker script selects by section NAME.
+# `undefInert` is excluded for the reason its docstring gives and is reported as a
+# difference of its own.
+_CONTRIB_FIELDS = ("keptSection", "keptBytes", "relocs", "defined", "mapping", "live",
+                   "undefReferenced")
+
+
+def compare_contribution(prod_raw, derived_raw, symbol):
+    """Is the derived object's contribution identical to the production object's?
+
+    `prod_raw` is the object the CURRENT build produces for this function: its own
+    one-function source compiled by rombuild.compile_one and reduced by
+    objisolate.isolate. `derived_raw` is the same function reduced out of the merged TU
+    object. Returns a verdict dict; `identical` is true only when every field in
+    _CONTRIB_FIELDS agrees exactly."""
+    p, d = contribution(prod_raw, symbol), contribution(derived_raw, symbol)
+    if p is None or d is None:
+        return {"identical": False, "differences": [
+            f"{symbol} is not a defined function in "
+            f"{'the production object' if p is None else 'the derived object'}"]}
+    diffs = []
+    for k in _CONTRIB_FIELDS:
+        if p[k] == d[k]:
+            continue
+        if k == "defined":
+            for name in sorted(set(p[k]) | set(d[k])):
+                if p[k].get(name) != d[k].get(name):
+                    diffs.append(f"defined symbol {name}: production {p[k].get(name)} "
+                                 f"vs derived {d[k].get(name)}")
+        elif k == "keptBytes":
+            diffs.append(f"kept .text bytes differ ({len(p[k])} vs {len(d[k])} bytes)")
+        else:
+            diffs.append(f"{k}: production {p[k]!r} vs derived {d[k]!r}")
+    return {
+        "identical": not diffs,
+        "differences": diffs,
+        "symbol": symbol,
+        "keptSection": list(p["keptSection"]),
+        "keptIndexProduction": p["keptIndex"],
+        "keptIndexDerived": d["keptIndex"],
+        "relocCount": len(p["relocs"]),
+        "extraInertImports": sorted(set(d["undefInert"]) - set(p["undefInert"])),
+        "missingInertImports": sorted(set(p["undefInert"]) - set(d["undefInert"])),
+        "productionBytes": len(prod_raw),
+        "derivedBytes": len(derived_raw),
+    }
+
+
+def unresolvable_imports(names, known=()):
+    """Which of `names` no symbols.txt anywhere defines and no sibling already imports.
+
+    An import a relocation does not name cannot change a byte, but it can still make
+    mwldarm refuse the link if nothing defines it -- so the ones with no home are worth
+    naming before the link rather than after. `known` is the set of imports the objects
+    being REPLACED already carry: an unresolvable name that the current build already
+    ships is not a new risk (`_ZN8PoleLiftD2Ev` is exactly that -- every isolated
+    PoleLift destructor object imports it today and the tree links)."""
+    homes = all_symbol_homes()
+    return sorted(n for n in names if n not in homes and n not in set(known))
+
+
+def production_objects(entry, build_root, jobs=1, cache=None):
+    """Compile each legacy one-function source EXACTLY as the ROM build does.
+
+    rombuild.compile_one is called directly -- same version pin, same flags, same
+    -MD/scratch handling, same objisolate.isolate call afterwards -- so the objects
+    this returns are the production comparison target by construction rather than by
+    re-implementation. Returns ({symbol: path}, [errors])."""
+    vers = RB.versions()
+    init_srcs = RB.init_section_sources()
+    syms = RB.enrolled_symbols()
+    out, errors = {}, []
+    rels = [(f["symbol"], f["legacy_source"]) for f in
+            sorted(entry["functions"], key=lambda x: x["ordinal"])]
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, jobs)) as ex:
+        results = list(ex.map(
+            lambda sr: (sr[0], sr[1], RB.compile_one(sr[1], vers, cache, init_srcs, syms,
+                                                     build_root=build_root)),
+            rels))
+    for sym, rel, (_rel, err, _outcome) in results:
+        if err:
+            errors.append(f"{rel}: {err}")
+            continue
+        out[sym] = pathlib.Path(build_root) / pathlib.Path(rel).with_suffix(".o")
+    return out, errors
+
+
+def partial_report(entry, merged_bytes, derived, prod_paths):
+    """[(ordinal, symbol, verdict_dict_or_error)] plus the aggregate counts."""
+    rows = []
+    for f in sorted(entry["functions"], key=lambda x: x["ordinal"]):
+        sym = f["symbol"]
+        dbytes, plan = derived.get(sym, (None, {"error": "not derived"}))
+        if dbytes is None:
+            rows.append((f["ordinal"], sym, {"identical": False,
+                                             "differences": [f"objisolate refused: "
+                                                             f"{plan.get('error')}"]}))
+            continue
+        ppath = prod_paths.get(sym)
+        if ppath is None or not ppath.is_file():
+            rows.append((f["ordinal"], sym, {"identical": False,
+                                             "differences": ["no production object"]}))
+            continue
+        v = compare_contribution(ppath.read_bytes(), dbytes, sym)
+        v["objisolateError"] = plan.get("error")
+        rows.append((f["ordinal"], sym, v))
+    return rows
+
+
+def print_partial_rows(rows, entry):
+    n_ok = sum(1 for _o, _s, v in rows if v["identical"])
+    print(f"  {'ord':3} {'symbol':42} {'kept .text':18} {'reloc':>5}  verdict")
+    for o, sym, v in rows:
+        if "keptSection" in v:
+            ks = v["keptSection"]
+            kept = f"{ks[0]} size 0x{ks[4]:03x}"
+            extra = (f"  (+{len(v['extraInertImports'])} inert import(s))"
+                     if v.get("extraInertImports") else "")
+            missing = (f"  (-{len(v['missingInertImports'])} import(s))"
+                       if v.get("missingInertImports") else "")
+            print(f"  [{o}] {sym:42} {kept:18} {v['relocCount']:5}  "
+                  f"{'IDENTICAL' if v['identical'] else 'DIFFERS'}{extra}{missing}")
+        else:
+            print(f"  [{o}] {sym:42} {'-':18} {'-':>5}  DIFFERS")
+        for d in v["differences"]:
+            print(f"        !! {d}")
+    print(f"\n  contribution equivalence: {n_ok}/{len(rows)} derived object(s) byte-identical "
+          f"to the production compile+isolate contribution")
+    return n_ok
+
+
+# The partial-isolation lifecycle. DELIBERATELY NOT a value of `status`.
+#
+# plan sec 6's states (mapped -> shadow -> text-verified -> link-verified ->
+# data-verified -> promoted) form one ladder, and its rungs above `text-verified` all
+# mean "the whole licensed range links as one contribution". Partial isolation is a
+# different axis: the source consolidates while the LINKER CONTRIBUTION stays exactly
+# as split as it is today. A TU can be partial-link-verified and never become
+# link-verified (a key-function TU cannot, until phase F), and a link-verified TU never
+# needs partial isolation at all. Writing either state into the other's field would
+# claim something untrue in both directions, so `status` keeps its ladder and this
+# lives beside it in `partial_isolation.state`.
+PARTIAL_STATES = {
+    "derived": "N per-function objects were extracted from one compiled TU object; "
+               "their equivalence to the production objects was not established",
+    "contribution-equivalent": "every derived object's linker-visible contribution -- "
+                               "kept section header and bytes, its relocations by symbol "
+                               "name, every defined symbol, every content section still "
+                               "carrying bytes, and every relocation-referenced import -- "
+                               "is byte-identical to what the current per-function "
+                               "compile+isolate pipeline produces for the same function",
+    "partial-link-verified": "contribution-equivalent, AND a scratch link with the N "
+                             "derived objects substituted at the N per-function object "
+                             "paths reproduces the module (and the ROM) byte-for-byte, "
+                             "with config/**/delinks.txt UNCHANGED",
+}
+
+
+def _record_partial(data, entry, block, state):
+    """Write the partial-isolation result onto the manifest entry.
+
+    Never touches `status`: see PARTIAL_STATES for why the two are separate axes."""
+    if entry is None:
+        return
+    block = dict(block)
+    block["state"] = state
+    block["stateMeaning"] = PARTIAL_STATES[state]
+    block["axisNote"] = ("Orthogonal to `status` (plan sec 6). This entry's `status` "
+                         "describes whole-range linking; this block describes a source "
+                         "consolidation whose linker contribution stays per-function.")
+    prev = entry.get("partial_isolation") or {}
+    prev.update(block)
+    entry["partial_isolation"] = prev
+    upsert_manifest_entry(data, entry)
+    save_manifest(data)
+
+
+def cmd_partial(args):
+    """Extract N derived per-function objects from ONE compiled TU object and prove
+    each is what the production pipeline already produces. No link, no config change."""
+    data = load_manifest()
+    entry = manifest_entry(data, args.id)
+    if entry is None:
+        raise SystemExit(f"no manifest entry for {args.id!r} in "
+                         f"{MANIFEST.relative_to(REPO).as_posix()}")
+
+    print(f"=== tubuild partial {entry['id']} (plan sec 9 / phase D) ===")
+    print("Nothing under config/ or src/ is read-write here; the only writes are under "
+          "build/tu/ (gitignored).\n")
+
+    obj_bytes, version, flags, build_dir, obj_path = _compile_tu(entry, args.version)
+    out_dir = build_dir / "partial"
+    if out_dir.exists() and args.clean:
+        shutil.rmtree(out_dir)
+    (out_dir / "derived").mkdir(parents=True, exist_ok=True)
+
+    print(f"\n[1/3] one merged object: {obj_path.relative_to(REPO).as_posix()} "
+          f"({len(obj_bytes)} bytes)")
+    derived = derive_function_objects(obj_bytes, entry)
+    refused = {s: p.get("error") for s, (b, p) in derived.items() if b is None}
+    for sym, (dbytes, _plan) in derived.items():
+        if dbytes is not None:
+            (out_dir / "derived" / f"{sym}.o").write_bytes(dbytes)
+    print(f"      derived {sum(1 for b, _p in derived.values() if b is not None)}/"
+          f"{len(derived)} per-function object(s) via objisolate.derive "
+          f"-> {(out_dir / 'derived').relative_to(REPO).as_posix()}")
+    for sym, err in refused.items():
+        print(f"      REFUSED {sym}: {err}")
+
+    print("\n[2/3] production comparison target: recompiling each legacy source with "
+          "tools/rombuild.compile_one")
+    prod_root = out_dir / "prod"
+    prod_paths, errors = production_objects(entry, prod_root, jobs=args.jobs)
+    for e in errors:
+        print(f"      FAIL {e}")
+    print(f"      {len(prod_paths)}/{len(entry['functions'])} object(s) "
+          f"-> {prod_root.relative_to(REPO).as_posix()}/src/")
+
+    print("\n[3/3] contribution comparison\n")
+    rows = partial_report(entry, obj_bytes, derived, prod_paths)
+    n_ok = print_partial_rows(rows, entry)
+
+    all_extra = sorted({n for _o, _s, v in rows for n in v.get("extraInertImports", [])})
+    known = set()
+    for sym, p in prod_paths.items():
+        if p.is_file():
+            c = contribution(p.read_bytes(), sym)
+            if c:
+                known |= set(c["undefInert"]) | set(c["undefReferenced"])
+    homeless = unresolvable_imports(all_extra, known)
+    if all_extra:
+        print(f"\n  {len(all_extra)} distinct EXTRA import(s) across the derived objects. "
+              f"These are symbol-table entries no kept relocation names, so none can "
+              f"change a byte; they exist because one merged symbol table serves all "
+              f"{len(rows)} reductions. {len(known & set(all_extra))} of them are already "
+              f"imported by one of the production objects being replaced.")
+        print(f"  imports with no symbols.txt home anywhere AND not already imported by "
+              f"the objects being replaced: {homeless or 'none'}")
+
+    # Contribution equivalence says nothing about ENROLLMENT, and the two are easy to
+    # confuse: a TU whose legacy entries are not `complete` today has production objects
+    # that compile fine and are never linked, because dsd serves those ranges from ROM
+    # bytes (notes/eligible-is-not-enrolled.md). Comparing against them is still
+    # meaningful -- it is what the pipeline WOULD produce -- but a reader must not read
+    # it as "this range is source-built". Stated rather than left implicit.
+    n_complete = sum(1 for f in entry["functions"]
+                     if is_complete(entry["module"], f["legacy_source"]))
+    if n_complete != len(entry["functions"]):
+        print(f"\n  NOTE: only {n_complete}/{len(entry['functions'])} of this TU's legacy "
+              f"delinks entries carry `complete`, so the ROM build serves the rest from "
+              f"ROM bytes today. The comparison above is still against what the "
+              f"per-function pipeline produces, but this TU is not fully source-built and "
+              f"`linkcheck --partial` will refuse it.")
+
+    identical = n_ok == len(rows) and not refused and not errors
+    print()
+    if identical:
+        print(f"Result: {n_ok}/{len(rows)} CONTRIBUTION-EQUIVALENT. Compiling "
+              f"{entry['source']} once and reducing it {len(rows)} times reproduces, "
+              f"byte-for-byte, the linker contribution of the {len(rows)} objects the "
+              f"ROM build makes today.")
+        print("        This is an object-level proof only. It says nothing about the "
+              "LINK until `tubuild.py linkcheck --partial` runs.")
+    else:
+        print(f"Result: {n_ok}/{len(rows)} contribution-equivalent -> NOT proven.")
+
+    report = {
+        "id": entry["id"], "toolchain": version, "flags": flags,
+        "mergedObject": obj_path.relative_to(REPO).as_posix(),
+        "mergedBytes": len(obj_bytes),
+        "rows": [{"ordinal": o, "symbol": s, **{k: v for k, v in vd.items()
+                                                if k != "keptBytes"}}
+                 for o, s, vd in rows],
+        "extraInertImports": all_extra,
+        "extraImportsWithNoHome": homeless,
+    }
+    (out_dir / "partial.json").write_text(json.dumps(report, indent=2) + "\n",
+                                          encoding="utf-8", newline="\n")
+    print(f"report -> {(out_dir / 'partial.json').relative_to(REPO).as_posix()} (gitignored)")
+
+    if not args.no_record:
+        _record_partial(data, entry, {
+            "round": "tools/tubuild.py partial -- one compile of the consolidated source, "
+                     "objisolate.derive per licensed function, compared against "
+                     "rombuild.compile_one + objisolate.isolate of each legacy source",
+            "derivedObjects": len(rows),
+            "contributionEquivalent": f"{n_ok}/{len(rows)}",
+            "comparedFields": list(_CONTRIB_FIELDS),
+            "legacyEntriesComplete": f"{n_complete}/{len(entry['functions'])}",
+            "extraInertImports": len(all_extra),
+            "extraImportsWithNoHome": homeless,
+            "artefacts": (out_dir / "partial.json").relative_to(REPO).as_posix()
+                         + " (gitignored)",
+        }, "contribution-equivalent" if identical else "derived")
+    return 0 if identical else 1
+
+
 class ReadOnlyObjectCache(RBK.ObjectCache):
     """rombuild's object cache, used for hits only.
 
@@ -1586,21 +2030,30 @@ def cmd_linkcheck(args):
         raise SystemExit(f"no manifest entry for {args.id!r} in "
                          f"{MANIFEST.relative_to(REPO).as_posix()}")
     baseline = bool(args.baseline)
+    partial = bool(getattr(args, "partial", False))
     if entry is None and not baseline:
         raise SystemExit("linkcheck needs a TU id (or --baseline for the control run)")
+    if partial and baseline:
+        raise SystemExit("--partial and --baseline are different runs: the baseline "
+                         "control substitutes nothing at all, so there is no partial "
+                         "variant of it. Run them separately.")
 
     module = entry["module"] if entry else (args.module or "ov002")
     tu_id = entry["id"] if entry else "_baseline"
     # One canonical baseline tree for the whole repository, not one per module: the
     # control run substitutes nothing, so its result is module-independent and every
-    # TU run diffs against the same artefact.
-    scratch = (BASELINE_LINK if baseline else BUILD_TU / sanitize_id(tu_id) / "link")
+    # TU run diffs against the same artefact. The partial run gets its own tree beside
+    # the whole-range one so a TU can hold both results at once -- they are different
+    # experiments on the same source and neither supersedes the other.
+    scratch = (BASELINE_LINK if baseline
+               else BUILD_TU / sanitize_id(tu_id) / ("link-partial" if partial else "link"))
     cfg_root = scratch / "config" / "arm9"
-    report = {"id": tu_id, "baseline": baseline, "module": module,
+    report = {"id": tu_id, "baseline": baseline, "partial": partial, "module": module,
               "scratch": scratch.relative_to(REPO).as_posix(), "phases": {}}
 
     print(f"=== tubuild linkcheck {tu_id}"
-          f"{'  [BASELINE CONTROL -- no TU substitution]' if baseline else ''} ===")
+          f"{'  [BASELINE CONTROL -- no TU substitution]' if baseline else ''}"
+          f"{'  [PARTIAL -- N derived per-function objects, delinks.txt UNCHANGED]' if partial else ''} ===")
     print(f"scratch tree: {scratch.relative_to(REPO).as_posix()}")
     print("real config/ and the shared build/ outputs are read-only for this command; "
           "everything written below lives under that scratch tree (build/ is gitignored).\n")
@@ -1635,23 +2088,43 @@ def cmd_linkcheck(args):
         dl = module_dir_in(cfg_root, module) / "delinks.txt"
         if not dl.is_file():
             raise SystemExit(f"no delinks.txt for module {module} at {dl}")
-        replaced, reasons = splice_tu_entry(
-            dl, span_start, span_end, entry["source"],
-            [f["legacy_source"] for f in entry["functions"]])
-        if reasons:
-            print("\nREFUSED -- the scratch delinks substitution is not safe:")
-            for r in reasons:
-                print(f"  {r}")
-            return 1
-        print(f"      spliced {len(replaced)} per-function entr(y/ies) in "
-              f"{module}/delinks.txt into one:")
-        print(f"        {entry['source']}:  .text start:0x{span_start:08x} "
-              f"end:0x{span_end:08x}  complete")
+        legacy_rels = [f["legacy_source"] for f in entry["functions"]]
+        if partial:
+            # No splice. The whole point of partial isolation is that the CONFIG does
+            # not move: the same N entries, the same N object paths, the same tiling of
+            # the span -- only the source that produced those objects' bytes changes.
+            # The span checks still run, because substituting objects under entries
+            # that do not tile the span, or that dsd currently serves from ROM bytes,
+            # would be exactly as silent a failure as a bad splice.
+            _h, _e, inside, reasons = span_entries(dl, span_start, span_end, legacy_rels)
+            if reasons:
+                print("\nREFUSED -- the per-function object substitution is not safe:")
+                for r in reasons:
+                    print(f"  {r}")
+                return 1
+            replaced = sorted(rel for _i, rel, _s in inside)
+            print(f"      delinks.txt NOT modified. {len(replaced)} per-function entr(y/ies) "
+                  f"tile 0x{span_start:08x}..0x{span_end:08x}, all `complete`, and each "
+                  f"keeps its own object path; the substitution happens at the OBJECT "
+                  f"level in [4b] below.")
+        else:
+            replaced, reasons = splice_tu_entry(
+                dl, span_start, span_end, entry["source"], legacy_rels)
+            if reasons:
+                print("\nREFUSED -- the scratch delinks substitution is not safe:")
+                for r in reasons:
+                    print(f"  {r}")
+                return 1
+            print(f"      spliced {len(replaced)} per-function entr(y/ies) in "
+                  f"{module}/delinks.txt into one:")
+            print(f"        {entry['source']}:  .text start:0x{span_start:08x} "
+                  f"end:0x{span_end:08x}  complete")
 
     # dsd's linker script selects contributions by object BASENAME, so a shadow TU
     # whose stem collides with any other enrolled or delinked object would be
-    # mislinked silently. Checked here rather than assumed.
-    if not baseline:
+    # mislinked silently. Checked here rather than assumed. Not applicable in partial
+    # mode: no new object basename enters the link there.
+    if not baseline and not partial:
         stem = pathlib.Path(entry["source"]).stem
         clash = [p for p in RB.enrolled(cfg_root, extra_roots=("src_tu",))
                  if pathlib.PurePosixPath(p).stem == stem and p != entry["source"]]
@@ -1681,7 +2154,15 @@ def cmd_linkcheck(args):
     # ------------------------------------------------------------------------ compile
     srcs = RB.enrolled(cfg_root, extra_roots=("src_tu",))
     vers = RB.versions()
-    if not baseline:
+    if partial:
+        pin, note = resolve_tu_version(entry)
+        print(f"[4/8] mwccarm: {len(srcs)} enrolled source file(s), -j{args.jobs}")
+        print(f"      the shadow TU is NOT one of them -- it is not in delinks.txt in this "
+              f"mode. It is compiled once in [4b] at pin {pin or '?'}"
+              f"{' (' + note + ')' if note else ''}, and the {len(entry['functions'])} "
+              f"per-function objects the build is about to produce are then replaced by "
+              f"reductions of it.")
+    elif not baseline:
         pin, note = resolve_tu_version(entry)
         used = vers.get(pathlib.Path(entry["source"]).stem, RB.VERSION)
         print(f"[4/8] mwccarm: {len(srcs)} enrolled source file(s), -j{args.jobs}")
@@ -1720,8 +2201,71 @@ def cmd_linkcheck(args):
             print(f"      FAIL {rel}: {err}")
         return 1
 
+    # ------------------------------- partial isolation: derive, compare, substitute
+    partial_rows = []
+    if partial:
+        print("[4b/8] partial isolation: one TU compile -> N derived objects, substituted "
+              "for the N objects [4/8] just produced")
+        obj_bytes, version, tu_flags, _bd, tu_obj_path = _compile_tu(entry)
+        derived = derive_function_objects(obj_bytes, entry)
+        keep = scratch / "partial"
+        (keep / "production").mkdir(parents=True, exist_ok=True)
+        (keep / "derived").mkdir(parents=True, exist_ok=True)
+        prod_paths, substituted = {}, []
+        for f in sorted(entry["functions"], key=lambda x: x["ordinal"]):
+            sym, rel = f["symbol"], f["legacy_source"]
+            obj = scratch / pathlib.Path(rel).with_suffix(".o")
+            if not obj.is_file():
+                print(f"      !! the build produced no object at {obj} for {rel}")
+                return 1
+            # The production object is preserved before it is overwritten -- it is the
+            # comparison target AND the thing to restore if this run is ever re-read.
+            saved = keep / "production" / f"{sym}.o"
+            saved.write_bytes(obj.read_bytes())
+            prod_paths[sym] = saved
+            dbytes, _plan = derived.get(sym, (None, {}))
+            if dbytes is None:
+                continue
+            (keep / "derived" / f"{sym}.o").write_bytes(dbytes)
+            obj.write_bytes(dbytes)
+            substituted.append(rel)
+        partial_rows = partial_report(entry, obj_bytes, derived, prod_paths)
+        print(f"      merged object: {tu_obj_path.relative_to(REPO).as_posix()} "
+              f"({len(obj_bytes)} bytes, {version})")
+        n_ok = print_partial_rows(partial_rows, entry)
+        print(f"      substituted {len(substituted)}/{len(entry['functions'])} object(s) "
+              f"in place under {scratch.relative_to(REPO).as_posix()}/src/")
+        extra = sorted({n for _o, _s, v in partial_rows
+                        for n in v.get("extraInertImports", [])})
+        known = set()
+        for sym, p in prod_paths.items():
+            c = contribution(p.read_bytes(), sym)
+            if c:
+                known |= set(c["undefInert"]) | set(c["undefReferenced"])
+        homeless = unresolvable_imports(extra, known)
+        print(f"      {len(extra)} extra inert import(s) across the derived objects; "
+              f"{len(homeless)} with no symbols.txt home and not already imported by the "
+              f"objects being replaced{': ' + ', '.join(homeless) if homeless else ''}")
+        report["partial"] = {
+            "mergedObject": tu_obj_path.relative_to(REPO).as_posix(),
+            "mergedBytes": len(obj_bytes), "toolchain": version, "flags": tu_flags,
+            "contributionEquivalent": f"{n_ok}/{len(partial_rows)}",
+            "rows": [{"ordinal": o, "symbol": s,
+                      **{k: v for k, v in vd.items() if k != "keptBytes"}}
+                     for o, s, vd in partial_rows],
+            "extraInertImports": extra, "extraImportsWithNoHome": homeless,
+            "substituted": substituted,
+        }
+        if n_ok != len(partial_rows):
+            print(f"      NOTE: {len(partial_rows) - n_ok} derived object(s) are NOT "
+                  f"contribution-equivalent. The link below still runs, but a green module "
+                  f"would then be evidence about the LINK, not about equivalence.")
+        if homeless:
+            print("      PREDICTION: an import with no definition anywhere can make "
+                  "mwldarm refuse the link. Running it so the verdict is measured.")
+
     # ------------------------------------------------- pre-link licensing audit
-    if not baseline:
+    if not baseline and not partial:
         print("[4b/8] licensing audit of the shadow object (plan sec 4.5), before the link")
         tu_obj = scratch / pathlib.Path(entry["source"]).with_suffix(".o")
         if not tu_obj.is_file():
@@ -1904,10 +2448,37 @@ def cmd_linkcheck(args):
         symbols_verdict = not symbols_new
     else:
         symbols_verdict = symbols_ok
+    equivalent = all(v["identical"] for _o, _s, v in partial_rows) if partial_rows else False
     verified = bool(module_ok and symbols_verdict and (rom_ok is not False))
-    report["result"] = "link-verified" if verified else "failed"
+    if partial:
+        # A partial run's claim is narrower than link-verified's and must not borrow its
+        # name: the TU's whole .text range still comes from N objects, not one.
+        verified = bool(verified and equivalent and partial_rows)
+        report["result"] = "partial-link-verified" if verified else "failed"
+    else:
+        report["result"] = "link-verified" if verified else "failed"
     print()
-    if baseline:
+    if partial:
+        n_ok = sum(1 for _o, _s, v in partial_rows if v["identical"])
+        if verified:
+            print(f"Result: PARTIAL-LINK-VERIFIED. {entry['source']} was compiled ONCE; "
+                  f"{n_ok}/{len(partial_rows)} derived per-function objects are "
+                  f"byte-identical in linker contribution to the ones the current build "
+                  f"produces, and with all {len(partial_rows)} substituted at their "
+                  f"existing object paths the module and the TU range "
+                  f"0x{span_start:08x}..0x{span_end:08x} reproduce"
+                  f"{', and the full ROM builds' if rom_ok else ''}.")
+            print("        config/**/delinks.txt was NOT changed: the same N entries, the "
+                  "same N object paths, the same enrolled function count. Only the SOURCE "
+                  "that produced those objects' bytes changed.")
+            print("        This does NOT make the TU link-verified (plan sec 6): the whole "
+                  "range is still linked from N contributions, and the vtable/RTTI "
+                  "ownership question is untouched -- it is deferred, not answered.")
+        else:
+            print(f"Result: NOT partial-link-verified "
+                  f"({n_ok}/{len(partial_rows)} contribution-equivalent; see the phases "
+                  f"above).")
+    elif baseline:
         print(f"BASELINE CONTROL: modules {'PASS' if module_ok else 'FAIL'}, "
               f"dsd check symbols --fail {'PASS' if symbols_ok else 'FAIL'}, "
               f"ROM {'built' if rom_ok else 'not built' if rom_ok is False else 'skipped'}.")
@@ -1930,7 +2501,33 @@ def cmd_linkcheck(args):
     else:
         print("Result: NOT link-verified (see the phases above).")
     _write_link_report(scratch, report)
-    _record_linkcheck(data, entry, report, baseline)
+    if partial:
+        p = report["partial"]
+        _record_partial(data, entry, {
+            "round": "tools/tubuild.py linkcheck --partial -- one compile of the "
+                     "consolidated source, objisolate.derive per licensed function, each "
+                     "derived object substituted for the production per-function object at "
+                     "its own existing path, then scratch dsd delink+lcf, whole-tree "
+                     "mwccarm, mwldarm link, linked-range and module byte comparison, dsd "
+                     "check symbols --fail, full ROM build",
+            "delinksChanged": False,
+            "derivedObjects": len(partial_rows),
+            "contributionEquivalent": p["contributionEquivalent"],
+            "comparedFields": list(_CONTRIB_FIELDS),
+            "substitutedObjectPaths": p["substituted"],
+            "extraInertImports": len(p["extraInertImports"]),
+            "extraImportsWithNoHome": p["extraImportsWithNoHome"],
+            "result": report["result"],
+            "phases": {k: v.get("ok") for k, v in report["phases"].items()},
+            "tuRange": report.get("tuRange"),
+            "moduleFidelityPassed": bool(module_ok),
+            "symbolCheckNewVsBaseline": report.get("symbolsNew"),
+            "rom": report.get("rom"),
+            "scratch": report["scratch"] + " (gitignored)",
+        }, "partial-link-verified" if verified else
+           ("contribution-equivalent" if equivalent else "derived"))
+    else:
+        _record_linkcheck(data, entry, report, baseline)
     return 0 if verified else 1
 
 
@@ -2139,6 +2736,27 @@ def cmd_promote(args):
               f"so `CREDIT LOST` is structural for this workstream and needs an explicit "
               f"policy (an attribution.json override keyed on the surviving path, or the "
               f"attribution-override label) BEFORE the first real promotion.")
+    # And a harder one that the credit computation above does not reach, found while
+    # investigating whether partial isolation changes the promotion story. It does not
+    # depend on git lineage at all, so no commit arrangement and no override touches it.
+    print(f"   HARDER, AND NOT WAIVABLE: tools/validate_merge.py binds a function to a "
+          f"source by FILE STEM -- function_snapshot() builds {{stem: path}} over src/ and "
+          f"looks the SYMBOL NAME up in it. Collapsing these {len(legacy)} files leaves no "
+          f"stem equal to any of the {len(legacy)} symbols, so all {len(legacy)} functions "
+          f"leave `matched` and the merge gate raises `lost {len(legacy)} matched "
+          f"function(s)`. Precisely: the attribution-override label maps to "
+          f"--allow-attribution-change, which DOES waive credit 'changed or was lost' "
+          f"(the two attribution reasons) -- but `lost N matched function(s)` is a "
+          f"separate, unconditional matched-COVERAGE check (validate_merge.py ~line 410), "
+          f"gated by no flag at all. No existing override reaches it. Verified against the "
+          f"real function_snapshot/attribution_snapshot at HEAD, where all {len(legacy)} "
+          f"are matched and credited today.")
+    print("   Consequence for sequencing: a whole-TU source collapse cannot land through "
+          "CI until validate_merge learns a symbol->source mapping that is not "
+          "'stem == symbol name'. config/**/delinks.txt already carries exactly that "
+          "mapping (each entry names a source AND the range it owns), and so does "
+          "config/tu_manifest.json; neither is consulted. `linkcheck --partial` is "
+          "unaffected -- it changes no source path at all.")
     print("   Related, and NOT triggered by this TU but by any key-function TU: dsd "
           "derives vtable/typeinfo ownership from the mangled class name in the "
           "delinks.txt PATH, so replacing src/_ZN<Class>D1Ev.cpp with src/<dir>/<Class>.cpp "
@@ -2197,6 +2815,19 @@ def main():
     p.add_argument("--version", default=None)
     p.set_defaults(func=cmd_verify)
 
+    p = sub.add_parser("partial", help="plan sec 9 -- derive one isolated object per "
+                                       "licensed function from a single TU compile and "
+                                       "compare each against the production per-function "
+                                       "object (no link, no config change)")
+    p.add_argument("id")
+    p.add_argument("--version", default=None)
+    p.add_argument("-j", "--jobs", type=int, default=4)
+    p.add_argument("--clean", action="store_true",
+                   help="delete this TU's build/tu/<id>/partial tree before running")
+    p.add_argument("--no-record", action="store_true",
+                   help="do not write the result back into the manifest")
+    p.set_defaults(func=cmd_partial)
+
     p = sub.add_parser("linkcheck", help="scratch dsd delink/lcf + real mwldarm link, "
                                          "linked-range/module comparison, dsd check "
                                          "symbols --fail, ROM build (plan sec 7.6)")
@@ -2204,6 +2835,12 @@ def main():
     p.add_argument("--baseline", action="store_true",
                    help="run the identical scratch pipeline with NO TU substitution -- the "
                         "control that says whether a failure belongs to the TU or the harness")
+    p.add_argument("--partial", action="store_true",
+                   help="plan sec 9: leave delinks.txt alone and substitute N derived "
+                        "per-function objects (one TU compile, objisolate.derive per "
+                        "function) for the N objects the build produces, at their own "
+                        "existing paths -- instead of replacing the whole range with one "
+                        "object")
     p.add_argument("--module", default=None, help="module for --baseline without an id")
     p.add_argument("-j", "--jobs", type=int, default=RB.default_jobs())
     p.add_argument("--no-cache", action="store_true",

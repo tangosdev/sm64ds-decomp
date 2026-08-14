@@ -257,19 +257,54 @@ def referenced_undefined(raw, keep_symbol):
     return out
 
 
+def derive(raw, keep_symbol):
+    """`isolate`, as a pure function of bytes: (derived_bytes, plan).
+
+    Same reduction, same plan, no filesystem. `derived_bytes` is None exactly when
+    the plan carries an error.
+
+    WHY THIS EXISTS SEPARATELY FROM `isolate`
+    -----------------------------------------
+    `isolate` answers "reduce THIS object to the one function its delink entry
+    declares", which is a 1:1 relationship between a source file and a function and
+    is all the current build needs. Translation-unit reconstruction needs the 1:N
+    one: compile the recovered multi-function `.cpp` ONCE, then produce one derived
+    object per function it is licensed to contribute
+    (notes/translation-unit-reconstruction-plan.md section 9, phase D). That is N
+    reductions of the SAME input bytes, which an in-place mutator cannot express --
+    each reduction has to start from the untouched object, and `isolate` has already
+    consumed it by the second call.
+
+    Nothing about the reduction itself changes: `plan` still decides what to keep,
+    drop, externalise and re-addend, and `isolate` is now this function plus a
+    write. A caller that wants the derived object on disk under a DIFFERENT name
+    (the TU case: one source, N object paths) writes the bytes itself.
+    """
+    p = plan(bytes(raw), keep_symbol)
+    if p.get("error"):
+        return None, p
+    if not p["drop"] and not p["externalise"]:
+        return bytes(raw), p
+    return _apply(raw, p, keep_symbol), p
+
+
 def isolate(obj, keep_symbol):
     """Apply `plan` to the object file in place. Returns the plan.
 
     Idempotent: an object with nothing left to drop is rewritten to the same bytes,
     so a cached object processed by an earlier build is not corrupted by a later
     one."""
-    raw = bytearray(obj.read_bytes())
-    p = plan(bytes(raw), keep_symbol)
-    if p.get("error"):
+    raw = obj.read_bytes()
+    out, p = derive(raw, keep_symbol)
+    if p.get("error") or not (p["drop"] or p["externalise"]):
         return p
-    if not p["drop"] and not p["externalise"]:
-        return p
+    obj.write_bytes(out)
+    return p
 
+
+def _apply(raw, p, keep_symbol):
+    """The reduction itself: header surgery on a copy of `raw`, per plan `p`."""
+    raw = bytearray(raw)
     elf = ELFFile(io.BytesIO(bytes(raw)))
     endian = "<" if elf.little_endian else ">"
     import struct
@@ -358,5 +393,4 @@ def isolate(obj, keep_symbol):
                 struct.pack_into(endian + "i", raw, roff + i * 12 + 8,
                                  r["r_addend"] - VTABLE_PREAMBLE)
 
-    obj.write_bytes(bytes(raw))
-    return p
+    return bytes(raw)
