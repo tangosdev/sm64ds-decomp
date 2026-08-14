@@ -16,6 +16,10 @@ src/func_01ffa4bc.c:
     complete
     .text start:0x01ffa4bc end:0x01ffa588
 
+src/__aeabi_ulmod.c:
+    complete
+    .text start:0x01ffa9e8 end:0x01ffaa34
+
 src/func_01ffafd4.c:
     complete
     .text start:0x01ffafd4 end:0x01ffb008

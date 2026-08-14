@@ -398,3 +398,4 @@
 {"id":"ov006:0x0211ea70","module":"ov006","addr":34728560,"name":"func_ov006_0211ea70","matchProvenance":{"kind":"ai","model":"grok-4.6","reasoning":"xhigh","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov006_0211ea70.c"}
 {"id":"ov006:0x0211f9fc","module":"ov006","addr":34732540,"name":"func_ov006_0211f9fc","matchProvenance":{"kind":"ai","model":"grok-4.6","reasoning":"xhigh","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_ov006_0211f9fc.c"}
 {"id":"arm9:0x02073300","module":"arm9","addr":34026240,"name":"func_02073300","matchProvenance":{"kind":"ai","model":"grok-4.6","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/func_02073300.cpp"}
+{"id":"itcm:0x01ffa9e8","module":"itcm","addr":33532392,"name":"__aeabi_ulmod","matchProvenance":{"kind":"ai","model":"grok-4.6","reasoning":"high","harness":"grok-build"},"author":"lunavyqo","srcPath":"src/__aeabi_ulmod.c"}
