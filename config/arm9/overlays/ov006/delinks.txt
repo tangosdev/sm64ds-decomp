@@ -5745,15 +5745,15 @@ src/func_ov006_02113c14.c:
     complete
     .text start:0x02113c14 end:0x02113e54
 
-src/func_ov006_02113e54.c:
+src/_ZN19cMgSmartball_ball_c6UpdateEv.cpp:
     complete
     .text start:0x02113e54 end:0x02113f1c
 
-src/func_ov006_02113f1c.c:
+src/_ZN19cMgSmartball_ball_c12SaveSnapshotEv.cpp:
     complete
     .text start:0x02113f1c end:0x02114458
 
-src/func_ov006_02114458.c:
+src/_ZN19cMgSmartball_ball_c14RestoreInitialEv.cpp:
     complete
     .text start:0x02114458 end:0x02114548
 

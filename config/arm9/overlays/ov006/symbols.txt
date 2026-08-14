@@ -1492,9 +1492,9 @@ func_ov006_021126b4 kind:function(arm,size=0x248) addr:0x021126b4
 func_ov006_021128fc kind:function(arm,size=0x1dc) addr:0x021128fc
 func_ov006_02112ad8 kind:function(arm,size=0x113c) addr:0x02112ad8
 func_ov006_02113c14 kind:function(arm,size=0x240) addr:0x02113c14
-func_ov006_02113e54 kind:function(arm,size=0xc8) addr:0x02113e54
-func_ov006_02113f1c kind:function(arm,size=0x53c) addr:0x02113f1c
-func_ov006_02114458 kind:function(arm,size=0xf0) addr:0x02114458
+_ZN19cMgSmartball_ball_c6UpdateEv kind:function(arm,size=0xc8) addr:0x02113e54
+_ZN19cMgSmartball_ball_c12SaveSnapshotEv kind:function(arm,size=0x53c) addr:0x02113f1c
+_ZN19cMgSmartball_ball_c14RestoreInitialEv kind:function(arm,size=0xf0) addr:0x02114458
 func_ov006_02114548 kind:function(arm,size=0x48) addr:0x02114548
 func_ov006_02114590 kind:function(arm,size=0x11c) addr:0x02114590
 func_ov006_021146ac kind:function(arm,size=0x20) addr:0x021146ac
@@ -4111,7 +4111,7 @@ _ZTI20cMgSmartball_board_c kind:data(any) addr:0x0213ec58
 _ZTI21cMgSmartball_spring_c kind:data(any) addr:0x0213ec64
 _ZTI19cMgSmartball_slot_c kind:data(any) addr:0x0213ec70
 _ZTS16dScMgSmartball_c kind:data(any) addr:0x0213ec7c
-data_ov006_0213ec98 kind:data(any) addr:0x0213ec98
+_ZTV19cMgSmartball_ball_c kind:data(any) addr:0x0213ec98
 _ZTV20cMgSmartball_dokan_c kind:data(any) addr:0x0213ecac
 data_ov006_0213ecb8 kind:data(any) addr:0x0213ecb8
 data_ov006_0213eccc kind:data(any) addr:0x0213eccc

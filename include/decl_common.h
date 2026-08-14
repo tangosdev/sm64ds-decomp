@@ -1019,7 +1019,7 @@ extern int data_ov006_0213d744[];
 extern int data_ov006_0213e5dc;
 extern int data_ov006_0213e614[];
 extern int data_ov006_0213e628[];
-extern int data_ov006_0213ec98[];
+extern int _ZTV19cMgSmartball_ball_c[];
 extern int _ZTV20cMgSmartball_dokan_c[];
 extern int data_ov006_0213eccc[];
 extern int data_ov006_0213ece8[];
