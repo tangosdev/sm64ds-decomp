@@ -76,7 +76,16 @@ data_ov070_021222e0 data_ov070_021222e8 data_ov070_02122404
 # A symmetric Fix12 curve, sized because dsd guessed a boundary exactly on its
 # APEX (0x2800) -- the point where the byte pattern reverses, so the 35 words
 # after the cut mirror the 35 before it. The real end is the .rodata end
-# 0x02122afc, where __sinit_ov070_02122afc begins.
+# 0x02122afc, where __sinit_ov070_02122afc begins; data_ov070_021234c4 + 0x10
+# is the word that points at it.
+#
+# SIDE EFFECT, measured: naming it takes 0x02122968 out of the discovered-target
+# set, so port_ov070_gap_02122594 shrinks 0x4d8 -> 0x304 and ROM
+# [0x02122898, 0x02122968) -- 208 bytes -- stops being hosted. A pointer landing
+# at 0x02122594 now has 772 bytes of runway rather than 1240. Nothing reaches
+# the dropped span (guards clean, selftest stderr identical), and the old extent
+# was never a real extent anyway: it was that run stretching to the SAME
+# ambiguous guess at the apex that truncated the curve.
 data_ov070_02122968:0x194
 
 # ---- .data: the 30 state PMF sources (each 8 bytes, {fn, 0}) ---------------

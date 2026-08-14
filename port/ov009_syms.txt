@@ -55,11 +55,32 @@ data_ov009_02112bc4 data_ov009_02112bf8 data_ov009_02112c38
 # bytes of unreferenced neighbour span [0x02112288, 0x021122ec). The track also
 # moves out of ordinary .data into .dsstate, so save states now capture it.
 data_ov009_021122ec:0x16c
-# Two Vector3<s16> path arrays, walked by index out of the records at
-# 0x02112c9c and 0x02112dcc ({u8 tag; u8 numPoints; u16 zero; Vector3<s16> *}).
-# The count byte pins both sizes: 0x02112dcc says 220 points, 220*6 = 0x528,
-# ending exactly on data_ov009_021138fc; 0x02112cac says 28, 28*6 = 0xa8.
-# Ambiguous cuts had them hosted sixteen and four points long.
+# Two Vector3<s16> path arrays, walked by index out of the record table that
+# starts at 0x02112c9c -- 8-byte records, {u8 tag; u8 numPoints; u16 zero;
+# Vector3<s16> *points}. The two that name these arrays are the records at
+# 0x02112dcc and 0x02112cac (NOT 0x02112c9c, which is the table's first record
+# and names a different four-point path). The count byte pins both sizes:
+# 0x02112dcc says 220 points, 220*6 = 0x528, ending exactly on
+# data_ov009_021138fc; 0x02112cac says 28, 28*6 = 0xa8. Ambiguous cuts had them
+# hosted sixteen and four points long.
+#
+# TRAP, ARMED BUT NOT FIRING -- read before mounting ov006, ov007 or ov089.
+# config/arm9/overlays/ov009/relocs.txt carries four SPURIOUS `kind:load`
+# relocs INSIDE this array: 0x021135cc -> ov006, 0x021136d4 -> ov089,
+# 0x021136e0 -> ov007, 0x02113758 -> ov006. None of them is a pointer. They are
+# dsd misreading path coordinates that happen to parse as plausible addresses --
+# 0x021135cc is point 84, x=-5000 y=530, and the two s16s together spell
+# 0x0212ec78. Harmless today because the --cross pass only patches a word whose
+# TARGET some mount hosts: ov006 and ov007 are not mounted at all, and ov089 is
+# mounted per symbol but does not host 0x021310cc. Verified: ov_cross.c has zero
+# patches into this array and ovsweep reports no raw cross-mount words.
+#
+# The day a mount starts providing one of those three targets, --cross will
+# write a host address over two s16 path coordinates -- eight of them across the
+# four sites -- which is exactly the failure this lane exists to remove, only
+# arriving through the reloc table instead of an array overrun. The relocs.txt
+# entries are NOT suppressed here on purpose: that file is dsd config shared
+# with the decomp side and the call to edit it is Tango's.
 data_ov009_021133d4:0x528
 data_ov009_02113214:0xa8
 # the four {function, delta} pairs __sinit_ov009_02112458 copies into the
