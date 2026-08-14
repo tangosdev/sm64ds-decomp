@@ -91,7 +91,7 @@ extern int data_ov006_0213ed9c[];
 extern int data_ov006_0213ed38[];
 extern int data_ov006_0213ed74[];
 extern int data_ov006_0213ed60[];
-extern int data_ov006_0213ed24[];
+extern int _ZTV19cMgSmartball_wing_c[];
 extern int data_ov006_02142c40[];
 extern int data_ov006_0213ef8c[];
 extern int data_ov006_0213efb8[];
@@ -229,7 +229,7 @@ void func_ov006_02115b0c(char *c)
         int *p = *(int **)(c + 0x4000 + 0x780);
         if (p != 0) {
             if (p != 0) {
-                *p = (int)data_ov006_0213ed24;
+                *p = (int)_ZTV19cMgSmartball_wing_c;
                 *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
