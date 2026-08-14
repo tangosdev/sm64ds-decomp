@@ -267,6 +267,9 @@ extern "C" int host_setting_save_run(int mode, int key, int pad);
 typedef unsigned int u32;
 
 extern "C" {
+/* The hosted-DS section sentinels (hal/dsstate_seg.cpp). Their addresses are
+   the .dsstate span, printed beside the selftest BMP as that run's layout. */
+extern char dsstate_lo, dsstate_hi;
 void *_ZN6PlayerC1Ev(void *self);
 /* Player::InitResources' own character-propagation helper: +0x6d9 forward
    into the swap pair at +0x6dc/+0x6dd (src/func_ov002_020beabc.cpp) */
@@ -5960,6 +5963,14 @@ int main(void)
             if (boot_spawns)
                 port_actor_census();
             port_bob_spawn_report();
+            /* THE IMAGE LAYOUT THIS BMP WAS PRODUCED AT. The hosted-DS span is
+               the linker's .dsstate section (hal/dsstate_seg.h), and its base
+               moves whenever anything placed before it in the image changes
+               size. A selftest BMP that differs between two builds is only
+               comparable against a run whose span matches, so the span is part
+               of the run's identity and is printed beside the dump. */
+            fprintf(stderr, "[layout] dsstate=%p..%p\n",
+                    (void *)&dsstate_lo, (void *)&dsstate_hi);
             ntr::ppu_write_bmp("walk_window_selftest.bmp", fb);
             /* the other half of the boot's [heap] line: what the run itself
                spent out of the ROM's 0x3b000.
