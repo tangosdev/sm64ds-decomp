@@ -48,10 +48,12 @@
 // The shared half is byte-identical to the arena class the port already hosts:
 // slots 1,2,4,5,7,8,10..15 and 18..30 of this table hold exactly the same arm9
 // addresses as _ZTV18BowserFireSeaArena's (0x0211a8b0, ov060) -- compared word
-// for word on this lane. Two slots differ from that class's shape and both are
+// for word on this lane. One slot differs from that class's shape and is
 // INHERITED here rather than own:
 //   slot  6  0x02043b24  _ZN9ActorBase8BehaviorEv        (no Behavior of its own)
-//   slot 12  0x02043ac0  _ZN9ActorBase16OnPendingDestroyEv
+// (slot 12, 0x02043ac0 _ZN9ActorBase16OnPendingDestroyEv, is the SAME word in
+// both tables -- inherited in each; the review's word-for-word recomparison
+// puts the full differing set at {0, 3, 6, 9, 16, 17}.)
 // Own slots are 0 / 3 / 9 / 16 / 17 only. Sixteen static billboards that turn
 // to face the camera do not need a per-frame Behavior, and the ROM agrees.
 //
