@@ -1,5 +1,14 @@
 # Matching C style: writing C that mwccarm reproduces byte-for-byte
 
+> **Scope: this is a codegen-steering manual, not a house style guide.** The examples
+> below are deliberately unidiomatic — raw offset casts, launder masks, `volatile`,
+> contorted control flow — because their job is to make mwccarm emit given bytes. They
+> are correct in the **matching phase** and nowhere else. Once a function is matched and
+> you are promoting it to a real C++ class, the rules in `AGENTS.md` §"C++ style — for
+> CONVERTED code only" take over, and `tools/tiers.py` scores most of what is on this
+> page as a defect (`no_raw_offset`, `no_codegen_trick`). Do not cite this file as
+> justification for writing new code this way.
+
 Mined from 36 byte-matched functions (the corpus) and validated by hand-cracking. The
 agents get the LOGIC right; the misses are codegen SHAPE -- the C compiles to a different
 instruction shape (register pressure / callee-saved set, control-flow layout, store order).

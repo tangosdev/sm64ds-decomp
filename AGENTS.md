@@ -13,6 +13,108 @@ you to the repo's toolchain over MCP. Ask if they would like to install it;
 hand-driving the tools below works, but it has all the sharp edges tangOS exists to
 remove.
 
+**Autonomous agent, no human at the keyboard?** Work in a dedicated `git worktree`, not
+in a shared checkout. Two things bite:
+
+- `git worktree add` does **not** bring the gitignored inputs the byte gates need —
+  `extracted/` (your own ROM dump), `tools/mwccarm/` (the compiler), `tools/bin/`
+  (`dsd`). Link them in from the primary checkout (directory junction on Windows,
+  symlink elsewhere) as the first step, or `build_pin.verify` reports "not verified"
+  and `rombuild.py` aborts with `no extracted ROM` — neither of which reads as
+  "you forgot to wire up the worktree".
+- `build/` is per-checkout scratch (`tools/rombuild.py:BUILD`) and is **not** safe to
+  share between concurrent processes. Two builds writing one `build/` invent
+  truncated-object link errors and eligibility drops that look exactly like real
+  regressions. One build at a time, per worktree. The object cache
+  (`tools/rombuild_cache.py`) is content-addressed and is the right way to make
+  repeat builds cheap — do not chase that speed by pointing two worktrees at one
+  `build/`.
+
+## What we are building, in priority order
+
+Everything below this line is mechanics. This is the *why* those mechanics exist, and
+the tie-breaker when two of them appear to pull in different directions.
+
+1. **Historically accurate C++ that byte-reproduces the ROM.** One goal, two halves —
+   we are recovering the source Nintendo/Vertigo actually compiled, and the proof that
+   we recovered it is that the pinned compiler emits the ROM's bytes from it.
+2. **Portability** — the recovered source should be able to build for a host
+   (see [`port/`](port/)), not just for ARM946E.
+3. **Readability** — a person can follow it without the disassembly open beside them.
+
+**The byte match is never traded away for 2 or 3.** Not for a nicer name, not for a
+cleaner loop, not to make the host build happy. If a readability-motivated or
+portability-motivated rewrite costs a single byte, the byte wins: revert the rewrite,
+bank the near-miss (`tools/nearmiss_db.py`), and move on. Do not argue with the
+compiler and do not "improve" a matched file into a non-matching one — a
+non-reproducing file in `src/` is worse than no file at all, because it plants a false
+match someone has to find and rip out later.
+
+Two corollaries agents get wrong:
+
+- **An accuracy fix outranks a readability fix, even when both are byte-free.** Both
+  are free; only one of them advances goal 1. If you have budget for one change,
+  spend it on the one that makes the recovered structure *truer* (correct base class,
+  correct member name, correct signature), not the one that makes it prettier.
+- **Goal 1's two halves do not license each other.** Bytes falling out is not proof
+  the structure is right (see the next section), and a confident story about the
+  original class is not proof of anything at all until `validate` is green.
+
+## Byte-match is the floor, not the ceiling
+
+A green `validate` says the compiler agrees with the ROM. It says nothing about
+whether the C++ around that function is an honest recovery. Both matter, and the repo
+measures them separately — `tools/tiers.py`, published (and kept current — this file
+is not) at the top of [`README.md`](README.md):
+
+```
+MATCHED    ████████████████████████████████░░  most        bytes agree with the ROM
+CONVERTED  ██░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░░  far behind  a person can read it
+LINKED     ███████████░░░░░░░░░░░░░░░░░░░░░░  partial     it reaches the host binary
+```
+
+The exact numbers move every day; read them from README.md, not from here. The shape
+does not: MATCHED is almost done, CONVERTED is a small fraction of it, and the gap
+between those first two lines is the point. A file can be byte-perfect,
+relocation-correct, merged, and still be `*(u32*)(this + 0x74)` inside a `char
+pad[0x1000]` shadow struct. That file is *matched* and it is *not recovered*.
+`tiers.py` pins what recovered means, five criteria, all five required:
+
+| | |
+|---|---|
+| `real_name` | the symbol is a real name, not `func_<addr>` and not `_Z…` |
+| `no_raw_offset` | no `*(u32*)(c + 0x74)` / `(char*)self + 0x74` object arithmetic |
+| `no_unk_field` | no `unk_<off>` members |
+| `no_codegen_trick` | no launder mask, no `volatile`, no inline asm |
+| `no_mangled_refs` | it calls `Player::SpinBounce`, not `_ZN6Player10SpinBounceE…` |
+
+So the obligation on a class migration is: **the layout comes from evidence, not from
+convenience.** Size and base from the factory / `operator new`; members from what the
+destructor and the accessors actually touch; overrides from diffing the class's vtable
+against its base's. A flat struct with a `char pad[…]` renamed to `class` is not a
+migration — it is the same shadow struct wearing a `class` keyword, and it will match
+the bytes exactly as well as the honest version does, which is the problem.
+
+**Verify the thing, not the proxy for the thing.** Every metric here has a cheaper way
+to satisfy it than to be true, and this tree has been caught by that at least three
+times:
+
+- `tiers.py` used to score its criteria over raw file text, so a *comment* explaining
+  why an offset cast was needed scored exactly like the cast. Documenting your cleanup
+  made the file look dirtier. See `tiers.py:_code_only` — 1,310 file-criterion
+  readings flipped when it started masking comments.
+- The langmode launder metric had the same inversion, and a merged file
+  (`src/_ZN14BlueCoinSwitch13InitResourcesEv.cpp`) documents rewording a comment on
+  purpose to move the number. It now reads code via `delaunder.find_sites`.
+- The structural one, and the reason the style section below is so careful: **a `src/`
+  file that fails to compile, or that is never enrolled, is silently served from ROM
+  bytes.** It is not eligible, so it is not built, so `dsd` supplies the original
+  range and every gate stays green — while your file contributes nothing. A silent
+  pass here is indistinguishable from a real one unless you check `source-built`.
+
+When you report a result, report the thing. "`validate` is green" and "this class is
+recovered" are two different claims and only one of them is checked by CI.
+
 ## The one rule that matters
 
 **Every file you add to `src/` must byte-reproduce the ROM.**
@@ -109,6 +211,105 @@ So:
 - Don't add a type to a shared header speculatively. A name in `include/` is a claim that
   every consumer agrees on it; a wrong shared type is far more expensive than a local one.
 
+## C++ style — for CONVERTED code only
+
+**Scope, read this first.** This section governs code that has already been promoted to
+a real C++ class: named members, real method names, no shadow struct. It does **not**
+govern raw-matching-phase files. In the matching phase, the idioms in
+[`notes/matching-style.md`](notes/matching-style.md) — raw offset casts, `launder.h`
+masks, `volatile`, deliberately contorted control flow — are frequently the *only* way
+to reproduce the ROM, and they are correct there. That file's examples are
+unidiomatic on purpose; it is a codegen-steering manual, not a style guide, and nothing
+in it should be read as general guidance. The direction of travel is
+matching-style → this section, once the bytes are already nailed down.
+
+**And every rule below is subordinate to the byte gate.** A style change to a matched
+file is a codegen change until proven otherwise. Apply these when you are already
+rewriting the file, and re-run `build_pin.verify` / `tools/match.py` afterwards. If a
+rule costs a byte, the byte wins (see "What we are building").
+
+### What actually compiles under the pin
+
+The pin is **mwccarm 2004/b56** (`tools/rombuild.py:VERSION`), flags
+`-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on
+-msgstyle gcc -Cpp_exceptions off`, with `-lang c99` swapped for `-lang c++` on a
+`//cpp` file. It is a **2004 compiler**: it predates C++11 entirely, and the build
+passes **no system include path** (`MWCIncludes` is unset and no `src/` file has ever
+`#include <…>`), so the C++ standard library and its macros are simply not there.
+
+Verified empirically by compiling snippets with that exact command line:
+
+| construct | verdict |
+|---|---|
+| `static_cast` / `reinterpret_cast` / `const_cast` / `dynamic_cast` | compiles clean |
+| templates, member-init lists, `bool`, references | compiles clean |
+| `this->member` and bare `member` | both compile clean |
+| **`nullptr`** | **`undefined identifier 'nullptr'`** — C++11, does not exist here |
+| **`NULL`** | **`undefined identifier 'NULL'`** — nothing in the tree defines it |
+| **`auto` deduction, range-based `for`** | **syntax error** (`auto` is still the C storage class) |
+
+"Compiles" is not "free". None of the above was measured for codegen impact on a real
+matched function; that is per-file and only the byte gate settles it.
+
+### The rules, with the evidence behind them
+
+**Null pointers: write `0`, or the implicit test.** Not `nullptr` (does not compile).
+Not `NULL` either — `NULL` occurs 11 times in `src/` and 8 times in `include/`, and
+**every single one is inside a comment**; there are zero uses in code, no `#define
+NULL` anywhere in the tree, and a snippet using bare `NULL` fails to compile under the
+pin. The tree's actual idiom is `if (!p)` / `if (p)` / `== 0` (`if (!x)` alone: 163
+occurrences across 117 files). Do not "fix" this by adding a `NULL` definition to a
+shared header — that is a blast-radius change (see above) bought for a cosmetic.
+
+**`this->`: omit it.** 28 of 2,303 `_ZN*.cpp` files use it (1.2%); 32 of the 1,540
+`.cpp` files that define an unmangled `Class::Method` use it (2.1%). Bare member
+access is the convention by a factor of ~50. Keep `this->` only where it disambiguates
+against a parameter or local of the same name, or where you genuinely need `this` as a
+value (`(char*)this` arithmetic during a partial migration). `this->x` and `x` are the
+same lvalue and are *expected* to be codegen-identical — that specific equivalence was
+**not** byte-measured, so do not mass-rewrite a matched file on the strength of it
+without re-verifying.
+
+**Member variables: `lowerCamelCase`, no prefix.** Of 4,972 field declarations in
+`include/`: `m_` prefix **0**, leading underscore **0**, trailing underscore **0**.
+2,818 (56.7%) are still `unk_<off>` placeholders; of the 2,154 that carry a real name,
+1,998 (92.8%) are lowerCamelCase, 148 are a single lowercase word, 4 are UpperCamel and
+4 are snake_case. So: lowerCamelCase, and if the name is one word, one lowercase word
+is fine. `unk_<off>` is a legal *way-station* — it records an offset you have not
+identified yet — but it fails CONVERTED criterion 3 and is never the finished state.
+
+**Methods: `UpperCamelCase`.** 2,320 of 2,351 unmangled `Class::Method` definition
+sites (98.7%) are UpperCamel; 5 start lowercase. Underscores appear in 273 of them and
+are usually a ROM-attested name shape (`Player::St_Owl_Main`) — keep those exactly as
+attested, and see
+[`notes/symbol-name-provenance.md`](notes/symbol-name-provenance.md) before you
+"correct" any mangled name.
+
+**Casts: keep C-style casts as the default.** C++-style casts *do* compile under the
+pin (verified above), but they are **unattested in this tree**: `static_cast`,
+`reinterpret_cast`, `const_cast` and `dynamic_cast` have a combined **zero**
+occurrences across 11,121 `src/` files and 454 `include/` files. So there is no
+in-tree evidence about their codegen behaviour at `-O4,p`, and the ~7,300 `-lang c99`
+files cannot use them at all while code moves between C and C++ constantly. If you
+want to introduce them, do it deliberately in one file, prove the bytes with
+`build_pin`, and say so in the PR body — do not sweep them in across a batch.
+*Unverified:* whether `static_cast`/`reinterpret_cast` are byte-identical to the
+equivalent C cast on a real matched function. Someone should measure that before this
+recommendation is loosened.
+
+**Formatting: don't.** There is no `.clang-format` in this repo and there should not
+be one. Reformatting is byte-safe for mwccarm but not for the gates:
+`tools/check_header_offsets.py` parses struct bodies with line-oriented regexes
+(`^\s*TYPE NAME;`), so a reformat can silently reduce how many fields it validates —
+and it only checks the paths you pass it, so running it with no arguments checks
+nothing and prints a pass. Match the surrounding file; do not reformat a file you are
+not otherwise editing.
+
+**Header edits still follow the "Shared headers" rules above.** Renaming a member in
+`include/` moves the codegen of every consumer. Diff the *name list* from
+`tools/eligible.py` before and after, not just the count — a rename can cost a
+different file its eligibility.
+
 ## `port/` references (renames, `.c`→`.cpp`, file moves)
 
 `port/` builds its own MSVC host executable that points into `src/` by literal path and
@@ -202,9 +403,15 @@ Do not open the PR with near-misses in `src/` expecting the maintainer to split 
   6ac (launder tree position, escape aliasing, rank classes); older: u64-mask laundering,
   decl/statement order, `//cpp` dummy-vtable dispatch, struct-copy interleave.
 - [`notes/pret-idioms.md`](notes/pret-idioms.md) — mwccarm idioms mined from pret decomps.
-- [`notes/matching-style.md`](notes/matching-style.md) "Known walls" — patterns proven
-  unreachable from source. If your **only** divergence is one of those, it's a wall:
-  store the near-miss and hand it to the permuter instead of grinding.
+- [`notes/matching-style.md`](notes/matching-style.md) — how to steer mwccarm's codegen
+  shape, plus "Known walls": patterns proven unreachable from source. If your **only**
+  divergence is one of those, it's a wall: store the near-miss and hand it to the
+  permuter instead of grinding. **Scope warning:** that file's examples are
+  deliberately unidiomatic — raw offset casts, launder masks, `volatile`, contorted
+  control flow — because they exist to make the compiler emit given bytes. They are
+  correct in the matching phase and they are **not** a house style. Once a file is
+  matched and you are promoting it to a real class, the rules in "C++ style — for
+  CONVERTED code only" above take over.
 - [`notes/symbol-name-provenance.md`](notes/symbol-name-provenance.md) — which parts of a
   mangled name are ROM-proven and which are somebody's assertion. The address and the
   class name are well attested; **parameter types are not**, and roughly half of all
