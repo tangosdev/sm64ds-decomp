@@ -5629,15 +5629,15 @@ src/func_ov006_021115cc.c:
     complete
     .text start:0x021115cc end:0x02111654
 
-src/func_ov006_02111654.c:
+src/_ZN18cMgSmartball_ana_c6UpdateEv.cpp:
     complete
     .text start:0x02111654 end:0x021116f0
 
-src/func_ov006_021116f0.c:
+src/_ZN18cMgSmartball_ana_c12SaveSnapshotEv.cpp:
     complete
     .text start:0x021116f0 end:0x02111750
 
-src/func_ov006_02111750.c:
+src/_ZN18cMgSmartball_ana_c14RestoreInitialEv.cpp:
     complete
     .text start:0x02111750 end:0x02111774
 

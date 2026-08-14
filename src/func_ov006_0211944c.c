@@ -48,7 +48,7 @@ void func_ov006_0211944c(char *c, int mode)
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
-                *(int volatile *)p = (int)data_ov006_0213ed4c;
+                *(int volatile *)p = (int)_ZTV18cMgSmartball_ana_c;
                 *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
