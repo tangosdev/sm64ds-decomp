@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-void func_ov006_02114738(void);
+void _ZN21cMgSmartball_object_c14RestoreInitialEv(void);
 struct P {
   char p0[0x34];
   struct { int a,b; } A[3];
@@ -13,7 +13,7 @@ struct P {
 };
 void func_ov006_02110154(void* c){
   struct P* r4=(struct P*)c;
-  func_ov006_02114738();
+  _ZN21cMgSmartball_object_c14RestoreInitialEv();
   for(int i=0;i<3;i++){
     r4->A[i].a=0;
     r4->A[i].b=0;

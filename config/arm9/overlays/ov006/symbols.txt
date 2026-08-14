@@ -1502,9 +1502,9 @@ func_ov006_021146cc kind:function(arm,size=0x14) addr:0x021146cc
 func_ov006_021146e0 kind:function(arm,size=0x14) addr:0x021146e0
 func_ov006_021146f4 kind:function(arm,size=0x18) addr:0x021146f4
 func_ov006_0211470c kind:function(arm,size=0x14) addr:0x0211470c
-func_ov006_02114720 kind:function(arm,size=0x4) addr:0x02114720
-func_ov006_02114724 kind:function(arm,size=0x14) addr:0x02114724
-func_ov006_02114738 kind:function(arm,size=0x14) addr:0x02114738
+_ZN21cMgSmartball_object_c6UpdateEv kind:function(arm,size=0x4) addr:0x02114720
+_ZN21cMgSmartball_object_c12SaveSnapshotEv kind:function(arm,size=0x14) addr:0x02114724
+_ZN21cMgSmartball_object_c14RestoreInitialEv kind:function(arm,size=0x14) addr:0x02114738
 func_ov006_0211474c kind:function(arm,size=0x60) addr:0x0211474c
 func_ov006_021147ac kind:function(arm,size=0x24) addr:0x021147ac
 func_ov006_021147d0 kind:function(arm,size=0x30) addr:0x021147d0
@@ -4117,7 +4117,7 @@ data_ov006_0213ecb8 kind:data(any) addr:0x0213ecb8
 data_ov006_0213eccc kind:data(any) addr:0x0213eccc
 data_ov006_0213ece8 kind:data(any) addr:0x0213ece8
 data_ov006_0213ecfc kind:data(any) addr:0x0213ecfc
-data_ov006_0213ed10 kind:data(any) addr:0x0213ed10
+_ZTV21cMgSmartball_object_c kind:data(any) addr:0x0213ed10
 data_ov006_0213ed24 kind:data(any) addr:0x0213ed24
 data_ov006_0213ed38 kind:data(any) addr:0x0213ed38
 data_ov006_0213ed4c kind:data(any) addr:0x0213ed4c

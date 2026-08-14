@@ -1,7 +1,7 @@
-extern int data_ov006_0213ed10;
+extern int _ZTV21cMgSmartball_object_c;
 void func_ov006_0211474c(char* c, int a1, int a2, int* a3){
   int lo, hi;
-  *(int*)(c) = (int)&data_ov006_0213ed10;
+  *(int*)(c) = (int)&_ZTV21cMgSmartball_object_c;
   *(int*)(c+4) = a1;
   *(int*)(c+0x2c) = a2;
   hi = a3[1]; lo = a3[0];

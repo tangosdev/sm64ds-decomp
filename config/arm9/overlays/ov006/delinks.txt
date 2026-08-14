@@ -5785,15 +5785,15 @@ src/func_ov006_0211470c.c:
     complete
     .text start:0x0211470c end:0x02114720
 
-src/func_ov006_02114720.c:
+src/_ZN21cMgSmartball_object_c6UpdateEv.cpp:
     complete
     .text start:0x02114720 end:0x02114724
 
-src/func_ov006_02114724.c:
+src/_ZN21cMgSmartball_object_c12SaveSnapshotEv.cpp:
     complete
     .text start:0x02114724 end:0x02114738
 
-src/func_ov006_02114738.c:
+src/_ZN21cMgSmartball_object_c14RestoreInitialEv.cpp:
     complete
     .text start:0x02114738 end:0x0211474c
 

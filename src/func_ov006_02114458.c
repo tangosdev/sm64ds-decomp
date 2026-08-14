@@ -1,10 +1,10 @@
 #include "types.h"
-extern void func_ov006_02114738(char *o);
+extern void _ZN21cMgSmartball_object_c14RestoreInitialEv(char *o);
 
 void func_ov006_02114458(char *o)
 {
     int i;
-    func_ov006_02114738(o);
+    _ZN21cMgSmartball_object_c14RestoreInitialEv(o);
     *(int *)(o + 0x114) = *(int *)(o + 8);
     *(int *)(o + 0x118) = *(int *)(o + 0xc);
     *(int *)(o + 0x20) = 0;

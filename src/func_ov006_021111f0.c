@@ -1,9 +1,9 @@
-void func_ov006_02114738(int *p);
+void _ZN21cMgSmartball_object_c14RestoreInitialEv(int *p);
 void func_ov006_02110e28(void *p);
 
 void func_ov006_021111f0(short *thiz)
 {
-    func_ov006_02114738((int*)thiz);
+    _ZN21cMgSmartball_object_c14RestoreInitialEv((int*)thiz);
     *(short*)((char*)thiz + 0x32) = 0;
     *(short*)((char*)thiz + 0x34) = 0x40;
     *(short*)((char*)thiz + 0x36) = 0;

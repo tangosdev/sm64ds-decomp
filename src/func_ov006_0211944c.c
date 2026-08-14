@@ -21,7 +21,7 @@ void func_ov006_0211944c(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *(int volatile *)p = (int)data_ov006_0213ec98;
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *slot = 0;
@@ -35,7 +35,7 @@ void func_ov006_0211944c(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *(int volatile *)p = (int)data_ov006_0213ed88;
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *slot = 0;
@@ -49,7 +49,7 @@ void func_ov006_0211944c(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *(int volatile *)p = (int)data_ov006_0213ed4c;
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *slot = 0;
@@ -62,7 +62,7 @@ void func_ov006_0211944c(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *(int volatile *)p = (int)data_ov006_0213ecfc;
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *(int *)(c + 0x4000 + 0x684) = 0;
@@ -75,7 +75,7 @@ void func_ov006_0211944c(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *(int volatile *)p = (int)data_ov006_0213ece8;
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *slot = 0;
@@ -88,7 +88,7 @@ void func_ov006_0211944c(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *(int volatile *)p = (int)data_ov006_0213ecac;
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *slot = 0;
@@ -102,7 +102,7 @@ void func_ov006_0211944c(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *(int volatile *)p = (int)data_ov006_0213ed9c;
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *slot = 0;
@@ -116,7 +116,7 @@ void func_ov006_0211944c(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *(int volatile *)p = (int)data_ov006_0213ed38;
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *slot = 0;
@@ -131,7 +131,7 @@ void func_ov006_0211944c(char *c, int mode)
                 *p = (int)data_ov006_0213ed74;
                 __destroy_arr((char *)p + 0x4c, 3, 8, NullDestructor_0203d47c);
                 __destroy_arr((char *)p + 0x34, 3, 8, NullDestructor_0203d47c);
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *(int **)(c + 0x4000 + 0x778) = 0;
@@ -142,7 +142,7 @@ void func_ov006_0211944c(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *p = (int)data_ov006_0213ed60;
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *(int **)(c + 0x4000 + 0x77c) = 0;
@@ -153,7 +153,7 @@ void func_ov006_0211944c(char *c, int mode)
         if (p != 0) {
             if (p != 0) {
                 *p = (int)data_ov006_0213ed24;
-                *(int volatile *)p = (int)data_ov006_0213ed10;
+                *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }
             *(int **)(c + 0x4000 + 0x780) = 0;

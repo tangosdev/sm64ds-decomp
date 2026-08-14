@@ -1,8 +1,8 @@
-extern void func_ov006_02114738(void *p);
+extern void _ZN21cMgSmartball_object_c14RestoreInitialEv(void *p);
 extern void func_ov006_0210d93c(void *p);
 void func_ov006_0210e098(char *c)
 {
-    func_ov006_02114738(c);
+    _ZN21cMgSmartball_object_c14RestoreInitialEv(c);
     *(unsigned short *)(c + 0x32) = 0;
     *(int *)(c + 0x34) = 0;
     *(unsigned char *)(c + 0x3c) = 0;

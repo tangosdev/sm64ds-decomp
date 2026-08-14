@@ -1,5 +1,5 @@
 #include "types.h"
-// Reset: forwards self to func_ov006_02114738, fills data_ov006_02142c1c with
+// Reset: forwards self to _ZN21cMgSmartball_object_c14RestoreInitialEv, fills data_ov006_02142c1c with
 // 0..8, calls func_ov006_0210f998, then zeroes the per-slot state arrays
 // (+0x31/+0x3c/+0x60 x9, +0x6c/+0x8c x8) and +0x94/+0x98.
 typedef struct Obj {
@@ -16,12 +16,12 @@ typedef struct Obj {
 } Obj;
 
 extern int data_ov006_02142c1c[9];
-extern void func_ov006_02114738(int* p);
+extern void _ZN21cMgSmartball_object_c14RestoreInitialEv(int* p);
 extern void func_ov006_0210f998(void);
 
 void func_ov006_0210f914(Obj* self) {
     int i;
-    func_ov006_02114738((int*)self);
+    _ZN21cMgSmartball_object_c14RestoreInitialEv((int*)self);
     for (i = 0; i < 9; i++)
         data_ov006_02142c1c[i] = i;
     func_ov006_0210f998();
