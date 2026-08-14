@@ -5497,6 +5497,10 @@ src/func_ov006_0210ef48.c:
     complete
     .text start:0x0210ef48 end:0x0210f564
 
+src/func_ov006_0210f564.c:
+    complete
+    .text start:0x0210f564 end:0x0210f914
+
 src/func_ov006_0210f914.c:
     complete
     .text start:0x0210f914 end:0x0210f998
