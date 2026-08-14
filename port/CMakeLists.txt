@@ -2652,6 +2652,32 @@ foreach(line IN LISTS SLICE_W7B_LINES)
     list(APPEND SLICE_W7B_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# Two MR_I_PROJECTILE TUs need hostgen, both mwcc-vs-MSVC syntax quirks the
+# byte-verified tree must not be edited for (the gate-32 / gate-64 treatment).
+# func_ov071_02121b08 is C++ inside a .c -- `struct Callback {}`, an empty
+# struct, which MSVC will not compile as C (C2016); hostgen emits it as .cpp
+# with the symbols wrapped back to C linkage.
+# func_ov071_02121ba4 is the decl_common.h HEADER_SHADOW case: that header
+# declares it `(void*)` inside its extern "C" block while the TU defines it
+# `(char*)` -- one register on the ROM, C2733 to MSVC. This lane adds the
+# HEADER_SHADOW table entry in tools/hostgen.py.
+set(GATE_W7B_SYMS func_ov071_02121b08 func_ov071_02121ba4)
+set(GATE_W7B_GEN "")
+foreach(sym IN LISTS GATE_W7B_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND GATE_W7B_GEN "${sym_out}")
+endforeach()
+
 # Gate 177: BULLY (215) + BIG_BULLY (216) + ROTATING_FIREBAR (81), ov064's
 # first mount. No PMF tables; the bullies' D1/D0 and all three Renders are
 # host thunks/copies (the fill and unmatched/ModelAnim_Renders.cpp); the
@@ -3068,7 +3094,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     hal/actor_classes_flame.cpp ${SLICE175_SOURCES}
     hal/actor_classes_flamethrower.cpp ${SLICE_W6F_SOURCES} unmatched/Flamethrower_Behavior.c
     hal/actor_classes_scuttlebug.cpp ${SLICE176_SOURCES} unmatched/Scuttlebug_StateDispatch.cpp
-    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp unmatched/MrI_Render.cpp
+    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} ${GATE_W7B_GEN} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp unmatched/MrI_Render.cpp
     hal/actor_classes_ov064.cpp ${SLICE177_SOURCES} unmatched/Bully_AfterClsn.cpp
     hal/actor_classes_ov064_gate178.cpp ${SLICE178_SOURCES} unmatched/Ov064Gate178_States.cpp
     hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
@@ -3146,7 +3172,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     hal/actor_classes_flame.cpp ${SLICE175_SOURCES}
     hal/actor_classes_flamethrower.cpp ${SLICE_W6F_SOURCES} unmatched/Flamethrower_Behavior.c
     hal/actor_classes_scuttlebug.cpp ${SLICE176_SOURCES} unmatched/Scuttlebug_StateDispatch.cpp
-    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp unmatched/MrI_Render.cpp
+    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} ${GATE_W7B_GEN} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp unmatched/MrI_Render.cpp
     hal/actor_classes_ov064.cpp ${SLICE177_SOURCES} unmatched/Bully_AfterClsn.cpp
     hal/actor_classes_ov064_gate178.cpp ${SLICE178_SOURCES} unmatched/Ov064Gate178_States.cpp
     hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp
@@ -3253,7 +3279,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     hal/actor_classes_flame.cpp ${SLICE175_SOURCES}
     hal/actor_classes_flamethrower.cpp ${SLICE_W6F_SOURCES} unmatched/Flamethrower_Behavior.c
     hal/actor_classes_scuttlebug.cpp ${SLICE176_SOURCES} unmatched/Scuttlebug_StateDispatch.cpp
-    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp unmatched/MrI_Render.cpp
+    hal/actor_classes_ov071.cpp ${SLICE_W7B_SOURCES} ${GATE_W7B_GEN} unmatched/MrI_StateDispatch.cpp unmatched/MrI_StateMains.cpp unmatched/MrI_Render.cpp
     hal/actor_classes_ov064.cpp ${SLICE177_SOURCES} unmatched/Bully_AfterClsn.cpp
     hal/actor_classes_ov064_gate178.cpp ${SLICE178_SOURCES} unmatched/Ov064Gate178_States.cpp
     hal/actor_classes_jrb.cpp ${SLICE188_SOURCES} unmatched/Jrb_Renders.cpp

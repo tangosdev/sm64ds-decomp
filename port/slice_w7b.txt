@@ -75,6 +75,12 @@ src/func_ov071_0212110c.c
 src/func_ov071_021214f4.c
 src/func_ov071_0212152c.c
 src/func_ov071_02121570.c
+# The one arm9 body the closure reaches that no earlier gate had linked:
+# func_ov071_02120b14's call at 0x02120b50 relocates to 0x02010374 =
+# Actor::FindExplosionActor(CylinderClsn&) (arm9 symbols.txt, size 0x40), and
+# nothing else in the binary named it before this lane -- /OPT:REF had always
+# stripped it. Measured as a link error, not guessed.
+src/_ZN5Actor18FindExplosionActorER12CylinderClsn.c
 
 # ---- MR_I_PROJECTILE (264) --------------------------------------------------
 src/MrI_Projectile_Spawn.c
@@ -85,7 +91,18 @@ src/_ZN14MrI_Projectile16OnPendingDestroyEv.c
 src/_ZN14MrI_Projectile6RenderEv.cpp
 src/_ZN14MrI_Projectile8BehaviorEv.cpp
 src/func_ov071_02121b00.c
-src/func_ov071_02121b08.c
 src/func_ov071_02121b50.c
-src/func_ov071_02121ba4.cpp
 src/func_ov071_02121c6c.cpp
+# NOT listed here -- routed through hostgen instead (${GATE_W7B_GEN} in
+# port/CMakeLists.txt), two mwcc-vs-MSVC syntax quirks the byte-verified tree
+# must not be edited for. Both are still the decomp's own bodies; hostgen only
+# rewrites the wrapper:
+#   func_ov071_02121b08 -- C++ inside a .c (`struct Callback {}`, an empty
+#       struct, which C rejects: MSVC error C2016). hostgen emits it as .cpp
+#       with the symbols wrapped back to C linkage -- the gate-9 /
+#       func_ov084_021298d0 case.
+#   func_ov071_02121ba4 -- decl_common.h:2793 declares it `(void*)` inside that
+#       header's extern "C" block while the TU defines it `(char*)`. One
+#       register on the ROM, C2733 to MSVC. hostgen's HEADER_SHADOW hides the
+#       header's declaration across the include -- the func_ov102_0214b248
+#       case; the table entry is this lane's addition to port/tools/hostgen.py.

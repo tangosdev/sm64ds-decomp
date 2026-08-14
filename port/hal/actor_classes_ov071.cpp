@@ -120,6 +120,8 @@
 
 #include "Actor.h"
 #include "ActorBase.h"
+#include "MrI.h"
+#include "MrI_Projectile.h"
 
 extern "C" {
 /* the shared lifecycle halves, the same functions every fill writes */
@@ -146,21 +148,24 @@ const char *port_actor_class_name(unsigned id);            /* hal/actor_registry
 void port_actor_slot_decline(const char *what);            /* func_02043fdc.cpp */
 void port_actor_render_probe(const char *cls, void *model); /* actor_classes */
 
-/* ---- MR. I's own bodies --------------------------------------------------- */
-int _ZN3MrI13InitResourcesEv(char *self);      /* slot 0,  nonmatching src */
+/* ---- MR. I's own bodies ----------------------------------------------------
+   Behavior is a REAL C++ METHOD (src/_ZN3MrI8BehaviorEv.cpp defines
+   `int MrI::Behavior()` against include/MrI.h), so it is reached qualified
+   below, not by the _ZN name -- the Scuttlebug Init/Behavior/Render treatment.
+   InitResources IS spelled extern "C" inside its own TU, so it keeps the
+   _ZN name; Render is this lane's host copy. */
+int _ZN3MrI13InitResourcesEv(char *self);      /* slot 0,  nonmatching src, extern "C" */
 int _ZN3MrI16CleanupResourcesEv(void);         /* slot 3,  C linkage, no self */
-int _ZN3MrI8BehaviorEv(void *self);            /* slot 6,  real C++ member */
 int _ZN3MrI6RenderEv(void *self);              /* slot 9,  HOST COPY */
 void _ZN3MrI16OnPendingDestroyEv(void);        /* slot 12, empty, no self */
 int *_ZN3MrID0Ev(int *self);                   /* slot 17, C linkage */
 void *MrI_Spawn(void);
 void *BigMrI_Spawn(void);
 
-/* ---- MR_I_PROJECTILE's own bodies ----------------------------------------- */
-int _ZN14MrI_Projectile13InitResourcesEv(void *self);   /* slot 0  */
+/* ---- MR_I_PROJECTILE's own bodies -----------------------------------------
+   Init/Behavior/Render are all real C++ methods against
+   include/MrI_Projectile.h -- reached qualified below. */
 int _ZN14MrI_Projectile16CleanupResourcesEv(void);      /* slot 3  */
-int _ZN14MrI_Projectile8BehaviorEv(void *self);         /* slot 6  */
-int _ZN14MrI_Projectile6RenderEv(void *self);           /* slot 9  */
 void _ZN14MrI_Projectile16OnPendingDestroyEv(void);     /* slot 12 */
 int *_ZN14MrI_ProjectileD0Ev(int *self);                /* slot 17 */
 int func_ov071_02121b00(void);                          /* slot 18, returns 4 */
@@ -200,6 +205,25 @@ int _ZTV14MrI_Projectile[31];
    spelling is another module's dsd export winning the race at a shared-window
    address. Alias by address; the config rename goes upstream as its own PR. */
 #pragma comment(linker, "/alternatename:_data_ov074_02123038=_data_ov071_02123038")
+
+/* C++-MANGLED DATA SPELLINGS, the data_02082128 / data_020a0e68 precedent.
+   src/_ZN3MrI13InitResourcesEv.c and the two MrI_Projectile method TUs declare
+   their mount data OUTSIDE any extern "C" block, so MSVC mangles the
+   references while the mount defines the plain C names. Point each mangled
+   spelling at the one host object. Every LHS below is the exact decorated name
+   the linker asked for, and each is undefined everywhere else, so no alias can
+   be defeated by a real definition (the wave-5 R1/R2 lesson). */
+#pragma comment(linker, "/alternatename:?data_ov071_02123038@@3USharedFilePtr@@A=_data_ov071_02123038")
+#pragma comment(linker, "/alternatename:?data_ov071_02123048@@3USharedFilePtr@@A=_data_ov071_02123048")
+#pragma comment(linker, "/alternatename:?data_ov071_02123050@@3USharedFilePtr@@A=_data_ov071_02123050")
+#pragma comment(linker, "/alternatename:?data_ov071_021226a0@@3USharedFilePtr@@A=_data_ov071_021226a0")
+#pragma comment(linker, "/alternatename:?data_ov071_021226a4@@3PAPAUSharedFilePtr@@A=_data_ov071_021226a4")
+/* data_ov071_021230b8 is the gravity Vector3 __sinit_ov071_02122a1c seats
+   {0, -0x19000, 0}. MrI_Projectile::Behavior spells it `Vector3` and
+   MrI_Projectile::InitResources spells the SAME address `void *` -- one
+   storage, two spellings, the data_ov071_02122ecc_d case in the sibling fill. */
+#pragma comment(linker, "/alternatename:?data_ov071_021230b8@@3UVector3@@A=_data_ov071_021230b8")
+#pragma comment(linker, "/alternatename:?data_ov071_021230b8@@3PAXA=_data_ov071_021230b8")
 
 // ---- the trap --------------------------------------------------------------
 static void mri_trap_report(void *self, int slot)
@@ -273,7 +297,7 @@ static int __fastcall mri_init(void *s, void *)
 static int __fastcall mri_clean(void *s, void *)
 { (void)s; return _ZN3MrI16CleanupResourcesEv(); }
 static int __fastcall mri_behavior(void *s, void *)
-{ return _ZN3MrI8BehaviorEv(s); }
+{ return ((MrI *)s)->MrI::Behavior(); }
 /* Render is the MrI_Render host copy (ROM-order ModelAnim slot-5 dispatch, the
    Whomp/Fish case), not the matched TU. */
 static int __fastcall mri_render(void *s, void *)
@@ -299,15 +323,16 @@ static int __fastcall mri_d1(void *s, void *)
 
 // ---- MR_I_PROJECTILE's own slots -------------------------------------------
 static int __fastcall mrp_init(void *s, void *)
-{ return _ZN14MrI_Projectile13InitResourcesEv(s); }
+{ return ((MrI_Projectile *)s)->MrI_Projectile::InitResources(); }
 static int __fastcall mrp_clean(void *s, void *)
 { (void)s; return _ZN14MrI_Projectile16CleanupResourcesEv(); }
 static int __fastcall mrp_behavior(void *s, void *)
-{ return _ZN14MrI_Projectile8BehaviorEv(s); }
+{ return ((MrI_Projectile *)s)->MrI_Projectile::Behavior(); }
 /* The projectile's Render is a real method with NO vtable dispatch in it (two
-   Particle::System::NewUnkCallback818 calls), so the matched TU is used. */
+   Particle::System::NewUnkCallback818 calls), so the matched TU is used --
+   unlike MrI::Render, which is this lane's ModelAnim slot-5 host copy. */
 static int __fastcall mrp_render(void *s, void *)
-{ return _ZN14MrI_Projectile6RenderEv(s); }
+{ return ((MrI_Projectile *)s)->MrI_Projectile::Render(); }
 static int __fastcall mrp_pdes(void *s, void *)
 { (void)s; _ZN14MrI_Projectile16OnPendingDestroyEv(); return 0; }
 static int __fastcall mrp_d0(void *s, void *)

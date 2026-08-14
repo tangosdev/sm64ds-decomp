@@ -388,6 +388,11 @@ HEADER_SHADOW = {
     # (void*,int) -- one register on the ROM, two C2733s to MSVC.
     "_ZN5Whomp13InitResourcesEv": ("decl_common.h",
                                    ("func_01ffb07c", "func_020396d0")),
+    # run linkw wave 7, lane w7b, MR_I_PROJECTILE (264): decl_common.h:2793
+    # declares func_ov071_02121ba4 `(void*)` inside its extern "C" block while
+    # src/func_ov071_02121ba4.cpp defines it `(char*)`. One register on the
+    # ROM, C2733 to MSVC -- the func_ov102_0214b248 case exactly.
+    "func_ov071_02121ba4": "decl_common.h",
 }
 
 # ---- REDUNDANT OUT-OF-LINE MEMBER REDECLARATIONS ---------------------------
