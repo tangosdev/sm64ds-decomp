@@ -77,7 +77,14 @@ WorkElevator_SpawnInfo
 
 # ---- ROLLING_ROCK (221): SpawnInfo + the split three-word record ----------
 RollingRock_SpawnInfo
-data_ov021_021148c4 data_ov021_021148dc
+data_ov021_021148c4
+# The mangled class-name string the record's middle word points at,
+# "16daObjCvShutter_c" -- 18 characters, NUL at +18 (read out of the raw ndspy
+# image; ov021's dsd export is the compressed one and shows garbage here). dsd
+# guessed a boundary four bytes in, so the host array was [4] plus a zero pack
+# pad and every read got "16da". 0x14 runs to ShutterHmc_SpawnInfo at
+# 0x021148f0.
+data_ov021_021148dc:0x14
 
 # ---- SHUTTER_HMC (67): pointer table + the CLPS block it names ------------
 data_ov021_02113a00

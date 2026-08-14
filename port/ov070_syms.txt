@@ -73,6 +73,11 @@
 # ---- .rodata ---------------------------------------------------------------
 # 021222e0/021222e8: FlameChomp Behavior's fix tables; 02122404: Amp's.
 data_ov070_021222e0 data_ov070_021222e8 data_ov070_02122404
+# A symmetric Fix12 curve, sized because dsd guessed a boundary exactly on its
+# APEX (0x2800) -- the point where the byte pattern reverses, so the 35 words
+# after the cut mirror the 35 before it. The real end is the .rodata end
+# 0x02122afc, where __sinit_ov070_02122afc begins.
+data_ov070_02122968:0x194
 
 # ---- .data: the 30 state PMF sources (each 8 bytes, {fn, 0}) ---------------
 data_ov070_021230c0 data_ov070_021230c8 data_ov070_021230d0

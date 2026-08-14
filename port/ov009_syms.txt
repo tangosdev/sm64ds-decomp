@@ -55,6 +55,13 @@ data_ov009_02112bc4 data_ov009_02112bf8 data_ov009_02112c38
 # bytes of unreferenced neighbour span [0x02112288, 0x021122ec). The track also
 # moves out of ordinary .data into .dsstate, so save states now capture it.
 data_ov009_021122ec:0x16c
+# Two Vector3<s16> path arrays, walked by index out of the records at
+# 0x02112c9c and 0x02112dcc ({u8 tag; u8 numPoints; u16 zero; Vector3<s16> *}).
+# The count byte pins both sizes: 0x02112dcc says 220 points, 220*6 = 0x528,
+# ending exactly on data_ov009_021138fc; 0x02112cac says 28, 28*6 = 0xa8.
+# Ambiguous cuts had them hosted sixteen and four points long.
+data_ov009_021133d4:0x528
+data_ov009_02113214:0xa8
 # the four {function, delta} pairs __sinit_ov009_02112458 copies into the
 # Bird's own behaviour table
 data_ov009_021138fc data_ov009_02113904 data_ov009_0211390c data_ov009_02113914
