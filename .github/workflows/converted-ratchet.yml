@@ -1,0 +1,86 @@
+# Guards the CONVERTED tier against a silent backslide.
+#
+# `tools/tiers.py` scores every file under src/ against five readability criteria (real
+# function name, no raw offset arithmetic, no `unk_<off>` fields, no codegen tricks, no
+# calls through mangled names). `tools/tiers_ratchet.py` banks the SET of paths that pass
+# all five in `config/converted-baseline.json` and fails when a banked path LEAVES it.
+#
+# A SET, not a count, on purpose: a count ratchet is satisfied by converting one file
+# while wrecking another, which is the exact trade this gate exists to notice.
+#
+# Costs nothing to run: pure source text over git-tracked files, stdlib only, no compiler
+# and no ROM, ~2s over 11k files. That is why it can live on a GitHub-hosted runner rather
+# than on the private build box that `pr-validate.yml` relays to.
+#
+# WHERE THE BASELINE LIVES -- and why this job is shorter than langmode-ratchet.yml.
+# `config/converted-baseline.json`, in this tree, in your PR's diff. That is the opposite
+# of the langmode ratchet, whose baseline lives on the `chaos-data` branch because it is a
+# COUNTER: every PR that lowered a count had to re-bank, so the file moved under every
+# other PR in flight and four conflicted on it in one session.
+#
+# A SET baseline has no such pressure, because staleness here only ever runs one way.
+# `--check` fails on removals alone, so a baseline that has not caught up with newly
+# converted files is PERMISSIVE, never falsely red -- no PR needs to re-bank in order to
+# pass, so the file is not in every PR's diff and does not conflict. Re-bank it
+# occasionally, on its own, to bank recent gains.
+#
+# Hence: no second checkout, and no root-file override the way langmode has one. The
+# escape hatch is a flag on the tool, used LOCALLY before you push.
+#
+# WHEN A FILE MUST LEAVE THE SET. It legitimately can. This project's goal ordering puts a
+# historically accurate C++ source that reproduces the ROM's exact bytes FIRST and
+# readability third, and the two genuinely collide: whether a raw cast can become a named
+# member is decided per function by the byte gate, not by taste. So a matching fix may have
+# to put offset arithmetic BACK into a file this baseline calls CONVERTED. Bank it with a
+# reason rather than reverting the match:
+#
+#     python tools/tiers_ratchet.py --update --reason "St_WallJump_Init: named members
+#         cost 0x14 bytes, reverted to offset casts to hold the match"
+#
+# That rewrites the baseline and appends every removed path to
+# `config/converted-backslide-exceptions.jsonl` with your reason, so each file that ever
+# left the set is one line with a `git blame` and a PR behind it. Commit both and this job
+# is green again. The gate's job is to make a backslide LOUD and ATTRIBUTED, not impossible
+# -- and unlike the langmode ratchet's `--update`, this one has no state-dependent refusal,
+# so there is no tree from which it cannot be re-pinned in a single command.
+name: converted ratchet
+
+on:
+  pull_request:
+    paths:
+      - "src/**"
+      - "tools/tiers.py"
+      - "tools/tiers_ratchet.py"
+      - "tools/delaunder.py"
+      - "config/converted-baseline.json"
+      - ".github/workflows/converted-ratchet.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: converted-ratchet-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ratchet:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No history needed: the tool reads `git ls-files src` and the working tree, both
+        # of which a depth-1 checkout provides in full.
+      - uses: actions/setup-python@v5
+        # Nothing here needs more than the stdlib -- tiers.py imports json/os/pathlib/re/sys
+        # plus tools/delaunder.py, which is stdlib too, and there is no pip step. The pin is
+        # for the same reason python-names.yml pins pyflakes: a runner's default python
+        # moving under a gate that touched no Python is indistinguishable from a regression.
+        with:
+          python-version: "3.12"
+      - name: Current CONVERTED state
+        # Report only, no exit-code meaning: prints the tier percentage and names anything
+        # that backslid, so the log says what happened before the gate says whether it passed.
+        run: python tools/tiers_ratchet.py
+      - name: "Ratchet: a banked file may not stop being CONVERTED"
+        # Newly converted files that are not yet banked are fine and never fail this.
+        run: python tools/tiers_ratchet.py --check
