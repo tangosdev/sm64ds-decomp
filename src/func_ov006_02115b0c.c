@@ -88,7 +88,7 @@ extern int _ZTV21cMgSmartball_kinoko_c[];
 extern int _ZTV24cMgSmartball_propeller_c[];
 extern int _ZTV20cMgSmartball_dokan_c[];
 extern int _ZTV21cMgSmartball_pakkun_c[];
-extern int data_ov006_0213ed38[];
+extern int _ZTV25cMgSmartball_pushswitch_c[];
 extern int _ZTV19cMgSmartball_slot_c[];
 extern int data_ov006_0213ed60[];
 extern int _ZTV19cMgSmartball_wing_c[];
@@ -193,7 +193,7 @@ void func_ov006_02115b0c(char *c)
         int *p = *slot;
         if (p != 0) {
             if (p != 0) {
-                *(int volatile *)p = (int)data_ov006_0213ed38;
+                *(int volatile *)p = (int)_ZTV25cMgSmartball_pushswitch_c;
                 *(int volatile *)p = (int)_ZTV21cMgSmartball_object_c;
                 _ZN6Memory16operator_delete2EPv(p);
             }

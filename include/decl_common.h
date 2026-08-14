@@ -1025,7 +1025,7 @@ extern int data_ov006_0213eccc[];
 extern int _ZTV24cMgSmartball_propeller_c[];
 extern int data_ov006_0213ecfc[];
 extern int _ZTV19cMgSmartball_wing_c[];
-extern int data_ov006_0213ed38[];
+extern int _ZTV25cMgSmartball_pushswitch_c[];
 extern int _ZTV18cMgSmartball_ana_c[];
 extern int data_ov006_0213ed60[];
 extern int _ZTV19cMgSmartball_slot_c[];

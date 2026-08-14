@@ -5465,15 +5465,15 @@ src/func_ov006_0210e1fc.c:
     complete
     .text start:0x0210e1fc end:0x0210e364
 
-src/func_ov006_0210e364.c:
+src/_ZN25cMgSmartball_pushswitch_c6UpdateEv.cpp:
     complete
     .text start:0x0210e364 end:0x0210e3e8
 
-src/func_ov006_0210e3e8.c:
+src/_ZN25cMgSmartball_pushswitch_c12SaveSnapshotEv.cpp:
     complete
     .text start:0x0210e3e8 end:0x0210e460
 
-src/func_ov006_0210e460.c:
+src/_ZN25cMgSmartball_pushswitch_c14RestoreInitialEv.cpp:
     complete
     .text start:0x0210e460 end:0x0210e480
 
