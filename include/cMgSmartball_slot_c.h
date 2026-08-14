@@ -41,6 +41,14 @@
 #include "types.h"
 #include "cMgSmartball_object_c.h"
 
+/* NOTE FOR ANYONE EDITING THIS HEADER: tools/check_header_offsets.py CANNOT
+ * parse the two anonymous nested-struct arrays below. It reports them as
+ * "2 unparsed" and then computes the struct as spanning 0x58 rather than
+ * 0x88 -- and still prints "0 mismatched", which reads like a pass. The
+ * offsets in this header are therefore NOT machine-checked by that gate.
+ * What actually holds them is the compile-time size assert at the bottom
+ * plus the byte match itself, since a wrong offset changes the emitted
+ * instruction. Do not trust a clean check_header_offsets run on this file. */
 struct cMgSmartball_slot_c : cMgSmartball_object_c {
     virtual void SaveSnapshot();   /* slot 0 */
     virtual void Update();         /* slot 1 */
