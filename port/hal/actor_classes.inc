@@ -933,6 +933,20 @@ void hal_fill_flamethrower_vtable(void);         /* fills _ZTV12Flamethrower, 31
 extern unsigned char PathLift_SpawnInfo[];       /* ov100 0x02148558, +4 reads 31 */
 void *PathLift_Spawn(void);                      /* ov100 0x02147328 */
 void hal_fill_path_lift_vtable(void);            /* fills data_ov100_0214857c, 33 */
+/* ---- run linkw wave 7 (lane w7-c): ORANGE_BALL_BILLBOARD (301), the ONE
+   class either new boss arena needed. Its overlay is the LEVEL overlay, not an
+   actor overlay: arm9 spawn table 0x02090864 + 301*4 = 0x02090d18 holds
+   0x021115e0, and that record read RAW out of extracted/overlays/
+   overlay_0044.bin (ov044 is compressed:true, so the dsd export is the wrong
+   image) is {0x021112dc, 0x00be012d, ...} -- word[0] is
+   OrangeBallBillboard_Spawn inside ov044's own load window and word[1]'s low
+   half is 301. RTTI at vtable[-1] names the class daObjKb1Billboard_c (kb1 =
+   koopa boss 1); the width pin, the held-out D1 and the cross-overlay
+   SharedFilePtr spelling are in hal/actor_classes_ov044.cpp. x16 on level 36,
+   placed on no other level. ---- */
+extern unsigned char OrangeBallBillboard_SpawnInfo[]; /* ov044 0x021115e0, +4 reads 301 */
+void *OrangeBallBillboard_Spawn(void);                /* ov044 0x021112dc */
+void hal_fill_orange_ball_billboard_vtable(void);     /* _ZTV19OrangeBallBillboard, 31 */
 }
 
 #define PORT_ACTOR_CLASS_ROWS                                                 \
@@ -1382,4 +1396,8 @@ void hal_fill_path_lift_vtable(void);            /* fills data_ov100_0214857c, 3
        its own table by a real name, so no factory wrapper. Placed on
        levels 13 (x1) and 15 (x2). ---- */ \
     {31, "PATH_LIFT", PathLift_SpawnInfo, PathLift_Spawn, \
-     hal_fill_path_lift_vtable},
+     hal_fill_path_lift_vtable}, \
+    /* ---- run linkw wave 7 (lane w7-c): the Dark World arena's own class.
+       Spawn stores its table by a real name, so no factory wrapper. ---- */ \
+    {301, "ORANGE_BALL_BILLBOARD", OrangeBallBillboard_SpawnInfo, \
+     OrangeBallBillboard_Spawn, hal_fill_orange_ball_billboard_vtable},

@@ -1,0 +1,88 @@
+# run linkw wave 7 (lane w7-c): ov044's ONE class, per symbol.
+#
+# ov044 (level 36, Bowser in the Dark World's battle arena,
+# data/stage/koopa1_boss) is mounted WHOLE in PORT_LEVEL_OVERLAYS by this same
+# lane -- the loaders walk the LVL_Overlay's object tables across whatever
+# symbol boundaries dsd named, which is why a level overlay needs the whole
+# image. This file is the SECOND mount of the same overlay, per symbol, and the
+# two do not conflict: tools/ovdata.py --whole emits port_ov044_image/_patch/_at
+# and NOTHING by name, while --from-list --pack emits the named arrays plus
+# port_ov044_syms_patch. ov012/ov013/ov014/ov021/ov045/ov046 are all
+# dual-mounted the same way; this is the seventh.
+#
+# ==== WHY THE NAMED HALF EXISTS ============================================
+# The registry rewrites OrangeBallBillboard_SpawnInfo's +0 word to the host
+# factory and ActorBase's constructor reads the two list priorities back out of
+# the SAME record, so it has to be storage the actor code and the registry
+# agree on -- which the whole image is not (it emits no names). The class's
+# InitResources / CleanupResources / sinit reach the overlay's two bss cells by
+# name for the same reason.
+#
+# ==== MANDATORY WINDOW-ALIAS CHECK (the gate-199/202 rule) =================
+# OrangeBallBillboard_SpawnInfo is flagged `ambiguous` in
+# config/arm9/overlays/ov044/symbols.txt -- 0x021115e0 sits in the level-overlay
+# window every one of the fifty-two level overlays is linked into (base
+# 0x021111a0), so the label alone proves nothing. RESOLVED by reading the raw
+# bytes out of extracted/overlays/overlay_0044.bin (ov044 is compressed:true in
+# overlays.yaml, so extracted/dsd/arm9_overlays/ov044.bin is the COMPRESSED
+# image and reading halfwords out of it is reading noise -- the ov045 trap):
+#
+#   arm9 ACTOR_SPAWN_TABLE 0x02090864 + 301*4 = 0x02090d18 -> 0x021115e0
+#   0x021115e0 word[0] = 0x021112dc  OrangeBallBillboard_Spawn
+#   0x021115e0 word[1] & 0xffff = 0x012d = 301
+#
+# BOTH attribution tests pass and both are needed: the spawn word lands inside
+# ov044's OWN load window (0x021111a0..0x02111680 code, ..0x021116a0 with bss,
+# from overlays.yaml ram_size 1248 / bss_size 32), and the id halfword matches
+# the spawn-table slot it was reached from. Sibling overlays share the window;
+# they do not share both of those.
+#
+# ==== CLASS IDENTITY COMES FROM RTTI, NOT THE LABEL ========================
+# _ZTV19OrangeBallBillboard sits at 0x02111604 and its vtable[-1] word
+# (0x02111600) points at 0x021115bc, a typeinfo record whose name string at
+# 0x021115c8 reads "19daObjKb1Billboard_c" -- kb1 = koopa boss 1, the ROM's own
+# name for this arena. The asset agrees: the sinit constructs its SharedFilePtr
+# on handle 1570, which resolves through build/assets/handles.tsv to
+# data/special_obj/kb1_ball/kb1_ball.bmd. "OrangeBallBillboard" is the config's
+# chosen spelling of daObjKb1Billboard_c, not a shifted label: ov044 holds
+# exactly ONE class, so there is no neighbour for a shift to land on.
+#
+# ==== ONE SYMBOL LEFT OUT ==================================================
+# _ZTV19OrangeBallBillboard (0x02111604..0x02111680, 31 slots) is a HOST ARRAY
+# hal/actor_classes_ov044.cpp fills -- the ov015/ov016/ov045/ov060 rule: a
+# mounted vtable hands a factory DS code addresses. Its width is pinned TWICE:
+# by the reloc run (config/arm9/overlays/ov044/relocs.txt carries an unbroken
+# 31-word run of `load` relocs from 0x02111604 to 0x0211167c inclusive, and
+# nothing at 0x02111680), and by the next symbol landing -- delinks.txt ends
+# .data at 0x02111680 and starts .bss there, so the table cannot be 32 and
+# cannot be 30. Thirty-one, the plain Actor shape, no Platform::Kill tail.
+#
+# dsd's ".p__sinit_ov044_02111314" .ctor entry is left out as well (not a C
+# identifier), and so is the .init body: __sinit_ov044_02111314 is a FUNCTION
+# and mounting it would emit its code bytes under its own name. It is matched
+# src (slice_w7c.txt) and runs from the registry fill.
+#
+# ==== THE SPAWNINFO PACK ===================================================
+# dsd split the 0x021115e0 record into three data symbols; --pack puts the ROM
+# spacing back (the ov060 SpawnInfo shape). Sizes are next-symbol deltas:
+# 0x021115e0 +4, 0x021115e4 +0x10, 0x021115f4 +0x10 -> one contiguous
+# 0x021115e0..0x02111604 run. The last word of it (0x02111600) is the excluded
+# vtable's typeinfo-pointer header; it is carried for spacing and nothing reads
+# it by name.
+OrangeBallBillboard_SpawnInfo data_ov044_021115e4 data_ov044_021115f4
+
+# ==== THE TWO BSS CELLS ====================================================
+# .bss is 0x02111680..0x021116a0 (delinks.txt), two symbols, both zero in the
+# ROM and both written at runtime:
+#   0x02111680  the class's SharedFilePtr (8 bytes, next-symbol delta) --
+#               __sinit_ov044_02111314 constructs it on handle 1570,
+#               InitResources loads the model through it, CleanupResources
+#               releases it. The host PortSharedFilePtr (hal/fs.cpp) is 8 bytes
+#               too, so the delta is exact.
+#   0x02111688  the static-destructor chain node func_020731dc links (0x18 by
+#               section end -- the LAST symbol of the section, so the size is
+#               the section end and not a 4-byte fallback: the ov018
+#               ICE_SLIDE_MANAGER trample is what that rule exists for). The
+#               node is three host pointers = 12 bytes, comfortably inside 0x18.
+data_ov044_02111680
+data_ov044_02111688:0x18

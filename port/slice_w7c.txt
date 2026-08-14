@@ -1,0 +1,47 @@
+# slice_w7c.txt -- lane-owned slice for the linkage campaign (run linkw,
+# wave 7, lane w7-c: the other two boss arenas). One matched src TU per line,
+# path relative to the repo root, comments with #. ONE OWNER (lane w7-c).
+#
+# What this slice wires: ov044's single class, daObjKb1Billboard_c /
+# OrangeBallBillboard (id 301), the sixteen orange balls that ring Bowser in
+# the Dark World's arena -- level 36's only cast item that was not already
+# registered. Level 40's three ids (167 / 279 / 284) are all ov060 and all
+# landed in wave 6, so that arena needs no slice at all.
+#
+# ONE TU HELD OUT, for a measured reason:
+#   src/_ZN19OrangeBallBillboardD1Ev.cpp -- a real MSVC destructor over a
+#     SHADOW class declared inside its own .cpp, so MSVC emits
+#     ??1OrangeBallBillboard@@UAE@XZ and auto-generates calls to
+#     ??1Model@@QAE@XZ and ??1Actor@@UAE@XZ, which exist nowhere in this build.
+#     The BigBooIcon / HauntedChair / SPIKE_BOMB case. Slot 16 is the host
+#     thunk obb_d1 in hal/actor_classes_ov044.cpp, which is exactly what the
+#     matched sibling D0 spells minus Memory::Deallocate; relocs.txt pins the
+#     chain (0x021111cc load 0x02111604, 0x021111b4 call 0x02016d20
+#     Model::~Model, 0x021111bc call 0x020112c8 Actor::D2, nothing else).
+#
+# CLOSURE, walked from relocs.txt rather than assumed. Every arm9 callee the
+# seven wired TUs reach is ALREADY in the link, so this slice drags nothing in:
+#   Model::~Model 0x02016d20 / Actor::D2 0x020112c8 / Memory::Deallocate
+#   0x0203c1e8 / Matrix4x3_FromRotationY 0x0203bd6c / SharedFilePtr::Release
+#   0x02017b64 / Model::LoadFile 0x02017a3c / ModelBase::SetFile 0x02016fd4 /
+#   ActorBase::operator new 0x02043444 / Actor::C2 0x0201150c / Model::C1
+#   0x02016d58 (slice_gate4b, slice_gate9) and the two sinit veneers
+#   func_02017acc / func_02017ab4, which are HOST bodies in hal/cxx_aliases.cpp
+#   -- the ARM-r1 fileID ride-through the one-arg matched veneers cannot
+#   express. func_020731dc (the static-dtor chain link) is matched src and
+#   already in slice_gate10.txt.
+#
+# THE SINIT: __sinit_ov044_02111314 is a FUNCTION, so it is linked here and
+# CALLED from the registry fill (port_ov44_bringup) -- the ov045/ov060
+# lane-ownership shape, because no lane owns hal/actor_overlays.cpp this wave.
+
+src/OrangeBallBillboard_Spawn.c
+src/_ZN19OrangeBallBillboard13InitResourcesEv.c
+src/_ZN19OrangeBallBillboard16CleanupResourcesEv.c
+src/_ZN19OrangeBallBillboard6RenderEv.cpp
+src/_ZN19OrangeBallBillboardD0Ev.c
+src/func_ov044_02111214.c
+src/__sinit_ov044_02111314.c
+
+# the registry row / vtable fill / host D1 / cross-overlay alias host file
+port/hal/actor_classes_ov044.cpp
