@@ -564,6 +564,126 @@ void port_ov046_patch(void);
 void *port_ov046_at(unsigned ds);
 extern unsigned char port_ov046_image[];
 extern const unsigned port_ov046_ds_base, port_ov046_ds_end;
+
+/* ov044 = LEVEL 36, the Bowser in the Dark World BATTLE ARENA
+   (data/stage/koopa1_boss), course 15 -- the SECOND of the three koopaN_boss
+   arenas the port mounts, and ov048 below is the third. Everything re-derived
+   from extracted/arm9_dec.bin (base 0x02004000) and
+   extracted/overlays/overlay_0044.bin on this lane; the level-38 row above is
+   the model and it reproduces byte for byte from the same reads:
+
+     1. data_020758c8[36] -- the arm9 level->overlay map, a WORD table (stride
+        4, the ov045 correction; byte stride gets every level wrong). The read
+        is 0x020758c8 + 36*4 = 0x02075958, raw word 0x0000002c = overlay 44.
+        IT IS level+8, AND THAT IS A READ, NOT AN ASSUMPTION: all 52 words were
+        dumped on this lane and the table is contiguous 8..59 with no
+        exceptions, so the +8 is a property the table HAS, not a rule applied
+        to it. (Same read gives [38] = 0x2e = 46 and [40] = 0x30 = 48, which
+        reproduces the landed level-38 row.)
+
+     2. LVL_Overlay = data_02092208[36], also a word table: 0x02092208 + 36*4 =
+        0x02092298, raw word 0x021113b0. Re-derived for all 52 levels on this
+        lane and checked against every one of the seventeen rows already in the
+        table below -- 17/17 reproduce exactly, which is what makes the two new
+        reads trustworthy.
+
+     3. The four OV0 asset handles at LVL_Overlay+8, read out of
+        extracted/overlays/overlay_0044.bin (image offset 0x210; ov044 is
+        compressed:true in overlays.yaml, so the dsd export is the COMPRESSED
+        image and its halfwords are noise). Raw record bytes at 0x021113b0:
+          cc 13 11 02 | 74 13 11 02 | 6b 07 | 69 07 | 6c 07 | 6d 07 | ...
+        clps 0x021113cc, objTable 0x02111374, bmd 0x076b / kcl 0x0769 /
+        icg 0x076c / icl 0x076d. RESOLVED THROUGH build/assets/handles.tsv,
+        not arithmetic -- delta 0, the mapping levels 8..15 / 37 / 38 use:
+          1899 -> data/stage/koopa1_boss/koopa1_boss_all.bmd  (4411 bytes)
+          1897 -> data/stage/koopa1_boss/koopa1_boss.kcl      (1624)
+          1900 -> data/stage/koopa1_boss/koopa1_boss_icg.bin  (13728)
+          1901 -> data/stage/koopa1_boss/koopa1_boss_icl.bin  (512)
+        subTables 0x0211137c, subCount 1, flags 0 -- one area, no sublevel
+        tricks, the smallest KCL of any mounted level.
+
+     4. SUBLEVEL_LEVEL_TABLE (arm9 0x02075298, a BYTE table): 0x02075298 + 36 =
+        0x020752bc, raw 0x0f = course 15. koopa1 is the ROM's own name for the
+        first Bowser stage, and [35] is 0x0f too -- level 35 is the approach,
+        36 the arena, exactly the 37/38 pairing one course up.
+
+   ITS CAST is ov060 + ov089, by the same arm9 special case the level-38 row
+   documents (LoadOrUnloadObjectOverlays short-circuits idx 0x24/0x26/0x28 --
+   levels 36/38/40 -- to ov060 with an early return, after the selector loop has
+   already pulled ov089 in). Read off the level's own object table on this lane,
+   the arena places THREE ids: 279 BOWSER x1 and 284 SPIKE_BOMB x8 (both landed
+   in wave 6, lane w6-A) and 301 x16 -- which is NOT an ov060 class at all. The
+   arm9 spawn table 0x02090864 + 301*4 = 0x02090d18 holds 0x021115e0, a
+   LEVEL-OVERLAY address, and at that address in overlay_0044.bin the record's
+   +0 word is 0x021112dc (inside ov044's own 0x021111a0..0x02111680 window) and
+   its +4 halfword is 0x012d = 301. Both attribution tests pass on ov044, so
+   the sixteen orange balls ringing the arena are ov044's own class -- hosted
+   this lane in hal/actor_classes_ov044.cpp. Mounted --whole like the rest, and
+   ALSO per symbol (port/ov044_syms.txt) because that class reaches its
+   SpawnInfo and its two bss cells by name; own_sinits stays 0 (the ov044 sinit
+   runs from the registry fill, the ov045/ov060 lane-ownership shape). */
+void port_ov044_patch(void);
+void *port_ov044_at(unsigned ds);
+extern unsigned char port_ov044_image[];
+extern const unsigned port_ov044_ds_base, port_ov044_ds_end;
+
+/* ov048 = LEVEL 40, the Bowser in the Sky BATTLE ARENA
+   (data/stage/koopa3_boss), course 17 -- the LAST of the three koopaN_boss
+   arenas, and with it every boss arena in the game is mounted. Same four reads,
+   same discipline:
+
+     1. data_020758c8[40] = word at 0x020758c8 + 40*4 = 0x02075968, raw
+        0x00000030 = overlay 48. level+8 again, from the same 52-word dump.
+
+     2. data_02092208[40] = word at 0x02092208 + 40*4 = 0x020922a8, raw
+        0x02111624. (0x02111624 is ALSO the address of a dsd data label inside
+        ov044 -- every level overlay is linked at 0x021111a0, so the windows
+        collide by construction. The word is ov048's LVL_Overlay because it is
+        what ov048's row of the table says; port_level_mounts_install asserts
+        each row against port_level_ds_overlay and would say so loudly if not.)
+
+     3. LVL_Overlay+8 out of extracted/overlays/overlay_0048.bin (image offset
+        0x484; compressed:true, so again NOT the dsd export). Raw at 0x02111624:
+          80 17 11 02 | ac 15 11 02 | 87 07 | 85 07 | 88 07 | 89 07 | ...
+        clps 0x02111780, objTable 0x021115ac, bmd 0x0787 / kcl 0x0785 /
+        icg 0x0788 / icl 0x0789 -> through build/assets/handles.tsv (delta 0):
+          1927 -> data/stage/koopa3_boss/koopa3_boss_all.bmd  (7228 bytes)
+          1925 -> data/stage/koopa3_boss/koopa3_boss.kcl      (1889)
+          1928 -> data/stage/koopa3_boss/koopa3_boss_icg.bin  (15028)
+          1929 -> data/stage/koopa3_boss/koopa3_boss_icl.bin  (512)
+        subTables 0x021115c8, subCount 1, flags 0.
+
+     4. SUBLEVEL_LEVEL_TABLE[40] = byte at 0x020752c0 = 0x11 = course 17.
+        [39] is 0x11 as well -- the approach/arena pair, koopa3.
+
+   ITS CAST NEEDS NO NEW CLASS. The level's object table places exactly three
+   ids: 167 BOWSER_SKY_PLATFORM x10, 279 BOWSER x1, 284 SPIKE_BOMB x5 -- all
+   three ov060, all three registered by wave 6 lane w6-A, and 167's registry
+   comment already says in as many words that it is "level 40's floor (not
+   placed in 38)". So level 40 is a pure mount, and no slice.
+
+   ONE OF THE THREE IS DECLINED HERE, and the reason is a HOST BOOT-ORDER limit
+   in a file this lane may not touch. Level 40 is the only level of the
+   fifty-two that places id 167, so wave 6 registered a class that had never
+   actually spawned; mounting the arena ran it for the first time and it faulted
+   under FAULTS_FATAL. daKpa3Bg_c::InitResources (src/func_ov060_021182b0.cpp)
+   calls CopyTexPalFromLevelModel, whose first line loads through
+   data_0209f320 -- the Stage's ModelComponents pointer, written ONLY by
+   Stage::LoadModel. The ROM seats it first (Stage::InitResources :361 LoadModel,
+   :363 LoadClsnAndObjects); port/tests/walk_window.cpp does the two the other
+   way round (:2099 the boot, :2265 LoadModel), so the pointer is still null when
+   the object pass runs. port_stage_a_boot cannot compensate: a second
+   Stage::LoadModel is not idempotent (Model::UpdateFileOffsets rebases the BMD's
+   offsets in place and the harness's own call would run it twice, corrupting the
+   level model on every level). The whole derivation, with the fault dump, is in
+   port_host_abi_blocked (hal/actor_registry.cpp). Level 40 therefore boots and
+   exits 0 with the ten platforms named in the census as skipped rather than
+   faked. Mounted --whole; own_sinits 0, and no per-symbol half (nothing in ov048
+   is reached by name). */
+void port_ov048_patch(void);
+void *port_ov048_at(unsigned ds);
+extern unsigned char port_ov048_image[];
+extern const unsigned port_ov048_ds_base, port_ov048_ds_end;
 }
 
 /* LVL_Overlay, the fields the boot uses. */
@@ -679,6 +799,12 @@ static const PortLevelDesc port_level_table[] = {
     {38, "Bowser fight arena (koopa2_boss, course 16)", "ov046", 0x02111560,
      port_ov046_patch, port_ov046_at,
      &port_ov046_ds_base, &port_ov046_ds_end, 0},
+    {36, "Bowser in the Dark World arena (koopa1_boss, course 15)", "ov044",
+     0x021113b0, port_ov044_patch, port_ov044_at,
+     &port_ov044_ds_base, &port_ov044_ds_end, 0},
+    {40, "Bowser in the Sky arena (koopa3_boss, course 17)", "ov048",
+     0x02111624, port_ov048_patch, port_ov048_at,
+     &port_ov048_ds_base, &port_ov048_ds_end, 0},
 };
 
 enum { PORT_LEVEL_COUNT = sizeof port_level_table / sizeof port_level_table[0] };
@@ -877,6 +1003,11 @@ static void *port_mount_row_14(void) { return port_level_mount_at(14); }
 static void *port_mount_row_lvl37(void) { return port_level_mount_at(15); }
 /* Level 38's row is table index 16, the same append-only convention. */
 static void *port_mount_row_lvl38(void) { return port_level_mount_at(16); }
+/* Levels 36 and 40 are table indices 17 and 18 -- the other two koopaN_boss
+   arenas. Named by level, the same append-only convention, so a sibling stream
+   appending its own level against this base does not collide. */
+static void *port_mount_row_lvl36(void) { return port_level_mount_at(17); }
+static void *port_mount_row_lvl40(void) { return port_level_mount_at(18); }
 static void *(*const port_level_mount_fns[PORT_LEVEL_COUNT])(void) = {
     port_mount_row_0, port_mount_row_1, port_mount_row_2, port_mount_row_3,
     port_mount_row_4,
@@ -892,6 +1023,8 @@ static void *(*const port_level_mount_fns[PORT_LEVEL_COUNT])(void) = {
     port_mount_row_14,
     port_mount_row_lvl37,
     port_mount_row_lvl38,
+    port_mount_row_lvl36,
+    port_mount_row_lvl40,
 };
 
 // ---- the loader dispatch table ---------------------------------------------
