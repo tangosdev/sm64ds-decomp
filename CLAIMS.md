@@ -38,6 +38,7 @@ take over, ping the claimant first.
 ## Claims
 
 | Range | Who | Claimed | Status |
+| ov007 func_ov007_020c368c (0x020c368c, size 0x36c) | lunavyqo | 2026-08-15 | **released** — no_progress vs stored tip **div=74**. Session best size-exact **div=97**. Levers: volatile y/x/z loads, IME around SQRT_PARAM, u64 numer, Vector3_16 x-first source gives y-first mul/mla+DIVCNT after. Residual: x-before-y mul order (s16*) or y/x r5↔r6 + z r3 vs r4 (Vector3_16). API clm_30b383ac449b released |
 | ov006 func_ov006_020d8408 (0x020d8408, size 0x4fc) | lunavyqo | 2026-08-15 | **released** — near-miss improved **21→7** (size-exact 0x4fc, align 316/319). Levers: step=0 after cnt=1 (ROM zero schedule); dropped 2nd arg on sb==0 call; inline `c+(j<<6)+off` remat after Random/flag paths; ang+= before i++. Residual: loop-head r1↔r2 (row/slot) + z0 load vs add#0x4600 order. API clm_045ac8a8085c released |
 | ov005 func_ov005_020c16e4 (0x020c16e4, size 0x33c) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: ++row MultiCopy tail, dest pin `idx?dstp:dstp` / `destOff?dstp:dstp` (equal-arm) for rem-before-quot + increment order; from near-miss 136→18→16→3→0; API clm_84a56ab710d3 kept |
 | ov005 func_ov005_020c0378 (0x020c0378, size 0x354) | lunavyqo | 2026-08-13 | **active** — near-miss improved **77→44** size-exact. 0250-style S.a/S.b has + loop_invariants off + S[idx].d y. Residual pure regperm (idx r1 vs r5, has r3 vs r2) + path-B y early. API clm_3c2c2b05061d |
