@@ -7,7 +7,9 @@
 #include "daKpa3Bg_c.h"
 // recovered name: daKpa3Bg_c_CleanupResources
 /* recovered: renamed to Class_Method */
-/* daKpa3Bg_c::CleanupResources - recovered from vtable slot identity */
+/* daKpa3Bg_c::CleanupResources - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern void *data_ov060_02119514[];

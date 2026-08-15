@@ -3,7 +3,9 @@
 #include "daObjEmmLog_c.h"
 // recovered name: daObjEmmLog_c_Behavior
 /* recovered: renamed to Class_Method */
-/* daObjEmmLog_c::Behavior - recovered from vtable slot identity */
+/* daObjEmmLog_c::Behavior - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 typedef int Fix12;
 extern void func_020393a4(int *p, int v);
 extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);

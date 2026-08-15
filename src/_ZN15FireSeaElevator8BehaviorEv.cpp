@@ -5,7 +5,9 @@
 #include "daObjKm2_Agaru_c.h"
 // recovered name: daObjKm2_Agaru_c_Behavior
 /* recovered: renamed to Class_Method */
-/* daObjKm2_Agaru_c::Behavior - recovered from vtable slot identity */
+/* daObjKm2_Agaru_c::Behavior - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern "C" {
 extern int _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
 extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);

@@ -2,7 +2,9 @@
 // @symbol func_ov073_021223f4
 // recovered name: CccArena_Kill
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjEwbIce_c::Kill - recovered from vtable slot identity */
+/* daObjEwbIce_c::Kill - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 // func_ov073_021223f4 at 0x021223f4
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov073).
 struct Vector3 { int x, y, z; };

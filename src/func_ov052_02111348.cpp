@@ -2,7 +2,9 @@
 // @symbol func_ov052_02111348
 // recovered name: daObjEmmLog_c_InitResources
 /* recovered: renamed to Class_Method */
-/* daObjEmmLog_c::InitResources - recovered from vtable slot identity */
+/* daObjEmmLog_c::InitResources - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 struct Model { int d; };

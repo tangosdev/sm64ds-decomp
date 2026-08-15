@@ -255,5 +255,51 @@ reason; it doesn't yet report on the comment layer's own accuracy -- extending
 it to do so would settle the "how far does this spread" question in one run
 instead of by hand.
 
+**Update (2026-08-15): measured, and the answer is that it was systematic and is
+now spent.** Two questions were open above: how the mislabel was minted, and how
+far it spread. Both are answered.
+
+Minting: there is no generator. No script in this tree, in any branch, writes
+either the `// recovered name:` slot names or the `recovered from vtable slot
+identity` tag; `tools/reconcile_names.py` only copies a pre-existing `@emits`
+line into a comment, and derives nothing. The shift came from reading a slot
+table that numbers `virtual` DECLARATIONS instead of vtable WORDS. A class
+declares its destructor once and mwcc emits two words for it (D1 at 16, D0 at
+17), so declaration index equals slot index up to the destructor and is one
+short of it from the destructor onward. That is why a slot-17 D0 collected slot
+18's name, `OnYoshiTryEat`, and it is a uniform +1 from that word on rather than
+a general off-by-one. The tables that carry the shift are gitignored working
+material, not repo content; every table tracked here is correct, including the
+only executable one, `tools/actor_names.py`'s `SLOT_SIGS` (16 = D1, 17 = D0),
+which has been right since PR #211. `notes/actor-vtables.md` states the trap
+directly: D1/D0 land at slots 16 and 17.
+
+Spread, counted against `src/` on this commit and classified by body structure
+rather than by comment (a body is a deleting destructor when it stores a vtable
+into the object and calls `Memory::Deallocate`):
+
+| measure | count |
+|---|---:|
+| `src/` files scanned | 11287 |
+| bodies that are deleting destructors | 208 |
+| of those, carrying a D0/D1/D2 name | 170 |
+| of those, carrying an ordinary method name instead | **0** |
+| files still claiming an `OnYoshiTryEat` name | 31 |
+| of those 31, bodies that are deleting destructors | **0** |
+
+So the D0-labelled-as-OnYoshiTryEat defect no longer has a single instance in
+`src/`. The seven survivors §3 counted were fixed as their classes were named,
+each one settled by reading the body; `src/_ZN10ChillBullyD0Ev.c` and
+`src/_ZN10LavaSeesawD0Ev.c` carry the reasoning in their headers. All 31
+remaining `OnYoshiTryEat` claims sit on genuine slot-18 bodies. The standing
+advice is still right and still cheap: don't trust a slot-17 "recovered name"
+without checking the body.
+
+What is NOT spent is the separate overloaded-marker problem. 531 files carried
+`recovered from vtable slot identity`, a tag that reads as "this body was
+guessed" while in practice it usually records where the NAME came from. 30 of
+them were adjudicated against the ROM and reworded (run linkw w13); 501 still
+carry the bare tag and none of those has been ruled on.
+
 Related: `notes/plan-cpp-language-mode.md`, `notes/dtor-variant-audit.md`,
 `notes/runbook-type-reconstruction.md` section 2.

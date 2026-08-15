@@ -7,7 +7,9 @@
 #include "daObjKm2_Agaru_c.h"
 // recovered name: daObjKm2_Agaru_c_InitResources
 /* recovered: renamed to Class_Method */
-/* daObjKm2_Agaru_c::InitResources - recovered from vtable slot identity */
+/* daObjKm2_Agaru_c::InitResources - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *p, int file, int a, int b);

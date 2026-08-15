@@ -3,7 +3,9 @@
 #include "BookShot.h"
 // recovered name: BookShot_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method */
-/* daBook_c::OnAimedAtWithEgg - recovered from vtable slot identity */
+/* daBook_c::OnAimedAtWithEgg - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern "C" {
 s32 BookShot::OnAimedAtWithEgg() {
     char* c = (char*)this;

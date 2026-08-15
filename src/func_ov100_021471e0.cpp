@@ -6,7 +6,9 @@
 #include "daObjPathLift_c.h"
 // recovered name: daObjPathLift_c_InitResources
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjPathLift_c::InitResources - recovered from vtable slot identity */
+/* daObjPathLift_c::InitResources - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 struct Actor;
 struct RaycastGround {
   char pad[0x44];

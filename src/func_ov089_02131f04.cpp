@@ -2,7 +2,9 @@
 // @symbol func_ov089_02131f04
 // recovered name: Key_OnTurnIntoEgg
 /* recovered: renamed to Class_Method */
-/* daObjKey_c::OnTurnIntoEgg - recovered from vtable slot identity */
+/* daObjKey_c::OnTurnIntoEgg - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern "C" {
 extern int func_ov089_02131df4(void *c, int a);
 extern int func_ov089_02131dcc(void *c, int a);

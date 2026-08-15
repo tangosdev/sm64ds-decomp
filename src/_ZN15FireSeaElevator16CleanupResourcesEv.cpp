@@ -5,7 +5,9 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjKm2_Agaru_c::CleanupResources - recovered from vtable slot identity */
+/* daObjKm2_Agaru_c::CleanupResources - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern "C" {
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern int data_ov045_02113188[];

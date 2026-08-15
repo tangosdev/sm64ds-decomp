@@ -3,7 +3,9 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daTBasket_c::Kill - recovered from vtable slot identity */
+/* daTBasket_c::Kill - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int e);
 void func_ov063_0211c7b0(char *c) {
     short *t;

@@ -6,7 +6,9 @@
 #include "daObjPathLift_c.h"
 // recovered name: daObjPathLift_c_Behavior
 /* recovered: shared common types, renamed to Class_Method */
-/* daObjPathLift_c::Behavior - recovered from vtable slot identity */
+/* daObjPathLift_c::Behavior - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 typedef int Fix12i;
 
 struct PathLift { void BaseBehavior(); };

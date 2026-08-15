@@ -2,7 +2,9 @@
 // @symbol func_ov060_021182b0
 // recovered name: daKpa3Bg_c_InitResources
 /* recovered: renamed to Class_Method */
-/* daKpa3Bg_c::InitResources - recovered from vtable slot identity */
+/* daKpa3Bg_c::InitResources - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 struct BMD_File; struct KCL_File; struct Actor; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr;
 struct Vector3;

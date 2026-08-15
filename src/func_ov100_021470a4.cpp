@@ -6,7 +6,9 @@
 #include "daObjPathLift_c.h"
 // recovered name: daObjPathLift_c_Render
 /* recovered: renamed to Class_Method */
-/* daObjPathLift_c::Render - recovered from vtable slot identity */
+/* daObjPathLift_c::Render - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 extern "C" {
 int func_ov100_021470a4(char* c){

@@ -1,7 +1,9 @@
 // @symbol func_ov052_0211123c
 // recovered name: daObjEmmLog_c_CleanupResources
 /* recovered: renamed to Class_Method */
-/* daObjEmmLog_c::CleanupResources - recovered from vtable slot identity */
+/* daObjEmmLog_c::CleanupResources - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern int _ZN16MeshColliderBase9IsEnabledEv();
 extern int _ZN16MeshColliderBase7DisableEv();
 extern int _ZN13SharedFilePtr7ReleaseEv();

@@ -3,7 +3,9 @@
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
-/* daObjPathLift_c::CleanupResources - recovered from vtable slot identity */
+/* daObjPathLift_c::CleanupResources - name recovered from the vtable slot it fills.
+   The body is a decompilation verified against the ROM, not an
+   inferred stub. */
 extern void _ZN13SharedFilePtr7ReleaseEv(void *);
 extern int G0[];
 int func_ov100_02147054(void *t)
