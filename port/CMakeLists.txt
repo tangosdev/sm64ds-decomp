@@ -1524,6 +1524,49 @@ foreach(sym IN LISTS OV70GEN_SYMS)
         COMMENT "hostgen ${sym}")
     list(APPEND OV70GEN "${sym_out}")
 endforeach()
+# 0.2.7 CRASH HOTFIX: the mwcc POINTER-TO-MEMBER width bug, on the three
+# dispatchers that carry it into the shipped binary.
+#
+# src/func_ov070_02120d34.cpp, _0212180c.cpp and _02121fd0.cpp are each the
+# first statement of their class's Behavior: `PMF *p = c->pp + 1; (c->**p)();`
+# over a class that is INCOMPLETE where the pointer-to-member is declared.
+# mwcc's representation there is the Itanium 8-byte {fn, adj} record -- the one
+# the ROM actually stores -- and MSVC's default for an incomplete class is the
+# 4-byte single-inheritance form. So `+ 1` strides FOUR instead of eight and
+# lands on the adj word of record 0, which is zero on every seated record. The
+# three compile to `mov eax,[ecx+pad]` / `mov eax,[eax+4]` / `jmp eax`, i.e.
+# `jmp 0`, and they are live at 0x004a3d50, 0x004a42c0 and 0x004a4740 in the
+# 0.2.6 binary. Level 37 (Bowser in the Fire Sea) is the only mounted level
+# that places their classes, so a player who picks it off the F5 menu and walks
+# within about 2200 units of an Amp or a Flame Chomp loses the process.
+#
+# /vmg /vmm says "for a pointer-to-member declared before its class, use the
+# MULTIPLE-INHERITANCE representation", which is {void *fn; int delta;} --
+# eight bytes, the ROM's own record, with a call that adds delta to `this` and
+# calls fn. The call target moves from [pp+4] (the adj word, always 0) to
+# [pp+8] (the record's own function word). Every record seated in ov070 carries
+# adj 0, so the two agree word for word.
+#
+# PER-SOURCE, NEVER GLOBAL: the option changes the representation of every
+# pointer-to-member declared in a TU, so a blanket flag would silently relayout
+# TUs that already agree with MSVC's default. It is safe on these three because
+# each is a four-line dispatcher that includes nothing at all, and `pp` is a
+# POINTER either way, so no struct changes size.
+#
+# SCOPE, MEASURED RATHER THAN ASSUMED. The bug class has twenty-one members in
+# src/. Disassembling all 9585 functions in the 0.2.6 link map turns up exactly
+# three sites that read a pointer-to-member field out of `this` and then branch
+# through [field+4]: these three. The other members are either absent from the
+# link entirely or still served by a host copy that hand-reads the record at
+# the correct stride of eight (func_ov071_02120278, func_ov072_02121cdc,
+# func_ov080_021250c8, KingBobOmb::Behavior). Nothing else in the shipped build
+# needs this option, so nothing else gets it here.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov070_02120d34.cpp"   # Amp::Behavior,            ov070 +0x41c
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov070_0212180c.cpp"   # FlameChomp::Behavior,     ov070 +0x39c
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov070_02121fd0.cpp"   # FlameChompFire::Behavior, ov070 +0x31c
+    PROPERTIES COMPILE_OPTIONS "/vmg;/vmm")
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_w5c.txt" SLICE_W5C_LINES)
 set(SLICE_W5C_SOURCES "")
 foreach(line IN LISTS SLICE_W5C_LINES)
