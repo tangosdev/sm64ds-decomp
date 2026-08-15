@@ -4,27 +4,22 @@
 *.nds
 *.bin
 *.sav
+*.mln
+*.ml1
+*.ml2
+*.ml3
+*.ml4
+*.ml5
+*.ml6
+*.ml7
+*.ml8
+*.ml9
+*.ml10
+
 baserom*
 extracted/
 build/
 
-# --- Build artifacts ---
-*.o
-
-# --- Ghidra scaffolds (derived from ROM; local only) ---
-ghidra_out/
-ghidra_targets.txt
-
-# --- Tooling / OS noise ---
-__pycache__/
-*.pyc
-.venv/
-venv/
-.idea/
-.vscode/
-.vs/
-Thumbs.db
-desktop.ini
 
 # third-party binaries (not our code)
 tools/bin/
@@ -56,6 +51,10 @@ notes/ac-decomp-comparison.md
 # third-party tools cloned for evaluation/integration (not part of this repo)
 vendor/
 
+# emu-trace runtime capture output (tools/trace) - regenerable, may contain ROM-derived memory dumps
+/traces/
+/behavior/
+
 # local-only, never commit
 tools/claims_key.txt
 tools/claims_handle.txt
@@ -69,6 +68,7 @@ tools/claims_handle.txt
 /unsloth_compiled_cache/
 /out/
 /wsl-bridge/
+.pytest_cache/
 
 # local MCP server wiring (machine-specific, may hold endpoints or tokens)
 /.mcp.json
@@ -96,13 +96,26 @@ _glmwork/
 .agents/
 .codex/
 .cw2004work/
-
-# emu-trace runtime capture output (tools/trace) - regenerable, may contain ROM-derived memory dumps
-/traces/
-/behavior/
-
 # port runtime output: rendered frames, smoke-test screenshots, playtest logs.
 # These are pixels the game drew from Nintendo's assets - same rule as the ROM.
 /frames/
 /playlog/
 *.bmp
+
+# --- Build artifacts ---
+*.o
+
+# --- Ghidra scaffolds (derived from ROM; local only) ---
+ghidra_out/
+ghidra_targets.txt
+
+# --- Tooling / OS noise ---
+__pycache__/
+*.pyc
+.venv/
+venv/
+.idea/
+.vscode/
+.vs/
+Thumbs.db
+desktop.ini
