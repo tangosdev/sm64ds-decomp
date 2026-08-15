@@ -28,11 +28,11 @@
     "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
     "linked closure never references."
   ],
-  "linkedTus": 3881,
-  "matchedTus": 11240,
-  "measuredAt": "2026-08-12",
+  "linkedTus": 4888,
+  "matchedTus": 11243,
+  "measuredAt": "2026-08-15",
   "branch": "port-mount-noseat-cluster",
-  "commit": "4b323dc1c",
+  "commit": "8cd187fe0",
   "stale": false,
-  "basis": "best of seven live port lanes; branches unmerged, combined figure is higher"
+  "basis": "single lane cons at its pushed tip, measured against its own walk_window.map; three parked lanes (w19/w20/w21) unmerged, so the figure stays a floor"
 }
