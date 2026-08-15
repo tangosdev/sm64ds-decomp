@@ -3055,6 +3055,7 @@ list(APPEND SLICE16_SOURCES
 # needs the host dispatcher too or the first ChangeState calls a mwcc
 # member-function pointer.
 add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
+    unmatched/Ov070_PmfDispatch.cpp   # 0.2.7 hotfix: ov070 ModelAnim slot-5 Render copies
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
     hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
@@ -3122,6 +3123,7 @@ endif()
 # a special build of it. Inert unless SM64DS_IO_PRESSURE_AT is set in the
 # environment, and nothing in the tree sets it.
 add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
+    unmatched/Ov070_PmfDispatch.cpp   # 0.2.7 hotfix: ov070 ModelAnim slot-5 Render copies
     # dialogue pipeline (2026-08-08): the box pump (Stage::UpdateMessage's
     # dialogue arm), the engine-A 2D-over-3D compositor, and the headless probe.
     hal/message_pump.cpp hal/message_compositor.cpp hal/message_probe.cpp hal/message_gen_text.cpp hal/input_probe.cpp
@@ -3229,6 +3231,7 @@ add_custom_command(TARGET walk_window POST_BUILD
 
 # hires clone for screenshot sessions (4x resolution, ~1/16 the fps)
 add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
+    unmatched/Ov070_PmfDispatch.cpp   # 0.2.7 hotfix: ov070 ModelAnim slot-5 Render copies
     # dialogue pipeline (2026-08-08): pump, engine-A compositor, headless probe.
     hal/message_pump.cpp hal/message_compositor.cpp hal/message_probe.cpp hal/message_gen_text.cpp hal/input_probe.cpp
     # the launcher's settings.json, read by the game (camera turn direction)

@@ -503,9 +503,21 @@ static int __fastcall amp_clean(void *s, void *)
 { return _ZN3Amp16CleanupResourcesEv(s); }
 static int __fastcall amp_behavior(void *s, void *)
 { return _ZN3Amp8BehaviorEv(s); }
+/* 0.2.7 crash hotfix: slot 9 is a HOST COPY, not the C face. Both this class's
+   Render and FlameChomp's are ModelAnim SLOT-5 shadow dispatches -- the
+   Butterfly/Whomp collision -- and both fault c0000005 in Model::Virtual10
+   through ModelAnim::Virtual18 the first frame level 37 draws one. That fault
+   sat BEHIND the pointer-to-member `jmp 0` above: with Behavior dying on the
+   actor's first tick the quarantine froze it before it could ever draw, so
+   fixing only the dispatch moves the crash rather than removing it. The two
+   copies and the full reading are in port/unmatched/Ov070_PmfDispatch.cpp; the
+   matched C++ methods stay in src/ and on their slice, and their C faces below
+   stay defined and unused. */
+extern "C" int port_ov070_amp_render(void *self);
+extern "C" int port_ov070_flamechomp_render(void *self);
 static int __fastcall amp_render(void *s, void *)
 { port_actor_render_probe("AMP", (char *)s + 0xd4);
-  return _ZN3Amp6RenderEv(s); }
+  return port_ov070_amp_render(s); }
 static int __fastcall amp_pdes(void *s, void *)
 { (void)s; _ZN3Amp16OnPendingDestroyEv(); return 0; }
 /* slot 16, HOST CHAIN -- the ROM listing at 0x02120570: store the own table,
@@ -555,7 +567,7 @@ static int __fastcall fc_behavior(void *s, void *)
 { return _ZN10FlameChomp8BehaviorEv(s); }
 static int __fastcall fc_render(void *s, void *)
 { port_actor_render_probe("FLAME_CHOMP", (char *)s + 0xd4);
-  return _ZN10FlameChomp6RenderEv(s); }
+  return port_ov070_flamechomp_render(s); }
 static int __fastcall fc_pdes(void *s, void *)
 { (void)s; _ZN10FlameChomp16OnPendingDestroyEv(); return 0; }
 /* slot 18: the ROM body is `mov r0, #5; bx lr` (0x021211bc, quoted in the
