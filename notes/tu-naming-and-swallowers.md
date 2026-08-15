@@ -128,17 +128,18 @@ one blob — the largest remaining units are coherent: `Heap`/`Memory`/`HeapAllo
 `BgCh`/`SphereClsn`/`RaycastGround`/`MeshColliderBase` (223), `Camera`/`Vector3`
 (157), the GX register API `G2`/`G2S`/`G3X`/`GXS` (122).
 
-## 4. Two findings that are not mine to fix
+## 4. Two gate findings
 
 **`sinit_vs_tu` is structurally blind to this defect.** The gate is
 `ok if len(sinits) <= len(tus)`. `main` has 23 sinits and 26 TUs, so it passed while
 97% of the module sat in one unit. It can only fire when under-segmentation is severe
-enough to push the TU count below the count of TUs *with static initialisers*.
+enough to push the TU count below the count of TUs *with static initialisers*. Not
+changed here — a fix needs a different signal, not a different constant.
 
-**`V1 ov080 classed-TU count == 3` fails on `origin/main` today, with no flag.**
-Reproduced on a clean baseline — this is pre-existing, not caused by anything here,
-and the map is not wrong. ov080 really does have 5 TUs, of which 4 now carry a class
-label:
+**`V1 ov080 classed-TU count == 3` was failing on `origin/main`, with no flag.
+Corrected to 4.** Reproduced on a clean baseline before touching it, so it was
+pre-existing rather than caused by anything else in this note, and the map was never
+wrong. ov080 really does have 5 TUs, of which 4 carry a class label:
 
 ```
 0x2123740  MontyMole, MontyMoleRock, daChoropu_c
@@ -147,10 +148,13 @@ label:
 0x2126fbc  daPicGate_c        <- labelled by RTTI; no mangled name ever named it
 ```
 
-The constant at `tools/tu_map.py:518` predates the RTTI label source. The 4th classed
-TU is new *labelling*, not a new *boundary* — total TU count is unchanged at 5. The
-expectation is stale and should read 4, but that is a gate change and is left for
-review.
+The constant predated the RTTI label source. The 4th classed TU is new *labelling*,
+not a new *boundary* — the total is 5 either way, and 3 sinits still fits under it.
+`--check` is now 8/8 green both with and without `--split-swallowers`.
+
+Note this is a different count from the module docstring's "ov080's three TUs shatter
+into thirteen", which describes the *mangled-name* view alone; `daPicGate_c` has no
+mangled name and is not part of that illustration, so that passage stands.
 
 ## 5. Pilot cross-check
 

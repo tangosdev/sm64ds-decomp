@@ -515,7 +515,16 @@ def analyse(mod, vt, blind=False):
 KNOWN = {                               # V1: known answers, hand-verified
     "ov062": 5,
     "ov063": 4,
-    "ov080": 3,
+    # ov080 was 3 and failed on main. The constant predates the RTTI label
+    # source: `daPicGate_c` occupies its own 6-function run at 0x2126fbc that no
+    # mangled name ever named, so the vtable pass labels a FOURTH TU there. No
+    # boundary moved -- ov080 is 5 TUs before and after -- only how many of them
+    # carry a class. 3 sinits still fits under 5.
+    #
+    # This is a different count from the docstring's "ov080's three TUs shatter
+    # into thirteen", which is about the mangled-name view alone; daPicGate_c has
+    # no mangled name and is not part of that illustration.
+    "ov080": 4,
     "ov020": 2,
 }
 
