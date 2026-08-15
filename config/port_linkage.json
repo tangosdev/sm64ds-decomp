@@ -28,11 +28,11 @@
     "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
     "linked closure never references."
   ],
-  "linkedTus": 4888,
+  "linkedTus": 4871,
   "matchedTus": 11243,
   "measuredAt": "2026-08-15",
   "branch": "port-mount-noseat-cluster",
-  "commit": "8cd187fe0",
+  "commit": "4bba244fd",
   "stale": false,
-  "basis": "single lane cons at its pushed tip, measured against its own walk_window.map; three parked lanes (w19/w20/w21) unmerged, so the figure stays a floor"
+  "basis": "single lane cons at its pushed tip, measured against its own walk_window.map. The drop from the prior 4888 stamp is a correction, not a regression: nothing was unlinked. Eighteen matched TUs were credited as linked while a host stand-in of the same basename was what reached the binary; the stand-ins are renamed _hostcopy so the map can tell them apart, and the count now measures what it always claimed to. The wave itself added five verified seats and traded four Render TUs for crash fixes."
 }
