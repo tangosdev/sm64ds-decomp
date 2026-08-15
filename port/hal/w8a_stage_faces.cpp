@@ -1,82 +1,88 @@
-// THE STAGE CLASS'S C-NAME FACES, and the LINK ROOTS that reach its bodies.
-// (run linkw wave 8, lane w8-a.)
+// THE STAGE CLASS'S C-NAME FACES. (run linkw wave 8, lane w8-a.)
 //
 // ===========================================================================
-// PART 1 -- THE LINK ROOTS. READ THIS BEFORE READING THE DIRECTIVES.
+// PART 1 -- THERE IS NO REACH FOR THE STAGE BODIES YET, AND THIS FILE DOES NOT
+//           MANUFACTURE ONE. Read this before reading a linkage number.
 // ===========================================================================
 //
-// This is a /OPT:REF link. A translation unit whose symbols nothing names is
-// compiled and then DISCARDED, so listing a matched TU in a slice does not put
-// it in the binary. Measured on this very tree, not assumed: the wave-8 base
-// build compiles 4975 objects into walk_window and 61 of them are absent from
-// walk_window.map -- src/_ZN6Player8CanPauseEv.cpp and
-// src/_ZN8Particle10SysTrackerD1Ev.cpp among them -- purely because no
-// surviving reference named them.
+// slice_w8a.txt lists nine matched translation units. They COMPILE into
+// walk_window and /OPT:REF then DISCARDS every one of them, because nothing in
+// the link names them. That is the correct outcome, not a defect to be worked
+// around, and linkage.py counts them out on purpose: the campaign's number is
+// how much of the decomp RUNS, and a body nothing can call does not run.
 //
-// On the ROM every Stage body below is reached the same way: through
-// _ZTV5Stage, the eighteen-entry vtable Stage::Stage installs last. The port
-// does not have that seat yet. hal/stage_bridges.cpp TRAP-fills all twenty
-// slots at boot (`hal_fill_stage_vtable`), nothing dispatches through the
-// Stage -- it is in the scene tree but on neither processing list -- and
-// seating the real words in that table is a lane of its own that owns
-// stage_bridges.cpp. This lane does not.
+// The first draft of this file rooted the eight Stage bodies with eight
+// `#pragma comment(linker, "/include:...")` directives and the linked count
+// went 4623 -> 4634. Review removed the eight directives and measured the
+// remainder: 4623 again, exactly. All eleven TUs of that delta were
+// directive-manufactured. The directives are gone and the number is 4623.
 //
-// So the reach here is EXPLICIT AND LINK-ONLY: one /include: per body. Each
-// directive is an artificial root that keeps the section alive; it is NOT a
-// call site and it adds NO behaviour, which is the whole point -- this piece
-// is meant to move linkage and leave every gate byte-identical. Say it plainly
-// rather than let a reader infer from a rising count that the ROM's Stage is
-// now running: it is not. What is true after this piece is that the bodies and
-// the storage they need are IN the binary under the ROM's own names, so the
-// vtable seat that comes next is a table fill and not a link excavation.
+// THE PRECEDENT, corrected. /INCLUDE: is not banned here -- the base build
+// already carries eight of them, four in port/ntr/io.cpp and four in
+// port/tests/io_pressure.cpp:
 //
-// A .drectve directive is processed for every object on the linker's command
-// line before any elimination runs, so these roots cannot themselves be
-// stripped -- which is exactly why the reach has to be stated as a directive
-// and not as a dead function nothing calls.
+//     #pragma comment(linker, "/INCLUDE:_tls_used")
+//     #pragma comment(linker, "/INCLUDE:_ntr_io_tls_entry")
 //
-// The two names that are NOT rooted here, because they do not need to be:
-// src/_ZN8Particle10SysTrackerD1Ev.cpp and src/func_02021b98.cpp are already
-// compiled into walk_window by earlier slices and were being discarded; the
-// Stage destructors below name them, so they come back on their own. They are
-// the two TUs of this piece that are reached by real ROM code rather than by a
-// directive.
-
-/* Stage::GraphCallback1 -- the Stage's SceneRelated block slot 1, whose body
-   is Particle::RenderAll. */
-#pragma comment(linker, "/include:__ZN5Stage14GraphCallback1Ev")
-/* Stage::IsPauseDisabled -- Stage::Behavior's pause gate. Pulls
-   src/func_ov002_020bd8ac.c, its only callee. */
-#pragma comment(linker, "/include:__ZN5Stage15IsPauseDisabledEv")
-/* Stage::CanPause -- the sibling gate. */
-#pragma comment(linker, "/include:__ZN5Stage8CanPauseEv")
-/* Stage::BeforeInitResources -- _ZTV5Stage slot 1. */
-#pragma comment(linker, "/include:__ZN5Stage19BeforeInitResourcesEv")
-/* Stage::UpdateMenuButtons -- the pause/VS/level-clear button rows. Reads
-   data_0209f244, data_0209f2b4, data_0209f2e0 and data_0209f360[0..3], all
-   four hosted by hal/w8a_stage_storage.cpp in this same piece. */
-#pragma comment(linker, "/include:__ZN5Stage17UpdateMenuButtonsEb")
-/* Stage::OnPendingDestroy -- _ZTV5Stage slot 12. This one is a real C++
-   method in its own TU, so it is rooted by its MSVC decoration, not by the
-   Itanium name; the string is the one its object file publishes. */
-#pragma comment(linker, "/include:?OnPendingDestroy@Stage@@QAEXXZ")
-/* ~Stage, both ROM destructors -- _ZTV5Stage slots 16 (D1/D2) and 17 (D0).
-   Between them they name _ZTV5Stage, _ZTV5Scene, MeshCollider::~MeshCollider,
-   Model::~Model, Particle::SysTracker::~SysTracker, ActorBase::~ActorBase and
-   Memory::Deallocate -- every one already in the link except the SysTracker
-   destructor, which these two revive. */
-#pragma comment(linker, "/include:__ZN5StageD2Ev")
-#pragma comment(linker, "/include:__ZN5StageD0Ev")
+// and every one of those roots a TLS callback THE WINDOWS LOADER ACTUALLY
+// INVOKES. The directive is there because the caller is the loader and the
+// loader is not visible to the linker, not because the symbol has no caller.
+// That is the standard: something real calls it. None of the nine bodies in
+// slice_w8a.txt has a caller yet.
+//
+// WHAT THE HONEST SEAT IS, and how much of this it actually covers.
+//
+// On the ROM the Stage is dispatched through _ZTV5Stage, the eighteen-entry
+// vtable Stage::Stage installs last. hal/stage_bridges.cpp trap-fills all
+// twenty slots at boot (hal_fill_stage_vtable) and nothing dispatches through
+// the Stage at all -- it is in the scene tree but on neither processing list.
+// Seating real words in that table is the next piece and it owns
+// stage_bridges.cpp, which this lane does not.
+//
+// And that seat reaches AT MOST FOUR of the eight Stage bodies here, because
+// only four of them are vtable entries:
+//
+//     slot 1   Stage::BeforeInitResources     0x0202ddc8
+//     slot 12  Stage::OnPendingDestroy        0x0202b8a0
+//     slot 16  ~Stage (D1/D2)                 0x02023688
+//     slot 17  ~Stage (D0)                    0x020236f0
+//
+// The other four are reached from somewhere else entirely, and every one of
+// those callers is itself still blocked:
+//
+//     Stage::GraphCallback1     the Stage's SceneRelated graphics block,
+//                               dispatched by func_02019144 -- a beat the port
+//                               does not run and nothing seats data_0209d4a8
+//     Stage::CanPause           called from Stage::Behavior
+//     Stage::IsPauseDisabled    called from Stage::Behavior
+//     Stage::UpdateMenuButtons  called from Stage::PS_Update, Stage::VE_Init,
+//                               Stage::VE_Update and Stage::LC_Update
+//
+// Stage::Behavior needs nine faces and Scene::SetSceneToSpawn; PS_Update and
+// LC_Update need data_020a0dea, which cannot be hosted without re-shaping the
+// TouchInfo block hal/auto_bss.cpp owns. So even after the vtable seat lands,
+// four of these eight stay discarded until their own callers land. Written
+// down here so the next lane sizes its piece from this rather than from the
+// hope that one table fill reaches everything.
+//
+// AND ONE MORE THING THE SEAT WILL HAVE TO SOLVE. Stage::OnPendingDestroy's
+// object publishes ONLY the MSVC mangling ?OnPendingDestroy@Stage@@QAEXXZ --
+// never the Itanium C name _ZN5Stage16OnPendingDestroyEv, because
+// src/_ZN5Stage16OnPendingDestroyEv.cpp compiles a real C++ method and does
+// not wrap it in extern "C" (verified with dumpbin /symbols on its object:
+// one External, that mangling, nothing else). QAE is __thiscall. So slot 12
+// cannot be filled with a plain function pointer to a C name that does not
+// exist; it needs a face or a __fastcall thunk, the same shape every other
+// slot in hal/stage_bridges.cpp already uses.
 
 // ===========================================================================
 // PART 2 -- THE C-NAME FACES.
 // ===========================================================================
 //
 // The ROM's callers spell these methods with the Itanium C name; the matched
-// TU that defines each one either IS that C name (a .c file, or a .cpp that
-// wraps the definition in extern "C") or is the MSVC method. Where the two
-// spellings are the same function with the same calling convention, a linker
-// alias is the whole face and no forwarder is needed.
+// TU that defines each one is that C name (a .c file, or a .cpp that wraps the
+// definition in extern "C"). Where the two spellings are the same function
+// with the same calling convention, a linker alias is the whole face.
 //
 // Each LHS below is transcribed verbatim from the probe link's own error text
 // -- the throwaway build that wired all 29 unwired src/_ZN5Stage* TUs into
@@ -104,15 +110,26 @@
 //       frame balances. This is the shape method_faces.cpp warns about; it is
 //       written down here because it was checked, not because it is obvious.
 //
-// All four are INERT in this piece. Their LHS is referenced only by
-// Stage::Behavior and Stage::Render, neither of which is in this lane's slice,
-// so each LHS is absent from walk_window.map -- the "OK (unused)" row of
-// alternatename_guard.py. They land now with their provenance so the piece
-// that adds Stage::Behavior adds a translation unit and not plumbing.
+//   ?func_020aba70@@3PAPAUOamAttr@@A = _func_020aba70
+//       A DATA face, not a code one, and NOT a chained alias: _func_020aba70
+//       is a real definition in the base map (ov001_syms.c.obj, the ov001
+//       per-symbol mount) at the OAM::NUMBERS pointer table, so this aliases
+//       onto a defined symbol rather than onto another alias.
+//       src/_ZN5Stage12RenderNumberEhiibi.cpp declares it as
+//       `extern OamAttr *func_020aba70[]` without extern "C", which is where
+//       the mangling comes from.
+//
+// ALL FIVE ARE INERT TODAY. Their LHS is referenced only by Stage::Behavior,
+// Stage::Render and Stage::RenderNumber, none of which is in this lane's
+// slice, so each LHS is absent from walk_window.map -- the "OK (unused)" row
+// of alternatename_guard.py, which the guard confirms (910 fired, unchanged
+// from base; 0 new defeats). They land now with their provenance so the piece
+// that adds those bodies adds translation units and not plumbing.
 #pragma comment(linker, "/alternatename:?CanPause@Stage@@SAHXZ=__ZN5Stage8CanPauseEv")
 #pragma comment(linker, "/alternatename:?IsPauseDisabled@Stage@@SAHXZ=__ZN5Stage15IsPauseDisabledEv")
 #pragma comment(linker, "/alternatename:?RenderBouncingArrows@Stage@@SAXXZ=__ZN5Stage20RenderBouncingArrowsEv")
 #pragma comment(linker, "/alternatename:?CheckInput@Stage@@QAEXXZ=__ZN5Stage10CheckInputEv")
+#pragma comment(linker, "/alternatename:?func_020aba70@@3PAPAUOamAttr@@A=_func_020aba70")
 
 /* An object with no code and no data would still be handed to the linker for
    its .drectve, but an empty translation unit is a warning in some MSVC

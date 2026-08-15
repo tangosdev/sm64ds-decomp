@@ -3,19 +3,47 @@
 # src TU per line, path relative to the repo root, comments with #. ONE OWNER
 # (lane w8-a).
 #
-# WHAT THIS SLICE IS. The arc's goal is that Stage::InitResources, Stage::Render
-# and Stage::Behavior run the ROM's own class in walk_window and the hand-written
-# subset port_stage_a_boot retires. The measurement that sizes that job is a
-# throwaway probe: wire every src/_ZN5Stage* TU that no slice already names --
-# 29 files -- into walk_window and read the link.
+# ===========================================================================
+# THESE NINE ARE COMPILED AND THEN DISCARDED. THAT IS THE POINT OF THE ENTRY,
+# NOT A DEFECT IN IT.
+# ===========================================================================
+#
+# Every TU below compiles into walk_window and is then stripped by /OPT:REF,
+# because nothing in the link names it. linkage.py counts them out, correctly:
+# the campaign's number is how much of the decomp RUNS, and a body with no
+# caller does not run. Linkage at this tip is 4623, the same as the base.
+#
+# The first draft of this piece rooted the eight Stage bodies with eight
+# /include: directives in hal/w8a_stage_faces.cpp and reported 4634. Review
+# removed only those eight lines and re-measured: 4623 exactly. The whole +11
+# was directive-manufactured. The directives are gone. What is left is
+# groundwork -- the class's storage, its faces, and its bodies staged in the
+# build -- and it is worth landing on its own terms, but it moves no number.
+#
+# What reaches them is the _ZTV5Stage seat in hal/stage_bridges.cpp, which
+# this lane does not own, and which covers AT MOST FOUR of the eight Stage
+# bodies here (slot 1 BeforeInitResources, slot 12 OnPendingDestroy, slots
+# 16/17 the destructors). GraphCallback1, CanPause, IsPauseDisabled and
+# UpdateMenuButtons are reached from the SceneRelated graphics block,
+# Stage::Behavior and Stage::PS_Update/VE_Init/VE_Update/LC_Update
+# respectively -- all still blocked. The header of hal/w8a_stage_faces.cpp
+# has the full accounting, including why slot 12 will need a face or a
+# __fastcall thunk even after the seat lands.
+#
+# ===========================================================================
+# WHERE THE NINE COME FROM
+# ===========================================================================
+#
+# A throwaway probe wired every src/_ZN5Stage* TU that no slice already names
+# -- 29 files -- into walk_window and read the link:
 #
 #     walk_window.exe : fatal error LNK1120: 171 unresolved externals
 #
-# EIGHT of the 29 are landable now and are below, with the one callee they drag
-# that no slice already names. Seven of the eight need nothing at all beyond
-# what today's link already provides; the eighth, Stage::UpdateMenuButtons,
-# needs four globals from the storage batch (hal/w8a_stage_storage.cpp) that
-# lands with it.
+# EIGHT of the 29 are the ones whose every external reference resolves, and are
+# below with the one callee they drag that no slice already names. Seven need
+# nothing beyond what today's link already provides; the eighth,
+# Stage::UpdateMenuButtons, needs four globals from the storage batch
+# (hal/w8a_stage_storage.cpp) that lands with it.
 #
 # THE OTHER TWENTY-ONE, each with the blocker that holds it out. No TU is held
 # out for taste; several have more than one blocker and the first is named.
@@ -50,8 +78,16 @@
 #   hal/sub_actors.cpp's port_minimap_affine_update is its stand-in and says so:
 #       Stage::GraphCallback2
 #
-#   GENUINELY UNMATCHED -- the arc's only one. Stage::CleanupResources calls
-#   FaderWipe::~FaderWipe and src/ carries NO matched TU for it:
+#   THE FADER TABLE AND A COLOUR DESTRUCTOR. Stage::CleanupResources calls
+#   FaderWipe::~FaderWipe, and that IS matched --
+#   src/engine/fader/_ZN9FaderWipeD1Ev.c, 0x02017450 (config/arm9/delinks.txt),
+#   already listed on the INERT slice_gate36.txt; _ZN9FaderWipeD0Ev.c exists
+#   too. (An earlier draft of this file called it genuinely unmatched. That was
+#   a search that did not descend into src/engine/fader/, not a fact about the
+#   corpus. There is NO genuinely unmatched body in this arc.) What actually
+#   blocks it is the storage the fader closure needs -- _ZTV9FaderWipe, the
+#   table hal/fader_wipes.cpp stages by hand, and _ZN5ColorD1Ev -- the same
+#   two the gate-36 note has carried since wave 4:
 #       Stage::CleanupResources (also blocked above)
 #
 #   AND ONE HELD OUT FOR A REASON WORTH READING TWICE.
@@ -63,44 +99,42 @@
 #   wrote to isolate the function. Nothing references those manglings today, so
 #   linking it is inert NOW and a silent wrong-binding the first time anything
 #   does. Its dialogue arm already runs from hal/message_pump.cpp besides.
-#
-# NOTHING HERE IS DISPATCHED. Every body below is reached by an explicit
-# /include: root in hal/w8a_stage_faces.cpp, not by a call: the ROM reaches all
-# of them through _ZTV5Stage, and that table is still trap-filled by
-# hal/stage_bridges.cpp, which this lane does not own. Read that file's header
-# before quoting the linkage number.
 
 # ---- the Stage bodies (8) -------------------------------------------------
 
 # _ZTV5Stage slot 1. Its whole body is Scene::ResetFadersAndSound plus two
-# flag stores; both are already in the link.
+# flag stores; both are already in the link. One of the four the vtable seat
+# will reach.
 src/_ZN5Stage19BeforeInitResourcesEv.cpp
 
-# _ZTV5Stage slot 12.
+# _ZTV5Stage slot 12. Reachable by the seat, but its object publishes ONLY
+# ?OnPendingDestroy@Stage@@QAEXXZ (__thiscall) and never the C name, so the
+# slot needs a face or a __fastcall thunk on top of the table fill.
 src/_ZN5Stage16OnPendingDestroyEv.cpp
 
 # _ZTV5Stage slots 16 and 17 -- ~Stage (D2/D1) and the deleting ~Stage (D0).
-# These two are what REVIVE src/_ZN8Particle10SysTrackerD1Ev.cpp and
-# src/func_02021b98.cpp: both were already compiled into walk_window by earlier
-# slices and both were being discarded by /OPT:REF because nothing named them.
-# The Stage destructors name them, so they come back with no new slice line --
-# the two TUs of this piece reached by real ROM code rather than a directive,
-# and the reason this slice's nine lines move linkage by eleven.
+# Between them they name _ZTV5Stage, _ZTV5Scene, MeshCollider::~MeshCollider,
+# Model::~Model, Particle::SysTracker::~SysTracker, ActorBase::~ActorBase and
+# Memory::Deallocate. Every one of those already resolves, which is why these
+# two close with nothing added.
 src/_ZN5StageD2Ev.c
 src/_ZN5StageD0Ev.c
 
-# The Stage's SceneRelated graphics block, slot 1: Particle::RenderAll.
+# The Stage's SceneRelated graphics block, slot 1: Particle::RenderAll. NOT a
+# _ZTV5Stage entry -- func_02019144 dispatches it, and the port does not run
+# that beat.
 src/_ZN5Stage14GraphCallback1Ev.c
 
-# Stage::Behavior's two pause gates. IsPauseDisabled's only callee is
-# func_ov002_020bd8ac, below.
+# Stage::Behavior's two pause gates -- reached from Behavior, not from the
+# vtable. IsPauseDisabled's only callee is func_ov002_020bd8ac, below.
 src/_ZN5Stage8CanPauseEv.c
 src/_ZN5Stage15IsPauseDisabledEv.c
 
-# The pause / VS / level-clear menu button rows. This is the one body in the
-# slice that needs the storage batch: data_0209f244, data_0209f2b4,
-# data_0209f2e0 and the four-slot data_0209f360[0..3], all hosted by
-# hal/w8a_stage_storage.cpp in this same piece.
+# The pause / VS / level-clear menu button rows, reached from Stage::PS_Update,
+# VE_Init, VE_Update and LC_Update. This is the one body in the slice that
+# needs the storage batch: data_0209f244, data_0209f2b4, data_0209f2e0 and the
+# four-slot data_0209f360[0..3], all hosted by hal/w8a_stage_storage.cpp in
+# this same piece.
 src/_ZN5Stage17UpdateMenuButtonsEb.c
 
 # ---- the one callee those eight drag that no slice already names (1) ------
