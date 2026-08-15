@@ -43,7 +43,7 @@ here, and they move independently.
 ```
 MATCHED    ██████████████████████████████  98.5%   11,221 / 11,394 functions
 CONVERTED  █░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   3.8%   426 / 11,287 files
-LINKED     █████████████░░░░░░░░░░░░░░░░░  43.5%   4,888 / 11,243 matched TUs
+LINKED     █████████████░░░░░░░░░░░░░░░░░  43.3%   4,871 / 11,243 matched TUs
 ```
 <!-- tiers:end -->
 
