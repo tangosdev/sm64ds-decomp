@@ -589,3 +589,60 @@ the `cascade.py --scaffold ghidra` use case that is the more valuable half — t
 can re-derive structure from the disassembly but cannot invent the right callee names —
 so re-enabling the scaffold on a SyncDsd'd project is worth doing. It will not, on this
 evidence, rescue functions that are hard for reasons of type recovery.
+
+---
+
+## 10. Outcome (applied)
+
+Commit `193fc107` applies §8's nine resolutions: 118 substitutions across 30 `src/`
+files, then `enroll.py --complete-list` promoted the newly eligible names.
+
+| gate | before | after |
+|---|---|---|
+| `eligible.py` | 10854 / 11174 | **10880 / 11174** (+26, 0 removed) |
+| `rombuild.py` source-built | 10,854 fns, 88.68% of code bytes | **10,880 fns, 89.75%** |
+| reproducing / mismatching | 10,854 / 0 | **10,880 / 0** |
+| module fidelity | 106/106 exact | **106/106 exact, 100.000000%** |
+| `port_refcheck.py` | — | 393 checked, 0 stale |
+| `prepush_attribution.py` | — | 11330 tracked, 0 changed, 0 lost |
+
+**G10.1 — The langmode ratchet fails, and it is not this change.** [high] `--check`
+against `origin/chaos-data:langmode-baseline.json` reports
+`unmigrated_total 683 -> 688` and `cpp_still_handspelled 138 -> 140`. Stashing every
+change and re-running on the clean tree gives the **identical** numbers, so the ratchet
+is stuck on main. This is the `[[stale-baseline-gates]]` case; reproduce before owning.
+
+**G10.2 — CORRECTION to G8.2: `func_ov081_02123910` is not a landed fakematch.** [high]
+It is `reason: "compile failed"` in the eligibility report —
+`func_ov081_02123910.cpp:31: illegal function overloading` under 2004/b56. It is not
+eligible, not enrolled, and not in the build, so its reference to the ov004 symbol has
+never affected a byte. It is a latent problem in an unbuildable file, which is exactly
+the `[[unbuildable-files-invisible]]` class. The finding is still worth keeping — when
+that file is made to compile, the reference needs deciding first.
+
+**G10.3 — ov002 is itself an Enemy-base overlay, which explains the whole pattern.**
+[high] `_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj` is defined in
+**ov002** at `0x020ad838` (size 0x208). So the enemy behaviour overlays calling into
+ov002 is semantically expected, not just statistically supported — the co-residency
+verdict and the class structure agree. ov004 holds a parallel, mutually exclusive copy;
+only three ov004-resident files plus the unbuildable ov081 one name its
+`_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player` at `0x020ada40`.
+
+**G10.4 — What is left of this worklist.** [high] Repo-wide, **213 files are rejected
+with missing symbols across 254 distinct names**. This change cleared 30 of those files.
+The largest remaining single names:
+
+| missing name | files blocked |
+|---|---|
+| `func_020beb68` | **25** |
+| `_ZTV10dBgActor_c` | 12 |
+| `_ll_udiv` | **9** |
+| `func_020bc7d4` | 8 |
+| `_Z35_ZN5Model8LoadFileER13SharedFilePtrPv` | 6 |
+| `_Z77_ZN18MovingMeshCollider7SetFileE…` | 6 |
+
+`func_020beb68` and `func_020bc7d4` are the same module-less shape as the nine just
+resolved and should yield to the same co-residency method. `_ll_udiv` connects back to
+§4: PR #37's signature matched it byte-exactly at `0x01ffa9dc`, where our config calls it
+`__aeabi_uldiv` — so nine files are blocked on a name the upstream signature already
+supplies. The `_Z35_…`/`_Z77_…` entries are the `[[double-mangling-defect]]` shape.
