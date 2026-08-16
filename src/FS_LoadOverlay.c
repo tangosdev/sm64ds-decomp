@@ -2,7 +2,7 @@ extern int func_02018c00(void *info, int proc, int id);
 extern int func_02018b64(void *info);
 extern void Crash(void);
 extern void func_0205dd9c(char *self);
-extern void func_020aa420(void);
+extern void func_ov001_020aa420(void);
 
 int FS_LoadOverlay(int proc, int id) {
     char info[0x24];
@@ -14,7 +14,7 @@ int FS_LoadOverlay(int proc, int id) {
     return 0;
 ok:
     ram = *(unsigned int *)(info + 4);
-    if (ram >= (unsigned int)func_020aa420) {
+    if (ram >= (unsigned int)func_ov001_020aa420) {
         sum = ram + *(unsigned int *)(info + 8);
         if (sum + *(unsigned int *)(info + 0xc) <= 0x214eaa0u)
             goto start;

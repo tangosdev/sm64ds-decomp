@@ -260,6 +260,7 @@ src/unnamed/ov063/func_ov063_0211a0a8.c:
     .text start:0x0211a0a8 end:0x0211a0dc
 
 src/unnamed/ov063/func_ov063_0211a0dc.cpp:
+    complete
     .text start:0x0211a0dc end:0x0211a3d0
 
 src/unnamed/ov063/func_ov063_0211a3d0.cpp:

@@ -6,7 +6,7 @@
 #include "dScMgLuigi_c.h"
 /* dScMgLuigi_c::InitResources - recovered from vtable slot identity */
 extern "C" {
-extern int func_020adc74(void* p);
+extern int func_ov004_020adc74(void* p);
 extern void DecompressLZ16(int src, void* dst);
 extern int LoadFile(int handle);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
@@ -34,7 +34,7 @@ s32 dScMgLuigi_c::InitResources()
     int f;
     int r5;
 
-    r6 = func_020adc74(&data_ov006_0213cfa0);
+    r6 = func_ov004_020adc74(&data_ov006_0213cfa0);
     if (r6 == 0) return 0;
 
     data_0209d45c |= 8;

@@ -337,6 +337,7 @@ src/func_02008b08.c:
     .text start:0x02008b08 end:0x02008b4c
 
 src/func_02008b4c.c:
+    complete
     .text start:0x02008b4c end:0x02008cb4
 
 src/func_02008cb4.c:
@@ -2772,6 +2773,7 @@ src/func_02018ac4.c:
     .text start:0x02018ac4 end:0x02018ad0
 
 src/FS_LoadOverlay.c:
+    complete
     .text start:0x02018ad0 end:0x02018b64
 
 src/func_02018b64.c:

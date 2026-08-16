@@ -28,7 +28,7 @@ void _ZN8Platform19UpdateClsnPosAndRotEv(char* self);
 void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* p);
 void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, const void* mtx, int fix, short s, void* clps);
 void func_020393d4(int* p, int v);
-void func_020efaf0(char* c);
+void func_ov002_020efaf0(char* c);
 }
 extern int data_ov002_0210d9f0;
 extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
@@ -48,7 +48,7 @@ extern "C" int func_ov100_021471e0(char* c) {
   func_020393d4((int*)(c+0x124), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
   self->unk_440 = 0xa000;
   self->unk_098 = self->unk_440;
-  func_020efaf0(c);
+  func_ov002_020efaf0(c);
   self->unk_43c = 1;
   pos.x = self->unk_05c;
   pos.y = self->unk_060;

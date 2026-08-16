@@ -26,7 +26,7 @@ struct ActorBase {
 extern "C" {
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
 extern void func_ov064_02115f98(void* c, void* p);
-extern int func_020ada40(void* c, void* v, void* r4, s32 flag);
+extern int func_ov002_020ada40(void* c, void* v, void* r4, s32 flag);
 extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
 extern int _ZN6Player9IsOnShellEv(void* p);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12 f, u32 b, u32 c, u32 d);
@@ -88,7 +88,7 @@ extern "C" void func_ov064_02116754(char* c)
             v[0] = 0x2000;
             v[1] = 0;
             v[2] = 0;
-            func_020ada40(c, v, r4, *(s32*)(*(char**)(c + 0x330) + 0x24));
+            func_ov002_020ada40(c, v, r4, *(s32*)(*(char**)(c + 0x330) + 0x24));
             ((ActorBase*)c)->ChangeState();
             return;
         }

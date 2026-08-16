@@ -6,11 +6,11 @@
 extern "C" {
     void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, void* v);
     void* _ZN5Actor10FindWithIDEj(u32 id);
-    void func_020aea30(void* self, void* a, int b);
+    void func_ov002_020aea30(void* self, void* a, int b);
     s16 _ZN5Actor18HorzAngleToCPlayerEv(void* self);
     void func_02012694(int a, void* p);
     void func_ov081_02125488(void* self, void* p);
-    void func_020ada40(void* self, void* v, void* a);
+    void func_ov002_020ada40(void* self, void* v, void* a);
     void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, u32 a, int f, u32 c, u32 d, u32 e);
     void func_ov081_02124134(void* self);
 }
@@ -39,7 +39,7 @@ extern "C" void func_ov081_021243cc(void* self)
 
     if (flags & 0x2000) {
         *(s32*)(c+0x10c) = 2;
-        func_020aea30(self, found, hit);
+        func_ov002_020aea30(self, found, hit);
         *(u16*)(c+0x94) = (u16)(_ZN5Actor18HorzAngleToCPlayerEv(self) + 0x8000);
         hit = 1;
     }
@@ -53,7 +53,7 @@ extern "C" void func_ov081_021243cc(void* self)
         if (*(u8*)(f+0x6fb) != 0) return;
         if (*(u8*)(f+0x6f9) == 1) {
             *(s32*)(c+0x10c) = 2;
-            func_020aea30(self, found, 0);
+            func_ov002_020aea30(self, found, 0);
             *(u16*)(c+0x94) = (u16)(_ZN5Actor18HorzAngleToCPlayerEv(self) + 0x8000);
             hit = 1;
         }
@@ -62,13 +62,13 @@ extern "C" void func_ov081_021243cc(void* self)
             vv.x = (s16)-0x1200;
             vv.y = 0;
             vv.z = 0;
-            func_020ada40(self, &vv, found);
+            func_ov002_020ada40(self, &vv, found);
             func_02012694(0x1d, (void*)(c+0x74));
             hit = 1;
         }
         if ((flags & 0x40) && *(s32*)(f+8) == 2) {
             *(s32*)(c+0x10c) = 2;
-            func_020aea30(self, found, 0);
+            func_ov002_020aea30(self, found, 0);
             *(u8*)(c+0x468) = 2;
             *(u16*)(c+0x94) = (u16)(_ZN5Actor18HorzAngleToCPlayerEv(self) + 0x8000);
             hit = 1;

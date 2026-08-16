@@ -8,7 +8,7 @@ typedef struct { s32 x, y, z; } Vector3;
 
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
 extern void _ZN8CapEnemy10ReleaseCapERK7Vector3(void* thiz, const Vector3* v);
-extern void* func_020ada40(void* thiz, s16* v, void* r6, s32 flag);
+extern void* func_ov002_020ada40(void* thiz, s16* v, void* r6, s32 flag);
 extern void func_02012694(s32 a, void* b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, s32 i, s32 fx, u32 j);
 extern s32 _ZN6Player9IsOnShellEv(void* p);
@@ -17,7 +17,7 @@ extern void _ZN6Player6BounceE5Fix12IiE(void* p, s32 f);
 extern void _ZN5Actor13SmallPoofDustEv(void* thiz);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, s32 f, u32 b, u32 cc, u32 d);
 extern void func_ov084_02129498(void* thiz);
-extern void func_020aea30(void* thiz, void* r6, void* p);
+extern void func_ov002_020aea30(void* thiz, void* r6, void* p);
 
 extern void* data_ov084_02130cd0[];
 extern void* data_ov084_02130ce0[];
@@ -69,11 +69,11 @@ void func_ov084_02129ed4(void* c)
         var_r0 = (s32)(U16f(c, 0xc) == 0xc8);
         if (var_r0 != 0) {
             aC[0] = -0x2000; aC[1] = 0; aC[2] = 0;
-            func_020ada40(c, aC, r6, 0x41000);
+            func_ov002_020ada40(c, aC, r6, 0x41000);
             return;
         }
         a12[0] = -0x1800; a12[1] = 0; a12[2] = 0;
-        func_020ada40(c, a12, r6, 0x96000);
+        func_ov002_020ada40(c, a12, r6, 0x96000);
         return;
     }
 
@@ -131,7 +131,7 @@ void func_ov084_02129ed4(void* c)
                     v44.x = 0; v44.y = 0x6c000; v44.z = 0;
                     _ZN8CapEnemy10ReleaseCapERK7Vector3(c, &v44);
                     a18[0] = 0x2000; a18[1] = 0; a18[2] = 0;
-                    func_020ada40(c, a18, r6, 0x41000);
+                    func_ov002_020ada40(c, a18, r6, 0x41000);
                     return;
                 }
                 { Vector3* pp = (Vector3*)(((int)r6 + 0x5c) & 0xffffffffffffffffULL); v20.x = pp->x; v20.y = pp->y; v20.z = pp->z; }
@@ -201,7 +201,7 @@ block_68:
         v74.x = 0; v74.y = 0x6c000; v74.z = 0;
         _ZN8CapEnemy10ReleaseCapERK7Vector3(c, &v74);
     }
-    func_020aea30(c, r6, (char*)c + 0x1b4);
+    func_ov002_020aea30(c, r6, (char*)c + 0x1b4);
     if (var_r5 != 0) {
         S16f(c, 0x8e) = (s16)(S16f(c, 0x94) + 0x8000);
     }

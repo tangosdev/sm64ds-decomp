@@ -2428,6 +2428,7 @@ src/_ZN14dScMgCurling_c8BehaviorEv.cpp:
     .text start:0x020e3528 end:0x020e3578
 
 src/_ZN14dScMgCurling_c13InitResourcesEv.cpp:
+    complete
     .text start:0x020e3578 end:0x020e3820
 
 src/MgShuffleShell_Spawn.c:
@@ -2626,6 +2627,7 @@ src/_ZN15dScMgCurling2_c8BehaviorEv.cpp:
     .text start:0x020e683c end:0x020e6894
 
 src/_ZN15dScMgCurling2_c13InitResourcesEv.cpp:
+    complete
     .text start:0x020e6894 end:0x020e6bf4
 
 src/func_ov006_020e6bf4.c:
@@ -5894,6 +5896,7 @@ src/func_ov006_02115a5c.c:
     .text start:0x02115a5c end:0x02115b0c
 
 src/func_ov006_02115b0c.c:
+    complete
     .text start:0x02115b0c end:0x021173c8
 
 src/func_ov006_021173c8.cpp:
@@ -7048,6 +7051,7 @@ src/func_ov006_0212921c.c:
     .text start:0x0212921c end:0x02129268
 
 src/func_ov006_02129268.c:
+    complete
     .text start:0x02129268 end:0x021295ac
 
 src/func_ov006_021295ac.cpp:
