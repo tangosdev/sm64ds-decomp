@@ -7,5 +7,5 @@
 
 int func_ov016_02112fa8(void *self)
 {
-    return func_020b5e58(self, &data_ov016_02114b8c);
+    return func_ov002_020b5e58(self, &data_ov016_02114b8c);
 }

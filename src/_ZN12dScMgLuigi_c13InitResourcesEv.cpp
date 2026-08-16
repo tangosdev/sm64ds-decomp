@@ -119,8 +119,8 @@ s32 dScMgLuigi_c::InitResources()
     func_ov004_020b04d0(0x30);
     *(volatile u16*)(c + 0x5100 + 0x72) = 0xa;
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
-    func_020bc888 = 0x80;
-    func_020bc864 = ~0x1b;
+    data_ov004_020bc888 = 0x80;
+    data_ov004_020bc864 = ~0x1b;
     *(int*)(c + 0xb4) = 0;
     return 1;
 }

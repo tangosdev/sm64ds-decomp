@@ -12,7 +12,7 @@ struct Player {
 };
 
 extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
-extern void func_020caf98(struct Player* player, struct Actor* actor);
+extern void func_ov002_020caf98(struct Player* player, struct Actor* actor);
 
 #define PLAYER_ACTOR_ID 0xbf
 
@@ -26,5 +26,5 @@ void func_02014f5c(struct Actor* self, u32 id) {
     isPlayer = (player->actorID == PLAYER_ACTOR_ID) ? 1 : 0;
     if (!isPlayer) return;
 
-    func_020caf98((struct Player*)player, self);
+    func_ov002_020caf98((struct Player*)player, self);
 }

@@ -49,6 +49,7 @@ src/_ZN19RotatingPlatformLllD0Ev.c:
     .text start:0x021115f8 end:0x0211165c
 
 src/func_ov022_0211165c.c:
+    complete
     .text start:0x0211165c end:0x02111670
 
 src/func_ov022_02111670.c:
@@ -232,6 +233,7 @@ src/_ZN13RollingLogLllD0Ev.c:
     .text start:0x021124e8 end:0x0211254c
 
 src/_ZN13RollingLogLll16CleanupResourcesEv.cpp:
+    complete
     .text start:0x0211254c end:0x02112560
 
 src/_ZN13RollingLogLll8BehaviorEv.cpp:

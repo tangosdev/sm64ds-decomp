@@ -92,10 +92,10 @@ int func_ov006_0212b480(void *arg0)
     _ZN3GXS11LoadOBJPlttEPKvjj((const void *)h, 0, 0x100);
     Ov004_Deallocate(h);
 
-    func_020bc8a8 = 0x40;
-    func_020bc898 = 0xa0;
-    func_020bc86c = 0xc0;
-    func_020bc8a4 = 0xa0;
+    data_ov004_020bc8a8 = 0x40;
+    data_ov004_020bc898 = 0xa0;
+    data_ov004_020bc86c = 0xc0;
+    data_ov004_020bc8a4 = 0xa0;
 
     *(int *)(c + 0x5fdc) = 0;
     *(int *)(c + 0x5fe0) = 0;

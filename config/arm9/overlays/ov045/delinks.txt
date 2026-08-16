@@ -117,9 +117,11 @@ src/_ZN16FloatingFloorBfsD0Ev.c:
     .text start:0x02111b64 end:0x02111bc8
 
 src/func_ov045_02111bc8.c:
+    complete
     .text start:0x02111bc8 end:0x02111bdc
 
 src/func_ov045_02111bdc.c:
+    complete
     .text start:0x02111bdc end:0x02111bf4
 
 src/FloatingFloorBfs_Spawn.c:
@@ -135,9 +137,11 @@ src/_ZN18TiltingPlatformBfsD0Ev.c:
     .text start:0x02111c80 end:0x02111ce4
 
 src/_ZN18TiltingPlatformBfs16CleanupResourcesEv.c:
+    complete
     .text start:0x02111ce4 end:0x02111cf8
 
 src/_ZN18TiltingPlatformBfs13InitResourcesEv.c:
+    complete
     .text start:0x02111cf8 end:0x02111d0c
 
 src/TiltingPlatformBfs_Spawn.c:

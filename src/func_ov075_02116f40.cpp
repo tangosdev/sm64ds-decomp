@@ -8,7 +8,7 @@ struct OAM {
 extern "C" int func_0200f0bc(void);
 extern short data_ov075_0211b5d4[];
 extern "C" char data_ov075_0211c790[];
-extern "C" char func_020abd88[];
+extern "C" char _ZN3OAM14BOUNCING_ARROWE[];
 
 extern "C" void func_ov075_02116f40(char* c)
 {
@@ -26,7 +26,7 @@ extern "C" void func_ov075_02116f40(char* c)
 
     *(int*)(c + 0x26c) += 1;
     int r5 = (*(int*)(c + 0x26c) & 8) ? 0xac : 0xae;
-    OAM::Render(false, (OamAttr*)func_020abd88, 0x40, r5, -1, -1, 0x1000, (OamAttr*)0x1000, 0, -1);
-    OAM::Render(false, (OamAttr*)func_020abd88, 0x80, r5, -1, -1, 0x1000, (OamAttr*)0x1000, 0, -1);
-    OAM::Render(false, (OamAttr*)func_020abd88, 0xc0, r5, -1, -1, 0x1000, (OamAttr*)0x1000, 0, -1);
+    OAM::Render(false, (OamAttr*)_ZN3OAM14BOUNCING_ARROWE, 0x40, r5, -1, -1, 0x1000, (OamAttr*)0x1000, 0, -1);
+    OAM::Render(false, (OamAttr*)_ZN3OAM14BOUNCING_ARROWE, 0x80, r5, -1, -1, 0x1000, (OamAttr*)0x1000, 0, -1);
+    OAM::Render(false, (OamAttr*)_ZN3OAM14BOUNCING_ARROWE, 0xc0, r5, -1, -1, 0x1000, (OamAttr*)0x1000, 0, -1);
 }

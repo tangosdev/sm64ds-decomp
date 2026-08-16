@@ -12,5 +12,5 @@ extern char data_ov015_021147a4[];
 
 int func_ov015_02112c84(void *thisp)
 {
-    return func_020b66a8(thisp, data_ov015_021147a4);
+    return func_ov002_020b66a8(thisp, data_ov015_021147a4);
 }

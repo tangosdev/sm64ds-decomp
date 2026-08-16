@@ -31,7 +31,7 @@ extern void func_ov006_0210935c(Thing* t, s32 idx);
 extern void func_ov006_0210927c(Thing* t);
 extern void _ZN5Sound12PlayBank2_2DEj(u32 id);
 
-extern s32 func_020b9488;
+extern s32 data_ov004_020b9488;
 extern u8 data_020a0e40;
 extern u8 data_020a0de8[];
 extern u8 data_020a0dea[];
@@ -82,7 +82,7 @@ void func_ov006_02108f2c(Thing* t)
         s32 d;
         s32* p;
         s32 q;
-        d = func_020b9488;
+        d = data_ov004_020b9488;
         p = (s32*)(((s32)t + 4));
         q = -((t->unk30 - (d >> 1)) << 12) / d - 0x600;
         *p += (s32)((((s64)q << 14) + 0x800) >> 12);

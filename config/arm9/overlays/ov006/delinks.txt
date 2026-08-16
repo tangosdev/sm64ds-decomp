@@ -2114,6 +2114,7 @@ src/func_ov006_020de440.cpp:
     .text start:0x020de440 end:0x020de584
 
 src/func_ov006_020de584.c:
+    complete
     .text start:0x020de584 end:0x020de5ac
 
 src/func_ov006_020de5ac.c:
@@ -2721,6 +2722,7 @@ src/func_ov006_020e7110.c:
     .text start:0x020e7110 end:0x020e7124
 
 src/func_ov006_020e7124.c:
+    complete
     .text start:0x020e7124 end:0x020e72c0
 
 src/func_ov006_020e72c0.c:
@@ -3662,6 +3664,7 @@ src/_ZN12dScMgLuigi_c8BehaviorEv.cpp:
     .text start:0x020f3414 end:0x020f3460
 
 src/_ZN12dScMgLuigi_c13InitResourcesEv.cpp:
+    complete
     .text start:0x020f3460 end:0x020f3800
 
 src/MgWanted_Spawn.c:
@@ -5183,6 +5186,7 @@ src/func_ov006_02108e24.c:
     .text start:0x02108e24 end:0x02108f2c
 
 src/func_ov006_02108f2c.c:
+    complete
     .text start:0x02108f2c end:0x0210927c
 
 src/func_ov006_0210927c.c:
@@ -5282,6 +5286,7 @@ src/func_ov006_0210a6e4.cpp:
     .text start:0x0210a6e4 end:0x0210a708
 
 src/func_ov006_0210a708.c:
+    complete
     .text start:0x0210a708 end:0x0210a8c0
 
 src/_ZN12dScMgSlot1_cD1Ev.cpp:
@@ -5441,6 +5446,7 @@ src/_ZN12dScMgSlot1_c13InitResourcesEv.cpp:
     .text start:0x0210d1fc end:0x0210d6b8
 
 src/func_ov006_0210d6b8.cpp:
+    complete
     .text start:0x0210d6b8 end:0x0210d740
 
 src/_ZN16dScMgSmartball_cD1Ev.cpp:
@@ -5932,6 +5938,7 @@ src/func_ov006_021173c8.cpp:
     .text start:0x021173c8 end:0x02118488
 
 src/func_ov006_02118488.c:
+    complete
     .text start:0x02118488 end:0x02118a8c
 
 src/func_ov006_02118a8c.cpp:
@@ -6562,6 +6569,7 @@ src/func_ov006_021200cc.c:
     .text start:0x021200cc end:0x021200dc
 
 src/func_ov006_021200dc.c:
+    complete
     .text start:0x021200dc end:0x02120238
 
 src/func_ov006_02120238.c:
@@ -6580,6 +6588,7 @@ src/_ZN13dScMgTeresa_c8BehaviorEv.cpp:
     .text start:0x021203ac end:0x021203fc
 
 src/_ZN13dScMgTeresa_c13InitResourcesEv.cpp:
+    complete
     .text start:0x021203fc end:0x021207a8
 
 src/MgHideAndBooSeek_Spawn.c:
@@ -7193,6 +7202,7 @@ src/func_ov006_0212ac74.c:
     .text start:0x0212ac74 end:0x0212b480
 
 src/func_ov006_0212b480.c:
+    complete
     .text start:0x0212b480 end:0x0212b7f8
 
 src/func_ov006_0212b7f8.cpp:

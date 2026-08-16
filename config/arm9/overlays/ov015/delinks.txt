@@ -265,6 +265,7 @@ src/_ZN18RotatingPlatformWfD0Ev.c:
     .text start:0x02112c20 end:0x02112c84
 
 src/func_ov015_02112c84.c:
+    complete
     .text start:0x02112c84 end:0x02112c98
 
 src/func_ov015_02112c98.c:
