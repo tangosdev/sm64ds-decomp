@@ -1879,6 +1879,7 @@ src/func_ov006_020db720.c:
     .text start:0x020db720 end:0x020db9dc
 
 src/func_ov006_020db9dc.cpp:
+    complete
     .text start:0x020db9dc end:0x020dbaf0
 
 src/func_ov006_020dbaf0.cpp:
@@ -2995,6 +2996,7 @@ src/func_ov006_020e9c10.c:
     .text start:0x020e9c10 end:0x020e9c20
 
 src/func_ov006_020e9c20.cpp:
+    complete
     .text start:0x020e9c20 end:0x020e9cec
 
 src/func_ov006_020e9cec.c:
@@ -3830,6 +3832,7 @@ src/func_ov006_020f5250.c:
     .text start:0x020f5250 end:0x020f52c4
 
 src/func_ov006_020f52c4.c:
+    complete
     .text start:0x020f52c4 end:0x020f5324
 
 src/func_ov006_020f5324.c:
@@ -3841,6 +3844,7 @@ src/func_ov006_020f5388.cpp:
     .text start:0x020f5388 end:0x020f53e4
 
 src/func_ov006_020f53e4.cpp:
+    complete
     .text start:0x020f53e4 end:0x020f5504
 
 src/MgMemoryMatch_Spawn.c:
@@ -4031,6 +4035,7 @@ src/func_ov006_020f7320.c:
     .text start:0x020f7320 end:0x020f7394
 
 src/func_ov006_020f7394.c:
+    complete
     .text start:0x020f7394 end:0x020f73f4
 
 src/func_ov006_020f73f4.c:
@@ -4042,6 +4047,7 @@ src/func_ov006_020f7458.cpp:
     .text start:0x020f7458 end:0x020f74b4
 
 src/func_ov006_020f74b4.cpp:
+    complete
     .text start:0x020f74b4 end:0x020f75d4
 
 src/MgMemoryMaster_Spawn.c:
@@ -4133,6 +4139,7 @@ src/func_ov006_020f8a3c.c:
     .text start:0x020f8a3c end:0x020f8c68
 
 src/func_ov006_020f8c68.c:
+    complete
     .text start:0x020f8c68 end:0x020f8d08
 
 src/func_ov006_020f8d08.cpp:
@@ -5207,6 +5214,7 @@ src/func_ov006_021095ac.c:
     .text start:0x021095ac end:0x021095cc
 
 src/func_ov006_021095cc.cpp:
+    complete
     .text start:0x021095cc end:0x021096c8
 
 src/func_ov006_021096c8.c:
@@ -6978,6 +6986,7 @@ src/func_ov006_0212527c.cpp:
     .text start:0x0212527c end:0x02125364
 
 src/func_ov006_02125364.cpp:
+    complete
     .text start:0x02125364 end:0x021253bc
 
 src/func_ov006_021253bc.c:

@@ -1349,7 +1349,7 @@ extern int func_020b6244(void*, void*);
 extern int func_020b6424(void*, void*);
 extern int func_020b6584(void*, void*, int);
 extern int func_020b66a8(void*, void*);
-extern int func_020bc7d4;
+extern int data_ov004_020bc7d4;
 extern int func_020bc860;
 extern int func_020bc864;
 extern int func_020bc86c;
