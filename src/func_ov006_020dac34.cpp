@@ -309,8 +309,7 @@ extern "C" void func_ov006_020dac34(unsigned char *c)
                 g = data_ov004_020beb68;
                 if (g != 0) {
                     if (*(int *)((char *)g + 0xb4) > 0) {
-                        int *gi = (int *)(int)(((s64)(int)((char *)g + 0xb4)) & 0xFFFFFFFFFFFFFFFFLL);
-                        *gi = *gi - 1;
+                        *(int *)((char *)g + 0xb4) = *(int *)((char *)g + 0xb4) - 1;
                     }
                 }
                 func_ov004_020b0a54(5);

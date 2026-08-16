@@ -32,7 +32,7 @@ void func_ov006_020d8408(char *c)
   s32 j0;
   if ((*((u16 *) ((c + 0x6200) + 0xe2))) != 0)
   {
-    (*((u16 *) ((long long) ((int) (c + 0x62e2)))))--;
+    (*((u16 *) ( ((int) (c + 0x62e2)))))--;
     if ((*((s16 *) ((c + 0x6200) + 0xe2))) < 0)
     {
       *((u16 *) ((c + 0x6200) + 0xe2)) = 0;
@@ -113,7 +113,7 @@ void func_ov006_020d8408(char *c)
   flag = 0;
   if (sb == 7)
   {
-    unsigned char *pf = (unsigned char *) ((int) ((long long) ((int) (c + 0x62fc))));
+    unsigned char *pf = (unsigned char *) ((int) ( ((int) (c + 0x62fc))));
     s32 bit = *((unsigned char *) ((c + 0x6000) + 0x2fc));
     cnt = 2;
     flag = (bit & 1) + 1;
@@ -124,7 +124,7 @@ void func_ov006_020d8408(char *c)
   if (new_var == 8)
   {
     s32 bit = (*((unsigned char *) ((c + 0x6000) + 0x2fc))) & 1;
-    unsigned char *pf = (unsigned char *) ((int) ((long long) ((int) (c + 0x62fc))));
+    unsigned char *pf = (unsigned char *) ((int) ( ((int) (c + 0x62fc))));
     s32 x = *pf;
     cnt = bit + 2;
     *pf = x ^ 1;
@@ -145,7 +145,7 @@ void func_ov006_020d8408(char *c)
   }
   if (sb == 11)
   {
-    unsigned char *pf = (unsigned char *) ((int) ((long long) ((int) (c + 0x62fc))));
+    unsigned char *pf = (unsigned char *) ((int) ( ((int) (c + 0x62fc))));
     s32 bit = *((unsigned char *) ((c + 0x6000) + 0x2fc));
     cnt = 3;
     flag = (bit & 1) + 1;
@@ -192,7 +192,7 @@ void func_ov006_020d8408(char *c)
           *((s16 *) ((c + (j << 6)) + 0x4690)) = (s16) v4;
           *((s16 *) ((c + (j << 6)) + 0x4692)) = (s16) v200;
           rnd = (u32) RandomIntInternal(&data_0209d4b8);
-          ptype = (unsigned char *) ((int) ((long long) ((int) ((c + (j << 6)) + 0x4696))));
+          ptype = (unsigned char *) ((int) ( ((int) ((c + (j << 6)) + 0x4696))));
           *ptype = (((rnd >> 16) & 0x7fff) << 1) >> 15;
           *((s32 *) ((c + (j << 6)) + 0x4670)) = 0x999;
           *((s32 *) ((c + (j << 6)) + 0x4688)) = z1;
@@ -252,7 +252,7 @@ void func_ov006_020d8408(char *c)
             *((s32 *) ((c + (j << 6)) + 0x4664)) = vB8000;
             func_ov006_020d66c4(c, one);
           }
-          (*((s32 *) ((int) ((long long) ((int) (c + 0x62d8))))))++;
+          (*((s32 *) ((int) ( ((int) (c + 0x62d8))))))++;
           break;
         }
         j++;

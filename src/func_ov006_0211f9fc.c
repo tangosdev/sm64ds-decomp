@@ -25,7 +25,7 @@ void func_ov006_0211f9fc(int self)
         int dist;
         d.x = *(int *)((char *)self + 0x4000 + 0xBEC) - *(int *)((char *)self + 0x4000 + 0xBF4);
         d.y = *(int *)((char *)self + 0x4000 + 0xBF0) - *(int *)((char *)self + 0x4000 + 0xBF8);
-        dist = _ZN4cstd4sqrtEy((u64)(s64)((d.x) * (d.x) + (d.y) * (d.y)));
+        dist = _ZN4cstd4sqrtEy((u64)((d.x) * (d.x) + (d.y) * (d.y)));
         if (dist <= 3)
             close = 1;
         if (close == 0) {
