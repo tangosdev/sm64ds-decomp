@@ -460,7 +460,7 @@ src/actors/MansionSteps/MansionSteps_Spawn.c:
     complete
     .text start:0x0211d360 end:0x0211d3a0
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.c:
+src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.cpp:
     .text start:0x0211d3a0 end:0x0211d3f0
 
 src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.c:

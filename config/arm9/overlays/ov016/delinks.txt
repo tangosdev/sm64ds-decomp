@@ -152,7 +152,7 @@ src/RockPillar_Spawn.c:
     complete
     .text start:0x02112ec4 end:0x02112ef4
 
-src/_ZN23FloatOnWaterPlatformJrbD1Ev.c:
+src/_ZN23FloatOnWaterPlatformJrbD1Ev.cpp:
     complete
     .text start:0x02112ef4 end:0x02112f44
 

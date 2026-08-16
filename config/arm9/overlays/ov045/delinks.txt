@@ -108,7 +108,7 @@ src/ExtendingPlatform_Spawn.c:
     complete
     .text start:0x02111ad4 end:0x02111b14
 
-src/_ZN16FloatingFloorBfsD1Ev.c:
+src/_ZN16FloatingFloorBfsD1Ev.cpp:
     complete
     .text start:0x02111b14 end:0x02111b64
 
@@ -126,7 +126,7 @@ src/FloatingFloorBfs_Spawn.c:
     complete
     .text start:0x02111bf4 end:0x02111c30
 
-src/_ZN18TiltingPlatformBfsD1Ev.c:
+src/_ZN18TiltingPlatformBfsD1Ev.cpp:
     complete
     .text start:0x02111c30 end:0x02111c80
 
@@ -144,7 +144,7 @@ src/TiltingPlatformBfs_Spawn.c:
     complete
     .text start:0x02111d0c end:0x02111d48
 
-src/_ZN12FallBlockBfsD1Ev.c:
+src/_ZN12FallBlockBfsD1Ev.cpp:
     .text start:0x02111d48 end:0x02111d98
 
 src/_ZN12FallBlockBfsD0Ev.c:

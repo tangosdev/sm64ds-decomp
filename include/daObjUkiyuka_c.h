@@ -3,38 +3,84 @@
 
 #include "types.h"
 
-/* daObjUkiyuka_c -- an intermediate class the ROM's RTTI names and the tree
- * did not.  Base: dBgActor_c (the tree calls it Platform).
+/* The abstract base of the floating floors: the slabs that sink under your weight
+ * and bob back up. `ukiyuka` is a floating floor.
  *
- * typeinfo 0x02109104 (ov002), vtable 0x0210912c (ov002), 32 slots (base has 32).
- * Abstract -- pure-virtual (null) slots: 0, 3
- * Own overrides at slots: 6, 9, 16, 17
- * 2 known descendant(s): daObjFl_Ukiyuka_c, daObjKm2_Ukishima_c
+ * A LAYER THE TREE DID NOT HAVE. This header used to be a flat struct under
+ * `u8 pad_000[0x320]`, emitted by `tools/rtti_vtables.py --emit-headers` because
+ * that pass knew offsets and not sizeof(base). include/Platform.h has since
+ * settled sizeof(Platform) = 0x320, so the class can be spelled as what it is. The
+ * regenerate line is gone with the generated body: that tool deletes only files
+ * that still carry it, and this one is hand-written now.
  *
- * The fields below are the offsets this class's OWN vtable overrides
- * touch that no named ancestor declares.  A method of a class can
- * reach its own members and its ancestors', never a descendant's, so
- * an offset seen here and owned by no ancestor belongs to this class.
- * Read from these byte-matched functions:
- *   func_ov002_020b6494
- *   func_ov002_020b646c
- *   func_ov002_020b63e0
- *   func_ov002_020b6388
+ *   _ZTI14daObjUkiyuka_c  ov002 0x02109104
+ *   _ZTS14daObjUkiyuka_c  ov002 0x02109110   "14daObjUkiyuka_c"
+ *   vtable                ov002 0x0210912c, 32 slots, same count as the base
+ *   kind                  __si_class_type_info, ONE base, subobject offset 0
+ *   base                  dBgActor_c, ov002 0x021089ec -- the tree's Platform
  *
- * The space below 0x320 is left as padding.  It is NOT all the base's:
- * this class's own subobjects live in there too -- daObjDorifu_c's
- * destructor destroys a Model[5] at 0x320 and a MeshCollider[5] at
- * 0x4b0, both its own.  Padding means unobserved, not inherited.
- * The struct is flat like the rest of the generated corpus rather than
- * inheriting because this pass knows offsets, not sizeof(base).
- * Regenerate: python tools/rtti_vtables.py --emit-headers */
+ * ABSTRACT. Slots 0 and 3 -- InitResources and CleanupResources -- are null. Its
+ * own overrides are slots 6 (Behavior), 9 (Render), 16 (D1) and 17 (D0).
+ *
+ * TWO DESCENDANTS: daObjFl_Ukiyuka_c (FloatingFloorLllSmall, which has a second
+ * factory FloatingFloorLllBig_Spawn building the same class with different
+ * parameters) and daObjKm2_Ukishima_c (FloatingFloorBfs).
+ *
+ * FOUR FIELDS, all of them read by this class's own Behavior,
+ * `func_ov002_020b6494`:
+ *
+ *   0x320  the rest height. Behavior compares the actor's own Y at 0x60 against it
+ *          and, when the two are equal, restarts the rest timer.
+ *   0x324  the bob amplitude, multiplied by sin(phase) and subtracted from Y.
+ *   0x328  the bob phase, stepped 0x100 a frame.
+ *   0x32a  the rest timer, 0x3c frames. While DecIfAbove0_Short is counting it
+ *          down Behavior does nothing but the collider range check.
+ *
+ * SIZE 0x32c. 0x32a + 2 closes the class, and FloatingFloorBfs_Spawn passes
+ * 812 = 0x32c to ActorBase::operator new, which is this class and nothing more:
+ * daObjKm2_Ukishima_c adds no field of its own. THE OTHER LEAF IS BIGGER --
+ * FloatingFloorLllSmall_Spawn and FloatingFloorLllBig_Spawn both pass 816 = 0x330
+ * -- so daObjFl_Ukiyuka_c has 4 bytes this class does not, which is what fixes the
+ * boundary at 0x32c rather than anywhere higher.
+ *
+ * Field NAMES are coined from what the code does; nothing in the ROM names them.
+ */
 
-struct daObjUkiyuka_c {
-    u8  pad_000[0x320];
-    s32 unk_320;            /* 0x320 */
-    s32 unk_324;            /* 0x324 */
-    s16 unk_328;            /* 0x328 */
-    s16 unk_32a;            /* 0x32a */
+#ifdef __cplusplus
+
+#include "Platform.h"
+
+struct daObjUkiyuka_c : Platform {
+    /* Field NAMES are placeholders. Offsets, widths and types are observed. */
+    s32 mRestY;             /* 0x320 */
+    s32 mBobAmplitude;      /* 0x324 */
+    s16 mBobPhase;          /* 0x328 */
+    u16 mRestTimer;         /* 0x32a */
+
+    /* --- vtable --- */
+    /* INLINE ON PURPOSE, for the reason include/Platform.h gives for its own:
+       every descendant's destructor inlines this body rather than calling
+       _ZN14daObjUkiyuka_cD1Ev (which does exist out of line, at ov002
+       0x020b63e0, still under its func_ov002_ name). An out-of-line declaration
+       here would make each descendant emit a `bl` the ROM does not have. */
+    virtual ~daObjUkiyuka_c() {}
 };
 
-#endif
+typedef char daObjUkiyuka_c_size_must_be_0x32c[sizeof(daObjUkiyuka_c) == 0x32c ? 1 : -1];
+
+#else
+
+/* The same object for a C translation unit, which has no base sub-object to
+   inherit Platform's fields from and so spells the layout flat. Same arrangement
+   as include/Platform.h. */
+struct daObjUkiyuka_c {
+    u8  pad_000[0x320];
+    s32 mRestY;             /* 0x320 */
+    s32 mBobAmplitude;      /* 0x324 */
+    s16 mBobPhase;          /* 0x328 */
+    u16 mRestTimer;         /* 0x32a */
+};
+
+#endif /* __cplusplus */
+
+#endif /* DAOBJUKIYUKA_C_H */

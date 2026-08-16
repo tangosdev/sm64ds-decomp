@@ -1,0 +1,64 @@
+#ifndef DAOBJKAITENDAI_C_H
+#define DAOBJKAITENDAI_C_H
+
+#include "types.h"
+#include "Platform.h"
+
+/* The abstract base of the turntable platforms: the discs that spin in place and
+ * carry Mario round with them. `kaitendai` is a revolving stand.
+ *
+ * A LAYER THE TREE DID NOT HAVE. Five classes read as direct Platform subclasses
+ * because the tree named the base's base. The ROM's RTTI names this one and points
+ * it at dBgActor_c.
+ *
+ *   _ZTI16daObjKaitendai_c  ov002 0x021091ac
+ *   _ZTS16daObjKaitendai_c  ov002 0x021091b8   "16daObjKaitendai_c"
+ *   vtable                  ov002 0x021091d4, 32 slots, same count as the base
+ *   kind                    __si_class_type_info, ONE base, subobject offset 0
+ *   base                    dBgActor_c, ov002 0x021089ec -- the tree's Platform
+ *
+ * ABSTRACT. Slots 0 and 3 -- InitResources and CleanupResources -- are null. Its
+ * own overrides are slots 6 (Behavior), 9 (Render), 16 (D1) and 17 (D0); every
+ * other slot holds the base's word and is inherited.
+ *
+ * FIVE DESCENDANTS, more than any other class in this series:
+ * daObjBk_Ukisima_c (RotatingPlatformWf), daObjFl_Koma_D_c (RotatingPlatformLll),
+ * daObjWc_Obj07_c (RotatingPlatformWdw), daObjRc_Kaitendai_c (RotatingPlatformRr)
+ * and daObjKm3_Kaitendai_c (RickshawBs). Each one's destructor stores this class's
+ * vtable between its own and _ZTV8Platform, which is the same fact the RTTI
+ * records, arrived at from the other direction.
+ *
+ * NO FIELDS, and that is measured rather than assumed. Its own Behavior
+ * (`func_ov002_020b6718`) reads this+0x94, which is Platform's mPrevAngleY, and
+ * otherwise only calls Platform::UpdateModelPosAndRotY and the guarded
+ * UpdateClsnPosAndRot. Its own Render (`func_ov002_020b66f0`) dispatches through
+ * the Model at 0xd4. Its own destructor destroys only Platform's two members. And
+ * all five factories -- RotatingPlatformWf_Spawn, RotatingPlatformLll_Spawn,
+ * RotatingPlatformWdw_Spawn, RotatingPlatformRr_Spawn and `func_ov047_021113bc`,
+ * which is RickshawBs's real factory -- pass 800 = 0x320 to
+ * ActorBase::operator new, which is sizeof(Platform) exactly. There is no room for
+ * a field anywhere in this class or in any of the five leaves.
+ *
+ * NOT RickshawBs_Spawn. That function allocates 816 and builds
+ * daObjKm3_Kurumajiku_c; the ov047 "Bs" names are crossed, which #1521 recorded in
+ * include/RickshawPlatformBs.h. Untangling them is a config change and its own
+ * piece of work.
+ */
+
+#ifdef __cplusplus
+
+struct daObjKaitendai_c : Platform {
+    /* --- vtable --- */
+    /* INLINE ON PURPOSE, for the reason include/Platform.h gives for its own:
+       every descendant's destructor inlines this body rather than calling
+       _ZN16daObjKaitendai_cD1Ev (which does exist out of line, at ov002
+       0x020b6664, still under its func_ov002_ name). An out-of-line declaration
+       here would make each descendant emit a `bl` the ROM does not have. */
+    virtual ~daObjKaitendai_c() {}
+};
+
+typedef char daObjKaitendai_c_size_must_be_0x320[sizeof(daObjKaitendai_c) == 0x320 ? 1 : -1];
+
+#endif /* __cplusplus */
+
+#endif /* DAOBJKAITENDAI_C_H */

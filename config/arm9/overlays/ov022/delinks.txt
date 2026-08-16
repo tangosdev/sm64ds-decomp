@@ -40,7 +40,7 @@ src/VolcanoRing_Spawn.c:
     complete
     .text start:0x02111578 end:0x021115a8
 
-src/_ZN19RotatingPlatformLllD1Ev.c:
+src/_ZN19RotatingPlatformLllD1Ev.cpp:
     complete
     .text start:0x021115a8 end:0x021115f8
 
@@ -158,7 +158,7 @@ src/LavaSeesaw_Spawn.c:
     complete
     .text start:0x02111f3c end:0x02111f6c
 
-src/_ZN21FloatingFloorLllSmallD1Ev.c:
+src/_ZN21FloatingFloorLllSmallD1Ev.cpp:
     complete
     .text start:0x02111f6c end:0x02111fbc
 
@@ -225,7 +225,7 @@ src/func_ov022_02112448.c:
 src/FallBlockLll_Spawn.c:
     .text start:0x0211245c end:0x02112498
 
-src/_ZN13RollingLogLllD1Ev.c:
+src/_ZN13RollingLogLllD1Ev.cpp:
     .text start:0x02112498 end:0x021124e8
 
 src/_ZN13RollingLogLllD0Ev.c:

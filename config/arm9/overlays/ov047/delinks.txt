@@ -23,7 +23,7 @@ src/RickshawBs_Spawn.c:
     complete
     .text start:0x02111280 end:0x021112bc
 
-src/_ZN10RickshawBsD1Ev.c:
+src/_ZN10RickshawBsD1Ev.cpp:
     complete
     .text start:0x021112bc end:0x0211130c
 
