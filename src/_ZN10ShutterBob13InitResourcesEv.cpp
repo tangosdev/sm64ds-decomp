@@ -1,21 +1,25 @@
 //cpp
 // @symbol _ZN10ShutterBob13InitResourcesEv
-/* recovered: named members + shared header, real C++ method */
+/* recovered: named members + shared header, real C++ method
+ *
+ * The collider used to be reached through a `u8 mMovingMeshCollider` marker this
+ * class declared itself. It is Platform's, twice removed, and Platform calls it
+ * mMeshCollider; the byte at that offset has not moved.
+ *
+ * THE TWO LOCAL SHADOW CLASSES ARE GONE, and they had to go rather than be
+ * renamed. This file used to carry `class Actor {};` and
+ * `class MeshColliderBase { void Enable(Actor *); };`. ShutterBob.h now reaches
+ * the real Actor and the real MeshColliderBase through Platform, and a second
+ * definition of either name in the same translation unit makes mwccarm 2004/b56
+ * die with an internal compiler error rather than a diagnostic. Renaming them
+ * compiles and byte-matches and is still wrong: the call mangles to
+ * _ZN10ClsnEnable6EnableEP9ClsnOwner, which nothing defines, so the relocation
+ * lands nowhere. The byte gate cannot see that -- it wildcards relocation slots --
+ * and tools/check_references.py reported it as newly unresolvable. Using the real
+ * declarations mangles to _ZN16MeshColliderBase6EnableEP5Actor, which resolves.
+ */
 #include "ShutterBob.h"
-/* The collider used to be reached through a `u8 mMovingMeshCollider` marker this
-   class declared itself. It is Platform's, twice removed, and Platform calls it
-   mMeshCollider; the byte at that offset has not moved. The two local shadow
-   declarations stay: the ROM's Enable takes an Actor by pointer and declaring the
-   real types changes the call site. See notes/mwccarm-codegen.md 6az. They are
-   RENAMED, though: this header now reaches the real Actor and the real
-   MeshColliderBase through Platform, and redefining either name in the same
-   translation unit makes mwccarm 2004/b56 die with an internal compiler error
-   rather than a diagnostic. */
-class ClsnOwner {};
-class ClsnEnable {
-public:
-    void Enable(ClsnOwner *a);
-};
+#include "MeshColliderBase.h"
 
 extern "C" {
 extern int func_ov002_020bad10(void *c, void **f);
@@ -25,6 +29,6 @@ extern int data_ov014_021145c4;
 int ShutterBob::InitResources()
 {
     int r4 = func_ov002_020bad10(((char *)this), (void **)&data_ov014_021145c4);
-    ((ClsnEnable *)((char *)&mMeshCollider))->Enable((ClsnOwner *)((char *)this));
+    ((MeshColliderBase *)((char *)&mMeshCollider))->Enable((Actor *)((char *)this));
     return r4;
 }
