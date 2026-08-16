@@ -1,10 +1,6 @@
 //cpp
-#include "types.h"
-// @symbol func_ov080_02124088
-/* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: shared common types */
 #include "common.h"
+#include "decl_common.h"
 #define LAUND(p) ((void*)((((long long)(int)(p)))))
 
 extern "C" {
@@ -13,11 +9,11 @@ extern void func_0201267c(unsigned int id, const Vector3* v);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void* self, const Vector3& v);
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int a, const Vector3& pos, const void* vec16, int b, int c2);
-
 }
 
-extern "C" void func_ov080_02124088(char* c)
+void func_ov080_02124088(void* thiz)
 {
+    char* c = (char*)thiz;
     Vector3 v1;
     Vector3 v3;
     Vector3 v2;
