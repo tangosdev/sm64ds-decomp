@@ -4940,6 +4940,10 @@ src/func_ov006_021051dc.c:
     complete
     .text start:0x021051dc end:0x021053a8
 
+src/func_ov006_021053a8.cpp:
+    complete
+    .text start:0x021053a8 end:0x02105670
+
 src/func_ov006_02105670.c:
     complete
     .text start:0x02105670 end:0x02105730

@@ -38,6 +38,7 @@ take over, ping the claimant first.
 ## Claims
 
 | Range | Who | Claimed | Status |
+| ov006 func_ov006_021053a8 (0x021053a8, size 0x2c8) | lunavyqo | 2026-08-16 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: dummy vtable m8c, o->width for r6 dest, decl y before x for ip/r3; API clm_a7b7c289a682 kept |
 | ov007 func_ov007_020c19cc (0x020c19cc, size 0x3ac) | lunavyqo | 2026-08-15 | **done** — verified byte-identical + linkcheck BENIGN/interwork (mwccarm 2004/b56); levers: s16 halfd=(s16)(ang-prevAng)/2 named temp before idx for adjacent [sp,#0xc] load-load, prev++ before i++, n=(s16)nh; API clm_c621b8aa81e6 kept |
 | ov006 func_ov006_020d8408 (0x020d8408, size 0x4fc) | lunavyqo | 2026-08-15 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: sb copy for case-8/10 compares, remat `c+(j<<6)+off`, step=0 after cnt=1, pragmas SR/CS/LI off, dual 0x62fc, dropped 2nd arg on sb==0; API clm_2468a190637a kept |
 | ov006 func_ov006_0211ea70 (0x0211ea70, size 0x120) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: 6k decl gx,gy,cnt,y,x,pA,pB + common_subs off + char* tile + fake-dep row+=(gy-gy) + u16 tail; API clm_e8f38fc836bf kept |
