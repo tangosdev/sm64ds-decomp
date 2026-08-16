@@ -284,6 +284,11 @@ def _rom_state(report):
             json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
     return {"available": True, "passed": passed, "signature": signature,
             "analysis": analysis if "moduleFidelity" in analysis else None,
+            # tools/romdata_check.py's counts, present only from a rombuild that ran the
+            # measurement. A base report cached before it existed simply has none, and
+            # the ratchet below then does not run -- which is the right degradation:
+            # nothing to compare against is not a regression.
+            "romData": report.get("romData"),
             "failure": failure}
 
 
@@ -482,6 +487,20 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append(f"{len(link['blocking'])} blocking relocation verdict(s)")
     if port.get("available") and not port["passed"]:
         reasons.append(_port_reason(port))
+    # A RATCHET, not a gate. The emitted vtable and RTTI that `objisolate` discards are
+    # compared against the cartridge, and most of the tree fails that today for a
+    # understood reason -- a generated flat header declares no virtuals, so mwcc emits a
+    # two-slot stub where the ROM has thirty-one. Failing a merge on it would fail nearly
+    # every C++ file for pre-existing modelling debt. So the count may rise freely and
+    # may not fall: this is the only check in the report that watches ROM DATA at all.
+    base_data = base_rom_state.get("romData") or {}
+    head_data = head_rom_state.get("romData") or {}
+    data_ratchet = (base_data.get("verified") is not None
+                    and head_data.get("verified") is not None)
+    if data_ratchet and head_data["verified"] < base_data["verified"]:
+        reasons.append(
+            f"ROM data verified from source fell from {base_data['verified']} to "
+            f"{head_data['verified']} symbol(s)")
     if rom_regression:
         reasons.append("full-ROM result regressed from the base commit")
     if head_rom_state.get("available") and not head_rom_state.get("passed") \
@@ -655,6 +674,20 @@ def render_markdown(r):
                      f"{mf['percent']:.6f}% compared bytes |")
         lines.append(f"| Code linked from verified source | {sf['sourceFunctions']:,} functions, "
                      f"{sf['sourceBytes']:,} bytes ({sf['sourceBytesPercent']:.2f}%) |")
+        # What the 100.000000% above is a percentage OF. Every byte not built from
+        # source is one dsd handed back from the cartridge and compared against itself.
+        mc = head_rom["analysis"].get("moduleComposition")
+        if mc:
+            lines.append(
+                f"| Module bytes from source | {mc['sourceBytes']:,} / "
+                f"{mc['moduleBytes']:,} ({mc['sourceBytesOfModulePercent']:.1f}%); "
+                f"{mc['dataBytes']:,} ({mc['dataBytesOfModulePercent']:.1f}%) are data "
+                f"no delink entry reaches |")
+    rom_data = head_rom.get("romData")
+    if rom_data:
+        lines.append(f"| ROM data reproduced from source | {rom_data['verified']:,} "
+                     f"symbol(s) exact, {rom_data['partial']:,} partial, "
+                     f"{rom_data['differs']:,} differ |")
     elif head_rom.get("failure"):
         lines.append(f"| Full ROM build | {head_rom['failure'].get('phase')} failed |")
     else:
