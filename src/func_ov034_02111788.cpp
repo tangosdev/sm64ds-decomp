@@ -8,9 +8,13 @@
 struct Vec3D { int x, y, z; ~Vec3D() {} };
 
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
+extern "C" {
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void *self, const Vector3 *v);
+}
 extern "C" int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
+extern "C" {
 extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void *self, signed char *id, unsigned int starID, const Vector3 *pos, unsigned int how);
+}
 extern "C" void func_ov034_021125b8(void *c, int i);
 
 extern "C" int data_ov034_021138c4[];

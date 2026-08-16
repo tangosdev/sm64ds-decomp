@@ -197,6 +197,7 @@ src/_ZN9WDW_Water8BehaviorEv.cpp:
     .text start:0x02112354 end:0x021124d0
 
 src/_ZN9WDW_Water13InitResourcesEv.cpp:
+    complete
     .text start:0x021124d0 end:0x021125f8
 
 src/WDW_Water_Spawn.c:

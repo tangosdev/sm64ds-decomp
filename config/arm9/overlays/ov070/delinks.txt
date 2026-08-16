@@ -273,6 +273,7 @@ src/_ZN10FlameChomp8BehaviorEv.cpp:
     .text start:0x021218f4 end:0x02121914
 
 src/_ZN10FlameChomp13InitResourcesEv.cpp:
+    complete
     .text start:0x02121914 end:0x02121a64
 
 src/func_ov070_02121a64.c:

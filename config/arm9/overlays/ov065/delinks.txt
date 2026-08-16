@@ -477,6 +477,7 @@ src/_ZN13TTC_MovingBar8BehaviorEv.cpp:
     .text start:0x0211b508 end:0x0211b640
 
 src/_ZN13TTC_MovingBar13InitResourcesEv.cpp:
+    complete
     .text start:0x0211b640 end:0x0211b780
 
 src/TtcRotatingTriangle_Spawn.c:

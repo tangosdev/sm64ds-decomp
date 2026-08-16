@@ -17,6 +17,7 @@ src/func_ov002_020ada40.cpp:
     .text start:0x020ada40 end:0x020adb40
 
 src/_ZN5Enemy22SpawnMegaCharParticlesER5ActorPc.cpp:
+    complete
     .text start:0x020adb40 end:0x020addc0
 
 src/_ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn.cpp:

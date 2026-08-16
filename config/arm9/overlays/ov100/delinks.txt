@@ -504,6 +504,7 @@ src/func_ov100_021470f4.cpp:
     .text start:0x021470f4 end:0x021471e0
 
 src/func_ov100_021471e0.cpp:
+    complete
     .text start:0x021471e0 end:0x02147328
 
 src/PathLift_Spawn.cpp:

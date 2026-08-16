@@ -208,6 +208,7 @@ src/_ZN10CheepCheep8BehaviorEv.cpp:
     .text start:0x02133430 end:0x02133530
 
 src/_ZN10CheepCheep13InitResourcesEv.cpp:
+    complete
     .text start:0x02133530 end:0x02133634
 
 src/CheepCheep_Spawn.c:

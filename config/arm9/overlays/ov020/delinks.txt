@@ -100,6 +100,7 @@ src/_ZN8BookShot13InitResourcesEv.cpp:
     .text start:0x021124e4 end:0x02112768
 
 src/_ZN15BookShotSpawner13InitResourcesEv.cpp:
+    complete
     .text start:0x02112768 end:0x021127a4
 
 src/_ZN8BookShot16OnAimedAtWithEggEv.cpp:
