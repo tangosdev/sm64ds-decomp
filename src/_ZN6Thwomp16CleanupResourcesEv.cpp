@@ -10,8 +10,8 @@
 int Thwomp::CleanupResources()
 {
     void **fp;
-    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
     }
     fp = *(void***)((char *)&mFileTable);
     ((SharedFilePtr *)(fp[0]))->Release();
