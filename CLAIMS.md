@@ -39,6 +39,7 @@ take over, ping the claimant first.
 
 | Range | Who | Claimed | Status |
 | ov080 func_ov080_02124088 (0x02124088, size 0x180) | lunavyqo | 2026-08-16 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); lever: `void*` param matching decl_common.h (retired extern-c-clash); API clm_2b0b0f3af4d4 kept |
+| ov064 func_ov064_02119afc (0x02119afc, size 0x164) | lunavyqo | 2026-08-16 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: drop decl_common clash, Vector3 copy, u64-mask pos, sign-bit angle gate; API clm_7ee22b95f686 kept |
 | ov006 func_ov006_02126ee4 (0x02126ee4, size 0xacc) | lunavyqo | 2026-08-16 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: unnamed `c+0xba04` late base, `sbv` as row pointer + block-scoped y counter, `rs=n` then row before rowx, `(char*)sbv+0x4f38` tile access; from near-miss 28→24→19→8→0; API clm_ab16b7bec718 kept |
 | ov081 func_ov081_02123910 (0x02123910, size 0x210) | lunavyqo | 2026-08-16 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: Actor::OnAimedAtWithEgg virtual for kill-spin 4th arg, func_ov002_020ada40, no local struct; API clm_8a0224aebd4d kept |
 | ov085 func_ov085_02129dbc (0x02129dbc, size 0x100) | lunavyqo | 2026-08-16 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: Toad-shaped field copies + mangled ClosestPlayer, no local Actor; API clm_a0a50be1234f kept |
