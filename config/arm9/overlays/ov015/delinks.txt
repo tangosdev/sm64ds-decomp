@@ -277,9 +277,11 @@ src/RotatingPlatformWf_Spawn.c:
     .text start:0x02112cb8 end:0x02112cf4
 
 src/_ZN11FallBlockWfD1Ev.cpp:
+    complete
     .text start:0x02112cf4 end:0x02112d44
 
 src/_ZN11FallBlockWfD0Ev.c:
+    complete
     .text start:0x02112d44 end:0x02112da8
 
 src/_ZN11FallBlockWf16CleanupResourcesEv.c:
