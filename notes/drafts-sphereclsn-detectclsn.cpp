@@ -1,19 +1,10 @@
 //cpp
-// NONMATCHING: first draft -- head/AABB only, the walk and prism tests are stubs.
+// NONMATCHING: size 0x1af4 vs 0x1bc8, frame 0x1e4 vs 0x1b4
 // @symbol _ZN12MeshCollider10DetectClsnER10SphereClsn
-/* MeshCollider::DetectClsn(SphereClsn &) at 0x01ffb830 (ITCM), 0x1bc8 bytes.
- * vtable slot 8. Same octree as the RaycastGround twin, but a sphere query needs
- * a full 3-axis AABB like DetectClsn(RaycastLine&), which is why the frame is
- * 0x1b4 rather than 0x4c.
- *
- * The AABB is centre +/- (radius + 0x40) in the file's 1/64 units: 0x40 raw is
- * one whole world unit, i.e. one octree cell of slack, exactly as the Line
- * overload pads its segment bounds.
- */
+/* MeshCollider::DetectClsn(SphereClsn &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
 #include "MeshCollider.h"
-
-struct ClsnResult { u8 raw[0x28]; };
-struct SurfaceInfo { u8 clps[8]; Vector3 normal; };
+#include "SphereClsn.h"
+#include "ClsnResult.h"
 
 extern "C" void func_02037a6c(SphereClsn *self, s32 loX, s32 loY, s32 loZ,
                               s32 hiX, s32 hiY, s32 hiZ);
@@ -29,7 +20,7 @@ extern "C" void func_0203798c(SphereClsn *self, s16 triID, SurfaceInfo *info);
 extern "C" void func_0203794c(SphereClsn *self, const Vector3 *n);
 extern "C" int _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info,
                                                               SphereClsn *q, int flag);
-extern "C" int func_020397dc(int x);         /* |x| <= 8 -- a near-zero divisor guard */
+extern "C" int func_020397dc(int x);
 extern "C" int func_02037e58(unsigned int *p);
 extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
 
@@ -39,12 +30,12 @@ extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
    inline helper, and the `0` and `1` it writes are loaded from frame slots
    (sp+0x118, sp+0x10c) rather than immediates -- which is what four expansions
    of one inline function look like on this compiler. */
-static inline s32 SqrtRaw(u64 x)
+static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
 {
     volatile u16 *ime = (volatile u16 *)0x4000208;
     u16 saved = *ime;
-    *ime = 0;
-    *(volatile u16 *)0x40002b0 = 1;
+    *ime = (u16)zval;
+    *(volatile u16 *)0x40002b0 = (u16)one;
     *(volatile u64 *)0x40002b8 = x;
     *ime;
     *ime = saved;
@@ -78,12 +69,12 @@ static inline s32 SqrtRaw(u64 x)
     cr[0] = (s16)(MUL10(fn[1], (ea)[2]) - MUL10(fn[2], (ea)[1]));             \
     cr[1] = (s16)(MUL10(fn[2], (ea)[0]) - MUL10(fn[0], (ea)[2]));             \
     cr[2] = (s16)(MUL10(fn[0], (ea)[1]) - MUL10(fn[1], (ea)[0]));             \
-    cd = MUL10(cr[0], en3[0]) + MUL10(cr[1], en3[1]) + MUL10(cr[2], en3[2]);  \
-    if (func_020397dc(cd)) continue;                                          \
-    ck = _ZN4cstd4fdivEii(tri->length, cd) >> 2;                              \
-    (out)[0] = tp[0] + (s32)(((s64)cr[0] * ck) >> 14);                        \
-    (out)[1] = tp[1] + (s32)(((s64)cr[1] * ck) >> 14);                        \
-    (out)[2] = tp[2] + (s32)(((s64)cr[2] * ck) >> 14);
+    t = MUL10(cr[0], en3[0]) + MUL10(cr[1], en3[1]) + MUL10(cr[2], en3[2]);   \
+    if (func_020397dc(t)) continue;                                           \
+    u = _ZN4cstd4fdivEii(tri->length, t) >> 2;                                \
+    (out)[0] = tp[0] + (s32)(((s64)cr[0] * u) >> 14);                         \
+    (out)[1] = tp[1] + (s32)(((s64)cr[1] * u) >> 14);                         \
+    (out)[2] = tp[2] + (s32)(((s64)cr[2] * u) >> 14);
 
 /* That vertex's offset from the sphere centre, projected on the collider axis. */
 #define AXIS_DOT(v) (FX12((v)[0] - c->x, unk_28)                              \
@@ -132,86 +123,47 @@ static inline s32 SqrtRaw(u64 x)
         if (cls != 0) continue;                                               \
         if (sphere.flags & 0x20) continue;                                    \
         hyp = SqrtRaw((u64)((s64)((d) >> 4) * ((d) >> 4)                       \
-                          + (s64)(faceDot >> 4) * (faceDot >> 4)));           \
+                          + (s64)(faceDot >> 4) * (faceDot >> 4)), k0, k1);   \
         if (func_020397dc(hyp)) continue;                                     \
         if (DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28)               \
                 > _ZN4cstd4fdivEii(faceDot >> 4, hyp)) continue;              \
     }
 
-/* The sphere shape sub-object at 0x38. The destructor stores a third vtable
-   here (VT2) and destroys it with func_0203ac1c, so 0x38 is a polymorphic
-   member, not loose fields -- see notes/collision-query-classes.md. The entry
-   code pins its contents: `add r0,fp,#0x3c` then [r0], [r0,#4], [r0,#8] is a
-   Vector3 centre, and `ldr r0,[fp,#0x48]` is the radius. */
-struct SphereClsn {
-    u8         head[0x10];
-    ClsnResult result;       /* 0x10 - the shared 0x28 sub-object */
-    u8         pad_038[0x4]; /* 0x38 - the shape sub-object's vptr */
-    Vector3    centre;       /* 0x3c */
-    Fix12i     radius;       /* 0x48 */
-    u8         pad_04c[0x24];
-    u8         flags;        /* 0x70 - 1 hit, 4 floor, 8 wall, 0x10 und */
-    /* 0x71 + 0x8b lands unk_100 at 0xfc, not 0x100 -- an off-by-4 that was
-       harmless only while nothing below 0x100 was referenced. The wall block
-       reads 0xec, so the padding is now spelled out per field. */
-    u8         pad_071[0x7b];
-    s32        unk_ec;       /* 0xec  - slab half-width, and the wall block's
-                                        own enable: <= 0 skips it entirely */
-    u8         pad_0f0[0x10];
-    s32        unk_100;      /* 0x100 - the best floor normal.y so far */
-    u8         pad_104[0x4];
-    s32        unk_108;      /* 0x108 - a normal.y floor the hit must clear */
-};
-
 s32 MeshCollider::DetectClsn(SphereClsn &sphere)
 {
-    /* The ROM's first slot: `f` is at sp+0x0c, so it is declared FIRST -- ahead of
-       the whole C89 block, exactly as the matched RaycastGround twin declares
-       `file` and `pos` before its own block. `&centre` at 0xc4 comes with it. */
-    KCL_File *f = kclFile;
-    const Vector3 *c = &sphere.centre;
-    const Vector3 *origin = &f->origin;
-    /* DECLARATION ORDER IS THE FRAME. This block is permuted to the ROM's slot
-       map (handoff section 5 plus what the step-5 work pinned down), one slot per
-       declaration from sp+0x10 upward, rather than to anything the source would
-       naturally read as. The run 0x10..0xa8 is contiguous and fully attested;
-       everything after it is unplaced and simply follows. */
-    s32 loX, hiX;               /* 0x10 0x14 */
-    s32 loY, hiY;               /* 0x18 0x1c */
-    s32 loZ, hiZ;               /* 0x20 0x24 */
-    /* The three running min/max pairs -- the accumulated penetration extent,
-       handed to func_02037a6c at the end as (lo.x, lo.y, lo.z, hi.x, hi.y, hi.z).
-       Six scalars, not two Vector3s by value: a by-value class parameter would
-       have homed r0-r3 to the stack and no homing happens here. */
-    s32 loPX, hiPX;             /* 0x28 0x2c */
-    s32 loPY, hiPY;             /* 0x30 0x34 */
-    s32 loPZ, hiPZ;             /* 0x38 0x3c */
-    s32 hitFlags;               /* 0x40 - a bitmask (|= 4 seen); RETURNED */
-    s32 hitFlags2;              /* 0x44 - second flag, ORed into the hit test */
-    u16 *prev1, *prev2, *prev3; /* 0x48 0x4c 0x50 */
-    u16 *p1, *p2, *p3;          /* 0x54 0x58 0x5c */
-    s64 rsq;                    /* 0x60 0x64 - squared radius, 64-bit */
-    s32 stepY, stepZ;           /* 0x6c 0x70 */
-    s32 s1, s2, s3;             /* 0x74 0x78 0x7c - the top-3 scores */
-    u32 y, x;                   /* 0x80 0x84 - y before x */
-    u16 *leaf;                  /* 0x88 */
-    KCL_Tri *tri;               /* 0x8c */
-    s32 *vtx;                   /* 0x90 */
-    s16 *en3;                   /* 0x94 - only en3 spills; en1/en2 stay in r5/r4 */
-    s16 *fn;                    /* 0x98 */
-    s32 depth;                  /* 0x9c */
-    s16 triID;                  /* 0xa0 */
-    s32 cls;                    /* 0xa4 */
-    s32 contactKind;            /* 0xa8 */
-    s32 den12, den23, den31;    /* 0xb8 0xbc 0xc0 - one per vertex pair */
-    s32 rawX, rawY, rawZ;       /* 0xc8 0xcc 0xd0 */
-    s32 nn12, nn23, nn31;       /* 0xf0 / 0xf4 0xf8 / 0xfc 0x100 */
-    s32 rsc;                    /* 0x104 */
-    /* No observed slot -- these follow the attested run. */
+    KCL_File *f;
+    s32 loX, hiX;
+    s32 loY, hiY;
+    s32 loZ, hiZ;
+    s32 loPX, hiPX;
+    s32 loPY, hiPY;
+    s32 loPZ, hiPZ;
+    s32 hitFlags;
+    s32 hitFlags2;
+    u16 *prev1, *prev2, *prev3;
+    u16 *p1, *p2, *p3;
+    s64 rsq;
+    s32 stepY, stepZ;
+    s32 s1, s2, s3;
+    u32 y, x;
+    u16 *leaf;
+    KCL_Tri *tri;
+    s32 *vtx;
+    s16 *en3;
+    s16 *fn;
+    s32 depth;
+    s16 triID;
+    s32 cls;
+    s32 contactKind;
+    s32 den12, den23, den31;
+    const Vector3 *c;
+    s32 rawX, rawY, rawZ;
+    s32 nn12, nn23, nn31;
+    s32 rsc;
+    s32 k0, k1, k2, k3;
     u32 z;
     s32 stepX;
     s32 r;
-    u32 one = 1;
     s16 *en1, *en2;
     u32 shift;
     u32 *node;
@@ -221,20 +173,19 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     s64 dsq;
     s32 t, u;
     s32 vx, vy, vz;
-    s64 lensq;
     s32 dx, dy, dz;
     s32 faceDot;
     s32 v;
     s32 dot1, dot2, dot3;
-    s32 cd, ck, lo, hi;
-    /* The aggregates, in the ROM's own order and contiguous at the top of the
-       frame: cr 0x16c, nrm 0x174, sn 0x180, tp 0x18c, vb 0x198, vc 0x1a4 -- 17
-       words, and this draft's aggregate region is already exactly 17 words too. */
     s16 cr[3];
     s32 nrm[3];
     Vector3 sn;
     s32 tp[3], vb[3], vc[3];
+    const Vector3 *origin;
 
+    c = &sphere.pos;
+    f = kclFile;
+    origin = &f->origin;
 
     rawX = c->x >> 6;
     rawY = c->y >> 6;
@@ -259,10 +210,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     if (hiZ > (s32)~f->zMask) hiZ = ~f->zMask;
     if (loZ >= hiZ) return 0;
 
-    /* The sphere test is a squared-distance compare, so the radius is scaled up
-       (<< 4) and squared into 64 bits once, before the walk. */
     rsc = sphere.radius << 4;
-    rsq = (s64)rsc * rsc;
 
     loPX = hiPX = 0;
     loPY = hiPY = 0;
@@ -270,7 +218,12 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     hitFlags = hitFlags2 = 0;
     prev1 = prev2 = prev3 = 0;
     p1 = p2 = p3 = 0;
-    s1 = s2 = s3 = 0;
+
+    rsq = (s64)rsc * rsc;
+    k0 = loPX;
+    k1 = 1;
+    k2 = 2;
+    k3 = 3;
 
     z = loZ;
     do {
@@ -278,6 +231,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
         y = loY;
         do {
             stepY = 1000000;
+            s1 = s2 = s3 = k0;
             x = loX;
             do {
                 shift = f->coordShift;
@@ -298,7 +252,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
 
                 leaf = (u16 *)((u8 *)node + (word & 0x7fffffff));
 
-                size = one << shift;
+                size = k1 << shift;
                 mask = size - 1;
                 stepX = size - (x & mask);
                 cz = size - (z & mask);
@@ -342,7 +296,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            seed is sp+0x114, which 0x01ffba10 loads from sp+0x28
                            one instruction after 0x01ffb9c8 zeroed it -- so it is
                            the hoisted constant 0, not a value from anywhere. */
-                        contactKind = 0;
+                        contactKind = k0;
 
                         dx = rawX - vtx[0];
                         dy = rawY - vtx[1];
@@ -498,12 +452,12 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            trick the inlined sqrt uses for its 0 and 1). So the
                            gate is a plain bit test. */
                         if (sphere.flags & 0x40) continue;
-                        lensq = (s64)vx * vx + (s64)vy * vy + (s64)vz * vz;
+                        dsq = (s64)vx * vx + (s64)vy * vy + (s64)vz * vz;
                         if (faceDot < 0) continue;
-                        if ((s64)faceDot * faceDot < lensq) continue;
-                        dsq = rsq - lensq;
+                        if ((s64)faceDot * faceDot < dsq) continue;
+                        dsq = rsq - dsq;
                         if (dsq <= 0) continue;
-                        contactKind = 3;
+                        contactKind = k3;
                         goto tail;
 
                     tail:
@@ -511,13 +465,9 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            real square root of the 64-bit remainder, and THAT is
                            the depth -- the `rsc - faceDot` computed above is only
                            the face case's answer. */
-                        depth = SqrtRaw((u64)dsq) - faceDot;
+                        depth = SqrtRaw((u64)dsq, k0, k1) - faceDot;
                         if (depth < 0) continue;
-                        /* 0x01ffca94: the contact kind defaults to 2 here and is
-                           set to 3 by the vertex tail, so the face case (which
-                           jumps straight past this) keeps whatever it came in
-                           with. sp+0x158 and sp+0x160 are the hoisted 3 and 2. */
-                        if (!contactKind) contactKind = 2;
+                        if (!contactKind) contactKind = k2;
 
                     face:
                         if (sphere.unk_108 < sn.y) continue;
@@ -536,67 +486,60 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            wholly-INSIDE rejects -- the last compare is
                            `ble 0x1ffd314`, the reject -- so a triangle that
                            escapes the slab in any component keeps its hit. */
-                        if (sphere.unk_ec > 0 && cls == 1
+                        if (sphere.unk_0ec > 0 && cls == 1
                                 && !(tri->length & 0xf0000000)) {
 
-                            tp[0] = vtx[0] << 6;   /* full Fix12i, not 1/64 */
+                            tp[0] = vtx[0] << 6;
                             tp[1] = vtx[1] << 6;
                             tp[2] = vtx[2] << 6;
 
                             KCL_VERTEX(vb, en2)
                             KCL_VERTEX(vc, en1)
 
-                            lo = -(sphere.unk_ec + sphere.radius);
-                            hi =   sphere.unk_ec - sphere.radius;
+                            t = -(sphere.unk_0ec + sphere.radius);
+                            u =   sphere.unk_0ec - sphere.radius;
 
-                            if (AXIS_DOT(tp) >= lo && AXIS_DOT(tp) <= hi
-                             && AXIS_DOT(vb) >= lo && AXIS_DOT(vb) <= hi
-                             && AXIS_DOT(vc) >= lo && AXIS_DOT(vc) <= hi)
+                            if (AXIS_DOT(tp) >= t && AXIS_DOT(tp) <= u
+                             && AXIS_DOT(vb) >= t && AXIS_DOT(vb) <= u
+                             && AXIS_DOT(vc) >= t && AXIS_DOT(vc) <= u)
                                 continue;
                         }
-                        /* 0x01ffcfe4: a face contact is kind 1, where the sqrt
-                           tail defaulted the edge case to 2 and the vertex tail
-                           set 3. */
-                        if (!contactKind) contactKind = 1;
+                        if (!contactKind) contactKind = k1;
 
-                        func_02037fd4(&sphere.result, triID, &data_020a0cec);
+                        func_02037fd4((ClsnResult *)&sphere.unk_010, triID, &data_020a0cec);
                         sphere.flags |= 1;
 
                         if (cls == 0) {
-                            /* Floor: only the vertical component is accumulated. */
                             if (!(sphere.flags & 4)) {
                                 func_020379f4(&sphere, triID, &data_020a0cec);
                                 hitFlags |= 1;
                             }
-                            hitFlags2 = one;
+                            hitFlags2 = k1;
                             sphere.flags |= 4;
-                            v = (s32)(((s64)depth * sn.y) >> 16);
+                            v = (s32)(((s64)depth * sn.y) >> 14) >> 2;
                             if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
-                            /* Keep the most upward-facing floor seen. */
                             if (sn.y > sphere.unk_100) func_0203794c(&sphere, &sn);
                         } else if (cls == 1) {
-                            if (!(sphere.flags & 8)) {
-                                func_020379c0(&sphere, triID, &data_020a0cec);
-                                hitFlags |= 2;
-                            }
                             sphere.flags |= 8;
-                            v = (s32)(((s64)depth * sn.x) >> 16);
+                            func_020379c0(&sphere, triID, &data_020a0cec);
+                            hitFlags |= 2;
+                            v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
                             if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
-                            v = (s32)(((s64)depth * sn.y) >> 16);
-                            if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
-                            v = (s32)(((s64)depth * sn.z) >> 16);
+                            if (contactKind != 1) {
+                                v = (s32)(((s64)depth * sn.y) >> 14) >> 2;
+                                if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
+                            }
+                            v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
                             if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
                         } else {
-                            if (!(sphere.flags & 0x10)) {
-                                func_0203798c(&sphere, triID, &data_020a0cec);
-                                hitFlags |= 4;
-                            }
                             sphere.flags |= 0x10;
-                            v = (s32)(((s64)depth * sn.x) >> 16);
+                            func_0203798c(&sphere, triID, &data_020a0cec);
+                            hitFlags |= 4;
+                            v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
                             if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
-                            v = (s32)(((s64)depth * sn.y) >> 16);
+                            v = (s32)(((s64)depth * sn.y) >> 14) >> 2;
                             if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
-                            v = (s32)(((s64)depth * sn.z) >> 16);
+                            v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
                             if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
                         }
                     }
@@ -604,8 +547,8 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
 
                 x += stepX;
             } while (x <= hiX);
-            prev1 = p1; prev2 = p2; prev3 = p3;
             y += stepY;
+            prev1 = p1; prev2 = p2; prev3 = p3;
         } while (y <= hiY);
         z += stepZ;
     } while (z <= hiZ);
