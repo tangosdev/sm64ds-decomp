@@ -1,5 +1,5 @@
 {
- "eligible": 10854,
+ "eligible": 10870,
  "unresolved": {
   "arm9:0x02008b4c": {
    "name": "func_02008b4c",
@@ -770,23 +770,6 @@
     "func_020b66a8"
    ]
   },
-  "ov015:0x02112cf4": {
-   "name": "_ZN11FallBlockWfD1Ev",
-   "missing": [
-    "VT1",
-    "VT2",
-    "_ZTV10dBgActor_c"
-   ]
-  },
-  "ov015:0x02112d44": {
-   "name": "_ZN11FallBlockWfD0Ev",
-   "missing": [
-    "G0",
-    "VT1",
-    "VT2",
-    "_ZTV10dBgActor_c"
-   ]
-  },
   "ov015:0x02112da8": {
    "name": "_ZN11FallBlockWf16CleanupResourcesEv",
    "missing": [
@@ -865,13 +848,6 @@
     "_Z13func_020393a4Pii"
    ]
   },
-  "ov022:0x02112380": {
-   "name": "func_ov022_02112380",
-   "missing": [
-    "_ZTV10dBgActor_c",
-    "_ZTV20daObjFl_Fall_Block_c"
-   ]
-  },
   "ov022:0x02112434": {
    "name": "func_ov022_02112434",
    "missing": [
@@ -884,36 +860,10 @@
     "func_0213a794"
    ]
   },
-  "ov022:0x0211245c": {
-   "name": "FallBlockLll_Spawn",
-   "missing": [
-    "_ZTV20daObjFl_Fall_Block_c"
-   ]
-  },
-  "ov022:0x02112498": {
-   "name": "_ZN13RollingLogLllD1Ev",
-   "missing": [
-    "_ZTV10dBgActor_c",
-    "_ZTV15daObjFlMaruta_c"
-   ]
-  },
-  "ov022:0x021124e8": {
-   "name": "_ZN13RollingLogLllD0Ev",
-   "missing": [
-    "_ZTV10dBgActor_c",
-    "_ZTV15daObjFlMaruta_c"
-   ]
-  },
   "ov022:0x0211254c": {
    "name": "_ZN13RollingLogLll16CleanupResourcesEv",
    "missing": [
     "func_021270dc"
-   ]
-  },
-  "ov022:0x021125a4": {
-   "name": "RollingLogLll_Spawn",
-   "missing": [
-    "_ZTV15daObjFlMaruta_c"
    ]
   },
   "ov025:0x021118c8": {
@@ -942,26 +892,6 @@
    "name": "_ZN9WDW_Water13InitResourcesEv",
    "missing": [
     "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_"
-   ]
-  },
-  "ov030:0x0211155c": {
-   "name": "_ZN13RollingLogTtmD1Ev",
-   "missing": [
-    "_ZTV10dBgActor_c",
-    "_ZTV15daObjHmMaruta_c"
-   ]
-  },
-  "ov030:0x021115ac": {
-   "name": "_ZN13RollingLogTtmD0Ev",
-   "missing": [
-    "_ZTV10dBgActor_c",
-    "_ZTV15daObjHmMaruta_c"
-   ]
-  },
-  "ov030:0x0211164c": {
-   "name": "RollingLogTtm_Spawn",
-   "missing": [
-    "_ZTV15daObjHmMaruta_c"
    ]
   },
   "ov034:0x02111788": {
@@ -1023,20 +953,6 @@
     "func_020b6244"
    ]
   },
-  "ov045:0x02111d48": {
-   "name": "_ZN12FallBlockBfsD1Ev",
-   "missing": [
-    "_ZTV10dBgActor_c",
-    "_ZTV21daObjKm2_Fall_Block_c"
-   ]
-  },
-  "ov045:0x02111d98": {
-   "name": "_ZN12FallBlockBfsD0Ev",
-   "missing": [
-    "_ZTV10dBgActor_c",
-    "_ZTV21daObjKm2_Fall_Block_c"
-   ]
-  },
   "ov045:0x02111dfc": {
    "name": "_ZN12FallBlockBfs16CleanupResourcesEv",
    "missing": [
@@ -1047,12 +963,6 @@
    "name": "_ZN12FallBlockBfs13InitResourcesEv",
    "missing": [
     "func_0213a794"
-   ]
-  },
-  "ov045:0x02111e24": {
-   "name": "FallBlockBfs_Spawn",
-   "missing": [
-    "_ZTV21daObjKm2_Fall_Block_c"
    ]
   },
   "ov055:0x02111674": {
@@ -1110,26 +1020,6 @@
    "name": "func_ov063_0211a0dc",
    "missing": [
     "func_020ada40"
-   ]
-  },
-  "ov063:0x0211d3a0": {
-   "name": "_ZN12FallBlockBbhD1Ev",
-   "missing": [
-    "_ZTV10dBgActor_c",
-    "_ZTV20daObjTh_Fall_Block_c"
-   ]
-  },
-  "ov063:0x0211d3f0": {
-   "name": "_ZN12FallBlockBbhD0Ev",
-   "missing": [
-    "_ZTV10dBgActor_c",
-    "_ZTV20daObjTh_Fall_Block_c"
-   ]
-  },
-  "ov063:0x0211d47c": {
-   "name": "FallBlockBbh_Spawn",
-   "missing": [
-    "_ZTV20daObjTh_Fall_Block_c"
    ]
   },
   "ov064:0x02116754": {
