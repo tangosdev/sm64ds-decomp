@@ -447,8 +447,40 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     link = _link_state(link_rows)
     port = _port_state(port_report)
     reasons = []
-    if base_keys - head_keys:
-        reasons.append(f"lost {len(base_keys - head_keys)} matched function(s)")
+    # A function can leave `matched` two ways, and they are opposite acts.
+    #
+    #   REMOVED    the file was deleted, renamed out from under its symbol, or turned
+    #              into a dcd transcription. Something the tree had is gone. Blocks.
+    #   WITHDRAWN  the same file is still there, still named after the same symbol, and
+    #              now carries a NONMATCHING banner. Nothing was lost -- a claim was
+    #              retracted, which is the sanctioned way to tell the truth here.
+    #
+    # Treating both as loss made the gate reward the lie: a file that compiles to 916
+    # bytes where the ROM has 912 was never a match, and bannering it -- the only
+    # mechanism this repo HAS for saying so -- was the one edit that could not land.
+    # Same shape as the CONVERTED defect, where un-converting a class was the only way
+    # to score. See tools/bytegate.py: policy D already stopped counting the
+    # unevidenced half of `matched`; this is the same judgement at the PR gate.
+    #
+    # WITHDRAWN is restricted to functions that were NOT byte-verified in the base.
+    # That restriction is the whole safety argument, and it is explicit rather than
+    # emergent: a byte-verified function is one the ROM build compiles and compares, so
+    # retracting its claim is a real coverage loss and stays a hard reason (it would
+    # also trip `source-built function coverage decreased`, but relying on that
+    # interaction would leave the rule true only by accident).
+    base_enrolled = {key.split("-", 1)[0] for key in be["source"]}
+    transcribed_now = set(new_transcribed)
+    withdrawn, removed = [], []
+    for k in sorted(base_keys - head_keys):
+        hr, br = hf["functions"].get(k) or {}, bf["functions"].get(k) or {}
+        if (k not in base_enrolled and hr.get("srcPath")
+                and hr["srcPath"] == br.get("srcPath")
+                and hr["srcPath"] not in transcribed_now):
+            withdrawn.append({"id": k, "path": hr["srcPath"], "name": hr.get("name")})
+        else:
+            removed.append(k)
+    if removed:
+        reasons.append(f"lost {len(removed)} matched function(s)")
     if (hf["stats"]["totalFunctions"] != bf["stats"]["totalFunctions"]
             or hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]):
         reasons.append("function/byte coverage denominator changed")
@@ -508,6 +540,13 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append("full-ROM validation failed")
 
     warnings = []
+    if withdrawn:
+        warnings.append(
+            f"{len(withdrawn)} claimed match(es) withdrawn by a NONMATCHING banner "
+            "rather than lost: each file is still present under the same name, and "
+            "none was byte-verified -- "
+            + ", ".join(w["path"] for w in withdrawn[:3])
+            + (f", +{len(withdrawn) - 3} more" if len(withdrawn) > 3 else ""))
     if allow_attribution_change and credit_moved:
         warnings.append("attribution-override label: contributor attribution changed or "
                         f"was lost ({_credit_detail(credit_changes, lost_credit)}), "
@@ -561,7 +600,11 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         "sourceBuiltFunctions": he["stats"]["sourceFunctions"] - be["stats"]["sourceFunctions"],
         "sourceBuiltBytes": he["stats"]["sourceBytes"] - be["stats"]["sourceBytes"],
         "newMatchedFunctions": len(head_keys - base_keys),
+        # Kept as the total, so an existing reader of this field does not silently see
+        # a smaller number than the tree actually shed. The split is beside it.
         "removedMatchedFunctions": len(base_keys - head_keys),
+        "withdrawnMatchedFunctions": len(withdrawn),
+        "lostMatchedFunctions": len(removed),
     }
     base_source_stats = dict(be["stats"])
     head_source_stats = dict(he["stats"])
@@ -605,6 +648,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
                         "lost": lost_credit, "overridden": allow_attribution_change},
         "diff": diff,
         "asmPolicy": {"transcribed": new_transcribed, "unbanneredAsm": new_unbannered},
+        "matchedWithdrawn": withdrawn,
         "linkcheck": link,
         "portRefcheck": port,
         "rom": {"base": base_rom_state, "head": head_rom_state,
@@ -642,6 +686,12 @@ def render_markdown(r):
              f"| Claimed, not byte-verified | {h['claimedFunctions']:,} functions, "
              f"{h['claimedBytes']:,} bytes ({_signed(d['claimedFunctions'])}) |",
              f"| Perfect source moves | {len(r['diff']['perfectRenames'])} R100 |"]
+    # Only when it happened. A retracted claim is news; a zero here would be noise on
+    # every other pull request.
+    if r.get("matchedWithdrawn"):
+        lines.append(
+            f"| Claims withdrawn (banner added) | {len(r['matchedWithdrawn'])} "
+            f"function(s), none byte-verified |")
     # The delinks view of the same quantity. Identical to byte-verified above whenever
     # every enrolled range is a matched symbols.txt function, which is the healthy
     # state -- so it earns a row only when the two disagree, where the disagreement is
