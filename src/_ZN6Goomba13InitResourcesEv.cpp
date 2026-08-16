@@ -1,10 +1,7 @@
-#include "MaterialChanger.h"
 //cpp
+#include "common.h"
+#include "SharedFilePtr.h"
 
-struct SharedFilePtr { int id; void* file; };
-
-struct BMD_File;
-struct BMA_File;
 extern "C" {
 int _ZN5Actor9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 void LoadSilverStarAndNumber(void);
@@ -14,23 +11,24 @@ void _ZN8CapEnemy6AddCapEj(void* self, unsigned int x);
 int _ZN8CapEnemy21DestroyIfCapNotNeededEv(void* self);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 int _ZN11ShadowModel12InitCylinderEv(void* self);
-void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void* self, void* bma, int a, Fix12 b, unsigned int cc);
+void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void* bmd, void* bma);
+void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void* self, void* bma, int a, int b, unsigned int cc);
 void LoadBlueCoinModel(void* c);
-void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, Fix12 b, Fix12 cc, void* d, Fix12 e);
+void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* a, int r, int h, unsigned int e, unsigned int g);
+void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, int b, int cc, void* d, int e);
 void _ZN12WithMeshClsn19StartDetectingWaterEv(void* self);
 void func_ov084_021290d4(void* c);
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* f, int a, Fix12 b, unsigned int cc);
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* f, int a, int b, unsigned int cc);
+}
 
-extern SharedFilePtr data_ov084_02130cf8;
-extern SharedFilePtr data_ov084_02130ce8;
+extern int data_ov084_02130cf8[];
+extern int data_ov084_02130ce8[];
 extern char data_ov084_0213089c;
 extern SharedFilePtr* data_ov084_02130278[7];
 extern int data_ov084_02130258[];
 extern int data_ov084_02130208[];
 extern int data_ov084_02130228[];
 extern int data_ov084_02130238[];
-}
 
 extern "C" int _ZN6Goomba13InitResourcesEv(char* c)
 {
@@ -51,25 +49,28 @@ extern "C" int _ZN6Goomba13InitResourcesEv(char* c)
         LoadSilverStarAndNumber();
     }
 
-    _ZN5Model8LoadFileER13SharedFilePtr(&data_ov084_02130cf8);
+    _ZN5Model8LoadFileER13SharedFilePtr((SharedFilePtr*)data_ov084_02130cf8);
     for (i = 0; i < 7; i++)
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov084_02130278[i]);
 
     _ZN8CapEnemy6AddCapEj(c, (unsigned char)(*(int*)(c + 8) & 0xf));
 
     if ((*(unsigned char*)(c + 0x113) & 0xf) < 6)
-        *(int*)(c + 8) = *(int*)(c + 8) & 0xf0ff;
+    {
+        int v = *(volatile int*)(c + 8);
+        *(int*)(c + 8) = v & 0xf0ff;
+    }
 
     if (_ZN8CapEnemy21DestroyIfCapNotNeededEv(c) == 0)
         return 0;
 
-    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x370, data_ov084_02130cf8.file, 1, -1) == 0)
+    if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x370, (void*)data_ov084_02130cf8[1], 1, -1) == 0)
         return 0;
 
     if (_ZN11ShadowModel12InitCylinderEv(c + 0x3d4) == 0)
         return 0;
 
-    MaterialChanger::Prepare(*(BMD_File*)data_ov084_02130cf8.file, *(BMA_File*)&data_ov084_0213089c);
+    _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File((void*)data_ov084_02130cf8[1], &data_ov084_0213089c);
     _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(c + 0x3fc, &data_ov084_0213089c, 0x40000000, 0x1000, 0);
 
     *(unsigned char*)(c + 0x108) = 1;
@@ -86,7 +87,7 @@ extern "C" int _ZN6Goomba13InitResourcesEv(char* c)
             cond = (id == 0xc8);
             if (cond != false)
             {
-                if (*(int*)(c + 8) == 0xeeee || *(int*)(c + 8) == 0xeeef)
+                if ((unsigned)(*(int*)(c + 8) + (int)0xFFFF1112) <= 1)
                 {
                     *(int*)(c + 0x460) = 3;
                     *(int*)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFF) &= ~2;
@@ -142,7 +143,7 @@ extern "C" int _ZN6Goomba13InitResourcesEv(char* c)
     *(int*)(c + 0x424) = *(int*)(c + 0x64);
     *(int*)(c + 0x9c) = data_ov084_02130238[*(int*)(c + 0x460)];
     *(int*)(c + 0xa0) = -0x32000;
-    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, data_ov084_02130ce8.file, 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, (void*)data_ov084_02130ce8[1], 0, 0x1000, 0);
 
     *(unsigned char*)(c + 0x467) = 0;
     *(int*)(c + 0x44c) = *(int*)(c + 8);
