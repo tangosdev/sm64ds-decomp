@@ -2,7 +2,6 @@
 #include "types.h"
 // @symbol _ZN15TtcRotatingCube13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "TtcRotatingCube.h"
 struct SharedFilePtr;
@@ -14,6 +13,10 @@ struct Vector3;
 struct Actor;
 
 extern "C" {
+    extern void*data_ov065_0211c0a8[];
+    extern s16 data_ov065_0211cfa8[];
+    extern void*data_ov065_0211cfd8[];
+    extern u8 data_ov065_0211cfa4[];
     void *_ZN5Model8LoadFileER13SharedFilePtr(void *shared);
     void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *mb, void *bmd, int a, int b);
     void _ZN11ShadowModel10InitCuboidEv(void *self);
@@ -34,7 +37,7 @@ extern "C" {
 
 extern void *data_ov065_0211cfd0[];
 extern void *data_ov065_0211cfd4[];
-extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern u8 data_0209f2c0;
 extern s32 data_020a0e68[];
 

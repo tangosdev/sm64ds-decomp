@@ -1,9 +1,11 @@
 //cpp
 // @symbol func_ov085_02129dbc
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+extern "C" {
+    extern int AngleDiff(int, int);
+}
 struct Actor { Actor *ClosestPlayer(); };
 
 extern "C" int Vec3_HorzDist(const void *a, const void *b);

@@ -1,9 +1,11 @@
 //cpp
 // @symbol func_ov098_0213a794
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+extern "C" {
+    extern void func_ov098_0213a8ec();
+}
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);

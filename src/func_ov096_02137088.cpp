@@ -2,11 +2,12 @@
 // @symbol func_ov096_02137088
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_WithMeshClsn.h"
-#include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
 
+    extern int func_ov002_020de328(void*);
+    extern void func_ov096_02136e54(void*, int);
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern int Vec3_HorzDist(const void *a, const void *b);
 extern int Vec3_Dist(const void *a, const void *b);

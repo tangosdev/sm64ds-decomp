@@ -2,12 +2,13 @@
 #include "types.h"
 // @symbol func_ov080_02124088
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
 #define LAUND(p) ((void*)((((long long)(int)(p)))))
 
 extern "C" {
+    extern int data_ov080_021283d8[];
+    extern void func_ov080_02124360(void*);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* file, int a, int b, unsigned int e);
 extern void func_0201267c(unsigned int id, const Vector3* v);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void* self, const Vector3& v);

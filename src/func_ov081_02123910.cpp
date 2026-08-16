@@ -3,7 +3,6 @@
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Enemy.h"
 #include "decl_Player.h"
-#include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
 
@@ -21,6 +20,8 @@ struct VObj {
 };
 
 extern "C" {
+    extern void func_ov081_021237ec(void*);
+    extern int func_ov002_020e10a8(void*);
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* cyl, void* player);
 extern short Vec3_HorzAngle(void* a, void* b);

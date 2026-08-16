@@ -2,12 +2,12 @@
 // @symbol func_ov002_020cfbdc
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_ClsnResult.h"
-#include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
 
 
 extern "C" {
+    extern void func_ov002_020d0948(void*);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
