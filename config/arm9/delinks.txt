@@ -337,6 +337,7 @@ src/func_02008b08.c:
     .text start:0x02008b08 end:0x02008b4c
 
 src/func_02008b4c.c:
+    complete
     .text start:0x02008b4c end:0x02008cb4
 
 src/func_02008cb4.c:
@@ -1903,6 +1904,7 @@ src/func_02014f44.c:
     .text start:0x02014f44 end:0x02014f5c
 
 src/func_02014f5c.c:
+    complete
     .text start:0x02014f5c end:0x02014fa4
 
 src/func_02014fa4.c:
@@ -2772,6 +2774,7 @@ src/func_02018ac4.c:
     .text start:0x02018ac4 end:0x02018ad0
 
 src/FS_LoadOverlay.c:
+    complete
     .text start:0x02018ad0 end:0x02018b64
 
 src/func_02018b64.c:
@@ -3079,6 +3082,7 @@ src/IsMinigameActorID.c:
     .text start:0x0201a888 end:0x0201a8b4
 
 src/func_0201a8b4.c:
+    complete
     .text start:0x0201a8b4 end:0x0201a96c
 
 src/func_0201a96c.c:
@@ -3800,6 +3804,7 @@ src/_ZN5Stage12RenderNumberEhiibi.cpp:
     .text start:0x020250d0 end:0x020251d0
 
 src/_ZN5Stage9PS_RenderEv.cpp:
+    complete
     .text start:0x020251d0 end:0x02025d20
 
 src/_ZN5Stage25PS_UpdateOkAndBackButtonsEb.cpp:
@@ -7017,9 +7022,11 @@ src/func_02042778.c:
     .text start:0x02042778 end:0x02042784
 
 src/func_02042784.c:
+    complete
     .text start:0x02042784 end:0x020427c4
 
 src/func_020427c4.c:
+    complete
     .text start:0x020427c4 end:0x020427f8
 
 src/func_020427f8.c:
@@ -9316,6 +9323,7 @@ src/func_02057320.cpp:
     .text start:0x02057320 end:0x02057410
 
 src/func_02057410.c:
+    complete
     .text start:0x02057410 end:0x02057ce8
 
 src/func_02057ce8.c:
@@ -9643,6 +9651,7 @@ src/func_020599e8.cpp:
     .text start:0x020599e8 end:0x02059a60
 
 src/func_02059a60.c:
+    complete
     .text start:0x02059a60 end:0x02059ba0
 
 src/func_02059ba0.c:
@@ -11618,6 +11627,7 @@ src/func_0206f46c.c:
     .text start:0x0206f46c end:0x0206f820
 
 src/func_0206f820.c:
+    complete
     .text start:0x0206f820 end:0x0206fb08
 
 src/func_0206fb08.c:
@@ -11691,6 +11701,7 @@ src/func_02071364.c:
     .text start:0x02071364 end:0x02071510
 
 src/func_02071510.c:
+    complete
     .text start:0x02071510 end:0x020715e0
 
 src/func_020715e0.c:

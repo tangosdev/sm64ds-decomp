@@ -21,7 +21,7 @@ extern void _ZN12CylinderClsn5ClearEv(void*);
 extern void _ZN12CylinderClsn6UpdateEv(void*);
 extern void func_ov102_0214b03c(void*);
 extern void *_ZN5Actor10FindWithIDEj(unsigned int);
-extern void func_020ada40(void*,void*,void*,unsigned int);
+extern void func_ov002_020ada40(void*,void*,void*,unsigned int);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void*,void*);
 extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void*,void*,unsigned int);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
@@ -85,7 +85,7 @@ int BobOmb::Behavior()
                 v[0] = -0x2000;
                 v[1] = 0;
                 v[2] = 0;
-                func_020ada40(this, v, other, 0x32000);
+                func_ov002_020ada40(this, v, other, 0x32000);
                 _ZN5Actor9UpdatePosEP12CylinderClsn(this, (char *)&mCylinderClsn);
                 _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(this, (char *)&mWithMeshClsn, 0);
                 _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);

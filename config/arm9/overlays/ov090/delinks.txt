@@ -16,6 +16,7 @@ src/func_ov090_02130f94.c:
     .text start:0x02130f94 end:0x021310b4
 
 src/func_ov090_021310b4.c:
+    complete
     .text start:0x021310b4 end:0x02131378
 
 src/func_ov090_02131378.cpp:
@@ -79,6 +80,7 @@ src/_ZN7Skeeter6RenderEv.cpp:
     .text start:0x02131f34 end:0x02131f88
 
 src/_ZN7Skeeter8BehaviorEv.cpp:
+    complete
     .text start:0x02131f88 end:0x0213235c
 
 src/_ZN7Skeeter13InitResourcesEv.cpp:
@@ -206,6 +208,7 @@ src/_ZN10CheepCheep8BehaviorEv.cpp:
     .text start:0x02133430 end:0x02133530
 
 src/_ZN10CheepCheep13InitResourcesEv.cpp:
+    complete
     .text start:0x02133530 end:0x02133634
 
 src/CheepCheep_Spawn.c:

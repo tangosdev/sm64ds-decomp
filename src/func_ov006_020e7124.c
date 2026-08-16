@@ -28,7 +28,7 @@ extern int data_0208ee44;
 extern void *data_ov006_02141a44;
 extern void *data_ov006_02141a40;
 extern void *data_ov006_02141a50;
-extern int func_020beb74[];
+extern int data_ov004_020beb74[];
 extern void *data_0209d4a8;
 
 void func_ov006_020e7124(char *obj)
@@ -70,6 +70,6 @@ void func_ov006_020e7124(char *obj)
     data_ov006_02141a44 = obj + 0x466c;
     data_ov006_02141a40 = obj + 0x466c;
     data_ov006_02141a50 = obj + 0x4728;
-    func_020beb74[1] = (int)obj;
-    data_0209d4a8 = (void *)func_020beb74;
+    data_ov004_020beb74[1] = (int)obj;
+    data_0209d4a8 = (void *)data_ov004_020beb74;
 }

@@ -77,6 +77,7 @@ src/func_ov064_021166f0.c:
     .text start:0x021166f0 end:0x02116754
 
 src/func_ov064_02116754.cpp:
+    complete
     .text start:0x02116754 end:0x02116bac
 
 src/func_ov064_02116bac.cpp:
@@ -231,7 +232,7 @@ src/MetalNetLift_Spawn.c:
     complete
     .text start:0x02117fe8 end:0x02118020
 
-src/_ZN18TiltingPlatformLllD1Ev.c:
+src/_ZN18TiltingPlatformLllD1Ev.cpp:
     complete
     .text start:0x02118020 end:0x02118070
 

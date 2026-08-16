@@ -20,7 +20,7 @@ extern void func_ov006_020c19d0(char *thiz);
 extern void func_ov004_020b65e4(void);
 
 extern unsigned char data_ov006_02142ab4[];
-extern char *func_020beb68;
+extern char *data_ov004_020beb68;
 
 #define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 #define LNDR(e) ((int)(((long long)(e))))
@@ -150,7 +150,7 @@ int func_ov006_02109aac(char *c)
                         q2 += 0x34;
                     } while (j < I(0x53fc));
                 }
-                func_ov004_020ad79c(I(0x53fc) - H(0x53f6) + ((func_020beb68 != 0) ? *(int *)(func_020beb68 + 0xa8) : 0), 0);
+                func_ov004_020ad79c(I(0x53fc) - H(0x53f6) + ((data_ov004_020beb68 != 0) ? *(int *)(data_ov004_020beb68 + 0xa8) : 0), 0);
             }
         }
         break;
@@ -191,7 +191,7 @@ int func_ov006_02109aac(char *c)
                         p += 0x34;
                     } while (j < I(0x53fc));
                 }
-                func_ov004_020ad79c(H(0x53f2) + ((func_020beb68 != 0) ? *(int *)(func_020beb68 + 0xa8) : 0), 0);
+                func_ov004_020ad79c(H(0x53f2) + ((data_ov004_020beb68 != 0) ? *(int *)(data_ov004_020beb68 + 0xa8) : 0), 0);
                 H(0x53f4) = 0;
                 I(0x53f8) = 0;
                 H(0x53e8) = 0x5a;

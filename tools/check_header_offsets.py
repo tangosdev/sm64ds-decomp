@@ -10,9 +10,12 @@ This walks the declarations, applies natural alignment, and compares. Used as th
 first gate on any header edit; see notes/plan-scalar-markers.md 4.
 
     python tools/check_header_offsets.py include/Enemy.h include/Camera.h
-    python tools/check_header_offsets.py $(git diff --name-only include/)
+    python tools/check_header_offsets.py --changed              # vs origin/main
+    python tools/check_header_offsets.py --changed main
+
+Running it with no arguments is an error, not a pass -- see _resolve_paths.
 """
-import re, sys, pathlib
+import re, subprocess, sys, pathlib
 SZ = {"u8":1,"s8":1,"char":1,"u16":2,"s16":2,"short":2,"u32":4,"s32":4,"int":4,
       "unsigned":4,"long":4,"Fix12i":4,"float":4,"u64":8,"s64":8,"double":8}
 # Alignment is NOT the same as width once aggregates are in play: a Vector3 is 12
@@ -158,8 +161,62 @@ for _h in pathlib.Path(__file__).resolve().parents[1].joinpath("include").rglob(
         if _last is not None and _cls not in DATA_SIZE:
             DATA_SIZE[_cls] = _last
 
+KNOWN = REPO / "config" / "header-offset-known-issues.txt"
+
+
+def _known_issues():
+    """Header paths this gate already tolerates. See the file's own header comment.
+
+    Waived rather than skipped silently: each one still prints, so the debt stays
+    visible in the log and the list can only shrink.
+    """
+    if not KNOWN.is_file():
+        return set()
+    return {line.split("#", 1)[0].strip().replace("\\", "/")
+            for line in KNOWN.read_text(encoding="utf-8").splitlines()
+            if line.split("#", 1)[0].strip()}
+
+
+def _resolve_paths(argv):
+    """The headers to check, or exit non-zero having said why.
+
+    This tool fed ``sys.argv[1:]`` straight into the loop below, so running it bare
+    checked nothing, printed nothing, and exited 0 -- a clean pass over zero files.
+    Nothing in `.github/workflows/` or `tools/hooks/` invoked it, so that silent
+    vacuous pass was, in practice, its only behaviour. Refusing an empty list is what
+    makes wiring it into CI mean anything.
+
+    ``--changed [base]`` is the CI form: the added and modified headers of this branch.
+    Renames arrive as an add because ``-M`` is deliberately not passed -- a header that
+    moved still has to have its offsets agree.
+    """
+    if argv and argv[0] == "--changed":
+        base = argv[1] if len(argv) > 1 else "origin/main"
+        proc = subprocess.run(
+            ["git", "diff", "--name-only", "--diff-filter=AM", f"{base}...HEAD",
+             "--", "include/"],
+            cwd=REPO, capture_output=True, text=True)
+        if proc.returncode != 0:
+            sys.exit(f"check_header_offsets: git diff against {base} failed: "
+                     f"{proc.stderr.strip()}")
+        argv = [p for p in proc.stdout.split() if p.endswith((".h", ".hpp"))]
+        if not argv:
+            print(f"check_header_offsets: no include/ header added or modified "
+                  f"against {base}")
+            sys.exit(0)
+        print(f"check_header_offsets: {len(argv)} changed header(s) vs {base}")
+    if not argv:
+        sys.exit("usage: check_header_offsets.py <header>... | --changed [base]\n"
+                 "refusing to run with no headers: an empty check is not a pass")
+    return argv
+
+
 rc = 0
-for path in sys.argv[1:]:
+WAIVED = _known_issues()
+for path in _resolve_paths(sys.argv[1:]):
+    if pathlib.PurePath(path).as_posix() in WAIVED:
+        print(f"{path}: WAIVED -- config/header-offset-known-issues.txt")
+        continue
     txt = pathlib.Path(path).read_text(errors="replace")
     off, bad, n, skipped, pending = 0, 0, 0, [], []
     trusted = True

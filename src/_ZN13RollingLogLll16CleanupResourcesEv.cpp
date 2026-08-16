@@ -7,5 +7,5 @@
 
 int RollingLogLll::CleanupResources()
 {
-    return func_021270dc(((void *)this), data_ov022_02112c9c);
+    return func_ov080_021270dc(((void *)this), data_ov022_02112c9c);
 }

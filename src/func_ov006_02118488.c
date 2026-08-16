@@ -158,8 +158,8 @@ int func_ov006_02118488(void* arg)
                 }
                 if (flag != 0) {
                     if ((*(int*)(c + 8) & 0xff) == 0) {
-                        func_020bc888 = 0x80;
-                        func_020bc864 = -0x30;
+                        data_ov004_020bc888 = 0x80;
+                        data_ov004_020bc864 = -0x30;
                     }
                     func_ov004_020b0a54(0x10);
                     *(int*)(c + 0x4660) = 2;

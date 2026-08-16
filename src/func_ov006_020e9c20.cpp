@@ -6,7 +6,8 @@
 #include "dScMg3DEsp_c.h"
 // recovered name: dScMg3DEsp_c_OnYoshiTryEat_020e9c20
 /* recovered: renamed to Class_Method */
-extern char* func_020beb68;
+/* data_ov004_020beb68 is declared `void *` by dScMgBase_c.h; cast at the use site
+   rather than redeclaring it with a different pointer type. */
 
 extern "C" void func_ov006_020e9c20(char* c, int a)
 {
@@ -18,7 +19,7 @@ extern "C" void func_ov006_020e9c20(char* c, int a)
         *p += 1;
         if (self->unk_0bc > 0x270e) self->unk_0bc = 0x270e;
     } else if (a == 0x12) {
-        if (func_020beb68 != 0) *(int*)(func_020beb68 + 0xb4) = 0;
+        if (data_ov004_020beb68 != 0) *(int*)((char*)data_ov004_020beb68 + 0xb4) = 0;
         self->unk_0bc = 0;
         if (self->unk_0bc > 0x270e) self->unk_0bc = 0x270e;
     }

@@ -6,14 +6,15 @@
 #include "decl_TextureSequence.h"
 #include "decl_common.h"
 extern int data_ov025_02113850[];
+extern int _ZTV11daDsnBase_c[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = _ZTV7daDkk_c */
+/* vtable identified: VT0 = _ZTV11daDsnBase_c */
 int *Grindel_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(928);
     if (p) {
         _ZN8PlatformC2Ev(p);
-        p[0] = (int)_ZTV7daDkk_c;
+        p[0] = (int)_ZTV11daDsnBase_c;
         _ZN15TextureSequenceC1Ev((char *)p + 0x324);
         _ZN11ShadowModelC1Ev((char *)p + 0x338);
         p[0] = (int)data_ov025_02113850;

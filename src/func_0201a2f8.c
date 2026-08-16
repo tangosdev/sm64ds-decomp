@@ -10,7 +10,7 @@ extern void SetSoundMode(int mode);
 extern int func_0205d94c(int a, int b);
 extern void* _ZN6Memory8AllocateEj(unsigned int);
 extern void LoadOverlay(int id);
-extern void func_020aa420(void);
+extern void func_ov001_020aa420(void);
 extern void UnloadOverlay(int id);
 extern void func_0205d23c(void* p, int n);
 extern void func_0205c91c(void);
@@ -39,7 +39,7 @@ void func_0201a2f8(void) {
         func_0205d94c((int)ptr, size);
     }
     LoadOverlay((int)&overlay_0);
-    func_020aa420();
+    func_ov001_020aa420();
     UnloadOverlay((int)&overlay_0);
     if (ptr != 0) {
         func_0205d23c(&data_0208ee5c, 3);

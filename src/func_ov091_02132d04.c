@@ -5,15 +5,15 @@
 #include "decl_MovingMeshCollider.h"
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
-extern int data_ov091_021351fc[];
+extern int _ZTV11daDsnBase_c[];
 extern int _ZTV8Platform[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = data_ov091_021351fc */
+/* vtable identified: VT0 = _ZTV11daDsnBase_c */
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *data_020a0eac;
 int *func_ov091_02132d04(int *t)
 {
-    t[0] = (int)data_ov091_021351fc;
+    t[0] = (int)_ZTV11daDsnBase_c;
     _ZN11ShadowModelD1Ev((char *)t + 0x338);
     _ZN15TextureSequenceD1Ev((char *)t + 0x324);
     t[0] = (int)_ZTV8Platform;

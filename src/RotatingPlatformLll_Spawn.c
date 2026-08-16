@@ -3,16 +3,16 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_common.h"
-extern int data_ov002_021091d4[];
+extern int _ZTV16daObjKaitendai_c[];
 extern int _ZTV19RotatingPlatformLll[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = data_ov002_021091d4 */
+/* vtable identified: VT0 = _ZTV16daObjKaitendai_c */
 int *RotatingPlatformLll_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(800);
     if (p) {
         _ZN8PlatformC2Ev(p);
-        p[0] = (int)data_ov002_021091d4;
+        p[0] = (int)_ZTV16daObjKaitendai_c;
         p[0] = (int)_ZTV19RotatingPlatformLll;
     }
     return p;

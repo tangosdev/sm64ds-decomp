@@ -123,7 +123,7 @@ src/RollingRock_Spawn.c:
     complete
     .text start:0x02112d64 end:0x02112db4
 
-src/_ZN10ShutterHmcD1Ev.c:
+src/_ZN10ShutterHmcD1Ev.cpp:
     complete
     .text start:0x02112db4 end:0x02112e04
 

@@ -5,10 +5,10 @@
 // ==0xbf bool (moveq #1/movne #0/cmp) instead of jump-threading.
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* thiz, void* v);
 extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern void func_020aea30(char* c, void* p, int a, int b);
+extern void func_ov002_020aea30(char* c, void* p, int a, int b);
 extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(char* c, void* cyl, void* p);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, int f);
-extern void func_020ada40(char* c, void* v, void* p, int a);
+extern void func_ov002_020ada40(char* c, void* v, void* p, int a);
 extern void func_02012694(int a, void* b);
 extern int _ZN6Player9IsOnShellEv(void* p);
 extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(char* c, void* v, unsigned int a, int b, short d);
@@ -44,23 +44,23 @@ void func_ov090_021310b4(char* c)
 
     if (flags & 0x2400) {
         *(int*)(c + 0x10c) = 2;
-        func_020aea30(c, p, 0, 2);
+        func_ov002_020aea30(c, p, 0, 2);
         return;
     }
     if (flags & 0x40000) {
         *(int*)(c + 0x10c) = 4;
-        func_020aea30(c, p, 0, 4);
+        func_ov002_020aea30(c, p, 0, 4);
         return;
     }
     if (flags & 0x40) {
         *(int*)(c + 0x10c) = 2;
-        func_020aea30(c, p, 0, 2);
+        func_ov002_020aea30(c, p, 0, 2);
         return;
     }
     if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, p)) {
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         *(int*)(c + 0x10c) = 1;
-        func_020aea30(c, p, 0, 1);
+        func_ov002_020aea30(c, p, 0, 1);
         return;
     }
     if (flags & 0x20) {
@@ -69,21 +69,21 @@ void func_ov090_021310b4(char* c)
         *(int*)(c + 0xa8) = 0;
         *(int*)(c + 0xac) = 0;
         *(int*)(c + 0x10c) = 1;
-        func_020aea30(c, p, 0, 1);
+        func_ov002_020aea30(c, p, 0, 1);
         return;
     }
     if (flags & 0x10) {
         hv[0] = 0x1000;
         hv[1] = 0;
         hv[2] = 0;
-        func_020ada40(c, hv, p, 0);
+        func_ov002_020ada40(c, hv, p, 0);
         func_02012694(0x1d, c + 0x74);
         return;
     }
     if (flags & 0x4380) {
         *(unsigned char*)(c + 0x3a1) = 3;
         *(int*)(c + 0x10c) = 3;
-        func_020aea30(c, p, 0, 3);
+        func_ov002_020aea30(c, p, 0, 3);
         return;
     }
     {

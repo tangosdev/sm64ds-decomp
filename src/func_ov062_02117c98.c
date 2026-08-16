@@ -5,9 +5,9 @@ typedef struct { s16 x, y, z; } V16;
 #define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
-extern void func_020ada40(void* self, void* v, void* a, int f);
+extern void func_ov002_020ada40(void* self, void* v, void* a, int f);
 extern void func_ov062_02117bf4(void* self);
-extern void func_020aea30(void* self, void* a, int b);
+extern void func_ov002_020aea30(void* self, void* a, int b);
 extern int _ZN6Player9IsOnShellEv(void* p);
 extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* clsn, void* player);
 extern void func_0201267c(int a, void* p);
@@ -41,7 +41,7 @@ void func_ov062_02117c98(void* self)
         v.x = (s16)-0x2000;
         v.y = (s16)r5;
         v.z = (s16)r5;
-        func_020ada40(self, &v, found, 0x46000);
+        func_ov002_020ada40(self, &v, found, 0x46000);
         return;
     }
     if (flags & 0x22400) {
@@ -50,7 +50,7 @@ void func_ov062_02117c98(void* self)
             return;
         }
         *(s32*)(c + 0x10c) = 5;
-        func_020aea30(self, found, r5);
+        func_ov002_020aea30(self, found, r5);
         return;
     }
     if (flags & 0x4000) {
@@ -77,7 +77,7 @@ void func_ov062_02117c98(void* self)
                 *(s32*)(c + 0x84) = 0x1000;
                 *(s32*)(c + 0x88) = 0x1000;
             }
-            func_020aea30(self, found, 0);
+            func_ov002_020aea30(self, found, 0);
             return;
         }
     } else {
@@ -93,7 +93,7 @@ void func_ov062_02117c98(void* self)
                 goto tail;
             }
             *(s32*)(c + 0x10c) = 6;
-            func_020aea30(self, found, 0);
+            func_ov002_020aea30(self, found, 0);
             return;
         }
         {
@@ -112,7 +112,7 @@ void func_ov062_02117c98(void* self)
                 func_ov062_02117bf4(self);
             } else {
                 *(s32*)(c + 0x10c) = 1;
-                func_020aea30(self, found, 0);
+                func_ov002_020aea30(self, found, 0);
                 *(s32*)(c + 0x80) = 0x1000;
                 *(s32*)(c + 0x84) = 0x1000;
                 *(s32*)(c + 0x88) = 0x1000;
@@ -146,7 +146,7 @@ void func_ov062_02117c98(void* self)
     }
 
 tail:
-    func_020aea30(self, found, (int)(c + 0x144));
+    func_ov002_020aea30(self, found, (int)(c + 0x144));
     if (r5)
         *(u16*)(c + 0x8e) = *(s16*)(c + 0x94) + 0x8000;
 }

@@ -72,6 +72,7 @@ src/func_ov081_0212423c.c:
     .text start:0x0212423c end:0x021243cc
 
 src/func_ov081_021243cc.cpp:
+    complete
     .text start:0x021243cc end:0x021245e8
 
 src/func_ov081_021245e8.c:
@@ -183,6 +184,7 @@ src/_ZN10MrBlizzard8BehaviorEv.cpp:
     .text start:0x0212588c end:0x02125ba0
 
 src/_ZN10MrBlizzard13InitResourcesEv.cpp:
+    complete
     .text start:0x02125ba0 end:0x02125eb8
 
 src/_ZN10MrBlizzard16OnAimedAtWithEggEv.cpp:

@@ -45,7 +45,7 @@ void _ZN5Actor24KillAndTrackInDeathTableEv(void* self);
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* cyl);
 int  func_02035638(u8* p);
 void* _ZN5Actor13ClosestPlayerEv(void* self);
-void func_020aea30(void* self, void* p, int n);
+void func_ov002_020aea30(void* self, void* p, int n);
 u16  DecIfAbove0_Short(u16* p);
 void _ZN9Animation7AdvanceEv(void* self);
 void func_ov090_021310b4(void* c);
@@ -109,7 +109,7 @@ int Skeeter::Behavior()
                 mVertSpeed = 0;
                 unk_0ac = 0;
                 mDeathState = 1;
-                func_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
+                func_ov002_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
                 return 1;
             }
         }
@@ -132,7 +132,7 @@ int Skeeter::Behavior()
         mVertSpeed = 0;
         unk_0ac = 0;
         mDeathState = 1;
-        func_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
+        func_ov002_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
         return 1;
     }
 

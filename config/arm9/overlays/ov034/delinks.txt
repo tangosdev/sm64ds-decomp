@@ -37,6 +37,7 @@ src/func_ov034_02111720.c:
     .text start:0x02111720 end:0x02111788
 
 src/func_ov034_02111788.cpp:
+    complete
     .text start:0x02111788 end:0x02111974
 
 src/func_ov034_02111974.c:

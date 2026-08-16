@@ -10,7 +10,7 @@ extern int func_ov006_020c1718(void* p);
 extern void func_ov004_020b65e4(void);
 extern void func_ov006_020c19d0(void* c);
 
-extern char *func_020beb68;
+extern char *data_ov004_020beb68;
 extern int data_ov006_0213d568;
 
 int func_ov006_020f869c(void* arg)
@@ -72,7 +72,7 @@ int func_ov006_020f869c(void* arg)
                             *(s16*)(c + 0x4f52) = 0;
                         } else if (func_ov006_020c16b4(c + 0x4f38) != 0) {
                             {
-                                char *g = func_020beb68;
+                                char *g = data_ov004_020beb68;
                                 if (g != 0) {
                                     if (*(int *)(g + 0xb4) > 0)
                                         *(int *)(((int)g + 0xb4)) -= 1;
@@ -82,7 +82,7 @@ int func_ov006_020f869c(void* arg)
                             func_ov004_020b0a54(5);
                             {
                                 int d = data_ov006_0213d570;
-                                char *g = func_020beb68;
+                                char *g = data_ov004_020beb68;
                                 int t = ((g != 0) ? *(int *)(g + 0xa8) : 0) - d;
                                 int u = (g != 0) ? *(int *)(g + 0xb4) : 0;
                                 func_ov004_020ad79c(t, u);
@@ -95,7 +95,7 @@ int func_ov006_020f869c(void* arg)
                         }
                     } else {
                         {
-                            char *g = func_020beb68;
+                            char *g = data_ov004_020beb68;
                             if (g != 0) {
                                 if (*(int *)(g + 0xb4) < 0x270f)
                                     *(int *)(((int)g + 0xb4)) += 1;
@@ -107,7 +107,7 @@ int func_ov006_020f869c(void* arg)
                         func_ov006_020c0c80(c + 0x4f38);
                         func_ov004_020b0a54(4);
                         {
-                            char *g = func_020beb68;
+                            char *g = data_ov004_020beb68;
                             int t = (g != 0) ? *(int *)(g + 0xa8) : 0;
                             func_ov004_020ad79c(data_ov006_0213d568 + t,
                                                 (g != 0) ? *(int *)(g + 0xb4) : 0);

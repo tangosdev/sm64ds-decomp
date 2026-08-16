@@ -14,7 +14,7 @@ extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void*
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, Fix12 f);
 extern int func_0201267c(u32 a, void* b);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12 f, u32 b, u32 c, u32 d);
-extern void func_020ada40(void* c, void* v, void* r4, s32 flag);
+extern void func_ov002_020ada40(void* c, void* v, void* r4, s32 flag);
 }
 
 extern "C" int func_ov063_0211a0dc(char* c)
@@ -110,7 +110,7 @@ found_kind:
             v[0] = -0x2000;
             v[1] = 0;
             v[2] = 0;
-            func_020ada40(c, v, found2, 0);
+            func_ov002_020ada40(c, v, found2, 0);
 
             {
                 s16* ap = (s16*)(int)(((long long)(int)(c + 0x8e)));

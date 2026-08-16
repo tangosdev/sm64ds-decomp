@@ -1,38 +1,91 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Thwomp: 6 matched functions, 9 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef THWOMP_H
 #define THWOMP_H
-#include "types.h"
-#include "Model.h"
 
-struct Thwomp {
-    u8  pad_000[0xd4];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    Model mModel;            /* 0x0d4 */
-    u8  mMovingMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
-    s32 mFileTable;            /* 0x320 */
-    u8  mTextureSequence;            /* 0x324 */
-    u8  pad_325[0x7];
-    s32 unk_32c;            /* 0x32c */
-    u8  pad_330[0x8];
-    u8  mShadowModel;            /* 0x338 */
-    u8  pad_339[0x5f];
-    s32 mState;            /* 0x398 */
-    u8  pad_39c[0x2];
-    u8  unk_39e;            /* 0x39e */
-    u8  pad_39f[0x3];
-    u8  mTriggered;            /* 0x3a2 */
+#include "types.h"
+
+/* The Thwomp. ROM name daDsn_c, from dossun.
+ *
+ * IT DOES NOT DERIVE FROM Platform. It derives from daDsnBase_c, which derives
+ * from Platform, and the difference is in the bytes rather than only in the RTTI:
+ * its destructor stores THREE vptrs -- its own, daDsnBase_c's, then Platform's --
+ * and destroys daDsnBase_c's ShadowModel at 0x338 and TextureSequence at 0x324
+ * between the second and the third. A one-level chain emits two vptr stores and
+ * neither member call.
+ *
+ *   _ZTI7daDsn_c  ov091 0x0213512c
+ *   _ZTS7daDsn_c  ov091 0x02135120
+ *   _ZTV6Thwomp   ov091 0x02135174  (its record sits at V-4)
+ *   kind  __si_class_type_info, ONE base, subobject offset 0
+ *   base  daDsnBase_c, ov025 0x021137f8 -- whose vtable is in ov091
+ *
+ * TWO OF THE METHODS BELOW ARE NOT THIS CLASS'S, and the header says so rather
+ * than moving them. CleanupResources and Render are slots 3 and 9, and those
+ * words live in daDsnBase_c's vtable; this class does not override either, it
+ * inherits both. The ROM symbols are `_ZN6Thwomp16CleanupResourcesEv` and
+ * `_ZN6Thwomp6RenderEv` all the same, so the declarations stay here: moving them
+ * to daDsnBase_c would change the mangled names and stop two byte-matched files
+ * reproducing. Same shape as the crossed ov047 "Bs" names #1521 recorded, and the
+ * same answer -- a method rename is a config change and its own piece of work.
+ * InitResources and Behavior, slots 0 and 6, really are this class's: the base
+ * leaves both null.
+ *
+ * SIZE 0x3a4, from Thwomp_Spawn's literal 932.
+ *
+ * FOUR FIELDS OF ITS OWN, all of them read by this class's own two slots:
+ *
+ *   0x398  the state, 0..4. Behavior is the switch on it; InitResources zeroes it.
+ *   0x39e  a 0x5a-frame timer, set when the Thwomp is triggered mid-cycle.
+ *   0x3a0  a countdown Behavior decrements while the model's own 0x3a0 counter is
+ *          still running.
+ *   0x3a2  the trigger flag. Behavior clears it, InitResources zeroes it.
+ *
+ * WHAT THIS HEADER USED TO SAY, AND WHY MOST OF IT WAS THE BASE'S. The generated
+ * body had nine fields over `u8 pad_000[0xd4]`. `Model mModel` at 0xd4 and a
+ * `u8 mMovingMeshCollider` marker at 0x124 are Platform's, twice removed --
+ * Platform calls the second one mMeshCollider. `s32 mFileTable` at 0x320,
+ * `u8 mTextureSequence` at 0x324 and `u8 mShadowModel` at 0x338 are
+ * daDsnBase_c's, and the last two are whole sub-objects rather than marker bytes:
+ * both factories construct them and both destructors destroy them.
+ *
+ * AND `s32 unk_32c` WAS INSIDE ONE OF THEM. 0x32c is 0x324 + 8, which is
+ * Animation::currFrame reached through the TextureSequence -- Behavior treats it
+ * as a 20.12 countdown, shifting right by 12 to read it and left by 12 to write
+ * it, in the same function that calls Animation::Advance on the same sub-object.
+ * It is spelled through the member now, so nothing describes those four bytes
+ * twice.
+ */
+
 #ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int CleanupResources();
-    int InitResources();
-    int Render();
-#endif
+
+#include "daDsnBase_c.h"
+
+struct Thwomp : daDsnBase_c {
+    /* UNOBSERVED, not inherited. daDsnBase_c's own methods stop at 0x360 and
+       nothing in the tree reads 0x360..0x398 on either leaf. daDkk_c allocates
+       0x3a0, so the span exists there too -- see include/daDsnBase_c.h. */
+    u8  pad_360[0x38];
+    /* Field NAMES are placeholders. Offsets, widths and types are observed. */
+    s32 mState;             /* 0x398 */
+    u8  pad_39c[0x2];
+    u8  mRetrigger;         /* 0x39e */
+    u8  pad_39f[0x1];
+    u16 mHoldTimer;         /* 0x3a0 */
+    u8  mTriggered;         /* 0x3a2 */
+
+    /* --- vtable --- */
+    virtual ~Thwomp();                 /* slots 16 (D1), 17 (D0) */
+
+    int Behavior();                    /* slot  6 */
+    int InitResources();               /* slot  0 */
+
+    /* SLOTS 3 AND 9 ARE daDsnBase_c'S -- see the note above. Declared here
+       because the ROM's symbols are _ZN6Thwomp*, not _ZN11daDsnBase_c*. */
+    int CleanupResources();            /* slot  3, daDsnBase_c's word */
+    int Render();                      /* slot  9, daDsnBase_c's word */
 };
 
-#endif
+typedef char Thwomp_size_must_be_0x3a4[sizeof(Thwomp) == 0x3a4 ? 1 : -1];
+
+#endif /* __cplusplus */
+
+#endif /* THWOMP_H */

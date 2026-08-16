@@ -3,55 +3,136 @@
 
 #include "types.h"
 
-/* daObjFallBlock_c -- an intermediate class the ROM's RTTI names and the tree
- * did not.  Base: dBgActor_c (the tree calls it Platform).
+/* The abstract base of the falling blocks: the platforms that shake for a moment
+ * once you stand on them and then drop out from under you.
  *
- * typeinfo 0x02114874 (ov015), vtable 0x0213c5bc (ov098), 32 slots (base has 32).
- * Note the vtable is in a DIFFERENT overlay from the typeinfo.
- * Abstract -- pure-virtual (null) slots: 0, 3
- * Own overrides at slots: 6, 9, 16, 17, 27, 31
- * 4 known descendant(s): daObjBk_Fall_Block_c, daObjFl_Fall_Block_c, daObjKm2_Fall_Block_c, daObjTh_Fall_Block_c
+ * A LAYER THE TREE DID NOT HAVE. This header used to be a flat struct under
+ * `u8 pad_000[0x320]`, emitted by `tools/rtti_vtables.py --emit-headers` because
+ * that pass knew offsets and not sizeof(base). include/Platform.h has since
+ * settled sizeof(Platform) = 0x320, so the class can be spelled as what it is. The
+ * regenerate line is gone with the generated body: that tool deletes only files
+ * that still carry it, and this one is hand-written now.
  *
- * The fields below are the offsets this class's OWN vtable overrides
- * touch that no named ancestor declares.  A method of a class can
- * reach its own members and its ancestors', never a descendant's, so
- * an offset seen here and owned by no ancestor belongs to this class.
- * Read from these byte-matched functions:
- *   func_ov098_0213a36c
- *   func_ov098_0213a314
- *   func_ov098_02139fc8
- *   func_ov098_02139f70
- *   func_ov098_0213a284
- *   func_ov098_0213a17c
+ *   _ZTI16daObjFallBlock_c  ov015 0x02114874
+ *   _ZTS16daObjFallBlock_c  ov015 0x0211488c   "16daObjFallBlock_c"
+ *   vtable                  ov098 0x0213c5bc, 32 slots, same count as the base
+ *   kind                    __si_class_type_info, ONE base, subobject offset 0
+ *   base                    dBgActor_c, ov002 0x021089ec -- the tree's Platform
  *
- * The space below 0x320 is left as padding.  It is NOT all the base's:
- * this class's own subobjects live in there too -- daObjDorifu_c's
- * destructor destroys a Model[5] at 0x320 and a MeshCollider[5] at
- * 0x4b0, both its own.  Padding means unobserved, not inherited.
- * The struct is flat like the rest of the generated corpus rather than
- * inheriting because this pass knows offsets, not sizeof(base).
- * Regenerate: python tools/rtti_vtables.py --emit-headers */
+ * THE VTABLE LIVES IN ov098, WITH THE CODE, and the typeinfo record does not.
+ * Every one of this class's own slots resolves to an ov098 function, which is how
+ * the shared behaviour survives a level change while each leaf sits in its own
+ * level overlay. The relocations that reach the vtable carry the ambiguous tag
+ * `overlays(6,98)` because that pair shares address space; the config settles it
+ * from the other side by marking ov006's copy of 0x0213c5bc `ambiguous` and
+ * leaving ov098's as the definition.
+ *
+ * ABSTRACT. Slots 0 and 3 -- InitResources and CleanupResources -- are null. Its
+ * own overrides are 6 (Behavior), 9 (Render), 16 (D1), 17 (D0), 27
+ * (OnHitByMegaChar) and 31 (Kill).
+ *
+ * FOUR DESCENDANTS, one per level overlay: daObjBk_Fall_Block_c (FallBlockWf,
+ * ov015), daObjFl_Fall_Block_c (ov022, only ever named by its factory
+ * FallBlockLll_Spawn), daObjKm2_Fall_Block_c (FallBlockBfs, ov045) and
+ * daObjTh_Fall_Block_c (FallBlockBbh, ov063). Each one's destructor stores this
+ * class's vtable between its own and _ZTV8Platform.
+ *
+ * SIZE 0x34c, the literal all four factories pass to ActorBase::operator new.
+ *
+ * THE FIELDS COME OUT OF ONE FUNCTION, `func_ov098_0213a36c`, which is this
+ * class's own slot 6 and lives in this class's own overlay. It is the whole
+ * fall-block state machine and it reaches every one of them:
+ *
+ *   0x320  the rest position, a Vector3. Case 3 passes `this+0x320` to
+ *          Vec3_HorzDist against the closest player, and 0x320 + 12 = 0x32c lands
+ *          exactly on the next field.
+ *   0x32c  the Y below which the block is gone. Case 2 compares the actor's own Y
+ *          at 0x60 against it and calls slot 31 when it drops under.
+ *   0x330  which of the two shake routines case 0 runs.
+ *   0x334  the shake step added to mAngleX each frame in case 2.
+ *   0x336  the same for mAngleY.
+ *   0x338  the fall speed, stepped from a sine table in case 1.
+ *   0x33a  the per-state frame counter, walked down by DecIfAbove0_Short.
+ *   0x33c  the state, 0..3 -- the switch this whole function is built on.
+ *   0x33e  set when case 0 should start shaking.
+ *   0x33f  the respawn delay. While it runs the collider is disabled and Behavior
+ *          returns early.
+ *   0x340  this block's "ready" flag, and the one the group walk tests.
+ *   0x342  suppresses Render as well as Behavior, for actor id 0x53.
+ *   0x344  non-zero means this block is not the head of a group.
+ *   0x348  the next block in the group. Behavior walks the chain twice through it,
+ *          once to see whether every member's 0x340 is set and once to trip them
+ *          all together.
+ *
+ * 0x348 + 4 = 0x34c closes the class on the factories' literal with no gap left in
+ * the span. The generated body had 0x320..0x344 and stopped there; the Vector3 and
+ * the group link are new. Field NAMES are coined from what the code does; nothing
+ * in the ROM names them.
+ */
 
-struct daObjFallBlock_c {
-    u8  pad_000[0x320];
-    s32 unk_320;            /* 0x320 */
-    s32 unk_324;            /* 0x324 */
-    s32 unk_328;            /* 0x328 */
-    s32 unk_32c;            /* 0x32c */
-    s32 unk_330;            /* 0x330 */
-    s16 unk_334;            /* 0x334 */
-    s16 unk_336;            /* 0x336 */
-    u8  pad_338[0x2];
-    s16 unk_33a;            /* 0x33a */
-    u8  unk_33c;            /* 0x33c */
-    u8  pad_33d[0x1];
-    u8  unk_33e;            /* 0x33e */
-    u8  unk_33f;            /* 0x33f */
-    u8  unk_340;            /* 0x340 */
-    u8  pad_341[0x1];
-    u8  unk_342;            /* 0x342 */
-    u8  pad_343[0x1];
-    s32 unk_344;            /* 0x344 */
+#ifdef __cplusplus
+
+#include "Platform.h"
+
+struct daObjFallBlock_c : Platform {
+    /* Field NAMES are placeholders. Offsets, widths and types are observed. */
+    Vector3 mRestPos;                   /* 0x320 */
+    s32  mKillY;                        /* 0x32c */
+    s32  mShakeKind;                    /* 0x330 */
+    s16  mShakeX;                       /* 0x334 */
+    s16  mShakeY;                       /* 0x336 */
+    s16  mFallSpeed;                    /* 0x338 */
+    u16  mStateTimer;                   /* 0x33a */
+    u8   mState;                        /* 0x33c */
+    u8   pad_33d[0x1];
+    u8   mShakeRequested;               /* 0x33e */
+    u8   mRespawnDelay;                 /* 0x33f */
+    u8   mReady;                        /* 0x340 */
+    u8   pad_341[0x1];
+    u8   mSuppressed;                   /* 0x342 */
+    u8   pad_343[0x1];
+    s32  mNotGroupHead;                 /* 0x344 */
+    daObjFallBlock_c *mNextInGroup;     /* 0x348 */
+
+    /* --- vtable --- */
+    /* INLINE ON PURPOSE, for the reason include/Platform.h gives for its own:
+       every descendant's destructor inlines this body rather than calling
+       _ZN16daObjFallBlock_cD1Ev (which does exist out of line, at ov098
+       0x02139fc8, still under its func_ov098_ name). An out-of-line declaration
+       here would make each descendant emit a `bl` the ROM does not have. */
+    virtual ~daObjFallBlock_c() {}
 };
 
-#endif
+typedef char daObjFallBlock_c_size_must_be_0x34c[sizeof(daObjFallBlock_c) == 0x34c ? 1 : -1];
+
+#else
+
+/* The same object for a C translation unit, which has no base sub-object to
+   inherit Platform's fields from and so spells the layout flat. Same arrangement
+   as include/Platform.h. */
+struct daObjFallBlock_c {
+    u8  pad_000[0x320];
+    s32 mRestPosX;          /* 0x320 */
+    s32 mRestPosY;          /* 0x324 */
+    s32 mRestPosZ;          /* 0x328 */
+    s32 mKillY;             /* 0x32c */
+    s32 mShakeKind;         /* 0x330 */
+    s16 mShakeX;            /* 0x334 */
+    s16 mShakeY;            /* 0x336 */
+    s16 mFallSpeed;         /* 0x338 */
+    u16 mStateTimer;        /* 0x33a */
+    u8  mState;             /* 0x33c */
+    u8  pad_33d[0x1];
+    u8  mShakeRequested;    /* 0x33e */
+    u8  mRespawnDelay;      /* 0x33f */
+    u8  mReady;             /* 0x340 */
+    u8  pad_341[0x1];
+    u8  mSuppressed;        /* 0x342 */
+    u8  pad_343[0x1];
+    s32 mNotGroupHead;      /* 0x344 */
+    struct daObjFallBlock_c *mNextInGroup;      /* 0x348 */
+};
+
+#endif /* __cplusplus */
+
+#endif /* DAOBJFALLBLOCK_C_H */

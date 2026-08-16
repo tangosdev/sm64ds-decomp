@@ -3,16 +3,16 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 #include "decl_common.h"
-extern int data_ov002_02108fdc[];
+extern int _ZTV17daObjFloatBoard_c[];
 extern int _ZTV23FloatOnWaterPlatformJrb[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = data_ov002_02108fdc */
+/* vtable identified: VT0 = _ZTV17daObjFloatBoard_c */
 int *FloatOnWaterPlatformJrb_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(840);
     if (p) {
         _ZN8PlatformC2Ev(p);
-        p[0] = (int)data_ov002_02108fdc;
+        p[0] = (int)_ZTV17daObjFloatBoard_c;
         p[0] = (int)_ZTV23FloatOnWaterPlatformJrb;
     }
     return p;

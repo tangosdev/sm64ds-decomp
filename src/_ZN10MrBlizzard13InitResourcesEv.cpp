@@ -19,10 +19,14 @@ extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const voi
 extern void _ZN7PathPtrC1Ev(void *self);
 extern void _ZN7PathPtr6FromIDEj(void *self, u32 id);
 }
+extern "C" {
 extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
     void *self, void *actor, const void *v, int d, int e, u32 f, u32 g);
+}
+extern "C" {
 extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *actor, int b, int c, void *v16, int e);
+}
 extern "C" {
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, u32 idx);
 extern void func_ov081_02125488(void *c, void *p);

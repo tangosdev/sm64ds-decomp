@@ -6,12 +6,14 @@
 #include "decl_common.h"
 extern int _ZTV8Platform[];
 /* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV20daObjTh_Fall_Block_c; VT1 = _ZTV10dBgActor_c */
+/* vtable identified: VT0 = _ZTV12FallBlockBbh; VT1 = _ZTV16daObjFallBlock_c */
 extern void *data_020a0eac;
+extern int _ZTV12FallBlockBbh[];
+extern int _ZTV16daObjFallBlock_c[];
 int *_ZN12FallBlockBbhD0Ev(int *t)
 {
-    t[0] = (int)_ZTV20daObjTh_Fall_Block_c;
-    t[0] = (int)_ZTV10dBgActor_c;
+    t[0] = (int)_ZTV12FallBlockBbh;
+    t[0] = (int)_ZTV16daObjFallBlock_c;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);

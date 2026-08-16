@@ -1,0 +1,35 @@
+# Headers tools/check_header_offsets.py tolerates today, by path.
+#
+# Modelled on config/layout-known-issues.txt and config/rombuild-exclude.txt: the gate
+# is real for anything NEW, and the debt already in the tree is written down instead of
+# silently allowed. This list should only ever shrink.
+#
+# All four were found the moment the tool was first run over the whole tree. It had
+# never gated anything -- no workflow and no hook invoked it, and run with no arguments
+# it checked nothing and exited 0 -- so none of these had ever been reported.
+#
+# Format: one repo-relative header path per line. '#' starts a comment.
+
+# --- tool cannot parse the declaration (NOT a layout defect) ----------------------
+# A two-word scalar type. DECL reads `unsigned` as the type and `short` as the field
+# name, so all four members come back UNPARSED. The offsets in the file are right;
+# the parser is what is short. Teaching DECL about `unsigned short`/`unsigned long`
+# and friends retires this entry.
+include/OamAttr.h
+
+# An anonymous inline aggregate as a member type -- `struct { s32 a; s32 b; } unk_034[3];`.
+# AGG matches a struct body with no nested braces, so a member whose type IS a brace
+# body cannot be walked. Two members affected.
+include/cMgSmartball_slot_c.h
+
+# `T val;` inside a template. There is no width for T until it is instantiated, so
+# this is not answerable by textual walk at all and probably never leaves this list.
+include/math/Fix12.h
+
+# --- a real disagreement, unresolved ----------------------------------------------
+# Four fields sit exactly 3 bytes later than the tool computes (0x4660 vs 0x465d, and
+# three pads after it). A constant 3-byte shortfall means one earlier member is modelled
+# 3 bytes too small, so either the header's comments or an earlier field's type is wrong.
+# Whichever it is, it is a pre-existing question about this header and not something the
+# validator work that wired this gate up should have been deciding.
+include/dScMgSlot1_c.h

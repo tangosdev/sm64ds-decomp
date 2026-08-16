@@ -2888,17 +2888,11 @@ commutative op, try the sub-identity before calling it a floor.
 
 Landing note (split-symbol carriers, extends 9a(3)): func_02072168 is banked and
 re-verified at the COMBINED 0x88c extent (0x02072168..0x020729f4) because its compiled
-<<<<<<< Updated upstream
 object also emits func_020729e8, the severed 12-byte epilogue. RESOLVED 2026-08-01: the
 symbol map now merges the pair (config/arm9/symbols.txt lists func_02072168 at size
 0x88c, the func_020729e8 row and its stub src file are gone) -- the first symbol-map
 merge of a severed fragment into its parent. Precedent for the func_02071644/
 func_02071694 pair (9a(3)'s other proven case) when someone lands that one.
-=======
-object also emits func_020729e8, the severed 12-byte epilogue. matched.jsonl carries size
-2188; the symbol map still lists both symbols. src/func_020729e8.c stays as a documented
-stub.
->>>>>>> Stashed changes
 
 ## 6ax. Inverse RMW-launder: demote the PLAIN read to let the RMW chain lead an interleave (2026-08-01, CapEnemy::GetCapState MATCHED)
 
@@ -2919,7 +2913,6 @@ Rule amendment: "launder ONLY the RMW sites" holds for the ADDRESS-MATERIALIZATI
 (that is what the ROM's RMW/single-use anatomy dictates). But for ORDERING residue between
 two chains, the launder is a scheduling-class demotion you can apply to EITHER side: launder
 the chain that must YIELD, not the one that must lead.
-<<<<<<< Updated upstream
 
 ## 6ay. Four new axes tested on the arm9 floors, all closed (2026-08-01, post-#960 theory sweep)
 
@@ -3152,3 +3145,108 @@ Rule: when the residual is a shift-pair with foreign loads interleaved, check
 whether entering the gap forces a second hoist before spending on ordering
 levers -- this shape reads as crackable (no floor note, "just scheduling")
 and is not.
+
+## 6bf. Pairwise-transposition climbing beats random shuffles on decl-order floors (func_ov007_020c9688, div 33 -> 10, 2026-08-15)
+
+A "FLOOR(regperm)" call on a 12-local declaration list survived 100+ variants,
+two permuter runs and two sessions, and then fell to swapping two declaration
+lines. The mechanism was never exotic; the SEARCH was wrong.
+
+func_ov007_020c9688 (ov007, 0x300) was banked at div=33 with
+`floor {class: regperm, evidence: "... cannot force ip ..."}`. Splitting the
+residual by address region showed two independent clusters: 14 words in the
+first loop (a 3-cycle over {r1, r3, ip} for the webs `hi`/`bA`/`bE`) and 19 in
+the second (a 5-cycle over the callee-saved chain). The first cluster is now
+ZERO from one change: move `hi` from declaration slot 7 to slot 3 and `bA` from
+3 to 7. `hi` lands in ip, exactly the coloring the floor note said could not be
+forced.
+
+Rank rule this pins down, complementing 6ab: among named-local webs competing
+for the SCRATCH file, earlier declaration takes the HIGHER register. Measured
+here as slot 3 -> ip, slot 4 -> r3, slot 7 -> r1. 6ab's "descending from r3 in
+first-definition order" is the same rule seen from the other end, and ip is in
+the sequence rather than an unreachable spill-of-last-resort.
+
+Why two sessions missed it. The prior sweeps, and my own first pass, sampled
+declaration order RANDOMLY -- 400 random shuffles of a 12-element list. A
+specific adjacent transposition has probability ~1/66 of appearing in a random
+shuffle at the needed pair of slots, and nothing in the sample is a small step
+away from the seed, so the search never sees the gradient. Greedy climbing over
+pairwise transpositions found it in one pass. Both moves matter: swap any two
+DECLARATION lines and any two ASSIGNMENT lines, score, keep improvements,
+repeat to a local optimum, restart a few times.
+
+Cost: an oracle call is ~0.19s (`wallcrack.Target.div`), so a full
+transposition neighbourhood of a 12-decl / 13-assignment body is 144 compiles,
+about 4s on 8 threads. There is no reason to sample this space randomly.
+
+Two more things worth carrying:
+
+- **Score by ADDRESS REGION, not just the total.** Splitting 33 into 14/19 made
+  two independent problems out of one, and made each one's local optimum
+  legible. A single global count hides which lever moved what.
+- **The permuter's stock scorer will happily reward semantically WRONG code.**
+  Here it "improved" the second loop by 2 words by moving a read from `*q` to
+  after `q += 0x18` -- reading the NEXT record -- emitting `ldrh r3,[rN,#0x18]!`
+  where the ROM has post-indexed `ldrh r3,[rN],#0x18`. The honest form of the
+  same lever (read the saved cursor `q0` at the use site instead of a named
+  temp) scores identically and is correct. Read permuter diffs for semantics
+  before banking them; a score is not a proof.
+
+Remaining residual is 10 words, all in the second loop: a pure 3-cycle over `q`
+(ROM sb), the argument zero (ROM r8) and the m-reset zero (ROM r7). That one
+survived 720 declaration permutations, 7 hill-climb restarts from random
+starts, named-zero webs at every declaration slot, 6 outer-loop shapes, 10
+inner-loop forms, the verified pragma vocabulary and all 25 installed
+compilers, so it is banked as the live near-miss rather than a floor claim --
+the last two claims on this function were both wrong.
+
+## 6bg. Measure the register IDENTITY, not the divergence count, before claiming a decl-order lever is exhausted (func_ov007_020c9688, still div 10, 2026-08-16)
+
+Follow-up to 6bf on the same function. 6bf closed the first-loop cluster and left
+10 words in the second loop: a 3-cycle where the ROM colors the cursor `q` into
+`sb`, the call's argument zero into `r8` and the m-reset zero into `r7`, while
+every compile of ours colors them `r7` / `sb` / `r8`.
+
+Roughly 900 further hypotheses moved the count by exactly nothing. All of these
+return div=10, not "about 10" -- the identical number, with loop 1 still at zero:
+
+- all 120 block declaration permutations, and 735 more from the 6bf greedy
+  pairwise climb over a 15-element *function-top* declaration list (seed plus 6
+  random restarts, every one a local optimum at 10 with no gradient anywhere)
+- 6y lever 2 (scope depth): `q` at five function-top slots
+- 6y lever 1 (fake self-select use-count boost) in five placements
+- 6y lever 4 (`volatile` on a memory-sourced web), plus `register`
+- the type-rank lever: `q` as `char*`, `u32`, `s16*`, `u16*`, `void*`, `Entry*`
+- nine zero-plumbing shapes, including one shared named zero, two named zeros in
+  both definition orders, and reusing the function-top `heap = 0` (already an
+  argument to the loop-1 allocator) as the loop-2 call arguments
+- the pragma vocabulary, singles and pairs
+
+The useful move was to stop scoring the count and start reading the allocated
+register out of the object. Disassembling word +0x250 (`q`) and +0x264 / +0x268
+(the two zeros) across 520 variants gives four outcomes and only four:
+
+    (q, zero_a, zero_b) = (r7, sb, r8)   137
+                          (r5, sb, r8)   134
+                          (r4, sb, r8)   127
+                          (r6, sb, r8)   122
+
+The zero pair is **invariant**. Declaration order moves `q` freely around the low
+callee-saved band r4-r7 -- which is why the count looks alive at 10/13 -- and
+never once places it above r7. mwccarm ranks the two loop-invariant constant webs
+that live across the call above a cursor pointer web, and hands them the two
+highest free callee-saved registers; the ROM does the opposite.
+
+Two things to carry:
+
+- **A flat divergence count across a large sweep is not evidence the space is
+  searched; it can mean the lever never touched the web you care about.** Reading
+  the register identity turns "900 variants, no progress" into a specific,
+  falsifiable statement about which register a web can and cannot reach. Cheap:
+  the object is already in hand, it is four lines of capstone.
+- **Not marked as a floor**, deliberately. Two prior floor claims on this function
+  were both wrong, and a `floor` entry makes the refine tooling skip the target.
+  What would break this one is a lever that outranks a cross-call constant web
+  against a pointer web, which is a rank rule none of 6k / 6q / 6y / 6ab / 6bf
+  currently spells. The near-miss stays live at div 10.

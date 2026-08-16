@@ -9,7 +9,7 @@ int _ZN8Platform19UpdateClsnPosAndRotEv(void*);
 int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,int,void*);
 void func_020393d4(void* p, void* v);
-void func_020efaf0(void* c);
+void func_ov002_020efaf0(void* c);
 extern int data_ov002_0210d9f0[];
 extern int data_ov036_02113f58[];
 extern int data_ov036_0211419c[];
@@ -27,7 +27,7 @@ int func_ov036_0211244c(char* c){
   func_020393d4(c+0x124, (void*)_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
   *(int*)(c+0x440) = 0xa000;
   *(int*)(c+0x98) = *(int*)(c+0x440);
-  func_020efaf0(c);
+  func_ov002_020efaf0(c);
   *(int*)(c+0x43c) = 1;
   *(unsigned char*)(c+0x42c) = 1;
   return 1;

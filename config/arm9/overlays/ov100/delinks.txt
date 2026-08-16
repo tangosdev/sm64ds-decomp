@@ -80,6 +80,7 @@ src/_ZN15RollingIronBall16OnAimedAtWithEggEv.cpp:
     .text start:0x02141fa8 end:0x02141fb0
 
 src/func_ov100_02141fb0.cpp:
+    complete
     .text start:0x02141fb0 end:0x02142130
 
 src/func_ov100_02142130.cpp:
@@ -99,9 +100,11 @@ src/func_ov100_021424c0.c:
     .text start:0x021424c0 end:0x0214272c
 
 src/func_ov100_0214272c.cpp:
+    complete
     .text start:0x0214272c end:0x02142918
 
 src/func_ov100_02142918.cpp:
+    complete
     .text start:0x02142918 end:0x02142b90
 
 src/func_ov100_02142b90.c:
@@ -276,6 +279,7 @@ src/func_ov100_02145070.c:
     .text start:0x02145070 end:0x02145080
 
 src/func_ov100_02145080.c:
+    complete
     .text start:0x02145080 end:0x02145170
 
 src/func_ov100_02145170.c:
@@ -500,6 +504,7 @@ src/func_ov100_021470f4.cpp:
     .text start:0x021470f4 end:0x021471e0
 
 src/func_ov100_021471e0.cpp:
+    complete
     .text start:0x021471e0 end:0x02147328
 
 src/PathLift_Spawn.cpp:

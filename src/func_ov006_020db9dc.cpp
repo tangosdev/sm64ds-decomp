@@ -45,7 +45,7 @@ extern "C" void func_ov006_020db9dc(char *c)
 
     func_ov004_020b66d4();
 
-    func_020bc7d4 = 1;
+    data_ov004_020bc7d4 = 1;
     data_ov006_0214176c = 0;
     data_ov006_02141768 = 0;
     data_ov006_02141770 = 0;

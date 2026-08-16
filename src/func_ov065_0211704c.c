@@ -3,9 +3,9 @@ typedef int Fix12i;
 
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* m, void* f, int a, Fix12i fix, unsigned sp0);
-extern void func_020aea30(char* c, char* p, int r2);
+extern void func_ov002_020aea30(char* c, char* p, int r2);
 extern void func_02012694(int a, char* b);
-extern void func_020ada40(char* c, short* v, char* p);
+extern void func_ov002_020ada40(char* c, short* v, char* p);
 extern int _ZN5Actor24BumpedUnderneathByPlayerER6Player(char* c, char* p);
 extern int _ZN6Player9IsOnShellEv(char* p);
 extern void _ZN5Actor13SmallPoofDustEv(char* c);
@@ -34,7 +34,7 @@ void func_ov065_0211704c(char* c)
         *(unsigned char*)(c + 0x43c) = 1;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, data_ov065_0211d690[1], 0, 0x1000, 0);
         *(int*)(c + 0x10c) = 2;
-        func_020aea30(c, p, 0);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x112, c + 0x74);
         return;
     }
@@ -43,7 +43,7 @@ void func_ov065_0211704c(char* c)
         v[0] = -0x2000;
         v[1] = 0;
         v[2] = 0;
-        func_020ada40(c, v, p);
+        func_ov002_020ada40(c, v, p);
         func_02012694(0x112, c + 0x74);
         return;
     }
@@ -51,7 +51,7 @@ void func_ov065_0211704c(char* c)
         *(int*)(c + 0x10c) = 4;
         *(unsigned char*)(c + 0x43c) = 1;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, data_ov065_0211d690[1], 0, 0x1000, 0);
-        func_020aea30(c, p, 0);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x112, c + 0x74);
         return;
     }
@@ -59,7 +59,7 @@ void func_ov065_0211704c(char* c)
         *(unsigned char*)(c + 0x43c) = 1;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, data_ov065_0211d690[1], 0, 0x1000, 0);
         *(int*)(c + 0x10c) = 3;
-        func_020aea30(c, p, 0);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x112, c + 0x74);
         return;
     }
@@ -67,13 +67,13 @@ void func_ov065_0211704c(char* c)
         *(unsigned char*)(c + 0x43c) = 1;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x300, data_ov065_0211d690[1], 0, 0x1000, 0);
         *(int*)(c + 0x10c) = 2;
-        func_020aea30(c, p, 0);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x112, c + 0x74);
         return;
     }
     if (flags & 0x20) {
         *(int*)(c + 0x10c) = 1;
-        func_020aea30(c, p, 0);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x112, c + 0x74);
         return;
     }
@@ -107,7 +107,7 @@ jumped:
     if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, p) != 0) {
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         *(int*)(c + 0x10c) = 1;
-        func_020aea30(c, p, 0);
+        func_ov002_020aea30(c, p, 0);
         func_02012694(0x112, c + 0x74);
         return;
     }

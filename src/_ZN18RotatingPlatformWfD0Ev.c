@@ -5,7 +5,7 @@
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
 extern int _ZTV18RotatingPlatformWf[];
-extern int data_ov002_021091d4[];
+extern int _ZTV16daObjKaitendai_c[];
 extern int _ZTV8Platform[];
 /* recovered: vtable identified, renamed to Class_Method */
 /* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
@@ -16,7 +16,7 @@ extern void *data_020a0eac;
 int *_ZN18RotatingPlatformWfD0Ev(int *t)
 {
     t[0] = (int)_ZTV18RotatingPlatformWf;
-    t[0] = (int)data_ov002_021091d4;
+    t[0] = (int)_ZTV16daObjKaitendai_c;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
