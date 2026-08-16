@@ -5,14 +5,14 @@
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
 extern int _ZTV21FloatingFloorLllSmall[];
-extern int data_ov002_0210912c[];
+extern int _ZTV14daObjUkiyuka_c[];
 extern int _ZTV8Platform[];
 /* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV21FloatingFloorLllSmall; VT1 = data_ov002_0210912c */
+/* vtable identified: VT0 = _ZTV21FloatingFloorLllSmall; VT1 = _ZTV14daObjUkiyuka_c */
 int *_ZN21FloatingFloorLllSmallD1Ev(int *t)
 {
     t[0] = (int)_ZTV21FloatingFloorLllSmall;
-    t[0] = (int)data_ov002_0210912c;
+    t[0] = (int)_ZTV14daObjUkiyuka_c;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);

@@ -5,12 +5,14 @@
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
 extern int _ZTV8Platform[];
+extern int _ZTV12FallBlockBfs[];
+extern int _ZTV16daObjFallBlock_c[];
 /* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV21daObjKm2_Fall_Block_c; VT1 = _ZTV10dBgActor_c */
+/* vtable identified: VT0 = _ZTV12FallBlockBfs; VT1 = _ZTV16daObjFallBlock_c */
 int *_ZN12FallBlockBfsD1Ev(int *t)
 {
-    t[0] = (int)_ZTV21daObjKm2_Fall_Block_c;
-    t[0] = (int)_ZTV10dBgActor_c;
+    t[0] = (int)_ZTV12FallBlockBfs;
+    t[0] = (int)_ZTV16daObjFallBlock_c;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
