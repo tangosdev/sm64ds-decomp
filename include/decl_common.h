@@ -2924,7 +2924,9 @@ extern void func_ov100_021437d4(void*);
 extern void func_ov100_02143b68(char*);
 extern void func_ov100_02145070(int);
 extern void func_ov100_02145170(char*, char*, struct Vector3*, struct Vector3*);
-extern void func_ov100_021453d8(char*, void*, int);
+/* Returns int -- the tree's own definition (src/func_ov100_021453d8.cpp)
+   defines it `extern "C" int`, and its early-out is `return 1`. */
+extern int func_ov100_021453d8(char*, void*, int);
 extern void func_ov100_02145e10(char*, char*);
 extern void func_ov100_02146280(void);
 extern void func_ov100_0214629c(void*, int);

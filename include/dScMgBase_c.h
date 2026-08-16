@@ -60,7 +60,12 @@
 #define DSCMGBASE_C_H
 #include "Scene.h"
 
-extern "C" void func_ov004_020b929c(void *);
+/* Returns its argument. The ROM parks the pointer in r4 across the
+   __destroy_arr call and hands it straight back -- 0x020b92ac `mov r4, r0`,
+   0x020b92b4 `mov r0, r4`, 0x020b92b8 `pop {r4, lr}` -- and the tree's own
+   definition (src/func_ov004_020b929c.c) already says `void *`. All three
+   call sites discard the result, so this only makes the two agree. */
+extern "C" void *func_ov004_020b929c(void *);
 extern "C" void *data_ov004_020beb68;
 
 struct dScMgBase_c : Scene {
