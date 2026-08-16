@@ -50,6 +50,9 @@ static inline void SetV2(V2 *p, int x, int y)
     p->y = y;
 }
 
+/* Load-bearing for this spelling: without it the function is 5 words too long.
+ * Not a property of the function itself -- match/board-slot0-a reproduces the
+ * same bytes with different statement order and no pragma at all. */
 #pragma opt_strength_reduction off
 void func_ov006_0210f564(S *c)
 {
