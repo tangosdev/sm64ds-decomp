@@ -3002,6 +3002,7 @@ src/func_ov006_020e9c20.cpp:
     .text start:0x020e9c20 end:0x020e9cec
 
 src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp:
+    complete
     .text start:0x020e9cec end:0x020e9d1c
 
 src/func_ov006_020e9d1c.cpp:
@@ -6692,6 +6693,7 @@ src/_ZN17dScMgTrampoline_c16CleanupResourcesEv.cpp:
     .text start:0x021212e0 end:0x021212fc
 
 src/_ZN17dScMgTrampoline_c6RenderEv.cpp:
+    complete
     .text start:0x021212fc end:0x021214f8
 
 src/_ZN17dScMgTrampoline_c8BehaviorEv.cpp:
