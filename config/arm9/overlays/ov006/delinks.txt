@@ -5020,6 +5020,10 @@ src/func_ov006_02106bc0.c:
     complete
     .text start:0x02106bc0 end:0x02106ca4
 
+src/func_ov006_02106ca4.cpp:
+    complete
+    .text start:0x02106ca4 end:0x02106eb8
+
 src/func_ov006_02106eb8.cpp:
     complete
     .text start:0x02106eb8 end:0x02106f44
