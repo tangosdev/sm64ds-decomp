@@ -43,6 +43,7 @@ import sys
 REPO = pathlib.Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "tools"))
 import delaunder  # noqa: E402  (code_mask only -- no compiler, no ROM; see _code_only)
+import demangle  # noqa: E402  (pure string work, no compiler, no ROM; see _reader_name)
 
 SRC = REPO / "src"
 README = REPO / "README.md"
@@ -73,8 +74,33 @@ SYMBOL = re.compile(r"//\s*@symbol\s+(\S+)")
 PLACEHOLDER = re.compile(r"^func_(ov\d+_)?0[0-9a-f]{7}$")
 MANGLED = re.compile(r"^_Z[0-9NK]")
 
+# One component of a reader-visible name that is still a placeholder even when the
+# rest of the name is real. `Player::Unk_020c9e5c`, `CommonModel::Func_020160AC`
+# and `ActorBase::Virtual38` all wear a genuine class prefix over a method half
+# that is the ROM address or a vtable slot index, so the pair reads no better than
+# the bare `func_020c9e5c` did. `FUN_<addr>` is Ghidra's default for a function it
+# never analysed. The trailing `_Z` catches a mangled name that reached this test
+# without demangling.
+#
+# Note the old MANGLED above is deliberately kept but no longer decides the tier:
+# `^_Z[0-9NK]` misses `_ZT` and `_Zd`/`_Zn`, so vtable symbols, thunks and the
+# operator new/delete pair scored as REAL names. Six `_ZThn80_*` thunk files and
+# six `FUN_<addr>` files passed `real_name` on that hole before this change.
+PLACEHOLDER_PART = re.compile(
+    r"^(?:func|data)_(?:ov\d+_)?0[0-9a-f]{7}$"
+    r"|^(?:Unk|Func|Method|Sub)_[0-9a-fA-F]{6,8}$"
+    r"|^Virtual\d+$"
+    r"|^FUN_[0-9a-fA-F]+$"
+    r"|^_Z", re.IGNORECASE)
+
 # Raw object-layout arithmetic: a cast-and-offset into an object, in the forms
 # the tree actually uses. The single biggest thing holding this tier down.
+#
+# KNOWN HOLE, same PR as the one above: `(int)this + 0x154` is the same defect --
+# a field address computed by hand -- but the redundant integer cast makes it read
+# as arithmetic on an int rather than a cast into an object, so it passes. 4 files
+# use it. Left here rather than fixed silently, because widening what the tier
+# counts while leaving a known evasion in place is how a metric goes soft.
 RAW_OFFSET = re.compile(r"""
     \(\s*(?:unsigned\s+|signed\s+)?\w+\s*\*\s*\)\s*\(\s*\w+\s*\+\s*0x   # *(u32*)(c + 0x74)
   | \(\s*char\s*\*\s*\)\s*[\w\)\(]+\s*\+\s*0x                            # (char*)self + 0x74
@@ -88,13 +114,22 @@ ASM = re.compile(r"\b(__asm|asm\s*\()")
 
 # A call to another function under its mangled name: readable code calls
 # Player::SpinBounce, not _ZN6Player10SpinBounceE5Fix12IiE.
+#
+# KNOWN HOLE, deliberately left for its own PR: the label says "calls things by
+# real names" but only the mangled half is tested, so a file that calls nothing but
+# `func_020c9e5c` placeholders passes. Closing it is correct and was measured --
+# tree-wide this criterion falls 6,521 -> 1,431 and it becomes the tier's binding
+# constraint instead of real_name -- but it de-credits 204 of the currently banked
+# CONVERTED files, nearly all plain C files with no bearing on the real_name defect
+# this PR fixes. Bundling a 204-file backslide into a correction about C++ method
+# names would make one number answer two questions. See notes/converted-tier.md.
 MANGLED_REF = re.compile(r"\b_Z[0-9NK]\w+")
 SHARED_HEADER = re.compile(r'#include\s+"(decl_|common\.h|[A-Z])')
 
 CRITERIA = ("real_name", "no_raw_offset", "no_unk_field", "no_codegen_trick",
             "no_mangled_refs")
 CRITERION_LABEL = {
-    "real_name": "Real function name (not func_<addr> or _Z...)",
+    "real_name": "Real function name (not func_<addr>, Unk_<addr>, Virtual<n>)",
     "no_raw_offset": "No raw offset arithmetic (*(u32*)(c + 0x74))",
     "no_unk_field": "No unk_<off> fields",
     "no_codegen_trick": "No codegen tricks (launder mask, volatile, asm)",
@@ -143,12 +178,61 @@ def _code_only(text):
     return "".join(c if k else " " for c, k in zip(text, keep))
 
 
+def _reader_name(path, text):
+    """The name a READER sees, which is not always the linker symbol.
+
+    For a plain C function the two are the same string, and this returns the symbol
+    unchanged. For a C++ method they are not, and the difference used to decide the
+    tier the wrong way round.
+
+    mwccarm emits `_ZN10KoopaShell13OnYoshiTryEatEv` for `KoopaShell::OnYoshiTryEat()`,
+    and eligible.py REQUIRES a file's defined symbol to equal its config symbol (it
+    rejects with `defines X, expected Y`). So a converted method cannot carry any
+    other symbol, and asking "is the symbol a placeholder or mangled?" asked a
+    question no method could answer well: the only way to pass was to un-convert the
+    method back into a flat extern "C" function. Measured before this change, 0 of
+    the 426 CONVERTED files had a mangled symbol -- the tier structurally excluded
+    every C++ method in the tree, which inverts what it exists to reward, and is why
+    CONVERTED read as "furthest behind and not moving" while 2,034 files had already
+    been converted into real methods.
+
+    Demangling the file's own symbol answers the question the tier actually means.
+    That is done with the repo's demangler rather than by matching `Class::Method(`
+    in the body, because the text search was tried first and is wrong four ways:
+    it finds a DEPENDENCY's stub or a bare forward declaration instead of the file's
+    own function (src/_ZN5Stage13UpdateMessageEv.cpp reported `Message::UpdateWindow`;
+    src/_ZN6Coffin13InitResourcesEv.cpp matched a `MeshCollider::LoadFile` prototype),
+    it lets an unrelated call override a genuinely-unidentified `func_ov*` filename,
+    it drops outer qualifiers (`Sound::Player::SetPlayableSeqCount` -> `Player::...`,
+    colliding with the unrelated real `Player` class), and it cannot match a ctor or
+    dtor at all, since those have no return type -- which would have excluded the 749
+    already-converted destructor files that motivated the change in the first place.
+
+    Returns (name, ok). `ok` is False for a symbol that starts `_Z` but does not
+    demangle, and for a compiler-emitted thunk: `_ZThn80_N9ModelAnimD0Ev` demangles
+    to a real class and method, but no one wrote that function and its name encodes
+    an adjustment offset, so it is not a name a reader benefits from.
+    """
+    sym = _defined_symbol(path, text)
+    d = demangle.demangle(sym)
+    if d is None:
+        return sym, not sym.startswith("_Z")
+    return d["qualified"], not d.get("thunk")
+
+
+def _real_name(path, text):
+    name, ok = _reader_name(path, text)
+    if not ok or not name:
+        return False
+    return all(not PLACEHOLDER_PART.match(part.lstrip("~").strip())
+               for part in name.split("::") if part.strip())
+
+
 def score_file(path, text):
     """The five criteria for one source file, plus the header reading."""
-    sym = _defined_symbol(path, text)
     code = _code_only(text)
     return {
-        "real_name": not (PLACEHOLDER.match(sym) or MANGLED.match(sym)),
+        "real_name": _real_name(path, text),
         "no_raw_offset": not RAW_OFFSET.search(code),
         "no_unk_field": not UNK_FIELD.search(code),
         "no_codegen_trick": not (LAUNDER.search(code) or VOLATILE.search(code)

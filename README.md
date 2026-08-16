@@ -42,7 +42,7 @@ here, and they move independently.
 <!-- tiers:start -->
 ```
 MATCHED    █████████████████████████████░  98.3%   11,200 / 11,396 functions
-CONVERTED  █░░░░░░░░░░░░░░░░░░░░░░░░░░░░░   3.8%   426 / 11,288 files
+CONVERTED  ████░░░░░░░░░░░░░░░░░░░░░░░░░░  13.8%   1,558 / 11,288 files
 LINKED     █████████████░░░░░░░░░░░░░░░░░  43.3%   4,871 / 11,243 matched TUs
 ```
 <!-- tiers:end -->
@@ -61,9 +61,16 @@ being unreadable, and converting a file never changes its matched bytes.
 CONVERTED is strict on purpose. A file counts only if it passes all five of: a real
 function name, no raw offset arithmetic, no `unk_<off>` fields, no codegen tricks, and
 no calls through mangled names. Most of the tree is partway there rather than nowhere
-near it, which the headline alone hides: 39% of files pass three of the five, and 26%
+near it, which the headline alone hides: 31% of files pass three of the five, and 32%
 pass four. Run `python tools/tiers.py` for the full breakdown and two softer readings
 of the same tree.
+
+The name criterion reads the name a *reader* sees, not the linker symbol. For a C++
+method those differ — the ROM's `KoopaShell::OnYoshiTryEat` can only ever link as
+`_ZN10KoopaShell13OnYoshiTryEatEv` — so judging the symbol asked a question no
+converted method could answer, and the tier paid you to un-convert methods back into
+flat C. It read 3.8% for that reason. See [notes/converted-tier.md](notes/converted-tier.md),
+which also records two evasions in the other criteria that are left open on purpose.
 
 LINKED is a stamped measurement, not a live counter. It needs an MSVC build of the
 port, which CI on this branch cannot produce, so it is measured by hand and recorded
