@@ -5269,19 +5269,19 @@ src/func_ov006_0210a600.c:
     complete
     .text start:0x0210a600 end:0x0210a608
 
-src/func_ov006_0210a608.c:
+src/_ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x0210a608 end:0x0210a664
 
-src/func_ov006_0210a664.c:
+src/_ZN19dScMgSingle3DBase_c12BeforeRenderEv.cpp:
     complete
     .text start:0x0210a664 end:0x0210a698
 
-src/func_ov006_0210a698.cpp:
+src/_ZN19dScMgSingle3DBase_c14BeforeBehaviorEv.cpp:
     complete
     .text start:0x0210a698 end:0x0210a6e4
 
-src/func_ov006_0210a6e4.cpp:
+src/_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj.cpp:
     complete
     .text start:0x0210a6e4 end:0x0210a708
 

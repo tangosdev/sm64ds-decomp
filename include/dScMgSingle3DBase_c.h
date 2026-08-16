@@ -125,10 +125,25 @@ struct SysTracker {
     u8  unk_818;            /* 0x818 */
     u8  pad_819[0x3];       /* rounds 0x819 up to the 0x81c alignment boundary */
 
+    /* Non-virtual, so neither adds a field nor a vtable slot -- declaring them
+       changes no layout, and the size assert below still holds. Both are called
+       by dScMgSingle3DBase_c on `mSysTracker`, which is what the banner above
+       already records as two of this member's four independent witnesses:
+       AfterInitResources initialises it, BeforeBehavior updates it. Before this,
+       both were reached by an `extern "C"` declaration of the mangled symbol at
+       the call site, which is the same call the compiler emits from here. */
+    s32 Initialise();
+    s32 Update();
+
     ~SysTracker();
 };
 
 typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
+
+/* Free function in the same namespace, called by dScMgSingle3DBase_c::BeforeRender.
+   Declared here for the same reason as the two members above: so the call can be
+   spelled Particle::RenderAll() rather than through the mangled symbol. */
+void RenderAll();
 }
 
 struct dScMgSingle3DBase_c : dScMgBase_c {
