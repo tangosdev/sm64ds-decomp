@@ -52,6 +52,21 @@ struct daObjMaruta_c : Platform {
        still under its func_ov080_ name). An out-of-line declaration here would
        make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjMaruta_c() {}
+
+    /* Slot 27, this class's own override, defined out of line in
+       src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp. LAYOUT-NEUTRAL: it
+       re-uses the slot Actor already holds rather than appending one, and adds
+       no field, so the 0x320 assert below is untouched.
+
+       Because the destructor above is inline this class has no key function,
+       so declaring the first out-of-line virtual makes THIS the key function
+       and its translation unit emits _ZTV13daObjMaruta_c, the RTTI records and
+       the implicit destructor bodies alongside the one function the file is
+       for. That is the same shape every migrated D1 file in this family
+       already has, and tools/objisolate.py reduces the object to the declared
+       function before eligible.py and rombuild.py judge it -- checked on this
+       file, not assumed. */
+    int OnHitByMegaChar(Player &player);
 };
 
 typedef char daObjMaruta_c_size_must_be_0x320[sizeof(daObjMaruta_c) == 0x320 ? 1 : -1];

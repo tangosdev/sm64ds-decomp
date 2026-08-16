@@ -39,7 +39,15 @@ extern "C" void func_ov006_020eed64(void);
 struct dScMgJump2_c : dScMgD3DBase_c {
     virtual ~dScMgJump2_c();
 
-    u8  pad_5004[0x8];    /* 0x5004 -- no matched access in this class's methods */
+    /* 0x5004 -- the state callback, a pointer-to-member of this class, which
+       is mwccarm's eight bytes exactly. Behavior calls through it every frame:
+       `(this->**(State *)pad_5004)()`. Was "no matched access", which was only
+       ever true of the files NAMED after this class -- the access was in
+       func_ov006_020ef3e0 all along, and reads as this class's own now that
+       the function carries its real name. Left as bytes rather than declared
+       as the member pointer: naming it would fix a signature for every state
+       function in the table, and none of them is recovered. */
+    u8  pad_5004[0x8];   /* 0x5004 -- the state callback; see the block above */
     u8  mArray1[0x228];   /* 0x500c -- 3 * 0xb8,  elem dtor func_ov006_020c893c */
     u8  mArray2[0x5a0];   /* 0x5234 -- 6 * 0xf0,  elem dtor func_ov006_020c6f3c */
     u8  mArray3[0x240];   /* 0x57d4 -- 0x10 * 0x24, elem dtor func_ov006_020eed64 */
@@ -48,6 +56,17 @@ struct dScMgJump2_c : dScMgD3DBase_c {
     u8  pad_5a68[0x4];    /* 0x5a68 */
     u32 unk_5a6c;         /* 0x5a6c */
     u8  pad_5a70[0x8];    /* 0x5a70 -- no matched access */
+
+    /* --- this class's own vtable overrides, defined out of line under their
+       own mangled names. Each re-uses a slot ActorBase already holds rather
+       than appending one, and none adds a field, so the size assert below is
+       untouched. The destructor above stays the key function, so no
+       translation unit starts emitting _ZTV12dScMgJump2_c because of these.
+       Signatures are include/ActorBase.h's and include/dScMgBase_c.h's own,
+       copied unchanged. --- */
+    s32 CleanupResources();   /* slot 3 -- ov006 0x020ef110 */
+    s32 Behavior();           /* slot 6 -- ov006 0x020ef3e0 */
+    s32 Render();             /* slot 9 -- ov006 0x020ef148 */
 };
 
 typedef char dScMgJump2_c_size_must_be_0x5a78[sizeof(dScMgJump2_c) == 0x5a78 ? 1 : -1];

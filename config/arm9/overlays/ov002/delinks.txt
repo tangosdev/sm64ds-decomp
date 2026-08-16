@@ -972,7 +972,7 @@ src/func_ov002_020b646c.cpp:
     complete
     .text start:0x020b646c end:0x020b6494
 
-src/func_ov002_020b6494.c:
+src/_ZN14daObjUkiyuka_c8BehaviorEv.cpp:
     complete
     .text start:0x020b6494 end:0x020b6584
 
@@ -996,7 +996,7 @@ src/func_ov002_020b66f0.cpp:
     complete
     .text start:0x020b66f0 end:0x020b6718
 
-src/func_ov002_020b6718.cpp:
+src/_ZN16daObjKaitendai_c8BehaviorEv.cpp:
     complete
     .text start:0x020b6718 end:0x020b676c
 

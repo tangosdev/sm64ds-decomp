@@ -3001,14 +3001,14 @@ src/func_ov006_020e9c20.cpp:
     complete
     .text start:0x020e9c20 end:0x020e9cec
 
-src/func_ov006_020e9cec.c:
+src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp:
     .text start:0x020e9cec end:0x020e9d1c
 
 src/func_ov006_020e9d1c.cpp:
     complete
     .text start:0x020e9d1c end:0x020e9e00
 
-src/func_ov006_020e9e00.cpp:
+src/_ZN12dScMg3DEsp_c8BehaviorEv.cpp:
     complete
     .text start:0x020e9e00 end:0x020e9e70
 
@@ -3391,11 +3391,11 @@ src/func_ov006_020ef0d4.c:
     complete
     .text start:0x020ef0d4 end:0x020ef110
 
-src/func_ov006_020ef110.c:
+src/_ZN12dScMgJump2_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020ef110 end:0x020ef148
 
-src/func_ov006_020ef148.c:
+src/_ZN12dScMgJump2_c6RenderEv.cpp:
     complete
     .text start:0x020ef148 end:0x020ef2b8
 
@@ -3403,7 +3403,7 @@ src/func_ov006_020ef2b8.c:
     complete
     .text start:0x020ef2b8 end:0x020ef3e0
 
-src/func_ov006_020ef3e0.cpp:
+src/_ZN12dScMgJump2_c8BehaviorEv.cpp:
     complete
     .text start:0x020ef3e0 end:0x020ef47c
 
@@ -3838,15 +3838,15 @@ src/func_ov006_020f52c4.c:
     complete
     .text start:0x020f52c4 end:0x020f5324
 
-src/func_ov006_020f5324.c:
+src/_ZN13dScMgMemory_c6RenderEv.cpp:
     complete
     .text start:0x020f5324 end:0x020f5388
 
-src/func_ov006_020f5388.cpp:
+src/_ZN13dScMgMemory_c8BehaviorEv.cpp:
     complete
     .text start:0x020f5388 end:0x020f53e4
 
-src/func_ov006_020f53e4.cpp:
+src/_ZN13dScMgMemory_c13InitResourcesEv.cpp:
     complete
     .text start:0x020f53e4 end:0x020f5504
 
@@ -4225,7 +4225,7 @@ src/func_ov006_020f9f40.c:
     complete
     .text start:0x020f9f40 end:0x020f9fe0
 
-src/func_ov006_020f9fe0.c:
+src/_ZN14dScMgMCarlo2_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020f9fe0 end:0x020f9ffc
 
@@ -4233,7 +4233,7 @@ src/func_ov006_020f9ffc.cpp:
     complete
     .text start:0x020f9ffc end:0x020fa13c
 
-src/func_ov006_020fa13c.c:
+src/_ZN14dScMgMCarlo2_c8BehaviorEv.cpp:
     complete
     .text start:0x020fa13c end:0x020fa3d0
 
@@ -6264,15 +6264,15 @@ src/func_ov006_0211c5b8.c:
 src/func_ov006_0211c5d0.c:
     .text start:0x0211c5d0 end:0x0211c6c4
 
-src/func_ov006_0211c6c4.c:
+src/_ZN12dScMgSound_c6RenderEv.cpp:
     complete
     .text start:0x0211c6c4 end:0x0211c720
 
-src/func_ov006_0211c720.c:
+src/_ZN12dScMgSound_c8BehaviorEv.cpp:
     complete
     .text start:0x0211c720 end:0x0211c984
 
-src/func_ov006_0211c984.c:
+src/_ZN12dScMgSound_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211c984 end:0x0211cb70
 
@@ -6846,15 +6846,15 @@ src/func_ov006_021230e8.c:
     complete
     .text start:0x021230e8 end:0x0212318c
 
-src/func_ov006_0212318c.c:
+src/_ZN18dScMgTrampoline2_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212318c end:0x021231ac
 
-src/func_ov006_021231ac.c:
+src/_ZN18dScMgTrampoline2_c6RenderEv.cpp:
     complete
     .text start:0x021231ac end:0x02123340
 
-src/func_ov006_02123340.cpp:
+src/_ZN18dScMgTrampoline2_c8BehaviorEv.cpp:
     complete
     .text start:0x02123340 end:0x02123428
 
