@@ -38,6 +38,7 @@ take over, ping the claimant first.
 ## Claims
 
 | Range | Who | Claimed | Status |
+| ov007 func_ov007_020c368c (0x020c368c, size 0x36c) | lunavyqo | 2026-08-15 | **released** — 0 matched; near-miss improved stored **74→56** (official evaluate, size-exact 0x36c). Levers: Vector3_16 x-first + `#pragma opt_propagation off` + 7 locals before divcnt + named ime=`*0` + named prod + slots[0] sign in scale. Residual: lim dest sl vs lr, increment fold (no `mov r3,r0`), delayed asr. Tip in nearmiss/db.jsonl; API clm_970c72f8bdc5 released |
 | ov005 func_ov005_020c16e4 (0x020c16e4, size 0x33c) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: ++row MultiCopy tail, dest pin `idx?dstp:dstp` / `destOff?dstp:dstp` (equal-arm) for rem-before-quot + increment order; from near-miss 136→18→16→3→0; API clm_84a56ab710d3 kept |
 | ov005 func_ov005_020c0378 (0x020c0378, size 0x354) | lunavyqo | 2026-08-13 | **active** — near-miss improved **77→44** size-exact. 0250-style S.a/S.b has + loop_invariants off + S[idx].d y. Residual pure regperm (idx r1 vs r5, has r3 vs r2) + path-B y early. API clm_3c2c2b05061d |
 | ov015 _ZN14KnockDownPlank13InitResourcesEv (0x02111960, size 0x208) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_propagation off` + u64-mask angle increment + named `zero` for vec stores; API clm_645f51ab54fa kept |
