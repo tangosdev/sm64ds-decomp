@@ -35,6 +35,7 @@ import asm_policy  # noqa: E402
 import srcpath as SP  # noqa: E402
 import relocs as RL  # noqa: E402
 import rombuild_check as RBC  # noqa: E402
+import layout_check as LYC  # noqa: E402
 import tiers as TIERS  # noqa: E402
 
 
@@ -59,6 +60,43 @@ def enrolled_addresses():
             if not rel.startswith("mods/"):
                 out.add((label, addr))
     return out
+
+
+def enrollment_of(label, addr, src_path, enrolled, blocks):
+    """``enrolled`` / ``unenrolled`` / ``no_block`` for one function.
+
+    ``verified`` above is a boolean, and a boolean cannot tell the two halves of its
+    false case apart. They are different facts with different remedies:
+
+      enrolled    a delinks range carries ``complete``: mwccarm compiles this source
+                  and the link byte-compares it against the cartridge. Identical to
+                  ``verified`` for a matched function, by construction: both read the
+                  same enrolled_addresses() set, so the two fields cannot drift.
+      unenrolled  a delinks entry names a source for this range but has no ``complete``.
+                  The source is in the tree and the build reads ROM bytes instead. This
+                  is where a real match that nobody promoted looks exactly like a file
+                  that was never going to build.
+      no_block    no delinks entry names this range at all. Overwhelmingly deliberate:
+                  enroll.py skips thumb functions, addresses that are not 4-aligned,
+                  zero-size alias symbols and everything in config/rombuild-exclude.txt,
+                  and it writes an intentional divergence under mods/ rather than src/.
+
+    Two existing readers, no third delinks parser: enrolled_addresses() for ``complete``
+    (address-keyed, the same set ``verified`` uses) and layout_check.delinks_paths() for
+    "is there an entry at all" (path-keyed, the L1/L5 reader).
+
+    The two keyings disagree for exactly one entry in the tree, and it is worth naming
+    because it is the whole 47-vs-48 discrepancy two independent derivations of this gap
+    produced: mods/Player_ScaleByCharFactor.c (ov002 0x020bf30c) IS marked ``complete``,
+    so an address-coverage test calls it enrolled, but the path it names is not the
+    src/ path, and enrolled_addresses() drops mods/ on purpose, because a deliberate
+    divergence must never be counted as a reproduction of the cartridge. It is reported
+    no_block here, which is the honest answer for src/Player_ScaleByCharFactor.c: that
+    file is compiled by nothing.
+    """
+    if (label, addr) in enrolled:
+        return "enrolled"
+    return "unenrolled" if src_path and src_path in blocks else "no_block"
 
 
 def tier_stats():
@@ -438,6 +476,11 @@ def main():
     total_b = matched_b = matched_n = 0
     verified_b = verified_n = 0
     enrolled = enrolled_addresses()
+    # Every src path any delinks.txt names, promoted or not. Read once: delinks_paths
+    # walks all 106 delinks files, and calling it per function would walk them 11,396
+    # times.
+    blocks = set(LYC.delinks_paths())
+    enrollment_n = collections.Counter()
     transcribed_files, unbannered_files = set(), set()
     # Every module, itcm included. relocs.module_universe is the one definition of
     # what "every module" means, and it fails loudly rather than skipping a new one.
@@ -489,6 +532,13 @@ def main():
                 r = nm.get((label, addr))
                 if r and r.get("divergences") is not None:
                     rec["div"] = r["divergences"]
+            # Appended last, deliberately. Every field above keeps the position it had
+            # before this existed, so the whole diff against a previous chaos-db is one
+            # inserted key per record and a reviewer can see at a glance that nothing
+            # else moved. Nothing here reads it back, and `matched` is untouched: this
+            # annotation reports the tree, it does not redefine the count.
+            rec["enrollment"] = enrollment_of(label, addr, src_path, enrolled, blocks)
+            enrollment_n[(rec["enrollment"], matched)] += 1
             functions.append(rec)
 
     if transcribed_files:
@@ -547,6 +597,14 @@ def main():
           f"({100.0 * verified_b / total_b:.2f}% vs {100.0 * matched_b / total_b:.2f}% "
           f"matched); {matched_n - verified_n} matched function(s) are compiled by "
           f"nothing")
+    # ...and WHICH KIND of nothing, because the two halves have different remedies. A
+    # matched/unenrolled function has a delinks entry waiting for a `complete`; a
+    # matched/no_block one is almost always deliberate (thumb, alias, exclude list) and
+    # promoting it is not on the table. Printed so the split lands in the CI log next to
+    # the number it explains. See audit/enrollment_report.md.
+    print("  enrollment: " + ", ".join(
+        f"{k[0]}{'/matched' if k[1] else ''}={n}"
+        for k, n in sorted(enrollment_n.items(), key=lambda kv: (kv[0][0], not kv[0][1]))))
     # Per-module counts in the log, so a module that stops being emitted shows up in
     # the CI diff as a line that vanished. The silent version of this cost itcm its
     # entire visibility; a number that goes to zero is at least readable.
