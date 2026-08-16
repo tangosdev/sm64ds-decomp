@@ -53,6 +53,14 @@ struct daObjKurumajiku_c : Platform {
        0x020b6a3c, still under its func_ov002_ name). An out-of-line declaration
        here would make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjKurumajiku_c() {}
+
+    /* Slot 6, ov002 0x020b6b38 -- carries the four mounted actors around the
+       axle. An override of the virtual ActorBase already declared, so it
+       occupies a slot that exists rather than adding one, and no field moves.
+       Spelled without `virtual` the way include/daObjFloatBoard_c.h spells its
+       own slot-3 override: virtualness is inherited, and the destructor above
+       stays the first virtual DECLARED in the class. */
+    s32 Behavior();
 };
 
 typedef char daObjKurumajiku_c_size_must_be_0x330[sizeof(daObjKurumajiku_c) == 0x330 ? 1 : -1];

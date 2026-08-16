@@ -1,34 +1,58 @@
+//cpp
+// @symbol _ZN15dScMgSnowball_c13InitResourcesEv
 #include "types.h"
-// @symbol func_ov006_02129268
-// recovered name: dScMgSnowball_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgSnowball_c::InitResources - recovered from vtable slot identity */
-extern void *_ZN2G213GetBG2CharPtrEv(void);
-extern unsigned _ZN3G2S13GetBG2CharPtrEv(void);
-extern void *_ZN2G212GetBG3ScrPtrEv(void);
-extern void *_ZN3G2S12GetBG3ScrPtrEv(void);
-extern u32 LoadCompressedFileAt(u16 fileID, void *target);
+#include "dScMgSnowball_c.h"
+/* dScMgSnowball_c::InitResources -- vtable slot 0, ov006 0x02129268.
+ *
+ * Named from the table: 0x02129268 is the word slot 0 of
+ * _ZTV15dScMgSnowball_c holds where its base's table holds something else, so
+ * it is this class's own override of the virtual ActorBase declares.
+ *
+ * Sets up both screens' BG2/BG3 layers, loads the minigame's palettes and
+ * tiles, then loads the snowball BMD into unk_abf4 and hands it to mModel --
+ * which is the pointer this class's own CleanupResources (slot 3, 0x021291f8)
+ * frees again. Returning 0 when ModelBase::SetFile fails is what makes the
+ * scene abort.
+ *
+ * EVERY MANGLED CALLEE IS NOW `extern "C"`, not a bare `extern`. In a C
+ * translation unit -- which this file was -- the identifier is emitted
+ * verbatim; compiled as C++ a bare `extern` mangles it a SECOND time and the
+ * reference resolves to nothing (see the note at the top of
+ * include/SharedFilePtr.h). The names themselves are unchanged.
+ *
+ * The receiver stays a `void *`/`u8 *` pair the way the pre-migration file
+ * spelled it: 0xb9f8 and 0xabf4 are named fields, but the three ov006 helpers
+ * at the end take the scene as an opaque pointer, and only unk_abf4 is
+ * reached as a member below. */
 
-extern void *func_ov004_020adc74(void *p);
-extern void Ov004_Deallocate(void *p);
-extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *p, u32 sz);
-extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void DecompressLZ16(void *src, void *dst);
-extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN5Model17UpdateFileOffsetsER8BMD_File(void *file);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisPtr, void *file, int a, int b);
-extern void func_ov006_02126a98(void *p);
+extern "C" {
+void *_ZN2G213GetBG2CharPtrEv(void);
+unsigned _ZN3G2S13GetBG2CharPtrEv(void);
+void *_ZN2G212GetBG3ScrPtrEv(void);
+void *_ZN3G2S12GetBG3ScrPtrEv(void);
+u32 LoadCompressedFileAt(u16 fileID, void *target);
+
+void *func_ov004_020adc74(void *p);
+void Ov004_Deallocate(void *p);
+void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *p, u32 sz);
+void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+void DecompressLZ16(void *src, void *dst);
+void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN5Model17UpdateFileOffsetsER8BMD_File(void *file);
+int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisPtr, void *file, int a, int b);
+void func_ov006_02126a98(void *p);
 
 extern int data_0208ee44;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
+}
 
-int func_ov006_02129268(void *arg0)
+s32 dScMgSnowball_c::InitResources()
 {
+    void *arg0 = this;
     u8 *r4 = (u8 *)arg0;
     void *buf;
 

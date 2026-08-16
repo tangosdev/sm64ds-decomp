@@ -29,6 +29,14 @@ extern "C" void func_ov006_02120938(void);
 struct dScMgTrampoline_c : dScMgD3DBase_c {
     virtual ~dScMgTrampoline_c();
 
+    /* --- this class's own vtable slots, named from the table ---
+       Re-overrides of slots ActorBase already owns, NOT new virtuals: the
+       table stays the base's width and no field moves. Declared AFTER the
+       destructor so the destructor is still the first virtual declared. */
+    virtual s32 CleanupResources();  /* slot 3 -- ov006 0x021212e0 */
+    virtual s32 Behavior();          /* slot 6 -- ov006 0x021214f8 */
+    virtual s32 Render();            /* slot 9 -- ov006 0x021212fc */
+
     u8  pad_5004[0x8];    /* 0x5004 -- no matched access in this class's methods */
     u8  mArray1[0x340];   /* 0x500c -- 4 * 0xd0,  elem dtor func_ov006_020ccfc8 */
     u8  mArray2[0x984];   /* 0x534c -- 3 * 0x32c, elem dtor func_ov006_020d1008 */

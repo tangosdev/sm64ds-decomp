@@ -76,6 +76,7 @@ struct daObjMarioCap_c : Enemy {
     int InitResources();
     int Render();
     void OnPendingDestroy();
+    int OnTurnIntoEgg(Player &player);  /* slot 19, ov002 0x020b81e0 */
 };
 
 typedef char daObjMarioCap_c_size_must_be_0x410[sizeof(daObjMarioCap_c) == 0x410 ? 1 : -1];

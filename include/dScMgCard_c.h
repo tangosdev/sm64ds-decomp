@@ -42,6 +42,13 @@ extern "C" void func_ov006_020d96f0(void);
 struct dScMgCard_c : dScMgSingle3DBase_c {
     virtual ~dScMgCard_c();
 
+    /* --- this class's own vtable slots, named from the table ---
+       Re-overrides of slots ActorBase already owns, NOT new virtuals: the
+       table stays the base's width and no field moves. Declared AFTER the
+       destructor so the destructor is still the first virtual declared. */
+    virtual s32 CleanupResources();  /* slot 3 -- ov006 0x020da994 */
+    virtual s32 Behavior();          /* slot 6 -- ov006 0x020dabec */
+
     u8  pad_4f38[0x1a];   /* 0x4f38 -- shared table start, see file banner */
     s16 unk_4f52;          /* 0x4f52 -- within shared table */
     u8  pad_4f54[0x1ca];   /* 0x4f54 */

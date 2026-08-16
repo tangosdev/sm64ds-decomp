@@ -1,18 +1,26 @@
 //cpp
+// @symbol _ZN15dScMgRoulette_c6RenderEv
 #include "types.h"
-// @symbol func_ov006_02109834
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgRoulette_c.h"
-// recovered name: dScMgRoulette_c_Render
-/* recovered: renamed to Class_Method */
-/* dScMgRoulette_c::Render - recovered from vtable slot identity */
-/* func_ov006_02109834 @ 0x02109834 (ov006, size 0x26c)
+/* dScMgRoulette_c::Render -- vtable slot 9, ov006 0x02109834.
+ *
+ * Named from the table: 0x02109834 is the word slot 9 of
+ * _ZTV15dScMgRoulette_c holds where its base's table holds something else, so
+ * it is this class's own override of the virtual ActorBase declares. The
+ * pre-migration file had already retyped the receiver as dScMgRoulette_c and
+ * named its fields; only the symbol was still a func_ov006_ one.
+ *
  * Race minigame frame update: updates the racers back-to-front, plays the
  * countdown beep (volume ramps over the last 3 seconds), shows the winner
  * banner with per-rank colors, and refreshes the board.
- */
+ *
+ * `c` and `self` are BOTH kept from the pre-migration file rather than folded
+ * into `this`. The byte offsets that go through `c` -- 0x4660, 0x4f38, 0x51a8,
+ * 0x530c -- land inside spans include/dScMgRoulette_c.h holds as opaque
+ * members (mTable, mArray) or inside the base's own body, so spelling them as
+ * members would be a layout claim this rename has no evidence for. */
+
 typedef struct Racer {
     char b[0x34];
 } Racer;
@@ -25,17 +33,17 @@ typedef struct Obj9 {
 extern "C" {
 extern int data_020a0db0;
 
-extern void func_ov004_020b1bc8(char *, int, int, int);
-extern void Hud_RenderSprite(int, int, int, int, int);
-extern void func_ov004_020b2220(int, int, int, int, int, int, int);
-extern void Camera_UpdateMatrices(char *);
-extern void func_ov006_020c0aa8(char *);
-extern void func_ov006_020c1804(char *);
+void func_ov004_020b1bc8(char *, int, int, int);
+void Hud_RenderSprite(int, int, int, int, int);
+void func_ov004_020b2220(int, int, int, int, int, int, int);
+void Camera_UpdateMatrices(char *);
+void func_ov006_020c0aa8(char *);
+void func_ov006_020c1804(char *);
 }
 
-extern "C" int func_ov006_02109834(char *c);
-int func_ov006_02109834(char *c)
+s32 dScMgRoulette_c::Render()
 {
+    char *c = (char *)this;
     struct dScMgRoulette_c *self = (struct dScMgRoulette_c *)(void *)c;
     func_ov004_020b1bc8(c, 0xc, 0xc, 0);
     func_ov004_020b6430();

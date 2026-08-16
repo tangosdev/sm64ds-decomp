@@ -1,26 +1,56 @@
-extern int func_ov006_020c0efc(char *a);
-extern void func_ov006_021095ac(int *a, int *b);
-extern void func_ov004_020b1b08(int c);
-extern void _ZN5Sound12PlayBank2_2DEj(unsigned int a);
-extern void func_ov006_020c1764(char *c);
-extern short func_ov006_02108650(int a, int b);
-extern void func_ov006_02109530(char *out, int *a, int scale);
-extern void func_ov006_0210935c(char *a);
-extern void func_ov006_021092e8(char *self);
-extern void func_ov004_020ad79c(int a, int b);
-extern int func_ov006_02108b90(char *a, int b);
-extern void func_ov006_02107d20(char *p, char *val);
-extern void func_ov006_020c0c80(char *c);
-extern void func_ov006_020c0d68(char *c);
-extern void func_ov004_020b0a54(int c);
-extern void func_ov006_02108f2c(char *o);
-extern void func_ov006_02108d28(char *o);
-extern void func_ov006_02107db8(char *c);
-extern void func_ov006_020c19d0(char *thiz);
-extern void func_ov004_020b65e4(void);
+//cpp
+// @symbol _ZN15dScMgRoulette_c8BehaviorEv
+#include "dScMgRoulette_c.h"
+/* dScMgRoulette_c::Behavior -- vtable slot 6, ov006 0x02109aac.
+ *
+ * Named from the table: 0x02109aac is the word slot 6 of
+ * _ZTV15dScMgRoulette_c holds where its base's table holds something else, so
+ * it is this class's own override of the virtual ActorBase declares.
+ *
+ * The race's five phases, selected by unk_53e6: 1 deals the racers out one at
+ * a time, 2 runs the countdown and scores the board, 3 pays out per landed
+ * tile, 4 announces win/lose/draw, then the per-racer update loops run every
+ * frame regardless of phase.
+ *
+ * THE `AT`/`LNDR` LAUNDERS AND THE ADDRESS MACROS ARE LOAD-BEARING and are
+ * inherited verbatim from the pre-migration file: they are what stops mwcc
+ * common-subexpressioning a field address across a call, which the ROM does
+ * not do. Only the receiver changes -- `c` is now `this` cast to the same
+ * `char *` the macros already assume, so every offset reads the same bytes.
+ *
+ * data_ov004_020beb68 IS THE HEADER'S, NOT A LOCAL ONE. The pre-migration file
+ * declared it `extern char *data_ov004_020beb68` for its own convenience;
+ * include/dScMgBase_c.h -- which this file now reaches through the class --
+ * declares it `void *`, and two incompatible extern "C" declarations of one
+ * name in one translation unit is what mwcc rejects as "illegal function
+ * overloading" (see include/Actor.h's own note on that). The pointer
+ * arithmetic is spelled through a `char *` cast instead; same address, same
+ * bytes. */
+
+extern "C" {
+int  func_ov006_020c0efc(char *a);
+void func_ov006_021095ac(int *a, int *b);
+void func_ov004_020b1b08(int c);
+void _ZN5Sound12PlayBank2_2DEj(unsigned int a);
+void func_ov006_020c1764(char *c);
+short func_ov006_02108650(int a, int b);
+void func_ov006_02109530(char *out, int *a, int scale);
+void func_ov006_0210935c(char *a);
+void func_ov006_021092e8(char *self);
+void func_ov004_020ad79c(int a, int b);
+int  func_ov006_02108b90(char *a, int b);
+void func_ov006_02107d20(char *p, char *val);
+void func_ov006_020c0c80(char *c);
+void func_ov006_020c0d68(char *c);
+void func_ov004_020b0a54(int c);
+void func_ov006_02108f2c(char *o);
+void func_ov006_02108d28(char *o);
+void func_ov006_02107db8(char *c);
+void func_ov006_020c19d0(char *thiz);
+void func_ov004_020b65e4(void);
 
 extern unsigned char data_ov006_02142ab4[];
-extern char *data_ov004_020beb68;
+}
 
 #define AT(p,off) ((void*)(int)(((long long)(int)((char*)(p)+(off)))))
 #define LNDR(e) ((int)(((long long)(e))))
@@ -30,9 +60,14 @@ extern char *data_ov004_020beb68;
 #define IA(o) (*(int*)AT(c,(o)))
 #define HA(o) (*(short*)AT(c,(o)))
 #define PlayBank2 _ZN5Sound12PlayBank2_2DEj
+/* The global singleton pointer to the active dScMgBase_c, read as bytes. */
+#define SCENE_BONUS ((data_ov004_020beb68 != 0) \
+                        ? *(int *)((char *)data_ov004_020beb68 + 0xa8) : 0)
 
-int func_ov006_02109aac(char *c)
+s32 dScMgRoulette_c::Behavior()
 {
+    char *c = (char *)this;
+
     switch (H(0x53e6)) {
     case 0:
         break;
@@ -150,7 +185,7 @@ int func_ov006_02109aac(char *c)
                         q2 += 0x34;
                     } while (j < I(0x53fc));
                 }
-                func_ov004_020ad79c(I(0x53fc) - H(0x53f6) + ((data_ov004_020beb68 != 0) ? *(int *)(data_ov004_020beb68 + 0xa8) : 0), 0);
+                func_ov004_020ad79c(I(0x53fc) - H(0x53f6) + SCENE_BONUS, 0);
             }
         }
         break;
@@ -191,7 +226,7 @@ int func_ov006_02109aac(char *c)
                         p += 0x34;
                     } while (j < I(0x53fc));
                 }
-                func_ov004_020ad79c(H(0x53f2) + ((data_ov004_020beb68 != 0) ? *(int *)(data_ov004_020beb68 + 0xa8) : 0), 0);
+                func_ov004_020ad79c(H(0x53f2) + SCENE_BONUS, 0);
                 H(0x53f4) = 0;
                 I(0x53f8) = 0;
                 H(0x53e8) = 0x5a;

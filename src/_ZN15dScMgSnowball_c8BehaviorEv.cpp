@@ -1,23 +1,48 @@
-// @symbol func_ov006_021283a4
-// recovered name: dScMgSnowball_c_Behavior
-/* recovered: renamed to Class_Method, declarations from a shared header */
+//cpp
+// @symbol _ZN15dScMgSnowball_c8BehaviorEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgSnowball_c::Behavior - recovered from vtable slot identity */
-extern void func_02012790(int a);
-extern void FreeGfxSlotsById(int arg);
-extern int Vec2_Len(int *p);
-extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-extern void Vec2_Sub(int *o, int *a, int *b);
-extern void _Z14ApproachLinearRsss(short *a, short b, short cc);
-extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int cc, int d, int e, const void *f, void *g);
-extern int *_ZN8Particle6System12FromUniqueIDEj(unsigned int a);
+#include "dScMgSnowball_c.h"
+/* dScMgSnowball_c::Behavior -- vtable slot 6, ov006 0x021283a4.
+ *
+ * Named from the table: 0x021283a4 is the word slot 6 of
+ * _ZTV15dScMgSnowball_c holds where its base's table holds something else, so
+ * it is this class's own override of the virtual ActorBase declares.
+ *
+ * The five-state snowball roll: 0 counts in, 1 steers with the touch screen
+ * and grows the ball, 2/3 are the crash, 4 is the melt, 5 is over. The
+ * `if (B(0xc4) == 0) { ... }` prologue is the same idiom roughly 25 ov006
+ * files carry -- include/dScMgBase_c.h names those bytes (unk_0c3, unk_0c4,
+ * unk_0c0) and this file predates that naming.
+ *
+ * THE ADDRESS MACROS AND THE `AT`/`LNDR` LAUNDERS ARE LOAD-BEARING and are
+ * inherited verbatim from the pre-migration file: they are what stops mwcc
+ * common-subexpressioning the field addresses across calls, which the ROM does
+ * not do. Only the receiver changes -- `c` is now `this` cast to the same
+ * `char *` the macros already assume, so every offset below reads exactly the
+ * bytes it read before.
+ *
+ * `#define atan2` and `#define ApproachLinear` alias two mangled ROM symbols
+ * that stay reached through `extern "C"` rather than through real member/free
+ * declarations: cstd::atan2 and ApproachLinear(short&, short, short) are
+ * declared below with the ROM's own spelling, which the C++ front end must not
+ * mangle a second time (see the note at the top of include/SharedFilePtr.h). */
+
+extern "C" {
+void func_02012790(int a);
+void FreeGfxSlotsById(int arg);
+int  Vec2_Len(int *p);
+int  _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
+void Vec2_Sub(int *o, int *a, int *b);
+void _Z14ApproachLinearRsss(short *a, short b, short cc);
+int  _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int cc, int d, int e, const void *f, void *g);
+int *_ZN8Particle6System12FromUniqueIDEj(unsigned int a);
 
 extern unsigned char data_020a0e40[];
 extern unsigned char data_020a0de8[];
 extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
+}
 
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 #define LNDR(e) ((int)((long long)(e)))
@@ -41,7 +66,9 @@ struct SPS {
     int cc[3];
 };
 
-int func_ov006_021283a4(char *c) {
+s32 dScMgSnowball_c::Behavior()
+{
+    char *c = (char *)this;
     int r5, r4;
     int idx, r3rec, r7, j;
     struct SPS s;

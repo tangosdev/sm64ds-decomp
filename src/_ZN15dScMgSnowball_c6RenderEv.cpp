@@ -1,26 +1,39 @@
 //cpp
+// @symbol _ZN15dScMgSnowball_c6RenderEv
 #include "types.h"
-// @symbol func_ov006_02127d10
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgSnowball_c.h"
+/* dScMgSnowball_c::Render -- vtable slot 9, ov006 0x02127d10.
+ *
+ * Named from the table: 0x02127d10 is the word slot 9 of
+ * _ZTV15dScMgSnowball_c holds where its base's table holds something else, so
+ * it is this class's own override of the virtual ActorBase declares. The
+ * pre-migration file had already retyped the receiver as dScMgSnowball_c and
+ * named its fields; only the symbol was still a func_ov006_ one.
+ *
+ * `c` is kept alongside `self` for the same reason it was there before: the
+ * two 0x80-entry parallel arrays at 0xacd8 and 0xb5d8 are indexed with a
+ * per-element stride the header holds as raw bytes (mArray1/mArray2, element
+ * type unevidenced -- their ROM element destructor is NullDestructor_0203d47c),
+ * so those reads stay byte offsets rather than becoming a layout claim.
+ *
+ * BOTH #pragmas ARE LOAD-BEARING and are inherited verbatim from the
+ * pre-migration file; they are the reason this body reproduces at all. */
 
-extern "C" {
-// recovered name: dScMgSnowball_c_Render
-/* recovered: renamed to Class_Method */
-/* dScMgSnowball_c::Render - recovered from vtable slot identity */
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
-extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
-extern void func_0203cd80(int *m, short angle);
-extern void func_ov006_02126a98(char *c);
-extern void func_ov004_020b2220(int a1, int a2, int a3, int a4, int a5, int a6, int a7);
-extern s32 GetGameLanguage(void);
 
+extern "C" {
+void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
+void func_0203cd80(int *m, short angle);
+void func_ov006_02126a98(char *c);
+void func_ov004_020b2220(int a1, int a2, int a3, int a4, int a5, int a6, int a7);
+s32  GetGameLanguage(void);
+}
 
-int func_ov006_02127d10(char *c)
+s32 dScMgSnowball_c::Render()
 {
+    char *c = (char *)this;
     struct dScMgSnowball_c *self = (struct dScMgSnowball_c *)(void *)c;
     int m[3];
     int vecArr[3];
@@ -167,5 +180,4 @@ int func_ov006_02127d10(char *c)
     func_ov006_02129690(c);
     func_ov006_02125804(c);
     return 1;
-}
 }
