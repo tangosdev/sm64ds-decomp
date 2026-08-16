@@ -45,6 +45,16 @@ extern "C" void func_ov006_020f7730(void);
 struct dScMgMCarlo_c : dScMgSingle3DBase_c {
     virtual ~dScMgMCarlo_c();
 
+    /* This class's own override, read off the ROM's vtable: the one slot where
+       the table differs from dScMgSingle3DBase_c's. Spelled WITHOUT the `virtual`
+       keyword, the way include/daObjMarioCap_c.h and include/daObjRc_Dorifu_c.h
+       spell theirs -- an override of a virtual an ancestor already declares is
+       implicitly virtual either way, so it reuses slot 6 rather than adding one
+       and adds no field, and the 0x60b0 assert below still holds. The destructor
+       above is declared first and out of line, so it stays this class's KEY
+       FUNCTION and this translation unit does not emit _ZTV13dScMgMCarlo_c. */
+    s32 Behavior();        /* slot  6 -- src/_ZN13dScMgMCarlo_c8BehaviorEv.cpp */
+
     u8  pad_4f38[0x1a];    /* 0x4f38 -- shared table start, see file banner */
     s16 unk_4f52;          /* 0x4f52 -- within shared table */
     u8  pad_4f54[0x1ca];   /* 0x4f54 */

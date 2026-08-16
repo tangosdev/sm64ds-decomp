@@ -15,7 +15,7 @@
  * Nothing reads inside the table itself, so its size is bounded only by
  * what follows it, and that bound is 0xac, not the 0xb8 the first draft of
  * this header claimed: a THREE-ELEMENT s32 array sits at 0x4fe4, indexed by
- * five of this class's own files (func_ov006_0210b648.c's own local
+ * five of this class's own files (_ZN12dScMgSlot3_c6RenderEv.cpp's own local
  * `struct T4fe4 { char pad[0x4fe4]; int vals[3]; }` names it outright, and
  * 0210bdb0.cpp, 0210af64.c, 0210adac.c and 0210ab08.c all index it as
  * `[i]` or `+ i*4`). It closes exactly on unk_4ff0. Left opaque up to
@@ -41,6 +41,17 @@ extern "C" int func_ov006_020c21e4(char *t); /* decl_common.h's own signature */
 
 struct dScMgSlot3_c : dScMgSingle3DBase_c {
     virtual ~dScMgSlot3_c();
+
+    /* This class's own overrides, read off the ROM's vtable: the slots where the
+       table differs from dScMgSingle3DBase_c's. Spelled WITHOUT the `virtual`
+       keyword, the way include/daObjMarioCap_c.h and include/daObjRc_Dorifu_c.h
+       spell theirs -- an override of a virtual an ancestor already declares is
+       implicitly virtual either way, so each reuses an existing slot and adds no
+       field, and the 0x5044 assert below still holds. The destructor above is
+       declared first and out of line, so it stays this class's KEY FUNCTION and
+       neither of these translation units emits _ZTV12dScMgSlot3_c. */
+    s32 Behavior();        /* slot  6 -- src/_ZN12dScMgSlot3_c8BehaviorEv.cpp */
+    s32 Render();          /* slot  9 -- src/_ZN12dScMgSlot3_c6RenderEv.cpp */
 
     u8  pad_4f38[0xac];     /* 0x4f38 -- opaque table, see file banner */
     s32 unk_4fe4[3];        /* 0x4fe4 -- indexed array, see file banner */

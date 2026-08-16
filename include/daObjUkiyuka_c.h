@@ -26,8 +26,8 @@
  * factory FloatingFloorLllBig_Spawn building the same class with different
  * parameters) and daObjKm2_Ukishima_c (FloatingFloorBfs).
  *
- * FOUR FIELDS, all of them read by this class's own Behavior,
- * `func_ov002_020b6494`:
+ * FOUR FIELDS, all of them read by this class's own Behavior, ov002 0x020b6494
+ * -- now `_ZN14daObjUkiyuka_c8BehaviorEv`:
  *
  *   0x320  the rest height. Behavior compares the actor's own Y at 0x60 against it
  *          and, when the two are equal, restarts the rest timer.
@@ -64,6 +64,21 @@ struct daObjUkiyuka_c : Platform {
        0x020b63e0, still under its func_ov002_ name). An out-of-line declaration
        here would make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjUkiyuka_c() {}
+
+    /* Slot 6, this class's own override, defined out of line in
+       src/_ZN14daObjUkiyuka_c8BehaviorEv.cpp. LAYOUT-NEUTRAL: it re-uses the
+       slot Platform already holds rather than appending one, and adds no
+       field, so the 0x32c assert below is untouched.
+
+       Because the destructor above is inline this class has no key function,
+       so declaring the first out-of-line virtual makes THIS the key function
+       and its translation unit emits _ZTV14daObjUkiyuka_c, the RTTI records
+       and four implicit destructor bodies alongside the one function the file
+       is for. That is the same shape every migrated D1 file in this family
+       already has, and tools/objisolate.py reduces the object to the declared
+       function before eligible.py and rombuild.py judge it -- checked on this
+       file, not assumed. */
+    s32 Behavior();
 };
 
 typedef char daObjUkiyuka_c_size_must_be_0x32c[sizeof(daObjUkiyuka_c) == 0x32c ? 1 : -1];

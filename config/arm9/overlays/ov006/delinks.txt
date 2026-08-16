@@ -1858,7 +1858,7 @@ src/func_ov006_020da974.c:
     complete
     .text start:0x020da974 end:0x020da994
 
-src/func_ov006_020da994.c:
+src/_ZN11dScMgCard_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020da994 end:0x020da9c4
 
@@ -1866,7 +1866,7 @@ src/func_ov006_020da9c4.cpp:
     complete
     .text start:0x020da9c4 end:0x020dabec
 
-src/func_ov006_020dabec.c:
+src/_ZN11dScMgCard_c8BehaviorEv.cpp:
     complete
     .text start:0x020dabec end:0x020dac34
 
@@ -2248,11 +2248,11 @@ src/func_ov006_020dfeec.c:
     complete
     .text start:0x020dfeec end:0x020e0068
 
-src/func_ov006_020e0068.c:
+src/_ZN10dScMgCup_c6RenderEv.cpp:
     complete
     .text start:0x020e0068 end:0x020e0204
 
-src/func_ov006_020e0204.cpp:
+src/_ZN10dScMgCup_c8BehaviorEv.cpp:
     complete
     .text start:0x020e0204 end:0x020e0308
 
@@ -3001,14 +3001,15 @@ src/func_ov006_020e9c20.cpp:
     complete
     .text start:0x020e9c20 end:0x020e9cec
 
-src/func_ov006_020e9cec.c:
+src/_ZN12dScMg3DEsp_c16CleanupResourcesEv.cpp:
+    complete
     .text start:0x020e9cec end:0x020e9d1c
 
 src/func_ov006_020e9d1c.cpp:
     complete
     .text start:0x020e9d1c end:0x020e9e00
 
-src/func_ov006_020e9e00.cpp:
+src/_ZN12dScMg3DEsp_c8BehaviorEv.cpp:
     complete
     .text start:0x020e9e00 end:0x020e9e70
 
@@ -3275,15 +3276,15 @@ src/_ZN11dScMgJump_cD0Ev.cpp:
     complete
     .text start:0x020edf54 end:0x020edffc
 
-src/func_ov006_020edffc.c:
+src/_ZN11dScMgJump_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020edffc end:0x020ee034
 
-src/func_ov006_020ee034.c:
+src/_ZN11dScMgJump_c6RenderEv.cpp:
     complete
     .text start:0x020ee034 end:0x020ee27c
 
-src/func_ov006_020ee27c.cpp:
+src/_ZN11dScMgJump_c8BehaviorEv.cpp:
     complete
     .text start:0x020ee27c end:0x020ee2c0
 
@@ -3391,11 +3392,11 @@ src/func_ov006_020ef0d4.c:
     complete
     .text start:0x020ef0d4 end:0x020ef110
 
-src/func_ov006_020ef110.c:
+src/_ZN12dScMgJump2_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020ef110 end:0x020ef148
 
-src/func_ov006_020ef148.c:
+src/_ZN12dScMgJump2_c6RenderEv.cpp:
     complete
     .text start:0x020ef148 end:0x020ef2b8
 
@@ -3403,7 +3404,7 @@ src/func_ov006_020ef2b8.c:
     complete
     .text start:0x020ef2b8 end:0x020ef3e0
 
-src/func_ov006_020ef3e0.cpp:
+src/_ZN12dScMgJump2_c8BehaviorEv.cpp:
     complete
     .text start:0x020ef3e0 end:0x020ef47c
 
@@ -3838,15 +3839,15 @@ src/func_ov006_020f52c4.c:
     complete
     .text start:0x020f52c4 end:0x020f5324
 
-src/func_ov006_020f5324.c:
+src/_ZN13dScMgMemory_c6RenderEv.cpp:
     complete
     .text start:0x020f5324 end:0x020f5388
 
-src/func_ov006_020f5388.cpp:
+src/_ZN13dScMgMemory_c8BehaviorEv.cpp:
     complete
     .text start:0x020f5388 end:0x020f53e4
 
-src/func_ov006_020f53e4.cpp:
+src/_ZN13dScMgMemory_c13InitResourcesEv.cpp:
     complete
     .text start:0x020f53e4 end:0x020f5504
 
@@ -4041,15 +4042,15 @@ src/func_ov006_020f7394.c:
     complete
     .text start:0x020f7394 end:0x020f73f4
 
-src/func_ov006_020f73f4.c:
+src/_ZN14dScMgMemory2_c6RenderEv.cpp:
     complete
     .text start:0x020f73f4 end:0x020f7458
 
-src/func_ov006_020f7458.cpp:
+src/_ZN14dScMgMemory2_c8BehaviorEv.cpp:
     complete
     .text start:0x020f7458 end:0x020f74b4
 
-src/func_ov006_020f74b4.cpp:
+src/_ZN14dScMgMemory2_c13InitResourcesEv.cpp:
     complete
     .text start:0x020f74b4 end:0x020f75d4
 
@@ -4133,7 +4134,7 @@ src/func_ov006_020f85b0.cpp:
     complete
     .text start:0x020f85b0 end:0x020f869c
 
-src/func_ov006_020f869c.c:
+src/_ZN13dScMgMCarlo_c8BehaviorEv.cpp:
     complete
     .text start:0x020f869c end:0x020f8a3c
 
@@ -4225,7 +4226,7 @@ src/func_ov006_020f9f40.c:
     complete
     .text start:0x020f9f40 end:0x020f9fe0
 
-src/func_ov006_020f9fe0.c:
+src/_ZN14dScMgMCarlo2_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020f9fe0 end:0x020f9ffc
 
@@ -4233,7 +4234,7 @@ src/func_ov006_020f9ffc.cpp:
     complete
     .text start:0x020f9ffc end:0x020fa13c
 
-src/func_ov006_020fa13c.c:
+src/_ZN14dScMgMCarlo2_c8BehaviorEv.cpp:
     complete
     .text start:0x020fa13c end:0x020fa3d0
 
@@ -5225,11 +5226,11 @@ src/func_ov006_021096c8.c:
     complete
     .text start:0x021096c8 end:0x0210980c
 
-src/func_ov006_0210980c.c:
+src/_ZN15dScMgRoulette_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0210980c end:0x02109834
 
-src/func_ov006_02109834.c:
+src/_ZN15dScMgRoulette_c6RenderEv.cpp:
     complete
     .text start:0x02109834 end:0x02109aa0
 
@@ -5237,7 +5238,7 @@ src/func_ov006_02109aa0.c:
     complete
     .text start:0x02109aa0 end:0x02109aac
 
-src/func_ov006_02109aac.c:
+src/_ZN15dScMgRoulette_c8BehaviorEv.cpp:
     complete
     .text start:0x02109aac end:0x0210a194
 
@@ -5269,19 +5270,19 @@ src/func_ov006_0210a600.c:
     complete
     .text start:0x0210a600 end:0x0210a608
 
-src/func_ov006_0210a608.c:
+src/_ZN19dScMgSingle3DBase_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x0210a608 end:0x0210a664
 
-src/func_ov006_0210a664.c:
+src/_ZN19dScMgSingle3DBase_c12BeforeRenderEv.cpp:
     complete
     .text start:0x0210a664 end:0x0210a698
 
-src/func_ov006_0210a698.cpp:
+src/_ZN19dScMgSingle3DBase_c14BeforeBehaviorEv.cpp:
     complete
     .text start:0x0210a698 end:0x0210a6e4
 
-src/func_ov006_0210a6e4.cpp:
+src/_ZN19dScMgSingle3DBase_c18AfterInitResourcesEj.cpp:
     complete
     .text start:0x0210a6e4 end:0x0210a708
 
@@ -5351,11 +5352,11 @@ src/func_ov006_0210b314.c:
     complete
     .text start:0x0210b314 end:0x0210b648
 
-src/func_ov006_0210b648.c:
+src/_ZN12dScMgSlot3_c6RenderEv.cpp:
     complete
     .text start:0x0210b648 end:0x0210bcb0
 
-src/func_ov006_0210bcb0.cpp:
+src/_ZN12dScMgSlot3_c8BehaviorEv.cpp:
     complete
     .text start:0x0210bcb0 end:0x0210bdb0
 
@@ -5933,11 +5934,11 @@ src/func_ov006_02115b0c.c:
     complete
     .text start:0x02115b0c end:0x021173c8
 
-src/func_ov006_021173c8.cpp:
+src/_ZN16dScMgSmartball_c6RenderEv.cpp:
     complete
     .text start:0x021173c8 end:0x02118488
 
-src/func_ov006_02118488.c:
+src/_ZN16dScMgSmartball_c8BehaviorEv.cpp:
     complete
     .text start:0x02118488 end:0x02118a8c
 
@@ -5949,7 +5950,7 @@ src/func_ov006_02118ae4.c:
     complete
     .text start:0x02118ae4 end:0x02118b70
 
-src/func_ov006_0211944c.c:
+src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x0211944c end:0x02119824
 
@@ -6264,15 +6265,15 @@ src/func_ov006_0211c5b8.c:
 src/func_ov006_0211c5d0.c:
     .text start:0x0211c5d0 end:0x0211c6c4
 
-src/func_ov006_0211c6c4.c:
+src/_ZN12dScMgSound_c6RenderEv.cpp:
     complete
     .text start:0x0211c6c4 end:0x0211c720
 
-src/func_ov006_0211c720.c:
+src/_ZN12dScMgSound_c8BehaviorEv.cpp:
     complete
     .text start:0x0211c720 end:0x0211c984
 
-src/func_ov006_0211c984.c:
+src/_ZN12dScMgSound_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211c984 end:0x0211cb70
 
@@ -6687,14 +6688,15 @@ src/func_ov006_021211e0.cpp:
     complete
     .text start:0x021211e0 end:0x021212e0
 
-src/func_ov006_021212e0.c:
+src/_ZN17dScMgTrampoline_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021212e0 end:0x021212fc
 
-src/func_ov006_021212fc.c:
+src/_ZN17dScMgTrampoline_c6RenderEv.cpp:
+    complete
     .text start:0x021212fc end:0x021214f8
 
-src/func_ov006_021214f8.cpp:
+src/_ZN17dScMgTrampoline_c8BehaviorEv.cpp:
     complete
     .text start:0x021214f8 end:0x0212157c
 
@@ -6846,15 +6848,15 @@ src/func_ov006_021230e8.c:
     complete
     .text start:0x021230e8 end:0x0212318c
 
-src/func_ov006_0212318c.c:
+src/_ZN18dScMgTrampoline2_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212318c end:0x021231ac
 
-src/func_ov006_021231ac.c:
+src/_ZN18dScMgTrampoline2_c6RenderEv.cpp:
     complete
     .text start:0x021231ac end:0x02123340
 
-src/func_ov006_02123340.cpp:
+src/_ZN18dScMgTrampoline2_c8BehaviorEv.cpp:
     complete
     .text start:0x02123340 end:0x02123428
 
@@ -6998,11 +7000,11 @@ src/func_ov006_02125364.cpp:
     complete
     .text start:0x02125364 end:0x021253bc
 
-src/func_ov006_021253bc.c:
+src/_ZN10dScMgBSC_c6RenderEv.cpp:
     complete
     .text start:0x021253bc end:0x021254c0
 
-src/func_ov006_021254c0.cpp:
+src/_ZN10dScMgBSC_c8BehaviorEv.cpp:
     complete
     .text start:0x021254c0 end:0x0212551c
 
@@ -7061,11 +7063,11 @@ src/func_ov006_021279b0.cpp:
     complete
     .text start:0x021279b0 end:0x02127d10
 
-src/func_ov006_02127d10.c:
+src/_ZN15dScMgSnowball_c6RenderEv.cpp:
     complete
     .text start:0x02127d10 end:0x021283a4
 
-src/func_ov006_021283a4.c:
+src/_ZN15dScMgSnowball_c8BehaviorEv.cpp:
     complete
     .text start:0x021283a4 end:0x02128fb8
 
@@ -7081,7 +7083,7 @@ src/func_ov006_021291d4.c:
     complete
     .text start:0x021291d4 end:0x021291f8
 
-src/func_ov006_021291f8.c:
+src/_ZN15dScMgSnowball_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021291f8 end:0x0212921c
 
@@ -7089,7 +7091,7 @@ src/func_ov006_0212921c.c:
     complete
     .text start:0x0212921c end:0x02129268
 
-src/func_ov006_02129268.c:
+src/_ZN15dScMgSnowball_c13InitResourcesEv.cpp:
     complete
     .text start:0x02129268 end:0x021295ac
 
@@ -7193,15 +7195,15 @@ src/func_ov006_0212aa74.c:
     complete
     .text start:0x0212aa74 end:0x0212aacc
 
-src/func_ov006_0212aacc.c:
+src/_ZN13dScMgFlower_c6RenderEv.cpp:
     complete
     .text start:0x0212aacc end:0x0212ac74
 
-src/func_ov006_0212ac74.c:
+src/_ZN13dScMgFlower_c8BehaviorEv.cpp:
     complete
     .text start:0x0212ac74 end:0x0212b480
 
-src/func_ov006_0212b480.c:
+src/_ZN13dScMgFlower_c13InitResourcesEv.cpp:
     complete
     .text start:0x0212b480 end:0x0212b7f8
 

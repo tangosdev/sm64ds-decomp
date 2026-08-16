@@ -54,6 +54,14 @@ extern "C" void _ZN5ModelD1Ev(void *);
 struct dScMgRoulette_c : dScMgSingle3DBase_c {
     virtual ~dScMgRoulette_c();
 
+    /* --- this class's own vtable slots, named from the table ---
+       Re-overrides of slots ActorBase already owns, NOT new virtuals: the
+       table stays the base's width and no field moves. Declared AFTER the
+       destructor so the destructor is still the first virtual declared. */
+    virtual s32 CleanupResources();  /* slot 3 -- ov006 0x0210980c */
+    virtual s32 Behavior();          /* slot 6 -- ov006 0x02109aac */
+    virtual s32 Render();            /* slot 9 -- ov006 0x02109834 */
+
     u8    mTable[0x270];  /* 0x4f38 -- ctor func_ov006_020c1d80, dtor func_ov006_020c1c64 */
     u8    mArray[0x104];   /* 0x51a8 -- 5 * 0x34, dtor func_ov006_021079c8 */
     u8    pad_52ac[0x70];  /* 0x52ac -- no named field access, see file banner */

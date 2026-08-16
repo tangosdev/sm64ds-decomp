@@ -51,6 +51,24 @@ extern "C" void func_ov006_0210d894(void);
 struct dScMgSmartball_c : dScMgBase_c {
     virtual ~dScMgSmartball_c();
 
+    /* This class's own overrides, read off the ROM's vtable: the slots where the
+       table differs from dScMgBase_c's. Spelled WITHOUT the `virtual` keyword, the
+       way include/daObjMarioCap_c.h and include/daObjRc_Dorifu_c.h spell theirs --
+       an override of a virtual an ancestor already declares is implicitly virtual
+       either way, so each reuses an existing slot and adds no field, and the
+       0x629c assert below still holds. The destructor above is declared first and
+       out of line, so it stays this class's KEY FUNCTION and none of these
+       translation units emits _ZTV16dScMgSmartball_c.
+
+       AfterCleanupResources takes dScMgBase_c's signature exactly, u32 and all.
+       The pre-migration file spelled the parameter `int mode` and still matched,
+       because the ROM only ever compares it against 2 -- but the declaration it is
+       overriding is `void AfterCleanupResources(u32)`, so that is what it is. */
+    void AfterCleanupResources(u32 vfSuccess);
+                           /* slot  5 -- src/_ZN16dScMgSmartball_c21AfterCleanupResourcesEj.cpp */
+    s32  Behavior();       /* slot  6 -- src/_ZN16dScMgSmartball_c8BehaviorEv.cpp */
+    s32  Render();         /* slot  9 -- src/_ZN16dScMgSmartball_c6RenderEv.cpp */
+
     u8 pad_465d[0x16b];   /* 0x465d -- dScMgBase_c's data ends here; real matched
                               access inside, see file banner */
     u8 mArray1[0x28];     /* 0x47c8 -- 5 * 8,      elem dtor NullDestructor_0203d47c */

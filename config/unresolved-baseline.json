@@ -1,5 +1,5 @@
 {
- "eligible": 10971,
+ "eligible": 10973,
  "unresolved": {
   "arm9:0x02009374": {
    "name": "func_02009374",
@@ -302,13 +302,6 @@
    "missing": [
     "g0",
     "g1"
-   ]
-  },
-  "ov006:0x020e9cec": {
-   "name": "func_ov006_020e9cec",
-   "missing": [
-    "G0",
-    "G1"
    ]
   },
   "ov006:0x020efcf8": {
