@@ -25,6 +25,6 @@ void func_ov006_020f8c68(char* c)
     self->unk_60aa = 0;
     self->unk_60a8 = 1;
     func_ov004_020b66d4(c + 0x6000);
-    func_020bc7d4 = 1;
+    data_ov004_020bc7d4 = 1;
 }
 }

@@ -1,4 +1,4 @@
-extern char* func_020beb68;
+extern char* data_ov004_020beb68;
 extern void func_ov006_020dc370(void*);
 
 void func_ov006_020de1d4(char* c) {
@@ -10,7 +10,7 @@ void func_ov006_020de1d4(char* c) {
     return;
   }
   {
-    char* o = func_020beb68;
+    char* o = data_ov004_020beb68;
     int v = o != 0 ? *(int*)(o + 0xa8) : 0;
     if (v != 0) {
       *(unsigned char*)(c + 0x51de) = 0;

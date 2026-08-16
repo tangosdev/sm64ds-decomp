@@ -1,4 +1,4 @@
-extern char *func_020beb68;
+extern char *data_ov004_020beb68;
 
 extern int data_ov006_021424f8;
 extern int data_ov006_021424f0;
@@ -29,7 +29,7 @@ void func_ov006_020f7c10(char *c)
     char *n2;
     void *nx;
 
-    o = func_020beb68;
+    o = data_ov004_020beb68;
     v = (o != 0) ? *(int *)(o + 0xb4) : 0;
 
     if (v < 5) {

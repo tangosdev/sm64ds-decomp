@@ -3,7 +3,7 @@ extern void func_ov004_020b0a54(int c);
 extern void func_ov004_020adb1c(int self);
 extern void func_ov006_020c0c80(void *c);
 extern void func_ov006_020c0d68(char *c);
-extern char *func_020beb68;
+extern char *data_ov004_020beb68;
 
 void func_ov006_020f4888(char *self)
 {
@@ -21,7 +21,7 @@ void func_ov006_020f4888(char *self)
                 }
                 if (*(int *)(self + 0xb4) > *(int *)(self + 0xb8))
                     *(int *)(self + 0xb8) = *(int *)(self + 0xb4);
-                func_ov004_020adb1c(func_020beb68 ? *(int *)(func_020beb68 + 0xb4) : 0);
+                func_ov004_020adb1c(data_ov004_020beb68 ? *(int *)(data_ov004_020beb68 + 0xb4) : 0);
                 func_ov006_020c0c80(self + 0x4f38);
             } else {
                 func_ov004_020b0a54(5);

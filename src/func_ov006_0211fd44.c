@@ -7,7 +7,7 @@ extern int func_ov004_020adbe0(void);
 extern void func_ov004_020b0cac(int a, int b, int c, int d, int e, short f);
 
 struct B { unsigned char pad[0xb4]; int b4; int b8; };
-extern struct B *func_020beb68;
+extern struct B *data_ov004_020beb68;
 
 void func_ov006_0211fd44(char *c)
 {
@@ -21,7 +21,7 @@ void func_ov006_0211fd44(char *c)
     if (*(unsigned char *)(c + 0x4000 + 0xc1f) != 0) {
         struct B *p;
         func_ov004_020b0a54(0);
-        p = func_020beb68;
+        p = data_ov004_020beb68;
         if (p != 0) {
             if (p->b4 < 0x270f) {
                 *(int *)(((int)p + 0xb4)) += 1;
@@ -30,7 +30,7 @@ void func_ov006_0211fd44(char *c)
                 p->b8 = p->b4;
             }
         }
-        func_ov004_020adb1c(func_020beb68 ? func_020beb68->b4 : 0);
+        func_ov004_020adb1c(data_ov004_020beb68 ? data_ov004_020beb68->b4 : 0);
     } else {
         if (func_ov004_020adbe0() != 0) {
             *(unsigned char *)(c + 0x4000 + 0xc1b) = 0;

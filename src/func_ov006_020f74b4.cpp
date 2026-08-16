@@ -50,7 +50,7 @@ extern "C" int func_ov006_020f74b4(char *self)
     *(int *)(self + 0xac) = *(int *)(self + 0xa8);
     *(int *)(self + 0xb4) = func_ov004_020ad878();
     func_ov004_020b66d4();
-    func_020bc7d4 = 1;
+    data_ov004_020bc7d4 = 1;
     *(u8 *)(self + 0x5409) = 5;
     func_ov004_020b04d0(0x20);
     func_ov004_020b682c();
