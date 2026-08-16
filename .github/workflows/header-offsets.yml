@@ -1,0 +1,65 @@
+# Do a header's field offsets agree with the offsets its own comments claim?
+#
+# The generated headers encode layout twice -- as a sequence of declarations and pads,
+# and as a `/* 0x0a4 */` comment per field. Retyping a field breaks the agreement unless
+# the following pad shrinks to match, and NOTHING ELSE IN THE BUILD WOULD NOTICE: a
+# header is not compiled on its own, and the byte gate cannot see a field no source file
+# happens to read. `objisolate` then drops every `.data` section a C++ TU emits, so even
+# a wrong vtable links clean against the ROM's own gap object.
+#
+# This is the only gate that touches the project's FIRST goal -- accurate C++ -- rather
+# than byte equality. It existed for months and gated nothing: no workflow and no hook
+# invoked `tools/check_header_offsets.py`, and run with no arguments it checked zero
+# files, printed nothing, and exited 0. Its first whole-tree run found four problems.
+#
+# SCOPED TO CHANGED HEADERS on purpose. 441 of 445 headers pass; the four that do not
+# are written down in config/header-offset-known-issues.txt rather than silently
+# allowed, so this job is a ratchet on NEW breakage and cannot go red on debt a pull
+# request did not create. A gate that lands red gets switched off.
+#
+# Costs nothing: a textual walk over git-tracked headers, stdlib only, no compiler and
+# no ROM. That is why it lives here rather than on the private build box that
+# pr-validate.yml relays to.
+name: header offsets
+
+on:
+  pull_request:
+    paths:
+      - "include/**"
+      - "config/header-offset-known-issues.txt"
+      - "tools/check_header_offsets.py"
+      - ".github/workflows/header-offsets.yml"
+  workflow_dispatch:
+    inputs:
+      all:
+        description: "Check every header, not just the changed ones"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: header-offsets-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  offsets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # --changed diffs `<base>...HEAD`, so the merge-base has to be present.
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Offsets agree with their comments
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ "${{ inputs.all }}" = "true" ] || [ -z "$BASE" ]; then
+            python tools/check_header_offsets.py $(git ls-files 'include/**/*.h' 'include/*.h')
+          else
+            python tools/check_header_offsets.py --changed "$BASE"
+          fi
