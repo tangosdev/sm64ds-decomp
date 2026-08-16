@@ -1,5 +1,5 @@
 {
- "eligible": 10870,
+ "eligible": 10873,
  "unresolved": {
   "arm9:0x02008b4c": {
    "name": "func_02008b4c",
@@ -864,28 +864,6 @@
    "name": "_ZN13RollingLogLll16CleanupResourcesEv",
    "missing": [
     "func_021270dc"
-   ]
-  },
-  "ov025:0x021118c8": {
-   "name": "func_ov025_021118c8",
-   "missing": [
-    "_ZTV10dBgActor_c",
-    "_ZTV7daDkk_c"
-   ]
-  },
-  "ov025:0x02111928": {
-   "name": "func_ov025_02111928",
-   "missing": [
-    "G0",
-    "VT0",
-    "VT1",
-    "VT2"
-   ]
-  },
-  "ov025:0x02111cf4": {
-   "name": "Grindel_Spawn",
-   "missing": [
-    "_ZTV7daDkk_c"
    ]
   },
   "ov029:0x021124d0": {
