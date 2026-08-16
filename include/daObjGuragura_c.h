@@ -29,7 +29,7 @@
  * SIZE 0x350, the literal both factories pass to ActorBase::operator new.
  *
  * TWO QUATERNIONS, AND THEY CLOSE ON EACH OTHER. This class's own Behavior,
- * `func_ov002_020b616c`, ends with
+ * `daObjGuragura_c::Behavior` (0x020b616c), ends with
  *
  *     Quaternion_SLerp(this+0x320, this+0x330, 0x199, this+0x320)
  *
@@ -71,6 +71,33 @@ struct daObjGuragura_c : Platform {
        0x020b6030, still under its func_ov002_ name). An out-of-line declaration
        here would make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjGuragura_c() {}
+
+    /* Two of the four own overrides the banner above already lists, spelled
+       WITHOUT the `virtual` keyword -- the same way include/daObjMarioCap_c.h and
+       include/daObjRc_Dorifu_c.h spell theirs. An override of a virtual the base
+       already declares is implicitly virtual either way, so both reuse a slot the
+       32-slot table above already has and neither adds a field: the 0x350 size
+       assert below still holds. Writing `virtual` would read as a NEW slot, which
+       is exactly what this class must not gain.
+
+       RENDER IS DECLARED FIRST ON PURPOSE, AND THE ORDER IS WHAT MATTERS, not the
+       slot number. The destructor above is inline, so the KEY FUNCTION -- the first
+       non-inline virtual declared in the class -- is whichever of these comes
+       first, and the key function's translation unit is the one that emits
+       _ZTV15daObjGuragura_c. That symbol is already delinked data (ov002
+       0x02109084, config/arm9/overlays/ov002/symbols.txt), and tools/eligible.py
+       drops any file whose object carries a section other than .text -- so a TU
+       that emitted it would be dropped from the build entirely and the function it
+       defines would stop being compiled, with every gate still reporting green
+       (notes: "unbuildable files are invisible"). Render's definition
+       (func_ov002_020b6144) is not migrated, so naming it here parks the key
+       function on a translation unit that does not exist and no file emits the
+       vtable -- the tree's state today, and the same mechanism
+       include/Platform.h's own destructor comment relies on. Measured on the
+       sibling daObjKuruma_c: with Behavior declared first the object came out with
+       eleven .data sections; with Render first, one .text. */
+    s32 Render();                      /* slot  9 -- see above; not yet migrated */
+    s32 Behavior();                    /* slot  6 */
 };
 
 typedef char daObjGuragura_c_size_must_be_0x350[sizeof(daObjGuragura_c) == 0x350 ? 1 : -1];

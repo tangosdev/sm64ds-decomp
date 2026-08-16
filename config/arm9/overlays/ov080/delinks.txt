@@ -310,7 +310,7 @@ src/func_ov080_02127014.c:
     complete
     .text start:0x02127014 end:0x02127058
 
-src/func_ov080_02127058.c:
+src/_ZN13daObjMaruta_c15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02127058 end:0x02127094
 

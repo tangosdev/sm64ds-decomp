@@ -72,6 +72,15 @@ extern "C" void NullDestructor_0203d47c(void);
 struct dScMgSnowball_c : dScMgSingle3DBase_c {
     virtual ~dScMgSnowball_c();
 
+    /* --- this class's own vtable slots, named from the table ---
+       Re-overrides of slots ActorBase already owns, NOT new virtuals: the
+       table stays the base's width and no field moves. Declared AFTER the
+       destructor so the destructor is still the first virtual declared. */
+    virtual s32 InitResources();     /* slot 0 -- ov006 0x02129268 */
+    virtual s32 CleanupResources();  /* slot 3 -- ov006 0x021291f8 */
+    virtual s32 Behavior();          /* slot 6 -- ov006 0x021283a4 */
+    virtual s32 Render();            /* slot 9 -- ov006 0x02127d10 */
+
     u8    pad_4f38[0x5c04]; /* 0x4f38 -- no matched access */
     s32   unk_ab3c;         /* 0xab3c */
     u8    pad_ab40[0x8];    /* 0xab40 */

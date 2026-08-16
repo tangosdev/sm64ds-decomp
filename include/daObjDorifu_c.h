@@ -80,6 +80,14 @@ struct daObjDorifu_c : Platform {
        still under its func_ov002_ name). An out-of-line declaration here would
        make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjDorifu_c() {}
+
+    /* Slot 6, ov002 0x020b4bfc -- the state machine the banner above describes.
+       An override of the virtual ActorBase already declared, so it occupies a
+       slot that exists rather than adding one, and no field moves. Spelled
+       without `virtual` for the same reason include/daObjFloatBoard_c.h spells
+       its own slot-3 override that way: virtualness is inherited, and the
+       destructor above stays the first virtual DECLARED in the class. */
+    s32 Behavior();
 };
 
 typedef char daObjDorifu_c_size_must_be_0xdcc[sizeof(daObjDorifu_c) == 0xdcc ? 1 : -1];

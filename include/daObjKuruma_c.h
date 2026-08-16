@@ -24,7 +24,7 @@
  * their own and _ZTV8Platform, which is the same fact the RTTI records.
  *
  * NO FIELDS OF ITS OWN, and that is measured rather than assumed. Its own
- * Behavior (`func_ov002_020b6920`) and Render (`func_ov002_020b68f8`) reach
+ * Behavior (0x020b6920) and Render (`func_ov002_020b68f8`) reach
  * nothing above Platform -- Behavior is UpdateModelPosAndRotY plus the guarded
  * UpdateClsnPosAndRot, Render dispatches through the Model at 0xd4. Its own
  * destructor destroys only Platform's two members. And both factories,
@@ -40,6 +40,32 @@ struct daObjKuruma_c : Platform {
     /* INLINE ON PURPOSE -- see include/Platform.h. The out-of-line copy is at
        ov002 0x020b686c, still under its func_ov002_ name. */
     virtual ~daObjKuruma_c() {}
+
+    /* The two own overrides the banner above already lists, spelled WITHOUT the
+       `virtual` keyword -- the same way include/daObjMarioCap_c.h and
+       include/daObjRc_Dorifu_c.h spell theirs. An override of a virtual the base
+       already declares is implicitly virtual either way, so both reuse a slot the
+       32-slot table above already has and neither adds a field: the size assert
+       below still holds. Writing `virtual` would read as a NEW slot, which is
+       exactly what this class must not gain.
+
+       RENDER IS DECLARED FIRST ON PURPOSE, AND IT IS THE ORDER THAT MATTERS, not
+       the slot number. The destructor above is inline, so the KEY FUNCTION -- the
+       first non-inline virtual declared in the class -- is whichever of these two
+       comes first, and the key function's translation unit is the one that emits
+       _ZTV13daObjKuruma_c. That symbol is already delinked data (ov002 0x02109278,
+       config/arm9/overlays/ov002/symbols.txt), and tools/eligible.py drops any file
+       whose object carries a section other than .text, so a TU that emitted it
+       would be silently dropped from the build and the function it defines would
+       stop being compiled at all. Render's definition (func_ov002_020b68f8) is not
+       migrated yet, so naming it here parks the key function on a TU that does not
+       exist and no file emits the vtable -- which is the tree's state today, and
+       the same mechanism include/Platform.h's own destructor comment relies on.
+       Measured: with Behavior first the object came out with eleven .data sections
+       and five .text; with Render first, one .text of 0x38. Whoever migrates
+       Render will have to place the vtable deliberately. */
+    s32 Render();                      /* slot  9 -- see above; not yet migrated */
+    s32 Behavior();                    /* slot  6 */
 };
 
 typedef char daObjKuruma_c_size_must_be_0x320[sizeof(daObjKuruma_c) == 0x320 ? 1 : -1];

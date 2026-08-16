@@ -29,7 +29,8 @@
  * records, arrived at from the other direction.
  *
  * NO FIELDS, and that is measured rather than assumed. Its own Behavior
- * (`func_ov002_020b6718`) reads this+0x94, which is Platform's mPrevAngleY, and
+ * (ov002 0x020b6718, now `_ZN16daObjKaitendai_c8BehaviorEv`) reads this+0x94,
+ * which is Platform's mPrevAngleY, and
  * otherwise only calls Platform::UpdateModelPosAndRotY and the guarded
  * UpdateClsnPosAndRot. Its own Render (`func_ov002_020b66f0`) dispatches through
  * the Model at 0xd4. Its own destructor destroys only Platform's two members. And
@@ -55,6 +56,21 @@ struct daObjKaitendai_c : Platform {
        0x020b6664, still under its func_ov002_ name). An out-of-line declaration
        here would make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjKaitendai_c() {}
+
+    /* Slot 6, this class's own override, defined out of line in
+       src/_ZN16daObjKaitendai_c8BehaviorEv.cpp. LAYOUT-NEUTRAL: it re-uses the
+       slot Platform already holds rather than appending one, and adds no
+       field, so the 0x320 assert below is untouched.
+
+       Because the destructor above is inline this class has no key function,
+       so declaring the first out-of-line virtual makes THIS the key function
+       and its translation unit emits _ZTV16daObjKaitendai_c, the RTTI records
+       and the implicit destructor bodies alongside the one function the file
+       is for. That is the same shape every migrated D1 file in this family
+       already has, and tools/objisolate.py reduces the object to the declared
+       function before eligible.py and rombuild.py judge it -- checked on this
+       file, not assumed. */
+    s32 Behavior();
 };
 
 typedef char daObjKaitendai_c_size_must_be_0x320[sizeof(daObjKaitendai_c) == 0x320 ? 1 : -1];
