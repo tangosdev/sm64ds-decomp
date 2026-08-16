@@ -13,7 +13,7 @@ void func_0202f428(char *obj)
 {
     struct dWipe_c *self = (struct dWipe_c *)(void *)obj;
     if (self->unk_014 == 1) {
-        _ZN10FaderColor11AdvanceFadeEv();
+        _ZN10FaderColor11AdvanceFadeEv(obj);
         return;
     }
     switch (self->unk_010) {

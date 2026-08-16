@@ -20,7 +20,13 @@
 extern "C" {
 #endif
 
-extern void _ZN10FaderColor11AdvanceFadeEv(void);
+/* AdvanceFade is a non-static member of FaderColor, so its receiver rides r0
+   like any other first argument. Declared `(void)` it still byte-matches, because
+   every caller happens to already hold the object in r0 and the compiler emits no
+   argument setup either way. It is still a dropped argument, and any host whose
+   calling convention makes the receiver explicit loses it. Named, per the
+   Heap::_Destroy precedent. */
+extern void _ZN10FaderColor11AdvanceFadeEv(void*);
 extern void _ZN10FaderColorD1Ev(void*);
 
 
