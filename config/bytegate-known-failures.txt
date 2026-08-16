@@ -59,10 +59,6 @@ fb8c9547cf4b4a3a src/func_ov064_02119afc.cpp extern-c-clash
 7a37d816f5e354a9 src/func_ov071_02121ba4.cpp extern-c-clash
 a058233791d59bb6 src/func_ov078_02124cf4.cpp extern-c-clash
 58d9bf39038be0ed src/func_ov080_02124088.cpp extern-c-clash
-e2ff5d9f25ff7b90 src/func_ov081_02123910.cpp extern-c-clash
-3282c177d8044544 src/func_ov085_02129dbc.cpp extern-c-clash
-83976ff4cb5e9444 src/func_ov096_02137088.cpp extern-c-clash
-7fb411355a511de8 src/func_ov098_0213a794.cpp extern-c-clash
 
 # --- bare Fix12 where the real type is Fix12<int> (1) ------------------------------
 # line 17: template argument list expected. A genuine error, not a sentinel problem --
