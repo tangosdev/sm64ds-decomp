@@ -37,6 +37,7 @@ take over, ping the claimant first.
 
 ## Claims
 
+| ov016 func_ov016_02111c40 (0x02111c40, size 0x2f8) | lunavyqo | 2026-08-16 | **released** — no_progress vs banked **div=41** (match.py words=42 size-exact). Halfword i=0/ldrsh schedule, loop RMW r1↔r3, epi src-first vs px-first; decl-order 325 pairs + RMW un-scramble/comma/pragma no beat. API clm_badc432cd433 released |
 | Range | Who | Claimed | Status |
 | ov007 func_ov007_020c368c (0x020c368c, size 0x36c) | lunavyqo | 2026-08-15 | **released** — 0 matched; near-miss improved stored **74→56** (official evaluate, size-exact 0x36c). Levers: Vector3_16 x-first + `#pragma opt_propagation off` + 7 locals before divcnt + named ime=`*0` + named prod + slots[0] sign in scale. Residual: lim dest sl vs lr, increment fold (no `mov r3,r0`), delayed asr. Tip in nearmiss/db.jsonl; API clm_970c72f8bdc5 released |
 | ov005 func_ov005_020c16e4 (0x020c16e4, size 0x33c) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: ++row MultiCopy tail, dest pin `idx?dstp:dstp` / `destOff?dstp:dstp` (equal-arm) for rem-before-quot + increment order; from near-miss 136→18→16→3→0; API clm_84a56ab710d3 kept |
