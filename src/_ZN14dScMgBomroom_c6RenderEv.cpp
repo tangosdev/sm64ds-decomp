@@ -10,13 +10,13 @@
    including decl_common.h for this file. */
 extern "C" {
 int func_ov006_020d5dfc(void*);
-int func_ov006_020d6098(void*);
+void func_ov006_020d6098(void*);
 int func_ov006_020d5e5c(void*);
 int func_ov006_020d672c(void*);
-int func_ov006_020d7524(void*);
-int func_ov006_020d63d4(void*);
-int func_ov006_020d5c88(void*);
-int func_ov006_020d5ab0(void*);
+void func_ov006_020d7524(void*);
+void func_ov006_020d63d4(void*);
+void func_ov006_020d5c88(void*);
+void func_ov006_020d5ab0(void*);
 }
 s32 dScMgBomroom_c::Render()
 {
