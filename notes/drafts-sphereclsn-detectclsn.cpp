@@ -1,5 +1,5 @@
 //cpp
-// NONMATCHING: size 0x1af4 vs 0x1bc8, frame 0x1e4 vs 0x1b4
+// NONMATCHING: size 0x1b58 vs 0x1bc8 (28 insn short), align equal=565 ratio=0.320
 // @symbol _ZN12MeshCollider10DetectClsnER10SphereClsn
 /* MeshCollider::DetectClsn(SphereClsn &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
 #include "MeshCollider.h"
@@ -88,8 +88,9 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    `func_020397dc(den)` is the divisor guard: |den| <= 8 means the two edge
    normals are within a hair of parallel and the 2x2 is singular. The `>> 2` on
    the quotient is cstd::fdiv's Fix12 result brought back to the 0x400 scale. */
-#define VERTEX_BLOCK(nn, den, ea, eb, dotI, dotJ)                                  \
+#define VERTEX_BLOCK(nn, nnh, den, ea, eb, dotI, dotJ)                        \
     den = MUL10(nn, nn) - 0x400;                                              \
+    den += (nnh) - (nnh);                                                     \
     if (func_020397dc(den)) continue;                                         \
     t = _ZN4cstd4fdivEii(MUL10(nn, dotJ) - (dotI), den) >> 2;                  \
     u = (dotJ) - MUL10(t, nn);                                                \
@@ -106,7 +107,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    path -- a real hypotenuse through the hardware sqrt, then the contact angle
    through cstd::fdiv, compared against the collider's stored axis at +0x28.
    func_020397dc guards the divisor: |x| <= 8 means near-zero, so bail. */
-#define EDGE_FILTER(d)                                                        \
+#define EDGE_FILTER(d, zval)                                                  \
     if (sphere.flags & 2) {                                                   \
         if (cls == 1) { if ((d) > faceDot) continue; }                        \
         else if ((d) > (faceDot >> unk_48)) continue;                         \
@@ -123,7 +124,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
         if (cls != 0) continue;                                               \
         if (sphere.flags & 0x20) continue;                                    \
         hyp = SqrtRaw((u64)((s64)((d) >> 4) * ((d) >> 4)                       \
-                          + (s64)(faceDot >> 4) * (faceDot >> 4)), k0, k1);   \
+                          + (s64)(faceDot >> 4) * (faceDot >> 4)), zval, k1); \
         if (func_020397dc(hyp)) continue;                                     \
         if (DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28)               \
                 > _ZN4cstd4fdivEii(faceDot >> 4, hyp)) continue;              \
@@ -143,6 +144,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     u16 *prev1, *prev2, *prev3;
     u16 *p1, *p2, *p3;
     s64 rsq;
+    s32 stepX;
     s32 stepY, stepZ;
     s32 s1, s2, s3;
     u32 y, x;
@@ -158,12 +160,21 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     s32 den12, den23, den31;
     const Vector3 *c;
     s32 rawX, rawY, rawZ;
-    s32 nn12, nn23, nn31;
+    s32 d1h, d2h, d3h;
+    s32 nn12, n12h;
+    s32 nn23, n23h;
+    s32 nn31, n31h;
     s32 rsc;
-    s32 k0, k1, k2, k3;
+    s32 z108;
+    s32 k1;
+    s32 k0;
+    s32 z118, z11c, z120, z154;
+    s32 k3;
+    s32 z15c;
+    s32 k2;
+    s32 tlen;
+    s32 passArg;
     u32 z;
-    s32 stepX;
-    s32 r;
     s16 *en1, *en2;
     u32 shift;
     u32 *node;
@@ -173,7 +184,6 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     s64 dsq;
     s32 t, u;
     s32 vx, vy, vz;
-    s32 dx, dy, dz;
     s32 faceDot;
     s32 v;
     s32 dot1, dot2, dot3;
@@ -181,49 +191,56 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
     s32 nrm[3];
     Vector3 sn;
     s32 tp[3], vb[3], vc[3];
-    const Vector3 *origin;
 
     c = &sphere.pos;
     f = kclFile;
-    origin = &f->origin;
+    {
+        const Vector3 *origin = &f->origin;
+        s32 slack = (sphere.radius >> 6) + 0x40;
 
-    rawX = c->x >> 6;
-    rawY = c->y >> 6;
-    rawZ = c->z >> 6;
-    r = (sphere.radius >> 6) + 0x40;
+        rawX = c->x >> 6;
+        rawY = c->y >> 6;
+        rawZ = c->z >> 6;
 
-    loX = (rawX - origin->x - r) >> 6;
-    if (loX < 0) loX = 0;
-    hiX = (rawX - origin->x + r) >> 6;
-    if (hiX > (s32)~f->xMask) hiX = ~f->xMask;
-    if (loX >= hiX) return 0;
+        loX = (rawX - origin->x - slack) >> 6;
+        if (loX < 0) loX = 0;
+        hiX = (rawX - origin->x + slack) >> 6;
+        if (hiX > (s32)~f->xMask) hiX = ~f->xMask;
+        if (loX >= hiX) return 0;
 
-    loY = (rawY - origin->y - r) >> 6;
-    if (loY < 0) loY = 0;
-    hiY = (rawY - origin->y + r) >> 6;
-    if (hiY > (s32)~f->yMask) hiY = ~f->yMask;
-    if (loY >= hiY) return 0;
+        loY = (rawY - origin->y - slack) >> 6;
+        if (loY < 0) loY = 0;
+        hiY = (rawY - origin->y + slack) >> 6;
+        if (hiY > (s32)~f->yMask) hiY = ~f->yMask;
+        if (loY >= hiY) return 0;
 
-    loZ = (rawZ - origin->z - r) >> 6;
-    if (loZ < 0) loZ = 0;
-    hiZ = (rawZ - origin->z + r) >> 6;
-    if (hiZ > (s32)~f->zMask) hiZ = ~f->zMask;
-    if (loZ >= hiZ) return 0;
+        loZ = (rawZ - origin->z - slack) >> 6;
+        if (loZ < 0) loZ = 0;
+        hiZ = (rawZ - origin->z + slack) >> 6;
+        if (hiZ > (s32)~f->zMask) hiZ = ~f->zMask;
+        if (loZ >= hiZ) return 0;
+    }
 
     rsc = sphere.radius << 4;
 
-    loPX = hiPX = 0;
-    loPY = hiPY = 0;
-    loPZ = hiPZ = 0;
-    hitFlags = hitFlags2 = 0;
-    prev1 = prev2 = prev3 = 0;
-    p1 = p2 = p3 = 0;
+    hiPX = loPX = 0;
+    hiPY = loPY = 0;
+    hiPZ = loPZ = 0;
+    hitFlags2 = hitFlags = 0;
+    prev3 = prev2 = prev1 = 0;
+    p3 = p2 = p1 = 0;
 
     rsq = (s64)rsc * rsc;
     k0 = loPX;
     k1 = 1;
-    k2 = 2;
+    z118 = loPX;
+    z11c = loPX;
+    z120 = loPX;
+    z154 = loPX;
     k3 = 3;
+    z15c = loPX;
+    k2 = 2;
+    z108 = loPX;
 
     z = loZ;
     do {
@@ -231,7 +248,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
         y = loY;
         do {
             stepY = 1000000;
-            s1 = s2 = s3 = k0;
+            s1 = s2 = s3 = z108;
             x = loX;
             do {
                 shift = f->coordShift;
@@ -296,12 +313,10 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            seed is sp+0x114, which 0x01ffba10 loads from sp+0x28
                            one instruction after 0x01ffb9c8 zeroed it -- so it is
                            the hoisted constant 0, not a value from anywhere. */
-                        contactKind = k0;
-
-                        dx = rawX - vtx[0];
-                        dy = rawY - vtx[1];
-                        dz = rawZ - vtx[2];
-
+                        {
+                        s32 dx = rawX - vtx[0];
+                        s32 dy = rawY - vtx[1];
+                        s32 dz = rawZ - vtx[2];
                         en1 = f->normals[tri->edgeNormal1Idx];
                         dot1 = dx * en1[0] + dy * en1[1] + dz * en1[2];
                         if (dot1 >= rsc) continue;
@@ -309,13 +324,14 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         dot2 = dx * en2[0] + dy * en2[1] + dz * en2[2];
                         if (dot2 >= rsc) continue;
                         en3 = f->normals[tri->edgeNormal3Idx];
-                        dot3 = dx * en3[0] + dy * en3[1] + dz * en3[2] - tri->length;
+                        tlen = tri->length;
+                        dot3 = dx * en3[0] + dy * en3[1] + dz * en3[2] - tlen;
                         if (dot3 >= rsc) continue;
 
-                        /* Face normal. Note GT, not the GE the three edges use. */
                         fn = f->normals[tri->normalIdx];
                         faceDot = dx * fn[0] + dy * fn[1] + dz * fn[2];
                         if (faceDot > rsc) continue;
+                        }
 
                         /* this->unk_34 / unk_35 gate the face test. These are the
                            MeshCollider bytes whose set/clear accessors were among
@@ -354,19 +370,11 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            the 0x74 / 0x9c / 0xc4 result slots and the 4 / 8 / 0x10
                            flag bits respectively. */
                         cls = func_02039794(sn.y);
-
-                        /* Same one-way/pass-through filter the RaycastGround twin
-                           applies, and it takes the collider, the surface and the
-                           query object.
-
-                           The last argument is NOT a constant: 0x01ffbe78 sets it
-                           from the classify with `cmp r0,#1 / ldreq r3,[sp+0x10c]
-                           / movne r3,r0`, i.e. `cls == 1` -- a wall tells the
-                           filter it is a wall. The draft passed a zero here, which
-                           only looked right because the surrounding block was
-                           never exercised. */
+                        contactKind = k0;
+                        passArg = k1;
+                        if (cls != 1) passArg = k0;
                         if (_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
-                                this, &data_020a0cec, &sphere, cls == 1))
+                                this, &data_020a0cec, &sphere, passArg))
                             continue;
 
                         /* Voronoi region select: whichever edge the centre is
@@ -400,13 +408,17 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                             if (!unk_4c) continue;
                             if (dot2 > dot3) {
                                 nn12 = EDGENORMAL_DOT(en1, en2);
+                                d1h = dot1 >> 31;
+                                n12h = nn12 >> 31;
                                 if (MUL10(nn12, dot1) <= dot2) goto v12;
                             } else {
                                 nn31 = EDGENORMAL_DOT(en1, en3);
+                                d1h = dot1 >> 31;
+                                n31h = nn31 >> 31;
                                 if (MUL10(nn31, dot1) <= dot3) goto v31;
                             }
-                            /* --- E1: closest point is on edge 1 --- */
-                            EDGE_FILTER(dot1)
+                            EDGE_FILTER(dot1, z118)
+                            d1h = dot1 >> 31;
                             dsq = rsq - (s64)dot1 * dot1;
                             goto tail;
                         }
@@ -415,13 +427,17 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         if (!unk_4c) continue;
                         if (dot3 > dot1) {
                             nn23 = EDGENORMAL_DOT(en2, en3);
+                            d2h = dot2 >> 31;
+                            n23h = nn23 >> 31;
                             if (MUL10(nn23, dot2) <= dot3) goto v23;
                         } else {
                             nn12 = EDGENORMAL_DOT(en2, en1);
+                            d2h = dot2 >> 31;
+                            n12h = nn12 >> 31;
                             if (MUL10(nn12, dot2) <= dot1) goto v12;
                         }
-                        /* --- E2 --- */
-                        EDGE_FILTER(dot2)
+                        EDGE_FILTER(dot2, z11c)
+                        d2h = dot2 >> 31;
                         dsq = rsq - (s64)dot2 * dot2;
                         goto tail;
 
@@ -430,28 +446,28 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         if (!unk_4c) continue;
                         if (dot1 > dot2) {
                             nn31 = EDGENORMAL_DOT(en3, en1);
+                            d3h = dot3 >> 31;
+                            n31h = nn31 >> 31;
                             if (MUL10(nn31, dot3) <= dot1) goto v31;
                         } else {
                             nn23 = EDGENORMAL_DOT(en3, en2);
+                            d3h = dot3 >> 31;
+                            n23h = nn23 >> 31;
                             if (MUL10(nn23, dot3) <= dot2) goto v23;
                         }
-                        /* --- E3 --- */
-                        EDGE_FILTER(dot3)
+                        EDGE_FILTER(dot3, z120)
+                        d3h = dot3 >> 31;
                         dsq = rsq - (s64)dot3 * dot3;
                         goto tail;
 
-                    v12:  VERTEX_BLOCK(nn12, den12, en1, en2, dot1, dot2)   /* 0x01ffc63c */
-                    v23:  VERTEX_BLOCK(nn23, den23, en2, en3, dot2, dot3)   /* 0x01ffc750 */
-                    v31:  VERTEX_BLOCK(nn31, den31, en3, en1, dot3, dot1)   /* 0x01ffc89c */
+                    v12:  VERTEX_BLOCK(nn12, n12h, den12, en1, en2, dot1, dot2)
+                    v23:  VERTEX_BLOCK(nn23, n23h, den23, en2, en3, dot2, dot3)
+                    v31:  VERTEX_BLOCK(nn31, n31h, den31, en3, en1, dot3, dot1)
 
                     vtail:
-                        /* Shared by all three vertex regions (0x01ffc9cc). The
-                           `ldreq [sp+0x10c] / ldrne [sp+0x154]` pair here is not a
-                           second variable -- both slots are hoisted CONSTANTS, 1
-                           and 0, materialised at 0x01ffba18 / 0x01ffba30 (the same
-                           trick the inlined sqrt uses for its 0 and 1). So the
-                           gate is a plain bit test. */
-                        if (sphere.flags & 0x40) continue;
+                        v = k1;
+                        if (sphere.flags & 0x40) v = z154;
+                        if (!v) continue;
                         dsq = (s64)vx * vx + (s64)vy * vy + (s64)vz * vz;
                         if (faceDot < 0) continue;
                         if ((s64)faceDot * faceDot < dsq) continue;
@@ -461,11 +477,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         goto tail;
 
                     tail:
-                        /* Every edge/vertex region lands here: the distance is a
-                           real square root of the 64-bit remainder, and THAT is
-                           the depth -- the `rsc - faceDot` computed above is only
-                           the face case's answer. */
-                        depth = SqrtRaw((u64)dsq, k0, k1) - faceDot;
+                        depth = SqrtRaw((u64)dsq, z15c, k1) - faceDot;
                         if (depth < 0) continue;
                         if (!contactKind) contactKind = k2;
 
