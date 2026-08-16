@@ -54,7 +54,6 @@ a6ea3b1a74b57099 src/_ZN8Particle10SysTracker10InitialiseEv.cpp extern-c-clash
 b4ec67022e088af8 src/func_ov004_020aeed8.cpp extern-c-clash
 cf7d83579757ff4c src/func_ov004_020af094.cpp extern-c-clash
 01cadd806d718eb1 src/func_ov006_020e6e78.cpp extern-c-clash
-fb8c9547cf4b4a3a src/func_ov064_02119afc.cpp extern-c-clash
 3f2675885e87d552 src/_ZN15TtcRotatingCube13InitResourcesEv.cpp extern-c-clash
 7a37d816f5e354a9 src/func_ov071_02121ba4.cpp extern-c-clash
 a058233791d59bb6 src/func_ov078_02124cf4.cpp extern-c-clash
