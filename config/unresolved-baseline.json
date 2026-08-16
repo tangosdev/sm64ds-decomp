@@ -1,5 +1,5 @@
 {
- "eligible": 10973,
+ "eligible": 10999,
  "unresolved": {
   "arm9:0x02009374": {
    "name": "func_02009374",
@@ -357,42 +357,10 @@
     "p__sinit_ov031_02111434"
    ]
   },
-  "ov019:0x021123d4": {
-   "name": "_ZN13RacingPenguin13InitResourcesEv",
-   "missing": [
-    "Actor_TrackStar",
-    "Animation_LoadFile",
-    "ModelBase_SetFile",
-    "Model_LoadFile",
-    "MovingCylinderClsn_Init",
-    "PathPtr_FromID",
-    "PathPtr_GetNode",
-    "ShadowModel_InitCylinder",
-    "TextureSequence_LoadFile",
-    "TextureSequence_Prepare",
-    "WithMeshClsn_Init"
-   ]
-  },
-  "ov020:0x021112b0": {
-   "name": "func_ov020_021112b0",
-   "missing": [
-    "Actor_ClosestPlayer",
-    "cstd_atan2"
-   ]
-  },
   "ov021:0x02111434": {
    "name": "func_ov021_02111434",
    "missing": [
     "conv_ov021"
-   ]
-  },
-  "ov022:0x021117cc": {
-   "name": "_ZN19FloatOnLavaPlatform8BehaviorEv",
-   "missing": [
-    "Platform_IsClsnInRange",
-    "Platform_UpdateClsnPosAndRot",
-    "Platform_UpdateModelPosAndRotY",
-    "_Z13func_020393a4Pii"
    ]
   },
   "ov022:0x02112434": {
@@ -435,18 +403,6 @@
     "func_0213a794"
    ]
   },
-  "ov055:0x02111674": {
-   "name": "_ZN11MirrorLuigi13InitResourcesEv",
-   "missing": [
-    "Animation_LoadFile",
-    "ModelAnim_SetAnim",
-    "ModelBase_SetFile",
-    "Model_LoadFile",
-    "ShadowModel_InitCylinder",
-    "TextureSequence_Prepare",
-    "TextureSequence_SetFile"
-   ]
-  },
   "ov060:0x02117c30": {
    "name": "_ZN18BowserFireSeaArena13InitResourcesEv",
    "missing": [
@@ -457,13 +413,6 @@
     "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_",
     "_Z88_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_v",
     "func_021115bc"
-   ]
-  },
-  "ov060:0x021182b0": {
-   "name": "func_ov060_021182b0",
-   "missing": [
-    "_Z94_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_v",
-    "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block"
    ]
   },
   "ov060:0x02119004": {
@@ -579,12 +528,6 @@
     "_ZN18MovingCylinderClsn4InitEP5Actoriijj"
    ]
   },
-  "ov071:0x02122a64": {
-   "name": "__sinit_ov071_02122a64",
-   "missing": [
-    "data_ov071_02122ecc_d"
-   ]
-  },
   "ov074:0x02121e98": {
    "name": "_ZN8Goomboss13InitResourcesEv",
    "missing": [
@@ -609,20 +552,6 @@
    "name": "_ZN5Whomp13InitResourcesEv",
    "missing": [
     "func_021135d4"
-   ]
-  },
-  "ov080:0x0212459c": {
-   "name": "_ZN13MontyMoleRock8BehaviorEv",
-   "missing": [
-    "ActorBase_MarkForDestruction",
-    "Actor_FindWithID",
-    "Actor_MakeVanishLuigiWork",
-    "Actor_UpdatePos",
-    "CylinderClsn_Clear",
-    "CylinderClsn_Update",
-    "Enemy_UpdateWMClsn",
-    "Player_Hurt",
-    "WithMeshClsn_IsOnGround"
    ]
   },
   "ov085:0x02129f8c": {
@@ -675,19 +604,6 @@
     "func_02112968"
    ]
   },
-  "ov098:0x021390ec": {
-   "name": "func_ov098_021390ec",
-   "missing": [
-    "_Z19func_ov002_020ef228Pvi",
-    "_ZN5Actor12ReflectAngleEiis"
-   ]
-  },
-  "ov100:0x0214109c": {
-   "name": "func_ov100_0214109c",
-   "missing": [
-    "ActorBase_MarkForDestruction"
-   ]
-  },
   "ov100:0x02147054": {
    "name": "func_ov100_02147054",
    "missing": [
@@ -704,17 +620,6 @@
     "_ZN16MeshColliderBase6EnableEPv",
     "_ZN9Platform219UpdateClsnPosAndRotEv",
     "_ZN9Platform313IsClsnInRangeEii"
-   ]
-  },
-  "ov102:0x02148c94": {
-   "name": "_ZN13FortressTower13InitResourcesEv",
-   "missing": [
-    "MeshCollider_LoadFile",
-    "ModelBase_SetFile",
-    "Model_LoadFile",
-    "MovingMeshCollider_SetFile",
-    "Platform_UpdateClsnPosAndRot",
-    "Platform_UpdateModelPosAndRotY"
    ]
   }
  }
