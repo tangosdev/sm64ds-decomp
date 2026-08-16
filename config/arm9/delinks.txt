@@ -3701,6 +3701,7 @@ src/_ZN8Particle10SysTracker6UpdateEv.c:
     .text start:0x02022f20 end:0x02022f40
 
 src/_ZN8Particle10SysTracker10InitialiseEv.cpp:
+    complete
     .text start:0x02022f40 end:0x020230ec
 
 src/_ZN8Particle7Texture12AllocPalVramEjb.c:
@@ -5074,9 +5075,6 @@ src/_ZN13RaycastGroundC1Ev.c:
 src/func_020375b0.cpp:
     .text start:0x020375b0 end:0x020375c0
 
-src/func_020375c0.c:
-    .text start:0x020375c0 end:0x020375d0
-
 src/_ZN11RaycastLine10GetClsnPosEv.c:
     complete
     .text start:0x020375d0 end:0x020375ec
@@ -5107,9 +5105,6 @@ src/_ZN11RaycastLineC1Ev.cpp:
 
 src/func_0203780c.cpp:
     .text start:0x0203780c end:0x0203781c
-
-src/func_0203781c.c:
-    .text start:0x0203781c end:0x0203782c
 
 src/func_0203782c.c:
     complete
@@ -5206,14 +5201,8 @@ src/_ZN10SphereClsnC1Ev.c:
 src/func_02037d84.cpp:
     .text start:0x02037d84 end:0x02037d94
 
-src/func_02037d94.c:
-    .text start:0x02037d94 end:0x02037da4
-
 src/func_02037da4.cpp:
     .text start:0x02037da4 end:0x02037db4
-
-src/func_02037db4.c:
-    .text start:0x02037db4 end:0x02037dc4
 
 src/func_02037dc4.c:
     complete

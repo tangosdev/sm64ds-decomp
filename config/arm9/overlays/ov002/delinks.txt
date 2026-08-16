@@ -2921,6 +2921,7 @@ src/func_ov002_020cfaf0.cpp:
     .text start:0x020cfaf0 end:0x020cfbdc
 
 src/func_ov002_020cfbdc.cpp:
+    complete
     .text start:0x020cfbdc end:0x020cfd84
 
 src/func_ov002_020cfd84.cpp:

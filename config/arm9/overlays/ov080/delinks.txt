@@ -49,6 +49,7 @@ src/func_ov080_02123fcc.cpp:
     .text start:0x02123fcc end:0x02124088
 
 src/func_ov080_02124088.cpp:
+    complete
     .text start:0x02124088 end:0x02124208
 
 src/func_ov080_02124208.c:

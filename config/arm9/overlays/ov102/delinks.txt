@@ -260,6 +260,7 @@ src/func_ov102_0214b128.cpp:
     .text start:0x0214b128 end:0x0214b248
 
 src/func_ov102_0214b248.cpp:
+    complete
     .text start:0x0214b248 end:0x0214b384
 
 src/func_ov102_0214b384.c:

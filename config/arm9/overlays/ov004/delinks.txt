@@ -204,6 +204,7 @@ src/func_ov004_020aeb24.cpp:
     .text start:0x020aeb24 end:0x020aeed8
 
 src/func_ov004_020aeed8.cpp:
+    complete
     .text start:0x020aeed8 end:0x020af04c
 
 src/func_ov004_020af04c.cpp:
@@ -211,6 +212,7 @@ src/func_ov004_020af04c.cpp:
     .text start:0x020af04c end:0x020af094
 
 src/func_ov004_020af094.cpp:
+    complete
     .text start:0x020af094 end:0x020af27c
 
 src/func_ov004_020af27c.cpp:

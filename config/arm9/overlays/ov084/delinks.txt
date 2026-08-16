@@ -122,9 +122,6 @@ src/_ZN6Goomba8BehaviorEv.cpp:
     complete
     .text start:0x0212b6ec end:0x0212bc30
 
-src/_ZN6Goomba13InitResourcesEv.cpp:
-    .text start:0x0212bc30 end:0x0212bfc0
-
 src/func_ov084_0212bfc0.cpp:
     complete
     .text start:0x0212bfc0 end:0x0212bff8

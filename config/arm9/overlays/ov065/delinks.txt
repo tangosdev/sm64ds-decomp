@@ -329,6 +329,7 @@ src/_ZN15TtcRotatingCube8BehaviorEv.cpp:
     .text start:0x02119a50 end:0x02119c38
 
 src/_ZN15TtcRotatingCube13InitResourcesEv.cpp:
+    complete
     .text start:0x02119c38 end:0x02119ebc
 
 src/TtcRotatingPrism_Spawn.c:
