@@ -3250,3 +3250,57 @@ Two things to carry:
   What would break this one is a lever that outranks a cross-call constant web
   against a pointer web, which is a rank rule none of 6k / 6q / 6y / 6ab / 6bf
   currently spells. The near-miss stays live at div 10.
+
+## 6bh. A hoisted constant block in the prologue is evidence of BARE LITERALS in the loop body (func_ov007_020b2998 MATCHED, 2026-08-16)
+
+func_ov007_020b2998 (ov007, 0x23c, the title screen's widget setup) opens with a
+block that reads like deliberate setup: `mov r8,#0x1000`, `mov r0,#0x32000` plus
+`rsb r0,r0,#0`, seven more `mov rN,#imm` / `str rN,[sp,#..]` pairs, then
+`mov r5,sl`, `mov r7,#1`, `mov r6,#0x80000`, `mov fp,#0x60000`. Twelve constant
+webs materialized before a three-iteration loop, five kept in callee-saved
+registers and seven spilled to the frame.
+
+Nothing in the source expresses any of it. Eleven of the twelve are BARE LITERALS
+written inline in the arms of a `switch (i)` inside the loop (`w->f_4e = 0x14;`,
+`w->f_70 = 0x20;`, `w->f_0 |= 2;` and so on); the twelfth, `0x1000`, is CSE'd with
+the pre-loop `P->f_f8 = 0x1000` store. mwccarm treats each distinct loop-invariant
+literal as a web, hoists the whole set into the preheader, colors what fits and
+spills the rest. The block reproduced for free from the naive transcription on the
+first compile. The matched file has no named constants, no const table and no
+hand-hoisted temps.
+
+**Read the block as evidence, not as structure.** A prologue full of
+`mov rN,#imm` / `str rN,[sp,#..]` for values only consumed inside a loop is a
+statement about the LOOP BODY: it spelled those numbers inline. Drafting them as
+named locals or as a table declared above the loop is the wrong shape, and an
+expensive one, because named locals then join the declaration-order rank game of
+6ab / 6bf and a table changes the addressing as well.
+
+**The hoist/no-hoist split is by materialization cost, which makes the literal pool
+a diagnostic for what the source spelled.** Three negative Q12 constants appear in
+this function and only one is hoisted. `0x32000` is a rotated 8 bit immediate, so
+`-0x32000` costs two instructions (`mov` plus `rsb`), becomes a web, and lands in
+the spilled set at `[sp,#0xc]`. `-0x320ff` and `-0x31f01` are reachable by neither
+`mov` nor `mvn`, so each stays a pc relative load (`ldr r0,[pc,#0xc8]`) inside its
+own switch arm and is never hoisted, despite being exactly as loop-invariant as the
+one that was. `0x7fff`, stored to a halfword field, behaves the same way.
+
+So the pool tells you which constants the source spelled in a form mwccarm could not
+synthesize. A value sitting in the pool that your draft hoisted, or a value hoisted
+into the prologue that your draft left as a pool load, is a shape error in the draft
+and not a coloring problem; no register lever will close it.
+
+**The zero web coalesces with the induction variable's initializer.** The zero used
+for `w->f_46 = w->f_4c = 0;` inside the loop is not a fresh `mov r5,#0`. The ROM
+emits `mov sl,#0` for `i = 0` and then `mov r5,sl`. Constant webs are ranked and
+coalesced against each other, the same machinery 6bf and 6bg measure from the other
+end, and the zero is cheap enough here to reach a register while `0x100` and `0x14`
+are not.
+
+Rule: do not spend a cycle reverse engineering a prologue constant block before
+checking whether it falls out of the naive body. Here it did, and the whole 0x23c
+matched on the second compile once the per index dispatch was written as a `switch`
+(the ROM lays out the full compare chain before the case bodies, which an if/else
+chain cannot produce and which is worth exactly the one word of size difference) and
+`int i` was declared ahead of the object pointer. div=0 at 2004/b56, strict relocs,
+linkcheck VERIFIED.
