@@ -3207,3 +3207,53 @@ starts, named-zero webs at every declaration slot, 6 outer-loop shapes, 10
 inner-loop forms, the verified pragma vocabulary and all 25 installed
 compilers, so it is banked as the live near-miss rather than a floor claim --
 the last two claims on this function were both wrong.
+
+## 6bg. Measure the register IDENTITY, not the divergence count, before claiming a decl-order lever is exhausted (func_ov007_020c9688, still div 10, 2026-08-16)
+
+Follow-up to 6bf on the same function. 6bf closed the first-loop cluster and left
+10 words in the second loop: a 3-cycle where the ROM colors the cursor `q` into
+`sb`, the call's argument zero into `r8` and the m-reset zero into `r7`, while
+every compile of ours colors them `r7` / `sb` / `r8`.
+
+Roughly 900 further hypotheses moved the count by exactly nothing. All of these
+return div=10, not "about 10" -- the identical number, with loop 1 still at zero:
+
+- all 120 block declaration permutations, and 735 more from the 6bf greedy
+  pairwise climb over a 15-element *function-top* declaration list (seed plus 6
+  random restarts, every one a local optimum at 10 with no gradient anywhere)
+- 6y lever 2 (scope depth): `q` at five function-top slots
+- 6y lever 1 (fake self-select use-count boost) in five placements
+- 6y lever 4 (`volatile` on a memory-sourced web), plus `register`
+- the type-rank lever: `q` as `char*`, `u32`, `s16*`, `u16*`, `void*`, `Entry*`
+- nine zero-plumbing shapes, including one shared named zero, two named zeros in
+  both definition orders, and reusing the function-top `heap = 0` (already an
+  argument to the loop-1 allocator) as the loop-2 call arguments
+- the pragma vocabulary, singles and pairs
+
+The useful move was to stop scoring the count and start reading the allocated
+register out of the object. Disassembling word +0x250 (`q`) and +0x264 / +0x268
+(the two zeros) across 520 variants gives four outcomes and only four:
+
+    (q, zero_a, zero_b) = (r7, sb, r8)   137
+                          (r5, sb, r8)   134
+                          (r4, sb, r8)   127
+                          (r6, sb, r8)   122
+
+The zero pair is **invariant**. Declaration order moves `q` freely around the low
+callee-saved band r4-r7 -- which is why the count looks alive at 10/13 -- and
+never once places it above r7. mwccarm ranks the two loop-invariant constant webs
+that live across the call above a cursor pointer web, and hands them the two
+highest free callee-saved registers; the ROM does the opposite.
+
+Two things to carry:
+
+- **A flat divergence count across a large sweep is not evidence the space is
+  searched; it can mean the lever never touched the web you care about.** Reading
+  the register identity turns "900 variants, no progress" into a specific,
+  falsifiable statement about which register a web can and cannot reach. Cheap:
+  the object is already in hand, it is four lines of capstone.
+- **Not marked as a floor**, deliberately. Two prior floor claims on this function
+  were both wrong, and a `floor` entry makes the refine tooling skip the target.
+  What would break this one is a lever that outranks a cross-call constant web
+  against a pointer web, which is a rank rule none of 6k / 6q / 6y / 6ab / 6bf
+  currently spells. The near-miss stays live at div 10.
