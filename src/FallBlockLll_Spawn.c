@@ -4,14 +4,15 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 extern int data_ov022_021142c4[];
+extern int _ZTV16daObjFallBlock_c[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = _ZTV20daObjFl_Fall_Block_c */
+/* vtable identified: VT0 = _ZTV16daObjFallBlock_c */
 int *FallBlockLll_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(844);
     if (p) {
         _ZN8PlatformC2Ev(p);
-        p[0] = (int)_ZTV20daObjFl_Fall_Block_c;
+        p[0] = (int)_ZTV16daObjFallBlock_c;
         p[0] = (int)data_ov022_021142c4;
     }
     return p;

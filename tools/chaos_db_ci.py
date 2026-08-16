@@ -34,7 +34,31 @@ sys.path.insert(0, str(REPO / "tools"))
 import asm_policy  # noqa: E402
 import srcpath as SP  # noqa: E402
 import relocs as RL  # noqa: E402
+import rombuild_check as RBC  # noqa: E402
 import tiers as TIERS  # noqa: E402
+
+
+def enrolled_addresses():
+    """{(module, addr)} for every range a delinks.txt marks ``complete``.
+
+    This is the set the ROM build actually compiles and byte-compares against the
+    cartridge.  ``matched`` below is a different and much weaker test -- a ``src/``
+    file named after the symbol, with no ``NONMATCHING`` banner and no ``dcd`` blob --
+    and the two differ by several hundred functions, because a file can sit in the
+    tree, be counted, and be compiled by nothing.  The published percentage was the
+    weaker number alone, so both now ride along and the site can say which is which.
+
+    Reads only committed config, so it stays CI-safe: no ROM, no compiler.
+    """
+    out = set()
+    for sym, label in RL.module_universe():
+        delinks = sym.parent / "delinks.txt"
+        if not delinks.is_file():
+            continue
+        for rel, addr, _end in RBC.complete_entries(delinks):
+            if not rel.startswith("mods/"):
+                out.add((label, addr))
+    return out
 
 
 def tier_stats():
@@ -412,6 +436,8 @@ def main():
 
     functions = []
     total_b = matched_b = matched_n = 0
+    verified_b = verified_n = 0
+    enrolled = enrolled_addresses()
     transcribed_files, unbannered_files = set(), set()
     # Every module, itcm included. relocs.module_universe is the one definition of
     # what "every module" means, and it fails loudly rather than skipping a new one.
@@ -451,6 +477,14 @@ def main():
             if matched:
                 matched_b += size
                 matched_n += 1
+                # Byte-verified is the subset the ROM build proves: enrolled, compiled,
+                # linked into its module and compared to the cartridge. The rest are
+                # matched on the strength of a filename and are filled at link time by
+                # a gap object holding the ROM's own bytes.
+                if (label, addr) in enrolled:
+                    rec["verified"] = True
+                    verified_b += size
+                    verified_n += 1
             else:
                 r = nm.get((label, addr))
                 if r and r.get("divergences") is not None:
@@ -482,6 +516,12 @@ def main():
             "matchedFunctions": matched_n,
             "totalBytes": total_b,
             "matchedBytes": matched_b,
+            # The subset of `matched` the cartridge actually settles. `matched` is kept
+            # unchanged -- it is what contributor credit is computed from, and every
+            # existing consumer reads it -- but shipping it alone overstated coverage,
+            # so the measured figure travels beside it. See enrolled_addresses.
+            "verifiedFunctions": verified_n,
+            "verifiedBytes": verified_b,
             "moduleCount": len({f["module"] for f in functions}),
             # The other two tiers ride along here so every consumer reads ONE file.
             # romstats-sync.sh on the VPS fetches this db and nothing else, and the
@@ -499,6 +539,14 @@ def main():
           f"{matched_n}/{len(functions)} funcs, {matched_b}/{total_b} bytes, "
           f"{db['stats']['moduleCount']} modules, "
           f"{sum(1 for f in functions if 'author' in f)} authored")
+    # Both numbers in the log, always. The gap between them is the number of functions
+    # counted on the strength of a filename that no build compiles, and it is only
+    # visible if the smaller figure is printed next to the larger one.
+    print(f"  byte-verified: {verified_n}/{len(functions)} funcs, "
+          f"{verified_b}/{total_b} bytes "
+          f"({100.0 * verified_b / total_b:.2f}% vs {100.0 * matched_b / total_b:.2f}% "
+          f"matched); {matched_n - verified_n} matched function(s) are compiled by "
+          f"nothing")
     # Per-module counts in the log, so a module that stops being emitted shows up in
     # the CI diff as a line that vanished. The silent version of this cost itcm its
     # entire visibility; a number that goes to zero is at least readable.

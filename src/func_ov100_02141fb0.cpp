@@ -18,7 +18,7 @@ struct Obj {
 };
 
 extern "C" void *_ZN5Actor10FindWithIDEj(u32 id);
-extern "C" void func_020ada40(char *c, Vector3_16 *s, void *a, int z);
+extern "C" void func_ov002_020ada40(char *c, Vector3_16 *s, void *a, int z);
 extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
 extern "C" void _ZN5Actor8PoofDustEv(void *a);
 extern "C" void _ZN9ActorBase18MarkForDestructionEv(void *a);
@@ -47,7 +47,7 @@ extern "C" void func_ov100_02141fb0(Obj *thiz)
         u32 r = thiz->m();
         *(int *)(((int)c + 0x60)) += r;
         s.x = 0; s.y = 0; s.z = 0;
-        func_020ada40(c, &s, a, 0);
+        func_ov002_020ada40(c, &s, a, 0);
         _ZN12WithMeshClsn15ClearGroundFlagEv(c + 0x110);
         return;
     }

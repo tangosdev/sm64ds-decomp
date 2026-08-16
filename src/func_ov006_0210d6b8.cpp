@@ -10,7 +10,7 @@ extern void func_ov006_0210c2b0(char *p);
 extern void func_ov006_0210c208(char *p);
 extern void *data_ov006_0213eb40[];
 extern void *data_ov006_0213e5d4[];
-extern void func_020ad494();
+extern void data_ov001_020ad494();
 void *func_ov006_0210d6b8(void);
 void *func_ov006_0210d6b8(void) {
     char *p = (char *)_ZN9ActorBasenwEj(0x4710);
@@ -18,7 +18,7 @@ void *func_ov006_0210d6b8(void) {
         func_ov004_020b2adc(p);
         *(void ***)p = data_ov006_0213eb40;
         char *base = (char *)(((int)p + 0x4660));
-        *(void **)base = (void *)&func_020ad494;
+        *(void **)base = (void *)&data_ov001_020ad494;
         *(void ***)base = data_ov006_0213e5d4;
         func_ov006_0210c2b0(p + 0x4684);
         func_ov006_0210c2b0(p + 0x4690);

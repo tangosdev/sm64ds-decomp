@@ -17,6 +17,7 @@ src/func_ov070_0211f0a4.cpp:
     .text start:0x0211f0a4 end:0x0211f100
 
 src/func_ov070_0211f100.cpp:
+    complete
     .text start:0x0211f100 end:0x0211f368
 
 src/func_ov070_0211f368.cpp:
@@ -272,6 +273,7 @@ src/_ZN10FlameChomp8BehaviorEv.cpp:
     .text start:0x021218f4 end:0x02121914
 
 src/_ZN10FlameChomp13InitResourcesEv.cpp:
+    complete
     .text start:0x02121914 end:0x02121a64
 
 src/func_ov070_02121a64.c:

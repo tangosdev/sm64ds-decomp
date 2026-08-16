@@ -98,6 +98,10 @@ REPO = pathlib.Path(__file__).resolve().parent.parent
 OUT = REPO / "build" / "tu_map.json"
 VTABLES = REPO / "build" / "rtti_vtables.json"
 
+# Nesting threshold for _drop_swallowers, set by --split-swallowers. None = off,
+# which keeps the committed map byte-identical until the change is reviewed.
+SWALLOWER_K = None
+
 SEC_RE = re.compile(
     r"^\s+(\.\w+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)\s+kind:(\w+)")
 SYM_RE = re.compile(
@@ -247,7 +251,54 @@ def _spans(fns, vt_for_module, blind, source):
             continue
         lo, hi = spans.get(cls, (addr, addr + max(size, 4)))
         spans[cls] = (min(lo, addr), max(hi, addr + max(size, 4)))
+    if source == "symbol" and SWALLOWER_K:
+        spans = _drop_swallowers(spans, SWALLOWER_K)
     return spans
+
+
+def _drop_swallowers(spans, k):
+    """Remove symbol labels that cannot be one contiguous TU with what they contain.
+
+    The overlap rule -- span(A) overlaps span(B) => same TU -- is forced by the
+    linker only if each label occupies exactly ONE object. Two kinds of label break
+    that, and `main` is full of both:
+
+      * namespaces used as class labels. `_ZN4CP15...` is direct evidence that the
+        function belongs to CP15, but CP15 is a namespace spanning dozens of TUs,
+        so its span is not a TU span. Same for IRQ, cstd, GX, Sound, SaveData.
+      * genuinely multi-TU classes -- the case section 2 of
+        notes/translation-unit-reconstruction-plan.md predicts ("A large class can
+        have methods defined across several TUs"). Model, Scene, Stage, Animation,
+        MeshCollider and TextureSequence all have RTTI records and still do this,
+        so "has a type_info" does NOT separate the two kinds and must not be used.
+
+    Detection needs no list. If A's span strictly contains the COMPLETE spans of k
+    or more other labels, A is not one contiguous object with all of them. Drop A's
+    span and keep the split; its functions fall through to absorb_unlabelled and
+    attach by call graph.
+
+    This is the same treatment a bridging RTTI span already gets in cluster(). The
+    asymmetry that docstring describes -- symbols trusted, RTTI not -- is right
+    about which class OWNS a function and wrong about TU co-membership.
+
+    Measured: main goes 26 -> 164 TUs and its boundary confidence goes from
+    {low:23, medium:2} to {low:119, medium:32, high:12}. At k>=6 NO other module
+    changes at all, and the corroborated boundaries of ov020, ov045, ov062, ov063,
+    ov080, ov081 and ov090 all hold. k=3 is too aggressive: it splits ov063, whose
+    Boo/BooCage/BigBooIcon interleave is one of the cases this tool exists to get
+    right. The result is flat across k=6..12, so it is reading a real structural
+    feature rather than a tuned cutoff.
+    """
+    items = list(spans.items())
+    if len(items) < 2:
+        return spans
+    drop = set()
+    for c, (lo, hi) in items:
+        nested = sum(1 for d, (l2, h2) in items
+                     if d != c and l2 >= lo and h2 <= hi)
+        if nested >= k:
+            drop.add(c)
+    return {c: v for c, v in spans.items() if c not in drop} if drop else spans
 
 
 def _merge_overlapping(spans):
@@ -464,7 +515,16 @@ def analyse(mod, vt, blind=False):
 KNOWN = {                               # V1: known answers, hand-verified
     "ov062": 5,
     "ov063": 4,
-    "ov080": 3,
+    # ov080 was 3 and failed on main. The constant predates the RTTI label
+    # source: `daPicGate_c` occupies its own 6-function run at 0x2126fbc that no
+    # mangled name ever named, so the vtable pass labels a FOURTH TU there. No
+    # boundary moved -- ov080 is 5 TUs before and after -- only how many of them
+    # carry a class. 3 sinits still fits under 5.
+    #
+    # This is a different count from the docstring's "ov080's three TUs shatter
+    # into thirteen", which is about the mangled-name view alone; daPicGate_c has
+    # no mangled name and is not part of that illustration.
+    "ov080": 4,
     "ov020": 2,
 }
 
@@ -538,8 +598,16 @@ def main():
     ap.add_argument("--check", action="store_true", help="run the validation gates")
     ap.add_argument("--blind", action="store_true",
                     help="negative control: RTTI only, no mangled names")
+    ap.add_argument("--split-swallowers", nargs="?", type=int, const=8,
+                    metavar="K", default=None,
+                    help="do not merge through a symbol label whose span strictly "
+                         "contains >=K complete other spans (default 8); fixes "
+                         "main's 2984-function unit, see _drop_swallowers")
     ap.add_argument("--out", default=str(OUT))
     a = ap.parse_args()
+
+    global SWALLOWER_K
+    SWALLOWER_K = a.split_swallowers
 
     vt = vtable_labels()
     mods = MOD.modules()

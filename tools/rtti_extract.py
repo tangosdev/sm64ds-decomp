@@ -80,8 +80,14 @@ TI_KIND = {
 
 ARM9_BASE = 0x02004000
 ARM9_BIN = REPO / "extracted" / "arm9_dec.bin"
-OVERLAY_DIR = REPO / "extracted" / "dsd" / "arm9_overlays"
-OVERLAY_YAML = OVERLAY_DIR / "overlays.yaml"
+# The REAL ROM overlay images, not `extracted/dsd/arm9_overlays/*.bin`. Those are
+# dsd's DELINKED images: every relocation site is stamped with a placeholder word,
+# and a typeinfo record is nothing but relocations -- the kind vtable pointer, the
+# name pointer, the base pointer. Scanning them finds no overlay record at all, so
+# the census silently reports 67 of 429 and every overlay class reads as absent.
+# tools/modules.py, match.py and build_pin.py all read these images instead.
+OVERLAY_DIR = REPO / "extracted" / "overlays"
+OVERLAY_YAML = REPO / "extracted" / "dsd" / "arm9_overlays" / "overlays.yaml"
 
 # delinks.txt section table: leading indented lines before the first `path:` line
 SECTION_RE = re.compile(
@@ -203,7 +209,7 @@ def load_modules(stats):
     cfg = yaml.safe_load(OVERLAY_YAML.read_text(encoding="utf-8"))
     for ov in cfg["overlays"]:
         name = "ov%03d" % ov["id"]
-        binp = OVERLAY_DIR / ov["file_name"]
+        binp = OVERLAY_DIR / ("overlay_%04d.bin" % ov["id"])
         if not binp.is_file():
             stats["overlay_images_missing"] += 1
             continue
@@ -465,7 +471,7 @@ def build():
 
     out = {
         "meta": {
-            "source": "extracted/arm9_dec.bin + extracted/dsd/arm9_overlays/*.bin",
+            "source": "extracted/arm9_dec.bin + extracted/overlays/overlay_%04d.bin",
             "type_info_vtables": {hex(k): v for k, v in sorted(TI_KIND.items())},
             "stats": dict(sorted(stats.items())),
         },

@@ -39,7 +39,7 @@
  * THE EMBEDDED SUBOBJECT AT 0x4660. Pre-migration, dScMgSlot1_c's D1/D0
  * (src/func_ov006_0210a8c0.c and .../func_ov006_0210a900.cpp) wrote two
  * vtables back to back into this+0x4660 with no further calls --
- * data_ov006_0213e5d4 then func_020ad494 -- the same "most-derived writes
+ * data_ov006_0213e5d4 then data_ov001_020ad494 -- the same "most-derived writes
  * its own vtable, then chains to its base which writes ITS OWN vtable, both
  * inlined to nothing but the two writes" idiom dScMgBase_c.h documents for
  * its own touchIcon_0f4. Unlike that case (an array of 8), this is a SINGLE
@@ -47,12 +47,12 @@
  * independently records a distinct nested class, `dScMgSlot1_c::betIcon_c`
  * (mangled N12dScMgSlot1_c9betIcon_cE, ov006:0x0213e594), single-inheriting
  * `dThIcon_c` at offset 0 (ov001:0x020ad478) -- literally the SAME dThIcon_c
- * dScMgBase_c's own TouchIcon_c also inherits (func_020ad494 is the
+ * dScMgBase_c's own TouchIcon_c also inherits (data_ov001_020ad494 is the
  * identical address dScMgBase_c.h cites for dThIcon_c's own vtable).
  * data_ov006_0213e5d4 is betIcon_c's own vtable (build/rtti.json:
  * "ov006:0x0213e594" -> vtable "0x0213e5d4"). The constructor
  * (src/func_ov006_0210d6b8.cpp, already matched, not touched by this
- * migration) confirms the construction order: it writes func_020ad494 (the
+ * migration) confirms the construction order: it writes data_ov001_020ad494 (the
  * dThIcon_c base vtable) into this+0x4660 FIRST, then overwrites it with
  * data_ov006_0213e5d4 (betIcon_c's own vtable) -- ordinary base-then-derived
  * construction, the mirror image of the destructor's derived-then-base
@@ -108,7 +108,7 @@
 struct Player;
 struct Actor;
 
-extern "C" void func_020ad494(void);
+extern "C" void data_ov001_020ad494(void);
 extern "C" void *data_ov006_0213e5d4;
 
 struct dScMgSlot1_c : dScMgBase_c {

@@ -17,6 +17,7 @@ src/func_ov062_02115f84.c:
     .text start:0x02115f84 end:0x02116010
 
 src/func_ov062_02116010.c:
+    complete
     .text start:0x02116010 end:0x021161a8
 
 src/func_ov062_021161a8.c:
@@ -200,6 +201,7 @@ src/func_ov062_02117bf4.cpp:
     .text start:0x02117bf4 end:0x02117c98
 
 src/func_ov062_02117c98.c:
+    complete
     .text start:0x02117c98 end:0x02118004
 
 src/func_ov062_02118004.cpp:

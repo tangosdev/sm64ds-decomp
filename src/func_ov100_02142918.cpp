@@ -6,7 +6,7 @@
 /* daBtfly_c::Kill - recovered from vtable slot identity */
 extern "C" {
 void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void* self, void* c);
-int func_020ad660(void* a, void* b, void* d, int e);
+int func_ov002_020ad660(void* a, void* b, void* d, int e);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void func_02012694(int a, void* p);
 void func_ov100_02141fb0(void* c);
@@ -31,7 +31,7 @@ extern "C" void func_ov100_02142918(char* c)
 {
     int r;
     _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x374);
-    r = func_020ad660(c, c + 0x110, c + 0x2cc, 3);
+    r = func_ov002_020ad660(c, c + 0x110, c + 0x2cc, 3);
     if (r != 0) {
         if (r != 2)
             return;

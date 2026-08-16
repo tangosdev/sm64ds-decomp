@@ -12,8 +12,10 @@ extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
 extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
 }
+extern "C" {
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int fix, short s, void *clps);
+}
 extern "C" {
 extern void func_020393d4(int *p, int v);
 extern void _ZN13RaycastGroundC1Ev(void *self);

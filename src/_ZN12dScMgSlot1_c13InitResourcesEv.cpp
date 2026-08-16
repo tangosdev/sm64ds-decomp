@@ -130,11 +130,11 @@ s32 dScMgSlot1_c::InitResources()
     *(volatile u16 *)0x4000050 = 0;
     _ZN3G2x13SetBlendAlphaEPVttttt((volatile u16 *)0x4001050, 1, 0x1c, 7, 9);
 
-    func_020bc88c = 0x80;
-    func_020bc860 = 0x40;
-    func_020bc878 = 0x80;
-    func_020bc890 = 0x40;
-    func_020bc8b8 = 0x80;
+    data_ov004_020bc88c = 0x80;
+    data_ov004_020bc860 = 0x40;
+    data_ov004_020bc878 = 0x80;
+    data_ov004_020bc890 = 0x40;
+    data_ov004_020bc8b8 = 0x80;
     func_020bc8b4 = 0x40;
 
     if (*(int *)(c + 8) & 0xff) {

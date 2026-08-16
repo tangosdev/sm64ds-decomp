@@ -52,6 +52,7 @@ sys.path.insert(0, str(REPO / "tools"))
 import objisolate as OI  # noqa: E402
 import rombuild_cache as RBK  # noqa: E402
 import rombuild_check as RBC  # noqa: E402
+import romdata_check as RDC  # noqa: E402
 import layout_check as LAY  # noqa: E402
 import rombuild_profile as RP  # noqa: E402
 
@@ -231,7 +232,7 @@ def init_section_sources():
     return {rel for (_d, _name, rel, _addr, _size, sec) in cands if sec == ".init"}
 
 
-def _isolate(obj, rel, syms):
+def _isolate(obj, rel, syms, data_sink=None):
     """Reduce a compiled `src/` object to its declared function. Returns an error or None.
 
     `mods/` is deliberately exempt. A mod is not a recovered ROM function: it may
@@ -242,6 +243,16 @@ def _isolate(obj, rel, syms):
     """
     if not rel.replace("\\", "/").startswith("src/"):
         return None
+    if data_sink is not None:
+        # THE ONLY MOMENT THIS IS POSSIBLE. The object still carries every `.data`
+        # section mwcc emitted -- the vtable, the typeinfo record, the typeinfo name --
+        # and `OI.isolate` on the next line zeroes all of them and rebinds their symbols
+        # to the ROM's carved-out addresses. After that the bytes are gone from the
+        # pipeline and the link compares the cartridge's own data against itself.
+        #
+        # Measurement only: check_object swallows its own exceptions, and nothing here
+        # can fail the build. See tools/romdata_check.py for why it is not a gate.
+        data_sink.extend(RDC.check_object(obj, rel))
     plan = OI.isolate(obj, (syms or {}).get(rel, pathlib.Path(rel).stem))
     if plan.get("kind") == OI.NOT_A_FUNCTION:
         return None          # nothing to reduce; other gates judge this file
@@ -326,7 +337,8 @@ def retarget_text_section(obj, section=".init"):
     return False
 
 
-def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_root=None):
+def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_root=None,
+                data_sink=None):
     """Compile one enrolled source file to the object path dsd's objects.txt names.
 
     Returns (rel, error-or-None, outcome), where outcome is how the object was
@@ -359,7 +371,7 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
             err = _retarget(obj, rel, init_srcs)
             if err:
                 return rel, f"retarget: {err}", "error"
-            err = _isolate(obj, rel, syms)
+            err = _isolate(obj, rel, syms, data_sink)
             if err:
                 return rel, f"isolate: {err}", "error"
             return rel, None, "hit"
@@ -393,18 +405,18 @@ def compile_one(rel, vers=None, cache=None, init_srcs=None, syms=None, build_roo
         if err:
             return rel, f"retarget: {err}", "error"
         if key is None:
-            err = _isolate(obj, rel, syms)
+            err = _isolate(obj, rel, syms, data_sink)
             return (rel, f"isolate: {err}", "error") if err else (rel, None, "miss")
         deps = cache.deps_from(scratch)
         if deps is None:
-            err = _isolate(obj, rel, syms)
+            err = _isolate(obj, rel, syms, data_sink)
             return (rel, f"isolate: {err}", "error") if err else (rel, None, "uncacheable")
         # Cache the RAW object, then isolate the working copy. Storing the reduced
         # form instead would bake this transformation into every entry, so any later
         # fix to it would be masked by isolate()'s own idempotence -- which is exactly
         # how the STB_LOPROC bug survived a rebuild and forced SCHEMA 2.
         cache.put(key, deps, obj)
-        err = _isolate(obj, rel, syms)
+        err = _isolate(obj, rel, syms, data_sink)
         return (rel, f"isolate: {err}", "error") if err else (rel, None, "miss")
     finally:
         if scratch:
@@ -426,6 +438,9 @@ def main():
                     help="skip the src/ layout invariant gate (see tools/layout_check.py)")
     ap.add_argument("--no-check", action="store_true",
                     help="skip module/source fidelity analysis; report status is unchecked")
+    ap.add_argument("--no-data-check", action="store_true",
+                    help="skip comparing emitted vtable/RTTI data against the ROM "
+                         "(see tools/romdata_check.py); never affects the link")
     ap.add_argument("--arm7-bios", help="passed to dsd rom build if your dump needs it")
     ap.add_argument("--no-cache", action="store_true",
                     help="compile every enrolled file, ignoring the object cache")
@@ -502,6 +517,10 @@ def main():
                                 enabled=not args.no_cache)
         init_srcs = init_section_sources()
         syms = enrolled_symbols()
+        # Collected during the compile because that is the only point at which the
+        # objects still carry the data mwcc emitted -- see _isolate. None switches the
+        # measurement off entirely; it never affects what gets linked either way.
+        data_sink = None if args.no_data_check else []
         print(f"[3/6] mwccarm: {len(srcs)} enrolled source file(s), -j{args.jobs}"
               + (f" ({n_alt} on an alternate toolchain version)" if n_alt else ""))
         failures = []
@@ -509,7 +528,8 @@ def main():
         if srcs:
             with concurrent.futures.ThreadPoolExecutor(max_workers=args.jobs) as ex:
                 for rel, err, outcome in ex.map(
-                        lambda s: compile_one(s, vers, cache, init_srcs, syms), srcs):
+                        lambda s: compile_one(s, vers, cache, init_srcs, syms,
+                                              data_sink=data_sink), srcs):
                     outcomes[outcome] = outcomes.get(outcome, 0) + 1
                     if err:
                         failures.append((rel, err))
@@ -560,7 +580,20 @@ def main():
             return 0
         print("[6/6] analyze module and source fidelity")
         analysis = RBC.analyze(config_root, args.profile)
+        if data_sink is not None:
+            # Folded in before printing, so the composition line can say how much of the
+            # data it just called unreachable is nonetheless proven. Reported, never
+            # gated: most of the tree fails this today for known modelling reasons, and
+            # validate_merge ratchets the verified count instead.
+            romdata = RDC.summarize(data_sink)
+            report["romData"] = romdata
+            analysis["moduleComposition"]["dataBytesVerified"] = romdata["verifiedBytes"]
         RBC.print_report(analysis)
+        if data_sink is not None:
+            rd = report["romData"]
+            print(f"ROM data from source: {rd['verified']:,} symbol(s) verified, "
+                  f"{rd['partial']:,} partial, {rd['differs']:,} differ, "
+                  f"{rd['unnamed']:,} unnamed by config")
         report["analysis"] = analysis
         report["status"] = "passed" if analysis["passed"] else "failed"
         save_report()

@@ -6,7 +6,7 @@
 #include "dScMgCurling2_c.h"
 /* dScMgCurling2_c::InitResources - recovered from vtable slot identity */
 extern "C" {
-char* func_020adc74(void* p);
+char* func_ov004_020adc74(void* p);
 void DecompressLZ16(const void* src, void* dst);
 void* LoadFile(int handle);
 void _ZN2GX10LoadBGPlttEPKvjj(const void* p, u32 a, u32 b);
@@ -31,7 +31,7 @@ extern unsigned char data_0209d454;
 s32 dScMgCurling2_c::InitResources()
 {
     char *self = (char *)this;
-    char* r6 = func_020adc74(&data_ov006_0213c5a0);
+    char* r6 = func_ov004_020adc74(&data_ov006_0213c5a0);
     void* f;
     void* c7;
     void* c8;

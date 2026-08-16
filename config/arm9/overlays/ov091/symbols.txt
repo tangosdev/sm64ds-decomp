@@ -150,7 +150,7 @@ _ZTI7daDsn_c kind:data(any) addr:0x0213512c
 data_ov091_02135138 kind:data(any) addr:0x02135138
 Thwomp_SpawnInfo kind:data(any) addr:0x02135150 ambiguous
 _ZTV6Thwomp kind:data(any) addr:0x02135174
-data_ov091_021351fc kind:data(any) addr:0x021351fc
+_ZTV11daDsnBase_c kind:data(any) addr:0x021351fc
 _ZTI11daObjPile_c kind:data(any) addr:0x0213527c
 _ZTS11daObjPile_c kind:data(any) addr:0x02135288
 Stump_SpawnInfo kind:data(any) addr:0x02135298 ambiguous

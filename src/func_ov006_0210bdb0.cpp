@@ -123,14 +123,14 @@ extern "C" int func_ov006_0210bdb0(void *arg0)
         ((u32 *)(c + 0x4fe4))[i] = val * 0x50000;
     }
 
-    func_020bc88c = 0x80;
-    func_020bc860 = 0xa0;
-    func_020bc878 = 0x80;
-    func_020bc890 = 0xa0;
-    func_020bc8b8 = 0x80;
+    data_ov004_020bc88c = 0x80;
+    data_ov004_020bc860 = 0xa0;
+    data_ov004_020bc878 = 0x80;
+    data_ov004_020bc890 = 0xa0;
+    data_ov004_020bc8b8 = 0x80;
     func_020bc8b4 = 0x60;
-    func_020bc888 = 0x80;
-    func_020bc864 = ~0x1b;
+    data_ov004_020bc888 = 0x80;
+    data_ov004_020bc864 = ~0x1b;
 
     func_ov004_020b04d0(0x20);
 

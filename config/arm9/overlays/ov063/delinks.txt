@@ -260,6 +260,7 @@ src/unnamed/ov063/func_ov063_0211a0a8.c:
     .text start:0x0211a0a8 end:0x0211a0dc
 
 src/unnamed/ov063/func_ov063_0211a0dc.cpp:
+    complete
     .text start:0x0211a0dc end:0x0211a3d0
 
 src/unnamed/ov063/func_ov063_0211a3d0.cpp:
@@ -460,10 +461,12 @@ src/actors/MansionSteps/MansionSteps_Spawn.c:
     complete
     .text start:0x0211d360 end:0x0211d3a0
 
-src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.c:
+src/actors/FallBlockBbh/_ZN12FallBlockBbhD1Ev.cpp:
+    complete
     .text start:0x0211d3a0 end:0x0211d3f0
 
 src/actors/FallBlockBbh/_ZN12FallBlockBbhD0Ev.c:
+    complete
     .text start:0x0211d3f0 end:0x0211d454
 
 src/actors/FallBlockBbh/_ZN12FallBlockBbh16CleanupResourcesEv.cpp:
@@ -475,6 +478,7 @@ src/actors/FallBlockBbh/_ZN12FallBlockBbh13InitResourcesEv.cpp:
     .text start:0x0211d468 end:0x0211d47c
 
 src/actors/FallBlockBbh/FallBlockBbh_Spawn.c:
+    complete
     .text start:0x0211d47c end:0x0211d4b8
 
 src/actors/MadPiano/_ZN8MadPianoD1Ev.c:

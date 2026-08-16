@@ -18,6 +18,6 @@ extern "C" void func_ov006_02125364(char* c, int mode){
     func_ov004_020adb1c(self->unk_0b4);
   }
   func_ov004_020b66d4();
-  func_020bc7d4 = 1;
+  data_ov004_020bc7d4 = 1;
   *(int*)(c+0x5000+0x1b8) = 0;
 }

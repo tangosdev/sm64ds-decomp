@@ -11,7 +11,7 @@ extern void *_ZN2G212GetBG3ScrPtrEv(void);
 extern void *_ZN3G2S12GetBG3ScrPtrEv(void);
 extern u32 LoadCompressedFileAt(u16 fileID, void *target);
 
-extern void *func_020adc74(void *p);
+extern void *func_ov004_020adc74(void *p);
 extern void Ov004_Deallocate(void *p);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *p, u32 sz);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -64,18 +64,18 @@ int func_ov006_02129268(void *arg0)
     data_0209d45c |= 0xc;
     data_0209d454 |= 0xc;
 
-    buf = func_020adc74(&data_ov006_0214009c);
+    buf = func_ov004_020adc74(&data_ov006_0214009c);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(buf, 0x100);
     _ZN2GX10LoadBGPlttEPKvjj(buf, 0x100, 0x100);
     _ZN3GXS10LoadBGPlttEPKvjj(buf, 0x100, 0x100);
     Ov004_Deallocate(buf);
 
-    buf = func_020adc74(&data_ov006_021400bc);
+    buf = func_ov004_020adc74(&data_ov006_021400bc);
     DecompressLZ16(buf, (void *)0x6400000);
     DecompressLZ16(buf, (void *)0x6600000);
     Ov004_Deallocate(buf);
 
-    buf = func_020adc74(&data_ov006_021400dc);
+    buf = func_ov004_020adc74(&data_ov006_021400dc);
     _ZN4CP1527FlushAndInvalidateDataCacheEjj(buf, 0x100);
     _ZN2GX11LoadOBJPlttEPKvjj(buf, 0, 0x100);
     _ZN3GXS11LoadOBJPlttEPKvjj(buf, 0, 0x100);
@@ -86,7 +86,7 @@ int func_ov006_02129268(void *arg0)
     *(vu16 *)0x4000060 = (*(vu16 *)0x4000060 & ~0x3000) | 8;
     InitialiseVramGlobals();
 
-    *(void **)(r4 + 0xabf4) = func_020adc74(&data_ov006_021400fc);
+    *(void **)(r4 + 0xabf4) = func_ov004_020adc74(&data_ov006_021400fc);
     _ZN5Model17UpdateFileOffsetsER8BMD_File(*(void **)(r4 + 0xabf4));
 
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(r4 + 0xaba4, *(void **)(r4 + 0xabf4), 1, -1) == 0)

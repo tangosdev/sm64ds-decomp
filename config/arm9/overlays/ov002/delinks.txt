@@ -17,6 +17,7 @@ src/func_ov002_020ada40.cpp:
     .text start:0x020ada40 end:0x020adb40
 
 src/_ZN5Enemy22SpawnMegaCharParticlesER5ActorPc.cpp:
+    complete
     .text start:0x020adb40 end:0x020addc0
 
 src/_ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn.cpp:
@@ -1981,6 +1982,7 @@ src/func_ov002_020c0d90.c:
     .text start:0x020c0d90 end:0x020c0fb4
 
 src/func_ov002_020c0fb4.c:
+    complete
     .text start:0x020c0fb4 end:0x020c1234
 
 src/func_ov002_020c1234.cpp:
@@ -5778,6 +5780,7 @@ src/_ZN3HUDD0Ev.c:
     .text start:0x020fb928 end:0x020fb96c
 
 src/_ZN3HUD15RenderTimeTimerEv.cpp:
+    complete
     .text start:0x020fb96c end:0x020fbdac
 
 src/_ZN3HUD15CalculateDigitsEt.cpp:

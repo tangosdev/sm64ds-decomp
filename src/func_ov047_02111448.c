@@ -5,14 +5,14 @@
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
 extern int data_ov047_0211244c[];
-extern int data_ov002_02109278[];
+extern int _ZTV13daObjKuruma_c[];
 extern int _ZTV8Platform[];
 /* recovered: vtable identified, renamed to Class_Method */
 extern void *data_020a0eac;
 int *func_ov047_02111448(int *t)
 {
     t[0] = (int)data_ov047_0211244c;
-    t[0] = (int)data_ov002_02109278;
+    t[0] = (int)_ZTV13daObjKuruma_c;
     t[0] = (int)_ZTV8Platform;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);

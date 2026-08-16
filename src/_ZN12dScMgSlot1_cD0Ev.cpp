@@ -15,5 +15,5 @@
 dScMgSlot1_c::~dScMgSlot1_c()
 {
     *(void **)((char *)this + 0x4660) = &data_ov006_0213e5d4;
-    *(void **)((char *)this + 0x4660) = (void *)&func_020ad494;
+    *(void **)((char *)this + 0x4660) = (void *)&data_ov001_020ad494;
 }

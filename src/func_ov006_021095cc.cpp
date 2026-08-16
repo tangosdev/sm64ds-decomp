@@ -11,7 +11,7 @@
    vtable, destroys the members and calls Memory::Deallocate; no eat handler
    does any of that. */
 extern "C" void func_ov004_020b66d4(void);
-extern int *func_020beb68;
+/* data_ov004_020beb68 is declared `void *` by dScMgBase_c.h; cast at the use site. */
 
 extern "C" void func_ov006_021095cc(char *c)
 {
@@ -35,7 +35,7 @@ extern "C" void func_ov006_021095cc(char *c)
     self->unk_53f8 = 0;
     self->unk_53f6 = 0;
     n = 0;
-    if (func_020beb68 != 0) n = func_020beb68[0xa8 / 4];
+    if (data_ov004_020beb68 != 0) n = ((int *)data_ov004_020beb68)[0xa8 / 4];
     if (n >= 5) n = 5;
     self->unk_53fc = n;
 
@@ -53,5 +53,5 @@ extern "C" void func_ov006_021095cc(char *c)
     self->unk_53e6 = 1;
 
     func_ov004_020b66d4();
-    func_020bc7d4 = 1;
+    data_ov004_020bc7d4 = 1;
 }

@@ -12,7 +12,7 @@ extern "C" {
     void func_ov004_020adb1c(int arg);
 }
 extern PMF data_ov006_02141840[];
-extern char *func_020beb68;
+extern char *data_ov004_020beb68;
 
 extern "C" void func_ov006_020de26c(char *self) {
     int count;
@@ -53,7 +53,7 @@ extern "C" void func_ov006_020de26c(char *self) {
         if (((int *)(self + 0x5000))[0x73] <= 0) ((int *)(self + 0x5000))[0x73] = 0;
         return;
     }
-    g = func_020beb68;
+    g = data_ov004_020beb68;
     func_ov004_020adb1c(g != 0 ? *(int *)(g + 0xa8) : 0);
     ((int *)(self + 0x5000))[0x73] = 0x70;
     ((int *)(self + 0x5000))[0x72] = 4;

@@ -16,7 +16,7 @@ extern void func_ov006_020c0aa8(void *p);
 extern int func_ov006_020c1a88(void *p);
 extern unsigned char data_0209d45c;
 extern unsigned char data_0209d454;
-extern void *func_020beb68;
+extern void *data_ov004_020beb68;
 }
 namespace GXS { void LoadOBJPltt(void const *, unsigned int, unsigned int); }
 
@@ -55,7 +55,7 @@ extern "C" int func_ov006_020f8d08(char *c)
     self->unk_0ac = self->unk_0a8;
     {
         int v = func_ov004_020ad878();
-        if (func_020beb68) *(int *)((char *)func_020beb68 + 0xb4) = v;
+        if (data_ov004_020beb68) *(int *)((char *)data_ov004_020beb68 + 0xb4) = v;
     }
     ((Obj *)c)->v18(-1);
     self->unk_60aa = 0;

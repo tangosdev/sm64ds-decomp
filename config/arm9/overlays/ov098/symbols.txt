@@ -132,7 +132,7 @@ data_ov098_0213c4f0 kind:data(any) addr:0x0213c4f0
 _ZTS13daObjBlockS_c kind:data(any) addr:0x0213c500
 Crate_SpawnInfo kind:data(any) addr:0x0213c510 ambiguous
 _ZTV5Crate kind:data(any) addr:0x0213c534
-data_ov098_0213c5bc kind:data(any) addr:0x0213c5bc
+_ZTV16daObjFallBlock_c kind:data(any) addr:0x0213c5bc
 data_ov098_0213c63c kind:data(any) addr:0x0213c63c
 data_ov098_0213c644 kind:data(any) addr:0x0213c644
 data_ov098_0213c64c kind:data(any) addr:0x0213c64c

@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void*, void*);
-extern int func_020ad660(void*, void*, void*, int);
+extern int func_ov002_020ad660(void*, void*, void*, int);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
 extern void func_02012694(int, void*);
 extern void func_ov100_02141fb0(void*);
@@ -25,7 +25,7 @@ extern "C" void func_ov100_0214272c(char *c)
     int r;
 
     _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x374);
-    r = func_020ad660(c, c + 0x110, c + 0x2cc, 3);
+    r = func_ov002_020ad660(c, c + 0x110, c + 0x2cc, 3);
     if (r != 0) {
         if (r != 2)
             return;

@@ -104,8 +104,8 @@ s32 dScMgTeresa_c::InitResources()
     *((int *) (self + 0x4be8)) = 1;
     *((u16 *) (self + 0x4c16)) = 0x20;
     func_ov004_020b0cac(0xd, 0x80, 0xa8, 1, -1, 0xd);
-    func_020bc880 = 0x80;
-    func_020bc884 = -128;
+    data_ov004_020bc880 = 0x80;
+    data_ov004_020bc884 = -128;
     *((int *) (self + 0xb4)) = 0;
     return 1;
 }

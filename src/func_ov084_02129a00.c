@@ -13,7 +13,7 @@ extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern int _ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(void *self, void *clsn);
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern void func_020aea30(void *self, void *actor, void *clsn, int a);
+extern void func_ov002_020aea30(void *self, void *actor, void *clsn, int a);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, void *f, int a, int fix, unsigned int j);
 extern void func_ov084_0212a580(void *self);
 extern void func_ov084_021294d0(void *self);
@@ -54,7 +54,7 @@ int func_ov084_02129a00(char *self) {
     if (_ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(self, self + 0x180) != 0) {
         void *actor = _ZN5Actor10FindWithIDEj(*(int *)(self + 0x1a4));
         *(int *)(self + 0x10c) = 7;
-        func_020aea30(self, actor, self + 0x1b4, 7);
+        func_ov002_020aea30(self, actor, self + 0x1b4, 7);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x370, (void *)((int *)&data_ov084_02130ce0)[1], 0x40000000, 0x1000, 0);
         *(int *)(((int)self + 0x198)) |= 1;
         return 1;

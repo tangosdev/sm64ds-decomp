@@ -145,7 +145,7 @@ _ZTI11daPicGate_c kind:data(any) addr:0x02128274
 _ZTS11daPicGate_c kind:data(any) addr:0x02128280
 Painting_SpawnInfo kind:data(any) addr:0x02128290 ambiguous
 _ZTV8Painting kind:data(any) addr:0x021282b4
-data_ov080_02128338 kind:data(any) addr:0x02128338
+_ZTV13daObjMaruta_c kind:data(any) addr:0x02128338
 data_ov080_021283c0 kind:bss addr:0x021283c0
 data_ov080_021283c8 kind:bss addr:0x021283c8
 data_ov080_021283d0 kind:bss addr:0x021283d0

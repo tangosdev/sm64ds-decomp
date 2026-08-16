@@ -12,10 +12,12 @@ extern s32 Vec3_HorzLen(const Vector3 *v);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);
 }
+extern "C" {
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int uniqueID, unsigned int effectID,
     s32 x, s32 y, s32 z,
     const void *dir, void *callback);
+}
 
 extern s16 data_02082214[];
 

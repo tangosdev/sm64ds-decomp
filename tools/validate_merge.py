@@ -160,6 +160,40 @@ def enrollment_snapshot(rev):
                       "modBytes": sum(e["size"] for e in mods.values())}}
 
 
+def verification_split(functions, enrollment):
+    """Divide ``matched`` into what the ROM build PROVES and what only asserts itself.
+
+    ``function_snapshot`` calls a function matched when a file named after its symbol
+    exists in ``src/``, carries no ``NONMATCHING`` banner, and is not a ``dcd``
+    transcription.  That is a filename test.  Nothing in it compiles the file, links
+    it, or compares a byte -- and it cannot, because the real per-function ledger
+    (``progress/matched.jsonl``) is gitignored and never reaches a validator.
+
+    What the cartridge actually settles is the OTHER set: a range carrying ``complete``
+    in a ``delinks.txt`` is compiled, linked into its module, and byte-compared against
+    retail.  Everything else is filled by a gap object holding the ROM's own bytes, so
+    it is exact by construction and proves nothing about the source beside it.
+
+    The two are not close.  Reporting only the larger one puts a 10-point overstatement
+    in front of every reader, so both travel, separately labelled, and the measured one
+    leads.  ``matched`` itself is deliberately left alone: ``attribution_snapshot`` keys
+    contributor credit off it, so redefining it here would move credit for everyone.
+    """
+    enrolled = {key.split("-", 1)[0] for key in enrollment["source"]}
+    verified = {k: r for k, r in functions["matched"].items() if k in enrolled}
+    claimed = {k: r for k, r in functions["matched"].items() if k not in enrolled}
+    return {
+        "verified": verified,
+        "claimed": claimed,
+        "stats": {
+            "verifiedFunctions": len(verified),
+            "verifiedBytes": sum(r["size"] for r in verified.values()),
+            "claimedFunctions": len(claimed),
+            "claimedBytes": sum(r["size"] for r in claimed.values()),
+        },
+    }
+
+
 def _json_at(rev, path):
     try:
         return json.loads(git_text(rev, path))
@@ -250,6 +284,11 @@ def _rom_state(report):
             json.dumps(payload, sort_keys=True).encode("utf-8")).hexdigest()
     return {"available": True, "passed": passed, "signature": signature,
             "analysis": analysis if "moduleFidelity" in analysis else None,
+            # tools/romdata_check.py's counts, present only from a rombuild that ran the
+            # measurement. A base report cached before it existed simply has none, and
+            # the ratchet below then does not run -- which is the right degradation:
+            # nothing to compare against is not a regression.
+            "romData": report.get("romData"),
             "failure": failure}
 
 
@@ -370,6 +409,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
 
     bf, hf = function_snapshot(base_sha), function_snapshot(head_sha)
     be, he = enrollment_snapshot(base_sha), enrollment_snapshot(head_sha)
+    bv, hv = verification_split(bf, be), verification_split(hf, he)
     ba, ha = attribution_snapshot(base_sha, bf), attribution_snapshot(head_sha, hf)
     diff = diff_snapshot(base_sha, head_sha, set(tree_paths(head_sha, "src/")))
 
@@ -414,6 +454,16 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append("function/byte coverage denominator changed")
     if he["stats"]["sourceBytes"] < be["stats"]["sourceBytes"]:
         reasons.append("source-built byte coverage decreased")
+    # Bytes alone cannot see a SWAP. Dropping `complete` from one delinks entry and
+    # adding it to another of equal or greater size holds sourceBytes flat while the
+    # first range quietly leaves the set the ROM build actually byte-compares -- and
+    # its src/ file still exists, so `matched` does not move either and nothing in the
+    # report changes. Two more checks, because the pair is what closes it: the count
+    # catches a same-size swap, and the range diff below names anything that left even
+    # when both totals hold.
+    if he["stats"]["sourceFunctions"] < be["stats"]["sourceFunctions"]:
+        reasons.append("source-built function coverage decreased")
+    dropped_enrollment = sorted(set(be["source"]) - set(he["source"]))
     # The attribution-override label (carried on the job by tangos-backend) makes every
     # attribution finding advisory for this one pull request.  The finding is still
     # computed and still named -- an override says "I know, and I meant it", not "do not
@@ -437,6 +487,20 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append(f"{len(link['blocking'])} blocking relocation verdict(s)")
     if port.get("available") and not port["passed"]:
         reasons.append(_port_reason(port))
+    # A RATCHET, not a gate. The emitted vtable and RTTI that `objisolate` discards are
+    # compared against the cartridge, and most of the tree fails that today for a
+    # understood reason -- a generated flat header declares no virtuals, so mwcc emits a
+    # two-slot stub where the ROM has thirty-one. Failing a merge on it would fail nearly
+    # every C++ file for pre-existing modelling debt. So the count may rise freely and
+    # may not fall: this is the only check in the report that watches ROM DATA at all.
+    base_data = base_rom_state.get("romData") or {}
+    head_data = head_rom_state.get("romData") or {}
+    data_ratchet = (base_data.get("verified") is not None
+                    and head_data.get("verified") is not None)
+    if data_ratchet and head_data["verified"] < base_data["verified"]:
+        reasons.append(
+            f"ROM data verified from source fell from {base_data['verified']} to "
+            f"{head_data['verified']} symbol(s)")
     if rom_regression:
         reasons.append("full-ROM result regressed from the base commit")
     if head_rom_state.get("available") and not head_rom_state.get("passed") \
@@ -454,6 +518,16 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
                         "the pull request")
     if same_baseline_failure:
         warnings.append("base and merge share the same pre-existing ROM-build failure")
+    if (dropped_enrollment
+            and he["stats"]["sourceBytes"] >= be["stats"]["sourceBytes"]
+            and he["stats"]["sourceFunctions"] >= be["stats"]["sourceFunctions"]):
+        # Both totals held, so neither reason above fired -- but these ranges are no
+        # longer byte-compared against the cartridge. Re-splitting an entry (its `end`
+        # moving) lands here too, which is why it warns rather than failing.
+        warnings.append(
+            f"{len(dropped_enrollment)} address range(s) left the byte-verified set "
+            f"while enrolled totals held steady: " + ", ".join(dropped_enrollment[:5])
+            + (f", +{len(dropped_enrollment) - 5} more" if len(dropped_enrollment) > 5 else ""))
     if new_unbannered:
         warnings.append(f"{len(new_unbannered)} new/changed file(s) carry an asm body "
                         f"with no HAND-ASM PRIMITIVE or NONMATCHING banner: "
@@ -465,10 +539,25 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         warnings.append(f"{unresolved} affected source file(s) could not be fully link-checked")
     if not head_rom_state.get("available"):
         warnings.append("no head full-ROM report was supplied")
+    new_claimed = hv["stats"]["claimedFunctions"] - bv["stats"]["claimedFunctions"]
+    if new_claimed > 0:
+        # Landing a match before enrolling it is ordinary, so this is not a failure --
+        # but the count only ever grew silently before, and it is the number that makes
+        # the headline percentage bigger than the evidence.
+        warnings.append(
+            f"{new_claimed} more function(s) now claim a match "
+            f"that nothing compiles; enroll them in a delinks.txt to have the ROM "
+            f"build check them")
 
     coverage_delta = {
         "matchedFunctions": hf["stats"]["matchedFunctions"] - bf["stats"]["matchedFunctions"],
         "matchedBytes": hf["stats"]["matchedBytes"] - bf["stats"]["matchedBytes"],
+        "verifiedFunctions": (hv["stats"]["verifiedFunctions"]
+                              - bv["stats"]["verifiedFunctions"]),
+        "verifiedBytes": hv["stats"]["verifiedBytes"] - bv["stats"]["verifiedBytes"],
+        "claimedFunctions": (hv["stats"]["claimedFunctions"]
+                             - bv["stats"]["claimedFunctions"]),
+        "claimedBytes": hv["stats"]["claimedBytes"] - bv["stats"]["claimedBytes"],
         "sourceBuiltFunctions": he["stats"]["sourceFunctions"] - be["stats"]["sourceFunctions"],
         "sourceBuiltBytes": he["stats"]["sourceBytes"] - be["stats"]["sourceBytes"],
         "newMatchedFunctions": len(head_keys - base_keys),
@@ -506,7 +595,9 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         "summary": summary,
         "reasons": reasons,
         "warnings": warnings,
-        "coverage": {"base": bf["stats"], "head": hf["stats"], "delta": coverage_delta},
+        "coverage": {"base": {**bf["stats"], **bv["stats"]},
+                     "head": {**hf["stats"], **hv["stats"]},
+                     "delta": coverage_delta},
         "sourceBuild": {"base": base_source_stats, "head": head_source_stats},
         "attribution": {"base": ba["contributors"], "head": ha["contributors"],
                         "baseStats": ba["stats"], "headStats": ha["stats"],
@@ -527,6 +618,10 @@ def _signed(n):
     return f"{n:+,}"
 
 
+def _pct(n, d):
+    return f"{100.0 * n / d:.2f}%" if d else "n/a"
+
+
 def render_markdown(r):
     c, s, l = r["coverage"], r["sourceBuild"], r["linkcheck"]
     h, d = c["head"], c["delta"]
@@ -535,14 +630,31 @@ def render_markdown(r):
     lines = ["### Full merge validation", "",
              "| Check | Result |", "|---|---|",
              f"| Committed test merge | {'yes' if r['committedMerge'] else 'no'} |",
-             f"| Matched functions | {h['matchedFunctions']:,} / {h['totalFunctions']:,} "
-             f"({h['matchedFunctionPercent']:.1f}%, {_signed(d['matchedFunctions'])}) |",
-             f"| Matched code bytes | {h['matchedBytes']:,} / {h['totalBytes']:,} "
-             f"({h['matchedBytePercent']:.1f}%, {_signed(d['matchedBytes'])}) |",
-             f"| Tracked source enrollment | {s['head']['sourceFunctions']:,} functions, "
-             f"{s['head']['sourceBytes']:,} bytes "
-             f"({s['head']['sourceBytesPercent']:.2f}%, {_signed(d['sourceBuiltBytes'])}) |",
-             f"| Perfect source moves | {len(r['diff']['perfectRenames'])} R100 |",
+             # The measured number leads and the asserted one is named as an assertion.
+             # Printing only `matchedFunctions` overstated coverage by ten points,
+             # because a filename with no `complete` delinks entry counts there and is
+             # compiled by nothing -- see verification_split.
+             f"| Byte-verified functions | {h['verifiedFunctions']:,} / "
+             f"{h['totalFunctions']:,} ({_pct(h['verifiedFunctions'], h['totalFunctions'])}, "
+             f"{_signed(d['verifiedFunctions'])}) |",
+             f"| Byte-verified code bytes | {h['verifiedBytes']:,} / {h['totalBytes']:,} "
+             f"({_pct(h['verifiedBytes'], h['totalBytes'])}, {_signed(d['verifiedBytes'])}) |",
+             f"| Claimed, not byte-verified | {h['claimedFunctions']:,} functions, "
+             f"{h['claimedBytes']:,} bytes ({_signed(d['claimedFunctions'])}) |",
+             f"| Perfect source moves | {len(r['diff']['perfectRenames'])} R100 |"]
+    # The delinks view of the same quantity. Identical to byte-verified above whenever
+    # every enrolled range is a matched symbols.txt function, which is the healthy
+    # state -- so it earns a row only when the two disagree, where the disagreement is
+    # the news: an enrolled range with no matched function behind it, or a matched
+    # function whose enrolled entry the symbol table does not know about.
+    if s["head"]["sourceFunctions"] != h["verifiedFunctions"]:
+        lines.append(
+            f"| Enrolled ranges (delinks `complete`) | {s['head']['sourceFunctions']:,} "
+            f"functions, {s['head']['sourceBytes']:,} bytes "
+            f"({s['head']['sourceBytesPercent']:.2f}%, {_signed(d['sourceBuiltBytes'])}) "
+            f"-- differs from byte-verified by "
+            f"{s['head']['sourceFunctions'] - h['verifiedFunctions']:+,} |")
+    lines += [
              f"| Contributor credit | {len(r['attribution']['added'])} added, "
              f"{len(r['attribution']['changed'])} changed, "
              f"{len(r['attribution']['lost'])} lost"
@@ -562,11 +674,33 @@ def render_markdown(r):
                      f"{mf['percent']:.6f}% compared bytes |")
         lines.append(f"| Code linked from verified source | {sf['sourceFunctions']:,} functions, "
                      f"{sf['sourceBytes']:,} bytes ({sf['sourceBytesPercent']:.2f}%) |")
+        # What the 100.000000% above is a percentage OF. Every byte not built from
+        # source is one dsd handed back from the cartridge and compared against itself.
+        mc = head_rom["analysis"].get("moduleComposition")
+        if mc:
+            lines.append(
+                f"| Module bytes from source | {mc['sourceBytes']:,} / "
+                f"{mc['moduleBytes']:,} ({mc['sourceBytesOfModulePercent']:.1f}%); "
+                f"{mc['dataBytes']:,} ({mc['dataBytesOfModulePercent']:.1f}%) are data "
+                f"no delink entry reaches |")
+    rom_data = head_rom.get("romData")
+    if rom_data:
+        lines.append(f"| ROM data reproduced from source | {rom_data['verified']:,} "
+                     f"symbol(s) exact, {rom_data['partial']:,} partial, "
+                     f"{rom_data['differs']:,} differ |")
     elif head_rom.get("failure"):
         lines.append(f"| Full ROM build | {head_rom['failure'].get('phase')} failed |")
     else:
         lines.append("| Full ROM build | not supplied |")
     lines += _credit_table(r["attribution"])
+    if h.get("claimedFunctions"):
+        lines += ["", f"*Byte-verified* means the range carries `complete` in a "
+                      f"`delinks.txt`, so the ROM build compiled it and compared it to "
+                      f"the cartridge. The {h['claimedFunctions']:,} *claimed* functions "
+                      f"have a `src/` file named after the symbol with no `NONMATCHING` "
+                      f"banner, and nothing compiles them -- dsd fills their addresses "
+                      f"with the ROM's own bytes. Both together are the "
+                      f"{h['matchedFunctions']:,} this project calls matched."]
     if r["warnings"]:
         lines += ["", "Warnings: " + "; ".join(r["warnings"]) + "."]
     return "\n".join(lines)

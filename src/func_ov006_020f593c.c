@@ -1,12 +1,12 @@
 
-extern int *func_020beb68;
+extern int *data_ov004_020beb68;
 void func_ov006_020f593c(int this)
 {
   int n;
   int i;
-  if (func_020beb68 != 0)
+  if (data_ov004_020beb68 != 0)
   {
-    n = *((int *) (((char *) func_020beb68) + 0xa8));
+    n = *((int *) (((char *) data_ov004_020beb68) + 0xa8));
   }
   else
   {

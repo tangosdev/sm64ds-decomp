@@ -8,5 +8,5 @@
    inferred stub. */
 int func_ov045_02111bdc(void *self)
 {
-    return func_020b6584(self, data_ov045_02112f08, 0xf50);
+    return func_ov002_020b6584(self, data_ov045_02112f08, 0xf50);
 }

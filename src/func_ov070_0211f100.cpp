@@ -16,7 +16,7 @@ extern u32 data_ov070_02123528[];
 extern "C" {
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
 extern void FlyGuy_ChangeState(void* c, void* p);
-extern int func_020aea30(void* c, void* p, int a, int b);
+extern int func_ov002_020aea30(void* c, void* p, int a, int b);
 extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
 extern void _ZN6Player10SpinBounceE5Fix12IiE(void* p, Fix12 f);
 extern void _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc(void* enemy, void* actor, char* s);
@@ -46,7 +46,7 @@ extern "C" void func_ov070_0211f100(char* c)
     }
     if (r4 & 0x20) {
         *(s32*)(c + 0x10c) = 1;
-        func_020aea30(c, r5, 0, 1);
+        func_ov002_020aea30(c, r5, 0, 1);
         return;
     }
     if (r4 & 0x67c0) {
@@ -66,7 +66,7 @@ extern "C" void func_ov070_0211f100(char* c)
     if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, r5)) {
         _ZN6Player10SpinBounceE5Fix12IiE(r5, 0x28000);
         *(s32*)(c + 0x10c) = 1;
-        func_020aea30(c, r5, 0, 1);
+        func_ov002_020aea30(c, r5, 0, 1);
         return;
     }
 

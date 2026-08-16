@@ -154,7 +154,12 @@ def _level_tables():
     data_02075804 is 7 groups of 7 overlay ids and each group is exactly one tier of
     the overlay layout, so at most one member of a group is ever loaded. That is the
     same exclusion E2 gives, stated by the game."""
-    p = EXTRACTED / "arm9" / "arm9.bin"
+    # The DECOMPRESSED arm9, not `extracted/dsd/arm9/arm9.bin`. The ROM's arm9 is
+    # BLZ-compressed and dsd keeps it that way (its own arm9.yaml says
+    # `compressed: true`), so reading it at base 0x02004000 lands in packed bytes:
+    # the three tables come back as noise and `group[i][idx[L][i]]` walks off the
+    # end of a 7-entry row. tools/unpack.py writes the unpacked image beside it.
+    p = REPO / "extracted" / "arm9_dec.bin"
     if not p.is_file():
         return None
     b, base = p.read_bytes(), 0x02004000

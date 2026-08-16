@@ -32,7 +32,7 @@ extern "C" {
     extern int data_ov006_0214176c;
     extern int data_ov006_02141770;
     extern int data_ov004_020bf9ec;
-    extern void *func_020beb68;
+    extern void *data_ov004_020beb68;
     extern int data_ov006_0213bc44;
     extern int data_ov004_020bfa18;
     extern int data_ov006_0213bd48[];
@@ -108,7 +108,7 @@ struct VObj {
                             data_ov004_020bf9ec = 1;
                             _ZN5Sound12PlayBank2_2DEj(0x151);
                             {
-                                void *g = func_020beb68;
+                                void *g = data_ov004_020beb68;
                                 int a0 = g ? *(int *)((char *)g + 0xa8) : 0;
                                 int a1 = g ? *(int *)((char *)g + 0xb4) : 0;
                                 func_ov004_020ad79c(a0, a1);
@@ -130,7 +130,7 @@ struct VObj {
                             data_ov004_020bf9ec = 1;
                             _ZN5Sound12PlayBank2_2DEj(0x151);
                             {
-                                void *g = func_020beb68;
+                                void *g = data_ov004_020beb68;
                                 int a0 = g ? *(int *)((char *)g + 0xa8) : 0;
                                 int a1 = g ? *(int *)((char *)g + 0xb4) : 0;
                                 func_ov004_020ad79c(a0, a1);
@@ -270,13 +270,13 @@ struct VObj {
                 {
                     int r = func_ov006_020da5e8(c + 0x51a8, c + 0x5298);
                     if (r == -1) {
-                        void *g = func_020beb68;
+                        void *g = data_ov004_020beb68;
                         int a0 = g ? *(int *)((char *)g + 0xa8) : 0;
                         int a1 = g ? *(int *)((char *)g + 0xb4) : 0;
                         func_ov004_020ad79c(a0, a1 - 1);
                         S16(0x538a) = 0x5a;
                     } else if (r == 1) {
-                        void *g = func_020beb68;
+                        void *g = data_ov004_020beb68;
                         int a0 = g ? *(int *)((char *)g + 0xa8) : 0;
                         int arrv = data_ov006_0213bd48[t5];
                         int bfa = data_ov004_020bfa18;
@@ -298,7 +298,7 @@ struct VObj {
                 if (r == -1) {
                     func_ov006_020c0d68(c + 0x4f38);
                     {
-                        char *g = (char *)func_020beb68;
+                        char *g = (char *)data_ov004_020beb68;
                         if (g != 0) {
                             if (*(volatile int *)(g + 0xb4) > 0) {
                                 int *gi = (int *)((int)(((long long)(int)(g + 0xb4)) & 0xFFFFFFFFFFFFFFFFLL));
@@ -310,7 +310,7 @@ struct VObj {
                 } else if (r == 1) {
                     func_ov006_020c0c80(c + 0x4f38);
                     {
-                        void *g = func_020beb68;
+                        void *g = data_ov004_020beb68;
                         if (g != 0) {
                             char *gb = (char *)g;
                             if (*(volatile int *)(gb + 0xb4) < 0x270f) {

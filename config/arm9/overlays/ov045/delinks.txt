@@ -108,7 +108,7 @@ src/ExtendingPlatform_Spawn.c:
     complete
     .text start:0x02111ad4 end:0x02111b14
 
-src/_ZN16FloatingFloorBfsD1Ev.c:
+src/_ZN16FloatingFloorBfsD1Ev.cpp:
     complete
     .text start:0x02111b14 end:0x02111b64
 
@@ -117,16 +117,18 @@ src/_ZN16FloatingFloorBfsD0Ev.c:
     .text start:0x02111b64 end:0x02111bc8
 
 src/func_ov045_02111bc8.c:
+    complete
     .text start:0x02111bc8 end:0x02111bdc
 
 src/func_ov045_02111bdc.c:
+    complete
     .text start:0x02111bdc end:0x02111bf4
 
 src/FloatingFloorBfs_Spawn.c:
     complete
     .text start:0x02111bf4 end:0x02111c30
 
-src/_ZN18TiltingPlatformBfsD1Ev.c:
+src/_ZN18TiltingPlatformBfsD1Ev.cpp:
     complete
     .text start:0x02111c30 end:0x02111c80
 
@@ -135,19 +137,23 @@ src/_ZN18TiltingPlatformBfsD0Ev.c:
     .text start:0x02111c80 end:0x02111ce4
 
 src/_ZN18TiltingPlatformBfs16CleanupResourcesEv.c:
+    complete
     .text start:0x02111ce4 end:0x02111cf8
 
 src/_ZN18TiltingPlatformBfs13InitResourcesEv.c:
+    complete
     .text start:0x02111cf8 end:0x02111d0c
 
 src/TiltingPlatformBfs_Spawn.c:
     complete
     .text start:0x02111d0c end:0x02111d48
 
-src/_ZN12FallBlockBfsD1Ev.c:
+src/_ZN12FallBlockBfsD1Ev.cpp:
+    complete
     .text start:0x02111d48 end:0x02111d98
 
 src/_ZN12FallBlockBfsD0Ev.c:
+    complete
     .text start:0x02111d98 end:0x02111dfc
 
 src/_ZN12FallBlockBfs16CleanupResourcesEv.c:
@@ -157,6 +163,7 @@ src/_ZN12FallBlockBfs13InitResourcesEv.c:
     .text start:0x02111e10 end:0x02111e24
 
 src/FallBlockBfs_Spawn.c:
+    complete
     .text start:0x02111e24 end:0x02111e60
 
 src/__sinit_ov045_021121a8.c:

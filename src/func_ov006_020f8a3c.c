@@ -18,7 +18,7 @@ extern int _Z15ApproachLinear2Rsss(s16* r, s16 t, s16 s);
 extern char* data_ov006_0213d568;
 extern char* data_ov006_02142504;
 extern unsigned short data_ov004_020bf9e4;
-extern void* func_020beb68;
+extern void* data_ov004_020beb68;
 
 int func_ov006_020f8a3c(char* c)
 {
@@ -65,7 +65,7 @@ int func_ov006_020f8a3c(char* c)
         break;
     }
     case 7: {
-        void* p = func_020beb68;
+        void* p = data_ov004_020beb68;
         if ((p != 0 ? *(int*)((char*)p + 0xa8) : 0) != 0)
             return 1;
         func_ov006_020f7994();

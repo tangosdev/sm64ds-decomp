@@ -9,7 +9,7 @@ extern "C" {
 // recovered name: dScMgMemory2_c_OnYoshiTryEat_020f7394
 /* recovered: renamed to Class_Method */
 extern void func_ov004_020b66d4(void *o);
-extern char *func_020beb68;
+/* data_ov004_020beb68 is declared `void *` by dScMgBase_c.h; cast at the use site. */
 
 void func_ov006_020f7394(char *c)
 {
@@ -18,12 +18,12 @@ void func_ov006_020f7394(char *c)
     int v;
     func_ov006_020f7064(c);
     self->unk_53d4 = 0;
-    o = func_020beb68;
+    o = (char *)data_ov004_020beb68;
     v = 0;
     if (o != 0) v = *(int *)(o + 0xa8);
     if (v >= 5) v = 5;
     func_ov004_020b66d4(o);
-    func_020bc7d4 = 1;
+    data_ov004_020bc7d4 = 1;
     self->unk_5409 = (unsigned char)v;
 }
 }
