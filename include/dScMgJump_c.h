@@ -44,6 +44,18 @@ extern "C" void func_ov006_020c893c(void);
 struct dScMgJump_c : dScMgD3DBase_c {
     virtual ~dScMgJump_c();
 
+    /* This class's own overrides, read off the ROM's vtable: the slots where the
+       table differs from dScMgD3DBase_c's. Spelled WITHOUT the `virtual` keyword,
+       the way include/daObjMarioCap_c.h and include/daObjRc_Dorifu_c.h spell
+       theirs -- an override of a virtual an ancestor already declares is
+       implicitly virtual either way, so each reuses an existing slot and adds no
+       field, and the 0x5834 assert below still holds. The destructor above is
+       declared first and out of line, so it stays this class's KEY FUNCTION and
+       none of these translation units emits _ZTV11dScMgJump_c. */
+    s32 CleanupResources(); /* slot  3 -- src/_ZN11dScMgJump_c16CleanupResourcesEv.cpp */
+    s32 Behavior();         /* slot  6 -- src/_ZN11dScMgJump_c8BehaviorEv.cpp */
+    s32 Render();           /* slot  9 -- src/_ZN11dScMgJump_c6RenderEv.cpp */
+
     s32   unk_5004;        /* 0x5004 -- written as an { int, int } pair */
     s32   unk_5008;        /* 0x5008 */
     u8    pad_500c[0x8];   /* 0x500c */

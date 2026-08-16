@@ -788,7 +788,7 @@ src/func_ov002_020b4bc4.cpp:
     complete
     .text start:0x020b4bc4 end:0x020b4bfc
 
-src/func_ov002_020b4bfc.c:
+src/_ZN13daObjDorifu_c8BehaviorEv.cpp:
     complete
     .text start:0x020b4bfc end:0x020b4d58
 
@@ -896,7 +896,7 @@ src/func_ov002_020b5b98.c:
     complete
     .text start:0x020b5b98 end:0x020b5be0
 
-src/func_ov002_020b5be0.c:
+src/_ZN17daObjFloatBoard_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b5be0 end:0x020b5c24
 
@@ -904,7 +904,7 @@ src/func_ov002_020b5c24.cpp:
     complete
     .text start:0x020b5c24 end:0x020b5c4c
 
-src/func_ov002_020b5c4c.c:
+src/_ZN17daObjFloatBoard_c8BehaviorEv.cpp:
     complete
     .text start:0x020b5c4c end:0x020b5e58
 
@@ -940,7 +940,7 @@ src/func_ov002_020b6144.cpp:
     complete
     .text start:0x020b6144 end:0x020b616c
 
-src/func_ov002_020b616c.c:
+src/_ZN15daObjGuragura_c8BehaviorEv.cpp:
     complete
     .text start:0x020b616c end:0x020b6244
 
@@ -972,7 +972,7 @@ src/func_ov002_020b646c.cpp:
     complete
     .text start:0x020b646c end:0x020b6494
 
-src/func_ov002_020b6494.c:
+src/_ZN14daObjUkiyuka_c8BehaviorEv.cpp:
     complete
     .text start:0x020b6494 end:0x020b6584
 
@@ -996,7 +996,7 @@ src/func_ov002_020b66f0.cpp:
     complete
     .text start:0x020b66f0 end:0x020b6718
 
-src/func_ov002_020b6718.cpp:
+src/_ZN16daObjKaitendai_c8BehaviorEv.cpp:
     complete
     .text start:0x020b6718 end:0x020b676c
 
@@ -1020,7 +1020,7 @@ src/func_ov002_020b68f8.cpp:
     complete
     .text start:0x020b68f8 end:0x020b6920
 
-src/func_ov002_020b6920.cpp:
+src/_ZN13daObjKuruma_c8BehaviorEv.cpp:
     complete
     .text start:0x020b6920 end:0x020b6958
 
@@ -1048,7 +1048,7 @@ src/func_ov002_020b6b10.cpp:
     complete
     .text start:0x020b6b10 end:0x020b6b38
 
-src/func_ov002_020b6b38.c:
+src/_ZN17daObjKurumajiku_c8BehaviorEv.cpp:
     complete
     .text start:0x020b6b38 end:0x020b6c54
 
@@ -1188,7 +1188,7 @@ src/func_ov002_020b7f7c.c:
     complete
     .text start:0x020b7f7c end:0x020b81e0
 
-src/func_ov002_020b81e0.c:
+src/_ZN15daObjMarioCap_c13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x020b81e0 end:0x020b8270
 

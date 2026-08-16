@@ -77,6 +77,7 @@ struct daObjFloatBoard_c : Platform {
     virtual ~daObjFloatBoard_c() {}
 
     int CleanupResources();             /* slot 3, ov002 0x020b5be0 */
+    int Behavior();                     /* slot 6, ov002 0x020b5c4c */
 };
 
 typedef char daObjFloatBoard_c_size_must_be_0x348[sizeof(daObjFloatBoard_c) == 0x348 ? 1 : -1];

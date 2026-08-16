@@ -36,6 +36,25 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
     virtual ~dScMgSound_c();
 
     u8  mTable[0x6f4]; /* 0x4f38 -- ctor func_ov006_020c33dc, dtor func_ov006_020c3288 */
+
+    /* --- this class's own vtable overrides, defined out of line under their
+       own mangled names. Each re-uses a slot ActorBase already holds rather
+       than appending one, and none adds a field, so the size assert below is
+       untouched. The destructor above stays the key function, so no
+       translation unit starts emitting _ZTV12dScMgSound_c because of these.
+       Signatures are include/ActorBase.h's and include/dScMgBase_c.h's own,
+       copied unchanged.
+
+       NONE OF THE THREE ADDS A FIELD ABOVE mTable. Between them they reach
+       0x50e0, 0x5608, 0x5616, 0x5618 and 0x5626, and every one of those falls
+       INSIDE the 0x6f4 -- which is why the banner above can leave the member
+       raw: the offsets are real matched access, but into the helper object
+       func_ov006_020c33dc/020c3288 owns, not into fields of this class.
+       Everything else they touch is inherited (unk_0b4 from dScMgBase_c,
+       +0x4660 from dScMgSingle3DBase_c). --- */
+    s32 InitResources();      /* slot 0 -- ov006 0x0211c984 */
+    s32 Behavior();           /* slot 6 -- ov006 0x0211c720 */
+    s32 Render();             /* slot 9 -- ov006 0x0211c6c4 */
 };
 
 typedef char dScMgSound_c_size_must_be_0x562c[sizeof(dScMgSound_c) == 0x562c ? 1 : -1];

@@ -48,6 +48,16 @@ struct dScMgMCarlo2_c : dScMgSingle3DBase_c {
     s16 unk_592a;           /* 0x592a */
     u8  pad_592c[0x2];      /* 0x592c */
     s16 unk_592e;           /* 0x592e */
+
+    /* --- this class's own vtable overrides, defined out of line under their
+       own mangled names. Each re-uses a slot ActorBase already holds rather
+       than appending one, and neither adds a field, so the size assert below
+       is untouched. The destructor above stays the key function, so no
+       translation unit starts emitting _ZTV14dScMgMCarlo2_c because of these.
+       Signatures are include/ActorBase.h's and include/dScMgBase_c.h's own,
+       copied unchanged. --- */
+    s32 CleanupResources();   /* slot 3 -- ov006 0x020f9fe0 */
+    s32 Behavior();           /* slot 6 -- ov006 0x020fa13c */
 };
 
 typedef char dScMgMCarlo2_c_size_must_be_0x5930[sizeof(dScMgMCarlo2_c) == 0x5930 ? 1 : -1];
