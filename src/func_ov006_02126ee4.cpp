@@ -297,7 +297,7 @@ extern "C" void func_ov006_02126ee4(char *c)
                         *(u16 *)(c + r2 * 0x5c0 + col * 2 + 0x4f38) = wb4;
                         cool = wb8;
                         for (i = zbc; i < 0x80; i++) {
-                            u8 *q = (u8 *)(((int)c + i + 0xac58) & 0xFFFFFFFFFFFFFFFF);
+                            u8 *q = (u8 *)((int)c + i + 0xac58);
                             if (*q == 0) {
                                 *(int *)(c + i * 8 + 0xacd8) = ((r2 << 4) + 8) << 12;
                                 *(int *)(c + i * 8 + 0xacdc) = colx << 12;
@@ -315,7 +315,7 @@ extern "C" void func_ov006_02126ee4(char *c)
                         *(u16 *)(c + r2 * 0x5c0 + col * 2 + 0x4f38) = wb4;
                         cool = wb8;
                         for (i = zc0; i < 0x80; i++) {
-                            u8 *q = (u8 *)(((int)c + i + 0xac58) & 0xFFFFFFFFFFFFFFFF);
+                            u8 *q = (u8 *)((int)c + i + 0xac58);
                             if (*q == 0) {
                                 *(int *)(c + i * 8 + 0xacd8) = ((r2 << 4) + 8) << 12;
                                 *(int *)(c + i * 8 + 0xacdc) = colx << 12;
@@ -334,7 +334,7 @@ extern "C" void func_ov006_02126ee4(char *c)
                         *(u16 *)(c + r2 * 0x5c0 + col * 2 + 0x4f38) = wb4;
                         cool = wb8;
                         for (i = zc4; i < 0x80; i++) {
-                            u8 *q = (u8 *)(((int)c + i + 0xac58) & 0xFFFFFFFFFFFFFFFF);
+                            u8 *q = (u8 *)((int)c + i + 0xac58);
                             if (*q == 0) {
                                 *(int *)(c + i * 8 + 0xacd8) = ((r2 << 4) + 8) << 12;
                                 *(int *)(c + i * 8 + 0xacdc) = colx << 12;
