@@ -4,6 +4,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "FortressTower.h"
+extern "C" void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
+extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
+extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
+extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
+extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -34,21 +40,21 @@ int FortressTower::InitResources()
 
     idx = *(unsigned char *)(c + 0x31e);
     {
-        void *f = Model_LoadFile(*(void **)((char *)data_ov102_0214e188 + idx * 0xc));
-        ModelBase_SetFile(c + 0xd4, f, 1, -1);
+        void *f = _ZN5Model8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov102_0214e188 + idx * 0xc));
+        _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, f, 1, -1);
     }
-    Platform_UpdateModelPosAndRotY(c);
-    Platform_UpdateClsnPosAndRot(c);
+    _ZN8Platform21UpdateModelPosAndRotYEv(c);
+    _ZN8Platform19UpdateClsnPosAndRotEv(c);
 
     idx = *(unsigned char *)(c + 0x31e);
     if (idx == 0 || idx == 2) {
-        void *f = MeshCollider_LoadFile(*(void **)((char *)data_ov102_0214e18c + idx * 0xc));
-        MovingMeshCollider_SetFile(c + 0x124, f, c + 0x2ec, 0x1000,
+        void *f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov102_0214e18c + idx * 0xc));
+        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x124, f, c + 0x2ec, 0x1000,
                                    *(short *)(c + 0x8e),
                                    *(void **)((char *)data_ov102_0214e190 + idx * 0xc));
     } else {
-        void *f = MeshCollider_LoadFile(*(void **)((char *)data_ov102_0214e18c + idx * 0xc));
-        MovingMeshCollider_SetFile(c + 0x124, f, c + 0x2ec, 0x199,
+        void *f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov102_0214e18c + idx * 0xc));
+        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x124, f, c + 0x2ec, 0x199,
                                    *(short *)(c + 0x8e),
                                    *(void **)((char *)data_ov102_0214e190 + idx * 0xc));
     }

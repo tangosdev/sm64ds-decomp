@@ -77,6 +77,7 @@ src/_ZN19FloatOnLavaPlatform6RenderEv.cpp:
     .text start:0x021117a4 end:0x021117cc
 
 src/_ZN19FloatOnLavaPlatform8BehaviorEv.cpp:
+    complete
     .text start:0x021117cc end:0x02111870
 
 src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp:

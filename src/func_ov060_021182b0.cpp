@@ -13,9 +13,15 @@ struct Model { static BMD_File* LoadFile(SharedFilePtr& f); };
 struct ModelBase { void SetFile(BMD_File* f, int b, int c); };
 struct Platform { void UpdateClsnPosAndRot(); };
 struct MeshCollider { static KCL_File* LoadFile(SharedFilePtr& f); };
-struct MovingMeshCollider {
-    void SetFile(KCL_File* f, const Matrix4x3& m, int fix, short sh, CLPS_Block& b);
-};
+struct MovingMeshCollider { };
+/* Declared by its final name rather than as a shadow method: the ROM's symbol takes
+   Fix12<int> where the call site has an int, and Fix12<int> is an aggregate with no
+   converting constructor, so a shadow declaration cannot be both callable and mangle
+   correctly. Spelling the symbol literally sidesteps the mangling entirely -- the
+   parameter types then only decide the call ABI, and a Fix12 passes in one register
+   bit-identical to an int. */
+extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void* self, KCL_File* f, const Matrix4x3& m, int fix, short sh, CLPS_Block& b);
 struct MeshColliderBase { void Enable(Actor* a); };
 
 extern "C" void CopyTexPalFromLevelModel(void* p);
@@ -26,7 +32,7 @@ extern "C" int data_0208e738;
 extern "C" SharedFilePtr* data_ov060_02119514[];
 extern "C" SharedFilePtr* data_ov060_0211953c[];
 extern "C" CLPS_Block* data_ov060_0211a980[];
-extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern "C" void func_ov060_021183f4();
 
 extern "C" int func_ov060_021182b0(char* self);
@@ -42,8 +48,8 @@ int func_ov060_021182b0(char* self)
     ((Platform*)self)->UpdateClsnPosAndRot();
     {
         int i = *(unsigned char*)(self + 0x329);
-        ((MovingMeshCollider*)(self + 0x124))->SetFile(
-            MeshCollider::LoadFile(*data_ov060_0211953c[i]),
+        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            self + 0x124, MeshCollider::LoadFile(*data_ov060_0211953c[i]),
             *(Matrix4x3*)(self + 0x2ec), 0x1000, *(short*)(self + 0x8e),
             *data_ov060_0211a980[i]);
     }

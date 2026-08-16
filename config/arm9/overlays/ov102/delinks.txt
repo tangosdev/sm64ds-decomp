@@ -25,6 +25,7 @@ src/_ZN13FortressTower8BehaviorEv.cpp:
     .text start:0x02148ba8 end:0x02148c94
 
 src/_ZN13FortressTower13InitResourcesEv.cpp:
+    complete
     .text start:0x02148c94 end:0x02148e9c
 
 src/RopeBarrier_Spawn.c:

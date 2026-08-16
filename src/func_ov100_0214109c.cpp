@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
+extern "C" void _ZN9ActorBase18MarkForDestructionEv(void*);
 typedef int Fix12;
 
 
@@ -22,7 +23,7 @@ void func_ov100_0214109c(void *t) {
         }
         int sub = *(signed char*)(c+0xcc);
         _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x114, 0, (struct Vector3*)(c+0x5c), 0, sub, -1);
-        ActorBase_MarkForDestruction(c);
+        _ZN9ActorBase18MarkForDestructionEv(c);
         return;
     }
     if (st <= 0x14) return;

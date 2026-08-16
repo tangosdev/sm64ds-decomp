@@ -3,6 +3,10 @@
 // @symbol func_ov098_021390ec
 /* recovered: shared common types */
 #include "common.h"
+/* Final name, not a shadow method: the ROM symbol takes Fix12<int> and the call
+   site has an int. See func_ov060_021182b0.cpp for the same case. */
+extern "C" short _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void* self, int a, int b,
+                                                       short c);
 struct ClsnResult { int GetClsnID() const; };
 struct SurfaceInfo { void CopyNormalTo(Vector3 &) const; };
 struct WithMeshClsn {
@@ -43,11 +47,10 @@ struct Actor {
     virtual void v30();
     virtual void vcall();
     static Actor *FindWithID(u32 id);
-    s16 ReflectAngle(int a, int b, s16 c);
 };
 
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
-extern int func_ov002_020ef228(void *c, int arg);
+extern "C" int func_ov002_020ef228(void *c, int arg);
 
 extern "C" void func_ov098_021390ec(char *cc)
 {
@@ -79,5 +82,6 @@ extern "C" void func_ov098_021390ec(char *cc)
     }
     Vector3 v;
     ((SurfaceInfo *)((char *)((WithMeshClsn *)((char *)c + 0x320))->GetWallResult() + 4))->CopyNormalTo(v);
-    *(s16 *)((char *)c + 0x94) = c->ReflectAngle(v.x, v.z, *(s16 *)((char *)c + 0x94));
+    *(s16 *)((char *)c + 0x94) =
+        _ZN5Actor12ReflectAngleE5Fix12IiES1_s(c, v.x, v.z, *(s16 *)((char *)c + 0x94));
 }
