@@ -3152,3 +3152,58 @@ Rule: when the residual is a shift-pair with foreign loads interleaved, check
 whether entering the gap forces a second hoist before spending on ordering
 levers -- this shape reads as crackable (no floor note, "just scheduling")
 and is not.
+
+## 6bf. Pairwise-transposition climbing beats random shuffles on decl-order floors (func_ov007_020c9688, div 33 -> 10, 2026-08-15)
+
+A "FLOOR(regperm)" call on a 12-local declaration list survived 100+ variants,
+two permuter runs and two sessions, and then fell to swapping two declaration
+lines. The mechanism was never exotic; the SEARCH was wrong.
+
+func_ov007_020c9688 (ov007, 0x300) was banked at div=33 with
+`floor {class: regperm, evidence: "... cannot force ip ..."}`. Splitting the
+residual by address region showed two independent clusters: 14 words in the
+first loop (a 3-cycle over {r1, r3, ip} for the webs `hi`/`bA`/`bE`) and 19 in
+the second (a 5-cycle over the callee-saved chain). The first cluster is now
+ZERO from one change: move `hi` from declaration slot 7 to slot 3 and `bA` from
+3 to 7. `hi` lands in ip, exactly the coloring the floor note said could not be
+forced.
+
+Rank rule this pins down, complementing 6ab: among named-local webs competing
+for the SCRATCH file, earlier declaration takes the HIGHER register. Measured
+here as slot 3 -> ip, slot 4 -> r3, slot 7 -> r1. 6ab's "descending from r3 in
+first-definition order" is the same rule seen from the other end, and ip is in
+the sequence rather than an unreachable spill-of-last-resort.
+
+Why two sessions missed it. The prior sweeps, and my own first pass, sampled
+declaration order RANDOMLY -- 400 random shuffles of a 12-element list. A
+specific adjacent transposition has probability ~1/66 of appearing in a random
+shuffle at the needed pair of slots, and nothing in the sample is a small step
+away from the seed, so the search never sees the gradient. Greedy climbing over
+pairwise transpositions found it in one pass. Both moves matter: swap any two
+DECLARATION lines and any two ASSIGNMENT lines, score, keep improvements,
+repeat to a local optimum, restart a few times.
+
+Cost: an oracle call is ~0.19s (`wallcrack.Target.div`), so a full
+transposition neighbourhood of a 12-decl / 13-assignment body is 144 compiles,
+about 4s on 8 threads. There is no reason to sample this space randomly.
+
+Two more things worth carrying:
+
+- **Score by ADDRESS REGION, not just the total.** Splitting 33 into 14/19 made
+  two independent problems out of one, and made each one's local optimum
+  legible. A single global count hides which lever moved what.
+- **The permuter's stock scorer will happily reward semantically WRONG code.**
+  Here it "improved" the second loop by 2 words by moving a read from `*q` to
+  after `q += 0x18` -- reading the NEXT record -- emitting `ldrh r3,[rN,#0x18]!`
+  where the ROM has post-indexed `ldrh r3,[rN],#0x18`. The honest form of the
+  same lever (read the saved cursor `q0` at the use site instead of a named
+  temp) scores identically and is correct. Read permuter diffs for semantics
+  before banking them; a score is not a proof.
+
+Remaining residual is 10 words, all in the second loop: a pure 3-cycle over `q`
+(ROM sb), the argument zero (ROM r8) and the m-reset zero (ROM r7). That one
+survived 720 declaration permutations, 7 hill-climb restarts from random
+starts, named-zero webs at every declaration slot, 6 outer-loop shapes, 10
+inner-loop forms, the verified pragma vocabulary and all 25 installed
+compilers, so it is banked as the live near-miss rather than a floor claim --
+the last two claims on this function were both wrong.
