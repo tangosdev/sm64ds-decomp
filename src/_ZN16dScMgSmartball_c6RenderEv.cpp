@@ -1,17 +1,32 @@
 //cpp
-// MATCH: func_ov006_021173c8 @ 0x021173c8 size 0x10c0 (ov006), mwccarm 2004/b56.
+// @symbol _ZN16dScMgSmartball_c6RenderEv
+// MATCH: dScMgSmartball_c::Render @ 0x021173c8 size 0x10c0 (ov006), mwccarm 2004/b56.
 // Levers from near-miss div=15:
-//  - plain (non-u64) pcnt for loop C → pcnt@sp+0x10 (div 15→8)
-//  - block-scope pcnt2 for loop G → val@sp+0x14 (div 8→5)
+//  - plain (non-u64) pcnt for loop C -> pcnt@sp+0x10 (div 15->8)
+//  - block-scope pcnt2 for loop G -> val@sp+0x14 (div 8->5)
 //  - int *slot[2] with early slot[0]=0, slot[1]=loopG pcnt, slot[0]=loop2 pmode
-//    forces spill order pmode@0x18 before pcnt2@0x1c (div 5→0)
+//    forces spill order pmode@0x18 before pcnt2@0x1c (div 5->0)
 // Loop2 digit-count still uses inner u64 mask form for pooled ldr form.
 //
-// TODO: shared ov006 HUD/score object layout — this file and siblings
+// TODO: shared ov006 HUD/score object layout - this file and siblings
 // (func_ov006_020fd2d8, 02103ac0, 020fb7e0) re-spell the same base offsets:
-//   0x4660–0x4770  display-object pointer arrays (DispObj* at k*4 stride)
-//   0x5958–0x5998  score/coin block
+//   0x4660-0x4770  display-object pointer arrays (DispObj* at k*4 stride)
+//   0x5958-0x5998  score/coin block
 // Name the base struct once so later matches do not invent a fifth spelling.
+//
+/* dScMgSmartball_c::Render -- vtable slot 9. Attributed by the ROM's vtable: the
+ * third of the three slots where this class's table differs from dScMgBase_c's.
+ * The old file carried no `recovered name:` comment, only the address.
+ *
+ * The result screen's itemised score, one row per bonus category, gated on how far
+ * the 0x5960 reveal counter has run; then the two flipper lamps, then every live
+ * display object's slot-1 virtual, in the ROM's order.
+ *
+ * ONLY THE RECEIVER CHANGED. The body is byte-for-byte the one that already
+ * matched, with `this` where the void* parameter was: everything else here --
+ * the two pragmas, the spill-order levers recorded above, the `slot[2]` array
+ * whose two entries are written in that particular order -- is load-bearing, and
+ * the banner above is kept verbatim so the next reader does not undo it. */
 
 /* Both pragmas are load-bearing, not tidying: without them mwccarm 2004/b56
  * emits 0x1170 bytes with 999 words differing (target is 0x10c0). Do not remove. */
@@ -19,6 +34,7 @@
 #pragma opt_strength_reduction off
 
 #include "private/disp_obj_vtbl.h"
+#include "dScMgSmartball_c.h"
 
 extern "C" {
 void SetSubBg0Offset(void *p, int a);
@@ -52,9 +68,9 @@ extern int data_ov006_02138a88[];
 #define UC(off) (*(unsigned char *)(g + (off)))
 #define LP(e) ((int *)(e))
 
-extern "C" int func_ov006_021173c8(void *this_)
+s32 dScMgSmartball_c::Render()
 {
-    char *g = (char *)this_;
+    char *g = (char *)this;
     int col;
     int xpos;
     int row;

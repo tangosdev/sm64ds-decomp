@@ -1,15 +1,27 @@
 //cpp
+// @symbol _ZN13dScMgFlower_c8BehaviorEv
 #include "types.h"
-// @symbol func_ov006_0212ac74
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgFlower_c.h"
+/* dScMgFlower_c::Behavior -- vtable slot 6.
+ *
+ * Attributed by the ROM's vtable; one of the three slots (0, 6, 9) where Flower's
+ * table really does differ from dScMgSingle3DBase_c's. The four addresses that
+ * once carried `recovered name: dScMgFlower_c_*` for slots 2/5/7/10 were the
+ * parent's and moved up in commit 4f7406b9c -- see include/dScMgFlower_c.h.
+ *
+ * The whole minigame: pick the flower nearest the cursor, drag it, drop it, score
+ * the pair, and run the between-rounds state machine. mArray at 0x4f38 is the
+ * 0x16-entry flower table, spelled here by raw offset because its element type is
+ * not reconstructed yet.
+ *
+ * LA/LB ARE LAUNDERS, NOT CASTS. Each forces the address through an integer so
+ * mwccarm re-materialises it instead of common-subexpressing the field address --
+ * removing one is a byte-level change. The two pragmas are load-bearing for the
+ * same reason. Only the declarations move: the body is byte-for-byte the one that
+ * already matched, with `this` in place of the char* parameter. */
 
 extern "C" {
-// recovered name: dScMgFlower_c_Behavior
-/* recovered: renamed to Class_Method */
-/* dScMgFlower_c::Behavior - recovered from vtable slot identity */
 typedef struct V2 {
     int x;
     int z;
@@ -21,14 +33,15 @@ typedef struct Cell {
     char pad[0x18];
 } Cell;
 
-extern void Vec2_Sub(V2 *out, V2 *a, V2 *b);
-extern int Vec2_Len(V2 *p);
-extern void FreeGfxSlotsById(int a);
+void Vec2_Sub(V2 *out, V2 *a, V2 *b);
+int Vec2_Len(V2 *p);
+void FreeGfxSlotsById(int a);
 extern u8 data_020a0e40[];
 extern u8 data_020a0de8[];
 extern u8 data_020a0de9[];
 extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
+}
 
 #define LB(p) ((int)((int)(p)))
 #define LA(p) ((int)(p))
@@ -36,9 +49,10 @@ extern u8 data_020a0deb[];
 #pragma opt_strength_reduction off
 #pragma opt_common_subs off
 
-int func_ov006_0212ac74(char *c)
+s32 dScMgFlower_c::Behavior()
 {
-    struct dScMgFlower_c *self = (struct dScMgFlower_c *)(void *)c;
+    char *c = (char *)this;
+    struct dScMgFlower_c *self = this;
     int i;
     int k;
     int t;
@@ -253,5 +267,4 @@ int func_ov006_0212ac74(char *c)
     }
     func_ov006_020c3d18(c + 0x51f8);
     return 1;
-}
 }

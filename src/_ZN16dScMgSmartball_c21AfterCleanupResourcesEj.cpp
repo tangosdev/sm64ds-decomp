@@ -1,18 +1,36 @@
-// @symbol func_ov006_0211944c
-// recovered name: dScMgSmartball_c_AfterCleanupResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+//cpp
+// @symbol _ZN16dScMgSmartball_c21AfterCleanupResourcesEj
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgSmartball_c::AfterCleanupResources - recovered from vtable slot identity */
+#include "dScMgSmartball_c.h"
+/* dScMgSmartball_c::AfterCleanupResources -- vtable slot 5.
+ *
+ * Attributed by the ROM's vtable: one of the three slots where this class's table
+ * differs from dScMgBase_c's. The old file's `recovered name:` comment agreed, and
+ * here it is right.
+ *
+ * Tears the pinball table down object by object -- balls, mushrooms, holes, the
+ * spring, propellers, pipes, piranhas, push switches, then the three singletons.
+ * Each pointer slot is walked, the object's vptr rewound to its base's before the
+ * free (which is a destructor fully inlined into two vtable stores, the same shape
+ * include/dScMgBase_c.h describes for TouchIcon_c), and the slot nulled.
+ *
+ * THE PARAMETER IS u32, NOT int. The pre-migration spelling was `int mode` and it
+ * matched, because the only use is a compare against 2 -- but the virtual being
+ * overridden is dScMgBase_c's `void AfterCleanupResources(u32)`, so that is the
+ * signature. The chain at the end is a QUALIFIED call, which compiles to the direct
+ * `bl` the ROM has; unqualified it would become a virtual dispatch through this
+ * very slot and recurse.
+ *
+ * WAS A C99 FILE. Its three declarations are gone rather than moved: decl_common.h
+ * already declares __destroy_arr and NullDestructor_0203d47c with C linkage, and
+ * the base chain is a real call now. The pragma is load-bearing, not tidying. */
 #pragma opt_strength_reduction off
 
-extern void __destroy_arr(void *p, int a, int b, void *cb);
-extern void NullDestructor_0203d47c(void);
-extern void _ZN11dScMgBase_c21AfterCleanupResourcesEj(char *c, int arg);
-
-void func_ov006_0211944c(char *c, int mode)
+void dScMgSmartball_c::AfterCleanupResources(u32 vfSuccess)
 {
-    if (mode != 2)
+    char *c = (char *)this;
+
+    if (vfSuccess != 2)
         return;
 
     for (int i = 0; i < 0xd; i++) {
@@ -160,5 +178,5 @@ void func_ov006_0211944c(char *c, int mode)
         }
     }
 
-    _ZN11dScMgBase_c21AfterCleanupResourcesEj(c, mode);
+    dScMgBase_c::AfterCleanupResources(vfSuccess);
 }

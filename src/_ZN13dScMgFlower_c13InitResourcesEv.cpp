@@ -1,32 +1,50 @@
+//cpp
+// @symbol _ZN13dScMgFlower_c13InitResourcesEv
 #include "types.h"
-// @symbol func_ov006_0212b480
-// recovered name: dScMgFlower_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgFlower_c::InitResources - recovered from vtable slot identity */
-extern void *func_ov004_020adc74(void *arg);
-extern char *_ZN2G213GetBG2CharPtrEv(void);
-extern void DecompressLZ16(int src, void *dst);
-extern void Ov004_Deallocate(int handle);
-extern void *_ZN3G2S13GetBG2CharPtrEv(void);
-extern char *_ZN2G212GetBG2ScrPtrEv(void);
-extern char *_ZN3G2S12GetBG2ScrPtrEv(void);
-extern char *_ZN3G2S12GetBG3ScrPtrEv(void);
-extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 addr, u32 size);
-extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
-extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+#include "dScMgFlower_c.h"
+/* dScMgFlower_c::InitResources -- vtable slot 0.
+ *
+ * Attributed by the ROM's vtable, and this one the old `recovered name:` comment
+ * got right: slot 0 is one of the three where Flower's table really does differ
+ * from dScMgSingle3DBase_c's (the others are 6 and 9). The four addresses that
+ * used to claim `dScMgFlower_c_*` for slots 2/5/7/10 were the parent's and moved
+ * up in commit 4f7406b9c; see include/dScMgFlower_c.h.
+ *
+ * Sets up both screens' BG2/BG3 layers, decompresses the tile and screen data
+ * behind each, loads the palettes, then hands off to the class's own state reset.
+ * The bare 0x040000xx stores are the 2D engine's BGxCNT / BGxOFS registers and
+ * the 0x0640_0000 / 0x0660_0000 destinations are the two OBJ VRAM banks.
+ *
+ * WAS A C99 FILE, so every declaration below moves inside `extern "C"`: in C++
+ * these names would mangle and resolve to nothing. The three `extern` variables
+ * keep that keyword deliberately -- a variable declaration inside `extern "C" {}`
+ * without it is a definition and collides with the delinked gap object. */
+
+extern "C" {
+void *func_ov004_020adc74(void *arg);
+char *_ZN2G213GetBG2CharPtrEv(void);
+void DecompressLZ16(int src, void *dst);
+void Ov004_Deallocate(int handle);
+void *_ZN3G2S13GetBG2CharPtrEv(void);
+char *_ZN2G212GetBG2ScrPtrEv(void);
+char *_ZN3G2S12GetBG2ScrPtrEv(void);
+char *_ZN3G2S12GetBG3ScrPtrEv(void);
+void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 addr, u32 size);
+void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *p, u16 a, u16 b, u16 c, u16 d);
+void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
 
 extern int data_0208ee44;
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
+}
 
-int func_ov006_0212b480(void *arg0)
+s32 dScMgFlower_c::InitResources()
 {
-    char *c = (char *)arg0;
+    char *c = (char *)this;
     int h;
 
     *(int *)(c + 0x5ff0) = func_ov004_020ad8b8();

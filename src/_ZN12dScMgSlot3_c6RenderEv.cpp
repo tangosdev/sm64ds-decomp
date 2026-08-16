@@ -1,19 +1,28 @@
 //cpp
+// @symbol _ZN12dScMgSlot3_c6RenderEv
 #include "types.h"
-// @symbol func_ov006_0210b648
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgSlot3_c.h"
-// recovered name: dScMgSlot3_c_Render
-/* recovered: renamed to Class_Method */
-/* dScMgSlot3_c::Render - recovered from vtable slot identity */
+/* dScMgSlot3_c::Render -- vtable slot 9.
+ *
+ * Attributed by the ROM's vtable: the second of the two slots where this class's
+ * table differs from dScMgSingle3DBase_c's. The old file's `recovered name:`
+ * comment agreed, and here it is right.
+ *
+ * Draws the three reels -- the win-line pass at state 6 and the scrolling pass
+ * otherwise -- then the payout markers, the HUD, and the two swinging lamps whose
+ * angles are unk_5018/unk_501a.
+ *
+ * The pragma is load-bearing, not tidying; the `(int)` launder on the two indexed
+ * reads at 0x4fe4/0x4ff4 is there for the same reason. Only the receiver changed:
+ * `self` is `this` now instead of a char* parameter cast back to the class. */
+
 extern "C" {
-extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
-extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
-extern void func_ov004_020b1bc8(char *a0, int a1, int a2, int a3);
-extern void func_ov004_020b1e34(char *a0, int a1, int a2, int a3);
-extern int GetGameLanguage(void);
+void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int b, void *attr, int a2, int a3, int a4, int a5, int a6, int a7, int a8, int a9);
+void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
+void func_ov004_020b1bc8(char *a0, int a1, int a2, int a3);
+void func_ov004_020b1e34(char *a0, int a1, int a2, int a3);
+int GetGameLanguage(void);
 }
 
 typedef struct T4fe4 {
@@ -25,10 +34,10 @@ extern "C" char *data_ov006_0213e5ec[];
 
 #pragma opt_strength_reduction off
 
-extern "C" int func_ov006_0210b648(char *c);
-extern "C" int func_ov006_0210b648(char *c)
+s32 dScMgSlot3_c::Render()
 {
-    struct dScMgSlot3_c *self = (struct dScMgSlot3_c *)(void *)c;
+    char *c = (char *)this;
+    struct dScMgSlot3_c *self = this;
     int i, j;
 
     func_ov006_020c1eb4(c + 0x4660);

@@ -33,7 +33,7 @@
  *
  * OWN TAIL, 0x5400..0x5470, IS THE CLASS'S STATE MACHINE, not the
  * unclaimed trailing space the first draft of this header called it. The
- * first statement of Cup's own Behavior (src/func_ov006_020e0204.cpp,
+ * first statement of Cup's own Behavior (src/_ZN10dScMgCup_c8BehaviorEv.cpp,
  * vtable slot 6) is a pointer-to-member dispatch through
  * `data_ov006_02141870[*(int*)(o + 0x5418)]`; InitResources
  * (func_ov006_020e0308.cpp, slot 0) already carries a local struct naming
@@ -58,6 +58,18 @@ extern "C" void NullDestructor_0203d47c(void);
 
 struct dScMgCup_c : dScMgSingle3DBase_c {
     virtual ~dScMgCup_c();
+
+    /* This class's own overrides, read off the ROM's vtable at ov006 0x0213c154:
+       the two slots where the table differs from dScMgSingle3DBase_c's. Spelled
+       WITHOUT the `virtual` keyword, the way include/daObjMarioCap_c.h and
+       include/daObjRc_Dorifu_c.h spell theirs -- an override of a virtual an
+       ancestor already declares is implicitly virtual either way, so each reuses
+       an existing slot and adds no field, and the 0x5470 assert below still
+       holds. The destructor above is declared first and out of line, so it stays
+       this class's KEY FUNCTION and neither of these translation units emits
+       _ZTV10dScMgCup_c. */
+    s32 Behavior();       /* slot  6 -- src/_ZN10dScMgCup_c8BehaviorEv.cpp */
+    s32 Render();         /* slot  9 -- src/_ZN10dScMgCup_c6RenderEv.cpp */
 
     u8  pad_4f38[0x19c];  /* 0x4f38 -- opaque table, see file banner */
     s32 unk_50d4;         /* 0x50d4 -- split-literal access, see file banner */

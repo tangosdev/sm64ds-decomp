@@ -1,23 +1,47 @@
-// @symbol func_ov006_02118488
-// recovered name: dScMgSmartball_c_Behavior
-/* recovered: renamed to Class_Method, declarations from a shared header */
+//cpp
+// @symbol _ZN16dScMgSmartball_c8BehaviorEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgSmartball_c::Behavior - recovered from vtable slot identity */
+#include "dScMgSmartball_c.h"
+/* dScMgSmartball_c::Behavior -- vtable slot 6.
+ *
+ * Attributed by the ROM's vtable: one of the three slots where this class's table
+ * differs from dScMgBase_c's. The old file's `recovered name:` comment agreed, and
+ * here it is right.
+ *
+ * State 0 runs the table: every live object's slot-0 virtual is called through its
+ * own vptr, one array at a time (balls, mushrooms, holes, propellers, pipes,
+ * piranhas, push switches, then the three singletons), then the physics, the score
+ * and the ball-lost check. State 1 is the game-over hold, state 2 the hand-off out.
+ * The opening `0xc4 == 0` block is dScMgBase_c's shared counter idiom -- the same
+ * three fields Flower's and MCarlo's own Behaviors arm, which is why
+ * include/dScMgBase_c.h names 0xc0/0xc3/0xc4.
+ *
+ * THE `(long long)(int)` CASTS ARE LAUNDERS. They force the address through a wider
+ * temporary so mwccarm re-materialises it instead of strength-reducing the loop, and
+ * the pragma below is there for the same reason: neither is a spelling that can be
+ * simplified without changing bytes.
+ *
+ * WAS A C99 FILE, so the declarations move inside `extern "C"`; in C++ they would
+ * mangle and resolve to nothing. The `extern` on the four variables is load-bearing
+ * -- without it a declaration inside `extern "C" {}` is a definition and collides
+ * with the delinked gap object. */
 #pragma opt_strength_reduction off
+
 typedef void (*VFunc)(void*);
 
-extern void FreeGfxSlotsById(int a);
-extern unsigned int func_02012790(unsigned int a);
+extern "C" {
+void FreeGfxSlotsById(int a);
+unsigned int func_02012790(unsigned int a);
 
 extern unsigned char data_0209d454;
 extern unsigned char data_020a0e40;
 extern unsigned char data_020a0de8[];
 extern unsigned char data_020a0de9[];
+}
 
-int func_ov006_02118488(void* arg)
+s32 dScMgSmartball_c::Behavior()
 {
-    char* c = (char*)arg;
+    char* c = (char*)this;
     int vec[3];
 
     if (*(unsigned char*)(c + 0xc4) == 0) {

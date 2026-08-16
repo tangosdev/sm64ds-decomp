@@ -41,6 +41,18 @@ extern "C" int func_ov006_020c1c64(char *t); /* decl_common.h's own signature */
 struct dScMgMemory2_c : dScMgSingle3DBase_c {
     virtual ~dScMgMemory2_c();
 
+    /* This class's own overrides, read off the ROM's vtable: the slots where the
+       table differs from dScMgSingle3DBase_c's. Spelled WITHOUT the `virtual`
+       keyword, the way include/daObjMarioCap_c.h and include/daObjRc_Dorifu_c.h
+       spell theirs -- an override of a virtual an ancestor already declares is
+       implicitly virtual either way, so each reuses an existing slot and adds no
+       field, and the 0x5410 assert below still holds. The destructor above is
+       declared first and out of line, so it stays this class's KEY FUNCTION and
+       none of these translation units emits _ZTV14dScMgMemory2_c. */
+    s32 InitResources();   /* slot  0 -- src/_ZN14dScMgMemory2_c13InitResourcesEv.cpp */
+    s32 Behavior();        /* slot  6 -- src/_ZN14dScMgMemory2_c8BehaviorEv.cpp */
+    s32 Render();          /* slot  9 -- src/_ZN14dScMgMemory2_c6RenderEv.cpp */
+
     u8  pad_4f38[0x270];   /* 0x4f38 -- shared table, opaque here; see banner */
     u8  pad_51a8[0x22c];   /* 0x51a8 -- no matched access, see banner */
     s32 unk_53d4;          /* 0x53d4 */

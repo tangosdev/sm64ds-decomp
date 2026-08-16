@@ -1,24 +1,39 @@
+//cpp
+// @symbol _ZN11dScMgJump_c6RenderEv
 #include "types.h"
-// @symbol func_ov006_020ee034
-// recovered name: dScMgJump_c_Render
-/* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgJump_c::Render - recovered from vtable slot identity */
+#include "dScMgJump_c.h"
+/* dScMgJump_c::Render -- vtable slot 9.
+ *
+ * Attributed by the ROM's vtable: the third of the three slots where this class's
+ * table differs from dScMgD3DBase_c's.
+ *
+ * Draws the language-dependent instruction rows on the touch screen while
+ * unk_4664 == 1, then sets up the 3D engine's fog registers twice -- once for the
+ * scene, once with bit 30 set for the pass that follows -- and hands the model at
+ * 0x501c its transform. 0x040004c8 / 0x040004cc are memory-mapped registers, which
+ * is why the stores are volatile; that is I/O, not codegen steering.
+ *
+ * WAS A C99 FILE, so the declarations move inside `extern "C"`; in C++ they would
+ * mangle and resolve to nothing. */
+
+extern "C" {
 typedef struct { int w[12]; } M48;
 typedef struct { int w[3]; } V3;
 
-extern void func_ov004_020b1e34(void *a, int b, int c, int d);
-extern int GetGameLanguage(void);
-extern void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
-extern void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
-extern void func_0203cd80(int *m, short angle);
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+void func_ov004_020b1e34(void *a, int b, int c, int d);
+int GetGameLanguage(void);
+void DrawOamSprite(void *a0, void *a1, int a2, void *a3);
+void RenderOamMainScreen(int a0, int a1, int a2, int a3, int a4);
+void func_0203cd80(int *m, short angle);
+void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 
 extern int data_020a0e68;
+}
 
-int func_ov006_020ee034(void *self)
+s32 dScMgJump_c::Render()
 {
+    void *self = (void *)this;
     char *c = (char *)self;
 
     if (*(u16 *)(c + 0x4664) == 1) {

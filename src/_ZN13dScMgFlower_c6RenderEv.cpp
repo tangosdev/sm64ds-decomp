@@ -1,19 +1,34 @@
+//cpp
+// @symbol _ZN13dScMgFlower_c6RenderEv
 #include "types.h"
-// @symbol func_ov006_0212aacc
-// recovered name: dScMgFlower_c_Render
-/* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgFlower_c::Render - recovered from vtable slot identity */
-extern s16 data_02082214[];
-extern void func_ov004_020afdd0(void* a0, int a1, int a2, int a3, int a4);
-extern void func_ov004_020af770(void* a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
+#include "dScMgFlower_c.h"
+/* dScMgFlower_c::Render -- vtable slot 9.
+ *
+ * Attributed by the ROM's vtable; the third of the three slots (0, 6, 9) where
+ * Flower's table differs from dScMgSingle3DBase_c's. The four addresses that once
+ * carried `recovered name: dScMgFlower_c_*` for slots 2/5/7/10 were the parent's
+ * and moved up in commit 4f7406b9c -- see include/dScMgFlower_c.h.
+ *
+ * Scrolls the two background layers off a sine table (0x5ff4 is the phase, stepped
+ * 0xc0 a frame), draws the round's banner sprite, then one sprite per live flower.
+ * The flower being dragged -- index 0x5fc8 -- is drawn with a different palette
+ * argument, which is how the player sees which one is held.
+ *
+ * WAS A C99 FILE, so the three declarations move inside `extern "C"`; in C++ they
+ * would mangle and resolve to nothing. */
 
+extern "C" {
+extern s16 data_02082214[];
+void func_ov004_020afdd0(void *a0, int a1, int a2, int a3, int a4);
+void func_ov004_020af770(void *a0, int a1, int a2, int a3, int a4, int a5, u16 a6);
+}
 
 struct S2 { int a, b; };
 
-int func_ov006_0212aacc(char* self)
+s32 dScMgFlower_c::Render()
 {
+    char *self = (char *)this;
     int i;
     u8 (*barr)[0x20] = (u8 (*)[0x20])self;
     int (*iarr)[8] = (int (*)[8])self;

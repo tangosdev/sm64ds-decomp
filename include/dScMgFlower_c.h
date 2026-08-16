@@ -48,6 +48,24 @@ extern "C" void func_ov006_0212a650(void);
 struct dScMgFlower_c : dScMgSingle3DBase_c {
     virtual ~dScMgFlower_c();
 
+    /* THIS CLASS'S OWN OVERRIDES ARE SLOTS 0, 6 AND 9 -- AND ONLY THOSE. Four
+       further addresses used to carry `recovered name: dScMgFlower_c_*` comments
+       (AfterInitResources, AfterCleanupResources, BeforeBehavior, BeforeRender);
+       all four are dScMgSingle3DBase_c's own, one level up, and commit 4f7406b9c
+       moved them there. Flower merely inherits them. The three below are the
+       slots where the ROM's own table really does differ from its parent's.
+
+       Spelled WITHOUT the `virtual` keyword, the way include/daObjMarioCap_c.h
+       and include/daObjRc_Dorifu_c.h spell theirs -- an override of a virtual an
+       ancestor already declares is implicitly virtual either way, so each reuses
+       an existing slot and adds no field, and the 0x5ff8 assert below still
+       holds. The destructor above is declared first and out of line, so it stays
+       this class's KEY FUNCTION and none of these translation units emits
+       _ZTV13dScMgFlower_c. */
+    s32 InitResources();   /* slot  0 -- src/_ZN13dScMgFlower_c13InitResourcesEv.cpp */
+    s32 Behavior();        /* slot  6 -- src/_ZN13dScMgFlower_c8BehaviorEv.cpp */
+    s32 Render();          /* slot  9 -- src/_ZN13dScMgFlower_c6RenderEv.cpp */
+
     u8  mArray[0x2c0];     /* 0x4f38 -- 0x16 * 0x20, elem dtor func_ov006_0212a650 */
     u8  pad_51f8[0xdc0];   /* 0x51f8 -- opaque object, see file banner */
     s32 unk_5fb8;          /* 0x5fb8 */

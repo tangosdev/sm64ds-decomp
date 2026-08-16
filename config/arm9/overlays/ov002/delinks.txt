@@ -940,7 +940,7 @@ src/func_ov002_020b6144.cpp:
     complete
     .text start:0x020b6144 end:0x020b616c
 
-src/func_ov002_020b616c.c:
+src/_ZN15daObjGuragura_c8BehaviorEv.cpp:
     complete
     .text start:0x020b616c end:0x020b6244
 
@@ -1020,7 +1020,7 @@ src/func_ov002_020b68f8.cpp:
     complete
     .text start:0x020b68f8 end:0x020b6920
 
-src/func_ov002_020b6920.cpp:
+src/_ZN13daObjKuruma_c8BehaviorEv.cpp:
     complete
     .text start:0x020b6920 end:0x020b6958
 
