@@ -906,7 +906,7 @@ extern int data_ov002_020ff1b0[4];
 extern int data_ov002_020ff1c0[];
 extern int data_ov002_020ff1d0[];
 extern int data_ov002_020ff254[];
-extern int data_ov002_02108d94[];
+extern int _ZTV13daObjDorifu_c[];
 extern int data_ov002_02109fe4[];
 extern int data_ov002_0210a424[];
 extern int data_ov002_0210a560[];

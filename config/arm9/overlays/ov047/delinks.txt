@@ -63,7 +63,7 @@ src/RickshawPlatformBs_Spawn.c:
     complete
     .text start:0x021114d4 end:0x02111510
 
-src/_ZN18RickshawPlatformBsD1Ev.c:
+src/_ZN18RickshawPlatformBsD1Ev.cpp:
     complete
     .text start:0x02111510 end:0x02111590
 

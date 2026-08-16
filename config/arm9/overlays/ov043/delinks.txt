@@ -31,7 +31,7 @@ src/DiamondLift_Spawn.c:
     complete
     .text start:0x021113cc end:0x021113fc
 
-src/_ZN11RickshawBdwD1Ev.c:
+src/_ZN11RickshawBdwD1Ev.cpp:
     complete
     .text start:0x021113fc end:0x0211144c
 
@@ -51,7 +51,7 @@ src/RickshawBdw_Spawn.c:
     complete
     .text start:0x021114dc end:0x02111518
 
-src/_ZN19RickshawPlatformBdwD1Ev.c:
+src/_ZN19RickshawPlatformBdwD1Ev.cpp:
     complete
     .text start:0x02111518 end:0x02111568
 

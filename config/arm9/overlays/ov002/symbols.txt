@@ -1766,7 +1766,7 @@ _ZTV21MegaMushroomCreateTag kind:data(any) addr:0x02108cf4
 _ZTV16daObjKinokoTag_c kind:data(any) addr:0x02108cf4
 _ZTI13daObjDorifu_c kind:data(any) addr:0x02108d70
 _ZTS13daObjDorifu_c kind:data(any) addr:0x02108d7c
-data_ov002_02108d94 kind:data(any) addr:0x02108d94
+_ZTV13daObjDorifu_c kind:data(any) addr:0x02108d94
 _ZTI19daObjHatenaSwitch_c kind:data(any) addr:0x02108e14
 _ZTS19daObjHatenaSwitch_c kind:data(any) addr:0x02108e20
 QuestionSwitch_SpawnInfo kind:data(any) addr:0x02108e38
@@ -1791,10 +1791,10 @@ _ZTS16daObjKaitendai_c kind:data(any) addr:0x021091b8
 data_ov002_021091d4 kind:data(any) addr:0x021091d4
 _ZTI13daObjKuruma_c kind:data(any) addr:0x02109254
 _ZTS13daObjKuruma_c kind:data(any) addr:0x02109260
-data_ov002_02109278 kind:data(any) addr:0x02109278
+_ZTV13daObjKuruma_c kind:data(any) addr:0x02109278
 _ZTI17daObjKurumajiku_c kind:data(any) addr:0x021092f8
 _ZTS17daObjKurumajiku_c kind:data(any) addr:0x02109304
-data_ov002_02109320 kind:data(any) addr:0x02109320
+_ZTV17daObjKurumajiku_c kind:data(any) addr:0x02109320
 _ZTI11daObjLava_c kind:data(any) addr:0x021093a0
 _ZTS11daObjLava_c kind:data(any) addr:0x021093ac
 PoppingLavaBubbles_SpawnInfo kind:data(any) addr:0x021093bc
