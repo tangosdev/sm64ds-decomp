@@ -37,7 +37,7 @@ struct DonutBlock : Platform {
     int Render();
 };
 
-typedef char ShipWing_size_must_be_0x4ec[sizeof(DonutBlock) == 0x4ec ? 1 : -1];
+typedef char DonutBlock_size_must_be_0x4ec[sizeof(DonutBlock) == 0x4ec ? 1 : -1];
 
 #else
 

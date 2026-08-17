@@ -33,7 +33,7 @@ struct MovingBar : Platform {
     int Render();
 };
 
-typedef char KnockDownPlank_size_must_be_0x330[sizeof(MovingBar) == 0x330 ? 1 : -1];
+typedef char MovingBar_size_must_be_0x330[sizeof(MovingBar) == 0x330 ? 1 : -1];
 
 #else
 

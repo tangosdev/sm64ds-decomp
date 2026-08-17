@@ -38,7 +38,7 @@ struct WDW_Water : Platform {
     int Render();
 };
 
-typedef char RotatingPlatformWdw_size_must_be_0x348[sizeof(WDW_Water) == 0x348 ? 1 : -1];
+typedef char WDW_Water_size_must_be_0x348[sizeof(WDW_Water) == 0x348 ? 1 : -1];
 
 #else
 

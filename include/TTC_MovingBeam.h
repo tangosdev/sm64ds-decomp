@@ -35,7 +35,7 @@ struct TTC_MovingBeam : Platform {
     int Render();
 };
 
-typedef char TtcMovingCubeA_size_must_be_0x35c[sizeof(TTC_MovingBeam) == 0x35c ? 1 : -1];
+typedef char TTC_MovingBeam_size_must_be_0x35c[sizeof(TTC_MovingBeam) == 0x35c ? 1 : -1];
 
 #else
 

@@ -31,7 +31,7 @@ struct FloatOnLavaPlatform : Platform {
     int Render();
 };
 
-typedef char RotatingPlatformLll_size_must_be_0x328[sizeof(FloatOnLavaPlatform) == 0x328 ? 1 : -1];
+typedef char FloatOnLavaPlatform_size_must_be_0x328[sizeof(FloatOnLavaPlatform) == 0x328 ? 1 : -1];
 
 #else
 

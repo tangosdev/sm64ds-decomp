@@ -34,7 +34,7 @@ struct TinyWater : Platform {
     int Render();
 };
 
-typedef char TinyCover_size_must_be_0x340[sizeof(TinyWater) == 0x340 ? 1 : -1];
+typedef char TinyWater_size_must_be_0x340[sizeof(TinyWater) == 0x340 ? 1 : -1];
 
 #else
 

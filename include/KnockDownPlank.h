@@ -42,7 +42,7 @@ struct KnockDownPlank : Platform {
     int Render();
 };
 
-typedef char PoleBillboard_size_must_be_0x398[sizeof(KnockDownPlank) == 0x398 ? 1 : -1];
+typedef char KnockDownPlank_size_must_be_0x398[sizeof(KnockDownPlank) == 0x398 ? 1 : -1];
 
 #else
 

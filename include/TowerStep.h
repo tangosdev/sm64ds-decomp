@@ -40,7 +40,7 @@ struct TowerStep : Platform {
     int Render();
 };
 
-typedef char MovingBarSmall_size_must_be_0x394[sizeof(TowerStep) == 0x394 ? 1 : -1];
+typedef char TowerStep_size_must_be_0x394[sizeof(TowerStep) == 0x394 ? 1 : -1];
 
 #else
 

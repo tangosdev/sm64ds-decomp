@@ -58,7 +58,7 @@ struct SpikeBomb : Actor {
     int Render();
 };
 
-typedef char BowserSkyPlatform_size_must_be_0x32c[
+typedef char SpikeBomb_size_must_be_0x32c[
     sizeof(SpikeBomb) == 0x32c ? 1 : -1];
 
 #else

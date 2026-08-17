@@ -36,7 +36,7 @@ struct BasementWater : Platform {
     int Render();
 };
 
-typedef char SwitchPillar_size_must_be_0x340[sizeof(BasementWater) == 0x340 ? 1 : -1];
+typedef char BasementWater_size_must_be_0x340[sizeof(BasementWater) == 0x340 ? 1 : -1];
 
 #else
 
