@@ -43,6 +43,24 @@ def _section_rank(name: str) -> tuple[int, str]:
     return SECTION_ORDER.get(name, len(SECTION_ORDER)), name
 
 
+# mwccarm marks its coalesced RTTI records (_ZTS.../_ZTI...) with a
+# processor-specific binding, not STB_GLOBAL/STB_WEAK.  pyelftools renders the
+# first of those as 'STB_LOPROC' and leaves the rest as raw integers.  Filtering
+# to GLOBAL/WEAK therefore hid every typeinfo symbol the compiler emits, which
+# made "does the compiler produce _ZTI4Heap?" unanswerable through this reader.
+# They are defined and externally visible, so they belong in the answer.
+_EXTERNAL_BINDINGS = {"STB_GLOBAL", "STB_WEAK"}
+_PROC_BINDING_RANGE = range(10, 16)      # STB_LOOS .. STB_HIPROC
+
+
+def _is_external(binding) -> bool:
+    if isinstance(binding, int):
+        return binding in _PROC_BINDING_RANGE
+    if binding in _EXTERNAL_BINDINGS:
+        return True
+    return binding.startswith(("STB_LOPROC", "STB_HIPROC", "STB_LOOS", "STB_HIOS"))
+
+
 def defined_symbols(obj: bytes) -> list[EmittedSymbol]:
     """Return externally visible symbols defined by an mwccarm ELF object."""
     elf = ELFFile(io.BytesIO(obj))
@@ -58,7 +76,7 @@ def defined_symbols(obj: bytes) -> list[EmittedSymbol]:
         kind = symbol.entry["st_info"]["type"]
         if not name or not isinstance(section_index, int):
             continue
-        if binding not in ("STB_GLOBAL", "STB_WEAK"):
+        if not _is_external(binding):
             continue
         if kind in ("STT_FILE", "STT_SECTION"):
             continue
@@ -68,8 +86,8 @@ def defined_symbols(obj: bytes) -> list[EmittedSymbol]:
         found.add(EmittedSymbol(
             section=section.name,
             name=name,
-            kind=kind.removeprefix("STT_"),
-            binding=binding.removeprefix("STB_"),
+            kind=str(kind).removeprefix("STT_"),
+            binding=str(binding).removeprefix("STB_"),
             size=int(symbol.entry["st_size"]),
         ))
 
