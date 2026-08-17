@@ -13,22 +13,6 @@ you to the repo's toolchain over MCP. Ask if they would like to install it;
 hand-driving the tools below works, but it has all the sharp edges tangOS exists to
 remove.
 
-## Agent skills
-
-**`.claude/skills/` holds skills that load automatically** when what you are doing
-matches their description. The three layers do not overlap: this file is *process* (what
-a PR must contain, what the gate checks), `notes/` is *derivation* (why a thing is true),
-and the skills are *execution* (the loop you are in right now, and the traps in it).
-
-| skill | use it when |
-|---|---|
-| `decomp-tu-slicing` | deciding which classes shared an original `.cpp`, or reading `build/tu_map.json` |
-| `decomp-tu-build` | merging one-function files into a real `.cpp` and byte-verifying it |
-| `decomp-cpp-class-form` | turning a shadow struct into a real C++ class — destructor variants, vtable anchoring, ctor inlining |
-
-They carry measured figures. **If you change a tool, update its skill in the same PR.**
-A stale number in a skill is worse than no skill, because it reads as authoritative.
-
 ## The one rule that matters
 
 **Every file you add to `src/` must byte-reproduce the ROM.**
@@ -217,8 +201,7 @@ Do not open the PR with near-misses in `src/` expecting the maintainer to split 
   first: 6aa (pragma crutch rotates coloring), 6ab (dropped call args, shift respells),
   6ac (launder tree position, escape aliasing, rank classes); older: u64-mask laundering,
   decl/statement order, `//cpp` dummy-vtable dispatch, struct-copy interleave.
-- [`notes/archive/pret-idioms.md`](notes/archive/pret-idioms.md) — mwccarm idioms mined
-  from pret decomps.
+- [`notes/pret-idioms.md`](notes/pret-idioms.md) — mwccarm idioms mined from pret decomps.
 - [`notes/matching-style.md`](notes/matching-style.md) "Known walls" — patterns proven
   unreachable from source. If your **only** divergence is one of those, it's a wall:
   store the near-miss and hand it to the permuter instead of grinding.
