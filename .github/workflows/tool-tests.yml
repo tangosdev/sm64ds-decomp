@@ -1,0 +1,56 @@
+# ROM-free tests for the standalone reverse-engineering tools.
+#
+# Do not put these commands in the ROM build itself: real mangle.py work needs
+# the proprietary mwccarm compiler, and real bmg.py work reads extracted ROM
+# assets. Their unit tests mock the compiler and use synthetic message banks, so
+# they are safe to run on GitHub's public workers.
+name: SM64DS tool tests
+
+on:
+  pull_request:
+    paths:
+      - "tools/mangle.py"
+      - "tools/test_mangle.py"
+      - "tools/match.py"
+      - "tools/bmg.py"
+      - "tools/test_bmg.py"
+      - "tools/message_bank.py"
+      - "tools/test_message_bank.py"
+      - ".github/workflows/tool-tests.yml"
+  push:
+    branches: [main]
+    paths:
+      - "tools/mangle.py"
+      - "tools/test_mangle.py"
+      - "tools/match.py"
+      - "tools/bmg.py"
+      - "tools/test_bmg.py"
+      - "tools/message_bank.py"
+      - "tools/test_message_bank.py"
+      - ".github/workflows/tool-tests.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: sm64ds-tool-tests-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tools:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install pinned tool dependencies
+        run: pip install "capstone==5.0.7" "pyelftools==0.33" "ndspy==4.2.0"
+      - name: Run mangling and message-bank tests
+        run: >-
+          python -m unittest
+          tools.test_mangle
+          tools.test_bmg
+          tools.test_message_bank
+          -v
