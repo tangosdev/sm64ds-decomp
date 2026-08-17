@@ -1,5 +1,5 @@
 //cpp
-/* Scene::AfterRender(u32) at 0x0202e398, 0xc bytes -- vtable slot 11.
+/* dScene_c::AfterRender(u32) at 0x0202e398, 0xc bytes -- vtable slot 11.
  *
  * The whole body is a tail call to ActorBase::AfterRender (0x02043ac4), which
  * mwccarm emits under -interworking as `ldr ip,[pc]; bx ip; .word target` rather
@@ -9,9 +9,9 @@
  * The parameter type is NOT derived from these bytes -- it cannot be, because a
  * tail call never touches r0-r3, so any prototype at all would reproduce them.
  * It comes from the definition of the target, include/ActorBase.h slot 11. */
-#include "Scene.h"
+#include "dScene_c.h"
 
-void Scene::AfterRender(u32 vfSuccess)
+void dScene_c::AfterRender(u32 vfSuccess)
 {
     ActorBase::AfterRender(vfSuccess);
 }

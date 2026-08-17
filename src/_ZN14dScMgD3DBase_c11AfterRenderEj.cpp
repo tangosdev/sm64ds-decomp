@@ -3,7 +3,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "dScMgD3DBase_c.h"
 
-extern "C" void _ZN5Scene11AfterRenderEj(void *self, unsigned int result);
+extern "C" void _ZN8dScene_c11AfterRenderEj(void *self, unsigned int result);
 
 void dScMgD3DBase_c::AfterRender(unsigned int arg)
 {
@@ -15,5 +15,5 @@ void dScMgD3DBase_c::AfterRender(unsigned int arg)
         }
     }
 
-    _ZN5Scene11AfterRenderEj(this, arg);
+    _ZN8dScene_c11AfterRenderEj(this, arg);
 }

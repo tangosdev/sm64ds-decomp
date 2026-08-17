@@ -75,7 +75,7 @@ typedef char dScMgAmida_c_Piece_size_must_be_0x18[sizeof(dScMgAmida_c_Piece) == 
    assumed, that calling it as a normal `this->Unk36()` does NOT reproduce
    the ROM: it compiled Render 0xc bytes larger (0x2ac vs 0x2a0), because
    mwcc's own compiled slot for Unk36 (appended after dScMgBase_c's
-   compiler-visible virtuals, which stop at Scene/ActorBase's own count --
+   compiler-visible virtuals, which stop at dScene_c/ActorBase's own count --
    dScMgBase_c.h leaves slots 18-35 undeclared) does NOT land on true ROM
    slot 36 the way it accidentally does for a class's first-and-only new
    slot when that slot is 18 (dScMgCoin_c's OnYoshiTryEat, etc.) -- Amida's

@@ -32,7 +32,7 @@ extern u16 data_0209f5e8[];
 
 extern "C" {
 extern void func_02012790(int idx);
-extern void _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
+extern void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 a);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void func_ov003_020ad6ec(char *c);
@@ -64,19 +64,19 @@ int func_ov003_020ad814(char *c)
             if (f == 0)
                 goto chk;
         fade5:
-            _ZN5Scene14StartSceneFadeEjjt(5, 0, 0);
+            _ZN8dScene_c14StartSceneFadeEjjt(5, 0, 0);
             _ZN5Sound22StopLoadedMusic_Layer1Ej(0x3c);
             goto tail;
         chk:
             if (t == -2) {
-                _ZN5Scene14StartSceneFadeEjjt(6, 0, 0);
+                _ZN8dScene_c14StartSceneFadeEjjt(6, 0, 0);
                 _ZN5Sound22StopLoadedMusic_Layer1Ej(0x3c);
             } else {
                 data_0209f2d8 = 0;
                 LoadLevelNoReturn(t, data_ov003_020b1181[i << 3], 1, 0);
                 SetPlayerGlobals();
                 SetNumPlayers(1);
-                _ZN5Scene14StartSceneFadeEjjt(4, 0, 0);
+                _ZN8dScene_c14StartSceneFadeEjjt(4, 0, 0);
                 data_0209f5e8[6] = 0x7fff;
             }
             goto tail;

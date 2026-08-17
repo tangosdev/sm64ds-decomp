@@ -4,13 +4,13 @@
 #include "dScMgBase_c.h"
 // recovered name: dScMgBase_c_AfterInitResources
 /* dScMgBase_c::AfterInitResources - recovered from vtable slot identity.
-   The original recovered file got _ZN5Scene18AfterInitResourcesEj's exact
-   mangling by declaring a second local `struct Scene` whose member
-   coincided with the real one; now that the real Scene.h is included via
+   The original recovered file got _ZN8dScene_c18AfterInitResourcesEj's exact
+   mangling by declaring a second local `struct dScene_c` whose member
+   coincided with the real one; now that the real dScene_c.h is included via
    dScMgBase_c.h, call it directly instead. targetMethod is real vtable slot
    32, one of the still-undeclared slots 18-35 (see dScMgBase_c.h) -- reached
    by the same local stand-in-by-position trick as before, just no longer
-   needing to fake Scene's identity too. */
+   needing to fake dScene_c's identity too. */
 extern "C" {
     void func_ov004_020ae330();
 }
@@ -32,5 +32,5 @@ void dScMgBase_c::AfterInitResources(u32 flags)
     ((VSlot32 *)this)->targetMethod();
     LoadFont(2);
     func_ov004_020ae330();
-    Scene::AfterInitResources(flags);
+    dScene_c::AfterInitResources(flags);
 }

@@ -13,7 +13,7 @@ int dScMgBase_c::BeforeRender()
     char *c = (char *)this;
     int i; char *p; int i2; char *p2; int j;
 
-    if (Scene::BeforeRender() == 0)
+    if (dScene_c::BeforeRender() == 0)
         return 0;
 
     if (unk_4628 != 0) {

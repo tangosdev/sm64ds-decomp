@@ -8,7 +8,7 @@ extern int IsButtonInputValid(void);
 extern void func_ov003_020b0730(void *self, int flag);
 extern void func_02012790(int se);
 extern void func_0202ae74(void);
-extern void _ZN5Scene14StartSceneFadeEjjt(unsigned int, unsigned int, unsigned short);
+extern void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int, unsigned int, unsigned short);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int);
 
 extern unsigned char data_020a0e40;
@@ -102,7 +102,7 @@ state1:
                 if (self[0x91] == 0)
                     func_0202ae74();
                 else
-                    _ZN5Scene14StartSceneFadeEjjt(1, 0, 0);
+                    _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);
                 _ZN5Sound22StopLoadedMusic_Layer1Ej(0x3c);
             }
         }

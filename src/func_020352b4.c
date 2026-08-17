@@ -3,7 +3,7 @@ extern void *_ZN9ActorBasenwEj(unsigned);
 extern void _ZN9ActorBaseC1Ev(void *);
 
 extern int data_0208e4b8[];
-extern int _ZTV5Scene[];
+extern int _ZTV8dScene_c[];
 extern int data_020943c4[];
 extern int data_0208eafc[];
 extern int data_0208eacc[];
@@ -14,7 +14,7 @@ void *func_020352b4(void)
     if (p) {
         _ZN9ActorBaseC1Ev(p);
         *(int **)p = data_0208e4b8;
-        *(int **)p = _ZTV5Scene;
+        *(int **)p = _ZTV8dScene_c;
         {
             u8 *bp = (u8 *)((int)p + 0x13);
             *bp |= 1;

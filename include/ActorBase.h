@@ -150,7 +150,7 @@ struct ActorBase {
        comment records why: mwcc inlines operator delete only when it is found in
        the class itself or its IMMEDIATE base, so a declaration here does NOT
        reach Actor (two levels down) and cannot replace Actor's. Nor does it
-       reach HUD, Minimap or Scene, whose immediate base is dBase_c. The
+       reach HUD, Minimap or dScene_c, whose immediate base is dBase_c. The
        only classes it changes are ActorBase itself and dBase_c -- the two
        whose D0 the ROM shows inlining it. The two src/ files that declare a
        local `struct Actor : ActorBase` (EndKuppaScript.cpp,

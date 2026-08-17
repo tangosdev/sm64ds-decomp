@@ -12,7 +12,7 @@ extern "C" void func_ov006_020ea324(void);
 
 /* dScMgHanachan_c : dScMgBase_c, confirmed leaf via tools/rtti_extract.py
    (no RTTI record names it as a base). Own vtable slots: 0 (InitResources),
-   3 (CleanupResources -- the ActorBase/Scene-level virtual, see
+   3 (CleanupResources -- the ActorBase/dScene_c-level virtual, see
    include/ActorBase.h; NOT one of dScMgBase_c's usual six overrides), 6
    (Behavior), 9 (Render), 16 (D1), 17 (D0), 18 (own new slot, not yet
    named -- stays a raw extern "C" helper (src/func_ov006_020eda48.c), not a

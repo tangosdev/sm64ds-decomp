@@ -7,25 +7,25 @@
  * class dScMgBase_c, recovered from ROM RTTI + vtable slot identity.
  * Offsets/widths are observed. Names are placeholders.
  *
- * dScMgBase_c : Scene, confirmed by tools/rtti_extract.py (single base,
+ * dScMgBase_c : dScene_c, confirmed by tools/rtti_extract.py (single base,
  * dScMgBase_c's __si_class_type_info at ov004:0x020bbf6c points at dScene_c
- * arm9:0x020914d4, offset 0) -- same edge include/Scene.h's own census
+ * arm9:0x020914d4, offset 0) -- same edge include/dScene_c.h's own census
  * documents. dScMgBase_c is ALSO a second hierarchy root: 15 direct RTTI
  * children, 32 transitive descendants (the minigame family --
  * notes/dscene-c-siblings-census.md section 2). Its own fields therefore
- * start at file-relative offset 0 == ROM offset 0x50 (sizeof(Scene)), same
+ * start at file-relative offset 0 == ROM offset 0x50 (sizeof(dScene_c)), same
  * as every other dScene_c child.
  *
- * THE DESTRUCTOR CASCADES ONE MORE LEVEL, same shape as Scene's own fix
- * (include/Scene.h's KEY FUNCTION note). dScMgBase_c has 32 descendants, so
+ * THE DESTRUCTOR CASCADES ONE MORE LEVEL, same shape as dScene_c's own fix
+ * (include/dScene_c.h's KEY FUNCTION note). dScMgBase_c has 32 descendants, so
  * its own D2/D1 must be DEFINED INLINE for them to inline it the way Stage
- * inlines Scene's -- a merely declared destructor can't be. Its own copy of
+ * inlines dScene_c's -- a merely declared destructor can't be. Its own copy of
  * operator delete is for the same reason: mwcc only inlines a D0 route
  * through the class itself or its IMMEDIATE base, and for dScMgBase_c's
- * children that immediate base is dScMgBase_c, not Scene -- Scene's own copy
- * (which already covers dScMgBase_c's own D0, Scene being ITS immediate
+ * children that immediate base is dScMgBase_c, not dScene_c -- dScene_c's own copy
+ * (which already covers dScMgBase_c's own D0, dScene_c being ITS immediate
  * base) is out of reach two levels down. See include/Actor.h and
- * include/Scene.h for the full mechanics; this is the same rule applied one
+ * include/dScene_c.h for the full mechanics; this is the same rule applied one
  * level further from the root.
  *
  * 0x0f4 IS hand-verified, from _ZN11dScMgBase_cD2Ev (src/_ZN11dScMgBase_cD2Ev.cpp):
@@ -58,7 +58,7 @@
  * zeroed through it. */
 #ifndef DSCMGBASE_C_H
 #define DSCMGBASE_C_H
-#include "Scene.h"
+#include "dScene_c.h"
 
 /* Returns its argument. The ROM parks the pointer in r4 across the
    __destroy_arr call and hands it straight back -- 0x020b92ac `mov r4, r0`,
@@ -68,10 +68,10 @@
 extern "C" void *func_ov004_020b929c(void *);
 extern "C" void *data_ov004_020beb68;
 
-struct dScMgBase_c : Scene {
-    /* Declared first, deliberately -- see include/Scene.h's KEY FUNCTION
+struct dScMgBase_c : dScene_c {
+    /* Declared first, deliberately -- see include/dScene_c.h's KEY FUNCTION
        note for why. Overrides slots 16 (D1) and 17 (D0).
-       NOT DEFINED INLINE -- unlike Scene's, which is trivial (an empty
+       NOT DEFINED INLINE -- unlike dScene_c's, which is trivial (an empty
        body) and unconditionally inlined by every child. This body has
        real work (a global write, a function call), and measured against
        dScMgD3DBase_c -- the first real descendant -- mwcc does NOT
@@ -85,12 +85,12 @@ struct dScMgBase_c : Scene {
        a leaf; its descendants simply don't inline a body this size. */
     virtual ~dScMgBase_c();
 
-    /* dScMgBase_c's own copy, for the same reason Scene has one -- see the
+    /* dScMgBase_c's own copy, for the same reason dScene_c has one -- see the
        file banner. Unlocks D0 for all 32 descendants below. */
     void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 
-    /* --- overrides of Scene's own virtuals, same signature, in _ZTV order.
-           1, 2, 5, 7, 10 re-override slots Scene already gave a body;
+    /* --- overrides of dScene_c's own virtuals, same signature, in _ZTV order.
+           1, 2, 5, 7, 10 re-override slots dScene_c already gave a body;
            6, 9, 12 are the first override below ActorBase's own default. --- */
     virtual bool BeforeInitResources();                /* slot  1 */
     virtual void AfterInitResources(u32 vfSuccess);    /* slot  2 */

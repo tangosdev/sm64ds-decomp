@@ -150,7 +150,7 @@ bool dScMgBase_c::BeforeInitResources()
 {
     char *c = (char *)this;
     struct dScMgBase_c *self = this;
-    if (Scene::BeforeInitResources() == 0) return 0;
+    if (dScene_c::BeforeInitResources() == 0) return 0;
     if (((ObjV34*)c)->v26() == 0)
         func_02019028();
     else
@@ -166,7 +166,7 @@ bool dScMgBase_c::BeforeInitResources()
     func_ov004_020b8a8c(c + 0x4000);
     ((ObjV34*)c)->v33();
     func_ov004_020b2cb8();
-    Scene::SetFaders((FaderBrightness *)data_0209f61c);
+    dScene_c::SetFaders((FaderBrightness *)data_0209f61c);
     func_0202ec9c(data_0209f61c, 0);
     data_0209d460[0] = 0;
     data_0209d458[0] = 0;
@@ -180,19 +180,19 @@ bool dScMgBase_c::BeforeInitResources()
 // @symbol _ZN11dScMgBase_c18AfterInitResourcesEj
 // recovered name: dScMgBase_c_AfterInitResources
 /* dScMgBase_c::AfterInitResources - recovered from vtable slot identity.
-   The original recovered file got _ZN5Scene18AfterInitResourcesEj's exact
-   mangling by declaring a second local `struct Scene` whose member
-   coincided with the real one; now that the real Scene.h is included via
+   The original recovered file got _ZN8dScene_c18AfterInitResourcesEj's exact
+   mangling by declaring a second local `struct dScene_c` whose member
+   coincided with the real one; now that the real dScene_c.h is included via
    dScMgBase_c.h, call it directly instead. targetMethod is real vtable slot
    32, one of the still-undeclared slots 18-35 (see dScMgBase_c.h) -- reached
    by the same local stand-in-by-position trick as before, just no longer
-   needing to fake Scene's identity too. */
+   needing to fake dScene_c's identity too. */
 void dScMgBase_c::AfterInitResources(u32 flags)
 {
     ((VSlot32 *)this)->targetMethod();
     LoadFont(2);
     func_ov004_020ae330();
-    Scene::AfterInitResources(flags);
+    dScene_c::AfterInitResources(flags);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -219,7 +219,7 @@ void dScMgBase_c::AfterCleanupResources(u32 arg)
         }
         func_ov004_020b2c84();
     }
-    Scene::AfterCleanupResources(arg);
+    dScene_c::AfterCleanupResources(arg);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -228,10 +228,10 @@ void dScMgBase_c::AfterCleanupResources(u32 arg)
 // @symbol _ZN11dScMgBase_c14BeforeBehaviorEv
 // recovered name: dScMgBase_c_BeforeBehavior
 /* dScMgBase_c::BeforeBehavior - recovered from vtable slot identity.
-   data_0209f5bc points at some OTHER active Scene-family object, not this
+   data_0209f5bc points at some OTHER active dScene_c-family object, not this
    one -- SceneVCall6 is a reduced 6-slot stand-in reaching its real slot 5
    by position, same trick the recovered source already used under the name
-   "Scene" (renamed here only to not collide with the real one now included
+   "dScene_c" (renamed here only to not collide with the real one now included
    via dScMgBase_c.h). m6c/m70 (real vtable slots 27/28) are two more of the
    still-undeclared slots 18-35 (see dScMgBase_c.h), reached the same way
    through this object's own vtable. */
@@ -241,7 +241,7 @@ int dScMgBase_c::BeforeBehavior()
     int mode;
     unsigned short flags;
 
-    if (Scene::BeforeBehavior() == 0)
+    if (dScene_c::BeforeBehavior() == 0)
         return 0;
 
     if (data_0209f5bc->f05()) {
@@ -329,7 +329,7 @@ int dScMgBase_c::BeforeRender()
     char *c = (char *)this;
     int i; char *p; int i2; char *p2; int j;
 
-    if (Scene::BeforeRender() == 0)
+    if (dScene_c::BeforeRender() == 0)
         return 0;
 
     if (unk_4628 != 0) {

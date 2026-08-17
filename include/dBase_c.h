@@ -30,10 +30,10 @@
  * what protects anything. See include/ModelBase.h.
  *
  * THE DESTRUCTOR IS DEFINED INLINE, AND THAT IS LOAD-BEARING FOR SUBCLASSES.
- * Scene::~Scene in the ROM stores two vptrs and then calls ActorBase's
+ * dScene_c::~dScene_c in the ROM stores two vptrs and then calls ActorBase's
  * destructor directly:
  *
- *     str r2, [r4]        ; _ZTV5Scene
+ *     str r2, [r4]        ; _ZTV8dScene_c
  *     str r1, [r4]        ; _ZTV7dBase_c   <- this destructor, INLINED
  *     bl  ActorBase::~ActorBase
  *
@@ -41,7 +41,7 @@
  * compiler has no body to inline and emits `bl _ZN7dBase_cD2Ev` instead,
  * one store where the ROM has two. So the original source defined it in the
  * class body, and every derived destructor inlined it. Moving this definition
- * back out of the class un-matches Scene, Stage and every actor destructor
+ * back out of the class un-matches dScene_c, Stage and every actor destructor
  * below them.
  *
  * The cost is that src/_ZN7dBase_cD1Ev.cpp can no longer define it --

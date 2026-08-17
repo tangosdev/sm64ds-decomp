@@ -53,7 +53,7 @@ struct UnkVis {
 };
 extern "C" UnkVis* data_0209f5bc;
 
-class Scene {
+class dScene_c {
 public:
     static void StartSceneFade(unsigned int a, unsigned int b, unsigned short c);
     static void SetAndStopColorFader();
@@ -95,7 +95,7 @@ extern "C" void ProcessKuppaScript(void)
                     u32 off = i * 4;
                     if (*(u16*)(data_020a0e58 + i * 4 + 2) != 0 ||
                         ((data_020a0de8[off] != 0 && *(data_020a0de8 + off + 1) != 0) ? 1 : 0)) {
-                        Scene::StartSceneFade(1, 0, 0);
+                        dScene_c::StartSceneFade(1, 0, 0);
                         Sound::StopLoadedMusic_Layer1(0x3c);
                     }
                 }
@@ -122,7 +122,7 @@ extern "C" void ProcessKuppaScript(void)
                 data_0209fc4c = ReadUnalignedInt(s + 9);
                 if (((data_0209f2d8 == 2) ? 1 : 0) == 0)
                     Sound::StopLoadedMusic_Layer1(0x3c);
-                Scene::SetAndStopColorFader();
+                dScene_c::SetAndStopColorFader();
                 data_0209d4b0 = 0;
             } else if (cmd == 0xc) {
                 FaderBrightness* f = &data_0209b294;
@@ -154,7 +154,7 @@ extern "C" void ProcessKuppaScript(void)
                 f->SetToEnd();
                 f->fieldC = 0;
                 f->SetForwardTime(0x1e, 0);
-                Scene::SetFaders(f);
+                dScene_c::SetFaders(f);
             } else if (cmd == 0x11) {
                 data_ov002_02110aec = 0;
             } else if (cmd == 4) {

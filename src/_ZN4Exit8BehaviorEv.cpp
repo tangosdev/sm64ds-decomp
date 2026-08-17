@@ -32,7 +32,7 @@ extern "C" {
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 extern void InvMat4x3(void *in, void *out);
 extern void func_ov002_020b0a0c(void *c);
-extern void _ZN5Scene20SetAndStopColorFaderEv(void);
+extern void _ZN8dScene_c20SetAndStopColorFaderEv(void);
 extern int _ZN6Player20IsStateEnteringLevelEv(void *p);
 extern int _ZN6Player12Unk_020c9e5cEh(void *p, int a);
 extern void StartExitFaderWipe(int a);
@@ -69,7 +69,7 @@ int Exit::Behavior()
             mHorzSpeed = -0x300000;
             if (data_02092110 < 0) {
                 func_ov002_020b0a0c(this);
-                _ZN5Scene20SetAndStopColorFaderEv();
+                _ZN8dScene_c20SetAndStopColorFaderEv();
                 *(short *)(data_0209f5e8 + 0xc) = 0x7fff;
             }
         }
@@ -120,7 +120,7 @@ int Exit::Behavior()
                                         int t = (signed char)(int)(((unsigned int)mParam >> 0x18));
                                         if (t == 0x1b || t == 0x12) {
                                             func_ov002_020b0a0c(this);
-                                            _ZN5Scene20SetAndStopColorFaderEv();
+                                            _ZN8dScene_c20SetAndStopColorFaderEv();
                                             *(short *)(data_0209f5e8 + 0xc) = 0x7fff;
                                         }
                                         mHorzSpeed = out2[2];

@@ -3,7 +3,7 @@
 /* recovered: real C++ destructor, defined inline in the header
  *
  * ~dBase_c is defined in the class body rather than here, and that is not
- * a style choice -- Scene::~Scene and every actor destructor below it INLINE
+ * a style choice -- dScene_c::~dScene_c and every actor destructor below it INLINE
  * this destructor's vptr store, which the compiler can only do from a visible
  * body. include/dBase_c.h records the measurement.
  *

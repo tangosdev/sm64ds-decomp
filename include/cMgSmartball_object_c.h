@@ -2,7 +2,7 @@
  * tools/rtti_extract.py (build/rtti.json). Own vtable ov006:0x0213ed10.
  *
  * A ROOT. It has no RTTI base at all -- this is a separate hierarchy from
- * the ActorBase/Scene tree that the rest of this directory models, and the
+ * the ActorBase/dScene_c tree that the rest of this directory models, and the
  * first class in it anyone has touched. Eleven direct children:
  * ball, pakkun, dokan, kinoko, pushswitch, propeller, wing, ana, board,
  * spring, slot.

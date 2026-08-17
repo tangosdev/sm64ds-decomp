@@ -7,7 +7,7 @@ extern void *GAME_HEAP_PTR;
 int *func_ov003_020b05bc(int *t)
 {
     t[0] = (int)_ZTV13dScGameOver_c;
-    t[0] = (int)_ZTV5Scene;
+    t[0] = (int)_ZTV8dScene_c;
     t[0] = (int)_ZTV7dBase_c;
     _ZN9ActorBaseD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, GAME_HEAP_PTR);

@@ -1,6 +1,6 @@
 //cpp
 // @symbol _ZN15dScMgHanachan_c16CleanupResourcesEv
-/* dScMgHanachan_c::CleanupResources -- slot 3, the ActorBase/Scene-level
+/* dScMgHanachan_c::CleanupResources -- slot 3, the ActorBase/dScene_c-level
    virtual (see include/ActorBase.h), not one of dScMgBase_c's usual six
    overrides. */
 #include "dScMgHanachan_c.h"

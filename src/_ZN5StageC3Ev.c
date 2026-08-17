@@ -5,7 +5,7 @@ extern int _ZN8Particle10SysTrackerC1Ev(void *);
 extern int _ZN5ModelC1Ev(void *);
 extern int _ZN12MeshColliderC1Ev(void *);
 extern int data_0208e4b8[];
-extern int _ZTV5Scene[];
+extern int _ZTV8dScene_c[];
 extern int _ZTV5Stage[];
 
 void *_ZN5StageC3Ev(void)
@@ -14,7 +14,7 @@ void *_ZN5StageC3Ev(void)
     if (p) {
         _ZN9ActorBaseC1Ev(p);
         *(int*)(p) = (int)data_0208e4b8;
-        *(int*)(p) = (int)_ZTV5Scene;
+        *(int*)(p) = (int)_ZTV8dScene_c;
         *(unsigned char*)AT(p, 0x13) |= 1;
         *(unsigned char*)AT(p, 0x13) |= 4;
         *(int*)(p) = (int)_ZTV5Stage;

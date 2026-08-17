@@ -11,7 +11,7 @@ struct GX {
     static void DispOn();
     static void DisableAllBanks();
 };
-struct Scene {
+struct dScene_c {
     void SetFaders(FaderBrightness *fb);
 };
 struct Sound {
@@ -45,7 +45,7 @@ extern "C" int func_ov007_020cc4c0(char *self)
     Enable3dEngines();
     Initialise3dGraphics(0);
     data_0209d4a8 = (int)(self + 0x50);
-    ((Scene *)(self + 0x54))->SetFaders((FaderBrightness *)(self + 0x50));
+    ((dScene_c *)(self + 0x54))->SetFaders((FaderBrightness *)(self + 0x50));
     data_0208ee44 = 1;
     GX::DisableAllBanks();
     data_ov007_02103260 = -1;

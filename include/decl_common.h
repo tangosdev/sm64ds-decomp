@@ -2962,7 +2962,6 @@ extern void*_ZTV14MultiBootScene[];
 extern void*_ZTV18MovingMeshCollider[];
 extern void*_ZTV19CylinderClsnWithPos[];
 extern void*_ZTV21ExtendingMeshCollider[];
-extern void*_ZTV5Scene[];
 extern void*data_0208a0e4[];
 extern void*data_0208f3c4;
 extern void*data_020992a4;

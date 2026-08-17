@@ -36,7 +36,7 @@
  * are what give the class its slots.
  *
  * ~dBase_c IS STILL DEFINED INLINE IN THE HEADER and that is untouched too:
- * it is load-bearing for Scene, Stage and every actor destructor below them,
+ * it is load-bearing for dScene_c, Stage and every actor destructor below them,
  * which inline its vptr store. Only the out-of-line copies the vtable points at
  * are spelled out here. See the destructor block at the bottom.
  *
@@ -145,7 +145,7 @@ extern "C" void func_02013edc(int a, int b, int c)
  * Written D0 then D1 so the reversal emits them D1, D0 -- the ROM's order.
  *
  * ~dBase_c IS STILL DEFINED INLINE IN include/dBase_c.h, and that is
- * still load-bearing: Scene::~Scene stores two vptrs and then calls ActorBase's
+ * still load-bearing: dScene_c::~dScene_c stores two vptrs and then calls ActorBase's
  * destructor directly, which the compiler can only produce by inlining a visible
  * body, and Stage and every actor destructor below them do the same. Nothing
  * here changes that. What changes is only where the OUT-OF-LINE copies the

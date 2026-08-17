@@ -1,7 +1,7 @@
 extern void* _ZN9ActorBasenwEj(unsigned int size);
 extern void _ZN9ActorBaseC1Ev(void* self);
 extern int data_0208e4b8[];
-extern int _ZTV5Scene[];
+extern int _ZTV8dScene_c[];
 extern int data_02091528[];
 
 void* func_02023624(void)
@@ -10,7 +10,7 @@ void* func_02023624(void)
     if (self != 0) {
         _ZN9ActorBaseC1Ev(self);
         *(int**)self = data_0208e4b8;
-        *(int**)self = _ZTV5Scene;
+        *(int**)self = _ZTV8dScene_c;
         {
             unsigned char* f = (unsigned char*)(self + 0x13);
             *f |= 1;

@@ -1,5 +1,5 @@
 //cpp
-/* Scene::BeforeRender() at 0x0202e3a4, 0x24 bytes -- vtable slot 10.
+/* dScene_c::BeforeRender() at 0x0202e3a4, 0x24 bytes -- vtable slot 10.
  *
  * Chains to ActorBase's and narrows the result to 0 or 1. The narrowing is in the
  * ROM, not invented here: after the call the bytes are `cmp r0,#0; movne r0,#1;
@@ -8,9 +8,9 @@
  *
  * Return type is `int` because ActorBase declares slot 10 as `int`; an override
  * whose return type differs is not an override at all, it is a nineteenth slot. */
-#include "Scene.h"
+#include "dScene_c.h"
 
-int Scene::BeforeRender()
+int dScene_c::BeforeRender()
 {
     return ActorBase::BeforeRender() != 0;
 }

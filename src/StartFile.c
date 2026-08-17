@@ -13,7 +13,7 @@ extern u8 data_0209f228[];
 extern void LoadLevelNoReturn(s8 levelID, u8 entranceID, s8 starID, u8 returnState);
 extern void SetPlayerGlobals(void);
 extern void SetNumPlayers(u32 n);
-extern void _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
+extern void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
 
 void StartFile(s8 levelID, u8 entranceID)
 {
@@ -24,5 +24,5 @@ void StartFile(s8 levelID, u8 entranceID)
     SetNumPlayers(1);
     data_02092124[0] = 6;
     data_0209f228[0] = 0;
-    _ZN5Scene14StartSceneFadeEjjt(3, 0, 0x7fff);
+    _ZN8dScene_c14StartSceneFadeEjjt(3, 0, 0x7fff);
 }

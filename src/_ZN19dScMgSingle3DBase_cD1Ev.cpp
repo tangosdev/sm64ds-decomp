@@ -5,8 +5,8 @@
  * ~dScMgSingle3DBase_c is defined in the class body rather than here, and
  * that is not a style choice -- every one of its 13 direct RTTI children
  * inlines this destructor's vptr store + mSysTracker destruction + chain
- * to ~dScMgBase_c(), the same way Stage inlines Scene's own D2 (see
- * include/Scene.h and src/_ZN5SceneD1Ev.cpp for the identical precedent).
+ * to ~dScMgBase_c(), the same way Stage inlines dScene_c's own D2 (see
+ * include/dScene_c.h and src/_ZN8dScene_cD1Ev.cpp for the identical precedent).
  *
  * So this file cannot define it: that would be a redefinition. But the
  * vtable points at an out-of-line copy, and a TU that merely includes the

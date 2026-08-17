@@ -18,7 +18,7 @@ extern u8 data_020a0deb[];
 void _ZN5Stage17UpdateMenuButtonsEb(int b);
 int IsButtonInputValid(void);
 void func_02012790(unsigned int id);
-void _ZN5Scene14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
+void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
 
 }
 
@@ -89,9 +89,9 @@ void Stage::VE_Update()
     }
     case 1: {
         if (data_0209f2e0 == 0) {
-            _ZN5Scene14StartSceneFadeEjjt(6, 1, 0);
+            _ZN8dScene_c14StartSceneFadeEjjt(6, 1, 0);
         } else {
-            _ZN5Scene14StartSceneFadeEjjt(1, 0, 0);
+            _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);
         }
         data_0209f290 = 2;
         data_0209d45c &= ~4;
