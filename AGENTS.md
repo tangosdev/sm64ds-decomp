@@ -22,7 +22,6 @@ and the skills are *execution* (the loop you are in right now, and the traps in 
 
 | skill | use it when |
 |---|---|
-| `decomp-match-review` | reviewing or preparing a matching PR — fakematch checks, admissible source, port impact |
 | `decomp-tu-slicing` | deciding which classes shared an original `.cpp`, or reading `build/tu_map.json` |
 | `decomp-tu-build` | merging one-function files into a real `.cpp` and byte-verifying it |
 | `decomp-cpp-class-form` | turning a shadow struct into a real C++ class — destructor variants, vtable anchoring, ctor inlining |
