@@ -91,6 +91,38 @@
  * definitions in SOME file -- just not this one. A class's members may of course
  * be spread over several .cpp files, and Scene's are.
  *
+ * ============================================================================
+ * HOW FAR UP THE LADDER THIS GOT, AND WHAT STOPPED IT
+ * ============================================================================
+ *
+ * text-verified: 21/21 MATCH, objisolate clean, reloc-destinations clean,
+ * emission order ROM-ascending. Baseline control first -- the 21 untouched
+ * legacy files re-verified 21/21 under the pinned 2004/b56 with the strict
+ * relocation-destination check on -- so a green merged result is not an
+ * environment artefact.
+ *
+ * partial-link-verified (`tubuild.py linkcheck --partial`): one compile of this
+ * file, objisolate.derive per function, all 21 derived objects substituted at
+ * the existing per-function object paths with delinks.txt UNCHANGED. 21/21
+ * contribution-equivalent; the range 0x0202e140..0x0202ec9c comes out
+ * IDENTICAL (2908 bytes, 0 differing); module fidelity 106/106 exact at
+ * 100.000000%; and the full 16 MB ROM builds BIT-IDENTICAL to the baseline
+ * control that substitutes nothing.
+ *
+ * WHOLE-RANGE link-verified is WALLED, and the wall is not in this source.
+ * Defining Scene's key function emits _ZTV5Scene STB_GLOBAL, which dsd's gap
+ * object already supplies from ROM data, and mwldarm aborts with
+ * `Multiply-defined: "virtual table for Scene" in Scene.o / Previously defined
+ * in _dsd_gap@main_44.o`. Breaking it needs (1) a way to write a .data claim
+ * into the spliced scratch delinks entry, which tubuild.splice_tu_entry cannot
+ * do -- it hardcodes one `.text` line -- and (2) somewhere for the six HOMELESS
+ * STB_LOPROC RTTI records to go: no symbols.txt names _ZTI/_ZTS for Scene,
+ * ActorDerived or ActorBase, because the ROM carries those records under the
+ * real class names (dScene_c at 0x020914d4), and rombuild links -nodead so
+ * nothing drops them. objisolate drops exactly that material per function,
+ * which is why --partial reproduces the module and the whole-range splice
+ * cannot. See the manifest entry for the measured details.
+ *
  * THIS TU ALSO OWNS, and this round neither declares nor verifies any of it:
  *   data_02092660  .data  0x02092660   (u8)
  *   data_02092664  .data  0x02092664   (u16)

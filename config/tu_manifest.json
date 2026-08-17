@@ -2618,7 +2618,8 @@
         "The two functions at 0x0202e73c and 0x0202e78c carry other classes' names (Stage::SetVramBanks, GX::DisableAllBanks) and are admitted on the data-attribution reading in boundary_evidence, not on their names. Names in this tree are project coinages; the ROM's RTTI carries class names only.",
         "ZERO UNLICENSED .text, AND THAT TOOK REMOVING A SCAFFOLD RATHER THAN ADDING ONE. ~Scene() is defined INLINE in include/Scene.h, and src/_ZN5SceneD1Ev.cpp / src/_ZN5SceneD0Ev.cpp each carry a never-called forcing function because a TU that merely includes the header emits no out-of-line copy. This TU needs no such thing: it defines Scene's key function (BeforeInitResources, the first non-inline virtual), so it emits _ZTV5Scene, whose slots 16/17 ARE D1/D0, and taking their addresses for the table forces both out-of-line copies. MEASURED both ways -- `tubuild.py compile` reports D1 at section[16] size 0x30 and D0 at section[18] size 0x44 with the scaffold and without it; dropping it took unlicensed function symbols 1 -> 0. It was worth dropping and not merely tidy: a 0x38-byte STB_GLOBAL .text that no config/arm9/symbols.txt entry names, sitting inside the licensed span, displaces every byte after it under rombuild's -nodead link (measured on arm9/Actor: 506 bytes differ and 15/106 modules exact with a scaffold, IDENTICAL and 106/106 without).",
         "UNLICENSED .data, 7 symbols, ALL EXPECTED AND NONE VERIFIED. Defining the key function emits _ZTV5Scene (0x50, STB_GLOBAL) plus six STB_LOPROC RTTI records for Scene and its bases. _ZTV5Scene is ROM-resident at 0x02092678..0x020926c8 -- inside the 0x02092660..0x020926c8 block boundary_evidence establishes this TU owns -- so it is licensable in principle, but it is deliberately NOT listed under `data` here: every one of its 20 words is a relocation, `verify` does not compare data at all, and listing it would only stop the tool reporting it while proving nothing. That is the `data-verified` rung and this round did not attempt it. Note also the convention clash the pilot hit in the text direction: mwcc's `_ZTV5Scene` names the vtable OBJECT at 0x02092678 while config/arm9/symbols.txt names the SLOT ARRAY at 0x02092680, eight bytes apart.",
-        "boundary_confidence 'high' came out of tubuild.tu_confidence's DEGENERATE path -- with a single synthetic unit it has no neighbouring unit to score against and returns 'high' merely because the unit carries a class label. It is NOT a tu_map boundary_confidence reading, because tu_map has no boundary here at all. The real basis for trusting this cut is the boundary_evidence list, item 5 in particular."
+        "boundary_confidence 'high' came out of tubuild.tu_confidence's DEGENERATE path -- with a single synthetic unit it has no neighbouring unit to score against and returns 'high' merely because the unit carries a class label. It is NOT a tu_map boundary_confidence reading, because tu_map has no boundary here at all. The real basis for trusting this cut is the boundary_evidence list, item 5 in particular.",
+        "LADDER REACHED: status text-verified on the whole-range axis (whole-range linking is walled -- see verification.linkcheck.whyWholeRangeCannotPassYet), and partial-link-verified on the orthogonal partial-isolation axis, where the TU range 0x0202e140..0x0202ec9c comes out IDENTICAL (2908 bytes, 0 differing), module fidelity is 106/106 exact at 100.000000%, dsd check modules --fail PASSes, and the full ROM builds bit-identical to the baseline control."
       ],
       "verification": {
         "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
@@ -2634,7 +2635,143 @@
           "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 7 unlicensed section/symbol(s); see unlicensed_output_observed",
           "functions_occur_in_expected_order": "PASS",
           "relocation_destinations_verified": "PASS"
-        }
+        },
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-failed",
+          "scratch": "build/tu/arm9-Scene/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": false
+          },
+          "tuRange": null,
+          "objectAudit": {
+            "counts": {
+              "HOMELESS": 6,
+              "COLLIDES-GAP": 1,
+              "LICENSED": 21
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [
+              "HOMELESS _ZTS5Scene STB_LOPROC .data size=0x7",
+              "HOMELESS _ZTI9ActorBase STB_LOPROC .data size=0x8",
+              "HOMELESS _ZTS9ActorBase STB_LOPROC .data size=0xb",
+              "HOMELESS _ZTI12ActorDerived STB_LOPROC .data size=0xc",
+              "HOMELESS _ZTS12ActorDerived STB_LOPROC .data size=0xf",
+              "HOMELESS _ZTI5Scene STB_LOPROC .data size=0xc",
+              "COLLIDES-GAP _ZTV5Scene STB_GLOBAL .data size=0x50 already at arm9:0x02092680"
+            ],
+            "unlicensedSections": [
+              {
+                "name": ".data",
+                "size": 7
+              },
+              {
+                "name": ".data",
+                "size": 8
+              },
+              {
+                "name": ".data",
+                "size": 11
+              },
+              {
+                "name": ".data",
+                "size": 12
+              },
+              {
+                "name": ".data",
+                "size": 12
+              },
+              {
+                "name": ".data",
+                "size": 15
+              },
+              {
+                "name": ".data",
+                "size": 80
+              }
+            ]
+          },
+          "symbolCheckNewVsBaseline": null,
+          "linkerOutput": "mwldarm.exe: Multiply-defined: \"virtual table for Scene\" in Scene.o\nmwldarm.exe: Previously defined in _dsd_gap@main_44.o\n\nErrors caused tool to abort.",
+          "whyWholeRangeCannotPassYet": [
+            "THE KEY-FUNCTION LINK WALL, measured rather than predicted. This TU defines Scene's key function, so it emits _ZTV5Scene STB_GLOBAL; dsd's gap object supplies the same symbol from ROM data at arm9:0x02092680, and mwldarm aborts: 'Multiply-defined: \"virtual table for Scene\" in Scene.o / Previously defined in _dsd_gap@main_44.o'. The licensing audit predicted it (1 COLLIDES-GAP) and the link was run anyway so the verdict was measured.",
+            "FIX 1, TOOLING, NOT SOURCE: the TU would have to OWN the .data its _ZTV lands in, so dsd's gap object stops claiming it. tubuild.splice_tu_entry cannot express that -- it hardcodes a single `.text start:.. end:..` line per spliced entry and has no path for a .data claim. boundary_evidence already establishes which range that would be (0x02092660..0x020926c8), and _ZTV5Scene's own object occupies 0x02092678..0x020926c8 of it, so the claim is knowable; writing it is not currently possible.",
+            "FIX 2, AND IT IS THE HARDER ONE: the object also emits 6 HOMELESS STB_LOPROC RTTI records (_ZTI/_ZTS for Scene, ActorDerived, ActorBase; 65 bytes) that NO symbols.txt anywhere names -- the ROM's records live under the real class names (dScene_c at 0x020914d4), not these coinages. rombuild links -nodead, so nothing drops them and they would displace bytes inside the module. objisolate drops exactly this material per function, which is precisely why the --partial route below reproduces the module byte-for-byte while the whole-range route cannot.",
+            "Neither fix is a source change to this file, and neither was attempted here. The text-only result stands regardless: a linkcheck failure says nothing about it."
+          ]
+        },
+        "baseline_control": "Run BEFORE the merge, so a green merged result cannot be an environment artefact: all 21 untouched legacy sources re-verified with build_pin.verify() under their own pin, strict=(reloc_audit destination check) -- 21/21 OK, every one 2004/b56, which is also what resolve_tu_version derives for the merged TU. config/rombuild-versions.txt carries no override for any of the 21 stems."
+      },
+      "partial_isolation": {
+        "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+        "delinksChanged": false,
+        "derivedObjects": 21,
+        "contributionEquivalent": "21/21",
+        "comparedFields": [
+          "keptSection",
+          "keptBytes",
+          "relocs",
+          "defined",
+          "mapping",
+          "live",
+          "undefReferenced"
+        ],
+        "substitutedObjectPaths": [
+          "src/_ZN5SceneD1Ev.cpp",
+          "src/_ZN5SceneD0Ev.cpp",
+          "src/_ZN5Scene20SetAndStopColorFaderEv.cpp",
+          "src/_ZN5Scene9SetFadersEP15FaderBrightness.cpp",
+          "src/_ZN5Scene16SpawnIfNecessaryEv.cpp",
+          "src/_ZN5Scene18PrepareToSpawnBootEv.cpp",
+          "src/_ZN5Scene14StartSceneFadeEjjt.cpp",
+          "src/_ZN5Scene15SetSceneToSpawnEjj.cpp",
+          "src/_ZN5Scene11AfterRenderEj.cpp",
+          "src/_ZN5Scene12BeforeRenderEv.cpp",
+          "src/_ZN5Scene13AfterBehaviorEj.cpp",
+          "src/_ZN5Scene14BeforeBehaviorEv.cpp",
+          "src/_ZN5Scene21AfterCleanupResourcesEj.cpp",
+          "src/_ZN5Scene22BeforeCleanupResourcesEv.cpp",
+          "src/_ZN5Scene18AfterInitResourcesEj.cpp",
+          "src/_ZN5Scene19BeforeInitResourcesEv.cpp",
+          "src/_ZN5Scene19ResetFadersAndSoundEv.cpp",
+          "src/_ZN5Scene20Initialise3dGraphicsEv.cpp",
+          "src/_ZN5Stage12SetVramBanksEv.cpp",
+          "src/_ZN2GX15DisableAllBanksEv.cpp",
+          "src/_ZN5Scene22ResetHardwareRegistersEv.cpp"
+        ],
+        "extraInertImports": 99,
+        "extraImportsWithNoHome": [],
+        "result": "partial-link-verified",
+        "phases": {
+          "delink": true,
+          "lcf": true,
+          "compile": true,
+          "link": true,
+          "checkModules": true,
+          "checkSymbols": false,
+          "rom": true
+        },
+        "tuRange": {
+          "start": "0x0202e140",
+          "end": "0x0202ec9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        "moduleFidelityPassed": true,
+        "symbolCheckNewVsBaseline": [],
+        "rom": {
+          "bytes": 16777216,
+          "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+        },
+        "scratch": "build/tu/arm9-Scene/link-partial (gitignored)",
+        "state": "partial-link-verified",
+        "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+        "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
+        "romIdenticalToBaseline": "The 16,777,216-byte ROM this run built has sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, which is BIT-IDENTICAL to the one `linkcheck --baseline --module arm9` builds with no TU substitution at all. Substituting all 21 derived objects changes nothing in the cartridge.",
+        "checkSymbolsIsPreExisting": "phases.checkSymbols is false, and it is NOT this TU's. `dsd check symbols --fail` emits exactly two errors -- data_020ad524 and data_020ad560 'not found in linked binary', both ~0x7f000 bytes outside this TU's span -- and the BASELINE CONTROL run, which substitutes nothing, emits the same two. Recorded by the tool itself as symbolCheckNewVsBaseline: [] (0 NEW, 0 resolved). The first partial run reported NOT partial-link-verified only because no baseline artefact existed yet to attribute it against; with the control in hand the same run passes."
       }
     }
   ]
