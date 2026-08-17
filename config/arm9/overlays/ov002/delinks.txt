@@ -1491,7 +1491,7 @@ src/func_ov002_020bb374.cpp:
     complete
     .text start:0x020bb374 end:0x020bb3b8
 
-src/func_ov002_020bb3b8.cpp:
+src/_ZN8SignPost4KillEv.cpp:
     complete
     .text start:0x020bb3b8 end:0x020bb42c
 

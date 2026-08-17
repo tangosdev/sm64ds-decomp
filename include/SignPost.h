@@ -90,6 +90,19 @@ struct SignPost : Platform {
        neither defines SignPost::~SignPost. */
     virtual ~SignPost() {}
 
+    /* Slot 31, Platform's own new virtual (include/Platform.h). This class
+       overrides it: _ZTV8SignPost (ov002 0x02109af8) carries 0x020bb3b8 at
+       vtable + 0x7c where _ZTV8Platform carries _ZN8Platform4KillEv, and slot 30
+       is Actor's 0x020100dc in both. It adds no slot and no field, so the size
+       assert below is unaffected.
+
+       It is also this class's KEY FUNCTION, the destructor above being inline,
+       so src/_ZN8SignPost4KillEv.cpp emits _ZTV8SignPost, _ZTI8SignPost and the
+       destructor variants alongside the one function it is bound to.
+       objisolate.py reduces the object back to that one 0x74 .text before
+       eligible.py and rombuild.py judge it -- checked, not assumed. */
+    virtual void Kill();        /* slot 31 */
+
     /* --- non-virtual --- */
     int CleanupResources();
     int InitResources();
