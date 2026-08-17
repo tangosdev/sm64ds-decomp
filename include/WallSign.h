@@ -29,9 +29,14 @@ struct WallSign : Platform {
     int InitResources();
     int Behavior();
     int Render();
+
+    /* Tail padding. The field span stops short of the real size: WallSign_Spawn
+       calls ActorBase::operator new(0x368), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_360[0x8];      /* 0x360, to the ROM's 0x368 */
 };
 
-typedef char WallSign_size_must_be_0x360[sizeof(WallSign) == 0x360 ? 1 : -1];
+typedef char WallSign_size_must_be_0x368[sizeof(WallSign) == 0x368 ? 1 : -1];
 
 #else
 

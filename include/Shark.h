@@ -38,9 +38,14 @@ struct Shark : Enemy {
     int Behavior();
     int InitResources();
     int Render();
+
+    /* Tail padding. The field span stops short of the real size: Shark_Spawn
+       calls ActorBase::operator new(0x3a0), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_394[0xc];      /* 0x394, to the ROM's 0x3a0 */
 };
 
-typedef char Shark_size_must_be_0x394[sizeof(Shark) == 0x394 ? 1 : -1];
+typedef char Shark_size_must_be_0x3a0[sizeof(Shark) == 0x3a0 ? 1 : -1];
 
 #else
 

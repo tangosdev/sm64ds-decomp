@@ -48,9 +48,14 @@ struct MrBlizzard : Enemy {
     int Behavior();
     int InitResources();
     int Render();
+
+    /* Tail padding. The field span stops short of the real size: MrBlizzard_Spawn
+       calls ActorBase::operator new(0x46c), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_458[0x14];      /* 0x458, to the ROM's 0x46c */
 };
 
-typedef char MrBlizzard_size_must_be_0x458[sizeof(MrBlizzard) == 0x458 ? 1 : -1];
+typedef char MrBlizzard_size_must_be_0x46c[sizeof(MrBlizzard) == 0x46c ? 1 : -1];
 
 #else
 

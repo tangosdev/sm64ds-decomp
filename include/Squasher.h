@@ -31,9 +31,14 @@ struct Squasher : Platform {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* Tail padding. The field span stops short of the real size: Squasher_Spawn
+       calls ActorBase::operator new(0x37c), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_34c[0x30];      /* 0x34c, to the ROM's 0x37c */
 };
 
-typedef char Squasher_size_must_be_0x34c[sizeof(Squasher) == 0x34c ? 1 : -1];
+typedef char Squasher_size_must_be_0x37c[sizeof(Squasher) == 0x37c ? 1 : -1];
 
 #else
 

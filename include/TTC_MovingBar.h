@@ -30,9 +30,14 @@ struct TTC_MovingBar : Platform {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* Tail padding. The field span stops short of the real size: TtcRotatingGear_Spawn and TtcRotatingTriangle_Spawn
+       call ActorBase::operator new(0x37c), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_34c[0x30];      /* 0x34c, to the ROM's 0x37c */
 };
 
-typedef char TTC_MovingBar_size_must_be_0x34c[sizeof(TTC_MovingBar) == 0x34c ? 1 : -1];
+typedef char TTC_MovingBar_size_must_be_0x37c[sizeof(TTC_MovingBar) == 0x37c ? 1 : -1];
 
 #else
 

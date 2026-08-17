@@ -15,8 +15,14 @@
  * MovingCylinderClsnWithPos's D1 at +0x124, and 0x40 lands exactly where the next
  * declared field starts.
  *
- * sizeof is 0x32c, which is not inferred from the fields: BowserSkyPlatform_Spawn
- * asks ActorBase::operator new for 812 bytes.
+ * sizeof is 0x1b0, and it IS the field span: the last field unk_1ae ends at 0x1af.
+ *
+ * It used to say 0x32c, "not inferred from the fields", on the authority of
+ * BowserSkyPlatform_Spawn -- a DIFFERENT CLASS's factory. That is the pair-by-name
+ * error: SpikeBomb_Spawn is the factory that stores _ZTV9SpikeBomb, and it asks
+ * ActorBase::operator new for 0x1b0. BowserSkyPlatform's own assert is 0x32c and is
+ * correct; this class simply inherited its number, and 0x17d bytes of tail padding
+ * were invented to reach it.
  *
  * Field NAMES for the unk_ entries are placeholders. */
 #ifndef SPIKEBOMB_H
@@ -46,7 +52,7 @@ struct SpikeBomb : Actor {
     s32 unk_1a8;            /* 0x1a8 */
     u8  pad_1ac[0x2];
     u8  unk_1ae;            /* 0x1ae */
-    u8  pad_1af[0x17d];
+    u8  pad_1af[0x1];       /* 0x1af, closing on the ROM's 0x1b0 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~SpikeBomb();       /* slots 16 (D1), 17 (D0) */
@@ -58,8 +64,7 @@ struct SpikeBomb : Actor {
     int Render();
 };
 
-typedef char SpikeBomb_size_must_be_0x32c[
-    sizeof(SpikeBomb) == 0x32c ? 1 : -1];
+typedef char SpikeBomb_size_must_be_0x1b0[sizeof(SpikeBomb) == 0x1b0 ? 1 : -1];
 
 #else
 
@@ -89,7 +94,7 @@ struct SpikeBomb {
     s32 unk_1a8;            /* 0x1a8 */
     u8  pad_1ac[0x2];
     u8  unk_1ae;            /* 0x1ae */
-    u8  pad_1af[0x17d];
+    u8  pad_1af[0x1];       /* 0x1af, closing on the ROM's 0x1b0 */
 };
 
 #endif /* __cplusplus */

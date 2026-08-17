@@ -40,9 +40,14 @@ struct QuestionBlock : Platform {
     int Behavior();
     int CleanupResources();
     int Render();
+
+    /* Tail padding. The field span stops short of the real size: CapBlockLuigi_Spawn and CapBlockMario_Spawn
+       call ActorBase::operator new(0x3f8), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_3f4[0x4];      /* 0x3f4, to the ROM's 0x3f8 */
 };
 
-typedef char QuestionBlock_size_must_be_0x3f4[sizeof(QuestionBlock) == 0x3f4 ? 1 : -1];
+typedef char QuestionBlock_size_must_be_0x3f8[sizeof(QuestionBlock) == 0x3f8 ? 1 : -1];
 
 #else
 
