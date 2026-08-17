@@ -1,7 +1,7 @@
 {
   "_note": "ratchet baseline; regenerate with `python tools/langmode_audit.py --json <this file>`. Use --full for per-class detail and file lists.",
   "codegen_hacks": {
-    "extern_vtable": 398,
+    "extern_vtable": 394,
     "extern_vtable_classes": 184,
     "inline_asm": 13,
     "launder_or_forced": 281,
