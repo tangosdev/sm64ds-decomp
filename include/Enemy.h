@@ -94,6 +94,14 @@ struct Enemy : Actor {
        spell the mangled name. */
     void SpawnCoin();
     int SpawnParticlesIfHitOtherObj(CylinderClsn & clsn_);
+    /* Its own file still builds this from a local `struct Enemy { char pad[0x100]; }`
+       shadow, but SpawnParticlesIfHitOtherObj -- which shares its translation unit,
+       ov002 0x020ad838..0x020aedbc -- calls it, so the merged TU needs the real
+       declaration. Non-virtual, so it cannot move a vtable slot or change which TU
+       is Enemy's key function; ~Enemy is still the first virtual declared. The
+       second parameter is the CylinderClsn the caller was handed, passed as raw
+       bytes because that class has no header here. */
+    void SpawnMegaCharParticles(Actor & a, char * p);
     int UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_, unsigned int flags);
     /* PROVISIONAL SIGNATURE -- do not migrate a caller against it yet. Two
        separate problems, both caller-side:
