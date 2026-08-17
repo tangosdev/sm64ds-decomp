@@ -33,6 +33,10 @@ struct KnockDownPlank : Platform {
     s16 unk_394;                      /* 0x394 */
     s8 unk_396;                       /* 0x396 */
     u8 unk_397;                       /* 0x397 */
+    /* KnockDownPlank_Spawn, the one factory storing _ZTV14KnockDownPlank
+       (ov015:0x02114420), calls ActorBase::operator new(0x39c). The field span
+       stopping at 0x398 is a lower bound, not the size. */
+    u8 pad_398[0x4];                  /* 0x398, to the ROM's 0x39c */
 
     /* --- vtable --- */
     virtual ~KnockDownPlank();
@@ -42,7 +46,7 @@ struct KnockDownPlank : Platform {
     int Render();
 };
 
-typedef char KnockDownPlank_size_must_be_0x398[sizeof(KnockDownPlank) == 0x398 ? 1 : -1];
+typedef char KnockDownPlank_size_must_be_0x39c[sizeof(KnockDownPlank) == 0x39c ? 1 : -1];
 
 #else
 

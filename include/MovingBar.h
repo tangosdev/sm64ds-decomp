@@ -23,6 +23,11 @@ struct MovingBar : Platform {
     s32 unk_324;                      /* 0x324 */
     s32 unk_328;                      /* 0x328 */
     s32 mVariant;                     /* 0x32c */
+    /* Both factories storing _ZTV9MovingBar (ov015:0x0211458c) -- MovingBarBig_Spawn
+       and MovingBarSmall_Spawn -- call ActorBase::operator new(0x338). They agree, so
+       they are two spawn-info variants of one actor, and 0x330 was the field span
+       rather than the size. */
+    u8 pad_330[0x8];                  /* 0x330, to the ROM's 0x338 */
 
     /* --- vtable --- */
     virtual ~MovingBar();
@@ -33,7 +38,7 @@ struct MovingBar : Platform {
     int Render();
 };
 
-typedef char MovingBar_size_must_be_0x330[sizeof(MovingBar) == 0x330 ? 1 : -1];
+typedef char MovingBar_size_must_be_0x338[sizeof(MovingBar) == 0x338 ? 1 : -1];
 
 #else
 

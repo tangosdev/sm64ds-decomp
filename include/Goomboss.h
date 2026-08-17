@@ -65,6 +65,11 @@ struct Goomboss : Enemy {
     u8  mSizeIndex;            /* 0x604 */
     u8  pad_605[0x5];
     u8  unk_60a;            /* 0x60a */
+    /* The field span ends at 0x60b, but a span is only a LOWER BOUND. Both factories
+       that store _ZTV8Goomboss (ov074:0x02122eb8) -- Goomboss_Spawn and
+       ExplosionGoomba_Spawn -- call ActorBase::operator new(0x610). Two factories
+       building one actor is a spawn-info variant, not a second class. */
+    u8  pad_60b[0x5];       /* 0x60b, to the ROM's 0x610 */
 
     virtual ~Goomboss();
 
@@ -73,7 +78,7 @@ struct Goomboss : Enemy {
     virtual s32 Render();
 };
 
-typedef char Goomboss_size_must_be_0x60c[sizeof(Goomboss) == 0x60c ? 1 : -1];
+typedef char Goomboss_size_must_be_0x610[sizeof(Goomboss) == 0x610 ? 1 : -1];
 
 #else
 
