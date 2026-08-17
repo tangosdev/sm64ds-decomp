@@ -1,18 +1,6 @@
 {
- "eligible": 10999,
+ "eligible": 11025,
  "unresolved": {
-  "arm9:0x02009374": {
-   "name": "func_02009374",
-   "missing": [
-    "Vec3_DistSq"
-   ]
-  },
-  "arm9:0x020156fc": {
-   "name": "_ZN7ClipperD0Ev",
-   "missing": [
-    "base_dtor_Clipper"
-   ]
-  },
   "arm9:0x02017848": {
    "name": "_ZN5FaderD0Ev",
    "missing": [
@@ -80,12 +68,6 @@
     "func_020bd828"
    ]
   },
-  "arm9:0x020297f4": {
-   "name": "_ZN5Stage14GraphCallback2EP12SceneRelated",
-   "missing": [
-    "reg_G2S_DB_BG3PA"
-   ]
-  },
   "arm9:0x0202df70": {
    "name": "_Z26LoadOrUnloadObjectOverlaysPFviEi",
    "missing": [
@@ -113,57 +95,10 @@
     "func_020527e9"
    ]
   },
-  "arm9:0x02043b2c": {
-   "name": "_ZN9ActorBase21AfterCleanupResourcesEj",
-   "missing": [
-    "Heap_Destroy",
-    "Memory_Deallocate",
-    "Memory_gameHeapPtr",
-    "gGlobalA",
-    "gGlobalB"
-   ]
-  },
   "arm9:0x02044b30": {
    "name": "func_02044b30",
    "missing": [
     "@30"
-   ]
-  },
-  "arm9:0x02053130": {
-   "name": "func_02053130",
-   "missing": [
-    "SQRTCNT",
-    "SQRT_RESULT"
-   ]
-  },
-  "arm9:0x02055454": {
-   "name": "func_02055454",
-   "missing": [
-    "G"
-   ]
-  },
-  "arm9:0x020570c0": {
-   "name": "func_020570c0",
-   "missing": [
-    "G"
-   ]
-  },
-  "arm9:0x020570d8": {
-   "name": "func_020570d8",
-   "missing": [
-    "G"
-   ]
-  },
-  "arm9:0x02057128": {
-   "name": "func_02057128",
-   "missing": [
-    "G"
-   ]
-  },
-  "arm9:0x02057140": {
-   "name": "func_02057140",
-   "missing": [
-    "G"
    ]
   },
   "arm9:0x02058308": {
@@ -178,24 +113,6 @@
    "missing": [
     "func_00000000",
     "func_00000600"
-   ]
-  },
-  "arm9:0x02059640": {
-   "name": "func_02059640",
-   "missing": [
-    "G"
-   ]
-  },
-  "arm9:0x02059f48": {
-   "name": "func_02059f48",
-   "missing": [
-    "G"
-   ]
-  },
-  "arm9:0x0205f650": {
-   "name": "func_0205f650",
-   "missing": [
-    "G"
    ]
   },
   "arm9:0x0206ece0": {
@@ -220,16 +137,6 @@
    "name": "func_02070c68",
    "missing": [
     "func_01ff9d40"
-   ]
-  },
-  "ov002:0x020bc240": {
-   "name": "_ZN8SignPost13InitResourcesEv",
-   "missing": [
-    "MeshColliderLoadFile",
-    "ModelLoadFile",
-    "_ZN12WithMeshClsn4InitEP5ActoriiP10Vector3_16i",
-    "_ZN18MovingCylinderClsn4InitEP5Actoriijj",
-    "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block"
    ]
   },
   "ov002:0x020bd664": {
@@ -304,12 +211,6 @@
     "g1"
    ]
   },
-  "ov006:0x020efcf8": {
-   "name": "func_ov006_020efcf8",
-   "missing": [
-    "data_04000006"
-   ]
-  },
   "ov006:0x0210bdb0": {
    "name": "func_ov006_0210bdb0",
    "missing": [
@@ -348,15 +249,6 @@
     "func_0213a794"
    ]
   },
-  "ov019:0x02112394": {
-   "name": "_ZN13RacingPenguin8BehaviorEv",
-   "missing": [
-    "_Z23_ZN9Animation7AdvanceEvPc",
-    "_Z25_ZN12CylinderClsn5ClearEvPc",
-    "_Z26_ZN12CylinderClsn6UpdateEvPc",
-    "p__sinit_ov031_02111434"
-   ]
-  },
   "ov021:0x02111434": {
    "name": "func_ov021_02111434",
    "missing": [
@@ -373,22 +265,6 @@
    "name": "func_ov022_02112448",
    "missing": [
     "func_0213a794"
-   ]
-  },
-  "ov035:0x02111a98": {
-   "name": "_ZN16SpinningPlatform13InitResourcesEv",
-   "missing": [
-    "MeshColliderLoadFile",
-    "ModelLoadFile",
-    "UpdatePosWithTransformSym",
-    "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block"
-   ]
-  },
-  "ov039:0x021112a0": {
-   "name": "_ZN5Cloud8BehaviorEv",
-   "missing": [
-    "FindWithActorID",
-    "SetPolygonID"
    ]
   },
   "ov045:0x02111dfc": {
@@ -519,26 +395,11 @@
     "func_02112d48"
    ]
   },
-  "ov071:0x021203f8": {
-   "name": "_ZN10Scuttlebug13InitResourcesEv",
-   "missing": [
-    "AnimLoadFile",
-    "ModelLoadFile",
-    "_ZN12WithMeshClsn4InitEP5ActoriiPvi",
-    "_ZN18MovingCylinderClsn4InitEP5Actoriijj"
-   ]
-  },
   "ov074:0x02121e98": {
    "name": "_ZN8Goomboss13InitResourcesEv",
    "missing": [
     "func_021123f4",
     "func_021124ac"
-   ]
-  },
-  "ov075:0x02116f40": {
-   "name": "func_ov075_02116f40",
-   "missing": [
-    "_ZN3OAM6RenderEbP7OamAttriiiiiS1_ii"
    ]
   },
   "ov075:0x02117bc4": {
@@ -560,66 +421,16 @@
     "normalize"
    ]
   },
-  "ov085:0x0212a588": {
-   "name": "_ZN13PrincessPeach13InitResourcesEv",
-   "missing": [
-    "AnimLoadFile",
-    "ModelLoadFile",
-    "_ZN12WithMeshClsn4InitEP5ActoriiPvi",
-    "_ZN18MovingCylinderClsn4InitEP5Actoriijj"
-   ]
-  },
   "ov089:0x0213162c": {
    "name": "func_ov089_0213162c",
    "missing": [
     "data_02111b68"
    ]
   },
-  "ov091:0x02132108": {
-   "name": "_ZN22RotatingUpDownPlatform8BehaviorEv",
-   "missing": [
-    "ApproachLinearI",
-    "UpdatePosWithVelocitySym",
-    "_ZN8Platform13IsClsnInRangeEii"
-   ]
-  },
-  "ov091:0x0213220c": {
-   "name": "_ZN22RotatingUpDownPlatform13InitResourcesEv",
-   "missing": [
-    "Vec3_equal",
-    "_Z13func_020393c4PvS_",
-    "_Z13func_020393d4PvS_",
-    "_Z20_ZN7PathPtr6FromIDEjPvj",
-    "_Z31_ZNK7PathPtr7GetNodeER7Vector3jPvS_j",
-    "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPvS_ii",
-    "_Z35_ZN5Model8LoadFileER13SharedFilePtrPv",
-    "_Z35_ZN8Platform19UpdateClsnPosAndRotEvPv",
-    "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrPv",
-    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_"
-   ]
-  },
   "ov096:0x02137564": {
    "name": "_ZN7Tornado13InitResourcesEv",
    "missing": [
     "func_02112968"
-   ]
-  },
-  "ov100:0x02147054": {
-   "name": "func_ov100_02147054",
-   "missing": [
-    "G0",
-    "G1",
-    "G2"
-   ]
-  },
-  "ov100:0x021470f4": {
-   "name": "func_ov100_021470f4",
-   "missing": [
-    "_Z16DecIfAbove0_BytePh",
-    "_Z9Vec3_DistPK7Vector3S1_",
-    "_ZN16MeshColliderBase6EnableEPv",
-    "_ZN9Platform219UpdateClsnPosAndRotEv",
-    "_ZN9Platform313IsClsnInRangeEii"
    ]
   }
  }
