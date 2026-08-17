@@ -1327,11 +1327,10 @@ int func_ov004_020b0b1c(int arg) {
 extern "C" {
 void FreeGfxSlotsById(int arg)
 {
-  int i;
-  struct E *p;
-  i = arg == 0x1d;
-  if (i)
+  if (arg == 0x1d)
   {
+    int i;
+    struct E *p;
     p = (struct E *)data_ov004_020bf648;
     for (i = 0; i < 3; i++)
     {
@@ -1345,6 +1344,8 @@ void FreeGfxSlotsById(int arg)
   }
   else
   {
+    int i;
+    struct E *p;
     p = (struct E *)data_ov004_020bf648;
     for (i = 0; i < 3; i++)
     {
