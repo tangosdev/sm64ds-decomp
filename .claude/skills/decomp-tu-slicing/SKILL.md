@@ -20,22 +20,35 @@ python tools/tu_map.py           # -> build/tu_map.json
 
 `build/` is gitignored, so a fresh worktree has none of this.
 
-**This is now enforced.** `tu_map.py` fails closed (exit 1) when `rtti_vtables.json` is
-missing, older than `rtti.json`, or inconsistent with it (class/vtable-address/module
-cross-check, which catches a file built from a different commit where mtime looks fine).
-`--no-rtti` is the only way past; it is loud, recorded as `meta.rtti_labels`, and
-**refused under `--check`**. `tubuild.py` inherits this, since it shells out to
-`tu_map.py` when the map is absent.
+**Nothing enforces that order, and skipping it fails silently.** `vtable_labels()`
+returns `{}` when `build/rtti_vtables.json` is absent, and `tu_map.py` then writes a
+complete, self-consistent, **wrong** map and exits **0**. Measured on `main` from an
+empty `build/`:
 
-It is worth knowing what that gate prevents, because the failure was invisible:
-`vtable_labels()` used to return `{}` silently, producing a complete, self-consistent,
-**wrong** map — 516 TUs instead of 532 on the pre-fix code, with **all gates passing**
-(ov080 read 6 TUs instead of 5 and still had 4 classed, so the known-answer gate passed
-for the wrong reason). The under-segmented list was itself a casualty, so you could not
-use it to detect the problem either.
+| | full chain | `rtti_vtables.json` absent |
+|---|---|---|
+| whole-ROM TUs | 532 | 516 |
+| boundaries | `{low: 68, medium: 110, high: 280}` | `{low: 72, medium: 124, high: 246}` |
+| TUs with a class | 400/532 | 370/516 |
+| under-segmented | ov007, main, ov075, ov084 | ov007, main, **ov005**, ov084 |
+| ov080 | 5 TUs, 4 classed | **6 TUs**, 4 classed |
+| `--check` | all gates PASS, exit 0 | **all gates PASS**, exit 0 |
 
-Current whole-ROM figures: **74 modules, 11,083 functions, 520 TUs, 305 sinits**,
-boundaries `{low: 56, medium: 110, high: 280}`, 400/520 carrying a class.
+The known-answer gate asserts ov080's *classed* TU count, which is 4 either way, so it
+passes for the wrong reason. The under-segmented list is itself a casualty, so you
+cannot use it to detect the problem either. The one visible tell is the negative-control
+table, which collapses to `blind 1 / blind-classed 0`. There is no exit code to lean on:
+check the prerequisites yourself.
+
+`--blind` is **not** an opt-out — it is the negative control, dropping the mangled-name
+signal to score what RTTI alone recovers. The whole flag set is `--module`, `--verbose`,
+`--check`, `--blind`, `--split-swallowers [K]`, `--out`; nothing suppresses the RTTI
+labels while keeping the names. `tubuild.py` regenerates the map only when it is
+*entirely absent* — a stale-but-present map is reported as a note and used as-is.
+
+Figures move whenever the map changes, so run the command rather than quoting these.
+Measured on `main` at `343eab070`: **74 modules, 11,091 functions, 532 TUs, 305 sinits**,
+boundaries `{low: 68, medium: 110, high: 280}`, 400/532 carrying a class.
 
 ## The one rule that matters
 
@@ -45,10 +58,13 @@ in fact one TU. Never slice on "the class name changed."
 
 ```
 python tools/tu_map.py --module ov080
-  0x2123740-0x2124a20  26 fn  MontyMole, MontyMoleRock, daChoropu_c   <- ONE TU
-  0x2124a20-0x2125404  21 fn  CrazedCrate, daBttBk_c
-  0x2125404-0x212714c  35 fn  Painting, daPicGate_c
-  0x212714c-0x212766c   4 fn  (unattributed)
+ov080: 86 functions -> 5 TUs (4 with a class), 3 sinits / 3 ctor entries [ok]
+  0x2123740-0x2124a20    26 fn  MontyMole, MontyMoleRock, daChoropu_c   <- ONE TU
+  0x2124a20-0x2125404    21 fn  CrazedCrate, daBttBk_c
+  0x2125404-0x2126fbc    29 fn  Painting
+  0x2126fbc-0x212714c     6 fn  daObjMaruta_c, daPicGate_c
+  0x212714c-0x212766c     4 fn  (unattributed)
+  boundaries: {'high': 3, 'medium': 1}
 ```
 
 MontyMole and MontyMoleRock ship together or not at all. Splitting them into two PRs
@@ -77,40 +93,54 @@ invents a structure the ROM contradicts, and any later consolidation has to undo
 | boundary `low` | contiguity only — evidence, not an answer |
 | module in `meta.under_segmented` | TU count is a **lower bound**: ov007, main, ov075, ov084 |
 
-In an unnamed overlay, a TU carrying a class name is trustworthy — the negative
-control shows RTTI alone recovers class clusters exactly — but the unattributed runs
-between them are *unresolved*, not TUs. Do not report a raw TU count from an
-under-segmented module as if it were the file count.
+In an unnamed overlay, a TU carrying a class name is largely trustworthy — but the
+unattributed runs between them are *unresolved*, not TUs. Do not report a raw TU count
+from an under-segmented module as if it were the file count.
+
+The negative control (`--check`, bottom table) is the calibration, and it is good but
+not exact. Names stripped, RTTI alone recovers the known classed-TU count in 3 of the 4
+known-answer modules — ov062 5/5, ov063 4/4, ov020 2/2 — and falls one short on ov080
+(3 against 4). Its `blind` column is much larger than `known` (10, 9, 6, 4) because
+without mangled names the unlabelled runs never get absorbed.
 
 ## Gotchas that have already bitten
 
-* **A module can contain an object with NO `.text` at all.** ov045 has a seventh,
-  data-only object — 2,128 bytes at the head of `.data`, read by three TUs'
-  `InitResources`. `tu_map` is built from `.text` runs and **structurally cannot see
-  it**, so "N TUs" is a count of code-bearing objects, not of original files. It was
+* **A module can contain an object with NO `.text` at all.** `tu_map --module ov045`
+  reports 6 TUs; ov045 has a seventh, data-only object — 2,128 bytes at the head of
+  `.data`, read by three TUs' `InitResources`. `tu_map` is built from `.text` runs and
+  **structurally cannot see it**, so "N TUs" is a count of code-bearing objects, not of
+  original files. (The 6 is reproducible; the 2,128 is an analysis result not recorded
+  anywhere in `notes/` — treat it as unconfirmed.) It was
   found only because attributing `.data` by "whose code loads it" produced a TU
   ordering the linker's layout rule forbids. Distinct from the 31 whole modules that
   are data-only.
 * **A size-0 function symbol is an ALIAS, not a function.** All 8 in the corpus are a
   second `kind:function` symbol at an address a *sized* one already occupies — the ARM
-  runtime exporting both its mwcc and AEABI name from one entry point
-  (`__aeabi_uidiv`/`_u32_div_f`, `_dadd`, `_ll_sdiv`, …) plus `__destroy_arr`/
+  runtime exporting both its mwcc and AEABI name from one entry point (`_u32_div_f`,
+  `_s32_div_f`, `_dadd`, `_dmul`, `_ll_udiv`, `_ll_sdiv`, `_ull_mod`) plus
   `__cxa_vec_cleanup`. They are not unrecorded sizes: no size-0 symbol is alone at its
   address and no address carries two sized ones, so the extent is never ambiguous.
-  **Fixed** — `functions()` now collapses aliases (one entry per address, survivor is
-  the sized symbol). Before the fix these fragmented real runs into overlapping 4-byte
-  units and `main`/`itcm` were not partitions. If you inventory symbols yourself, collapse
-  by address or you will reintroduce it.
+  **This is NOT fixed on `main`.** `functions()` reads symbols.txt straight through with
+  no collapse by address, so these 8 still fragment real runs into 4-byte units that
+  overlap their neighbours — 8 overlapping unit pairs in today's map, all of them in
+  `main` and `itcm`, which are therefore **not partitions**. If you inventory symbols
+  yourself, collapse by address (one entry per address, survivor is the sized symbol) or
+  you inherit the same defect.
 * **RTTI spans can bridge two real TUs.** A vtable slot may point at inherited or
   shared code in the neighbouring object. `tu_map.py` already suppresses this
   (mangled names win over RTTI spans), but if you compute spans yourself, don't
   re-introduce it — ov081's `daSnowman_c` and ov090's `daMenbo_c` are the cases.
-* **Inventory functions from `symbols.txt`, not `delinks.txt`.** delinks can leave a
-  hole: ov062 has no entry covering `0x02117724-0x02117994` yet
-  `func_ov062_02117724` sits right there inside the Koopa run.
-* **Key by (module, addr), never addr alone.** 52 overlays share base `0x021111A0`.
+* **Inventory functions from `symbols.txt`, not `delinks.txt`.** That is what
+  `tu_map.functions()` does, and it is the right rule — delinks is a build artefact and
+  can be re-partitioned, symbols.txt is the inventory. Its docstring justifies the choice
+  with an ov062 hole at `0x02117724-0x02117994`; **that hole no longer exists on `main`**
+  (config/arm9/overlays/ov062/delinks.txt covers it, and a sweep of every module finds 0
+  symbols.txt functions uncovered by a delinks `.text` entry). Keep the rule, don't cite
+  the example as current.
+* **Key by (module, addr), never addr alone.** 44 of the 93 modules `tools/modules.py`
+  lists — all of them overlays — load at base `0x021111A0`.
 * **Join files to TUs by address -> symbol -> `units[].functions`**, never by file stem
-  (renames) nor by TU interval — 212 functions sit outside their own TU's start/end.
+  (renames) nor by TU interval — 109 functions sit outside their own TU's start/end.
 * **`tu_map.py` calls arm9 `main`.** Keying on `arm9` silently drops 3,067 functions.
 
 ## Attributing non-`.text` sections
@@ -129,8 +159,9 @@ never references its own `.rodata` at all.
 
 `tools/objisolate.py` reduces a compiled object to the one function its delink entry
 declares, so a `.cpp` destructor -- which mwcc emits as D0/D1/D2 plus the class
-vtable and RTTI -- can link. 99 of 105 `.cpp` destructor files are source-built.
-Read `notes/objisolate.md` before touching it; in particular a `_ZTV*` relocation's
+vtable and RTTI -- can link. `notes/objisolate.md` measures 99 of 105 `.cpp` destructor
+files **eligible** (up from 30) — read that column as eligible, not enrolled — and is
+required reading before touching it; in particular a `_ZTV*` relocation's
 addend must lose 8 on rebinding, because mwcc's vtable symbol addresses the object's
 start while symbols.txt's addresses the slot array. Getting that wrong links clean
 and corrupts 34 modules.
@@ -142,19 +173,26 @@ inline removes the anchor entirely. The full source-form rules are in
 
 ## After changing tu_map.py
 
-`python tools/tu_map.py --check` must stay green — and it now **exits non-zero** on
-failure, which it previously did not (it only printed). The gates are
-ov062/ov063/ov080/ov020 known answers, `KoopaSmall_Spawn` landing inside the Koopa TU,
-sinit==ctor counts, no module with more sinits than TUs, every function in exactly one
-TU, and **V4: units partition their module — no overlap, no zero-length or empty unit**
-(also recorded as `meta.partition_defects` for consumers reading the JSON off disk).
-V2b earns its keep — it caught the RTTI-bridge bug. V4 earns its keep — applied to the
-pre-fix map it reports 8 defects.
+`python tools/tu_map.py --check` must stay green — but **read the output, never the exit
+status.** On `main` it prints `[PASS]`/`[FAIL]` per gate and returns; the exit code is
+**0 either way**. `--check --blind` fails two gates and still exits 0. `--check` also
+does not rewrite `build/tu_map.json`.
 
-V4 deliberately does **not** assert that every function lies inside its unit's range:
-109 functions across 10 modules violate that on purpose, because `absorb_unlabelled`
-attaches call-graph-proven file-local functions without widening the cluster span. Nor
-does it forbid gaps — 85 exist legitimately.
+The gates on `main` are V1 (known-answer classed-TU counts for ov062/ov063/ov080/ov020),
+V1b (`KoopaSmall_Spawn` lands inside the Koopa TU), V2a (sinit count == `.ctor` entry
+count), V2b (no module has more sinits than TUs) and V3 (every function in exactly one
+TU), followed by the blind negative-control table. V2b earns its keep — it caught the
+RTTI-bridge bug.
+
+**There is no partition gate.** Nothing asserts that a module's units are disjoint, and
+the JSON carries no `meta.partition_defects` — `meta` is exactly `modules`, `total_tus`,
+`total_functions`, `total_sinits`, `boundaries`, `tus_with_class`, `under_segmented`,
+`caveat`. Today's map has 8 overlapping unit pairs (the alias defect above) and 85 gaps,
+and nothing reports either. If such a gate is ever added it must **not** assert that
+every function lies inside its unit's range: 109 functions across 10 modules violate
+that on purpose, because `absorb_unlabelled` attaches call-graph-proven file-local
+functions without widening the cluster span. Nor should it forbid gaps — the 85 are
+legitimate.
 
 The map does **not** merge files. Consolidation is a separate byte-gated change:
 a merged TU must emit functions in exactly the ROM's order (mwccarm emits one `.text`

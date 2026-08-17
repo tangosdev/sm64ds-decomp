@@ -22,17 +22,22 @@ python tools/tu_map.py           # -> build/tu_map.json
 
 **Nothing enforces that order.** `tu_map.py` reads `build/rtti_vtables.json` if it is
 present and silently falls back to an empty label table if it is not, so a missing
-prerequisite produces a complete, self-consistent, **wrong** map with every gate passing.
+prerequisite produces a complete, self-consistent, **wrong** map — 516 TUs instead of
+532 — with every gate passing and **exit 0**. Verify the prerequisites yourself; no exit
+code will do it for you, and `--check` will not either (it exits 0 on failure too). The
+full damage table is in `decomp-tu-slicing` §0.
+
 `tubuild.py` regenerates the map only when it is *entirely absent*; a stale-but-present
-map is reported as a note and then used as-is. Verify the prerequisites yourself — no
-exit code will do it for you.
+map is reported as a note and then used as-is.
 
 `--blind` is a negative control, not an opt-out: it drops the mangled-name signal and
 scores what the map retains on RTTI alone, which is the honest measure for the anonymous
-overlays. It is not something to reach for in a normal run.
+overlays. It is not something to reach for in a normal run. There is no flag that
+suppresses the RTTI labels while keeping the names.
 
-Current figures with the chain: **74 modules, 11,083 functions, 520 TUs**, boundaries
-`{low: 56, medium: 110, high: 280}`, 400/520 carrying a class.
+Figures move whenever the map changes — run the command rather than quoting these.
+Measured on `main` at `343eab070` with the full chain: **74 modules, 11,091 functions,
+532 TUs**, boundaries `{low: 68, medium: 110, high: 280}`, 400/532 carrying a class.
 
 ## 1. The loop
 
@@ -44,16 +49,19 @@ python tools/tubuild.py compile ov045/PoleLift
 python tools/tubuild.py verify  ov045/PoleLift    # byte + relocation verification
 python tools/tubuild.py partial ov045/PoleLift    # N derived per-function objects
 python tools/tubuild.py linkcheck ov002/LevelObjects
+python tools/tubuild.py promote  ov045/PoleLift   # --dry-run only
 ```
 
 `tubuild.py` writes **only** `src_tu/`, `config/tu_manifest.json`, and `build/tu/`. It
-never touches `src/` or `config/**/delinks.txt` and never invokes `rombuild.py` /
-`eligible.py`. Keep it that way. It delegates every byte and relocation check to
+never touches `src/` or `config/**/delinks.txt` and — in its own words — never runs real
+`eligible.py --apply` / `rombuild.py`, though it imports both as libraries. Keep it that
+way. It delegates every byte and relocation check to
 `match.py`, `objisolate.py`, `reloc_audit.py`, `build_pin.py` — never reimplement those.
 
 `create` **refuses** a legacy file whose body is wrapped in `extern "C" { }` — its
-splitter cannot parse it. Hand-assemble, then build the manifest entry with
-`tubuild.build_manifest_entry` so the schema stays the tool's own.
+splitter consumes the whole block as extern declarations and then reports
+`scanned to end of file without finding a function body`. Hand-assemble, then build the
+manifest entry with `tubuild.build_manifest_entry` so the schema stays the tool's own.
 
 ### The status ladder
 
@@ -109,13 +117,19 @@ while calling the WRONG function. This cost a full day: ov077's `func_ov077_0212
 called `ApproachLinear` where the ROM calls `ApproachLinear2` — same signature shape,
 reported MATCH.
 
-**Always confirm the run reported all three:**
+**Always confirm the run reported all three.** `verify` prints the first two as labelled
+lines and folds the third into its verdict line:
 ```
-byte comparison   : N/N MATCH
-objisolate check  : clean            <- relocation type/addend
-reloc-destinations: clean            <- relocation destination identity
+byte comparison   : 7/7 MATCH  (tools/match.py extract_func + compare, relocation-aware)
+objisolate check  : clean  (tools/objisolate.py plan() -- relocation type/addend ...)
+...
+Result: 7/7 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED
 ```
-If any could not run, the result is "not verified" — never "probably fine".
+There is no standalone `reloc-destinations:` line — a destination failure shows up on
+the offending symbol's row as `N reloc destination(s) WRONG (first: ...)`, and the
+`Result:` line degrades to `NOT verified`. `verify` **does** exit non-zero when it is not
+text-verified (unlike `tu_map.py --check`, which always exits 0). If any of the three
+could not run, the result is "not verified" — never "probably fine".
 
 ## 5. Enrollment and the ph-shaped config
 
