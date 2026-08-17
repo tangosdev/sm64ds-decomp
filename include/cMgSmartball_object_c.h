@@ -63,18 +63,34 @@ struct cMgSmartball_object_c {
                           field of the class */
     s32 unk_02c;      /* 0x02c -- the constructor's second argument */
     u8  unk_030;      /* 0x030 -- constructor sets it to 1 */
-    u8  unk_031;      /* 0x031 -- a 0/1 flag; 11 files read or write it */
-    s16 unk_032;      /* 0x032 -- 16 bits wide, 43 files touch it. SIGNEDNESS
-                          IS CONTESTED and the declaration below is the more
-                          common reading, not a settled one: func_ov006_0210d898
-                          compares it signed against 0x3000 and
-                          func_ov006_0210e014 does signed += 0x200 on it, but
-                          func_ov006_0211102c reads it UNSIGNED to index a sine
-                          table (>> 4, which is lsr not asr -- a real codegen
-                          difference). Nothing names it yet, so nothing depends
-                          on this choice; the first caller to use the name must
-                          re-derive it. cMgSmartball_ana_c muddies it further by
-                          storing a u8 0/1 into the low byte only. */
+    /* 0x031-0x033 IS A THREE-BYTE REGION WITH NO SINGLE TYPE, and that is the
+       answer, not a gap in the evidence. Three children read the same three
+       bytes three incompatible ways, all of them byte-matching:
+
+         - cMgSmartball_ana_c writes 0x031 and 0x032 as independent u8 0/1
+           flags and never touches 0x033.
+         - cMgSmartball_wing_c and cMgSmartball_propeller_c read a 16-bit
+           angle spanning 0x032-0x033 -- wing signed (compares < 0x3000,
+           += 0x200), propeller unsigned (>> 4 to index a sine table, lsr not
+           asr, a real codegen difference). They disagree with each other, so
+           no one signedness is right for both.
+         - cMgSmartball_board_c treats 0x031 as the HEAD of a nine-element
+           per-cell byte array that runs to 0x039 -- i.e. through all three
+           of these bytes and on into the derived class.
+
+       An earlier revision declared 0x032 as a single s16 and called the
+       signedness "contested". It is not contested; it is per-reader. Three
+       u8s is the declaration that lets each reader spell its own access
+       correctly with a cast, and misstates none of them. Every caller reaches
+       these bytes by raw cast today, so this is byte-free -- but a future
+       caller that wants the 16-bit angle must cast, not add a name. */
+    u8  unk_031;      /* 0x031 -- a 0/1 flag; 11 files read or write it. Also
+                          the first cell of cMgSmartball_board_c's nine-byte
+                          cell array. */
+    u8  unk_032;      /* 0x032 -- low byte of the wing/propeller angle, an
+                          independent flag to ana, a board cell to board.
+                          43 files touch this span. */
+    u8  unk_033;      /* 0x033 -- high byte of that angle; a board cell. */
 };
 
 typedef char cMgSmartball_object_c_size_must_be_0x34[sizeof(cMgSmartball_object_c) == 0x34 ? 1 : -1];

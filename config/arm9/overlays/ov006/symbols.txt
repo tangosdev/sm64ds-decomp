@@ -1426,11 +1426,11 @@ _ZN25cMgSmartball_pushswitch_c12SaveSnapshotEv kind:function(arm,size=0x78) addr
 _ZN25cMgSmartball_pushswitch_c14RestoreInitialEv kind:function(arm,size=0x20) addr:0x0210e460
 func_ov006_0210e480 kind:function(arm,size=0x48) addr:0x0210e480
 func_ov006_0210e4c8 kind:function(arm,size=0x2c) addr:0x0210e4c8
-func_ov006_0210e4f4 kind:function(arm,size=0x7b0) addr:0x0210e4f4
+_ZN20cMgSmartball_board_c6UpdateEv kind:function(arm,size=0x7b0) addr:0x0210e4f4
 func_ov006_0210eca4 kind:function(arm,size=0x2a4) addr:0x0210eca4
 func_ov006_0210ef48 kind:function(arm,size=0x61c) addr:0x0210ef48
-func_ov006_0210f564 kind:function(arm,size=0x3b0) addr:0x0210f564
-func_ov006_0210f914 kind:function(arm,size=0x84) addr:0x0210f914
+_ZN20cMgSmartball_board_c12SaveSnapshotEv kind:function(arm,size=0x3b0) addr:0x0210f564
+_ZN20cMgSmartball_board_c14RestoreInitialEv kind:function(arm,size=0x84) addr:0x0210f914
 func_ov006_0210f998 kind:function(arm,size=0x60) addr:0x0210f998
 func_ov006_0210f9f8 kind:function(arm,size=0x48) addr:0x0210f9f8
 func_ov006_0210fa40 kind:function(arm,size=0x2c) addr:0x0210fa40
@@ -4121,7 +4121,7 @@ _ZTV21cMgSmartball_object_c kind:data(any) addr:0x0213ed10
 _ZTV19cMgSmartball_wing_c kind:data(any) addr:0x0213ed24
 _ZTV25cMgSmartball_pushswitch_c kind:data(any) addr:0x0213ed38
 _ZTV18cMgSmartball_ana_c kind:data(any) addr:0x0213ed4c
-data_ov006_0213ed60 kind:data(any) addr:0x0213ed60
+_ZTV20cMgSmartball_board_c kind:data(any) addr:0x0213ed60
 _ZTV19cMgSmartball_slot_c kind:data(any) addr:0x0213ed74
 _ZTV21cMgSmartball_kinoko_c kind:data(any) addr:0x0213ed88
 _ZTV21cMgSmartball_pakkun_c kind:data(any) addr:0x0213ed9c

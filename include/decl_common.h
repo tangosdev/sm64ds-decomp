@@ -1027,7 +1027,7 @@ extern int _ZTV21cMgSmartball_spring_c[];
 extern int _ZTV19cMgSmartball_wing_c[];
 extern int _ZTV25cMgSmartball_pushswitch_c[];
 extern int _ZTV18cMgSmartball_ana_c[];
-extern int data_ov006_0213ed60[];
+extern int _ZTV20cMgSmartball_board_c[];
 extern int _ZTV19cMgSmartball_slot_c[];
 extern int _ZTV21cMgSmartball_kinoko_c[];
 extern int _ZTV21cMgSmartball_pakkun_c[];
