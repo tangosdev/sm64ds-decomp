@@ -14,7 +14,14 @@
  * only reproduces from a real C++ virtual dispatch; a function-pointer-through-
  * a-data-field reads the vtable from r4 directly and swaps those two words).
  */
-struct Heap;
+/* Both of these used to be called as `Heap_Destroy` and `Memory_Deallocate`, names no
+   module defines. The mangled names say what they really are, and both model as
+   ordinary C++ -- every parameter is a pointer, so unlike the Fix12<int> methods
+   elsewhere in this sweep there is nothing here that forces an extern "C" escape.
+   _Destroy takes no arguments: the operand is the implicit `this`. Deallocate carries
+   both of its parameters in the mangled name, so it is static. */
+struct Heap { void _Destroy(); };                       /* 0x0203c74c */
+struct Memory { static void Deallocate(void*, Heap*); };/* 0x0203c1e8 */
 struct SceneNode { char b[0x14]; };
 struct PListNode { char b[0x10]; };
 
@@ -23,10 +30,8 @@ extern "C" {
   char data_020a4ba8;                 /* 0x020a4ba8 */
   void func_0203b3c0(void*, void*);
   void func_0203b27c(void*, void*);
-  void _ZN4Heap8_DestroyEv(void*);              /* 0x0203c74c = Heap::_Destroy */
   void func_02044334(void*);
-  void _ZN6Memory10DeallocateEPvP4Heap(void*, struct Heap*); /* 0x0203c1e8 */
-  struct Heap* data_020a0eac;             /* 0x020a0eac */
+  Heap* data_020a0eac;                /* 0x020a0eac = Memory::gameHeapPtr */
 }
 
 struct ActorBase {
@@ -57,8 +62,8 @@ void ActorBase::AfterCleanupResources(u32 vfSuccess) {
   if (vfSuccess != 2) return;
   func_0203b3c0(&data_020a4b6c, &this->sceneNode);
   func_0203b27c(&data_020a4ba8, &this->behavNode);
-  if (this->unk4C) _ZN4Heap8_DestroyEv(this->unk4C);
+  if (this->unk4C) ((Heap*)this->unk4C)->_Destroy();
   if (this->unk48) func_02044334(this->unk48);
   this->Destructor();   /* ~ActorBase, then free below */
-  _ZN6Memory10DeallocateEPvP4Heap(this, data_020a0eac);
+  Memory::Deallocate(this, data_020a0eac);
 }
