@@ -123,10 +123,10 @@ extern "C" {
 /* reconciled survivors -- see the CONFLICT notes below */
 extern char data_0209b308[];
 extern char *data_ov004_020bbfa8[];
-extern unsigned char data_020a0de8[];
 extern void func_ov004_020b87e0(void* a, void* b);
 extern void func_ov004_020b3194(void *c);
 extern unsigned char data_020a0e40;
+extern unsigned char data_020a0de8[][4];
 extern unsigned char data_020a0de9[][4];
 extern unsigned char data_020a0dea[][4];
 extern unsigned char data_020a0deb[][4];
@@ -1183,7 +1183,7 @@ int func_ov004_020b0b1c(int arg) {
     int flag = 0;
     int i;
 
-    if (data_020a0de8[idx * 4] != 0) {
+    if (data_020a0de8[idx][0] != 0) {
         if (data_020a0de9[idx][0] != 0) flag = 1;
     }
 
@@ -1205,7 +1205,7 @@ int func_ov004_020b0b1c(int arg) {
                     if (data_ov004_020bc150 != 0) {
                         func_ov004_020b422c(o);
                         if ((unsigned int)(arg - 1) <= 1) {
-                            *(int *)((int)data_ov004_020beb68 + 0x4000 + 0x630) = 1;
+                            *(int *)((char *)data_ov004_020beb68 + 0x4000 + 0x630) = 1;
                         }
                     }
                 }

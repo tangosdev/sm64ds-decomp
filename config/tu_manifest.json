@@ -2043,7 +2043,7 @@
       "module": "ov004",
       "source": "src_tu/actors/unit_ov004_020b0a38.cpp",
       "promoted_source": "src/actors/unit020b0a38.cpp",
-      "status": "shadow",
+      "status": "text-verified",
       "boundary_confidence": "medium",
       "boundary_evidence": [
         "contiguous linker run: 0x20b0a38..0x20b2adc, 41 function(s). This is a SUB-RANGE of build/tu_map.json's ov004 unit 9 (0x020b04e8..0x020b2adc), split because #pragma opt_strength_reduction is file-global and the ROM needs it OFF for 0x020b0620 and ON for 0x020b0cac / 0x020b14f0 -- see this file's own header comment",
@@ -2377,14 +2377,14 @@
         "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
         "object": "build/tu/ov004-unit020b0a38/unit_ov004_020b0a38.o (gitignored)",
         "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
-        "functions_matched": 40,
+        "functions_matched": 41,
         "functions_declared": 41,
         "criteria": {
           "every_declared_function_defined": "PASS",
-          "every_declared_function_bytes_match": "FAIL",
+          "every_declared_function_bytes_match": "PASS",
           "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 9 unlicensed section/symbol(s); see unlicensed_output_observed",
           "functions_occur_in_expected_order": "PASS",
-          "relocation_destinations_verified": "FAIL -- see DIFF/objisolate lines above"
+          "relocation_destinations_verified": "PASS"
         }
       }
     }
