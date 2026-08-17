@@ -62,6 +62,19 @@ struct BigBrickBlock : Platform {
     /* --- vtable --- */
     virtual ~BigBrickBlock();
 
+    /* Slot 31, Platform's own new virtual (include/Platform.h). Attributed by
+       the vtable: _ZTV13BigBrickBlock (ov002 0x02108adc) carries 0x020b38a0 at
+       slot 31 -- vtable + 0x7c -- where _ZTV8Platform carries
+       _ZN8Platform4KillEv, and slot 30 is Actor's 0x020100dc in both. An
+       override adds no slot and no field, so the size assert is unaffected.
+
+       NOT the key function: ~BigBrickBlock() above is declared out of line and
+       is defined as a real method by src/_ZN13BigBrickBlockD1Ev.cpp and
+       src/_ZN13BigBrickBlockD0Ev.cpp, so the destructor stays the first
+       non-inline virtual and those two TUs keep emitting _ZTV13BigBrickBlock.
+       This one does not -- checked with objisolate, not assumed. */
+    virtual void Kill();              /* slot 31 */
+
     int Behavior();
     int CleanupResources();
     int InitResources();
