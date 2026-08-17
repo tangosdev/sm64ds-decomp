@@ -93,6 +93,28 @@ struct Platform : Actor {
        translation unit that merely includes this header emits _ZTV8Platform. */
     virtual ~Platform() {}
 
+    /* SLOT 31, AND THE ONLY NEW VIRTUAL THIS CLASS ADDS. Actor ends at slot 30,
+       so this one word is the whole difference between the vtable this header
+       emitted and the one in the cartridge.
+
+       _ZTV8Platform is 0x84 at ov002:0x0210ae38 -- 33 words, one more than the
+       32 an Actor-shaped table needs -- and _ZTV8PoleLift, one of the 70
+       subclasses, is 0x84 as well. rtti_vtables agrees from the other side:
+       dBgActor_c's parent dActor_c has 31 slots and dBgActor_c's own overrides
+       are 16 (D1), 17 (D0) and 31, and 97 of its 101 RTTI children have exactly
+       32 slots. Without this line every one of those tables came out a word
+       short, which is why daObjFallBlock_c::Kill and its siblings had to reach
+       slot 31 through a hand-declared 32-slot shadow struct.
+
+       Kill is not an override: no ancestor declares it, so `virtual` here
+       CREATES the slot. It also makes Kill this class's key function -- the
+       destructor above is inline on purpose -- so the TU defining it emits
+       _ZTV8Platform, _ZTI8Platform and the destructor variants alongside. That
+       is expected and handled: objisolate.py reduces the object to the one
+       function its delink entry declares before eligible.py and rombuild.py
+       judge it. */
+    virtual void Kill();
+
     /* --- non-virtual --- */
     void KillByMegaChar(Player &player_);
     void UpdateClsnPosAndRot();

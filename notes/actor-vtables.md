@@ -163,3 +163,72 @@ listed in the commit that detached them from `Player.h`. Measured against `sizeo
 = 0x768, they read offsets like 0x4eb0 and 0x62ad, thousands of bytes past the end of the
 object. Do not treat a `_ZN6Player*` name as proof of module membership; check which
 `symbols.txt` owns the address.
+
+## Platform — 0x0210ae30 (ov002), 32 slots
+
+`Platform` (RTTI name `dBgActor_c`) derives **directly from Actor** and is the base of the
+largest family in the tree: **101 direct RTTI children, 132 classes in the whole subtree.**
+
+It is the first class in this document that **adds** a virtual rather than only overriding
+one. Its table is Actor's 31 slots with three differences:
+
+| # | override |
+|---:|---|
+| 16 | `~Platform` (D1) — ov002 `0x020ee42c` |
+| 17 | `~Platform` (D0) — ov002 `0x020ee464` |
+| **31** | **`Platform::Kill()` — ov002 `0x020ee55c`, NEW** |
+
+### The 32nd slot, and how long it was missing
+
+`include/Platform.h` declared nothing but `virtual ~Platform() {}` until 2026-08-16, so
+every translation unit that included it emitted a **31-slot** table against the cartridge's
+32. Nothing caught it: no source file delivers `_ZTV8Platform` — the ROM's gap object does
+— and `objisolate.py` drops the vtable a key-function TU emits before any byte gate sees
+it. The table was wrong in the only place it could be wrong silently.
+
+Four independent measurements agree it is 32:
+
+- **`_ZTV8Platform` spans `0x0210ae30`..`0x0210aeb8` = 0x88 bytes.** Two header words plus
+  32 slots. `_ZTV8PoleLift`, one of the subclasses, is 0x88 as well.
+- `rtti_vtables.py` reads `dActor_c` at 31 slots and `dBgActor_c`'s own overrides as
+  16, 17 and **31**.
+- **97 of `dBgActor_c`'s 101 direct RTTI children have exactly 32 slots** (three add one or
+  two more of their own; `daObjBlockS_c` adds 31).
+- With `virtual void Kill();` declared, mwcc emits a `_ZTV8Platform` of **exactly 0x88**.
+
+What the gap cost is visible in the sources: fourteen subclasses override slot 31, and
+their bodies reach it through a hand-declared 32-slot shadow struct because no real class
+spelled that slot.
+
+### There IS an RTTI header here, and `_ZTV8Platform` is not where it starts
+
+The note at the top of this file — "CodeWarrior 1.2 emits no RTTI header, so the address
+stored into `[this+0x0]` *is* slot 0" — holds for the four arm9 tables and **not** for this
+one:
+
+    0x0210ae30  0x00000000    offset-to-top
+    0x0210ae34  0x021089ec    _ZTI8Platform
+    0x0210ae38  0x02043c80    slot 0            <- config's _ZTV8Platform is HERE
+
+`config/arm9/overlays/ov002/symbols.txt` puts `_ZTV8Platform` at the **address point**,
+`0x0210ae38`, which is the vptr value; mwcc emits its `_ZTV8Platform` at the **object
+start**, eight bytes earlier. Nothing depends on this today because the compiled vtable is
+always dropped, but a future change that tries to make a source file *deliver* a Platform
+vtable has to reconcile the eight bytes first.
+
+### Key function, and what it did to the D0 file
+
+`~Platform()` is inline on purpose — the seventy-odd subclasses inline its vptr store
+rather than calling it — so `Kill` is the **first out-of-line virtual and therefore the key
+function**. Its TU emits `_ZTV8Platform`, `_ZTI8Platform` and the destructor variants;
+`objisolate.py` reduces the object back to Kill's one `0x74` `.text` before the gates see
+it.
+
+The second-order effect is the one worth remembering. While Platform had **no** key
+function, any TU touching the destructor group emitted all of it, and
+`src/_ZN8PlatformD0Ev.cpp` got D0 from a plain `p->~Platform()` call. Once Kill exists, D0
+is emitted *only* where the vtable is — so that file compiled to D1 plus its own forcing
+function, two `.text` sections, and **dropped out of the build with every byte gate still
+green**. `delete p` asks for the deleting half by name and brings it back. The same
+sentence is in `src/_ZN19dScMgSingle3DBase_cD0Ev.cpp`, which has had a key function since
+\#1544.

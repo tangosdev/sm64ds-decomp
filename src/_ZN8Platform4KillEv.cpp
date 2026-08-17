@@ -1,30 +1,51 @@
 //cpp
-// _ZN8Platform4KillEv at 0x020ee55c
-// Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
-struct Vector3 { int x, y, z; };
+// @symbol _ZN8Platform4KillEv
+/* Platform::Kill() at ov002 0x020ee55c, 0x74 bytes -- vtable slot 31.
+ *
+ * THE SLOT THIS CLASS ADDS. Actor's table ends at slot 30; Kill is the one new
+ * virtual Platform declares, and 97 of the 101 classes deriving from it have
+ * exactly 32 slots because of this function. See include/Platform.h.
+ *
+ * Kill is also, necessarily, Platform's key function: the destructor is inline
+ * on purpose (every subclass inlines its body rather than calling
+ * _ZN8PlatformD1Ev), so this is the first out-of-line virtual and this TU emits
+ * _ZTV8Platform, _ZTI8Platform and the destructor variants. objisolate.py
+ * reduces the object back to this one function before the byte gates see it.
+ *
+ * The particle spawns 0x64000 -- one 20.12 unit is 0x1000, so 100 units --
+ * above the platform, and the poof and the sound both take the position by
+ * reference. mCamSpacePos is read as a Vector3 through its first member, which
+ * is how the rest of the tree spells that triple (see BulletBill::Behavior).
+ *
+ * Particle::System::NewSimple stays spelled as its mangled name: its parameters
+ * are Fix12<int> BY VALUE, and declaring the true types changes how the caller
+ * passes them and breaks the bytes. Same reason, same note, as
+ * src/_ZN5Actor10PoofDustAtERK7Vector3.cpp -- notes/mwccarm-codegen.md 6az. */
+#include "Platform.h"
+#include "Sound.h"
 
-extern "C" {
-void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-void _ZN5Actor10PoofDustAtERK7Vector3(void* self, const Vector3& vec);
-void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
-}
+extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
+    u32 id, Fix12i x, Fix12i y, Fix12i z);
 
-extern "C" void _ZN8Platform4KillEv(char* self);
-void _ZN8Platform4KillEv(char* self) {
-    Vector3 vec;
-    Vector3 vec2;
-    int x = *(int*)(self + 0x5c);
-    int y = *(int*)(self + 0x60) + 0x64000;
-    int z = *(int*)(self + 0x64);
-    vec.x = x;
-    vec.y = y;
-    vec.z = z;
-    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xa, vec.x, vec.y, vec.z);
-    ((int*)&vec2)[0] = ((int*)&vec)[0];
-    ((int*)&vec2)[1] = ((int*)&vec)[1];
-    ((int*)&vec2)[2] = ((int*)&vec)[2];
-    _ZN5Actor10PoofDustAtERK7Vector3(self, vec2);
-    _ZN5Sound9PlayBank3EjRK7Vector3(0x41, *(Vector3*)(self + 0x74));
-    _ZN9ActorBase18MarkForDestructionEv(self);
+void Platform::Kill()
+{
+    Vector3 pos;
+    Vector3 dustPos;
+    Fix12i x = mPosX;
+    Fix12i y = mPosY + 0x64000;
+    Fix12i z = mPosZ;
+    pos.x = x;
+    pos.y = y;
+    pos.z = z;
+    _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xa, pos.x, pos.y, pos.z);
+    /* MEMBERWISE, NOT `dustPos = pos`. Vector3 declares a destructor (see
+       types.h), so it is non-POD, and a whole-object assignment compiles to an
+       ldm/stm pair -- four instructions where the ROM has six. Three field
+       stores are what the cartridge does. */
+    dustPos.x = pos.x;
+    dustPos.y = pos.y;
+    dustPos.z = pos.z;
+    PoofDustAt(dustPos);
+    Sound::PlayBank3(0x41, *(Vector3 *)&mCamSpacePosX);
+    MarkForDestruction();
 }
