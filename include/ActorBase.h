@@ -3,7 +3,34 @@
 
 #include "types.h"
 
-/* The root of the actor hierarchy, 0x02043494..0x02043e04.
+/* The root of the actor hierarchy. Its code is one contiguous run in arm9,
+ * 0x02043444..0x02043f4c, 25 functions.
+ *
+ * THAT RANGE IS A CORRECTION. This banner used to say "0x02043494..0x02043e04"
+ * and both ends were wrong; src_tu/actors/ActorBase.cpp reconciled it against
+ * the cartridge while rebuilding the translation unit.
+ *
+ *   0x02043444  is the real start: _ZN9ActorBasenwEj, this class's own
+ *               operator new (size 0x50, discussed further down this file).
+ *               The old 0x02043494 began at OnHeapCreated and excluded it.
+ *   0x02043f4c  is the real end -- the byte after _ZN9ActorBaseC1Ev, and the
+ *               address of func_02043f4c, the next unrelated function.
+ *   0x02043e04  was not a function boundary at all. It falls 0x18 bytes INSIDE
+ *               the constructor (_ZN9ActorBaseC1Ev, 0x02043dec, size 0x160), so
+ *               the old end cut that function in half.
+ *
+ * The run is bracketed by unlabelled neighbours on both sides -- func_020433b8
+ * ends at 0x02043444, func_02043f4c begins at 0x02043f4c -- and contains exactly
+ * two unnamed functions, func_02043810 and func_02043880, both enclosed by named
+ * members and both reading this layout directly. 24 of the 25 are byte-verified
+ * together as one TU; the constructor is the exception, and the only source the
+ * tree has for it is a NONMATCHING hand-written asm transcription that
+ * config/arm9/delinks.txt does not enrol.
+ *
+ * SEPARATELY, the nested class ActorBase::SceneNode has two functions of its own
+ * 0x8000 bytes away at 0x0203b4ac..0x0203b4dc, sitting next to the intrusive-
+ * list primitives this class calls. Different translation unit; not part of the
+ * run above.
  *
  * The chain is ActorBase -> ActorDerived -> Actor. See notes/actor-vtables.md;
  * Actor is NOT a direct child of this class.
