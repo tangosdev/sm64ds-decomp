@@ -35,6 +35,14 @@ struct IceBlock : Platform {
     int CleanupResources();
     int InitResources();
     int Render();
+    /* THE VTABLE SAYS SO. _ZTV8IceBlock is ov081 0x02128cc4 and the word at
+       +0x7c relocates to ov081 0x02127cf4, while _ZTV8Platform carries
+       _ZN8Platform4KillEv at the same slot -- so this is this class's own
+       override of Platform's Kill, not a new virtual. Slot 30 (+0x78) is still
+       the main-module 0x02010124 both tables share, which is what makes 31 the
+       first slot where they differ. An override adds no field and no slot; the
+       0x368 assertion below is unchanged. */
+    virtual void Kill();                            /* slot 31 */
 };
 
 typedef char IceBlock_size_must_be_0x368[sizeof(IceBlock) == 0x368 ? 1 : -1];
