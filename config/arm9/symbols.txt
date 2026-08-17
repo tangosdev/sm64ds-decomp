@@ -456,11 +456,11 @@ _ZN8SaveData12ReadFileDataEjP12FileSaveData kind:function(arm,size=0x70) addr:0x
 _ZN8SaveData16SetDefaultValuesEP12FileSaveData kind:function(arm,size=0x48) addr:0x02013dc4
 _ZN8SaveData16EraseAllSaveDataEv kind:function(arm,size=0x58) addr:0x02013e0c
 func_02013e64 kind:function(arm,size=0x1c) addr:0x02013e64
-_ZN12ActorDerivedD1Ev kind:function(arm,size=0x24) addr:0x02013e80
-_ZN12ActorDerivedD0Ev kind:function(arm,size=0x38) addr:0x02013ea4
+_ZN7dBase_cD1Ev kind:function(arm,size=0x24) addr:0x02013e80
+_ZN7dBase_cD0Ev kind:function(arm,size=0x38) addr:0x02013ea4
 func_02013edc kind:function(arm,size=0xc) addr:0x02013edc
-_ZN12ActorDerived5SpawnEjP9ActorBaseii kind:function(arm,size=0xc) addr:0x02013ee8
-_ZN12ActorDerived18AfterInitResourcesEj kind:function(arm,size=0x34) addr:0x02013ef4
+_ZN7dBase_c5SpawnEjP9ActorBaseii kind:function(arm,size=0xc) addr:0x02013ee8
+_ZN7dBase_c18AfterInitResourcesEj kind:function(arm,size=0x34) addr:0x02013ef4
 func_02013f28 kind:function(arm,size=0x24) addr:0x02013f28
 func_02013f4c kind:function(arm,size=0x204) addr:0x02013f4c
 InitCrashScreen kind:function(arm,size=0xc4) addr:0x02014150
@@ -3547,7 +3547,7 @@ data_0208e440 kind:data(any) addr:0x0208e440
 data_0208e444 kind:data(any) addr:0x0208e444
 data_0208e448 kind:data(any) addr:0x0208e448
 data_0208e498 kind:data(any) addr:0x0208e498
-_ZTV12ActorDerived kind:data(any) addr:0x0208e4b8
+_ZTV7dBase_c kind:data(any) addr:0x0208e4b8
 data_0208e4b8 kind:data(any) addr:0x0208e4b8
 data_0208e500 kind:data(any) addr:0x0208e500
 data_0208e504 kind:data(any) addr:0x0208e504

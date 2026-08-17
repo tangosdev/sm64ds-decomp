@@ -1,7 +1,7 @@
 /* Camera::~Camera (D1) at 0x0200705c
  *
  * Inheritance chain (from resolved vtable literals in this function's pool):
- *   Camera : View : ActorDerived : ActorBase
+ *   Camera : View : dBase_c : ActorBase
  *     0x02086f84 = _ZTV6Camera
  *     0x02092720 = _ZTV4View
  *     0x0208e4b8 = data_0208e4b8

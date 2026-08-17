@@ -1751,11 +1751,11 @@ src/func_02013e64.c:
     complete
     .text start:0x02013e64 end:0x02013e80
 
-src/_ZN12ActorDerivedD1Ev.cpp:
+src/_ZN7dBase_cD1Ev.cpp:
     complete
     .text start:0x02013e80 end:0x02013ea4
 
-src/_ZN12ActorDerivedD0Ev.c:
+src/_ZN7dBase_cD0Ev.c:
     complete
     .text start:0x02013ea4 end:0x02013edc
 
@@ -1763,11 +1763,11 @@ src/func_02013edc.c:
     complete
     .text start:0x02013edc end:0x02013ee8
 
-src/_ZN12ActorDerived5SpawnEjP9ActorBaseii.cpp:
+src/_ZN7dBase_c5SpawnEjP9ActorBaseii.cpp:
     complete
     .text start:0x02013ee8 end:0x02013ef4
 
-src/_ZN12ActorDerived18AfterInitResourcesEj.cpp:
+src/_ZN7dBase_c18AfterInitResourcesEj.cpp:
     complete
     .text start:0x02013ef4 end:0x02013f28
 

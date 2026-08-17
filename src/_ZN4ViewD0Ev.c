@@ -1,6 +1,6 @@
 /* View::~View (deleting / D0) at 0x0202fcc8
  *
- * vtable chain View -> ActorDerived:
+ * vtable chain View -> dBase_c:
  *   0x02092720 = _ZTV4View
  *   0x0208e4b8 = data_0208e4b8
  *   bl 0x02043d48 = ActorBase::~ActorBase

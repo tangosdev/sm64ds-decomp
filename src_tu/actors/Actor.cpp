@@ -215,7 +215,7 @@ extern "C" void* _ZN5ActorC1Ev(struct Actor *self) {
  * 0x02011374  size 0x4c   legacy src/_ZN5ActorD1Ev.cpp */
 extern "C" {
 extern int _ZTV5Actor[];
-extern int _ZTV12ActorDerived[];
+extern int _ZTV7dBase_c[];
 extern void _ZN9ActorBaseD2Ev(int c);
 }
 extern "C" {
@@ -223,7 +223,7 @@ int _ZN5ActorD1Ev(struct Actor *self) {
   *(int*)((int)self) = (int)_ZTV5Actor;
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
   func_02044104((int)&self->unk_050);
-  *(int*)((int)self) = (int)_ZTV12ActorDerived;
+  *(int*)((int)self) = (int)_ZTV7dBase_c;
   _ZN9ActorBaseD2Ev(((int)self));
   return ((int)self);
 }
@@ -237,7 +237,7 @@ extern "C" struct Actor *_ZN5ActorD0Ev(struct Actor *thiz)
     *(void **)thiz = (void *)_ZTV5Actor;
     func_0203b27c((int)data_0209b468, ((int)thiz) + 0x50);
     func_02044104((int)&thiz->unk_050);
-    *(void **)thiz = (void *)_ZTV12ActorDerived;
+    *(void **)thiz = (void *)_ZTV7dBase_c;
     _ZN9ActorBaseD2Ev((int)thiz);
     _ZN6Memory10DeallocateEPvP4Heap(thiz, data_020a0eac);
     return thiz;
@@ -251,7 +251,7 @@ int _ZN5ActorD2Ev(struct Actor *self) {
   *(int*)((int)self) = (int)_ZTV5Actor;
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
   func_02044104((int)&self->unk_050);
-  *(int*)((int)self) = (int)_ZTV12ActorDerived;
+  *(int*)((int)self) = (int)_ZTV7dBase_c;
   _ZN9ActorBaseD2Ev(((int)self));
   return ((int)self);
 }
@@ -286,7 +286,7 @@ skip:;
  * 0x02011244  size 0x24   legacy src/_ZN5Actor18AfterInitResourcesEj.cpp */
 void Actor::AfterInitResources(u32 vfSuccess)
 {
-    ActorDerived::AfterInitResources(vfSuccess);
+    dBase_c::AfterInitResources(vfSuccess);
     /* The (long long)(int) cast is a codegen launder, not a type conversion: the
        ROM materialises the address into a register first (`add r1,r4,#0xb0`)
        and then does the read-modify-write through it. Writing `mFlags |= 0x38`
@@ -492,7 +492,7 @@ Actor *Actor::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                     const Vector3_16 *rot, s8 areaID, s16 deathTableID)
 {
     func_02010e78(&pos, rot, areaID, deathTableID);
-    return (Actor *)ActorDerived::Spawn(actorID, data_0209f5c0, spawnParam, 2);
+    return (Actor *)dBase_c::Spawn(actorID, data_0209f5c0, spawnParam, 2);
 }
 
 /* -------------------------------------------------------------------------- */

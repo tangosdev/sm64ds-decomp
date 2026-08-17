@@ -3,10 +3,10 @@
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * The hand-written version this replaces spelled out three vptr stores --
- * dScBoot_c's own vtable, then _ZTV5Scene, then ActorDerived's -- followed by
+ * dScBoot_c's own vtable, then _ZTV5Scene, then dBase_c's -- followed by
  * a call to ActorBase::~ActorBase. That is the chain with the two
  * intermediate destructors inlined: BootScene's own, then Scene's (which
- * itself inlines ActorDerived's, see _ZN5SceneD1Ev.cpp), then a real call to
+ * itself inlines dBase_c's, see _ZN5SceneD1Ev.cpp), then a real call to
  * ActorBase's, because that one is not defined inline anywhere in the chain.
  *
  * BootScene adds no members with destructors, so there is nothing between

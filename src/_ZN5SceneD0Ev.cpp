@@ -12,7 +12,7 @@
  *
  * It is never called. objisolate keeps the symbol this file declares and
  * drops the rest, and the bytes at 0x0202e170 come out exactly as the ROM
- * has them: Scene's own vptr, then ActorDerived's (inlined), then
+ * has them: Scene's own vptr, then dBase_c's (inlined), then
  * ActorBase::~ActorBase(), then Scene's own operator delete.
  */
 #include "Scene.h"

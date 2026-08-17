@@ -24,7 +24,7 @@ extern "C" {
 int *ArrowSignRight_Spawn(void);
 void *_ZN4Heap13SetupRootHeapEv(void);
 extern int data_0209b3ec[12];       /* camera matrix */
-/* the spawn context ActorDerived::Spawn would have staged */
+/* the spawn context dBase_c::Spawn would have staged */
 struct SharedFilePtrC { unsigned short fileID; unsigned char numRefs;
                         unsigned char pad; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *s, u32 id);

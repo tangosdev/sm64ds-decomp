@@ -2,9 +2,9 @@
 #define HUD_H
 
 #include "types.h"
-#include "ActorDerived.h"
+#include "dBase_c.h"
 
-/* Derives from ActorDerived: the destructor stores this class's vtable, then the
+/* Derives from dBase_c: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x50 belonged to the
  * chain above and is inherited now.
@@ -15,7 +15,7 @@
 
 #ifdef __cplusplus
 
-struct HUD : ActorDerived {
+struct HUD : dBase_c {
     u8  pad_050[0x10];
     u16 mVsTimer;                     /* 0x060 */
     u8  pad_062[0x4];

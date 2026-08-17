@@ -3,7 +3,7 @@
  * explicit padding. Field NAMES cannot change codegen, so they are safe to
  * improve -- but the OFFSETS and WIDTHS are pinned by the bytes.
  *
- * Player derives from Actor: ActorBase -> ActorDerived -> Actor -> Player.
+ * Player derives from Actor: ActorBase -> dBase_c -> Actor -> Player.
  * See notes/actor-vtables.md. That IS expressed here now: `struct Player :
  * Actor` inherits 0x000..0x0cf rather than duplicating it, and the 31-slot
  * vtable (_ZTV6Player, 0x0210a83c in ov002) has seven of its overrides

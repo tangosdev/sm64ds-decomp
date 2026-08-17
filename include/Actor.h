@@ -4,13 +4,13 @@
 #include "types.h"
 
 #ifdef __cplusplus
-#include "ActorDerived.h"
+#include "dBase_c.h"
 #endif
 
 /* The base of every enemy and object class, 0x020100dc..0x020113e4.
  *
- * The chain is ActorBase -> ActorDerived -> Actor. Actor is NOT a direct child
- * of ActorBase: Actor::Actor calls ActorBase::ActorBase, stores ActorDerived's
+ * The chain is ActorBase -> dBase_c -> Actor. Actor is NOT a direct child
+ * of ActorBase: Actor::Actor calls ActorBase::ActorBase, stores dBase_c's
  * vptr, then immediately overwrites it with its own. Two consecutive vptr
  * stores is what an inlined intermediate-base constructor looks like. See
  * notes/actor-vtables.md.
@@ -77,7 +77,7 @@ struct Matrix4x3;
 extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern "C" void *data_020a0eac;
 
-struct Actor : ActorDerived {
+struct Actor : dBase_c {
     s32 unk_050;            /* 0x050 */
     s32 unk_054;            /* 0x054 */
     u8  unk_058;            /* 0x058 */

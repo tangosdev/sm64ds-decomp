@@ -3,7 +3,7 @@
 
 #include "Scene.h"
 
-/* The boot/intro scene: ActorBase -> ActorDerived -> Scene -> BootScene.
+/* The boot/intro scene: ActorBase -> dBase_c -> Scene -> BootScene.
  *
  * The generated header this replaces, include/dScBoot_c.h, named no base and
  * re-declared a 0x50-byte pad in place of the inherited chain, so `dScBoot_c`

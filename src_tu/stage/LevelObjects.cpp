@@ -68,7 +68,7 @@ extern u8 data_0209caa0[];
 /* CONFLICT 2 -- data_0209f5c0's type.
  * Stage said `ActorBase *`, LoadEntranceObjects said `void *` and cast it back
  * to `ActorBase *` at the one place it used it. ActorBase * is the real type
- * (it is the parent handed to ActorDerived::Spawn), so the cast disappears. */
+ * (it is the parent handed to dBase_c::Spawn), so the cast disappears. */
 extern ActorBase *data_0209f5c0;
 
 extern u8   data_0209f21c;
@@ -235,7 +235,7 @@ void LoadStandardObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
 /* ========================================================================= *
  * ROM ordinal 14 -- LoadEntranceObjects, 0x020fe6c8, size 0x1e4
  * ========================================================================= */
-/* Spawn entrance actors and the entrance-controller ActorDerived. Walks
+/* Spawn entrance actors and the entrance-controller dBase_c. Walks
  * StandardEntry records like LoadStandardObjects, but the third argument is an
  * entry index OFFSET into the table rather than a free parameter: the walk
  * starts at `entries + p3` and runs for data_0209f21c iterations, not tbl.count. */
@@ -289,7 +289,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
         }
     }
 
-    data_0209f318 = ActorDerived::Spawn(0x14c, data_0209f5c0, entranceId, 0);
+    data_0209f318 = dBase_c::Spawn(0x14c, data_0209f5c0, entranceId, 0);
 
     int t = data_0209f2d8;
     t = t == 2;
@@ -610,9 +610,9 @@ void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
 
     isTwo = (data_0209f2d8 == 2);
     if (isTwo == 0) {
-        ActorDerived::Spawn(0x14f, data_0209f5c0, 0, 0);
+        dBase_c::Spawn(0x14f, data_0209f5c0, 0, 0);
         if (intro == 0)
-            ActorDerived::Spawn(0x14e, data_0209f5c0, 0, 0);
+            dBase_c::Spawn(0x14e, data_0209f5c0, 0, 0);
     }
 
     if (intro != 0)

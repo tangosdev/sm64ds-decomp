@@ -1,11 +1,11 @@
 /* Actor::~Actor (deleting / D0) at 0x02011314
  *
- * Inheritance: Actor : ActorDerived : ActorBase
+ * Inheritance: Actor : dBase_c : ActorBase
  * Virtual deleting destructor (CodeWarrior 1.2):
  *   - write Actor vtable to [this]
  *   - run two Actor-subobject teardown calls operating on (this + 0x50)
  *     (the Actor-specific members begin at 0x50)
- *   - write ActorDerived vtable to [this]
+ *   - write dBase_c vtable to [this]
  *   - call the immediate base destructor ActorBase::~ActorBase
  *   - Memory::Deallocate(this, *gameHeapPtr)
  *   - return this
@@ -13,7 +13,7 @@
  * Pool literals (relocations, wildcarded by matcher):
  *   0x0208e3a4 = _ZTV5Actor
  *   0x0209b468 = global passed as first arg to the 0x0203b27c teardown
- *   0x0208e4b8 = _ZTV12ActorDerived
+ *   0x0208e4b8 = _ZTV7dBase_c
  *   0x020a0eac = Memory::gameHeapPtr
  * Calls:
  *   0x0203b27c = teardown(global, &actorSub)   (unnamed)
@@ -30,7 +30,7 @@ struct Actor {
 };
 
 extern void *_ZTV5Actor[];
-extern void *_ZTV12ActorDerived[];
+extern void *_ZTV7dBase_c[];
 
 extern void func_0203b27c(void *global, void *actorSub);   /* 0x0203b27c */
 extern void func_02044104(void *actorSub);                 /* 0x02044104 */
@@ -45,7 +45,7 @@ struct Actor *_ZN5ActorD0Ev(struct Actor *thiz)
     thiz->vtable = (void *)_ZTV5Actor;
     func_0203b27c(&data_0209b468, (char *)thiz + 0x50);
     func_02044104((char *)thiz + 0x50);
-    thiz->vtable = (void *)_ZTV12ActorDerived;
+    thiz->vtable = (void *)_ZTV7dBase_c;
     _ZN9ActorBaseD2Ev(thiz);
     _ZN6Memory10DeallocateEPvP4Heap(thiz, data_020a0eac);
     return thiz;

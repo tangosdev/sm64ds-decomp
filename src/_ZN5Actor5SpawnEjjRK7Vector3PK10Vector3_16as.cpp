@@ -6,7 +6,7 @@
  *
  * The tree's one entry point for creating an actor from an ID. It parks the
  * placement -- position, rotation, area, death-table slot -- in the staging
- * area that func_02010e78 owns, then asks ActorDerived::Spawn to build the
+ * area that func_02010e78 owns, then asks dBase_c::Spawn to build the
  * object and parent it to whatever 0x0209f5c0 currently holds.
  *
  * Static: r0 carries actorID, not `this`. Nothing here touches a field.
@@ -23,10 +23,10 @@
  * difference. The narrowing is the CALLEE's, and it is visible only here.
  *
  * The return type is recovered here too, and this is the only place it could
- * be. ActorDerived::Spawn is a three-word veneer, so its own definition cannot
+ * be. dBase_c::Spawn is a three-word veneer, so its own definition cannot
  * evidence a return value -- but this function's `bl` is followed straight by
  * the epilogue, so r0 flows out untouched. It returns the actor it built;
- * ActorDerived.h said `void` and now says so correctly.
+ * dBase_c.h said `void` and now says so correctly.
  */
 #include "Actor.h"
 
@@ -44,5 +44,5 @@ Actor *Actor::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                     const Vector3_16 *rot, s8 areaID, s16 deathTableID)
 {
     func_02010e78(&pos, rot, areaID, deathTableID);
-    return (Actor *)ActorDerived::Spawn(actorID, data_0209f5c0, spawnParam, 2);
+    return (Actor *)dBase_c::Spawn(actorID, data_0209f5c0, spawnParam, 2);
 }

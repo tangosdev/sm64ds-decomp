@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN12ActorDerived18AfterInitResourcesEj
-/* ActorDerived::AfterInitResources(u32) at 0x02013ef4 -- vtable slot 2, the only
+// @symbol _ZN7dBase_c18AfterInitResourcesEj
+/* dBase_c::AfterInitResources(u32) at 0x02013ef4 -- vtable slot 2, the only
  * functional override this class makes.
  *
  * If initialisation reported VS_FAIL (1) the actor is marked for destruction,
@@ -10,9 +10,9 @@
  * extension is what config/arm9/delinks.txt records, so renaming the file would
  * turn a src-only change into a config change too.
  */
-#include "ActorDerived.h"
+#include "dBase_c.h"
 
-void ActorDerived::AfterInitResources(u32 vfSuccess)
+void dBase_c::AfterInitResources(u32 vfSuccess)
 {
     if (vfSuccess == 1)
         MarkForDestruction();

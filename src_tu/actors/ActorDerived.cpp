@@ -1,5 +1,5 @@
 //cpp
-/* SHADOW translation unit -- arm9 / ActorDerived (Nintendo's dBase_c).
+/* SHADOW translation unit -- arm9 / dBase_c (Nintendo's dBase_c).
  *
  * NOT ENROLLED, AND NOT CANONICAL. This file contributes nothing to the ROM
  * build. The five one-function sources under src/ remain the enrolled owners of
@@ -15,11 +15,11 @@
  * D1 -- and the emitted order comes out ROM-ascending, as `tubuild.py verify`
  * reports.
  *
- * NOTHING HERE IS A REAL ActorDerived:: VIRTUAL, AND THAT IS THE WHOLE DESIGN OF
+ * NOTHING HERE IS A REAL dBase_c:: VIRTUAL, AND THAT IS THE WHOLE DESIGN OF
  * THIS FILE. The class declares exactly two virtuals of its own: the destructor,
- * defined INLINE in include/ActorDerived.h, and AfterInitResources. So
+ * defined INLINE in include/dBase_c.h, and AfterInitResources. So
  * AfterInitResources is the KEY FUNCTION, and defining it as a method makes this
- * TU emit `_ZTV12ActorDerived` -- which the module's gap object already supplies
+ * TU emit `_ZTV7dBase_c` -- which the module's gap object already supplies
  * from ROM data. Both members are therefore spelled as extern "C" free functions
  * under their exact mangled names, and the two destructor variants with them.
  * The result is an object with no .data at all: 5 LICENSED, 0 COLLIDES-GAP,
@@ -27,15 +27,15 @@
  *
  * Measured both ways, because the method form is the prettier one and it had to
  * be ruled out rather than assumed:
- *   real `void ActorDerived::AfterInitResources(u32)`  -> 5/5 MATCH, but the
- *        link aborts, "Multiply-defined: virtual table for ActorDerived ...
+ *   real `void dBase_c::AfterInitResources(u32)`  -> 5/5 MATCH, but the
+ *        link aborts, "Multiply-defined: virtual table for dBase_c ...
  *        Previously defined in _dsd_gap@main_44.o"
  *   extern "C", as below                               -> 5/5 MATCH and
  *        LINK-VERIFIED, 168 bytes IDENTICAL, module fidelity 106/106
  * The class DECLARATIONS in the header are untouched and still required -- they
  * are what give the class its slots.
  *
- * ~ActorDerived IS STILL DEFINED INLINE IN THE HEADER and that is untouched too:
+ * ~dBase_c IS STILL DEFINED INLINE IN THE HEADER and that is untouched too:
  * it is load-bearing for Scene, Stage and every actor destructor below them,
  * which inline its vptr store. Only the out-of-line copies the vtable points at
  * are spelled out here. See the destructor block at the bottom.
@@ -49,10 +49,10 @@
  * class has: 0x02013e80 D1, 0x02013ea4 D0, no D2 anywhere in the image. The two
  * classes corroborate each other's source form straight off the cartridge.
  */
-#include "ActorDerived.h"
+#include "dBase_c.h"
 
 /* Both veneer targets, spelled as their own src/ files spell them. Neither is
- * an ActorDerived member: they are ordinary arm9 functions 0x2f100 bytes away,
+ * an dBase_c member: they are ordinary arm9 functions 0x2f100 bytes away,
  * and the two 0xc-byte forwarders below are how this run reaches them. */
 extern "C" {
 extern void func_02042fe4(int a, int b, int c);
@@ -61,13 +61,13 @@ extern int  func_02042ffc(void *a, void *b);
 /* The base's base-object destructor, which both variants below chain to, and
    this class's vtable as DATA -- named, not defined. The vtable reference has to
    be addend 0: the ROM literals at 0x02013ea0 (D1) and 0x02013ed4 (D0) are
-   exactly 0x0208e4b8, which is config's `_ZTV12ActorDerived`, the SLOT ARRAY. */
+   exactly 0x0208e4b8, which is config's `_ZTV7dBase_c`, the SLOT ARRAY. */
 extern void *_ZN9ActorBaseD2Ev(void *self);
-extern void *_ZTV12ActorDerived[];
+extern void *_ZTV7dBase_c[];
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 4 -- ActorDerived::AfterInitResources(u32), 0x02013ef4, 0x34   */
+/* ROM ordinal 4 -- dBase_c::AfterInitResources(u32), 0x02013ef4, 0x34   */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 2, the only functional override this class makes -- every other
  * slot still points at the ActorBase implementation. If initialisation reported
@@ -75,14 +75,14 @@ extern void *_ZTV12ActorDerived[];
  * implementation runs afterwards.
  *
  * THIS IS THE KEY FUNCTION, AND THAT IS WHY IT IS NOT A METHOD HERE.
- * AfterInitResources is the first NON-INLINE virtual ActorDerived declares (the
+ * AfterInitResources is the first NON-INLINE virtual dBase_c declares (the
  * destructor above it in the class body is defined inline), so CW 1.2 emits
- * `_ZTV12ActorDerived` into whichever TU defines it -- and the ROM's copy of
+ * `_ZTV7dBase_c` into whichever TU defines it -- and the ROM's copy of
  * that vtable is already supplied as data by the module's gap object. Written as
- * a real `void ActorDerived::AfterInitResources(u32)` this TU byte-verifies
+ * a real `void dBase_c::AfterInitResources(u32)` this TU byte-verifies
  * 5/5, but the whole-range link then aborts:
  *
- *     mwldarm.exe: Multiply-defined: "virtual table for ActorDerived"
+ *     mwldarm.exe: Multiply-defined: "virtual table for dBase_c"
  *     mwldarm.exe: Previously defined in _dsd_gap@main_44.o
  *
  * which is the documented key-function link wall. Spelled as an extern "C" free
@@ -96,7 +96,7 @@ extern void *_ZTV12ActorDerived[];
  * a virtual dispatch -- which is what the ROM does, and what the method form's
  * unqualified `ActorBase::AfterInitResources(...)` also compiled to.
  */
-extern "C" void _ZN12ActorDerived18AfterInitResourcesEj(ActorDerived *self,
+extern "C" void _ZN7dBase_c18AfterInitResourcesEj(dBase_c *self,
                                                         u32 vfSuccess)
 {
     if (vfSuccess == 1)
@@ -105,7 +105,7 @@ extern "C" void _ZN12ActorDerived18AfterInitResourcesEj(ActorDerived *self,
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- ActorDerived::Spawn, 0x02013ee8, size 0xc                 */
+/* ROM ordinal 3 -- dBase_c::Spawn, 0x02013ee8, size 0xc                 */
 /* ------------------------------------------------------------------------- */
 /* recovered: a 0xc-byte tail-call forwarder to func_02042ffc (0x02042ffc):
  *     ldr ip, [pc]; bx ip; .word 0x02042ffc
@@ -122,7 +122,7 @@ extern "C" void _ZN12ActorDerived18AfterInitResourcesEj(ActorDerived *self,
  * about the third and fourth. The name is left exactly as the config spells it;
  * see the return for what that costs.
  */
-ActorBase *ActorDerived::Spawn(u32 actorID, ActorBase *parent, int a, int b)
+ActorBase *dBase_c::Spawn(u32 actorID, ActorBase *parent, int a, int b)
 {
     return (ActorBase *)func_02042ffc((void *)actorID, parent);
 }
@@ -131,7 +131,7 @@ ActorBase *ActorDerived::Spawn(u32 actorID, ActorBase *parent, int a, int b)
 /* ROM ordinal 2 -- func_02013edc, 0x02013edc, size 0xc                       */
 /* ------------------------------------------------------------------------- */
 /* The same forwarder shape, to func_02042fe4 (0x02042fe4). Unnamed, and not an
- * ActorDerived member by any evidence -- but it sits INSIDE the class's run,
+ * dBase_c member by any evidence -- but it sits INSIDE the class's run,
  * between D0 and Spawn, which is what puts it in this TU. */
 extern "C" void func_02013edc(int a, int b, int c)
 {
@@ -140,11 +140,11 @@ extern "C" void func_02013edc(int a, int b, int c)
 
 /* ========================================================================= *
  * ROM ordinals 1 and 0 -- the two destructor variants.
- *   _ZN12ActorDerivedD0Ev  0x02013ea4  size 0x38   (deleting)
- *   _ZN12ActorDerivedD1Ev  0x02013e80  size 0x24   (complete-object)
+ *   _ZN7dBase_cD0Ev  0x02013ea4  size 0x38   (deleting)
+ *   _ZN7dBase_cD1Ev  0x02013e80  size 0x24   (complete-object)
  * Written D0 then D1 so the reversal emits them D1, D0 -- the ROM's order.
  *
- * ~ActorDerived IS STILL DEFINED INLINE IN include/ActorDerived.h, and that is
+ * ~dBase_c IS STILL DEFINED INLINE IN include/dBase_c.h, and that is
  * still load-bearing: Scene::~Scene stores two vptrs and then calls ActorBase's
  * destructor directly, which the compiler can only produce by inlining a visible
  * body, and Stage and every actor destructor below them do the same. Nothing
@@ -156,11 +156,11 @@ extern "C" void func_02013edc(int a, int b, int c)
  * existence. Two ways, and both have a cost this TU cannot pay:
  *
  *   * Let the key function do it. Defining AfterInitResources as a real method
- *     emits _ZTV12ActorDerived, and the vtable's slots 16/17 pull D1 and D0 in
+ *     emits _ZTV7dBase_c, and the vtable's slots 16/17 pull D1 and D0 in
  *     for free -- measured, 5/5 MATCH, no scaffold needed. But the emitted
  *     vtable then collides with the gap object's copy and the link aborts.
- *   * A forcing scaffold -- a never-called `p->~ActorDerived()`, which is what
- *     src/_ZN12ActorDerivedD1Ev.cpp uses. objisolate strips that per function,
+ *   * A forcing scaffold -- a never-called `p->~dBase_c()`, which is what
+ *     src/_ZN7dBase_cD1Ev.cpp uses. objisolate strips that per function,
  *     but a MERGED object cannot be reduced that way: the scaffold is .text no
  *     symbols.txt names, `-nodead` keeps it, and it lands inside this span.
  *
@@ -177,17 +177,17 @@ extern "C" void func_02013edc(int a, int b, int c)
  * which is exactly what ActorBase, whose destructor IS defined out of line, has
  * at 0x02043d48/0x02043d78/0x02043dbc.
  * ========================================================================= */
-extern "C" ActorDerived *_ZN12ActorDerivedD0Ev(ActorDerived *self)
+extern "C" dBase_c *_ZN7dBase_cD0Ev(dBase_c *self)
 {
-    *(int *)self = (int)_ZTV12ActorDerived;
+    *(int *)self = (int)_ZTV7dBase_c;
     _ZN9ActorBaseD2Ev(self);
     _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac);
     return self;
 }
 
-extern "C" ActorDerived *_ZN12ActorDerivedD1Ev(ActorDerived *self)
+extern "C" dBase_c *_ZN7dBase_cD1Ev(dBase_c *self)
 {
-    *(int *)self = (int)_ZTV12ActorDerived;
+    *(int *)self = (int)_ZTV7dBase_c;
     _ZN9ActorBaseD2Ev(self);
     return self;
 }

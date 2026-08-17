@@ -1,6 +1,6 @@
 /* MultiBootScene::~MultiBootScene (D1/complete) at 0x02034a78
  *
- * Chain MultiBootScene -> Scene -> ActorDerived, with a FaderColor member
+ * Chain MultiBootScene -> Scene -> dBase_c, with a FaderColor member
  * subobject at +0x50.  CW emits: most-derived vptr write, member dtor,
  * then the base-subobject vptr writes, then the lowest base dtor.
  *   0x020943c4 = data_020943c4

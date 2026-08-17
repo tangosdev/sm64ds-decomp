@@ -85,7 +85,7 @@ int data_0208e3a4[20];
 // C transcription, field for field against the disassembly there. The spawn
 // CONTEXT globals it reads (pending actor ID, area byte, the spawn-info
 // pointer table for the two processing-list priorities) are storage here;
-// the smoke seeds them the way func_02010e78/ActorDerived::Spawn would.
+// the smoke seeds them the way func_02010e78/dBase_c::Spawn would.
 extern "C" {
 void _ZN9ActorBase9SceneNodeC1Ev(void *node);
 int func_0203b438(void *a, void *b, void *c);

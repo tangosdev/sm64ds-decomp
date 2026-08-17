@@ -2,7 +2,7 @@
 // @symbol _ZN9BootSceneD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
- * Destroy through BootScene (which inlines ~Scene and ~ActorDerived, see
+ * Destroy through BootScene (which inlines ~Scene and ~dBase_c, see
  * _ZN9BootSceneD1Ev.cpp), then a real call to ActorBase::~ActorBase, then
  * hand the object back through Scene's inline operator delete -- declared on
  * Scene, BootScene's IMMEDIATE base, which is where mwcc finds it (it only

@@ -32,7 +32,7 @@
  * list primitives this class calls. Different translation unit; not part of the
  * run above.
  *
- * The chain is ActorBase -> ActorDerived -> Actor. See notes/actor-vtables.md;
+ * The chain is ActorBase -> dBase_c -> Actor. See notes/actor-vtables.md;
  * Actor is NOT a direct child of this class.
  *
  * LAYOUT is read out of the ROM, not guessed. ActorBase::ActorBase stores its
@@ -141,8 +141,8 @@ struct ActorBase {
        Memory::Deallocate -- rather than calling a shared helper, and both are
        exactly their D1 body plus those instructions:
            ActorBase::~ActorBase [D0]    0x02043d78  0x44 = D1's 0x30 + 0x14
-           ActorDerived::~ActorDerived   0x02013ea4  0x38 = D1's 0x24 + 0x14
-       Compiled without this declaration, src_tu/actors/ActorDerived.cpp's D0
+           dBase_c::~dBase_c   0x02013ea4  0x38 = D1's 0x24 + 0x14
+       Compiled without this declaration, src_tu/actors/dBase_c.cpp's D0
        came out the wrong SIZE (`999 word(s) differ`); with it, 5/5 MATCH. Only
        an inline member produces that shape.
 
@@ -150,8 +150,8 @@ struct ActorBase {
        comment records why: mwcc inlines operator delete only when it is found in
        the class itself or its IMMEDIATE base, so a declaration here does NOT
        reach Actor (two levels down) and cannot replace Actor's. Nor does it
-       reach HUD, Minimap or Scene, whose immediate base is ActorDerived. The
-       only classes it changes are ActorBase itself and ActorDerived -- the two
+       reach HUD, Minimap or Scene, whose immediate base is dBase_c. The
+       only classes it changes are ActorBase itself and dBase_c -- the two
        whose D0 the ROM shows inlining it. The two src/ files that declare a
        local `struct Actor : ActorBase` (EndKuppaScript.cpp,
        func_ov002_020b7e1c.cpp) use their own local shadow ActorBase, not this

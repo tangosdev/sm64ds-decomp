@@ -1,9 +1,9 @@
 #ifndef SCENE_H
 #define SCENE_H
 
-#include "ActorDerived.h"
+#include "dBase_c.h"
 
-/* The scene root: ActorBase -> ActorDerived -> Scene. Its own code lives at
+/* The scene root: ActorBase -> dBase_c -> Scene. Its own code lives at
  * 0x0202e140..0x0202ec9c, plus the four GraphCallbacks stranded at
  * 0x02018ea0..0x02018ec0.
  *
@@ -44,26 +44,26 @@
  *      16/17. (An earlier revision of this comment had those two numbers the
  *      wrong way round.)
  *   2. Slot 2 points at Scene's own AfterInitResources, whose body is a tail
- *      call to _ZN12ActorDerived18AfterInitResourcesEj -- ActorDerived's only
+ *      call to _ZN7dBase_c18AfterInitResourcesEj -- dBase_c's only
  *      FUNCTIONAL override, though it also carries its own D1/D0 at 16/17.
  *      This one SUGGESTS the base and does not force it: an extern "C" call
  *      reproduces the same three words, which is exactly what the .c file this
  *      slice replaced did, and it byte-matched. It constrains what the original
  *      source plausibly was, jointly with the others -- not by itself.
  *   3. Scene::~Scene says it from the other side: it writes _ZTV5Scene, then
- *      _ZTV12ActorDerived (0x0208e4b8), and only then calls ActorBase::~ActorBase.
+ *      _ZTV7dBase_c (0x0208e4b8), and only then calls ActorBase::~ActorBase.
  *      That is the vptr sequence of a three-deep chain with the middle destructor
  *      inlined.
  *   4. The ROM carries its own type graph, and tools/rtti_extract.py reads it.
  *      Scene's __si_class_type_info record is at 0x020914d4 under the ROM's real
  *      name for the class, `dScene_c`; its vtable field is 0x02092680, which is
  *      _ZTV5Scene, and its single base pointer walks to `dBase_c` (vtable
- *      0x0208e4b8 = _ZTV12ActorDerived), whose own base is `fBase_c` (vtable
+ *      0x0208e4b8 = _ZTV7dBase_c), whose own base is `fBase_c` (vtable
  *      0x02099edc = _ZTV9ActorBase). `si` means single inheritance: exactly one
  *      base, no ambiguity to resolve.
  *
  * Nintendo EAD's own names for the three, then, are fBase_c -> dBase_c ->
- * dScene_c. The tree's ActorBase/ActorDerived/Scene are its own coinages, and
+ * dScene_c. The tree's ActorBase/dBase_c/Scene are its own coinages, and
  * renaming them is a separate question from getting the shape right.
  *
  * SLOT ORDER is ActorBase's, unchanged -- Scene adds no virtual of its own. It
@@ -72,22 +72,22 @@
  * which is safe for a derived class (an override takes its base's slot
  * wherever it is declared).
  *
- * ~Scene() IS NOW DEFINED INLINE, and per include/ActorDerived.h that key-
+ * ~Scene() IS NOW DEFINED INLINE, and per include/dBase_c.h that key-
  * function worry is moot -- objisolate makes a key-function TU eligible
  * regardless, by dropping the vtable it emits and rebinding to the ROM's own
  * _ZTV. What forced the inline move instead: Stage::~Stage (and every one of
  * Scene's other nine direct children) INLINES Scene's own D2 the same way
- * Scene inlines ActorDerived's -- the ROM's Stage destructor stores Stage's
- * vptr, then Scene's, then ActorDerived's, then calls ActorBase's D2 directly,
+ * Scene inlines dBase_c's -- the ROM's Stage destructor stores Stage's
+ * vptr, then Scene's, then dBase_c's, then calls ActorBase's D2 directly,
  * with no call to a separate Scene::~Scene(). A merely declared
  * `virtual ~Scene();` can't be inlined -- the compiler has no body to see --
  * and emits `bl _ZN5SceneD2Ev` where the ROM has none (measured on a Stage
  * trial: 80 bytes with the call vs the ROM's 104 with none). Scene had been
  * defined out-of-line since the previous slice; that blocked every child's
- * own destructor migration the same way an out-of-line ~ActorDerived() would
+ * own destructor migration the same way an out-of-line ~dBase_c() would
  * have blocked Scene's.
  *
- * The cost is what ActorDerived already pays: src/_ZN5SceneD1Ev.cpp and
+ * The cost is what dBase_c already pays: src/_ZN5SceneD1Ev.cpp and
  * _ZN5SceneD0Ev.cpp can no longer DEFINE ~Scene() (that would be a
  * redefinition of the inline body below) and a bare include emits nothing --
  * `_ZN5SceneD1Ev is not in the object`. Both now carry a forcing call
@@ -135,7 +135,7 @@
  *     receive that register.
  *
  * This header has no C spelling and cannot be included from a C file, because
- * ActorDerived.h has none either. Nothing includes it from C: the two .c files
+ * dBase_c.h has none either. Nothing includes it from C: the two .c files
  * that used to are part of this slice and are now .cpp.
  */
 struct FaderBrightness;
@@ -145,17 +145,17 @@ struct FaderBrightness;
 extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern "C" void *data_020a0eac;
 
-struct Scene : ActorDerived {
+struct Scene : dBase_c {
     /* Declared first, deliberately -- see KEY FUNCTION above. Overrides slots
        16 (D1) and 17 (D0); the position in this list does not affect that.
        DEFINED INLINE on purpose: subclass destructors inline it, the same
-       way ActorDerived's is inline for Scene's own sake. See the long note
+       way dBase_c's is inline for Scene's own sake. See the long note
        above. */
     virtual ~Scene() {}
 
     /* Scene's own copy of Actor's inline operator delete. mwcc inlines the
        operator only when it finds it in the class itself or its IMMEDIATE
-       base, and Scene's immediate base is ActorDerived, which has none --
+       base, and Scene's immediate base is dBase_c, which has none --
        ActorBase's copy (declared on Actor, not ActorBase) is out of reach
        from this branch of the hierarchy entirely. This copy is also what
        every one of Scene's ten direct subclasses (Stage, BootScene, and the
@@ -199,7 +199,7 @@ struct Scene : ActorDerived {
     static int GraphCallback3();
 };
 
-/* Holds ActorBase, ActorDerived and Scene to the layout the paragraph above
+/* Holds ActorBase, dBase_c and Scene to the layout the paragraph above
    claims. A silently-added member anywhere in the chain fails this. */
 typedef char Scene_size_must_be_0x50[sizeof(Scene) == 0x50 ? 1 : -1];
 

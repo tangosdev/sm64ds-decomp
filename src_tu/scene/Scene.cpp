@@ -85,7 +85,7 @@
  * OS_SleepThread wrapper) and func_02018ec0 (a fader slot-2 dispatch), i.e. a
  * system/graphics grab-bag rather than a scene class; the pointer tables that
  * hold them (0x0208ee14..0x0208ee20) sit ~0x3800 bytes below _ZTV5Scene's .data
- * block, on the far side of _ZTV12ActorDerived, so they fall in a much earlier
+ * block, on the far side of _ZTV7dBase_c, so they fall in a much earlier
  * object's data contribution; and their own address order reverses to
  * GraphCallback0,1,2,3, a natural block, which says they are consecutive
  * definitions in SOME file -- just not this one. A class's members may of course
@@ -125,7 +125,7 @@
  *
  *   B. NAMING, AND NOT FIXABLE BY ATTRIBUTION AT ALL. The object also emits six
  *      STB_LOPROC RTTI records the audit calls HOMELESS: _ZTI/_ZTS for Scene,
- *      ActorDerived, ActorBase, named in no symbols.txt anywhere. The reason is
+ *      dBase_c, ActorBase, named in no symbols.txt anywhere. The reason is
  *      that a _ZTS record's BYTES ARE THE CLASS NAME STRING, and this tree's
  *      names are coinages while the cartridge holds Nintendo's:
  *
@@ -137,7 +137,7 @@
  *      nothing drops them either. THE GENERAL RULE: no key-function TU can
  *      reach whole-range link-verified while its class name is a coinage. The
  *      only fix is renaming to the ROM's own names (Scene -> dScene_c,
- *      ActorDerived -> dBase_c, ActorBase -> fBase_c, per include/Scene.h
+ *      dBase_c -> dBase_c, ActorBase -> fBase_c, per include/Scene.h
  *      reading 4), which is a separate tree-wide change.
  *
  * objisolate drops exactly that material per function, which is why --partial
@@ -154,7 +154,7 @@
  * side effect. That is expected and is inventoried by `tubuild.py compile`, not
  * licensed.
  */
-#include "Stage.h"        /* -> Scene.h -> ActorDerived.h -> ActorBase.h, and the
+#include "Stage.h"        /* -> Scene.h -> dBase_c.h -> ActorBase.h, and the
                              Stage class SetVramBanks below is a member of */
 #include "FaderColor.h"   /* -> FaderBrightness.h -> Fader.h */
 
@@ -459,15 +459,15 @@ bool Scene::BeforeInitResources()
 /* ------------------------------------------------------------------------- */
 /* recovered: real C++ virtual override -- vtable slot 2.
  *
- * A tail call to ActorDerived::AfterInitResources (0x02013ef4), not to
- * ActorBase's. Slot 2 is ActorDerived's only FUNCTIONAL override, so a Scene
- * forwarding here is a strong hint that ActorDerived is a base -- a hint, not a
+ * A tail call to dBase_c::AfterInitResources (0x02013ef4), not to
+ * ActorBase's. Slot 2 is dBase_c's only FUNCTIONAL override, so a Scene
+ * forwarding here is a strong hint that dBase_c is a base -- a hint, not a
  * proof; the RTTI chain and the destructor's vptr sequence are what settle it.
  * See readings 3 and 4 in include/Scene.h.
  */
 void Scene::AfterInitResources(u32 vfSuccess)
 {
-    ActorDerived::AfterInitResources(vfSuccess);
+    dBase_c::AfterInitResources(vfSuccess);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -844,17 +844,17 @@ void Scene::SetAndStopColorFader()
  * The body is not here and must not be moved here. ~Scene() is defined in the
  * class body because Stage::~Stage and every one of Scene's other nine direct
  * children INLINE it -- the ROM's Stage destructor stores Stage's vptr, then
- * Scene's, then ActorDerived's, then calls ActorBase's D2 directly, with no
+ * Scene's, then dBase_c's, then calls ActorBase's D2 directly, with no
  * call to a separate Scene::~Scene(). A compiler can only do that from a
  * visible body. The same relationship one level up is what gives Scene's own
  * destructor its two vptr stores:
  *
  *     str r2, [r4]        ; _ZTV5Scene
- *     str r1, [r4]        ; _ZTV12ActorDerived   <- ActorDerived's D2, INLINED
+ *     str r1, [r4]        ; _ZTV7dBase_c   <- dBase_c's D2, INLINED
  *     bl  ActorBase::~ActorBase
  *
- * That second store exists only because ~ActorDerived() is defined inline in
- * include/ActorDerived.h. Outlining it would emit `bl _ZN12ActorDerivedD2Ev`
+ * That second store exists only because ~dBase_c() is defined inline in
+ * include/dBase_c.h. Outlining it would emit `bl _ZN7dBase_cD2Ev`
  * where the ROM has a store, and Scene would stop matching -- which is the
  * first place to look if the destructor ever comes out one store short. Note
  * that a byte MATCH alone cannot see this, since both vptr stores are relocated
@@ -878,18 +878,18 @@ void Scene::SetAndStopColorFader()
  *
  * ~Scene() is defined INLINE in include/Scene.h and must stay there: Stage and
  * every one of Scene's other nine direct children INLINE it -- the ROM's Stage
- * destructor stores Stage's vptr, then Scene's, then ActorDerived's, then calls
+ * destructor stores Stage's vptr, then Scene's, then dBase_c's, then calls
  * ActorBase's D2 directly, with no call to a separate Scene::~Scene(). A
  * compiler can only do that from a visible body. The same relationship one level
  * up is what gives Scene's own destructor its TWO vptr stores, read here
  * word-by-word off the cartridge at 0x0202e140:
  *
  *     0202e150  e5842000   str r2, [r4]   ; r2 = 0x02092680 = _ZTV5Scene
- *     0202e154  e5841000   str r1, [r4]   ; r1 = 0x0208e4b8 = _ZTV12ActorDerived
+ *     0202e154  e5841000   str r1, [r4]   ; r1 = 0x0208e4b8 = _ZTV7dBase_c
  *     0202e158  eb0056fa   bl  0x02043d48 ; _ZN9ActorBaseD2Ev
  *
- * The second store exists ONLY because ~ActorDerived() is defined inline in
- * include/ActorDerived.h. Outlining it emits `bl _ZN12ActorDerivedD2Ev` where
+ * The second store exists ONLY because ~dBase_c() is defined inline in
+ * include/dBase_c.h. Outlining it emits `bl _ZN7dBase_cD2Ev` where
  * the ROM has a store -- one store where the ROM has two -- and Scene stops
  * matching. If this destructor ever comes out one store short, that header is
  * the first place to look. Note that a byte MATCH alone cannot see this: both

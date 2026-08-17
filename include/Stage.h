@@ -99,7 +99,7 @@ struct SysTracker {
 typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
 }
 
-/* The playable level: ActorBase -> ActorDerived -> Scene -> Stage.
+/* The playable level: ActorBase -> dBase_c -> Scene -> Stage.
  *
  * The generated header this replaces named no base and re-declared the whole of
  * ActorBase inline -- uniqueID at 0x004, actorID at 0x00c, the three list nodes,
@@ -127,13 +127,13 @@ typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1]
  * from ROM data. The destructor is declared first, which is free for a derived
  * class (an override takes its base's slot wherever it is written) and pins the
  * role to ~Stage. tools/objisolate.py makes that TU eligible anyway (see
- * include/ActorDerived.h and include/Scene.h), so ~Stage is now a real method,
+ * include/dBase_c.h and include/Scene.h), so ~Stage is now a real method,
  * defined identically -- `Stage::~Stage() {}` -- in both src/_ZN5StageD1Ev.cpp
  * and src/_ZN5StageD0Ev.cpp. Unlike Scene, Stage does NOT need to define it
  * inline in the class body: Stage is a leaf (no record in the image names
  * dScStage_c as a base, per DERIVATION above), so nothing derives from it that
  * would need to inline ITS destructor in turn. Stage's own destructor inlining
- * Scene's (and Scene inlining ActorDerived's) is what required Scene.h's move;
+ * Scene's (and Scene inlining dBase_c's) is what required Scene.h's move;
  * see the note there.
  *
  * SIZE IS DELIBERATELY NOT ASSERTED, unlike the three headers above this one.
