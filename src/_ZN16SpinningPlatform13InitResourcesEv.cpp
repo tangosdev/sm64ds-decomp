@@ -4,6 +4,9 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SpinningPlatform.h"
+extern "C" void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
+extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
+extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
 struct BMD_File; struct KCL_File; struct Actor; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr;
 /* ModelBase is the real class now, through this actor's header. */
@@ -28,15 +31,15 @@ struct V3 { int x, y, z; };
 
 int SpinningPlatform::InitResources()
 {
-    void *mf = ModelLoadFile(&data_ov035_02112cb0);
+    void *mf = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov035_02112cb0);
     ((ModelBase*)((char *)&mModel))->SetFile((BMD_File*)mf, 1, -1);
     ((ShadowModel*)((char *)&mShadowModel))->InitCuboid();
     func_ov035_021118a8(((char *)this));
     ((Platform*)((char *)this))->UpdateClsnPosAndRot();
-    void *kf = MeshColliderLoadFile(&data_ov035_02112cb8);
+    void *kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov035_02112cb8);
     ((MovingMeshCollider*)((char *)&mMeshCollider))->SetFile((KCL_File*)kf,
         *(Matrix4x3*)((char *)&unk_2ec), 0x1000, mAngleY, data_ov035_02112238);
-    func_020393d4(((char *)this) + 0x124, (void*)&UpdatePosWithTransformSym);
+    func_020393d4(((char *)this) + 0x124, (void*)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020396c0(((char *)this) + 0x124, 0);
     V3 v;
     v.x = mPosX;

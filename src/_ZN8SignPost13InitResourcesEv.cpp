@@ -4,6 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SignPost.h"
+extern "C" void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
+extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 struct BMD_File; struct KCL_File; struct Actor; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr; struct Vector3_16;
 struct ModelBase { void SetFile(BMD_File *f, int b, int c); };
@@ -34,7 +36,7 @@ struct V3 { int x, y, z; };
 
 int SignPost::InitResources()
 {
-    void *mf = ModelLoadFile(&data_ov002_0210e064);
+    void *mf = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210e064);
     ((ModelBase*)((char *)&mModel))->SetFile((BMD_File*)mf, 1, -1);
     ((ShadowModel*)((char *)&mShadowModel))->InitCuboid();
 
@@ -52,7 +54,7 @@ int SignPost::InitResources()
     ((Platform*)((char *)this))->UpdateClsnPosAndRot();
     func_ov002_020baf80(((char *)this));
 
-    void *kf = MeshColliderLoadFile(&data_ov002_0210e05c);
+    void *kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov002_0210e05c);
     ((MovingMeshCollider*)((char *)&mMeshCollider))->SetFile((KCL_File*)kf,
         *(Matrix4x3*)((char *)&unk_2ec), 0x199, mAngleY, data_ov002_0210d714);
 

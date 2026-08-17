@@ -3,8 +3,8 @@
 /* ActorBase::AfterCleanupResources(u32 vfSuccess) at 0x02043b2c
  *
  * Only runs when vfSuccess == VS_SUCCESS (2); otherwise returns immediately.
- *   func_0203b3c0(&gGlobalA, &this->sceneNode);   (this+0x14)
- *   func_0203b27c(&gGlobalB, &this->behavNode);   (this+0x28)
+ *   func_0203b3c0(&data_020a4b6c, &this->sceneNode);   (this+0x14)
+ *   func_0203b27c(&data_020a4ba8, &this->behavNode);   (this+0x28)
  *   if (this->unk4C) Heap::_Destroy(this->unk4C);
  *   if (this->unk48) func_02044334(this->unk48);
  *   this->~ActorBase();                            virtual call at vtable+0x40
@@ -19,14 +19,14 @@ struct SceneNode { char b[0x14]; };
 struct PListNode { char b[0x10]; };
 
 extern "C" {
-  char gGlobalA;                 /* 0x020a4b6c */
-  char gGlobalB;                 /* 0x020a4ba8 */
+  char data_020a4b6c;                 /* 0x020a4b6c */
+  char data_020a4ba8;                 /* 0x020a4ba8 */
   void func_0203b3c0(void*, void*);
   void func_0203b27c(void*, void*);
-  void Heap_Destroy(void*);              /* 0x0203c74c = Heap::_Destroy */
+  void _ZN4Heap8_DestroyEv(void*);              /* 0x0203c74c = Heap::_Destroy */
   void func_02044334(void*);
-  void Memory_Deallocate(void*, struct Heap*); /* 0x0203c1e8 */
-  struct Heap* Memory_gameHeapPtr;             /* 0x020a0eac */
+  void _ZN6Memory10DeallocateEPvP4Heap(void*, struct Heap*); /* 0x0203c1e8 */
+  struct Heap* data_020a0eac;             /* 0x020a0eac */
 }
 
 struct ActorBase {
@@ -55,10 +55,10 @@ struct ActorBase {
 
 void ActorBase::AfterCleanupResources(u32 vfSuccess) {
   if (vfSuccess != 2) return;
-  func_0203b3c0(&gGlobalA, &this->sceneNode);
-  func_0203b27c(&gGlobalB, &this->behavNode);
-  if (this->unk4C) Heap_Destroy(this->unk4C);
+  func_0203b3c0(&data_020a4b6c, &this->sceneNode);
+  func_0203b27c(&data_020a4ba8, &this->behavNode);
+  if (this->unk4C) _ZN4Heap8_DestroyEv(this->unk4C);
   if (this->unk48) func_02044334(this->unk48);
   this->Destructor();   /* ~ActorBase, then free below */
-  Memory_Deallocate(this, Memory_gameHeapPtr);
+  _ZN6Memory10DeallocateEPvP4Heap(this, data_020a0eac);
 }

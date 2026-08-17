@@ -4,6 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Scuttlebug.h"
+extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(void*);
+extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 struct BMD_File; struct BCA_File; struct Actor; struct Vector3_16;
 /* ModelBase is the real class now, through this actor's header. */
 struct ShadowModel { int InitCylinder(); };
@@ -18,9 +20,9 @@ extern "C" int func_ov071_0211f524(char *c);
 int Scuttlebug::InitResources()
 {
     char *s = (char*)((Actor *)this);
-    void *mf = ModelLoadFile(&data_ov071_02122f80);
+    void *mf = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov071_02122f80);
     ((ModelBase*)(s + 0xd4))->SetFile((BMD_File*)mf, 1, -1);
-    AnimLoadFile(&data_ov071_02122f88);
+    _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov071_02122f88);
     if (((ShadowModel*)(s + 0x138))->InitCylinder() == 0)
         return 0;
     ((MovingCylinderClsn*)(s + 0x160))->Init(((Actor *)this), 0x46000, 0x64000, 0x200000, 0x6eff0);

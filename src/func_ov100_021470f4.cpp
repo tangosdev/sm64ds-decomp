@@ -12,8 +12,8 @@
 typedef int Fix12i;
 
 struct PathLift { void BaseBehavior(); };
-extern Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
-extern unsigned char DecIfAbove0_Byte(unsigned char* p);
+extern "C" Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
+extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 /* The fifth parameter is a SIGNED SHORT, not an unsigned int. Declared `unsigned
    int' this mangles _ZN5Sound8PlayLongEjjjRK7Vector3j, which is the symbol that
    correction removed -- and because this file declares the function in C++ and

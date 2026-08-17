@@ -4,6 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PrincessPeach.h"
+extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(void*);
+extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 struct BMD_File; struct Actor; struct Vector3_16;
 /* ModelBase is the real class now, through PrincessPeach.h. */
 struct ShadowModel { int InitCylinder(); };
@@ -14,10 +16,10 @@ extern "C" void func_ov085_02129fdc(char *c);
 int PrincessPeach::InitResources()
 {
     char *s = (char*)((Actor *)this);
-    void *f = ModelLoadFile(&data_ov085_021304f4);
+    void *f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021304f4);
     ((ModelBase*)(s + 0xd4))->SetFile((BMD_File*)f, 1, -1);
     for (int i = 0; i < 7; i++)
-        AnimLoadFile((void*)data_ov085_0212f280[i]);
+        _ZN9Animation8LoadFileER13SharedFilePtr((void*)data_ov085_0212f280[i]);
     if (((ShadowModel*)(s + 0x138))->InitCylinder() == 0)
         return 0;
     ((MovingCylinderClsn*)(s + 0x160))->Init(((Actor *)this), 0x90000, 0xc0000, 0x4800004, 0);
