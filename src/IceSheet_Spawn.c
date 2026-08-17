@@ -8,6 +8,6 @@
 int *IceSheet_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(800);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV8IceSheet; }
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV8IceSheet; }
     return p;
 }

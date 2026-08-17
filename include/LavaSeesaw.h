@@ -2,21 +2,21 @@
 #define LAVASEESAW_H
 
 #include "types.h"
-#include "Platform.h"
+#include "dBgActor_c.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   LavaSeesaw_Spawn  ActorBase::operator new(804 = 0x324), Platform::Platform(), stores _ZTV10LavaSeesaw,
+ *   LavaSeesaw_Spawn  ActorBase::operator new(804 = 0x324), dBgActor_c::dBgActor_c(), stores _ZTV10LavaSeesaw,
  *                 then the members below in this order.
- *   ~LavaSeesaw   the same members destroyed in reverse, then ~Platform.
+ *   ~LavaSeesaw   the same members destroyed in reverse, then ~dBgActor_c.
  *
  * SIZE 0x324 is the factory's own literal, and the last member closes exactly on it.
  *
- * THE VTABLE was diffed slot by slot against _ZTV8Platform. Only the slots declared
+ * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the slots declared
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
  */
-struct LavaSeesaw : Platform {
+struct LavaSeesaw : dBgActor_c {
     u8  pad_320[0x4];
 
     virtual ~LavaSeesaw();            /* slots 16 (D1), 17 (D0) */

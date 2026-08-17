@@ -11,8 +11,8 @@
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* f, int a, int b);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* thiz);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* thiz);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* thiz);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* thiz);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
 extern void func_020393d4(void* p, void* v);
@@ -24,8 +24,8 @@ s32 CageLift::InitResources() {
     struct daObjWc_Obj05_c *self = (struct daObjWc_Obj05_c *)(void *)c;
     void* f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_0211428c);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, f, 1, -1);
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov029_02114284);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         c + 0x124, mc, c + 0x2ec, 0x1000, self->unk_08e, data_ov029_0211306c);

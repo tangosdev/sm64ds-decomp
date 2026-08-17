@@ -10,8 +10,8 @@
 extern u16 DecIfAbove0_Short(u16* p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* v);
 extern int RandomIntInternal(int* seed);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 
 extern u8 data_0209f2c0;
 extern int data_0209e650;
@@ -63,7 +63,7 @@ int func_ov065_0211a1c8(char* c)
 
     func_ov065_0211a114(c);
     func_ov065_02119fe8(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0x300000, -0x200000) != 0)
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0x300000, -0x200000) != 0)
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     return 1;
 }

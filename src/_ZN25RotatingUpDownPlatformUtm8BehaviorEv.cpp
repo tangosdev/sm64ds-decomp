@@ -28,8 +28,8 @@ extern void SubVec3(Vec3 *a, Vec3 *b, Vec3 *c);
 extern void func_ov091_02131340(char *t);
 extern void func_020393a4(int *p, int v);
 extern void func_02039394(int *p, int v);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *thiz, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *thiz);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *thiz, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *thiz);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround *rc);
 }
 
@@ -114,7 +114,7 @@ int RotatingUpDownPlatformUtm::Behavior()
         return 1;
     }
 
-    if (_ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(((char *)this), 0x2000, 0, 0, 0) != 0) {
+    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(((char *)this), 0x2000, 0, 0, 0) != 0) {
         return 1;
     }
 
@@ -195,12 +195,12 @@ int RotatingUpDownPlatformUtm::Behavior()
         func_ov091_02131160(((char *)this));
         func_020393a4((int *)((char *)&mMeshCollider), 0x150000);
         func_02039394((int *)((char *)&mMeshCollider), 0x1000);
-        if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0x150000, 0x1000) != 0) {
-            _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0x150000, 0x1000) != 0) {
+            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
         }
     } else {
-        if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0) != 0) {
-            _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0) != 0) {
+            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
         }
     }
     }

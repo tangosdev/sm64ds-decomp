@@ -6,9 +6,9 @@
 /* recovered: renamed to Class_Method */
 /* daDkk_c::Behavior - recovered from vtable slot identity */
 typedef int Fix12i;
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void* p);
-extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* p, Fix12i a, Fix12i b);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void* p);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* p);
+extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* p, Fix12i a, Fix12i b);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* p);
 
 extern "C" int func_ov025_02111b64(char* thiz)
 {
@@ -23,11 +23,11 @@ extern "C" int func_ov025_02111b64(char* thiz)
     case 6: func_ov025_021119f4(c); break;
     case 7: func_ov025_021119a4(c); break;
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     func_ov091_02133098(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0 ||
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0 ||
         func_ov091_02132dc0(c) != 0) {
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     }
     return 1;
 }

@@ -11,7 +11,7 @@ extern void func_02012694(int a, void* b);
 void func_ov002_020bb374(char* self, void* p){
   _ZN6Player16IncMegaKillCountEv(p);
   func_02012694(0x1d, self+0x74);
-  _ZN8Platform14KillByMegaCharER6Player(self, p);
+  _ZN10dBgActor_c14KillByMegaCharER6Player(self, p);
   *(short*)(self+0x8e)=*(short*)(self+0x94);
 }
 }

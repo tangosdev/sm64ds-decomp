@@ -26,8 +26,8 @@ int DecIfAbove0_Short(u16 *p);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned id, void *pos);
 void *_ZN5Actor13ClosestPlayerEv(void *self);
 int Vec3_HorzDist(void *a, void *b);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 void func_ov098_0213a00c(void *c);
 void func_ov098_0213a0a8(void *c);
 void func_ov098_0213a0e8(void *c);
@@ -198,8 +198,8 @@ extern "C" int func_ov098_0213a36c(char *c)
 
     func_ov098_0213a23c(c);
     if (*(u8 *)(c + 0x33c) <= 1) {
-        if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
-            _ZN8Platform19UpdateClsnPosAndRotEv(c);
+        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
+            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     }
     *(u8 *)(c + 0x33e) = 0;
     return 1;

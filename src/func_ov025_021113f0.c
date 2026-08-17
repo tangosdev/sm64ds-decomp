@@ -7,7 +7,7 @@
 /* daDgr_c::Behavior - recovered from vtable slot identity */
 typedef struct { s32 x, y, z; } Vec3;
 
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *self, s32 a, s32 b);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char *self, s32 a, s32 b);
 extern void func_02012694(s32 a, void *b);
 extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(char *self, Vec3 *pos, s32 fix);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -32,7 +32,7 @@ int func_ov025_021113f0(char *self)
             *(s32 *)(self + 0xac) = 0;
             *(u16 *)(self + 0x324) = 0;
             func_ov025_02111344(self);
-            if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(self, 0, 0)) {
+            if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0, 0)) {
                 func_ov025_021112e0(self);
             }
             return 1;
@@ -139,7 +139,7 @@ int func_ov025_021113f0(char *self)
     }
 
     func_ov025_02111344(self);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(self, 0, 0) || func_ov025_0211123c(self)) {
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0, 0) || func_ov025_0211123c(self)) {
         func_ov025_021112e0(self);
     }
 

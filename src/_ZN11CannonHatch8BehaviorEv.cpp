@@ -6,9 +6,9 @@ struct Vector3 { int x, y, z; };
 
 extern "C" {
 char *_ZN5Actor13ClosestPlayerEv(char *self);
-int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(char *c, int a, int b);
-void _ZN8Platform21UpdateModelPosAndRotYEv(char *c);
-void _ZN8Platform19UpdateClsnPosAndRotEv(char *c);
+int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(char *c, int a, int b);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char *c);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char *c);
 int _ZN16MeshColliderBase9IsEnabledEv(char *c);
 void _ZN16MeshColliderBase7DisableEv(char *c);
 void Matrix4x3_FromRotationY(void *m, int angle);
@@ -27,9 +27,9 @@ extern "C" int _ZN11CannonHatch8BehaviorEv(char *c)
             *(int *)(c + 0x5c) = *(int *)(c + 0x320);
             *(int *)(c + 0x60) = *(int *)(c + 0x324);
             *(int *)(c + 0x64) = *(int *)(c + 0x328);
-            if (_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0)) {
-                _ZN8Platform21UpdateModelPosAndRotYEv(c);
-                _ZN8Platform19UpdateClsnPosAndRotEv(c);
+            if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0)) {
+                _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+                _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
             }
         } else {
             if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124)) {
@@ -65,10 +65,10 @@ extern "C" int _ZN11CannonHatch8BehaviorEv(char *c)
                 a = _ZN5Actor15FindWithActorIDEjPS_(0xe, a);
             }
         }
-        _ZN8Platform21UpdateModelPosAndRotYEv(c);
+        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     }
-    if (_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0)) {
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0)) {
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     }
     return 1;
 }

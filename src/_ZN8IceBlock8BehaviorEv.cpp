@@ -18,7 +18,7 @@ struct VObj {
 };
 
 extern "C" {
-extern void _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
+extern void _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN9ActorBase18MarkForDestructionEv(void* c);
@@ -38,7 +38,7 @@ int IceBlock::Behavior()
     char* p;
     unsigned int id;
 
-    _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char*)this), 0, 0);
+    _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char*)this), 0, 0);
 
     if (unk_354 != 0) {
         mScale = _ZN4cstd4fdivEii(unk_354 << 12, 0x1e000);

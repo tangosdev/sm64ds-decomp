@@ -14,7 +14,7 @@ void func_ov091_021310fc(char* self, void* p){
   if(eq) return;
   _ZN6Player16IncMegaKillCountEv(p);
   func_02012694(0x1e, self+0x74);
-  _ZN8Platform14KillByMegaCharER6Player(self, p);
+  _ZN10dBgActor_c14KillByMegaCharER6Player(self, p);
   *(short*)(self+0x8e)=*(short*)(self+0x94);
 }
 }

@@ -4,8 +4,8 @@
  *
  * ATTRIBUTED BY THE VTABLE. _ZTV9MovingBar (ov015 0x0211458c) carries 0x02111c3c
  * at slot 31 -- config/arm9/overlays/ov015/relocs.txt has
- * `from:0x02114608 kind:load to:0x02111c3c` -- while _ZTV8Platform's word at the
- * same slot (from:0x0210aeb4) relocates to 0x020ee55c, _ZN8Platform4KillEv.
+ * `from:0x02114608 kind:load to:0x02111c3c` -- while _ZTV10dBgActor_c's word at the
+ * same slot (from:0x0210aeb4) relocates to 0x020ee55c, _ZN10dBgActor_c4KillEv.
  * Different addresses in the same slot: this is the class's own override. The
  * file used to carry `recovered name: KnockDownPlank_Kill`, which names a
  * different class; the vtable is what settles it, so the comment is gone.
@@ -14,14 +14,14 @@
  * then the poof at the same point, bank-3 sound 0x41, then the bar destroys
  * itself. The offset is added to the built Vector3 rather than folded into the
  * load, which is the shape src/_ZN16daObjFallBlock_c4KillEv.cpp has and not the
- * one src/_ZN8Platform4KillEv.cpp has.
+ * one src/_ZN10dBgActor_c4KillEv.cpp has.
  *
  * The second Vector3 is copied MEMBERWISE on purpose: Vector3 declares a
  * destructor (types.h), so a whole-object assignment compiles to an ldm/stm
  * pair, four instructions where the ROM has six. Particle::System::NewSimple
  * stays spelled as its mangled name -- its parameters are Fix12<int> BY VALUE
  * and declaring the true types changes how the caller passes them. Both points
- * are argued in full in src/_ZN8Platform4KillEv.cpp. */
+ * are argued in full in src/_ZN10dBgActor_c4KillEv.cpp. */
 #include "MovingBar.h"
 #include "Sound.h"
 

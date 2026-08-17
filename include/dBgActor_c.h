@@ -1,7 +1,7 @@
 /* Seeded from matched-function evidence by tools/gen_header.py, then given its
  * real base and real member types by hand.
  *
- * class Platform: 9 matched functions. The base of a large family -- ArmedRotatingPlatform,
+ * class dBgActor_c: 9 matched functions. The base of a large family -- ArmedRotatingPlatform,
  * PyramidTop, RickshawBs, ShutterBob, ShutterHmc, SlidingIce and others -- whose
  * destructors all inline this one's body, which is why it is declared inline
  * below.
@@ -20,8 +20,8 @@
  *
  * SIZEOF IS 0x320, and it takes more than one derived class to see why.
  * BowserFireSeaArena starts its own Model at 0x324, which alone reads like the
- * class ending there. But FOUR classes derive from Platform DIRECTLY -- one
- * non-Platform vtable store each, so no intermediate -- and each places a
+ * class ending there. But FOUR classes derive from dBgActor_c DIRECTLY -- one
+ * non-dBgActor_c vtable store each, so no intermediate -- and each places a
  * 4-byte-aligned CLASS member at 0x320, impossible if this class occupied
  * 0x320..0x323:
  *
@@ -31,7 +31,7 @@
  *     WallSign        daObjKanban_c      MovingCylinderClsnWithPos  @ 0x320
  *
  * Each is read straight off that class's destructor, which destroys its own
- * member at 0x320 before storing _ZTV8Platform and running the base.
+ * member at 0x320 before storing _ZTV10dBgActor_c and running the base.
  *
  * One layout satisfies all five: data ends 0x31e, sizeof 0x320. The four above
  * align up from 0x31e to 0x320; BowserFireSeaArena puts its OWN three s16 at
@@ -41,8 +41,8 @@
  * the other four.
  *
  * Field NAMES for the unk_ entries are placeholders. */
-#ifndef PLATFORM_H
-#define PLATFORM_H
+#ifndef DBGACTOR_C_H
+#define DBGACTOR_C_H
 #include "types.h"
 
 /* fwd */
@@ -53,7 +53,7 @@ struct player_;
 /* FIRST, AND THE ORDER MATTERS. Matrix4x3 has two guarded spellings that share the
    0x30 bytes -- common.h's flat `s32 m[12]` and math/Matrix.h's `{Matrix3x3 r;
    Vector3 t;}` -- and whichever a translation unit sees first stands (see the note
-   in common.h). Model.h pulls in the second one, so without this line Platform's
+   in common.h). Model.h pulls in the second one, so without this line dBgActor_c's
    TUs would get `.r`/`.t`.
 
    The ROM says it was the flat one here: UpdateClsnPosAndRot copies mModel.mat4x3
@@ -66,7 +66,7 @@ struct player_;
 #include "Model.h"
 #include "MovingMeshCollider.h"
 
-struct Platform : Actor {
+struct dBgActor_c : Actor {
     u8  pad_0d0[0x4];
     /* Named by the class's own destructor calling Model's D1 at +0x0d4 and
        MovingMeshCollider's at +0x124 -- relocations the ROM build checks. */
@@ -85,19 +85,19 @@ struct Platform : Actor {
        comment: three s16 used to sit here, and they are BowserFireSeaArena's. */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    /* INLINE ON PURPOSE. Every Platform subclass's destructor inlines this body
-       rather than calling _ZN8PlatformD1Ev (which does exist, at ov002
+    /* INLINE ON PURPOSE. Every dBgActor_c subclass's destructor inlines this body
+       rather than calling _ZN10dBgActor_cD1Ev (which does exist, at ov002
        0x020ee42c, for the times it is called out of line). An out-of-line
        declaration here would make each subclass emit a `bl` the ROM does not
-       have. Being inline also keeps Platform without a key function, so no
-       translation unit that merely includes this header emits _ZTV8Platform. */
-    virtual ~Platform() {}
+       have. Being inline also keeps dBgActor_c without a key function, so no
+       translation unit that merely includes this header emits _ZTV10dBgActor_c. */
+    virtual ~dBgActor_c() {}
 
     /* SLOT 31, AND THE ONLY NEW VIRTUAL THIS CLASS ADDS. Actor ends at slot 30,
        so this one word is the whole difference between the vtable this header
        emitted and the one in the cartridge.
 
-       _ZTV8Platform is 0x84 at ov002:0x0210ae38 -- 33 words, one more than the
+       _ZTV10dBgActor_c is 0x84 at ov002:0x0210ae38 -- 33 words, one more than the
        32 an Actor-shaped table needs -- and _ZTV8PoleLift, one of the 70
        subclasses, is 0x84 as well. rtti_vtables agrees from the other side:
        dBgActor_c's parent dActor_c has 31 slots and dBgActor_c's own overrides
@@ -109,7 +109,7 @@ struct Platform : Actor {
        Kill is not an override: no ancestor declares it, so `virtual` here
        CREATES the slot. It also makes Kill this class's key function -- the
        destructor above is inline on purpose -- so the TU defining it emits
-       _ZTV8Platform, _ZTI8Platform and the destructor variants alongside. That
+       _ZTV10dBgActor_c, _ZTI10dBgActor_c and the destructor variants alongside. That
        is expected and handled: objisolate.py reduces the object to the one
        function its delink entry declares before eligible.py and rombuild.py
        judge it. */
@@ -129,20 +129,20 @@ struct Platform : Actor {
        IsClsnInRange* symbols, whose names make the same Fix12<int> claim and
        whose bytes REFUSE it -- see the note in include/Actor.h about CW homing
        class-typed by-value parameters to the stack, and the header comment in
-       src_tu/actors/Platform.cpp.
+       src_tu/actors/dBgActor_c.cpp.
 
        Non-virtual, so this declaration adds no slot and no field; the 0x320
        assertion below is unaffected. */
     int UpdateKillByMegaChar(s16 a, s16 b, s16 c, Fix12<int> d);
 };
 
-typedef char Platform_size_must_be_0x320[sizeof(Platform) == 0x320 ? 1 : -1];
+typedef char dBgActor_c_size_must_be_0x320[sizeof(dBgActor_c) == 0x320 ? 1 : -1];
 
 #else
 
 /* The same object for a C translation unit, which has no base class to inherit
    Actor's fields from and so spells the whole layout flat. */
-struct Platform {
+struct dBgActor_c {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */

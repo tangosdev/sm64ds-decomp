@@ -1,6 +1,6 @@
 //cpp
 extern "C" void *_ZN9ActorBasenwEj(unsigned int sz);
-extern "C" void _ZN8PlatformC2Ev(void *thiz);
+extern "C" void _ZN10dBgActor_cC2Ev(void *thiz);
 extern "C" void _ZN25MovingCylinderClsnWithPosC1Ev(void *thiz);
 extern "C" void _ZN14BlendModelAnimC1Ev(void *thiz);
 extern "C" void _ZN5ModelC1Ev(void *thiz);
@@ -16,7 +16,7 @@ extern "C" void *Eyerok_Spawn(void)
 {
     unsigned char *c = (unsigned char *)_ZN9ActorBasenwEj(0x874);
     if (c) {
-        _ZN8PlatformC2Ev(c);
+        _ZN10dBgActor_cC2Ev(c);
         *(void **)c = _ZTV6Eyerok;
         _ZN25MovingCylinderClsnWithPosC1Ev(c + 0x320);
         _ZN14BlendModelAnimC1Ev(c + 0x360);

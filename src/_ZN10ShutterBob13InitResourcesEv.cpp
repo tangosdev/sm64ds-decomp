@@ -3,13 +3,13 @@
 /* recovered: named members + shared header, real C++ method
  *
  * The collider used to be reached through a `u8 mMovingMeshCollider` marker this
- * class declared itself. It is Platform's, twice removed, and Platform calls it
+ * class declared itself. It is dBgActor_c's, twice removed, and dBgActor_c calls it
  * mMeshCollider; the byte at that offset has not moved.
  *
  * THE TWO LOCAL SHADOW CLASSES ARE GONE, and they had to go rather than be
  * renamed. This file used to carry `class Actor {};` and
  * `class MeshColliderBase { void Enable(Actor *); };`. ShutterBob.h now reaches
- * the real Actor and the real MeshColliderBase through Platform, and a second
+ * the real Actor and the real MeshColliderBase through dBgActor_c, and a second
  * definition of either name in the same translation unit makes mwccarm 2004/b56
  * die with an internal compiler error rather than a diagnostic. Renaming them
  * compiles and byte-matches and is still wrong: the call mangles to

@@ -11,7 +11,7 @@ struct BMD_File; struct KCL_File; struct Actor; struct Vector3; struct Matrix4x3
 struct CLPS_Block; struct SharedFilePtr;
 /* ModelBase is the real class now, through this actor's header. */
 struct ShadowModel { void InitCuboid(); };
-struct Platform { void UpdateClsnPosAndRot(); };
+struct dBgActor_c { void UpdateClsnPosAndRot(); };
 /* Declared by final name, not as a member: the ROM's SetFile takes Fix12<int> where
    this call passes 0x1000, and Fix12<int> is an aggregate with no converting
    constructor from int. Declared `int fix` it mangles ...RK9Matrix4x3isR10CLPS_Block,
@@ -38,7 +38,7 @@ int SpinningPlatform::InitResources()
     ((ModelBase*)((char *)&mModel))->SetFile((BMD_File*)mf, 1, -1);
     ((ShadowModel*)((char *)&mShadowModel))->InitCuboid();
     func_ov035_021118a8(((char *)this));
-    ((Platform*)((char *)this))->UpdateClsnPosAndRot();
+    ((dBgActor_c*)((char *)this))->UpdateClsnPosAndRot();
     void *kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov035_02112cb8);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         (char *)&mMeshCollider, (KCL_File*)kf,

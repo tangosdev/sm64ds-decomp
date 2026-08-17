@@ -7,7 +7,7 @@ src/_ZN14ArrowSignRight13InitResourcesEv.cpp
 src/_ZN14ArrowSignRight16CleanupResourcesEv.cpp
 src/_ZN14ArrowSignRight8BehaviorEv.cpp
 src/_ZN14ArrowSignRight6RenderEv.cpp
-src/_ZN8PlatformC2Ev.c
+src/_ZN10dBgActor_cC2Ev.c
 src/_ZN5ActorC2Ev.cpp
 # ActorBase C1 is hand-asm; the HAL carries the transcription
 src/_ZN9ActorBase9SceneNodeC1Ev.c
@@ -20,9 +20,9 @@ src/_ZN16MeshColliderBase7DisableEv.cpp
 src/_ZN16MeshColliderBase9IsEnabledEv.cpp
 src/_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block.c
 src/_ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_.cpp
-src/_ZN8Platform19UpdateClsnPosAndRotEv.cpp
-src/_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp
-src/_ZN8Platform21UpdateModelPosAndRotYEv.cpp
+src/_ZN10dBgActor_c19UpdateClsnPosAndRotEv.cpp
+src/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp
+src/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp
 src/_ZN9ModelBase7SetFileEP8BMD_Fileii.cpp
 src/func_02039394.c
 src/func_020393a4.c

@@ -8,6 +8,6 @@
 int *ArrowLift_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(808);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV9ArrowLift; }
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV9ArrowLift; }
     return p;
 }

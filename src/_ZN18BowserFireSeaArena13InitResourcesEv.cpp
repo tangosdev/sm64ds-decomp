@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method
  *
  * The three `((char*)this)+0xNNN` offsets are named members now: 0x324 is mModel2,
- * 0x374 is mMovingMeshCollider2, and 0x2ec is mClsnMat -- inherited from Platform,
+ * 0x374 is mMovingMeshCollider2, and 0x2ec is mClsnMat -- inherited from dBgActor_c,
  * which is also where the collider's transform comes from. unk_08e is Actor::mAngleY.
  */
 #include "BowserFireSeaArena.h"

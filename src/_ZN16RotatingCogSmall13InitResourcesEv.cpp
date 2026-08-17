@@ -8,8 +8,8 @@
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *m, void *f, int a, int b);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *sfp);
 }
 extern "C" {
@@ -35,8 +35,8 @@ int RotatingCogSmall::InitResources()
     if (b != 0) {
         _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel,
             _ZN5Model8LoadFileER13SharedFilePtr(data_ov035_02112c78), 1, -1);
-        _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider,
             _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov035_02112c68),
@@ -53,7 +53,7 @@ int RotatingCogSmall::InitResources()
             _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel,
                 _ZN5Model8LoadFileER13SharedFilePtr(data_ov035_02112c60), 1, -1);
         }
-        _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
+        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
         mRotationState = 1;
     }
 

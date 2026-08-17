@@ -11,8 +11,8 @@ struct MovingMeshCollider { int d; };
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern "C" KCL_File* _ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     MovingMeshCollider*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
@@ -31,8 +31,8 @@ int ArrowLift::InitResources()
         BMD_File* bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_02114250);
         _ZN9ModelBase7SetFileEP8BMD_Fileii((ModelBase*)(c + 0xd4), bmd, 1, -1);
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     {
         KCL_File* kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov029_02114248);
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(

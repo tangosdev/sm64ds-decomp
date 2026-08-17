@@ -5,9 +5,9 @@
 
 /* The Thwomp. ROM name daDsn_c, from dossun.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daDsnBase_c, which derives
- * from Platform, and the difference is in the bytes rather than only in the RTTI:
- * its destructor stores THREE vptrs -- its own, daDsnBase_c's, then Platform's --
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daDsnBase_c, which derives
+ * from dBgActor_c, and the difference is in the bytes rather than only in the RTTI:
+ * its destructor stores THREE vptrs -- its own, daDsnBase_c's, then dBgActor_c's --
  * and destroys daDsnBase_c's ShadowModel at 0x338 and TextureSequence at 0x324
  * between the second and the third. A one-level chain emits two vptr stores and
  * neither member call.
@@ -41,8 +41,8 @@
  *
  * WHAT THIS HEADER USED TO SAY, AND WHY MOST OF IT WAS THE BASE'S. The generated
  * body had nine fields over `u8 pad_000[0xd4]`. `Model mModel` at 0xd4 and a
- * `u8 mMovingMeshCollider` marker at 0x124 are Platform's, twice removed --
- * Platform calls the second one mMeshCollider. `s32 mFileTable` at 0x320,
+ * `u8 mMovingMeshCollider` marker at 0x124 are dBgActor_c's, twice removed --
+ * dBgActor_c calls the second one mMeshCollider. `s32 mFileTable` at 0x320,
  * `u8 mTextureSequence` at 0x324 and `u8 mShadowModel` at 0x338 are
  * daDsnBase_c's, and the last two are whole sub-objects rather than marker bytes:
  * both factories construct them and both destructors destroy them.

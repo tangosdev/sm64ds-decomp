@@ -4,7 +4,7 @@
 /* daObjKurumajiku_c::Behavior -- vtable slot 6, ov002 0x020b6b38.
  *
  * Named from the table: 0x020b6b38 is the word slot 6 of
- * _ZTV17daObjKurumajiku_c holds where _ZTV8Platform holds something else, so
+ * _ZTV17daObjKurumajiku_c holds where _ZTV10dBgActor_c holds something else, so
  * it is this class's own override of the virtual ActorBase declares.
  * include/daObjKurumajiku_c.h's banner already described this function -- it
  * is where mMountedActorIds was named from -- so only the definition was
@@ -32,7 +32,7 @@ int  func_ov002_020b6a80(daObjKurumajiku_c *self);
 
 /* Carries Fix12<int> by value, so its definition stays a mangled free
    function -- see include/ShadowModel.h. A call is unaffected. */
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(Platform *self, int x, int z);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(dBgActor_c *self, int x, int z);
 }
 
 s32 daObjKurumajiku_c::Behavior()
@@ -65,7 +65,7 @@ s32 daObjKurumajiku_c::Behavior()
         }
     }
     func_ov002_020b6a80(this);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
         UpdateClsnPosAndRot();
     return 1;
 }

@@ -2,9 +2,9 @@
 #define DAOBJKURUMA_C_H
 
 #include "types.h"
-#include "Platform.h"
+#include "dBgActor_c.h"
 
-/* The rickshaw's own platform: an abstract Platform that adds behaviour and no
+/* The rickshaw's own platform: an abstract dBgActor_c that adds behaviour and no
  * state. `kuruma` is the cart.
  *
  * A LAYER THE TREE DID NOT HAVE. The ROM's RTTI names this class and points it
@@ -14,30 +14,30 @@
  *   _ZTS13daObjKuruma_c  ov002 0x02109260   "13daObjKuruma_c"
  *   vtable               ov002 0x02109278, 32 slots, same count as the base
  *   kind                 __si_class_type_info, ONE base, subobject offset 0
- *   base                 dBgActor_c, ov002 0x021089ec -- the tree's Platform
+ *   base                 dBgActor_c, ov002 0x021089ec -- the tree's dBgActor_c
  *
  * ABSTRACT. Slots 0 and 3 -- InitResources and CleanupResources -- are null.
  * Its own overrides are slots 6 (Behavior), 9 (Render), 16 (D1) and 17 (D0).
  *
  * TWO DESCENDANTS: RickshawPlatformBdw (daObjKm1_Kuruma_c) and the unnamed ov047
  * sibling daObjKm3_Kuruma_c. Both destructors store this class's vtable between
- * their own and _ZTV8Platform, which is the same fact the RTTI records.
+ * their own and _ZTV10dBgActor_c, which is the same fact the RTTI records.
  *
  * NO FIELDS OF ITS OWN, and that is measured rather than assumed. Its own
  * Behavior (0x020b6920) and Render (`func_ov002_020b68f8`) reach
- * nothing above Platform -- Behavior is UpdateModelPosAndRotY plus the guarded
+ * nothing above dBgActor_c -- Behavior is UpdateModelPosAndRotY plus the guarded
  * UpdateClsnPosAndRot, Render dispatches through the Model at 0xd4. Its own
- * destructor destroys only Platform's two members. And both factories,
+ * destructor destroys only dBgActor_c's two members. And both factories,
  * RickshawPlatformBdw_Spawn and RickshawPlatformBs_Spawn, pass 800 = 0x320 to
- * ActorBase::operator new, which is sizeof(Platform) exactly: there is no room
+ * ActorBase::operator new, which is sizeof(dBgActor_c) exactly: there is no room
  * for a field anywhere in this class or in either leaf.
  */
 
 #ifdef __cplusplus
 
-struct daObjKuruma_c : Platform {
+struct daObjKuruma_c : dBgActor_c {
     /* --- vtable --- */
-    /* INLINE ON PURPOSE -- see include/Platform.h. The out-of-line copy is at
+    /* INLINE ON PURPOSE -- see include/dBgActor_c.h. The out-of-line copy is at
        ov002 0x020b686c, still under its func_ov002_ name. */
     virtual ~daObjKuruma_c() {}
 
@@ -60,7 +60,7 @@ struct daObjKuruma_c : Platform {
        stop being compiled at all. Render's definition (func_ov002_020b68f8) is not
        migrated yet, so naming it here parks the key function on a TU that does not
        exist and no file emits the vtable -- which is the tree's state today, and
-       the same mechanism include/Platform.h's own destructor comment relies on.
+       the same mechanism include/dBgActor_c.h's own destructor comment relies on.
        Measured: with Behavior first the object came out with eleven .data sections
        and five .text; with Render first, one .text of 0x38. Whoever migrates
        Render will have to place the vtable deliberately. */

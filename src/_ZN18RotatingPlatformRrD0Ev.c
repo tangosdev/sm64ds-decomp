@@ -6,14 +6,14 @@
 #include "decl_common.h"
 extern int _ZTV18RotatingPlatformRr[];
 extern int _ZTV16daObjKaitendai_c[];
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 /* recovered: vtable identified, renamed to Class_Method */
 extern void *data_020a0eac;
 int *_ZN18RotatingPlatformRrD0Ev(int *t)
 {
     t[0] = (int)_ZTV18RotatingPlatformRr;
     t[0] = (int)_ZTV16daObjKaitendai_c;
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);

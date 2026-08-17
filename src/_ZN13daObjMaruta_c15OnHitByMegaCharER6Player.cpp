@@ -18,7 +18,7 @@
  * bytes -- the same reading src/_ZN12dScMgSlot1_c15OnHitByMegaCharER6Player.cpp
  * records for its own slot 27.
  *
- * Platform::KillByMegaChar is declared non-virtual in include/Platform.h, so
+ * dBgActor_c::KillByMegaChar is declared non-virtual in include/dBgActor_c.h, so
  * the unqualified call is already the direct `bl` the ROM has. */
 
 extern "C" void func_02012694(int a, void *b);

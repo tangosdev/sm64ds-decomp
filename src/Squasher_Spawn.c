@@ -10,7 +10,7 @@ int *Squasher_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(892);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV8Squasher;
         _ZN11ShadowModelC1Ev((char *)p + 0x324);
     }

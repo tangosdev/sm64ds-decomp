@@ -6,7 +6,7 @@
 #include "decl_common.h"
 extern int _ZTV21FloatingFloorLllSmall[];
 extern int _ZTV14daObjUkiyuka_c[];
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV21FloatingFloorLllSmall; VT1 = _ZTV14daObjUkiyuka_c */
 extern void *data_020a0eac;
@@ -14,7 +14,7 @@ int *_ZN21FloatingFloorLllSmallD0Ev(int *t)
 {
     t[0] = (int)_ZTV21FloatingFloorLllSmall;
     t[0] = (int)_ZTV14daObjUkiyuka_c;
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);

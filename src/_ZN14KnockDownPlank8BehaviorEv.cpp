@@ -6,8 +6,8 @@ extern short data_02082214[];
 extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *self, struct Vector3 *v, int f);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, struct Vector3 *v);
 extern void func_ov015_0211166c(char *t);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern int func_ov015_021114f0(char *c);
 
 int _ZN14KnockDownPlank8BehaviorEv(char *c)
@@ -81,8 +81,8 @@ int _ZN14KnockDownPlank8BehaviorEv(char *c)
     }
 
     func_ov015_0211166c(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     func_ov015_021114f0(c);
     return 1;
 }

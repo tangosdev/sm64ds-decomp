@@ -10,7 +10,7 @@ int *ArrowPathLift_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(856);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV22RotatingUpDownPlatform;
         _ZN7PathPtrC1Ev((char *)p + 0x344);
     }

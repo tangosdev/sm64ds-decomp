@@ -18,7 +18,7 @@ extern void MulVec3Mat4x3(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
 extern void func_ov091_02131340(void *c);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern void func_020393d4(void *p, void *v);
@@ -101,7 +101,7 @@ int RotatingUpDownPlatformUtm::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, bmd, 1, -1);
 
     func_ov091_02131340(((char *)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
 
     idx395 = (unsigned char)((char *)this)[0x395];
     kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void**)((char*)data_ov091_02134c34 + idx395 * 0xc));

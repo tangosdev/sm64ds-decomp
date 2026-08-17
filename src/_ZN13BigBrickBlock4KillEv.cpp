@@ -3,9 +3,9 @@
 /* BigBrickBlock::Kill() at ov002 0x020b38a0, 0x210 bytes -- vtable slot 31.
  *
  * ATTRIBUTED BY THE VTABLE. _ZTV13BigBrickBlock (ov002 0x02108adc) carries
- * 0x020b38a0 at slot 31 -- vtable + 0x7c -- while _ZTV8Platform carries
- * _ZN8Platform4KillEv at the same slot and both tables carry Actor's 0x020100dc
- * at slot 30. So this is this class's own override of the one virtual Platform
+ * 0x020b38a0 at slot 31 -- vtable + 0x7c -- while _ZTV10dBgActor_c carries
+ * _ZN10dBgActor_c4KillEv at the same slot and both tables carry Actor's 0x020100dc
+ * at slot 30. So this is this class's own override of the one virtual dBgActor_c
  * adds. The file's old `// recovered name: BigBrickBlock_Kill` comment happened
  * to land on the right class; _ZTI13daObjBlockL_c, the RTTI record it was
  * derived from, is the same class under its Japanese name.
@@ -13,7 +13,7 @@
  * ONE CLASS, FIVE ACTOR IDS, which is why this function is a switchboard rather
  * than five overrides: BrickBlock, BigBrickBlock, BrickBlockSwitchActivated,
  * BlackBrickBlock and FortressTowerWall all allocate 816 bytes, run
- * Platform::Platform and store _ZTV13BigBrickBlock. See include/BigBrickBlock.h.
+ * dBgActor_c::dBgActor_c and store _ZTV13BigBrickBlock. See include/BigBrickBlock.h.
  *
  *   0x11  the block that holds a star. If mStarID is set it releases the star:
  *         through Actor::UntrackAndSpawnStar when param1's second byte is 0xff
@@ -44,7 +44,7 @@
  * Particle::System::NewSimple and Actor::SpawnCoins stay spelled as their
  * mangled names -- both take Fix12<int> BY VALUE and declaring the true types
  * changes how the caller passes them. include/Actor.h says the same thing at the
- * bottom of the class, src/_ZN8Platform4KillEv.cpp argues it in full, and
+ * bottom of the class, src/_ZN10dBgActor_c4KillEv.cpp argues it in full, and
  * notes/mwccarm-codegen.md 6az is the rule. */
 #include "BigBrickBlock.h"
 #include "Sound.h"

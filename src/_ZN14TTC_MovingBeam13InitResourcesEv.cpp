@@ -23,8 +23,8 @@ struct RaycastGround {
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
 extern "C" int _ZN11ShadowModel10InitCuboidEv(void *self);
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern "C" KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, KCL_File *f, const Matrix4x3 &m, int fx, s16 s, CLPS_Block &b);
 
@@ -41,8 +41,8 @@ extern "C" int _ZN14TTC_MovingBeam13InitResourcesEv(char *c)
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov065_0211d9d4);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, bmd, 1, -1);
     _ZN11ShadowModel10InitCuboidEv(c + 0x334);
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov065_0211d9cc);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         c + 0x124, kcl, *(Matrix4x3 *)(c + 0x2ec), 0x1000, *(s16 *)(c + 0x8e), func_02112118);

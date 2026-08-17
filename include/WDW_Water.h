@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -15,10 +15,10 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "TextureTransformer.h"
 
-struct WDW_Water : Platform {
+struct WDW_Water : dBgActor_c {
     u8  pad_31e[0x2];
     TextureTransformer mTextureTransformer;/* 0x320 */
     s32 mTargetPosY;                  /* 0x334 */

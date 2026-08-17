@@ -4,7 +4,7 @@ extern "C" void LoadSilverStarAndNumber(void);
 extern "C" int _ZN5Model8LoadFileER13SharedFilePtr(int p);
 extern "C" void _ZN5Event8ClearBitEj(unsigned int b);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, int f, int a, int b);
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 extern "C" void func_ov002_020b9f80(char *self);
 extern "C" int _ZN12MeshCollider8LoadFileER13SharedFilePtr(int p);
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
@@ -53,7 +53,7 @@ extern "C" int _ZN10StarSwitch13InitResourcesEv(char *c) {
     idx = *(u8*)(c + 0x34c);
     f = _ZN5Model8LoadFileER13SharedFilePtr(*(int*)(data_ov002_021098e8 + idx * 0xc));
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, f, 1, -1);
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     func_ov002_020b9f80(c);
 
     idx = *(u8*)(c + 0x34c);

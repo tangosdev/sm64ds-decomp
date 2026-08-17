@@ -10,7 +10,6 @@
 extern "C" {
 extern void __destroy_arr(void* arr, int count, int size, void(*dtor)(void*));
 extern void* data_ov002_0210af70[];
-extern void* _ZTV8Platform[];
 extern void* data_020a0eac;
 
 
@@ -19,7 +18,7 @@ void* func_ov100_02146dec(char* p){
   _ZN11ShadowModelD1Ev(p+0x450);
   *(void***)p = (void**)data_ov002_0210af70;
   __destroy_arr(p+0x320, 3, 0x50, _ZN5ModelD1Ev);
-  *(void***)p = (void**)_ZTV8Platform;
+  *(void***)p = (void**)_ZTV10dBgActor_c;
   _ZN18MovingMeshColliderD1Ev(p+0x124);
   _ZN5ModelD1Ev(p+0xd4);
   _ZN5ActorD2Ev(p);

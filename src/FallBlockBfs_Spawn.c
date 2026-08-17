@@ -11,7 +11,7 @@ int *FallBlockBfs_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(844);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV16daObjFallBlock_c;
         p[0] = (int)_ZTV12FallBlockBfs;
     }

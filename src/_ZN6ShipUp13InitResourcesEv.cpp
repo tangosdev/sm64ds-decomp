@@ -8,7 +8,7 @@
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 extern void func_020393d4(int* p, int v);
@@ -32,7 +32,7 @@ int ShipUp::InitResources()
     f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov016_021136e4[idx]);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, f, 1, -1);
     func_ov016_021126a8(((char*)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     idx = mModelIndex;
     f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov016_021136dc[idx]);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, f, ((char*)this)+0x2ec, 0x1000, unk_08e, sp8[idx]);

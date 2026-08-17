@@ -10,7 +10,7 @@ int *ArrowSignLeft_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(896);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV14ArrowSignRight;
         _ZN11ShadowModelC1Ev((char *)p + 0x320);
     }

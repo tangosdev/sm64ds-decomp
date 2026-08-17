@@ -10,7 +10,7 @@ extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
 extern void func_020393a4(int* p, int v);
 extern void func_02039394(int* p, int v);
 extern void _ZN9Animation7AdvanceEv(void* a);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 }
 extern int data_0209caa0[];
 extern unsigned char data_0209f2d8;
@@ -53,12 +53,12 @@ int QuestionBlock::Behavior()
         }
     }
     if (data_0209f2f8 == 0x1c) {
-        if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0x460000, 0x46000) != 0) {
+        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0x460000, 0x46000) != 0) {
             func_ov102_02149e38(((char*)this));
         }
         goto end;
     }
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0x118000, 0x46000) != 0) {
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0x118000, 0x46000) != 0) {
         func_ov102_02149e38(((char*)this));
     }
 end:

@@ -12,7 +12,7 @@ extern void _ZN6Player16IncMegaKillCountEv(void*);
 void func_ov079_02126ecc(char *c, void *p){
     struct daObjBkKillerdai_c *self = (struct daObjBkKillerdai_c *)(void *)c;
   _ZN6Player16IncMegaKillCountEv(p);
-  _ZN8Platform14KillByMegaCharER6Player(c, p);
+  _ZN10dBgActor_c14KillByMegaCharER6Player(c, p);
   self->unk_08e = self->unk_094;
 }
 }

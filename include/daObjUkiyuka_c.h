@@ -8,8 +8,8 @@
  *
  * A LAYER THE TREE DID NOT HAVE. This header used to be a flat struct under
  * `u8 pad_000[0x320]`, emitted by `tools/rtti_vtables.py --emit-headers` because
- * that pass knew offsets and not sizeof(base). include/Platform.h has since
- * settled sizeof(Platform) = 0x320, so the class can be spelled as what it is. The
+ * that pass knew offsets and not sizeof(base). include/dBgActor_c.h has since
+ * settled sizeof(dBgActor_c) = 0x320, so the class can be spelled as what it is. The
  * regenerate line is gone with the generated body: that tool deletes only files
  * that still carry it, and this one is hand-written now.
  *
@@ -17,7 +17,7 @@
  *   _ZTS14daObjUkiyuka_c  ov002 0x02109110   "14daObjUkiyuka_c"
  *   vtable                ov002 0x0210912c, 32 slots, same count as the base
  *   kind                  __si_class_type_info, ONE base, subobject offset 0
- *   base                  dBgActor_c, ov002 0x021089ec -- the tree's Platform
+ *   base                  dBgActor_c, ov002 0x021089ec -- the tree's dBgActor_c
  *
  * ABSTRACT. Slots 0 and 3 -- InitResources and CleanupResources -- are null. Its
  * own overrides are slots 6 (Behavior), 9 (Render), 16 (D1) and 17 (D0).
@@ -48,9 +48,9 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 
-struct daObjUkiyuka_c : Platform {
+struct daObjUkiyuka_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
     s32 mRestY;             /* 0x320 */
     s32 mBobAmplitude;      /* 0x324 */
@@ -58,7 +58,7 @@ struct daObjUkiyuka_c : Platform {
     u16 mRestTimer;         /* 0x32a */
 
     /* --- vtable --- */
-    /* INLINE ON PURPOSE, for the reason include/Platform.h gives for its own:
+    /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
        every descendant's destructor inlines this body rather than calling
        _ZN14daObjUkiyuka_cD1Ev (which does exist out of line, at ov002
        0x020b63e0, still under its func_ov002_ name). An out-of-line declaration
@@ -67,7 +67,7 @@ struct daObjUkiyuka_c : Platform {
 
     /* Slot 6, this class's own override, defined out of line in
        src/_ZN14daObjUkiyuka_c8BehaviorEv.cpp. LAYOUT-NEUTRAL: it re-uses the
-       slot Platform already holds rather than appending one, and adds no
+       slot dBgActor_c already holds rather than appending one, and adds no
        field, so the 0x32c assert below is untouched.
 
        Because the destructor above is inline this class has no key function,
@@ -86,8 +86,8 @@ typedef char daObjUkiyuka_c_size_must_be_0x32c[sizeof(daObjUkiyuka_c) == 0x32c ?
 #else
 
 /* The same object for a C translation unit, which has no base sub-object to
-   inherit Platform's fields from and so spells the layout flat. Same arrangement
-   as include/Platform.h. */
+   inherit dBgActor_c's fields from and so spells the layout flat. Same arrangement
+   as include/dBgActor_c.h. */
 struct daObjUkiyuka_c {
     u8  pad_000[0x320];
     s32 mRestY;             /* 0x320 */

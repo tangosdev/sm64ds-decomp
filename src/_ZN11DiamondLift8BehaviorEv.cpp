@@ -9,9 +9,9 @@
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *);
 s32 DiamondLift::Behavior() {
     char * c = (char *)this;
     struct daObjKm1_Ukishima_c *self = (struct daObjKm1_Ukishima_c *)(void *)c;
@@ -20,9 +20,9 @@ s32 DiamondLift::Behavior() {
         *(short *)(((int)c + 0x94)) = *(short *)(((int)c + 0x94)) + 0x4000;
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     return 1;
 }
 }

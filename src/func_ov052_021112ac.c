@@ -8,9 +8,9 @@
    inferred stub. */
 typedef int Fix12;
 extern void func_020393a4(int *p, int v);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, Fix12 a, int b);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, Fix12 a, int b);
 extern short data_02082214[];
 int func_ov052_021112ac(char *c)
 {
@@ -23,8 +23,8 @@ int func_ov052_021112ac(char *c)
     self->unk_060 = self->unk_320 + m;
     short *q = (short*)(((int)c + 0x31e));
     *q = (short)(*q + 0x200);
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
-    _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0x600000, 0);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0x600000, 0);
     return 1;
 }

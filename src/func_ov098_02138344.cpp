@@ -55,7 +55,7 @@ void _ZN12CylinderClsn5ClearEv(void* p);
 void _ZN12CylinderClsn6UpdateEv(void* p);
 void func_ov098_02139850(char* c);
 void func_ov098_021396a4(char* c);
-int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void* p, int a, int b);
+int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void* p, int a, int b);
 void func_ov098_021397c8(char* c);
 }
 
@@ -84,7 +84,7 @@ extern "C" void func_ov098_02138344(char* c) {
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320) == 0) {
         func_ov098_021396a4(c);
     }
-    if (_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0) != 0) {
+    if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0) != 0) {
         func_ov098_021397c8(c);
     }
 }

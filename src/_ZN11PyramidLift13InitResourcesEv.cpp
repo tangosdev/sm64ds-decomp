@@ -20,7 +20,7 @@ extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResult
 extern "C" {
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 extern KCL_File* _ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, KCL_File* k, Matrix4x3* m, Fix12 f, short s, CLPS_Block* b);
 extern void func_020393d4(void* p, void* v);
@@ -35,7 +35,7 @@ int PyramidLift::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, bmd, 1, -1);
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9f0);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0x320, bmd, 1, -1);
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov025_02113ad8);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this)+0x124, kcl, (Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, &data_ov025_02112d08);

@@ -11,7 +11,7 @@
  * on an undefined symbol while the bytes matched perfectly. The alias is now in
  * ov002's symbols.txt -- see the note there.
  *
- * The destructor stays OUT-OF-LINE, unlike Platform's: the 51 classes derived
+ * The destructor stays OUT-OF-LINE, unlike dBgActor_c's: the 51 classes derived
  * from dEnemyBase_c call _ZN12dEnemyBase_cD2Ev rather than inlining its vptr store, so a
  * visible body would make each of them emit code the ROM does not have.
  */

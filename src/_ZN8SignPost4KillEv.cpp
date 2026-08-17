@@ -4,15 +4,15 @@
  *
  * ATTRIBUTED BY THE VTABLE. _ZTV8SignPost (ov002 0x02109af8, and the same
  * address as _ZTV15daObjTatefuda_c) carries 0x020bb3b8 at vtable + 0x7c, which
- * is slot 31, while _ZTV8Platform carries _ZN8Platform4KillEv at the same slot
+ * is slot 31, while _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv at the same slot
  * and both tables carry Actor's 0x020100dc at slot 30. So this is this class's
- * own override of the one virtual Platform adds. Read out of
+ * own override of the one virtual dBgActor_c adds. Read out of
  * config/arm9/overlays/ov002/relocs.txt.
  *
  * The signpost does not destroy itself. It plays its particle 0x28000 -- forty
  * 20.12 units -- above where it stands, poofs, plays the break sound and then
  * tails into func_ov002_020bae9c, this class's own still-unnamed reset routine.
- * That is why there is no MarkForDestruction here, unlike Platform::Kill.
+ * That is why there is no MarkForDestruction here, unlike dBgActor_c::Kill.
  *
  * The trailing call's return value is dropped: the ROM does `bl`, then the
  * epilogue and `bx lr` with nothing written to r0 in between, which is what a
@@ -23,7 +23,7 @@
  * instructions where the ROM has six. Particle::System::NewSimple stays spelled
  * as its mangled name -- its parameters are Fix12<int> BY VALUE and declaring
  * the true types changes how the caller passes them. Both points are argued in
- * full in src/_ZN8Platform4KillEv.cpp. */
+ * full in src/_ZN10dBgActor_c4KillEv.cpp. */
 #include "SignPost.h"
 #include "Sound.h"
 

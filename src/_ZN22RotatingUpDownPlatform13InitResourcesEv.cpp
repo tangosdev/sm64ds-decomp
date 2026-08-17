@@ -10,7 +10,7 @@ extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
 extern "C" void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, void* mtx, int fix, short s, void* clps);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void* c);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* c);
 extern "C" void func_020393d4(void* p, void* v);
 extern "C" void func_020393c4(void* p, void* v);
 extern "C" void _ZN7PathPtr6FromIDEj(void* self, unsigned int id);
@@ -37,7 +37,7 @@ int RotatingUpDownPlatform::InitResources()
         mAngleY,
         (void*)data_ov091_02134e5c[idx]);
 
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     func_020393d4(((char*)this) + 0x124, &_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4(((char*)this) + 0x124, &func_ov091_02132380);
 

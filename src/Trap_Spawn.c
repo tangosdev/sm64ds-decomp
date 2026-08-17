@@ -11,7 +11,7 @@ int *Trap_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(944);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV4Trap;
         _ZN5ModelC1Ev((char *)p + 0x320);
     }

@@ -6,8 +6,8 @@
 /* recovered: shared common types */
 #include "common.h"
 
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
 extern "C" int _ZN5Actor18GetBitInDeathTableEv(void *c);
 extern "C" void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, Vector3 const &v, unsigned int n, int f, short s);
 
@@ -29,8 +29,8 @@ extern "C" void func_ov091_021334b8(char *c, int flag)
         *q = *q - 1;
     }
     *(unsigned char *)(c + 0x31f) = 0xf;
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     if (*(unsigned char *)(c + 0x31e) != 0) return;
 
     struct {

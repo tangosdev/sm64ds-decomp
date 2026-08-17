@@ -1,14 +1,14 @@
 //cpp
-// @symbol _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_
+// @symbol _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "MeshColliderBase.h"
 extern "C" {
 extern void* _ZN5Actor13ClosestPlayerEv(void*);
 extern int Vec3_Dist(void*, void*);
-int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(struct Platform *self, int a, int b) {
+int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self, int a, int b) {
   int on = (self->mFlags & 8) != 0;
   if (on) {
     if (((MeshColliderBase *)((char*)&self->mMeshCollider))->IsEnabled())

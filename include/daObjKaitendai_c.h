@@ -2,12 +2,12 @@
 #define DAOBJKAITENDAI_C_H
 
 #include "types.h"
-#include "Platform.h"
+#include "dBgActor_c.h"
 
 /* The abstract base of the turntable platforms: the discs that spin in place and
  * carry Mario round with them. `kaitendai` is a revolving stand.
  *
- * A LAYER THE TREE DID NOT HAVE. Five classes read as direct Platform subclasses
+ * A LAYER THE TREE DID NOT HAVE. Five classes read as direct dBgActor_c subclasses
  * because the tree named the base's base. The ROM's RTTI names this one and points
  * it at dBgActor_c.
  *
@@ -15,7 +15,7 @@
  *   _ZTS16daObjKaitendai_c  ov002 0x021091b8   "16daObjKaitendai_c"
  *   vtable                  ov002 0x021091d4, 32 slots, same count as the base
  *   kind                    __si_class_type_info, ONE base, subobject offset 0
- *   base                    dBgActor_c, ov002 0x021089ec -- the tree's Platform
+ *   base                    dBgActor_c, ov002 0x021089ec -- the tree's dBgActor_c
  *
  * ABSTRACT. Slots 0 and 3 -- InitResources and CleanupResources -- are null. Its
  * own overrides are slots 6 (Behavior), 9 (Render), 16 (D1) and 17 (D0); every
@@ -25,19 +25,19 @@
  * daObjBk_Ukisima_c (RotatingPlatformWf), daObjFl_Koma_D_c (RotatingPlatformLll),
  * daObjWc_Obj07_c (RotatingPlatformWdw), daObjRc_Kaitendai_c (RotatingPlatformRr)
  * and daObjKm3_Kaitendai_c (RickshawBs). Each one's destructor stores this class's
- * vtable between its own and _ZTV8Platform, which is the same fact the RTTI
+ * vtable between its own and _ZTV10dBgActor_c, which is the same fact the RTTI
  * records, arrived at from the other direction.
  *
  * NO FIELDS, and that is measured rather than assumed. Its own Behavior
  * (ov002 0x020b6718, now `_ZN16daObjKaitendai_c8BehaviorEv`) reads this+0x94,
- * which is Platform's mPrevAngleY, and
- * otherwise only calls Platform::UpdateModelPosAndRotY and the guarded
+ * which is dBgActor_c's mPrevAngleY, and
+ * otherwise only calls dBgActor_c::UpdateModelPosAndRotY and the guarded
  * UpdateClsnPosAndRot. Its own Render (`func_ov002_020b66f0`) dispatches through
- * the Model at 0xd4. Its own destructor destroys only Platform's two members. And
+ * the Model at 0xd4. Its own destructor destroys only dBgActor_c's two members. And
  * all five factories -- RotatingPlatformWf_Spawn, RotatingPlatformLll_Spawn,
  * RotatingPlatformWdw_Spawn, RotatingPlatformRr_Spawn and `func_ov047_021113bc`,
  * which is RickshawBs's real factory -- pass 800 = 0x320 to
- * ActorBase::operator new, which is sizeof(Platform) exactly. There is no room for
+ * ActorBase::operator new, which is sizeof(dBgActor_c) exactly. There is no room for
  * a field anywhere in this class or in any of the five leaves.
  *
  * NOT RickshawBs_Spawn. That function allocates 816 and builds
@@ -48,9 +48,9 @@
 
 #ifdef __cplusplus
 
-struct daObjKaitendai_c : Platform {
+struct daObjKaitendai_c : dBgActor_c {
     /* --- vtable --- */
-    /* INLINE ON PURPOSE, for the reason include/Platform.h gives for its own:
+    /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
        every descendant's destructor inlines this body rather than calling
        _ZN16daObjKaitendai_cD1Ev (which does exist out of line, at ov002
        0x020b6664, still under its func_ov002_ name). An out-of-line declaration
@@ -59,7 +59,7 @@ struct daObjKaitendai_c : Platform {
 
     /* Slot 6, this class's own override, defined out of line in
        src/_ZN16daObjKaitendai_c8BehaviorEv.cpp. LAYOUT-NEUTRAL: it re-uses the
-       slot Platform already holds rather than appending one, and adds no
+       slot dBgActor_c already holds rather than appending one, and adds no
        field, so the 0x320 assert below is untouched.
 
        Because the destructor above is inline this class has no key function,

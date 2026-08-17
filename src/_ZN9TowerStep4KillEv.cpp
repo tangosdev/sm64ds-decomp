@@ -5,8 +5,8 @@
  * ATTRIBUTED BY THE VTABLE, AND THE OLD COMMENT WAS WRONG TWICE. _ZTV9TowerStep
  * (ov015 0x02114650) carries 0x0211233c at slot 31 --
  * config/arm9/overlays/ov015/relocs.txt has
- * `from:0x021146cc kind:load to:0x0211233c` -- while _ZTV8Platform's word at the
- * same slot (from:0x0210aeb4) relocates to 0x020ee55c, _ZN8Platform4KillEv. The
+ * `from:0x021146cc kind:load to:0x0211233c` -- while _ZTV10dBgActor_c's word at the
+ * same slot (from:0x0210aeb4) relocates to 0x020ee55c, _ZN10dBgActor_c4KillEv. The
  * file used to say `recovered name: MovingBarSmall_Kill`; MovingBar is a
  * different class, with its own slot-31 override at 0x02111c3c reached through
  * _ZTV9MovingBar+0x7c. That comment is deleted rather than carried forward.
@@ -19,7 +19,7 @@
  *
  * Particle::System::NewSimple stays spelled as its mangled name -- its
  * parameters are Fix12<int> BY VALUE and declaring the true types changes how
- * the caller passes them; argued in full in src/_ZN8Platform4KillEv.cpp. */
+ * the caller passes them; argued in full in src/_ZN10dBgActor_c4KillEv.cpp. */
 #include "TowerStep.h"
 #include "Sound.h"
 

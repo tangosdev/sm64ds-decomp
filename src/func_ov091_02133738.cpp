@@ -15,7 +15,7 @@ int _ZN5Actor13DistToCPlayerEv(void* c);
 void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void* c, Vector3 v, unsigned int n, int f, short s);
 void _ZN5Actor17TrackInDeathTableEv(void* c);
 unsigned char DecIfAbove0_Byte(unsigned char* p);
-int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
+int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
 
 int func_ov091_02133738(char* c)
 {
@@ -52,7 +52,7 @@ int func_ov091_02133738(char* c)
         *(s16*)(c + 0x328) = angle;
     }
     DecIfAbove0_Byte((u8*)(c + 0x31f));
-    _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0);
+    _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0);
     return 1;
 }
 }

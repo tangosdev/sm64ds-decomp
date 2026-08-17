@@ -8,6 +8,6 @@
 int *FortressWallBreakable_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(804);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV12FortressWall; }
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV12FortressWall; }
     return p;
 }

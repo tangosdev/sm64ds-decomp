@@ -1,6 +1,6 @@
 
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(char *c);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(char *c);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char *c);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char *c);
 extern void func_ov002_020baf80(char *c);
 extern void func_ov002_020bbd5c(char *c, int i);
 extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(char *thiz, char *actor, int b, int d, unsigned int e, unsigned int f);
@@ -21,8 +21,8 @@ void func_ov002_020bae9c(char *c)
   *((short *) (c + 0x8e)) = *((short *) (c + 0x3be));
   *((short *) (c + 0x90)) = *((short *) (c + 0x3c0));
   *((unsigned char *) (c + 0x58e)) = 2;
-  _ZN8Platform21UpdateModelPosAndRotYEv(c);
-  _ZN8Platform19UpdateClsnPosAndRotEv(c);
+  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
   func_ov002_020baf80(c);
   func_ov002_020bbd5c(c, 0);
   *((unsigned char *) (c + 0x31c)) = 0;

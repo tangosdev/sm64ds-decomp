@@ -4,7 +4,7 @@
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* o, int bmd, int a, int b);
 extern void func_ov080_02127094(char* t);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* o);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* o);
 extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* o, int kcl, void* mtx, int fix, short s, void* clps);
 extern void func_020393d4(int* p, int v);
@@ -19,7 +19,7 @@ int func_ov080_021274ac(char* self, char** arg) {
     struct Vector3 d;
     _ZN9ModelBase7SetFileEP8BMD_Fileii(self + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(arg[0]), 1, -1);
     func_ov080_02127094(self);
-    _ZN8Platform19UpdateClsnPosAndRotEv(self);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(self + 0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(arg[1]), self + 0x2ec, 0x1000, *(short*)(self + 0x8e), arg[2]);
     func_020393d4((int*)(self + 0x124), (int)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4((int*)(self + 0x124), (int)&func_ov080_02127658);

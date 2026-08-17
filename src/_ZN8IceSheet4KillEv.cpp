@@ -3,11 +3,11 @@
 /* IceSheet::Kill() at ov018 0x02112880, 0x60 bytes -- vtable slot 31.
  *
  * ATTRIBUTED BY THE VTABLE. _ZTV8IceSheet (ov018 0x02113b34) carries 0x02112880
- * at slot 31 (0x02113bb0) and _ZTV8Platform carries _ZN8Platform4KillEv at the
- * same slot, so this is this class's own override of Platform's Kill. The RTTI
+ * at slot 31 (0x02113bb0) and _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv at the
+ * same slot, so this is this class's own override of dBgActor_c's Kill. The RTTI
  * agrees on the class: _ZTI15daObjIceBoard_c (ov018 0x02113af0) is a
  * __si_class_type_info with ONE base at subobject offset 0, ov002 0x021089ec --
- * dBgActor_c, the tree's Platform.
+ * dBgActor_c, the tree's dBgActor_c.
  *
  * The sheet shatters: the sound first, then three particle systems -- 0x74,
  * 0x75, 0x76 -- all at the actor's own position, and then it is gone.
@@ -24,7 +24,7 @@
  * Particle::System::NewSimple stays spelled as its mangled name: its parameters
  * are Fix12<int> BY VALUE, and declaring the true types changes how the caller
  * passes them and breaks the bytes. The argument is made in full in
- * src/_ZN8Platform4KillEv.cpp -- notes/mwccarm-codegen.md 6az.
+ * src/_ZN10dBgActor_c4KillEv.cpp -- notes/mwccarm-codegen.md 6az.
  *
  * mCamSpacePos is read as a Vector3 through its first member, which is how the
  * rest of the tree spells that triple. */

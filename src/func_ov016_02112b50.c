@@ -14,8 +14,8 @@ extern void _ZN5Actor13LandingDustAtER7Vector3b(void *self, struct Vector3 *v, i
 extern void func_0200d8c8(void *cam, const void *v, int strength);
 extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
 extern void func_ov016_02112a9c(void *self);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern s16 data_02082214[];
 extern void *data_0209f318;
 #pragma opt_common_subs off
@@ -98,7 +98,7 @@ int func_ov016_02112b50(char *c)
   }
   }
   func_ov016_02112a9c(c);
-  if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
+  if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
   return 1;
 }

@@ -14,7 +14,7 @@ struct CLPS_Block;
 extern struct BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisp, struct BMD_File *, int, int);
 extern void _ZN11ShadowModel10InitCuboidEv(void *thisp);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *thisp);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *thisp);
 extern struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *thisp, struct KCL_File *, struct Matrix4x3 const &, int, short, struct CLPS_Block &);
@@ -40,7 +40,7 @@ extern "C" int func_ov065_0211a358(char *self) {
     *(short *)(self + 0x90) = *(short *)(self + 0x322);
 
     func_ov065_0211a114(self);
-    _ZN8Platform19UpdateClsnPosAndRotEv(self);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
 
     kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov065_0211d894);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(

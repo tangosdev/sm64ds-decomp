@@ -33,7 +33,7 @@ struct TextureTransformer {
 extern "C" void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *, BTA_File &f, int a, int fix, unsigned int u);
 
 
-struct Platform {
+struct dBgActor_c {
     void UpdateModelPosAndRotY();
     void UpdateClsnPosAndRot();
 };
@@ -116,8 +116,8 @@ int TtcConveyorBeltLarge::InitResources()
 
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj((TextureTransformer *)((char *)&mTextureTransformer), *(BTA_File *)locbuf[mVariant], 0, 0x1000, 0);
 
-    ((Platform *)((char *)this))->UpdateModelPosAndRotY();
-    ((Platform *)((char *)this))->UpdateClsnPosAndRot();
+    ((dBgActor_c *)((char *)this))->UpdateModelPosAndRotY();
+    ((dBgActor_c *)((char *)this))->UpdateClsnPosAndRot();
 
     e = mVariant;
     kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(

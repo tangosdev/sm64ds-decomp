@@ -5,9 +5,9 @@
 
 /* Lethal Lava Land's tilting slab.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjGuragura_c, which derives
- * from Platform, and the difference is in the bytes rather than only in the RTTI:
- * its destructor stores THREE vptrs -- its own, daObjGuragura_c's, then Platform's.
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjGuragura_c, which derives
+ * from dBgActor_c, and the difference is in the bytes rather than only in the RTTI:
+ * its destructor stores THREE vptrs -- its own, daObjGuragura_c's, then dBgActor_c's.
  * A one-level chain emits two.
  *
  *   _ZTI14daObjFl_Gura_c    ov064 0x0211bce8

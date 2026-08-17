@@ -20,11 +20,11 @@ extern int _ZN13RaycastGround10DetectClsnEv(char *thiz);
 extern void _ZN13RaycastGroundD1Ev(char *thiz);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *thiz);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *thiz);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *thiz);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *thiz);
 extern void func_020393a4(int *p, int v);
 extern void func_02039394(int *p, int v);
-extern int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *thiz, int a, int b);
+extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *thiz, int a, int b);
 extern int Vec3_Dist(Vector3 *a, Vector3 *b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, Vector3 *pos, unsigned int e);
 extern int Vec3_HorzDist(Vector3 *a, Vector3 *b);
@@ -38,7 +38,7 @@ int func_ov002_020b8dd4(char *c)
     char ray[0x50];
     char *q;
 
-    if (_ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(c, 0x1800, 0, 0, 0x96000) != 0) {
+    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(c, 0x1800, 0, 0, 0x96000) != 0) {
         return 1;
     }
 
@@ -63,14 +63,14 @@ int func_ov002_020b8dd4(char *c)
         }
         _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
         WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
-        _ZN8Platform21UpdateModelPosAndRotYEv(c);
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
         _ZN13RaycastGroundD1Ev(ray);
     }
 
     func_020393a4((int *)(c + 0x124), 0x12c000);
     func_02039394((int *)(c + 0x124), 0x96000);
-    _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0x3e8000, 0x96000);
+    _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0x3e8000, 0x96000);
 
     if (self->unk_098 != 0 && Vec3_Dist((Vector3 *)(c + 0x5c), (Vector3 *)(c + 0x68)) != 0) {
         self->unk_4ec = _ZN5Sound8PlayLongEjjjRK7Vector3s(self->unk_4ec, 3, 0x97, (Vector3 *)(c + 0x74), 0);

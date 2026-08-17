@@ -8,6 +8,6 @@
 int *CccArena_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(828);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV8CccArena; }
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV8CccArena; }
     return p;
 }

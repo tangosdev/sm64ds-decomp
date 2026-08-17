@@ -11,7 +11,7 @@ struct Vector3;
 
 struct Model { static BMD_File* LoadFile(SharedFilePtr& f); };
 struct ModelBase { void SetFile(BMD_File* f, int b, int c); };
-struct Platform { void UpdateClsnPosAndRot(); };
+struct dBgActor_c { void UpdateClsnPosAndRot(); };
 struct MeshCollider { static KCL_File* LoadFile(SharedFilePtr& f); };
 struct MovingMeshCollider { };
 /* Declared by its final name rather than as a shadow method: the ROM's symbol takes
@@ -45,7 +45,7 @@ int func_ov060_021182b0(char* self)
         Model::LoadFile(*data_ov060_02119514[*(unsigned char*)(self + 0x329)]), 1, -1);
     CopyTexPalFromLevelModel(self + 0xdc);
     data_0208e738 = 1;
-    ((Platform*)self)->UpdateClsnPosAndRot();
+    ((dBgActor_c*)self)->UpdateClsnPosAndRot();
     {
         int i = *(unsigned char*)(self + 0x329);
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(

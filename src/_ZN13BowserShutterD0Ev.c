@@ -5,7 +5,7 @@
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
 extern int _ZTV13BowserShutter[];
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 /* recovered: vtable identified, renamed to Class_Method */
 /* The DELETING DESTRUCTOR, vtable slot 17. The old comment here called it
    OnYoshiTryEat, which is slot 18 -- off by one. This body stores the class
@@ -15,7 +15,7 @@ extern void *data_020a0eac;
 int *_ZN13BowserShutterD0Ev(int *t)
 {
     t[0] = (int)_ZTV13BowserShutter;
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);

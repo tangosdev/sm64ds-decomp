@@ -32,14 +32,14 @@ char data_ov098_0213c384[0x18];
 }
 
 // ---- gate-9 method bridges (C name -> MSVC method), the gx_upload pattern -
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "ShadowModel.h"
 #include "Model.h"
 extern "C" {
-void _ZN8Platform19UpdateClsnPosAndRotEv(void *self)
-{ ((Platform *)self)->Platform::UpdateClsnPosAndRot(); }
-void _ZN8Platform21UpdateModelPosAndRotYEv(void *self)
-{ ((Platform *)self)->Platform::UpdateModelPosAndRotY(); }
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self)
+{ ((dBgActor_c *)self)->dBgActor_c::UpdateClsnPosAndRot(); }
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self)
+{ ((dBgActor_c *)self)->dBgActor_c::UpdateModelPosAndRotY(); }
 /* SHADOW SYSTEM DEFERRED (cosmetic): the cuboid template BMD at
    data_020ad524 is BUILT AT RUNTIME by boot code not yet hosted (the ov000
    static image holds path strings there). InitCuboid and the per-frame

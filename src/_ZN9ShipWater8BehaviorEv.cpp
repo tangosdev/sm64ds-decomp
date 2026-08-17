@@ -6,8 +6,8 @@ extern "C" {
 extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char* prev);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
 extern int _ZN9Animation7AdvanceEv(char* t);
-extern int _ZN8Platform21UpdateModelPosAndRotYEv(char* t);
-extern int _ZN8Platform19UpdateClsnPosAndRotEv(char* t);
+extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char* t);
+extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char* t);
 }
 
 int ShipWater::Behavior()
@@ -37,7 +37,7 @@ int ShipWater::Behavior()
     }
     (*(s32 *)((char *)&mTextureTransformer + 0xc)) = 0x1000;
     _ZN9Animation7AdvanceEv((char*)&(*(u8 *)&mTextureTransformer));
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     return 1;
 }

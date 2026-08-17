@@ -5,12 +5,12 @@
  * below 0x320 are gone from this header and inherited now; the rest are still
  * observed, with gaps as explicit padding. Field NAMES are placeholders.
  *
- * THE BASE IS Platform, and the destructor says so outright. _ZN8SignPostD1Ev
+ * THE BASE IS dBgActor_c, and the destructor says so outright. _ZN8SignPostD1Ev
  * (ov002 0x020badd0) stores exactly two vtables -- _ZTV15daObjTatefuda_c, then
- * _ZTV8Platform -- with this class's own three members destroyed between them
- * and Platform's Model and MovingMeshCollider destroyed after. Two stores is a
+ * _ZTV10dBgActor_c -- with this class's own three members destroyed between them
+ * and dBgActor_c's Model and MovingMeshCollider destroyed after. Two stores is a
  * DIRECT child; an intermediate layer would have put a third one in between.
- * SignPost_Spawn agrees from the other side: it calls _ZN8PlatformC2Ev and then
+ * SignPost_Spawn agrees from the other side: it calls _ZN10dBgActor_cC2Ev and then
  * overwrites the vptr with _ZTV8SignPost, which is the same address as
  * _ZTV15daObjTatefuda_c -- one table, two names.
  *
@@ -31,7 +31,7 @@
  * methods. The third, mWithMeshClsn, is still a u8 marker; its call site never
  * had the problem, so it was left alone rather than widened opportunistically.
  *
- * 0x320 IS ALSO WHY sizeof(Platform) IS 0x320 -- include/Platform.h names this
+ * 0x320 IS ALSO WHY sizeof(dBgActor_c) IS 0x320 -- include/dBgActor_c.h names this
  * class (as WallSign's sibling daObjKanban_c does) among the four direct
  * children that each place a 4-byte-aligned class member there.
  */
@@ -50,11 +50,11 @@ typedef struct Player Player;
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "MovingCylinderClsn.h"
 #include "ShadowModel.h"
 
-struct SignPost : Platform {
+struct SignPost : dBgActor_c {
     MovingCylinderClsn mMovingCylinderClsn;  /* 0x320 */
     u8  pad_354[0x4];
     ShadowModel mShadowModel;   /* 0x358 */
@@ -80,7 +80,7 @@ struct SignPost : Platform {
     u8  pad_5a0[0x4];
 
     /* --- vtable --- */
-    /* INLINE ON PURPOSE, for the reason include/Platform.h gives for its own.
+    /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own.
        Nothing derives from SignPost, so no subclass can be made to emit a `bl`
        the ROM does not have -- but keeping it inline also keeps this class
        without a key function, so no translation unit that merely includes this
@@ -90,9 +90,9 @@ struct SignPost : Platform {
        neither defines SignPost::~SignPost. */
     virtual ~SignPost() {}
 
-    /* Slot 31, Platform's own new virtual (include/Platform.h). This class
+    /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). This class
        overrides it: _ZTV8SignPost (ov002 0x02109af8) carries 0x020bb3b8 at
-       vtable + 0x7c where _ZTV8Platform carries _ZN8Platform4KillEv, and slot 30
+       vtable + 0x7c where _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv, and slot 30
        is Actor's 0x020100dc in both. It adds no slot and no field, so the size
        assert below is unaffected.
 
@@ -114,8 +114,8 @@ typedef char SignPost_size_must_be_0x5a4[sizeof(SignPost) == 0x5a4 ? 1 : -1];
 #else
 
 /* The same object for a C translation unit, which has no base sub-object to
-   inherit Platform's fields from and so spells the layout flat. Same
-   arrangement as include/Platform.h. */
+   inherit dBgActor_c's fields from and so spells the layout flat. Same
+   arrangement as include/dBgActor_c.h. */
 struct SignPost {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */

@@ -16,8 +16,8 @@ struct Vector3;
 
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern "C" KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *k, Matrix4x3 *m, int fix, short s, CLPS_Block *clps);
@@ -55,8 +55,8 @@ s32 MetalNetLift::InitResources() {
     else
         *(unsigned char *)(self + 0x33b) = 1;
 
-    _ZN8Platform21UpdateModelPosAndRotYEv(self);
-    _ZN8Platform19UpdateClsnPosAndRotEv(self);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
 
     kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov064_0211c728);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(

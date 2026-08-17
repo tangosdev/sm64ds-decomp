@@ -5,7 +5,7 @@ extern void _ZN8PathLift12BaseBehaviorEv(void* c);
 extern void _ZN9Animation7AdvanceEv(void* a);
 extern void func_ov036_021122c0(char* c);
 extern void func_ov036_0211224c(char* c);
-extern void _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* t, int a, int b);
+extern void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* t, int a, int b);
 }
 
 extern "C" int func_ov036_021123c8(char* c){
@@ -17,6 +17,6 @@ extern "C" int func_ov036_021123c8(char* c){
     _ZN9Animation7AdvanceEv(c + 0x4a0);
     func_ov036_021122c0(c);
     func_ov036_0211224c(c);
-    _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
+    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
     return 1;
 }

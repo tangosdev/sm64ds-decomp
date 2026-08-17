@@ -9,7 +9,7 @@
 /* recovered: declarations from a shared header */
 #include "decl_common.h"
 extern "C" {
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* c);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* c);
 }
 
 int CccArena::Behavior()
@@ -28,6 +28,6 @@ int CccArena::Behavior()
   mModel.mat4x3.t.x = mPosX >> 3;
   mModel.mat4x3.t.y = mPosY >> 3;
   mModel.mat4x3.t.z = mPosZ >> 3;
-  _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
   return 1;
 }

@@ -10,7 +10,7 @@ extern "C" int _ZN5Event6GetBitEj(unsigned int a);
 extern "C" void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *after);
 extern "C" void func_020393a4(int *p, int v);
 extern "C" void func_02039394(int *p, int v);
-extern "C" void _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
+extern "C" void _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
 
 int BigBrickBlock::Behavior()
 {
@@ -34,7 +34,7 @@ int BigBrickBlock::Behavior()
         } else {
             func_020393a4((int *)((char *)&(*(u8 *)&mMeshCollider)), 0x15e000);
             func_02039394((int *)((char *)&(*(u8 *)&mMeshCollider)), 0x64000);
-            _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x150000, 0);
+            _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x150000, 0);
         }
 
         unk_31f = _ZN5Event6GetBitEj(mEventID);
@@ -50,7 +50,7 @@ int BigBrickBlock::Behavior()
         }
         func_020393a4((int *)((char *)&(*(u8 *)&mMeshCollider)), v1);
         func_02039394((int *)((char *)&(*(u8 *)&mMeshCollider)), v5);
-        _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x600000, 0);
+        _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x600000, 0);
     }
     return 1;
 }

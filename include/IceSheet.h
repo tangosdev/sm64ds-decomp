@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -15,9 +15,9 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 
-struct IceSheet : Platform {
+struct IceSheet : dBgActor_c {
     /* no fields of its own */
 
     /* --- vtable --- */
@@ -31,9 +31,9 @@ struct IceSheet : Platform {
     int InitResources();
     int Render();
 
-    /* Slot 31, Platform's own new virtual (include/Platform.h). ATTRIBUTED BY
+    /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). ATTRIBUTED BY
        THE VTABLE: _ZTV8IceSheet (ov018 0x02113b34) carries 0x02112880 at
-       +31*4 = 0x02113bb0, and _ZTV8Platform carries _ZN8Platform4KillEv at the
+       +31*4 = 0x02113bb0, and _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv at the
        same slot, so this is this class's own override. An override adds no slot
        and no field; the size assert below is unaffected. */
     virtual void Kill();                /* slot 31 */

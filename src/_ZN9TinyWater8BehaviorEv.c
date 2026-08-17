@@ -4,8 +4,8 @@ extern void _ZN9ActorBase18MarkForDestructionEv();
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s();
 extern void _ZN7Minimap19UpdateLevelSpecificEv();
 extern void _ZN9Animation7AdvanceEv();
-extern void _ZN8Platform21UpdateModelPosAndRotYEv();
-extern void _ZN8Platform19UpdateClsnPosAndRotEv();
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv();
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv();
 
 int _ZN9TinyWater8BehaviorEv(int *t)
 {
@@ -26,7 +26,7 @@ int _ZN9TinyWater8BehaviorEv(int *t)
     }
     t[0xcb] = 0x1000;
     _ZN9Animation7AdvanceEv((char*)t + 0x320);
-    _ZN8Platform21UpdateModelPosAndRotYEv(t);
-    _ZN8Platform19UpdateClsnPosAndRotEv(t);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(t);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(t);
     return 1;
 }

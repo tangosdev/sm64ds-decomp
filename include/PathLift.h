@@ -3,8 +3,8 @@
 
 #include "types.h"
 
-/* A lift that runs along a path. Derives from Platform, and its own data starts
- * in the base's tail padding at 0x31e (Platform's last field ends there and its
+/* A lift that runs along a path. Derives from dBgActor_c, and its own data starts
+ * in the base's tail padding at 0x31e (dBgActor_c's last field ends there and its
  * size rounds to 0x320).
  *
  * THE ARRAY IS Model[3]. The ROM destroys it with
@@ -15,10 +15,10 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "Model.h"
 
-struct PathLift : Platform {
+struct PathLift : dBgActor_c {
     u8  pad_31e[0x2];
     Model mModels[3];                     /* 0x320 */
     u8  pad_410[0x1a];

@@ -3,7 +3,7 @@ extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *thiz, struct Vector3
 extern short Vec3_HorzAngle(struct Vector3 *a, struct Vector3 *b);
 extern int _ZN16MeshColliderBase9IsEnabledEv(void *c);
 extern void _ZN16MeshColliderBase7DisableEv(void *c);
-void _ZN8Platform14KillByMegaCharER6Player(char *c, char *player) {
+void _ZN10dBgActor_c14KillByMegaCharER6Player(char *c, char *player) {
     struct Vector3 v;
     v.x = *(int*)(c + 0x5c);
     v.y = *(int*)(c + 0x60);

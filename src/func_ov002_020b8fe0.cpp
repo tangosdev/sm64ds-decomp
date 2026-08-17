@@ -11,8 +11,8 @@ struct KCL_File;
 
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern "C" KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *k, void *m, int fix, short s, void *clps);
@@ -38,8 +38,8 @@ extern "C" int func_ov002_020b8fe0(char *self)
 
     bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210df9c);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(self + 0xd4, bmd, 1, -1);
-    _ZN8Platform21UpdateModelPosAndRotYEv(self);
-    _ZN8Platform19UpdateClsnPosAndRotEv(self);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
     kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov002_0210df94);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         self + 0x124, kcl, self + 0x2ec, 0x1000, *(short *)(self + 0x8e), &data_ov002_0210d7b4);

@@ -6,14 +6,14 @@
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
 extern int data_ov065_0211d2b4[];
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 /* recovered: vtable identified, renamed to Class_Method */
 extern void *data_020a0eac;
 int *func_ov065_0211abac(int *t)
 {
     t[0] = (int)data_ov065_0211d2b4;
     _ZN11ShadowModelD1Ev((char *)t + 0x33c);
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);

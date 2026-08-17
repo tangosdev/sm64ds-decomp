@@ -304,7 +304,7 @@
     "_Z30_ZN11ShadowModel10InitCuboidEvPv",
     "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPvP8BMD_Fileii",
     "_Z35_ZN5Model8LoadFileER13SharedFilePtrR13SharedFilePtr",
-    "_Z35_ZN8Platform19UpdateClsnPosAndRotEvPv",
+    "_Z35_ZN10dBgActor_c19UpdateClsnPosAndRotEvPv",
     "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrR13SharedFilePtr",
     "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvP8KCL_FileRK9Matrix4x3isR10CLPS_Block",
     "_Z94_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_v",
@@ -326,8 +326,8 @@
    "missing": [
     "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPvS_ii",
     "_Z35_ZN5Model8LoadFileER13SharedFilePtrPv",
-    "_Z35_ZN8Platform19UpdateClsnPosAndRotEvPv",
-    "_Z37_ZN8Platform21UpdateModelPosAndRotYEvPv",
+    "_Z35_ZN10dBgActor_c19UpdateClsnPosAndRotEvPv",
+    "_Z37_ZN10dBgActor_c21UpdateModelPosAndRotYEvPv",
     "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrPv",
     "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_",
     "func_021121b8"

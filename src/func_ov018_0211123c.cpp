@@ -9,14 +9,14 @@ struct Player {
     void IncMegaKillCount();
 };
 
-struct Platform {
+struct dBgActor_c {
     void KillByMegaChar(Player &);
 };
 
 extern "C" void func_ov018_0211123c(char *c, void *p) {
     struct daObjSm_Lift_c *self = (struct daObjSm_Lift_c *)(void *)c;
     ((Player *)p)->IncMegaKillCount();
-    ((Platform *)c)->KillByMegaChar(*(Player *)p);
+    ((dBgActor_c *)c)->KillByMegaChar(*(Player *)p);
     short val = self->unk_094;
     self->unk_08e = val + 0x4000;
 }

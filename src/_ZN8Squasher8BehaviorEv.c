@@ -7,7 +7,7 @@ extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *self, struct Vec3 *v
 extern void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
 extern void func_0200fa04();
 extern void func_ov023_02111308(char *t);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern int func_ov023_0211124c(char *c);
 extern short data_02082214[];
 
@@ -85,7 +85,7 @@ int _ZN8Squasher8BehaviorEv(char *c)
     }
 
     func_ov023_02111308(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     func_ov023_0211124c(c);
     return 1;
 }

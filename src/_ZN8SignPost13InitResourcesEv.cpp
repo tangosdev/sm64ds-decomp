@@ -11,14 +11,14 @@
 extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern "C" void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
 /* THREE OF THE SHADOWS ARE GONE, because SignPost.h now says `SignPost :
-   Platform` and Platform.h brings in the real Platform, Model/ModelBase and
+   dBgActor_c` and dBgActor_c.h brings in the real dBgActor_c, Model/ModelBase and
    MovingMeshCollider. Each one is replaced by the thing it was standing in for:
 
      ModelBase          -> mModel.SetFile, whose real declaration in
                            include/ModelBase.h mangles identically
                            (_ZN9ModelBase7SetFileEP8BMD_Fileii) -- only the
                            return type differed, and that is not mangled.
-     Platform           -> the two calls are unqualified members now.
+     dBgActor_c           -> the two calls are unqualified members now.
      MovingMeshCollider -> its real SetFile takes Fix12<int> BY VALUE, so it
                            cannot be declared as a callable method here without
                            changing how the caller passes the argument
@@ -31,7 +31,7 @@ extern "C" void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
                            nothing caught it.
 
    The remaining shadows -- ShadowModel, MovingCylinderClsn, WithMeshClsn,
-   RaycastGround -- are untouched: Platform.h does not pull those headers in, so
+   RaycastGround -- are untouched: dBgActor_c.h does not pull those headers in, so
    they still compile, and MovingCylinderClsn::Init and WithMeshClsn::Init have
    the same Fix12<int> problem with no collision forcing the issue yet. */
 struct BMD_File; struct KCL_File; struct Actor; struct Vector3; struct Matrix4x3;

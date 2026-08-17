@@ -8,6 +8,6 @@
 int *RotatingBridge_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(804);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV14RotatingBridge; }
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV14RotatingBridge; }
     return p;
 }

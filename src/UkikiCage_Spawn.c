@@ -11,7 +11,7 @@ int *UkikiCage_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(1248);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV9UkikiCage;
         _ZN12WithMeshClsnC1Ev((char *)p + 0x320);
     }

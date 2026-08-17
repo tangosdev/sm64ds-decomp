@@ -38,7 +38,7 @@ struct PlatformVT {
 
 extern Matrix4x3 data_020a0e68;
 
-struct Platform {
+struct dBgActor_c {
     char _0[0x5c];
     Vector3 pos;         /* 0x5c */
     char _68[0x8c - 0x68];
@@ -52,7 +52,7 @@ struct Platform {
     int UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d);
 };
 
-int Platform::UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d)
+int dBgActor_c::UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d)
 {
     Vector3 vin;
     Vector3 vmid;

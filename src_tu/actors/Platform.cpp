@@ -1,5 +1,5 @@
 //cpp
-/* SHADOW translation unit -- ov002 / Platform (RTTI name dBgActor_c).
+/* SHADOW translation unit -- ov002 / dBgActor_c (RTTI name dBgActor_c).
  *
  * NOT ENROLLED, AND NOT CANONICAL. This file contributes nothing to the ROM
  * build. The eleven one-function sources under src/ remain the enrolled owners
@@ -20,14 +20,14 @@
  * last, which is where the ROM puts it (D1 0x020ee42c, D0 0x020ee464, the two
  * LOWEST addresses in the run).
  *
- * THE DESTRUCTORS ARE NOT WRITTEN OUT HERE ON PURPOSE. ~Platform is defined
- * inline in include/Platform.h -- load-bearing, seventy-odd subclasses inline
+ * THE DESTRUCTORS ARE NOT WRITTEN OUT HERE ON PURPOSE. ~dBgActor_c is defined
+ * inline in include/dBgActor_c.h -- load-bearing, seventy-odd subclasses inline
  * its body rather than calling it -- and Kill, defined below, is this class's
  * key function. Defining the key function is what makes this TU emit
- * _ZTV8Platform, _ZTI8Platform and the D1/D0/D2 variant group. The two legacy
- * files src/_ZN8PlatformD1Ev.cpp and src/_ZN8PlatformD0Ev.cpp exist only
+ * _ZTV10dBgActor_c, _ZTI10dBgActor_c and the D1/D0/D2 variant group. The two legacy
+ * files src/_ZN10dBgActor_cD1Ev.cpp and src/_ZN10dBgActor_cD0Ev.cpp exist only
  * because a per-function file has no key function to hang them on and needs a
- * forcing function (`p->~Platform()` / `delete p`); merged, that scaffolding is
+ * forcing function (`p->~dBgActor_c()` / `delete p`); merged, that scaffolding is
  * exactly what we do NOT want, since it would add two .text sections the
  * cartridge does not have.
  *
@@ -35,10 +35,10 @@
  * are defined under their mangled linker symbols with scalar parameters rather
  * than as real C++ methods:
  *
- *     _ZN8PlatformC2Ev
- *     _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_
- *     _ZN8Platform13IsClsnInRangeE5Fix12IiES1_
- *     _ZN8Platform14KillByMegaCharER6Player
+ *     _ZN10dBgActor_cC2Ev
+ *     _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_
+ *     _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_
+ *     _ZN10dBgActor_c14KillByMegaCharER6Player
  *
  * The two IsClsnInRange* names claim `Fix12<int>` parameters BY VALUE. That
  * claim is a reconstruction, not a measurement -- the cartridge's RTTI carries
@@ -52,8 +52,8 @@
  * reproduces here.
  *
  * The constructor is held back for a different reason, recorded as a finding
- * rather than fixed: the ROM has an out-of-line _ZN8PlatformC2Ev, which means
- * the original class DECLARED its constructor, but include/Platform.h does not.
+ * rather than fixed: the ROM has an out-of-line _ZN10dBgActor_cC2Ev, which means
+ * the original class DECLARED its constructor, but include/dBgActor_c.h does not.
  * Adding that declaration would stop every subclass constructor from inlining
  * the implicit one, and this TU cannot measure that blast radius on its own.
  *
@@ -62,17 +62,17 @@
  * offset and calls Actor::Earthquake, which takes a by-value Fix12<int> and so
  * hits the same homing rule. Left in legacy form.
  */
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "MeshColliderBase.h"
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN8PlatformC2Ev, 0x020eea50, size 0x34                  */
+/* ROM ordinal 10 -- _ZN10dBgActor_cC2Ev, 0x020eea50, size 0x34                  */
 /* ------------------------------------------------------------------------- */
 /* recovered: named members + shared header, vtable identified, globals resolved
- * resolved: VT0 = _ZTV8Platform
+ * resolved: VT0 = _ZTV10dBgActor_c
  *
  * THE `+ 2` IS LOAD-BEARING, and consolidation is what forced it. The legacy
- * file declared `extern int _ZTV8Platform[]` by the ROM's convention, where the
+ * file declared `extern int _ZTV10dBgActor_c[]` by the ROM's convention, where the
  * symbol IS the slot array, and stored it directly. This TU now DEFINES the
  * vtable, because it defines the class's key function, and mwcc's own
  * convention puts the symbol at the start of the vtable OBJECT -- two words of
@@ -80,15 +80,15 @@
  * int-array spelling lands on the first slot either way.
  */
 extern "C" {
-extern int   _ZTV8Platform[];
+extern int   _ZTV10dBgActor_c[];
 extern int  *_ZN5ActorC2Ev(int *thiz);
 extern void  _ZN5ModelC1Ev(void *thiz);
 extern void  _ZN18MovingMeshColliderC1Ev(void *thiz);
 
-int *_ZN8PlatformC2Ev(int *t)
+int *_ZN10dBgActor_cC2Ev(int *t)
 {
     _ZN5ActorC2Ev(t);
-    t[0] = (int)(_ZTV8Platform + 2);
+    t[0] = (int)(_ZTV10dBgActor_c + 2);
     _ZN5ModelC1Ev((char *)t + 0xd4);
     _ZN18MovingMeshColliderC1Ev((char *)t + 0x124);
     return t;
@@ -103,7 +103,7 @@ extern "C" {
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern int   Vec3_Dist(void *a, void *b);
 
-int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(struct Platform *self, int a, int b)
+int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self, int a, int b)
 {
     int on = (self->mFlags & 8) != 0;
     if (on) {
@@ -142,7 +142,7 @@ done:
 /* ------------------------------------------------------------------------- */
 /* recovered: named members + shared header. Declarations for ClosestPlayer and
    Vec3_Dist are the ones above, at their first occurrence -- not repeated. */
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(struct Platform *self, int a, int b)
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(struct dBgActor_c *self, int a, int b)
 {
     struct Vector3 v;
     v.x = self->mPosX;
@@ -165,7 +165,7 @@ int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(struct Platform *self, int a, int b
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- Platform::UpdateModelPosAndRotY, 0x020ee830, size 0x40    */
+/* ROM ordinal 7 -- dBgActor_c::UpdateModelPosAndRotY, 0x020ee830, size 0x40    */
 /* ------------------------------------------------------------------------- */
 /* recovered: named members + shared header, real C++ method
  *
@@ -177,7 +177,7 @@ int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(struct Platform *self, int a, int b
  */
 extern "C" void Matrix4x3_FromRotationY(Matrix4x3 *mat, int angleY);
 
-void Platform::UpdateModelPosAndRotY()
+void dBgActor_c::UpdateModelPosAndRotY()
 {
     Matrix4x3_FromRotationY(&mModel.mat4x3, mAngleY);
     mModel.mat4x3.m[9]  = mPosX >> 3;
@@ -186,7 +186,7 @@ void Platform::UpdateModelPosAndRotY()
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- Platform::UpdateClsnPosAndRot, 0x020ee7cc, size 0x64      */
+/* ROM ordinal 6 -- dBgActor_c::UpdateClsnPosAndRot, 0x020ee7cc, size 0x64      */
 /* ------------------------------------------------------------------------- */
 /* recovered: named members + shared header, real C++ method
  *
@@ -194,14 +194,14 @@ void Platform::UpdateModelPosAndRotY()
  * position, hand it to the collider. m[9], m[10] and m[11] are that row.
  *
  * The flat `s32 m[12]` spelling of Matrix4x3 is required here and is why
- * include/Platform.h includes common.h before Model.h: the `{Matrix3x3 r;
+ * include/dBgActor_c.h includes common.h before Model.h: the `{Matrix3x3 r;
  * Vector3 t;}` spelling copies the two members separately, 9 words then 3, and
  * this function comes out 0x74 against the ROM's 0x64.
  */
 extern "C" int _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(
     MovingMeshCollider *self, const Matrix4x3 &mat, short angleY);
 
-void Platform::UpdateClsnPosAndRot()
+void dBgActor_c::UpdateClsnPosAndRot()
 {
     mClsnMat = mModel.mat4x3;
     mClsnMat.m[9]  = mPosX;
@@ -211,14 +211,14 @@ void Platform::UpdateClsnPosAndRot()
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- Platform::UpdateKillByMegaChar, 0x020ee674, size 0x158    */
+/* ROM ordinal 5 -- dBgActor_c::UpdateKillByMegaChar, 0x020ee674, size 0x158    */
 /* ------------------------------------------------------------------------- */
 /* recovered: real C++ method.
  *
  * The legacy file reached every field through its own flat shadow structs -- a
- * `Platform` that was one big char array, its own `Actor`, `Vector3`,
+ * `dBgActor_c` that was one big char array, its own `Actor`, `Vector3`,
  * `Matrix4x3` and a 32-slot `PlatformVT` whose only used entry was v31. All of
- * those are now the real types: v31 is Platform::Kill (the slot this class
+ * those are now the real types: v31 is dBgActor_c::Kill (the slot this class
  * adds), and the raw 0x8c/0x8e/0x90/0x94 stores are mAngleX/mAngleY/mAngleZ/
  * mPrevAngleY.
  *
@@ -233,7 +233,7 @@ void Platform::UpdateClsnPosAndRot()
  * describes a 0x68-byte object; the legacy body that reproduces these bytes
  * declares 0x78, and `ray` is a stack local whose size sets the frame. 0x78 is
  * what matches. include/RaycastLine.h is not included here (it is not in
- * Platform.h's include closure, so there is no clash), and it is NOT edited --
+ * dBgActor_c.h's include closure, so there is no clash), and it is NOT edited --
  * that header is shared and re-sizing it is a separate, measured change. Filed
  * as a finding.
  */
@@ -254,7 +254,7 @@ struct RaycastLine {
     char buf[0x78];
 };
 
-int Platform::UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d)
+int dBgActor_c::UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d)
 {
     Vector3 vin;
     Vector3 vmid;
@@ -332,13 +332,13 @@ void func_ov002_020ee5d0(unsigned char *self, int arg)
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- Platform::Kill, 0x020ee55c, size 0x74                     */
+/* ROM ordinal 3 -- dBgActor_c::Kill, 0x020ee55c, size 0x74                     */
 /* ------------------------------------------------------------------------- */
 /* THE SLOT THIS CLASS ADDS, and this TU's key function. Actor's table ends at
- * slot 30; Kill is the one new virtual Platform declares, and 97 of the 101
+ * slot 30; Kill is the one new virtual dBgActor_c declares, and 97 of the 101
  * classes deriving from it have exactly 32 slots because of this function.
- * Being the key function is also why THIS file emits _ZTV8Platform,
- * _ZTI8Platform and the destructor variants -- see the header comment.
+ * Being the key function is also why THIS file emits _ZTV10dBgActor_c,
+ * _ZTI10dBgActor_c and the destructor variants -- see the header comment.
  *
  * The particle spawns 0x64000 -- one 20.12 unit is 0x1000, so 100 units --
  * above the platform, and the poof and the sound both take the position by
@@ -354,7 +354,7 @@ void func_ov002_020ee5d0(unsigned char *self, int arg)
 extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
     u32 id, Fix12i x, Fix12i y, Fix12i z);
 
-void Platform::Kill()
+void dBgActor_c::Kill()
 {
     Vector3 pos;
     Vector3 dustPos;
@@ -389,7 +389,7 @@ extern short Vec3_HorzAngle(struct Vector3 *a, struct Vector3 *b);
 extern int _ZN16MeshColliderBase9IsEnabledEv(void *c);
 extern void _ZN16MeshColliderBase7DisableEv(void *c);
 
-void _ZN8Platform14KillByMegaCharER6Player(char *c, char *player)
+void _ZN10dBgActor_c14KillByMegaCharER6Player(char *c, char *player)
 {
     struct Vector3 v;
     v.x = *(int *)(c + 0x5c);
@@ -409,6 +409,6 @@ void _ZN8Platform14KillByMegaCharER6Player(char *c, char *player)
 }
 }
 
-/* ROM ordinals 1 and 0 -- _ZN8PlatformD0Ev (0x020ee464) and _ZN8PlatformD1Ev
+/* ROM ordinals 1 and 0 -- _ZN10dBgActor_cD0Ev (0x020ee464) and _ZN10dBgActor_cD1Ev
    (0x020ee42c) -- are emitted implicitly by the key function above. Nothing is
    written for them here on purpose; see the header comment. */

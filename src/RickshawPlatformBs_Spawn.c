@@ -11,7 +11,7 @@ int *RickshawPlatformBs_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(800);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV13daObjKuruma_c;
         p[0] = (int)data_ov047_0211244c;
     }

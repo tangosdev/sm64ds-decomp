@@ -2,7 +2,7 @@
 #define DAOBJMARUTA_C_H
 
 #include "types.h"
-#include "Platform.h"
+#include "dBgActor_c.h"
 
 /* The abstract base of the rolling logs: the two that roll down a slope in Tall,
  * Tall Mountain and Lethal Lava Land. `maruta` is a log.
@@ -14,7 +14,7 @@
  *   _ZTS13daObjMaruta_c  ov022 0x0211435c   "13daObjMaruta_c"
  *   vtable               ov080 0x02128338, 32 slots, same count as the base
  *   kind                 __si_class_type_info, ONE base, subobject offset 0
- *   base                 dBgActor_c, ov002 0x021089ec -- the tree's Platform
+ *   base                 dBgActor_c, ov002 0x021089ec -- the tree's dBgActor_c
  *
  * THE VTABLE LIVES IN ov080, WITH THE CODE, and the typeinfo record does not --
  * the same split daObjFallBlock_c has. Every one of this class's own slots
@@ -29,12 +29,12 @@
  *
  * TWO DESCENDANTS: daObjFlMaruta_c (RollingLogLll, ov022) and daObjHmMaruta_c
  * (RollingLogTtm, ov030). Each one's destructor stores this class's vtable between
- * its own and _ZTV8Platform.
+ * its own and _ZTV10dBgActor_c.
  *
  * NO FIELDS HERE, AND THAT IS A DELIBERATE FLOOR RATHER THAN A FINDING. Its own
- * methods reach nothing above Platform: Render dispatches through the Model at
- * 0xd4, slot 27 forwards, and its destructor destroys only Platform's two members.
- * Both factories pass 836 = 0x344, which is 0x24 more than sizeof(Platform), but
+ * methods reach nothing above dBgActor_c: Render dispatches through the Model at
+ * 0xd4, slot 27 forwards, and its destructor destroys only dBgActor_c's two members.
+ * Both factories pass 836 = 0x344, which is 0x24 more than sizeof(dBgActor_c), but
  * nothing this class owns accounts for any of it and its Behavior slot is null, so
  * the span is declared on the leaves, where their own Behavior does read it. That
  * is the weaker of the two possible readings and the only one the evidence
@@ -44,9 +44,9 @@
 
 #ifdef __cplusplus
 
-struct daObjMaruta_c : Platform {
+struct daObjMaruta_c : dBgActor_c {
     /* --- vtable --- */
-    /* INLINE ON PURPOSE, for the reason include/Platform.h gives for its own:
+    /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
        every descendant's destructor inlines this body rather than calling
        _ZN13daObjMaruta_cD1Ev (which does exist out of line, at ov080 0x02127014,
        still under its func_ov080_ name). An out-of-line declaration here would

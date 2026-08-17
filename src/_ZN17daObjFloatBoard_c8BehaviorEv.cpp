@@ -4,7 +4,7 @@
 /* daObjFloatBoard_c::Behavior -- vtable slot 6, ov002 0x020b5c4c.
  *
  * Named from the table: 0x020b5c4c is the word slot 6 of
- * _ZTV17daObjFloatBoard_c holds where _ZTV8Platform holds something else, so
+ * _ZTV17daObjFloatBoard_c holds where _ZTV10dBgActor_c holds something else, so
  * it is this class's own override of the virtual ActorBase declares.
  *
  * The board floats at mWaterY, sinks 0x28000 further while someone is standing
@@ -24,7 +24,7 @@
  * which this file now is (see the note at the top of include/SharedFilePtr.h).
  * ApproachLinear's two overloads mangle back to the ROM's own
  * _Z14ApproachLinearRiii and _Z14ApproachLinearRsss; cstd::atan2 and
- * Platform::IsClsnInRangeOnScreen take Fix12<int> BY VALUE, so their
+ * dBgActor_c::IsClsnInRangeOnScreen take Fix12<int> BY VALUE, so their
  * definitions stay mangled free functions -- see include/ShadowModel.h -- and
  * only the call site changes. */
 
@@ -41,7 +41,7 @@ int  func_ov002_020b5ab4(daObjFloatBoard_c *self);
 void func_ov002_020b5b98(daObjFloatBoard_c *self);
 
 short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
-int   _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(Platform *self, int x, int z);
+int   _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(dBgActor_c *self, int x, int z);
 }
 
 int daObjFloatBoard_c::Behavior()
@@ -96,7 +96,7 @@ int daObjFloatBoard_c::Behavior()
     }
 
     func_ov002_020b5b98(this);
-    if (_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0) != 0)
+    if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(this, 0, 0) != 0)
         UpdateClsnPosAndRot();
 
     if (DecIfAbove0_Short(&mRiderTimeout) == 0)

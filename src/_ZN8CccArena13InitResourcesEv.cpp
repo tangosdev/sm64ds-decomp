@@ -12,7 +12,7 @@
 extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(int);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
-extern int _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(int);
 extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,short,int);
 extern void func_020393d4(void*,void*);
@@ -52,7 +52,7 @@ int CccArena::InitResources()
     mModel.mat4x3.t.x = mPosX >> 3;
     mModel.mat4x3.t.y = mPosY >> 3;
     mModel.mat4x3.t.z = mPosZ >> 3;
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
 
     {
         unsigned char i = (unsigned char)((char *)this)[0x32c];

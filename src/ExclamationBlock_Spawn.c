@@ -11,7 +11,7 @@ int *ExclamationBlock_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(1016);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV13QuestionBlock;
         _ZN9ModelAnimC1Ev((char *)p + 0x320);
         _ZN11ShadowModelC1Ev((char *)p + 0x384);

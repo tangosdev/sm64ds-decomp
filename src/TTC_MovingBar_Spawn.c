@@ -11,7 +11,7 @@ int *TTC_MovingBar_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(916);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)data_ov065_0211d2b4;
         _ZN11ShadowModelC1Ev((char *)p + 0x33c);
     }

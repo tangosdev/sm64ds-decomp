@@ -8,12 +8,12 @@ extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *pos);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
 extern void func_020393a4(void *p, int v);
 extern void func_02039394(void *p, int v);
-#define Platform_UpdateModelPosAndRotY _ZN8Platform21UpdateModelPosAndRotYEv
-#define Platform_IsClsnInRange _ZN8Platform13IsClsnInRangeE5Fix12IiES1_
-#define Platform_UpdateClsnPosAndRot _ZN8Platform19UpdateClsnPosAndRotEv
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int fix, int t);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+#define Platform_UpdateModelPosAndRotY _ZN10dBgActor_c21UpdateModelPosAndRotYEv
+#define Platform_IsClsnInRange _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_
+#define Platform_UpdateClsnPosAndRot _ZN10dBgActor_c19UpdateClsnPosAndRotEv
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int fix, int t);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 
 int func_ov022_021112ac(void *thiz)
 {

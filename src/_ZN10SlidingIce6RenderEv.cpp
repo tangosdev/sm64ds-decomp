@@ -11,16 +11,16 @@ struct VObj {
   virtual void m5(int);
 };
 extern "C" {
-void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 }
 
 int SlidingIce::Render()
 {
   int x = actorID==0x5d;
   if(x){
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     ((VObj*)((char*)&mModel))->m5(0);
   }
   return 1;

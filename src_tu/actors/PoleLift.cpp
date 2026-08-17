@@ -25,7 +25,7 @@
  *   PoleLift_ModelFile  .bss   0x021131d8
  *   a static initialiser in .init
  * Compiling the class's key function here does emit a vtable, RTTI records and
- * Platform's out-of-line destructors as a side effect. That is expected and is
+ * dBgActor_c's out-of-line destructors as a side effect. That is expected and is
  * inventoried in the report, not licensed.
  */
 #include "decl_common.h"
@@ -46,9 +46,9 @@
 extern "C" {
 extern void  _ZN12CylinderClsn5ClearEv(void *self);
 extern void  _ZN12CylinderClsn6UpdateEv(void *self);
-extern void  _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern int   _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
-extern void  _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern void  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern int   _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
+extern void  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void  _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *f, int a, int b);
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
@@ -90,7 +90,7 @@ extern "C" int *PoleLift_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(856);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)(_ZTV8PoleLift + 2);
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0x320);
     }
@@ -109,8 +109,8 @@ int PoleLift::InitResources()
         int* p = (int*)(((int)((char*)this) + 0x60));
         *p -= 0x12c000;
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov045_021131a8);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x199, mAngleY, data_ov045_02112510);
@@ -140,9 +140,9 @@ int PoleLift::Behavior()
     }
     *(short*)(((int)((char *)this) + 0x354)) =
         *(short*)(((int)((char *)this) + 0x354)) + 0x100;
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
-    if (_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x400000, 0)) {
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
+    if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x400000, 0)) {
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
     }
     return 1;
 }
@@ -154,7 +154,7 @@ int PoleLift::Behavior()
  *
  * The per-function file spelled this with two local shadow types -- a `struct
  * Base` of six virtuals and a `struct Derived { char pad[0xd4]; Base base; }` --
- * which are Platform's Model at +0xd4 and its slot-5 Render(const Vector3 *).
+ * which are dBgActor_c's Model at +0xd4 and its slot-5 Render(const Vector3 *).
  * Both names are far too generic to survive in a TU that includes the project
  * headers, and both describe something include/Model.h already declares
  * correctly. Reconciled onto the real member: byte-identical, measured.
@@ -172,7 +172,7 @@ int PoleLift::Render()
  *
  * The per-function file reached the collider through
  * `((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))`, which laundered a
- * `u8` marker back into a class pointer. Platform's C++ half types that member
+ * `u8` marker back into a class pointer. dBgActor_c's C++ half types that member
  * as a real MovingMeshCollider, and MovingMeshCollider : MeshCollider :
  * MeshColliderBase, so the cast chain was describing an inheritance the headers
  * already know about. Reconciled onto the member call: byte-identical, measured.
@@ -193,8 +193,8 @@ int PoleLift::CleanupResources()
 /* recovered: real C++ destructor -- the compiler emits the whole body.
  *
  * Two vtable stores and three destructor calls, every one a consequence of
- * `struct PoleLift : Platform`: its own vptr, then Platform's -- inlined,
- * because Platform's destructor is defined in its class body -- then Platform's
+ * `struct PoleLift : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
+ * because dBgActor_c's destructor is defined in its class body -- then dBgActor_c's
  * Model and MovingMeshCollider, then Actor. This class adds no member with a
  * destructor of its own. D0 additionally returns the object to its heap through
  * the inline operator delete it inherits, which is why nothing here mentions a

@@ -45,7 +45,7 @@
  * D2, D0, D1 (pilot report sec 3), and ActorBase -- whose destructor is defined
  * out of line -- has exactly that in the ROM: 0x02043d48 D2, 0x02043d78 D0,
  * 0x02043dbc D1. An INLINE destructor's vague-linkage copies come out D1 then D0
- * with no D2 at all, which is what the pilot measured for Platform and what this
+ * with no D2 at all, which is what the pilot measured for dBgActor_c and what this
  * class has: 0x02013e80 D1, 0x02013ea4 D0, no D2 anywhere in the image. The two
  * classes corroborate each other's source form straight off the cartridge.
  */

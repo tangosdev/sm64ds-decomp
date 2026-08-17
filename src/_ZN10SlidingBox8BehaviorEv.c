@@ -17,8 +17,8 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern int _ZN5Actor13DistToCPlayerEv(void *self);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void *, unsigned int);
 extern void func_ov016_021130a4(char *t);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 
 int _ZN10SlidingBox8BehaviorEv(char *a)
 {
@@ -85,8 +85,8 @@ int _ZN10SlidingBox8BehaviorEv(char *a)
     }
 
     func_ov016_021130a4(a);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(a, 0, 0)) {
-        _ZN8Platform19UpdateClsnPosAndRotEv(a);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(a, 0, 0)) {
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(a);
     }
     return 1;
 }

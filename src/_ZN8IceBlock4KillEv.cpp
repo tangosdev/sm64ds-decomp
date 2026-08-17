@@ -3,8 +3,8 @@
 /* IceBlock::Kill() at ov081 0x02127cf4, 0xa4 bytes -- vtable slot 31.
  *
  * ATTRIBUTED BY THE VTABLE. _ZTV8IceBlock (ov081 0x02128cc4) relocates its word
- * at +0x7c to 0x02127cf4, and _ZTV8Platform carries _ZN8Platform4KillEv at the
- * same slot, so this is this class's own override of Platform's Kill. Slot 30
+ * at +0x7c to 0x02127cf4, and _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv at the
+ * same slot, so this is this class's own override of dBgActor_c's Kill. Slot 30
  * (+0x78) is the main-module 0x02010124 in both tables, which is what makes 31
  * the first slot where they differ.
  *
@@ -27,7 +27,7 @@
  * instructions where the ROM has six. Particle::System::NewSimple stays spelled
  * as its mangled name -- its parameters are Fix12<int> BY VALUE and declaring
  * the true types changes how the caller passes them. Both points are argued in
- * full in src/_ZN8Platform4KillEv.cpp. */
+ * full in src/_ZN10dBgActor_c4KillEv.cpp. */
 #include "IceBlock.h"
 #include "Sound.h"
 

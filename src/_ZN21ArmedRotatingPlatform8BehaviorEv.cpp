@@ -7,7 +7,7 @@
  * matter, the collision mesh too.
  *
  * Three shadow declarations are gone -- a `typedef int Fix12` and stand-in
- * `MeshColliderBase` and `Platform` structs -- along with the raw offsets they
+ * `MeshColliderBase` and `dBgActor_c` structs -- along with the raw offsets they
  * served. `this + 0x8e` is Actor::mAngleY, and the `t[0x1e/2]` read off
  * `this + 0x300` was this class's own unk_31e reached the long way round.
  *
@@ -16,7 +16,7 @@
  */
 #include "ArmedRotatingPlatform.h"
 
-extern "C" bool _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern "C" bool _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 
 int ArmedRotatingPlatform::Behavior()
 {
@@ -36,7 +36,7 @@ int ArmedRotatingPlatform::Behavior()
     }
 
     UpdateModelPosAndRotY();
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0))
         UpdateClsnPosAndRot();
     return 1;
 }

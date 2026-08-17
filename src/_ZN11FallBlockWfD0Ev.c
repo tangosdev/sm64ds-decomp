@@ -9,13 +9,13 @@
 extern void *data_020a0eac;
 extern int _ZTV11FallBlockWf[];
 extern int _ZTV16daObjFallBlock_c[];
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 extern void *data_020a0eac;
 int *_ZN11FallBlockWfD0Ev(int *t)
 {
     t[0] = (int)_ZTV11FallBlockWf;
     t[0] = (int)_ZTV16daObjFallBlock_c;
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);

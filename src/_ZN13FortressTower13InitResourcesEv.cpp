@@ -8,8 +8,8 @@ extern "C" void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -43,8 +43,8 @@ int FortressTower::InitResources()
         void *f = _ZN5Model8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov102_0214e188 + idx * 0xc));
         _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, f, 1, -1);
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
 
     idx = *(unsigned char *)(c + 0x31e);
     if (idx == 0 || idx == 2) {

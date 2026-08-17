@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -15,10 +15,10 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "ShadowModel.h"
 
-struct ArrowSignRight : Platform {
+struct ArrowSignRight : dBgActor_c {
     u8  pad_31e[0x2];
     ShadowModel mShadowModel;         /* 0x320 */
     u8 unk_348;                       /* 0x348 */
@@ -32,9 +32,9 @@ struct ArrowSignRight : Platform {
     int CleanupResources();
     int Render();
     /* THE VTABLE SAYS SO. _ZTV14ArrowSignRight is ov098 0x0213c3d8 and the word
-       at +0x7c relocates to ov098 0x02137ccc, while _ZTV8Platform carries
-       _ZN8Platform4KillEv at the same slot -- so this is this class's own
-       override of Platform's Kill, not a new virtual. Slot 30 (+0x78) is still
+       at +0x7c relocates to ov098 0x02137ccc, while _ZTV10dBgActor_c carries
+       _ZN10dBgActor_c4KillEv at the same slot -- so this is this class's own
+       override of dBgActor_c's Kill, not a new virtual. Slot 30 (+0x78) is still
        the main-module 0x02010124 both tables share, which is what makes 31 the
        first slot where they differ. An override adds no field and no slot; the
        0x380 assertion below is unchanged. */

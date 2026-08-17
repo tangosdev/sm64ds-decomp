@@ -9,8 +9,8 @@ extern unsigned char IsAreaShowing(int idx);
 extern void func_ov002_020ba01c(char *c, int mask, int b, int base, int target);
 extern void func_ov002_020ba4d8(char *c, int i);
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(char *c);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char *c);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
 extern int _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int id, int vol);
 }
 
@@ -49,8 +49,8 @@ int StarSwitch::Behavior()
         id344 = mTargetActorID;
         if (id344 == 0) {
             func_ov002_020ba01c(((char *)this), 2, 3, 0x333, 0x1000);
-            _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
-            if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0) != 0) {
+            _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
+            if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0) != 0) {
                 func_ov002_020b9f80(((char *)this));
             }
             return 1;
@@ -67,8 +67,8 @@ int StarSwitch::Behavior()
         *p = *p + 1;
     }
     func_ov002_020ba520(((char *)this));
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0) != 0) {
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0) != 0) {
         func_ov002_020b9f80(((char *)this));
     }
 

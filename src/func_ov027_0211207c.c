@@ -13,7 +13,7 @@ int *func_ov027_0211207c(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(988);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)data_ov027_02113a90;
         _ZN9ModelAnimC1Ev((char *)p + 0x320);
         _ZN15TextureSequenceC1Ev((char *)p + 0x384);

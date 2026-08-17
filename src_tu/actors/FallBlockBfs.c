@@ -32,7 +32,7 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 extern void *data_020a0eac;
 extern int func_0213a2cc(void *self, void *data);
 extern int data_ov045_021130ac[];
@@ -50,7 +50,7 @@ int *FallBlockBfs_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(844);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV21daObjKm2_Fall_Block_c;
         p[0] = (int)_ZTV12FallBlockBfs;
     }
@@ -84,7 +84,7 @@ int *_ZN12FallBlockBfsD0Ev(int *t)
 {
     t[0] = (int)_ZTV21daObjKm2_Fall_Block_c;
     t[0] = (int)_ZTV10dBgActor_c;
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);
@@ -103,7 +103,7 @@ int *_ZN12FallBlockBfsD1Ev(int *t)
 {
     t[0] = (int)_ZTV21daObjKm2_Fall_Block_c;
     t[0] = (int)_ZTV10dBgActor_c;
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);

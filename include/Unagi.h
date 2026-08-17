@@ -73,7 +73,7 @@ struct Unagi : dEnemyBase_c {
 
 /* The same object for a C translation unit, flat -- Render and D0 are C files
    that read these fields, and D0 is compiler-generated so it can never be
-   migrated. Same arrangement as include/Platform.h. */
+   migrated. Same arrangement as include/dBgActor_c.h. */
 struct Unagi {
     u8  pad_000[0x8];
     u32 mParam;            /* 0x008 */

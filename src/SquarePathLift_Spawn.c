@@ -10,7 +10,7 @@ int *SquarePathLift_Spawn(void)
 {
     int *p = (int *)_ZN9ActorBasenwEj(816);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV14SquarePathLift;
         _ZN7PathPtrC1Ev((char *)p + 0x320);
     }

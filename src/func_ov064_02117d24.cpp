@@ -6,9 +6,9 @@ extern Entry data_ov064_0211c750[];
 extern short data_02082214[];
 extern "C" {
 extern int _Z14ApproachLinearRiii(int* a, int b, int c);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 }
 
 extern "C" int func_ov064_02117d24(char* c) {
@@ -33,9 +33,9 @@ extern "C" int func_ov064_02117d24(char* c) {
     int t324 = *(int*)(c + 0x324);
     int saved = *(int*)(c + 0x60);
     *(int*)(c + 0x60) = t324 + (t330 + t320);
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     *(int*)(c + 0x60) = saved;
     *(unsigned char*)(c + 0x33a) = 0;
     return 1;

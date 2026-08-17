@@ -9,7 +9,7 @@ extern Entry data_ov064_0211c904[];
 extern "C" void func_ov064_02118ee4(void* c);
 extern "C" char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern "C" void func_ov064_02119010(void* c);
-extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* c, Fix12i a, Fix12i b);
+extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* c, Fix12i a, Fix12i b);
 extern "C" void func_ov064_02118fa4(void* c);
 
 struct BowserPuzzlePiece {
@@ -31,7 +31,7 @@ int BowserPuzzlePiece::Behavior() {
         *ctr = *ctr + 1;
     }
     func_ov064_02119010(cc);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(cc, 0, 0) != 0)
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(cc, 0, 0) != 0)
         func_ov064_02118fa4(cc);
     return 1;
 }

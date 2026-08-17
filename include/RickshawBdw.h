@@ -6,10 +6,10 @@
 
 /* The Bob-omb Battlefield rickshaw axle. ROM name daObjKm1_Kurumajiku_c.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjKurumajiku_c, which
- * derives from Platform, and the difference is visible in the bytes rather than
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjKurumajiku_c, which
+ * derives from dBgActor_c, and the difference is visible in the bytes rather than
  * only in the RTTI: _ZN11RickshawBdwD1Ev stores THREE vptrs -- its own,
- * daObjKurumajiku_c's, then Platform's. Modelled as a direct Platform subclass
+ * daObjKurumajiku_c's, then dBgActor_c's. Modelled as a direct dBgActor_c subclass
  * the destructor compiles to 0x44 against the ROM's 0x50, twelve bytes short,
  * exactly one `ldr` + `str` + pool word.
  *

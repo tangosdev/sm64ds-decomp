@@ -6,7 +6,7 @@
 extern "C" {
 int DecIfAbove0_Byte(u8 *p);
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 int Vec3_Dist(void *a, void *b);
 unsigned _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void *pos, s16 e);
 void func_020393a4(void *p, int v);
@@ -30,7 +30,7 @@ int TowerStep::Behavior()
         }
         _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);
         UpdateModelPosAndRotY();
-        if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000) != 0)
+        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000) != 0)
             UpdateClsnPosAndRot();
     } else if (kind == 2) {
         if (DecIfAbove0_Byte(&unk_390) == 0) {
@@ -64,7 +64,7 @@ int TowerStep::Behavior()
         }
     c2_after:
         UpdateModelPosAndRotY();
-        if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000) != 0)
+        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000) != 0)
             UpdateClsnPosAndRot();
         if (Vec3_Dist(&mPosX, &unk_068) != 0) {
             unsigned z = 0;
@@ -74,7 +74,7 @@ int TowerStep::Behavior()
         }
         unk_391 = 0;
     } else {
-        _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000);
+        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000);
     }
 
     func_020393a4(&mMeshCollider, 0x150000);

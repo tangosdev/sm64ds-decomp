@@ -9,7 +9,7 @@
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *data_020a0eac;
 extern int _ZTV11daDsnBase_c[];
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 extern void *data_020a0eac;
 extern int data_ov025_02113850[];
 int *func_ov025_02111928(int *t)
@@ -18,7 +18,7 @@ int *func_ov025_02111928(int *t)
     t[0] = (int)_ZTV11daDsnBase_c;
     _ZN11ShadowModelD1Ev((char *)t + 0x338);
     _ZN15TextureSequenceD1Ev((char *)t + 0x324);
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);

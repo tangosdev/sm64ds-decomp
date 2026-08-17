@@ -3,8 +3,8 @@ enum { false = 0, true = 1 };
 
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* bmd, int a, int b);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 extern int _ZN5Actor9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, void* mtx, int f, s16 s, void* clps);
@@ -40,8 +40,8 @@ int _ZN13BigBrickBlock13InitResourcesEv(void* self)
             *(void**)((char*)data_ov002_02108ab0 + *(u8*)(c+0x32c) * 0xc));
         _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
 
     {
     int t11 = *(u16*)(c+0xc);

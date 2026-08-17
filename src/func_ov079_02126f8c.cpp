@@ -7,7 +7,7 @@ typedef int Fix12;
 struct Vector3 { int x, y, z; };
 struct Vector3_16 { short x, y, z; };
 struct Actor;
-struct Platform {
+struct dBgActor_c {
     int UpdateKillByMegaChar(short, short, short, Fix12);
     int IsClsnInRange(Fix12, Fix12);
 };
@@ -15,8 +15,8 @@ struct Platform {
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" int _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(void *, short, short, short, Fix12);
-extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *, Fix12, Fix12);
+extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *, short, short, short, Fix12);
+extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, Fix12, Fix12);
 
 struct Actor_s {
     static Actor* FindWithID(unsigned int);
@@ -36,15 +36,15 @@ Fix12 Vec3_HorzDist(const Vector3* a, const Vector3* b);
 short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int AngleDiff(int a, int b);
 }
-int Platform::UpdateKillByMegaChar(short, short, short, Fix12);
+int dBgActor_c::UpdateKillByMegaChar(short, short, short, Fix12);
 Actor* Actor_s::FindWithID(unsigned int);
 Actor* Actor_s::ClosestPlayer();
 Actor* Actor_s::Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
-int Platform::IsClsnInRange(Fix12, Fix12);
+int dBgActor_c::IsClsnInRange(Fix12, Fix12);
 
 extern "C" int func_ov079_02126f8c(char* c) {
-    Platform* self = (Platform*)c;
-    if (_ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(self, 0x2000, 0, 0, 0xc8000))
+    dBgActor_c* self = (dBgActor_c*)c;
+    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(self, 0x2000, 0, 0, 0xc8000))
         return 1;
     if (!_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x320))) {
         Actor* p = _ZN5Actor13ClosestPlayerEv((Actor_s*)c);
@@ -64,6 +64,6 @@ extern "C" int func_ov079_02126f8c(char* c) {
             *(int*)((char*)spawned + 0x3dc) = (int)c;
         }
     }
-    _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(self, 0, 0);
+    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0, 0);
     return 1;
 }

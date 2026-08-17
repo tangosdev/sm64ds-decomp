@@ -13,7 +13,7 @@ void _ZN12CylinderClsn6UpdateEv(void *);
 void func_ov098_02139850(void *);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void *);
 void func_ov098_021396a4(void *);
-int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *, int, int);
+int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *, int, int);
 void func_ov098_021397c8(void *);
 }
 
@@ -54,7 +54,7 @@ void func_ov098_021389f8(char *c) {
     if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320)) {
         func_ov098_021396a4(c);
     }
-    if (!_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0x600000, 0)) {
+    if (!_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0x600000, 0)) {
         return;
     }
     func_ov098_021397c8(c);

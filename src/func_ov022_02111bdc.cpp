@@ -15,7 +15,7 @@ struct Matrix4x3;
 struct CLPS_Block;
 struct Model { static BMD_File *LoadFile(SharedFilePtr &p); };
 struct ModelBase { void SetFile(BMD_File *f, int a, int b); };
-struct Platform { void UpdateClsnPosAndRot(); };
+struct dBgActor_c { void UpdateClsnPosAndRot(); };
 struct MeshCollider { static KCL_File *LoadFile(SharedFilePtr &p); };
 struct MovingMeshCollider {
     void SetFile(KCL_File *f, const Matrix4x3 &m, Fix12 a, short b, CLPS_Block &cb);
@@ -39,7 +39,7 @@ extern "C" int func_ov022_02111bdc(char *c)
     BMD_File *f = Model::LoadFile(data_ov022_02114580);
     ((ModelBase *)(c + 0xd4))->SetFile(f, 1, -1);
     func_ov022_02111a1c(c);
-    ((Platform *)c)->UpdateClsnPosAndRot();
+    ((dBgActor_c *)c)->UpdateClsnPosAndRot();
     KCL_File *k = MeshCollider::LoadFile(data_ov022_02114578);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((MovingMeshCollider *)(c + 0x124), k, *(Matrix4x3 *)(c + 0x2ec), 0x1000, self->unk_08e, data_ov064_0211bb2c);
     func_020393d4((int *)(c + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);

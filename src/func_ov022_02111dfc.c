@@ -10,8 +10,8 @@ typedef int Fix12;
 typedef short s16;
 extern void func_020393a4(int* p, int v);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char* c, Fix12 a, Fix12 b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(char* c);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char* c, Fix12 a, Fix12 b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char* c);
 
 int func_ov022_02111dfc(char* c) {
     struct daObjFl_Seesaw_c *self = (struct daObjFl_Seesaw_c *)(void *)c;
@@ -27,8 +27,8 @@ int func_ov022_02111dfc(char* c) {
     }
   }
   func_ov022_02111d48(c);
-  if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0) {
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
+  if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0) {
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
   }
   return 1;
 }

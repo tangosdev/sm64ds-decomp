@@ -8,8 +8,8 @@ extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
 }
 extern "C" {
@@ -48,8 +48,8 @@ int TTC_MovingBar::InitResources()
         1, -1);
 
     _ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel);
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
 
     i = unk_31e;
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(

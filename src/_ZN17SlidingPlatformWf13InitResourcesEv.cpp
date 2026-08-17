@@ -6,8 +6,8 @@
 extern "C" {
     void* _ZN5Model8LoadFileER13SharedFilePtr(void* shared);
     void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* mb, void* bmd, int a, int b);
-    void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);
-    void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+    void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
+    void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
     void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* shared);
     void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* mc, void* kcl, void* mtx, int f, s16 s, void* clps);
     void func_020393d4(void* p, void* v);
@@ -51,8 +51,8 @@ int SlidingPlatformWf::InitResources()
     *(s32*)(c+0x324) = *(s32*)(c+0x5c);
     *(s32*)(c+0x328) = *(s32*)(c+0x60);
     *(s32*)(c+0x32c) = *(s32*)(c+0x64);
-    _ZN8Platform21UpdateModelPosAndRotYEv(((void*)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((void*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((void*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((void*)this));
 
     if (*(u8*)(c+0x322) == 6) {
         int oi = *(u8*)(c+0x322) * 0xc;

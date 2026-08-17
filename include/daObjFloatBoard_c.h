@@ -2,7 +2,7 @@
 #define DAOBJFLOATBOARD_C_H
 
 #include "types.h"
-#include "Platform.h"
+#include "dBgActor_c.h"
 
 /* The abstract base of the planks that float on water and tip when you stand on
  * them: Jolly Roger Bay's raft and the two Wet-Dry World boards.
@@ -14,7 +14,7 @@
  *   _ZTS17daObjFloatBoard_c  ov002 0x02108fc0   "17daObjFloatBoard_c"
  *   vtable                   ov002 0x02108fdc, 32 slots, same count as the base
  *   kind                     __si_class_type_info, ONE base, subobject offset 0
- *   base                     dBgActor_c, ov002 0x021089ec -- the tree's Platform
+ *   base                     dBgActor_c, ov002 0x021089ec -- the tree's dBgActor_c
  *
  * ABSTRACT IN ONE SLOT ONLY, which makes it the odd one out in this series. Slot 0
  * (InitResources) is null and each leaf supplies it, but slot 3
@@ -25,7 +25,7 @@
  * THREE DESCENDANTS: daObjKi_Ita_c (FloatOnWaterPlatformJrb), daObjWcObj01_c
  * (FloatOnWaterPlatformWdwSquare) and daObjWcObj06_c
  * (FloatOnWaterPlatformWdwRectangle). Each destructor stores this class's vtable
- * between its own and _ZTV8Platform.
+ * between its own and _ZTV10dBgActor_c.
  *
  * SIZE 0x348, the literal all three factories pass to ActorBase::operator new.
  *
@@ -56,7 +56,7 @@
 
 #ifdef __cplusplus
 
-struct daObjFloatBoard_c : Platform {
+struct daObjFloatBoard_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
     u8   pad_320[0x4];
     s32  mWaterY;           /* 0x324 */
@@ -72,7 +72,7 @@ struct daObjFloatBoard_c : Platform {
     s32  mFallbackWaterY;   /* 0x344 */
 
     /* --- vtable --- */
-    /* INLINE ON PURPOSE -- see include/Platform.h. The out-of-line copy is at
+    /* INLINE ON PURPOSE -- see include/dBgActor_c.h. The out-of-line copy is at
        ov002 0x020b5a70, still under its func_ov002_ name. */
     virtual ~daObjFloatBoard_c() {}
 

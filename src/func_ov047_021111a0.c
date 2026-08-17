@@ -6,14 +6,14 @@
 #include "decl_common.h"
 extern int data_ov047_021122a0[];
 extern int _ZTV17daObjKurumajiku_c[];
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = data_ov047_021122a0; VT1 = _ZTV17daObjKurumajiku_c */
 int *func_ov047_021111a0(int *t)
 {
     t[0] = (int)data_ov047_021122a0;
     t[0] = (int)_ZTV17daObjKurumajiku_c;
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);

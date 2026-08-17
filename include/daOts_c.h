@@ -91,7 +91,7 @@ struct daOts_c : dEnemyBase_c {
        and an out-of-line declaration here would make each child emit a call the ROM
        does not have. Being inline also leaves this class without a key function, so
        merely including this header does not emit _ZTV7daOts_c. Same reasoning, same
-       wording, as include/Platform.h. */
+       wording, as include/dBgActor_c.h. */
     virtual ~daOts_c() {}
 
     /* The three slots this class owns outright, each named by the diff above rather

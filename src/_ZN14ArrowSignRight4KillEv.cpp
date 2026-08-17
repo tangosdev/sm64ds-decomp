@@ -3,9 +3,9 @@
 /* ArrowSignRight::Kill() at ov098 0x02137ccc, 0x74 bytes -- vtable slot 31.
  *
  * ATTRIBUTED BY THE VTABLE. _ZTV14ArrowSignRight (ov098 0x0213c3d8) relocates
- * its word at +0x7c to 0x02137ccc, and _ZTV8Platform carries
- * _ZN8Platform4KillEv at the same slot, so this is this class's own override of
- * Platform's Kill. Slot 30 (+0x78) is the main-module 0x02010124 in both
+ * its word at +0x7c to 0x02137ccc, and _ZTV10dBgActor_c carries
+ * _ZN10dBgActor_c4KillEv at the same slot, so this is this class's own override of
+ * dBgActor_c's Kill. Slot 30 (+0x78) is the main-module 0x02010124 in both
  * tables, which is what makes 31 the first slot where they differ.
  *
  * The file used to carry `// recovered name: ArrowSignRight_Kill` alongside
@@ -13,7 +13,7 @@
  * two agreed here; the comment is gone anyway because the vtable, not a
  * comment, is the source.
  *
- * Same shape as Platform::Kill, with three differences the ROM dictates: the
+ * Same shape as dBgActor_c::Kill, with three differences the ROM dictates: the
  * particle is 0xe rather than 0xa, it spawns 0x28000 -- forty 20.12 units --
  * above the sign rather than a hundred, and the poof is DisappearPoofDustAt
  * (particles 0x127/0x128) rather than PoofDustAt.
@@ -23,7 +23,7 @@
  * instructions where the ROM has six. Particle::System::NewSimple stays spelled
  * as its mangled name -- its parameters are Fix12<int> BY VALUE and declaring
  * the true types changes how the caller passes them. Both points are argued in
- * full in src/_ZN8Platform4KillEv.cpp. */
+ * full in src/_ZN10dBgActor_c4KillEv.cpp. */
 #include "ArrowSignRight.h"
 #include "Sound.h"
 

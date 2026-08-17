@@ -13,8 +13,8 @@
 extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *p, int file, int a, int b);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *p);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *p);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *p);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *p);
 extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *p, int kcl, void *mtx, int fix, short s, void *clps);
 extern void func_020393d4(void *p, int v);
@@ -28,8 +28,8 @@ s32 FireSeaElevator::InitResources() {
     struct daObjKm2_Agaru_c *self = (struct daObjKm2_Agaru_c *)(void *)c;
   int f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov045_02113188);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);
-  _ZN8Platform21UpdateModelPosAndRotYEv(c);
-  _ZN8Platform19UpdateClsnPosAndRotEv(c);
+  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
   f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov045_02113180);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     c+0x124, f, c+0x2ec, 0x199, self->unk_08e, data_ov045_021125d0);

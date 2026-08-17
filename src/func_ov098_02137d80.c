@@ -9,5 +9,5 @@ extern void _ZN6Player16IncMegaKillCountEv(void*);
 void func_ov098_02137d80(void* a, void* b){
   _ZN6Player16IncMegaKillCountEv(b);
   func_02012694(0x1e,(char*)a+0x74);
-  _ZN8Platform14KillByMegaCharER6Player(a,b);
+  _ZN10dBgActor_c14KillByMegaCharER6Player(a,b);
 }

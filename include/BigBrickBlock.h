@@ -3,16 +3,16 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+ * dBgActor_c's, and is inherited now.
  *
  * ONE CLASS, FIVE ACTORS. BrickBlock, BigBrickBlock, BrickBlockSwitchActivated,
  * BlackBrickBlock and FortressTowerWall all have their own SpawnInfo, and all
  * five factories are the same three instructions: ActorBase::operator new(816),
- * Platform::Platform(), store _ZTV13BigBrickBlock. There is no second vtable and
+ * dBgActor_c::dBgActor_c(), store _ZTV13BigBrickBlock. There is no second vtable and
  * no second size anywhere in the family, which is why every method here switches
  * on actorID (0xf, 0x10, 0x11, 0x12, 0x13, 0x2e) instead of being overridden.
  *
@@ -36,9 +36,9 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 
-struct BigBrickBlock : Platform {
+struct BigBrickBlock : dBgActor_c {
     u8 unk_31e;                       /* 0x31e */
     u8 unk_31f;                       /* 0x31f */
     u8 mEventID;                      /* 0x320 */
@@ -62,10 +62,10 @@ struct BigBrickBlock : Platform {
     /* --- vtable --- */
     virtual ~BigBrickBlock();
 
-    /* Slot 31, Platform's own new virtual (include/Platform.h). Attributed by
+    /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). Attributed by
        the vtable: _ZTV13BigBrickBlock (ov002 0x02108adc) carries 0x020b38a0 at
-       slot 31 -- vtable + 0x7c -- where _ZTV8Platform carries
-       _ZN8Platform4KillEv, and slot 30 is Actor's 0x020100dc in both. An
+       slot 31 -- vtable + 0x7c -- where _ZTV10dBgActor_c carries
+       _ZN10dBgActor_c4KillEv, and slot 30 is Actor's 0x020100dc in both. An
        override adds no slot and no field, so the size assert is unaffected.
 
        NOT the key function: ~BigBrickBlock() above is declared out of line and

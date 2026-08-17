@@ -23,25 +23,25 @@ extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
    did: "new unresolved reference: func_ov100_021470f4". */
 namespace Sound { unsigned int PlayLong(unsigned int, unsigned int, unsigned int, const Vector3&, short); }
 /* `Platform2` and `Platform3` were phantom CLASSES, and nothing in the source text
-   said so -- the names only exist after mangling. `_ZN8Platform19UpdateClsnPosAndRotEv`
-   is Platform::UpdateClsnPosAndRot, but read as `_ZN9Platform2` + `19UpdateClsn...` it
+   said so -- the names only exist after mangling. `_ZN10dBgActor_c19UpdateClsnPosAndRotEv`
+   is dBgActor_c::UpdateClsnPosAndRot, but read as `_ZN9Platform2` + `19UpdateClsn...` it
    splits into a class `Platform2` whose method name is one character shorter. Two
    different shadow structs grew out of one class that way. The length prefix is the
    only thing that distinguishes them, and the retail relocations for both call sites
-   land on Platform's methods. */
+   land on dBgActor_c's methods. */
 struct Actor;
-struct Platform { void UpdateClsnPosAndRot(); };
+struct dBgActor_c { void UpdateClsnPosAndRot(); };
 
 /* IsClsnInRange takes two Fix12<int>, not two ints -- the S1_ back-reference in
-   _ZN8Platform13IsClsnInRangeE5Fix12IiES1_ can only come from a repeated class type.
-   It is declared by its final name rather than as a member of Platform above,
+   _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_ can only come from a repeated class type.
+   It is declared by its final name rather than as a member of dBgActor_c above,
    because a faithful `int IsClsnInRange(Fix12<int>, Fix12<int>)` does not reproduce
    the call: Fix12<int> is an aggregate with no converting constructor from int, and
    every way of materialising a zero one (`= {0}`, `Fix12<int>()`, a named local)
    costs stack traffic the ROM does not have -- measured at 0x100 and 0x104 bytes
    against the cartridge's 0xec. The ROM passes the pair in registers exactly as two
    ints, so that is what the call site says. */
-extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern "C" void func_020393a4(int *p, int v);
 extern "C" void func_02039394(int *p, int v);
 struct MeshColliderBase { int IsEnabled(); void Enable(Actor *a); };
@@ -58,7 +58,7 @@ extern "C" int func_ov100_021470f4(char* c)
         }
     }
     func_ov100_0214700c(c);
-    ((Platform*)c)->UpdateClsnPosAndRot();
+    ((dBgActor_c*)c)->UpdateClsnPosAndRot();
     func_ov100_02146e70(c);
     func_020393a4((int*)(c + 0x124), 0x150000);
     func_02039394((int*)(c + 0x124), 0x1000);
@@ -68,7 +68,7 @@ extern "C" int func_ov100_021470f4(char* c)
             ((MeshColliderBase*)(c + 0x124))->Enable((Actor*)(void*)c);
         }
     } else {
-        _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
+        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
     }
     return 1;
 }

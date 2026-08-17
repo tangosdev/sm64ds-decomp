@@ -12,10 +12,10 @@ extern "C" void _ZN6Player9DropActorEv(void *self);
 extern "C" void func_ov002_020bb060(char *c);
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
 extern "C" int _ZN5Actor13DistToCPlayerEv(void *self);
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern "C" void func_ov002_020baf80(char *t);
-extern "C" int _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(void *self, short a, short b, short c, int fix);
+extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *self, short a, short b, short c, int fix);
 extern "C" int _ZN16MeshColliderBase9IsEnabledEv(void *self);
 extern "C" void _ZN16MeshColliderBase7DisableEv(void *self);
 extern "C" void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
@@ -23,7 +23,7 @@ extern "C" void *_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vec
 extern "C" void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void *self, const struct Vector3 *vec);
 extern "C" void func_ov002_020bae9c(char *c);
 extern "C" void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *m, int a, int b, int c, u32 j);
-extern "C" void _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern "C" void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern "C" void func_ov002_020bbda4(char *c);
 extern "C" void _ZN12CylinderClsn5ClearEv(void *self);
 extern "C" void _ZN12CylinderClsn6UpdateEv(void *self);
@@ -71,13 +71,13 @@ extern "C" int _ZN8SignPost8BehaviorEv(char *c)
             && _ZN5Actor13DistToCPlayerEv(c) > 0x7d0000) {
             *(u8 *)(c + 0x58e) = 2;
             *(int *)(c + 0x60) = *(int *)(c + 0x3b4);
-            _ZN8Platform21UpdateModelPosAndRotYEv(c);
-            _ZN8Platform19UpdateClsnPosAndRotEv(c);
+            _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
             func_ov002_020baf80(c);
         }
     }
 
-    if (_ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(c, -0x2000, 0, 0, 0x46000))
+    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(c, -0x2000, 0, 0, 0x46000))
         return 1;
 
     if (*(u8 *)(c + 0x58c) != 0) {
@@ -115,7 +115,7 @@ extern "C" int _ZN8SignPost8BehaviorEv(char *c)
 
     DecIfAbove0_Byte((u8 *)(c + 0x58f));
     if (*(u8 *)(c + 0x590) == 0)
-        _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
+        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
     func_ov002_020bbda4(c);
     _ZN12CylinderClsn5ClearEv(c + 0x320);
     _ZN12CylinderClsn6UpdateEv(c + 0x320);

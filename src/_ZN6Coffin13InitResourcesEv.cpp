@@ -24,13 +24,13 @@ struct MovingMeshCollider {
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, KCL_File* f, const Matrix4x3& m, Fix12 s, short n, CLPS_Block& c);
 
-struct Platform {
+struct dBgActor_c {
     void UpdateClsnPosAndRot();
 };
 
 KCL_File* MeshCollider::LoadFile(SharedFilePtr&);
 int MovingMeshCollider::SetFile(KCL_File*, const Matrix4x3&, Fix12, short, CLPS_Block&);
-void Platform::UpdateClsnPosAndRot();
+void dBgActor_c::UpdateClsnPosAndRot();
 
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
@@ -67,7 +67,7 @@ int Coffin::InitResources()
     mPosY = res.y;
     mPosZ = res.z;
     func_ov071_02122080(((char*)this));
-    ((Platform*)((char*)this))->UpdateClsnPosAndRot();
+    ((dBgActor_c*)((char*)this))->UpdateClsnPosAndRot();
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((MovingMeshCollider*)((char*)&mMeshCollider), MeshCollider::LoadFile(data_ov071_021230d8), *(Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, data_ov063_0211ebd8);
     func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     return 1;

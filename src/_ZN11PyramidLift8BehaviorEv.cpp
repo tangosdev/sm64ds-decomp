@@ -4,9 +4,9 @@
 #include "PyramidLift.h"
 extern "C" {
 extern short data_02082214[];
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 }
 
 int PyramidLift::Behavior()
@@ -74,9 +74,9 @@ int PyramidLift::Behavior()
         break;
     }
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     unk_3f7 = 0;
     return 1;
 }

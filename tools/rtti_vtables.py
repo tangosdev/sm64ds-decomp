@@ -469,7 +469,7 @@ def emit_headers(tables):
         lines.append('#include "types.h"')
         lines.append("")
         lines.append("/* %s -- an intermediate class the ROM's RTTI names and the tree" % cls)
-        lines.append(" * did not.  Base: %s (the tree calls it Platform)." % parent.get(cls, "?"))
+        lines.append(" * did not.  Base: %s (the tree calls it dBgActor_c)." % parent.get(cls, "?"))
         lines.append(" *")
         vmod = t.get("vtable_module") or rec["module"]
         lines.append(" * typeinfo %s (%s), vtable %s (%s), %d slots (base has %s)."
@@ -576,7 +576,7 @@ def recover_fields(tables):
     # as a NOVEL field of the derived class -- a fully populated, self-consistent,
     # wrong answer, which is the exact failure this tree has been bitten by before.
     # Fail loudly instead.
-    for n in ("Platform", "Actor", "ActorBase", "dBase_c", "dEnemyBase_c"):
+    for n in ("dBgActor_c", "Actor", "ActorBase", "dBase_c", "dEnemyBase_c"):
         p = REPO / "include" / (n + ".h")
         if not p.is_file():
             raise SystemExit(

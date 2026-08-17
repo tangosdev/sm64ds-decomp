@@ -1,7 +1,7 @@
 #include "types.h"
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
 extern u16 DecIfAbove0_Short(void *p);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *c, void *cc);
 extern int RandomIntInternal(int *seed);
@@ -15,9 +15,9 @@ int _ZN15TtcRotatingGear8BehaviorEv(char *c)
 {
     if (data_0209f2c0 == 3) {
         *(s32 *)(c + 0x60) = *(s32 *)(c + 0x324) + 0x14a000;
-        _ZN8Platform21UpdateModelPosAndRotYEv(c);
-        if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
-            _ZN8Platform19UpdateClsnPosAndRotEv(c);
+        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
+            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
         goto ret1;
     }
 
@@ -74,9 +74,9 @@ Lchk:
     }
 
 tail:
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
 ret1:
     return 1;
 }

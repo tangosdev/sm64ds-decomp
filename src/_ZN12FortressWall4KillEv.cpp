@@ -4,8 +4,8 @@
  *
  * ATTRIBUTED BY THE VTABLE. _ZTV12FortressWall (ov079 0x021280b0) carries
  * 0x02127280 at slot 31 -- config/arm9/overlays/ov079/relocs.txt has
- * `from:0x0212812c kind:load to:0x02127280` -- while _ZTV8Platform's word at the
- * same slot (from:0x0210aeb4) relocates to 0x020ee55c, _ZN8Platform4KillEv.
+ * `from:0x0212812c kind:load to:0x02127280` -- while _ZTV10dBgActor_c's word at the
+ * same slot (from:0x0210aeb4) relocates to 0x020ee55c, _ZN10dBgActor_c4KillEv.
  * Different addresses in the same slot: this is the class's own override.
  *
  * The odd one out of this family. It plays the sound FIRST, spawns particle
@@ -21,7 +21,7 @@
  *
  * Particle::System::NewSimple stays spelled as its mangled name -- its
  * parameters are Fix12<int> BY VALUE and declaring the true types changes how
- * the caller passes them; argued in full in src/_ZN8Platform4KillEv.cpp. */
+ * the caller passes them; argued in full in src/_ZN10dBgActor_c4KillEv.cpp. */
 #include "FortressWall.h"
 #include "Sound.h"
 

@@ -44,9 +44,9 @@ extern void _ZN5Actor8PoofDustEv(void *self);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *self);
 extern void *_ZN5Actor15FindWithActorIDEjPS_(u32 id, void *prev);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern s32 _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, s32 a, s32 b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern s32 _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, s32 a, s32 b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 
 #include "decl_common.h"
 }
@@ -91,8 +91,8 @@ s32 BlueCoinSwitch::Behavior()
             }
         }
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0x1f4000, 0) != 0)
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0x1f4000, 0) != 0)
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     return 1;
 }

@@ -7,7 +7,7 @@
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
 extern int data_ov027_02113a90[];
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 /* recovered: vtable identified, renamed to Class_Method */
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *data_020a0eac;
@@ -17,7 +17,7 @@ int *func_ov027_02111924(int *t)
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x398);
     _ZN15TextureSequenceD1Ev((char *)t + 0x384);
     _ZN9ModelAnimD1Ev((char *)t + 0x320);
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN5ActorD2Ev(t);

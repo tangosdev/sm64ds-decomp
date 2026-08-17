@@ -11,7 +11,7 @@ typedef long long s64;
 typedef int Fix12i;
 
 extern "C" {
-int _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(void* self, s16 a, s16 b, s16 c, Fix12i d);
+int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void* self, s16 a, s16 b, s16 c, Fix12i d);
 u8 DecIfAbove0_Byte(u8* p);
 Fix12i Vec3_HorzDist(const void* a, const void* b);
 s16 Vec3_HorzAngle(const void* a, const void* b);
@@ -29,8 +29,8 @@ void Vec3_MulScalar(void* out, void* v, int scalar);
 void SubVec3(void* a, void* b, void* c);
 int _ZNK7PathPtr5LoopsEv(const void* self);
 void func_ov018_02111278(char* c);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 }
 
 extern s16 data_02082214[];
@@ -45,7 +45,7 @@ extern "C" int func_ov018_02111368(char* self)
     s16 target;
     char* other;
 
-    if (_ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(self, 0x2000, 0, 0, 0) != 0)
+    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(self, 0x2000, 0, 0, 0) != 0)
         return 1;
 
     if (DecIfAbove0_Byte((u8*)(self + 0x331)) == 0)
@@ -139,8 +139,8 @@ extern "C" int func_ov018_02111368(char* self)
 
     func_ov018_02111278(self);
 
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(self, 0, 0) != 0) {
-        _ZN8Platform19UpdateClsnPosAndRotEv(self);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0, 0) != 0) {
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
     }
     *(int*)(self + 0x320) = 0;
     return 1;
