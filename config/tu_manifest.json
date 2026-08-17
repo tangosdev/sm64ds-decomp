@@ -415,7 +415,7 @@
           "symbol": "_ZN12FallBlockBfsD1Ev",
           "address": "0x02111d48",
           "size": "0x00000050",
-          "legacy_source": "src/_ZN12FallBlockBfsD1Ev.c",
+          "legacy_source": "src/_ZN12FallBlockBfsD1Ev.cpp",
           "ordinal": 0
         },
         {
@@ -459,7 +459,29 @@
         "object": "build/tu/ov045-FallBlockBfs/FallBlockBfs.o (gitignored)",
         "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
         "functions_matched": 5,
-        "functions_declared": 5
+        "functions_declared": 5,
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-failed",
+          "scratch": "build/tu/ov045-FallBlockBfs/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": false
+          },
+          "tuRange": null,
+          "objectAudit": {
+            "counts": {
+              "LICENSED": 5
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [],
+            "unlicensedSections": []
+          },
+          "symbolCheckNewVsBaseline": null,
+          "linkerOutput": "mwldarm.exe: Undefined : \"virtual table for dBgActor_c\"\nmwldarm.exe: Referenced from \"FallBlockBfs::~FallBlockBfs[virtual]()\" in \nmwldarm.exe: FallBlockBfs.o\nmwldarm.exe: Referenced from \"FallBlockBfs::~FallBlockBfs()\" in FallBlockBfs.o\nmwldarm.exe: Undefined : \"virtual table for daObjKm2_Fall_Block_c\"\nmwldarm.exe: Referenced from \"FallBlockBfs_Spawn\" in FallBlockBfs.o\nmwldarm.exe: Referenced from \"FallBlockBfs::~FallBlockBfs[virtual]()\" in \nmwldarm.exe: FallBlockBfs.o\nmwldarm.exe: alert: Link failed. \n\nErrors caused tool to abort."
+        }
       },
       "partial_isolation": {
         "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
