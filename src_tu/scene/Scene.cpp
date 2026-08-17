@@ -113,15 +113,36 @@
  * Defining Scene's key function emits _ZTV5Scene STB_GLOBAL, which dsd's gap
  * object already supplies from ROM data, and mwldarm aborts with
  * `Multiply-defined: "virtual table for Scene" in Scene.o / Previously defined
- * in _dsd_gap@main_44.o`. Breaking it needs (1) a way to write a .data claim
- * into the spliced scratch delinks entry, which tubuild.splice_tu_entry cannot
- * do -- it hardcodes one `.text` line -- and (2) somewhere for the six HOMELESS
- * STB_LOPROC RTTI records to go: no symbols.txt names _ZTI/_ZTS for Scene,
- * ActorDerived or ActorBase, because the ROM carries those records under the
- * real class names (dScene_c at 0x020914d4), and rombuild links -nodead so
- * nothing drops them. objisolate drops exactly that material per function,
- * which is why --partial reproduces the module and the whole-range splice
- * cannot. See the manifest entry for the measured details.
+ * in _dsd_gap@main_44.o`. Two separate blockers, and the second is the one that
+ * generalises:
+ *
+ *   A. TOOLING, fixable in principle. The TU would have to OWN the .data its
+ *      vtable lands in so the gap object stops claiming it, and
+ *      tubuild.splice_tu_entry hardcodes a single `.text` line with no path for
+ *      any other section. The range is known (BOUNDARY item 3); writing it is
+ *      not currently possible. The vtable's own 20 words are plausible content
+ *      -- every slot points at a real ROM function -- so this is plumbing.
+ *
+ *   B. NAMING, AND NOT FIXABLE BY ATTRIBUTION AT ALL. The object also emits six
+ *      STB_LOPROC RTTI records the audit calls HOMELESS: _ZTI/_ZTS for Scene,
+ *      ActorDerived, ActorBase, named in no symbols.txt anywhere. The reason is
+ *      that a _ZTS record's BYTES ARE THE CLASS NAME STRING, and this tree's
+ *      names are coinages while the cartridge holds Nintendo's:
+ *
+ *          ROM  0x020914b0 : '8dScene_c\0'   (then '9dScBoot_c\0')
+ *          ours _ZTS5Scene : '5Scene\0'      -- 7 bytes, not 10, and different
+ *
+ *      There is no address in the ROM those three records could be attributed
+ *      to, because their content is not in the ROM. rombuild links -nodead so
+ *      nothing drops them either. THE GENERAL RULE: no key-function TU can
+ *      reach whole-range link-verified while its class name is a coinage. The
+ *      only fix is renaming to the ROM's own names (Scene -> dScene_c,
+ *      ActorDerived -> dBase_c, ActorBase -> fBase_c, per include/Scene.h
+ *      reading 4), which is a separate tree-wide change.
+ *
+ * objisolate drops exactly that material per function, which is why --partial
+ * reproduces the module and the whole-range splice cannot. See the manifest
+ * entry for the measured details.
  *
  * THIS TU ALSO OWNS, and this round neither declares nor verifies any of it:
  *   data_02092660  .data  0x02092660   (u8)
