@@ -58,6 +58,9 @@ struct Player;
 struct Vector3;
 struct Vector3_16;
 struct CylinderClsn;
+/* Only ever named through a pointer below; the definition lives in common.h /
+   math/Matrix.h, which this header deliberately does not pull in. */
+struct Matrix4x3;
 
 /* The actor heap and its deallocator, for the inline operator delete at the end of
    the class. `data_020a0eac` is the heap every actor is allocated from -- the same
@@ -223,6 +226,14 @@ struct Actor : ActorDerived {
     int  BumpedUnderneathByPlayer(Player &player);
     int  GetSubtraction(short a, short b);
 
+    /* 0x02010180. Rebuilds the scratch matrix at 0x020a0e68 from the carrying
+       player's hand transform, writes the carried actor's own 0x5c..0x64 out of
+       it, and returns the matrix. A member outright: it reads 0x8c..0x94 and
+       writes 0x5c..0x64 through `this`. Declared here because
+       src_tu/actors/Actor.cpp defines it as a real method; the enrolled
+       one-function file carries its own local shadow class instead. */
+    Matrix4x3 *UpdateCarry(Player &player, const Vector3 &vec);
+
     /* The cylinder-collision group, 0x0200f7a8..0x02010c5c. Everything here
        reads a CylinderClsn the caller already has; see include/CylinderClsn.h
        for the layout (0x18 flags, 0x20 hitFlags, 0x24 otherOwner).
@@ -297,6 +308,12 @@ struct Actor : ActorDerived {
     int  GetBitInDeathTable();
     void KillAndTrackInDeathTable();
     void TrackInDeathTable();
+    /* The counterpart of TrackInDeathTable, 0x0200f9d4. Same shape: it reads
+       0x0ce and hands it to DeathTable_ClearBit, so `this` is dereferenced and
+       it is a member for the same reason its sibling is. Declared here because
+       src_tu/actors/Actor.cpp defines it as a real method; the enrolled
+       one-function file carries its own local shadow class instead. */
+    void UntrackInDeathTable();
     void SpawnSoundObj(u32 soundObjParam);
     s32  GetWaterHeightWDW();
 
