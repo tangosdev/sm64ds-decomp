@@ -2913,7 +2913,6 @@ extern void func_ov098_02137c8c(char*);
 extern void func_ov098_02138b70(char*);
 extern void func_ov098_02138ce0(char*);
 extern void func_ov098_02138e08(char*);
-extern void func_ov098_0213a17c(char*);
 extern void func_ov098_0213a8ec();
 extern void func_ov098_0213b15c(void*);
 extern void func_ov098_0213b584(char*);

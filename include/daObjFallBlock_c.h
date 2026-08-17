@@ -101,6 +101,18 @@ struct daObjFallBlock_c : Platform {
        0x02139fc8, still under its func_ov098_ name). An out-of-line declaration
        here would make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjFallBlock_c() {}
+
+    /* Slot 31, Platform's own new virtual (include/Platform.h). This class
+       overrides it; it adds no slot and no field, so the size assert below is
+       unaffected.
+
+       It is also this class's KEY FUNCTION, the destructor above being inline,
+       so src/_ZN16daObjFallBlock_c4KillEv.cpp emits _ZTV16daObjFallBlock_c,
+       _ZTI16daObjFallBlock_c and the destructor variants alongside the one
+       function it is bound to. objisolate.py reduces the object back to that
+       one 0xc0 .text before eligible.py and rombuild.py judge it -- checked,
+       not assumed: build_pin.verify returns True either way. */
+    virtual void Kill();                /* slot 31 */
 };
 
 typedef char daObjFallBlock_c_size_must_be_0x34c[sizeof(daObjFallBlock_c) == 0x34c ? 1 : -1];
