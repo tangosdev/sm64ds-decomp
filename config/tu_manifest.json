@@ -2437,6 +2437,205 @@
         "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
         "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
       }
+    },
+    {
+      "id": "arm9/Scene",
+      "module": "arm9",
+      "source": "src_tu/scene/Scene.cpp",
+      "promoted_source": "src/actors/Scene.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "tu_map CANNOT segment this module: tools/tu_map.py emits `main` as ONE unit covering 0x20049f0..0x20707a4 with 2984 functions and ~70 class labels, and lists the module under `under-segmented (TU count is a lower bound)`. There is therefore no `tubuild.py create` candidate id for Scene and NO tu_map boundary behind any of the readings below -- all of them were established by hand from the cartridge.",
+        "contiguous linker run: 0x0202e140..0x0202ec9c, 21 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all 21 marked `complete`).",
+        "neighbours differ on both sides: func_0202e118 (0x0202e118..0x0202e140) ends exactly where the run begins and _ZN5StageC3Ev sits below it; func_0202ec9c begins exactly where the run ends. Neither is a Scene member and neither is called from one.",
+        "TWO FOREIGN-NAMED FUNCTIONS SIT INSIDE THE SPAN and are admitted deliberately: _ZN5Stage12SetVramBanksEv (0x0202e73c) and _ZN2GX15DisableAllBanksEv (0x0202e78c) lie between _ZN5Scene20Initialise3dGraphicsEv (0x0202e6c8) and _ZN5Scene22ResetHardwareRegistersEv (0x0202e7d4). An object's contribution to a section is a single contiguous interval, so if those two Scene functions share an object then so do the two between them. The data attribution below is what establishes that they do.",
+        "STATIC-DATA ATTRIBUTION, which is the decisive reading. This TU's statics form one unbroken .data block ending in the vtable it is the key-function TU for: data_02092660 (u8) / data_02092664 (u16) / data_02092668 (Matrix2x2, 0x10 bytes, ending 0x02092678) / _ZTV5Scene's Itanium preamble at 0x02092678 / _ZTV5Scene at 0x02092680, 18 slots, ending 0x020926c8 where the next symbol data_020926c8 begins. From config/arm9/relocs.txt those three statics are referenced ONLY from inside this span, and from BOTH SIDES of the foreign pair: data_02092660 <- 0x0202e2f0, 0x0202e344, 0x0202e5e8; data_02092664 <- 0x0202e2f4, 0x0202e340, 0x0202e390, 0x0202e5c4 (all BELOW the pair); data_02092668 <- 0x0202ebe4, which is inside ResetHardwareRegisters, ABOVE the pair. Object k's contribution to EVERY section precedes object k+1's, in ascending disjoint intervals, so one object owns 0x02092660..0x020926c8; both text sub-runs reach into it; therefore both sub-runs are that one object, and the pair between them is inside it.",
+        "the source order the reverse-emission rule implies is a coherent file: reversing the ROM address order yields BeforeInitResources then AfterInitResources, then the Cleanup pair, then Behavior, then Render -- each Before immediately before its After, the four groups in ActorBase's own declaration order, destructor last. Corroboration, not proof.",
+        "THE FOUR GraphCallbacks ARE EXCLUDED, on evidence, not omission. _ZN5Scene14GraphCallback0Ev..3Ev are at 0x02018ea0..0x02018ec0, 0x152a0 bytes below this run. The same single-contiguous-interval rule the admission of the foreign pair rests on excludes them outright: no object can contribute .text at both 0x02018ea0 and 0x0202e140 with ~86 KB of other objects' code in between. Three further readings agree: (a) their neighbours are func_02018e68, an OS_SleepThread wrapper, and func_02018ec0, a fader slot-2 dispatch -- a system/graphics grab-bag, not a scene class; (b) the pointer tables holding them, 0x0208ee14..0x0208ee20, are ~0x3800 bytes below this TU's .data block and on the far side of _ZTV12ActorDerived (0x0208e4b8), i.e. in a much earlier object's data contribution; (c) their own address order reverses to GraphCallback0,1,2,3, so they ARE consecutive definitions in one source file -- just not this one. Which TU is theirs was not established.",
+        "module sinit corroboration: 23 sinit(s) / 23 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, and NOT narrowing to this TU: `main` has 23 static initialisers against 3067 functions, none of which references any of this TU's four data symbols, so static-initialiser attribution contributes NOTHING here and is recorded as such rather than quoted as support)."
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x0202e140",
+          "end": "0x0202ec9c"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN5SceneD1Ev",
+          "address": "0x0202e140",
+          "size": "0x00000030",
+          "legacy_source": "src/_ZN5SceneD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN5SceneD0Ev",
+          "address": "0x0202e170",
+          "size": "0x00000044",
+          "legacy_source": "src/_ZN5SceneD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN5Scene20SetAndStopColorFaderEv",
+          "address": "0x0202e1b4",
+          "size": "0x0000002c",
+          "legacy_source": "src/_ZN5Scene20SetAndStopColorFaderEv.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN5Scene9SetFadersEP15FaderBrightness",
+          "address": "0x0202e1e0",
+          "size": "0x0000008c",
+          "legacy_source": "src/_ZN5Scene9SetFadersEP15FaderBrightness.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "_ZN5Scene16SpawnIfNecessaryEv",
+          "address": "0x0202e26c",
+          "size": "0x00000094",
+          "legacy_source": "src/_ZN5Scene16SpawnIfNecessaryEv.cpp",
+          "ordinal": 4
+        },
+        {
+          "symbol": "_ZN5Scene18PrepareToSpawnBootEv",
+          "address": "0x0202e300",
+          "size": "0x00000048",
+          "legacy_source": "src/_ZN5Scene18PrepareToSpawnBootEv.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "_ZN5Scene14StartSceneFadeEjjt",
+          "address": "0x0202e348",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN5Scene14StartSceneFadeEjjt.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "_ZN5Scene15SetSceneToSpawnEjj",
+          "address": "0x0202e36c",
+          "size": "0x0000002c",
+          "legacy_source": "src/_ZN5Scene15SetSceneToSpawnEjj.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "_ZN5Scene11AfterRenderEj",
+          "address": "0x0202e398",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN5Scene11AfterRenderEj.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "_ZN5Scene12BeforeRenderEv",
+          "address": "0x0202e3a4",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN5Scene12BeforeRenderEv.cpp",
+          "ordinal": 9
+        },
+        {
+          "symbol": "_ZN5Scene13AfterBehaviorEj",
+          "address": "0x0202e3c8",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN5Scene13AfterBehaviorEj.cpp",
+          "ordinal": 10
+        },
+        {
+          "symbol": "_ZN5Scene14BeforeBehaviorEv",
+          "address": "0x0202e3d4",
+          "size": "0x000001fc",
+          "legacy_source": "src/_ZN5Scene14BeforeBehaviorEv.cpp",
+          "ordinal": 11
+        },
+        {
+          "symbol": "_ZN5Scene21AfterCleanupResourcesEj",
+          "address": "0x0202e5d0",
+          "size": "0x00000020",
+          "legacy_source": "src/_ZN5Scene21AfterCleanupResourcesEj.cpp",
+          "ordinal": 12
+        },
+        {
+          "symbol": "_ZN5Scene22BeforeCleanupResourcesEv",
+          "address": "0x0202e5f0",
+          "size": "0x0000003c",
+          "legacy_source": "src/_ZN5Scene22BeforeCleanupResourcesEv.cpp",
+          "ordinal": 13
+        },
+        {
+          "symbol": "_ZN5Scene18AfterInitResourcesEj",
+          "address": "0x0202e62c",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN5Scene18AfterInitResourcesEj.cpp",
+          "ordinal": 14
+        },
+        {
+          "symbol": "_ZN5Scene19BeforeInitResourcesEv",
+          "address": "0x0202e638",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN5Scene19BeforeInitResourcesEv.cpp",
+          "ordinal": 15
+        },
+        {
+          "symbol": "_ZN5Scene19ResetFadersAndSoundEv",
+          "address": "0x0202e66c",
+          "size": "0x0000005c",
+          "legacy_source": "src/_ZN5Scene19ResetFadersAndSoundEv.cpp",
+          "ordinal": 16
+        },
+        {
+          "symbol": "_ZN5Scene20Initialise3dGraphicsEv",
+          "address": "0x0202e6c8",
+          "size": "0x00000074",
+          "legacy_source": "src/_ZN5Scene20Initialise3dGraphicsEv.cpp",
+          "ordinal": 17
+        },
+        {
+          "symbol": "_ZN5Stage12SetVramBanksEv",
+          "address": "0x0202e73c",
+          "size": "0x00000050",
+          "legacy_source": "src/_ZN5Stage12SetVramBanksEv.cpp",
+          "ordinal": 18
+        },
+        {
+          "symbol": "_ZN2GX15DisableAllBanksEv",
+          "address": "0x0202e78c",
+          "size": "0x00000048",
+          "legacy_source": "src/_ZN2GX15DisableAllBanksEv.cpp",
+          "ordinal": 19
+        },
+        {
+          "symbol": "_ZN5Scene22ResetHardwareRegistersEv",
+          "address": "0x0202e7d4",
+          "size": "0x000004c8",
+          "legacy_source": "src/_ZN5Scene22ResetHardwareRegistersEv.cpp",
+          "ordinal": 20
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "HAND-ASSEMBLED. `tubuild.py create` has no candidate for this TU (see boundary_evidence item 1) and would refuse these sources anyway, several being extern \"C\"-wrapped. Written against notes/tu-reconstruction-pilot-report.md and src_tu/actors/PoleLift.cpp; the manifest entry itself is built by tubuild.build_manifest_entry so the schema stays the tool's own.",
+        "The two functions at 0x0202e73c and 0x0202e78c carry other classes' names (Stage::SetVramBanks, GX::DisableAllBanks) and are admitted on the data-attribution reading in boundary_evidence, not on their names. Names in this tree are project coinages; the ROM's RTTI carries class names only.",
+        "ZERO UNLICENSED .text, AND THAT TOOK REMOVING A SCAFFOLD RATHER THAN ADDING ONE. ~Scene() is defined INLINE in include/Scene.h, and src/_ZN5SceneD1Ev.cpp / src/_ZN5SceneD0Ev.cpp each carry a never-called forcing function because a TU that merely includes the header emits no out-of-line copy. This TU needs no such thing: it defines Scene's key function (BeforeInitResources, the first non-inline virtual), so it emits _ZTV5Scene, whose slots 16/17 ARE D1/D0, and taking their addresses for the table forces both out-of-line copies. MEASURED both ways -- `tubuild.py compile` reports D1 at section[16] size 0x30 and D0 at section[18] size 0x44 with the scaffold and without it; dropping it took unlicensed function symbols 1 -> 0. It was worth dropping and not merely tidy: a 0x38-byte STB_GLOBAL .text that no config/arm9/symbols.txt entry names, sitting inside the licensed span, displaces every byte after it under rombuild's -nodead link (measured on arm9/Actor: 506 bytes differ and 15/106 modules exact with a scaffold, IDENTICAL and 106/106 without).",
+        "UNLICENSED .data, 7 symbols, ALL EXPECTED AND NONE VERIFIED. Defining the key function emits _ZTV5Scene (0x50, STB_GLOBAL) plus six STB_LOPROC RTTI records for Scene and its bases. _ZTV5Scene is ROM-resident at 0x02092678..0x020926c8 -- inside the 0x02092660..0x020926c8 block boundary_evidence establishes this TU owns -- so it is licensable in principle, but it is deliberately NOT listed under `data` here: every one of its 20 words is a relocation, `verify` does not compare data at all, and listing it would only stop the tool reporting it while proving nothing. That is the `data-verified` rung and this round did not attempt it. Note also the convention clash the pilot hit in the text direction: mwcc's `_ZTV5Scene` names the vtable OBJECT at 0x02092678 while config/arm9/symbols.txt names the SLOT ARRAY at 0x02092680, eight bytes apart.",
+        "boundary_confidence 'high' came out of tubuild.tu_confidence's DEGENERATE path -- with a single synthetic unit it has no neighbouring unit to score against and returns 'high' merely because the unit carries a class label. It is NOT a tu_map boundary_confidence reading, because tu_map has no boundary here at all. The real basis for trusting this cut is the boundary_evidence list, item 5 in particular."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/arm9-Scene/Scene.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 21,
+        "functions_declared": 21,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 7 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
     }
   ]
 }
