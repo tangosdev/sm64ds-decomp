@@ -24,6 +24,10 @@ struct BillBlaster : Platform {
     virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */
     virtual s32   Render();                /* slot  9 */
+    /* Platform's own slot, overridden here: _ZTV11BillBlaster+0x7c relocates to
+       0x02126e58 while _ZTV8Platform+0x7c relocates to _ZN8Platform4KillEv. An
+       override, so it adds no slot and no field. */
+    virtual void  Kill();                  /* slot 31 */
 };
 
 typedef char BillBlaster_size_must_be_0x324[sizeof(BillBlaster) == 0x324 ? 1 : -1];
