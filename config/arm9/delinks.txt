@@ -7139,6 +7139,7 @@ src/_ZN9ActorBase8BehaviorEv.cpp:
     .text start:0x02043b24 end:0x02043b2c
 
 src/_ZN9ActorBase21AfterCleanupResourcesEj.cpp:
+    complete
     .text start:0x02043b2c end:0x02043bac
 
 src/_ZN9ActorBase22BeforeCleanupResourcesEv.cpp:

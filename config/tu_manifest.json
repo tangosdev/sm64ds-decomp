@@ -3174,6 +3174,57 @@
           "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 5 unlicensed section/symbol(s); see unlicensed_output_observed",
           "functions_occur_in_expected_order": "PASS",
           "relocation_destinations_verified": "PASS"
+        },
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-failed",
+          "scratch": "build/tu/arm9-ActorDerived/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": false
+          },
+          "tuRange": null,
+          "objectAudit": {
+            "counts": {
+              "HOMELESS": 4,
+              "COLLIDES-GAP": 1,
+              "LICENSED": 5
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [
+              "HOMELESS _ZTI9ActorBase STB_LOPROC .data size=0x8",
+              "HOMELESS _ZTS9ActorBase STB_LOPROC .data size=0xb",
+              "HOMELESS _ZTI12ActorDerived STB_LOPROC .data size=0xc",
+              "HOMELESS _ZTS12ActorDerived STB_LOPROC .data size=0xf",
+              "COLLIDES-GAP _ZTV12ActorDerived STB_GLOBAL .data size=0x50 already at arm9:0x0208e4b8"
+            ],
+            "unlicensedSections": [
+              {
+                "name": ".data",
+                "size": 8
+              },
+              {
+                "name": ".data",
+                "size": 11
+              },
+              {
+                "name": ".data",
+                "size": 12
+              },
+              {
+                "name": ".data",
+                "size": 15
+              },
+              {
+                "name": ".data",
+                "size": 80
+              }
+            ]
+          },
+          "symbolCheckNewVsBaseline": null,
+          "linkerOutput": "mwldarm.exe: Multiply-defined: \"virtual table for ActorDerived\" in \nmwldarm.exe: ActorDerived.o\nmwldarm.exe: Previously defined in _dsd_gap@main_44.o\n\nErrors caused tool to abort."
         }
       }
     },
