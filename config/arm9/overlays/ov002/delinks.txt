@@ -4026,6 +4026,7 @@ src/_ZN6Player6RenderEv.cpp:
     .text start:0x020e3a08 end:0x020e3e00
 
 src/func_ov002_020e3e00.cpp:
+    complete
     .text start:0x020e3e00 end:0x020e3f90
 
 src/func_ov002_020e3f90.c:
