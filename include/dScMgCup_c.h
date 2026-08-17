@@ -36,8 +36,9 @@
  * first statement of Cup's own Behavior (src/_ZN10dScMgCup_c8BehaviorEv.cpp,
  * vtable slot 6) is a pointer-to-member dispatch through
  * `data_ov006_02141870[*(int*)(o + 0x5418)]`; InitResources
- * (func_ov006_020e0308.cpp, slot 0) already carries a local struct naming
- * `ones[3]` at 0x540c, `ids[3]` at 0x5420 and `flags[3]` at 0x5465; and
+ * (now dScMgCup_c::InitResources, slot 0) carried a local struct naming
+ * `ones[3]` at 0x540c, `ids[3]` at 0x5420 and `flags[3]` at 0x5465 before
+ * migration -- now mOnes/mIds/mFlags below; and
  * slot 9's Render reads 0x5462 and 0x5468. Matched access runs to 0x5469.
  *
  * The size is unaffected -- 0x5470 is the factory's literal either way --
@@ -60,14 +61,15 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     virtual ~dScMgCup_c();
 
     /* This class's own overrides, read off the ROM's vtable at ov006 0x0213c154:
-       the two slots where the table differs from dScMgSingle3DBase_c's. Spelled
+       the three slots where the table differs from dScMgSingle3DBase_c's. Spelled
        WITHOUT the `virtual` keyword, the way include/daObjMarioCap_c.h and
        include/daObjRc_Dorifu_c.h spell theirs -- an override of a virtual an
        ancestor already declares is implicitly virtual either way, so each reuses
        an existing slot and adds no field, and the 0x5470 assert below still
        holds. The destructor above is declared first and out of line, so it stays
-       this class's KEY FUNCTION and neither of these translation units emits
+       this class's KEY FUNCTION and none of these translation units emits
        _ZTV10dScMgCup_c. */
+    s32 InitResources();  /* slot  0 -- src/minigames/dScMgCup_c/_ZN10dScMgCup_c13InitResourcesEv.cpp */
     s32 Behavior();       /* slot  6 -- src/_ZN10dScMgCup_c8BehaviorEv.cpp */
     s32 Render();         /* slot  9 -- src/_ZN10dScMgCup_c6RenderEv.cpp */
 
@@ -78,8 +80,8 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
     u8  pad_50e0[0x8];    /* 0x50e0 -- no matched access */
     u8  mArray1[0x300];   /* 0x50e8 -- 0x20 * 0x18, elem dtor func_ov006_020deac4 */
     u8  mArray2[0x18];    /* 0x53e8 -- 3 * 8, elem dtor NullDestructor_0203d47c.
-                             func_ov006_020e0308.cpp already recovers the element
-                             as a pair of s32; left raw here, own change. */
+                             InitResources recovers the element as a pair of
+                             s32 locally; left raw here, own change. */
     u8  pad_5400[0xc];    /* 0x5400 -- no matched access */
     s32 mOnes[3];         /* 0x540c -- named `ones[3]` by InitResources' own struct */
     s32 mState;           /* 0x5418 -- Behavior's pointer-to-member dispatch index */

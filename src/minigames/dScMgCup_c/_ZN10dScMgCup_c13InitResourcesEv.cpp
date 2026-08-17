@@ -1,17 +1,19 @@
 //cpp
+// @symbol _ZN10dScMgCup_c13InitResourcesEv
+/* dScMgCup_c::InitResources - recovered from ROM RTTI and vtable slot identity.
+ * Minigame sub-screen setup: configures sub BG1/BG2 control, loads the board
+ * tiles/map/palette files, sets the touch UI margins, initializes the three
+ * sliders from the table at data_ov006_0213c0a8, then calls own slot 18 with
+ * mode 3.
+ *
+ * mArray2 (0x53e8, Pair6[3]) stays reached through the same raw Obj6e cast
+ * as before this migration -- the header leaves it unnamed on purpose (see
+ * dScMgCup_c.h's file banner). mOnes/mIds/mFlags go through their real
+ * member names now that the header declares them. */
 #include "types.h"
-// @symbol func_ov006_020e0308
-// recovered name: dScMgCup_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+#include "dScMgCup_c.h"
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgCup_c::InitResources - recovered from vtable slot identity */
-/* func_ov006_020e0308 @ 0x020e0308 (ov006, size 0x26c)
- * Minigame sub-screen setup: configures sub BG1/BG2 control, loads the
- * board tiles/map/palette files, sets the touch UI margins, initializes
- * the three sliders from the table at data_ov006_0213c0a8, then calls
- * virtual +0x48 with mode 3.
- */
+
 struct VtObj {
     virtual void d0();
     virtual void d1();
@@ -40,13 +42,7 @@ typedef struct Pair6 {
 
 typedef struct Obj6e {
     char _p0[0x53e8];
-    Pair6 pairs[3];  /* 0x53e8 */
-    char _p1[0x540c - 0x5400];
-    int ones[3];     /* 0x540c */
-    char _p2[0x5420 - 0x5418];
-    int ids[3];      /* 0x5420 */
-    char _p3[0x5465 - 0x542c];
-    u8 flags[3];     /* 0x5465 */
+    Pair6 pairs[3];  /* 0x53e8 -- dScMgCup_c's own mArray2, left raw */
 } Obj6e;
 
 extern "C" {
@@ -64,9 +60,13 @@ extern void _ZN3GXS10LoadBGPlttEPKvjj(void *, unsigned int, unsigned int);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern int _ZN3G2S12GetBG2ScrPtrEv(void);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, unsigned int, unsigned int);
+extern void func_ov006_020dec3c(char *);
+}
 
-int func_ov006_020e0308(char *c)
+s32 dScMgCup_c::InitResources()
 {
+    dScMgCup_c *self = this;
+    char *c = (char *)self;
     void *f;
 
     data_0209d45c = 0x11;
@@ -118,14 +118,13 @@ int func_ov006_020e0308(char *c)
         for (i = 0; i < 3; i++) {
             ((Obj6e *)c)->pairs[i].a = data_ov006_0213c0a8[i].a;
             ((Obj6e *)c)->pairs[i].b = data_ov006_0213c0a8[i].b;
-            ((Obj6e *)c)->ones[i] = 0x1000;
-            ((Obj6e *)c)->ids[i] = i;
-            *(u8 *)(c + i + 0x5465) = 1;
+            self->mOnes[i] = 0x1000;
+            self->mIds[i] = i;
+            self->mFlags[i] = 1;
         }
     }
 
     ((VtObj *)c)->m18(3);
     func_ov006_020dec3c(c + 0x50e8);
     return 1;
-}
 }
