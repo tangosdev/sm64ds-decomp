@@ -565,10 +565,24 @@ def recover_fields(tables):
 
     fld = re.compile(r"^\s*(\S+)\s+(\w+)\s*(\[[^\]]*\])?\s*;\s*/\*\s*(0x[0-9a-fA-F]+)")
     owned = {}
-    for n in ("Platform", "Actor", "ActorBase", "ActorDerived", "Enemy"):
+    # These are the hierarchy's intermediate bases, spelled as the cartridge's RTTI
+    # spells them. `dBase_c` was `ActorDerived` until the class was renamed to its
+    # recorded name; the rest follow in their own commits.
+    #
+    # A MISSING HEADER IS NOW FATAL, and that is the point. This loop builds `owned`,
+    # the set of field offsets an ancestor already claims, and every ancestor whose
+    # header cannot be found simply contributes nothing. Skipping quietly meant a
+    # renamed header emptied `owned` and every inherited field downstream was reported
+    # as a NOVEL field of the derived class -- a fully populated, self-consistent,
+    # wrong answer, which is the exact failure this tree has been bitten by before.
+    # Fail loudly instead.
+    for n in ("Platform", "Actor", "ActorBase", "dBase_c", "Enemy"):
         p = REPO / "include" / (n + ".h")
         if not p.is_file():
-            continue
+            raise SystemExit(
+                f"rtti_vtables: include/{n}.h not found. This list names the hierarchy's "
+                f"intermediate bases and must track class renames; silently skipping it "
+                f"would report every inherited field as novel.")
         for line in p.read_text(encoding="utf-8", errors="replace").splitlines():
             m = fld.match(line)
             if m and not m.group(2).startswith("pad"):
