@@ -12,9 +12,12 @@ struct CLPS_Block; struct SharedFilePtr;
 /* ModelBase is the real class now, through this actor's header. */
 struct ShadowModel { void InitCuboid(); };
 struct Platform { void UpdateClsnPosAndRot(); };
-struct MovingMeshCollider {
-    void SetFile(KCL_File *f, const Matrix4x3 &m, int fix, short sh, CLPS_Block &b);
-};
+/* Declared by final name, not as a member: the ROM's SetFile takes Fix12<int> where
+   this call passes 0x1000, and Fix12<int> is an aggregate with no converting
+   constructor from int. Declared `int fix` it mangles ...RK9Matrix4x3isR10CLPS_Block,
+   which nothing defines. */
+extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *self, KCL_File *f, const Matrix4x3 &m, int fix, short sh, CLPS_Block &b);
 extern "C" void func_020393d4(void *p, void *v);
 struct RaycastGround {
     int pad[0x11];
@@ -37,7 +40,8 @@ int SpinningPlatform::InitResources()
     func_ov035_021118a8(((char *)this));
     ((Platform*)((char *)this))->UpdateClsnPosAndRot();
     void *kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov035_02112cb8);
-    ((MovingMeshCollider*)((char *)&mMeshCollider))->SetFile((KCL_File*)kf,
+    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        (char *)&mMeshCollider, (KCL_File*)kf,
         *(Matrix4x3*)((char *)&unk_2ec), 0x1000, mAngleY, data_ov035_02112238);
     func_020393d4(((char *)this) + 0x124, (void*)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020396c0(((char *)this) + 0x124, 0);

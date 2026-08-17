@@ -9,9 +9,15 @@ extern "C" void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnRe
 typedef void (*PMFholder);
 struct Platform {
     void UpdateModelPosAndRotY();
-    int IsClsnInRange(int a, int b);
     void UpdateClsnPosAndRot();
 };
+
+/* Not a member above, though it is one on the real class. Declared `int
+   IsClsnInRange(int, int)` it mangles _ZN8Platform13IsClsnInRangeEii, which nothing
+   defines; the ROM's symbol takes two Fix12<int>, and that type is an aggregate with
+   no converting constructor from int, so materialising a zero one costs stack traffic
+   the ROM does not have. The pair goes in registers exactly as two ints either way. */
+extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 struct PmfEntry;
 extern "C" void func_020393d4(void *p, void *v);
 
@@ -39,7 +45,7 @@ int RotatingUpDownPlatform::Behavior()
         *(int*)(s + 0x60) = saved;
     }
     ((Platform *)this)->UpdateModelPosAndRotY();
-    if (((Platform *)this)->IsClsnInRange(0, 0) != 0)
+    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(this, 0, 0) != 0)
         ((Platform *)this)->UpdateClsnPosAndRot();
     *(unsigned char*)(s + 0x356) = 0;
     return 1;
