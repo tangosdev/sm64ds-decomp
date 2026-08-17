@@ -640,7 +640,7 @@ src/func_ov002_020b382c.cpp:
     complete
     .text start:0x020b382c end:0x020b38a0
 
-src/func_ov002_020b38a0.c:
+src/_ZN13BigBrickBlock4KillEv.cpp:
     complete
     .text start:0x020b38a0 end:0x020b3ab0
 
@@ -1491,7 +1491,7 @@ src/func_ov002_020bb374.cpp:
     complete
     .text start:0x020bb374 end:0x020bb3b8
 
-src/func_ov002_020bb3b8.cpp:
+src/_ZN8SignPost4KillEv.cpp:
     complete
     .text start:0x020bb3b8 end:0x020bb42c
 

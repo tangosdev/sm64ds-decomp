@@ -30,7 +30,7 @@ struct LavaPlank : Platform {
     int Render();
 };
 
-typedef char FloatingFloorLllBig_size_must_be_0x328[sizeof(LavaPlank) == 0x328 ? 1 : -1];
+typedef char LavaPlank_size_must_be_0x328[sizeof(LavaPlank) == 0x328 ? 1 : -1];
 
 #else
 

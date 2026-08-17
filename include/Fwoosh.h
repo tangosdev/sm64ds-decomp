@@ -38,7 +38,7 @@ struct Fwoosh : Enemy {
     int Render();
 };
 
-typedef char Stump_size_must_be_0x378[sizeof(Fwoosh) == 0x378 ? 1 : -1];
+typedef char Fwoosh_size_must_be_0x378[sizeof(Fwoosh) == 0x378 ? 1 : -1];
 
 #else
 

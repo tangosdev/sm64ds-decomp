@@ -54,6 +54,6 @@ struct Whirlpool : Enemy {
     void OnPendingDestroy();
 };
 
-typedef char Submarine_size_must_be_0x1bc[sizeof(Whirlpool) == 0x1bc ? 1 : -1];
+typedef char Whirlpool_size_must_be_0x1bc[sizeof(Whirlpool) == 0x1bc ? 1 : -1];
 
 #endif /* WHIRLPOOL_H */

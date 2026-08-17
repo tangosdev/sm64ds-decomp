@@ -35,7 +35,7 @@ struct JetStream : Enemy {
     virtual s32 Render();
 };
 
-typedef char BowserPuzzlePiece_size_must_be_0x31c[sizeof(JetStream) == 0x31c ? 1 : -1];
+typedef char JetStream_size_must_be_0x31c[sizeof(JetStream) == 0x31c ? 1 : -1];
 
 #else
 

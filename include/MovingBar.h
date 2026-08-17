@@ -31,9 +31,13 @@ struct MovingBar : Platform {
     int CleanupResources();
     int InitResources();
     int Render();
+    /* Platform's own slot, overridden here: _ZTV9MovingBar+0x7c relocates to
+       0x02111c3c while _ZTV8Platform+0x7c relocates to _ZN8Platform4KillEv. An
+       override, so it adds no slot and no field. */
+    virtual void Kill();              /* slot 31 */
 };
 
-typedef char KnockDownPlank_size_must_be_0x330[sizeof(MovingBar) == 0x330 ? 1 : -1];
+typedef char MovingBar_size_must_be_0x330[sizeof(MovingBar) == 0x330 ? 1 : -1];
 
 #else
 

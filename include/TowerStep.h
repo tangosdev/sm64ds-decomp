@@ -38,9 +38,13 @@ struct TowerStep : Platform {
     int CleanupResources();
     int Behavior();
     int Render();
+    /* Platform's own slot, overridden here: _ZTV9TowerStep+0x7c relocates to
+       0x0211233c while _ZTV8Platform+0x7c relocates to _ZN8Platform4KillEv. An
+       override, so it adds no slot and no field. */
+    virtual void Kill();              /* slot 31 */
 };
 
-typedef char MovingBarSmall_size_must_be_0x394[sizeof(TowerStep) == 0x394 ? 1 : -1];
+typedef char TowerStep_size_must_be_0x394[sizeof(TowerStep) == 0x394 ? 1 : -1];
 
 #else
 

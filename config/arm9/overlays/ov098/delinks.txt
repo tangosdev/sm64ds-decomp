@@ -16,7 +16,7 @@ src/func_ov098_02137c8c.c:
     complete
     .text start:0x02137c8c end:0x02137ccc
 
-src/func_ov098_02137ccc.cpp:
+src/_ZN14ArrowSignRight4KillEv.cpp:
     complete
     .text start:0x02137ccc end:0x02137d40
 
@@ -224,7 +224,7 @@ src/func_ov098_0213a148.c:
     complete
     .text start:0x0213a148 end:0x0213a17c
 
-src/func_ov098_0213a17c.cpp:
+src/_ZN16daObjFallBlock_c4KillEv.cpp:
     complete
     .text start:0x0213a17c end:0x0213a23c
 

@@ -4,24 +4,34 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PrincessPeach.h"
+extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(void*);
+extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 struct BMD_File; struct Actor; struct Vector3_16;
 /* ModelBase is the real class now, through PrincessPeach.h. */
 struct ShadowModel { int InitCylinder(); };
-struct MovingCylinderClsn { void Init(Actor *a, int b, int c, unsigned int d, unsigned int e); };
-struct WithMeshClsn { void Init(Actor *a, int b, int c, void *d, int e); };
+/* Declared by final name, not as members: both take Fix12<int> where these calls pass
+   int literals, and Fix12<int> is an aggregate with no converting constructor from int.
+   WithMeshClsn::Init's last parameter is a Vector3_16* as well -- the S5_ in
+   ...P10Vector3_16S5_ back-references the pointer type, it is not an int. */
+extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
+    void *self, Actor *a, int b, int c, unsigned int d, unsigned int e);
+extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+    void *self, Actor *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
 extern "C" void func_ov085_02129fdc(char *c);
 
 int PrincessPeach::InitResources()
 {
     char *s = (char*)((Actor *)this);
-    void *f = ModelLoadFile(&data_ov085_021304f4);
+    void *f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_021304f4);
     ((ModelBase*)(s + 0xd4))->SetFile((BMD_File*)f, 1, -1);
     for (int i = 0; i < 7; i++)
-        AnimLoadFile((void*)data_ov085_0212f280[i]);
+        _ZN9Animation8LoadFileER13SharedFilePtr((void*)data_ov085_0212f280[i]);
     if (((ShadowModel*)(s + 0x138))->InitCylinder() == 0)
         return 0;
-    ((MovingCylinderClsn*)(s + 0x160))->Init(((Actor *)this), 0x90000, 0xc0000, 0x4800004, 0);
-    ((WithMeshClsn*)(s + 0x194))->Init(((Actor *)this), 0x40000, 0x40000, 0, 0);
+    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
+        s + 0x160, ((Actor *)this), 0x90000, 0xc0000, 0x4800004, 0);
+    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+        s + 0x194, ((Actor *)this), 0x40000, 0x40000, (Vector3_16*)0, (Vector3_16*)0);
     *(int*)(s + 0x9c) = -0x2000;
     *(int*)(s + 0xa0) = -0x3c000;
     *(int*)(s + 0x80) = 0x1000;

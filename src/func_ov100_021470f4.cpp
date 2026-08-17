@@ -4,6 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
 #include "daObjPathLift_c.h"
+#include "math/Fix12.h"
 // recovered name: daObjPathLift_c_Behavior
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjPathLift_c::Behavior - name recovered from the vtable slot it fills.
@@ -12,8 +13,8 @@
 typedef int Fix12i;
 
 struct PathLift { void BaseBehavior(); };
-extern Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
-extern unsigned char DecIfAbove0_Byte(unsigned char* p);
+extern "C" Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
+extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 /* The fifth parameter is a SIGNED SHORT, not an unsigned int. Declared `unsigned
    int' this mangles _ZN5Sound8PlayLongEjjjRK7Vector3j, which is the symbol that
    correction removed -- and because this file declares the function in C++ and
@@ -21,11 +22,29 @@ extern unsigned char DecIfAbove0_Byte(unsigned char* p);
    search for the old symbol could never find it. The pre-push reference check
    did: "new unresolved reference: func_ov100_021470f4". */
 namespace Sound { unsigned int PlayLong(unsigned int, unsigned int, unsigned int, const Vector3&, short); }
-struct Platform2 { void UpdateClsnPosAndRot(); };
+/* `Platform2` and `Platform3` were phantom CLASSES, and nothing in the source text
+   said so -- the names only exist after mangling. `_ZN8Platform19UpdateClsnPosAndRotEv`
+   is Platform::UpdateClsnPosAndRot, but read as `_ZN9Platform2` + `19UpdateClsn...` it
+   splits into a class `Platform2` whose method name is one character shorter. Two
+   different shadow structs grew out of one class that way. The length prefix is the
+   only thing that distinguishes them, and the retail relocations for both call sites
+   land on Platform's methods. */
+struct Actor;
+struct Platform { void UpdateClsnPosAndRot(); };
+
+/* IsClsnInRange takes two Fix12<int>, not two ints -- the S1_ back-reference in
+   _ZN8Platform13IsClsnInRangeE5Fix12IiES1_ can only come from a repeated class type.
+   It is declared by its final name rather than as a member of Platform above,
+   because a faithful `int IsClsnInRange(Fix12<int>, Fix12<int>)` does not reproduce
+   the call: Fix12<int> is an aggregate with no converting constructor from int, and
+   every way of materialising a zero one (`= {0}`, `Fix12<int>()`, a named local)
+   costs stack traffic the ROM does not have -- measured at 0x100 and 0x104 bytes
+   against the cartridge's 0xec. The ROM passes the pair in registers exactly as two
+   ints, so that is what the call site says. */
+extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern "C" void func_020393a4(int *p, int v);
 extern "C" void func_02039394(int *p, int v);
-struct MeshColliderBase { int IsEnabled(); void Enable(void *a); };
-struct Platform3 { int IsClsnInRange(Fix12i a, int b); };
+struct MeshColliderBase { int IsEnabled(); void Enable(Actor *a); };
 extern unsigned char data_0209f2d8;
 
 extern "C" int func_ov100_021470f4(char* c)
@@ -39,17 +58,17 @@ extern "C" int func_ov100_021470f4(char* c)
         }
     }
     func_ov100_0214700c(c);
-    ((Platform2*)c)->UpdateClsnPosAndRot();
+    ((Platform*)c)->UpdateClsnPosAndRot();
     func_ov100_02146e70(c);
     func_020393a4((int*)(c + 0x124), 0x150000);
     func_02039394((int*)(c + 0x124), 0x1000);
     int b = (int)(data_0209f2d8 == 1);
     if (b != 0) {
         if (((MeshColliderBase*)(c + 0x124))->IsEnabled() == 0) {
-            ((MeshColliderBase*)(c + 0x124))->Enable(c);
+            ((MeshColliderBase*)(c + 0x124))->Enable((Actor*)(void*)c);
         }
     } else {
-        ((Platform3*)c)->IsClsnInRange(0, 0);
+        _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
     }
     return 1;
 }

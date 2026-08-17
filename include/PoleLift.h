@@ -32,7 +32,7 @@ struct PoleLift : Platform {
     int Render();
 };
 
-typedef char FireSeaElevator_size_must_be_0x358[sizeof(PoleLift) == 0x358 ? 1 : -1];
+typedef char PoleLift_size_must_be_0x358[sizeof(PoleLift) == 0x358 ? 1 : -1];
 
 #else
 

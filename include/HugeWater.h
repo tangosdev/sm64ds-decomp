@@ -31,7 +31,7 @@ struct HugeWater : Platform {
     int Render();
 };
 
-typedef char HugeCover_size_must_be_0x334[sizeof(HugeWater) == 0x334 ? 1 : -1];
+typedef char HugeWater_size_must_be_0x334[sizeof(HugeWater) == 0x334 ? 1 : -1];
 
 #else
 

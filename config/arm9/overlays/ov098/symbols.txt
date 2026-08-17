@@ -1,7 +1,7 @@
 _ZN14ArrowSignRightD1Ev kind:function(arm,size=0x4c) addr:0x02137be0
 _ZN14ArrowSignRightD0Ev kind:function(arm,size=0x60) addr:0x02137c2c
 func_ov098_02137c8c kind:function(arm,size=0x40) addr:0x02137c8c
-func_ov098_02137ccc kind:function(arm,size=0x74) addr:0x02137ccc
+_ZN14ArrowSignRight4KillEv kind:function(arm,size=0x74) addr:0x02137ccc
 func_ov098_02137d40 kind:function(arm,size=0x40) addr:0x02137d40
 func_ov098_02137d80 kind:function(arm,size=0x3c) addr:0x02137d80
 _ZN14ArrowSignRight16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x02137dbc
@@ -53,7 +53,7 @@ func_ov098_0213a00c kind:function(arm,size=0x9c) addr:0x0213a00c
 func_ov098_0213a0a8 kind:function(arm,size=0x40) addr:0x0213a0a8
 func_ov098_0213a0e8 kind:function(arm,size=0x60) addr:0x0213a0e8
 func_ov098_0213a148 kind:function(arm,size=0x34) addr:0x0213a148
-func_ov098_0213a17c kind:function(arm,size=0xc0) addr:0x0213a17c
+_ZN16daObjFallBlock_c4KillEv kind:function(arm,size=0xc0) addr:0x0213a17c
 func_ov098_0213a23c kind:function(arm,size=0x48) addr:0x0213a23c
 func_ov098_0213a284 kind:function(arm,size=0x48) addr:0x0213a284
 func_ov098_0213a2cc kind:function(arm,size=0x48) addr:0x0213a2cc

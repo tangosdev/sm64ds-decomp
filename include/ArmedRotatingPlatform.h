@@ -33,7 +33,7 @@ struct ArmedRotatingPlatform : Platform {
     int Render();
 };
 
-typedef char DonutBlock_size_must_be_0x320[sizeof(ArmedRotatingPlatform) == 0x320 ? 1 : -1];
+typedef char ArmedRotatingPlatform_size_must_be_0x320[sizeof(ArmedRotatingPlatform) == 0x320 ? 1 : -1];
 
 #endif /* __cplusplus */
 

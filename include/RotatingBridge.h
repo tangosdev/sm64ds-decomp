@@ -31,7 +31,7 @@ struct RotatingBridge : Platform {
     int Render();
 };
 
-typedef char TowerStep_size_must_be_0x324[sizeof(RotatingBridge) == 0x324 ? 1 : -1];
+typedef char RotatingBridge_size_must_be_0x324[sizeof(RotatingBridge) == 0x324 ? 1 : -1];
 
 #else
 

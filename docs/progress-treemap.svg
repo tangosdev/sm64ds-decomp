@@ -13169,7 +13169,7 @@ matched: yes</title></rect><rect x="595.25" y="85.18" width="9.23" height="8.37"
 module: ov002
 addr: 0x020b382c
 size: 116 bytes
-matched: yes</title></rect><rect x="352.62" y="93.55" width="33.41" height="10.53" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov002_020b38a0
+matched: yes</title></rect><rect x="352.62" y="93.55" width="33.41" height="10.53" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN13BigBrickBlock4KillEv
 module: ov002
 addr: 0x020b38a0
 size: 528 bytes
@@ -14021,7 +14021,7 @@ matched: yes</title></rect><rect x="446.19" y="174.07" width="6.29" height="7.21
 module: ov002
 addr: 0x020bb374
 size: 68 bytes
-matched: yes</title></rect><rect x="452.48" y="174.07" width="10.73" height="7.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov002_020bb3b8
+matched: yes</title></rect><rect x="452.48" y="174.07" width="10.73" height="7.21" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8SignPost4KillEv
 module: ov002
 addr: 0x020bb3b8
 size: 116 bytes
@@ -30445,7 +30445,7 @@ matched: yes</title></rect><rect x="1385.04" y="89.07" width="4.15" height="5.46
 module: ov015
 addr: 0x02111be4
 size: 88 bytes
-matched: yes</title></rect><rect x="1385.04" y="94.52" width="4.15" height="7.69" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov015_02111c3c
+matched: yes</title></rect><rect x="1385.04" y="94.52" width="4.15" height="7.69" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9MovingBar4KillEv
 module: ov015
 addr: 0x02111c3c
 size: 124 bytes
@@ -30545,7 +30545,7 @@ matched: yes</title></rect><rect x="1408.62" y="81.37" width="4.84" height="5.10
 module: ov015
 addr: 0x021122dc
 size: 96 bytes
-matched: yes</title></rect><rect x="1408.62" y="86.48" width="4.84" height="5.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov015_0211233c
+matched: yes</title></rect><rect x="1408.62" y="86.48" width="4.84" height="5.32" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9TowerStep4KillEv
 module: ov015
 addr: 0x0211233c
 size: 100 bytes
@@ -31089,7 +31089,7 @@ matched: yes</title></rect><rect x="1163.60" y="137.97" width="3.54" height="1.7
 module: ov018
 addr: 0x02112858
 size: 40 bytes
-matched: yes</title></rect><rect x="1163.60" y="139.68" width="3.54" height="4.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov018_02112880
+matched: yes</title></rect><rect x="1163.60" y="139.68" width="3.54" height="4.10" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8IceSheet4KillEv
 module: ov018
 addr: 0x02112880
 size: 96 bytes
@@ -40729,7 +40729,7 @@ matched: yes</title></rect><rect x="1549.12" y="627.30" width="7.73" height="5.4
 module: ov079
 addr: 0x02126e00
 size: 88 bytes
-matched: yes</title></rect><rect x="1549.12" y="632.79" width="7.73" height="7.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov079_02126e58
+matched: yes</title></rect><rect x="1549.12" y="632.79" width="7.73" height="7.24" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN11BillBlaster4KillEv
 module: ov079
 addr: 0x02126e58
 size: 116 bytes
@@ -40765,7 +40765,7 @@ matched: yes</title></rect><rect x="1556.85" y="629.23" width="8.22" height="5.1
 module: ov079
 addr: 0x02127228
 size: 88 bytes
-matched: yes</title></rect><rect x="1556.85" y="634.39" width="8.22" height="5.63" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov079_02127280
+matched: yes</title></rect><rect x="1556.85" y="634.39" width="8.22" height="5.63" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN12FortressWall4KillEv
 module: ov079
 addr: 0x02127280
 size: 96 bytes
@@ -41573,7 +41573,7 @@ matched: yes</title></rect><rect x="1258.17" y="797.21" width="2.75" height="6.7
 module: ov081
 addr: 0x02127ccc
 size: 40 bytes
-matched: yes</title></rect><rect x="1260.92" y="797.21" width="11.27" height="6.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov081_02127cf4
+matched: yes</title></rect><rect x="1260.92" y="797.21" width="11.27" height="6.77" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN8IceBlock4KillEv
 module: ov081
 addr: 0x02127cf4
 size: 164 bytes
@@ -43877,7 +43877,7 @@ matched: yes</title></rect><rect x="1473.84" y="791.24" width="6.71" height="4.2
 module: ov098
 addr: 0x02137c8c
 size: 64 bytes
-matched: yes</title></rect><rect x="1473.84" y="795.51" width="6.71" height="7.75" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov098_02137ccc
+matched: yes</title></rect><rect x="1473.84" y="795.51" width="6.71" height="7.75" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN14ArrowSignRight4KillEv
 module: ov098
 addr: 0x02137ccc
 size: 116 bytes
@@ -44085,7 +44085,7 @@ matched: yes</title></rect><rect x="1532.64" y="785.06" width="3.96" height="5.8
 module: ov098
 addr: 0x0213a148
 size: 52 bytes
-matched: yes</title></rect><rect x="1532.64" y="790.95" width="3.96" height="21.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov098_0213a17c
+matched: yes</title></rect><rect x="1532.64" y="790.95" width="3.96" height="21.74" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN16daObjFallBlock_c4KillEv
 module: ov098
 addr: 0x0213a17c
 size: 192 bytes

@@ -21,12 +21,22 @@ struct IceSheet : Platform {
     /* no fields of its own */
 
     /* --- vtable --- */
+    /* DECLARED FIRST, AND IT STAYS FIRST. Out of line, so it is this class's key
+       function, and src/_ZN8IceSheetD1Ev.cpp / D0Ev.cpp define it as a real
+       method. Kill below must not displace it. */
     virtual ~IceSheet();
 
     int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* Slot 31, Platform's own new virtual (include/Platform.h). ATTRIBUTED BY
+       THE VTABLE: _ZTV8IceSheet (ov018 0x02113b34) carries 0x02112880 at
+       +31*4 = 0x02113bb0, and _ZTV8Platform carries _ZN8Platform4KillEv at the
+       same slot, so this is this class's own override. An override adds no slot
+       and no field; the size assert below is unaffected. */
+    virtual void Kill();                /* slot 31 */
 };
 
 typedef char IceSheet_size_must_be_0x320[sizeof(IceSheet) == 0x320 ? 1 : -1];

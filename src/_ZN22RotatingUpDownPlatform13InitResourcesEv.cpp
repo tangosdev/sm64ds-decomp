@@ -5,19 +5,20 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingUpDownPlatform.h"
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
-extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
-extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, void* mtx, int fix, short s, void* clps);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* c);
-extern void func_020393d4(void* p, void* v);
-extern void func_020393c4(void* p, void* v);
-extern void _ZN7PathPtr6FromIDEj(void* self, unsigned int id);
-extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, void* out, unsigned int idx);
+extern "C" int Vec3_Equal(void*, void*);
+extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
+extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
+extern "C" void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
+extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, void* mtx, int fix, short s, void* clps);
+extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void* c);
+extern "C" void func_020393d4(void* p, void* v);
+extern "C" void func_020393c4(void* p, void* v);
+extern "C" void _ZN7PathPtr6FromIDEj(void* self, unsigned int id);
+extern "C" void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, void* out, unsigned int idx);
 
 extern int data_ov091_021344fc[];
 extern int data_ov091_021344f4[];
-extern char _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern "C" char _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
 
 int RotatingUpDownPlatform::InitResources()
 {
@@ -48,7 +49,7 @@ int RotatingUpDownPlatform::InitResources()
     unk_334 = mPosZ;
     _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&unk_328));
 
-    if (Vec3_equal(((char*)this) + 0x338, ((char*)this) + 0x32c)) {
+    if (Vec3_Equal(((char*)this) + 0x338, ((char*)this) + 0x32c)) {
         int* p = (int*)(((int)((char*)this) + 0x328));
         *p = *p + 1;
         _ZNK7PathPtr7GetNodeER7Vector3j(((char*)this) + 0x344, ((char*)this) + 0x338, *(unsigned*)((char*)&unk_328));

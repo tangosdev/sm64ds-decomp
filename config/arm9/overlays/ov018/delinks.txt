@@ -168,7 +168,7 @@ src/func_ov018_02112858.cpp:
     complete
     .text start:0x02112858 end:0x02112880
 
-src/func_ov018_02112880.cpp:
+src/_ZN8IceSheet4KillEv.cpp:
     complete
     .text start:0x02112880 end:0x021128e0
 

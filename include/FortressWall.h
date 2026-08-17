@@ -31,6 +31,10 @@ struct FortressWall : Platform {
     int CleanupResources();
     int InitResources();
     int Render();
+    /* Platform's own slot, overridden here: _ZTV12FortressWall+0x7c relocates to
+       0x02127280 while _ZTV8Platform+0x7c relocates to _ZN8Platform4KillEv. An
+       override, so it adds no slot and no field. */
+    virtual void Kill();              /* slot 31 */
 };
 
 typedef char FortressWall_size_must_be_0x324[sizeof(FortressWall) == 0x324 ? 1 : -1];

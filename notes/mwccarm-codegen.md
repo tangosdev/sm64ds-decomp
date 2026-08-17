@@ -3304,3 +3304,33 @@ matched on the second compile once the per index dispatch was written as a `swit
 chain cannot produce and which is worth exactly the one word of size difference) and
 `int i` was declared ahead of the object pointer. div=0 at 2004/b56, strict relocs,
 linkcheck VERIFIED.
+
+## 6bi. `(char *)&member` on a `u8` marker in the DERIVED part goes through the literal pool (SignPost::InitResources 0x198 -> 0x188, 2026-08-16)
+
+A half-migrated class carries `u8 mFoo;` markers where a real member belongs, and the
+call sites cast: `SomeClass_Init((char *)&mFoo, ...)`. That is byte-transparent while
+the member sits in the base part of the object — but not once it is far enough out.
+
+`SignPost` derives from `Platform` (0x320) and puts a `MovingCylinderClsn` at 0x320
+and a `ShadowModel` at 0x358. With both spelled as `u8` markers, the offsets
+`this + 0x320` and `this + 0x358` came out as **`ldr` from the literal pool plus
+`add`**, where the ROM has a single `add rN, rM, #0x320`. Four extra words —
+`InitResources` compiled to 0x198 against the ROM's 0x188 — and the *whole* of the
+difference was those two address computations.
+
+Typing the members and calling the methods on them (`mMovingCylinderClsn.Init(...)`,
+`mShadowModel.SetFile(...)`) matched on the first compile.
+
+The threshold is not the offset. `mWithMeshClsn` at **0x3c8** in the same class,
+reached the same way, never had the problem: its call site passes the address to a
+function that takes it as its first argument in r0, and mwcc emits the plain `add`
+there. Do not derive a rule about "offsets above N" from this — the shape that
+breaks is `(char *)&marker` used as a *non-leading* argument, where mwcc has already
+committed a register-allocation decision by the time it needs the address.
+
+The practical form: **if a migrated class's function is a small multiple of 4 bytes
+too long and the surplus is address arithmetic, the remaining `u8` markers are the
+cause.** Type them and the length falls out; no coloring lever is involved.
+
+Same family as 6ar (a hoisted address local colors by its declared type) seen from
+the layout side rather than the register side.
