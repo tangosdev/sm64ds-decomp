@@ -119,6 +119,21 @@ struct Platform : Actor {
     void KillByMegaChar(Player &player_);
     void UpdateClsnPosAndRot();
     void UpdateModelPosAndRotY();
+
+    /* BY-VALUE Fix12<int> HERE IS MEASURED, NOT INFERRED FROM THE NAME, and the
+       distinction matters -- the cartridge's RTTI carries class names only, so
+       every parameter type in a mangled symbol is this project's reconstruction
+       until some function's bytes test it. This one is tested: the body at ov002
+       0x020ee674 reproduces with a single-int-by-value fourth parameter, which
+       is exactly what math/Fix12.h's `{ T val; }` is. Contrast the two
+       IsClsnInRange* symbols, whose names make the same Fix12<int> claim and
+       whose bytes REFUSE it -- see the note in include/Actor.h about CW homing
+       class-typed by-value parameters to the stack, and the header comment in
+       src_tu/actors/Platform.cpp.
+
+       Non-virtual, so this declaration adds no slot and no field; the 0x320
+       assertion below is unaffected. */
+    int UpdateKillByMegaChar(s16 a, s16 b, s16 c, Fix12<int> d);
 };
 
 typedef char Platform_size_must_be_0x320[sizeof(Platform) == 0x320 ? 1 : -1];
