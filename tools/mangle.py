@@ -24,9 +24,22 @@ from dataclasses import asdict, dataclass
 from elftools.elf.elffile import ELFFile
 
 import match as M
+from rombuild import CFLAGS as _BUILD_CFLAGS
 
 
-CPP_FLAGS = M.DEFAULT_FLAGS.replace("-lang c99", "-lang c++")
+# The BUILD's flags, not match.DEFAULT_FLAGS, for the reason build_pin.py
+# gives at length: an oracle answered with different flags than the link uses
+# can bless -- or condemn -- something the build then disagrees with.
+#
+# The concrete miss: rombuild carries `-Cpp_exceptions off` and DEFAULT_FLAGS
+# does not.  With exceptions on, `void operator delete(void *)` is rejected as
+# an "exception specification list mismatch" against the implicit throw()
+# declaration.  Asked through this tool, CodeWarrior therefore appeared to
+# refuse a plain operator delete, and the tree recorded that refusal as a
+# compiler restriction (src/_Znwj.cpp, include/ActorBase.h) when it is purely
+# an artefact of the wrong flag set.  Under the build's own flags it compiles
+# and emits _ZdlPv.
+CPP_FLAGS = _BUILD_CFLAGS.replace("-lang c99", "-lang c++")
 SECTION_ORDER = {".text": 0, ".init": 1, ".data": 2, ".bss": 3}
 
 
