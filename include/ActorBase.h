@@ -36,6 +36,15 @@
 
 #ifdef __cplusplus
 
+/* The actor heap and its deallocator, for the inline operator delete at the end
+   of the class. `data_020a0eac` is the heap every actor is allocated from -- the
+   same one ActorBase::operator new (src/_ZN9ActorBasenwEj.cpp) passes to
+   Memory::Allocate. Spelt exactly as include/decl_common.h and include/Actor.h
+   spell them; see the note on operator delete below for why the `void *` second
+   parameter is deliberate and not a mistake. */
+extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
+extern "C" void *data_020a0eac;
+
 /* 0x14 bytes: four words plus the owner back-pointer the constructor writes. */
 struct ActorBase_SceneNode {
     s32 unk_000;
@@ -93,6 +102,41 @@ struct ActorBase {
        declaration of it ("illegal 'operator' declaration"), and it is neither
        virtual nor layout-affecting, so src/_ZN9ActorBasenwEj.cpp defines it
        under its mangled name instead. */
+
+    /* operator delete IS declared here, and unlike operator new the compiler
+       accepts it in-class. It is what lets a real `~ActorBase()` reproduce the
+       ROM's deleting destructor: mwcc generates D0 as "run the destructor body,
+       then call operator delete on the class", and without this it emits a call
+       to the global `_ZdlPv`, which exists nowhere in this image.
+
+       MEASURED, not assumed. The ROM's two D0s under this class both END with
+       the same two instructions -- load the actor heap pointer, call
+       Memory::Deallocate -- rather than calling a shared helper, and both are
+       exactly their D1 body plus those instructions:
+           ActorBase::~ActorBase [D0]    0x02043d78  0x44 = D1's 0x30 + 0x14
+           ActorDerived::~ActorDerived   0x02013ea4  0x38 = D1's 0x24 + 0x14
+       Compiled without this declaration, src_tu/actors/ActorDerived.cpp's D0
+       came out the wrong SIZE (`999 word(s) differ`); with it, 5/5 MATCH. Only
+       an inline member produces that shape.
+
+       WHY HERE AND ALSO ON Actor. include/Actor.h carries its own copy and its
+       comment records why: mwcc inlines operator delete only when it is found in
+       the class itself or its IMMEDIATE base, so a declaration here does NOT
+       reach Actor (two levels down) and cannot replace Actor's. Nor does it
+       reach HUD, Minimap or Scene, whose immediate base is ActorDerived. The
+       only classes it changes are ActorBase itself and ActorDerived -- the two
+       whose D0 the ROM shows inlining it. The two src/ files that declare a
+       local `struct Actor : ActorBase` (EndKuppaScript.cpp,
+       func_ov002_020b7e1c.cpp) use their own local shadow ActorBase, not this
+       one, so they are out of scope too.
+
+       No layout effect: an inline non-virtual member adds no field and no vtable
+       slot, and the 0x50 assertion below still holds. Spelt exactly as
+       include/Actor.h and include/decl_common.h spell the two names -- declaring
+       the honest `Heap*` second parameter here instead would put two
+       incompatible extern "C" declarations of one name in the same TU, which
+       mwcc rejects as "illegal function overloading". */
+    void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 };
 
 #else
