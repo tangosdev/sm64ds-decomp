@@ -34,9 +34,9 @@
 
 extern int _ZTV10dBgActor_c[];
 extern void *data_020a0eac;
-extern int func_0213a2cc(void *self, void *data);
+extern int func_ov098_0213a2cc(void *self, void *data);
 extern int data_ov045_021130ac[];
-extern int func_0213a794(void *self, void *data);
+extern int func_ov098_0213a794(void *self, void *data);
 extern int _ZTV12FallBlockBfs[];
 
 /* -------------------------------------------------------------------------- */
@@ -62,7 +62,7 @@ int *FallBlockBfs_Spawn(void)
 /* -------------------------------------------------------------------------- */
 int _ZN12FallBlockBfs13InitResourcesEv(void *self)
 {
-    return func_0213a794(self, data_ov045_021130ac);
+    return func_ov098_0213a794(self, data_ov045_021130ac);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -70,7 +70,7 @@ int _ZN12FallBlockBfs13InitResourcesEv(void *self)
 /* -------------------------------------------------------------------------- */
 int _ZN12FallBlockBfs16CleanupResourcesEv(void *self)
 {
-    return func_0213a2cc(self, data_ov045_021130ac);
+    return func_ov098_0213a2cc(self, data_ov045_021130ac);
 }
 
 /* -------------------------------------------------------------------------- */

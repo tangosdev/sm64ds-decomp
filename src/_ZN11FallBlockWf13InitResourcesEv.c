@@ -2,10 +2,10 @@
 // `ldr ip,[pc]; bx ip` indirect tail-call (a plain near `b` otherwise) that the ROM uses
 // to reach another overlay. Loads the data pointer into r1; this stays in r0.
 #pragma long_calls on
-extern int func_0213a794(void *thisp, void *data);
+extern int func_ov098_0213a794(void *thisp, void *data);
 extern char data_ov015_02114880[];
 
 int _ZN11FallBlockWf13InitResourcesEv(void *thisp)
 {
-    return func_0213a794(thisp, data_ov015_02114880);
+    return func_ov098_0213a794(thisp, data_ov015_02114880);
 }

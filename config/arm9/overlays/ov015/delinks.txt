@@ -285,9 +285,11 @@ src/_ZN11FallBlockWfD0Ev.c:
     .text start:0x02112d44 end:0x02112da8
 
 src/_ZN11FallBlockWf16CleanupResourcesEv.c:
+    complete
     .text start:0x02112da8 end:0x02112dbc
 
 src/_ZN11FallBlockWf13InitResourcesEv.c:
+    complete
     .text start:0x02112dbc end:0x02112dd0
 
 src/FallBlockWf_Spawn.c:

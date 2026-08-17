@@ -237,46 +237,10 @@
     "overlay_102"
    ]
   },
-  "ov015:0x02112da8": {
-   "name": "_ZN11FallBlockWf16CleanupResourcesEv",
-   "missing": [
-    "func_0213a2cc"
-   ]
-  },
-  "ov015:0x02112dbc": {
-   "name": "_ZN11FallBlockWf13InitResourcesEv",
-   "missing": [
-    "func_0213a794"
-   ]
-  },
   "ov021:0x02111434": {
    "name": "func_ov021_02111434",
    "missing": [
     "conv_ov021"
-   ]
-  },
-  "ov022:0x02112434": {
-   "name": "func_ov022_02112434",
-   "missing": [
-    "func_0213a2cc"
-   ]
-  },
-  "ov022:0x02112448": {
-   "name": "func_ov022_02112448",
-   "missing": [
-    "func_0213a794"
-   ]
-  },
-  "ov045:0x02111dfc": {
-   "name": "_ZN12FallBlockBfs16CleanupResourcesEv",
-   "missing": [
-    "func_0213a2cc"
-   ]
-  },
-  "ov045:0x02111e10": {
-   "name": "_ZN12FallBlockBfs13InitResourcesEv",
-   "missing": [
-    "func_0213a794"
    ]
   },
   "ov060:0x02117c30": {

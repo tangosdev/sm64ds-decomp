@@ -157,9 +157,11 @@ src/_ZN12FallBlockBfsD0Ev.c:
     .text start:0x02111d98 end:0x02111dfc
 
 src/_ZN12FallBlockBfs16CleanupResourcesEv.c:
+    complete
     .text start:0x02111dfc end:0x02111e10
 
 src/_ZN12FallBlockBfs13InitResourcesEv.c:
+    complete
     .text start:0x02111e10 end:0x02111e24
 
 src/FallBlockBfs_Spawn.c:
