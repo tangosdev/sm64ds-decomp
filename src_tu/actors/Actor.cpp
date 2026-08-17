@@ -56,6 +56,13 @@
  *    mangled call and the other a class whose ctor/dtor the compiler calls;
  *    one C++ type cannot be both. Nothing spells it by an unmangled symbol, so
  *    the rename cannot reach the linker.
+ *  - _ZN8Vector3sD1Ev (ordinal 95) spells its mangled ROM symbol directly instead
+ *    of going through the legacy file's Vector3s_ForceDestructor scaffold. The
+ *    scaffold is the only way to force an out-of-line copy of an inline empty
+ *    destructor -- but it is 0x50 of STB_GLOBAL .text with no address in this
+ *    ROM, and per-function objisolate strips it. In a merged TU it lands INSIDE
+ *    the span and shifts every later function, which is the one thing that
+ *    stood between this file and a whole-range link. Same four bytes either way.
  *  - D0's two `thiz + 0x50` arguments are spelled differently (`((int)thiz)+0x50`
  *    and `&thiz->unk_050`), exactly as D1 and D2 spell them. Written identically
  *    under decl_common.h's (int) prototypes, mwcc commons them into a fourth
@@ -143,13 +150,15 @@ extern "C" void* _ZN5ActorC2Ev(struct Actor *self) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 95 -- _ZN8Vector3sD1Ev
  * 0x02011508  size 0x4   legacy src/_ZN8Vector3sD1Ev.cpp */
-struct Vector3s_ForceDestructor {
-    Vector3s v[2];
-    ~Vector3s_ForceDestructor();
-};
-Vector3s_ForceDestructor::~Vector3s_ForceDestructor()
-{
-}
+/* No forcing scaffold. The legacy file reaches this four-byte `bx lr` through a
+ * `struct Vector3s_ForceDestructor { Vector3s v[2]; ~Vector3s_ForceDestructor(); }`,
+ * because an explicit `p->~Vector3s()` on an empty inline destructor is inlined away
+ * while an ARRAY cleanup has to pass the destructor's address along -- but that
+ * scaffold is 0x50 of STB_GLOBAL .text with no address in this ROM, and objisolate
+ * strips it per function. In a merged TU it lands INSIDE the span and shifts
+ * everything after it, which is the one thing between this file and a whole-range
+ * link. Spelling the ROM symbol directly emits the same four bytes and nothing else. */
+extern "C" void _ZN8Vector3sD1Ev(void *self) {}
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 94 -- _ZN5ActorC1Ev
@@ -521,8 +530,8 @@ extern "C" void func_02010da4(int* p)
 typedef int s32;
 struct Vec3 { s32 x, y, z; };
 extern "C" {
-extern "C" void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
-extern "C" void func_02010da4(int *p);
+void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
+void func_02010da4(int *p);
 }
 void Actor::UpdatePosWithOnlySpeed(CylinderClsn *clsn) {
     AddVec3((Vec3 *)&mPosX, (Vec3 *)&unk_0a4, (Vec3 *)&mPosX);
@@ -782,7 +791,7 @@ extern "C" s32 func_02010844(void* unused, Vector3* v, s16 angle)
  * 0x02010714  size 0x130   legacy src/_ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs.c */
 typedef unsigned int u32;
 extern "C" {
-extern "C" Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as( u32 actorID, u32 param, const void *pos, const Vector3_16 *rot, s32 areaID, s32 deathTableID);
+Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as( u32 actorID, u32 param, const void *pos, const Vector3_16 *rot, s32 areaID, s32 deathTableID);
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650[];
 }
@@ -1061,13 +1070,13 @@ extern "C" void _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
 /* ROM ordinal 47 -- _ZN5Actor11UpdateCarryER6PlayerRK7Vector3
  * 0x02010180  size 0x130   legacy src/_ZN5Actor11UpdateCarryER6PlayerRK7Vector3.cpp */
 extern "C" {
-extern "C" void *func_ov002_020e496c(Player *p);
-extern "C" void MulMat4x3Mat4x3(Matrix4x3 *m1, Matrix4x3 *m0, Matrix4x3 *mF);
-extern "C" void Matrix4x3_FromTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
-extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *mF, short x, short y, short z);
-extern "C" void Vec3_Asr(Vector3 *vF, const Vector3 *v, int amount);
-extern "C" void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
-extern "C" void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
+void *func_ov002_020e496c(Player *p);
+void MulMat4x3Mat4x3(Matrix4x3 *m1, Matrix4x3 *m0, Matrix4x3 *mF);
+void Matrix4x3_FromTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
+void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *mF, short x, short y, short z);
+void Vec3_Asr(Vector3 *vF, const Vector3 *v, int amount);
+void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
+void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
 extern Matrix4x3 data_020a0e68;
 }
 Matrix4x3 *Actor::UpdateCarry(Player &player, const Vector3 &vec)
@@ -1221,7 +1230,7 @@ extern "C" void _ZN5Actor25OnAimedAtWithEggReturnVecEv(Vector3 *ret, Actor *self
 /* ROM ordinal 32 -- _ZN5Actor11SpawnNumberERK7Vector3jbtPS_
  * 0x02010044  size 0x98   legacy src/_ZN5Actor11SpawnNumberERK7Vector3jbtPS_.cpp */
 extern "C" {
-extern "C" Actor *func_ov002_020f0918(Actor *number, Actor *owner);
+Actor *func_ov002_020f0918(Actor *number, Actor *owner);
 }
 Actor *Actor::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
                           u16 delay, Actor *owner)
@@ -1558,7 +1567,7 @@ extern "C" int func_0200fa04(int a, Vector3* pos, int flag)
 /* ROM ordinal 11 -- _ZN5Actor18GetBitInDeathTableEv
  * 0x0200f9f4  size 0x10   legacy src/_ZN5Actor18GetBitInDeathTableEv.cpp */
 extern "C" {
-extern "C" int DeathTable_GetBit(int id);
+int DeathTable_GetBit(int id);
 }
 int Actor::GetBitInDeathTable()
 {
@@ -1569,7 +1578,7 @@ int Actor::GetBitInDeathTable()
 /* ROM ordinal 10 -- _ZN5Actor17TrackInDeathTableEv
  * 0x0200f9e4  size 0x10   legacy src/_ZN5Actor17TrackInDeathTableEv.cpp */
 extern "C" {
-extern "C" void DeathTable_SetBit(int id);
+void DeathTable_SetBit(int id);
 }
 void Actor::TrackInDeathTable()
 {
@@ -1580,7 +1589,7 @@ void Actor::TrackInDeathTable()
 /* ROM ordinal 9 -- _ZN5Actor19UntrackInDeathTableEv
  * 0x0200f9d4  size 0x10   legacy src/_ZN5Actor19UntrackInDeathTableEv.cpp */
 extern "C" {
-extern "C" void DeathTable_ClearBit(int id);
+void DeathTable_ClearBit(int id);
 }
 void Actor::UntrackInDeathTable()
 {
@@ -1610,7 +1619,7 @@ void Actor::SpawnSoundObj(u32 soundObjParam)
 /* ROM ordinal 6 -- _ZN5Sound15PlaySecretSoundEP5ActorPt
  * 0x0200f8f8  size 0x84   legacy src/_ZN5Sound15PlaySecretSoundEP5ActorPt.cpp */
 extern "C" {
-extern "C" int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int soundID, unsigned int vol, unsigned int pan, Fix12i dist, int loop);
+int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int soundID, unsigned int vol, unsigned int pan, Fix12i dist, int loop);
 static const int kPoolDist = 0x8777;
 }
 namespace Sound {
@@ -1708,7 +1717,7 @@ extern "C" void func_0200f760(void *self, char *actor)
 /* ROM ordinal 1 -- _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE
  * 0x0200f70c  size 0x54   legacy src/_ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE.cpp */
 extern "C" {
-extern "C" int _ZN5Actor13DistToCPlayerEv(Actor *self);
+int _ZN5Actor13DistToCPlayerEv(Actor *self);
 }
 extern "C" int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(Actor *self, int threshold)
 {
