@@ -6,8 +6,8 @@
 
 int VirtualDoor::InitResources()
 {
-  mScaleX=(((mParam&0xf)+1)*0x64000)>>1;
-  mScaleY=(((mParam>>4&0xf)+1)*0x64000);
+  mScaleX=(((param1&0xf)+1)*0x64000)>>1;
+  mScaleY=(((param1>>4&0xf)+1)*0x64000);
   mAngleY=-mAngleY;
   return 1;
 }

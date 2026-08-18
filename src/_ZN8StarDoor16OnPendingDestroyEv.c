@@ -1,3 +1,8 @@
-void _ZN8StarDoor16OnPendingDestroyEv(void)
+//cpp
+// @symbol _ZN8StarDoor16OnPendingDestroyEv
+
+#include "StarDoor.h"
+
+void StarDoor::OnPendingDestroy()
 {
 }

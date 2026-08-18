@@ -1,3 +1,8 @@
-void _ZN11VirtualDoor16OnPendingDestroyEv(void)
+//cpp
+// @symbol _ZN11VirtualDoor16OnPendingDestroyEv
+
+#include "VirtualDoor.h"
+
+void VirtualDoor::OnPendingDestroy()
 {
 }

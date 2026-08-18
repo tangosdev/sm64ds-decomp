@@ -1,38 +1,32 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class StarDoor: 5 matched functions, 15 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef STARDOOR_H
 #define STARDOOR_H
-#include "types.h"
 
-struct StarDoor {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x24];
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    s16 mAngleZ;            /* 0x090 */
-    u8  pad_092[0x12];
-    s32 unk_0a4;            /* 0x0a4 */
-    s32 unk_0a8;            /* 0x0a8 */
-    s32 unk_0ac;            /* 0x0ac */
-    u8  pad_0b0[0x24];
-    u8  mCommonModel;            /* 0x0d4 */
-    u8  pad_0d5[0xb];
-    u8  unk_0e0;            /* 0x0e0 */
-    u8  pad_0e1[0x23];
-    s32 unk_104;            /* 0x104 */
-    s32 unk_108;            /* 0x108 */
-    s32 unk_10c;            /* 0x10c */
-    u8  unk_110;            /* 0x110 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-#endif
+#include "CommonModel.h"
+#include "dActor_c.h"
+
+struct StarDoorCallback;
+
+/* StarDoor_Spawn allocates 0x118 bytes, constructs dActor_c, and constructs a
+ * CommonModel at 0xd4. D1 destroys that model before chaining to dActor_c.
+ * Render writes the model matrix at 0xe0..0x10f, while Behavior reads the
+ * callback pointer at 0x110; together those uses close the derived layout.
+ */
+struct StarDoor : dActor_c {
+    u8                pad_0d0[0x4];
+    CommonModel       mModel;       /* 0x0d4 */
+    StarDoorCallback *mCallback;    /* 0x110 */
+    u8                pad_114[0x4];
+
+    virtual ~StarDoor();
+
+    virtual s32 InitResources();
+    virtual s32 CleanupResources();
+    virtual s32 Behavior();
+    virtual s32 Render();
+    virtual void OnPendingDestroy();
 };
 
-#endif
+typedef char StarDoor_size_must_be_0x118[
+    sizeof(StarDoor) == 0x118 ? 1 : -1];
+
+#endif /* STARDOOR_H */

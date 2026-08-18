@@ -1,7 +1,13 @@
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov100_02148934[];
-int _ZN8StarDoor16CleanupResourcesEv(void)
+//cpp
+// @symbol _ZN8StarDoor16CleanupResourcesEv
+
+#include "SharedFilePtr.h"
+#include "StarDoor.h"
+
+extern SharedFilePtr data_ov100_02148934;
+
+int StarDoor::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov100_02148934);
+    data_ov100_02148934.Release();
     return 1;
 }

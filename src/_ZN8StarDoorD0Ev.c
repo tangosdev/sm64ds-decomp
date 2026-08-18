@@ -1,15 +1,8 @@
+//cpp
 // @symbol _ZN8StarDoorD0Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_common.h"
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV12daStarGate_c */
-extern void *data_020a0eac;
-int *_ZN8StarDoorD0Ev(int *t)
+
+#include "StarDoor.h"
+
+StarDoor::~StarDoor()
 {
-    t[0] = (int)_ZTV12daStarGate_c;
-    _ZN11CommonModelD1Ev((char *)t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
 }
