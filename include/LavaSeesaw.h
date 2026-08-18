@@ -15,13 +15,23 @@
  * THE VTABLE was diffed slot by slot against _ZTV10dBgActor_c. Only the slots declared
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
+ *
+ * mSwingStep sits at 0x31e, in dBgActor_c's TAIL PADDING (same placement rationale
+ * as ArmedRotatingPlatform's unk_31e): Behavior adds it to mAngleX every frame while
+ * mSwingCooldown is zero, and flips its sign (a see-saw tilt reversal) once mAngleX
+ * passes +-0x400, also reloading mSwingCooldown to 0x1e. InitResources seeds
+ * mSwingStep to -0x10.
  */
 struct LavaSeesaw : dBgActor_c {
-    u8  pad_320[0x4];
+    s16 mSwingStep;          /* 0x31e */
+    u8  mSwingCooldown;      /* 0x320 */
+    u8  pad_321[0x3];
 
     virtual ~LavaSeesaw();            /* slots 16 (D1), 17 (D0) */
 
+    virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
 };
 

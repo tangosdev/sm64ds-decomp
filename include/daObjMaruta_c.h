@@ -67,6 +67,11 @@ struct daObjMaruta_c : dBgActor_c {
        function before eligible.py and rombuild.py judge it -- checked on this
        file, not assumed. */
     void OnHitByMegaChar(Player &player);  /* void, see include/Stump.h */
+
+    /* Slot 9, this class's own override. Not `virtual` -- fBase_c already
+       declares it virtual, and re-adding the keyword here is a style
+       choice this header hasn't made for its own other declarations. */
+    s32 Render();
 };
 
 typedef char daObjMaruta_c_size_must_be_0x320[sizeof(daObjMaruta_c) == 0x320 ? 1 : -1];

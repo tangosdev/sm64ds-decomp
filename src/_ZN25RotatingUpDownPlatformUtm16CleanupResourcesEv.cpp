@@ -12,7 +12,7 @@ extern struct SFP data_ov091_02134c34[];
 
 int RotatingUpDownPlatformUtm::CleanupResources()
 {
-  if(mSpawnParam == 0xffff) return 1;
+  if(param1 == 0xffff) return 1;
   if(((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
     ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
   ((SharedFilePtr *)(data_ov091_02134c30[mVariant].a))->Release();

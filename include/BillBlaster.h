@@ -4,6 +4,8 @@
 #include "types.h"
 #include "dBgActor_c.h"
 
+struct Player;
+
 /* TWO WITNESSES, and they close on each other:
  *
  *   BillBlaster_Spawn  fBase_c::operator new(804 = 0x324), dBgActor_c::dBgActor_c(), stores _ZTV11BillBlaster,
@@ -23,7 +25,9 @@ struct BillBlaster : dBgActor_c {
 
     virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
+    virtual void  OnHitByMegaChar(Player &player); /* slot 27 */
     /* dBgActor_c's own slot, overridden here: _ZTV11BillBlaster+0x7c relocates to
        0x02126e58 while _ZTV10dBgActor_c+0x7c relocates to _ZN10dBgActor_c4KillEv. An
        override, so it adds no slot and no field. */

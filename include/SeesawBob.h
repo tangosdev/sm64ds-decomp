@@ -30,6 +30,7 @@ struct SeesawBob : dBgActor_c {
     int CleanupResources();
     int InitResources();
     int Render();
+    virtual void OnGroundPounded(dActor_c &other); /* slot 21 */
 };
 
 typedef char SeesawBob_size_must_be_0x328[sizeof(SeesawBob) == 0x328 ? 1 : -1];

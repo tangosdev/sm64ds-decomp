@@ -31,6 +31,7 @@ struct FortressWall : dBgActor_c {
     int CleanupResources();
     int InitResources();
     int Render();
+    virtual int OnHitByCannonBlastedChar(dActor_c &other); /* slot 26 */
     /* dBgActor_c's own slot, overridden here: _ZTV12FortressWall+0x7c relocates to
        0x02127280 while _ZTV10dBgActor_c+0x7c relocates to _ZN10dBgActor_c4KillEv. An
        override, so it adds no slot and no field. */

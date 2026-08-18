@@ -71,6 +71,7 @@ struct daObjKaitendai_c : dBgActor_c {
        function before eligible.py and rombuild.py judge it -- checked on this
        file, not assumed. */
     s32 Behavior();
+    s32 Render();                      /* slot 9, ov002 0x020b66f0 -- mModel.Render(0) */
 };
 
 typedef char daObjKaitendai_c_size_must_be_0x320[sizeof(daObjKaitendai_c) == 0x320 ? 1 : -1];

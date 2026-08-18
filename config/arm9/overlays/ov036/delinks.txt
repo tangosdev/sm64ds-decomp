@@ -27,7 +27,7 @@ src/_ZN16SwingingPlatform8BehaviorEv.cpp:
     complete
     .text start:0x021112f0 end:0x0211137c
 
-src/func_ov036_0211137c.cpp:
+src/_ZN16SwingingPlatform13InitResourcesEv.cpp:
     complete
     .text start:0x0211137c end:0x02111414
 
@@ -43,11 +43,11 @@ src/_ZN18RotatingPlatformRrD0Ev.c:
     complete
     .text start:0x02111494 end:0x021114f8
 
-src/func_ov036_021114f8.c:
+src/_ZN18RotatingPlatformRr16CleanupResourcesEv.cpp:
     complete
     .text start:0x021114f8 end:0x0211150c
 
-src/func_ov036_0211150c.c:
+src/_ZN18RotatingPlatformRr13InitResourcesEv.cpp:
     complete
     .text start:0x0211150c end:0x02111544
 
@@ -175,11 +175,11 @@ src/TrickyTriangles_Spawn.cpp:
     complete
     .text start:0x021120c8 end:0x02112158
 
-src/func_ov036_02112158.cpp:
+src/_ZN15daObjRcCarpet_cD1Ev.cpp:
     complete
     .text start:0x02112158 end:0x021121c8
 
-src/func_ov036_021121c8.cpp:
+src/_ZN15daObjRcCarpet_cD0Ev.cpp:
     complete
     .text start:0x021121c8 end:0x0211224c
 
@@ -191,19 +191,19 @@ src/func_ov036_021122c0.cpp:
     complete
     .text start:0x021122c0 end:0x02112318
 
-src/func_ov036_02112318.cpp:
+src/_ZN15daObjRcCarpet_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112318 end:0x02112378
 
-src/func_ov036_02112378.cpp:
+src/_ZN15daObjRcCarpet_c6RenderEv.cpp:
     complete
     .text start:0x02112378 end:0x021123c8
 
-src/func_ov036_021123c8.cpp:
+src/_ZN15daObjRcCarpet_c8BehaviorEv.cpp:
     complete
     .text start:0x021123c8 end:0x0211244c
 
-src/func_ov036_0211244c.cpp:
+src/_ZN15daObjRcCarpet_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211244c end:0x02112538
 

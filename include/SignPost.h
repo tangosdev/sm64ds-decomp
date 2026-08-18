@@ -68,10 +68,11 @@ struct SignPost : dBgActor_c {
     u8  pad_3c2[0x6];
     u8  mWithMeshClsn;          /* 0x3c8 */
     u8  pad_3c9[0x1c5];
-    s8  unk_58e;                /* 0x58e */
-    u8  pad_58f[0x1];
+    u8  unk_58e;                /* 0x58e */
+    u8  unk_58f;                /* 0x58f */
     u8  unk_590;                /* 0x590 */
-    u8  pad_591[0xb];
+    u8  unk_591;                /* 0x591 */
+    u8  pad_592[0xa];
     /* Player * -- the ROM loads this WORD and passes it to _ZN6Player9DropActorEv as that
        function's `this`, which is an object address, so the word is a Player *. It says
        nothing about the rest of the marker's span, which stays explicit padding. Was a u8
@@ -107,6 +108,10 @@ struct SignPost : dBgActor_c {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    void OnGroundPounded(dActor_c &other);   /* slot 21 */
+    int  OnAttacked1(dActor_c &other);       /* slot 22 */
+    void OnHitByMegaChar(Player &player);    /* slot 27 */
 };
 
 typedef char SignPost_size_must_be_0x5a4[sizeof(SignPost) == 0x5a4 ? 1 : -1];
@@ -150,10 +155,11 @@ struct SignPost {
     u8  pad_3c2[0x6];
     u8  mWithMeshClsn;            /* 0x3c8 */
     u8  pad_3c9[0x1c5];
-    s8  unk_58e;            /* 0x58e */
-    u8  pad_58f[0x1];
+    u8  unk_58e;            /* 0x58e */
+    u8  unk_58f;            /* 0x58f */
     u8  unk_590;            /* 0x590 */
-    u8  pad_591[0xb];
+    u8  unk_591;            /* 0x591 */
+    u8  pad_592[0xa];
     Player *unk_59c;            /* 0x59c */
     u8  pad_5a0[0x4];
 };

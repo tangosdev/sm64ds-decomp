@@ -82,6 +82,9 @@ struct Thwomp : daDsnBase_c {
        because the ROM's symbols are _ZN6Thwomp*, not _ZN11daDsnBase_c*. */
     int CleanupResources();            /* slot  3, daDsnBase_c's word */
     int Render();                      /* slot  9, daDsnBase_c's word */
+
+    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
+    virtual int  OnAimedAtWithEgg();              /* slot 29 */
 };
 
 typedef char Thwomp_size_must_be_0x3a4[sizeof(Thwomp) == 0x3a4 ? 1 : -1];

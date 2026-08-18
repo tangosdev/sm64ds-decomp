@@ -30,6 +30,8 @@ struct SlidingIce : dBgActor_c {
     int Behavior();
     int CleanupResources();
     int Render();
+
+    virtual void OnHitByMegaChar(Player &player);   /* slot 27 */
 };
 
 typedef char SlidingIce_size_must_be_0x32c[sizeof(SlidingIce) == 0x32c ? 1 : -1];

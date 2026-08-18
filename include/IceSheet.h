@@ -31,6 +31,9 @@ struct IceSheet : dBgActor_c {
     int InitResources();
     int Render();
 
+    virtual void OnGroundPounded(dActor_c &other);  /* slot 21 */
+    virtual void OnHitByMegaChar(Player &player);    /* slot 27 */
+
     /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). ATTRIBUTED BY
        THE VTABLE: _ZTV8IceSheet (ov018 0x02113b34) carries 0x02112880 at
        +31*4 = 0x02113bb0, and _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv at the

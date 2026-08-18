@@ -33,6 +33,7 @@ struct dScMgTrampoline_c : dScMgD3DBase_c {
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
        table stays the base's width and no field moves. Declared AFTER the
        destructor so the destructor is still the first virtual declared. */
+    virtual s32 InitResources();     /* slot 0 -- src/_ZN17dScMgTrampoline_c13InitResourcesEv.cpp */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x021212e0 */
     virtual s32 Behavior();          /* slot 6 -- ov006 0x021214f8 */
     virtual s32 Render();            /* slot 9 -- ov006 0x021212fc */

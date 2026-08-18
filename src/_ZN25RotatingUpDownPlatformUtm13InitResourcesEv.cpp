@@ -45,7 +45,7 @@ int RotatingUpDownPlatformUtm::InitResources()
     void *bmd;
     void *kcl;
 
-    if (mSpawnParam == 0xffff) {
+    if (param1 == 0xffff) {
         int *p = (int*)(((int)((char *)this) + 0xb0));
         *p = *p & ~2;
         _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(((char *)this), 0, 0x1000, 0, 0);
@@ -60,7 +60,7 @@ int RotatingUpDownPlatformUtm::InitResources()
     {
         enum Bool isSpecial;
         ((char *)this)[0x395] = 0;
-        isSpecial = (enum Bool)(mActorID == 0x1e);
+        isSpecial = (enum Bool)(actorID == 0x1e);
         if (isSpecial) {
             ((char *)this)[0x395] = 2;
         } else if (data_0209f2f8 == 7) {
@@ -68,7 +68,7 @@ int RotatingUpDownPlatformUtm::InitResources()
         }
     }
 
-    ((char *)this)[0x394] = (unsigned char)(mSpawnParam & 0xf);
+    ((char *)this)[0x394] = (unsigned char)(param1 & 0xf);
 
     if ((unsigned char)((char *)this)[0x394] == 2) {
         char *tbl = data_ov091_02134cdc;

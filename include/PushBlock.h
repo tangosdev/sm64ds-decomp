@@ -1,0 +1,108 @@
+#ifndef PUSHBLOCK_H
+#define PUSHBLOCK_H
+
+#include "types.h"
+
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x320 was dActor_c's and
+ * dBgActor_c's, and is inherited now.
+ *
+ * SIZE IS 0x4f4, THE LITERAL PushBlock_Spawn.c passes to fBase_c::operator
+ * new (1268 decimal) -- not merely the observed field span, though here they
+ * agree: dBgActor_c ends at 0x320 and this class adds exactly one WithMeshClsn
+ * (0x1bc) plus six trailing scalars, landing on 0x4f4 with no padding.
+ *
+ * THIS IS THE MID-RENAME CLASS. Before this change the header was a flat,
+ * auto-generated `struct daObjPushblock_c` while the vtable and both
+ * destructors already carried the real ROM name "PushBlock" --
+ * _ZTV9PushBlock, _ZN9PushBlockD1Ev, _ZN9PushBlockD0Ev. Only the RTTI pair,
+ * _ZTI16daObjPushblock_c and _ZTS16daObjPushblock_c, still spelled the old
+ * placeholder name; this class becoming its own key-function TU is what makes
+ * the compiler emit them consistently, so config/arm9/overlays/ov002/symbols.txt
+ * renames those two symbols in the same commit as this header (see
+ * notes/actor-class-names-off-by-one.md and the vague-linkage rule in
+ * decomp-cpp-class-form for why the rename cannot be split from the rewrite).
+ */
+
+#ifdef __cplusplus
+
+#include "dBgActor_c.h"
+#include "WithMeshClsn.h"
+
+struct dActor_c;
+struct Player;
+
+struct PushBlock : dBgActor_c {
+    WithMeshClsn mWithMeshClsn;       /* 0x320 */
+    s32 unk_4dc;                      /* 0x4dc */
+    s32 unk_4e0;                      /* 0x4e0 */
+    s32 unk_4e4;                      /* 0x4e4 */
+    s32 unk_4e8;                      /* 0x4e8 */
+    u32 unk_4ec;                      /* 0x4ec */
+    s32 unk_4f0;                      /* 0x4f0 */
+
+    /* --- vtable --- */
+    virtual ~PushBlock();
+
+    int InitResources();
+    int CleanupResources();
+    int Behavior();
+    int Render();
+
+    /* Slot 25, dActor_c's own OnPushed(dActor_c&) (include/dActor_c.h). Attributed
+       by the vtable: _ZTV9PushBlock (ov002 0x021096b0) carries 0x020b8d3c at
+       slot 25 -- vtable + 0x64 -- where _ZTV10dBgActor_c carries dActor_c's generic
+       0x02010138 at the same slot. Confirmed with tools/mangle.py, not
+       hand-mangled: _ZN9PushBlock8OnPushedER8dActor_c, NOT ...ERS_ -- the
+       Itanium substitution only fires when the parameter type has already
+       appeared earlier in the same mangled name, which happens inside
+       dActor_c's own methods but not here. */
+    int OnPushed(dActor_c &other);         /* slot 25 */
+
+    /* Slot 27, dActor_c's own OnHitByMegaChar(Player&). Attributed the same way:
+       _ZTV9PushBlock carries 0x020b8d14 at slot 27 -- vtable + 0x6c -- where
+       _ZTV10dBgActor_c carries dActor_c's generic 0x02010124. Confirmed with
+       tools/mangle.py: _ZN9PushBlock15OnHitByMegaCharER6Player. */
+    void OnHitByMegaChar(Player &player);  /* slot 27 */
+
+    /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). Attributed
+       the same way: _ZTV9PushBlock carries 0x020b8c9c at slot 31 -- vtable +
+       0x7c -- where _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv. Confirmed
+       with tools/mangle.py: _ZN9PushBlock4KillEv. */
+    void Kill();                           /* slot 31 */
+};
+
+typedef char PushBlock_size_must_be_0x4f4[sizeof(PushBlock) == 0x4f4 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the D0 file used to be
+   compiler-generated C; the arrangement matches include/ShadowModel.h and the
+   other members of this family (DonutBlock.h, BigBrickBlock.h, MetalNet.h). */
+struct PushBlock {
+    u8  pad_000[0x5c];
+    s32 unk_05c;            /* 0x05c */
+    s32 unk_060;            /* 0x060 */
+    s32 unk_064;            /* 0x064 */
+    u8  pad_068[0x26];
+    s16 unk_08e;            /* 0x08e */
+    u8  pad_090[0x4];
+    s16 unk_094;            /* 0x094 */
+    u8  pad_096[0x2];
+    s32 unk_098;            /* 0x098 */
+    s32 unk_09c;            /* 0x09c */
+    s32 unk_0a0;            /* 0x0a0 */
+    u8  pad_0a4[0x438];
+    s32 unk_4dc;            /* 0x4dc */
+    s32 unk_4e0;            /* 0x4e0 */
+    s32 unk_4e4;            /* 0x4e4 */
+    s32 unk_4e8;            /* 0x4e8 */
+    u32 unk_4ec;            /* 0x4ec */
+    s32 unk_4f0;            /* 0x4f0 */
+};
+
+#endif /* __cplusplus */
+
+#endif /* PUSHBLOCK_H */

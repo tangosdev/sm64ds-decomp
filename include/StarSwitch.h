@@ -27,7 +27,7 @@ struct StarSwitch : dBgActor_c {
     s16 unk_338;                      /* 0x338 */
     u16 unk_33a;                      /* 0x33a */
     s32 unk_33c;                      /* 0x33c */
-    u8  pad_340[0x4];
+    s32 unk_340;                      /* 0x340 */
     u32 mTargetActorID;               /* 0x344 */
     s32 unk_348;                      /* 0x348 */
     u8 unk_34c;                       /* 0x34c */
@@ -45,6 +45,7 @@ struct StarSwitch : dBgActor_c {
     int Behavior();
     int CleanupResources();
     int Render();
+    void OnGroundPounded(dActor_c &other);
 };
 
 typedef char StarSwitch_size_must_be_0x354[sizeof(StarSwitch) == 0x354 ? 1 : -1];
@@ -99,7 +100,7 @@ struct StarSwitch {
     s16 unk_338;            /* 0x338 */
     u16 unk_33a;            /* 0x33a */
     s32 unk_33c;            /* 0x33c */
-    u8  pad_340[0x4];
+    s32 unk_340;            /* 0x340 */
     u32 mTargetActorID;            /* 0x344 */
     s32 unk_348;            /* 0x348 */
     u8  unk_34c;            /* 0x34c */

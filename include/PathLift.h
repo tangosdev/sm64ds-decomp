@@ -30,6 +30,9 @@ struct PathLift : dBgActor_c {
     virtual ~PathLift();
 
     void AfterClsn();
+    /* Non-virtual. Subclasses (e.g. daObjPathLift_c) call it from their own
+       Behavior override to run PathLift's shared step first. */
+    void BaseBehavior();
 };
 
 typedef char PathLift_size_must_be_0x450[sizeof(PathLift) == 0x450 ? 1 : -1];

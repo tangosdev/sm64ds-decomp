@@ -78,6 +78,7 @@ struct daObjFloatBoard_c : dBgActor_c {
 
     int CleanupResources();             /* slot 3, ov002 0x020b5be0 */
     int Behavior();                     /* slot 6, ov002 0x020b5c4c */
+    s32 Render();                       /* slot 9, ov002 0x020b5c24 -- mModel.Render(0) */
 };
 
 typedef char daObjFloatBoard_c_size_must_be_0x348[sizeof(daObjFloatBoard_c) == 0x348 ? 1 : -1];

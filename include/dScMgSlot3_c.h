@@ -50,6 +50,7 @@ struct dScMgSlot3_c : dScMgSingle3DBase_c {
        field, and the 0x5044 assert below still holds. The destructor above is
        declared first and out of line, so it stays this class's KEY FUNCTION and
        neither of these translation units emits _ZTV12dScMgSlot3_c. */
+    s32 InitResources();   /* slot  0 -- src/_ZN12dScMgSlot3_c13InitResourcesEv.cpp */
     s32 Behavior();        /* slot  6 -- src/_ZN12dScMgSlot3_c8BehaviorEv.cpp */
     s32 Render();          /* slot  9 -- src/_ZN12dScMgSlot3_c6RenderEv.cpp */
 

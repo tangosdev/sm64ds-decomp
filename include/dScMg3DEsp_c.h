@@ -66,8 +66,10 @@ struct dScMg3DEsp_c : dScMgSingle3DBase_c {
        translation unit starts emitting _ZTV12dScMg3DEsp_c because of these.
        Signatures are include/fBase_c.h's and include/dScMgBase_c.h's own,
        copied unchanged. --- */
+    s32 InitResources();      /* slot 0 -- src/_ZN12dScMg3DEsp_c13InitResourcesEv.cpp */
     s32 CleanupResources();   /* slot 3 -- ov006 0x020e9cec */
     s32 Behavior();           /* slot 6 -- ov006 0x020e9e00 */
+    s32 Render();             /* slot 9 -- src/_ZN12dScMg3DEsp_c6RenderEv.cpp */
 };
 
 typedef char dScMg3DEsp_c_size_must_be_0x5558[sizeof(dScMg3DEsp_c) == 0x5558 ? 1 : -1];

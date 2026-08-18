@@ -45,6 +45,15 @@ struct daObjSwdoor_c : dBgActor_c {
        still under its func_ov002_ name). An out-of-line declaration here would
        make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjSwdoor_c() {}
+
+    /* Slot 9, ov002 0x020babf0 -- this class's only real slot, so declaring
+       it out of line makes THIS the key function: the destructor above is
+       inline and nothing else was migrated first. Its translation unit
+       picks up _ZTV13daObjSwdoor_c (already delinked data, ov002
+       0x021099e4) -- expected to drop this file from
+       tools/eligible.py's name list, same mechanism the Guragura/Kuruma
+       Render comments describe. */
+    s32 Render();
 };
 
 typedef char daObjSwdoor_c_size_must_be_0x320[sizeof(daObjSwdoor_c) == 0x320 ? 1 : -1];

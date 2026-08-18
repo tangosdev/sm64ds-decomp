@@ -58,6 +58,7 @@ struct dScMgRoulette_c : dScMgSingle3DBase_c {
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
        table stays the base's width and no field moves. Declared AFTER the
        destructor so the destructor is still the first virtual declared. */
+    virtual s32 InitResources();     /* slot 0 -- src/_ZN15dScMgRoulette_c13InitResourcesEv.cpp */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x0210980c */
     virtual s32 Behavior();          /* slot 6 -- ov006 0x02109aac */
     virtual s32 Render();            /* slot 9 -- ov006 0x02109834 */

@@ -50,6 +50,7 @@ struct OneUpMushroom : dEnemyBase_c {
     virtual ~OneUpMushroom();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
 
     /* --- non-virtual --- */
     int Behavior();

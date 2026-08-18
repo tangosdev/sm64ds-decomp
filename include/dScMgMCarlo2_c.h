@@ -56,8 +56,10 @@ struct dScMgMCarlo2_c : dScMgSingle3DBase_c {
        translation unit starts emitting _ZTV14dScMgMCarlo2_c because of these.
        Signatures are include/fBase_c.h's and include/dScMgBase_c.h's own,
        copied unchanged. --- */
+    s32 InitResources();      /* slot 0 -- src/_ZN14dScMgMCarlo2_c13InitResourcesEv.cpp */
     s32 CleanupResources();   /* slot 3 -- ov006 0x020f9fe0 */
     s32 Behavior();           /* slot 6 -- ov006 0x020fa13c */
+    s32 Render();             /* slot 9 -- src/_ZN14dScMgMCarlo2_c6RenderEv.cpp */
 };
 
 typedef char dScMgMCarlo2_c_size_must_be_0x5930[sizeof(dScMgMCarlo2_c) == 0x5930 ? 1 : -1];

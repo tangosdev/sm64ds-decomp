@@ -1,6 +1,6 @@
 _ZN9TinyCoverD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN9TinyCoverD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-func_ov033_0211123c kind:function(arm,size=0x44) addr:0x0211123c
+_ZN9TinyCover15OnGroundPoundedER8dActor_c kind:function(arm,size=0x44) addr:0x0211123c
 _ZN9TinyCover16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x02111280
 _ZN9TinyCover6RenderEv kind:function(arm,size=0x28) addr:0x021112c4
 _ZN9TinyCover8BehaviorEv kind:function(arm,size=0x24) addr:0x021112ec

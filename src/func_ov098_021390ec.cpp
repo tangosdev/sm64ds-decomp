@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 /* Final name, not a shadow method: the ROM symbol takes Fix12<int> and the call
-   site has an int. See func_ov060_021182b0.cpp for the same case. */
+   site has an int. See src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp for the same case. */
 extern "C" short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void* self, int a, int b,
                                                        short c);
 struct ClsnResult { int GetClsnID() const; };
