@@ -1,13 +1,10 @@
 #include "types.h"
-// @symbol func_02034d70
-// recovered name: dScMB_c_CleanupResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN7dScMB_c16CleanupResourcesEv
+/* dScMB_c::CleanupResources -- recovered from vtable slot identity */
 #include "decl_Scene.h"
-/* recovered: renamed to Class_Method */
-/* dScMB_c::CleanupResources - recovered from vtable slot identity */
 extern void* data_0209d4a8;  /* 0x0209d4a8 */
 
-int func_02034d70(void) {
+int _ZN7dScMB_c16CleanupResourcesEv(void) {
     data_0209d4a8 = 0;
     _ZN8dScene_c20SetAndStopColorFaderEv();
     return 1;

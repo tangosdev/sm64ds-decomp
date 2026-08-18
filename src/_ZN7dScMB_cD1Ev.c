@@ -1,4 +1,4 @@
-/* MultiBootScene::~MultiBootScene (D1/complete) at 0x02034a78
+/* dScMB_c::~dScMB_c (D1/complete) at 0x02034a78
  *
  * Chain MultiBootScene -> dScene_c -> dBase_c, with a FaderColor member
  * subobject at +0x50.  CW emits: most-derived vptr write, member dtor,
@@ -24,7 +24,7 @@ extern void *data_0208e4b8[];
 extern void _ZN10FaderColorD1Ev(void *fader);          /* 0x020175c4 */
 extern void _ZN7fBase_cD2Ev(struct MultiBootScene *self); /* 0x02043d48 */
 
-struct MultiBootScene *func_02034a78(struct MultiBootScene *self)
+struct MultiBootScene *_ZN7dScMB_cD1Ev(struct MultiBootScene *self)
 {
     self->vtable = (void **)data_020943c4;
     _ZN10FaderColorD1Ev((char *)self + 0x50);

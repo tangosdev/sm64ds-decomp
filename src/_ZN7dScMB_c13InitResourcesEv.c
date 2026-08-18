@@ -1,11 +1,8 @@
 #include "types.h"
-// @symbol func_0203506c
-// recovered name: dScMB_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN7dScMB_c13InitResourcesEv
+/* dScMB_c::InitResources -- recovered from vtable slot identity */
 #include "decl_Scene.h"
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMB_c::InitResources - recovered from vtable slot identity */
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void DecompressLZ16(int src, void *dst);
 extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
@@ -18,7 +15,7 @@ extern u8 data_0209d4a8[];
 extern u8 data_0208ee44[];
 extern u8 func_0201a2f8[];
 
-int func_0203506c(void *arg0)
+int _ZN7dScMB_c13InitResourcesEv(void *arg0)
 {
     void *self = arg0;
     volatile u16 sp4;

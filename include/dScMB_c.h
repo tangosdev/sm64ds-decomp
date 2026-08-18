@@ -1,0 +1,71 @@
+#ifndef DSCMB_C_H
+#define DSCMB_C_H
+#include "dScene_c.h"
+#include "FaderColor.h"
+
+/* Multi-Boot scene: one of dScene_c's ten direct children (see the census in
+ * dScene_c.h). Its own destructor and other matched code already carry the
+ * informal coinage "MultiBootScene" -- the boot/demo path used when the DS
+ * downloads the game over multiplayer.
+ *
+ * BASE. dScene_c, confirmed by the RTTI edge (dScMB_c arm9:0x02094370 ->
+ * dScene_c arm9:0x020914d4) and independently by the vtable: data_020943c4
+ * (18 slots, matching dScene_c's own 18) overrides exactly six --
+ * 0, 3, 6, 9, 16, 17 -- and every other slot is still whatever dScene_c's
+ * own table holds there.
+ *
+ * CONSTRUCTION. A real Spawn-style factory, func_020352b4: it opens with
+ * `_ZN7fBase_cnwEj(0x68)`, i.e. fBase_c::operator new(0x68). SIZE 0x68 is
+ * read directly off the allocator call.
+ *
+ * The same constructor writes the vtable chain fBase_c -> (dBase_c/dScene_c
+ * inlined) -> data_020943c4 (dScMB_c's own vtable), sets the usual two
+ * spawn-flag bits at fBase_c's own 0x13, then placement-constructs a
+ * FaderColor member at 0x50 (writes the Fader -> FaderBrightness ->
+ * FaderColor vtable chain and FaderColor's own fields, touching nothing
+ * past 0x60). dScMB_c::~dScMB_c (func_02034a78/func_02034ac0) destroys the
+ * same FaderColor member before calling fBase_c's own D2 -- the standard
+ * "most-derived vptr write, member dtor, base-subobject vptr writes, lowest
+ * base dtor" sequence.
+ *
+ * InitResources (func_0203506c) separately registers a GLOBAL
+ * dScMB_c::graphCallback_c object (data_020a0c68, constructed by
+ * func_02034b1c(&data_020a0c68, this)) with `this` as its context --
+ * NOT an embedded member of dScMB_c. Recovering that nested class's own
+ * layout is a separate, later pass; it occupies no space in this header.
+ *
+ * MEMBERS. FaderColor's own dsize is 0x10 (0x50..0x60); InitResources writes
+ * its own u16 at 0x5c (FaderColor's own field, via
+ * _ZN8dScene_c9SetFadersEP15FaderBrightness(this+0x50), not a new
+ * dScMB_c field). Two int fields at 0x60 and 0x64 are dScMB_c's own --
+ * InitResources zeroes both; Behavior uses 0x60 as a state-machine step
+ * counter and 0x64 as a frame-timeout counter. 0x64 + sizeof(int) == 0x68,
+ * exactly the operator-new size: field-span and allocator witnesses agree.
+ *
+ * VTABLE ORDER follows dScene_c's (unchanged slot indices; dScMB_c adds no
+ * new virtual). The destructor pair is at slots 16/17, the fBase_c/actor-
+ * family convention, not the Fader family's 0/1 -- consistent with every
+ * other dScene_c child recovered so far.
+ */
+struct dScMB_c : dScene_c {
+    FaderColor fader;      /* 0x50 -- placement-constructed by InitResources,
+                               destroyed by ~dScMB_c; see derivation above */
+    s32 unk_060;            /* 0x60 -- Behavior state-machine step */
+    s32 unk_064;            /* 0x064 -- Behavior frame-timeout counter */
+
+    /* Declared first -- key function; see the family convention discussed in
+       dBase_c.h/dScene_c.h. Never defined as a real method in any TU: both
+       D1 and D0 are plain functions carrying their literal mangled name
+       (src/_ZN7dScMB_cD1Ev.c, src/_ZN7dScMB_cD0Ev.c). */
+    virtual ~dScMB_c();                                 /* slots 16 (D1), 17 (D0) */
+
+    /* --- overrides, in _ZTV8dScene_c/_ZTV7fBase_c order. --- */
+    virtual s32 InitResources();                        /* slot  0 */
+    virtual s32 CleanupResources();                      /* slot  3 */
+    virtual s32 Behavior();                               /* slot  6 */
+    virtual s32 Render();                                 /* slot  9 */
+};
+
+typedef char dScMB_c_size_must_be_0x68[sizeof(dScMB_c) == 0x68 ? 1 : -1];
+
+#endif
