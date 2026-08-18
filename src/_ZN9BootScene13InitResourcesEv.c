@@ -1,12 +1,15 @@
 #include "types.h"
-// @symbol func_02005a58
+// @symbol _ZN9BootScene13InitResourcesEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScBoot_c.h"
-// recovered name: dScBoot_c_InitResources
-/* recovered: renamed to Class_Method */
-/* dScBoot_c::InitResources - recovered from vtable slot identity */
+// recovered name: BootScene::InitResources
+/* recovered: renamed to Class_Method, vtable slot 0 */
+/* BootScene::InitResources -- vtable slot 0, arm9 0x02005a58. Same idiom as
+ * src/_ZN4Door13InitResourcesEv.c: declared as an override in
+ * include/BootScene.h, defined here under the mangled symbol, not as a real
+ * BootScene:: method -- see include/BootScene.h's NOT CONVERTED. */
 extern void _ZN2GX12SetBankForBGEt(unsigned short b);
 extern void _ZN2GX13SetBankForOBJEt(unsigned short b);
 extern void _ZN2GX15SetBankForSubBGEt(unsigned short b);
@@ -25,7 +28,7 @@ extern char data_0208ee44;
 extern char data_0209f5e8;
 extern void func_0201a2f8(void);
 extern unsigned char data_0209f1e8;
-int func_02005a58(char* c)
+int _ZN9BootScene13InitResourcesEv(char* c)
 {
     struct dScBoot_c *self = (struct dScBoot_c *)(void *)c;
     _ZN2GX15DisableAllBanksEv();

@@ -1,13 +1,16 @@
 #include "types.h"
-// @symbol func_02005418
-// recovered name: dScBoot_c_Behavior
+// @symbol _ZN9BootScene8BehaviorEv
+// recovered name: BootScene::Behavior
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Message.h"
 #include "decl_SaveData.h"
 #include "decl_common.h"
 #include "MessageBank.h"
-/* recovered: renamed to Class_Method */
-/* dScBoot_c::Behavior - recovered from vtable slot identity */
+/* recovered: renamed to Class_Method, vtable slot 6 */
+/* BootScene::Behavior -- vtable slot 6, arm9 0x02005418. Same idiom as
+ * src/_ZN4Door13InitResourcesEv.c: declared as an override in
+ * include/BootScene.h, defined here under the mangled symbol, not as a real
+ * BootScene:: method -- see include/BootScene.h's NOT CONVERTED. */
 extern u8 data_0209f5bc[];
 
 extern u8 data_0209f1e8;
@@ -33,7 +36,7 @@ extern void func_02012790(int a);
 
 #pragma opt_common_subs off
 
-int func_02005418(void *arg0)
+int _ZN9BootScene8BehaviorEv(void *arg0)
 {
     char *c = (char *)arg0;
     u16 h58, h5a;
