@@ -503,7 +503,7 @@ src/_ZN17BowserSkyPlatform8BehaviorEv.cpp:
     complete
     .text start:0x02118254 end:0x021182b0
 
-src/func_ov060_021182b0.cpp:
+src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp:
     complete
     .text start:0x021182b0 end:0x021183cc
 
