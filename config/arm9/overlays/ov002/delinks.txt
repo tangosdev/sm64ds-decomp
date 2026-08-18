@@ -4511,7 +4511,7 @@ src/_ZN4Warp6RenderEv.cpp:
     complete
     .text start:0x020ec408 end:0x020ec410
 
-src/func_ov002_020ec410.cpp:
+src/_ZN4Warp8BehaviorEv.cpp:
     complete
     .text start:0x020ec410 end:0x020ec4c4
 
