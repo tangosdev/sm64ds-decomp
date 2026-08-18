@@ -74,16 +74,16 @@
  * family's.
  */
 struct dScEntry_c : dScene_c {
-    u8  unk_050[0x080 - 0x050];  /* 0x050 -- opaque; holds the icon_c[9]
+    u8  unk_050[0x30];  /* 0x050 -- opaque; holds the icon_c[9]
                                      array (0x070..0x1b4) and part of the
                                      graphCallback_c[4] array (0x1b4..) --
                                      see the derivation note above */
     s32 unk_080;                  /* 0x080 */
-    u8  unk_084[0x0a0 - 0x084];  /* 0x084 -- opaque; rest of graphCallback_c[4] */
+    u8  unk_084[0x1c];  /* 0x084 -- opaque; rest of graphCallback_c[4] */
     s16 unk_0a0;                  /* 0x0a0 */
-    u8  unk_0a2[0x0a4 - 0x0a2];  /* 0x0a2 */
+    u8  unk_0a2[0x2];  /* 0x0a2 */
     u16 unk_0a4;                  /* 0x0a4 */
-    u8  unk_0a6[0x283 - 0x0a6];  /* 0x0a6 -- opaque */
+    u8  unk_0a6[0x1dd];  /* 0x0a6 -- opaque */
     u8  unk_283;                   /* 0x283 */
     u8  unk_284;                   /* 0x284 */
     u8  unk_285;                   /* 0x285 */
