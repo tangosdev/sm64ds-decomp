@@ -1,7 +1,8 @@
 //cpp
-// @symbol func_020171f0
-// recovered name: dFdDummy_c_SetBackwardTime
-/* recovered: renamed to Class_Method */
-/* dFdDummy_c::SetBackwardTime - recovered from vtable slot identity */
+// @symbol _ZN10dFdDummy_c15SetBackwardTimeEj
+/* dFdDummy_c::SetBackwardTime -- recovered from vtable slot identity.
+ * Writes speed = -0x1000, then makes a genuine virtual call through slot 5
+ * (dFdDummy_c overrides none of slots 5-9, so this lands on
+ * FaderColor/FaderBrightness's own inherited body). */
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(); };
-extern "C" void func_020171f0(Base *c){ *(int*)((char*)c+8)=-0x1000; c->m(); }
+extern "C" void _ZN10dFdDummy_c15SetBackwardTimeEj(Base *c){ *(int*)((char*)c+8)=-0x1000; c->m(); }

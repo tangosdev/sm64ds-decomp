@@ -2402,23 +2402,23 @@ src/_ZThn80_N10ModelAnim2D1Ev.cpp:
     complete
     .text start:0x020171b8 end:0x020171c8
 
-src/func_020171c8.cpp:
+src/_ZN10dFdDummy_c14SetForwardTimeEj.cpp:
     complete
     .text start:0x020171c8 end:0x020171f0
 
-src/func_020171f0.cpp:
+src/_ZN10dFdDummy_c15SetBackwardTimeEj.cpp:
     complete
     .text start:0x020171f0 end:0x0201721c
 
-src/func_0201721c.c:
+src/_ZN10dFdDummy_c11AdvanceFadeEv.c:
     complete
     .text start:0x0201721c end:0x02017228
 
-src/func_02017228.c:
+src/_ZN10dFdDummy_cD0Ev.c:
     complete
     .text start:0x02017228 end:0x02017254
 
-src/func_02017254.c:
+src/_ZN10dFdDummy_cD1Ev.c:
     complete
     .text start:0x02017254 end:0x02017278
 
