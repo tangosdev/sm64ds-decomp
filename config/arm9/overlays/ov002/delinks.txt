@@ -132,7 +132,7 @@ src/func_ov002_020aedbc.c:
     complete
     .text start:0x020aedbc end:0x020aedf4
 
-src/_ZN8CapEnemyD0Ev.c:
+src/_ZN11dCapEnemy_cD0Ev.c:
     complete
     .text start:0x020aedf4 end:0x020aee40
 

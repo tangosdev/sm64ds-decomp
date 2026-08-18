@@ -4,7 +4,7 @@
 /* recovered: renamed to Class_Method */
 /* daKrb_c::OnTurnIntoEgg - recovered from vtable slot identity */
 extern "C" {
-void _ZN8CapEnemy15RespawnIfHasCapEv(char *self);
+void _ZN11dCapEnemy_c15RespawnIfHasCapEv(char *self);
 int _ZN6Player15IsCollectingCapEv(char *p);
 void _ZN8dActor_c15GivePlayerCoinsER6Playerhj(char *self, char *p, unsigned char a, unsigned int b);
 void func_ov084_021296cc(char *self);
@@ -48,7 +48,7 @@ extern "C" void func_ov084_0212b344(char *self, char *player)
         *(int *)(self + 0x5c) = *(int *)(self + 0x41c);
         *(int *)(self + 0x60) = *(int *)(self + 0x420);
         *(int *)(self + 0x64) = *(int *)(self + 0x424);
-        _ZN8CapEnemy15RespawnIfHasCapEv(self);
+        _ZN11dCapEnemy_c15RespawnIfHasCapEv(self);
     }
 
     if (o->GetState() == 6) {

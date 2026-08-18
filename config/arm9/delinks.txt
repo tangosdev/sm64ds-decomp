@@ -57,7 +57,7 @@ src/func_02005a58.c:
     complete
     .text start:0x02005a58 end:0x02005d94
 
-src/_ZN8CapEnemy12Unk_02005d94Ev.cpp:
+src/_ZN11dCapEnemy_c12Unk_02005d94Ev.cpp:
     complete
     .text start:0x02005d94 end:0x02005e28
 
@@ -69,46 +69,46 @@ src/func_02005ed8.c:
     complete
     .text start:0x02005ed8 end:0x02005f0c
 
-src/_ZN8CapEnemy21DestroyIfCapNotNeededEv.cpp:
+src/_ZN11dCapEnemy_c21DestroyIfCapNotNeededEv.cpp:
     complete
     .text start:0x02005f0c end:0x02005fa0
 
-src/_ZN8CapEnemy11GetCapStateEv.cpp:
+src/_ZN11dCapEnemy_c11GetCapStateEv.cpp:
     complete
     .text start:0x02005fa0 end:0x02006054
 
-src/_ZN8CapEnemy15RespawnIfHasCapEv.cpp:
+src/_ZN11dCapEnemy_c15RespawnIfHasCapEv.cpp:
     complete
     .text start:0x02006054 end:0x020060f4
 
-src/_ZN8CapEnemy16GetCapEatenOffItERK7Vector3.cpp:
+src/_ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3.cpp:
     complete
     .text start:0x020060f4 end:0x020061b0
 
-src/_ZN8CapEnemy10ReleaseCapERK7Vector3.cpp:
+src/_ZN11dCapEnemy_c10ReleaseCapERK7Vector3.cpp:
     complete
     .text start:0x020061b0 end:0x02006280
 
-src/_ZN8CapEnemy14RenderCapModelEPK7Vector3.cpp:
+src/_ZN11dCapEnemy_c14RenderCapModelEPK7Vector3.cpp:
     complete
     .text start:0x02006280 end:0x020062b8
 
-src/_ZN8CapEnemy12UpdateCapPosERK7Vector3RK10Vector3_16.cpp:
+src/_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16.cpp:
     .text start:0x020062b8 end:0x020063b0
 
-src/_ZN8CapEnemy6AddCapEj.cpp:
+src/_ZN11dCapEnemy_c6AddCapEj.cpp:
     complete
     .text start:0x020063b0 end:0x020064e0
 
-src/_ZN8CapEnemy14UnloadCapModelEv.cpp:
+src/_ZN11dCapEnemy_c14UnloadCapModelEv.cpp:
     complete
     .text start:0x020064e0 end:0x0200651c
 
-src/_ZN8CapEnemyD2Ev.cpp:
+src/_ZN11dCapEnemy_cD2Ev.cpp:
     complete
     .text start:0x0200651c end:0x02006554
 
-src/_ZN8CapEnemyC2Ev.cpp:
+src/_ZN11dCapEnemy_cC2Ev.cpp:
     complete
     .text start:0x02006554 end:0x02006588
 

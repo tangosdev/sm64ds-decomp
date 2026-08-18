@@ -21,9 +21,9 @@ struct dActor_c;
  * and write every word.
  *
  * SIZE. Three independent facts agree on 0x1c, and none of them is the others:
- * CapEnemy holds one at 0x164 and is 0x180; Goomba derives from CapEnemy and its
+ * dCapEnemy_c holds one at 0x164 and is 0x180; Goomba derives from dCapEnemy_c and its
  * first own member is at 0x180, and a derived member cannot begin inside its
- * base; and CapEnemy::GetCapState reads a field at 0x17f, which is 0x164 + 0x1b,
+ * base; and dCapEnemy_c::GetCapState reads a field at 0x17f, which is 0x164 + 0x1b,
  * the last byte of this struct.
  *
  * PREV AND NEXT ARE THIS WAY ROUND, and the struct this replaces had them
@@ -53,8 +53,8 @@ struct CapIcon {
     u8 mCharacter;                /* 0x18 */
     u8 unk_19;                    /* 0x19 */
     u8 unk_1a;                    /* 0x1a */
-    /* Bit 0 is the cap bank, passed in by CapEnemy::AddCap. Bit 1 is tested by
-       CapEnemy::GetCapState. Bit 2 means "not linked": the constructor sets it,
+    /* Bit 0 is the cap bank, passed in by dCapEnemy_c::AddCap. Bit 1 is tested by
+       dCapEnemy_c::GetCapState. Bit 2 means "not linked": the constructor sets it,
        the unlink sets it again on the way out, and func_ov001_020ab110 returns
        immediately if it is already set. */
     u8 mFlags;                    /* 0x1b */

@@ -9,8 +9,8 @@ extern int SurfaceInfo_TestFlag0x20(int* p);
 extern void func_ov084_021296cc(void*);
 extern void _ZN12dEnemyBase_c9SpawnCoinEv(void*);
 extern void func_ov084_02129498(void*);
-extern void _ZN8CapEnemy10ReleaseCapERK7Vector3(void*, void*);
-extern void _ZN8CapEnemy15RespawnIfHasCapEv(void*);
+extern void _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(void*, void*);
+extern void _ZN11dCapEnemy_c15RespawnIfHasCapEv(void*);
 extern int func_02037e38(unsigned int* p);
 extern int func_02037e84(int* p);
 extern void _ZN10ClsnResultD1Ev(void*);
@@ -32,11 +32,11 @@ extern "C" void func_ov084_021294d0(char* c)
         func_ov084_02129498(c);
         Vector3 v;
         v.x = 0; v.y = 0x6c000; v.z = 0;
-        _ZN8CapEnemy10ReleaseCapERK7Vector3(c, &v);
+        _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &v);
         *(int*)(c + 0x5c) = *(int*)(c + 0x41c);
         *(int*)(c + 0x60) = *(int*)(c + 0x420);
         *(int*)(c + 0x64) = *(int*)(c + 0x424);
-        _ZN8CapEnemy15RespawnIfHasCapEv(c);
+        _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
         return;
     }
 
@@ -77,8 +77,8 @@ action:
         *(int*)(c + 0x64) = *(int*)(c + 0x424);
         Vector3 v2;
         v2.x = 0; v2.y = 0x6c000; v2.z = 0;
-        _ZN8CapEnemy10ReleaseCapERK7Vector3(c, &v2);
-        _ZN8CapEnemy15RespawnIfHasCapEv(c);
+        _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &v2);
+        _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
     }
 dtor:
     _ZN10ClsnResultD1Ev(obj);

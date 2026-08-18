@@ -7,8 +7,8 @@ extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj();
 extern int _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj();
 extern int _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_();
 extern int LoadBlueCoinModel();
-extern int _ZN8CapEnemy6AddCapEj();
-extern int _ZN8CapEnemy21DestroyIfCapNotNeededEv();
+extern int _ZN11dCapEnemy_c6AddCapEj();
+extern int _ZN11dCapEnemy_c21DestroyIfCapNotNeededEv();
 extern int NumStars();
 extern int _ZN7fBase_c18MarkForDestructionEv();
 extern int IsStarCollectedInCurLevel();
@@ -146,11 +146,11 @@ int _ZN3Boo13InitResourcesEv(char *c)
         unsigned char capIdx;
         U8(0x112) = (U32(8) >> 0xc) & 0xf;
         capIdx = (U32(8) >> 8) & 0xf;
-        _ZN8CapEnemy6AddCapEj(c, capIdx);
+        _ZN11dCapEnemy_c6AddCapEj(c, capIdx);
         if ((U8(0x113) & 7) < 6) {
             U32(8) = U32(8) & 0xfff;
         }
-        if (_ZN8CapEnemy21DestroyIfCapNotNeededEv(c) == 0) {
+        if (_ZN11dCapEnemy_c21DestroyIfCapNotNeededEv(c) == 0) {
             return 0;
         }
     }

@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN8CapEnemy10ReleaseCapERK7Vector3
+// @symbol _ZN11dCapEnemy_c10ReleaseCapERK7Vector3
 /* recovered: named members + shared header, real C++ method
  *
  * Spawns the cap this enemy is wearing as a free-standing actor at its own
@@ -19,7 +19,7 @@
  * The spawn's second argument packs mCapId into bits 8+ of 0x1012, so one
  * actor ID covers all six caps.
  */
-#include "CapEnemy.h"
+#include "dCapEnemy_c.h"
 
 struct Vector3_16 { short x, y, z; };
 struct dActor_c;
@@ -32,7 +32,7 @@ extern struct dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     const struct Vector3_16 *a4, int a5, int a6);
 }
 
-struct dActor_c *CapEnemy::ReleaseCap(const Vector3 & v_)
+struct dActor_c *dCapEnemy_c::ReleaseCap(const Vector3 & v_)
 {
     unsigned char *c = (unsigned char *)this;
     const struct Vector3 *v = &v_;

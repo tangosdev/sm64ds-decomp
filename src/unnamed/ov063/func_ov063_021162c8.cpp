@@ -3,7 +3,7 @@
 /* recovered: shared common types */
 #include "common.h"
 struct Vector3; struct Vector3_16;
-struct CapEnemy { void ReleaseCap(const Vector3 &v); };
+struct dCapEnemy_c { void ReleaseCap(const Vector3 &v); };
 struct dActor_c {
     static dActor_c *Spawn(unsigned int a, unsigned int b, const Vector3 &v,
                         const Vector3_16 *p, signed char e, short f);
@@ -20,7 +20,7 @@ extern "C" void func_ov063_021162c8(char *self)
         v.x = *(int*)(self + 0x564);
         v.y = *(int*)(self + 0x568);
         v.z = *(int*)(self + 0x56c);
-        ((CapEnemy*)self)->ReleaseCap(*(Vector3*)&v);
+        ((dCapEnemy_c*)self)->ReleaseCap(*(Vector3*)&v);
         if ((unsigned int)(*(unsigned short*)(self + 0x5d4) << 0x1e) >> 0x1f) {
             unsigned int flags = 2;
             if (*(unsigned short*)(self + 0x4a0) == 0x121) flags |= 0x10;
