@@ -41,14 +41,14 @@ _ZN16daObjRc_Dorifu_cD0Ev kind:function(arm,size=0x94) addr:0x0211200c
 _ZN16daObjRc_Dorifu_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021120a0
 _ZN16daObjRc_Dorifu_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x021120b4
 TrickyTriangles_Spawn kind:function(arm,size=0x90) addr:0x021120c8
-func_ov036_02112158 kind:function(arm,size=0x70) addr:0x02112158
-func_ov036_021121c8 kind:function(arm,size=0x84) addr:0x021121c8
+_ZN15daObjRcCarpet_cD1Ev kind:function(arm,size=0x70) addr:0x02112158
+_ZN15daObjRcCarpet_cD0Ev kind:function(arm,size=0x84) addr:0x021121c8
 func_ov036_0211224c kind:function(arm,size=0x74) addr:0x0211224c
 func_ov036_021122c0 kind:function(arm,size=0x58) addr:0x021122c0
-func_ov036_02112318 kind:function(arm,size=0x60) addr:0x02112318
-func_ov036_02112378 kind:function(arm,size=0x50) addr:0x02112378
-func_ov036_021123c8 kind:function(arm,size=0x84) addr:0x021123c8
-func_ov036_0211244c kind:function(arm,size=0xec) addr:0x0211244c
+_ZN15daObjRcCarpet_c16CleanupResourcesEv kind:function(arm,size=0x60) addr:0x02112318
+_ZN15daObjRcCarpet_c6RenderEv kind:function(arm,size=0x50) addr:0x02112378
+_ZN15daObjRcCarpet_c8BehaviorEv kind:function(arm,size=0x84) addr:0x021123c8
+_ZN15daObjRcCarpet_c13InitResourcesEv kind:function(arm,size=0xec) addr:0x0211244c
 FlyingCarpet_Spawn kind:function(arm,size=0x78) addr:0x02112538
 __sinit_ov036_021125b0 kind:function(arm,size=0x6c) addr:0x021125b0
 __sinit_ov036_0211261c kind:function(arm,size=0x6c) addr:0x0211261c
@@ -205,7 +205,7 @@ _ZTI15daObjRcCarpet_c kind:data(any) addr:0x02113f4c
 data_ov036_02113f58 kind:data(any) addr:0x02113f58
 _ZTS15daObjRcCarpet_c kind:data(any) addr:0x02113f64
 FlyingCarpet_SpawnInfo kind:data(any) addr:0x02113f78 ambiguous
-data_ov036_02113f9c kind:data(any) addr:0x02113f9c
+_ZTV15daObjRcCarpet_c kind:data(any) addr:0x02113f9c
 data_ov036_02113ff4 kind:data(any) addr:0x02113ff4 ambiguous
 data_ov036_02114010 kind:data(any) addr:0x02114010 ambiguous
 data_ov036_02114020 kind:bss addr:0x02114020

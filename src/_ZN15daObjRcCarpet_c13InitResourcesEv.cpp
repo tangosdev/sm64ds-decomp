@@ -1,4 +1,5 @@
 //cpp
+// @symbol _ZN15daObjRcCarpet_c13InitResourcesEv
 extern "C" {
 int _ZN5Model8LoadFileER13SharedFilePtr(void*);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
@@ -14,7 +15,7 @@ extern int data_ov002_0210d9f0[];
 extern int data_ov036_02113f58[];
 extern int data_ov036_0211419c[];
 extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
-int func_ov036_0211244c(char* c){
+int _ZN15daObjRcCarpet_c13InitResourcesEv(char* c){
   _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9f0);
   int m = _ZN5Model8LoadFileER13SharedFilePtr((void*)data_ov036_02113f58[0]);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0x450, m, 1, -1);

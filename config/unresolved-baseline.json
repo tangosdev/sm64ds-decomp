@@ -1,5 +1,5 @@
 {
- "eligible": 11026,
+ "eligible": 11029,
  "unresolved": {
   "arm9:0x02017848": {
    "name": "_ZN5FaderD0Ev",
@@ -253,18 +253,6 @@
    "name": "func_ov021_02111434",
    "missing": [
     "conv_ov021"
-   ]
-  },
-  "ov022:0x02112434": {
-   "name": "func_ov022_02112434",
-   "missing": [
-    "func_0213a2cc"
-   ]
-  },
-  "ov022:0x02112448": {
-   "name": "func_ov022_02112448",
-   "missing": [
-    "func_0213a794"
    ]
   },
   "ov045:0x02111dfc": {

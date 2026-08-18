@@ -1,4 +1,5 @@
 //cpp
+// @symbol _ZN15daObjRcCarpet_c8BehaviorEv
 extern "C" {
 extern void _Z14ApproachLinearRiii(int* p, int target, int step);
 extern void _ZN8PathLift12BaseBehaviorEv(void* c);
@@ -8,7 +9,7 @@ extern void func_ov036_0211224c(char* c);
 extern void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* t, int a, int b);
 }
 
-extern "C" int func_ov036_021123c8(char* c){
+extern "C" int _ZN15daObjRcCarpet_c8BehaviorEv(char* c){
     if (*(unsigned char*)(c + 0x42a) != 0)
         _Z14ApproachLinearRiii((int*)(c + 0x4bc), -0x14000, 0x5000);
     else
