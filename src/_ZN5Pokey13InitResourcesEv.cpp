@@ -25,7 +25,7 @@ int Pokey::InitResources()
 {
     int t;
 
-    t = (mActorID == 0xf0);
+    t = (actorID == 0xf0);
     if (t != false) {
         void* m = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov096_02137b20);
         _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, 1);
@@ -33,7 +33,7 @@ int Pokey::InitResources()
         LoadBlueCoinModel(((char*)this));
         unk_3a8 = 1;
     } else {
-        t = (mActorID == 0xf1);
+        t = (actorID == 0xf1);
         if (t != false) {
             void* m = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov096_02137b28);
             if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, m, 1, 1) == 0)
@@ -47,11 +47,11 @@ int Pokey::InitResources()
     _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x14c, ((char*)this), 0x3c000, 0x78000, 0x200004, 0x6eff0);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x180, ((char*)this), 0x3c000, 0x3c000, 0, 0);
 
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
-    unk_098 = 0x3000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
+    mHorzSpeed = 0x3000;
 
-    t = (mActorID == 0xf0);
+    t = (actorID == 0xf0);
     if (t != false) {
         unk_36c = mPosX;
         unk_370 = mPosY;
@@ -62,12 +62,12 @@ int Pokey::InitResources()
         unk_390 = 0;
         unk_394 = 0;
     } else {
-        t = (mActorID == 0xf1);
+        t = (actorID == 0xf1);
         if (t != false) {
             mScaleX = 0;
             mScaleY = 0;
             mScaleZ = 0;
-            *(void**)((char*)&unk_390) = _ZN8dActor_c10FindWithIDEj(mParam);
+            *(void**)((char*)&unk_390) = _ZN8dActor_c10FindWithIDEj(param1);
             unk_394 = 0;
             {
                 int* p = (int*)(((int)*(char**)((char*)&unk_390) + 0x36c));
