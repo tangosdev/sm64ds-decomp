@@ -13,7 +13,18 @@ void func_ov006_020eed64();
 void func_ov006_020efc08();
 void func_ov006_020c6f3c();
 
-void *_ZN8PathLift17BaseInitResourcesEv()
+// @symbol dScMgJump2_c_Spawn
+/* recovered: vtable identified. Formerly mangled _ZN8PathLift17BaseInitResourcesEv --
+   a name matched across an OVERLAY BOUNDARY at a near-identical address to the real
+   PathLift (ov002, _ZN8PathLiftD1Ev and friends), neither this class's method nor a
+   BaseInitResources. This body is operator new(0x5a78), dScMgD3DBase_c's
+   constructor, dScMgD3DBase_c's vtable, mSysTracker, then dScMgJump2_c's own vtable
+   and every member -- a factory for dScMgJump2_c. Renamed per the fallback
+   convention (no known game object name for this minigame; compare
+   daObjEmmLog_c_Spawn, the tree's other `<ClassName>_Spawn` factory) rather than
+   the game-name-based MgBounceAndPounce_Spawn that dScMgJump_c's own factory
+   carries. See include/dScMgJump2_c.h. */
+void *dScMgJump2_c_Spawn()
 {
     char *p = (char *)_ZN7fBase_cnwEj(0x5a78);
     if (p) {
