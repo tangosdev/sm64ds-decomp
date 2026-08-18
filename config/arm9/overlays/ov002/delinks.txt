@@ -784,7 +784,7 @@ src/func_ov002_020b4b6c.c:
     complete
     .text start:0x020b4b6c end:0x020b4bc4
 
-src/func_ov002_020b4bc4.cpp:
+src/_ZN13daObjDorifu_c6RenderEv.cpp:
     complete
     .text start:0x020b4bc4 end:0x020b4bfc
 
@@ -900,7 +900,7 @@ src/_ZN17daObjFloatBoard_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b5be0 end:0x020b5c24
 
-src/func_ov002_020b5c24.cpp:
+src/_ZN17daObjFloatBoard_c6RenderEv.cpp:
     complete
     .text start:0x020b5c24 end:0x020b5c4c
 
@@ -936,7 +936,7 @@ src/func_ov002_020b60fc.c:
     complete
     .text start:0x020b60fc end:0x020b6144
 
-src/func_ov002_020b6144.cpp:
+src/_ZN15daObjGuragura_c6RenderEv.cpp:
     complete
     .text start:0x020b6144 end:0x020b616c
 
@@ -968,7 +968,7 @@ src/func_ov002_020b6424.c:
     complete
     .text start:0x020b6424 end:0x020b646c
 
-src/func_ov002_020b646c.cpp:
+src/_ZN14daObjUkiyuka_c6RenderEv.cpp:
     complete
     .text start:0x020b646c end:0x020b6494
 
@@ -992,7 +992,7 @@ src/func_ov002_020b66a8.c:
     complete
     .text start:0x020b66a8 end:0x020b66f0
 
-src/func_ov002_020b66f0.cpp:
+src/_ZN16daObjKaitendai_c6RenderEv.cpp:
     complete
     .text start:0x020b66f0 end:0x020b6718
 
@@ -1016,7 +1016,7 @@ src/func_ov002_020b68b0.cpp:
     complete
     .text start:0x020b68b0 end:0x020b68f8
 
-src/func_ov002_020b68f8.cpp:
+src/_ZN13daObjKuruma_c6RenderEv.cpp:
     complete
     .text start:0x020b68f8 end:0x020b6920
 
@@ -1044,7 +1044,7 @@ src/func_ov002_020b6ac8.cpp:
     complete
     .text start:0x020b6ac8 end:0x020b6b10
 
-src/func_ov002_020b6b10.cpp:
+src/_ZN17daObjKurumajiku_c6RenderEv.cpp:
     complete
     .text start:0x020b6b10 end:0x020b6b38
 
@@ -1443,7 +1443,7 @@ src/func_ov002_020baba8.cpp:
     complete
     .text start:0x020baba8 end:0x020babf0
 
-src/func_ov002_020babf0.cpp:
+src/_ZN13daObjSwdoor_c6RenderEv.cpp:
     complete
     .text start:0x020babf0 end:0x020bac18
 

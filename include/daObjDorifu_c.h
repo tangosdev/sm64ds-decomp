@@ -88,6 +88,13 @@ struct daObjDorifu_c : dBgActor_c {
        its own slot-3 override that way: virtualness is inherited, and the
        destructor above stays the first virtual DECLARED in the class. */
     s32 Behavior();
+
+    /* Slot 9, ov002 0x020b4bc4. Indexes mPlankModels with mActivePlank and
+       calls Model::Render(NULL) -- the shadow-struct recovery's `Base::m(0)`
+       at vtable slot 5, which is Model's own Render(const Vector3*) taking
+       a null scale pointer (spelled 0, matching every other Render(0) call
+       in the tree). */
+    s32 Render();
 };
 
 typedef char daObjDorifu_c_size_must_be_0xdcc[sizeof(daObjDorifu_c) == 0xdcc ? 1 : -1];

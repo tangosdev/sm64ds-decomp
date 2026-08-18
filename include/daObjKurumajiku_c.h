@@ -61,6 +61,7 @@ struct daObjKurumajiku_c : dBgActor_c {
        own slot-3 override: virtualness is inherited, and the destructor above
        stays the first virtual DECLARED in the class. */
     s32 Behavior();
+    s32 Render();                      /* slot 9, ov002 0x020b6b10 -- mModel.Render(0) */
 };
 
 typedef char daObjKurumajiku_c_size_must_be_0x330[sizeof(daObjKurumajiku_c) == 0x330 ? 1 : -1];

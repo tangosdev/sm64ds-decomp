@@ -79,6 +79,7 @@ struct daObjUkiyuka_c : dBgActor_c {
        function before eligible.py and rombuild.py judge it -- checked on this
        file, not assumed. */
     s32 Behavior();
+    s32 Render();                      /* slot 9, ov002 0x020b646c -- mModel.Render(0) */
 };
 
 typedef char daObjUkiyuka_c_size_must_be_0x32c[sizeof(daObjUkiyuka_c) == 0x32c ? 1 : -1];
