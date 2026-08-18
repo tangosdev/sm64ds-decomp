@@ -4345,11 +4345,11 @@ src/func_0202ec9c.cpp:
     complete
     .text start:0x0202ec9c end:0x0202ecfc
 
-src/func_0202ecfc.c:
+src/_ZN7dWipe_c10SetToStartEv.c:
     complete
     .text start:0x0202ecfc end:0x0202ed08
 
-src/func_0202ed08.c:
+src/_ZN7dWipe_c8SetToEndEv.c:
     complete
     .text start:0x0202ed08 end:0x0202ed14
 
@@ -4361,15 +4361,15 @@ src/func_0202ed48.c:
     complete
     .text start:0x0202ed48 end:0x0202ed7c
 
-src/func_0202ed7c.cpp:
+src/_ZN7dWipe_c20IsBetweenStartAndEndEv.cpp:
     complete
     .text start:0x0202ed7c end:0x0202eddc
 
-src/func_0202eddc.c:
+src/_ZN7dWipe_c7IsAtEndEv.c:
     complete
     .text start:0x0202eddc end:0x0202ee38
 
-src/func_0202ee38.c:
+src/_ZN7dWipe_c9IsAtStartEv.c:
     complete
     .text start:0x0202ee38 end:0x0202ee94
 
@@ -4393,7 +4393,7 @@ src/func_0202f3a4.c:
     complete
     .text start:0x0202f3a4 end:0x0202f428
 
-src/func_0202f428.c:
+src/_ZN7dWipe_c11AdvanceFadeEv.c:
     complete
     .text start:0x0202f428 end:0x0202f58c
 
@@ -4401,11 +4401,11 @@ src/func_0202f58c.c:
     complete
     .text start:0x0202f58c end:0x0202f708
 
-src/func_0202f708.c:
+src/_ZN7dWipe_c14SetForwardTimeEj.c:
     complete
     .text start:0x0202f708 end:0x0202f928
 
-src/func_0202f928.c:
+src/_ZN7dWipe_c15SetBackwardTimeEj.c:
     complete
     .text start:0x0202f928 end:0x0202fb30
 
@@ -4413,11 +4413,11 @@ src/func_0202fb30.c:
     complete
     .text start:0x0202fb30 end:0x0202fbc8
 
-src/func_0202fbc8.c:
+src/_ZN7dWipe_cD0Ev.c:
     complete
     .text start:0x0202fbc8 end:0x0202fc08
 
-src/func_0202fc08.c:
+src/_ZN7dWipe_cD1Ev.c:
     complete
     .text start:0x0202fc08 end:0x0202fc40
 

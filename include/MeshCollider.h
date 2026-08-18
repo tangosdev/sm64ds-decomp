@@ -80,7 +80,8 @@ struct MeshCollider : MeshColliderBase {
        `add r1, sl, #0x28`) and compares the result against a contact angle. It
        is the collider's preferred-contact axis. Left as three fields only
        because retyping it would touch already-matched callers; if you retype it,
-       re-verify SetFile and func_ov075_0211a410. */
+       re-verify SetFile and _ZN10dScEntry_c13InitResourcesEv (renamed from
+       func_ov075_0211a410). */
     Fix12i unk_28;            /* 0x28 - init 0 */
     Fix12i unk_2c;            /* 0x2c - init 0x1000 */
     s32 unk_30;               /* 0x30 - init 0 */
