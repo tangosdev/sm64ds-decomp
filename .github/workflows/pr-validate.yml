@@ -25,9 +25,12 @@ on:
     # once, when it claims the build.
     types: [opened, synchronize, reopened, labeled, unlabeled]
 
-# No permissions needed. This workflow no longer comments — the app does, under its
-# own identity — so the default read-only token is enough to submit and exit.
-permissions: {}
+# `pull-requests: read` is here to LIST THE CHANGED FILE PATHS, and nothing else. That is
+# PR metadata, not PR code: the files endpoint returns paths, and this job still never
+# checks out or executes anything from the head branch, so the pull_request_target safety
+# argument above is unchanged.
+permissions:
+  pull-requests: read
 
 concurrency:
   # Key on the head SHA, not the PR number. Grouping by PR number meant every new event for
@@ -53,6 +56,57 @@ jobs:
       (github.event.action != 'labeled' && github.event.action != 'unlabeled')
       || github.event.label.name == 'attribution-override'
     steps:
+      # Decide whether this PR can possibly change what validation measures, and tell the
+      # relay. A full validation is a stock ROM build plus a whole-module compare against
+      # retail, and the worker runs ONE AT A TIME -- so a pull request that only edits
+      # prose costs every other pull request its place in the queue for nothing.
+      #
+      # THE DEFAULT IS TO VALIDATE. This computes an INERT set and skips only when every
+      # changed path is in it; anything unrecognised is treated as relevant. That
+      # direction is deliberate: a filter that is too narrow silently skips validation on
+      # a pull request that needed it, which is the failure nobody would notice.
+      #
+      # What is NOT inert, and why -- the verdict covers reconstruction AND attribution:
+      #   src/ include/ src_tu/   compiled, or change codegen
+      #   config/                 delinks.txt and symbols.txt decide what is compiled and
+      #                           where; relocs.txt decides what it points at
+      #   tools/                  the ROM build itself
+      #   *.jsonl, attribution.json
+      #                           match_provenance.jsonl and match_attempts.jsonl feed the
+      #                           attribution half of the verdict, and attribution.json
+      #                           pins credit by source path. A stale row there is a real
+      #                           finding, so these must still be validated.
+      #   .gitattributes          decides how those ledgers merge
+      # Everything above is simply "not inert", so it needs no listing.
+      - name: Classify changed paths
+        id: classify
+        env:
+          GH_TOKEN: ${{ github.token }}
+          REPO: ${{ github.repository }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          set -euo pipefail
+          files=$(gh api "repos/$REPO/pulls/$PR/files" --paginate --jq '.[].filename')
+          if [ -z "$files" ]; then
+            # No file list is not evidence of an inert pull request. Fail safe.
+            echo "relevant=true" >> "$GITHUB_OUTPUT"
+            echo "no files returned -- treating as validation-relevant"
+            exit 0
+          fi
+          # Inert: prose, generated progress pages, and the licence. Note docs/index.html
+          # and docs/progress-treemap.svg are bot-written progress artefacts, not sources.
+          inert='^(docs/|notes/|\.github/ISSUE_TEMPLATE/)|(^|/)[^/]+\.(md|png|jpg|jpeg|gif|svg)$|^LICENSE$'
+          relevant=false
+          while IFS= read -r f; do
+            if ! printf '%s\n' "$f" | grep -Eq "$inert"; then
+              relevant=true
+              echo "validation-relevant: $f"
+            fi
+          done <<< "$files"
+          echo "relevant=$relevant" >> "$GITHUB_OUTPUT"
+          total=$(printf '%s\n' "$files" | wc -l)
+          echo "$total changed file(s); validation-relevant=$relevant"
+
       - name: Submit validation job
         env:
           RELAY: ${{ secrets.PR_VALIDATE_RELAY }}
@@ -62,12 +116,26 @@ jobs:
           SHA: ${{ github.event.pull_request.head.sha }}
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           ALLOW_ATTRIBUTION_CHANGE: ${{ contains(github.event.pull_request.labels.*.name, 'attribution-override') }}
+          VALIDATION_RELEVANT: ${{ steps.classify.outputs.relevant }}
         run: |
           set -euo pipefail
+          # `validationRelevant` is ADVISORY and the relay decides what to do with it.
+          #
+          # THE SUBMISSION STILL HAPPENS EITHER WAY, and that is the point: `PR validation`
+          # is a required check pinned to the tangos-validator app (integration_id
+          # 4461188), so only the relay can post a verdict that satisfies the ruleset. If
+          # this workflow skipped submitting, no check would ever arrive and the pull
+          # request would sit unmergeable forever waiting for one. Equally, a relay that
+          # does not know this field yet simply ignores it and validates as before, so
+          # landing this change on its own is a no-op rather than a regression.
+          #
+          # Relay side, to actually claim the saving: when validationRelevant is false,
+          # post a passing `PR validation` check immediately and do not queue a build.
           payload=$(jq -n --arg repo "$REPO" --argjson pr "$PR" \
             --arg sha "$SHA" --arg baseSha "$BASE_SHA" \
             --argjson allowAttributionChange "$ALLOW_ATTRIBUTION_CHANGE" \
-            '{repo:$repo,pr:$pr,sha:$sha,baseSha:$baseSha,allowAttributionChange:$allowAttributionChange}')
+            --argjson validationRelevant "$VALIDATION_RELEVANT" \
+            '{repo:$repo,pr:$pr,sha:$sha,baseSha:$baseSha,allowAttributionChange:$allowAttributionChange,validationRelevant:$validationRelevant}')
           resp=$(curl -sS -X POST "$RELAY/api/pr-validate" \
             -H "X-Api-Key: $TOKEN" -H "Content-Type: application/json" \
             --data "$payload")
