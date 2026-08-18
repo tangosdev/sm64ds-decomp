@@ -6,7 +6,7 @@
  * Named from the table, not from the old file's `recovered name:` comment
  * (which agreed here): 0x021254c0 is the word slot 6 of _ZTV10dScMgBSC_c
  * holds where dScMgSingle3DBase_c's table holds something else, so it is
- * this class's own override of the virtual ActorBase declares.
+ * this class's own override of the virtual fBase_c declares.
  *
  * The dispatch is a pointer-to-member table indexed by unk_51b8 -- the
  * minigame's state. The pre-migration file had to invent a `struct C` with

@@ -1,7 +1,7 @@
 #include "types.h"
 enum { false, true };
 
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_ov060_021123a0(void *a, int b);
 extern void func_ov060_021123c8(char *p);
 extern void _ZN6Player9DropActorEv(void *p);
@@ -12,7 +12,7 @@ void func_ov060_02115c1c(char *self)
     char *r1;
     int cond;
 
-    r4 = (char *)_ZN5Actor10FindWithIDEj(*(unsigned int *)(self + 0x108));
+    r4 = (char *)_ZN8dActor_c10FindWithIDEj(*(unsigned int *)(self + 0x108));
     if (*(int *)(r4 + 0x40c) == 0x13) {
         func_ov060_021123a0(r4, 1);
         *(int *)(self + 0x110) = 0;

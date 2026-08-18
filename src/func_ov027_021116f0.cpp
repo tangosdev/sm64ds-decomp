@@ -4,7 +4,7 @@
  *
  * It used to carry the recovered name `daIDonketu_c::AfterClsn`, attributed "from
  * vtable slot identity" -- but this address is in NO slot of ChillBully's vtable.
- * All 31 were checked against daOts_c's and Enemy's; the four this class overrides
+ * All 31 were checked against daOts_c's and dEnemyBase_c's; the four this class overrides
  * are 0 (InitResources), 6 (Behavior) and 16/17 (the destructor pair). So the name
  * is withdrawn and the placeholder kept until something actually names it.
  */

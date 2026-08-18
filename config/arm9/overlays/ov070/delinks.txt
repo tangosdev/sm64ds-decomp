@@ -100,7 +100,7 @@ src/_ZN6FlyGuy16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021204e4 end:0x021204ec
 
-src/func_ov070_021204ec.cpp:
+src/_ZN6FlyGuy13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x021204ec end:0x02120518
 

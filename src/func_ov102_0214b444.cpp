@@ -1,6 +1,6 @@
 //cpp
 struct Vector3;
-struct Actor;
+struct dActor_c;
 
 struct RaycastGround {
     char pad[0x44];
@@ -8,12 +8,12 @@ struct RaycastGround {
     char pad2[0xc];
     RaycastGround();
     ~RaycastGround();
-    void SetObjAndPos(const Vector3 &pos, Actor *a);
+    void SetObjAndPos(const Vector3 &pos, dActor_c *a);
     int DetectClsn();
 };
 
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(int self);
-extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     int self, int sm, int mat, int fix, int t, unsigned int j);
 
 extern "C" void func_ov102_0214b444(int c)
@@ -26,7 +26,7 @@ extern "C" void func_ov102_0214b444(int c)
     v = *(int*)(c + 0x60);
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) == 0) {
         RaycastGround rg;
-        rg.SetObjAndPos(*(const Vector3*)(c + 0x5c), (Actor*)0);
+        rg.SetObjAndPos(*(const Vector3*)(c + 0x5c), (dActor_c*)0);
         if (rg.DetectClsn() != 0)
             v = rg.result;
     }
@@ -46,6 +46,6 @@ extern "C" void func_ov102_0214b444(int c)
     *(int*)(c + 0x3bc) = v >> 3;
     *(int*)(c + 0x3c0) = *(int*)(c + 0x64) >> 3;
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x364, c + 0x394, *(int*)(c + 0x80) * 0x50, 0x1e000, 0xf);
 }

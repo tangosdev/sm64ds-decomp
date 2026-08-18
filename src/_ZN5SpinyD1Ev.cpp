@@ -1,9 +1,9 @@
 //cpp
 // @symbol _ZN5SpinyD1Ev
 
-struct Actor {
+struct dActor_c {
     char pad[0xd0];
-    virtual ~Actor();
+    virtual ~dActor_c();
 };
 
 struct Model { char pad[0x50]; ~Model(); };
@@ -12,7 +12,7 @@ struct ShadowModel { char pad[0x28]; ~ShadowModel(); };
 struct MovingCylinderClsn { char pad[0x34]; ~MovingCylinderClsn(); };
 struct WithMeshClsn { char pad[0x4]; ~WithMeshClsn(); };
 
-struct Spiny : Actor {
+struct Spiny : dActor_c {
     Model m0;   /* 0xd4 */
     ModelAnim m1;   /* 0x124 */
     ShadowModel m2;   /* 0x188 */

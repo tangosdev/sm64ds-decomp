@@ -1,0 +1,20 @@
+//cpp
+// @symbol _ZN9UkikiCageD1Ev
+/* recovered: real C++ destructor -- the compiler emits the whole body
+ *
+ * Two vtable stores and four destructor calls, all automatic consequences of
+ * `struct UkikiCage : dBgActor_c` and the one member UkikiCage itself adds:
+ * its own vptr, then this class's own WithMeshClsn at 0x320 -- the only field
+ * UkikiCage declares -- then dBgActor_c's vptr, inlined because dBgActor_c's
+ * destructor is defined in its class body, then dBgActor_c's
+ * MovingMeshCollider (0x124) and Model (0xd4) in reverse declaration order,
+ * then dActor_c. The empty `{}` body is enough; every one of those calls is
+ * the compiler's own member/base cleanup, matching the pre-migration C body's
+ * `_ZTV9UkikiCage; WithMeshClsn::D1(+0x320); _ZTV10dBgActor_c;
+ * MovingMeshCollider::D1(+0x124); Model::D1(+0xd4); dActor_c::D2` exactly.
+ */
+#include "UkikiCage.h"
+
+UkikiCage::~UkikiCage()
+{
+}

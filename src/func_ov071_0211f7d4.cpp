@@ -1,6 +1,6 @@
 //cpp
 struct CylinderClsn;
-struct Actor { void UpdatePos(CylinderClsn *c); };
+struct dActor_c { void UpdatePos(CylinderClsn *c); };
 struct WithMeshClsn {
     int JustHitGround() const;
     void *GetFloorResult() const;
@@ -21,7 +21,7 @@ extern "C" void _ZN12CylinderClsn5ClearEv(void *);
 extern "C" void _ZN12CylinderClsn6UpdateEv(void *);
 
 
-extern "C" int func_ov071_0211f7d4(Actor *self)
+extern "C" int func_ov071_0211f7d4(dActor_c *self)
 {
     char *s = (char*)self;
     WithMeshClsn_UpdateDiscreteNoLava_veneer(s + 0x194);

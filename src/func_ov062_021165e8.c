@@ -3,9 +3,9 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern void Chuckya_ChangeState(void* c, void* p);
-extern int _ZN5Actor18HorzAngleToCPlayerEv(void* self);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
 extern int ApproachAngle(short* angle, int target, int a, int b, int c);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const void* v, unsigned int e);
 extern int Vec3_Dist(const void* a, const void* b);
@@ -23,7 +23,7 @@ int func_ov062_021165e8(char* c)
     volatile struct Vector3 pos;
     struct Vector3* pp;
 
-    player = (char*)_ZN5Actor13ClosestPlayerEv(c);
+    player = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
     r = func_ov062_02115f84(c);
     if (r != 0 || *(unsigned char*)(c + 0x3e4) == 1) {
         if (r != 2)
@@ -42,7 +42,7 @@ int func_ov062_021165e8(char* c)
     pos.z = pp->z;
 
     if (*(int*)(c + 0x3f0) == 0) {
-        *(short*)(c + 0x3f4) = (short)_ZN5Actor18HorzAngleToCPlayerEv(c);
+        *(short*)(c + 0x3f4) = (short)_ZN8dActor_c18HorzAngleToCPlayerEv(c);
         ApproachAngle((short*)(c + 0x94), *(short*)(c + 0x3f4), 0x80, 0x200, 0x400);
         if (AngleDiff(*(short*)(c + 0x3f4), *(short*)(c + 0x8e)) < 0x200) {
             *(int*)(c + 0x98) = 0x1e000;

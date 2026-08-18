@@ -1,5 +1,5 @@
 #include "types.h"
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern void func_ov066_02119454(void* c, void* p);
 extern int RandomIntInternal(int* seed);
 extern int func_ov066_02116a68(void* self);
@@ -21,7 +21,7 @@ extern char data_ov066_0211afdc[];
 int func_ov066_02118e04(void* self)
 {
     u8* c = (u8*)self;
-    void* p = _ZN5Actor13ClosestPlayerEv(self);
+    void* p = _ZN8dActor_c13ClosestPlayerEv(self);
     int r4;
     int v;
 

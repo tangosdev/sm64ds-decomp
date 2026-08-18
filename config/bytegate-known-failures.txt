@@ -27,7 +27,7 @@
 #
 # The hash is taken over the file with CRLF folded to LF. There is no `text=auto` rule in
 # .gitattributes, so a Windows clone materialises these files CRLF and the ubuntu runner
-# that publishes the count materialises them LF. A raw-byte pin would miss on all 18 rows
+# that publishes the count materialises them LF. A raw-byte pin would miss on every row
 # in CI, lapse every exclusion at once, and quietly restore the pre-policy number while
 # every local check still passed. Do not re-pin these by hand; use --recheck.
 #
@@ -37,45 +37,37 @@
 # TO ADD OR RETIRE A ROW
 #   python tools/bytegate.py --recheck        # needs tools/mwccarm; prints the true set
 #
-# Re-derived at a6dd3d3ec: 18 rows, every one of them failing under all 12 versions.
-# linkcheck reports all 18 as NO-SYM, and reports WRONG for none of them -- these are
-# "counted without evidence", NOT "proven wrong". See audit/enrollment_report.md 4a.
+# HISTORY
+# --------
+# Recorded at a6dd3d3ec with 18 rows. `--recheck` now confirms 1 and retires 17: the
+# self-healing property did exactly what its docstring promised -- the 17 fixes were
+# made without reference to this file, and the rows lapsed on their own. They are
+# deleted here rather than left to lapse because a lapsed row is indistinguishable
+# from an un-re-checked one, which is what test_bytegate.test_no_row_is_stale exists
+# to refuse.
+#
+#   15 now build AND reproduce the cartridge -- the signature clash was repaired and
+#      the functions are enrolled, so they are counted matched and verified both.
+#    2 now build but do NOT reproduce it (Goomba::InitResources, 916 against 912;
+#      func_ov007_020ba05c, 0x22c against 0x284). Fixing the compile is what revealed
+#      each gap -- it had been hidden behind the compile error. Both now carry a
+#      NONMATCHING banner, so `matched` excludes them by the ordinary route and this
+#      list has nothing left to say about them.
+#
+# linkcheck reported all 18 as NO-SYM and WRONG for none -- "counted without evidence",
+# NOT "proven wrong", and repairing 15 of them into byte matches is what that predicted.
+# See audit/enrollment_report.md 4a.
 
-# --- extern "C" signature clash with include/decl_common.h (16) -------------------
+# --- extern "C" signature clash with include/decl_common.h (1) --------------------
 # The file declares a symbol `extern "C"` with one signature and decl_common.h declares
 # the same symbol with C++ linkage and a different parameter type, so mwccarm rejects the
-# pair as an illegal overload and never reaches codegen. 12 clash on their own symbol,
-# 4 on a callee they redeclare. Mechanical, and plausibly correct decompilations that
-# stopped compiling when decl_common.h grew -- fixing the 16 signatures retires all of
-# these rows at once and returns the functions to the count.
-a6ea3b1a74b57099 src/_ZN8Particle10SysTracker10InitialiseEv.cpp extern-c-clash
-58afde3c2716d8b2 src/func_ov002_020cfbdc.cpp extern-c-clash
+# pair as an illegal overload and never reaches codegen.
+#
+# This is the one row of the original 16 that survives, and it is not a harder signature
+# problem -- the same repair compiles it. It stays because compiling it exposes calls to
+# func_02111b64/func_02111b6c, an address that resolves in four overlays (ov008, ov012,
+# ov013, ov017), so resolve_placeholders cannot settle the destination and
+# check_references reports a NEW unresolvable reference. It also fails eligibility rule 2
+# (.text section size against declared size), so repairing it would not enrol it either.
+# Retire this row only together with the co-residency work that settles the callee.
 2371acc5ad305f55 src/func_ov002_020e3e00.cpp extern-c-clash
-b4ec67022e088af8 src/func_ov004_020aeed8.cpp extern-c-clash
-cf7d83579757ff4c src/func_ov004_020af094.cpp extern-c-clash
-01cadd806d718eb1 src/func_ov006_020e6e78.cpp extern-c-clash
-fb8c9547cf4b4a3a src/func_ov064_02119afc.cpp extern-c-clash
-3f2675885e87d552 src/_ZN15TtcRotatingCube13InitResourcesEv.cpp extern-c-clash
-7a37d816f5e354a9 src/func_ov071_02121ba4.cpp extern-c-clash
-a058233791d59bb6 src/func_ov078_02124cf4.cpp extern-c-clash
-58d9bf39038be0ed src/func_ov080_02124088.cpp extern-c-clash
-e2ff5d9f25ff7b90 src/func_ov081_02123910.cpp extern-c-clash
-3282c177d8044544 src/func_ov085_02129dbc.cpp extern-c-clash
-83976ff4cb5e9444 src/func_ov096_02137088.cpp extern-c-clash
-7fb411355a511de8 src/func_ov098_0213a794.cpp extern-c-clash
-219e3a71c05fb4b8 src/func_ov102_0214b248.cpp extern-c-clash
-
-# --- bare Fix12 where the real type is Fix12<int> (1) ------------------------------
-# line 17: template argument list expected. A genuine error, not a sentinel problem --
-# but the file also carries its //cpp sentinel on line 2, behind an #include, and both
-# eligible.classify and reloc_audit.winning_object test text.startswith("//cpp"), so it
-# is offered to the compiler as C99 first. Moving the sentinel to line 1 does not fix
-# this file, and is worth knowing about as a trap for others.
-818732269ec59bd1 src/_ZN6Goomba13InitResourcesEv.cpp bare-template-arg
-
-# --- broken draft (1) ---------------------------------------------------------------
-# line 114: 'array28' is not a member of class 'struct StructObj20', plus array24 and
-# f2C. The file carries the comment `bHolder->b->f2C = 0; // or bHolder->f2C? wait`.
-# It has never been compiled by any gate. This is the one row of the 18 that is a
-# genuinely unfinished draft rather than a mechanical signature defect.
-08e164c9fb1168c6 src/func_ov007_020ba05c.c broken-draft

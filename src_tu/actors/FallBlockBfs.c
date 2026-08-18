@@ -32,11 +32,11 @@
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 extern void *data_020a0eac;
-extern int func_0213a2cc(void *self, void *data);
+extern int func_ov098_0213a2cc(void *self, void *data);
 extern int data_ov045_021130ac[];
-extern int func_0213a794(void *self, void *data);
+extern int func_ov098_0213a794(void *self, void *data);
 extern int _ZTV12FallBlockBfs[];
 
 /* -------------------------------------------------------------------------- */
@@ -48,9 +48,9 @@ extern int _ZTV12FallBlockBfs[];
 /* vtable identified: VT0 = _ZTV21daObjKm2_Fall_Block_c */
 int *FallBlockBfs_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(844);
+    int *p = (int *)_ZN7fBase_cnwEj(844);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV21daObjKm2_Fall_Block_c;
         p[0] = (int)_ZTV12FallBlockBfs;
     }
@@ -62,7 +62,7 @@ int *FallBlockBfs_Spawn(void)
 /* -------------------------------------------------------------------------- */
 int _ZN12FallBlockBfs13InitResourcesEv(void *self)
 {
-    return func_0213a794(self, data_ov045_021130ac);
+    return func_ov098_0213a794(self, data_ov045_021130ac);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -70,7 +70,7 @@ int _ZN12FallBlockBfs13InitResourcesEv(void *self)
 /* -------------------------------------------------------------------------- */
 int _ZN12FallBlockBfs16CleanupResourcesEv(void *self)
 {
-    return func_0213a2cc(self, data_ov045_021130ac);
+    return func_ov098_0213a2cc(self, data_ov045_021130ac);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -84,10 +84,10 @@ int *_ZN12FallBlockBfsD0Ev(int *t)
 {
     t[0] = (int)_ZTV21daObjKm2_Fall_Block_c;
     t[0] = (int)_ZTV10dBgActor_c;
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }
@@ -103,9 +103,9 @@ int *_ZN12FallBlockBfsD1Ev(int *t)
 {
     t[0] = (int)_ZTV21daObjKm2_Fall_Block_c;
     t[0] = (int)_ZTV10dBgActor_c;
-    t[0] = (int)_ZTV8Platform;
+    t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     return t;
 }

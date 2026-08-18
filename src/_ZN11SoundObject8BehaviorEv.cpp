@@ -12,7 +12,7 @@ typedef int (C::*PMF)(void*);
 extern PMF data_ov002_0211110c[];
 
 extern "C" {
-void _ZN9ActorBase18MarkForDestructionEv(C* c);
+void _ZN7fBase_c18MarkForDestructionEv(C* c);
 void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int d, int f, bool g);
 
 int _ZN11SoundObject8BehaviorEv(char* cc)
@@ -25,7 +25,7 @@ int _ZN11SoundObject8BehaviorEv(char* cc)
         && (self->unk_0dc <= 0xa || data_0209b49c > 0x7f)) {
         goto skip;
     }
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
     if (data_0208e430 != 0x22) {
         _ZN5Sound7PlaySubEjjj5Fix12IiEb(data_0208e430, 0x7f, 0, 0x7f000, 0);
     }

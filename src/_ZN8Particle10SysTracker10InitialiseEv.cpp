@@ -3,10 +3,11 @@
 // @symbol _ZN8Particle10SysTracker10InitialiseEv
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_Heap.h"
-#include "decl_Particle.h"
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Particle__SysTracker.h"
+extern "C" extern u32 _ZN8Particle7Texture12AllocTexVramEjb(const void*, u32);
+extern "C" extern unsigned int _ZN8Particle7Texture12AllocPalVramEjb(unsigned int, unsigned int);
 extern "C" void DecompressLZ16(const void* src, void* dst);
 
 

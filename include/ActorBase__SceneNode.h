@@ -1,5 +1,5 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class ActorBase::SceneNode: 1 matched functions, 4 evidenced fields.
+ * class fBase_c::SceneNode: 1 matched functions, 4 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef ACTORBASE__SCENENODE_H

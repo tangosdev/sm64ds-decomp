@@ -30,7 +30,7 @@ int WDW_Water::Behavior()
         }
     } else {
         if (((MeshColliderBase *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() == 0) {
-            ((MeshColliderBase *)(((u8 *)this) + 0x124))->Enable((Actor *)(((u8 *)this)));
+            ((MeshColliderBase *)(((u8 *)this) + 0x124))->Enable((dActor_c *)(((u8 *)this)));
         }
     }
 

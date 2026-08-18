@@ -9,13 +9,13 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void MulVec3Mat4x3(void *src, void *m, void *dst);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *thiz);
-extern void *_ZN5Actor13ClosestPlayerEv(void *thiz);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void KingBobOmb_SetState(void *c, void *p);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *thiz, void *f, int a, int b, int fx, unsigned short t);
 extern void func_02012694(int a, void *p);
 extern void func_ov078_02125c24(void *c, int a);
 extern void func_0200fa8c(void *c, int a);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *thiz, void *actor, unsigned int a, const void *pos, unsigned int b, unsigned int cc);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *thiz, void *actor, unsigned int a, const void *pos, unsigned int b, unsigned int cc);
 extern void _ZN6Camera9SetFlag_3Ev(void *thiz);
 
 extern char data_020a0e68;
@@ -76,7 +76,7 @@ int func_ov078_021247bc(void *thiz)
     }
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110) != 0) {
-        void *pl = _ZN5Actor13ClosestPlayerEv(c);
+        void *pl = _ZN8dActor_c13ClosestPlayerEv(c);
         if (pl != 0) {
             D = *(Vec3 *)((char *)pl + 0x5c);
             if (Vec3_Dist(c + 0x4d4, &D) > 0x640000 ||
@@ -113,7 +113,7 @@ int func_ov078_021247bc(void *thiz)
             E.y += 0xc8000;
             m = *(unsigned short *)(pl2 + 0x6ce) & 0x800;
             if (m == 0) {
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(pl2, c, 0x94, &E, 0, 0) != 0) {
+                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(pl2, c, 0x94, &E, 0, 0) != 0) {
                     _ZN6Camera9SetFlag_3Ev(*(void **)&data_0209f318);
                     func_02012694(0x12a, c + 0x74);
                     KingBobOmb_SetState(c, &data_ov078_021270dc);

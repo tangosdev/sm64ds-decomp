@@ -1,10 +1,17 @@
 //cpp
-typedef int Fix12;
 struct OamAttr;
 struct OAM {
-    static int Render(bool, OamAttr*, int, int, int, int, Fix12, OamAttr*, int, int);
     static void RenderSub(OamAttr*, int, int);
 };
+
+/* Render's 7th AND 8th parameters are Fix12<int> -- the S3_ in
+   _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii back-references the Fix12<int> one place
+   earlier, so the eighth is not the OamAttr* this file used to declare. It was being
+   handed (OamAttr*)0x1000, which is the right WORD for the wrong reason. Declared by
+   final name because Fix12<int> is an aggregate with no converting constructor from
+   int, and both arguments here are int literals. */
+extern "C" int _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
+    bool, OamAttr*, int, int, int, int, int, int, int, int);
 extern "C" int func_0200f0bc(void);
 extern short data_ov075_0211b5d4[];
 extern "C" char data_ov075_0211c790[];
@@ -26,7 +33,10 @@ extern "C" void func_ov075_02116f40(char* c)
 
     *(int*)(c + 0x26c) += 1;
     int r5 = (*(int*)(c + 0x26c) & 8) ? 0xac : 0xae;
-    OAM::Render(false, (OamAttr*)_ZN3OAM14BOUNCING_ARROWE, 0x40, r5, -1, -1, 0x1000, (OamAttr*)0x1000, 0, -1);
-    OAM::Render(false, (OamAttr*)_ZN3OAM14BOUNCING_ARROWE, 0x80, r5, -1, -1, 0x1000, (OamAttr*)0x1000, 0, -1);
-    OAM::Render(false, (OamAttr*)_ZN3OAM14BOUNCING_ARROWE, 0xc0, r5, -1, -1, 0x1000, (OamAttr*)0x1000, 0, -1);
+    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
+        false, (OamAttr*)_ZN3OAM14BOUNCING_ARROWE, 0x40, r5, -1, -1, 0x1000, 0x1000, 0, -1);
+    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
+        false, (OamAttr*)_ZN3OAM14BOUNCING_ARROWE, 0x80, r5, -1, -1, 0x1000, 0x1000, 0, -1);
+    _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
+        false, (OamAttr*)_ZN3OAM14BOUNCING_ARROWE, 0xc0, r5, -1, -1, 0x1000, 0x1000, 0, -1);
 }

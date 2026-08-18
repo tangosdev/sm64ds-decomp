@@ -3,7 +3,7 @@
 /* recovered: shared common types */
 #include "common.h"
 
-struct Actor;
+struct dActor_c;
 struct ClsnResult { char data[0x34]; };
 
 struct RaycastGround {
@@ -13,7 +13,7 @@ struct RaycastGround {
     char pad48[0x50 - 0x48];
     RaycastGround();
     ~RaycastGround();
-    void SetObjAndPos(const Vector3& pos, Actor* a);
+    void SetObjAndPos(const Vector3& pos, dActor_c* a);
     int DetectClsn();
 };
 
@@ -37,7 +37,7 @@ void func_020371fc(char* self)
         pos.x = objpos->x;
         pos.y = objpos->y + *(int*)(self + 0x18);
         pos.z = objpos->z;
-        rg.SetObjAndPos(pos, *(Actor**)(self + 0x14));
+        rg.SetObjAndPos(pos, *(dActor_c**)(self + 0x14));
         if (rg.DetectClsn() != 0) {
             int cy = rg.field44;
             int diff = objpos->y - cy;

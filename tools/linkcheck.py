@@ -133,6 +133,31 @@ def is_interwork(rom_word, rom_t, cand_t):
     return (rom_word >> 24) in (0xfa, 0xfb) and cand_t is not None and rom_t == cand_t
 
 
+def is_thumb_pointer(rtype, rom_t, cand_t):
+    """True if the ROM slot is a DATA word holding a Thumb function pointer.
+
+    Taking the address of a Thumb function yields ``addr | 1``. Bit 0 is the state
+    bit ``bx``/``blx`` reads, not part of the address, and ``symbols.txt`` names the
+    function at its even address -- so a correct source naming that symbol produces a
+    slot the linker fills with ``addr | 1``, and the raw comparison is off by one.
+
+    ``is_interwork`` above covers the CALL form, a BL the linker rewrote to BLX. This
+    is the literal-pool form -- ``ldr ip, [pc]; bx ip; .word addr|1`` -- which is
+    R_ARM_ABS32 and so never reaches that check.
+
+    Safe because ARM instructions are 4-byte aligned and Thumb 2-byte aligned, so no
+    genuine function address ever carries bit 0. ``rom_t == cand_t | 1`` with an even
+    candidate identifies this case uniquely; every other divergence still reports
+    WRONG.
+
+    Proven on func_0203c178 (arm9 0x0203c178), a veneer whose literal is 0x020527e9
+    for the Thumb symbol func_020527e8: enrolling that range and building the ROM
+    reproduces the cartridge byte for byte while this check called it WRONG.
+    """
+    return (rtype == R_ARM_ABS32 and cand_t is not None
+            and cand_t % 2 == 0 and rom_t == (cand_t | 1))
+
+
 def is_benign(rom_t, cand_t, prefer):
     """True if the ROM target is a veneer to cand_t, or a byte-identical twin of it."""
     if cand_t is None:
@@ -256,7 +281,8 @@ def linkcheck(name, addr, size, mod, name_index, candidate=None, include_dirs=()
             if rl is not None:
                 rt = rom_target(target, i, rl["type"], addr)
                 rw = int.from_bytes(target[i:i + 4], "little")
-                if is_benign(rt, rl["addr"], prefer) or is_interwork(rw, rt, rl["addr"]):
+                if (is_benign(rt, rl["addr"], prefer) or is_interwork(rw, rt, rl["addr"])
+                        or is_thumb_pointer(rl["type"], rt, rl["addr"])):
                     benign += 1
                     continue
             tgt = (rl["addr"] + rl.get("add", 0)) & 0xFFFFFFFF if rl and rl["addr"] is not None else None

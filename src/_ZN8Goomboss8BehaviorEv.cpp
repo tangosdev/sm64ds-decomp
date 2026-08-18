@@ -7,14 +7,14 @@
 typedef long long s64;
 
 extern "C" {
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *thiz, void *clsn, unsigned int a);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *thiz, void *clsn, unsigned int a);
 extern void _ZN12CylinderClsn5ClearEv(void *c);
 extern void _ZN12CylinderClsn6UpdateEv(void *c);
-extern void _ZN5Actor17HugeLandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
-extern void _ZN5Actor13LandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
+extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
+extern void _ZN8dActor_c13LandingDustAtER7Vector3b(void *thiz, Vector3 *v, int b);
 extern void func_02012694(int a, void *p);
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *thiz, Vector3 *v, int f);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *thiz, Vector3 *v, int f);
 }
 
 extern char *data_0209f318;
@@ -39,8 +39,8 @@ int Goomboss::Behavior()
 
     func_ov074_0212199c(((char *)this));
     func_ov074_0212042c(((char *)this));
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((char *)this), 0);
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char *)this), ((char *)this) + 0x40c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char *)this), 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char *)this), ((char *)this) + 0x40c, 0);
     func_ov074_02120d74(((char *)this));
     func_ov074_02121380(((char *)this));
 
@@ -63,13 +63,13 @@ int Goomboss::Behavior()
                 v.x = unk_3ac[2].x;
                 v.y = unk_3ac[2].y;
                 v.z = unk_3ac[2].z;
-                _ZN5Actor17HugeLandingDustAtER7Vector3b(((char *)this), &v, 1);
+                _ZN8dActor_c17HugeLandingDustAtER7Vector3b(((char *)this), &v, 1);
             } else {
                 Vector3 v;
                 v.x = unk_3ac[2].x;
                 v.y = unk_3ac[2].y;
                 v.z = unk_3ac[2].z;
-                _ZN5Actor13LandingDustAtER7Vector3b(((char *)this), &v, 1);
+                _ZN8dActor_c13LandingDustAtER7Vector3b(((char *)this), &v, 1);
             }
             func_02012694(0x15e, ((char *)this) + 0x74);
             {
@@ -77,7 +77,7 @@ int Goomboss::Behavior()
                 v.x = unk_3ac[2].x;
                 v.y = unk_3ac[2].y;
                 v.z = unk_3ac[2].z;
-                _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(((char *)this), &v, quake);
+                _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(((char *)this), &v, quake);
             }
         }
 
@@ -87,13 +87,13 @@ int Goomboss::Behavior()
                 v.x = unk_3ac[1].x;
                 v.y = unk_3ac[1].y;
                 v.z = unk_3ac[1].z;
-                _ZN5Actor17HugeLandingDustAtER7Vector3b(((char *)this), &v, 1);
+                _ZN8dActor_c17HugeLandingDustAtER7Vector3b(((char *)this), &v, 1);
             } else {
                 Vector3 v;
                 v.x = unk_3ac[1].x;
                 v.y = unk_3ac[1].y;
                 v.z = unk_3ac[1].z;
-                _ZN5Actor13LandingDustAtER7Vector3b(((char *)this), &v, 1);
+                _ZN8dActor_c13LandingDustAtER7Vector3b(((char *)this), &v, 1);
             }
             func_02012694(0x15e, ((char *)this) + 0x74);
             {
@@ -101,7 +101,7 @@ int Goomboss::Behavior()
                 v.x = unk_3ac[1].x;
                 v.y = unk_3ac[1].y;
                 v.z = unk_3ac[1].z;
-                _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(((char *)this), &v, quake);
+                _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(((char *)this), &v, quake);
             }
         }
     }

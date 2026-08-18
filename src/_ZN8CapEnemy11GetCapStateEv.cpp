@@ -26,7 +26,7 @@ struct CapEnemy {
 };
 
 extern int data_0209f2d8;
-extern "C" int *_ZN5Actor13ClosestPlayerEv(void *self);
+extern "C" int *_ZN8dActor_c13ClosestPlayerEv(void *self);
 
 int CapEnemy::GetCapState() {
     if (field_111 == 0) {
@@ -36,7 +36,7 @@ int CapEnemy::GetCapState() {
     unsigned char val = *(unsigned char *)&data_0209f2d8;
     int check = (val == 1) ? 1 : 0;
     if (check == 0) {
-        int *p = _ZN5Actor13ClosestPlayerEv(this);
+        int *p = _ZN8dActor_c13ClosestPlayerEv(this);
         if (p != 0) {
             int s = field_113 & 7;
             int ps = p[2];

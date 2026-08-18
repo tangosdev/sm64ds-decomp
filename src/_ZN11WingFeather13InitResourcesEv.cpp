@@ -6,13 +6,13 @@
 #include "WingFeather.h"
 struct SharedFilePtr;
 struct BMD_File;
-struct Actor;
+struct dActor_c;
 
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, Actor *a, int b, int c, unsigned int d, unsigned int e);
-extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, Actor *a, int b, int c, void *d, int e);
+extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);
+extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, void *d, int e);
 
 extern SharedFilePtr data_ov002_0210da58;
 extern unsigned char data_0209f2d8;
@@ -33,9 +33,9 @@ int WingFeather::InitResources()
 
     unk_09c = -0x199;
     unk_0a0 = -0x28000;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x124, (Actor *)((char *)this), 0x6e000, 0x6e000, 0x100002, 0);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x124, (dActor_c *)((char *)this), 0x6e000, 0x6e000, 0x100002, 0);
     func_ov002_020b2c44(((char *)this));
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x158, (Actor *)((char *)this), 0x28000, 0xa000, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x158, (dActor_c *)((char *)this), 0x28000, 0xa000, 0, 0);
 
     mAngleX = 0x4000;
     mAngleZ = -0x4000;

@@ -2,7 +2,7 @@
 #define INVISIBLEPOLE_H
 
 #include "types.h"
-#include "Actor.h"
+#include "dActor_c.h"
 #include "MovingCylinderClsn.h"
 
 /* daBar_c in the ROM's RTTI -- the invisible climbing pole. The decomp's own name is
@@ -12,25 +12,25 @@
  *
  * TWO WITNESSES, and they close on each other exactly:
  *
- *   InvisiblePole_Spawn  ActorBase::operator new(264 = 0x108), Actor::Actor(),
+ *   InvisiblePole_Spawn  fBase_c::operator new(264 = 0x108), dActor_c::dActor_c(),
  *                        stores _ZTV13InvisiblePole, then MovingCylinderClsn at 0xd4.
  *   ~InvisiblePole       the same vtable store, MovingCylinderClsn::~MovingCylinderClsn
- *                        at 0xd4, then Actor::~Actor.
+ *                        at 0xd4, then dActor_c::~dActor_c.
  *
- * SIZE 0x108, the factory's own literal. Actor ends at 0xd0, the one member starts at
+ * SIZE 0x108, the factory's own literal. dActor_c ends at 0xd0, the one member starts at
  * 0xd4 and MovingCylinderClsn is 0x34, so 0xd4 + 0x34 = 0x108 closes the object with
  * nothing left over. The four bytes at 0xd0 are the only padding this class has, and
  * they are padding because both witnesses skip them.
  *
- * THE VTABLE, at ov002 0x02108480, diffed slot by slot against _ZTV5Actor. Five slots
- * differ, and they are the five declared below; every other slot holds Actor's own
+ * THE VTABLE, at ov002 0x02108480, diffed slot by slot against _ZTV8dActor_c. Five slots
+ * differ, and they are the five declared below; every other slot holds dActor_c's own
  * word and is inherited, so it is deliberately NOT redeclared here.
  *
  * No `operator delete` member is needed for the deleting destructor: mwcc inlines it
- * from the class or its IMMEDIATE base, and Actor -- this class's immediate base --
- * carries one. See the long note in include/Actor.h.
+ * from the class or its IMMEDIATE base, and dActor_c -- this class's immediate base --
+ * carries one. See the long note in include/dActor_c.h.
  */
-struct InvisiblePole : Actor {
+struct InvisiblePole : dActor_c {
     u8                  pad_0d0[0x4];
     MovingCylinderClsn  mClsn;           /* 0x0d4 */
 

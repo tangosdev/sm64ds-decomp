@@ -2,11 +2,11 @@
 // @symbol func_ov062_021199ac
 /* recovered: shared common types */
 #include "common.h"
-extern void *_ZN5Actor18ClosestWithActorIDEj(void *thiz, u32 id);
+extern void *_ZN8dActor_c18ClosestWithActorIDEj(void *thiz, u32 id);
 
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern s32 Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
-extern s32 _ZN5Actor14GetSubtractionEss(void *thiz, s16 a, s16 b);
+extern s32 _ZN8dActor_c14GetSubtractionEss(void *thiz, s16 a, s16 b);
 
 extern s16 data_02082214[];
 
@@ -23,7 +23,7 @@ int func_ov062_021199ac(char *self)
     s32 fixed1;
     s32 r;
 
-    other = (char *)_ZN5Actor18ClosestWithActorIDEj(self, 0xdc);
+    other = (char *)_ZN8dActor_c18ClosestWithActorIDEj(self, 0xdc);
     if (other == 0)
         goto ret0;
     if (*(u8 *)(other + 0x3d0) != 2)
@@ -38,7 +38,7 @@ int func_ov062_021199ac(char *self)
     otherK = *(s32 *)(other + 0x98);
     fixed1 = (s32)(((long long)otherK * tableVal + 0x800) >> 12);
 
-    r = _ZN5Actor14GetSubtractionEss(self, selfAngle, angle);
+    r = _ZN8dActor_c14GetSubtractionEss(self, selfAngle, angle);
     if (r < 0x4000) {
         s32 selfK;
         s32 fixed2;

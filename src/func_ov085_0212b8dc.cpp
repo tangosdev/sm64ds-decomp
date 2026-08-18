@@ -10,7 +10,7 @@
 #include "types.h"
 
 extern "C" {
-    char* _ZN5Actor13ClosestPlayerEv();
+    char* _ZN8dActor_c13ClosestPlayerEv();
     int func_ov085_0212a788(char* c);
     u32 func_02022cbc(u32 uid, u32 eid, Fix12i x, Fix12i y, Fix12i z, const void* dir);
     Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
@@ -31,7 +31,7 @@ extern void* data_ov085_021305c8[];
 
 extern "C" int func_ov085_0212b8dc(char* c)
 {
-    char* player = _ZN5Actor13ClosestPlayerEv();
+    char* player = _ZN8dActor_c13ClosestPlayerEv();
     if (player == 0) return 1;
 
     if (func_ov085_0212a788(c) == 1) {

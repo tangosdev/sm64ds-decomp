@@ -6,9 +6,9 @@ typedef struct { int x, y, z; } Vector3;
 
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
 extern void _Z14ApproachLinearRiii(int* ref, int target, int step);
-extern int _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void* a, Vector3* v, unsigned n, Fix12i f, short s);
+extern int _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* a, Vector3* v, unsigned n, Fix12i f, short s);
 extern void func_ov081_02124134(void* c);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(void* c);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* c);
 
 int func_ov081_021246a0(char* c)
 {
@@ -24,10 +24,10 @@ int func_ov081_021246a0(char* c)
                 v.x = *(int*)(c + 0x5c);
                 v.y = *(int*)(c + 0x60);
                 v.z = *(int*)(c + 0x64);
-                _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, *(u8*)(c + 0x10a) + 1, 0xa000, 0);
+                _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, *(u8*)(c + 0x10a) + 1, 0xa000, 0);
             }
             func_ov081_02124134(c);
-            _ZN5Actor24KillAndTrackInDeathTableEv(c);
+            _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
         }
     }
     return 1;

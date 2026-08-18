@@ -40,13 +40,13 @@ extern "C" {
 extern u8 IsAreaShowing(s32 idx);
 extern s32 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(u32 a, s32 vol);
 extern void _ZN5Event6SetBitEj(u32 bit);
-extern void _ZN5Actor8PoofDustEv(void *self);
+extern void _ZN8dActor_c8PoofDustEv(void *self);
 extern u16 DecIfAbove0_Short(u16 *p);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *self);
-extern void *_ZN5Actor15FindWithActorIDEjPS_(u32 id, void *prev);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern s32 _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, s32 a, s32 b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
+extern void *_ZN8dActor_c15FindWithActorIDEjPS_(u32 id, void *prev);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern s32 _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, s32 a, s32 b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 
 #include "decl_common.h"
 }
@@ -69,14 +69,14 @@ s32 BlueCoinSwitch::Behavior()
                 _ZN5Event6SetBitEj(unk_32d);
                 unk_328 = unk_32a;
                 _ZN16MeshColliderBase7DisableEv(&(*(u8 *)&mMeshCollider));
-                _ZN5Actor8PoofDustEv(c);
+                _ZN8dActor_c8PoofDustEv(c);
             }
         }
         if (unk_328 != 0) {
             if (DecIfAbove0_Short(&unk_328) == 0) {
                 unk_328 = 1;
                 if (_ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x64cc) != 0)
-                    _ZN5Actor24KillAndTrackInDeathTableEv(c);
+                    _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
             } else {
                 t = unk_328;
                 if (t == 0x2d)
@@ -86,13 +86,13 @@ s32 BlueCoinSwitch::Behavior()
                 else
                     unk_324 = func_02012310(unk_324, 0x38, 0);
                 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x40, 0xc999);
-                if (_ZN5Actor15FindWithActorIDEjPS_(0x122, 0) == 0)
+                if (_ZN8dActor_c15FindWithActorIDEjPS_(0x122, 0) == 0)
                     unk_328 = 1;
             }
         }
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0x1f4000, 0) != 0)
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0x1f4000, 0) != 0)
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     return 1;
 }

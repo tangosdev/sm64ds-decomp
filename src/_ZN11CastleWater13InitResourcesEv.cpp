@@ -27,8 +27,8 @@ struct BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, struct BMD_File *f, int a, int b);
 void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void* bmd, struct BTA_File& bta);
 void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void* self, struct BTA_File& bta, int a, int b, unsigned int c);
-void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
 void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, struct KCL_File *k, Matrix4x3 &m, int fx, short s, struct CLPS_Block &c);
@@ -57,14 +57,14 @@ int CastleWater::InitResources()
     }
     _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File((void*)data_ov009_02113c68.f[1], data_ov009_02112bc4);
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(&mTexTransformer, data_ov009_02112bc4, 0, 0x1000, 0);
-    _ZN8Platform21UpdateModelPosAndRotYEv(self);
-    _ZN8Platform19UpdateClsnPosAndRotEv(self);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
     {
         struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov009_02113c70);
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider, kcl, mMatrix, 0x1000, mAngleY, data_ov009_02112c38);
     }
-    ((MeshColliderBase *)&mMeshCollider)->Enable((Actor *)(self));
+    ((MeshColliderBase *)&mMeshCollider)->Enable((dActor_c *)(self));
     {
         int v = mPosY - 0x64000;
         if (data_0209f32c > v) data_0209f32c = v;

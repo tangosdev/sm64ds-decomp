@@ -1,12 +1,12 @@
 //cpp
 // @symbol _ZN15IceSlideManagerD1Ev
 
-struct Actor {
-    virtual ~Actor();
+struct dActor_c {
+    virtual ~dActor_c();
 };
 
 
-struct IceSlideManager : Actor {
+struct IceSlideManager : dActor_c {
     virtual ~IceSlideManager();
 };
 

@@ -8,11 +8,11 @@ extern int data_0209caa0[];
 extern int data_0209f32c[];
 extern int data_0209e650;
 
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern void Vec3_Sub(struct Vector3* out, void* a, void* b);
 extern int Vec3_HorzLen(struct Vector3* v);
 extern int RandomIntInternal(int* seed);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, void* rot, int area, int death);
+extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, void* rot, int area, int death);
 
 #pragma opt_loop_invariants off
 void func_ov100_02146828(char* self)
@@ -25,7 +25,7 @@ void func_ov100_02146828(char* self)
     unsigned int kind;
     void* closest;
 
-    closest = _ZN5Actor13ClosestPlayerEv(self);
+    closest = _ZN8dActor_c13ClosestPlayerEv(self);
     if (closest == 0) return;
 
     Vec3_Sub(&diff, self + 0x5c, (char*)closest + 0x5c);
@@ -72,7 +72,7 @@ void func_ov100_02146828(char* self)
         rot.y = rot.y + (s16)((unsigned)r >> 16);
 
         {
-            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+            void* a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x158, kind, &pos, &rot, *(signed char*)(self + 0xcc), -1);
             if (a != 0) {
                 func_ov100_0214629c(a, *(int*)(self + 4));

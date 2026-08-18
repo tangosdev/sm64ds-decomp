@@ -1,9 +1,9 @@
-struct Actor;
-extern struct Actor *func_0200e55c(unsigned int ownerID);
+struct dActor_c;
+extern struct dActor_c *func_0200e55c(unsigned int ownerID);
 
 int func_02008080(void *param_1)
 {
-    struct Actor *a;
+    struct dActor_c *a;
     int *dst;
 
     a = func_0200e55c(0x13);

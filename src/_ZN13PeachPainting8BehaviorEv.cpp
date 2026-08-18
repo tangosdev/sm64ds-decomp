@@ -2,7 +2,7 @@
 // @symbol _ZN13PeachPainting8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "PeachPainting.h"
-struct Actor { int DistToCPlayer(); };
+struct dActor_c { int DistToCPlayer(); };
 namespace cstd { int fdiv(int a, int b); }
 /* ModelBase is the real class (include/ModelBase.h), reached through
    PeachPainting.h -> Model.h. Its ApplyOpacity is declared there with one
@@ -15,7 +15,7 @@ extern "C" void _ZN9ModelBase12ApplyOpacityEj(void *, unsigned int o, int x);
 
 int PeachPainting::Behavior()
 {
-    int d = ((Actor *)((char *)this))->DistToCPlayer();
+    int d = ((dActor_c *)((char *)this))->DistToCPlayer();
     if (d >= 0xe10000) {
         mOpacity = 0xff;
     } else if (d <= 0xbf4000) {

@@ -7,7 +7,7 @@
  * global at data_0209f318+0x114, then rebuild the body cylinder 0x50000 in front of
  * the actor.
  *
- * FOUR STAND-IN STRUCTS ARE GONE -- `Actor`, `Animation`, `CylinderClsn` and
+ * FOUR STAND-IN STRUCTS ARE GONE -- `dActor_c`, `Animation`, `CylinderClsn` and
  * `MovingCylinderClsnWithPos`, each declared here with just the one or two methods
  * this file called, then "defined" again below with a set of bodyless declarations
  * that existed only to stop the compiler mangling them differently. All four are
@@ -36,9 +36,9 @@ int Bowser::Behavior()
 {
     RandomIntInternal(&data_0209e650);
     mTargetPlayer = (int)ClosestPlayer();
-    if (*(Actor**)((char*)&mTargetPlayer) != 0) {
-        unk_406 = Vec3_HorzAngle((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(Actor**)((char*)&mTargetPlayer) + 0x5c));
-        unk_3ec = Vec3_HorzDist((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(Actor**)((char*)&mTargetPlayer) + 0x5c));
+    if (*(dActor_c**)((char*)&mTargetPlayer) != 0) {
+        unk_406 = Vec3_HorzAngle((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(dActor_c**)((char*)&mTargetPlayer) + 0x5c));
+        unk_3ec = Vec3_HorzDist((Vector3*)((char*)&mPosX), (Vector3*)((char*)*(dActor_c**)((char*)&mTargetPlayer) + 0x5c));
     } else {
         unk_406 = mAngleY;
         unk_3ec = ~0x80000000;
@@ -58,7 +58,7 @@ int Bowser::Behavior()
     mMovingCylinderClsnWithPos.SetPosRelativeToActor(v);
     mMovingCylinderClsnWithPos.Update();
     if (unk_42b != 0) {
-        Actor* f = Actor::FindWithActorID(0x10d, 0);
+        dActor_c* f = dActor_c::FindWithActorID(0x10d, 0);
         if (f == 0) unk_42b = 0;
     }
     return 1;

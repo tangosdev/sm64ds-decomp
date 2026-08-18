@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 extern "C" {
-void* _ZN9ActorBasenwEj(u32 sz);
+void* _ZN7fBase_cnwEj(u32 sz);
 void _ZN8CapEnemyC2Ev(void* t);
 void _ZN25MovingCylinderClsnWithPosC1Ev(void* t);
 void _ZN12WithMeshClsnC1Ev(void* t);
@@ -10,7 +10,7 @@ void _ZN5ModelC1Ev(void* t);
 void _ZN11ShadowModelC1Ev(void* t);
 extern void* _ZTV3Boo;
 void* Boo_Spawn(void){
-  char* t=(char*)_ZN9ActorBasenwEj(0x5e0);
+  char* t=(char*)_ZN7fBase_cnwEj(0x5e0);
   if(t){
     _ZN8CapEnemyC2Ev(t);
     *(void**)t = &_ZTV3Boo;

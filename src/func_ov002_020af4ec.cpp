@@ -10,10 +10,10 @@ extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 extern void _ZN13RaycastGroundC1Ev(struct RaycastGround* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround* self, const struct Vector3* v, void* actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround* self, const struct Vector3* v, void* actor);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround* self);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround* self);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* shadow, void* mtx, int height, int rad, unsigned int x);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* shadow, void* mtx, int height, int rad, unsigned int x);
 void func_ov002_020af4ec(void* self);
 }
 
@@ -51,7 +51,7 @@ void func_ov002_020af4ec(void* self)
         v2.y = adjustedY;
         v2.z = z;
         _ZN13RaycastGroundC1Ev(&rg);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v2, 0);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v2, 0);
         rad = v2.y;
         if (_ZN13RaycastGround10DetectClsnEv(&rg)) {
             rad = *(int*)((char*)&rg + 0x44);
@@ -67,5 +67,5 @@ void func_ov002_020af4ec(void* self)
         height = (*(int*)(c + 0x114) - 0xa000) * 2;
     }
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x350, c + 0x31c, height, rad, 0xf);
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x350, c + 0x31c, height, rad, 0xf);
 }

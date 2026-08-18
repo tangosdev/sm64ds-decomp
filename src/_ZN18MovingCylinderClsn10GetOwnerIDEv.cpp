@@ -4,7 +4,7 @@
 #include "MovingCylinderClsn.h"
 
 
-/* Slot 3. owner->uniqueID, at Actor + 4 -- the same offset MeshColliderBase
+/* Slot 3. owner->uniqueID, at dActor_c + 4 -- the same offset MeshColliderBase
    reads for its own ownerUniqueID. */
 u32 MovingCylinderClsn::GetOwnerID()
 {

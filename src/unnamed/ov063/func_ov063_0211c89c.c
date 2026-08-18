@@ -2,12 +2,12 @@
 typedef struct { int x, y, z; } Vec3;
 
 extern u8 IsAreaShowing(int idx);
-extern char *_ZN5Actor13ClosestPlayerEv(void *self);
+extern char *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern int Vec3_Dist(const Vec3 *a, const Vec3 *b);
 extern short Vec3_HorzAngle(const Vec3 *a, const Vec3 *b);
-extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void *actor, u16 *p);
+extern int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void *actor, u16 *p);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const Vec3 *pos, unsigned int d);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 void func_ov063_0211c89c(char *c) {
     Vec3 pp;
@@ -19,7 +19,7 @@ void func_ov063_0211c89c(char *c) {
         *(char*)(c + 0xcc) = *(signed char*)(c + 0x100 + 0x58);
         return;
     }
-    p = _ZN5Actor13ClosestPlayerEv(c);
+    p = _ZN8dActor_c13ClosestPlayerEv(c);
     {
         int *q = (int*)(p + 0x5c);
         pp.x = q[0];
@@ -58,20 +58,20 @@ void func_ov063_0211c89c(char *c) {
                 return;
             }
             if (t < 0x1e) return;
-            _ZN5Sound15PlaySecretSoundEP5ActorPt(c, (u16*)(c + 0x14e));
+            _ZN5Sound15PlaySecretSoundEP8dActor_cPt(c, (u16*)(c + 0x14e));
         }
         return;
     case 2:
         *(int*)(c + 0x5c) += 0x5000;
         *(int*)(c + 0x148) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x148), 3, 0x8d, (Vec3*)(c + 0x74), 0);
-        _ZN5Sound15PlaySecretSoundEP5ActorPt(c, (u16*)(c + 0x14e));
+        _ZN5Sound15PlaySecretSoundEP8dActor_cPt(c, (u16*)(c + 0x14e));
         if (*(u16*)(c + 0x100 + 0x4c) > 0x65)
             *(u8*)(c + 0x150) = 3;
         return;
     case 3:
-        if (_ZN5Sound15PlaySecretSoundEP5ActorPt(c, (u16*)(c + 0x14e)) == 0)
+        if (_ZN5Sound15PlaySecretSoundEP8dActor_cPt(c, (u16*)(c + 0x14e)) == 0)
             return;
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return;
     }
 }

@@ -13,13 +13,13 @@
  * and misses by exactly that one word; everything else is byte-identical. A
  * full-word load on a parameter slot PROVES the declared type is 32-bit, because
  * mwcc does not fuse a narrowing cast into a narrower load (notes: the same rule
- * that settled Actor::Spawn's `as` and AllocateNode's `t`). So the real trailing
+ * that settled dActor_c::Spawn's `as` and AllocateNode's `t`). So the real trailing
  * parameter is `j`, not `t`, and the true symbol is not the one recorded.
  *
  * Callers cannot detect this -- AAPCS passes a u16 and a u32 argument
  * identically -- which is why it survived: only asking the compiler to GENERATE
- * the load exposes it. Third instance of that class after Actor::Spawn and
- * Actor::UntrackAndSpawnStar.
+ * the load exposes it. Third instance of that class after dActor_c::Spawn and
+ * dActor_c::UntrackAndSpawnStar.
  *
  * Fixing it is a symbol rename (symbols.txt, delinks, this file's name, the
  * records) and wants its own two-commit PR per the attribution rules, so it is

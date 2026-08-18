@@ -9,11 +9,11 @@ typedef short s16;
 
 extern int Vec3_Dist(const void* a, const void* b);
 extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void* pos, const void* target, int step);
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern void Matrix4x3_FromRotationY(void* m, int ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, int ang);
 extern void MulVec3Mat4x3(const void* in, const void* m, void* out);
-extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void* self);
+extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
 extern int Vec3_HorzDist(const void* a, const void* b);
 extern void func_ov016_02111bf0(void* self, void* state);
 
@@ -45,7 +45,7 @@ int func_ov016_021119ec(char* c)
     *(int*)(c + 0x60) = *(int*)(c + 0x3f4);
     *(int*)(c + 0x64) = *(int*)(c + 0x3f8);
 
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (player != 0) {
         int* p = LA((char*)player + 0x5c);
 
@@ -81,7 +81,7 @@ int func_ov016_021119ec(char* c)
                 func_ov016_02111bf0(c, &data_ov016_02114d9c);
         }
 
-        if (AngleDiff(_ZN5Actor18HorzAngleToCPlayerEv(c), *(s16*)(c + 0x8e)) < thrAng) {
+        if (AngleDiff(_ZN8dActor_c18HorzAngleToCPlayerEv(c), *(s16*)(c + 0x8e)) < thrAng) {
             if (Vec3_HorzDist(c + 0x5c, &playerPos) < thrHorz) {
                 dy = *(int*)(c + 0x60) - playerPos.y;
                 if (dy < 0)

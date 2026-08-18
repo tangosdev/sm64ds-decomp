@@ -13,7 +13,7 @@ extern void func_02012694(int a, void* p);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int frame, Fix12 rate, unsigned int flags);
 extern int RandomIntInternal(int* seed);
 extern int _ZNK9Animation12WillHitFrameEi(void* self, int f);
-extern char* _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(void* self, const Vector3* v, const void* p, Fix12 a, Fix12 b, unsigned int n);
+extern char* _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(void* self, const Vector3* v, const void* p, Fix12 a, Fix12 b, unsigned int n);
 
 extern s16 data_ov063_0211e1c0[];
 extern int data_ov063_0211edcc;
@@ -71,7 +71,7 @@ void func_ov063_02118458(void* self)
             char* fb;
             *(s16*)(c + 0x8c) = 0x1000;
             func_02012694(0x156, c + 0x74);
-            fb = _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
+            fb = _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
                 c, &v, (const void*)(c + 0x8c), 0x14000, 0x6999, 4);
             *(s16*)(c + 0x8c) = 0;
             if (((unsigned int)*(u16*)(c + 0x5d4) << 23) >> 31)

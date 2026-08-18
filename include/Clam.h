@@ -13,7 +13,7 @@ struct Clam {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0xc];
-    /* Actor::mCamSpacePos -- Actor.h declares s32 here. The sound call in
+    /* dActor_c::mCamSpacePos -- dActor_c.h declares s32 here. The sound call in
        Behavior takes its address, which is what pins it. */
     s32 mCamSpacePosX;            /* 0x074 */
     u8  pad_078[0x5c];

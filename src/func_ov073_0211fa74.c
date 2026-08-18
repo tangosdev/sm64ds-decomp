@@ -7,12 +7,12 @@ extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void _Z14ApproachLinearRiii(int* p, int t, int s);
 extern void _ZN7Message7EndTalkEv(void);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern short _ZN5Actor18HorzAngleToCPlayerEv(void* self);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int p, void* pos, void* rot, int a, int b);
-extern void* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void* prev);
+extern short _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
+extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int p, void* pos, void* rot, int a, int b);
+extern void* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void* prev);
 extern void func_02012694(int a, void* p);
-extern void _ZN5Actor10PoofDustAtERK7Vector3(void* self, void* pos);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern void _ZN8dActor_c10PoofDustAtERK7Vector3(void* self, void* pos);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern void* data_0209f318;
 
 int func_ov073_0211fa74(char* c) {
@@ -44,11 +44,11 @@ int func_ov073_0211fa74(char* c) {
         rot.x = b ? a : a;
         rot.y = b;
         rot.z = *(unsigned short*)(c + 0x90);
-        rot.y = (unsigned short)_ZN5Actor18HorzAngleToCPlayerEv(c);
+        rot.y = (unsigned short)_ZN8dActor_c18HorzAngleToCPlayerEv(c);
     }
 
-    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x11a, 4, &pos, 0, *(signed char*)(c + 0xcc), -1);
-    found = _ZN5Actor15FindWithActorIDEjPS_(0x13d, 0);
+    spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x11a, 4, &pos, 0, *(signed char*)(c + 0xcc), -1);
+    found = _ZN8dActor_c15FindWithActorIDEjPS_(0x13d, 0);
     func_02012694(0xbb, c + 0x74);
     if (found != 0) {
         struct Vector3 fp;
@@ -56,12 +56,12 @@ int func_ov073_0211fa74(char* c) {
         fp.x = *(int*)pv;
         fp.y = *(int*)(pv + 4);
         fp.z = *(int*)(pv + 8);
-        _ZN5Actor10PoofDustAtERK7Vector3(c, &fp);
-        _ZN9ActorBase18MarkForDestructionEv(found);
+        _ZN8dActor_c10PoofDustAtERK7Vector3(c, &fp);
+        _ZN7fBase_c18MarkForDestructionEv(found);
     }
     if (spawned != 0) {
         *(int*)(((int)cam + 0x154)) &= ~8;
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
 end:
     return 1;

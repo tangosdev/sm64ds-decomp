@@ -1,12 +1,12 @@
 //cpp
 // @symbol _ZN11VirtualDoorD1Ev
 
-struct Actor {
-    virtual ~Actor();
+struct dActor_c {
+    virtual ~dActor_c();
 };
 
 
-struct VirtualDoor : Actor {
+struct VirtualDoor : dActor_c {
     virtual ~VirtualDoor();
 };
 

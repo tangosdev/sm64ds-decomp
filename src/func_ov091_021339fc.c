@@ -4,15 +4,15 @@
 #include "decl_Player.h"
 #include "decl_SaveData.h"
 
-extern void *_ZN5Actor10FindWithIDEj(u32 id);
+extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020aea30(void *c, void *a, u32 unused);
-extern void _ZN5Actor8PoofDustEv(void *a);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *a);
+extern void _ZN8dActor_c8PoofDustEv(void *a);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *a);
 extern void _ZN6Player16IncMegaKillCountEv(void *p);
 extern void func_02012694(int a, void *p);
 extern int _ZN6Player15IsCollectingCapEv(void *p);
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *p, u32 a, u32 b, u32 c2);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 flags, Vector3 *pos, Vector3_16 *rot, s8 a, s16 b);
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 flags, Vector3 *pos, Vector3_16 *rot, s8 a, s16 b);
 
 void func_ov091_021339fc(char *c)
 {
@@ -22,7 +22,7 @@ void func_ov091_021339fc(char *c)
 
     if (id == 0)
         return;
-    a = (char *)_ZN5Actor10FindWithIDEj(id);
+    a = (char *)_ZN8dActor_c10FindWithIDEj(id);
     if (*(u32 *)(c + 0x374) == 0) {
         fl = *(u32 *)(c + 0x130);
         if ((fl & 0x40000) != 0) {
@@ -31,8 +31,8 @@ void func_ov091_021339fc(char *c)
             return;
         }
         if ((fl & 0x2000) != 0) {
-            _ZN5Actor8PoofDustEv(c);
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN8dActor_c8PoofDustEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return;
         }
         {
@@ -41,17 +41,17 @@ void func_ov091_021339fc(char *c)
                 return;
         }
         if (*(u8 *)(a + 0x6f9) == 1) {
-            _ZN5Actor8PoofDustEv(c);
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN8dActor_c8PoofDustEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return;
         }
         if ((fl & 0x10) == 0)
             return;
-        _ZN5Actor8PoofDustEv(c);
-        _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc(c, a, 0);
+        _ZN8dActor_c8PoofDustEv(c);
+        _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(c, a, 0);
         _ZN6Player16IncMegaKillCountEv(a);
         func_02012694(0x1d, c + 0x74);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return;
     }
 
@@ -93,7 +93,7 @@ void func_ov091_021339fc(char *c)
                 rot.z = 0;
                 rot.y = *(s16 *)(c + 0x94);
                 param = param | (curHat1 << 8);
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x10d, param, (Vector3 *)(c + 0x5c), &rot,
                     *(s8 *)(c + 0xcc), -1);
                 if (spawned == 0)

@@ -9,9 +9,9 @@
 /* resolved: VT0 = _ZTV9JetStream */
 int *JetStream_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(888);
+    int *p = (int *)_ZN7fBase_cnwEj(888);
     if (p) {
-        _ZN5EnemyC2Ev(p);
+        _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV9JetStream;
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0x110);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x144);

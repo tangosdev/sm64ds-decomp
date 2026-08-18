@@ -1,9 +1,9 @@
 //cpp
 // @symbol _ZN9ButterflyD1Ev
 
-struct Actor {
+struct dActor_c {
     char pad[0xd0];
-    virtual ~Actor();
+    virtual ~dActor_c();
 };
 
 struct ModelAnim { char pad[0x64]; ~ModelAnim(); };
@@ -12,7 +12,7 @@ struct ShadowModel { char pad[0x28]; ~ShadowModel(); };
 struct WithMeshClsn { char pad[0x1bc]; ~WithMeshClsn(); };
 struct MovingCylinderClsnWithPos { char pad[0x4]; ~MovingCylinderClsnWithPos(); };
 
-struct Butterfly : Actor {
+struct Butterfly : dActor_c {
     ModelAnim m0;   /* 0xd4 */
     Model m1;   /* 0x138 */
     ShadowModel m2;   /* 0x188 */

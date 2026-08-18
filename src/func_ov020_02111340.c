@@ -3,8 +3,8 @@
 #include "common.h"
 #define AT(p, off) ((void *)(int)((char *)(p) + (off)))
 extern int RandomIntInternal(void *p);
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
+extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
+extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
 extern int data_0209e650[];
 
 
@@ -15,7 +15,7 @@ void func_ov020_02111340(char *c)
     if (*(int *)(c + 0x41c) == 0)
         return;
     {
-        char *found = _ZN5Actor10FindWithIDEj(*(unsigned int *)(c + 0x418));
+        char *found = _ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x418));
         if (found == 0)
             return;
         {
@@ -42,7 +42,7 @@ void func_ov020_02111340(char *c)
             rot.y = (short)((bit << 15) + 0x4000);
             rot.x = 0;
             rot.z = 0;
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x145, 0, &pos, &rot, *(signed char *)(c + 0xcc), -1);
+            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x145, 0, &pos, &rot, *(signed char *)(c + 0xcc), -1);
         }
     }
 }

@@ -5,7 +5,7 @@
  *
  * Named from the table: 0x02109aac is the word slot 6 of
  * _ZTV15dScMgRoulette_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual ActorBase declares.
+ * it is this class's own override of the virtual fBase_c declares.
  *
  * The race's five phases, selected by unk_53e6: 1 deals the racers out one at
  * a time, 2 runs the countdown and scores the board, 3 pays out per landed
@@ -23,7 +23,7 @@
  * include/dScMgBase_c.h -- which this file now reaches through the class --
  * declares it `void *`, and two incompatible extern "C" declarations of one
  * name in one translation unit is what mwcc rejects as "illegal function
- * overloading" (see include/Actor.h's own note on that). The pointer
+ * overloading" (see include/dActor_c.h's own note on that). The pointer
  * arithmetic is spelled through a `char *` cast instead; same address, same
  * bytes. */
 

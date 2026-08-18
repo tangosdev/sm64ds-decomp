@@ -5,7 +5,7 @@
 extern "C" {
 
 extern void _ZN11RaycastLineC1Ev(void* self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, void* a, void* b, void* act);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
 extern int _ZN11RaycastLine10DetectClsnEv(void* self);
 extern int func_02037e58(unsigned int* p);
 extern void _ZN11RaycastLine10GetClsnPosEv(void* res, void* self);
@@ -15,7 +15,7 @@ int func_ov002_020c2270(void* c, void* p1, void* p2) {
     char rl[0x78];
     Vector3 clsnPos;
     _ZN11RaycastLineC1Ev(rl);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, p1, p2, c);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, p1, p2, c);
     if (_ZN11RaycastLine10DetectClsnEv(rl) != 0) {
         if (func_02037e58((unsigned int*)(rl + 0x14)) == 1) {
             _ZN11RaycastLine10GetClsnPosEv(&clsnPos, rl);

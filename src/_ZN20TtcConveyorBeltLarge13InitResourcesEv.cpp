@@ -7,7 +7,7 @@
 struct BMD_File;
 struct BTA_File;
 struct KCL_File;
-struct Actor;
+struct dActor_c;
 struct Vector3;
 struct Matrix4x3;
 struct CLPS_Block;
@@ -33,7 +33,7 @@ struct TextureTransformer {
 extern "C" void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *, BTA_File &f, int a, int fix, unsigned int u);
 
 
-struct Platform {
+struct dBgActor_c {
     void UpdateModelPosAndRotY();
     void UpdateClsnPosAndRot();
 };
@@ -59,7 +59,7 @@ struct RaycastGround {
     int pad2[2];
 
     RaycastGround();
-    void SetObjAndPos(const Vector3 &v, Actor *a);
+    void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
     ~RaycastGround();
 };
@@ -116,8 +116,8 @@ int TtcConveyorBeltLarge::InitResources()
 
     _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj((TextureTransformer *)((char *)&mTextureTransformer), *(BTA_File *)locbuf[mVariant], 0, 0x1000, 0);
 
-    ((Platform *)((char *)this))->UpdateModelPosAndRotY();
-    ((Platform *)((char *)this))->UpdateClsnPosAndRot();
+    ((dBgActor_c *)((char *)this))->UpdateModelPosAndRotY();
+    ((dBgActor_c *)((char *)this))->UpdateClsnPosAndRot();
 
     e = mVariant;
     kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(
@@ -143,7 +143,7 @@ int TtcConveyorBeltLarge::InitResources()
     {
         RaycastGround rg;
 
-        rg.SetObjAndPos(*(Vector3 *)&v, (Actor *)0);
+        rg.SetObjAndPos(*(Vector3 *)&v, (dActor_c *)0);
         unk_394 = v.y;
 
         if (rg.DetectClsn() != 0)

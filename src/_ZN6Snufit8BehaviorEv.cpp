@@ -5,16 +5,16 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Snufit.h"
 
-/* This file used to open with `struct Enemy { char pad[0x800]; };` and work a
+/* This file used to open with `struct dEnemyBase_c { char pad[0x800]; };` and work a
  * `char *c` through raw offsets. Snufit.h now supplies the real chain, so the
  * stand-in is gone and every offset below is a named field.
  *
- * Enemy::UpdateYoshiEat is still reached by its mangled name -- unlike
+ * dEnemyBase_c::UpdateYoshiEat is still reached by its mangled name -- unlike
  * UpdateDeath, UpdateWMClsn and UpdateKillByInvincibleChar, it is not declared
- * in Enemy.h yet.
+ * in dEnemyBase_c.h yet.
  */
 extern "C" {
-extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(Enemy *thiz, WithMeshClsn *c);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(dEnemyBase_c *thiz, WithMeshClsn *c);
 extern int ApproachAngle(short *target, short from, short start, short speed, short max);
 extern void _Z14ApproachLinearRiii(int *x, int target, int step);
 extern int func_ov065_0211691c(void *c, void *p);
@@ -26,7 +26,7 @@ extern int data_ov065_0211d670[];
 
 int Snufit::Behavior()
 {
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
         mMovingCylinderClsn.Clear();
         if (unk_107 != 0) {
             if (unk_104 == 0) {

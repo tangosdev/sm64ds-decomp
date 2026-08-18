@@ -6,7 +6,7 @@
 #include "WaterSuction.h"
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
 extern void _ZN12CylinderClsn5ClearEv(void* a);
 extern void _ZN12CylinderClsn6UpdateEv(void* a);
 }
@@ -27,7 +27,7 @@ int WaterSuction::Behavior()
     if (*(int*)((char*)o + 8) != 0) {
         (c->*(o->pmf))();
     }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;

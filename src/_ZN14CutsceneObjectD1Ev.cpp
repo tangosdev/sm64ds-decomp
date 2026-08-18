@@ -1,12 +1,12 @@
 //cpp
 // @symbol _ZN14CutsceneObjectD1Ev
 
-struct Actor {
-    virtual ~Actor();
+struct dActor_c {
+    virtual ~dActor_c();
 };
 
 
-struct CutsceneObject : Actor {
+struct CutsceneObject : dActor_c {
     virtual ~CutsceneObject();
 };
 

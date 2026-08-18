@@ -288,7 +288,7 @@ src/_ZN5Koopa16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02119608 end:0x02119628
 
-src/func_ov062_02119628.cpp:
+src/_ZN5Koopa13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02119628 end:0x021196a8
 

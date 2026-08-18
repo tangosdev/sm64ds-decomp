@@ -13,7 +13,7 @@ extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const Vector3 *v, s16 e);
 extern void MulVec3Mat4x3(int *v, void *m, int *dst);
 extern void Vec3_Add(int *out, int *a, int *b);
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN6Player4BurnEv(char *thiz);
 extern void func_02022774(Fix12i x, Fix12i y, Fix12i z, s16 ang1, int ang2);
 extern void func_020226fc(Fix12i x, Fix12i y, Fix12i z, s16 ang1, s16 ang2);
@@ -147,7 +147,7 @@ int Flamethrower::Behavior()
                 }
                 id = *((u32 *)(pclsn + 0xf8));
                 if (id != 0) {
-                    pl = _ZN5Actor10FindWithIDEj(id);
+                    pl = _ZN8dActor_c10FindWithIDEj(id);
                     if (pl != 0) {
                         if (*((u16 *)(pl + 0xc)) == 0xbf)
                             b = one;

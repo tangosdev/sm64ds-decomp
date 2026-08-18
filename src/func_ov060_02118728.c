@@ -8,9 +8,9 @@
 
 
 
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern int Vec3_Dist(struct Vector3 *a, struct Vector3 *b);
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 
 void func_ov060_02118728(char *c)
 {
@@ -21,7 +21,7 @@ void func_ov060_02118728(char *c)
     int best;
     int i;
 
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (((*(int *)(c + 0xb0) & 8) ? 1 : 0) == 0) return;
     if (player == 0) return;
 
@@ -37,7 +37,7 @@ void func_ov060_02118728(char *c)
     for (i = 0; i < 8; i++) {
         int id = *(int *)(c + (i << 2) + 0x188);
         if (id == 0) continue;
-        actor = (char *)_ZN5Actor10FindWithIDEj(id);
+        actor = (char *)_ZN8dActor_c10FindWithIDEj(id);
         if (actor != 0) {
             if (*(int *)(actor + 0x170) != 3) return;
             if (((*(int *)(actor + 0xb0) & 8) ? 1 : 0) == 0) continue;

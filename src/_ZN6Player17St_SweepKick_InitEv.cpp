@@ -14,7 +14,7 @@ int Player::St_SweepKick_Init()
     _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x68, 0x40000000, 0x1000, 0);
     mHorzSpeed = 0;
     unk_726 = 0;
-    /* mCamSpacePosX/Y/Z are three consecutive words; Actor.h declares them
+    /* mCamSpacePosX/Y/Z are three consecutive words; dActor_c.h declares them
        individually rather than as one Vector3. */
     _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0xa, (const Vector3*)&mCamSpacePosX);
     return 1;

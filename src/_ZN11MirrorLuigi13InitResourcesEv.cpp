@@ -4,6 +4,13 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MirrorLuigi.h"
+extern "C" void* _ZN9Animation8LoadFileER13SharedFilePtr(void*);
+extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*, void*, int, int, unsigned int);
+extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
+extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
+extern "C" int _ZN11ShadowModel12InitCylinderEv(void*);
+extern "C" void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void*, void*);
+extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void*, void*, int, int, unsigned int);
 struct M48 { int w[12]; };
 
 extern "C" void func_02016b24(void *self, int v);
@@ -24,22 +31,22 @@ int MirrorLuigi::InitResources()
     unsigned char *c = (unsigned char *)((void *)this);
     int t[3];
 
-    ModelBase_SetFile(c + 0xd4, Model_LoadFile(&data_ov002_0210ebb8), 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210ebb8), 1, -1);
     func_02016acc(c + 0xd4, 0x80);
     func_02016b24(c + 0xd4, 0x40);
 
-    ModelBase_SetFile(c + 0x138, Model_LoadFile(&data_ov002_0210eb20), 1, -1);
+    _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x138, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210eb20), 1, -1);
     func_02016acc(c + 0x138, 0x80);
     func_02016b24(c + 0x138, 0x40);
 
-    TextureSequence_Prepare((&data_ov002_0210ebb8)[1], (&data_ov002_0210e8d0)[1]);
-    TextureSequence_SetFile(c + 0x1b0, (&data_ov002_0210e8d0)[1], 0, 0x1000, 0);
-    TextureSequence_Prepare((&data_ov002_0210eb20)[1], (&data_ov002_0210ebd8)[1]);
-    TextureSequence_SetFile(c + 0x1c4, (&data_ov002_0210ebd8)[1], 0, 0x1000, 0);
+    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File((&data_ov002_0210ebb8)[1], (&data_ov002_0210e8d0)[1]);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x1b0, (&data_ov002_0210e8d0)[1], 0, 0x1000, 0);
+    _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File((&data_ov002_0210eb20)[1], (&data_ov002_0210ebd8)[1]);
+    _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x1c4, (&data_ov002_0210ebd8)[1], 0, 0x1000, 0);
 
-    ShadowModel_InitCylinder(c + 0x188);
+    _ZN11ShadowModel12InitCylinderEv(c + 0x188);
 
-    ModelAnim_SetAnim(c + 0xd4, Animation_LoadFile(&data_ov002_0210eaa0), 0, 0x1000, 0);
+    _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov002_0210eaa0), 0, 0x1000, 0);
 
     Vec3_Asr(t, c + 0x5c, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, t[0], t[1], t[2]);

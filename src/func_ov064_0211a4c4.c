@@ -10,9 +10,9 @@ extern void DecIfAbove0_Short(void *p);
 extern void func_02012790(u32 code);
 extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern s32 AngleDiff(s32 a, s32 b);
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
-extern char *_ZN5Actor15FindWithActorIDEjPS_(u32 actorId, void *prev);
-extern void _ZN5Actor13SpawnSoundObjEj(void *self, u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c15FindWithActorIDEjPS_(u32 actorId, void *prev);
+extern void _ZN8dActor_c13SpawnSoundObjEj(void *self, u32 id);
 extern void func_02012694(u32 code, void *pos);
 extern void _ZN6Player5ShockEj(void *player, u32 flag);
 extern void func_ov064_0211a6ec(void *c, int i);
@@ -30,7 +30,7 @@ void func_ov064_0211a4c4(char *sl)
     if (*(u16 *)(sl + 0x170) != 0)
         return;
 
-    char *fp = _ZN5Actor10FindWithIDEj(id);
+    char *fp = _ZN8dActor_c10FindWithIDEj(id);
     if (fp == 0)
         return;
 
@@ -46,7 +46,7 @@ void func_ov064_0211a4c4(char *sl)
             if (AngleDiff(Vec3_HorzAngle(sl + 0x5c, &v), *(s16 *)(sl + 0x8e)) < 0x4000) {
                 int sbcount = 0;
                 int count = 0;
-                char *cur = _ZN5Actor15FindWithActorIDEjPS_(0xd, 0);
+                char *cur = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, 0);
                 while (cur != 0) {
                     count++;
                     if (cur != sl) {
@@ -59,12 +59,12 @@ void func_ov064_0211a4c4(char *sl)
                         if (r1v != 0)
                             sbcount++;
                     }
-                    cur = _ZN5Actor15FindWithActorIDEjPS_(0xd, cur);
+                    cur = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, cur);
                 }
 
                 if (sbcount + 1 == *(u8 *)(sl + 0x172)) {
                     if (count == *(u8 *)(sl + 0x172)) {
-                        _ZN5Actor13SpawnSoundObjEj(sl, 0);
+                        _ZN8dActor_c13SpawnSoundObjEj(sl, 0);
                         *(u8 *)(sl + 0x173) = 1;
                     } else {
                         func_02012790(0x26);
@@ -82,7 +82,7 @@ void func_ov064_0211a4c4(char *sl)
                         _ZN6Player5ShockEj(fp, 1);
 
                     for (;;) {
-                        cur = _ZN5Actor15FindWithActorIDEjPS_(0xd, cur);
+                        cur = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, cur);
                         if (cur == 0)
                             break;
                         if (cur != sl)

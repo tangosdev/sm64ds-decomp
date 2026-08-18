@@ -1,0 +1,16 @@
+//cpp
+// @symbol _ZN13daObjEmmLog_cD1Ev
+/* recovered: real C++ destructor -- the compiler emits the whole body
+ *
+ * Two vtable stores and three destructor calls, every one a consequence of
+ * `struct daObjEmmLog_c : dBgActor_c`: its own vptr, then dBgActor_c's --
+ * inlined, because dBgActor_c's destructor is defined in its class body --
+ * then dBgActor_c's Model and MovingMeshCollider, then dActor_c. This class
+ * adds no member with a destructor of its own (unk_320/unk_324 are plain
+ * s32).
+ */
+#include "daObjEmmLog_c.h"
+
+daObjEmmLog_c::~daObjEmmLog_c()
+{
+}

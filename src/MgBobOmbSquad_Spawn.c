@@ -7,7 +7,7 @@ extern int data_ov006_0213d9cc[];
 /* vtable identified: VT0 = data_ov006_0213d9cc */
 int *MgBobOmbSquad_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(23608);
+    int *p = (int *)_ZN7fBase_cnwEj(23608);
     if (p) {
         func_ov004_020b2adc(p);
         p[0] = (int)data_ov006_0213d9cc;

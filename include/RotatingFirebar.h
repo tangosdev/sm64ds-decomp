@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-/* The rotating bar of flames. Derives from Platform, and the ONE thing it adds
+/* The rotating bar of flames. Derives from dBgActor_c, and the ONE thing it adds
  * is the array of collision cylinders -- one per flame.
  *
  *     CylinderClsnWithPos[8]   0x360 + 8 * 0x3c = 0x540
@@ -16,10 +16,10 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "CylinderClsnWithPos.h"
 
-struct RotatingFirebar : Platform {
+struct RotatingFirebar : dBgActor_c {
     u8  pad_31e[0x42];
     CylinderClsnWithPos mCylinderClsns[8];   /* 0x360 */
 

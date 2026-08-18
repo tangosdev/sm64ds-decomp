@@ -8,7 +8,7 @@ typedef struct RaycastGround {
 } RaycastGround;
 
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *self, Vec3 *pos, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *self, Vec3 *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
 extern int _ZNK10ClsnResult9GetClsnIDEv(void *self);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround *self);
@@ -18,7 +18,7 @@ extern void func_02012694(int a, void *p);
 extern void _Z14ApproachLinearRiii(int *v, int target, int step);
 extern int func_ov060_021145d4(void *c);
 extern void func_ov060_02115b0c(void *c);
-extern void *_ZN5Actor15FindWithActorIDEjPS_(u32 id, void *p);
+extern void *_ZN8dActor_c15FindWithActorIDEjPS_(u32 id, void *p);
 extern void func_ov060_02115018(void *c);
 extern int Bowser_IsAnimAtLastFrame(void *c);
 
@@ -41,7 +41,7 @@ void func_ov060_02113740(char *c)
             pos.y = py;
             pos.z = pz;
         }
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, &pos, c);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, &pos, c);
         if (_ZN13RaycastGround10DetectClsnEv(&rc)) {
             ground = rc.clsnY;
             if (_ZNK10ClsnResult9GetClsnIDEv(&rc.result) != -1)
@@ -114,7 +114,7 @@ void func_ov060_02113740(char *c)
             if (*(u8*)(c + 0x414) == 1) {
                 char *r;
                 *(int*)(c + 0x40c) = 0x13;
-                r = (char*)_ZN5Actor15FindWithActorIDEjPS_(0xa6, 0);
+                r = (char*)_ZN8dActor_c15FindWithActorIDEjPS_(0xa6, 0);
                 if (r) *(int*)(c + 0x3ac) = *(int*)(r + 4);
                 *(int*)(c + 0x9c) = -0x2000;
             }

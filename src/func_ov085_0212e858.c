@@ -5,8 +5,8 @@
 extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromTranslation(struct Matrix4x3* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-extern int _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *mtx, int fix, int t, u32 u);
-extern void* _ZN5Actor13ClosestPlayerEv(void *self);
+extern int _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *mtx, int fix, int t, u32 u);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void *self);
 extern Fix12i Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
 extern short Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
@@ -39,9 +39,9 @@ void func_ov085_0212e858(char *c)
         *(int*)(c + 0x64) >> 3);
     *(struct Matrix4x3*)(c + 0x240) = data_020a0e68;
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x1f0, c + 0x240, 0x46000, 0x258000, 0xf);
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x1f0, c + 0x240, 0x46000, 0x258000, 0xf);
 
-    pl = (char*)_ZN5Actor13ClosestPlayerEv(c);
+    pl = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
     if (pl == 0) return;
 
     /* early load of level, zero stacks, then player pos copy interleaved with cmp */
@@ -82,5 +82,5 @@ void func_ov085_0212e858(char *c)
     func_ov002_020e4374(pl, &p1, &p2);
 
     *(struct Matrix4x3*)(c + 0x270) = data_020a0e68;
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x218, c + 0x270, p2, p1, 0xf);
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x218, c + 0x270, p2, p1, 0xf);
 }

@@ -9,18 +9,18 @@ void func_ov084_0212d42c(void* self);
 int _ZN9Animation8FinishedEv(void* anim);
 void func_02012694(unsigned int a, char* p);
 void func_ov084_0212d2dc(char* c);
-void* _ZN5Actor10FindWithIDEj(unsigned int id);
-void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, Vec3* pos, unsigned int a, int b, short c);
-void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, Vec3* pos, void* p, int c, int d);
-void _ZN5Actor24KillAndTrackInDeathTableEv(void* self);
+void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
+void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, Vec3* pos, unsigned int a, int b, short c);
+void _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, Vec3* pos, void* p, int c, int d);
+void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* self);
 void func_ov084_0212d560(void* self);
-void _ZN5Actor17TrackInDeathTableEv(void* self);
-int _ZN5Actor13DistToCPlayerEv(void* self);
+void _ZN8dActor_c17TrackInDeathTableEv(void* self);
+int _ZN8dActor_c13DistToCPlayerEv(void* self);
 void func_0201267c(unsigned int a, char* p);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, int idx, int speed, unsigned int flags);
 int IsStarCollectedInCurLevel(unsigned int flag);
 void SetStarMarker(int i, void* self, int v);
-int _ZN5Actor13ClosestPlayerEv(void* self);
+int _ZN8dActor_c13ClosestPlayerEv(void* self);
 short Vec3_HorzAngle(Vec3* a, Vec3* b);
 }
 
@@ -67,7 +67,7 @@ extern "C" void func_ov084_0212e010(char* self)
         if (*(u16*)(self + 0xc) == 0xfb)
             b = 1;
         if (b != false) {
-            other = (char*)_ZN5Actor10FindWithIDEj(*(u32*)(self + 0x1f0));
+            other = (char*)_ZN8dActor_c10FindWithIDEj(*(u32*)(self + 0x1f0));
             if (other == 0)
                 return;
             (*(u8*)((int)other + 0x21a))--;
@@ -78,20 +78,20 @@ extern "C" void func_ov084_0212e010(char* self)
                 buf1.x = *(int*)(self + 0x5c);
                 buf1.y = *(int*)(self + 0x60);
                 buf1.z = *(int*)(self + 0x64);
-                _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &buf1, 2, 0xa000, 0);
+                _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &buf1, 2, 0xa000, 0);
             }
             if (*(u8*)(other + 0x21b) == 5) {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, *(u8*)(self + 0x21f) | 0x40, (Vec3*)(self + 0x5c), 0, *(signed char*)(self + 0xcc), -1);
-                _ZN5Actor24KillAndTrackInDeathTableEv(other);
-                _ZN5Actor24KillAndTrackInDeathTableEv(self);
+                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xb2, *(u8*)(self + 0x21f) | 0x40, (Vec3*)(self + 0x5c), 0, *(signed char*)(self + 0xcc), -1);
+                _ZN8dActor_c24KillAndTrackInDeathTableEv(other);
+                _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
                 return;
             }
             func_ov084_0212d560(self);
             if (*(int*)(self + 0x1e8) != 1) {
-                _ZN5Actor24KillAndTrackInDeathTableEv(self);
+                _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
                 return;
             }
-            _ZN5Actor17TrackInDeathTableEv(self);
+            _ZN8dActor_c17TrackInDeathTableEv(self);
             *(int*)(self + 0x1ec) = 4;
             return;
         }
@@ -103,15 +103,15 @@ extern "C" void func_ov084_0212e010(char* self)
         buf2.x = *(int*)(self + 0x5c);
         buf2.y = *(int*)(self + 0x60);
         buf2.z = *(int*)(self + 0x64);
-        _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &buf2, 1, 0xa000, 0);
-        _ZN5Actor24KillAndTrackInDeathTableEv(self);
+        _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(self, &buf2, 1, 0xa000, 0);
+        _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
         return;
     }
 
-    dist = _ZN5Actor13DistToCPlayerEv(self);
+    dist = _ZN8dActor_c13DistToCPlayerEv(self);
     b = *(u16*)(self + 0xc) == 0xfb;
     if (b != false) {
-        other = (char*)_ZN5Actor10FindWithIDEj(*(u32*)(self + 0x1f0));
+        other = (char*)_ZN8dActor_c10FindWithIDEj(*(u32*)(self + 0x1f0));
         if (other == 0)
             return;
     }
@@ -158,7 +158,7 @@ extern "C" void func_ov084_0212e010(char* self)
             *(int*)(other + 0x1f4) = *(int*)(self + 4);
         }
     }
-    dist = _ZN5Actor13ClosestPlayerEv(self);
+    dist = _ZN8dActor_c13ClosestPlayerEv(self);
     if (dist == 0)
         return;
     *(s16*)(self + 0x8e) = Vec3_HorzAngle((Vec3*)(self + 0x5c), (Vec3*)(dist + 0x5c));

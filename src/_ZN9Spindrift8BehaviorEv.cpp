@@ -6,34 +6,34 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Spindrift.h"
 extern "C" {
-extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void *, void *, void *, unsigned);
-extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *, void *);
+extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void *, void *, void *, unsigned);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void *, void *);
 extern void _ZN12CylinderClsn5ClearEv(void *);
 extern void _ZN12CylinderClsn6UpdateEv(void *);
-extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void *, void *);
+extern void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void *, void *);
 extern void _Z14ApproachLinearRiii(void *, int, int);
-extern void *_ZN5Actor13ClosestPlayerEv(void *);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *);
 extern int Vec3_HorzDist(void *a, void *b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void _Z14ApproachLinearRsss(void *, int, int);
 extern void _ZN9Animation7AdvanceEv(void *);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *, void *);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *, void *, unsigned);
-extern int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void *, void *, int, short, int, int, int);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *, void *);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *, void *, unsigned);
+extern int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void *, void *, int, short, int, int, int);
 /* sig: (this, WithMeshClsn&, Fix12, short, bool, bool, Fix12) */
 }
 
 int Spindrift::Behavior()
 {
-    int r = _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(((char *)this), ((char *)this) + 0x1d0, ((char *)this) + 0x110, 3);
+    int r = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(((char *)this), ((char *)this) + 0x1d0, ((char *)this) + 0x110, 3);
     if (r != 0) {
         if (r == 2)
             func_ov081_021237ec(((char *)this));
         return 1;
     }
 
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((char *)this), ((char *)this) + 0x1d0) != 0) {
-        if (_ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(((char *)this), ((char *)this) + 0x19c) != 0)
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(((char *)this), ((char *)this) + 0x1d0) != 0) {
+        if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(((char *)this), ((char *)this) + 0x19c) != 0)
             func_ov081_021237ec(((char *)this));
         func_ov081_02123b20(((char *)this));
         _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
@@ -43,13 +43,13 @@ int Spindrift::Behavior()
         return 1;
     }
 
-    _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(((char *)this), ((char *)this) + 0x19c);
+    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(((char *)this), ((char *)this) + 0x19c);
     func_ov081_02123910(((char *)this));
 
     switch (unk_39a) {
     case 0: {
             _Z14ApproachLinearRiii(((char *)this) + 0x98, 0x4000, 0x1000);
-            void *cp = _ZN5Actor13ClosestPlayerEv(((char *)this));
+            void *cp = _ZN8dActor_c13ClosestPlayerEv(((char *)this));
             if (cp != 0) {
                 int *src = (int *)((int)cp + 0x5c);
                 int v3[3];
@@ -77,10 +77,10 @@ int Spindrift::Behavior()
     }
 
     _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((char *)this), 0);
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char *)this), ((char *)this) + 0x1d0, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char *)this), 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char *)this), ((char *)this) + 0x1d0, 0);
 
-    if (_ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(((char *)this), ((char *)this) + 0x1d0, 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
+    if (_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(((char *)this), ((char *)this) + 0x1d0, 0x3c000, 0x2888, 1, 1, 0x32000) != 0) {
         mPosX = unk_068;
         mPosY = unk_06c;
         mPosZ = unk_070;

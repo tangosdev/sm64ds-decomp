@@ -4,18 +4,18 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daObjFlMaruta_c::AfterClsn - recovered from vtable slot identity */
-extern int _ZN9ActorBase18MarkForDestructionEv(void *c);
+extern int _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern int func_ov022_02112654(void *c);
 int func_ov022_021126ac(char *c) {
     int a = *(int*)(c+0x60);
     int b = *(int*)(c+0x118);
     if (a < b) {
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return 1;
     }
     unsigned short h = *(unsigned short*)(c+0x100+0x10);
     if (h == 0) {
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return 1;
     }
     func_ov022_02112654(c);

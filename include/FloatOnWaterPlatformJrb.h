@@ -5,9 +5,9 @@
 
 /* Jolly Roger Bay's floating plank. `ita` is a board.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjFloatBoard_c, which derives from
- * Platform, and the difference is in the bytes rather than only in the RTTI: its
- * destructor stores THREE vptrs -- its own, daObjFloatBoard_c's, then Platform's.
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjFloatBoard_c, which derives from
+ * dBgActor_c, and the difference is in the bytes rather than only in the RTTI: its
+ * destructor stores THREE vptrs -- its own, daObjFloatBoard_c's, then dBgActor_c's.
  * A one-level chain emits two.
  *
  *   _ZTI13daObjKi_Ita_c  ov016 0x02114b80

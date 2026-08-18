@@ -13,7 +13,7 @@ typedef struct { int x, y, z; } Vec3;
 
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* cc);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* thiz, void* cc);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int fx, int t1, int t2, int s4, int s5);
 extern void _ZN9Animation7AdvanceEv(void* thiz);
 }
@@ -31,7 +31,7 @@ int Whirlpool::Behavior()
             ((C*)((char*)this)->**pp)();
         }
     }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
 
     x = mPosX;
     v[0] = x;

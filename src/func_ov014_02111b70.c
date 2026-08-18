@@ -1,6 +1,6 @@
 extern int func_0201267c(int, void *, int);
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned);
-extern void *_ZN5Actor13ClosestPlayerEv(void *);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *);
 extern short Vec3_VertAngle(const void *, const void *);
 extern int data_ov014_02114970[];
 extern short data_02082214[];
@@ -16,7 +16,7 @@ void func_ov014_02111b70(char *c)
     *((int *)(c + 0x9c)) = 0;
     func_0201267c(0x3a, c + 0x74, 0);
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x150, (void *)data_ov014_02114970[1], 0, 0x1000, 0);
-    p = (char *)_ZN5Actor13ClosestPlayerEv(c);
+    p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
 
     /* ROM load order: y, z, x — then y+0x50000, store x, setup call, store y/z */
     {

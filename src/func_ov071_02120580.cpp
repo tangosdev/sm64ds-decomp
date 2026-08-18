@@ -5,16 +5,16 @@
 /* daSpd_c::OnTurnIntoEgg - recovered from vtable slot identity */
 extern "C" {
 extern int _ZN6Player15IsCollectingCapEv(void* p);
-extern void _ZN5Actor15GivePlayerCoinsER6Playerhj(void* a, void* p, unsigned char h, unsigned int j);
+extern void _ZN8dActor_c15GivePlayerCoinsER6Playerhj(void* a, void* p, unsigned char h, unsigned int j);
 extern void _ZN6Player20RegisterEggCoinCountEjbb(void* p, unsigned int n, int b1, int b2);
 extern void Scuttlebug_SetState(void* a, int idx);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* a);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* a);
 void func_ov071_02120580(char* a, void* p) {
   volatile int force_stack;
   int *bp;
   int t;
   if (_ZN6Player15IsCollectingCapEv(p))
-    _ZN5Actor15GivePlayerCoinsER6Playerhj(a, p, *(unsigned char*)(a + 0x3aa), 0);
+    _ZN8dActor_c15GivePlayerCoinsER6Playerhj(a, p, *(unsigned char*)(a + 0x3aa), 0);
   else
     _ZN6Player20RegisterEggCoinCountEjbb(p, *(unsigned char*)(a + 0x3aa), 0, 0);
   if (*(int*)(a + 8) != 0) {
@@ -26,7 +26,7 @@ void func_ov071_02120580(char* a, void* p) {
     Scuttlebug_SetState(a, 0);
     return;
   } else {
-    _ZN9ActorBase18MarkForDestructionEv(a);
+    _ZN7fBase_c18MarkForDestructionEv(a);
     return;
   }
 }

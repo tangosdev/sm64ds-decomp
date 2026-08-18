@@ -6,7 +6,7 @@
 /* The Chief Chilly boss. Its destructor is the layout, and every member closes
  * exactly on the next one:
  *
- *     Enemy                      ends 0x110
+ *     dEnemyBase_c                      ends 0x110
  *     MovingCylinderClsnWithPos  0x110 + 0x040 = 0x150
  *     WithMeshClsn               0x150 + 0x1bc = 0x30c
  *     BlendModelAnim             0x30c + 0x070 = 0x37c   -> mState
@@ -28,13 +28,13 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ShadowModel.h"
 #include "BlendModelAnim.h"
 #include "WithMeshClsn.h"
 #include "MovingCylinderClsnWithPos.h"
 
-struct ChiefChilly : Enemy {
+struct ChiefChilly : dEnemyBase_c {
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
     WithMeshClsn mWithMeshClsn;                            /* 0x150 */
     BlendModelAnim mBlendModelAnim;                        /* 0x30c */

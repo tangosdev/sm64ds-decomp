@@ -22,28 +22,28 @@
 #include "CapEnemy.h"
 
 struct Vector3_16 { short x, y, z; };
-struct Actor;
+struct dActor_c;
 
 extern "C" {
 extern void func_02005ed8(unsigned char *t);
 extern void Vec3_Add(struct Vector3 *out, const struct Vector3 *a, const struct Vector3 *b);
-extern struct Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+extern struct dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int a1, unsigned int a2, const struct Vector3 *a3,
     const struct Vector3_16 *a4, int a5, int a6);
 }
 
-struct Actor *CapEnemy::ReleaseCap(const Vector3 & v_)
+struct dActor_c *CapEnemy::ReleaseCap(const Vector3 & v_)
 {
     unsigned char *c = (unsigned char *)this;
     const struct Vector3 *v = &v_;
-    struct Actor *ret = 0;
+    struct dActor_c *ret = 0;
 
     if ((mCapId & 7) < 6) {
         func_02005ed8(c);
         if (mCapId < 6u) {
             struct Vector3 out;
             Vec3_Add(&out, (const struct Vector3 *)&mPosX, v);
-            ret = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+            ret = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x10d, 0x1012 | (mCapId << 8), &out,
                 (const struct Vector3_16 *)&mAngleX,
                 mAreaId, -1);
@@ -53,7 +53,7 @@ struct Actor *CapEnemy::ReleaseCap(const Vector3 & v_)
                 *(unsigned char *)((int)c + 0x113) |= 0x80;
             }
         } else {
-            ret = (struct Actor *)c;
+            ret = (struct dActor_c *)c;
         }
     }
     return ret;

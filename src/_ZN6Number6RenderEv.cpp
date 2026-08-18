@@ -4,8 +4,8 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Number.h"
 extern "C" {
-extern void* _ZN5Actor15FindWithActorIDEjPS_(u32 id, void* prev);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* thiz);
+extern void* _ZN8dActor_c15FindWithActorIDEjPS_(u32 id, void* prev);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* thiz);
 extern void _ZN15TextureSequence6UpdateER15ModelComponents(void* ts, void* mc);
 extern int data_0209b454;
 }
@@ -25,10 +25,10 @@ int Number::Render()
         void* a = 0;
         u32 id = 0xb2;
         for (;;) {
-            if ((a = _ZN5Actor15FindWithActorIDEjPS_(id, a)) == 0)
+            if ((a = _ZN8dActor_c15FindWithActorIDEjPS_(id, a)) == 0)
                 break;
             if (*(int*)((char*)a + 0x43c) == 6 && *(u16*)((char*)a + 0x496) == 0x64) {
-                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
                 return 1;
             }
         }

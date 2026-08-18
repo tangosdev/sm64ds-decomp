@@ -4,10 +4,10 @@
 #include "dScMgBase_c.h"
 // recovered name: dScMgBase_c_BeforeBehavior
 /* dScMgBase_c::BeforeBehavior - recovered from vtable slot identity.
-   data_0209f5bc points at some OTHER active Scene-family object, not this
+   data_0209f5bc points at some OTHER active dScene_c-family object, not this
    one -- SceneVCall6 is a reduced 6-slot stand-in reaching its real slot 5
    by position, same trick the recovered source already used under the name
-   "Scene" (renamed here only to not collide with the real one now included
+   "dScene_c" (renamed here only to not collide with the real one now included
    via dScMgBase_c.h). m6c/m70 (real vtable slots 27/28) are two more of the
    still-undeclared slots 18-35 (see dScMgBase_c.h), reached the same way
    through this object's own vtable. */
@@ -55,7 +55,7 @@ int dScMgBase_c::BeforeBehavior()
     int mode;
     unsigned short flags;
 
-    if (Scene::BeforeBehavior() == 0)
+    if (dScene_c::BeforeBehavior() == 0)
         return 0;
 
     if (data_0209f5bc->f05()) {

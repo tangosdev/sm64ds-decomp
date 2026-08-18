@@ -8,8 +8,8 @@ struct Cls { virtual void dummy(); };
 typedef void (Cls::*PMF)();
 extern PMF data_ov084_02130e80[];
 extern "C" {
-extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void*, void*, void*, unsigned int);
-extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void*, void*);
+extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void*, void*, void*, unsigned int);
+extern void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void*, void*);
 extern void _ZN12CylinderClsn5ClearEv(void*);
 extern void _ZN12CylinderClsn6UpdateEv(void*);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void*, void*);
@@ -20,7 +20,7 @@ int PiranhaPlant::Behavior()
     int r;
     int old;
     int cur;
-    r = _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(((char*)this), ((char*)this) + 0x1c4, ((char*)this) + 0x110, 1);
+    r = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(((char*)this), ((char*)this) + 0x1c4, ((char*)this) + 0x110, 1);
     if (r != 0) {
         if (r == 2) {
             unk_108 = 0;
@@ -34,7 +34,7 @@ int PiranhaPlant::Behavior()
         }
         return 1;
     }
-    _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(((char*)this), ((char*)this) + 0x380);
+    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(((char*)this), ((char*)this) + 0x380);
     mModelAnim.Advance();
     func_ov084_0212f204(((char*)this));
     old = mState;

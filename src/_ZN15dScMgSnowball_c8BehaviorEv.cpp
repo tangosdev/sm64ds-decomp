@@ -6,7 +6,7 @@
  *
  * Named from the table: 0x021283a4 is the word slot 6 of
  * _ZTV15dScMgSnowball_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual ActorBase declares.
+ * it is this class's own override of the virtual fBase_c declares.
  *
  * The five-state snowball roll: 0 counts in, 1 steers with the touch screen
  * and grows the ball, 2/3 are the crash, 4 is the melt, 5 is over. The

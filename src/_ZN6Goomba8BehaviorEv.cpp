@@ -15,23 +15,23 @@ typedef s32 Fix12;
 extern s8 data_0209f2f8;
 
 extern "C" {
-extern void _ZN5Actor8PoofDustEv(char* c);
-extern int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(char* c, Fix12 f);
-extern int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(char* c, void* w, void* m, u32 j);
+extern void _ZN8dActor_c8PoofDustEv(char* c);
+extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(char* c, Fix12 f);
+extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(char* c, void* w, void* m, u32 j);
 extern void func_ov084_02129498(char* c);
 extern void _ZN8CapEnemy10ReleaseCapERK7Vector3(char* c, Vector3* v);
 extern void _ZN8CapEnemy15RespawnIfHasCapEv(char* c);
 extern void func_ov084_021296cc(char* c);
 extern int _ZN4cstd4fdivEii(int a, int b);
-extern void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(char* c, void* cyl);
+extern void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(char* c, void* cyl);
 extern void _ZN9Animation7AdvanceEv(void* c);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char* c, void* cyl);
-extern int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(char* c, void* w, Fix12 f, int s, int b1, int b2, Fix12 g);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(char* c, void* w, u32 j);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char* c, void* cyl);
+extern int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(char* c, void* w, Fix12 f, int s, int b1, int b2, Fix12 g);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(char* c, void* w, u32 j);
 extern void _ZN12CylinderClsn5ClearEv(void* c);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
 extern int Vec3_Dist(const Vector3* a, const Vector3* b);
-extern void _ZN5Enemy9SpawnCoinEv(char* c);
+extern void _ZN12dEnemyBase_c9SpawnCoinEv(char* c);
 }
 
 int Goomba::Behavior()
@@ -48,18 +48,18 @@ int Goomba::Behavior()
         return 1;
     if (r == 1) {
         *(u32*)((char*)&unk_0b0) |= 0x10000000;
-        _ZN5Actor8PoofDustEv(((char*)this));
+        _ZN8dActor_c8PoofDustEv(((char*)this));
     }
     if (mGoombaType != 3 && mState != 3 &&
         unk_107 == 0 && mDeathType == 0 &&
-        _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000) != 0)
+        _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000) != 0)
     {
         _ZN8CapEnemy12Unk_02005d94Ev(((char*)this));
         return 1;
     }
 
     if (mDeathType != 0) {
-        r = _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(((char*)this), ((char*)this) + 0x1b4, ((char*)this) + 0x370, 3);
+        r = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(((char*)this), ((char*)this) + 0x1b4, ((char*)this) + 0x370, 3);
         if (r != 0) {
             if (r == 2) {
                 func_ov084_02129498(((char*)this));
@@ -97,7 +97,7 @@ int Goomba::Behavior()
         unk_3cc = v;
     }
 
-    _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(((char*)this), ((char*)this) + 0x180);
+    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(((char*)this), ((char*)this) + 0x180);
 
     if (mState != 2) {
         func_ov084_0212934c(((char*)this));
@@ -127,12 +127,12 @@ int Goomba::Behavior()
     func_ov084_02129ed4(((char*)this));
 
     if (unk_113 < 6)
-        _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
     else
-        _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x180);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x180);
 
     if (mDeathType == 0 && mState != 2 && mState != 3) {
-        if (_ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(((char*)this), ((char*)this) + 0x1b4, 0x32000, 0x1f49, 0, 1, 0x32000) != 0) {
+        if (_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(((char*)this), ((char*)this) + 0x1b4, 0x32000, 0x1f49, 0, 1, 0x32000) != 0) {
             mPosX = unk_410;
             mPosY = unk_414;
             mPosZ = unk_418;
@@ -146,14 +146,14 @@ int Goomba::Behavior()
     {
         int lvl = mGoombaType;
         if (lvl == 0) {
-            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x1b4, 0);
+            _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x1b4, 0);
         } else if (data_0209f2f8 == 6 || data_0209f2f8 == 0x1b) {
             if (unk_444 == data_ov084_02130228[lvl] && mDeathType != 7)
-                _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x1b4, 3);
+                _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x1b4, 3);
             else
-                _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x1b4, 2);
+                _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x1b4, 2);
         } else {
-            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x1b4, 2);
+            _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x1b4, 2);
         }
     }
 
@@ -175,7 +175,7 @@ int Goomba::Behavior()
                 }
                 if (mStuckTimer >= 0x12c && unk_458 == 0) {
                     func_ov084_021296cc(((char*)this));
-                    _ZN5Enemy9SpawnCoinEv(((char*)this));
+                    _ZN12dEnemyBase_c9SpawnCoinEv(((char*)this));
                     func_ov084_02129498(((char*)this));
                     v2.x = 0;
                     v2.y = 0x6c000;

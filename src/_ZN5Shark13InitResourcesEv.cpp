@@ -12,7 +12,7 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* file, int a, in
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* f);
 extern void _ZN7PathPtrC1Ev(void* thiz);
 extern void _ZN7PathPtr6FromIDEj(void* thiz, unsigned int id);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void* thiz, void* actor, void* pos, int f, int g, unsigned int h, unsigned int i);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* thiz, void* out, unsigned int j);
 
@@ -36,7 +36,7 @@ int Shark::InitResources()
     unk_374 = 0;
     unk_378 = 0;
     unk_37c = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         ((char*)this) + 0x110, ((char*)this), ((char*)this) + 0x374, 0x42000, 0x6e000, 0x200004, 0);
     _ZN7PathPtrC1Ev(&p2);
     _ZN7PathPtr6FromIDEj(&p2, mPathID);

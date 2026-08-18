@@ -13,11 +13,11 @@ struct ActorV {
 };
 extern "C" {
 typedef struct { int x, y, z; } Vector3;
-typedef struct Actor Actor;
+typedef struct dActor_c dActor_c;
 typedef struct BCA_File BCA_File;
 struct RaycastGround { char buf[0x50]; };
 void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3* p, Actor* a);
+void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3* p, dActor_c* a);
 int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
 int func_02037e38(unsigned int* p);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, BCA_File* f, int a, int b, unsigned int e);
@@ -37,7 +37,7 @@ void func_ov064_02116220(char* c){
   v.y = yv;
   v.z = z;
 
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, (Actor*)c);
+  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (dActor_c*)c);
   if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
     *(int*)(c+0x3f4) = *(int*)(rg.buf + 0x44);
     if (*(int*)(c+0x60) <= *(int*)(rg.buf + 0x44) + 0x14000) {

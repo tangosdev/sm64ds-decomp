@@ -14,7 +14,7 @@ that test which cannot be computed from committed data alone.
 The class splits by what it takes to decide it, and the two halves are implemented
 differently on purpose:
 
-  zero-size alias   DERIVED, live, in chaos_db_ci.zero_size_alias_records(). It reads
+  zero-size alias   DERIVED, live, in chaos_db_ci.alias_collision_addresses(). It reads
                     config/**/symbols.txt and nothing else, so it costs nothing in CI
                     and it self-heals in both directions: fix the config and the record
                     returns to the count, match one of the four aliases that are
@@ -28,7 +28,7 @@ differently on purpose:
                     fetches them. There is no compiler in the process that computes the
                     number, so the number has to read a recorded verdict.
 
-A bare name list would not self-heal -- someone fixes one of the 18 and the function
+A bare name list would not self-heal -- someone fixes one of the rows and the function
 stays uncounted until a human remembers this file exists. So each row pins the sha256 of
 the source it was recorded against, and the exclusion lapses the moment the file changes.
 A fix therefore restores the count with no list edit and no compiler. The cost is that a
@@ -36,6 +36,9 @@ cosmetic edit lapses it too, which would re-count a file that still does not bui
 is what tools/test_bytegate.py's staleness check is for, and it fails loudly rather than
 letting the count go quietly wrong. Both failure directions land on the old status quo
 plus a red test, never on a silently smaller-or-larger number.
+
+That property has now been exercised: 17 of the original 18 rows were repaired without
+anyone consulting this file, and every one lapsed on its own. The manifest is down to 1.
 
 What this does NOT do: notice a NEW file that will not build. Nothing in CI can, for the
 same no-compiler reason. `--scan` below is the discovery pass, run with a compiler.

@@ -2,8 +2,8 @@ extern short data_02082214[];
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern short Vec3_VertAngle(const void *a, const void *b);
 extern void _Z14ApproachLinearRsss(short *dst, short target, short step);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cyl);
-extern int _ZN5Actor15IsPlayerInRangeEi(void *self, int range);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *cyl);
+extern int _ZN8dActor_c15IsPlayerInRangeEi(void *self, int range);
 
 void func_ov100_02141470(char *c)
 {
@@ -13,7 +13,7 @@ void func_ov100_02141470(char *c)
         Vec3_HorzAngle(c + 0x5c, c + 0x3d4), 0x800);
     _Z14ApproachLinearRsss((short *)(c + 0x92),
         Vec3_VertAngle(c + 0x5c, c + 0x3d4), 0x50);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
 
     p = (int *)(c + 0x60);
     *p = *p - ((int)(((long long)*(int *)(c + 0x98)
@@ -29,7 +29,7 @@ void func_ov100_02141470(char *c)
             *(int *)(c + 0x3e8) = 0;
     }
 
-    if (_ZN5Actor15IsPlayerInRangeEi(c, 0xbb8))
+    if (_ZN8dActor_c15IsPlayerInRangeEi(c, 0xbb8))
         return;
 
     *(int *)(c + 0x5c) = *(int *)(c + 0x3d4);

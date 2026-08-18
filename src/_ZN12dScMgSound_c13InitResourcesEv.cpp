@@ -6,7 +6,7 @@
 /* dScMgSound_c::InitResources -- vtable slot 0, ov006 0x0211c984.
  *
  * Attributed by the vtable: dScMgSound_c's own table is ov006 0x0213f844 and
- * its slot 0 relocates here. The signature is include/ActorBase.h's own slot
+ * its slot 0 relocates here. The signature is include/fBase_c.h's own slot
  * 0, `virtual s32 InitResources()`.
  *
  * THE SPLIT LITERALS ARE ORIGINAL AND ARE LEFT ALONE. `r7 + 0x5000 + 0xe0` is

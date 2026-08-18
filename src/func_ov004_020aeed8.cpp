@@ -2,9 +2,11 @@
 #include "types.h"
 // @symbol func_ov004_020aeed8
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgBase_c.h"
+extern "C" {
+    extern void MultiCopy_Int(int*, int*, int);
+}
 // recovered name: dScMgBase_c_OnAimedAtWithEggReturnVec
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::OnAimedAtWithEggReturnVec - recovered from vtable slot identity */

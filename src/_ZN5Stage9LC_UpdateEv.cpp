@@ -18,7 +18,7 @@ void func_02012790(int snd);
 void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16 *p, int a, int b);
 void _ZN7Message21DisplaySaveStatusTextEt(int m);
 void _ZN8SaveData15SaveCurrentFileEv(void);
-void _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, int c);
+void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, int c);
 void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 a);
 
 extern int data_0208ee44;
@@ -263,7 +263,7 @@ void Stage::LC_Update()
         if (data_0209f2e0 != 1) {
             data_ov002_02111178 = 5;
         } else {
-            _ZN5Scene14StartSceneFadeEjjt(1, 0, 0);
+            _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);
             data_ov002_02111178 = 0;
             _ZN5Sound22StopLoadedMusic_Layer1Ej(0xa);
             {

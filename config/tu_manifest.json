@@ -119,21 +119,21 @@
             },
             "emittedTextOrderIsRomAscending": false,
             "nonLicensedSymbols": [
-              "HOMELESS _ZTS5Actor STB_LOPROC .data size=0x7",
-              "HOMELESS _ZTI9ActorBase STB_LOPROC .data size=0x8",
-              "HOMELESS _ZTS9ActorBase STB_LOPROC .data size=0xb",
-              "HOMELESS _ZTS8Platform STB_LOPROC .data size=0xa",
+              "HOMELESS _ZTS8dActor_c STB_LOPROC .data size=0x7",
+              "HOMELESS _ZTI7fBase_c STB_LOPROC .data size=0x8",
+              "HOMELESS _ZTS7fBase_c STB_LOPROC .data size=0xb",
+              "HOMELESS _ZTS10dBgActor_c STB_LOPROC .data size=0xa",
               "HOMELESS _ZTS8PoleLift STB_LOPROC .data size=0xa",
-              "HOMELESS _ZTI8Platform STB_LOPROC .data size=0xc",
-              "HOMELESS _ZTI5Actor STB_LOPROC .data size=0xc",
-              "HOMELESS _ZTI12ActorDerived STB_LOPROC .data size=0xc",
-              "HOMELESS _ZTS12ActorDerived STB_LOPROC .data size=0xf",
+              "HOMELESS _ZTI10dBgActor_c STB_LOPROC .data size=0xc",
+              "HOMELESS _ZTI8dActor_c STB_LOPROC .data size=0xc",
+              "HOMELESS _ZTI7dBase_c STB_LOPROC .data size=0xc",
+              "HOMELESS _ZTS7dBase_c STB_LOPROC .data size=0xf",
               "HOMELESS _ZTI8PoleLift STB_LOPROC .data size=0xc",
               "COLLIDES-GAP _ZTV8PoleLift STB_GLOBAL .data size=0x84 already at ov045:0x02112dbc",
               "HOMELESS _ZN8PoleLiftD2Ev STB_GLOBAL .text size=0x4c",
-              "COLLIDES-GAP _ZTV8Platform STB_LOPROC .data size=0x84 already at ov002:0x0210ae38",
-              "COLLIDES-SRC _ZN8PlatformD0Ev STB_LOPROC .text size=0x4c already at ov002:0x020ee464",
-              "COLLIDES-SRC _ZN8PlatformD1Ev STB_LOPROC .text size=0x38 already at ov002:0x020ee42c"
+              "COLLIDES-GAP _ZTV10dBgActor_c STB_LOPROC .data size=0x84 already at ov002:0x0210ae38",
+              "COLLIDES-SRC _ZN10dBgActor_cD0Ev STB_LOPROC .text size=0x4c already at ov002:0x020ee464",
+              "COLLIDES-SRC _ZN10dBgActor_cD1Ev STB_LOPROC .text size=0x38 already at ov002:0x020ee42c"
             ],
             "unlicensedSections": [
               {
@@ -201,7 +201,7 @@
             "note": "byte-identical to _ZN8PoleLiftD1Ev; no ROM symbol and no caller"
           },
           {
-            "symbol": "_ZN8PlatformD1Ev",
+            "symbol": "_ZN10dBgActor_cD1Ev",
             "size": "0x38",
             "binding": "STB_LOPROC",
             "in_rom": true,
@@ -209,7 +209,7 @@
             "note": "lives in ov002, not in this range; vague-linkage copy"
           },
           {
-            "symbol": "_ZN8PlatformD0Ev",
+            "symbol": "_ZN10dBgActor_cD0Ev",
             "size": "0x4c",
             "binding": "STB_LOPROC",
             "in_rom": true,
@@ -225,7 +225,7 @@
             "note": "the ROM symbol names the slot array; the compiler's symbol names the vtable object, which starts 8 bytes earlier at 0x02112db4"
           },
           {
-            "symbol": "_ZTV8Platform",
+            "symbol": "_ZTV10dBgActor_c",
             "size": "0x84",
             "binding": "STB_LOPROC"
           },
@@ -242,42 +242,42 @@
             "binding": "STB_LOPROC"
           },
           {
-            "symbol": "_ZTI8Platform",
+            "symbol": "_ZTI10dBgActor_c",
             "size": "0xc",
             "binding": "STB_LOPROC"
           },
           {
-            "symbol": "_ZTS8Platform",
+            "symbol": "_ZTS10dBgActor_c",
             "size": "0xa",
             "binding": "STB_LOPROC"
           },
           {
-            "symbol": "_ZTI5Actor",
+            "symbol": "_ZTI8dActor_c",
             "size": "0xc",
             "binding": "STB_LOPROC"
           },
           {
-            "symbol": "_ZTS5Actor",
+            "symbol": "_ZTS8dActor_c",
             "size": "0x7",
             "binding": "STB_LOPROC"
           },
           {
-            "symbol": "_ZTI12ActorDerived",
+            "symbol": "_ZTI7dBase_c",
             "size": "0xc",
             "binding": "STB_LOPROC"
           },
           {
-            "symbol": "_ZTS12ActorDerived",
+            "symbol": "_ZTS7dBase_c",
             "size": "0xf",
             "binding": "STB_LOPROC"
           },
           {
-            "symbol": "_ZTI9ActorBase",
+            "symbol": "_ZTI7fBase_c",
             "size": "0x8",
             "binding": "STB_LOPROC"
           },
           {
-            "symbol": "_ZTS9ActorBase",
+            "symbol": "_ZTS7fBase_c",
             "size": "0xb",
             "binding": "STB_LOPROC"
           }
@@ -415,7 +415,7 @@
           "symbol": "_ZN12FallBlockBfsD1Ev",
           "address": "0x02111d48",
           "size": "0x00000050",
-          "legacy_source": "src/_ZN12FallBlockBfsD1Ev.c",
+          "legacy_source": "src/_ZN12FallBlockBfsD1Ev.cpp",
           "ordinal": 0
         },
         {
@@ -459,7 +459,29 @@
         "object": "build/tu/ov045-FallBlockBfs/FallBlockBfs.o (gitignored)",
         "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
         "functions_matched": 5,
-        "functions_declared": 5
+        "functions_declared": 5,
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-failed",
+          "scratch": "build/tu/ov045-FallBlockBfs/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": false
+          },
+          "tuRange": null,
+          "objectAudit": {
+            "counts": {
+              "LICENSED": 5
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [],
+            "unlicensedSections": []
+          },
+          "symbolCheckNewVsBaseline": null,
+          "linkerOutput": "mwldarm.exe: Undefined : \"virtual table for dBgActor_c\"\nmwldarm.exe: Referenced from \"FallBlockBfs::~FallBlockBfs[virtual]()\" in \nmwldarm.exe: FallBlockBfs.o\nmwldarm.exe: Referenced from \"FallBlockBfs::~FallBlockBfs()\" in FallBlockBfs.o\nmwldarm.exe: Undefined : \"virtual table for daObjKm2_Fall_Block_c\"\nmwldarm.exe: Referenced from \"FallBlockBfs_Spawn\" in FallBlockBfs.o\nmwldarm.exe: Referenced from \"FallBlockBfs::~FallBlockBfs[virtual]()\" in \nmwldarm.exe: FallBlockBfs.o\nmwldarm.exe: alert: Link failed. \n\nErrors caused tool to abort."
+        }
       },
       "partial_isolation": {
         "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
@@ -832,6 +854,2726 @@
         "state": "partial-link-verified",
         "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
         "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+      }
+    },
+    {
+      "id": "ov002/Platform",
+      "module": "ov002",
+      "source": "src_tu/actors/Platform.cpp",
+      "promoted_source": "src/actors/Platform.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "medium",
+      "boundary_evidence": [
+        "contiguous linker run: 0x20ee42c..0x20eea84, 11 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): Platform",
+        "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)",
+        "hand check: every one of the 11 functions in the span carries complete=True in config/arm9/overlays/ov002/delinks.txt, and the span holds exactly one class label (Platform) plus one file-static helper (func_ov002_020ee5d0) called only from within the span"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x020ee42c",
+          "end": "0x020eea84"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN10dBgActor_cD1Ev",
+          "address": "0x020ee42c",
+          "size": "0x00000038",
+          "legacy_source": "src/_ZN10dBgActor_cD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN10dBgActor_cD0Ev",
+          "address": "0x020ee464",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN10dBgActor_cD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN10dBgActor_c14KillByMegaCharER6Player",
+          "address": "0x020ee4b0",
+          "size": "0x000000ac",
+          "legacy_source": "src/_ZN10dBgActor_c14KillByMegaCharER6Player.c",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN10dBgActor_c4KillEv",
+          "address": "0x020ee55c",
+          "size": "0x00000074",
+          "legacy_source": "src/_ZN10dBgActor_c4KillEv.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_ov002_020ee5d0",
+          "address": "0x020ee5d0",
+          "size": "0x000000a4",
+          "legacy_source": "src/func_ov002_020ee5d0.c",
+          "ordinal": 4
+        },
+        {
+          "symbol": "_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE",
+          "address": "0x020ee674",
+          "size": "0x00000158",
+          "legacy_source": "src/_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "_ZN10dBgActor_c19UpdateClsnPosAndRotEv",
+          "address": "0x020ee7cc",
+          "size": "0x00000064",
+          "legacy_source": "src/_ZN10dBgActor_c19UpdateClsnPosAndRotEv.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "_ZN10dBgActor_c21UpdateModelPosAndRotYEv",
+          "address": "0x020ee830",
+          "size": "0x00000040",
+          "legacy_source": "src/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_",
+          "address": "0x020ee870",
+          "size": "0x000000c4",
+          "legacy_source": "src/_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_",
+          "address": "0x020ee934",
+          "size": "0x0000011c",
+          "legacy_source": "src/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp",
+          "ordinal": 9
+        },
+        {
+          "symbol": "_ZN10dBgActor_cC2Ev",
+          "address": "0x020eea50",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN10dBgActor_cC2Ev.c",
+          "ordinal": 10
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: HAND-ASSEMBLED, not generated: tubuild create refuses this TU because three legacy sources wrap their body in extern \"C\" { }.",
+        "tubuild create warning: Destructor variants _ZN10dBgActor_cD1Ev/_ZN10dBgActor_cD0Ev are not written out; they are emitted implicitly by the key function Platform::Kill.",
+        "HAND-ASSEMBLED. tubuild.py create refuses this TU: three of the eleven legacy sources wrap their body in extern \"C\" { }, which its splitter cannot parse.",
+        "text-verified: 11/11 MATCH, objisolate clean, reloc-destinations clean.",
+        "partial-link-verified (tubuild.py linkcheck --partial): one TU compile reduced 11 times is byte-identical in linker contribution to the 11 objects the build makes today; with all 11 substituted the module and the TU range 0x020ee42c..0x020eea84 reproduce and the full ROM builds. The scratch ROM sha256 is d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, IDENTICAL to the baseline control run with no TU substitution at all.",
+        "dsd check symbols --fail reports 2 errors (data_020ad524, data_020ad560, both in ARM9 main). PRE-EXISTING, not this TU: `linkcheck --baseline --module ov002` reproduces both with no substitution -- 0 NEW, 0 resolved.",
+        "NOT link-verified: the range is still linked from 11 contributions, and the vtable/RTTI ownership question is deferred, not answered. The 10 unlicensed symbols (_ZTV10dBgActor_c, the _ZTI/_ZTS records for Platform/Actor/ActorDerived/ActorBase, and _ZN7Vector3D1Ev) are the expected key-function side effect: Platform::Kill is the key function because ~Platform is inline on purpose.",
+        "MANGLED-NAME PARAMETER TYPES ARE NOT EVIDENCE. Four members stay defined under their mangled symbols with scalar parameters rather than as real C++ methods. The two IsClsnInRange* names claim Fix12<int> BY VALUE; the ROM refuses it (CW homes a class-typed by-value parameter to the stack, +0x14 -- see include/Actor.h). Contrast UpdateKillByMegaChar, whose by-value Fix12<int> IS measured and which is now a real Platform:: method.",
+        "FINDING, not fixed here: the ROM has an out-of-line _ZN10dBgActor_cC2Ev, so the original class declared its constructor, but include/Platform.h does not. Adding that declaration would stop every subclass constructor inlining the implicit one; this TU cannot measure that blast radius, so the constructor stays extern \"C\".",
+        "FINDING, not fixed here: RaycastLine must be 0x78 for UpdateKillByMegaChar to reproduce (it is a stack local whose size sets the frame). include/RaycastLine.h describes a 0x68-byte object -- last field unk_064 at 0x064. The 0x78 declaration is kept local to this TU; RaycastLine.h is shared and re-sizing it is a separate, measured change.",
+        "FINDING, measured here: UpdateKillByMegaChar needs the RAW-CAST spelling `*(short *)((char *)this + 0x8c)` for its four angle read-modify-writes. Written as the named members mAngleX/mAngleY/mAngleZ/mPrevAngleY, mwcc folds each into a direct [r7,#imm] offset and the function comes out 0x148 against the ROM 0x158; the cartridge materialises each field address into a scratch register and reuses it across the load and the store. The choice is per-function: the same class's UpdateClsnPosAndRot and UpdateModelPosAndRotY match with named members."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov002-Platform/Platform.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 11,
+        "functions_declared": 11,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 10 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        }
+      },
+      "partial_isolation": {
+        "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+        "derivedObjects": 11,
+        "contributionEquivalent": "11/11",
+        "comparedFields": [
+          "keptSection",
+          "keptBytes",
+          "relocs",
+          "defined",
+          "mapping",
+          "live",
+          "undefReferenced"
+        ],
+        "legacyEntriesComplete": "11/11",
+        "extraInertImports": 86,
+        "extraImportsWithNoHome": [],
+        "artefacts": "build/tu/ov002-Platform/partial/partial.json (gitignored)",
+        "state": "partial-link-verified",
+        "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+        "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
+        "delinksChanged": false,
+        "substitutedObjectPaths": [
+          "src/_ZN10dBgActor_cD1Ev.cpp",
+          "src/_ZN10dBgActor_cD0Ev.cpp",
+          "src/_ZN10dBgActor_c14KillByMegaCharER6Player.c",
+          "src/_ZN10dBgActor_c4KillEv.cpp",
+          "src/func_ov002_020ee5d0.c",
+          "src/_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE.cpp",
+          "src/_ZN10dBgActor_c19UpdateClsnPosAndRotEv.cpp",
+          "src/_ZN10dBgActor_c21UpdateModelPosAndRotYEv.cpp",
+          "src/_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_.cpp",
+          "src/_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_.cpp",
+          "src/_ZN10dBgActor_cC2Ev.c"
+        ],
+        "result": "partial-link-verified",
+        "phases": {
+          "delink": true,
+          "lcf": true,
+          "compile": true,
+          "link": true,
+          "checkModules": true,
+          "checkSymbols": false,
+          "rom": true
+        },
+        "tuRange": {
+          "start": "0x020ee42c",
+          "end": "0x020eea84",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        "moduleFidelityPassed": true,
+        "symbolCheckNewVsBaseline": [],
+        "rom": {
+          "bytes": 16777216,
+          "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+        },
+        "scratch": "build/tu/ov002-Platform/link-partial (gitignored)"
+      }
+    },
+    {
+      "id": "arm9/Actor",
+      "module": "arm9",
+      "source": "src_tu/actors/Actor.cpp",
+      "promoted_source": "src/actors/Actor.cpp",
+      "status": "link-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "CONTIGUOUS AND EXHAUSTIVE: 0x0200f658..0x02011654 is covered by exactly 97 config/arm9/symbols.txt function symbols with NO gap and no overlap, and all 97 carry `complete` in config/arm9/delinks.txt with a .text section and nothing else.",
+        "NOT FROM tu_map.py: tools/tu_map.py reports the arm9 main module as under-segmented and emits ONE unit, 0x20049f0..0x20707a4, 2984 functions, 70+ class labels. There is no candidate id for this range; the unit below was assembled by hand and this evidence list replaces the generator's.",
+        "EMISSION ORDER, and this is the strongest single item. mwccarm 2004/b56 emits one .text section per function in the REVERSE of source order, so the ROM's HIGHEST address is the source file's FIRST function. Read that way this range is a canonical hand-written .cpp: Actor::Actor (0x0201150c/0x020113c0) first, then ~Actor, then BeforeInitResources/AfterInitResources, BeforeCleanupResources/AfterCleanupResources, BeforeBehavior/AfterBehavior, BeforeRender/AfterRender, then the finders, the movement helpers, the player-proximity group, the coin/star helpers, the twelve empty virtual stubs in one run, the dust workers, the death-table trio, and DetectRaycastClsn last. Under any other segmentation of this range that ordering is coincidence.",
+        "DESTRUCTOR VARIANT GROUP IN COMPILER ORDER: the ROM holds _ZN8dActor_cD2Ev (0x020112c8), _ZN8dActor_cD0Ev (0x02011314), _ZN8dActor_cD1Ev (0x02011374) in exactly the D2/D0/D1 order mwcc emits a single destructor definition's variant group in (notes/tu-reconstruction-pilot-report.md sec 3). One definition produced all three, so all three are one object's.",
+        "VAGUE-LINKAGE BODY BRACKETED BY THIS TU'S OWN: _ZN8Vector3sD1Ev (0x02011508, 4 bytes) sits BETWEEN _ZN8dActor_cC1Ev (0x020113c0) and _ZN8dActor_cC2Ev (0x0201150c). A vague-linkage copy of an inline destructor is emitted by the object that instantiates it; being interleaved with the constructor's own variant pair, it cannot have come from a different object.",
+        "NEIGHBOURS ARE A DIFFERENT SUBJECT: below, Initialise3dGraphics (0x0200f558..0x0200f658) writes 0x4000060/0x4000580/0x400044c and calls G3X/G3i - 3D hardware setup, no Actor anywhere. Above, func_02011654 and func_02011698 (0x02011654..0x020116c4) are the unlink/link pair of an intrusive hash-bucket list at +0x508, a matched pair of their own.",
+        "IT COMPILES AS ONE OBJECT: all 97 members reproduce the cartridge byte-for-byte from a single compile of a single source file. That is not proof of the boundary on its own -- a smaller TU would too -- but no member had to be excluded to get it, which is what a WRONG merge produces (0 of 159 >=10-member merges compiled under all-or-nothing)."
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x0200f658",
+          "end": "0x02011654"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b",
+          "address": "0x0200f658",
+          "size": "0x000000b4",
+          "legacy_source": "src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE",
+          "address": "0x0200f70c",
+          "size": "0x00000054",
+          "legacy_source": "src/_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "func_0200f760",
+          "address": "0x0200f760",
+          "size": "0x00000048",
+          "legacy_source": "src/func_0200f760.c",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn",
+          "address": "0x0200f7a8",
+          "size": "0x00000048",
+          "legacy_source": "src/_ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_0200f7f0",
+          "address": "0x0200f7f0",
+          "size": "0x00000084",
+          "legacy_source": "src/func_0200f7f0.c",
+          "ordinal": 4
+        },
+        {
+          "symbol": "_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt",
+          "address": "0x0200f874",
+          "size": "0x00000084",
+          "legacy_source": "src/_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "_ZN5Sound15PlaySecretSoundEP8dActor_cPt",
+          "address": "0x0200f8f8",
+          "size": "0x00000084",
+          "legacy_source": "src/_ZN5Sound15PlaySecretSoundEP8dActor_cPt.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "_ZN8dActor_c13SpawnSoundObjEj",
+          "address": "0x0200f97c",
+          "size": "0x0000003c",
+          "legacy_source": "src/_ZN8dActor_c13SpawnSoundObjEj.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "_ZN8dActor_c24KillAndTrackInDeathTableEv",
+          "address": "0x0200f9b8",
+          "size": "0x0000001c",
+          "legacy_source": "src/_ZN8dActor_c24KillAndTrackInDeathTableEv.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "_ZN8dActor_c19UntrackInDeathTableEv",
+          "address": "0x0200f9d4",
+          "size": "0x00000010",
+          "legacy_source": "src/_ZN8dActor_c19UntrackInDeathTableEv.cpp",
+          "ordinal": 9
+        },
+        {
+          "symbol": "_ZN8dActor_c17TrackInDeathTableEv",
+          "address": "0x0200f9e4",
+          "size": "0x00000010",
+          "legacy_source": "src/_ZN8dActor_c17TrackInDeathTableEv.cpp",
+          "ordinal": 10
+        },
+        {
+          "symbol": "_ZN8dActor_c18GetBitInDeathTableEv",
+          "address": "0x0200f9f4",
+          "size": "0x00000010",
+          "legacy_source": "src/_ZN8dActor_c18GetBitInDeathTableEv.cpp",
+          "ordinal": 11
+        },
+        {
+          "symbol": "func_0200fa04",
+          "address": "0x0200fa04",
+          "size": "0x00000088",
+          "legacy_source": "src/func_0200fa04.c",
+          "ordinal": 12
+        },
+        {
+          "symbol": "func_0200fa8c",
+          "address": "0x0200fa8c",
+          "size": "0x00000038",
+          "legacy_source": "src/func_0200fa8c.c",
+          "ordinal": 13
+        },
+        {
+          "symbol": "_ZN8dActor_c13LandingDustAtER7Vector3b",
+          "address": "0x0200fac4",
+          "size": "0x00000088",
+          "legacy_source": "src/_ZN8dActor_c13LandingDustAtER7Vector3b.cpp",
+          "ordinal": 14
+        },
+        {
+          "symbol": "_ZN8dActor_c15HugeLandingDustEb",
+          "address": "0x0200fb4c",
+          "size": "0x00000038",
+          "legacy_source": "src/_ZN8dActor_c15HugeLandingDustEb.cpp",
+          "ordinal": 15
+        },
+        {
+          "symbol": "_ZN8dActor_c17HugeLandingDustAtER7Vector3b",
+          "address": "0x0200fb84",
+          "size": "0x00000088",
+          "legacy_source": "src/_ZN8dActor_c17HugeLandingDustAtER7Vector3b.cpp",
+          "ordinal": 16
+        },
+        {
+          "symbol": "_ZN8dActor_c11LandingDustEb",
+          "address": "0x0200fc0c",
+          "size": "0x00000038",
+          "legacy_source": "src/_ZN8dActor_c11LandingDustEb.cpp",
+          "ordinal": 17
+        },
+        {
+          "symbol": "func_0200fc44",
+          "address": "0x0200fc44",
+          "size": "0x00000088",
+          "legacy_source": "src/func_0200fc44.c",
+          "ordinal": 18
+        },
+        {
+          "symbol": "func_0200fccc",
+          "address": "0x0200fccc",
+          "size": "0x00000038",
+          "legacy_source": "src/func_0200fccc.c",
+          "ordinal": 19
+        },
+        {
+          "symbol": "_ZN8dActor_c19DisappearPoofDustAtERK7Vector3",
+          "address": "0x0200fd04",
+          "size": "0x0000003c",
+          "legacy_source": "src/_ZN8dActor_c19DisappearPoofDustAtERK7Vector3.cpp",
+          "ordinal": 20
+        },
+        {
+          "symbol": "_ZN8dActor_c13SmallPoofDustEv",
+          "address": "0x0200fd40",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN8dActor_c13SmallPoofDustEv.cpp",
+          "ordinal": 21
+        },
+        {
+          "symbol": "_ZN8dActor_c16TriplePoofDustAtERK7Vector3",
+          "address": "0x0200fd74",
+          "size": "0x00000054",
+          "legacy_source": "src/_ZN8dActor_c16TriplePoofDustAtERK7Vector3.cpp",
+          "ordinal": 22
+        },
+        {
+          "symbol": "_ZN8dActor_c14TriplePoofDustEv",
+          "address": "0x0200fdc8",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN8dActor_c14TriplePoofDustEv.cpp",
+          "ordinal": 23
+        },
+        {
+          "symbol": "_ZN8dActor_c10PoofDustAtERK7Vector3",
+          "address": "0x0200fdfc",
+          "size": "0x00000040",
+          "legacy_source": "src/_ZN8dActor_c10PoofDustAtERK7Vector3.cpp",
+          "ordinal": 24
+        },
+        {
+          "symbol": "_ZN8dActor_c8PoofDustEv",
+          "address": "0x0200fe3c",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN8dActor_c8PoofDustEv.cpp",
+          "ordinal": 25
+        },
+        {
+          "symbol": "UnloadBlueCoinModel",
+          "address": "0x0200fe70",
+          "size": "0x0000002c",
+          "legacy_source": "src/UnloadBlueCoinModel.c",
+          "ordinal": 26
+        },
+        {
+          "symbol": "LoadBlueCoinModel",
+          "address": "0x0200fe9c",
+          "size": "0x0000002c",
+          "legacy_source": "src/LoadBlueCoinModel.c",
+          "ordinal": 27
+        },
+        {
+          "symbol": "_ZN8dActor_c17GetWaterHeightWDWEv",
+          "address": "0x0200fec8",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN8dActor_c17GetWaterHeightWDWEv.cpp",
+          "ordinal": 28
+        },
+        {
+          "symbol": "_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h",
+          "address": "0x0200ff14",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp",
+          "ordinal": 29
+        },
+        {
+          "symbol": "_ZN8dActor_c11UntrackStarERa",
+          "address": "0x0200ff60",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN8dActor_c11UntrackStarERa.cpp",
+          "ordinal": 30
+        },
+        {
+          "symbol": "_ZN8dActor_c9TrackStarEjj",
+          "address": "0x0200ff94",
+          "size": "0x000000b0",
+          "legacy_source": "src/_ZN8dActor_c9TrackStarEjj.cpp",
+          "ordinal": 31
+        },
+        {
+          "symbol": "_ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_",
+          "address": "0x02010044",
+          "size": "0x00000098",
+          "legacy_source": "src/_ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_.cpp",
+          "ordinal": 32
+        },
+        {
+          "symbol": "_ZN8dActor_c25OnAimedAtWithEggReturnVecEv",
+          "address": "0x020100dc",
+          "size": "0x00000048",
+          "legacy_source": "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+          "ordinal": 33
+        },
+        {
+          "symbol": "_ZN8dActor_c16OnAimedAtWithEggEv",
+          "address": "0x02010124",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN8dActor_c16OnAimedAtWithEggEv.cpp",
+          "ordinal": 34
+        },
+        {
+          "symbol": "_ZN8dActor_c19OnHitFromUnderneathERS_",
+          "address": "0x0201012c",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN8dActor_c19OnHitFromUnderneathERS_.cpp",
+          "ordinal": 35
+        },
+        {
+          "symbol": "_ZN8dActor_c15OnHitByMegaCharER6Player",
+          "address": "0x02010130",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN8dActor_c15OnHitByMegaCharER6Player.cpp",
+          "ordinal": 36
+        },
+        {
+          "symbol": "_ZN8dActor_c24OnHitByCannonBlastedCharERS_",
+          "address": "0x02010134",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN8dActor_c24OnHitByCannonBlastedCharERS_.cpp",
+          "ordinal": 37
+        },
+        {
+          "symbol": "_ZN8dActor_c8OnPushedERS_",
+          "address": "0x02010138",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN8dActor_c8OnPushedERS_.cpp",
+          "ordinal": 38
+        },
+        {
+          "symbol": "_ZN8dActor_c8OnKickedERS_",
+          "address": "0x0201013c",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN8dActor_c8OnKickedERS_.cpp",
+          "ordinal": 39
+        },
+        {
+          "symbol": "_ZN8dActor_c11OnAttacked2ERS_",
+          "address": "0x02010140",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN8dActor_c11OnAttacked2ERS_.cpp",
+          "ordinal": 40
+        },
+        {
+          "symbol": "_ZN8dActor_c11OnAttacked1ERS_",
+          "address": "0x02010144",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN8dActor_c11OnAttacked1ERS_.cpp",
+          "ordinal": 41
+        },
+        {
+          "symbol": "_ZN8dActor_c15OnGroundPoundedERS_",
+          "address": "0x02010148",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN8dActor_c15OnGroundPoundedERS_.cpp",
+          "ordinal": 42
+        },
+        {
+          "symbol": "_ZN8dActor_c9Virtual50Ev",
+          "address": "0x0201014c",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN8dActor_c9Virtual50Ev.cpp",
+          "ordinal": 43
+        },
+        {
+          "symbol": "_ZN8dActor_c13OnTurnIntoEggER6Player",
+          "address": "0x02010154",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN8dActor_c13OnTurnIntoEggER6Player.cpp",
+          "ordinal": 44
+        },
+        {
+          "symbol": "_ZN8dActor_c13OnYoshiTryEatEv",
+          "address": "0x02010160",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN8dActor_c13OnYoshiTryEatEv.cpp",
+          "ordinal": 45
+        },
+        {
+          "symbol": "_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE",
+          "address": "0x02010168",
+          "size": "0x00000018",
+          "legacy_source": "src/_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE.cpp",
+          "ordinal": 46
+        },
+        {
+          "symbol": "_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3",
+          "address": "0x02010180",
+          "size": "0x00000130",
+          "legacy_source": "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp",
+          "ordinal": 47
+        },
+        {
+          "symbol": "_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j",
+          "address": "0x020102b0",
+          "size": "0x00000054",
+          "legacy_source": "src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c",
+          "ordinal": 48
+        },
+        {
+          "symbol": "func_02010304",
+          "address": "0x02010304",
+          "size": "0x00000070",
+          "legacy_source": "src/func_02010304.cpp",
+          "ordinal": 49
+        },
+        {
+          "symbol": "_ZN8dActor_c18FindExplosionActorER12CylinderClsn",
+          "address": "0x02010374",
+          "size": "0x00000040",
+          "legacy_source": "src/_ZN8dActor_c18FindExplosionActorER12CylinderClsn.cpp",
+          "ordinal": 50
+        },
+        {
+          "symbol": "_ZN8dActor_c7FindEggER12CylinderClsn",
+          "address": "0x020103b4",
+          "size": "0x00000040",
+          "legacy_source": "src/_ZN8dActor_c7FindEggER12CylinderClsn.cpp",
+          "ordinal": 51
+        },
+        {
+          "symbol": "_ZN8dActor_c14GetSubtractionEss",
+          "address": "0x020103f4",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN8dActor_c14GetSubtractionEss.cpp",
+          "ordinal": 52
+        },
+        {
+          "symbol": "_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s",
+          "address": "0x02010428",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.c",
+          "ordinal": 53
+        },
+        {
+          "symbol": "_ZN8dActor_c15IsPlayerInRangeERK7Vector3i",
+          "address": "0x0201045c",
+          "size": "0x0000003c",
+          "legacy_source": "src/_ZN8dActor_c15IsPlayerInRangeERK7Vector3i.cpp",
+          "ordinal": 54
+        },
+        {
+          "symbol": "_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i",
+          "address": "0x02010498",
+          "size": "0x00000044",
+          "legacy_source": "src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c",
+          "ordinal": 55
+        },
+        {
+          "symbol": "_ZN8dActor_c15IsPlayerInRangeEi",
+          "address": "0x020104dc",
+          "size": "0x0000003c",
+          "legacy_source": "src/_ZN8dActor_c15IsPlayerInRangeEi.cpp",
+          "ordinal": 56
+        },
+        {
+          "symbol": "_ZN8dActor_c24BumpedUnderneathByPlayerER6Player",
+          "address": "0x02010518",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp",
+          "ordinal": 57
+        },
+        {
+          "symbol": "_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player",
+          "address": "0x0201054c",
+          "size": "0x00000080",
+          "legacy_source": "src/_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player.cpp",
+          "ordinal": 58
+        },
+        {
+          "symbol": "func_020105cc",
+          "address": "0x020105cc",
+          "size": "0x00000050",
+          "legacy_source": "src/func_020105cc.c",
+          "ordinal": 59
+        },
+        {
+          "symbol": "_ZN8dActor_c15GivePlayerCoinsER6Playerhj",
+          "address": "0x0201061c",
+          "size": "0x000000f8",
+          "legacy_source": "src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp",
+          "ordinal": 60
+        },
+        {
+          "symbol": "_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs",
+          "address": "0x02010714",
+          "size": "0x00000130",
+          "legacy_source": "src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.c",
+          "ordinal": 61
+        },
+        {
+          "symbol": "func_02010844",
+          "address": "0x02010844",
+          "size": "0x00000080",
+          "legacy_source": "src/func_02010844.c",
+          "ordinal": 62
+        },
+        {
+          "symbol": "_ZN8dActor_c18ClosestWithActorIDEj",
+          "address": "0x020108c4",
+          "size": "0x00000068",
+          "legacy_source": "src/_ZN8dActor_c18ClosestWithActorIDEj.cpp",
+          "ordinal": 63
+        },
+        {
+          "symbol": "_ZN8dActor_c18HorzAngleToFPlayerEv",
+          "address": "0x0201092c",
+          "size": "0x0000002c",
+          "legacy_source": "src/_ZN8dActor_c18HorzAngleToFPlayerEv.cpp",
+          "ordinal": 64
+        },
+        {
+          "symbol": "_ZN8dActor_c14FarthestPlayerEv",
+          "address": "0x02010958",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN8dActor_c14FarthestPlayerEv.cpp",
+          "ordinal": 65
+        },
+        {
+          "symbol": "_ZN8dActor_c23HorzAngleToCPlayerOrAngEv",
+          "address": "0x0201097c",
+          "size": "0x0000003c",
+          "legacy_source": "src/_ZN8dActor_c23HorzAngleToCPlayerOrAngEv.cpp",
+          "ordinal": 66
+        },
+        {
+          "symbol": "_ZN8dActor_c18HorzAngleToCPlayerEv",
+          "address": "0x020109b8",
+          "size": "0x0000002c",
+          "legacy_source": "src/_ZN8dActor_c18HorzAngleToCPlayerEv.cpp",
+          "ordinal": 67
+        },
+        {
+          "symbol": "_ZN8dActor_c13DistToCPlayerEv",
+          "address": "0x020109e4",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN8dActor_c13DistToCPlayerEv.cpp",
+          "ordinal": 68
+        },
+        {
+          "symbol": "_ZN8dActor_c22ClosestNonVanishPlayerEv",
+          "address": "0x02010a08",
+          "size": "0x000000d0",
+          "legacy_source": "src/_ZN8dActor_c22ClosestNonVanishPlayerEv.cpp",
+          "ordinal": 69
+        },
+        {
+          "symbol": "_ZN8dActor_c13ClosestPlayerEv",
+          "address": "0x02010ad8",
+          "size": "0x000000c4",
+          "legacy_source": "src/_ZN8dActor_c13ClosestPlayerEv.cpp",
+          "ordinal": 70
+        },
+        {
+          "symbol": "_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j",
+          "address": "0x02010b9c",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c",
+          "ordinal": 71
+        },
+        {
+          "symbol": "_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j",
+          "address": "0x02010be8",
+          "size": "0x00000048",
+          "legacy_source": "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c",
+          "ordinal": 72
+        },
+        {
+          "symbol": "_ZN8dActor_c9UpdatePosEP12CylinderClsn",
+          "address": "0x02010c30",
+          "size": "0x0000002c",
+          "legacy_source": "src/_ZN8dActor_c9UpdatePosEP12CylinderClsn.cpp",
+          "ordinal": 73
+        },
+        {
+          "symbol": "_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv",
+          "address": "0x02010c5c",
+          "size": "0x000000e4",
+          "legacy_source": "src/_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv.cpp",
+          "ordinal": 74
+        },
+        {
+          "symbol": "_ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn",
+          "address": "0x02010d40",
+          "size": "0x00000064",
+          "legacy_source": "src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn.cpp",
+          "ordinal": 75
+        },
+        {
+          "symbol": "func_02010da4",
+          "address": "0x02010da4",
+          "size": "0x00000064",
+          "legacy_source": "src/func_02010da4.c",
+          "ordinal": 76
+        },
+        {
+          "symbol": "_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_",
+          "address": "0x02010e08",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp",
+          "ordinal": 77
+        },
+        {
+          "symbol": "_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as",
+          "address": "0x02010e2c",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as.cpp",
+          "ordinal": 78
+        },
+        {
+          "symbol": "func_02010e78",
+          "address": "0x02010e78",
+          "size": "0x00000054",
+          "legacy_source": "src/func_02010e78.c",
+          "ordinal": 79
+        },
+        {
+          "symbol": "_ZN8dActor_c4NextEPKS_",
+          "address": "0x02010ecc",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN8dActor_c4NextEPKS_.cpp",
+          "ordinal": 80
+        },
+        {
+          "symbol": "_ZN8dActor_c15FindWithActorIDEjPS_",
+          "address": "0x02010ef0",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN8dActor_c15FindWithActorIDEjPS_.cpp",
+          "ordinal": 81
+        },
+        {
+          "symbol": "_ZN8dActor_c10FindWithIDEj",
+          "address": "0x02010f3c",
+          "size": "0x00000030",
+          "legacy_source": "src/_ZN8dActor_c10FindWithIDEj.cpp",
+          "ordinal": 82
+        },
+        {
+          "symbol": "_ZN8dActor_c11AfterRenderEj",
+          "address": "0x02010f6c",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN8dActor_c11AfterRenderEj.cpp",
+          "ordinal": 83
+        },
+        {
+          "symbol": "_ZN8dActor_c12BeforeRenderEv",
+          "address": "0x02010f78",
+          "size": "0x00000050",
+          "legacy_source": "src/_ZN8dActor_c12BeforeRenderEv.cpp",
+          "ordinal": 84
+        },
+        {
+          "symbol": "_ZN8dActor_c13AfterBehaviorEj",
+          "address": "0x02010fc8",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN8dActor_c13AfterBehaviorEj.cpp",
+          "ordinal": 85
+        },
+        {
+          "symbol": "_ZN8dActor_c14BeforeBehaviorEv",
+          "address": "0x02010fd4",
+          "size": "0x00000240",
+          "legacy_source": "src/_ZN8dActor_c14BeforeBehaviorEv.cpp",
+          "ordinal": 86
+        },
+        {
+          "symbol": "_ZN8dActor_c21AfterCleanupResourcesEj",
+          "address": "0x02011214",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN8dActor_c21AfterCleanupResourcesEj.cpp",
+          "ordinal": 87
+        },
+        {
+          "symbol": "_ZN8dActor_c22BeforeCleanupResourcesEv",
+          "address": "0x02011220",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN8dActor_c22BeforeCleanupResourcesEv.cpp",
+          "ordinal": 88
+        },
+        {
+          "symbol": "_ZN8dActor_c18AfterInitResourcesEj",
+          "address": "0x02011244",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN8dActor_c18AfterInitResourcesEj.cpp",
+          "ordinal": 89
+        },
+        {
+          "symbol": "_ZN8dActor_c19BeforeInitResourcesEv",
+          "address": "0x02011268",
+          "size": "0x00000060",
+          "legacy_source": "src/_ZN8dActor_c19BeforeInitResourcesEv.cpp",
+          "ordinal": 90
+        },
+        {
+          "symbol": "_ZN8dActor_cD2Ev",
+          "address": "0x020112c8",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN8dActor_cD2Ev.cpp",
+          "ordinal": 91
+        },
+        {
+          "symbol": "_ZN8dActor_cD0Ev",
+          "address": "0x02011314",
+          "size": "0x00000060",
+          "legacy_source": "src/_ZN8dActor_cD0Ev.c",
+          "ordinal": 92
+        },
+        {
+          "symbol": "_ZN8dActor_cD1Ev",
+          "address": "0x02011374",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN8dActor_cD1Ev.cpp",
+          "ordinal": 93
+        },
+        {
+          "symbol": "_ZN8dActor_cC1Ev",
+          "address": "0x020113c0",
+          "size": "0x00000148",
+          "legacy_source": "src/_ZN8dActor_cC1Ev.cpp",
+          "ordinal": 94
+        },
+        {
+          "symbol": "_ZN8Vector3sD1Ev",
+          "address": "0x02011508",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN8Vector3sD1Ev.cpp",
+          "ordinal": 95
+        },
+        {
+          "symbol": "_ZN8dActor_cC2Ev",
+          "address": "0x0201150c",
+          "size": "0x00000148",
+          "legacy_source": "src/_ZN8dActor_cC2Ev.cpp",
+          "ordinal": 96
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "HAND-ASSEMBLED. tu_map.py has no candidate for this range (see boundary_evidence item 2), so `tubuild.py create` could not be used; the schema still comes from tubuild.build_manifest_entry.",
+        "Reconciliation is documented in the source file's own header comment. Summary: 9 shadow type names dropped in favour of real headers, 9 globals/prototypes given one spelling each, one local type renamed, and a handful of casts and field renames that follow from those. Nothing changes what a function does.",
+        "include/Actor.h gained `struct Matrix4x3;`, `void UntrackInDeathTable();` and `Matrix4x3 *UpdateCarry(Player &, const Vector3 &);` -- all non-virtual, so the 0xd0 size assertion and the 31 vtable slots are unchanged and ~Actor() is still the key function.",
+        "Actor::~Actor is deliberately NOT defined as a method here. include/Actor.h's own comment states the invariant: the key function must never be defined as a real method or the TU emits _ZTV8dActor_c and collides with the gap object's copy. D0, D1 and D2 keep their extern \"C\" free-function form.",
+        "This TU also owns, and this round neither declares nor verifies, _ZTV8dActor_c (0x0208e3a4, 31 slots), _ZTI8dActor_c/_ZTS8dActor_c and whatever .data/.bss the range's globals live in. Nothing here is enrolled; config/arm9/delinks.txt is untouched and the 97 one-function sources under src/ remain the owners of the range.",
+        "LINK-VERIFIED, whole range, from ONE object: `tubuild.py linkcheck arm9/Actor` reports the .text range 0x0200f658..0x02011654 (8,188 bytes) IDENTICAL, module fidelity 106/106 exact at 100.000000%, 10,905/10,905 source-built functions reproducing with 0 mismatching, `dsd check modules --fail` PASS, and a ROM whose sha256 is d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 -- the SAME hash `linkcheck --baseline` produces with no substitution at all.",
+        "`dsd check symbols --fail` is NOT green and is not reported as such: it fails on data_020ad524 and data_020ad560. The baseline control emits those same two, and linkcheck reports `0 NEW, 0 resolved` against it, so they are the tree's and not this TU's -- but the check is red.",
+        "ONE unlicensed .text body remains: _ZN7Vector3D1Ev, 4 bytes, STB_LOPROC, already defined at arm9:0x020072c0. The audit classes it COLLIDES-SRC, tolerated only while both definitions are vague-linkage, which they are. It is emitted because include/types.h gives Vector3 an inline empty destructor and this TU instantiates Vector3 arrays; the same body comes out of the legacy per-function objects today. Promotion is still refused on it.",
+        "THE ONE DELIBERATE DEPARTURE FROM THE LEGACY SOURCE, and it is the whole reason the whole-range link passes. Ordinal 95, _ZN8Vector3sD1Ev at 0x02011508, spells its mangled ROM symbol directly (`extern \"C\" void _ZN8Vector3sD1Ev(void *) {}`) rather than going through src/_ZN8Vector3sD1Ev.cpp's Vector3s_ForceDestructor scaffold. types.h defines ~Vector3s() INLINE, so an out-of-line copy can only be forced by making the compiler destroy an ARRAY of it -- and that scaffold is 0x50 of STB_GLOBAL .text (D1 and D2, 0x28 each) that no symbols.txt anywhere names. Per-function objisolate strips it; a merged object cannot, `-nodead` keeps it, and it lands INSIDE the span. Measured with the scaffold in place: TU range 506 bytes DIFFER from 0x0200f670 on, 15/106 modules exact, 540,285 module bytes differing. Measured without it: range IDENTICAL, 106/106 exact. Same four bytes either way.",
+        "COST OF THAT DEPARTURE, stated rather than hidden: the object-level partial-isolation axis drops to 96/97. The one miss is _ZN8Vector3sD1Ev and it is a symbol BINDING difference on four byte-identical bytes -- production STB_LOPROC (vague linkage, which is what the scaffold produces) vs derived STB_GLOBAL (a strong definition, which is what the ROM's single copy at 0x02011508 actually is). `linkcheck --partial` still builds the identical ROM hash and 106/106 exact modules with it. With the scaffold instead, partial isolation is 97/97 and the whole-range link fails; the two cannot both be had, and link-verified is the higher rung.",
+        "The pre-scaffold-removal measurements are reproducible: put the Vector3s_ForceDestructor form back for ordinal 95 and the object audit reports 97 LICENSED / 1 COLLIDES-SRC / 2 HOMELESS with the PREDICTION that the two STB_GLOBAL bodies cannot be deadstripped under -nodead.",
+        "include/Actor.h's three new declarations were re-verified against the tree, not assumed safe: all 1,126 src/ files that transitively include Actor.h were rebuilt under build_pin.verify. 1,124 reproduce; the 2 that do not (_ZN15daObjMarioCap_c13InitResourcesEv, _ZN15RollingIronBall13InitResourcesEv) fail identically with the header reverted to HEAD~1 and carry no `complete` marker, so they are neither enrolled nor this change's.",
+        "STILL NOT DONE, and not claimed: `promoted`. config/**/delinks.txt is untouched, the 97 one-function sources under src/ remain the enrolled owners of the range, and this TU's data side -- _ZTV8dActor_c (0x0208e3a4, 31 slots), _ZTI8dActor_c/_ZTS8dActor_c and whatever .data/.bss its globals live in -- is neither declared nor verified here."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/arm9-Actor/Actor.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 97,
+        "functions_declared": 97,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 1 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        },
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-verified",
+          "scratch": "build/tu/arm9-Actor/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": true,
+            "checkModules": true,
+            "checkSymbols": false,
+            "rom": true
+          },
+          "tuRange": {
+            "start": "0x0200f658",
+            "end": "0x02011654",
+            "differingBytes": 0,
+            "firstDiff": null
+          },
+          "objectAudit": {
+            "counts": {
+              "LICENSED": 97,
+              "COLLIDES-SRC": 1
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [
+              "COLLIDES-SRC _ZN7Vector3D1Ev STB_LOPROC .text size=0x4 already at arm9:0x020072c0"
+            ],
+            "unlicensedSections": []
+          },
+          "symbolCheckNewVsBaseline": [],
+          "linkerOutput": null
+        }
+      },
+      "partial_isolation": {
+        "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+        "derivedObjects": 97,
+        "contributionEquivalent": "96/97",
+        "comparedFields": [
+          "keptSection",
+          "keptBytes",
+          "relocs",
+          "defined",
+          "mapping",
+          "live",
+          "undefReferenced"
+        ],
+        "legacyEntriesComplete": "97/97",
+        "extraInertImports": 199,
+        "extraImportsWithNoHome": [],
+        "artefacts": "build/tu/arm9-Actor/partial/partial.json (gitignored)",
+        "state": "derived",
+        "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
+        "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
+        "delinksChanged": false,
+        "substitutedObjectPaths": [
+          "src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp",
+          "src/_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE.cpp",
+          "src/func_0200f760.c",
+          "src/_ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn.cpp",
+          "src/func_0200f7f0.c",
+          "src/_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt.cpp",
+          "src/_ZN5Sound15PlaySecretSoundEP8dActor_cPt.cpp",
+          "src/_ZN8dActor_c13SpawnSoundObjEj.cpp",
+          "src/_ZN8dActor_c24KillAndTrackInDeathTableEv.cpp",
+          "src/_ZN8dActor_c19UntrackInDeathTableEv.cpp",
+          "src/_ZN8dActor_c17TrackInDeathTableEv.cpp",
+          "src/_ZN8dActor_c18GetBitInDeathTableEv.cpp",
+          "src/func_0200fa04.c",
+          "src/func_0200fa8c.c",
+          "src/_ZN8dActor_c13LandingDustAtER7Vector3b.cpp",
+          "src/_ZN8dActor_c15HugeLandingDustEb.cpp",
+          "src/_ZN8dActor_c17HugeLandingDustAtER7Vector3b.cpp",
+          "src/_ZN8dActor_c11LandingDustEb.cpp",
+          "src/func_0200fc44.c",
+          "src/func_0200fccc.c",
+          "src/_ZN8dActor_c19DisappearPoofDustAtERK7Vector3.cpp",
+          "src/_ZN8dActor_c13SmallPoofDustEv.cpp",
+          "src/_ZN8dActor_c16TriplePoofDustAtERK7Vector3.cpp",
+          "src/_ZN8dActor_c14TriplePoofDustEv.cpp",
+          "src/_ZN8dActor_c10PoofDustAtERK7Vector3.cpp",
+          "src/_ZN8dActor_c8PoofDustEv.cpp",
+          "src/UnloadBlueCoinModel.c",
+          "src/LoadBlueCoinModel.c",
+          "src/_ZN8dActor_c17GetWaterHeightWDWEv.cpp",
+          "src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp",
+          "src/_ZN8dActor_c11UntrackStarERa.cpp",
+          "src/_ZN8dActor_c9TrackStarEjj.cpp",
+          "src/_ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_.cpp",
+          "src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp",
+          "src/_ZN8dActor_c16OnAimedAtWithEggEv.cpp",
+          "src/_ZN8dActor_c19OnHitFromUnderneathERS_.cpp",
+          "src/_ZN8dActor_c15OnHitByMegaCharER6Player.cpp",
+          "src/_ZN8dActor_c24OnHitByCannonBlastedCharERS_.cpp",
+          "src/_ZN8dActor_c8OnPushedERS_.cpp",
+          "src/_ZN8dActor_c8OnKickedERS_.cpp",
+          "src/_ZN8dActor_c11OnAttacked2ERS_.cpp",
+          "src/_ZN8dActor_c11OnAttacked1ERS_.cpp",
+          "src/_ZN8dActor_c15OnGroundPoundedERS_.cpp",
+          "src/_ZN8dActor_c9Virtual50Ev.cpp",
+          "src/_ZN8dActor_c13OnTurnIntoEggER6Player.cpp",
+          "src/_ZN8dActor_c13OnYoshiTryEatEv.cpp",
+          "src/_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE.cpp",
+          "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp",
+          "src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c",
+          "src/func_02010304.cpp",
+          "src/_ZN8dActor_c18FindExplosionActorER12CylinderClsn.cpp",
+          "src/_ZN8dActor_c7FindEggER12CylinderClsn.cpp",
+          "src/_ZN8dActor_c14GetSubtractionEss.cpp",
+          "src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.c",
+          "src/_ZN8dActor_c15IsPlayerInRangeERK7Vector3i.cpp",
+          "src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c",
+          "src/_ZN8dActor_c15IsPlayerInRangeEi.cpp",
+          "src/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp",
+          "src/_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player.cpp",
+          "src/func_020105cc.c",
+          "src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp",
+          "src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.c",
+          "src/func_02010844.c",
+          "src/_ZN8dActor_c18ClosestWithActorIDEj.cpp",
+          "src/_ZN8dActor_c18HorzAngleToFPlayerEv.cpp",
+          "src/_ZN8dActor_c14FarthestPlayerEv.cpp",
+          "src/_ZN8dActor_c23HorzAngleToCPlayerOrAngEv.cpp",
+          "src/_ZN8dActor_c18HorzAngleToCPlayerEv.cpp",
+          "src/_ZN8dActor_c13DistToCPlayerEv.cpp",
+          "src/_ZN8dActor_c22ClosestNonVanishPlayerEv.cpp",
+          "src/_ZN8dActor_c13ClosestPlayerEv.cpp",
+          "src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c",
+          "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c",
+          "src/_ZN8dActor_c9UpdatePosEP12CylinderClsn.cpp",
+          "src/_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv.cpp",
+          "src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn.cpp",
+          "src/func_02010da4.c",
+          "src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp",
+          "src/_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as.cpp",
+          "src/func_02010e78.c",
+          "src/_ZN8dActor_c4NextEPKS_.cpp",
+          "src/_ZN8dActor_c15FindWithActorIDEjPS_.cpp",
+          "src/_ZN8dActor_c10FindWithIDEj.cpp",
+          "src/_ZN8dActor_c11AfterRenderEj.cpp",
+          "src/_ZN8dActor_c12BeforeRenderEv.cpp",
+          "src/_ZN8dActor_c13AfterBehaviorEj.cpp",
+          "src/_ZN8dActor_c14BeforeBehaviorEv.cpp",
+          "src/_ZN8dActor_c21AfterCleanupResourcesEj.cpp",
+          "src/_ZN8dActor_c22BeforeCleanupResourcesEv.cpp",
+          "src/_ZN8dActor_c18AfterInitResourcesEj.cpp",
+          "src/_ZN8dActor_c19BeforeInitResourcesEv.cpp",
+          "src/_ZN8dActor_cD2Ev.cpp",
+          "src/_ZN8dActor_cD0Ev.c",
+          "src/_ZN8dActor_cD1Ev.cpp",
+          "src/_ZN8dActor_cC1Ev.cpp",
+          "src/_ZN8Vector3sD1Ev.cpp",
+          "src/_ZN8dActor_cC2Ev.cpp"
+        ],
+        "result": "failed",
+        "phases": {
+          "delink": true,
+          "lcf": true,
+          "compile": true,
+          "link": true,
+          "checkModules": true,
+          "checkSymbols": false,
+          "rom": true
+        },
+        "tuRange": {
+          "start": "0x0200f658",
+          "end": "0x02011654",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        "moduleFidelityPassed": true,
+        "symbolCheckNewVsBaseline": [],
+        "rom": {
+          "bytes": 16777216,
+          "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+        },
+        "scratch": "build/tu/arm9-Actor/link-partial (gitignored)"
+      }
+    },
+    {
+      "id": "ov004/dScMgBase_c",
+      "module": "ov004",
+      "source": "src_tu/actors/dScMgBase_c.cpp",
+      "promoted_source": "src/actors/dScMgBase_c.cpp",
+      "status": "link-verified",
+      "boundary_confidence": "medium",
+      "boundary_evidence": [
+        "contiguous linker run: 0x20b04e8..0x20b0a38, 8 function(s). This is a SUB-RANGE of build/tu_map.json's ov004 unit 9 (0x020b04e8..0x020b2adc), split because #pragma opt_strength_reduction is file-global and the ROM needs it OFF for 0x020b0620 and ON for 0x020b0cac / 0x020b14f0 -- see this file's own header comment",
+        "class label(s): dScMgBase_c",
+        "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x020b04e8",
+          "end": "0x020b0a38"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN11dScMgBase_c16OnPendingDestroyEv",
+          "address": "0x020b04e8",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN11dScMgBase_c16OnPendingDestroyEv.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "_ZN11dScMgBase_c6RenderEv",
+          "address": "0x020b04ec",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN11dScMgBase_c6RenderEv.cpp",
+          "ordinal": 9
+        },
+        {
+          "symbol": "_ZN11dScMgBase_c12BeforeRenderEv",
+          "address": "0x020b04f4",
+          "size": "0x00000124",
+          "legacy_source": "src/_ZN11dScMgBase_c12BeforeRenderEv.cpp",
+          "ordinal": 10
+        },
+        {
+          "symbol": "_ZN11dScMgBase_c8BehaviorEv",
+          "address": "0x020b0618",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN11dScMgBase_c8BehaviorEv.cpp",
+          "ordinal": 11
+        },
+        {
+          "symbol": "_ZN11dScMgBase_c14BeforeBehaviorEv",
+          "address": "0x020b0620",
+          "size": "0x00000220",
+          "legacy_source": "src/_ZN11dScMgBase_c14BeforeBehaviorEv.cpp",
+          "ordinal": 12
+        },
+        {
+          "symbol": "_ZN11dScMgBase_c21AfterCleanupResourcesEj",
+          "address": "0x020b0840",
+          "size": "0x000000b0",
+          "legacy_source": "src/_ZN11dScMgBase_c21AfterCleanupResourcesEj.cpp",
+          "ordinal": 13
+        },
+        {
+          "symbol": "_ZN11dScMgBase_c18AfterInitResourcesEj",
+          "address": "0x020b08f0",
+          "size": "0x00000040",
+          "legacy_source": "src/_ZN11dScMgBase_c18AfterInitResourcesEj.cpp",
+          "ordinal": 14
+        },
+        {
+          "symbol": "_ZN11dScMgBase_c19BeforeInitResourcesEv",
+          "address": "0x020b0930",
+          "size": "0x00000108",
+          "legacy_source": "src/_ZN11dScMgBase_c19BeforeInitResourcesEv.cpp",
+          "ordinal": 15
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov004-dScMgBase_c/dScMgBase_c.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 8,
+        "functions_declared": 8,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "PASS",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        },
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-verified",
+          "scratch": "build/tu/ov004-dScMgBase_c/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": true,
+            "checkModules": true,
+            "checkSymbols": false
+          },
+          "tuRange": {
+            "start": "0x020b04e8",
+            "end": "0x020b0a38",
+            "differingBytes": 0,
+            "firstDiff": null
+          },
+          "objectAudit": {
+            "counts": {
+              "LICENSED": 8
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [],
+            "unlicensedSections": []
+          },
+          "symbolCheckNewVsBaseline": [],
+          "linkerOutput": null
+        }
+      }
+    },
+    {
+      "id": "ov004/unit020b0a38",
+      "module": "ov004",
+      "source": "src_tu/actors/unit_ov004_020b0a38.cpp",
+      "promoted_source": "src/actors/unit020b0a38.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "medium",
+      "boundary_evidence": [
+        "contiguous linker run: 0x20b0a38..0x20b2adc, 41 function(s). This is a SUB-RANGE of build/tu_map.json's ov004 unit 9 (0x020b04e8..0x020b2adc), split because #pragma opt_strength_reduction is file-global and the ROM needs it OFF for 0x020b0620 and ON for 0x020b0cac / 0x020b14f0 -- see this file's own header comment",
+        "class label(s): dScMgBase_c",
+        "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x020b0a38",
+          "end": "0x020b2adc"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "func_ov004_020b0a38",
+          "address": "0x020b0a38",
+          "size": "0x0000001c",
+          "legacy_source": "src/func_ov004_020b0a38.c",
+          "ordinal": 16
+        },
+        {
+          "symbol": "func_ov004_020b0a54",
+          "address": "0x020b0a54",
+          "size": "0x0000004c",
+          "legacy_source": "src/func_ov004_020b0a54.c",
+          "ordinal": 17
+        },
+        {
+          "symbol": "FreeGfxSlotsById",
+          "address": "0x020b0aa0",
+          "size": "0x0000007c",
+          "legacy_source": "src/FreeGfxSlotsById.c",
+          "ordinal": 18
+        },
+        {
+          "symbol": "func_ov004_020b0b1c",
+          "address": "0x020b0b1c",
+          "size": "0x00000190",
+          "legacy_source": "src/func_ov004_020b0b1c.c",
+          "ordinal": 19
+        },
+        {
+          "symbol": "func_ov004_020b0cac",
+          "address": "0x020b0cac",
+          "size": "0x00000084",
+          "legacy_source": "src/func_ov004_020b0cac.c",
+          "ordinal": 20
+        },
+        {
+          "symbol": "func_ov004_020b0d30",
+          "address": "0x020b0d30",
+          "size": "0x0000005c",
+          "legacy_source": "src/func_ov004_020b0d30.c",
+          "ordinal": 21
+        },
+        {
+          "symbol": "func_ov004_020b0d8c",
+          "address": "0x020b0d8c",
+          "size": "0x00000054",
+          "legacy_source": "src/func_ov004_020b0d8c.c",
+          "ordinal": 22
+        },
+        {
+          "symbol": "func_ov004_020b0de0",
+          "address": "0x020b0de0",
+          "size": "0x000000a4",
+          "legacy_source": "src/func_ov004_020b0de0.c",
+          "ordinal": 23
+        },
+        {
+          "symbol": "func_ov004_020b0e84",
+          "address": "0x020b0e84",
+          "size": "0x0000066c",
+          "legacy_source": "src/func_ov004_020b0e84.cpp",
+          "ordinal": 24
+        },
+        {
+          "symbol": "func_ov004_020b14f0",
+          "address": "0x020b14f0",
+          "size": "0x00000220",
+          "legacy_source": "src/func_ov004_020b14f0.c",
+          "ordinal": 25
+        },
+        {
+          "symbol": "func_ov004_020b1710",
+          "address": "0x020b1710",
+          "size": "0x000002e0",
+          "legacy_source": "src/func_ov004_020b1710.c",
+          "ordinal": 26
+        },
+        {
+          "symbol": "func_ov004_020b19f0",
+          "address": "0x020b19f0",
+          "size": "0x0000006c",
+          "legacy_source": "src/func_ov004_020b19f0.c",
+          "ordinal": 27
+        },
+        {
+          "symbol": "func_ov004_020b1a5c",
+          "address": "0x020b1a5c",
+          "size": "0x00000090",
+          "legacy_source": "src/func_ov004_020b1a5c.c",
+          "ordinal": 28
+        },
+        {
+          "symbol": "func_ov004_020b1aec",
+          "address": "0x020b1aec",
+          "size": "0x0000001c",
+          "legacy_source": "src/func_ov004_020b1aec.c",
+          "ordinal": 29
+        },
+        {
+          "symbol": "func_ov004_020b1b08",
+          "address": "0x020b1b08",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov004_020b1b08.c",
+          "ordinal": 30
+        },
+        {
+          "symbol": "func_ov004_020b1b40",
+          "address": "0x020b1b40",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov004_020b1b40.c",
+          "ordinal": 31
+        },
+        {
+          "symbol": "func_ov004_020b1b78",
+          "address": "0x020b1b78",
+          "size": "0x00000028",
+          "legacy_source": "src/func_ov004_020b1b78.c",
+          "ordinal": 32
+        },
+        {
+          "symbol": "func_ov004_020b1ba0",
+          "address": "0x020b1ba0",
+          "size": "0x00000028",
+          "legacy_source": "src/func_ov004_020b1ba0.c",
+          "ordinal": 33
+        },
+        {
+          "symbol": "func_ov004_020b1bc8",
+          "address": "0x020b1bc8",
+          "size": "0x000000a0",
+          "legacy_source": "src/func_ov004_020b1bc8.c",
+          "ordinal": 34
+        },
+        {
+          "symbol": "func_ov004_020b1c68",
+          "address": "0x020b1c68",
+          "size": "0x00000088",
+          "legacy_source": "src/func_ov004_020b1c68.c",
+          "ordinal": 35
+        },
+        {
+          "symbol": "func_ov004_020b1cf0",
+          "address": "0x020b1cf0",
+          "size": "0x00000070",
+          "legacy_source": "src/func_ov004_020b1cf0.c",
+          "ordinal": 36
+        },
+        {
+          "symbol": "func_ov004_020b1d60",
+          "address": "0x020b1d60",
+          "size": "0x00000088",
+          "legacy_source": "src/func_ov004_020b1d60.c",
+          "ordinal": 37
+        },
+        {
+          "symbol": "func_ov004_020b1de8",
+          "address": "0x020b1de8",
+          "size": "0x0000004c",
+          "legacy_source": "src/func_ov004_020b1de8.c",
+          "ordinal": 38
+        },
+        {
+          "symbol": "func_ov004_020b1e34",
+          "address": "0x020b1e34",
+          "size": "0x00000010",
+          "legacy_source": "src/func_ov004_020b1e34.c",
+          "ordinal": 39
+        },
+        {
+          "symbol": "func_ov004_020b1e44",
+          "address": "0x020b1e44",
+          "size": "0x00000060",
+          "legacy_source": "src/func_ov004_020b1e44.c",
+          "ordinal": 40
+        },
+        {
+          "symbol": "func_ov004_020b1ea4",
+          "address": "0x020b1ea4",
+          "size": "0x0000037c",
+          "legacy_source": "src/func_ov004_020b1ea4.c",
+          "ordinal": 41
+        },
+        {
+          "symbol": "func_ov004_020b2444",
+          "address": "0x020b2444",
+          "size": "0x00000130",
+          "legacy_source": "src/func_ov004_020b2444.c",
+          "ordinal": 43
+        },
+        {
+          "symbol": "func_ov004_020b2574",
+          "address": "0x020b2574",
+          "size": "0x000000e8",
+          "legacy_source": "src/func_ov004_020b2574.c",
+          "ordinal": 44
+        },
+        {
+          "symbol": "func_ov004_020b265c",
+          "address": "0x020b265c",
+          "size": "0x00000198",
+          "legacy_source": "src/func_ov004_020b265c.c",
+          "ordinal": 45
+        },
+        {
+          "symbol": "func_ov004_020b27f4",
+          "address": "0x020b27f4",
+          "size": "0x0000008c",
+          "legacy_source": "src/func_ov004_020b27f4.c",
+          "ordinal": 46
+        },
+        {
+          "symbol": "func_ov004_020b2880",
+          "address": "0x020b2880",
+          "size": "0x0000008c",
+          "legacy_source": "src/func_ov004_020b2880.c",
+          "ordinal": 47
+        },
+        {
+          "symbol": "func_ov004_020b290c",
+          "address": "0x020b290c",
+          "size": "0x00000074",
+          "legacy_source": "src/func_ov004_020b290c.c",
+          "ordinal": 48
+        },
+        {
+          "symbol": "func_ov004_020b2980",
+          "address": "0x020b2980",
+          "size": "0x0000000c",
+          "legacy_source": "src/func_ov004_020b2980.c",
+          "ordinal": 49
+        },
+        {
+          "symbol": "func_ov004_020b298c",
+          "address": "0x020b298c",
+          "size": "0x00000004",
+          "legacy_source": "src/func_ov004_020b298c.c",
+          "ordinal": 50
+        },
+        {
+          "symbol": "func_ov004_020b2990",
+          "address": "0x020b2990",
+          "size": "0x00000004",
+          "legacy_source": "src/func_ov004_020b2990.c",
+          "ordinal": 51
+        },
+        {
+          "symbol": "func_ov004_020b2994",
+          "address": "0x020b2994",
+          "size": "0x00000008",
+          "legacy_source": "src/func_ov004_020b2994.c",
+          "ordinal": 52
+        },
+        {
+          "symbol": "func_ov004_020b299c",
+          "address": "0x020b299c",
+          "size": "0x00000004",
+          "legacy_source": "src/func_ov004_020b299c.c",
+          "ordinal": 53
+        },
+        {
+          "symbol": "func_ov004_020b29a0",
+          "address": "0x020b29a0",
+          "size": "0x00000020",
+          "legacy_source": "src/func_ov004_020b29a0.cpp",
+          "ordinal": 54
+        },
+        {
+          "symbol": "_ZN11dScMgBase_cD2Ev",
+          "address": "0x020b29c0",
+          "size": "0x00000058",
+          "legacy_source": "src/_ZN11dScMgBase_cD2Ev.cpp",
+          "ordinal": 55
+        },
+        {
+          "symbol": "_ZN11dScMgBase_cD0Ev",
+          "address": "0x020b2a18",
+          "size": "0x0000006c",
+          "legacy_source": "src/_ZN11dScMgBase_cD0Ev.cpp",
+          "ordinal": 56
+        },
+        {
+          "symbol": "_ZN11dScMgBase_cD1Ev",
+          "address": "0x020b2a84",
+          "size": "0x00000058",
+          "legacy_source": "src/_ZN11dScMgBase_cD1Ev.cpp",
+          "ordinal": 57
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: CONFLICT: extern declaration 'data_ov004_020beb68' differs between the legacy file that used to hold func_ov004_020b0a54 and the one that held func_ov004_020b0b1c; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold func_ov004_020b0d8c and the one that held func_ov004_020b0e84; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold func_ov004_020b0d8c and the one that held func_ov004_020b1710; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020b1ea4' differs between the legacy file that used to hold func_ov004_020b0e84 and the one that held func_ov004_020b1710; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'Hud_RenderSprite' differs between the legacy file that used to hold func_ov004_020b0d8c and the one that held func_ov004_020b1710; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'data_ov004_020beb68' differs between the legacy file that used to hold func_ov004_020b0a54 and the one that held func_ov004_020b1aec; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'data_ov004_020beb68' differs between the legacy file that used to hold func_ov004_020b0a54 and the one that held func_ov004_020b1b08; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'data_ov004_020beb68' differs between the legacy file that used to hold func_ov004_020b0a54 and the one that held func_ov004_020b1b40; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020b2444' differs between the legacy file that used to hold func_ov004_020b1710 and the one that held func_ov004_020b1bc8; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020b1ea4' differs between the legacy file that used to hold func_ov004_020b0e84 and the one that held func_ov004_020b1bc8; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold func_ov004_020b0d8c and the one that held func_ov004_020b1de8; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020b2444' differs between the legacy file that used to hold func_ov004_020b1710 and the one that held func_ov004_020b1e44; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold func_ov004_020b0d8c and the one that held func_ov004_020b1e44; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020b1d60' differs between the legacy file that used to hold func_ov004_020b1de8 and the one that held func_ov004_020b1ea4; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'func_ov004_020b1d60' differs between the legacy file that used to hold func_ov004_020b1de8 and the one that held func_ov004_020b2444; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold func_ov004_020b0d8c and the one that held func_ov004_020b2574; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'DrawOamSprite' differs between the legacy file that used to hold func_ov004_020b1e44 and the one that held func_ov004_020b2574; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'FreeGfxSlotsById' differs between the legacy file that used to hold func_ov004_020b0d30 and the one that held func_ov004_020b265c; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold func_ov004_020b0d8c and the one that held func_ov004_020b27f4; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'GetGameLanguage' differs between the legacy file that used to hold func_ov004_020b0d8c and the one that held func_ov004_020b2880; kept the first, the other is commented out for review"
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov004-unit020b0a38/unit_ov004_020b0a38.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 41,
+        "functions_declared": 41,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 9 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        }
+      },
+      "partial_isolation": {
+        "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
+        "derivedObjects": 41,
+        "contributionEquivalent": "39/41",
+        "comparedFields": [
+          "keptSection",
+          "keptBytes",
+          "relocs",
+          "defined",
+          "mapping",
+          "live",
+          "undefReferenced"
+        ],
+        "legacyEntriesComplete": "40/41",
+        "extraInertImports": 141,
+        "extraImportsWithNoHome": [],
+        "artefacts": "build/tu/ov004-unit020b0a38/partial/partial.json (gitignored)",
+        "state": "derived",
+        "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
+        "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+      }
+    },
+    {
+      "id": "arm9/Scene",
+      "module": "arm9",
+      "source": "src_tu/scene/Scene.cpp",
+      "promoted_source": "src/actors/Scene.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "tu_map CANNOT segment this module: tools/tu_map.py emits `main` as ONE unit covering 0x20049f0..0x20707a4 with 2984 functions and ~70 class labels, and lists the module under `under-segmented (TU count is a lower bound)`. There is therefore no `tubuild.py create` candidate id for Scene and NO tu_map boundary behind any of the readings below -- all of them were established by hand from the cartridge.",
+        "contiguous linker run: 0x0202e140..0x0202ec9c, 21 function(s), gapless in config/arm9/delinks.txt (each entry's end is the next entry's start, all 21 marked `complete`).",
+        "neighbours differ on both sides: func_0202e118 (0x0202e118..0x0202e140) ends exactly where the run begins and _ZN5StageC3Ev sits below it; func_0202ec9c begins exactly where the run ends. Neither is a Scene member and neither is called from one.",
+        "TWO FOREIGN-NAMED FUNCTIONS SIT INSIDE THE SPAN and are admitted deliberately: _ZN5Stage12SetVramBanksEv (0x0202e73c) and _ZN2GX15DisableAllBanksEv (0x0202e78c) lie between _ZN8dScene_c20Initialise3dGraphicsEv (0x0202e6c8) and _ZN8dScene_c22ResetHardwareRegistersEv (0x0202e7d4). An object's contribution to a section is a single contiguous interval, so if those two Scene functions share an object then so do the two between them. The data attribution below is what establishes that they do.",
+        "STATIC-DATA ATTRIBUTION, which is the decisive reading. This TU's statics form one unbroken .data block ending in the vtable it is the key-function TU for: data_02092660 (u8) / data_02092664 (u16) / data_02092668 (Matrix2x2, 0x10 bytes, ending 0x02092678) / _ZTV8dScene_c's Itanium preamble at 0x02092678 / _ZTV8dScene_c at 0x02092680, 18 slots, ending 0x020926c8 where the next symbol data_020926c8 begins. From config/arm9/relocs.txt those three statics are referenced ONLY from inside this span, and from BOTH SIDES of the foreign pair: data_02092660 <- 0x0202e2f0, 0x0202e344, 0x0202e5e8; data_02092664 <- 0x0202e2f4, 0x0202e340, 0x0202e390, 0x0202e5c4 (all BELOW the pair); data_02092668 <- 0x0202ebe4, which is inside ResetHardwareRegisters, ABOVE the pair. Object k's contribution to EVERY section precedes object k+1's, in ascending disjoint intervals, so one object owns 0x02092660..0x020926c8; both text sub-runs reach into it; therefore both sub-runs are that one object, and the pair between them is inside it.",
+        "the source order the reverse-emission rule implies is a coherent file: reversing the ROM address order yields BeforeInitResources then AfterInitResources, then the Cleanup pair, then Behavior, then Render -- each Before immediately before its After, the four groups in ActorBase's own declaration order, destructor last. Corroboration, not proof.",
+        "THE FOUR GraphCallbacks ARE EXCLUDED, on evidence, not omission. _ZN8dScene_c14GraphCallback0Ev..3Ev are at 0x02018ea0..0x02018ec0, 0x152a0 bytes below this run. The same single-contiguous-interval rule the admission of the foreign pair rests on excludes them outright: no object can contribute .text at both 0x02018ea0 and 0x0202e140 with ~86 KB of other objects' code in between. Three further readings agree: (a) their neighbours are func_02018e68, an OS_SleepThread wrapper, and func_02018ec0, a fader slot-2 dispatch -- a system/graphics grab-bag, not a scene class; (b) the pointer tables holding them, 0x0208ee14..0x0208ee20, are ~0x3800 bytes below this TU's .data block and on the far side of _ZTV7dBase_c (0x0208e4b8), i.e. in a much earlier object's data contribution; (c) their own address order reverses to GraphCallback0,1,2,3, so they ARE consecutive definitions in one source file -- just not this one. Which TU is theirs was not established.",
+        "module sinit corroboration: 23 sinit(s) / 23 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, and NOT narrowing to this TU: `main` has 23 static initialisers against 3067 functions, none of which references any of this TU's four data symbols, so static-initialiser attribution contributes NOTHING here and is recorded as such rather than quoted as support)."
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x0202e140",
+          "end": "0x0202ec9c"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN8dScene_cD1Ev",
+          "address": "0x0202e140",
+          "size": "0x00000030",
+          "legacy_source": "src/_ZN8dScene_cD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN8dScene_cD0Ev",
+          "address": "0x0202e170",
+          "size": "0x00000044",
+          "legacy_source": "src/_ZN8dScene_cD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN8dScene_c20SetAndStopColorFaderEv",
+          "address": "0x0202e1b4",
+          "size": "0x0000002c",
+          "legacy_source": "src/_ZN8dScene_c20SetAndStopColorFaderEv.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN8dScene_c9SetFadersEP15FaderBrightness",
+          "address": "0x0202e1e0",
+          "size": "0x0000008c",
+          "legacy_source": "src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "_ZN8dScene_c16SpawnIfNecessaryEv",
+          "address": "0x0202e26c",
+          "size": "0x00000094",
+          "legacy_source": "src/_ZN8dScene_c16SpawnIfNecessaryEv.cpp",
+          "ordinal": 4
+        },
+        {
+          "symbol": "_ZN8dScene_c18PrepareToSpawnBootEv",
+          "address": "0x0202e300",
+          "size": "0x00000048",
+          "legacy_source": "src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "_ZN8dScene_c14StartSceneFadeEjjt",
+          "address": "0x0202e348",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN8dScene_c14StartSceneFadeEjjt.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "_ZN8dScene_c15SetSceneToSpawnEjj",
+          "address": "0x0202e36c",
+          "size": "0x0000002c",
+          "legacy_source": "src/_ZN8dScene_c15SetSceneToSpawnEjj.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "_ZN8dScene_c11AfterRenderEj",
+          "address": "0x0202e398",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN8dScene_c11AfterRenderEj.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "_ZN8dScene_c12BeforeRenderEv",
+          "address": "0x0202e3a4",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN8dScene_c12BeforeRenderEv.cpp",
+          "ordinal": 9
+        },
+        {
+          "symbol": "_ZN8dScene_c13AfterBehaviorEj",
+          "address": "0x0202e3c8",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN8dScene_c13AfterBehaviorEj.cpp",
+          "ordinal": 10
+        },
+        {
+          "symbol": "_ZN8dScene_c14BeforeBehaviorEv",
+          "address": "0x0202e3d4",
+          "size": "0x000001fc",
+          "legacy_source": "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+          "ordinal": 11
+        },
+        {
+          "symbol": "_ZN8dScene_c21AfterCleanupResourcesEj",
+          "address": "0x0202e5d0",
+          "size": "0x00000020",
+          "legacy_source": "src/_ZN8dScene_c21AfterCleanupResourcesEj.cpp",
+          "ordinal": 12
+        },
+        {
+          "symbol": "_ZN8dScene_c22BeforeCleanupResourcesEv",
+          "address": "0x0202e5f0",
+          "size": "0x0000003c",
+          "legacy_source": "src/_ZN8dScene_c22BeforeCleanupResourcesEv.cpp",
+          "ordinal": 13
+        },
+        {
+          "symbol": "_ZN8dScene_c18AfterInitResourcesEj",
+          "address": "0x0202e62c",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN8dScene_c18AfterInitResourcesEj.cpp",
+          "ordinal": 14
+        },
+        {
+          "symbol": "_ZN8dScene_c19BeforeInitResourcesEv",
+          "address": "0x0202e638",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN8dScene_c19BeforeInitResourcesEv.cpp",
+          "ordinal": 15
+        },
+        {
+          "symbol": "_ZN8dScene_c19ResetFadersAndSoundEv",
+          "address": "0x0202e66c",
+          "size": "0x0000005c",
+          "legacy_source": "src/_ZN8dScene_c19ResetFadersAndSoundEv.cpp",
+          "ordinal": 16
+        },
+        {
+          "symbol": "_ZN8dScene_c20Initialise3dGraphicsEv",
+          "address": "0x0202e6c8",
+          "size": "0x00000074",
+          "legacy_source": "src/_ZN8dScene_c20Initialise3dGraphicsEv.cpp",
+          "ordinal": 17
+        },
+        {
+          "symbol": "_ZN5Stage12SetVramBanksEv",
+          "address": "0x0202e73c",
+          "size": "0x00000050",
+          "legacy_source": "src/_ZN5Stage12SetVramBanksEv.cpp",
+          "ordinal": 18
+        },
+        {
+          "symbol": "_ZN2GX15DisableAllBanksEv",
+          "address": "0x0202e78c",
+          "size": "0x00000048",
+          "legacy_source": "src/_ZN2GX15DisableAllBanksEv.cpp",
+          "ordinal": 19
+        },
+        {
+          "symbol": "_ZN8dScene_c22ResetHardwareRegistersEv",
+          "address": "0x0202e7d4",
+          "size": "0x000004c8",
+          "legacy_source": "src/_ZN8dScene_c22ResetHardwareRegistersEv.cpp",
+          "ordinal": 20
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "HAND-ASSEMBLED. `tubuild.py create` has no candidate for this TU (see boundary_evidence item 1) and would refuse these sources anyway, several being extern \"C\"-wrapped. Written against notes/tu-reconstruction-pilot-report.md and src_tu/actors/PoleLift.cpp; the manifest entry itself is built by tubuild.build_manifest_entry so the schema stays the tool's own.",
+        "The two functions at 0x0202e73c and 0x0202e78c carry other classes' names (Stage::SetVramBanks, GX::DisableAllBanks) and are admitted on the data-attribution reading in boundary_evidence, not on their names. Names in this tree are project coinages; the ROM's RTTI carries class names only.",
+        "ZERO UNLICENSED .text, AND THAT TOOK REMOVING A SCAFFOLD RATHER THAN ADDING ONE. ~Scene() is defined INLINE in include/Scene.h, and src/_ZN8dScene_cD1Ev.cpp / src/_ZN8dScene_cD0Ev.cpp each carry a never-called forcing function because a TU that merely includes the header emits no out-of-line copy. This TU needs no such thing: it defines Scene's key function (BeforeInitResources, the first non-inline virtual), so it emits _ZTV8dScene_c, whose slots 16/17 ARE D1/D0, and taking their addresses for the table forces both out-of-line copies. MEASURED both ways -- `tubuild.py compile` reports D1 at section[16] size 0x30 and D0 at section[18] size 0x44 with the scaffold and without it; dropping it took unlicensed function symbols 1 -> 0. It was worth dropping and not merely tidy: a 0x38-byte STB_GLOBAL .text that no config/arm9/symbols.txt entry names, sitting inside the licensed span, displaces every byte after it under rombuild's -nodead link (measured on arm9/Actor: 506 bytes differ and 15/106 modules exact with a scaffold, IDENTICAL and 106/106 without).",
+        "UNLICENSED .data, 7 symbols, ALL EXPECTED AND NONE VERIFIED. Defining the key function emits _ZTV8dScene_c (0x50, STB_GLOBAL) plus six STB_LOPROC RTTI records for Scene and its bases. _ZTV8dScene_c is ROM-resident at 0x02092678..0x020926c8 -- inside the 0x02092660..0x020926c8 block boundary_evidence establishes this TU owns -- so it is licensable in principle, but it is deliberately NOT listed under `data` here: every one of its 20 words is a relocation, `verify` does not compare data at all, and listing it would only stop the tool reporting it while proving nothing. That is the `data-verified` rung and this round did not attempt it. Note also the convention clash the pilot hit in the text direction: mwcc's `_ZTV8dScene_c` names the vtable OBJECT at 0x02092678 while config/arm9/symbols.txt names the SLOT ARRAY at 0x02092680, eight bytes apart.",
+        "boundary_confidence 'high' came out of tubuild.tu_confidence's DEGENERATE path -- with a single synthetic unit it has no neighbouring unit to score against and returns 'high' merely because the unit carries a class label. It is NOT a tu_map boundary_confidence reading, because tu_map has no boundary here at all. The real basis for trusting this cut is the boundary_evidence list, item 5 in particular.",
+        "LADDER REACHED: status text-verified on the whole-range axis (whole-range linking is walled -- see verification.linkcheck.whyWholeRangeCannotPassYet), and partial-link-verified on the orthogonal partial-isolation axis, where the TU range 0x0202e140..0x0202ec9c comes out IDENTICAL (2908 bytes, 0 differing), module fidelity is 106/106 exact at 100.000000%, dsd check modules --fail PASSes, and the full ROM builds bit-identical to the baseline control.",
+        "GENERAL FINDING, worth lifting out of this entry: a key-function TU emits _ZTS records whose bytes are the CLASS NAME STRING, so while the tree's class names are coinages those records can never be attributed to any ROM address -- the ROM holds b'8dScene_c\\x00' where this TU emits b'8dScene_c\\x00'. That makes whole-range link-verified unreachable for every coinage-named key-function TU, independently of the tubuild.splice_tu_entry .data-claim gap. See verification.linkcheck.whyWholeRangeCannotPassYet blockers A and B."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/arm9-Scene/Scene.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 21,
+        "functions_declared": 21,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 7 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        },
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-failed",
+          "scratch": "build/tu/arm9-Scene/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": false
+          },
+          "tuRange": null,
+          "objectAudit": {
+            "counts": {
+              "HOMELESS": 6,
+              "COLLIDES-GAP": 1,
+              "LICENSED": 21
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [
+              "HOMELESS _ZTS8dScene_c STB_LOPROC .data size=0x7",
+              "HOMELESS _ZTI7fBase_c STB_LOPROC .data size=0x8",
+              "HOMELESS _ZTS7fBase_c STB_LOPROC .data size=0xb",
+              "HOMELESS _ZTI7dBase_c STB_LOPROC .data size=0xc",
+              "HOMELESS _ZTS7dBase_c STB_LOPROC .data size=0xf",
+              "HOMELESS _ZTI8dScene_c STB_LOPROC .data size=0xc",
+              "COLLIDES-GAP _ZTV8dScene_c STB_GLOBAL .data size=0x50 already at arm9:0x02092680"
+            ],
+            "unlicensedSections": [
+              {
+                "name": ".data",
+                "size": 7
+              },
+              {
+                "name": ".data",
+                "size": 8
+              },
+              {
+                "name": ".data",
+                "size": 11
+              },
+              {
+                "name": ".data",
+                "size": 12
+              },
+              {
+                "name": ".data",
+                "size": 12
+              },
+              {
+                "name": ".data",
+                "size": 15
+              },
+              {
+                "name": ".data",
+                "size": 80
+              }
+            ]
+          },
+          "symbolCheckNewVsBaseline": null,
+          "linkerOutput": "mwldarm.exe: Multiply-defined: \"virtual table for Scene\" in Scene.o\nmwldarm.exe: Previously defined in _dsd_gap@main_44.o\n\nErrors caused tool to abort.",
+          "whyWholeRangeCannotPassYet": [
+            "THE KEY-FUNCTION LINK WALL, measured rather than predicted. This TU defines Scene's key function, so it emits _ZTV8dScene_c STB_GLOBAL; dsd's gap object supplies the same symbol from ROM data at arm9:0x02092680, and mwldarm aborts: 'Multiply-defined: \"virtual table for Scene\" in Scene.o / Previously defined in _dsd_gap@main_44.o'. The licensing audit predicted it (1 COLLIDES-GAP) and the link was run anyway so the verdict was measured.",
+            "BLOCKER A -- TOOLING, in principle fixable. To stop the gap object claiming the vtable the TU would have to OWN the .data it lands in. tubuild.splice_tu_entry cannot express that: it hardcodes a single `.text start:.. end:..` line per spliced entry with no path for any other section. The range is already known from boundary_evidence (0x02092660..0x020926c8, the vtable object occupying 0x02092678..0x020926c8), so the claim is knowable; writing it is not currently possible. _ZTV8dScene_c's own 20 words are plausible content -- every slot points at a real ROM function -- so this blocker is about plumbing, not about the bytes.",
+            "BLOCKER B -- NAMING, AND IT IS NOT FIXABLE BY ATTRIBUTION AT ALL. This is the important one and it generalises past this TU. The object emits six STB_LOPROC RTTI records that the audit calls HOMELESS -- _ZTI/_ZTS for Scene, ActorDerived and ActorBase -- and no symbols.txt anywhere names them (verified: zero hits across every config/**/symbols.txt; the only matches in config/ are inside this manifest file itself). The reason is that the type-name STRINGS a C++ compiler bakes into _ZTS are the CLASS NAMES, and this tree's names are coinages while the cartridge holds Nintendo's. Measured side by side:",
+            "    ROM   0x020914b0 : b'8dScene_c\\x00\\x00\\x009dScBoot_c\\x00\\x00'   (_ZTS8dScene_c, and _ZTS9dScBoot_c behind it)",
+            "    ours  _ZTS8dScene_c size 0x7 : b'8dScene_c\\x00'          _ZTS7fBase_c 0xb : b'7fBase_c\\x00'          _ZTS7dBase_c 0xf : b'7dBase_c\\x00'",
+            "b'8dScene_c\\x00' is 7 bytes and b'8dScene_c\\x00' is 10, and they are different bytes, so there is no address in the cartridge these three _ZTS records could be attributed to -- their content is not in the ROM and never will be. Since rombuild links -nodead, nothing drops them either, and they would displace bytes inside the module.",
+            "CONSEQUENCE FOR THE WORKSTREAM, stated as a general rule because it is one: NO key-function TU can reach whole-range link-verified while its class name is a project coinage. The vtable is a plumbing problem; the type strings are not. The only fix is renaming the class to the ROM's own name (Scene -> dScene_c, ActorDerived -> dBase_c, ActorBase -> fBase_c, per include/Scene.h reading 4), which is a separate tree-wide change and was not attempted here.",
+            "WHY --partial IS UNAFFECTED: objisolate.derive drops exactly this material per function, which is why the partial route reproduces the module and the ROM byte-for-byte while the whole-range splice cannot. Neither blocker is a source change to this file, and the text-only result stands regardless -- a linkcheck failure says nothing about it."
+          ]
+        },
+        "baseline_control": "Run BEFORE the merge, so a green merged result cannot be an environment artefact: all 21 untouched legacy sources re-verified with build_pin.verify() under their own pin, strict=(reloc_audit destination check) -- 21/21 OK, every one 2004/b56, which is also what resolve_tu_version derives for the merged TU. config/rombuild-versions.txt carries no override for any of the 21 stems."
+      },
+      "partial_isolation": {
+        "round": "tools/tubuild.py linkcheck --partial -- one compile of the consolidated source, objisolate.derive per licensed function, each derived object substituted for the production per-function object at its own existing path, then scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+        "delinksChanged": false,
+        "derivedObjects": 21,
+        "contributionEquivalent": "21/21",
+        "comparedFields": [
+          "keptSection",
+          "keptBytes",
+          "relocs",
+          "defined",
+          "mapping",
+          "live",
+          "undefReferenced"
+        ],
+        "substitutedObjectPaths": [
+          "src/_ZN8dScene_cD1Ev.cpp",
+          "src/_ZN8dScene_cD0Ev.cpp",
+          "src/_ZN8dScene_c20SetAndStopColorFaderEv.cpp",
+          "src/_ZN8dScene_c9SetFadersEP15FaderBrightness.cpp",
+          "src/_ZN8dScene_c16SpawnIfNecessaryEv.cpp",
+          "src/_ZN8dScene_c18PrepareToSpawnBootEv.cpp",
+          "src/_ZN8dScene_c14StartSceneFadeEjjt.cpp",
+          "src/_ZN8dScene_c15SetSceneToSpawnEjj.cpp",
+          "src/_ZN8dScene_c11AfterRenderEj.cpp",
+          "src/_ZN8dScene_c12BeforeRenderEv.cpp",
+          "src/_ZN8dScene_c13AfterBehaviorEj.cpp",
+          "src/_ZN8dScene_c14BeforeBehaviorEv.cpp",
+          "src/_ZN8dScene_c21AfterCleanupResourcesEj.cpp",
+          "src/_ZN8dScene_c22BeforeCleanupResourcesEv.cpp",
+          "src/_ZN8dScene_c18AfterInitResourcesEj.cpp",
+          "src/_ZN8dScene_c19BeforeInitResourcesEv.cpp",
+          "src/_ZN8dScene_c19ResetFadersAndSoundEv.cpp",
+          "src/_ZN8dScene_c20Initialise3dGraphicsEv.cpp",
+          "src/_ZN5Stage12SetVramBanksEv.cpp",
+          "src/_ZN2GX15DisableAllBanksEv.cpp",
+          "src/_ZN8dScene_c22ResetHardwareRegistersEv.cpp"
+        ],
+        "extraInertImports": 99,
+        "extraImportsWithNoHome": [],
+        "result": "partial-link-verified",
+        "phases": {
+          "delink": true,
+          "lcf": true,
+          "compile": true,
+          "link": true,
+          "checkModules": true,
+          "checkSymbols": false,
+          "rom": true
+        },
+        "tuRange": {
+          "start": "0x0202e140",
+          "end": "0x0202ec9c",
+          "differingBytes": 0,
+          "firstDiff": null
+        },
+        "moduleFidelityPassed": true,
+        "symbolCheckNewVsBaseline": [],
+        "rom": {
+          "bytes": 16777216,
+          "sha256": "d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8"
+        },
+        "scratch": "build/tu/arm9-Scene/link-partial (gitignored)",
+        "state": "partial-link-verified",
+        "stateMeaning": "contribution-equivalent, AND a scratch link with the N derived objects substituted at the N per-function object paths reproduces the module (and the ROM) byte-for-byte, with config/**/delinks.txt UNCHANGED",
+        "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function.",
+        "romIdenticalToBaseline": "The 16,777,216-byte ROM this run built has sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8, which is BIT-IDENTICAL to the one `linkcheck --baseline --module arm9` builds with no TU substitution at all. Substituting all 21 derived objects changes nothing in the cartridge.",
+        "checkSymbolsIsPreExisting": "phases.checkSymbols is false, and it is NOT this TU's. `dsd check symbols --fail` emits exactly two errors -- data_020ad524 and data_020ad560 'not found in linked binary', both ~0x7f000 bytes outside this TU's span -- and the BASELINE CONTROL run, which substitutes nothing, emits the same two. Recorded by the tool itself as symbolCheckNewVsBaseline: [] (0 NEW, 0 resolved). The first partial run reported NOT partial-link-verified only because no baseline artefact existed yet to attribute it against; with the control in hand the same run passes."
+      }
+    },
+    {
+      "id": "ov002/Enemy",
+      "module": "ov002",
+      "source": "src_tu/actors/Enemy.cpp",
+      "promoted_source": "src/actors/Enemy.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "medium",
+      "boundary_evidence": [
+        "contiguous linker run: 0x020ad838..0x020aedbc, 31 functions in build/tu_map.json (tools/tu_map.py, run after rtti_extract.py + rtti_vtables.py). THIRTY are declared here; ordinal 4, _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn at 0x020ade78 size 0x3cc, has no source anywhere under src/ and is a hole in the middle of the run.",
+        "class label(s): Enemy -- the tree's name for Nintendo's dEnemyBase_c",
+        "neighbours: the function immediately below the span is func_ov002_020ad660 and the one immediately above is func_ov002_020aedbc, which is followed at 0x020aedf4 by the CapEnemy/OneUpMushroom destructor family -- a different class. Every function symbol strictly inside 0x020ad838..0x020aedbc is one of the 31.",
+        "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU).",
+        "VTABLE EXTENT, measured: config/arm9/overlays/ov002/symbols.txt puts _ZTS12dEnemyBase_c at 0x021081cc and _ZTI11dCapEnemy_c at 0x02108260, so the vtable OBJECT occupies 0x021081dc..0x02108260 = 0x84 bytes exactly, which is the size this TU's compiled _ZTV12dEnemyBase_c comes out. Its 33 words are offset-to-top 0, typeinfo -> 0x021081c0 (_ZTI12dEnemyBase_c), then 31 slots -- slot 16 = 0x020aed74 (_ZN12dEnemyBase_cD1Ev) and slot 17 = 0x020aed3c (_ZN12dEnemyBase_cD0Ev), both inside this span; the other 29 point into arm9. That independently confirms include/Enemy.h's virtual set: Enemy declares exactly one virtual of its own, the destructor, and adds no new slot to Actor's 31."
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x020ad838",
+          "end": "0x020aedbc"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj",
+          "address": "0x020ad838",
+          "size": "0x00000208",
+          "legacy_source": "src/_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "func_ov002_020ada40",
+          "address": "0x020ada40",
+          "size": "0x00000100",
+          "legacy_source": "src/func_ov002_020ada40.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc",
+          "address": "0x020adb40",
+          "size": "0x00000280",
+          "legacy_source": "src/_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn",
+          "address": "0x020addc0",
+          "size": "0x000000b8",
+          "legacy_source": "src/_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs",
+          "address": "0x020ae244",
+          "size": "0x00000074",
+          "legacy_source": "src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_",
+          "address": "0x020ae2b8",
+          "size": "0x0000019c",
+          "legacy_source": "src/_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "func_ov002_020ae454",
+          "address": "0x020ae454",
+          "size": "0x00000078",
+          "legacy_source": "src/func_ov002_020ae454.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "func_ov002_020ae4cc",
+          "address": "0x020ae4cc",
+          "size": "0x000000fc",
+          "legacy_source": "src/func_ov002_020ae4cc.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "func_ov002_020ae5c8",
+          "address": "0x020ae5c8",
+          "size": "0x00000040",
+          "legacy_source": "src/func_ov002_020ae5c8.c",
+          "ordinal": 9
+        },
+        {
+          "symbol": "func_ov002_020ae608",
+          "address": "0x020ae608",
+          "size": "0x00000044",
+          "legacy_source": "src/func_ov002_020ae608.c",
+          "ordinal": 10
+        },
+        {
+          "symbol": "func_ov002_020ae64c",
+          "address": "0x020ae64c",
+          "size": "0x0000005c",
+          "legacy_source": "src/func_ov002_020ae64c.c",
+          "ordinal": 11
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn",
+          "address": "0x020ae6a8",
+          "size": "0x00000094",
+          "legacy_source": "src/_ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn.cpp",
+          "ordinal": 12
+        },
+        {
+          "symbol": "func_ov002_020ae73c",
+          "address": "0x020ae73c",
+          "size": "0x000000d0",
+          "legacy_source": "src/func_ov002_020ae73c.c",
+          "ordinal": 13
+        },
+        {
+          "symbol": "func_ov002_020ae80c",
+          "address": "0x020ae80c",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov002_020ae80c.c",
+          "ordinal": 14
+        },
+        {
+          "symbol": "func_ov002_020ae844",
+          "address": "0x020ae844",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov002_020ae844.c",
+          "ordinal": 15
+        },
+        {
+          "symbol": "func_ov002_020ae87c",
+          "address": "0x020ae87c",
+          "size": "0x00000014",
+          "legacy_source": "src/func_ov002_020ae87c.c",
+          "ordinal": 16
+        },
+        {
+          "symbol": "func_ov002_020ae890",
+          "address": "0x020ae890",
+          "size": "0x00000028",
+          "legacy_source": "src/func_ov002_020ae890.c",
+          "ordinal": 17
+        },
+        {
+          "symbol": "func_ov002_020ae8b8",
+          "address": "0x020ae8b8",
+          "size": "0x0000009c",
+          "legacy_source": "src/func_ov002_020ae8b8.c",
+          "ordinal": 18
+        },
+        {
+          "symbol": "func_ov002_020ae954",
+          "address": "0x020ae954",
+          "size": "0x00000014",
+          "legacy_source": "src/func_ov002_020ae954.c",
+          "ordinal": 19
+        },
+        {
+          "symbol": "func_ov002_020ae968",
+          "address": "0x020ae968",
+          "size": "0x00000090",
+          "legacy_source": "src/func_ov002_020ae968.c",
+          "ordinal": 20
+        },
+        {
+          "symbol": "func_ov002_020ae9f8",
+          "address": "0x020ae9f8",
+          "size": "0x0000002c",
+          "legacy_source": "src/func_ov002_020ae9f8.c",
+          "ordinal": 21
+        },
+        {
+          "symbol": "func_ov002_020aea24",
+          "address": "0x020aea24",
+          "size": "0x00000008",
+          "legacy_source": "src/func_ov002_020aea24.c",
+          "ordinal": 22
+        },
+        {
+          "symbol": "func_ov002_020aea2c",
+          "address": "0x020aea2c",
+          "size": "0x00000004",
+          "legacy_source": "src/func_ov002_020aea2c.c",
+          "ordinal": 23
+        },
+        {
+          "symbol": "func_ov002_020aea30",
+          "address": "0x020aea30",
+          "size": "0x0000008c",
+          "legacy_source": "src/func_ov002_020aea30.cpp",
+          "ordinal": 24
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_c9SpawnCoinEv",
+          "address": "0x020aeabc",
+          "size": "0x0000013c",
+          "legacy_source": "src/_ZN12dEnemyBase_c9SpawnCoinEv.cpp",
+          "ordinal": 25
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj",
+          "address": "0x020aebf8",
+          "size": "0x00000120",
+          "legacy_source": "src/_ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj.cpp",
+          "ordinal": 26
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_cD2Ev",
+          "address": "0x020aed18",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN12dEnemyBase_cD2Ev.c",
+          "ordinal": 27
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_cD0Ev",
+          "address": "0x020aed3c",
+          "size": "0x00000038",
+          "legacy_source": "src/_ZN12dEnemyBase_cD0Ev.cpp",
+          "ordinal": 28
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_cD1Ev",
+          "address": "0x020aed74",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN12dEnemyBase_cD1Ev.cpp",
+          "ordinal": 29
+        },
+        {
+          "symbol": "_ZN12dEnemyBase_cC2Ev",
+          "address": "0x020aed98",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN12dEnemyBase_cC2Ev.cpp",
+          "ordinal": 30
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "HAND-ASSEMBLED, not `tubuild.py create`. That generator refuses this candidate twice over: one member has no legacy source at all, and three of the thirty legacy files (func_ov002_020ada40.cpp, func_ov002_020ae454.cpp, _ZN12dEnemyBase_cC2Ev.cpp) wrap their whole body in `extern \"C\" { ... }`, which its splitter cannot parse. The manifest entry is still tubuild's own, built through tubuild.build_manifest_entry.",
+        "ONE MEMBER IS NOT ADMITTED: _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn, 0x020ade78, size 0x3cc, ordinal 4. It is ov002's one unmatched function inside this span and no file for it exists under src/. That hole is why the TU can never be link-verified as it stands: `linkcheck --partial` refuses the whole span with 'range gap/overlap at 0x020ade78'.",
+        "THE SECOND ARGUMENT TO func_ov002_020ae5c8 IS REAL. Its own file defines it `(void *c)` and never reads a second argument; func_ov002_020ae64c's file declared it `(char *, int)` and passed one. Merged the one-argument way, func_ov002_020ae64c compiles to 0x50 against the ROM's 0x5c -- three instructions short, because `x` no longer has to survive the body in a callee-saved register. Both observations are true at once and the definition here carries the parameter unused. This is a declaration conflict that per-function compilation could not have exposed.",
+        "KEY-FUNCTION SIDE EFFECT, expected and inventoried rather than verified: Enemy's first non-inline virtual is ~Enemy and this TU defines it, so the object also emits _ZTV12dEnemyBase_c (0x84, STB_GLOBAL), _ZTI12dEnemyBase_c/_ZTS12dEnemyBase_c and the inherited Actor/ActorDerived/ActorBase RTTI records, plus a vague-linkage _ZN7Vector3D1Ev from types.h's Vector3 destructor. Ten unlicensed symbols; none is claimed correct here.",
+        "THE VTABLE DATA CANNOT DATA-VERIFY UNTIL THE CLASS IS RENAMED, and that is a measurement, not a guess: the ROM's typeinfo record at 0x021081c0 is _ZTI12dEnemyBase_c with the name string _ZTS12dEnemyBase_c, while this tree calls the class `Enemy`, so the compiler emits _ZTI12dEnemyBase_c / _ZTS12dEnemyBase_c (a 7-byte string where the ROM holds sixteen). The vtable's 33 slot words are structurally right; only the RTTI names are not. Renaming Enemy -> dEnemyBase_c is a tree-wide change and is out of scope here.",
+        "_ZN12dEnemyBase_cD2Ev is the one member whose derived object is not byte-identical in linker contribution to the production one, and the difference is a symbol ALIAS, not a byte: the legacy src/_ZN12dEnemyBase_cD2Ev.c stores the vptr through `data_ov002_021081e4` while a real `Enemy::~Enemy()` makes the compiler name its own _ZTV12dEnemyBase_c. ov002/symbols.txt gives both names the same address, 0x021081e4, objisolate's addend correction lands the derived reloc on addend 0 there, and the scratch link reproduced the range byte-for-byte -- so the destination is proven identical and only the name differs.",
+        "NAMING WAS DELIBERATELY LEFT ALONE. Eighteen members still carry func_ov002_* placeholder names, including 0x020ada40, which include/Enemy.h identifies as Enemy::KillByInvincibleChar. Renaming a linker symbol strands references this tree's gates cannot see, so it is a separate change."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov002-Enemy/Enemy.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 30,
+        "functions_declared": 30,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 10 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        }
+      },
+      "partial_isolation": {
+        "round": "tools/tubuild.py partial -- one compile of the consolidated source, objisolate.derive per licensed function, compared against rombuild.compile_one + objisolate.isolate of each legacy source",
+        "derivedObjects": 30,
+        "contributionEquivalent": "29/30",
+        "comparedFields": [
+          "keptSection",
+          "keptBytes",
+          "relocs",
+          "defined",
+          "mapping",
+          "live",
+          "undefReferenced"
+        ],
+        "legacyEntriesComplete": "30/30",
+        "extraInertImports": 125,
+        "extraImportsWithNoHome": [],
+        "artefacts": "build/tu/ov002-Enemy/partial/partial.json (gitignored)",
+        "state": "derived",
+        "stateMeaning": "N per-function objects were extracted from one compiled TU object; their equivalence to the production objects was not established",
+        "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
+      },
+      "sub_span_link": {
+        "round": "tools/tubuild.py linkcheck --partial, run TWICE against the two contiguous sub-spans the hole at ordinal 4 leaves behind. The whole span cannot be run: `linkcheck --partial` refuses it with 'range gap/overlap at 0x020ade78: next entry src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs.cpp starts at 0x020ae244'. config/**/delinks.txt was NOT changed in either run: the same entries, the same object paths, only the source that produced those objects.",
+        "lower": {
+          "span": "0x020ad838..0x020ade78",
+          "functions": "ordinals 0..3",
+          "contributionEquivalent": "4/4",
+          "linkedRange": "1600 bytes IDENTICAL",
+          "moduleFidelity": "106/106 exact, 100.000000% of compared bytes; dsd check modules --fail PASS",
+          "symbolCheck": "2 pre-existing error line(s), 0 NEW, 0 resolved",
+          "rom": "built, sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+          "verdict": "PARTIAL-LINK-VERIFIED"
+        },
+        "upper": {
+          "span": "0x020ae244..0x020aedbc",
+          "functions": "ordinals 5..30",
+          "contributionEquivalent": "25/26 -- the one exception is _ZN12dEnemyBase_cD2Ev's data_ov002_021081e4 / _ZTV12dEnemyBase_c alias, same address",
+          "linkedRange": "2936 bytes IDENTICAL",
+          "moduleFidelity": "106/106 exact, 100.000000% of compared bytes; dsd check modules --fail PASS",
+          "symbolCheck": "2 pre-existing error line(s), 0 NEW, 0 resolved",
+          "rom": "built, sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8",
+          "verdict": "NOT partial-link-verified, on the alias above alone; every byte measurement in the run is green"
+        },
+        "baselineControl": {
+          "round": "tools/tubuild.py linkcheck --baseline -- same scratch pipeline, NO TU substitution",
+          "moduleFidelity": "106/106 exact; dsd check modules --fail PASS",
+          "symbolCheck": "FAIL with exactly the same two lines -- data_020ad524 and data_020ad560 in ARM9 main not found in the linked binary. PRE-EXISTING, belongs to the tree, not to this TU.",
+          "rom": "built, sha256 d1506e90efae5e2d2cf119926a4ac2a291bd5ca78349d09d5024e1a918c478e8 -- bit-identical to both substituted runs."
+        },
+        "axisNote": "This does NOT make the TU link-verified (plan sec 6): the range is still linked from N per-function contributions, and the vtable/RTTI ownership question is untouched. It is stronger than `partial` alone, because a real mwldarm link resolved every reference and the ROM came out bit-identical to the control."
+      }
+    },
+    {
+      "id": "arm9/ActorDerived",
+      "module": "arm9",
+      "source": "src_tu/actors/ActorDerived.cpp",
+      "promoted_source": "src/actors/ActorDerived.cpp",
+      "status": "link-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as UNDER-SEGMENTED: one unit 0x20049f0..0x20707a4 carrying 2984 functions and 73 class labels, because the module's class address-spans interleave and cluster() unions them all. There is no tu_map boundary here and no `tubuild.py create` candidate id; every line below is hand-derived and independently checkable.",
+        "contiguous linker run 0x02013e80..0x02013f28: the five functions tile the span exactly -- 0x24+0x38+0xc+0xc+0x34 = 0xa8 = end-start -- with no hole and no tail (recomputed from config/arm9/symbols.txt, not asserted).",
+        "no foreign symbol inside the span: config/arm9/symbols.txt lists exactly these five function symbols in [0x02013e80,0x02013f28) and nothing else.",
+        "class-label homogeneity: 4 of the 5 carry the _ZN7dBase_c prefix. The fifth, func_02013edc, is unnamed and is ENCLOSED by named members on both sides (D0 ends at it, Spawn begins after it), so no cut can exclude it without splitting the class's own run.",
+        "the run is the class's WHOLE run: grep of every config/**/symbols.txt in the image finds exactly four _ZN7dBase_c* function symbols and they are the four here. The class has no code anywhere else, so no competing span exists.",
+        "neighbour below: func_02013e64 (0x02013e64..0x02013e80), and the six functions before it are all _ZN8SaveData* (0x02013cd4..0x02013e64) -- a different class. Neighbour above: func_02013f28 (0x02013f28..0x02013f4c) then func_02013f4c. Both neighbours carry a different label from this run, so the run is bracketed rather than merely cut out of a uniform stretch.",
+        "key-function corroboration: ActorDerived declares exactly two virtuals of its own -- the destructor, defined INLINE in the header, and AfterInitResources. AfterInitResources is therefore the key function, and MEASURED HERE, defining it as a real method emits _ZTV7dBase_c and pulls the destructor's two vague-linkage out-of-line copies into existence for free (5/5 MATCH, no forcing scaffold). That is a direct demonstration that D1, D0 and AfterInitResources belong to ONE translation unit: compiling the key function is what makes the two destructor bodies exist at all, and it produces them in the ROM's own order. The shipped file then spells all three as extern \"C\" instead, because the emitted vtable collides with the gap object's copy and blocks the link -- but the boundary evidence stands on the first measurement, not on the workaround.",
+        "destructor-variant order corroborates the source form independently of any of the above. mwcc emits an OUT-OF-LINE destructor definition as the fixed group D2,D0,D1 (notes/tu-reconstruction-pilot-report.md sec 3), and ActorBase -- destructor defined out of line -- has exactly that in the ROM (0x02043d48 D2, 0x02043d78 D0, 0x02043dbc D1). An INLINE destructor's vague-linkage copies come out D1-then-D0 with no D2, which is what the pilot measured for Platform. This class has D1 (0x02013e80) then D0 (0x02013ea4) and no D2 anywhere in the image -- matching the inline form include/ActorDerived.h documents, and NOT matching a second out-of-line definition.",
+        "static-initialiser attribution: NO HELP, stated rather than skipped. build/tu_map.json gives main 23 sinits / 23 .ctor entries with sinit_vs_tu 'ok' but corroborated=false, and nothing in this run touches dynamically-initialised static storage, so no sinit can be pinned to it. This boundary rests on the four lines above, not on sinit counting."
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x02013e80",
+          "end": "0x02013f28"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN7dBase_cD1Ev",
+          "address": "0x02013e80",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN7dBase_cD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN7dBase_cD0Ev",
+          "address": "0x02013ea4",
+          "size": "0x00000038",
+          "legacy_source": "src/_ZN7dBase_cD0Ev.c",
+          "ordinal": 1
+        },
+        {
+          "symbol": "func_02013edc",
+          "address": "0x02013edc",
+          "size": "0x0000000c",
+          "legacy_source": "src/func_02013edc.c",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN7dBase_c5SpawnEjP7fBase_cii",
+          "address": "0x02013ee8",
+          "size": "0x0000000c",
+          "legacy_source": "src/_ZN7dBase_c5SpawnEjP7fBase_cii.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "_ZN7dBase_c18AfterInitResourcesEj",
+          "address": "0x02013ef4",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN7dBase_c18AfterInitResourcesEj.cpp",
+          "ordinal": 4
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Hand-assembled, not generated by `tubuild.py create`: tu_map cannot segment arm9/main (see boundary_evidence line 1), so there was no candidate id to create from. The manifest entry was still built through tubuild.build_manifest_entry so the schema is the tool's own; boundary_confidence and boundary_evidence were then replaced with hand-derived values, because the tool's generated lines cite a tu_map unit that does not describe this run.",
+        "NEITHER OF THE CLASS'S OWN VIRTUALS IS DEFINED AS A METHOD HERE, deliberately. AfterInitResources is the key function (the only non-inline virtual ActorDerived declares), so a real method definition emits _ZTV7dBase_c, which collides with the module gap object's copy of the ROM vtable: the link aborts with 'Multiply-defined: virtual table for ActorDerived ... Previously defined in _dsd_gap@main_44.o'. Both forms were measured. Method form: 5/5 MATCH, 5 unlicensed .data symbols, link ABORTS. extern \"C\" form (shipped): 5/5 MATCH, 0 unlicensed anything, LINK-VERIFIED with the 168-byte range IDENTICAL. The class declarations in include/ActorDerived.h are untouched -- they are what give the class its slots.",
+        "The destructor's out-of-line copies are spelled directly under their mangled names rather than forced into existence by a scaffold. A never-called `p->~ActorDerived()` (what src/_ZN7dBase_cD1Ev.cpp uses) is .text that no symbols.txt entry names: objisolate strips it per function, but a merged object cannot be reduced that way, `-nodead` keeps it, and it would land inside this span. include/ActorDerived.h's inline definition of ~ActorDerived is UNCHANGED and still load-bearing for Scene, Stage and every actor destructor below them.",
+        "_ZN7dBase_cD2Ev does not exist in the ROM and is not emitted here -- an inline destructor's vague-linkage copies are D1 and D0 only, which is itself the evidence that the header's inline definition is the right source form. ActorBase, whose destructor IS out of line, has the full D2,D0,D1 group at 0x02043d48/0x02043d78/0x02043dbc."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/arm9-ActorDerived/ActorDerived.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 5,
+        "functions_declared": 5,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "PASS",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        },
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-verified",
+          "scratch": "build/tu/arm9-ActorDerived/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": true,
+            "checkModules": true,
+            "checkSymbols": false,
+            "rom": true
+          },
+          "tuRange": {
+            "start": "0x02013e80",
+            "end": "0x02013f28",
+            "differingBytes": 0,
+            "firstDiff": null
+          },
+          "objectAudit": {
+            "counts": {
+              "LICENSED": 5
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [],
+            "unlicensedSections": []
+          },
+          "symbolCheckNewVsBaseline": [],
+          "linkerOutput": null
+        }
+      }
+    },
+    {
+      "id": "arm9/ActorBase",
+      "module": "arm9",
+      "source": "src_tu/actors/ActorBase.cpp",
+      "promoted_source": "src/actors/ActorBase.cpp",
+      "status": "link-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as UNDER-SEGMENTED: one unit 0x20049f0..0x20707a4 with 2984 functions and 73 class labels, because the module's class address-spans interleave and cluster() unions them all. There is no tu_map boundary here and no `tubuild.py create` candidate id; every line below is hand-derived and independently checkable.",
+        "THE CLASS'S FULL CONTIGUOUS RUN IS 0x02043444..0x02043f4c, 25 functions, and it tiles that span exactly with no hole and no overlap (recomputed from config/arm9/symbols.txt). The lower bound is _ZN7fBase_cnwEj at 0x02043444; the byte before it, 0x02043443, is the last byte of func_020433b8, which carries no class label. The upper bound is 0x02043f4c, which is the first byte of func_02043f4c, likewise unlabelled. So the run is bracketed by unlabelled neighbours on both sides.",
+        "no foreign symbol inside the run: config/arm9/symbols.txt lists exactly 25 function symbols in [0x02043444,0x02043f4c) -- 23 with the _ZN7fBase_c prefix plus func_02043810 and func_02043880 -- and nothing else. Both func_* are ENCLOSED by named members (func_02043810 sits between Virtual34 and MarkForDestruction, func_02043880 between MarkForDestruction and OnPendingDestroy), so no cut can exclude either without splitting the class's own run. Both also read the ActorBase layout directly: func_02043810 follows sceneNode (+0x14) to the owner back-pointer the constructor writes at its +0x10, and func_02043880 touches aliveState (0x0e), shouldBeKilled (0x0f), the flag byte (0x13) and both ProcessingListNodes (0x28, 0x38).",
+        "the run is the class's WHOLE run, bar one nested-class outlier: grep of every config/**/symbols.txt in the image finds 25 _ZN7fBase_c* function symbols, 23 of them here and 2 elsewhere -- _ZN7fBase_c9SceneNode5ResetEv (0x0203b4ac) and _ZN7fBase_c9SceneNodeC1Ev (0x0203b4c4). Those two are the NESTED class ActorBase::SceneNode, not ActorBase, they are 0x8000 bytes away, and they sit immediately below _ZN4cstd5atan2E5Fix12IiES1_ inside the 0x0203b2xx-0x0203b4xx stretch that holds the very list primitives this run calls (func_0203b20c, func_0203b244, func_0203b27c, func_0203b3c0). They are a different TU and are deliberately NOT claimed here; see notes.",
+        "DESTRUCTOR-VARIANT ORDER CORROBORATES THE SOURCE FORM. mwcc emits an out-of-line destructor definition as the fixed group D2,D0,D1 (notes/tu-reconstruction-pilot-report.md sec 3). This class has exactly that in the ROM -- 0x02043d48 D2, 0x02043d78 D0, 0x02043dbc D1, contiguous -- so the three were emitted together from one object, which is only possible if they shared a TU. Contrast ActorDerived, whose destructor is defined INLINE in the header: its vague-linkage copies come out D1-then-D0 with no D2 (0x02013e80, 0x02013ea4). Two classes, two source forms, both readable straight off the cartridge.",
+        "KEY-FUNCTION CONSISTENCY, and it is a NEGATIVE that had to hold: ActorBase's first declared virtual is InitResources (slot 0), so any TU defining it as a real method emits _ZTV7fBase_c and collides with the gap object's copy of the ROM vtable. This TU keeps it an extern \"C\" free function, and the compiled object emits NO .data section at all -- no _ZTV, no _ZTI, no _ZTS. That is the check that the 23 other members can be real C++ methods in one TU without the vtable following them.",
+        "VPTR ADDEND, from the cartridge: the literal pools of all three destructor variants hold exactly 0x02099edc (0x02043d74 -> 0x02099edc, 0x02043db4 -> 0x02099edc, 0x02043de8 -> 0x02099edc), which is config's `_ZTV7fBase_c`, i.e. the SLOT ARRAY. A real C++ ~ActorBase() would store mwcc's own _ZTV7fBase_c + 8 (that symbol names the vtable OBJECT, two words of Itanium preamble earlier) and, with the vtable external because of the line above, would land eight bytes high. This is why the three variants are spelled as extern \"C\" free functions here and not as one method.",
+        "static-initialiser attribution: NO HELP, stated rather than skipped. build/tu_map.json gives main 23 sinits / 23 .ctor entries with sinit_vs_tu 'ok' but corroborated=false, and nothing in this run touches dynamically-initialised static storage -- the object emits no .init and no .bss. This boundary rests on the contiguity, enclosure and destructor-group lines above, not on sinit counting."
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x02043444",
+          "end": "0x02043dec"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN7fBase_cnwEj",
+          "address": "0x02043444",
+          "size": "0x00000050",
+          "legacy_source": "src/_ZN7fBase_cnwEj.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN7fBase_c13OnHeapCreatedEv",
+          "address": "0x02043494",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN7fBase_c13OnHeapCreatedEv.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN7fBase_c9Virtual38Ejj",
+          "address": "0x0204349c",
+          "size": "0x000000e0",
+          "legacy_source": "src/_ZN7fBase_c9Virtual38Ejj.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN7fBase_c9Virtual34Ejj",
+          "address": "0x0204357c",
+          "size": "0x00000294",
+          "legacy_source": "src/_ZN7fBase_c9Virtual34Ejj.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_02043810",
+          "address": "0x02043810",
+          "size": "0x00000014",
+          "legacy_source": "src/func_02043810.c",
+          "ordinal": 4
+        },
+        {
+          "symbol": "_ZN7fBase_c18MarkForDestructionEv",
+          "address": "0x02043824",
+          "size": "0x0000005c",
+          "legacy_source": "src/_ZN7fBase_c18MarkForDestructionEv.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "func_02043880",
+          "address": "0x02043880",
+          "size": "0x00000240",
+          "legacy_source": "src/func_02043880.c",
+          "ordinal": 6
+        },
+        {
+          "symbol": "_ZN7fBase_c16OnPendingDestroyEv",
+          "address": "0x02043ac0",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN7fBase_c16OnPendingDestroyEv.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "_ZN7fBase_c11AfterRenderEj",
+          "address": "0x02043ac4",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN7fBase_c11AfterRenderEj.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "_ZN7fBase_c12BeforeRenderEv",
+          "address": "0x02043ac8",
+          "size": "0x00000028",
+          "legacy_source": "src/_ZN7fBase_c12BeforeRenderEv.cpp",
+          "ordinal": 9
+        },
+        {
+          "symbol": "_ZN7fBase_c6RenderEv",
+          "address": "0x02043af0",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN7fBase_c6RenderEv.cpp",
+          "ordinal": 10
+        },
+        {
+          "symbol": "_ZN7fBase_c13AfterBehaviorEj",
+          "address": "0x02043af8",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN7fBase_c13AfterBehaviorEj.cpp",
+          "ordinal": 11
+        },
+        {
+          "symbol": "_ZN7fBase_c14BeforeBehaviorEv",
+          "address": "0x02043afc",
+          "size": "0x00000028",
+          "legacy_source": "src/_ZN7fBase_c14BeforeBehaviorEv.cpp",
+          "ordinal": 12
+        },
+        {
+          "symbol": "_ZN7fBase_c8BehaviorEv",
+          "address": "0x02043b24",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN7fBase_c8BehaviorEv.cpp",
+          "ordinal": 13
+        },
+        {
+          "symbol": "_ZN7fBase_c21AfterCleanupResourcesEj",
+          "address": "0x02043b2c",
+          "size": "0x00000080",
+          "legacy_source": "src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp",
+          "ordinal": 14
+        },
+        {
+          "symbol": "_ZN7fBase_c22BeforeCleanupResourcesEv",
+          "address": "0x02043bac",
+          "size": "0x00000044",
+          "legacy_source": "src/_ZN7fBase_c22BeforeCleanupResourcesEv.cpp",
+          "ordinal": 15
+        },
+        {
+          "symbol": "_ZN7fBase_c16CleanupResourcesEv",
+          "address": "0x02043bf0",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN7fBase_c16CleanupResourcesEv.cpp",
+          "ordinal": 16
+        },
+        {
+          "symbol": "_ZN7fBase_c18AfterInitResourcesEj",
+          "address": "0x02043bf8",
+          "size": "0x00000080",
+          "legacy_source": "src/_ZN7fBase_c18AfterInitResourcesEj.cpp",
+          "ordinal": 17
+        },
+        {
+          "symbol": "_ZN7fBase_c19BeforeInitResourcesEv",
+          "address": "0x02043c78",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN7fBase_c19BeforeInitResourcesEv.cpp",
+          "ordinal": 18
+        },
+        {
+          "symbol": "_ZN7fBase_c13InitResourcesEv",
+          "address": "0x02043c80",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN7fBase_c13InitResourcesEv.cpp",
+          "ordinal": 19
+        },
+        {
+          "symbol": "_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE",
+          "address": "0x02043c88",
+          "size": "0x000000c0",
+          "legacy_source": "src/_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp",
+          "ordinal": 20
+        },
+        {
+          "symbol": "_ZN7fBase_cD2Ev",
+          "address": "0x02043d48",
+          "size": "0x00000030",
+          "legacy_source": "src/_ZN7fBase_cD2Ev.c",
+          "ordinal": 21
+        },
+        {
+          "symbol": "_ZN7fBase_cD0Ev",
+          "address": "0x02043d78",
+          "size": "0x00000044",
+          "legacy_source": "src/_ZN7fBase_cD0Ev.c",
+          "ordinal": 22
+        },
+        {
+          "symbol": "_ZN7fBase_cD1Ev",
+          "address": "0x02043dbc",
+          "size": "0x00000030",
+          "legacy_source": "src/_ZN7fBase_cD1Ev.c",
+          "ordinal": 23
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Hand-assembled, not generated by `tubuild.py create`: tu_map cannot segment arm9/main (see boundary_evidence line 1), so there was no candidate id to create from. The manifest entry was still built through tubuild.build_manifest_entry so the schema is the tool's own; boundary_confidence and boundary_evidence were then replaced with hand-derived values.",
+        "LICENSED SPAN IS 0x02043444..0x02043dec, 24 of the run's 25 functions. The 25th, _ZN7fBase_cC1Ev (0x02043dec, size 0x160), belongs to this TU by every boundary test but is NOT admitted: the tree has no C++ for it. src/_ZN7fBase_cC1Ev.cpp is a whole-function hand-written `asm` transcription whose own banner reads 'NONMATCHING ... does NOT count as matched', and config/arm9/delinks.txt has NO entry for it at all -- it is neither compiled nor enrolled today, which is why no gate has ever reported its absence. Admitting asm would let this TU claim a range it has not reproduced from source.",
+        "include/ActorBase.h's banner used to describe the class as 0x02043494..0x02043e04. Both ends were wrong and have been corrected to 0x02043444..0x02043f4c: the old start excluded _ZN7fBase_cnwEj (0x02043444, 0x50, the class's own operator new), and the old end, 0x02043e04, is not a function boundary at all -- it falls 0x18 bytes inside _ZN7fBase_cC1Ev (0x02043dec..0x02043f4c), cutting the constructor in half.",
+        "_ZN7fBase_c9SceneNode5ResetEv (0x0203b4ac) and _ZN7fBase_c9SceneNodeC1Ev (0x0203b4c4) are the nested class ActorBase::SceneNode and are a SEPARATE TU, 0x8000 bytes away in the list-primitive stretch this run calls into. Not claimed by this entry. They are contiguous with each other (0x0203b4ac..0x0203b4dc, 0x30 total) and bracketed by func_0203b438 below and _ZN4cstd5atan2E5Fix12IiES1_ above, so they are a defensible 2-function run of their own -- but a 2-function TU whose neighbours are an unnamed function and a cstd math routine is a weaker boundary claim than this one, and merging them into ActorBase's TU would require the linker to have placed one TU's text in two places 0x8000 apart, which it does not do.",
+        "include/decl_common.h is deliberately NOT included. It declares func_0203b27c as (int, int) and data_020a4b6c as `int` where this class's own sources pass two pointers and take the address of a list head; from one TU those are two incompatible extern \"C\" declarations of one name, which mwcc rejects as 'illegal function overloading'. The few lines it supplied are restated in the file's own reconciled extern \"C\" block, keeping the most complete observation of each.",
+        "_ZN7fBase_c21AfterCleanupResourcesEj is the one admitted member whose legacy file is NOT marked `complete` in config/arm9/delinks.txt: the ROM build does not compile it today and dsd supplies its bytes from the cartridge. It reproduces under the pin both as the legacy file and in TU context, but it was never enrolled -- 'matching' and 'enrolled' are different questions."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/arm9-ActorBase/ActorBase.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 24,
+        "functions_declared": 24,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "PASS",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        },
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-verified",
+          "scratch": "build/tu/arm9-ActorBase/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": true,
+            "checkModules": true,
+            "checkSymbols": false,
+            "rom": true
+          },
+          "tuRange": {
+            "start": "0x02043444",
+            "end": "0x02043dec",
+            "differingBytes": 0,
+            "firstDiff": null
+          },
+          "objectAudit": {
+            "counts": {
+              "LICENSED": 24
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [],
+            "unlicensedSections": []
+          },
+          "symbolCheckNewVsBaseline": [],
+          "linkerOutput": null
+        }
+      }
+    },
+    {
+      "id": "arm9/ActorBase_SceneNode",
+      "module": "arm9",
+      "source": "src_tu/actors/ActorBase_SceneNode.cpp",
+      "promoted_source": "src/actors/ActorBase_SceneNode.cpp",
+      "status": "link-verified",
+      "boundary_confidence": "medium",
+      "boundary_evidence": [
+        "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as UNDER-SEGMENTED -- one unit 0x20049f0..0x20707a4 with 2984 functions and 73 class labels -- so there is no tu_map boundary and no `tubuild.py create` candidate id. Every line below is hand-derived.",
+        "contiguous run 0x0203b4ac..0x0203b4dc: the two functions tile the span exactly, 0x18 + 0x18 = 0x30 = end-start, no hole and no tail (recomputed from config/arm9/symbols.txt). No foreign symbol lies inside it.",
+        "class-label homogeneity is total: both symbols are _ZN7fBase_c9SceneNode*, i.e. members of the NESTED class ActorBase::SceneNode, and there are no others anywhere in the image.",
+        "SEPARATE FROM ActorBase'S OWN TU, and this is the load-bearing negative. These are the only two _ZN7fBase_c* functions outside the class's main run at 0x02043444..0x02043f4c, and they sit 0x8000 bytes below it. A single object's .text is placed contiguously by the linker, so one TU cannot occupy two regions 0x8000 apart -- merging them into arm9/ActorBase would require exactly that. arm9/ActorBase is independently LINK-VERIFIED over 0x02043444..0x02043dec without them, which confirms the split from the other side.",
+        "neighbourhood attribution: 0x0203b2xx-0x0203b4xx is the intrusive-list primitive stretch -- func_0203b20c, func_0203b244, func_0203b27c and func_0203b3c0 all live there, and every one of them is called from ActorBase's own members (AfterInitResources, AfterCleanupResources, func_02043880). This pair sits at the TOP of that stretch, which is consistent with a scene-graph-node TU adjacent to the list code it is built on.",
+        "neighbours on both sides carry a different label: func_0203b438 ends at 0x0203b4ac below, and _ZN4cstd5atan2E5Fix12IiES1_ begins at 0x0203b4dc above -- a cstd math routine, which is certainly a different TU.",
+        "CONFIDENCE IS medium, NOT high, and the reason is stated rather than hidden: the run is only two functions and BOTH its neighbours are unlabelled-or-unrelated, so nothing positively attributes the functions immediately below it to this same TU. The lower boundary at 0x0203b4ac is therefore a floor supported by a label change, not by a positive claim about func_0203b438. The upper boundary at 0x0203b4dc is strong (a cstd template instantiation cannot share a TU with an actor scene node). It is entirely possible the original .cpp also contained some of the list primitives below; this entry licenses only what it can defend.",
+        "static-initialiser attribution: no help. main has 23 sinits / 23 .ctor entries, sinit_vs_tu 'ok', corroborated=false, and this run touches no dynamically-initialised static storage -- the object emits no .init, no .bss and no .data."
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x0203b4ac",
+          "end": "0x0203b4dc"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN7fBase_c9SceneNode5ResetEv",
+          "address": "0x0203b4ac",
+          "size": "0x00000018",
+          "legacy_source": "src/_ZN7fBase_c9SceneNode5ResetEv.c",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN7fBase_c9SceneNodeC1Ev",
+          "address": "0x0203b4c4",
+          "size": "0x00000018",
+          "legacy_source": "src/_ZN7fBase_c9SceneNodeC1Ev.c",
+          "ordinal": 1
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Hand-assembled, not generated by `tubuild.py create`: tu_map cannot segment arm9/main. The entry was built through tubuild.build_manifest_entry so the schema is the tool's own; boundary_confidence and boundary_evidence were then replaced with hand-derived values.",
+        "This is the 0x30-byte OUTLIER of the ActorBase assignment: 25 _ZN7fBase_c* function symbols exist in the image, 23 in the main run (see arm9/ActorBase) and these 2 here. include/ActorBase.h now records the split.",
+        "BOTH MEMBERS ARE extern \"C\" RATHER THAN REAL ActorBase::SceneNode:: METHODS, on purpose. The mangled names say they are members of a class nested inside ActorBase, but include/ActorBase.h spells that type at top level as `ActorBase_SceneNode`. Making real methods possible means nesting it and declaring a constructor on the nested type -- which makes ActorBase's implicit default constructor non-trivial, in a header 1,393 enrolled C++ TUs include, several of whose classes have compiler-generated constructors that would then have to call it. That is the implicit-constructor hazard, and it deserves its own change and its own sweep rather than riding on a 0x30-byte TU. FOLLOW-UP, not a defect.",
+        "The type used is ActorBase.h's `ActorBase_SceneNode` (0x14 bytes, five fields) rather than the auto-generated include/ActorBase__SceneNode.h (0x10 bytes, four fields), which is the less complete of the tree's two spellings and is now referenced by nothing else. Reset() clears only the first four words and deliberately leaves the owner back-pointer at +0x10 alone; ActorBase's constructor writes that one."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/arm9-ActorBase_SceneNode/ActorBase_SceneNode.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 2,
+        "functions_declared": 2,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "PASS",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        },
+        "linkcheck": {
+          "round": "tools/tubuild.py linkcheck -- scratch dsd delink+lcf, whole-tree mwccarm, mwldarm link, linked-range and module byte comparison, dsd check symbols --fail, full ROM build",
+          "result": "link-verified",
+          "scratch": "build/tu/arm9-ActorBase_SceneNode/link (gitignored)",
+          "phases": {
+            "delink": true,
+            "lcf": true,
+            "compile": true,
+            "link": true,
+            "checkModules": true,
+            "checkSymbols": false,
+            "rom": true
+          },
+          "tuRange": {
+            "start": "0x0203b4ac",
+            "end": "0x0203b4dc",
+            "differingBytes": 0,
+            "firstDiff": null
+          },
+          "objectAudit": {
+            "counts": {
+              "LICENSED": 2
+            },
+            "emittedTextOrderIsRomAscending": true,
+            "nonLicensedSymbols": [],
+            "unlicensedSections": []
+          },
+          "symbolCheckNewVsBaseline": [],
+          "linkerOutput": null
+        }
       }
     }
   ]

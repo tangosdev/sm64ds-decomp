@@ -8,15 +8,15 @@ enum { false, true };
 typedef struct { int x, y, z; } Vector3;
 
 extern void ChiefChilly_ChangeState(void *c, void *p);
-extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void *self);
+extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
 extern int AngleDiff(int a, int b);
 extern void func_02012694(int a, void *p);
 extern void _Z14ApproachLinearRiii(int *p, int a, int b);
-extern int _ZN5Actor13DistToCPlayerEv(void *self);
+extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
 extern unsigned int RandomIntInternal(void *seed);
 extern void _Z14ApproachLinearRsss(s16 *p, s16 a, s16 b);
 extern void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int cc);
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern int _ZN6Player12GetHurtStateEv(void *self);
 extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int frame, u16 flags);
@@ -39,7 +39,7 @@ int func_ov073_02120ed0(void *self)
     switch (c[0x4c8]) {
     case 0:
         if (*(u16 *)(c + 0x100) == 0) {
-            *(s16 *)(c + 0x4c6) = _ZN5Actor18HorzAngleToCPlayerEv(c);
+            *(s16 *)(c + 0x4c6) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
             *(int *)(c + 0x4b4) = 0;
             if (AngleDiff(*(s16 *)(c + 0x94), *(s16 *)(c + 0x4c6)) <= 0x2000) {
                 *(s16 *)(c + 0x100) = 0x1e;
@@ -54,7 +54,7 @@ int func_ov073_02120ed0(void *self)
         } else {
             _Z14ApproachLinearRiii((int *)(c + 0x98), 0x1e000, 0x3000);
             if (*(int *)(c + 0x4b4) == 0) {
-                if (_ZN5Actor13DistToCPlayerEv(c) < 0x1f4000) {
+                if (_ZN8dActor_c13DistToCPlayerEv(c) < 0x1f4000) {
                     *(int *)(c + 0x4b4) = 1;
                     if (((RandomIntInternal(&data_0209e650) >> 0x18) & 7) == 0) {
                         c[0x4c8] = 3;
@@ -98,7 +98,7 @@ int func_ov073_02120ed0(void *self)
         }
         _Z14ApproachLinearRiii((int *)(c + 0x98), 0, *(int *)(c + 0x4d0));
         if (c[0x4c8] == 1) {
-            *(s16 *)(c + 0x4c6) = _ZN5Actor18HorzAngleToCPlayerEv(c);
+            *(s16 *)(c + 0x4c6) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
             _Z14ApproachLinearRsss((s16 *)(c + 0x8e), *(s16 *)(c + 0x4c6), 0x500);
         }
         d = *(int *)(c + 0x98);
@@ -106,7 +106,7 @@ int func_ov073_02120ed0(void *self)
         if (d >= 0xa) break;
         if (*(u16 *)(c + 0x100) != 0) break;
         if (c[0x4c8] == 2) {
-            u8 *p = (u8 *)_ZN5Actor13ClosestPlayerEv(c);
+            u8 *p = (u8 *)_ZN8dActor_c13ClosestPlayerEv(c);
             if (p != 0) {
                 int t;
                 if (_ZN6Player12GetHurtStateEv(p) == 4) goto hz;
@@ -116,7 +116,7 @@ int func_ov073_02120ed0(void *self)
 hz:
                     *(s16 *)(c + 0x4c6) = Vec3_HorzAngle((Vector3 *)(c + 0x5c), (Vector3 *)(c + 0x3d8));
                 } else {
-                    *(s16 *)(c + 0x4c6) = _ZN5Actor18HorzAngleToCPlayerEv(c);
+                    *(s16 *)(c + 0x4c6) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
                 }
             }
         }

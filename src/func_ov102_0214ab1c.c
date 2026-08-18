@@ -1,12 +1,12 @@
 #include "types.h"
-extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void *self, void *clsn);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void *self, void *clsn);
 extern int _ZN6Player16IsInsideOfCannonEv(void *player);
 extern int _ZN6Player22IsBeingShotOutOfCannonEv(void *player);
 extern int func_ov102_0214b248(u8 *c);
 extern void func_ov102_0214b384(void *arg0, unsigned int arg1);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, void *f, int i, int fx, unsigned int j);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern int _ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(void *self, void *clsn);
+extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(void *self, void *clsn);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
 extern void func_ov102_0214b53c(u8 *c);
@@ -15,7 +15,7 @@ extern int *data_ov102_0214e9c0;
 
 int func_ov102_0214ab1c(u8 *self)
 {
-    int r4 = _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(self, self + 0x144);
+    int r4 = _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(self, self + 0x144);
     if (r4 == 0) {
         goto ret0;
     }
@@ -66,7 +66,7 @@ after_cannon:
         }
     }
 
-    if (_ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(self, self + 0x110) != 0) {
+    if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(self, self + 0x110) != 0) {
         goto hit;
     }
     if (r4 != 3 || _ZNK12WithMeshClsn10IsOnGroundEv(self + 0x144) == 0) {

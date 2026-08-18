@@ -2,7 +2,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-void* _ZN5Actor22ClosestNonVanishPlayerEv(void* p);
+void* _ZN8dActor_c22ClosestNonVanishPlayerEv(void* p);
 int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
 int func_ov077_02123880(void* c);
 void func_ov077_0212478c(void* c, int v);
@@ -20,7 +20,7 @@ extern int data_ov077_02127b88[3];
 int func_ov077_02124564(char* c) {
     *(int*)(c + 0x98) = 0xc000;
     if (DecIfAbove0_Byte((unsigned char*)(c + 0x41c)) == 0) {
-        char* p = (char*)_ZN5Actor22ClosestNonVanishPlayerEv(c);
+        char* p = (char*)_ZN8dActor_c22ClosestNonVanishPlayerEv(c);
         if (p == 0) goto store2;
         if (*(int*)(p + 0x60) >= *(int*)(c + 0x60)) goto store1;
         if (Vec3_HorzDist((struct Vector3*)(c + 0x5c), (struct Vector3*)(p + 0x5c)) >= 0x190000) goto store1;

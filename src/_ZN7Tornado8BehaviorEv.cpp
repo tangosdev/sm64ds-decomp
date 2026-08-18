@@ -4,8 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Tornado.h"
-extern "C" void *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern "C" void *_ZN5Actor18ClosestWithActorIDEj(void *actor, unsigned int id);
+extern "C" void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
+extern "C" void *_ZN8dActor_c18ClosestWithActorIDEj(void *actor, unsigned int id);
 extern "C" int Vec3_Dist(void *a, void *b);
 extern "C" void _ZN12CylinderClsn5ClearEv(void *thiz);
 extern "C" void _ZN12CylinderClsn6UpdateEv(void *thiz);
@@ -30,9 +30,9 @@ int Tornado::Behavior()
     }
     unsigned int id = unk_0f8;
     if (id != 0 && (unk_0f4 & 0x400000) != 0) {
-        void *o = _ZN5Actor10FindWithIDEj(id);
+        void *o = _ZN8dActor_c10FindWithIDEj(id);
         if (o != 0) {
-            void *closest = _ZN5Actor18ClosestWithActorIDEj(((char *)this), 0x135);
+            void *closest = _ZN8dActor_c18ClosestWithActorIDEj(((char *)this), 0x135);
             if (closest == 0 || Vec3_Dist((char*)o + 0x5c, (char*)closest + 0x5c) > 0x118000) {
                 if (func_ov002_020de33c((char*)o, (int)((char *)this)) != 0) {
                     *(void**)((char *)&unk_33c) = o;

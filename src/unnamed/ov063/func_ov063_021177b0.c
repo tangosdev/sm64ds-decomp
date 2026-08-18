@@ -7,7 +7,7 @@ typedef struct {
     unsigned short hi7 : 7;
 } Sub500;
 
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int Vec3_Dist(const void* a, const void* b);
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern void func_020092c4(void* cam, void* out, void* tgt);
@@ -32,7 +32,7 @@ void func_ov063_021177b0(char* c)
         unsigned short flags = *(unsigned short*)(c + 0x5d4);
 
         if (((unsigned)(flags << 21)) >> 31) {
-            void* pl = _ZN5Actor13ClosestPlayerEv(c);
+            void* pl = _ZN8dActor_c13ClosestPlayerEv(c);
             if (pl != 0) {
                 Vec3 v;
                 Vec3 mid;

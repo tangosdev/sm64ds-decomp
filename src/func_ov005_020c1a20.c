@@ -247,7 +247,7 @@ int func_ov005_020c1a20(void *arg0)
     }
     data_0208ee44 = 1;
     if (data_0209b2fc != 0) {
-        _ZN5Scene9SetFadersEP15FaderBrightness(&data_0209f61c);
+        _ZN8dScene_c9SetFadersEP15FaderBrightness(&data_0209f61c);
     }
 
     data_0209b2fc = 0;

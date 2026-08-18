@@ -6,7 +6,7 @@
  *
  * Named from the table: 0x021212fc is the word slot 9 of
  * _ZTV17dScMgTrampoline_c holds where dScMgD3DBase_c's table holds something
- * else, so it is this class's own override of the virtual ActorBase declares.
+ * else, so it is this class's own override of the virtual fBase_c declares.
  *
  * THE RECEIVER HAD TO STOP BEING AN `int`. The pre-migration file took it as
  * a plain integer and spelled every access as `*(T*)(self + off)`; that form

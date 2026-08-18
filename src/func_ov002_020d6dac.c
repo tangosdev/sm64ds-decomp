@@ -13,11 +13,11 @@ extern void _ZN11RaycastLineD1Ev(void *self);
 extern int _ZNK6Player14GetBodyModelIDEjb(void *thiz, unsigned int a, int b);
 extern void MulVec3Mat4x3(void *v, void *m, void *dst);
 extern void Vec3_MulScalarInPlace(int *v, int s);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *self, void *a, void *b, void *act);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
 extern int _ZN11RaycastLine10DetectClsnEv(void *self);
 extern void _ZN11RaycastLine10GetClsnPosEv(void *res, void *self);
 extern unsigned int _ZNK10ClsnResult9GetClsnIDEv(void *r);
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN10ClsnResultD1Ev(void *r);
 extern int func_02053274(int *a, int *b);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *thiz, void *out);
@@ -67,7 +67,7 @@ int func_ov002_020d6dac(char *self)
         Vec3_MulScalarInPlace((int *)&p2, 0x8000);
     }
 
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, &p1, &p2, self);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &p1, &p2, self);
 
     if (_ZN11RaycastLine10DetectClsnEv(rl) == 0) {
         _ZN11RaycastLineD1Ev(rl);
@@ -86,7 +86,7 @@ int func_ov002_020d6dac(char *self)
     res.i = *(int *)(rl + 0x30);
     res.j = *(int *)(rl + 0x34);
 
-    actor = _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(&res));
+    actor = _ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(&res));
     if (actor != 0 && (t = (int)(*(u16 *)(actor + 0xc) == 0xc2)) != 0) {
         _ZN10ClsnResultD1Ev(&res);
         _ZN11RaycastLineD1Ev(rl);

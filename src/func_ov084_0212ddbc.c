@@ -6,11 +6,11 @@ extern int _Z14ApproachLinearRiii(s32 *p, int a, int b);
 extern int _ZN9Animation8FinishedEv(void *a);
 extern void func_0201267c(int a, void *p);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *o, void *f, int a, int fx, int j);
-extern void *_ZN5Actor13ClosestPlayerEv(void *c);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *c);
 extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
 extern int _Z14ApproachLinearRsss(s16 *p, short a, short b);
 extern int _ZNK9Animation12WillHitFrameEi(void *o, int f);
-extern void _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
+extern void _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
     void *self, const void *pos, const void *v16, int a, int b, u32 g);
 
 extern void *data_ov084_02130e1c[];
@@ -43,7 +43,7 @@ void func_ov084_0212ddbc(char *c)
     } else {
         if (*(u16 *)(c + 0x100) < 0x3a) {
             ang = *(s16 *)(c + 0x8e);
-            player = _ZN5Actor13ClosestPlayerEv(c);
+            player = _ZN8dActor_c13ClosestPlayerEv(c);
             if (player != 0)
                 ang = Vec3_HorzAngle(c + 0x5c, (char *)player + 0x5c);
             _Z14ApproachLinearRsss((s16 *)(c + 0x8e), ang, 0x400);
@@ -79,7 +79,7 @@ void func_ov084_0212ddbc(char *c)
     pos.y = y + speed * 0x5a;
     *(s16 *)(c + 0x8c) = 0x1000;
 
-    _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
+    _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
         c, &pos, c + 0x8c, 0x1e000, 0xa000, 3);
     return;
 

@@ -5,7 +5,7 @@
 
 
 extern "C" {
-extern char *_ZN5Actor13ClosestPlayerEv(char *);
+extern char *_ZN8dActor_c13ClosestPlayerEv(char *);
 extern void _ZN7PathPtrC1Ev(void *);
 extern void _ZN7PathPtr6FromIDEj(void *, unsigned int);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *, struct Vector3 *, unsigned int);
@@ -24,7 +24,7 @@ extern "C" int func_ov085_0212b75c(char *c)
   int d0;
   struct Vector3 *src;
 
-  char *p = _ZN5Actor13ClosestPlayerEv(c);
+  char *p = _ZN8dActor_c13ClosestPlayerEv(c);
   *(int *)(c + 0x41c) = 0;
   if (p)
   {

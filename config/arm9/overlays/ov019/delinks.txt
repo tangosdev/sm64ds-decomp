@@ -116,6 +116,7 @@ src/_ZN13RacingPenguin8BehaviorEv.cpp:
     .text start:0x02112394 end:0x021123d4
 
 src/_ZN13RacingPenguin13InitResourcesEv.cpp:
+    complete
     .text start:0x021123d4 end:0x021125bc
 
 src/RacingPenguin_Spawn.c:

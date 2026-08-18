@@ -140,11 +140,11 @@ src/_ZN10RockPillar6RenderEv.cpp:
     complete
     .text start:0x02112b28 end:0x02112b50
 
-src/func_ov016_02112b50.c:
+src/_ZN10RockPillar8BehaviorEv.cpp:
     complete
     .text start:0x02112b50 end:0x02112e1c
 
-src/func_ov016_02112e1c.c:
+src/_ZN10RockPillar13InitResourcesEv.cpp:
     complete
     .text start:0x02112e1c end:0x02112ec4
 
@@ -160,7 +160,7 @@ src/_ZN23FloatOnWaterPlatformJrbD0Ev.c:
     complete
     .text start:0x02112f44 end:0x02112fa8
 
-src/func_ov016_02112fa8.c:
+src/_ZN23FloatOnWaterPlatformJrb13InitResourcesEv.cpp:
     complete
     .text start:0x02112fa8 end:0x02112fbc
 

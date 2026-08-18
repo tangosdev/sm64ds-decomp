@@ -16,7 +16,7 @@
  *
  * THREE OF THESE USED TO BE DECLARED NON-VIRTUAL -- IsBetweenStartAndEnd,
  * SetToEnd and SetToStart. They occupy slots 7, 8 and 9 of every concrete table
- * in the family, and the ROM calls them through the vtable: Scene::SetFaders
+ * in the family, and the ROM calls them through the vtable: dScene_c::SetFaders
  * dispatches slot 9 at [vt+0x24] and slot 8 at [vt+0x20] on a fader it has only
  * as a base pointer, which a non-virtual member makes impossible to express.
  */

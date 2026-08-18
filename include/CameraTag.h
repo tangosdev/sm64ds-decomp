@@ -5,7 +5,7 @@
  * ALL FIVE of its virtual overrides are STUBS -- InitResources, Behavior,
  * Render and CleanupResources are `return 1`, OnPendingDestroy is empty, and
  * not one of them reads `this`. The class exists to BE somewhere: it is an
- * Actor carrying a MovingCylinderClsn and nothing else, so what it does is
+ * dActor_c carrying a MovingCylinderClsn and nothing else, so what it does is
  * occupy a collision volume that other code queries. Overriding every hook to
  * do nothing is how it stays inert while still being a full actor.
  *
@@ -13,7 +13,7 @@
  * the methods -- none of them touches a field:
  *
  *   InvisiblePole_Spawn allocates 264 == 0x108 bytes, so that is sizeof.
- *   It then runs MovingCylinderClsn's constructor at +0xd4, and Actor is
+ *   It then runs MovingCylinderClsn's constructor at +0xd4, and dActor_c is
  *   0xd0, so the sub-object begins on the first 4-aligned offset past the
  *   base and runs to the end: 0x108 - 0xd4 == 0x34.
  *

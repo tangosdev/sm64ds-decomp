@@ -11,7 +11,7 @@ extern int WithMeshClsn_UpdateDiscreteNoLava_veneer(void* w);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* w);
 extern int _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, struct Vector3* v);
 extern int _ZN13RaycastGroundC1Ev(struct RG* r);
-extern int _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RG* r, struct Vector3* v, void* a);
+extern int _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RG* r, struct Vector3* v, void* a);
 extern int _ZN4BgCh19StartDetectingWaterEv(struct RG* r);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RG* r);
 extern int _ZN4BgCh18StopDetectingWaterEv(struct RG* r);
@@ -30,7 +30,7 @@ void func_ov077_02123c6c(char* c, void* w){
   pos.z = *(int*)(c+0x64);
   pos.y += 0x64000;
   _ZN13RaycastGroundC1Ev(&rg);
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &pos, 0);
+  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, 0);
   _ZN4BgCh19StartDetectingWaterEv(&rg);
   if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
     int yy = *(int*)((char*)&rg + 0x44) + 0x3c000;

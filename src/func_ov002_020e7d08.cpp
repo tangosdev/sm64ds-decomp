@@ -4,13 +4,13 @@
 #include "common.h"
 typedef int Fix12;
 
-struct Actor;
+struct dActor_c;
 
 struct RaycastGround {
     char pad0[0x54];
     RaycastGround();
     ~RaycastGround();
-    void SetObjAndPos(const Vector3& pos, Actor* actor);
+    void SetObjAndPos(const Vector3& pos, dActor_c* actor);
     int DetectClsn();
 };
 

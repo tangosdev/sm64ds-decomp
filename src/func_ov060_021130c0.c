@@ -1,10 +1,10 @@
 #include "types.h"
 #define LAUND(p) ((void*)(p))
 
-extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actorBase, int isTalk);
+extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actorBase, int isTalk);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
 extern int _ZN6Player12GetTalkStateEv(void* player);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* player, void* actorBase, unsigned int msgId, const void* pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* player, void* actorBase, unsigned int msgId, const void* pos, unsigned int a, unsigned int b);
 extern void func_ov060_02111cc0(void* c, int a, int b, int d);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int a);
 extern int func_ov060_021132a4(void* c);
@@ -28,7 +28,7 @@ int func_ov060_021130c0(char* c)
         inner = *(u8*)(c + 0x424);
         switch (inner) {
         case 0:
-            if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(c + 0x3a0), c, 1)) {
+            if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(c + 0x3a0), c, 1)) {
                 _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
                 {
                     u8* p = (u8*)LAUND(c + 0x424);
@@ -40,7 +40,7 @@ int func_ov060_021130c0(char* c)
         case 1:
             if (_ZN6Player12GetTalkStateEv(*(void**)(c + 0x3a0)) == 0) {
                 int msg = (*(u8*)(c + 0x414) == 0) ? 0xcd : 0xcf;
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
                         *(void**)(c + 0x3a0), c, msg, c + 0x5c, 0, 2)) {
                     u8* p = (u8*)LAUND(c + 0x424);
                     *p = *p + 1;

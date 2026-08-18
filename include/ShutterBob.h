@@ -5,9 +5,9 @@
 
 /* Bob-omb Battlefield's switch-operated shutter.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjSwdoor_c, which derives
- * from Platform, and the difference is in the bytes rather than only in the RTTI:
- * its destructor stores THREE vptrs -- its own, daObjSwdoor_c's, then Platform's.
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjSwdoor_c, which derives
+ * from dBgActor_c, and the difference is in the bytes rather than only in the RTTI:
+ * its destructor stores THREE vptrs -- its own, daObjSwdoor_c's, then dBgActor_c's.
  * A one-level chain emits two.
  *
  *   _ZTI14daObjBSwdoor_c  ov014 0x021145b8
@@ -27,7 +27,7 @@
  *
  * WHAT THIS HEADER USED TO SAY: a `u8 mModel` marker at 0xd4 and a
  * `u8 mMovingMeshCollider` marker at 0x124, over `u8 pad_000[0xd4]`. Both were
- * Platform's, twice removed, and are inherited now -- Platform calls the second
+ * dBgActor_c's, twice removed, and are inherited now -- dBgActor_c calls the second
  * one mMeshCollider, which is why _ZN10ShutterBob13InitResourcesEv.cpp changes
  * with this header.
  */

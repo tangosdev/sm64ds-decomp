@@ -1,16 +1,16 @@
 //cpp
-struct Actor;
-extern "C" Actor* _ZN5Actor15FindWithActorIDEjPS_(unsigned int actorID, Actor* prev);
+struct dActor_c;
+extern "C" dActor_c* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int actorID, dActor_c* prev);
 extern "C" void GiveCoins(int idx, int amount);
 extern "C" void _ZN6Player4HealEi(void* p, int amt);
 extern "C" void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* pos);
-extern "C" void _ZN5Actor24KillAndTrackInDeathTableEv(void* self);
+extern "C" void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* self);
 
 extern "C" void func_ov002_020af684(char* self, int target, char* player){
     char* p = player;
-    Actor* found = 0;
+    dActor_c* found = 0;
     for (;;) {
-        found = _ZN5Actor15FindWithActorIDEjPS_(*(unsigned short*)(self + 0xc), found);
+        found = _ZN8dActor_c15FindWithActorIDEjPS_(*(unsigned short*)(self + 0xc), found);
         if (found == 0)
             break;
         if (target == *(int*)((char*)found + 0x384)) {
@@ -26,5 +26,5 @@ extern "C" void func_ov002_020af684(char* self, int target, char* player){
         else
             _ZN5Sound9PlayBank3EjRK7Vector3(0x11, self + 0x74);
     }
-    _ZN5Actor24KillAndTrackInDeathTableEv(self);
+    _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
 }

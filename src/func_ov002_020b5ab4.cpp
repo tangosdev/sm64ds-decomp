@@ -5,7 +5,7 @@
 typedef int s32;
 typedef signed char s8;
 
-struct Actor;
+struct dActor_c;
 
 struct RaycastGround {
     char pad0[0x14];
@@ -16,7 +16,7 @@ struct RaycastGround {
     RaycastGround();
     ~RaycastGround();
     void StartDetectingWater();
-    void SetObjAndPos(const Vector3& pos, Actor* a);
+    void SetObjAndPos(const Vector3& pos, dActor_c* a);
     int DetectClsn();
 };
 /* Signature deliberately copied from the local declaration above: the
@@ -56,7 +56,7 @@ int func_ov002_020b5ab4(char* c)
             vec.z = vz;
         }
         _ZN4BgCh19StartDetectingWaterEv(&(rg));
-        rg.SetObjAndPos(vec, (Actor*)c);
+        rg.SetObjAndPos(vec, (dActor_c*)c);
         if (rg.DetectClsn() != 0) {
             *(int*)(c+0x324) = rg.field44;
             if (SurfaceInfo_TestFlag0x20(&rg.field14) != 0) {

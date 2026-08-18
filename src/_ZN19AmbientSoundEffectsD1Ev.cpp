@@ -1,12 +1,12 @@
 //cpp
 // @symbol _ZN19AmbientSoundEffectsD1Ev
 
-struct Actor {
-    virtual ~Actor();
+struct dActor_c {
+    virtual ~dActor_c();
 };
 
 
-struct AmbientSoundEffects : Actor {
+struct AmbientSoundEffects : dActor_c {
     virtual ~AmbientSoundEffects();
 };
 

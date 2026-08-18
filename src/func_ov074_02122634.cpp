@@ -5,7 +5,7 @@ typedef unsigned int u32;
 template<class T> struct Fix12 { int val; };
 
 struct SharedFilePtr { unsigned short fileID; unsigned char numRefs; char* filePtr; };
-struct BMD_File; struct BMA_File; struct BCA_File; struct Vector3_16; struct Actor;
+struct BMD_File; struct BMA_File; struct BCA_File; struct Vector3_16; struct dActor_c;
 
 struct Model { static void LoadFile(SharedFilePtr&); };
 struct Animation { static void LoadFile(SharedFilePtr&); };
@@ -19,8 +19,8 @@ extern "C" int _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(
     void*, BMA_File&, int, int, u32);
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     void*, BCA_File*, int, int, u32);
-extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
-    void*, Actor*, int, int, Vector3_16*, int);
+extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    void*, dActor_c*, int, int, Vector3_16*, int);
 
 extern SharedFilePtr data_ov084_02130cf8;
 extern SharedFilePtr* data_ov074_0212292c[];
@@ -62,9 +62,9 @@ extern "C" int func_ov074_02122634(char* self)
     *(int*)(self + 0xa0) = -0x3c000;
     *(int*)(self + 0x5dc) = 0;
 
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         (void*)(self + 0x40c),
-        (Actor*)self,
+        (dActor_c*)self,
         0x14000, 0x14000,
         (Vector3_16*)0, 0);
 

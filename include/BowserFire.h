@@ -26,12 +26,12 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "WithMeshClsn.h"
 #include "MovingCylinderClsn.h"
 #include "ShadowModel.h"
 
-struct BowserFire : Enemy {
+struct BowserFire : dEnemyBase_c {
     WithMeshClsn mWithMeshClsn;                 /* 0x110 */
     s32 unk_2cc;                                /* 0x2cc */
     MovingCylinderClsn mMovingCylinderClsn;     /* 0x2d0 */

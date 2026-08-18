@@ -1,4 +1,4 @@
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void LinkSilverStarAndStarMarker(char* a, char* b);
 extern void func_ov002_020e9464(char* c);
 extern void func_ov002_020e8ef0(char* c, int a);
@@ -6,7 +6,7 @@ extern void func_ov002_020e8ef0(char* c, int a);
 void func_ov002_020e8e80(char* c, int a)
 {
     int* p;
-    char* pl = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x434));
+    char* pl = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x434));
     if (pl != 0)
         LinkSilverStarAndStarMarker(pl, 0);
 

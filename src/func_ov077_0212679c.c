@@ -7,7 +7,7 @@ extern int Vec3_Dist(void *a, void *b);
 extern int func_ov077_02126300(void *c);
 extern int func_ov077_02126d5c(void *c, void *p);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *thiz);
-extern void *_ZN5Actor13ClosestPlayerEv(void *thiz);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void _Z14ApproachLinearRsss(short *r, short a, short b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void *v, unsigned int d);
@@ -34,7 +34,7 @@ int func_ov077_0212679c(char *c)
         *(int *)(c + 0x64) = *(int *)(c + 0x418);
     }
 
-    p = (char *)_ZN5Actor13ClosestPlayerEv(c);
+    p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (p != 0) {
         /* u64 launder forces base materialization after the null cmp */
         pp = (struct Vector3 *)(void *)(unsigned long long)(unsigned long)(p + 0x5c);

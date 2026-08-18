@@ -8,10 +8,10 @@
 struct V3A { int w[3]; };
 
 extern "C" {
-    void* _ZN5Actor22ClosestNonVanishPlayerEv(void* self);
+    void* _ZN8dActor_c22ClosestNonVanishPlayerEv(void* self);
     s16 Vec3_HorzAngle(void* a, void* b);
     void ApproachAngle(void* p, s16 target, int a, int b, int e);
-    void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, void* pos, void* rot, int e, int f);
+    void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, void* pos, void* rot, int e, int f);
     void func_02012694(int a, void* p);
     void Matrix4x3_FromRotationY(void* m, int angle);
     void Matrix4x3_ApplyInPlaceToRotationX(void* m, s16 ax);
@@ -31,7 +31,7 @@ extern "C" int func_ov065_02116364(void* self)
 {
     u8* c = (u8*)self;
     struct { Vector3 pp; Vector3 spv; Vector3 sout; Vector3 d; Vector3 tgt; } L;
-    u8* pl = (u8*)_ZN5Actor22ClosestNonVanishPlayerEv(self);
+    u8* pl = (u8*)_ZN8dActor_c22ClosestNonVanishPlayerEv(self);
     if (pl != 0) {
         *(V3A*)(int)(&L.pp) = *(V3A*)(int)(pl + 0x5c);
         L.tgt = L.pp;
@@ -41,7 +41,7 @@ extern "C" int func_ov065_02116364(void* self)
         if (((*(u32*)(c+0x358) << 4) >> 16) >= 0xf
             && *(u16*)(c+0x100) == 0
             && *(s32*)(c+0x3dc) < 3) {
-            void* spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+            void* spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xe9, 1, (void*)(c+0x3c0), 0, *(signed char*)(c+0xcc), -1);
             if (spawned != 0) {
                 u8* sp2 = (u8*)spawned;

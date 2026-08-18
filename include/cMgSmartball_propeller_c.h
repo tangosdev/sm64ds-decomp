@@ -11,8 +11,8 @@
  * (the constructor, SaveSnapshot, Update, RestoreInitial): an s16 "ease
  * toward target" pair at 0x34/0x36. SaveSnapshot steps 0x36 by +-8 toward
  * the target at 0x34 (clamping once it crosses), then adds the stepped
- * value onto the BASE's own contested-width field at 0x32 -- so 0x36 is a
- * rotation speed and 0x32 accumulates it into a rotation angle.
+ * value onto the BASE's field at 0x32 -- so 0x36 is a rotation speed and
+ * 0x32 accumulates it into a rotation angle.
  * RestoreInitial zeroes 0x36, sets 0x34 to 0x40 (the default target speed),
  * and (through the base call) zeroes mCurrent. Update never touches 0x34+
  * at all -- it only reads the base's angle (0x32) and position
@@ -20,9 +20,9 @@
  *
  * 0x32 IS NOT DECLARED HERE, same as every sibling that reaches it: it
  * belongs to cMgSmartball_object_c (unk_032), reached with the base's own
- * raw `(char*)this + 0x32` idiom because the base's declared width for that
- * field is contested (see cMgSmartball_object_c.h). This class's own
- * Update is in fact one of the files that resolved the base header's note --
+ * raw `(char*)this + 0x32` idiom because 0x31-0x33 is a three-byte region
+ * with no single type, read three incompatible ways (see
+ * cMgSmartball_object_c.h). This class's own Update is one of the three --
  * it indexes a sine table with `>> 4` (lsr, not asr) on that field, i.e. an
  * UNSIGNED reading, one of the several conflicting accesses the base header
  * already records.

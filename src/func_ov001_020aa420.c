@@ -32,7 +32,7 @@ extern u8 data_0208a0e0;
 extern CapRequest *data_0209f394[];
 
 extern int func_ov001_020aa79c(int x);
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int func_0202a8e0(int a, u8 b);
 extern void func_ov001_020aa6b0(void *p, int flag);
 extern void func_ov001_020ab110(void *p);
@@ -92,7 +92,7 @@ void func_ov001_020aa420(void) {
 
         if (node != 0) {
             do {
-                found = _ZN5Actor10FindWithIDEj(node->field8);
+                found = _ZN8dActor_c10FindWithIDEj(node->field8);
                 if (found != 0 || (int)found != node->field4) {
                     if (node->flags.b0) {
                         if (node->soundHandle == -1) {

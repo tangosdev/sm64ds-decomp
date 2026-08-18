@@ -1,7 +1,7 @@
 typedef long long s64;
 struct Matrix4x3 { int m[12]; };
 extern struct Matrix4x3 data_02082128;
-void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *sm, void *mtx, int a, int b, unsigned int c);
 
 void func_ov074_02121800(char *c)
@@ -34,7 +34,7 @@ void func_ov074_02121800(char *c)
         fp = *(int *)(src + 0x3b4);
         sl += 0x28000;
         *(int *)(self + 0x318) = fp >> 3;
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, sm, m, r3_318, sl, 0xf);
         self += 0x30;
         src += 0xc;

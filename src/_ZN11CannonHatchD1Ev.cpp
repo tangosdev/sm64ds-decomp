@@ -3,9 +3,9 @@
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Two vtable stores and three destructor calls, every one a consequence of
- * `struct CannonHatch : Platform`: its own vptr, then Platform's -- inlined,
- * because Platform's destructor is defined in its class body -- then
- * Platform's Model and MovingMeshCollider, then Actor. This class adds no
+ * `struct CannonHatch : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
+ * because dBgActor_c's destructor is defined in its class body -- then
+ * dBgActor_c's Model and MovingMeshCollider, then dActor_c. This class adds no
  * member with a destructor of its own.
  */
 #include "CannonHatch.h"

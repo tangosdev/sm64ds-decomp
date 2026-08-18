@@ -5,7 +5,7 @@ extern void Matrix4x3_FromRotationXYZExt(void *m, int x, int y, int z);
 extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *mF, short angY);
-extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void *self, void *sm, void *mtx, int a, int b, int c, unsigned int g);
 
 extern short data_02082214[];
@@ -62,10 +62,10 @@ void func_ov079_02124188(char *self)
         return;
 
     if (*(unsigned char *)(self + 0x414) != 0) {
-        _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+        _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
             self, self + 0x344, self + 0x36c, 0x1cc000, 0x190000, shadowRad, 0xf);
     } else {
-        _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+        _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
             self, self + 0x344, self + 0x36c, 0xf0000, 0x190000, shadowRad, 0xf);
     }
     return;

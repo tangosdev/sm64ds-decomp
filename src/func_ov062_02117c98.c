@@ -4,19 +4,19 @@ typedef struct { s16 x, y, z; } V16;
 
 #define AT(p, off) ((void*)(int)(((long long)(int)((char*)(p) + (off)))))
 
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020ada40(void* self, void* v, void* a, int f);
 extern void func_ov062_02117bf4(void* self);
 extern void func_ov002_020aea30(void* self, void* a, int b);
 extern int _ZN6Player9IsOnShellEv(void* p);
-extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* clsn, void* player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* clsn, void* player);
 extern void func_0201267c(int a, void* p);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, int f);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, u32 a, int f, u32 b, u32 c, u32 d);
 extern void func_ov062_02117b48(void* p);
-extern void _ZN5Actor8PoofDustEv(void* self);
+extern void _ZN8dActor_c8PoofDustEv(void* self);
 extern void func_ov062_021179e4(void* c);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(void* self);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* self);
 
 void func_ov062_02117c98(void* self)
 {
@@ -29,7 +29,7 @@ void func_ov062_02117c98(void* self)
     id = *(u32*)(c + 0x134);
     if (id == 0)
         return;
-    found = _ZN5Actor10FindWithIDEj(id);
+    found = _ZN8dActor_c10FindWithIDEj(id);
     if (found == 0)
         return;
 
@@ -107,7 +107,7 @@ void func_ov062_02117c98(void* self)
             r5 = 1;
             goto tail;
         }
-        if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(self, (void*)(c + 0x110), found)) {
+        if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(self, (void*)(c + 0x110), found)) {
             if (*(s32*)(c + 0x390) == 0) {
                 func_ov062_02117bf4(self);
             } else {
@@ -138,9 +138,9 @@ void func_ov062_02117c98(void* self)
             _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(found, &L.hv, 0, pw, 1, 0, 1);
             func_ov062_02117b48(self);
             if (*(s32*)(c + 0x390) == 2) {
-                _ZN5Actor8PoofDustEv(self);
+                _ZN8dActor_c8PoofDustEv(self);
                 func_ov062_021179e4(self);
-                _ZN5Actor24KillAndTrackInDeathTableEv(self);
+                _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
             }
         }
     }

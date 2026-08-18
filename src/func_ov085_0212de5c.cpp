@@ -2,7 +2,7 @@
 #include "types.h"
 struct PMF;
 struct Player;
-struct Actor {
+struct dActor_c {
     Player *ClosestPlayer();
     short HorzAngleToCPlayer();
 };
@@ -36,7 +36,7 @@ struct Other {
 
 extern "C" int func_ov085_0212de5c(PlayerObj *c)
 {
-    Other *p = (Other *)((Actor *)c)->ClosestPlayer();
+    Other *p = (Other *)((dActor_c *)c)->ClosestPlayer();
     if (p == 0)
         return 1;
     {
@@ -45,7 +45,7 @@ extern "C" int func_ov085_0212de5c(PlayerObj *c)
         p->v8e = t;
         p->v90 = 0;
     }
-    c->v8e = ((Actor *)c)->HorzAngleToCPlayer();
+    c->v8e = ((dActor_c *)c)->HorzAngleToCPlayer();
     c->v2dc = 0;
     c->v8c = 0x1000;
     c->v90 = 0x800;

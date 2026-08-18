@@ -5,14 +5,14 @@
 /* recovered: shared common types */
 #include "common.h"
 
-struct Actor;
+struct dActor_c;
 struct RaycastGround {
     char pad0[0x14];
     int f14;
     char pad1[0x38];
     RaycastGround();
     ~RaycastGround();
-    void SetObjAndPos(const Vector3&, Actor*);
+    void SetObjAndPos(const Vector3&, dActor_c*);
     int DetectClsn();
 };
 extern "C" void _ZN4BgCh19StartDetectingWaterEv(RaycastGround*);
@@ -31,7 +31,7 @@ extern "C" void func_ov002_020c72a4(void* thisptr)
     v.y = d;
     v.z = z;
     *(int*)((char*)&rg + 0x4c) = d << 1;
-    rg.SetObjAndPos(v, (Actor*)thisptr);
+    rg.SetObjAndPos(v, (dActor_c*)thisptr);
     _ZN4BgCh19StartDetectingWaterEv(&rg);
     if (rg.DetectClsn()) {
         if (SurfaceInfo_TestFlag0x20(&rg.f14) != 0) {

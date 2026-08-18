@@ -6,15 +6,15 @@ typedef int s32;
 
 typedef struct { s32 x, y, z; } Vector3;
 
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN8CapEnemy10ReleaseCapERK7Vector3(void* thiz, const Vector3* v);
 extern void* func_ov002_020ada40(void* thiz, s16* v, void* r6, s32 flag);
 extern void func_02012694(s32 a, void* b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, s32 i, s32 fx, u32 j);
 extern s32 _ZN6Player9IsOnShellEv(void* p);
-extern s32 _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* thiz, void* clsn, void* player);
+extern s32 _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* thiz, void* clsn, void* player);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, s32 f);
-extern void _ZN5Actor13SmallPoofDustEv(void* thiz);
+extern void _ZN8dActor_c13SmallPoofDustEv(void* thiz);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, s32 f, u32 b, u32 cc, u32 d);
 extern void func_ov084_02129498(void* thiz);
 extern void func_ov002_020aea30(void* thiz, void* r6, void* p);
@@ -52,7 +52,7 @@ void func_ov084_02129ed4(void* c)
 
     id = *(u32*)((char*)c + 0x1a4);
     if (id == 0) return;
-    r6 = _ZN5Actor10FindWithIDEj(id);
+    r6 = _ZN8dActor_c10FindWithIDEj(id);
     if (r6 == 0) return;
 
     flags = I(c, 0x1a0);
@@ -141,7 +141,7 @@ void func_ov084_02129ed4(void* c)
                     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x370, data_ov084_02130ce0[1], 0x40000000, 0x1000, 0);
                     goto block_68;
                 }
-                if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, (char*)c + 0x180, r6) != 0) {
+                if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, (char*)c + 0x180, r6) != 0) {
                     _ZN6Player6BounceE5Fix12IiE(r6, 0x28000);
                     func_02012694(0xe0, (char*)c + 0x74);
                     I(c, 0x10c) = 1;
@@ -153,7 +153,7 @@ void func_ov084_02129ed4(void* c)
                 if (U8f(r6, 0x6fb) != 0) return;
                 if (I(c, 0x434) == 0) {
                     if (I(c, 0x460) == 0) {
-                        _ZN5Actor13SmallPoofDustEv(c);
+                        _ZN8dActor_c13SmallPoofDustEv(c);
                         v50.x = I(c, 0x5c); v50.y = I(c, 0x60); v50.z = I(c, 0x64);
                         _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(r6, &v50, 0, var_r4, 1, 0, 1);
                         func_ov084_02129498(c);
@@ -176,7 +176,7 @@ void func_ov084_02129ed4(void* c)
     var_r0 = (s32)(U16f(r6, 0xc) == 0xbf);
     if (var_r0 != 0) {
         { Vector3* pp = (Vector3*)(((int)r6 + 0x5c) & 0xffffffffffffffffULL); v2c.x = pp->x; v2c.y = pp->y; v2c.z = pp->z; }
-        if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, (char*)c + 0x180, r6) != 0) {
+        if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, (char*)c + 0x180, r6) != 0) {
             _ZN6Player6BounceE5Fix12IiE(r6, 0x28000);
             func_02012694(0xe0, (char*)c + 0x74);
             I(c, 0x10c) = 1;

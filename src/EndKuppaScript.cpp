@@ -1,6 +1,6 @@
 //cpp
-struct ActorBase { void MarkForDestruction(); };
-struct Actor : ActorBase { static Actor *FindWithID(unsigned int); };
+struct fBase_c { void MarkForDestruction(); };
+struct dActor_c : fBase_c { static dActor_c *FindWithID(unsigned int); };
 namespace Sound { void UnsetPlayerVoiceGroup(); }
 
 extern "C" {
@@ -36,7 +36,7 @@ extern "C" void EndKuppaScript(void)
 
     p = data_0209b284;
     for (i = 0; i < 4; i++) {
-        Actor *a = Actor::FindWithID(*p);
+        dActor_c *a = dActor_c::FindWithID(*p);
         if (a != 0) {
             a->MarkForDestruction();
             *p = 0;
@@ -48,7 +48,7 @@ extern "C" void EndKuppaScript(void)
 
     p = data_0209b2a4;
     for (i = 0; i < 0x10; i++) {
-        Actor *a = Actor::FindWithID(*p);
+        dActor_c *a = dActor_c::FindWithID(*p);
         if (a != 0) {
             a->MarkForDestruction();
             *p = 0;

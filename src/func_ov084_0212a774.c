@@ -11,7 +11,7 @@ extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void *self);
 extern void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void *bmd, void *bma);
 extern void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *self, void *file, int i, int fix, u32 j);
 extern void func_ov084_021296cc(char *c);
-extern void _ZN5Enemy9SpawnCoinEv(void *self);
+extern void _ZN12dEnemyBase_c9SpawnCoinEv(void *self);
 extern void func_ov084_02129498(char *r0);
 extern void _ZN8CapEnemy10ReleaseCapERK7Vector3(void *self, const Vector3 *v);
 extern void _ZN8CapEnemy15RespawnIfHasCapEv(void *self);
@@ -19,8 +19,8 @@ extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void func_02012694(int a, void *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern int _ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(void *self, void *c);
-extern void *_ZN5Actor10FindWithIDEj(u32 id);
+extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(void *self, void *c);
+extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020aea30(void *a, void *b, void *c, int d);
 extern void *data_ov084_02130ce8[];
 extern void *data_ov084_02130228[];
@@ -55,7 +55,7 @@ void func_ov084_0212a774(char *c)
         *(u16 *)(((long long)(int)(c + 0x452))) -= 1;
         if (*(u16 *)(c + 0x400 + 0x52) == 0) {
             func_ov084_021296cc(c);
-            _ZN5Enemy9SpawnCoinEv(c);
+            _ZN12dEnemyBase_c9SpawnCoinEv(c);
             func_ov084_02129498(c);
             v.x = 0;
             v.y = 0x6c000;
@@ -113,8 +113,8 @@ void func_ov084_0212a774(char *c)
         }
     }
     *(u8 *)(c + 0x107) = 1;
-    if (_ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(c, c + 0x180) != 0) {
-        void *a = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x1a4));
+    if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(c, c + 0x180) != 0) {
+        void *a = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x1a4));
         *(s32 *)(c + 0x10c) = 7;
         func_ov002_020aea30(c, a, c + 0x1b4, 7);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, data_ov084_02130ce0[1], 0x40000000, 0x1000, 0);

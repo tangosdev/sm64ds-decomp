@@ -2,7 +2,7 @@
 #define CAPENEMY_H
 
 #include "types.h"
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "CapIcon.h"
 #include "Model.h"
 
@@ -11,10 +11,10 @@ struct Vector3;
 /* The base for the enemies that can wear one of the caps. The ROM's RTTI names it
  * dCapEnemy_c and gives it two children, daKrb_c (Goomba) and daTrs_c (Boo).
  *
- * DERIVES FROM Enemy, and the class's own constructor and destructor are the two
- * witnesses. CapEnemy::CapEnemy calls _ZN5EnemyC2Ev, stores the vtable, then
+ * DERIVES FROM dEnemyBase_c, and the class's own constructor and destructor are the two
+ * witnesses. CapEnemy::CapEnemy calls _ZN12dEnemyBase_cC2Ev, stores the vtable, then
  * constructs Model at 0x114 and the CapIcon at 0x164; the destructor tears the
- * same two down in the opposite order and chains to _ZN5EnemyD2Ev. Forward in one,
+ * same two down in the opposite order and chains to _ZN12dEnemyBase_cD2Ev. Forward in one,
  * backward in the other, at the same offsets: a layout read twice.
  *
  * SIZE 0x180. This class is abstract in practice -- nothing allocates a plain
@@ -25,10 +25,10 @@ struct Vector3;
  * base, so 0x180 is both the floor and the ceiling.
  *
  * VTABLE. CapEnemy overrides exactly one thing: the destructor, at slots 16 and
- * 17. All 31 slots were diffed against Enemy's and every other one is identical,
+ * 17. All 31 slots were diffed against dEnemyBase_c's and every other one is identical,
  * which is why this class declares no virtual but its destructor.
  */
-struct CapEnemy : Enemy {
+struct CapEnemy : dEnemyBase_c {
     /* Which BANK of caps this enemy draws from. AddCap sets it when the spawn
        param is >= 3, and both ReleaseCap and GetCapEatenOffIt branch on it --
        a set flag releases the cap differently and skips the model re-bind. */
@@ -53,8 +53,8 @@ struct CapEnemy : Enemy {
     int AddCap(unsigned int param);
     int DestroyIfCapNotNeeded();
     int GetCapEatenOffIt(const Vector3 & v_);
-    struct Actor * ReleaseCap(const Vector3 & v_);
-    struct Actor * RespawnIfHasCap();
+    struct dActor_c * ReleaseCap(const Vector3 & v_);
+    struct dActor_c * RespawnIfHasCap();
     void RenderCapModel(const Vector3 * v);
     void UnloadCapModel();
     void Unk_02005d94();

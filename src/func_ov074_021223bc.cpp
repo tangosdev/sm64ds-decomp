@@ -12,21 +12,21 @@ struct Matrix4x3;
 
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN5Actor8PoofDustEv(void *self);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN8dActor_c8PoofDustEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
 extern void func_02012694(int a, void *b);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *self);
 extern void _ZN4BgCh19StartDetectingWaterEv(RaycastGround *self);
 extern void _ZN4BgCh19StartDetectingToxicEv(RaycastGround *self);
 extern void _ZN4BgCh21StopDetectingOrdinaryEv(RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *self, const Vector3 *v, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *self, const Vector3 *v, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
 extern int func_02037e20(int *p);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround *self);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, CylinderClsn *cc);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, CylinderClsn *cc);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, ShadowModel *sm, Matrix4x3 *mtx, Fix12i h, Fix12i g, unsigned int u);
 extern struct Blob48 { int w[12]; } data_02082128;
 
@@ -42,9 +42,9 @@ int func_ov074_021223bc(char *c)
     if (DecIfAbove0_Short((u16 *)(c + 0x5fc)) == 0 || *(u8 *)(c + 0x603) >= 3) {
         int b = ((*(int *)(c + 0xb0) & 8) != 0) ? 1 : 0;
         if (b == 0) {
-            _ZN5Actor8PoofDustEv(c);
+            _ZN8dActor_c8PoofDustEv(c);
         }
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return 1;
     }
 
@@ -76,21 +76,21 @@ int func_ov074_021223bc(char *c)
     _ZN4BgCh19StartDetectingWaterEv(&rg);
     _ZN4BgCh19StartDetectingToxicEv(&rg);
     _ZN4BgCh21StopDetectingOrdinaryEv(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &pos, c);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, c);
 
     if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0
         && func_02037e20(rg.floor) != 0
         && rg.floor[(0x44 - 0x14) / 4] != (int)0x80000000
         && *(int *)(c + 0x60) < rg.floor[(0x44 - 0x14) / 4]) {
-        _ZN5Actor8PoofDustEv(c);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN8dActor_c8PoofDustEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         _ZN13RaycastGroundD1Ev(&rg);
         return 1;
     }
 
     if (*(u16 *)(c + 0x5fc) < 0x60) {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, (WithMeshClsn *)(c + 0x40c), 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, (WithMeshClsn *)(c + 0x40c), 0);
 
         *(s16 *)AT(c, 0x8c) = *(s16 *)AT(c, 0x8c) + 0x1800;
     }
@@ -101,7 +101,7 @@ int func_ov074_021223bc(char *c)
     *(int *)(c + 0x314) = *(int *)(c + 0x60) >> 3;
     *(int *)(c + 0x318) = *(int *)(c + 0x64) >> 3;
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, (ShadowModel *)(c + 0x274), (Matrix4x3 *)(c + 0x2ec), 0x8c000, 0x3e8000, 0xf);
 
     _ZN13RaycastGroundD1Ev(&rg);

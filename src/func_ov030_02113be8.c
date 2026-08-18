@@ -1,7 +1,7 @@
 typedef int Fix12i;
 typedef short s16;
 
-extern void *_ZN5Actor13ClosestPlayerEv(void *c);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *c);
 extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
 extern Fix12i Vec3_Dist(const void *a, const void *b);
 extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *c);
@@ -15,7 +15,7 @@ int func_ov030_02113be8(void *c) {
 
     p = *(void **)((char *)c + 0x3a8);
     if (p == 0)
-        p = _ZN5Actor13ClosestPlayerEv(c);
+        p = _ZN8dActor_c13ClosestPlayerEv(c);
 
     b = (int)(*(unsigned short *)((char *)c + 0xc) == 0x10b);
     if (b != 0) {

@@ -2,9 +2,9 @@
 #define HUD_H
 
 #include "types.h"
-#include "ActorDerived.h"
+#include "dBase_c.h"
 
-/* Derives from ActorDerived: the destructor stores this class's vtable, then the
+/* Derives from dBase_c: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x50 belonged to the
  * chain above and is inherited now.
@@ -15,7 +15,7 @@
 
 #ifdef __cplusplus
 
-struct HUD : ActorDerived {
+struct HUD : dBase_c {
     u8  pad_050[0x10];
     u16 mVsTimer;                     /* 0x060 */
     u8  pad_062[0x4];
@@ -43,9 +43,14 @@ struct HUD : ActorDerived {
     void RenderTimeTimer();
     void RenderVsTimer();
     void UpdateHealthMeter();
+
+    /* Tail padding. The field span stops short of the real size: _ZN3HUDC1Ev
+       calls fBase_c::operator new(0x7c), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_078[0x4];      /* 0x078, to the ROM's 0x7c */
 };
 
-typedef char HUD_size_must_be_0x78[sizeof(HUD) == 0x78 ? 1 : -1];
+typedef char HUD_size_must_be_0x7c[sizeof(HUD) == 0x7c ? 1 : -1];
 
 #else
 

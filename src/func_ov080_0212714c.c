@@ -1,18 +1,18 @@
 #include "types.h"
-extern int _ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(void *self, s16 a, s16 b, s16 c, int d);
+extern int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *self, s16 a, s16 b, s16 c, int d);
 extern int DecIfAbove0_Byte(u8 *p);
 extern int Vec3_Dist(void *a, void *b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern int AngleDiff(int a, int b);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *a, void *b);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *a, void *b);
 extern void Vec3_Sub(void *out, void *a, void *b);
 extern int LenVec3(void *v);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int, void *);
 extern u16 DecIfAbove0_Short(u16 *p);
 extern void func_ov080_02127094(char *t);
-extern int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *, int, int);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
+extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *, int, int);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
 
 int func_ov080_0212714c(char *c, int *p2)
 {
@@ -22,7 +22,7 @@ int func_ov080_0212714c(char *c, int *p2)
     s16 v;
     int horz;
 
-    if (_ZN8Platform20UpdateKillByMegaCharEsss5Fix12IiE(c, (s16)-0x1500, 0, 0, 0) != 0)
+    if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(c, (s16)-0x1500, 0, 0, 0) != 0)
         return 1;
     if ((int)((*(int *)(c + 0xb0) & 8) != 0) != 0)
         return 1;
@@ -84,7 +84,7 @@ int func_ov080_0212714c(char *c, int *p2)
         int t = d + ((unsigned)(d >> 5) >> 26);
         *(int *)(c + 0x98) = (t >> 6) << 12;
     }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
     Vec3_Sub(tmp, c + 0x5c, c + 0x320);
     len = LenVec3(tmp);
     ang = Vec3_HorzAngle(c + 0x5c, c + 0x320);
@@ -123,11 +123,11 @@ int func_ov080_0212714c(char *c, int *p2)
     {
         int is66 = (int)(*(u16 *)(c + 0xc) == 0x66);
         if (is66 != 0) {
-            if (_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0) != 0)
-                _ZN8Platform19UpdateClsnPosAndRotEv(c);
+            if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0) != 0)
+                _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
         } else {
-            if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
-                _ZN8Platform19UpdateClsnPosAndRotEv(c);
+            if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0)
+                _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
         }
     }
     *(u8 *)(c + 0x342) = 0;

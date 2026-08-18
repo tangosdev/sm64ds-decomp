@@ -6,7 +6,7 @@ typedef struct ClsnResult { void *vtb; int s0, s1, s2, s3, s4; u16 f, g; int h, 
 extern int func_02035638(char *p);
 extern char *func_0203564c(char *p);
 extern unsigned int _ZNK10ClsnResult9GetClsnIDEv(void *r);
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, void *v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
 extern void _ZN10ClsnResultD1Ev(void *r);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(char *p);
@@ -40,7 +40,7 @@ int func_ov002_020eea84(char *self, char *player)
         res.i = *(int *)(r + 0x20);
         res.j = *(int *)(r + 0x24);
         if (_ZNK10ClsnResult9GetClsnIDEv(&res) != 0xffffffff) {
-            actor = _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(&res));
+            actor = _ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(&res));
             if (actor != 0 && (b = (int)(*(u16 *)(actor + 0xc) == 0x3a)) != 0) {
                 { int *s = (int *)(((int)player + 0x5c)); v.x = s[0]; v.y = s[1]; v.z = s[2]; }
                 _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &v, 3, 0xc000, 1, 0, 1);
@@ -54,7 +54,7 @@ int func_ov002_020eea84(char *self, char *player)
     if (_ZNK12WithMeshClsn8IsOnWallEv(self)) {
         char *wr = _ZNK12WithMeshClsn13GetWallResultEv(self);
         if (_ZNK10ClsnResult9GetClsnIDEv(wr) != 0xffffffff) {
-            actor = _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(wr));
+            actor = _ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(wr));
             if (actor != 0 && (b = (int)(*(u16 *)(actor + 0xc) == 0x139)) != 0) {
                 { int *s = (int *)(((int)actor + 0x5c)); v2.x = s[0]; v2.y = s[1]; v2.z = s[2]; }
                 if (_ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(player, &v2, 1, 0xc000, 1, 0, 1) != 0)

@@ -7,7 +7,7 @@ struct RaycastGround { char buf[0x50]; };
 
 extern "C" {
     void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3* p, void* a);
+    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3* p, void* a);
     int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
     void _ZN13RaycastGroundD1Ev(RaycastGround* self);
     void func_ov060_02111cc0(char* c, int a, int b);
@@ -37,7 +37,7 @@ extern "C" void func_ov060_02113b5c(char* c)
         v.x = xx;
         v.y = yy;
         v.z = zz;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, c);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, c);
         if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
             int hy = *(s32*)(rg.buf + 0x44);
             if (hy >= *(s32*)(c + 0x3b4) - 0x64000) r4 = hy;

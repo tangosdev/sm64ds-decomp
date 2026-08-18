@@ -7,7 +7,7 @@
  * Attributed by the vtable: dScMgJump2_c's own table is ov006 0x0213ccfc (the
  * address include/dScMgJump2_c.h's banner records) and its slot 3 relocates
  * here, so this is this class's own override and not dScMgD3DBase_c's. The
- * signature is include/ActorBase.h's own slot 3, `virtual s32
+ * signature is include/fBase_c.h's own slot 3, `virtual s32
  * CleanupResources()`.
  *
  * data_ov006_021421b8 IS A POINTER TO the handle, not the handle: the ROM

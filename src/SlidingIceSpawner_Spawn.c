@@ -7,7 +7,7 @@
 /* resolved: VT = _ZTV10SlidingIce */
 int *SlidingIceSpawner_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(812);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV10SlidingIce; }
+    int *p = (int *)_ZN7fBase_cnwEj(812);
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV10SlidingIce; }
     return p;
 }

@@ -1,15 +1,15 @@
 #include "types.h"
-extern struct Actor *func_0200e6d8(unsigned int arg0);
+extern struct dActor_c *func_0200e6d8(unsigned int arg0);
 extern void Math_Function_0203b0fc(int *p, int target, int scale, int max);
 
 extern u16 data_0209b274;
 
-typedef struct Actor {
+typedef struct dActor_c {
     char pad60[0x60];
     int f60;            /* 0x60 */
     char pad64[0x644 - 0x64];
     int f644;           /* 0x644 */
-} Actor;
+} dActor_c;
 
 typedef struct Self {
     char pad84[0x84];
@@ -20,7 +20,7 @@ typedef struct Self {
 
 int func_02008200(Self *self, int dummy, int arg2)
 {
-    Actor *a;
+    dActor_c *a;
     int diff, val, target;
     if (arg2 == data_0209b274)
         self->fb4 = 0x190000;

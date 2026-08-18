@@ -15,15 +15,16 @@
  *
  * OFFSETS 0x31 AND 0x32 ARE NOT DECLARED HERE even though this class's own
  * functions touch them -- they belong to cMgSmartball_object_c (unk_031,
- * unk_032), not to this class's 0x34+ region. The two are reached
- * DIFFERENTLY, and the difference is deliberate. 0x31 goes through the
- * base's member name: the base declares it u8 and every access here is a
- * byte, so the name states exactly the right thing. 0x32 keeps a raw
- * `(char*)this + 0x32` cast, because the base declares it 16 bits wide --
- * the more common reading among its 43 touching files -- while this class
- * only ever writes a u8 0/1 into its low byte. The name would misstate the
- * instruction there; the cast says what the ROM does. See
- * cMgSmartball_object_c.h on that field's contested width.
+ * unk_032), not to this class's 0x34+ region. Both are reached through the
+ * base's member names, and every access here is a byte.
+ *
+ * That is a change from how this class first landed. The base then declared
+ * 0x32 as a 16-bit field, so this class's byte-wide 0/1 write had to go
+ * through a raw `(char*)this + 0x32` cast to avoid misstating the emitted
+ * instruction. Migrating cMgSmartball_board_c showed the region is three
+ * independent bytes read three incompatible ways, the base was corrected to
+ * three u8s, and this class's view now agrees with the declaration. Siblings
+ * that read a 16-bit angle across 0x32-0x33 still need their casts.
  *
  * CONSTRUCTED BY func_ov006_02111774, left a free function per the recipe
  * (this tree has migrated zero constructors), with only its vtable-symbol

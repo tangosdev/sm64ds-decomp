@@ -4,10 +4,10 @@
 struct PVec { s32 x, y, z; ~PVec() {} };
 
 extern "C" {
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern int func_ov002_020d85fc(char *self, char *arg, int flags);
 extern int func_ov002_020d8360(void *self, void *other, u32 flags);
-extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(char *self, void *clsn, char *player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(char *self, void *clsn, char *player);
 extern int _ZN6Player7IsInAirEv(char *p);
 extern int func_ov002_020d9298(char *c);
 extern void func_ov002_020db8bc(u8 *p, u8 val);
@@ -31,7 +31,7 @@ extern "C" int func_ov002_020d869c(char *c)
         return 0;
     if (*(u32 *)(c + 0x2f8) == 0)
         return 0;
-    r6 = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x2f8));
+    r6 = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x2f8));
     if (r6 == 0 || r6 == c)
         return 0;
     t = (int)(*(u16 *)(r6 + 0xc) == 0xbf);
@@ -48,7 +48,7 @@ extern "C" int func_ov002_020d869c(char *c)
     } else {
         if (*(u8 *)(c + 0x709) != 0)
             return 0;
-        if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x2d4, r6) != 0) {
+        if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x2d4, r6) != 0) {
             if (_ZN6Player7IsInAirEv(r6) == 0)
                 return 0;
             if (func_ov002_020d9298(r6) != 0) {

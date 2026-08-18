@@ -1,11 +1,11 @@
 #include "types.h"
-struct Actor { char _pad[0xd4]; };
+struct dActor_c { char _pad[0xd4]; };
 
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int soundID, unsigned int vol, unsigned int pan, Fix12i dist, int loop);
 
 static const int kPoolDist = 0x8777;
 
-int func_0200f7f0(struct Actor *actor, u16 *counter)
+int func_0200f7f0(struct dActor_c *actor, u16 *counter)
 {
     int ret = 0;
     (void)actor;

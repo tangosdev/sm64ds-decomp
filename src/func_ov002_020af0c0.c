@@ -2,7 +2,7 @@ typedef struct Vector3 { int x, y, z; } Vector3;
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 extern short data_02082214[];
 #define SINE_TABLE data_02082214
-extern char* _ZN5Actor13ClosestPlayerEv(void*);
+extern char* _ZN8dActor_c13ClosestPlayerEv(void*);
 extern int func_ov002_020d0d2c(void*);
 extern int Vec3_HorzLen(const Vector3*);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int, int);
@@ -11,7 +11,7 @@ extern void _Z14ApproachLinearRsss(short*, int, int);
 extern void func_ov002_020af3a8(void*);
 
 void func_ov002_020af0c0(char* c){
-    char* p = _ZN5Actor13ClosestPlayerEv(c);
+    char* p = _ZN8dActor_c13ClosestPlayerEv(c);
     if(p != 0){
         Vector3 diff;
         Vector3 ppos;

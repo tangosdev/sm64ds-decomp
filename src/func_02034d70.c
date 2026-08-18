@@ -9,6 +9,6 @@ extern void* data_0209d4a8;  /* 0x0209d4a8 */
 
 int func_02034d70(void) {
     data_0209d4a8 = 0;
-    _ZN5Scene20SetAndStopColorFaderEv();
+    _ZN8dScene_c20SetAndStopColorFaderEv();
     return 1;
 }

@@ -6,7 +6,7 @@
 struct BMD_File;
 struct BTP_File;
 struct BCA_File;
-struct Actor;
+struct dActor_c;
 struct Vector3 { int x, y, z; };
 struct SharedFilePtr { void *hdr; void *ptr; };
 
@@ -18,13 +18,13 @@ extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a
 extern "C" void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void *self, Actor *a, Vector3 const &b, int c, int d, unsigned int e, unsigned int f);
-extern "C" unsigned char _ZN5Actor9TrackStarEjj(Actor *self, unsigned int a, unsigned int b);
+extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, dActor_c *a, Vector3 const &b, int c, int d, unsigned int e, unsigned int f);
+extern "C" unsigned char _ZN8dActor_c9TrackStarEjj(dActor_c *self, unsigned int a, unsigned int b);
 extern "C" void func_ov071_02121634(void *self, int a);
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, BCA_File *f, int a, int b, unsigned int c);
 extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, BTP_File &f, int a, int b, unsigned int c);
 extern "C" void _ZN13RaycastGroundC1Ev(void *self);
-extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, Vector3 const &pos, Actor *act);
+extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, Vector3 const &pos, dActor_c *act);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern "C" void func_ov071_02120c90(char *c);
 extern "C" void _ZN13RaycastGroundD1Ev(void *self);
@@ -69,7 +69,7 @@ extern "C" int _ZN3MrI13InitResourcesEv(char *c)
         v.x = 0;
         v.y = -0x4b000;
         v.z = 0;
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(c + 0x174, (Actor *)c, v, 0x55000, 0x96000, 0x200004, 0x42000);
+        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x174, (dActor_c *)c, v, 0x55000, 0x96000, 0x200004, 0x42000);
         *(int *)(c + 0x80) = 0x1000;
         *(int *)(c + 0x84) = 0x1000;
         *(int *)(c + 0x88) = 0x1000;
@@ -81,7 +81,7 @@ extern "C" int _ZN3MrI13InitResourcesEv(char *c)
             v.x = 0;
             v.y = -0x96000;
             v.z = 0;
-            _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(c + 0x174, (Actor *)c, v, 0xaa000, 0x12c000, 0x200004, 0);
+            _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x174, (dActor_c *)c, v, 0xaa000, 0x12c000, 0x200004, 0);
             *(int *)(c + 0x80) = 0x2000;
             *(int *)(c + 0x84) = 0x2000;
             *(int *)(c + 0x88) = 0x2000;
@@ -90,7 +90,7 @@ extern "C" int _ZN3MrI13InitResourcesEv(char *c)
     }
 
     unsigned char mask = (unsigned char)(*(unsigned int *)(c + 8) & 0xf);
-    unsigned char star = _ZN5Actor9TrackStarEjj((Actor *)c, mask, 2);
+    unsigned char star = _ZN8dActor_c9TrackStarEjj((dActor_c *)c, mask, 2);
     *(unsigned char *)(c + 0x217) = star;
 
     *(int *)(c + 0x9c) = 0;
@@ -110,7 +110,7 @@ extern "C" int _ZN3MrI13InitResourcesEv(char *c)
 
     char rg[0x50];
     _ZN13RaycastGroundC1Ev(rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, *(Vector3 *)(c + 0x5c), (Actor *)c);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, *(Vector3 *)(c + 0x5c), (dActor_c *)c);
     int y;
     if (_ZN13RaycastGround10DetectClsnEv(rg)) {
         y = (*(int *)(c + 0x60) - *(int *)(rg + 0x44)) + 0x1e000;

@@ -21,7 +21,7 @@ struct PowerFlower {
     s32 mScaleY;            /* 0x084 */
     s32 mScaleZ;            /* 0x088 */
     u8  pad_08c[0x2];
-    /* 0x08e..0x09c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x08e..0x09c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s16 unk_08e;                 /* 0x08e */
     s16 mAngleZ;                 /* 0x090 */

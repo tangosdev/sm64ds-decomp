@@ -4,8 +4,8 @@
 /* daObjDorifu_c::Behavior -- vtable slot 6, ov002 0x020b4bfc.
  *
  * Named from the table: 0x020b4bfc is the word slot 6 of _ZTV13daObjDorifu_c
- * holds where _ZTV8Platform holds something else, so it is this class's own
- * override of the virtual ActorBase declares. include/daObjDorifu_c.h's
+ * holds where _ZTV10dBgActor_c holds something else, so it is this class's own
+ * override of the virtual fBase_c declares. include/daObjDorifu_c.h's
  * banner already attributed this address to this class -- it is the function
  * the four bytes at 0xdc8 were named from -- so only the definition was still
  * under a func_ov002_ name.

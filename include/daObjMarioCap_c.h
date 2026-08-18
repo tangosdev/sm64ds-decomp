@@ -2,21 +2,21 @@
 #define DAOBJMARIOCAP_C_H
 
 #include "types.h"
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "CapIcon.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-/* Derives from Enemy, and both witnesses agree offset for offset:
+/* Derives from dEnemyBase_c, and both witnesses agree offset for offset:
  *
- *   Cap_Spawn (ov002) allocates 0x410, calls _ZN5EnemyC2Ev, stores
+ *   Cap_Spawn (ov002) allocates 0x410, calls _ZN12dEnemyBase_cC2Ev, stores
  *   _ZTV15daObjMarioCap_c, then constructs MovingCylinderClsn 0x110, WithMeshClsn 0x144,
  *   ModelAnim 0x300, ShadowModel 0x364 and the CapIcon at 0x3d0.
  *
  *   _ZN15daObjMarioCap_cD1Ev tears the same five down in exactly the reverse order and
- *   chains to _ZN5EnemyD2Ev.
+ *   chains to _ZN12dEnemyBase_cD2Ev.
  *
  * THE 0x3d0 MEMBER IS A CapIcon, and that is what this class was waiting on. Its
  * constructor and destructor are func_ov001_020ab3c4 / func_ov001_020ab3a0 -- the same
@@ -24,7 +24,7 @@
  * the destructor emits a short chain and comes out a different SIZE, which reads as
  * `999 word(s) differ` and looks like a total failure rather than one missing member.
  *
- * SIZE 0x410, the literal in Cap_Spawn's ActorBase::operator new. CapIcon is 0x1c, so
+ * SIZE 0x410, the literal in Cap_Spawn's fBase_c::operator new. CapIcon is 0x1c, so
  * 0x3d0 + 0x1c = 0x3ec closes onto the scalars below it.
  *
  * THE CLASS USED TO BE CALLED WaterfallMist, and the previous revision of this comment
@@ -45,7 +45,7 @@
  * PoppingLavaBubbles_Spawn stores it as the unnamed _ZTV18PoppingLavaBubbles. So that symbol
  * names the wrong table, one entry along.
  */
-struct daObjMarioCap_c : Enemy {
+struct daObjMarioCap_c : dEnemyBase_c {
     MovingCylinderClsn  mMovingCylinderClsn;    /* 0x110 */
     WithMeshClsn        mWithMeshClsn;          /* 0x144 */
     ModelAnim           mModelAnim;             /* 0x300 */

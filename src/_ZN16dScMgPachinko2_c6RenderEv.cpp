@@ -9,14 +9,14 @@
    `this`. Declared locally with the real (void*) signature instead of
    including decl_common.h for this file. */
 extern "C" {
-int func_ov006_021004c0(void*);
-int func_ov006_02100488(void*);
-int func_ov006_02102624(void*);
-int func_ov006_02100314(void*);
-int func_ov006_02100140(void*);
-int func_ov006_02102de4(void*);
-int func_ov006_0210068c(void*);
-int func_ov006_020ff47c(void*);
+void func_ov006_021004c0(void*);
+void func_ov006_02100488(void*);
+void func_ov006_02102624(void*);
+void func_ov006_02100314(void*);
+void func_ov006_02100140(void*);
+void func_ov006_02102de4(void*);
+void func_ov006_0210068c(void*);
+void func_ov006_020ff47c(void*);
 }
 s32 dScMgPachinko2_c::Render()
 {

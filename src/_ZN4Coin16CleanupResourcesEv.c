@@ -1,7 +1,7 @@
 typedef int Fix12i;
 extern void _ZN13SharedFilePtr7ReleaseEv(char* p);
-extern void _ZN5Actor11UntrackStarERa(char* c, signed char* p);
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void _ZN8dActor_c11UntrackStarERa(char* c, signed char* p);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, Fix12i x, Fix12i y, Fix12i z);
 extern char data_ov002_0210d9a8;
 extern char* data_ov002_020ff06c[];
@@ -16,8 +16,8 @@ int _ZN4Coin16CleanupResourcesEv(char* c)
         _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff06c[*(int*)(c + 0x3a0)]);
         _ZN13SharedFilePtr7ReleaseEv(data_ov002_020ff060[*(int*)(c + 0x3a0)]);
     }
-    _ZN5Actor11UntrackStarERa(c, (signed char*)(c + 0x3ac));
-    o = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0xd4));
+    _ZN8dActor_c11UntrackStarERa(c, (signed char*)(c + 0x3ac));
+    o = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0xd4));
     if (o != 0) {
         int b2 = (int)(*(unsigned short*)(o + 0xc) == 0x4f);
         if (b2 != 0) {

@@ -1,5 +1,5 @@
 #include "types.h"
-struct Actor {
+struct dActor_c {
     char pad[0xa4];
     int speed_x; /* 0xa4 */
     int speed_y; /* 0xa8 */
@@ -9,14 +9,14 @@ struct Actor {
 struct WithMeshClsn {
     char pad[0x10];
     u32 flags;   /* 0x10 */
-    struct Actor *actor; /* 0x14 */
+    struct dActor_c *actor; /* 0x14 */
 };
 
 struct ClsnResult;
 
 extern void func_0203573c(struct WithMeshClsn *clsn);
 extern struct ClsnResult *_ZNK12WithMeshClsn14GetFloorResultEv(struct WithMeshClsn *clsn);
-extern void func_02038234(struct ClsnResult *result, struct Actor *actor);
+extern void func_02038234(struct ClsnResult *result, struct dActor_c *actor);
 extern void _ZN12WithMeshClsn13SetGroundFlagEv(struct WithMeshClsn *clsn);
 extern u32 _ZNK12WithMeshClsn13GetLimMovFlagEv(struct WithMeshClsn *clsn);
 

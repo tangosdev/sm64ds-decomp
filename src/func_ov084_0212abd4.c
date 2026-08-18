@@ -6,7 +6,7 @@ extern void func_ov084_02129c9c(void *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int i, int fx, unsigned int j);
 extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern int Vec3_Dist(const void *a, const void *b);
-extern int _ZN5Enemy24AngleAwayFromWallOrCliffER12WithMeshClsnRs(void *self, void *clsn, short *a);
+extern int _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs(void *self, void *clsn, short *a);
 extern int RandomIntInternal(int *seed);
 extern int data_ov084_02130228[];
 extern int data_ov084_02130268[];
@@ -54,7 +54,7 @@ void func_ov084_0212abd4(char *self)
         *(s16 *)(self + 0x450) = 0x19;
     }
     {
-        int bit = _ZN5Enemy24AngleAwayFromWallOrCliffER12WithMeshClsnRs(
+        int bit = _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs(
                       self, self + 0x1b4, (short *)(self + 0x45c));
         unsigned char *p = (unsigned char *)(((int)self + 0x468));
         bit &= 1;

@@ -7,7 +7,7 @@
  *
  * Named from the table: 0x02129268 is the word slot 0 of
  * _ZTV15dScMgSnowball_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual ActorBase declares.
+ * it is this class's own override of the virtual fBase_c declares.
  *
  * Sets up both screens' BG2/BG3 layers, loads the minigame's palettes and
  * tiles, then loads the snowball BMD into unk_abf4 and hands it to mModel --

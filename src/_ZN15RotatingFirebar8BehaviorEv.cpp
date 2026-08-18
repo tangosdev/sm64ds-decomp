@@ -14,16 +14,16 @@
 
 
 extern "C" {
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* c);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* c);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
 extern void AddVec3(void* a, void* b, void* c);
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int x, int y, int z, int v, int cb);
 extern void _ZN12CylinderClsn5ClearEv(void* p);
 extern void _ZN12CylinderClsn6UpdateEv(void* p);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* c, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* c);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* c, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* c);
 }
 
 extern int data_020a0e68[];
@@ -51,7 +51,7 @@ int RotatingFirebar::Behavior()
         return 1;
     }
 
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
     Matrix4x3_FromRotationY(data_020a0e68, mAngleY);
 
     w = ((char*)this);
@@ -82,7 +82,7 @@ int RotatingFirebar::Behavior()
 
         id = *(u32*)(w + 0x384);
         if (id != 0) {
-            p = _ZN5Actor10FindWithIDEj(id);
+            p = _ZN8dActor_c10FindWithIDEj(id);
             if (p != 0) {
                 is_burn = (*(u16*)((char*)p + 0xc) == 0xbf) ? 1 : 0;
                 if (is_burn != 0)
@@ -104,7 +104,7 @@ int RotatingFirebar::Behavior()
         i += 1;
     } while (i < 8);
 
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0) != 0)
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0) != 0)
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     return 1;
 }
