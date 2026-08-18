@@ -53,15 +53,18 @@ struct QuestionBlock : dBgActor_c {
        these five TUs newly emits _ZTV13QuestionBlock -- checked with
        objisolate, not assumed.
 
-       OnKicked returns `void`, matching include/dActor_c.h's slot 24
-       (corrected from `int` by BigBrickBlock::OnKicked -- see
-       include/BigBrickBlock.h and src/_ZN8dActor_c8OnKickedERS_.cpp for the
-       falsifying evidence). The other four stay `int`, dActor_c's own
-       declared type for their slots. */
-    int OnGroundPounded(dActor_c &other);      /* slot 21 */
+       OnKicked, OnGroundPounded and OnHitByMegaChar return `void`, matching
+       include/dActor_c.h's slots 24, 21 and 27 (corrected from `int` by
+       BigBrickBlock::OnKicked and Stump::OnGroundPounded/OnHitByMegaChar
+       respectively -- see include/BigBrickBlock.h, include/Stump.h and
+       src/_ZN8dActor_c8OnKickedERS_.cpp for the falsifying evidence; this
+       class's own overrides happened to byte-match under the old `int` too,
+       re-verified rather than assumed). The other two stay `int`, dActor_c's
+       own declared type for their slots. */
+    void OnGroundPounded(dActor_c &other);     /* slot 21 */
     int OnAttacked1(dActor_c &other);          /* slot 22 */
     void OnKicked(dActor_c &other);            /* slot 24 */
-    int OnHitByMegaChar(Player &player);       /* slot 27 */
+    void OnHitByMegaChar(Player &player);      /* slot 27 */
     int OnHitFromUnderneath(dActor_c &other);  /* slot 28 */
 
     /* Tail padding. The field span stops short of the real size: CapBlockLuigi_Spawn and CapBlockMario_Spawn

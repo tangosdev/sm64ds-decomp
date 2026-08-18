@@ -8,13 +8,15 @@
    parameter is unused -- same as dActor_c::OnHitByMegaChar's own trivial stub
    (src/_ZN8dActor_c15OnHitByMegaCharER6Player.cpp): the ROM sets no r0 here
    either, so the declared `int` return and the pre-migration `void` return
-   compile to the same bytes. */
+   compile to the same bytes -- and now the DECLARED return is `void` too,
+   corrected tree-wide by Stump::OnHitByMegaChar (include/Stump.h); a no-op
+   re-verify for this file, which has neither locals nor an early return. */
 #include "decl_common.h"
 #include "dScMgSlot1_c.h"
 
 extern "C" void func_ov004_020af27c(void* c);
 
-int dScMgSlot1_c::OnHitByMegaChar(Player &player)
+void dScMgSlot1_c::OnHitByMegaChar(Player &player)
 {
     SetSubBg1Offset(0, 0);
     func_ov004_020af27c(this);

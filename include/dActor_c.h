@@ -152,7 +152,16 @@ struct dActor_c : dBase_c {
     virtual int  OnYoshiTryEat();                      /* slot 18 */
     virtual int  OnTurnIntoEgg(Player &player);        /* slot 19 */
     virtual int  Virtual50();                          /* slot 20 -- vtable+0x50 */
-    virtual int  OnGroundPounded(dActor_c &other);        /* slot 21 */
+    /* Declared `int` until Stump::OnGroundPounded (slot 21, ov091
+       0x02133648) made it falsifiable: that override compares two class
+       fields and returns early on either, and mwcc allocates registers
+       differently for `int` vs `void` here too, even with r0 untouched --
+       measured, not assumed (see include/Stump.h). BigBrickBlock's and
+       QuestionBlock's own overrides of this slot happened not to trigger the
+       difference under `int` and were re-verified under `void`, so the
+       correction is free there. Same falsifiability shape as slot 24 below
+       and slot 30 further down. */
+    virtual void OnGroundPounded(dActor_c &other);        /* slot 21 */
     virtual int  OnAttacked1(dActor_c &other);            /* slot 22 */
     virtual int  OnAttacked2(dActor_c &other);            /* slot 23 */
     /* Declared `int` until BigBrickBlock::OnKicked (slot 24, ov002
@@ -165,7 +174,17 @@ struct dActor_c : dBase_c {
     virtual void OnKicked(dActor_c &other);               /* slot 24 */
     virtual int  OnPushed(dActor_c &other);               /* slot 25 */
     virtual int  OnHitByCannonBlastedChar(dActor_c &other); /* slot 26 */
-    virtual int  OnHitByMegaChar(Player &player);      /* slot 27 */
+    /* Declared `int` until Stump::OnHitByMegaChar (slot 27, ov091
+       0x021335d4) made it falsifiable: four early-return field checks,
+       6-word register mismatch under `int`, exact match under `void` --
+       measured, not assumed (see include/Stump.h). The two other
+       already-landed overrides of this slot, dScMgSlot1_c's and
+       daObjMaruta_c's, have no locals or early returns, so the correction is
+       a re-verified no-op for them (their own file comments already said
+       `int` and `void` compile to the same bytes here). BigBrickBlock's and
+       QuestionBlock's own overrides in this change are also re-verified
+       under `void`. */
+    virtual void OnHitByMegaChar(Player &player);      /* slot 27 */
     virtual int  OnHitFromUnderneath(dActor_c &other);    /* slot 28 */
     virtual int  OnAimedAtWithEgg();                   /* slot 29 */
 

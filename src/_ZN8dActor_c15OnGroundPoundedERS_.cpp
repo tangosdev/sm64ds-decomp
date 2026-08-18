@@ -3,12 +3,14 @@
  *
  * A bare `bx lr`. The base actor does not react to a ground pound; leaf classes override.
  *
- * The declared `int` return is include/dActor_c.h's and is not observable here:
- * the ROM sets no r0, so `int` and `void` compile to the same one instruction.
- * See src/_ZN8dActor_c8OnPushedERS_.cpp for the full note.
+ * Declared `void` in include/dActor_c.h -- corrected from `int`, which was
+ * unfalsifiable here (one instruction either way) but proven wrong by
+ * Stump::OnGroundPounded (slot 21, ov091 0x02133648): that override compares
+ * two fields and returns early, where `int` vs `void` changes mwcc's
+ * register allocation even with r0 untouched. See include/Stump.h.
  */
 #include "dActor_c.h"
 
-int dActor_c::OnGroundPounded(dActor_c &pounder)
+void dActor_c::OnGroundPounded(dActor_c &pounder)
 {
 }

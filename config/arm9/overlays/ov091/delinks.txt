@@ -258,11 +258,11 @@ src/func_ov091_021334b8.cpp:
     complete
     .text start:0x021334b8 end:0x021335d4
 
-src/func_ov091_021335d4.c:
+src/_ZN5Stump15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x021335d4 end:0x02133648
 
-src/func_ov091_02133648.cpp:
+src/_ZN5Stump15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x02133648 end:0x021336cc
 
@@ -274,11 +274,11 @@ src/_ZN5Stump6RenderEv.cpp:
     complete
     .text start:0x02133710 end:0x02133738
 
-src/func_ov091_02133738.cpp:
+src/_ZN5Stump8BehaviorEv.cpp:
     complete
     .text start:0x02133738 end:0x021338ac
 
-src/func_ov091_021338ac.c:
+src/_ZN5Stump13InitResourcesEv.cpp:
     complete
     .text start:0x021338ac end:0x02133938
 

@@ -92,12 +92,16 @@ struct BigBrickBlock : dBgActor_c {
        include/dActor_c.h's slot 24 declaration wrong (it has two locals and
        two early returns, and mwcc allocates registers differently for `int`
        vs `void` even though r0 is never touched) -- measured with
-       tools/mangle.py, not assumed. */
-    int OnGroundPounded(dActor_c &other);   /* slot 21 */
+       tools/mangle.py, not assumed. OnGroundPounded and OnHitByMegaChar are
+       also `void`, matching the slot 21/27 corrections Stump forced
+       (include/Stump.h) -- both happened to byte-match under the old `int`
+       here too, so the correction is a no-op for this class, re-verified
+       rather than assumed. */
+    void OnGroundPounded(dActor_c &other);  /* slot 21 */
     int OnAttacked1(dActor_c &other);       /* slot 22 */
     int OnAttacked2(dActor_c &other);       /* slot 23 */
     void OnKicked(dActor_c &other);         /* slot 24 */
-    int OnHitByMegaChar(Player &player);    /* slot 27 */
+    void OnHitByMegaChar(Player &player);   /* slot 27 */
 };
 
 typedef char BigBrickBlock_size_must_be_0x330[sizeof(BigBrickBlock) == 0x330 ? 1 : -1];

@@ -115,7 +115,7 @@ struct dScMgSlot1_c : dScMgBase_c {
     virtual ~dScMgSlot1_c();
     virtual s32 InitResources();                       /* slot  0 */
     virtual s32 Render();                               /* slot  9 */
-    virtual int OnHitByMegaChar(Player &player);        /* slot 27 */
+    virtual void OnHitByMegaChar(Player &player);       /* slot 27 -- void, see include/Stump.h */
     virtual int OnHitFromUnderneath(dActor_c &other);      /* slot 28 */
 
     u8  betIcon_4660[0x24]; /* 0x4660 -- dScMgSlot1_c::betIcon_c : dThIcon_c,

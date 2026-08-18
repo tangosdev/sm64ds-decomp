@@ -66,7 +66,7 @@ struct daObjMaruta_c : dBgActor_c {
        already has, and tools/objisolate.py reduces the object to the declared
        function before eligible.py and rombuild.py judge it -- checked on this
        file, not assumed. */
-    int OnHitByMegaChar(Player &player);
+    void OnHitByMegaChar(Player &player);  /* void, see include/Stump.h */
 };
 
 typedef char daObjMaruta_c_size_must_be_0x320[sizeof(daObjMaruta_c) == 0x320 ? 1 : -1];

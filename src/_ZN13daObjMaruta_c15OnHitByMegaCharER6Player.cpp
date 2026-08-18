@@ -11,19 +11,19 @@
  * daObjFlMaruta_c's or daObjHmMaruta_c's; both leaves inherit it.
  * include/daObjMaruta_c.h's banner already says so from the other direction.
  *
- * SIGNATURE FROM include/dActor_c.h's OWN SLOT 27, `virtual int
- * OnHitByMegaChar(Player &player)`, which is where the name comes from. The
- * pre-migration stub returned void and took the player as `void *`; the ROM
- * sets no r0 here either, so the declared `int` return compiles to the same
- * bytes -- the same reading src/_ZN12dScMgSlot1_c15OnHitByMegaCharER6Player.cpp
- * records for its own slot 27.
+ * SIGNATURE FROM include/dActor_c.h's OWN SLOT 27, `virtual void
+ * OnHitByMegaChar(Player &player)` -- `int` until Stump::OnHitByMegaChar
+ * (include/Stump.h) proved it wrong tree-wide; a no-op re-verify for this
+ * file, which has neither locals nor an early return, same reading
+ * src/_ZN12dScMgSlot1_c15OnHitByMegaCharER6Player.cpp records for its own
+ * slot 27.
  *
  * dBgActor_c::KillByMegaChar is declared non-virtual in include/dBgActor_c.h, so
  * the unqualified call is already the direct `bl` the ROM has. */
 
 extern "C" void func_02012694(int a, void *b);
 
-int daObjMaruta_c::OnHitByMegaChar(Player &player)
+void daObjMaruta_c::OnHitByMegaChar(Player &player)
 {
     player.IncMegaKillCount();
     func_02012694(0x1e, &mCamSpacePosX);
