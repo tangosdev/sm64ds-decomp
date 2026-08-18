@@ -3462,9 +3462,9 @@
     {
       "id": "arm9/ActorBase_SceneNode",
       "module": "arm9",
-      "source": "src_tu/actors/ActorBase_SceneNode.cpp",
+      "source": "src/actors/ActorBase_SceneNode.cpp",
       "promoted_source": "src/actors/ActorBase_SceneNode.cpp",
-      "status": "link-verified",
+      "status": "promoted",
       "boundary_confidence": "medium",
       "boundary_evidence": [
         "NOT FROM tu_map. tools/tu_map.py reports the arm9 `main` module as UNDER-SEGMENTED -- one unit 0x20049f0..0x20707a4 with 2984 functions and 73 class labels -- so there is no tu_map boundary and no `tubuild.py create` candidate id. Every line below is hand-derived.",
@@ -3552,6 +3552,22 @@
           "symbolCheckNewVsBaseline": [],
           "linkerOutput": null
         }
+      },
+      "promotion": {
+        "round": "tools/tubuild.py promote -- preflight (status/span/pin/name/collision/ledger gates) + fresh compile re-verification (bytes, objisolate, reloc destinations, licensing, emission order, isolation no-op) + git mv/rm + delinks splice",
+        "from": "src_tu/actors/ActorBase_SceneNode.cpp",
+        "licensedText": {
+          "start": "0x0203b4ac",
+          "end": "0x0203b4dc"
+        },
+        "replacedDelinksEntries": [
+          "src/_ZN7fBase_c9SceneNode5ResetEv.c",
+          "src/_ZN7fBase_c9SceneNodeC1Ev.c"
+        ],
+        "toolchain": "2004/b56",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "reverified": "2/2 MATCH at promote time",
+        "trackerEdits": {}
       }
     }
   ]
