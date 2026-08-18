@@ -1,0 +1,95 @@
+#ifndef TRAP_H
+#define TRAP_H
+
+#include "types.h"
+
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x320 -- mPosX/mPosY/mPosZ at
+ * 0x05c/0x060/0x064, mAngleY at 0x08e, mAreaId at 0x0cc -- was dActor_c's, and
+ * is inherited now. See include/dActor_c.h.
+ *
+ * SIZE IS 0x3b0 (944 decimal), THE LITERAL Trap_Spawn.c passes to
+ * fBase_c::operator new -- not merely the observed field span, though here
+ * they agree: dBgActor_c ends at 0x320 and this class adds exactly one bare
+ * Model (0x50, unlike the WithMeshClsn siblings) plus trailing scalars,
+ * landing on 0x3b0.
+ *
+ * THIS IS THE MID-RENAME CLASS. Before this change the header was a flat,
+ * auto-generated `struct daObjC1_Trap_c` while the vtable and both
+ * destructors already carried the real ROM name "Trap" -- _ZTV4Trap,
+ * _ZN4TrapD1Ev, _ZN4TrapD0Ev. Only the RTTI pair, _ZTI14daObjC1_Trap_c and
+ * _ZTS14daObjC1_Trap_c, still spelled the old placeholder name; this class
+ * becoming its own key-function TU is what makes the compiler emit them
+ * consistently, so config/arm9/overlays/ov010/symbols.txt renames those two
+ * symbols in the same commit as this header (see
+ * notes/actor-class-names-off-by-one.md and the vague-linkage rule in
+ * decomp-cpp-class-form for why the rename cannot be split from the rewrite).
+ */
+
+#ifdef __cplusplus
+
+#include "dBgActor_c.h"
+#include "Model.h"
+
+struct dActor_c;
+struct Player;
+
+struct Trap : dBgActor_c {
+    /* Bare Model, not WithMeshClsn -- Trap_Spawn.c calls
+       _ZN5ModelC1Ev((char*)p + 0x320) directly, no WithMeshClsn wrapper. Named
+       "mModel" (not "mModel2") because dBgActor_c's own Model at 0xd4 is
+       inherited, not restated here -- this is the only Model this struct
+       declares. Matches the established convention for this exact shape: see
+       include/PyramidStep.h, whose derived-class half names its own 0x320
+       Model "mModel" for the identical reason (its flat C half, which DOES
+       restate dBgActor_c's fields, calls the two "mModel1"/"mModel2" -- the
+       numbered pair is a flat-struct-only convention). */
+    Model mModel;                     /* 0x320 */
+    u8  pad_370[0x30];
+    s32 unk_3a0;                      /* 0x3a0 */
+    s32 unk_3a4;                      /* 0x3a4 */
+    u16 unk_3a8;                      /* 0x3a8 */
+    u8  unk_3aa;                      /* 0x3aa */
+    u8  unk_3ab;                      /* 0x3ab */
+    s32 unk_3ac;                      /* 0x3ac */
+
+    /* --- vtable --- */
+    virtual ~Trap();
+
+    int InitResources();
+    int CleanupResources();
+    int Behavior();
+    int Render();
+};
+
+typedef char Trap_size_must_be_0x3b0[sizeof(Trap) == 0x3b0 ? 1 : -1];
+
+#else
+
+/* The C spelling of the same object, flat. Kept because the four vtable-slot
+   override files still read the object by hand offset. The arrangement
+   matches include/PushBlock.h and the other members of this family
+   (DonutBlock.h, BigBrickBlock.h, MetalNet.h, PyramidStep.h). */
+struct Trap {
+    u8  pad_000[0x5c];
+    s32 unk_05c;            /* 0x05c */
+    s32 unk_060;            /* 0x060 */
+    s32 unk_064;            /* 0x064 */
+    u8  pad_068[0x26];
+    u16 unk_08e;            /* 0x08e */
+    u8  pad_090[0x3c];
+    s8  unk_0cc;            /* 0x0cc */
+    u8  pad_0cd[0x2d3];
+    s32 unk_3a0;            /* 0x3a0 */
+    s32 unk_3a4;            /* 0x3a4 */
+    u16 unk_3a8;            /* 0x3a8 */
+    u8  unk_3aa;            /* 0x3aa */
+    u8  unk_3ab;            /* 0x3ab */
+    s32 unk_3ac;            /* 0x3ac */
+};
+
+#endif /* __cplusplus */
+
+#endif /* TRAP_H */

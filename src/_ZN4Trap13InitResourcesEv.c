@@ -1,11 +1,18 @@
-// @symbol func_ov010_02111654
-/* recovered: shared common types, renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN4Trap13InitResourcesEv
+/* recovered: vtable identified, shared common types, declarations from a shared header
+ *
+ * Trap::InitResources -- vtable slot 0, ov010 0x02111654. Attributed by the
+ * vtable: _ZTV4Trap (ov010 0x02112ae4) carries this address at slot 0, where
+ * _ZTV10dBgActor_c carries fBase_c's generic 0x02043c80.
+ *
+ * Kept as a free function under the literal mangled name rather than a real
+ * `Trap::InitResources()` method: `self` arrives as a raw pointer and the
+ * body still reads/writes by hand offset, unconverted -- the same shape
+ * include/PushBlock.h's InitResources file documents. include/Trap.h is
+ * included only for the flat, non-C++ half of that header, which still
+ * spells this object's fields as `struct Trap` for exactly this reason. */
 #include "decl_common.h"
-/* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
-#include "daObjC1_Trap_c.h"
-// recovered name: daObjC1_Trap_c_InitResources
-/* recovered: shared common types, renamed to Class_Method */
-/* daObjC1_Trap_c::InitResources - recovered from vtable slot identity */
+#include "Trap.h"
 
 extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, struct Vector3* v, void* rot, int e, int f);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* p);
@@ -19,9 +26,9 @@ extern void _ZN16MeshColliderBase6EnableEP8dActor_c(void* p, void* a);
 
 extern short data_02082214[];
 
-int func_ov010_02111654(char* c)
+int _ZN4Trap13InitResourcesEv(char* c)
 {
-    struct daObjC1_Trap_c *self = (struct daObjC1_Trap_c *)(void *)c;
+    struct Trap *self = (struct Trap *)(void *)c;
     self->unk_3aa = 0;
     self->unk_3ac = 0;
 

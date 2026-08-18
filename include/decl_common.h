@@ -561,7 +561,6 @@ extern int _ZTV14daObjBk_Kabe_c[];
 extern int _ZTV14daObjBk_Lift_c[];
 extern int _ZTV14daObjC0Water_c[];
 extern int _ZTV14daObjC1Peach_c[];
-extern int _ZTV14daObjC1_Trap_c[];
 extern int _ZTV14daObjDpBrock_c[];
 extern int _ZTV14daObjEmmYuka_c[];
 extern int _ZTV14daObjFl_Gura_c[];
