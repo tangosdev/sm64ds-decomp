@@ -1,17 +1,22 @@
-#include "types.h"
-// @symbol func_ov095_021357d8
+//cpp
+// @symbol _ZN9SeesawBob15OnGroundPoundedER8dActor_c
+#include "SeesawBob.h"
 // recovered name: SeesawBob_OnGroundPounded
-/* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daObjSeesaw_c::OnGroundPounded - recovered from vtable slot identity */
 #pragma opt_propagation off
-extern int Vec3_Dist(void *a, void *b);
-extern s16 Vec3_HorzAngle(void *a, void *b);
+extern "C" {
+int Vec3_Dist(void *a, void *b);
+s16 Vec3_HorzAngle(void *a, void *b);
+int AngleDiff(int a, int b);
 extern s16 data_02082214[];
+int func_ov095_0213579c(void* self, char* p);
+}
 
-void func_ov095_021357d8(char *a, char *b)
+void SeesawBob::OnGroundPounded(dActor_c &other)
 {
+    char *a = (char*)this;
+    char *b = (char*)&other;
     char *b5c = b + 0x5c;
     int dist = Vec3_Dist(a + 0x5c, b5c);
     s16 angle = Vec3_HorzAngle(a + 0x5c, b5c);
