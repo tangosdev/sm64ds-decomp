@@ -1,9 +1,15 @@
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov084_02130da4[];
-extern int data_ov084_02130d9c[];
-int _ZN11BobOmbBuddy16CleanupResourcesEv(void)
+//cpp
+// @symbol _ZN11BobOmbBuddy16CleanupResourcesEv
+
+#include "BobOmbBuddy.h"
+#include "SharedFilePtr.h"
+
+extern SharedFilePtr data_ov084_02130da4;
+extern SharedFilePtr data_ov084_02130d9c;
+
+int BobOmbBuddy::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov084_02130da4);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov084_02130d9c);
+    data_ov084_02130da4.Release();
+    data_ov084_02130d9c.Release();
     return 1;
 }
