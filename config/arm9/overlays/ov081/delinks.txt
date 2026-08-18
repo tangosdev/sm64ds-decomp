@@ -168,11 +168,11 @@ src/func_ov081_021254d8.cpp:
     complete
     .text start:0x021254d8 end:0x021257b0
 
-src/_ZN10MrBlizzard16CleanupResourcesEv.c:
+src/_ZN10MrBlizzard16CleanupResourcesEv.cpp:
     complete
     .text start:0x021257b0 end:0x0212581c
 
-src/_ZN10MrBlizzard16OnPendingDestroyEv.c:
+src/_ZN10MrBlizzard16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212581c end:0x02125820
 

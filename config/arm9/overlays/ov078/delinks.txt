@@ -182,11 +182,11 @@ src/func_ov078_02125f8c.cpp:
     complete
     .text start:0x02125f8c end:0x02125ff4
 
-src/_ZN10KingBobOmb16CleanupResourcesEv.c:
+src/_ZN10KingBobOmb16CleanupResourcesEv.cpp:
     complete
     .text start:0x02125ff4 end:0x021260a8
 
-src/_ZN10KingBobOmb16OnPendingDestroyEv.c:
+src/_ZN10KingBobOmb16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021260a8 end:0x021260ac
 

@@ -44,6 +44,7 @@ struct Wiggler : dEnemyBase_c {
 
     virtual ~Wiggler();
 
+    int CleanupResources();
     int InitResources();
     int Render();
 };

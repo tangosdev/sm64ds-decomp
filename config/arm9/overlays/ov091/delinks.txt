@@ -334,7 +334,7 @@ src/_ZN6Fwoosh16CleanupResourcesEv.cpp:
     complete
     .text start:0x02134108 end:0x02134180
 
-src/_ZN6Fwoosh16OnPendingDestroyEv.c:
+src/_ZN6Fwoosh16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02134180 end:0x02134184
 

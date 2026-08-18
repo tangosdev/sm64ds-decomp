@@ -49,6 +49,7 @@ struct ChainChomp : dEnemyBase_c {
     virtual ~ChainChomp();
 
     int Behavior();
+    int CleanupResources();
     int InitResources();
     int Render();
 };

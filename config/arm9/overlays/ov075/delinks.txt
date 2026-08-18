@@ -228,6 +228,14 @@ src/func_ov075_021160dc.cpp:
     complete
     .text start:0x021160dc end:0x02116128
 
+src/func_ov075_021165b0.c:
+    complete
+    .text start:0x021165b0 end:0x02116818
+
+src/func_ov075_02116818.c:
+    complete
+    .text start:0x02116818 end:0x02116ad4
+
 src/func_ov075_02116ad4.c:
     complete
     .text start:0x02116ad4 end:0x02116c38
@@ -266,6 +274,10 @@ src/func_ov075_02116ebc.c:
 
 src/func_ov075_02116f40.cpp:
     .text start:0x02116f40 end:0x0211705c
+
+src/func_ov075_0211705c.c:
+    complete
+    .text start:0x0211705c end:0x021173a8
 
 src/func_ov075_021173a8.c:
     complete
