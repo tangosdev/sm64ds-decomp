@@ -49,18 +49,27 @@ def normalize_module(module: str) -> str:
     return m
 
 
-def iter_symbol_files(include_itcm_dtcm: bool = True):
-    """Yield ``(module, symbols_path)`` for main, overlays, and optionally RAM."""
-    yield "arm9", SYMS
+def iter_symbol_files(include_itcm_dtcm: bool = True, repo=None):
+    """Yield ``(module, symbols_path)`` for main, overlays, and optionally RAM.
+
+    ``repo`` resolves against a different checkout, the way ``srcpath.set_root`` does.
+    The module-level ``SYMS``/``OVERLAYS`` constants bind this file's own repository at
+    import time, so a caller that has been pointed at another tree -- a worktree, a
+    temporary fixture -- would otherwise silently enumerate THIS one and report its
+    modules as the other tree's. Default is unchanged and yields exactly the constants.
+    """
+    cfg = (pathlib.Path(repo) / "config" / "arm9") if repo is not None else CFG
+    yield "arm9", cfg / "symbols.txt"
     if include_itcm_dtcm:
-        yield "itcm", ITCM_SYMS
-        yield "dtcm", DTCM_SYMS
-    if OVERLAYS.is_dir():
-        for path in sorted(OVERLAYS.glob("ov*/symbols.txt")):
+        yield "itcm", cfg / "itcm" / "symbols.txt"
+        yield "dtcm", cfg / "dtcm" / "symbols.txt"
+    overlays = cfg / "overlays"
+    if overlays.is_dir():
+        for path in sorted(overlays.glob("ov*/symbols.txt")):
             yield normalize_module(path.parent.name), path
 
 
-def module_universe() -> list[tuple[pathlib.Path, str]]:
+def module_universe(repo=None) -> list[tuple[pathlib.Path, str]]:
     """Every module that exists, as ``(symbols.txt, label)``. THE definition.
 
     Four tools each grew their own copy of this as a regex over config/, and all
@@ -76,14 +85,15 @@ def module_universe() -> list[tuple[pathlib.Path, str]]:
     filesystem: any config/**/symbols.txt this function does not yield is a hard
     failure at the call site, not a silent skip. Adding a module means teaching
     iter_symbol_files() about it once, and forgetting to is loud."""
+    root = pathlib.Path(repo) if repo is not None else REPO
     known: dict[pathlib.Path, str] = {}
-    for label, path in iter_symbol_files():
+    for label, path in iter_symbol_files(repo=repo):
         if path.is_file():
             known[path.resolve()] = label
-    missed = sorted(p for p in (REPO / "config").rglob("symbols.txt")
+    missed = sorted(p for p in (root / "config").rglob("symbols.txt")
                     if p.resolve() not in known)
     if missed:
-        rels = ", ".join(p.relative_to(REPO).as_posix() for p in missed)
+        rels = ", ".join(p.relative_to(root).as_posix() for p in missed)
         raise SystemExit(
             f"relocs.module_universe: {len(missed)} symbols.txt not covered by "
             f"iter_symbol_files(): {rels}\n"
