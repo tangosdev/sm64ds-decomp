@@ -24,6 +24,7 @@ struct TinyCover : dBgActor_c {
     virtual s32   CleanupResources();      /* slot  3 */
     virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
+    virtual void  OnGroundPounded(dActor_c &other); /* slot 21 */
 };
 
 typedef char TinyCover_size_must_be_0x320[sizeof(TinyCover) == 0x320 ? 1 : -1];
