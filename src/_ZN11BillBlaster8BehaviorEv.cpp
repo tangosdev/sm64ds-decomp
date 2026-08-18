@@ -1,22 +1,29 @@
 //cpp
-// @symbol func_ov079_02126f8c
+// @symbol _ZN11BillBlaster8BehaviorEv
+#include "BillBlaster.h"
 // recovered name: daObjBkKillerdai_c_Behavior
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjBkKillerdai_c::Behavior - recovered from vtable slot identity */
-typedef int Fix12;
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
+/* FixV, not Fix12: this file now includes BillBlaster.h, which pulls in
+   the real Fix12<int> template (math/Fix12.h) transitively, so a bare
+   `typedef int Fix12;` here would redefine that template's name. FixV
+   still passes ABI-identically to Fix12<int> (both one register). Vector3
+   and Vector3_16 are likewise the real types now, pulled in the same way
+   -- local shadows for them would redefine those classes too. */
+typedef int FixV;
 struct dActor_c;
-struct dBgActor_c {
-    int UpdateKillByMegaChar(short, short, short, Fix12);
-    int IsClsnInRange(Fix12, Fix12);
+/* Named _helper, not dBgActor_c: a local shadow with a body would redefine
+   the real dBgActor_c class this file now sees through BillBlaster.h. */
+struct dBgActor_c_helper {
+    int UpdateKillByMegaChar(short, short, short, FixV);
+    int IsClsnInRange(FixV, FixV);
 };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *, short, short, short, Fix12);
-extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, Fix12, Fix12);
+extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *, short, short, short, FixV);
+extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, FixV, FixV);
 
 struct Actor_s {
     static dActor_c* FindWithID(unsigned int);
@@ -32,23 +39,24 @@ extern "C" dActor_c* _ZN8dActor_c13ClosestPlayerEv(void *);
 extern "C" dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
 
 extern "C" {
-Fix12 Vec3_HorzDist(const Vector3* a, const Vector3* b);
+FixV Vec3_HorzDist(const Vector3* a, const Vector3* b);
 short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int AngleDiff(int a, int b);
 }
-int dBgActor_c::UpdateKillByMegaChar(short, short, short, Fix12);
+int dBgActor_c_helper::UpdateKillByMegaChar(short, short, short, FixV);
 dActor_c* Actor_s::FindWithID(unsigned int);
 dActor_c* Actor_s::ClosestPlayer();
 dActor_c* Actor_s::Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
-int dBgActor_c::IsClsnInRange(Fix12, Fix12);
+int dBgActor_c_helper::IsClsnInRange(FixV, FixV);
 
-extern "C" int func_ov079_02126f8c(char* c) {
-    dBgActor_c* self = (dBgActor_c*)c;
+s32 BillBlaster::Behavior() {
+    char* c = (char*)this;
+    dBgActor_c_helper* self = (dBgActor_c_helper*)c;
     if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(self, 0x2000, 0, 0, 0xc8000))
         return 1;
     if (!_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x320))) {
         dActor_c* p = _ZN8dActor_c13ClosestPlayerEv((Actor_s*)c);
-        Fix12 dist = Vec3_HorzDist((Vector3*)(c + 0x5c), (Vector3*)((char*)p + 0x5c));
+        FixV dist = Vec3_HorzDist((Vector3*)(c + 0x5c), (Vector3*)((char*)p + 0x5c));
         short ang = Vec3_HorzAngle((Vector3*)(c + 0x5c), (Vector3*)((char*)p + 0x5c));
         if (AngleDiff(ang, *(short*)(c + 0x8e)) < 0x2000 && dist > 0x320000 && dist < 0x5dc000) {
             long long yll = *(int*)(c + 0x60);

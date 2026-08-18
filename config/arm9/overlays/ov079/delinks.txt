@@ -203,7 +203,7 @@ src/_ZN11BillBlaster4KillEv.cpp:
     complete
     .text start:0x02126e58 end:0x02126ecc
 
-src/func_ov079_02126ecc.cpp:
+src/_ZN11BillBlaster15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02126ecc end:0x02126f04
 
@@ -215,7 +215,7 @@ src/_ZN11BillBlaster6RenderEv.cpp:
     complete
     .text start:0x02126f64 end:0x02126f8c
 
-src/func_ov079_02126f8c.cpp:
+src/_ZN11BillBlaster8BehaviorEv.cpp:
     complete
     .text start:0x02126f8c end:0x02127090
 
@@ -239,7 +239,7 @@ src/_ZN12FortressWall4KillEv.cpp:
     complete
     .text start:0x02127280 end:0x021272e0
 
-src/func_ov079_021272e0.cpp:
+src/_ZN12FortressWall24OnHitByCannonBlastedCharER8dActor_c.cpp:
     complete
     .text start:0x021272e0 end:0x02127300
 
