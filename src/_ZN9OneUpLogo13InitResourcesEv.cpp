@@ -17,23 +17,23 @@ int OneUpLogo::InitResources()
 {
   unsigned short n;
   {
-    unsigned int v = mParam;
+    unsigned int v = param1;
     n = (unsigned short)(v > 8 ? 7 : (v - 1));
   }
   _ZN15TextureSequence8LoadFileER13SharedFilePtr(data_ov002_02110a9c);
-  if (_ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_02110aa4), 1, -1) == 0)
+  if (_ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_02110aa4), 1, -1) == 0)
     return 0;
   TextureSequence::Prepare(*(BMD_File*)data_ov002_02110aa4.file, *(BTP_File*)data_ov002_02110a9c.file);
-  _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(((char*)this)+0x124, (void*)data_ov002_02110a9c.file, 0x40000000, 0, n);
-  unk_14e = 0;
-  unk_13c = mPosX;
-  unk_140 = mPosY;
-  unk_144 = mPosZ;
-  unk_0a8 = 0x14000;
-  unk_09c = -0x2000;
-  unk_0a0 = -0x32000;
-  unk_14c = 0;
-  unk_138 = 0;
-  unk_148 = 0;
+  _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(&mTextureSequence, (void*)data_ov002_02110a9c.file, 0x40000000, 0, n);
+  mState = 0;
+  mInitialPos.x = mPosX;
+  mInitialPos.y = mPosY;
+  mInitialPos.z = mPosZ;
+  mVertSpeed = 0x14000;
+  mVertAccel = -0x2000;
+  mTerminalVelocity = -0x32000;
+  mDelay = 0;
+  mFollowActorID = 0;
+  mFollowYOffset = 0;
   return 1;
 }

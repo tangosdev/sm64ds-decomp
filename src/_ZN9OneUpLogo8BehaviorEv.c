@@ -1,52 +1,57 @@
-#include "types.h"
-struct V3 { int x, y, z; };
+//cpp
+// @symbol _ZN9OneUpLogo8BehaviorEv
 
-extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern void _ZN7fBase_c18MarkForDestructionEv(char *self);
-extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+#include "OneUpLogo.h"
 
-int _ZN9OneUpLogo8BehaviorEv(char *self)
+extern "C" {
+void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
+void Matrix4x3_FromTranslation(Matrix4x3 *matrix, s32 x, s32 y, s32 z);
+}
+
+int OneUpLogo::Behavior()
 {
-    struct V3 pos;
+    Vector3 pos;
 
-    if (*(unsigned short *)(self + 0x14c) != 0) return 1;
+    if (mDelay != 0)
+        return 1;
 
-    *(int *)((int)(self + 0xa8)) += *(int *)(self + 0x9c);
-    if (*(int *)(self + 0xa8) < *(int *)(self + 0xa0))
-        *(int *)(self + 0xa8) = *(int *)(self + 0xa0);
-    *(int *)((int)(self + 0x60)) += *(int *)(self + 0xa8);
+    mVertSpeed += mVertAccel;
+    if (mVertSpeed < mTerminalVelocity)
+        mVertSpeed = mTerminalVelocity;
+    mPosY += mVertSpeed;
 
-    switch (*(u8 *)(self + 0x14e)) {
+    switch (mState) {
     case 0:
-        if (*(int *)(self + 0x60) < *(int *)(self + 0x140)) {
-            *(int *)(self + 0x60) = *(int *)(self + 0x140);
-            *(int *)(self + 0xa8) = 0xf000;
-            (*(u8 *)((int)(self + 0x14e)))++;
+        if (mPosY < mInitialPos.y) {
+            mPosY = mInitialPos.y;
+            mVertSpeed = 0xf000;
+            mState++;
         }
         break;
     case 1:
-        if (*(int *)(self + 0x60) < *(int *)(self + 0x140)) {
-            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, *(int *)(self + 0x5c), *(volatile int *)(self + 0x60), *(int *)(self + 0x64));
-            _ZN7fBase_c18MarkForDestructionEv(self);
+        if (mPosY < mInitialPos.y) {
+            _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
+                0xd2, mPosX, *(volatile s32 *)&mPosY, mPosZ);
+            MarkForDestruction();
         }
         break;
     }
 
-    pos.x = *(int *)(self + 0x5c);
-    pos.y = *(int *)(self + 0x60);
-    pos.z = *(int *)(self + 0x64);
-    if (*(int *)(self + 0x138) != 0) {
-        char *other = _ZN8dActor_c10FindWithIDEj(*(int *)(self + 0x138));
+    pos.x = mPosX;
+    pos.y = mPosY;
+    pos.z = mPosZ;
+    if (mFollowActorID != 0) {
+        dActor_c *other = FindWithID(mFollowActorID);
         if (other != 0) {
-            struct V3 *op = (struct V3 *)((int)(other + 0x5c));
-            int oy;
-            pos.x = op->x;
-            pos.y = oy = op->y;
-            pos.z = op->z;
-            pos.y = oy + (*(int *)(self + 0x148) + (*(int *)(self + 0x60) - *(int *)(self + 0x140)));
+            Vector3 *otherPos = (Vector3 *)&other->mPosX;
+            s32 otherY;
+            pos.x = otherPos->x;
+            pos.y = otherY = otherPos->y;
+            pos.z = otherPos->z;
+            pos.y = otherY + (mFollowYOffset + (mPosY - mInitialPos.y));
         }
     }
-    Matrix4x3_FromTranslation((void *)(self + 0xf0), pos.x >> 3, pos.y >> 3, (*(volatile int *)&pos.z) >> 3);
+    Matrix4x3_FromTranslation(&mModel.mat4x3, pos.x >> 3, pos.y >> 3,
+                              (*(volatile s32 *)&pos.z) >> 3);
     return 1;
 }

@@ -1,9 +1,15 @@
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov002_02110aa4[];
-extern int data_ov002_02110a9c[];
-int _ZN9OneUpLogo16CleanupResourcesEv(void)
+//cpp
+// @symbol _ZN9OneUpLogo16CleanupResourcesEv
+
+#include "OneUpLogo.h"
+#include "SharedFilePtr.h"
+
+extern SharedFilePtr data_ov002_02110aa4;
+extern SharedFilePtr data_ov002_02110a9c;
+
+int OneUpLogo::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_02110aa4);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov002_02110a9c);
+    data_ov002_02110aa4.Release();
+    data_ov002_02110a9c.Release();
     return 1;
 }

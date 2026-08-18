@@ -1,4 +1,9 @@
-int _ZN8MugenBgm6RenderEv(void)
+//cpp
+// @symbol _ZN8MugenBgm6RenderEv
+
+#include "MugenBgm.h"
+
+int MugenBgm::Render()
 {
     return 1;
 }
