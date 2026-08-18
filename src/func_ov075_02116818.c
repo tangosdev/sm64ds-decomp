@@ -19,7 +19,7 @@ extern void func_02032f9c(int a);
 extern int func_02030958(int val);
 extern void func_02033464(unsigned short a, signed char b, int c);
 extern void func_ov075_0211a194(char *self, int *src);
-extern void *_ZN12ActorDerived5SpawnEjP9ActorBaseii(u32 a, void *b, int c, int d);
+extern void *_ZN7dBase_c5SpawnEjP7fBase_cii(u32 a, void *b, int c, int d);
 
 extern u8 data_0209fc50;
 extern int data_ov075_0211c990[];
@@ -124,6 +124,6 @@ int func_ov075_02116818(char *c)
     }
 
     func_ov075_0211a194(c, data_ov075_0211d7e0);
-    *(void **)(c + 0x50) = _ZN12ActorDerived5SpawnEjP9ActorBaseii(0x15a, data_0209f5c0, 1, 0);
+    *(void **)(c + 0x50) = _ZN7dBase_c5SpawnEjP7fBase_cii(0x15a, data_0209f5c0, 1, 0);
     return 1;
 }
