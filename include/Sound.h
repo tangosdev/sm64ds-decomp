@@ -19,7 +19,16 @@
 
 #ifdef __cplusplus
 
+#include "types.h"
+
 namespace Sound {
+
+/* A bank-bound wrapper over Sound::Play, defined in
+   src/_ZN5Sound9PlayBank3EjRK7Vector3.cpp. The position is a REFERENCE -- the
+   mangled name says RK7Vector3 -- and a caller spelling it as a pointer is
+   byte-identical, which is why the wrong spelling survived so long in the
+   sources that call it. Declared here so callers stop hand-mangling the name. */
+void PlayBank3(u32 id, const Vector3 &pos);
 
 struct Player {
     /* STATIC, and the bytes are what say so. A non-static member would take

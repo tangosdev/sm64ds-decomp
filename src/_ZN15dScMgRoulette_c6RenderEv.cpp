@@ -7,7 +7,7 @@
  *
  * Named from the table: 0x02109834 is the word slot 9 of
  * _ZTV15dScMgRoulette_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual ActorBase declares. The
+ * it is this class's own override of the virtual fBase_c declares. The
  * pre-migration file had already retyped the receiver as dScMgRoulette_c and
  * named its fields; only the symbol was still a func_ov006_ one.
  *

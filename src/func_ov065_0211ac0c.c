@@ -4,7 +4,7 @@
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* a, void* b, void* c);
 extern void AddVec3(void* a, void* b, void* c);
-extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     int self, int sm, int mat, int s1, int s2, int s3, unsigned int j);
 
 void func_ov065_0211ac0c(int c)
@@ -34,6 +34,6 @@ void func_ov065_0211ac0c(int c)
     *(int*)(c + 0x38c) = (*(int*)(c + 0x338)) >> 3;
     *(int*)(c + 0x390) = v2.z >> 3;
 
-    _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+    _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
         c, c + 0x33c, c + 0x364, 0xdc000, 0x32000, 0x28a000, 0xf);
 }

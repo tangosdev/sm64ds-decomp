@@ -4,7 +4,7 @@ void *func_ov002_020e496c(char *c);
 int _ZN6Player14IsFrontSlidingEv(void *self);
 int _ZN6Player17LostGrabbedObjectEv(void *self);
 void Math_Function_0203b14c(void *out, int a1, int a2, int a3, int a4);
-void *_ZN5Actor11UpdateCarryER6PlayerRK7Vector3(void *self, void *player, const void *v);
+void *_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void *self, void *player, const void *v);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void MulMat4x3Mat4x3(void *a, void *b, void *out);
 void Vec3_Lsl(Vector3 *d, Vector3 *s, int sh);
@@ -56,7 +56,7 @@ void func_ov102_0214b53c(char *c)
       Math_Function_0203b14c(c + 0x3d0, *((int *) (((char *) data_ov102_0214ea18) + off)), 0x800, 0x3e8000, 4);
       Math_Function_0203b14c(c + 0x3d4, *((int *) (((char *) data_ov102_0214ea1c) + off)), 0x800, 0x3e8000, 4);
       Math_Function_0203b14c(c + 0x3d8, *((int *) (((char *) data_ov102_0214ea20) + off)), 0x800, 0x3e8000, 4);
-      Matrix4x3 *rmtx = (Matrix4x3 *) _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(c, *((char **) (c + 0x390)), c + 0x3d0);
+      Matrix4x3 *rmtx = (Matrix4x3 *) _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(c, *((char **) (c + 0x390)), c + 0x3d0);
       *((Matrix4x3 *) (c + 0x31c)) = *rmtx;
     }
     else

@@ -11,7 +11,7 @@ extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void* c);
 extern void _ZN13RaycastGroundC1Ev(void* r);
 extern void _ZN13RaycastGroundD1Ev(void* r);
 extern void _ZN4BgCh19StartDetectingWaterEv(void* r);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* r, struct Vector3* p, void* a);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* r, struct Vector3* p, void* a);
 extern int _ZN13RaycastGround10DetectClsnEv(void* r);
 extern int SurfaceInfo_TestFlag0x20(void* p);
 extern void func_ov002_020e9448(void* p);
@@ -43,7 +43,7 @@ void func_ov002_020e86ec(char* self) {
         v.x = tx;
         v.y = ta;
         v.z = tz;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rc, &v, self);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rc, &v, self);
         if (_ZN13RaycastGround10DetectClsnEv(rc) != 0) {
             if (SurfaceInfo_TestFlag0x20(rc + 0x14) != 0) {
                 *(int*)(self + 0x488) = *(int*)(rc + 0x44);

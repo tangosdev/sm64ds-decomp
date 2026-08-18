@@ -18,15 +18,15 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, BMD_File* f, int a, i
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, KCL_File* f, const Matrix4x3* m, Fix12 fix, s16 s, CLPS_Block* clps);
 extern void func_020393d4(int* p, int v);
 extern void func_020393c4(int* p, int v);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void* thiz, void* actor);
+extern void _ZN16MeshColliderBase6EnableEP8dActor_c(void* thiz, void* actor);
 extern void _ZN13RaycastGroundC1Ev(void* thiz);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* thiz, const Vector3* pos, void* actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* thiz, const Vector3* pos, void* actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void* thiz);
 extern void _ZN13RaycastGroundD1Ev(void* thiz);
 extern void func_ov021_02111434(void* p);
 extern void func_ov021_0211129c(void* p);
 }
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern int func_ov021_02112128, func_ov021_02111fe4, func_ov021_02111f8c, func_ov021_02111f34, func_ov021_02111edc;
 struct RaycastGround { char buf[0x50]; };
 extern "C" int _ZN12WorkElevator13InitResourcesEv(char* sl)
@@ -45,16 +45,16 @@ extern "C" int _ZN12WorkElevator13InitResourcesEv(char* sl)
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         sl + 0x124, (KCL_File*)data_ov021_021149a8.data[1], (Matrix4x3*)(sl + 0x2ec),
         0x199, *(s16*)(sl + 0x8e), (CLPS_Block*)&data_ov021_02113a60);
-    func_020393d4((int*)(sl + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int*)(sl + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4((int*)(sl + 0x124), (int)&func_ov021_02112128);
-    _ZN16MeshColliderBase6EnableEP5Actor(sl + 0x124, sl);
+    _ZN16MeshColliderBase6EnableEP8dActor_c(sl + 0x124, sl);
     {
         int j = 0;
         char* mat = sl + 0x460;
         char* col = sl + 0x520;
         CLPS_Block* clps = (CLPS_Block*)&data_ov021_02113a80;
         Fix12 fix = 0x199;
-        int upd = (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+        int upd = (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
         SharedFilePtr* kclFile = &data_ov021_021149b8;
         for (; j < 4; j++) {
             _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
@@ -67,14 +67,14 @@ extern "C" int _ZN12WorkElevator13InitResourcesEv(char* sl)
     func_020393c4((int*)(sl + 0x6e8), (int)&func_ov021_02111f8c);
     func_020393c4((int*)(sl + 0x8b0), (int)&func_ov021_02111f34);
     func_020393c4((int*)(sl + 0xa78), (int)&func_ov021_02111edc);
-    { int k = 0; char* col = sl + 0x520; for (; k < 4; k++) { _ZN16MeshColliderBase6EnableEP5Actor(col, sl); col += 0x1c8; } }
+    { int k = 0; char* col = sl + 0x520; for (; k < 4; k++) { _ZN16MeshColliderBase6EnableEP8dActor_c(col, sl); col += 0x1c8; } }
     *(s32*)(sl + 0xc40) = *(s32*)(sl + 0x5c);
     *(s32*)(sl + 0xc44) = *(s32*)(sl + 0x60);
     *(s32*)(sl + 0xc48) = *(s32*)(sl + 0x64);
     objPos.x = *(s32*)(sl + 0x5c); objPos.y = *(s32*)(sl + 0x60); objPos.z = *(s32*)(sl + 0x64);
     objPos.y = objPos.y - 0x14000;
     _ZN13RaycastGroundC1Ev(&ray);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&ray, &objPos, (void*)0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&ray, &objPos, (void*)0);
     *(s32*)(sl + 0xc6c) = objPos.y;
     if (_ZN13RaycastGround10DetectClsnEv(&ray)) *(s32*)(sl + 0xc6c) = *(s32*)((char*)&ray + 0x44);
     _ZN13RaycastGroundD1Ev(&ray);

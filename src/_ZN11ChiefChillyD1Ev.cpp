@@ -2,7 +2,7 @@
 // @symbol _ZN11ChiefChillyD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
- * Three array cleanups, four member destructors and the chain into Enemy, all
+ * Three array cleanups, four member destructors and the chain into dEnemyBase_c, all
  * of it reverse declaration order out of ChiefChilly.h. Nothing here is
  * written by hand.
  *

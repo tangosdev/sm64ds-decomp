@@ -26,7 +26,7 @@ struct SnowmanBreath {
     u8  unk_1394;           /* 0x1394 */
     u8  pad_1395[0x2f];
     /* Player * -- the ROM loads this WORD and passes it to
-       _ZN6Player9StartTalkER9ActorBaseb as that function's `this`, which is an object
+       _ZN6Player9StartTalkER7fBase_cb as that function's `this`, which is an object
        address, so the word is a Player *. It says nothing about the rest of the marker's
        span, which stays explicit padding. Was a u8 marker. */
     Player *unk_13c4;           /* 0x13c4 */

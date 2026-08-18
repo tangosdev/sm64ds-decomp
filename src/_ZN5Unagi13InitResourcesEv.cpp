@@ -14,11 +14,11 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(char* m, void* f, int a, int b);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN7PathPtrC1Ev(void* p);
 extern void _ZN7PathPtr6FromIDEj(void* p, unsigned int id);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(char* self, char* actor, struct V3* pos, int r3, int sp0, int sp4, int sp8);
+extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, char* actor, struct V3* pos, int r3, int sp0, int sp4, int sp8);
 extern int IsStarCollected(int a, int b);
 extern void func_ov016_02111bf0(char* c, void* p);
-extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, char* pos, void* d, int sp0, int sp4);
-extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(char* a, int r1, int r2, int r3, int sp0);
+extern char* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, char* pos, void* d, int sp0, int sp4);
+extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(char* a, int r1, int r2, int r3, int sp0);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* p, char* out, unsigned int n);
 extern short Vec3_HorzAngle(char* a, char* b);
 
@@ -63,10 +63,10 @@ int Unagi::InitResources()
     unk_3f8 = mPosZ;
     mTerminalVelocity = -0x1e000;
     v1 = data_ov016_02114d4c;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         ((char*)this) + 0x110, ((char*)this), &v1, 0x32000, 0x50000, 0x200004, 0);
     v2 = data_ov016_02114d4c;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         ((char*)this) + 0x150, ((char*)this), &v2, 0x32000, 0x50000, 0x200000, 0);
 
     _ZN7PathPtrC1Ev(&path2);
@@ -103,13 +103,13 @@ stage2_path:
 check_param1:
     if (mVariant != 1)
         goto ret0_b;
-    spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+    spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         0xb2, unk_414 | 0x50, ((char*)this) + 0x5c, 0,
         mAreaId, -1);
     if (spawned != 0) {
         mStarUniqueID = *(int*)(spawned + 4);
         *(int*)(spawned + 0xb0) = 0;
-        _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(spawned, 0, 0x3e8000, 0x1f40000, 0x1f40000);
+        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(spawned, 0, 0x3e8000, 0x1f40000, 0x1f40000);
     }
     func_ov016_02111bf0(((char*)this), &data_ov016_02114d8c);
     goto tail;

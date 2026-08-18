@@ -246,6 +246,33 @@ def defined_mangled_symbol(path):
     return None
 
 
+# `extern int _ZTV6ToxBox[];`, `extern u32 _ZTV11ShadowModel[];`, `extern void
+# *_ZTV6Eyerok[];`, `extern int _ZTV11ChiefChilly;` -- the declaration that lets a
+# non-polymorphic struct store a vptr by hand.
+#
+# BOTH SPELLINGS COUNT, and requiring either one alone undercounts by tens of files.
+# The type is `int`, `u32`, `void *` or `unsigned int` depending on who wrote it, and
+# the array brackets are optional because the scalar form is taken by address instead.
+# What actually pins the idiom is `extern` + a `_ZTV` name + a declarator terminator,
+# so that is all this matches.
+EXTERN_VTABLE = re.compile(
+    r"\bextern\s+[A-Za-z_][\w\s*]*?\b(_ZTV[0-9A-Za-z_]+)\s*(?:\[\s*\])?\s*;")
+
+
+def _extern_vtable_classes(text):
+    """The `_ZTV` symbols this file declares as an extern array, from CODE only.
+
+    Masked through `delaunder.code_mask` for the reason the launder metric is: the
+    idiom gets explained in comments, and a metric a reword can move is a metric that
+    rewards rewording. Measured when this landed: 397 files, 183 classes, and masking
+    suppresses exactly 0 of each -- nothing is being scored from prose today. The mask
+    is here so that stays true, not because it is currently load-bearing.
+    """
+    keep = delaunder.code_mask(text)
+    return {m.group(1) for m in EXTERN_VTABLE.finditer(text)
+            if all(keep[i] for i in range(m.start(), m.end()))}
+
+
 def classify(path):
     """Return (kind, info, symbol) for a mangled-symbol file, or (None, None, None).
 
@@ -411,6 +438,7 @@ def audit():
     z = lambda: {"c": 0, "cpp": 0}
     local_body, no_include, pad, asm_files, launder = z(), z(), z(), z(), z()
     launder_sites = z()
+    extern_vtable, extern_vtable_classes = z(), set()
     for p in srcs:
         try:
             t = (REPO / p).read_text(errors="ignore")
@@ -439,6 +467,18 @@ def audit():
         if sites:
             launder[k] += 1
             launder_sites[k] += len(sites)
+        # THE FAKE VTABLE. `extern int _ZTV6ToxBox[]; *(int**)p = _ZTV6ToxBox;` stores a
+        # vptr by hand because no polymorphic class exists to emit one. It byte-matches
+        # permanently -- storing the address of the ROM's own vtable is exactly what the
+        # ROM does -- so no byte gate can ever object, and `romdata_check` finds nothing
+        # to compare because the compiler emits no vtable at all. Invisible by
+        # construction to every other check in this tree, which is why it is counted
+        # here. Masked like the launder metric above: a comment naming `_ZTV` is prose,
+        # and rewriting prose must not move a defect count.
+        found = _extern_vtable_classes(t)
+        if found:
+            extern_vtable[k] += 1
+            extern_vtable_classes |= found
 
     tot = lambda d: d["c"] + d["cpp"]
     r["shadow_decls"] = {
@@ -450,7 +490,16 @@ def audit():
     }
     r["codegen_hacks"] = {"inline_asm": tot(asm_files),
                           "launder_or_forced": tot(launder),
-                          "launder_sites": tot(launder_sites)}
+                          "launder_sites": tot(launder_sites),
+                          "extern_vtable": tot(extern_vtable),
+                          # Distinct classes, not files: many files fake the SAME class
+                          # (`_ZTV8Platform` alone appears in 161 of them), and modelling
+                          # that one class retires every one of its sites at once. The
+                          # class count is therefore the size of the remaining WORK; the
+                          # file count is the size of the debt. Both ratchet, because
+                          # they can move independently -- a new file faking an
+                          # already-faked class raises only the first.
+                          "extern_vtable_classes": len(extern_vtable_classes)}
     return r
 
 
@@ -484,6 +533,8 @@ RATCHET = [
     ("codegen_hacks", "inline_asm"),
     ("codegen_hacks", "launder_or_forced"),
     ("codegen_hacks", "launder_sites"),
+    ("codegen_hacks", "extern_vtable"),
+    ("codegen_hacks", "extern_vtable_classes"),
 ]
 
 
@@ -529,6 +580,8 @@ def summary(r):
     out.append("")
     out.append("codegen hacks")
     out.append(f"    inline asm               {ch['inline_asm']:6d}")
+    out.append(f"    extern _ZTV vptr store   {ch['extern_vtable']:6d}"
+               f"   ({ch['extern_vtable_classes']} class(es) unmodelled)")
     out.append(f"    launder / forced         {ch['launder_or_forced']:6d}"
                f"   ({ch['launder_sites']} site(s) in code)")
     return "\n".join(out)
@@ -595,8 +648,11 @@ def main():
         if regressions:
             print("langmode ratchet FAILED -- these counts may fall, never rise:")
             print("\n".join(regressions))
-            print("\nA C++ symbol was added in a .c file, or a shadow declaration was\n"
-                  "introduced. See notes/plan-cpp-language-mode.md section 3.")
+            print("\nA C++ symbol was added in a .c file, a shadow declaration was\n"
+                  "introduced, or a vptr was stored through an `extern _ZTV` array\n"
+                  "instead of a real polymorphic class (extern_vtable*). The last one\n"
+                  "byte-matches permanently and no other gate in this tree can see it.\n"
+                  "See notes/plan-cpp-language-mode.md section 3.")
             return 1
         print("langmode ratchet PASS")
         return 0

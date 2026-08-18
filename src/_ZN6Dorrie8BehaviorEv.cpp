@@ -8,7 +8,7 @@ extern void _Z14ApproachLinearRiii(int* a, int b, int c);
 extern int Vec3_HorzDist(void* a, void* b);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern int AngleDiff(int a, int b);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* c, void* p);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* c, void* p);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern void _ZN9Animation7AdvanceEv(void* p);
 extern void func_ov065_02118cc4(char* c);
@@ -72,7 +72,7 @@ int Dorrie::Behavior()
             - (int)(((long long)thr * data_02082214[(*(unsigned short*)(c + 0x11a4) >> 4) * 2 + 1] + 0x800) >> 12);
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
     WithMeshClsn_UpdateContinuous_Veneer(c + 0xf50);
     *(int*)(c + 0x60) = *(int*)(c + 0x1198) - *(int*)(c + 0x11ac) - *(int*)(c + 0x11a8);
     _ZN9Animation7AdvanceEv(c + 0x13c);

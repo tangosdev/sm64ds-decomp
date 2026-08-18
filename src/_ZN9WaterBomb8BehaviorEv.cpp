@@ -6,12 +6,12 @@
 #include "WaterBomb.h"
 extern "C" {
 extern void func_ov098_0213b63c(char* c);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* a, void* b);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* a, void* b, unsigned int j);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* a, void* b);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* a, void* b, unsigned int j);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
 extern void _ZN12CylinderClsn5ClearEv(void* p);
 extern void _ZN12CylinderClsn6UpdateEv(void* p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* p);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 }
 
@@ -37,13 +37,13 @@ int WaterBomb::Behavior()
     ((void (*)(char*))fn)(self);
 
     if (unk_3c8 != 0) {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x144, 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
+        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x144, 0);
         if (_ZNK12WithMeshClsn8IsOnWallEv((char*)&mWithMeshClsn)) {
             if (unk_3c8 == 1) {
                 func_ov098_0213b63c(((char*)this));
             } else {
-                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
             }
             return 0;
         }

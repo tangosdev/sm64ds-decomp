@@ -16,7 +16,7 @@ int SignPost::Render()
   if (unk_590 != 0) return 1;
   void* r = *(void**)((char*)&unk_59c);
   if (r != 0) {
-    int b = (unk_0b0 & 0x4000) != 0;
+    int b = (mFlags & 0x4000) != 0;
     if (b && *(int*)((char*)r+0xc8) != 0) {
       func_ov002_020bb060(((char*)this));
     }

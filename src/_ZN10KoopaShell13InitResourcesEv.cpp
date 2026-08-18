@@ -20,12 +20,12 @@
 #include "KoopaShell.h"
 
 struct BMD_File;
-struct Actor;
+struct dActor_c;
 struct Vector3_16;
 
-extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, int r, int h, unsigned int d, unsigned int e);
+extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c* a, int r, int h, unsigned int d, unsigned int e);
 
-extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *, Actor* a, int b, int c, Vector3_16* d, int e);
+extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c* a, int b, int c, Vector3_16* d, int e);
 
 extern "C" void func_ov102_0214d1f8(void* c, void* p);
 
@@ -42,7 +42,7 @@ int KoopaShell::InitResources()
         return 0;
     if (((ShadowModel*)&mShadowModel)->InitCylinder() == 0)
         return 0;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj((MovingCylinderClsn*)&mCylinderClsn, (Actor*)this, 0x3c000, 0x46000, 0x100004, 0xa083c0);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj((MovingCylinderClsn*)&mCylinderClsn, (dActor_c*)this, 0x3c000, 0x46000, 0x100004, 0xa083c0);
     mSpawnPosX = mPosX;
     mSpawnPosY = mPosY;
     mSpawnPosZ = mPosZ;
@@ -50,7 +50,7 @@ int KoopaShell::InitResources()
     mTerminalVelocity = -0x32000;
     unk_100 = 0x14;
     unk_3c0 = 0;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&mMeshClsn, (Actor*)this, 0x28000, 0x28000, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&mMeshClsn, (dActor_c*)this, 0x28000, 0x28000, 0, 0);
     ((WithMeshClsn*)&mMeshClsn)->StartDetectingWater();
     func_ov102_0214d1f8(this, &data_ov102_0214ea68);
     unk_3d4 = 0;

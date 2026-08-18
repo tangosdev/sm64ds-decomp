@@ -6,7 +6,7 @@
 #include "common.h"
 extern "C" {
 
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern void _ZN6Player16IncMegaKillCountEv(void* thiz);
 
@@ -14,7 +14,7 @@ void func_ov070_021211c4(char* c)
 {
     unsigned int id = *(unsigned int*)(c + 0x184);
     if (id == 0) return;
-    char* o = (char*)_ZN5Actor10FindWithIDEj(id);
+    char* o = (char*)_ZN8dActor_c10FindWithIDEj(id);
     if (o == 0) return;
     int b = (*(unsigned short*)(o + 0xc) == 0xbf);
     if (b == 0) return;

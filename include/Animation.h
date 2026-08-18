@@ -77,11 +77,11 @@ struct Animation {
        because it wildcards relocated words. Only the link catches it.
 
        This family deallocates through Memory::operator_delete2, not the actor
-       heap: every D0 below ends with a call to 0x0203cbcc. Actor's copy of this
+       heap: every D0 below ends with a call to 0x0203cbcc. dActor_c's copy of this
        member calls Memory::Deallocate instead, which is why each needs its own.
 
        Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
-       in the class or one level up, as include/Actor.h records. No layout
+       in the class or one level up, as include/dActor_c.h records. No layout
        effect: a non-virtual inline member adds no field and no vtable slot. */
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 

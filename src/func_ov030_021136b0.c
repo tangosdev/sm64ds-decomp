@@ -9,7 +9,7 @@ typedef int s32;
 
 extern void _ZN8SaveData13PlayerLoseCapEv(void);
 /* ROM symbol is Vector3_16 (not Vector3s) — wrong mangling left this BLIND and broke mwldarm. */
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param1, const Vector3 *pos,
     const void *rot, int areaID, int deathTableID);
 extern void func_02012790(int arg);
@@ -17,14 +17,14 @@ extern s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern void Matrix4x3_FromTranslation(Mtx43 *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(Mtx43 *m, s16 angY);
 extern void Matrix4x3_ApplyInPlaceToTranslation(Mtx43 *m, int x, int y, int z);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
     void *self, void *actor, unsigned int msgId, const Vector3 *pos,
     unsigned int d, unsigned int e);
 extern void func_0201267c(int a, void *b);
 extern int _ZN6Player12GetTalkStateEv(void *self);
 extern void _ZN6Player9DropActorEv(void *self);
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *self, unsigned int a, unsigned int b, int c);
-extern void *_ZN5Actor10FindWithIDEj(u32 id);
+extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov030_021141a8(char *c, int v);
 extern void _ZN9Animation7AdvanceEv(void *self);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
@@ -59,7 +59,7 @@ int func_ov030_021136b0(char *c)
                 void *spawned;
                 *(u32 *)(c + 0x3b0) = *(u32 *)(p + 8);
                 msg = *(s8 *)(c + 0xcc);
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x10d,
                     (*(u32 *)(c + 0x3b0) << 8) | 2,
                     (Vector3 *)(c + 0x5c),
@@ -106,7 +106,7 @@ int func_ov030_021136b0(char *c)
             msgPos.y = my;
             msgPos.z = mz;
             msgPos.y = *(int *)(c + 0x60) + 0x64000;
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
                     *(void **)(c + 0x3a8), c, msgArg, &msgPos, 0, 2) != 0) {
                 func_0201267c(0xd1, c + 0x74);
                 {
@@ -149,7 +149,7 @@ int func_ov030_021136b0(char *c)
                 *(int *)(c + 0x3b8) = 1;
                 func_ov030_021141a8(c, 2);
             } else {
-                void *act = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x3ac));
+                void *act = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x3ac));
                 int z = 0;
                 *(int *)((char *)act + 0xc8) = z;
                 {

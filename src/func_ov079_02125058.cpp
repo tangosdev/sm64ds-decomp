@@ -10,7 +10,7 @@ typedef s32 Fix12;
 extern "C" {
 extern int func_ov002_020dd8b8(void* c);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, const Vector3* v, u32 n, Fix12 f, short s);
+extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, const Vector3* v, u32 n, Fix12 f, short s);
 }
 
 extern "C" void func_ov079_02125058(char* c, char* a)
@@ -38,7 +38,7 @@ extern "C" void func_ov079_02125058(char* c, char* a)
         y = p->y; v1.y = y;
         z = p->z; v1.z = z;
         w1.x = x; w1.y = y; w1.z = z;
-        _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &w1, 1, 0x8000, 0);
+        _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &w1, 1, 0x8000, 0);
         *(u8*)(c + 0x405) = 1;
         return;
     }
@@ -54,7 +54,7 @@ extern "C" void func_ov079_02125058(char* c, char* a)
         if (y - *(s32*)(c + 0x60) < 0x2bc000) return;
         if (DecIfAbove0_Byte((u8*)(c + 0x406)) == 0) return;
         w2.x = v2.x; w2.y = v2.y; w2.z = v2.z;
-        _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &w2, 1, 0x8000, 0);
+        _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &w2, 1, 0x8000, 0);
         *(u8*)(c + 0x405) = 1;
         return;
     }

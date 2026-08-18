@@ -7,14 +7,14 @@
 extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(int);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
-extern int _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(int);
 extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,short,int);
 extern void func_020393d4(void*,void*);
 extern void func_020393c4(void*,void*);
 }
 
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_[];
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_[];
 
 int SeesawBob::InitResources()
 {
@@ -33,14 +33,14 @@ int SeesawBob::InitResources()
     f = _ZN5Model8LoadFileER13SharedFilePtr(*(int*)(data_ov095_021374a0 + idx*0xc));
     _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, f, 1, -1);
     func_ov095_0213597c(((char *)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
     {
         unsigned char i = (unsigned char)((char *)this)[0x31e];
         f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(int*)(data_ov095_021374a4 + i*0xc));
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider, f, &mClsnMat, 0x1000, mAngleY, *(int*)(data_ov095_021374a8 + i*0xc));
     }
-    func_020393d4(&mMeshCollider, _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMeshCollider, _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4(&mMeshCollider, func_ov095_02135e90);
     return 1;
 }

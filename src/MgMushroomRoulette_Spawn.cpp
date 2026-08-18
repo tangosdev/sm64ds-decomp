@@ -1,5 +1,5 @@
 //cpp
-extern "C" void* _ZN9ActorBasenwEj(unsigned int sz);
+extern "C" void* _ZN7fBase_cnwEj(unsigned int sz);
 extern "C" void func_ov004_020b2adc(void);
 extern "C" void _ZN8Particle10SysTrackerC1Ev(char* p);
 extern "C" void func_ov006_020c1d80(char* p);
@@ -11,7 +11,7 @@ extern int func_ov006_021079c8[];
 extern int func_ov006_0210a4ac[];
 
 extern "C" void* MgMushroomRoulette_Spawn(void){
-  char* c = (char*)_ZN9ActorBasenwEj(0x5400);
+  char* c = (char*)_ZN7fBase_cnwEj(0x5400);
   if (c) {
     func_ov004_020b2adc();
     *(int*)c = (int)_ZTV19dScMgSingle3DBase_c;

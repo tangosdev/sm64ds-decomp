@@ -9,7 +9,7 @@ typedef struct { s32 x, y, z; } Vector3;
 typedef s32 Fix12;
 struct BCA_File;
 
-struct ActorBase {
+struct fBase_c {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
     virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
     virtual void v08(); virtual void v09(); virtual void v0a(); virtual void v0b();
@@ -24,10 +24,10 @@ struct ActorBase {
 };
 
 extern "C" {
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov064_02115f98(void* c, void* p);
 extern int func_ov002_020ada40(void* c, void* v, void* r4, s32 flag);
-extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
 extern int _ZN6Player9IsOnShellEv(void* p);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12 f, u32 b, u32 c, u32 d);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, BCA_File* f, int i, Fix12 fx, u32 j);
@@ -45,7 +45,7 @@ extern "C" void func_ov064_02116754(char* c)
     if (id == 0)
         return;
 
-    r4 = _ZN5Actor10FindWithIDEj(id);
+    r4 = _ZN8dActor_c10FindWithIDEj(id);
     if (!r4)
         return;
 
@@ -66,7 +66,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((ActorBase*)c)->ChangeState();
+        ((fBase_c*)c)->ChangeState();
         return;
     }
 
@@ -77,7 +77,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((ActorBase*)c)->ChangeState();
+        ((fBase_c*)c)->ChangeState();
         return;
     }
 
@@ -89,7 +89,7 @@ extern "C" void func_ov064_02116754(char* c)
             v[1] = 0;
             v[2] = 0;
             func_ov002_020ada40(c, v, r4, *(s32*)(*(char**)(c + 0x330) + 0x24));
-            ((ActorBase*)c)->ChangeState();
+            ((fBase_c*)c)->ChangeState();
             return;
         }
     }
@@ -101,11 +101,11 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((ActorBase*)c)->ChangeState();
+        ((fBase_c*)c)->ChangeState();
         return;
     }
 
-    if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x33c, r4) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x33c, r4) != 0) {
         *(s16*)(c + 0x94) = *(s16*)((char*)r4 + 0x8e);
         if (*(s32*)((char*)r4 + 8) == 2)
             *(s32*)(c + 0x98) = 0x32000;
@@ -115,7 +115,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((ActorBase*)c)->ChangeState();
+        ((fBase_c*)c)->ChangeState();
         return;
     }
 
@@ -124,11 +124,11 @@ extern "C" void func_ov064_02116754(char* c)
         *(s16*)(c + 0x94) = (s16)(*(s16*)(c + 0x8e) + 0x8000);
         *(s32*)(c + 0x98) = 0x28000;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, *(BCA_File**)(*(char**)(*(char**)(c + 0x330) + 0x10) + 4), 0, 0x1000, 0);
-        ((ActorBase*)c)->OnStateEntered();
+        ((fBase_c*)c)->OnStateEntered();
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((ActorBase*)c)->ChangeState();
+        ((fBase_c*)c)->ChangeState();
         return;
     }
 
@@ -137,7 +137,7 @@ extern "C" void func_ov064_02116754(char* c)
 
     *(s32*)(c + 0x398) = 2;
     *(u8*)(c + 0x3f9) = 0;
-    ((ActorBase*)c)->ChangeState();
+    ((fBase_c*)c)->ChangeState();
 
     {
         Vector3 v;
@@ -158,5 +158,5 @@ extern "C" void func_ov064_02116754(char* c)
             *(s32*)(c + 0x98) = 0xa000;
     }
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, *(BCA_File**)(*(char**)(*(char**)(c + 0x330) + 0x10) + 4), 0, 0x1000, 0);
-    ((ActorBase*)c)->OnStateEntered();
+    ((fBase_c*)c)->OnStateEntered();
 }

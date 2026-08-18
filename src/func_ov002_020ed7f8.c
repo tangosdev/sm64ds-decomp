@@ -2,15 +2,15 @@ typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct RaycastGround { char buf[0x68 - 0x18]; } RaycastGround;
 
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *self, const Vec3 *v, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *self, const Vec3 *v, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern int func_ov002_020cf700(void *g);
 extern int func_ov002_020d0d2c(void *g);
 extern int func_ov002_020ec654(unsigned char *p);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *shadow, void *mtx, int fix, int t, unsigned int n);
-extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void *self, void *shadow, void *mtx, int fix, int t1, int t2, unsigned int n);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 
@@ -33,7 +33,7 @@ void func_ov002_020ed7f8(void *self)
     v.z = *(int*)(c + 0x64);
     v.y += 0x28000;
     _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, 0);
     r4 = v.y;
     if (_ZN13RaycastGround10DetectClsnEv(&rg))
         r4 = *(int*)((char*)&rg + 0x44);
@@ -52,10 +52,10 @@ void func_ov002_020ed7f8(void *self)
         && !func_ov002_020d0d2c(*(void**)(c + 0x38c)))
     {
         if (func_ov002_020ec654((unsigned char*)c) == 0) {
-            _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
                 c, c + 0x364, c + 0x390, r4, r5 + 0x28000, 0xf);
         } else {
-            _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+            _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
                 c, c + 0x364, c + 0x390, r4, r5 + 0x28000, r4, 0xf);
         }
     }

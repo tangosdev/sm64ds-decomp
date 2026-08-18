@@ -4,14 +4,14 @@ extern "C" {
 void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 void _ZN11ShadowModel10InitCuboidEv(void* self);
-void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
 void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* f, void* m, int fx, short s, void* b);
 void func_020393d4(int* p, int v);
 void func_020393c4(int* p, int v);
 void _ZN13RaycastGroundC1Ev(void* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, void* pos, void* actor);
+void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* pos, void* actor);
 int _ZN13RaycastGround10DetectClsnEv(void* self);
 void _ZN13RaycastGroundD1Ev(void* self);
 void func_ov015_021123c8(char* c);
@@ -22,7 +22,7 @@ extern void* data_ov015_02114a64;
 extern void* data_ov015_02114a5c;
 extern void* data_ov015_02113594;
 extern "C" {
-extern void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern void func_ov015_021128f8();
 }
 extern s16 data_02082214[];
@@ -39,12 +39,12 @@ extern "C" int _ZN9TowerStep13InitResourcesEv(char* self) {
 
   _ZN9ModelBase7SetFileEP8BMD_Fileii(self+0xd4, _ZN5Model8LoadFileER13SharedFilePtr(&data_ov015_02114a64), 1, -1);
   _ZN11ShadowModel10InitCuboidEv(self+0x320);
-  _ZN8Platform21UpdateModelPosAndRotYEv(self);
-  _ZN8Platform19UpdateClsnPosAndRotEv(self);
+  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
+  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
       self+0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov015_02114a5c),
       self+0x2ec, 0x199, *(short*)(self+0x8e), &data_ov015_02113594);
-  func_020393d4((int*)(self+0x124), (int)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4((int*)(self+0x124), (int)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
   func_020393c4((int*)(self+0x124), (int)&func_ov015_021128f8);
 
   v.x = *(int*)(self+0x5c);
@@ -53,7 +53,7 @@ extern "C" int _ZN9TowerStep13InitResourcesEv(char* self) {
   v.y -= 0x14000;
 
   _ZN13RaycastGroundC1Ev(&rc);
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, &v, 0);
+  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, &v, 0);
   *(int*)(self+0x378) = v.y;
   if (_ZN13RaycastGround10DetectClsnEv(&rc) != 0) {
     *(int*)(self+0x378) = *(int*)((char*)&rc + 0x44);

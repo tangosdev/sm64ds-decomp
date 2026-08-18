@@ -5,7 +5,7 @@
  *
  * Named from the table: 0x021291f8 is the word slot 3 of
  * _ZTV15dScMgSnowball_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual ActorBase declares.
+ * it is this class's own override of the virtual fBase_c declares.
  *
  * It frees the BMD this class's own InitResources (slot 0, 0x02129268) parked
  * in unk_abf4 -- the header's note that 0xabf4 is "the constructor's own `= 0`

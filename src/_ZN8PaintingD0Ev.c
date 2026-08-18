@@ -8,7 +8,7 @@ extern int _ZTV8Painting[];
 int *_ZN8PaintingD0Ev(int *t)
 {
     t[0] = (int)_ZTV8Painting;
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

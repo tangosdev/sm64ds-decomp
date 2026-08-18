@@ -19,7 +19,7 @@ int _ZNK6Player14GetBodyModelIDEjb(void* self, u32 a, int b);
 void _ZN9Animation8SetFlagsEi(void* self, int flags);
 void Player_DisableInteraction(char* self);
 void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, Vector3* pos, void* actor);
+void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, Vector3* pos, void* actor);
 int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
 int func_ov002_020c7cbc(char* self);
 void func_02012790(int a);
@@ -74,7 +74,7 @@ int Player::St_LevelEnter_Init()
         pos.x = x;
         pos.y = w;
         pos.z = z;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &pos, ((char*)this));
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, ((char*)this));
         hit = 0x80000000;
         if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) hit = rg.clsnY;
         mPosY = hit;

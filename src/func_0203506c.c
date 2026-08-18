@@ -67,7 +67,7 @@ int func_0203506c(void *arg0)
     *(void **)&data_0209d4a8 = (void *)&data_020a0c68;
     *(int *)((char *)self + 0x60) = 0;
     *(int *)((char *)self + 0x64) = 0;
-    _ZN5Scene9SetFadersEP15FaderBrightness((void *)((char *)self + 0x50));
+    _ZN8dScene_c9SetFadersEP15FaderBrightness((void *)((char *)self + 0x50));
 
     *(u16 *)((char *)self + 0x5c) = 0x7fff;
     *(int *)&data_0208ee44 = 1;

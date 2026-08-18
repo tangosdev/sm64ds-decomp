@@ -11,9 +11,9 @@ extern G data_ov060_0211ace0;
 extern G data_ov060_0211aca0;
 extern G data_ov060_0211abf8;
 extern G data_ov060_0211ac90;
-extern void _ZN5Actor17HugeLandingDustAtER7Vector3b(void *a, void *v, int b);
+extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *a, void *v, int b);
 extern void _ZN5Sound4PlayEjjRK7Vector3(unsigned a, unsigned b, void *v);
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *a, void *v, int f);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *a, void *v, int f);
 
 void func_ov060_02111a28(char *c)
 {
@@ -66,13 +66,13 @@ void func_ov060_02111a28(char *c)
         dust.x = *(int *)(c + 0x3d4);
         dust.y = *(int *)(c + 0x3d8);
         dust.z = *(int *)(c + 0x3dc);
-        _ZN5Actor17HugeLandingDustAtER7Vector3b(c, &dust, 0);
+        _ZN8dActor_c17HugeLandingDustAtER7Vector3b(c, &dust, 0);
     } else {
         Vector3 dust;
         dust.x = *(int *)(c + 0x3e0);
         dust.y = *(int *)(c + 0x3e4);
         dust.z = *(int *)(c + 0x3e8);
-        _ZN5Actor17HugeLandingDustAtER7Vector3b(c, &dust, 0);
+        _ZN8dActor_c17HugeLandingDustAtER7Vector3b(c, &dust, 0);
     }
     _ZN5Sound4PlayEjjRK7Vector3(3, 0xb0, c + 0x74);
     {
@@ -80,7 +80,7 @@ void func_ov060_02111a28(char *c)
         quake.x = *(int *)(c + 0x5c);
         quake.y = *(int *)(c + 0x60);
         quake.z = *(int *)(c + 0x64);
-        _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, &quake, 0x320000);
+        _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &quake, 0x320000);
     }
 }
 }

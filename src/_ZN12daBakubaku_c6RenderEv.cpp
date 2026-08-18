@@ -2,7 +2,7 @@
 // @symbol _ZN12daBakubaku_c6RenderEv
 /* Vtable slot 9, previously func_ov032_02112164.
  *
- * Skips drawing entirely when Actor flag 0x40000 is set, otherwise renders the
+ * Skips drawing entirely when dActor_c flag 0x40000 is set, otherwise renders the
  * animated model with a null scale.
  *
  * The file used to reach the model through a six-slot stand-in class whose last

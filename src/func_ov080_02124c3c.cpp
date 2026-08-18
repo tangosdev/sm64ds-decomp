@@ -13,9 +13,9 @@ void Matrix4x3_FromRotationXYZExt(void* m, int x, int y, int z);
 void Matrix4x3_FromRotationY(void* m, int angle);
 void _ZN13RaycastGroundC1Ev(void* self);
 void _ZN13RaycastGroundD1Ev(void* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, const Vector3* pos, void* actor);
+void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, const Vector3* pos, void* actor);
 int _ZN13RaycastGround10DetectClsnEv(void* self);
-void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void* self, void* sm, void* mtx, int r, int t5, int t6, unsigned int u);
 }
 extern Mtx43 data_020a0e68;
@@ -57,7 +57,7 @@ void func_ov080_02124c3c(char* c)
     pos.z = *(int*)(c + 0x64);
     pos.y = pos.y + 0x14000;
     _ZN13RaycastGroundC1Ev(rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &pos, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, 0);
     int h = pos.y;
     if (_ZN13RaycastGround10DetectClsnEv(rg)) {
         h = *(int*)(rg + 0x44);
@@ -71,7 +71,7 @@ void func_ov080_02124c3c(char* c)
         int sv = data_02082214[((unsigned short)(short)(a << 1) >> 4) * 2];
         if (sv < 0) sv = -sv;
         int result = (int)(((s64)sv * 0x28000 + 0x800) >> 12);
-        _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+        _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
             c, c + 0x124, c + 0x33c, 0x96000, 0x32000, result + 0x96000, 0xf);
     }
     _ZN13RaycastGroundD1Ev(rg);

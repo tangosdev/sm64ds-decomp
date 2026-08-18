@@ -8,8 +8,8 @@ struct C;
 typedef void (C::*PMF)();
 struct Entry { PMF pmf; };
 extern Entry data_ov060_0211b1ac[];
-extern "C" void _ZN8Platform21UpdateModelPosAndRotYEv(void* p);
-extern "C" void _ZN8Platform19UpdateClsnPosAndRotEv(void* p);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* p);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* p);
 struct C {
     unsigned char pad[0x328];
     unsigned char idx;
@@ -19,8 +19,8 @@ struct C {
 s32 BowserSkyPlatform::Behavior() {
     C* c = (C*)this;
     (c->*(data_ov060_0211b1ac[c->idx].pmf))();
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     c->flag = 0;
     return 1;
 }

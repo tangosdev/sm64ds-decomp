@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
- * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -15,10 +15,10 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "MovingCylinderClsnWithPos.h"
 
-struct WallSign : Platform {
+struct WallSign : dBgActor_c {
     u8  pad_31e[0x2];
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x320 */
 
@@ -29,9 +29,14 @@ struct WallSign : Platform {
     int InitResources();
     int Behavior();
     int Render();
+
+    /* Tail padding. The field span stops short of the real size: WallSign_Spawn
+       calls fBase_c::operator new(0x368), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_360[0x8];      /* 0x360, to the ROM's 0x368 */
 };
 
-typedef char WallSign_size_must_be_0x360[sizeof(WallSign) == 0x360 ? 1 : -1];
+typedef char WallSign_size_must_be_0x368[sizeof(WallSign) == 0x368 ? 1 : -1];
 
 #else
 

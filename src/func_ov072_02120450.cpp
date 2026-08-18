@@ -11,12 +11,12 @@ void ApproachLinear(short& v, short target, short step);
 struct Animation { void Advance(); };
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 
-struct ActorBase {};
-struct Actor : ActorBase { Actor* ClosestPlayer(); };
+struct fBase_c {};
+struct dActor_c : fBase_c { dActor_c* ClosestPlayer(); };
 extern "C" Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
-struct Player : Actor { int StartTalk(ActorBase& a, bool b); };
+struct Player : dActor_c { int StartTalk(fBase_c& a, bool b); };
 
-extern "C" bool func_ov072_02120450(Actor* self) {
+extern "C" bool func_ov072_02120450(dActor_c* self) {
     char* s = (char*)self;
     ApproachLinear(*(short*)(s + 0x8e), -0x4000, 0x514);
     ((Animation*)(s + 0x124))->Advance();
@@ -25,10 +25,10 @@ extern "C" bool func_ov072_02120450(Actor* self) {
         return true;
     }
     if (DecIfAbove0_Byte((unsigned char*)(s + 0x335)) == 0) {
-        Actor* p = self->ClosestPlayer();
+        dActor_c* p = self->ClosestPlayer();
         if (Vec3_HorzDist((Vector3*)(s + 0x5c), (Vector3*)((char*)p + 0x5c)) < 0x118000
             && ((Player*)p)->StartTalk(*self, true) != 0) {
-            *(Actor**)(s + 0x32c) = p;
+            *(dActor_c**)(s + 0x32c) = p;
             func_ov072_021205d4(self, 1);
         }
     }

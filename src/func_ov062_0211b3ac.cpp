@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 struct PathPtr { int a, b; };
-extern "C" void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern "C" void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern "C" void _ZN7PathPtrC1Ev(PathPtr* self);
 extern "C" void _ZN7PathPtr6FromIDEj(PathPtr* self, u32 id);
 extern "C" void _ZNK7PathPtr7GetNodeER7Vector3j(PathPtr* self, Vector3* v, u32 i);
@@ -29,7 +29,7 @@ extern "C" int func_ov062_0211b3ac(char* sl)
     if (*(int *)(sl + 0x460) != 0)
         return 0;
 
-    player = (char*)_ZN5Actor13ClosestPlayerEv(sl);
+    player = (char*)_ZN8dActor_c13ClosestPlayerEv(sl);
     _ZN7PathPtrC1Ev(&path);
     _ZN7PathPtr6FromIDEj(&path, *(u32*)(sl + 0x464));
 

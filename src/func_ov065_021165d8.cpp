@@ -6,7 +6,7 @@
 #include "common.h"
 extern "C" {
 
-extern char* _ZN5Actor22ClosestNonVanishPlayerEv(void);
+extern char* _ZN8dActor_c22ClosestNonVanishPlayerEv(void);
 extern short Vec3_HorzAngle(const void*,const struct Vector3*);
 extern short Vec3_VertAngle(const void*,const struct Vector3*);
 extern int Vec3_Dist(const void*,const struct Vector3*);
@@ -17,7 +17,7 @@ extern int func_ov065_0211691c(void*,void*);
 extern int data_020a0e68[];
 int func_ov065_021165d8(char*c){
   short r4=0;
-  char*p=_ZN5Actor22ClosestNonVanishPlayerEv();
+  char*p=_ZN8dActor_c22ClosestNonVanishPlayerEv();
   if(p!=0){
     struct Vector3 tmp=*(struct Vector3*)(p+0x5c);
     struct Vector3 v;

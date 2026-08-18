@@ -1,5 +1,5 @@
 extern unsigned NumStars(void);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *o);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *o);
 extern void func_0201267c(int a, void *b);
 extern void _Z14ApproachLinearRiii(int *p, int t, int s);
 extern int Vec3_HorzAngle(void *a, void *b, int c);
@@ -25,7 +25,7 @@ void func_ov063_02116a1c(void *cc)
     if (a == 0) {
         *(unsigned short *)((int)c + 0x5d4) &= ~8;
         if (NumStars() < 0xf) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return;
         }
         if (((unsigned)(*(unsigned short *)(c + 0x5d4)) << 0x1b) >> 0x1f) {

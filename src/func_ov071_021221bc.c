@@ -1,12 +1,12 @@
 typedef short s16;
 typedef struct { int x, y, z; } Vector3;
 
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void* self, Vector3* v, int power);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void* self, Vector3* v, int power);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(Vector3* in, void* m, Vector3* out);
 extern void AddVec3(Vector3* a, Vector3* b, Vector3* out);
-extern void _ZN5Actor13LandingDustAtER7Vector3b(void* self, Vector3* v, int b);
+extern void _ZN8dActor_c13LandingDustAtER7Vector3b(void* self, Vector3* v, int b);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, Vector3* pos);
 extern int _Z14ApproachLinearRsss(s16* dst, s16 target, s16 step);
 extern int Vec3_HorzDist(Vector3* a, Vector3* b);
@@ -30,7 +30,7 @@ void func_ov071_021221bc(void* self) {
         eq.x = *(int*)(c + 0x5c);
         eq.y = *(int*)(c + 0x60);
         eq.z = *(int*)(c + 0x64);
-        _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(self, &eq, 0x5dc000);
+        _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(self, &eq, 0x5dc000);
 
         vin.x = 0; vin.y = 0; vin.z = -0xc8000;
         vout.x = 0; vout.y = 0; vout.z = 0;
@@ -38,11 +38,11 @@ void func_ov071_021221bc(void* self) {
         MulVec3Mat4x3(&vin, &data_020a0e68, &vout);
         AddVec3(&vout, (Vector3*)(c + 0x5c), &vout);
         ld.x = vout.x; ld.y = vout.y; ld.z = vout.z;
-        _ZN5Actor13LandingDustAtER7Vector3b(self, &ld, 1);
+        _ZN8dActor_c13LandingDustAtER7Vector3b(self, &ld, 1);
         _ZN5Sound9PlayBank3EjRK7Vector3(0x5a, (Vector3*)(c + 0x74));
     } else {
         Vector3* plp;
-        void* pl = _ZN5Actor13ClosestPlayerEv(self);
+        void* pl = _ZN8dActor_c13ClosestPlayerEv(self);
         if (pl == 0)
             return;
         plp = (Vector3*)((int)pl + 0x5c);

@@ -7,20 +7,20 @@
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
 struct Vector3;
-struct Actor;
+struct dActor_c;
 struct RaycastGround {
   char pad[0x44];
   int result;
   char pad2[8];
   RaycastGround();
   ~RaycastGround();
-  void SetObjAndPos(const Vector3& pos, Actor* a);
+  void SetObjAndPos(const Vector3& pos, dActor_c* a);
   int DetectClsn();
 };
 
 extern "C" {
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
-void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
 }
 extern Matrix4x3 data_02082128;
 
@@ -48,6 +48,6 @@ extern "C" void func_ov078_02125c98(char* c) {
   *(int*)(c+0x458) = *(int*)(c+0x5c) >> 3;
   *(int*)(c+0x45c) = *(int*)(c+0x60) >> 3;
   *(int*)(c+0x460) = *(int*)(c+0x64) >> 3;
-  _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
       c, c+0x3f8, c+0x434, r8, ip + 0x28000, 0xf);
 }

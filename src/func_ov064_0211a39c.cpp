@@ -8,9 +8,9 @@
 struct Vec3_16 {};
 extern "C" {
 extern void _ZN9Animation7AdvanceEv(char*);
-extern char* _ZN5Actor13ClosestPlayerEv(char*);
-extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(char*, Vector3*, unsigned int, int, unsigned short, char*);
-extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, Vector3*, Vec3_16*, int, int);
+extern char* _ZN8dActor_c13ClosestPlayerEv(char*);
+extern void _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(char*, Vector3*, unsigned int, int, unsigned short, char*);
+extern char* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, Vector3*, Vec3_16*, int, int);
 extern int _ZN9Animation8FinishedEv(char*);
 
 void func_ov064_0211a39c(char* c)
@@ -18,7 +18,7 @@ void func_ov064_0211a39c(char* c)
     _ZN9Animation7AdvanceEv(c + 0x124);
     if (((unsigned int)(*(int*)(c + 0x12c) << 4) >> 0x10) == 0x14)
     {
-        char* p = _ZN5Actor13ClosestPlayerEv(c);
+        char* p = _ZN8dActor_c13ClosestPlayerEv(c);
 
         Vector3 v1;
         v1.x = *(int*)(c + 0x5c);
@@ -32,11 +32,11 @@ void func_ov064_0211a39c(char* c)
             v2.x = v1.x;
             v2.y = v1.y;
             v2.z = v1.z;
-            _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(c, &v2, *(unsigned char*)(c + 0x172), 0, 0, 0);
+            _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(c, &v2, *(unsigned char*)(c + 0x172), 0, 0, 0);
         }
         if (*(unsigned char*)(p + 0x706) != 0)
         {
-            char* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x123, 0, &v1, 0, *(signed char*)(c + 0xcc), -1);
+            char* a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x123, 0, &v1, 0, *(signed char*)(c + 0xcc), -1);
             *(int*)(a + 0xa4) = 0;
             *(int*)(a + 0xa8) = 0x800;
             *(int*)(a + 0xac) = 0;

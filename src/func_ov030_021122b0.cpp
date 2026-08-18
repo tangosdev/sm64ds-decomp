@@ -1,6 +1,6 @@
 //cpp
 struct CylinderClsn { void Clear(); void Update(); };
-struct Actor {
+struct dActor_c {
     short HorzAngleToCPlayer();
     void UpdatePos(CylinderClsn *c);
 };
@@ -14,7 +14,7 @@ extern "C" void func_ov030_02111bc4(char *c);
 extern "C" void func_ov030_02111ea4(char *c);
 extern "C" void func_ov030_02111890(char *c);
 
-extern "C" int func_ov030_021122b0(Actor *self)
+extern "C" int func_ov030_021122b0(dActor_c *self)
 {
     char *s = (char*)self;
     short ang = self->HorzAngleToCPlayer() + 0x8000;

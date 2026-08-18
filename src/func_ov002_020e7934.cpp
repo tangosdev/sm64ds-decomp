@@ -3,7 +3,7 @@
 /* recovered: shared common types */
 #include "common.h"
 
-struct Actor;
+struct dActor_c;
 
 extern "C" {
 extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, const Vector3* v);
@@ -19,7 +19,7 @@ struct RaycastLine {
     RaycastLine();
     ~RaycastLine();
     int DetectClsn();
-    void SetObjAndLine(const Vector3& a, const Vector3& b, Actor* obj);
+    void SetObjAndLine(const Vector3& a, const Vector3& b, dActor_c* obj);
 };
 
 extern "C" void func_ov002_020e7934(char* self, void* cam)
@@ -82,7 +82,7 @@ extern "C" void func_ov002_020e7934(char* self, void* cam)
             b.x = vec[0].x;
             b.y = vec[0].y;
             b.z = vec[0].z;
-            rl.SetObjAndLine(a, b, (Actor*)self);
+            rl.SetObjAndLine(a, b, (dActor_c*)self);
             if (rl.DetectClsn()) {
                 r6 = (r6 + 1) & 0xff;
                 vec[0] = vec[1];

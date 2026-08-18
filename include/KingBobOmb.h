@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-/* Derives from Enemy: the destructor stores this class's vtable, then the
+/* Derives from dEnemyBase_c: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x110 belonged to the
  * chain above and is inherited now.
@@ -14,14 +14,14 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "BlendModelAnim.h"
 #include "CommonModel.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct KingBobOmb : Enemy {
+struct KingBobOmb : dEnemyBase_c {
     WithMeshClsn mWithMeshClsn;       /* 0x110 */
     BlendModelAnim mBlendModelAnim;   /* 0x2cc */
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x33c */
@@ -54,7 +54,9 @@ struct KingBobOmb : Enemy {
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
 };
 
@@ -78,7 +80,7 @@ struct KingBobOmb {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0xc];
-    /* 0x0b0..0x110 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x0b0..0x110 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     u32 unk_0b0;                 /* 0x0b0 */
     s32 unk_0b4;                 /* 0x0b4 */

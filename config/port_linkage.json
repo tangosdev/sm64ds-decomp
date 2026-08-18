@@ -28,11 +28,11 @@
     "Enrolling free TUs does nothing, because the release build dead-strips whatever the",
     "linked closure never references."
   ],
-  "linkedTus": 4871,
-  "matchedTus": 11243,
-  "measuredAt": "2026-08-15",
+  "linkedTus": 5831,
+  "matchedTus": 11250,
+  "measuredAt": "2026-08-18",
   "branch": "port-mount-noseat-cluster",
-  "commit": "4bba244fd",
+  "commit": "0fe9c7f62",
   "stale": false,
-  "basis": "single lane cons at its pushed tip, measured against its own walk_window.map. The drop from the prior 4888 stamp is a correction, not a regression: nothing was unlinked. Eighteen matched TUs were credited as linked while a host stand-in of the same basename was what reached the binary; the stand-ins are renamed _hostcopy so the map can tell them apart, and the count now measures what it always claimed to. The wave itself added five verified seats and traded four Render TUs for crash fixes."
+  "basis": "single lane cons at its pushed tip, measured against its own walk_window.map from the tip's gate build (tree clean, battery ALL GREEN, no scene blocks or level skips). +960 over the 4871 stamp, all from the 60% campaign landing on this lane: the ov007 title-screen mount and seat, the ov004/ov006 minigame framework with the first seated minigame (dScMgCurling_c, scene 374), the arm9 fader seat, the stage lifecycle closures, and the gate/course-loop waves. The 45 stem SHADOWS + 13 MSVC-name SHADOWS the tool reports remain the replacement backlog and are not counted as linked."
 }

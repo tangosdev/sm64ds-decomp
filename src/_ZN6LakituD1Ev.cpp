@@ -1,9 +1,9 @@
 //cpp
 // @symbol _ZN6LakituD1Ev
 
-struct Actor {
+struct dActor_c {
     char pad[0xd0];
-    virtual ~Actor();
+    virtual ~dActor_c();
 };
 
 struct ModelAnim { char pad[0x64]; ~ModelAnim(); };
@@ -13,7 +13,7 @@ struct TextureSequence { char pad[0x14]; ~TextureSequence(); };
 struct MovingCylinderClsnWithPos { char pad[0x40]; ~MovingCylinderClsnWithPos(); };
 struct WithMeshClsn { char pad[0x4]; ~WithMeshClsn(); };
 
-struct Lakitu : Actor {
+struct Lakitu : dActor_c {
     ModelAnim m0;   /* 0xd4 */
     Model m1;   /* 0x138 */
     ShadowModel m2;   /* 0x188 */

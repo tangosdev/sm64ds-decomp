@@ -3,7 +3,7 @@ extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* p, void* out, unsigned int i);
 extern int Vec3_Dist(void* a, void* b);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern int _Z14ApproachLinearRsss(short* p, short t, short s);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* clsn);
 extern int func_ov019_0211140c(int* self, void* clsn);
 extern void func_0201267c(int a, void* p);
 extern int func_ov019_021122dc(void* c, int s);
@@ -29,7 +29,7 @@ int func_ov019_021117a8(char* c) {
             *(int*)(c+0x98) = *(int*)(c+0x380);
             LB(0x38f) = LB(0x38f) + 1;
         }
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, c+0x174);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c+0x174);
         func_ov019_0211140c((int*)c, c+0x1a8);
         {
             unsigned int s = ((unsigned int)*(int*)(c+0x12c) << 4) >> 0x10;

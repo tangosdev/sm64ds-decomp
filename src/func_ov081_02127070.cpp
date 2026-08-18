@@ -12,7 +12,7 @@ extern "C" s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern "C" void _Z14ApproachLinearRsss(s16& v, s16 target, s16 step);
 struct CylinderClsn { void Clear(); void Update(); };
 struct Animation { void Advance(); };
-struct Actor { void UpdatePos(CylinderClsn* c); };
+struct dActor_c { void UpdatePos(CylinderClsn* c); };
 
 struct Obj {
     char pad0[0x5c];
@@ -42,7 +42,7 @@ extern "C" int func_ov081_02127070(Obj* self)
         self->f94 = self->f8e;
     }
     ((Animation*)self->anim)->Advance();
-    ((Actor*)self)->UpdatePos((CylinderClsn*)self->clsn);
+    ((dActor_c*)self)->UpdatePos((CylinderClsn*)self->clsn);
     func_ov081_02126950(self, self->field1e4);
     func_ov081_02126758(self);
     if (d < 0xa000) {

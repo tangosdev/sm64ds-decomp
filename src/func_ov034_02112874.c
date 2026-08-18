@@ -9,7 +9,7 @@ extern void Vec3_MulScalarInPlace(void *v, int s);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void Vec3_Add(void *out, void *a, void *b);
 extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void _ZN13RaycastGroundD1Ev(void *self);
 
@@ -62,7 +62,7 @@ void func_ov034_02112874(char *sl)
             castPos.y = py;
             castPos.z = *(int *)(r6 + 0x3d4);
             castPos.y = py + 0x3c000;
-            _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(ray, &castPos, (void *)zero);
+            _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(ray, &castPos, (void *)zero);
             if (_ZN13RaycastGround10DetectClsnEv(ray) != 0) {
                 int clY = *(int *)(ray + 0x44);
                 if (*(int *)(r6 + 0x3d0) <= clY)

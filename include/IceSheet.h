@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
- * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -15,18 +15,31 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 
-struct IceSheet : Platform {
+struct IceSheet : dBgActor_c {
     /* no fields of its own */
 
     /* --- vtable --- */
+    /* DECLARED FIRST, AND IT STAYS FIRST. Out of line, so it is this class's key
+       function, and src/_ZN8IceSheetD1Ev.cpp / D0Ev.cpp define it as a real
+       method. Kill below must not displace it. */
     virtual ~IceSheet();
 
     int Behavior();
     int CleanupResources();
     int InitResources();
     int Render();
+
+    virtual void OnGroundPounded(dActor_c &other);  /* slot 21 */
+    virtual void OnHitByMegaChar(Player &player);    /* slot 27 */
+
+    /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). ATTRIBUTED BY
+       THE VTABLE: _ZTV8IceSheet (ov018 0x02113b34) carries 0x02112880 at
+       +31*4 = 0x02113bb0, and _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv at the
+       same slot, so this is this class's own override. An override adds no slot
+       and no field; the size assert below is unaffected. */
+    virtual void Kill();                /* slot 31 */
 };
 
 typedef char IceSheet_size_must_be_0x320[sizeof(IceSheet) == 0x320 ? 1 : -1];

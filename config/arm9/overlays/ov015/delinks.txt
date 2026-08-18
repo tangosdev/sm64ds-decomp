@@ -24,7 +24,7 @@ src/_ZN13PoleBillboard6RenderEv.cpp:
     complete
     .text start:0x02111278 end:0x021112a0
 
-src/func_ov015_021112a0.cpp:
+src/_ZN13PoleBillboard13InitResourcesEv.cpp:
     complete
     .text start:0x021112a0 end:0x021112dc
 
@@ -40,15 +40,15 @@ src/_ZN14KnockDownPlankD0Ev.cpp:
     complete
     .text start:0x02111360 end:0x021113c0
 
-src/func_ov015_021113c0.cpp:
+src/_ZN14KnockDownPlank15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x021113c0 end:0x021113fc
 
-src/func_ov015_021113fc.c:
+src/_ZN14KnockDownPlank8OnKickedER8dActor_c.cpp:
     complete
     .text start:0x021113fc end:0x02111408
 
-src/func_ov015_02111408.c:
+src/_ZN14KnockDownPlank11OnAttacked2ER8dActor_c.cpp:
     complete
     .text start:0x02111408 end:0x02111414
 
@@ -88,11 +88,11 @@ src/_ZN9MovingBarD0Ev.cpp:
     complete
     .text start:0x02111be4 end:0x02111c3c
 
-src/func_ov015_02111c3c.cpp:
+src/_ZN9MovingBar4KillEv.cpp:
     complete
     .text start:0x02111c3c end:0x02111cb8
 
-src/func_ov015_02111cb8.cpp:
+src/_ZN9MovingBar15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02111cb8 end:0x02111ce0
 
@@ -188,11 +188,11 @@ src/_ZN9TowerStepD0Ev.cpp:
     complete
     .text start:0x021122dc end:0x0211233c
 
-src/func_ov015_0211233c.cpp:
+src/_ZN9TowerStep4KillEv.cpp:
     complete
     .text start:0x0211233c end:0x021123a0
 
-src/func_ov015_021123a0.cpp:
+src/_ZN9TowerStep15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x021123a0 end:0x021123c8
 
@@ -264,11 +264,11 @@ src/_ZN18RotatingPlatformWfD0Ev.c:
     complete
     .text start:0x02112c20 end:0x02112c84
 
-src/func_ov015_02112c84.c:
+src/_ZN18RotatingPlatformWf16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112c84 end:0x02112c98
 
-src/func_ov015_02112c98.c:
+src/_ZN18RotatingPlatformWf13InitResourcesEv.cpp:
     complete
     .text start:0x02112c98 end:0x02112cb8
 
@@ -285,9 +285,11 @@ src/_ZN11FallBlockWfD0Ev.c:
     .text start:0x02112d44 end:0x02112da8
 
 src/_ZN11FallBlockWf16CleanupResourcesEv.c:
+    complete
     .text start:0x02112da8 end:0x02112dbc
 
 src/_ZN11FallBlockWf13InitResourcesEv.c:
+    complete
     .text start:0x02112dbc end:0x02112dd0
 
 src/FallBlockWf_Spawn.c:

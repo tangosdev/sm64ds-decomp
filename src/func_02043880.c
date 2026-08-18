@@ -33,7 +33,7 @@ extern int func_0203b27c(void* l, void* n);
 extern int func_0203b20c(void* l, void* n);
 extern int func_0203b244(void* l, void* n);
 extern int func_0204405c(void* l, void* n);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern Obj* func_02043810(Obj* p);
 extern int data_020a4b78;
 extern int data_020a4b98;
@@ -60,7 +60,7 @@ int func_02043880(Obj* o) {
         func_0203b20c(&data_020a4ba8, &o->n28);
         o->state = 2;
         for (it = o->list; it != 0; it = it->next) {
-            _ZN9ActorBase18MarkForDestructionEv(it->obj);
+            _ZN7fBase_c18MarkForDestructionEv(it->obj);
         }
     } else {
         u32 state;

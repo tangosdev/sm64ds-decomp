@@ -1,5 +1,5 @@
 #include "types.h"
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern int func_ov002_020cc01c(char *c);
 
 #define LA(p) ((int)(p))
@@ -15,7 +15,7 @@ int func_ov002_020cbea8(char *c)
 
     if (*(u32 *)(c + 0x2f8) == 0) return 0;
     if ((*(int *)(c + 0x2f4) & 0x400000) == 0) return 0;
-    o = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x2f8));
+    o = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x2f8));
     if (o == 0 || o == c) return 0;
     b = (int)(*(unsigned short *)(o + 0xc) == 0xbf);
     if (b == 0) return 0;

@@ -20,7 +20,7 @@ extern int _ZN9Animation8FinishedEv(void* thiz);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thisp, void* bca, int a, int fix, unsigned int j);
 extern void FlyGuy_ChangeState(void* c, void* p);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* thiz);
-extern void* _ZN5Actor22ClosestNonVanishPlayerEv(void* thiz);
+extern void* _ZN8dActor_c22ClosestNonVanishPlayerEv(void* thiz);
 extern s16 Vec3_VertAngle(const Vector3* v1, const Vector3* v0);
 extern Fix12 Vec3_Dist(const Vector3* a, const Vector3* b);
 extern u16 DecIfAbove0_Short(u16* p);
@@ -67,7 +67,7 @@ int func_ov070_0211f6e0(char* c)
         return 1;
     }
 
-    player = (char*)_ZN5Actor22ClosestNonVanishPlayerEv(c);
+    player = (char*)_ZN8dActor_c22ClosestNonVanishPlayerEv(c);
     if (player == 0) {
         if (data_0209f2f8 != 0x16) {
             *(s32*)(c + 0x3c0) = *(s32*)(c + 0x5c);

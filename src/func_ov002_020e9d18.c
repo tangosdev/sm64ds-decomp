@@ -9,7 +9,7 @@ extern void _ZN9Animation7AdvanceEv(char *anim);
 extern void func_ov002_020e7eb4(char *c);
 extern void GiveVsStars(int idx, int n);
 extern void func_ov002_020e8244(Vec3 *t, char *c);
-extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(char *self, Vec3 *vec, int n, u32 b, int t, int actor);
+extern void _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(char *self, Vec3 *vec, int n, u32 b, int t, int actor);
 extern void func_ov002_020e8618(char *c);
 extern void func_02012790(int n);
 extern int _ZN6Player12Unk_020c9e5cEh(int self, u32 st);
@@ -71,7 +71,7 @@ modes:
             if (data_0209f310[idx] == 4) {
                 GiveVsStars(idx, 1);
                 func_ov002_020e8244(&t1, c);
-                _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(c, &t1, 5, st, 0, *(int *)(c + 0x438));
+                _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(c, &t1, 5, st, 0, *(int *)(c + 0x438));
                 func_ov002_020e8618(c);
             }
         } else if (mode == 5) {
@@ -81,7 +81,7 @@ modes:
             if (r2v == false)
                 GiveVsStars(idx2, 1);
             func_ov002_020e8244(&t2, c);
-            _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(c, &t2,
+            _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(c, &t2,
                 data_0209f310[*(u8 *)(*(int *)(c + 0x438) + 0x6d8)], st, 0,
                 *(int *)(c + 0x438));
             func_ov002_020e8618(c);

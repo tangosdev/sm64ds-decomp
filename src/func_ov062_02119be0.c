@@ -4,14 +4,14 @@ typedef struct Vec3 {
 
 extern int Vec3_Dist(Vec3* a, Vec3* b);
 extern short Vec3_HorzAngle(Vec3* a, Vec3* b);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actor, int flag);
+extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actor, int flag);
 extern int _ZN6Player12GetTalkStateEv(void* player);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* player, void* actor, unsigned int msg, Vec3* pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* player, void* actor, unsigned int msg, Vec3* pos, unsigned int a, unsigned int b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* anim, void* file, int idx, int speed, unsigned int flags);
 extern void _ZN5Sound22StopLoadedMusic_Layer2Ev(void);
 extern void func_0201277c(unsigned int id);
 extern int _Z14ApproachLinearRsss(short* val, short target, short step);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void* actor, signed char* flag, unsigned int id, Vec3* pos, unsigned int arg);
+extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void* actor, signed char* flag, unsigned int id, Vec3* pos, unsigned int arg);
 
 extern void* data_ov062_0211e03c[];
 extern void* data_ov062_0211e034[];
@@ -48,7 +48,7 @@ void func_ov062_02119be0(char* self)
         }
         if (Vec3_Dist((Vec3*)(self + 0x5c), &playerPos) >= 0x190000)
             return;
-        if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(self + 0x398), self, 1) == 0)
+        if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(self + 0x398), self, 1) == 0)
             return;
         *(short*)(self + 0x3a8) = Vec3_HorzAngle((Vec3*)(self + 0x5c), &playerPos);
         (*(unsigned char*)(((int)self + 0x390)))++;
@@ -92,7 +92,7 @@ void func_ov062_02119be0(char* self)
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
+        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 3:
@@ -106,7 +106,7 @@ void func_ov062_02119be0(char* self)
             starPos.y = *(int*)(self + 0x60);
             starPos.z = *(int*)(self + 0x64);
             starPos.y += 0x64000;
-            _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(self, (signed char*)(self + 0x3b0), *(unsigned char*)(self + 0x3b1), &starPos, 4);
+            _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(self, (signed char*)(self + 0x3b0), *(unsigned char*)(self + 0x3b1), &starPos, 4);
             return;
         }
         if (*(unsigned char*)(self + 0x3b3) == 1) {
@@ -123,7 +123,7 @@ void func_ov062_02119be0(char* self)
         }
         if (Vec3_Dist((Vec3*)(self + 0x5c), &playerPos) >= 0x190000)
             return;
-        if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(self + 0x398), self, 0) != 0)
+        if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(self + 0x398), self, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 5:
@@ -155,7 +155,7 @@ void func_ov062_02119be0(char* self)
         msgPos.x = x;
         msgPos.y = y;
         msgPos.z = z;
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
+        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(self + 0x398), self, msg, &msgPos, 0, 0) != 0)
             (*(unsigned char*)(((int)self + 0x390)))++;
         return;
     case 8:

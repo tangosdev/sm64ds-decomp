@@ -3,18 +3,18 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ShipWater.h"
 extern "C" {
-extern char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, char* prev);
+extern char* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, char* prev);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
 extern int _ZN9Animation7AdvanceEv(char* t);
-extern int _ZN8Platform21UpdateModelPosAndRotYEv(char* t);
-extern int _ZN8Platform19UpdateClsnPosAndRotEv(char* t);
+extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char* t);
+extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char* t);
 }
 
 int ShipWater::Behavior()
 {
     if (unk_338 == 0) {
         int ok = 1;
-        char* p = _ZN5Actor15FindWithActorIDEjPS_(0xd, 0);
+        char* p = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, 0);
         while (p != 0) {
             int state = *(int*)(p+0x16c);
             int cond = 1;
@@ -22,7 +22,7 @@ int ShipWater::Behavior()
                 if (state != 2) cond = 0;
             }
             if (cond == 0) ok = 0;
-            p = _ZN5Actor15FindWithActorIDEjPS_(0xd, p);
+            p = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, p);
         }
         if (ok != 0) unk_338 = 1;
     } else {
@@ -37,7 +37,7 @@ int ShipWater::Behavior()
     }
     (*(s32 *)((char *)&mTextureTransformer + 0xc)) = 0x1000;
     _ZN9Animation7AdvanceEv((char*)&(*(u8 *)&mTextureTransformer));
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     return 1;
 }

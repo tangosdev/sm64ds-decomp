@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-/* Derives from Enemy: the destructor stores this class's vtable, then the
+/* Derives from dEnemyBase_c: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x110 belonged to the
  * chain above and is inherited now.
@@ -14,11 +14,11 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "WithMeshClsn.h"
 
-struct WaterSuction : Enemy {
+struct WaterSuction : dEnemyBase_c {
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x150 */
     u8  pad_30c[0x8];
@@ -28,7 +28,10 @@ struct WaterSuction : Enemy {
     virtual ~WaterSuction();
 
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
+    int Render();
 };
 
 typedef char WaterSuction_size_must_be_0x318[sizeof(WaterSuction) == 0x318 ? 1 : -1];

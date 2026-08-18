@@ -2,12 +2,12 @@
 // @symbol _ZN5UnagiD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
- * Destroy through Unagi and Enemy, then hand the object back through Actor's
+ * Destroy through Unagi and dEnemyBase_c, then hand the object back through dActor_c's
  * inline operator delete, which is why nothing here mentions a heap. The array
  * cleanup at 0x448 is Vector3[7]; see the note in the D1 file.
  *
  * The hand-written version declared its own `extern void *data_020a0eac[]`,
- * which collides with the `void *` Actor.h supplies for that same heap once the
+ * which collides with the `void *` dActor_c.h supplies for that same heap once the
  * real header is in scope. Declaring the destructor is enough; the compiler
  * writes the rest.
  */

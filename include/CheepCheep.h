@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-/* Derives from Enemy: the destructor stores this class's vtable, then the
+/* Derives from dEnemyBase_c: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x110 belonged to the
  * chain above and is inherited now.
@@ -14,12 +14,12 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "WithMeshClsn.h"
 
-struct CheepCheep : Enemy {
+struct CheepCheep : dEnemyBase_c {
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
@@ -32,11 +32,18 @@ struct CheepCheep : Enemy {
     virtual ~CheepCheep();
 
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
+
+    /* Tail padding. The field span stops short of the real size: CheepCheep_Spawn
+       calls fBase_c::operator new(0x388), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_380[0x8];      /* 0x380, to the ROM's 0x388 */
 };
 
-typedef char CheepCheep_size_must_be_0x380[sizeof(CheepCheep) == 0x380 ? 1 : -1];
+typedef char CheepCheep_size_must_be_0x388[sizeof(CheepCheep) == 0x388 ? 1 : -1];
 
 #else
 

@@ -7,9 +7,9 @@ void KingBobOmb_SetState(void *c, void *p);
 void func_02012694(unsigned int id, void *v);
 void func_ov078_02125c24(void *c, int a);
 void func_0200fa8c(void *t, int a);
-int _ZN6Player9StartTalkER9ActorBaseb(void *self, void *a, int b);
+int _ZN6Player9StartTalkER7fBase_cb(void *self, void *a, int b);
 void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int fix);
-int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *self, void *a, unsigned int b, const void *v, unsigned int d, unsigned int e);
+int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *self, void *a, unsigned int b, const void *v, unsigned int d, unsigned int e);
 
 extern int data_ov078_021270ac;
 extern int data_ov078_021270ec;
@@ -44,7 +44,7 @@ int func_ov078_02124cf4(unsigned char *thiz)
             goto done;
         if ((unsigned short)(*(unsigned short *)(other + 0x6ce) & 0x800) != 0)
             goto done;
-        if (_ZN6Player9StartTalkER9ActorBaseb(other, thiz, 1) == 0)
+        if (_ZN6Player9StartTalkER7fBase_cb(other, thiz, 1) == 0)
             goto done;
         {
             short msg = 0;
@@ -53,7 +53,7 @@ int func_ov078_02124cf4(unsigned char *thiz)
                 msg += (short)(*(int *)(other + 8) + 0x9a);
             else
                 msg = 0x95;
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
                     other, thiz, (unsigned)(int)msg, thiz + 0x5c, 0, 0) == 0)
                 goto done;
             func_02012694(0x12a, thiz + 0x74);

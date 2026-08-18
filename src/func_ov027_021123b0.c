@@ -6,8 +6,8 @@ extern void Matrix4x3_FromRotationY(struct Matrix4x3*, s16);
 extern void Matrix4x3_ApplyInPlaceToRotationX(struct Matrix4x3*, s16);
 extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3*, s32, s32, s32);
 extern void AddVec3(const Vector3*, const Vector3*, Vector3*);
-struct Actor { char pad[0x40]; Vector3 f40; char pad2[0xc]; s16 f58; s16 f5a; };
-void func_ov027_021123b0(struct Actor* c) {
+struct dActor_c { char pad[0x40]; Vector3 f40; char pad2[0xc]; s16 f58; s16 f5a; };
+void func_ov027_021123b0(struct dActor_c* c) {
     Matrix4x3_FromRotationY(&data_020a0e68, c->f5a);
     Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, c->f58);
     Matrix4x3_ApplyInPlaceToTranslation(&data_020a0e68, 0, 0, 0x50000);

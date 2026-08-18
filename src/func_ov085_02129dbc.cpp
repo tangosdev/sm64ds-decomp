@@ -2,7 +2,7 @@
 #include "common.h"
 
 extern "C" {
-extern void *_ZN5Actor13ClosestPlayerEv(void *c);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *c);
 extern s32 Vec3_HorzDist(const void *a, const void *b);
 extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern s16 Vec3_VertAngle(const void *a, const void *b);
@@ -11,7 +11,7 @@ extern void _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 rate);
 
 void func_ov085_02129dbc(char *s)
 {
-    char *p = (char *)_ZN5Actor13ClosestPlayerEv(s);
+    char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(s);
     if (p == 0)
         return;
 

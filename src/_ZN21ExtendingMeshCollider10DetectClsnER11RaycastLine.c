@@ -1,14 +1,14 @@
 typedef int s32;
 typedef s32 Fix12i;
 typedef struct { s32 x, y, z; } Vector3;
-struct Actor;
+struct dActor_c;
 
 extern char data_020a0d0c[];
 extern char data_020a0d60[];
 extern char data_020a0d1c[];
 
 extern void func_0203aa74(void* thiz, Vector3* v, Vector3* res);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* line, const Vector3* a, const Vector3* b, struct Actor* act);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* line, const Vector3* a, const Vector3* b, struct dActor_c* act);
 extern void func_02035394(void* line, void* arg);
 extern int _ZN12MeshCollider10DetectClsnER11RaycastLine(void* thiz, void* line);
 extern void func_0203aa10(void* thiz, const Vector3* v, Vector3* res);
@@ -21,7 +21,7 @@ int _ZN21ExtendingMeshCollider10DetectClsnER11RaycastLine(void* thiz, char* line
     func_0203aa74(thiz, (Vector3*)(line + 0x38), &a);
     func_0203aa74(thiz, (Vector3*)(line + 0x54), &b);
     unsigned char saved = *(unsigned char*)(line + 0x50);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(data_020a0d0c, &a, &b, 0);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(data_020a0d0c, &a, &b, 0);
     if (saved != 0)
         *(char*)(data_020a0d0c + 0x50) = 1;
     func_02035394(data_020a0d0c, line);

@@ -34,6 +34,7 @@ take over, ping the claimant first.
 | ActorBase -> ActorDerived -> Actor -> Player | andrewboudreau | 2026-08-01 | **active** - ActorBase landed as a real polymorphic class (#974); ActorDerived next, then Actor, then Player |
 | Collision chain: MeshColliderBase, MeshCollider, MovingMeshCollider, ExtendingMeshCollider, WithMeshClsn, CylinderClsn family | tangosdev | 2026-08-02 | **active** - readable conversion, same per-file byte gate as the Model chain |
 | Model chain: ModelBase, Model, CommonModel, ShadowModel, Animation, ModelAnim, BlendModelAnim, ModelAnim2 | tangosdev | 2026-08-01 | **done** - #981, #984, #985: all eight real C++ classes, every converted file byte-matched; MI reproduces (Animation second base at +0x50, thunks stay ROM-supplied). Parked: Func_ method renames, _ZTV9Animation naming, wall 6az gates 5Fix12IiE definitions |
+| CheepCheep, WaterSuction, ChainChomp, Fwoosh, MontyMoleRock, Wiggler, KingBobOmb, MrBlizzard | andrewboudreau | 2026-08-18 | **done** - 13 methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform work excluded |
 
 ## Claims
 
@@ -48,6 +49,7 @@ take over, ping the claimant first.
 | ov096 func_ov096_02137088 (0x02137088, size 0x238) | lunavyqo | 2026-08-16 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: mid-function goto for dedicated beq early-return (if-return if-converts), int[3] pos/n, no decl_common clash; API clm_d88cf8de87a8 kept |
 | ov084 _ZN6Goomba13InitResourcesEv (0x0212bc30, size 0x390) | lunavyqo | 2026-08-16 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: volatile param RMW split for folded [r4,#8], unsigned add+cmp range on 0xeeee/0xeeef, u64-mask bases at +0xb0/+0x19c; API clm_2e09d75c0eed kept |
 | ov071 func_ov071_02121ba4 (0x02121ba4, size 0xc8) | lunavyqo | 2026-08-16 | **done** — verified byte-identical (mwccarm 2004/b56); lever: nested-block materialized actor-id bool `(int)(ldrh==0xbf)` so moveq/movne+cmp survive; C rewrite from enrolled clash draft; API clm_403d310f1347 kept |
+|---|---|---|---|
 | ov005 func_ov005_020c16e4 (0x020c16e4, size 0x33c) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: ++row MultiCopy tail, dest pin `idx?dstp:dstp` / `destOff?dstp:dstp` (equal-arm) for rem-before-quot + increment order; from near-miss 136→18→16→3→0; API clm_84a56ab710d3 kept |
 | ov005 func_ov005_020c0378 (0x020c0378, size 0x354) | lunavyqo | 2026-08-13 | **active** — near-miss improved **77→44** size-exact. 0250-style S.a/S.b has + loop_invariants off + S[idx].d y. Residual pure regperm (idx r1 vs r5, has r3 vs r2) + path-B y early. API clm_3c2c2b05061d |
 | ov015 _ZN14KnockDownPlank13InitResourcesEv (0x02111960, size 0x208) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_propagation off` + u64-mask angle increment + named `zero` for vec stores; API clm_645f51ab54fa kept |

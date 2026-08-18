@@ -1,20 +1,20 @@
 #include "types.h"
-extern void *_ZN9ActorBasenwEj(unsigned);
-extern void _ZN9ActorBaseC1Ev(void *);
+extern void *_ZN7fBase_cnwEj(unsigned);
+extern void _ZN7fBase_cC1Ev(void *);
 
 extern int data_0208e4b8[];
-extern int _ZTV5Scene[];
+extern int _ZTV8dScene_c[];
 extern int data_020943c4[];
 extern int data_0208eafc[];
 extern int data_0208eacc[];
 extern int data_0208eb2c[];
 void *func_020352b4(void)
 {
-    char *p = (char *)_ZN9ActorBasenwEj(0x68);
+    char *p = (char *)_ZN7fBase_cnwEj(0x68);
     if (p) {
-        _ZN9ActorBaseC1Ev(p);
+        _ZN7fBase_cC1Ev(p);
         *(int **)p = data_0208e4b8;
-        *(int **)p = _ZTV5Scene;
+        *(int **)p = _ZTV8dScene_c;
         {
             u8 *bp = (u8 *)((int)p + 0x13);
             *bp |= 1;

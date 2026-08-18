@@ -1,7 +1,7 @@
 enum { false, true };
 
 extern void Matrix4x3_FromRotationY(void *m, short ang);
-extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *mtx, int a, int b, int d, unsigned int e);
+extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *mtx, int a, int b, int d, unsigned int e);
 extern short data_02082214[];
 extern signed char data_0209f2f8;
 extern unsigned char data_0209f2d8;
@@ -36,8 +36,8 @@ void func_ov100_02146e70(char *c) {
     t = data_0209f2d8;
     t = t == 1;
     if (t != false) {
-        _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(c, c+0x450, c+0x478, 0x118000, 0x7d0000, r6, 0xf);
+        _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(c, c+0x450, c+0x478, 0x118000, 0x7d0000, r6, 0xf);
     } else {
-        _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(c, c+0x450, c+0x478, 0x118000, belse, r6, 0xf);
+        _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(c, c+0x450, c+0x478, 0x118000, belse, r6, 0xf);
     }
 }

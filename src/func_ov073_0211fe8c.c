@@ -3,12 +3,12 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-struct ActorBase;
+struct fBase_c;
 
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, struct Vector3* v, unsigned int d);
-extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
-extern void _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
-extern int _ZN5Actor18HorzAngleToCPlayerEv(void* actor);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* actor);
+extern void _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void* actor);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
@@ -26,11 +26,11 @@ int func_ov073_0211fe8c(char* c) {
 
     *(unsigned int*)(c + 0x500) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x500), 3, 0x170, (struct Vector3*)(c + 0x74), 0);
 
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (player != 0 && *(unsigned char*)((char*)player + 0x6de) == 0) {
         int angle;
-        _ZN6Player9StartTalkER9ActorBaseb(player, c, 1);
-        angle = _ZN5Actor18HorzAngleToCPlayerEv(c);
+        _ZN6Player9StartTalkER7fBase_cb(player, c, 1);
+        angle = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
         *(short*)((char*)player + 0x8c) = 0;
         *(short*)((char*)player + 0x8e) = angle + 0x8000;
         *(short*)((char*)player + 0x90) = 0;

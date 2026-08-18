@@ -11,6 +11,7 @@
 #   python tools/rombuild_versions.py build/bad.txt --write
 func_02062428 1.2/base
 func_0206a6d0 1.2/base
+_ZN11dScMgCard_c13InitResourcesEv 1.2/base
 func_ov006_020ded00 1.2/base
 func_ov006_02111e90 1.2/base
 func_ov013_021112a8 1.2/base

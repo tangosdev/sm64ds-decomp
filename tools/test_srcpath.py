@@ -31,6 +31,26 @@ class SrcPath(unittest.TestCase):
         SP.invalidate()
         return p
 
+    def enrol(self, entries, symbols, module="arm9"):
+        """Write a `config/<module>/` symbols.txt + delinks.txt pair.
+
+        ``entries`` is [(delinks path, [(start, end)])] and ``symbols`` is
+        [(name, addr)]. The delinks file gets a module section header first, because
+        that header is an indented `.text start:.. end:..` line belonging to no entry,
+        and reading it as one would hand the first file its whole module."""
+        cfg = SP.REPO / "config" / module
+        cfg.mkdir(parents=True, exist_ok=True)
+        (cfg / "symbols.txt").write_text("".join(
+            "%s kind:function(arm,size=0x4) addr:0x%08x\n" % (n, a) for n, a in symbols))
+        lines = ["    .text       start:0x02000000 end:0x03000000 kind:code align:32", ""]
+        for rel, secs in entries:
+            lines.append(rel + ":")
+            lines.append("    complete")
+            lines += ["    .text start:0x%08x end:0x%08x" % (a, b) for a, b in secs]
+            lines.append("")
+        (cfg / "delinks.txt").write_text("\n".join(lines))
+        SP.invalidate()
+
     # --- today's flat tree -------------------------------------------------
     def test_flat_c(self):
         p = self.write("func_0205a61c.c")
@@ -231,6 +251,136 @@ class SrcPath(unittest.TestCase):
         self.write("header.h", "x")
         self.assertEqual(list(SP.iter_sources()), [])
         self.assertIsNone(SP.path_for("header"))
+
+    # --- the enrolment table: the answer the convention cannot give ---------
+    def test_merged_tu_owns_both_of_its_symbols(self):
+        """The case the whole index exists for. Neither symbol names the file."""
+        tu = self.write("actors/ActorBase_SceneNode.cpp")
+        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+                   [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac),
+                    ("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
+        self.assertEqual(SP.path_for("_ZN7fBase_c9SceneNode5ResetEv"), tu)
+        self.assertEqual(SP.path_for("_ZN7fBase_c9SceneNodeC1Ev"), tu)
+
+    def test_symbols_for_lists_a_tus_functions_in_rom_order(self):
+        """Written high-address-first in the source; ROM order is what is reported."""
+        self.write("actors/ActorBase_SceneNode.cpp")
+        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+                   [("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4),
+                    ("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac)])
+        self.assertEqual(SP.symbols_for("src/actors/ActorBase_SceneNode.cpp"),
+                         ["_ZN7fBase_c9SceneNode5ResetEv", "_ZN7fBase_c9SceneNodeC1Ev"])
+
+    def test_symbols_for_falls_back_to_the_filename(self):
+        self.write("func_0203b438.c")
+        self.assertEqual(SP.symbols_for("src/func_0203b438.c"), ["func_0203b438"])
+
+    def test_build_index_names_the_symbols_inside_a_merged_tu(self):
+        """A stem-keyed index cannot see either function; the enrolment pass adds both."""
+        self.write("actors/ActorBase_SceneNode.cpp")
+        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+                   [("_ZN7fBase_c9SceneNode5ResetEv", 0x0203b4ac),
+                    ("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
+        idx = SP.build_index()
+        self.assertEqual(idx["_ZN7fBase_c9SceneNode5ResetEv"],
+                         "src/actors/ActorBase_SceneNode.cpp")
+        self.assertEqual(idx["_ZN7fBase_c9SceneNodeC1Ev"],
+                         "src/actors/ActorBase_SceneNode.cpp")
+
+    def test_enrolment_beats_a_stale_one_function_file(self):
+        """A leftover src/<symbol>.c beside a promoted TU is a file nothing compiles.
+        Answering with it would report a match the ROM build never made."""
+        tu = self.write("actors/ActorBase_SceneNode.cpp")
+        self.write("_ZN7fBase_c9SceneNodeC1Ev.c")
+        self.enrol([("src/actors/ActorBase_SceneNode.cpp", [(0x0203b4ac, 0x0203b4dc)])],
+                   [("_ZN7fBase_c9SceneNodeC1Ev", 0x0203b4c4)])
+        self.assertEqual(SP.path_for("_ZN7fBase_c9SceneNodeC1Ev"), tu)
+        # ...and the duplicate stays visible to whoever looks for duplicates.
+        self.assertIn(SP.SRC / "_ZN7fBase_c9SceneNodeC1Ev.c",
+                      SP.paths_for("_ZN7fBase_c9SceneNodeC1Ev"))
+
+    def test_a_mods_entry_never_wins(self):
+        """rombuild_profile._stock_delinks swaps `mods/X.c:` for its src/ counterpart by
+        calling path_for on the mods stem. Answer with the mod and that swap becomes a
+        no-op, and a deliberate divergence from the cartridge ships in the stock ROM."""
+        src = self.write("Player_ScaleByCharFactor.c")
+        (SP.REPO / "mods").mkdir()
+        (SP.REPO / "mods" / "Player_ScaleByCharFactor.c").write_text("int f(void){return 1;}")
+        self.enrol([("mods/Player_ScaleByCharFactor.c", [(0x02100000, 0x02100004)])],
+                   [("Player_ScaleByCharFactor", 0x02100000)])
+        self.assertEqual(SP.path_for("Player_ScaleByCharFactor"), src)
+        self.assertNotIn("Player_ScaleByCharFactor", SP.enrolment_index())
+
+    def test_the_module_section_header_owns_nothing(self):
+        """`enrol` writes one, spanning the whole module. Read as an entry's section, it
+        would hand the first file every function in that module."""
+        self.write("func_0203b438.c")
+        self.write("other.c")
+        self.enrol([("src/func_0203b438.c", [(0x0203b438, 0x0203b4ac)])],
+                   [("func_0203b438", 0x0203b438), ("elsewhere", 0x02050000)])
+        self.assertEqual(SP.enrolment_index(),
+                         {"func_0203b438": "src/func_0203b438.c"})
+
+    def test_an_unenrolled_symbol_still_uses_the_convention(self):
+        p = self.write("func_02050000.c")
+        self.enrol([("src/other.c", [(0x0203b438, 0x0203b4ac)])],
+                   [("func_02050000", 0x02050000)])
+        self.assertEqual(SP.path_for("func_02050000"), p)
+
+    def test_an_entry_naming_a_file_that_is_gone_answers_none(self):
+        """delinks can outlive the file it names -- layout_check L1 is the gate for that.
+        Resolution must not hand back a path with nothing behind it."""
+        self.enrol([("src/vanished.c", [(0x0203b438, 0x0203b4ac)])],
+                   [("func_0203b438", 0x0203b438)])
+        self.assertIsNone(SP.path_for("func_0203b438"))
+
+    def test_invalidate_drops_the_enrolment_cache(self):
+        """enroll and `tubuild promote` both rewrite delinks mid-process."""
+        self.write("a.c")
+        self.write("b.c")
+        self.enrol([("src/a.c", [(0x02000000, 0x02000004)])], [("sym", 0x02000000)])
+        self.assertEqual(SP.path_for("sym"), SP.SRC / "a.c")
+        self.enrol([("src/b.c", [(0x02000000, 0x02000004)])], [("sym", 0x02000000)])
+        self.assertEqual(SP.path_for("sym"), SP.SRC / "b.c")
+
+    def test_no_config_at_all_is_an_empty_index_not_a_crash(self):
+        self.write("func_0203b438.c")
+        self.assertEqual(SP.enrolment_index(), {})
+        self.assertEqual(SP.path_for("func_0203b438"), SP.SRC / "func_0203b438.c")
+
+
+class EnrolmentMatchesTheTree(unittest.TestCase):
+    """Against the REAL repository, not a fixture.
+
+    Consulting the enrolment table before the filename convention is only safe because
+    the two agree everywhere today. That is a property of the checked-in tree, so it is
+    measured here rather than asserted in a docstring: the day an entry stops being
+    named after the function it holds, this fails and someone reads why."""
+
+    def test_enrolment_agrees_with_the_filename_convention(self):
+        idx = SP.enrolment_index()
+        self.assertGreater(len(idx), 10_000, "config/**/delinks.txt did not parse")
+        disagree = []
+        for symbol, rel in idx.items():
+            convention = None
+            for ext in SP.SOURCE_SUFFIXES:
+                if (SP.SRC / (symbol + ext)).is_file():
+                    convention = SP.SRC / (symbol + ext)
+                    break
+            if convention is None:
+                found = SP._scan().get(symbol, [])
+                if found:
+                    convention = sorted(
+                        found, key=lambda q: SP.SOURCE_SUFFIXES.index(q.suffix))[0]
+            if convention is None or convention.resolve() != (SP.REPO / rel).resolve():
+                disagree.append((symbol, rel, convention))
+        self.assertEqual(disagree, [], "enrolment and filename disagree -- read "
+                                       "srcpath._enrolment before changing this")
+
+    def test_no_enrolled_entry_points_outside_src(self):
+        """`mods/` is the one that exists today. Any other would be just as wrong."""
+        self.assertEqual([r for r in SP.enrolment_index().values()
+                          if not r.startswith("src/")], [])
 
 
 if __name__ == "__main__":

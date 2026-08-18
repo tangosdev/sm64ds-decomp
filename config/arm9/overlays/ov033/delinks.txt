@@ -12,7 +12,7 @@ src/_ZN9TinyCoverD0Ev.c:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/func_ov033_0211123c.c:
+src/_ZN9TinyCover15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x0211123c end:0x02111280
 

@@ -9,7 +9,7 @@ extern int _ZTV13WaterfallMist[];
 int *_ZN13WaterfallMistD0Ev(int *t)
 {
     t[0] = (int)_ZTV13WaterfallMist;
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

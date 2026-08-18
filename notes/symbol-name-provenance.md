@@ -145,9 +145,22 @@ That test is self-validating. It reads the name's parameter *count* and checks i
 the ROM. If the count were wrong the test would return nonsense — a negative implied
 parameter, or a `this` never used as one — and you would notice immediately.
 
-And empirically: **every correction so far has been to a parameter's type, never to the
-count.** `Pvjj → Pvjt` preserves arity. `PPFvPvPS_jEj → PFvPvPS_jEj` preserves arity. The
-D1/D2 corrections were identity errors, not signature errors.
+Empirically the corrections are *mostly* to a parameter's type: `Pvjj → Pvjt` preserves
+arity, `PPFvPvPS_jEj → PFvPvPS_jEj` preserves arity, and the D1/D2 corrections were
+identity errors rather than signature errors.
+
+**This note previously said the count had never been wrong. That is false, and two
+symbols in this tree disprove it** — both witnessed by a byte-matched file, not by
+inference:
+
+| symbol | name declares | tree says | witness |
+|---|---|---|---|
+| `_ZN7Clipper13Func_020156DCEv` | 0 | **5** | `src/Camera_UpdateMatrices.c` declares `(void*,int,int,int,int)` and matches the ROM |
+| `_ZN12dEnemyBase_c12KillByAttackER8dActor_c` | 1 (+`this`) | **4** | its own definition takes 4, and three call sites pass 4 |
+
+So the arity test is sound *as a test* — it reads the ROM, not the name — but the name's
+count is an input that can itself be wrong, and when the two disagree the ROM wins. Run it
+per function and treat a disagreement as a defect in the name.
 
 So the arity test is sound. What it does *not* license is inheriting a neighbour's answer:
 `ExpandingHeapAllocator::AllocateForwards` mangles `Ejj` and is an **instance** method;
@@ -161,6 +174,15 @@ codegen — load widths, argument homing, whether a call needs an extra indirect
 member declaration that reproduces the ROM has had its types *checked by the compiler
 against the ROM*. A hand-spelled `extern "C"` name has not: the string is whatever you
 typed, and the linker resolves it by address regardless.
+
+**A strictly weaker check now covers 100% of the tree: `tools/name_roundtrip.py`.** It
+synthesises each mangled name's declaration, compiles it with the pin, and reads the
+emitted symbol back — 4,428 of 4,436 round-trip. Do not quote that 99.8% as "the names are
+verified". Round-tripping proves only that the pinned compiler *can emit* the name;
+`void f(unsigned int)` and `void f(int)` both compile, and Itanium encodes neither the
+return type nor static-vs-instance. It is a floor, not a signature check. What it does buy
+is that a `MISMATCH` or `REJECTED` verdict is a hard defect regardless of who wrote the
+name, and `--check` keeps a new one from landing.
 
 `tools/langmode_audit.py` measures exactly this gap:
 

@@ -16,7 +16,7 @@ struct ToxBox {
 
 extern "C" {
 void func_ov092_02131aec(void* c);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 void func_ov092_02131a88(char* self);
 void _ZN12CylinderClsn5ClearEv(void* m);
 void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* m, Vector3* v);
@@ -40,7 +40,7 @@ extern "C" int _ZN6ToxBox8BehaviorEv(ToxBox* self) {
         }
     }
     func_ov092_02131aec(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0) {
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0) != 0) {
         func_ov092_02131a88(c);
     }
     if (*(unsigned char*)(c+0x577) == 1) {

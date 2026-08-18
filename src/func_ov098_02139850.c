@@ -8,7 +8,7 @@ extern int func_ov002_020e496c(char* c);
 extern int _ZN6Player14IsFrontSlidingEv(char* p);
 extern int _ZN6Player17LostGrabbedObjectEv(char* p);
 extern void Math_Function_0203b14c(char* dst, int a, int b, int c, int d);
-extern char* _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(char* self, char* player, const struct Vector3* v);
+extern char* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(char* self, char* player, const struct Vector3* v);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char* self);
 
 void func_ov098_02139850(char* self)
@@ -35,7 +35,7 @@ void func_ov098_02139850(char* self)
         Math_Function_0203b14c(self + 0x4f8, *(int*)((char*)data_ov098_0213bf64 + r5 * 0xc), 0x800, 0x3e8000, 4);
         Math_Function_0203b14c(self + 0x4fc, *(int*)((char*)data_ov098_0213bf68 + r5 * 0xc), 0x800, 0x3e8000, 4);
         {
-            char* res = _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(self, *(char**)(self + 0x5e4), (struct Vector3*)(self + 0x4f4));
+            char* res = _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(self, *(char**)(self + 0x5e4), (struct Vector3*)(self + 0x4f4));
             *(struct Matrix4x3*)(self + 0xf0) = *(struct Matrix4x3*)res;
         }
         *(u32*)(((int)self + 0xb0)) |= 0x4000000;

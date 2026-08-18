@@ -6,15 +6,15 @@
  *
  * Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov072).
  */
-struct Actor;
+struct dActor_c;
 
 
-extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
-extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(struct Actor* actor, const struct Vector3* pos, u32 a, int fix, u32 b, u32 c, u32 d);
+extern struct dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
+extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(struct dActor_c* actor, const struct Vector3* pos, u32 a, int fix, u32 b, u32 c, u32 d);
 
 int func_ov072_0211f280(char* self)
 {
-    struct Actor* actor;
+    struct dActor_c* actor;
     u32 id;
     int t;
     struct Vector3 pos;
@@ -22,7 +22,7 @@ int func_ov072_0211f280(char* self)
     id = *(u32*)(self + 0x170);
     if (id == 0) return 0;
 
-    actor = _ZN5Actor10FindWithIDEj(id);
+    actor = _ZN8dActor_c10FindWithIDEj(id);
     if (actor == 0) goto fail;
 
     t = (int)(*(u16*)((char*)actor + 0xc) == 0xbf);

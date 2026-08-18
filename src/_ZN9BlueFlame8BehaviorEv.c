@@ -3,11 +3,11 @@ struct Vector3 { int x, y, z; };
 
 extern u8 DecIfAbove0_Byte(u8 *p);
 extern void _ZN12CylinderClsn5ClearEv(char *c);
-extern void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void *self, const struct Vector3 *vec);
+extern void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void *self, const struct Vector3 *vec);
 extern unsigned int func_020228dc(int x, int y, int z);
 extern unsigned int func_0202293c(int x, int y, int z);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN6Player4BurnEv(void *p);
 extern void _ZN12CylinderClsn6UpdateEv(char *c);
 
@@ -28,7 +28,7 @@ int _ZN9BlueFlame8BehaviorEv(char *self)
             ((int *)&dust)[0] = ((int *)&pos)[0];
             ((int *)&dust)[1] = ((int *)&pos)[1];
             ((int *)&dust)[2] = ((int *)&pos)[2];
-            _ZN5Actor19DisappearPoofDustAtERK7Vector3(self, &dust);
+            _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(self, &dust);
         }
         return 1;
     }
@@ -55,7 +55,7 @@ int _ZN9BlueFlame8BehaviorEv(char *self)
     {
         int id = *(int *)(self + 0x108);
         if (id != 0) {
-            char *r = _ZN5Actor10FindWithIDEj(id);
+            char *r = _ZN8dActor_c10FindWithIDEj(id);
             if (r != 0) {
                 if ((int)(*(unsigned short *)(r + 0xc) == 0xbf) != 0) {
                     if ((*(int *)(self + 0x104) & 0x8000) == 0) {

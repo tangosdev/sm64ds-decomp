@@ -6,7 +6,7 @@
 typedef short s16;
 
 extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
-extern int _ZN5Actor14GetSubtractionEss(void* self, short a, short b);
+extern int _ZN8dActor_c14GetSubtractionEss(void* self, short a, short b);
 
 int func_ov060_02113404(char* c) {
   int r = 0;
@@ -22,7 +22,7 @@ int func_ov060_02113404(char* c) {
       v.z = o[2];
       ang = *(s16*)(*(char**)(c+0x3a0) + 0x8e);
       if (Vec3_HorzDist((struct Vector3*)(c+0x5c), &v) < 0x258000) {
-        if (_ZN5Actor14GetSubtractionEss(c, ang, *(s16*)(c+0x406)) > 0x6000) r = 1;
+        if (_ZN8dActor_c14GetSubtractionEss(c, ang, *(s16*)(c+0x406)) > 0x6000) r = 1;
       }
     }
   }

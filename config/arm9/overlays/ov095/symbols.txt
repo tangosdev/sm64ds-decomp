@@ -1,7 +1,7 @@
 _ZN9SeesawBobD1Ev kind:function(arm,size=0x44) addr:0x02135700
 _ZN9SeesawBobD0Ev kind:function(arm,size=0x58) addr:0x02135744
 func_ov095_0213579c kind:function(arm,size=0x3c) addr:0x0213579c
-func_ov095_021357d8 kind:function(arm,size=0xf4) addr:0x021357d8
+_ZN9SeesawBob15OnGroundPoundedER8dActor_c kind:function(arm,size=0xf4) addr:0x021357d8
 func_ov095_021358cc kind:function(arm,size=0xb0) addr:0x021358cc
 func_ov095_0213597c kind:function(arm,size=0x48) addr:0x0213597c
 _ZN9SeesawBob16CleanupResourcesEv kind:function(arm,size=0x64) addr:0x021359c4

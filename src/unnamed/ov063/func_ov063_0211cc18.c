@@ -23,11 +23,11 @@ struct Obj {
     unsigned char f156;
 };
 
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a0, unsigned int a1, unsigned int a2, const Vector3 *a3, unsigned int a4);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a0, const Vector3 *a1);
 extern int func_ov063_0211c770(void *actor, int idx);
-extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void *actor, unsigned short *snd);
+extern int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void *actor, unsigned short *snd);
 extern int data_ov063_0211e270[];
 
 void func_ov063_0211cc18(struct Obj *a)
@@ -39,7 +39,7 @@ void func_ov063_0211cc18(struct Obj *a)
     int *p144;
 
     limit = data_ov063_0211e270[a->f151];
-    other = (struct Obj *)_ZN5Actor10FindWithIDEj(a->f128);
+    other = (struct Obj *)_ZN8dActor_c10FindWithIDEj(a->f128);
     if (other != 0) {
         if (other->f155 == 0)
             return;
@@ -80,7 +80,7 @@ void func_ov063_0211cc18(struct Obj *a)
         return;
     case 3:
         if (a->f151 == 2) {
-            if (_ZN5Sound15PlaySecretSoundEP5ActorPt(a, &a->f14e) != 0) {
+            if (_ZN5Sound15PlaySecretSoundEP8dActor_cPt(a, &a->f14e) != 0) {
                 pst = (unsigned char *)(int)LAUNDER((char *)a + 0x150);
                 *pst = (unsigned char)(*pst + 1);
             }

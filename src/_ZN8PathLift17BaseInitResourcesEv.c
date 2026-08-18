@@ -1,5 +1,5 @@
 #include "types.h"
-void *_ZN9ActorBasenwEj(u32 sz);
+void *_ZN7fBase_cnwEj(u32 sz);
 void func_ov004_020b2adc(void *p);
 void func_020733a8(void *o, int a, int b, void *f1, void *f2);
 void _ZN8Particle10SysTrackerC1Ev(void *p);
@@ -15,7 +15,7 @@ void func_ov006_020c6f3c();
 
 void *_ZN8PathLift17BaseInitResourcesEv()
 {
-    char *p = (char *)_ZN9ActorBasenwEj(0x5a78);
+    char *p = (char *)_ZN7fBase_cnwEj(0x5a78);
     if (p) {
         char *e;
         char *end;

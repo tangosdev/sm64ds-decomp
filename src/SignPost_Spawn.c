@@ -10,9 +10,9 @@
 /* resolved: VT0 = _ZTV8SignPost */
 int *SignPost_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1444);
+    int *p = (int *)_ZN7fBase_cnwEj(1444);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV8SignPost;
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0x320);
         _ZN11ShadowModelC1Ev((char *)p + 0x358);

@@ -11,16 +11,16 @@
 extern "C" {
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
 extern int _ZTV6ToxBox[];
-extern int _ZTV8Platform[];
+extern int _ZTV10dBgActor_c[];
 extern void* data_020a0eac;
 void* _ZN6ToxBoxD0Ev(struct ToxBox *self) {
   *(int**)(((char*)self))=_ZTV6ToxBox;
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
   _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
-  *(int**)(((char*)self))=_ZTV8Platform;
+  *(int**)(((char*)self))=_ZTV10dBgActor_c;
   _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
   _ZN5ModelD1Ev((char*)&self->mModel);
-  _ZN5ActorD2Ev(((char*)self));
+  _ZN8dActor_cD2Ev(((char*)self));
   _ZN6Memory10DeallocateEPvP4Heap(((char*)self), data_020a0eac);
   return ((char*)self);
 }

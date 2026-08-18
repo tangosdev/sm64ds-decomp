@@ -4,7 +4,7 @@ int func_ov020_02111418(char *c);
 int _Z14ApproachLinearRsss(void*, int, int);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
 int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void*,int,int,int,unsigned);
-int _ZN5Actor9UpdatePosEP12CylinderClsn(void*,int);
+int _ZN8dActor_c9UpdatePosEP12CylinderClsn(void*,int);
 extern int data_ov020_02114aa0[];
 extern int data_ov020_02114aa8[];
 int func_ov020_02111ee0(char* c){
@@ -25,6 +25,6 @@ int func_ov020_02111ee0(char* c){
     }
     *(int*)(c+0x43c) = -0x19000;
   }
-  return _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+  return _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
 }
 }

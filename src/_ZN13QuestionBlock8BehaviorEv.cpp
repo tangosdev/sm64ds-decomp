@@ -6,11 +6,11 @@
 #include "QuestionBlock.h"
 #include "MeshColliderBase.h"
 extern "C" {
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* clsn);
 extern void func_020393a4(int* p, int v);
 extern void func_02039394(int* p, int v);
 extern void _ZN9Animation7AdvanceEv(void* a);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 }
 extern int data_0209caa0[];
 extern unsigned char data_0209f2d8;
@@ -20,7 +20,7 @@ int QuestionBlock::Behavior()
 {
     func_ov102_02149df0(((char*)this));
     if (unk_3e8 != 2) {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
         if (mPosY <= unk_3e0) mPosY = unk_3e0;
         func_ov102_02149ff0(((char*)this));
         func_ov102_02149ea4(((char*)this));
@@ -47,18 +47,18 @@ int QuestionBlock::Behavior()
         int b = (int)(data_0209f2d8 == 1);
         if (b != 0) {
             if (((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() == 0) {
-                ((MeshColliderBase *)(&mMeshCollider))->Enable((Actor *)(((char*)this)));
+                ((MeshColliderBase *)(&mMeshCollider))->Enable((dActor_c *)(((char*)this)));
             }
             goto end;
         }
     }
     if (data_0209f2f8 == 0x1c) {
-        if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0x460000, 0x46000) != 0) {
+        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0x460000, 0x46000) != 0) {
             func_ov102_02149e38(((char*)this));
         }
         goto end;
     }
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0x118000, 0x46000) != 0) {
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0x118000, 0x46000) != 0) {
         func_ov102_02149e38(((char*)this));
     }
 end:

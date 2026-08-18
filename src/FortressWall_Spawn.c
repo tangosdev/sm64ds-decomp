@@ -7,7 +7,7 @@
 /* resolved: VT = _ZTV12FortressWall */
 int *FortressWall_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(804);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV12FortressWall; }
+    int *p = (int *)_ZN7fBase_cnwEj(804);
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV12FortressWall; }
     return p;
 }

@@ -11,16 +11,16 @@ extern "C" {
 int _ZN6Player12GetTalkStateEv(void* self);
 int _Z14ApproachLinearRsss(short* cur, short target, short step);
 void _ZN7Message11PrepareTalkEv(void);
-void _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* vec, unsigned int a, unsigned int b);
+void _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* vec, unsigned int a, unsigned int b);
 void func_02012790(int a);
 int _ZN6Player18HasFinishedTalkingEv(void* self);
 void _ZN7Message7EndTalkEv(void);
 void _ZN7Message13DisplaySavingEt(unsigned short a);
 void StartMinigameMenu(unsigned char a);
-void* _ZN5Actor10FindWithIDEj(unsigned int id);
+void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 int AngleDiff(int a, int b);
-int _ZN6Player9StartTalkER9ActorBaseb(void* actor, void* self, int b);
+int _ZN6Player9StartTalkER7fBase_cb(void* actor, void* self, int b);
 void _ZN12CylinderClsn5ClearEv(void* self);
 void _ZN12CylinderClsn6UpdateEv(void* self);
 }
@@ -59,7 +59,7 @@ extern "C" int _ZN15RecRoomCupboard8BehaviorEv(char* self)
             if (_Z14ApproachLinearRsss((short*)(target + 0x8e), cur, 0x800) != 0) {
                 *(u16*)(self + 0x21a) = 0xb09;
                 _ZN7Message11PrepareTalkEv();
-                _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh(
+                _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(
                     target, self, *(s16*)(self + 0x21a), 0, 1, 0);
             }
             break;
@@ -105,7 +105,7 @@ extern "C" int _ZN15RecRoomCupboard8BehaviorEv(char* self)
             char* entry = self + (i << 6);
             if (*(int*)(entry + 0xf4) & 0x8000000) {
                 u32 id = *(u32*)(entry + 0xf8);
-                char* actor = (char*)_ZN5Actor10FindWithIDEj(id);
+                char* actor = (char*)_ZN8dActor_c10FindWithIDEj(id);
                 if (actor) {
                     int isMatch = (*(u16*)(actor + 0xc) == 0xbf);
                     if (isMatch != false) {
@@ -118,7 +118,7 @@ extern "C" int _ZN15RecRoomCupboard8BehaviorEv(char* self)
                         ang = Vec3_HorzAngle((struct Vector3*)(self + 0x5c), &apos);
                         diff = AngleDiff(ang, *(short*)(self + 0x8e));
                         if (diff < 0x4000) {
-                            if (_ZN6Player9StartTalkER9ActorBaseb(actor, self, 0) != 0) {
+                            if (_ZN6Player9StartTalkER7fBase_cb(actor, self, 0) != 0) {
                                 *(char**)(self + 0x214) = actor;
                                 break;
                             }

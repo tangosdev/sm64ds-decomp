@@ -1,7 +1,7 @@
 //cpp
 struct Animation { void Advance(); };
 struct CylinderClsn { void Clear(); void Update(); };
-struct Actor { void UpdatePos(CylinderClsn *cc); };
+struct dActor_c { void UpdatePos(CylinderClsn *cc); };
 
 extern "C" void func_0201267c(int a, void *p);
 extern "C" void func_ov071_0211f0b4(char *c);
@@ -18,7 +18,7 @@ extern "C" int func_ov071_0211fee4(char *c)
         func_0201267c(0xf0, (void *)(c + 0x74));
     }
     func_ov071_0211f0b4(c);
-    ((Actor *)c)->UpdatePos((CylinderClsn *)(c + 0x160));
+    ((dActor_c *)c)->UpdatePos((CylinderClsn *)(c + 0x160));
     func_ov071_0211f148(c, (void *)(c + 0x194));
     func_ov071_0211f29c(c);
     ((CylinderClsn *)(c + 0x160))->Clear();

@@ -8,9 +8,9 @@
 /* resolved: VT0 = _ZTV8WallSign */
 int *WallSign_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(872);
+    int *p = (int *)_ZN7fBase_cnwEj(872);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV8WallSign;
         _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x320);
     }

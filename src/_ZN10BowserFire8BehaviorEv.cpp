@@ -4,8 +4,8 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BowserFire.h"
-struct Actor;
-typedef void (Actor::*PMF)();
+struct dActor_c;
+typedef void (dActor_c::*PMF)();
 struct Entry { PMF pmf; };
 extern "C" Entry data_ov060_0211afb4[];
 extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void *p);
@@ -13,7 +13,7 @@ extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
 
 int BowserFire::Behavior()
 {
-    Actor *self = (Actor*)((char *)this);
+    dActor_c *self = (dActor_c*)((char *)this);
     *(int*)(((int)((char *)this) + 0x370)) += 1;
     (self->*data_ov060_0211afb4[unk_35c].pmf)();
     *(unsigned short*)(((int)((char *)this) + 0x374)) += 1;

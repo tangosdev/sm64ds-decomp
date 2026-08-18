@@ -8,7 +8,7 @@ extern int Vec3_Dist(const void *a, const void *b);
 extern int AngleDiff(s16 a, s16 b);
 extern int ApproachAngle(s16 *cur, s16 target, int div, int band, int maxStep);
 extern int _ZN8SaveData16HasPlayerLostCapEv(void);
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(
     void *anim, void *file, int a, int b, int speed, unsigned short flags);
 extern int func_ov062_0211b2fc(void *self);
@@ -83,7 +83,7 @@ int func_ov062_0211bd10(char *c)
 
     if (*(int *)(c + 0x44c) == 0 && *(int *)(c + 0x468) == 0) {
         if (_ZN8SaveData16HasPlayerLostCapEv() == 0) {
-            player = _ZN5Actor13ClosestPlayerEv(c);
+            player = _ZN8dActor_c13ClosestPlayerEv(c);
             if (player != 0) {
                 pp = (int *)((char *)player + 0x5c);
                 tmp = pp[0];

@@ -2,18 +2,18 @@
 #define YOSHIEGG_H
 
 #include "types.h"
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-/* daYegg_c in the ROM's RTTI. Derives from Enemy, and both witnesses agree:
- * YoshiEgg_Spawn allocates 0x42c, calls _ZN5EnemyC2Ev, stores _ZTV8YoshiEgg and
+/* daYegg_c in the ROM's RTTI. Derives from dEnemyBase_c, and both witnesses agree:
+ * YoshiEgg_Spawn allocates 0x42c, calls _ZN12dEnemyBase_cC2Ev, stores _ZTV8YoshiEgg and
  * constructs the four members below in order; _ZN8YoshiEggD1Ev destroys the same four
- * in reverse and chains to _ZN5EnemyD2Ev.
+ * in reverse and chains to _ZN12dEnemyBase_cD2Ev.
  *
- * SIZE 0x42c, the literal in the factory's ActorBase::operator new. ShadowModel ends
+ * SIZE 0x42c, the literal in the factory's fBase_c::operator new. ShadowModel ends
  * at 0x38c, so everything below that is this class's own.
  *
  * The old flat header also carried a marker at 0x350 called mAnimation. That is not a
@@ -21,7 +21,7 @@
  * the Animation base sits at +0x50, so 0x300 + 0x50 is mModelAnim's Animation
  * subobject. It disappears here because the type expresses it.
  */
-struct YoshiEgg : Enemy {
+struct YoshiEgg : dEnemyBase_c {
     MovingCylinderClsn  mMovingCylinderClsn;    /* 0x110 */
     WithMeshClsn        mWithMeshClsn;          /* 0x144 */
     ModelAnim           mModelAnim;             /* 0x300 */
@@ -58,7 +58,7 @@ struct YoshiEgg : Enemy {
     u8  unk_420;                                /* 0x420 */
     u8  unk_421[5];                             /* 0x421 */
     u8  pad_426[0x1];
-    u8  mStarSlot;                              /* 0x427 -- Actor::TrackStar's answer,
+    u8  mStarSlot;                              /* 0x427 -- dActor_c::TrackStar's answer,
                                                    the same shape as ChillBully's */
     u8  unk_428;                                /* 0x428 -- param1 >> 4 */
     u8  pad_429[0x3];

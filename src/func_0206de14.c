@@ -10,7 +10,7 @@
  * Needs mwccarm 2004/b56. Every 1.2 and 2.0 build brackets that below-sp staging
  * with `mov sp, r2` / `add sp, r2, #4` and takes a frame pointer to do it, which
  * is the same pre-2005 codegen difference recorded in notes/mwccarm-codegen.md
- * 6ai for the ActorBase::Process wrappers.
+ * 6ai for the fBase_c::Process wrappers.
  */
 typedef struct { int x, y; } Pair;
 

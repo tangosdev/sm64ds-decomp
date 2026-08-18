@@ -1,7 +1,7 @@
 #ifndef STAGE_H
 #define STAGE_H
 
-#include "Scene.h"
+#include "dScene_c.h"
 #include "Model.h"
 #include "MeshCollider.h"
 
@@ -99,11 +99,11 @@ struct SysTracker {
 typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
 }
 
-/* The playable level: ActorBase -> ActorDerived -> Scene -> Stage.
+/* The playable level: fBase_c -> dBase_c -> dScene_c -> Stage.
  *
  * The generated header this replaces named no base and re-declared the whole of
- * ActorBase inline -- uniqueID at 0x004, actorID at 0x00c, the three list nodes,
- * a pad to 0x050 -- so `Stage` and `Scene` were unrelated types even though the
+ * fBase_c inline -- uniqueID at 0x004, actorID at 0x00c, the three list nodes,
+ * a pad to 0x050 -- so `Stage` and `dScene_c` were unrelated types even though the
  * ROM has one derived from the other. Everything below 0x050 is gone from this
  * file now; it comes from the base chain, which owns it.
  *
@@ -111,29 +111,29 @@ typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1]
  * 0x02092158, vtable 0x020921c0 -- which is _ZTV5Stage -- and its single base is
  * dScene_c. It is a leaf: no record in the image names dScStage_c as a base.
  *
- * VTABLE. _ZTV5Stage is 18 slots, the same shape Scene and ActorBase have, and
+ * VTABLE. _ZTV5Stage is 18 slots, the same shape dScene_c and fBase_c have, and
  * Stage adds no virtual of its own. It overrides six functionally --
  *
  *     0  InitResources        3  CleanupResources     6  Behavior
  *     9  Render              12  OnPendingDestroy     1  BeforeInitResources
  *
- * -- plus the destructor pair at 16/17. The remaining ten still point at Scene's
- * Before/After hooks or at ActorBase.
+ * -- plus the destructor pair at 16/17. The remaining ten still point at dScene_c's
+ * Before/After hooks or at fBase_c.
  *
  * KEY FUNCTION. Slot 0 is Stage::InitResources, so declaration order matters
- * here in the way include/Actor.h warns about: whichever non-inline virtual is
+ * here in the way include/dActor_c.h warns about: whichever non-inline virtual is
  * declared first is the key function, and CW 1.2 emits the vtable group into the
  * TU that DEFINES it -- colliding with the copy the module's gap object supplies
  * from ROM data. The destructor is declared first, which is free for a derived
  * class (an override takes its base's slot wherever it is written) and pins the
  * role to ~Stage. tools/objisolate.py makes that TU eligible anyway (see
- * include/ActorDerived.h and include/Scene.h), so ~Stage is now a real method,
+ * include/dBase_c.h and include/dScene_c.h), so ~Stage is now a real method,
  * defined identically -- `Stage::~Stage() {}` -- in both src/_ZN5StageD1Ev.cpp
- * and src/_ZN5StageD0Ev.cpp. Unlike Scene, Stage does NOT need to define it
+ * and src/_ZN5StageD0Ev.cpp. Unlike dScene_c, Stage does NOT need to define it
  * inline in the class body: Stage is a leaf (no record in the image names
  * dScStage_c as a base, per DERIVATION above), so nothing derives from it that
  * would need to inline ITS destructor in turn. Stage's own destructor inlining
- * Scene's (and Scene inlining ActorDerived's) is what required Scene.h's move;
+ * dScene_c's (and dScene_c inlining dBase_c's) is what required dScene_c.h's move;
  * see the note there.
  *
  * SIZE IS DELIBERATELY NOT ASSERTED, unlike the three headers above this one.
@@ -142,12 +142,12 @@ typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1]
  * size would turn "we have not seen past 0x9bc" into "the object ends at 0x9bc".
  * Nothing needs the number either -- dScStage_c is a leaf, so no derived header
  * has to start its own fields after it. The offsets below ARE checked:
- * tools/check_header_offsets.py walks them from Scene's asserted 0x50.
+ * tools/check_header_offsets.py walks them from dScene_c's asserted 0x50.
  *
  * Field NAMES are placeholders and cannot change codegen. Offsets and widths are
  * observed.
  */
-struct Stage : Scene {
+struct Stage : dScene_c {
     Particle::SysTracker mSysTracker;  /* 0x050 */
     Model mModel;             /* 0x86c */
     u8  pad_8bc[0x60];       /* Model ends 0x8bc; MeshCollider does not start until 0x91c */

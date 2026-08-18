@@ -3,9 +3,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingCogSmall.h"
 extern "C" {
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void*);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern int _Z14ApproachLinearRsss(short* dst, short to, short step);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern int RandomIntInternal(int* seed);
@@ -18,9 +18,9 @@ extern int data_0209e650[];
 int RotatingCogSmall::Behavior()
 {
     if (data_0209f2c0[0] == 3) {
-        _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-        if (mRotationState == 0 && _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0))
-            _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+        _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+        if (mRotationState == 0 && _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0))
+            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
         return 1;
     }
 
@@ -46,8 +46,8 @@ int RotatingCogSmall::Behavior()
         }
     }
 
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-    if (mRotationState == 0 && _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+    if (mRotationState == 0 && _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     return 1;
 }

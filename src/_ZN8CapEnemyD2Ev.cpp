@@ -4,8 +4,8 @@
  *
  * The mirror of the constructor, and the second witness for the layout: one
  * vtable store, then mCapIcon at 0x164 and mModel at 0x114 torn down in reverse
- * declaration order, then Enemy::~Enemy. Every one of those is a consequence of
- * `struct CapEnemy : Enemy` and the two members that declaration types.
+ * declaration order, then dEnemyBase_c::~dEnemyBase_c. Every one of those is a consequence of
+ * `struct CapEnemy : dEnemyBase_c` and the two members that declaration types.
  *
  * The CapIcon call is written out for the same reason as in the constructor,
  * and sits in the body for the mirror-image reason: the body runs BEFORE any
@@ -13,7 +13,7 @@
  * either way.
  *
  * This is the destructor in vtable slot 16. Slot 17 is _ZN8CapEnemyD0Ev, which
- * stays as it is -- see the note in include/Enemy.h about why the inline
+ * stays as it is -- see the note in include/dEnemyBase_c.h about why the inline
  * operator delete on the immediate base is what lets a D0 reproduce at all.
  */
 #include "CapEnemy.h"

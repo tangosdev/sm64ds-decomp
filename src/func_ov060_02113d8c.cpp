@@ -4,7 +4,7 @@ typedef unsigned short u16;
 
 struct Fix12 { int v; Fix12(int a) : v(a) {} };
 
-struct Actor { int GetSubtraction(short a, short b); };
+struct dActor_c { int GetSubtraction(short a, short b); };
 struct WithMeshClsn { int IsOnGround() const; };
 
 extern "C" {
@@ -37,7 +37,7 @@ extern "C" void func_ov060_02113d8c(char *r4)
             if (*(u16 *)((r4 + 0x300) + 0xfe) > 0xa)
                 *(u8 *)(r4 + 0x423) = 3;
             if (*(u16 *)((r4 + 0x300) + 0xfe) >= 2) {
-                if (((Actor *)r4)->GetSubtraction(*(short *)(r4 + 0x406), *(short *)(r4 + 0x8e)) > 0x2000) {
+                if (((dActor_c *)r4)->GetSubtraction(*(short *)(r4 + 0x406), *(short *)(r4 + 0x8e)) > 0x2000) {
                     *(u8 *)(r4 + 0x423) = 3;
                     *(int *)(r4 + 0x448) = 0;
                 }

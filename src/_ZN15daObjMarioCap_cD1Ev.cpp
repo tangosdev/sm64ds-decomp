@@ -3,7 +3,7 @@
 /* recovered: real C++ destructor -- the compiler emits all but one line of it
  *
  * One vtable store and five teardowns. Four of them are the compiler's: the members
- * this class declares, destroyed in reverse declaration order, then Enemy.
+ * this class declares, destroyed in reverse declaration order, then dEnemyBase_c.
  *
  * The CapIcon call is the exception, and it is written out for the same reason as in
  * CapEnemy -- that type's destructor is still spelt func_ov001_020ab3a0 rather than

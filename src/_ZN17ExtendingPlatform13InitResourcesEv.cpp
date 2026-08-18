@@ -25,7 +25,7 @@ int ExtendingPlatform::InitResources()
   _ZN21ExtendingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x158, kcl, ((char*)this)+0x128, 0x1000, unk_08e, data_ov045_021125b0);
   func_020396c0(((char*)this)+0x158, 4);
   unk_1a5 = 1;
-  ((MeshColliderBase *)(((char*)this)+0x158))->Enable((Actor *)(((char*)this)));
+  ((MeshColliderBase *)(((char*)this)+0x158))->Enable((dActor_c *)(((char*)this)));
   unk_0d4 = 1;
   return 1;
 }

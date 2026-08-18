@@ -5,9 +5,9 @@
 typedef struct { int x, y, z; } Vec3;
 #define LDR(p) ((int)(p))
 
-extern void *_ZN5Actor10FindWithIDEj(u32 id);
-extern int _ZN5Actor24BumpedUnderneathByPlayerER6Player(void *thiz, void *player);
-extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void *thiz, void *clsn, void *player);
+extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
+extern int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(void *thiz, void *player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void *thiz, void *clsn, void *player);
 
 int func_ov020_021115ac(char *c)
 {
@@ -20,7 +20,7 @@ int func_ov020_021115ac(char *c)
     id = *(u32 *)(c + 0x240);
     if (id == 0)
         return 0;
-    found = (char *)_ZN5Actor10FindWithIDEj(id);
+    found = (char *)_ZN8dActor_c10FindWithIDEj(id);
     if (found == 0)
         return 0;
 
@@ -42,7 +42,7 @@ int func_ov020_021115ac(char *c)
     if ((*(u32 *)(c + 0x23c) & 0x26fe0) != 0)
         return 1;
 
-    if (_ZN5Actor24BumpedUnderneathByPlayerER6Player(c, found) != 0) {
+    if (_ZN8dActor_c24BumpedUnderneathByPlayerER6Player(c, found) != 0) {
         Vec3 *p = (Vec3 *)LDR(found + 0xa4);
         Vec3 v;
         v.z = p->z;
@@ -55,7 +55,7 @@ int func_ov020_021115ac(char *c)
         return 1;
     }
 
-    if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x21c, found) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x21c, found) != 0) {
         *(void **)(c + 0x41c) = found;
         return ~1;
     }

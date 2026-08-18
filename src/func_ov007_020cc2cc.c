@@ -10,7 +10,7 @@
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
 extern int _ZN4Heap10SetDefaultEv(int heap);
-extern void _ZN5Scene14StartSceneFadeEjjt(unsigned int a, unsigned int b, u16 c);
+extern void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int a, unsigned int b, u16 c);
 extern void StartMinigameMenu(u8 returnToRecRoom);
 
 extern char* data_0209b33c;
@@ -54,13 +54,13 @@ int func_ov007_020cc2cc(char* c)
             LoadOverlay((int)&overlay_64);
             LoadOverlay((int)&overlay_66);
         }
-        _ZN5Scene14StartSceneFadeEjjt(6, 0, 0x7fff);
+        _ZN8dScene_c14StartSceneFadeEjjt(6, 0, 0x7fff);
     } else if (result == 7) {
         StartMinigameMenu(0);
     } else if (result == 2) {
-        _ZN5Scene14StartSceneFadeEjjt(1, 0, 0x7fff);
+        _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0x7fff);
     }
 
-    _ZN5Scene9SetFadersEP15FaderBrightness(c + 0x54);
+    _ZN8dScene_c9SetFadersEP15FaderBrightness(c + 0x54);
     return 1;
 }

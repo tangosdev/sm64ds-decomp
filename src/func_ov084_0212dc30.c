@@ -6,12 +6,12 @@
 extern int _Z14ApproachLinearRiii(int *cur, int target, int step);
 extern int _ZNK9Animation12WillHitFrameEi(void *anim, int frame);
 extern void func_0201267c(unsigned int id, const struct Vector3 *v);
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern short Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern int _Z14ApproachLinearRsss(short *cur, short target, short step);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int a, const struct Vector3 *pos, const void *rot, int e, int f);
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int a, const struct Vector3 *pos, const void *rot, int e, int f);
 extern void func_ov084_0212ec04(char *c, int arg);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 void func_ov084_0212dc30(char *c)
 {
@@ -33,7 +33,7 @@ void func_ov084_0212dc30(char *c)
     }
 
     angle = *(short*)(c + 0x8e);
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     p = (int*)AT(player, 0x5c);
     v.x = p[0];
     v.y = p[1];
@@ -44,7 +44,7 @@ void func_ov084_0212dc30(char *c)
     _Z14ApproachLinearRsss((short*)(c + 0x8e), angle, 0x400);
 
     if (*(unsigned char*)(c + 0x21e) == 1) {
-        spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xfa, 0, (struct Vector3*)(c + 0x5c), (void*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
+        spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xfa, 0, (struct Vector3*)(c + 0x5c), (void*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
         if (spawned == 0) return;
 
         *(unsigned char*)(c + 0x21e) = 2;
@@ -54,7 +54,7 @@ void func_ov084_0212dc30(char *c)
         return;
     }
 
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
     return;
 
 tail:

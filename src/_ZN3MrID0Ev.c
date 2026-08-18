@@ -16,7 +16,7 @@ int *_ZN3MrID0Ev(int *t)
     _ZN11ShadowModelD1Ev((char *)t + 0x14c);
     _ZN15TextureSequenceD1Ev((char *)t + 0x138);
     _ZN9ModelAnimD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

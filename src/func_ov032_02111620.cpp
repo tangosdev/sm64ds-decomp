@@ -1,6 +1,6 @@
 //cpp
 typedef struct { int x, y, z; } Vector3;
-extern "C" void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern "C" void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern "C" int func_ov032_02111350(void *c);
 extern "C" int func_ov032_02111254(void *c);
 extern "C" void Matrix4x3_FromRotationY(void *m, short angle);
@@ -23,7 +23,7 @@ extern "C" int func_ov032_02111620(void *thiz)
     unsigned char *c = (unsigned char *)thiz;
     unsigned char *r5;
 
-    r5 = (unsigned char *)_ZN5Actor13ClosestPlayerEv(c);
+    r5 = (unsigned char *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (r5 == 0)
         return 1;
 

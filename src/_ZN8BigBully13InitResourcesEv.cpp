@@ -6,16 +6,16 @@
 /* recovered: named members + shared header, real C++ method */
 #include "BigBully.h"
 extern "C" {
-typedef struct Actor Actor;
+typedef struct dActor_c dActor_c;
 struct RaycastGround { char buf[0x50]; };
 
 extern int func_ov064_02116ec0(void* obj);
-extern int _ZN5Actor9TrackStarEjj(Actor* self, unsigned int a, unsigned int b);
+extern int _ZN8dActor_c9TrackStarEjj(dActor_c* self, unsigned int a, unsigned int b);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3* p, Actor* a);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3* p, dActor_c* a);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround* self);
-extern Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s8 areaID, s16 deathTableID);
+extern dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s8 areaID, s16 deathTableID);
 extern s16 data_02082214[];
 }
 
@@ -26,7 +26,7 @@ int BigBully::InitResources()
     *(void**)((char*)&mFileTable) = &data_ov064_0211b93c;
     saved = func_ov064_02116ec0(((char*)this));
     unk_3fc = param1 & 0xf;
-    unk_3fd = (u8)_ZN5Actor9TrackStarEjj((Actor*)((char*)this), unk_3fc, 2);
+    unk_3fd = (u8)_ZN8dActor_c9TrackStarEjj((dActor_c*)((char*)this), unk_3fc, 2);
     mSecretSoundCounter = 0;
 
     if ((param1 & 0xff00) == 0x100) {
@@ -47,7 +47,7 @@ int BigBully::InitResources()
             v.y = ty;
             v.z = tz;
         }
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, (Actor*)((char*)this));
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (dActor_c*)((char*)this));
 
         if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
             pos.y = *(int*)(rg.buf + 0x44);
@@ -57,12 +57,12 @@ int BigBully::InitResources()
         ang = 0;
         do {
             int idx = (u16)(s16)ang >> 4;
-            Actor* spawned;
+            dActor_c* spawned;
 
             pos.x = mPosX + data_02082214[idx * 2] * 500 - 0x64000;
             pos.z = mPosZ - data_02082214[idx * 2 + 1] * 500;
 
-            spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xd7, -1, &pos, (Vector3_16*)0, mAreaId, -1);
+            spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xd7, -1, &pos, (Vector3_16*)0, mAreaId, -1);
             if (spawned != 0) {
                 *(int*)((char*)spawned + 0x3fc) = uniqueID;
             } else {

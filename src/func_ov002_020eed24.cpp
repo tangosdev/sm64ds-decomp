@@ -5,7 +5,7 @@ extern "C" int func_02035638(void*);
 extern "C" void* func_0203567c(void*);
 extern "C" int _ZNK10ClsnResult9GetClsnIDEv(void*);
 
-struct Actor {
+struct dActor_c {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
     virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
     virtual void v08(); virtual void v09(); virtual void v10(); virtual void v11();
@@ -16,17 +16,17 @@ struct Actor {
     virtual void m(void* arg);  /* slot 27 = 0x6c */
 };
 
-extern "C" Actor* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern "C" dActor_c* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 
 extern "C" int func_ov002_020eed24(void* c, void* arg){
     void* r;
-    Actor* a;
+    dActor_c* a;
     if (_ZNK12WithMeshClsn8IsOnWallEv(c)
         || _ZNK12WithMeshClsn10IsOnGroundEv(c)
         || func_02035638(c)) {
         r = func_0203567c(c);
         if (_ZNK10ClsnResult9GetClsnIDEv(r) != -1) {
-            a = _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(r));
+            a = _ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(r));
             if (a) {
                 a->m(arg);
                 return 1;

@@ -1,7 +1,7 @@
 typedef int Fix12i;
 typedef short s16;
 
-extern void *_ZN5Actor13ClosestPlayerEv(void *c);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *c);
 extern Fix12i Vec3_Dist(const void *a, const void *b);
 extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
 extern void _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 step);
@@ -9,7 +9,7 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *anim, void *file, 
 extern void _ZN9Animation7AdvanceEv(void *anim);
 extern void func_ov072_02120e20(void *c);
 extern void func_ov072_02120ddc(void *c);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *c, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *c, void *clsn);
 extern void func_ov072_02120fd4(void *c, void *clsn);
 extern void func_ov072_02120f14(void *c);
 extern void func_ov072_02120e50(void *c);
@@ -27,7 +27,7 @@ int func_ov072_02121a84(void *c)
     s16 angle;
     int frame;
 
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     dist = Vec3_Dist((char *)c + 0x5c, (char *)player + 0x5c);
     switch (*(unsigned char *)((char *)c + 0x36e)) {
     case 0:
@@ -70,7 +70,7 @@ int func_ov072_02121a84(void *c)
     _ZN9Animation7AdvanceEv((char *)c + 0x124);
     func_ov072_02120e20(c);
     func_ov072_02120ddc(c);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, (char *)c + 0x160);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (char *)c + 0x160);
     func_ov072_02120fd4(c, (char *)c + 0x194);
     func_ov072_02120f14(c);
     func_ov072_02120e50(c);

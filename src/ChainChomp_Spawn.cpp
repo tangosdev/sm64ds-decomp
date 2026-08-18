@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
-void* _ZN9ActorBasenwEj(unsigned int);
-void _ZN5EnemyC2Ev(void*);
+void* _ZN7fBase_cnwEj(unsigned int);
+void _ZN12dEnemyBase_cC2Ev(void*);
 int _ZN25MovingCylinderClsnWithPosC1Ev(void*);
 int _ZN9ModelAnimC1Ev(void*);
 int _ZN11ShadowModelC1Ev(void*);
@@ -13,9 +13,9 @@ extern void _ZN11ShadowModelD1Ev();
 extern void _ZN7Vector3D1Ev();
 extern void func_0203d384();
 void* ChainChomp_Spawn(void){
-  char* c = (char*)_ZN9ActorBasenwEj(0x620);
+  char* c = (char*)_ZN7fBase_cnwEj(0x620);
   if(c){
-    _ZN5EnemyC2Ev(c);
+    _ZN12dEnemyBase_cC2Ev(c);
     *(int**)c = _ZTV10ChainChomp;
     _ZN25MovingCylinderClsnWithPosC1Ev(c+0x110);
     _ZN9ModelAnimC1Ev(c+0x150);

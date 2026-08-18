@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout:
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN3KeyD1Ev` destroys each member, and
  * `Key_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV3Key`. Everything this header used to restate below
- * 0x110 belongs to Enemy and Actor and is inherited now.
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
@@ -25,22 +25,22 @@
  *   - unk_174 = ModelAnim.file
  *
  * THE FIRST MEMBER IS AT 0x114, NOT 0x110: Key keeps four bytes of its own
- * between Enemy's end and the ModelAnim. Every other class in this batch
- * starts its members flush against Enemy.
+ * between dEnemyBase_c's end and the ModelAnim. Every other class in this batch
+ * starts its members flush against dEnemyBase_c.
  *
  * SIZE IS THE ROM'S OWN: `Key_Spawn` calls
- * `ActorBase::operator new(1136)` -- 0x470 -- and stores this class's
+ * `fBase_c::operator new(1136)` -- 0x470 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct Key : Enemy {
+struct Key : dEnemyBase_c {
     s32                          unk_110;               /* 0x110 */
     ModelAnim                    mModelAnim;            /* 0x114 */
     Model                        mModel;                /* 0x178 */
@@ -66,6 +66,7 @@ struct Key : Enemy {
     virtual ~Key();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
 
     int Behavior();
     int CleanupResources();

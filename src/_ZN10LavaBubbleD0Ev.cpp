@@ -7,8 +7,8 @@
  * is enough, because mwcc emits D2, D0 and D1 together and objisolate keeps the
  * one this file is bound to.
  *
- * The deallocation is an inline operator delete -- Enemy's, reached because
- * Enemy is this class's IMMEDIATE base -- which is why nothing below mentions a
+ * The deallocation is an inline operator delete -- dEnemyBase_c's, reached because
+ * dEnemyBase_c is this class's IMMEDIATE base -- which is why nothing below mentions a
  * heap.
  */
 #include "LavaBubble.h"

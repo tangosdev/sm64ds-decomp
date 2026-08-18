@@ -19,7 +19,7 @@ extern "C" {
 void func_0203abb0(int* a, int* b);
 void func_0203aa74(void* thiz, int* v, int* res);
 void _ZN10SphereClsnC1Ev(void* o);
-void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(void* o, void* v, int r, void* a);
+void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* o, void* v, int r, void* a);
 void func_02037940(void* p, int v);
 void func_02035394(void* o, void* r);
 int _ZN12MeshCollider10DetectClsnER10SphereClsn(void* o, void* s);
@@ -59,7 +59,7 @@ extern "C" int _ZN21ExtendingMeshCollider10DetectClsnER10SphereClsn(char* self, 
     radius2 = FMUL(*(int*)(sphere + 0xec), scale);
 
     _ZN10SphereClsnC1Ev(&loc);
-    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(&loc, v2, radius1, 0);
+    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, v2, radius1, 0);
     loc.f_ec = radius2;
     func_02037940(&loc, *(u8*)(sphere + 0x70));
     func_02035394(&loc, sphere);

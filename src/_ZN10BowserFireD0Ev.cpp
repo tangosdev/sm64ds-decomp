@@ -2,11 +2,11 @@
 // @symbol _ZN10BowserFireD0Ev
 /* recovered: real C++ deleting destructor -- the compiler emits the whole body
  *
- * D0 is vtable slot 1 here (BowserFire's chain starts at Enemy): destroy, then
+ * D0 is vtable slot 1 here (BowserFire's chain starts at dEnemyBase_c): destroy, then
  * return the object to the actor heap. The hand-written version spelled that out --
- * store the vtable, call the three member destructors, chain to Enemy, call
+ * store the vtable, call the three member destructors, chain to dEnemyBase_c, call
  * Memory::Deallocate. All of it comes from the same `~BowserFire()` the D1 file
- * declares; the deallocation is the inline Enemy::operator delete, which is why
+ * declares; the deallocation is the inline dEnemyBase_c::operator delete, which is why
  * nothing here mentions the heap.
  *
  * The identical body in both files is not duplication: D1 and D0 are two of the

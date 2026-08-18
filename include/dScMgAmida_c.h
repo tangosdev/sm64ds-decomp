@@ -75,7 +75,7 @@ typedef char dScMgAmida_c_Piece_size_must_be_0x18[sizeof(dScMgAmida_c_Piece) == 
    assumed, that calling it as a normal `this->Unk36()` does NOT reproduce
    the ROM: it compiled Render 0xc bytes larger (0x2ac vs 0x2a0), because
    mwcc's own compiled slot for Unk36 (appended after dScMgBase_c's
-   compiler-visible virtuals, which stop at Scene/ActorBase's own count --
+   compiler-visible virtuals, which stop at dScene_c/fBase_c's own count --
    dScMgBase_c.h leaves slots 18-35 undeclared) does NOT land on true ROM
    slot 36 the way it accidentally does for a class's first-and-only new
    slot when that slot is 18 (dScMgCoin_c's OnYoshiTryEat, etc.) -- Amida's
@@ -148,7 +148,7 @@ typedef char dScMgAmida_c_Piece_size_must_be_0x18[sizeof(dScMgAmida_c_Piece) == 
    stay inside a pad, same discipline as every prior sibling. The class's
    true allocation size, 0x53fc, is independently confirmed (not just the
    last-named-field's rounded end) by the untouched constructor's own
-   `_ZN9ActorBasenwEj(0x53fc)` call (src/func_ov006_020d5974.cpp), which
+   `_ZN7fBase_cnwEj(0x53fc)` call (src/func_ov006_020d5974.cpp), which
    also independently corroborates all four destroyed-array offsets/sizes
    via its own construction-side func_020733a8 calls. */
 struct dScMgAmida_c : dScMgBase_c {

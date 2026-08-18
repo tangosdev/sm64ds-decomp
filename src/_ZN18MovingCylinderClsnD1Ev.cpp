@@ -8,7 +8,7 @@
  * come out of `struct MovingCylinderClsn : CylinderClsn` and `virtual ~MovingCylinderClsn()` in the
  * header, so there is nothing left to write.
  *
- * The one member is a back-pointer to the owning Actor -- not owned, and with
+ * The one member is a back-pointer to the owning dActor_c -- not owned, and with
  * no destructor -- so the ROM's 0x24 bytes are the vtable store and the base
  * call.
  */

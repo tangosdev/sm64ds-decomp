@@ -1,7 +1,7 @@
 extern unsigned char NumStars(void);
 extern short GetAngleToCamera(int i);
 extern void LoadLevel(int a, int b, int c, int d, int e);
-extern void _ZN5Scene20SetAndStopColorFaderEv(void);
+extern void _ZN8dScene_c20SetAndStopColorFaderEv(void);
 extern void func_02012790(int a);
 
 extern short data_0209f5e8;
@@ -15,7 +15,7 @@ int func_ov002_020cac60(char *self)
         angle = GetAngleToCamera(*(unsigned char *)(self + 0x6d8));
         if (ang <= 0x1c00 && angle >= -0x1000 && angle <= 0x1000) {
             LoadLevel(0x1f, 0, 1, 0, 0xe);
-            _ZN5Scene20SetAndStopColorFaderEv();
+            _ZN8dScene_c20SetAndStopColorFaderEv();
             *(short *)((char *)&data_0209f5e8 + 0xc) = 0x7fff;
             func_02012790(0x1e);
             return 1;

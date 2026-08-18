@@ -15,11 +15,13 @@
  * 0x3000 by SaveSnapshot and zeroed by RestoreInitial and the constructor,
  * belongs to the BASE -- it sits below 0x34. Migrating this class is what
  * turned it up: the base header used to call bytes 0x31-0x33 padding, and
- * they are not padding (11 files touch 0x31, 43 touch 0x32). That is fixed
- * in cMgSmartball_object_c.h now, where the contested signedness is
- * recorded. This class still reaches the byte with an explicit
- * `(char*)this + 0x32` cast rather than the base's name, because the name's
- * type is not yet settled and the cast states exactly what the ROM does.
+ * they are not padding (11 files touch 0x31, 43 touch 0x32). The base header
+ * now declares all three as u8, because migrating cMgSmartball_board_c
+ * showed the region has no single type -- three children read the same three
+ * bytes three incompatible ways, and this class's signed 16-bit angle at
+ * 0x32-0x33 is one of them. The explicit `(char*)this + 0x32` cast stays for
+ * exactly that reason: it states this reader's view without asserting it is
+ * the region's type.
  *
  * THE TAIL FROM 0x45 TO 0x87 IS AN EXPLICIT PAD, and it is UNMODELLED, NOT
  * UNREAD. func_ov006_0210d93c -- a free helper called from both

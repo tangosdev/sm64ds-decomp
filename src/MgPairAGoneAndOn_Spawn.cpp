@@ -1,5 +1,5 @@
 //cpp
-extern "C" void* _ZN9ActorBasenwEj(unsigned int);
+extern "C" void* _ZN7fBase_cnwEj(unsigned int);
 extern "C" void func_ov004_020b2adc(void*);
 extern "C" void _ZN8Particle10SysTrackerC1Ev(void*);
 extern "C" void func_ov006_020c1d80(void*);
@@ -9,7 +9,7 @@ extern int _ZTV14dScMgMCarlo2_c;
 extern "C" void func_ov006_020f8ff0(void);
 extern "C" void func_ov006_020fa740(void);
 extern "C" void* MgPairAGoneAndOn_Spawn(void){
-  char* p = (char*)_ZN9ActorBasenwEj(0x5930);
+  char* p = (char*)_ZN7fBase_cnwEj(0x5930);
   if (p) {
     func_ov004_020b2adc(p);
     *(int*)p = (int)&_ZTV19dScMgSingle3DBase_c;

@@ -8,9 +8,9 @@
 /* resolved: VT0 = _ZTV10SlidingBox */
 int *SlidingBox_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1272);
+    int *p = (int *)_ZN7fBase_cnwEj(1272);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV10SlidingBox;
         _ZN12WithMeshClsnC1Ev((char *)p + 0x324);
     }

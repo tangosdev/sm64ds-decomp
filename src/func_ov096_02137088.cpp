@@ -6,10 +6,10 @@ extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern s32 Vec3_HorzDist(const void *a, const void *b);
 extern s32 Vec3_Dist(const void *a, const void *b);
 extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const void *v, s32 e);
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern void _Z14ApproachLinearRsss(s16 *v, s16 target, s16 step);
 extern s32 func_ov002_020de328(void *player);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern s32 _ZNK12WithMeshClsn8IsOnWallEv(void *p);
 extern void *_ZNK12WithMeshClsn13GetWallResultEv(void *p);
@@ -44,7 +44,7 @@ void func_ov096_02137088(void *self)
 
     *(s32 *)(c + 0x98) = 0x14000;
 
-    player = (char *)_ZN5Actor13ClosestPlayerEv(c);
+    player = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (player == 0)
         goto null_player;
 
@@ -85,7 +85,7 @@ cont:
         *(s32 *)(c + 0x35c) = 2;
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
     WithMeshClsn_UpdateContinuous_Veneer(c + 0x108);
     if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x108) != 0) {
         void *wr = _ZNK12WithMeshClsn13GetWallResultEv(c + 0x108);

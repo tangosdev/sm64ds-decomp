@@ -11,7 +11,7 @@
  */
 extern "C" {
 extern void func_020393c4(int* p, int v);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 extern int _Z14ApproachLinearRiii(int* r, int t, int step);
 extern u16 DecIfAbove0_Short(u16* p);
 extern int RandomIntInternal(int* seed);
@@ -28,7 +28,7 @@ int TtcConveyorBeltLarge::Behavior()
 {
     if (data_0209f2c0 == 3) {
         func_020393c4((int*)((char*)&mMeshCollider), 0);
-        _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0);
+        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0);
     } else {
         if (((unk_0b0 & 8) ? 1 : 0) == 0) {
             if (func_020393bc((int*)((char*)&mMeshCollider)) == 0) {
@@ -57,7 +57,7 @@ int TtcConveyorBeltLarge::Behavior()
             }
         }
 
-        _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0);
+        _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0);
     }
 
     func_ov065_0211a550(((char*)this));

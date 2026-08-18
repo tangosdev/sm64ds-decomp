@@ -12,7 +12,7 @@
  * the ov006 global at 0x02142184, not anything on the object. That is why the
  * pre-migration file could be spelled `int func_ov006_020edffc(void)` and still
  * match: the ROM leaves r0 untouched, so a receiver it never reads costs nothing.
- * The signature has to be ActorBase::CleanupResources's, and it now is. */
+ * The signature has to be fBase_c::CleanupResources's, and it now is. */
 
 extern "C" void _ZN13SharedFilePtr7ReleaseEv(void *p);
 extern "C" void func_ov004_020ad90c(void);

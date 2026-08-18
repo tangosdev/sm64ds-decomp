@@ -9,8 +9,8 @@ extern "C" {
 int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int d);
 void func_ov095_021358cc(void* c, void* a, void* b, int d, int e, int f, int g);
 void func_ov095_0213597c(char *t);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 }
 
 int SeesawBob::Behavior()
@@ -36,8 +36,8 @@ int SeesawBob::Behavior()
     if (mAngleX > 0x2000) mAngleX = 0x2000;
     if (mAngleX < -0x2000) mAngleX = -0x2000;
     func_ov095_0213597c(((char*)this));
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0)) {
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0)) {
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     }
     unk_326 = 0;
     return 1;

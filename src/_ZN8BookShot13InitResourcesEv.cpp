@@ -3,7 +3,7 @@
 // @symbol _ZN8BookShot13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "BookShot.h"
-struct Actor; struct Vector3; struct Vector3_16; struct BMD_File;
+struct dActor_c; struct Vector3; struct Vector3_16; struct BMD_File;
 /* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
    deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 
@@ -12,9 +12,9 @@ extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* fp);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* fp);
 extern void LoadBlueCoinModel(void* c);
 extern int _ZN11ShadowModel12InitCylinderEv(char* self);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(char* self, struct Actor* a, int r, int h, struct Vector3_16* rot, int f);
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(char* self, struct Actor* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
+extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
 }
 
 extern SharedFilePtr data_ov020_02114aa0;
@@ -38,12 +38,12 @@ int BookShot::InitResources()
     if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
         return 0;
 
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x25c, (struct Actor*)((char*)this), 0x32000, 0x32000, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x25c, (struct dActor_c*)((char*)this), 0x32000, 0x32000, 0, 0);
 
     unk_438 = 0;
     unk_43c = 0;
     unk_440 = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(((char*)this)+0x21c, (struct Actor*)((char*)this), (struct Vector3*)((char*)&unk_438), 0x19000, 0x32000, 0x200001, 0);
+    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x21c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&unk_438), 0x19000, 0x32000, 0x200001, 0);
 
     unk_418 = 0;
     unk_41c = 0;

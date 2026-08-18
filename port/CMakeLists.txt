@@ -389,7 +389,7 @@ endif()
 # Gate 9: the actor framework -- ArrowSignRight's full lifecycle.
 # One .c file carries C++ syntax (mwccarm accepted it); hostgen's
 # emit-as-cpp with extern "C" wrap makes it legal.
-set(GATE9_SYMS _ZN9ActorBase21AfterCleanupResourcesEj)
+set(GATE9_SYMS _ZN7fBase_c21AfterCleanupResourcesEj)
 set(GATE9_GEN "")
 foreach(sym IN LISTS GATE9_SYMS)
     if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")

@@ -1,12 +1,12 @@
 //cpp
 // @symbol _ZN4ExitD1Ev
 
-struct Actor {
-    virtual ~Actor();
+struct dActor_c {
+    virtual ~dActor_c();
 };
 
 
-struct Exit : Actor {
+struct Exit : dActor_c {
     virtual ~Exit();
 };
 

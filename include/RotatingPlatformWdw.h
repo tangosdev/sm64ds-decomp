@@ -5,9 +5,9 @@
 
 /* Wet-Dry World's spinning disc.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjKaitendai_c, which derives from
- * Platform, and the difference is in the bytes rather than only in the RTTI: its
- * destructor stores THREE vptrs -- its own, daObjKaitendai_c's, then Platform's.
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjKaitendai_c, which derives from
+ * dBgActor_c, and the difference is in the bytes rather than only in the RTTI: its
+ * destructor stores THREE vptrs -- its own, daObjKaitendai_c's, then dBgActor_c's.
  * A one-level chain emits two.
  *
  *   _ZTI15daObjWc_Obj07_c  ov029 0x02113fc8
@@ -16,7 +16,7 @@
  *   kind  __si_class_type_info, ONE base, subobject offset 0
  *   base  daObjKaitendai_c, ov002 0x021091ac
  *
- * NO FIELDS OF ITS OWN: RotatingPlatformWdw_Spawn passes 800 = 0x320 = sizeof(Platform).
+ * NO FIELDS OF ITS OWN: RotatingPlatformWdw_Spawn passes 800 = 0x320 = sizeof(dBgActor_c).
  * It overrides slots 0 and 3, which the base leaves null.
  */
 

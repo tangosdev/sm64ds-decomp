@@ -11,7 +11,7 @@ typedef struct { int x, y, z; } Vector3i;
 
 extern void _ZN13RaycastGroundC1Ev(void *self);
 extern int _ZN6Player12Unk_020c9e5cEh(void *self, unsigned char state);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *act);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void func_ov002_020c16ec(void *o, void *s);
 extern void _ZN10ClsnResultD1Ev(void *self);
@@ -59,7 +59,7 @@ void func_ov002_020c14b8(void *arg0)
         pos.y = y;
         pos.z = z;
     }
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &pos, c);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, c);
     if (_ZN13RaycastGround10DetectClsnEv(rg)) {
         int *dst = &tmp.f04;
         *(Pair2i *)dst = *(Pair2i *)(rg + 0x14);
@@ -83,7 +83,7 @@ void func_ov002_020c14b8(void *arg0)
     _ZN4BgCh19StartDetectingWaterEv(rg);
     _ZN4BgCh19StartDetectingToxicEv(rg);
     _ZN4BgCh21StopDetectingOrdinaryEv(rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &pos, c);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, c);
     if (_ZN13RaycastGround10DetectClsnEv(rg)) {
         if (SurfaceInfo_TestFlag0x20((int *)(rg + 0x14)) != 0) {
             *(int *)(c + 0x64c) = *(int *)(rg + 0x44);

@@ -5,7 +5,7 @@ typedef int Fix12;
 struct Vector3 { Fix12 x, y, z; };
 struct Ent { int f0; int f4; };
 extern void func_0201267c(unsigned int a, void* p);
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void* self, const struct Vector3* v, Fix12 f);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void* self, const struct Vector3* v, Fix12 f);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12 x, Fix12 y, Fix12 z);
 extern struct Ent *data_ov079_021275ec[];
 extern unsigned int data_0209b454;
@@ -51,7 +51,7 @@ void func_ov079_02125504(char *c)
         v[1].x = *(Fix12 *)(c + 0x5c);
         v[1].y = *(Fix12 *)(c + 0x60);
         v[1].z = *(Fix12 *)(c + 0x64);
-        _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, &v[1], 0x320000);
+        _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &v[1], 0x320000);
     }
 
     {

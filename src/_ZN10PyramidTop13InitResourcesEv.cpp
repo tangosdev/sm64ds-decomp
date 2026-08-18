@@ -12,7 +12,7 @@ extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
 extern void func_020393d4(void* p, void* v);
 extern void _ZN5Event8ClearBitEj(unsigned int n);
-extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 }
 
 int PyramidTop::InitResources()
@@ -24,8 +24,8 @@ int PyramidTop::InitResources()
     void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov024_02113960);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this) + 0x124, mc, ((char*)this) + 0x370, 0x199, mAngleY, data_ov024_021129f0);
-    func_020393d4(((char*)this) + 0x124, (void*)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
-    ((MeshColliderBase *)(((char*)this) + 0x124))->Enable((Actor *)(((char*)this)));
+    func_020393d4(((char*)this) + 0x124, (void*)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    ((MeshColliderBase *)(((char*)this) + 0x124))->Enable((dActor_c *)(((char*)this)));
     unk_3a0 = mPosX;
     unk_3a4 = mPosY;
     unk_3a8 = mPosZ;

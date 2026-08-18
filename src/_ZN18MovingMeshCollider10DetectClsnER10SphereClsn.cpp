@@ -54,7 +54,7 @@ typedef struct {
 extern "C" {
 extern void _ZN10SphereClsnC1Ev(void* o);
 extern void func_02039e48(void* m, void* v, void* c);
-extern void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(void* o, void* v, int r, void* a);
+extern void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* o, void* v, int r, void* a);
 extern void func_02037940(void* p, int v);
 extern void func_02035394(void* o, void* r);
 extern void func_02037a04(void* o, void* d1, void* d2);
@@ -80,7 +80,7 @@ int MovingMeshCollider::DetectClsn(SphereClsn & sphere_)
 
     _ZN10SphereClsnC1Ev(&loc);
     func_02039e48(this, &sphere->pos, pos);
-    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(&loc, pos,
+    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, pos,
         FMUL(*(int*)&sphere->radius, unk_164), 0);
     loc.f_ec = FMUL(sphere->unk_0ec, unk_164);
     func_02037940(&loc, sphere->flags);

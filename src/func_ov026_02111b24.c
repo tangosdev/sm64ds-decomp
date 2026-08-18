@@ -1,13 +1,13 @@
 typedef short s16;
 typedef struct { int x, y, z; } Vec3;
 
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(Vec3* in, void* m, Vec3* out);
 extern void _Z15ApproachLinear2Rsss(s16* v, s16 target, s16 step);
 extern void _Z14ApproachLinearRiii(int* v, int target, int step);
 extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(Vec3* v, Vec3* target, int step);
-extern int _ZN5Actor18HorzAngleToCPlayerEv(void* self);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
 extern void KillPlayer(void);
 
 extern char data_020a0e68;
@@ -26,7 +26,7 @@ int func_ov026_02111b24(char* self)
     v2.y = 0;
     v2.z = 0;
     v1.z = *(int*)(self + 0x198);
-    player = (char*)_ZN5Actor13ClosestPlayerEv(self);
+    player = (char*)_ZN8dActor_c13ClosestPlayerEv(self);
     if (player) {
         Matrix4x3_FromRotationY(&data_020a0e68, *(s16*)(self + 0x1b4));
         MulVec3Mat4x3(&v1, &data_020a0e68, &v2);
@@ -48,7 +48,7 @@ int func_ov026_02111b24(char* self)
         *(int*)(player + 0x60) = *(int*)(self + 0x1a0);
         *(int*)(player + 0x64) = *(int*)(self + 0x1a4);
         {
-            int ang = _ZN5Actor18HorzAngleToCPlayerEv(self) + 0x8000;
+            int ang = _ZN8dActor_c18HorzAngleToCPlayerEv(self) + 0x8000;
             *(s16*)(player + 0x8c) = -0x2000;
             *(s16*)(player + 0x8e) = ang;
             *(s16*)(player + 0x90) = 0;

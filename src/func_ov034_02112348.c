@@ -5,11 +5,11 @@
 #include "common.h"
 extern void Vec3_Sub(void* out, void* a, void* b);
 extern int LenVec3(void* v);
-extern char* _ZN5Actor13ClosestPlayerEv(void* c);
+extern char* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern void func_ov034_021125b8(void* c, int i);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern int RandomIntInternal(int* seed);
-extern short _ZN5Actor18HorzAngleToCPlayerEv(void* c);
+extern short _ZN8dActor_c18HorzAngleToCPlayerEv(void* c);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
@@ -27,7 +27,7 @@ void func_ov034_02112348(char* c)
 
     Vec3_Sub(&v, c + 0x5c, c + 0x8cc);
     len = LenVec3(&v);
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (*(int*)(player + 0x60) > *(int*)(c + 0x60) + 0x12c000) {
         func_ov034_021125b8(c, 1);
         return;
@@ -38,7 +38,7 @@ void func_ov034_02112348(char* c)
         if (r & 1) {
             *(short*)(c + 0x8d8) = (short)((r & 0xf) << 0xc);
         } else {
-            *(short*)(c + 0x8d8) = _ZN5Actor18HorzAngleToCPlayerEv(c);
+            *(short*)(c + 0x8d8) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
         }
         *(unsigned char*)(c + 0x8da) = data_ov034_0211433c[*(unsigned char*)(c + 0x8db)];
     }
