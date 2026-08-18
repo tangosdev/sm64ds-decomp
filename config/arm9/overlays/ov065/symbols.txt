@@ -103,14 +103,14 @@ func_ov065_0211aa38 kind:function(arm,size=0x94) addr:0x0211aa38
 func_ov065_0211aacc kind:function(arm,size=0x14) addr:0x0211aacc
 TtcConveyorBeltLarge_Spawn kind:function(arm,size=0x40) addr:0x0211aae0
 TtcConveyorBeltSmall_Spawn kind:function(arm,size=0x40) addr:0x0211ab20
-func_ov065_0211ab60 kind:function(arm,size=0x4c) addr:0x0211ab60
-func_ov065_0211abac kind:function(arm,size=0x60) addr:0x0211abac
+_ZN16daObjCtMecha05_cD1Ev kind:function(arm,size=0x4c) addr:0x0211ab60
+_ZN16daObjCtMecha05_cD0Ev kind:function(arm,size=0x60) addr:0x0211abac
 func_ov065_0211ac0c kind:function(arm,size=0xf8) addr:0x0211ac0c
-func_ov065_0211ad04 kind:function(arm,size=0x44) addr:0x0211ad04
-func_ov065_0211ad48 kind:function(arm,size=0x28) addr:0x0211ad48
+_ZN16daObjCtMecha05_c16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x0211ad04
+_ZN16daObjCtMecha05_c6RenderEv kind:function(arm,size=0x28) addr:0x0211ad48
 func_ov065_0211ad70 kind:function(arm,size=0x98) addr:0x0211ad70
-func_ov065_0211ae08 kind:function(arm,size=0x3cc) addr:0x0211ae08
-func_ov065_0211b1d4 kind:function(arm,size=0x154) addr:0x0211b1d4
+_ZN16daObjCtMecha05_c8BehaviorEv kind:function(arm,size=0x3cc) addr:0x0211ae08
+_ZN16daObjCtMecha05_c13InitResourcesEv kind:function(arm,size=0x154) addr:0x0211b1d4
 TTC_MovingBar_Spawn kind:function(arm,size=0x38) addr:0x0211b328
 _ZN13TTC_MovingBarD1Ev kind:function(arm,size=0x4c) addr:0x0211b360
 _ZN13TTC_MovingBarD0Ev kind:function(arm,size=0x60) addr:0x0211b3ac
@@ -241,7 +241,7 @@ data_ov065_0211d26c kind:data(any) addr:0x0211d26c
 _ZTI16daObjCtMecha05_c kind:data(any) addr:0x0211d270
 _ZTS16daObjCtMecha05_c kind:data(any) addr:0x0211d27c
 TTC_MovingBar_SpawnInfo kind:data(any) addr:0x0211d290 ambiguous
-data_ov065_0211d2b4 kind:data(any) addr:0x0211d2b4
+_ZTV16daObjCtMecha05_c kind:data(any) addr:0x0211d2b4
 data_ov065_0211d334 kind:data(any) addr:0x0211d334
 _ZTI18daObjCtKaitendai_c kind:data(any) addr:0x0211d338
 _ZTS18daObjCtKaitendai_c kind:data(any) addr:0x0211d344
