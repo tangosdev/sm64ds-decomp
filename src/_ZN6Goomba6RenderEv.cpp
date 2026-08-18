@@ -25,14 +25,14 @@ int Goomba::Render()
     int locked;
     volatile Vector3 backup;
 
-    locked = (unk_0b0 & 0x40000) != 0;
+    locked = (mFlags & 0x40000) != 0;
     if (locked || unk_111 != 0) return 1;
 
     backup.x = mScaleX;
     backup.y = mScaleY;
     backup.z = mScaleZ;
 
-    if (mDeathType == 1) {
+    if (mDeathState == 1) {
         mScaleX = (int)(((long long)mScaleX * data_ov084_02130258[mGoombaType] + 0x800) >> 12);
         mScaleY = (int)(((long long)mScaleY * data_ov084_02130258[mGoombaType] + 0x800) >> 12);
         mScaleZ = (int)(((long long)mScaleZ * data_ov084_02130258[mGoombaType] + 0x800) >> 12);
