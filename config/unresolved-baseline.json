@@ -1,5 +1,5 @@
 {
- "eligible": 11031,
+ "eligible": 11037,
  "unresolved": {
   "arm9:0x02017848": {
    "name": "_ZN5FaderD0Ev",
@@ -83,12 +83,6 @@
     "overlay_66"
    ]
   },
-  "arm9:0x0203b4dc": {
-   "name": "_ZN4cstd5atan2E5Fix12IiES1_",
-   "missing": [
-    "func_01ff98f4"
-   ]
-  },
   "arm9:0x02044b30": {
    "name": "func_02044b30",
    "missing": [
@@ -109,42 +103,11 @@
     "func_00000600"
    ]
   },
-  "arm9:0x0206ece0": {
-   "name": "func_0206ece0",
-   "missing": [
-    "func_01ff9e2c"
-   ]
-  },
-  "arm9:0x0206f46c": {
-   "name": "func_0206f46c",
-   "missing": [
-    "_deq"
-   ]
-  },
-  "arm9:0x020708b4": {
-   "name": "func_020708b4",
-   "missing": [
-    "_deq"
-   ]
-  },
-  "arm9:0x02070c68": {
-   "name": "func_02070c68",
-   "missing": [
-    "func_01ff9d40"
-   ]
-  },
   "ov002:0x020bd664": {
    "name": "func_ov002_020bd664",
    "missing": [
     "_ZGVtable$8",
     "table$8"
-   ]
-  },
-  "ov002:0x020dc560": {
-   "name": "func_ov002_020dc560",
-   "missing": [
-    "func_01ff98f4",
-    "func_01ff99a4"
    ]
   },
   "ov002:0x020ec670": {
