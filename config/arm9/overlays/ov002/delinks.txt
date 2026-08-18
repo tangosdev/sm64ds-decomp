@@ -1080,7 +1080,7 @@ src/_ZN13WaterfallMistD1Ev.cpp:
     complete
     .text start:0x020b6e08 end:0x020b6e2c
 
-src/_ZN13WaterfallMistD0Ev.c:
+src/_ZN13WaterfallMistD0Ev.cpp:
     complete
     .text start:0x020b6e2c end:0x020b6e64
 
@@ -4985,7 +4985,7 @@ src/_ZN12EnemySpawnerD1Ev.cpp:
     complete
     .text start:0x020f1670 end:0x020f1694
 
-src/_ZN12EnemySpawnerD0Ev.c:
+src/_ZN12EnemySpawnerD0Ev.cpp:
     complete
     .text start:0x020f1694 end:0x020f16cc
 
