@@ -24,9 +24,9 @@
  * FIVE DESCENDANTS, more than any other class in this series:
  * daObjBk_Ukisima_c (RotatingPlatformWf), daObjFl_Koma_D_c (RotatingPlatformLll),
  * daObjWc_Obj07_c (RotatingPlatformWdw), daObjRc_Kaitendai_c (RotatingPlatformRr)
- * and daObjKm3_Kaitendai_c (RickshawBs). Each one's destructor stores this class's
- * vtable between its own and _ZTV10dBgActor_c, which is the same fact the RTTI
- * records, arrived at from the other direction.
+ * and daObjKm3_Kaitendai_c (include/daObjKm3_Kaitendai_c.h). Each one's destructor
+ * stores this class's vtable between its own and _ZTV10dBgActor_c, which is the
+ * same fact the RTTI records, arrived at from the other direction.
  *
  * NO FIELDS, and that is measured rather than assumed. Its own Behavior
  * (ov002 0x020b6718, now `_ZN16daObjKaitendai_c8BehaviorEv`) reads this+0x94,
@@ -36,14 +36,14 @@
  * the Model at 0xd4. Its own destructor destroys only dBgActor_c's two members. And
  * all five factories -- RotatingPlatformWf_Spawn, RotatingPlatformLll_Spawn,
  * RotatingPlatformWdw_Spawn, RotatingPlatformRr_Spawn and `func_ov047_021113bc`,
- * which is RickshawBs's real factory -- pass 800 = 0x320 to
+ * which is daObjKm3_Kaitendai_c's real factory -- pass 800 = 0x320 to
  * fBase_c::operator new, which is sizeof(dBgActor_c) exactly. There is no room for
  * a field anywhere in this class or in any of the five leaves.
  *
  * NOT RickshawBs_Spawn. That function allocates 816 and builds
- * daObjKm3_Kurumajiku_c; the ov047 "Bs" names are crossed, which #1521 recorded in
- * include/RickshawPlatformBs.h. Untangling them is a config change and its own
- * piece of work.
+ * daObjKm3_Kurumajiku_c; the ov047 "Bs" names were crossed -- daObjKm3_Kaitendai_c
+ * itself was misnamed RickshawBs until the rename in include/daObjKm3_Kaitendai_c.h,
+ * settled by vtable evidence rather than by either factory's own name.
  */
 
 #ifdef __cplusplus
