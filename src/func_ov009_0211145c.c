@@ -10,10 +10,10 @@
  * 021116ec avoids by not calling after the stores).
  */
 
-extern char* _ZN5Actor13ClosestPlayerEv(void* self);
+extern char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int Vec3_Sub(struct Vector3* dst, void* a, void* b);
 extern int Vec3_HorzLen(struct Vector3* v);
-extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int p1, void* pos, void* rot, int a, int b);
+extern char* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int p1, void* pos, void* rot, int a, int b);
 extern void func_ov009_02111224(char* c, int r1);
 extern int func_0201267c(unsigned int a, void* b);
 extern int RandomIntInternal(void* rng);
@@ -25,7 +25,7 @@ void func_ov009_0211145c(char* c) {
         struct Vector3 copy;
         struct Vector3 diff;
         int n;
-        p = _ZN5Actor13ClosestPlayerEv(c);
+        p = _ZN8dActor_c13ClosestPlayerEv(c);
         if (p == 0) {
             return;
         }
@@ -42,7 +42,7 @@ void func_ov009_0211145c(char* c) {
             int lim = n - 1;
             if (lim > 0) {
                 do {
-                    char* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x157, 0x10, c + 0x5c, 0, *(signed char*)(c + 0xcc), -1);
+                    char* a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x157, 0x10, c + 0x5c, 0, *(signed char*)(c + 0xcc), -1);
                     if (a != 0) {
                         func_ov009_02111224(a, *(int*)(c + 4));
                     }

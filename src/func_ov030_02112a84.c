@@ -17,7 +17,7 @@ extern void func_ov030_021141a8(void *a, int m);
 extern void _ZN10ClsnResultD1Ev(void *r);
 extern int Vec3_Dist(void *a, void *b);
 extern void _ZN9Animation7AdvanceEv(void *p);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *a, void *c);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *a, void *c);
 extern void func_ov030_02111bc4(void *a);
 extern void _ZN12CylinderClsn5ClearEv(void *p);
 extern void *data_02099368[];
@@ -68,7 +68,7 @@ int func_ov030_02112a84(char *a)
     }
 
     _ZN9Animation7AdvanceEv(a + 0x124);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(a, a + 0x160);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(a, a + 0x160);
     func_ov030_02111bc4(a);
     _ZN12CylinderClsn5ClearEv(a + 0x160);
     return 1;

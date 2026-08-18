@@ -2,14 +2,14 @@
 #define UNCHAINEDCHOMP_H
 
 #include "types.h"
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-/* daWanwan2_c in the ROM's RTTI. Derives from Enemy, and the destructor is an
+/* daWanwan2_c in the ROM's RTTI. Derives from dEnemyBase_c, and the destructor is an
  * unusually strong witness because six of the nine members are ARRAYS: __destroy_arr
  * takes a count and a stride, so it names not just the type at an offset but how many
  * and how far apart. Six arrays tile 0x370..0x78c with no overlap and no gap:
@@ -25,7 +25,7 @@
  * same counts and strides, and allocates 0x7a4 -- so 0x18 of tail is spare and stays
  * padding.
  */
-struct UnchainedChomp : Enemy {
+struct UnchainedChomp : dEnemyBase_c {
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
     WithMeshClsn        mWithMeshClsn;      /* 0x150 */
     ModelAnim           mModelAnim;         /* 0x30c */

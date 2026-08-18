@@ -4,7 +4,7 @@
 #include "common.h"
 #include "MeshColliderBase.h"
 
-struct Actor {
+struct dActor_c {
     virtual void f00(); virtual void f01(); virtual void f02(); virtual void f03();
     virtual void f04(); virtual void f05(); virtual void f06(); virtual void f07();
     virtual void f08(); virtual void f09(); virtual void f10(); virtual void f11();
@@ -15,20 +15,20 @@ struct Actor {
     virtual void f28(); virtual int f29();
 };
 extern "C" {
-extern void* _ZN5Actor18ClosestWithActorIDEj(void*, unsigned int);
+extern void* _ZN8dActor_c18ClosestWithActorIDEj(void*, unsigned int);
 extern int Vec3_Dist(void*, void*);
 
 int func_ov025_0211123c(char* c) {
-    void* p = _ZN5Actor18ClosestWithActorIDEj(c, 9);
+    void* p = _ZN8dActor_c18ClosestWithActorIDEj(c, 9);
     if (p != 0) {
         volatile struct Vector3 v;
         v.x = *(int*)(c + 0x5c);
         v.y = *(int*)(c + 0x60);
         v.z = *(int*)(c + 0x64);
-        v.y = v.y + ((Actor*)c)->f29();
+        v.y = v.y + ((dActor_c*)c)->f29();
         if (Vec3_Dist((char*)c + 0x5c, (char*)p + 0x5c) < (*(int*)(c + 0xb8) << 3)) {
             if (!((MeshColliderBase *)(c + 0x124))->IsEnabled()) {
-                ((MeshColliderBase *)(c + 0x124))->Enable((Actor *)(c));
+                ((MeshColliderBase *)(c + 0x124))->Enable((dActor_c *)(c));
                 return 1;
             }
         }

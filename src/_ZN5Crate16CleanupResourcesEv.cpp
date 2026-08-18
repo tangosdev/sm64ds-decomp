@@ -14,7 +14,7 @@ int Crate::CleanupResources()
   if(((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
     ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
   f = 0;
-  if(mActorID == 0xc2) f = data_ov098_0213c4c8;
+  if(actorID == 0xc2) f = data_ov098_0213c4c8;
   if(f){
     ((SharedFilePtr *)((void*)f[0]))->Release();
     ((SharedFilePtr *)((void*)f[1]))->Release();

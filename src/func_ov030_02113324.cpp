@@ -2,15 +2,15 @@
 #include "types.h"
 #include "private/mtx43.h"
 
-extern "C" int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* out, int doStore);
+extern "C" int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* out, int doStore);
 extern "C" int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" void func_ov030_021141a8(char* c, int v);
-extern "C" int _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
+extern "C" int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
 extern "C" short Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
 extern "C" void Matrix4x3_FromTranslation(Mtx43* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(Mtx43* m, short angY);
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(Mtx43* m, int x, int y, int z);
-extern "C" int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);
+extern "C" int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msgId, const Vector3* pos, unsigned int d, unsigned int e);
 extern "C" int func_0201267c(int a, void* b);
 extern "C" int _ZN6Player12GetTalkStateEv(void* self);
 extern "C" void _ZN6Player9DropActorEv(void* self);
@@ -51,7 +51,7 @@ do_raycast:
         v.x = *(int*)(other + 0x5c);
         v.y = vy;
         v.z = oz;
-        _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(c, &v, (Vector3*)(c + 0x5c), 1);
+        _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(c, &v, (Vector3*)(c + 0x5c), 1);
 
         if (Vec3_Dist((Vector3*)(c + 0x380), (Vector3*)(c + 0x5c)) < 0x514000 &&
             *(int*)(c + 0x60) > *(int*)(c + 0x384) - 0x12c000) {
@@ -67,7 +67,7 @@ skip_raycast:
     case 0:
         if (Vec3_Dist((Vector3*)(c + 0x380), (Vector3*)(c + 0x5c)) < 0x514000 &&
             *(int*)(c + 0x60) > *(int*)(c + 0x384) - 0x12c000) {
-            if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(c + 0x3a8), c, 1) != 0) {
+            if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(c + 0x3a8), c, 1) != 0) {
                 Vector3 camPos;
                 {
                     Vector3 *src = (Vector3*)((char*)data_0209f318 + 0x8c);
@@ -89,7 +89,7 @@ skip_raycast:
                 msgPos.z = data_020a0e68.a[11];
                 msgPos.y = *(int*)(c + 0x60) + 0x64000;
 
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(c + 0x3a8), c, 0xc0, &msgPos, 0, 2) != 0) {
+                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x3a8), c, 0xc0, &msgPos, 0, 2) != 0) {
                     func_0201267c(0xd1, c + 0x74);
                     {
                         unsigned char *p = (unsigned char*)(c + 0x3c7);

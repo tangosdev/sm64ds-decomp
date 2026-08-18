@@ -1,7 +1,7 @@
 //cpp
 extern "C" int _ZN10BigBooIcon13InitResourcesEv(void *c);
 
-struct Actor {
+struct dActor_c {
     void *vtable;
     int field4;
     int field8;
@@ -13,7 +13,7 @@ struct Actor {
 
 extern "C" int _ZN10BigBooIcon13InitResourcesEv(void *c)
 {
-    Actor *a = (Actor *)c;
+    dActor_c *a = (dActor_c *)c;
     unsigned int val = (unsigned int)a->field8;
     a->field_d5 = (unsigned char)((val >> 8) & 0xf);
     a->field_d4 = ~0;

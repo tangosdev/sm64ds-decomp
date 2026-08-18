@@ -6,7 +6,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "PyramidTop.h"
 extern "C" {
-extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void* actor, void* pt);
+extern int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* actor, void* pt);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int bank, void* pos);
 }
 
@@ -20,14 +20,14 @@ int PyramidTop::Behavior()
         }
         break;
     case 1:
-        _ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (void*)((char*)&unk_3b4));
+        _ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (void*)((char*)&unk_3b4));
         if (unk_3b2 == 0) {
             _ZN5Sound9PlayBank3EjRK7Vector3(0x4b, (void*)((char*)&mCamSpacePosX));
         }
         func_ov024_02111350(((char*)this));
         break;
     case 2:
-        if (_ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (void*)((char*)&unk_3b4))) {
+        if (_ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (void*)((char*)&unk_3b4))) {
             _ZN5Sound9PlayBank3EjRK7Vector3(0x4c, (void*)((char*)&mCamSpacePosX));
             func_ov024_021112c0(((char*)this));
         } else {

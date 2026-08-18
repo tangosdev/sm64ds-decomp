@@ -25,7 +25,7 @@ extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callback
 extern void func_ov066_021194fc(char *c);
 extern int _ZN16MeshColliderBase9IsEnabledEv(char *c);
 extern void func_ov066_021194a4(char *c);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char *c, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char *c, void *clsn);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(char *c, const Vector3 *v);
 extern void _ZN12CylinderClsn5ClearEv(char *c);
 extern void _ZN12CylinderClsn6UpdateEv(char *c);
@@ -163,7 +163,7 @@ extern "C" int _ZN6Eyerok8BehaviorEv(char *c)
     {
         Vector3 vrel;
         *(int *)(c + 0x4a8) = *(int *)(c + 0x4b4) + 0x8000;
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
         *(int *)(c + 0x354) = *(int *)(c + 0x5c);
         *(int *)(c + 0x358) = *(int *)(c + 0x60);
         *(int *)(c + 0x35c) = *(int *)(c + 0x64);

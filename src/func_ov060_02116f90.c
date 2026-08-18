@@ -1,17 +1,17 @@
 #include "types.h"
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 extern int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 id, u32 a, int fix, int t1, int t2, void *vec);
 extern void func_ov060_0211712c(void *self);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern int RandomIntInternal(int *seed);
 extern void func_ov060_02116518(char *self, u32 kind, int a2, int a3);
 extern void func_ov060_021172e0(void *self);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 extern int data_0209e650;
 
 void func_ov060_02116f90(char *self) {
-    _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, 0);
     if (*(int *)(self + 0xa8) < -0x4000)
         *(int *)(self + 0xa8) = -0x4000;
 
@@ -43,5 +43,5 @@ void func_ov060_02116f90(char *self) {
         }
     }
     if (*(int *)(self + 0x60) < 0)
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
 }

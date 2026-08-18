@@ -2,14 +2,14 @@
 // @symbol func_ov074_0211f244
 /* recovered: shared common types */
 #include "common.h"
-struct Actor { static Actor *FindWithActorID(unsigned int id, Actor *after); };
+struct dActor_c { static dActor_c *FindWithActorID(unsigned int id, dActor_c *after); };
 extern "C" int RandomIntInternal(int *seed);
 extern "C" int data_0209e650;
 
 
-extern "C" void func_ov074_0211f244(Actor *self)
+extern "C" void func_ov074_0211f244(dActor_c *self)
 {
-    Actor *a = Actor::FindWithActorID(0xc7, 0);
+    dActor_c *a = dActor_c::FindWithActorID(0xc7, 0);
     if (a == 0) return;
     do {
         if (a != self) {
@@ -35,6 +35,6 @@ extern "C" void func_ov074_0211f244(Actor *self)
             *(short*)(t + 0x90) = z;
             *(unsigned char*)(t + 0x609) = 1;
         }
-        a = Actor::FindWithActorID(0xc7, a);
+        a = dActor_c::FindWithActorID(0xc7, a);
     } while (a != 0);
 }

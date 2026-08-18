@@ -7,7 +7,7 @@
  * Attributed by the vtable: dScMgTrampoline2_c's own table is ov006 0x0213fc7c
  * (the address include/dScMgTrampoline2_c.h's banner records) and its slot 3
  * relocates here, so this is this class's own override and not
- * dScMgD3DBase_c's. The signature is include/ActorBase.h's own slot 3,
+ * dScMgD3DBase_c's. The signature is include/fBase_c.h's own slot 3,
  * `virtual s32 CleanupResources()`.
  *
  * Takes no argument in the ROM's own terms and reads nothing off the scene --

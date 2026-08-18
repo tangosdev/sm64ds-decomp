@@ -7,7 +7,7 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *sfp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *thiz, void *kcl, void *mtx, int fix, short s, void *clps);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void *thiz, void *actor);
+extern void _ZN16MeshColliderBase6EnableEP8dActor_c(void *thiz, void *actor);
 
 int func_ov002_020b4d58(char *c, char *arg)
 {
@@ -51,7 +51,7 @@ int func_ov002_020b4d58(char *c, char *arg)
             cl, _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void **)(arg + 4)),
             c + 0xd98, fix, *(s16 *)(c + 0x8e), *(void **)(arg + 8));
         if (j == *(u8 *)(c + 0xdc8))
-            _ZN16MeshColliderBase6EnableEP5Actor(cl, c);
+            _ZN16MeshColliderBase6EnableEP8dActor_c(cl, c);
         dst += 0x50;
         arg += 0xc;
         cl += 0x1c8;

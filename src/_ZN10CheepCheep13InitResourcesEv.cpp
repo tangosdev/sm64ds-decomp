@@ -7,7 +7,7 @@
 struct SharedFilePtr;
 struct BMD_File;
 struct BCA_File;
-struct Actor;
+struct dActor_c;
 struct Vector3_16;
 
 extern "C" {
@@ -16,12 +16,12 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisp, struct BMD_File *, i
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(struct SharedFilePtr &);
 }
 extern "C" {
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
-    void *thisp, struct Actor *, struct Vector3 const &, int, int, unsigned int, unsigned int);
+extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    void *thisp, struct dActor_c *, struct Vector3 const &, int, int, unsigned int, unsigned int);
 }
 extern "C" {
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
-    void *thisp, struct Actor *, int, int, struct Vector3_16 *, int);
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    void *thisp, struct dActor_c *, int, int, struct Vector3_16 *, int);
 }
 extern "C" {
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
@@ -45,15 +45,15 @@ int CheepCheep::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(*(struct SharedFilePtr *)&data_ov090_0213455c);
 
     v = data_ov090_021342d8;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
-        (void *)((char *)&(*(MovingCylinderClsnWithPos *)&mMovingCylinderClsnWithPos)), (struct Actor *)((char *)this), v, 0x32000, 0x3c000, 0x200004, 0x8000);
+    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+        (void *)((char *)&(*(MovingCylinderClsnWithPos *)&mMovingCylinderClsnWithPos)), (struct dActor_c *)((char *)this), v, 0x32000, 0x3c000, 0x200004, 0x8000);
 
     unk_374 = mPosX;
     unk_378 = mPosY;
     unk_37c = mPosZ;
     mAngleY = mPrevAngleY;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
-        (void *)((char *)&(*(WithMeshClsn *)&mWithMeshClsn)), (struct Actor *)((char *)this), 0x1e000, 0x1e000, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+        (void *)((char *)&(*(WithMeshClsn *)&mWithMeshClsn)), (struct dActor_c *)((char *)this), 0x1e000, 0x1e000, 0, 0);
 
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
         (void *)((char *)&(*(u8 *)&mModelAnim)), data_ov090_0213455c.file, 0, 0x1000, 0);

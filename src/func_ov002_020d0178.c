@@ -3,11 +3,11 @@ typedef struct Vec3 { int x, y, z; } Vec3;
 
 extern void _ZN13RaycastGroundC1Ev(void* self);
 extern void _ZN13RaycastGroundD1Ev(void* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, Vec3* pos, void* actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, Vec3* pos, void* actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void* self);
 extern void _ZN11RaycastLineC1Ev(void* self);
 extern void _ZN11RaycastLineD1Ev(void* self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, Vec3* a, Vec3* b, void* actor);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
 extern int _ZN11RaycastLine10DetectClsnEv(void* self);
 extern void _ZN11RaycastLine10GetClsnPosEv(Vec3* out, void* self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vec3* out);
@@ -60,7 +60,7 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
             pos1.z = tz;
         }
     }
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &pos1, c);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos1, c);
     if (!_ZN13RaycastGround10DetectClsnEv(rg)) {
         _ZN13RaycastGroundD1Ev(rg);
         return 0;
@@ -94,7 +94,7 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
         lineStart.y = arg1;
         lineStart.z = tz;
     }
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, &lineStart, &pos1, c);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &pos1, c);
     if (!_ZN11RaycastLine10DetectClsnEv(rl)) {
         _ZN11RaycastLineD1Ev(rl);
         _ZN13RaycastGroundD1Ev(rg);
@@ -130,7 +130,7 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
     _ZN11RaycastLine10GetClsnPosEv(&clsnPos, rl);
     lineStart.y += 0x64000;
     pos1.y += 0x64000;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, &lineStart, &pos1, c);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &pos1, c);
     if (_ZN11RaycastLine10DetectClsnEv(rl)) {
         _ZN11RaycastLineD1Ev(rl);
         _ZN13RaycastGroundD1Ev(rg);
@@ -141,7 +141,7 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
     line2.y = *(int*)(c + 0x60);
     line2.z = *(int*)(c + 0x64);
     line2.y = gy + 0xa000;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, &lineStart, &line2, c);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &line2, c);
     if (_ZN11RaycastLine10DetectClsnEv(rl)) {
         _ZN11RaycastLineD1Ev(rl);
         _ZN13RaycastGroundD1Ev(rg);

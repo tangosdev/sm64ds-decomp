@@ -5,7 +5,7 @@
  * itself takes its real ROM identity, matching this tree's current
  * convention.
  *
- * SIZE 0x562c, from MgBoomBox_Spawn.cpp's own `_ZN9ActorBasenwEj(0x562c)`.
+ * SIZE 0x562c, from MgBoomBox_Spawn.cpp's own `_ZN7fBase_cnwEj(0x562c)`.
  *
  * ONE OWN MEMBER, evidenced by the destructor (func_ov006_02119904,
  * pre-migration): a single explicit call to func_ov006_020c3288(c +
@@ -38,11 +38,11 @@ struct dScMgSound_c : dScMgSingle3DBase_c {
     u8  mTable[0x6f4]; /* 0x4f38 -- ctor func_ov006_020c33dc, dtor func_ov006_020c3288 */
 
     /* --- this class's own vtable overrides, defined out of line under their
-       own mangled names. Each re-uses a slot ActorBase already holds rather
+       own mangled names. Each re-uses a slot fBase_c already holds rather
        than appending one, and none adds a field, so the size assert below is
        untouched. The destructor above stays the key function, so no
        translation unit starts emitting _ZTV12dScMgSound_c because of these.
-       Signatures are include/ActorBase.h's and include/dScMgBase_c.h's own,
+       Signatures are include/fBase_c.h's and include/dScMgBase_c.h's own,
        copied unchanged.
 
        NONE OF THE THREE ADDS A FIELD ABOVE mTable. Between them they reach

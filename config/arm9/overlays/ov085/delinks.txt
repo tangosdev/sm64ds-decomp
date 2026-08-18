@@ -73,6 +73,7 @@ src/_ZN13PrincessPeachD0Ev.c:
     .text start:0x02129d60 end:0x02129dbc
 
 src/func_ov085_02129dbc.cpp:
+    complete
     .text start:0x02129dbc end:0x02129ebc
 
 src/func_ov085_02129ebc.cpp:

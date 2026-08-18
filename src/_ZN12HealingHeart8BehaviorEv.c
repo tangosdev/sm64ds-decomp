@@ -4,7 +4,7 @@ typedef int s32;
 struct Vector3 { int x, y, z; };
 
 extern u8 DecIfAbove0_Byte(u8* p);
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN6Player4HealEi(char* p, int amt);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, const struct Vector3* v);
 extern void Math_Function_0203b14c(int* p, int a, int b, int c, int d);
@@ -23,7 +23,7 @@ int _ZN12HealingHeart8BehaviorEv(char* self)
             *(u8*)(self + 0x170) = 0;
         }
         if (*(u8*)(self + 0x170) == 0) {
-            char* other = (char*)_ZN5Actor10FindWithIDEj(*(int*)(self + 0x15c));
+            char* other = (char*)_ZN8dActor_c10FindWithIDEj(*(int*)(self + 0x15c));
             if (other != 0) {
                 int b = (int)(*(u16*)(other + 0xc) == 0xbf);
                 if (b != 0) {

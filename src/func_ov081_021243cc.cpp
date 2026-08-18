@@ -5,9 +5,9 @@
 #include "common.h"
 extern "C" {
     void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, void* v);
-    void* _ZN5Actor10FindWithIDEj(u32 id);
+    void* _ZN8dActor_c10FindWithIDEj(u32 id);
     void func_ov002_020aea30(void* self, void* a, int b);
-    s16 _ZN5Actor18HorzAngleToCPlayerEv(void* self);
+    s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
     void func_02012694(int a, void* p);
     void func_ov081_02125488(void* self, void* p);
     void func_ov002_020ada40(void* self, void* v, void* a);
@@ -29,7 +29,7 @@ extern "C" void func_ov081_021243cc(void* self)
 
     u32 id = *(u32*)(c+0x134);
     if (id == 0) return;
-    void* found = _ZN5Actor10FindWithIDEj(id);
+    void* found = _ZN8dActor_c10FindWithIDEj(id);
     if (found == 0) return;
     u8* f = (u8*)found;
 
@@ -40,7 +40,7 @@ extern "C" void func_ov081_021243cc(void* self)
     if (flags & 0x2000) {
         *(s32*)(c+0x10c) = 2;
         func_ov002_020aea30(self, found, hit);
-        *(u16*)(c+0x94) = (u16)(_ZN5Actor18HorzAngleToCPlayerEv(self) + 0x8000);
+        *(u16*)(c+0x94) = (u16)(_ZN8dActor_c18HorzAngleToCPlayerEv(self) + 0x8000);
         hit = 1;
     }
     if (flags & 0x40000) {
@@ -54,7 +54,7 @@ extern "C" void func_ov081_021243cc(void* self)
         if (*(u8*)(f+0x6f9) == 1) {
             *(s32*)(c+0x10c) = 2;
             func_ov002_020aea30(self, found, 0);
-            *(u16*)(c+0x94) = (u16)(_ZN5Actor18HorzAngleToCPlayerEv(self) + 0x8000);
+            *(u16*)(c+0x94) = (u16)(_ZN8dActor_c18HorzAngleToCPlayerEv(self) + 0x8000);
             hit = 1;
         }
         if (flags & 0x10) {
@@ -70,7 +70,7 @@ extern "C" void func_ov081_021243cc(void* self)
             *(s32*)(c+0x10c) = 2;
             func_ov002_020aea30(self, found, 0);
             *(u8*)(c+0x468) = 2;
-            *(u16*)(c+0x94) = (u16)(_ZN5Actor18HorzAngleToCPlayerEv(self) + 0x8000);
+            *(u16*)(c+0x94) = (u16)(_ZN8dActor_c18HorzAngleToCPlayerEv(self) + 0x8000);
             hit = 1;
         }
         if (hit == 0) {

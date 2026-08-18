@@ -7,7 +7,7 @@
 #include "Cannon.h"
 extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *file, int a, int b);
-extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *thiz, void *actor, int r, int h, unsigned int a, unsigned int b);
+extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, int r, int h, unsigned int a, unsigned int b);
 extern "C" char data_ov098_0213c91c;
 extern "C" char data_ov002_0210da38;
 
@@ -32,14 +32,14 @@ int Cannon::InitResources()
         *(short*)(c + 0x17a) = *(short*)(c + 0x8e);
         *(int*)(c + 0x180) = 0;
         func_ov098_0213b15c(((void *)this));
-        _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0x124, ((void *)this), 0xa0000, 0x12c000, 0x800004, 0);
+        _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(c + 0x124, ((void *)this), 0xa0000, 0x12c000, 0x800004, 0);
     } else {
         *(int*)(c + 0x60) -= 0x190000;
         *(short*)(c + 0x17a) = *(short*)(c + 0x90);
         *(short*)(c + 0x178) = 0x2000;
         *(int*)(c + 0x180) = 2;
         *(int*)(c + 0xb0) &= ~1;
-        _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0x124, ((void *)this), 0x50000, 0x12c000, 0x800004, 0);
+        _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(c + 0x124, ((void *)this), 0x50000, 0x12c000, 0x800004, 0);
     }
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov098_0213c91c);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210da38);

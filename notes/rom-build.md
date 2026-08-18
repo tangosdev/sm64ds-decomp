@@ -466,7 +466,7 @@ individually with `match.py` before the link confirmed them:
 |---|---|---|
 | `_ZN13PrincessPeach6RenderEv` | `CommonModel::Render` | `Model::Render` |
 | `_ZN7Tornado6RenderEv`, `_ZN9WaterRing6RenderEv` | `TextureSequence::Update` | `TextureTransformer::Update` |
-| `func_ov079_02126e58` | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
+| `_ZN11BillBlaster4KillEv` (then `func_ov079_02126e58`) | `Actor::DisappearPoofDustAt` | `Actor::PoofDustAt` |
 | `func_ov085_0212e778` | `…ApplyInPlaceToRotationXYZExt` | `…ApplyInPlaceToRotationZXYExt` |
 | `func_ov006_0211a048`, `func_ov006_0211a5ec` | wrong `data_ov006_*` base | the adjacent one |
 | `func_ov006_02120c08` | `func_ov006_020eed68` | `func_ov006_02120a64` |

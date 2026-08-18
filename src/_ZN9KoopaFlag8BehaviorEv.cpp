@@ -6,7 +6,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "KoopaFlag.h"
 extern "C" {
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 extern void _ZN9Animation7AdvanceEv(void *a);
 extern void _ZN12CylinderClsn5ClearEv(void *c);
@@ -23,7 +23,7 @@ int KoopaFlag::Behavior()
     if (unk_16e == 0) {
         id = unk_0f8;
         if (id != 0) {
-            a = _ZN5Actor10FindWithIDEj(id);
+            a = _ZN8dActor_c10FindWithIDEj(id);
             if (a != 0) {
                 b = *(unsigned short *)(a + 0xC);
                 b = b == 0xBF;

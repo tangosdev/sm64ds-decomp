@@ -24,17 +24,17 @@ struct Obj {
 extern "C" {
 void func_ov002_020f8b24(void* self);
 int func_ov002_020ad660(void* cc, void* pp, void* r5p, int flags);
-void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void* self, const struct Vector3* v);
-void* _ZN5Actor13ClosestPlayerEv(void* self);
+void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void* self, const struct Vector3* v);
+void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 s16 Vec3_HorzAngle(const void* a, const void* b);
-void* _ZN5Actor10FindWithIDEj(u32 id);
+void* _ZN8dActor_c10FindWithIDEj(u32 id);
 void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, const void* pos);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
 void _ZN12CylinderClsn5ClearEv(void* self);
 void _ZN12CylinderClsn6UpdateEv(void* self);
 void _ZN6Player4BurnEv(void* self);
 void func_02012694(u32 id, const void* v);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
+void _ZN7fBase_c18MarkForDestructionEv(void* self);
 void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 int _Z14ApproachLinearRiii(void* p, s32 target, s32 step);
 int _Z14ApproachLinearRsss(void* p, s16 target, s16 step);
@@ -84,14 +84,14 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
             ((int*)&w1)[0] = ((int*)&v1)[0];
             ((int*)&w1)[1] = ((int*)&v1)[1];
             ((int*)&w1)[2] = ((int*)&v1)[2];
-            _ZN5Actor19DisappearPoofDustAtERK7Vector3(c, &w1);
+            _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(c, &w1);
         } else {
             func_ov002_020f8b24(c);
         }
         return 1;
     }
 
-    *(void**)(c + 0x358) = _ZN5Actor13ClosestPlayerEv(c);
+    *(void**)(c + 0x358) = _ZN8dActor_c13ClosestPlayerEv(c);
     if (*(void**)(c + 0x358) != 0 && *(u8*)(c + 0x36d) != 3) {
         *(s16*)(c + 0x368) = Vec3_HorzAngle(c + 0x5c, (char*)(*(void**)(c + 0x358)) + 0x5c);
     } else {
@@ -101,7 +101,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
     id134 = *(int*)(c + 0x134);
     if (id134 != 0) {
         if ((*(int*)(c + 0x130) & 0x8000) == 0) {
-            found = _ZN5Actor10FindWithIDEj((u32)id134);
+            found = _ZN8dActor_c10FindWithIDEj((u32)id134);
             if (found != 0) {
                 if (*(int*)(c + 0x130) & 0x10) {
                     *(u32*)(((int)c + 0xb0)) &= ~0x10000001;
@@ -149,11 +149,11 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
                             ((int*)&w2)[0] = ((int*)&v2)[0];
                             ((int*)&w2)[1] = ((int*)&v2)[1];
                             ((int*)&w2)[2] = ((int*)&v2)[2];
-                            _ZN5Actor19DisappearPoofDustAtERK7Vector3(c, &w2);
+                            _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(c, &w2);
                         }
                         if (*(u8*)(c + 0x36d) == 4)
                             func_02012694(0x157, c + 0x74);
-                        _ZN9ActorBase18MarkForDestructionEv(c);
+                        _ZN7fBase_c18MarkForDestructionEv(c);
                     }
                 }
             }
@@ -199,11 +199,11 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
             ((int*)&w3)[0] = ((int*)&v3)[0];
             ((int*)&w3)[1] = ((int*)&v3)[1];
             ((int*)&w3)[2] = ((int*)&v3)[2];
-            _ZN5Actor19DisappearPoofDustAtERK7Vector3(c, &w3);
+            _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(c, &w3);
         }
         if (*(u8*)(c + 0x36d) == 4)
             func_02012694(0x157, c + 0x74);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
     *(u16*)(((int)c + 0x100)) += 1;

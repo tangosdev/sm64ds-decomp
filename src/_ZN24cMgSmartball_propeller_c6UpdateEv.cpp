@@ -1,11 +1,12 @@
 //cpp
 /* Slot 1. Looks up a rotation matrix from the base's angle field at 0x32,
  * reading it UNSIGNED (>> 4, lsr not asr) to index the sine table -- one of
- * the conflicting readings cMgSmartball_object_c.h records for that field's
- * contested width, so it stays a raw cast rather than the base's member
- * name. Draws two OAM sprites (front and back cap) at the base's position
- * (mCurrent0/mCurrent1) using that matrix; touches nothing in this class's
- * own 0x34+ region at all. */
+ * the three incompatible readings cMgSmartball_object_c.h records for that
+ * three-byte region, so it stays a raw cast rather than the base's member
+ * name: no single member type is right for all three readers. Draws two
+ * OAM sprites (front and back cap) at the base's position (mCurrent0/
+ * mCurrent1) using that matrix; touches nothing in this class's own 0x34+
+ * region at all. */
 #include "cMgSmartball_propeller_c.h"
 
 extern "C" short data_02082214[];

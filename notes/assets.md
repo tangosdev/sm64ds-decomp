@@ -77,6 +77,17 @@ is its total length, and `FF` ends the message. The character and icon map agree
 with the long-standing
 [SM64DSe character table](https://github.com/Gota7/SM64DSe-Ultimate/blob/master/assets/basic_eur_us_chars.txt).
 
+For quick decompilation research, inspect one message or search decoded text
+without exporting the whole bank:
+
+```powershell
+python tools/bmg.py show 0x123 --language eng
+python tools/bmg.py search "save" --language eng
+```
+
+`--file` overrides the extracted language bank. `show` accepts decimal or hex
+IDs; `search` is case-insensitive by default and supports `--regex`.
+
 ```powershell
 python tools/message_bank.py extract `
   extracted/dsd/files/data/message/msg_data_eng.bin `

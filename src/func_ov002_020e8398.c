@@ -7,7 +7,7 @@ struct ShadowModel;
 struct Matrix4x3;
 
 extern struct Matrix4x3 data_02082128;
-extern int _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(char *self, struct ShadowModel *sm, struct Matrix4x3 *m, int fix, int t, u32 f);
+extern int _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(char *self, struct ShadowModel *sm, struct Matrix4x3 *m, int fix, int t, u32 f);
 
 #pragma opt_common_subs off
 #pragma opt_strength_reduction off
@@ -54,5 +54,5 @@ void func_ov002_020e8398(char *c)
     *(int *)(c + 0x424) = *(int *)(c + 0x60) >> 3;
     *(int *)(c + 0x428) = *(int *)(c + 0x64) >> 3;
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, (struct ShadowModel *)(c + 0x3d4), (struct Matrix4x3 *)(c + 0x3fc), r8, t, 0xf);
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, (struct ShadowModel *)(c + 0x3d4), (struct Matrix4x3 *)(c + 0x3fc), r8, t, 0xf);
 }

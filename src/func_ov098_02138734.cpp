@@ -14,7 +14,7 @@ struct Obj {
 };
 
 extern "C" {
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *actor, void *cyl);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *actor, void *cyl);
 void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 int func_ov098_02139228(void *c);
 void Crate_SetState(void *c, int i);
@@ -32,7 +32,7 @@ void func_ov098_02138734(char *c);
 
 void func_ov098_02138734(char *c)
 {
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x564);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x564);
     WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
     if (func_ov098_02139228(c)) {
         Crate_SetState(c, 0);

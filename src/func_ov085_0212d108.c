@@ -4,7 +4,7 @@ typedef int s32;
 typedef struct { s32 x, y, z; } Vector3;
 typedef struct { Vector3 c0, c1, c2, c3; } Matrix4x3;
 
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
 extern s16 Vec3_VertAngle(const Vector3* v1, const Vector3* v0);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
@@ -30,7 +30,7 @@ int func_ov085_0212d108(char* c)
     if (*(unsigned short*)(c + 0x100) != 0) {
         return 1;
     }
-    player = (char*)_ZN5Actor13ClosestPlayerEv(c);
+    player = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
     if (player == 0) {
         return 1;
     }

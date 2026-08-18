@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
- * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -15,10 +15,10 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "ShadowModel.h"
 
-struct TowerStep : Platform {
+struct TowerStep : dBgActor_c {
     u8  pad_31e[0x2];
     ShadowModel mShadowModel;         /* 0x320 */
     u8  pad_348[0x30];
@@ -38,9 +38,14 @@ struct TowerStep : Platform {
     int CleanupResources();
     int Behavior();
     int Render();
+    virtual void OnHitByMegaChar(Player &player);   /* slot 27 */
+    /* dBgActor_c's own slot, overridden here: _ZTV9TowerStep+0x7c relocates to
+       0x0211233c while _ZTV10dBgActor_c+0x7c relocates to _ZN10dBgActor_c4KillEv. An
+       override, so it adds no slot and no field. */
+    virtual void Kill();              /* slot 31 */
 };
 
-typedef char MovingBarSmall_size_must_be_0x394[sizeof(TowerStep) == 0x394 ? 1 : -1];
+typedef char TowerStep_size_must_be_0x394[sizeof(TowerStep) == 0x394 ? 1 : -1];
 
 #else
 

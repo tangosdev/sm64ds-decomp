@@ -1,12 +1,12 @@
 //cpp
 // @symbol _ZN9CameraTagD1Ev
 
-struct Actor {
-    virtual ~Actor();
+struct dActor_c {
+    virtual ~dActor_c();
 };
 
 
-struct CameraTag : Actor {
+struct CameraTag : dActor_c {
     virtual ~CameraTag();
 };
 

@@ -1,9 +1,9 @@
 //cpp
 // @symbol _ZN7TornadoD1Ev
 
-struct Actor {
+struct dActor_c {
     char pad[0xd0];
-    virtual ~Actor();
+    virtual ~dActor_c();
 };
 
 struct MovingCylinderClsn { char pad[0x34]; ~MovingCylinderClsn(); };
@@ -11,7 +11,7 @@ struct WithMeshClsn { char pad[0x1bc]; ~WithMeshClsn(); };
 struct ModelAnim { char pad[0x64]; ~ModelAnim(); };
 struct TextureTransformer { char pad[0x4]; ~TextureTransformer(); };
 
-struct Tornado : Actor {
+struct Tornado : dActor_c {
     MovingCylinderClsn m0;   /* 0xd4 */
     WithMeshClsn m1;   /* 0x108 */
     ModelAnim m2;   /* 0x2c4 */

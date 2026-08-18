@@ -7,9 +7,9 @@
  * base. Declaring the layout in BowserFire.h instead lets the compiler emit
  * all of it, and the ROM's order is the evidence that the declaration order
  * is right: it destroys 0x304, 0x2d0, 0x110 -- exactly reverse declaration
- * order -- then calls Enemy's base-object destructor.
+ * order -- then calls dEnemyBase_c's base-object destructor.
  *
- * No stand-in structs. The base is the real Enemy and the three members are
+ * No stand-in structs. The base is the real dEnemyBase_c and the three members are
  * their real classes, each of whose size is pinned by its own static
  * assertion. That is what makes this file this short.
  */

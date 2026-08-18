@@ -10,11 +10,11 @@ typedef struct {
 extern "C" {
 extern void _ZN11RaycastLineC1Ev(void *self);
 extern void _ZN11RaycastLineD1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *self, void *a, void *b, void *act);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
 extern int _ZN11RaycastLine10DetectClsnEv(void *self);
 extern void func_ov002_020d8838(void *actor);
 extern unsigned _ZNK10ClsnResult9GetClsnIDEv(void *self);
-extern void *_ZN5Actor10FindWithIDEj(unsigned id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 extern void _ZN10ClsnResultD1Ev(void *self);
 
 extern int data_02099368;
@@ -46,7 +46,7 @@ extern "C" int func_ov002_020ef070(void *unused, char *actor)
     v2.x = scale * data_02082214[(*(unsigned short *)(actor + 0x8e) >> 4) << 1] + v2.x;
     v2.z = scale * data_02082214[((*(unsigned short *)(actor + 0x8e) >> 4) << 1) + 1] + v2.z;
 
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, &v1, &v2, actor);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, actor);
     if (_ZN11RaycastLine10DetectClsnEv(rl)) {
         int t = (*(unsigned short *)(actor + 0xc) == 0xbf);
         if (t != false) {
@@ -68,7 +68,7 @@ extern "C" int func_ov002_020ef070(void *unused, char *actor)
             tmp.f20 = *(int *)(rl + 0x30);
             tmp.f24 = *(int *)(rl + 0x34);
             if (_ZNK10ClsnResult9GetClsnIDEv(&tmp) != 0xffffffff) {
-                void *a = _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(&tmp));
+                void *a = _ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(&tmp));
                 if (a) {
                     (*(void (**)(void *, char *))(*(int *)a + 0x5c))(a, actor);
                     _ZN10ClsnResultD1Ev(&tmp);

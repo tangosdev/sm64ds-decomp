@@ -8,8 +8,8 @@
 /* daObjRcBuranko_c::Behavior - recovered from vtable slot identity */
 extern "C" {
 extern int func_ov036_0211123c(char *t);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
-extern int _ZN8Platform19UpdateClsnPosAndRotEv(char *c);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
+extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char *c);
 }
 
 s32 SwingingPlatform::Behavior() {
@@ -27,7 +27,7 @@ s32 SwingingPlatform::Behavior() {
         *q = *q + ((short *)(c + 0x300))[15];
     }
     func_ov036_0211123c(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     return 1;
 }

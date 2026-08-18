@@ -12,10 +12,10 @@ struct ClsnResult {
     int GetClsnID() const;
 };
 
-struct Actor {
+struct dActor_c {
     char pad[0xb0];
     u32 flags;
-    static Actor *FindWithID(u32 id);
+    static dActor_c *FindWithID(u32 id);
 };
 
 struct RaycastLine {
@@ -23,7 +23,7 @@ struct RaycastLine {
     ClsnResult mResult;
     RaycastLine();
     ~RaycastLine();
-    void SetObjAndLine(const Vector3 &a, const Vector3 &b, Actor *actor);
+    void SetObjAndLine(const Vector3 &a, const Vector3 &b, dActor_c *actor);
     int DetectClsn();
     Vector3 GetClsnPos();
 };
@@ -39,12 +39,12 @@ extern "C" int func_ov002_020c607c(char *self, int p1, int p2, int *outptr)
 
     Vector3 a(*(int *)(self + 0x5c), p1, *(int *)(self + 0x64));
     Vector3 b(*(int *)(self + 0x5c), p2, *(int *)(self + 0x64));
-    rc.SetObjAndLine(a, b, (Actor *)self);
+    rc.SetObjAndLine(a, b, (dActor_c *)self);
     if (rc.DetectClsn() != 0) {
         pos = rc.GetClsnPos();
         *outptr = pos.y;
         if (rc.mResult.GetClsnID() != -1) {
-            Actor *found = Actor::FindWithID((u32)rc.mResult.GetClsnID());
+            dActor_c *found = dActor_c::FindWithID((u32)rc.mResult.GetClsnID());
             *(int *)(self + 0x36c) = (int)found;
             if (found != 0) {
                 int flag = (found->flags & 0x1000000) ? 1 : 0;

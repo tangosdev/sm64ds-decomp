@@ -1,7 +1,7 @@
 """Rewrite a subclass of a reconstructed actor base as real C++, or leave it be.
 
 The generated headers restate the whole inheritance chain. This turns one into
-`struct X : Platform` keeping only its own fields, makes its destructor a real
+`struct X : dBgActor_c` keeping only its own fields, makes its destructor a real
 method, and repoints its sources at the inherited names -- then verifies every
 source the header reaches and REVERTS THE WHOLE CLASS if any one of them fails.
 A class is migrated completely or not at all; nothing half-done is left behind.
@@ -27,9 +27,9 @@ FIELD = re.compile(r"^\s*([A-Za-z_][\w:<>]*)\s+(\**)(\w+)(\[[^\]]*\])?\s*;\s*/\*
 # The base class this run is migrating subclasses of, and its DATA size -- the
 # end of its last declared field, which is where a derived class's own fields
 # start. That is NOT its sizeof: the Itanium ABI lets a derived class use a
-# non-POD base's tail padding, and Platform's subclasses do (its data ends at
+# non-POD base's tail padding, and dBgActor_c's subclasses do (its data ends at
 # 0x31e and it rounds to 0x320). Both are read off the base's header.
-BASE = ["Platform"]
+BASE = ["dBgActor_c"]
 BASE_DSIZE = [0x31e]
 
 # build_header fills this: marker name -> (member, byte offset into it, type).
@@ -121,7 +121,7 @@ BASE_MEMBER_OFFSETS = [set()]
 
 
 def inherited_names():
-    """offset -> (name, type) Actor.h / Platform.h gives that offset."""
+    """offset -> (name, type) Actor.h / dBgActor_c.h gives that offset."""
     out, ty_out = {}, {}
     for h, lo, hi in chain_ranges():
         for ty, star, name, arr, off in FIELD.findall((REPO / h).read_text(errors="replace")):
@@ -219,7 +219,7 @@ def build_header(cls, old, sizes=None):
         n = int(arr.strip("[]"), 0) if arr else 1
         cur = o + (4 if star else sizes.get(ty) or W.get(ty, 4)) * n
     # The floor is the BASE's sizeof, not a constant -- this read 0x320,
-    # Platform's, left behind when the tool was generalised. For any other
+    # dBgActor_c's, left behind when the tool was generalised. For any other
     # base it asserted a size the class does not have and every source
     # failed with "illegal constant expression".
     size = max(sizes.get(BASE[0], BASE_DSIZE[0]), (cur + 3) & ~3)
@@ -318,9 +318,9 @@ typedef char {cls}_size_must_be_0x{size:x}[sizeof({cls}) == 0x{size:x} ? 1 : -1]
 
 
 def patch_source(text, oldmap, names, types=None, itypes=None, cls=None):
-    """Repoint one source at the names Actor and Platform already give it.
+    """Repoint one source at the names Actor and dBgActor_c already give it.
 
-    The width-cast branch below is a leftover safety net. It fired when Platform
+    The width-cast branch below is a leftover safety net. It fired when dBgActor_c
     was briefly read as ending at 0x324 and subclass fields at 0x31e..0x323
     looked inherited; with the base ending at 0x31e those are the subclass's own
     fields again and nothing should reach it.
@@ -358,7 +358,7 @@ def patch_source(text, oldmap, names, types=None, itypes=None, cls=None):
     # STAND-IN STRUCTS COLLIDE WITH THE REAL TYPES. A source that predates the
     # real header often carries its own one-line placeholder --
     # `struct MeshCollider { int d; };` -- purely so an offset cast has a type
-    # to name. Once Platform.h drags the real class in, that is a redefinition,
+    # to name. Once dBgActor_c.h drags the real class in, that is a redefinition,
     # and mwcc answers some of them with an internal compiler error rather than
     # a diagnostic. Drop any single-line placeholder whose name the tree really
     # declares; anything it does NOT declare is a genuine local type and stays.
@@ -416,7 +416,7 @@ def sources_for(cls):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--base", default="Platform",
+    ap.add_argument("--base", default="dBgActor_c",
                     help="the reconstructed base whose subclasses to migrate")
     ap.add_argument("classes", nargs="+")
     ap.add_argument("--cast-members", action="store_true",
@@ -459,9 +459,9 @@ def main():
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Two vtable stores and three destructor calls, every one a consequence of
- * `struct {cls} : Platform`: its own vptr, then Platform's -- inlined,
- * because Platform's destructor is defined in its class body -- then
- * Platform's Model and MovingMeshCollider, then Actor. This class adds no
+ * `struct {cls} : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
+ * because dBgActor_c's destructor is defined in its class body -- then
+ * dBgActor_c's Model and MovingMeshCollider, then Actor. This class adds no
  * member with a destructor of its own.
  */
 #include "{cls}.h"

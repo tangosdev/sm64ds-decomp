@@ -25,7 +25,7 @@ extern "C" {
     void* func_02073470(int a, int b, int c, void* d, void* e);
     void* _ZN6Memory13operator_new2Ej(unsigned int sz);
     void func_ov002_020e63a4(void* p);
-    void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int a, int b, void* v1, void* v2);
+    void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int a, int b, void* v1, void* v2);
     void func_02035644(void* p, int a);
     void func_ov002_020d6368(void* p);
     void LoadSilverStarAndNumber(void);
@@ -33,7 +33,7 @@ extern "C" {
     void func_02013a00(void);
     void func_ov002_020c7dd0(void* p, int a);
     void _ZN13RaycastGroundC1Ev(void* p);
-    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* p, void* v, void* a);
+    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* p, void* v, void* a);
     void _ZN4BgCh19StartDetectingWaterEv(void* p);
     int StartWithFarCamera(void);
     void _ZN13RaycastGroundD1Ev(void* p);
@@ -136,7 +136,7 @@ Ld0:
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     func_ov002_020e63a4(c);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c + 0x380, c, 0x32000, 0x32000, c + 0x92, c + 0x8c);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x380, c, 0x32000, 0x32000, c + 0x92, c + 0x8c);
     func_02035644(c + 0x380, 0x28000);
     mTerminalVelocity = -0x4b000;
     mSpawnPosX = mPosX;
@@ -175,7 +175,7 @@ Ld0:
     pos.y = td;
     pos.z = tz;
     *(int*)(rc + 0x4c) = td * 2;
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rc, &pos, c);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rc, &pos, c);
     _ZN4BgCh19StartDetectingWaterEv(rc);
     if (data_0209f2f8 == 0x1d) {
         data_0209211c = 2;

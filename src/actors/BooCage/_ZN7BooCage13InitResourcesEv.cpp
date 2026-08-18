@@ -8,8 +8,8 @@ extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
+extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
 }
 extern void *data_ov063_0211edec;
 
@@ -20,8 +20,8 @@ int BooCage::InitResources()
     if (!_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel)) return 0;
     mVertAccel = -0x4000;
     mTerminalVelocity = -0x46000;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0x200004, 0);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x64000, 0x64000, 0, 0);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0x200004, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x64000, 0x64000, 0, 0);
     _ZN12WithMeshClsn13SetLimMovFlagEv((char *)&mWithMeshClsn);
     unk_378 = 0;
     unk_37c = 0;

@@ -8,7 +8,7 @@
  * dScMg3DEsp_c_CleanupResources and happens to agree here. dScMg3DEsp_c's own
  * vtable is ov006 0x0213c8c4 and its word at slot 3 (0x0213c8d0) relocates to
  * 0x020e9cec -- so this is this class's own override rather than one it
- * inherits from dScMgSingle3DBase_c. The signature is include/ActorBase.h's
+ * inherits from dScMgSingle3DBase_c. The signature is include/fBase_c.h's
  * own slot 3, `virtual s32 CleanupResources()`.
  *
  * IT ALSO RESOLVES TWO PHANTOM REFERENCES. The pre-migration file released

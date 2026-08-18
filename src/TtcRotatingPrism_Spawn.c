@@ -9,9 +9,9 @@
 /* resolved: VT0 = _ZTV15TtcRotatingCube */
 int *TtcRotatingPrism_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(984);
+    int *p = (int *)_ZN7fBase_cnwEj(984);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV15TtcRotatingCube;
         _ZN5ModelC1Ev((char *)p + 0x320);
         _ZN11ShadowModelC1Ev((char *)p + 0x380);

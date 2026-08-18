@@ -10,7 +10,7 @@ extern u16 DecIfAbove0_Short(u16 *p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *v);
 extern int _Z14ApproachLinearRsss(s16 *val, int target, int step);
 extern int RandomIntInternal(int *seed);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 }
 
 extern u8 data_0209f2c0;
@@ -52,7 +52,7 @@ int TtcRotatingCube::Behavior()
     }
     func_ov065_0211990c(((char *)this));
     func_ov065_02119794(((char *)this));
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0))
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0))
         func_ov065_021198a0(((char *)this));
     return 1;
 }

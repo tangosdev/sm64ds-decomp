@@ -73,7 +73,7 @@
 #include "Stage.h"
 
 struct dScMgD3DBase_c : dScMgBase_c {
-    /* Declared first -- see include/Scene.h's KEY FUNCTION note. Overrides
+    /* Declared first -- see include/dScene_c.h's KEY FUNCTION note. Overrides
        slots 16 (D1) and 17 (D0). DEFINED INLINE, see the file banner. */
     virtual ~dScMgD3DBase_c() {}
 
@@ -82,7 +82,7 @@ struct dScMgD3DBase_c : dScMgBase_c {
     void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 
     /* --- overrides. 1, 2, 5, 7, 10 re-override slots dScMgBase_c already
-           gave a body; 11 (AfterRender) is the first override below Scene's
+           gave a body; 11 (AfterRender) is the first override below dScene_c's
            own default (dScMgBase_c never touched it). --- */
     virtual bool BeforeInitResources();                /* slot  1 */
     virtual void AfterInitResources(u32 vfSuccess);    /* slot  2 */

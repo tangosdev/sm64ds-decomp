@@ -3,9 +3,9 @@
 
 #include "types.h"
 
-/* Derives from Enemy, on the evidence of its own destructor: `_ZN6FlyGuyD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN6FlyGuyD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
- * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
  *
  * The members close exactly on one another:
@@ -19,12 +19,12 @@
  * also rename things its callers spell.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `FlyGuy_Spawn` calls
- * `ActorBase::operator new(1000)` -- 0x3e8 -- and stores `_ZTV6FlyGuy`,
+ * `fBase_c::operator new(1000)` -- 0x3e8 -- and stores `_ZTV6FlyGuy`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3e4; the difference is trailing space no source reads.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
@@ -33,7 +33,7 @@
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
 
-struct FlyGuy : Enemy {
+struct FlyGuy : dEnemyBase_c {
     /* What mCurrentState points at. Behavior compares it against two objects in
        ov070's data and calls the handler at +0x08 through it. Both it and the
        timer at 0x3cc were reachable only as raw `c + 0x...`, so the generated
@@ -61,6 +61,7 @@ struct FlyGuy : Enemy {
     virtual ~FlyGuy();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

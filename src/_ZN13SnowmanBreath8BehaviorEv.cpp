@@ -9,13 +9,13 @@
 extern u8 data_0209f2d8[];
 
 extern "C" {
-extern int _ZN6Player9StartTalkER9ActorBaseb(void *self, void *actor, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void *self, void *actor, int b);
 /* Moved INSIDE the extern "C" block. A bare `extern` on a mangled name in a
    //cpp file mangles it a second time -- this one was reaching the linker as
    _Z48_ZN6Player11ShowMessage... and sat in the unresolved baseline. Byte
    gates cannot see it, because relocations compare as wildcards; only
    check_references does. */
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *self, void *actor,
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *self, void *actor,
                                                             unsigned int msg,
                                                             const Vector3 *pos,
                                                             unsigned int a,
@@ -53,7 +53,7 @@ int SnowmanBreath::Behavior()
             if (func_ov027_02112618(((char *)this)) == 0) {
                 break;
             }
-            if (_ZN6Player9StartTalkER9ActorBaseb(*(void **)((char *)&unk_13c4), ((char *)this), 1) == 0) {
+            if (_ZN6Player9StartTalkER7fBase_cb(*(void **)((char *)&unk_13c4), ((char *)this), 1) == 0) {
                 break;
             }
             {
@@ -67,7 +67,7 @@ int SnowmanBreath::Behavior()
             pos.y = mPosY;
             pos.z = mPosZ;
             pos.y = pos.y + 0x12c000;
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
                     *(void **)((char *)&unk_13c4), ((char *)this), 0xbb, &pos, zero, zero) == 0) {
                 break;
             }

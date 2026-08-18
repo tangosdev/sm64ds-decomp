@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "PowerStar.h"
 #include "SharedFilePtr.h"
-extern "C" void _ZN5Actor11UntrackStarERa(void* self, signed char* star);
+extern "C" void _ZN8dActor_c11UntrackStarERa(void* self, signed char* star);
 
 extern char data_ov002_02110944;
 extern char data_ov002_02110924;
@@ -20,10 +20,10 @@ int PowerStar::CleanupResources()
         if (v != 8) {
             if (v == 6)
                 UnloadSilverStarAndNumber();
-            _ZN5Actor11UntrackStarERa(((char*)this), (signed char*)((char*)&unk_498));
+            _ZN8dActor_c11UntrackStarERa(((char*)this), (signed char*)((char*)&unk_498));
         }
     } else {
-        _ZN5Actor11UntrackStarERa(((char*)this), (signed char*)((char*)&unk_498));
+        _ZN8dActor_c11UntrackStarERa(((char*)this), (signed char*)((char*)&unk_498));
         UnloadSilverStarAndNumber();
     }
     ((SharedFilePtr *)(&data_ov002_02110944))->Release();

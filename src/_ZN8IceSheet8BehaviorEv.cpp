@@ -9,6 +9,6 @@ extern "C" {
 int IceSheet::Behavior()
 {
   if (!((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled())
-    ((MeshColliderBase *)(&mMeshCollider))->Enable((Actor *)(((char*)this)));
+    ((MeshColliderBase *)(&mMeshCollider))->Enable((dActor_c *)(((char*)this)));
   return 1;
 }

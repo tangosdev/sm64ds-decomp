@@ -3,7 +3,7 @@
 /* recovered: named members + shared header, real C++ method
  *
  * mHeldObj is declared s32 in Player.h but is an actor pointer: this reads
- * ActorBase's mFlags (+0xb0) and actorID (+0xc) through it. Actor IDs 0xbd
+ * fBase_c's mFlags (+0xb0) and actorID (+0xc) through it. dActor_c IDs 0xbd
  * and 0xbe get the alternate throw animation.
  */
 #include "Player.h"
@@ -16,7 +16,7 @@ extern int _ZN6Player7SetAnimEji5Fix12IiEj(void*,unsigned,int,int,unsigned);
 
 int Player::St_Throw_Init()
 {
-    Actor* held = (Actor*)mHeldObj;
+    dActor_c* held = (dActor_c*)mHeldObj;
     int b = (held->mFlags & 0x200) ? 1 : 0;
     if (!b) {
         unsigned short a = held->actorID;

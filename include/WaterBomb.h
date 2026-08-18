@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout:
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN9WaterBombD1Ev` destroys each member, and
  * `WaterBomb_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV9WaterBomb`. Everything this header used to restate below
- * 0x110 belongs to Enemy and Actor and is inherited now.
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
@@ -18,17 +18,17 @@
  *     0x350 ShadowModel                0x28    -> 0x378
  *
  * SIZE IS THE ROM'S OWN: `WaterBomb_Spawn` calls
- * `ActorBase::operator new(972)` -- 0x3cc -- and stores this class's
+ * `fBase_c::operator new(972)` -- 0x3cc -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "MovingCylinderClsn.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct WaterBomb : Enemy {
+struct WaterBomb : dEnemyBase_c {
     MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
     Model                        mModel;                /* 0x300 */

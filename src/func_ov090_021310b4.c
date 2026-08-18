@@ -4,16 +4,16 @@
 // rotates the p/flags r5/r4 coloring; ternary + laundered test materializes the
 // ==0xbf bool (moveq #1/movne #0/cmp) instead of jump-threading.
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* thiz, void* v);
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_ov002_020aea30(char* c, void* p, int a, int b);
-extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(char* c, void* cyl, void* p);
+extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(char* c, void* cyl, void* p);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, int f);
 extern void func_ov002_020ada40(char* c, void* v, void* p, int a);
 extern void func_02012694(int a, void* b);
 extern int _ZN6Player9IsOnShellEv(void* p);
-extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(char* c, void* v, unsigned int a, int b, short d);
-extern void _ZN5Actor8PoofDustEv(char* c);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(char* c);
+extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(char* c, void* v, unsigned int a, int b, short d);
+extern void _ZN8dActor_c8PoofDustEv(char* c);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(char* c);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, int a, int b, int d, int e, int f);
 
 struct V3 { int x, y, z; };
@@ -39,7 +39,7 @@ void func_ov090_021310b4(char* c)
     _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x110, &sv);
 
     if (*(unsigned int*)(c + 0x134) == 0) return;
-    if ((p = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x134))) == 0) return;
+    if ((p = (char*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x134))) == 0) return;
     flags = (int)(((long long)*(int*)(c + 0x130)));
 
     if (flags & 0x2400) {
@@ -57,7 +57,7 @@ void func_ov090_021310b4(char* c)
         func_ov002_020aea30(c, p, 0, 2);
         return;
     }
-    if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, p)) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, p)) {
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         *(int*)(c + 0x10c) = 1;
         func_ov002_020aea30(c, p, 0, 1);
@@ -94,9 +94,9 @@ void func_ov090_021310b4(char* c)
         cv.x = *(int*)(c + 0x5c);
         cv.y = *(int*)(c + 0x60);
         cv.z = *(int*)(c + 0x64);
-        _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &cv, *(unsigned char*)(c + 0x10a) + 1, 0xa000, 0);
-        _ZN5Actor8PoofDustEv(c);
-        _ZN5Actor24KillAndTrackInDeathTableEv(c);
+        _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &cv, *(unsigned char*)(c + 0x10a) + 1, 0xa000, 0);
+        _ZN8dActor_c8PoofDustEv(c);
+        _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
         return;
     }
     hurt.x = *(int*)(c + 0x5c);

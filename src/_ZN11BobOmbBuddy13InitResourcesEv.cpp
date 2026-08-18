@@ -12,13 +12,13 @@ extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void* self);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* actor, Fix12i b, Fix12i c, unsigned int d, unsigned int e);
+extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, Fix12i b, Fix12i c, unsigned int d, unsigned int e);
 extern void func_ov084_0212c960(void* c, int i);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3& v, void* actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3& v, void* actor);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
 extern int func_ov084_0212ca60(void* p);
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int IsStarCollected(int r0, int r1);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround* self);
 
@@ -35,7 +35,7 @@ int BobOmbBuddy::InitResources()
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov084_02130da4), 1, -1);
     _ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov084_02130d9c);
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this) + 0xd4, ((char*)this), 0x8c000, 0x8c000, 0x4200004, 0);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0xd4, ((char*)this), 0x8c000, 0x8c000, 0x4200004, 0);
     func_ov084_0212c960(((char*)this), 0);
     unk_198 = 0;
 
@@ -48,12 +48,12 @@ int BobOmbBuddy::InitResources()
     }
 
     _ZN13RaycastGroundC1Ev(&rc);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, pos, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, pos, 0);
     if (_ZN13RaycastGround10DetectClsnEv(&rc) != 0)
         mPosY = rc.floor[(0x44 - 0x14) / 4];
 
     if (func_ov084_0212ca60(((char*)this)) != 0) {
-        void* player = _ZN5Actor13ClosestPlayerEv(((char*)this));
+        void* player = _ZN8dActor_c13ClosestPlayerEv(((char*)this));
         unsigned char state = *(unsigned char*)((char*)player + 0x6d9);
 
         if (state != 0) goto state_check1;

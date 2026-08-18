@@ -1,12 +1,12 @@
 // @symbol func_ov070_0211f48c
 /* recovered: shared common types */
 #include "common.h"
-char* _ZN5Actor13ClosestPlayerEv(void* self);
+char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 short Vec3_HorzAngle(void* a, void* b);
 void ApproachAngle(short* p, int target, int a, int b, int limit);
 int _ZNK9Animation12WillHitFrameEi(void* a, int f);
 short Vec3_VertAngle(void* a, void* b);
-void* _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(void* self, void* pos, void* vel, int a, int b, unsigned int d);
+void* _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(void* self, void* pos, void* vel, int a, int b, unsigned int d);
 void func_02012694(int a, void* p);
 int _ZN9Animation8FinishedEv(void* a);
 int FlyGuy_ChangeState(void* c, void* p);
@@ -21,7 +21,7 @@ int func_ov070_0211f48c(char* c) {
     struct Vector3 fp;
     struct Vector3 tmp;
 
-    pl = _ZN5Actor13ClosestPlayerEv(c);
+    pl = _ZN8dActor_c13ClosestPlayerEv(c);
     if ((unsigned)(*(int*)(c+0x358) << 4) >> 0x10 >= 0xd)
         goto hitframe;
 
@@ -44,7 +44,7 @@ hitframe:
             fp.z = base[2];
             vel.x = Vec3_VertAngle(c+0x5c, &fp);
         }
-        _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(c, c+0x5c, &vel, 0x1e000, 0xa000, 1);
+        _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(c, c+0x5c, &vel, 0x1e000, 0xa000, 1);
         func_02012694(0x105, c+0x74);
     }
     if (_ZN9Animation8FinishedEv(c+0x350) != 0) {

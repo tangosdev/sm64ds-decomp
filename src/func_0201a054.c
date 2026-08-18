@@ -23,7 +23,7 @@ extern void func_02019440(void);
 extern void func_020134c8(void);
 extern void func_0203b684(void);
 extern void func_020233f0(void);
-extern void _ZN5Scene18PrepareToSpawnBootEv(void);
+extern void _ZN8dScene_c18PrepareToSpawnBootEv(void);
 extern void func_020196cc(void);
 extern void func_0201a5cc(void);
 
@@ -72,7 +72,7 @@ void func_0201a054(void){
   func_0203b684();
   data_020a4bb8 = data_02090864;
   func_020233f0();
-  _ZN5Scene18PrepareToSpawnBootEv();
+  _ZN8dScene_c18PrepareToSpawnBootEv();
   func_020196cc();
   data_0209ee90.f44 = 0x100;
   *(volatile u32*)0x40004c8 = 0x296a5800;

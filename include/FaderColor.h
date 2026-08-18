@@ -32,7 +32,7 @@ struct FaderColor : FaderBrightness {
     /* 0x0c. Only its zero/non-zero-ness is observed: AdvanceFade picks a blend
        step of +0x10 when it is set and -0x10 when it is clear. Kept as unk_00c
        rather than renamed, because a rename cannot change codegen and belongs in
-       its own commit -- and src/_ZN5Scene14StartSceneFadeEjjt.* names it. */
+       its own commit -- and src/_ZN8dScene_c14StartSceneFadeEjjt.* names it. */
     u16 unk_00c;
 
     virtual ~FaderColor();          /* key function; see above */

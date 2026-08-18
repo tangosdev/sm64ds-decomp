@@ -10,7 +10,7 @@
  * a delete-expression forces the deleting destructor's own out-of-line copy
  * into existence instead -- the same role _ZN19dScMgSingle3DBase_cD1Ev.cpp's
  * plain destructor call plays for D1/D2. Same precedent as
- * src/_ZN5SceneD0Ev.cpp.
+ * src/_ZN8dScene_cD0Ev.cpp.
  *
  * It is never called. objisolate keeps the symbol this file declares and
  * drops the rest, and the bytes at 0x0210a4e8 come out exactly as the ROM

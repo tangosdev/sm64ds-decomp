@@ -25,6 +25,7 @@ src/_ZN13FortressTower8BehaviorEv.cpp:
     .text start:0x02148ba8 end:0x02148c94
 
 src/_ZN13FortressTower13InitResourcesEv.cpp:
+    complete
     .text start:0x02148c94 end:0x02148e9c
 
 src/RopeBarrier_Spawn.c:
@@ -111,23 +112,23 @@ src/func_ov102_02149684.c:
     complete
     .text start:0x02149684 end:0x021496a4
 
-src/func_ov102_021496a4.c:
+src/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp:
     complete
     .text start:0x021496a4 end:0x02149710
 
-src/func_ov102_02149710.c:
+src/_ZN13QuestionBlock15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02149710 end:0x02149770
 
-src/func_ov102_02149770.c:
+src/_ZN13QuestionBlock8OnKickedER8dActor_c.cpp:
     complete
     .text start:0x02149770 end:0x021497c8
 
-src/func_ov102_021497c8.c:
+src/_ZN13QuestionBlock11OnAttacked1ER8dActor_c.cpp:
     complete
     .text start:0x021497c8 end:0x02149820
 
-src/func_ov102_02149820.c:
+src/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x02149820 end:0x02149878
 
@@ -243,7 +244,7 @@ src/func_ov102_0214ad40.c:
     complete
     .text start:0x0214ad40 end:0x0214adc8
 
-src/func_ov102_0214adc8.c:
+src/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x0214adc8 end:0x0214ae1c
 
@@ -260,6 +261,7 @@ src/func_ov102_0214b128.cpp:
     .text start:0x0214b128 end:0x0214b248
 
 src/func_ov102_0214b248.cpp:
+    complete
     .text start:0x0214b248 end:0x0214b384
 
 src/func_ov102_0214b384.c:

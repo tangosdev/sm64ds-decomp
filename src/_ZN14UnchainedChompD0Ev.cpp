@@ -2,7 +2,7 @@
 // @symbol _ZN14UnchainedChompD0Ev
 /* recovered: named members + shared header
  *
- * Memory::Deallocate and data_020a0eac are NOT declared here. Enemy.h already
+ * Memory::Deallocate and data_020a0eac are NOT declared here. dEnemyBase_c.h already
  * declares both -- as `void` and `void *` -- and a second extern "C" declaration
  * with a different type is not a redeclaration but an attempt to overload a
  * C-linkage name, which mwccarm rejects outright. */
@@ -13,7 +13,7 @@ int _ZN11ShadowModelD1Ev(void*);
 int _ZN9ModelAnimD1Ev(void*);
 int _ZN12WithMeshClsnD1Ev(void*);
 int _ZN25MovingCylinderClsnWithPosD1Ev(void*);
-int _ZN5EnemyD2Ev(void*);
+int _ZN12dEnemyBase_cD2Ev(void*);
 extern int _ZTV14UnchainedChomp[];
 extern void _ZN8Vector3sD1Ev();
 extern void _ZN7Vector3D1Ev();
@@ -29,7 +29,7 @@ void* _ZN14UnchainedChompD0Ev(struct UnchainedChomp *self) {
   _ZN9ModelAnimD1Ev((char*)&self->mModelAnim);
   _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
-  _ZN5EnemyD2Ev(((char*)self));
+  _ZN12dEnemyBase_cD2Ev(((char*)self));
   _ZN6Memory10DeallocateEPvP4Heap(((char*)self), data_020a0eac);
   return ((char*)self);
 }

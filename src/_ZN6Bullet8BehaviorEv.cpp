@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Bullet.h"
 
-/* This file used to carry `struct Actor { char pad[0x350]; Holder* h; }` and
+/* This file used to carry `struct dActor_c { char pad[0x350]; Holder* h; }` and
  * cast `this` to it. That stand-in was how the state pointer at 0x350 was
  * reached; Bullet.h declares it now, so the cast and the three dummy structs
  * are gone.

@@ -1,15 +1,15 @@
 //cpp
 // @symbol _ZN4ClamD1Ev
 
-struct Actor {
+struct dActor_c {
     char pad[0xd0];
-    virtual ~Actor();
+    virtual ~dActor_c();
 };
 
 struct ModelAnim { char pad[0x64]; ~ModelAnim(); };
 struct MovingCylinderClsn { char pad[0x4]; ~MovingCylinderClsn(); };
 
-struct Clam : Actor {
+struct Clam : dActor_c {
     ModelAnim m0;   /* 0xd4 */
     MovingCylinderClsn m1;   /* 0x138 */
     virtual ~Clam();

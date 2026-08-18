@@ -5,9 +5,9 @@
 
 /* Hazy Maze Cave's switch-operated shutter. `cv` is the ROM's tag for that stage.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjSwdoor_c, which derives
- * from Platform. Its destructor stores THREE vptrs -- its own, daObjSwdoor_c's,
- * then Platform's. A one-level chain emits two.
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjSwdoor_c, which derives
+ * from dBgActor_c. Its destructor stores THREE vptrs -- its own, daObjSwdoor_c's,
+ * then dBgActor_c's. A one-level chain emits two.
  *
  *   _ZTI16daObjCvShutter_c  ov021 0x021148c4
  *   _ZTS16daObjCvShutter_c  ov021 0x021148dc
@@ -22,7 +22,7 @@
  * THE FOUR BYTES AT 0x320 ARE UNOBSERVED, on the same reading as ShutterBob's.
  *
  * WHAT THIS HEADER USED TO SAY: a `u8 mModel` marker at 0xd4 and a
- * `u8 mMovingMeshCollider` marker at 0x124. Both were Platform's, twice removed,
+ * `u8 mMovingMeshCollider` marker at 0x124. Both were dBgActor_c's, twice removed,
  * and are inherited now.
  */
 

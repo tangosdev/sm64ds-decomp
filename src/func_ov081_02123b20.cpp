@@ -8,7 +8,7 @@ extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
 
 struct WithMeshClsn { virtual int v0(); };
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
-extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* thiz, ShadowModel& sm, Matrix4x3& mtx, Fix12i a, Fix12i b, unsigned int c);
 
 extern "C" void func_ov081_02123b20(char* thiz)
@@ -23,10 +23,10 @@ extern "C" void func_ov081_02123b20(char* thiz)
         if (b != 0) return;
     }
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1d0) != 0) {
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, *(ShadowModel*)(c + 0x174), *(Matrix4x3*)(c + 0x12c), 0x50000, 0x1e000, 0xf);
     } else {
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, *(ShadowModel*)(c + 0x174), *(Matrix4x3*)(c + 0x12c), 0x50000, 0x96000, 0xf);
     }
 }

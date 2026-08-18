@@ -21,6 +21,7 @@ src/func_ov081_021237ec.cpp:
     .text start:0x021237ec end:0x02123910
 
 src/func_ov081_02123910.cpp:
+    complete
     .text start:0x02123910 end:0x02123b20
 
 src/func_ov081_02123b20.cpp:
@@ -43,7 +44,7 @@ src/_ZN9Spindrift13InitResourcesEv.cpp:
     complete
     .text start:0x02123ed0 end:0x02123fd8
 
-src/func_ov081_02123fd8.cpp:
+src/_ZN9Spindrift13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02123fd8 end:0x02124038
 
@@ -167,11 +168,11 @@ src/func_ov081_021254d8.cpp:
     complete
     .text start:0x021254d8 end:0x021257b0
 
-src/_ZN10MrBlizzard16CleanupResourcesEv.c:
+src/_ZN10MrBlizzard16CleanupResourcesEv.cpp:
     complete
     .text start:0x021257b0 end:0x0212581c
 
-src/_ZN10MrBlizzard16OnPendingDestroyEv.c:
+src/_ZN10MrBlizzard16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212581c end:0x02125820
 
@@ -406,11 +407,11 @@ src/func_ov081_02127be0.cpp:
     complete
     .text start:0x02127be0 end:0x02127ccc
 
-src/func_ov081_02127ccc.cpp:
+src/_ZN8IceBlock15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02127ccc end:0x02127cf4
 
-src/func_ov081_02127cf4.c:
+src/_ZN8IceBlock4KillEv.cpp:
     complete
     .text start:0x02127cf4 end:0x02127d98
 

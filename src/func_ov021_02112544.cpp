@@ -21,9 +21,9 @@ extern int Vec3_HorzLen(void* v);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
 extern void* _ZNK12WithMeshClsn13GetWallResultEv(void* p);
-extern int _ZN5Actor14GetSubtractionEss(void* a, s16 x, int y);
-extern s16 _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void* a, int x, int y, s16 ang);
-extern void _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(void* a);
+extern int _ZN8dActor_c14GetSubtractionEss(void* a, s16 x, int y);
+extern s16 _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void* a, int x, int y, s16 ang);
+extern void _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(void* a);
 
 extern s16 data_02082214[];
 
@@ -78,9 +78,9 @@ extern "C" void func_ov021_02112544(char* self)
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK12WithMeshClsn13GetWallResultEv(self + 0x1f8) + 4, &walln);
     {
         int wa = _ZN4cstd5atan2E5Fix12IiES1_(walln.x, walln.z);
-        if (_ZN5Actor14GetSubtractionEss(self, *(s16*)(self + 0x94), wa) <= 0x1000)
+        if (_ZN8dActor_c14GetSubtractionEss(self, *(s16*)(self + 0x94), wa) <= 0x1000)
             return;
-        *(s16*)(self + 0x94) = _ZN5Actor12ReflectAngleE5Fix12IiES1_s(self, walln.x, walln.z, *(s16*)(self + 0x94));
-        _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv(self);
+        *(s16*)(self + 0x94) = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(self, walln.x, walln.z, *(s16*)(self + 0x94));
+        _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(self);
     }
 }

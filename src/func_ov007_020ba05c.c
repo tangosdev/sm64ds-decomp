@@ -1,3 +1,15 @@
+/* NONMATCHING -- compiles, but the result is 0x22c bytes against the ROM's 0x284:
+ * 88 bytes SHORT, so this is an incomplete reconstruction rather than a near-miss.
+ *
+ * Three defects had to be fixed before it would compile at all, and each was a shadow
+ * struct disagreeing with itself: `array24` and `array28` are members of StructObj0 but
+ * were being read off StructObj20, and `f2C` was used on StructAInner without being
+ * declared. The pad split below keeps every later offset where it was (pad1 spanned
+ * 0x0c..0x30, so 0x20 of pad puts f2C at 0x2c and leaves f30 at 0x30).
+ *
+ * Those fixes are right, and they are what exposed the 88-byte gap the compile error
+ * had been hiding.
+ */
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -69,7 +81,8 @@ typedef struct StructAInner {
     StructObj0* obj0;
     u8 pad0[4];
     s16* p8;
-    u8 pad1[0x24];
+    u8 pad1[0x20];
+    u32 f2C;
     u32 f30;
     u32 f34;
 } StructAInner;
@@ -111,10 +124,10 @@ int func_ov007_020ba05c(void) {
         s32 check = 0;
         if (obj20->f8 >= 2) {
             s32 sb = b->f3E;
-            u32 sl1 = obj20->array28[obj20->f8 - 2];
+            u32 sl1 = obj0->array28[obj20->f8 - 2];
             u32 lr = (u32)(sb * sb);
             s32 sb_val = (s32)(sl1 >> 12) - (s32)b->fA;
-            u32 sl2 = obj20->array24[obj20->f8 - 2];
+            u32 sl2 = obj0->array24[obj20->f8 - 2];
             s32 r7 = b->f3C;
             s32 sb_sq = sb_val * sb_val;
             s32 sb_acc = r7 * r7 + lr;

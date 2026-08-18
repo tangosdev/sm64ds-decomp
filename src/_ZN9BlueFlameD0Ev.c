@@ -10,7 +10,7 @@ int *_ZN9BlueFlameD0Ev(int *t)
 {
     t[0] = (int)_ZTV11daObjFire_c;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xe4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

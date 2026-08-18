@@ -10,14 +10,14 @@ extern int _ZNK12WithMeshClsn15ShouldUpdatePosEv(void* p);
 extern int func_02037938(void* p);
 extern void func_02038324(int a, int* b, int c, int d);
 extern void _ZN10ClsnResultC1Ev(ClsnResult* r);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, Vec3* a, Vec3* b, void* actor);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
 extern int func_0203842c(void* self);
 extern void _ZN11RaycastLine10GetClsnPosEv(Vec3* out, void* self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vec3* out);
 extern int func_02039794(int x);
 extern void _ZNK10ClsnResult6CopyToERS_(void* self, ClsnResult* dst);
 extern void _ZN12WithMeshClsn19ClearAllGroundFlagsEv(void* p);
-extern void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(void* self, Vec3* v, int rad, void* actor);
+extern void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* self, Vec3* v, int rad, void* actor);
 extern int func_0203553c(void* p);
 extern void _ZN10SphereClsn14SetFloorResultERK10ClsnResult(void* self, ClsnResult* r);
 extern void _ZN10ClsnResultaSERKS_(void* self, ClsnResult* r);
@@ -77,7 +77,7 @@ void func_02036acc(char* c)
         lineEnd.y = ty;
         lineEnd.z = tz;
     }
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(c + 0x134, &lineStart, &lineEnd, *(void**)(c + 0x14));
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(c + 0x134, &lineStart, &lineEnd, *(void**)(c + 0x14));
     if (func_0203842c(c + 0x134))
     {
         int r;
@@ -97,7 +97,7 @@ void func_02036acc(char* c)
             floorFlag = 1;
             _ZNK10ClsnResult6CopyToERS_(c + 0x144, &res0);
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(c + 0x134, &newStart, &newEnd, *(void**)(c + 0x14));
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(c + 0x134, &newStart, &newEnd, *(void**)(c + 0x14));
         if (func_0203842c(c + 0x134)) {
             _ZN11RaycastLine10GetClsnPosEv(&clsnPos2, c + 0x134);
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3(c + 0x148, &normal2);
@@ -124,7 +124,7 @@ void func_02036acc(char* c)
     sphere.y = pos[1];
     sphere.z = pos[2];
     sphere.y += height;
-    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(c + 0x20, &sphere, *(int*)(c + 0x18), *(void**)(c + 0x14));
+    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(c + 0x20, &sphere, *(int*)(c + 0x18), *(void**)(c + 0x14));
     if (func_0203553c(c) == 0)
         *(u8*)AT(c, 0x90) |= 0x40;
     *(int*)(c + 0x128) = *(int*)(c + 0x1b8);

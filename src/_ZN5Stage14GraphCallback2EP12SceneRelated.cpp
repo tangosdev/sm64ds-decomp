@@ -1,5 +1,6 @@
 //cpp
 #include "types.h"
+#include "nitro/hw/registers.h"
 // @symbol _ZN5Stage14GraphCallback2EP12SceneRelated
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
@@ -41,7 +42,7 @@ extern "C" void _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(vu16* reg, struct Matri
    that lost an argument against a name that kept it. */
 s32 Stage::GraphCallback2(SceneRelated *scene) {
     _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(
-        &reg_G2S_DB_BG3PA,
+        REG_DB_BG3PA,
         (struct Matrix2x2*)&scene->unk4,
         scene->unk14,
         scene->unk18,

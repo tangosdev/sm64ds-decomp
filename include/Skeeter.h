@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout:
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN7SkeeterD1Ev` destroys each member, and
  * `Skeeter_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV7Skeeter`. Everything this header used to restate below
- * 0x110 belongs to Enemy and Actor and is inherited now.
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
@@ -17,16 +17,16 @@
  *     0x30c ModelAnim                  0x64    -> 0x370
  *
  * SIZE IS THE ROM'S OWN: `Skeeter_Spawn` calls
- * `ActorBase::operator new(944)` -- 0x3b0 -- and stores this class's
+ * `fBase_c::operator new(944)` -- 0x3b0 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "WithMeshClsn.h"
 
-struct Skeeter : Enemy {
+struct Skeeter : dEnemyBase_c {
     MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x110 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x150 */
     ModelAnim                    mModelAnim;            /* 0x30c */
@@ -51,6 +51,7 @@ struct Skeeter : Enemy {
     virtual ~Skeeter();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

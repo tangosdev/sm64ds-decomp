@@ -5,13 +5,13 @@
 
 /* A donut lift: stands still until ridden, then shakes, falls and respawns.
  *
- * Everything this header used to declare below 0x31e was Actor's and
- * Platform's, restated. It derives from Platform now, which the destructor
- * evidences the usual way -- it stores ArmedRotatingPlatform's vtable, then Platform's,
+ * Everything this header used to declare below 0x31e was dActor_c's and
+ * dBgActor_c's, restated. It derives from dBgActor_c now, which the destructor
+ * evidences the usual way -- it stores ArmedRotatingPlatform's vtable, then dBgActor_c's,
  * then destroys the MovingMeshCollider at 0x124 and the Model at 0xd4 and
- * chains to Actor. Those three are Platform's own.
+ * chains to dActor_c. Those three are dBgActor_c's own.
  *
- * unk_31e sits at 0x31e, in Platform's TAIL PADDING: Platform's last field
+ * unk_31e sits at 0x31e, in dBgActor_c's TAIL PADDING: dBgActor_c's last field
  * ends at 0x31e and its size rounds to 0x320, and the Itanium ABI lets a
  * derived class place members in a non-POD base's tail padding. Behavior reads
  * this+0x31e and reproduces the ROM, which is what confirms the placement.
@@ -19,9 +19,9 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 
-struct ArmedRotatingPlatform : Platform {
+struct ArmedRotatingPlatform : dBgActor_c {
     s16 unk_31e;            /* 0x31e - per-frame yaw step; see InitResources */
 
     /* --- vtable --- */
@@ -33,7 +33,7 @@ struct ArmedRotatingPlatform : Platform {
     int Render();
 };
 
-typedef char DonutBlock_size_must_be_0x320[sizeof(ArmedRotatingPlatform) == 0x320 ? 1 : -1];
+typedef char ArmedRotatingPlatform_size_must_be_0x320[sizeof(ArmedRotatingPlatform) == 0x320 ? 1 : -1];
 
 #endif /* __cplusplus */
 

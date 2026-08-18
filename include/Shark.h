@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-/* Derives from Enemy: the destructor stores this class's vtable, then the
+/* Derives from dEnemyBase_c: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x110 belonged to the
  * chain above and is inherited now.
@@ -14,12 +14,12 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "WithMeshClsn.h"
 
-struct Shark : Enemy {
+struct Shark : dEnemyBase_c {
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
@@ -38,9 +38,14 @@ struct Shark : Enemy {
     int Behavior();
     int InitResources();
     int Render();
+
+    /* Tail padding. The field span stops short of the real size: Shark_Spawn
+       calls fBase_c::operator new(0x3a0), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_394[0xc];      /* 0x394, to the ROM's 0x3a0 */
 };
 
-typedef char Shark_size_must_be_0x394[sizeof(Shark) == 0x394 ? 1 : -1];
+typedef char Shark_size_must_be_0x3a0[sizeof(Shark) == 0x3a0 ? 1 : -1];
 
 #else
 
@@ -51,7 +56,7 @@ struct Shark {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
-    /* 0x05c..0x08c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x05c..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_05c;                 /* 0x05c */
     s32 mPosY;                   /* 0x060 */

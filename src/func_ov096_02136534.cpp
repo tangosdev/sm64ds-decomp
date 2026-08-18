@@ -1,7 +1,7 @@
 //cpp
 struct Vector3;
 struct Vector3_16;
-struct Actor {
+struct dActor_c {
     static void Spawn(unsigned int a, unsigned int b, const Vector3 &v, const Vector3_16 *p, signed char e, short f);
 };
 
@@ -12,7 +12,7 @@ extern "C" int func_ov096_02136534(char *c)
 {
     int b = (int)(*(unsigned short *)(c + 0xc) == 0xf0);
     if (b != 0) {
-        Actor::Spawn(0x122, 2, *(Vector3 *)(c + 0x5c), (Vector3_16 *)0, *(signed char *)(c + 0xcc), -1);
+        dActor_c::Spawn(0x122, 2, *(Vector3 *)(c + 0x5c), (Vector3_16 *)0, *(signed char *)(c + 0xcc), -1);
     }
     func_ov096_02135800(c);
     *(short *)(c + 0x94) = Vec3_HorzAngle((Vector3 *)(*(char **)(c + 0x388) + 0x5c), (Vector3 *)(c + 0x5c));

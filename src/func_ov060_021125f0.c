@@ -1,6 +1,6 @@
 extern int func_ov060_02111cc0(char *c, int a, int b);
 extern int Bowser_IsAnimAtLastFrame(char *c);
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int _ZN12WithMeshClsn15ClearGroundFlagEv(char *c);
 extern short data_02082214[];
 
@@ -31,7 +31,7 @@ void func_ov060_021125f0(char *c)
     nv = -v;
     *(int *)(c + 0x98) = v * data_02082214[(*(unsigned short *)(c + 0x8c) >> 4 << 1) + 1];
     *(int *)(c + 0xa8) = nv * data_02082214[*(unsigned short *)(c + 0x8c) >> 4 << 1];
-    a = _ZN5Actor10FindWithIDEj(*(unsigned int *)(c + 0x3a8));
+    a = _ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x3a8));
     if (a != 0) {
         *(int *)(a + 0x110) = 1;
         {

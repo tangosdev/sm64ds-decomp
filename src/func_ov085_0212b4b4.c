@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daPeach_c::Kill - recovered from vtable slot identity */
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern s32 Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void func_ov085_0212bc78(void *c, void *p);
 extern void func_02012694(int a, void *b);
@@ -35,7 +35,7 @@ int func_ov085_0212b4b4(char *c)
   s16 ang;
   int idx;
   int ysave;
-  pl = _ZN5Actor13ClosestPlayerEv(c);
+  pl = _ZN8dActor_c13ClosestPlayerEv(c);
   if (pl != 0)
   {
     v = *((Vector3 *) (((char *) pl) + 0x5c));

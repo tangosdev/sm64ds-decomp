@@ -56,21 +56,21 @@ extern char data_ov073_021233f0[];
 extern char data_ov073_02123400[];
 
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *clsn);
 extern int _ZNK9Animation12WillHitFrameEi(void *self, int f);
 extern void MulMat4x3Mat4x3(void *d, void *a, void *b);
 extern void Vec3_Lsl(Vector3 *d, Vector3 *s, int sh);
 extern void func_02012694(int a, void *b);
-extern void _ZN5Actor17HugeLandingDustAtER7Vector3b(void *self, Vector3 *v, int b);
+extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *self, Vector3 *v, int b);
 extern void _ZN11RaycastLineC1Ev(void *self);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
 extern void MulVec3Mat4x3(void *a, void *m, void *out);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *self, const Vector3 *a, const Vector3 *b, void *actor);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, const Vector3 *a, const Vector3 *b, void *actor);
 extern int _ZN11RaycastLine10DetectClsnEv(void *self);
 extern void _ZN11RaycastLineD1Ev(void *self);
-extern void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void *self, void *wmc, unsigned int flags);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, void *wmc, unsigned int flags);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
 extern void func_ov073_0211f61c(void *self);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
@@ -92,7 +92,7 @@ int ChiefChilly::Behavior()
     int line[0x1f];
 
     *(C **)((char *)data_0209f318 + 0x114) = c;
-    /* Enemy declares unk_100 as s16 -- 28 of its subclasses' generated headers
+    /* dEnemyBase_c declares unk_100 as s16 -- 28 of its subclasses' generated headers
        say so -- while this file's own extern for the helper says u16*. Both are
        recovered guesses and nothing here settles which; the cast reproduces the
        ROM without asserting either. */
@@ -106,7 +106,7 @@ int ChiefChilly::Behavior()
     if ((char *)c->pp != data_ov073_02123400
         && (char *)c->pp != data_ov073_02123320
         && (char *)c->pp != data_ov073_02123340) {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(self, &mMovingCylinderClsnWithPos);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, &mMovingCylinderClsnWithPos);
     } else {
         int sum = mVertSpeed + mVertAccel;
         int m = mTerminalVelocity;
@@ -114,7 +114,7 @@ int ChiefChilly::Behavior()
         if (sum >= m) m = sum;
         mVertSpeed = m;
         unk_0ac = ac;
-        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(self, &mMovingCylinderClsnWithPos);
+        _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(self, &mMovingCylinderClsnWithPos);
     }
 
     if (((char *)c->pp == data_ov073_02123330 || (char *)c->pp == data_ov073_02123350)
@@ -128,7 +128,7 @@ int ChiefChilly::Behavior()
         v0 = v3C;
         func_02012694(0x167, &mCamSpacePosX);
         v48 = v0;
-        _ZN5Actor17HugeLandingDustAtER7Vector3b(self, &v48, 1);
+        _ZN8dActor_c17HugeLandingDustAtER7Vector3b(self, &v48, 1);
     }
 
     if ((char *)c->pp != data_ov073_021233c0
@@ -174,7 +174,7 @@ int ChiefChilly::Behavior()
             rp.end.z = sz;
             rp.end.z = sz + oz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(line, &rp.start, &rp.end, self);
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(line, &rp.start, &rp.end, self);
         if (_ZN11RaycastLine10DetectClsnEv(line) == 0) {
             if (mHorzSpeed > 0xa000) {
                 unk_4c9 = 1;
@@ -194,7 +194,7 @@ int ChiefChilly::Behavior()
         _ZN11RaycastLineD1Ev(line);
     }
 
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(self, &mWithMeshClsn, 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(self, &mWithMeshClsn, 0);
 
     v54 = data_ov073_02123040;
     _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(&mMovingCylinderClsnWithPos, &v54);

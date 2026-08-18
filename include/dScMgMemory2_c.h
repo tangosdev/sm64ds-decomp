@@ -12,7 +12,7 @@
  * attributed. "MgMemoryMaster" and "dScMgMemory2_c" are both 14 characters,
  * so the rename is length-neutral and no mangled prefix changes.
  *
- * SIZE 0x5410, from MgMemoryMaster_Spawn's own `_ZN9ActorBasenwEj(0x5410)`.
+ * SIZE 0x5410, from MgMemoryMaster_Spawn's own `_ZN7fBase_cnwEj(0x5410)`.
  *
  * SHARED TABLE at 0x4f38, size 0x270 (func_ov006_020c1d80 /
  * func_ov006_020c1c64), the same one four siblings use. As with

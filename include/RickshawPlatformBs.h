@@ -5,9 +5,9 @@
 
 /* The Bowser-in-the-Sky drifting platform. ROM name daObjKm3_Dorifu_c.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjDorifu_c, which derives
- * from Platform. The destructor stores three vptrs -- its own, daObjDorifu_c's,
- * then Platform's -- and destroys daObjDorifu_c's Model[5] and
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjDorifu_c, which derives
+ * from dBgActor_c. The destructor stores three vptrs -- its own, daObjDorifu_c's,
+ * then dBgActor_c's -- and destroys daObjDorifu_c's Model[5] and
  * MovingMeshCollider[5] in between, all of it from the base declaration.
  *
  *   _ZTI17daObjKm3_Dorifu_c  ov047 0x021124cc
@@ -46,7 +46,7 @@ typedef char RickshawPlatformBs_size_must_be_0xdcc[sizeof(RickshawPlatformBs) ==
 
 /* The C spelling of the same object, flat. Kept because the D0 file is a C
    translation unit that reads these fields, and D0 is compiler-generated so it
-   can never be migrated. Same arrangement as include/Platform.h. */
+   can never be migrated. Same arrangement as include/dBgActor_c.h. */
 struct RickshawPlatformBs {
     u8  pad_000[0xd4];
     u8  mModel;            /* 0x0d4 */

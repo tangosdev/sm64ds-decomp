@@ -11,7 +11,7 @@
 
 extern "C" {
 extern int func_ov064_02116ec0(void *);
-extern int _ZN5Actor9TrackStarEjj(void *, unsigned int, unsigned int);
+extern int _ZN8dActor_c9TrackStarEjj(void *, unsigned int, unsigned int);
 }
 
 int ChillBully::InitResources()
@@ -19,6 +19,6 @@ int ChillBully::InitResources()
     mFileTable = (int)data_ov027_021138f4;
     int r = func_ov064_02116ec0((char *)this);
     mStarIdx = param1 & 0xf;
-    mStarSlot = _ZN5Actor9TrackStarEjj((char *)this, mStarIdx, 2);
+    mStarSlot = _ZN8dActor_c9TrackStarEjj((char *)this, mStarIdx, 2);
     return r;
 }

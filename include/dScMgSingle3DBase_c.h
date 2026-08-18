@@ -55,7 +55,7 @@
  * as padding.
  *
  * THE DESTRUCTOR IS NOW DEFINED INLINE (fixed after this file's first
- * landing, #1421) -- same fix, same reason, as include/Scene.h's own note:
+ * landing, #1421) -- same fix, same reason, as include/dScene_c.h's own note:
  * this class has 13 direct RTTI children and every one needs to inline
  * this destructor's body to reproduce its own D1. See the class body's own
  * note for the measurement that caught it. No separate operator delete
@@ -150,10 +150,10 @@ struct dScMgSingle3DBase_c : dScMgBase_c {
     /* Declared first, deliberately -- see dScMgBase_c.h's own KEY FUNCTION
        note for why. Overrides slots 16 (D1) and 17 (D0).
 
-       DEFINED INLINE -- same fix, same reason, as include/Scene.h's own
+       DEFINED INLINE -- same fix, same reason, as include/dScene_c.h's own
        note: this class has 13 direct RTTI children, and every one of them
        inlines THIS destructor's vptr store + mSysTracker destruction +
-       chain to ~dScMgBase_c(), the same way Stage inlines Scene's. Measured
+       chain to ~dScMgBase_c(), the same way Stage inlines dScene_c's. Measured
        directly on dScMgMemory_c (one of the 8 in this slice): a merely
        declared `virtual ~dScMgSingle3DBase_c();` compiles a derived
        destructor that references `_ZN19dScMgSingle3DBase_cD2Ev` as an

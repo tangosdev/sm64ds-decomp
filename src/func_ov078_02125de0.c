@@ -4,7 +4,7 @@
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(struct Vector3 *d, struct Vector3 *s, int sh);
-extern unsigned int _ZN5Actor10FindWithIDEj(unsigned int id);
+extern unsigned int _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
 extern struct Matrix4x3 data_020a0e68;
@@ -41,7 +41,7 @@ void func_ov078_02125de0(char *c)
         id = ((unsigned int*)(c + 0x424))[i];
         if (id == 0)
             continue;
-        actor = (void*)_ZN5Actor10FindWithIDEj(id);
+        actor = (void*)_ZN8dActor_c10FindWithIDEj(id);
         if (actor == 0)
             continue;
 

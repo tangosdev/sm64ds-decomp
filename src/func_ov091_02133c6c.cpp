@@ -6,7 +6,7 @@ extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angX);
 extern "C" void MulVec3Mat4x3(const Vector3* v, const void* m, Vector3* res);
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(char* w);
 extern "C" int _ZNK12WithMeshClsn8IsOnWallEv(char* w);
-extern "C" void _ZN9ActorBase18MarkForDestructionEv(char* c);
+extern "C" void _ZN7fBase_c18MarkForDestructionEv(char* c);
 extern int data_020a0e68[];
 
 extern "C" int func_ov091_02133c6c(char* c){
@@ -26,7 +26,7 @@ extern "C" int func_ov091_02133c6c(char* c){
         || _ZNK12WithMeshClsn10IsOnGroundEv(c+0x144) != 0
         || _ZNK12WithMeshClsn8IsOnWallEv(c+0x144) != 0
         || (*(int*)(c+0xb0) & 8))
-      _ZN9ActorBase18MarkForDestructionEv(c);
+      _ZN7fBase_c18MarkForDestructionEv(c);
   }
   return 1;
 }

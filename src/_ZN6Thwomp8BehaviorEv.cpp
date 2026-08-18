@@ -20,9 +20,9 @@ void func_ov091_02133098(char *c);
 int func_ov091_02132dc0(char *c);
 int _ZN9Animation7AdvanceEv(void *self);
 int _ZN9Animation8FinishedEv(void *self);
-void _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
 }
 
 int Thwomp::Behavior()
@@ -94,13 +94,13 @@ int Thwomp::Behavior()
         func_ov091_02132e64(((char *)this));
         break;
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
     func_ov091_02133098(((char *)this));
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0) == 0) {
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0, 0) == 0) {
         if (func_ov091_02132dc0(((char *)this)) == 0)
             goto done;
     }
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
 done:
     return 1;
 }

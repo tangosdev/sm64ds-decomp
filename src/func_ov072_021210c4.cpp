@@ -7,12 +7,12 @@ struct RaycastGround { char buf[0x68 - 0x18]; };
 extern "C" {
 extern int _ZN6Player14IsFrontSlidingEv(void*);
 extern int _ZN6Player17LostGrabbedObjectEv(void*);
-extern void* _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(void*, void*, void*);
+extern void* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void*, void*, void*);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const struct Vector3 *v, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround *self, const struct Vector3 *v, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *shadow, void *mtx, int fix, int t1, unsigned int t2);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
 extern char data_ov072_02122d3c[];
@@ -40,7 +40,7 @@ void func_ov072_021210c4(void *self)
         if (*(int*)(*(char**)(c + 0x360) + 8) == 2) {
             idx = (idx + 2) & 0xff;
         }
-        res = _ZN5Actor11UpdateCarryER6PlayerRK7Vector3(c, *(void**)(c + 0x360), data_ov072_02122d3c + idx * 0xc);
+        res = _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(c, *(void**)(c + 0x360), data_ov072_02122d3c + idx * 0xc);
         *(struct Matrix4x3*)(c + 0xf0) = *(struct Matrix4x3*)res;
     } else {
         Matrix4x3_FromRotationY(c + 0xf0, *(short*)(c + 0x8e));
@@ -61,7 +61,7 @@ void func_ov072_021210c4(void *self)
         v.z = *(int*)(c + 0x64);
         v.y -= 0xa000;
         _ZN13RaycastGroundC1Ev(&rg);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, 0);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, 0);
         if (_ZN13RaycastGround10DetectClsnEv(&rg)) {
             r5 = *(int*)(c + 0x60) - *(int*)((char*)&rg + 0x44);
             if (r5 < 0x1000) r5 = 0x1000;
@@ -74,6 +74,6 @@ void func_ov072_021210c4(void *self)
         _ZN13RaycastGroundD1Ev(&rg);
     }
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x138, c + 0xf0, r4, r5, 0xf);
 }

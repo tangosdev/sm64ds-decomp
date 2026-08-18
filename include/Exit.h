@@ -6,9 +6,9 @@
  * HAND-EXTENDED 2026-08-09 from all five methods. Do not regenerate over this.
  *
  * Exit is a TRIGGER VOLUME, not a moving actor -- it never moves and
- * never draws (Render is `return 1`). So it inherits Actor's motion and scale
- * slots and uses them for something else entirely. The names below are Actor's,
- * kept deliberately so this header does not contradict include/Actor.h, but
+ * never draws (Render is `return 1`). So it inherits dActor_c's motion and scale
+ * slots and uses them for something else entirely. The names below are dActor_c's,
+ * kept deliberately so this header does not contradict include/dActor_c.h, but
  * what this class actually does with them is:
  *
  *   mScaleX  0x080   HALF-WIDTH of the trigger box. InitResources derives it

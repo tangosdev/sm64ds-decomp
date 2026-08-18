@@ -1,7 +1,7 @@
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef struct Vector3 { int x, y, z; } Vector3;
-typedef struct Actor Actor;
+typedef struct dActor_c dActor_c;
 
 struct S18  { short f0; char pad[0x16]; };
 struct S18b { u16 f0; char pad[0x16]; };
@@ -15,7 +15,7 @@ extern char data_ov002_02110694;
 extern int func_ov002_020ceb54(char* self);
 extern void _ZN11RaycastLineC1Ev(void* self);
 extern void _ZN11RaycastLineD1Ev(void* self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, const Vector3* a, const Vector3* b, Actor* obj);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, const Vector3* a, const Vector3* b, dActor_c* obj);
 extern int _ZN11RaycastLine10DetectClsnEv(void* self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(const void* self, Vector3* out);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
@@ -41,7 +41,7 @@ int func_ov002_020ce324(char* c)
     a2.z = *(int*)(c + 0x64);
     a1.y += 0x50000;
     a2.y += 0x96000;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl1, &a1, &a2, (Actor*)c);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl1, &a1, &a2, (dActor_c*)c);
     if (_ZN11RaycastLine10DetectClsnEv(rl1)) {
         _ZN11RaycastLineD1Ev(rl1);
         return 0;
@@ -68,7 +68,7 @@ int func_ov002_020ce324(char* c)
         b2.x = bx;
         b2.y = by;
         b2.z = bz;
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl2, &b1, &b2, (Actor*)c);
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl2, &b1, &b2, (dActor_c*)c);
         if (_ZN11RaycastLine10DetectClsnEv(rl2)) {
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rl2 + 0x14, &nrm);
             if (nrm.y == 0) {

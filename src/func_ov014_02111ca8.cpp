@@ -6,8 +6,8 @@ void ApproachAngle(void* p, int a, int b, int c, int d);
 unsigned short DecIfAbove0_Short(unsigned short* p);
 void _Z14ApproachLinearRiii(int* p, int to, int step);
 void _Z14ApproachLinearRsss(short* p, short to, short step);
-int _ZN5Actor13DistToCPlayerEv(void* self);
-short _ZN5Actor18HorzAngleToCPlayerEv(void* self);
+int _ZN8dActor_c13DistToCPlayerEv(void* self);
+short _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
 int AngleDiff(int a, int b);
 void func_ov014_02111ebc(void* c, int i);
 void _ZN9Animation7AdvanceEv(void* self);
@@ -20,8 +20,8 @@ void func_ov014_02111ca8(char* c){
     _Z14ApproachLinearRsss((short*)(c + 0x8e), *(short*)(c + 0x602), 0x190);
     _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x400);
     if (*(unsigned char*)(c + 0x61c)) {
-        int d = _ZN5Actor13DistToCPlayerEv(c);
-        *(short*)(c + 0x602) = _ZN5Actor18HorzAngleToCPlayerEv(c);
+        int d = _ZN8dActor_c13DistToCPlayerEv(c);
+        *(short*)(c + 0x602) = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
         *(short*)(c + 0x94) = *(short*)(c + 0x8e);
         *(int*)(c + 0x98) = 0xa000;
         *(int*)(c + 0xa8) = 0x14000;

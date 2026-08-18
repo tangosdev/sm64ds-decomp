@@ -4,7 +4,7 @@
  * dScMgD3DBase_c's four children, and the largest class in the family.
  *
  * SIZE 0x7bac, from MgTrampolineTerror_Spawn's own
- * `_ZN9ActorBasenwEj(0x7bac)`. The English _Spawn name is already
+ * `_ZN7fBase_cnwEj(0x7bac)`. The English _Spawn name is already
  * attributed and is kept.
  *
  * SIX ARRAYS, and factory and destructor agree on all six in exact reverse
@@ -74,16 +74,17 @@ struct dScMgTrampoline2_c : dScMgD3DBase_c {
     u8  unk_7bab;         /* 0x7bab */
 
     /* --- this class's own vtable overrides, defined out of line under their
-       own mangled names. Each re-uses a slot ActorBase already holds rather
+       own mangled names. Each re-uses a slot fBase_c already holds rather
        than appending one, and none adds a field, so the size assert below is
        untouched. The destructor above stays the key function, so no
        translation unit starts emitting _ZTV18dScMgTrampoline2_c because of
-       these. Signatures are include/ActorBase.h's and include/dScMgBase_c.h's
+       these. Signatures are include/fBase_c.h's and include/dScMgBase_c.h's
        own, copied unchanged.
 
        Behavior IS THE MATCHED ACCESS THAT REACHES pad_7ac4 and pad_5004; the
        banner above records what that costs the two "no matched access"
        claims. --- */
+    s32 InitResources();      /* slot 0 -- src/_ZN18dScMgTrampoline2_c13InitResourcesEv.cpp */
     s32 CleanupResources();   /* slot 3 -- ov006 0x0212318c */
     s32 Behavior();           /* slot 6 -- ov006 0x02123340 */
     s32 Render();             /* slot 9 -- ov006 0x021231ac */

@@ -12,7 +12,7 @@ extern int _ZN6Player12GetTalkStateEv(void* p);
 extern int _Z14ApproachLinearRsss(s16* p, s16 target, s16 step);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void func_ov084_0212c960(char* c, int a);
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 
 extern char* data_0209f318;
 extern signed char data_0209f2f8;
@@ -73,7 +73,7 @@ void func_ov084_0212c1a0(char* c)
             return;
         if (func_ov084_0212cae0(c) == 0)
             return;
-        actor = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x198));
+        actor = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x198));
         if (actor == 0)
             return;
         func_ov002_020bc990(actor);
@@ -84,7 +84,7 @@ void func_ov084_0212c1a0(char* c)
         unsigned int id = *(unsigned int*)(c + 0x198);
         if (id == 0)
             return;
-        if (*(unsigned char*)(_ZN5Actor10FindWithIDEj(id) + 0x32e) == 1)
+        if (*(unsigned char*)(_ZN8dActor_c10FindWithIDEj(id) + 0x32e) == 1)
             *(unsigned char*)AT(c, 0x1e8) += 1;
         return;
     }

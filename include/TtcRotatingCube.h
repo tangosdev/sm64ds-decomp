@@ -9,7 +9,7 @@
 
 struct TtcRotatingCube {
     u8  pad_000[0x90];
-    /* 0x090..0x0a8 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x090..0x0a8 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s16 unk_090;                 /* 0x090 */
     s16 mPrevAngleX;             /* 0x092 */

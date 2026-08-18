@@ -3,7 +3,7 @@
 struct Vec3 { s32 x, y, z; Vec3() {} Vec3(const Vec3 &o) { x = o.x; y = o.y; z = o.z; } };
 
 extern "C" {
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020ed63c(void *self, s32 a);
 extern s32 _ZNK12WithMeshClsn14GetResultFlag1Ev(void *self);
 extern void func_ov002_020ec670(void *self, void *clsn);
@@ -16,7 +16,7 @@ extern s32 func_ov002_020eddc4(void *self);
 extern s32 func_ov002_020ed6cc(void *self);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *cc);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void *self);
 }
 struct VObj {
@@ -65,7 +65,7 @@ void func_ov002_020ecd18(void *arg0)
 
     o = 0;
     if (*(u32 *)(c + 0x410) != 0)
-        o = _ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x410));
+        o = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x410));
     if (o != 0) {
         b = (s32)((*(u32 *)(o + 0xb0) & 0x10000000) != 0);
         if (b == 0) {
@@ -129,6 +129,6 @@ void func_ov002_020ecd18(void *arg0)
     if (flag == 1)
         _ZN12CylinderClsn6UpdateEv(c + 0x110);
     if (o == 0)
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x110);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x110);
     WithMeshClsn_UpdateContinuous_Veneer(c + 0x144);
 }

@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 extern "C" {
-    void* _ZN5Actor10FindWithIDEj(u32 id);
+    void* _ZN8dActor_c10FindWithIDEj(u32 id);
     void LinkSilverStarAndStarMarker(void* a, void* b);
     int _ZN6Player9IsOnShellEv(void* p);
     void func_02012790(int a);
@@ -15,7 +15,7 @@ extern "C" {
     void GiveVsStars(int idx, int delta);
     int IsStarCollectedInCurLevel(int i);
     void CollectStarInCurLevel(int i);
-    void _ZN5Actor17TrackInDeathTableEv(void* a);
+    void _ZN8dActor_c17TrackInDeathTableEv(void* a);
     int SublevelToLevel(int i);
     int _ZN8SaveData13GetCoinRecordEj(u32 i);
     s16 NumCoins(void);
@@ -41,7 +41,7 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
     int sb;
 
     *(u32*)(c + 0x440) = 0xa;
-    found = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x434));
+    found = _ZN8dActor_c10FindWithIDEj(*(u32*)(c + 0x434));
     if (found) {
         LinkSilverStarAndStarMarker(found, 0);
     }
@@ -124,7 +124,7 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
             if (r5 != 0) {
                 int lvl;
                 if ((((u32)(*(u16*)(c + 0x4a2) << 0x13)) >> 0x1f) != 0 && found != 0) {
-                    _ZN5Actor17TrackInDeathTableEv(found);
+                    _ZN8dActor_c17TrackInDeathTableEv(found);
                 }
                 lvl = SublevelToLevel((signed char)data_0209f2f8);
                 if (lvl <= 0xe) {

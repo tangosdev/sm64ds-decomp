@@ -12,7 +12,7 @@
  * Loads the language-specific card art into both OBJ VRAM banks with the shared
  * palette, resets the class's own state, then arms the timer and the HUD. The bail
  * on func_ov006_020c1a88 returning 0 is the only failure path, and it returns 0
- * from InitResources -- which is what the s32 return of ActorBase::InitResources
+ * from InitResources -- which is what the s32 return of fBase_c::InitResources
  * is for.
  *
  * func_ov006_0210a534 is dScMgSingle3DBase_c's slot 26, still unnamed at that

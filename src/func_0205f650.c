@@ -1,2 +1,2 @@
-extern unsigned short G;
-int func_0205f650(void) { return (G & 1) != 0; }
+#include "nitro/hw/registers.h"
+int func_0205f650(void) { return (REG_POWCNT1 & POWER_CONTROL_ENABLE) != 0; }

@@ -8,7 +8,7 @@ extern int Vec3_ApproachHorz(void* out, void* a, int maxStep);
 extern void _Z14ApproachLinearRiii(int* r, int a, int b);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 extern int _ZN6Player18HasFinishedTalkingEv(void* thiz);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* thiz);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* thiz);
 extern unsigned char data_0209f284[];
 
 int func_ov085_0212e078(char* c)
@@ -24,7 +24,7 @@ int func_ov085_0212e078(char* c)
     if (*(unsigned short*)(c + 0x100) == 0) {
         if (_ZN5Sound7PlaySubEjjj5Fix12IiEb(0x4a, 0x7f, 0, 0x7222, 0) != 0) {
             if (_ZN6Player18HasFinishedTalkingEv(*(void**)(c + 0x2a0)) == 1) {
-                _ZN9ActorBase18MarkForDestructionEv(c);
+                _ZN7fBase_c18MarkForDestructionEv(c);
                 data_0209f284[0] = 0;
             }
         }

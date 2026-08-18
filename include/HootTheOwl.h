@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and the class's own destructor is what proves it:
+/* Derives from dEnemyBase_c, and the class's own destructor is what proves it:
  * `_ZN10HootTheOwlD1Ev` stores this vtable, destroys the four members below in
- * reverse declaration order, then calls `Enemy::~Enemy`. Everything this header
+ * reverse declaration order, then calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header
  * used to restate below 0x110 belongs to that chain and is inherited now --
- * nine of those markers turned out to be named Actor/Enemy fields (mAngleX,
+ * nine of those markers turned out to be named dActor_c/dEnemyBase_c fields (mAngleX,
  * mPrevAngleX, mVertAccel, mTerminalVelocity, mVertSpeed, ...).
  *
  * THE FOUR MEMBERS CLOSE EXACTLY ON EACH OTHER, which is four independent
@@ -18,7 +18,7 @@
  *     0x30c ModelAnim                  0x64   -> 0x370
  *     0x370 ShadowModel                0x28   -> 0x398
  *
- * and Enemy's own 0x110 closes exactly on the first of them.
+ * and dEnemyBase_c's own 0x110 closes exactly on the first of them.
  *
  * Typing them absorbed four markers that were their insides, each corroborated
  * by what the code does with it:
@@ -30,18 +30,18 @@
  *     into it, and InitResources sets mAnimSpeed to 0x1000, which is 1.0
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `HootTheOwl_Spawn` calls
- * `ActorBase::operator new(1016)` -- 0x3f8 -- and stores `_ZTV10HootTheOwl`,
+ * `fBase_c::operator new(1016)` -- 0x3f8 -- and stores `_ZTV10HootTheOwl`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3f4; the difference is trailing space no source reads.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct HootTheOwl : Enemy {
+struct HootTheOwl : dEnemyBase_c {
     /* What mCurrentState points at. The field was declared `s32` and every one
        of its six uses immediately cast it to a pointer, which is the whole
        evidence for the type: Behavior compares it against four objects in

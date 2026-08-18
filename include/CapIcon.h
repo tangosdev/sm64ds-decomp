@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-struct Actor;
+struct dActor_c;
 
 /* The record an actor carries while it is holding one of the caps, and a node in
  * a per-character intrusive doubly-linked list. 0x1c bytes.
@@ -39,7 +39,7 @@ struct CapIcon {
        link time. func_ov001_020ab110 compares the owner against the live slot
        table before releasing it, which is what the copy is for: the slot can
        outlive the actor, and the id says whether it did. */
-    struct Actor *mOwner;         /* 0x04 */
+    struct dActor_c *mOwner;         /* 0x04 */
     u32 mOwnerUniqueID;           /* 0x08 */
     struct CapIcon *mPrev;        /* 0x0c */
     struct CapIcon *mNext;        /* 0x10 */

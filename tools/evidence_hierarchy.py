@@ -1336,7 +1336,7 @@ def build(root, seed_path):
     kinds = Counter(r["kind"] for r in conflicts)
 
     # ---- 7. cross-checks against the figures quoted in the plan ----------
-    actor_c_half = parse_header(os.path.join(inc, "Actor.h"), "include/Actor.h",
+    actor_c_half = parse_header(os.path.join(inc, "dActor_c.h"), "include/dActor_c.h",
                                 cplusplus=False)
 
     def actor_map(which):

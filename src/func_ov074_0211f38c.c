@@ -6,8 +6,8 @@
 #include "common.h"
 extern u16 DecIfAbove0_Short(u16* p);
 extern s16 Vec3_VertAngle(const struct Vector3* v1, const struct Vector3* v0);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3* pos, const struct Vector3_16* ang, int e, int f);
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3* pos, const struct Vector3_16* ang, int e, int f);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern s16 data_02082214[];
 
 int func_ov074_0211f38c(u8* c){
@@ -49,7 +49,7 @@ int func_ov074_0211f38c(u8* c){
             p0.z += (int)(((s64)mult * data_02082214[s+1] + 0x800) >> 0xc);
         }
         ang.x=Vec3_VertAngle(&p1, &p0);
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xc7, 0x1111, &p0, &ang, (signed char)c[0xcc], -1);
+        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xc7, 0x1111, &p0, &ang, (signed char)c[0xcc], -1);
         {
             u8* pc=(u8*)(c+0x602);
             *pc+=1;
@@ -57,7 +57,7 @@ int func_ov074_0211f38c(u8* c){
         *(short*)((c+0x500)+0xfc)=2;
     }
     r5=data_ov074_02122d80[c[0x604]];
-    pl=_ZN5Actor13ClosestPlayerEv(c);
+    pl=_ZN8dActor_c13ClosestPlayerEv(c);
     if(c[0x604]==1){ if(*(int*)((char*)pl+8)!=3) r5+=1; }
     return c[0x602]>=r5 ? 1 : 0;
 }

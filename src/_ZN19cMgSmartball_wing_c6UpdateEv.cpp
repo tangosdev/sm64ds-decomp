@@ -1,7 +1,7 @@
 //cpp
 /* Slot 1. While unk_040 is 0 or 1, draws two extra base sprites under the
  * main pair; then four OAM::Render calls draw a mirrored quad using the
- * eased angle at offset 0x32 (base tail padding -- see the header) to
+ * eased angle at offset 0x32 (a BASE field -- see the header) to
  * spread each half away from vertical. */
 #include "cMgSmartball_wing_c.h"
 #include "OamAttr.h"

@@ -8,7 +8,7 @@ extern void func_ov102_02149ff0(char* c);
 extern void func_ov102_02149e38(char* self);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
-extern unsigned char _ZN5Actor9TrackStarEjj(void* c, unsigned int a, unsigned int b);
+extern unsigned char _ZN8dActor_c9TrackStarEjj(void* c, unsigned int a, unsigned int b);
 
 extern char data_ov102_0214e7e8, data_ov102_0214e808, data_ov102_0214e7f8;
 extern char data_ov002_0210d9e0, data_ov102_0214e800, data_ov102_0214e7f0;
@@ -73,7 +73,7 @@ int _ZN13QuestionBlock13InitResourcesEv(char* c)
         *(unsigned char*)(c + 0x3f1) = (unsigned char)(*(unsigned int*)(c + 8) >> 8);
         if (*(unsigned char*)(c + 0x3f1) == 0xff)
             *(unsigned char*)(c + 0x3f1) = 0;
-        *(unsigned char*)(c + 0x3f0) = _ZN5Actor9TrackStarEjj(c, *(unsigned char*)(c + 0x3f1), 2);
+        *(unsigned char*)(c + 0x3f0) = _ZN8dActor_c9TrackStarEjj(c, *(unsigned char*)(c + 0x3f1), 2);
     }
 
     {

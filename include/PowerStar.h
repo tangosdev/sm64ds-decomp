@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout:
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN9PowerStarD1Ev` destroys each member, and
  * `PowerStar_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV9PowerStar`. Everything this header used to restate below
- * 0x110 belongs to Enemy and Actor and is inherited now.
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
@@ -19,17 +19,17 @@
  *     0x3d4 ShadowModel                0x28    -> 0x3fc
  *
  * SIZE IS THE ROM'S OWN: `PowerStar_Spawn` calls
- * `ActorBase::operator new(1220)` -- 0x4c4 -- and stores this class's
+ * `fBase_c::operator new(1220)` -- 0x4c4 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct PowerStar : Enemy {
+struct PowerStar : dEnemyBase_c {
     MovingCylinderClsnWithPos    mCylinderClsn;         /* 0x110 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x150 */
     ModelAnim                    mModelAnim1;           /* 0x30c */
@@ -58,6 +58,7 @@ struct PowerStar : Enemy {
     virtual ~PowerStar();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
 
     void AddStarMarker();
     int Behavior();

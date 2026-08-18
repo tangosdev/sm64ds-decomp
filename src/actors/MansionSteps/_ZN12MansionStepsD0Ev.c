@@ -12,7 +12,7 @@ int *_ZN12MansionStepsD0Ev(int *t)
     t[0] = (int)_ZTV11daTrsTrap_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x15c);
     _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

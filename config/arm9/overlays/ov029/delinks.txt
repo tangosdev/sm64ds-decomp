@@ -12,7 +12,7 @@ src/_ZN29FloatOnWaterPlatformWdwSquareD0Ev.c:
     complete
     .text start:0x021111f0 end:0x02111254
 
-src/func_ov029_02111254.cpp:
+src/_ZN29FloatOnWaterPlatformWdwSquare13InitResourcesEv.cpp:
     complete
     .text start:0x02111254 end:0x02111340
 
@@ -140,7 +140,7 @@ src/_ZN32FloatOnWaterPlatformWdwRectangleD0Ev.c:
     complete
     .text start:0x02111ef4 end:0x02111f58
 
-src/func_ov029_02111f58.cpp:
+src/_ZN32FloatOnWaterPlatformWdwRectangle13InitResourcesEv.cpp:
     complete
     .text start:0x02111f58 end:0x02112044
 

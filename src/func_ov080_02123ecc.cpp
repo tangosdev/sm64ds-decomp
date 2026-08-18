@@ -1,6 +1,6 @@
 //cpp
 struct Vector3; struct BCA_File;
-struct Actor { Actor *ClosestPlayer(); };
+struct dActor_c { dActor_c *ClosestPlayer(); };
 struct ModelAnim { void SetAnim(BCA_File *f, int b, int c, unsigned int d); };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
@@ -14,10 +14,10 @@ extern "C" void func_0201267c(int a, void *b);
 extern "C" void func_ov080_02124360(void *self);
 extern "C" int data_ov080_021283d8[];
 
-extern "C" void func_ov080_02123ecc(Actor *self)
+extern "C" void func_ov080_02123ecc(dActor_c *self)
 {
     char *s = (char*)self;
-    Actor *p = self->ClosestPlayer();
+    dActor_c *p = self->ClosestPlayer();
     int dist;
     if (p == 0) dist = 0x5dc000;
     else dist = Vec3_HorzDist(s + 0x5c, (char*)p + 0x5c);
@@ -26,7 +26,7 @@ extern "C" void func_ov080_02123ecc(Actor *self)
     if (dist >= 0xfa000) {
         *(int*)(s + 0x17c) = 2;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((ModelAnim*)(s + 0xd4), (BCA_File*)data_ov080_021283d8[1], 0x40000000, 0x1000, 0);
-        Actor *p2 = self->ClosestPlayer();
+        dActor_c *p2 = self->ClosestPlayer();
         *(short*)(s + 0x8e) = Vec3_HorzAngle(s + 0x5c, (char*)p2 + 0x5c);
         {
             int *a = (int*)((int)s + 0x150);

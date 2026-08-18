@@ -1,7 +1,7 @@
 //cpp
 struct Vec4 { int a, b, c, d; ~Vec4(){} };
 extern "C" {
-char* _ZN5Actor13ClosestPlayerEv(void);
+char* _ZN8dActor_c13ClosestPlayerEv(void);
 void func_ov066_02119454(char* c, void* p);
 extern unsigned char data_ov066_0211ae08;
 extern unsigned char data_ov066_0211ae04;
@@ -10,7 +10,7 @@ extern int data_ov066_0211b0ac;
 int func_ov066_02119398(char* c)
 {
     Vec4 sp;
-    char* p = _ZN5Actor13ClosestPlayerEv();
+    char* p = _ZN8dActor_c13ClosestPlayerEv();
     if (p != 0) {
         char* sp2 = p + 0x5c;
         int v1 = *(int*)(sp2 + 4);

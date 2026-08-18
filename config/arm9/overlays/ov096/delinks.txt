@@ -164,6 +164,7 @@ src/func_ov096_02136fd4.c:
     .text start:0x02136fd4 end:0x02137088
 
 src/func_ov096_02137088.cpp:
+    complete
     .text start:0x02137088 end:0x021372c0
 
 src/func_ov096_021372c0.cpp:

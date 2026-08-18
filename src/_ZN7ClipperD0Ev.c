@@ -10,10 +10,12 @@ extern void* _ZTV7Clipper[];
  * Call target: 0x0203cbcc
  */
 struct Obj { void *vtable; };
-extern void base_dtor_Clipper(struct Obj *thiz); /* 0x0203cbcc */
+/* Declared by decl_common.h as taking void*. This used to be a local declaration of
+   `base_dtor_Clipper`, a name no module defines: the call at 0x0203cbcc goes to
+   Memory::operator_delete2, not to a Clipper base destructor. */
 struct Obj *_ZN7ClipperD0Ev(struct Obj *thiz)
 {
     thiz->vtable = (void *)_ZTV7Clipper;
-    base_dtor_Clipper(thiz);
+    _ZN6Memory16operator_delete2EPv(thiz);
     return thiz;
 }

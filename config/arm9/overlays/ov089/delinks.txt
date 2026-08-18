@@ -47,7 +47,7 @@ src/func_ov089_02131df4.c:
     complete
     .text start:0x02131df4 end:0x02131f04
 
-src/func_ov089_02131f04.cpp:
+src/_ZN3Key13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02131f04 end:0x02131f4c
 

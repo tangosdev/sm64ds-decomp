@@ -2,7 +2,7 @@
 // @symbol _ZN5UnagiD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
- * One array cleanup, four member destructors and the chain into Enemy, all of
+ * One array cleanup, four member destructors and the chain into dEnemyBase_c, all of
  * it reverse declaration order out of Unagi.h.
  *
  * The array at 0x448 is Vector3[7] -- the ROM destroys it with

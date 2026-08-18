@@ -1,13 +1,13 @@
 //cpp
 struct Vector3 { int x, y, z; };
-struct Actor;
+struct dActor_c;
 
 struct RaycastGround {
     char pad0[0x14];
     unsigned int sub[(0x50 - 0x14) / 4];
     RaycastGround();
     ~RaycastGround();
-    void SetObjAndPos(const Vector3 &pos, Actor *obj);
+    void SetObjAndPos(const Vector3 &pos, dActor_c *obj);
     int DetectClsn();
 };
 

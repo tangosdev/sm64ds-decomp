@@ -9,9 +9,9 @@
    The body is a decompilation verified against the ROM, not an
    inferred stub. */
 extern "C" {
-extern int _ZN8Platform21UpdateModelPosAndRotYEv(void *c);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
-extern int _ZN8Platform19UpdateClsnPosAndRotEv(void *c);
+extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *c, int a, int b);
+extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
 }
 
 s32 FireSeaElevator::Behavior() {
@@ -57,9 +57,9 @@ s32 FireSeaElevator::Behavior() {
         }
         break;
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0x1f4000, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0x1f4000, 0))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     self->unk_326 = 0;
     return 1;
 }

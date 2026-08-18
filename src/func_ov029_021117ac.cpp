@@ -1,6 +1,6 @@
 //cpp
 struct Vector3;
-struct Actor { static Actor *FindWithID(unsigned int id); };
+struct dActor_c { static dActor_c *FindWithID(unsigned int id); };
 struct Sound { static void PlayBank3(unsigned int id, const Vector3 &v); };
 
 extern "C" void func_ov029_021117ac(char *c)
@@ -10,13 +10,13 @@ extern "C" void func_ov029_021117ac(char *c)
     unsigned int id = *(unsigned int *)(c + 0x148);
     if (id == 0)
         return;
-    char *a = (char *)Actor::FindWithID(id);
+    char *a = (char *)dActor_c::FindWithID(id);
     if (a == 0)
         return;
     int b = (int)(*(unsigned short *)(a + 0xc) == 0xbf);
     if (b == 0)
         return;
-    char *o = (char *)Actor::FindWithID(*(unsigned int *)(c + 0x158));
+    char *o = (char *)dActor_c::FindWithID(*(unsigned int *)(c + 0x158));
     int v = *(int *)(o + 0x334);
     if (v != *(int *)(o + 0x60))
         return;

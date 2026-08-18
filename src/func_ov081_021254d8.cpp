@@ -10,10 +10,10 @@ extern "C" {
 void Vec3_Asr(int *d, int *s, int sh);
 void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationXYZExt(void *m, int x, int y, int z);
-unsigned int _ZN5Actor10FindWithIDEj(unsigned int id);
+unsigned int _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *mtx, int a, int b, unsigned int g);
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *mtx, int a, int b, unsigned int g);
 extern struct Matrix4x3 data_020a0e68;
 }
 
@@ -41,7 +41,7 @@ extern "C" void func_ov081_021254d8(char *c)
         *(int*)(c + 0x440) = 0;
         *(int*)(c + 0x444) = 0;
         *(int*)(c + 0x448) = 0;
-        actor = (void*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x400));
+        actor = (void*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x400));
         if (actor != 0) {
             MulMat4x3Mat4x3(*(char**)(c + 0x320) + 0xf0, c + 0x328, c + 0x3c8);
 
@@ -84,6 +84,6 @@ extern "C" void func_ov081_021254d8(char *c)
         (*(int*)(c + 0x60) - 0xe000) >> 3,
         *(int*)(c + 0x64) >> 3);
     *(struct Matrix4x3*)(c + 0x398) = data_020a0e68;
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x370, c + 0x398, 0x78000, 0xc8000, 0xf);
 }

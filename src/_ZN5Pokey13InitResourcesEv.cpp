@@ -7,9 +7,9 @@ void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
 void LoadBlueCoinModel(void* actor);
 int _ZN11ShadowModel12InitCylinderEv(void* self);
-void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* actor, int r, int h, unsigned int d, unsigned int e);
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int b, int c, void* v, int e);
-void* _ZN5Actor10FindWithIDEj(unsigned int id);
+void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int r, int h, unsigned int d, unsigned int e);
+void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int b, int c, void* v, int e);
+void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_ov096_02136928(void* self, int a);
 void func_ov096_02135efc(void* self);
 }
@@ -44,8 +44,8 @@ int Pokey::InitResources()
     if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
         return 0;
 
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this) + 0x14c, ((char*)this), 0x3c000, 0x78000, 0x200004, 0x6eff0);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x180, ((char*)this), 0x3c000, 0x3c000, 0, 0);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x14c, ((char*)this), 0x3c000, 0x78000, 0x200004, 0x6eff0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x180, ((char*)this), 0x3c000, 0x3c000, 0, 0);
 
     unk_09c = -0x2000;
     unk_0a0 = -0x3c000;
@@ -67,7 +67,7 @@ int Pokey::InitResources()
             mScaleX = 0;
             mScaleY = 0;
             mScaleZ = 0;
-            *(void**)((char*)&unk_390) = _ZN5Actor10FindWithIDEj(mParam);
+            *(void**)((char*)&unk_390) = _ZN8dActor_c10FindWithIDEj(mParam);
             unk_394 = 0;
             {
                 int* p = (int*)(((int)*(char**)((char*)&unk_390) + 0x36c));

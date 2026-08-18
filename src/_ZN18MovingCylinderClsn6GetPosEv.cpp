@@ -4,8 +4,8 @@
 #include "MovingCylinderClsn.h"
 
 
-/* Slot 2. Returns the OWNER's position (Actor + 0x5c), not a field of this
-   object -- a moving cylinder tracks its Actor instead of storing a copy. */
+/* Slot 2. Returns the OWNER's position (dActor_c + 0x5c), not a field of this
+   object -- a moving cylinder tracks its dActor_c instead of storing a copy. */
 Vector3 & MovingCylinderClsn::GetPos()
 {
     char *q = *(char **)&owner;

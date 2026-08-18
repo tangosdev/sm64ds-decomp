@@ -9,7 +9,7 @@
    notes/dscene-c-siblings-census.md section 3): this body sets two
    fields and calls two helpers, nothing like a vtable-write-then-
    deallocate shape. Converted .c -> .cpp: dScMgCurling_c.h now
-   transitively includes Scene.h, which has no C spelling. */
+   transitively includes dScene_c.h, which has no C spelling. */
 extern "C" {
 void func_ov006_020e3388(void*);
 void func_ov006_020e3250(void*);

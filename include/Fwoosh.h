@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-/* Derives from Enemy: the destructor stores this class's vtable, then the
+/* Derives from dEnemyBase_c: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x110 belonged to the
  * chain above and is inherited now.
@@ -14,12 +14,12 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
-struct Fwoosh : Enemy {
+struct Fwoosh : dEnemyBase_c {
     MovingCylinderClsn mMovingCylinderClsn;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x144 */
     ModelAnim mModelAnim;             /* 0x300 */
@@ -30,15 +30,17 @@ struct Fwoosh : Enemy {
     virtual ~Fwoosh();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();
     int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
 };
 
-typedef char Stump_size_must_be_0x378[sizeof(Fwoosh) == 0x378 ? 1 : -1];
+typedef char Fwoosh_size_must_be_0x378[sizeof(Fwoosh) == 0x378 ? 1 : -1];
 
 #else
 

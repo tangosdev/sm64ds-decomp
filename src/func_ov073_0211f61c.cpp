@@ -18,12 +18,12 @@ extern char data_ov073_021233d0;
 
 extern "C" {
 extern u16 DecIfAbove0_Short(void* p);
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov073_0211f494(void* c, void* p);
-extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
 extern void func_02012694(int a, void* b);
 extern int RandomIntInternal(u16* seed);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3* v, void* rot, s32 e, s32 f);
+extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3* v, void* rot, s32 e, s32 f);
 extern int _ZN8SaveData19IsCharacterUnlockedEj(u32 id);
 extern void ChiefChilly_ChangeState(void* c, void* p);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12 f, u32 b, u32 c, u32 d);
@@ -43,7 +43,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
     id = *(u32*)(c + 0x134);
     if (id == 0)
         return 0;
-    r5 = _ZN5Actor10FindWithIDEj(id);
+    r5 = _ZN8dActor_c10FindWithIDEj(id);
     if (!r5)
         return 0;
 
@@ -74,7 +74,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
             }
             if (r4 == 0) {
                 if ((*(s32*)(c + 0x130) & 0x70) || (*(u8*)((char*)r5 + 0x6f9) != 0)
-                    || (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, r5) != 0)) {
+                    || (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, r5) != 0)) {
                     func_ov073_0211f494(c, c);
                     *(s32*)(c + 0x98) = 0x20000;
                     r4 = 1;
@@ -112,7 +112,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
             i = 0;
             if (count > 0) {
                 do {
-                    void* actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x120, 0, &v, 0, *(s8*)(c + 0xcc), -1);
+                    void* actor = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x120, 0, &v, 0, *(s8*)(c + 0xcc), -1);
                     if (actor != 0) {
                         rnd = RandomIntInternal(&data_0209e650);
                         shortY = ((s32)((((u32)rnd >> 8) & 0xf) << 0x1c)) >> 0x10;
@@ -123,7 +123,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
                         if (_ZN8SaveData19IsCharacterUnlockedEj(2) != 0) {
                             *(s32*)(void*)(int)(c + 0x4c0) += 1;
                             if (*(s32*)(c + 0x4c0) > 0x1e) {
-                                void* actor2 = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x115, 0, &v, 0, *(s8*)(c + 0xcc), -1);
+                                void* actor2 = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x115, 0, &v, 0, *(s8*)(c + 0xcc), -1);
                                 if (actor2 != 0) {
                                     *(s16*)((char*)actor2 + 0x92) = 0;
                                     *(s16*)((char*)actor2 + 0x94) = (s16)shortY;

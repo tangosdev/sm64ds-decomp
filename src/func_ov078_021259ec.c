@@ -4,13 +4,13 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-struct ActorBase;
+struct fBase_c;
 
 extern void _Z14ApproachLinearRsss(short* a, short b, short c);
-extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* actor);
 extern int Vec3_Dist(struct Vector3* a, struct Vector3* b);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void* player, void* actor, int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* player, void* actor, unsigned int msgid, struct Vector3* v, unsigned int arg4, unsigned int arg5);
+extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actor, int b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* player, void* actor, unsigned int msgid, struct Vector3* v, unsigned int arg4, unsigned int arg5);
 extern void func_02012694(int a, void* b);
 extern int KingBobOmb_SetState(char* c, void* p);
 
@@ -45,7 +45,7 @@ int func_ov078_021259ec(char* c)
         return 1;
     }
 
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (player != 0) {
         ppos = *(struct Vector3*)((char*)player + 0x5c);
 
@@ -58,10 +58,10 @@ int func_ov078_021259ec(char* c)
                 v.z = *(int*)(c + 0x64);
                 v.y = v.y + 0xc8000;
 
-                if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(c + 0x430), c, 1)) {
+                if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(c + 0x430), c, 1)) {
                     _ZN7Message11PrepareTalkEv();
                     b = (data_0209f220 != 1) ? 0x93 : (unsigned int)(short)(*(int*)((char*)player + 8) + 0x96);
-                    if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(player, c, b, &v, 0, 0)) {
+                    if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, c, b, &v, 0, 0)) {
                         func_02012694(0x12a, c + 0x74);
                         *(unsigned char*)(c + 0x508) = 1;
                         KingBobOmb_SetState(c, &data_ov078_0212700c);

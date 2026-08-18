@@ -16,7 +16,7 @@ src/func_ov095_0213579c.c:
     complete
     .text start:0x0213579c end:0x021357d8
 
-src/func_ov095_021357d8.c:
+src/_ZN9SeesawBob15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x021357d8 end:0x021358cc
 

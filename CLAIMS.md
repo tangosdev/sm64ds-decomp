@@ -34,11 +34,13 @@ take over, ping the claimant first.
 | ActorBase -> ActorDerived -> Actor -> Player | andrewboudreau | 2026-08-01 | **active** - ActorBase landed as a real polymorphic class (#974); ActorDerived next, then Actor, then Player |
 | Collision chain: MeshColliderBase, MeshCollider, MovingMeshCollider, ExtendingMeshCollider, WithMeshClsn, CylinderClsn family | tangosdev | 2026-08-02 | **active** - readable conversion, same per-file byte gate as the Model chain |
 | Model chain: ModelBase, Model, CommonModel, ShadowModel, Animation, ModelAnim, BlendModelAnim, ModelAnim2 | tangosdev | 2026-08-01 | **done** - #981, #984, #985: all eight real C++ classes, every converted file byte-matched; MI reproduces (Animation second base at +0x50, thunks stay ROM-supplied). Parked: Func_ method renames, _ZTV9Animation naming, wall 6az gates 5Fix12IiE definitions |
+| CheepCheep, WaterSuction, ChainChomp, Fwoosh, MontyMoleRock, Wiggler, KingBobOmb, MrBlizzard | andrewboudreau | 2026-08-18 | **done** - 13 methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform work excluded |
 
 ## Claims
 
 | Range | Who | Claimed | Status |
 | itcm _ZN12MeshCollider10DetectClsnER10SphereClsn (0x01ffb830, size 0x1bc8) | lunavyqo | 2026-08-16 | **released** — near-miss improved **1412→1332→1213** (align equal 366→446→**565**, size 0x1b58 vs 0x1bc8, 28 insn short). Levers: per-edge sqrt zeros, contactKind seeded after classify from hoisted 0, pass-through k1/k0, nn/dot sign-extends, origin AABB, vtail hoisted bit test. Residual: frame 0x1fc vs 0x1b4, 28 insn short. tip in nearmiss/db.jsonl; API released |
+|---|---|---|---|
 | ov005 func_ov005_020c16e4 (0x020c16e4, size 0x33c) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: ++row MultiCopy tail, dest pin `idx?dstp:dstp` / `destOff?dstp:dstp` (equal-arm) for rem-before-quot + increment order; from near-miss 136→18→16→3→0; API clm_84a56ab710d3 kept |
 | ov005 func_ov005_020c0378 (0x020c0378, size 0x354) | lunavyqo | 2026-08-13 | **active** — near-miss improved **77→44** size-exact. 0250-style S.a/S.b has + loop_invariants off + S[idx].d y. Residual pure regperm (idx r1 vs r5, has r3 vs r2) + path-B y early. API clm_3c2c2b05061d |
 | ov015 _ZN14KnockDownPlank13InitResourcesEv (0x02111960, size 0x208) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_propagation off` + u64-mask angle increment + named `zero` for vec stores; API clm_645f51ab54fa kept |

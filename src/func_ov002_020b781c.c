@@ -8,7 +8,7 @@ extern short data_02082214[];
 
 extern void func_ov002_020b6fcc(void *self);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern char *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, void *out);
@@ -50,7 +50,7 @@ int func_ov002_020b781c(char *c)
     if (*(u16 *)(c + 0x100) == 1) {
         b = (int)((*(int *)(c + 0xb0) & 0x60000) != 0);
         if (b == 0) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return 1;
         }
     }

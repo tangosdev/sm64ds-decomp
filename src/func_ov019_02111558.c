@@ -1,13 +1,13 @@
 typedef struct { int x, y, z; } Vec3;
 
 extern int Vec3_Dist(void *a, void *b);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void *actor, void *self, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void *actor, void *self, int b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern int _Z14ApproachLinearRsss(short *p, short target, short step);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, unsigned int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *actor, void *ab, unsigned int id, void *pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *actor, void *ab, unsigned int id, void *pos, unsigned int a, unsigned int b);
 extern int _ZN6Player12GetTalkStateEv(void *actor);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void *self, signed char *a, unsigned int b, void *pos, unsigned int d);
+extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void *self, signed char *a, unsigned int b, void *pos, unsigned int d);
 extern int _ZN6Player18HasFinishedTalkingEv(void *actor);
 extern int func_0201267c(int a, void *pos);
 
@@ -25,7 +25,7 @@ int func_ov019_02111558(void *thiz)
         int r5 = *(int *)(c + 0x178);
         int d = Vec3_Dist(c + 0x5c, (char *)*(void **)(c + 0x378) + 0x5c);
         if (d < r5 + 0x78000) {
-            if (_ZN6Player9StartTalkER9ActorBaseb(*(void **)(c + 0x378), c, 1) != 0) {
+            if (_ZN6Player9StartTalkER7fBase_cb(*(void **)(c + 0x378), c, 1) != 0) {
                 LB(0x38f) = LB(0x38f) + 1;
             }
         }
@@ -52,7 +52,7 @@ int func_ov019_02111558(void *thiz)
                 else
                     id = 0xa8;
             }
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void **)(c + 0x378), c, id, &v, 1, 2) != 0) {
+            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void **)(c + 0x378), c, id, &v, 1, 2) != 0) {
                 func_0201267c(0xdf, c + 0x74);
                 LB(0x38f) = LB(0x38f) + 1;
             }
@@ -62,7 +62,7 @@ int func_ov019_02111558(void *thiz)
     case 2:
         if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x378)) == 2) {
             if (*(unsigned char *)(c + 0x395) == 0) {
-                _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(
+                _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(
                     c, (signed char *)(((int)c + 0x396)),
                     (unsigned int)(unsigned char)((*(unsigned int *)(c + 8) >> 8) & 0xf),
                     c + 0x5c, 4);

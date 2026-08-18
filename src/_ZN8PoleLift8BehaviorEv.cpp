@@ -5,9 +5,9 @@
 extern "C" {
 extern void _ZN12CylinderClsn5ClearEv(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void *self);
-extern int _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void *self);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
+extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 }
 extern short data_02082214[];
 
@@ -28,9 +28,9 @@ int PoleLift::Behavior()
     }
     *(short*)(((int)((char *)this) + 0x354)) =
         *(short*)(((int)((char *)this) + 0x354)) + 0x100;
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char *)this));
-    if (_ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x400000, 0)) {
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
+    if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char *)this), 0x400000, 0)) {
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
     }
     return 1;
 }

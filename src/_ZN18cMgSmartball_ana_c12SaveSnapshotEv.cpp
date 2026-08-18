@@ -3,9 +3,10 @@
  * rather than called -- same pattern as every sibling in this family (the
  * base's copy is out-of-line and there is no bl here). Then decrements this
  * class's own countdown (unk_034); when it reaches zero it calls the shared
- * helper func_ov006_02114ec0 and sets the BASE's unk_032 byte -- low byte
- * only, see cMgSmartball_ana_c.h and cMgSmartball_object_c.h for why that
- * field's width is contested -- to 1. */
+ * helper func_ov006_02114ec0 and sets the BASE's unk_032 byte to 1 -- the
+ * low byte only. 0x031-0x033 is a three-byte region that three children read
+ * three incompatible ways; this class's byte-wide view is one of them. See
+ * cMgSmartball_object_c.h. */
 #include "cMgSmartball_ana_c.h"
 
 extern "C" void func_ov006_02114ec0(void *self);
@@ -20,5 +21,5 @@ void cMgSmartball_ana_c::SaveSnapshot()
     if (unk_034 > 0)
         return;
     func_ov006_02114ec0((void *)unk_004);
-    *(u8 *)((char *)this + 0x32) = 1;
+    unk_032 = 1;
 }

@@ -8,7 +8,7 @@ extern struct AnimRec data_ov002_0210de18;
 extern struct AnimRec* data_ov002_020ff0a0[];
 extern struct AnimRec* data_ov002_020ff0b8[];
 
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* file, int a, int b, unsigned c);
 
 int func_ov002_020b7330(char* self)
@@ -20,7 +20,7 @@ int func_ov002_020b7330(char* self)
 
     state = *(int*)(self + 0x3f0);
     if (state == 0xa || state == 0xf) {
-        char* closest = (char*)_ZN5Actor13ClosestPlayerEv(self);
+        char* closest = (char*)_ZN8dActor_c13ClosestPlayerEv(self);
         if (closest != 0) {
             s16* src = (s16*)(closest + 0x8c);
             *(s16*)(self + 0x92) = src[0];

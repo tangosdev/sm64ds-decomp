@@ -1,7 +1,7 @@
     struct CylinderClsn;
     extern void func_0203568c(int* p, int v);
     extern void _Z14ApproachLinearRiii(int* v, int a, int b);
-    extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* a, struct CylinderClsn* c);
+    extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* a, struct CylinderClsn* c);
     
     void func_ov020_021119dc(void* thiz)
     {
@@ -26,5 +26,5 @@
             if (*(int*)(c + 0x424) == 3)
                 *(int*)(c + 0x424) = 2;
         }
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
     }

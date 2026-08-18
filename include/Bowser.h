@@ -6,7 +6,7 @@
  * Five sub-objects, and every one's asserted size closes EXACTLY on the next named
  * field -- five independent confirmations of one layout:
  *
- *     Actor                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     dActor_c                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
  *     ModelAnim                  0x0d4 + 0x064 = 0x138   -> mTextureSequence
  *     TextureSequence            0x138 + 0x014 = 0x14c   -> mWithMeshClsn
  *     WithMeshClsn               0x14c + 0x1bc = 0x308   -> mShadowModel
@@ -20,7 +20,7 @@
  * Same shape as Player's two ModelAnims.
  *
  * sizeof is 0x454, which is not inferred from the fields: Bowser_Spawn asks
- * ActorBase::operator new for 1108 bytes -- and the last declared field, unk_450,
+ * fBase_c::operator new for 1108 bytes -- and the last declared field, unk_450,
  * happens to end there too.
  *
  * Field NAMES for the unk_ entries are placeholders. */
@@ -35,9 +35,9 @@
 
 #ifdef __cplusplus
 
-#include "Actor.h"
+#include "dActor_c.h"
 
-struct Bowser : Actor {
+struct Bowser : dActor_c {
     u8  pad_0d0[0x4];
     ModelAnim mModelAnim;                                   /* 0x0d4 */
     TextureSequence mTextureSequence;                       /* 0x138 */
@@ -102,7 +102,7 @@ typedef char Bowser_size_must_be_0x454[sizeof(Bowser) == 0x454 ? 1 : -1];
 #else
 
 /* The same object for a C translation unit, which has no base class to inherit
-   Actor's fields from and so spells the whole layout flat. Every current includer
+   dActor_c's fields from and so spells the whole layout flat. Every current includer
    is a .cpp; this half is kept so that a future C one gets the right offsets
    rather than a parse error. */
 struct Bowser {

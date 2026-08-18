@@ -7,7 +7,7 @@
  * everything. NINE CONSECUTIVE BOUNDARIES close on sizes other headers assert,
  * the longest unbroken run this branch has found:
  *
- *     Enemy                     ends 0x110
+ *     dEnemyBase_c                     ends 0x110
  *     MovingCylinderClsnWithPos 0x110 +   0x40  = 0x150  -> ModelAnim
  *     ModelAnim                 0x150 +   0x64  = 0x1b4  -> ShadowModel
  *     ShadowModel               0x1b4 +   0x28  = 0x1dc  -> the link models
@@ -22,13 +22,13 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 #include "MovingCylinderClsnWithPos.h"
 
-struct ChainChomp : Enemy {
+struct ChainChomp : dEnemyBase_c {
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
     ModelAnim mModelAnim;                                  /* 0x150 */
     ShadowModel mShadowModel;                              /* 0x1b4 */
@@ -49,6 +49,7 @@ struct ChainChomp : Enemy {
     virtual ~ChainChomp();
 
     int Behavior();
+    int CleanupResources();
     int InitResources();
     int Render();
 };
@@ -60,7 +61,7 @@ struct ChainChomp {
     u8  pad_000[0x60];
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x1c];
-    /* 0x080..0x110 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x080..0x110 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 mScaleX;                 /* 0x080 */
     s32 mScaleY;                 /* 0x084 */

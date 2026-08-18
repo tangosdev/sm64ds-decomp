@@ -4,7 +4,7 @@
 #include "types.h"
 #include "MovingCylinderClsn.h"
 
-/* An Actor-attached cylinder that keeps its own position, vtable
+/* An dActor_c-attached cylinder that keeps its own position, vtable
  * _ZTV25MovingCylinderClsnWithPos at 0x0208e704.
  *
  * VTABLE, 4 slots, read out of the ROM:

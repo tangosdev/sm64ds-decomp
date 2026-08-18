@@ -12,13 +12,13 @@
  * The fields are spelled by name now that the receiver is typed: mTilt is the live
  * orientation, mTiltTarget what it lerps toward, mSettleDelay the countdown that
  * gates reloading the target, and mBumped the per-frame flag the body clears on the
- * way out. Actor::mFlags bit 3 is the "suppressed" bit -- while it is set the class
+ * way out. dActor_c::mFlags bit 3 is the "suppressed" bit -- while it is set the class
  * disables its collider and does nothing else.
  *
- * UpdateClsnPosAndRot is Platform's own non-virtual member, so it is a call now
+ * UpdateClsnPosAndRot is dBgActor_c's own non-virtual member, so it is a call now
  * rather than an `extern "C"` declaration of the mangled symbol. IsClsnInRange stays
- * mangled: include/Platform.h does not declare it, and that header belongs to the
- * whole Platform family rather than to this slice. MeshColliderBase's two members
+ * mangled: include/dBgActor_c.h does not declare it, and that header belongs to the
+ * whole dBgActor_c family rather than to this slice. MeshColliderBase's two members
  * stay mangled for the same reason.
  *
  * Was a C99 file. The `(int)((expr) != 0) != 0` idiom around the mFlags test is kept
@@ -29,7 +29,7 @@
 extern "C" {
 int  _ZN16MeshColliderBase9IsEnabledEv(void *thiz);
 void _ZN16MeshColliderBase7DisableEv(void *thiz);
-int  _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *thiz, int x, int z);
+int  _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *thiz, int x, int z);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void Quaternion_SLerp(char *out, char *a, int t, char *b);
 void func_ov002_020b6074(char *c);
@@ -54,7 +54,7 @@ s32 daObjGuragura_c::Behavior()
     }
     Quaternion_SLerp((char *)mTilt, (char *)mTiltTarget, 0x199, (char *)mTilt);
     func_ov002_020b6074(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(this, 0, 0)) {
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(this, 0, 0)) {
         UpdateClsnPosAndRot();
     }
     mBumped = 0;

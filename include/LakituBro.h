@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout:
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN9LakituBroD1Ev` destroys each member, and
  * `LakituBro_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV9LakituBro`. Everything this header used to restate below
- * 0x110 belongs to Enemy and Actor and is inherited now.
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
@@ -22,16 +22,16 @@
  *   - unk_16c = ModelAnim.speed
  *
  * SIZE IS THE ROM'S OWN: `LakituBro_Spawn` calls
- * `ActorBase::operator new(744)` -- 0x2e8 -- and stores this class's
+ * `fBase_c::operator new(744)` -- 0x2e8 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 #include "TextureSequence.h"
 
-struct LakituBro : Enemy {
+struct LakituBro : dEnemyBase_c {
     ModelAnim                    mModelAnim1;           /* 0x110 */
     ModelAnim                    mModelAnim2;           /* 0x174 */
     TextureSequence              mTextureSequence;      /* 0x1d8 */

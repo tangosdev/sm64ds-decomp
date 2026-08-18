@@ -9,10 +9,10 @@ typedef short s16;
 
 
 extern void _ZN13RaycastGroundC1Ev(void *rg);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *rg, struct Vector3 *pos, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *rg, struct Vector3 *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void *rg);
 extern void _ZN13RaycastGroundD1Ev(void *rg);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *c, void *sm, void *mtx, int h, int g, unsigned int u);
 extern signed char data_0209f2f8[];
 
@@ -52,13 +52,13 @@ void func_ov070_02120724(char *c)
         pos.z = *(int*)(c + 0x64);
         pos.y = y - 0xa000;
         _ZN13RaycastGroundC1Ev(&rg);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &pos, 0);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, 0);
         if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
             g = (*(int*)(c + 0x60) - rg.ground) + 0x28000;
         }
         _ZN13RaycastGroundD1Ev(&rg);
     }
 
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c + 0x1b0, c + 0x3d4, 0x5a000, g, 0xf);
 }

@@ -9,7 +9,7 @@
 
 struct ClockPaintingHandShort {
     u8  pad_000[0xc];
-    /* 0x00c..0x090 is ActorBase's, and ActorBase.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x00c..0x090 is fBase_c's, and fBase_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     u16 unk_00c;                 /* 0x00c */
     u8  aliveState;              /* 0x00e */

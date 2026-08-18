@@ -7,8 +7,8 @@
  * enough, because mwcc emits D2, D0 and D1 together and objisolate keeps the
  * one this file is bound to.
  *
- * The deallocation is an inline operator delete -- Enemy's, reachable because
- * Enemy is this class's IMMEDIATE base.
+ * The deallocation is an inline operator delete -- dEnemyBase_c's, reachable because
+ * dEnemyBase_c is this class's IMMEDIATE base.
  */
 #include "PiranhaPlant.h"
 

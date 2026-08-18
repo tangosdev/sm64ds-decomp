@@ -1,6 +1,6 @@
 typedef struct { int x, y, z; } Vector3;
 
-extern void *_ZN5Actor22ClosestNonVanishPlayerEv(void *self);
+extern void *_ZN8dActor_c22ClosestNonVanishPlayerEv(void *self);
 extern short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern short Vec3_VertAngle(const Vector3 *v1, const Vector3 *v0);
 extern void ApproachAngle(short *cur, short target, int a, int b, int c);
@@ -28,7 +28,7 @@ int func_ov070_0211fae4(void *arg)
     Vector3 vc;
     Vector3 vd;
 
-    player = (char *)_ZN5Actor22ClosestNonVanishPlayerEv(c);
+    player = (char *)_ZN8dActor_c22ClosestNonVanishPlayerEv(c);
     if (player == 0) {
         if (data_0209f2f8 != 0x16) {
             *(int *)(c + 0x3c0) = *(int *)(c + 0x5c);

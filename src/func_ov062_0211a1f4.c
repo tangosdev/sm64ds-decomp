@@ -21,9 +21,9 @@ extern int _ZN6Player12GetTalkStateEv(int p);
 extern void func_02012694(u32 a, void *b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, int f, int a, u32 b, int e);
 extern void func_0201267c(u32 a, void *b);
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
-extern int _ZN5Actor14GetSubtractionEss(void *c, s16 a, int b);
+extern int _ZN8dActor_c14GetSubtractionEss(void *c, s16 a, int b);
 extern int _ZN6Player22IsBeingShotOutOfCannonEv(int p);
 extern int Vec3_Dist(const void *a, const void *b);
 extern void _Z14ApproachLinearRiii(int *r, int a, int b);
@@ -67,7 +67,7 @@ void func_ov062_0211a1f4(char *a)
             char *o;
             if (*(int *)(a + 0x394) == 0)
                 return;
-            o = _ZN5Actor10FindWithIDEj(*(int *)(a + 0x394));
+            o = _ZN8dActor_c10FindWithIDEj(*(int *)(a + 0x394));
             if (o == 0)
                 return;
             *(int *)(a + 0x38c) = 3;
@@ -78,7 +78,7 @@ void func_ov062_0211a1f4(char *a)
             return;
         }
         r4 = func_ov062_021199ac(a);
-        if (_ZN5Actor14GetSubtractionEss(a, *(s16 *)(a + 0x94),
+        if (_ZN8dActor_c14GetSubtractionEss(a, *(s16 *)(a + 0x94),
                 _ZN4cstd5atan2E5Fix12IiES1_(*(int *)(a + 0xd4), *(int *)(a + 0xdc))) >= 0x6000)
             r7 = *(int *)(a + 0xd8) * 7 - 0x6000;
         else
@@ -87,7 +87,7 @@ void func_ov062_0211a1f4(char *a)
             *(u8 *)(a + 0x3ac) = _ZN6Player22IsBeingShotOutOfCannonEv(*(int *)(a + 0x398));
         r5 = 4;
         if (*(int *)(a + 0x394) != 0) {
-            char *o = _ZN5Actor10FindWithIDEj(*(int *)(a + 0x394));
+            char *o = _ZN8dActor_c10FindWithIDEj(*(int *)(a + 0x394));
             if (o != 0) {
                 if (*(u8 *)(o + 0x16e) != 0 &&
                     Vec3_Dist(a + 0x5c, *(char **)(a + 0x398) + 0x5c) > 0x7d0000)
@@ -135,7 +135,7 @@ void func_ov062_0211a1f4(char *a)
             *(int *)(a + 0x38c) = 3;
             *(u8 *)(a + 0x390) = 0;
             _ZN5Timer9StopTimerEv(&data_0209d4c8);
-            o = _ZN5Actor10FindWithIDEj(*(int *)(a + 0x394));
+            o = _ZN8dActor_c10FindWithIDEj(*(int *)(a + 0x394));
             *(u8 *)(a + 0x3af) = (*(u8 *)(o + 0x16e) != 0) ? 1 : 0;
             *(u8 *)(o + 0x16e) = 1;
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e004[1], 0x40000000, 0x1000, 0);

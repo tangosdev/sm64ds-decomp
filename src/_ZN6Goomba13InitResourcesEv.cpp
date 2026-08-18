@@ -1,3 +1,18 @@
+// NONMATCHING -- compiles, but the result is 916 bytes against the ROM's 912.
+// Four bytes, so this is a near-miss and not a wrong reconstruction; it is one
+// instruction over. The `Fix12` -> `Fix12i` retype below was needed just to make the
+// file compile at all (Fix12 became a template, and the declarations still used the
+// bare name), and it is correct: include/math/Fix12.h records that a Fix12 passes in a
+// single register bit-identical to an int, and these are extern declarations whose
+// symbol names are spelled literally, so the parameter type only decides the call ABI.
+// Fixing the compile is what revealed the size gap -- it was hidden behind the error.
+//
+// NOTE, pre-existing and left alone: this file's `//cpp` marker is on line 2, behind an
+// #include, so `text.startswith("//cpp")` -- the whole test, in rombuild.compile_one and
+// build_pin.flags_for alike -- is FALSE for it. Every tool in the tree therefore selects
+// -lang c99 for a file whose body is C++. It is left as-is because moving it changes
+// nothing measurable: 916 bytes comes out identical under -lang c99 and -lang c++, so
+// the marker's position is not what stands between this file and a match.
 #include "MaterialChanger.h"
 //cpp
 
@@ -6,7 +21,7 @@ struct SharedFilePtr { int id; void* file; };
 struct BMD_File;
 struct BMA_File;
 extern "C" {
-int _ZN5Actor9TrackStarEjj(void* self, unsigned int a, unsigned int b);
+int _ZN8dActor_c9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 void LoadSilverStarAndNumber(void);
 void* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
@@ -14,13 +29,13 @@ void _ZN8CapEnemy6AddCapEj(void* self, unsigned int x);
 int _ZN8CapEnemy21DestroyIfCapNotNeededEv(void* self);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 int _ZN11ShadowModel12InitCylinderEv(void* self);
-void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void* self, void* bma, int a, Fix12 b, unsigned int cc);
+void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void* self, void* bma, int a, Fix12i b, unsigned int cc);
 void LoadBlueCoinModel(void* c);
-void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, void* a, Fix12 r, Fix12 h, unsigned int e, unsigned int g);
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, Fix12 b, Fix12 cc, void* d, Fix12 e);
+void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
+void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, Fix12i b, Fix12i cc, void* d, Fix12i e);
 void _ZN12WithMeshClsn19StartDetectingWaterEv(void* self);
 void func_ov084_021290d4(void* c);
-void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* f, int a, Fix12 b, unsigned int cc);
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* f, int a, Fix12i b, unsigned int cc);
 
 extern SharedFilePtr data_ov084_02130cf8;
 extern SharedFilePtr data_ov084_02130ce8;
@@ -43,7 +58,7 @@ extern "C" int _ZN6Goomba13InitResourcesEv(char* c)
 
     if (*(unsigned char*)(c + 0x464) == 1)
     {
-        *(unsigned char*)(c + 0x465) = _ZN5Actor9TrackStarEjj(c, *(unsigned char*)(c + 0x466), 1);
+        *(unsigned char*)(c + 0x465) = _ZN8dActor_c9TrackStarEjj(c, *(unsigned char*)(c + 0x466), 1);
         LoadSilverStarAndNumber();
     }
     else if (*(unsigned char*)(c + 0x464) == 2)
@@ -112,12 +127,12 @@ extern "C" int _ZN6Goomba13InitResourcesEv(char* c)
         *(int*)(c + 0x84) = scale;
         *(int*)(c + 0x88) = scale;
     }
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0x180, c, *(int*)(c + 0x80) * 0x3c, data_ov084_02130208[*(int*)(c + 0x460)], 0x200000, 0xa6efe0);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(c + 0x180, c, *(int*)(c + 0x80) * 0x3c, data_ov084_02130208[*(int*)(c + 0x460)], 0x200000, 0xa6efe0);
 
     if (*(int*)(c + 0x460) == 2)
         *(int*)(((int)c + 0x19c) & 0xFFFFFFFFFFFFFFFF) &= ~0x8000;
 
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(c + 0x1b4, c, *(int*)(c + 0x80) * 0x3c, *(int*)(c + 0x80) * 0x3c, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1b4, c, *(int*)(c + 0x80) * 0x3c, *(int*)(c + 0x80) * 0x3c, 0, 0);
     _ZN12WithMeshClsn19StartDetectingWaterEv(c + 0x1b4);
 
     *(unsigned char*)(c + 0x468) = 0;

@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern int _ZN5Actor13DistToCPlayerEv(void *self);
+extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const void *v, unsigned int e);
 extern void func_ov096_02136e54(void *self, int n);
 
@@ -25,7 +25,7 @@ void func_ov096_021372c0(void *self)
         *(int*)(c + 0x84) = 0;
         *(int*)(c + 0x88) = 0;
         *(unsigned short*)(c + 0x352) = 0;
-        if (_ZN5Actor13DistToCPlayerEv(c) < 0x5dc000) {
+        if (_ZN8dActor_c13DistToCPlayerEv(c) < 0x5dc000) {
             unsigned char *p = (unsigned char*)(int)M(c + 0x360);
             *p = *p + 1;
         }

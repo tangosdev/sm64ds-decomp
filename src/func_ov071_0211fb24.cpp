@@ -11,7 +11,7 @@ extern void _Z14ApproachLinearRsss(short& dst, short a, short b);
 extern void _ZN9Animation7AdvanceEv(void* thiz);
 extern int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern void Scuttlebug_SetState(void* c, int n);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* cc);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* thiz, void* cc);
 extern void _ZN12CylinderClsn5ClearEv(void* thiz);
 extern void _ZN12CylinderClsn6UpdateEv(void* thiz);
 extern void func_0201267c(int a, void* v);
@@ -25,7 +25,7 @@ int func_ov071_0211fb24(char* c)
     if (Vec3_Dist((Vector3*)(c + 0x5c), (Vector3*)(c + 0x390)) < 0x12c000)
         Scuttlebug_SetState(c, 2);
     func_ov071_0211f0b4(c);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x160);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x160);
     func_ov071_0211f148(c, c + 0x194);
     func_ov071_0211f29c(c);
     _ZN12CylinderClsn5ClearEv(c + 0x160);

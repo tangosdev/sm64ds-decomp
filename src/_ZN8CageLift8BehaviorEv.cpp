@@ -10,9 +10,9 @@
 extern "C" {
 extern void func_020393a4(int* p, int v);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void* pos, unsigned e);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 extern void _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(void* self, void* mat, s16 s);
 }
 
@@ -81,9 +81,9 @@ s32 CageLift::Behavior() {
         break;
     }
 
-    _ZN8Platform21UpdateModelPosAndRotYEv(thiz);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(thiz, 0, 0)) {
-        _ZN8Platform19UpdateClsnPosAndRotEv(thiz);
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(thiz);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(thiz, 0, 0)) {
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(thiz);
     }
     _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(
         thiz + 0x124, thiz + 0x2ec, self->unk_08e);

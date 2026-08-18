@@ -10,7 +10,7 @@
  * Every offset below comes from the two structors, nothing from a prior
  * header.
  *
- * SIZE 0x5470, from the factory's own `_ZN9ActorBasenwEj(0x5470)`
+ * SIZE 0x5470, from the factory's own `_ZN7fBase_cnwEj(0x5470)`
  * (src/func_ov006_020e0574.cpp).
  *
  * THE FACTORY AND THE DESTRUCTOR AGREE MEMBER FOR MEMBER, which is the
@@ -68,6 +68,7 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
        holds. The destructor above is declared first and out of line, so it stays
        this class's KEY FUNCTION and neither of these translation units emits
        _ZTV10dScMgCup_c. */
+    s32 InitResources();  /* slot  0 -- src/_ZN10dScMgCup_c13InitResourcesEv.cpp */
     s32 Behavior();       /* slot  6 -- src/_ZN10dScMgCup_c8BehaviorEv.cpp */
     s32 Render();         /* slot  9 -- src/_ZN10dScMgCup_c6RenderEv.cpp */
 

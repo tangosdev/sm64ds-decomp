@@ -10,7 +10,7 @@
  * intermediate base's destructor would have left behind.
  *
  * SIZE 0x629c, from MgBingoBallSlotsShot_Spawn's own
- * `_ZN9ActorBasenwEj(0x629c)`, and the last array closes EXACTLY on it:
+ * `_ZN7fBase_cnwEj(0x629c)`, and the last array closes EXACTLY on it:
  * 0x599c + 0x40 * 0x24 = 0x629c. The English _Spawn name is already
  * attributed and is kept, the same convention as MgPicturePoker_Spawn for
  * dScMgCard_c.

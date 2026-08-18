@@ -11,28 +11,28 @@ extern "C" void func_0203568c(void* p, int v);
 extern "C" void func_02035684(void* p, int v);
 extern "C" void func_ov063_0211d5f4(void* self);
 
-struct Actor {
+struct dActor_c {
   void UpdatePos(struct CylinderClsn*);
-  struct Actor* ClosestPlayer();
+  struct dActor_c* ClosestPlayer();
 };
 struct MeshColliderBase {
   int IsEnabled();
   void Disable();
 };
-struct Platform {
+struct dBgActor_c {
   int IsClsnInRange(int, int);
 };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
+extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, int, int);
 
 
 int MadPiano::Behavior()
 {
   func_ov063_0211ddf4(((char*)this));
-  ((struct Actor*)((char*)this))->UpdatePos(0);
+  ((struct dActor_c*)((char*)this))->UpdatePos(0);
   if (Vec3_HorzDist((struct Vector3*)((char*)&unk_6d4), (struct Vector3*)((char*)&mPosX)) > 0x180000) {
     mPosX = unk_068;
     mPosY = unk_06c;
@@ -45,11 +45,11 @@ int MadPiano::Behavior()
   WithMeshClsn_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
   func_0203568c(((char*)this)+0x50c, 0x159000);
   func_02035684(((char*)this)+0x50c, 0x159000);
-  if (*(unsigned char*)((char*)((struct Actor*)((char*)this))->ClosestPlayer()+0x6fb) != 0) {
+  if (*(unsigned char*)((char*)((struct dActor_c*)((char*)this))->ClosestPlayer()+0x6fb) != 0) {
     if (((struct MeshColliderBase*)((char*)&mMeshCollider))->IsEnabled() != 0)
       ((struct MeshColliderBase*)((char*)&mMeshCollider))->Disable();
   } else {
-    _ZN8Platform13IsClsnInRangeE5Fix12IiES1_((struct Platform*)((char*)this), 0x1f4000, 0);
+    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_((struct dBgActor_c*)((char*)this), 0x1f4000, 0);
   }
   func_ov063_0211d88c(((char*)this));
   func_ov063_0211d828(((char*)this));

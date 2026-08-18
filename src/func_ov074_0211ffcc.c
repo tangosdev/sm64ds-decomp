@@ -2,9 +2,9 @@ typedef short s16;
 extern int func_ov074_02121a20(void* c, int idx);
 extern int func_ov074_021206c8(char* c);
 extern void func_ov074_02121a4c(char* c, int i);
-extern int _ZN5Actor13DistToCPlayerEv(char* c);
+extern int _ZN8dActor_c13DistToCPlayerEv(char* c);
 extern void func_ov074_021203e4(char* c, int i);
-extern int _ZN5Actor18HorzAngleToCPlayerEv(char* c);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(char* c);
 extern int AngleDiff(int a, int b);
 
 void func_ov074_0211ffcc(char* c) {
@@ -13,10 +13,10 @@ void func_ov074_0211ffcc(char* c) {
     func_ov074_02121a4c(c, 5);
     return;
   }
-  if (_ZN5Actor13DistToCPlayerEv(c) >= 0x4b0000) {
+  if (_ZN8dActor_c13DistToCPlayerEv(c) >= 0x4b0000) {
     func_ov074_021203e4(c, 3);
   } else {
-    if (AngleDiff(_ZN5Actor18HorzAngleToCPlayerEv(c), *(s16*)(c+0x8e)) < 0x3000) {
+    if (AngleDiff(_ZN8dActor_c18HorzAngleToCPlayerEv(c), *(s16*)(c+0x8e)) < 0x3000) {
       func_ov074_021203e4(c, 3);
       return;
     }

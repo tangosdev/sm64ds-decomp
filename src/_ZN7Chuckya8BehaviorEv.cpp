@@ -35,11 +35,11 @@ struct CylinderClsn;
 struct WithMeshClsn;
 
 extern "C" {
-int _ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* wm, void* anim, unsigned int n);
+int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* wm, void* anim, unsigned int n);
 unsigned short DecIfAbove0_Short(unsigned short* p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, CylinderClsn* cc);
-int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, WithMeshClsn* wm, int a, s16 b, int c, int d, void* e);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* self, WithMeshClsn* wm, unsigned int j);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, CylinderClsn* cc);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, WithMeshClsn* wm, int a, s16 b, int c, int d, void* e);
+void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, WithMeshClsn* wm, unsigned int j);
 void func_ov062_02116010(void* self);
 void _ZN12CylinderClsn5ClearEv(CylinderClsn* self);
 void _ZN12CylinderClsn6UpdateEv(CylinderClsn* self);
@@ -61,7 +61,7 @@ int Chuckya::Behavior()
 {
     char* c = (char*)this;
 
-    if (_ZN5Enemy26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, &mMeshClsn, &mModel, 3))
+    if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, &mMeshClsn, &mModel, 3))
         return 1;
 
     DecIfAbove0_Short((unsigned short *)&unk_100);
@@ -77,7 +77,7 @@ int Chuckya::Behavior()
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, (CylinderClsn*)&mCylinderClsn);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (CylinderClsn*)&mCylinderClsn);
 
     if (mState != (void*)data_ov062_0211dea0) {
         if (mState != (void*)data_ov062_0211dec0
@@ -93,7 +93,7 @@ int Chuckya::Behavior()
             }
             if (r2 != 0
                 || (mHorzSpeed != 0
-                    && _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
+                    && _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
                            c, (WithMeshClsn*)&mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, (void*)0x32000))) {
                 mHorzSpeed = 0;
                 unk_3e4 = 1;
@@ -108,7 +108,7 @@ int Chuckya::Behavior()
         mPrevPosX = mPosX;
         mPrevPosY = mPosY;
         mPrevPosZ = mPosZ;
-        _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, (WithMeshClsn*)&mMeshClsn, 3);
+        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, (WithMeshClsn*)&mMeshClsn, 3);
     }
 
     if (mState == (void*)data_ov062_0211ded0

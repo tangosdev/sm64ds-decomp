@@ -4,9 +4,9 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-    void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* cc);
-    void* _ZN5Actor10FindWithIDEj(u32 id);
-    void _ZN9ActorBase18MarkForDestructionEv(void* self);
+    void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* cc);
+    void* _ZN8dActor_c10FindWithIDEj(u32 id);
+    void _ZN7fBase_c18MarkForDestructionEv(void* self);
     void Vec3_Sub(void* out, void* a, void* b);
     s32 Vec3_HorzLen(void* v);
     s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
@@ -19,10 +19,10 @@ extern short data_02082214[];
 extern "C" void func_ov009_02111234(void* self)
 {
     u8* c = (u8*)self;
-    _ZN5Actor9UpdatePosEP12CylinderClsn(self, 0);
-    u8* f = (u8*)_ZN5Actor10FindWithIDEj(*(u32*)(c+0x178));
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, 0);
+    u8* f = (u8*)_ZN8dActor_c10FindWithIDEj(*(u32*)(c+0x178));
     if (f == 0 || *(s32*)(f+0x60) > 0xbb8000) {
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
         return;
     }
 
