@@ -1682,6 +1682,10 @@ src/func_ov006_020d836c.cpp:
     complete
     .text start:0x020d836c end:0x020d8408
 
+src/func_ov006_020d8408.c:
+    complete
+    .text start:0x020d8408 end:0x020d8904
+
 src/func_ov006_020d8904.c:
     complete
     .text start:0x020d8904 end:0x020d893c
@@ -1869,6 +1873,10 @@ src/_ZN11dScMgCard_c6RenderEv.cpp:
 src/_ZN11dScMgCard_c8BehaviorEv.cpp:
     complete
     .text start:0x020dabec end:0x020dac34
+
+src/func_ov006_020dac34.cpp:
+    complete
+    .text start:0x020dac34 end:0x020db6ec
 
 src/func_ov006_020db6ec.c:
     complete
@@ -4645,6 +4653,10 @@ src/func_ov006_02100734.c:
     complete
     .text start:0x02100734 end:0x0210076c
 
+src/func_ov006_0210076c.c:
+    complete
+    .text start:0x0210076c end:0x021009b8
+
 src/func_ov006_021009b8.c:
     complete
     .text start:0x021009b8 end:0x02100b08
@@ -4971,6 +4983,10 @@ src/func_ov006_021051dc.c:
     complete
     .text start:0x021051dc end:0x021053a8
 
+src/func_ov006_021053a8.cpp:
+    complete
+    .text start:0x021053a8 end:0x02105670
+
 src/func_ov006_02105670.c:
     complete
     .text start:0x02105670 end:0x02105730
@@ -5050,6 +5066,10 @@ src/func_ov006_02106bac.c:
 src/func_ov006_02106bc0.c:
     complete
     .text start:0x02106bc0 end:0x02106ca4
+
+src/func_ov006_02106ca4.cpp:
+    complete
+    .text start:0x02106ca4 end:0x02106eb8
 
 src/func_ov006_02106eb8.cpp:
     complete
@@ -6486,6 +6506,10 @@ src/func_ov006_0211e8a8.c:
     complete
     .text start:0x0211e8a8 end:0x0211ea70
 
+src/func_ov006_0211ea70.c:
+    complete
+    .text start:0x0211ea70 end:0x0211eb90
+
 src/func_ov006_0211eb90.c:
     complete
     .text start:0x0211eb90 end:0x0211ebdc
@@ -6545,6 +6569,10 @@ src/func_ov006_0211f6fc.cpp:
 src/func_ov006_0211f77c.c:
     complete
     .text start:0x0211f77c end:0x0211f9fc
+
+src/func_ov006_0211f9fc.c:
+    complete
+    .text start:0x0211f9fc end:0x0211fb1c
 
 src/func_ov006_0211fb1c.c:
     complete
