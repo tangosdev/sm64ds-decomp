@@ -56,7 +56,7 @@ src/_ZN5CrateD1Ev.cpp:
     complete
     .text start:0x02138040 end:0x021380bc
 
-src/_ZN5CrateD0Ev.c:
+src/_ZN5CrateD0Ev.cpp:
     complete
     .text start:0x021380bc end:0x0213814c
 
@@ -144,7 +144,7 @@ src/func_ov098_02138e6c.cpp:
     complete
     .text start:0x02138e6c end:0x02139070
 
-src/func_ov098_02139070.c:
+src/_ZN5Crate4KillEv.c:
     complete
     .text start:0x02139070 end:0x021390ec
 
@@ -184,15 +184,15 @@ src/_ZN5Crate13InitResourcesEv.cpp:
     complete
     .text start:0x02139d14 end:0x02139e44
 
-src/func_ov098_02139e44.cpp:
+src/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x02139e44 end:0x02139e64
 
-src/func_ov098_02139e64.c:
+src/_ZN5Crate13OnYoshiTryEatEv.c:
     complete
     .text start:0x02139e64 end:0x02139e78
 
-src/func_ov098_02139e78.c:
+src/_ZN5Crate13OnTurnIntoEggER6Player.c:
     complete
     .text start:0x02139e78 end:0x02139f04
 

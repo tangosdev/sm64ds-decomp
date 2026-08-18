@@ -19,7 +19,7 @@ extern char data_ov098_0213c4c8[];
 int Crate::InitResources()
 {
     char* f = 0;
-    if (mActorID == 0xc2) f = data_ov098_0213c4c8;
+    if (actorID == 0xc2) f = data_ov098_0213c4c8;
     if (f == 0) return 0;
     unk_4e8 = mPosX;
     unk_4ec = mPosY;
@@ -34,10 +34,13 @@ int Crate::InitResources()
         ((char*)this) + 0x2ec, 0x199, mAngleY, *(int*)(f + 8));
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x320, ((char*)this), 0x28000, 0x28000, 0, 0);
     _ZN12WithMeshClsn19StartDetectingWaterEv((char*)&mWithMeshClsn);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     Crate_SetState(((char*)this), 0);
-    mEatingPlayer = 0;
+    /* dBgActor_c's own generic 0xd0..0xd4 pad (include/dBgActor_c.h), not a
+       Crate field -- reused here by raw offset, same idiom as
+       ArmedRotatingPlatform's tail-padding field. */
+    *(s32*)(((char*)this) + 0xd0) = 0;
     func_ov098_02138ce0(((char*)this));
     return 1;
 }
