@@ -18,10 +18,12 @@ The check here is mechanical and needs no judgement:
 A name the pinned toolchain **cannot emit** is wrong regardless of who wrote
 it.  That is a strictly stronger statement than "a human disagrees with it".
 
-The motivating case is ``_ZN9ActorBasenwEj`` (``ActorBase::operator
+The motivating case is ``_ZN7fBase_cnwEj`` (``fBase_c::operator
 new(unsigned int)``).  Every installed mwccarm rejects ``operator
 new(unsigned int)`` outright -- CodeWarrior's ``size_t`` is ``unsigned long``,
-so it will only accept ``m``.  ``j`` is the *GCC* spelling, inherited from
+so it will only accept ``m``.  (It was spelled ``_ZN9ActorBasenwEj`` until the
+class was renamed to its cartridge name in #1576; the rename carried the defect
+forward under a new spelling, which is exactly what ``--check`` caught.)  ``j`` is the *GCC* spelling, inherited from
 upstream projects built with a GCC ARM EABI toolchain.  Note carefully that
 ``Ej`` is perfectly correct for an ordinary ``u32`` parameter; the defect is
 confined to the positions where the compiler validates the type against its
@@ -45,9 +47,9 @@ so this check is blind to both by construction.
 
     python tools/name_roundtrip.py                       # audit everything
     python tools/name_roundtrip.py --json out.json
-    python tools/name_roundtrip.py --symbol _ZN9ActorBasenwEj --verbose
+    python tools/name_roundtrip.py --symbol _ZN7fBase_cnwEj --verbose
     python tools/name_roundtrip.py --check                # CI mode
-    python tools/name_roundtrip.py --emit _ZN9ActorBasenwEj   # show the TU
+    python tools/name_roundtrip.py --emit _ZN7fBase_cnwEj   # show the TU
 
 ``--check`` compares the current failure set against
 ``config/name-roundtrip-baseline.json`` and exits non-zero when a symbol that
@@ -1053,7 +1055,7 @@ def _is_alloc_operator(name):
     """True when the symbol names one of the allocation operators.
 
     Decided by parsing, not by a substring test: `nwE` also occurs inside
-    ordinary identifiers, and a lookbehind on letters gets `ActorBase` + `nw`
+    ordinary identifiers, and a lookbehind on letters gets `fBase_c` + `nw`
     exactly backwards.
     """
     try:

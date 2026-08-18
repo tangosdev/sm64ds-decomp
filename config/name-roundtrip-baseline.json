@@ -65,14 +65,14 @@
     "_ZN6PlayerC2Ev"
    ]
   },
-  "_ZN9ActorBasenwEj": {
+  "_ZN7fBase_cnwEj": {
    "verdict": "REJECTED",
    "reason": "line 4: illegal 'operator' declaration",
    "cause": "GCC size_t spelling: an allocation operator's size argument is 'j' (unsigned int).  CodeWarrior's size_t is unsigned long, so it will only accept 'm'",
    "module": "arm9",
    "addr": "0x02043444",
    "proposed": [
-    "_ZN9ActorBasenwEm"
+    "_ZN7fBase_cnwEm"
    ]
   },
   "_Znwj": {
