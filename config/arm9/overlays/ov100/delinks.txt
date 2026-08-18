@@ -330,7 +330,7 @@ src/_ZN8StarDoorD1Ev.cpp:
     complete
     .text start:0x021458d4 end:0x02145904
 
-src/_ZN8StarDoorD0Ev.c:
+src/_ZN8StarDoorD0Ev.cpp:
     complete
     .text start:0x02145904 end:0x02145948
 
@@ -382,15 +382,15 @@ src/func_ov100_02145f68.cpp:
     complete
     .text start:0x02145f68 end:0x02145fbc
 
-src/_ZN8StarDoor16CleanupResourcesEv.c:
+src/_ZN8StarDoor16CleanupResourcesEv.cpp:
     complete
     .text start:0x02145fbc end:0x02145fe0
 
-src/_ZN8StarDoor16OnPendingDestroyEv.c:
+src/_ZN8StarDoor16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02145fe0 end:0x02145fe4
 
-src/_ZN8StarDoor6RenderEv.c:
+src/_ZN8StarDoor6RenderEv.cpp:
     complete
     .text start:0x02145fe4 end:0x021460dc
 
