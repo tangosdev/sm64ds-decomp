@@ -12,11 +12,11 @@ src/_ZN6LakituD0Ev.c:
     complete
     .text start:0x02123798 end:0x02123804
 
-src/func_ov077_02123804.c:
+src/_ZN6Lakitu13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02123804 end:0x0212380c
 
-src/func_ov077_0212380c.c:
+src/_ZN6Lakitu16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0212380c end:0x02123814
 
@@ -124,7 +124,7 @@ src/_ZN6Lakitu13InitResourcesEv.cpp:
     complete
     .text start:0x02124908 end:0x02124aa4
 
-src/func_ov077_02124aa4.cpp:
+src/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02124aa4 end:0x02124b04
 
@@ -140,11 +140,11 @@ src/_ZN5SpinyD0Ev.c:
     complete
     .text start:0x02124bb4 end:0x02124c18
 
-src/func_ov077_02124c18.c:
+src/_ZN5Spiny13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02124c18 end:0x02124c20
 
-src/func_ov077_02124c20.c:
+src/_ZN5Spiny16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02124c20 end:0x02124c28
 
@@ -260,7 +260,7 @@ src/_ZN5Spiny13InitResourcesEv.cpp:
     complete
     .text start:0x02126058 end:0x02126194
 
-src/func_ov077_02126194.cpp:
+src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02126194 end:0x021261f4
 

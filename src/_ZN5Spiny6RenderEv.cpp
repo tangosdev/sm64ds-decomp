@@ -9,7 +9,7 @@ struct Obj {
 
 int Spiny::Render()
 {
-  if((*(unsigned*)((char *)&unk_0b0) & 0x40000) ? 1 : 0) return 1;
+  if((mFlags & 0x40000) ? 1 : 0) return 1;
   int s=unk_3d8;
   if(s==0 || s==4) ((Obj*)((char *)&mModel))->doit(0);
   else ((Obj*)((char *)&mModelAnim))->doit(0);
