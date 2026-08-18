@@ -84,7 +84,7 @@ src/_ZN6Snufit16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02116f0c end:0x02116f14
 
-src/func_ov065_02116f14.cpp:
+src/_ZN6Snufit13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02116f14 end:0x02116f40
 
@@ -172,7 +172,7 @@ src/_ZN5Swoop16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02117eac end:0x02117eb4
 
-src/func_ov065_02117eb4.cpp:
+src/_ZN5Swoop13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02117eb4 end:0x02117ee0
 

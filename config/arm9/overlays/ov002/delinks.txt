@@ -172,7 +172,7 @@ src/func_ov002_020af248.c:
     complete
     .text start:0x020af248 end:0x020af2b0
 
-src/func_ov002_020af2b0.c:
+src/_ZN13OneUpMushroom13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x020af2b0 end:0x020af3a0
 
@@ -864,7 +864,7 @@ src/_ZN9BlueFlame13InitResourcesEv.c:
     complete
     .text start:0x020b5940 end:0x020b599c
 
-src/func_ov002_020b599c.c:
+src/_ZN9BlueFlame13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x020b599c end:0x020b59a0
 
@@ -4312,7 +4312,7 @@ src/func_ov002_020e8e80.c:
     complete
     .text start:0x020e8e80 end:0x020e8edc
 
-src/func_ov002_020e8edc.c:
+src/_ZN9PowerStar13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x020e8edc end:0x020e8ee8
 

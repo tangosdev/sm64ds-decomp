@@ -44,7 +44,7 @@ src/_ZN9Spindrift13InitResourcesEv.cpp:
     complete
     .text start:0x02123ed0 end:0x02123fd8
 
-src/func_ov081_02123fd8.cpp:
+src/_ZN9Spindrift13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02123fd8 end:0x02124038
 

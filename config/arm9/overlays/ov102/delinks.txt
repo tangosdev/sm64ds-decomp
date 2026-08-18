@@ -244,7 +244,7 @@ src/func_ov102_0214ad40.c:
     complete
     .text start:0x0214ad40 end:0x0214adc8
 
-src/func_ov102_0214adc8.c:
+src/_ZN6BobOmb13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x0214adc8 end:0x0214ae1c
 

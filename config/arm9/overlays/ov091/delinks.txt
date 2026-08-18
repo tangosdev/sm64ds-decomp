@@ -354,7 +354,7 @@ src/_ZN6Fwoosh16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02134484 end:0x0213448c
 
-src/func_ov091_0213448c.c:
+src/_ZN6Fwoosh13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x0213448c end:0x02134498
 

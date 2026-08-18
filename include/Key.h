@@ -66,6 +66,7 @@ struct Key : dEnemyBase_c {
     virtual ~Key();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
 
     int Behavior();
     int CleanupResources();
