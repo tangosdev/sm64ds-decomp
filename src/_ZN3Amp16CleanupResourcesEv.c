@@ -1,20 +1,25 @@
-struct SharedFilePtr { int data[4]; };
-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
-extern struct SharedFilePtr data_ov070_021235fc;
-extern struct SharedFilePtr data_ov070_02123604;
-extern struct SharedFilePtr *data_ov070_021222e0[2];
-extern struct SharedFilePtr data_ov070_021235ec;
+//cpp
+// @symbol _ZN3Amp16CleanupResourcesEv
 
-int _ZN3Amp16CleanupResourcesEv(void)
+#include "Amp.h"
+#include "SharedFilePtr.h"
+
+extern SharedFilePtr data_ov070_021235fc;
+extern SharedFilePtr data_ov070_02123604;
+extern SharedFilePtr *data_ov070_021222e0[2];
+extern SharedFilePtr data_ov070_021235ec;
+
+int Amp::CleanupResources()
 {
-    int r5;
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov070_021235fc);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov070_02123604);
-    r5 = 0;
+    data_ov070_021235fc.Release();
+    data_ov070_02123604.Release();
+
+    int i = 0;
     do {
-        _ZN13SharedFilePtr7ReleaseEv(data_ov070_021222e0[r5]);
-        r5++;
-    } while (r5 < 2);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov070_021235ec);
+        data_ov070_021222e0[i]->Release();
+        i++;
+    } while (i < 2);
+
+    data_ov070_021235ec.Release();
     return 1;
 }

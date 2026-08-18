@@ -1,3 +1,8 @@
-void _ZN4Bird16OnPendingDestroyEv(void)
+//cpp
+// @symbol _ZN4Bird16OnPendingDestroyEv
+
+#include "Bird.h"
+
+void Bird::OnPendingDestroy()
 {
 }

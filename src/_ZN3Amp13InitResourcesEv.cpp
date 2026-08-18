@@ -10,17 +10,11 @@ struct dActor_c;
 struct Vector3;
 struct Vector3_16;
 
-extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
-extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
-extern "C" void *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr &f);
-extern "C" BTP_File *_ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePtr &f);
-extern "C" void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(BMD_File &a, BTA_File &b);
-extern "C" int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern "C" void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(dActor_c *self, int a, int b, int c, int d);
 extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, dActor_c *a, Vector3 const &b, int c, int d, unsigned int e, unsigned int f);
 extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
 extern "C" int func_ov070_02120da8(void *c, int a);
-extern "C" void func_ov070_02120724(char *c);
+extern "C" void func_ov070_02120724(void *c);
 
 extern SharedFilePtr data_ov070_021235fc;
 extern SharedFilePtr data_ov070_02123604;
@@ -35,41 +29,41 @@ struct M48 { int w[12]; };
 int Amp::InitResources()
 {
     BMD_File *bmd;
-    bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov070_021235fc);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, bmd, 1, 1);
-    bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov070_02123604);
-    _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0x138, bmd, 1, 1);
+    bmd = (BMD_File *)Model::LoadFile(data_ov070_021235fc);
+    mModelAnim.SetFile(bmd, 1, 1);
+    bmd = (BMD_File *)Model::LoadFile(data_ov070_02123604);
+    mModel.SetFile(bmd, 1, 1);
 
     int i;
     for (i = 0; i < 2; i++) {
-        _ZN9Animation8LoadFileER13SharedFilePtr(*data_ov070_021222e0[i]);
+        Animation::LoadFile(*data_ov070_021222e0[i]);
     }
 
     BMD_File *bmd2 = *(BMD_File **)((char *)&data_ov070_02123604 + 4);
-    BTP_File *btp = _ZN15TextureSequence8LoadFileER13SharedFilePtr(data_ov070_021235ec);
+    BTP_File *btp = (BTP_File *)TextureSequence::LoadFile(data_ov070_021235ec);
     TextureSequence::Prepare(*bmd2, *btp);
 
     bmd2 = *(BMD_File **)((char *)&data_ov070_02123604 + 4);
-    _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(*bmd2, data_ov070_021231f4);
+    TextureTransformer::Prepare(*bmd2, data_ov070_021231f4);
 
-    if (!_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel))
+    if (!mShadowModel.InitCylinder())
         return 0;
 
-    if ((unsigned char)((unk_008 >> 1) & 1)) {
-        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_((dActor_c *)((char *)this), 0, 0x20d000, 0x1000000, 0xa28000);
+    if ((unsigned char)((param1 >> 1) & 1)) {
+        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0, 0x20d000, 0x1000000, 0xa28000);
     } else {
-        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_((dActor_c *)((char *)this), 0, 0x2c1000, 0x1000000, 0xa28000);
+        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0, 0x2c1000, 0x1000000, 0xa28000);
     }
 
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char *)this) + 0x1d8, (dActor_c *)((char *)this), data_ov070_0212365c, 0x2d000, 0x50000, 0x200002, 0x8000);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x218, (dActor_c *)((char *)this), 0x2d000, 0x2d000, 0, 0);
+    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, this, data_ov070_0212365c, 0x2d000, 0x50000, 0x200002, 0x8000);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x2d000, 0x2d000, 0, 0);
 
-    unk_09c = 0;
-    unk_0a0 = 0;
-    func_ov070_02120da8(((char *)this), 1);
+    mVertAccel = 0;
+    mTerminalVelocity = 0;
+    func_ov070_02120da8(this, 1);
 
-    *(M48 *)((char *)&unk_3d4) = *(M48 *)&data_02082128;
+    *(M48 *)unk_3d4 = *(M48 *)&data_02082128;
 
-    func_ov070_02120724(((char *)this));
+    func_ov070_02120724(this);
     return 1;
 }
