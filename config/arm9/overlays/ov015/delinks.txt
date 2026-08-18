@@ -24,7 +24,7 @@ src/_ZN13PoleBillboard6RenderEv.cpp:
     complete
     .text start:0x02111278 end:0x021112a0
 
-src/func_ov015_021112a0.cpp:
+src/_ZN13PoleBillboard13InitResourcesEv.cpp:
     complete
     .text start:0x021112a0 end:0x021112dc
 
