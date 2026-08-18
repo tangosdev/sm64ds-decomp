@@ -2,7 +2,7 @@
  * real base and real member types by hand.
  *
  * class dBgActor_c: 9 matched functions. The base of a large family -- ArmedRotatingPlatform,
- * PyramidTop, RickshawBs, ShutterBob, ShutterHmc, SlidingIce and others -- whose
+ * PyramidTop, daObjKm3_Kaitendai_c, ShutterBob, ShutterHmc, SlidingIce and others -- whose
  * destructors all inline this one's body, which is why it is declared inline
  * below.
  *

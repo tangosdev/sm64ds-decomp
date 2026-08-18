@@ -4,8 +4,9 @@
 #include "decl_Platform.h"
 #include "decl_common.h"
 extern int _ZTV16daObjKaitendai_c[];
-extern int _ZTV10RickshawBs[];
-/* recovered: vtable identified */
+extern int _ZTV20daObjKm3_Kaitendai_c[];
+/* recovered: vtable identified. This is daObjKm3_Kaitendai_c's real factory --
+   see include/daObjKm3_Kaitendai_c.h. */
 /* vtable identified: VT0 = _ZTV16daObjKaitendai_c */
 int *func_ov047_021113bc(void)
 {
@@ -13,7 +14,7 @@ int *func_ov047_021113bc(void)
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV16daObjKaitendai_c;
-        p[0] = (int)_ZTV10RickshawBs;
+        p[0] = (int)_ZTV20daObjKm3_Kaitendai_c;
     }
     return p;
 }

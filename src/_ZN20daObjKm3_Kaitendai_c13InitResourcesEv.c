@@ -6,7 +6,7 @@ extern s16 data_ov047_02112320;
 extern s16 data_ov047_02112324;
 extern struct Arg data_ov047_02112334;
 
-int _ZN10RickshawBs13InitResourcesEv(u8 *self)
+int _ZN20daObjKm3_Kaitendai_c13InitResourcesEv(u8 *self)
 {
     s16 value = data_ov047_02112320;
 

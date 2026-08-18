@@ -36,11 +36,15 @@ extern int data_ov065_0211d894[];
    shared CLPS_Block. It is NOT ov065's own: config/arm9/overlays/ov065's
    lowest symbol is ~0x02115ee0, and tools/modules.py derives an overlay's
    base from its lowest symbol, so adding an ov065 entry here at 0x02112198
-   drags every other ov065 address out of range. Left as the same unresolved
-   external the un-migrated func_ov065_0211a358 already carried -- a
-   pre-existing phantom reference, not one this migration introduces.
-   decl_common.h already declares it (as a scalar int), so it is not
-   redeclared here -- only its address is taken below. */
+   would drag every other ov065 address out of range.
+
+   SETTLED to ov035 by tools/overlay_residency.py: of the eleven overlays
+   whose own symbols.txt declares an "ambiguous" entry at this address
+   (ov012/013/024/033/035/043/045/047/052/053/056), residency's loader/level
+   constraints rule out every one but ov035 as able to coexist with ov065 --
+   `settle()` returns exactly one survivor. Spelled as ov035's own symbol
+   name, data_ov035_02112198, rather than a bare unqualified extern. */
+extern int data_ov035_02112198;
 extern unsigned char data_0209f2c0;
 extern short data_ov065_0211c0b0[];
 
@@ -65,7 +69,7 @@ int daObjCtMecha03_c::InitResources()
     kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov065_0211d894);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         (void *)(self + 0x124), kcl, (void *)(self + 0x2ec), 0x1000,
-        mAngleY, (void *)&func_02112198);
+        mAngleY, (void *)&data_ov035_02112198);
 
     func_020393a4((void *)(self + 0x124), 0x300000);
     func_02039394((void *)(self + 0x124), -0x200000);

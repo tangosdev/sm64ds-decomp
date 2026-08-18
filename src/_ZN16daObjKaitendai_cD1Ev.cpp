@@ -4,10 +4,10 @@
  *
  * ~daObjKaitendai_c is defined in the class body, not here, and that is
  * load-bearing: this class's five descendants (RotatingPlatformWf,
- * RotatingPlatformLll, RotatingPlatformWdw, RotatingPlatformRr, RickshawBs)
- * inline this destructor's vptr store rather than calling it, which the
- * compiler can only do from a visible body. include/daObjKaitendai_c.h
- * records the measurement.
+ * RotatingPlatformLll, RotatingPlatformWdw, RotatingPlatformRr,
+ * daObjKm3_Kaitendai_c) inline this destructor's vptr store rather than
+ * calling it, which the compiler can only do from a visible body.
+ * include/daObjKaitendai_c.h records the measurement.
  *
  * So this file cannot define it -- that would be a redefinition -- and a TU
  * that merely includes the header emits nothing at all. The explicit
