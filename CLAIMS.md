@@ -41,7 +41,7 @@ take over, ping the claimant first.
 | VirtualDoor, StarDoor | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus six ordinary methods and two deleting destructors migrated to C++; strict matches and link checks verified with `blind: 0`; Platform/collision work excluded |
 | MugenBgm, OneUpLogo | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus five ordinary methods and two deleting destructors migrated to C++; strict matches and link checks verified with `blind: 0`; Platform/collision work excluded |
 | OrangeBallBillboard, ShipWing | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four ordinary methods and two deleting destructors migrated to C++; strict matches and link checks verified with `blind: 0`; Platform/collision work excluded |
-| Amp, Bird | andrewboudreau | 2026-08-18 | **active** - real `dActor_c` layouts and six remaining cleanup/destructor C++ migrations; Platform/collision work excluded |
+| Amp, Bird | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four cleanup hooks and two deleting destructors migrated to C++; all fourteen class consumers strict-matched and link-checked with `blind: 0`; Platform/collision work excluded |
 
 ## Claims
 
