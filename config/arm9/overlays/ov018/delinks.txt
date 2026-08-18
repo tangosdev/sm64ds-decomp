@@ -12,7 +12,7 @@ src/_ZN7SkiLiftD0Ev.c:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/func_ov018_0211123c.cpp:
+src/_ZN7SkiLift15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x0211123c end:0x02111278
 
@@ -28,7 +28,7 @@ src/_ZN7SkiLift6RenderEv.cpp:
     complete
     .text start:0x02111340 end:0x02111368
 
-src/func_ov018_02111368.cpp:
+src/_ZN7SkiLift8BehaviorEv.cpp:
     complete
     .text start:0x02111368 end:0x021116b4
 
@@ -164,7 +164,7 @@ src/_ZN8IceSheetD0Ev.cpp:
     complete
     .text start:0x02112800 end:0x02112858
 
-src/func_ov018_02112858.cpp:
+src/_ZN8IceSheet15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02112858 end:0x02112880
 
@@ -172,7 +172,7 @@ src/_ZN8IceSheet4KillEv.cpp:
     complete
     .text start:0x02112880 end:0x021128e0
 
-src/func_ov018_021128e0.cpp:
+src/_ZN8IceSheet15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x021128e0 end:0x02112924
 

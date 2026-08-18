@@ -23,7 +23,9 @@ struct SkiLift : dBgActor_c {
 
     virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
+    virtual void  OnHitByMegaChar(Player &player); /* slot 27 */
 };
 
 typedef char SkiLift_size_must_be_0x354[sizeof(SkiLift) == 0x354 ? 1 : -1];

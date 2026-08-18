@@ -1,8 +1,22 @@
 //cpp
-// @symbol func_ov018_02111368
-// recovered name: daObjSm_Lift_c_Behavior
-/* recovered: shared common types, renamed to Class_Method */
-/* daObjSm_Lift_c::Behavior - recovered from vtable slot identity */
+// @symbol _ZN7SkiLift8BehaviorEv
+#include "SkiLift.h"
+
+/* SkiLift::Behavior -- vtable slot 6, ov018 0x02111368.
+ *
+ * Minimal-diff member-function migration: the pre-migration recovery's
+ * `char *self` parameter becomes a local `char *self = (char *)this;`,
+ * everything else byte-for-byte unchanged. dBgActor_c::UpdateClsnPosAndRot
+ * is a real method (include/dBgActor_c.h) and is called through `this`.
+ * dBgActor_c::UpdateKillByMegaChar is ALSO real, but calling it through
+ * `this` with an actual Fix12<int> argument mismatched the ROM by 999
+ * words -- same by-value-Fix12<int> refusal already documented on
+ * IsClsnInRangeE5Fix12IiES1_ (dBgActor_c.h's own note) -- so it stays raw
+ * extern "C" under its mangled name instead; mwcc tolerates the raw
+ * redeclaration alongside dBgActor_c.h's real one in the same TU.
+ * SkiLift.h declares this class's own 0x320..0x353 span only as opaque
+ * `pad_320[0x34]`; naming that 13-slot path-follower state is out of this
+ * task's scope, so the raw-offset recovery is kept verbatim. */
 typedef unsigned char u8;
 typedef short s16;
 typedef unsigned short u16;
@@ -30,18 +44,17 @@ void SubVec3(void* a, void* b, void* c);
 int _ZNK7PathPtr5LoopsEv(const void* self);
 void func_ov018_02111278(char* c);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
-void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 }
 
 extern s16 data_02082214[];
 
-struct Vector3 { int x, y, z; };
 struct PathPtrObj { int a, b; };
 
-extern "C" int func_ov018_02111368(char* self)
+int SkiLift::Behavior()
 {
+    char* self = (char *)this;
     struct PathPtrObj path;
-    struct Vector3 nodeA, nodeB, diff, scaled;
+    Vector3 nodeA, nodeB, diff, scaled;
     s16 target;
     char* other;
 
@@ -140,7 +153,7 @@ extern "C" int func_ov018_02111368(char* self)
     func_ov018_02111278(self);
 
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0, 0) != 0) {
-        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
+        UpdateClsnPosAndRot();
     }
     *(int*)(self + 0x320) = 0;
     return 1;
