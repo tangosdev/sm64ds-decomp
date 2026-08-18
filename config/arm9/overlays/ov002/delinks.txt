@@ -5001,7 +5001,7 @@ src/_ZN14EnemySwitchTag8BehaviorEv.cpp:
     complete
     .text start:0x020f1760 end:0x020f1814
 
-src/_ZN12EnemySpawner16CleanupResourcesEv.c:
+src/_ZN12EnemySpawner16CleanupResourcesEv.cpp:
     complete
     .text start:0x020f1814 end:0x020f1838
 
