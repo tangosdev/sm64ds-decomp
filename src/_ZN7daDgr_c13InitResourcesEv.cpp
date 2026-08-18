@@ -1,7 +1,15 @@
 //cpp
-// @symbol func_ov025_021117dc
-// recovered name: daDgr_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN7daDgr_c13InitResourcesEv
+/* daDgr_c::InitResources -- vtable slot 0.
+ *
+ * Kept as an extern "C" free function under the mangled name, the same
+ * convention include/fBase_c.h's own InitResources note documents:
+ * declared as a real virtual method in the header so callers mangle it
+ * correctly, but defined here as a free function operating on a raw `char*`
+ * rather than converted to a true `daDgr_c::InitResources()` member -- no
+ * caller in the tree invokes it as a method, so there is nothing to gain by
+ * converting the body and a real risk of a codegen-driven byte miss doing
+ * so. */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daDgr_c::InitResources - recovered from vtable slot identity */
@@ -24,7 +32,7 @@ extern SharedFilePtr data_ov025_02113a60;
 extern CLPS_Block data_ov025_02112c28;
 extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
-extern "C" int func_ov025_021117dc(char* thiz)
+extern "C" int _ZN7daDgr_c13InitResourcesEv(char* thiz)
 {
     char* c = thiz;
     func_ov025_02111344(c);

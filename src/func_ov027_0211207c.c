@@ -6,15 +6,15 @@
 #include "decl_Platform.h"
 #include "decl_TextureSequence.h"
 #include "decl_common.h"
-extern int data_ov027_02113a90[];
+extern int _ZTV10daPgDfdr_c[];
 /* recovered: vtable identified */
-/* vtable identified: VT0 = data_ov027_02113a90 */
+/* vtable identified: VT0 = _ZTV10daPgDfdr_c */
 int *func_ov027_0211207c(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(988);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
-        p[0] = (int)data_ov027_02113a90;
+        p[0] = (int)_ZTV10daPgDfdr_c;
         _ZN9ModelAnimC1Ev((char *)p + 0x320);
         _ZN15TextureSequenceC1Ev((char *)p + 0x384);
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0x398);

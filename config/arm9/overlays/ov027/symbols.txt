@@ -14,8 +14,8 @@ func_ov027_021116f0 kind:function(arm,size=0x80) addr:0x021116f0
 _ZN10ChillBully8BehaviorEv kind:function(arm,size=0xac) addr:0x02111770
 _ZN10ChillBully13InitResourcesEv kind:function(arm,size=0x50) addr:0x0211181c
 ChillBully_Spawn kind:function(arm,size=0x5c) addr:0x0211186c
-func_ov027_021118c8 kind:function(arm,size=0x5c) addr:0x021118c8
-func_ov027_02111924 kind:function(arm,size=0x70) addr:0x02111924
+_ZN10daPgDfdr_cD1Ev kind:function(arm,size=0x5c) addr:0x021118c8
+_ZN10daPgDfdr_cD0Ev kind:function(arm,size=0x70) addr:0x02111924
 func_ov027_02111994 kind:function(arm,size=0x94) addr:0x02111994
 func_ov027_02111a28 kind:function(arm,size=0x104) addr:0x02111a28
 func_ov027_02111b2c kind:function(arm,size=0x11c) addr:0x02111b2c
@@ -24,11 +24,11 @@ func_ov027_02111ca8 kind:function(arm,size=0x54) addr:0x02111ca8
 func_ov027_02111cfc kind:function(arm,size=0x3c) addr:0x02111cfc
 func_ov027_02111d38 kind:function(arm,size=0x38) addr:0x02111d38
 func_ov027_02111d70 kind:function(arm,size=0x1c) addr:0x02111d70
-func_ov027_02111d8c kind:function(arm,size=0x70) addr:0x02111d8c
-func_ov027_02111dfc kind:function(arm,size=0x4) addr:0x02111dfc
-func_ov027_02111e00 kind:function(arm,size=0x34) addr:0x02111e00
-func_ov027_02111e34 kind:function(arm,size=0x80) addr:0x02111e34
-func_ov027_02111eb4 kind:function(arm,size=0x1c8) addr:0x02111eb4
+_ZN10daPgDfdr_c16CleanupResourcesEv kind:function(arm,size=0x70) addr:0x02111d8c
+_ZN10daPgDfdr_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02111dfc
+_ZN10daPgDfdr_c6RenderEv kind:function(arm,size=0x34) addr:0x02111e00
+_ZN10daPgDfdr_c8BehaviorEv kind:function(arm,size=0x80) addr:0x02111e34
+_ZN10daPgDfdr_c13InitResourcesEv kind:function(arm,size=0x1c8) addr:0x02111eb4
 func_ov027_0211207c kind:function(arm,size=0x48) addr:0x0211207c
 _ZN13SnowmanBreathD1Ev kind:function(arm,size=0x40) addr:0x021120c4
 _ZN13SnowmanBreathD0Ev kind:function(arm,size=0x54) addr:0x02112104
@@ -153,7 +153,7 @@ data_ov027_02113a24 kind:data(any) addr:0x02113a24
 data_ov027_02113a26 kind:data(any) addr:0x02113a26
 data_ov027_02113a50 kind:data(any) addr:0x02113a50 ambiguous
 data_ov027_02113a74 kind:data(any) addr:0x02113a74 ambiguous
-data_ov027_02113a90 kind:data(any) addr:0x02113a90
+_ZTV10daPgDfdr_c kind:data(any) addr:0x02113a90
 data_ov027_02113aa0 kind:data(any) addr:0x02113aa0 ambiguous
 data_ov027_02113abc kind:data(any) addr:0x02113abc ambiguous
 _ZTI10daSnmBth_c kind:data(any) addr:0x02113b10

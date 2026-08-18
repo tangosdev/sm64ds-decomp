@@ -1,10 +1,11 @@
 #include "types.h"
-// @symbol func_ov025_021113f0
-// recovered name: daDgr_c_Behavior
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN7daDgr_c8BehaviorEv
+/* daDgr_c::Behavior -- vtable slot 6. A plain C file defining the exact
+   mangled identifier directly (C has no name mangling of its own, so the
+   literal spelling below IS the symbol); see
+   src/_ZN7daDgr_c13InitResourcesEv.cpp for why it stays a free function
+   rather than a converted method body. */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* daDgr_c::Behavior - recovered from vtable slot identity */
 typedef struct { s32 x, y, z; } Vec3;
 
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char *self, s32 a, s32 b);
@@ -16,7 +17,7 @@ extern s16 data_02082214[];
 
 #define LAUNDER(p) (p)
 
-int func_ov025_021113f0(char *self)
+int _ZN7daDgr_c8BehaviorEv(char *self)
 {
     s32 loc[6];
     s32 n;

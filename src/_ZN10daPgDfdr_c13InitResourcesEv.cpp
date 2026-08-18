@@ -1,11 +1,12 @@
 //cpp
-// @symbol func_ov027_02111eb4
-// recovered name: daPgDfdr_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN10daPgDfdr_c13InitResourcesEv
+/* daPgDfdr_c::InitResources -- vtable slot 0. Extern "C" free function under
+   the mangled name, the same convention include/fBase_c.h's own
+   InitResources note documents; see src/_ZN7daDgr_c13InitResourcesEv.cpp for
+   the fuller rationale -- no caller in the tree invokes this slot as a
+   method, so there is nothing to gain by converting the body. */
 #include "decl_common.h"
 #include "TextureSequence.h"
-/* recovered: renamed to Class_Method */
-/* daPgDfdr_c::InitResources - recovered from vtable slot identity */
 struct BMD_File;
 struct BTP_File;
 extern "C" {
@@ -31,7 +32,7 @@ extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7
 
 struct RG { char pad[0x54]; };
 
-int func_ov027_02111eb4(void *cc)
+int _ZN10daPgDfdr_c13InitResourcesEv(void *cc)
 {
     char *c = (char*)cc;
     int i;

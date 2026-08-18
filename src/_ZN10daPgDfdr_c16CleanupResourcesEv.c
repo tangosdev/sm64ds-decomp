@@ -1,14 +1,13 @@
-// @symbol func_ov027_02111d8c
-// recovered name: daPgDfdr_c_CleanupResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN10daPgDfdr_c16CleanupResourcesEv
+/* daPgDfdr_c::CleanupResources -- vtable slot 3. A plain C file defining the
+   exact mangled identifier directly (C has no name mangling of its own);
+   see src/_ZN7daDgr_c13InitResourcesEv.cpp for why it stays a free function. */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* daPgDfdr_c::CleanupResources - recovered from vtable slot identity */
 extern void _ZN13SharedFilePtr7ReleaseEv(void*);
 extern void* data_ov027_02113c7c;
 extern void* data_ov027_02113c94;
 extern void* data_ov027_02113c6c;
-int func_ov027_02111d8c(char* c){
+int _ZN10daPgDfdr_c16CleanupResourcesEv(char* c){
   int i;
   _ZN13SharedFilePtr7ReleaseEv(&data_ov027_02113c7c);
   for(i=0;i<3;i++) _ZN13SharedFilePtr7ReleaseEv(data_ov027_02112ca4[i]);
