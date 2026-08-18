@@ -20,7 +20,7 @@ src/_ZN13MontyMoleRockD0Ev.cpp:
     complete
     .text start:0x02123804 end:0x02123858
 
-src/func_ov080_02123858.c:
+src/_ZN9MontyMole16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02123858 end:0x02123860
 
