@@ -31,7 +31,12 @@ struct QuestionBlock : dBgActor_c {
     u8  pad_3ec[0x4];
     u8 unk_3f0;                       /* 0x3f0 */
     u8 unk_3f1;                       /* 0x3f1 */
-    u8  pad_3f2[0x1];
+    /* Written (truncated from the caller's u32 param1/actorID-ish word) by
+       every one of this class's five combat-callback overrides below, always
+       immediately before func_ov102_02149da8(this, 1) -- a state-machine
+       dispatch through data_ov102_0214e890 keyed on unk_3e8. Was a u8
+       marker. */
+    u8 unk_3f2;                       /* 0x3f2 */
     u8 unk_3f3;                       /* 0x3f3 */
 
     /* --- vtable --- */
@@ -40,6 +45,24 @@ struct QuestionBlock : dBgActor_c {
     int Behavior();
     int CleanupResources();
     int Render();
+
+    /* Slots 21/22/24/27/28, all dActor_c combat-callback overrides (see
+       include/dActor_c.h). Attributed by the vtable, not by the
+       pre-migration `recovered name:` comments. None is the key function:
+       ~QuestionBlock() above stays the first out-of-line virtual, so none of
+       these five TUs newly emits _ZTV13QuestionBlock -- checked with
+       objisolate, not assumed.
+
+       OnKicked returns `void`, matching include/dActor_c.h's slot 24
+       (corrected from `int` by BigBrickBlock::OnKicked -- see
+       include/BigBrickBlock.h and src/_ZN8dActor_c8OnKickedERS_.cpp for the
+       falsifying evidence). The other four stay `int`, dActor_c's own
+       declared type for their slots. */
+    int OnGroundPounded(dActor_c &other);      /* slot 21 */
+    int OnAttacked1(dActor_c &other);          /* slot 22 */
+    void OnKicked(dActor_c &other);            /* slot 24 */
+    int OnHitByMegaChar(Player &player);       /* slot 27 */
+    int OnHitFromUnderneath(dActor_c &other);  /* slot 28 */
 
     /* Tail padding. The field span stops short of the real size: CapBlockLuigi_Spawn and CapBlockMario_Spawn
        call fBase_c::operator new(0x3f8), read off the retail
