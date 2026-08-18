@@ -46,7 +46,9 @@ struct MrBlizzard : dEnemyBase_c {
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
 
     /* Tail padding. The field span stops short of the real size: MrBlizzard_Spawn

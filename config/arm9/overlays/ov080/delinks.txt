@@ -72,7 +72,7 @@ src/_ZN9MontyMole16CleanupResourcesEv.c:
     complete
     .text start:0x02124458 end:0x021244b4
 
-src/_ZN13MontyMoleRock16CleanupResourcesEv.c:
+src/_ZN13MontyMoleRock16CleanupResourcesEv.cpp:
     complete
     .text start:0x021244b4 end:0x021244d8
 

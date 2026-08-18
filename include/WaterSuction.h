@@ -28,7 +28,10 @@ struct WaterSuction : dEnemyBase_c {
     virtual ~WaterSuction();
 
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
+    int Render();
 };
 
 typedef char WaterSuction_size_must_be_0x318[sizeof(WaterSuction) == 0x318 ? 1 : -1];
