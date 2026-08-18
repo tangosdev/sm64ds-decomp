@@ -69,7 +69,7 @@ struct dScMiniGm_c : dScene_c {
     s32 unk_05c;                 /* 0x05c */
     s32 unk_060;                 /* 0x060 */
     s32 unk_064;                 /* 0x064 */
-    u8  pad_068[0x08c - 0x068];  /* 0x068 -- opaque; untouched by any slot fn */
+    u8  pad_068[0x24];  /* 0x068 -- opaque; untouched by any slot fn */
     s32 unk_08c;                 /* 0x08c */
     s32 unk_090;                 /* 0x090 */
     s32 unk_094;                 /* 0x094 */

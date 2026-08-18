@@ -51,7 +51,7 @@
  * _ZN8dScene_cD1Ev / _ZN8dScene_cD0Ev.
  */
 struct dScDSMT_c : dScene_c {
-    u8  unk_050[0x064 - 0x050]; /* 0x050 -- opaque; holds the graphCallback_c
+    u8  unk_050[0x14]; /* 0x050 -- opaque; holds the graphCallback_c
                                     member constructed by func_02017278 and
                                     torn down by func_02017254 -- see the
                                     derivation note above */
