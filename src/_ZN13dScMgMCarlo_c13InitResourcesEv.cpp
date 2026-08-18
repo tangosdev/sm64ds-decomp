@@ -1,12 +1,16 @@
 //cpp
-// @symbol func_ov006_020f8d08
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN13dScMgMCarlo_c13InitResourcesEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgMCarlo_c.h"
-// recovered name: dScMgMCarlo_c_InitResources
-/* recovered: renamed to Class_Method */
-/* dScMgMCarlo_c::InitResources - recovered from vtable slot identity */
+/* dScMgMCarlo_c::InitResources -- vtable slot 0.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMgMCarlo_c, this class's own
+ * slot 0 (fBase_c::InitResources). The old file's `recovered name:
+ * dScMgMCarlo_c_InitResources` agreed.
+ *
+ * The final `((Obj *)c)->v18(-1)` is a self-dispatch through this class's own
+ * vtable slot 18 -- left as a raw vtable-shim call, same shape the pre-migration
+ * file used, just through `this` instead of a `char *c` parameter. */
 extern "C" {
 extern void func_ov006_0210a534(void *c);
 extern int GetGameLanguage(void);
@@ -28,9 +32,9 @@ struct Obj {
     virtual void v16(); virtual void v17(); virtual void v18(int x);
 };
 
-extern "C" int func_ov006_020f8d08(char *c)
+s32 dScMgMCarlo_c::InitResources()
 {
-    struct dScMgMCarlo_c *self = (struct dScMgMCarlo_c *)(void *)c;
+    char *c = (char *)this;
     void *a;
     void *b;
 
@@ -51,13 +55,13 @@ extern "C" int func_ov006_020f8d08(char *c)
     if (func_ov006_020c1a88(c + 0x4f38) == 0) return 0;
 
     func_ov004_020b682c();
-    self->unk_0a8 = func_ov004_020ad8b8();
-    self->unk_0ac = self->unk_0a8;
+    *(int *)(c + 0xa8) = func_ov004_020ad8b8();
+    *(int *)(c + 0xac) = *(int *)(c + 0xa8);
     {
         int v = func_ov004_020ad878();
         if (data_ov004_020beb68) *(int *)((char *)data_ov004_020beb68 + 0xb4) = v;
     }
     ((Obj *)c)->v18(-1);
-    self->unk_60aa = 0;
+    this->unk_60aa = 0;
     return 1;
 }

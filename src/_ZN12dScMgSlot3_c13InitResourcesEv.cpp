@@ -1,11 +1,16 @@
 //cpp
-#include "types.h"
-// @symbol func_ov006_0210bdb0
-// recovered name: dScMgSlot3_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN12dScMgSlot3_c13InitResourcesEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgSlot3_c::InitResources - recovered from vtable slot identity */
+#include "dScMgSlot3_c.h"
+/* dScMgSlot3_c::InitResources -- vtable slot 0.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMgSlot3_c, this class's own
+ * slot 0 (fBase_c::InitResources). The old file's `recovered name:
+ * dScMgSlot3_c_InitResources` agreed.
+ *
+ * The `((struct Obj *)c)->m48(3)` is a self-dispatch through this class's own
+ * vtable slot 18 -- left as a raw vtable-shim call, same shape the pre-migration
+ * file used, just through `this` instead of a `void *arg0` parameter. */
 extern "C" {
 
 extern u32 LoadCompressedFileAt(u16 fileID, void *target);
@@ -50,9 +55,9 @@ struct Obj {
     virtual void m48(int a);
 };
 
-extern "C" int func_ov006_0210bdb0(void *arg0)
+s32 dScMgSlot3_c::InitResources()
 {
-    char *c = (char *)arg0;
+    char *c = (char *)this;
 
     *(volatile u16 *)0x400000a = (*(volatile u16 *)0x400000a & 0x43) | 0x1118;
     *(volatile u16 *)0x400000a = *(volatile u16 *)0x400000a & ~0x40;

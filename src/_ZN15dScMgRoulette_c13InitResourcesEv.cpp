@@ -1,18 +1,20 @@
 //cpp
-#include "types.h"
-// @symbol func_ov006_0210a194
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN15dScMgRoulette_c13InitResourcesEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgRoulette_c.h"
-// recovered name: dScMgRoulette_c_InitResources
-/* recovered: renamed to Class_Method */
-/* dScMgRoulette_c::InitResources - recovered from vtable slot identity */
-/* func_ov006_0210a194 @ 0x0210a194 (ov006, size 0x26c)
+/* dScMgRoulette_c::InitResources -- vtable slot 0.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMgRoulette_c, this class's own
+ * slot 0 (fBase_c::InitResources). The old file's `recovered name:
+ * dScMgRoulette_c_InitResources` agreed.
+ *
  * Minigame dual-screen graphics init: sets both sub BG layers, loads the
  * BG tiles/maps/palette and the shared OBJ tiles/palettes for both engines,
  * then initializes the board, cursor and slider objects.
- */
+ *
+ * The final `((VtObj *)c)->m18(-1)` is a self-dispatch through this class's own
+ * vtable slot 18 -- left as a raw vtable-shim call, same shape the pre-migration
+ * file used, just through `this` instead of a `char *c` parameter. */
 struct VtObj {
     virtual void d0();
     virtual void d1();
@@ -49,10 +51,11 @@ extern void _ZN2GX11LoadOBJPlttEPKvjj(void *, unsigned int, unsigned int);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, unsigned int, unsigned int);
 extern void func_ov006_020c0aa8(char *);
 extern int func_ov006_020c1a88(char *);
+}
 
-int func_ov006_0210a194(char *c)
+s32 dScMgRoulette_c::InitResources()
 {
-    struct dScMgRoulette_c *self = (struct dScMgRoulette_c *)(void *)c;
+    char *c = (char *)this;
     void *f8, *f7, *f6, *f5;
 
     func_ov004_020b04d0(0x20);
@@ -102,11 +105,10 @@ int func_ov006_0210a194(char *c)
     if (func_ov006_021085c0(c + 0x530c) == 0)
         return 0;
 
-    self->unk_0a8 = func_ov004_020ad8b8();
-    self->unk_0ac = self->unk_0a8;
+    *(int *)(c + 0xa8) = func_ov004_020ad8b8();
+    *(int *)(c + 0xac) = *(int *)(c + 0xa8);
     func_ov004_020b682c();
     func_ov006_02107b70(c + 0x52ac);
     ((VtObj *)c)->m18(-1);
     return 1;
-}
 }

@@ -1,11 +1,19 @@
 //cpp
-#include "types.h"
-// @symbol func_ov006_0212551c
-// recovered name: dScMgBSC_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN10dScMgBSC_c13InitResourcesEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgBSC_c::InitResources - recovered from vtable slot identity */
+#include "dScMgBSC_c.h"
+/* dScMgBSC_c::InitResources -- vtable slot 0.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMgBSC_c, which lists this address
+ * as this class's own slot 0 (fBase_c::InitResources), distinct from
+ * dScMgSingle3DBase_c's. The old file's `recovered name: dScMgBSC_c_InitResources`
+ * agreed.
+ *
+ * The final call is a self-dispatch through this class's own vtable slot 18
+ * (func_ov006_02125364, per the same rtti dump) -- neither dScMgBase_c.h nor this
+ * header names that slot yet (both leave 18-35 undeclared), so it stays a raw
+ * vtable-shim call exactly as the pre-migration file spelled it, just through
+ * `this` instead of a `void *self` parameter. */
 extern "C" {
 extern unsigned char data_0209d45c[];
 extern int data_0208ee44[];
@@ -15,9 +23,9 @@ extern u32 LoadCompressedFileAt(int fileID, void *target);
 extern int LoadFile(int handle);
 extern void func_ov006_020c0aa8(void *p);
 extern int func_ov006_020c1a88(void *p);
-int func_ov006_0212551c(void *self);
 }
 extern "C" void _ZN3GXS11LoadOBJPlttEPKvjj(void const *a, unsigned int b, unsigned int c);
+
 struct Obj {
     virtual void v0();virtual void v1();virtual void v2();virtual void v3();
     virtual void v4();virtual void v5();virtual void v6();virtual void v7();
@@ -26,9 +34,11 @@ struct Obj {
     virtual void v16();virtual void v17();virtual void v18(int x);
     char pad[0x10000];
 };
-int func_ov006_0212551c(void *self) {
-    Obj *o = (Obj *)self;
-    char *c = (char *)self;
+
+s32 dScMgBSC_c::InitResources()
+{
+    Obj *o = (Obj *)this;
+    char *c = (char *)this;
     int fh;
     data_0209d45c[0] = 0x11;
     func_ov006_0210a534();

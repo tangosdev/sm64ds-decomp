@@ -1,8 +1,12 @@
 //cpp
-// @symbol func_ov006_020f85b0
-// recovered name: dScMgMCarlo_c_Render
-/* recovered: renamed to Class_Method */
-/* dScMgMCarlo_c::Render - recovered from vtable slot identity */
+// @symbol _ZN13dScMgMCarlo_c6RenderEv
+#include "decl_common.h"
+#include "dScMgMCarlo_c.h"
+/* dScMgMCarlo_c::Render -- vtable slot 9.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMgMCarlo_c, this class's own
+ * slot 9 (dScMgBase_c::Render). The old file's `recovered name:
+ * dScMgMCarlo_c_Render` agreed. */
 struct Node {
     virtual void f0();
     Node* next;
@@ -19,8 +23,9 @@ void func_ov006_020c1804(char* p);
 }
 extern Node* data_ov006_02142504;
 
-extern "C" int func_ov006_020f85b0(char* c)
+s32 dScMgMCarlo_c::Render()
 {
+    char* c = (char*)this;
     func_ov006_020c0aa8(c + 0x4660);
     func_ov004_020b1bc8(c, 0xc, 0xc, 0);
     func_ov004_020b6430();

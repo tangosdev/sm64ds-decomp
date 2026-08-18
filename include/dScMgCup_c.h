@@ -68,6 +68,7 @@ struct dScMgCup_c : dScMgSingle3DBase_c {
        holds. The destructor above is declared first and out of line, so it stays
        this class's KEY FUNCTION and neither of these translation units emits
        _ZTV10dScMgCup_c. */
+    s32 InitResources();  /* slot  0 -- src/_ZN10dScMgCup_c13InitResourcesEv.cpp */
     s32 Behavior();       /* slot  6 -- src/_ZN10dScMgCup_c8BehaviorEv.cpp */
     s32 Render();         /* slot  9 -- src/_ZN10dScMgCup_c6RenderEv.cpp */
 

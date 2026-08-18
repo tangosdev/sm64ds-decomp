@@ -40,6 +40,7 @@ struct dScMgBSC_c : dScMgSingle3DBase_c {
        Re-overrides of slots fBase_c already owns, NOT new virtuals: the
        table stays the base's width and no field moves. Declared AFTER the
        destructor so the destructor is still the first virtual declared. */
+    virtual s32 InitResources(); /* slot 0 -- src/_ZN10dScMgBSC_c13InitResourcesEv.cpp */
     virtual s32 Behavior();   /* slot 6 -- ov006 0x021254c0 */
     virtual s32 Render();     /* slot 9 -- ov006 0x021253bc */
 

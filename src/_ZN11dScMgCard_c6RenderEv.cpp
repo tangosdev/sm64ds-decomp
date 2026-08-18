@@ -1,12 +1,11 @@
 //cpp
-// @symbol func_ov006_020da9c4
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN11dScMgCard_c6RenderEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgCard_c.h"
-// recovered name: dScMgCard_c_Render
-/* recovered: renamed to Class_Method */
-/* dScMgCard_c::Render - recovered from vtable slot identity */
+/* dScMgCard_c::Render -- vtable slot 9.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMgCard_c, this class's own slot 9
+ * (dScMgBase_c::Render). The old file's `recovered name: dScMgCard_c_Render` agreed. */
 struct Node {
     virtual void m0();
     char pad[0x2c];
@@ -20,9 +19,9 @@ extern "C" void func_ov006_020c1804(void *c);
 
 extern int data_ov006_02134028;
 
-extern "C" int func_ov006_020da9c4(char *c)
+s32 dScMgCard_c::Render()
 {
-    struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
+    char *c = (char *)this;
     int skip;
     short v;
     int i;
@@ -30,11 +29,11 @@ extern "C" int func_ov006_020da9c4(char *c)
 
     func_ov006_020c0aa8(c + 0x4660);
 
-    v = self->unk_5388;
+    v = this->unk_5388;
     if (v > 3 && v < 0x11) {
         skip = -1;
         if (v > 0xe) {
-            if (self->unk_5396 & 8) {
+            if (this->unk_5396 & 8) {
                 if (func_ov006_020da5e8(c + 0x51a8, c + 0x5298) == 1) {
                     skip = 6 - func_ov006_020da4ac(c + 0x51a8, 0);
                 }
@@ -55,9 +54,9 @@ extern "C" int func_ov006_020da9c4(char *c)
     func_ov004_020b1bc8(c, 0xc, 0xc, 0);
     func_ov004_020b1e34(c, 0xe0, 0x14, 1);
 
-    if (self->unk_5398 < self->unk_0b4)
-        self->unk_5398 = self->unk_0b4;
-    func_ov004_020adb1c(self->unk_5398);
+    if (this->unk_5398 < this->unk_0b4)
+        this->unk_5398 = this->unk_0b4;
+    func_ov004_020adb1c(this->unk_5398);
 
     func_ov004_020b6430();
 
@@ -70,12 +69,12 @@ extern "C" int func_ov006_020da9c4(char *c)
         Node *node = &bank[4];
         do {
             unsigned char cfg = *(unsigned char *)(cfgp + 0x5000 + 0x1d2);
-            if (self->unk_538e == cfg)
+            if (this->unk_538e == cfg)
                 goto chk1;
-            if (self->unk_5390 != cfg)
+            if (this->unk_5390 != cfg)
                 goto docall1;
         chk1:
-            if (!(self->unk_5396 & 8))
+            if (!(this->unk_5396 & 8))
                 goto skip1;
         docall1:
             node->m0();
@@ -92,12 +91,12 @@ extern "C" int func_ov006_020da9c4(char *c)
         Node *node = &bank[4];
         do {
             unsigned char cfg = *(unsigned char *)(cfgp + 0x5000 + 0x2c2);
-            if (self->unk_5392 == cfg)
+            if (this->unk_5392 == cfg)
                 goto chk2;
-            if (self->unk_5394 != cfg)
+            if (this->unk_5394 != cfg)
                 goto docall2;
         chk2:
-            if (!(self->unk_5396 & 8))
+            if (!(this->unk_5396 & 8))
                 goto skip2;
         docall2:
             node->m0();

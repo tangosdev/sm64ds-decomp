@@ -1,10 +1,19 @@
 //cpp
-// @symbol func_ov006_020e9e70
-// recovered name: dScMg3DEsp_c_InitResources
-/* recovered: shared common types, renamed to Class_Method */
-/* dScMg3DEsp_c::InitResources - recovered from vtable slot identity */
+// @symbol _ZN12dScMg3DEsp_c13InitResourcesEv
+#include "decl_common.h"
+#include "dScMg3DEsp_c.h"
+/* dScMg3DEsp_c::InitResources -- vtable slot 0.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMg3DEsp_c, this class's own slot 0
+ * (fBase_c::InitResources). The old file's `recovered name:
+ * dScMg3DEsp_c_InitResources` agreed.
+ *
+ * The final `((Obj *)c)->v48(-1)` is a self-dispatch through this class's own
+ * vtable slot 18 -- neither dScMgBase_c.h nor this header names that slot yet
+ * (both leave 18-35 undeclared), so it stays a raw vtable-shim call, same shape
+ * the pre-migration file used, just through `this` instead of a `void *arg0`
+ * parameter. */
 extern "C" {
-int _ZN3G3X6SetFogEbiii(int a, int b, int c, int d);
 void InitialiseVramGlobals(void);
 void func_ov004_020b04d0(int v);
 void Camera_UpdateMatrices(void* self);
@@ -43,9 +52,9 @@ struct Obj {
     virtual void v48(int arg);
 };
 
-extern "C" int func_ov006_020e9e70(void* arg0)
+s32 dScMg3DEsp_c::InitResources()
 {
-    char* c = (char*)arg0;
+    char* c = (char*)this;
     M48 tmp;
     int zero;
     int f;

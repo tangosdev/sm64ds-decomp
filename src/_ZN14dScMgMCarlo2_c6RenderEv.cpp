@@ -1,12 +1,12 @@
 //cpp
-// @symbol func_ov006_020f9ffc
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN14dScMgMCarlo2_c6RenderEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgMCarlo2_c.h"
-// recovered name: dScMgMCarlo2_c_Render
-/* recovered: renamed to Class_Method */
-/* dScMgMCarlo2_c::Render - recovered from vtable slot identity */
+/* dScMgMCarlo2_c::Render -- vtable slot 9.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMgMCarlo2_c, this class's own
+ * slot 9 (dScMgBase_c::Render). The old file's `recovered name:
+ * dScMgMCarlo2_c_Render` agreed. */
 struct Node {
     virtual void m0();
     Node *next;
@@ -20,9 +20,9 @@ extern "C" void func_ov006_020c1804(void *c);
 
 extern Node *data_ov006_02142578;
 
-extern "C" int func_ov006_020f9ffc(char *c)
+s32 dScMgMCarlo2_c::Render()
 {
-    struct dScMgMCarlo2_c *self = (struct dScMgMCarlo2_c *)(void *)c;
+    char *c = (char *)this;
     short v;
     Node *n6;
     int i5;
@@ -38,7 +38,7 @@ extern "C" int func_ov006_020f9ffc(char *c)
 
     RenderOamMainScreen(data_ov006_02133f18, 0xe8, 0x18, -1, -1);
 
-    if (self->unk_5928 == 5)
+    if (this->unk_5928 == 5)
         func_ov004_020b0d8c(c, 0xe0, 0xa0);
 
     n6 = data_ov006_02142578;

@@ -1,17 +1,17 @@
 //cpp
-#include "types.h"
-// @symbol func_ov006_020e0308
-// recovered name: dScMgCup_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN10dScMgCup_c13InitResourcesEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMgCup_c::InitResources - recovered from vtable slot identity */
-/* func_ov006_020e0308 @ 0x020e0308 (ov006, size 0x26c)
+#include "dScMgCup_c.h"
+/* dScMgCup_c::InitResources -- vtable slot 0.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMgCup_c, this class's own slot 0
+ * (fBase_c::InitResources). The old file's `recovered name:
+ * dScMgCup_c_InitResources` agreed.
+ *
  * Minigame sub-screen setup: configures sub BG1/BG2 control, loads the
  * board tiles/map/palette files, sets the touch UI margins, initializes
  * the three sliders from the table at data_ov006_0213c0a8, then calls
- * virtual +0x48 with mode 3.
- */
+ * virtual +0x48 (this class's own slot 18) with mode 3. */
 struct VtObj {
     virtual void d0();
     virtual void d1();
@@ -64,9 +64,11 @@ extern void _ZN3GXS10LoadBGPlttEPKvjj(void *, unsigned int, unsigned int);
 extern int _ZN3G2S12GetBG0ScrPtrEv(void);
 extern int _ZN3G2S12GetBG2ScrPtrEv(void);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, unsigned int, unsigned int);
+}
 
-int func_ov006_020e0308(char *c)
+s32 dScMgCup_c::InitResources()
 {
+    char *c = (char *)this;
     void *f;
 
     data_0209d45c = 0x11;
@@ -127,5 +129,4 @@ int func_ov006_020e0308(char *c)
     ((VtObj *)c)->m18(3);
     func_ov006_020dec3c(c + 0x50e8);
     return 1;
-}
 }

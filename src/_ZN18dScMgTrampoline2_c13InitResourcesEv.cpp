@@ -1,13 +1,16 @@
 //cpp
-#include "types.h"
-// @symbol func_ov006_021243ec
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN18dScMgTrampoline2_c13InitResourcesEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgTrampoline2_c.h"
-// recovered name: dScMgTrampoline2_c_InitResources
-/* recovered: renamed to Class_Method */
-/* dScMgTrampoline2_c::InitResources - recovered from vtable slot identity */
+/* dScMgTrampoline2_c::InitResources -- vtable slot 0.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMgTrampoline2_c, this class's own
+ * slot 0 (fBase_c::InitResources). The old file's `recovered name:
+ * dScMgTrampoline2_c_InitResources` agreed.
+ *
+ * The final `((Base *)base)->m48(-1)` is a self-dispatch through this class's own
+ * vtable slot 18 -- left as a raw vtable-shim call, same shape the pre-migration
+ * file used, just through `this` instead of a `char *base` parameter. */
 extern "C" {
 extern s32 _ZN4cstd4fdivEii(s32 a, s32 b);
 extern void Camera_UpdateMatrices(void *cam);
@@ -37,9 +40,9 @@ struct Base {
     virtual void m48(int x);
 };
 
-extern "C" int func_ov006_021243ec(char *base)
+s32 dScMgTrampoline2_c::InitResources()
 {
-    struct dScMgTrampoline2_c *self = (struct dScMgTrampoline2_c *)(void *)base;
+    char *base = (char *)this;
     s32 fov;
 
     func_ov006_021245a8(base);
@@ -49,21 +52,21 @@ extern "C" int func_ov006_021243ec(char *base)
     InitialiseVramGlobals();
     *(u16 *)0x4000008 = (*(u16 *)0x4000008 & ~3) | 1;
     fov = _ZN4cstd4fdivEii(0xc0000, (s32)data_02082414);
-    self->unk_470c = 0;
-    self->unk_4710 = -0x64000;
-    self->unk_4714 = 0;
-    self->unk_4718 = 0;
-    self->unk_471c = 0;
-    self->unk_4720 = fov;
-    self->unk_4724 = 0x400;
+    this->unk_470c = 0;
+    this->unk_4710 = -0x64000;
+    this->unk_4714 = 0;
+    this->unk_4718 = 0;
+    this->unk_471c = 0;
+    this->unk_4720 = fov;
+    this->unk_4724 = 0x400;
     Camera_UpdateMatrices(base + 0x466c);
-    self->unk_47c8 = 0;
-    self->unk_47cc = 0x82000;
-    self->unk_47d0 = 0;
-    self->unk_47d4 = 0;
-    self->unk_47d8 = 0;
-    self->unk_47dc = fov;
-    self->unk_47e0 = 0x400;
+    this->unk_47c8 = 0;
+    this->unk_47cc = 0x82000;
+    this->unk_47d0 = 0;
+    this->unk_47d4 = 0;
+    this->unk_47d8 = 0;
+    this->unk_47dc = fov;
+    this->unk_47e0 = 0x400;
     Camera_UpdateMatrices(base + 0x4728);
     if (func_ov006_020cae9c(base + 0x500c, 5) == 0)
         return 0;

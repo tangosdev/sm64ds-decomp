@@ -1,18 +1,20 @@
 //cpp
-#include "types.h"
-// @symbol func_ov006_020dbaf0
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN11dScMgCard_c13InitResourcesEv
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScMgCard_c.h"
-// recovered name: dScMgCard_c_InitResources
-/* recovered: renamed to Class_Method */
-/* dScMgCard_c::InitResources - recovered from vtable slot identity */
-/* func_ov006_020dbaf0 @ 0x020dbaf0 (ov006, size 0x264)
+/* dScMgCard_c::InitResources -- vtable slot 0.
+ *
+ * Attributed by tools/rtti_vtables.py --own dScMgCard_c, this class's own slot 0
+ * (fBase_c::InitResources). The old file's `recovered name:
+ * dScMgCard_c_InitResources` agreed.
+ *
  * Minigame graphics init: loads/decompresses the OBJ tiles+palettes for both
  * engines, sets blending, patches the OAM attr template list, spawns the two
  * rows of 5 slot sprites, and resets the shared counters.
- */
+ *
+ * The final `((VtObj *)c)->m18(-1)` is a self-dispatch through this class's own
+ * vtable slot 18 -- left as a raw vtable-shim call, same shape the pre-migration
+ * file used, just through `this` instead of a `char *c` parameter. */
 typedef struct Slot6 {
     char b[0x30];
 } Slot6;
@@ -49,9 +51,8 @@ extern "C" {
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern u32 *data_ov006_02134028;
-/* data_ov004_020beb68 comes from dScMgBase_c.h (void*) now that this file
-   includes the real class chain -- not redeclared here, see its own use
-   below. */
+/* data_ov004_020beb68 comes from dScMgBase_c.h (void*) -- not redeclared here,
+   see its own use below. */
 
 extern void func_ov006_0210a534(char *);
 extern void *LoadFile(int);
@@ -62,10 +63,12 @@ extern void _ZN3GXS11LoadOBJPlttEPKvjj(void *, u32, u32);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(volatile u16 *, int, int, int, int);
 extern void func_ov006_020c0aa8(char *);
 extern int func_ov006_020c1a88(char *);
+}
 
-int func_ov006_020dbaf0(char *c)
+s32 dScMgCard_c::InitResources()
 {
-    struct dScMgCard_c *self = (struct dScMgCard_c *)(void *)c;
+    dScMgCard_c *self = this;
+    char *c = (char *)this;
     void *f7, *f6, *f5, *f4;
     int v[2];
 
@@ -120,8 +123,8 @@ int func_ov006_020dbaf0(char *c)
 
     self->unk_5388 = 0;
     self->unk_538a = 0;
-    self->unk_0a8 = func_ov004_020ad8b8();
-    self->unk_0ac = self->unk_0a8;
+    *(int *)(c + 0xa8) = func_ov004_020ad8b8();
+    *(int *)(c + 0xac) = *(int *)(c + 0xa8);
     {
         int r = func_ov004_020ad878();
         if (data_ov004_020beb68 != 0)
@@ -131,5 +134,4 @@ int func_ov006_020dbaf0(char *c)
     func_ov004_020b682c();
     ((VtObj *)c)->m18(-1);
     return 1;
-}
 }
