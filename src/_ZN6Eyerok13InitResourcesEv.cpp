@@ -32,25 +32,26 @@ extern int data_ov066_0211ae34[];
 extern s8 data_ov066_0211abe0;
 extern s8 data_ov066_0211ae04;
 extern s8 data_ov066_0211ae0c;
-extern char _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern "C" char _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
-extern u8 _ZN8dActor_c9TrackStarEjj(void* actor, u32 a, u32 b);
-extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
-extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void* sfp);
-extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
-extern void _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
-extern void _ZN11ShadowModel12InitCylinderEv(void* thiz);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* thiz, void* actor, Vector3* v, s32 f1, s32 f2, u32 a, u32 b);
-/* extern "C" is load-bearing here: without it the name mangles a SECOND time,
-   to _Z44_ZN8dActor_c5Spawn...jjP7Vector3Pvii, which exists nowhere -- and the
-   file byte-matches either way, so only check_references sees it. The other
-   declarations in this block carry the same defect and are left to a cleanup
-   that owns them; this one is fixed because the rename had to touch it. */
+/* extern "C" is load-bearing on every mangled/C-named declaration below: without
+   it a .cpp file mangles the name a SECOND time (e.g.
+   _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as ->
+   _Z44_ZN8dActor_c5Spawn...jjP7Vector3Pvii, func_020393d4 -> _Z13func_020393d4PvS_),
+   which exists nowhere -- and the file byte-matches either way (match.py compares
+   relocated words as wildcards), so only check_references sees it. */
+extern "C" u8 _ZN8dActor_c9TrackStarEjj(void* actor, u32 a, u32 b);
+extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
+extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
+extern "C" void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void* sfp);
+extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
+extern "C" void _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
+extern "C" void _ZN11ShadowModel12InitCylinderEv(void* thiz);
+extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* thiz, void* actor, Vector3* v, s32 f1, s32 f2, u32 a, u32 b);
 extern "C" void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 b, Vector3* pos, void* p, int e, int f);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, int kcl, void* mtx, s32 fix, s16 s, void* clps);
-extern void func_020393d4(void* p, void* v);
-extern void func_020393c4(void* p, void* v);
+extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, int kcl, void* mtx, s32 fix, s16 s, void* clps);
+extern "C" void func_020393d4(void* p, void* v);
+extern "C" void func_020393c4(void* p, void* v);
 
 int Eyerok::InitResources()
 {

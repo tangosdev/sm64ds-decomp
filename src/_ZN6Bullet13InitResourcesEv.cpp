@@ -8,10 +8,12 @@
 struct dActor_c;
 struct Vector3_16;
 struct BMD_File;
-extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(char* self, struct dActor_c* a, int r, int h, u32 f1, u32 f2);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
+/* Mangled ROM names need extern "C" in a .cpp file, or the compiler re-mangles them
+   into phantoms no module defines. */
+extern "C" struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
+extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
+extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(char* self, struct dActor_c* a, int r, int h, u32 f1, u32 f2);
+extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
 
 int Bullet::InitResources()
 {

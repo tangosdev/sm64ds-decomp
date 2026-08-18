@@ -1,5 +1,5 @@
 {
- "eligible": 11026,
+ "eligible": 11031,
  "unresolved": {
   "arm9:0x02017848": {
    "name": "_ZN5FaderD0Ev",
@@ -89,12 +89,6 @@
     "func_01ff98f4"
    ]
   },
-  "arm9:0x0203c178": {
-   "name": "func_0203c178",
-   "missing": [
-    "func_020527e9"
-   ]
-  },
   "arm9:0x02044b30": {
    "name": "func_02044b30",
    "missing": [
@@ -169,7 +163,6 @@
   "ov002:0x020f83a4": {
    "name": "_ZN14CutsceneObject13InitResourcesEv",
    "missing": [
-    "_Z5_Znwji",
     "func_02113c20"
    ]
   },
@@ -290,9 +283,6 @@
   "ov065:0x0211b1d4": {
    "name": "func_ov065_0211b1d4",
    "missing": [
-    "MeshColliderLoadFile",
-    "ModelLoadFile",
-    "UpdatePosWithTransformSym",
     "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block",
     "func_02112258"
    ]

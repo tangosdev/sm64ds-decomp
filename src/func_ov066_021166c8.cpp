@@ -14,10 +14,12 @@ extern void **data_ov066_0211ae94;
 extern void **data_ov066_0211ae9c;
 extern void **data_ov066_0211ae34;
 extern void **data_ov066_0211ae1c;
-extern void func_02112cc8();
-extern void func_02112c88();
-extern void func_02112cd8_updatepos();
-extern void func_ov066_0211a35c();
+/* Bare C names in a .cpp file mangle to _Z13func_02112cc8v etc, which are
+   phantoms no module defines. */
+extern "C" void func_02112cc8();
+extern "C" void func_02112c88();
+extern "C" void func_02112cd8_updatepos();
+extern "C" void func_ov066_0211a35c();
 
 extern "C" void func_ov066_021166c8(void *thiz)
 {
