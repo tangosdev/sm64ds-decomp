@@ -220,11 +220,9 @@ src/func_ov022_021123d0.c:
     .text start:0x021123d0 end:0x02112434
 
 src/func_ov022_02112434.c:
-    complete
     .text start:0x02112434 end:0x02112448
 
 src/func_ov022_02112448.c:
-    complete
     .text start:0x02112448 end:0x0211245c
 
 src/FallBlockLll_Spawn.c:
