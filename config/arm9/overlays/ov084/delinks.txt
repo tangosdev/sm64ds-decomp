@@ -99,7 +99,7 @@ src/func_ov084_0212b2dc.c:
     complete
     .text start:0x0212b2dc end:0x0212b30c
 
-src/func_ov084_0212b30c.cpp:
+src/_ZN6Goomba16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0212b30c end:0x0212b344
 
@@ -122,7 +122,7 @@ src/_ZN6Goomba8BehaviorEv.cpp:
     complete
     .text start:0x0212b6ec end:0x0212bc30
 
-src/func_ov084_0212bfc0.cpp:
+src/_ZN6Goomba13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0212bfc0 end:0x0212bff8
 
