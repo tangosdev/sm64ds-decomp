@@ -1,15 +1,21 @@
-typedef int s32;
-struct SharedFilePtr { int data[4]; };
-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
-extern struct SharedFilePtr data_ov072_02122cb4;
-extern struct SharedFilePtr *data_ov072_02122004[];
+//cpp
+// @symbol _ZN11BabyPenguin16CleanupResourcesEv
 
-s32 _ZN11BabyPenguin16CleanupResourcesEv(void) {
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov072_02122cb4);
-    s32 r5 = 0;
+#include "BabyPenguin.h"
+#include "SharedFilePtr.h"
+
+extern SharedFilePtr data_ov072_02122cb4;
+extern SharedFilePtr *data_ov072_02122004[];
+
+int BabyPenguin::CleanupResources()
+{
+    data_ov072_02122cb4.Release();
+
+    int i = 0;
     do {
-        _ZN13SharedFilePtr7ReleaseEv(data_ov072_02122004[r5]);
-        r5++;
-    } while (r5 < 5);
+        data_ov072_02122004[i]->Release();
+        i++;
+    } while (i < 5);
+
     return 1;
 }

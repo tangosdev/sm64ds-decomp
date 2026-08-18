@@ -1,23 +1,26 @@
-#include "types.h"
-struct SharedFilePtr { u16 fileID; u8 numRefs; char* filePtr; };
+//cpp
+// @symbol _ZN6Lakitu16CleanupResourcesEv
 
-extern void _ZN13SharedFilePtr7ReleaseEv(struct SharedFilePtr *self);
+#include "Lakitu.h"
+#include "SharedFilePtr.h"
 
-extern struct SharedFilePtr data_ov077_02127b50;
-extern struct SharedFilePtr data_ov077_02127b48;
-extern struct SharedFilePtr data_ov077_02127b38;
-extern struct SharedFilePtr* data_ov077_02127238[2];
-extern struct SharedFilePtr* data_ov077_02127230[2];
+extern SharedFilePtr data_ov077_02127b50;
+extern SharedFilePtr data_ov077_02127b48;
+extern SharedFilePtr data_ov077_02127b38;
+extern SharedFilePtr *data_ov077_02127238[2];
+extern SharedFilePtr *data_ov077_02127230[2];
 
-int _ZN6Lakitu16CleanupResourcesEv(void)
+int Lakitu::CleanupResources()
 {
-    s32 i;
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov077_02127b50);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov077_02127b48);
-    _ZN13SharedFilePtr7ReleaseEv(&data_ov077_02127b38);
-    for (i = 0; i < 2; i++)
-        _ZN13SharedFilePtr7ReleaseEv(data_ov077_02127238[i]);
-    for (i = 0; i < 2; i++)
-        _ZN13SharedFilePtr7ReleaseEv(data_ov077_02127230[i]);
+    data_ov077_02127b50.Release();
+    data_ov077_02127b48.Release();
+    data_ov077_02127b38.Release();
+
+    for (int i = 0; i < 2; i++)
+        data_ov077_02127238[i]->Release();
+
+    for (int i = 0; i < 2; i++)
+        data_ov077_02127230[i]->Release();
+
     return 1;
 }
