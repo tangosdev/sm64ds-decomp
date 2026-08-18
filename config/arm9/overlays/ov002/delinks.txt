@@ -5025,19 +5025,19 @@ src/_ZN19AmbientSoundEffectsD1Ev.cpp:
     complete
     .text start:0x020f198c end:0x020f19b0
 
-src/_ZN19AmbientSoundEffectsD0Ev.c:
+src/_ZN19AmbientSoundEffectsD0Ev.cpp:
     complete
     .text start:0x020f19b0 end:0x020f19e8
 
-src/_ZN19AmbientSoundEffects16CleanupResourcesEv.c:
+src/_ZN19AmbientSoundEffects16CleanupResourcesEv.cpp:
     complete
     .text start:0x020f19e8 end:0x020f19f0
 
-src/_ZN19AmbientSoundEffects16OnPendingDestroyEv.c:
+src/_ZN19AmbientSoundEffects16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020f19f0 end:0x020f19f4
 
-src/_ZN19AmbientSoundEffects6RenderEv.c:
+src/_ZN19AmbientSoundEffects6RenderEv.cpp:
     complete
     .text start:0x020f19f4 end:0x020f19fc
 
