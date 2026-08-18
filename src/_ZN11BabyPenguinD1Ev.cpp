@@ -1,23 +1,11 @@
 //cpp
 // @symbol _ZN11BabyPenguinD1Ev
-
-struct dActor_c {
-    char pad[0xd0];
-    virtual ~dActor_c();
-};
-
-struct ModelAnim { char pad[0x64]; ~ModelAnim(); };
-struct ShadowModel { char pad[0x28]; ~ShadowModel(); };
-struct MovingCylinderClsn { char pad[0x34]; ~MovingCylinderClsn(); };
-struct WithMeshClsn { char pad[0x4]; ~WithMeshClsn(); };
-
-struct BabyPenguin : dActor_c {
-    ModelAnim m0;   /* 0xd4 */
-    ShadowModel m1;   /* 0x138 */
-    MovingCylinderClsn m2;   /* 0x160 */
-    WithMeshClsn m3;   /* 0x194 */
-    virtual ~BabyPenguin();
-};
+/* recovered: real C++ destructor -- the compiler emits the whole body.
+ * Vtable slot 16: one vtable store, the members in reverse, then
+ * ~dActor_c. Was a forcing-destructor scaffold (a local duplicate shadow
+ * struct) until BabyPenguin.h became the real class; now it just includes
+ * it. */
+#include "BabyPenguin.h"
 
 BabyPenguin::~BabyPenguin()
 {
