@@ -800,11 +800,11 @@ src/_ZN14QuestionSwitchD1Ev.cpp:
     complete
     .text start:0x020b4ed8 end:0x020b4f44
 
-src/_ZN14QuestionSwitchD0Ev.c:
+src/_ZN14QuestionSwitchD0Ev.cpp:
     complete
     .text start:0x020b4f44 end:0x020b4fc4
 
-src/func_ov002_020b4fc4.c:
+src/_ZN14QuestionSwitch15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x020b4fc4 end:0x020b4fd0
 
