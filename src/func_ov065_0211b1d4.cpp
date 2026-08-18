@@ -16,6 +16,13 @@ struct MovingMeshCollider {
 extern "C" void func_020393d4(void *p, void *v);
 extern "C" void func_020393a4(void *p, int v);
 extern "C" void func_02039394(void *p, int v);
+/* decl_common.h's ModelLoadFile / MeshColliderLoadFile / UpdatePosWithTransformSym are
+   phantoms -- names no module defines -- and match.py compares relocated words as
+   wildcards, so the byte gate never saw it. Route to the real ROM symbols instead,
+   the same idiom SignPost::InitResources (#1554) and the ov060/ov066 siblings use. */
+extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
+extern "C" void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
+extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 struct RaycastGround {
     int pad[0x11];
     int result;       // offset 0x44
@@ -31,15 +38,15 @@ struct V3 { int x, y, z; };
 
 extern "C" int func_ov065_0211b1d4(char *self)
 {
-    void *mf = ModelLoadFile(&data_ov065_0211d904);
+    void *mf = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov065_0211d904);
     ((ModelBase*)(self + 0xd4))->SetFile((BMD_File*)mf, 1, -1);
     ((ShadowModel*)(self + 0x33c))->InitCuboid();
     ((dBgActor_c*)self)->UpdateModelPosAndRotY();
     ((dBgActor_c*)self)->UpdateClsnPosAndRot();
-    void *kf = MeshColliderLoadFile(&data_ov065_0211d90c);
+    void *kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov065_0211d90c);
     ((MovingMeshCollider*)(self + 0x124))->SetFile((KCL_File*)kf,
         *(Matrix4x3*)(self + 0x2ec), 0x199, *(short*)(self + 0x8e), *(CLPS_Block*)&func_02112258);
-    func_020393d4(self + 0x124, (void*)&UpdatePosWithTransformSym);
+    func_020393d4(self + 0x124, (void*)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393a4(self + 0x124, 0x1c0000);
     func_02039394(self + 0x124, 0x1000);
     *(short*)(self + 0x94) = *(short*)(self + 0x8e);
