@@ -6,9 +6,10 @@
 
 /* Bowser in the Sky's rickshaw axle. Its factory is named RickshawBs_Spawn --
  * "Bs" for Bowser in the Sky -- but that name is crossed with its sibling's
- * (include/RickshawBs.h documents the mixup: the ov047 "Bs"-named C++ class
- * actually reproduces daObjKm3_Kaitendai_c, not this one). This class stays
- * unnamed in the tree until now; paired to its vtable by ADDRESS, not by the
+ * (include/daObjKm3_Kaitendai_c.h documents the mixup: the ov047 "Bs"-named
+ * C++ class actually reproduces daObjKm3_Kaitendai_c, not this one -- it was
+ * misnamed RickshawBs until that header's rename). This class stays unnamed
+ * in the tree until now; paired to its vtable by ADDRESS, not by the
  * factory's name.
  *
  * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjKurumajiku_c, which
