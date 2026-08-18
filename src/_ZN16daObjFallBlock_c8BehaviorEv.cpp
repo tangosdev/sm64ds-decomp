@@ -1,25 +1,18 @@
 //cpp
-#include "types.h"
-#include "MeshColliderBase.h"
-// func_ov098_0213a36c at 0x0213a36c
+// @symbol _ZN16daObjFallBlock_c8BehaviorEv
+#include "daObjFallBlock_c.h"
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
-struct CylinderClsn;
-
-struct dActor_c {
-    virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
-    virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
-    virtual void v08(); virtual void v09(); virtual void v10(); virtual void v11();
-    virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
-    virtual void v16(); virtual void v17(); virtual void v18(); virtual void v19();
-    virtual void v20(); virtual void v21(); virtual void v22(); virtual void v23();
-    virtual void v24(); virtual void v25(); virtual void v26(); virtual void v27();
-    virtual void v28(); virtual void v29(); virtual void v30();
-    virtual void KillOrWhatever(); /* vtable slot 31 @ 0x7c */
-    char pad[0x8c - 4];
-    s16 rotX, rotY, rotZ;
-    void UpdatePos(CylinderClsn *clsn);
-};
-
+/* daObjFallBlock_c::Behavior - the whole fall-block state machine; see the
+   class header for the field-by-field account. The draft cast `this` to a
+   32-entry vtable-shim struct and called slot 31 (KillOrWhatever); that
+   slot is Kill(), already a named virtual on this class (its own key
+   function, per daObjFallBlock_c.h), so this calls it directly. UpdatePos
+   is dActor_c's own named member (dActor_c.h), inherited; the
+   MeshColliderBase calls go through the real named mMeshCollider member
+   (dBgActor_c.h) instead of a raw offset-0x124 cast. The Fix12<int>-typed
+   dBgActor_c calls stay spelled as their extern "C" mangled names -- see
+   dBgActor_c.h's note on why declaring the true types there breaks the
+   byte match. */
 extern "C" {
 int DecIfAbove0_Byte(u8 *p);
 int DecIfAbove0_Short(u16 *p);
@@ -40,8 +33,9 @@ extern signed char data_0209f2f8;
 #define U64 0xFFFFFFFFFFFFFFFFLL
 #define BASE(c, off) ((char *)(((int)(c) + (off)) & U64))
 
-extern "C" int func_ov098_0213a36c(char *c)
+s32 daObjFallBlock_c::Behavior()
 {
+    char *c = (char *)this;
     int all;
     char *p;
     char *q;
@@ -69,8 +63,8 @@ extern "C" int func_ov098_0213a36c(char *c)
     func_ov098_0213a00c(c);
     if (*(u8 *)(c + 0x33f) != 0) {
         if (DecIfAbove0_Byte((u8 *)BASE(c, 0x33f)) == 0) {
-            if (((MeshColliderBase *)(c + 0x124))->IsEnabled() != 0)
-                ((MeshColliderBase *)(c + 0x124))->Disable();
+            if (mMeshCollider.IsEnabled() != 0)
+                mMeshCollider.Disable();
         }
         return 1;
     }
@@ -137,8 +131,8 @@ extern "C" int func_ov098_0213a36c(char *c)
             s16 *p334 = (s16 *)BASE(c, 0x334);
             *p334 = (s16)(*p334 + 0x80);
         } else {
-            if (((MeshColliderBase *)(c + 0x124))->IsEnabled() != 0)
-                ((MeshColliderBase *)(c + 0x124))->Disable();
+            if (mMeshCollider.IsEnabled() != 0)
+                mMeshCollider.Disable();
         }
         yaw = *(s16 *)(c + 0x90);
         if (yaw > -0x400) {
@@ -153,7 +147,7 @@ extern "C" int func_ov098_0213a36c(char *c)
             *(s16 *)(((int)c + 0x8c) & U64) = t;
             t = (s16)(*(s16 *)(((int)c + 0x90) & U64) + *(s16 *)(c + 0x336));
             *(s16 *)(((int)c + 0x90) & U64) = t;
-            ((dActor_c *)c)->UpdatePos(0);
+            UpdatePos(0);
         }
         if (DecIfAbove0_Short((u16 *)BASE(c, 0x33a)) == 0) {
             *(int *)(c + 0x5c) = *(int *)(c + 0x320);
@@ -163,7 +157,7 @@ extern "C" int func_ov098_0213a36c(char *c)
             *st = (u8)(*st + 1);
         } else {
             if (*(int *)(c + 0x60) < *(int *)(c + 0x32c)) {
-                ((dActor_c *)c)->KillOrWhatever();
+                Kill();
                 *(int *)(c + 0x5c) = *(int *)(c + 0x320);
                 *(int *)(c + 0x60) = *(int *)(c + 0x324);
                 *(int *)(c + 0x64) = *(int *)(c + 0x328);

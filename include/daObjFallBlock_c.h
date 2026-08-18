@@ -39,9 +39,9 @@
  *
  * SIZE 0x34c, the literal all four factories pass to fBase_c::operator new.
  *
- * THE FIELDS COME OUT OF ONE FUNCTION, `func_ov098_0213a36c`, which is this
- * class's own slot 6 and lives in this class's own overlay. It is the whole
- * fall-block state machine and it reaches every one of them:
+ * THE FIELDS COME OUT OF ONE FUNCTION, `_ZN16daObjFallBlock_c8BehaviorEv`,
+ * which is this class's own slot 6 and lives in this class's own overlay. It
+ * is the whole fall-block state machine and it reaches every one of them:
  *
  *   0x320  the rest position, a Vector3. Case 3 passes `this+0x320` to
  *          Vec3_HorzDist against the closest player, and 0x320 + 12 = 0x32c lands
@@ -113,6 +113,13 @@ struct daObjFallBlock_c : dBgActor_c {
        one 0xc0 .text before eligible.py and rombuild.py judge it -- checked,
        not assumed: build_pin.verify returns True either way. */
     virtual void Kill();                /* slot 31 */
+
+    /* Slot 6, this class's own override -- the whole fall-block state
+       machine. Not marked `virtual` here: fBase_c already declares it
+       virtual, and the override keyword isn't required to re-add it. */
+    s32 Behavior();                     /* slot  6 */
+    s32 Render();                       /* slot  9 */
+    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
 };
 
 typedef char daObjFallBlock_c_size_must_be_0x34c[sizeof(daObjFallBlock_c) == 0x34c ? 1 : -1];

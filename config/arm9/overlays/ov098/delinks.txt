@@ -20,11 +20,11 @@ src/_ZN14ArrowSignRight4KillEv.cpp:
     complete
     .text start:0x02137ccc end:0x02137d40
 
-src/func_ov098_02137d40.cpp:
+src/_ZN14ArrowSignRight11OnAttacked1ER8dActor_c.cpp:
     complete
     .text start:0x02137d40 end:0x02137d80
 
-src/func_ov098_02137d80.c:
+src/_ZN14ArrowSignRight15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02137d80 end:0x02137dbc
 
@@ -200,11 +200,11 @@ src/Crate_Spawn.cpp:
     complete
     .text start:0x02139f04 end:0x02139f70
 
-src/func_ov098_02139f70.c:
+src/_ZN16daObjFallBlock_cD0Ev.c:
     complete
     .text start:0x02139f70 end:0x02139fc8
 
-src/func_ov098_02139fc8.c:
+src/_ZN16daObjFallBlock_cD1Ev.c:
     complete
     .text start:0x02139fc8 end:0x0213a00c
 
@@ -232,7 +232,7 @@ src/func_ov098_0213a23c.c:
     complete
     .text start:0x0213a23c end:0x0213a284
 
-src/func_ov098_0213a284.cpp:
+src/_ZN16daObjFallBlock_c15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x0213a284 end:0x0213a2cc
 
@@ -240,11 +240,11 @@ src/func_ov098_0213a2cc.c:
     complete
     .text start:0x0213a2cc end:0x0213a314
 
-src/func_ov098_0213a314.cpp:
+src/_ZN16daObjFallBlock_c6RenderEv.cpp:
     complete
     .text start:0x0213a314 end:0x0213a36c
 
-src/func_ov098_0213a36c.cpp:
+src/_ZN16daObjFallBlock_c8BehaviorEv.cpp:
     complete
     .text start:0x0213a36c end:0x0213a794
 
