@@ -1,9 +1,17 @@
-// @symbol func_ov100_021455a0
+// @symbol _ZN4Door13InitResourcesEv
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daDoor_c.h"
-// recovered name: daDoor_c_InitResources
-/* recovered: renamed to Class_Method */
-/* daDoor_c::InitResources - recovered from vtable slot identity */
+// recovered name: Door::InitResources
+/* recovered: renamed to Class_Method, vtable slot 0 */
+/* Door::InitResources -- vtable slot 0, ov100 0x021455a0. RTTI/mangled class
+ * name is Door (_ZTV4Door, see include/Door.h and the destructor pair
+ * _ZN4DoorD1Ev/_ZN4DoorD0Ev); include/daDoor_c.h is the pre-existing
+ * flat-struct placeholder for this class's still-unnamed fields and stays in
+ * place -- this file is renamed to its mangled symbol only, same idiom as
+ * src/_ZN7fBase_c13InitResourcesEv.cpp: declared as an override in
+ * include/Door.h but defined here as a free function taking the object
+ * pointer explicitly, not as a real Door:: method, so nothing needs to touch
+ * the field layout to land the correct symbol name. */
 enum { false, true };
 
 typedef struct { int x, y, z; } Vec3;
@@ -48,7 +56,7 @@ extern int data_ov100_02148914;
 extern int data_ov100_021488b4;
 extern void func_ov100_021453d8(char *c, void *p, int a2);
 
-int func_ov100_021455a0(char *c)
+int _ZN4Door13InitResourcesEv(char *c)
 {
     struct daDoor_c *self = (struct daDoor_c *)(void *)c;
     unsigned int idx;

@@ -1,16 +1,18 @@
 //cpp
-// @symbol func_ov100_021454c8
+// @symbol _ZN4Door6RenderEv
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daDoor_c.h"
-// recovered name: daDoor_c_Render
-/* recovered: renamed to Class_Method */
-/* daDoor_c::Render - recovered from vtable slot identity */
+// recovered name: Door::Render
+/* recovered: renamed to Class_Method, vtable slot 9 */
+/* Door::Render -- vtable slot 9, ov100 0x021454c8. Same idiom as
+ * _ZN4Door13InitResourcesEv.c: declared as an override in include/Door.h,
+ * defined here as an extern "C" free function under the mangled symbol. */
 extern "C" {
 extern unsigned char IsAreaShowing(int idx);
 }
 struct V1 { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 struct V2 { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void n(int); virtual void m(int); };
-extern "C" int func_ov100_021454c8(char* c){
+extern "C" int _ZN4Door6RenderEv(char* c){
     struct daDoor_c *self = (struct daDoor_c *)(void *)c;
   if(IsAreaShowing((char)self->unk_08c)==0){
     if(IsAreaShowing((char)self->unk_090)==0) goto done;

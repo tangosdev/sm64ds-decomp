@@ -1,8 +1,10 @@
 //cpp
-// @symbol func_ov100_02145550
-// recovered name: daDoor_c_Behavior
-/* recovered: renamed to Class_Method */
-/* daDoor_c::Behavior - recovered from vtable slot identity */
+// @symbol _ZN4Door8BehaviorEv
+// recovered name: Door::Behavior
+/* recovered: renamed to Class_Method, vtable slot 6 */
+/* Door::Behavior -- vtable slot 6, ov100 0x02145550. Same idiom as
+ * _ZN4Door13InitResourcesEv.c: declared as an override in include/Door.h,
+ * defined here as an extern "C" free function under the mangled symbol. */
 struct Base {};
 typedef void (Base::*PMF)(int);
 struct CallbackNode {
@@ -12,7 +14,7 @@ struct CallbackNode {
 extern "C" {
 extern int func_ov100_02145370(char *c);
 }
-extern "C" int func_ov100_02145550(char *c) {
+extern "C" int _ZN4Door8BehaviorEv(char *c) {
     int res = func_ov100_02145370(c);
     CallbackNode *node = *(CallbackNode**)((char*)c + 0x140);
     if (*(int*)&node->callback != 0) {

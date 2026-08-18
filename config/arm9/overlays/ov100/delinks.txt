@@ -303,23 +303,23 @@ src/func_ov100_021453d8.cpp:
     complete
     .text start:0x021453d8 end:0x0214542c
 
-src/func_ov100_0214542c.cpp:
+src/_ZN4Door16CleanupResourcesEv.cpp:
     complete
     .text start:0x0214542c end:0x021454c4
 
-src/func_ov100_021454c4.c:
+src/_ZN4Door16OnPendingDestroyEv.c:
     complete
     .text start:0x021454c4 end:0x021454c8
 
-src/func_ov100_021454c8.cpp:
+src/_ZN4Door6RenderEv.cpp:
     complete
     .text start:0x021454c8 end:0x02145550
 
-src/func_ov100_02145550.cpp:
+src/_ZN4Door8BehaviorEv.cpp:
     complete
     .text start:0x02145550 end:0x021455a0
 
-src/func_ov100_021455a0.c:
+src/_ZN4Door13InitResourcesEv.c:
     .text start:0x021455a0 end:0x0214589c
 
 src/Door_Spawn.c:
