@@ -1,20 +1,22 @@
 //cpp
-// @symbol func_ov073_021223f4
-// recovered name: CccArena_Kill
-/* recovered: shared common types, renamed to Class_Method */
-/* daObjEwbIce_c::Kill - name recovered from the vtable slot it fills.
-   The body is a decompilation verified against the ROM, not an
-   inferred stub. */
-// func_ov073_021223f4 at 0x021223f4
-// Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov073).
-struct Vector3 { int x, y, z; };
+// @symbol _ZN8CccArena4KillEv
+/* recovered: real C++ override -- slot 31, attributed by the vtable.
+   _ZTV8CccArena + 4*31 = 0x021231e8 + 0x7c = 0x02123264;
+   config/arm9/overlays/ov073/relocs.txt: 0x02123264 -> 0x021223f4.
+   Not the key function (see include/CccArena.h). Matched byte-for-byte;
+   the body is a decompilation verified against the ROM, not an inferred
+   stub. */
+#include "CccArena.h"
+
 extern "C" {
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void _ZN8dActor_c10PoofDustAtERK7Vector3(void* self, const Vector3& vec);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
 }
-extern "C" void func_ov073_021223f4(char* c);
-void func_ov073_021223f4(char* c) {
+
+void CccArena::Kill()
+{
+    char *c = (char *)this;
     Vector3 vec;
     Vector3 vec2;
     vec.x = *(int*)(c + 0x5c);

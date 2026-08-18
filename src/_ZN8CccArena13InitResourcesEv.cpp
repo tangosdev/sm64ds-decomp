@@ -1,10 +1,14 @@
 //cpp
 // @symbol _ZN8CccArena13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-/* The class header comes FIRST on purpose: it reaches math/Matrix.h, whose
-   Matrix4x3 is the structured one, and include/common.h's flat spelling stands
-   down behind the guard. mat4x3.t is only nameable this way round, and the two
-   spellings are the same 0x30 bytes. */
+/* Model.h comes FIRST on purpose, now that CccArena derives from
+   dBgActor_c (which reaches common.h's FLAT Matrix4x3 first for its own
+   reasons -- see include/dBgActor_c.h). Model.h reaches math/Matrix.h,
+   whose Matrix4x3 is the structured one, and it wins the include guard
+   race so common.h's flat spelling stands down for this TU. mat4x3.t is
+   only nameable this way round; the two spellings are the same 0x30
+   bytes. */
+#include "Model.h"
 #include "CccArena.h"
 /* recovered: declarations from a shared header */
 #include "decl_common.h"
@@ -26,7 +30,7 @@ int CccArena::InitResources()
     unsigned char idx;
     int f;
 
-    switch (mActorID) {
+    switch (actorID) {
         case 0xaa:
             unk_330 = 3;
             ((char *)this)[0x32c] = 0;
