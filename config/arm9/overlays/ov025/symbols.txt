@@ -8,14 +8,14 @@ func_ov025_021113c8 kind:function(arm,size=0x28) addr:0x021113c8
 func_ov025_021113f0 kind:function(arm,size=0x3ec) addr:0x021113f0
 func_ov025_021117dc kind:function(arm,size=0xbc) addr:0x021117dc
 func_ov025_02111898 kind:function(arm,size=0x30) addr:0x02111898
-func_ov025_021118c8 kind:function(arm,size=0x60) addr:0x021118c8
-func_ov025_02111928 kind:function(arm,size=0x74) addr:0x02111928
-func_ov025_0211199c kind:function(arm,size=0x8) addr:0x0211199c
+_ZN7daDkk_cD1Ev kind:function(arm,size=0x60) addr:0x021118c8
+_ZN7daDkk_cD0Ev kind:function(arm,size=0x74) addr:0x02111928
+_ZN7daDkk_c16OnAimedAtWithEggEv kind:function(arm,size=0x8) addr:0x0211199c
 func_ov025_021119a4 kind:function(arm,size=0x50) addr:0x021119a4
 func_ov025_021119f4 kind:function(arm,size=0x90) addr:0x021119f4
 func_ov025_02111a84 kind:function(arm,size=0xe0) addr:0x02111a84
-func_ov025_02111b64 kind:function(arm,size=0xc0) addr:0x02111b64
-func_ov025_02111c24 kind:function(arm,size=0xd0) addr:0x02111c24
+_ZN7daDkk_c8BehaviorEv kind:function(arm,size=0xc0) addr:0x02111b64
+_ZN7daDkk_c13InitResourcesEv kind:function(arm,size=0xd0) addr:0x02111c24
 Grindel_Spawn kind:function(arm,size=0x4c) addr:0x02111cf4
 _ZN11PyramidStepD1Ev kind:function(arm,size=0x4c) addr:0x02111d40
 _ZN11PyramidStepD0Ev kind:function(arm,size=0x60) addr:0x02111d8c
@@ -124,7 +124,7 @@ _ZTS11daDsnBase_c kind:data(any) addr:0x02113804
 data_ov025_02113814 kind:data(any) addr:0x02113814
 data_ov025_02113820 kind:data(any) addr:0x02113820 ambiguous
 Grindel_SpawnInfo kind:data(any) addr:0x0211382c ambiguous
-data_ov025_02113850 kind:data(any) addr:0x02113850
+_ZTV7daDkk_c kind:data(any) addr:0x02113850
 data_ov025_021138a8 kind:data(any) addr:0x021138a8 ambiguous
 data_ov025_021138bc kind:data(any) addr:0x021138bc ambiguous
 data_ov025_021138c4 kind:data(any) addr:0x021138c4 ambiguous
