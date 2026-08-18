@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* actor);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, struct Vector3* v);
 extern void _ZN6Camera6SetPosERK7Vector3(void* cam, struct Vector3* v);
@@ -27,7 +27,7 @@ int func_ov073_02121388(char* c) {
     int msg;
     char* p;
 
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (player == 0) return 1;
 
     {

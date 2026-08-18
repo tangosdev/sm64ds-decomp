@@ -8,7 +8,7 @@
  * flags: -O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
  */
 extern "C" {
-struct Actor {
+struct dActor_c {
     virtual void v0();
     virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4();
     virtual void v5(); virtual void v6(); virtual void v7(); virtual void v8();
@@ -19,17 +19,17 @@ struct Actor {
 };
 extern int _ZN6Player15IsCollectingCapEv(void *p);
 extern void _ZN6Player20RegisterEggCoinCountEjbb(void *p, unsigned int a, bool b, bool c);
-extern void _ZN5Actor15GivePlayerCoinsER6Playerhj(void *self, void *p, unsigned char b, unsigned int n);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *self);
-void func_ov062_02119628(Actor *c, void *player) {
+extern void _ZN8dActor_c15GivePlayerCoinsER6Playerhj(void *self, void *p, unsigned char b, unsigned int n);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
+void func_ov062_02119628(dActor_c *c, void *player) {
 #pragma optimize_for_size on
     if (c->f108 == 3) {
         if (c->Slot18() == 6 && _ZN6Player15IsCollectingCapEv(player) == 0) {
             _ZN6Player20RegisterEggCoinCountEjbb(player, 0, 0, 1);
         } else {
-            _ZN5Actor15GivePlayerCoinsER6Playerhj(c, player, 1, 2);
+            _ZN8dActor_c15GivePlayerCoinsER6Playerhj(c, player, 1, 2);
         }
     }
-    _ZN5Actor24KillAndTrackInDeathTableEv(c);
+    _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
 }
 }

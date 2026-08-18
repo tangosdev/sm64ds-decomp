@@ -13,8 +13,8 @@ int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,int,void*);
 void func_020393d4(void* p, void* v);
 void func_020393c4(void* p, void* v);
-int _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void*,void*,int,int,int,int);
-extern void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+int _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void*,void*,int,int,int,int);
+extern void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 }
 
 int DonutBlock::InitResources()
@@ -25,9 +25,9 @@ int DonutBlock::InitResources()
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
   int k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov036_02114084);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, data_ov036_02112b48);
-  func_020393d4(&mMeshCollider, (void*)_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4(&mMeshCollider, (void*)_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
   func_020393c4(&mMeshCollider, (void*)func_ov036_02111cc4);
-  _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x320, ((char*)this), 0x32000, 0x64000, 0, 0);
+  _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x320, ((char*)this), 0x32000, 0x64000, 0, 0);
   mTerminalVelocity = -0x1e000;
   mVertAccel = ~0x198;
   unk_4dc = mPosX;

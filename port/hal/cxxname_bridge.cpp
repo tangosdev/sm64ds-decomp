@@ -45,7 +45,7 @@ void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self)
    static image holds path strings there). InitCuboid and the per-frame
    drop-shadow install are no-ops until that boot path lands. */
 void _ZN11ShadowModel10InitCuboidEv(void *) {}
-void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void *, void *, void *, int, int, int, unsigned) {}
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp)
 { return Model::LoadFile(*(SharedFilePtr *)fp); }
@@ -90,9 +90,9 @@ extern "C" void hal_m43_roty(void *m, int a);
 void Matrix4x3_FromRotationY(void *m, int a) { hal_m43_roty(m, a); }
 
 #include "MeshColliderBase.h"
-extern "C" int _ZN16MeshColliderBase6EnableEP5Actor(void *self, void *actor)
+extern "C" int _ZN16MeshColliderBase6EnableEP8dActor_c(void *self, void *actor)
 {
-    return ((MeshColliderBase *)self)->MeshColliderBase::Enable((Actor *)actor);
+    return ((MeshColliderBase *)self)->MeshColliderBase::Enable((dActor_c *)actor);
 }
 extern "C" {
 /* player-list globals ClosestPlayer scans: empty world -> null result */

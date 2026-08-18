@@ -8,7 +8,7 @@
 
 struct BookShotSpawner {
     u8  pad_000[0x5c];
-    /* 0x05c..0x08e is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x05c..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_05c;                 /* 0x05c */
     s32 mPosY;                   /* 0x060 */
@@ -25,7 +25,7 @@ struct BookShotSpawner {
     s16 mAngleX;                 /* 0x08c */
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x2];
-    /* 0x092..0x0cc is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x092..0x0cc is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s16 unk_092;                 /* 0x092 */
     s16 mPrevAngleY;             /* 0x094 */

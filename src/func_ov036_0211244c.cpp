@@ -13,7 +13,7 @@ void func_ov002_020efaf0(void* c);
 extern int data_ov002_0210d9f0[];
 extern int data_ov036_02113f58[];
 extern int data_ov036_0211419c[];
-extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 int func_ov036_0211244c(char* c){
   _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9f0);
   int m = _ZN5Model8LoadFileER13SharedFilePtr((void*)data_ov036_02113f58[0]);
@@ -24,7 +24,7 @@ int func_ov036_0211244c(char* c){
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
   int k = _ZN12MeshCollider8LoadFileER13SharedFilePtr((void*)data_ov036_02113f58[1]);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c+0x124, k, c+0x2ec, 0x199, *(short*)(c+0x8e), (void*)data_ov036_02113f58[2]);
-  func_020393d4(c+0x124, (void*)_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4(c+0x124, (void*)_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
   *(int*)(c+0x440) = 0xa000;
   *(int*)(c+0x98) = *(int*)(c+0x440);
   func_ov002_020efaf0(c);

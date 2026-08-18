@@ -12,9 +12,9 @@ typedef struct Mtx { int m[12]; } Mtx;
 extern "C" {
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *sm, void *mtx, int rad, int h, unsigned int g);
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN12CylinderClsn5ClearEv(void *p);
 extern void _ZN12CylinderClsn6UpdateEv(void *p);
 
@@ -70,14 +70,14 @@ int StarMarker::Behavior()
             int rad = 0xa0000;
             if (mState != 0)
                 rad = 0xc8000;
-            _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
                 ((char *)this), ((char *)this) + 0x164, ((char *)this) + 0x18c, rad, d + 0x28000, 0xf);
         }
     }
     if (mState != 0) {
         if ((unsigned int)(mFlags << 0x1e) >> 0x1f) {
             if (mState != 2 && unk_0f8 != 0) {
-                char *a = _ZN5Actor10FindWithIDEj(unk_0f8);
+                char *a = _ZN8dActor_c10FindWithIDEj(unk_0f8);
                 if (a != 0) {
                     if ((unk_0f4 & 0x408000) != 0) {
                         unk_1d0 = (int)a;

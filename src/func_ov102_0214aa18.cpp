@@ -4,7 +4,7 @@
 #include "common.h"
 struct CylinderClsn { void Clear(); void Update(); };
 struct WithMeshClsn;
-struct Actor { void UpdatePos(CylinderClsn *c); };
+struct dActor_c { void UpdatePos(CylinderClsn *c); };
 struct dEnemyBase_c { void UpdateWMClsn(WithMeshClsn &w, unsigned int j); };
 struct WithMeshClsn2 { int JustHitGround() const; int IsOnGround() const; };
 /* Signature deliberately copied from the local declaration above: the
@@ -21,7 +21,7 @@ extern "C" void func_0200fc44(char *c, void *v, int x);
 
 
 
-extern "C" int func_ov102_0214aa18(Actor *self)
+extern "C" int func_ov102_0214aa18(dActor_c *self)
 {
     char *s = (char*)self;
     if (*(unsigned char*)(s + 0x3f5) == 2) {

@@ -1,5 +1,5 @@
 #include "types.h"
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int func_ov020_021115ac(void *thiz);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void *pos);
 extern void func_ov020_02111340(void *thiz);
@@ -13,8 +13,8 @@ void func_ov020_0211174c(char *c)
 {
     char *found;
 
-    _ZN5Actor10FindWithIDEj(*(unsigned int *)(c + 0x418));
-    found = (char *)_ZN5Actor10FindWithIDEj(*(unsigned int *)(c + 0x418));
+    _ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x418));
+    found = (char *)_ZN8dActor_c10FindWithIDEj(*(unsigned int *)(c + 0x418));
     if (found == 0)
         return;
 

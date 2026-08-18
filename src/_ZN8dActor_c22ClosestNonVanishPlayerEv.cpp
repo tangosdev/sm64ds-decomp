@@ -1,5 +1,5 @@
 //cpp
-#include "Actor.h"
+#include "dActor_c.h"
 extern "C" {
 extern int Vec3_Dist(const void* a, const void* b);
 extern void* data_0209b458;
@@ -9,7 +9,7 @@ extern int data_0208e37c;
 extern unsigned char data_0209f21c;
 extern void* data_0209f394[];
 }
-Player *Actor::ClosestNonVanishPlayer()
+Player *dActor_c::ClosestNonVanishPlayer()
 {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;

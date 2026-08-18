@@ -17,6 +17,6 @@ int *func_ov072_02120824(int *t)
     _ZN15TextureSequenceD1Ev((char *)t + 0x174);
     _ZN5ModelD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     return t;
 }

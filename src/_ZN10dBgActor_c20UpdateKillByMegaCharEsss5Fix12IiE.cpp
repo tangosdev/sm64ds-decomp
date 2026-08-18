@@ -4,7 +4,7 @@ struct Vector3 { int x, y, z; };
 struct Matrix4x3 { int m[12]; };
 struct CylinderClsn;
 
-struct Actor {
+struct dActor_c {
     void UpdatePos(CylinderClsn* c);
 };
 
@@ -19,7 +19,7 @@ extern void func_ov002_020ee5d0(unsigned char* self, int arg);
 struct RaycastLine {
     RaycastLine();
     ~RaycastLine();
-    void SetObjAndLine(Vector3 const& a, Vector3 const& b, Actor* c);
+    void SetObjAndLine(Vector3 const& a, Vector3 const& b, dActor_c* c);
     int DetectClsn();
     char buf[0x78];
 };
@@ -72,7 +72,7 @@ int dBgActor_c::UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d)
     vmid = vout;
 
     RaycastLine ray;
-    ray.SetObjAndLine(this->pos, vmid, (Actor*)this);
+    ray.SetObjAndLine(this->pos, vmid, (dActor_c*)this);
     if (ray.DetectClsn()) {
         *(short*)((int)((char*)this + 0x94)) =
             (short)(*(short*)((int)((char*)this + 0x94)) + 0x8000);
@@ -83,7 +83,7 @@ int dBgActor_c::UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d)
         (short)(*(short*)((int)((char*)this + 0x8e)) + b);
     *(short*)((int)((char*)this + 0x90)) =
         (short)(*(short*)((int)((char*)this + 0x90)) + c);
-    ((Actor*)this)->UpdatePos(0);
+    ((dActor_c*)this)->UpdatePos(0);
     if (DecIfAbove0_Byte(&this->f_31d) == 0) {
         ((PlatformVT*)this)->v31();
     }

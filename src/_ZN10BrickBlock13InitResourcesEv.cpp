@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
-extern int _ZN5Actor9TrackStarEjj(char* c, unsigned a, unsigned b);
+extern int _ZN8dActor_c9TrackStarEjj(char* c, unsigned a, unsigned b);
 extern void LoadSilverStarAndNumber(void);
 extern int data_ov002_0210d9d8;
 extern int data_ov002_0210da30;
@@ -24,7 +24,7 @@ int _ZN10BrickBlock13InitResourcesEv(char* c) {
         break;
     case 0x144:
         *(unsigned char*)(c+0xd7) = 3;
-        *(unsigned char*)(c+0xd5) = _ZN5Actor9TrackStarEjj(c, *(unsigned char*)(c+0xd4), 1);
+        *(unsigned char*)(c+0xd5) = _ZN8dActor_c9TrackStarEjj(c, *(unsigned char*)(c+0xd4), 1);
         LoadSilverStarAndNumber();
         break;
     }

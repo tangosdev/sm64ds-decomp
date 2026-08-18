@@ -4,10 +4,10 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void *_ZN5Actor10FindWithIDEj(u32 id);
+extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_02012694(int a, void *p);
 extern void _ZN6Player16IncMegaKillCountEv(void *p);
-extern void _ZN5Actor14TriplePoofDustEv(void *a);
+extern void _ZN8dActor_c14TriplePoofDustEv(void *a);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *a);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void *pos);
@@ -20,13 +20,13 @@ void func_ov021_021123b0(char *c)
     u32 id = *(u32*)(c + 0x1dc);
 
     if (id == 0) return;
-    a = (char*)_ZN5Actor10FindWithIDEj(id);
+    a = (char*)_ZN8dActor_c10FindWithIDEj(id);
     if (a == 0) return;
     fl = *(u32*)(c + 0x1d8);
     if ((fl & 0x10) != 0) {
         func_02012694(0x17a, c + 0x74);
         _ZN6Player16IncMegaKillCountEv(a);
-        _ZN5Actor14TriplePoofDustEv(c);
+        _ZN8dActor_c14TriplePoofDustEv(c);
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
             0x67, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
         func_ov021_02112294(c);
@@ -43,7 +43,7 @@ void func_ov021_021123b0(char *c)
         if (*(int*)(a + 8) == 2) {
             func_02012694(0x17a, c + 0x74);
             _ZN7fBase_c18MarkForDestructionEv(c);
-            _ZN5Actor14TriplePoofDustEv(c);
+            _ZN8dActor_c14TriplePoofDustEv(c);
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
                 0x67, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
             func_ov021_02112294(c);

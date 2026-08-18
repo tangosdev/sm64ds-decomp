@@ -13,7 +13,7 @@ int *Tornado_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(880);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV7Tornado;
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0xd4);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x108);

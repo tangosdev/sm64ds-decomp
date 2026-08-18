@@ -19,7 +19,7 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern void func_020393d4(void *p, void *v);
 extern void func_020393c4(void *p, void *v);
 }
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern int data_ov095_02136f68[];
 extern int data_ov095_02136f74[];
 
@@ -55,7 +55,7 @@ int UpDownLiftBbh::InitResources()
   idx = *((int *) ((char *)&mVariant));
 
   _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(data_ov095_02136f68[idx]), 1, -1);
-  new_var = &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+  new_var = &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
   idx = *((int *) ((char *)&mVariant));
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char *)this) + 0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov095_02136f74[idx]), ((char *)this) + 0x2ec, 0x199, *((s16 *) ((char *)&unk_08e)), data_ov095_021375a4[idx]);

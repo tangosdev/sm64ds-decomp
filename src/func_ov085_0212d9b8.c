@@ -1,4 +1,4 @@
-extern void* _ZN5Actor13ClosestPlayerEv(void);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 extern int func_ov002_020c3ea0(void* c);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int e);
@@ -8,7 +8,7 @@ extern short data_ov085_02130820;
 
 int func_ov085_0212d9b8(char* c)
 {
-    void* pl = _ZN5Actor13ClosestPlayerEv();
+    void* pl = _ZN8dActor_c13ClosestPlayerEv();
     if (pl == 0) return 1;
 
     *(int*)(((int)c + 0x2c8)) += 1;

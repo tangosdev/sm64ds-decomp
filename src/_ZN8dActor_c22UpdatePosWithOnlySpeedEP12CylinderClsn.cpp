@@ -13,7 +13,7 @@ struct CylinderClsn {
 extern "C" void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
 extern "C" void func_02010da4(int *p);
 
-struct Actor {
+struct dActor_c {
     char pad[0x5c];
     Vec3 pos;
     char pad2[0xa4 - 0x68];
@@ -21,7 +21,7 @@ struct Actor {
     void UpdatePosWithOnlySpeed(CylinderClsn *clsn);
 };
 
-void Actor::UpdatePosWithOnlySpeed(CylinderClsn *clsn) {
+void dActor_c::UpdatePosWithOnlySpeed(CylinderClsn *clsn) {
     AddVec3(&pos, &speed, &pos);
     if (clsn != 0) {
         *(s32 *)(&pos.x) += clsn->dx;

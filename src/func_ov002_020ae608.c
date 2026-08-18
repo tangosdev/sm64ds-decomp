@@ -1,10 +1,10 @@
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 extern int _ZN12dEnemyBase_c9SpawnCoinEv(void*);
-extern int _ZN5Actor24KillAndTrackInDeathTableEv(void*);
+extern int _ZN8dActor_c24KillAndTrackInDeathTableEv(void*);
 int func_ov002_020ae608(void* c, void* a){
   if(_ZNK12WithMeshClsn10IsOnGroundEv(a)==0) return 0;
   _ZN12dEnemyBase_c9SpawnCoinEv(c);
-  _ZN5Actor24KillAndTrackInDeathTableEv(c);
+  _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
   *(int*)((char*)c+0x10c)=0;
   return 1;
 }

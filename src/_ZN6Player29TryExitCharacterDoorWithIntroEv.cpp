@@ -6,10 +6,10 @@
  * stores a vptr into [this+0], then runs a member constructor at this+0x78.
  * Player's own constructors are _ZN6PlayerC1Ev / C3Ev in ov002, and Player's
  * ModelAnims live at 0xf0 and 0x174 -- not 0x78, which on a real Player is
- * Actor's mCamSpacePosY.
+ * dActor_c's mCamSpacePosY.
  *
  * This file was the only evidence for Player.h's `mModelAnim2` at 0x078, so
- * that field can now be dropped and the offset returned to Actor.
+ * that field can now be dropped and the offset returned to dActor_c.
  *
  * The vptr it stores is the invented symbol data_ov006_0213b2e0, which carries no address --
  * a separate problem, left alone here.

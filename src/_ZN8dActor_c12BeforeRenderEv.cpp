@@ -1,7 +1,7 @@
 //cpp
-/* Actor::BeforeRender() at 0x02010f78, 0x50 bytes -- vtable slot 10.
+/* dActor_c::BeforeRender() at 0x02010f78, 0x50 bytes -- vtable slot 10.
  *
- * Asks the base first, then applies two of Actor's own reasons not to draw:
+ * Asks the base first, then applies two of dActor_c's own reasons not to draw:
  *
  *   0x20  the actor belongs to an area that is not the showing one
  *   0x08  off screen, as decided by BeforeBehavior's clipper test
@@ -11,12 +11,12 @@
  * want drawing -- so the off-screen path returns 0 only when 0x02 is also set.
  * That is why the test is two branches rather than a single mask compare.
  *
- * mFlags is named in include/Actor.h at 0x0b0; the old source reached it
- * through a shadow `struct Actor { char _pad[0xb0]; u32 flags; }`.
+ * mFlags is named in include/dActor_c.h at 0x0b0; the old source reached it
+ * through a shadow `struct dActor_c { char _pad[0xb0]; u32 flags; }`.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
-int Actor::BeforeRender()
+int dActor_c::BeforeRender()
 {
     u32 flags;
 

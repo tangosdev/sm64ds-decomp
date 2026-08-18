@@ -225,7 +225,7 @@ dScMgBase_c::~dScMgBase_c()
 /* NO SEPARATE DEFINITION. In the merged TU the one ~dScMgBase_c() below emits
    the whole D1/D0/D2 variant group; a second definition of the same destructor
    is ill-formed. dScMgBase_c.h's inline `operator delete` is what lets mwcc
-   emit D0 at all (see include/Actor.h's D0 route note). */
+   emit D0 at all (see include/dActor_c.h's D0 route note). */
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 55 -- _ZN11dScMgBase_cD2Ev, 0x020b29c0, size 0x58 */

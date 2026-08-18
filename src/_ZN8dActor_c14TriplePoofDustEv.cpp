@@ -1,12 +1,12 @@
 //cpp
-/* Actor::TriplePoofDust() at 0x0200fdc8, 0x34 bytes.
+/* dActor_c::TriplePoofDust() at 0x0200fdc8, 0x34 bytes.
  *
  * The stack-copy wrapper around TriplePoofDustAt, at the actor's own position.
- * See src/_ZN5Actor8PoofDustEv.cpp -- same shape, different worker.
+ * See src/_ZN8dActor_c8PoofDustEv.cpp -- same shape, different worker.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
-void Actor::TriplePoofDust()
+void dActor_c::TriplePoofDust()
 {
     Vector3 pos;
     pos.x = mPosX;

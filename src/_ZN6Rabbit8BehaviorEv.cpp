@@ -65,7 +65,7 @@ extern "C" char data_ov085_021306ac;
 extern "C" char data_ov085_021306bc;
 extern "C" char data_ov085_021306dc;
 
-extern "C" void* _ZN5Actor13ClosestPlayerEv(void* c);
+extern "C" void* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, void* f, void* g);
 extern "C" void _ZN7Message11PrepareTalkEv(void);
 extern "C" int func_02013890(int a, int b);
@@ -85,7 +85,7 @@ extern "C" u16 DecIfAbove0_Short(void* p);
 extern "C" void _ZN9Animation7AdvanceEv(void* c);
 extern "C" void func_ov085_0212bdbc(void* c);
 extern "C" void func_ov085_0212bedc(void* c);
-extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void* c, void* cyl);
+extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* c, void* cyl);
 extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* c, void* w, u32 j);
 extern "C" void func_ov085_0212a828(void* c);
 
@@ -101,7 +101,7 @@ int Rabbit::Behavior()
             return 1;
         }
     } else {
-        r0p = _ZN5Actor13ClosestPlayerEv(c);
+        r0p = _ZN8dActor_c13ClosestPlayerEv(c);
         if (r0p == 0)
             return 1;
         if (!(data_0209caa0[2] & 0x20000) || mCharacterId != *(u8*)((char*)r0p + 0x6d9)) {
@@ -194,7 +194,7 @@ int Rabbit::Behavior()
         func_ov085_0212bc78(c, &data_ov085_021306ac);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void**)((char*)&data_ov085_021305c0 + 4), 0, 0x1000, 0);
         if (*(void**)&unk_45c == 0)
-            *(void**)&unk_45c = _ZN5Actor13ClosestPlayerEv(c);
+            *(void**)&unk_45c = _ZN8dActor_c13ClosestPlayerEv(c);
         return 1;
     }
 
@@ -242,7 +242,7 @@ int Rabbit::Behavior()
         int v = (mFlags & 0x4000) ? 1 : 0;
         if (v == 0) {
             if (*(void**)&unk_364 != (void*)&data_ov085_021306ac || unk_426 != 0)
-                _ZN5Actor9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsn);
+                _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsn);
             mAngleX = mPrevAngleX;
             mAngleY = mPrevAngleY;
             mAngleZ = mPrevAngleZ;

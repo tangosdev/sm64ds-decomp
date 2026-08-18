@@ -3,7 +3,7 @@
 extern "C" {
 int _ZN6Player15IsCollectingCapEv(void* p);
 int func_ov001_020aa960(int x, void* arg);
-void* _ZN5Actor10FindWithIDEj(u32 id);
+void* _ZN8dActor_c10FindWithIDEj(u32 id);
 int func_0202a8e0(void* a, u8 b);
 void func_ov001_020aa6b0(void* p, int r1);
 void func_ov001_020ab110(void* p);
@@ -75,7 +75,7 @@ void func_ov001_020aaa54(void)
         if (func_ov001_020aa960(r6, player) != 0) {
             sl = (struct Node*)data_ov001_020ad634[r6];
             while (sl != 0) {
-                void* found = _ZN5Actor10FindWithIDEj(sl->id8);
+                void* found = _ZN8dActor_c10FindWithIDEj(sl->id8);
                 if (found == 0 && found == sl->f4) goto do_ab110;
                 {
                     int b1b = sl->flags1b;

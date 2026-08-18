@@ -1,5 +1,5 @@
 //cpp
-/* Actor::IsPlayerInRange(const Vector3&, s32) at 0x0201045c, 0x3c bytes.
+/* dActor_c::IsPlayerInRange(const Vector3&, s32) at 0x0201045c, 0x3c bytes.
  *
  * Is the nearest player within maxDist of the position handed in? The overload
  * beside it asks the same question about the actor's own position.
@@ -10,7 +10,7 @@
  * `IsPlayerInRange(const Vector3&, s32)` would have taken `pos` in r0. Same
  * argument as the dust workers, and with the same premise: what this settles is
  * static-vs-non-static GIVEN the mangled name's parameter list. See
- * include/Actor.h.
+ * include/dActor_c.h.
  *
  * maxDist is a whole-unit distance shifted into 20.12 at the comparison
  * (`cmp r0, r4, lsl #12`) -- see the sibling overload.
@@ -22,7 +22,7 @@ extern "C" {
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
 
-bool Actor::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
+bool dActor_c::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
 {
     Player *closest = ClosestPlayer();
 

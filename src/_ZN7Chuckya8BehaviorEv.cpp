@@ -37,7 +37,7 @@ struct WithMeshClsn;
 extern "C" {
 int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* wm, void* anim, unsigned int n);
 unsigned short DecIfAbove0_Short(unsigned short* p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, CylinderClsn* cc);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, CylinderClsn* cc);
 int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, WithMeshClsn* wm, int a, s16 b, int c, int d, void* e);
 void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, WithMeshClsn* wm, unsigned int j);
 void func_ov062_02116010(void* self);
@@ -77,7 +77,7 @@ int Chuckya::Behavior()
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, (CylinderClsn*)&mCylinderClsn);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (CylinderClsn*)&mCylinderClsn);
 
     if (mState != (void*)data_ov062_0211dea0) {
         if (mState != (void*)data_ov062_0211dec0

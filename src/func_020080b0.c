@@ -1,9 +1,9 @@
-struct Actor;
-extern struct Actor *func_0200e55c(unsigned int ownerID);
+struct dActor_c;
+extern struct dActor_c *func_0200e55c(unsigned int ownerID);
 
 int func_020080b0(char *c)
 {
-    struct Actor *obj = func_0200e55c(0x13);
+    struct dActor_c *obj = func_0200e55c(0x13);
     char *base = (char *)((char *)obj + 0x5c);
 
     int z = *(int *)(base + 8);

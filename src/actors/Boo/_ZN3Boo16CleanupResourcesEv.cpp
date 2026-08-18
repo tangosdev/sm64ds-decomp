@@ -5,8 +5,8 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Boo.h"
 #include "SharedFilePtr.h"
-struct Actor;
-extern "C" Actor *_ZN5Actor10FindWithIDEj(unsigned int id);
+struct dActor_c;
+extern "C" dActor_c *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern "C" void UnloadBlueCoinModel(void *o);
 struct SharedFilePtr;
@@ -40,13 +40,13 @@ int Boo::CleanupResources()
     int *cnt;
 
     if (((O *)this)->f49c != 0) {
-        ((O *)this)->f48c = _ZN5Actor10FindWithIDEj(((O *)this)->f49c);
+        ((O *)this)->f48c = _ZN8dActor_c10FindWithIDEj(((O *)this)->f49c);
         if (((O *)this)->f48c != 0)
             _ZN7fBase_c18MarkForDestructionEv(((O *)this)->f48c);
         ((O *)this)->f48c = 0;
     }
     if (((O *)this)->f494 != 0) {
-        ((O *)this)->f48c = _ZN5Actor10FindWithIDEj(((O *)this)->f494);
+        ((O *)this)->f48c = _ZN8dActor_c10FindWithIDEj(((O *)this)->f494);
         if (((O *)this)->f48c != 0) {
             cnt = (int *)(((int)((O *)this)->f48c + 0x5a0));
             (*cnt)++;

@@ -8,7 +8,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020eeca8(void* c, int arg);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
@@ -40,7 +40,7 @@ int Player::St_Shell_Main()
         flag = 1;
         res = (void*)func_0203564c((int)((char*)&mMeshClsn));
         if (_ZNK10ClsnResult9GetClsnIDEv(res) != -1) {
-            void* a = _ZN5Actor10FindWithIDEj((u32)_ZNK10ClsnResult9GetClsnIDEv(res));
+            void* a = _ZN8dActor_c10FindWithIDEj((u32)_ZNK10ClsnResult9GetClsnIDEv(res));
             if (a) {
                 u16 type = *(u16*)((char*)a + 0xc);
                 if ((type == 0x14 ? flag : 0) || (type == 0x15 ? 1 : 0)) {

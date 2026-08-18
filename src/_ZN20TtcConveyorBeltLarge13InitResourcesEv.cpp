@@ -7,7 +7,7 @@
 struct BMD_File;
 struct BTA_File;
 struct KCL_File;
-struct Actor;
+struct dActor_c;
 struct Vector3;
 struct Matrix4x3;
 struct CLPS_Block;
@@ -59,7 +59,7 @@ struct RaycastGround {
     int pad2[2];
 
     RaycastGround();
-    void SetObjAndPos(const Vector3 &v, Actor *a);
+    void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
     ~RaycastGround();
 };
@@ -143,7 +143,7 @@ int TtcConveyorBeltLarge::InitResources()
     {
         RaycastGround rg;
 
-        rg.SetObjAndPos(*(Vector3 *)&v, (Actor *)0);
+        rg.SetObjAndPos(*(Vector3 *)&v, (dActor_c *)0);
         unk_394 = v.y;
 
         if (rg.DetectClsn() != 0)

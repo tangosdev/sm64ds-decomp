@@ -23,7 +23,7 @@ int FortressTower::Behavior()
     int on = (data_0209f2d8[0] == 1);
     if (on) {
         if (!((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled())
-            ((MeshColliderBase *)((char*)&mMeshCollider))->Enable((Actor *)(((char*)this)));
+            ((MeshColliderBase *)((char*)&mMeshCollider))->Enable((dActor_c *)(((char*)this)));
     } else {
         _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char*)this), r1, 0);
     }

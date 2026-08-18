@@ -8,20 +8,20 @@ struct Vector3 { int x, y, z; };
 typedef short s16;
 #define LA(p) (p)
 extern "C" {
-void *_ZN5Actor13ClosestPlayerEv(void *self);
+void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 int func_ov002_020de328(void);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *c);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *c);
 void WithMeshClsn_UpdateContinuous_Veneer(void *a);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *self, const Vector3 *v, int fix);
+void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, const Vector3 *v, int fix);
 void func_02012694(int a, int *t);
-void _ZN5Actor13LandingDustAtER7Vector3b(void *self, Vector3 *v, int b);
+void _ZN8dActor_c13LandingDustAtER7Vector3b(void *self, Vector3 *v, int b);
 }
 extern "C" int func_ov092_02131010(unsigned char *thiz)
 {
     struct Frame { Vector3 tmp; Vector3 eq; Vector3 dust; } f;
 
-    if (_ZN5Actor13ClosestPlayerEv(thiz) != 0) {
+    if (_ZN8dActor_c13ClosestPlayerEv(thiz) != 0) {
         if (func_ov002_020de328() != 0) {
             int *p504 = (int *)LA(thiz + 0x504);
             int *p500 = (int *)LA(thiz + 0x500);
@@ -49,7 +49,7 @@ extern "C" int func_ov092_02131010(unsigned char *thiz)
         if (v == 0) return v;
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(thiz, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(thiz, 0);
     WithMeshClsn_UpdateContinuous_Veneer(thiz + 0x324);
     {
         int g = _ZNK12WithMeshClsn10IsOnGroundEv(thiz + 0x324);
@@ -68,7 +68,7 @@ extern "C" int func_ov092_02131010(unsigned char *thiz)
     f.eq.x = *(int *)(thiz + 0x5c);
     f.eq.y = *(int *)(thiz + 0x60);
     f.eq.z = *(int *)(thiz + 0x64);
-    _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(thiz, &f.eq, 0x5dc000);
+    _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(thiz, &f.eq, 0x5dc000);
     func_02012694(0x46, (int *)(thiz + 0x74));
 
     {
@@ -85,7 +85,7 @@ extern "C" int func_ov092_02131010(unsigned char *thiz)
         f.dust.y = y;
         f.dust.z = z;
     }
-    _ZN5Actor13LandingDustAtER7Vector3b(thiz, &f.dust, 1);
+    _ZN8dActor_c13LandingDustAtER7Vector3b(thiz, &f.dust, 1);
 
     *(int *)(thiz + 0x9c) = 0;
     return 0;

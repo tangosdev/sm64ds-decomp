@@ -53,8 +53,8 @@ struct CapEnemy : dEnemyBase_c {
     int AddCap(unsigned int param);
     int DestroyIfCapNotNeeded();
     int GetCapEatenOffIt(const Vector3 & v_);
-    struct Actor * ReleaseCap(const Vector3 & v_);
-    struct Actor * RespawnIfHasCap();
+    struct dActor_c * ReleaseCap(const Vector3 & v_);
+    struct dActor_c * RespawnIfHasCap();
     void RenderCapModel(const Vector3 * v);
     void UnloadCapModel();
     void Unk_02005d94();

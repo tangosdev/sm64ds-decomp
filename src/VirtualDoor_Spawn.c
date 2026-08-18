@@ -8,6 +8,6 @@
 int *VirtualDoor_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(212);
-    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV11VirtualDoor; }
+    if (p) { _ZN8dActor_cC2Ev(p); p[0] = (int)_ZTV11VirtualDoor; }
     return p;
 }

@@ -14,7 +14,7 @@ int *func_ov072_02120c00(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(496);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)data_ov072_02122978;
         _ZN5ModelC1Ev((char *)p + 0xd4);
         _ZN5ModelC1Ev((char *)p + 0x124);

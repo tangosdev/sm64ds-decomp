@@ -11,7 +11,7 @@ int *ExtendingPlatform_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(808);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV17ExtendingPlatform;
         _ZN5ModelC1Ev((char *)p + 0xd8);
         _ZN21ExtendingMeshColliderC1Ev((char *)p + 0x158);

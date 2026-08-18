@@ -4,7 +4,7 @@
 #include "RotatingFirebar.h"
 extern void* data_ov064_0211adbc[];
 extern "C" {
-extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 }
 
 extern "C" {
@@ -36,6 +36,6 @@ int RotatingFirebar::InitResources()
         _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov064_0211adbc[1]),
         ((char*)this) + 0x2ec, 0x199, mAngleY, data_ov064_0211adbc[2]);
     func_020393d4((int*)((char*)&mMeshCollider),
-        (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+        (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     return 1;
 }

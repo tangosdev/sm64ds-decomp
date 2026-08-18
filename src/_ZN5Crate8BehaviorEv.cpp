@@ -13,7 +13,7 @@ extern u32 data_0209b454;
 extern "C" {
 extern void _ZN6Player9DropActorEv(void* self);
 extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
-extern int _ZN5Actor13DistToCPlayerEv(void* self);
+extern int _ZN8dActor_c13DistToCPlayerEv(void* self);
 extern void Crate_SetState(char* c, int i);
 extern u8 DecIfAbove0_Byte(u8* p);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void* v, void* cb);
@@ -37,7 +37,7 @@ int Crate::Behavior()
     b2 = (enum Bool)((unk_0b0 & 8) != 0);
     if (b2 != FALSE
           && Vec3_HorzDist((struct Vector3*)((char*)&mPosX), (const struct Vector3*)((char*)&unk_4e8))
-          && _ZN5Actor13DistToCPlayerEv(((char*)this)) > 0x7d0000) {
+          && _ZN8dActor_c13DistToCPlayerEv(((char*)this)) > 0x7d0000) {
         Crate_SetState(((char*)this), 6);
         return 1;
     }
@@ -64,7 +64,7 @@ int Crate::Behavior()
         ((int*)&vec2)[0] = ((int*)&vec)[0];
         ((int*)&vec2)[1] = ((int*)&vec)[1];
         ((int*)&vec2)[2] = ((int*)&vec)[2];
-        _ZN5Actor19DisappearPoofDustAtERK7Vector3(((char*)this), &vec2);
+        _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(((char*)this), &vec2);
         Crate_SetState(((char*)this), 6);
         return 1;
     }

@@ -60,7 +60,7 @@ struct ChainChomp {
     u8  pad_000[0x60];
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x1c];
-    /* 0x080..0x110 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x080..0x110 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 mScaleX;                 /* 0x080 */
     s32 mScaleY;                 /* 0x084 */

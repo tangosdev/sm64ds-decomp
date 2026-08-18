@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BowserShockwaves.h"
-extern "C" void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern "C" void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern "C" int Vec3_HorzDist(const void* a, const void* b);
 extern "C" void _ZN6Player5ShockEj(void* p, unsigned int x);
 extern "C" void _ZN9Animation7AdvanceEv(void* a);
@@ -20,7 +20,7 @@ int BowserShockwaves::Behavior()
   int s;
   int m0, m1, m2, m3;
   ((*(unsigned short *)(((int)((char*)this) + 0x214))))++;
-  pl = (char*)_ZN5Actor13ClosestPlayerEv(((char*)this));
+  pl = (char*)_ZN8dActor_c13ClosestPlayerEv(((char*)this));
   n = *(unsigned short*)(((char*)this)+0x200+0x14);
   s = n * 0x22;
   if(pl != 0 && n < 0x46 && *(unsigned char*)(pl+0x6de) == 0){

@@ -13,10 +13,10 @@ void Matrix4x3_ApplyInPlaceToRotationY(void *m, s16 ang);
 void Matrix4x3_ApplyInPlaceToRotationZ(void *m, s16 ang);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 ang);
 void Matrix4x3_FromRotationY(void *m, int angle);
-void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *sm, void *mtx, Fix12i a, Fix12i b, u32 u);
 void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const struct Vector3 *v, void *actor);
+void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround *self, const struct Vector3 *v, void *actor);
 int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
 void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
 }
@@ -44,7 +44,7 @@ extern "C" void func_ov002_020b2c44(char *c)
         *(int *)(c + 0x360) = *(int *)(c + 0x5c) >> 3;
         *(int *)(c + 0x364) = *(int *)(c + 0x60) >> 3;
         *(int *)(c + 0x368) = *(int *)(c + 0x64) >> 3;
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, c + 0x314, c + 0x33c, 0x96000, 0x320000, 0xf);
         return;
     }
@@ -58,7 +58,7 @@ extern "C" void func_ov002_020b2c44(char *c)
         pos.y = *(int *)(c + 0x60);
         pos.z = *(int *)(c + 0x64);
         pos.y = pos.y + 0x14000;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &pos, c);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, c);
         _ZN13RaycastGround10DetectClsnEv(&rg);
 
         r5 = *(int *)(c + 0x60) - *(int *)((char *)&rg + 0x44);
@@ -72,7 +72,7 @@ extern "C" void func_ov002_020b2c44(char *c)
         *(int *)(c + 0x360) = *(int *)(c + 0x5c) >> 3;
         *(int *)(c + 0x364) = *(int *)(c + 0x60) >> 3;
         *(int *)(c + 0x368) = *(int *)(c + 0x64) >> 3;
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, c + 0x314, c + 0x33c, r4, r5 + 0x28000, 0xf);
         _ZN13RaycastGroundD1Ev(&rg);
     }

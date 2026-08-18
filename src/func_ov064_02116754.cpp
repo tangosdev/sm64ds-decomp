@@ -24,10 +24,10 @@ struct fBase_c {
 };
 
 extern "C" {
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov064_02115f98(void* c, void* p);
 extern int func_ov002_020ada40(void* c, void* v, void* r4, s32 flag);
-extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
 extern int _ZN6Player9IsOnShellEv(void* p);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12 f, u32 b, u32 c, u32 d);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, BCA_File* f, int i, Fix12 fx, u32 j);
@@ -45,7 +45,7 @@ extern "C" void func_ov064_02116754(char* c)
     if (id == 0)
         return;
 
-    r4 = _ZN5Actor10FindWithIDEj(id);
+    r4 = _ZN8dActor_c10FindWithIDEj(id);
     if (!r4)
         return;
 
@@ -105,7 +105,7 @@ extern "C" void func_ov064_02116754(char* c)
         return;
     }
 
-    if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x33c, r4) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x33c, r4) != 0) {
         *(s16*)(c + 0x94) = *(s16*)((char*)r4 + 0x8e);
         if (*(s32*)((char*)r4 + 8) == 2)
             *(s32*)(c + 0x98) = 0x32000;

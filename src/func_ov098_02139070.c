@@ -29,7 +29,7 @@ void func_ov098_02139070(char* self) {
     ((int*)&vec2)[0] = ((int*)&vec)[0];
     ((int*)&vec2)[1] = ((int*)&vec)[1];
     ((int*)&vec2)[2] = ((int*)&vec)[2];
-    _ZN5Actor19DisappearPoofDustAtERK7Vector3(self, &vec2);
+    _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(self, &vec2);
     _ZN5Sound9PlayBank3EjRK7Vector3(0x41, (struct Vector3*)(self + 0x74));
     Crate_SetState(self, 6);
 }

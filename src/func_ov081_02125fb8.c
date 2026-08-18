@@ -10,7 +10,7 @@ typedef unsigned char u8;
 
 typedef struct Vector3 { int x, y, z; } Vector3;
 
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32, int, int, int);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3* pos, u32 a, int b, u32 c, u32 d, u32 e);
@@ -22,7 +22,7 @@ void func_ov081_02125fb8(void* thisp) {
     int flags;
     u32 id = *(u32*)(self + 0x134);
     if (id == 0) return;
-    other = _ZN5Actor10FindWithIDEj(id);
+    other = _ZN8dActor_c10FindWithIDEj(id);
     if (other == 0) return;
     flags = *(int*)(self + 0x130);
     if ((flags & 0x10) || (flags & 0x40000)) {

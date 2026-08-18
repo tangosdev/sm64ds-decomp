@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method */
 /* daObjCtMecha05_c::InitResources - recovered from vtable slot identity */
-struct BMD_File; struct KCL_File; struct Actor; struct Vector3; struct Matrix4x3;
+struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr;
 struct ModelBase { void SetFile(BMD_File *f, int b, int c); };
 struct ShadowModel { void InitCuboid(); };
@@ -21,7 +21,7 @@ struct RaycastGround {
     int result;       // offset 0x44
     int pad2[3];      // pad to 0x54 total
     RaycastGround();
-    void SetObjAndPos(const Vector3 &v, Actor *a);
+    void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
     ~RaycastGround();
 };
@@ -54,7 +54,7 @@ extern "C" int func_ov065_0211b1d4(char *self)
     v.z = *(int*)(self + 0x64);
     v.y = v.y - 0xa000;
     RaycastGround rg;
-    rg.SetObjAndPos(*(Vector3*)&v, (Actor*)0);
+    rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     *(int*)(self + 0x338) = v.y;
     if (rg.DetectClsn() != 0)
         *(int*)(self + 0x338) = rg.result;

@@ -1,7 +1,7 @@
 //cpp
 extern "C" int DeathTable_GetBit(int id);
 
-class Actor {
+class dActor_c {
 public:
     char pad[0xce];
     short deathTableId;
@@ -9,7 +9,7 @@ public:
     int GetBitInDeathTable();
 };
 
-int Actor::GetBitInDeathTable()
+int dActor_c::GetBitInDeathTable()
 {
     return DeathTable_GetBit(deathTableId);
 }

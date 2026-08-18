@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_
+// @symbol _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_
 #include "MeshColliderBase.h"
 
-void MeshColliderBase::UpdatePosWithTransform(MeshColliderBase &clsn, Actor *clsnActor,
+void MeshColliderBase::UpdatePosWithTransform(MeshColliderBase &clsn, dActor_c *clsnActor,
                                               ClsnResult &res, Vector3 &pos,
                                               Vector3_16 *motionAng, Vector3_16 *ang)
 {

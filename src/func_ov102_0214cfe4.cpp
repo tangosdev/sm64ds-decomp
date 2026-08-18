@@ -3,7 +3,7 @@
 // recovered name: BobOmb_Kill
 /* recovered: renamed to Class_Method */
 /* daBmb_c::Kill - recovered from vtable slot identity */
-extern "C" void _ZN5Actor8PoofDustEv(void *c);
+extern "C" void _ZN8dActor_c8PoofDustEv(void *c);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern "C" int func_ov102_0214cfe4(char *c)
 {
@@ -12,7 +12,7 @@ extern "C" int func_ov102_0214cfe4(char *c)
     flags = *(int*)(c + 0xb0);
     b = (flags & 0x100) != 0;
     if (!b) {
-        _ZN5Actor8PoofDustEv(c);
+        _ZN8dActor_c8PoofDustEv(c);
         _ZN7fBase_c18MarkForDestructionEv(c);
     }
     return 1;

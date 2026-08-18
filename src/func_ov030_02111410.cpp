@@ -10,13 +10,13 @@ struct V3 { Fix12i x, y, z; };
 extern "C" {
 struct BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, struct BMD_File *f, int a, int b);
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int a, int b, void* vr, int e);
+void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int a, int b, void* vr, int e);
 void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
 void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, struct KCL_File *k, struct Matrix4x3 &m, int fx, short s, struct CLPS_Block &c);
-int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct V3*, void*, int, int);
+int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct V3*, void*, int, int);
 extern struct SharedFilePtr data_ov030_02115c88;
 extern struct SharedFilePtr data_ov030_02115c80;
 extern struct CLPS_Block data_ov030_02114ee4;
@@ -30,7 +30,7 @@ int func_ov030_02111410(char *self){
     *(int*)(self + 0x80) = 0x1000;
     *(int*)(self + 0x84) = 0x1000;
     *(int*)(self + 0x88) = 0x1000;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(self + 0x320, self, 0x32000, 0x32000, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(self + 0x320, self, 0x32000, 0x32000, 0, 0);
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
     {
@@ -47,7 +47,7 @@ int func_ov030_02111410(char *self){
         v.y = y;
         v.z = *(int*)(self + 0x64);
         v.y = y + 0x3c000;
-        *(int*)(self + 0x4dc) = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+        *(int*)(self + 0x4dc) = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
             0xb2, (unsigned char)(*(int*)(self + 8) & 0xf) | 0x50, &v, 0,
             *(signed char*)(self + 0xcc), -1);
     }

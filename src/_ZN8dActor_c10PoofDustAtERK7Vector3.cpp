@@ -1,5 +1,5 @@
 //cpp
-/* Actor::PoofDustAt(Vector3 const&) at 0x0200fdfc, 0x40 bytes.
+/* dActor_c::PoofDustAt(Vector3 const&) at 0x0200fdfc, 0x40 bytes.
  *
  * Spawns the two-particle poof (0x122, 0x123) at the position handed in.
  *
@@ -14,12 +14,12 @@
  * scalar arguments -- declaring the true types changes how the caller passes
  * them and breaks the bytes. See notes/mwccarm-codegen.md 6az.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
 extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
     u32 id, Fix12i x, Fix12i y, Fix12i z);
 
-void Actor::PoofDustAt(const Vector3 &pos)
+void dActor_c::PoofDustAt(const Vector3 &pos)
 {
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x122, pos.x, pos.y, pos.z);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x123, pos.x, pos.y, pos.z);

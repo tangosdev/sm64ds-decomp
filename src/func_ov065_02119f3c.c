@@ -16,6 +16,6 @@ int *func_ov065_02119f3c(int *t)
     t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     return t;
 }

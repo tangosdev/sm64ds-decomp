@@ -1,5 +1,5 @@
 typedef int Fix12i;
-extern int _ZN5Actor10FindWithIDEj(unsigned int id);
+extern int _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN7fBase_c18MarkForDestructionEv(char* c);
 extern int Vec3_HorzDist(char* a, char* b);
 extern void func_ov002_020e9448(char* c);
@@ -10,7 +10,7 @@ extern signed char data_0209f2f8;
 
 void func_ov002_020ea824(char* c)
 {
-    char* o = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x434));
+    char* o = (char*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x434));
     if (o == 0) { _ZN7fBase_c18MarkForDestructionEv(c); return; }
     if (Vec3_HorzDist(c + 0x5c, o + 0x5c) < *(int*)(c + 0x98)) {
         int* src = (int*)(o + 0x5c);

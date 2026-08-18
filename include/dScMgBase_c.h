@@ -24,7 +24,7 @@
  * through the class itself or its IMMEDIATE base, and for dScMgBase_c's
  * children that immediate base is dScMgBase_c, not dScene_c -- dScene_c's own copy
  * (which already covers dScMgBase_c's own D0, dScene_c being ITS immediate
- * base) is out of reach two levels down. See include/Actor.h and
+ * base) is out of reach two levels down. See include/dActor_c.h and
  * include/dScene_c.h for the full mechanics; this is the same rule applied one
  * level further from the root.
  *
@@ -102,7 +102,7 @@ struct dScMgBase_c : dScene_c {
     virtual void OnPendingDestroy();                   /* slot 12 */
 
     /* Slots 18-35: eighteen further virtuals new at this class, same shape
-       as Actor's own 13 new slots over fBase_c. All 18 target addresses
+       as dActor_c's own 13 new slots over fBase_c. All 18 target addresses
        are already matched source (func_ov004_* under arm9/ov004) -- see
        notes/dscene-c-siblings-census.md section 2 -- but their signatures
        are not yet reconstructed from the bodies, so they are left

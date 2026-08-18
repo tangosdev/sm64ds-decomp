@@ -5,7 +5,7 @@
  *
  * A dBgActor_c subclass -- the only one in ov060 -- which is what the destructor
  * shows: it tears down its own two members, then REWRITES THE VPTR to _ZTV10dBgActor_c
- * and tears down two more at dBgActor_c's offsets, then chains to Actor. That middle
+ * and tears down two more at dBgActor_c's offsets, then chains to dActor_c. That middle
  * vptr store is a base-class destructor running inline, and it is the evidence for
  * the base.
  *
@@ -60,7 +60,7 @@ typedef char BowserFireSeaArena_size_must_be_0x570[
 #else
 
 /* The same object for a C translation unit, which has no base class to inherit
-   dBgActor_c's and Actor's fields from and so spells the whole layout flat. */
+   dBgActor_c's and dActor_c's fields from and so spells the whole layout flat. */
 struct BowserFireSeaArena {
     u8  pad_000[0x8e];
     s16 unk_08e;            /* 0x08e */

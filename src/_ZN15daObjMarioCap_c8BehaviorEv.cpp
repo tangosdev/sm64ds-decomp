@@ -28,9 +28,9 @@ struct Flags3eb {
 };
 
 extern "C" {
-extern void _ZN5Actor13SmallPoofDustEv(MistPmfSelf *thiz);
+extern void _ZN8dActor_c13SmallPoofDustEv(MistPmfSelf *thiz);
 extern void _Z14ApproachLinearRiii(int *x, int target, int step);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(MistPmfSelf *thiz, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(MistPmfSelf *thiz, void *clsn);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(MistPmfSelf *thiz, WithMeshClsn *wm, u32 j);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *thiz);
 extern void func_ov002_020b7f7c(char *c);
@@ -56,7 +56,7 @@ int daObjMarioCap_c::Behavior()
             *(int *)(c + 0x40c) = 0x2000;
             *(u8 *)(c + 0x402) = 1;
             *(int *)(c + 0xa8) = 0xf000;
-            _ZN5Actor13SmallPoofDustEv(((MistPmfSelf *)this));
+            _ZN8dActor_c13SmallPoofDustEv(((MistPmfSelf *)this));
         }
     }
 
@@ -69,7 +69,7 @@ int daObjMarioCap_c::Behavior()
         _Z14ApproachLinearRiii((int *)(c + 0x80), *(int *)(c + 0x40c), 0x400);
         *(int *)(c + 0x88) = *(int *)(c + 0x80);
         *(int *)(c + 0x84) = *(int *)(c + 0x88);
-        _ZN5Actor9UpdatePosEP12CylinderClsn(((MistPmfSelf *)this), c + 0x110);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((MistPmfSelf *)this), c + 0x110);
         _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((MistPmfSelf *)this), (WithMeshClsn *)(c + 0x144), 0);
         if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) != 0) {
             if (*(int *)(c + 0x80) == 0x1000) {
@@ -101,7 +101,7 @@ int daObjMarioCap_c::Behavior()
         int v = *(int *)(c + 0x3f0);
         if (v != 4 && v != 0x11 && v != 6 && v != 8 && v != 0xc && v != 0xa
             && v != 0x13 && v != 0xf && v != 0x14 && v != 0x15 && v != 0x16 && v != 0xd) {
-            _ZN5Actor9UpdatePosEP12CylinderClsn(((MistPmfSelf *)this), c + 0x110);
+            _ZN8dActor_c9UpdatePosEP12CylinderClsn(((MistPmfSelf *)this), c + 0x110);
             _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((MistPmfSelf *)this), (WithMeshClsn *)(c + 0x144), 0);
         }
     }

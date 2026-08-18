@@ -1,12 +1,12 @@
 //cpp
 extern "C" {
 typedef struct { int x, y, z; } Vector3;
-typedef struct Actor Actor;
+typedef struct dActor_c dActor_c;
 struct RaycastGround { char buf[0x54]; };
 extern void func_ov090_02130f94(void* c);
 void _ZN13RaycastGroundC1Ev(RaycastGround* self);
 int Vec3_HorzDist(const Vector3* a, const Vector3* b);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3* p, Actor* a);
+void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3* p, dActor_c* a);
 int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
 void _ZN13RaycastGroundD1Ev(RaycastGround* self);
 extern unsigned char data_0209f2d8;
@@ -31,7 +31,7 @@ void func_ov090_02131378(char* c){
   v.z = vz;
   *(unsigned char*)(c+0x39c) = 0;
   if (Vec3_HorzDist((Vector3*)(c+0x5c), (Vector3*)(c+0x68)) != 0) {
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, (Actor*)c);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (dActor_c*)c);
     if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0)
       *(int*)(c+0x3a8) = *(int*)(rg.buf + 0x44);
   }

@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h
-/* Actor::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
+// @symbol _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h
+/* dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
  *                            const Vector3 &spawnPos, u8 howToSpawnStar)
  * at 0x0200ff14.
  *
@@ -27,9 +27,9 @@
  * became falsifiable. Renamed here, in symbols.txt, in delinks.txt and in the
  * twelve callers that spell it.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
-Actor *Actor::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
+dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
                                   const Vector3 &spawnPos, u8 howToSpawnStar)
 {
     UntrackStar(trackStarID);

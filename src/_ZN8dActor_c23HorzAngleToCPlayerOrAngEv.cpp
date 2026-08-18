@@ -1,5 +1,5 @@
 //cpp
-/* Actor::HorzAngleToCPlayerOrAng() at 0x0201097c, 0x3c bytes.
+/* dActor_c::HorzAngleToCPlayerOrAng() at 0x0201097c, 0x3c bytes.
  *
  * HorzAngleToCPlayer with a fallback: if there is no nearest player, face the
  * way you already are. The "OrAng" in the name is that fallback -- the actor's
@@ -14,22 +14,22 @@
  * loads 0x0209b458 after the call and compares that. Both are the same pointer
  * in practice, but the bytes read the global, so this does too.
  *
- * The old file used a shadow `struct Actor` with a `Vector3_16 ang` at 0x8c to
+ * The old file used a shadow `struct dActor_c` with a `Vector3_16 ang` at 0x8c to
  * reach the angle; mAngleX/Y/Z have been named in the real header all along.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
 extern "C" {
 /* C linkage -- the ROM spells it unmangled. */
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 
-/* Refilled by ClosestPlayer(); see the proximity note in include/Actor.h. */
-extern Actor *data_0209b458;
+/* Refilled by ClosestPlayer(); see the proximity note in include/dActor_c.h. */
+extern dActor_c *data_0209b458;
 }
 
-s16 Actor::HorzAngleToCPlayerOrAng()
+s16 dActor_c::HorzAngleToCPlayerOrAng()
 {
-    Actor *player;
+    dActor_c *player;
 
     ClosestPlayer();
     player = data_0209b458;

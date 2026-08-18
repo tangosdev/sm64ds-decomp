@@ -12,7 +12,7 @@ int *_ZN6CannonD0Ev(int *t)
     t[0] = (int)_ZTV7daCnn_c;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

@@ -30,7 +30,7 @@ typedef struct { int w[2]; } LocSharedFilePtr;
 typedef struct { short x,y,z; } LocVector3_16;
 typedef struct { int x,y,z; } LocVec3;
 typedef struct BMD_File BMD_File;
-typedef struct Actor Actor;
+typedef struct dActor_c dActor_c;
 struct C; typedef int (C::*PMF)();
 struct RG { char a[0x14]; int detect[16]; };
 
@@ -38,13 +38,13 @@ extern "C" {
 BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(LocSharedFilePtr* f);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 void _ZN9Animation8LoadFileER13SharedFilePtr(LocSharedFilePtr* f);
-void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* self, Actor* a, LocVec3* v, LocFix12 r, LocFix12 h, unsigned int e, unsigned int g);
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, LocFix12 r, LocFix12 h, LocVector3_16* p, LocVector3_16* q);
+void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, LocVec3* v, LocFix12 r, LocFix12 h, unsigned int e, unsigned int g);
+void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, LocFix12 r, LocFix12 h, LocVector3_16* p, LocVector3_16* q);
 void func_0203558c(void* self);
 int func_ov090_02131e00(void* c, PMF* p);
 void _ZN13RaycastGroundC1Ev(RG* self);
 void _ZN4BgCh19StartDetectingWaterEv(RG* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RG* self, const LocVec3* v, Actor* a);
+void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RG* self, const LocVec3* v, dActor_c* a);
 int _ZN13RaycastGround10DetectClsnEv(RG* self);
 int SurfaceInfo_TestFlag0x20(int* p);
 void _ZN13RaycastGroundD1Ev(RG* self);
@@ -85,14 +85,14 @@ int Skeeter::InitResources()
     v.x = data_ov090_0213412c.x;
     v.y = data_ov090_0213412c.y;
     v.z = data_ov090_0213412c.z;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, (Actor*)c, &v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
+    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, (dActor_c*)c, &v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
 
     mAngleY = mPrevAngleY;
     unk_3a4 = 0x1000;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (Actor*)c, 0xc8000, 0, (LocVector3_16*)0, (LocVector3_16*)0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (dActor_c*)c, 0xc8000, 0, (LocVector3_16*)0, (LocVector3_16*)0);
     func_0203558c(&mWithMeshClsn);
 
     unk_108 = 1;
@@ -125,7 +125,7 @@ int Skeeter::InitResources()
             pos.y = ip;
             pos.z = pz;
         }
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &pos, (Actor*)c);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, (dActor_c*)c);
         unk_3a8 = data_02092138;
         if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
             if (SurfaceInfo_TestFlag0x20(rg.detect) != 0) {

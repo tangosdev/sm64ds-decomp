@@ -1,4 +1,4 @@
-struct Actor;
+struct dActor_c;
 struct Vector3 { int x, y, z; };
 struct Vector3_16;
 
@@ -6,17 +6,17 @@ typedef unsigned int u32;
 typedef int s32;
 typedef short s16;
 
-extern struct Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+extern struct dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 id, u32 param, const struct Vector3 *pos,
     const struct Vector3_16 *r, int a, int b);
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650[];
 
-void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(
-    struct Actor *self, const struct Vector3 *pos, s32 count,
+void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(
+    struct dActor_c *self, const struct Vector3 *pos, s32 count,
     s32 spread, s16 angle)
 {
-    struct Actor *actor;
+    struct dActor_c *actor;
     s32 ang;
     s32 prev;
     s32 i;
@@ -40,7 +40,7 @@ void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(
     }
 
     for (i = 0; i < count; i++) {
-        actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+        actor = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
             id, param, pos, rot,
             *(signed char *)((char *)self + 0xcc), deathId);
 

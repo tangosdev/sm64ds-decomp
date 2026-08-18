@@ -9,9 +9,9 @@ struct Vector3 { int x, y, z; };
 
 extern "C" {
 int _ZNK12WithMeshClsn8IsOnWallEv(void* self);
-void _ZN5Actor10PoofDustAtERK7Vector3(void* self, const struct Vector3* v);
-void _ZN5Actor8PoofDustEv(void* self);
-void* _ZN5Actor10FindWithIDEj(u32 id);
+void _ZN8dActor_c10PoofDustAtERK7Vector3(void* self, const struct Vector3* v);
+void _ZN8dActor_c8PoofDustEv(void* self);
+void* _ZN8dActor_c10FindWithIDEj(u32 id);
 void func_ov063_02116244(char* c);
 }
 
@@ -45,15 +45,15 @@ extern "C" int func_ov063_0211a3d0(char* c)
         ((int*)&w)[0] = ((int*)&v)[0];
         ((int*)&w)[1] = ((int*)&v)[1];
         ((int*)&w)[2] = ((int*)&v)[2];
-        _ZN5Actor10PoofDustAtERK7Vector3(c, &w);
+        _ZN8dActor_c10PoofDustAtERK7Vector3(c, &w);
     } else {
-        _ZN5Actor8PoofDustEv(c);
+        _ZN8dActor_c8PoofDustEv(c);
     }
 
     *(s32*)(c + 0x5a0) = 2;
 
     if (*(u8*)(c + 0x5cf) != 0 && *(u32*)(c + 0x490) != 0) {
-        *(void**)(c + 0x48c) = _ZN5Actor10FindWithIDEj(*(u32*)(c + 0x490));
+        *(void**)(c + 0x48c) = _ZN8dActor_c10FindWithIDEj(*(u32*)(c + 0x490));
         if (*(void**)(c + 0x48c) != 0) {
             if (*(u8*)(c + 0x5cf) != 2) {
                 *(s32*)(((int)*(char**)(c + 0x48c) + 0x180)) += 1;

@@ -14,7 +14,7 @@ int *_ZN6BubbleD0Ev(int *t)
 {
     t[0] = (int)_ZTV6Bubble;
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

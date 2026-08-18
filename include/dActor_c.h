@@ -1,5 +1,5 @@
-#ifndef ACTOR_H
-#define ACTOR_H
+#ifndef DACTOR_C_H
+#define DACTOR_C_H
 
 #include "types.h"
 
@@ -9,18 +9,18 @@
 
 /* The base of every enemy and object class, 0x020100dc..0x020113e4.
  *
- * The chain is fBase_c -> dBase_c -> Actor. Actor is NOT a direct child
- * of fBase_c: Actor::Actor calls fBase_c::fBase_c, stores dBase_c's
+ * The chain is fBase_c -> dBase_c -> dActor_c. dActor_c is NOT a direct child
+ * of fBase_c: dActor_c::dActor_c calls fBase_c::fBase_c, stores dBase_c's
  * vptr, then immediately overwrites it with its own. Two consecutive vptr
  * stores is what an inlined intermediate-base constructor looks like. See
  * notes/actor-vtables.md.
  *
- * LAYOUT. fBase_c occupies 0x00..0x4f, so Actor's own fields begin at 0x50.
+ * LAYOUT. fBase_c occupies 0x00..0x4f, so dActor_c's own fields begin at 0x50.
  * The generated header this replaces duplicated fBase_c's fields inline --
  * uniqueID at 0x04, actorID at 0x0c -- instead of inheriting them, which is why
  * it opened with pad_000[0x4] and a 0x42-byte gap.
  *
- * VTABLE. _ZTV5Actor (0x0208e3a4) has 31 slots. Actor overrides ten of the
+ * VTABLE. _ZTV8dActor_c (0x0208e3a4) has 31 slots. dActor_c overrides ten of the
  * eighteen it inherits -- 1, 2, 4, 5, 7, 8, 10, 11 and the destructor at 16/17
  * -- and appends thirteen of its own at 18..30. Slots 0, 3, 6, 9, 12, 13, 14
  * and 15 still point at the fBase_c implementations.
@@ -29,15 +29,15 @@
  * TU defining the first non-inline virtual declared in the class (the key
  * function), and that copy collides with the one the module's gap object
  * supplies from ROM data. An override takes its base's slot wherever it is
- * declared, so putting ~Actor first costs nothing and makes it the key
+ * declared, so putting ~dActor_c first costs nothing and makes it the key
  * function. The thirteen NEW virtuals still take 18..30 from their declaration
  * order below, because new slots append after the inherited table.
  *
  * What makes that safe is NOT that the destructor lives in a C translation
- * unit -- src/_ZN5ActorD1Ev.cpp and _ZN5ActorD2Ev.cpp are C++ and do include
- * this header; only _ZN5ActorD0Ev.c is C. The invariant is that all three
+ * unit -- src/_ZN8dActor_cD1Ev.cpp and _ZN8dActor_cD2Ev.cpp are C++ and do include
+ * this header; only _ZN8dActor_cD0Ev.c is C. The invariant is that all three
  * define extern "C" free functions under the mangled names and none defines
- * `Actor::~Actor`, so no TU is ever the key function's definition.
+ * `dActor_c::~dActor_c`, so no TU is ever the key function's definition.
  *
  * The rule, stated precisely: the key function -- the first non-inline virtual
  * declared -- must never be defined as a real method in any translation unit.
@@ -77,7 +77,7 @@ struct Matrix4x3;
 extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern "C" void *data_020a0eac;
 
-struct Actor : dBase_c {
+struct dActor_c : dBase_c {
     s32 unk_050;            /* 0x050 */
     s32 unk_054;            /* 0x054 */
     u8  unk_058;            /* 0x058 */
@@ -100,7 +100,7 @@ struct Actor : dBase_c {
        0x098 as a 32-bit argument.
 
        These were deliberately left wrong until now: nothing compiled against
-       Actor's copies, so no gate could prove a change either way. Now that
+       dActor_c's copies, so no gate could prove a change either way. Now that
        Player inherits them, 62 files using mHorzSpeed and 49 using mVertSpeed
        resolve through this header, and a wrong width fails immediately. */
     s32 mScaleX;            /* 0x080 */
@@ -117,9 +117,9 @@ struct Actor : dBase_c {
     s32 mTerminalVelocity;  /* 0x0a0 -- fix12, negative */
     /* 0x0a4 and 0x0ac were padding "likely the same physics block; unproven".
        They are real, and dEnemyBase_c is the evidence: its generated header declared
-       both as s32 and its sources read them, so once `dEnemyBase_c : Actor` they have
+       both as s32 and its sources read them, so once `dEnemyBase_c : dActor_c` they have
        to exist here. Still unnamed -- what they mean is not evidenced, only
-       that they are Actor's and four bytes wide. */
+       that they are dActor_c's and four bytes wide. */
     s32 unk_0a4;            /* 0x0a4 */
     s32 mVertSpeed;         /* 0x0a8 */
     s32 unk_0ac;            /* 0x0ac */
@@ -136,7 +136,7 @@ struct Actor : dBase_c {
 
     /* --- vtable. Declared first, see the header comment. Overrides slots
            16 (D1) and 17 (D0); position here does not affect that. --- */
-    virtual ~Actor();
+    virtual ~dActor_c();
 
     /* --- overrides of inherited slots. Each takes its base's index. --- */
     virtual bool BeforeInitResources();                /* slot  1 */
@@ -152,14 +152,14 @@ struct Actor : dBase_c {
     virtual int  OnYoshiTryEat();                      /* slot 18 */
     virtual int  OnTurnIntoEgg(Player &player);        /* slot 19 */
     virtual int  Virtual50();                          /* slot 20 -- vtable+0x50 */
-    virtual int  OnGroundPounded(Actor &other);        /* slot 21 */
-    virtual int  OnAttacked1(Actor &other);            /* slot 22 */
-    virtual int  OnAttacked2(Actor &other);            /* slot 23 */
-    virtual int  OnKicked(Actor &other);               /* slot 24 */
-    virtual int  OnPushed(Actor &other);               /* slot 25 */
-    virtual int  OnHitByCannonBlastedChar(Actor &other); /* slot 26 */
+    virtual int  OnGroundPounded(dActor_c &other);        /* slot 21 */
+    virtual int  OnAttacked1(dActor_c &other);            /* slot 22 */
+    virtual int  OnAttacked2(dActor_c &other);            /* slot 23 */
+    virtual int  OnKicked(dActor_c &other);               /* slot 24 */
+    virtual int  OnPushed(dActor_c &other);               /* slot 25 */
+    virtual int  OnHitByCannonBlastedChar(dActor_c &other); /* slot 26 */
     virtual int  OnHitByMegaChar(Player &player);      /* slot 27 */
-    virtual int  OnHitFromUnderneath(Actor &other);    /* slot 28 */
+    virtual int  OnHitFromUnderneath(dActor_c &other);    /* slot 28 */
     virtual int  OnAimedAtWithEgg();                   /* slot 29 */
 
     /* slot 30. Returns a Vector3 BY VALUE, and the ROM says so plainly: the
@@ -217,7 +217,7 @@ struct Actor : dBase_c {
 
     /* Static: the mangled name carries both parameters and the ROM reads them
        from r0 and r1, leaving no register for a `this`. */
-    static Actor *FindWithActorID(u32 actorID, Actor *after);
+    static dActor_c *FindWithActorID(u32 actorID, dActor_c *after);
 
     /* Integrates horizontal speed along the facing angle and applies gravity,
        all through `this` -- mHorzSpeed at 0x98, mVertAccel 0x9c,
@@ -230,7 +230,7 @@ struct Actor : dBase_c {
        player's hand transform, writes the carried actor's own 0x5c..0x64 out of
        it, and returns the matrix. A member outright: it reads 0x8c..0x94 and
        writes 0x5c..0x64 through `this`. Declared here because
-       src_tu/actors/Actor.cpp defines it as a real method; the enrolled
+       src_tu/actors/dActor_c.cpp defines it as a real method; the enrolled
        one-function file carries its own local shadow class instead. */
     Matrix4x3 *UpdateCarry(Player &player, const Vector3 &vec);
 
@@ -246,15 +246,15 @@ struct Actor : dBase_c {
 
        FindEgg and FindExplosionActor are the same function twice over. Both
        ask "did the thing that hit me have an owner, and was the hit of my
-       kind", then resolve the owner to an Actor. Only the hitFlags bit
+       kind", then resolve the owner to an dActor_c. Only the hitFlags bit
        differs: 0x2000 egg, 0x4000 explosion. Kept as two, because the ROM has
        two.
 
        UpdatePos takes a POINTER where the rest take references -- the mangled
        name says `P12CylinderClsn`, not `R`. It is a two-line forwarder and
        passes the pointer straight through to UpdatePosWithOnlySpeed. */
-    Actor *FindEgg(CylinderClsn &clsn);               /* hitFlags 0x2000 */
-    Actor *FindExplosionActor(CylinderClsn &clsn);    /* hitFlags 0x4000 */
+    dActor_c *FindEgg(CylinderClsn &clsn);               /* hitFlags 0x2000 */
+    dActor_c *FindExplosionActor(CylinderClsn &clsn);    /* hitFlags 0x4000 */
     void   MakeVanishLuigiWork(CylinderClsn &clsn);
     int    JumpedOnByPlayer(CylinderClsn &clsn, Player &player);
     void   UpdatePos(CylinderClsn *clsn);
@@ -274,7 +274,7 @@ struct Actor : dBase_c {
        State that premise precisely, because the bytes alone do not carry it:
        what the register evidence settles is static-vs-non-static GIVEN the
        mangled name's parameter list, which is the one distinction mangling
-       cannot express. A free function with an unused leading `Actor*` would be
+       cannot express. A free function with an unused leading `dActor_c*` would be
        byte-identical; it is excluded by the attested symbol name, not by the
        disassembly. The names are the premise the whole tree rests on, so the
        conclusion holds -- but it is name plus ABI, not ABI alone.
@@ -311,14 +311,14 @@ struct Actor : dBase_c {
     /* The counterpart of TrackInDeathTable, 0x0200f9d4. Same shape: it reads
        0x0ce and hands it to DeathTable_ClearBit, so `this` is dereferenced and
        it is a member for the same reason its sibling is. Declared here because
-       src_tu/actors/Actor.cpp defines it as a real method; the enrolled
+       src_tu/actors/dActor_c.cpp defines it as a real method; the enrolled
        one-function file carries its own local shadow class instead. */
     void UntrackInDeathTable();
     void SpawnSoundObj(u32 soundObjParam);
     s32  GetWaterHeightWDW();
 
     /* Static: searches the live-actor list rather than acting on an instance. */
-    static Actor *FindWithID(u32 id);
+    static dActor_c *FindWithID(u32 id);
 
     /* Star tracking, 0x0200ff14..0x02010043 -- three functions in one
        uninterrupted run, which is why they migrate as a set.
@@ -374,7 +374,7 @@ struct Actor : dBase_c {
        (`ldr` + `and #0xff`, one instruction long). See the definition. */
     s32    TrackStar(u32 starIdx, u32 markerType);
     void   UntrackStar(s8 &starID);
-    Actor *UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
+    dActor_c *UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
                                const Vector3 &spawnPos, u8 howToSpawnStar);
 
     /* The spawn-and-reward group, 0x02010044..0x02010929. All three are
@@ -399,10 +399,10 @@ struct Actor : dBase_c {
 
        ClosestWithActorID walks FindWithActorID and keeps the nearest, skipping
        `this` itself; the sentinel is `mvn r5, #0x80000000` = 0x7fffffff. */
-    Actor *SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
-                       u16 delay, Actor *owner);
+    dActor_c *SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
+                       u16 delay, dActor_c *owner);
     void   GivePlayerCoins(Player &player, u8 count, u32 coinKind);
-    Actor *ClosestWithActorID(u32 actorID);
+    dActor_c *ClosestWithActorID(u32 actorID);
 
     /* Static: builds an actor from an ID rather than acting on an instance --
        r0 carries actorID, not `this`, at 0x02010e2c's only in-tree call site.
@@ -420,7 +420,7 @@ struct Actor : dBase_c {
        arguments five and six occupy full stack words however they are
        declared, so no call site's bytes depend on the difference. The
        narrowing belongs to the callee and is visible only there. */
-    static Actor *Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
+    static dActor_c *Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                         const Vector3_16 *rot, s8 areaID, s16 deathTableID);
 
     /* Methods whose mangled names carry a by-value class parameter (5Fix12IiE,
@@ -447,13 +447,13 @@ struct Actor : dBase_c {
 
        DECLARED HERE AND NOT ON fBase_c, and the difference is load-bearing: mwcc
        inlines it only when it is found in the class itself or its IMMEDIATE base.
-       On fBase_c, every Actor-derived D0 emits an out-of-line call instead and
+       On fBase_c, every dActor_c-derived D0 emits an out-of-line call instead and
        misses. dEnemyBase_c carries its own copy for the same reason -- it is a flattened
-       struct that does not derive from Actor in these headers, so this one is not
+       struct that does not derive from dActor_c in these headers, so this one is not
        even in scope for the classes under it.
 
        No layout effect: an inline non-virtual member adds no field and no vtable
-       slot, and Actor's 0xd0 assertion still holds. */
+       slot, and dActor_c's 0xd0 assertion still holds. */
     void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 };
 
@@ -461,7 +461,7 @@ struct Actor : dBase_c {
 
 /* Flat layout for the C translation units, which can express neither the base
    class nor the virtual functions. 0x00..0x4f is fBase_c. */
-struct Actor {
+struct dActor_c {
     void **vtable;          /* 0x000 */
     u32 uniqueID;           /* 0x004 */
     u32 param1;             /* 0x008 */
@@ -519,12 +519,12 @@ struct Actor {
 /* Outside the split, so the C and C++ spellings cannot drift apart.
  *
  * Read what this does and does not claim. 0xd0 is the size this header's own
- * field list computes -- it is NOT independent ROM evidence that an Actor is
+ * field list computes -- it is NOT independent ROM evidence that an dActor_c is
  * 0xd0 bytes. What it buys is real all the same: the two spellings are held to
  * each other, a field retyped without shrinking the pad after it stops
  * compiling, and include/Player.h becomes checkable -- a derived struct's fields
  * start at its base's size, and tools/check_header_offsets.py will not guess
  * that number. */
-typedef char Actor_size_must_be_0xd0[sizeof(struct Actor) == 0xd0 ? 1 : -1];
+typedef char dActor_c_size_must_be_0xd0[sizeof(struct dActor_c) == 0xd0 ? 1 : -1];
 
 #endif

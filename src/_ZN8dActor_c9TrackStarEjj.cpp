@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN5Actor9TrackStarEjj
-/* Actor::TrackStar(u32 starIdx, u32 markerType) at 0x0200ff94.
+// @symbol _ZN8dActor_c9TrackStarEjj
+/* dActor_c::TrackStar(u32 starIdx, u32 markerType) at 0x0200ff94.
  *
  * Registers this actor in STAR_MARKERS, the twelve-slot table of actors
  * currently showing an uncollected-star glint, and returns the slot index it
@@ -20,19 +20,19 @@
  * sign-extending byte round-trip. Its bound of 0xc is what fixes the table at
  * twelve entries.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 #include "decl_common.h" /* SublevelToLevel */
 
 extern "C" {
 extern u8     data_0209f220[]; /* the star index this mission was entered for */
 extern s8     data_0209f2f8[]; /* the current sublevel id */
-extern Actor *STAR_MARKERS[12]; /* 0x0209f40c */
+extern dActor_c *STAR_MARKERS[12]; /* 0x0209f40c */
 
-void SetStarMarker(s32 slot, Actor *actor, s32 markerType);
+void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
 int  IsStarCollectedInCurLevel(u32 starIdx);
 }
 
-s32 Actor::TrackStar(u32 starIdx, u32 markerType)
+s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
 {
     s32 type = markerType;
 

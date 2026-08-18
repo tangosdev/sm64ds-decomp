@@ -5,7 +5,7 @@ typedef struct RaycastLine { char pad[0x14]; char surf[0x64]; } RaycastLine;
 extern s16 Vec3_HorzAngle(const V3 *a, const V3 *b);
 extern void _ZN11RaycastLineC1Ev(RaycastLine *rc);
 extern void func_0200897c(char *self, RaycastLine *rc);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(RaycastLine *rc, V3 *a, V3 *b, void *actor);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLine *rc, V3 *a, V3 *b, void *actor);
 extern int _ZN11RaycastLine10DetectClsnEv(RaycastLine *rc);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *surf, V3 *out);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
@@ -46,7 +46,7 @@ void func_0200b990(char *self, char *arg1, int arg2)
                 lineB.y = *(int *)(self + 0x84);
                 lineB.x = v.x;
                 lineB.z = v.z;
-                _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&rc, (V3 *)(self + 0x80), &lineB, 0);
+                _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc, (V3 *)(self + 0x80), &lineB, 0);
                 if (_ZN11RaycastLine10DetectClsnEv(&rc) != 0) {
                     V3 normal;
                     s16 a2;

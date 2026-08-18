@@ -1,5 +1,5 @@
 #include "types.h"
-extern int _ZN5Actor13ClosestPlayerEv(void* thiz);
+extern int _ZN8dActor_c13ClosestPlayerEv(void* thiz);
 extern int _ZN6Player9StartTalkER7fBase_cb(void* thiz, void* ab, int b);
 extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* thiz, void* ab, u32 a, const void* v, u32 c, u32 d);
 extern int func_02012694(int a, void* b);
@@ -30,7 +30,7 @@ int func_ov094_02135c28(void* thiz)
     struct V6 buf;
 
     if (*(u8*)(c + 0x3d4) == 0) {
-        if (_ZN5Actor13ClosestPlayerEv(c) != 0) {
+        if (_ZN8dActor_c13ClosestPlayerEv(c) != 0) {
             void* player = *(void**)(c + 0x3d0);
             if (player != 0) {
                 if ((u16)(*(u16*)((char*)player + 0x6ce) & 0x800) == 0) {

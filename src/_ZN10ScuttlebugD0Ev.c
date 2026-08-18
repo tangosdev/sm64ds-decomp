@@ -16,7 +16,7 @@ int *_ZN10ScuttlebugD0Ev(int *t)
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0x160);
     _ZN11ShadowModelD1Ev((char *)t + 0x138);
     _ZN9ModelAnimD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

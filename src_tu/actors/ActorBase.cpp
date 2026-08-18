@@ -44,7 +44,7 @@
  *     0x02043db4 -> 0x02099edc   (D0)
  *     0x02043de8 -> 0x02099edc   (D1)
  * -- so the reference this TU needs is addend 0, which only the free-function
- * spelling can express. arm9/Actor reached link-verified under the same
+ * spelling can express. arm9/dActor_c reached link-verified under the same
  * arrangement.
  *
  * The variant ORDER still comes out right, and by two independent routes. mwcc

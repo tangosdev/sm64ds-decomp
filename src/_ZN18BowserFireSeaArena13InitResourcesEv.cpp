@@ -6,7 +6,7 @@
  *
  * The three `((char*)this)+0xNNN` offsets are named members now: 0x324 is mModel2,
  * 0x374 is mMovingMeshCollider2, and 0x2ec is mClsnMat -- inherited from dBgActor_c,
- * which is also where the collider's transform comes from. unk_08e is Actor::mAngleY.
+ * which is also where the collider's transform comes from. unk_08e is dActor_c::mAngleY.
  */
 #include "BowserFireSeaArena.h"
 #include "MeshColliderBase.h"
@@ -16,9 +16,9 @@ extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 /* `int`, not a local `typedef int Fix12;`. That typedef used to sit above and now
    collides with the real Fix12<> template, which BowserFireSeaArena.h reaches
-   through Actor.h. The parameter is passed in a register either way. */
+   through dActor_c.h. The parameter is passed in a register either way. */
 extern int func_020393d4(void*, void*);
-extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 
 
 int BowserFireSeaArena::InitResources()
@@ -30,8 +30,8 @@ int BowserFireSeaArena::InitResources()
   func_ov060_02117a64(((char*)this));
   kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov060_0211aff4);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMovingMeshCollider2, kcl, &mClsnMat, 0x1000, mAngleY, &func_021115bc);
-  func_020393d4(&mMovingMeshCollider2, &_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
-  ((MeshColliderBase *)&mMovingMeshCollider2)->Enable((Actor *)(((char*)this)));
+  func_020393d4(&mMovingMeshCollider2, &_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+  ((MeshColliderBase *)&mMovingMeshCollider2)->Enable((dActor_c *)(((char*)this)));
   unk_31e = 0;
   unk_320 = 0;
   unk_322 = 0;

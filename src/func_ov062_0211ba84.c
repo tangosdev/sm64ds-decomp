@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daRFlag_c::Kill - recovered from vtable slot identity */
-extern char *_ZN5Actor13ClosestPlayerEv(char *self);
+extern char *_ZN8dActor_c13ClosestPlayerEv(char *self);
 extern int func_ov062_0211c658(char *c, void *p);
 extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern s16 Vec3_VertAngle(const Vector3 *v0, const Vector3 *v1);
@@ -32,7 +32,7 @@ int func_ov062_0211ba84(char *c)
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    ip = _ZN5Actor13ClosestPlayerEv(c);
+    ip = _ZN8dActor_c13ClosestPlayerEv(c);
     if (ip != 0) {
         if (*(u8 *)(ip + 0x6fb) == 1) {
             *(s16 *)(c + 0x444) = 0x1e;

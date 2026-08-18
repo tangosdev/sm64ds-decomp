@@ -121,7 +121,7 @@ typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1]
  * Before/After hooks or at fBase_c.
  *
  * KEY FUNCTION. Slot 0 is Stage::InitResources, so declaration order matters
- * here in the way include/Actor.h warns about: whichever non-inline virtual is
+ * here in the way include/dActor_c.h warns about: whichever non-inline virtual is
  * declared first is the key function, and CW 1.2 emits the vtable group into the
  * TU that DEFINES it -- colliding with the copy the module's gap object supplies
  * from ROM data. The destructor is declared first, which is free for a derived

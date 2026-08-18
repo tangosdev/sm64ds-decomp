@@ -1,7 +1,7 @@
 //cpp
 struct SharedFilePtr;
 struct BMD_File;
-struct Actor;
+struct dActor_c;
 struct Vector3 { int x, y, z; };
 
 struct PathPtr {
@@ -18,7 +18,7 @@ int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 void _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr& p);
 void LoadSilverStarAndNumber(void);
 void _ZN11ShadowModel12InitCylinderEv(void* self);
-void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* self, Actor* a, const Vector3& v, int fix12, int c, unsigned int d, unsigned int e);
+void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, const Vector3& v, int fix12, int c, unsigned int d, unsigned int e);
 void func_ov100_02143b18(unsigned char* c, void* p);
 
 extern SharedFilePtr data_ov002_0211092c;
@@ -78,7 +78,7 @@ extern "C" int _ZN14UnchainedChomp13InitResourcesEv(unsigned char* thiz)
         v.x = data_ov100_02148008[0];
         v.y = data_ov100_02148008[1];
         v.z = data_ov100_02148008[2];
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(thiz + 0x110, (Actor*)thiz, v,
+        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(thiz + 0x110, (dActor_c*)thiz, v,
             0xaa000, 0x140000, 0x200004, 0x6010);
     }
 

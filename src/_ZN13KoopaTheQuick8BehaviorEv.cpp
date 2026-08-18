@@ -6,7 +6,7 @@
 #include "KoopaTheQuick.h"
 extern "C" {
 extern void _ZN9Animation7AdvanceEv(void* p);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* a, void* b);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* a, void* b);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* a, void* b, unsigned int j);
 extern void _ZN12CylinderClsn5ClearEv(void* p);
 extern void _ZN12CylinderClsn6UpdateEv(void* p);
@@ -24,7 +24,7 @@ int KoopaTheQuick::Behavior()
   ((void(*)(char*))fn)(self);
   _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
   mAngleY = mPrevAngleY;
-  _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this)+0x110);
+  _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this)+0x110);
   _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this)+0x144, 0);
   _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
   _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);

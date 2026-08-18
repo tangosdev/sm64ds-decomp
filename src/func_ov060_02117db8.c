@@ -4,8 +4,8 @@ typedef struct Vec3 { int x, y, z; } Vec3;
 extern void Vec3_AsrInPlace(Vec3 *v, int n);
 extern void MulVec3Mat4x3(Vec3 *in, void *m, void *out);
 extern void func_02012694(int a, void *p);
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *self, Vec3 *v, int fix);
-extern void _ZN5Actor10PoofDustAtERK7Vector3(void *self, Vec3 *v);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, Vec3 *v, int fix);
+extern void _ZN8dActor_c10PoofDustAtERK7Vector3(void *self, Vec3 *v);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 extern u16 data_ov060_0211956c[];
@@ -63,7 +63,7 @@ void func_ov060_02117db8(char *self) {
         eq.x = *(int *)(self + 0x5c);
         eq.y = *(int *)(self + 0x60);
         eq.z = *(int *)(self + 0x64);
-        _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(self, &eq, 0x7d0000);
+        _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(self, &eq, 0x7d0000);
         *(int *)(self + 0xa8) = 0x8000;
         *(int *)(self + 0x9c) = 0;
     }
@@ -86,7 +86,7 @@ void func_ov060_02117db8(char *self) {
         dust1.x = x;
         dust1.y = y;
         dust1.z = z;
-        _ZN5Actor10PoofDustAtERK7Vector3(self, &dust1);
+        _ZN8dActor_c10PoofDustAtERK7Vector3(self, &dust1);
 
         a = ((int)(u16)(s16)(mul - 0x14b0) >> 4) * 2;
         x = k * (s16)data_02082214[a] + (bx << 12);
@@ -98,7 +98,7 @@ void func_ov060_02117db8(char *self) {
         dust2.x = x;
         dust2.y = y;
         dust2.z = z;
-        _ZN5Actor10PoofDustAtERK7Vector3(self, &dust2);
+        _ZN8dActor_c10PoofDustAtERK7Vector3(self, &dust2);
     }
 
     {

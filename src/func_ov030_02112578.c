@@ -1,6 +1,6 @@
 #include "types.h"
-void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *p);
-void *_ZN5Actor13ClosestPlayerEv(void *self);
+void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *p);
+void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 int func_ov030_02111b20(void *self);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *bca, int a, int fx, unsigned int f);
 void func_ov030_02111890(void *c);
@@ -20,7 +20,7 @@ void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned in
 u8 DecIfAbove0_Byte(u8 *p);
 void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
 void _ZN9Animation7AdvanceEv(void *thiz);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 void func_ov030_02111f6c(void *c, void *w);
 void _ZN12CylinderClsn5ClearEv(void *thiz);
 
@@ -33,8 +33,8 @@ extern void *data_ov030_02115d18[];
 int func_ov030_02112578(void *arg0)
 {
     u8 *c = (u8 *)arg0;
-    void *r4 = _ZN5Actor15FindWithActorIDEjPS_(0x67, 0);
-    void *r6 = _ZN5Actor13ClosestPlayerEv(arg0);
+    void *r4 = _ZN8dActor_c15FindWithActorIDEjPS_(0x67, 0);
+    void *r6 = _ZN8dActor_c13ClosestPlayerEv(arg0);
     s32 v[3];
     *(s32 *)((u8 *)v + 0) = 0x981;
     *(s32 *)((u8 *)v + 4) = 0x77a;
@@ -128,7 +128,7 @@ int func_ov030_02112578(void *arg0)
         { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
         break;
     case 10:
-        if (_ZN5Actor15FindWithActorIDEjPS_(0x67, 0) == 0) {
+        if (_ZN8dActor_c15FindWithActorIDEjPS_(0x67, 0) == 0) {
             _ZN7fBase_c18MarkForDestructionEv(arg0);
         }
         break;
@@ -137,7 +137,7 @@ int func_ov030_02112578(void *arg0)
     }
 
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(arg0, c + 0x160);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(arg0, c + 0x160);
     func_ov030_02111f6c(arg0, c + 0x194);
     _ZN12CylinderClsn5ClearEv(c + 0x160);
     return 1;

@@ -1,4 +1,4 @@
-// Actor factory: new fBase_c(0x64), base ctor, installs the vtable chain
+// dActor_c factory: new fBase_c(0x64), base ctor, installs the vtable chain
 // (two base vtables then the ov007 one), ORs flag bits 1 and 4 at +0x13 via a
 // materialized byte pointer, sets the +0x50 sub-object vtables, and constructs
 // the member at +0x54 via func_02017278.

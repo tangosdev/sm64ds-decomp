@@ -33,7 +33,7 @@
 struct Bullet : dEnemyBase_c {
     /* What mCurrentState points at. Behavior calls the handler at +0x08
        through it; only that handler is evidenced. The field was reachable only
-       through the `struct Actor { char pad[0x350]; Holder* h; }` stand-in that
+       through the `struct dActor_c { char pad[0x350]; Holder* h; }` stand-in that
        file used to carry, so the generated header never had it. */
     struct State {
         u8  pad_00[0x8];

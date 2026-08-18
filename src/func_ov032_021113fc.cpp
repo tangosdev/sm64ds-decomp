@@ -7,12 +7,12 @@
 #include "common.h"
 extern "C" {
     void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, void* v);
-    void* _ZN5Actor10FindWithIDEj(u32 id);
-    void _ZN12dEnemyBase_c22SpawnMegaCharParticlesER5ActorPc(void* self, void* a, void* p);
-    void _ZN5Actor8PoofDustEv(void* self);
+    void* _ZN8dActor_c10FindWithIDEj(u32 id);
+    void _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(void* self, void* a, void* p);
+    void _ZN8dActor_c8PoofDustEv(void* self);
     void _ZN6Player16IncMegaKillCountEv(void* p);
     void func_02012694(int a, void* p);
-    void _ZN5Actor24KillAndTrackInDeathTableEv(void* self);
+    void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* self);
     int func_ov002_020c5cd8(void* a, void* self);
     void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, u32 a, int f, u32 c, u32 d, u32 e);
 }
@@ -32,16 +32,16 @@ extern "C" void func_ov032_021113fc(void* self)
 
     u32 id1 = *(u32*)(c+0x134);
     if (id1 != 0) {
-        u8* f = (u8*)_ZN5Actor10FindWithIDEj(id1);
+        u8* f = (u8*)_ZN8dActor_c10FindWithIDEj(id1);
         int isbf = (int)(*(u16*)(f+0xc) == 0xbf);
         if (isbf) {
             if (*(u8*)(f+0x6fb) != 0) return;
             if (*(s32*)(c+0x130) & 0x10) {
-                _ZN12dEnemyBase_c22SpawnMegaCharParticlesER5ActorPc(self, f, 0);
-                _ZN5Actor8PoofDustEv(self);
+                _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(self, f, 0);
+                _ZN8dActor_c8PoofDustEv(self);
                 _ZN6Player16IncMegaKillCountEv(f);
                 func_02012694(0x1e, (void*)(c+0x74));
-                _ZN5Actor24KillAndTrackInDeathTableEv(self);
+                _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
                 return;
             }
             if (*(u8*)(c+0x428) != 0) {
@@ -61,15 +61,15 @@ extern "C" void func_ov032_021113fc(void* self)
 
     u32 id2 = *(u32*)(c+0x174);
     if (id2 == 0) return;
-    u8* f2 = (u8*)_ZN5Actor10FindWithIDEj(id2);
+    u8* f2 = (u8*)_ZN8dActor_c10FindWithIDEj(id2);
     int isbf2 = (int)(*(u16*)(f2+0xc) == 0xbf);
     if (isbf2 == 0) return;
 
     if (*(s32*)(c+0x170) & 0x10) {
-        _ZN12dEnemyBase_c22SpawnMegaCharParticlesER5ActorPc(self, f2, 0);
-        _ZN5Actor8PoofDustEv(self);
+        _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(self, f2, 0);
+        _ZN8dActor_c8PoofDustEv(self);
         _ZN6Player16IncMegaKillCountEv(f2);
-        _ZN5Actor24KillAndTrackInDeathTableEv(self);
+        _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
         return;
     }
 

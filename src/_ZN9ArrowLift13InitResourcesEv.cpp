@@ -22,7 +22,7 @@ extern "C" void func_020393c4(int* p, int v);
 extern SharedFilePtr data_ov029_02114250;
 extern SharedFilePtr data_ov029_02114248;
 extern CLPS_Block data_ov029_0211302c;
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
 int ArrowLift::InitResources()
 {
@@ -43,7 +43,7 @@ int ArrowLift::InitResources()
         short* p = (short*)((unsigned long long)((int)c + 0x94));
         short val = *p;
         int* arg0_1 = (int*)(c + 0x124);
-        int arg1_1 = (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+        int arg1_1 = (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
         *p = (short)(val + 0x4000);
         func_020393d4(arg0_1, arg1_1);
     }

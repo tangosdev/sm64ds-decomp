@@ -15,7 +15,7 @@ void Matrix4x3_FromRotationY(void* m, int angle);
 void MulVec3Mat4x3(Vector3* v, void* m, Vector3* out);
 void Vec3_Add(Vector3* out, Vector3* a, Vector3* b);
 void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, Vector3* v, void* a);
+void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, Vector3* v, void* a);
 int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
 int IsStarCollectedInCurLevel(int starID);
 void _ZN13RaycastGroundD1Ev(RaycastGround* self);
@@ -60,7 +60,7 @@ int KnockDownPlank::InitResources()
     Vec3_Add(&c, &b, (Vector3 *)&mPosX);
     c.y += 0x14000;
     _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &c, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &c, 0);
     unk_384 = c.y;
     if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0)
         unk_384 = rg.clsnY;

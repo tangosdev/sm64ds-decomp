@@ -86,14 +86,14 @@ struct SignPost : dBgActor_c {
        without a key function, so no translation unit that merely includes this
        header emits _ZTV8SignPost. The out-of-line D1 and D0 at ov002 0x020badd0
        and 0x020bae2c are still C translation units defining extern "C" free
-       functions under the mangled names, exactly as include/Actor.h describes;
+       functions under the mangled names, exactly as include/dActor_c.h describes;
        neither defines SignPost::~SignPost. */
     virtual ~SignPost() {}
 
     /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). This class
        overrides it: _ZTV8SignPost (ov002 0x02109af8) carries 0x020bb3b8 at
        vtable + 0x7c where _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv, and slot 30
-       is Actor's 0x020100dc in both. It adds no slot and no field, so the size
+       is dActor_c's 0x020100dc in both. It adds no slot and no field, so the size
        assert below is unaffected.
 
        It is also this class's KEY FUNCTION, the destructor above being inline,

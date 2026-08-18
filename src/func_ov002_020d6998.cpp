@@ -31,7 +31,7 @@ extern int func_ov002_020bea7c(char* c);
 extern int _ZN6Player15IsCollectingCapEv(char* self);
 extern int func_ov002_020d6dac(char* self);
 extern void func_ov002_020d71ec(char* self, int arg1);
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern int func_ov002_020d6c60(char* self, void* other);
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern void Vec3_RotateYAndTranslate(int* out, int* in, s16 angle, int* src);
@@ -78,7 +78,7 @@ int func_ov002_020d6998(char* self)
     if (*(u32*)(self + 0x360) != 0) goto fail;
     id = *(u32*)(self + 0x338);
     if (id == 0) goto fail;
-    other = _ZN5Actor10FindWithIDEj(id);
+    other = _ZN8dActor_c10FindWithIDEj(id);
     if (other == 0) goto fail;
     if (other == self) goto fail;
 

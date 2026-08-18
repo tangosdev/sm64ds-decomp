@@ -19,7 +19,7 @@ extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *p, int kcl, void *mtx, int fix, short s, void *clps);
 extern void func_020393d4(void *p, int v);
 extern void func_020393c4(void *p, int v);
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_[];
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_[];
 extern void func_ov045_021114c8(void*, int);
 }
 
@@ -33,7 +33,7 @@ s32 FireSeaElevator::InitResources() {
   f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov045_02113180);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     c+0x124, f, c+0x2ec, 0x199, self->unk_08e, data_ov045_021125d0);
-  func_020393d4(c+0x124, (int)_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4(c+0x124, (int)_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
   func_020393c4(c+0x124, (int)func_ov045_021114c8);
   *(short*)(c+0x300+0x24) = 0;
   self->unk_327 = 0;

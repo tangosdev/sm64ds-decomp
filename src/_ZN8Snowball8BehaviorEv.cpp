@@ -9,10 +9,10 @@ struct M { char pad[8]; PMF pmf; };
 struct CylinderClsn;
 struct WithMeshClsn;
 extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
-extern "C" void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, CylinderClsn *cc);
+extern "C" void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, CylinderClsn *cc);
 extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
 extern "C" void _ZN12CylinderClsn5ClearEv(CylinderClsn *self);
-extern "C" void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern "C" void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern "C" void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
 
 int Snowball::Behavior()
@@ -28,12 +28,12 @@ int Snowball::Behavior()
     int tmp = unk_0ac;
     mVertSpeed = hi;
     unk_0ac = tmp;
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsn));
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsn));
     _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 0);
     mAngleY = mPrevAngleY;
     func_ov081_02126224(((char *)this));
     _ZN12CylinderClsn5ClearEv((CylinderClsn *)((char *)&mMovingCylinderClsn));
-    void *p = _ZN5Actor13ClosestPlayerEv(((char *)this));
+    void *p = _ZN8dActor_c13ClosestPlayerEv(((char *)this));
     if (p != 0 && *(unsigned char *)((char *)p + 0x6fb) == 0)
         _ZN12CylinderClsn6UpdateEv((CylinderClsn *)((char *)&mMovingCylinderClsn));
     return 1;

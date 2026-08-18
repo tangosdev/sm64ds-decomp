@@ -31,7 +31,7 @@ extern SharedFilePtr data_ov064_0211c730;
 extern SharedFilePtr data_ov064_0211c728;
 extern CLPS_Block data_ov064_0211bb6c;
 extern "C" {
-extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 }
 
 struct V3 { int x, y, z; };
@@ -62,7 +62,7 @@ s32 MetalNetLift::InitResources() {
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         self + 0x124, kcl, (Matrix4x3 *)(self + 0x2ec), 0x199, *(short *)(self + 0x8e), &data_ov064_0211bb6c);
 
-    func_020393d4(self + 0x124, (void *)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(self + 0x124, (void *)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4(self + 0x124, (void *)&func_ov064_02117fd4);
 
     _ZN7PathPtr6FromIDEj(self + 0x360, *(int *)(self + 8) & 0xf);

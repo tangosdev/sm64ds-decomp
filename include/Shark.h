@@ -56,7 +56,7 @@ struct Shark {
     u8  pad_000[0x8];
     s32 mParam;            /* 0x008 */
     u8  pad_00c[0x50];
-    /* 0x05c..0x08c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x05c..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_05c;                 /* 0x05c */
     s32 mPosY;                   /* 0x060 */

@@ -11,7 +11,7 @@
  * daObjFlMaruta_c's or daObjHmMaruta_c's; both leaves inherit it.
  * include/daObjMaruta_c.h's banner already says so from the other direction.
  *
- * SIGNATURE FROM include/Actor.h's OWN SLOT 27, `virtual int
+ * SIGNATURE FROM include/dActor_c.h's OWN SLOT 27, `virtual int
  * OnHitByMegaChar(Player &player)`, which is where the name comes from. The
  * pre-migration stub returned void and took the player as `void *`; the ROM
  * sets no r0 here either, so the declared `int` return compiles to the same

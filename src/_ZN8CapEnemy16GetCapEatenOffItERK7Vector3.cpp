@@ -17,7 +17,7 @@
  */
 #include "CapEnemy.h"
 
-struct Actor;
+struct dActor_c;
 
 extern "C" {
 extern void func_ov001_020ab228(unsigned char *a, unsigned char *b, unsigned char idx, int e, unsigned char f);

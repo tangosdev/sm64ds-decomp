@@ -7,7 +7,7 @@ void _ZN9ModelAnimD1Ev(void*);
 void __destroy_arr(void*,int,int,void*);
 void _ZN18MovingMeshColliderD1Ev(void*);
 void _ZN5ModelD1Ev(void*);
-void _ZN5ActorD2Ev(void*);
+void _ZN8dActor_cD2Ev(void*);
 }
 extern "C" int func_ov036_02112158(char* c){
   *(int**)c=(int*)data_ov036_02113f9c;
@@ -17,6 +17,6 @@ extern "C" int func_ov036_02112158(char* c){
   *(int**)c=(int*)_ZTV10dBgActor_c;
   _ZN18MovingMeshColliderD1Ev(c+0x124);
   _ZN5ModelD1Ev(c+0xd4);
-  _ZN5ActorD2Ev(c);
+  _ZN8dActor_cD2Ev(c);
   return (int)c;
 }

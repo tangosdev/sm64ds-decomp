@@ -19,11 +19,11 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern "C" {
 extern void func_020393d4(int *p, int v);
 extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void _ZN13RaycastGroundD1Ev(void *self);
 }
-extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
 
 struct Vec3 { int x, y, z; };
@@ -60,7 +60,7 @@ int TTC_MovingBar::InitResources()
         mAngleY,
         *(void **)(data_ov065_0211d364 + i * 0xc));
 
-    func_020393d4((int *)((char *)&(*(u8 *)&mMeshCollider)), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int *)((char *)&(*(u8 *)&mMeshCollider)), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
 
     pos.x = mPosX;
     pos.y = mPosY;
@@ -68,7 +68,7 @@ int TTC_MovingBar::InitResources()
     pos.y = pos.y - 0xa000;
 
     _ZN13RaycastGroundC1Ev(raycast);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(raycast, &pos, (void *)0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(raycast, &pos, (void *)0);
     unk_320 = pos.y;
     if (_ZN13RaycastGround10DetectClsnEv(raycast))
         unk_320 = *(int *)(raycast + 0x44);

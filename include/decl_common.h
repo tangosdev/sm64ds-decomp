@@ -420,7 +420,7 @@ extern int _ZN16MeshColliderBase9IsEnabledEv(void*);
 extern int _ZN4cstd3absEi(int);
 extern int _ZN4cstd3divEii(int, int);
 extern int _ZN4cstd3modEii(int, int);
-extern int _ZN5Sound20PlaySmallSecretSoundEP5ActorPt(void*, u16*);
+extern int _ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt(void*, u16*);
 extern int _ZN6Memory25isRootHeapIterInitializedE;
 extern int _ZTV10BigBooIcon[];
 extern int _ZTV10BowserFire[];

@@ -1,7 +1,7 @@
 //cpp
 extern "C" void DeathTable_ClearBit(int id);
 
-class Actor {
+class dActor_c {
 public:
     char pad[0xce];
     short deathTableId;
@@ -9,7 +9,7 @@ public:
     void UntrackInDeathTable();
 };
 
-void Actor::UntrackInDeathTable()
+void dActor_c::UntrackInDeathTable()
 {
     DeathTable_ClearBit(deathTableId);
 }

@@ -9,10 +9,10 @@ enum Bool { FALSE, TRUE };
 struct RaycastGround { char buf[0x44]; int f44; char rest[8]; };
 
 extern "C" {
-extern void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
+extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
 extern int _ZN11ShadowModel10InitCuboidEv(void *self);
 extern void Vec3_Add(Vector3 *out, Vector3 *a, Vector3 *b);
-extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
+extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
 extern void Matrix4x3_FromRotationY(struct Matrix4x3 *m, short angY);
 extern void MulVec3Mat4x3(const Vector3 *v, const struct Matrix4x3 *m, Vector3 *out);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
@@ -23,7 +23,7 @@ extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern void func_020393d4(void *p, void *v);
 extern void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const Vector3 *v, void *a);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround *self, const Vector3 *v, void *a);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
 }
@@ -32,7 +32,7 @@ extern signed char data_0209f2f8;
 extern struct Matrix4x3 data_020a0e68;
 extern void *data_ov091_02134c30[];
 extern void *data_ov091_02134c34[];
-extern void *_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern void *_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
 int RotatingUpDownPlatformUtm::InitResources()
 {
@@ -48,7 +48,7 @@ int RotatingUpDownPlatformUtm::InitResources()
     if (mSpawnParam == 0xffff) {
         int *p = (int*)(((int)((char *)this) + 0xb0));
         *p = *p & ~2;
-        _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(((char *)this), 0, 0x1000, 0, 0);
+        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(((char *)this), 0, 0x1000, 0, 0);
         return 1;
     }
 
@@ -77,7 +77,7 @@ int RotatingUpDownPlatformUtm::InitResources()
         Vec3_Add(&v, (Vector3*)((char *)&mBasePos), (Vector3*)(tbl + i * s));
         i = (unsigned char)((char *)this)[0x395];
         v.y += *(int*)(data_ov091_02134d1c + i * s);
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x1d, 0xffff, &v, 0, mAreaId, -1);
+        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x1d, 0xffff, &v, 0, mAreaId, -1);
     }
 
     Matrix4x3_FromRotationY(&data_020a0e68, mAngleY);
@@ -109,7 +109,7 @@ int RotatingUpDownPlatformUtm::InitResources()
         ((char *)this) + 0x124, kcl, ((char *)this) + 0x2ec, 0x199, mAngleY,
         *(void**)((char*)data_ov091_02134c38 + idx395 * 0xc));
 
-    func_020393d4(((char *)this) + 0x124, &_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(((char *)this) + 0x124, &_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
 
     posVec.x = mPosX;
     posVec.y = mPosY;
@@ -117,7 +117,7 @@ int RotatingUpDownPlatformUtm::InitResources()
     posVec.y -= 0x14000;
 
     _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &posVec, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &posVec, 0);
     unk_37c = posVec.y;
     if (_ZN13RaycastGround10DetectClsnEv(&rg))
         unk_37c = rg.f44;

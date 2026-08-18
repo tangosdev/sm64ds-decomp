@@ -8,7 +8,7 @@
 /* daPgDfdr_c::Behavior - recovered from vtable slot identity */
 extern "C" {
 extern void _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void* t, int a, int b);
-extern void* _ZN5Actor13ClosestPlayerEv(void* c);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern void _ZN9Animation7AdvanceEv(void* a);
 extern void _ZN12CylinderClsn5ClearEv(void* a);
 extern void _ZN12CylinderClsn6UpdateEv(void* a);
@@ -17,7 +17,7 @@ extern void func_ov027_02111994(char* c);
 int func_ov027_02111e34(char* c){
   _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0);
   func_ov027_02111cfc(c);
-  if(_ZN6Player16IsInsideOfCannonEv(_ZN5Actor13ClosestPlayerEv(c))){
+  if(_ZN6Player16IsInsideOfCannonEv(_ZN8dActor_c13ClosestPlayerEv(c))){
     *(int *)(((int)c + 0xb0)) &= ~2;
   } else {
     *(int *)(((int)c + 0xb0)) |= 2;

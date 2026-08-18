@@ -9,7 +9,7 @@ typedef struct { s32 x, y, z; } Vec3;
 
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char *self, s32 a, s32 b);
 extern void func_02012694(s32 a, void *b);
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(char *self, Vec3 *pos, s32 fix);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(char *self, Vec3 *pos, s32 fix);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 slot, u32 effect, s32 x, s32 y, s32 z, const void *rot, void *cb);
 extern s16 data_02082214[];
@@ -107,7 +107,7 @@ int func_ov025_021113f0(char *self)
             loc[3] = *(s32 *)(self + 0x5c);
             loc[4] = *(s32 *)(self + 0x60);
             loc[5] = *(s32 *)(self + 0x64);
-            _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(self, (Vec3 *)&loc[3], 0x3e8000);
+            _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(self, (Vec3 *)&loc[3], 0x3e8000);
         }
 
         loc[0] = *(s32 *)(self + 0x5c);

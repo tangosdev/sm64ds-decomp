@@ -16,8 +16,8 @@ struct BlendModelAnim {
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" int _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *, BCA_File& f, int a, int b, Fix12 spd, unsigned short t);
 
-struct Actor {
-    static Actor* FindWithID(unsigned int id);
+struct dActor_c {
+    static dActor_c* FindWithID(unsigned int id);
     static unsigned int Spawn(unsigned int a, unsigned int b, const Vector3& pos,
                        const Vector3_16* rot, signed char e, short f);
 };
@@ -71,10 +71,10 @@ struct Obj {
 
 extern "C" int func_ov062_0211b930(Obj* o)
 {
-    Actor* found;
+    dActor_c* found;
     _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(&(o->anim), *data_ov062_0211e10c.f, 4, 0x40000000, 0x1000, 0);
     o->f43c = 1;
-    if (o->f44c != 0 && (found = Actor::FindWithID(o->f44c)) != 0) {
+    if (o->f44c != 0 && (found = dActor_c::FindWithID(o->f44c)) != 0) {
         Found* f = (Found*)found;
         f->f9c = -0x2000;
         f->fa0 = -0x32000;
@@ -82,9 +82,9 @@ extern "C" int func_ov062_0211b930(Obj* o)
         if (o->f468 == 1) {
             ((fBase_c*)found)->MarkForDestruction();
             if (o->f448 != 2) {
-                Actor::Spawn(0xb2, o->f46c | 0x40, o->f5c, &o->f8c, o->fcc, -1);
+                dActor_c::Spawn(0xb2, o->f46c | 0x40, o->f5c, &o->f8c, o->fcc, -1);
             } else {
-                Actor::Spawn(0xb3, 0x10, o->f5c, &o->f8c, o->fcc, -1);
+                dActor_c::Spawn(0xb3, 0x10, o->f5c, &o->f8c, o->fcc, -1);
                 o->f468 = 0;
             }
         } else {

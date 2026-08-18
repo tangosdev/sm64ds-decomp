@@ -9,7 +9,7 @@ struct KCL_File;
 struct CLPS_Block;
 struct MeshCollider;
 struct ObjTable;
-struct Actor;
+struct dActor_c;
 struct fBase_c;
 
 struct LVL_SubTbl {
@@ -62,7 +62,7 @@ void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
         _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(f);
         _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(mc, f, ovl->clps);
         func_0202a850(_ZNK12MeshCollider16GetOctreeOriginYEv(mc), _ZNK12MeshCollider13GetUnkOctreeYEv(mc));
-        ((MeshColliderBase *)(mc))->Enable((Actor *)(0));
+        ((MeshColliderBase *)(mc))->Enable((dActor_c *)(0));
     }
 
     data_ov002_0211118c = 0;

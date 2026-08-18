@@ -64,7 +64,7 @@ int CastleWater::InitResources()
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider, kcl, mMatrix, 0x1000, mAngleY, data_ov009_02112c38);
     }
-    ((MeshColliderBase *)&mMeshCollider)->Enable((Actor *)(self));
+    ((MeshColliderBase *)&mMeshCollider)->Enable((dActor_c *)(self));
     {
         int v = mPosY - 0x64000;
         if (data_0209f32c > v) data_0209f32c = v;

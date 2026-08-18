@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* actor);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, struct Vector3* v, unsigned int d);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
@@ -26,7 +26,7 @@ int func_ov073_0211fc78(char* c) {
     void* player;
     void* cam;
 
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     *(unsigned int*)(c + 0x500) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned int*)(c + 0x500), 3, 0x170, (struct Vector3*)(c + 0x74), 0);
     if (player == 0) return 1;
 

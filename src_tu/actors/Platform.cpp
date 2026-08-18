@@ -42,7 +42,7 @@
  *
  * The two IsClsnInRange* names claim `Fix12<int>` parameters BY VALUE. That
  * claim is a reconstruction, not a measurement -- the cartridge's RTTI carries
- * class names only, never parameter types -- and include/Actor.h section
+ * class names only, never parameter types -- and include/dActor_c.h section
  * "Methods whose mangled names carry a by-value class parameter" records the
  * measured consequence of believing it: CW homes a class-typed by-value
  * parameter to the stack, costing +0x14, so the real-method form misses. Note
@@ -58,8 +58,8 @@
  * the implicit one, and this TU cannot measure that blast radius on its own.
  *
  * KillByMegaChar's name claims `Player&` and the header agrees, but its legacy
- * body reaches five unnamed Actor fields (0x098, 0x09c, 0x0a0, 0x0a8) by raw
- * offset and calls Actor::Earthquake, which takes a by-value Fix12<int> and so
+ * body reaches five unnamed dActor_c fields (0x098, 0x09c, 0x0a0, 0x0a8) by raw
+ * offset and calls dActor_c::Earthquake, which takes a by-value Fix12<int> and so
  * hits the same homing rule. Left in legacy form.
  */
 #include "dBgActor_c.h"
@@ -81,13 +81,13 @@
  */
 extern "C" {
 extern int   _ZTV10dBgActor_c[];
-extern int  *_ZN5ActorC2Ev(int *thiz);
+extern int  *_ZN8dActor_cC2Ev(int *thiz);
 extern void  _ZN5ModelC1Ev(void *thiz);
 extern void  _ZN18MovingMeshColliderC1Ev(void *thiz);
 
 int *_ZN10dBgActor_cC2Ev(int *t)
 {
-    _ZN5ActorC2Ev(t);
+    _ZN8dActor_cC2Ev(t);
     t[0] = (int)(_ZTV10dBgActor_c + 2);
     _ZN5ModelC1Ev((char *)t + 0xd4);
     _ZN18MovingMeshColliderC1Ev((char *)t + 0x124);
@@ -100,7 +100,7 @@ int *_ZN10dBgActor_cC2Ev(int *t)
 /* ------------------------------------------------------------------------- */
 /* recovered: named members + shared header */
 extern "C" {
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern int   Vec3_Dist(void *a, void *b);
 
 int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self, int a, int b)
@@ -113,7 +113,7 @@ int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self,
     }
     if (a == 0) {
         if (!((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
-            ((MeshColliderBase *)(((char *)self) + 0x124))->Enable((Actor *)(((char *)self)));
+            ((MeshColliderBase *)(((char *)self) + 0x124))->Enable((dActor_c *)(((char *)self)));
         goto done;
     }
     {
@@ -123,7 +123,7 @@ int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self,
     v.z = self->mPosZ;
     if (b == 0) v.y = v.y + self->unk_0b4;
     else v.y = v.y + b;
-    void *p = _ZN5Actor13ClosestPlayerEv(((char *)self));
+    void *p = _ZN8dActor_c13ClosestPlayerEv(((char *)self));
     int d = Vec3_Dist(&v, (char *)p + 0x5c);
     if (d > a) {
         if (((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
@@ -131,7 +131,7 @@ int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self,
         return 0;
     }
     if (!((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
-        ((MeshColliderBase *)(((char *)self) + 0x124))->Enable((Actor *)(((char *)self)));
+        ((MeshColliderBase *)(((char *)self) + 0x124))->Enable((dActor_c *)(((char *)self)));
     }
 done:
     return 1;
@@ -151,7 +151,7 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(struct dBgActor_c *self, int a, 
     if (a == 0) a = self->unk_0b8 << 3;
     if (b == 0) v.y = v.y + self->unk_0b4;
     else v.y = v.y + b;
-    void *p = _ZN5Actor13ClosestPlayerEv(((char *)self));
+    void *p = _ZN8dActor_c13ClosestPlayerEv(((char *)self));
     int d = Vec3_Dist(&v, (char *)p + 0x5c);
     if (d > a) {
         if (((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
@@ -159,7 +159,7 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(struct dBgActor_c *self, int a, 
         return 0;
     }
     if (!((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
-        ((MeshColliderBase *)(((char *)self) + 0x124))->Enable((Actor *)(((char *)self)));
+        ((MeshColliderBase *)(((char *)self) + 0x124))->Enable((dActor_c *)(((char *)self)));
     return 1;
 }
 }
@@ -216,7 +216,7 @@ void dBgActor_c::UpdateClsnPosAndRot()
 /* recovered: real C++ method.
  *
  * The legacy file reached every field through its own flat shadow structs -- a
- * `dBgActor_c` that was one big char array, its own `Actor`, `Vector3`,
+ * `dBgActor_c` that was one big char array, its own `dActor_c`, `Vector3`,
  * `Matrix4x3` and a 32-slot `PlatformVT` whose only used entry was v31. All of
  * those are now the real types: v31 is dBgActor_c::Kill (the slot this class
  * adds), and the raw 0x8c/0x8e/0x90/0x94 stores are mAngleX/mAngleY/mAngleZ/
@@ -249,7 +249,7 @@ extern Matrix4x3 data_020a0e68;
 struct RaycastLine {
     RaycastLine();
     ~RaycastLine();
-    void SetObjAndLine(Vector3 const &a, Vector3 const &b, Actor *c);
+    void SetObjAndLine(Vector3 const &a, Vector3 const &b, dActor_c *c);
     int  DetectClsn();
     char buf[0x78];
 };
@@ -334,7 +334,7 @@ void func_ov002_020ee5d0(unsigned char *self, int arg)
 /* ------------------------------------------------------------------------- */
 /* ROM ordinal 3 -- dBgActor_c::Kill, 0x020ee55c, size 0x74                     */
 /* ------------------------------------------------------------------------- */
-/* THE SLOT THIS CLASS ADDS, and this TU's key function. Actor's table ends at
+/* THE SLOT THIS CLASS ADDS, and this TU's key function. dActor_c's table ends at
  * slot 30; Kill is the one new virtual dBgActor_c declares, and 97 of the 101
  * classes deriving from it have exactly 32 slots because of this function.
  * Being the key function is also why THIS file emits _ZTV10dBgActor_c,
@@ -381,10 +381,10 @@ void dBgActor_c::Kill()
 /* ROM ordinal 2 -- KillByMegaChar, 0x020ee4b0, size 0xac                     */
 /* ------------------------------------------------------------------------- */
 /* Legacy form -- see the header comment for why this one is not a real method
-   yet. Actor::Earthquake takes a by-value Fix12<int>, so the true-signature
+   yet. dActor_c::Earthquake takes a by-value Fix12<int>, so the true-signature
    declaration is the thing that would cost bytes, not the offsets. */
 extern "C" {
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *thiz, struct Vector3 *v, int f);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *thiz, struct Vector3 *v, int f);
 extern short Vec3_HorzAngle(struct Vector3 *a, struct Vector3 *b);
 extern int _ZN16MeshColliderBase9IsEnabledEv(void *c);
 extern void _ZN16MeshColliderBase7DisableEv(void *c);
@@ -395,7 +395,7 @@ void _ZN10dBgActor_c14KillByMegaCharER6Player(char *c, char *player)
     v.x = *(int *)(c + 0x5c);
     v.y = *(int *)(c + 0x60);
     v.z = *(int *)(c + 0x64);
-    _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, &v, 0x5dc000);
+    _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &v, 0x5dc000);
     *(unsigned char *)(c + 0x31c) = 1;
     *(int *)(c + 0x9c) = -0x2000;
     *(int *)(c + 0xa0) = -0x3c000;

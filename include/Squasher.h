@@ -5,8 +5,8 @@
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to dBgActor_c.
- * Everything this header used to restate below 0x31e was Actor's and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
  * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
@@ -51,7 +51,7 @@ struct Squasher {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0xc];
-    /* 0x074..0x08c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x074..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_074;                 /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */

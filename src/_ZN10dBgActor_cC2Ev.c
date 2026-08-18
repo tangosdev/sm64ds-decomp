@@ -8,7 +8,7 @@
 extern int _ZTV10dBgActor_c[];
 int *_ZN10dBgActor_cC2Ev(int *t)
 {
-    _ZN5ActorC2Ev(t);
+    _ZN8dActor_cC2Ev(t);
     t[0] = (int)_ZTV10dBgActor_c;
     _ZN5ModelC1Ev((char *)t + 0xd4);
     _ZN18MovingMeshColliderC1Ev((char *)t + 0x124);

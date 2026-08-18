@@ -1,8 +1,8 @@
-// Actor-hierarchy vtables (gate 9), per the vtable law (clsn_vtable.cpp):
+// dActor_c-hierarchy vtables (gate 9), per the vtable law (clsn_vtable.cpp):
 // MSVC slot order. include/fBase_c.h declares the dtor LAST, so MSVC and
 // the ROM agree on slots 0..15 and diverge only at the tail -- the header
 // was built for exactly this. Lifecycle slots forward to the class's own
-// overrides where they exist and to the fBase_c/Actor defaults where
+// overrides where they exist and to the fBase_c/dActor_c defaults where
 // they do not; the tail traps.
 //
 // Base-class vtable symbols the ctor chain installs and then overwrites
@@ -76,7 +76,7 @@ extern "C" void *_ZTV14ArrowSignRight[20] = {
 // Base vtables the ctor chain installs transiently: storage only.
 extern "C" {
 void *_ZTV17ExclamationSwitch[20];
-int data_0208e4b8[20];   /* fBase_c-era vtable-ish install in Actor ctor */
+int data_0208e4b8[20];   /* fBase_c-era vtable-ish install in dActor_c ctor */
 int data_0208e3a4[20];
 }
 

@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN5Actor11UntrackStarERa
-/* Actor::UntrackStar(s8 &starID) at 0x0200ff60.
+// @symbol _ZN8dActor_c11UntrackStarERa
+/* dActor_c::UntrackStar(s8 &starID) at 0x0200ff60.
  *
  * Releases the star-marker slot named by starID and writes -1 back through the
  * reference so the caller's field records "no slot". A negative value already
@@ -11,11 +11,11 @@
  * handed straight to SetStarMarker without a reload, which is why the slot
  * argument needs no conversion here either.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
-extern "C" void SetStarMarker(s32 slot, Actor *actor, s32 markerType);
+extern "C" void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
 
-void Actor::UntrackStar(s8 &starID)
+void dActor_c::UntrackStar(s8 &starID)
 {
     s8 slot = starID;
     if (slot < 0)

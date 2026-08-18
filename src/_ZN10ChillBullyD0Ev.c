@@ -4,7 +4,7 @@
  *
  * It used to carry the recovered name `daIDonketu_c::OnYoshiTryEat`, which was
  * off by one slot: OnYoshiTryEat is slot 18 and this class does not override it
- * (slot 18 is still _ZN5Actor13OnYoshiTryEatEv). The body settles it anyway -- it
+ * (slot 18 is still _ZN8dActor_c13OnYoshiTryEatEv). The body settles it anyway -- it
  * tears the object down and then calls Memory::Deallocate, which no eat handler does.
  */
 #include "decl_ModelAnim.h"

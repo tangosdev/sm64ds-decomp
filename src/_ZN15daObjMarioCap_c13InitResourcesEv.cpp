@@ -9,9 +9,9 @@ extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *sfp);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *bmd, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void *thiz);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *thiz, void *actor, s32 f1, s32 f2, u32 a, u32 b);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
-extern int _ZN5Actor13ClosestPlayerEv(void *thiz);
+extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, s32 f1, s32 f2, u32 a, u32 b);
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
+extern int _ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void func_ov002_020b7f2c(void *c, void *p);
 extern void func_ov002_020b7f7c(void *thiz);
 extern void func_ov001_020ab228(void *c, void *a1, int idx, int a3, int a5);
@@ -95,8 +95,8 @@ int daObjMarioCap_c::InitResources()
 
     flag = 0;
 
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x1e000, 0x1e000, 0x800002, 0);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x1e000, 0x16000, 0, 0);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x1e000, 0x1e000, 0x800002, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x1e000, 0x16000, 0, 0);
 
     unk_3c4 = mPosX;
     unk_3c8 = mPosY;
@@ -128,7 +128,7 @@ int daObjMarioCap_c::InitResources()
         break;
     case 19:
         unk_400 = 0xff;
-        unk_3c0 = _ZN5Actor13ClosestPlayerEv(((char *)this));
+        unk_3c0 = _ZN8dActor_c13ClosestPlayerEv(((char *)this));
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df54);
         unk_401 = 1;
         break;

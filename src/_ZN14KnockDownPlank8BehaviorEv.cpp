@@ -3,7 +3,7 @@ extern "C" {
 struct Vector3 { int x, y, z; };
 
 extern short data_02082214[];
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *self, struct Vector3 *v, int f);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, struct Vector3 *v, int f);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, struct Vector3 *v);
 extern void func_ov015_0211166c(char *t);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
@@ -48,7 +48,7 @@ int _ZN14KnockDownPlank8BehaviorEv(char *c)
                 pos.x = *(int *)(c + 0x5c);
                 pos.y = *(int *)(c + 0x60);
                 pos.z = *(int *)(c + 0x64);
-                _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, &pos, 0x2000000);
+                _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &pos, 0x2000000);
                 _ZN5Sound9PlayBank3EjRK7Vector3(0x44, (struct Vector3 *)(c + 0x74));
             }
         } else {
@@ -68,7 +68,7 @@ int _ZN14KnockDownPlank8BehaviorEv(char *c)
                 pos.x = *(int *)(c + 0x5c);
                 pos.y = *(int *)(c + 0x60);
                 pos.z = *(int *)(c + 0x64);
-                _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, &pos, 0x2000000);
+                _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &pos, 0x2000000);
                 _ZN5Sound9PlayBank3EjRK7Vector3(0x44, (struct Vector3 *)(c + 0x74));
             }
         }

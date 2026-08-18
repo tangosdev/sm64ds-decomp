@@ -1,14 +1,14 @@
 //cpp
-/* Actor::OnGroundPounded(Actor&) at 0x02010148, 4 bytes -- vtable slot 21.
+/* dActor_c::OnGroundPounded(dActor_c&) at 0x02010148, 4 bytes -- vtable slot 21.
  *
  * A bare `bx lr`. The base actor does not react to a ground pound; leaf classes override.
  *
- * The declared `int` return is include/Actor.h's and is not observable here:
+ * The declared `int` return is include/dActor_c.h's and is not observable here:
  * the ROM sets no r0, so `int` and `void` compile to the same one instruction.
- * See src/_ZN5Actor8OnPushedERS_.cpp for the full note.
+ * See src/_ZN8dActor_c8OnPushedERS_.cpp for the full note.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
-int Actor::OnGroundPounded(Actor &pounder)
+int dActor_c::OnGroundPounded(dActor_c &pounder)
 {
 }

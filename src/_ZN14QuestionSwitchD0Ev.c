@@ -17,7 +17,7 @@ int *_ZN14QuestionSwitchD0Ev(struct QuestionSwitch *self) {
     ((int *)self)[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)&self->unk_124);
     _ZN5ModelD1Ev((char *)&self->mModel);
-    _ZN5ActorD2Ev(((int *)self));
+    _ZN8dActor_cD2Ev(((int *)self));
     _ZN6Memory10DeallocateEPvP4Heap(((int *)self), data_020a0eac);
     return ((int *)self);
 }

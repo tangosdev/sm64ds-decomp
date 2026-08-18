@@ -17,7 +17,7 @@ int _ZN6Player18HasFinishedTalkingEv(void* self);
 void _ZN7Message7EndTalkEv(void);
 void _ZN7Message13DisplaySavingEt(unsigned short a);
 void StartMinigameMenu(unsigned char a);
-void* _ZN5Actor10FindWithIDEj(unsigned int id);
+void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 int AngleDiff(int a, int b);
 int _ZN6Player9StartTalkER7fBase_cb(void* actor, void* self, int b);
@@ -105,7 +105,7 @@ extern "C" int _ZN15RecRoomCupboard8BehaviorEv(char* self)
             char* entry = self + (i << 6);
             if (*(int*)(entry + 0xf4) & 0x8000000) {
                 u32 id = *(u32*)(entry + 0xf8);
-                char* actor = (char*)_ZN5Actor10FindWithIDEj(id);
+                char* actor = (char*)_ZN8dActor_c10FindWithIDEj(id);
                 if (actor) {
                     int isMatch = (*(u16*)(actor + 0xc) == 0xbf);
                     if (isMatch != false) {

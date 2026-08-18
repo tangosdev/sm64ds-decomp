@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN5Actor11SpawnNumberERK7Vector3jbtPS_
-/* Actor::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
- *                    u16 delay, Actor *owner) at 0x02010044.
+// @symbol _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_
+/* dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
+ *                    u16 delay, dActor_c *owner) at 0x02010044.
  *
  * Puts up actor 0x14a -- the floating number popup -- at pos, in this actor's
  * own area, then hands it to the helper that attaches it to `owner`.
@@ -21,14 +21,14 @@
  * single store offset. `owner` is `ldr` from the next stack slot and the
  * mangled name types it PS_, this class again.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
-extern "C" Actor *func_ov002_020f0918(Actor *number, Actor *owner);
+extern "C" dActor_c *func_ov002_020f0918(dActor_c *number, dActor_c *owner);
 
-Actor *Actor::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
-                          u16 delay, Actor *owner)
+dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
+                          u16 delay, dActor_c *owner)
 {
-    Actor *number;
+    dActor_c *number;
 
     if (packLowNibble)
         number = Spawn(0x14a, (value & 0xf) | 0x10, pos, 0, mAreaId, -1);

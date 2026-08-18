@@ -8,6 +8,6 @@
 int *WaterfallMist_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(220);
-    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV13WaterfallMist; }
+    if (p) { _ZN8dActor_cC2Ev(p); p[0] = (int)_ZTV13WaterfallMist; }
     return p;
 }

@@ -1,7 +1,7 @@
 extern int __destroy_arr(void*, int, int, void*);
 extern int _ZN18MovingMeshColliderD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
-extern int _ZN5ActorD2Ev(void*);
+extern int _ZN8dActor_cD2Ev(void*);
 extern int _ZN6Memory10DeallocateEPvP4Heap(void*, void*);
 extern void* _ZTV13daObjDorifu_c;
 extern void* _ZTV10dBgActor_c;
@@ -13,7 +13,7 @@ void* func_ov002_020b4a70(void* c) {
   *(void**)c = &_ZTV10dBgActor_c;
   _ZN18MovingMeshColliderD1Ev((char*)c+0x124);
   _ZN5ModelD1Ev((char*)c+0xd4);
-  _ZN5ActorD2Ev(c);
+  _ZN8dActor_cD2Ev(c);
   _ZN6Memory10DeallocateEPvP4Heap(c, *(void**)&data_020a0eac);
   return c;
 }

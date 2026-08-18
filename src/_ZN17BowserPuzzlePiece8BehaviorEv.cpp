@@ -7,7 +7,7 @@ struct Entry { PMF pmf; };
 extern Entry data_ov064_0211c904[];
 
 extern "C" void func_ov064_02118ee4(void* c);
-extern "C" char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern "C" char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void func_ov064_02119010(void* c);
 extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* c, Fix12i a, Fix12i b);
 extern "C" void func_ov064_02118fa4(void* c);
@@ -25,7 +25,7 @@ int BowserPuzzlePiece::Behavior() {
     char* p = 0;
     unsigned int id = *(unsigned int*)(cc + 0x320);
     if (id != 0)
-        p = _ZN5Actor10FindWithIDEj(id);
+        p = _ZN8dActor_c10FindWithIDEj(id);
     if (p == 0 || *(unsigned char*)(p + 0xd6) == 0) {
         unsigned short* ctr = (unsigned short*)(int)(cc + 0x334);
         *ctr = *ctr + 1;

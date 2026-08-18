@@ -6,8 +6,8 @@
 #include "SpinningPlatform.h"
 extern "C" void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
-extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
-struct BMD_File; struct KCL_File; struct Actor; struct Vector3; struct Matrix4x3;
+extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr;
 /* ModelBase is the real class now, through this actor's header. */
 struct ShadowModel { void InitCuboid(); };
@@ -24,7 +24,7 @@ struct RaycastGround {
     int result;       // offset 0x44
     int pad2[3];      // pad to 0x54 total
     RaycastGround();
-    void SetObjAndPos(const Vector3 &v, Actor *a);
+    void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
     ~RaycastGround();
 };
@@ -43,7 +43,7 @@ int SpinningPlatform::InitResources()
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         (char *)&mMeshCollider, (KCL_File*)kf,
         *(Matrix4x3*)((char *)&unk_2ec), 0x1000, mAngleY, data_ov035_02112238);
-    func_020393d4(((char *)this) + 0x124, (void*)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(((char *)this) + 0x124, (void*)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020396c0(((char *)this) + 0x124, 0);
     V3 v;
     v.x = mPosX;
@@ -51,7 +51,7 @@ int SpinningPlatform::InitResources()
     v.z = mPosZ;
     v.y = v.y - 0xa000;
     RaycastGround rg;
-    rg.SetObjAndPos(*(Vector3*)&v, (Actor*)0);
+    rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     unk_324 = v.y;
     if (rg.DetectClsn() != 0)
         unk_324 = rg.result;

@@ -1,5 +1,5 @@
 //cpp
-/* Actor::IsPlayerInRange(s32) at 0x020104dc, 0x3c bytes.
+/* dActor_c::IsPlayerInRange(s32) at 0x020104dc, 0x3c bytes.
  *
  * Is the nearest player within maxDist of this actor?
  *
@@ -14,7 +14,7 @@
  *
  * A member: `mov r5, r0` then `add r0, r5, #0x5c` measures from this actor's
  * own position. The old file reached that through a shadow
- * `struct Actor { char _pad[0x5c]; Vector3 pos; }`.
+ * `struct dActor_c { char _pad[0x5c]; Vector3 pos; }`.
  */
 #include "Player.h"
 
@@ -23,7 +23,7 @@ extern "C" {
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 }
 
-bool Actor::IsPlayerInRange(s32 maxDist)
+bool dActor_c::IsPlayerInRange(s32 maxDist)
 {
     Player *closest = ClosestPlayer();
 

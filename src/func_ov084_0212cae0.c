@@ -3,7 +3,7 @@
 #include "common.h"
 extern char *data_0209f318;
 extern struct Matrix4x3 data_020a0e68;
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(struct Vector3 *v, struct Matrix4x3 *m, struct Vector3 *out);
 extern void Vec3_Add(struct Vector3 *out, struct Vector3 *a, struct Vector3 *b);
@@ -20,7 +20,7 @@ int func_ov084_0212cae0(char *self)
     unsigned id = *(unsigned int *)(self + 0x198);
     cam = data_0209f318;
     if (id != 0) {
-        actor = _ZN5Actor10FindWithIDEj(id);
+        actor = _ZN8dActor_c10FindWithIDEj(id);
         if (actor != 0) goto body;
     }
     goto end;

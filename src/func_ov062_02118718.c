@@ -5,7 +5,7 @@ extern int Vec3_Dist(void *a, void *b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern unsigned char _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs(void *self, void *clsn, short *a);
 extern int RandomIntInternal(int *seed);
-extern int _ZN5Actor14GetSubtractionEss(void *self, short a, short b);
+extern int _ZN8dActor_c14GetSubtractionEss(void *self, short a, short b);
 extern int _Z14ApproachLinearRiii(int *a, int b, int c);
 extern void func_ov062_02117994(char *c, int idx);
 extern int data_0209e650;
@@ -47,7 +47,7 @@ void func_ov062_02118718(char *c)
 
         if (*(int*)(c + 0x3b8) > 0x320000 ||
             (other != 0 &&
-             _ZN5Actor14GetSubtractionEss(c, *(short*)(c + 0x3c2),
+             _ZN8dActor_c14GetSubtractionEss(c, *(short*)(c + 0x3c2),
                  (short)(*(short*)(c + 0x94) + 0x8000)) < 0x2000)) {
             _Z14ApproachLinearRsss((short*)(c + 0x94), *(short*)(c + 0x3c2), 0x600);
         } else {
@@ -62,7 +62,7 @@ void func_ov062_02118718(char *c)
         return;
     if (dist >= 0xc8000)
         return;
-    if (_ZN5Actor14GetSubtractionEss(c, *(short*)(c + 0x3c2), *(short*)(c + 0x94)) >= 0xc00)
+    if (_ZN8dActor_c14GetSubtractionEss(c, *(short*)(c + 0x3c2), *(short*)(c + 0x94)) >= 0xc00)
         return;
 
     *(short*)(c + 0x94) = *(short*)(c + 0x3c2);

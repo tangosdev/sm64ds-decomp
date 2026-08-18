@@ -4,7 +4,7 @@ typedef short s16;
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
-struct Actor;
+struct dActor_c;
 struct Matrix4x3;
 struct CLPS_Block;
 
@@ -16,7 +16,7 @@ struct RaycastGround {
     char pad2[0x54 - 0x48];
     RaycastGround();
     ~RaycastGround();
-    int SetObjAndPos(const Vector3 &p, Actor *a);
+    int SetObjAndPos(const Vector3 &p, dActor_c *a);
     int DetectClsn();
 };
 

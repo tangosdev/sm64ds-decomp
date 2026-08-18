@@ -2,17 +2,17 @@
 // @symbol func_ov030_02113094
 /* recovered: shared common types */
 #include "common.h"
-struct Actor;
+struct dActor_c;
 
 
 
-extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
+extern struct dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov030_021141a8(char* self, int a);
 extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(char* p, char* self, u32 msg, const struct Vector3* pos, u32 a, u32 b);
 extern void func_0201267c(u32 id, char* p);
 extern int _ZN6Player12GetTalkStateEv(char* p);
 extern void _ZN6Player9DropActorEv(char* p);
-extern struct Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
+extern struct dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const struct Vector3* pos, const struct Vector3_16* rot, int a, int b);
 extern void _ZN7fBase_c18MarkForDestructionEv(char* self);
 
 int func_ov030_02113094(char* self)
@@ -32,7 +32,7 @@ int func_ov030_02113094(char* self)
         int b2 = (int)((*(u32*)(self + 0xb0) & 0x40000) != 0);
         if (b2 != 0) {
             if (*(u8*)(self + 0x3c8) != 0) {
-                struct Actor* a = _ZN5Actor10FindWithIDEj(*(u32*)(self + 0x3ac));
+                struct dActor_c* a = _ZN8dActor_c10FindWithIDEj(*(u32*)(self + 0x3ac));
                 *(char**)((char*)a + 0xd0) = *(char**)(self + 0x3a8);
                 *(u32*)(((int)a + 0xb0)) |= 0x40000;
             }
@@ -70,8 +70,8 @@ int func_ov030_02113094(char* self)
         int b5 = (int)((*(u32*)(self + 0xb0) & 0x80000) != 0);
         if (b5 != 0) {
             if (*(u8*)(self + 0x3c8) != 0) {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (*(u32*)(self + 0x3b0) << 8) | 5, (struct Vector3*)(*(char**)(self + 0x3a8) + 0x5c), 0, *(s8*)(self + 0xcc), -1);
-                _ZN7fBase_c18MarkForDestructionEv((char*)_ZN5Actor10FindWithIDEj(*(u32*)(self + 0x3ac)));
+                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (*(u32*)(self + 0x3b0) << 8) | 5, (struct Vector3*)(*(char**)(self + 0x3a8) + 0x5c), 0, *(s8*)(self + 0xcc), -1);
+                _ZN7fBase_c18MarkForDestructionEv((char*)_ZN8dActor_c10FindWithIDEj(*(u32*)(self + 0x3ac)));
                 {
                     u32 z = 0;
                     *(u32*)(self + 0x3ac) = z;

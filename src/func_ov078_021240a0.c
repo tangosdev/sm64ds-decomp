@@ -4,18 +4,18 @@
 /* recovered: shared common types */
 #include "common.h"
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
-extern int _ZN5Actor18HorzAngleToCPlayerEv(char* c);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(char* c);
 extern void ApproachAngle(short* p, int target, int a, int b, int c);
 extern int _ZN6Player9StartTalkER7fBase_cb(void* pl, char* c, int b);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int f);
 extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* pl, char* c, int m, void* v, int a, int b);
 extern void func_02012694(int a, void* b);
 extern void KingBobOmb_SetState(char* c, void* pmf);
-extern void _ZN5Actor15HugeLandingDustEb(char* c, int b);
+extern void _ZN8dActor_c15HugeLandingDustEb(char* c, int b);
 extern int Vec3_Dist(const void* a, const void* b);
 extern int RandomIntInternal(int* seed);
 extern short Vec3_HorzAngle(const void* a, const void* b);
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN6Player12Unk_020c6a10Ej(void* p, unsigned int a);
 
 extern unsigned char data_0209f220;
@@ -40,9 +40,9 @@ int func_ov078_021240a0(char* c)
             if ((unsigned short)(*(unsigned short*)(*(int*)(c + 0x430) + 0x6ce) & 0x800) != 0)
                 return 1;
 
-            ApproachAngle((short*)(c + 0x94), _ZN5Actor18HorzAngleToCPlayerEv(c), 5, 0x1000, 0x200);
+            ApproachAngle((short*)(c + 0x94), _ZN8dActor_c18HorzAngleToCPlayerEv(c), 5, 0x1000, 0x200);
             *(short*)(c + 0x8e) = *(short*)(c + 0x94);
-            if (AngleDiff(_ZN5Actor18HorzAngleToCPlayerEv(c), *(short*)(c + 0x8e)) < 0x1000) {
+            if (AngleDiff(_ZN8dActor_c18HorzAngleToCPlayerEv(c), *(short*)(c + 0x8e)) < 0x1000) {
                 char* pl = (char*)(long)*(int*)(c + 0x430);
                 if (_ZN6Player9StartTalkER7fBase_cb(pl, c, 1) != 0) {
                     msg = 0;
@@ -64,7 +64,7 @@ int func_ov078_021240a0(char* c)
         if (*(unsigned char*)(c + 0x499) == 0) {
             func_02012694(0x128, c + 0x74);
             func_ov078_02125c24(c, 0x7d0000);
-            _ZN5Actor15HugeLandingDustEb(c, 1);
+            _ZN8dActor_c15HugeLandingDustEb(c, 1);
             *(unsigned char*)(c + 0x499) = 1;
         }
         if (*(unsigned short*)(c + 0x100) == 0) {
@@ -98,7 +98,7 @@ int func_ov078_021240a0(char* c)
         if (*(int*)(c + 0xa8) < 0) {
             unsigned int id = *(unsigned int*)(c + 0x360);
             if (id != 0) {
-                char* a = (char*)_ZN5Actor10FindWithIDEj(id);
+                char* a = (char*)_ZN8dActor_c10FindWithIDEj(id);
                 if (a != 0) {
                     int b = (int)(*(unsigned short*)(a + 0xc) == 0xbf);
                     if (b != 0) {

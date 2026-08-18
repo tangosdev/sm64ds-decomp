@@ -7,12 +7,12 @@
 typedef int Fix12i;
 
 struct MovingCylinderClsnWithPos { int d; };
-struct Actor;
+struct dActor_c;
 struct Player;
 
 extern "C" void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
     MovingCylinderClsnWithPos*, const Vector3&);
-extern "C" Player* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern "C" Player* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     Player*, const Vector3&, unsigned int, Fix12i, unsigned int, unsigned int, unsigned int);
 
@@ -30,7 +30,7 @@ extern "C" void func_ov090_02132730(char* thiz)
         unsigned int id = *(unsigned int*)(c + 0x134);
         if (id == 0) return;
         {
-        Player* a = _ZN5Actor10FindWithIDEj(id);
+        Player* a = _ZN8dActor_c10FindWithIDEj(id);
         int b = (int)(*(unsigned short*)((char*)a + 0xc) == 0xbf);
         if (b == 0) return;
         {

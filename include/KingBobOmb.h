@@ -78,7 +78,7 @@ struct KingBobOmb {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0xc];
-    /* 0x0b0..0x110 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x0b0..0x110 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     u32 unk_0b0;                 /* 0x0b0 */
     s32 unk_0b4;                 /* 0x0b4 */

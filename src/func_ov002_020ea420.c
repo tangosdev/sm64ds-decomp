@@ -7,7 +7,7 @@ extern int NumVsStarsObtained(void);
 extern void _ZN9PowerStar13AddStarMarkerEv(char *self);
 extern void func_02012790(int id);
 extern int _Z14ApproachLinearRiii(int *v, int target, int step);
-extern void _ZN5Actor11UntrackStarERa(char *self, char *p);
+extern void _ZN8dActor_c11UntrackStarERa(char *self, char *p);
 extern void func_ov002_020e7e14(char *self);
 extern void func_ov002_020e930c(char *self);
 extern int data_0209b454;
@@ -93,7 +93,7 @@ void func_ov002_020ea420(char *c) {
                 }
                 if (_Z14ApproachLinearRiii(&spd2, 0, step2) != 0) {
                     *(u16 *)(c + 0x4a2) &= ~0x200;
-                    _ZN5Actor11UntrackStarERa(c, c + 0x498);
+                    _ZN8dActor_c11UntrackStarERa(c, c + 0x498);
                 }
                 {
                     int v2 = spd2;

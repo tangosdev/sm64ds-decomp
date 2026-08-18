@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN5Actor24KillAndTrackInDeathTableEv
-/* Actor::KillAndTrackInDeathTable() at 0x0200f9b8.
+// @symbol _ZN8dActor_c24KillAndTrackInDeathTableEv
+/* dActor_c::KillAndTrackInDeathTable() at 0x0200f9b8.
  *
  * Records the actor in the death table, then marks it for destruction through
  * the fBase_c helper it inherits.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
-void Actor::KillAndTrackInDeathTable()
+void dActor_c::KillAndTrackInDeathTable()
 {
     TrackInDeathTable();
     MarkForDestruction();

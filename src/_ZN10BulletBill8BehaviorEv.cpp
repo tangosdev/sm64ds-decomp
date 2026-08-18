@@ -36,8 +36,8 @@ struct M { PMF pmf; };
 
 extern "C" {
 void func_0200f760(void *self, void *cc);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
-void *_ZN5Actor10FindWithIDEj(u32 id);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *cc);
+void *_ZN8dActor_c10FindWithIDEj(u32 id);
 void _ZN6Player16IncMegaKillCountEv();
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32, int, int, int);
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
@@ -60,7 +60,7 @@ int BulletBill::Behavior()
     u32 id;
 
     func_0200f760(c, &mMovingCylinderClsnWithPos);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
 
     which = (u32)mState;
     {
@@ -72,7 +72,7 @@ int BulletBill::Behavior()
     if (id != 0) {
         flags = (*(s32 *)((char *)&mMovingCylinderClsnWithPos + 0x20));
         if (flags & 0x10) {
-            _ZN5Actor10FindWithIDEj(id);
+            _ZN8dActor_c10FindWithIDEj(id);
             _ZN6Player16IncMegaKillCountEv();
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8f, mPosX, mPosY, mPosZ);
             _ZN7fBase_c18MarkForDestructionEv(c);
@@ -89,7 +89,7 @@ int BulletBill::Behavior()
                 _ZN5Sound9PlayBank0EjRK7Vector3(0xb5, pos);
             }
         } else {
-            void *o = _ZN5Actor10FindWithIDEj(id);
+            void *o = _ZN8dActor_c10FindWithIDEj(id);
             if (o != 0) {
                 int eq = (*(u16 *)((char *)o + 0xc) == 0xbf);
                 if (eq != 0) {

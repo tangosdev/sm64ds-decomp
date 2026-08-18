@@ -19,7 +19,7 @@ void* _ZN11PyramidLiftD1Ev(struct PyramidLift *self) {
   *(int**)((char*)self) = _ZTV10dBgActor_c;
   _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
   _ZN5ModelD1Ev((char*)&self->mModel1);
-  _ZN5ActorD2Ev(((char*)self));
+  _ZN8dActor_cD2Ev(((char*)self));
   return ((char*)self);
 }
 }

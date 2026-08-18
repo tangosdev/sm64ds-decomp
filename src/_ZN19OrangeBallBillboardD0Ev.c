@@ -9,7 +9,7 @@ extern void *data_020a0eac;
 int *_ZN19OrangeBallBillboardD0Ev(struct OrangeBallBillboard *self) {
     ((int *)self)[0] = (int)_ZTV19OrangeBallBillboard;
     _ZN5ModelD1Ev((char *)&self->mModel);
-    _ZN5ActorD2Ev(((int *)self));
+    _ZN8dActor_cD2Ev(((int *)self));
     _ZN6Memory10DeallocateEPvP4Heap(((int *)self), data_020a0eac);
     return ((int *)self);
 }

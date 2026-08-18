@@ -7,7 +7,7 @@ struct Plat;
 typedef void (Plat::*PMF)();
 extern "C" PMF data_ov095_02137910[];
 
-extern "C" void* _ZN5Actor13ClosestPlayerEv(void* c);
+extern "C" void* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* c);
 extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* c, int a, int b);
 extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* c);
@@ -15,7 +15,7 @@ extern "C" int _ZN6Player7IsInAirEv(void* c);
 int UpDownLiftBbh::Behavior()
 {
     int old;
-    *(void**)((char*)&unk_324) = _ZN5Actor13ClosestPlayerEv(((char*)this));
+    *(void**)((char*)&unk_324) = _ZN8dActor_c13ClosestPlayerEv(((char*)this));
     old = mState;
     (((Plat*)((char*)this))->*data_ov095_02137910[old])();
     *(u16*)(((int)((char*)this) + 0x344)) += 1;

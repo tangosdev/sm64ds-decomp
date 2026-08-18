@@ -5,8 +5,8 @@
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to dBgActor_c.
- * Everything this header used to restate below 0x31e was Actor's and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
  * dBgActor_c's, and is inherited now.
  *
  * ONE CLASS, FIVE ACTORS. BrickBlock, BigBrickBlock, BrickBlockSwitchActivated,
@@ -21,8 +21,8 @@
  * knew about ended, and three separate places in the ROM read past it:
  *
  *   +0x322  Kill's `ldrb r0, [r4, #0x322]` and InitResources' star-ID write
- *   +0x323  Kill hands `r4 + 0x323` to Actor::UntrackAndSpawnStar as its
- *           `s8 &trackStarID`; InitResources stores Actor::TrackStar's result there
+ *   +0x323  Kill hands `r4 + 0x323` to dActor_c::UntrackAndSpawnStar as its
+ *           `s8 &trackStarID`; InitResources stores dActor_c::TrackStar's result there
  *   +0x328  Kill's `ldr r0, [r4, #0x328]`, and func_ov002_020b363c dereferences
  *           the same word as an actor (reads actorID at +0xc)
  *   +0x32c  a u8 variant index, 0..2, written by InitResources and used by
@@ -47,15 +47,15 @@ struct BigBrickBlock : dBgActor_c {
        writes it and zeroes it when it reads 0xff. Kill spawns the star when it
        is non-zero. */
     u8 mStarID;                       /* 0x322 */
-    /* The star-marker slot, s8 because Actor::TrackStar returns one and
-       Actor::UntrackAndSpawnStar takes `s8 &` -- Kill passes `this + 0x323` as
+    /* The star-marker slot, s8 because dActor_c::TrackStar returns one and
+       dActor_c::UntrackAndSpawnStar takes `s8 &` -- Kill passes `this + 0x323` as
        exactly that argument. */
     s8 mTrackStarID;                  /* 0x323 */
-    Actor *mSwitch;                   /* 0x324 */
-    /* An Actor *, and func_ov002_020b363c is the evidence: it loads this word
+    dActor_c *mSwitch;                   /* 0x324 */
+    /* An dActor_c *, and func_ov002_020b363c is the evidence: it loads this word
        and reads actorID at +0xc off it, then writes +0x3b0 or +0xd6. Kill only
        tests it against null. */
-    Actor *unk_328;                   /* 0x328 */
+    dActor_c *unk_328;                   /* 0x328 */
     /* 0x32c is a u8 variant index; see the header comment. */
     u8  pad_32c[0x4];
 
@@ -65,7 +65,7 @@ struct BigBrickBlock : dBgActor_c {
     /* Slot 31, dBgActor_c's own new virtual (include/dBgActor_c.h). Attributed by
        the vtable: _ZTV13BigBrickBlock (ov002 0x02108adc) carries 0x020b38a0 at
        slot 31 -- vtable + 0x7c -- where _ZTV10dBgActor_c carries
-       _ZN10dBgActor_c4KillEv, and slot 30 is Actor's 0x020100dc in both. An
+       _ZN10dBgActor_c4KillEv, and slot 30 is dActor_c's 0x020100dc in both. An
        override adds no slot and no field, so the size assert is unaffected.
 
        NOT the key function: ~BigBrickBlock() above is declared out of line and
@@ -104,12 +104,12 @@ struct BigBrickBlock {
     u8  pad_321[0x1];
     u8  mStarID;            /* 0x322 */
     s8  mTrackStarID;            /* 0x323 */
-    /* Actor * -- the ROM loads this WORD and passes it to _ZN5Actor15FindWithActorIDEjPS_
-       as that function's `this`, which is an object address, so the word is a Actor *. It
+    /* dActor_c * -- the ROM loads this WORD and passes it to _ZN8dActor_c15FindWithActorIDEjPS_
+       as that function's `this`, which is an object address, so the word is a dActor_c *. It
        says nothing about the rest of the marker's span, which stays explicit padding. Was
        a u8 marker. */
-    Actor *mSwitch;            /* 0x324 */
-    Actor *unk_328;            /* 0x328 */
+    dActor_c *mSwitch;            /* 0x324 */
+    dActor_c *unk_328;            /* 0x328 */
     u8  pad_32c[0x4];
 };
 

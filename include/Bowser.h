@@ -6,7 +6,7 @@
  * Five sub-objects, and every one's asserted size closes EXACTLY on the next named
  * field -- five independent confirmations of one layout:
  *
- *     Actor                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     dActor_c                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
  *     ModelAnim                  0x0d4 + 0x064 = 0x138   -> mTextureSequence
  *     TextureSequence            0x138 + 0x014 = 0x14c   -> mWithMeshClsn
  *     WithMeshClsn               0x14c + 0x1bc = 0x308   -> mShadowModel
@@ -35,9 +35,9 @@
 
 #ifdef __cplusplus
 
-#include "Actor.h"
+#include "dActor_c.h"
 
-struct Bowser : Actor {
+struct Bowser : dActor_c {
     u8  pad_0d0[0x4];
     ModelAnim mModelAnim;                                   /* 0x0d4 */
     TextureSequence mTextureSequence;                       /* 0x138 */
@@ -102,7 +102,7 @@ typedef char Bowser_size_must_be_0x454[sizeof(Bowser) == 0x454 ? 1 : -1];
 #else
 
 /* The same object for a C translation unit, which has no base class to inherit
-   Actor's fields from and so spells the whole layout flat. Every current includer
+   dActor_c's fields from and so spells the whole layout flat. Every current includer
    is a .cpp; this half is kept so that a future C one gets the right offsets
    rather than a parse error. */
 struct Bowser {

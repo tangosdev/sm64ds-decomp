@@ -17,7 +17,7 @@ void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, uns
 void _ZN7Message13DisplaySavingEt(unsigned short a);
 int _ZN6Player18HasFinishedTalkingEv(void* self);
 void _ZN7Message7EndTalkEv(void);
-char* _ZN5Actor13ClosestPlayerEv(void* self);
+char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
 int _ZN16MeshColliderBase9IsEnabledEv(void* self);
 void _ZN16MeshColliderBase7DisableEv(void* self);
@@ -77,7 +77,7 @@ extern "C" int _ZN14QuestionSwitch8BehaviorEv(char* self)
             }
             }
         } else {
-            char* p = _ZN5Actor13ClosestPlayerEv(self);
+            char* p = _ZN8dActor_c13ClosestPlayerEv(self);
             if (*(u8*)(p + 0x6de) == 0) {
                 if (_ZN6Player9StartTalkER7fBase_cb(p, self, 1) != 0) {
                     *(char**)(self + 0x720) = p;

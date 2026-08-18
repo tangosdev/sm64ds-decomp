@@ -16,12 +16,12 @@ extern "C" void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix
 
 extern Matrix4x3 data_020a0e68;
 
-class Actor {
+class dActor_c {
 public:
     Matrix4x3 *UpdateCarry(Player &player, const Vector3 &vec);
 };
 
-Matrix4x3 *Actor::UpdateCarry(Player &player, const Vector3 &vec)
+Matrix4x3 *dActor_c::UpdateCarry(Player &player, const Vector3 &vec)
 {
     Player *p = &player;
     char *self = (char *)this;

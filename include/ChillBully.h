@@ -22,8 +22,8 @@ struct ChillBully : daOts_c {
     /* Which star this one carries: InitResources takes param1 & 0xf, and both users
        pass it on with bit 6 set. */
     u8  mStarIdx;                   /* 0x3fa */
-    /* The slot Actor::TrackStar claimed for that star, or -1 -- see the note on
-       TrackStar in Actor.h. Its ADDRESS is what goes to UntrackAndSpawnStar, which
+    /* The slot dActor_c::TrackStar claimed for that star, or -1 -- see the note on
+       TrackStar in dActor_c.h. Its ADDRESS is what goes to UntrackAndSpawnStar, which
        is why it is a field and not a local. */
     s8  mStarSlot;                  /* 0x3fb */
 

@@ -1,17 +1,17 @@
 //cpp
 typedef short s16;
 
-struct Actor;
+struct dActor_c;
 
 struct Camera {
     struct State;
-    void LookAtExit(struct Actor &actor);
+    void LookAtExit(struct dActor_c &actor);
     void ChangeState(State *st);
 };
 
 extern Camera::State data_0209b0f8;
 
-void Camera::LookAtExit(struct Actor &actor)
+void Camera::LookAtExit(struct dActor_c &actor)
 {
     int *src;
     char *a = (char *)&actor;

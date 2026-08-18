@@ -19,7 +19,7 @@
  * stopped axle stop carrying.
  *
  * The pre-migration file had to invent a flat `struct Obj` for all of this;
- * every field it reached by offset is one Actor or this class already names. */
+ * every field it reached by offset is one dActor_c or this class already names. */
 
 extern "C" {
 extern Vector3 data_ov002_0210ddd0[4];
@@ -50,7 +50,7 @@ s32 daObjKurumajiku_c::Behavior()
     }
     for (i = 0; i < 4; i++) {
         if (mMountedActorIds[i]) {
-            Actor *rider = Actor::FindWithID(mMountedActorIds[i]);
+            dActor_c *rider = dActor_c::FindWithID(mMountedActorIds[i]);
             if (rider) {
                 mid.x = 0;
                 mid.y = 0;

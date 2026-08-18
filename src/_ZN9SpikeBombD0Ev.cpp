@@ -4,7 +4,7 @@
  *
  * D0 is vtable slot 17: destroy, then return the object to the actor heap. Both
  * halves come from the same `~SpikeBomb()` the D1 file declares; the
- * deallocation is the inline Actor::operator delete, which is why nothing here
+ * deallocation is the inline dActor_c::operator delete, which is why nothing here
  * mentions the heap.
  */
 #include "SpikeBomb.h"

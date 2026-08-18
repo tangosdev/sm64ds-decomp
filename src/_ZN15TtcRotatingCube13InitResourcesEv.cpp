@@ -10,7 +10,7 @@ struct KCL_File;
 struct Matrix4x3;
 struct CLPS_Block;
 struct Vector3;
-struct Actor;
+struct dActor_c;
 
 extern "C" {
     extern void*data_ov065_0211c0a8[];
@@ -30,14 +30,14 @@ extern "C" {
     void MulVec3Mat4x3(void *dst, void *mtx, void *src);
     void AddVec3(void *a, void *b, void *c);
     void _ZN13RaycastGroundC1Ev(void *self);
-    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *actor);
+    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *actor);
     int _ZN13RaycastGround10DetectClsnEv(void *self);
     void _ZN13RaycastGroundD1Ev(void *self);
 }
 
 extern void *data_ov065_0211cfd0[];
 extern void *data_ov065_0211cfd4[];
-extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern u8 data_0209f2c0;
 extern s32 data_020a0e68[];
 
@@ -93,7 +93,7 @@ int TtcRotatingCube::InitResources()
             *(void **)((char *)data_ov065_0211cfd8 + oi));
     }
 
-    func_020393d4(c + 0x124, (void *)_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(c + 0x124, (void *)_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
 
     {
         s32 va[3];
@@ -115,7 +115,7 @@ int TtcRotatingCube::InitResources()
 
         RaycastGround rg;
         _ZN13RaycastGroundC1Ev(&rg);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, vb, 0);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, vb, 0);
         *(s32 *)(c + 0x37c) = vb[1];
         if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
             *(s32 *)(c + 0x37c) = rg.hitY;
@@ -126,7 +126,7 @@ int TtcRotatingCube::InitResources()
         vb[2] = *(s32 *)(c + 0x64);
         vb[1] -= 0xd2000;
 
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, vb, 0);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, vb, 0);
         s32 r5 = vb[1];
         if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
             r5 = rg.hitY;

@@ -66,12 +66,12 @@ extern s32 Sound_PlayIfNotActive(s32 a, s32 b, s32 c);
 
 extern void _ZN11RaycastLineC1Ev(void *t);
 extern void _ZN11RaycastLineD1Ev(void *t);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *t, const struct Vector3 *a, const struct Vector3 *b, void *actor);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *t, const struct Vector3 *a, const struct Vector3 *b, void *actor);
 extern s32 _ZN11RaycastLine10DetectClsnEv(void *t);
 extern void _ZN11RaycastLine10GetClsnPosEv(struct Vector3 *out, void *t);
 extern void _ZN13RaycastGroundC1Ev(void *t);
 extern void _ZN13RaycastGroundD1Ev(void *t);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *t, const struct Vector3 *p, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *t, const struct Vector3 *p, void *actor);
 extern s32 _ZN13RaycastGround10DetectClsnEv(void *t);
 extern void _ZN4BgCh19StartDetectingWaterEv(void *t);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *t, struct Vector3 *out);
@@ -271,7 +271,7 @@ s32 func_02009e70(char *self)
     sb = *(s32 *)(self + 0x9c) + 0x82500;
     _ZN11RaycastLineC1Ev(spd0);
     func_0200897c(self, spd0);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(spd0, (struct Vector3 *)(self + 0x98), &sp4c, 0);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(spd0, (struct Vector3 *)(self + 0x98), &sp4c, 0);
     if (_ZN11RaycastLine10DetectClsnEv(spd0) != 0) {
         _ZN11RaycastLine10GetClsnPosEv(&sp94, spd0);
         r4 = sp94.y - 0x80000;
@@ -287,7 +287,7 @@ s32 func_02009e70(char *self)
         sp58.z = tz;
     }
     if (sb > r4) goto L_A534;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(spd0, &sp58, (struct Vector3 *)(self + 0x8c), 0);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(spd0, &sp58, (struct Vector3 *)(self + 0x8c), 0);
     if (_ZN11RaycastLine10DetectClsnEv(spd0) == 0) goto L_A534;
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(spd0 + 0x14, &sp64);
     _ZN11RaycastLine10GetClsnPosEv(&spa0, spd0);
@@ -455,7 +455,7 @@ L_AAD0:
         sp4c.y = ty;
         sp4c.z = tz;
     }
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(spd0, (struct Vector3 *)(self + 0x8c), &sp4c, 0);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(spd0, (struct Vector3 *)(self + 0x8c), &sp4c, 0);
     if (_ZN11RaycastLine10DetectClsnEv(spd0) != 0) {
         _ZN11RaycastLine10GetClsnPosEv(&spb8, spd0);
         sp4c.y = spb8.y;
@@ -466,7 +466,7 @@ L_AAD0:
     sp88.x = sp7c.x;
     sp88.y = sp7c.y + 0x100000;
     sp88.z = sp7c.z;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(spd0, &sp7c, &sp88, 0);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(spd0, &sp7c, &sp88, 0);
     if (_ZN11RaycastLine10DetectClsnEv(spd0) != 0) {
         _ZN11RaycastLine10GetClsnPosEv(&spc4, spd0);
         sp88.y = spc4.y - 0x80000;
@@ -476,7 +476,7 @@ L_AAD0:
     _ZN13RaycastGroundC1Ev(sp148);
     *(s32 *)(sp148 + 0x4c) = 0x5dc000;
     func_0200897c(self, sp148);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(sp148, &sp4c, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(sp148, &sp4c, 0);
     if (sp1c > &data_02086fcc) _ZN4BgCh19StartDetectingWaterEv(sp148);
     if (_ZN13RaycastGround10DetectClsnEv(sp148) != 0) sb = *(s32 *)(sp148 + 0x44);
     if (sp1c == &data_02086ff4) {

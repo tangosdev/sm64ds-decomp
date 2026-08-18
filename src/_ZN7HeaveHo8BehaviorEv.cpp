@@ -11,7 +11,7 @@ struct CylinderClsn;
 struct WithMeshClsn;
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, CylinderClsn *cc);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, CylinderClsn *cc);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, Vector3 *v);
@@ -47,7 +47,7 @@ int HeaveHo::Behavior()
     if (m->pmf != 0)
         (((Klass *)((char *)this))->*(m->pmf))();
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsnWithPos));
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsnWithPos));
 
     r5 = 0;
     if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn)) {

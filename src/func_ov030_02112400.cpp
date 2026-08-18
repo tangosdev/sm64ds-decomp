@@ -14,7 +14,7 @@ extern "C" int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" void func_ov030_021141a8(void* c, int x);
 extern "C" void* data_02099368[];
 
-struct Actor {
+struct dActor_c {
     void UpdatePos(CylinderClsn*);
 };
 
@@ -35,7 +35,7 @@ extern "C" int func_ov030_02112400(char* c)
 {
     func_ov030_02111a00(c);
     ((Animation*)(c + 0x124))->Advance();
-    ((Actor*)c)->UpdatePos((CylinderClsn*)(c + 0x160));
+    ((dActor_c*)c)->UpdatePos((CylinderClsn*)(c + 0x160));
     func_ov030_02111f6c(c, (WithMeshClsn*)(c + 0x194));
     func_ov030_02111bc4(c);
     ((CylinderClsn*)(c + 0x160))->Clear();

@@ -10,7 +10,7 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(char* thiz, int f, int a, int b);
 extern void _ZN11ShadowModel10InitCuboidEv(char* thiz);
 extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(char* f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(char* thiz, int f, char* m, int fix, short s, int blk);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(char* thiz, char* actor, int b, int d, void* v, int f);
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* thiz, char* actor, int b, int d, void* v, int f);
 extern void _ZN12WithMeshClsn19StartDetectingWaterEv(char* thiz);
 extern void Crate_SetState(char* c, int i);
 }
@@ -32,7 +32,7 @@ int Crate::InitResources()
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this) + 0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(char**)(f + 4)),
         ((char*)this) + 0x2ec, 0x199, mAngleY, *(int*)(f + 8));
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x320, ((char*)this), 0x28000, 0x28000, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x320, ((char*)this), 0x28000, 0x28000, 0, 0);
     _ZN12WithMeshClsn19StartDetectingWaterEv((char*)&mWithMeshClsn);
     unk_09c = -0x2000;
     unk_0a0 = -0x3c000;

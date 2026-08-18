@@ -9,7 +9,7 @@ extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void MulVec3Mat4x3(void *src, void *m, void *dst);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *thiz);
-extern void *_ZN5Actor13ClosestPlayerEv(void *thiz);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void KingBobOmb_SetState(void *c, void *p);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *thiz, void *f, int a, int b, int fx, unsigned short t);
 extern void func_02012694(int a, void *p);
@@ -76,7 +76,7 @@ int func_ov078_021247bc(void *thiz)
     }
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110) != 0) {
-        void *pl = _ZN5Actor13ClosestPlayerEv(c);
+        void *pl = _ZN8dActor_c13ClosestPlayerEv(c);
         if (pl != 0) {
             D = *(Vec3 *)((char *)pl + 0x5c);
             if (Vec3_Dist(c + 0x4d4, &D) > 0x640000 ||

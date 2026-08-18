@@ -5,7 +5,7 @@
  * ATTRIBUTED BY THE VTABLE. _ZTV8SignPost (ov002 0x02109af8, and the same
  * address as _ZTV15daObjTatefuda_c) carries 0x020bb3b8 at vtable + 0x7c, which
  * is slot 31, while _ZTV10dBgActor_c carries _ZN10dBgActor_c4KillEv at the same slot
- * and both tables carry Actor's 0x020100dc at slot 30. So this is this class's
+ * and both tables carry dActor_c's 0x020100dc at slot 30. So this is this class's
  * own override of the one virtual dBgActor_c adds. Read out of
  * config/arm9/overlays/ov002/relocs.txt.
  *

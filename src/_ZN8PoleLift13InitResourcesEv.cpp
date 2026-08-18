@@ -11,7 +11,7 @@ extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* thiz);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* thiz);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* thiz, void* act, int fix, int t, unsigned int a, unsigned int b);
+extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* act, int fix, int t, unsigned int a, unsigned int b);
 }
 
 int PoleLift::InitResources()
@@ -27,7 +27,7 @@ int PoleLift::InitResources()
     void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov045_021131a8);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x199, mAngleY, data_ov045_02112510);
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
         ((char*)this) + 0x320, ((char*)this), 0x35555, 0x258000, 0x280000c, 0);
     return 1;
 }

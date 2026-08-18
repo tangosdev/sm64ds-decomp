@@ -16,7 +16,7 @@ src/func_ov002_020ada40.cpp:
     complete
     .text start:0x020ada40 end:0x020adb40
 
-src/_ZN12dEnemyBase_c22SpawnMegaCharParticlesER5ActorPc.cpp:
+src/_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc.cpp:
     complete
     .text start:0x020adb40 end:0x020addc0
 
@@ -3471,7 +3471,7 @@ src/Player_ReleaseHeldActor.c:
     complete
     .text start:0x020dab14 end:0x020daba0
 
-src/_ZN6Player7TryGrabER5Actor.cpp:
+src/_ZN6Player7TryGrabER8dActor_c.cpp:
     complete
     .text start:0x020daba0 end:0x020dacb4
 

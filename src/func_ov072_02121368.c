@@ -6,7 +6,7 @@
 /* recovered: shared common types, renamed to Class_Method */
 /* daBgSnwmn_c::Kill - recovered from vtable slot identity */
 extern s16 data_02082214[];
-extern int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);
+extern int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void *self, struct Vector3 *a, struct Vector3 *out, int doStore);
 
 #define M(p) (p)
 
@@ -73,7 +73,7 @@ int func_ov072_02121368(char *self)
     v.x = x;
     v.y = y2;
     v.z = z;
-    _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(self, vp, (struct Vector3 *)pos, flag);
+    _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(self, vp, (struct Vector3 *)pos, flag);
 
     *(int *)(self + 0xd0) = 0;
     _ZN12WithMeshClsn13SetLimMovFlagEv(self + 0x194);

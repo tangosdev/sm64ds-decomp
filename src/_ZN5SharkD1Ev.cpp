@@ -5,7 +5,7 @@
  * Two vtable stores and three destructor calls, every one a consequence of
  * `struct Shark : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
  * because dBgActor_c's destructor is defined in its class body -- then
- * dBgActor_c's Model and MovingMeshCollider, then Actor. This class adds no
+ * dBgActor_c's Model and MovingMeshCollider, then dActor_c. This class adds no
  * member with a destructor of its own.
  */
 #include "Shark.h"

@@ -22,7 +22,7 @@ struct UpDownLiftBbh {
     u8  behavNode[0x10];               /* 0x028 */
     u8  renderNode[0x10];              /* 0x038 */
     u8  pad_048[0x18];
-    /* 0x060..0x08e is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x060..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_060;                 /* 0x060 */
     s32 mPosZ;                   /* 0x064 */
@@ -36,15 +36,15 @@ struct UpDownLiftBbh {
     s32 mScaleY;                 /* 0x084 */
     s32 mScaleZ;                 /* 0x088 */
     s16 mAngleX;                 /* 0x08c */
-    /* 0x08e..0x092 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x08e..0x092 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s16 unk_08e;                 /* 0x08e */
     s16 mAngleZ;                 /* 0x090 */
-    /* 0x092..0x096 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x092..0x096 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s16 unk_092;                 /* 0x092 */
     s16 mPrevAngleY;             /* 0x094 */
-    /* 0x096..0x0d4 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x096..0x0d4 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s16 unk_096;                 /* 0x096 */
     s32 mHorzSpeed;              /* 0x098 */

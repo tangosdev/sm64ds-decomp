@@ -1,12 +1,12 @@
 //cpp
-struct Actor {
+struct dActor_c {
     int DistToCPlayer();
 };
 extern "C" {
 extern int RandomIntInternal(int* seed);
 extern int data_0209e650;
 
-void func_ov060_021150d0(Actor* a) {
+void func_ov060_021150d0(dActor_c* a) {
     char* c = (char*)a;
     if (*(int*)(c + 0x418) & 2) {
         if (a->DistToCPlayer() < 0x3e8000) {

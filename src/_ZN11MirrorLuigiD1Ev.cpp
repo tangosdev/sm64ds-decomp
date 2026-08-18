@@ -2,7 +2,7 @@
 struct ShadowModel { ~ShadowModel(); };
 struct Model { ~Model(); };
 struct ModelAnim { ~ModelAnim(); };
-struct Actor { ~Actor(); };
+struct dActor_c { ~dActor_c(); };
 
 extern int _ZTV11MirrorLuigi;
 extern int _ZN15TextureSequenceD1Ev;
@@ -14,6 +14,6 @@ extern "C" int _ZN11MirrorLuigiD1Ev(char *c) {
     ((ShadowModel *)(c + 0x188))->~ShadowModel();
     ((Model *)(c + 0x138))->~Model();
     ((ModelAnim *)(c + 0xd4))->~ModelAnim();
-    ((Actor *)c)->~Actor();
+    ((dActor_c *)c)->~dActor_c();
     return (int)c;
 }

@@ -5,11 +5,11 @@ extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* bmd, int a, int b);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
-extern int _ZN5Actor9TrackStarEjj(void* self, unsigned int a, unsigned int b);
+extern int _ZN8dActor_c9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, void* mtx, int f, s16 s, void* clps);
 extern int _ZN5Event6GetBitEj(unsigned int b);
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int _ZN6Player15IsEnteringLevelEv(void* self);
 extern int func_ov002_020b36a0(char* c);
 extern int IsStarCollectedInCurLevel(int a);
@@ -53,7 +53,7 @@ int _ZN13BigBrickBlock13InitResourcesEv(void* self)
         if (*(u8*)(c+0x322) == 0xff)
             *(u8*)(c+0x322) = 0;
         if (*(u8*)(c+0x322) != 0 && byte1 == 0xff) {
-            *(u8*)(c+0x323) = _ZN5Actor9TrackStarEjj(c, *(u8*)(c+0x322), 2);
+            *(u8*)(c+0x323) = _ZN8dActor_c9TrackStarEjj(c, *(u8*)(c+0x322), 2);
         }
     }
     }
@@ -92,7 +92,7 @@ int _ZN13BigBrickBlock13InitResourcesEv(void* self)
     *(u8*)(c+0x31f) = _ZN5Event6GetBitEj(*(u8*)(c+0x320));
 
     {
-    void* pl = _ZN5Actor13ClosestPlayerEv(c);
+    void* pl = _ZN8dActor_c13ClosestPlayerEv(c);
     if (pl != 0 && _ZN6Player15IsEnteringLevelEv(pl) != 0) {
         int t11b = *(u16*)(c+0xc);
         t11b = t11b == 0x11;

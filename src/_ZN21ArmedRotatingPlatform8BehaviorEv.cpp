@@ -8,7 +8,7 @@
  *
  * Three shadow declarations are gone -- a `typedef int Fix12` and stand-in
  * `MeshColliderBase` and `dBgActor_c` structs -- along with the raw offsets they
- * served. `this + 0x8e` is Actor::mAngleY, and the `t[0x1e/2]` read off
+ * served. `this + 0x8e` is dActor_c::mAngleY, and the `t[0x1e/2]` read off
  * `this + 0x300` was this class's own unk_31e reached the long way round.
  *
  * IsClsnInRange keeps its mangled spelling: the name carries Fix12<int> by

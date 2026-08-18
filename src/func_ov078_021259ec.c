@@ -7,7 +7,7 @@
 struct fBase_c;
 
 extern void _Z14ApproachLinearRsss(short* a, short b, short c);
-extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* actor);
 extern int Vec3_Dist(struct Vector3* a, struct Vector3* b);
 extern int _ZN6Player9StartTalkER7fBase_cb(void* player, void* actor, int b);
 extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* player, void* actor, unsigned int msgid, struct Vector3* v, unsigned int arg4, unsigned int arg5);
@@ -45,7 +45,7 @@ int func_ov078_021259ec(char* c)
         return 1;
     }
 
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (player != 0) {
         ppos = *(struct Vector3*)((char*)player + 0x5c);
 

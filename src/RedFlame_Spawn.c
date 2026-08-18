@@ -10,7 +10,7 @@ int *RedFlame_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(280);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV9BlueFlame;
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0xe4);
     }

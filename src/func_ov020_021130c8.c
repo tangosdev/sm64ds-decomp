@@ -1,6 +1,6 @@
 typedef int Fix12i;
 typedef struct Vector3 { int x, y, z; } Vector3;
-extern void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *start);
+extern void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *start);
 extern Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 
 void func_ov020_021130c8(char *c) {
@@ -10,7 +10,7 @@ void func_ov020_021130c8(char *c) {
     *(short*)(c + 0x300 + 0x98) = 0;
     *(short*)(c + 0x300 + 0x9a) = 0;
     *(short*)(c + 0x300 + 0x9c) = 0;
-    void *found = _ZN5Actor15FindWithActorIDEjPS_(0xf9, 0);
+    void *found = _ZN8dActor_c15FindWithActorIDEjPS_(0xf9, 0);
     *(int*)(c + 0x37c) = 0;
     if (!found)
         return;

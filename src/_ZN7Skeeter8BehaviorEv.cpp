@@ -37,14 +37,14 @@ void func_02035684(int* p, int v);
 void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, void* wm, u32 n);
 int  _ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn(void* self, void* wm);
 void func_ov090_02131378(void* c);
-void _ZN5Actor8PoofDustEv(void* self);
+void _ZN8dActor_c8PoofDustEv(void* self);
 void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 int  AngleDiff(int a, int b);
-void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, const void* v, u32 n, s32 fix, s16 s);
-void _ZN5Actor24KillAndTrackInDeathTableEv(void* self);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* cyl);
+void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, const void* v, u32 n, s32 fix, s16 s);
+void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* self);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* cyl);
 int  func_02035638(u8* p);
-void* _ZN5Actor13ClosestPlayerEv(void* self);
+void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 void func_ov002_020aea30(void* self, void* p, int n);
 u16  DecIfAbove0_Short(u16* p);
 void _ZN9Animation7AdvanceEv(void* self);
@@ -75,7 +75,7 @@ int Skeeter::Behavior()
         func_ov090_02131378(c);
         func_ov090_02131e50(c);
         if (mDeathState == 0)
-            _ZN5Actor8PoofDustEv(c);
+            _ZN8dActor_c8PoofDustEv(c);
         if (unk_3a1 == 3) {
             _Z14ApproachLinearRsss(&mAngleX, -32767, 0x500);
             if (AngleDiff(*&mAngleX, -32767) < 0x1000) {
@@ -88,9 +88,9 @@ int Skeeter::Behavior()
             v.x = mPosX;
             v.y = mPosY;
             v.z = mPosZ;
-            _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, unk_10a + 1, 0xa000, 0);
-            _ZN5Actor8PoofDustEv(c);
-            _ZN5Actor24KillAndTrackInDeathTableEv(c);
+            _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, unk_10a + 1, 0xa000, 0);
+            _ZN8dActor_c8PoofDustEv(c);
+            _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
         }
         return 1;
     }
@@ -99,7 +99,7 @@ int Skeeter::Behavior()
     int flag = (mFlags & 8) != 0;
     if (flag) {
         mHorzSpeed = 0;
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
         func_ov090_02131378(c);
         if (data_0209f2f8 == 0x15 && mAreaId == 1) {
             _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 2);
@@ -109,7 +109,7 @@ int Skeeter::Behavior()
                 mVertSpeed = 0;
                 unk_0ac = 0;
                 mDeathState = 1;
-                func_ov002_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
+                func_ov002_020aea30(c, _ZN8dActor_c13ClosestPlayerEv(c), 0);
                 return 1;
             }
         }
@@ -117,7 +117,7 @@ int Skeeter::Behavior()
     }
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
     func_ov090_02131378(c);
     DecIfAbove0_Short((u16 *)&unk_100);
     DecIfAbove0_Short(&unk_394);
@@ -132,7 +132,7 @@ int Skeeter::Behavior()
         mVertSpeed = 0;
         unk_0ac = 0;
         mDeathState = 1;
-        func_ov002_020aea30(c, _ZN5Actor13ClosestPlayerEv(c), 0);
+        func_ov002_020aea30(c, _ZN8dActor_c13ClosestPlayerEv(c), 0);
         return 1;
     }
 
@@ -154,7 +154,7 @@ int Skeeter::Behavior()
     func_ov090_021310b4(c);
     _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsnWithPos);
     {
-        void* p = _ZN5Actor13ClosestPlayerEv(c);
+        void* p = _ZN8dActor_c13ClosestPlayerEv(c);
         if (p != 0 && *(u8*)((char*)p + 0x6fb) == 0)
             _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsnWithPos);
     }

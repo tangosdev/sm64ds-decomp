@@ -15,7 +15,7 @@ extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(dEnemyBase_c *thiz,
 extern void _ZN12CylinderClsn5ClearEv(void *thiz);
 extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(dEnemyBase_c *thiz, void *clsn);
+extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(dEnemyBase_c *thiz, void *clsn);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(dEnemyBase_c *thiz, WithMeshClsn *wm, unsigned int j);
 extern void _ZN9Animation7AdvanceEv(void *thiz);
 }
@@ -52,7 +52,7 @@ int Fwoosh::Behavior()
         *(int *)(c + 0xa8) = hi;
         *(int *)(c + 0xac) = tmp;
     }
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((dEnemyBase_c *)this), (void *)(c + 0x110));
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(((dEnemyBase_c *)this), (void *)(c + 0x110));
     func_ov091_021339fc(c);
     _ZN12CylinderClsn5ClearEv(c + 0x110);
     _ZN12CylinderClsn6UpdateEv(c + 0x110);

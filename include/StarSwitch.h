@@ -5,8 +5,8 @@
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to dBgActor_c.
- * Everything this header used to restate below 0x31e was Actor's and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
  * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
@@ -59,7 +59,7 @@ struct StarSwitch {
     u32 mParam;            /* 0x008 */
     u16 mActorID;            /* 0x00c */
     u8  pad_00e[0x52];
-    /* 0x060..0x08e is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x060..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_060;                 /* 0x060 */
     s32 mPosZ;                   /* 0x064 */
@@ -75,7 +75,7 @@ struct StarSwitch {
     s16 mAngleX;                 /* 0x08c */
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x20];
-    /* 0x0b0..0x0cc is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x0b0..0x0cc is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     u32 unk_0b0;                 /* 0x0b0 */
     s32 unk_0b4;                 /* 0x0b4 */

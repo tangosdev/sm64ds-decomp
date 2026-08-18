@@ -5,15 +5,15 @@
 /* recovered: named members + shared header, real C++ method */
 #include "MontyMoleRock.h"
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void*);
-extern "C" void* _ZN5Actor10FindWithIDEj(unsigned int);
-extern "C" void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void*, void*);
-extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void*, void*);
+extern "C" void* _ZN8dActor_c10FindWithIDEj(unsigned int);
+extern "C" void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void*, void*);
+extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void*, void*);
 extern "C" void _ZN12CylinderClsn5ClearEv(void*);
 extern "C" void _ZN12CylinderClsn6UpdateEv(void*);
 extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void*, void*, unsigned int);
 extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void*, void*, unsigned int, int, unsigned int, unsigned int, unsigned int);
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
-extern "C" void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
+extern "C" void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
 extern "C" int RandomIntInternal(int *seed);
 
 extern int data_0209e650;
@@ -23,12 +23,12 @@ s32 MontyMoleRock::Behavior()
     unsigned char *c = (unsigned char *)((void *)this);
     unsigned char *o;
 
-    _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x160);
+    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x160);
 
     {
         unsigned int id = *(unsigned int *)(c + 0x184);
         if (id != 0) {
-            o = (unsigned char *)_ZN5Actor10FindWithIDEj(id);
+            o = (unsigned char *)_ZN8dActor_c10FindWithIDEj(id);
             if (o != 0 && (*(int *)(c + 0x180) & 0x400000)) {
                 if (*(unsigned char *)(o + 0x6f9) != 0) {
                     int v1[3];
@@ -52,7 +52,7 @@ s32 MontyMoleRock::Behavior()
             unsigned char *s;
             int r;
 
-            s = (unsigned char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
+            s = (unsigned char *)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
             r = RandomIntInternal(&data_0209e650);
             *(short *)(s + 0x92) = 0;
             *(short *)(s + 0x94) = (short)((unsigned int)r >> 8);
@@ -62,7 +62,7 @@ s32 MontyMoleRock::Behavior()
             *(int *)(s + 0xa8) = 0x5000;
             *(int *)(s + 0xac) = 0;
 
-            s = (unsigned char *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
+            s = (unsigned char *)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x137, 1, c + 0x5c, 0, *(signed char *)(c + 0xcc), -1);
             r = RandomIntInternal(&data_0209e650);
             *(short *)(s + 0x92) = 0;
             *(short *)(s + 0x94) = (short)((unsigned int)r >> 8);
@@ -75,7 +75,7 @@ s32 MontyMoleRock::Behavior()
         _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
     _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, c + 0x194, 0);
     func_ov080_02124418(c);
     _ZN12CylinderClsn5ClearEv(c + 0x160);

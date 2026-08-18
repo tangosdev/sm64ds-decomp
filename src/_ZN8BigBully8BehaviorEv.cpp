@@ -6,7 +6,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "BigBully.h"
 extern "C" {
-extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, u16* p);
+extern int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* a, u16* p);
 extern int func_ov064_02116d1c(void* c);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* c, void* clsn, unsigned f);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
@@ -17,7 +17,7 @@ int BigBully::Behavior()
     u8 s = unk_3fe;
     if (s >= 4) {
         if (mSecretSoundCounter != 0) {
-            if (_ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
+            if (_ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
                 mSecretSoundCounter = 0;
         }
         return func_ov064_02116d1c(((char*)this));
@@ -26,7 +26,7 @@ int BigBully::Behavior()
         int t;
         int m;
         int* p;
-        if (_ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
+        if (_ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)
             mSecretSoundCounter = 0;
         t = mVertSpeed + mVertAccel;
         m = mTerminalVelocity;

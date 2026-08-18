@@ -9,7 +9,7 @@ typedef short s16;
 
 extern "C" {
 extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
-extern int _ZN5Actor13DistToCPlayerEv(void* c);
+extern int _ZN8dActor_c13DistToCPlayerEv(void* c);
 extern void _Z14ApproachLinearRiii(int* val, int target, int step);
 extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern int RandomIntInternal(int* seed);
@@ -21,12 +21,12 @@ extern "C" void func_ov100_0214117c(char* c)
 {
     s16 hAngle;
 
-    if (!_ZN5Actor15IsPlayerInRangeEi(c, 0x5dc)) {
+    if (!_ZN8dActor_c15IsPlayerInRangeEi(c, 0x5dc)) {
         _ZN7fBase_c18MarkForDestructionEv(c);
         return;
     }
 
-    if (*(int*)(c + 0x3e8) > 0x6e && _ZN5Actor13DistToCPlayerEv(c) < 0xc8000 &&
+    if (*(int*)(c + 0x3e8) > 0x6e && _ZN8dActor_c13DistToCPlayerEv(c) < 0xc8000 &&
         (unsigned char)(*(unsigned char*)(c + 0x3f0) + 0xff) <= 1) {
         *(int*)(c + 0x98) = 0;
         *(int*)(c + 0x3e8) = 0;

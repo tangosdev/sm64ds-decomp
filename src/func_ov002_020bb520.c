@@ -6,7 +6,7 @@
 #include "common.h"
 enum { false, true };
 
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern s16 Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern int _ZN6Player9StartTalkER7fBase_cb(char* p, char* a, int b);
 
@@ -16,7 +16,7 @@ int func_ov002_020bb520(char* self){
   if ((*(int*)(self+0x340) & 0x8000000) == 0) return 0;
   if (*(u8*)(self+0x58e) == 0) return 0;
   {
-    char* other = (char*)_ZN5Actor10FindWithIDEj(id);
+    char* other = (char*)_ZN8dActor_c10FindWithIDEj(id);
     if (other == 0) goto fail;
     {
       int b = (int)(*(u16*)(other+0xc) == 0xbf);

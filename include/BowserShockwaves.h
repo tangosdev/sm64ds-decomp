@@ -6,7 +6,7 @@
  * EIGHT sub-objects in two identical groups of four, and every one closes exactly
  * on the next -- no padding anywhere between 0x0d4 and 0x214:
  *
- *     Actor               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     dActor_c               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
  *     ModelAnim           0x0d4 + 0x064 = 0x138   -> mTextureSequence1
  *     TextureSequence     0x138 + 0x014 = 0x14c   -> mMaterialChanger1
  *     MaterialChanger     0x14c + 0x014 = 0x160   -> mTextureTransformer1
@@ -37,9 +37,9 @@
 
 #ifdef __cplusplus
 
-#include "Actor.h"
+#include "dActor_c.h"
 
-struct BowserShockwaves : Actor {
+struct BowserShockwaves : dActor_c {
     u8  pad_0d0[0x4];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
@@ -96,7 +96,7 @@ typedef char BowserShockwaves_size_must_be_0x218[
 #else
 
 /* The same object for a C translation unit, which has no base class to inherit
-   Actor's fields from and so spells the whole layout flat. Every current includer
+   dActor_c's fields from and so spells the whole layout flat. Every current includer
    is a .cpp; this half is kept so that a future C one gets the right offsets
    rather than a parse error. */
 struct BowserShockwaves {

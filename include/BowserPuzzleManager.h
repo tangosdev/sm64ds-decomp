@@ -2,21 +2,21 @@
 #define BOWSERPUZZLEMANAGER_H
 
 #include "types.h"
-#include "Actor.h"
+#include "dActor_c.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   BowserPuzzleManager_Spawn  fBase_c::operator new(216 = 0xd8), Actor::Actor(), stores _ZTV19BowserPuzzleManager,
+ *   BowserPuzzleManager_Spawn  fBase_c::operator new(216 = 0xd8), dActor_c::dActor_c(), stores _ZTV19BowserPuzzleManager,
  *                 then the members below in this order.
- *   ~BowserPuzzleManager   the same members destroyed in reverse, then ~Actor.
+ *   ~BowserPuzzleManager   the same members destroyed in reverse, then ~dActor_c.
  *
  * SIZE 0xd8 is the factory's own literal, and the last member closes exactly on it.
  *
- * THE VTABLE was diffed slot by slot against _ZTV5Actor. Only the slots declared
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. Only the slots declared
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
  */
-struct BowserPuzzleManager : Actor {
+struct BowserPuzzleManager : dActor_c {
     u8  pad_0d0[0x8];
 
     virtual ~BowserPuzzleManager();            /* slots 16 (D1), 17 (D0) */

@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* out, int doStore);
+int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* out, int doStore);
 void _ZN12WithMeshClsn13SetLimMovFlagEv(void* self);
 }
 
@@ -75,7 +75,7 @@ extern "C" int func_ov071_0211f8d0(char* self)
     v.y = y2;
     v.z = z;
 
-    _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(self, &v, pos, one);
+    _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(self, &v, pos, one);
 
     *(int *)(self + 0xd0) = zero;
     _ZN12WithMeshClsn13SetLimMovFlagEv(self + 0x194);

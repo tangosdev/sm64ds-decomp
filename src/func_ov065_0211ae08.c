@@ -12,7 +12,7 @@ extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b)
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 extern u16 DecIfAbove0_Short(u16* p);
 extern int RandomIntInternal(int* seed);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
 
 extern s16 data_02082214[];
 extern u8 data_0209f2c0;
@@ -109,7 +109,7 @@ int func_ov065_0211ae08(char* c)
     }
 
 Lend:
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     func_ov065_0211ac0c(c);
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0x1c0000, 0x1000) != 0)

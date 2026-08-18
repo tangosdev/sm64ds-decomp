@@ -11,7 +11,7 @@ extern void func_ov077_02126d5c(char* c, void* p);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern void _Z14ApproachLinearRsss(short* a, short b, short cc);
-extern void* _ZN5Actor13ClosestPlayerEv(char* c);
+extern void* _ZN8dActor_c13ClosestPlayerEv(char* c);
 
 extern char data_ov077_02127cf8[];
 
@@ -54,7 +54,7 @@ int func_ov077_02126ad0(char* c)
     if (*(unsigned short*)(c + 0x426) != 0)
         return 1;
 
-    player = (char*)_ZN5Actor13ClosestPlayerEv(c);
+    player = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
     if (player != 0) {
         struct Vector3* src = (struct Vector3*)(((long)(player + 0x5c)));
         pp.x = src->x;

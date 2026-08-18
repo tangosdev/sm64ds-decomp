@@ -2,7 +2,7 @@
 typedef short s16;
 struct SharedFilePtr { int x; }; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 struct Arg { struct SharedFilePtr *m[2]; struct CLPS_Block *clps; };
-extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern "C" {
 struct BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, struct BMD_File *f, int a, int b);
@@ -27,7 +27,7 @@ extern "C" int func_ov002_020b676c(unsigned char *self, struct Arg *a, short arg
             self + 0x124, kcl, *(struct Matrix4x3 *)(self + 0x2ec), 0x199,
             *(s16 *)(self + 0x8e), *a->clps);
     }
-    func_020393d4((int *)(self + 0x124), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int *)(self + 0x124), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     *(s16 *)(self + 0x96) = arg2;
     y = *(s16 *)(self + 0x90);
     if (y != 0) {

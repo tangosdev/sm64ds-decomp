@@ -6,7 +6,7 @@ struct C;
 typedef void (C::*PMF)();
 extern "C" PMF data_ov002_0210dd30[];
 extern "C" {
-void* _ZN5Actor4NextEPKS_(const void* prev);
+void* _ZN8dActor_c4NextEPKS_(const void* prev);
 int Vec3_Dist(const void* a, const void* b);
 void _ZN7fBase_c18MarkForDestructionEv(void* c);
 }
@@ -16,7 +16,7 @@ int BrickBlock::Behavior()
 {
   char* o = 0;
   if (unk_0d8 != 0) goto d6;
-  o = (char*)_ZN5Actor4NextEPKS_(0);
+  o = (char*)_ZN8dActor_c4NextEPKS_(0);
   while (o){
     unsigned short t = *(unsigned short*)(o + 0xc);
     int b;
@@ -34,7 +34,7 @@ int BrickBlock::Behavior()
       return 1;
     }
   next:
-    o = (char*)_ZN5Actor4NextEPKS_(o);
+    o = (char*)_ZN8dActor_c4NextEPKS_(o);
   }
   if (o) goto d6;
   _ZN7fBase_c18MarkForDestructionEv(((char*)this));

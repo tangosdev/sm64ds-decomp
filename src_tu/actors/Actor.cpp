@@ -1,5 +1,5 @@
 //cpp
-/* SHADOW translation unit -- arm9 / Actor.  Nintendo's dActor_c.
+/* SHADOW translation unit -- arm9 / dActor_c.  Nintendo's dActor_c.
  *
  * NOT ENROLLED, NOT CANONICAL. The one-function sources under src/ remain the
  * enrolled owners of 0x0200f658..0x02011654; this file contributes nothing to
@@ -13,10 +13,10 @@
  * bottom -- the natural shape of a hand-written .cpp, and the strongest single
  * piece of evidence that this span is one translation unit.
  *
- * Actor::~Actor IS NOT DEFINED AS A METHOD HERE, deliberately. include/Actor.h
+ * dActor_c::~dActor_c IS NOT DEFINED AS A METHOD HERE, deliberately. include/dActor_c.h
  * declares the destructor first precisely so that it is the key function, and
  * the header's own comment states the invariant: the key function must never be
- * defined as a real method in any TU, or the compiler emits _ZTV5Actor and it
+ * defined as a real method in any TU, or the compiler emits _ZTV8dActor_c and it
  * collides with the copy the module's gap object supplies from ROM data. D0, D1
  * and D2 therefore keep their extern "C" free-function form, exactly as the
  * legacy sources have them.
@@ -34,7 +34,7 @@
  * file. Not one of them changes what a function does, and every one was held to
  * the byte gate: 97/97 members reproduce the cartridge.
  *
- *  - Shadow types dropped for the real header's: Actor, Vector3, Vector3_16,
+ *  - Shadow types dropped for the real header's: dActor_c, Vector3, Vector3_16,
  *    Matrix4x3, CylinderClsn, Player, Sound, Heap, and `typedef int Fix12`
  *    (types.h has a Fix12<T> TEMPLATE, so that typedef is not even legal here).
  *    Field names follow: deathTableId -> unk_0ce, flags -> mFlags, camSpacePos
@@ -49,7 +49,7 @@
  *    s16) where its own file only knew (int, int, uchar, short);
  *    Particle::System::NewSimple returns int, because the two callers that USE
  *    the result cannot both be wrong about it while six that discard it are
- *    right. Actor::ClosestPlayer is DEFINED here, so the three disagreeing
+ *    right. dActor_c::ClosestPlayer is DEFINED here, so the three disagreeing
  *    extern "C" guesses at its prototype are simply gone.
  *  - 12/18's RaycastGround is renamed RaycastGroundPod. It and 14/16's describe
  *    the same 0x50 bytes of stack, but one is a POD constructed by explicit
@@ -68,26 +68,26 @@
  *    under decl_common.h's (int) prototypes, mwcc commons them into a fourth
  *    register and D0 comes out 0xc long.
  *
- * include/Actor.h gained three declarations for this file: a `struct Matrix4x3;`
+ * include/dActor_c.h gained three declarations for this file: a `struct Matrix4x3;`
  * forward declaration, `void UntrackInDeathTable();` and
  * `Matrix4x3 *UpdateCarry(Player &, const Vector3 &);`. All three are
  * NON-VIRTUAL, so the class layout, its 0xd0 size assertion and its 31 vtable
- * slots are untouched, and ~Actor() is still the key function. */
+ * slots are untouched, and ~dActor_c() is still the key function. */
 
 /* Includes: union of the admitted legacy files', first-seen in emission
  * order. Header-guarded, so the union is safe; ordering constraints are
  * not otherwise checked. */
 #include "types.h"
 #include "decl_common.h"
-#include "Actor.h"
+#include "dActor_c.h"
 #include "Player.h"
 #include "common.h"
 #include "CylinderClsn.h"
 #include "Sound.h"
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 96 -- _ZN5ActorC2Ev
- * 0x0201150c  size 0x148   legacy src/_ZN5ActorC2Ev.cpp */
+/* ROM ordinal 96 -- _ZN8dActor_cC2Ev
+ * 0x0201150c  size 0x148   legacy src/_ZN8dActor_cC2Ev.cpp */
 extern "C" {
 extern int data_0208e4b8;
 extern int data_0208e3a4;
@@ -99,9 +99,9 @@ extern int* data_020a4bb8;
 extern unsigned char data_0209f2d8;
 void _ZN7fBase_cC1Ev(void* self);
 int func_0203b244(void* l, void* n);
-void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(struct Actor *self, int a, int b, int c, int d);
+void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(struct dActor_c *self, int a, int b, int c, int d);
 }
-extern "C" void* _ZN5ActorC2Ev(struct Actor *self) {
+extern "C" void* _ZN8dActor_cC2Ev(struct dActor_c *self) {
     int* entry;
     int b;
     int r3;
@@ -143,7 +143,7 @@ extern "C" void* _ZN5ActorC2Ev(struct Actor *self) {
         r3 = entry[5] + 0x7d0000;
     else
         r3 = entry[5];
-    _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_((self), entry[3], entry[4], r3, entry[6]);
+    _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_((self), entry[3], entry[4], r3, entry[6]);
     return ((char*)self);
 }
 
@@ -161,9 +161,9 @@ extern "C" void* _ZN5ActorC2Ev(struct Actor *self) {
 extern "C" void _ZN8Vector3sD1Ev(void *self) {}
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 94 -- _ZN5ActorC1Ev
- * 0x020113c0  size 0x148   legacy src/_ZN5ActorC1Ev.cpp */
-extern "C" void* _ZN5ActorC1Ev(struct Actor *self) {
+/* ROM ordinal 94 -- _ZN8dActor_cC1Ev
+ * 0x020113c0  size 0x148   legacy src/_ZN8dActor_cC1Ev.cpp */
+extern "C" void* _ZN8dActor_cC1Ev(struct dActor_c *self) {
   _ZN7fBase_cC1Ev(((char*)self));
   *(void**)((char*)self) = &data_0208e4b8;
   *(void**)((char*)self) = &data_0208e3a4;
@@ -204,23 +204,23 @@ extern "C" void* _ZN5ActorC1Ev(struct Actor *self) {
       int d = *(int*)(s+0x18);
       if (b) r3 = *(int*)(s+0x14) + 0x7d0000;
       else r3 = *(int*)(s+0x14);
-      _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_((self), *(int*)(s+0xc), *(int*)(s+0x10), r3, d);
+      _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_((self), *(int*)(s+0xc), *(int*)(s+0x10), r3, d);
     }
   }
   return ((char*)self);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 93 -- _ZN5ActorD1Ev
- * 0x02011374  size 0x4c   legacy src/_ZN5ActorD1Ev.cpp */
+/* ROM ordinal 93 -- _ZN8dActor_cD1Ev
+ * 0x02011374  size 0x4c   legacy src/_ZN8dActor_cD1Ev.cpp */
 extern "C" {
-extern int _ZTV5Actor[];
+extern int _ZTV8dActor_c[];
 extern int _ZTV7dBase_c[];
 extern void _ZN7fBase_cD2Ev(int c);
 }
 extern "C" {
-int _ZN5ActorD1Ev(struct Actor *self) {
-  *(int*)((int)self) = (int)_ZTV5Actor;
+int _ZN8dActor_cD1Ev(struct dActor_c *self) {
+  *(int*)((int)self) = (int)_ZTV8dActor_c;
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
   func_02044104((int)&self->unk_050);
   *(int*)((int)self) = (int)_ZTV7dBase_c;
@@ -230,11 +230,11 @@ int _ZN5ActorD1Ev(struct Actor *self) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 92 -- _ZN5ActorD0Ev
- * 0x02011314  size 0x60   legacy src/_ZN5ActorD0Ev.c */
-extern "C" struct Actor *_ZN5ActorD0Ev(struct Actor *thiz)
+/* ROM ordinal 92 -- _ZN8dActor_cD0Ev
+ * 0x02011314  size 0x60   legacy src/_ZN8dActor_cD0Ev.c */
+extern "C" struct dActor_c *_ZN8dActor_cD0Ev(struct dActor_c *thiz)
 {
-    *(void **)thiz = (void *)_ZTV5Actor;
+    *(void **)thiz = (void *)_ZTV8dActor_c;
     func_0203b27c((int)data_0209b468, ((int)thiz) + 0x50);
     func_02044104((int)&thiz->unk_050);
     *(void **)thiz = (void *)_ZTV7dBase_c;
@@ -244,11 +244,11 @@ extern "C" struct Actor *_ZN5ActorD0Ev(struct Actor *thiz)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 91 -- _ZN5ActorD2Ev
- * 0x020112c8  size 0x4c   legacy src/_ZN5ActorD2Ev.cpp */
+/* ROM ordinal 91 -- _ZN8dActor_cD2Ev
+ * 0x020112c8  size 0x4c   legacy src/_ZN8dActor_cD2Ev.cpp */
 extern "C" {
-int _ZN5ActorD2Ev(struct Actor *self) {
-  *(int*)((int)self) = (int)_ZTV5Actor;
+int _ZN8dActor_cD2Ev(struct dActor_c *self) {
+  *(int*)((int)self) = (int)_ZTV8dActor_c;
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
   func_02044104((int)&self->unk_050);
   *(int*)((int)self) = (int)_ZTV7dBase_c;
@@ -258,9 +258,9 @@ int _ZN5ActorD2Ev(struct Actor *self) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 90 -- _ZN5Actor19BeforeInitResourcesEv
- * 0x02011268  size 0x60   legacy src/_ZN5Actor19BeforeInitResourcesEv.cpp */
-bool Actor::BeforeInitResources()
+/* ROM ordinal 90 -- _ZN8dActor_c19BeforeInitResourcesEv
+ * 0x02011268  size 0x60   legacy src/_ZN8dActor_c19BeforeInitResourcesEv.cpp */
+bool dActor_c::BeforeInitResources()
 {
     int spawnEvenIfKilledBefore;
 
@@ -282,9 +282,9 @@ skip:;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 89 -- _ZN5Actor18AfterInitResourcesEj
- * 0x02011244  size 0x24   legacy src/_ZN5Actor18AfterInitResourcesEj.cpp */
-void Actor::AfterInitResources(u32 vfSuccess)
+/* ROM ordinal 89 -- _ZN8dActor_c18AfterInitResourcesEj
+ * 0x02011244  size 0x24   legacy src/_ZN8dActor_c18AfterInitResourcesEj.cpp */
+void dActor_c::AfterInitResources(u32 vfSuccess)
 {
     dBase_c::AfterInitResources(vfSuccess);
     /* The (long long)(int) cast is a codegen launder, not a type conversion: the
@@ -295,9 +295,9 @@ void Actor::AfterInitResources(u32 vfSuccess)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 88 -- _ZN5Actor22BeforeCleanupResourcesEv
- * 0x02011220  size 0x24   legacy src/_ZN5Actor22BeforeCleanupResourcesEv.cpp */
-int Actor::BeforeCleanupResources()
+/* ROM ordinal 88 -- _ZN8dActor_c22BeforeCleanupResourcesEv
+ * 0x02011220  size 0x24   legacy src/_ZN8dActor_c22BeforeCleanupResourcesEv.cpp */
+int dActor_c::BeforeCleanupResources()
 {
     if (fBase_c::BeforeCleanupResources() != 0)
         return 1;
@@ -305,16 +305,16 @@ int Actor::BeforeCleanupResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 87 -- _ZN5Actor21AfterCleanupResourcesEj
- * 0x02011214  size 0xc   legacy src/_ZN5Actor21AfterCleanupResourcesEj.cpp */
-void Actor::AfterCleanupResources(u32 vfSuccess)
+/* ROM ordinal 87 -- _ZN8dActor_c21AfterCleanupResourcesEj
+ * 0x02011214  size 0xc   legacy src/_ZN8dActor_c21AfterCleanupResourcesEj.cpp */
+void dActor_c::AfterCleanupResources(u32 vfSuccess)
 {
     fBase_c::AfterCleanupResources(vfSuccess);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 86 -- _ZN5Actor14BeforeBehaviorEv
- * 0x02010fd4  size 0x240   legacy src/_ZN5Actor14BeforeBehaviorEv.cpp */
+/* ROM ordinal 86 -- _ZN8dActor_c14BeforeBehaviorEv
+ * 0x02010fd4  size 0x240   legacy src/_ZN8dActor_c14BeforeBehaviorEv.cpp */
 extern "C" {
 u8 IsAreaShowing(int areaId);
 void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
@@ -328,7 +328,7 @@ extern u8 data_0209f20c;
 extern u8 data_0209f294;
 extern u32 data_0209b464; /* flag mask that forces thinking; 0 means "any" */
 }
-int Actor::BeforeBehavior()
+int dActor_c::BeforeBehavior()
 {
     if (!fBase_c::BeforeBehavior())
         return 0;
@@ -392,17 +392,17 @@ do_copy:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 85 -- _ZN5Actor13AfterBehaviorEj
- * 0x02010fc8  size 0xc   legacy src/_ZN5Actor13AfterBehaviorEj.cpp */
-void Actor::AfterBehavior(u32 vfSuccess)
+/* ROM ordinal 85 -- _ZN8dActor_c13AfterBehaviorEj
+ * 0x02010fc8  size 0xc   legacy src/_ZN8dActor_c13AfterBehaviorEj.cpp */
+void dActor_c::AfterBehavior(u32 vfSuccess)
 {
     fBase_c::AfterBehavior(vfSuccess);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 84 -- _ZN5Actor12BeforeRenderEv
- * 0x02010f78  size 0x50   legacy src/_ZN5Actor12BeforeRenderEv.cpp */
-int Actor::BeforeRender()
+/* ROM ordinal 84 -- _ZN8dActor_c12BeforeRenderEv
+ * 0x02010f78  size 0x50   legacy src/_ZN8dActor_c12BeforeRenderEv.cpp */
+int dActor_c::BeforeRender()
 {
     u32 flags;
 
@@ -423,48 +423,48 @@ ret1:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 83 -- _ZN5Actor11AfterRenderEj
- * 0x02010f6c  size 0xc   legacy src/_ZN5Actor11AfterRenderEj.cpp */
-void Actor::AfterRender(u32 vfSuccess)
+/* ROM ordinal 83 -- _ZN8dActor_c11AfterRenderEj
+ * 0x02010f6c  size 0xc   legacy src/_ZN8dActor_c11AfterRenderEj.cpp */
+void dActor_c::AfterRender(u32 vfSuccess)
 {
     fBase_c::AfterRender(vfSuccess);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 82 -- _ZN5Actor10FindWithIDEj
- * 0x02010f3c  size 0x30   legacy src/_ZN5Actor10FindWithIDEj.cpp */
+/* ROM ordinal 82 -- _ZN8dActor_c10FindWithIDEj
+ * 0x02010f3c  size 0x30   legacy src/_ZN8dActor_c10FindWithIDEj.cpp */
 extern "C" {
-extern Actor *func_02043f98(Actor **head, unsigned int id);
+extern dActor_c *func_02043f98(dActor_c **head, unsigned int id);
 }
-Actor *Actor::FindWithID(u32 id)
+dActor_c *dActor_c::FindWithID(u32 id)
 {
-    Actor *node = func_02043f98((Actor **)data_0209b468, id);
+    dActor_c *node = func_02043f98((dActor_c **)data_0209b468, id);
     if (node)
-        return *(Actor **)((char *)node + 8);
+        return *(dActor_c **)((char *)node + 8);
     return 0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 81 -- _ZN5Actor15FindWithActorIDEjPS_
- * 0x02010ef0  size 0x4c   legacy src/_ZN5Actor15FindWithActorIDEjPS_.cpp */
-Actor *Actor::FindWithActorID(u32 j, Actor *after) {
+/* ROM ordinal 81 -- _ZN8dActor_c15FindWithActorIDEjPS_
+ * 0x02010ef0  size 0x4c   legacy src/_ZN8dActor_c15FindWithActorIDEjPS_.cpp */
+dActor_c *dActor_c::FindWithActorID(u32 j, dActor_c *after) {
   int p = (int)after;
   int *r;
   if (p) r = func_02043f4c(data_0209b468, j, p+0x50);
   else r = func_02043f4c(data_0209b468, j, 0);
-  if (r) return (Actor *)r[2];
+  if (r) return (dActor_c *)r[2];
   return 0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 80 -- _ZN5Actor4NextEPKS_
- * 0x02010ecc  size 0x24   legacy src/_ZN5Actor4NextEPKS_.cpp */
+/* ROM ordinal 80 -- _ZN8dActor_c4NextEPKS_
+ * 0x02010ecc  size 0x24   legacy src/_ZN8dActor_c4NextEPKS_.cpp */
 extern "C" {
-struct Actor* _ZN5Actor4NextEPKS_(struct Actor *self) {
-  struct Actor* p;
-  if(((struct Actor*)self)) p = *(struct Actor**)((char*)&self->unk_054);
-  else  p = *(struct Actor**)&data_0209b468;
-  if(p) return *(struct Actor**)((char*)p+8);
+struct dActor_c* _ZN8dActor_c4NextEPKS_(struct dActor_c *self) {
+  struct dActor_c* p;
+  if(((struct dActor_c*)self)) p = *(struct dActor_c**)((char*)&self->unk_054);
+  else  p = *(struct dActor_c**)&data_0209b468;
+  if(p) return *(struct dActor_c**)((char*)p+8);
   return 0;
 }
 }
@@ -482,24 +482,24 @@ extern "C" void func_02010e78(const Vector3 *a, const Vector3_16 *b, s8 c, s16 d
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 78 -- _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as
- * 0x02010e2c  size 0x4c   legacy src/_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as.cpp */
+/* ROM ordinal 78 -- _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as
+ * 0x02010e2c  size 0x4c   legacy src/_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as.cpp */
 extern "C" {
 extern fBase_c *data_0209f5c0;
 void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID);
 }
-Actor *Actor::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
+dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                     const Vector3_16 *rot, s8 areaID, s16 deathTableID)
 {
     func_02010e78(&pos, rot, areaID, deathTableID);
-    return (Actor *)dBase_c::Spawn(actorID, data_0209f5c0, spawnParam, 2);
+    return (dActor_c *)dBase_c::Spawn(actorID, data_0209f5c0, spawnParam, 2);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 77 -- _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_
- * 0x02010e08  size 0x24   legacy src/_ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_.cpp */
+/* ROM ordinal 77 -- _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_
+ * 0x02010e08  size 0x24   legacy src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp */
 extern "C" {
-void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(struct Actor *self, int a, int b, int c, int d) {
+void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(struct dActor_c *self, int a, int b, int c, int d) {
 self->unk_0b4=a;
 self->unk_0b8=b>>3;
 self->unk_0bc=c>>3;
@@ -525,15 +525,15 @@ extern "C" void func_02010da4(int* p)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 75 -- _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn
- * 0x02010d40  size 0x64   legacy src/_ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn.cpp */
+/* ROM ordinal 75 -- _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn
+ * 0x02010d40  size 0x64   legacy src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn.cpp */
 typedef int s32;
 struct Vec3 { s32 x, y, z; };
 extern "C" {
 void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
 void func_02010da4(int *p);
 }
-void Actor::UpdatePosWithOnlySpeed(CylinderClsn *clsn) {
+void dActor_c::UpdatePosWithOnlySpeed(CylinderClsn *clsn) {
     AddVec3((Vec3 *)&mPosX, (Vec3 *)&unk_0a4, (Vec3 *)&mPosX);
     if (clsn != 0) {
         *(s32 *)(&mPosX) += clsn->pushback.x;
@@ -543,14 +543,14 @@ void Actor::UpdatePosWithOnlySpeed(CylinderClsn *clsn) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 74 -- _ZN5Actor28UpdatePosWithHorzSpeedAndAngEv
- * 0x02010c5c  size 0xe4   legacy src/_ZN5Actor28UpdatePosWithHorzSpeedAndAngEv.cpp */
+/* ROM ordinal 74 -- _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv
+ * 0x02010c5c  size 0xe4   legacy src/_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv.cpp */
 typedef short s16;
 typedef long long s64;
 extern "C" {
 extern "C" s16 data_02082214[];
 }
-void Actor::UpdatePosWithHorzSpeedAndAng(){
+void dActor_c::UpdatePosWithHorzSpeedAndAng(){
     void *c = this;
     s32 v98 = *(s32*)((char*)c+0x98);
     if (v98 == 0) {
@@ -591,23 +591,23 @@ void Actor::UpdatePosWithHorzSpeedAndAng(){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 73 -- _ZN5Actor9UpdatePosEP12CylinderClsn
- * 0x02010c30  size 0x2c   legacy src/_ZN5Actor9UpdatePosEP12CylinderClsn.cpp */
-void Actor::UpdatePos(CylinderClsn *clsn)
+/* ROM ordinal 73 -- _ZN8dActor_c9UpdatePosEP12CylinderClsn
+ * 0x02010c30  size 0x2c   legacy src/_ZN8dActor_c9UpdatePosEP12CylinderClsn.cpp */
+void dActor_c::UpdatePos(CylinderClsn *clsn)
 {
     UpdatePosWithHorzSpeedAndAng();
     UpdatePosWithOnlySpeed(clsn);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 72 -- _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j
- * 0x02010be8  size 0x48   legacy src/_ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c */
+/* ROM ordinal 72 -- _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j
+ * 0x02010be8  size 0x48   legacy src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c */
 struct ShadowModel;
 extern "C" {
 extern void _ZN11ShadowModel9InitModelEP9Matrix4x35Fix12IiES3_S3_j( struct ShadowModel* shadow, struct Matrix4x3* matrix, Fix12i scaleX, Fix12i scaleY, Fix12i scaleZ, u8 opacity);
 }
-extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
-    struct Actor* this_,
+extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    struct dActor_c* this_,
     struct ShadowModel* shadow,
     struct Matrix4x3* matrix,
     Fix12i radius,
@@ -620,10 +620,10 @@ extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12Ii
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 71 -- _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j
- * 0x02010b9c  size 0x4c   legacy src/_ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c */
-extern "C" void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
-    struct Actor* this_,
+/* ROM ordinal 71 -- _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j
+ * 0x02010b9c  size 0x4c   legacy src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c */
+extern "C" void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+    struct dActor_c* this_,
     struct ShadowModel* shadow,
     struct Matrix4x3* matrix,
     Fix12i scaleX,
@@ -637,8 +637,8 @@ extern "C" void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiE
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 70 -- _ZN5Actor13ClosestPlayerEv
- * 0x02010ad8  size 0xc4   legacy src/_ZN5Actor13ClosestPlayerEv.cpp */
+/* ROM ordinal 70 -- _ZN8dActor_c13ClosestPlayerEv
+ * 0x02010ad8  size 0xc4   legacy src/_ZN8dActor_c13ClosestPlayerEv.cpp */
 extern "C" {
 extern int Vec3_Dist(const void* a, const void* b);
 extern int data_0208e380;
@@ -646,7 +646,7 @@ extern int data_0208e37c;
 extern unsigned char data_0209f21c;
 extern void* data_0209f394[];
 }
-Player *Actor::ClosestPlayer()
+Player *dActor_c::ClosestPlayer()
 {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
@@ -664,9 +664,9 @@ Player *Actor::ClosestPlayer()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 69 -- _ZN5Actor22ClosestNonVanishPlayerEv
- * 0x02010a08  size 0xd0   legacy src/_ZN5Actor22ClosestNonVanishPlayerEv.cpp */
-Player *Actor::ClosestNonVanishPlayer()
+/* ROM ordinal 69 -- _ZN8dActor_c22ClosestNonVanishPlayerEv
+ * 0x02010a08  size 0xd0   legacy src/_ZN8dActor_c22ClosestNonVanishPlayerEv.cpp */
+Player *dActor_c::ClosestNonVanishPlayer()
 {
     if (!data_0209b458) {
         data_0208e380 = 0x7fffffff;
@@ -685,36 +685,36 @@ Player *Actor::ClosestNonVanishPlayer()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 68 -- _ZN5Actor13DistToCPlayerEv
- * 0x020109e4  size 0x24   legacy src/_ZN5Actor13DistToCPlayerEv.cpp */
+/* ROM ordinal 68 -- _ZN8dActor_c13DistToCPlayerEv
+ * 0x020109e4  size 0x24   legacy src/_ZN8dActor_c13DistToCPlayerEv.cpp */
 typedef int Fix12i; /* 20.12 fixed-point */
-s32 Actor::DistToCPlayer()
+s32 dActor_c::DistToCPlayer()
 {
     ClosestPlayer();
     return data_0208e380;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 67 -- _ZN5Actor18HorzAngleToCPlayerEv
- * 0x020109b8  size 0x2c   legacy src/_ZN5Actor18HorzAngleToCPlayerEv.cpp */
+/* ROM ordinal 67 -- _ZN8dActor_c18HorzAngleToCPlayerEv
+ * 0x020109b8  size 0x2c   legacy src/_ZN8dActor_c18HorzAngleToCPlayerEv.cpp */
 extern "C" {
 s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 }
-s16 Actor::HorzAngleToCPlayer()
+s16 dActor_c::HorzAngleToCPlayer()
 {
     ClosestPlayer();
     return Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)((char *)data_0209b458 + 0x5c));
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 66 -- _ZN5Actor23HorzAngleToCPlayerOrAngEv
- * 0x0201097c  size 0x3c   legacy src/_ZN5Actor23HorzAngleToCPlayerOrAngEv.cpp */
-s16 Actor::HorzAngleToCPlayerOrAng()
+/* ROM ordinal 66 -- _ZN8dActor_c23HorzAngleToCPlayerOrAngEv
+ * 0x0201097c  size 0x3c   legacy src/_ZN8dActor_c23HorzAngleToCPlayerOrAngEv.cpp */
+s16 dActor_c::HorzAngleToCPlayerOrAng()
 {
-    Actor *player;
+    dActor_c *player;
 
     ClosestPlayer();
-    player = (Actor *)data_0209b458;
+    player = (dActor_c *)data_0209b458;
     if (player == 0)
         return mAngleY;
 
@@ -722,30 +722,30 @@ s16 Actor::HorzAngleToCPlayerOrAng()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 65 -- _ZN5Actor14FarthestPlayerEv
- * 0x02010958  size 0x24   legacy src/_ZN5Actor14FarthestPlayerEv.cpp */
-Player *Actor::FarthestPlayer()
+/* ROM ordinal 65 -- _ZN8dActor_c14FarthestPlayerEv
+ * 0x02010958  size 0x24   legacy src/_ZN8dActor_c14FarthestPlayerEv.cpp */
+Player *dActor_c::FarthestPlayer()
 {
     ClosestPlayer();
     return (Player *)data_0209b450;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 64 -- _ZN5Actor18HorzAngleToFPlayerEv
- * 0x0201092c  size 0x2c   legacy src/_ZN5Actor18HorzAngleToFPlayerEv.cpp */
-s16 Actor::HorzAngleToFPlayer()
+/* ROM ordinal 64 -- _ZN8dActor_c18HorzAngleToFPlayerEv
+ * 0x0201092c  size 0x2c   legacy src/_ZN8dActor_c18HorzAngleToFPlayerEv.cpp */
+s16 dActor_c::HorzAngleToFPlayer()
 {
     ClosestPlayer();
     return Vec3_HorzAngle((Vector3 *)&mPosX, (Vector3 *)((char *)data_0209b450 + 0x5c));
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 63 -- _ZN5Actor18ClosestWithActorIDEj
- * 0x020108c4  size 0x68   legacy src/_ZN5Actor18ClosestWithActorIDEj.cpp */
-Actor *Actor::ClosestWithActorID(u32 actorID)
+/* ROM ordinal 63 -- _ZN8dActor_c18ClosestWithActorIDEj
+ * 0x020108c4  size 0x68   legacy src/_ZN8dActor_c18ClosestWithActorIDEj.cpp */
+dActor_c *dActor_c::ClosestWithActorID(u32 actorID)
 {
-    Actor *actor = 0;
-    Actor *closest = 0;
+    dActor_c *actor = 0;
+    dActor_c *closest = 0;
     Fix12i closestDist = 0x7fffffff;
 
     for (;;) {
@@ -787,19 +787,19 @@ extern "C" s32 func_02010844(void* unused, Vector3* v, s16 angle)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 61 -- _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs
- * 0x02010714  size 0x130   legacy src/_ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs.c */
+/* ROM ordinal 61 -- _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs
+ * 0x02010714  size 0x130   legacy src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.c */
 typedef unsigned int u32;
 extern "C" {
-Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as( u32 actorID, u32 param, const void *pos, const Vector3_16 *rot, s32 areaID, s32 deathTableID);
+dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as( u32 actorID, u32 param, const void *pos, const Vector3_16 *rot, s32 areaID, s32 deathTableID);
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650[];
 }
-extern "C" void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(
-    struct Actor *self, const struct Vector3 *pos, s32 count,
+extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(
+    struct dActor_c *self, const struct Vector3 *pos, s32 count,
     s32 spread, s16 angle)
 {
-    struct Actor *actor;
+    struct dActor_c *actor;
     s32 ang;
     s32 prev;
     s32 i;
@@ -823,7 +823,7 @@ extern "C" void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(
     }
 
     for (i = 0; i < count; i++) {
-        actor = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+        actor = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
             id, param, pos, rot,
             *(signed char *)((char *)self + 0xcc), deathId);
 
@@ -846,14 +846,14 @@ extern "C" void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 60 -- _ZN5Actor15GivePlayerCoinsER6Playerhj
- * 0x0201061c  size 0xf8   legacy src/_ZN5Actor15GivePlayerCoinsER6Playerhj.cpp */
+/* ROM ordinal 60 -- _ZN8dActor_c15GivePlayerCoinsER6Playerhj
+ * 0x0201061c  size 0xf8   legacy src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp */
 extern "C" {
 extern u32 data_02075238[]; /* coins each kind is worth */
 extern u16 data_02075230[]; /* actor ID of the popup each kind spawns */
 void GiveCoins(s32 playerNo, s32 amount); /* 0x0202a7b8 */
 }
-void Actor::GivePlayerCoins(Player &player, u8 count, u32 coinKind)
+void dActor_c::GivePlayerCoins(Player &player, u8 count, u32 coinKind)
 {
     if (&player == 0)
         return;
@@ -882,7 +882,7 @@ void Actor::GivePlayerCoins(Player &player, u8 count, u32 coinKind)
     spawnPos.z = src->z;
     spawnPos.y = spawnPos.y + 0x96000;
 
-    Actor *popup = Spawn(data_02075230[coinKind], 8, spawnPos, 0,
+    dActor_c *popup = Spawn(data_02075230[coinKind], 8, spawnPos, 0,
                          player.mAreaId, -1);
     if (popup != 0)
         *(Player **)((char *)popup + 0x39c) = &player;
@@ -894,7 +894,7 @@ void Actor::GivePlayerCoins(Player &player, u8 count, u32 coinKind)
 extern "C" {
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 soundID, const struct Vector3 *pos); /* 0x0201264c */
 }
-extern "C" void func_020105cc(struct Actor *thiz, u32 flags)
+extern "C" void func_020105cc(struct dActor_c *thiz, u32 flags)
 {
     if (flags & 0x380)
     {
@@ -909,9 +909,9 @@ extern "C" void func_020105cc(struct Actor *thiz, u32 flags)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 58 -- _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player
- * 0x0201054c  size 0x80   legacy src/_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player.cpp */
-int Actor::JumpedOnByPlayer(CylinderClsn &clsn, Player &player)
+/* ROM ordinal 58 -- _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player
+ * 0x0201054c  size 0x80   legacy src/_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player.cpp */
+int dActor_c::JumpedOnByPlayer(CylinderClsn &clsn, Player &player)
 {
     volatile s32 pad[4];
     s32 vel = player.mVertSpeed;
@@ -931,10 +931,10 @@ int Actor::JumpedOnByPlayer(CylinderClsn &clsn, Player &player)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 57 -- _ZN5Actor24BumpedUnderneathByPlayerER6Player
- * 0x02010518  size 0x34   legacy src/_ZN5Actor24BumpedUnderneathByPlayerER6Player.cpp */
+/* ROM ordinal 57 -- _ZN8dActor_c24BumpedUnderneathByPlayerER6Player
+ * 0x02010518  size 0x34   legacy src/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp */
 extern "C" {
-int _ZN5Actor24BumpedUnderneathByPlayerER6Player(struct Actor *self, char*player) {
+int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(struct dActor_c *self, char*player) {
 if(*(unsigned char*)(player+0x6de)!=0 && *(int*)(player+0xa8)>0
    && *(int*)(player+0x60) < self->mPosY)
   return 1;
@@ -943,9 +943,9 @@ return 0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 56 -- _ZN5Actor15IsPlayerInRangeEi
- * 0x020104dc  size 0x3c   legacy src/_ZN5Actor15IsPlayerInRangeEi.cpp */
-bool Actor::IsPlayerInRange(s32 maxDist)
+/* ROM ordinal 56 -- _ZN8dActor_c15IsPlayerInRangeEi
+ * 0x020104dc  size 0x3c   legacy src/_ZN8dActor_c15IsPlayerInRangeEi.cpp */
+bool dActor_c::IsPlayerInRange(s32 maxDist)
 {
     Player *closest = ClosestPlayer();
 
@@ -953,21 +953,21 @@ bool Actor::IsPlayerInRange(s32 maxDist)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 55 -- _ZN5Actor15IsPlayerInRangeE5Fix12IiES1_S1_i
- * 0x02010498  size 0x44   legacy src/_ZN5Actor15IsPlayerInRangeE5Fix12IiES1_S1_i.c */
-extern "C" int _ZN5Actor15IsPlayerInRangeE5Fix12IiES1_S1_i(struct Actor *self, Fix12i posX, Fix12i posY, Fix12i posZ, int maxDist) {
+/* ROM ordinal 55 -- _ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i
+ * 0x02010498  size 0x44   legacy src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c */
+extern "C" int _ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i(struct dActor_c *self, Fix12i posX, Fix12i posY, Fix12i posZ, int maxDist) {
     struct Vector3 pos;
     pos.x = posX;
     pos.y = posY;
     pos.z = posZ;
-    struct Actor *closest = (struct Actor *)self->ClosestPlayer();
+    struct dActor_c *closest = (struct dActor_c *)self->ClosestPlayer();
     return Vec3_Dist(&pos, (struct Vector3 *)&closest->mPosX) < (maxDist << 12);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 54 -- _ZN5Actor15IsPlayerInRangeERK7Vector3i
- * 0x0201045c  size 0x3c   legacy src/_ZN5Actor15IsPlayerInRangeERK7Vector3i.cpp */
-bool Actor::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
+/* ROM ordinal 54 -- _ZN8dActor_c15IsPlayerInRangeERK7Vector3i
+ * 0x0201045c  size 0x3c   legacy src/_ZN8dActor_c15IsPlayerInRangeERK7Vector3i.cpp */
+bool dActor_c::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
 {
     Player *closest = ClosestPlayer();
 
@@ -975,9 +975,9 @@ bool Actor::IsPlayerInRange(const Vector3 &pos, s32 maxDist)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 53 -- _ZN5Actor12ReflectAngleE5Fix12IiES1_s
- * 0x02010428  size 0x34   legacy src/_ZN5Actor12ReflectAngleE5Fix12IiES1_s.c */
-extern "C" s16 _ZN5Actor12ReflectAngleE5Fix12IiES1_s(struct Actor *thiz, Fix12i normalX, Fix12i normalZ, s16 angToReflect)
+/* ROM ordinal 53 -- _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s
+ * 0x02010428  size 0x34   legacy src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.c */
+extern "C" s16 _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(struct dActor_c *thiz, Fix12i normalX, Fix12i normalZ, s16 angToReflect)
 {
     s16 normalAngle = _ZN4cstd5atan2E5Fix12IiES1_(normalX, normalZ);
     s16 delta = (s16)((angToReflect + 0x8000) - normalAngle);
@@ -985,9 +985,9 @@ extern "C" s16 _ZN5Actor12ReflectAngleE5Fix12IiES1_s(struct Actor *thiz, Fix12i 
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 52 -- _ZN5Actor14GetSubtractionEss
- * 0x020103f4  size 0x34   legacy src/_ZN5Actor14GetSubtractionEss.cpp */
-int Actor::GetSubtraction(short a, short b)
+/* ROM ordinal 52 -- _ZN8dActor_c14GetSubtractionEss
+ * 0x020103f4  size 0x34   legacy src/_ZN8dActor_c14GetSubtractionEss.cpp */
+int dActor_c::GetSubtraction(short a, short b)
 {
 int d=(short)(b-a);
 if(d==-0x8000) d=-0x7fff;
@@ -996,9 +996,9 @@ return d;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 51 -- _ZN5Actor7FindEggER12CylinderClsn
- * 0x020103b4  size 0x40   legacy src/_ZN5Actor7FindEggER12CylinderClsn.cpp */
-Actor *Actor::FindEgg(CylinderClsn &clsn)
+/* ROM ordinal 51 -- _ZN8dActor_c7FindEggER12CylinderClsn
+ * 0x020103b4  size 0x40   legacy src/_ZN8dActor_c7FindEggER12CylinderClsn.cpp */
+dActor_c *dActor_c::FindEgg(CylinderClsn &clsn)
 {
     u32 id = clsn.otherOwner;
     u32 flags;
@@ -1012,9 +1012,9 @@ Actor *Actor::FindEgg(CylinderClsn &clsn)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 50 -- _ZN5Actor18FindExplosionActorER12CylinderClsn
- * 0x02010374  size 0x40   legacy src/_ZN5Actor18FindExplosionActorER12CylinderClsn.cpp */
-Actor *Actor::FindExplosionActor(CylinderClsn &clsn)
+/* ROM ordinal 50 -- _ZN8dActor_c18FindExplosionActorER12CylinderClsn
+ * 0x02010374  size 0x40   legacy src/_ZN8dActor_c18FindExplosionActorER12CylinderClsn.cpp */
+dActor_c *dActor_c::FindExplosionActor(CylinderClsn &clsn)
 {
     u32 id = clsn.otherOwner;
     u32 flags;
@@ -1031,16 +1031,16 @@ Actor *Actor::FindExplosionActor(CylinderClsn &clsn)
 /* ROM ordinal 49 -- func_02010304
  * 0x02010304  size 0x70   legacy src/func_02010304.cpp */
 extern "C" {
-extern void *_ZN5Actor10FindWithIDEj(unsigned);
-extern int _ZN6Player7TryGrabER5Actor(void *, void *);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned);
+extern int _ZN6Player7TryGrabER8dActor_c(void *, void *);
 }
 extern "C" {
 void *func_02010304(void *target, char *p) {
     unsigned id = *(unsigned *)(p + 0x24);
     void *found;
-    if (id != 0 && (found = _ZN5Actor10FindWithIDEj(id)) != 0 && (*(int *)(p + 0x20) & 0x1000)) {
+    if (id != 0 && (found = _ZN8dActor_c10FindWithIDEj(id)) != 0 && (*(int *)(p + 0x20) & 0x1000)) {
         int t = *(unsigned short *)((char *)found + 0xc) == 0xbf;
-        if (t && _ZN6Player7TryGrabER5Actor(found, target))
+        if (t && _ZN6Player7TryGrabER8dActor_c(found, target))
             return found;
     }
     return 0;
@@ -1048,27 +1048,27 @@ void *func_02010304(void *target, char *p) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 48 -- _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j
- * 0x020102b0  size 0x54   legacy src/_ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c */
+/* ROM ordinal 48 -- _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j
+ * 0x020102b0  size 0x54   legacy src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c */
 typedef signed char s8;
-extern "C" void _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
-    Actor* self,
+extern "C" void _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(
+    dActor_c* self,
     const Vector3* pos,
     const Vector3_16* rot,
     Fix12i horzSpeed,
     Fix12i unk35c,
     u32 param1
 ) {
-    Actor* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xfe, param1, pos, rot, (s32)self->mAreaId, -1);
-    if (a != (Actor*)0) {
+    dActor_c* a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xfe, param1, pos, rot, (s32)self->mAreaId, -1);
+    if (a != (dActor_c*)0) {
         a->mHorzSpeed = horzSpeed;
         *(Fix12i *)((char *)a + 0x35c) = unk35c;
     }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 47 -- _ZN5Actor11UpdateCarryER6PlayerRK7Vector3
- * 0x02010180  size 0x130   legacy src/_ZN5Actor11UpdateCarryER6PlayerRK7Vector3.cpp */
+/* ROM ordinal 47 -- _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3
+ * 0x02010180  size 0x130   legacy src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp */
 extern "C" {
 void *func_ov002_020e496c(Player *p);
 void MulMat4x3Mat4x3(Matrix4x3 *m1, Matrix4x3 *m0, Matrix4x3 *mF);
@@ -1079,7 +1079,7 @@ void Vec3_Lsl(Vector3 *vF, const Vector3 *v, int amount);
 void Matrix4x3_ApplyInPlaceToTranslation(Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
 extern Matrix4x3 data_020a0e68;
 }
-Matrix4x3 *Actor::UpdateCarry(Player &player, const Vector3 &vec)
+Matrix4x3 *dActor_c::UpdateCarry(Player &player, const Vector3 &vec)
 {
     Player *p = &player;
     char *self = (char *)this;
@@ -1115,110 +1115,110 @@ Matrix4x3 *Actor::UpdateCarry(Player &player, const Vector3 &vec)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 46 -- _ZN5Actor10EarthquakeERK7Vector35Fix12IiE
- * 0x02010168  size 0x18   legacy src/_ZN5Actor10EarthquakeERK7Vector35Fix12IiE.cpp */
+/* ROM ordinal 46 -- _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE
+ * 0x02010168  size 0x18   legacy src/_ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE.cpp */
 extern "C" {
 extern void func_0200d8c8(void*, int);
 extern void* data_0209f318;
 }
 extern "C" {
-void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void* v, int f) {
+void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void* v, int f) {
     func_0200d8c8(data_0209f318, f);
 }
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 45 -- _ZN5Actor13OnYoshiTryEatEv
- * 0x02010160  size 0x8   legacy src/_ZN5Actor13OnYoshiTryEatEv.cpp */
-int Actor::OnYoshiTryEat()
+/* ROM ordinal 45 -- _ZN8dActor_c13OnYoshiTryEatEv
+ * 0x02010160  size 0x8   legacy src/_ZN8dActor_c13OnYoshiTryEatEv.cpp */
+int dActor_c::OnYoshiTryEat()
 {
     return 0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 44 -- _ZN5Actor13OnTurnIntoEggER6Player
- * 0x02010154  size 0xc   legacy src/_ZN5Actor13OnTurnIntoEggER6Player.cpp */
-int Actor::OnTurnIntoEgg(Player &player)
+/* ROM ordinal 44 -- _ZN8dActor_c13OnTurnIntoEggER6Player
+ * 0x02010154  size 0xc   legacy src/_ZN8dActor_c13OnTurnIntoEggER6Player.cpp */
+int dActor_c::OnTurnIntoEgg(Player &player)
 {
     KillAndTrackInDeathTable();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 43 -- _ZN5Actor9Virtual50Ev
- * 0x0201014c  size 0x8   legacy src/_ZN5Actor9Virtual50Ev.cpp */
-int Actor::Virtual50()
+/* ROM ordinal 43 -- _ZN8dActor_c9Virtual50Ev
+ * 0x0201014c  size 0x8   legacy src/_ZN8dActor_c9Virtual50Ev.cpp */
+int dActor_c::Virtual50()
 {
     return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 42 -- _ZN5Actor15OnGroundPoundedERS_
- * 0x02010148  size 0x4   legacy src/_ZN5Actor15OnGroundPoundedERS_.cpp */
-int Actor::OnGroundPounded(Actor &pounder)
+/* ROM ordinal 42 -- _ZN8dActor_c15OnGroundPoundedERS_
+ * 0x02010148  size 0x4   legacy src/_ZN8dActor_c15OnGroundPoundedERS_.cpp */
+int dActor_c::OnGroundPounded(dActor_c &pounder)
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 41 -- _ZN5Actor11OnAttacked1ERS_
- * 0x02010144  size 0x4   legacy src/_ZN5Actor11OnAttacked1ERS_.cpp */
-int Actor::OnAttacked1(Actor &attacker)
+/* ROM ordinal 41 -- _ZN8dActor_c11OnAttacked1ERS_
+ * 0x02010144  size 0x4   legacy src/_ZN8dActor_c11OnAttacked1ERS_.cpp */
+int dActor_c::OnAttacked1(dActor_c &attacker)
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 40 -- _ZN5Actor11OnAttacked2ERS_
- * 0x02010140  size 0x4   legacy src/_ZN5Actor11OnAttacked2ERS_.cpp */
-int Actor::OnAttacked2(Actor &attacker)
+/* ROM ordinal 40 -- _ZN8dActor_c11OnAttacked2ERS_
+ * 0x02010140  size 0x4   legacy src/_ZN8dActor_c11OnAttacked2ERS_.cpp */
+int dActor_c::OnAttacked2(dActor_c &attacker)
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 39 -- _ZN5Actor8OnKickedERS_
- * 0x0201013c  size 0x4   legacy src/_ZN5Actor8OnKickedERS_.cpp */
-int Actor::OnKicked(Actor &kicker)
+/* ROM ordinal 39 -- _ZN8dActor_c8OnKickedERS_
+ * 0x0201013c  size 0x4   legacy src/_ZN8dActor_c8OnKickedERS_.cpp */
+int dActor_c::OnKicked(dActor_c &kicker)
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 38 -- _ZN5Actor8OnPushedERS_
- * 0x02010138  size 0x4   legacy src/_ZN5Actor8OnPushedERS_.cpp */
-int Actor::OnPushed(Actor &pusher)
+/* ROM ordinal 38 -- _ZN8dActor_c8OnPushedERS_
+ * 0x02010138  size 0x4   legacy src/_ZN8dActor_c8OnPushedERS_.cpp */
+int dActor_c::OnPushed(dActor_c &pusher)
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 37 -- _ZN5Actor24OnHitByCannonBlastedCharERS_
- * 0x02010134  size 0x4   legacy src/_ZN5Actor24OnHitByCannonBlastedCharERS_.cpp */
-int Actor::OnHitByCannonBlastedChar(Actor &attacker)
+/* ROM ordinal 37 -- _ZN8dActor_c24OnHitByCannonBlastedCharERS_
+ * 0x02010134  size 0x4   legacy src/_ZN8dActor_c24OnHitByCannonBlastedCharERS_.cpp */
+int dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker)
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 36 -- _ZN5Actor15OnHitByMegaCharER6Player
- * 0x02010130  size 0x4   legacy src/_ZN5Actor15OnHitByMegaCharER6Player.cpp */
-int Actor::OnHitByMegaChar(Player &player)
+/* ROM ordinal 36 -- _ZN8dActor_c15OnHitByMegaCharER6Player
+ * 0x02010130  size 0x4   legacy src/_ZN8dActor_c15OnHitByMegaCharER6Player.cpp */
+int dActor_c::OnHitByMegaChar(Player &player)
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 35 -- _ZN5Actor19OnHitFromUnderneathERS_
- * 0x0201012c  size 0x4   legacy src/_ZN5Actor19OnHitFromUnderneathERS_.cpp */
-int Actor::OnHitFromUnderneath(Actor &attacker)
+/* ROM ordinal 35 -- _ZN8dActor_c19OnHitFromUnderneathERS_
+ * 0x0201012c  size 0x4   legacy src/_ZN8dActor_c19OnHitFromUnderneathERS_.cpp */
+int dActor_c::OnHitFromUnderneath(dActor_c &attacker)
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 34 -- _ZN5Actor16OnAimedAtWithEggEv
- * 0x02010124  size 0x8   legacy src/_ZN5Actor16OnAimedAtWithEggEv.cpp */
-int Actor::OnAimedAtWithEgg()
+/* ROM ordinal 34 -- _ZN8dActor_c16OnAimedAtWithEggEv
+ * 0x02010124  size 0x8   legacy src/_ZN8dActor_c16OnAimedAtWithEggEv.cpp */
+int dActor_c::OnAimedAtWithEgg()
 {
     return 0x14000;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 33 -- _ZN5Actor25OnAimedAtWithEggReturnVecEv
- * 0x020100dc  size 0x48   legacy src/_ZN5Actor25OnAimedAtWithEggReturnVecEv.cpp */
-extern "C" void _ZN5Actor25OnAimedAtWithEggReturnVecEv(Vector3 *ret, Actor *self)
+/* ROM ordinal 33 -- _ZN8dActor_c25OnAimedAtWithEggReturnVecEv
+ * 0x020100dc  size 0x48   legacy src/_ZN8dActor_c25OnAimedAtWithEggReturnVecEv.cpp */
+extern "C" void _ZN8dActor_c25OnAimedAtWithEggReturnVecEv(Vector3 *ret, dActor_c *self)
 {
     ret->x = self->mPosX;
     ret->y = self->mPosY;
@@ -1227,15 +1227,15 @@ extern "C" void _ZN5Actor25OnAimedAtWithEggReturnVecEv(Vector3 *ret, Actor *self
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 32 -- _ZN5Actor11SpawnNumberERK7Vector3jbtPS_
- * 0x02010044  size 0x98   legacy src/_ZN5Actor11SpawnNumberERK7Vector3jbtPS_.cpp */
+/* ROM ordinal 32 -- _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_
+ * 0x02010044  size 0x98   legacy src/_ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_.cpp */
 extern "C" {
-Actor *func_ov002_020f0918(Actor *number, Actor *owner);
+dActor_c *func_ov002_020f0918(dActor_c *number, dActor_c *owner);
 }
-Actor *Actor::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
-                          u16 delay, Actor *owner)
+dActor_c *dActor_c::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
+                          u16 delay, dActor_c *owner)
 {
-    Actor *number;
+    dActor_c *number;
 
     if (packLowNibble)
         number = Spawn(0x14a, (value & 0xf) | 0x10, pos, 0, mAreaId, -1);
@@ -1250,16 +1250,16 @@ Actor *Actor::SpawnNumber(const Vector3 &pos, u32 value, bool packLowNibble,
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 31 -- _ZN5Actor9TrackStarEjj
- * 0x0200ff94  size 0xb0   legacy src/_ZN5Actor9TrackStarEjj.cpp */
+/* ROM ordinal 31 -- _ZN8dActor_c9TrackStarEjj
+ * 0x0200ff94  size 0xb0   legacy src/_ZN8dActor_c9TrackStarEjj.cpp */
 extern "C" {
 extern u8 data_0209f220[]; /* the star index this mission was entered for */
 extern s8 data_0209f2f8[]; /* the current sublevel id */
-extern Actor *STAR_MARKERS[12]; /* 0x0209f40c */
-void SetStarMarker(s32 slot, Actor *actor, s32 markerType);
+extern dActor_c *STAR_MARKERS[12]; /* 0x0209f40c */
+void SetStarMarker(s32 slot, dActor_c *actor, s32 markerType);
 int IsStarCollectedInCurLevel(u32 starIdx);
 }
-s32 Actor::TrackStar(u32 starIdx, u32 markerType)
+s32 dActor_c::TrackStar(u32 starIdx, u32 markerType)
 {
     s32 type = markerType;
 
@@ -1283,9 +1283,9 @@ s32 Actor::TrackStar(u32 starIdx, u32 markerType)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 30 -- _ZN5Actor11UntrackStarERa
- * 0x0200ff60  size 0x34   legacy src/_ZN5Actor11UntrackStarERa.cpp */
-void Actor::UntrackStar(s8 &starID)
+/* ROM ordinal 30 -- _ZN8dActor_c11UntrackStarERa
+ * 0x0200ff60  size 0x34   legacy src/_ZN8dActor_c11UntrackStarERa.cpp */
+void dActor_c::UntrackStar(s8 &starID)
 {
     s8 slot = starID;
     if (slot < 0)
@@ -1296,9 +1296,9 @@ void Actor::UntrackStar(s8 &starID)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 29 -- _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h
- * 0x0200ff14  size 0x4c   legacy src/_ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h.cpp */
-Actor *Actor::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
+/* ROM ordinal 29 -- _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h
+ * 0x0200ff14  size 0x4c   legacy src/_ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h.cpp */
+dActor_c *dActor_c::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
                                   const Vector3 &spawnPos, u8 howToSpawnStar)
 {
     UntrackStar(trackStarID);
@@ -1308,13 +1308,13 @@ Actor *Actor::UntrackAndSpawnStar(s8 &trackStarID, u32 starID,
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 28 -- _ZN5Actor17GetWaterHeightWDWEv
- * 0x0200fec8  size 0x4c   legacy src/_ZN5Actor17GetWaterHeightWDWEv.cpp */
+/* ROM ordinal 28 -- _ZN8dActor_c17GetWaterHeightWDWEv
+ * 0x0200fec8  size 0x4c   legacy src/_ZN8dActor_c17GetWaterHeightWDWEv.cpp */
 extern "C" {
 extern unsigned char data_0209f2c0[];
 extern int data_02075244[];
 }
-s32 Actor::GetWaterHeightWDW()
+s32 dActor_c::GetWaterHeightWDW()
 {
     s32 ret = mPosY;
     if (data_0209f2f8[0] == 0x15 && mAreaId == 0) {
@@ -1353,9 +1353,9 @@ extern "C" void UnloadBlueCoinModel(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 25 -- _ZN5Actor8PoofDustEv
- * 0x0200fe3c  size 0x34   legacy src/_ZN5Actor8PoofDustEv.cpp */
-void Actor::PoofDust()
+/* ROM ordinal 25 -- _ZN8dActor_c8PoofDustEv
+ * 0x0200fe3c  size 0x34   legacy src/_ZN8dActor_c8PoofDustEv.cpp */
+void dActor_c::PoofDust()
 {
     Vector3 pos;
     pos.x = mPosX;
@@ -1365,21 +1365,21 @@ void Actor::PoofDust()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- _ZN5Actor10PoofDustAtERK7Vector3
- * 0x0200fdfc  size 0x40   legacy src/_ZN5Actor10PoofDustAtERK7Vector3.cpp */
+/* ROM ordinal 24 -- _ZN8dActor_c10PoofDustAtERK7Vector3
+ * 0x0200fdfc  size 0x40   legacy src/_ZN8dActor_c10PoofDustAtERK7Vector3.cpp */
 extern "C" {
 extern int _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 }
-void Actor::PoofDustAt(const Vector3 &pos)
+void dActor_c::PoofDustAt(const Vector3 &pos)
 {
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x122, pos.x, pos.y, pos.z);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x123, pos.x, pos.y, pos.z);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 23 -- _ZN5Actor14TriplePoofDustEv
- * 0x0200fdc8  size 0x34   legacy src/_ZN5Actor14TriplePoofDustEv.cpp */
-void Actor::TriplePoofDust()
+/* ROM ordinal 23 -- _ZN8dActor_c14TriplePoofDustEv
+ * 0x0200fdc8  size 0x34   legacy src/_ZN8dActor_c14TriplePoofDustEv.cpp */
+void dActor_c::TriplePoofDust()
 {
     Vector3 pos;
     pos.x = mPosX;
@@ -1389,9 +1389,9 @@ void Actor::TriplePoofDust()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 22 -- _ZN5Actor16TriplePoofDustAtERK7Vector3
- * 0x0200fd74  size 0x54   legacy src/_ZN5Actor16TriplePoofDustAtERK7Vector3.cpp */
-void Actor::TriplePoofDustAt(const Vector3 &pos)
+/* ROM ordinal 22 -- _ZN8dActor_c16TriplePoofDustAtERK7Vector3
+ * 0x0200fd74  size 0x54   legacy src/_ZN8dActor_c16TriplePoofDustAtERK7Vector3.cpp */
+void dActor_c::TriplePoofDustAt(const Vector3 &pos)
 {
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x124, pos.x, pos.y, pos.z);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x125, pos.x, pos.y, pos.z);
@@ -1399,9 +1399,9 @@ void Actor::TriplePoofDustAt(const Vector3 &pos)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN5Actor13SmallPoofDustEv
- * 0x0200fd40  size 0x34   legacy src/_ZN5Actor13SmallPoofDustEv.cpp */
-void Actor::SmallPoofDust()
+/* ROM ordinal 21 -- _ZN8dActor_c13SmallPoofDustEv
+ * 0x0200fd40  size 0x34   legacy src/_ZN8dActor_c13SmallPoofDustEv.cpp */
+void dActor_c::SmallPoofDust()
 {
     Vector3 pos;
     pos.x = mPosX;
@@ -1411,9 +1411,9 @@ void Actor::SmallPoofDust()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN5Actor19DisappearPoofDustAtERK7Vector3
- * 0x0200fd04  size 0x3c   legacy src/_ZN5Actor19DisappearPoofDustAtERK7Vector3.cpp */
-void Actor::DisappearPoofDustAt(const Vector3 &pos)
+/* ROM ordinal 20 -- _ZN8dActor_c19DisappearPoofDustAtERK7Vector3
+ * 0x0200fd04  size 0x3c   legacy src/_ZN8dActor_c19DisappearPoofDustAtERK7Vector3.cpp */
+void dActor_c::DisappearPoofDustAt(const Vector3 &pos)
 {
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x127, pos.x, pos.y, pos.z);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x128, pos.x, pos.y, pos.z);
@@ -1437,7 +1437,7 @@ return func_0200fc44((int)s,(Vector3 *)&t,r1);
 typedef struct RaycastGroundPod { int filler[17]; int resultY; int pad[2]; } RaycastGroundPod;
 extern "C" {
 extern void _ZN13RaycastGroundC1Ev(RaycastGroundPod* c);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGroundPod* c, Vector3* pos, void* actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGroundPod* c, Vector3* pos, void* actor);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGroundPod* c);
 extern void _ZN13RaycastGroundD1Ev(RaycastGroundPod* c);
 }
@@ -1447,7 +1447,7 @@ extern "C" int func_0200fc44(int a, Vector3* pos, int flag) {
         _ZN13RaycastGroundC1Ev(&rg);
         int* yp = (int*)((int)pos + 4);
         *yp += 0x32000;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, pos, 0);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, pos, 0);
         if (_ZN13RaycastGround10DetectClsnEv(&rg))
             pos->y = rg.resultY;
         _ZN13RaycastGroundD1Ev(&rg);
@@ -1458,9 +1458,9 @@ extern "C" int func_0200fc44(int a, Vector3* pos, int flag) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN5Actor11LandingDustEb
- * 0x0200fc0c  size 0x38   legacy src/_ZN5Actor11LandingDustEb.cpp */
-void Actor::LandingDust(bool doRaycast)
+/* ROM ordinal 17 -- _ZN8dActor_c11LandingDustEb
+ * 0x0200fc0c  size 0x38   legacy src/_ZN8dActor_c11LandingDustEb.cpp */
+void dActor_c::LandingDust(bool doRaycast)
 {
     Vector3 pos;
     pos.x = mPosX;
@@ -1470,13 +1470,13 @@ void Actor::LandingDust(bool doRaycast)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN5Actor17HugeLandingDustAtER7Vector3b
- * 0x0200fb84  size 0x88   legacy src/_ZN5Actor17HugeLandingDustAtER7Vector3b.cpp */
+/* ROM ordinal 16 -- _ZN8dActor_c17HugeLandingDustAtER7Vector3b
+ * 0x0200fb84  size 0x88   legacy src/_ZN8dActor_c17HugeLandingDustAtER7Vector3b.cpp */
 struct RaycastGround {
     char buf[0x50];
     RaycastGround();
     ~RaycastGround();
-    void SetObjAndPos(const Vector3 &pos, Actor *actor);
+    void SetObjAndPos(const Vector3 &pos, dActor_c *actor);
     int DetectClsn();
 };
 namespace Particle { struct System {
@@ -1488,7 +1488,7 @@ namespace Particle { struct System {
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" int _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
  }
-extern "C" void _ZN5Actor17HugeLandingDustAtER7Vector3b(Actor *self, Vector3 *pos, bool b)
+extern "C" void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(dActor_c *self, Vector3 *pos, bool b)
 {
     if (b) {
         RaycastGround rc;
@@ -1502,9 +1502,9 @@ extern "C" void _ZN5Actor17HugeLandingDustAtER7Vector3b(Actor *self, Vector3 *po
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN5Actor15HugeLandingDustEb
- * 0x0200fb4c  size 0x38   legacy src/_ZN5Actor15HugeLandingDustEb.cpp */
-void Actor::HugeLandingDust(bool doRaycast)
+/* ROM ordinal 15 -- _ZN8dActor_c15HugeLandingDustEb
+ * 0x0200fb4c  size 0x38   legacy src/_ZN8dActor_c15HugeLandingDustEb.cpp */
+void dActor_c::HugeLandingDust(bool doRaycast)
 {
     Vector3 pos;
     pos.x = mPosX;
@@ -1514,9 +1514,9 @@ void Actor::HugeLandingDust(bool doRaycast)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- _ZN5Actor13LandingDustAtER7Vector3b
- * 0x0200fac4  size 0x88   legacy src/_ZN5Actor13LandingDustAtER7Vector3b.cpp */
-extern "C" void _ZN5Actor13LandingDustAtER7Vector3b(Actor *self, Vector3 *pos, bool b)
+/* ROM ordinal 14 -- _ZN8dActor_c13LandingDustAtER7Vector3b
+ * 0x0200fac4  size 0x88   legacy src/_ZN8dActor_c13LandingDustAtER7Vector3b.cpp */
+extern "C" void _ZN8dActor_c13LandingDustAtER7Vector3b(dActor_c *self, Vector3 *pos, bool b)
 {
     if (b) {
         RaycastGround rc;
@@ -1554,7 +1554,7 @@ extern "C" int func_0200fa04(int a, Vector3* pos, int flag)
     if (flag) {
         _ZN13RaycastGroundC1Ev(&rc);
         *(int*)(((int)pos + 4)) += 0x32000;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, pos, 0);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, pos, 0);
         if (_ZN13RaycastGround10DetectClsnEv(&rc))
             pos->y = rc.resultY;
         _ZN13RaycastGroundD1Ev(&rc);
@@ -1564,67 +1564,67 @@ extern "C" int func_0200fa04(int a, Vector3* pos, int flag)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- _ZN5Actor18GetBitInDeathTableEv
- * 0x0200f9f4  size 0x10   legacy src/_ZN5Actor18GetBitInDeathTableEv.cpp */
+/* ROM ordinal 11 -- _ZN8dActor_c18GetBitInDeathTableEv
+ * 0x0200f9f4  size 0x10   legacy src/_ZN8dActor_c18GetBitInDeathTableEv.cpp */
 extern "C" {
 int DeathTable_GetBit(int id);
 }
-int Actor::GetBitInDeathTable()
+int dActor_c::GetBitInDeathTable()
 {
     return DeathTable_GetBit(unk_0ce);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- _ZN5Actor17TrackInDeathTableEv
- * 0x0200f9e4  size 0x10   legacy src/_ZN5Actor17TrackInDeathTableEv.cpp */
+/* ROM ordinal 10 -- _ZN8dActor_c17TrackInDeathTableEv
+ * 0x0200f9e4  size 0x10   legacy src/_ZN8dActor_c17TrackInDeathTableEv.cpp */
 extern "C" {
 void DeathTable_SetBit(int id);
 }
-void Actor::TrackInDeathTable()
+void dActor_c::TrackInDeathTable()
 {
     DeathTable_SetBit(unk_0ce);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- _ZN5Actor19UntrackInDeathTableEv
- * 0x0200f9d4  size 0x10   legacy src/_ZN5Actor19UntrackInDeathTableEv.cpp */
+/* ROM ordinal 9 -- _ZN8dActor_c19UntrackInDeathTableEv
+ * 0x0200f9d4  size 0x10   legacy src/_ZN8dActor_c19UntrackInDeathTableEv.cpp */
 extern "C" {
 void DeathTable_ClearBit(int id);
 }
-void Actor::UntrackInDeathTable()
+void dActor_c::UntrackInDeathTable()
 {
     DeathTable_ClearBit(unk_0ce);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- _ZN5Actor24KillAndTrackInDeathTableEv
- * 0x0200f9b8  size 0x1c   legacy src/_ZN5Actor24KillAndTrackInDeathTableEv.cpp */
-void Actor::KillAndTrackInDeathTable()
+/* ROM ordinal 8 -- _ZN8dActor_c24KillAndTrackInDeathTableEv
+ * 0x0200f9b8  size 0x1c   legacy src/_ZN8dActor_c24KillAndTrackInDeathTableEv.cpp */
+void dActor_c::KillAndTrackInDeathTable()
 {
     TrackInDeathTable();
     MarkForDestruction();
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- _ZN5Actor13SpawnSoundObjEj
- * 0x0200f97c  size 0x3c   legacy src/_ZN5Actor13SpawnSoundObjEj.cpp */
-void Actor::SpawnSoundObj(u32 soundObjParam)
+/* ROM ordinal 7 -- _ZN8dActor_c13SpawnSoundObjEj
+ * 0x0200f97c  size 0x3c   legacy src/_ZN8dActor_c13SpawnSoundObjEj.cpp */
+void dActor_c::SpawnSoundObj(u32 soundObjParam)
 {
-    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         0x167, soundObjParam, (const void *)&mPosX, (const Vector3_16 *)0,
         (s32)mAreaId, -1);
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN5Sound15PlaySecretSoundEP5ActorPt
- * 0x0200f8f8  size 0x84   legacy src/_ZN5Sound15PlaySecretSoundEP5ActorPt.cpp */
+/* ROM ordinal 6 -- _ZN5Sound15PlaySecretSoundEP8dActor_cPt
+ * 0x0200f8f8  size 0x84   legacy src/_ZN5Sound15PlaySecretSoundEP8dActor_cPt.cpp */
 extern "C" {
 int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int soundID, unsigned int vol, unsigned int pan, Fix12i dist, int loop);
 static const int kPoolDist = 0x8777;
 }
 namespace Sound {
 
-int PlaySecretSound(Actor* actor, u16* counter)
+int PlaySecretSound(dActor_c* actor, u16* counter)
 {
     int ret = 0;
     (void)actor;
@@ -1642,11 +1642,11 @@ done:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN5Sound20PlaySmallSecretSoundEP5ActorPt
- * 0x0200f874  size 0x84   legacy src/_ZN5Sound20PlaySmallSecretSoundEP5ActorPt.cpp */
+/* ROM ordinal 5 -- _ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt
+ * 0x0200f874  size 0x84   legacy src/_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt.cpp */
 namespace Sound {
 
-int PlaySmallSecretSound(Actor* actor, u16* counter)
+int PlaySmallSecretSound(dActor_c* actor, u16* counter)
 {
     int ret = 0;
     (void)actor;
@@ -1666,7 +1666,7 @@ done:
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 4 -- func_0200f7f0
  * 0x0200f7f0  size 0x84   legacy src/func_0200f7f0.c */
-extern "C" int func_0200f7f0(struct Actor *actor, u16 *counter)
+extern "C" int func_0200f7f0(struct dActor_c *actor, u16 *counter)
 {
     int ret = 0;
     (void)actor;
@@ -1682,9 +1682,9 @@ done:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn
- * 0x0200f7a8  size 0x48   legacy src/_ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn.cpp */
-void Actor::MakeVanishLuigiWork(CylinderClsn &clsn)
+/* ROM ordinal 3 -- _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn
+ * 0x0200f7a8  size 0x48   legacy src/_ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn.cpp */
+void dActor_c::MakeVanishLuigiWork(CylinderClsn &clsn)
 {
     Player *player;
 
@@ -1706,7 +1706,7 @@ extern "C" void func_0200f760(void *self, char *actor)
     unsigned char *p;
 
     *(u32 *)(((int)actor + 0x18)) &= ~2;
-    p = (unsigned char *)((Actor *)self)->ClosestPlayer();
+    p = (unsigned char *)((dActor_c *)self)->ClosestPlayer();
     if (p == 0) return;
     if (p[0x6fb] != 0) {
         *(u32 *)(((int)(actor + 0x18))) |= 2;
@@ -1714,17 +1714,17 @@ extern "C" void func_0200f760(void *self, char *actor)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE
- * 0x0200f70c  size 0x54   legacy src/_ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE.cpp */
+/* ROM ordinal 1 -- _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE
+ * 0x0200f70c  size 0x54   legacy src/_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE.cpp */
 extern "C" {
-int _ZN5Actor13DistToCPlayerEv(Actor *self);
+int _ZN8dActor_c13DistToCPlayerEv(dActor_c *self);
 }
-extern "C" int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(Actor *self, int threshold)
+extern "C" int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(dActor_c *self, int threshold)
 {
     if (data_0209fc68 == 0) {
         int b = (self->mFlags & 8) != 0;
         if (b != 0) {
-            if (_ZN5Actor13DistToCPlayerEv(self) >= threshold)
+            if (_ZN8dActor_c13DistToCPlayerEv(self) >= threshold)
                 return 1;
         }
     }
@@ -1732,21 +1732,21 @@ extern "C" int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(Actor *self, int thre
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN5Actor17DetectRaycastClsnER7Vector3S1_b
- * 0x0200f658  size 0xb4   legacy src/_ZN5Actor17DetectRaycastClsnER7Vector3S1_b.cpp */
+/* ROM ordinal 0 -- _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b
+ * 0x0200f658  size 0xb4   legacy src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp */
 struct RaycastLine { char data[0x78]; };
 extern "C" {
 extern void _ZN11RaycastLineC1Ev(RaycastLine*);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(RaycastLine*, const Vector3*, const Vector3*, Actor*);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLine*, const Vector3*, const Vector3*, dActor_c*);
 extern int _ZN11RaycastLine10DetectClsnEv(RaycastLine*);
 extern Vector3* func_02037dc4(void*);
 extern void _ZN11RaycastLineD1Ev(RaycastLine*);
 }
 extern "C" {
-int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(Actor *self, Vector3 *a, Vector3 *out, int doStore){
+int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(dActor_c *self, Vector3 *a, Vector3 *out, int doStore){
   RaycastLine rl;
   _ZN11RaycastLineC1Ev(&rl);
-  _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&rl, a, (const Vector3*)out, 0);
+  _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&rl, a, (const Vector3*)out, 0);
   if(_ZN11RaycastLine10DetectClsnEv(&rl)){
     if(doStore){
       Vector3 *p = (Vector3*)(rl.data + 0x54);

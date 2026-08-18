@@ -8,7 +8,7 @@ void _ZN11ShadowModelD1Ev(void*);
 void _ZN12WithMeshClsnD1Ev(void*);
 void _ZN18MovingMeshColliderD1Ev(void*);
 void _ZN5ModelD1Ev(void*);
-void _ZN5ActorD2Ev(void*);
+void _ZN8dActor_cD2Ev(void*);
 extern int _ZTV5Crate[];
 extern int _ZTV10dBgActor_c[];
 void* _ZN5CrateD1Ev(struct Crate *self) {
@@ -20,7 +20,7 @@ void* _ZN5CrateD1Ev(struct Crate *self) {
     *(int*)((char*)self) = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
     _ZN5ModelD1Ev((char*)&self->mModel);
-    _ZN5ActorD2Ev(((char*)self));
+    _ZN8dActor_cD2Ev(((char*)self));
     return ((char*)self);
 }
 }

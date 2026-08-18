@@ -30,7 +30,7 @@
  * `func_ov002_020b6b38`, which is THIS CLASS'S OWN Behavior (vtable slot 6, and
  * it lives in ov002 with the class, not in either child's overlay). A method can
  * reach its own members and its ancestors', never a descendant's. Behavior walks
- * the four, looks each up with Actor::FindWithID and writes the actor's position
+ * the four, looks each up with dActor_c::FindWithID and writes the actor's position
  * from a rotation of this platform's own angles -- four things bolted to the
  * axle. The name is coined from what the code does; nothing in the ROM names it.
  *

@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern s16 _ZN5Actor18HorzAngleToCPlayerEv(void* c);
+extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* c);
 extern void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* ab, unsigned int id, const struct Vector3* v, unsigned int a, unsigned int b);
 extern void func_02012790(int x);
@@ -17,7 +17,7 @@ extern unsigned char data_0209f284;
 
 int func_ov085_0212e19c(char* c)
 {
-    _Z14ApproachLinearRsss((s16*)(c + 0x8e), _ZN5Actor18HorzAngleToCPlayerEv(c), 0x800);
+    _Z14ApproachLinearRsss((s16*)(c + 0x8e), _ZN8dActor_c18HorzAngleToCPlayerEv(c), 0x800);
     switch (*(int*)(c + 0x2d8)) {
     case 0:
         {

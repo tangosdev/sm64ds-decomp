@@ -169,7 +169,7 @@ struct Heap {
        METHOD. It occupies slots 0/1, which makes it this class's key function;
        defining it would emit _ZTV4Heap/_ZTI4Heap/_ZTS4Heap into that
        translation unit and eligible.py would reject the file with "extra
-       sections: .data". include/Actor.h states the same rule and for the same
+       sections: .data". include/dActor_c.h states the same rule and for the same
        reason: declaring the destructor first pins that role to translation
        units which by construction never define it. See runbook section 7. */
     virtual ~Heap();
@@ -259,10 +259,10 @@ struct Heap {
        ROM -- a difference build_pin.verify CANNOT SEE, because it wildcards
        relocated words. Only the link catches it.
 
-       This family deallocates through Memory::operator_delete2; Actor's copy of
+       This family deallocates through Memory::operator_delete2; dActor_c's copy of
        this member calls Memory::Deallocate instead, which is why each family
        needs its own. Inline and in the IMMEDIATE base: mwcc inlines it only
-       when it finds it in the class or one level up (see include/Actor.h).
+       when it finds it in the class or one level up (see include/dActor_c.h).
        No layout effect. */
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 

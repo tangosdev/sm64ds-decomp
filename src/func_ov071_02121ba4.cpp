@@ -6,7 +6,7 @@
 
 extern "C" {
     extern void func_ov071_02121b08(void*);
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, const struct Vector3 *v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
 
 void func_ov071_02121ba4(char *c){
@@ -16,7 +16,7 @@ void func_ov071_02121ba4(char *c){
   unsigned int id;
   id = *(unsigned int*)(c + 0x120);
   if(id == 0) return;
-  o = _ZN5Actor10FindWithIDEj(id);
+  o = _ZN8dActor_c10FindWithIDEj(id);
   if(o == 0) return;
   t = (*(unsigned short*)((char*)o + 0xc) == 0xbf);
   if(t == 0) return;

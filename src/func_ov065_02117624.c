@@ -1,4 +1,4 @@
-extern int _ZN5Actor18HorzAngleToCPlayerEv(void* c);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void* c);
 extern void _Z14ApproachLinearRsss(short* p, short t, short step);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void* m, short ang);
@@ -11,7 +11,7 @@ extern int data_ov065_0211d6f0[];
 int func_ov065_02117624(char* c) {
     int v[3];
     v[0] = 0; v[1] = 0; v[2] = 0;
-    *(short*)(c + 0x434) = (short)_ZN5Actor18HorzAngleToCPlayerEv(c);
+    *(short*)(c + 0x434) = (short)_ZN8dActor_c18HorzAngleToCPlayerEv(c);
     _Z14ApproachLinearRsss((short*)(c + 0x94), *(short*)(c + 0x434), 0x500);
     _Z14ApproachLinearRsss((short*)(c + 0x92), 0x100, 0x500);
     v[2] = 0xa000;

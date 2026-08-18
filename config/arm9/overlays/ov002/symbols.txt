@@ -1,7 +1,7 @@
 func_ov002_020ad660 kind:function(arm,size=0x1d8) addr:0x020ad660
 _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj kind:function(arm,size=0x208) addr:0x020ad838
 func_ov002_020ada40 kind:function(arm,size=0x100) addr:0x020ada40
-_ZN12dEnemyBase_c22SpawnMegaCharParticlesER5ActorPc kind:function(arm,size=0x280) addr:0x020adb40
+_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc kind:function(arm,size=0x280) addr:0x020adb40
 _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn kind:function(arm,size=0xb8) addr:0x020addc0
 _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn kind:function(arm,size=0x3cc) addr:0x020ade78
 _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs kind:function(arm,size=0x74) addr:0x020ae244
@@ -872,7 +872,7 @@ func_ov002_020da95c kind:function(arm,size=0x78) addr:0x020da95c
 func_ov002_020da9d4 kind:function(arm,size=0xa0) addr:0x020da9d4
 func_ov002_020daa74 kind:function(arm,size=0xa0) addr:0x020daa74
 Player_ReleaseHeldActor kind:function(arm,size=0x8c) addr:0x020dab14
-_ZN6Player7TryGrabER5Actor kind:function(arm,size=0x114) addr:0x020daba0
+_ZN6Player7TryGrabER8dActor_c kind:function(arm,size=0x114) addr:0x020daba0
 func_ov002_020dacb4 kind:function(arm,size=0x1b8) addr:0x020dacb4
 _ZN6Player13St_Throw_MainEv kind:function(arm,size=0x168) addr:0x020dae6c
 _ZN6Player13St_Throw_InitEv kind:function(arm,size=0xd0) addr:0x020dafd4

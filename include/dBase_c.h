@@ -3,8 +3,8 @@
 
 #include "fBase_c.h"
 
-/* The middle link of the actor hierarchy: fBase_c -> dBase_c -> Actor.
- * Actor is NOT a direct child of fBase_c. See notes/actor-vtables.md.
+/* The middle link of the actor hierarchy: fBase_c -> dBase_c -> dActor_c.
+ * dActor_c is NOT a direct child of fBase_c. See notes/actor-vtables.md.
  *
  * _ZTV7dBase_c (0x0208e4b8) is fBase_c's 18-slot table with exactly one
  * functional override -- slot 2, AfterInitResources -- plus its own D1/D0 at
@@ -63,7 +63,7 @@ struct dBase_c : fBase_c {
 
        It RETURNS the actor it built, and a veneer is exactly the shape that
        cannot say so: three words of `ldr ip,[pc]; bx ip; .word` evidence no
-       return value at all. The evidence is at its caller -- Actor::Spawn's
+       return value at all. The evidence is at its caller -- dActor_c::Spawn's
        `bl` is followed straight by the epilogue, so r0 flows out untouched.
        This read `void` until that function was migrated, which is the general
        rule for a forwarder: its return type is unobservable at its definition

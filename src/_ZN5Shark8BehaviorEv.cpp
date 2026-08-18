@@ -20,10 +20,10 @@ short Vec3_VertAngle(Vector3* v0, Vector3* v1);
 void Matrix4x3_FromRotationY(void* m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angle);
 void MulVec3Mat4x3(Vector3* v, void* m, Vector3* out);
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void* thiz, void* clsn);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void* thiz, void* clsn);
 void func_ov090_02133904(void* c);
 void _ZN12CylinderClsn5ClearEv(void* c);
-char* _ZN5Actor13ClosestPlayerEv(void* c);
+char* _ZN8dActor_c13ClosestPlayerEv(void* c);
 void _ZN12CylinderClsn6UpdateEv(void* c);
 extern char data_020a0e68[];
 }
@@ -74,11 +74,11 @@ extern "C" int _ZN5Shark8BehaviorEv(char* c)
         *(int*)(c + 0xa8) = m2;
         *(int*)(c + 0xac) = ac;
     }
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, c + 0x110);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(c, c + 0x110);
     func_ov090_02133904(c);
     _ZN12CylinderClsn5ClearEv(c + 0x110);
     {
-        char* p = _ZN5Actor13ClosestPlayerEv(c);
+        char* p = _ZN8dActor_c13ClosestPlayerEv(c);
         if (p != 0 && *(unsigned char*)(p + 0x6fb) == 0)
             _ZN12CylinderClsn6UpdateEv(c + 0x110);
     }

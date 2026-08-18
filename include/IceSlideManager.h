@@ -8,11 +8,11 @@
 
 struct IceSlideManager {
     u8  pad_000[0x5c];
-    /* Actor::mPosX -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPosX -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
     s32 unk_05c;            /* 0x05c */
-    /* Actor::mPosY -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPosY -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
     s32 unk_060;            /* 0x060 */
-    /* 0x064..0x0d4 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x064..0x0d4 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_064;                 /* 0x064 */
     s32 unk_068;                 /* 0x068 */

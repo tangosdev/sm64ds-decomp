@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN6Player7TryGrabER5Actor
+// @symbol _ZN6Player7TryGrabER8dActor_c
 /* recovered: named members + shared header, real C++ method
  *
  * Refuses if already holding something or if the target does not carry the
@@ -15,9 +15,9 @@ extern Player::State data_ov002_0211067c;   /* swim */
 extern Player::State data_ov002_021105bc;   /* crouch */
 }
 
-int Player::TryGrab(Actor & actor_)
+int Player::TryGrab(dActor_c & actor_)
 {
-    Actor *actor = &actor_;
+    dActor_c *actor = &actor_;
     int b = (mHeldObj != 0);
     if (b) return 0;
     if ((actor->mFlags & 0x80) == 0) return 0;

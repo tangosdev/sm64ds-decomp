@@ -12,7 +12,7 @@
  * The fields are spelled by name now that the receiver is typed: mTilt is the live
  * orientation, mTiltTarget what it lerps toward, mSettleDelay the countdown that
  * gates reloading the target, and mBumped the per-frame flag the body clears on the
- * way out. Actor::mFlags bit 3 is the "suppressed" bit -- while it is set the class
+ * way out. dActor_c::mFlags bit 3 is the "suppressed" bit -- while it is set the class
  * disables its collider and does nothing else.
  *
  * UpdateClsnPosAndRot is dBgActor_c's own non-virtual member, so it is a call now

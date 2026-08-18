@@ -22,8 +22,8 @@
    and this call site reads it, so the value-returning entry keeps the mangled
    spelling until that signature is settled. */
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, BMD_File *f, int a, int b);
-extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *, Actor* a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
-extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *, Actor* a, Fix12i b, Fix12i c, Vector3_16* d, Fix12i e);
+extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c* a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
+extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c* a, Fix12i b, Fix12i c, Vector3_16* d, Fix12i e);
 extern "C" void func_ov102_0214c0b8(void* c);
 
 extern SharedFilePtr data_ov102_0214e9c0;
@@ -48,7 +48,7 @@ int BobOmb::InitResources()
     unk_3f5 = (unsigned char)(param1 & 7);
     unk_3ec = 0x2000;
     func_ov102_0214c0b8(this);
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(&mCylinderClsn, this, 0x3c000, 0x50000, 0x200004, 0xa6d380);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(&mCylinderClsn, this, 0x3c000, 0x50000, 0x200004, 0xa6d380);
     mTerminalVelocity = -0x37000;
 
     if (unk_3f5 == 2) {
@@ -75,10 +75,10 @@ int BobOmb::InitResources()
     mScaleZ = 0x1000;
     unk_390 = 0;
     unk_3f2 = 0;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
     mWithMeshClsn.StartDetectingWater();
     unk_3f3 = 1;
-    /* Actor does not name 0xc8 yet -- it is padding between unk_0c4 and
+    /* dActor_c does not name 0xc8 yet -- it is padding between unk_0c4 and
        mAreaId -- so this one stays an offset rather than growing a field on a
        header 200+ files include. */
     *(int *)((char *)this + 0xc8) = 0;

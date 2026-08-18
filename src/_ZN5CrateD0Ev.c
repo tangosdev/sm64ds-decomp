@@ -27,7 +27,7 @@ void* _ZN5CrateD0Ev(struct Crate *self) {
     *(void**)((char*)self) = (void*)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
     _ZN5ModelD1Ev((char*)&self->mModel);
-    _ZN5ActorD2Ev(((char*)self));
+    _ZN8dActor_cD2Ev(((char*)self));
     _ZN6Memory10DeallocateEPvP4Heap(((char*)self), data_020a0eac[0]);
     return ((char*)self);
 }

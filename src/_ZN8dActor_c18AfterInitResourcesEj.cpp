@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN5Actor18AfterInitResourcesEj
-/* Actor::AfterInitResources(u32) at 0x02011244 -- vtable slot 2.
+// @symbol _ZN8dActor_c18AfterInitResourcesEj
+/* dActor_c::AfterInitResources(u32) at 0x02011244 -- vtable slot 2.
  *
  * Chains to the dBase_c implementation, then sets the three flag bits that
  * suppress this actor until something clears them.
@@ -9,9 +9,9 @@
  * the extension is what config/arm9/delinks.txt records, so a rename would turn
  * a src-only change into a config change too.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
-void Actor::AfterInitResources(u32 vfSuccess)
+void dActor_c::AfterInitResources(u32 vfSuccess)
 {
     dBase_c::AfterInitResources(vfSuccess);
     /* The (long long)(int) cast is a codegen launder, not a type conversion: the

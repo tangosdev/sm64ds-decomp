@@ -17,7 +17,7 @@ extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callba
 extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
 extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
 extern void _ZN12CylinderClsn5ClearEv(void* c);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* c, void* cyl);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* c, void* cyl);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, void* v);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
 
@@ -108,7 +108,7 @@ int Key::Behavior()
         short* ang = (short*)(int)LAUNDER((char*)&mAngleY);
         *ang = *ang + mSpinSpeed;
     }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
     (((C*)((char*)this))->*PMFTABLE[mState].pmf)();
     func_ov089_02131f54(((char*)this));
     _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);

@@ -1,5 +1,5 @@
 //cpp
-/* Actor::BeforeBehavior() at 0x02010fd4, 0x240 bytes -- vtable slot 7.
+/* dActor_c::BeforeBehavior() at 0x02010fd4, 0x240 bytes -- vtable slot 7.
  *
  * The per-frame gate in front of every actor's Behavior. It answers "should this
  * actor think this frame", and on the way there it does the two pieces of
@@ -10,7 +10,7 @@
  *
  *   1. Ask the base first; if it says no, nothing else runs.
  *   2. Clear 0x0209b458 -- the nearest-player cache that ClosestPlayer fills in
- *      (see the player-proximity note in include/Actor.h). It is a per-frame
+ *      (see the player-proximity note in include/dActor_c.h). It is a per-frame
  *      cache, so the frame starts by invalidating it.
  *   3. If the actor is bound to an area (mAreaId >= 0) that is not the showing
  *      one, force it off screen: set 0x38, push camera-space position to
@@ -34,7 +34,7 @@
  * tests `>= 0` before calling IsAreaShowing rather than after.
  *
  * MIGRATION NOTE. Every offset this function used to reach through a bare
- * `char *self` is already named in include/Actor.h -- 0x5c/0x60/0x64 mPos,
+ * `char *self` is already named in include/dActor_c.h -- 0x5c/0x60/0x64 mPos,
  * 0x68..0x70 the previous-position snapshot, 0x74..0x7c mCamSpacePos, 0xb0
  * mFlags, 0xb4/0xb8/0xbc/0xc0/0xc4 the clip block, 0xcc mAreaId. Nothing here
  * needed new evidence; the names existed and this file was not using them.
@@ -51,7 +51,7 @@
  * Clipper::Func_020150E8's mangled name carries a by-value Fix12<int>, so it
  * stays spelled out with scalar arguments -- see notes/mwccarm-codegen.md 6az.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
 struct Matrix4x3 { s32 m[12]; };
 
@@ -66,7 +66,7 @@ int  _ZN7Clipper13Func_020150E8ER7Vector35Fix12IiEPh(char *thisp, Vector3 *v,
    `extern "C" { ... }` a variable declaration WITHOUT `extern` is a
    DEFINITION in C++ -- C's tentative-definition rule does not apply -- so the
    object would define these nine alongside the ROM's gap object. The same
-   shape in Actor::HorzAngleToFPlayer produced
+   shape in dActor_c::HorzAngleToFPlayer produced
    `Multiply-defined: "data_0209b450" ... Previously defined in
    _dsd_gap@main_40.o` and aborted the link. It did not abort here, which is
    luck about how mwcc emits each type, not correctness. Function declarations
@@ -83,7 +83,7 @@ extern u32       data_0209b464;   /* flag mask that forces thinking; 0 means "an
 
 }
 
-int Actor::BeforeBehavior()
+int dActor_c::BeforeBehavior()
 {
     if (!fBase_c::BeforeBehavior())
         return 0;

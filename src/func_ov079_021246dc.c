@@ -8,13 +8,13 @@ extern void func_0201267c(unsigned int id, void *p);
 extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
 extern void func_02011cfc(void);
 extern void func_ov079_02123d4c(Vec3 *out, void *actor);
-extern void _ZN5Actor16TriplePoofDustAtERK7Vector3(void *actor, const Vec3 *p);
+extern void _ZN8dActor_c16TriplePoofDustAtERK7Vector3(void *actor, const Vec3 *p);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void *actor, signed char *flag, unsigned int id, const Vec3 *pos, unsigned int j);
+extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void *actor, signed char *flag, unsigned int id, const Vec3 *pos, unsigned int j);
 extern int _ZN16MeshColliderBase9IsEnabledEv(void *self);
 extern void _ZN16MeshColliderBase7DisableEv(void *self);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
-extern void _ZN5Actor10PoofDustAtERK7Vector3(void *actor, const Vec3 *p);
+extern void _ZN8dActor_c10PoofDustAtERK7Vector3(void *actor, const Vec3 *p);
 
 extern short data_02082214[];
 
@@ -78,10 +78,10 @@ void func_ov079_021246dc(void *thiz)
             dp.x = v.x;
             dp.y = v.y;
             dp.z = v.z;
-            _ZN5Actor16TriplePoofDustAtERK7Vector3(c, &dp);
+            _ZN8dActor_c16TriplePoofDustAtERK7Vector3(c, &dp);
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(4, v.x, v.y, v.z);
             *(unsigned char *)(c + 0x404) = 0;
-            _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(c, (signed char *)(c + 0x408), *(unsigned char *)(c + 0x409), &starPos, 4);
+            _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(c, (signed char *)(c + 0x408), *(unsigned char *)(c + 0x409), &starPos, 4);
             if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x418) != 0)
                 _ZN16MeshColliderBase7DisableEv(c + 0x418);
             _ZN7fBase_c18MarkForDestructionEv(c);
@@ -94,7 +94,7 @@ void func_ov079_021246dc(void *thiz)
         dp2.x = v2.x;
         dp2.y = v2.y;
         dp2.z = v2.z;
-        _ZN5Actor10PoofDustAtERK7Vector3(c, &dp2);
+        _ZN8dActor_c10PoofDustAtERK7Vector3(c, &dp2);
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(5, v2.x, v2.y, v2.z);
         _ZN7fBase_c18MarkForDestructionEv(c);
     }

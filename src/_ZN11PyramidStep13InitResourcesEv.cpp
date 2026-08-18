@@ -4,7 +4,7 @@
 #include "PyramidStep.h"
 typedef short s16;
 struct SharedFilePtr { int x; }; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern "C" {
 struct BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, struct BMD_File *f, int a, int b);
@@ -31,7 +31,7 @@ int PyramidStep::InitResources()
             &mMeshCollider, kcl, *(struct Matrix4x3 *)((char *)&unk_374), 0x1000,
             mAngleY, data_ov025_02112ce8);
     }
-    func_020393d4((int *)((char *)&(*(u8 *)&mMeshCollider)), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int *)((char *)&(*(u8 *)&mMeshCollider)), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     {
         int v = 0x5000;
         int k = (*(s32 *)&param1) & 3;

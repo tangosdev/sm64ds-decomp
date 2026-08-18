@@ -3,7 +3,7 @@
 /* recovered: shared common types */
 #include "common.h"
 
-struct Actor {
+struct dActor_c {
   char pad[0x5c];
   Vector3 pos;          // 0x5c
   char pad2[160];       // 0x68 .. 0x108
@@ -16,14 +16,14 @@ struct Actor {
   unsigned char b113;   // 0x113
 };
 extern "C" {
-Actor* _ZN5Actor10FindWithIDEj(unsigned int id);
+dActor_c* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_02012790(int);
-short _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(Actor* thiz, const Vector3& v, unsigned int a, bool b, unsigned short c, Actor* d);
-void _ZN7fBase_c18MarkForDestructionEv(Actor* thiz);
+short _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(dActor_c* thiz, const Vector3& v, unsigned int a, bool b, unsigned short c, dActor_c* d);
+void _ZN7fBase_c18MarkForDestructionEv(dActor_c* thiz);
 
-void func_ov002_020f0438(Actor* thiz)
+void func_ov002_020f0438(dActor_c* thiz)
 {
-  Actor* o = _ZN5Actor10FindWithIDEj(thiz->id);
+  dActor_c* o = _ZN8dActor_c10FindWithIDEj(thiz->id);
   if (!o) return;
   if (thiz->b10e != 0xf && thiz->b10e != o->b110) return;
   func_02012790(0x25);
@@ -33,7 +33,7 @@ void func_ov002_020f0438(Actor* thiz)
     v.x = thiz->pos.x;
     v.y = thiz->pos.y;
     v.z = thiz->pos.z;
-    _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(thiz, v, o->b110, false, 0, 0);
+    _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(thiz, v, o->b110, false, 0, 0);
   }
   *(int*)((int)thiz + 0xec) |= 1;
   if (o->b110 == 5) { thiz->b113 = 0x1e; return; }

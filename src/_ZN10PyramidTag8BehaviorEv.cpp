@@ -4,7 +4,7 @@
 #include "PyramidTag.h"
 extern "C" {
 extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN12CylinderClsn5ClearEv(void* a);
 extern void _ZN12CylinderClsn6UpdateEv(void* a);
 }
@@ -17,7 +17,7 @@ int PyramidTag::Behavior()
       _ZN7fBase_c18MarkForDestructionEv(((char*)this));
       return 1;
     }
-    char* a = _ZN5Actor10FindWithIDEj(id);
+    char* a = _ZN8dActor_c10FindWithIDEj(id);
     if(a){
       unsigned char* p = (unsigned char*)(((int)a + 0x3b6));
       *p += 1;

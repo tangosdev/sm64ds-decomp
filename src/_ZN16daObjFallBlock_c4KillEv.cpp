@@ -14,7 +14,7 @@
  * why there is no MarkForDestruction here and why the other thirteen slot-31
  * overrides in this family end with one.
  *
- * Actor id 0x8b gets particle 0x49 instead of 0x48.
+ * dActor_c id 0x8b gets particle 0x49 instead of 0x48.
  *
  * The second Vector3 is memberwise on purpose: Vector3 declares a destructor
  * (types.h), so a whole-object assignment compiles to an ldm/stm pair, four

@@ -4,7 +4,7 @@
 typedef int Fix12i;
 
 
-extern void *_ZN5Actor13ClosestPlayerEv(void);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void);
 extern Fix12i Vec3_Dist(const struct Vector3 *a, const struct Vector3 *b);
 extern short Vec3_HorzAngle(const struct Vector3 *a, const struct Vector3 *b);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *c);
@@ -13,7 +13,7 @@ void func_ov084_02129cf4(char *c, Fix12i distThresh)
 {
     struct Vector3 ppos;
 
-    *(void **)(c + 0x438) = _ZN5Actor13ClosestPlayerEv();
+    *(void **)(c + 0x438) = _ZN8dActor_c13ClosestPlayerEv();
 
     if (*(void **)(c + 0x438) == 0
         || (Vec3_Dist((struct Vector3*)(c+0x5c), (struct Vector3*)(c+0x41c)) > distThresh

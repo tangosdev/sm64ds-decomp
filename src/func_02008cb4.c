@@ -12,7 +12,7 @@ extern void Vec3_MulScalarInPlace(Vec3* v, int s);
 extern void Vec3_Add(Vec3* out, Vec3* a, Vec3* b);
 extern void _ZN11RaycastLineC1Ev(RaycastLine* rc);
 extern void func_0200897c(char* self, RaycastLine* rc);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(RaycastLine* rc, Vec3* a, Vec3* b, void* actor);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLine* rc, Vec3* a, Vec3* b, void* actor);
 extern int _ZN11RaycastLine10DetectClsnEv(RaycastLine* rc);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* surf, Vec3* out);
 extern int DotVec3(Vec3* a, Vec3* b);
@@ -70,7 +70,7 @@ int func_02008cb4(char* c)
             Vec3_Add(&end1, (Vec3*)(c + 0x8c), &dir1);
             _ZN11RaycastLineC1Ev(&rc1);
             func_0200897c(c, &rc1);
-            _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&rc1, &end1, &v0, 0);
+            _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc1, &end1, &v0, 0);
             if (_ZN11RaycastLine10DetectClsnEv(&rc1) != 0) {
                 _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rc1.surf, &n1);
                 if (DotVec3((Vec3*)(c + 0xec), &n1) > 0) {
@@ -127,7 +127,7 @@ int func_02008cb4(char* c)
     Vec3_Add(&end2, (Vec3*)(c + 0x8c), &dir2);
     _ZN11RaycastLineC1Ev(&rc2);
     func_0200897c(c, &rc2);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&rc2, &v0, &end2, 0);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc2, &v0, &end2, 0);
     if (_ZN11RaycastLine10DetectClsnEv(&rc2) == 0) {
         *(u32*)(((int)c + 0x154)) &= ~0x80000;
         _ZN11RaycastLineD1Ev(&rc2);

@@ -16,14 +16,14 @@ extern void _ZN12CylinderClsn5ClearEv(void *thiz);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *thiz, const struct Vector3 *v);
 extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
-extern void *_ZN5Actor10FindWithIDEj(u32 id);
-extern void _ZN5Actor11UntrackStarERa(void *thiz, s8 *ref);
-extern void _ZN5Actor14TriplePoofDustEv(void *thiz);
+extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
+extern void _ZN8dActor_c11UntrackStarERa(void *thiz, s8 *ref);
+extern void _ZN8dActor_c14TriplePoofDustEv(void *thiz);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
 extern void func_02012694(int a, void *p);
-extern int _ZN5Actor13DistToCPlayerEv(void *thiz);
+extern int _ZN8dActor_c13DistToCPlayerEv(void *thiz);
 extern int RandomIntInternal(int *seed);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3 *pos, const struct Vector3_16 *ang, int e, int f);
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3 *pos, const struct Vector3_16 *ang, int e, int f);
 extern int data_0209e650;
 
 int _ZN11RollingRock8BehaviorEv(char *c)
@@ -63,17 +63,17 @@ int _ZN11RollingRock8BehaviorEv(char *c)
             if (*(int*)(c + 0x60) < -0x3e8000) {
                 _ZN7fBase_c18MarkForDestructionEv(c);
                 if (*(u32*)(c + 0x3b4) != 0) {
-                    char *a = (char*)_ZN5Actor10FindWithIDEj(*(u32*)(c + 0x3b4));
+                    char *a = (char*)_ZN8dActor_c10FindWithIDEj(*(u32*)(c + 0x3b4));
                     if (a) *(u8*)(a + 0x3c2) = 0;
                 }
-                _ZN5Actor11UntrackStarERa(c, (s8*)(c + 0x3c0));
-                _ZN5Actor14TriplePoofDustEv(c);
+                _ZN8dActor_c11UntrackStarERa(c, (s8*)(c + 0x3c0));
+                _ZN8dActor_c14TriplePoofDustEv(c);
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x67, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
                 func_02012694(0x17a, c + 0x74);
             }
         }
     } else {
-        int dist = _ZN5Actor13DistToCPlayerEv(c);
+        int dist = _ZN8dActor_c13DistToCPlayerEv(c);
         if (dist > 0x5dc000) {
             u32 th = (dist < 0x1770000) ? 0x70 : 0xe0;
             if (*(u16*)(c + 0x100) >= th) {
@@ -89,12 +89,12 @@ int _ZN11RollingRock8BehaviorEv(char *c)
                 if (*(u8*)(c + 0x3be) == 1 && *(u8*)(c + 0x3bf) >= 5 && *(u8*)(c + 0x3c2) == 0) {
                     char *a;
                     *(u8*)(c + 0x3c2) = 1;
-                    a = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+                    a = (char*)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                         0xdd, (*(u8*)(c + 0x3c1) << 8) | 3, (struct Vector3*)(c + 0x5c), &v16, *(s8*)(c + 0xcc), -1);
                     *(u8*)(c + 0x3bf) = 0;
                     if (a) *(u32*)(a + 0x3b4) = *(u32*)(c + 4);
                 } else {
-                    _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+                    _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                         0xdd, 2, (struct Vector3*)(c + 0x5c), &v16, *(s8*)(c + 0xcc), -1);
                 }
             }

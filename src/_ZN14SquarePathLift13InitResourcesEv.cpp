@@ -11,7 +11,7 @@ extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, void* mtx, int fix, short s, void* clps);
 extern void func_020393d4(int* p, void* v);
 extern void _ZN7PathPtr6FromIDEj(void* self, unsigned int id);
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 struct SFP { void* a; void* b; void* c; };
 extern struct SFP data_ov052_021125a0;
 }
@@ -24,7 +24,7 @@ int SquarePathLift::InitResources()
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
   void* f2 = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov052_021125a0.b);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, f2, &mClsnMat, 0x199, mAngleY, data_ov052_021125a0.c);
-  func_020393d4((int*)((char*)&(*(u8 *)&mMeshCollider)), &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4((int*)((char*)&(*(u8 *)&mMeshCollider)), &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
   _ZN7PathPtr6FromIDEj(((char*)this)+0x320, (*(s32 *)&param1)&0xff);
   mPathDir = 1;
   mHorzSpeed = 0xa000;

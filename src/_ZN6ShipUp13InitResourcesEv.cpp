@@ -14,7 +14,7 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern void func_020393d4(int* p, int v);
 extern int IsStarCollected(int a, int b);
 }
-extern void* _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern void* _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern unsigned char data_0209f220;
 
 int ShipUp::InitResources()
@@ -37,9 +37,9 @@ int ShipUp::InitResources()
     f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov016_021136dc[idx]);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, f, ((char*)this)+0x2ec, 0x1000, unk_08e, sp8[idx]);
     if (mModelIndex == 0) {
-        func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+        func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     }
-    ((MeshColliderBase *)(((char*)this)+0x124))->Enable((Actor *)(((char*)this)));
+    ((MeshColliderBase *)(((char*)this)+0x124))->Enable((dActor_c *)(((char*)this)));
     unk_324 = 0;
     unk_328 = 0;
     if (data_0209f220 > 1) {

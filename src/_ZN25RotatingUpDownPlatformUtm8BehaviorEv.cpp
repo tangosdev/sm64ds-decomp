@@ -10,12 +10,12 @@ typedef struct Vec3 { int x, y, z; } Vec3;
 typedef struct RaycastGround { char pad[0x54]; } RaycastGround;
 
 extern "C" {
-extern void *_ZN5Actor15FindWithActorIDEjPS_(u32 id, void *p);
+extern void *_ZN8dActor_c15FindWithActorIDEjPS_(u32 id, void *p);
 extern int Vec3_HorzDist(const Vec3 *a, const Vec3 *b);
-extern int _ZN5Actor13DistToCPlayerEv(void *thiz);
+extern int _ZN8dActor_c13DistToCPlayerEv(void *thiz);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, const Vec3 *pos, u32 e);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *rc);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *rc, const Vec3 *pos, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *rc, const Vec3 *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *rc);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(void *src, void *m, void *dst);
@@ -67,7 +67,7 @@ int RotatingUpDownPlatformUtm::Behavior()
             void *a;
             void *b;
             if (*(void **)((char *)&mPlatform0) == 0 || *(void **)((char *)&mPlatform1) == 0) {
-                r8 = _ZN5Actor15FindWithActorIDEjPS_(0x1d, 0);
+                r8 = _ZN8dActor_c15FindWithActorIDEjPS_(0x1d, 0);
                 if (r8 != 0) {
                     do {
                         if (r8 != (void *)((char *)this) &&
@@ -78,7 +78,7 @@ int RotatingUpDownPlatformUtm::Behavior()
                                 *(void **)((char *)&mPlatform1) = r8;
                             }
                         }
-                        r8 = _ZN5Actor15FindWithActorIDEjPS_(0x1d, r8);
+                        r8 = _ZN8dActor_c15FindWithActorIDEjPS_(0x1d, r8);
                     } while (r8 != 0);
                 }
             }
@@ -92,7 +92,7 @@ int RotatingUpDownPlatformUtm::Behavior()
                     }
                     b8 = (unk_0b0 & 8) ? 1 : 0;
                     if (b8 != 0) {
-                        if (_ZN5Actor13DistToCPlayerEv(((char *)this)) > 0x7d0000) {
+                        if (_ZN8dActor_c13DistToCPlayerEv(((char *)this)) > 0x7d0000) {
                             char *p398 = *(char **)((char *)&mPlatform0);
                             char *p39c;
                             if (*(u8 *)(p398 + 0x3a0) != 0) {
@@ -127,7 +127,7 @@ int RotatingUpDownPlatformUtm::Behavior()
         pos.y = py - 0x14000;
     }
     _ZN13RaycastGroundC1Ev(&rc);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, &pos, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, &pos, 0);
     unk_37c = pos.y;
     if (_ZN13RaycastGround10DetectClsnEv(&rc) != 0) {
         unk_37c = *(int *)((char *)&rc + 0x44);

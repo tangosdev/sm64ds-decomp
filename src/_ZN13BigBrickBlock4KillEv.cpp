@@ -4,7 +4,7 @@
  *
  * ATTRIBUTED BY THE VTABLE. _ZTV13BigBrickBlock (ov002 0x02108adc) carries
  * 0x020b38a0 at slot 31 -- vtable + 0x7c -- while _ZTV10dBgActor_c carries
- * _ZN10dBgActor_c4KillEv at the same slot and both tables carry Actor's 0x020100dc
+ * _ZN10dBgActor_c4KillEv at the same slot and both tables carry dActor_c's 0x020100dc
  * at slot 30. So this is this class's own override of the one virtual dBgActor_c
  * adds. The file's old `// recovered name: BigBrickBlock_Kill` comment happened
  * to land on the right class; _ZTI13daObjBlockL_c, the RTTI record it was
@@ -16,9 +16,9 @@
  * dBgActor_c::dBgActor_c and store _ZTV13BigBrickBlock. See include/BigBrickBlock.h.
  *
  *   0x11  the block that holds a star. If mStarID is set it releases the star:
- *         through Actor::UntrackAndSpawnStar when param1's second byte is 0xff
+ *         through dActor_c::UntrackAndSpawnStar when param1's second byte is 0xff
  *         (the star was tracked, so the marker slot has to be freed too), and
- *         through Actor::Spawn of actor 0xb2 with the id tagged 0x40 otherwise.
+ *         through dActor_c::Spawn of actor 0xb2 with the id tagged 0x40 otherwise.
  *         Its poof rides 0x96000 -- 150 20.12 units -- up instead of 0x64000,
  *         and uses particle 0xf.
  *   0x0f  and 0x11 when the star path did not fire: three coins, but only when
@@ -41,9 +41,9 @@
  * (types.h), so a whole-object assignment compiles to an ldm/stm pair, four
  * instructions where the ROM has six.
  *
- * Particle::System::NewSimple and Actor::SpawnCoins stay spelled as their
+ * Particle::System::NewSimple and dActor_c::SpawnCoins stay spelled as their
  * mangled names -- both take Fix12<int> BY VALUE and declaring the true types
- * changes how the caller passes them. include/Actor.h says the same thing at the
+ * changes how the caller passes them. include/dActor_c.h says the same thing at the
  * bottom of the class, src/_ZN10dBgActor_c4KillEv.cpp argues it in full, and
  * notes/mwccarm-codegen.md 6az is the rule. */
 #include "BigBrickBlock.h"
@@ -51,7 +51,7 @@
 
 extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
     u32 id, Fix12i x, Fix12i y, Fix12i z);
-extern "C" void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(
+extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(
     void *self, const Vector3 &pos, u32 count, s32 speed, s16 delay);
 
 /* Two of this class's own methods, still unnamed and still under their
@@ -86,7 +86,7 @@ void BigBrickBlock::Kill()
                 coinPos.x = mPosX;
                 coinPos.y = mPosY;
                 coinPos.z = mPosZ;
-                _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(this, coinPos, 3, 0xf000, 0);
+                _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(this, coinPos, 3, 0xf000, 0);
             }
         }
     }

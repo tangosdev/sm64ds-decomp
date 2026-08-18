@@ -2,8 +2,8 @@
 struct Vector3;
 struct Vector3_16;
 
-struct Actor {
-    static Actor* Spawn(unsigned int a, unsigned int b, const Vector3& pos,
+struct dActor_c {
+    static dActor_c* Spawn(unsigned int a, unsigned int b, const Vector3& pos,
                         const Vector3_16* rot, signed char e, short f);
 };
 struct fBase_c {
@@ -18,7 +18,7 @@ extern "C" void func_ov098_0213b63c(char* c)
 {
     int i;
     for (i = 0; i < 5; i++) {
-        Actor* a = Actor::Spawn(0xd0, 2, *(const Vector3*)(c + 0x5c),
+        dActor_c* a = dActor_c::Spawn(0xd0, 2, *(const Vector3*)(c + 0x5c),
                                 (const Vector3_16*)0,
                                 *(signed char*)(c + 0xcc), -1);
         *(int*)((char*)a + 0xa4) = 0;

@@ -8,7 +8,7 @@
 extern "C" {
 extern void _ZN12CylinderClsn5ClearEv(char* t);
 extern void _ZN12CylinderClsn6UpdateEv(char* t);
-extern void _ZN5Actor13SmallPoofDustEv(char* c);
+extern void _ZN8dActor_c13SmallPoofDustEv(char* c);
 extern void _ZN7fBase_c18MarkForDestructionEv(char* c);
 }
 
@@ -26,7 +26,7 @@ int PowerFlower::Behavior()
     _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
     _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
     if (_ZN8SaveData16HasPlayerLostCapEv()) {
-        _ZN5Actor13SmallPoofDustEv(((char*)this));
+        _ZN8dActor_c13SmallPoofDustEv(((char*)this));
         _ZN7fBase_c18MarkForDestructionEv(((char*)this));
     }
     return 1;

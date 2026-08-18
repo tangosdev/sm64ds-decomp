@@ -5,7 +5,7 @@
 #include "common.h"
 /* Final name, not a shadow method: the ROM symbol takes Fix12<int> and the call
    site has an int. See func_ov060_021182b0.cpp for the same case. */
-extern "C" short _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void* self, int a, int b,
+extern "C" short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void* self, int a, int b,
                                                        short c);
 struct ClsnResult { int GetClsnID() const; };
 struct SurfaceInfo { void CopyNormalTo(Vector3 &) const; };
@@ -13,7 +13,7 @@ struct WithMeshClsn {
     int IsOnWall() const;
     ClsnResult *GetWallResult() const;
 };
-struct Actor {
+struct dActor_c {
     virtual void v0();
     virtual void v1();
     virtual void v2();
@@ -46,7 +46,7 @@ struct Actor {
     virtual void v29();
     virtual void v30();
     virtual void vcall();
-    static Actor *FindWithID(u32 id);
+    static dActor_c *FindWithID(u32 id);
 };
 
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
@@ -54,13 +54,13 @@ extern "C" int func_ov002_020ef228(void *c, int arg);
 
 extern "C" void func_ov098_021390ec(char *cc)
 {
-    Actor *c = (Actor *)cc;
+    dActor_c *c = (dActor_c *)cc;
     if (DecIfAbove0_Byte((u8 *)((char *)c + 0x605)) != 0)
         return;
     if (((WithMeshClsn *)((char *)c + 0x320))->IsOnWall() != 0) {
         ClsnResult *wr = ((WithMeshClsn *)((char *)c + 0x320))->GetWallResult();
         if (wr->GetClsnID() != -1) {
-            Actor *a = Actor::FindWithID((u32)wr->GetClsnID());
+            dActor_c *a = dActor_c::FindWithID((u32)wr->GetClsnID());
             if (a != 0) {
                 int isF = (*(unsigned short *)((char *)a + 0xc) == 0xf);
                 if (isF == 0) {
@@ -83,5 +83,5 @@ extern "C" void func_ov098_021390ec(char *cc)
     Vector3 v;
     ((SurfaceInfo *)((char *)((WithMeshClsn *)((char *)c + 0x320))->GetWallResult() + 4))->CopyNormalTo(v);
     *(s16 *)((char *)c + 0x94) =
-        _ZN5Actor12ReflectAngleE5Fix12IiES1_s(c, v.x, v.z, *(s16 *)((char *)c + 0x94));
+        _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(c, v.x, v.z, *(s16 *)((char *)c + 0x94));
 }

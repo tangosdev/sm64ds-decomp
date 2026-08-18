@@ -1,6 +1,6 @@
 #include "types.h"
 enum { false, true };
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_ov102_0214ae1c(char* a);
 extern int func_ov002_020df34c(char* self);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int n, void* v);
@@ -10,7 +10,7 @@ void func_ov098_0213ad08(char* self) {
     char* p;
     int b1;
     if (id == 0) return;
-    a = _ZN5Actor10FindWithIDEj(id);
+    a = _ZN8dActor_c10FindWithIDEj(id);
     if (a == 0) return;
     b1 = *(u16*)(a + 0xc);
     b1 = b1 == 0xbf;

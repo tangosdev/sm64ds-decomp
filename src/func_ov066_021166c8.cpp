@@ -45,7 +45,7 @@ extern "C" void func_ov066_021166c8(void *thiz)
     func_020393d4(c + 0x674, (void *)func_02112cd8_updatepos);
     func_020393c4(c + 0x674, (void *)func_ov066_0211a35c);
     func_020398fc(c + 0x674);
-    ((MeshColliderBase *)(c + 0x674))->Enable((Actor *)(c));
+    ((MeshColliderBase *)(c + 0x674))->Enable((dActor_c *)(c));
 
     {
         int n = _ZNK9Animation13GetFrameCountEv(c + 0x3b0);

@@ -4,7 +4,7 @@
 #include "HugeWater.h"
 #include "MeshColliderBase.h"
 typedef int Fix12i;
-struct SharedFilePtr; struct BMD_File; struct BTA_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block; struct Actor;
+struct SharedFilePtr; struct BMD_File; struct BTA_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block; struct dActor_c;
 /* Model and ModelBase are the real classes now, through HugeWater.h. */
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
@@ -42,6 +42,6 @@ int HugeWater::InitResources()
             (MovingMeshCollider*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x2ec),
             0x1000, *(short*)(c + 0x8e), data_ov032_02112fb8);
     }
-    ((MeshColliderBase *)((MeshColliderBase*)(c + 0x124)))->Enable((Actor *)((Actor*)c));
+    ((MeshColliderBase *)((MeshColliderBase*)(c + 0x124)))->Enable((dActor_c *)((dActor_c*)c));
     return (int)(_ZN5Event6GetBitEj(0xe) == 0);
 }

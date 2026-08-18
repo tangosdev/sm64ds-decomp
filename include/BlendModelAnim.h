@@ -49,7 +49,7 @@ struct BlendModelAnim : ModelAnim {
        declare operator delete, so an inherited one is "ambiguous access to
        name found: ModelBase::operator delete and Animation::operator delete".
        Declaring it here picks the same deallocator both bases name, and also
-       satisfies the rule in include/Actor.h that mwcc only inlines the member
+       satisfies the rule in include/dActor_c.h that mwcc only inlines the member
        when it is in the class or its immediate base. */
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 

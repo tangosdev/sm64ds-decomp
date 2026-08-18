@@ -14,7 +14,7 @@ extern void func_020393d4(void*,void*);
 extern void func_020393c4(void*,void*);
 }
 
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_[];
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_[];
 
 int SeesawBob::InitResources()
 {
@@ -40,7 +40,7 @@ int SeesawBob::InitResources()
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider, f, &mClsnMat, 0x1000, mAngleY, *(int*)(data_ov095_021374a8 + i*0xc));
     }
-    func_020393d4(&mMeshCollider, _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMeshCollider, _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4(&mMeshCollider, func_ov095_02135e90);
     return 1;
 }

@@ -23,6 +23,6 @@ void* _ZN8MadPianoD1Ev(struct MadPiano *self) {
   *(void**)((void*)self) = &_ZTV10dBgActor_c;
   _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
   _ZN5ModelD1Ev((char*)&self->mModel);
-  _ZN5ActorD2Ev(((void*)self));
+  _ZN8dActor_cD2Ev(((void*)self));
   return ((void*)self);
 }

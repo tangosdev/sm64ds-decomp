@@ -6,7 +6,7 @@
 #include "WaterDiamond.h"
 typedef short s16;
 extern "C" {
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN12CylinderClsn5ClearEv(void* self);
 extern void _ZN12CylinderClsn6UpdateEv(void* self);
 }
@@ -20,7 +20,7 @@ int WaterDiamond::Behavior()
         char* p;
         s16* a = (s16*)(((int)((char*)this) + 0x8e));
         *a = *a + 0x400;
-        p = _ZN5Actor10FindWithIDEj(unk_158);
+        p = _ZN8dActor_c10FindWithIDEj(unk_158);
         if (p != 0) {
             if (mPosY == *(int*)(p+0x60)) {
                 if (mAngleY == 0) unk_15d = 0;

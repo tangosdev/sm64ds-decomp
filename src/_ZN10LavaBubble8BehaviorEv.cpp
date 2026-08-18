@@ -9,12 +9,12 @@ struct CylinderClsn;
 struct WithMeshClsn;
 
 extern "C" {
-int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, Fix12i d);
+int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, Fix12i d);
 void _ZN7fBase_c18MarkForDestructionEv(void* self);
 unsigned short DecIfAbove0_Short(unsigned short* p);
-void* _ZN5Actor10FindWithIDEj(unsigned int id);
+void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN6Player4BurnEv(void* self);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, CylinderClsn* cc);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, CylinderClsn* cc);
 void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, WithMeshClsn* wm, unsigned int j);
 void _ZN12CylinderClsn5ClearEv(CylinderClsn* self);
 void _ZN12CylinderClsn6UpdateEv(CylinderClsn* self);
@@ -38,7 +38,7 @@ int LavaBubble::Behavior()
             return 1;
     }
 
-    if (_ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000)) {
+    if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000)) {
         if (unk_310 != 0)
             _ZN7fBase_c18MarkForDestructionEv(((char*)this));
         return 1;
@@ -50,7 +50,7 @@ int LavaBubble::Behavior()
         unsigned int id = mMovingCylinderClsn.otherOwner;
         if (id != 0) {
             if ((mMovingCylinderClsn.hitFlags & 0x8000) == 0) {
-                char* a = (char*)_ZN5Actor10FindWithIDEj(id);
+                char* a = (char*)_ZN8dActor_c10FindWithIDEj(id);
                 if (a != 0) {
                     int hit = (*(u16*)(a + 0xc) == 0xbf);
                     if (hit)
@@ -68,7 +68,7 @@ int LavaBubble::Behavior()
             (((Klass*)((char*)this))->*(m->pmf))();
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), (CylinderClsn*)((char*)&mMovingCylinderClsn));
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), (CylinderClsn*)((char*)&mMovingCylinderClsn));
 
     if (mVertAccel != 0)
         _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), (WithMeshClsn*)((char*)&mWithMeshClsn), 0);

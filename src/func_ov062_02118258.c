@@ -2,13 +2,13 @@ typedef struct Vector3 { int x, y, z; } Vector3;
 
 #define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
-extern void* _ZN5Actor13ClosestPlayerEv(void*);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void*);
 extern int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 
 void func_ov062_02118258(char* c, int lim)
 {
-    *(void**)(c + 0x3b4) = _ZN5Actor13ClosestPlayerEv(c);
+    *(void**)(c + 0x3b4) = _ZN8dActor_c13ClosestPlayerEv(c);
 
     if (*(void**)(c + 0x3b4) == 0 || Vec3_Dist((Vector3*)(c + 0x5c), (Vector3*)(c + 0x39c)) > lim) {
         *(short*)(c + 0x3c0) = Vec3_HorzAngle((Vector3*)(c + 0x5c), (Vector3*)(c + 0x39c));

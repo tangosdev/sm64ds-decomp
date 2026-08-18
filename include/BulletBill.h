@@ -55,7 +55,7 @@ struct BulletBill {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0xc];
-    /* 0x074..0x08c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x074..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     /* The X of the camera-space triple, not a scalar: Behavior takes
        `(Vector3*)(c + 0x74)` twice -- once as the sound's position and once as

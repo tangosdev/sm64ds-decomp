@@ -5,13 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "UnchainedChomp.h"
 struct CylinderClsn;
-/* NOT the real Actor, and deliberately not named one. This stand-in exists
+/* NOT the real dActor_c, and deliberately not named one. This stand-in exists
    solely to give the pointer-to-member below a representation: a PMF on a
    non-polymorphic, single-base class is laid out differently from one on the
-   real Actor, so the shape here is codegen, not decoration. Naming it Actor
+   real dActor_c, so the shape here is codegen, not decoration. Naming it dActor_c
    used to work only because this file included no header that defined the
    real one; with UnchainedChomp.h in scope that became a redefinition, and
-   letting the PMF bind to the real Actor makes mwccarm abort with an
+   letting the PMF bind to the real dActor_c makes mwccarm abort with an
    internal compiler error rather than a diagnostic. */
 struct ChompPmfSelf;
 typedef void (ChompPmfSelf::*PMF)();
@@ -20,13 +20,13 @@ struct Holder { char pad[8]; PMF fn; };
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void _Z14ApproachLinearRiii(int &x, int target, int step);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(Actor *thiz, CylinderClsn *c);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(dActor_c *thiz, CylinderClsn *c);
 extern void _ZN12CylinderClsn5ClearEv(void *thiz);
 extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
 extern void func_02012694(int, void *);
-extern void _ZN5Actor15HugeLandingDustEb(Actor *thiz, bool b);
-extern Actor *_ZN5Actor13ClosestPlayerEv(Actor *thiz);
-extern Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const Vector3 &pos, const Vector3_16 *rot, int e, int f);
+extern void _ZN8dActor_c15HugeLandingDustEb(dActor_c *thiz, bool b);
+extern dActor_c *_ZN8dActor_c13ClosestPlayerEv(dActor_c *thiz);
+extern dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const Vector3 &pos, const Vector3_16 *rot, int e, int f);
 extern void _ZN7PathPtrC1Ev(void *thiz);
 extern void _ZN7PathPtr6FromIDEj(void *thiz, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *thiz, Vector3 &out, unsigned int idx);
@@ -51,7 +51,7 @@ int UnchainedChomp::Behavior()
         *(int *)(c + 0x84) = *(int *)(c + 0x88);
         func_ov100_02143b68(c);
         *(int *)(c + 0x98) = 0;
-        _ZN5Actor9UpdatePosEP12CylinderClsn(((Actor *)this), (CylinderClsn *)(c + 0x110));
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((dActor_c *)this), (CylinderClsn *)(c + 0x110));
         if (func_ov100_02143370(c) != 0) {
             *(int *)(c + 0xa0) = 0;
         }
@@ -70,21 +70,21 @@ int UnchainedChomp::Behavior()
     }
 
     *(int *)(c + 0x98) = 0x17000;
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((Actor *)this), (CylinderClsn *)(c + 0x110));
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((dActor_c *)this), (CylinderClsn *)(c + 0x110));
 
     if (func_ov100_02143370(c) != 0) {
         if (*(unsigned short *)(c + 0x6a8) == 0) {
             func_02012694(0x39, c + 0x74);
         }
         *(int *)(c + 0xa8) = 0x14000;
-        _ZN5Actor15HugeLandingDustEb(((Actor *)this), true);
+        _ZN8dActor_c15HugeLandingDustEb(((dActor_c *)this), true);
     }
 
     int flag = (data_0209f2d8[0] == 1);
     if (flag != 0 && *(unsigned short *)(c + 0x6ca) == 0) {
         int q16 = __aeabi_idiv(0x10000, *(int *)(c + 0x6b4));
         short spd = (short)q16;
-        Actor *pl = _ZN5Actor13ClosestPlayerEv(((Actor *)this));
+        dActor_c *pl = _ZN8dActor_c13ClosestPlayerEv(((dActor_c *)this));
         (void)pl;
 
         volatile Vector3 v;
@@ -92,7 +92,7 @@ int UnchainedChomp::Behavior()
         v.y = 4;
         v.z = 0;
 
-        Actor *sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+        dActor_c *sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x120, 2, *(Vector3 *)(c + 0x5c), (const Vector3_16 *)0,
             *(signed char *)(c + 0xcc), -1);
         if (*(unsigned short *)(c + 0x6a8) == 0) {
@@ -139,7 +139,7 @@ int UnchainedChomp::Behavior()
         func_ov100_02143b68(c);
         _ZN12CylinderClsn5ClearEv(c + 0x110);
 
-        Actor *p = _ZN5Actor13ClosestPlayerEv(((Actor *)this));
+        dActor_c *p = _ZN8dActor_c13ClosestPlayerEv(((dActor_c *)this));
         if (p != 0 && *(unsigned char *)((char *)p + 0x6fb) == 0) {
             _ZN12CylinderClsn6UpdateEv(c + 0x110);
         }

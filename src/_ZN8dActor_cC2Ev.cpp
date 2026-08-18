@@ -1,10 +1,10 @@
 //cpp
 #include "types.h"
-// @symbol _ZN5ActorC2Ev
+// @symbol _ZN8dActor_cC2Ev
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "Actor.h"
+#include "dActor_c.h"
 extern "C" {
 extern int data_0208e4b8;
 extern int data_0208e3a4;
@@ -16,10 +16,10 @@ extern int* data_020a4bb8;
 extern unsigned char data_0209f2d8;
 void _ZN7fBase_cC1Ev(void* self);
 int func_0203b244(void* l, void* n);
-void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
+void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
 }
 
-extern "C" void* _ZN5ActorC2Ev(struct Actor *self) {
+extern "C" void* _ZN8dActor_cC2Ev(struct dActor_c *self) {
     int* entry;
     int b;
     int r3;
@@ -61,6 +61,6 @@ extern "C" void* _ZN5ActorC2Ev(struct Actor *self) {
         r3 = entry[5] + 0x7d0000;
     else
         r3 = entry[5];
-    _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(((char*)self), entry[3], entry[4], r3, entry[6]);
+    _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(((char*)self), entry[3], entry[4], r3, entry[6]);
     return ((char*)self);
 }

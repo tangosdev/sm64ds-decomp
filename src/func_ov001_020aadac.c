@@ -1,6 +1,6 @@
 extern void func_ov001_020aa6cc(int r0);
 extern void func_ov001_020aa6b0(int* r0, int r1);
-extern void* _ZN5Actor10FindWithIDEj(unsigned id);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned id);
 extern int func_0202a8e0(int a, unsigned char b);
 extern void func_ov001_020aa6e4(int idx, unsigned r1, int* obj);
 extern void func_ov001_020ab110(int* r0);
@@ -43,7 +43,7 @@ void func_ov001_020aadac(void) {
         o = data_ov001_020ad634[i2];
         if (o == 0) continue;
         do {
-            void* fw = _ZN5Actor10FindWithIDEj(o[8/4]);
+            void* fw = _ZN8dActor_c10FindWithIDEj(o[8/4]);
             if (fw != 0 || (int)fw != o[4/4]) {
                 if (*(unsigned char*)((char*)o + 0x19) == 4) {
                     unsigned char* fl = LAUNDER_U8_PTR((char*)o + 0x1b);

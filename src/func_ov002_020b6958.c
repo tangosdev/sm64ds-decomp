@@ -6,7 +6,7 @@ extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, Fix12, short, void*);
 extern int func_020393d4(void*, void*);
-extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 int func_ov002_020b6958(void* c, void** f) {
   void* mdl;
   void* kcl;
@@ -16,6 +16,6 @@ int func_ov002_020b6958(void* c, void** f) {
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
   kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(f[1]);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char*)c+0x124, kcl, (char*)c+0x2ec, 0x199, *(short*)((char*)c+0x8e), f[2]);
-  func_020393d4((char*)c+0x124, &_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4((char*)c+0x124, &_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
   return 1;
 }

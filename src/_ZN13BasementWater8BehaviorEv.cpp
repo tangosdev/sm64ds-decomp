@@ -3,7 +3,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "BasementWater.h"
 extern "C" {
-extern void _ZN5Sound15PlaySecretSoundEP5ActorPt(void* a, unsigned short* p);
+extern void _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* a, unsigned short* p);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int d, void* v, unsigned int e);
 extern void _ZN7Minimap19UpdateLevelSpecificEv(void);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* thiz);
@@ -16,7 +16,7 @@ extern int data_0209f32c;
 int BasementWater::Behavior()
 {
     if (unk_33e != 0)
-        _ZN5Sound15PlaySecretSoundEP5ActorPt(((char*)this), (unsigned short*)((char*)&unk_33c));
+        _ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (unsigned short*)((char*)&unk_33c));
     if (mPosY <= mLoweredY) {
         mPosY = mLoweredY;
     } else if (*(int*)((char*)data_0209caa0 + 8) & 0x80000) {

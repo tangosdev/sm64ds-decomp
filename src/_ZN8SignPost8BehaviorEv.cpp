@@ -11,7 +11,7 @@ extern "C" unsigned int data_0209b454;
 extern "C" void _ZN6Player9DropActorEv(void *self);
 extern "C" void func_ov002_020bb060(char *c);
 extern "C" u8 DecIfAbove0_Byte(u8 *p);
-extern "C" int _ZN5Actor13DistToCPlayerEv(void *self);
+extern "C" int _ZN8dActor_c13DistToCPlayerEv(void *self);
 extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern "C" void func_ov002_020baf80(char *t);
@@ -20,9 +20,9 @@ extern "C" int _ZN16MeshColliderBase9IsEnabledEv(void *self);
 extern "C" void _ZN16MeshColliderBase7DisableEv(void *self);
 extern "C" void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
 extern "C" void *_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const void *v);
-extern "C" void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void *self, const struct Vector3 *vec);
+extern "C" void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void *self, const struct Vector3 *vec);
 extern "C" void func_ov002_020bae9c(char *c);
-extern "C" void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *m, int a, int b, int c, u32 j);
+extern "C" void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *m, int a, int b, int c, u32 j);
 extern "C" void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern "C" void func_ov002_020bbda4(char *c);
 extern "C" void _ZN12CylinderClsn5ClearEv(void *self);
@@ -60,7 +60,7 @@ extern "C" int _ZN8SignPost8BehaviorEv(char *c)
     if (*(u8 *)(c + 0x590) != 0) {
         enum Bool b = (enum Bool)((*(u32 *)(c + 0xb0) & 8) != 0);
         if (b != FALSE && DecIfAbove0_Byte((u8 *)(c + 0x591)) == 0
-            && _ZN5Actor13DistToCPlayerEv(c) > 0x7d0000)
+            && _ZN8dActor_c13DistToCPlayerEv(c) > 0x7d0000)
             *(u8 *)(c + 0x590) = 0;
         return 1;
     }
@@ -68,7 +68,7 @@ extern "C" int _ZN8SignPost8BehaviorEv(char *c)
     if (*(u8 *)(c + 0x58e) == 0) {
         enum Bool b = (enum Bool)((*(u32 *)(c + 0xb0) & 8) != 0);
         if (b != FALSE && DecIfAbove0_Byte((u8 *)(c + 0x591)) == 0
-            && _ZN5Actor13DistToCPlayerEv(c) > 0x7d0000) {
+            && _ZN8dActor_c13DistToCPlayerEv(c) > 0x7d0000) {
             *(u8 *)(c + 0x58e) = 2;
             *(int *)(c + 0x60) = *(int *)(c + 0x3b4);
             _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
@@ -104,11 +104,11 @@ extern "C" int _ZN8SignPost8BehaviorEv(char *c)
             ((int *)&vec)[1] = y2;
             ((int *)&vec)[2] = z2;
             vec2 = vec;
-            _ZN5Actor19DisappearPoofDustAtERK7Vector3(c, &vec2);
+            _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(c, &vec2);
             func_ov002_020bae9c(c);
             return 1;
         }
-        _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+        _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
             c, c + 0x358, c + 0x380, 0x50000, 0x28000, 0x28000, 0xf);
         return 1;
     }
@@ -124,7 +124,7 @@ extern "C" int _ZN8SignPost8BehaviorEv(char *c)
         if (s == 3) {
             func_ov002_020bafc0(c);
         } else if (*(u8 *)(c + 0x58e) == 2 && (u32)s <= 1) {
-            _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+            _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
                 c, c + 0x358, c + 0x380, 0x50000, 0x28000, 0x28000, 0xf);
         }
     }

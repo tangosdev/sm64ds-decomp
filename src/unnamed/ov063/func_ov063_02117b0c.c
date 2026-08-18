@@ -1,7 +1,7 @@
 #include "types.h"
 #define LAUND(p) ((void *)(p))
 
-extern void *_ZN5Actor13ClosestPlayerEv(void *o);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *o);
 extern int _ZN6Player9StartTalkER7fBase_cb(void *pl, void *a, int b);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned a, int fx);
 extern int _ZN6Player12GetTalkStateEv(void *pl);
@@ -18,7 +18,7 @@ void func_ov063_02117b0c(char *c)
 
     switch (*(u8 *)(c + 0x5ce)) {
     case 0:
-        *(void **)(c + 0x488) = _ZN5Actor13ClosestPlayerEv(c);
+        *(void **)(c + 0x488) = _ZN8dActor_c13ClosestPlayerEv(c);
         if (!_ZN6Player9StartTalkER7fBase_cb(*(void **)(c + 0x488), c, 1))
             return;
         {

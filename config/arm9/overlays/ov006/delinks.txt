@@ -5420,7 +5420,7 @@ src/func_ov006_0210c478.c:
     complete
     .text start:0x0210c478 end:0x0210c4b8
 
-src/_ZN12dScMgSlot1_c19OnHitFromUnderneathER5Actor.cpp:
+src/_ZN12dScMgSlot1_c19OnHitFromUnderneathER8dActor_c.cpp:
     complete
     .text start:0x0210c4b8 end:0x0210c4dc
 

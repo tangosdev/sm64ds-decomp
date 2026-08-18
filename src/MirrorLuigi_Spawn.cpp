@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int sz);
-extern void _ZN5ActorC2Ev(void* c);
+extern void _ZN8dActor_cC2Ev(void* c);
 extern void _ZN9ModelAnimC1Ev(void* c);
 extern void _ZN5ModelC1Ev(void* c);
 extern void _ZN11ShadowModelC1Ev(void* c);
@@ -12,7 +12,7 @@ extern void _ZN15TextureSequenceC1Ev(void*);
 void* MirrorLuigi_Spawn(void){
   char* c = (char*)_ZN7fBase_cnwEj(0x20c);
   if (c) {
-    _ZN5ActorC2Ev(c);
+    _ZN8dActor_cC2Ev(c);
     *(int**)c = _ZTV11MirrorLuigi;
     _ZN9ModelAnimC1Ev(c+0xd4);
     _ZN5ModelC1Ev(c+0x138);

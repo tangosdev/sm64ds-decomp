@@ -3,7 +3,7 @@ extern Fix12i Vec3_Dist(const void *a, const void *b);
 extern short Vec3_HorzAngle(const void *v0, const void *v1);
 extern void _Z14ApproachLinearRsss(short *cur, short tgt, short step);
 extern void _ZN9Animation7AdvanceEv(void *self);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 extern void func_ov072_02120fd4(void *self, void *p);
 extern void func_ov072_02120f14(void *self);
 extern void func_ov072_02120e50(void *self);
@@ -21,7 +21,7 @@ int func_ov072_02121670(char *c) {
     _Z14ApproachLinearRsss((short*)(c + 0x8e), tgt, 0x2bc);
     *(short*)(c + 0x94) = *(short*)(c + 0x8e);
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x160);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x160);
     func_ov072_02120fd4(c, c + 0x194);
     func_ov072_02120f14(c);
     func_ov072_02120e50(c);

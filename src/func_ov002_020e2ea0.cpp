@@ -7,8 +7,8 @@ struct WithMeshClsn {
 struct ClsnResult {
     int GetClsnID() const;
 };
-struct Actor {
-    static Actor* FindWithID(unsigned int id);
+struct dActor_c {
+    static dActor_c* FindWithID(unsigned int id);
 };
 struct Player {
     struct State {};
@@ -46,7 +46,7 @@ extern "C" int func_ov002_020e2ea0(Player *self) {
 
     ClsnResult *cr = (ClsnResult *)((WithMeshClsn *)(base + 0x380))->GetFloorResult();
     if (cr->GetClsnID() != -1) {
-        if (Actor::FindWithID((unsigned int)cr->GetClsnID()) != 0) {
+        if (dActor_c::FindWithID((unsigned int)cr->GetClsnID()) != 0) {
             return 0;
         }
     }

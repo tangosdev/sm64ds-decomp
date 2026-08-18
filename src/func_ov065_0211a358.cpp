@@ -25,7 +25,7 @@ extern "C" void func_020393d4(int *p, int v);
 extern struct SharedFilePtr data_ov065_0211d88c;
 extern struct SharedFilePtr data_ov065_0211d894;
 extern unsigned char data_0209f2c0;
-extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 
 extern "C" int func_ov065_0211a358(char *self) {
     struct BMD_File *bmd;
@@ -52,7 +52,7 @@ extern "C" int func_ov065_0211a358(char *self) {
 
     if (data_0209f2c0 != 3) {
         func_020393d4((int *)(self + 0x124),
-            (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+            (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     }
     return 1;
 }

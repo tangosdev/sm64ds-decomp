@@ -7,7 +7,7 @@
  * the class's own destructor `_ZN8MantaRayD1Ev` destroys each member, and
  * `MantaRay_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV8MantaRay`. Everything this header used to restate below
- * 0x110 belongs to dEnemyBase_c and Actor and is inherited now.
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:

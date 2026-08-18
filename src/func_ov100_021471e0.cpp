@@ -9,14 +9,14 @@
 /* daObjPathLift_c::InitResources - name recovered from the vtable slot it fills.
    The body is a decompilation verified against the ROM, not an
    inferred stub. */
-struct Actor;
+struct dActor_c;
 struct RaycastGround {
   char pad[0x44];
   int result;
   char pad2[0xc];
   RaycastGround();
   ~RaycastGround();
-  void SetObjAndPos(const Vector3& pos, Actor* a);
+  void SetObjAndPos(const Vector3& pos, dActor_c* a);
   int DetectClsn();
 };
 extern "C" {
@@ -32,7 +32,7 @@ void func_ov002_020efaf0(char* c);
 }
 extern int data_ov002_0210d9f0;
 extern "C" {
-extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 }
 extern unsigned char data_0209f2d8;
 
@@ -47,7 +47,7 @@ extern "C" int func_ov100_021471e0(char* c) {
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
       c+0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov100_02148a5c),
       c+0x2ec, 0x1000, self->unk_08e, &data_ov002_0210d7d4);
-  func_020393d4((int*)(c+0x124), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4((int*)(c+0x124), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
   self->unk_440 = 0xa000;
   self->unk_098 = self->unk_440;
   func_ov002_020efaf0(c);

@@ -7,7 +7,7 @@
  * daDsnBase_c's -- inlined, because that destructor is defined in its class body
  * -- then that class's ShadowModel at 0x338 and TextureSequence at 0x324 in
  * reverse declaration order, then dBgActor_c's vptr and dBgActor_c's own
- * MovingMeshCollider and Model, then Actor.
+ * MovingMeshCollider and Model, then dActor_c.
  *
  * This is the only one of the eleven intermediates whose leaf destructor is 0x60
  * rather than 0x50, and the two extra calls are exactly the two sub-objects

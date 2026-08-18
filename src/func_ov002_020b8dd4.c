@@ -15,10 +15,10 @@ extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
 extern void _ZN13RaycastGroundC1Ev(char *thiz);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(char *thiz, Vector3 *v, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(char *thiz, Vector3 *v, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(char *thiz);
 extern void _ZN13RaycastGroundD1Ev(char *thiz);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *thiz);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *thiz);
@@ -53,7 +53,7 @@ int func_ov002_020b8dd4(char *c)
         MulVec3Mat4x3(&v, &data_020a0e68, &dst);
         AddVec3(&dst, (Vector3 *)(c + 0x5c), &dst);
         _ZN13RaycastGroundC1Ev(ray);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(ray, &dst, 0);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(ray, &dst, 0);
         if (_ZN13RaycastGround10DetectClsnEv(ray) != 0) {
             if (self->unk_4e8 != *(int *)(ray + 0x44)) {
                 self->unk_098 = 0;
@@ -61,7 +61,7 @@ int func_ov002_020b8dd4(char *c)
         } else {
             self->unk_098 = 0;
         }
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
         WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
         _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);

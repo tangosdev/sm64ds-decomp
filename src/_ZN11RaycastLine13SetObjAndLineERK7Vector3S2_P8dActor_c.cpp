@@ -1,6 +1,6 @@
 //cpp
 struct Vector3 { int x, y, z; };
-struct Actor;
+struct dActor_c;
 
 extern "C" {
 void _ZN11RaycastLine4Line3SetERK7Vector3S3_(void *line, const Vector3 *a, const Vector3 *b);
@@ -9,8 +9,8 @@ void func_02037608(char *thiz);
 void func_0203abd4(int *dst, Vector3 *mid, int w);
 }
 
-extern "C" void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(
-    char *thiz, const Vector3 *a, const Vector3 *b, Actor *obj)
+extern "C" void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(
+    char *thiz, const Vector3 *a, const Vector3 *b, dActor_c *obj)
 {
     Vector3 mid;
     _ZN11RaycastLine4Line3SetERK7Vector3S3_(thiz + 0x38, a, b);

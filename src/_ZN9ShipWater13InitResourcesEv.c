@@ -6,7 +6,7 @@ extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
 extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,int,void*);
-extern int _ZN16MeshColliderBase6EnableEP5Actor(void*,void*);
+extern int _ZN16MeshColliderBase6EnableEP8dActor_c(void*,void*);
 extern int data_ov017_02111c88[];
 extern int data_ov017_02111a60[];
 extern int _ZN18TiltingPlatformBfsD0Ev[];
@@ -20,7 +20,7 @@ int _ZN9ShipWater13InitResourcesEv(char* c){
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
   int k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(_ZN18TiltingPlatformBfsD0Ev);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char*)c+0x124, k, (char*)c+0x2ec, 0x1000, *(short*)((char*)c+0x8e), (void*)data_ov017_02111a94);
-  _ZN16MeshColliderBase6EnableEP5Actor((char*)c+0x124, c);
+  _ZN16MeshColliderBase6EnableEP8dActor_c((char*)c+0x124, c);
   *(int*)((char*)c+0x334)=*(int*)((char*)c+0x60);
   return 1;
 }

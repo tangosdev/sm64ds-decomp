@@ -8,6 +8,6 @@
 int *BookShotSpawner_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(216);
-    if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV15BookShotSpawner; }
+    if (p) { _ZN8dActor_cC2Ev(p); p[0] = (int)_ZTV15BookShotSpawner; }
     return p;
 }

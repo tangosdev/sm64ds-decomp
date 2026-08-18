@@ -3,9 +3,9 @@ extern "C" {
 int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
 void* _ZNK12WithMeshClsn13GetWallResultEv(void* c);
 unsigned int _ZNK10ClsnResult9GetClsnIDEv(void* r);
-void* _ZN5Actor10FindWithIDEj(unsigned int id);
+void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 }
-struct Actor {
+struct dActor_c {
   virtual void v00(); virtual void v04(); virtual void v08(); virtual void v0c();
   virtual void v10(); virtual void v14(); virtual void v18(); virtual void v1c();
   virtual void v20(); virtual void v24(); virtual void v28(); virtual void v2c();
@@ -18,7 +18,7 @@ extern "C" int func_ov002_020eee3c(void* c, int arg){
   if(_ZNK12WithMeshClsn8IsOnWallEv(c)){
     void* res = _ZNK12WithMeshClsn13GetWallResultEv(c);
     if(_ZNK10ClsnResult9GetClsnIDEv(res) != 0xffffffff){
-      Actor* a = (Actor*)_ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(res));
+      dActor_c* a = (dActor_c*)_ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(res));
       if(a != 0){
         a->m64(arg);
         return 1;

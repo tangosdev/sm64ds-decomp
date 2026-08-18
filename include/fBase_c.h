@@ -32,8 +32,8 @@
  * list primitives this class calls. Different translation unit; not part of the
  * run above.
  *
- * The chain is fBase_c -> dBase_c -> Actor. See notes/actor-vtables.md;
- * Actor is NOT a direct child of this class.
+ * The chain is fBase_c -> dBase_c -> dActor_c. See notes/actor-vtables.md;
+ * dActor_c is NOT a direct child of this class.
  *
  * LAYOUT is read out of the ROM, not guessed. fBase_c::fBase_c stores its
  * vptr with `str r1, [r4]`, so the vptr is at 0x0. The same constructor does
@@ -66,7 +66,7 @@
 /* The actor heap and its deallocator, for the inline operator delete at the end
    of the class. `data_020a0eac` is the heap every actor is allocated from -- the
    same one fBase_c::operator new (src/_ZN7fBase_cnwEj.cpp) passes to
-   Memory::Allocate. Spelt exactly as include/decl_common.h and include/Actor.h
+   Memory::Allocate. Spelt exactly as include/decl_common.h and include/dActor_c.h
    spell them; see the note on operator delete below for why the `void *` second
    parameter is deliberate and not a mistake. */
 extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
@@ -146,20 +146,20 @@ struct fBase_c {
        came out the wrong SIZE (`999 word(s) differ`); with it, 5/5 MATCH. Only
        an inline member produces that shape.
 
-       WHY HERE AND ALSO ON Actor. include/Actor.h carries its own copy and its
+       WHY HERE AND ALSO ON dActor_c. include/dActor_c.h carries its own copy and its
        comment records why: mwcc inlines operator delete only when it is found in
        the class itself or its IMMEDIATE base, so a declaration here does NOT
-       reach Actor (two levels down) and cannot replace Actor's. Nor does it
+       reach dActor_c (two levels down) and cannot replace dActor_c's. Nor does it
        reach HUD, Minimap or dScene_c, whose immediate base is dBase_c. The
        only classes it changes are fBase_c itself and dBase_c -- the two
        whose D0 the ROM shows inlining it. The two src/ files that declare a
-       local `struct Actor : fBase_c` (EndKuppaScript.cpp,
+       local `struct dActor_c : fBase_c` (EndKuppaScript.cpp,
        func_ov002_020b7e1c.cpp) use their own local shadow fBase_c, not this
        one, so they are out of scope too.
 
        No layout effect: an inline non-virtual member adds no field and no vtable
        slot, and the 0x50 assertion below still holds. Spelt exactly as
-       include/Actor.h and include/decl_common.h spell the two names -- declaring
+       include/dActor_c.h and include/decl_common.h spell the two names -- declaring
        the honest `Heap*` second parameter here instead would put two
        incompatible extern "C" declarations of one name in the same TU, which
        mwcc rejects as "illegal function overloading". */

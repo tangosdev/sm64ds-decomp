@@ -4,7 +4,7 @@ typedef unsigned short u16;
 typedef signed short s16;
 
 struct Vector3 { s32 x, y, z; };
-struct Actor { char pad[0x100]; };
+struct dActor_c { char pad[0x100]; };
 
 extern "C" {
 extern void Vec3_Sub(Vector3 *out, const Vector3 *a, const Vector3 *b);
@@ -25,10 +25,10 @@ struct dEnemyBase_c
 {
     char pad[0x100];
 
-    void SpawnMegaCharParticles(Actor &a, char *p);
+    void SpawnMegaCharParticles(dActor_c &a, char *p);
 };
 
-void dEnemyBase_c::SpawnMegaCharParticles(Actor &a, char *p)
+void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &a, char *p)
 {
     char *self = (char *)this;
     char *ap = (char *)&a;

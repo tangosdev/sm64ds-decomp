@@ -4,7 +4,7 @@ extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 extern int SurfaceInfo_TestFlag0x20(int *p);
 extern int Player_ScaleByCharFactor(void *c, int a);
 extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, void *pos, void *act);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void _ZN13RaycastGroundD1Ev(void *self);
 extern int _ZN6Player7IsStateERNS_5StateE(void *thiz, void *st);
@@ -85,7 +85,7 @@ void func_ov002_020c2b08(void *arg0)
             }
 
             _ZN13RaycastGroundC1Ev(rg);
-            _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, v, c);
+            _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, v, c);
 
             if (_ZN13RaycastGround10DetectClsnEv(rg) != 0) {
                 *(int *)(c + 0x644) = *(int *)(rg + 0x44);

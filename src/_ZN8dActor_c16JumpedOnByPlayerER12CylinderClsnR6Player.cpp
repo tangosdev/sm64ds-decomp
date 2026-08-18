@@ -1,5 +1,5 @@
 //cpp
-/* Actor::JumpedOnByPlayer(CylinderClsn&, Player&) at 0x0201054c, 0x80 bytes.
+/* dActor_c::JumpedOnByPlayer(CylinderClsn&, Player&) at 0x0201054c, 0x80 bytes.
  *
  * "Did that player land on me, as opposed to walking into me?" Two different
  * tests, chosen by whether the cylinder reports a side hit.
@@ -31,11 +31,11 @@
  * and the bytes DO depend on it. Same test, opposite answer; that is why it is
  * worth running rather than guessing.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 #include "Player.h"
 #include "CylinderClsn.h"
 
-int Actor::JumpedOnByPlayer(CylinderClsn &clsn, Player &player)
+int dActor_c::JumpedOnByPlayer(CylinderClsn &clsn, Player &player)
 {
     volatile s32 pad[4];
     s32 vel = player.mVertSpeed;

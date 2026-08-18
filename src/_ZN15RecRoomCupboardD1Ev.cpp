@@ -1,6 +1,6 @@
 //cpp
-struct Actor {
-    ~Actor();
+struct dActor_c {
+    ~dActor_c();
 };
 
 extern int _ZTV15RecRoomCupboard;
@@ -10,6 +10,6 @@ extern "C" int __destroy_arr(char *, int, int, int);
 extern "C" int _ZN15RecRoomCupboardD1Ev(char *c) {
     *(int *)c = (int)&_ZTV15RecRoomCupboard;
     __destroy_arr(c + 0xd4, 5, 0x40, (int)&_ZN25MovingCylinderClsnWithPosD1Ev);
-    ((Actor *)c)->~Actor();
+    ((dActor_c *)c)->~dActor_c();
     return (int)c;
 }

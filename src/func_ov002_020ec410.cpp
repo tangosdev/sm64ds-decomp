@@ -1,6 +1,6 @@
 //cpp
-struct Actor {
-    static Actor* FindWithID(unsigned int id);
+struct dActor_c {
+    static dActor_c* FindWithID(unsigned int id);
 };
 struct Player {
     bool CanWarp();
@@ -17,7 +17,7 @@ extern "C" int func_ov002_020ec410(char* c)
     unsigned int id = *(unsigned int*)(c + 0xf8);
     if (id != 0) {
         if (*(short*)(c + 0x8e) == 0) {
-            Actor* a = Actor::FindWithID(id);
+            dActor_c* a = dActor_c::FindWithID(id);
             if (a != 0) {
                 int isPlayer = (*(unsigned short*)((char*)a + 0xc) == 0xbf) ? 1 : 0;
                 if (isPlayer != 0) {

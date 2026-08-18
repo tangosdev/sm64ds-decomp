@@ -9,7 +9,7 @@
  * address is slot 6, so the function belongs to this class and not to any of
  * its five leaves, which merely inherit it. include/daObjKaitendai_c.h's
  * banner already reads this exact function to conclude the class has no
- * fields: everything it touches is Actor's.
+ * fields: everything it touches is dActor_c's.
  *
  * The turntable step itself: advance the spin by the per-frame increment held
  * in mPrevAngleZ, then publish it as the actor's facing angle. The two

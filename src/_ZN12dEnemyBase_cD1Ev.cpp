@@ -2,8 +2,8 @@
 // @symbol _ZN12dEnemyBase_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
- * Store this class's vtable over the one Actor's constructor left, then run
- * the Actor subobject destructor. Both follow from `struct dEnemyBase_c : Actor` and
+ * Store this class's vtable over the one dActor_c's constructor left, then run
+ * the dActor_c subobject destructor. Both follow from `struct dEnemyBase_c : dActor_c` and
  * `virtual ~dEnemyBase_c()`; dEnemyBase_c owns nothing with a destructor of its own.
  *
  * This needed the vtable to have a NAME. A real destructor stores _ZTV12dEnemyBase_c,

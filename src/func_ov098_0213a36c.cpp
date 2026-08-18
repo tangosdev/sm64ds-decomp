@@ -5,7 +5,7 @@
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
 struct CylinderClsn;
 
-struct Actor {
+struct dActor_c {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
     virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
     virtual void v08(); virtual void v09(); virtual void v10(); virtual void v11();
@@ -24,7 +24,7 @@ extern "C" {
 int DecIfAbove0_Byte(u8 *p);
 int DecIfAbove0_Short(u16 *p);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned id, void *pos);
-void *_ZN5Actor13ClosestPlayerEv(void *self);
+void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 int Vec3_HorzDist(void *a, void *b);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
@@ -153,7 +153,7 @@ extern "C" int func_ov098_0213a36c(char *c)
             *(s16 *)(((int)c + 0x8c) & U64) = t;
             t = (s16)(*(s16 *)(((int)c + 0x90) & U64) + *(s16 *)(c + 0x336));
             *(s16 *)(((int)c + 0x90) & U64) = t;
-            ((Actor *)c)->UpdatePos(0);
+            ((dActor_c *)c)->UpdatePos(0);
         }
         if (DecIfAbove0_Short((u16 *)BASE(c, 0x33a)) == 0) {
             *(int *)(c + 0x5c) = *(int *)(c + 0x320);
@@ -163,7 +163,7 @@ extern "C" int func_ov098_0213a36c(char *c)
             *st = (u8)(*st + 1);
         } else {
             if (*(int *)(c + 0x60) < *(int *)(c + 0x32c)) {
-                ((Actor *)c)->KillOrWhatever();
+                ((dActor_c *)c)->KillOrWhatever();
                 *(int *)(c + 0x5c) = *(int *)(c + 0x320);
                 *(int *)(c + 0x60) = *(int *)(c + 0x324);
                 *(int *)(c + 0x64) = *(int *)(c + 0x328);
@@ -179,7 +179,7 @@ extern "C" int func_ov098_0213a36c(char *c)
         *(int *)(c + 0x64) = *(int *)(c + 0x328);
         is53 = (int)(*(u16 *)(c + 0xc) == 0x53);
         if (is53 == 0) {
-            pl = _ZN5Actor13ClosestPlayerEv(c);
+            pl = _ZN8dActor_c13ClosestPlayerEv(c);
             dist = Vec3_HorzDist(c + 0x320, (char *)pl + 0x5c);
             thresh = 0x28a000;
             if (data_0209f2f8 == 0x2e)

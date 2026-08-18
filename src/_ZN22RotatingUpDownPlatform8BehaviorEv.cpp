@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "RotatingUpDownPlatform.h"
 extern "C" void _Z14ApproachLinearRiii(int*, int, int);
-extern "C" void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern "C" void _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 typedef void (*PMFholder);
 struct dBgActor_c {
     void UpdateModelPosAndRotY();
@@ -35,7 +35,7 @@ int RotatingUpDownPlatform::Behavior()
         *(short*)(s + 0x354) = 0;
         func_020393d4(s + 0x124, 0);
     } else {
-        func_020393d4(s + 0x124, (void*)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+        func_020393d4(s + 0x124, (void*)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     }
     if (*(unsigned char*)(s + 0x352) == 0) {
         int rate = 0x5000;

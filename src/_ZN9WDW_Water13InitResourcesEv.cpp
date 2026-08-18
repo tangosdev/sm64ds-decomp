@@ -48,7 +48,7 @@ int WDW_Water::InitResources()
     k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov029_02114304);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, &data_ov029_02112fec);
-    ((MeshColliderBase *)(&mMeshCollider))->Enable((Actor *)(((char *)this)));
+    ((MeshColliderBase *)(&mMeshCollider))->Enable((dActor_c *)(((char *)this)));
 
     unk_340 = (u8)mAreaId;
     mAreaId = -1;

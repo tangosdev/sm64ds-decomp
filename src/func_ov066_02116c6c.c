@@ -5,7 +5,7 @@ typedef int Fix12;
 
 extern int _ZN9Animation8FinishedEv(void* self);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
-extern void _ZN5Actor16TriplePoofDustAtERK7Vector3(void* self, const struct Vector3* v);
+extern void _ZN8dActor_c16TriplePoofDustAtERK7Vector3(void* self, const struct Vector3* v);
 extern void func_02012694(int a, void* p);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 
@@ -21,7 +21,7 @@ int func_ov066_02116c6c(char* c) {
       v.x = *(int*)(c+0x5c);
       v.y = *(int*)(c+0x60);
       v.z = *(int*)(c+0x64);
-      _ZN5Actor16TriplePoofDustAtERK7Vector3(c, &v);
+      _ZN8dActor_c16TriplePoofDustAtERK7Vector3(c, &v);
     }
     func_02012694(0x146, c+0x74);
     _ZN7fBase_c18MarkForDestructionEv(c);

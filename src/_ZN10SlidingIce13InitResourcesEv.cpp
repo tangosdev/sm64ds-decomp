@@ -11,7 +11,7 @@ extern void func_020393d4(int *p, int v);
 extern int data_ov027_02113be8[];
 extern char data_ov027_02113be0[];
 extern char data_ov027_02113108[];
-extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_[];
+extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_[];
 int _ZN10SlidingIce13InitResourcesEv(char *c){
   _ZN5Model8LoadFileER13SharedFilePtr(data_ov027_02113be8);
   _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov027_02113be0);
@@ -23,9 +23,9 @@ int _ZN10SlidingIce13InitResourcesEv(char *c){
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         c+0x124, *(int*)(data_ov027_02113be0+4), c+0x2ec, 0x1000, *(short*)(c+0x8e), data_ov027_02113108);
-    func_020393d4((int*)(c+0x124), (int)_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int*)(c+0x124), (int)_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     *(char*)(c+0x170) = 0;
-    ((MeshColliderBase *)(c+0x124))->Enable((Actor *)(c));
+    ((MeshColliderBase *)(c+0x124))->Enable((dActor_c *)(c));
     *(int*)(c+0x98) = 0x2d000;
     *(short*)(c+0x31e) = 0x64;
     *(short*)(c+0x94) = -0x4000;

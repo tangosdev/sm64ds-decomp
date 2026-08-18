@@ -1,7 +1,7 @@
 //cpp
 // func_ov098_021389f8 at 0x021389f8
 extern "C" {
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void *, void *);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *, void *);
 void WithMeshClsn_UpdateContinuous_Veneer(void *);
 void func_ov098_02139228(void *);
 void func_ov098_02138e6c(void *);
@@ -38,7 +38,7 @@ void func_ov098_021389f8(char *c) {
             }
         }
     }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x564);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x564);
     WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
     func_ov098_02139228(c);
     func_ov098_02138e6c(c);

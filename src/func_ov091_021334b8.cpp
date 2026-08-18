@@ -8,8 +8,8 @@
 
 extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
 extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
-extern "C" int _ZN5Actor18GetBitInDeathTableEv(void *c);
-extern "C" void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, Vector3 const &v, unsigned int n, int f, short s);
+extern "C" int _ZN8dActor_c18GetBitInDeathTableEv(void *c);
+extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *c, Vector3 const &v, unsigned int n, int f, short s);
 
 extern "C" void func_ov091_021334b8(char *c, int flag)
 {
@@ -42,13 +42,13 @@ extern "C" void func_ov091_021334b8(char *c, int flag)
     st.vz = *(int *)(c + 0x64);
     st.vy = st.vy + 0x17c000;
     if (*(unsigned char *)(c + 0x320) == 0) {
-        if (_ZN5Actor18GetBitInDeathTableEv(c) == 0) {
+        if (_ZN8dActor_c18GetBitInDeathTableEv(c) == 0) {
             st.v2x = st.vx;
             st.v2y = st.vy;
             st.v2z = st.vz;
-            _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, *(struct Vector3 *)&st.v2x, 5, 0x5000, 0);
+            _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, *(struct Vector3 *)&st.v2x, 5, 0x5000, 0);
         }
     }
-    _ZN5Actor17TrackInDeathTableEv(c);
+    _ZN8dActor_c17TrackInDeathTableEv(c);
     func_ov091_02133498(c);
 }

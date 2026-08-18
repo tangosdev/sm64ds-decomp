@@ -1,7 +1,7 @@
-// @symbol _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_
+// @symbol _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_
 /* recovered: named members + shared header */
 #include "WithMeshClsn.h"
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(struct WithMeshClsn *self, int a1, int a2, int a3, int sp0, int sp1) {
+void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(struct WithMeshClsn *self, int a1, int a2, int a3, int sp0, int sp1) {
   *(int*)((char*)&self->mActor)=a1;
   *(int*)((char*)&self->unk_018)=a2;
   *(int*)((char*)&self->unk_01c)=a3;

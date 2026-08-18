@@ -1,12 +1,12 @@
 //cpp
 typedef int Fix12i;
 struct Vector3 { Fix12i x, y, z; };
-struct Actor;
+struct dActor_c;
 struct RaycastGround {
     char buf[0x50];
     RaycastGround();
     ~RaycastGround();
-    void SetObjAndPos(const Vector3 &pos, Actor *actor);
+    void SetObjAndPos(const Vector3 &pos, dActor_c *actor);
     int DetectClsn();
 };
 namespace Particle { struct System {
@@ -19,7 +19,7 @@ namespace Particle { struct System {
 extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i a, Fix12i b, Fix12i c);
  }
 
-extern "C" void _ZN5Actor13LandingDustAtER7Vector3b(Actor *self, Vector3 *pos, bool b)
+extern "C" void _ZN8dActor_c13LandingDustAtER7Vector3b(dActor_c *self, Vector3 *pos, bool b)
 {
     if (b) {
         RaycastGround rc;

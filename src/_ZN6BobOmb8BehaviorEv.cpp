@@ -20,9 +20,9 @@ extern void func_ov102_0214b53c(void*);
 extern void _ZN12CylinderClsn5ClearEv(void*);
 extern void _ZN12CylinderClsn6UpdateEv(void*);
 extern void func_ov102_0214b03c(void*);
-extern void *_ZN5Actor10FindWithIDEj(unsigned int);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int);
 extern void func_ov002_020ada40(void*,void*,void*,unsigned int);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void*,void*);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void*,void*);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void*,void*,unsigned int);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void*);
@@ -81,18 +81,18 @@ int BobOmb::Behavior()
         if (mVertAccel != 0) {
             if ((*(int*)(&mCylinderClsn.hitFlags) & 0x10) != 0) {
                 short v[3];
-                other = _ZN5Actor10FindWithIDEj(*(unsigned int*)(&mCylinderClsn.otherOwner));
+                other = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(&mCylinderClsn.otherOwner));
                 v[0] = -0x2000;
                 v[1] = 0;
                 v[2] = 0;
                 func_ov002_020ada40(this, v, other, 0x32000);
-                _ZN5Actor9UpdatePosEP12CylinderClsn(this, (char *)&mCylinderClsn);
+                _ZN8dActor_c9UpdatePosEP12CylinderClsn(this, (char *)&mCylinderClsn);
                 _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(this, (char *)&mWithMeshClsn, 0);
                 _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
                 return 1;
             }
 
-            _ZN5Actor9UpdatePosEP12CylinderClsn(this, (char *)&mCylinderClsn);
+            _ZN8dActor_c9UpdatePosEP12CylinderClsn(this, (char *)&mCylinderClsn);
             if (data_0209f2f8 == 6 && data_0209f220 == 3) {
                 if (mHorzSpeed == 0x5000) {
                     _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(this, (char *)&mWithMeshClsn, 3);
@@ -126,7 +126,7 @@ int BobOmb::Behavior()
             if (unk_3dc == 4) {
                 unsigned char b = unk_3f5;
                 if (b == 2 || b == 3) {
-                    other = _ZN5Actor10FindWithIDEj(*(unsigned int*)(&mCylinderClsn.otherOwner));
+                    other = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(&mCylinderClsn.otherOwner));
                     if (other != 0) {
                         int flag2 = *(unsigned short*)((char*)other+0xc);
                         flag2 = flag2 == 0xbd;

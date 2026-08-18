@@ -11,9 +11,9 @@ class fBase_c {
 public:
     void MarkForDestruction();
 };
-class Actor {
+class dActor_c {
 public:
-    static Actor *FindWithActorID(unsigned int id, Actor *p);
+    static dActor_c *FindWithActorID(unsigned int id, dActor_c *p);
 };
 class CylinderClsn {
 public:
@@ -36,13 +36,13 @@ extern "C" int func_ov002_020f06c0(char *c)
         unsigned char st = self->unk_10e;
         if (st == 0 || st == 0xf) {
             {
-                Actor *o = 0;
+                dActor_c *o = 0;
                 self->unk_10f = 1;
                 self->unk_108 = *(int *)(c + 4);
                 for (;;) {
-                    o = Actor::FindWithActorID(0x149, o);
+                    o = dActor_c::FindWithActorID(0x149, o);
                     if (o == 0) break;
-                    if (o != (Actor *)c) {
+                    if (o != (dActor_c *)c) {
                         *(unsigned char *)((char *)o + 0x10f) = 2;
                         *(int *)((char *)o + 0x108) = *(int *)(c + 4);
                     }

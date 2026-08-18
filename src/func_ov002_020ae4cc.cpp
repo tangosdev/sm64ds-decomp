@@ -2,7 +2,7 @@
 extern "C" {
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char* w);
 extern void _ZN12dEnemyBase_c9SpawnCoinEv(char* c);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(char* c);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(char* c);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
   unsigned int a, unsigned int b, int c, int d, int e, const void* f, void* g);
 extern void* _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(
@@ -28,7 +28,7 @@ extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
   }
   if (_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
     _ZN12dEnemyBase_c9SpawnCoinEv(self);
-    _ZN5Actor24KillAndTrackInDeathTableEv(self);
+    _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
     *(int*)(self+0x10c) = 0;
     return 1;
   }

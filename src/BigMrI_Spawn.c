@@ -13,7 +13,7 @@ int *BigMrI_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(536);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV3MrI;
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN15TextureSequenceC1Ev((char *)p + 0x138);

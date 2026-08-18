@@ -28,7 +28,7 @@ struct ActorS {
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN5Actor10PoofDustAtERK7Vector3(void *, const Vector3 &v);
+extern "C" void _ZN8dActor_c10PoofDustAtERK7Vector3(void *, const Vector3 &v);
 
 
 extern "C" void func_ov014_02112ea8(ActorS *a)
@@ -47,7 +47,7 @@ extern "C" void func_ov014_02112ea8(ActorS *a)
     v[1].x = v[0].x;
     v[1].y = v[0].y;
     v[1].z = v[0].z;
-    _ZN5Actor10PoofDustAtERK7Vector3(a, v[1]);
+    _ZN8dActor_c10PoofDustAtERK7Vector3(a, v[1]);
     a->flag = 1;
     if (a->col.IsEnabled())
         a->col.Disable();

@@ -15,7 +15,7 @@ extern "C" {
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *clsn);
 /* ReflectAngle takes Fix12<int> by value -- the mwccarm 6az wall, runbook
    section 7 -- so it stays extern "C" with scalars in those slots. */
-extern short _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void *actor, int a, int b, short c);
+extern short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *actor, int a, int b, short c);
 }
 
 int dEnemyBase_c::AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngle_)
@@ -23,7 +23,7 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngl
     void *clsn = &clsn_;
     short *outAngle = &outAngle_;
     if (_ZNK12WithMeshClsn8IsOnWallEv(clsn)) {
-        *outAngle = _ZN5Actor12ReflectAngleE5Fix12IiES1_s(this,
+        *outAngle = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(this,
             mWallNormalX, mWallNormalZ, *outAngle);
     } else if (unk_106) {
         *outAngle = (short)(mPrevAngleY + 0x8000);

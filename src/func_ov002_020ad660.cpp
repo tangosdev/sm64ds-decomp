@@ -6,8 +6,8 @@ extern "C" {
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *o);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *o);
 extern void _ZN12dEnemyBase_c9SpawnCoinEv(void *o);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *o);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *o, void *cc);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *o);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *o, void *cc);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *o, void *w, unsigned int j);
 extern void Vec3_Asr(void *d, const void *s, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
@@ -68,13 +68,13 @@ extern "C" int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags)
         if (flags & 1)
             _ZN12dEnemyBase_c9SpawnCoinEv(c);
         if (flags & 2)
-            _ZN5Actor24KillAndTrackInDeathTableEv(c);
+            _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
         *(int *)(c + 0x10c) = 0;
         return 2;
     }
 
     *(unsigned short *)LAUNDER(c + 0x102) -= 1;
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
     if (p != 0)
         _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, p, 0);
 

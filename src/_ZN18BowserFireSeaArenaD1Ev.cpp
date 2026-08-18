@@ -11,7 +11,7 @@
  * one vptr store, not two.
  *
  * The ROM destroys 0x374, 0x324, then (as dBgActor_c) 0x124, 0x0d4, then chains to
- * Actor -- exactly reverse declaration order through both classes.
+ * dActor_c -- exactly reverse declaration order through both classes.
  */
 #include "BowserFireSeaArena.h"
 

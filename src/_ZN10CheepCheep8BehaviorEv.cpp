@@ -16,9 +16,9 @@ extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(dEnemyBase_c *thiz,
 extern void _ZN12CylinderClsn5ClearEv(void *thiz);
 extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(dEnemyBase_c *thiz, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(dEnemyBase_c *thiz, void *clsn);
 extern void _ZN9Animation7AdvanceEv(void *thiz);
-extern char *_ZN5Actor13ClosestPlayerEv(dEnemyBase_c *thiz);
+extern char *_ZN8dActor_c13ClosestPlayerEv(dEnemyBase_c *thiz);
 }
 
 
@@ -37,7 +37,7 @@ int CheepCheep::Behavior()
     }
 
     DecIfAbove0_Short((unsigned short *)(c + 0x100));
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((dEnemyBase_c *)this), (void *)(c + 0x110));
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((dEnemyBase_c *)this), (void *)(c + 0x110));
     {
         Holder *q = *(Holder **)(c + 0x370);
         if (q->fn != 0) (((dEnemyBase_c *)this)->*(q->fn))();
@@ -49,7 +49,7 @@ int CheepCheep::Behavior()
     func_ov090_021330c8(c);
     _ZN12CylinderClsn5ClearEv(c + 0x110);
     {
-        char *p = _ZN5Actor13ClosestPlayerEv(((dEnemyBase_c *)this));
+        char *p = _ZN8dActor_c13ClosestPlayerEv(((dEnemyBase_c *)this));
         if (p != 0 && *(unsigned char *)(p + 0x6fb) == 0) {
             _ZN12CylinderClsn6UpdateEv(c + 0x110);
         }

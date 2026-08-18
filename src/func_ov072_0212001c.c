@@ -3,12 +3,12 @@
 /* recovered: shared common types, renamed to Class_Method */
 /* daBgSnmBdy_c::Kill - recovered from vtable slot identity */
 struct Vec3 { int x, y, z; };
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern int Vec3_HorzDist(void *a, void *b);
 extern int _ZN6Player9StartTalkER7fBase_cb(void *player, void *actor, int b);
 extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *player, void *actor, unsigned msg, const void *pos, unsigned a, unsigned b);
 extern int _ZN6Player12GetTalkStateEv(void *player);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned param, const void *pos, const void *ang, int a, int b);
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned param, const void *pos, const void *ang, int a, int b);
 extern void _ZN9Animation7AdvanceEv(void *anim);
 extern int _Z14ApproachLinearRsss(short *p, short to, short step);
 
@@ -23,7 +23,7 @@ int func_ov072_0212001c(char *c)
     v.y = v.y + 0x1c2000;
     switch (*(unsigned char *)(c + 0x334)) {
     case 0:
-        *(void **)(c + 0x32c) = _ZN5Actor13ClosestPlayerEv(c);
+        *(void **)(c + 0x32c) = _ZN8dActor_c13ClosestPlayerEv(c);
         if (Vec3_HorzDist(c + 0x5c, *(char **)(c + 0x32c) + 0x5c) < 0x118000) {
             if (_ZN6Player9StartTalkER7fBase_cb(*(void **)(c + 0x32c), c, 1)) {
                 st = (unsigned char *)(((int)c + 0x334));
@@ -42,7 +42,7 @@ int func_ov072_0212001c(char *c)
             param = *(int *)(c + 8) & 0xf;
             param = param & 0xff;
             param = param | 0x40;
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xb2,
                 param,
                 c + 0x5c,

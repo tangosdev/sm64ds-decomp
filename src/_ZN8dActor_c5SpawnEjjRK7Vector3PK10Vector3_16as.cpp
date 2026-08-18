@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as
-/* Actor::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
+// @symbol _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as
+/* dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
  *              const Vector3_16 *rot, s8 areaID, s16 deathTableID)
  * at 0x02010e2c.
  *
@@ -28,7 +28,7 @@
  * the epilogue, so r0 flows out untouched. It returns the actor it built;
  * dBase_c.h said `void` and now says so correctly.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
 extern "C" {
 /* The parent every actor spawned through this path is attached to. */
@@ -40,9 +40,9 @@ fBase_c *func_02010e78(const Vector3 *pos, const Vector3_16 *rot,
                          s8 areaID, s16 deathTableID);
 }
 
-Actor *Actor::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
+dActor_c *dActor_c::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,
                     const Vector3_16 *rot, s8 areaID, s16 deathTableID)
 {
     func_02010e78(&pos, rot, areaID, deathTableID);
-    return (Actor *)dBase_c::Spawn(actorID, data_0209f5c0, spawnParam, 2);
+    return (dActor_c *)dBase_c::Spawn(actorID, data_0209f5c0, spawnParam, 2);
 }

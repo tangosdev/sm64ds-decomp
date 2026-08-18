@@ -21,7 +21,7 @@ void* func_ov100_02146dec(char* p){
   *(void***)p = (void**)_ZTV10dBgActor_c;
   _ZN18MovingMeshColliderD1Ev(p+0x124);
   _ZN5ModelD1Ev(p+0xd4);
-  _ZN5ActorD2Ev(p);
+  _ZN8dActor_cD2Ev(p);
   _ZN6Memory10DeallocateEPvP4Heap(p, data_020a0eac);
   return p;
 }

@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void* self, struct Vector3* v, int f);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void* self, struct Vector3* v, int f);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, struct Vector3* v);
 extern int _Z14ApproachLinearRsss(short* r, short t, short s);
 extern short GetAngleToCamera(int i);
@@ -58,7 +58,7 @@ void func_ov098_0213aa28(char* c)
         vs[1].x = *(int*)(c + 0x5c);
         vs[1].y = *(int*)(c + 0x60);
         vs[1].z = *(int*)(c + 0x64);
-        _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, &vs[1], 0x1f4000);
+        _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &vs[1], 0x1f4000);
         _ZN5Sound9PlayBank3EjRK7Vector3(0x14c, (struct Vector3*)(c + 0x74));
         break;
 

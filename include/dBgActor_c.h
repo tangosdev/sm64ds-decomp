@@ -9,7 +9,7 @@
  * Two sub-objects, each checked twice -- once by that class's own size assertion,
  * once by closing exactly on the next named field:
  *
- *     Actor               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     dActor_c               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
  *     Model               0x0d4 + 0x050 = 0x124   -> mMeshCollider
  *     MovingMeshCollider  0x124 + 0x1c8 = 0x2ec   -> padding, then unk_310
  *
@@ -62,11 +62,11 @@ struct player_;
    function comes out 0x74 against the ROM's 0x64. Both were built. */
 #include "common.h"
 
-#include "Actor.h"
+#include "dActor_c.h"
 #include "Model.h"
 #include "MovingMeshCollider.h"
 
-struct dBgActor_c : Actor {
+struct dBgActor_c : dActor_c {
     u8  pad_0d0[0x4];
     /* Named by the class's own destructor calling Model's D1 at +0x0d4 and
        MovingMeshCollider's at +0x124 -- relocations the ROM build checks. */
@@ -93,12 +93,12 @@ struct dBgActor_c : Actor {
        translation unit that merely includes this header emits _ZTV10dBgActor_c. */
     virtual ~dBgActor_c() {}
 
-    /* SLOT 31, AND THE ONLY NEW VIRTUAL THIS CLASS ADDS. Actor ends at slot 30,
+    /* SLOT 31, AND THE ONLY NEW VIRTUAL THIS CLASS ADDS. dActor_c ends at slot 30,
        so this one word is the whole difference between the vtable this header
        emitted and the one in the cartridge.
 
        _ZTV10dBgActor_c is 0x84 at ov002:0x0210ae38 -- 33 words, one more than the
-       32 an Actor-shaped table needs -- and _ZTV8PoleLift, one of the 70
+       32 an dActor_c-shaped table needs -- and _ZTV8PoleLift, one of the 70
        subclasses, is 0x84 as well. rtti_vtables agrees from the other side:
        dBgActor_c's parent dActor_c has 31 slots and dBgActor_c's own overrides
        are 16 (D1), 17 (D0) and 31, and 97 of its 101 RTTI children have exactly
@@ -127,7 +127,7 @@ struct dBgActor_c : Actor {
        0x020ee674 reproduces with a single-int-by-value fourth parameter, which
        is exactly what math/Fix12.h's `{ T val; }` is. Contrast the two
        IsClsnInRange* symbols, whose names make the same Fix12<int> claim and
-       whose bytes REFUSE it -- see the note in include/Actor.h about CW homing
+       whose bytes REFUSE it -- see the note in include/dActor_c.h about CW homing
        class-typed by-value parameters to the stack, and the header comment in
        src_tu/actors/dBgActor_c.cpp.
 
@@ -141,14 +141,14 @@ typedef char dBgActor_c_size_must_be_0x320[sizeof(dBgActor_c) == 0x320 ? 1 : -1]
 #else
 
 /* The same object for a C translation unit, which has no base class to inherit
-   Actor's fields from and so spells the whole layout flat. */
+   dActor_c's fields from and so spells the whole layout flat. */
 struct dBgActor_c {
     u8  pad_000[0x5c];
     s32 mPosX;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0xc];
-    /* 0x074..0x08e is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x074..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_074;                 /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */

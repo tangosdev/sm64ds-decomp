@@ -14,7 +14,7 @@ extern int _ZN6Player12GetTalkStateEv(void* p);
 extern int _Z14ApproachLinearRsss(s16* val, s16 target, s16 step);
 extern void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* p, void* base, u32 a, const Vector3* v, u32 b, u32 c);
 extern void _ZN7Message7EndTalkEv(void);
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
 extern int _ZN6Player9StartTalkER7fBase_cb(void* p, void* base, int b);
 extern void _ZN12CylinderClsn5ClearEv(void* c);
@@ -48,7 +48,7 @@ int LightBeam::Behavior()
 
     if (((Obj*)this)->f164 != 0) {
         void* p;
-        if (!_ZN5Sound20PlaySmallSecretSoundEP5ActorPt(((Obj*)this), ((Obj*)this)->arr_168))
+        if (!_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt(((Obj*)this), ((Obj*)this)->arr_168))
             return 1;
         p = (void*)((Obj*)this)->f164;
 
@@ -78,7 +78,7 @@ int LightBeam::Behavior()
         }
     } else {
         if (((Obj*)this)->f144 & 0x8000000) {
-            void* o = _ZN5Actor10FindWithIDEj(((Obj*)this)->f148);
+            void* o = _ZN8dActor_c10FindWithIDEj(((Obj*)this)->f148);
             if (o) {
                 int b = (int)(*(u16*)((char*)o + 0xc) == 0xbf);
                 if (b) {

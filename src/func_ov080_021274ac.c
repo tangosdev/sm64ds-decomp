@@ -13,7 +13,7 @@ extern void Vec3_Sub(struct Vector3* out, struct Vector3* a, struct Vector3* b);
 extern int LenVec3(struct Vector3* v);
 extern short Vec3_HorzAngle(struct Vector3* a, struct Vector3* b);
 extern int AngleDiff(int a, int b);
-extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern int func_ov080_02127658;
 int func_ov080_021274ac(char* self, char** arg) {
     struct Vector3 d;
@@ -21,7 +21,7 @@ int func_ov080_021274ac(char* self, char** arg) {
     func_ov080_02127094(self);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(self + 0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(arg[1]), self + 0x2ec, 0x1000, *(short*)(self + 0x8e), arg[2]);
-    func_020393d4((int*)(self + 0x124), (int)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int*)(self + 0x124), (int)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4((int*)(self + 0x124), (int)&func_ov080_02127658);
     *(int*)(self + 0x320) = *(int*)(self + 0x5c);
     *(int*)(self + 0x324) = *(int*)(self + 0x60);

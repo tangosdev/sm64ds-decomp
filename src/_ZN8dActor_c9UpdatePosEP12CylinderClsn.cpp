@@ -1,5 +1,5 @@
 //cpp
-/* Actor::UpdatePos(CylinderClsn*) at 0x02010c30, 0x2c bytes.
+/* dActor_c::UpdatePos(CylinderClsn*) at 0x02010c30, 0x2c bytes.
  *
  * The whole per-frame position step in one call: integrate horizontal speed
  * along the facing angle and apply gravity, then move and resolve against the
@@ -12,9 +12,9 @@
  * A member: `mov r5, r0` saves `this` across the first call and restores it
  * into r0 for the second, with the clsn shuttled through r4.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
-void Actor::UpdatePos(CylinderClsn *clsn)
+void dActor_c::UpdatePos(CylinderClsn *clsn)
 {
     UpdatePosWithHorzSpeedAndAng();
     UpdatePosWithOnlySpeed(clsn);

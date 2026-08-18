@@ -44,7 +44,7 @@ extern SharedFilePtr data_ov071_021230d8;
 extern CLPS_Block data_ov063_0211ebd8;
 }
 
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
 int Coffin::InitResources()
 {
@@ -69,6 +69,6 @@ int Coffin::InitResources()
     func_ov071_02122080(((char*)this));
     ((dBgActor_c*)((char*)this))->UpdateClsnPosAndRot();
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((MovingMeshCollider*)((char*)&mMeshCollider), MeshCollider::LoadFile(data_ov071_021230d8), *(Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, data_ov063_0211ebd8);
-    func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     return 1;
 }

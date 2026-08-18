@@ -32,22 +32,22 @@ extern int data_ov066_0211ae34[];
 extern s8 data_ov066_0211abe0;
 extern s8 data_ov066_0211ae04;
 extern s8 data_ov066_0211ae0c;
-extern char _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern char _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
-extern u8 _ZN5Actor9TrackStarEjj(void* actor, u32 a, u32 b);
+extern u8 _ZN8dActor_c9TrackStarEjj(void* actor, u32 a, u32 b);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
 extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN11ShadowModel12InitCylinderEv(void* thiz);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* thiz, void* actor, Vector3* v, s32 f1, s32 f2, u32 a, u32 b);
+extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* thiz, void* actor, Vector3* v, s32 f1, s32 f2, u32 a, u32 b);
 /* extern "C" is load-bearing here: without it the name mangles a SECOND time,
-   to _Z44_ZN5Actor5Spawn...jjP7Vector3Pvii, which exists nowhere -- and the
+   to _Z44_ZN8dActor_c5Spawn...jjP7Vector3Pvii, which exists nowhere -- and the
    file byte-matches either way, so only check_references sees it. The other
    declarations in this block carry the same defect and are left to a cleanup
    that owns them; this one is fixed because the rename had to touch it. */
-extern "C" void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 b, Vector3* pos, void* p, int e, int f);
+extern "C" void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 b, Vector3* pos, void* p, int e, int f);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, int kcl, void* mtx, s32 fix, s16 s, void* clps);
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
@@ -62,7 +62,7 @@ int Eyerok::InitResources()
     if (*(s32*)(c + 0x49C) == 0xFF)
         *(s32*)(c + 0x49C) = 0;
     *(u8*)(c + 0x672) = (*(u32*)(c + 8) >> 0xC) & 0xF;
-    *(u8*)(c + 0x673) = _ZN5Actor9TrackStarEjj(c, *(u8*)(c + 0x672), 2);
+    *(u8*)(c + 0x673) = _ZN8dActor_c9TrackStarEjj(c, *(u8*)(c + 0x672), 2);
     if (*(s32*)(c + 0x49C) > 2)
         *(s32*)(c + 0x49C) = 0;
 
@@ -110,7 +110,7 @@ int Eyerok::InitResources()
         w.x = data_ov066_0211ad18[0];
         w.y = data_ov066_0211ad18[1];
         w.z = data_ov066_0211ad18[2];
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(c + 0x320, c, &w, 0x64000, 0x64000, 0x200002, 0);
+        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x320, c, &w, 0x64000, 0x64000, 0x200002, 0);
     }
 
     {
@@ -139,12 +139,12 @@ int Eyerok::InitResources()
         v.y = *(s32*)(c + 0x60);
         v.z = *(s32*)(c + 0x64);
         v.x += 0x193000;
-        r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xB0, 1, &v, 0, *(s8*)(c + 0xCC), -1);
+        r = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xB0, 1, &v, 0, *(s8*)(c + 0xCC), -1);
         if (r != 0)
             *(s32*)(c + 0x86C) = *(s32*)((char*)r + 4);
         v.x = *(s32*)(c + 0x5C);
         v.x -= 0x18C000;
-        r = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xB0, 2, &v, 0, *(s8*)(c + 0xCC), -1);
+        r = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xB0, 2, &v, 0, *(s8*)(c + 0xCC), -1);
         if (r != 0)
             *(s32*)(c + 0x870) = *(s32*)((char*)r + 4);
         data_ov066_0211ae10 = 0;
@@ -154,9 +154,9 @@ int Eyerok::InitResources()
         data_ov066_0211ae04 = 1;
         data_ov066_0211abe0 = 3;
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211ae24[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112ca8);
-        func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+        func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
         func_020393c4(c + 0x674, &func_ov066_0211a35c);
-        ((MeshColliderBase *)(c + 0x674))->Enable((Actor *)(c));
+        ((MeshColliderBase *)(c + 0x674))->Enable((dActor_c *)(c));
         *(s16*)(c + 0x4D2) = 0x64;
         func_ov066_02119454(c, data_ov066_0211b09c);
     } else {
@@ -173,7 +173,7 @@ int Eyerok::InitResources()
             _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211aeac[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112d48);
             *(s32*)(((int)c + 0x4A4)) += 0x31F000;
         }
-        func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+        func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
         func_020393c4(c + 0x674, &func_ov066_0211a35c);
         func_020398fc(c + 0x674);
         *(s32*)(((int)c + 0x4AC)) -= 0x32000;

@@ -29,7 +29,7 @@ namespace Sound { unsigned int PlayLong(unsigned int, unsigned int, unsigned int
    different shadow structs grew out of one class that way. The length prefix is the
    only thing that distinguishes them, and the retail relocations for both call sites
    land on dBgActor_c's methods. */
-struct Actor;
+struct dActor_c;
 struct dBgActor_c { void UpdateClsnPosAndRot(); };
 
 /* IsClsnInRange takes two Fix12<int>, not two ints -- the S1_ back-reference in
@@ -44,7 +44,7 @@ struct dBgActor_c { void UpdateClsnPosAndRot(); };
 extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern "C" void func_020393a4(int *p, int v);
 extern "C" void func_02039394(int *p, int v);
-struct MeshColliderBase { int IsEnabled(); void Enable(Actor *a); };
+struct MeshColliderBase { int IsEnabled(); void Enable(dActor_c *a); };
 extern unsigned char data_0209f2d8;
 
 extern "C" int func_ov100_021470f4(char* c)
@@ -65,7 +65,7 @@ extern "C" int func_ov100_021470f4(char* c)
     int b = (int)(data_0209f2d8 == 1);
     if (b != 0) {
         if (((MeshColliderBase*)(c + 0x124))->IsEnabled() == 0) {
-            ((MeshColliderBase*)(c + 0x124))->Enable((Actor*)(void*)c);
+            ((MeshColliderBase*)(c + 0x124))->Enable((dActor_c*)(void*)c);
         }
     } else {
         _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);

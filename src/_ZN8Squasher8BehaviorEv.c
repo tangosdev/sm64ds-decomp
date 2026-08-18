@@ -1,9 +1,9 @@
 #include "types.h"
 struct Vec3 { int x, y, z; };
 
-extern int _ZN5Actor13DistToCPlayerEv(char *self);
+extern int _ZN8dActor_c13DistToCPlayerEv(char *self);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, struct Vec3 *v);
-extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *self, struct Vec3 *v, int f);
+extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, struct Vec3 *v, int f);
 extern void AddVec3(struct Vec3 *a, struct Vec3 *b, struct Vec3 *c);
 extern void func_0200fa04();
 extern void func_ov023_02111308(char *t);
@@ -15,7 +15,7 @@ int _ZN8Squasher8BehaviorEv(char *c)
 {
     switch (*(u8 *)(c + 0x322)) {
     case 0:
-        if (_ZN5Actor13DistToCPlayerEv(c) < 0x3e8000) {
+        if (_ZN8dActor_c13DistToCPlayerEv(c) < 0x3e8000) {
             (*(u8 *)(((int)c + 0x322)))++;
             _ZN5Sound9PlayBank3EjRK7Vector3(0x43, (struct Vec3 *)(c + 0x74));
         }
@@ -39,7 +39,7 @@ int _ZN8Squasher8BehaviorEv(char *c)
             pos.x = *(int *)(c + 0x5c);
             pos.y = *(int *)(c + 0x60);
             pos.z = *(int *)(c + 0x64);
-            _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(c, &pos, 0x4000000);
+            _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(c, &pos, 0x4000000);
             _ZN5Sound9PlayBank3EjRK7Vector3(0x44, (struct Vec3 *)(c + 0x74));
 
             s0 = data_02082214[(*(u16 *)(c + 0x8e) >> 4) * 2];

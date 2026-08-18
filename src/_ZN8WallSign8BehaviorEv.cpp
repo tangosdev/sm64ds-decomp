@@ -12,7 +12,7 @@ extern int _Z14ApproachLinearRsss(s16 *p, s16 target, s16 step);
 extern int func_ov002_020bec9c(void *c, unsigned int a, int b, int d, unsigned short e);
 extern int Vec3_ApproachHorz(Vector3 *out, Vector3 *a, int maxStep);
 extern void _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(void *actor, void *self, unsigned int a, Vector3 *pos, unsigned int b, unsigned int c);
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int AngleDiff(int a, int b);
 extern int _ZN6Player9StartTalkER7fBase_cb(void *actor, void *self, int b);
 extern void _ZN12CylinderClsn5ClearEv(void *self);
@@ -90,7 +90,7 @@ int WallSign::Behavior()
         int *pO;
 
         if ((*(u32 *)(self + 0x340) & 0x8000000) != 0) {
-            other = _ZN5Actor10FindWithIDEj(*(unsigned int *)(self + 0x344));
+            other = _ZN8dActor_c10FindWithIDEj(*(unsigned int *)(self + 0x344));
             if (other != 0) {
                 isPlayer = (*(u16 *)((char *)other + 0xc) == 0xbf);
                 if (isPlayer != 0) {

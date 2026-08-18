@@ -8,7 +8,7 @@
 #include "common.h"
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *w);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, struct Vector3 *v);
-extern s16 _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void *self, int a, int b, s16 ang);
+extern s16 _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *self, int a, int b, s16 ang);
 extern int _ZN9Animation8FinishedEv(void *anim);
 
 void func_ov062_02118a50(char *c)
@@ -17,7 +17,7 @@ void func_ov062_02118a50(char *c)
         if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0) {
             void *sr = _ZNK12WithMeshClsn13GetWallResultEv(c + 0x144);
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)sr + 4, (struct Vector3 *)(c + 0xe0));
-            *(s16 *)(c + 0x94) = _ZN5Actor12ReflectAngleE5Fix12IiES1_s(
+            *(s16 *)(c + 0x94) = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(
                 c, *(int *)(c + 0xe0), *(int *)(c + 0xe8), *(s16 *)(c + 0x94));
         }
         func_ov062_02118004(c, 0x4cc);

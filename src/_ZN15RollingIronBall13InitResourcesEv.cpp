@@ -12,9 +12,9 @@ extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int idx);
 extern int Vec3_Equal(void *a, void *b);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v0, int v1);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *c);
+extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v0, int v1);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *c);
 
 extern char data_ov100_02148668;
 extern int data_02092138;
@@ -56,15 +56,15 @@ int RollingIronBall::InitResources()
             unk_3ac = 0x800;
             unk_3b0 = 0x800;
             unk_3b4 = 0x800;
-            _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x374, ((char *)this), 0x1e000, 0x1e000, 0x200004, 0x3c0);
-            _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x1e000, 0x1e000, 0, 0);
+            _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x374, ((char *)this), 0x1e000, 0x1e000, 0x200004, 0x3c0);
+            _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x1e000, 0x1e000, 0, 0);
             unk_3c8 = -0x640000;
         } else {
             unk_3ac = 0x1000;
             unk_3b0 = 0x1000;
             unk_3b4 = 0x1000;
-            _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x374, ((char *)this), 0x64000, 0x64000, 0x200004, 0x3c0);
-            _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0, 0);
+            _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x374, ((char *)this), 0x64000, 0x64000, 0x200004, 0x3c0);
+            _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0, 0);
             d = *(volatile signed char *)&data_0209f2f8;
             if (d == 0x18) {
                 mHorzSpeed = 0x19000;
@@ -79,7 +79,7 @@ int RollingIronBall::InitResources()
                     mHorzSpeed = 0xa000;
             }
         }
-        _ZN5Actor9UpdatePosEP12CylinderClsn(((char *)this), 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char *)this), 0);
         _ZN12WithMeshClsn13SetLimMovFlagEv((char *)&mWithMeshClsn);
         goto end;
     }
@@ -89,8 +89,8 @@ int RollingIronBall::InitResources()
         unk_3ac = 0x1000;
         unk_3b0 = 0x1000;
         unk_3b4 = 0x1000;
-        _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x374, ((char *)this), 0x64000, 0x64000, 0x200004, 0x3c0);
-        _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0, 0);
+        _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x374, ((char *)this), 0x64000, 0x64000, 0x200004, 0x3c0);
+        _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0, 0);
         _ZN12WithMeshClsn13SetLimMovFlagEv((char *)&mWithMeshClsn);
         goto end;
     }

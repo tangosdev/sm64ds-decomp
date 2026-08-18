@@ -10,7 +10,7 @@ extern "C" void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3
 extern "C" void Matrix4x3_FromRotationY(void* m, s16 ang);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void* m, s16 ang);
 extern "C" void MulVec3Mat4x3(void* dst, void* m, void* src);
-extern "C" void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void* self, void* clsn);
+extern "C" void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void* self, void* clsn);
 extern "C" void func_ov071_02121c6c(void* c);
 extern "C" void _ZN12CylinderClsn5ClearEv(void* cl);
 extern "C" void _ZN12CylinderClsn6UpdateEv(void* cl);
@@ -39,7 +39,7 @@ int MrI_Projectile::Behavior()
         Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, mPrevAngleX);
         MulVec3Mat4x3(&r, data_020a0e68, ((char*)this) + 0xa4);
         *(Vector3*)((char*)&unk_0a4) = *(Vector3*)((char*)&unk_0a4);
-        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(((char*)this), ((char*)this) + 0xfc);
+        _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(((char*)this), ((char*)this) + 0xfc);
         func_ov071_02121b50(((char*)this), ((char*)this) + 0x13c);
         func_ov071_02121ba4(((char*)this));
         func_ov071_02121c6c(((char*)this));

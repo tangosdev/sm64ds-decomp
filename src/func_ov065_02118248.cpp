@@ -1,6 +1,6 @@
 //cpp
-struct Actor;
-struct MeshColliderBase { int IsEnabled(); void Disable(); void Enable(Actor *a); };
+struct dActor_c;
+struct MeshColliderBase { int IsEnabled(); void Disable(); void Enable(dActor_c *a); };
 
 extern "C" int func_ov065_02118248(char *c)
 {
@@ -19,7 +19,7 @@ extern "C" int func_ov065_02118248(char *c)
     int i;
     for (i = 0; i < 7; i++) {
         if (!((MeshColliderBase *)m)->IsEnabled())
-            ((MeshColliderBase *)m)->Enable((Actor *)c);
+            ((MeshColliderBase *)m)->Enable((dActor_c *)c);
         m += 0x200;
     }
     return 0;

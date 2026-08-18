@@ -915,7 +915,7 @@ void dScene_c::SetAndStopColorFader()
  * this TU's licensed span. objisolate can strip such a thing per function, but a
  * merged object cannot be reduced that way and rombuild links -nodead, so it
  * would displace every byte after it in a whole-range link. Measured elsewhere
- * in this workstream on arm9/Actor: with a forcing scaffold the TU range came
+ * in this workstream on arm9/dActor_c: with a forcing scaffold the TU range came
  * out 506 bytes different and 15/106 modules exact; with the scaffold gone,
  * IDENTICAL and 106/106.
  */

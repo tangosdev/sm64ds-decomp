@@ -22,8 +22,8 @@ struct VObj {
 extern "C" {
     extern void func_ov081_021237ec(void*);
     extern int func_ov002_020e10a8(void*);
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* cyl, void* player);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
+extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* cyl, void* player);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, unsigned n, int f, unsigned a, unsigned b, unsigned c);
 }
@@ -40,7 +40,7 @@ extern "C" void func_ov081_02123910(char* c)
     id = *(unsigned int*)(c + 0x1c0);
     if (id == 0)
         return;
-    other = _ZN5Actor10FindWithIDEj(id);
+    other = _ZN8dActor_c10FindWithIDEj(id);
     if (other == 0)
         return;
 
@@ -82,7 +82,7 @@ cont:
         }
     }
 
-    if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x19c, other) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x19c, other) != 0) {
         _ZN6Player10SpinBounceE5Fix12IiE(other, 0x28000);
         func_ov081_021237ec(c);
         return;

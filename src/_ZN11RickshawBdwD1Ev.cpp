@@ -5,7 +5,7 @@
  * THREE vtable stores, and the middle one is the finding. `struct RickshawBdw :
  * daObjKurumajiku_c : dBgActor_c` emits its own vptr, then daObjKurumajiku_c's --
  * inlined, because that destructor is defined in its class body -- then
- * dBgActor_c's, then dBgActor_c's MovingMeshCollider and Model, then Actor. Nothing
+ * dBgActor_c's, then dBgActor_c's MovingMeshCollider and Model, then dActor_c. Nothing
  * in the chain adds a member with a destructor.
  *
  * Modelled flat as `RickshawBdw : dBgActor_c` the body compiles to 0x44 against the

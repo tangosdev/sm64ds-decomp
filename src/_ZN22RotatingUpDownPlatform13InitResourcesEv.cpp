@@ -18,7 +18,7 @@ extern "C" void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, void* out, unsigned 
 
 extern int data_ov091_021344fc[];
 extern int data_ov091_021344f4[];
-extern "C" char _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern "C" char _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
 int RotatingUpDownPlatform::InitResources()
 {
@@ -38,7 +38,7 @@ int RotatingUpDownPlatform::InitResources()
         (void*)data_ov091_02134e5c[idx]);
 
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
-    func_020393d4(((char*)this) + 0x124, &_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(((char*)this) + 0x124, &_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     func_020393c4(((char*)this) + 0x124, &func_ov091_02132380);
 
     _ZN7PathPtr6FromIDEj(((char*)this) + 0x344, *(unsigned*)((char*)&mParam) & 0xf);

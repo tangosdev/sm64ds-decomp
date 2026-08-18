@@ -1,7 +1,7 @@
 // @symbol func_ov010_0211184c
 /* recovered: shared common types */
 #include "common.h"
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern short Vec3_HorzAngle(const struct Vector3* v0, const struct Vector3* v1);
 extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
 extern short data_02082214[];
@@ -21,7 +21,7 @@ void func_ov010_0211184c(char* c, char* arg2) {
     if (*(short*)(c+0x90) < -0x3000) return;
     id = *(unsigned int*)(c+0x3ac);
     if (id == 0) return;
-    target = _ZN5Actor10FindWithIDEj(id);
+    target = _ZN8dActor_c10FindWithIDEj(id);
     if (target == 0) return;
     b = (int)(*(unsigned short*)(arg2+0xc) == 0xbf);
     if (b == 0) return;

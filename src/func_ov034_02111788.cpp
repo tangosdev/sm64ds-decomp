@@ -9,11 +9,11 @@ struct Vec3D { int x, y, z; ~Vec3D() {} };
 
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern "C" {
-extern void _ZN5Actor10PoofDustAtERK7Vector3(void *self, const Vector3 *v);
+extern void _ZN8dActor_c10PoofDustAtERK7Vector3(void *self, const Vector3 *v);
 }
 extern "C" int Math_Function_0203b14c(void *base, int a, int b, int c, int d);
 extern "C" {
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void *self, signed char *id, unsigned int starID, const Vector3 *pos, unsigned int how);
+extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void *self, signed char *id, unsigned int starID, const Vector3 *pos, unsigned int how);
 }
 extern "C" void func_ov034_021125b8(void *c, int i);
 
@@ -34,7 +34,7 @@ extern "C" void func_ov034_02111788(void *thiz)
             v.x = vp->x;
             v.y = vp->y;
             v.z = vp->z;
-            _ZN5Actor10PoofDustAtERK7Vector3(c, &v);
+            _ZN8dActor_c10PoofDustAtERK7Vector3(c, &v);
             (*(unsigned char *)(((int)c + 0x8dd)))++;
             *(unsigned char *)(c + 0x8da) = 5;
         }
@@ -72,7 +72,7 @@ extern "C" void func_ov034_02111788(void *thiz)
         starPos.y = py;
         starPos.z = pz;
     }
-    _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(c, (signed char *)(c + 0x8e3), *(unsigned char *)(c + 0x8e2), (const Vector3 *)(c + 0x5c), 4);
+    _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(c, (signed char *)(c + 0x8e3), *(unsigned char *)(c + 0x8e2), (const Vector3 *)(c + 0x5c), 4);
     _ZN5Sound22StopLoadedMusic_Layer3Ev();
     func_ov034_021125b8(c, 3);
 }

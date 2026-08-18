@@ -8,23 +8,23 @@ struct Vector3 {
     ~Vector3() {}
 };
 extern "C" {
-void* _ZN5Actor13ClosestPlayerEv(void* c);
-int _ZN5Actor18GetBitInDeathTableEv(void* c);
-int _ZN5Actor18HorzAngleToCPlayerEv(void* c);
-int _ZN5Actor13DistToCPlayerEv(void* c);
-void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void* c, Vector3 v, unsigned int n, int f, short s);
-void _ZN5Actor17TrackInDeathTableEv(void* c);
+void* _ZN8dActor_c13ClosestPlayerEv(void* c);
+int _ZN8dActor_c18GetBitInDeathTableEv(void* c);
+int _ZN8dActor_c18HorzAngleToCPlayerEv(void* c);
+int _ZN8dActor_c13DistToCPlayerEv(void* c);
+void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* c, Vector3 v, unsigned int n, int f, short s);
+void _ZN8dActor_c17TrackInDeathTableEv(void* c);
 unsigned char DecIfAbove0_Byte(unsigned char* p);
 int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
 
 int func_ov091_02133738(char* c)
 {
-    void* player = _ZN5Actor13ClosestPlayerEv(c);
+    void* player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (*(u8*)(c + 0x31e) == 3
-        && _ZN5Actor18GetBitInDeathTableEv(c) == 0
+        && _ZN8dActor_c18GetBitInDeathTableEv(c) == 0
         && *(int*)((char*)player + 0x60) < *(int*)(c + 0x60) + 0x64000) {
-        int angle = _ZN5Actor18HorzAngleToCPlayerEv(c);
-        if (_ZN5Actor13DistToCPlayerEv(c) > 0x190000) {
+        int angle = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
+        if (_ZN8dActor_c13DistToCPlayerEv(c) > 0x190000) {
             *(int*)(c + 0x324) = 0;
         } else {
             s16 diff = (s16)(angle - *(s16*)(c + 0x328));
@@ -38,14 +38,14 @@ int func_ov091_02133738(char* c)
                 int a = *(int*)(c + 0x324);
                 if (a < 0) a = -a;
                 if (a > 0x30000 && *(u8*)(c + 0x320) == 0
-                    && _ZN5Actor18GetBitInDeathTableEv(c) == 0) {
+                    && _ZN8dActor_c18GetBitInDeathTableEv(c) == 0) {
                     Vector3 v;
                     v.x = *(int*)(c + 0x5c);
                     v.y = *(int*)(c + 0x60);
                     v.z = *(int*)(c + 0x64);
                     v.y += 0xc8000;
-                    _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, v, 5, 0x5000, 0);
-                    _ZN5Actor17TrackInDeathTableEv(c);
+                    _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, v, 5, 0x5000, 0);
+                    _ZN8dActor_c17TrackInDeathTableEv(c);
                 }
             }
         }

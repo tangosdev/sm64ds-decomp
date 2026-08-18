@@ -4,8 +4,8 @@ struct CylinderClsn;
 
 extern "C" {
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
-int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, int d);
-void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void* self, CylinderClsn& c);
+int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, int d);
+void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void* self, CylinderClsn& c);
 int func_ov064_021166f0(unsigned char* t);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, BCA_File* f, int a, int fix, unsigned int j);
 void func_ov064_02116754(unsigned char* c);
@@ -35,14 +35,14 @@ struct Base {
 extern "C" int func_ov064_02116d1c(unsigned char* thiz)
 {
     if (_ZNK12WithMeshClsn10IsOnGroundEv(thiz + 0x174) != 0) {
-        if (_ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(thiz, 0x5dc000) != 0) return 1;
+        if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(thiz, 0x5dc000) != 0) return 1;
     }
 
     int four = *(int*)(thiz + 0x398);
     *(int*)(thiz + 0x39c) = *(int*)(thiz + 0x5c);
     *(int*)(thiz + 0x3a0) = *(int*)(thiz + 0x60);
     *(int*)(thiz + 0x3a4) = *(int*)(thiz + 0x64);
-    _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(thiz, *(CylinderClsn*)(thiz + 0x33c));
+    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(thiz, *(CylinderClsn*)(thiz + 0x33c));
     func_ov064_02116754(thiz);
 
     switch (*(int*)(thiz + 0x398)) {

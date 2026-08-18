@@ -27,7 +27,7 @@ int BasementWater::InitResources()
   _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, data_ov012_021124c8[1], &mClsnMat, 0x1000, mAngleY, data_ov012_02111c90);
-  ((MeshColliderBase *)(&mMeshCollider))->Enable((Actor *)(((char*)this)));
+  ((MeshColliderBase *)(&mMeshCollider))->Enable((dActor_c *)(((char*)this)));
   int v = mPosY - 0x4b0000;
   mLoweredY = v;
   if(data_0209caa0[2] & 0x80000){

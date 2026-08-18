@@ -13,7 +13,7 @@ extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, short ang);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 extern void _Z14ApproachLinearRiii(void *dst, int a, int b);
 extern int FlyGuy_ChangeState(void *c, void *p);
-extern void *_ZN5Actor22ClosestNonVanishPlayerEv(void *c);
+extern void *_ZN8dActor_c22ClosestNonVanishPlayerEv(void *c);
 
 extern char data_020a0e68[];
 extern char data_ov070_0212359c[];
@@ -59,7 +59,7 @@ int func_ov070_0211fd98(char *c)
     if (*(unsigned short *)(c + 0x300 + 0xcc) != 0)
         return 1;
     if (Vec3_Dist(c + 0x5c, c + 0x3c0) < 0x5dc000) {
-        p = _ZN5Actor22ClosestNonVanishPlayerEv(c);
+        p = _ZN8dActor_c22ClosestNonVanishPlayerEv(c);
         if (p) {
             int *pos = (int *)(((int)p + 0x5c));
             t.x = pos[0];

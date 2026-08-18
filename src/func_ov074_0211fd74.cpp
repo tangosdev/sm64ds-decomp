@@ -9,12 +9,12 @@ extern "C" {
     int func_ov074_02121a20(void* c, int idx);
     int func_ov074_021207b8(void* c);
     int func_ov074_021206c8(void* c);
-    void* _ZN5Actor13ClosestPlayerEv(void* self);
+    void* _ZN8dActor_c13ClosestPlayerEv(void* self);
     int _ZN9Animation8FinishedEv(void* anim);
     u16 DecIfAbove0_Short(u16* p);
     void func_ov074_0212087c(void* out, void* self, int idx);
-    void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void* self, void* v);
-    void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, void* pos, void* rot, int e, int f);
+    void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void* self, void* v);
+    void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, void* pos, void* rot, int e, int f);
     void func_ov084_021296b0(void* a, void* b);
     int __aeabi_idiv(int a, int b);
 }
@@ -37,7 +37,7 @@ extern "C" void func_ov074_0211fd74(void* self)
 
 L90:;
     int r5 = data_ov074_02122d80[*(u8*)(c+0x604)];
-    u8* pl = (u8*)_ZN5Actor13ClosestPlayerEv(self);
+    u8* pl = (u8*)_ZN8dActor_c13ClosestPlayerEv(self);
     if (*(u8*)(c+0x604) == 1 && *(s32*)(pl+8) != 3) r5 = r5 + 1;
 
     if (_ZN9Animation8FinishedEv((void*)(c+0x260)) == 0) return;
@@ -49,14 +49,14 @@ L90:;
     pp.x = pos.x;
     pp.y = pos.y;
     pp.z = pos.z;
-    _ZN5Actor19DisappearPoofDustAtERK7Vector3(self, &pp);
+    _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(self, &pp);
 
     u32 sid = 0xeeee;
     if (*(s32*)(pl+8) != 3) {
         if (*(u8*)(c+0x602) % 2 == 0) sid = 0xeeef;
     }
 
-    u8* sp2 = (u8*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+    u8* sp2 = (u8*)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         0xc8, sid, &pos, (void*)(c+0x8c), *(signed char*)(c+0xcc), -1);
     *(s32*)(sp2+0x43c) = *(s32*)(c+4);
     Vector3 v2;
@@ -70,7 +70,7 @@ L90:;
     *p602 = (u8)(*p602 + 1);
     *(u16*)((c+0x500)+0xfc) = 2;
 
-    u8* pl2 = (u8*)_ZN5Actor13ClosestPlayerEv(self);
+    u8* pl2 = (u8*)_ZN8dActor_c13ClosestPlayerEv(self);
     int dv = 3;
     if (*(s32*)(pl2+8) != 3) {
         if (*(u8*)(c+0x604) == 1) dv = 5;

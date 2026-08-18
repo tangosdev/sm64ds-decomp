@@ -48,11 +48,11 @@ extern int DecIfAbove0_Byte(char *);
 extern void _ZN7fBase_c18MarkForDestructionEv(char *);
 extern int DecIfAbove0_Short(char *);
 extern void func_ov102_0214cbec(char *);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char *, char *);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char *, char *);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(char *, char *, u32);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(char *);
-extern void _ZN5Actor8PoofDustEv(char *);
+extern void _ZN8dActor_c8PoofDustEv(char *);
 extern void func_ov102_0214c7fc(char *);
 extern void func_ov102_0214c84c(char *);
 extern void _ZN12CylinderClsn6UpdateEv(char *);
@@ -103,13 +103,13 @@ int KoopaShell::Behavior()
     func_ov102_0214cbec(c);
 
     if (mVertAccel != 0) {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, (char *)&mCylinderClsn);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (char *)&mCylinderClsn);
         _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, (char *)&mMeshClsn, 0);
         if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mMeshClsn) != 0 ||
             _ZNK12WithMeshClsn8IsOnWallEv((char *)&mMeshClsn) != 0) {
             if (_ZNK12WithMeshClsn8IsOnWallEv((char *)&mMeshClsn) != 0) {
                 if (mState == (void *)&data_ov102_0214ea78) {
-                    _ZN5Actor8PoofDustEv(c);
+                    _ZN8dActor_c8PoofDustEv(c);
                     _ZN7fBase_c18MarkForDestructionEv(c);
                     return 0;
                 }

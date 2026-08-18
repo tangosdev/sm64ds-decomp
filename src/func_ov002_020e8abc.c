@@ -1,5 +1,5 @@
 #include "types.h"
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void func_02035860(char *o, void *src);
 extern void func_ov002_020e9464(char *p);
@@ -10,7 +10,7 @@ void func_ov002_020e8abc(char *self)
 {
     char *a;
 
-    a = (char *)_ZN5Actor10FindWithIDEj(*(unsigned int *)(self + 0x434));
+    a = (char *)_ZN8dActor_c10FindWithIDEj(*(unsigned int *)(self + 0x434));
     if (a == 0) {
         _ZN7fBase_c18MarkForDestructionEv(self);
         return;

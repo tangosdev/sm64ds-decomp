@@ -51,17 +51,17 @@ struct JetStream {
     u8  pad_000[0x8];
     u32 unk_008;            /* 0x008 */
     u8  pad_00c[0x80];
-    /* Actor::mAngleX -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mAngleX -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
     s16 unk_08c;            /* 0x08c */
-    /* Actor::mAngleY -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mAngleY -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
     s16 unk_08e;            /* 0x08e */
-    /* Actor::mAngleZ -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mAngleZ -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
     s16 unk_090;            /* 0x090 */
-    /* Actor::mPrevAngleX -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPrevAngleX -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
     s16 unk_092;            /* 0x092 */
-    /* Actor::mPrevAngleY -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPrevAngleY -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
     s16 unk_094;            /* 0x094 */
-    /* 0x096..0x100 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x096..0x100 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s16 unk_096;                 /* 0x096 */
     s32 mHorzSpeed;              /* 0x098 */

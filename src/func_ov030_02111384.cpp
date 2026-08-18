@@ -8,7 +8,7 @@
 /* recovered: renamed to Class_Method */
 /* daObjHmBskt_c::Behavior - recovered from vtable slot identity */
 extern "C" int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(char *c, int a, int b);
-extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(char *c, char *clsn);
+extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char *c, char *clsn);
 extern "C" int func_ov030_02111384(char *c) {
     struct daObjHmBskt_c *self = (struct daObjHmBskt_c *)(void *)c;
     volatile int dummy[4];
@@ -17,7 +17,7 @@ extern "C" int func_ov030_02111384(char *c) {
     self->unk_08e = self->unk_08e + self->unk_098;
     if (self->unk_09c != 0) {
         *(int *)(((int)c + 0xb0)) = *(int *)(((int)c + 0xb0)) & ~1;
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, (char*)0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (char*)0);
         func_ov030_0211124c(c, c+0x320);
         int a0 = self->unk_060;
         int a1 = self->unk_064;

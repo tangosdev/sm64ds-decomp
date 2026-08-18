@@ -12,12 +12,12 @@ extern void *_ZN8Particle6System12FromUniqueIDEj(unsigned int id);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void _ZN9Animation7AdvanceEv(void *self);
 extern int _ZN9Animation8FinishedEv(void *self);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int actorID, unsigned int param, Vector3 *pos, void *rot, s8 areaID, s16 deathTableID);
-extern void _ZN5Actor8PoofDustEv(void *self);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(
+extern void _ZN8dActor_c8PoofDustEv(void *self);
+extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(
     void *self, signed char *starFlag, unsigned int starID, Vector3 *pos, unsigned int how);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *self);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 extern s16 data_02082214[];
@@ -116,14 +116,14 @@ int func_ov071_02120d30(char *c)
             pos.x = x;
             pos.z = zcopy;
             pos.y = yadj;
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x122, 2, &pos, 0, *(signed char *)(c + 0xcc), -1);
-            _ZN5Actor8PoofDustEv(c);
+            _ZN8dActor_c8PoofDustEv(c);
         } else {
             int isSmall = (int)(kind == 0x107);
             if (isSmall != 0) {
                 unsigned char star = (unsigned char)(*(unsigned int *)(c + 8) & 0xf);
-                _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(
+                _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(
                     c, (signed char *)(c + 0x217), star, (Vector3 *)(c + 0x5c), 4);
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
                     0x124, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
@@ -135,7 +135,7 @@ int func_ov071_02120d30(char *c)
         }
         func_0201267c(0xc4, c + 0x74);
         if (data_0209f2f8 == 0x2e) {
-            _ZN5Actor24KillAndTrackInDeathTableEv(c);
+            _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
         } else {
             _ZN7fBase_c18MarkForDestructionEv(c);
         }

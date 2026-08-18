@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN5Actor15GivePlayerCoinsER6Playerhj
-/* Actor::GivePlayerCoins(Player &player, u8 count, u32 coinKind) at 0x0201061c.
+// @symbol _ZN8dActor_c15GivePlayerCoinsER6Playerhj
+/* dActor_c::GivePlayerCoins(Player &player, u8 count, u32 coinKind) at 0x0201061c.
  *
  * Pays a player for this actor: plays the pickup sound at this actor's own
  * camera-space position, credits the coins, heals by the same amount scaled
@@ -26,7 +26,7 @@
  * player's own, raised 0x96000 -- copied field by field into a stack Vector3,
  * which is what the three load/store pairs at [sp,#8..0x10] are.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 #include "Player.h"
 
 extern "C" {
@@ -45,7 +45,7 @@ struct Sound {
     static void PlayBank3(u32 bank, const Vector3 &pos);
 };
 
-void Actor::GivePlayerCoins(Player &player, u8 count, u32 coinKind)
+void dActor_c::GivePlayerCoins(Player &player, u8 count, u32 coinKind)
 {
     if (&player == 0)
         return;
@@ -74,7 +74,7 @@ void Actor::GivePlayerCoins(Player &player, u8 count, u32 coinKind)
     spawnPos.z = src->z;
     spawnPos.y = spawnPos.y + 0x96000;
 
-    Actor *popup = Spawn(data_02075230[coinKind], 8, spawnPos, 0,
+    dActor_c *popup = Spawn(data_02075230[coinKind], 8, spawnPos, 0,
                          player.mAreaId, -1);
     if (popup != 0)
         *(Player **)((char *)popup + 0x39c) = &player;

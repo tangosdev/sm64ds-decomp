@@ -5,8 +5,8 @@
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to dBgActor_c.
- * Everything this header used to restate below 0x31e was Actor's and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
  * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
@@ -64,11 +64,11 @@ struct MovingBar {
     u8  behavNode[0x10];               /* 0x028 */
     u8  renderNode[0x10];              /* 0x038 */
     u8  pad_048[0x14];
-    /* Actor::mPosX -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPosX -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
     s32 unk_05c;            /* 0x05c */
-    /* Actor::mPosY -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPosY -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
     s32 unk_060;            /* 0x060 */
-    /* 0x064..0x08e is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x064..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_064;                 /* 0x064 */
     s32 unk_068;                 /* 0x068 */

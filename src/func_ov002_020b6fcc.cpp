@@ -7,8 +7,8 @@ struct V16 { u16 x, y, z; };
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
 extern void* _ZNK12WithMeshClsn13GetWallResultEv(void* p);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* si, void* out);
-extern s16 _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void* self, int a, int b, short c);
-extern void* _ZN5Actor10FindWithIDEj(unsigned id);
+extern s16 _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void* self, int a, int b, short c);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned id);
 extern int _ZN6Player15IsCollectingCapEv(void* p);
 extern void _ZN6Player15InitVanishLuigiEv(void* p);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
@@ -29,13 +29,13 @@ void func_ov002_020b6fcc(char* self)
     if (_ZNK12WithMeshClsn8IsOnWallEv(self + 0x144) != 0) {
         void* wr = _ZNK12WithMeshClsn13GetWallResultEv(self + 0x144);
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)wr + 4, &normal[0]);
-        *(s16*)(self + 0x94) = _ZN5Actor12ReflectAngleE5Fix12IiES1_s(
+        *(s16*)(self + 0x94) = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(
             self, normal[0], normal[2], *(s16*)(self + 0x94));
     }
 
     if (*(int*)(self + 0x134) == 0) return;
 
-    *(void**)(self + 0x3c0) = _ZN5Actor10FindWithIDEj(*(int*)(self + 0x134));
+    *(void**)(self + 0x3c0) = _ZN8dActor_c10FindWithIDEj(*(int*)(self + 0x134));
     if (*(void**)(self + 0x3c0) == 0) return;
 
     {

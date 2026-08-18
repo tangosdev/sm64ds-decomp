@@ -23,7 +23,7 @@
  * include/dScMgBase_c.h -- which this file now reaches through the class --
  * declares it `void *`, and two incompatible extern "C" declarations of one
  * name in one translation unit is what mwcc rejects as "illegal function
- * overloading" (see include/Actor.h's own note on that). The pointer
+ * overloading" (see include/dActor_c.h's own note on that). The pointer
  * arithmetic is spelled through a `char *` cast instead; same address, same
  * bytes. */
 

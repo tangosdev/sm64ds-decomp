@@ -7,11 +7,11 @@ struct MeshColliderBase {
     void Disable();
 };
 
-struct Actor;
-namespace Sound { int PlaySecretSound(Actor *a, unsigned short *p); }
+struct dActor_c;
+namespace Sound { int PlaySecretSound(dActor_c *a, unsigned short *p); }
 
-struct Actor {
-    static Actor *Spawn(unsigned int id, unsigned int param, const Vector3 &pos, const Vector3_16 *rot, signed char a, short b);
+struct dActor_c {
+    static dActor_c *Spawn(unsigned int id, unsigned int param, const Vector3 &pos, const Vector3_16 *rot, signed char a, short b);
 };
 struct fBase_c {
     void MarkForDestruction();
@@ -35,13 +35,13 @@ extern "C" int _ZN12FortressWall8BehaviorEv(dBgActor_c *self) {
         if (((MeshColliderBase *)((char *)self + 0x124))->IsEnabled() != 0) {
             ((MeshColliderBase *)((char *)self + 0x124))->Disable();
         }
-        if (Sound::PlaySecretSound((Actor *)self, (unsigned short *)((char *)self + 0x322)) != 0) {
+        if (Sound::PlaySecretSound((dActor_c *)self, (unsigned short *)((char *)self + 0x322)) != 0) {
             Vector3 pos;
             pos.x = *(int *)((char *)self + 0x5c);
             pos.y = *(int *)((char *)self + 0x60);
             pos.z = *(int *)((char *)self + 0x64);
             pos.y += 0xc8000;
-            Actor::Spawn(0xb2, *(unsigned char *)((char *)self + 0x31f) | 0x40,
+            dActor_c::Spawn(0xb2, *(unsigned char *)((char *)self + 0x31f) | 0x40,
                          pos, (Vector3_16 *)0, *(signed char *)((char *)self + 0xcc), -1);
             ((fBase_c *)self)->MarkForDestruction();
         }

@@ -12,12 +12,12 @@ struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual v
 struct Derived { char pad[0x2cc]; Base base; };
 
 extern "C" {
-extern int _ZN5Actor13DistToCPlayerEv(void *self);
+extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
 extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-extern void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *clsn);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, void *wmc, unsigned int flags);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
@@ -36,7 +36,7 @@ int KingBobOmb::Behavior()
 {
     char *self = (char *)((C *)this);
 
-    if (_ZN5Actor13DistToCPlayerEv(((C *)this)) < 0x1770000) {
+    if (_ZN8dActor_c13DistToCPlayerEv(((C *)this)) < 0x1770000) {
         *(C **)((char *)data_0209f318 + 0x114) = ((C *)this);
     }
 
@@ -72,9 +72,9 @@ int KingBobOmb::Behavior()
     DecIfAbove0_Byte((unsigned char *)(self + 0x504));
 
     if ((char *)((C *)this)->pp != data_ov078_021270bc) {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(self, self + 0x33c);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, self + 0x33c);
     } else {
-        _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(self, self + 0x33c);
+        _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(self, self + 0x33c);
     }
 
     if ((char *)((C *)this)->pp != data_ov078_021270bc || *(unsigned char *)(self + 0x499) == 1) {

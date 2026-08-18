@@ -10,7 +10,7 @@ extern "C" {
 extern void _ZN6Player16IncMegaKillCountEv(void* thiz);
 extern void func_02012694(int a, void* v);
 extern void func_ov079_02123d4c(void* out, void* c);
-extern void _ZN5Actor10PoofDustAtERK7Vector3(void* thiz, const Vector3& v);
+extern void _ZN8dActor_c10PoofDustAtERK7Vector3(void* thiz, const Vector3& v);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* thiz);
 
@@ -27,7 +27,7 @@ void func_ov079_02123e60(char* c, void* player)
     dust.x = pos.x;
     dust.y = pos.y;
     dust.z = pos.z;
-    _ZN5Actor10PoofDustAtERK7Vector3(c, dust);
+    _ZN8dActor_c10PoofDustAtERK7Vector3(c, dust);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(5, pos.x, pos.y, pos.z);
     _ZN7fBase_c18MarkForDestructionEv(c);
     if (((MeshColliderBase *)(c + 0x418))->IsEnabled() != 0)

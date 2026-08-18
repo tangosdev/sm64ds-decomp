@@ -6,15 +6,15 @@ struct Vector3 { int x, y, z; };
 
 extern short data_02082214[];
 
-extern void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *p);
+extern void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *p);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, struct Vector3 *out);
 extern int _ZN4cstd4fdivEii(int a, int b);
-extern int _ZN5Actor13DistToCPlayerEv(void *self);
+extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void *, unsigned int);
 extern void func_ov016_021130a4(char *t);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
@@ -26,7 +26,7 @@ int _ZN10SlidingBox8BehaviorEv(char *a)
 
     switch (*(u8 *)(a + 0x4f4)) {
     case 0:
-        *(void **)(a + 0x320) = _ZN5Actor15FindWithActorIDEjPS_(0x39, 0);
+        *(void **)(a + 0x320) = _ZN8dActor_c15FindWithActorIDEjPS_(0x39, 0);
         if (*(void **)(a + 0x320) == 0) {
             _ZN7fBase_c18MarkForDestructionEv(a);
             break;
@@ -34,7 +34,7 @@ int _ZN10SlidingBox8BehaviorEv(char *a)
         (*(u8 *)(((int)a + 0x4f4)))++;
         /* fallthrough */
     case 1:
-        _ZN5Actor9UpdatePosEP12CylinderClsn(a, 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(a, 0);
         WithMeshClsn_UpdateContinuous_Veneer(a + 0x324);
         if (_ZNK12WithMeshClsn10IsOnGroundEv(a + 0x324)) {
             (*(u8 *)(((int)a + 0x4f4)))++;
@@ -60,7 +60,7 @@ int _ZN10SlidingBox8BehaviorEv(char *a)
         *(int *)(a + 0x5c) = *(int *)(a + 0x4e0) + (int)(((long long)*(int *)(a + 0x4ec) * data_02082214[(*(u16 *)(a + 0x8e) >> 4) * 2] + 0x800) >> 12);
         *(int *)(a + 0x64) = *(int *)(a + 0x4e8) + (int)(((long long)*(int *)(a + 0x4ec) * data_02082214[(*(u16 *)(a + 0x8e) >> 4) * 2 + 1] + 0x800) >> 12);
         *(int *)(a + 0x98) = 0;
-        _ZN5Actor9UpdatePosEP12CylinderClsn(a, 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(a, 0);
         WithMeshClsn_UpdateContinuous_Veneer(a + 0x324);
         if (_ZNK12WithMeshClsn10IsOnGroundEv(a + 0x324)) {
             void *fr = _ZNK12WithMeshClsn14GetFloorResultEv(a + 0x324);
@@ -72,7 +72,7 @@ int _ZN10SlidingBox8BehaviorEv(char *a)
                     normal.y) + 0x8000);
             }
         }
-        if (_ZN5Actor13DistToCPlayerEv(a) < 0x7d0000) {
+        if (_ZN8dActor_c13DistToCPlayerEv(a) < 0x7d0000) {
             int vel = *(int *)(a + 0x98);
             if (vel < 0)
                 vel = -vel;

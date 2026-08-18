@@ -5,7 +5,7 @@ extern void func_ov002_020bdd2c(void *c);
 extern int func_ov002_020c607c(void *c, int a, int b, int *out);
 extern void _ZN13RaycastGroundC1Ev(void *p);
 extern void _ZN4BgCh19StartDetectingWaterEv(void *p);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *p, void *v, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *p, void *v, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void *p);
 extern void _ZN13RaycastGroundD1Ev(void *p);
 
@@ -51,7 +51,7 @@ int func_ov002_020c61ac(char *c) {
             v[2] = zv;
             _ZN13RaycastGroundC1Ev(obj);
             _ZN4BgCh19StartDetectingWaterEv(obj);
-            _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(obj, v, c);
+            _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(obj, v, c);
             if (_ZN13RaycastGround10DetectClsnEv(obj)) {
                 *(int *)(c + 0x644) = *(int *)((char *)obj + 0x44);
                 *(int *)(c + 0x60) = *(int *)(c + 0x644);

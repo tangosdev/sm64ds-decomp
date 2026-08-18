@@ -30,10 +30,10 @@
 extern "C" {
 extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
     char *self, WithMeshClsn *wm, ModelAnim *ma, unsigned int flags);
-extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int actorId, unsigned int param, const Vector3 *pos,
     const Vector3s *rot, int areaId, int f);
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int RandomIntInternal(void *seed);
 extern int data_0209e650;
 extern int func_ov064_02116d1c(char *self);
@@ -61,7 +61,7 @@ int Bully::Behavior()
             rot.z = 0;
             rot.y = (s16)yrot;
 
-            char *coin = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+            char *coin = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0x120, 2, &pos, &rot, mAreaId, -1);
             if (coin) {
                 *(int *)(coin + 0x98) = 0xa000;
@@ -69,7 +69,7 @@ int Bully::Behavior()
                 *(int *)(coin + 0xa8) = 0x50000;
                 *(int *)(coin + 0xac) = 0;
             }
-            char *spawner = _ZN5Actor10FindWithIDEj(unk_3fc);
+            char *spawner = _ZN8dActor_c10FindWithIDEj(unk_3fc);
             if (spawner) {
                 (*(u8 *)(spawner + 0x3fe))++;
             }

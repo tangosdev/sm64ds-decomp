@@ -10,7 +10,7 @@ struct V3
 extern void func_0200d8c8(void *cam, void *v, int strength);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_Lsl(void *d, void *s, int sh);
-extern void _ZN5Actor17HugeLandingDustAtER7Vector3b(void *self, void *v, int b);
+extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *self, void *v, int b);
 extern void Matrix4x3_FromRotationY(void *m, short angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
@@ -56,7 +56,7 @@ void func_ov073_0211f2c0(char *c, int strength)
     dv.x = x;
     dv.y = y;
     dv.z = z;
-    _ZN5Actor17HugeLandingDustAtER7Vector3b(c, &dv, 1);
+    _ZN8dActor_c17HugeLandingDustAtER7Vector3b(c, &dv, 1);
     return;
   }
   pv.x = *((int *) (c + 0x5c));

@@ -178,8 +178,8 @@
    "missing": [
     "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPcP8BMD_Fileii",
     "_Z35_ZN5Model8LoadFileER13SharedFilePtrPv",
-    "_Z50_ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jjPcP5Actoriijj",
-    "_Z58_ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_PcP5ActoriiP10Vector3_16i",
+    "_Z50_ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jjPcP8dActor_ciijj",
+    "_Z58_ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_PcP8dActor_ciiP10Vector3_16i",
     "func_0211d610"
    ]
   },
@@ -287,7 +287,7 @@
     "_Z35_ZN5Model8LoadFileER13SharedFilePtrPv",
     "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrPv",
     "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_",
-    "_Z88_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_v",
+    "_Z88_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_v",
     "func_021115bc"
    ]
   },
@@ -307,7 +307,7 @@
     "_Z35_ZN10dBgActor_c19UpdateClsnPosAndRotEvPv",
     "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrR13SharedFilePtr",
     "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvP8KCL_FileRK9Matrix4x3isR10CLPS_Block",
-    "_Z94_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_v",
+    "_Z94_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_v",
     "func_02112198"
    ]
   },
@@ -381,14 +381,14 @@
    "missing": [
     "_Z13func_020393c4PvS_",
     "_Z13func_020393d4PvS_",
-    "_Z22_ZN5Actor9TrackStarEjjPvjj",
+    "_Z22_ZN8dActor_c9TrackStarEjjPvjj",
     "_Z32_ZN11ShadowModel12InitCylinderEvPv",
     "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPvS_ii",
     "_Z35_ZN5Model8LoadFileER13SharedFilePtrPv",
     "_Z39_ZN9Animation8LoadFileER13SharedFilePtrPv",
     "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrPv",
     "_Z46_ZN15TextureSequence8LoadFileER13SharedFilePtrPv",
-    "_Z67_ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jjPvS_P7Vector3iijj",
+    "_Z67_ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jjPvS_P7Vector3iijj",
     "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPviS_isS_",
     "func_02112c08",
     "func_02112ca8",

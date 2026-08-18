@@ -93,7 +93,7 @@ struct Goomboss {
     u8  pad_068[0x18];
     s32 mScaleX;            /* 0x080 */
     s32 mScaleY;            /* 0x084 */
-    /* 0x088..0x09c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x088..0x09c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 mScaleZ;                 /* 0x088 */
     s16 mAngleX;                 /* 0x08c */

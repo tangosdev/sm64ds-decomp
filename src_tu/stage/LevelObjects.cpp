@@ -87,10 +87,10 @@ extern u8   data_ov002_0210cb70[];
 extern u16  data_ov002_0210cb88[];
 extern u16  data_ov002_0210cbf4[];
 
-/* CONFLICT 3 -- Actor::Spawn's spelling.
+/* CONFLICT 3 -- dActor_c::Spawn's spelling.
  * Five of the seventeen call it. Four spelled the mangled symbol by hand as an
  * `extern "C"` free function, and LoadStandardObjects records why: calling the
- * real `Actor::Spawn` -- whose header gives the last two arguments as s8/s16 --
+ * real `dActor_c::Spawn` -- whose header gives the last two arguments as s8/s16 --
  * inserts truncates that make that function four bytes too long, because
  * `areaID` arrives as a full-word int. LoadEntranceObjects used the real method.
  * One TU can only have one, and the hand-spelled form is the one the bytes
@@ -99,7 +99,7 @@ extern u16  data_ov002_0210cbf4[];
  * the position, `Vector3s` versus `Vector3_16` for the rotation -- so all five
  * call sites now go through this one declaration. Measured byte-free on all
  * five, including LoadEntranceObjects' move off the real method. */
-void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         u32 actorID, u32 spawnParam, const Vector3 *pos, const Vector3_16 *rot,
         s32 areaID, s32 deathTableID);
 
@@ -198,7 +198,7 @@ void LoadSimpleObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
         } else {
             s16 old = data_ov002_0211118c;
             data_ov002_0211118c = (s16)(old + 1);
-            _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+            _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 data_ov002_0210cbf4[masked], actorParam, &v, 0, areaID, old);
         }
     }
@@ -227,7 +227,7 @@ void LoadStandardObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
         v.z = zz;
         s16 old = data_ov002_0211118c;
         data_ov002_0211118c = (s16)(old + 1);
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
             a, e->param, &v, (const Vector3_16*)&e->rot, areaID, old);
     }
 }
@@ -272,7 +272,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
             }
             u32 flags = f2 | (f1 << 3) | (i << 6) | (sl << 8);
 
-            void* a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+            void* a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 data_ov002_0210cbf4[e->raw], flags, &pos,
                 (const Vector3_16*)&e->rot, (s8)(param & 7), -1);
 
@@ -380,7 +380,7 @@ void LoadTeleportSourceObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 pa
         pos.y = vy;
         pos.z = vz;
 
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x15b, e->param, &pos, (const Vector3_16*)0, 0, -1);
 
         i++;
@@ -438,7 +438,7 @@ void LoadDoorObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
         int idx = e->fielda & 0x1f;
         u32 id = data_ov002_0210cb88[idx];
         u32 p = e->field8 | (data_ov002_0210cb70[idx] << 16);
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(id, p, &pos, &rot, -1, -1);
+        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(id, p, &pos, &rot, -1, -1);
         e++;
     }
 }
@@ -472,7 +472,7 @@ void LoadExitObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
         rot.x = -e->rotX;
         rot.y = -e->rotY;
 
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
             0x15d,
             ((u32)e->param[0] << 24) | ((u32)e->param[1] << 16)
                 | ((u32)e->param[2] << 8) | (u32)e->param[3],
@@ -581,7 +581,7 @@ void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
         _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(f);
         _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(mc, f, ovl->clps);
         func_0202a850(_ZNK12MeshCollider16GetOctreeOriginYEv(mc), _ZNK12MeshCollider13GetUnkOctreeYEv(mc));
-        ((MeshColliderBase *)(mc))->Enable((Actor *)(0));
+        ((MeshColliderBase *)(mc))->Enable((dActor_c *)(0));
     }
 
     data_ov002_0211118c = 0;

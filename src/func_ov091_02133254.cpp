@@ -23,11 +23,11 @@ extern "C" int _ZN11ShadowModel10InitCuboidEv(void *self);
 
 struct RaycastGround { char buf[0x44]; int f44; char rest[8]; };
 extern "C" void _ZN13RaycastGroundC1Ev(RaycastGround *self);
-extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *self, Vector3 *v, void *a);
+extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *self, Vector3 *v, void *a);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
 extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 
-extern void *_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern void *_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
 extern "C" int func_ov091_02133254(char *self)
 {
@@ -50,8 +50,8 @@ extern "C" int func_ov091_02133254(char *self)
     p8 = *(void **)((char *)p320 + 8);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         self + 0x124, kcl, self + 0x2ec, 0x199, *(short *)(self + 0x8e), p8);
-    func_020393d4((int *)(self + 0x124), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
-    ((MeshColliderBase *)(self + 0x124))->Enable((Actor *)(self));
+    func_020393d4((int *)(self + 0x124), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    ((MeshColliderBase *)(self + 0x124))->Enable((dActor_c *)(self));
 
     tp = *(void **)(*(char **)(self + 0x320) + 0xc);
     if (tp != 0)
@@ -75,7 +75,7 @@ extern "C" int func_ov091_02133254(char *self)
     v.z = *(int *)(self + 0x64);
     v.y = v.y + 0x32000;
     _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, 0);
     *(int *)(self + 0x394) = v.y;
     if (_ZN13RaycastGround10DetectClsnEv(&rg))
         *(int *)(self + 0x394) = rg.f44;

@@ -6,7 +6,7 @@
 extern "C" {
     extern int AngleDiff(int, int);
 }
-struct Actor { Actor *ClosestPlayer(); };
+struct dActor_c { dActor_c *ClosestPlayer(); };
 
 extern "C" int Vec3_HorzDist(const void *a, const void *b);
 extern "C" short Vec3_HorzAngle(const void *a, const void *b);
@@ -15,10 +15,10 @@ extern "C" void _Z14ApproachLinearRsss(short *dst, short target, short rate);
 
 
 
-extern "C" void func_ov085_02129dbc(Actor *self)
+extern "C" void func_ov085_02129dbc(dActor_c *self)
 {
     char *s = (char *)self;
-    Actor *p = self->ClosestPlayer();
+    dActor_c *p = self->ClosestPlayer();
     if (p == 0)
         return;
     Vector3 v;

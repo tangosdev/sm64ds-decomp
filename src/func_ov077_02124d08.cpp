@@ -9,7 +9,7 @@ typedef int Fix12;
 typedef short s16;
 
 struct WithMeshClsn;
-struct Actor;
+struct dActor_c;
 struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
 struct ClsnResult;
 struct SurfaceInfo;
@@ -18,9 +18,9 @@ extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* p);
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 extern "C" void _ZN13RaycastGroundC1Ev(RaycastGround* self);
 extern "C" void _ZN4BgCh19StartDetectingToxicEv(void* self);
-extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround* self, const Vector3& v, void* actor);
+extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3& v, void* actor);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
-extern "C" void _ZN5Actor8PoofDustEv(void* self);
+extern "C" void _ZN8dActor_c8PoofDustEv(void* self);
 extern "C" void func_02012694(int a, void* b);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround* self);
@@ -48,10 +48,10 @@ extern "C" void func_ov077_02124d08(char* a, char* w) {
             pos.z = pz;
         }
         _ZN4BgCh19StartDetectingToxicEv(&rc);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, pos, a);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, pos, a);
         if (_ZN13RaycastGround10DetectClsnEv(&rc)) {
             if (func_02037e20(rc.floor) != 0 && *(int*)(a+0x60) < rc.floor[(0x44-0x14)/4]) {
-                _ZN5Actor8PoofDustEv(a);
+                _ZN8dActor_c8PoofDustEv(a);
                 func_02012694(0xc4, a+0x74);
                 _ZN7fBase_c18MarkForDestructionEv(a);
                 _ZN13RaycastGroundD1Ev(&rc);

@@ -34,14 +34,14 @@ extern "C" void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
    RaycastGround -- are untouched: dBgActor_c.h does not pull those headers in, so
    they still compile, and MovingCylinderClsn::Init and WithMeshClsn::Init have
    the same Fix12<int> problem with no collision forcing the issue yet. */
-struct BMD_File; struct KCL_File; struct Actor; struct Vector3; struct Matrix4x3;
+struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr; struct Vector3_16;
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh, CLPS_Block &b);
-extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
-    void *self, Actor *a, s32 radius, s32 height, u32 u0, u32 u1);
-extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
-    void *self, Actor *a, s32 radius, s32 height, Vector3_16 *v, Vector3_16 *v2);
+extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+    void *self, dActor_c *a, s32 radius, s32 height, u32 u0, u32 u1);
+extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v, Vector3_16 *v2);
 struct WithMeshClsn {
     void StartDetectingWater();
 };
@@ -50,7 +50,7 @@ struct RaycastGround {
     int result;       // offset 0x44
     int pad2[2];      // pad to 0x50 total
     RaycastGround();
-    void SetObjAndPos(const Vector3 &v, Actor *a);
+    void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
     ~RaycastGround();
 };
@@ -70,7 +70,7 @@ int SignPost::InitResources()
     int py2 = py + 0x64000;
     V3 v = { px, py2, pz };
     RaycastGround rg;
-    rg.SetObjAndPos(*(Vector3*)&v, (Actor*)0);
+    rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     if (rg.DetectClsn() != 0)
         mPosY = rg.result;
 
@@ -82,8 +82,8 @@ int SignPost::InitResources()
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, (KCL_File*)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
 
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
-        &mMovingCylinderClsn, (Actor*)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+        &mMovingCylinderClsn, (dActor_c*)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
 
     unk_58e = 2;
     unk_3b0 = mPosX;
@@ -95,8 +95,8 @@ int SignPost::InitResources()
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
 
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
-        (char *)&mWithMeshClsn, (Actor*)((char *)this), 0x28000, 0x28000, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+        (char *)&mWithMeshClsn, (dActor_c*)((char *)this), 0x28000, 0x28000, 0, 0);
     ((WithMeshClsn*)((char *)&mWithMeshClsn))->StartDetectingWater();
 
     return 1;

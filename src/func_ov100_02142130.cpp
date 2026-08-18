@@ -3,14 +3,14 @@ extern "C" {
 typedef struct { int x, y, z; } Vector3;
 typedef struct WithMeshClsn WithMeshClsn;
 typedef struct SurfaceInfo SurfaceInfo;
-typedef struct Actor Actor;
+typedef struct dActor_c dActor_c;
 void func_020383f0(void* p);
 void func_02038414(void* p);
 int _ZNK12WithMeshClsn8IsOnWallEv(WithMeshClsn* w);
 void* _ZNK12WithMeshClsn13GetWallResultEv(WithMeshClsn* w);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo* s, Vector3* v);
 int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
-int _ZN5Actor14GetSubtractionEss(Actor* a, short s1, int s2);
+int _ZN8dActor_c14GetSubtractionEss(dActor_c* a, short s1, int s2);
 int _ZNK12WithMeshClsn10IsOnGroundEv(WithMeshClsn* w);
 void* _ZNK12WithMeshClsn14GetFloorResultEv(WithMeshClsn* w);
 int _ZN4cstd4fdivEii(int a, int b);
@@ -23,7 +23,7 @@ void func_ov100_02142130(char* c){
   if (_ZNK12WithMeshClsn8IsOnWallEv((WithMeshClsn*)(c+0x110)) != 0) {
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3((SurfaceInfo*)((char*)_ZNK12WithMeshClsn13GetWallResultEv((WithMeshClsn*)(c+0x110)) + 4), (Vector3*)(c+0xe0));
     int a = _ZN4cstd5atan2E5Fix12IiES1_(*(int*)(c+0xe0), *(int*)(c+0xe8));
-    if (_ZN5Actor14GetSubtractionEss((Actor*)c, *(short*)(c+0x94), a) > 0x4000)
+    if (_ZN8dActor_c14GetSubtractionEss((dActor_c*)c, *(short*)(c+0x94), a) > 0x4000)
       *(unsigned char*)(c+0x3d1) = 1;
   }
   if (_ZNK12WithMeshClsn10IsOnGroundEv((WithMeshClsn*)(c+0x110)) == 0) return;

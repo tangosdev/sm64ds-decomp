@@ -30,7 +30,7 @@ extern SharedFilePtr data_ov036_02114020;
 extern CLPS_Block data_ov036_02112b68;
 extern "C" void func_ov036_0211123c(char *t);
 extern "C" void func_020393d4(int *p, int v);
-extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 
 extern "C" int func_ov036_0211137c(char *c)
 {
@@ -42,6 +42,6 @@ extern "C" int func_ov036_0211137c(char *c)
     ((dBgActor_c *)c)->UpdateClsnPosAndRot();
     KCL_File *k = MeshCollider::LoadFile(data_ov036_02114020);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((MovingMeshCollider *)(c + 0x124), k, *(Matrix4x3 *)(c + 0x2ec), 0x1000, self->unk_08e, data_ov036_02112b68);
-    func_020393d4((int *)(c + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int *)(c + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     return 1;
 }

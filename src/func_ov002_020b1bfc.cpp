@@ -6,9 +6,9 @@ extern int _ZNK12WithMeshClsn13JustHitGroundEv(char* c);
 extern void* _ZNK12WithMeshClsn14GetFloorResultEv(char* c);
 extern int SurfaceInfo_TestFlag0x20(void* p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned a, void* v);
-extern int _ZN5Actor13DistToCPlayerEv(char* c);
-extern int _ZN5Actor18HorzAngleToCPlayerEv(char* c);
-extern int _ZN5Actor18HorzAngleToFPlayerEv(char* c);
+extern int _ZN8dActor_c13DistToCPlayerEv(char* c);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(char* c);
+extern int _ZN8dActor_c18HorzAngleToFPlayerEv(char* c);
 void func_ov002_020b1bfc(char* c) {
     func_ov002_020b13e0(c);
     func_ov002_020b1384(c);
@@ -22,10 +22,10 @@ void func_ov002_020b1bfc(char* c) {
         if (*(int*)(c+0x98) > 0x13000) *(int*)(c+0x98) = 0x13000;
     }
     *(int*)(c+0xa8) = 0x23000;
-    if (_ZN5Actor13DistToCPlayerEv(c) < 0x4b0000) {
-        *(short*)(c+0x94) = _ZN5Actor18HorzAngleToCPlayerEv(c) + 0x8000;
+    if (_ZN8dActor_c13DistToCPlayerEv(c) < 0x4b0000) {
+        *(short*)(c+0x94) = _ZN8dActor_c18HorzAngleToCPlayerEv(c) + 0x8000;
     } else {
-        *(short*)(c+0x94) = _ZN5Actor18HorzAngleToFPlayerEv(c);
+        *(short*)(c+0x94) = _ZN8dActor_c18HorzAngleToFPlayerEv(c);
     }
 }
 }

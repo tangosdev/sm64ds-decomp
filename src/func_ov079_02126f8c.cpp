@@ -6,7 +6,7 @@
 typedef int Fix12;
 struct Vector3 { int x, y, z; };
 struct Vector3_16 { short x, y, z; };
-struct Actor;
+struct dActor_c;
 struct dBgActor_c {
     int UpdateKillByMegaChar(short, short, short, Fix12);
     int IsClsnInRange(Fix12, Fix12);
@@ -19,17 +19,17 @@ extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *, short,
 extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, Fix12, Fix12);
 
 struct Actor_s {
-    static Actor* FindWithID(unsigned int);
-    Actor* ClosestPlayer();
-    static Actor* Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
+    static dActor_c* FindWithID(unsigned int);
+    dActor_c* ClosestPlayer();
+    static dActor_c* Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
 };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" Actor* _ZN5Actor10FindWithIDEj(unsigned int);
-extern "C" Actor* _ZN5Actor13ClosestPlayerEv(void *);
-extern "C" Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
+extern "C" dActor_c* _ZN8dActor_c10FindWithIDEj(unsigned int);
+extern "C" dActor_c* _ZN8dActor_c13ClosestPlayerEv(void *);
+extern "C" dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const Vector3&, const Vector3_16*, int, int);
 
 extern "C" {
 Fix12 Vec3_HorzDist(const Vector3* a, const Vector3* b);
@@ -37,17 +37,17 @@ short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int AngleDiff(int a, int b);
 }
 int dBgActor_c::UpdateKillByMegaChar(short, short, short, Fix12);
-Actor* Actor_s::FindWithID(unsigned int);
-Actor* Actor_s::ClosestPlayer();
-Actor* Actor_s::Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
+dActor_c* Actor_s::FindWithID(unsigned int);
+dActor_c* Actor_s::ClosestPlayer();
+dActor_c* Actor_s::Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
 int dBgActor_c::IsClsnInRange(Fix12, Fix12);
 
 extern "C" int func_ov079_02126f8c(char* c) {
     dBgActor_c* self = (dBgActor_c*)c;
     if (_ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(self, 0x2000, 0, 0, 0xc8000))
         return 1;
-    if (!_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x320))) {
-        Actor* p = _ZN5Actor13ClosestPlayerEv((Actor_s*)c);
+    if (!_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x320))) {
+        dActor_c* p = _ZN8dActor_c13ClosestPlayerEv((Actor_s*)c);
         Fix12 dist = Vec3_HorzDist((Vector3*)(c + 0x5c), (Vector3*)((char*)p + 0x5c));
         short ang = Vec3_HorzAngle((Vector3*)(c + 0x5c), (Vector3*)((char*)p + 0x5c));
         if (AngleDiff(ang, *(short*)(c + 0x8e)) < 0x2000 && dist > 0x320000 && dist < 0x5dc000) {
@@ -59,7 +59,7 @@ extern "C" int func_ov079_02126f8c(char* c) {
             *(volatile int*)&pos.x = x;
             *(volatile int*)&pos.z = z;
             *(volatile int*)&pos.y = y;
-            Actor* spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xde, 0, pos, (Vector3_16*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
+            dActor_c* spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xde, 0, pos, (Vector3_16*)(c + 0x8c), *(signed char*)(c + 0xcc), -1);
             *(int*)(c + 0x320) = *(int*)((char*)spawned + 4);
             *(int*)((char*)spawned + 0x3dc) = (int)c;
         }

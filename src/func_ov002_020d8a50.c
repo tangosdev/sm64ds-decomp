@@ -13,7 +13,7 @@ extern void func_ov002_020dbf4c(char* c);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, struct Vector3* v);
 extern void _ZN11RaycastLineC1Ev(struct RaycastLine* r);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(struct RaycastLine* r, struct Vector3* a, struct Vector3* b, void* actor);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(struct RaycastLine* r, struct Vector3* a, struct Vector3* b, void* actor);
 extern int _ZN11RaycastLine10DetectClsnEv(struct RaycastLine* r);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, struct Vector3* n);
 extern void _ZN11RaycastLine10GetClsnPosEv(struct Vector3* ret, struct RaycastLine* r);
@@ -101,7 +101,7 @@ void func_ov002_020d8a50(char* self, int which)
         v2.z = v1.z;
         v2.x += data_02082214[idx * 2] * 0x64;
         v2.z += data_02082214[idx * 2 + 1] * 0x64;
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&ray, &v1, &v2, self);
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray, &v1, &v2, self);
         if (_ZN11RaycastLine10DetectClsnEv(&ray)) {
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&ray.surf, &normal);
             if (normal.y == 0) {

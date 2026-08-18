@@ -25,9 +25,9 @@
  * is still tubuild's own (tubuild.build_manifest_entry).
  *
  * WHAT THE MERGE FORCED, and nothing else was changed:
- *   1. Local shadow `struct dEnemyBase_c` / `struct Actor` (SpawnMegaCharParticles,
+ *   1. Local shadow `struct dEnemyBase_c` / `struct dActor_c` (SpawnMegaCharParticles,
  *      SpawnCoin) replaced by include/dEnemyBase_c.h's real classes -- two globally
- *      visible types named `dEnemyBase_c` and `Actor` cannot survive in one TU.
+ *      visible types named `dEnemyBase_c` and `dActor_c` cannot survive in one TU.
  *   2. Duplicate local helper types renamed apart per block (UnkA/UnkB appeared
  *      twice with identical bodies; two files declared their own POD `Vector3`
  *      that collides with types.h's non-POD one). Renaming a file-local type
@@ -61,11 +61,11 @@
    address -- rather than through the locally emitted _ZTV12dEnemyBase_c, so the addend
    stays 0 and the pilot report's sec 5.1 vtable-preamble trap does not apply. */
 extern "C" {
-extern int _ZN5ActorC2Ev(void *);
+extern int _ZN8dActor_cC2Ev(void *);
 extern int data_ov002_021081e4[];
 int _ZN12dEnemyBase_cC2Ev(void *c)
 {
-    _ZN5ActorC2Ev(c);
+    _ZN8dActor_cC2Ev(c);
     *(int *)c = (int)data_ov002_021081e4;
     return (int)c;
 }
@@ -75,8 +75,8 @@ int _ZN12dEnemyBase_cC2Ev(void *c)
 /* ROM ordinals 27/28/29 -- _ZN12dEnemyBase_cD2Ev 0x020aed18, _ZN12dEnemyBase_cD0Ev 0x020aed3c, */
 /* _ZN12dEnemyBase_cD1Ev 0x020aed74.  ONE definition, three emitted sections.          */
 /* -------------------------------------------------------------------------- */
-/* Store this class's vtable over the one Actor's constructor left, then run the
-   Actor subobject destructor. D0 additionally returns the object to the actor
+/* Store this class's vtable over the one dActor_c's constructor left, then run the
+   dActor_c subobject destructor. D0 additionally returns the object to the actor
    heap through dEnemyBase_c's own inline operator delete (see include/dEnemyBase_c.h). The
    three legacy files each spelled one variant; the compiler emits all three from
    this. */
@@ -147,11 +147,11 @@ void dEnemyBase_c::UpdateWMClsn(WithMeshClsn & clsn_, unsigned int sel)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 25 -- _ZN12dEnemyBase_c9SpawnCoinEv, 0x020aeabc, size 0x13c             */
 /* -------------------------------------------------------------------------- */
-/* Its legacy file built this from a local `struct dEnemyBase_c : Actor` shadow with a
+/* Its legacy file built this from a local `struct dEnemyBase_c : dActor_c` shadow with a
    local POD `struct Vector3`; both are the real ones now. Measured: using
    types.h's Vector3 -- which declares ~Vector3(){} and is therefore NOT a POD --
    for the local `v` costs nothing here, all 0x13c bytes reproduce, which is what
-   lets Actor::Spawn take it by const reference as its real signature says. */
+   lets dActor_c::Spawn take it by const reference as its real signature says. */
 extern "C" int RandomIntInternal(int *seed);
 extern u16 data_ov002_020ff014;
 extern int data_0209e650;
@@ -171,7 +171,7 @@ void dEnemyBase_c::SpawnCoin()
         if (*(u8 *)(t + 0x108) >= 4)
             *(u8 *)(t + 0x108) = 1;
         for (i = 0; i < *(u8 *)(t + 0x10a) + 1; i++) {
-            Actor *coin = Actor::Spawn(
+            dActor_c *coin = dActor_c::Spawn(
                 (&data_ov002_020ff014)[*(u8 *)(t + 0x108) - 1],
                 0xf2, v, 0, *(s8 *)(t + 0xcc), -1);
             if (coin != 0) {
@@ -401,7 +401,7 @@ extern int (dEnemyBase_c::*data_ov002_0210dbc0[])(WithMeshClsn &);
 
 extern "C" {
 extern void DecIfAbove0_Short(unsigned short *p);
-extern int _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
+extern int _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
 }
 
 int dEnemyBase_c::UpdateDeath(WithMeshClsn & clsn_)
@@ -412,7 +412,7 @@ int dEnemyBase_c::UpdateDeath(WithMeshClsn & clsn_)
         return 0;
     DecIfAbove0_Short(&mDeathTimer);
     ret = (this->*data_ov002_0210dbc0[mDeathState - 1])(*clsn);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(this, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(this, 0);
     UpdateWMClsn(*clsn, 0);
     return ret;
 }
@@ -530,7 +530,7 @@ extern "C" int func_ov002_020ae454(char* c, void* a){
    two by-value Fix12<int> parameters, which is the mwccarm 6az wall. */
 extern "C" {
 extern void _ZN11RaycastLineC1Ev(void* self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, void* a, void* b, void* act);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
 extern void _ZN4BgCh19StartDetectingWaterEv(void* self);
 extern int _ZN11RaycastLine10DetectClsnEv(void* self);
 extern void _ZN10ClsnResultC1Ev(void* self);
@@ -557,7 +557,7 @@ extern "C" int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_
     v2.y = self->mPosY;
     v2.z = self->mPosZ;
     v2.y -= fix2;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, &v1, &v2, ((char*)self));
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, ((char*)self));
     if (a4 != 0)
       _ZN4BgCh19StartDetectingWaterEv(rl);
     if (_ZN11RaycastLine10DetectClsnEv(rl) != 0) {
@@ -596,7 +596,7 @@ extern "C" int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_
 extern "C" {
 /* ReflectAngle takes Fix12<int> by value -- the mwccarm 6az wall, runbook
    section 7 -- so it stays extern "C" with scalars in those slots. */
-extern short _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void *actor, int a, int b, short c);
+extern short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *actor, int a, int b, short c);
 }
 
 int dEnemyBase_c::AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngle_)
@@ -604,7 +604,7 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngl
     void *clsn = &clsn_;
     short *outAngle = &outAngle_;
     if (_ZNK12WithMeshClsn8IsOnWallEv(clsn)) {
-        *outAngle = _ZN5Actor12ReflectAngleE5Fix12IiES1_s(this,
+        *outAngle = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(this,
             mWallNormalX, mWallNormalZ, *outAngle);
     } else if (unk_106) {
         *outAngle = (short)(mPrevAngleY + 0x8000);
@@ -629,7 +629,7 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngl
    IDs 0x120/0x121 spawns the mega-character particles; otherwise bit 0x20000 on
    the collision is raised. Clearing unk_107 clears that bit instead. */
 extern "C" {
-extern void* _ZN5Actor10FindWithIDEj(unsigned int);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int);
 }
 
 int dEnemyBase_c::SpawnParticlesIfHitOtherObj(CylinderClsn & clsn_)
@@ -639,14 +639,14 @@ int dEnemyBase_c::SpawnParticlesIfHitOtherObj(CylinderClsn & clsn_)
     if (unk_107 != 0) {
         unsigned int id = *(unsigned int*)(clsn+0x24);
         if (id != 0) {
-            void* a = _ZN5Actor10FindWithIDEj(id);
+            void* a = _ZN8dActor_c10FindWithIDEj(id);
             if (a != 0) {
                 unsigned short t = *(unsigned short*)((char*)a+0xc);
                 int e1 = (t == 0x120);
                 if (e1 == 0) {
                     int e2 = (t == 0x121);
                     if (e2 == 0) {
-                        SpawnMegaCharParticles(*(Actor *)a, clsn);
+                        SpawnMegaCharParticles(*(dActor_c *)a, clsn);
                         return 1;
                     }
                 }
@@ -663,7 +663,7 @@ done:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN12dEnemyBase_c22SpawnMegaCharParticlesER5ActorPc               */
+/* ROM ordinal 2 -- _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc               */
 /* 0x020adb40, size 0x280                                                     */
 /* -------------------------------------------------------------------------- */
 /* MegaV3 is deliberately a POD copy of Vector3: types.h's Vector3 declares
@@ -678,7 +678,7 @@ extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern s32 *Vec3_AsrInPlace(s32 *v, s32 sh);
 }
 
-void dEnemyBase_c::SpawnMegaCharParticles(Actor &a, char *p)
+void dEnemyBase_c::SpawnMegaCharParticles(dActor_c &a, char *p)
 {
     char *self = (char *)this;
     char *ap = (char *)&a;
@@ -833,13 +833,13 @@ extern void Vec3_Asr(void *dst, const void *src, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, int x, int y, int z);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *actor);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *actor);
 extern char data_020a0e68;
 }
 
-/* Reaches Actor vtable slot 29 -- vtable+0x74 -- whose return value, arithmetic
+/* Reaches dActor_c vtable slot 29 -- vtable+0x74 -- whose return value, arithmetic
    shifted right by 3, is the height of the point the model spins about. Kept as
-   a stand-in rather than Actor::OnAimedAtWithEgg() because that slot's NAME is
+   a stand-in rather than dActor_c::OnAimedAtWithEgg() because that slot's NAME is
    imported from a different hierarchy (dScMgBase_c) and does not fit this use;
    flagged, not resolved. */
 struct KbicVB {
@@ -896,16 +896,16 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_
         if (flags & 1)
             SpawnCoin();
         if (flags & 2)
-            _ZN5Actor24KillAndTrackInDeathTableEv(this);
+            _ZN8dActor_c24KillAndTrackInDeathTableEv(this);
         mDeathState = 0;
         return 2;
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(this, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(this, 0);
     if (clsn != 0) {
         UpdateWMClsn(*clsn, 0);
         if (_ZNK12WithMeshClsn8IsOnWallEv(clsn) != 0)
-            mPrevAngleY = _ZN5Actor12ReflectAngleE5Fix12IiES1_s(
+            mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(
                 this, mWallNormalX, mWallNormalZ, mPrevAngleY);
     }
 

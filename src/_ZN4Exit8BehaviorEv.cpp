@@ -38,10 +38,10 @@ extern int _ZN6Player12Unk_020c9e5cEh(void *p, int a);
 extern void StartExitFaderWipe(int a);
 extern void _ZN6Camera9SetFlag_3Ev(void *cam);
 extern void _ZN6Player17SetNoControlStateEhih(void *p, int a, int b, int d);
-extern char *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *prev);
+extern char *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *prev);
 extern int Vec3_Dist(void *a, void *b);
 extern void func_02012790(int id);
-extern void _ZN6Camera10LookAtExitER5Actor(void *cam, void *a);
+extern void _ZN6Camera10LookAtExitER8dActor_c(void *cam, void *a);
 
 extern unsigned char data_0209f250;
 extern char *data_0209f394[];
@@ -103,11 +103,11 @@ int Exit::Behavior()
                                         func_ov002_020b0a0c(this);
                                         StartExitFaderWipe(5);
                                         _ZN6Camera9SetFlag_3Ev(cam);
-                                        o = _ZN5Actor15FindWithActorIDEjPS_(0x12a, 0);
+                                        o = _ZN8dActor_c15FindWithActorIDEjPS_(0x12a, 0);
                                         while (o != 0) {
                                             if (Vec3_Dist(o + 0x5c, &mPosX) < 0x12c000)
                                                 break;
-                                            o = _ZN5Actor15FindWithActorIDEjPS_(0x12a, o);
+                                            o = _ZN8dActor_c15FindWithActorIDEjPS_(0x12a, o);
                                         }
                                         if (o != 0) {
                                             func_02012790(0x16);
@@ -124,7 +124,7 @@ int Exit::Behavior()
                                             *(short *)(data_0209f5e8 + 0xc) = 0x7fff;
                                         }
                                         mHorzSpeed = out2[2];
-                                        _ZN6Camera10LookAtExitER5Actor(cam, this);
+                                        _ZN6Camera10LookAtExitER8dActor_c(cam, this);
                                         func_02012790(0x1e);
                                     }
                                 }

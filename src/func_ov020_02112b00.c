@@ -8,7 +8,7 @@ typedef struct { s32 x, y, z; } Vector3;
 extern void WithMeshClsn_UpdateContinuous_Veneer(void *);
 extern void func_ov020_02113148(void *, void *, void *, int, int, int, int);
 extern void func_0201267c(int, void *);
-extern void *_ZN5Actor13ClosestPlayerEv(void *);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *);
 extern void Vec3_Sub(Vector3 *res, const Vector3 *v0, const Vector3 *v1);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern s32 Vec3_HorzLen(const Vector3 *v0);
@@ -17,9 +17,9 @@ extern void func_ov020_021131f8(void *);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *);
 extern void *_ZNK12WithMeshClsn13GetWallResultEv(void *);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *, Vector3 *);
-extern int _ZN5Actor14GetSubtractionEss(void *, s16, s16);
+extern int _ZN8dActor_c14GetSubtractionEss(void *, s16, s16);
 extern void AddVec3(void *, void *, void *);
-extern void *_ZN5Actor10FindWithIDEj(u32);
+extern void *_ZN8dActor_c10FindWithIDEj(u32);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *, const Vector3 *, u32, int, u32, u32, u32);
 
 extern s16 data_02082214[];
@@ -55,7 +55,7 @@ void func_ov020_02112b00(char *c)
             if (ST->timer == 0) {
                 void *player;
                 func_0201267c(0x5d, c + 0x74);
-                player = _ZN5Actor13ClosestPlayerEv(c);
+                player = _ZN8dActor_c13ClosestPlayerEv(c);
                 if (player == 0)
                     return;
                 {
@@ -86,7 +86,7 @@ void func_ov020_02112b00(char *c)
                 void *wr = _ZNK12WithMeshClsn13GetWallResultEv(c + 0x1bc);
                 Vector3 normal;
                 _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wr + 4, &normal);
-                if (_ZN5Actor14GetSubtractionEss(c, *(s16 *)(c + 0x94),
+                if (_ZN8dActor_c14GetSubtractionEss(c, *(s16 *)(c + 0x94),
                         _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z)) > 0x4000) {
                     func_ov020_021131f8(c);
                 }
@@ -102,7 +102,7 @@ void func_ov020_02112b00(char *c)
         int b;
         if (id == 0)
             return;
-        a = _ZN5Actor10FindWithIDEj(id);
+        a = _ZN8dActor_c10FindWithIDEj(id);
         if (a == 0)
             return;
         b = (int)(*(u16 *)((char *)a + 0xc) == 0xbf);

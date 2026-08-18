@@ -1,5 +1,5 @@
 #include "types.h"
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern int _ZN6Player15IsCollectingCapEv(void* p);
 extern void _ZN6Player16InitWingFeathersEb(void* p, int b);
 extern void _ZN6Player16InitBalloonMarioEv(void* p);
@@ -13,7 +13,7 @@ void func_ov002_020b979c(char* self) {
     u32 id = *(u32*)(self + 0x1f0);
     if (id == 0) return;
 
-    other = (char*)_ZN5Actor10FindWithIDEj(id);
+    other = (char*)_ZN8dActor_c10FindWithIDEj(id);
     if (other == 0) return;
 
     {

@@ -1,7 +1,7 @@
 //cpp
 extern "C" void DeathTable_SetBit(int id);
 
-class Actor {
+class dActor_c {
 public:
     char pad[0xce];
     short deathTableId;
@@ -9,7 +9,7 @@ public:
     void TrackInDeathTable();
 };
 
-void Actor::TrackInDeathTable()
+void dActor_c::TrackInDeathTable()
 {
     DeathTable_SetBit(deathTableId);
 }

@@ -11,7 +11,7 @@ int *DorrieCap_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(388);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV9DorrieCap;
         func_ov001_020ab3c4((char *)p + 0xd4);
         _ZN5ModelC1Ev((char *)p + 0xf0);

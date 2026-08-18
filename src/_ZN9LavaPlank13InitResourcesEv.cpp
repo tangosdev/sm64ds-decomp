@@ -13,7 +13,7 @@ extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 extern int func_020393d4(void*, void*);
-extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 }
 
 int LavaPlank::InitResources()
@@ -26,7 +26,7 @@ int LavaPlank::InitResources()
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
   kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov022_02114618);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, data_ov064_0211ba6c);
-  func_020393d4(&mMeshCollider, &_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4(&mMeshCollider, &_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
   unk_320 = mPosY;
   unk_324 = mAngleX;
   return 1;

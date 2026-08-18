@@ -2,7 +2,7 @@
 extern "C" {
 int _ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn(void* self, void* wm);
 void _ZN9Animation7AdvanceEv(void* self);
-char* _ZN5Actor10FindWithIDEj(unsigned int id);
+char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN12dEnemyBase_c9SpawnCoinEv(void* self);
 void func_ov084_02129498(char* r0);
 void _ZN12CylinderClsn5ClearEv(void* self);
@@ -10,7 +10,7 @@ void _ZN12CylinderClsn6UpdateEv(void* self);
 void func_02012694(int a, void* p);
 void func_ov084_021296cc(char* c);
 void _ZN8CapEnemy15RespawnIfHasCapEv(void* self);
-void _ZN5Actor19UntrackInDeathTableEv(void* self);
+void _ZN8dActor_c19UntrackInDeathTableEv(void* self);
 extern int data_ov084_02130218[];
 
 int func_ov084_021298d0(char* c){
@@ -23,7 +23,7 @@ int func_ov084_021298d0(char* c){
     /* SpawnCoin only when linked actor is type 0xc6; flag+cylinder always when state==3 */
     unsigned int id = *(unsigned int*)(c + 0x1a4);
     if (id != 0) {
-        char* r = _ZN5Actor10FindWithIDEj(id);
+        char* r = _ZN8dActor_c10FindWithIDEj(id);
         if (r != 0) {
             int b = (*(unsigned short*)(r + 0xc) == 0xc6);
             if (b != 0) {
@@ -49,7 +49,7 @@ L_a4:
         _ZN8CapEnemy15RespawnIfHasCapEv(c);
     }
     if ((*(unsigned char*)(c + 0x113) & 0xf) < 6) {
-        _ZN5Actor19UntrackInDeathTableEv(c);
+        _ZN8dActor_c19UntrackInDeathTableEv(c);
     }
 L_end:
     return r4;

@@ -1,13 +1,13 @@
 //cpp
-/* Actor::HugeLandingDust(bool) at 0x0200fb4c, 0x38 bytes.
+/* dActor_c::HugeLandingDust(bool) at 0x0200fb4c, 0x38 bytes.
  *
  * The other half of the crossed pair: the `bl` at 0x0200fb74 targets
- * 0x0200fac4 = _ZN5Actor13LandingDustAtER7Vector3b. See
- * src/_ZN5Actor11LandingDustEb.cpp and include/Actor.h.
+ * 0x0200fac4 = _ZN8dActor_c13LandingDustAtER7Vector3b. See
+ * src/_ZN8dActor_c11LandingDustEb.cpp and include/dActor_c.h.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
-void Actor::HugeLandingDust(bool doRaycast)
+void dActor_c::HugeLandingDust(bool doRaycast)
 {
     Vector3 pos;
     pos.x = mPosX;

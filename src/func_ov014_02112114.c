@@ -1,4 +1,4 @@
-extern void *_ZN5Actor10FindWithIDEj(unsigned id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 extern void func_ov014_02111ebc(void *c, int i);
 extern int Vec3_HorzAngle(void *a, void *b);
 extern int AngleDiff(int a, int b);
@@ -18,7 +18,7 @@ void func_ov014_02112114(void *cc)
     id = *(int*)(c + 0x134);
     if (id == 0)
         return;
-    e = (char*)_ZN5Actor10FindWithIDEj(id);
+    e = (char*)_ZN8dActor_c10FindWithIDEj(id);
     if (e == 0)
         return;
 

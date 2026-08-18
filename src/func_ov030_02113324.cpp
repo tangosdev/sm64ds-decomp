@@ -2,7 +2,7 @@
 #include "types.h"
 #include "private/mtx43.h"
 
-extern "C" int _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* out, int doStore);
+extern "C" int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* out, int doStore);
 extern "C" int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" void func_ov030_021141a8(char* c, int v);
 extern "C" int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
@@ -51,7 +51,7 @@ do_raycast:
         v.x = *(int*)(other + 0x5c);
         v.y = vy;
         v.z = oz;
-        _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(c, &v, (Vector3*)(c + 0x5c), 1);
+        _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(c, &v, (Vector3*)(c + 0x5c), 1);
 
         if (Vec3_Dist((Vector3*)(c + 0x380), (Vector3*)(c + 0x5c)) < 0x514000 &&
             *(int*)(c + 0x60) > *(int*)(c + 0x384) - 0x12c000) {

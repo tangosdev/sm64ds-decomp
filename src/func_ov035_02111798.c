@@ -1,5 +1,5 @@
 extern void Matrix4x3_FromRotationY(void *m, short ang);
-extern int _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *mtx, int a, int b, int d, unsigned int e);
+extern int _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *mtx, int a, int b, int d, unsigned int e);
 extern short data_02082214[];
 int func_ov035_02111798(char *c) {
     int d1 = *(int*)(c+0x60) - *(int*)(c+0x324);
@@ -18,5 +18,5 @@ int func_ov035_02111798(char *c) {
     int s = data_02082214[(idx << 1) + 1];
     int sa = s < 0 ? -s : s;
     int scaled = (int)(((long long)sa * 0x26c000 + 0x800) >> 12);
-    return _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(c, c+0x328, c+0x350, 0x12c000, 0x32000, scaled + 0x50000, 0xf);
+    return _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(c, c+0x328, c+0x350, 0x12c000, 0x32000, scaled + 0x50000, 0xf);
 }

@@ -7,7 +7,7 @@
 #pragma opt_loop_invariants off
 
 
-extern void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *prev);
+extern void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *prev);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
 extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 
@@ -33,7 +33,7 @@ int _ZN11SoundObject13InitResourcesEv(void *self)
     {
         while (1)
         {
-            a = _ZN5Actor15FindWithActorIDEjPS_(0x167, a);
+            a = _ZN8dActor_c15FindWithActorIDEjPS_(0x167, a);
             if (a == 0)
                 break;
             if (a != self)

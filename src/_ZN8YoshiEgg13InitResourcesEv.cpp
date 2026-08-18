@@ -22,14 +22,14 @@ extern char data_ov002_0210eb78[];
    functions -- see the note in include/ShadowModel.h about CW homing class-typed
    by-value parameters. A CALL is unaffected, it emits the same symbol either way.
    extern "C" so the reference is mangled once and not twice. */
-void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
-        MovingCylinderClsn *self, Actor *actor, int radius, int height, u32 d, u32 e);
-void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
-        WithMeshClsn *self, Actor *actor, int radius, int height, void *a, void *b);
+void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+        MovingCylinderClsn *self, dActor_c *actor, int radius, int height, u32 d, u32 e);
+void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+        WithMeshClsn *self, dActor_c *actor, int radius, int height, void *a, void *b);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
         ModelAnim *self, void *animFile, int flags, int speed, u32 startFrame);
 
-unsigned char _ZN5Actor9TrackStarEjj(Actor *self, u32 star, u32 kind);
+unsigned char _ZN8dActor_c9TrackStarEjj(dActor_c *self, u32 star, u32 kind);
 
 int func_ov002_020ec654(void *self);
 int func_ov002_020ec628(void *self);
@@ -82,18 +82,18 @@ int YoshiEgg::InitResources()
         mScaleX = 0x1000;
         mScaleY = 0x1000;
         mScaleZ = 0x1000;
-        _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
+        _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
             &mMovingCylinderClsn, this, 0x46000, 0x8c000, 0x200002, 0xa08000);
-        _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+        _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
             &mWithMeshClsn, this, 0x28000, 0x28000, 0, 0);
         break;
     case 2:
         mScaleX = 0x2000;
         mScaleY = 0x2000;
         mScaleZ = 0x2000;
-        _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
+        _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
             &mMovingCylinderClsn, this, 0x78000, 0xa0000, 0x200002, 0xa08000);
-        _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+        _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
             &mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
         break;
     default:
@@ -114,6 +114,6 @@ int YoshiEgg::InitResources()
     if (func_ov002_020ec628((char *)this) != 0)
         LoadBlueCoinModel((char *)this);
     if (func_ov002_020ec610((char *)this) != 0)
-        mStarSlot = _ZN5Actor9TrackStarEjj(this, 0, 1);
+        mStarSlot = _ZN8dActor_c9TrackStarEjj(this, 0, 1);
     return 1;
 }

@@ -6,7 +6,7 @@
  *
  * Named from the table: 0x020b81e0 is the word slot 19 of
  * _ZTV15daObjMarioCap_c holds where _ZTV12dEnemyBase_c holds something else, so it is
- * this class's own override of the virtual Actor declares.
+ * this class's own override of the virtual dActor_c declares.
  *
  * THE OLD `recovered name:` COMMENT SAID WaterfallMist_OnTurnIntoEgg, WHICH IS
  * A DIFFERENT CLASS ENTIRELY -- the same header's own banner already records
@@ -16,7 +16,7 @@
  * daObjMarioCap_c's table, and 0x3f4 (mModelIndex) and 0x300 (mModelAnim) --
  * both read below -- are this class's own fields at this class's own offsets.
  *
- * The ROM returns nothing, but Actor declares slot 19 as `int` and the
+ * The ROM returns nothing, but dActor_c declares slot 19 as `int` and the
  * cartridge simply leaves r0 alone on the way out; the declared return type
  * is the ancestor's, and no value is produced here for the same reason.
  *

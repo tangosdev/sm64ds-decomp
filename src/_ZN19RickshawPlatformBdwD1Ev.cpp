@@ -4,7 +4,7 @@
  *
  * Three vtable stores: its own, daObjKuruma_c's -- inlined, that destructor is
  * defined in its class body -- then dBgActor_c's, then dBgActor_c's
- * MovingMeshCollider and Model, then Actor.
+ * MovingMeshCollider and Model, then dActor_c.
  */
 #include "RickshawPlatformBdw.h"
 

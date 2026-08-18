@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN5Actor17GetWaterHeightWDWEv
-/* Actor::GetWaterHeightWDW() at 0x02010b70.
+// @symbol _ZN8dActor_c17GetWaterHeightWDWEv
+/* dActor_c::GetWaterHeightWDW() at 0x02010b70.
  *
  * Normally the actor's own Y. In Wet-Dry World (level 0x15) and only for actors
  * that are not area-bound, the height instead comes from a three-entry table
  * indexed by the current water level.
  */
-#include "Actor.h"
+#include "dActor_c.h"
 
 extern "C" {
 extern signed char data_0209f2f8[];
@@ -14,7 +14,7 @@ extern unsigned char data_0209f2c0[];
 extern int data_02075244[];
 }
 
-s32 Actor::GetWaterHeightWDW()
+s32 dActor_c::GetWaterHeightWDW()
 {
     s32 ret = mPosY;
     if (data_0209f2f8[0] == 0x15 && mAreaId == 0) {

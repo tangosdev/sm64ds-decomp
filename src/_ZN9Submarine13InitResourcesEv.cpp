@@ -13,7 +13,7 @@ extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *);
 extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, int, void *, int, int, void *);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void *, void *);
+extern void _ZN16MeshColliderBase6EnableEP8dActor_c(void *, void *);
 extern char data_0209caa0[];
 }
 
@@ -29,6 +29,6 @@ s32 Submarine::InitResources() {
         c+0x124,(int)k,c+0x2ec,0x199,*(short*)(c+0x8e),(void*)data_ov026_02112fd4);
   }
   if(*(int*)(data_0209caa0+4) & 0x204) return 0;
-  _ZN16MeshColliderBase6EnableEP5Actor(c+0x124,c);
+  _ZN16MeshColliderBase6EnableEP8dActor_c(c+0x124,c);
   return 1;
 }

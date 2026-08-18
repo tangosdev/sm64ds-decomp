@@ -1,9 +1,9 @@
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_02035860(void* o, void* src);
 extern void func_ov002_020e9464(char* p);
 
 void func_ov002_020e7454(char* self) {
-    char* a = _ZN5Actor10FindWithIDEj(*(unsigned int*)(self + 0x434));
+    char* a = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(self + 0x434));
     int* s;
     *(unsigned short*)((int)((unsigned long long)(unsigned)(self + 0x4a2))) &= ~0x30;
     s = (int*)((int)(a + 0x5c));

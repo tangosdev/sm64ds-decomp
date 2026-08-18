@@ -8,7 +8,7 @@ extern "C" {
 extern unsigned char IsAreaShowing(int idx);
 extern void func_ov002_020ba01c(char *c, int mask, int b, int base, int target);
 extern void func_ov002_020ba4d8(char *c, int i);
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char *c);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
 extern int _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int id, int vol);
@@ -27,7 +27,7 @@ int StarSwitch::Behavior()
         unk_338 = 1;
         func_ov002_020ba01c(((char *)this), 2, 1, 0x333, 0x1000);
         func_ov002_020ba4d8(((char *)this), 0);
-        a = _ZN5Actor10FindWithIDEj(mTargetActorID);
+        a = _ZN8dActor_c10FindWithIDEj(mTargetActorID);
         if (a != 0) {
             func_ov002_020e6d88(a);
         }
@@ -37,7 +37,7 @@ int StarSwitch::Behavior()
         int isType = (int)(actorID == 0xc);
         if (isType != 0) {
             if (func_ov002_020b9f00(((char *)this)) != 0) {
-                a = _ZN5Actor10FindWithIDEj(mTargetActorID);
+                a = _ZN8dActor_c10FindWithIDEj(mTargetActorID);
                 if (a != 0) {
                     *(void **)((char *)&unk_348) = a;
                 }
@@ -55,7 +55,7 @@ int StarSwitch::Behavior()
             }
             return 1;
         }
-        if (_ZN5Actor10FindWithIDEj(id344) == 0) {
+        if (_ZN8dActor_c10FindWithIDEj(id344) == 0) {
             mTargetActorID = 0;
             (*(u8 *)&mAreaId) = unk_353;
             return 1;

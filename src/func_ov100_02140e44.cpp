@@ -5,17 +5,17 @@
 #include "common.h"
 extern "C" {
 void _Z14ApproachLinearRiii(int* p, int a, int b);
-void* _ZN5Actor13ClosestPlayerEv(void* self);
-s16 _ZN5Actor18HorzAngleToCPlayerEv(void* self);
+void* _ZN8dActor_c13ClosestPlayerEv(void* self);
+s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
 void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 s16 Vec3_VertAngle(void* v1, void* v0);
 void WithMeshClsn_UpdateContinuous_Veneer(void* c);
 int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
 int func_02035638(void* c);
-void* _ZN5Actor10FindWithIDEj(unsigned int id);
+void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, struct Vector3* pos, unsigned int a, int b, unsigned int c, unsigned int d, unsigned int e);
-void _ZN5Actor14TriplePoofDustEv(void* self);
+void _ZN8dActor_c14TriplePoofDustEv(void* self);
 void _ZN7fBase_c18MarkForDestructionEv(void* self);
 void _ZN12CylinderClsn5ClearEv(void* c);
 void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, struct Vector3* v);
@@ -48,9 +48,9 @@ extern "C" void func_ov100_02140e44(char* c)
 
     _Z14ApproachLinearRiii((int*)(c + 0x98), 0x14000, 0x1000);
 
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (player != 0) {
-        _Z14ApproachLinearRsss((s16*)(c + 0x94), _ZN5Actor18HorzAngleToCPlayerEv(c), 0x320);
+        _Z14ApproachLinearRsss((s16*)(c + 0x94), _ZN8dActor_c18HorzAngleToCPlayerEv(c), 0x320);
         _Z14ApproachLinearRsss((s16*)(c + 0x92), Vec3_VertAngle(c + 0x5c, (char*)player + 0x5c), 0x320);
     }
 
@@ -72,7 +72,7 @@ extern "C" void func_ov100_02140e44(char* c)
     }
 
     if (r5 != 0) {
-        void* a = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x3b8));
+        void* a = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x3b8));
         if (a != 0) {
             int isPlayer = (*(u16*)((char*)a + 0xc) == 0xbf);
             if (isPlayer != 0) {
@@ -85,7 +85,7 @@ extern "C" void func_ov100_02140e44(char* c)
         }
     }
 
-    _ZN5Actor14TriplePoofDustEv(c);
+    _ZN8dActor_c14TriplePoofDustEv(c);
     _ZN7fBase_c18MarkForDestructionEv(c);
 
 cylinder_only:

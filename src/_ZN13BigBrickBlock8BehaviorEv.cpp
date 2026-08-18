@@ -7,7 +7,7 @@
 #include "BigBrickBlock.h"
 #include "MeshColliderBase.h"
 extern "C" int _ZN5Event6GetBitEj(unsigned int a);
-extern "C" void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *after);
+extern "C" void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *after);
 extern "C" void func_020393a4(int *p, int v);
 extern "C" void func_02039394(int *p, int v);
 extern "C" void _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
@@ -23,7 +23,7 @@ int BigBrickBlock::Behavior()
             unsigned int id = 0xb;
             char *p;
             do {
-                *(void **)((char *)&mSwitch) = _ZN5Actor15FindWithActorIDEjPS_(id, *(void **)((char *)&mSwitch));
+                *(void **)((char *)&mSwitch) = _ZN8dActor_c15FindWithActorIDEjPS_(id, *(void **)((char *)&mSwitch));
                 p = *(char **)((char *)&mSwitch);
             } while (p == 0 || mEventID != *(u8 *)(p + 0x34e));
         }

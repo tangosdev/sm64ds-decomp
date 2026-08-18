@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
-extern int _ZN5Actor18HorzAngleToCPlayerEv(void* c);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void* c);
 extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern short Vec3_HorzAngle(const void* a, const void* b);
@@ -25,7 +25,7 @@ void func_ov034_02111a64(char* c)
     char* talk;
 
     _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x1000);
-    *(short*)(c + 0x8d8) = (short)_ZN5Actor18HorzAngleToCPlayerEv(c);
+    *(short*)(c + 0x8d8) = (short)_ZN8dActor_c18HorzAngleToCPlayerEv(c);
 
     talk = *(char**)(c + 0x8c8);
     st.x = *(int*)(c + 0x3cc);

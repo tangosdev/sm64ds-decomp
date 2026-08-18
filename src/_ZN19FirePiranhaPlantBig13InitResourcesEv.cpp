@@ -21,8 +21,8 @@
 
 extern "C" {
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, int b, unsigned int cc);
-void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *a, int r, int h, unsigned int e, unsigned int g);
-void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void *self, void *a, Vector3 *v, int r, int h, unsigned int e, unsigned int g);
+void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *a, int r, int h, unsigned int e, unsigned int g);
+void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *a, Vector3 *v, int r, int h, unsigned int e, unsigned int g);
 void LoadBlueCoinModel(void *c);
 
 extern SharedFilePtr data_ov084_02130dfc;
@@ -49,13 +49,13 @@ int FirePiranhaPlantBig::InitResources()
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
         &mModelAnim, data_ov084_02130df4.file, 0x40000000, 0x1000, 0);
 
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
         &mMovingCylinderClsn, this, 0, 0, 0x200001, 0x66fe0);
 
     v.x = 0;
     v.y = 0;
     v.z = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         &mMovingCylinderClsnWithPos, this, &v, 0x4b000, 0x64000, 0x200002, 0x66fe0);
 
     mScale = 0;

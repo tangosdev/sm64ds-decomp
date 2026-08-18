@@ -17,7 +17,7 @@
  * matrix built from the eased yaw and pitch turns a fixed 0xa000 forward vector
  * into a velocity written across 0x0a4..0x0b0 -- and only then is gravity
  * applied to its y, as max(mTerminalVelocity, mVertSpeed + mVertAccel). See MantaRay.h: those
- * are Actor's speed slots, repurposed as a vector.
+ * are dActor_c's speed slots, repurposed as a vector.
  */
 #include "MantaRay.h"
 struct C3;
@@ -40,7 +40,7 @@ short Vec3_VertAngle(Vector3* v0, Vector3* v1);
 void Matrix4x3_FromRotationY(void* m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angle);
 void MulVec3Mat4x3(Vector3* v, void* m, Vector3* out);
-void _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(void* thiz, void* clsn);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void* thiz, void* clsn);
 void func_ov090_02132b14(void* c);
 void _ZN12CylinderClsn5ClearEv(void* c);
 void _ZN12CylinderClsn6UpdateEv(void* c);
@@ -94,7 +94,7 @@ int MantaRay::Behavior()
         mVertSpeed = m2;
         unk_0ac = ac;
     }
-    _ZN5Actor22UpdatePosWithOnlySpeedEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
     func_ov090_02132b14(c);
     _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsnWithPos);
     _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsnWithPos);

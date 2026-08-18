@@ -11,7 +11,7 @@ int *TreasureChest_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(376);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV13TreasureChest;
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0x138);
