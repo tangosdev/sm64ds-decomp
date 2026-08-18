@@ -4909,7 +4909,7 @@ src/_ZN9OneUpLogoD1Ev.cpp:
     complete
     .text start:0x020f0dd0 end:0x020f0e08
 
-src/_ZN9OneUpLogoD0Ev.c:
+src/_ZN9OneUpLogoD0Ev.cpp:
     complete
     .text start:0x020f0e08 end:0x020f0e54
 
@@ -4917,7 +4917,7 @@ src/func_ov002_020f0e54.c:
     complete
     .text start:0x020f0e54 end:0x020f0e78
 
-src/_ZN9OneUpLogo16CleanupResourcesEv.c:
+src/_ZN9OneUpLogo16CleanupResourcesEv.cpp:
     complete
     .text start:0x020f0e78 end:0x020f0ea8
 
@@ -4925,7 +4925,7 @@ src/_ZN9OneUpLogo6RenderEv.cpp:
     complete
     .text start:0x020f0ea8 end:0x020f0f08
 
-src/_ZN9OneUpLogo8BehaviorEv.c:
+src/_ZN9OneUpLogo8BehaviorEv.cpp:
     complete
     .text start:0x020f0f08 end:0x020f107c
 
@@ -5056,7 +5056,7 @@ src/_ZN8MugenBgmD1Ev.cpp:
     complete
     .text start:0x020f1bc4 end:0x020f1be8
 
-src/_ZN8MugenBgmD0Ev.c:
+src/_ZN8MugenBgmD0Ev.cpp:
     complete
     .text start:0x020f1be8 end:0x020f1c20
 
@@ -5064,15 +5064,15 @@ src/func_ov002_020f1c20.c:
     complete
     .text start:0x020f1c20 end:0x020f1c50
 
-src/_ZN8MugenBgm16CleanupResourcesEv.c:
+src/_ZN8MugenBgm16CleanupResourcesEv.cpp:
     complete
     .text start:0x020f1c50 end:0x020f1c58
 
-src/_ZN8MugenBgm16OnPendingDestroyEv.c:
+src/_ZN8MugenBgm16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020f1c58 end:0x020f1c5c
 
-src/_ZN8MugenBgm6RenderEv.c:
+src/_ZN8MugenBgm6RenderEv.cpp:
     complete
     .text start:0x020f1c5c end:0x020f1c64
 
