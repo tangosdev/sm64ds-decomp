@@ -1,4 +1,6 @@
 //cpp
+// @symbol _ZN12MetalNetLift8BehaviorEv
+#include "MetalNetLift.h"
 struct C;
 typedef void (C::*PMF)();
 struct Entry { PMF pmf; };
@@ -11,7 +13,8 @@ extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 }
 
-extern "C" int func_ov064_02117d24(char* c) {
+s32 MetalNetLift::Behavior() {
+    char* c = (char*)this;
     int idx = *(unsigned char*)(c + 0x33b);
     (((C*)c)->*data_ov064_0211c750[idx].pmf)();
     unsigned short* p338 = (unsigned short*)(c + 0x338);
