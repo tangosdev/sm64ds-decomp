@@ -772,11 +772,11 @@ src/MegaMushroomTag_Spawn.c:
     complete
     .text start:0x020b4a38 end:0x020b4a70
 
-src/func_ov002_020b4a70.c:
+src/_ZN13daObjDorifu_cD0Ev.cpp:
     complete
     .text start:0x020b4a70 end:0x020b4af8
 
-src/func_ov002_020b4af8.c:
+src/_ZN13daObjDorifu_cD1Ev.cpp:
     complete
     .text start:0x020b4af8 end:0x020b4b6c
 
@@ -880,11 +880,11 @@ src/RedFlame_Spawn.c:
     complete
     .text start:0x020b59e0 end:0x020b5a18
 
-src/func_ov002_020b5a18.c:
+src/_ZN17daObjFloatBoard_cD0Ev.cpp:
     complete
     .text start:0x020b5a18 end:0x020b5a70
 
-src/func_ov002_020b5a70.c:
+src/_ZN17daObjFloatBoard_cD1Ev.cpp:
     complete
     .text start:0x020b5a70 end:0x020b5ab4
 
@@ -920,11 +920,11 @@ src/func_ov002_020b5fc4.c:
     complete
     .text start:0x020b5fc4 end:0x020b5fd8
 
-src/func_ov002_020b5fd8.c:
+src/_ZN15daObjGuragura_cD0Ev.cpp:
     complete
     .text start:0x020b5fd8 end:0x020b6030
 
-src/func_ov002_020b6030.c:
+src/_ZN15daObjGuragura_cD1Ev.cpp:
     complete
     .text start:0x020b6030 end:0x020b6074
 
@@ -956,11 +956,11 @@ src/func_ov002_020b6374.c:
     complete
     .text start:0x020b6374 end:0x020b6388
 
-src/func_ov002_020b6388.c:
+src/_ZN14daObjUkiyuka_cD0Ev.cpp:
     complete
     .text start:0x020b6388 end:0x020b63e0
 
-src/func_ov002_020b63e0.c:
+src/_ZN14daObjUkiyuka_cD1Ev.cpp:
     complete
     .text start:0x020b63e0 end:0x020b6424
 
@@ -980,11 +980,11 @@ src/func_ov002_020b6584.c:
     complete
     .text start:0x020b6584 end:0x020b660c
 
-src/func_ov002_020b660c.c:
+src/_ZN16daObjKaitendai_cD0Ev.cpp:
     complete
     .text start:0x020b660c end:0x020b6664
 
-src/func_ov002_020b6664.c:
+src/_ZN16daObjKaitendai_cD1Ev.cpp:
     complete
     .text start:0x020b6664 end:0x020b66a8
 
@@ -1004,11 +1004,11 @@ src/func_ov002_020b676c.cpp:
     complete
     .text start:0x020b676c end:0x020b6814
 
-src/func_ov002_020b6814.c:
+src/_ZN13daObjKuruma_cD0Ev.cpp:
     complete
     .text start:0x020b6814 end:0x020b686c
 
-src/func_ov002_020b686c.c:
+src/_ZN13daObjKuruma_cD1Ev.cpp:
     complete
     .text start:0x020b686c end:0x020b68b0
 
@@ -1028,11 +1028,11 @@ src/func_ov002_020b6958.c:
     complete
     .text start:0x020b6958 end:0x020b69e4
 
-src/func_ov002_020b69e4.c:
+src/_ZN17daObjKurumajiku_cD0Ev.cpp:
     complete
     .text start:0x020b69e4 end:0x020b6a3c
 
-src/func_ov002_020b6a3c.c:
+src/_ZN17daObjKurumajiku_cD1Ev.cpp:
     complete
     .text start:0x020b6a3c end:0x020b6a80
 
@@ -1431,11 +1431,11 @@ src/ExclamationSwitch_Spawn.c:
     complete
     .text start:0x020baadc end:0x020bab0c
 
-src/func_ov002_020bab0c.c:
+src/_ZN13daObjSwdoor_cD0Ev.cpp:
     complete
     .text start:0x020bab0c end:0x020bab64
 
-src/func_ov002_020bab64.c:
+src/_ZN13daObjSwdoor_cD1Ev.cpp:
     complete
     .text start:0x020bab64 end:0x020baba8
 
