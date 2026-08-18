@@ -1,9 +1,8 @@
 //cpp
-// @symbol func_ov002_020b33dc
-// recovered name: daObjAbuku_c_Behavior
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN12daObjAbuku_c8BehaviorEv
+/* recovered: renamed to Class_Method, declarations from a shared header.
+ * Was func_ov002_020b33dc, vtable slot 6. */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
 /* daObjAbuku_c::Behavior - recovered from vtable slot identity */
 typedef long long s64;
 extern short data_02082214[];
@@ -16,7 +15,7 @@ extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Ca
 extern "C" void _ZN12CylinderClsn5ClearEv(char* cl);
 extern "C" void _ZN12CylinderClsn6UpdateEv(char* cl);
 
-extern "C" int func_ov002_020b33dc(char* self)
+extern "C" int _ZN12daObjAbuku_c8BehaviorEv(char* self)
 {
     *(short*)(((int)self + 0x10c)) += 0x400;
     int v = *(volatile unsigned short*)(self + 0x10c);

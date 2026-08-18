@@ -576,11 +576,11 @@ src/WingFeather_Spawn.c:
     complete
     .text start:0x020b3248 end:0x020b3298
 
-src/_ZN6BubbleD1Ev.c:
+src/_ZN12daObjAbuku_cD1Ev.c:
     complete
     .text start:0x020b3298 end:0x020b32c8
 
-src/_ZN6BubbleD0Ev.c:
+src/_ZN12daObjAbuku_cD0Ev.c:
     complete
     .text start:0x020b32c8 end:0x020b330c
 
@@ -592,15 +592,15 @@ src/func_ov002_020b3344.c:
     complete
     .text start:0x020b3344 end:0x020b33dc
 
-src/func_ov002_020b33dc.cpp:
+src/_ZN12daObjAbuku_c8BehaviorEv.cpp:
     complete
     .text start:0x020b33dc end:0x020b3518
 
-src/func_ov002_020b3518.cpp:
+src/_ZN12daObjAbuku_c13InitResourcesEv.cpp:
     complete
     .text start:0x020b3518 end:0x020b3568
 
-src/Bubble_Spawn.c:
+src/daObjAbuku_c_Spawn.c:
     complete
     .text start:0x020b3568 end:0x020b35a0
 
