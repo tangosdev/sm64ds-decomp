@@ -1,8 +1,8 @@
 _ZN25RotatingUpDownPlatformUtmD1Ev kind:function(arm,size=0x4c) addr:0x02130f00
 _ZN25RotatingUpDownPlatformUtmD0Ev kind:function(arm,size=0x60) addr:0x02130f4c
 func_ov091_02130fac kind:function(arm,size=0xc4) addr:0x02130fac
-func_ov091_02131070 kind:function(arm,size=0x8c) addr:0x02131070
-func_ov091_021310fc kind:function(arm,size=0x64) addr:0x021310fc
+_ZN25RotatingUpDownPlatformUtm4KillEv kind:function(arm,size=0x8c) addr:0x02131070
+_ZN25RotatingUpDownPlatformUtm15OnHitByMegaCharER6Player kind:function(arm,size=0x64) addr:0x021310fc
 func_ov091_02131160 kind:function(arm,size=0x1e0) addr:0x02131160
 func_ov091_02131340 kind:function(arm,size=0x48) addr:0x02131340
 _ZN25RotatingUpDownPlatformUtm16CleanupResourcesEv kind:function(arm,size=0x80) addr:0x02131388

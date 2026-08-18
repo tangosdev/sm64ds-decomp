@@ -58,10 +58,10 @@ int RotatingUpDownPlatformUtm::Behavior()
         return 1;
     }
 
-    if (mSpawnParam == 0xffff) {
+    if (param1 == 0xffff) {
         int is1d;
         r4 = 1;
-        is1d = mActorID;
+        is1d = actorID;
         is1d = (is1d == 0x1d);
         if (is1d != 0) {
             void *a;
@@ -90,7 +90,7 @@ int RotatingUpDownPlatformUtm::Behavior()
                     if (*(u8 *)((char *)a + 0x3a0) != 0 && *(u8 *)((char *)b + 0x3a0) != 0) {
                         r4 = 0;
                     }
-                    b8 = (unk_0b0 & 8) ? 1 : 0;
+                    b8 = (mFlags & 8) ? 1 : 0;
                     if (b8 != 0) {
                         if (_ZN8dActor_c13DistToCPlayerEv(((char *)this)) > 0x7d0000) {
                             char *p398 = *(char **)((char *)&mPlatform0);
@@ -109,7 +109,7 @@ int RotatingUpDownPlatformUtm::Behavior()
         }
         if (r4 != 0) {
             unk_378 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                unk_378, 3, 0x8d, (Vec3 *)((char *)&unk_074), 0);
+                unk_378, 3, 0x8d, (Vec3 *)((char *)&mCamSpacePosX), 0);
         }
         return 1;
     }
@@ -151,7 +151,7 @@ int RotatingUpDownPlatformUtm::Behavior()
     len2 = LenVec3(&sp28);
     fd = _ZN4cstd4fdivEii(len1 - len2, len1);
     {
-        s16 *b300 = (s16 *)((char *)&unk_300);
+        s16 *b300 = (s16 *)((char *)this + 0x300);
         int mul = *(s16 *)((char *)b300 + 0xa4);
         int base = *(s16 *)((char *)b300 + 0xa2);
         mAngleX = (s16)(base + (int)((short)(((long long)mul * fd + 0x800) >> 12)));
@@ -164,7 +164,7 @@ int RotatingUpDownPlatformUtm::Behavior()
         mPosZ = sp4C.z;
         {
             s16 *r2 = (s16 *)((char *)&unk_3a2);
-            s16 *b300 = (s16 *)((char *)&unk_300);
+            s16 *b300 = (s16 *)((char *)this + 0x300);
             r6 = 1;
             *r2 = (s16)(*r2 + *(s16 *)((char *)b300 + 0xa4));
         }
@@ -189,7 +189,7 @@ int RotatingUpDownPlatformUtm::Behavior()
     func_ov091_02131340(((char *)this));
 
     {
-    int is1e = mActorID;
+    int is1e = actorID;
     is1e = (is1e == 0x1e);
     if (is1e == 0) {
         func_ov091_02131160(((char *)this));
