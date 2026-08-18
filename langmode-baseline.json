@@ -45,15 +45,15 @@
       "method": {
         "draft": 7,
         "migrated": 2013,
-        "unmigrated": 374
+        "unmigrated": 385
       }
     },
-    "cpp_still_handspelled": 169,
-    "mangled_c": 539,
-    "mangled_cpp": 2653,
-    "mangled_total": 3192,
+    "cpp_still_handspelled": 174,
+    "mangled_c": 545,
+    "mangled_cpp": 2658,
+    "mangled_total": 3203,
     "nonmatching_drafts": 8,
-    "unmigrated_total": 708
+    "unmigrated_total": 719
   },
   "shadow_decls": {
     "local_body_no_include": 1398,
