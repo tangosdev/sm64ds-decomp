@@ -50,10 +50,10 @@ _ZN9LavaPlank6RenderEv kind:function(arm,size=0x28) addr:0x02112210
 _ZN9LavaPlank8BehaviorEv kind:function(arm,size=0x74) addr:0x02112238
 _ZN9LavaPlank13InitResourcesEv kind:function(arm,size=0xa4) addr:0x021122ac
 LavaPlank_Spawn kind:function(arm,size=0x30) addr:0x02112350
-func_ov022_02112380 kind:function(arm,size=0x50) addr:0x02112380
-func_ov022_021123d0 kind:function(arm,size=0x64) addr:0x021123d0
-func_ov022_02112434 kind:function(arm,size=0x14) addr:0x02112434
-func_ov022_02112448 kind:function(arm,size=0x14) addr:0x02112448
+_ZN20daObjFl_Fall_Block_cD1Ev kind:function(arm,size=0x50) addr:0x02112380
+_ZN20daObjFl_Fall_Block_cD0Ev kind:function(arm,size=0x64) addr:0x021123d0
+_ZN20daObjFl_Fall_Block_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02112434
+_ZN20daObjFl_Fall_Block_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x02112448
 FallBlockLll_Spawn kind:function(arm,size=0x3c) addr:0x0211245c
 _ZN13RollingLogLllD1Ev kind:function(arm,size=0x50) addr:0x02112498
 _ZN13RollingLogLllD0Ev kind:function(arm,size=0x64) addr:0x021124e8
@@ -237,7 +237,7 @@ _ZTI20daObjFl_Fall_Block_c kind:data(any) addr:0x02114270
 data_ov022_0211427c kind:data(any) addr:0x0211427c
 _ZTS20daObjFl_Fall_Block_c kind:data(any) addr:0x02114288
 FallBlockLll_SpawnInfo kind:data(any) addr:0x021142a0 ambiguous
-data_ov022_021142c4 kind:data(any) addr:0x021142c4
+_ZTV20daObjFl_Fall_Block_c kind:data(any) addr:0x021142c4
 data_ov022_0211433c kind:data(any) addr:0x0211433c ambiguous
 _ZTI15daObjFlMaruta_c kind:data(any) addr:0x02114344
 _ZTI13daObjMaruta_c kind:data(any) addr:0x02114350

@@ -1,10 +1,9 @@
-// @symbol func_ov022_02112448
-// recovered name: daObjFl_Fall_Block_c_InitResources
+// @symbol _ZN20daObjFl_Fall_Block_c13InitResourcesEv
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* daObjFl_Fall_Block_c::InitResources - recovered from vtable slot identity */
-int func_ov022_02112448(void *self)
+int _ZN20daObjFl_Fall_Block_c13InitResourcesEv(void *self)
 {
-    return func_0213a794(self, data_ov022_0211427c);
+    return func_ov098_0213a794(self, data_ov022_0211427c);
 }
