@@ -1,12 +1,11 @@
 #include "types.h"
-// @symbol func_ov007_020cc2cc
-// recovered name: dScDSMT_c_Behavior
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN9dScDSMT_c8BehaviorEv
+/* dScDSMT_c::Behavior() -- vtable slot 6. See include/dScDSMT_c.h. The
+ * SetFaders(c+0x54) call reaches into the same opaque unk_050 range the
+ * header documents. */
 #include "decl_Heap.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScDSMT_c::Behavior - recovered from vtable slot identity */
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
 extern int _ZN4Heap10SetDefaultEv(int heap);
@@ -16,7 +15,7 @@ extern void StartMinigameMenu(u8 returnToRecRoom);
 extern char* data_0209b33c;
 extern char data_0209caa0;
 
-int func_ov007_020cc2cc(char* c)
+int _ZN9dScDSMT_c8BehaviorEv(char* c)
 {
     int result;
 

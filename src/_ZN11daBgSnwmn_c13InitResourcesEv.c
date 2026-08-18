@@ -1,12 +1,13 @@
 #include "types.h"
-// @symbol func_ov072_02120a44
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN11daBgSnwmn_c13InitResourcesEv
+/* daBgSnwmn_c::InitResources() -- vtable slot 0. See include/daBgSnwmn_c.h.
+ * Plain C, so it cannot include that header (dActor_c-derived, C++-only) --
+ * a local, non-inheriting offset struct stands in instead. Every field it
+ * names below 0xd0 is inherited dActor_c (mPosX/Y/Z, mScaleX/Y/Z,
+ * mVertAccel, mTerminalVelocity, mAreaId -- see include/dActor_c.h and the
+ * header's derivation note); this class adds no field of its own below
+ * 0xd4. */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
-#include "daBgSnwmn_c.h"
-// recovered name: daBgSnwmn_c_InitResources
-/* recovered: renamed to Class_Method */
-/* daBgSnwmn_c::InitResources - recovered from vtable slot identity */
 extern int IsStarCollectedInLevel(s8 levelID, int starID);
 extern void _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, void *pos, void *ang, int a, int b);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
@@ -24,9 +25,25 @@ extern void _ZN13RaycastGroundD1Ev(void *self);
 
 extern int data_ov072_02122c70[];
 
-int func_ov072_02120a44(char *c)
+struct daBgSnwmn_c_shadow {
+    char pad_000[0x5c];
+    s32 unk_05c;
+    s32 unk_060;
+    s32 unk_064;
+    char pad_068[0x80 - 0x68];
+    s32 unk_080;
+    s32 unk_084;
+    s32 unk_088;
+    char pad_08c[0x9c - 0x8c];
+    s32 unk_09c;
+    s32 unk_0a0;
+    char pad_0a4[0xcc - 0xa4];
+    s8  unk_0cc;
+};
+
+int _ZN11daBgSnwmn_c13InitResourcesEv(char *c)
 {
-    struct daBgSnwmn_c *self = (struct daBgSnwmn_c *)(void *)c;
+    struct daBgSnwmn_c_shadow *self = (struct daBgSnwmn_c_shadow *)(void *)c;
     char rg[0x50];
     int v[3];
     void *m;

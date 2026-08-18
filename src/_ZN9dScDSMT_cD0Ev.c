@@ -1,10 +1,11 @@
-// @symbol func_ov007_020cc070
-/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN9dScDSMT_cD0Ev
+/* dScDSMT_c::~dScDSMT_c() (deleting / D0) -- vtable slots 16/17. Same
+ * teardown as D1, then deallocates. Plain C function carrying the literal
+ * mangled name -- see include/dScDSMT_c.h. */
 #include "decl_common.h"
-/* recovered: vtable identified, renamed to Class_Method */
 extern void _ZN7fBase_cD2Ev(void *);
 extern void *GAME_HEAP_PTR;
-int *func_ov007_020cc070(int *t)
+int *_ZN9dScDSMT_cD0Ev(int *t)
 {
     t[0] = (int)_ZTV9dScDSMT_c;
     func_02017254((char *)t + 0x54);
