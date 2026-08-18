@@ -3,12 +3,15 @@
  *
  * A bare `bx lr`. The base actor does not react to being kicked; leaf classes override.
  *
- * The declared `int` return is include/dActor_c.h's and is not observable here:
- * the ROM sets no r0, so `int` and `void` compile to the same one instruction.
- * See src/_ZN8dActor_c8OnPushedERS_.cpp for the full note.
+ * Declared `void` in include/dActor_c.h -- corrected from `int`, which was
+ * unfalsifiable here (the ROM sets no r0, one instruction either way) but
+ * proven wrong by BigBrickBlock::OnKicked (slot 24, ov002 0x020b36dc): that
+ * override has locals and early returns, where `int` vs `void` changes
+ * mwcc's register allocation even with r0 untouched. See
+ * include/BigBrickBlock.h.
  */
 #include "dActor_c.h"
 
-int dActor_c::OnKicked(dActor_c &kicker)
+void dActor_c::OnKicked(dActor_c &kicker)
 {
 }

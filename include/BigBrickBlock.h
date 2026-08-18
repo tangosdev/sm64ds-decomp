@@ -79,6 +79,25 @@ struct BigBrickBlock : dBgActor_c {
     int CleanupResources();
     int InitResources();
     int Render();
+
+    /* Slots 21-24 and 27, all dActor_c combat-callback overrides (see
+       include/dActor_c.h for the slot table). Attributed by the vtable, not
+       by the pre-migration `recovered name:` comments, which name the wrong
+       class one level down the tree (actor-class-names-off-by-one). None of
+       these is the key function: ~BigBrickBlock() above stays the first
+       out-of-line virtual, so these five TUs do not emit _ZTV13BigBrickBlock
+       -- checked with objisolate, not assumed.
+
+       OnKicked returns `void`, not `int`: this override is what proved
+       include/dActor_c.h's slot 24 declaration wrong (it has two locals and
+       two early returns, and mwcc allocates registers differently for `int`
+       vs `void` even though r0 is never touched) -- measured with
+       tools/mangle.py, not assumed. */
+    int OnGroundPounded(dActor_c &other);   /* slot 21 */
+    int OnAttacked1(dActor_c &other);       /* slot 22 */
+    int OnAttacked2(dActor_c &other);       /* slot 23 */
+    void OnKicked(dActor_c &other);         /* slot 24 */
+    int OnHitByMegaChar(Player &player);    /* slot 27 */
 };
 
 typedef char BigBrickBlock_size_must_be_0x330[sizeof(BigBrickBlock) == 0x330 ? 1 : -1];

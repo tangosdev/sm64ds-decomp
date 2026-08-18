@@ -155,7 +155,14 @@ struct dActor_c : dBase_c {
     virtual int  OnGroundPounded(dActor_c &other);        /* slot 21 */
     virtual int  OnAttacked1(dActor_c &other);            /* slot 22 */
     virtual int  OnAttacked2(dActor_c &other);            /* slot 23 */
-    virtual int  OnKicked(dActor_c &other);               /* slot 24 */
+    /* Declared `int` until BigBrickBlock::OnKicked (slot 24, ov002
+       0x020b36dc) made it falsifiable: that override has two locals and two
+       early returns, so `int` vs `void` produces different mwcc register
+       allocation even though neither reads or sets r0 -- measured, not
+       assumed (see include/BigBrickBlock.h). Same shape as slot 30's own
+       correction below: nothing in the tree reads this slot's return value,
+       so no caller could have contradicted the wrong type until now. */
+    virtual void OnKicked(dActor_c &other);               /* slot 24 */
     virtual int  OnPushed(dActor_c &other);               /* slot 25 */
     virtual int  OnHitByCannonBlastedChar(dActor_c &other); /* slot 26 */
     virtual int  OnHitByMegaChar(Player &player);      /* slot 27 */

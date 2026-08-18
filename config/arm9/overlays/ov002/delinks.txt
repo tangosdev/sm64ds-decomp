@@ -620,23 +620,23 @@ src/func_ov002_020b36a0.c:
     complete
     .text start:0x020b36a0 end:0x020b36b4
 
-src/func_ov002_020b36b4.cpp:
+src/_ZN13BigBrickBlock15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x020b36b4 end:0x020b36dc
 
-src/func_ov002_020b36dc.cpp:
+src/_ZN13BigBrickBlock8OnKickedER8dActor_c.cpp:
     complete
     .text start:0x020b36dc end:0x020b3788
 
-src/func_ov002_020b3788.cpp:
+src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp:
     complete
     .text start:0x020b3788 end:0x020b37ec
 
-src/func_ov002_020b37ec.c:
+src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp:
     complete
     .text start:0x020b37ec end:0x020b382c
 
-src/func_ov002_020b382c.cpp:
+src/_ZN13BigBrickBlock15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x020b382c end:0x020b38a0
 
