@@ -1,15 +1,15 @@
-// @symbol func_0202f428
+// @symbol _ZN7dWipe_c11AdvanceFadeEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_FaderColor.h"
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dWipe_c.h"
-// recovered name: dWipe_c_AdvanceFade
-/* recovered: renamed to Class_Method */
-/* dWipe_c::AdvanceFade - recovered from vtable slot identity */
+/* dWipe_c::AdvanceFade() -- vtable slot 2. Spelled as a plain C function
+ * carrying the literal mangled name (implicit `this` as the sole explicit
+ * param), matching the family convention -- see include/dWipe_c.h. */
 extern void _ZN3G2x18SetBlendBrightnessEPVtts(unsigned short *p, unsigned short a, int b);
 
-void func_0202f428(char *obj)
+void _ZN7dWipe_c11AdvanceFadeEv(char *obj)
 {
     struct dWipe_c *self = (struct dWipe_c *)(void *)obj;
     if (self->unk_014 == 1) {
