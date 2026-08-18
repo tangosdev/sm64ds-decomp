@@ -1,17 +1,17 @@
-// @symbol func_ov047_021111f0
+// @symbol _ZN21daObjKm3_Kurumajiku_cD0Ev
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_MovingMeshCollider.h"
 #include "decl_common.h"
-extern int data_ov047_021122a0[];
+extern int _ZTV21daObjKm3_Kurumajiku_c[];
 extern int _ZTV17daObjKurumajiku_c[];
 extern int _ZTV10dBgActor_c[];
 /* recovered: vtable identified, renamed to Class_Method */
 extern void *data_020a0eac;
-int *func_ov047_021111f0(int *t)
+int *_ZN21daObjKm3_Kurumajiku_cD0Ev(int *t)
 {
-    t[0] = (int)data_ov047_021122a0;
+    t[0] = (int)_ZTV21daObjKm3_Kurumajiku_c;
     t[0] = (int)_ZTV17daObjKurumajiku_c;
     t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);

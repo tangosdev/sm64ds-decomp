@@ -1,17 +1,17 @@
-func_ov047_021111a0 kind:function(arm,size=0x50) addr:0x021111a0
-func_ov047_021111f0 kind:function(arm,size=0x64) addr:0x021111f0
-func_ov047_02111254 kind:function(arm,size=0x14) addr:0x02111254
-func_ov047_02111268 kind:function(arm,size=0x18) addr:0x02111268
+_ZN21daObjKm3_Kurumajiku_cD1Ev kind:function(arm,size=0x50) addr:0x021111a0
+_ZN21daObjKm3_Kurumajiku_cD0Ev kind:function(arm,size=0x64) addr:0x021111f0
+_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111254
+_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv kind:function(arm,size=0x18) addr:0x02111268
 RickshawBs_Spawn kind:function(arm,size=0x3c) addr:0x02111280
 _ZN10RickshawBsD1Ev kind:function(arm,size=0x50) addr:0x021112bc
 _ZN10RickshawBsD0Ev kind:function(arm,size=0x64) addr:0x0211130c
 _ZN10RickshawBs16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x02111370
 _ZN10RickshawBs13InitResourcesEv kind:function(arm,size=0x38) addr:0x02111384
 func_ov047_021113bc kind:function(arm,size=0x3c) addr:0x021113bc
-func_ov047_021113f8 kind:function(arm,size=0x50) addr:0x021113f8
-func_ov047_02111448 kind:function(arm,size=0x64) addr:0x02111448
-func_ov047_021114ac kind:function(arm,size=0x14) addr:0x021114ac
-func_ov047_021114c0 kind:function(arm,size=0x14) addr:0x021114c0
+_ZN17daObjKm3_Kuruma_cD1Ev kind:function(arm,size=0x50) addr:0x021113f8
+_ZN17daObjKm3_Kuruma_cD0Ev kind:function(arm,size=0x64) addr:0x02111448
+_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv kind:function(arm,size=0x14) addr:0x021114ac
+_ZN17daObjKm3_Kuruma_c13InitResourcesEv kind:function(arm,size=0x14) addr:0x021114c0
 RickshawPlatformBs_Spawn kind:function(arm,size=0x3c) addr:0x021114d4
 _ZN18RickshawPlatformBsD1Ev kind:function(arm,size=0x80) addr:0x02111510
 _ZN18RickshawPlatformBsD0Ev kind:function(arm,size=0x94) addr:0x02111590
@@ -89,7 +89,7 @@ _ZTS21daObjKm3_Kurumajiku_c kind:data(any) addr:0x02112264
 RickshawBs_SpawnInfo kind:data(any) addr:0x0211227c ambiguous
 data_ov047_02112294 kind:data(any) addr:0x02112294 ambiguous
 data_ov047_0211229c kind:data(any) addr:0x0211229c ambiguous
-data_ov047_021122a0 kind:data(any) addr:0x021122a0
+_ZTV21daObjKm3_Kurumajiku_c kind:data(any) addr:0x021122a0
 data_ov047_02112320 kind:data(any) addr:0x02112320
 data_ov047_02112324 kind:data(any) addr:0x02112324
 _ZTI20daObjKm3_Kaitendai_c kind:data(any) addr:0x02112328
@@ -108,7 +108,7 @@ data_ov047_0211241c kind:data(any) addr:0x0211241c ambiguous
 RickshawPlatformBs_SpawnInfo kind:data(any) addr:0x02112428 ambiguous
 data_ov047_02112434 kind:data(any) addr:0x02112434 ambiguous
 data_ov047_02112438 kind:data(any) addr:0x02112438 ambiguous
-data_ov047_0211244c kind:data(any) addr:0x0211244c
+_ZTV17daObjKm3_Kuruma_c kind:data(any) addr:0x0211244c
 data_ov047_02112464 kind:data(any) addr:0x02112464 ambiguous
 data_ov047_02112494 kind:data(any) addr:0x02112494 ambiguous
 data_ov047_021124ac kind:data(any) addr:0x021124ac ambiguous
