@@ -31,6 +31,9 @@
 struct RickshawBdw : daObjKurumajiku_c {
     /* --- vtable --- */
     virtual ~RickshawBdw();            /* slots 16 (D1), 17 (D0) */
+
+    int InitResources();               /* slot  0 */
+    int CleanupResources();            /* slot  3 */
 };
 
 typedef char RickshawBdw_size_must_be_0x330[sizeof(RickshawBdw) == 0x330 ? 1 : -1];
