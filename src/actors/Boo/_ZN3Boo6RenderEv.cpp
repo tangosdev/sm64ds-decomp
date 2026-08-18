@@ -11,7 +11,7 @@ struct Model {
 struct Flags { unsigned short b0:1, b1:1, b2:1, b3:1; };
 
 extern "C" {
-void _ZN8CapEnemy14RenderCapModelEPK7Vector3(void *thiz, const void *v);
+void _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3(void *thiz, const void *v);
 void _ZN5Model12HideMaterialEii(void *thiz, int a, int b);
 void _ZN5Model6RenderEPK7Vector3(void *thiz, const void *v);
 }
@@ -29,7 +29,7 @@ int Boo::Render()
         if (f->b1) {
             ((Model *)((char *)&mModel))->Render((const Vector3 *)((char *)&unk_510));
         }
-        _ZN8CapEnemy14RenderCapModelEPK7Vector3(((char *)this), 0);
+        _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3(((char *)this), 0);
     }
 
     if (unk_5c8 < 8)

@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN8CapEnemy12Unk_02005d94Ev
+// @symbol _ZN11dCapEnemy_c12Unk_02005d94Ev
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "CapEnemy.h"
+#include "dCapEnemy_c.h"
 extern unsigned char data_0209f2d8;
 
-void CapEnemy::Unk_02005d94()
+void dCapEnemy_c::Unk_02005d94()
 {
     int b1;
     int b2;

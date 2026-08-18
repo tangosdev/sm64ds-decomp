@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN8CapEnemy6AddCapEj
+// @symbol _ZN11dCapEnemy_c6AddCapEj
 /* recovered: named members + shared header, real C++ method
  *
  * Gives this enemy a cap: picks the model, loads it, binds it, and clears the
@@ -15,7 +15,7 @@
  * and then releases `data_ov002_020ff028[6]` -- index SIX of a six-entry table, one
  * past the end. That is the ROM's own behaviour, reproduced as-is.
  */
-#include "CapEnemy.h"
+#include "dCapEnemy_c.h"
 
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
@@ -26,7 +26,7 @@ extern int func_02005e28(unsigned char *self);
 extern void *data_ov002_020ff028[];
 }
 
-int CapEnemy::AddCap(unsigned int param)
+int dCapEnemy_c::AddCap(unsigned int param)
 {
     unk_111 = 0;
     if (param >= 6) {

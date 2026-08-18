@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN6Goomba6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_CapEnemy.h"
+#include "decl_dCapEnemy_c.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Goomba.h"
@@ -47,6 +47,6 @@ int Goomba::Render()
     mScaleY = backup.y;
     mScaleZ = backup.z;
     _ZN15MaterialChanger6UpdateER15ModelComponents(((char*)this) + 0x3fc, ((char*)this) + 0x378);
-    _ZN8CapEnemy14RenderCapModelEPK7Vector3(((char*)this), 0);
+    _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3(((char*)this), 0);
     return 1;
 }

@@ -10,7 +10,7 @@ extern "C" dActor_c *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern "C" void UnloadBlueCoinModel(void *o);
 struct SharedFilePtr;
-extern "C" void _ZN8CapEnemy14UnloadCapModelEv(void *self);
+extern "C" void _ZN11dCapEnemy_c14UnloadCapModelEv(void *self);
 
 extern SharedFilePtr data_ov063_0211edec;
 extern SharedFilePtr data_ov063_0211edc4;
@@ -71,6 +71,6 @@ int Boo::CleanupResources()
             ((SharedFilePtr *)(&data_ov063_0211edcc))->Release();
         }
     }
-    _ZN8CapEnemy14UnloadCapModelEv(((O *)this));
+    _ZN11dCapEnemy_c14UnloadCapModelEv(((O *)this));
     return 1;
 }

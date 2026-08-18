@@ -7,7 +7,7 @@
 #include "SharedFilePtr.h"
 extern "C" {
 extern void UnloadBlueCoinModel(void* p);
-extern void _ZN8CapEnemy14UnloadCapModelEv(char* c);
+extern void _ZN11dCapEnemy_c14UnloadCapModelEv(char* c);
 extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 }
 extern char data_ov084_02130cf8[];
@@ -23,7 +23,7 @@ int Goomba::CleanupResources()
     ((SharedFilePtr *)(data_ov084_02130278[i]))->Release();
   if ((unsigned char)(unk_464 + 0xff) <= 1)
     UnloadSilverStarAndNumber();
-  _ZN8CapEnemy14UnloadCapModelEv(((char*)this));
+  _ZN11dCapEnemy_c14UnloadCapModelEv(((char*)this));
   if (mGoombaType == 3) {
     unsigned int id = unk_43c;
     if (id != 0) {

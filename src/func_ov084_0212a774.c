@@ -13,8 +13,8 @@ extern void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *self, void 
 extern void func_ov084_021296cc(char *c);
 extern void _ZN12dEnemyBase_c9SpawnCoinEv(void *self);
 extern void func_ov084_02129498(char *r0);
-extern void _ZN8CapEnemy10ReleaseCapERK7Vector3(void *self, const Vector3 *v);
-extern void _ZN8CapEnemy15RespawnIfHasCapEv(void *self);
+extern void _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(void *self, const Vector3 *v);
+extern void _ZN11dCapEnemy_c15RespawnIfHasCapEv(void *self);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void func_02012694(int a, void *p);
@@ -60,11 +60,11 @@ void func_ov084_0212a774(char *c)
             v.x = 0;
             v.y = 0x6c000;
             v.z = 0;
-            _ZN8CapEnemy10ReleaseCapERK7Vector3(c, &v);
+            _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &v);
             *(s32 *)(c + 0x5c) = *(s32 *)(c + 0x41c);
             *(s32 *)(c + 0x60) = *(s32 *)(c + 0x420);
             *(s32 *)(c + 0x64) = *(s32 *)(c + 0x424);
-            _ZN8CapEnemy15RespawnIfHasCapEv(c);
+            _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
         }
     }
     if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1b4) != 0) {

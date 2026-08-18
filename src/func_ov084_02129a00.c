@@ -5,7 +5,7 @@ typedef unsigned char u8;
 typedef struct Vector3 { int x, y, z; } Vector3;
 
 extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void *self, void *clsn);
-extern int _ZN8CapEnemy16GetCapEatenOffItERK7Vector3(void *self, Vector3 *v);
+extern int _ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3(void *self, Vector3 *v);
 extern void func_ov084_02129168(char *c, char *actor);
 extern void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void *bmd, void *bma);
 extern void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *m, void *f, int a, int fix, unsigned int j);
@@ -36,7 +36,7 @@ int func_ov084_02129a00(char *self) {
         v.x = 0;
         v.y = 0x6c000;
         v.z = 0;
-        if (_ZN8CapEnemy16GetCapEatenOffItERK7Vector3(self, &v) != 0) {
+        if (_ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3(self, &v) != 0) {
             func_ov084_02129168(self, actor);
             *(int *)(self + 0x98) = -0xf000;
             *(int *)(self + 0xa8) = 0x14000;

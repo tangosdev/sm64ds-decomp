@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN6Goomba8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_CapEnemy.h"
+#include "decl_dCapEnemy_c.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Goomba.h"
@@ -19,8 +19,8 @@ extern void _ZN8dActor_c8PoofDustEv(char* c);
 extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(char* c, Fix12 f);
 extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(char* c, void* w, void* m, u32 j);
 extern void func_ov084_02129498(char* c);
-extern void _ZN8CapEnemy10ReleaseCapERK7Vector3(char* c, Vector3* v);
-extern void _ZN8CapEnemy15RespawnIfHasCapEv(char* c);
+extern void _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(char* c, Vector3* v);
+extern void _ZN11dCapEnemy_c15RespawnIfHasCapEv(char* c);
 extern void func_ov084_021296cc(char* c);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(char* c, void* cyl);
@@ -43,7 +43,7 @@ int Goomba::Behavior()
 
     func_ov084_02129864(((char*)this));
     func_ov084_021290d4(((char*)this));
-    r = _ZN8CapEnemy11GetCapStateEv(((char*)this));
+    r = _ZN11dCapEnemy_c11GetCapStateEv(((char*)this));
     if (r == 0)
         return 1;
     if (r == 1) {
@@ -54,7 +54,7 @@ int Goomba::Behavior()
         unk_107 == 0 && mDeathType == 0 &&
         _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000) != 0)
     {
-        _ZN8CapEnemy12Unk_02005d94Ev(((char*)this));
+        _ZN11dCapEnemy_c12Unk_02005d94Ev(((char*)this));
         return 1;
     }
 
@@ -66,14 +66,14 @@ int Goomba::Behavior()
                 v1.x = 0;
                 v1.y = 0x6c000;
                 v1.z = 0;
-                _ZN8CapEnemy10ReleaseCapERK7Vector3(((char*)this), &v1);
+                _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(((char*)this), &v1);
                 mPosX = unk_41c;
                 mPosY = unk_420;
                 mPosZ = unk_424;
                 mAngleX = 0;
                 mAngleY = 0;
                 mAngleZ = 0;
-                _ZN8CapEnemy15RespawnIfHasCapEv(((char*)this));
+                _ZN11dCapEnemy_c15RespawnIfHasCapEv(((char*)this));
                 func_ov084_021296cc(((char*)this));
             }
             return 1;
@@ -180,11 +180,11 @@ int Goomba::Behavior()
                     v2.x = 0;
                     v2.y = 0x6c000;
                     v2.z = 0;
-                    _ZN8CapEnemy10ReleaseCapERK7Vector3(((char*)this), &v2);
+                    _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(((char*)this), &v2);
                     mPosX = unk_41c;
                     mPosY = unk_420;
                     mPosZ = unk_424;
-                    _ZN8CapEnemy15RespawnIfHasCapEv(((char*)this));
+                    _ZN11dCapEnemy_c15RespawnIfHasCapEv(((char*)this));
                     return 1;
                 }
             } else {

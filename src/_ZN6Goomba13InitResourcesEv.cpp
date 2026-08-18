@@ -25,8 +25,8 @@ int _ZN8dActor_c9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 void LoadSilverStarAndNumber(void);
 void* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-void _ZN8CapEnemy6AddCapEj(void* self, unsigned int x);
-int _ZN8CapEnemy21DestroyIfCapNotNeededEv(void* self);
+void _ZN11dCapEnemy_c6AddCapEj(void* self, unsigned int x);
+int _ZN11dCapEnemy_c21DestroyIfCapNotNeededEv(void* self);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 int _ZN11ShadowModel12InitCylinderEv(void* self);
 void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void* self, void* bma, int a, Fix12i b, unsigned int cc);
@@ -70,12 +70,12 @@ extern "C" int _ZN6Goomba13InitResourcesEv(char* c)
     for (i = 0; i < 7; i++)
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov084_02130278[i]);
 
-    _ZN8CapEnemy6AddCapEj(c, (unsigned char)(*(int*)(c + 8) & 0xf));
+    _ZN11dCapEnemy_c6AddCapEj(c, (unsigned char)(*(int*)(c + 8) & 0xf));
 
     if ((*(unsigned char*)(c + 0x113) & 0xf) < 6)
         *(int*)(c + 8) = *(int*)(c + 8) & 0xf0ff;
 
-    if (_ZN8CapEnemy21DestroyIfCapNotNeededEv(c) == 0)
+    if (_ZN11dCapEnemy_c21DestroyIfCapNotNeededEv(c) == 0)
         return 0;
 
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x370, data_ov084_02130cf8.file, 1, -1) == 0)

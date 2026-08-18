@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN8CapEnemy16GetCapEatenOffItERK7Vector3
+// @symbol _ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3
 /* recovered: named members + shared header, real C++ method
  *
  * Yoshi eats the cap off this enemy. ReleaseCap does the spawning; this
@@ -15,7 +15,7 @@
  *
  * The model is only re-bound for bank-0 caps (unk_110 == 0).
  */
-#include "CapEnemy.h"
+#include "dCapEnemy_c.h"
 
 struct dActor_c;
 
@@ -23,7 +23,7 @@ extern "C" {
 extern void func_ov001_020ab228(unsigned char *a, unsigned char *b, unsigned char idx, int e, unsigned char f);
 }
 
-int CapEnemy::GetCapEatenOffIt(const Vector3 & v_)
+int dCapEnemy_c::GetCapEatenOffIt(const Vector3 & v_)
 {
     unsigned char *c = (unsigned char *)this;
     const Vector3 *v = &v_;

@@ -2,7 +2,7 @@
 #include "types.h"
 extern "C" {
 void* _ZN7fBase_cnwEj(u32 sz);
-void _ZN8CapEnemyC2Ev(void* t);
+void _ZN11dCapEnemy_cC2Ev(void* t);
 void _ZN25MovingCylinderClsnWithPosC1Ev(void* t);
 void _ZN12WithMeshClsnC1Ev(void* t);
 void _ZN9ModelAnimC1Ev(void* t);
@@ -12,7 +12,7 @@ extern void* _ZTV3Boo;
 void* Boo_Spawn(void){
   char* t=(char*)_ZN7fBase_cnwEj(0x5e0);
   if(t){
-    _ZN8CapEnemyC2Ev(t);
+    _ZN11dCapEnemy_cC2Ev(t);
     *(void**)t = &_ZTV3Boo;
     _ZN25MovingCylinderClsnWithPosC1Ev(t+0x184);
     _ZN12WithMeshClsnC1Ev(t+0x1c4);

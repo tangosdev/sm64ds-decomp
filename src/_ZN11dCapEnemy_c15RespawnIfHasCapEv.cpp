@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN8CapEnemy15RespawnIfHasCapEv
+// @symbol _ZN11dCapEnemy_c15RespawnIfHasCapEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "CapEnemy.h"
+#include "dCapEnemy_c.h"
 struct dActor_c;
 
 extern "C" {
@@ -12,7 +12,7 @@ extern struct dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     const struct Vector3_16 *a4, int a5, int a6);
 }
 
-struct dActor_c * CapEnemy::RespawnIfHasCap()
+struct dActor_c * dCapEnemy_c::RespawnIfHasCap()
 {
     struct dActor_c *r;
     func_02005ed8(((unsigned char *)this));

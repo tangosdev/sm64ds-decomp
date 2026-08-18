@@ -9,7 +9,7 @@ void _ZN12CylinderClsn5ClearEv(void* self);
 void _ZN12CylinderClsn6UpdateEv(void* self);
 void func_02012694(int a, void* p);
 void func_ov084_021296cc(char* c);
-void _ZN8CapEnemy15RespawnIfHasCapEv(void* self);
+void _ZN11dCapEnemy_c15RespawnIfHasCapEv(void* self);
 void _ZN8dActor_c19UntrackInDeathTableEv(void* self);
 extern int data_ov084_02130218[];
 
@@ -46,7 +46,7 @@ L_a4:
         *(int*)(c + 0x5c) = *(int*)(c + 0x41c);
         *(int*)(c + 0x60) = *(int*)(c + 0x420);
         *(int*)(c + 0x64) = *(int*)(c + 0x424);
-        _ZN8CapEnemy15RespawnIfHasCapEv(c);
+        _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
     }
     if ((*(unsigned char*)(c + 0x113) & 0xf) < 6) {
         _ZN8dActor_c19UntrackInDeathTableEv(c);

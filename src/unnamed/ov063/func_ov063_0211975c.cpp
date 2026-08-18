@@ -3,7 +3,7 @@
 extern "C" int func_ov063_0211a3d0(void* p);
 extern "C" void func_0201267c(int a, char* b);
 extern "C" {
-extern char* _ZN8CapEnemy15RespawnIfHasCapEv(void* self);
+extern char* _ZN11dCapEnemy_c15RespawnIfHasCapEv(void* self);
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* self);
 }
 
@@ -24,7 +24,7 @@ extern "C" void func_ov063_0211975c(char* self) {
         *(s16*)(self + 0x8c) = src[0];
         *(s16*)(self + 0x8e) = src[1];
         *(s16*)(self + 0x90) = src[2];
-        char* r = (char*)_ZN8CapEnemy15RespawnIfHasCapEv(self);
+        char* r = (char*)_ZN11dCapEnemy_c15RespawnIfHasCapEv(self);
         if (r == 0) return;
         {
             u16* p = (u16*)(((int)r + 0x5d4));

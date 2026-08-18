@@ -20,7 +20,7 @@
  *
  * THE 0x3d0 MEMBER IS A CapIcon, and that is what this class was waiting on. Its
  * constructor and destructor are func_ov001_020ab3c4 / func_ov001_020ab3a0 -- the same
- * pair CapEnemy holds at its own 0x164, typed in include/CapIcon.h. Left as padding
+ * pair dCapEnemy_c holds at its own 0x164, typed in include/CapIcon.h. Left as padding
  * the destructor emits a short chain and comes out a different SIZE, which reads as
  * `999 word(s) differ` and looks like a total failure rather than one missing member.
  *
