@@ -35,6 +35,10 @@ struct DorrieCap {
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x140 */
     s32 unk_174;            /* 0x174 */
 #ifdef __cplusplus
+    /* --- vtable, own override --- */
+    int OnYoshiTryEat();              /* slot 18, include/dActor_c.h --
+                                          src/_ZN9DorrieCap13OnYoshiTryEatEv.c */
+
     /* methods */
     int Behavior();
     int InitResources();

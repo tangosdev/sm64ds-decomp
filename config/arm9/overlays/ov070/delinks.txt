@@ -196,7 +196,7 @@ src/_ZN10FlameChompD0Ev.c:
     complete
     .text start:0x02121160 end:0x021211bc
 
-src/func_ov070_021211bc.c:
+src/_ZN10FlameChomp13OnYoshiTryEatEv.c:
     complete
     .text start:0x021211bc end:0x021211c4
 
@@ -296,7 +296,7 @@ src/_ZN14FlameChompFireD0Ev.c:
     complete
     .text start:0x02121b88 end:0x02121bdc
 
-src/func_ov070_02121bdc.c:
+src/_ZN14FlameChompFire13OnYoshiTryEatEv.c:
     complete
     .text start:0x02121bdc end:0x02121be4
 

@@ -38,6 +38,10 @@ struct MrI_Projectile {
     s32 unk_32c;            /* 0x32c */
     s16 unk_330;            /* 0x330 */
 #ifdef __cplusplus
+    /* --- vtable, own override --- */
+    int OnYoshiTryEat();              /* slot 18, include/dActor_c.h --
+                                          src/_ZN14MrI_Projectile13OnYoshiTryEatEv.c */
+
     /* methods */
     int Behavior();
     int InitResources();
