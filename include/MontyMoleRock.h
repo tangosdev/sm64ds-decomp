@@ -29,6 +29,7 @@ struct MontyMoleRock : dEnemyBase_c {
     virtual ~MontyMoleRock();
 
     virtual s32 Behavior();
+    virtual s32 CleanupResources();
     virtual s32 InitResources();
     virtual s32 Render();
 };
