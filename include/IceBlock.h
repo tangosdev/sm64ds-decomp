@@ -18,6 +18,8 @@
 #include "dBgActor_c.h"
 #include "MovingCylinderClsn.h"
 
+struct Player;
+
 struct IceBlock : dBgActor_c {
     u8  pad_31e[0x2];
     MovingCylinderClsn mMovingCylinderClsn;/* 0x320 */
@@ -35,6 +37,7 @@ struct IceBlock : dBgActor_c {
     int CleanupResources();
     int InitResources();
     int Render();
+    virtual void OnHitByMegaChar(Player &player); /* slot 27 */
     /* THE VTABLE SAYS SO. _ZTV8IceBlock is ov081 0x02128cc4 and the word at
        +0x7c relocates to ov081 0x02127cf4, while _ZTV10dBgActor_c carries
        _ZN10dBgActor_c4KillEv at the same slot -- so this is this class's own

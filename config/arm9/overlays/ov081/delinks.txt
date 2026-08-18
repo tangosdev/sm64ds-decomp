@@ -407,7 +407,7 @@ src/func_ov081_02127be0.cpp:
     complete
     .text start:0x02127be0 end:0x02127ccc
 
-src/func_ov081_02127ccc.cpp:
+src/_ZN8IceBlock15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02127ccc end:0x02127cf4
 
