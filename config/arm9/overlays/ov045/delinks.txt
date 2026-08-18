@@ -116,11 +116,11 @@ src/_ZN16FloatingFloorBfsD0Ev.c:
     complete
     .text start:0x02111b64 end:0x02111bc8
 
-src/func_ov045_02111bc8.c:
+src/_ZN16FloatingFloorBfs16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111bc8 end:0x02111bdc
 
-src/func_ov045_02111bdc.c:
+src/_ZN16FloatingFloorBfs13InitResourcesEv.cpp:
     complete
     .text start:0x02111bdc end:0x02111bf4
 
