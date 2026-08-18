@@ -1,9 +1,18 @@
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int fix, int t, unsigned int e, unsigned int f);
-int _ZN9BlueFlame13InitResourcesEv(char *t)
+//cpp
+// @symbol _ZN9BlueFlame13InitResourcesEv
+
+#include "BlueFlame.h"
+
+extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+    void *self, dActor_c *actor, Fix12i radius, Fix12i height,
+    u32 flags, u32 vulnFlags);
+
+int BlueFlame::InitResources()
 {
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(t + 0xe4, t, 0x41000, 0x41000, 0x200002, 0x8000);
-    *(int *)(t + 0xd4) = *(int *)(t + 0x5c);
-    *(int *)(t + 0xd8) = *(int *)(t + 0x60);
-    *(int *)(t + 0xdc) = *(int *)(t + 0x64);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+        &mMovingCylinderClsn, this, 0x41000, 0x41000, 0x200002, 0x8000);
+    mFlamePos.x = mPosX;
+    mFlamePos.y = mPosY;
+    mFlamePos.z = mPosZ;
     return 1;
 }

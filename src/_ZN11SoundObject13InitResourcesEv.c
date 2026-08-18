@@ -1,31 +1,28 @@
+//cpp
 // @symbol _ZN11SoundObject13InitResourcesEv
-// recovered name: daSoundObj_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* daSoundObj_c::InitResources - recovered from vtable slot identity */
+#include "SoundObject.h"
+
 #pragma opt_loop_invariants off
 
+extern "C" void _ZN5Sound7PlaySubEjjj5Fix12IiEb(
+    u32 a, u32 b, u32 c, Fix12i d, bool e);
 
-extern void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *prev);
-extern void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
-extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
-
-int _ZN11SoundObject13InitResourcesEv(void *self)
+int SoundObject::InitResources()
 {
-    char *c = (char *)self;
-    void *a;
+    dActor_c *actor;
     int g;
 
-    if (*(unsigned int *)(c + 8) > 7)
+    if (param1 > 7)
         return 0;
 
-    *(int *)(c + 0xd4) = *(int *)((char *)data_ov002_0210c080 + *(unsigned int *)(c + 8) * 0xc);
-    *(int *)(c + 0xd8) = *(int *)((char *)data_ov002_0210c084 + *(unsigned int *)(c + 8) * 0xc);
-    *(short *)(c + 0xde) = *(unsigned short *)((char *)data_ov002_0210c088 + *(unsigned int *)(c + 8) * 0xc);
-    *(unsigned char *)(c + 0xe0) = *(unsigned char *)((char *)data_ov002_0210c08a + *(unsigned int *)(c + 8) * 0xc);
+    mLevelID = *(s32 *)((char *)data_ov002_0210c080 + param1 * 0xc);
+    mTimerThreshold = *(s32 *)((char *)data_ov002_0210c084 + param1 * 0xc);
+    mTimerReset = *(u16 *)((char *)data_ov002_0210c088 + param1 * 0xc);
+    unk_0e0 = *(u8 *)((char *)data_ov002_0210c08a + param1 * 0xc);
 
-    a = 0;
+    actor = 0;
     g = data_0208e430;
 
     if (g == 0x20 || g == 0x29 || g == 0x21 || g == 0x1e || g == 0x50 ||
@@ -33,18 +30,18 @@ int _ZN11SoundObject13InitResourcesEv(void *self)
     {
         while (1)
         {
-            a = _ZN8dActor_c15FindWithActorIDEjPS_(0x167, a);
-            if (a == 0)
+            actor = FindWithActorID(0x167, actor);
+            if (actor == 0)
                 break;
-            if (a != self)
+            if (actor != this)
             {
-                _ZN7fBase_c18MarkForDestructionEv(a);
+                actor->MarkForDestruction();
                 _ZN5Sound7PlaySubEjjj5Fix12IiEb(g, 0x7f, 0, 0x7f000, 0);
             }
         }
     }
 
-    *(short *)(c + 0xdc) = 0;
-    *(char *)(c + 0xcc) = -1;
+    mTimer = 0;
+    mAreaId = -1;
     return 1;
 }

@@ -17,9 +17,18 @@
  * is deliberately not redeclared here.
  */
 struct SoundObject : dActor_c {
-    u8  pad_0d0[0x14];
+    u8  pad_0d0[0x4];
+    s32 mLevelID;                /* 0x0d4 */
+    s32 mTimerThreshold;         /* 0x0d8 */
+    u16 mTimer;                  /* 0x0dc */
+    u16 mTimerReset;             /* 0x0de */
+    u8  unk_0e0;                 /* 0x0e0 */
+    u8  pad_0e1[0x3];
 
     virtual ~SoundObject();            /* slots 16 (D1), 17 (D0) */
+
+    int Behavior();
+    int InitResources();
 };
 
 typedef char SoundObject_size_must_be_0xe4[sizeof(SoundObject) == 0xe4 ? 1 : -1];

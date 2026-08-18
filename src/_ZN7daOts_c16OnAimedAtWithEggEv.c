@@ -1,22 +1,19 @@
+//cpp
 // @symbol _ZN7daOts_c16OnAimedAtWithEggEv
-// recovered name: daBDonketu_c_OnAimedAtWithEgg
-/* recovered: renamed to Class_Method */
-/* daBDonketu_c::OnAimedAtWithEgg - recovered from vtable slot identity */
-struct UnknownStruct {
-    char pad[0x24];
-    int value;
+
+#include "daOts_c.h"
+
+struct BullyResourceConfig {
+    u8 pad_00[0x24];
+    Fix12i eggAimSpeed;
 };
 
-struct Context {
-    char pad[0x330];
-    struct UnknownStruct* ptr;
-};
+int daOts_c::OnAimedAtWithEgg()
+{
+    BullyResourceConfig *config = (BullyResourceConfig *)mFileTable;
+    Fix12i aimSpeed = 0x14000;
+    if (config != 0)
+        aimSpeed = config->eggAimSpeed;
 
-int _ZN7daOts_c16OnAimedAtWithEggEv(void* c) {
-    struct UnknownStruct* r1 = ((struct Context*)c)->ptr;
-    int r0 = 0x14000;
-    if (r1 != 0) {
-        r0 = r1->value;
-    }
-    return r0;
+    return aimSpeed;
 }
