@@ -6,10 +6,9 @@
 #include "Scuttlebug.h"
 extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(void*);
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
-struct BMD_File; struct BCA_File; struct dActor_c; struct Vector3_16;
-/* ModelBase is the real class now, through this actor's header. */
-struct ShadowModel { int InitCylinder(); };
-struct WithMeshClsn { void StartDetectingWater(); };
+struct BMD_File; struct BCA_File; struct Vector3_16;
+/* ModelBase, ShadowModel and WithMeshClsn are the real classes now, through
+   this actor's header (Scuttlebug.h). */
 
 /* Declared by final name, not as members: both take Fix12<int> where these calls pass
    int literals, and Fix12<int> is an aggregate with no converting constructor from int.
