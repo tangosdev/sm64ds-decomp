@@ -1479,15 +1479,15 @@ src/func_ov002_020bb060.c:
     complete
     .text start:0x020bb060 end:0x020bb23c
 
-src/func_ov002_020bb23c.cpp:
+src/_ZN8SignPost11OnAttacked1ER8dActor_c.cpp:
     complete
     .text start:0x020bb23c end:0x020bb27c
 
-src/func_ov002_020bb27c.c:
+src/_ZN8SignPost15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x020bb27c end:0x020bb374
 
-src/func_ov002_020bb374.cpp:
+src/_ZN8SignPost15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x020bb374 end:0x020bb3b8
 
