@@ -405,6 +405,12 @@
     "src/_ZN9PowerStar13OnTurnIntoEggER6Player.c": "ruspecial",
     "src/_ZN9PowerStar13OnTurnIntoEggER6Player.cpp": "ruspecial",
     "src/_ZN9Spindrift13OnTurnIntoEggER6Player.c": "tangosdev",
-    "src/_ZN9Spindrift13OnTurnIntoEggER6Player.cpp": "tangosdev"
+    "src/_ZN9Spindrift13OnTurnIntoEggER6Player.cpp": "tangosdev",
+    "src/_ZN13PoleBillboard13InitResourcesEv.c": "tangosdev",
+    "src/_ZN13PoleBillboard13InitResourcesEv.cpp": "tangosdev",
+    "src/_ZN5Whomp25OnAimedAtWithEggReturnVecEv.c": "ruspecial",
+    "src/_ZN5Whomp25OnAimedAtWithEggReturnVecEv.cpp": "ruspecial",
+    "src/_ZN5Whomp15OnHitByMegaCharER6Player.c": "tangosdev",
+    "src/_ZN5Whomp15OnHitByMegaCharER6Player.cpp": "tangosdev"
   }
 }
