@@ -12,7 +12,7 @@ src/_ZN10SlidingIceD0Ev.cpp:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/func_ov027_0211123c.cpp:
+src/_ZN10SlidingIce15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x0211123c end:0x02111264
 

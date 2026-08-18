@@ -1,6 +1,6 @@
 _ZN10SlidingIceD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN10SlidingIceD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-func_ov027_0211123c kind:function(arm,size=0x28) addr:0x0211123c
+_ZN10SlidingIce15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x0211123c
 _ZN10SlidingIce16CleanupResourcesEv kind:function(arm,size=0x50) addr:0x02111264
 _ZN10SlidingIce6RenderEv kind:function(arm,size=0x50) addr:0x021112b4
 _ZN10SlidingIce8BehaviorEv kind:function(arm,size=0x13c) addr:0x02111304
