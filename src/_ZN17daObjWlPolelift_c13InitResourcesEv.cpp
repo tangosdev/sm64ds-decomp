@@ -1,11 +1,8 @@
 //cpp
-// @symbol func_ov026_02111598
-// recovered name: daObjWlPolelift_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN17daObjWlPolelift_c13InitResourcesEv
+/* daObjWlPolelift_c::InitResources -- recovered from vtable slot identity */
 #include "decl_PathPtr.h"
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* daObjWlPolelift_c::InitResources - recovered from vtable slot identity */
 struct V3 { int x,y,z; V3(){} V3(const V3&o){x=o.x;y=o.y;z=o.z;} };
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
@@ -15,7 +12,7 @@ extern void _ZN7PathPtr6FromIDEj(void*, unsigned int);
 extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void*, void*, V3*, int, int, unsigned int, unsigned int);
 extern int data_0209caa0[];
 extern void func_ov026_021112a4(char*);
-int func_ov026_02111598(char *c){
+int _ZN17daObjWlPolelift_c13InitResourcesEv(char *c){
   void *f = _ZN5Model8LoadFileER13SharedFilePtr((void*)data_ov026_02113ea0);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(c+0xd4, f, 1, -1);
   if((data_0209caa0[1] & 0x204) == 0) return 0;
