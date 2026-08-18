@@ -10,7 +10,7 @@ src/_ZN14ArrowSignRight6RenderEv.cpp
 src/_ZN10dBgActor_cC2Ev.c
 src/_ZN8dActor_cC2Ev.cpp
 # ActorBase C1 is hand-asm; the HAL carries the transcription
-src/_ZN7fBase_c9SceneNodeC1Ev.c
+src/actors/ActorBase_SceneNode.cpp
 src/func_0203b438.c
 src/func_02043810.c
 src/_ZN7fBase_cnwEj.cpp
@@ -39,7 +39,6 @@ src/LenVec3.c
 src/func_020396d0.c
 src/_ZN16MeshColliderBase6EnableEP8dActor_c.cpp
 src/_ZN8dActor_c13ClosestPlayerEv.cpp
-src/_ZN7fBase_c9SceneNode5ResetEv.c
 src/Matrix4x3_FromRotationY.c
 src/func_01ffb07c.cpp
 src/func_01ffb098.cpp

@@ -1,8 +1,9 @@
 //cpp
-/* SHADOW translation unit -- arm9 / fBase_c::SceneNode, the NESTED class.
+/* arm9 / fBase_c::SceneNode, the NESTED class -- the CANONICAL translation unit.
  *
- * NOT ENROLLED, AND NOT CANONICAL. The two one-function sources under src/
- * remain the enrolled owners of 0x0203b4ac..0x0203b4dc.
+ * Promoted by tools/tubuild.py promote: this file is the enrolled owner of
+ * .text 0x0203b4ac..0x0203b4dc (config/arm9/delinks.txt names it `complete`),
+ * replacing the two one-function sources that used to tile the range.
  *
  * WHY THIS IS A SEPARATE TU FROM fBase_c. These are the only two
  * _ZN7fBase_c* functions in the image that are NOT in the class's main run at
