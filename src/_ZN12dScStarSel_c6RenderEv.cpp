@@ -1,5 +1,8 @@
 //cpp
+// @symbol _ZN12dScStarSel_c6RenderEv
 // NONMATCHING: near-miss from DB (div=51)
+/* dScStarSel_c::Render() -- vtable slot 9. extern "C" carries the literal
+ * mangled name unmangled -- see include/dScStarSel_c.h. */
 struct VBase {
     virtual void v0();
     virtual void v1();
@@ -52,7 +55,7 @@ extern void *func_020abbf4;
 struct M { int w[12]; };
 extern struct M data_020a0e68;
 
-int func_ov003_020ae6f4(char *sl)
+int _ZN12dScStarSel_c6RenderEv(char *sl)
 {
     func_ov003_020ae238(sl);
     func_ov003_020ae0b0(sl);

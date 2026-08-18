@@ -1,7 +1,10 @@
 //cpp
+// @symbol _ZN12dScStarSel_c8BehaviorEv
 // NONMATCHING: different op / idiom (div=112). Logic verified correct vs ROM; not
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
 // Counts as decompiled, not matched.
+/* dScStarSel_c::Behavior() -- vtable slot 6. extern "C" carries the literal
+ * mangled name unmangled -- see include/dScStarSel_c.h. */
 struct Obj {
   virtual void v0(); virtual void v1(); virtual void v2();
   virtual void m_c(int a, int b);
@@ -40,7 +43,7 @@ extern unsigned char data_0209f1f0;
 #define U16(o) (*(unsigned short*)(c+(o)))
 #define S16(o) (*(short*)(c+(o)))
 
-extern "C" int func_ov003_020af038(char* c) {
+extern "C" int _ZN12dScStarSel_c8BehaviorEv(char* c) {
     if (data_0209f5bc->v5() != 0) {
         DecIfAbove0_Byte((unsigned char*)(c + 0x117));
         DecIfAbove0_Byte((unsigned char*)(c + 0x118));

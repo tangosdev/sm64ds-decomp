@@ -1,17 +1,16 @@
 //cpp
-// @symbol func_ov003_020af86c
-// recovered name: dScStarSel_c_CleanupResources
+// @symbol _ZN12dScStarSel_c16CleanupResourcesEv
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScStarSel_c::CleanupResources - recovered from vtable slot identity */
+/* dScStarSel_c::CleanupResources() -- vtable slot 3. extern "C" carries the
+ * literal mangled name unmangled -- see include/dScStarSel_c.h. */
 class Sound {
 public:
     static void UnsetPlayerVoiceGroup();
 };
 
 
-extern "C" int func_ov003_020af86c(void) {
+extern "C" int _ZN12dScStarSel_c16CleanupResourcesEv(void) {
     CleanCommonModelDataArr();
     Sound::UnsetPlayerVoiceGroup();
     unsigned short *p = (unsigned short *)0x4000304;

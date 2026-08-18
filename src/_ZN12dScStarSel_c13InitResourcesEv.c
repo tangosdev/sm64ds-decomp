@@ -1,4 +1,8 @@
+// @symbol _ZN12dScStarSel_c13InitResourcesEv
 // NONMATCHING: near-miss from DB (div=153)
+/* dScStarSel_c::InitResources() -- vtable slot 0. Plain C carries the
+ * literal mangled name with no mangling needed -- see
+ * include/dScStarSel_c.h. */
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;
@@ -72,7 +76,7 @@ extern s8 data_ov003_020b16c8[];
 extern s16 data_ov003_020b16e4[];
 extern u8 data_0209caa0[0x50];
 
-void func_ov003_020af8a0(void *arg0)
+void _ZN12dScStarSel_c13InitResourcesEv(void *arg0)
 {
     void *file;
     u8 level;
