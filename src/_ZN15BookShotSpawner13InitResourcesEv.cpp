@@ -13,7 +13,7 @@ extern int data_ov020_02114aa0[];
 
 int BookShotSpawner::InitResources()
 {
-    unk_0d4 = 0;
+    mSpawnTimer = 0;
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov020_02114aa0);
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov020_02114ab8);
     LoadBlueCoinModel(((char *)this));

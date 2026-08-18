@@ -1,7 +1,13 @@
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
+//cpp
+// @symbol _ZN5Cloud16CleanupResourcesEv
+
+#include "Cloud.h"
+#include "SharedFilePtr.h"
+
 extern int data_ov039_021118e4[];
-int _ZN5Cloud16CleanupResourcesEv(void)
+
+int Cloud::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov039_021118e4);
+    ((SharedFilePtr *)data_ov039_021118e4)->Release();
     return 1;
 }

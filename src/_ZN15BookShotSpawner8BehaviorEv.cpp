@@ -1,38 +1,38 @@
 //cpp
+#include "BookShotSpawner.h"
+#include "Player.h"
+
 extern "C" {
-struct Vector3 { int x, y, z; };
-struct Vector3_16 { short x, y, z; };
-extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern short Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
 extern int _ZN8dActor_c14GetSubtractionEss(void *thiz, short a, short b);
 extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const Vector3 *pos, const Vector3_16 *r, int e, int f);
+}
 
-int _ZN15BookShotSpawner8BehaviorEv(char *c)
+int BookShotSpawner::Behavior()
 {
-    if (*(unsigned short *)(c + 0xd4) > 0x28) {
-        char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
-        if (p != 0) {
+    if (mSpawnTimer > 0x28) {
+        Player *player = ClosestPlayer();
+        if (player != 0) {
 
             Vector3 tmp;
-            Vector3 *ps = (Vector3 *)(p + 0x5c);
+            Vector3 *ps = (Vector3 *)&player->mPosX;
             tmp = *ps;
 
-            if (Vec3_HorzDist((Vector3 *)(c + 0x5c), &tmp) < 0x258000) {
-                short angle = Vec3_HorzAngle((Vector3 *)(c + 0x5c), &tmp);
-                if (_ZN8dActor_c14GetSubtractionEss(c, *(short *)(c + 0x8e), angle) < 0x2000) {
-                    signed char sc = *(signed char *)(c + 0xcc);
+            if (Vec3_HorzDist((Vector3 *)&mPosX, &tmp) < 0x258000) {
+                short angle = Vec3_HorzAngle((Vector3 *)&mPosX, &tmp);
+                if (_ZN8dActor_c14GetSubtractionEss(this, mAngleY, angle) < 0x2000) {
+                    signed char sc = mAreaId;
                     _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-                        0x145, 0, (Vector3 *)(c + 0x5c), (Vector3_16 *)(c + 0x92),
+                        0x145, 0, (Vector3 *)&mPosX, (Vector3_16 *)&mPrevAngleX,
                         sc, -1);
-                    *(unsigned short *)(c + 0xd4) = 0;
+                    mSpawnTimer = 0;
                 }
             }
         }
     } else {
-        unsigned short *pt = (unsigned short *)((int)c + 0xd4);
-        *pt = *pt + 1;
+        u16 *timer = &mSpawnTimer;
+        *timer = *timer + 1;
     }
     return 1;
-}
 }
