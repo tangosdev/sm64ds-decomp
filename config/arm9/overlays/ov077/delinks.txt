@@ -8,7 +8,7 @@ src/_ZN6LakituD1Ev.cpp:
     complete
     .text start:0x02123740 end:0x02123798
 
-src/_ZN6LakituD0Ev.c:
+src/_ZN6LakituD0Ev.cpp:
     complete
     .text start:0x02123798 end:0x02123804
 
@@ -104,11 +104,11 @@ src/func_ov077_0212478c.c:
     complete
     .text start:0x0212478c end:0x021247a8
 
-src/_ZN6Lakitu16CleanupResourcesEv.c:
+src/_ZN6Lakitu16CleanupResourcesEv.cpp:
     complete
     .text start:0x021247a8 end:0x02124824
 
-src/_ZN6Lakitu16OnPendingDestroyEv.c:
+src/_ZN6Lakitu16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02124824 end:0x02124828
 
