@@ -27,7 +27,7 @@ int Coin::Behavior()
         *(unsigned char *)(((int)((char *)this) + 0x3ae)) &= ~2;
         _ZN5Sound9PlayBank3EjRK7Vector3(0x30, ((char *)this) + 0x74);
     }
-    if ((int)(mActorID == 0x122) != 0) {
+    if ((int)(actorID == 0x122) != 0) {
         if ((unsigned int)(unk_3ae << 0x1f) >> 0x1f)
             mAreaId = -1;
     }
@@ -42,9 +42,9 @@ int Coin::Behavior()
     mEatingPlayer = 0;
     if (func_ov002_020b19dc(((char *)this)) != 0) return 1;
     (((C *)((char *)this))->*data_ov002_0210dc70[mBehaviorType])();
-    if ((int)(data_0209f2d8 == 1) == 0 && (int)((unk_0b0 & 8) != 0) != 0) {
+    if ((int)(data_0209f2d8 == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
         _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
-        if (unk_3aa == 0 && LenVec3((char *)&unk_074) < 0x64000) {
+        if (unk_3aa == 0 && LenVec3((char *)&mCamSpacePosX) < 0x64000) {
             if (mCoinType != 1 || unk_3b0 == 0)
                 _ZN12CylinderClsn6UpdateEv((char *)&mCylinderClsn);
         }

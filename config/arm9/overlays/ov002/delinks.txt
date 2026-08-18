@@ -524,11 +524,11 @@ src/_ZN4Coin13InitResourcesEv.c:
     complete
     .text start:0x020b2508 end:0x020b2a34
 
-src/func_ov002_020b2a34.c:
+src/_ZN4Coin13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x020b2a34 end:0x020b2a90
 
-src/func_ov002_020b2a90.c:
+src/_ZN4Coin13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020b2a90 end:0x020b2a98
 
