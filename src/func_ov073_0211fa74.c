@@ -12,7 +12,7 @@ extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsig
 extern void* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void* prev);
 extern void func_02012694(int a, void* p);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void* self, void* pos);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern void* data_0209f318;
 
 int func_ov073_0211fa74(char* c) {
@@ -57,11 +57,11 @@ int func_ov073_0211fa74(char* c) {
         fp.y = *(int*)(pv + 4);
         fp.z = *(int*)(pv + 8);
         _ZN5Actor10PoofDustAtERK7Vector3(c, &fp);
-        _ZN9ActorBase18MarkForDestructionEv(found);
+        _ZN7fBase_c18MarkForDestructionEv(found);
     }
     if (spawned != 0) {
         *(int*)(((int)cam + 0x154)) &= ~8;
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
 end:
     return 1;

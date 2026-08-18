@@ -9,7 +9,7 @@
 /* resolved: VT0 = _ZTV17ExtendingPlatform */
 int *ExtendingPlatform_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(808);
+    int *p = (int *)_ZN7fBase_cnwEj(808);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV17ExtendingPlatform;

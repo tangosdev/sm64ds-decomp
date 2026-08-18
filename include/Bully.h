@@ -9,7 +9,7 @@
  * MovingCylinderClsn and the ShadowModel are all the base's, and Bully_Spawn proves
  * it by constructing them between the two vtable stores.
  *
- * SIZE 0x400, which is the literal in Bully_Spawn's ActorBase::operator new. The base
+ * SIZE 0x400, which is the literal in Bully_Spawn's fBase_c::operator new. The base
  * ends at 0x398, so everything below is Bully's own.
  */
 struct Bully : daOts_c {

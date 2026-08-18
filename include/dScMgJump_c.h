@@ -3,7 +3,7 @@
  * Its own vtable is ov006:0x0213cbe4.
  *
  * SIZE 0x5834, from MgBounceAndPounce_Spawn's own
- * `_ZN9ActorBasenwEj(0x5834)`. THAT FACTORY IS THIS CLASS'S, despite its
+ * `_ZN7fBase_cnwEj(0x5834)`. THAT FACTORY IS THIS CLASS'S, despite its
  * name: it writes dScMgD3DBase_c's vtable, then THIS class's, and
  * everything it builds after that derived vptr store belongs here. The
  * English name is kept because it is already attributed, the same

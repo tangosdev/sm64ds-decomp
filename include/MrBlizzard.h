@@ -50,7 +50,7 @@ struct MrBlizzard : dEnemyBase_c {
     int Render();
 
     /* Tail padding. The field span stops short of the real size: MrBlizzard_Spawn
-       calls ActorBase::operator new(0x46c), read off the retail
+       calls fBase_c::operator new(0x46c), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_458[0x14];      /* 0x458, to the ROM's 0x46c */
 };

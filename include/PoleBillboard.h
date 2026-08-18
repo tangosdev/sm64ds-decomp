@@ -7,7 +7,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   PoleBillboard_Spawn  ActorBase::operator new(292 = 0x124), Actor::Actor(), stores _ZTV13PoleBillboard,
+ *   PoleBillboard_Spawn  fBase_c::operator new(292 = 0x124), Actor::Actor(), stores _ZTV13PoleBillboard,
  *                 then the member below in this order.
  *   ~PoleBillboard   the same member destroyed in reverse, then ~Actor.
  *

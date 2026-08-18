@@ -24,7 +24,7 @@
  *   - unk_35c = ModelAnim.speed
  *
  * SIZE IS THE ROM'S OWN: `Rabbit_Spawn` calls
- * `ActorBase::operator new(1140)` -- 0x474 -- and stores this class's
+ * `fBase_c::operator new(1140)` -- 0x474 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   SkiLift_Spawn  ActorBase::operator new(852 = 0x354), dBgActor_c::dBgActor_c(), stores _ZTV7SkiLift,
+ *   SkiLift_Spawn  fBase_c::operator new(852 = 0x354), dBgActor_c::dBgActor_c(), stores _ZTV7SkiLift,
  *                 then the members below in this order.
  *   ~SkiLift   the same members destroyed in reverse, then ~dBgActor_c.
  *

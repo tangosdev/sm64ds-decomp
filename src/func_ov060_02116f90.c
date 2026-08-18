@@ -6,7 +6,7 @@ extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern int RandomIntInternal(int *seed);
 extern void func_ov060_02116518(char *self, u32 kind, int a2, int a3);
 extern void func_ov060_021172e0(void *self);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 extern int data_0209e650;
 
@@ -43,5 +43,5 @@ void func_ov060_02116f90(char *self) {
         }
     }
     if (*(int *)(self + 0x60) < 0)
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
 }

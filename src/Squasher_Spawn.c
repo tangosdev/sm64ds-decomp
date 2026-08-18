@@ -8,7 +8,7 @@
 /* resolved: VT0 = _ZTV8Squasher */
 int *Squasher_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(892);
+    int *p = (int *)_ZN7fBase_cnwEj(892);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV8Squasher;

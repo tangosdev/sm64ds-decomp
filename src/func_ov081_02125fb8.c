@@ -12,7 +12,7 @@ typedef struct Vector3 { int x, y, z; } Vector3;
 
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32, int, int, int);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3* pos, u32 a, int b, u32 c, u32 d, u32 e);
 extern void func_02012694(int a, void* b);
 
@@ -27,7 +27,7 @@ void func_ov081_02125fb8(void* thisp) {
     flags = *(int*)(self + 0x130);
     if ((flags & 0x10) || (flags & 0x40000)) {
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x11c, *(int*)(self+0x5c), *(int*)(self+0x60), *(int*)(self+0x64));
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
         return;
     }
     {
@@ -36,7 +36,7 @@ void func_ov081_02125fb8(void* thisp) {
             if (*(u8*)((char*)other + 0x6fb) != 0) return;
             if (*(u8*)((char*)other + 0x6f9) == 1) {
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x11c, *(int*)(self+0x5c), *(int*)(self+0x60), *(int*)(self+0x64));
-                _ZN9ActorBase18MarkForDestructionEv(self);
+                _ZN7fBase_c18MarkForDestructionEv(self);
                 return;
             }
             {
@@ -47,7 +47,7 @@ void func_ov081_02125fb8(void* thisp) {
                 _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(other, &pos, 1, 0xc000, 1, 0, 1);
                 func_02012694(0x3c, self + 0x74);
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x11c, *(int*)(self+0x5c), *(int*)(self+0x60), *(int*)(self+0x64));
-                _ZN9ActorBase18MarkForDestructionEv(self);
+                _ZN7fBase_c18MarkForDestructionEv(self);
                 return;
             }
         }

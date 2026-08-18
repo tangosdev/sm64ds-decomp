@@ -29,7 +29,7 @@
  * UpdateClsnPosAndRot, Render dispatches through the Model at 0xd4. Its own
  * destructor destroys only dBgActor_c's two members. And both factories,
  * RickshawPlatformBdw_Spawn and RickshawPlatformBs_Spawn, pass 800 = 0x320 to
- * ActorBase::operator new, which is sizeof(dBgActor_c) exactly: there is no room
+ * fBase_c::operator new, which is sizeof(dBgActor_c) exactly: there is no room
  * for a field anywhere in this class or in either leaf.
  */
 

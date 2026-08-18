@@ -19,7 +19,7 @@
  *     0x3d4 ShadowModel                0x28    -> 0x3fc
  *
  * SIZE IS THE ROM'S OWN: `PowerStar_Spawn` calls
- * `ActorBase::operator new(1220)` -- 0x4c4 -- and stores this class's
+ * `fBase_c::operator new(1220)` -- 0x4c4 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

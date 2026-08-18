@@ -13,13 +13,13 @@ namespace Sound { int PlaySecretSound(Actor *a, unsigned short *p); }
 struct Actor {
     static Actor *Spawn(unsigned int id, unsigned int param, const Vector3 &pos, const Vector3_16 *rot, signed char a, short b);
 };
-struct ActorBase {
+struct fBase_c {
     void MarkForDestruction();
 };
 
 extern "C" void func_020393a4(int *p, int v);
 
-struct dBgActor_c : ActorBase {
+struct dBgActor_c : fBase_c {
     int IsClsnInRange(int a, int b);
 };
 /* Signature deliberately copied from the local declaration above: the
@@ -43,7 +43,7 @@ extern "C" int _ZN12FortressWall8BehaviorEv(dBgActor_c *self) {
             pos.y += 0xc8000;
             Actor::Spawn(0xb2, *(unsigned char *)((char *)self + 0x31f) | 0x40,
                          pos, (Vector3_16 *)0, *(signed char *)((char *)self + 0xcc), -1);
-            ((ActorBase *)self)->MarkForDestruction();
+            ((fBase_c *)self)->MarkForDestruction();
         }
         return 1;
     }

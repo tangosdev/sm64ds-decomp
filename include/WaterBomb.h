@@ -18,7 +18,7 @@
  *     0x350 ShadowModel                0x28    -> 0x378
  *
  * SIZE IS THE ROM'S OWN: `WaterBomb_Spawn` calls
- * `ActorBase::operator new(972)` -- 0x3cc -- and stores this class's
+ * `fBase_c::operator new(972)` -- 0x3cc -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

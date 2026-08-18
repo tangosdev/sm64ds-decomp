@@ -72,7 +72,7 @@
  * 4. THE SOURCE ORDER THE REVERSAL IMPLIES IS A SENSIBLE FILE. Reversing the ROM
  *    address order yields BeforeInitResources/AfterInitResources, then the
  *    Cleanup pair, then Behavior, then Render -- each Before immediately before
- *    its After, the four groups in the order ActorBase declares them, and the
+ *    its After, the four groups in the order fBase_c declares them, and the
  *    destructor last. That is corroboration, not proof, but a wrong cut does not
  *    usually reverse into a tidy file.
  *
@@ -125,7 +125,7 @@
  *
  *   B. NAMING, AND NOT FIXABLE BY ATTRIBUTION AT ALL. The object also emits six
  *      STB_LOPROC RTTI records the audit calls HOMELESS: _ZTI/_ZTS for dScene_c,
- *      dBase_c, ActorBase, named in no symbols.txt anywhere. The reason is
+ *      dBase_c, fBase_c, named in no symbols.txt anywhere. The reason is
  *      that a _ZTS record's BYTES ARE THE CLASS NAME STRING, and this tree's
  *      names are coinages while the cartridge holds Nintendo's:
  *
@@ -137,7 +137,7 @@
  *      nothing drops them either. THE GENERAL RULE: no key-function TU can
  *      reach whole-range link-verified while its class name is a coinage. The
  *      only fix is renaming to the ROM's own names (dScene_c -> dScene_c,
- *      dBase_c -> dBase_c, ActorBase -> fBase_c, per include/dScene_c.h
+ *      dBase_c -> dBase_c, fBase_c -> fBase_c, per include/dScene_c.h
  *      reading 4), which is a separate tree-wide change.
  *
  * objisolate drops exactly that material per function, which is why --partial
@@ -154,7 +154,7 @@
  * side effect. That is expected and is inventoried by `tubuild.py compile`, not
  * licensed.
  */
-#include "Stage.h"        /* -> dScene_c.h -> dBase_c.h -> ActorBase.h, and the
+#include "Stage.h"        /* -> dScene_c.h -> dBase_c.h -> fBase_c.h, and the
                              Stage class SetVramBanks below is a member of */
 #include "FaderColor.h"   /* -> FaderBrightness.h -> Fader.h */
 
@@ -393,9 +393,9 @@ void dScene_c::Initialise3dGraphics()
 /* recovered: real C++ member, shared header.
  *
  * Non-virtual, and takes `this`: it publishes the scene as the current actor at
- * 0x0209f5c0 and hands the same pointer to ActorBase::BeforeInitResources.
+ * 0x0209f5c0 and hands the same pointer to fBase_c::BeforeInitResources.
  *
- * The qualified call is deliberate. ActorBase::BeforeInitResources is virtual and
+ * The qualified call is deliberate. fBase_c::BeforeInitResources is virtual and
  * dScene_c overrides it, so an unqualified call here would dispatch through the
  * vtable and land straight back in the caller -- infinite recursion. The ROM does
  * `bl 0x02043c78`, a direct call to the base implementation.
@@ -404,7 +404,7 @@ void dScene_c::Initialise3dGraphics()
 /* `extern` on every one of these -- a braced `extern "C" { }` is a linkage
    specification wrapped around a DEFINITION, not a declaration. */
 extern "C" {
-extern ActorBase *data_0209f5c0;
+extern fBase_c *data_0209f5c0;
 /* RECONCILED. Three of this TU's legacy files declared 0x0209f5e8 three
    different ways -- `FaderBrightness` (SetAndStopColorFader, which uses
    ::speed, and ResetFadersAndSound, which takes its address), `FaderColor`
@@ -429,7 +429,7 @@ extern void func_02011b7c(void);
 int dScene_c::ResetFadersAndSound()
 {
     data_0209f5c0 = this;
-    if (!ActorBase::BeforeInitResources())
+    if (!fBase_c::BeforeInitResources())
         return 0;
     SetFaders(&data_0209f5e8);
     data_0209f1e4 = 0;
@@ -460,7 +460,7 @@ bool dScene_c::BeforeInitResources()
 /* recovered: real C++ virtual override -- vtable slot 2.
  *
  * A tail call to dBase_c::AfterInitResources (0x02013ef4), not to
- * ActorBase's. Slot 2 is dBase_c's only FUNCTIONAL override, so a dScene_c
+ * fBase_c's. Slot 2 is dBase_c's only FUNCTIONAL override, so a dScene_c
  * forwarding here is a strong hint that dBase_c is a base -- a hint, not a
  * proof; the RTTI chain and the destructor's vptr sequence are what settle it.
  * See readings 3 and 4 in include/dScene_c.h.
@@ -475,7 +475,7 @@ void dScene_c::AfterInitResources(u32 vfSuccess)
 /* ------------------------------------------------------------------------- */
 /* recovered: real C++ virtual override -- vtable slot 4.
  *
- * Chains to ActorBase's, gives up if it fails, and otherwise tears down the
+ * Chains to fBase_c's, gives up if it fails, and otherwise tears down the
  * object at 0x0209b53c through 0x02011974. The early exit is a real early
  * return, not a predicated fall-through: the ROM ends the failing path with its
  * own `addeq sp,#4; ldmeq sp!,{lr}; bxeq lr` rather than branching to the tail.
@@ -487,7 +487,7 @@ extern void func_02011974(void *object);
 
 int dScene_c::BeforeCleanupResources()
 {
-    if (!ActorBase::BeforeCleanupResources())
+    if (!fBase_c::BeforeCleanupResources())
         return 0;
     func_02011974(&data_0209b53c);
     return 1;
@@ -516,7 +516,7 @@ void dScene_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess == 2)
         data_02092660 = 0;
-    ActorBase::AfterCleanupResources(vfSuccess);
+    fBase_c::AfterCleanupResources(vfSuccess);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -524,7 +524,7 @@ void dScene_c::AfterCleanupResources(u32 vfSuccess)
 /* ------------------------------------------------------------------------- */
 /* recovered: real C++ virtual override -- vtable slot 7.
  *
- * Chains to ActorBase's, then runs the scene-transition state machine: hold the
+ * Chains to fBase_c's, then runs the scene-transition state machine: hold the
  * screen while a fade is in flight, and once the brightness fader reaches the
  * end, queue the next scene and mark this one for destruction.
  *
@@ -582,12 +582,12 @@ extern u16  data_02092664;               /* pending scene ID; 0x187 means none *
 extern void func_02023544(void);
 extern void _ZN15FaderBrightness14SetForwardTimeEj(FaderBrightness *self, u32 frames);
 extern int  _ZN15FaderBrightness7IsAtEndEv(FaderBrightness *self);
-extern int  func_020431c4(ActorBase *self);
+extern int  func_020431c4(fBase_c *self);
 }
 
 int dScene_c::BeforeBehavior()
 {
-    if (!ActorBase::BeforeBehavior())
+    if (!fBase_c::BeforeBehavior())
         return 0;
 
     if (data_0209f1e0 != 0) {
@@ -636,13 +636,13 @@ int dScene_c::BeforeBehavior()
 /* ------------------------------------------------------------------------- */
 /* recovered: real C++ virtual override -- vtable slot 8.
  *
- * A tail call to ActorBase::AfterBehavior (0x02043af8); see AfterRender below
+ * A tail call to fBase_c::AfterBehavior (0x02043af8); see AfterRender below
  * for why that is three words and why the parameter type comes from the
  * target's declaration rather than from these bytes.
  */
 void dScene_c::AfterBehavior(u32 vfSuccess)
 {
-    ActorBase::AfterBehavior(vfSuccess);
+    fBase_c::AfterBehavior(vfSuccess);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -650,17 +650,17 @@ void dScene_c::AfterBehavior(u32 vfSuccess)
 /* ------------------------------------------------------------------------- */
 /* recovered: real C++ virtual override -- vtable slot 10.
  *
- * Chains to ActorBase's and narrows the result to 0 or 1. The narrowing is in
+ * Chains to fBase_c's and narrows the result to 0 or 1. The narrowing is in
  * the ROM, not invented here: after the call the bytes are `cmp r0,#0;
  * movne r0,#1; moveq r0,#0`, which is exactly what a `!= 0` costs and would be
  * absent if the result were returned unchanged.
  *
- * Return type is `int` because ActorBase declares slot 10 as `int`; an override
+ * Return type is `int` because fBase_c declares slot 10 as `int`; an override
  * whose return type differs is not an override at all, it is a nineteenth slot.
  */
 int dScene_c::BeforeRender()
 {
-    return ActorBase::BeforeRender() != 0;
+    return fBase_c::BeforeRender() != 0;
 }
 
 /* ------------------------------------------------------------------------- */
@@ -668,18 +668,18 @@ int dScene_c::BeforeRender()
 /* ------------------------------------------------------------------------- */
 /* recovered: real C++ virtual override -- vtable slot 11.
  *
- * The whole body is a tail call to ActorBase::AfterRender (0x02043ac4), which
+ * The whole body is a tail call to fBase_c::AfterRender (0x02043ac4), which
  * mwccarm emits under -interworking as `ldr ip,[pc]; bx ip; .word target`
  * rather than a plain `b`. The three-word shape is about interworking, not
  * distance: the target here is 87KB away, comfortably inside `b` range.
  *
  * The parameter type is NOT derived from these bytes -- it cannot be, because a
  * tail call never touches r0-r3, so any prototype at all would reproduce them.
- * It comes from the definition of the target, include/ActorBase.h slot 11.
+ * It comes from the definition of the target, include/fBase_c.h slot 11.
  */
 void dScene_c::AfterRender(u32 vfSuccess)
 {
-    ActorBase::AfterRender(vfSuccess);
+    fBase_c::AfterRender(vfSuccess);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -844,14 +844,14 @@ void dScene_c::SetAndStopColorFader()
  * The body is not here and must not be moved here. ~dScene_c() is defined in the
  * class body because Stage::~Stage and every one of dScene_c's other nine direct
  * children INLINE it -- the ROM's Stage destructor stores Stage's vptr, then
- * dScene_c's, then dBase_c's, then calls ActorBase's D2 directly, with no
+ * dScene_c's, then dBase_c's, then calls fBase_c's D2 directly, with no
  * call to a separate dScene_c::~dScene_c(). A compiler can only do that from a
  * visible body. The same relationship one level up is what gives dScene_c's own
  * destructor its two vptr stores:
  *
  *     str r2, [r4]        ; _ZTV8dScene_c
  *     str r1, [r4]        ; _ZTV7dBase_c   <- dBase_c's D2, INLINED
- *     bl  ActorBase::~ActorBase
+ *     bl  fBase_c::~fBase_c
  *
  * That second store exists only because ~dBase_c() is defined inline in
  * include/dBase_c.h. Outlining it would emit `bl _ZN7dBase_cD2Ev`
@@ -879,14 +879,14 @@ void dScene_c::SetAndStopColorFader()
  * ~dScene_c() is defined INLINE in include/dScene_c.h and must stay there: Stage and
  * every one of dScene_c's other nine direct children INLINE it -- the ROM's Stage
  * destructor stores Stage's vptr, then dScene_c's, then dBase_c's, then calls
- * ActorBase's D2 directly, with no call to a separate dScene_c::~dScene_c(). A
+ * fBase_c's D2 directly, with no call to a separate dScene_c::~dScene_c(). A
  * compiler can only do that from a visible body. The same relationship one level
  * up is what gives dScene_c's own destructor its TWO vptr stores, read here
  * word-by-word off the cartridge at 0x0202e140:
  *
  *     0202e150  e5842000   str r2, [r4]   ; r2 = 0x02092680 = _ZTV8dScene_c
  *     0202e154  e5841000   str r1, [r4]   ; r1 = 0x0208e4b8 = _ZTV7dBase_c
- *     0202e158  eb0056fa   bl  0x02043d48 ; _ZN9ActorBaseD2Ev
+ *     0202e158  eb0056fa   bl  0x02043d48 ; _ZN7fBase_cD2Ev
  *
  * The second store exists ONLY because ~dBase_c() is defined inline in
  * include/dBase_c.h. Outlining it emits `bl _ZN7dBase_cD2Ev` where

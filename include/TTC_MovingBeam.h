@@ -35,7 +35,7 @@ struct TTC_MovingBeam : dBgActor_c {
     int Render();
 
     /* Tail padding. The field span stops short of the real size: TTC_MovingBeam_Spawn
-       calls ActorBase::operator new(0x38c), read off the retail
+       calls fBase_c::operator new(0x38c), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_35c[0x30];      /* 0x35c, to the ROM's 0x38c */
 };

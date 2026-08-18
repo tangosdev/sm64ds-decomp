@@ -66,10 +66,10 @@ extern "C" {
 extern u8 data_0209caa0[];
 
 /* CONFLICT 2 -- data_0209f5c0's type.
- * Stage said `ActorBase *`, LoadEntranceObjects said `void *` and cast it back
- * to `ActorBase *` at the one place it used it. ActorBase * is the real type
+ * Stage said `fBase_c *`, LoadEntranceObjects said `void *` and cast it back
+ * to `fBase_c *` at the one place it used it. fBase_c * is the real type
  * (it is the parent handed to dBase_c::Spawn), so the cast disappears. */
-extern ActorBase *data_0209f5c0;
+extern fBase_c *data_0209f5c0;
 
 extern u8   data_0209f21c;
 extern u8   data_0209f220;

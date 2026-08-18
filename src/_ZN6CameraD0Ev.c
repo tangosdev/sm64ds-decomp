@@ -12,11 +12,11 @@ struct Camera {
 struct Heap;
 
 /* Reference symbols resolved from symbols/verified.tsv:
- *   0x02043d48 = ActorBase::~ActorBase  (base / complete-object destructor)
+ *   0x02043d48 = fBase_c::~fBase_c  (base / complete-object destructor)
  *   0x0203c1e8 = Memory::Deallocate(void*, Heap*)
  *   0x020a0eac = Memory::gameHeapPtr    (Heap*)
  * The three vtable literals are _ZTV6Camera / _ZTV4View / _ZTV7dBase_c. */
-extern void _ZN9ActorBaseD2Ev(struct Camera *self);                 /* _ZN9ActorBaseD2Ev */
+extern void _ZN7fBase_cD2Ev(struct Camera *self);                 /* _ZN7fBase_cD2Ev */
 extern void _ZN6Memory10DeallocateEPvP4Heap(void *ptr, struct Heap *heap);    /* _ZN6Memory10DeallocateEPvP4Heap */
 
 extern void *_ZTV6Camera;        /* _ZTV6Camera        */
@@ -28,7 +28,7 @@ struct Camera *_ZN6CameraD0Ev(struct Camera *self) {
     self->vtable = &_ZTV6Camera;
     self->vtable = &_ZTV4View;
     self->vtable = &data_0208e4b8;
-    _ZN9ActorBaseD2Ev(self);
+    _ZN7fBase_cD2Ev(self);
     _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac);
     return self;
 }

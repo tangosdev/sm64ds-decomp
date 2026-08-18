@@ -22,7 +22,7 @@ extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround
 extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
 extern "C" void _ZN5Actor8PoofDustEv(void* self);
 extern "C" void func_02012694(int a, void* b);
-extern "C" void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround* self);
 extern "C" void* _ZNK12WithMeshClsn14GetFloorResultEv(void* self);
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);
@@ -53,7 +53,7 @@ extern "C" void func_ov077_02124d08(char* a, char* w) {
             if (func_02037e20(rc.floor) != 0 && *(int*)(a+0x60) < rc.floor[(0x44-0x14)/4]) {
                 _ZN5Actor8PoofDustEv(a);
                 func_02012694(0xc4, a+0x74);
-                _ZN9ActorBase18MarkForDestructionEv(a);
+                _ZN7fBase_c18MarkForDestructionEv(a);
                 _ZN13RaycastGroundD1Ev(&rc);
                 return;
             }

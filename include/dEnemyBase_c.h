@@ -65,7 +65,7 @@ struct dEnemyBase_c : Actor {
 
     /* DECLARED, NEVER DEFINED HERE. Without it the compiler synthesises a
        constructor and inlines it into every subclass that has one, turning a
-       single `bl _ZN12dEnemyBase_cC2Ev` into the whole Actor/ActorBase vtable-store
+       single `bl _ZN12dEnemyBase_cC2Ev` into the whole Actor/fBase_c vtable-store
        chain written out in place. The ROM calls it at 0x020aed98. Same
        reasoning as the note on Model(); see include/Model.h. */
     dEnemyBase_c();

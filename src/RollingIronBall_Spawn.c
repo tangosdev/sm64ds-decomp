@@ -12,7 +12,7 @@
 extern void _ZN7PathPtrC1Ev(void *);
 int *RollingIronBall_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1020);
+    int *p = (int *)_ZN7fBase_cnwEj(1020);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV15RollingIronBall;

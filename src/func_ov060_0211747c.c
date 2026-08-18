@@ -2,7 +2,7 @@
 struct Vec3 { int x, y, z; };
 
 extern void *_ZN5Actor10FindWithIDEj(u32 id);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern int func_ov060_02111c68(char *c);
 extern int _ZNK9Animation13GetFrameCountEv(void *anim);
 extern u32 _ZN5Sound8PlayLongEjjjRK7Vector3s(u32 a, u32 b, u32 c, void *pos, u32 d);
@@ -27,7 +27,7 @@ void func_ov060_0211747c(char *self)
 
     o = (char *)_ZN5Actor10FindWithIDEj(*(u32 *)(self + 0x2cc));
     if (o == 0) {
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
         return;
     }
 

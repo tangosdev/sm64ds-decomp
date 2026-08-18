@@ -19,7 +19,7 @@
  * also rename things its callers spell.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `RollingRock_Spawn` calls
- * `ActorBase::operator new(968)` -- 0x3c8 -- and stores `_ZTV11RollingRock`,
+ * `fBase_c::operator new(968)` -- 0x3c8 -- and stores `_ZTV11RollingRock`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3c4; the difference is trailing space no source reads.
  */

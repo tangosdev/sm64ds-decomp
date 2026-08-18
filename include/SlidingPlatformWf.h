@@ -32,7 +32,7 @@ struct SlidingPlatformWf : dBgActor_c {
     int Render();
 
     /* Tail padding. The field span stops short of the real size: SlidingPlatformBdw_Spawn and SlidingPlatformBfsRectangle_Spawn
-       call ActorBase::operator new(0x330), read off the retail
+       call fBase_c::operator new(0x330), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_324[0xc];      /* 0x324, to the ROM's 0x330 */
 };

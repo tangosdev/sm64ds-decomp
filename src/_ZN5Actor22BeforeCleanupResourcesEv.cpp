@@ -2,7 +2,7 @@
 // @symbol _ZN5Actor22BeforeCleanupResourcesEv
 /* Actor::BeforeCleanupResources() at 0x02011220 -- vtable slot 4.
  *
- * Normalises the ActorBase result to 0 or 1.
+ * Normalises the fBase_c result to 0 or 1.
  *
  * Kept as a .c filename with the //cpp marker; see the note in
  * src/_ZN5Actor18AfterInitResourcesEj.c.
@@ -11,7 +11,7 @@
 
 int Actor::BeforeCleanupResources()
 {
-    if (ActorBase::BeforeCleanupResources() != 0)
+    if (fBase_c::BeforeCleanupResources() != 0)
         return 1;
     return 0;
 }

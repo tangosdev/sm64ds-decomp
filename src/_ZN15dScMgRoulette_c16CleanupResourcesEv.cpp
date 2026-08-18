@@ -6,7 +6,7 @@
  *
  * Named from the table: 0x0210980c is the word slot 3 of
  * _ZTV15dScMgRoulette_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual ActorBase declares.
+ * it is this class's own override of the virtual fBase_c declares.
  *
  * 0x530c falls inside the header's pad_52ac span, which has no named field
  * yet, so the one subobject this tears down is still reached by offset. */

@@ -9,7 +9,7 @@ extern int _ZTV15InvisibleSecret[];
 /* vtable identified: VT0 = _ZTV15InvisibleSecret */
 int *InvisibleSecret_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(276);
+    int *p = (int *)_ZN7fBase_cnwEj(276);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV15InvisibleSecret;

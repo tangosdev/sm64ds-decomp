@@ -9,7 +9,7 @@ extern int _ZTV4Door[];
 /* vtable identified: VT0 = _ZTV4Door */
 int *Door_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(328);
+    int *p = (int *)_ZN7fBase_cnwEj(328);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV4Door;

@@ -28,8 +28,8 @@
  * colliding with the copy the module's gap object already supplies from ROM
  * data. That is why the D0/D1/D2 bodies in this family were all C translation
  * units that never saw the class: no TU defined the key function, so no vtable
- * was ever emitted. Same arrangement as ActorBase::InitResources, see
- * include/ActorBase.h and PR #974.
+ * was ever emitted. Same arrangement as fBase_c::InitResources, see
+ * include/fBase_c.h and PR #974.
  *
  * tools/objisolate.py retired that constraint. It keeps the declared
  * function's .text, drops the vtable and typeinfo the TU emitted alongside it,

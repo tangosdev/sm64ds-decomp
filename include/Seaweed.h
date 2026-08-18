@@ -7,7 +7,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   Seaweed_Spawn  ActorBase::operator new(312 = 0x138), Actor::Actor(), stores _ZTV7Seaweed,
+ *   Seaweed_Spawn  fBase_c::operator new(312 = 0x138), Actor::Actor(), stores _ZTV7Seaweed,
  *                 then the member below in this order.
  *   ~Seaweed   the same member destroyed in reverse, then ~Actor.
  *

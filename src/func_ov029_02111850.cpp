@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 char* _ZN5Actor15FindWithActorIDEjPS_(unsigned int, void*);
-void _ZN9ActorBase18MarkForDestructionEv(void*);
+void _ZN7fBase_c18MarkForDestructionEv(void*);
 void func_ov029_02111850(char* c){
   char* a;
   if(*(int*)(c+0x158) != 0) return;
@@ -14,6 +14,6 @@ void func_ov029_02111850(char* c){
   *(int*)(c+0x158) = *(int*)(a+4);
 done:
   if(*(int*)(c+0x158) != 0) return;
-  _ZN9ActorBase18MarkForDestructionEv(c);
+  _ZN7fBase_c18MarkForDestructionEv(c);
 }
 }

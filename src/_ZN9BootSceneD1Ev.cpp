@@ -4,10 +4,10 @@
  *
  * The hand-written version this replaces spelled out three vptr stores --
  * dScBoot_c's own vtable, then _ZTV8dScene_c, then dBase_c's -- followed by
- * a call to ActorBase::~ActorBase. That is the chain with the two
+ * a call to fBase_c::~fBase_c. That is the chain with the two
  * intermediate destructors inlined: BootScene's own, then dScene_c's (which
  * itself inlines dBase_c's, see _ZN8dScene_cD1Ev.cpp), then a real call to
- * ActorBase's, because that one is not defined inline anywhere in the chain.
+ * fBase_c's, because that one is not defined inline anywhere in the chain.
  *
  * BootScene adds no members with destructors, so there is nothing between
  * them. It was also misnamed and miscounted before this slice -- see the

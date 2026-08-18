@@ -6,7 +6,7 @@
 /* dScMgMemory_c::InitResources -- vtable slot 0, ov006 0x020f53e4.
  *
  * Attributed by the vtable: dScMgMemory_c's own table is ov006 0x0213d1b8 and
- * its slot 0 relocates here. The signature is include/ActorBase.h's own slot
+ * its slot 0 relocates here. The signature is include/fBase_c.h's own slot
  * 0, `virtual s32 InitResources()`.
  *
  * unk_0a8, unk_0ac and unk_0b4 ARE dScMgBase_c'S, not this class's, which is

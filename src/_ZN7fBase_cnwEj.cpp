@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN9ActorBasenwEj
+// @symbol _ZN7fBase_cnwEj
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "ActorBase.h"
+#include "fBase_c.h"
 /* `data_020a0eac` used to be declared here as `extern Heap *`, with a local
-   `struct Heap;` to name the type. include/ActorBase.h now declares it -- it
-   needs it for the inline operator delete that lets a real ~ActorBase reproduce
+   `struct Heap;` to name the type. include/fBase_c.h now declares it -- it
+   needs it for the inline operator delete that lets a real ~fBase_c reproduce
    the ROM's deleting destructor -- using the `extern "C" void *` spelling
    include/Actor.h, include/dScene_c.h and include/dEnemyBase_c.h all already use. Two
    spellings of one name in one TU is exactly what mwcc rejects ("identifier
@@ -21,7 +21,7 @@
    same time. Bytes unchanged, 0x50/0x50, re-verified under the pin. */
 extern "C" void *_ZN6Memory8AllocateEjiP4Heap(unsigned int size, int align, void *heap);
 
-extern "C" void *_ZN9ActorBasenwEj(unsigned int size)
+extern "C" void *_ZN7fBase_cnwEj(unsigned int size)
 {
     void *p = _ZN6Memory8AllocateEjiP4Heap(size, -4, data_020a0eac);
     if (!p)

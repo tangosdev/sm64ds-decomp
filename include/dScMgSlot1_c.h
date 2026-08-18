@@ -74,7 +74,7 @@
  * address to a helper -- so all three stay raw padding.
  *
  * Field at `this+8` some of these methods read is INHERITED from further up
- * the hierarchy than dScMgBase_c (dScene_c/ActorBase level, well below where
+ * the hierarchy than dScMgBase_c (dScene_c/fBase_c level, well below where
  * dScMgBase_c's own fields start at 0x50) -- accessed via raw offset
  * arithmetic on a char* cast, not added as a named field anywhere.
  *
@@ -91,10 +91,10 @@
  * recovered on dScMgBase_c's own copy at the same two slots
  * (src/func_ov004_020af27c.cpp and .../func_ov004_020af04c.cpp, both of
  * which dScMgSlot1_c's own overrides call into), and on many unrelated
- * ActorBase descendants across other overlays -- a shared, fixed
+ * fBase_c descendants across other overlays -- a shared, fixed
  * collision-event slot pair used across both the Actor and dScene_c branches,
  * not a coincidence of numbering. Neither dScMgBase_c.h nor dScene_c.h/
- * ActorBase.h currently declares a slot at 27/28 for the dScene_c branch (they
+ * fBase_c.h currently declares a slot at 27/28 for the dScene_c branch (they
  * are left undeclared, same as dScMgBase_c.h's own "18-35... left
  * undeclared" note), so the compiler's OWN internal slot assignment for
  * these two methods in THIS class does not literally land on index 27/28 --

@@ -2181,11 +2181,11 @@ src/_ZN6Player12St_Talk_InitEv.cpp:
     complete
     .text start:0x020c4bd8 end:0x020c4c60
 
-src/_ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh.cpp:
+src/_ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh.cpp:
     complete
     .text start:0x020c4c60 end:0x020c4ec0
 
-src/_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh.cpp:
+src/_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh.cpp:
     complete
     .text start:0x020c4ec0 end:0x020c4efc
 
@@ -2197,7 +2197,7 @@ src/_ZN6Player12Unk_020c4f40Et.cpp:
     complete
     .text start:0x020c4f40 end:0x020c4fa0
 
-src/_ZN6Player9StartTalkER9ActorBaseb.cpp:
+src/_ZN6Player9StartTalkER7fBase_cb.cpp:
     complete
     .text start:0x020c4fa0 end:0x020c51d0
 

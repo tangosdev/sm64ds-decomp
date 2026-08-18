@@ -3,7 +3,7 @@
 
 #include "dBase_c.h"
 
-/* The scene root: ActorBase -> dBase_c -> dScene_c. Its own code lives at
+/* The scene root: fBase_c -> dBase_c -> dScene_c. Its own code lives at
  * 0x0202e140..0x0202ec9c, plus the four GraphCallbacks stranded at
  * 0x02018ea0..0x02018ec0.
  *
@@ -28,8 +28,8 @@
  * this paragraph exists to stop.
  *
  * The header this replaces described dScene_c as a flat 0x14-byte struct with one
- * field. That was a shadow of ActorBase's first twenty bytes, not a class: it
- * named no base, so `dScene_c` and `ActorBase` were unrelated types, and the two
+ * field. That was a shadow of fBase_c's first twenty bytes, not a class: it
+ * named no base, so `dScene_c` and `fBase_c` were unrelated types, and the two
  * translation units that included it could only reach `this` as an int*.
  *
  * EVERY CLAIM BELOW IS READ OUT OF THE ROM.
@@ -38,7 +38,7 @@
  * on its own. Counted, because a census quoted from memory is how this header
  * got its numbers wrong the first time:
  *
- *   1. _ZTV8dScene_c (0x02092680) is 18 slots. EIGHT still point at ActorBase
+ *   1. _ZTV8dScene_c (0x02092680) is 18 slots. EIGHT still point at fBase_c
  *      implementations -- slots 0, 3, 6, 9, 12, 13, 14, 15 -- and the other TEN
  *      are dScene_c's own: 1, 2, 4, 5, 7, 8, 10, 11, and the destructor pair at
  *      16/17. (An earlier revision of this comment had those two numbers the
@@ -51,7 +51,7 @@
  *      slice replaced did, and it byte-matched. It constrains what the original
  *      source plausibly was, jointly with the others -- not by itself.
  *   3. dScene_c::~dScene_c says it from the other side: it writes _ZTV8dScene_c, then
- *      _ZTV7dBase_c (0x0208e4b8), and only then calls ActorBase::~ActorBase.
+ *      _ZTV7dBase_c (0x0208e4b8), and only then calls fBase_c::~fBase_c.
  *      That is the vptr sequence of a three-deep chain with the middle destructor
  *      inlined.
  *   4. The ROM carries its own type graph, and tools/rtti_extract.py reads it.
@@ -59,14 +59,14 @@
  *      name for the class, `dScene_c`; its vtable field is 0x02092680, which is
  *      _ZTV8dScene_c, and its single base pointer walks to `dBase_c` (vtable
  *      0x0208e4b8 = _ZTV7dBase_c), whose own base is `fBase_c` (vtable
- *      0x02099edc = _ZTV9ActorBase). `si` means single inheritance: exactly one
+ *      0x02099edc = _ZTV7fBase_c). `si` means single inheritance: exactly one
  *      base, no ambiguity to resolve.
  *
  * Nintendo EAD's own names for the three, then, are fBase_c -> dBase_c ->
- * dScene_c. The tree's ActorBase/dBase_c/dScene_c are its own coinages, and
+ * dScene_c. The tree's fBase_c/dBase_c/dScene_c are its own coinages, and
  * renaming them is a separate question from getting the shape right.
  *
- * SLOT ORDER is ActorBase's, unchanged -- dScene_c adds no virtual of its own. It
+ * SLOT ORDER is fBase_c's, unchanged -- dScene_c adds no virtual of its own. It
  * overrides eight of them functionally, plus the destructor pair at 16/17, which
  * is where the ten in reading 1 comes from. The destructor is declared FIRST,
  * which is safe for a derived class (an override takes its base's slot
@@ -78,7 +78,7 @@
  * _ZTV. What forced the inline move instead: Stage::~Stage (and every one of
  * dScene_c's other nine direct children) INLINES dScene_c's own D2 the same way
  * dScene_c inlines dBase_c's -- the ROM's Stage destructor stores Stage's
- * vptr, then dScene_c's, then dBase_c's, then calls ActorBase's D2 directly,
+ * vptr, then dScene_c's, then dBase_c's, then calls fBase_c's D2 directly,
  * with no call to a separate dScene_c::~dScene_c(). A merely declared
  * `virtual ~dScene_c();` can't be inlined -- the compiler has no body to see --
  * and emits `bl _ZN8dScene_cD2Ev` where the ROM has none (measured on a Stage
@@ -95,7 +95,7 @@
  *
  * LAYOUT. dScene_c declares no fields, and that is a claim, so here is its basis.
  *
- * First, no dScene_c method reads or writes anything past ActorBase's own members.
+ * First, no dScene_c method reads or writes anything past fBase_c's own members.
  * The only this-relative access in the entire class, across all 23 functions, is
  * `this->unk_013` in BeforeBehavior at 0x13; the destructors touch the vptr at
  * 0x0; everything else either passes `this` straight through or never sees it.
@@ -156,7 +156,7 @@ struct dScene_c : dBase_c {
     /* dScene_c's own copy of Actor's inline operator delete. mwcc inlines the
        operator only when it finds it in the class itself or its IMMEDIATE
        base, and dScene_c's immediate base is dBase_c, which has none --
-       ActorBase's copy (declared on Actor, not ActorBase) is out of reach
+       fBase_c's copy (declared on Actor, not fBase_c) is out of reach
        from this branch of the hierarchy entirely. This copy is also what
        every one of dScene_c's ten direct subclasses (Stage, BootScene, and the
        rest -- see the census above) will find as ITS immediate base, so it
@@ -164,7 +164,7 @@ struct dScene_c : dBase_c {
        inline member is what the ROM shows. */
     void operator delete(void *ptr) { _ZN6Memory10DeallocateEPvP4Heap(ptr, data_020a0eac); }
 
-    /* --- overrides, in _ZTV8dScene_c order. Signatures must match ActorBase's
+    /* --- overrides, in _ZTV8dScene_c order. Signatures must match fBase_c's
            declarations exactly or these become new slots instead of overrides. --- */
     virtual bool BeforeInitResources();                /* slot  1 */
     virtual void AfterInitResources(u32 vfSuccess);    /* slot  2 */
@@ -199,7 +199,7 @@ struct dScene_c : dBase_c {
     static int GraphCallback3();
 };
 
-/* Holds ActorBase, dBase_c and dScene_c to the layout the paragraph above
+/* Holds fBase_c, dBase_c and dScene_c to the layout the paragraph above
    claims. A silently-added member anywhere in the chain fails this. */
 typedef char dScene_c_size_must_be_0x50[sizeof(dScene_c) == 0x50 ? 1 : -1];
 

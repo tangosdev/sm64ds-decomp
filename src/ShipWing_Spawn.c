@@ -7,7 +7,7 @@
 /* resolved: VT0 = _ZTV8ShipWing */
 int *ShipWing_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(284);
+    int *p = (int *)_ZN7fBase_cnwEj(284);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV8ShipWing;

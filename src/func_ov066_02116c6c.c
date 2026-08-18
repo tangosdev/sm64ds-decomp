@@ -7,7 +7,7 @@ extern int _ZN9Animation8FinishedEv(void* self);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
 extern void _ZN5Actor16TriplePoofDustAtERK7Vector3(void* self, const struct Vector3* v);
 extern void func_02012694(int a, void* p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 
 int func_ov066_02116c6c(char* c) {
   if ((unsigned int)((unsigned int)(*(unsigned int*)(c+0x3b8) << 4) >> 0x10) > 0xc) {
@@ -24,7 +24,7 @@ int func_ov066_02116c6c(char* c) {
       _ZN5Actor16TriplePoofDustAtERK7Vector3(c, &v);
     }
     func_02012694(0x146, c+0x74);
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
   }
   return 1;
 }

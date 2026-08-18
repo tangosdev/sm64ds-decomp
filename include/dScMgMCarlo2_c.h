@@ -6,7 +6,7 @@
  * convention.
  *
  * SIZE 0x5930, from MgPairAGoneAndOn_Spawn.cpp's own
- * `_ZN9ActorBasenwEj(0x5930)`.
+ * `_ZN7fBase_cnwEj(0x5930)`.
  *
  * SHARED TABLE at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64), same
  * as five siblings -- see include/dScMgMemory_c.h's own note. TWO fields
@@ -50,11 +50,11 @@ struct dScMgMCarlo2_c : dScMgSingle3DBase_c {
     s16 unk_592e;           /* 0x592e */
 
     /* --- this class's own vtable overrides, defined out of line under their
-       own mangled names. Each re-uses a slot ActorBase already holds rather
+       own mangled names. Each re-uses a slot fBase_c already holds rather
        than appending one, and neither adds a field, so the size assert below
        is untouched. The destructor above stays the key function, so no
        translation unit starts emitting _ZTV14dScMgMCarlo2_c because of these.
-       Signatures are include/ActorBase.h's and include/dScMgBase_c.h's own,
+       Signatures are include/fBase_c.h's and include/dScMgBase_c.h's own,
        copied unchanged. --- */
     s32 CleanupResources();   /* slot 3 -- ov006 0x020f9fe0 */
     s32 Behavior();           /* slot 6 -- ov006 0x020fa13c */

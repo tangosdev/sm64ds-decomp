@@ -13,7 +13,7 @@ void func_ov064_021165d8(unsigned char* c);
 void func_ov064_02116560(unsigned char* c);
 void func_ov064_02116460(unsigned char* c);
 void func_ov064_021163c0(unsigned char* c);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
+void _ZN7fBase_c18MarkForDestructionEv(void* self);
 void _ZN9Animation7AdvanceEv(void* self);
 void func_ov064_02116bac(unsigned char* c);
 void _ZN12CylinderClsn5ClearEv(void* self);
@@ -75,7 +75,7 @@ extern "C" int func_ov064_02116d1c(unsigned char* thiz)
         ((Base*)thiz)->m32();
         break;
     case 5:
-        _ZN9ActorBase18MarkForDestructionEv(thiz);
+        _ZN7fBase_c18MarkForDestructionEv(thiz);
         break;
     default:
         break;

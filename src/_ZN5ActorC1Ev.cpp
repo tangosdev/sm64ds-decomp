@@ -5,7 +5,7 @@
 /* recovered: named members + shared header */
 #include "Actor.h"
 extern "C" {
-void _ZN9ActorBaseC1Ev(void* self);
+void _ZN7fBase_cC1Ev(void* self);
 void func_0203b244(void* l, void* n);
 void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
 }
@@ -19,7 +19,7 @@ extern void* data_020a4bb8;
 extern unsigned char data_0209f2d8;
 
 extern "C" void* _ZN5ActorC1Ev(struct Actor *self) {
-  _ZN9ActorBaseC1Ev(((char*)self));
+  _ZN7fBase_cC1Ev(((char*)self));
   *(void**)((char*)self) = &data_0208e4b8;
   *(void**)((char*)self) = &data_0208e3a4;
   self->unk_050 = 0;

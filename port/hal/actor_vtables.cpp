@@ -1,8 +1,8 @@
 // Actor-hierarchy vtables (gate 9), per the vtable law (clsn_vtable.cpp):
-// MSVC slot order. include/ActorBase.h declares the dtor LAST, so MSVC and
+// MSVC slot order. include/fBase_c.h declares the dtor LAST, so MSVC and
 // the ROM agree on slots 0..15 and diverge only at the tail -- the header
 // was built for exactly this. Lifecycle slots forward to the class's own
-// overrides where they exist and to the ActorBase/Actor defaults where
+// overrides where they exist and to the fBase_c/Actor defaults where
 // they do not; the tail traps.
 //
 // Base-class vtable symbols the ctor chain installs and then overwrites
@@ -10,10 +10,10 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "ActorBase.h"
+#include "fBase_c.h"
 #include "ArrowSignRight.h"
 
-// The lifecycle definitions are MSVC methods (ArrowSignRight.h/ActorBase.h
+// The lifecycle definitions are MSVC methods (ArrowSignRight.h/fBase_c.h
 // real classes); InitResources alone is a C-named free function. Every shim
 // calls QUALIFIED -- never virtual.
 extern "C" int _ZN14ArrowSignRight13InitResourcesEv(char *self);
@@ -27,25 +27,25 @@ static int __fastcall sl_behavior(void *self, void *)
 static int __fastcall sl_render(void *self, void *)
 { return ((ArrowSignRight *)self)->ArrowSignRight::Render(); }
 static int __fastcall sl_binit(void *self, void *)
-{ return ((ActorBase *)self)->ActorBase::BeforeInitResources(); }
+{ return ((fBase_c *)self)->fBase_c::BeforeInitResources(); }
 static void __fastcall sl_ainit(void *self, void *, u32 a)
-{ ((ActorBase *)self)->ActorBase::AfterInitResources(a); }
+{ ((fBase_c *)self)->fBase_c::AfterInitResources(a); }
 static int __fastcall sl_bclean(void *self, void *)
-{ return ((ActorBase *)self)->ActorBase::BeforeCleanupResources(); }
+{ return ((fBase_c *)self)->fBase_c::BeforeCleanupResources(); }
 static void __fastcall sl_aclean(void *self, void *, u32 a)
-{ ((ActorBase *)self)->ActorBase::AfterCleanupResources(a); }
+{ ((fBase_c *)self)->fBase_c::AfterCleanupResources(a); }
 static int __fastcall sl_bbeh(void *self, void *)
-{ return ((ActorBase *)self)->ActorBase::BeforeBehavior(); }
+{ return ((fBase_c *)self)->fBase_c::BeforeBehavior(); }
 static void __fastcall sl_abeh(void *self, void *, u32 a)
-{ ((ActorBase *)self)->ActorBase::AfterBehavior(a); }
+{ ((fBase_c *)self)->fBase_c::AfterBehavior(a); }
 static int __fastcall sl_bren(void *self, void *)
-{ return ((ActorBase *)self)->ActorBase::BeforeRender(); }
+{ return ((fBase_c *)self)->fBase_c::BeforeRender(); }
 static void __fastcall sl_aren(void *self, void *, u32 a)
-{ ((ActorBase *)self)->ActorBase::AfterRender(a); }
+{ ((fBase_c *)self)->fBase_c::AfterRender(a); }
 static int __fastcall sl_pdes(void *self, void *)
-{ ((ActorBase *)self)->ActorBase::OnPendingDestroy(); return 0; }
+{ ((fBase_c *)self)->fBase_c::OnPendingDestroy(); return 0; }
 static int __fastcall sl_heap(void *self, void *)
-{ return ((ActorBase *)self)->ActorBase::OnHeapCreated(); }
+{ return ((fBase_c *)self)->fBase_c::OnHeapCreated(); }
 
 #define ATRAP(n) \
     static void __fastcall a_trap##n(void *, void *) { \
@@ -76,22 +76,22 @@ extern "C" void *_ZTV14ArrowSignRight[20] = {
 // Base vtables the ctor chain installs transiently: storage only.
 extern "C" {
 void *_ZTV17ExclamationSwitch[20];
-int data_0208e4b8[20];   /* ActorBase-era vtable-ish install in Actor ctor */
+int data_0208e4b8[20];   /* fBase_c-era vtable-ish install in Actor ctor */
 int data_0208e3a4[20];
 }
 
-// ---- ActorBase::ActorBase() transcription ---------------------------------
-// The ROM ctor is a hand-asm block (src/_ZN9ActorBaseC1Ev.cpp); this is its
+// ---- fBase_c::fBase_c() transcription ---------------------------------
+// The ROM ctor is a hand-asm block (src/_ZN7fBase_cC1Ev.cpp); this is its
 // C transcription, field for field against the disassembly there. The spawn
 // CONTEXT globals it reads (pending actor ID, area byte, the spawn-info
 // pointer table for the two processing-list priorities) are storage here;
 // the smoke seeds them the way func_02010e78/dBase_c::Spawn would.
 extern "C" {
-void _ZN9ActorBase9SceneNodeC1Ev(void *node);
+void _ZN7fBase_c9SceneNodeC1Ev(void *node);
 int func_0203b438(void *a, void *b, void *c);
 int func_02043810(void *p);
 
-int data_02099edc[8];           /* the transient ActorBase vtable install */
+int data_02099edc[8];           /* the transient fBase_c vtable install */
 int data_02099e70[1];           /* next unique actor id */
 int data_020a4b60[1];
 unsigned short data_020a4b54;   /* PENDING ACTOR ID (the spawn context) */
@@ -101,10 +101,10 @@ int data_020a4b6c[8];           /* the scene tree root the ctor links into */
 void *data_020a4bb8_storage[512];
 void **data_020a4bb8 = data_020a4bb8_storage;  /* actorID -> SpawnInfo* */
 
-void *_ZN9ActorBaseC1Ev(char *self)
+void *_ZN7fBase_cC1Ev(char *self)
 {
     *(void **)self = data_02099edc;
-    _ZN9ActorBase9SceneNodeC1Ev(self + 0x14);
+    _ZN7fBase_c9SceneNodeC1Ev(self + 0x14);
     *(void **)(self + 0x24) = self;             /* sceneNode.actor */
     for (int off = 0x28; off <= 0x38; off += 0x10) {
         *(void **)(self + off) = 0;

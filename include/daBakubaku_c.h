@@ -17,7 +17,7 @@
  *
  * TWO WITNESSES, and they agree offset for offset:
  *
- *   func_ov032_0211244c is the factory. ActorBase::operator new(0x438), then
+ *   func_ov032_0211244c is the factory. fBase_c::operator new(0x438), then
  *   _ZN12dEnemyBase_cC2Ev, then ONE vtable store -- one, not two, which is what says nothing
  *   derives from this class -- then the five members below in this order.
  *

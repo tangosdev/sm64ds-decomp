@@ -1,11 +1,11 @@
-// @symbol _ZN9ActorBaseD2Ev
+// @symbol _ZN7fBase_cD2Ev
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "ActorBase.h"
-extern void *_ZTV9ActorBase[];   /* 0x02099edc */
-int *_ZN9ActorBaseD2Ev(struct ActorBase *self) {
-    ((int *)self)[0] = (int)_ZTV9ActorBase;
+#include "fBase_c.h"
+extern void *_ZTV7fBase_c[];   /* 0x02099edc */
+int *_ZN7fBase_cD2Ev(struct fBase_c *self) {
+    ((int *)self)[0] = (int)_ZTV7fBase_c;
     func_020440e8((char *)&self->renderNode);
     func_020440e8((char *)&self->behavNode);
     return ((int *)self);

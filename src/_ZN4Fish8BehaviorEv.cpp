@@ -13,7 +13,7 @@ struct M48 { int w[12]; };
 extern "C" M48 data_020a0e68;
 
 extern "C" int* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern "C" void _ZN9ActorBase18MarkForDestructionEv(C* c);
+extern "C" void _ZN7fBase_c18MarkForDestructionEv(C* c);
 extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(C* c, int clsn);
 extern "C" void Vec3_Asr(Vec3* d, Vec3* s, int sh);
 extern "C" void Matrix4x3_FromTranslation(M48* m, int x, int y, int z);
@@ -49,7 +49,7 @@ int Fish::Behavior()
     } else {
         r = _ZN5Actor10FindWithIDEj(((C*)this)->id);
         if (r == 0 || func_ov100_0214639c(r) != 0) {
-            _ZN9ActorBase18MarkForDestructionEv(((C*)this));
+            _ZN7fBase_c18MarkForDestructionEv(((C*)this));
         } else {
             (((C*)this)->*data_ov100_02148a1c[((C*)this)->idx].pmf)();
             _ZN5Actor9UpdatePosEP12CylinderClsn(((C*)this), 0);

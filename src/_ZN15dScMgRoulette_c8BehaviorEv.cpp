@@ -5,7 +5,7 @@
  *
  * Named from the table: 0x02109aac is the word slot 6 of
  * _ZTV15dScMgRoulette_c holds where its base's table holds something else, so
- * it is this class's own override of the virtual ActorBase declares.
+ * it is this class's own override of the virtual fBase_c declares.
  *
  * The race's five phases, selected by unk_53e6: 1 deals the racers out one at
  * a time, 2 runs the countdown and scores the board, 3 pays out per landed

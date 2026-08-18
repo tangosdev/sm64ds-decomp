@@ -8,7 +8,7 @@
 
 
 extern void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *prev);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *thiz);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
 extern void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 
 int _ZN11SoundObject13InitResourcesEv(void *self)
@@ -38,7 +38,7 @@ int _ZN11SoundObject13InitResourcesEv(void *self)
                 break;
             if (a != self)
             {
-                _ZN9ActorBase18MarkForDestructionEv(a);
+                _ZN7fBase_c18MarkForDestructionEv(a);
                 _ZN5Sound7PlaySubEjjj5Fix12IiEb(g, 0x7f, 0, 0x7f000, 0);
             }
         }

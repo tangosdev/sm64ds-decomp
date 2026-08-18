@@ -19,7 +19,7 @@
  *
  * mFlags is named in include/Actor.h at 0x0b0; the old source used a shadow
  * `struct Actor { char pad[0xb0]; u32 flags; }`. MarkForDestruction comes from
- * include/ActorBase.h.
+ * include/fBase_c.h.
  */
 #include "Actor.h"
 
@@ -38,7 +38,7 @@ bool Actor::BeforeInitResources()
     return true;
 skip:;
     {
-        int r = ActorBase::BeforeInitResources();
+        int r = fBase_c::BeforeInitResources();
         if (r == 0) return false;
         return true;
     }

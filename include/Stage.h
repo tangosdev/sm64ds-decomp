@@ -99,10 +99,10 @@ struct SysTracker {
 typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1];
 }
 
-/* The playable level: ActorBase -> dBase_c -> dScene_c -> Stage.
+/* The playable level: fBase_c -> dBase_c -> dScene_c -> Stage.
  *
  * The generated header this replaces named no base and re-declared the whole of
- * ActorBase inline -- uniqueID at 0x004, actorID at 0x00c, the three list nodes,
+ * fBase_c inline -- uniqueID at 0x004, actorID at 0x00c, the three list nodes,
  * a pad to 0x050 -- so `Stage` and `dScene_c` were unrelated types even though the
  * ROM has one derived from the other. Everything below 0x050 is gone from this
  * file now; it comes from the base chain, which owns it.
@@ -111,14 +111,14 @@ typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1]
  * 0x02092158, vtable 0x020921c0 -- which is _ZTV5Stage -- and its single base is
  * dScene_c. It is a leaf: no record in the image names dScStage_c as a base.
  *
- * VTABLE. _ZTV5Stage is 18 slots, the same shape dScene_c and ActorBase have, and
+ * VTABLE. _ZTV5Stage is 18 slots, the same shape dScene_c and fBase_c have, and
  * Stage adds no virtual of its own. It overrides six functionally --
  *
  *     0  InitResources        3  CleanupResources     6  Behavior
  *     9  Render              12  OnPendingDestroy     1  BeforeInitResources
  *
  * -- plus the destructor pair at 16/17. The remaining ten still point at dScene_c's
- * Before/After hooks or at ActorBase.
+ * Before/After hooks or at fBase_c.
  *
  * KEY FUNCTION. Slot 0 is Stage::InitResources, so declaration order matters
  * here in the way include/Actor.h warns about: whichever non-inline virtual is

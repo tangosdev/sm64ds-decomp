@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   BillBlaster_Spawn  ActorBase::operator new(804 = 0x324), dBgActor_c::dBgActor_c(), stores _ZTV11BillBlaster,
+ *   BillBlaster_Spawn  fBase_c::operator new(804 = 0x324), dBgActor_c::dBgActor_c(), stores _ZTV11BillBlaster,
  *                 then the members below in this order.
  *   ~BillBlaster   the same members destroyed in reverse, then ~dBgActor_c.
  *

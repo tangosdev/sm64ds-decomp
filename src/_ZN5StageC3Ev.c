@@ -1,6 +1,6 @@
 #define AT(p, off) ((void *)(int)((char *)(p) + (off)))
-extern int _ZN9ActorBasenwEj(unsigned int);
-extern int _ZN9ActorBaseC1Ev(void *);
+extern int _ZN7fBase_cnwEj(unsigned int);
+extern int _ZN7fBase_cC1Ev(void *);
 extern int _ZN8Particle10SysTrackerC1Ev(void *);
 extern int _ZN5ModelC1Ev(void *);
 extern int _ZN12MeshColliderC1Ev(void *);
@@ -10,9 +10,9 @@ extern int _ZTV5Stage[];
 
 void *_ZN5StageC3Ev(void)
 {
-    char *p = (char*)_ZN9ActorBasenwEj(0x9c8);
+    char *p = (char*)_ZN7fBase_cnwEj(0x9c8);
     if (p) {
-        _ZN9ActorBaseC1Ev(p);
+        _ZN7fBase_cC1Ev(p);
         *(int*)(p) = (int)data_0208e4b8;
         *(int*)(p) = (int)_ZTV8dScene_c;
         *(unsigned char*)AT(p, 0x13) |= 1;

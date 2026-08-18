@@ -7,7 +7,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   BlueFlame_Spawn  ActorBase::operator new(280 = 0x118), Actor::Actor(), stores _ZTV9BlueFlame,
+ *   BlueFlame_Spawn  fBase_c::operator new(280 = 0x118), Actor::Actor(), stores _ZTV9BlueFlame,
  *                 then the member below in this order.
  *   ~BlueFlame   the same member destroyed in reverse, then ~Actor.
  *

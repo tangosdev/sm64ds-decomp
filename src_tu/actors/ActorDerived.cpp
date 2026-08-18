@@ -42,7 +42,7 @@
  *
  * AND THE ROM STILL PROVES THE INLINE FORM, independently of how this file is
  * written. mwcc emits an OUT-OF-LINE destructor definition as the fixed group
- * D2, D0, D1 (pilot report sec 3), and ActorBase -- whose destructor is defined
+ * D2, D0, D1 (pilot report sec 3), and fBase_c -- whose destructor is defined
  * out of line -- has exactly that in the ROM: 0x02043d48 D2, 0x02043d78 D0,
  * 0x02043dbc D1. An INLINE destructor's vague-linkage copies come out D1 then D0
  * with no D2 at all, which is what the pilot measured for dBgActor_c and what this
@@ -62,7 +62,7 @@ extern int  func_02042ffc(void *a, void *b);
    this class's vtable as DATA -- named, not defined. The vtable reference has to
    be addend 0: the ROM literals at 0x02013ea0 (D1) and 0x02013ed4 (D0) are
    exactly 0x0208e4b8, which is config's `_ZTV7dBase_c`, the SLOT ARRAY. */
-extern void *_ZN9ActorBaseD2Ev(void *self);
+extern void *_ZN7fBase_cD2Ev(void *self);
 extern void *_ZTV7dBase_c[];
 }
 
@@ -70,8 +70,8 @@ extern void *_ZTV7dBase_c[];
 /* ROM ordinal 4 -- dBase_c::AfterInitResources(u32), 0x02013ef4, 0x34   */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 2, the only functional override this class makes -- every other
- * slot still points at the ActorBase implementation. If initialisation reported
- * VS_FAIL (1) the actor is marked for destruction, and either way the ActorBase
+ * slot still points at the fBase_c implementation. If initialisation reported
+ * VS_FAIL (1) the actor is marked for destruction, and either way the fBase_c
  * implementation runs afterwards.
  *
  * THIS IS THE KEY FUNCTION, AND THAT IS WHY IT IS NOT A METHOD HERE.
@@ -89,19 +89,19 @@ extern void *_ZTV7dBase_c[];
  * function, no TU defines the key function, no vtable is emitted, and the link
  * goes through. The DECLARATION in the class is still required -- removing it
  * would delete slot 2 and shift the sixteen below it. Same arrangement
- * include/ActorBase.h uses for InitResources, and the same one that let
- * arm9/Actor and arm9/ActorBase reach link-verified.
+ * include/fBase_c.h uses for InitResources, and the same one that let
+ * arm9/Actor and arm9/fBase_c reach link-verified.
  *
- * The qualified `self->ActorBase::AfterInitResources(...)` is a direct `bl`, not
+ * The qualified `self->fBase_c::AfterInitResources(...)` is a direct `bl`, not
  * a virtual dispatch -- which is what the ROM does, and what the method form's
- * unqualified `ActorBase::AfterInitResources(...)` also compiled to.
+ * unqualified `fBase_c::AfterInitResources(...)` also compiled to.
  */
 extern "C" void _ZN7dBase_c18AfterInitResourcesEj(dBase_c *self,
                                                         u32 vfSuccess)
 {
     if (vfSuccess == 1)
         self->MarkForDestruction();
-    self->ActorBase::AfterInitResources(vfSuccess);
+    self->fBase_c::AfterInitResources(vfSuccess);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -117,14 +117,14 @@ extern "C" void _ZN7dBase_c18AfterInitResourcesEj(dBase_c *self,
  * move no register observe nothing about their own arguments. What can be
  * observed is the CALLEE -- src/func_02042ffc.c is `int func_02042ffc(void *a,
  * void *b)`, TWO arguments, and it passes `(char *)b + 0x14`, i.e. an
- * ActorBase's sceneNode. So the callee's own recovered body agrees with this
- * name on the second parameter being an ActorBase* and says nothing at all
+ * fBase_c's sceneNode. So the callee's own recovered body agrees with this
+ * name on the second parameter being an fBase_c* and says nothing at all
  * about the third and fourth. The name is left exactly as the config spells it;
  * see the return for what that costs.
  */
-ActorBase *dBase_c::Spawn(u32 actorID, ActorBase *parent, int a, int b)
+fBase_c *dBase_c::Spawn(u32 actorID, fBase_c *parent, int a, int b)
 {
-    return (ActorBase *)func_02042ffc((void *)actorID, parent);
+    return (fBase_c *)func_02042ffc((void *)actorID, parent);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -145,7 +145,7 @@ extern "C" void func_02013edc(int a, int b, int c)
  * Written D0 then D1 so the reversal emits them D1, D0 -- the ROM's order.
  *
  * ~dBase_c IS STILL DEFINED INLINE IN include/dBase_c.h, and that is
- * still load-bearing: dScene_c::~dScene_c stores two vptrs and then calls ActorBase's
+ * still load-bearing: dScene_c::~dScene_c stores two vptrs and then calls fBase_c's
  * destructor directly, which the compiler can only produce by inlining a visible
  * body, and Stage and every actor destructor below them do the same. Nothing
  * here changes that. What changes is only where the OUT-OF-LINE copies the
@@ -166,21 +166,21 @@ extern "C" void func_02013edc(int a, int b, int c)
  *
  * So the vague-linkage symbols are spelled directly under their mangled names,
  * which is what the arm9/Actor rebuild found. Byte-for-byte the same code the
- * compiler would have produced -- D1 stores the vptr and chains to ActorBase's
+ * compiler would have produced -- D1 stores the vptr and chains to fBase_c's
  * D2; D0 does that and then returns the object to the actor heap, which is what
- * the inline operator delete on ActorBase compiles to.
+ * the inline operator delete on fBase_c compiles to.
  *
  * THE VARIANT ORDER IS STILL THE EVIDENCE that the header's inline definition is
  * right, and this file cannot take that away: the ROM has D1 at 0x02013e80 then
  * D0 at 0x02013ea4 and NO D2 anywhere in the image, which is the vague-linkage
  * shape. An out-of-line definition would have emitted the fixed group D2,D0,D1 --
- * which is exactly what ActorBase, whose destructor IS defined out of line, has
+ * which is exactly what fBase_c, whose destructor IS defined out of line, has
  * at 0x02043d48/0x02043d78/0x02043dbc.
  * ========================================================================= */
 extern "C" dBase_c *_ZN7dBase_cD0Ev(dBase_c *self)
 {
     *(int *)self = (int)_ZTV7dBase_c;
-    _ZN9ActorBaseD2Ev(self);
+    _ZN7fBase_cD2Ev(self);
     _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac);
     return self;
 }
@@ -188,6 +188,6 @@ extern "C" dBase_c *_ZN7dBase_cD0Ev(dBase_c *self)
 extern "C" dBase_c *_ZN7dBase_cD1Ev(dBase_c *self)
 {
     *(int *)self = (int)_ZTV7dBase_c;
-    _ZN9ActorBaseD2Ev(self);
+    _ZN7fBase_cD2Ev(self);
     return self;
 }

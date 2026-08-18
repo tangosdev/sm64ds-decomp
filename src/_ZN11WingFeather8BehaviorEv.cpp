@@ -7,7 +7,7 @@ extern "C" {
 void* _ZN5Actor13ClosestPlayerEv(void* self);
 int _ZN6Player15IsCollectingCapEv(void* self);
 void _ZN5Actor13SmallPoofDustEv(void* self);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
+void _ZN7fBase_c18MarkForDestructionEv(void* self);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 kind, u32 sub, int x, int y, int z, void* vec, void* cb);
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
 void WithMeshClsn_UpdateContinuous_Veneer(void* p);
@@ -37,7 +37,7 @@ int WingFeather::Behavior()
             void* p = _ZN5Actor13ClosestPlayerEv(((char*)this));
             if (*(int*)((char*)p + 8) != 0 || _ZN6Player15IsCollectingCapEv(p) != 0) {
                 _ZN5Actor13SmallPoofDustEv(((char*)this));
-                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
                 return 1;
             }
         }
@@ -54,7 +54,7 @@ int WingFeather::Behavior()
         _Z14ApproachLinearRiii((int*)((char*)&unk_098), 0, 0x555);
         if (DecIfAbove0_Byte((u8*)((char*)&unk_384)) == 0) {
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, mPosY, mPosZ);
-            _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+            _ZN7fBase_c18MarkForDestructionEv(((char*)this));
         }
     } else {
         short* angp = (short*)((((s64)((char*)&unk_37c))));
@@ -89,7 +89,7 @@ int WingFeather::Behavior()
             if (eq) {
                 _ZN6Player16InitWingFeathersEb(a, 1);
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, mPosY, mPosZ);
-                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
                 return 1;
             }
         }

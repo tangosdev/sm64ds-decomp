@@ -6,7 +6,7 @@
  * convention.
  *
  * SIZE 0x51d0, from MgLuckyStars_Spawn.cpp's own
- * `_ZN9ActorBasenwEj(0x51d0)`.
+ * `_ZN7fBase_cnwEj(0x51d0)`.
  *
  * ONE SHARED MEMBER at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64),
  * shared verbatim by five other classes in this family -- left as raw
@@ -37,7 +37,7 @@ struct dScMgBSC_c : dScMgSingle3DBase_c {
     virtual ~dScMgBSC_c();
 
     /* --- this class's own vtable slots, named from the table ---
-       Re-overrides of slots ActorBase already owns, NOT new virtuals: the
+       Re-overrides of slots fBase_c already owns, NOT new virtuals: the
        table stays the base's width and no field moves. Declared AFTER the
        destructor so the destructor is still the first virtual declared. */
     virtual s32 Behavior();   /* slot 6 -- ov006 0x021254c0 */

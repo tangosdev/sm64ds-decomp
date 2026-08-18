@@ -4,7 +4,7 @@
 #include "common.h"
 
 struct Vector3_16_local { unsigned short x, y, z; };
-struct ActorBase { void MarkForDestruction(); };
+struct fBase_c { void MarkForDestruction(); };
 struct Actor {
     static Actor* Spawn(unsigned int a, unsigned int b, const Vector3& v, const Vector3_16_local* v16, signed char e, short f);
 };
@@ -38,7 +38,7 @@ extern "C" void func_ov081_02127be0(char* c)
         rot.z = *(unsigned short*)(o2 + 0x90);
     }
 
-    ((ActorBase*)*(char**)(c + 0x364))->MarkForDestruction();
+    ((fBase_c*)*(char**)(c + 0x364))->MarkForDestruction();
 
     unsigned int newflags = (unsigned char)(flags & 0xf) | 0x20;
     _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb4, newflags, pos, &rot, *(signed char*)(c + 0xcc), -1);

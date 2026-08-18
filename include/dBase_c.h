@@ -1,14 +1,14 @@
 #ifndef DBASE_C_H
 #define DBASE_C_H
 
-#include "ActorBase.h"
+#include "fBase_c.h"
 
-/* The middle link of the actor hierarchy: ActorBase -> dBase_c -> Actor.
- * Actor is NOT a direct child of ActorBase. See notes/actor-vtables.md.
+/* The middle link of the actor hierarchy: fBase_c -> dBase_c -> Actor.
+ * Actor is NOT a direct child of fBase_c. See notes/actor-vtables.md.
  *
- * _ZTV7dBase_c (0x0208e4b8) is ActorBase's 18-slot table with exactly one
+ * _ZTV7dBase_c (0x0208e4b8) is fBase_c's 18-slot table with exactly one
  * functional override -- slot 2, AfterInitResources -- plus its own D1/D0 at
- * slots 16/17. Every other slot still points at the ActorBase implementation.
+ * slots 16/17. Every other slot still points at the fBase_c implementation.
  * The class therefore adds NO new virtuals, which has a useful consequence.
  *
  * KEY FUNCTION. CW 1.2 emits the vtable into the TU that DEFINES the first
@@ -17,9 +17,9 @@
  *
  * The rule, stated precisely: the key function must never be defined as a real
  * method in any translation unit. Its declaration in the class is required and
- * harmless -- include/ActorBase.h does declare InitResources (slot 0) in-class,
+ * harmless -- include/fBase_c.h does declare InitResources (slot 0) in-class,
  * and removing it would delete a slot and shift the other seventeen. What
- * ActorBase.h relies on is that src/_ZN9ActorBase13InitResourcesEv.cpp defines
+ * fBase_c.h relies on is that src/_ZN7fBase_c13InitResourcesEv.cpp defines
  * it as an extern "C" free function rather than a method.
  *
  * dBase_c used to get there cheaply: the destructor was declared FIRST,
@@ -30,12 +30,12 @@
  * what protects anything. See include/ModelBase.h.
  *
  * THE DESTRUCTOR IS DEFINED INLINE, AND THAT IS LOAD-BEARING FOR SUBCLASSES.
- * dScene_c::~dScene_c in the ROM stores two vptrs and then calls ActorBase's
+ * dScene_c::~dScene_c in the ROM stores two vptrs and then calls fBase_c's
  * destructor directly:
  *
  *     str r2, [r4]        ; _ZTV8dScene_c
  *     str r1, [r4]        ; _ZTV7dBase_c   <- this destructor, INLINED
- *     bl  ActorBase::~ActorBase
+ *     bl  fBase_c::~fBase_c
  *
  * A merely DECLARED `virtual ~dBase_c();` cannot produce that: the
  * compiler has no body to inline and emits `bl _ZN7dBase_cD2Ev` instead,
@@ -49,7 +49,7 @@
  * emits nothing. That file therefore carries a forcing function instead; see
  * the note in it.
  */
-struct dBase_c : ActorBase {
+struct dBase_c : fBase_c {
     /* Declared first, deliberately -- see KEY FUNCTION above. Overrides slots
        16 (D1) and 17 (D0); the position in this list does not affect that.
        DEFINED INLINE on purpose: subclass destructors inline it. */
@@ -68,11 +68,11 @@ struct dBase_c : ActorBase {
        This read `void` until that function was migrated, which is the general
        rule for a forwarder: its return type is unobservable at its definition
        and observable only where it is called. */
-    static ActorBase *Spawn(u32 actorID, ActorBase *parent, int a, int b);
+    static fBase_c *Spawn(u32 actorID, fBase_c *parent, int a, int b);
 };
 
 /* dBase_c adds no members -- it exists to carry one overridden slot -- so it
-   is exactly ActorBase's 0x50. Asserting it holds that claim, and lets
+   is exactly fBase_c's 0x50. Asserting it holds that claim, and lets
    tools/check_header_offsets.py check everything below it. */
 typedef char dBase_c_size_must_be_0x50[sizeof(dBase_c) == 0x50 ? 1 : -1];
 

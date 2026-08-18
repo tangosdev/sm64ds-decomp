@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MontyMoleRock.h"
-extern "C" void _ZN9ActorBase18MarkForDestructionEv(void*);
+extern "C" void _ZN7fBase_c18MarkForDestructionEv(void*);
 extern "C" void* _ZN5Actor10FindWithIDEj(unsigned int);
 extern "C" void _ZN5Actor19MakeVanishLuigiWorkER12CylinderClsn(void*, void*);
 extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void*, void*);
@@ -72,7 +72,7 @@ s32 MontyMoleRock::Behavior()
             *(int *)(s + 0xa8) = 0x5000;
             *(int *)(s + 0xac) = 0;
         }
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
     _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);

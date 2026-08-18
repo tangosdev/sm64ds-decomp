@@ -12,7 +12,7 @@
 extern void _ZN7PathPtrC1Ev(void *);
 int *SnowmanBody_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(936);
+    int *p = (int *)_ZN7fBase_cnwEj(936);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV11SnowmanBody;

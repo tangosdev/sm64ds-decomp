@@ -13,11 +13,11 @@ struct CylinderClsn {
     void Update();
 };
 
-struct ActorBase {
+struct fBase_c {
     void MarkForDestruction();
 };
 
-struct Actor : ActorBase {
+struct Actor : fBase_c {
     char pad0[0xc];
     unsigned short actorID;   /* 0xc */
     char pad1[0x5c - 0xe];

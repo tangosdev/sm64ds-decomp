@@ -1,5 +1,5 @@
 //cpp
-/* SHADOW translation unit -- arm9 / ActorBase (Nintendo's fBase_c), the ROOT of
+/* SHADOW translation unit -- arm9 / fBase_c (Nintendo's fBase_c), the ROOT of
  * the actor hierarchy.
  *
  * NOT ENROLLED, AND NOT CANONICAL. This file contributes nothing to the ROM
@@ -7,15 +7,15 @@
  * 0x02043444..0x02043dec. See notes/translation-unit-reconstruction-plan.md and
  * notes/tu-reconstruction-pilot-report.md.
  *
- * THE SPAN, RECONCILED AGAINST THE ROM. include/ActorBase.h's banner has said
+ * THE SPAN, RECONCILED AGAINST THE ROM. include/fBase_c.h's banner has said
  * "0x02043494..0x02043e04" and BOTH ends of that are wrong:
  *
- *   0x02043444  _ZN9ActorBasenwEj      ActorBase::operator new -- the class's
+ *   0x02043444  _ZN7fBase_cnwEj      fBase_c::operator new -- the class's
  *                                      own member, and the header's own comment
  *                                      discusses it. It is 0x50 bytes BELOW the
  *                                      old start, which excluded it.
  *   0x02043e04  is not a function boundary at all. It falls 0x18 bytes INSIDE
- *               _ZN9ActorBaseC1Ev (0x02043dec, size 0x160), so the old end cut
+ *               _ZN7fBase_cC1Ev (0x02043dec, size 0x160), so the old end cut
  *               the constructor in half.
  *   0x02043f4c  is where the run really ends -- the byte after the constructor,
  *               and the address of func_02043f4c, the next unrelated function.
@@ -31,12 +31,12 @@
  * FIRST. Reading order below is therefore the destructor triple, Process,
  * InitResources, ... , OnHeapCreated, operator new.
  *
- * THE DESTRUCTORS ARE extern "C" FREE FUNCTIONS, NOT A REAL ~ActorBase(), AND
+ * THE DESTRUCTORS ARE extern "C" FREE FUNCTIONS, NOT A REAL ~fBase_c(), AND
  * THE ROM IS WHAT FORCES THAT. A real C++ destructor stores its vptr through a
- * relocation on mwcc's OWN `_ZTV9ActorBase`, which names the vtable OBJECT --
+ * relocation on mwcc's OWN `_ZTV7fBase_c`, which names the vtable OBJECT --
  * two words of Itanium preamble before the slot array -- so the store carries
  * addend 8. This TU does NOT define the vtable (see KEY FUNCTION below), so
- * that symbol stays external and resolves against config's `_ZTV9ActorBase`,
+ * that symbol stays external and resolves against config's `_ZTV7fBase_c`,
  * which IS the slot array at 0x02099edc. The addend would land the vptr eight
  * bytes high. The cartridge is unambiguous about the right value: the literal
  * pools of all three variants hold exactly 0x02099edc --
@@ -56,27 +56,27 @@
  * right vptr addend, so that is the one used.
  *
  * KEY FUNCTION -- DO NOT DEFINE InitResources AS A METHOD. It is slot 0, the
- * first virtual the class declares, so CW 1.2 emits `_ZTV9ActorBase` into
+ * first virtual the class declares, so CW 1.2 emits `_ZTV7fBase_c` into
  * whichever TU defines it. The ROM's vtable is already supplied as data by the
  * module's gap object, and a second definition makes the link fail with
- * "Multiply-defined: virtual table for ActorBase". Defining it below as an
+ * "Multiply-defined: virtual table for fBase_c". Defining it below as an
  * extern "C" free function is what keeps this TU from being the key function's
  * definition -- and therefore what leaves the other 23 members free to be real
  * C++ methods. Confirmed by this round: the compiled object emits NO .data at
  * all, no _ZTV, no _ZTI, no _ZTS.
  *
  * LICENSED SPAN 0x02043444..0x02043dec, 24 of the run's 25 functions. The
- * missing one is `_ZN9ActorBaseC1Ev` (0x02043dec, 0x160), and it belongs to
+ * missing one is `_ZN7fBase_cC1Ev` (0x02043dec, 0x160), and it belongs to
  * this TU by every boundary test -- it is inside the contiguous run, it carries
  * the class's own name, and nothing else claims it. It is left out because the
- * tree has no C++ for it: src/_ZN9ActorBaseC1Ev.cpp is a whole-function
+ * tree has no C++ for it: src/_ZN7fBase_cC1Ev.cpp is a whole-function
  * hand-written `asm` transcription, its own banner says "NONMATCHING ... does
  * NOT count as matched", and config/arm9/delinks.txt has no entry for it at all
  * -- it is neither compiled nor enrolled today. Admitting asm here would let
  * this TU claim a range it has not reproduced from source. The manifest entry
  * records it as the one unadmitted member.
  */
-#include "ActorBase.h"
+#include "fBase_c.h"
 
 /* ------------------------------------------------------------------------- *
  * RECONCILED DECLARATIONS
@@ -137,10 +137,10 @@ extern void *func_02043810(void *p);
 
 /* The class's own vtable, as DATA. Named, not defined: see the destructor note
    in the file banner for why this reference has to be addend 0. config/arm9
-   carries two symbols at 0x02099edc -- `_ZTV9ActorBase` and the older
+   carries two symbols at 0x02099edc -- `_ZTV7fBase_c` and the older
    placeholder `data_02099edc` -- and the legacy files used both. This is the
    one that says what it is. */
-extern void *_ZTV9ActorBase[];
+extern void *_ZTV7fBase_c[];
 
 /* Heap and Memory, by their exact ROM names.
    `void *` rather than `Heap *` throughout, deliberately: include/Heap.h has a
@@ -150,7 +150,7 @@ extern void *_ZTV9ActorBase[];
    change this round has no reason to risk. include/Heap.h itself declares
    InitializeSolidHeapAsDefault as returning `void *`, so that part is the
    tree's own choice, not an evasion. Memory::Deallocate and data_020a0eac come
-   from include/ActorBase.h, which needs them for its inline operator delete. */
+   from include/fBase_c.h, which needs them for its inline operator delete. */
 extern void *_ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i(u32 size, void *root,
                                                           int align);
 extern void *_ZN6Memory8AllocateEjiP4Heap(unsigned int size, int align, void *heap);
@@ -163,57 +163,57 @@ extern void  _ZN4Heap11ResizeToFitEv(void *h);
 
 /* ========================================================================= *
  * ROM ordinals 23, 22 and 21 -- the destructor variants.
- *   _ZN9ActorBaseD2Ev  0x02043d48  size 0x30   (base-object)
- *   _ZN9ActorBaseD0Ev  0x02043d78  size 0x44   (deleting)
- *   _ZN9ActorBaseD1Ev  0x02043dbc  size 0x30   (complete-object)
+ *   _ZN7fBase_cD2Ev  0x02043d48  size 0x30   (base-object)
+ *   _ZN7fBase_cD0Ev  0x02043d78  size 0x44   (deleting)
+ *   _ZN7fBase_cD1Ev  0x02043dbc  size 0x30   (complete-object)
  * Written D1, D0, D2 so the reversal emits them D2, D0, D1 -- the ROM's order.
  *
- * ActorBase is the root: there is no base destructor to chain to. Each variant
+ * fBase_c is the root: there is no base destructor to chain to. Each variant
  * stores the vptr, then destroys the two ProcessingListNode members in REVERSE
  * declaration order (renderNode at 0x38 before behavNode at 0x28), and returns
  * `this`. D0 additionally hands the object back to the actor heap, which is
- * what an inline `operator delete` compiles to -- see include/ActorBase.h.
+ * what an inline `operator delete` compiles to -- see include/fBase_c.h.
  * D1 and D2 are byte-identical, which for a root class they must be.
  * ========================================================================= */
-extern "C" ActorBase *_ZN9ActorBaseD1Ev(ActorBase *self)
+extern "C" fBase_c *_ZN7fBase_cD1Ev(fBase_c *self)
 {
-    *(int *)self = (int)_ZTV9ActorBase;
+    *(int *)self = (int)_ZTV7fBase_c;
     func_020440e8(&self->renderNode);
     func_020440e8(&self->behavNode);
     return self;
 }
 
-extern "C" ActorBase *_ZN9ActorBaseD0Ev(ActorBase *self)
+extern "C" fBase_c *_ZN7fBase_cD0Ev(fBase_c *self)
 {
-    *(int *)self = (int)_ZTV9ActorBase;
+    *(int *)self = (int)_ZTV7fBase_c;
     func_020440e8(&self->renderNode);
     func_020440e8(&self->behavNode);
     _ZN6Memory10DeallocateEPvP4Heap(self, data_020a0eac);
     return self;
 }
 
-extern "C" ActorBase *_ZN9ActorBaseD2Ev(ActorBase *self)
+extern "C" fBase_c *_ZN7fBase_cD2Ev(fBase_c *self)
 {
-    *(int *)self = (int)_ZTV9ActorBase;
+    *(int *)self = (int)_ZTV7fBase_c;
     func_020440e8(&self->renderNode);
     func_020440e8(&self->behavNode);
     return self;
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- ActorBase::Process, 0x02043c88, size 0xc0               */
+/* ROM ordinal 20 -- fBase_c::Process, 0x02043c88, size 0xc0               */
 /* ------------------------------------------------------------------------- */
 /* The per-frame driver: run the `before` guard, then the work, then the
  * `after` hook with a VirtualFuncSuccess code derived from the work's result.
  * The three arguments are POINTERS TO MEMBER FUNCTIONS -- the mangled name says
- * so (`MS_FivE`, `MS_FbvE`, `MS_FvjE` = pointer-to-member-of-ActorBase), and
+ * so (`MS_FivE`, `MS_FbvE`, `MS_FvjE` = pointer-to-member-of-fBase_c), and
  * that is the one part of a mangled parameter list this project did not have to
  * guess, because no other type spells `M`.
  *
  * KEPT AS AN extern "C" FREE FUNCTION WITH AN EXPLICIT `self`. The mangled name
  * describes a real method, so the honest form would be a member. It is not used
  * here for a measured reason: a pointer-to-member of a POLYMORPHIC class is a
- * different representation from one of the flat `struct ActorBase { int v0(); }`
+ * different representation from one of the flat `struct fBase_c { int v0(); }`
  * the legacy file declared, and the legacy shadow is what these bytes were
  * recovered against. Swapping in the real class here is a codegen change, not a
  * spelling change. The local shadow it needed could not survive in this TU
@@ -226,7 +226,7 @@ struct ActorBase_ProcessSelf {
 typedef int  (ActorBase_ProcessSelf::*ActorBase_PMFi)();
 typedef void (ActorBase_ProcessSelf::*ActorBase_PMFv)(int);
 
-extern "C" int _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(
+extern "C" int _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE(
     ActorBase_ProcessSelf *self, ActorBase_PMFi b, ActorBase_PMFi a,
     ActorBase_PMFv c)
 {
@@ -245,37 +245,37 @@ extern "C" int _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- ActorBase::InitResources, 0x02043c80, size 0x8          */
+/* ROM ordinal 19 -- fBase_c::InitResources, 0x02043c80, size 0x8          */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 0. Base loads nothing and returns VS_FAIL (1).
  *
  * THE KEY FUNCTION, AND THE REASON THIS ONE IS NOT A METHOD. See the file
- * banner: a real `s32 ActorBase::InitResources()` anywhere makes that TU emit
- * _ZTV9ActorBase and collide with the gap object's copy of the ROM's own
+ * banner: a real `s32 fBase_c::InitResources()` anywhere makes that TU emit
+ * _ZTV7fBase_c and collide with the gap object's copy of the ROM's own
  * vtable. Its DECLARATION in the class is required and harmless -- removing it
  * would delete slot 0 and shift the other seventeen. */
-extern "C" int _ZN9ActorBase13InitResourcesEv(void)
+extern "C" int _ZN7fBase_c13InitResourcesEv(void)
 {
     return 1; /* VS_FAIL */
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- ActorBase::BeforeInitResources, 0x02043c78, size 0x8    */
+/* ROM ordinal 18 -- fBase_c::BeforeInitResources, 0x02043c78, size 0x8    */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 1, the init guard. Base returns VS_FAIL (1). */
-bool ActorBase::BeforeInitResources()
+bool fBase_c::BeforeInitResources()
 {
     return 1; /* VS_FAIL */
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- ActorBase::AfterInitResources(u32), 0x02043bf8, 0x80    */
+/* ROM ordinal 17 -- fBase_c::AfterInitResources(u32), 0x02043bf8, 0x80    */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 2. Only acts on VS_SUCCESS (2): unlink from the pending list,
  * then either flag the actor as deferred (when the global at data_02099f24
  * reads 3) or link it into both the behaviour and render lists and mark it
  * alive. */
-void ActorBase::AfterInitResources(u32 vfSuccess)
+void fBase_c::AfterInitResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
         return;
@@ -292,20 +292,20 @@ void ActorBase::AfterInitResources(u32 vfSuccess)
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- ActorBase::CleanupResources, 0x02043bf0, size 0x8       */
+/* ROM ordinal 16 -- fBase_c::CleanupResources, 0x02043bf0, size 0x8       */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 3. Base releases nothing and returns VS_FAIL (1). */
-s32 ActorBase::CleanupResources()
+s32 fBase_c::CleanupResources()
 {
     return 1; /* VS_FAIL */
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- ActorBase::BeforeCleanupResources, 0x02043bac, 0x44     */
+/* ROM ordinal 15 -- fBase_c::BeforeCleanupResources, 0x02043bac, 0x44     */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 4. Refuses cleanup while unk_048 is still busy, or once the
  * scene node has been unlinked. */
-int ActorBase::BeforeCleanupResources()
+int fBase_c::BeforeCleanupResources()
 {
     int v = (int)unk_048;
     if (v != 0) {
@@ -321,7 +321,7 @@ ret1:
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 14 -- ActorBase::AfterCleanupResources(u32), 0x02043b2c, 0x80 */
+/* ROM ordinal 14 -- fBase_c::AfterCleanupResources(u32), 0x02043b2c, 0x80 */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 5, and the one member that destroys the object. Only runs on
  * VS_SUCCESS (2): unlink the scene node and the behaviour node, tear down the
@@ -329,11 +329,11 @@ ret1:
  *
  * THE DESTRUCTOR CALL IS A VIRTUAL DISPATCH THROUGH vtable+0x40, AND THAT IS
  * SLOT 16 -- the D1 complete-object destructor, NOT OnPendingDestroy, which is
- * slot 12 at vtable+0x30. include/ActorBase.h records the same thing: calling
+ * slot 12 at vtable+0x30. include/fBase_c.h records the same thing: calling
  * vtable+0x40 OnPendingDestroy would describe a leak, because the deallocation
  * on the next line is separate.
  *
- * Written as `this->~ActorBase()`, which is a real virtual call: for a class
+ * Written as `this->~fBase_c()`, which is a real virtual call: for a class
  * with a virtual destructor an explicit pseudo-destructor call dispatches on
  * the dynamic type, so it lands on slot 16 exactly as the ROM does. The legacy
  * file had to fake this with a shadow class carrying a dummy
@@ -346,7 +346,7 @@ ret1:
  * cartridge instead. It does reproduce -- verified under the pin both as the
  * legacy file and here -- but "matching" and "enrolled" are different
  * questions, and this one was only ever the former. */
-void ActorBase::AfterCleanupResources(u32 vfSuccess)
+void fBase_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess != 2)
         return;
@@ -356,25 +356,25 @@ void ActorBase::AfterCleanupResources(u32 vfSuccess)
         _ZN4Heap8_DestroyEv(heap);
     if (unk_048)
         func_02044334(unk_048);
-    this->~ActorBase();   /* vtable+0x40 = slot 16 = D1 */
+    this->~fBase_c();   /* vtable+0x40 = slot 16 = D1 */
     _ZN6Memory10DeallocateEPvP4Heap(this, data_020a0eac);
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 13 -- ActorBase::Behavior, 0x02043b24, size 0x8              */
+/* ROM ordinal 13 -- fBase_c::Behavior, 0x02043b24, size 0x8              */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 6, the per-frame update tick. Base does nothing, VS_FAIL (1). */
-s32 ActorBase::Behavior()
+s32 fBase_c::Behavior()
 {
     return 1; /* VS_FAIL */
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- ActorBase::BeforeBehavior, 0x02043afc, size 0x28       */
+/* ROM ordinal 12 -- fBase_c::BeforeBehavior, 0x02043afc, size 0x28       */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 7. Skips the tick once the actor is marked for death, or when
  * bit 1 of the spawn-flag byte is set. */
-int ActorBase::BeforeBehavior()
+int fBase_c::BeforeBehavior()
 {
     if (shouldBeKilled != 0)
         goto ret0;
@@ -387,28 +387,28 @@ ret1:
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 11 -- ActorBase::AfterBehavior(u32), 0x02043af8, size 0x4    */
+/* ROM ordinal 11 -- fBase_c::AfterBehavior(u32), 0x02043af8, size 0x4    */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 8. Base does nothing; leaf classes override. */
-void ActorBase::AfterBehavior(u32 vfSuccess)
+void fBase_c::AfterBehavior(u32 vfSuccess)
 {
     u32 unused = vfSuccess;
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 10 -- ActorBase::Render, 0x02043af0, size 0x8                */
+/* ROM ordinal 10 -- fBase_c::Render, 0x02043af0, size 0x8                */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 9. Base draws nothing and returns VS_FAIL (1). */
-s32 ActorBase::Render()
+s32 fBase_c::Render()
 {
     return 1; /* VS_FAIL */
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 9 -- ActorBase::BeforeRender, 0x02043ac8, size 0x28          */
+/* ROM ordinal 9 -- fBase_c::BeforeRender, 0x02043ac8, size 0x28          */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 10. The render twin of BeforeBehavior, on bit 3 instead of 1. */
-int ActorBase::BeforeRender()
+int fBase_c::BeforeRender()
 {
     if (shouldBeKilled != 0)
         goto ret0;
@@ -421,20 +421,20 @@ ret1:
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 8 -- ActorBase::AfterRender(u32), 0x02043ac4, size 0x4       */
+/* ROM ordinal 8 -- fBase_c::AfterRender(u32), 0x02043ac4, size 0x4       */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 11. Base does nothing; leaf classes override. */
-void ActorBase::AfterRender(u32 vfSuccess)
+void fBase_c::AfterRender(u32 vfSuccess)
 {
     u32 unused = vfSuccess;
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 7 -- ActorBase::OnPendingDestroy, 0x02043ac0, size 0x4       */
+/* ROM ordinal 7 -- fBase_c::OnPendingDestroy, 0x02043ac0, size 0x4       */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 12 (vtable+0x30), fired by MarkForDestruction. Base does
  * nothing; leaf classes override to release or notify. */
-void ActorBase::OnPendingDestroy()
+void fBase_c::OnPendingDestroy()
 {
 }
 
@@ -443,9 +443,9 @@ void ActorBase::OnPendingDestroy()
 /* ------------------------------------------------------------------------- */
 /* The scene-graph list maintainer: reconciles one actor's list membership with
  * its state and its parent's flags. Unnamed in config, and it is not an
- * ActorBase member by any evidence -- but it is INSIDE the class's contiguous
+ * fBase_c member by any evidence -- but it is INSIDE the class's contiguous
  * run, between MarkForDestruction and OnPendingDestroy, and it reads the
- * ActorBase layout directly (state at 0x0e, flags at 0x13, the two list nodes
+ * fBase_c layout directly (state at 0x0e, flags at 0x13, the two list nodes
  * at 0x28 and 0x38), so nothing else can own it.
  *
  * The legacy file reached that layout through three local structs called
@@ -458,7 +458,7 @@ void ActorBase::OnPendingDestroy()
  * recovered against the casts.
  *
  * For the record, since restating a class by hand is exactly what a TU rebuild
- * is supposed to retire, here is what `Obj` maps onto in include/ActorBase.h --
+ * is supposed to retire, here is what `Obj` maps onto in include/fBase_c.h --
  * so the next pass can try the real members one at a time and measure:
  *     0x0e state  = aliveState        0x12 pad12 = unk_012
  *     0x0f dirty  = shouldBeKilled    0x13 flags = unk_013
@@ -515,7 +515,7 @@ extern "C" int func_02043880(ActorBase_Raw *o)
         func_0203b20c(data_020a4ba8, &o->n28);
         o->state = 2;
         for (it = o->list; it != 0; it = it->next) {
-            ((ActorBase *)it->obj)->MarkForDestruction();
+            ((fBase_c *)it->obj)->MarkForDestruction();
         }
     } else {
         u32 state;
@@ -605,11 +605,11 @@ extern "C" int func_02043880(ActorBase_Raw *o)
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- ActorBase::MarkForDestruction, 0x02043824, size 0x5c    */
+/* ROM ordinal 5 -- fBase_c::MarkForDestruction, 0x02043824, size 0x5c    */
 /* ------------------------------------------------------------------------- */
 /* Non-virtual. Idempotent, and a no-op once the actor is already dying;
  * otherwise sets the flag and fires slot 12. */
-void ActorBase::MarkForDestruction()
+void fBase_c::MarkForDestruction()
 {
     if (shouldBeKilled != 0)
         return;
@@ -626,7 +626,7 @@ void ActorBase::MarkForDestruction()
 /* The parent-actor accessor: follow sceneNode.unk_004 (0x14 + 0x04 -- the
  * legacy file read it as p[0x14/4], i.e. the first word of sceneNode) and
  * return the owner back-pointer the constructor writes at its +0x10. Reads as
- * ActorBase but is unnamed in config, and func_02043880 above is its only
+ * fBase_c but is unnamed in config, and func_02043880 above is its only
  * caller in this run. */
 extern "C" void *func_02043810(void *p)
 {
@@ -637,7 +637,7 @@ extern "C" void *func_02043810(void *p)
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- ActorBase::Virtual34(u32, u32), 0x0204357c, size 0x294  */
+/* ROM ordinal 3 -- fBase_c::Virtual34(u32, u32), 0x0204357c, size 0x294  */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 13 (vtable+0x34). Builds the actor's dedicated heap. Tries the
  * requested size first, then an unbounded solid heap, then a right-sized
@@ -648,7 +648,7 @@ extern "C" void *func_02043810(void *p)
  * OnHeapCreated -- so this now reads as the virtual it is. The heap's flags
  * word (+4) and top (+8) are still reached by raw offset: see the note on the
  * Heap declarations above. */
-int ActorBase::Virtual34(u32 a, u32 b)
+int fBase_c::Virtual34(u32 a, u32 b)
 {
     void *h = 0;
     u32 avail;
@@ -756,7 +756,7 @@ fail:
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- ActorBase::Virtual38(u32, u32), 0x0204349c, size 0xe0   */
+/* ROM ordinal 2 -- fBase_c::Virtual38(u32, u32), 0x0204349c, size 0xe0   */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 14 (vtable+0x38). The short form of Virtual34: one attempt, no
  * right-sizing retry.
@@ -768,7 +768,7 @@ fail:
  * direct calls, but two definitions of `struct Heap` cannot coexist in one TU,
  * so this member is reconciled onto Virtual34's mangled-name form -- the one of
  * the two that needs no class definition at all. */
-int ActorBase::Virtual38(u32 a, u32 b)
+int fBase_c::Virtual38(u32 a, u32 b)
 {
     if (heap != 0)
         return 1;
@@ -799,19 +799,19 @@ int ActorBase::Virtual38(u32 a, u32 b)
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- ActorBase::OnHeapCreated, 0x02043494, size 0x8          */
+/* ROM ordinal 1 -- fBase_c::OnHeapCreated, 0x02043494, size 0x8          */
 /* ------------------------------------------------------------------------- */
 /* vtable slot 15 (vtable+0x3c), fired by Virtual34/Virtual38 once the actor's
  * heap exists. Base returns VS_FAIL (1); leaf classes override. */
-bool ActorBase::OnHeapCreated()
+bool fBase_c::OnHeapCreated()
 {
     return 1; /* VS_FAIL */
 }
 
 /* ------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- ActorBase::operator new(u32), 0x02043444, size 0x50     */
+/* ROM ordinal 0 -- fBase_c::operator new(u32), 0x02043444, size 0x50     */
 /* ------------------------------------------------------------------------- */
-/* THE LOWEST FUNCTION OF THE RUN, and the one include/ActorBase.h's old
+/* THE LOWEST FUNCTION OF THE RUN, and the one include/fBase_c.h's old
  * 0x02043494 start excluded. Every actor factory in the image calls it -- the
  * literal it is passed is how this project reads each class's size -- so it is
  * unambiguously this class's member.
@@ -820,7 +820,7 @@ bool ActorBase::OnHeapCreated()
  * in-class declaration of operator new outright ("illegal 'operator'
  * declaration"). Its counterpart operator delete IS accepted in-class and is
  * declared there, which is what lets the destructors above reproduce D0. */
-extern "C" void *_ZN9ActorBasenwEj(unsigned int size)
+extern "C" void *_ZN7fBase_cnwEj(unsigned int size)
 {
     void *p = _ZN6Memory8AllocateEjiP4Heap(size, -4, data_020a0eac);
     if (!p)

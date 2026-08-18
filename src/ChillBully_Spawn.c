@@ -13,7 +13,7 @@ extern int data_ov027_02113930[];
 /* vtable identified: VT0 = data_ov064_0211b768 */
 int *ChillBully_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1020);
+    int *p = (int *)_ZN7fBase_cnwEj(1020);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)data_ov064_0211b768;

@@ -7,7 +7,7 @@
 // recovered name: daSCoin_c_Behavior
 /* recovered: renamed to Class_Method */
 /* daSCoin_c::Behavior - recovered from vtable slot identity */
-class ActorBase {
+class fBase_c {
 public:
     void MarkForDestruction();
 };
@@ -28,7 +28,7 @@ extern "C" int func_ov002_020f06c0(char *c)
     if (self->unk_113) {
         if (DecIfAbove0_Byte((unsigned char *)(c + 0x113)) == 0) {
             func_ov002_020f05f4(c);
-            ((ActorBase *)c)->MarkForDestruction();
+            ((fBase_c *)c)->MarkForDestruction();
         }
         return 1;
     }
@@ -51,7 +51,7 @@ extern "C" int func_ov002_020f06c0(char *c)
         }
     }
     if (self->unk_10f == 1 && self->unk_110 == 5) {
-        ((ActorBase *)c)->MarkForDestruction();
+        ((fBase_c *)c)->MarkForDestruction();
         return 1;
     }
     func_ov002_020f051c(c);

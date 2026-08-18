@@ -9,7 +9,7 @@ extern int data_ov047_021122a0[];
 /* vtable identified: VT0 = _ZTV17daObjKurumajiku_c */
 int *RickshawBs_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(816);
+    int *p = (int *)_ZN7fBase_cnwEj(816);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV17daObjKurumajiku_c;

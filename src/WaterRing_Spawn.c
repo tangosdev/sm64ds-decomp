@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV9WaterRing */
 int *WaterRing_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(912);
+    int *p = (int *)_ZN7fBase_cnwEj(912);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV9WaterRing;

@@ -36,7 +36,7 @@ struct CheepCheep : dEnemyBase_c {
     int Render();
 
     /* Tail padding. The field span stops short of the real size: CheepCheep_Spawn
-       calls ActorBase::operator new(0x388), read off the retail
+       calls fBase_c::operator new(0x388), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_380[0x8];      /* 0x380, to the ROM's 0x388 */
 };

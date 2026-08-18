@@ -10,7 +10,7 @@
  *     MovingCylinderClsn  0x0d4 + 0x034 = 0x108   -> unk_108
  *
  * sizeof is 0x118, which is not inferred from the fields: BowserTail_Spawn asks
- * ActorBase::operator new for 280 bytes.
+ * fBase_c::operator new for 280 bytes.
  *
  * The position fields the generated header declared at 0x5c..0x64 are gone from
  * this half on purpose -- they are Actor's mPosX/mPosY/mPosZ and are inherited

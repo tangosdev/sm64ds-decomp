@@ -9,7 +9,7 @@ extern int _ZTV18TiltingPlatformLll[];
 /* vtable identified: VT0 = _ZTV15daObjGuragura_c */
 int *TiltingPlatformLll_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(848);
+    int *p = (int *)_ZN7fBase_cnwEj(848);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV15daObjGuragura_c;

@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   TinyCover_Spawn  ActorBase::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV9TinyCover,
+ *   TinyCover_Spawn  fBase_c::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV9TinyCover,
  *                 then the members below in this order.
  *   ~TinyCover   the same members destroyed in reverse, then ~dBgActor_c.
  *

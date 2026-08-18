@@ -1,11 +1,11 @@
 #include "types.h"
-extern int _ZN6Player9StartTalkER9ActorBaseb(void *target, void *self, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void *target, void *self, int b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern int _Z14ApproachLinearRsss(void *dst, short a, short b);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, short a);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *self, void *ab, unsigned msg, void *v, unsigned a, unsigned b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *self, void *ab, unsigned msg, void *v, unsigned a, unsigned b);
 extern void func_0201267c(int id, void *p);
 extern int _ZN6Player12GetTalkStateEv(void *self);
 extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, void *pos, void *c, int d, int e);
@@ -22,7 +22,7 @@ int func_ov018_02111fac(char *c)
     switch (*(unsigned char *)(c + 0x388)) {
     case 0:
         if (*(int *)(c + 0x194) & 0x8000000) {
-            if (_ZN6Player9StartTalkER9ActorBaseb(*(void **)(c + 0x374), c, 1)) {
+            if (_ZN6Player9StartTalkER7fBase_cb(*(void **)(c + 0x374), c, 1)) {
                 u8 *p = U8P(c, 0x388);
                 *p = *p + 1;
             }
@@ -41,7 +41,7 @@ int func_ov018_02111fac(char *c)
                 v[0] = *(int *)(data_020a0e68 + 0x24);
                 v[1] = *(int *)(data_020a0e68 + 0x28);
                 v[2] = *(int *)(data_020a0e68 + 0x2c);
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
                         *(void **)(c + 0x374), c, *(s16 *)(c + 0x300 + 0x84), v, 0, 0)) {
                     func_0201267c(0xdf, c + 0x74);
                     {

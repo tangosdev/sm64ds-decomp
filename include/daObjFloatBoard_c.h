@@ -27,7 +27,7 @@
  * (FloatOnWaterPlatformWdwRectangle). Each destructor stores this class's vtable
  * between its own and _ZTV10dBgActor_c.
  *
- * SIZE 0x348, the literal all three factories pass to ActorBase::operator new.
+ * SIZE 0x348, the literal all three factories pass to fBase_c::operator new.
  *
  * THE FIELDS BELOW ARE THIS CLASS'S, read off methods that are this class's own
  * vtable slots and live in this class's own overlay. A method can reach its own

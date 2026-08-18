@@ -1,6 +1,6 @@
 typedef int Fix12i;
 extern int _ZN5Actor10FindWithIDEj(unsigned int id);
-extern void _ZN9ActorBase18MarkForDestructionEv(char* c);
+extern void _ZN7fBase_c18MarkForDestructionEv(char* c);
 extern int Vec3_HorzDist(char* a, char* b);
 extern void func_ov002_020e9448(char* c);
 extern void func_ov002_020e81e0(char* c);
@@ -11,7 +11,7 @@ extern signed char data_0209f2f8;
 void func_ov002_020ea824(char* c)
 {
     char* o = (char*)_ZN5Actor10FindWithIDEj(*(unsigned int*)(c + 0x434));
-    if (o == 0) { _ZN9ActorBase18MarkForDestructionEv(c); return; }
+    if (o == 0) { _ZN7fBase_c18MarkForDestructionEv(c); return; }
     if (Vec3_HorzDist(c + 0x5c, o + 0x5c) < *(int*)(c + 0x98)) {
         int* src = (int*)(o + 0x5c);
         int* yp = (int*)(c + 0x60);

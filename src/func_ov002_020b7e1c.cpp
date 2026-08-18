@@ -5,8 +5,8 @@
 
 
 struct WithMeshClsn { int IsOnGround() const; };
-struct ActorBase { void MarkForDestruction(); };
-struct Actor : ActorBase {
+struct fBase_c { void MarkForDestruction(); };
+struct Actor : fBase_c {
     static int Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
     void SetRanges(int, int, int, int);
 };
@@ -33,7 +33,7 @@ int func_ov002_020b7e1c(char* self) {
             }
         }
         if (DecIfAbove0_Short((unsigned short*)(self + 0x100)) == 1) {
-            ((ActorBase*)self)->MarkForDestruction();
+            ((fBase_c*)self)->MarkForDestruction();
         }
         return 1;
     }
@@ -43,7 +43,7 @@ int func_ov002_020b7e1c(char* self) {
     func_ov002_020b6fcc(self);
     if (data_02092138 > *(int*)(self + 0x60)) {
         SaveData::PlayerLoseCap();
-        ((ActorBase*)self)->MarkForDestruction();
+        ((fBase_c*)self)->MarkForDestruction();
     }
     return 1;
 }

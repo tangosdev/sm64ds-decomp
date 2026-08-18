@@ -1,6 +1,6 @@
 #include "types.h"
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void func_02035860(char *o, void *src);
 extern void func_ov002_020e9464(char *p);
 extern void func_ov002_020e7454(char *self);
@@ -12,7 +12,7 @@ void func_ov002_020e8abc(char *self)
 
     a = (char *)_ZN5Actor10FindWithIDEj(*(unsigned int *)(self + 0x434));
     if (a == 0) {
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
         return;
     }
 

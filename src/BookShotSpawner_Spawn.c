@@ -7,7 +7,7 @@
 /* resolved: VT = _ZTV15BookShotSpawner */
 int *BookShotSpawner_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(216);
+    int *p = (int *)_ZN7fBase_cnwEj(216);
     if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV15BookShotSpawner; }
     return p;
 }

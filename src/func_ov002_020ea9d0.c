@@ -10,7 +10,7 @@ extern s32 data_0209b454;
 extern s8 data_0209f2f8;
 
 extern void func_ov002_020e9590(void *self);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void func_02012694(u32 id, void *v);
 extern void func_ov002_020e9448(void *p);
 extern char *_ZN5Actor10FindWithIDEj(u32 id);
@@ -32,7 +32,7 @@ void func_ov002_020ea9d0(void *arg0)
     if (*(u8 *)(c + 0x49d) != 0) {
         func_ov002_020e9590(c);
         if (*(s32 *)(c + 0x434) == 0) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return;
         }
     }

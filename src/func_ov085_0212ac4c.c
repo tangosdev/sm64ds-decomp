@@ -1,6 +1,6 @@
 extern char *_ZN5Actor13ClosestPlayerEv(void *self);
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void *self, void *other, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void *self, void *other, int b);
 extern int func_ov085_0212bc78(void *c, void *p);
 extern int data_ov085_021306dc;
 
@@ -62,7 +62,7 @@ int func_ov085_0212ac4c(char *c)
             if (ok != 0) {
                 *(char **)(c + 0x460) = o;
                 o = *(char **)(c + 0x460);
-                if (_ZN6Player9StartTalkER9ActorBaseb(o, c, 0) != 0) {
+                if (_ZN6Player9StartTalkER7fBase_cb(o, c, 0) != 0) {
                     func_ov085_0212bc78(c, &data_ov085_021306dc);
                 }
             }

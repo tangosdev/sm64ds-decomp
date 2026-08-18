@@ -12,8 +12,8 @@ extern void MulVec3Mat4x3(void* in, void* m, void* out);
 extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, struct Vector3* v);
 extern void _ZN6Camera6SetPosERK7Vector3(void* cam, struct Vector3* v);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
 extern void func_02012694(int a, void* p);
 extern int ChiefChilly_ChangeState(void* c, void* p);
 
@@ -74,9 +74,9 @@ int func_ov073_0211fc78(char* c) {
         msg = (short)(*(int*)((char*)*(void**)(c + 0x3e4) + 8) + 0xe7);
         _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
         _ZN7Message11PrepareTalkEv();
-        if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(c + 0x3e4), c, 1)) {
+        if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(c + 0x3e4), c, 1)) {
             _ZN6Camera9SetFlag_3Ev(cam);
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(c + 0x3e4), c, msg, &msgpos[1], 0, 2)) {
+            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x3e4), c, msg, &msgpos[1], 0, 2)) {
                 func_02012694(0x12a, (void*)(c + 0x74));
                 ChiefChilly_ChangeState(c, &data_ov073_02123410);
             }

@@ -1,7 +1,7 @@
 //cpp
 /* dScene_c::BeforeCleanupResources() at 0x0202e5f0, 0x3c bytes -- vtable slot 4.
  *
- * Chains to ActorBase's, gives up if it fails, and otherwise tears down the object
+ * Chains to fBase_c's, gives up if it fails, and otherwise tears down the object
  * at 0x0209b53c through 0x02011974. The early exit is a real early return, not a
  * predicated fall-through: the ROM ends the failing path with its own
  * `addeq sp,#4; ldmeq sp!,{lr}; bxeq lr` rather than branching to the tail. */
@@ -17,7 +17,7 @@ extern void func_02011974(void *object);
 
 int dScene_c::BeforeCleanupResources()
 {
-    if (!ActorBase::BeforeCleanupResources())
+    if (!fBase_c::BeforeCleanupResources())
         return 0;
     func_02011974(&data_0209b53c);
     return 1;

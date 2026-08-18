@@ -10,7 +10,7 @@
 /* resolved: VT0 = _ZTV19FirePiranhaPlantBig */
 int *FirePiranhaPlantSmall_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(556);
+    int *p = (int *)_ZN7fBase_cnwEj(556);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV19FirePiranhaPlantBig;

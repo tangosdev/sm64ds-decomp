@@ -7,9 +7,9 @@ void func_ov030_02111890(void *c);
 s16 Vec3_HorzAngle(const void *v0, const void *v1);
 int _Z14ApproachLinearRsss(s16 *v, s16 target, s16 step);
 s32 Vec3_Dist(const void *a, const void *b);
-int _ZN6Player9StartTalkER9ActorBaseb(void *player, void *actor, int b);
+int _ZN6Player9StartTalkER7fBase_cb(void *player, void *actor, int b);
 void func_ov030_02111908(void *c);
-int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *player, void *actor, unsigned int id, const void *pos, unsigned int a, unsigned int b);
+int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *player, void *actor, unsigned int id, const void *pos, unsigned int a, unsigned int b);
 void _ZN9Animation8SetFlagsEi(void *thiz, int flags);
 void func_0201267c(int a, void *b);
 int _ZN6Player12GetTalkStateEv(void);
@@ -18,7 +18,7 @@ int _ZNK12WithMeshClsn13JustHitGroundEv(const void *thiz);
 int _ZN9Animation8FinishedEv(void *thiz);
 void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fx, int e);
 u8 DecIfAbove0_Byte(u8 *p);
-void _ZN9ActorBase18MarkForDestructionEv(void *thiz);
+void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
 void _ZN9Animation7AdvanceEv(void *thiz);
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 void func_ov030_02111f6c(void *c, void *w);
@@ -53,7 +53,7 @@ int func_ov030_02112578(void *arg0)
     case 1:
         _Z14ApproachLinearRsss((s16 *)(c + 0x8e), Vec3_HorzAngle(c + 0x5c, (u8 *)r6 + 0x5c), 0x300);
         if (Vec3_Dist(c + 0x5c, (u8 *)r6 + 0x5c) < 0x96000) {
-            if (_ZN6Player9StartTalkER9ActorBaseb(r6, arg0, 1) != 0) {
+            if (_ZN6Player9StartTalkER7fBase_cb(r6, arg0, 1) != 0) {
                 { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
             }
         }
@@ -65,7 +65,7 @@ int func_ov030_02112578(void *arg0)
         sp[1] = *(s32 *)(c + 0x60);
         sp[2] = *(s32 *)(c + 0x64);
         sp[1] += 0x50000;
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(r6, arg0, 0xbd, sp, 1, 0) != 0) {
+        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(r6, arg0, 0xbd, sp, 1, 0) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115cf8[1], 0, 0x1000, 0);
             _ZN9Animation8SetFlagsEi(c + 0x124, 0);
             func_0201267c(0xd1, c + 0x74);
@@ -129,7 +129,7 @@ int func_ov030_02112578(void *arg0)
         break;
     case 10:
         if (_ZN5Actor15FindWithActorIDEjPS_(0x67, 0) == 0) {
-            _ZN9ActorBase18MarkForDestructionEv(arg0);
+            _ZN7fBase_c18MarkForDestructionEv(arg0);
         }
         break;
     default:

@@ -32,11 +32,11 @@
 
 extern "C" {
 /* The parent every actor spawned through this path is attached to. */
-extern ActorBase *data_0209f5c0;
+extern fBase_c *data_0209f5c0;
 
 /* 0x02010e78. Stages the placement for the spawn that follows; its own return
    value is discarded here, so nothing about it is evidenced. */
-ActorBase *func_02010e78(const Vector3 *pos, const Vector3_16 *rot,
+fBase_c *func_02010e78(const Vector3 *pos, const Vector3_16 *rot,
                          s8 areaID, s16 deathTableID);
 }
 

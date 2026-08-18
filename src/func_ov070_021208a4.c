@@ -4,7 +4,7 @@ extern int WithMeshClsn_UpdateDiscreteNoLava_veneer();
 extern int _ZNK12WithMeshClsn13JustHitGroundEv();
 extern int DecIfAbove0_Byte();
 extern int _ZN5Actor8PoofDustEv();
-extern int _ZN9ActorBase18MarkForDestructionEv();
+extern int _ZN7fBase_c18MarkForDestructionEv();
 int func_ov070_021208a4(char *c){
  *(short*)(c+0x8c)=*(short*)(c+0x8c)-0x1000;
  _ZN9Animation7AdvanceEv((char*)c+0x124);
@@ -14,7 +14,7 @@ int func_ov070_021208a4(char *c){
    if(DecIfAbove0_Byte((char*)c+0x430)!=0) goto end;
  }
  _ZN5Actor8PoofDustEv(c);
- _ZN9ActorBase18MarkForDestructionEv(c);
+ _ZN7fBase_c18MarkForDestructionEv(c);
 end:
  return 1;
 }

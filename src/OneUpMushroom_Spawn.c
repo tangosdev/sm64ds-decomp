@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV13OneUpMushroom */
 int *OneUpMushroom_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(920);
+    int *p = (int *)_ZN7fBase_cnwEj(920);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV13OneUpMushroom;

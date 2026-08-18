@@ -9,7 +9,7 @@ extern int _ZTV9PushBlock[];
 /* vtable identified: VT0 = _ZTV9PushBlock */
 int *PushBlock_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1268);
+    int *p = (int *)_ZN7fBase_cnwEj(1268);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV9PushBlock;

@@ -24,7 +24,7 @@ struct MovingBar : dBgActor_c {
     s32 unk_328;                      /* 0x328 */
     s32 mVariant;                     /* 0x32c */
     /* Both factories storing _ZTV9MovingBar (ov015:0x0211458c) -- MovingBarBig_Spawn
-       and MovingBarSmall_Spawn -- call ActorBase::operator new(0x338). They agree, so
+       and MovingBarSmall_Spawn -- call fBase_c::operator new(0x338). They agree, so
        they are two spawn-info variants of one actor, and 0x330 was the field span
        rather than the size. */
     u8 pad_330[0x8];                  /* 0x330, to the ROM's 0x338 */
@@ -51,7 +51,7 @@ typedef char MovingBar_size_must_be_0x338[sizeof(MovingBar) == 0x338 ? 1 : -1];
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct MovingBar {
     u8  pad_000[0xc];
-    /* 0x00c..0x05c is ActorBase's, and ActorBase.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x00c..0x05c is fBase_c's, and fBase_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     u16 unk_00c;                 /* 0x00c */
     u8  aliveState;              /* 0x00e */

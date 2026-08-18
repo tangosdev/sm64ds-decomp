@@ -10,7 +10,7 @@ struct WithMeshClsn;
 
 extern "C" {
 int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, Fix12i d);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
+void _ZN7fBase_c18MarkForDestructionEv(void* self);
 unsigned short DecIfAbove0_Short(unsigned short* p);
 void* _ZN5Actor10FindWithIDEj(unsigned int id);
 void _ZN6Player4BurnEv(void* self);
@@ -40,7 +40,7 @@ int LavaBubble::Behavior()
 
     if (_ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000)) {
         if (unk_310 != 0)
-            _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+            _ZN7fBase_c18MarkForDestructionEv(((char*)this));
         return 1;
     }
 

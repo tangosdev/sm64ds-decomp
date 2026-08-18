@@ -8,7 +8,7 @@
  * had overridden it.
  *
  * mTalkActor is declared u8 in Player.h but holds an actor pointer -- +0xb0
- * is read through it, which is ActorBase's mFlags. Reached through a cast
+ * is read through it, which is fBase_c's mFlags. Reached through a cast
  * here rather than retyping the field, because Player::St_Talk_Main reaches
  * it the same way and the two should change together.
  */

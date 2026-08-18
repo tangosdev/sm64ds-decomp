@@ -9,7 +9,7 @@ extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void* a, CylinderClsn* c);
 extern "C" void func_02012694(int a, void* p);
 extern "C" int _Z14ApproachLinearRsss(short& v, short a, short b);
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
-extern "C" void _ZN9ActorBase18MarkForDestructionEv(void* a);
+extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* a);
 extern int data_02092138;
 
 extern "C" int func_ov073_02122200(char* thiz)
@@ -28,7 +28,7 @@ extern "C" int func_ov073_02122200(char* thiz)
     }
     if (DecIfAbove0_Short((unsigned short*)(c + 0x330)) == 0 ||
         data_02092138 - 0xc8000 > *(int*)(c + 0x60)) {
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
     return 1;
 }

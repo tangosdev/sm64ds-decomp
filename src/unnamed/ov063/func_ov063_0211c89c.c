@@ -7,7 +7,7 @@ extern int Vec3_Dist(const Vec3 *a, const Vec3 *b);
 extern short Vec3_HorzAngle(const Vec3 *a, const Vec3 *b);
 extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void *actor, u16 *p);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const Vec3 *pos, unsigned int d);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 void func_ov063_0211c89c(char *c) {
     Vec3 pp;
@@ -71,7 +71,7 @@ void func_ov063_0211c89c(char *c) {
     case 3:
         if (_ZN5Sound15PlaySecretSoundEP5ActorPt(c, (u16*)(c + 0x14e)) == 0)
             return;
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return;
     }
 }

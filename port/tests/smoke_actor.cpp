@@ -1,7 +1,7 @@
 // Gate-9 smoke: a real actor lives its lifecycle on host.
 //
 // ArrowSignRight_Spawn allocates from the game heap and runs the ctor
-// chain (dBgActor_c -> Actor -> ActorBase, Model and MovingMeshCollider
+// chain (dBgActor_c -> Actor -> fBase_c, Model and MovingMeshCollider
 // subobjects, ShadowModel); then every lifecycle step dispatches THROUGH
 // THE VTABLE exactly as the game's processing lists do: InitResources
 // loads the sign's model and collider through the full asset pipeline,
@@ -41,7 +41,7 @@ void hal_fill_shadow_vtable(void);
 void hal_fill_mmc_vtable(void);
 }
 
-/* the ActorBase virtual surface, MSVC view: dispatch helpers */
+/* the fBase_c virtual surface, MSVC view: dispatch helpers */
 typedef int (__thiscall *Fn0)(void *);
 static int vcall0(void *actor, int slot)
 {

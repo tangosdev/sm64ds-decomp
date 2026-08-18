@@ -34,7 +34,7 @@ struct KnockDownPlank : dBgActor_c {
     s8 unk_396;                       /* 0x396 */
     u8 unk_397;                       /* 0x397 */
     /* KnockDownPlank_Spawn, the one factory storing _ZTV14KnockDownPlank
-       (ov015:0x02114420), calls ActorBase::operator new(0x39c). The field span
+       (ov015:0x02114420), calls fBase_c::operator new(0x39c). The field span
        stopping at 0x398 is a lower bound, not the size. */
     u8 pad_398[0x4];                  /* 0x398, to the ROM's 0x39c */
 

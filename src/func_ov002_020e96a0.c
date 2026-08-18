@@ -5,7 +5,7 @@ extern void func_ov002_020e8244(int *out, char *c);
 extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(char *c, int *pos, int num, int b, int t, char *p);
 extern void _ZN5Actor11UntrackStarERa(char *c, signed char *p);
 extern void func_ov002_020e7e58(char *c);
-extern void _ZN9ActorBase18MarkForDestructionEv(char *c);
+extern void _ZN7fBase_c18MarkForDestructionEv(char *c);
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(char *c);
 extern void func_ov002_020e8098(char *c);
 
@@ -31,7 +31,7 @@ void func_ov002_020e96a0(char *c)
         if (*(unsigned short *)(c + 0x490) < 0x64) return;
         func_ov002_020e7e58(c);
         if ((int)(data_0209f2d8 == 1) != 0) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
         } else {
             _ZN5Actor24KillAndTrackInDeathTableEv(c);
         }

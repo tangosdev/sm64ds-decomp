@@ -40,7 +40,7 @@ extern s32 NumVsStarsObtained(void);
 extern void func_ov002_020e9448(void *self);
 extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void *self);
 extern s32 IsStarCollectedInCurLevel(u32 idx);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void func_ov002_020e8dd8(void *self);
 extern void func_ov002_020e7d08(void *self);
 extern void _ZN5Event8ClearBitEj(u32 bit);
@@ -219,7 +219,7 @@ s32 PowerStar::InitResources()
     if (U8(0x49d) < 8 && S32(0x43c) != 5 && S32(0x43c) != 3 &&
         (s32)(data_0209f2d8 == 1) == 0 && IsStarCollectedInCurLevel(U8(0x49d)) != 0) {
         if (SublevelToLevel(data_0209f2f8) == 0x1d) {
-            _ZN9ActorBase18MarkForDestructionEv(t);
+            _ZN7fBase_c18MarkForDestructionEv(t);
             return 0;
         }
         LU16(0x4a2) |= 4;
@@ -249,13 +249,13 @@ s32 PowerStar::InitResources()
         LinkSilverStarAndStarMarker(sp, t);
     if (data_0209f2f8 == 8 && U8(0x49d) == 7) {
         if (IsStarCollected(SublevelToLevel(8), 1) == 0 || data_0209f220 == 1) {
-            _ZN9ActorBase18MarkForDestructionEv(t);
+            _ZN7fBase_c18MarkForDestructionEv(t);
             return ret;
         }
     }
     if (data_0209f2f8 == 7 && U8(0x49d) == 2) {
         if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
-            _ZN9ActorBase18MarkForDestructionEv(t);
+            _ZN7fBase_c18MarkForDestructionEv(t);
             return 0;
         }
     }

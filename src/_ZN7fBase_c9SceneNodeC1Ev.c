@@ -1,8 +1,8 @@
 #include "types.h"
-// @symbol _ZN9ActorBase9SceneNodeC1Ev
+// @symbol _ZN7fBase_c9SceneNodeC1Ev
 /* recovered: named members + shared header */
-#include "ActorBase.h"
-// ActorBase::SceneNode::SceneNode() - C1 constructor
+#include "fBase_c.h"
+// fBase_c::SceneNode::SceneNode() - C1 constructor
 // Address: 0x0203b4c4
 struct SceneNode {
     struct SceneNode* parent;      // 0x00
@@ -12,9 +12,9 @@ struct SceneNode {
     void*             actor;       // 0x10
 };
 
-extern void _ZN9ActorBase9SceneNode5ResetEv(struct SceneNode* self);
+extern void _ZN7fBase_c9SceneNode5ResetEv(struct SceneNode* self);
 
-struct SceneNode* _ZN9ActorBase9SceneNodeC1Ev(struct SceneNode* self) {
-    _ZN9ActorBase9SceneNode5ResetEv(self);
+struct SceneNode* _ZN7fBase_c9SceneNodeC1Ev(struct SceneNode* self) {
+    _ZN7fBase_c9SceneNode5ResetEv(self);
     return self;
 }

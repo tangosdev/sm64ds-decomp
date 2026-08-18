@@ -14,7 +14,7 @@
  * overwrites the vptr with _ZTV8SignPost, which is the same address as
  * _ZTV15daObjTatefuda_c -- one table, two names.
  *
- * SIZE IS 0x5a4, the literal SignPost_Spawn passes to ActorBase::operator new
+ * SIZE IS 0x5a4, the literal SignPost_Spawn passes to fBase_c::operator new
  * (1444). The last named field, the Player * at 0x59c, closes at 0x5a0, so four
  * bytes of tail stay padding.
  *

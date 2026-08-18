@@ -6,7 +6,7 @@
  *
  * Named from the table: 0x020b5be0 is the word slot 3 of
  * _ZTV17daObjFloatBoard_c holds where _ZTV10dBgActor_c holds something else, so
- * it is this class's own override of the virtual ActorBase declares. The
+ * it is this class's own override of the virtual fBase_c declares. The
  * header already recorded that address against this slot; only the definition
  * was still sitting under a func_ov002_ name.
  *

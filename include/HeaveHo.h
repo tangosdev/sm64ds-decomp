@@ -24,7 +24,7 @@
  * also rename things its callers spell.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `HeaveHo_Spawn` calls
- * `ActorBase::operator new(1068)` -- 0x42c -- and stores `_ZTV7HeaveHo`,
+ * `fBase_c::operator new(1068)` -- 0x42c -- and stores `_ZTV7HeaveHo`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x428; the difference is trailing space no source reads.
  */

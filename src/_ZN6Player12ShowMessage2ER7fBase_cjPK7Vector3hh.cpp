@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN6Player12ShowMessage2ER9ActorBasejPK7Vector3hh
+// @symbol _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh
 /* recovered: named members + shared header, real C++ method
  *
  * Starts a message. Already talking is success only at sub-step 0 or 3;
@@ -32,9 +32,9 @@ void func_020731dc(void *a, void *b, void *node);
 void Vec3_RotateYAndTranslate(Vector3 *out, const Vector3 *in, int angle, const Vector3 *src);
 void _ZN6Camera9SetFlag_3Ev(void *self);
 
-int Player::ShowMessage2(ActorBase & actor_, unsigned int msg, const Vector3 * pos, unsigned char d, unsigned char e)
+int Player::ShowMessage2(fBase_c & actor_, unsigned int msg, const Vector3 * pos, unsigned char d, unsigned char e)
 {
-    ActorBase *actor = &actor_;
+    fBase_c *actor = &actor_;
     int r7;
 
     if (IsState(data_ov002_0211046c)) {
@@ -67,7 +67,7 @@ int Player::ShowMessage2(ActorBase & actor_, unsigned int msg, const Vector3 * p
         return 0;
 
     _ZN6Player11ChangeStateERNS_5StateE(this, &data_ov002_0211046c);
-    *(ActorBase **)(&mTalkActor) = actor;
+    *(fBase_c **)(&mTalkActor) = actor;
 
 finish:
     mStateWork = 0;

@@ -31,7 +31,7 @@ struct WallSign : dBgActor_c {
     int Render();
 
     /* Tail padding. The field span stops short of the real size: WallSign_Spawn
-       calls ActorBase::operator new(0x368), read off the retail
+       calls fBase_c::operator new(0x368), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_360[0x8];      /* 0x360, to the ROM's 0x368 */
 };

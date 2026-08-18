@@ -6,7 +6,7 @@
  * convention.
  *
  * SIZE 0x539c, from MgPicturePoker_Spawn.cpp's own
- * `_ZN9ActorBasenwEj(0x539c)`.
+ * `_ZN7fBase_cnwEj(0x539c)`.
  *
  * SHARED TABLE at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64), same
  * as five siblings -- see include/dScMgMemory_c.h's own note. TWO fields
@@ -43,7 +43,7 @@ struct dScMgCard_c : dScMgSingle3DBase_c {
     virtual ~dScMgCard_c();
 
     /* --- this class's own vtable slots, named from the table ---
-       Re-overrides of slots ActorBase already owns, NOT new virtuals: the
+       Re-overrides of slots fBase_c already owns, NOT new virtuals: the
        table stays the base's width and no field moves. Declared AFTER the
        destructor so the destructor is still the first virtual declared. */
     virtual s32 CleanupResources();  /* slot 3 -- ov006 0x020da994 */

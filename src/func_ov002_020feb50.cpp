@@ -7,7 +7,7 @@ extern "C" char* _ZN5Actor10FindWithIDEj(unsigned int id);
 extern "C" void _ZN5Sound4PlayEjjRK7Vector3(unsigned int a, unsigned int b, Vector3 const & v);
 extern "C" void _ZN5Actor13SmallPoofDustEv(char* self);
 extern "C" void func_02012694(unsigned int a, Vector3 const & v);
-extern "C" void _ZN9ActorBase18MarkForDestructionEv(char* self);
+extern "C" void _ZN7fBase_c18MarkForDestructionEv(char* self);
 extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char* self, Vector3 const & v, unsigned int a, int b, unsigned int c, unsigned int d, unsigned int e);
 
 extern "C" void func_ov002_020feb50(char* self) {
@@ -46,7 +46,7 @@ extern "C" void func_ov002_020feb50(char* self) {
     flags = *(s32*)(self + 0x130);
     _ZN5Actor13SmallPoofDustEv(self);
     func_02012694(0x166, *(Vector3*)(self + 0x74));
-    _ZN9ActorBase18MarkForDestructionEv(self);
+    _ZN7fBase_c18MarkForDestructionEv(self);
     if ((flags & 0x10) != 0) {
         return;
     }

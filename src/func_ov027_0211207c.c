@@ -11,7 +11,7 @@ extern int data_ov027_02113a90[];
 /* vtable identified: VT0 = data_ov027_02113a90 */
 int *func_ov027_0211207c(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(988);
+    int *p = (int *)_ZN7fBase_cnwEj(988);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)data_ov027_02113a90;

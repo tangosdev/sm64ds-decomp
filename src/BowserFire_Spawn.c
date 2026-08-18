@@ -10,7 +10,7 @@
 /* resolved: VT0 = _ZTV10BowserFire */
 int *BowserFire_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(908);
+    int *p = (int *)_ZN7fBase_cnwEj(908);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV10BowserFire;

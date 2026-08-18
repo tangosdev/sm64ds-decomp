@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN9ActorBase18AfterInitResourcesEj
+// @symbol _ZN7fBase_c18AfterInitResourcesEj
 /* recovered: named members + shared header, real C++ method */
-#include "ActorBase.h"
+#include "fBase_c.h"
 extern "C" {
 extern int data_020a4b88[]; extern int data_02099f24[]; extern int data_020a4b78[]; extern int data_020a4b98[];
 extern void func_0203b27c(void*, void*); extern void func_0204405c(void*, void*);
 }
 
-void ActorBase::AfterInitResources(unsigned int a)
+void fBase_c::AfterInitResources(unsigned int a)
 {
   if(a!=2) return;
   func_0203b27c(data_020a4b88, ((char*)this)+0x28);

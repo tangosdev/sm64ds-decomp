@@ -6,7 +6,7 @@ extern void MulVec3Mat4x3(Vec3 *in, void *m, void *out);
 extern void func_02012694(int a, void *p);
 extern void _ZN5Actor10EarthquakeERK7Vector35Fix12IiE(void *self, Vec3 *v, int fix);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void *self, Vec3 *v);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 extern u16 data_ov060_0211956c[];
 extern s16 data_02082214[];
@@ -110,7 +110,7 @@ void func_ov060_02117db8(char *self) {
         *pypos = *pypos + *(int *)(self + 0xa8);
     }
     if ((u16)*(u16 *)(self + 0x326) > 0x12cu)
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
     (*(u16 *)(((int)self + 0x326)))++;
     (void)live;
 }

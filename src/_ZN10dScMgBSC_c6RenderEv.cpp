@@ -6,7 +6,7 @@
  *
  * Named from the table: 0x021253bc is the word slot 9 of _ZTV10dScMgBSC_c
  * holds where its base's table holds something else, so it is this class's
- * own override of the virtual ActorBase declares.
+ * own override of the virtual fBase_c declares.
  *
  * THE SHADOW STRUCT SURVIVES THE RENAME ON PURPOSE. Three of the four things
  * this function reads past 0x51a8 -- the two 8-byte score positions and the

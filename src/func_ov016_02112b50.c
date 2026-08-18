@@ -12,7 +12,7 @@ extern int DecIfAbove0_Byte(u8 *p);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 extern void _ZN5Actor13LandingDustAtER7Vector3b(void *self, struct Vector3 *v, int flag);
 extern void func_0200d8c8(void *cam, const void *v, int strength);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void func_ov016_02112a9c(void *self);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
@@ -91,7 +91,7 @@ int func_ov016_02112b50(char *c)
       _ZN5Actor13LandingDustAtER7Vector3b(c, &dust, 1);
       func_0200d8c8(data_0209f318, c + 0x5c, 0x5dc000);
       _ZN5Sound9PlayBank3EjRK7Vector3(0x41, c + 0x74);
-      _ZN9ActorBase18MarkForDestructionEv(c);
+      _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
     break;

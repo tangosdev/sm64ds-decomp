@@ -71,7 +71,7 @@ extern "C" void _ZN7Message11PrepareTalkEv(void);
 extern "C" int func_02013890(int a, int b);
 extern "C" void _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, Fix12i d, int e);
 extern "C" int _ZN8SaveData22NumGlowingRabbitsFoundEv(void);
-extern "C" int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* thiz, void* ab, u32 id, const Vector3* pos, u32 e, u32 f);
+extern "C" int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* thiz, void* ab, u32 id, const Vector3* pos, u32 e, u32 f);
 extern "C" void func_02012694(int a, void* b);
 extern "C" int _ZN6Player12GetTalkStateEv(void* c);
 extern "C" void _ZN6Player9DropActorEv(void* c);
@@ -160,7 +160,7 @@ int Rabbit::Behavior()
                             var_r2 = 0x13b; var_r6 = 0x160;
                         }
                         pos.y += 0x64000;
-                        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(temp_r4, c, var_r2, 0, 0, 0) == 1) {
+                        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(temp_r4, c, var_r2, 0, 0, 0) == 1) {
                             func_02012694(var_r6, &mCamSpacePosX);
                             unk_427 = 1;
                         }

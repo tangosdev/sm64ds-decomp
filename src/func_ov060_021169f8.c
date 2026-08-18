@@ -6,7 +6,7 @@ struct Actor;
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char* self, void* c);
 extern void func_ov060_02116518(char* self, int a, int b, int c);
 extern char* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 a, struct Vector3* pos, struct Vector3_16* rot, int e, int f);
-extern void _ZN9ActorBase18MarkForDestructionEv(char* self);
+extern void _ZN7fBase_c18MarkForDestructionEv(char* self);
 
 void func_ov060_021169f8(char* sl)
 {
@@ -30,5 +30,5 @@ void func_ov060_021169f8(char* sl)
         a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x118, 0x22, (struct Vector3*)(sl+0x5c), (struct Vector3_16*)(sl+0x92), *(signed char*)(sl+0xcc), -1);
         *(int*)(a+0x360) = 0x8000;
     }
-    _ZN9ActorBase18MarkForDestructionEv(sl);
+    _ZN7fBase_c18MarkForDestructionEv(sl);
 }

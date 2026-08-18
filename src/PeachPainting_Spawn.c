@@ -8,7 +8,7 @@
 /* resolved: VT0 = _ZTV13PeachPainting */
 int *PeachPainting_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(296);
+    int *p = (int *)_ZN7fBase_cnwEj(296);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV13PeachPainting;

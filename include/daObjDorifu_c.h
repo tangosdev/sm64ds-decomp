@@ -48,7 +48,7 @@
  *
  * SIZE 0xdcc closes the class: all three factories that build a descendant of it
  * -- StairsBdw_Spawn, StairsBs_Spawn and TrickyTriangles_Spawn, one per
- * descendant -- pass 0xdcc to ActorBase::operator new, and each of them then
+ * descendant -- pass 0xdcc to fBase_c::operator new, and each of them then
  * constructs the Model[5] and MovingMeshCollider[5] in place at 0x320 and 0x4b0
  * with the same strides the destructor uses.
  *
@@ -82,7 +82,7 @@ struct daObjDorifu_c : dBgActor_c {
     virtual ~daObjDorifu_c() {}
 
     /* Slot 6, ov002 0x020b4bfc -- the state machine the banner above describes.
-       An override of the virtual ActorBase already declared, so it occupies a
+       An override of the virtual fBase_c already declared, so it occupies a
        slot that exists rather than adding one, and no field moves. Spelled
        without `virtual` for the same reason include/daObjFloatBoard_c.h spells
        its own slot-3 override that way: virtualness is inherited, and the

@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV6Klepto */
 int *Klepto_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1168);
+    int *p = (int *)_ZN7fBase_cnwEj(1168);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV6Klepto;

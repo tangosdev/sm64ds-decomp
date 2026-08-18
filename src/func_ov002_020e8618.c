@@ -3,7 +3,7 @@ extern int data_0209b454;
 extern int _ZN9Animation8FinishedEv(char* a);
 extern void func_ov002_020e7e58(char* c);
 extern void _ZN5Actor11UntrackStarERa(char* c, signed char* p);
-extern void _ZN9ActorBase18MarkForDestructionEv(char* c);
+extern void _ZN7fBase_c18MarkForDestructionEv(char* c);
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(char* c);
 extern void _ZN5Event8ClearBitEj(unsigned int b);
 void func_ov002_020e8618(char* c){
@@ -12,7 +12,7 @@ void func_ov002_020e8618(char* c){
   *(unsigned short*)(((int)c + 0x4a2)) &= ~2;
   _ZN5Actor11UntrackStarERa(c, (signed char*)(c+0x498));
   if((int)(data_0209f2d8 == 1) != 0){
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
   }else{
     _ZN5Actor24KillAndTrackInDeathTableEv(c);
   }

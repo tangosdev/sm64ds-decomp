@@ -19,7 +19,7 @@
  *                           edges leave their overlay.
  *
  * NO FIELDS OF ITS OWN: its factory, TrickyTriangles_Spawn, passes 0xdcc to
- * ActorBase::operator new, which daObjDorifu_c fills. It overrides slots 0 and 3,
+ * fBase_c::operator new, which daObjDorifu_c fills. It overrides slots 0 and 3,
  * which the base leaves null, and both bodies just forward to daObjDorifu_c's
  * shared helpers in ov002 with this class's own argument block. Everything this
  * header used to restate was dBgActor_c's, twice removed.

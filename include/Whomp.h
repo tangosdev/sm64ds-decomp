@@ -23,7 +23,7 @@
  *   - unk_33c = TextureSequence.speed
  *
  * SIZE IS THE ROM'S OWN: `Whomp_Spawn` calls
- * `ActorBase::operator new(1552)` -- 0x610 -- and stores this class's
+ * `fBase_c::operator new(1552)` -- 0x610 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

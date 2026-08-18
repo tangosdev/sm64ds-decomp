@@ -19,7 +19,7 @@
  * unk_09c / unk_0a0 are Actor::mVertAccel and Actor::mTerminalVelocity -- and the
  * values written here, -0x2000 and -0x3c000, are fix12 gravity and terminal
  * velocity, which is the same evidence Actor.h cites from BooCage and MadPiano.
- * mParam is ActorBase::param1, unk_004 is ActorBase::uniqueID, and unk_0cc is
+ * mParam is fBase_c::param1, unk_004 is fBase_c::uniqueID, and unk_0cc is
  * Actor::mAreaId -- which is why it is read as a signed char and handed straight
  * to Actor::Spawn's areaID parameter.
  *

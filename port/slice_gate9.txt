@@ -10,10 +10,10 @@ src/_ZN14ArrowSignRight6RenderEv.cpp
 src/_ZN10dBgActor_cC2Ev.c
 src/_ZN5ActorC2Ev.cpp
 # ActorBase C1 is hand-asm; the HAL carries the transcription
-src/_ZN9ActorBase9SceneNodeC1Ev.c
+src/_ZN7fBase_c9SceneNodeC1Ev.c
 src/func_0203b438.c
 src/func_02043810.c
-src/_ZN9ActorBasenwEj.cpp
+src/_ZN7fBase_cnwEj.cpp
 src/_ZN11ShadowModelC1Ev.c
 src/_ZN18MovingMeshColliderC1Ev.c
 src/_ZN16MeshColliderBase7DisableEv.cpp
@@ -39,7 +39,7 @@ src/LenVec3.c
 src/func_020396d0.c
 src/_ZN16MeshColliderBase6EnableEP5Actor.cpp
 src/_ZN5Actor13ClosestPlayerEv.cpp
-src/_ZN9ActorBase9SceneNode5ResetEv.c
+src/_ZN7fBase_c9SceneNode5ResetEv.c
 src/Matrix4x3_FromRotationY.c
 src/func_01ffb07c.cpp
 src/func_01ffb098.cpp
@@ -49,15 +49,15 @@ src/func_01ffb0bc.cpp
 src/func_01ffb0c8.cpp
 src/func_020393fc.c
 src/func_020395fc.c
-src/_ZN9ActorBase19BeforeInitResourcesEv.cpp
-src/_ZN9ActorBase18AfterInitResourcesEj.cpp
-src/_ZN9ActorBase22BeforeCleanupResourcesEv.cpp
-src/_ZN9ActorBase14BeforeBehaviorEv.cpp
-src/_ZN9ActorBase13AfterBehaviorEj.cpp
-src/_ZN9ActorBase12BeforeRenderEv.cpp
-src/_ZN9ActorBase11AfterRenderEj.cpp
-src/_ZN9ActorBase16OnPendingDestroyEv.cpp
-src/_ZN9ActorBase13OnHeapCreatedEv.cpp
+src/_ZN7fBase_c19BeforeInitResourcesEv.cpp
+src/_ZN7fBase_c18AfterInitResourcesEj.cpp
+src/_ZN7fBase_c22BeforeCleanupResourcesEv.cpp
+src/_ZN7fBase_c14BeforeBehaviorEv.cpp
+src/_ZN7fBase_c13AfterBehaviorEj.cpp
+src/_ZN7fBase_c12BeforeRenderEv.cpp
+src/_ZN7fBase_c11AfterRenderEj.cpp
+src/_ZN7fBase_c16OnPendingDestroyEv.cpp
+src/_ZN7fBase_c13OnHeapCreatedEv.cpp
 src/func_0203b27c.c
 src/func_0204405c.c
 src/func_0203b3c0.c

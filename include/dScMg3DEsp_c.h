@@ -6,7 +6,7 @@
  * convention.
  *
  * SIZE 0x5558, from MgPsycheOut_Spawn.cpp's own
- * `_ZN9ActorBasenwEj(0x5558)`.
+ * `_ZN7fBase_cnwEj(0x5558)`.
  *
  * This class does NOT use the 0x270-byte shared table five siblings do
  * (see include/dScMgMemory_c.h's own note) -- its own construction/
@@ -60,11 +60,11 @@ struct dScMg3DEsp_c : dScMgSingle3DBase_c {
     u8  pad_5540[0x18];          /* 0x5540 */
 
     /* --- this class's own vtable overrides, defined out of line under their
-       own mangled names. Each re-uses a slot ActorBase already holds rather
+       own mangled names. Each re-uses a slot fBase_c already holds rather
        than appending one, and neither adds a field, so the size assert below
        is untouched. The destructor above stays the key function, so no
        translation unit starts emitting _ZTV12dScMg3DEsp_c because of these.
-       Signatures are include/ActorBase.h's and include/dScMgBase_c.h's own,
+       Signatures are include/fBase_c.h's and include/dScMgBase_c.h's own,
        copied unchanged. --- */
     s32 CleanupResources();   /* slot 3 -- ov006 0x020e9cec */
     s32 Behavior();           /* slot 6 -- ov006 0x020e9e00 */

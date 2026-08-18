@@ -88,7 +88,7 @@ extern short data_02082214[];
  */
 extern "C" int *PoleLift_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(856);
+    int *p = (int *)_ZN7fBase_cnwEj(856);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)(_ZTV8PoleLift + 2);

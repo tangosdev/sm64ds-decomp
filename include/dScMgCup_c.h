@@ -10,7 +10,7 @@
  * Every offset below comes from the two structors, nothing from a prior
  * header.
  *
- * SIZE 0x5470, from the factory's own `_ZN9ActorBasenwEj(0x5470)`
+ * SIZE 0x5470, from the factory's own `_ZN7fBase_cnwEj(0x5470)`
  * (src/func_ov006_020e0574.cpp).
  *
  * THE FACTORY AND THE DESTRUCTOR AGREE MEMBER FOR MEMBER, which is the

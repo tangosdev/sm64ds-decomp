@@ -1763,7 +1763,7 @@ src/func_02013edc.c:
     complete
     .text start:0x02013edc end:0x02013ee8
 
-src/_ZN7dBase_c5SpawnEjP9ActorBaseii.cpp:
+src/_ZN7dBase_c5SpawnEjP7fBase_cii.cpp:
     complete
     .text start:0x02013ee8 end:0x02013ef4
 
@@ -5936,11 +5936,11 @@ src/func_0203b438.c:
     complete
     .text start:0x0203b438 end:0x0203b4ac
 
-src/_ZN9ActorBase9SceneNode5ResetEv.c:
+src/_ZN7fBase_c9SceneNode5ResetEv.c:
     complete
     .text start:0x0203b4ac end:0x0203b4c4
 
-src/_ZN9ActorBase9SceneNodeC1Ev.c:
+src/_ZN7fBase_c9SceneNodeC1Ev.c:
     complete
     .text start:0x0203b4c4 end:0x0203b4dc
 
@@ -7082,19 +7082,19 @@ src/func_020433b8.c:
     complete
     .text start:0x020433b8 end:0x02043444
 
-src/_ZN9ActorBasenwEj.cpp:
+src/_ZN7fBase_cnwEj.cpp:
     complete
     .text start:0x02043444 end:0x02043494
 
-src/_ZN9ActorBase13OnHeapCreatedEv.cpp:
+src/_ZN7fBase_c13OnHeapCreatedEv.cpp:
     complete
     .text start:0x02043494 end:0x0204349c
 
-src/_ZN9ActorBase9Virtual38Ejj.cpp:
+src/_ZN7fBase_c9Virtual38Ejj.cpp:
     complete
     .text start:0x0204349c end:0x0204357c
 
-src/_ZN9ActorBase9Virtual34Ejj.cpp:
+src/_ZN7fBase_c9Virtual34Ejj.cpp:
     complete
     .text start:0x0204357c end:0x02043810
 
@@ -7102,7 +7102,7 @@ src/func_02043810.c:
     complete
     .text start:0x02043810 end:0x02043824
 
-src/_ZN9ActorBase18MarkForDestructionEv.cpp:
+src/_ZN7fBase_c18MarkForDestructionEv.cpp:
     complete
     .text start:0x02043824 end:0x02043880
 
@@ -7110,71 +7110,71 @@ src/func_02043880.c:
     complete
     .text start:0x02043880 end:0x02043ac0
 
-src/_ZN9ActorBase16OnPendingDestroyEv.cpp:
+src/_ZN7fBase_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02043ac0 end:0x02043ac4
 
-src/_ZN9ActorBase11AfterRenderEj.cpp:
+src/_ZN7fBase_c11AfterRenderEj.cpp:
     complete
     .text start:0x02043ac4 end:0x02043ac8
 
-src/_ZN9ActorBase12BeforeRenderEv.cpp:
+src/_ZN7fBase_c12BeforeRenderEv.cpp:
     complete
     .text start:0x02043ac8 end:0x02043af0
 
-src/_ZN9ActorBase6RenderEv.cpp:
+src/_ZN7fBase_c6RenderEv.cpp:
     complete
     .text start:0x02043af0 end:0x02043af8
 
-src/_ZN9ActorBase13AfterBehaviorEj.cpp:
+src/_ZN7fBase_c13AfterBehaviorEj.cpp:
     complete
     .text start:0x02043af8 end:0x02043afc
 
-src/_ZN9ActorBase14BeforeBehaviorEv.cpp:
+src/_ZN7fBase_c14BeforeBehaviorEv.cpp:
     complete
     .text start:0x02043afc end:0x02043b24
 
-src/_ZN9ActorBase8BehaviorEv.cpp:
+src/_ZN7fBase_c8BehaviorEv.cpp:
     complete
     .text start:0x02043b24 end:0x02043b2c
 
-src/_ZN9ActorBase21AfterCleanupResourcesEj.cpp:
+src/_ZN7fBase_c21AfterCleanupResourcesEj.cpp:
     complete
     .text start:0x02043b2c end:0x02043bac
 
-src/_ZN9ActorBase22BeforeCleanupResourcesEv.cpp:
+src/_ZN7fBase_c22BeforeCleanupResourcesEv.cpp:
     complete
     .text start:0x02043bac end:0x02043bf0
 
-src/_ZN9ActorBase16CleanupResourcesEv.cpp:
+src/_ZN7fBase_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02043bf0 end:0x02043bf8
 
-src/_ZN9ActorBase18AfterInitResourcesEj.cpp:
+src/_ZN7fBase_c18AfterInitResourcesEj.cpp:
     complete
     .text start:0x02043bf8 end:0x02043c78
 
-src/_ZN9ActorBase19BeforeInitResourcesEv.cpp:
+src/_ZN7fBase_c19BeforeInitResourcesEv.cpp:
     complete
     .text start:0x02043c78 end:0x02043c80
 
-src/_ZN9ActorBase13InitResourcesEv.cpp:
+src/_ZN7fBase_c13InitResourcesEv.cpp:
     complete
     .text start:0x02043c80 end:0x02043c88
 
-src/_ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp:
+src/_ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE.cpp:
     complete
     .text start:0x02043c88 end:0x02043d48
 
-src/_ZN9ActorBaseD2Ev.c:
+src/_ZN7fBase_cD2Ev.c:
     complete
     .text start:0x02043d48 end:0x02043d78
 
-src/_ZN9ActorBaseD0Ev.c:
+src/_ZN7fBase_cD0Ev.c:
     complete
     .text start:0x02043d78 end:0x02043dbc
 
-src/_ZN9ActorBaseD1Ev.c:
+src/_ZN7fBase_cD1Ev.c:
     complete
     .text start:0x02043dbc end:0x02043dec
 

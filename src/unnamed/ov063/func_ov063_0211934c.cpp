@@ -4,13 +4,13 @@ extern "C" {
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *a);
 extern void func_0201267c(u32 id, void *p);
 extern void *_ZN8CapEnemy15RespawnIfHasCapEv(void *a);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void *p, void *a, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void *p, void *a, int b);
 extern void *_ZN5Actor10FindWithIDEj(u32 id);
-extern void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *p, void *a, u32 msg, void *v, u32 a4, u32 a5);
+extern void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *p, void *a, u32 msg, void *v, u32 a4, u32 a5);
 extern void func_ov063_02116244(char *c);
 extern u8 data_0209d660;
 extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void *a, void *p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *a);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *a);
 }
 
 extern "C" void func_ov063_0211934c(char *c)
@@ -53,7 +53,7 @@ extern "C" void func_ov063_0211934c(char *c)
     st = *(u8 *)(c + 0x5ce);
     switch (st) {
     case 0:
-        if (_ZN6Player9StartTalkER9ActorBaseb(r4, c, 1) == 0)
+        if (_ZN6Player9StartTalkER7fBase_cb(r4, c, 1) == 0)
             return;
         {
             u8 *q = (u8 *)(c + 0x5ce);
@@ -72,9 +72,9 @@ extern "C" void func_ov063_0211934c(char *c)
         }
         found = *(void **)(c + 0x48c);
         if (found != 0 && *(s32 *)((char *)found + 0x180) == 5) {
-            _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(r4, c, 0xb5, c + 0x5c, 0, 2);
+            _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(r4, c, 0xb5, c + 0x5c, 0, 2);
         } else {
-            _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(r4, c, 0xb4, c + 0x5c, 0, 2);
+            _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(r4, c, 0xb4, c + 0x5c, 0, 2);
         }
         *(void **)(c + 0x48c) = 0;
         {
@@ -112,7 +112,7 @@ extern "C" void func_ov063_0211934c(char *c)
             if (_ZN5Sound15PlaySecretSoundEP5ActorPt(
                     c, (u16 *)(c + 0x5c6)) == 0)
                 return;
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             if (((*(u8 *)(c + 0x113)) & 0xf) >= 6)
                 return;
             
@@ -140,7 +140,7 @@ extern "C" void func_ov063_0211934c(char *c)
         }
             return;
         }
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         if (((*(u8 *)(c + 0x113)) & 0xf) >= 6)
             return;
         

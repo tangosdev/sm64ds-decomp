@@ -8,7 +8,7 @@ extern "C" {
 extern int DecIfAbove0_Short(void*);
 extern int DecIfAbove0_Byte(void*);
 extern int _Z14ApproachLinearRiii(int*, int, int);
-extern void _ZN9ActorBase18MarkForDestructionEv(void*);
+extern void _ZN7fBase_c18MarkForDestructionEv(void*);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void*, void*);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void*, unsigned int);
 extern int _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, void*, void*, int, int);
@@ -21,7 +21,7 @@ int SlidingIce::Behavior()
     if(DecIfAbove0_Short((char *)&unk_31e) == 0){
       _Z14ApproachLinearRiii((int*)((char *)&mHorzSpeed), 0, 0x3000);
       if(_Z14ApproachLinearRiii((int*)((char *)&mPosY), unk_324, 0xa000) != 0){
-        _ZN9ActorBase18MarkForDestructionEv(((char *)this));
+        _ZN7fBase_c18MarkForDestructionEv(((char *)this));
       }
     }
     _ZN5Actor9UpdatePosEP12CylinderClsn(((char *)this), 0);

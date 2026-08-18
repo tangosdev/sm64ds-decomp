@@ -85,7 +85,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
     }
 
     data_0209f318 = dBase_c::Spawn(
-        0x14c, (ActorBase*)data_0209f5c0, entranceId, 0);
+        0x14c, (fBase_c*)data_0209f5c0, entranceId, 0);
 
     int t = data_0209f2d8;
     t = t == 2;

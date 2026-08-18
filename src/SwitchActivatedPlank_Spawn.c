@@ -8,7 +8,7 @@
 /* resolved: VT0 = _ZTV20SwitchActivatedPlank */
 int *SwitchActivatedPlank_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(936);
+    int *p = (int *)_ZN7fBase_cnwEj(936);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV20SwitchActivatedPlank;

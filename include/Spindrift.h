@@ -17,7 +17,7 @@
  *     0x19c MovingCylinderClsn         0x34    -> 0x1d0
  *     0x1d0 WithMeshClsn               0x1bc   -> 0x38c
  *
- * SIZE IS THE ROM'S OWN: `Spindrift_Spawn` calls `ActorBase::operator new(924)`
+ * SIZE IS THE ROM'S OWN: `Spindrift_Spawn` calls `fBase_c::operator new(924)`
  * -- 0x39c -- and stores this class's vtable, so that literal IS this
  * class's sizeof.
  *

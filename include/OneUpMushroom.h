@@ -17,7 +17,7 @@
  *     0x300 Model                      0x50    -> 0x350
  *     0x350 ShadowModel                0x28    -> 0x378
  *
- * SIZE IS THE ROM'S OWN: `OneUpMushroom_Spawn` calls `ActorBase::operator new(920)`
+ * SIZE IS THE ROM'S OWN: `OneUpMushroom_Spawn` calls `fBase_c::operator new(920)`
  * -- 0x398 -- and stores this class's vtable, so that literal IS this
  * class's sizeof.
  *

@@ -13,7 +13,7 @@
  * It is never called. objisolate keeps the symbol this file declares and
  * drops the rest, and the bytes at 0x0202e170 come out exactly as the ROM
  * has them: dScene_c's own vptr, then dBase_c's (inlined), then
- * ActorBase::~ActorBase(), then dScene_c's own operator delete.
+ * fBase_c::~fBase_c(), then dScene_c's own operator delete.
  */
 #include "dScene_c.h"
 

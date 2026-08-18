@@ -12,7 +12,7 @@
 /* resolved: VT0 = _ZTV6Bowser */
 int *Bowser_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1108);
+    int *p = (int *)_ZN7fBase_cnwEj(1108);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV6Bowser;

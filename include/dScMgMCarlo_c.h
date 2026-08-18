@@ -4,7 +4,7 @@
  * pointer one word below it is _ZTI13dScMgMCarlo_c, which is what ties
  * that table to this class rather than to a neighbour.
  *
- * SIZE 0x60b0, from the factory's own `_ZN9ActorBasenwEj(0x60b0)`
+ * SIZE 0x60b0, from the factory's own `_ZN7fBase_cnwEj(0x60b0)`
  * (src/func_ov006_020f8e44.cpp).
  *
  * SHARED TABLE at 0x4f38, size 0x270, constructed by func_ov006_020c1d80

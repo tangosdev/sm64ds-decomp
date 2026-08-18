@@ -13,7 +13,7 @@
  * THE MISSING `return` IS DELIBERATE AND IS THE HONEST SPELLING HERE. Read
  * before ' fixing' it:
  *
- *   - The return type must be `bool`, because ActorBase declares slot 1 that way
+ *   - The return type must be `bool`, because fBase_c declares slot 1 that way
  *     and an override whose return type differs is a nineteenth slot, not an
  *     override.
  *   - dScene_c::ResetFadersAndSound is declared `int`.

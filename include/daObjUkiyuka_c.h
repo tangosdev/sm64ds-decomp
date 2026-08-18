@@ -37,7 +37,7 @@
  *          down Behavior does nothing but the collider range check.
  *
  * SIZE 0x32c. 0x32a + 2 closes the class, and FloatingFloorBfs_Spawn passes
- * 812 = 0x32c to ActorBase::operator new, which is this class and nothing more:
+ * 812 = 0x32c to fBase_c::operator new, which is this class and nothing more:
  * daObjKm2_Ukishima_c adds no field of its own. THE OTHER LEAF IS BIGGER --
  * FloatingFloorLllSmall_Spawn and FloatingFloorLllBig_Spawn both pass 816 = 0x330
  * -- so daObjFl_Ukiyuka_c has 4 bytes this class does not, which is what fixes the

@@ -7,7 +7,7 @@ struct Vector3 { int x, y, z; };
 extern short data_02082214[];
 
 extern void *_ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void *p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
@@ -28,7 +28,7 @@ int _ZN10SlidingBox8BehaviorEv(char *a)
     case 0:
         *(void **)(a + 0x320) = _ZN5Actor15FindWithActorIDEjPS_(0x39, 0);
         if (*(void **)(a + 0x320) == 0) {
-            _ZN9ActorBase18MarkForDestructionEv(a);
+            _ZN7fBase_c18MarkForDestructionEv(a);
             break;
         }
         (*(u8 *)(((int)a + 0x4f4)))++;

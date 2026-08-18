@@ -22,7 +22,7 @@
  *
  * THIS HEADER WAS BUILT FROM THE WRONG FACTORY and that is the reason to read the
  * next paragraph rather than trust the last version. It said `sizeof 0x368`,
- * "MetalNetLift_Spawn asks ActorBase::operator new for 872 bytes", and a `PathPtr
+ * "MetalNetLift_Spawn asks fBase_c::operator new for 872 bytes", and a `PathPtr
  * mPath` at 0x360 "named by MetalNetLift_Spawn calling _ZN7PathPtrC1Ev at +0x360".
  * MetalNetLift is a different class. Its factory stores _ZTV12MetalNetLift, ov064
  * 0x0211bc68, and never mentions this one; this class's factory is

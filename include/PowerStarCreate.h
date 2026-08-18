@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   PowerStarCreate_Spawn  ActorBase::operator new(212 = 0xd4), Actor::Actor(), stores _ZTV15PowerStarCreate,
+ *   PowerStarCreate_Spawn  fBase_c::operator new(212 = 0xd4), Actor::Actor(), stores _ZTV15PowerStarCreate,
  *                 then the members below in this order.
  *   ~PowerStarCreate   the same members destroyed in reverse, then ~Actor.
  *

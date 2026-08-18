@@ -24,7 +24,7 @@
  * also rename things its callers spell.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `BobOmb_Spawn` calls
- * `ActorBase::operator new(1024)` -- 0x400 -- and stores `_ZTV6BobOmb`,
+ * `fBase_c::operator new(1024)` -- 0x400 -- and stores `_ZTV6BobOmb`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3f8; the difference is trailing space no source reads.
  */

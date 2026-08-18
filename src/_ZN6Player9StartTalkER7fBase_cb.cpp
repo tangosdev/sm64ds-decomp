@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN6Player9StartTalkER9ActorBaseb
+// @symbol _ZN6Player9StartTalkER7fBase_cb
 /* recovered: named members + shared header, real C++ method
  *
  * Entering conversation. Already talking to this actor with mStateStep 0 is
@@ -26,11 +26,11 @@ extern u8 data_020a0e40;
 extern u8 data_0209f49e[];
 
 
-int Player::StartTalk(ActorBase & actor_, bool b_)
+int Player::StartTalk(fBase_c & actor_, bool b_)
 {
-    ActorBase *actor = &actor_;
+    fBase_c *actor = &actor_;
     if (IsState(data_ov002_0211046c)) {
-        if (actor == *(ActorBase **)&mTalkActor && mStateStep == 0)
+        if (actor == *(fBase_c **)&mTalkActor && mStateStep == 0)
             return 1;
         return 0;
     }
@@ -56,7 +56,7 @@ int Player::StartTalk(ActorBase & actor_, bool b_)
 
         mStateStep = 0;
         ChangeState(data_ov002_0211046c);
-        *(ActorBase **)&mTalkActor = actor;
+        *(fBase_c **)&mTalkActor = actor;
         return 1;
     } else {
         if (IsState(data_ov002_02110424) ||
@@ -67,7 +67,7 @@ int Player::StartTalk(ActorBase & actor_, bool b_)
 
         mStateStep = 0;
         ChangeState(data_ov002_0211046c);
-        *(ActorBase **)&mTalkActor = actor;
+        *(fBase_c **)&mTalkActor = actor;
         return 1;
     }
 ret0:

@@ -20,7 +20,7 @@ extern void func_ov084_021294d0(void *self);
 extern void _ZN12CylinderClsn6UpdateEv(void *self);
 extern void _ZN9Animation7AdvanceEv(void *self);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 extern int *data_ov084_02130cf8;
 extern int *data_ov084_0213088c;
@@ -88,7 +88,7 @@ int func_ov084_02129a00(char *self) {
         goto ret1;
     if (*(int *)(self + 0x60) >= *(int *)(self + 0x420) - 0x3e8000)
         goto ret1;
-    _ZN9ActorBase18MarkForDestructionEv(self);
+    _ZN7fBase_c18MarkForDestructionEv(self);
     return 1;
 ret1:
     return 1;

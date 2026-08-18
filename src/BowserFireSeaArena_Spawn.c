@@ -9,7 +9,7 @@
 /* resolved: VT0 = _ZTV18BowserFireSeaArena */
 int *BowserFireSeaArena_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1392);
+    int *p = (int *)_ZN7fBase_cnwEj(1392);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV18BowserFireSeaArena;

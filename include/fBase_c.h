@@ -1,5 +1,5 @@
-#ifndef ACTORBASE_H
-#define ACTORBASE_H
+#ifndef FBASE_C_H
+#define FBASE_C_H
 
 #include "types.h"
 
@@ -7,16 +7,16 @@
  * 0x02043444..0x02043f4c, 25 functions.
  *
  * THAT RANGE IS A CORRECTION. This banner used to say "0x02043494..0x02043e04"
- * and both ends were wrong; src_tu/actors/ActorBase.cpp reconciled it against
+ * and both ends were wrong; src_tu/actors/fBase_c.cpp reconciled it against
  * the cartridge while rebuilding the translation unit.
  *
- *   0x02043444  is the real start: _ZN9ActorBasenwEj, this class's own
+ *   0x02043444  is the real start: _ZN7fBase_cnwEj, this class's own
  *               operator new (size 0x50, discussed further down this file).
  *               The old 0x02043494 began at OnHeapCreated and excluded it.
- *   0x02043f4c  is the real end -- the byte after _ZN9ActorBaseC1Ev, and the
+ *   0x02043f4c  is the real end -- the byte after _ZN7fBase_cC1Ev, and the
  *               address of func_02043f4c, the next unrelated function.
  *   0x02043e04  was not a function boundary at all. It falls 0x18 bytes INSIDE
- *               the constructor (_ZN9ActorBaseC1Ev, 0x02043dec, size 0x160), so
+ *               the constructor (_ZN7fBase_cC1Ev, 0x02043dec, size 0x160), so
  *               the old end cut that function in half.
  *
  * The run is bracketed by unlabelled neighbours on both sides -- func_020433b8
@@ -27,15 +27,15 @@
  * tree has for it is a NONMATCHING hand-written asm transcription that
  * config/arm9/delinks.txt does not enrol.
  *
- * SEPARATELY, the nested class ActorBase::SceneNode has two functions of its own
+ * SEPARATELY, the nested class fBase_c::SceneNode has two functions of its own
  * 0x8000 bytes away at 0x0203b4ac..0x0203b4dc, sitting next to the intrusive-
  * list primitives this class calls. Different translation unit; not part of the
  * run above.
  *
- * The chain is ActorBase -> dBase_c -> Actor. See notes/actor-vtables.md;
+ * The chain is fBase_c -> dBase_c -> Actor. See notes/actor-vtables.md;
  * Actor is NOT a direct child of this class.
  *
- * LAYOUT is read out of the ROM, not guessed. ActorBase::ActorBase stores its
+ * LAYOUT is read out of the ROM, not guessed. fBase_c::fBase_c stores its
  * vptr with `str r1, [r4]`, so the vptr is at 0x0. The same constructor does
  * `add r5, r4, #0x14` and passes r5 to SceneNode::SceneNode, then writes an
  * owner back-pointer with `str r4, [r5, #0x10]` -- which pins sceneNode at 0x14
@@ -43,12 +43,12 @@
  * It then initialises two identical 0x10-byte nodes at r5+0x14 (0x28) and
  * r5+0x24 (0x38), the two the destructor tears down in reverse order.
  *
- * VTABLE ORDER is read directly out of _ZTV9ActorBase (0x02099edc, 18 slots).
+ * VTABLE ORDER is read directly out of _ZTV7fBase_c (0x02099edc, 18 slots).
  * Every slot resolves to a named function, so no inference was needed here --
  * unlike include/Fader.h. Two consequences, both easy to get wrong:
  *
  *   * The destructor is at slots 16/17, NOT 0/1. Slot index follows declaration
- *     order, so ~ActorBase must be declared AFTER OnHeapCreated. Copying the
+ *     order, so ~fBase_c must be declared AFTER OnHeapCreated. Copying the
  *     Fader header shape, where the destructor comes first, shifts sixteen slots
  *     and silently changes every virtual call in the tree.
  *
@@ -65,7 +65,7 @@
 
 /* The actor heap and its deallocator, for the inline operator delete at the end
    of the class. `data_020a0eac` is the heap every actor is allocated from -- the
-   same one ActorBase::operator new (src/_ZN9ActorBasenwEj.cpp) passes to
+   same one fBase_c::operator new (src/_ZN7fBase_cnwEj.cpp) passes to
    Memory::Allocate. Spelt exactly as include/decl_common.h and include/Actor.h
    spell them; see the note on operator delete below for why the `void *` second
    parameter is deliberate and not a mistake. */
@@ -78,16 +78,16 @@ struct ActorBase_SceneNode {
     s32 unk_004;
     s32 unk_008;
     s32 unk_00c;
-    void *owner;        /* 0x10 -- the containing ActorBase */
+    void *owner;        /* 0x10 -- the containing fBase_c */
 };
 
-/* 0x10 bytes. Two per ActorBase; the destructor tears them down through
+/* 0x10 bytes. Two per fBase_c; the destructor tears them down through
    0x020440e8 in reverse order. */
 struct ActorBase_ProcessingListNode {
     u8 raw[0x10];
 };
 
-struct ActorBase {
+struct fBase_c {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
     u32 uniqueID;                             /* 0x04 -- post-incremented global */
     u32 param1;                               /* 0x08 */
@@ -104,7 +104,7 @@ struct ActorBase {
     void *unk_048;                            /* 0x48 */
     void *heap;                               /* 0x4c -- Heap*, owned */
 
-    /* --- vtable, in _ZTV9ActorBase order. Do not reorder. --- */
+    /* --- vtable, in _ZTV7fBase_c order. Do not reorder. --- */
     virtual s32  InitResources();                      /* slot  0 */
     virtual bool BeforeInitResources();                /* slot  1 */
     virtual void AfterInitResources(u32 vfSuccess);    /* slot  2 */
@@ -121,17 +121,17 @@ struct ActorBase {
     virtual int  Virtual34(u32 a, u32 b);              /* slot 13 -- vtable+0x34 */
     virtual int  Virtual38(u32 a, u32 b);              /* slot 14 -- vtable+0x38 */
     virtual bool OnHeapCreated();                      /* slot 15 -- vtable+0x3c */
-    virtual ~ActorBase();                              /* slots 16 (D1), 17 (D0) */
+    virtual ~fBase_c();                              /* slots 16 (D1), 17 (D0) */
 
     /* --- non-virtual --- */
     void MarkForDestruction();
     /* operator new is deliberately NOT declared here. CW 1.2 rejects an in-class
        declaration of it ("illegal 'operator' declaration"), and it is neither
-       virtual nor layout-affecting, so src/_ZN9ActorBasenwEj.cpp defines it
+       virtual nor layout-affecting, so src/_ZN7fBase_cnwEj.cpp defines it
        under its mangled name instead. */
 
     /* operator delete IS declared here, and unlike operator new the compiler
-       accepts it in-class. It is what lets a real `~ActorBase()` reproduce the
+       accepts it in-class. It is what lets a real `~fBase_c()` reproduce the
        ROM's deleting destructor: mwcc generates D0 as "run the destructor body,
        then call operator delete on the class", and without this it emits a call
        to the global `_ZdlPv`, which exists nowhere in this image.
@@ -140,7 +140,7 @@ struct ActorBase {
        the same two instructions -- load the actor heap pointer, call
        Memory::Deallocate -- rather than calling a shared helper, and both are
        exactly their D1 body plus those instructions:
-           ActorBase::~ActorBase [D0]    0x02043d78  0x44 = D1's 0x30 + 0x14
+           fBase_c::~fBase_c [D0]    0x02043d78  0x44 = D1's 0x30 + 0x14
            dBase_c::~dBase_c   0x02013ea4  0x38 = D1's 0x24 + 0x14
        Compiled without this declaration, src_tu/actors/dBase_c.cpp's D0
        came out the wrong SIZE (`999 word(s) differ`); with it, 5/5 MATCH. Only
@@ -151,10 +151,10 @@ struct ActorBase {
        the class itself or its IMMEDIATE base, so a declaration here does NOT
        reach Actor (two levels down) and cannot replace Actor's. Nor does it
        reach HUD, Minimap or dScene_c, whose immediate base is dBase_c. The
-       only classes it changes are ActorBase itself and dBase_c -- the two
+       only classes it changes are fBase_c itself and dBase_c -- the two
        whose D0 the ROM shows inlining it. The two src/ files that declare a
-       local `struct Actor : ActorBase` (EndKuppaScript.cpp,
-       func_ov002_020b7e1c.cpp) use their own local shadow ActorBase, not this
+       local `struct Actor : fBase_c` (EndKuppaScript.cpp,
+       func_ov002_020b7e1c.cpp) use their own local shadow fBase_c, not this
        one, so they are out of scope too.
 
        No layout effect: an inline non-virtual member adds no field and no vtable
@@ -170,7 +170,7 @@ struct ActorBase {
 
 /* The same object for the C translation units, which cannot express the virtual
    functions, so the vptr the compiler would place is written out explicitly. */
-struct ActorBase {
+struct fBase_c {
     void **vtable;          /* 0x00 */
     u32 uniqueID;           /* 0x04 */
     u32 param1;             /* 0x08 */
@@ -195,6 +195,6 @@ struct ActorBase {
    to drift from the C++ one. It is also what lets tools/check_header_offsets.py
    check the classes derived from this: a derived struct's own fields start at the
    base's size, and the tool refuses to guess it. */
-typedef char ActorBase_size_must_be_0x50[sizeof(struct ActorBase) == 0x50 ? 1 : -1];
+typedef char fBase_c_size_must_be_0x50[sizeof(struct fBase_c) == 0x50 ? 1 : -1];
 
 #endif

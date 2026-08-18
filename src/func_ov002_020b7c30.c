@@ -4,7 +4,7 @@ extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 extern int func_ov002_020b6fcc(void*);
 extern int _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void*, int, int, int, int);
 extern int _ZN8SaveData13PlayerLoseCapEv(void);
-extern int _ZN9ActorBase18MarkForDestructionEv(void*);
+extern int _ZN7fBase_c18MarkForDestructionEv(void*);
 extern int data_02092138;
 
 int func_ov002_020b7c30(void* c) {
@@ -20,7 +20,7 @@ int func_ov002_020b7c30(void* c) {
   }
   if (data_02092138 > *(int*)((char*)c + 0x60)) {
     _ZN8SaveData13PlayerLoseCapEv();
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
   }
   return 1;
 }

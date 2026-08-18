@@ -3,7 +3,7 @@
 /* recovered: named members + shared header, real C++ method
  *
  * mHeldObj is declared s32 in Player.h but is an actor pointer: this reads
- * ActorBase's mFlags (+0xb0) and actorID (+0xc) through it. Actor IDs 0xbd
+ * fBase_c's mFlags (+0xb0) and actorID (+0xc) through it. Actor IDs 0xbd
  * and 0xbe get the alternate throw animation.
  */
 #include "Player.h"

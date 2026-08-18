@@ -14,7 +14,7 @@ struct Actor {
     static Actor* FindWithID(unsigned int id);
     void UpdatePos(CylinderClsn* c);
 };
-struct ActorBase { void MarkForDestruction(); };
+struct fBase_c { void MarkForDestruction(); };
 extern "C" int func_ov060_02116518(char* c, int a, int b, int d);
 extern "C" {
 extern Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
@@ -36,10 +36,10 @@ extern "C" void func_ov060_021168c4(char* c)
     ((Actor*)c)->UpdatePos((CylinderClsn*)0);
     func_ov060_02116518(c, 0xa6, 0, 0x32000);
     if (func_ov060_021172c8((unsigned char*)c, 0x96) != 0) {
-        ((ActorBase*)c)->MarkForDestruction();
+        ((fBase_c*)c)->MarkForDestruction();
     }
     if (r4 == 0) return;
     if (*(int*)(r4 + 0x410) != 0) return;
     if (Vec3_HorzDist((Vector3*)(c + 0x5c), (Vector3*)(r4 + 0x5c)) >= 0x96000) return;
-    ((ActorBase*)c)->MarkForDestruction();
+    ((fBase_c*)c)->MarkForDestruction();
 }

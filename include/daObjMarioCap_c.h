@@ -24,7 +24,7 @@
  * the destructor emits a short chain and comes out a different SIZE, which reads as
  * `999 word(s) differ` and looks like a total failure rather than one missing member.
  *
- * SIZE 0x410, the literal in Cap_Spawn's ActorBase::operator new. CapIcon is 0x1c, so
+ * SIZE 0x410, the literal in Cap_Spawn's fBase_c::operator new. CapIcon is 0x1c, so
  * 0x3d0 + 0x1c = 0x3ec closes onto the scalars below it.
  *
  * THE CLASS USED TO BE CALLED WaterfallMist, and the previous revision of this comment

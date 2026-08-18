@@ -9,7 +9,7 @@
 /* resolved: VT0 = _ZTV4Bird */
 int *Bird_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(388);
+    int *p = (int *)_ZN7fBase_cnwEj(388);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV4Bird;

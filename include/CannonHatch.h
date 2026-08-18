@@ -44,7 +44,7 @@ typedef char CannonHatch_size_must_be_0x330[sizeof(CannonHatch) == 0x330 ? 1 : -
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct CannonHatch {
     u8  pad_000[0x8];
-    /* 0x008..0x05c is ActorBase's, and ActorBase.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x008..0x05c is fBase_c's, and fBase_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     u32 mParam;                  /* 0x008 */
     u16 actorID;                 /* 0x00c */

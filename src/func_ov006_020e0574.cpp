@@ -2,7 +2,7 @@
 extern "C" void *func_ov004_020b2adc(void);
 extern "C" void func_ov006_020c33dc(void *);
 extern "C" void func_020733a8(void *p, int a, int b, void *f1, void *f2);
-extern "C" void *_ZN9ActorBasenwEj(unsigned int);
+extern "C" void *_ZN7fBase_cnwEj(unsigned int);
 extern "C" void _ZN8Particle10SysTrackerC1Ev(void *);
 extern void *_ZTV19dScMgSingle3DBase_c;
 extern void *_ZTV10dScMgCup_c;
@@ -13,7 +13,7 @@ extern "C" void func_0203d738(void);
 
 extern "C" void *func_ov006_020e0574(void)
 {
-    char *p = (char *)_ZN9ActorBasenwEj(0x5470);
+    char *p = (char *)_ZN7fBase_cnwEj(0x5470);
     if (p) {
         func_ov004_020b2adc();
         *(void **)p = &_ZTV19dScMgSingle3DBase_c;

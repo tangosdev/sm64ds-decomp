@@ -20,7 +20,7 @@ extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b)
 extern void _ZN13RaycastGroundD1Ev(void *self);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern int IsStarCollectedInCurLevel(u8 x);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern int _ZN5Actor18GetBitInDeathTableEv(void *self);
 }
 
@@ -144,12 +144,12 @@ int StarMarker::InitResources()
     if (data_0209f2d8 == 1)
         r3 = 1;
     if (r3 == 0 && SublevelToLevel((s8)data_0209f2f8) == 0x1d && IsStarCollectedInCurLevel(mStarID) != 0) {
-        _ZN9ActorBase18MarkForDestructionEv(((char *)this));
+        _ZN7fBase_c18MarkForDestructionEv(((char *)this));
         _ZN13RaycastGroundD1Ev(&rg);
         return 0;
     }
     if (_ZN5Actor18GetBitInDeathTableEv(((char *)this)) != 0) {
-        _ZN9ActorBase18MarkForDestructionEv(((char *)this));
+        _ZN7fBase_c18MarkForDestructionEv(((char *)this));
         _ZN13RaycastGroundD1Ev(&rg);
         return 0;
     }

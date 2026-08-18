@@ -9,7 +9,7 @@
 /* resolved: VT0 = _ZTV20TtcConveyorBeltLarge */
 int *TtcConveyorBeltLarge_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(928);
+    int *p = (int *)_ZN7fBase_cnwEj(928);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV20TtcConveyorBeltLarge;

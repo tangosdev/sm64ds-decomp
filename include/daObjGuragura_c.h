@@ -26,7 +26,7 @@
  * (TiltingPlatformLll). Each one's destructor stores this class's vtable between
  * its own and _ZTV10dBgActor_c.
  *
- * SIZE 0x350, the literal both factories pass to ActorBase::operator new.
+ * SIZE 0x350, the literal both factories pass to fBase_c::operator new.
  *
  * TWO QUATERNIONS, AND THEY CLOSE ON EACH OTHER. This class's own Behavior,
  * `daObjGuragura_c::Behavior` (0x020b616c), ends with

@@ -1,5 +1,5 @@
-extern void* _ZN9ActorBasenwEj(unsigned int);
-extern void _ZN9ActorBaseC1Ev(void*);
+extern void* _ZN7fBase_cnwEj(unsigned int);
+extern void _ZN7fBase_cC1Ev(void*);
 extern void func_020733a8(void*, int, int, void*, void*);
 
 struct P2 { int a, b; };
@@ -14,10 +14,10 @@ extern void func_ov075_0211a834(void);
 
 void* func_ov075_0211a740(void)
 {
-    char* p = (char*)_ZN9ActorBasenwEj(0x288);
+    char* p = (char*)_ZN7fBase_cnwEj(0x288);
     if (p) {
         struct P2 v;
-        _ZN9ActorBaseC1Ev(p);
+        _ZN7fBase_cC1Ev(p);
         *(char**)p = data_0208e4b8;
         *(char**)p = _ZTV8dScene_c;
         {

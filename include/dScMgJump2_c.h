@@ -58,11 +58,11 @@ struct dScMgJump2_c : dScMgD3DBase_c {
     u8  pad_5a70[0x8];    /* 0x5a70 -- no matched access */
 
     /* --- this class's own vtable overrides, defined out of line under their
-       own mangled names. Each re-uses a slot ActorBase already holds rather
+       own mangled names. Each re-uses a slot fBase_c already holds rather
        than appending one, and none adds a field, so the size assert below is
        untouched. The destructor above stays the key function, so no
        translation unit starts emitting _ZTV12dScMgJump2_c because of these.
-       Signatures are include/ActorBase.h's and include/dScMgBase_c.h's own,
+       Signatures are include/fBase_c.h's and include/dScMgBase_c.h's own,
        copied unchanged. --- */
     s32 CleanupResources();   /* slot 3 -- ov006 0x020ef110 */
     s32 Behavior();           /* slot 6 -- ov006 0x020ef3e0 */

@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV6FlyGuy */
 int *FlyGuy_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1000);
+    int *p = (int *)_ZN7fBase_cnwEj(1000);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV6FlyGuy;

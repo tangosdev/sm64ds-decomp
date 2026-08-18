@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   LavaSeesaw_Spawn  ActorBase::operator new(804 = 0x324), dBgActor_c::dBgActor_c(), stores _ZTV10LavaSeesaw,
+ *   LavaSeesaw_Spawn  fBase_c::operator new(804 = 0x324), dBgActor_c::dBgActor_c(), stores _ZTV10LavaSeesaw,
  *                 then the members below in this order.
  *   ~LavaSeesaw   the same members destroyed in reverse, then ~dBgActor_c.
  *

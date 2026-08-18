@@ -34,7 +34,7 @@ void _ZN12CylinderClsn5ClearEv(void* self);
 void _ZN12CylinderClsn6UpdateEv(void* self);
 void _ZN6Player4BurnEv(void* self);
 void func_02012694(u32 id, const void* v);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
+void _ZN7fBase_c18MarkForDestructionEv(void* self);
 void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 int _Z14ApproachLinearRiii(void* p, s32 target, s32 step);
 int _Z14ApproachLinearRsss(void* p, s16 target, s16 step);
@@ -153,7 +153,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
                         }
                         if (*(u8*)(c + 0x36d) == 4)
                             func_02012694(0x157, c + 0x74);
-                        _ZN9ActorBase18MarkForDestructionEv(c);
+                        _ZN7fBase_c18MarkForDestructionEv(c);
                     }
                 }
             }
@@ -203,7 +203,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
         }
         if (*(u8*)(c + 0x36d) == 4)
             func_02012694(0x157, c + 0x74);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
     *(u16*)(((int)c + 0x100)) += 1;

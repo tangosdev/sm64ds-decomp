@@ -5,7 +5,7 @@
 #include "common.h"
 extern "C" {
     void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, Fix12i x, Fix12i y, Fix12i z);
-    void _ZN9ActorBase18MarkForDestructionEv(void* self);
+    void _ZN7fBase_c18MarkForDestructionEv(void* self);
     int RandomIntInternal(int* seed);
     void* _ZN5Actor13ClosestPlayerEv(void* self);
     void* _ZN5Actor15FindWithActorIDEjPS_(u32 id, void* prev);
@@ -23,7 +23,7 @@ extern "C" void func_ov060_021172e0(void* self)
 
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
         0x9f, *(Fix12i*)(sl + 0x5c), *(Fix12i*)(sl + 0x60), *(Fix12i*)(sl + 0x64));
-    _ZN9ActorBase18MarkForDestructionEv(sl);
+    _ZN7fBase_c18MarkForDestructionEv(sl);
 
     if ((((u32)RandomIntInternal(&data_0209e650) >> 0x10) % 10) >= 2) {
         return;

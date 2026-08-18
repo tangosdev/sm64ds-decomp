@@ -15,7 +15,7 @@ extern int func_ov021_021122fc(char *c);
 extern void _ZN12CylinderClsn5ClearEv(void *thiz);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *thiz, const struct Vector3 *v);
 extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *thiz);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
 extern void *_ZN5Actor10FindWithIDEj(u32 id);
 extern void _ZN5Actor11UntrackStarERa(void *thiz, s8 *ref);
 extern void _ZN5Actor14TriplePoofDustEv(void *thiz);
@@ -61,7 +61,7 @@ int _ZN11RollingRock8BehaviorEv(char *c)
 
         if (*(u8*)(c + 0x3be) != 4) {
             if (*(int*)(c + 0x60) < -0x3e8000) {
-                _ZN9ActorBase18MarkForDestructionEv(c);
+                _ZN7fBase_c18MarkForDestructionEv(c);
                 if (*(u32*)(c + 0x3b4) != 0) {
                     char *a = (char*)_ZN5Actor10FindWithIDEj(*(u32*)(c + 0x3b4));
                     if (a) *(u8*)(a + 0x3c2) = 0;

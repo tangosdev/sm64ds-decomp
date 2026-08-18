@@ -9,7 +9,7 @@
 /* resolved: VT0 = _ZTV10LavaBubble */
 int *LavaBubble_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(796);
+    int *p = (int *)_ZN7fBase_cnwEj(796);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV10LavaBubble;

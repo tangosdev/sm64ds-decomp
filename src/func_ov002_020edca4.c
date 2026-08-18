@@ -11,7 +11,7 @@ extern int func_ov002_020ec610(unsigned char* p);
 extern void _ZN5Actor11UntrackStarERa(struct Actor* self, signed char* r);
 extern struct Actor* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3* pos, const void* v, int e, int f);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 a, int b, int c, int d);
-extern void _ZN9ActorBase18MarkForDestructionEv(struct Actor* self);
+extern void _ZN7fBase_c18MarkForDestructionEv(struct Actor* self);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, const struct Vector3* pos);
 
 void func_ov002_020edca4(char* self)
@@ -45,7 +45,7 @@ void func_ov002_020edca4(char* self)
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x40, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x41, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x42, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64));
-    _ZN9ActorBase18MarkForDestructionEv((struct Actor*)self);
+    _ZN7fBase_c18MarkForDestructionEv((struct Actor*)self);
     _ZN5Sound13PlayCharVoiceEjjRK7Vector3(0, 0x103, (const struct Vector3*)(self + 0x74));
 
     *(u8*)(self + 0x426) = 1;

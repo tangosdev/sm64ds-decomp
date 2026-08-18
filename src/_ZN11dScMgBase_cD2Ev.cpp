@@ -9,7 +9,7 @@ extern void *func_ov004_020b929c(void *);
    this replaces compiled to the complete-object destructor D1 instead --
    0x02043dbc where the ROM branches to 0x02043d48. Same shape as the sibling
    func_ov004_020b2a18. */
-extern void _ZN9ActorBaseD2Ev(void *);
+extern void _ZN7fBase_cD2Ev(void *);
 }
 
 extern "C" void *_ZN11dScMgBase_cD2Ev(void *c) {
@@ -18,6 +18,6 @@ extern "C" void *_ZN11dScMgBase_cD2Ev(void *c) {
     func_ov004_020b929c((char *)c + 0xf4);
     *(int *)c = (int)_ZTV8dScene_c;
     *(int *)c = (int)data_0208e4b8;
-    _ZN9ActorBaseD2Ev(c);
+    _ZN7fBase_cD2Ev(c);
     return c;
 }

@@ -2,7 +2,7 @@
 extern "C" {
 extern void* _ZN5Actor10FindWithIDEj(unsigned int);
 extern void _ZN6Player4BurnEv(void*);
-extern void _ZN9ActorBase18MarkForDestructionEv(void*);
+extern void _ZN7fBase_c18MarkForDestructionEv(void*);
 void func_ov022_02112654(char* c){
   if(*(unsigned int*)(c+0xf8)==0) return;
   void* a=_ZN5Actor10FindWithIDEj(*(unsigned int*)(c+0xf8));
@@ -10,6 +10,6 @@ void func_ov022_02112654(char* c){
   unsigned int b=*(unsigned short*)((char*)a+0xc)==0xbf;
   if(b==0) return;
   _ZN6Player4BurnEv(a);
-  _ZN9ActorBase18MarkForDestructionEv(c);
+  _ZN7fBase_c18MarkForDestructionEv(c);
 }
 }

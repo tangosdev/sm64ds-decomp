@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV13PrincessPeach */
 int *PrincessPeach_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(876);
+    int *p = (int *)_ZN7fBase_cnwEj(876);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV13PrincessPeach;

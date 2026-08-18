@@ -12,11 +12,11 @@ extern void MulVec3Mat4x3(const Vector3* v, const Matrix4x3* m, Vector3* res);
 extern void Vec3_Add(Vector3* out, const Vector3* a, const Vector3* b);
 extern int _ZN6Player12GetTalkStateEv(void* p);
 extern int _Z14ApproachLinearRsss(s16* val, s16 target, s16 step);
-extern void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* p, void* base, u32 a, const Vector3* v, u32 b, u32 c);
+extern void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* p, void* base, u32 a, const Vector3* v, u32 b, u32 c);
 extern void _ZN7Message7EndTalkEv(void);
 extern void* _ZN5Actor10FindWithIDEj(u32 id);
 extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void* p, void* base, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void* p, void* base, int b);
 extern void _ZN12CylinderClsn5ClearEv(void* c);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
 }
@@ -66,7 +66,7 @@ int LightBeam::Behavior()
         case 0:
             if (_Z14ApproachLinearRsss((s16*)((char*)p + 0x8e), ((Obj*)this)->angle_8e + 0x8000, 0x800)) {
                 _ZN7Message11PrepareTalkEv();
-                _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(p, ((Obj*)this), 0x192, &vRes, 0, 0);
+                _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(p, ((Obj*)this), 0x192, &vRes, 0, 0);
             }
             break;
         case 1:
@@ -86,7 +86,7 @@ int LightBeam::Behavior()
                     hv = *op;
                     if (AngleDiff(Vec3_HorzAngle(&((Obj*)this)->pos, &hv), ((Obj*)this)->angle_8e) < 0x4000) {
                         if (*(s32*)((char*)o + 0x664) == 0xd) {
-                            if (_ZN6Player9StartTalkER9ActorBaseb(o, ((Obj*)this), 0)) {
+                            if (_ZN6Player9StartTalkER7fBase_cb(o, ((Obj*)this), 0)) {
                                 ((Obj*)this)->f164 = (s32)o;
                                 *(s16*)((char*)&unk_168) = 0;
                             }

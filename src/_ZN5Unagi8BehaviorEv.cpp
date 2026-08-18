@@ -13,7 +13,7 @@ extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* cc);
 extern "C" void* _ZN5Actor10FindWithIDEj(unsigned id);
 extern "C" void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern "C" int Vec3_Dist(const void* a, const void* b);
-extern "C" void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern "C" void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const Vector3& pos, const Vector3_16* rot, int e, int f);
 extern "C" void _ZN12CylinderClsn5ClearEv(void* self);
 extern "C" void _ZN12CylinderClsn6UpdateEv(void* self);
@@ -54,7 +54,7 @@ int Unagi::Behavior()
             if (cp != 0) {
                 int off43c = 0x43c;
                 if (Vec3_Dist(((char*)this) + off43c, (char*)cp + 0x5c) < 0xfa000) {
-                    _ZN9ActorBase18MarkForDestructionEv(found);
+                    _ZN7fBase_c18MarkForDestructionEv(found);
                     {
                         int param = mAreaId;
                         int m1 = -1;

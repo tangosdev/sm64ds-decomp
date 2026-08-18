@@ -8,7 +8,7 @@
  *
  * `BooCage_Spawn` (ov063:0x0211c4d0) constructs, in order:
  *
- *     _ZN9ActorBasenwEj(0x380)      <- the allocation, so 0x380 IS the sizeof
+ *     _ZN7fBase_cnwEj(0x380)      <- the allocation, so 0x380 IS the sizeof
  *     _ZN12dEnemyBase_cC2Ev                 <- the base, so this derives from dEnemyBase_c
  *     str  _ZTV7BooCage             <- and it is this class, not a relative
  *     +0x110 _ZN18MovingCylinderClsnC1Ev

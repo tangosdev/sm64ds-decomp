@@ -13,7 +13,7 @@ extern int _ZTV8BigBully[];
 /* vtable identified: VT0 = data_ov064_0211b768 */
 int *BigBully_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1024);
+    int *p = (int *)_ZN7fBase_cnwEj(1024);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)data_ov064_0211b768;

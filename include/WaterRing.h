@@ -21,7 +21,7 @@
  *   - unk_368 = TextureTransformer.speed
  *
  * SIZE IS THE ROM'S OWN: `WaterRing_Spawn` calls
- * `ActorBase::operator new(912)` -- 0x390 -- and stores this class's
+ * `fBase_c::operator new(912)` -- 0x390 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

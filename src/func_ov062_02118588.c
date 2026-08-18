@@ -1,5 +1,5 @@
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *a);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *a);
 extern void func_ov062_02118004(void *c, int a1);
 extern void func_ov062_02117994(char *c, int idx);
 extern int _ZNK9Animation12WillHitFrameEi(void *anim, int f);
@@ -30,7 +30,7 @@ void func_ov062_02118588(char *c)
         *(int *)(c + 0x390) = 0;
         *(int *)(c + 0x38c) = 4;
         *hp = *hp / 2;
-        _ZN9ActorBase18MarkForDestructionEv(found);
+        _ZN7fBase_c18MarkForDestructionEv(found);
         return;
     }
     if (*(int *)(c + 0x98) != 0) {

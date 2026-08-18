@@ -2,7 +2,7 @@
 /* dScene_c::AfterInitResources(u32) at 0x0202e62c, 0xc bytes -- vtable slot 2.
  *
  * A tail call to dBase_c::AfterInitResources (0x02013ef4), not to
- * ActorBase's. Slot 2 is dBase_c's only FUNCTIONAL override -- it also
+ * fBase_c's. Slot 2 is dBase_c's only FUNCTIONAL override -- it also
  * carries its own D1/D0 at slots 16/17 -- so a dScene_c forwarding here is a strong
  * hint that dBase_c is a base.
  *

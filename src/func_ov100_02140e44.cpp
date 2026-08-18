@@ -16,7 +16,7 @@ int func_02035638(void* c);
 void* _ZN5Actor10FindWithIDEj(unsigned int id);
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, struct Vector3* pos, unsigned int a, int b, unsigned int c, unsigned int d, unsigned int e);
 void _ZN5Actor14TriplePoofDustEv(void* self);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
+void _ZN7fBase_c18MarkForDestructionEv(void* self);
 void _ZN12CylinderClsn5ClearEv(void* c);
 void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, struct Vector3* v);
 void _ZN12CylinderClsn6UpdateEv(void* c);
@@ -86,7 +86,7 @@ extern "C" void func_ov100_02140e44(char* c)
     }
 
     _ZN5Actor14TriplePoofDustEv(c);
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
 
 cylinder_only:
     _ZN12CylinderClsn5ClearEv(c + 0x394);

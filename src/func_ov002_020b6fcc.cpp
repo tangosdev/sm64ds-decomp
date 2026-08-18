@@ -11,7 +11,7 @@ extern s16 _ZN5Actor12ReflectAngleE5Fix12IiES1_s(void* self, int a, int b, short
 extern void* _ZN5Actor10FindWithIDEj(unsigned id);
 extern int _ZN6Player15IsCollectingCapEv(void* p);
 extern void _ZN6Player15InitVanishLuigiEv(void* p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern void _ZN6Player14InitMetalWarioEv(void* p);
 extern int _ZN8SaveData16HasPlayerLostCapEv(void);
 extern void func_ov002_020b7f2c(void* c, void* pmf);
@@ -53,12 +53,12 @@ void func_ov002_020b6fcc(char* self)
     state = *(int*)(self + 0x3f0);
     if ((unsigned)(state - 6) <= 1) {
         _ZN6Player15InitVanishLuigiEv(*(void**)(self + 0x3c0));
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
         return;
     }
     if ((unsigned)(state - 8) <= 1) {
         _ZN6Player14InitMetalWarioEv(*(void**)(self + 0x3c0));
-        _ZN9ActorBase18MarkForDestructionEv(self);
+        _ZN7fBase_c18MarkForDestructionEv(self);
         return;
     }
 

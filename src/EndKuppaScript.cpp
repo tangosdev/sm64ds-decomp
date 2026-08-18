@@ -1,6 +1,6 @@
 //cpp
-struct ActorBase { void MarkForDestruction(); };
-struct Actor : ActorBase { static Actor *FindWithID(unsigned int); };
+struct fBase_c { void MarkForDestruction(); };
+struct Actor : fBase_c { static Actor *FindWithID(unsigned int); };
 namespace Sound { void UnsetPlayerVoiceGroup(); }
 
 extern "C" {

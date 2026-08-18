@@ -19,7 +19,7 @@
  * also rename things its callers spell.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `Snowball_Spawn` calls
- * `ActorBase::operator new(908)` -- 0x38c -- and stores `_ZTV8Snowball`,
+ * `fBase_c::operator new(908)` -- 0x38c -- and stores `_ZTV8Snowball`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x388; the difference is trailing space no source reads.
  */

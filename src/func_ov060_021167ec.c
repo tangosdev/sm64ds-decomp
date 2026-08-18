@@ -11,7 +11,7 @@ struct Actor {
 extern void* _ZN5Actor13ClosestPlayerEv(void* self);
 extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const struct Vector3* v, const struct Vector3_16* p, int e, int f);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* a);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* a);
 
 void func_ov060_021167ec(char* c)
 {
@@ -35,5 +35,5 @@ void func_ov060_021167ec(char* c)
             ang += 0x5555;
         } while (i < 3);
     }
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
 }

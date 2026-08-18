@@ -12,7 +12,7 @@ extern int data_ov026_02113ae0[];
 extern void _ZN7PathPtrC1Ev(void *);
 int *func_ov026_02111678(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(484);
+    int *p = (int *)_ZN7fBase_cnwEj(484);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)data_ov026_02113ae0;

@@ -35,7 +35,7 @@ struct JetStream : dEnemyBase_c {
     virtual s32 Render();
 
     /* Tail padding. The field span stops short of the real size: JetStream_Spawn
-       calls ActorBase::operator new(0x378), read off the retail
+       calls fBase_c::operator new(0x378), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_31c[0x5c];      /* 0x31c, to the ROM's 0x378 */
 };

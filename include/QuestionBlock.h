@@ -42,7 +42,7 @@ struct QuestionBlock : dBgActor_c {
     int Render();
 
     /* Tail padding. The field span stops short of the real size: CapBlockLuigi_Spawn and CapBlockMario_Spawn
-       call ActorBase::operator new(0x3f8), read off the retail
+       call fBase_c::operator new(0x3f8), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_3f4[0x4];      /* 0x3f4, to the ROM's 0x3f8 */
 };

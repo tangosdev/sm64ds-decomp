@@ -1,14 +1,14 @@
 //cpp
-struct ActorBase {
+struct fBase_c {
     int v0();
 };
 
-typedef int (ActorBase::*PMF1)();
-typedef int (ActorBase::*PMF2)();
-typedef void (ActorBase::*PMF3)(int);
+typedef int (fBase_c::*PMF1)();
+typedef int (fBase_c::*PMF2)();
+typedef void (fBase_c::*PMF3)(int);
 
-extern "C" int _ZN9ActorBase7ProcessEMS_FivEMS_FbvEMS_FvjE(
-    ActorBase *self, PMF2 b, PMF1 a, PMF3 c)
+extern "C" int _ZN7fBase_c7ProcessEMS_FivEMS_FbvEMS_FvjE(
+    fBase_c *self, PMF2 b, PMF1 a, PMF3 c)
 {
     int r = (self->*a)();
     int code;

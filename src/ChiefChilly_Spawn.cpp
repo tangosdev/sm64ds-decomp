@@ -1,5 +1,5 @@
 //cpp
-extern "C" void* _ZN9ActorBasenwEj(unsigned int sz);
+extern "C" void* _ZN7fBase_cnwEj(unsigned int sz);
 extern "C" void _ZN12dEnemyBase_cC2Ev(void*);
 extern "C" void _ZN25MovingCylinderClsnWithPosC1Ev(void*);
 extern "C" void _ZN12WithMeshClsnC1Ev(void*);
@@ -13,7 +13,7 @@ extern "C" void func_0203d384(void);
 
 extern "C" void* ChiefChilly_Spawn(void)
 {
-    char* p = (char*)_ZN9ActorBasenwEj(0x504);
+    char* p = (char*)_ZN7fBase_cnwEj(0x504);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         *(void**)p = &_ZTV11ChiefChilly;

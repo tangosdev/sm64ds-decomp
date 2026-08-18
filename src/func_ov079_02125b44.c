@@ -2,11 +2,11 @@
 extern int _ZN9Animation8FinishedEv(void* self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int frame, int rate, unsigned int flags);
 extern void _ZN9Animation7AdvanceEv(void* self);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
 extern int _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 extern int _ZN6Player12GetTalkStateEv(void* self);
 extern s16 Vec3_HorzAngle(const void* a, const void* b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* v, unsigned int d, unsigned int e);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* v, unsigned int d, unsigned int e);
 extern void _ZN7Message11PrepareTalkEv(void);
 extern void func_0201267c(unsigned int id, void* p);
 extern void _ZN5Sound22LoadAndSetMusic_Layer3Ej(unsigned int a);
@@ -40,7 +40,7 @@ void func_ov079_02125b44(char* c)
         if (*(int*)(c + 0x3f4) < 0x190000) {
             void* p = *(void**)(c + (*(int*)(c + 0x3ec) << 2) + 0x39c);
             if (*(int*)((char*)p + 0x60) >= *(int*)(c + 0x60) - 0xa000) {
-                if (_ZN6Player9StartTalkER9ActorBaseb(p, c, 1) != 0) {
+                if (_ZN6Player9StartTalkER7fBase_cb(p, c, 1) != 0) {
                     u8 *st = (u8 *)(((int)c + 0x40c));
                     (*st)++;
                 }
@@ -75,7 +75,7 @@ void func_ov079_02125b44(char* c)
             pos[0] = data_02082214[i * 2] * 0xd7 + pos[0];
             pos[2] = data_02082214[i * 2 + 1] * 0xd7 + pos[2];
             pos[1] = y;
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
                     *(void**)(c + (*(int*)(c + 0x3ec) << 2) + 0x39c),
                     c, 0xa4, pos, 0, 0) != 0) {
                 u8 *st = (u8 *)(((int)c + 0x40c));

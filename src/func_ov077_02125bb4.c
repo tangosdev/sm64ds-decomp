@@ -18,7 +18,7 @@ extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_
     const void *dir, void *callback);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *p);
 extern void _ZN5Actor8PoofDustEv(void *c);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *c);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern void func_ov077_02125e94(void *c, int a);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
 extern void func_0201267c(int id, void *pos);
@@ -68,7 +68,7 @@ int func_ov077_02125bb4(char *c)
         if (d < -0xc8000) {
             _ZN5Actor8PoofDustEv(c);
             func_02012694(0x166, c + 0x74);
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
         } else if (*(int *)(c + 0xa8) < 0xa000) {
             *(int *)(c + 0xa8) = 0;
             *(short *)(c + 0x8c) = *(short *)(c + 0x92);

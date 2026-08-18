@@ -8,7 +8,7 @@
 /* resolved: VT0 = _ZTV19OrangeBallBillboard */
 int *OrangeBallBillboard_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(292);
+    int *p = (int *)_ZN7fBase_cnwEj(292);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV19OrangeBallBillboard;

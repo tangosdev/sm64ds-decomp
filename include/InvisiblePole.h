@@ -12,7 +12,7 @@
  *
  * TWO WITNESSES, and they close on each other exactly:
  *
- *   InvisiblePole_Spawn  ActorBase::operator new(264 = 0x108), Actor::Actor(),
+ *   InvisiblePole_Spawn  fBase_c::operator new(264 = 0x108), Actor::Actor(),
  *                        stores _ZTV13InvisiblePole, then MovingCylinderClsn at 0xd4.
  *   ~InvisiblePole       the same vtable store, MovingCylinderClsn::~MovingCylinderClsn
  *                        at 0xd4, then Actor::~Actor.

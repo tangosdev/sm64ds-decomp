@@ -13,7 +13,7 @@ struct Matrix4x3;
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void _ZN5Actor8PoofDustEv(void *self);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
 extern void func_02012694(int a, void *b);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *self);
@@ -44,7 +44,7 @@ int func_ov074_021223bc(char *c)
         if (b == 0) {
             _ZN5Actor8PoofDustEv(c);
         }
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return 1;
     }
 
@@ -83,7 +83,7 @@ int func_ov074_021223bc(char *c)
         && rg.floor[(0x44 - 0x14) / 4] != (int)0x80000000
         && *(int *)(c + 0x60) < rg.floor[(0x44 - 0x14) / 4]) {
         _ZN5Actor8PoofDustEv(c);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         _ZN13RaycastGroundD1Ev(&rg);
         return 1;
     }

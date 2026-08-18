@@ -20,7 +20,7 @@
  * Same shape as Player's two ModelAnims.
  *
  * sizeof is 0x454, which is not inferred from the fields: Bowser_Spawn asks
- * ActorBase::operator new for 1108 bytes -- and the last declared field, unk_450,
+ * fBase_c::operator new for 1108 bytes -- and the last declared field, unk_450,
  * happens to end there too.
  *
  * Field NAMES for the unk_ entries are placeholders. */

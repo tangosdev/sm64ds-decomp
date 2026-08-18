@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void* _ZN9ActorBasenwEj(unsigned);
+extern void* _ZN7fBase_cnwEj(unsigned);
 extern void _ZN10dBgActor_cC2Ev(void*);
 extern void func_020733a8(void*,int,int,void*,void*);
 extern int _ZTV12WorkElevator[];
@@ -9,7 +9,7 @@ extern void _ZN5ModelC1Ev(void*);
 extern void _ZN18MovingMeshColliderD1Ev(void*);
 extern void _ZN18MovingMeshColliderC1Ev(void*);
 void* WorkElevator_Spawn(void){
-  char* c = (char*)_ZN9ActorBasenwEj(0xc80);
+  char* c = (char*)_ZN7fBase_cnwEj(0xc80);
   if(c){
     _ZN10dBgActor_cC2Ev(c);
     *(int*)c = (int)_ZTV12WorkElevator;

@@ -31,7 +31,7 @@
  * this class reproduces.)
  *
  * SIZE IS THE ROM'S OWN: `RollingIronBall_Spawn` calls
- * `ActorBase::operator new(1020)` -- 0x3fc -- and stores this class's
+ * `fBase_c::operator new(1020)` -- 0x3fc -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

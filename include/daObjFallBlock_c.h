@@ -37,7 +37,7 @@
  * daObjTh_Fall_Block_c (FallBlockBbh, ov063). Each one's destructor stores this
  * class's vtable between its own and _ZTV10dBgActor_c.
  *
- * SIZE 0x34c, the literal all four factories pass to ActorBase::operator new.
+ * SIZE 0x34c, the literal all four factories pass to fBase_c::operator new.
  *
  * THE FIELDS COME OUT OF ONE FUNCTION, `func_ov098_0213a36c`, which is this
  * class's own slot 6 and lives in this class's own overlay. It is the whole

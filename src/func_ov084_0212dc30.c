@@ -11,7 +11,7 @@ extern short Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern int _Z14ApproachLinearRsss(short *cur, short target, short step);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int id, unsigned int a, const struct Vector3 *pos, const void *rot, int e, int f);
 extern void func_ov084_0212ec04(char *c, int arg);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 void func_ov084_0212dc30(char *c)
 {
@@ -54,7 +54,7 @@ void func_ov084_0212dc30(char *c)
         return;
     }
 
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
     return;
 
 tail:

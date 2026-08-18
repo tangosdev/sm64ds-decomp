@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void* _ZN9ActorBasenwEj(unsigned int);
+extern void* _ZN7fBase_cnwEj(unsigned int);
 extern void _ZN5ActorC2Ev(void*);
 extern void _ZN9ModelAnimC1Ev(void*);
 extern void _ZN12WithMeshClsnC1Ev(void*);
@@ -12,7 +12,7 @@ extern void func_ov065_021196bc(void*);
 extern void* _ZTV6Dorrie[];
 
 int* Dorrie_Spawn(void){
-  int* p = (int*)_ZN9ActorBasenwEj(0x11b8);
+  int* p = (int*)_ZN7fBase_cnwEj(0x11b8);
   if(p){
     _ZN5ActorC2Ev(p);
     *(void***)p = (void**)_ZTV6Dorrie;

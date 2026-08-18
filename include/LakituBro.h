@@ -22,7 +22,7 @@
  *   - unk_16c = ModelAnim.speed
  *
  * SIZE IS THE ROM'S OWN: `LakituBro_Spawn` calls
- * `ActorBase::operator new(744)` -- 0x2e8 -- and stores this class's
+ * `fBase_c::operator new(744)` -- 0x2e8 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

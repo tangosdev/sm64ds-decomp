@@ -16,7 +16,7 @@ void func_ov062_0211c6a8(void *self);
 void *_ZN5Actor10FindWithIDEj(unsigned int id);
 void func_02012790(int a, int b);
 void func_ov062_0211c658(void *c, PMF *p);
-void _ZN9ActorBase18MarkForDestructionEv(void *self);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void _ZN12CylinderClsn5ClearEv(CylinderClsn *self);
 void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
 extern char data_ov062_0211e17c[];
@@ -86,7 +86,7 @@ int Klepto::Behavior()
     if (mCarriedItem == 1 && unk_448 != 2) {
         b = (mFlags & 8) != 0;
         if (b != 0) {
-            _ZN9ActorBase18MarkForDestructionEv(((char *)this));
+            _ZN7fBase_c18MarkForDestructionEv(((char *)this));
         }
     }
 skip_destroy:

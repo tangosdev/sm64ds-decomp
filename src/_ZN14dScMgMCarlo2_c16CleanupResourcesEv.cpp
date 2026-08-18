@@ -5,7 +5,7 @@
  *
  * Attributed by the vtable: dScMgMCarlo2_c's own table is ov006 0x0213d7e8 and
  * its slot 3 relocates here, so this is this class's own override and not one
- * it inherits from dScMgSingle3DBase_c. The signature is include/ActorBase.h's
+ * it inherits from dScMgSingle3DBase_c. The signature is include/fBase_c.h's
  * own slot 3, `virtual s32 CleanupResources()`.
  *
  * func_ov004_020ad90c IS ARITY-AMBIGUOUS ACROSS THE FAMILY, and this file does

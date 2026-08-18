@@ -5,7 +5,7 @@
  *
  * Named from the table: 0x020b5c4c is the word slot 6 of
  * _ZTV17daObjFloatBoard_c holds where _ZTV10dBgActor_c holds something else, so
- * it is this class's own override of the virtual ActorBase declares.
+ * it is this class's own override of the virtual fBase_c declares.
  *
  * The board floats at mWaterY, sinks 0x28000 further while someone is standing
  * on it (mRider), bobs on top of that from a sine table walked by mBobPhase,

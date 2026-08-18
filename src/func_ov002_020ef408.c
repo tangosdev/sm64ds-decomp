@@ -9,7 +9,7 @@ extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cc);
 extern s32 func_ov002_020efe68(void *c);
 extern void _Z14ApproachLinearRsss(s16 *p, s16 target, s16 step);
 extern s32 func_ov002_020eff04(void *c);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 void func_ov002_020ef408(void *arg0)
 {
@@ -46,5 +46,5 @@ void func_ov002_020ef408(void *arg0)
         func_ov002_020efbdc(c);
         return;
     }
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
 }

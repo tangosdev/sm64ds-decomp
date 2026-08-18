@@ -37,7 +37,7 @@ extern "C" {
     void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *c, void *d);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
     int IsStarCollectedInCurLevel(int a);
-    void _ZN9ActorBase18MarkForDestructionEv(void *self);
+    void _ZN7fBase_c18MarkForDestructionEv(void *self);
 }
 
 struct SFP { void *unk0; void *unk4; };
@@ -212,7 +212,7 @@ int Whomp::InitResources()
         && data_0209f2f8 == 7
         && data_0209f220 != 1
         && IsStarCollectedInCurLevel(1) != 0) {
-        _ZN9ActorBase18MarkForDestructionEv(((char *)this));
+        _ZN7fBase_c18MarkForDestructionEv(((char *)this));
         return 0;
     }
 

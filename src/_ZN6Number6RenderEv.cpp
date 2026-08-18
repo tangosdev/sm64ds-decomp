@@ -5,7 +5,7 @@
 #include "Number.h"
 extern "C" {
 extern void* _ZN5Actor15FindWithActorIDEjPS_(u32 id, void* prev);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* thiz);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* thiz);
 extern void _ZN15TextureSequence6UpdateER15ModelComponents(void* ts, void* mc);
 extern int data_0209b454;
 }
@@ -28,7 +28,7 @@ int Number::Render()
             if ((a = _ZN5Actor15FindWithActorIDEjPS_(id, a)) == 0)
                 break;
             if (*(int*)((char*)a + 0x43c) == 6 && *(u16*)((char*)a + 0x496) == 0x64) {
-                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
                 return 1;
             }
         }

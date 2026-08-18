@@ -12,7 +12,7 @@ void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int 
 void _ZN5Actor10PoofDustAtERK7Vector3(void* self, const Vector3& vec);
 void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, const Vector3& v, unsigned int n, int vel, short unk);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
+void _ZN7fBase_c18MarkForDestructionEv(void* self);
 }
 extern "C" void func_ov080_02124acc(char* c);
 void func_ov080_02124acc(char* c)
@@ -46,5 +46,5 @@ void func_ov080_02124acc(char* c)
     v3.z = v.z;
     _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, v3, 5, 0xf000, 0);
     _ZN5Sound9PlayBank3EjRK7Vector3(0x41, *(Vector3*)(c + 0x74));
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
 }

@@ -8,7 +8,7 @@ extern "C" PMF data_ov002_0210dd30[];
 extern "C" {
 void* _ZN5Actor4NextEPKS_(const void* prev);
 int Vec3_Dist(const void* a, const void* b);
-void _ZN9ActorBase18MarkForDestructionEv(void* c);
+void _ZN7fBase_c18MarkForDestructionEv(void* c);
 }
 struct C { char pad[0x1000]; };
 
@@ -37,13 +37,13 @@ int BrickBlock::Behavior()
     o = (char*)_ZN5Actor4NextEPKS_(o);
   }
   if (o) goto d6;
-  _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+  _ZN7fBase_c18MarkForDestructionEv(((char*)this));
   return 1;
 d6:
   if (unk_0d6 != 0){
     int idx = unk_0d7;
     (((C*)((char*)this))->*data_ov002_0210dd30[idx])();
-    _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+    _ZN7fBase_c18MarkForDestructionEv(((char*)this));
   }
   return 1;
 }

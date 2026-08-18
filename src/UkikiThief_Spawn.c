@@ -12,7 +12,7 @@
 extern void _ZN7PathPtrC1Ev(void *);
 int *UkikiThief_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(972);
+    int *p = (int *)_ZN7fBase_cnwEj(972);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV5Ukiki;

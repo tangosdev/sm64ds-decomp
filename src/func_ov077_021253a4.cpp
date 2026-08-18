@@ -13,7 +13,7 @@ extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void*, const Vector3*, unsigned int, int, short);
 extern void _ZN5Actor8PoofDustEv(void*);
 extern void func_02012694(int a, void* b);
-extern void _ZN9ActorBase18MarkForDestructionEv(void*);
+extern void _ZN7fBase_c18MarkForDestructionEv(void*);
 
 int func_ov077_021253a4(char* c)
 {
@@ -35,7 +35,7 @@ int func_ov077_021253a4(char* c)
         _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, &v, 1, 0x2000, 0);
         _ZN5Actor8PoofDustEv(c);
         func_02012694(0xc4, c + 0x74);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
     return 1;
 }

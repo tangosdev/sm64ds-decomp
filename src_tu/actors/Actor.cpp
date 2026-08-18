@@ -97,7 +97,7 @@ extern s16* data_0209b45c;
 extern s16 data_0208e378;
 extern int* data_020a4bb8;
 extern unsigned char data_0209f2d8;
-void _ZN9ActorBaseC1Ev(void* self);
+void _ZN7fBase_cC1Ev(void* self);
 int func_0203b244(void* l, void* n);
 void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(struct Actor *self, int a, int b, int c, int d);
 }
@@ -105,7 +105,7 @@ extern "C" void* _ZN5ActorC2Ev(struct Actor *self) {
     int* entry;
     int b;
     int r3;
-    _ZN9ActorBaseC1Ev(((char*)self));
+    _ZN7fBase_cC1Ev(((char*)self));
     *(void**)((char*)self) = &data_0208e4b8;
     *(void**)((char*)self) = &data_0208e3a4;
     self->unk_050 = 0;
@@ -164,7 +164,7 @@ extern "C" void _ZN8Vector3sD1Ev(void *self) {}
 /* ROM ordinal 94 -- _ZN5ActorC1Ev
  * 0x020113c0  size 0x148   legacy src/_ZN5ActorC1Ev.cpp */
 extern "C" void* _ZN5ActorC1Ev(struct Actor *self) {
-  _ZN9ActorBaseC1Ev(((char*)self));
+  _ZN7fBase_cC1Ev(((char*)self));
   *(void**)((char*)self) = &data_0208e4b8;
   *(void**)((char*)self) = &data_0208e3a4;
   self->unk_050 = 0;
@@ -216,7 +216,7 @@ extern "C" void* _ZN5ActorC1Ev(struct Actor *self) {
 extern "C" {
 extern int _ZTV5Actor[];
 extern int _ZTV7dBase_c[];
-extern void _ZN9ActorBaseD2Ev(int c);
+extern void _ZN7fBase_cD2Ev(int c);
 }
 extern "C" {
 int _ZN5ActorD1Ev(struct Actor *self) {
@@ -224,7 +224,7 @@ int _ZN5ActorD1Ev(struct Actor *self) {
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
   func_02044104((int)&self->unk_050);
   *(int*)((int)self) = (int)_ZTV7dBase_c;
-  _ZN9ActorBaseD2Ev(((int)self));
+  _ZN7fBase_cD2Ev(((int)self));
   return ((int)self);
 }
 }
@@ -238,7 +238,7 @@ extern "C" struct Actor *_ZN5ActorD0Ev(struct Actor *thiz)
     func_0203b27c((int)data_0209b468, ((int)thiz) + 0x50);
     func_02044104((int)&thiz->unk_050);
     *(void **)thiz = (void *)_ZTV7dBase_c;
-    _ZN9ActorBaseD2Ev((int)thiz);
+    _ZN7fBase_cD2Ev((int)thiz);
     _ZN6Memory10DeallocateEPvP4Heap(thiz, data_020a0eac);
     return thiz;
 }
@@ -252,7 +252,7 @@ int _ZN5ActorD2Ev(struct Actor *self) {
   func_0203b27c((int)data_0209b468, ((int)self)+0x50);
   func_02044104((int)&self->unk_050);
   *(int*)((int)self) = (int)_ZTV7dBase_c;
-  _ZN9ActorBaseD2Ev(((int)self));
+  _ZN7fBase_cD2Ev(((int)self));
   return ((int)self);
 }
 }
@@ -275,7 +275,7 @@ bool Actor::BeforeInitResources()
     return true;
 skip:;
     {
-        int r = ActorBase::BeforeInitResources();
+        int r = fBase_c::BeforeInitResources();
         if (r == 0) return false;
         return true;
     }
@@ -299,7 +299,7 @@ void Actor::AfterInitResources(u32 vfSuccess)
  * 0x02011220  size 0x24   legacy src/_ZN5Actor22BeforeCleanupResourcesEv.cpp */
 int Actor::BeforeCleanupResources()
 {
-    if (ActorBase::BeforeCleanupResources() != 0)
+    if (fBase_c::BeforeCleanupResources() != 0)
         return 1;
     return 0;
 }
@@ -309,7 +309,7 @@ int Actor::BeforeCleanupResources()
  * 0x02011214  size 0xc   legacy src/_ZN5Actor21AfterCleanupResourcesEj.cpp */
 void Actor::AfterCleanupResources(u32 vfSuccess)
 {
-    ActorBase::AfterCleanupResources(vfSuccess);
+    fBase_c::AfterCleanupResources(vfSuccess);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -330,7 +330,7 @@ extern u32 data_0209b464; /* flag mask that forces thinking; 0 means "any" */
 }
 int Actor::BeforeBehavior()
 {
-    if (!ActorBase::BeforeBehavior())
+    if (!fBase_c::BeforeBehavior())
         return 0;
 
     data_0209b458 = 0;
@@ -396,7 +396,7 @@ do_copy:
  * 0x02010fc8  size 0xc   legacy src/_ZN5Actor13AfterBehaviorEj.cpp */
 void Actor::AfterBehavior(u32 vfSuccess)
 {
-    ActorBase::AfterBehavior(vfSuccess);
+    fBase_c::AfterBehavior(vfSuccess);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -406,7 +406,7 @@ int Actor::BeforeRender()
 {
     u32 flags;
 
-    if (!ActorBase::BeforeRender())
+    if (!fBase_c::BeforeRender())
         return 0;
 
     flags = mFlags;
@@ -427,7 +427,7 @@ ret1:
  * 0x02010f6c  size 0xc   legacy src/_ZN5Actor11AfterRenderEj.cpp */
 void Actor::AfterRender(u32 vfSuccess)
 {
-    ActorBase::AfterRender(vfSuccess);
+    fBase_c::AfterRender(vfSuccess);
 }
 
 /* -------------------------------------------------------------------------- */
@@ -485,7 +485,7 @@ extern "C" void func_02010e78(const Vector3 *a, const Vector3_16 *b, s8 c, s16 d
 /* ROM ordinal 78 -- _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as
  * 0x02010e2c  size 0x4c   legacy src/_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as.cpp */
 extern "C" {
-extern ActorBase *data_0209f5c0;
+extern fBase_c *data_0209f5c0;
 void func_02010e78(const Vector3 *pos, const Vector3_16 *rot, s8 areaID, s16 deathTableID);
 }
 Actor *Actor::Spawn(u32 actorID, u32 spawnParam, const Vector3 &pos,

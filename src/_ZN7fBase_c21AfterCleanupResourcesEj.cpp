@@ -1,13 +1,13 @@
 //cpp
 #include "types.h"
-/* ActorBase::AfterCleanupResources(u32 vfSuccess) at 0x02043b2c
+/* fBase_c::AfterCleanupResources(u32 vfSuccess) at 0x02043b2c
  *
  * Only runs when vfSuccess == VS_SUCCESS (2); otherwise returns immediately.
  *   func_0203b3c0(&data_020a4b6c, &this->sceneNode);   (this+0x14)
  *   func_0203b27c(&data_020a4ba8, &this->behavNode);   (this+0x28)
  *   if (this->unk4C) Heap::_Destroy(this->unk4C);
  *   if (this->unk48) func_02044334(this->unk48);
- *   this->~ActorBase();                            virtual call at vtable+0x40
+ *   this->~fBase_c();                            virtual call at vtable+0x40
  *   Memory::Deallocate(this, Memory::gameHeapPtr);
  *
  * NOTE: compiled as C++ (the virtual-call codegen `mov r0,r4; ldr r1,[r0]`
@@ -34,7 +34,7 @@ extern "C" {
   Heap* data_020a0eac;                /* 0x020a0eac = Memory::gameHeapPtr */
 }
 
-struct ActorBase {
+struct fBase_c {
   /* 0x00 vtable */
   u32 uniqueID;            /* 0x04 */
   u32 param1;              /* 0x08 */
@@ -52,18 +52,18 @@ struct ActorBase {
   virtual void v4(); virtual void v5(); virtual void v6(); virtual void v7();
   virtual void v8(); virtual void v9(); virtual void v10(); virtual void v11();
   virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
-  virtual void Destructor();        /* index 16 -> vtable+0x40 = ~ActorBase (D1).
+  virtual void Destructor();        /* index 16 -> vtable+0x40 = ~fBase_c (D1).
                                        NOT OnPendingDestroy, which is slot 12 /
                                        vtable+0x30 -- see notes/actor-vtables.md. */
   virtual void AfterCleanupResources(u32 vfSuccess);
 };
 
-void ActorBase::AfterCleanupResources(u32 vfSuccess) {
+void fBase_c::AfterCleanupResources(u32 vfSuccess) {
   if (vfSuccess != 2) return;
   func_0203b3c0(&data_020a4b6c, &this->sceneNode);
   func_0203b27c(&data_020a4ba8, &this->behavNode);
   if (this->unk4C) ((Heap*)this->unk4C)->_Destroy();
   if (this->unk48) func_02044334(this->unk48);
-  this->Destructor();   /* ~ActorBase, then free below */
+  this->Destructor();   /* ~fBase_c, then free below */
   Memory::Deallocate(this, data_020a0eac);
 }

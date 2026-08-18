@@ -8,7 +8,7 @@
  * one that stands on the ice. ChillBully_Spawn is Bully_Spawn and BigBully_Spawn
  * again, with 0x3fc for the allocation and this class's vtable stored last.
  *
- * SIZE 0x3fc, the literal in ChillBully_Spawn's ActorBase::operator new. The base
+ * SIZE 0x3fc, the literal in ChillBully_Spawn's fBase_c::operator new. The base
  * ends at 0x398, so the two bytes below are all this class adds -- which is why it is
  * four bytes smaller than its siblings rather than larger.
  *

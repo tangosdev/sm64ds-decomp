@@ -3,15 +3,15 @@ extern "C" {
 extern void *data_0208e4b8;
 extern void *_ZTV8dScene_c;
 extern void *data_ov003_020b179c;
-void *_ZN9ActorBasenwEj(unsigned int);
-void _ZN9ActorBaseC1Ev(void *);
+void *_ZN7fBase_cnwEj(unsigned int);
+void _ZN7fBase_cC1Ev(void *);
 void *func_ov003_020b1118(void);
 }
 
 void *func_ov003_020b1118(void) {
-    char *p = (char *)_ZN9ActorBasenwEj(0x98);
+    char *p = (char *)_ZN7fBase_cnwEj(0x98);
     if (p) {
-        _ZN9ActorBaseC1Ev(p);
+        _ZN7fBase_cC1Ev(p);
         *(void **)p = &data_0208e4b8;
         *(void **)p = &_ZTV8dScene_c;
         *(unsigned char *)(int)(((int)p + 0x13)) |= 1;

@@ -23,7 +23,7 @@ extern "C" int _ZN11ShadowModel12InitCylinderEv(void* self);
 extern "C" void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* self, Actor* a, int r, int h, unsigned int e, unsigned int g);
 extern "C" void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* self, Actor* a, int r, int h, Vector3_16* p, int q);
 extern "C" int IsStarCollectedInCurLevel(int a);
-extern "C" void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* self);
 
 int OneUpMushroom::InitResources()
 {
@@ -95,7 +95,7 @@ int OneUpMushroom::InitResources()
 
     if (data_0209f2f8 == 7 && mPosY == 0xdac000 && mPosZ == 0
         && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0)) {
-        _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+        _ZN7fBase_c18MarkForDestructionEv(((char*)this));
         return 0;
     }
 

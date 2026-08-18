@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV6BobOmb */
 int *BobOmb_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1024);
+    int *p = (int *)_ZN7fBase_cnwEj(1024);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV6BobOmb;

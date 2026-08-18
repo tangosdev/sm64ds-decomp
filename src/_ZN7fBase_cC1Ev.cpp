@@ -3,20 +3,20 @@
 // transcription of compiled-C-shaped code (stmdb prolog, plain ldr/str/bl body, ldmia
 // epilog - no C-inexpressible instruction), so the asm-primitive policy does not apply;
 // does NOT count as matched. Reverts to a draft until someone reproduces the bytes from
-// real C++ (ActorBase::ActorBase() - the inheritance chain and callees are already known).
-// @symbol _ZN9ActorBaseC1Ev
+// real C++ (fBase_c::fBase_c() - the inheritance chain and callees are already known).
+// @symbol _ZN7fBase_cC1Ev
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "ActorBase.h"
+#include "fBase_c.h"
 extern "C" {
-void _ZN9ActorBase9SceneNodeC1Ev(void);
+void _ZN7fBase_c9SceneNodeC1Ev(void);
 int func_0203b438(void);
 int func_02043810(void);
 extern int data_020a4bb8;
 }
 
-extern "C" asm void* _ZN9ActorBaseC1Ev(void* self) {
+extern "C" asm void* _ZN7fBase_cC1Ev(void* self) {
     stmdb sp!, {r4, r5, lr}
     sub sp, sp, #4
     mov r4, r0
@@ -24,7 +24,7 @@ extern "C" asm void* _ZN9ActorBaseC1Ev(void* self) {
     add r5, r4, #0x14
     mov r0, r5
     str r1, [r4]
-    bl _ZN9ActorBase9SceneNodeC1Ev
+    bl _ZN7fBase_c9SceneNodeC1Ev
     str r4, [r5, #0x10]
     add r0, r5, #0x14
     mov r2, #0

@@ -20,7 +20,7 @@ int Actor::BeforeRender()
 {
     u32 flags;
 
-    if (!ActorBase::BeforeRender())
+    if (!fBase_c::BeforeRender())
         return 0;
 
     flags = mFlags;

@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV7Chuckya */
 int *Chuckya_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1080);
+    int *p = (int *)_ZN7fBase_cnwEj(1080);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV7Chuckya;

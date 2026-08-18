@@ -13,7 +13,7 @@ extern void _ZN5Actor16TriplePoofDustAtERK7Vector3(void *c, struct Vec3 *pos);
 extern void _ZN5Sound22StopLoadedMusic_Layer3Ev(void);
 extern void func_02011cfc(void);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *c);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern void *data_0209f318;
 extern struct M12 data_020a0e68;
 
@@ -62,6 +62,6 @@ int func_ov078_021238ac(char *c)
         func_02011cfc();
         _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x7f, 0x15666);
     }
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
     return 1;
 }

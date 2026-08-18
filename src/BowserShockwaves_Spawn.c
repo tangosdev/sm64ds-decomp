@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV16BowserShockwaves */
 int *BowserShockwaves_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(536);
+    int *p = (int *)_ZN7fBase_cnwEj(536);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV16BowserShockwaves;

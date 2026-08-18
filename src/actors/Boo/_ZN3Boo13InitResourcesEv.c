@@ -10,7 +10,7 @@ extern int LoadBlueCoinModel();
 extern int _ZN8CapEnemy6AddCapEj();
 extern int _ZN8CapEnemy21DestroyIfCapNotNeededEv();
 extern int NumStars();
-extern int _ZN9ActorBase18MarkForDestructionEv();
+extern int _ZN7fBase_c18MarkForDestructionEv();
 extern int IsStarCollectedInCurLevel();
 extern int _ZN11ShadowModel12InitCylinderEv();
 extern int func_02035800();
@@ -157,11 +157,11 @@ int _ZN3Boo13InitResourcesEv(char *c)
 
     if ((unsigned)(unsigned char)(U8(0x5cf) + 0xf6) <= 1) {
         if ((unsigned)NumStars() < 3) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return 0;
         }
         if (U8(0x5cf) == 0xb && (unsigned)NumStars() >= 0xf) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return 0;
         }
         if (IsStarCollectedInCurLevel(1) != 0) {
@@ -212,14 +212,14 @@ int _ZN3Boo13InitResourcesEv(char *c)
 
     if (U8(0x5cf) == 5) {
         if ((unsigned)NumStars() < 0xf) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return 1;
         }
         if (data_0209f264 == 0) {
             spawned = (void *)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(U16(0x4a0), 0, c + 0x5c, 0, S8(0x5d0), -1);
             if (spawned != 0) {
                 *(unsigned char *)((char *)spawned + 0x37e) = 1;
-                _ZN9ActorBase18MarkForDestructionEv(c);
+                _ZN7fBase_c18MarkForDestructionEv(c);
                 return 1;
             }
         }

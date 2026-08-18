@@ -17,7 +17,7 @@
  *     0x30c ModelAnim                  0x64    -> 0x370
  *
  * SIZE IS THE ROM'S OWN: `Skeeter_Spawn` calls
- * `ActorBase::operator new(944)` -- 0x3b0 -- and stores this class's
+ * `fBase_c::operator new(944)` -- 0x3b0 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

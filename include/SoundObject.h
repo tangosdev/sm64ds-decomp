@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   SoundObject_Spawn  ActorBase::operator new(228 = 0xe4), Actor::Actor(), stores _ZTV11SoundObject,
+ *   SoundObject_Spawn  fBase_c::operator new(228 = 0xe4), Actor::Actor(), stores _ZTV11SoundObject,
  *                 then the members below in this order.
  *   ~SoundObject   the same members destroyed in reverse, then ~Actor.
  *

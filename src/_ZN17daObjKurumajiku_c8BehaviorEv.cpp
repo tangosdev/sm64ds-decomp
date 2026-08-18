@@ -5,7 +5,7 @@
  *
  * Named from the table: 0x020b6b38 is the word slot 6 of
  * _ZTV17daObjKurumajiku_c holds where _ZTV10dBgActor_c holds something else, so
- * it is this class's own override of the virtual ActorBase declares.
+ * it is this class's own override of the virtual fBase_c declares.
  * include/daObjKurumajiku_c.h's banner already described this function -- it
  * is where mMountedActorIds was named from -- so only the definition was
  * still under a func_ov002_ name.
@@ -14,7 +14,7 @@
  * with it: each ride's offset comes out of the four-entry table at
  * data_ov002_0210ddd0, rotated by the axle's own Euler angles through the
  * scratch matrix at data_020a0e68 and added to the axle's position. Bit 8 of
- * mFlags suppresses all of it -- ActorBase's own "behaviour off" bit -- and
+ * mFlags suppresses all of it -- fBase_c's own "behaviour off" bit -- and
  * the early return skips the collision update too, which is what makes a
  * stopped axle stop carrying.
  *

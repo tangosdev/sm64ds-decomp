@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void* _ZN9ActorBasenwEj(unsigned int);
+extern void* _ZN7fBase_cnwEj(unsigned int);
 extern void _ZN5ActorC2Ev(void*);
 extern void _ZN19CylinderClsnWithPosD1Ev(void*);
 extern void _ZN19CylinderClsnWithPosC1Ev(void*);
@@ -10,7 +10,7 @@ extern void func_020733a8(void* arr, int count, int size, void(*ctor)(void*), vo
 extern void* _ZTV12Flamethrower[];
 
 int* Flamethrower_Spawn(void){
-  int* p = (int*)_ZN9ActorBasenwEj(0x46c);
+  int* p = (int*)_ZN7fBase_cnwEj(0x46c);
   if(p){
     _ZN5ActorC2Ev(p);
     *(void***)p = (void**)_ZTV12Flamethrower;

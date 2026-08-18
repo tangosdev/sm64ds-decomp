@@ -9,7 +9,7 @@ extern int _ZTV9UkikiCage[];
 /* vtable identified: VT0 = _ZTV9UkikiCage */
 int *UkikiCage_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1248);
+    int *p = (int *)_ZN7fBase_cnwEj(1248);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV9UkikiCage;

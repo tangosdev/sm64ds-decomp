@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV10BulletBill */
 int *BulletBill_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(992);
+    int *p = (int *)_ZN7fBase_cnwEj(992);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV10BulletBill;

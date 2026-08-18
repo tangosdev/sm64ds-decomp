@@ -7,7 +7,7 @@ struct V3 { int x, y, z; };
 
 extern "C" {
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern void _ZN9ActorBase18MarkForDestructionEv(char *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(char *self);
 extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 }
@@ -34,7 +34,7 @@ int Number::Behavior()
     case 1:
         if (mPosY < mStartPosY) {
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, *(volatile int *)((char *)&mPosY), mPosZ);
-            _ZN9ActorBase18MarkForDestructionEv(((char *)this));
+            _ZN7fBase_c18MarkForDestructionEv(((char *)this));
         }
         break;
     }

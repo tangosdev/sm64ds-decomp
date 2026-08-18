@@ -16,7 +16,7 @@ extern "C" {
 void _ZN6Player16IncMegaKillCountEv(void* self);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void _ZN5Actor10PoofDustAtERK7Vector3(void* self, const Vector3& v);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
+void _ZN7fBase_c18MarkForDestructionEv(void* self);
 void func_02012694(int, void*);
 }
 
@@ -34,6 +34,6 @@ extern "C" void func_ov091_02132a14(char* c, void* p){
     ((int*)&vec2)[1] = ((int*)&vec)[1];
     ((int*)&vec2)[2] = ((int*)&vec)[2];
     _ZN5Actor10PoofDustAtERK7Vector3(c, vec2);
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
     func_02012694(0x1e, c + 0x74);
 }

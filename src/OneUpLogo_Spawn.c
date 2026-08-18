@@ -9,7 +9,7 @@
 /* resolved: VT0 = _ZTV9OneUpLogo */
 int *OneUpLogo_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(336);
+    int *p = (int *)_ZN7fBase_cnwEj(336);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV9OneUpLogo;

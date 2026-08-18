@@ -18,7 +18,7 @@ extern void _ZN5Actor8PoofDustEv(void *self);
 extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(
     void *self, signed char *starFlag, unsigned int starID, Vector3 *pos, unsigned int how);
 extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *self);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 extern s16 data_02082214[];
 extern s8 data_0209f2f8;
@@ -137,7 +137,7 @@ int func_ov071_02120d30(char *c)
         if (data_0209f2f8 == 0x2e) {
             _ZN5Actor24KillAndTrackInDeathTableEv(c);
         } else {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
         }
         break;
     }

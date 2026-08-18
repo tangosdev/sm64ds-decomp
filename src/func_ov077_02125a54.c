@@ -3,7 +3,7 @@ extern void _ZN9Animation7AdvanceEv(void *);
 extern void func_ov077_02124eb0(void *c);
 extern void _ZN5Actor8PoofDustEv(void *);
 extern void func_02012694(int a, void *b);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *c, void *clsn);
 extern void func_ov077_02124d08(void *c, void *p);
 extern void _ZN12CylinderClsn5ClearEv(void *c);
@@ -24,7 +24,7 @@ int func_ov077_02125a54(char *c){
   if(d < -0xc8000){
     _ZN5Actor8PoofDustEv(c);
     func_02012694(0x166, c + 0x74);
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
   }
   _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x1b0);
   func_ov077_02124d08(c, c + 0x1e4);

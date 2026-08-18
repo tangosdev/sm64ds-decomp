@@ -9,7 +9,7 @@ extern int _ZTV4Trap[];
 /* vtable identified: VT0 = _ZTV4Trap */
 int *Trap_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(944);
+    int *p = (int *)_ZN7fBase_cnwEj(944);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV4Trap;

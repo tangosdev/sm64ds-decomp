@@ -6,9 +6,9 @@
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
 extern int _ZN5Actor18HorzAngleToCPlayerEv(char* c);
 extern void ApproachAngle(short* p, int target, int a, int b, int c);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void* pl, char* c, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void* pl, char* c, int b);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int f);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* pl, char* c, int m, void* v, int a, int b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* pl, char* c, int m, void* v, int a, int b);
 extern void func_02012694(int a, void* b);
 extern void KingBobOmb_SetState(char* c, void* pmf);
 extern void _ZN5Actor15HugeLandingDustEb(char* c, int b);
@@ -44,7 +44,7 @@ int func_ov078_021240a0(char* c)
             *(short*)(c + 0x8e) = *(short*)(c + 0x94);
             if (AngleDiff(_ZN5Actor18HorzAngleToCPlayerEv(c), *(short*)(c + 0x8e)) < 0x1000) {
                 char* pl = (char*)(long)*(int*)(c + 0x430);
-                if (_ZN6Player9StartTalkER9ActorBaseb(pl, c, 1) != 0) {
+                if (_ZN6Player9StartTalkER7fBase_cb(pl, c, 1) != 0) {
                     msg = 0;
                     if (data_0209f220 == 1) {
                         msg += (short)(*(int*)(pl + 8) + 0x9a);
@@ -52,7 +52,7 @@ int func_ov078_021240a0(char* c)
                         msg = 0x95;
                     }
                     _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(0x14, 0x15666);
-                    if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(pl, c, (int)msg, c + 0x5c, 0, 0) != 0) {
+                    if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(pl, c, (int)msg, c + 0x5c, 0, 0) != 0) {
                         func_02012694(0x12a, c + 0x74);
                         KingBobOmb_SetState(c, &data_ov078_0212705c);
                     }

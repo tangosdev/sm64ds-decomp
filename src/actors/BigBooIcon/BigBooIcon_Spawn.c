@@ -7,7 +7,7 @@
 /* resolved: VT = _ZTV10BigBooIcon */
 int *BigBooIcon_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(216);
+    int *p = (int *)_ZN7fBase_cnwEj(216);
     if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV10BigBooIcon; }
     return p;
 }

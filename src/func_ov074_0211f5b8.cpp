@@ -15,12 +15,12 @@ extern int _ZN9Animation8FinishedEv(void* c);
 extern void func_ov074_02121a4c(char* c, int idx);
 extern void func_ov074_0211f154(char* c);
 extern int _ZN6Player12GetTalkStateEv(void* p);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* p, void* actor, u32 id, const Vector3* v, u32 a, u32 b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* p, void* actor, u32 id, const Vector3* v, u32 a, u32 b);
 extern void func_0201277c(u32 a);
 extern u16 DecIfAbove0_Short(u16* p);
 extern void* _ZN5Actor15FindWithActorIDEjPS_(u32 id, void* prev);
 extern void _ZN5Actor10PoofDustAtERK7Vector3(void* c, const Vector3* v);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* a);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* a);
 extern void func_02012694(u32 a, void* b);
 extern int func_ov074_0211f38c(char* c);
 extern int func_ov074_02120474(char* c);
@@ -71,7 +71,7 @@ extern "C" void func_ov074_0211f5b8(char* c)
                     goto inc603;
                 return;
             }
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(player, c, (s16)msgId, &vmsg, 1, 2) == 0)
+            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(player, c, (s16)msgId, &vmsg, 1, 2) == 0)
                 return;
             func_0201277c(0x15a);
         }
@@ -93,7 +93,7 @@ extern "C" void func_ov074_0211f5b8(char* c)
                         v2.y = src[1];
                         v2.z = src[2];
                         _ZN5Actor10PoofDustAtERK7Vector3(c, &v2);
-                        _ZN9ActorBase18MarkForDestructionEv(actor);
+                        _ZN7fBase_c18MarkForDestructionEv(actor);
                         *(u16*)(c + 0x5fc) = 2;
                         return;
                     }
@@ -165,7 +165,7 @@ extern "C" void func_ov074_0211f5b8(char* c)
         vzero.y = vzero.y + 0x12c000;
         _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x11a, 2, &vzero, 0, *(signed char*)(c + 0xcc), -1);
         func_02012694(0xbb, c + 0x74);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return;
     default:
         return;

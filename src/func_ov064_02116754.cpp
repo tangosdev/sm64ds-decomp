@@ -9,7 +9,7 @@ typedef struct { s32 x, y, z; } Vector3;
 typedef s32 Fix12;
 struct BCA_File;
 
-struct ActorBase {
+struct fBase_c {
     virtual void v00(); virtual void v01(); virtual void v02(); virtual void v03();
     virtual void v04(); virtual void v05(); virtual void v06(); virtual void v07();
     virtual void v08(); virtual void v09(); virtual void v0a(); virtual void v0b();
@@ -66,7 +66,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((ActorBase*)c)->ChangeState();
+        ((fBase_c*)c)->ChangeState();
         return;
     }
 
@@ -77,7 +77,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((ActorBase*)c)->ChangeState();
+        ((fBase_c*)c)->ChangeState();
         return;
     }
 
@@ -89,7 +89,7 @@ extern "C" void func_ov064_02116754(char* c)
             v[1] = 0;
             v[2] = 0;
             func_ov002_020ada40(c, v, r4, *(s32*)(*(char**)(c + 0x330) + 0x24));
-            ((ActorBase*)c)->ChangeState();
+            ((fBase_c*)c)->ChangeState();
             return;
         }
     }
@@ -101,7 +101,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((ActorBase*)c)->ChangeState();
+        ((fBase_c*)c)->ChangeState();
         return;
     }
 
@@ -115,7 +115,7 @@ extern "C" void func_ov064_02116754(char* c)
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((ActorBase*)c)->ChangeState();
+        ((fBase_c*)c)->ChangeState();
         return;
     }
 
@@ -124,11 +124,11 @@ extern "C" void func_ov064_02116754(char* c)
         *(s16*)(c + 0x94) = (s16)(*(s16*)(c + 0x8e) + 0x8000);
         *(s32*)(c + 0x98) = 0x28000;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, *(BCA_File**)(*(char**)(*(char**)(c + 0x330) + 0x10) + 4), 0, 0x1000, 0);
-        ((ActorBase*)c)->OnStateEntered();
+        ((fBase_c*)c)->OnStateEntered();
         func_ov064_02115f98(c, r4);
         *(s32*)(c + 0x398) = 2;
         *(u8*)(c + 0x3f9) = 0;
-        ((ActorBase*)c)->ChangeState();
+        ((fBase_c*)c)->ChangeState();
         return;
     }
 
@@ -137,7 +137,7 @@ extern "C" void func_ov064_02116754(char* c)
 
     *(s32*)(c + 0x398) = 2;
     *(u8*)(c + 0x3f9) = 0;
-    ((ActorBase*)c)->ChangeState();
+    ((fBase_c*)c)->ChangeState();
 
     {
         Vector3 v;
@@ -158,5 +158,5 @@ extern "C" void func_ov064_02116754(char* c)
             *(s32*)(c + 0x98) = 0xa000;
     }
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x110, *(BCA_File**)(*(char**)(*(char**)(c + 0x330) + 0x10) + 4), 0, 0x1000, 0);
-    ((ActorBase*)c)->OnStateEntered();
+    ((fBase_c*)c)->OnStateEntered();
 }

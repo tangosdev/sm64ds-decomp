@@ -85,7 +85,7 @@ extern u32       data_0209b464;   /* flag mask that forces thinking; 0 means "an
 
 int Actor::BeforeBehavior()
 {
-    if (!ActorBase::BeforeBehavior())
+    if (!fBase_c::BeforeBehavior())
         return 0;
 
     data_0209b458 = 0;

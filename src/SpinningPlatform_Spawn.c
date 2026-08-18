@@ -8,7 +8,7 @@
 /* resolved: VT0 = _ZTV16SpinningPlatform */
 int *SpinningPlatform_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(896);
+    int *p = (int *)_ZN7fBase_cnwEj(896);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV16SpinningPlatform;

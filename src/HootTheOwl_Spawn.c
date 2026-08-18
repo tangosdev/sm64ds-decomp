@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV10HootTheOwl */
 int *HootTheOwl_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1016);
+    int *p = (int *)_ZN7fBase_cnwEj(1016);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV10HootTheOwl;

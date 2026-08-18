@@ -20,5 +20,5 @@ void dScene_c::AfterCleanupResources(u32 vfSuccess)
 {
     if (vfSuccess == 2)
         data_02092660 = 0;
-    ActorBase::AfterCleanupResources(vfSuccess);
+    fBase_c::AfterCleanupResources(vfSuccess);
 }

@@ -30,7 +30,7 @@
  *     into it, and InitResources sets mAnimSpeed to 0x1000, which is 1.0
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `HootTheOwl_Spawn` calls
- * `ActorBase::operator new(1016)` -- 0x3f8 -- and stores `_ZTV10HootTheOwl`,
+ * `fBase_c::operator new(1016)` -- 0x3f8 -- and stores `_ZTV10HootTheOwl`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3f4; the difference is trailing space no source reads.
  */

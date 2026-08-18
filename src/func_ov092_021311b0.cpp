@@ -9,7 +9,7 @@ extern "C" {
 void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *clsn);
 int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
 void _ZN5Actor14TriplePoofDustEv(void *self);
-void _ZN9ActorBase18MarkForDestructionEv(void *self);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *pos);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
@@ -47,7 +47,7 @@ extern "C" void func_ov092_021311b0(void *thiz)
 
     if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x324) != 0) {
         _ZN5Actor14TriplePoofDustEv(c);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         _ZN5Sound9PlayBank3EjRK7Vector3(0x41, c + 0x74);
         return;
     }
@@ -85,7 +85,7 @@ extern "C" void func_ov092_021311b0(void *thiz)
         int *p;
         _ZN5Actor14TriplePoofDustEv(c);
         _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xfa, *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         o = *(char **)(c + 0x320);
         p = (int *)LA(o + 0x5c);
         v2.x = p[0];

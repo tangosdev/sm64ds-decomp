@@ -5,8 +5,8 @@
 struct Vec3 { int x, y, z; };
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern int Vec3_HorzDist(void *a, void *b);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void *player, void *actor, int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void *player, void *actor, unsigned msg, const void *pos, unsigned a, unsigned b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void *player, void *actor, int b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *player, void *actor, unsigned msg, const void *pos, unsigned a, unsigned b);
 extern int _ZN6Player12GetTalkStateEv(void *player);
 extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned param, const void *pos, const void *ang, int a, int b);
 extern void _ZN9Animation7AdvanceEv(void *anim);
@@ -25,14 +25,14 @@ int func_ov072_0212001c(char *c)
     case 0:
         *(void **)(c + 0x32c) = _ZN5Actor13ClosestPlayerEv(c);
         if (Vec3_HorzDist(c + 0x5c, *(char **)(c + 0x32c) + 0x5c) < 0x118000) {
-            if (_ZN6Player9StartTalkER9ActorBaseb(*(void **)(c + 0x32c), c, 1)) {
+            if (_ZN6Player9StartTalkER7fBase_cb(*(void **)(c + 0x32c), c, 1)) {
                 st = (unsigned char *)(((int)c + 0x334));
                 *st = *st + 1;
             }
         }
         break;
     case 1:
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void **)(c + 0x32c), c, 0xb1, &v, 0, 2)) {
+        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void **)(c + 0x32c), c, 0xb1, &v, 0, 2)) {
             st = (unsigned char *)(((int)c + 0x334));
             *st = *st + 1;
         }

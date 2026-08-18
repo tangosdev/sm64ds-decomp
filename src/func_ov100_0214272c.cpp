@@ -7,7 +7,7 @@ extern void func_02012694(int, void*);
 extern void func_ov100_02141fb0(void*);
 extern void func_ov100_02142130(void*);
 extern void _ZN5Actor14TriplePoofDustEv(void*);
-extern void _ZN9ActorBase18MarkForDestructionEv(void*);
+extern void _ZN7fBase_c18MarkForDestructionEv(void*);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 extern int Vec3_HorzLen(void*);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int, int);
@@ -51,7 +51,7 @@ extern "C" void func_ov100_0214272c(char *c)
         *(int *)(c + 0x64));
     func_02012694(0x173, c + 0x74);
     _ZN5Actor14TriplePoofDustEv(c);
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
     return;
 
 ground:

@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   HugeCover_Spawn  ActorBase::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV9HugeCover,
+ *   HugeCover_Spawn  fBase_c::operator new(800 = 0x320), dBgActor_c::dBgActor_c(), stores _ZTV9HugeCover,
  *                 then the members below in this order.
  *   ~HugeCover   the same members destroyed in reverse, then ~dBgActor_c.
  *

@@ -35,7 +35,7 @@ struct PyramidStep : dBgActor_c {
     int Render();
 
     /* Tail padding. The field span stops short of the real size: PyramidStep_Spawn
-       calls ActorBase::operator new(0x3a4), read off the retail
+       calls fBase_c::operator new(0x3a4), read off the retail
        instruction. A span is only a LOWER BOUND. */
     u8 pad_378[0x2c];      /* 0x378, to the ROM's 0x3a4 */
 };

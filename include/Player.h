@@ -3,7 +3,7 @@
  * explicit padding. Field NAMES cannot change codegen, so they are safe to
  * improve -- but the OFFSETS and WIDTHS are pinned by the bytes.
  *
- * Player derives from Actor: ActorBase -> dBase_c -> Actor -> Player.
+ * Player derives from Actor: fBase_c -> dBase_c -> Actor -> Player.
  * See notes/actor-vtables.md. That IS expressed here now: `struct Player :
  * Actor` inherits 0x000..0x0cf rather than duplicating it, and the 31-slot
  * vtable (_ZTV6Player, 0x0210a83c in ov002) has seven of its overrides
@@ -37,12 +37,12 @@
    a;` through `struct x;` -- which declared nothing any declaration below
    refers to. Removed; none was used as a type anywhere in src/ or include/. */
 struct Actor;
-struct ActorBase;
+struct fBase_c;
 struct Vector3;
 
 struct Player : Actor {
     /* 0x000..0x0cf is Actor's, inherited rather than duplicated. It used to be
-       written out inline here -- mParam at 0x008 was ActorBase's param1, mPosX
+       written out inline here -- mParam at 0x008 was fBase_c's param1, mPosX
        at 0x05c was Actor's, and so on. The names were reconciled first so that
        deleting the block is all that happens here. sizeof(Actor) is 0xd0, so
        Player's own fields start exactly where the base ends. */
@@ -496,8 +496,8 @@ struct Player : Actor {
        their stack-passed arguments with ldrb, and mwcc never fuses a
        narrowing cast into a narrower load. The symbols were imported ending
        jj and are corrected to hh in this commit. */
-    int ShowMessage(ActorBase & a_, unsigned int b, const Vector3 * v, unsigned char d_, unsigned char e_);
-    int ShowMessage2(ActorBase & actor_, unsigned int msg, const Vector3 * pos, unsigned char d_, unsigned char e_);
+    int ShowMessage(fBase_c & a_, unsigned int b, const Vector3 * v, unsigned char d_, unsigned char e_);
+    int ShowMessage2(fBase_c & actor_, unsigned int msg, const Vector3 * pos, unsigned char d_, unsigned char e_);
     int St_BackFlip_Init();
     int St_Balloon_Cleanup();
     int St_Balloon_Init();
@@ -670,7 +670,7 @@ struct Player : Actor {
     int St_YoshiPower_Cleanup();
     int St_YoshiPower_Init();
     int St_YoshiPower_Main();
-    int StartTalk(ActorBase & actor_, bool b_);
+    int StartTalk(fBase_c & actor_, bool b_);
     int TryEnterStarDoor(Vector3 & pos_, short kind);
     int TryExitWhiteDoorWithStar();
     int TryGrab(Actor & actor_);

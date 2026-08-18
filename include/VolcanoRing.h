@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   VolcanoRing_Spawn  ActorBase::operator new(808 = 0x328), dBgActor_c::dBgActor_c(), stores _ZTV11VolcanoRing,
+ *   VolcanoRing_Spawn  fBase_c::operator new(808 = 0x328), dBgActor_c::dBgActor_c(), stores _ZTV11VolcanoRing,
  *                 then the members below in this order.
  *   ~VolcanoRing   the same members destroyed in reverse, then ~dBgActor_c.
  *

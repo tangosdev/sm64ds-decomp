@@ -11,7 +11,7 @@ extern int _ZTV11daDsnBase_c[];
 /* vtable identified: VT0 = _ZTV11daDsnBase_c */
 int *Grindel_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(928);
+    int *p = (int *)_ZN7fBase_cnwEj(928);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV11daDsnBase_c;

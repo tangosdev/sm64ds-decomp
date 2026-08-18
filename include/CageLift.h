@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   CageLift_Spawn  ActorBase::operator new(816 = 0x330), dBgActor_c::dBgActor_c(), stores _ZTV8CageLift,
+ *   CageLift_Spawn  fBase_c::operator new(816 = 0x330), dBgActor_c::dBgActor_c(), stores _ZTV8CageLift,
  *                 then the members below in this order.
  *   ~CageLift   the same members destroyed in reverse, then ~dBgActor_c.
  *

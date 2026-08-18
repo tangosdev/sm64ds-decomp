@@ -14,7 +14,7 @@
 /* resolved: VT0 = _ZTV3Amp */
 int *Amp_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1076);
+    int *p = (int *)_ZN7fBase_cnwEj(1076);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV3Amp;

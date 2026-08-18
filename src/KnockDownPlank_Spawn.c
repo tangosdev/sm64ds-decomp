@@ -8,7 +8,7 @@
 /* resolved: VT0 = _ZTV14KnockDownPlank */
 int *KnockDownPlank_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(924);
+    int *p = (int *)_ZN7fBase_cnwEj(924);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV14KnockDownPlank;

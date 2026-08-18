@@ -36,7 +36,7 @@
  *
  * SIZE 0x330 closes on that: dBgActor_c ends at 0x31e, the array is 4-aligned so it
  * starts at 0x320, and 0x320 + 4*4 = 0x330 is the literal both factories pass to
- * ActorBase::operator new -- RickshawBdw_Spawn and RickshawBs_Spawn, one per
+ * fBase_c::operator new -- RickshawBdw_Spawn and RickshawBs_Spawn, one per
  * descendant, agreeing.
  */
 
@@ -55,7 +55,7 @@ struct daObjKurumajiku_c : dBgActor_c {
     virtual ~daObjKurumajiku_c() {}
 
     /* Slot 6, ov002 0x020b6b38 -- carries the four mounted actors around the
-       axle. An override of the virtual ActorBase already declared, so it
+       axle. An override of the virtual fBase_c already declared, so it
        occupies a slot that exists rather than adding one, and no field moves.
        Spelled without `virtual` the way include/daObjFloatBoard_c.h spells its
        own slot-3 override: virtualness is inherited, and the destructor above

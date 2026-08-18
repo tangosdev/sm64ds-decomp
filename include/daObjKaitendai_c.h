@@ -37,7 +37,7 @@
  * all five factories -- RotatingPlatformWf_Spawn, RotatingPlatformLll_Spawn,
  * RotatingPlatformWdw_Spawn, RotatingPlatformRr_Spawn and `func_ov047_021113bc`,
  * which is RickshawBs's real factory -- pass 800 = 0x320 to
- * ActorBase::operator new, which is sizeof(dBgActor_c) exactly. There is no room for
+ * fBase_c::operator new, which is sizeof(dBgActor_c) exactly. There is no room for
  * a field anywhere in this class or in any of the five leaves.
  *
  * NOT RickshawBs_Spawn. That function allocates 816 and builds

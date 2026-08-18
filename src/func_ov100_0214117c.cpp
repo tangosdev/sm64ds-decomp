@@ -8,7 +8,7 @@ typedef short s16;
 
 
 extern "C" {
-extern void _ZN9ActorBase18MarkForDestructionEv(void* c);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
 extern int _ZN5Actor13DistToCPlayerEv(void* c);
 extern void _Z14ApproachLinearRiii(int* val, int target, int step);
 extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
@@ -22,7 +22,7 @@ extern "C" void func_ov100_0214117c(char* c)
     s16 hAngle;
 
     if (!_ZN5Actor15IsPlayerInRangeEi(c, 0x5dc)) {
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return;
     }
 

@@ -232,7 +232,7 @@ dScMgBase_c::~dScMgBase_c()
 /* -------------------------------------------------------------------------- */
 /* NO SEPARATE DEFINITION -- emitted by the ~dScMgBase_c() above. The legacy
    free-function form hand-wrote what mwcc generates for D2 on its own: the
-   two vtable stores and the `bl _ZN9ActorBaseD2Ev`. Writing it out here as
+   two vtable stores and the `bl _ZN7fBase_cD2Ev`. Writing it out here as
    well would define the symbol twice. */
 
 /* -------------------------------------------------------------------------- */

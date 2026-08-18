@@ -9,21 +9,21 @@
 
 /* The base of every enemy and object class, 0x020100dc..0x020113e4.
  *
- * The chain is ActorBase -> dBase_c -> Actor. Actor is NOT a direct child
- * of ActorBase: Actor::Actor calls ActorBase::ActorBase, stores dBase_c's
+ * The chain is fBase_c -> dBase_c -> Actor. Actor is NOT a direct child
+ * of fBase_c: Actor::Actor calls fBase_c::fBase_c, stores dBase_c's
  * vptr, then immediately overwrites it with its own. Two consecutive vptr
  * stores is what an inlined intermediate-base constructor looks like. See
  * notes/actor-vtables.md.
  *
- * LAYOUT. ActorBase occupies 0x00..0x4f, so Actor's own fields begin at 0x50.
- * The generated header this replaces duplicated ActorBase's fields inline --
+ * LAYOUT. fBase_c occupies 0x00..0x4f, so Actor's own fields begin at 0x50.
+ * The generated header this replaces duplicated fBase_c's fields inline --
  * uniqueID at 0x04, actorID at 0x0c -- instead of inheriting them, which is why
  * it opened with pad_000[0x4] and a 0x42-byte gap.
  *
  * VTABLE. _ZTV5Actor (0x0208e3a4) has 31 slots. Actor overrides ten of the
  * eighteen it inherits -- 1, 2, 4, 5, 7, 8, 10, 11 and the destructor at 16/17
  * -- and appends thirteen of its own at 18..30. Slots 0, 3, 6, 9, 12, 13, 14
- * and 15 still point at the ActorBase implementations.
+ * and 15 still point at the fBase_c implementations.
  *
  * The destructor is declared FIRST on purpose. CW 1.2 emits the vtable into the
  * TU defining the first non-inline virtual declared in the class (the key
@@ -42,11 +42,11 @@
  * The rule, stated precisely: the key function -- the first non-inline virtual
  * declared -- must never be defined as a real method in any translation unit.
  * Declaring the destructor first pins that role to TUs which by construction
- * never will. include/ActorBase.h reaches the same end differently: it does
- * declare InitResources (slot 0) in-class, but src/_ZN9ActorBase13InitResourcesEv.cpp
+ * never will. include/fBase_c.h reaches the same end differently: it does
+ * declare InitResources (slot 0) in-class, but src/_ZN7fBase_c13InitResourcesEv.cpp
  * deliberately defines it as an extern "C" free function rather than a method.
  * Do not "fix" that file into a real method, and do not remove the declaration
- * from ActorBase.h -- removing it would delete slot 0 and shift all 18 slots.
+ * from fBase_c.h -- removing it would delete slot 0 and shift all 18 slots.
  *
  * Field NAMES are inferred from behaviour and cannot change codegen, so they are
  * safe to improve. Offsets, widths and vtable slots are pinned by the bytes.
@@ -64,7 +64,7 @@ struct Matrix4x3;
 
 /* The actor heap and its deallocator, for the inline operator delete at the end of
    the class. `data_020a0eac` is the heap every actor is allocated from -- the same
-   one ActorBase::operator new (src/_ZN9ActorBasenwEj.cpp) passes to
+   one fBase_c::operator new (src/_ZN7fBase_cnwEj.cpp) passes to
    Memory::Allocate.
 
    SPELT EXACTLY AS include/decl_common.h SPELLS IT, deliberately. The mangled name
@@ -430,7 +430,7 @@ struct Actor : dBase_c {
        definitions with scalar args. A true-signature declaration for callers is
        fine and is tracked separately. */
 
-    /* THE COUNTERPART OF ActorBase::operator new, AND WHAT LETS A REAL `~Class()`
+    /* THE COUNTERPART OF fBase_c::operator new, AND WHAT LETS A REAL `~Class()`
        REPRODUCE THE ROM'S DELETING DESTRUCTOR.
 
        The compiler generates D0 -- the deleting destructor, vtable slot 17 -- as
@@ -439,15 +439,15 @@ struct Actor : dBase_c {
        in this image, and D0 comes out three instructions short of the ROM's.
 
        Inline, and that is not a style choice, it is what the ROM shows.
-       ActorBase::operator new is a real function at 0x02043444, but NO operator
+       fBase_c::operator new is a real function at 0x02043444, but NO operator
        delete symbol exists anywhere in the image, and every deleting destructor
        ends with the same two instructions -- load the actor heap, call
        Memory::Deallocate -- rather than a call to a shared helper. Only an inline
        member produces that.
 
-       DECLARED HERE AND NOT ON ActorBase, and the difference is load-bearing: mwcc
+       DECLARED HERE AND NOT ON fBase_c, and the difference is load-bearing: mwcc
        inlines it only when it is found in the class itself or its IMMEDIATE base.
-       On ActorBase, every Actor-derived D0 emits an out-of-line call instead and
+       On fBase_c, every Actor-derived D0 emits an out-of-line call instead and
        misses. dEnemyBase_c carries its own copy for the same reason -- it is a flattened
        struct that does not derive from Actor in these headers, so this one is not
        even in scope for the classes under it.
@@ -460,7 +460,7 @@ struct Actor : dBase_c {
 #else
 
 /* Flat layout for the C translation units, which can express neither the base
-   class nor the virtual functions. 0x00..0x4f is ActorBase. */
+   class nor the virtual functions. 0x00..0x4f is fBase_c. */
 struct Actor {
     void **vtable;          /* 0x000 */
     u32 uniqueID;           /* 0x004 */

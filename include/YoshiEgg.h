@@ -13,7 +13,7 @@
  * constructs the four members below in order; _ZN8YoshiEggD1Ev destroys the same four
  * in reverse and chains to _ZN12dEnemyBase_cD2Ev.
  *
- * SIZE 0x42c, the literal in the factory's ActorBase::operator new. ShadowModel ends
+ * SIZE 0x42c, the literal in the factory's fBase_c::operator new. ShadowModel ends
  * at 0x38c, so everything below that is this class's own.
  *
  * The old flat header also carried a marker at 0x350 called mAnimation. That is not a

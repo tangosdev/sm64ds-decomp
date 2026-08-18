@@ -8,7 +8,7 @@
 extern void _ZN7PathPtrC1Ev(void *);
 int *BigMovingIceBlock_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(816);
+    int *p = (int *)_ZN7fBase_cnwEj(816);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV17BigMovingIceBlock;

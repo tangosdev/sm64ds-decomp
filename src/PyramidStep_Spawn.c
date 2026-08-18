@@ -8,7 +8,7 @@
 /* resolved: VT0 = _ZTV11PyramidStep */
 int *PyramidStep_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(932);
+    int *p = (int *)_ZN7fBase_cnwEj(932);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV11PyramidStep;

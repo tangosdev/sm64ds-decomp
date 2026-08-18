@@ -9,7 +9,7 @@ extern int data_ov065_0211d2b4[];
 /* vtable identified: VT0 = data_ov065_0211d2b4 */
 int *TTC_MovingBar_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(916);
+    int *p = (int *)_ZN7fBase_cnwEj(916);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)data_ov065_0211d2b4;

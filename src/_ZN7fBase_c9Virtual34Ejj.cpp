@@ -1,7 +1,7 @@
 //cpp
 #include "types.h"
 struct Heap;
-struct ActorBase;
+struct fBase_c;
 
 extern "C" {
     Heap* _ZN4Heap28InitializeSolidHeapAsDefaultEjPS_i(u32 size, Heap* heap, int flag);
@@ -10,10 +10,10 @@ extern "C" {
     void  _ZN4Heap8_DestroyEv(Heap* h);
     u32   _ZN4Heap21MaxAllocationUnitSizeEv(Heap* h);
     void  _ZN4Heap11ResizeToFitEv(Heap* h);
-    void  _ZN9ActorBase18MarkForDestructionEv(ActorBase* self);
+    void  _ZN7fBase_c18MarkForDestructionEv(fBase_c* self);
 }
 
-struct ActorBase {
+struct fBase_c {
     virtual void v0();  virtual void v1();  virtual void v2();  virtual void v3();
     virtual void v4();  virtual void v5();  virtual void v6();  virtual void v7();
     virtual void v8();  virtual void v9();  virtual void v10(); virtual void v11();
@@ -23,7 +23,7 @@ struct ActorBase {
     int Virtual34(u32 a, u32 b);
 };
 
-int ActorBase::Virtual34(u32 a, u32 b)
+int fBase_c::Virtual34(u32 a, u32 b)
 {
     Heap* h = 0;
     u32 avail;
@@ -76,7 +76,7 @@ int ActorBase::Virtual34(u32 a, u32 b)
         _ZN4Heap20RestoreFromTemporaryEv();
         if (a == 0) {
             _ZN4Heap8_DestroyEv(h);
-            _ZN9ActorBase18MarkForDestructionEv(this);
+            _ZN7fBase_c18MarkForDestructionEv(this);
             return 0;
         }
         u32 topB = *(u32*)((char*)h + 8);
@@ -126,6 +126,6 @@ int ActorBase::Virtual34(u32 a, u32 b)
     }
 
 fail:
-    _ZN9ActorBase18MarkForDestructionEv(this);
+    _ZN7fBase_c18MarkForDestructionEv(this);
     return 0;
 }

@@ -21,7 +21,7 @@ extern "C" void *_ZN5Actor10FindWithIDEj(u32 id);
 extern "C" void func_ov002_020ada40(char *c, Vector3_16 *s, void *a, int z);
 extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, int x, int y, int z);
 extern "C" void _ZN5Actor8PoofDustEv(void *a);
-extern "C" void _ZN9ActorBase18MarkForDestructionEv(void *a);
+extern "C" void _ZN7fBase_c18MarkForDestructionEv(void *a);
 extern "C" void func_02012694(int a, void *p);
 extern "C" void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, void *pos);
 extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *p, Vector3 *pos, u32 a, int b, u32 d, u32 e, u32 f);
@@ -56,7 +56,7 @@ extern "C" void func_ov100_02141fb0(Obj *thiz)
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(
                 0xf, *(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
             _ZN5Actor8PoofDustEv(c);
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             func_02012694(0x173, c + 0x74);
             return;
         }

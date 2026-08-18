@@ -2,7 +2,7 @@
 extern "C" {
 int _ZN6Player9IsOnShellEv(void* p);
 void _ZN5Actor8PoofDustEv(void* p);
-void _ZN9ActorBase18MarkForDestructionEv(void* p);
+void _ZN7fBase_c18MarkForDestructionEv(void* p);
 }
 
 extern "C" int func_ov102_0214d044(char* c)
@@ -12,7 +12,7 @@ extern "C" int func_ov102_0214d044(char* c)
             goto copy;
     }
     _ZN5Actor8PoofDustEv(c);
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
     return 0;
 copy:
     {

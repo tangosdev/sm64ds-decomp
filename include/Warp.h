@@ -7,7 +7,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   Warp_Spawn  ActorBase::operator new(264 = 0x108), Actor::Actor(), stores _ZTV4Warp,
+ *   Warp_Spawn  fBase_c::operator new(264 = 0x108), Actor::Actor(), stores _ZTV4Warp,
  *                 then the member below in this order.
  *   ~Warp   the same member destroyed in reverse, then ~Actor.
  *

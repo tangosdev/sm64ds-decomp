@@ -2,7 +2,7 @@
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: vtable identified, renamed to Class_Method */
-extern void _ZN9ActorBaseD2Ev(void *);
+extern void _ZN7fBase_cD2Ev(void *);
 extern void *GAME_HEAP_PTR;
 int *func_ov007_020cc070(int *t)
 {
@@ -10,7 +10,7 @@ int *func_ov007_020cc070(int *t)
     func_02017254((char *)t + 0x54);
     t[0] = (int)_ZTV8dScene_c;
     t[0] = (int)_ZTV7dBase_c;
-    _ZN9ActorBaseD2Ev(t);
+    _ZN7fBase_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, GAME_HEAP_PTR);
     return t;
 }

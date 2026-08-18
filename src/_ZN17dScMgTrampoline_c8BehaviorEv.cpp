@@ -6,7 +6,7 @@
  *
  * Named from the table: 0x021214f8 is the word slot 6 of
  * _ZTV17dScMgTrampoline_c holds where dScMgD3DBase_c's table holds something
- * else, so it is this class's own override of the virtual ActorBase declares.
+ * else, so it is this class's own override of the virtual fBase_c declares.
  *
  * 0x5004 IS A POINTER-TO-MEMBER-FUNCTION, not a pad. The pre-migration file
  * had already worked that out -- it invented a `struct C` whose only purpose

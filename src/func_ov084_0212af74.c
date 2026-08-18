@@ -23,7 +23,7 @@ extern u32 RandomIntInternal(int *seed);
 extern int _Z14ApproachLinearRiii(int *v, int target, int step);
 extern s16 Vec3_HorzAngle(void *a, void *b);
 extern void Math_Function_0203b14c(int *v, int target, int a, int b, int c);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 extern int data_ov084_02130cc8[];
 extern int data_ov084_02130ce8[];
@@ -122,7 +122,7 @@ void func_ov084_0212af74(char *c)
     }
 
     if (*(s32 *)(c + 0x60) < *(s32 *)(c + 0x420) - 0x3e8000) {
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
     if (*(s32 *)((char *)player + 0x5cc) != 4)

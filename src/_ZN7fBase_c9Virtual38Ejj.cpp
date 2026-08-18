@@ -13,7 +13,7 @@ struct Memory {
     static void *Allocate(u32, int, Heap *);
 };
 
-struct ActorBase {
+struct fBase_c {
     virtual void v0();   virtual void v1();   virtual void v2();   virtual void v3();
     virtual void v4();   virtual void v5();   virtual void v6();   virtual void v7();
     virtual void v8();   virtual void v9();   virtual void v10();  virtual void v11();
@@ -26,7 +26,7 @@ struct ActorBase {
     Heap *heap_4c;   /* 0x4c */
 };
 
-int ActorBase::Virtual38(u32 a, u32 b) {
+int fBase_c::Virtual38(u32 a, u32 b) {
     if (this->heap_4c != 0) return 1;
     if (a != 0) {
         Heap *h = Heap::InitializeSolidHeapAsDefault(a, (Heap *)b, 0x20);

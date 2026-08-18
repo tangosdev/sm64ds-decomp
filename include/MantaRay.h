@@ -17,7 +17,7 @@
  *     0x30c ModelAnim                  0x64    -> 0x370
  *
  * SIZE IS THE FACTORY'S LITERAL, NOT THE FIELD SPAN. `MantaRay_Spawn` calls
- * `ActorBase::operator new(1028)` -- 0x404 -- and stores this class's vtable,
+ * `fBase_c::operator new(1028)` -- 0x404 -- and stores this class's vtable,
  * so that literal IS this class's sizeof. The evidenced fields reach only
  * 0x38c; the 0x94 between is trailing space no source reads, and a rounded-up
  * field span would have made this assert wrong by 120 bytes.

@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void *_ZN5Actor10FindWithIDEj(unsigned int);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void*,void*,char);
+extern int _ZN6Player9StartTalkER7fBase_cb(void*,void*,char);
 extern int _ZN7Message11PrepareTalkEv(void);
 extern int func_ov085_02129524(void*,int);
 void func_ov085_02129470(char *c){
@@ -11,7 +11,7 @@ void func_ov085_02129470(char *c){
     int eq = (*(unsigned short*)((char*)o+0xc)==0xbf) ? 1 : 0;
     if(!eq) return;
     *(void**)(c+0x1f8)=o;
-    if(_ZN6Player9StartTalkER9ActorBaseb(*(void**)(c+0x1f8), c, 0)==0) return;
+    if(_ZN6Player9StartTalkER7fBase_cb(*(void**)(c+0x1f8), c, 0)==0) return;
     _ZN7Message11PrepareTalkEv();
     func_ov085_02129524(c, 1);
 }

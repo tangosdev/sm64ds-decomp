@@ -4,7 +4,7 @@ extern void func_ov063_02118eac(void *c);
 extern void func_ov063_02118e5c(void *c);
 extern void func_ov063_02118ea0(void *c);
 extern int _ZN5Actor15FindWithActorIDEjPS_(unsigned int j, int p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void func_0201267c(unsigned int id, const void *v);
 
 void func_ov063_02118b98(char *c)
@@ -48,11 +48,11 @@ bigblock:
         *(char *)(r1 + 0x155) = 1;
     }
 after_strb:
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
     func_0201267c(0xd5, c + 0x74);
     return;
 
 special:
-    _ZN9ActorBase18MarkForDestructionEv(c);
+    _ZN7fBase_c18MarkForDestructionEv(c);
     func_0201267c(0xd5, c + 0x74);
 }

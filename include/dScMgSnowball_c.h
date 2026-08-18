@@ -7,7 +7,7 @@
  * SIZE 0xc59c, and the allocation is NOT in this class's own constructor.
  * func_ov006_021295ac takes an already-allocated `char*` -- it is a C2,
  * not a factory. Its one caller, MgSnowballSlalom_Spawn, is where
- * `_ZN9ActorBasenwEj(0xc59c)` lives. Deriving a size from the field span
+ * `_ZN7fBase_cnwEj(0xc59c)` lives. Deriving a size from the field span
  * would have stopped at 0xbe94 and been 0x708 short.
  *
  * CONSTRUCTOR AND DESTRUCTOR AGREE MEMBER FOR MEMBER, in exact reverse
@@ -73,7 +73,7 @@ struct dScMgSnowball_c : dScMgSingle3DBase_c {
     virtual ~dScMgSnowball_c();
 
     /* --- this class's own vtable slots, named from the table ---
-       Re-overrides of slots ActorBase already owns, NOT new virtuals: the
+       Re-overrides of slots fBase_c already owns, NOT new virtuals: the
        table stays the base's width and no field moves. Declared AFTER the
        destructor so the destructor is still the first virtual declared. */
     virtual s32 InitResources();     /* slot 0 -- ov006 0x02129268 */

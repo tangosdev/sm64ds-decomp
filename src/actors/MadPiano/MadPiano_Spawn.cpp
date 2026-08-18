@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-void* _ZN9ActorBasenwEj(unsigned int);
+void* _ZN7fBase_cnwEj(unsigned int);
 void _ZN10dBgActor_cC2Ev(void*);
 void _ZN9ModelAnimC1Ev(void*);
 void _ZN11ShadowModelC1Ev(void*);
@@ -10,7 +10,7 @@ void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
 void _ZN12WithMeshClsnC1Ev(void*);
 extern int _ZTV8MadPiano[];
 void* MadPiano_Spawn(void) {
-  char* r4 = (char*)_ZN9ActorBasenwEj(0x6e4);
+  char* r4 = (char*)_ZN7fBase_cnwEj(0x6e4);
   if (r4) {
     _ZN10dBgActor_cC2Ev(r4);
     *(int*)r4 = (int)_ZTV8MadPiano;

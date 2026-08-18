@@ -20,7 +20,7 @@
  * It used to say 0x32c, "not inferred from the fields", on the authority of
  * BowserSkyPlatform_Spawn -- a DIFFERENT CLASS's factory. That is the pair-by-name
  * error: SpikeBomb_Spawn is the factory that stores _ZTV9SpikeBomb, and it asks
- * ActorBase::operator new for 0x1b0. BowserSkyPlatform's own assert is 0x32c and is
+ * fBase_c::operator new for 0x1b0. BowserSkyPlatform's own assert is 0x32c and is
  * correct; this class simply inherited its number, and 0x17d bytes of tail padding
  * were invented to reach it.
  *

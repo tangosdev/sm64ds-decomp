@@ -21,7 +21,7 @@
  *   - unk_134 = MovingCylinderClsn.otherOwner
  *
  * SIZE IS THE ROM'S OWN: `LavaBubble_Spawn` calls
- * `ActorBase::operator new(796)` -- 0x31c -- and stores this class's
+ * `fBase_c::operator new(796)` -- 0x31c -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV5Swoop */
 int *Swoop_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1088);
+    int *p = (int *)_ZN7fBase_cnwEj(1088);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV5Swoop;

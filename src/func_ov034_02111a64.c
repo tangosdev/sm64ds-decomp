@@ -5,12 +5,12 @@
 #include "common.h"
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 extern int _ZN5Actor18HorzAngleToCPlayerEv(void* c);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern void _Z14ApproachLinearRsss(short* p, short a, short b);
 extern int _ZN9Animation8FinishedEv(void* a);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* pos, unsigned int a, unsigned int b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msg, const void* pos, unsigned int a, unsigned int b);
 extern void func_0201267c(int a, void* p);
 extern void func_ov034_021125b8(void* c, int i);
 
@@ -32,7 +32,7 @@ void func_ov034_02111a64(char* c)
     st.y = *(int*)(c + 0x3d0);
     st.z = *(int*)(c + 0x3d4);
     st.y = st.y + 0x8c000;
-    if (!_ZN6Player9StartTalkER9ActorBaseb(talk, c, 1))
+    if (!_ZN6Player9StartTalkER7fBase_cb(talk, c, 1))
         return;
 
     _ZN6Camera9SetFlag_3Ev(data_0209f318[0]);
@@ -50,7 +50,7 @@ void func_ov034_02111a64(char* c)
         unsigned int idx = (4 - *(unsigned char*)(c + 0x8db)) & 0xff;
         if (idx >= 4)
             idx = 0;
-        if (!_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(talk, c, data_ov034_02113820[idx], &st, 1, 0))
+        if (!_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(talk, c, data_ov034_02113820[idx], &st, 1, 0))
             return;
     }
 

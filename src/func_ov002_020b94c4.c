@@ -17,7 +17,7 @@ extern void _ZN13RaycastGroundC1Ev(struct RG*);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RG*, const Vector3*, void*);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RG*);
 extern void _ZN5Actor13SmallPoofDustEv(void* self);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern void _ZN13RaycastGroundD1Ev(struct RG*);
 extern void _ZN12WithMeshClsn18StopDetectingWaterEv(void* self);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
@@ -70,14 +70,14 @@ void func_ov002_020b94c4(char* c)
                 diff = -diff;
             if (diff > 0x64000) {
                 _ZN5Actor13SmallPoofDustEv(c);
-                _ZN9ActorBase18MarkForDestructionEv(c);
+                _ZN7fBase_c18MarkForDestructionEv(c);
                 _ZN13RaycastGroundD1Ev(&rg);
                 return;
             }
             _ZN12WithMeshClsn18StopDetectingWaterEv((void*)(c + 0x200));
         } else {
             _ZN5Actor13SmallPoofDustEv(c);
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             _ZN13RaycastGroundD1Ev(&rg);
             return;
         }

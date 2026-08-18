@@ -24,7 +24,7 @@
  * teardown are identical either way.)
  *
  * sizeof is 0x218, which is not inferred from the fields: BowserShockwaves_Spawn
- * asks ActorBase::operator new for 536 bytes.
+ * asks fBase_c::operator new for 536 bytes.
  *
  * Field NAMES for the unk_ entries are placeholders. */
 #ifndef BOWSERSHOCKWAVES_H

@@ -45,7 +45,7 @@ extern void func_ov102_0214d1f8(char *, void *);
 extern void func_ov102_0214ce60(char *);
 extern void _ZN12CylinderClsn5ClearEv(char *);
 extern int DecIfAbove0_Byte(char *);
-extern void _ZN9ActorBase18MarkForDestructionEv(char *);
+extern void _ZN7fBase_c18MarkForDestructionEv(char *);
 extern int DecIfAbove0_Short(char *);
 extern void func_ov102_0214cbec(char *);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char *, char *);
@@ -80,7 +80,7 @@ int KoopaShell::Behavior()
     if (mDespawnTimer != 0 &&
         mState == (void *)&data_ov102_0214ea68) {
         if (DecIfAbove0_Byte((char *)&mDespawnTimer) == 0) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return 1;
         }
     } else {
@@ -110,7 +110,7 @@ int KoopaShell::Behavior()
             if (_ZNK12WithMeshClsn8IsOnWallEv((char *)&mMeshClsn) != 0) {
                 if (mState == (void *)&data_ov102_0214ea78) {
                     _ZN5Actor8PoofDustEv(c);
-                    _ZN9ActorBase18MarkForDestructionEv(c);
+                    _ZN7fBase_c18MarkForDestructionEv(c);
                     return 0;
                 }
             }

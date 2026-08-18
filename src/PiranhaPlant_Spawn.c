@@ -12,7 +12,7 @@
 /* resolved: VT0 = _ZTV12PiranhaPlant */
 int *PiranhaPlant_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1148);
+    int *p = (int *)_ZN7fBase_cnwEj(1148);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV12PiranhaPlant;

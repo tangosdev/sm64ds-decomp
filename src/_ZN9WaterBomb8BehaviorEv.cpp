@@ -11,7 +11,7 @@ extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* a, void* b, u
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
 extern void _ZN12CylinderClsn5ClearEv(void* p);
 extern void _ZN12CylinderClsn6UpdateEv(void* p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* p);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 }
 
@@ -43,7 +43,7 @@ int WaterBomb::Behavior()
             if (unk_3c8 == 1) {
                 func_ov098_0213b63c(((char*)this));
             } else {
-                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
             }
             return 0;
         }

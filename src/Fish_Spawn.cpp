@@ -1,13 +1,13 @@
 //cpp
 extern "C" {
-extern void *_ZN9ActorBasenwEj(unsigned int);
+extern void *_ZN7fBase_cnwEj(unsigned int);
 extern void _ZN5ActorC2Ev(void *);
 extern void _ZN9ModelAnimC1Ev(void *);
 extern void func_0203b9b4(int *p, int v);
 extern void *_ZTV4Fish;
 void *Fish_Spawn(void)
 {
-    char *p = (char *)_ZN9ActorBasenwEj(0x160);
+    char *p = (char *)_ZN7fBase_cnwEj(0x160);
     if (p)
     {
         _ZN5ActorC2Ev(p);

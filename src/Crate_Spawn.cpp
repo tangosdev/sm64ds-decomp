@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-void* _ZN9ActorBasenwEj(unsigned int sz);
+void* _ZN7fBase_cnwEj(unsigned int sz);
 void _ZN10dBgActor_cC2Ev(void* p);
 void _ZN12WithMeshClsnC1Ev(void* p);
 void _ZN11ShadowModelC1Ev(void* p);
@@ -10,7 +10,7 @@ extern void* _ZTV5Crate;
 
 extern "C" void* Crate_Spawn(void)
 {
-    char* p = (char*)_ZN9ActorBasenwEj(0x608);
+    char* p = (char*)_ZN7fBase_cnwEj(0x608);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         *(void**)p = &_ZTV5Crate;

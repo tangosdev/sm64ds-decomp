@@ -1,6 +1,6 @@
 #include "types.h"
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void *_ZN5Actor13ClosestPlayerEv(void *self);
 extern int _ZN6Player17SetNoControlStateEhih(void *self, int a, int b, int c);
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *self, unsigned int a, unsigned int b, int c);
@@ -15,7 +15,7 @@ extern int data_ov002_0210de30[];
 
 int func_ov002_020b74d0(char *c) {
     if (DecIfAbove0_Short((unsigned short *)(c + 0x100)) == 0) {
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return 1;
     }
 
@@ -56,7 +56,7 @@ int func_ov002_020b74d0(char *c) {
         break;
     case 2:
         if (_ZN9Animation8FinishedEv(c + 0x350) != 0) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
         }
         break;
     }
@@ -77,7 +77,7 @@ int func_ov002_020b74d0(char *c) {
             if (*(int *)(c + 0x3f0) == 4) {
                 _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, *(u32 *)(c + 8), c + 0x3c4, 0, *(signed char *)(c + 0xcc), -1);
             }
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
         }
     }
 

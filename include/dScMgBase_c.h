@@ -91,7 +91,7 @@ struct dScMgBase_c : dScene_c {
 
     /* --- overrides of dScene_c's own virtuals, same signature, in _ZTV order.
            1, 2, 5, 7, 10 re-override slots dScene_c already gave a body;
-           6, 9, 12 are the first override below ActorBase's own default. --- */
+           6, 9, 12 are the first override below fBase_c's own default. --- */
     virtual bool BeforeInitResources();                /* slot  1 */
     virtual void AfterInitResources(u32 vfSuccess);    /* slot  2 */
     virtual void AfterCleanupResources(u32 vfSuccess); /* slot  5 */
@@ -102,7 +102,7 @@ struct dScMgBase_c : dScene_c {
     virtual void OnPendingDestroy();                   /* slot 12 */
 
     /* Slots 18-35: eighteen further virtuals new at this class, same shape
-       as Actor's own 13 new slots over ActorBase. All 18 target addresses
+       as Actor's own 13 new slots over fBase_c. All 18 target addresses
        are already matched source (func_ov004_* under arm9/ov004) -- see
        notes/dscene-c-siblings-census.md section 2 -- but their signatures
        are not yet reconstructed from the bodies, so they are left

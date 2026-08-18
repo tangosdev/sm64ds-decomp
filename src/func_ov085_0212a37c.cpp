@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void *self, void *actor, bool b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void *self, void *actor, bool b);
 extern void func_ov085_0212a4a4(void *self, int i);
 int func_ov085_0212a37c(char *c) {
     if (*(int*)(c+0x180) & 0x8000000) {
@@ -10,7 +10,7 @@ int func_ov085_0212a37c(char *c) {
             int match = (*(unsigned short*)(a+0xc) == 0xbf) ? 1 : 0;
             if (match != 0) {
                 *(void**)(c+0x35c) = a;
-                if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(c+0x35c), c, false)) {
+                if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(c+0x35c), c, false)) {
                     func_ov085_0212a4a4(c, 1);
                 }
             }

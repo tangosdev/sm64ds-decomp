@@ -11,10 +11,10 @@ void ApproachLinear(short& v, short target, short step);
 struct Animation { void Advance(); };
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 
-struct ActorBase {};
-struct Actor : ActorBase { Actor* ClosestPlayer(); };
+struct fBase_c {};
+struct Actor : fBase_c { Actor* ClosestPlayer(); };
 extern "C" Fix12i Vec3_HorzDist(const Vector3* a, const Vector3* b);
-struct Player : Actor { int StartTalk(ActorBase& a, bool b); };
+struct Player : Actor { int StartTalk(fBase_c& a, bool b); };
 
 extern "C" bool func_ov072_02120450(Actor* self) {
     char* s = (char*)self;

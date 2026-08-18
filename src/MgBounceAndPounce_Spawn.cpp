@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void *_ZN9ActorBasenwEj(unsigned int sz);
+extern void *_ZN7fBase_cnwEj(unsigned int sz);
 extern int func_ov004_020b2adc(void *p);
 extern void _ZN8Particle10SysTrackerC1Ev(void *);
 extern void _ZN5ModelC1Ev(void *);
@@ -15,7 +15,7 @@ extern void func_ov006_020c6f3c();
 
 extern "C" void *MgBounceAndPounce_Spawn(void)
 {
-    char *p = (char *)_ZN9ActorBasenwEj(0x5834);
+    char *p = (char *)_ZN7fBase_cnwEj(0x5834);
     if (p) {
         char *it;
         func_ov004_020b2adc(p);

@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV11WingFeather */
 int *WingFeather_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(904);
+    int *p = (int *)_ZN7fBase_cnwEj(904);
     if (p) {
         _ZN5ActorC2Ev(p);
         p[0] = (int)_ZTV11WingFeather;

@@ -1,12 +1,12 @@
 /* Actor::~Actor (deleting / D0) at 0x02011314
  *
- * Inheritance: Actor : dBase_c : ActorBase
+ * Inheritance: Actor : dBase_c : fBase_c
  * Virtual deleting destructor (CodeWarrior 1.2):
  *   - write Actor vtable to [this]
  *   - run two Actor-subobject teardown calls operating on (this + 0x50)
  *     (the Actor-specific members begin at 0x50)
  *   - write dBase_c vtable to [this]
- *   - call the immediate base destructor ActorBase::~ActorBase
+ *   - call the immediate base destructor fBase_c::~fBase_c
  *   - Memory::Deallocate(this, *gameHeapPtr)
  *   - return this
  *
@@ -18,7 +18,7 @@
  * Calls:
  *   0x0203b27c = teardown(global, &actorSub)   (unnamed)
  *   0x02044104 = teardown2(&actorSub)          (unnamed)
- *   0x02043d48 = _ZN9ActorBaseD2Ev
+ *   0x02043d48 = _ZN7fBase_cD2Ev
  *   0x0203c1e8 = Memory::Deallocate(void*, Heap*)
  */
 
@@ -34,7 +34,7 @@ extern void *_ZTV7dBase_c[];
 
 extern void func_0203b27c(void *global, void *actorSub);   /* 0x0203b27c */
 extern void func_02044104(void *actorSub);                 /* 0x02044104 */
-extern void _ZN9ActorBaseD2Ev(struct Actor *thiz);           /* 0x02043d48 */
+extern void _ZN7fBase_cD2Ev(struct Actor *thiz);           /* 0x02043d48 */
 extern void _ZN6Memory10DeallocateEPvP4Heap(void *ptr, struct Heap *heap); /* 0x0203c1e8 */
 
 extern void *data_0209b468;                           /* 0x0209b468 */
@@ -46,7 +46,7 @@ struct Actor *_ZN5ActorD0Ev(struct Actor *thiz)
     func_0203b27c(&data_0209b468, (char *)thiz + 0x50);
     func_02044104((char *)thiz + 0x50);
     thiz->vtable = (void *)_ZTV7dBase_c;
-    _ZN9ActorBaseD2Ev(thiz);
+    _ZN7fBase_cD2Ev(thiz);
     _ZN6Memory10DeallocateEPvP4Heap(thiz, data_020a0eac);
     return thiz;
 }

@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   Painting_Spawn  ActorBase::operator new(444 = 0x1bc), Actor::Actor(), stores _ZTV8Painting,
+ *   Painting_Spawn  fBase_c::operator new(444 = 0x1bc), Actor::Actor(), stores _ZTV8Painting,
  *                 then the members below in this order.
  *   ~Painting   the same members destroyed in reverse, then ~Actor.
  *

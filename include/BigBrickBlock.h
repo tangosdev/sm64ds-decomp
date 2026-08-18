@@ -11,7 +11,7 @@
  *
  * ONE CLASS, FIVE ACTORS. BrickBlock, BigBrickBlock, BrickBlockSwitchActivated,
  * BlackBrickBlock and FortressTowerWall all have their own SpawnInfo, and all
- * five factories are the same three instructions: ActorBase::operator new(816),
+ * five factories are the same three instructions: fBase_c::operator new(816),
  * dBgActor_c::dBgActor_c(), store _ZTV13BigBrickBlock. There is no second vtable and
  * no second size anywhere in the family, which is why every method here switches
  * on actorID (0xf, 0x10, 0x11, 0x12, 0x13, 0x2e) instead of being overridden.

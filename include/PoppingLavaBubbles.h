@@ -6,7 +6,7 @@
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   PoppingLavaBubbles_Spawn  ActorBase::operator new(216 = 0xd8), Actor::Actor(), stores _ZTV18PoppingLavaBubbles,
+ *   PoppingLavaBubbles_Spawn  fBase_c::operator new(216 = 0xd8), Actor::Actor(), stores _ZTV18PoppingLavaBubbles,
  *                 then the members below in this order.
  *   ~PoppingLavaBubbles   the same members destroyed in reverse, then ~Actor.
  *

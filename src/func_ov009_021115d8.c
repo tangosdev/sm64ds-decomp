@@ -6,7 +6,7 @@ extern int Vec3_Sub(struct Vector3* dst, void* a, void* b);
 extern int Vec3_HorzLen(struct Vector3* v);
 extern int func_0201267c(unsigned int a, void* b);
 extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
-extern int _ZN9ActorBase18MarkForDestructionEv(char* t);
+extern int _ZN7fBase_c18MarkForDestructionEv(char* t);
 extern int RandomIntInternal(void* rng);
 extern int data_0209e650;
 void func_ov009_021115d8(char* c) {
@@ -27,7 +27,7 @@ void func_ov009_021115d8(char* c) {
     } else {
         char* p = _ZN5Actor10FindWithIDEj(*(unsigned int*)(c+0x178));
         if (p == 0) {
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             return;
         }
         if (*(int*)(p+0x17c) != 3) return;

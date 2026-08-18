@@ -18,7 +18,7 @@
  *     0x21c MovingCylinderClsnWithPos  0x40    -> 0x25c
  *     0x25c WithMeshClsn               0x1bc   -> 0x418
  *
- * SIZE IS THE ROM'S OWN: `BookShot_Spawn` calls `ActorBase::operator new(1108)`
+ * SIZE IS THE ROM'S OWN: `BookShot_Spawn` calls `fBase_c::operator new(1108)`
  * -- 0x454 -- and stores this class's vtable, so that literal IS this
  * class's sizeof.
  *

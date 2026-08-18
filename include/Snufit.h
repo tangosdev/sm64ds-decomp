@@ -26,7 +26,7 @@
  * HootTheOwl's.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `Snufit_Spawn` calls
- * `ActorBase::operator new(996)` -- 0x3e4 -- and stores `_ZTV6Snufit`,
+ * `fBase_c::operator new(996)` -- 0x3e4 -- and stores `_ZTV6Snufit`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3dc; the difference is trailing space no source reads.
  */

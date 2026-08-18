@@ -6,7 +6,7 @@ struct Actor {
     static Actor* Spawn(unsigned int a, unsigned int b, const Vector3& pos,
                         const Vector3_16* rot, signed char e, short f);
 };
-struct ActorBase {
+struct fBase_c {
     void MarkForDestruction();
 };
 
@@ -30,5 +30,5 @@ extern "C" void func_ov098_0213b63c(char* c)
         *(short*)((char*)a + 0x96) = 0;
     }
     func_0201267c(0xda, c + 0x74);
-    ((ActorBase*)c)->MarkForDestruction();
+    ((fBase_c*)c)->MarkForDestruction();
 }

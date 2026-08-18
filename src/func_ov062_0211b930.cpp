@@ -21,7 +21,7 @@ struct Actor {
     static unsigned int Spawn(unsigned int a, unsigned int b, const Vector3& pos,
                        const Vector3_16* rot, signed char e, short f);
 };
-struct ActorBase { void MarkForDestruction(); };
+struct fBase_c { void MarkForDestruction(); };
 namespace Particle { struct System {
     static void NewSimple(unsigned int id, Fix12 x, Fix12 y, Fix12 z);
 };
@@ -80,7 +80,7 @@ extern "C" int func_ov062_0211b930(Obj* o)
         f->fa0 = -0x32000;
         f->fc8 = 0;
         if (o->f468 == 1) {
-            ((ActorBase*)found)->MarkForDestruction();
+            ((fBase_c*)found)->MarkForDestruction();
             if (o->f448 != 2) {
                 Actor::Spawn(0xb2, o->f46c | 0x40, o->f5c, &o->f8c, o->fcc, -1);
             } else {

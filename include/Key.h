@@ -29,7 +29,7 @@
  * starts its members flush against dEnemyBase_c.
  *
  * SIZE IS THE ROM'S OWN: `Key_Spawn` calls
- * `ActorBase::operator new(1136)` -- 0x470 -- and stores this class's
+ * `fBase_c::operator new(1136)` -- 0x470 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void* _ZN9ActorBasenwEj(unsigned);
+extern void* _ZN7fBase_cnwEj(unsigned);
 extern void _ZN10dBgActor_cC2Ev(void*);
 extern void func_020733a8(void*,int,int,void*,void*);
 extern int _ZTV13daObjDorifu_c[];
@@ -10,7 +10,7 @@ extern void _ZN5ModelC1Ev(void*);
 extern void _ZN18MovingMeshColliderD1Ev(void*);
 extern void _ZN18MovingMeshColliderC1Ev(void*);
 void* StairsBdw_Spawn(void){
-  char* c = (char*)_ZN9ActorBasenwEj(0xdcc);
+  char* c = (char*)_ZN7fBase_cnwEj(0xdcc);
   if(c){
     _ZN10dBgActor_cC2Ev(c);
     *(int*)c = (int)_ZTV13daObjDorifu_c;

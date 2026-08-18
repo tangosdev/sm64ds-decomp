@@ -10,13 +10,13 @@ extern s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern int _ZN6Player12GetTalkStateEv(char *p);
 extern int _Z14ApproachLinearRsss(s16 *cur, s16 tgt, s16 step);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, int fix, int loop);
-extern void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(char *p, char *actor, u32 msg, const Vector3 *pos, u32 d, u32 e);
+extern void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(char *p, char *actor, u32 msg, const Vector3 *pos, u32 d, u32 e);
 extern int IsStarCollectedInCurLevel(void);
 extern u8 NumStars(void);
 extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, const void *pos, const void *rot, int a, int b);
 extern int func_02013a44(void);
 extern char *_ZN5Actor10FindWithIDEj(u32 id);
-extern void _ZN9ActorBase18MarkForDestructionEv(char *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(char *self);
 extern void _ZN5Actor13SpawnSoundObjEj(char *self, u32 id);
 extern void _ZN7Message7EndTalkEv(void);
 extern void func_ov085_02129524(char *c, int i);
@@ -64,7 +64,7 @@ void func_ov085_021291ac(char *c)
             pos.z = z;
             (void)x;
         }
-        _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(p, c, (u32)(s16)r4, &pos, 0, 0);
+        _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(p, c, (u32)(s16)r4, &pos, 0, 0);
         return;
     }
     case 1:
@@ -99,7 +99,7 @@ void func_ov085_021291ac(char *c)
             if (id != 0) {
                 char *found = _ZN5Actor10FindWithIDEj(id);
                 if (found != 0) {
-                    _ZN9ActorBase18MarkForDestructionEv(found);
+                    _ZN7fBase_c18MarkForDestructionEv(found);
                     *(int *)(c + 0x1f4) = 0;
                     _ZN5Actor13SpawnSoundObjEj(c, 1);
                     {

@@ -19,7 +19,7 @@ extern "C" {
 Actor* _ZN5Actor10FindWithIDEj(unsigned int id);
 void func_02012790(int);
 short _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(Actor* thiz, const Vector3& v, unsigned int a, bool b, unsigned short c, Actor* d);
-void _ZN9ActorBase18MarkForDestructionEv(Actor* thiz);
+void _ZN7fBase_c18MarkForDestructionEv(Actor* thiz);
 
 void func_ov002_020f0438(Actor* thiz)
 {
@@ -38,6 +38,6 @@ void func_ov002_020f0438(Actor* thiz)
   *(int*)((int)thiz + 0xec) |= 1;
   if (o->b110 == 5) { thiz->b113 = 0x1e; return; }
   if (thiz->b10f != 2) return;
-  _ZN9ActorBase18MarkForDestructionEv(thiz);
+  _ZN7fBase_c18MarkForDestructionEv(thiz);
 }
 }

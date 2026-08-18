@@ -16,7 +16,7 @@
  *     0x160 ShadowModel                0x28    -> 0x188
  *
  * SIZE IS THE ROM'S OWN: `RabbitKey_Spawn` calls
- * `ActorBase::operator new(416)` -- 0x1a0 -- and stores this class's
+ * `fBase_c::operator new(416)` -- 0x1a0 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 

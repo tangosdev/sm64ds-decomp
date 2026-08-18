@@ -8,7 +8,7 @@
 extern void _ZN7PathPtrC1Ev(void *);
 int *SquareMetalNetLift_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(856);
+    int *p = (int *)_ZN7fBase_cnwEj(856);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV22RotatingUpDownPlatform;

@@ -8,7 +8,7 @@
 /* resolved: VT0 = _ZTV10DonutBlock */
 int *DonutBlock_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1260);
+    int *p = (int *)_ZN7fBase_cnwEj(1260);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV10DonutBlock;

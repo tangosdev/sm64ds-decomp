@@ -7,7 +7,7 @@
  *   bl 0x020175c4 = FaderColor::~FaderColor(this+0x50)
  *   0x02092680 = _ZTV8dScene_c
  *   0x0208e4b8 = data_0208e4b8
- *   bl 0x02043d48 = ActorBase::~ActorBase(this)
+ *   bl 0x02043d48 = fBase_c::~fBase_c(this)
  *   return this;
  */
 
@@ -22,7 +22,7 @@ extern void *_ZTV8dScene_c[];
 extern void *data_0208e4b8[];
 
 extern void _ZN10FaderColorD1Ev(void *fader);          /* 0x020175c4 */
-extern void _ZN9ActorBaseD2Ev(struct MultiBootScene *self); /* 0x02043d48 */
+extern void _ZN7fBase_cD2Ev(struct MultiBootScene *self); /* 0x02043d48 */
 
 struct MultiBootScene *func_02034a78(struct MultiBootScene *self)
 {
@@ -30,6 +30,6 @@ struct MultiBootScene *func_02034a78(struct MultiBootScene *self)
     _ZN10FaderColorD1Ev((char *)self + 0x50);
     self->vtable = (void **)_ZTV8dScene_c;
     self->vtable = (void **)data_0208e4b8;
-    _ZN9ActorBaseD2Ev(self);
+    _ZN7fBase_cD2Ev(self);
     return self;
 }

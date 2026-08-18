@@ -3,7 +3,7 @@
 
 #include "dScene_c.h"
 
-/* The boot/intro scene: ActorBase -> dBase_c -> dScene_c -> BootScene.
+/* The boot/intro scene: fBase_c -> dBase_c -> dScene_c -> BootScene.
  *
  * The generated header this replaces, include/dScBoot_c.h, named no base and
  * re-declared a 0x50-byte pad in place of the inherited chain, so `dScBoot_c`
@@ -31,7 +31,7 @@
  *                          not migrated by this slice)
  *
  * -- plus the destructor pair at 16/17, which IS this slice. The remaining
- * fourteen still point at dScene_c's Before/After hooks or at ActorBase.
+ * fourteen still point at dScene_c's Before/After hooks or at fBase_c.
  *
  * KEY FUNCTION. Slot 16 (the D1) is declared first below, which is safe for a
  * derived class (an override takes its base's slot wherever it is declared)

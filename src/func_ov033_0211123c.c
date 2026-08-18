@@ -5,7 +5,7 @@
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int x, int y, int z);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void *v);
 extern void _ZN5Event6SetBitEj(unsigned int b);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *c);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 
 void func_ov033_0211123c(char *self, char *other)
 {
@@ -13,5 +13,5 @@ void func_ov033_0211123c(char *self, char *other)
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x28, v[0], v[1], v[2]);
     _ZN5Sound9PlayBank3EjRK7Vector3(0xf, self + 0x74);
     _ZN5Event6SetBitEj(0xe);
-    _ZN9ActorBase18MarkForDestructionEv(self);
+    _ZN7fBase_c18MarkForDestructionEv(self);
 }

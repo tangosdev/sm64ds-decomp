@@ -6,7 +6,7 @@ extern int func_ov075_02115bac[];
 extern int _ZTV8dScene_c[];
 extern int data_0208e4b8[];
 int __destroy_arr(void* a, int b, int c, void* d);
-int _ZN9ActorBaseD2Ev(void* c);
+int _ZN7fBase_cD2Ev(void* c);
 int func_ov075_02115ab8(void* c){
   char* p=(char*)c;
   *(int*)p=(int)data_ov075_0211d304;
@@ -14,7 +14,7 @@ int func_ov075_02115ab8(void* c){
   __destroy_arr(p+0x70, 9, 0x24, func_ov075_02115bac);
   *(int*)p=(int)_ZTV8dScene_c;
   *(int*)p=(int)data_0208e4b8;
-  _ZN9ActorBaseD2Ev(c);
+  _ZN7fBase_cD2Ev(c);
   return (int)c;
 }
 }

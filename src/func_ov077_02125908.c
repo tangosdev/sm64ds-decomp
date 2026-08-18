@@ -3,7 +3,7 @@ extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
 extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void *p);
 extern void _ZN5Actor8PoofDustEv(void *p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *p);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *p);
 extern void _ZN9Animation7AdvanceEv(void *p);
 extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *p, void *cc);
 extern void _ZN12CylinderClsn5ClearEv(void *p);
@@ -39,7 +39,7 @@ int func_ov077_02125908(char *c)
     {
         _ZN5Actor8PoofDustEv(c);
         func_02012694(0x166, c + 0x74);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
     _ZN9Animation7AdvanceEv(c + 0x174);

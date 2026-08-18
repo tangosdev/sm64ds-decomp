@@ -19,7 +19,7 @@ extern "C" {
     void *_ZN5Actor13ClosestPlayerEv(void *self);
     s32 _ZN6Player12Unk_020ca150Eh(void *player, u8 a);
     void _ZN6Camera9SetLookAtERK7Vector3(void *cam, const Vector3 *v);
-    void _ZN9ActorBase18MarkForDestructionEv(void *self);
+    void _ZN7fBase_c18MarkForDestructionEv(void *self);
     void _ZN9Animation7AdvanceEv(void *self);
     extern s16 data_02082214[];
     extern void *data_0209f318;
@@ -152,7 +152,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
         break;
     case 9:
         if (DecIfAbove0_Short(self + 0x5fc) == 0)
-            _ZN9ActorBase18MarkForDestructionEv(self);
+            _ZN7fBase_c18MarkForDestructionEv(self);
         break;
     }
     _ZN9Animation7AdvanceEv(self + 0x1a0);

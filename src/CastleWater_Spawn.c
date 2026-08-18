@@ -8,7 +8,7 @@
 /* vtable identified: VT0 = _ZTV14daObjMcWater_c */
 int *CastleWater_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(824);
+    int *p = (int *)_ZN7fBase_cnwEj(824);
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV14daObjMcWater_c;

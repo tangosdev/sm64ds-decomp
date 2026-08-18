@@ -4,7 +4,7 @@
  * functional override this class makes.
  *
  * If initialisation reported VS_FAIL (1) the actor is marked for destruction,
- * and either way the ActorBase implementation runs afterwards.
+ * and either way the fBase_c implementation runs afterwards.
  *
  * Kept as a .c filename with the //cpp marker rather than renamed to .cpp: the
  * extension is what config/arm9/delinks.txt records, so renaming the file would
@@ -16,5 +16,5 @@ void dBase_c::AfterInitResources(u32 vfSuccess)
 {
     if (vfSuccess == 1)
         MarkForDestruction();
-    ActorBase::AfterInitResources(vfSuccess);
+    fBase_c::AfterInitResources(vfSuccess);
 }

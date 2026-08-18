@@ -7,7 +7,7 @@
 /* resolved: VT = _ZTV4Exit */
 int *Exit_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(260);
+    int *p = (int *)_ZN7fBase_cnwEj(260);
     if (p) { _ZN5ActorC2Ev(p); p[0] = (int)_ZTV4Exit; }
     return p;
 }

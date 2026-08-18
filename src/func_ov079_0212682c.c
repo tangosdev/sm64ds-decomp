@@ -20,7 +20,7 @@ extern void *_ZN5Actor10FindWithIDEj(u32 id);
 extern void func_02012694(int a, void *p);
 extern void _ZN5Actor8PoofDustEv(void *c);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 a, int b, int d, int e);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *c);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 void func_ov079_0212682c(char *c)
 {
   struct Vec3 sum;
@@ -96,5 +96,5 @@ void func_ov079_0212682c(char *c)
     func_02012694(0x78, c + 0x74);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x8f, sum.x, sum.y, sum.z);
   }
-  _ZN9ActorBase18MarkForDestructionEv(c);
+  _ZN7fBase_c18MarkForDestructionEv(c);
 }

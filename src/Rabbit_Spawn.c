@@ -11,7 +11,7 @@
 /* resolved: VT0 = _ZTV6Rabbit */
 int *Rabbit_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1140);
+    int *p = (int *)_ZN7fBase_cnwEj(1140);
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV6Rabbit;

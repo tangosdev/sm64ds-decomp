@@ -67,7 +67,7 @@ struct Goomboss : dEnemyBase_c {
     u8  unk_60a;            /* 0x60a */
     /* The field span ends at 0x60b, but a span is only a LOWER BOUND. Both factories
        that store _ZTV8Goomboss (ov074:0x02122eb8) -- Goomboss_Spawn and
-       ExplosionGoomba_Spawn -- call ActorBase::operator new(0x610). Two factories
+       ExplosionGoomba_Spawn -- call fBase_c::operator new(0x610). Two factories
        building one actor is a spawn-info variant, not a second class. */
     u8  pad_60b[0x5];       /* 0x60b, to the ROM's 0x610 */
 
