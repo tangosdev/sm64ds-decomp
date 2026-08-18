@@ -49,13 +49,13 @@
  * immediate base, same as dScEntry_c.
  */
 struct dScStarSel_c : dScene_c {
-    u8    unk_050[0x064 - 0x050];  /* 0x050 -- opaque; animation/fade scalars
+    u8    unk_050[0x14];  /* 0x050 -- opaque; animation/fade scalars
                                         (Behavior/Render access as 32-bit
                                         fixed-point values at 0x50/0x54/0x58/
                                         0x5c/0x60) */
     Model models[2];                 /* 0x064 -- Model::LoadAndSetFile'd pair,
                                         see CONSTRUCTION above */
-    u8    unk_104[0x13c - 0x104];  /* 0x104 -- opaque; cursor state, per-
+    u8    unk_104[0x38];  /* 0x104 -- opaque; cursor state, per-
                                         character UI positions and timers */
 
     /* Declared first -- key function; see the family convention discussed in

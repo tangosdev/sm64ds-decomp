@@ -54,7 +54,7 @@ struct dScGameOver_c : dScene_c {
     u8  unk_092;                    /* 0x092 -- countdown timer, Behavior */
     u8  unk_093;                    /* 0x093 -- countdown timer, Behavior */
     u8  unk_094;                    /* 0x094 -- input-gate counter, Behavior/Render */
-    u8  pad_095[0x098 - 0x095];    /* 0x095 -- trailing alignment */
+    u8  pad_095[0x3];    /* 0x095 -- trailing alignment */
 
     /* Declared first -- key function; see the family convention discussed in
        dBase_c.h/dScene_c.h. Never defined as a real method in any TU: both
