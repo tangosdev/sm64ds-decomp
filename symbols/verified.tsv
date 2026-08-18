@@ -1732,7 +1732,7 @@
 0x020ef320	_ZN8PathLiftD0Ev	function
 0x020ef390	_ZN8PathLiftD2Ev	function
 0x020efaa0	_ZN8PathLift12BaseBehaviorEv	function
-0x020efaf0	_ZN8PathLift17BaseInitResourcesEv	function
+0x020efaf0	dScMgJump2_c_Spawn	function
 0x020eff18	_ZN8PathLift9AfterClsnEv	function
 0x020f975c	_ZN7MinimapD1Ev	function
 0x020f978c	_ZN7MinimapD0Ev	function
