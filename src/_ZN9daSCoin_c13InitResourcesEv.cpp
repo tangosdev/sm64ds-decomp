@@ -1,13 +1,15 @@
-// @symbol func_ov002_020f07dc
-/* recovered: renamed to Class_Method, RTTI class fields named */
+//cpp
+// @symbol _ZN9daSCoin_c13InitResourcesEv
+/* recovered: renamed to Class_Method, RTTI class fields named. Was
+ * func_ov002_020f07dc, vtable slot 0. */
 #include "daSCoin_c.h"
-// recovered name: daSCoin_c_InitResources
-/* recovered: renamed to Class_Method */
 /* daSCoin_c::InitResources - recovered from vtable slot identity */
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int radius, int height, unsigned int flags, unsigned int vulnFlags);
-extern void _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
+extern "C" {
+void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int radius, int height, unsigned int flags, unsigned int vulnFlags);
+void _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern int data_ov002_0210d9a8;
-int func_ov002_020f07dc(char* c){
+
+int _ZN9daSCoin_c13InitResourcesEv(char* c){
     struct daSCoin_c *self = (struct daSCoin_c *)(void *)c;
     _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(c + 0xd4, c, 0x64000, 0x40000, 0x800002, 0);
     self->unk_10d = *(unsigned int*)(c + 8) & 0xf;
@@ -18,4 +20,5 @@ int func_ov002_020f07dc(char* c){
     self->unk_113 = 0;
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a8);
     return 1;
+}
 }
