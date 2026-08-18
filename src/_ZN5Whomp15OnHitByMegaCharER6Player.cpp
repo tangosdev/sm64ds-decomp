@@ -1,36 +1,37 @@
 //cpp
-// @symbol func_ov079_02123e60
-// recovered name: Whomp_OnHitByMegaChar
-/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
-#include "MeshColliderBase.h"
-/* recovered: shared common types, renamed to Class_Method */
-/* daBtn_c::OnHitByMegaChar - recovered from vtable slot identity */
+// @symbol _ZN5Whomp15OnHitByMegaCharER6Player
+// recovered name: Whomp::OnHitByMegaChar
+/* Whomp::OnHitByMegaChar - vtable slot 27, overriding
+ * dActor_c::OnHitByMegaChar(Player&). Migrated to a real member: the raw
+ * shadow-struct offsets resolve onto fields already recovered in
+ * include/Whomp.h (mIsKing 0x414, inherited mDeathState 0x10c, inherited
+ * mCamSpacePosX 0x74, mMovingMeshCollider 0x418) and the callees onto real
+ * (non-virtual) members of Player/dActor_c/fBase_c. */
+#include "Whomp.h"
+#include "Player.h"
+
 extern "C" {
-extern void _ZN6Player16IncMegaKillCountEv(void* thiz);
 extern void func_02012694(int a, void* v);
 extern void func_ov079_02123d4c(void* out, void* c);
-extern void _ZN8dActor_c10PoofDustAtERK7Vector3(void* thiz, const Vector3& v);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
-extern void _ZN7fBase_c18MarkForDestructionEv(void* thiz);
+}
 
-void func_ov079_02123e60(char* c, void* player)
+void Whomp::OnHitByMegaChar(Player &player)
 {
-    if (*(unsigned char*)(c + 0x414) != 0) return;
-    if (*(int*)(c + 0x10c) == 8) return;
-    _ZN6Player16IncMegaKillCountEv(player);
-    func_02012694(0x1e, c + 0x74);
+    if (mIsKing != 0) return;
+    if (mDeathState == 8) return;
+    player.IncMegaKillCount();
+    func_02012694(0x1e, &mCamSpacePosX);
     Vector3 pos;
-    func_ov079_02123d4c(&pos, c);
+    func_ov079_02123d4c(&pos, this);
     Vector3 dust;
     pos.y = pos.y + 0x28000;
     dust.x = pos.x;
     dust.y = pos.y;
     dust.z = pos.z;
-    _ZN8dActor_c10PoofDustAtERK7Vector3(c, dust);
+    PoofDustAt(dust);
     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(5, pos.x, pos.y, pos.z);
-    _ZN7fBase_c18MarkForDestructionEv(c);
-    if (((MeshColliderBase *)(c + 0x418))->IsEnabled() != 0)
-        ((MeshColliderBase *)(c + 0x418))->Disable();
-}
+    MarkForDestruction();
+    if (mMovingMeshCollider.IsEnabled() != 0)
+        mMovingMeshCollider.Disable();
 }
