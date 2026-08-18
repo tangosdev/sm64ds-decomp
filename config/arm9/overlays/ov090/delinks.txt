@@ -243,11 +243,11 @@ src/func_ov090_02133904.c:
     complete
     .text start:0x02133904 end:0x02133978
 
-src/_ZN5Shark16CleanupResourcesEv.c:
+src/_ZN5Shark16CleanupResourcesEv.cpp:
     complete
     .text start:0x02133978 end:0x021339a8
 
-src/_ZN5Shark16OnPendingDestroyEv.c:
+src/_ZN5Shark16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021339a8 end:0x021339ac
 

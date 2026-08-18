@@ -171,11 +171,11 @@ src/func_ov100_02143b68.cpp:
     complete
     .text start:0x02143b68 end:0x02143cb0
 
-src/_ZN14UnchainedChomp16CleanupResourcesEv.c:
+src/_ZN14UnchainedChomp16CleanupResourcesEv.cpp:
     complete
     .text start:0x02143cb0 end:0x02143d08
 
-src/_ZN14UnchainedChomp16OnPendingDestroyEv.c:
+src/_ZN14UnchainedChomp16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02143d08 end:0x02143d0c
 

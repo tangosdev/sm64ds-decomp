@@ -28,7 +28,7 @@ src/func_ov081_02123b20.cpp:
     complete
     .text start:0x02123b20 end:0x02123bec
 
-src/_ZN9Spindrift16CleanupResourcesEv.c:
+src/_ZN9Spindrift16CleanupResourcesEv.cpp:
     complete
     .text start:0x02123bec end:0x02123c1c
 
