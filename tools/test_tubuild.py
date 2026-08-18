@@ -149,22 +149,29 @@ def test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate():
     # emits D2/D0/D1 in a fixed order that puts D0 before D1, opposite the ROM.
     assert "1 ordinal pair(s) NOT in ROM order: [(0, 1)]" in out
     assert "Result: 7/7 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED" in out
-    # 3 unlicensed .text (D2 + Platform's two out-of-line vague-linkage dtors) +
-    # 12 unlicensed .data (the vtable + RTTI records) = 15, exactly the pilot's
-    # sec 4 inventory -- present and correctly refusing promotion, not silently
-    # dropped.
-    assert "15 unlicensed section/symbol(s) present -> PROMOTION REFUSED" in out
+    # 1 unlicensed .text (D2) + 11 unlicensed .data (the vtable + RTTI records) = 12,
+    # present and correctly refusing promotion, not silently dropped. The pilot
+    # report's sec 4 counted 15 (3 .text + 12 .data) against the PRE-RENAME headers;
+    # the #1572-#1577 class renames (ActorBase -> fBase_c etc.) changed which
+    # vague-linkage bodies and RTTI records the headers make this TU emit --
+    # Platform's two out-of-line dtors no longer appear. Re-measured 2026-08-17 on
+    # origin/main (3531ac2b7); the byte result above is unchanged.
+    assert "12 unlicensed section/symbol(s) present -> PROMOTION REFUSED" in out
     assert "_ZN8PoleLiftD2Ev" in out and "_ZTV8PoleLift" in out
 
 
 def test_compile_report_matches_the_pilots_object_inventory():
-    """43 sections, 10 .text, 12 .data -- notes/tu-reconstruction-pilot-report.md
-    sec 4, reproduced independently by tubuild.py's own ELF walk."""
+    """37 sections, 8 .text, 11 .data, reproduced independently by tubuild.py's own
+    ELF walk. notes/tu-reconstruction-pilot-report.md sec 4 banked 43/10/12 against
+    the PRE-RENAME headers; the #1572-#1577 class renames changed which
+    vague-linkage bodies and RTTI records the headers make this TU emit (Platform's
+    two out-of-line dtors and their .text sections no longer appear). Re-measured
+    2026-08-17 on origin/main (3531ac2b7); the 7/7 byte result is unchanged."""
     if not _toolchain():
         return
     code, out = _run("compile", "ov045/PoleLift")
     assert code == 0, out
-    assert "sections (43):" in out
+    assert "sections (37):" in out
     # Anchored to the section-LISTING line shape ("[ NN] .text  type=SHT_..."), not
     # a bare substring: "-> section[N] .text  size=..." in the function-mapping
     # block below it also contains the text "] .text ", which a plain count()
@@ -172,10 +179,10 @@ def test_compile_report_matches_the_pilots_object_inventory():
     import re
     n_text = len(re.findall(r"\[\s*\d+\] \.text\s+type=SHT_", out))
     n_data = len(re.findall(r"\[\s*\d+\] \.data\s+type=SHT_", out))
-    assert n_text == 10, f"expected 10 .text sections, counted {n_text}"
-    assert n_data == 12, f"expected 12 .data sections, counted {n_data}"
-    assert "UNLICENSED function symbols (3)" in out
-    assert "UNLICENSED object/data symbols (12)" in out
+    assert n_text == 8, f"expected 8 .text sections, counted {n_text}"
+    assert n_data == 11, f"expected 11 .data sections, counted {n_data}"
+    assert "UNLICENSED function symbols (1)" in out
+    assert "UNLICENSED object/data symbols (11)" in out
     assert (REPO / "build" / "tu" / "ov045-PoleLift" / "inventory.txt").is_file()
     assert (REPO / "build" / "tu" / "ov045-PoleLift" / "PoleLift.o").is_file()
 
