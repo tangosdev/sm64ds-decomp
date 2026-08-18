@@ -1,15 +1,17 @@
+//cpp
 // @symbol _ZN3BooD0Ev
-/* recovered: named members + shared header */
+/* recovered: named members + shared header, real derived class (Boo : CapEnemy)
+ * -- chains to CapEnemy's out-of-line D1 (func_ov002_020aedbc, not yet
+ * renamed; see include/Boo.h) the same way _ZN3BooD1Ev.cpp does. */
 #include "Boo.h"
-extern int _ZN11ShadowModelD1Ev();
-extern int _ZN5ModelD1Ev();
-extern int _ZN9ModelAnimD1Ev();
-extern int _ZN12WithMeshClsnD1Ev();
-extern int _ZN25MovingCylinderClsnWithPosD1Ev();
-extern int func_ov002_020aedbc();
-extern int _ZN6Memory10DeallocateEPvP4Heap();
+extern "C" {
+extern int _ZN11ShadowModelD1Ev(void*);
+extern int _ZN5ModelD1Ev(void*);
+extern int _ZN9ModelAnimD1Ev(void*);
+extern int _ZN12WithMeshClsnD1Ev(void*);
+extern int _ZN25MovingCylinderClsnWithPosD1Ev(void*);
+extern int func_ov002_020aedbc(void*);
 extern int _ZTV3Boo[];
-extern int *data_020a0eac;
 
 int *_ZN3BooD0Ev(struct Boo *self) {
     *((int *)self) = (int)_ZTV3Boo;
@@ -22,4 +24,5 @@ int *_ZN3BooD0Ev(struct Boo *self) {
     func_ov002_020aedbc(((int *)self));
     _ZN6Memory10DeallocateEPvP4Heap(((int *)self), data_020a0eac);
     return ((int *)self);
+}
 }

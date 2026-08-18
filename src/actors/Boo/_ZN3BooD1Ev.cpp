@@ -1,6 +1,12 @@
+//cpp
 // @symbol _ZN3BooD1Ev
-/* recovered: named members + shared header */
+/* recovered: named members + shared header, real derived class (Boo : CapEnemy)
+ * -- chains to CapEnemy's out-of-line D1 (func_ov002_020aedbc, not yet renamed;
+ * see include/Boo.h for the base-edge evidence) instead of a compiler-
+ * synthesized call, since that symbol does not exist under its mangled name
+ * in this tree yet. */
 #include "Boo.h"
+extern "C" {
 extern int _ZTV3Boo[];
 extern int _ZN11ShadowModelD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
@@ -18,4 +24,5 @@ int _ZN3BooD1Ev(struct Boo *self) {
   _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
   func_ov002_020aedbc((int*)((char*)self));
   return (int)((char*)self);
+}
 }
