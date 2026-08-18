@@ -304,11 +304,11 @@ src/Painting_Spawn.c:
     complete
     .text start:0x02126f8c end:0x02126fbc
 
-src/func_ov080_02126fbc.c:
+src/_ZN13daObjMaruta_cD0Ev.c:
     complete
     .text start:0x02126fbc end:0x02127014
 
-src/func_ov080_02127014.c:
+src/_ZN13daObjMaruta_cD1Ev.c:
     complete
     .text start:0x02127014 end:0x02127058
 
@@ -324,7 +324,7 @@ src/func_ov080_021270dc.c:
     complete
     .text start:0x021270dc end:0x02127124
 
-src/func_ov080_02127124.cpp:
+src/_ZN13daObjMaruta_c6RenderEv.cpp:
     complete
     .text start:0x02127124 end:0x0212714c
 
