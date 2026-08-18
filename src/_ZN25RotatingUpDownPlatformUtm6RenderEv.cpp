@@ -14,7 +14,7 @@ struct Sub {
 int RotatingUpDownPlatformUtm::Render()
 {
     if (unk_3a0) return 1;
-    if (mSpawnParam == 0xffff) return 1;
+    if (param1 == 0xffff) return 1;
     ((struct Sub*)((char *)&mModel))->doit(0);
     return 1;
 }

@@ -22,7 +22,7 @@ void _ZN11RaycastLineC1Ev(RaycastLine *self);
 void Matrix4x3_FromRotationY(void *m, s16 angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 void MulVec3Mat4x3(const Vector3 *v, const void *m, Vector3 *out);
-void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(RaycastLine *self, const Vector3 *a, const Vector3 *b, void *actor);
+void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLine *self, const Vector3 *a, const Vector3 *b, void *actor);
 int _ZN11RaycastLine10DetectClsnEv(RaycastLine *self);
 s16 Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
@@ -85,7 +85,7 @@ extern "C" int func_ov090_02131648(C *c)
     b.y = a.y + out.y;
     b.z = a.z + out.z;
 
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&rc, &a, &b, c);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc, &a, &b, c);
 
     if (_ZN11RaycastLine10DetectClsnEv(&rc) == 0) {
         if (*(u8 *)(self + 0x3a0) == 0) {

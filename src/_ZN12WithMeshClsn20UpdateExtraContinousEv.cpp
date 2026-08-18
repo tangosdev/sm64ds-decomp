@@ -36,7 +36,7 @@ void *func_02037938(void *);
 void func_02038324(void *, Vector3 *, void *, void *);
 void _ZN10ClsnResultC1Ev(ClsnResult *);
 void _ZN10ClsnResultD1Ev(ClsnResult *);
-void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *, const Vector3 *, const Vector3 *, void *);
+void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *, const Vector3 *, const Vector3 *, void *);
 int  func_0203859c(void *);
 void _ZN11RaycastLine10GetClsnPosEv(Vector3 *, void *);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *, Vector3 *);
@@ -44,7 +44,7 @@ int  _ZN11RaycastLine10DetectClsnEv(void *);
 int  func_02039794(s32);
 void _ZNK10ClsnResult6CopyToERS_(const ClsnResult *, ClsnResult *);
 Vector3 *func_02037dc4(SurfaceInfo *);
-void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(void *, const Vector3 *, s32, void *);
+void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void *, const Vector3 *, s32, void *);
 int  func_02035764(void *);
 void _ZN10SphereClsn14SetFloorResultERK10ClsnResult(void *, const ClsnResult *);
 void _ZN10ClsnResultaSERKS_(ClsnResult *, const ClsnResult *);
@@ -93,7 +93,7 @@ void WithMeshClsn::UpdateExtraContinous()
         Vector3 v88;
 
         V3C(v88, prev)
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(t + 0x134, &v88, &v7c, *(void **)(t + 0x14));
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(t + 0x134, &v88, &v7c, *(void **)(t + 0x14));
 
         if (func_0203859c(t + 0x134))
         {
@@ -109,7 +109,7 @@ void WithMeshClsn::UpdateExtraContinous()
 
 
         V3D(va0, pos, vo)
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(t + 0x134, &v7c, &va0, *(void **)(t + 0x14));
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(t + 0x134, &v7c, &va0, *(void **)(t + 0x14));
 
         if (_ZN11RaycastLine10DetectClsnEv(t + 0x134))
         {
@@ -142,7 +142,7 @@ void WithMeshClsn::UpdateExtraContinous()
             vd0.x = vc4.x;
             vd0.y = vc4.y - vo;
             vd0.z = vc4.z;
-            _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(t + 0x134, &vc4, &vd0, *(void **)(t + 0x14));
+            _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(t + 0x134, &vc4, &vd0, *(void **)(t + 0x14));
 
             if (_ZN11RaycastLine10DetectClsnEv(t + 0x134))
             {
@@ -162,7 +162,7 @@ void WithMeshClsn::UpdateExtraContinous()
                 vf4.x = vdc.x;
                 vf4.y = vdc.y + (vo << 1);
                 vf4.z = vdc.z;
-                _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(t + 0x134, &vdc, &vf4, *(void **)(t + 0x14));
+                _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(t + 0x134, &vdc, &vf4, *(void **)(t + 0x14));
 
                 if (_ZN11RaycastLine10DetectClsnEv(t + 0x134))
                 {
@@ -193,7 +193,7 @@ void WithMeshClsn::UpdateExtraContinous()
             Vector3 v118;
 
             V3D(v118, pos, vo)
-            _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(t + 0x134, &v10c, &v118, *(void **)(t + 0x14));
+            _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(t + 0x134, &v10c, &v118, *(void **)(t + 0x14));
 
             if (_ZN11RaycastLine10DetectClsnEv(t + 0x134) &&
                 func_02037dc4((SurfaceInfo *)(t + 0x148))->y >= 0)
@@ -214,7 +214,7 @@ void WithMeshClsn::UpdateExtraContinous()
         v124.y = pos->y;
         v124.z = pos->z;
         v124.y = v124.y + vo;
-        _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(t + 0x20, &v124, *(s32 *)(t + 0x18), *(void **)(t + 0x14));
+        _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(t + 0x20, &v124, *(s32 *)(t + 0x18), *(void **)(t + 0x14));
 
         *(s32 *)(t + 0x128) = *(s32 *)(t + 0x1b8);
         if (func_02035764(t))
@@ -267,7 +267,7 @@ void WithMeshClsn::UpdateExtraContinous()
                 Vector3 v13c;
 
                 V3C(v13c, pos)
-                _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(t + 0x134, &v130, &v13c, *(void **)(t + 0x14));
+                _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(t + 0x134, &v130, &v13c, *(void **)(t + 0x14));
                 if (_ZN11RaycastLine10DetectClsnEv(t + 0x134))
                 {
                     Vector3 *cp = LNDR(Vector3, t + 0x188);
@@ -309,7 +309,7 @@ void WithMeshClsn::UpdateExtraContinous()
                     Vector3 v17c;
 
                     V3C(v17c, pos)
-                    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(t + 0x134, &v170, &v17c, *(void **)(t + 0x14));
+                    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(t + 0x134, &v170, &v17c, *(void **)(t + 0x14));
                     if (_ZN11RaycastLine10DetectClsnEv(t + 0x134))
                     {
                         Vector3 *cp = LNDR(Vector3, t + 0x188);
@@ -355,7 +355,7 @@ void WithMeshClsn::UpdateExtraContinous()
                     Vector3 v194;
 
                     V3D(v194, pos, (vo << 1))
-                    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(t + 0x134, &v188, &v194, *(void **)(t + 0x14));
+                    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(t + 0x134, &v188, &v194, *(void **)(t + 0x14));
                     if (_ZN11RaycastLine10DetectClsnEv(t + 0x134))
                     {
                         Vector3 *cp = (Vector3 *)(t + 0x188);
@@ -375,7 +375,7 @@ void WithMeshClsn::UpdateExtraContinous()
                 Vector3 v1ac;
 
                 V3D(v1ac, pos, vo)
-                _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(t + 0x134, &v1a0, &v1ac, *(void **)(t + 0x14));
+                _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(t + 0x134, &v1a0, &v1ac, *(void **)(t + 0x14));
                 if (func_0203859c(t + 0x134))
                 {
                     Vector3 *cp = LNDR(Vector3, t + 0x188);

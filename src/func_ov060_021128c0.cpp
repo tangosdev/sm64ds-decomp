@@ -6,9 +6,9 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-    void* _ZN5Actor10FindWithIDEj(u32 id);
+    void* _ZN8dActor_c10FindWithIDEj(u32 id);
     void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3& v, u32 a, Fix12i b, u32 c, u32 d, u32 e);
-    void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* cc);
+    void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* cc);
     void func_02038408(void* p);
     void WithMeshClsn_UpdateContinuous_Veneer(void* p);
     int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
@@ -28,7 +28,7 @@ extern "C" void func_ov060_021128c0(char* c)
     *(u8*)(c + 0x425) = 0;
     u32 id;
     if (*(s32*)(c + 0x40c) != 4 && (id = *(u32*)(c + 0x384)) != 0) {
-        void* f = _ZN5Actor10FindWithIDEj(id);
+        void* f = _ZN8dActor_c10FindWithIDEj(id);
         if (f != 0) {
             int b = (*(u16*)((char*)f + 0xc) == 0xbf);
             if (b) {
@@ -61,7 +61,7 @@ extern "C" void func_ov060_021128c0(char* c)
         *(u16*)((char*)(((int)c + 0x300)) + 0xfc) = 0;
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x360);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x360);
 
     if (*(u8*)(c + 0x414) == 1)
         func_02038408(c + 0x14c);

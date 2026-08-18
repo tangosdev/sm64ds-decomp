@@ -2,7 +2,7 @@
 extern "C" {
 extern int func_ov002_020ec654(unsigned char *p);
 extern void func_ov002_020edca4(char *self);
-extern void *_ZN5Actor4NextEPKS_(const void *prev);
+extern void *_ZN8dActor_c4NextEPKS_(const void *prev);
 extern int Vec3_Dist(const void *a, const void *b);
 
 struct VObj { virtual int s0(); virtual int s1(); virtual int s2(); virtual int s3(); virtual int s4(); virtual int s5(); virtual int s6(); virtual int s7(); virtual int s8(); virtual int s9(); virtual int s10(); virtual int s11(); virtual int s12(); virtual int s13(); virtual int s14(); virtual int s15(); virtual int s16(); virtual int s17(); virtual int s18(); virtual int s19(); virtual int s20(); };
@@ -25,7 +25,7 @@ int func_ov002_020edb3c(char *self, int a1, int best)
     }
 
     found = 0;
-    actor = (char *)_ZN5Actor4NextEPKS_(0);
+    actor = (char *)_ZN8dActor_c4NextEPKS_(0);
     if (actor == 0) goto end;
 
 loop:
@@ -52,7 +52,7 @@ loop:
         }
     }
 next:
-    actor = (char *)_ZN5Actor4NextEPKS_(actor);
+    actor = (char *)_ZN8dActor_c4NextEPKS_(actor);
     if (actor != 0) goto loop;
 
 end:

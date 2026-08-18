@@ -1,16 +1,16 @@
 typedef struct UID { int low, high; } UID;
 
-typedef struct Actor {
+typedef struct dActor_c {
     int pad[0x30 / 4];
     UID id;                             /* 0x30 */
     unsigned char pad2[0xe6 - 0x38];
     short fE6;                          /* 0xe6 */
-} Actor;
+} dActor_c;
 
 extern UID data_ov006_0213afa0;
 extern UID data_ov006_0213afb0;
 
-int func_ov006_020c4710(Actor *a)
+int func_ov006_020c4710(dActor_c *a)
 {
     int result = 0;
     UID *p = (UID *)(int)(&a->id);

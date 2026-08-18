@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern short Vec3_HorzAngle(const void* a, const void* b);
-extern char* _ZN5Actor13ClosestPlayerEv(void* c);
+extern char* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern int Vec3_Dist(const void* a, const void* b);
 extern int KingBobOmb_SetState(void* c, void* p);
 extern void func_02012694(int a, void* b);
@@ -17,7 +17,7 @@ extern int data_ov078_0212710c[];
 int func_ov078_02123aa0(char* c){
     short ang = Vec3_HorzAngle(c+0x5c, c+0x4e0);
     if(_ZN13MontyMoleRockD0Ev(c) == 1) return 1;
-    char* p = _ZN5Actor13ClosestPlayerEv(c);
+    char* p = _ZN8dActor_c13ClosestPlayerEv(c);
     if(p != 0){
         struct Vector3 v = *(struct Vector3*)(p+0x5c);
         if(Vec3_Dist(c+0x4d4, &v) < 0x640000){

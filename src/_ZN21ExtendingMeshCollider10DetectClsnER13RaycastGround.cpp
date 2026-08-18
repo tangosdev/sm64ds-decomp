@@ -1,13 +1,13 @@
 //cpp
 extern "C" {
 struct Vector3 { int x, y, z; };
-struct Actor;
+struct dActor_c;
 struct RaycastLine { char data[0x78]; };
 
 extern void func_020374b8(int *a, int *b);
 extern void func_0203aa74(void *thiz, Vector3 *v, Vector3 *res);
 extern void _ZN11RaycastLineC1Ev(RaycastLine *);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(RaycastLine *, const Vector3 *, const Vector3 *, Actor *);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLine *, const Vector3 *, const Vector3 *, dActor_c *);
 extern void func_02035394(RaycastLine *, void *);
 extern int _ZN12MeshCollider10DetectClsnER11RaycastLine(void *, RaycastLine *);
 extern Vector3 *_ZN11RaycastLine10GetClsnPosEv(Vector3 *, RaycastLine *);
@@ -34,7 +34,7 @@ int _ZN21ExtendingMeshCollider10DetectClsnER13RaycastGround(void *self, char *gr
     func_0203aa74(self, &v0x24, &v0x18);
 
     _ZN11RaycastLineC1Ev(&ray);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&ray, &v0, &v0x18, 0);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray, &v0, &v0x18, 0);
     func_02035394(&ray, ground);
     int r = _ZN12MeshCollider10DetectClsnER11RaycastLine(self, &ray);
     if (r) {

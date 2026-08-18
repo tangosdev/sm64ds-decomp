@@ -3,15 +3,15 @@
  *
  * class BowserFireSeaArena: 6 matched functions.
  *
- * A Platform subclass -- the only one in ov060 -- which is what the destructor
- * shows: it tears down its own two members, then REWRITES THE VPTR to _ZTV8Platform
- * and tears down two more at Platform's offsets, then chains to Actor. That middle
+ * A dBgActor_c subclass -- the only one in ov060 -- which is what the destructor
+ * shows: it tears down its own two members, then REWRITES THE VPTR to _ZTV10dBgActor_c
+ * and tears down two more at dBgActor_c's offsets, then chains to dActor_c. That middle
  * vptr store is a base-class destructor running inline, and it is the evidence for
  * the base.
  *
- * Two sub-objects of its own, on top of Platform's two:
+ * Two sub-objects of its own, on top of dBgActor_c's two:
  *
- *     Platform            0x000 + 0x324 = 0x324   -> mModel2
+ *     dBgActor_c            0x000 + 0x324 = 0x324   -> mModel2
  *     Model               0x324 + 0x050 = 0x374   -> mMovingMeshCollider2
  *     MovingMeshCollider  0x374 + 0x1c8 = 0x53c   -> padding, then unk_56c
  *
@@ -19,7 +19,7 @@
  * was the object.
  *
  * sizeof is 0x570, which is not inferred from the fields: BowserFireSeaArena_Spawn
- * asks ActorBase::operator new for 1392 bytes.
+ * asks fBase_c::operator new for 1392 bytes.
  *
  * Field NAMES for the unk_ entries are placeholders. */
 #ifndef BOWSERFIRESEAARENA_H
@@ -30,10 +30,10 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 
-struct BowserFireSeaArena : Platform {
-    /* THIS CLASS'S OWN, not Platform's -- Platform ends at 0x31e. They are what
+struct BowserFireSeaArena : dBgActor_c {
+    /* THIS CLASS'S OWN, not dBgActor_c's -- dBgActor_c ends at 0x31e. They are what
        push mModel2 from 0x320 to 0x324, and the first two sit in the base's
        tail padding. */
     s16 unk_31e;                                /* 0x31e */
@@ -60,7 +60,7 @@ typedef char BowserFireSeaArena_size_must_be_0x570[
 #else
 
 /* The same object for a C translation unit, which has no base class to inherit
-   Platform's and Actor's fields from and so spells the whole layout flat. */
+   dBgActor_c's and dActor_c's fields from and so spells the whole layout flat. */
 struct BowserFireSeaArena {
     u8  pad_000[0x8e];
     s16 unk_08e;            /* 0x08e */

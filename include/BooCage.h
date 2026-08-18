@@ -3,13 +3,13 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree -- both read straight out
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree -- both read straight out
  * of the ROM, because this class had no source file at all until now.
  *
  * `BooCage_Spawn` (ov063:0x0211c4d0) constructs, in order:
  *
- *     _ZN9ActorBasenwEj(0x380)      <- the allocation, so 0x380 IS the sizeof
- *     _ZN5EnemyC2Ev                 <- the base, so this derives from Enemy
+ *     _ZN7fBase_cnwEj(0x380)      <- the allocation, so 0x380 IS the sizeof
+ *     _ZN12dEnemyBase_cC2Ev                 <- the base, so this derives from dEnemyBase_c
  *     str  _ZTV7BooCage             <- and it is this class, not a relative
  *     +0x110 _ZN18MovingCylinderClsnC1Ev
  *     +0x144 _ZN12WithMeshClsnC1Ev
@@ -17,7 +17,7 @@
  *     +0x350 _ZN11ShadowModelC1Ev
  *
  * `_ZN7BooCageD1Ev` (ov063:0x02115fc4) destroys the same four at the same offsets in
- * exactly the reverse order and then chains to `_ZN5EnemyD2Ev`. Construction order
+ * exactly the reverse order and then chains to `_ZN12dEnemyBase_cD2Ev`. Construction order
  * forward, destruction order backward, same offsets, same types: that is a layout
  * read twice, not once.
  *
@@ -29,13 +29,13 @@
  * spawn-and-hold idiom looks like; the classes differ only in total size.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "MovingCylinderClsn.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct BooCage : Enemy {
+struct BooCage : dEnemyBase_c {
     MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
     Model                        mModel;                /* 0x300 */

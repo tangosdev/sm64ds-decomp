@@ -1,6 +1,6 @@
 extern int func_ov102_02149610(char *c);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void *self, void *shadow, void *mtx, int fix, int t1, int t2, unsigned int n);
 extern unsigned char data_0209f2d8;
 
@@ -30,6 +30,6 @@ skipcall:
     *(int*)(c + 0x3d0) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x3d4) = (*(int*)(c + 0x60) - 0x20000) >> 3;
     *(int*)(c + 0x3d8) = *(int*)(c + 0x64) >> 3;
-    _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+    _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
         c, c + 0x384, c + 0x3ac, r4, r5 + 0x14000, r4, 0xf);
 }

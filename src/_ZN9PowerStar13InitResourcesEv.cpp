@@ -29,26 +29,26 @@ extern void func_ov002_020e6df8(void *self);
 extern s32 SublevelToLevel(s32 sub);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, s32 a, s32 spd, u32 g);
 extern s32 _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *self, void *actor, struct Vec3 *v, s32 a, s32 b, u32 c, u32 d);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
 extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *self);
-extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 id, u32 param, struct Vec3 *pos, void *rot, s32 a, s32 b);
 extern s32 NumVsStarsObtained(void);
 extern void func_ov002_020e9448(void *self);
 extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void *self);
 extern s32 IsStarCollectedInCurLevel(u32 idx);
-extern void _ZN9ActorBase18MarkForDestructionEv(void *self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void func_ov002_020e8dd8(void *self);
 extern void func_ov002_020e7d08(void *self);
 extern void _ZN5Event8ClearBitEj(u32 bit);
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void LinkSilverStarAndStarMarker(void *a, void *b);
 extern s32 IsStarCollected(s32 level, s32 idx);
-extern s32 _ZN5Actor18GetBitInDeathTableEv(void *self);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(void *self);
+extern s32 _ZN8dActor_c18GetBitInDeathTableEv(void *self);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
 
 extern s32 _ZN9PowerStar13InitResourcesEv(void *arg0);
 }
@@ -146,9 +146,9 @@ s32 PowerStar::InitResources()
     v2.x = data_ov002_0210aa0c.x;
     v2.y = data_ov002_0210aa0c.y;
     v2.z = data_ov002_0210aa0c.z;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         t + 0x110, t, &v2, 0x64000, 0x96000, 0x100002, 0x8000);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(t + 0x150, t, 0x50000, 0, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(t + 0x150, t, 0x50000, 0, 0, 0);
     _ZN12WithMeshClsn13SetLimMovFlagEv(t + 0x150);
     U8(0x49d) = (u8)(*(u32 *)(t + 8) & 0xf);
     if (S32(0x43c) != 7 && S32(0x43c) != 3)
@@ -168,7 +168,7 @@ s32 PowerStar::InitResources()
             v.y = S32(0x60);
             v.z = S32(0x64);
             v.y = v.y + 0xa000;
-            sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb4, 0x40, &v, 0, S8(0x499), -1);
+            sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xb4, 0x40, &v, 0, S8(0x499), -1);
             if (sp != 0) {
                 S32(0x434) = *(s32 *)(sp + 4);
             } else {
@@ -219,7 +219,7 @@ s32 PowerStar::InitResources()
     if (U8(0x49d) < 8 && S32(0x43c) != 5 && S32(0x43c) != 3 &&
         (s32)(data_0209f2d8 == 1) == 0 && IsStarCollectedInCurLevel(U8(0x49d)) != 0) {
         if (SublevelToLevel(data_0209f2f8) == 0x1d) {
-            _ZN9ActorBase18MarkForDestructionEv(t);
+            _ZN7fBase_c18MarkForDestructionEv(t);
             return 0;
         }
         LU16(0x4a2) |= 4;
@@ -233,7 +233,7 @@ s32 PowerStar::InitResources()
         _ZN5Event8ClearBitEj(0x1d);
         if (S32(0x43c) != 3) {
             if ((s32)(data_0209f2d8 == 1) != 0 || (s32)(*(u16 *)(t + 0xc) == 0xb3) != 0) {
-                sp = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+                sp = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0xb4, 0x50, (struct Vec3 *)(t + 0x5c), 0, S8(0x499), -1);
                 if (sp != 0) {
                     S32(0x434) = *(s32 *)(sp + 4);
@@ -244,24 +244,24 @@ s32 PowerStar::InitResources()
         }
     }
 
-    sp = _ZN5Actor10FindWithIDEj((u32)S32(0x434));
+    sp = _ZN8dActor_c10FindWithIDEj((u32)S32(0x434));
     if (sp != 0)
         LinkSilverStarAndStarMarker(sp, t);
     if (data_0209f2f8 == 8 && U8(0x49d) == 7) {
         if (IsStarCollected(SublevelToLevel(8), 1) == 0 || data_0209f220 == 1) {
-            _ZN9ActorBase18MarkForDestructionEv(t);
+            _ZN7fBase_c18MarkForDestructionEv(t);
             return ret;
         }
     }
     if (data_0209f2f8 == 7 && U8(0x49d) == 2) {
         if (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) {
-            _ZN9ActorBase18MarkForDestructionEv(t);
+            _ZN7fBase_c18MarkForDestructionEv(t);
             return 0;
         }
     }
-    if (_ZN5Actor18GetBitInDeathTableEv(t) != 0 && U8(0x49d) == 1 && data_0209f2f8 == 0x2e) {
-        _ZN5Actor24KillAndTrackInDeathTableEv(t);
-        sp = _ZN5Actor10FindWithIDEj((u32)S32(0x434));
+    if (_ZN8dActor_c18GetBitInDeathTableEv(t) != 0 && U8(0x49d) == 1 && data_0209f2f8 == 0x2e) {
+        _ZN8dActor_c24KillAndTrackInDeathTableEv(t);
+        sp = _ZN8dActor_c10FindWithIDEj((u32)S32(0x434));
         if (sp != 0)
             LinkSilverStarAndStarMarker(sp, 0);
     }

@@ -5,7 +5,7 @@
 /* daWater_Ring_c::Kill - recovered from vtable slot identity */
 struct Vector3 { int x, y, z; };
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
-struct Actor {
+struct dActor_c {
     void UntrackAndSpawnStar(signed char &a, unsigned int b, const Vector3 &c, unsigned char d);
 };
 
@@ -20,7 +20,7 @@ extern "C" void func_ov064_0211a2c4(char *thiz)
         v.y = *(int*)(thiz + 0x60);
         v.z = *(int*)(thiz + 0x64);
         v.y += 0xc8000;
-        ((Actor*)thiz)->UntrackAndSpawnStar(
+        ((dActor_c*)thiz)->UntrackAndSpawnStar(
             *(signed char*)(thiz + 0x175),
             *(unsigned char*)(thiz + 0x174),
             v, 4);

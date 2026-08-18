@@ -74,7 +74,7 @@
  * address to a helper -- so all three stay raw padding.
  *
  * Field at `this+8` some of these methods read is INHERITED from further up
- * the hierarchy than dScMgBase_c (Scene/ActorBase level, well below where
+ * the hierarchy than dScMgBase_c (dScene_c/fBase_c level, well below where
  * dScMgBase_c's own fields start at 0x50) -- accessed via raw offset
  * arithmetic on a char* cast, not added as a named field anywhere.
  *
@@ -86,15 +86,15 @@
  * longer includes this header.
  *
  * slots 27/28 (OnHitByMegaChar/OnHitFromUnderneath) are real overrides,
- * with the exact signature copied from include/Actor.h's own slots 27/28 --
+ * with the exact signature copied from include/dActor_c.h's own slots 27/28 --
  * the same "OnHitByMegaChar"/"OnHitFromUnderneath" names were independently
  * recovered on dScMgBase_c's own copy at the same two slots
  * (src/func_ov004_020af27c.cpp and .../func_ov004_020af04c.cpp, both of
  * which dScMgSlot1_c's own overrides call into), and on many unrelated
- * ActorBase descendants across other overlays -- a shared, fixed
- * collision-event slot pair used across both the Actor and Scene branches,
- * not a coincidence of numbering. Neither dScMgBase_c.h nor Scene.h/
- * ActorBase.h currently declares a slot at 27/28 for the Scene branch (they
+ * fBase_c descendants across other overlays -- a shared, fixed
+ * collision-event slot pair used across both the dActor_c and dScene_c branches,
+ * not a coincidence of numbering. Neither dScMgBase_c.h nor dScene_c.h/
+ * fBase_c.h currently declares a slot at 27/28 for the dScene_c branch (they
  * are left undeclared, same as dScMgBase_c.h's own "18-35... left
  * undeclared" note), so the compiler's OWN internal slot assignment for
  * these two methods in THIS class does not literally land on index 27/28 --
@@ -106,7 +106,7 @@
 #include "dScMgBase_c.h"
 
 struct Player;
-struct Actor;
+struct dActor_c;
 
 extern "C" void data_ov001_020ad494(void);
 extern "C" void *data_ov006_0213e5d4;
@@ -115,8 +115,8 @@ struct dScMgSlot1_c : dScMgBase_c {
     virtual ~dScMgSlot1_c();
     virtual s32 InitResources();                       /* slot  0 */
     virtual s32 Render();                               /* slot  9 */
-    virtual int OnHitByMegaChar(Player &player);        /* slot 27 */
-    virtual int OnHitFromUnderneath(Actor &other);      /* slot 28 */
+    virtual void OnHitByMegaChar(Player &player);       /* slot 27 -- void, see include/Stump.h */
+    virtual int OnHitFromUnderneath(dActor_c &other);      /* slot 28 */
 
     u8  betIcon_4660[0x24]; /* 0x4660 -- dScMgSlot1_c::betIcon_c : dThIcon_c,
                                 destroyed by hand in D1/D0; see the file

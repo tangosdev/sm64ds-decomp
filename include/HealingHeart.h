@@ -9,7 +9,7 @@
 
 struct HealingHeart {
     u8  pad_000[0x74];
-    /* 0x074..0x0d4 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x074..0x0d4 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_074;                 /* 0x074 */
     s32 mCamSpacePosY;           /* 0x078 */

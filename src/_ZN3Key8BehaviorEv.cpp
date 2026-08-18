@@ -14,10 +14,10 @@ extern void SubVec3(void* d, void* a, void* b);
 extern void Vec3_LslInPlace(void* v, int sh);
 extern void AddVec3(void* d, void* a, void* b);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int x, int y, int z, const void* v, void* cb);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* c);
-extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
 extern void _ZN12CylinderClsn5ClearEv(void* c);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* c, void* cyl);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* c, void* cyl);
 extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, void* v);
 extern void _ZN12CylinderClsn6UpdateEv(void* c);
 
@@ -86,13 +86,13 @@ int Key::Behavior()
             int b = (actorID == 0x11a);
             if (b != 0) {
                 if (mModelAnim.file != (BCA_File *)data_ov089_02132c40[1])
-                    _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+                    _ZN7fBase_c18MarkForDestructionEv(((char*)this));
             }
         }
         return 1;
     }
 
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((char*)this), ((char*)this) + 0x260)) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(((char*)this), ((char*)this) + 0x260)) {
         func_ov089_02131f54(((char*)this));
         _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
         return 1;
@@ -108,7 +108,7 @@ int Key::Behavior()
         short* ang = (short*)(int)LAUNDER((char*)&mAngleY);
         *ang = *ang + mSpinSpeed;
     }
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
     (((C*)((char*)this))->*PMFTABLE[mState].pmf)();
     func_ov089_02131f54(((char*)this));
     _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);

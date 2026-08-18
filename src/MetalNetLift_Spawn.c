@@ -9,9 +9,9 @@ extern int _ZTV12MetalNetLift[];
 extern void _ZN7PathPtrC1Ev(void *);
 int *MetalNetLift_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(872);
+    int *p = (int *)_ZN7fBase_cnwEj(872);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV12MetalNetLift;
         _ZN7PathPtrC1Ev((char *)p + 0x360);
     }

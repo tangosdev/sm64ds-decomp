@@ -1,12 +1,12 @@
 //cpp
 // @symbol _ZN13WaterfallMistD1Ev
 
-struct Actor {
-    virtual ~Actor();
+struct dActor_c {
+    virtual ~dActor_c();
 };
 
 
-struct WaterfallMist : Actor {
+struct WaterfallMist : dActor_c {
     virtual ~WaterfallMist();
 };
 

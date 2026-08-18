@@ -8,8 +8,8 @@
  *
  * A LAYER THE TREE DID NOT HAVE. This header used to be a flat struct under
  * `u8 pad_000[0x320]`, emitted by `tools/rtti_vtables.py --emit-headers` because
- * that pass knew offsets and not sizeof(base). include/Platform.h has since
- * settled sizeof(Platform) = 0x320, so the class can be spelled as what it is. The
+ * that pass knew offsets and not sizeof(base). include/dBgActor_c.h has since
+ * settled sizeof(dBgActor_c) = 0x320, so the class can be spelled as what it is. The
  * regenerate line is gone with the generated body: that tool deletes only files
  * that still carry it, and this one is hand-written now.
  *
@@ -17,7 +17,7 @@
  *   _ZTS14daObjUkiyuka_c  ov002 0x02109110   "14daObjUkiyuka_c"
  *   vtable                ov002 0x0210912c, 32 slots, same count as the base
  *   kind                  __si_class_type_info, ONE base, subobject offset 0
- *   base                  dBgActor_c, ov002 0x021089ec -- the tree's Platform
+ *   base                  dBgActor_c, ov002 0x021089ec -- the tree's dBgActor_c
  *
  * ABSTRACT. Slots 0 and 3 -- InitResources and CleanupResources -- are null. Its
  * own overrides are slots 6 (Behavior), 9 (Render), 16 (D1) and 17 (D0).
@@ -26,8 +26,8 @@
  * factory FloatingFloorLllBig_Spawn building the same class with different
  * parameters) and daObjKm2_Ukishima_c (FloatingFloorBfs).
  *
- * FOUR FIELDS, all of them read by this class's own Behavior,
- * `func_ov002_020b6494`:
+ * FOUR FIELDS, all of them read by this class's own Behavior, ov002 0x020b6494
+ * -- now `_ZN14daObjUkiyuka_c8BehaviorEv`:
  *
  *   0x320  the rest height. Behavior compares the actor's own Y at 0x60 against it
  *          and, when the two are equal, restarts the rest timer.
@@ -37,7 +37,7 @@
  *          down Behavior does nothing but the collider range check.
  *
  * SIZE 0x32c. 0x32a + 2 closes the class, and FloatingFloorBfs_Spawn passes
- * 812 = 0x32c to ActorBase::operator new, which is this class and nothing more:
+ * 812 = 0x32c to fBase_c::operator new, which is this class and nothing more:
  * daObjKm2_Ukishima_c adds no field of its own. THE OTHER LEAF IS BIGGER --
  * FloatingFloorLllSmall_Spawn and FloatingFloorLllBig_Spawn both pass 816 = 0x330
  * -- so daObjFl_Ukiyuka_c has 4 bytes this class does not, which is what fixes the
@@ -48,9 +48,9 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 
-struct daObjUkiyuka_c : Platform {
+struct daObjUkiyuka_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
     s32 mRestY;             /* 0x320 */
     s32 mBobAmplitude;      /* 0x324 */
@@ -58,12 +58,28 @@ struct daObjUkiyuka_c : Platform {
     u16 mRestTimer;         /* 0x32a */
 
     /* --- vtable --- */
-    /* INLINE ON PURPOSE, for the reason include/Platform.h gives for its own:
+    /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
        every descendant's destructor inlines this body rather than calling
        _ZN14daObjUkiyuka_cD1Ev (which does exist out of line, at ov002
        0x020b63e0, still under its func_ov002_ name). An out-of-line declaration
        here would make each descendant emit a `bl` the ROM does not have. */
     virtual ~daObjUkiyuka_c() {}
+
+    /* Slot 6, this class's own override, defined out of line in
+       src/_ZN14daObjUkiyuka_c8BehaviorEv.cpp. LAYOUT-NEUTRAL: it re-uses the
+       slot dBgActor_c already holds rather than appending one, and adds no
+       field, so the 0x32c assert below is untouched.
+
+       Because the destructor above is inline this class has no key function,
+       so declaring the first out-of-line virtual makes THIS the key function
+       and its translation unit emits _ZTV14daObjUkiyuka_c, the RTTI records
+       and four implicit destructor bodies alongside the one function the file
+       is for. That is the same shape every migrated D1 file in this family
+       already has, and tools/objisolate.py reduces the object to the declared
+       function before eligible.py and rombuild.py judge it -- checked on this
+       file, not assumed. */
+    s32 Behavior();
+    s32 Render();                      /* slot 9, ov002 0x020b646c -- mModel.Render(0) */
 };
 
 typedef char daObjUkiyuka_c_size_must_be_0x32c[sizeof(daObjUkiyuka_c) == 0x32c ? 1 : -1];
@@ -71,8 +87,8 @@ typedef char daObjUkiyuka_c_size_must_be_0x32c[sizeof(daObjUkiyuka_c) == 0x32c ?
 #else
 
 /* The same object for a C translation unit, which has no base sub-object to
-   inherit Platform's fields from and so spells the layout flat. Same arrangement
-   as include/Platform.h. */
+   inherit dBgActor_c's fields from and so spells the layout flat. Same arrangement
+   as include/dBgActor_c.h. */
 struct daObjUkiyuka_c {
     u8  pad_000[0x320];
     s32 mRestY;             /* 0x320 */

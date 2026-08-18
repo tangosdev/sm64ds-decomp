@@ -23,7 +23,7 @@
 #include "MantaRay.h"
 struct SharedFilePtr;
 struct BMD_File;
-struct Actor;
+struct dActor_c;
 
 struct PathPtr {
     char pad[8];
@@ -37,7 +37,7 @@ extern "C" {
 BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr& p);
 int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 void _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr& p);
-void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(void* self, Actor* a, const Vector3& v, int b, int c, unsigned int d, unsigned int e);
+void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, const Vector3& v, int b, int c, unsigned int d, unsigned int e);
 void func_ov090_02132ac4(unsigned char* c, void* p);
 
 extern SharedFilePtr data_ov090_02134524;
@@ -74,7 +74,7 @@ int MantaRay::InitResources()
         v.x = data_ov090_02134200.x;
         v.y = data_ov090_02134200.y;
         v.z = data_ov090_02134200.z;
-        _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, (Actor*)thiz, v,
+        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, (dActor_c*)thiz, v,
             0x150000, 0xc8000, 0x200004, 0);
     }
 

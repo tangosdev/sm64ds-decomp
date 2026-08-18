@@ -9,9 +9,9 @@ extern int _ZTV16FloatingFloorBfs[];
 /* vtable identified: VT0 = _ZTV14daObjUkiyuka_c */
 int *FloatingFloorBfs_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(812);
+    int *p = (int *)_ZN7fBase_cnwEj(812);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV14daObjUkiyuka_c;
         p[0] = (int)_ZTV16FloatingFloorBfs;
     }

@@ -9,9 +9,9 @@
 /* resolved: VT0 = _ZTV9SpikeBomb */
 int *SpikeBomb_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(432);
+    int *p = (int *)_ZN7fBase_cnwEj(432);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV9SpikeBomb;
         _ZN5ModelC1Ev((char *)p + 0xd4);
         _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x124);

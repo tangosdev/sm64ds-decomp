@@ -3,9 +3,9 @@
 
 #include "types.h"
 
-/* Derives from Enemy, on the evidence of its own destructor: `_ZN9WhirlpoolD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN9WhirlpoolD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
- * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
  *
  * The members close exactly on one another:
@@ -23,7 +23,7 @@
  * is not independent evidence about the ROM.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
@@ -32,7 +32,7 @@
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
 
-struct Whirlpool : Enemy {
+struct Whirlpool : dEnemyBase_c {
     s32                          unk_110;               /* 0x110 */
     ModelAnim                    mModelAnim;            /* 0x114 */
     TextureTransformer           mTextureTransformer;   /* 0x178 */
@@ -54,6 +54,6 @@ struct Whirlpool : Enemy {
     void OnPendingDestroy();
 };
 
-typedef char Submarine_size_must_be_0x1bc[sizeof(Whirlpool) == 0x1bc ? 1 : -1];
+typedef char Whirlpool_size_must_be_0x1bc[sizeof(Whirlpool) == 0x1bc ? 1 : -1];
 
 #endif /* WHIRLPOOL_H */

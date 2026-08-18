@@ -13,10 +13,10 @@ extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *file, int a, int
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int idx, int speed, u32 flags);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *self, void *actor, int a, int b, u32 c, u32 d);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v0, void *v1);
-extern char *_ZN5Actor13ClosestPlayerEv(void *self);
-extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, void *pos, void *rot, int a, int b);
+extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, u32 c, u32 d);
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v0, void *v1);
+extern char *_ZN8dActor_c13ClosestPlayerEv(void *self);
+extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 param, void *pos, void *rot, int a, int b);
 extern void func_ov030_021141a8(void *self, int a);
 extern void func_ov030_02112094(void *self);
 }
@@ -42,8 +42,8 @@ int Ukiki::InitResources()
         return 0;
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(((char *)this) + 0xd4, data_ov030_02115cf0[1], 0, 0x1000, 0);
     mModelAnim.speed = 0x1000;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char *)this) + 0x160, ((char *)this), 0x28000, 0x64000, 0x800004, 0x49000);
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x194, ((char *)this), 0x32000, 0x32000, 0, 0);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x160, ((char *)this), 0x28000, 0x64000, 0x800004, 0x49000);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x194, ((char *)this), 0x32000, 0x32000, 0, 0);
     unk_09c = -0x2000;
     unk_0a0 = -0x3c000;
     py = (int *)(((int)((char *)this) + 0x384));
@@ -66,13 +66,13 @@ int Ukiki::InitResources()
         b = 1;
     if (b != 0) {
         if (_ZN8SaveData16HasPlayerLostCapEv() != 0) {
-            char *player = _ZN5Actor13ClosestPlayerEv(((char *)this));
+            char *player = _ZN8dActor_c13ClosestPlayerEv(((char *)this));
             if (*(u32 *)(player + 8) >= 3)
                 goto ov030_no_spawn;
             {
                 char *spawned;
                 unk_3b0 = *(u32 *)(player + 8);
-                spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (unk_3b0 << 8) | 2, ((char *)this) + 0x5c, 0, mAreaId, -1);
+                spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, (unk_3b0 << 8) | 2, ((char *)this) + 0x5c, 0, mAreaId, -1);
                 unk_3ac = *(int *)(spawned + 4);
                 unk_3c8 = 1;
                 func_ov030_021141a8(((char *)this), 1);

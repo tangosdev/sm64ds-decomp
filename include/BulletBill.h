@@ -5,7 +5,7 @@
 
 /* Five boundaries close on sizes other headers assert:
  *
- *     Enemy                     ends 0x110
+ *     dEnemyBase_c                     ends 0x110
  *     MovingCylinderClsnWithPos 0x110 + 0x040 = 0x150  -> WithMeshClsn
  *     WithMeshClsn              0x150 + 0x1bc = 0x30c  -> the first Model
  *     Model                     0x30c + 0x050 = 0x35c  -> the second
@@ -21,13 +21,13 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 #include "MovingCylinderClsnWithPos.h"
 
-struct BulletBill : Enemy {
+struct BulletBill : dEnemyBase_c {
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
     WithMeshClsn mWithMeshClsn;                            /* 0x150 */
     Model mModel1;                                         /* 0x30c */
@@ -55,7 +55,7 @@ struct BulletBill {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0xc];
-    /* 0x074..0x08c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x074..0x08c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     /* The X of the camera-space triple, not a scalar: Behavior takes
        `(Vector3*)(c + 0x74)` twice -- once as the sound's position and once as

@@ -31,7 +31,7 @@ extern u8 data_0209f20c;
 extern void _ZN5Sound21ResetPlayerVoiceGroupEv(void);
 extern void EndKuppaScript(void);
 extern void _ZN6Memory16operator_delete2EPv(void *);
-extern void _ZN5Scene20SetAndStopColorFaderEv(void);
+extern void _ZN8dScene_c20SetAndStopColorFaderEv(void);
 extern void func_02073244(void *, int, int, void (*)(void *));
 extern void _ZN9FaderWipeD1Ev(void *);
 extern void CleanCommonModelDataArr(void);
@@ -94,7 +94,7 @@ int Stage::CleanupResources()
 
     data_0209f320 = 0;
     data_0209f314 = 0;
-    _ZN5Scene20SetAndStopColorFaderEv();
+    _ZN8dScene_c20SetAndStopColorFaderEv();
     data_0209d4b0 = 0;
     func_02073244(data_0209f324, 0x60, 8, _ZN9FaderWipeD1Ev);
     data_0209f324 = 0;

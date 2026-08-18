@@ -14,7 +14,7 @@
  *   _ZTS11daDsnBase_c  ov025 0x02113804   "11daDsnBase_c"
  *   vtable             ov091 0x021351fc, 32 slots, same count as the base
  *   kind               __si_class_type_info, ONE base, subobject offset 0
- *   base               dBgActor_c, ov002 0x021089ec -- the tree's Platform
+ *   base               dBgActor_c, ov002 0x021089ec -- the tree's dBgActor_c
  *
  * SO IT IS PLATFORM-FAMILY AFTER ALL, by base chain: the same dBgActor_c the
  * other ten sit on, not a family of its own. Two things make it read differently.
@@ -74,18 +74,18 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "TextureSequence.h"
 #include "ShadowModel.h"
 
-struct daDsnBase_c : Platform {
+struct daDsnBase_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
     s32 mFileTable;                     /* 0x320 - a void** in practice */
     TextureSequence mTextureSequence;   /* 0x324 */
     ShadowModel mShadowModel;           /* 0x338 */
 
     /* --- vtable --- */
-    /* INLINE ON PURPOSE, for the reason include/Platform.h gives for its own:
+    /* INLINE ON PURPOSE, for the reason include/dBgActor_c.h gives for its own:
        every descendant's destructor inlines this body rather than calling
        _ZN11daDsnBase_cD1Ev (which does exist out of line, at ov091 0x02132d6c,
        still under its func_ov091_ name). An out-of-line declaration here would

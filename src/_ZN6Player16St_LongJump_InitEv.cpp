@@ -45,7 +45,7 @@ int Player::St_LongJump_Init()
     if (mHorzSpeed >= 0x3c000) {
         mHorzSpeed = 0x3c000;
     }
-    /* mCamSpacePosX/Y/Z are three consecutive words; Actor.h declares them
+    /* mCamSpacePosX/Y/Z are three consecutive words; dActor_c.h declares them
        individually rather than as one Vector3. */
     if (mIsMetal == 0) {
         _ZN5Sound9PlayBank0EjRK7Vector3((u32)mGroundSoundType + 0x30, *(const Vector3*)&mCamSpacePosX);

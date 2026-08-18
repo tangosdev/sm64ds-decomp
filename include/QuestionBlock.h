@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
- * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -15,11 +15,11 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 
-struct QuestionBlock : Platform {
+struct QuestionBlock : dBgActor_c {
     u8  pad_31e[0x2];
     ModelAnim mModelAnim;             /* 0x320 */
     ShadowModel mShadowModel;         /* 0x384 */
@@ -31,7 +31,12 @@ struct QuestionBlock : Platform {
     u8  pad_3ec[0x4];
     u8 unk_3f0;                       /* 0x3f0 */
     u8 unk_3f1;                       /* 0x3f1 */
-    u8  pad_3f2[0x1];
+    /* Written (truncated from the caller's u32 param1/actorID-ish word) by
+       every one of this class's five combat-callback overrides below, always
+       immediately before func_ov102_02149da8(this, 1) -- a state-machine
+       dispatch through data_ov102_0214e890 keyed on unk_3e8. Was a u8
+       marker. */
+    u8 unk_3f2;                       /* 0x3f2 */
     u8 unk_3f3;                       /* 0x3f3 */
 
     /* --- vtable --- */
@@ -40,9 +45,35 @@ struct QuestionBlock : Platform {
     int Behavior();
     int CleanupResources();
     int Render();
+
+    /* Slots 21/22/24/27/28, all dActor_c combat-callback overrides (see
+       include/dActor_c.h). Attributed by the vtable, not by the
+       pre-migration `recovered name:` comments. None is the key function:
+       ~QuestionBlock() above stays the first out-of-line virtual, so none of
+       these five TUs newly emits _ZTV13QuestionBlock -- checked with
+       objisolate, not assumed.
+
+       OnKicked, OnGroundPounded and OnHitByMegaChar return `void`, matching
+       include/dActor_c.h's slots 24, 21 and 27 (corrected from `int` by
+       BigBrickBlock::OnKicked and Stump::OnGroundPounded/OnHitByMegaChar
+       respectively -- see include/BigBrickBlock.h, include/Stump.h and
+       src/_ZN8dActor_c8OnKickedERS_.cpp for the falsifying evidence; this
+       class's own overrides happened to byte-match under the old `int` too,
+       re-verified rather than assumed). The other two stay `int`, dActor_c's
+       own declared type for their slots. */
+    void OnGroundPounded(dActor_c &other);     /* slot 21 */
+    int OnAttacked1(dActor_c &other);          /* slot 22 */
+    void OnKicked(dActor_c &other);            /* slot 24 */
+    void OnHitByMegaChar(Player &player);      /* slot 27 */
+    int OnHitFromUnderneath(dActor_c &other);  /* slot 28 */
+
+    /* Tail padding. The field span stops short of the real size: CapBlockLuigi_Spawn and CapBlockMario_Spawn
+       call fBase_c::operator new(0x3f8), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_3f4[0x4];      /* 0x3f4, to the ROM's 0x3f8 */
 };
 
-typedef char QuestionBlock_size_must_be_0x3f4[sizeof(QuestionBlock) == 0x3f4 ? 1 : -1];
+typedef char QuestionBlock_size_must_be_0x3f8[sizeof(QuestionBlock) == 0x3f8 ? 1 : -1];
 
 #else
 

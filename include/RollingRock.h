@@ -3,9 +3,9 @@
 
 #include "types.h"
 
-/* Derives from Enemy, on the evidence of its own destructor: `_ZN11RollingRockD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN11RollingRockD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
- * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
  *
  * The members close exactly on one another:
@@ -19,12 +19,12 @@
  * also rename things its callers spell.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `RollingRock_Spawn` calls
- * `ActorBase::operator new(968)` -- 0x3c8 -- and stores `_ZTV11RollingRock`,
+ * `fBase_c::operator new(968)` -- 0x3c8 -- and stores `_ZTV11RollingRock`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3c4; the difference is trailing space no source reads.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
@@ -33,7 +33,7 @@
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
 
-struct RollingRock : Enemy {
+struct RollingRock : dEnemyBase_c {
     Model                        mModel;                /* 0x110 */
     ShadowModel                  mShadowModel;          /* 0x160 */
     u8  pad_188[0x30];

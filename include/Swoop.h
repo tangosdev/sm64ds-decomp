@@ -3,12 +3,12 @@
 
 #include "types.h"
 
-/* Derives from Enemy, on the evidence of its own destructor: `_ZN5SwoopD1Ev`
- * stores this vtable, destroys five members, then calls `Enemy::~Enemy`.
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN5SwoopD1Ev`
+ * stores this vtable, destroys five members, then calls `dEnemyBase_c::~dEnemyBase_c`.
  * Everything this header used to restate below 0x110 belongs to that chain and
  * is inherited now.
  *
- * The five members close exactly on one another, and Enemy's own 0x110 closes
+ * The five members close exactly on one another, and dEnemyBase_c's own 0x110 closes
  * exactly on the first. The destructor destroys TWO ModelAnims, which is what
  * makes the pair at 0x300 and 0x364 two members rather than one and a gap:
  *
@@ -27,13 +27,13 @@
  * is not independent evidence about the ROM.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct Swoop : Enemy {
+struct Swoop : dEnemyBase_c {
     /* What mCurrentState points at. Behavior compares it against objects in
        ov065's data and calls the handler at +0x08 through it. Only that
        handler is evidenced. */
@@ -62,6 +62,7 @@ struct Swoop : Enemy {
     virtual ~Swoop();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

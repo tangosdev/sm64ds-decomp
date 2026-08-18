@@ -8,12 +8,12 @@
 extern short data_02082214[];
 
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN6Player12Unk_020c6a10Ej(char *p, unsigned int a);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char *p, const struct Vector3 *v, unsigned int a, int b, unsigned int c, unsigned int d, unsigned int e);
 extern s16 Vec3_HorzAngle(const struct Vector3 *v0, const struct Vector3 *v1);
 extern void func_02012694(unsigned int a, void *b);
-extern char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const struct Vector3 *, const void *, int, int);
+extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const struct Vector3 *, const void *, int, int);
 
 void func_ov074_02120d74(char *a)
 {
@@ -49,7 +49,7 @@ void func_ov074_02120d74(char *a)
     do {
         cur = p;
         if (*(u32 *)(cur + 0x24) != 0)
-            player = _ZN5Actor10FindWithIDEj(*(u32 *)(cur + 0x24));
+            player = _ZN8dActor_c10FindWithIDEj(*(u32 *)(cur + 0x24));
         if (player != 0)
             break;
         i++;
@@ -121,12 +121,12 @@ void func_ov074_02120d74(char *a)
                                 v0.x = *(int *)(a + 0x5c);
                                 v0.y = *(int *)(a + 0x60);
                                 v0.z = *(int *)(a + 0x64);
-                                if (*(u32 *)(a + 0x5dc) == 0 && _ZN5Actor10FindWithIDEj(*(u32 *)(a + 0x5dc)) == 0) {
+                                if (*(u32 *)(a + 0x5dc) == 0 && _ZN8dActor_c10FindWithIDEj(*(u32 *)(a + 0x5dc)) == 0) {
                                     int k = ((u16)(s16)(*(int *)(a + 0x5f0) * ((s16)((*(int *)(a + 0x80) / 0x1000) * 0x350 + 0x500) + 0x600) + (*(s16 *)(a + 0x5f4) + *(s16 *)(a + 0x5f8)))) >> 4;
                                     v0.x = (int)(((long long)data_02082214[k * 2] * 0x546000LL + 0x800) >> 12);
                                     v0.y += 0x32000;
                                     v0.z = (int)(((long long)data_02082214[k * 2 + 1] * 0x546000LL + 0x800) >> 12);
-                                    *(int *)(a + 0x5dc) = *(int *)(_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0x115, 0, &v0, 0, *(s8 *)(a + 0xcc), -1) + 4);
+                                    *(int *)(a + 0x5dc) = *(int *)(_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x115, 0, &v0, 0, *(s8 *)(a + 0xcc), -1) + 4);
                                 }
                             }
                         }

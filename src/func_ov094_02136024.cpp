@@ -2,7 +2,7 @@
 extern "C" {
 typedef struct { int x, y, z; } Vec3;
 typedef struct PMF PMF;
-char* _ZN5Actor13ClosestPlayerEv(void);
+char* _ZN8dActor_c13ClosestPlayerEv(void);
 void Vec3_Sub(Vec3* out, Vec3* a, Vec3* b);
 int LenVec3(Vec3* v);
 void Matrix4x3_FromRotationY(void* m, int angle);
@@ -14,7 +14,7 @@ extern PMF data_ov094_02136b60;
 #define LA(p) ((char*)(unsigned)((unsigned)(p)))
 
 int func_ov094_02136024(char* c){
-  char* p = _ZN5Actor13ClosestPlayerEv();
+  char* p = _ZN8dActor_c13ClosestPlayerEv();
   if (p != 0 && *(int*)(p+0x37c) != 0) {
     char* ip = LA(p + 0x5c);
     Vec3 pp;

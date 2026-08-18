@@ -7,7 +7,7 @@ extern void func_0200897c(void *self, void *arg);
 extern int func_020092c4(int arg0, Vector3 *out, Vector3 *target);
 
 extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, const Vector3 *pos, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, const Vector3 *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void _ZN13RaycastGroundD1Ev(void *self);
 
@@ -66,7 +66,7 @@ void func_0200b590(char *c, short *a1, int arg2)
 
     _ZN13RaycastGroundC1Ev(rg);
     func_0200897c(c, rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &pos, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, 0);
     if (_ZN13RaycastGround10DetectClsnEv(rg)) {
         hitY = *(int *)(rg + 0x44);
         rotated.y = hitY;

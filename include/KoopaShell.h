@@ -5,7 +5,7 @@
 
 /* Six boundaries close on sizes other headers assert:
  *
- *     Enemy              ends 0x110
+ *     dEnemyBase_c              ends 0x110
  *     MovingCylinderClsn 0x110 + 0x034 = 0x144  -> WithMeshClsn
  *     WithMeshClsn       0x144 + 0x1bc = 0x300  -> Model
  *     Model              0x300 + 0x050 = 0x350  -> ShadowModel
@@ -17,13 +17,13 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 #include "MovingCylinderClsn.h"
 
-struct KoopaShell : Enemy {
+struct KoopaShell : dEnemyBase_c {
     MovingCylinderClsn mCylinderClsn;        /* 0x110 */
     WithMeshClsn mMeshClsn;                  /* 0x144 */
     Model mModel;                            /* 0x300 */

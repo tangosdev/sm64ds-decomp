@@ -16,7 +16,7 @@ int *_ZN7TornadoD0Ev(int *t)
     _ZN9ModelAnimD1Ev((char *)t + 0x2c4);
     _ZN12WithMeshClsnD1Ev((char *)t + 0x108);
     _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

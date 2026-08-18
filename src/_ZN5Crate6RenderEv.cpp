@@ -15,7 +15,7 @@ int Crate::Render()
 {
   if(unk_560 == 6) return 1;
   {
-    int b = (int)((unk_0b0 & 0x40000) != 0);
+    int b = (int)((mFlags & 0x40000) != 0);
     if(b) return 1;
   }
   Sub* o = (Sub*)((char*)&mModel);

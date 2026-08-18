@@ -8,21 +8,27 @@ each edge, what makes it true.
 Three evidence tiers, and the distinction is the whole point:
 
     PROVEN       the ROM's type_info record holds a pointer to the base's record.
-                 Read, not inferred.  405 edges + 24 records the ROM calls roots.
+                 Read, not inferred.
     INFERRED     no type_info record exists (the class is not polymorphic, or its
                  vtable was never emitted), and the base comes from
-                 evidence_hierarchy.py reading ctor/dtor vptr chains.  58 classes.
+                 evidence_hierarchy.py reading ctor/dtor vptr chains.
     CONTRADICTED the repo's own header names a class that IS on the ROM's ancestor
-                 chain but is not the immediate base.  24 classes, all in the
-                 Platform family, and rtti_reconcile.py calls this `flattened`.
+                 chain but is not the immediate base -- rtti_reconcile.py calls this
+                 `flattened`.  Currently EMPTY, and §5 has a zero case that says so
+                 in words; do not assume a count here is non-zero.
+
+No tier count is written down in this file on purpose.  They move every time headers
+land, and a stale number in a docstring is how a reader ends up trusting a page that
+disagrees with it.  Run `--check` to print the live ones.
 
 Nothing on the page is typed by hand except the glosses, which come from
 config/rom-name-glossary.json and carry their own confidence.  Every count, edge and
-offset is joined at generation time from:
+offset is joined at generation time.  The inputs MUST be regenerated in this order,
+because each reads the ones above it and load() now refuses a build that was not:
 
     build/rtti.json                  tools/rtti_extract.py  (gated with --check)
-    build/rtti_reconcile.json        tools/rtti_reconcile.py
     build/evidence_hierarchy.json    tools/evidence_hierarchy.py
+    build/rtti_reconcile.json        tools/rtti_reconcile.py
     build/tu_names.json              tools/tu_names.py       (optional)
 
 Usage:
@@ -53,12 +59,51 @@ E = html.escape
 # data
 # --------------------------------------------------------------------------
 
+# build/ dependency order.  Each generator READS the ones above it, so a file older
+# than an input was produced from a state that no longer exists.
+#
+#   rtti.json                rtti_extract.py        <- the ROM
+#   evidence_hierarchy.json  evidence_hierarchy.py  <- include/, src/, rtti.json
+#   rtti_reconcile.json      rtti_reconcile.py      <- rtti.json, evidence_hierarchy.json
+#
+# This is checked because getting it wrong is silent and convincing.  Running
+# rtti_reconcile BEFORE evidence_hierarchy joins fresh ROM records against a stale
+# hierarchy and produces a §5 full of CONTRADICTED rows -- rows that accuse headers
+# which, read on disk, name exactly the base the ROM names.  The page renders it as
+# "where the repo's headers are wrong" and every count on it is internally consistent.
+# The old --check passed on that state, because it only asked whether the files parse.
+STAGES = [("rtti.json", RTTI, "rtti_extract.py"),
+          ("evidence_hierarchy.json", EVIDENCE, "evidence_hierarchy.py"),
+          ("rtti_reconcile.json", RECONCILE, "rtti_reconcile.py")]
+
+
+def check_order():
+    """Names of the stages that are older than something they were built from."""
+    stale = []
+    for i, (name, path, gen) in enumerate(STAGES):
+        newer = [STAGES[j][0] for j in range(i)
+                 if STAGES[j][1].stat().st_mtime > path.stat().st_mtime]
+        if newer:
+            stale.append((name, gen, newer))
+    return stale
+
+
 def load():
     missing = [p for p in (RTTI, RECONCILE, EVIDENCE) if not p.is_file()]
     if missing:
-        sys.exit("missing: %s\nrun rtti_extract.py, rtti_reconcile.py, "
-                 "evidence_hierarchy.py first"
+        sys.exit("missing: %s\nrun rtti_extract.py, evidence_hierarchy.py, "
+                 "rtti_reconcile.py first (in that order)"
                  % ", ".join(str(p.relative_to(REPO)) for p in missing))
+    stale = check_order()
+    if stale:
+        sys.exit("\n".join(
+            ["stale inputs -- these were built before something they read:"]
+            + ["  %s is older than %s; re-run tools/%s"
+               % (name, ", ".join(newer), gen) for name, gen, newer in stale]
+            + ["", "The generators must run in dependency order:",
+               "  python tools/rtti_extract.py --check",
+               "  python tools/evidence_hierarchy.py",
+               "  python tools/rtti_reconcile.py"]))
     d = {
         "rtti": json.loads(RTTI.read_text(encoding="utf-8")),
         "rec": json.loads(RECONCILE.read_text(encoding="utf-8")),
@@ -350,6 +395,11 @@ def build(d):
     st = rec["stats"]
     n_edges = len(d["rtti"]["edges"])
     n_rec = len(g.name)
+    n_unresolved = len(d["rtti"]["unresolved"])
+    # Joined, not typed.  This was hardcoded as 183 and the true figure had reached 293
+    # -- on a page whose footer says nothing on it is typed by hand.
+    n_cross = sum(1 for e in d["rtti"]["edges"]
+                  if g.module[e["derived_key"]] != g.module[e["base_key"]])
 
     H = []
     A = H.append
@@ -393,7 +443,8 @@ def build(d):
         ("Proven", "%d edges" % n_edges,
          "The class's <code>type_info</code> record holds a pointer to its base's "
          "record. The compiler wrote it; this is read, not inferred.",
-         "Only if the pointer was misread. 0 of %d are unresolved." % n_edges),
+         "Only if the pointer was misread. %d of %d are unresolved."
+         % (n_unresolved, n_edges)),
         ("Proven root", "%d classes" % len(g.roots),
          "A <code>__class_type_info</code> record — the ABI's own encoding for "
          "“no base”.",
@@ -414,9 +465,12 @@ def build(d):
           "<td>%s</td></tr>" % (E(tier), E(cnt), how, wrong))
     A("</tbody></table></div>")
     A('<div class="note">The ROM stores %d type_info records and %d base pointers, '
-      "and <strong>every one of those pointers resolves</strong> — 183 of them across "
-      "an overlay boundary. Where this page is silent it is because the ROM is "
-      "silent, not because the reading was hard.</div>" % (n_rec, n_edges))
+      "and <strong>%s</strong> — %d of them across an overlay boundary. Where this "
+      "page is silent it is because the ROM is silent, not because the reading was "
+      "hard.</div>"
+      % (n_rec, n_edges,
+         "every one of those pointers resolves" if not n_unresolved
+         else "%d of those pointers do not resolve" % n_unresolved, n_cross))
 
     # ---- §2 spine
     A('</section><section><div class="sec-h"><span class="sec-n">§2</span>'
@@ -491,30 +545,61 @@ def build(d):
       % mi_diagram(g))
 
     # ---- §5 contradicted
+    #
+    # This section has a zero case and it is not cosmetic.  The prose used to assume a
+    # non-zero count unconditionally and degenerated into "Those 0 rows collapse to 0
+    # missing intermediate classes, not 0 separate mistakes: . Modelling those 0 is the
+    # single highest-yield correction available to the hierarchy" -- a dangling list and
+    # a recommendation to do nothing, rendered with total confidence.  An empty finding
+    # is a result, so it gets written as one.
     A('</section><section><div class="sec-h"><span class="sec-n">§5</span>'
       "<h2>Where the repo's headers are wrong</h2></div>")
-    A("<p>%d classes have a header naming a base that is a genuine ancestor but not "
-      "the immediate one — the chain was flattened. Every one is in the Platform "
-      "family, and each names an intermediate class the repo has never modelled. "
-      "There are no outright contradictions: not one header names a class that is "
-      "absent from the ROM's ancestor chain.</p>" % len(contra))
-    A('<div class="scroll"><table><thead><tr><th>Class (ROM)</th>'
-      "<th>Repo calls it</th><th>Repo's base</th><th>Actual base</th>"
-      "</tr></thead><tbody>")
-    for r in sorted(by_verdict["flattened"], key=lambda x: x["rom_bases"][0]):
-        A('<tr><td class="m">%s</td><td class="m">%s</td>'
-          '<td class="m" style="color:var(--contra)">%s</td>'
-          '<td class="m" style="color:var(--proven)">%s</td></tr>'
-          % (E(r["rom_name"]), E(r["tree_name"] or "—"), E(r["tree_base"] or "—"),
-             E(", ".join(r["rom_bases"]))))
-    A("</tbody></table></div>")
-    inter = collections.Counter(r["rom_bases"][0] for r in by_verdict["flattened"])
-    A('<div class="note">Those %d rows collapse to <strong>%d missing intermediate '
-      "classes</strong>, not %d separate mistakes: %s. Modelling those %d is the "
-      "single highest-yield correction available to the hierarchy.</div>"
-      % (len(contra), len(inter), len(contra),
-         ", ".join("<code>%s</code> (%d)" % (E(k), v) for k, v in inter.most_common()),
-         len(inter)))
+    if not contra:
+        # Joined, like everything else: how many agreements rest on a hand-written base
+        # clause rather than on a belief the ROM itself supplied.
+        by_hand = sum(1 for r in rows
+                      if r["verdict"].startswith("agree")
+                      and "reference_header" in (r["tree_sources"] or []))
+        A("<p><strong>Nowhere.</strong> Every class the repo both names and holds a "
+          "belief about names the <em>immediate</em> base the ROM records. Not one "
+          "header names a class absent from the ROM's ancestor chain, and — the "
+          "weaker failure this section was built to catch — not one names a genuine "
+          "ancestor further up the chain than the real parent.</p>")
+        A("<p>The chain-flattening this section reports comes from modelling a class's "
+          "grandparent as its parent, which happens when the intermediate has no "
+          "header and the evidence for the edge is a destructor vptr store that skips "
+          "it. It is therefore retired by writing the intermediate down, not by "
+          "correcting the children.</p>")
+        A('<div class="note">Empty because the finding was acted on, not because the '
+          "test was relaxed: the same comparison still runs against all %d records. "
+          "%d of them are parented by a hand-written <code>struct D : B</code> in a "
+          "de-bannered header rather than by a base pointer the ROM supplied, and "
+          "those are the only rows that <em>can</em> disagree with the ROM. None "
+          "does.</div>" % (n_rec, by_hand))
+    else:
+        A("<p>%d classes have a header naming a base that is a genuine ancestor but "
+          "not the immediate one — the chain was flattened. Each names an "
+          "intermediate class the repo has never modelled. There are no outright "
+          "contradictions: not one header names a class that is absent from the ROM's "
+          "ancestor chain.</p>" % len(contra))
+        A('<div class="scroll"><table><thead><tr><th>Class (ROM)</th>'
+          "<th>Repo calls it</th><th>Repo's base</th><th>Actual base</th>"
+          "</tr></thead><tbody>")
+        for r in sorted(by_verdict["flattened"], key=lambda x: x["rom_bases"][0]):
+            A('<tr><td class="m">%s</td><td class="m">%s</td>'
+              '<td class="m" style="color:var(--contra)">%s</td>'
+              '<td class="m" style="color:var(--proven)">%s</td></tr>'
+              % (E(r["rom_name"]), E(r["tree_name"] or "—"), E(r["tree_base"] or "—"),
+                 E(", ".join(r["rom_bases"]))))
+        A("</tbody></table></div>")
+        inter = collections.Counter(r["rom_bases"][0] for r in by_verdict["flattened"])
+        A('<div class="note">Those %d rows collapse to <strong>%d missing intermediate '
+          "class%s</strong>, not %d separate mistakes: %s. Modelling %s is the single "
+          "highest-yield correction available to the hierarchy.</div>"
+          % (len(contra), len(inter), "" if len(inter) == 1 else "es", len(contra),
+             ", ".join("<code>%s</code> (%d)" % (E(k), v)
+                       for k, v in inter.most_common()),
+             "it" if len(inter) == 1 else "those %d" % len(inter)))
 
     # ---- §6 unproven
     A('</section><section><div class="sec-h"><span class="sec-n">§6</span>'
@@ -590,6 +675,8 @@ def main():
     print("tree-only classes %d, flattened %d"
           % (len(d["rec"]["tree_only_classes"]),
              sum(1 for r in d["rec"]["rows"] if r["verdict"] == "flattened")))
+    print("inputs in dependency order: %s"
+          % " -> ".join(n for n, _p, _g in STAGES))
     if a.check:
         print("CHECK OK")
         return 0

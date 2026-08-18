@@ -12,7 +12,7 @@
 
 struct FlameChomp {
     u8  pad_000[0x5c];
-    /* Actor::mPosX -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPosX -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
     s32 unk_05c;            /* 0x05c */
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x1c];

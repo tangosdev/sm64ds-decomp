@@ -113,7 +113,7 @@ void _ZN9FaderWipeC1Ev(void *thiz);
 void _ZN9FaderWipeD1Ev(void *thiz);
 
 void _ZN5Sound6Player19SetPlayableSeqCountEii(int a, int b);
-void _ZN5Scene20Initialise3dGraphicsEv(void);
+void _ZN8dScene_c20Initialise3dGraphicsEv(void);
 void *_ZN4Heap10SetDefaultEv(void *self);
 void _ZN2GX15DisableAllBanksEv(void);
 void _ZN5Stage12SetVramBanksEv(void);
@@ -148,7 +148,7 @@ int Stage::InitResources()
             int n = 3;
             _ZN5Sound6Player19SetPlayableSeqCountEii(n, n);
         }
-        _ZN5Scene20Initialise3dGraphicsEv();
+        _ZN8dScene_c20Initialise3dGraphicsEv();
         Enable3dEngines();
         data_0209f21c = data_0208a0e0;
         data_0209f250 = (u8)func_0203da9c();

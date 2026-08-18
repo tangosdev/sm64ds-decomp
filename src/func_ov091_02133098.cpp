@@ -3,7 +3,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void* a, void* sm, void* mtx, int f, int t1, int t2, unsigned int x);
 
 void func_ov091_02133098(void* c){
@@ -28,7 +28,7 @@ void func_ov091_02133098(void* c){
   *(int*)(r+0x384) = *(int*)(r+0x5c) >> 3;
   *(int*)(r+0x388) = (*(int*)(r+0x60) - off) >> 3;
   *(int*)(r+0x38c) = *(int*)(r+0x64) >> 3;
-  _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+  _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
       r, r+0x338, r+0x360, v1, d + 0x28000, v2, 0xf);
 }
 }

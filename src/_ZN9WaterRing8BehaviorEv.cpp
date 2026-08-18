@@ -6,7 +6,7 @@
 #include "WaterRing.h"
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char* self, char* cc);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char* self, char* cc);
 extern void _ZN12CylinderClsn5ClearEv(char* c);
 extern void _ZN12CylinderClsn6UpdateEv(char* c);
 extern void _ZN9Animation7AdvanceEv(char* c);
@@ -23,7 +23,7 @@ int WaterRing::Behavior()
     C* c = (C*)((char*)this);
     (c->**p)();
   }
-  _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
+  _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
   mAngleX = mPrevAngleX;
   mAngleY = mPrevAngleY;
   mAngleZ = mPrevAngleZ;

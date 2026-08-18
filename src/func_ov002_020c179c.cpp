@@ -7,7 +7,7 @@
 
 extern "C" {
 extern void _ZN13RaycastGroundC1Ev(void* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, void* pos, void* act);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* pos, void* act);
 extern int _ZN13RaycastGround10DetectClsnEv(void* self);
 extern void _ZN13RaycastGroundD1Ev(void* self);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
@@ -34,7 +34,7 @@ int func_ov002_020c179c(char* self, int angle) {
         v1.y = y;
         v1.z = z;
     }
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &v1, self);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &v1, self);
     if (_ZN13RaycastGround10DetectClsnEv(rg)) y1 = *(int*)(rg + 0x44);
     {
         int z = *(int*)(self + 0x64) - oy;
@@ -44,7 +44,7 @@ int func_ov002_020c179c(char* self, int angle) {
         v2.y = y;
         v2.z = z;
     }
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &v2, self);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &v2, self);
     if (_ZN13RaycastGround10DetectClsnEv(rg)) y2 = *(int*)(rg + 0x44);
     {
         int r = _ZN4cstd5atan2E5Fix12IiES1_(y1 - y2, 0xa000);

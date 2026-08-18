@@ -9,9 +9,9 @@ extern int _ZTV21ClockPaintingPendulum[];
 /* vtable identified: VT0 = _ZTV21ClockPaintingPendulum */
 int *ClockPaintingPendulum_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(296);
+    int *p = (int *)_ZN7fBase_cnwEj(296);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV21ClockPaintingPendulum;
         _ZN5ModelC1Ev((char *)p + 0xd4);
     }

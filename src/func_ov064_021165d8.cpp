@@ -1,11 +1,11 @@
 //cpp
 extern "C" {
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
-int _ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, void* wm, int fix12, short s, int b1, int b2, int t);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, void* wm, int fix12, short s, int b1, int b2, int t);
 int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix12, unsigned int j);
-void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* self, void* wm, unsigned int j);
+void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, void* wm, unsigned int j);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
-int _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, int fix12);
+int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, int fix12);
 void func_ov064_02116220(char* c);
 }
 
@@ -23,9 +23,9 @@ struct Base {
 
 extern "C" void func_ov064_021165d8(unsigned char* c)
 {
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
 
-    if (_ZN5Enemy15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
+    if (_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
             c, c + 0x174,
             *(int*)(*(int*)(c + 0x330) + 0x2c),
             0x2888, 0, 1, 0x32000) != 0
@@ -40,10 +40,10 @@ extern "C" void func_ov064_021165d8(unsigned char* c)
             0, 0x1000, 0);
     }
 
-    _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, c + 0x174, 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, c + 0x174, 0);
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x174) != 0
-        && _ZN5Actor22IsTooFarAwayFromPlayerE5Fix12IiE(c, 0x5dc000) != 0) {
+        && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(c, 0x5dc000) != 0) {
         *(int*)(((int)c + 0xb0)) |= 1;
     } else {
         *(int*)(((int)c + 0xb0)) &= ~1;

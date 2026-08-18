@@ -20,10 +20,10 @@
 extern "C" {
 #endif
 
-extern int _ZN5Enemy27SpawnParticlesIfHitOtherObjER12CylinderClsn(void*, void*);
-extern void _ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player(void*, Vector3_16*, void*, int);
-extern void _ZN5Enemy22SpawnMegaCharParticlesER5ActorPc(void*, void*, char*);
-extern void _ZN5EnemyC2Ev(void*);
+extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(void*, void*);
+extern void _ZN12dEnemyBase_c20KillByInvincibleCharERK10Vector3_16R6Player(void*, Vector3_16*, void*, int);
+extern void _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(void*, void*, char*);
+extern void _ZN12dEnemyBase_cC2Ev(void*);
 
 
 #ifdef __cplusplus

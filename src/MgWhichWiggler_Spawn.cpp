@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void *_ZN9ActorBasenwEj(unsigned int sz);
+extern void *_ZN7fBase_cnwEj(unsigned int sz);
 extern int func_ov004_020b2adc(void *p);
 extern void func_020733a8(void *obj, int a, int b, void *cb1, void *cb2);
 extern int data_ov006_0213cab8[];
@@ -8,7 +8,7 @@ extern void func_ov006_020ede80(void *);
 extern void func_ov006_020ea324(void *);
 void *MgWhichWiggler_Spawn(void);
 void *MgWhichWiggler_Spawn(void) {
-    char *o = (char *)_ZN9ActorBasenwEj(0x4f68);
+    char *o = (char *)_ZN7fBase_cnwEj(0x4f68);
     if (o != 0) {
         func_ov004_020b2adc(o);
         *(int *)o = (int)data_ov006_0213cab8;

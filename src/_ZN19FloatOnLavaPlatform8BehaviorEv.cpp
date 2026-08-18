@@ -4,7 +4,10 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "FloatOnLavaPlatform.h"
-extern void func_020393a4(int* p, int v);
+extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
+extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
+extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
+extern "C" void func_020393a4(int* p, int v);
 
 int FloatOnLavaPlatform::Behavior()
 {
@@ -21,9 +24,9 @@ int FloatOnLavaPlatform::Behavior()
         int lim = unk_320;
         if (mPosY > lim) mPosY = lim;
     }
-    Platform_UpdateModelPosAndRotY(((char*)this));
-    if (Platform_IsClsnInRange(((char*)this), 0, 0)) {
-        Platform_UpdateClsnPosAndRot(((char*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0)) {
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     }
     return 1;
 }

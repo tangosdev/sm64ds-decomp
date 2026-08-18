@@ -6,7 +6,7 @@
 /* The Goomboss. Its destructor is the layout, and eight boundaries close on
  * sizes other headers assert:
  *
- *     Enemy                        ends 0x110
+ *     dEnemyBase_c                        ends 0x110
  *     MovingCylinderClsnWithPos[4] 0x110 + 4*0x40 = 0x210  -> ModelAnim
  *     ModelAnim                    0x210 +   0x64 = 0x274  -> the shadows
  *     ShadowModel[3]               0x274 + 3*0x28 = 0x2ec
@@ -25,7 +25,7 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 #include "MaterialChanger.h"
@@ -34,7 +34,7 @@
 #include "WithMeshClsn.h"
 #include "MovingCylinderClsnWithPos.h"
 
-struct Goomboss : Enemy {
+struct Goomboss : dEnemyBase_c {
     MovingCylinderClsnWithPos mCylinderClsns[4];  /* 0x110 */
     ModelAnim mModelAnim;                         /* 0x210 */
     ShadowModel mShadowModels[3];                 /* 0x274 */
@@ -65,6 +65,11 @@ struct Goomboss : Enemy {
     u8  mSizeIndex;            /* 0x604 */
     u8  pad_605[0x5];
     u8  unk_60a;            /* 0x60a */
+    /* The field span ends at 0x60b, but a span is only a LOWER BOUND. Both factories
+       that store _ZTV8Goomboss (ov074:0x02122eb8) -- Goomboss_Spawn and
+       ExplosionGoomba_Spawn -- call fBase_c::operator new(0x610). Two factories
+       building one actor is a spawn-info variant, not a second class. */
+    u8  pad_60b[0x5];       /* 0x60b, to the ROM's 0x610 */
 
     virtual ~Goomboss();
 
@@ -73,7 +78,7 @@ struct Goomboss : Enemy {
     virtual s32 Render();
 };
 
-typedef char Goomboss_size_must_be_0x60c[sizeof(Goomboss) == 0x60c ? 1 : -1];
+typedef char Goomboss_size_must_be_0x610[sizeof(Goomboss) == 0x610 ? 1 : -1];
 
 #else
 
@@ -88,7 +93,7 @@ struct Goomboss {
     u8  pad_068[0x18];
     s32 mScaleX;            /* 0x080 */
     s32 mScaleY;            /* 0x084 */
-    /* 0x088..0x09c is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x088..0x09c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 mScaleZ;                 /* 0x088 */
     s16 mAngleX;                 /* 0x08c */

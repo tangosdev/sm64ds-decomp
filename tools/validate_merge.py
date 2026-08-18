@@ -16,6 +16,7 @@ Example:
       --out build/validate-report.json --markdown build/validate-report.md
 """
 import argparse
+import bisect
 import collections
 import hashlib
 import json
@@ -80,6 +81,63 @@ def _module_from_delinks(path):
     return m.group(1) if m else None
 
 
+_ENROLMENT_CACHE = {}
+
+
+def _rev_enrolment(rev):
+    """``(module -> sorted [addr], (module, addr) -> src path)`` at ``rev``.
+
+    validate_merge's own copy of ``srcpath._enrolment``, and it has to be one: every
+    snapshot here reads git revisions through ``git show``, never the working tree, so
+    the filesystem-backed resolver cannot answer for a base commit. Same rule, same
+    `mods/` exclusion -- an entry outside `src/` is a deliberate divergence from the
+    cartridge and is not the source that reproduces a ROM function.
+
+    Every entry is read, `complete` or not: this answers "which file owns this symbol",
+    which is a different question from "which range does the ROM build compare".
+    """
+    if rev not in _ENROLMENT_CACHE:
+        addrs = {}
+        for path in tree_paths(rev, "config/arm9"):
+            module = _module_from_symbols(path)
+            if module is None:
+                continue
+            rows = []
+            for line in git_text(rev, path).splitlines():
+                m = FUNC_RE.match(line)
+                if m:
+                    rows.append(int(m.group(3), 16))
+            addrs[module] = sorted(rows)
+        owner = {}
+        for path in tree_paths(rev, "config/arm9"):
+            module = _module_from_delinks(path)
+            if module is None:
+                continue
+            module_addrs = addrs.get(module, [])
+            entry = None
+            for line in git_text(rev, path).splitlines():
+                if not line.strip():
+                    continue
+                if not line[0].isspace():
+                    entry = line.strip().rstrip(":")
+                    continue
+                # An indented section line before the first entry is the MODULE's own
+                # header and owns nothing; read as an entry's it would hand the first
+                # file every function in its module.
+                if entry is None or not entry.startswith("src/"):
+                    continue
+                m = RBC.ENTRY_SEC.match(line)
+                if not m:
+                    continue
+                start, end = int(m.group(2), 16), int(m.group(3), 16)
+                i = bisect.bisect_left(module_addrs, start)
+                while i < len(module_addrs) and module_addrs[i] < end:
+                    owner[(module, module_addrs[i])] = entry
+                    i += 1
+        _ENROLMENT_CACHE[rev] = (addrs, owner)
+    return _ENROLMENT_CACHE[rev]
+
+
 def function_snapshot(rev):
     paths = tree_paths(rev)
     sources = {}
@@ -106,6 +164,16 @@ def function_snapshot(rev):
     transcribed = {path for path in dcd_candidates
                    if AP.classify(git_text(rev, path)) == "transcribed"}
 
+    # Which file owns a function has two answers and this needs the authoritative one.
+    # `sources` above is the filename convention -- stem == symbol -- which is right for
+    # 11,289 of the tree's files and blind to every merged translation unit, whose name
+    # is neither of the symbols in it. Blind here does not read as "unknown": it reads as
+    # "no source exists", so the functions leave `matched`, leave the byte-verified
+    # count, and hand their authors' credit to nobody, while the ROM build goes on
+    # compiling and byte-comparing them. The enrolment table is asked first, and it is
+    # the one dsd hands the linker.
+    enrolled = _rev_enrolment(rev)[1]
+    in_tree = set(paths)
     records = {}
     total_bytes = matched_bytes = 0
     for path in paths:
@@ -118,7 +186,8 @@ def function_snapshot(rev):
                 continue
             name, size, addr = m.group(1), int(m.group(2), 16), int(m.group(3), 16)
             key = f"{module}:0x{addr:08x}"
-            src = sources.get(name)
+            owner = enrolled.get((module, addr))
+            src = owner if owner in in_tree else sources.get(name)
             matched = bool(src and src not in nonmatching and src not in transcribed)
             records[key] = {"id": key, "module": module, "addr": addr, "name": name,
                             "size": size, "matched": matched, "srcPath": src}
@@ -153,10 +222,29 @@ def enrollment_snapshot(rev):
                             "kind": "mod" if rel.startswith("mods/") else "src"}
     src = {k: e for k, e in entries.items() if e["kind"] == "src"}
     mods = {k: e for k, e in entries.items() if e["kind"] == "mod"}
+    # FUNCTIONS IN THE RANGES, NOT THE NUMBER OF RANGES. `len(src)` counted delinks
+    # entries and called them functions, which was the same number only while every
+    # entry held exactly one -- true for all 11,170 of them until a translation unit is
+    # promoted. Merging two entries into one covering the identical address span then
+    # reads as `source-built function coverage decreased`, an unconditional failure,
+    # for arithmetic rather than for lost coverage: `sourceBytes` does not move,
+    # because no byte left the set.
+    addrs = _rev_enrolment(rev)[0]
+
+    def _functions_in(group):
+        n = 0
+        for e in group.values():
+            module_addrs = addrs.get(e["module"], [])
+            i = bisect.bisect_left(module_addrs, e["addr"])
+            while i < len(module_addrs) and module_addrs[i] < e["end"]:
+                n += 1
+                i += 1
+        return n
+
     return {"entries": entries, "source": src, "mods": mods,
-            "stats": {"sourceFunctions": len(src),
+            "stats": {"sourceFunctions": _functions_in(src),
                       "sourceBytes": sum(e["size"] for e in src.values()),
-                      "modFunctions": len(mods),
+                      "modFunctions": _functions_in(mods),
                       "modBytes": sum(e["size"] for e in mods.values())}}
 
 
@@ -447,8 +535,40 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
     link = _link_state(link_rows)
     port = _port_state(port_report)
     reasons = []
-    if base_keys - head_keys:
-        reasons.append(f"lost {len(base_keys - head_keys)} matched function(s)")
+    # A function can leave `matched` two ways, and they are opposite acts.
+    #
+    #   REMOVED    the file was deleted, renamed out from under its symbol, or turned
+    #              into a dcd transcription. Something the tree had is gone. Blocks.
+    #   WITHDRAWN  the same file is still there, still named after the same symbol, and
+    #              now carries a NONMATCHING banner. Nothing was lost -- a claim was
+    #              retracted, which is the sanctioned way to tell the truth here.
+    #
+    # Treating both as loss made the gate reward the lie: a file that compiles to 916
+    # bytes where the ROM has 912 was never a match, and bannering it -- the only
+    # mechanism this repo HAS for saying so -- was the one edit that could not land.
+    # Same shape as the CONVERTED defect, where un-converting a class was the only way
+    # to score. See tools/bytegate.py: policy D already stopped counting the
+    # unevidenced half of `matched`; this is the same judgement at the PR gate.
+    #
+    # WITHDRAWN is restricted to functions that were NOT byte-verified in the base.
+    # That restriction is the whole safety argument, and it is explicit rather than
+    # emergent: a byte-verified function is one the ROM build compiles and compares, so
+    # retracting its claim is a real coverage loss and stays a hard reason (it would
+    # also trip `source-built function coverage decreased`, but relying on that
+    # interaction would leave the rule true only by accident).
+    base_enrolled = {key.split("-", 1)[0] for key in be["source"]}
+    transcribed_now = set(new_transcribed)
+    withdrawn, removed = [], []
+    for k in sorted(base_keys - head_keys):
+        hr, br = hf["functions"].get(k) or {}, bf["functions"].get(k) or {}
+        if (k not in base_enrolled and hr.get("srcPath")
+                and hr["srcPath"] == br.get("srcPath")
+                and hr["srcPath"] not in transcribed_now):
+            withdrawn.append({"id": k, "path": hr["srcPath"], "name": hr.get("name")})
+        else:
+            removed.append(k)
+    if removed:
+        reasons.append(f"lost {len(removed)} matched function(s)")
     if (hf["stats"]["totalFunctions"] != bf["stats"]["totalFunctions"]
             or hf["stats"]["totalBytes"] != bf["stats"]["totalBytes"]):
         reasons.append("function/byte coverage denominator changed")
@@ -508,6 +628,13 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         reasons.append("full-ROM validation failed")
 
     warnings = []
+    if withdrawn:
+        warnings.append(
+            f"{len(withdrawn)} claimed match(es) withdrawn by a NONMATCHING banner "
+            "rather than lost: each file is still present under the same name, and "
+            "none was byte-verified -- "
+            + ", ".join(w["path"] for w in withdrawn[:3])
+            + (f", +{len(withdrawn) - 3} more" if len(withdrawn) > 3 else ""))
     if allow_attribution_change and credit_moved:
         warnings.append("attribution-override label: contributor attribution changed or "
                         f"was lost ({_credit_detail(credit_changes, lost_credit)}), "
@@ -561,7 +688,11 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
         "sourceBuiltFunctions": he["stats"]["sourceFunctions"] - be["stats"]["sourceFunctions"],
         "sourceBuiltBytes": he["stats"]["sourceBytes"] - be["stats"]["sourceBytes"],
         "newMatchedFunctions": len(head_keys - base_keys),
+        # Kept as the total, so an existing reader of this field does not silently see
+        # a smaller number than the tree actually shed. The split is beside it.
         "removedMatchedFunctions": len(base_keys - head_keys),
+        "withdrawnMatchedFunctions": len(withdrawn),
+        "lostMatchedFunctions": len(removed),
     }
     base_source_stats = dict(be["stats"])
     head_source_stats = dict(he["stats"])
@@ -605,6 +736,7 @@ def build_report(base, head, base_rom=None, head_rom=None, link_rows=None,
                         "lost": lost_credit, "overridden": allow_attribution_change},
         "diff": diff,
         "asmPolicy": {"transcribed": new_transcribed, "unbanneredAsm": new_unbannered},
+        "matchedWithdrawn": withdrawn,
         "linkcheck": link,
         "portRefcheck": port,
         "rom": {"base": base_rom_state, "head": head_rom_state,
@@ -642,6 +774,12 @@ def render_markdown(r):
              f"| Claimed, not byte-verified | {h['claimedFunctions']:,} functions, "
              f"{h['claimedBytes']:,} bytes ({_signed(d['claimedFunctions'])}) |",
              f"| Perfect source moves | {len(r['diff']['perfectRenames'])} R100 |"]
+    # Only when it happened. A retracted claim is news; a zero here would be noise on
+    # every other pull request.
+    if r.get("matchedWithdrawn"):
+        lines.append(
+            f"| Claims withdrawn (banner added) | {len(r['matchedWithdrawn'])} "
+            f"function(s), none byte-verified |")
     # The delinks view of the same quantity. Identical to byte-verified above whenever
     # every enrolled range is a matched symbols.txt function, which is the healthy
     # state -- so it earns a row only when the two disagree, where the disagreement is

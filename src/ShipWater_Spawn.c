@@ -8,9 +8,9 @@
 /* resolved: VT0 = _ZTV9ShipWater */
 int *ShipWater_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(832);
+    int *p = (int *)_ZN7fBase_cnwEj(832);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV9ShipWater;
         _ZN18TextureTransformerC1Ev((char *)p + 0x320);
     }

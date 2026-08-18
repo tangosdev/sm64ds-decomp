@@ -12,7 +12,7 @@ extern void* data_0209b33c;
 
 int func_ov007_020cc45c(void) {
     data_0209d4a8 = 0;
-    _ZN5Scene20SetAndStopColorFaderEv();
+    _ZN8dScene_c20SetAndStopColorFaderEv();
     data_0209b340[0] = func_ov007_020b6f4c();
     data_0209b340[1] = 2;
     _ZN5Sound21UnsetPlayerVoiceGroupEv();

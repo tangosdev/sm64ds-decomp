@@ -36,7 +36,7 @@ bool dScMgBase_c::BeforeInitResources()
 {
     char *c = (char *)this;
     struct dScMgBase_c *self = this;
-    if (Scene::BeforeInitResources() == 0) return 0;
+    if (dScene_c::BeforeInitResources() == 0) return 0;
     if (((Obj*)c)->v26() == 0)
         func_02019028();
     else
@@ -52,7 +52,7 @@ bool dScMgBase_c::BeforeInitResources()
     func_ov004_020b8a8c(c + 0x4000);
     ((Obj*)c)->v33();
     func_ov004_020b2cb8();
-    Scene::SetFaders((FaderBrightness *)data_0209f61c);
+    dScene_c::SetFaders((FaderBrightness *)data_0209f61c);
     func_0202ec9c(data_0209f61c, 0);
     data_0209d460[0] = 0;
     data_0209d458[0] = 0;

@@ -3,15 +3,15 @@
 /* recovered: shared common types */
 #include "common.h"
 
-class Actor;
-extern "C" int func_ov072_02121d50(Actor *a);
+class dActor_c;
+extern "C" int func_ov072_02121d50(dActor_c *a);
 extern "C" int func_0201267c(int id, void *p);
 extern "C" {
-extern bool _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(Actor *thiz, Vector3 &a, Vector3 &b, bool c);
+extern bool _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(dActor_c *thiz, Vector3 &a, Vector3 &b, bool c);
 extern void _ZN9Animation7AdvanceEv(void *anim);
 extern void _ZN12CylinderClsn5ClearEv(void *clsn);
 }
-extern "C" int func_ov072_021217ac(Actor *thiz)
+extern "C" int func_ov072_021217ac(dActor_c *thiz)
 {
     char *c = (char *)thiz;
     short h = *(short *)(*(char **)(c + 0x360) + 0x8e);
@@ -34,7 +34,7 @@ extern "C" int func_ov072_021217ac(Actor *thiz)
         v.x = x;
         v.y = y2;
         v.z = z;
-        _ZN5Actor17DetectRaycastClsnER7Vector3S1_b(thiz, v, *(Vector3 *)(c + 0x5c), true);
+        _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(thiz, v, *(Vector3 *)(c + 0x5c), true);
         {
             int z0 = 0;
             *(int *)(c + 0x360) = z0;

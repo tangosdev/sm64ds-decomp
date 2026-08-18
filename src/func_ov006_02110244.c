@@ -4,7 +4,7 @@
  * This is the file that contaminated include/Player.h. It reads 0x08 and 0x0c
  * as a fix12 2D coordinate pair -- differencing them against another point and
  * feeding the result to a distance helper. On a real Player those offsets are
- * ActorBase's param1 and actorID/aliveState/shouldBeKilled, which cannot be a
+ * fBase_c's param1 and actorID/aliveState/shouldBeKilled, which cannot be a
  * position. It is some other ov006 class at a shared RAM address.
  *
  * Because it was the only evidence for Player.h's `unk_00c` being an s32, and

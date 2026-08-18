@@ -1,5 +1,5 @@
 //cpp
-extern "C" void* _ZN9ActorBasenwEj(unsigned int);
+extern "C" void* _ZN7fBase_cnwEj(unsigned int);
 extern "C" void func_ov004_020b2adc(void*);
 extern "C" void _ZN8Particle10SysTrackerC1Ev(void*);
 extern "C" void func_ov006_020c1d80(void*);
@@ -9,7 +9,7 @@ extern int _ZTV13dScMgMCarlo_c;
 extern "C" void func_ov006_020f7730(void);
 extern "C" void func_ov006_020f8ed8(void);
 extern "C" void* func_ov006_020f8e44(void){
-  char* p = (char*)_ZN9ActorBasenwEj(0x60b0);
+  char* p = (char*)_ZN7fBase_cnwEj(0x60b0);
   if (p) {
     func_ov004_020b2adc(p);
     *(int*)p = (int)&_ZTV19dScMgSingle3DBase_c;

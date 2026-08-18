@@ -12,7 +12,7 @@
 /* resolved: VT0 = _ZTV6Goomba */
 int *GoombaLarge_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1144);
+    int *p = (int *)_ZN7fBase_cnwEj(1144);
     if (p) {
         _ZN8CapEnemyC2Ev(p);
         p[0] = (int)_ZTV6Goomba;

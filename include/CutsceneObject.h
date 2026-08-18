@@ -10,7 +10,7 @@ struct CutsceneObject {
     u8  pad_000[0x8];
     s32 unk_008;            /* 0x008 */
     u8  pad_00c[0x74];
-    /* 0x080..0x0dc is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x080..0x0dc is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_080;                 /* 0x080 */
     s32 mScaleY;                 /* 0x084 */

@@ -2,9 +2,9 @@
 #define MINIMAP_H
 
 #include "types.h"
-#include "ActorDerived.h"
+#include "dBase_c.h"
 
-/* Derives from ActorDerived: the destructor stores this class's vtable, then the
+/* Derives from dBase_c: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x50 belonged to the
  * chain above and is inherited now.
@@ -15,7 +15,7 @@
 
 #ifdef __cplusplus
 
-struct Minimap : ActorDerived {
+struct Minimap : dBase_c {
     s32 unk_050;                      /* 0x050 */
     s32 unk_054;                      /* 0x054 */
     s32 unk_058;                      /* 0x058 */

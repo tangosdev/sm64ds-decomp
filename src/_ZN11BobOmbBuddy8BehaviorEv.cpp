@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BobOmbBuddy.h"
-extern "C" void *_ZN5Actor13ClosestPlayerEv(void *thiz);
+extern "C" void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern "C" int Vec3_HorzDist(const Vector3* a, const Vector3* b);
 extern "C" short Vec3_HorzAngle(const Vector3 *v0, const Vector3 *v1);
 extern "C" int _Z14ApproachLinearRsss(short *r, short b, short c);
@@ -18,7 +18,7 @@ int BobOmbBuddy::Behavior()
     Vector3 v;
     char *p;
     func_ov084_0212c9a8(((char *)this));
-    p = (char*)_ZN5Actor13ClosestPlayerEv(((char *)this));
+    p = (char*)_ZN8dActor_c13ClosestPlayerEv(((char *)this));
     if (p != 0) {
         Vector3 *ps = (Vector3 *)(p + 0x5c);
         v = *ps;

@@ -1,21 +1,21 @@
 //cpp
 // @symbol _Z19LoadEntranceObjectsRN11LVL_Overlay11ObjSubTableEij
 /* LoadEntranceObjects(LVL_Overlay::ObjSubTable&, int, u32) at ov002:0x020fe6c8
- * -- spawn entrance actors and the entrance-controller ActorDerived.
+ * -- spawn entrance actors and the entrance-controller dBase_c.
  *
  * A free function taking a nested LVL_Overlay::ObjSubTable reference. Each
  * StandardEntry is 0x10 bytes: raw id index, s16 position, Vector3s rotation,
- * u16 param. Positions shift left by 12 into Fix12 on the way to Actor::Spawn.
+ * u16 param. Positions shift left by 12 into Fix12 on the way to dActor_c::Spawn.
  *
  * The third argument is an entry index offset into the table (not a free
  * parameter like the sibling loaders' unused `param'): the walk starts at
  * `entries + p3' and runs for `data_0209f21c' iterations, not `tbl.count'.
  *
- * Actor::Spawn and ActorDerived::Spawn are real static methods; mwccarm mangles
- * the call relocs (including Actor::Spawn's s8/s16 trailing args). */
+ * dActor_c::Spawn and dBase_c::Spawn are real static methods; mwccarm mangles
+ * the call relocs (including dActor_c::Spawn's s8/s16 trailing args). */
 #include "types.h"
 #include "LVL_Overlay.h"
-#include "Actor.h"
+#include "dActor_c.h"
 
 extern "C" {
 extern u8 data_0209f21c;
@@ -67,7 +67,7 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
             }
             u32 flags = f2 | (f1 << 3) | (i << 6) | (sl << 8);
 
-            void* a = Actor::Spawn(
+            void* a = dActor_c::Spawn(
                 data_ov002_0210cbf4[e->raw], flags, pos,
                 (const Vector3_16*)&e->rot, (s8)(param & 7), -1);
 
@@ -84,8 +84,8 @@ void LoadEntranceObjects(LVL_Overlay::ObjSubTable& tbl, int p2, u32 p3)
         }
     }
 
-    data_0209f318 = ActorDerived::Spawn(
-        0x14c, (ActorBase*)data_0209f5c0, entranceId, 0);
+    data_0209f318 = dBase_c::Spawn(
+        0x14c, (fBase_c*)data_0209f5c0, entranceId, 0);
 
     int t = data_0209f2d8;
     t = t == 2;

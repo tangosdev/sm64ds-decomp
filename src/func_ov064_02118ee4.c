@@ -1,11 +1,11 @@
 #include "types.h"
-void *_ZN5Actor10FindWithIDEj(u32 id);
+void *_ZN8dActor_c10FindWithIDEj(u32 id);
 void func_ov064_02118ee4(char *c)
 {
   int p_addr;
   if (*(u8 *)(c + 0x338)) {
     if (*(u32 *)(c + 0x320)) {
-      char *a = (char *)_ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x320));
+      char *a = (char *)_ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x320));
       if (a)
         *(u8 *)(a + 0xd4) = 1;
     }
@@ -23,7 +23,7 @@ void func_ov064_02118ee4(char *c)
     if ((*(s8 **)(c + 0x324))[*(u8 *)(c + 0x328)] == (s8)m1) {
       *(u8 *)(c + 0x328) = 0;
       if (*(u32 *)(c + 0x320)) {
-        char *a = (char *)_ZN5Actor10FindWithIDEj(*(u32 *)(c + 0x320));
+        char *a = (char *)_ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x320));
         if (a) {
           u8 *f = (u8 *)(a + 0xd4);
           *f |= 2;

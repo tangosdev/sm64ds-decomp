@@ -6,7 +6,7 @@
 #include "common.h"
 extern "C" {
 
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *c, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *c, void *clsn);
 extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int f, int t1, int t2, const void *v, void *cb);
 extern unsigned _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unsigned a, unsigned b, int f, int t1, int t2, const void *v);
 extern void *_ZN8Particle6System12FromUniqueIDEj(unsigned id);
@@ -18,7 +18,7 @@ int func_ov096_02136434(void *c)
     struct Vector3 pos;
     void *p0, *p1;
     int x, y, z;
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, s+0x14c);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, s+0x14c);
     if (*(unsigned*)(s+0x3a0) != 0 && *(unsigned*)(s+0x3a4) != 0) {
         x = *(int*)(s+0x5c);
         z = *(int*)(s+0x64);

@@ -12,19 +12,19 @@ src/_ZN11VolcanoRingD0Ev.c:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/func_ov022_0211123c.cpp:
+src/_ZN11VolcanoRing16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211123c end:0x02111284
 
-src/func_ov022_02111284.cpp:
+src/_ZN11VolcanoRing6RenderEv.cpp:
     complete
     .text start:0x02111284 end:0x021112ac
 
-src/func_ov022_021112ac.c:
+src/_ZN11VolcanoRing8BehaviorEv.cpp:
     complete
     .text start:0x021112ac end:0x0211149c
 
-src/func_ov022_0211149c.c:
+src/_ZN11VolcanoRing13InitResourcesEv.cpp:
     complete
     .text start:0x0211149c end:0x02111558
 
@@ -48,11 +48,11 @@ src/_ZN19RotatingPlatformLllD0Ev.c:
     complete
     .text start:0x021115f8 end:0x0211165c
 
-src/func_ov022_0211165c.c:
+src/_ZN19RotatingPlatformLll16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211165c end:0x02111670
 
-src/func_ov022_02111670.c:
+src/_ZN19RotatingPlatformLll13InitResourcesEv.cpp:
     complete
     .text start:0x02111670 end:0x02111688
 
@@ -77,6 +77,7 @@ src/_ZN19FloatOnLavaPlatform6RenderEv.cpp:
     .text start:0x021117a4 end:0x021117cc
 
 src/_ZN19FloatOnLavaPlatform8BehaviorEv.cpp:
+    complete
     .text start:0x021117cc end:0x02111870
 
 src/_ZN19FloatOnLavaPlatform13InitResourcesEv.cpp:
@@ -119,7 +120,7 @@ src/_ZN10LavaBridge8BehaviorEv.cpp:
     complete
     .text start:0x02111ad0 end:0x02111bdc
 
-src/func_ov022_02111bdc.cpp:
+src/_ZN10LavaBridge13InitResourcesEv.cpp:
     complete
     .text start:0x02111bdc end:0x02111c7c
 
@@ -147,11 +148,11 @@ src/_ZN10LavaSeesaw6RenderEv.cpp:
     complete
     .text start:0x02111dd4 end:0x02111dfc
 
-src/func_ov022_02111dfc.c:
+src/_ZN10LavaSeesaw8BehaviorEv.cpp:
     complete
     .text start:0x02111dfc end:0x02111ea0
 
-src/func_ov022_02111ea0.cpp:
+src/_ZN10LavaSeesaw13InitResourcesEv.cpp:
     complete
     .text start:0x02111ea0 end:0x02111f3c
 
@@ -211,17 +212,20 @@ src/LavaPlank_Spawn.c:
     complete
     .text start:0x02112350 end:0x02112380
 
-src/func_ov022_02112380.c:
+src/_ZN20daObjFl_Fall_Block_cD1Ev.cpp:
     complete
     .text start:0x02112380 end:0x021123d0
 
-src/func_ov022_021123d0.c:
+src/_ZN20daObjFl_Fall_Block_cD0Ev.c:
+    complete
     .text start:0x021123d0 end:0x02112434
 
-src/func_ov022_02112434.c:
+src/_ZN20daObjFl_Fall_Block_c16CleanupResourcesEv.c:
+    complete
     .text start:0x02112434 end:0x02112448
 
-src/func_ov022_02112448.c:
+src/_ZN20daObjFl_Fall_Block_c13InitResourcesEv.c:
+    complete
     .text start:0x02112448 end:0x0211245c
 
 src/FallBlockLll_Spawn.c:

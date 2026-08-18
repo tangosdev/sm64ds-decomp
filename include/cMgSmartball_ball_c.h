@@ -10,7 +10,7 @@
  * FIELD EVIDENCE. All fields below 0x34 belong to the base and are reached
  * through inherited members (unk_004, mCurrent0/1, unk_020/024/028/02c,
  * unk_030); this class's own four functions never touch the base's
- * contested 0x31/0x32 span, so no raw cast is needed anywhere here.
+ * 0x31-0x33 region, so no raw cast is needed anywhere here.
  *
  * Most of the 0x34+ fields are both declared AND zeroed by this class's own
  * RestoreInitial, which is exhaustive -- it is the strongest single source

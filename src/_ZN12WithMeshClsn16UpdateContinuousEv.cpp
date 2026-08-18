@@ -20,12 +20,12 @@ extern "C" {
 extern int func_02037938(void* p);
 extern void func_02038324(int a, int* b, int c, int d);
 extern void _ZN10ClsnResultC1Ev(ClsnResult* r);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, Vec3* a, Vec3* b, void* actor);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
 extern int _ZN11RaycastLine10DetectClsnEv(void* self);
 extern void _ZN11RaycastLine10GetClsnPosEv(Vec3* out, void* self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vec3* out);
 extern void _ZNK10ClsnResult6CopyToERS_(void* self, ClsnResult* dst);
-extern void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(void* self, Vec3* v, int rad, void* actor);
+extern void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* self, Vec3* v, int rad, void* actor);
 extern void _ZN10SphereClsn14SetFloorResultERK10ClsnResult(void* self, ClsnResult* r);
 extern void _ZN10ClsnResultaSERKS_(void* self, ClsnResult* r);
 extern void func_02037888(void* dst, ClsnResult* src);
@@ -82,7 +82,7 @@ void WithMeshClsn::UpdateContinuous()
         lineEnd.y = ty;
         lineEnd.z = tz;
     }
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(((char*)this) + 0x134, &lineStart, &lineEnd, *(void**)((char*)&mActor));
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(((char*)this) + 0x134, &lineStart, &lineEnd, *(void**)((char*)&mActor));
     if (_ZN11RaycastLine10DetectClsnEv((char*)&mRaycastLine))
     {
         int r;
@@ -102,7 +102,7 @@ void WithMeshClsn::UpdateContinuous()
             floorFlag = 1;
             _ZNK10ClsnResult6CopyToERS_(((char*)this) + 0x144, &res0);
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(((char*)this) + 0x134, &newStart, &newEnd, *(void**)((char*)&mActor));
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(((char*)this) + 0x134, &newStart, &newEnd, *(void**)((char*)&mActor));
         if (_ZN11RaycastLine10DetectClsnEv((char*)&mRaycastLine)) {
             _ZN11RaycastLine10GetClsnPosEv(&clsnPos2, ((char*)this) + 0x134);
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3(((char*)this) + 0x148, &normal2);
@@ -129,7 +129,7 @@ void WithMeshClsn::UpdateContinuous()
     sphere.y = pos[1];
     sphere.z = pos[2];
     sphere.y += height;
-    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(((char*)this) + 0x20, &sphere, unk_018, *(void**)((char*)&mActor));
+    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char*)this) + 0x20, &sphere, unk_018, *(void**)((char*)&mActor));
     if (func_0203553c(((char*)this)) == 0)
         *(u8*)AT(((char*)this), 0x90) |= 0x40;
     unk_128 = unk_1b8;

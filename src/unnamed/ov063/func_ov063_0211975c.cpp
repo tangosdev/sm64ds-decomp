@@ -4,13 +4,13 @@ extern "C" int func_ov063_0211a3d0(void* p);
 extern "C" void func_0201267c(int a, char* b);
 extern "C" {
 extern char* _ZN8CapEnemy15RespawnIfHasCapEv(void* self);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(void* self);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* self);
 }
 
 extern "C" void func_ov063_0211975c(char* self) {
     if (!func_ov063_0211a3d0(self)) return;
     if (*(int*)(self + 0x5a4) != 0) {
-        _ZN5Actor24KillAndTrackInDeathTableEv(self);
+        _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
         func_0201267c(0xd5, self + 0x74);
         if ((*(u8*)(self + 0x113) & 0xf) >= 6) return;
         *(int*)(self + 0x5c) = *(int*)(self + 0x51c);

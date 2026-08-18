@@ -3,7 +3,7 @@ typedef struct { int x, y, z; } Vec3;
 
 extern int Vec3_HorzDist(Vec3* a, Vec3* b);
 extern s16 Vec3_HorzAngle(Vec3* a, Vec3* b);
-extern int _ZN5Actor14GetSubtractionEss(void* self, s16 a, s16 b);
+extern int _ZN8dActor_c14GetSubtractionEss(void* self, s16 a, s16 b);
 
 #pragma opt_strength_reduction off
 void func_ov079_02123f34(char* self)
@@ -35,7 +35,7 @@ void func_ov079_02123f34(char* self)
             minDist = dist;
             minAngle = angle;
         }
-        if (_ZN5Actor14GetSubtractionEss(self, angle, *(s16*)(self + 0x94)) < 0x2000) {
+        if (_ZN8dActor_c14GetSubtractionEss(self, angle, *(s16*)(self + 0x94)) < 0x2000) {
             if (dist < minDist2) {
                 minDist2 = dist;
                 *(int*)(self + 0x3f0) = i;

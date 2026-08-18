@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout: the
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout: the
  * class's own destructor `_ZN8BookShotD1Ev` destroys each member, and
  * `BookShot_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV8BookShot`. Everything this header used to restate below 0x110
- * belongs to Enemy and Actor and is inherited now.
+ * belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a reading
  * rather than a guess:
@@ -18,21 +18,21 @@
  *     0x21c MovingCylinderClsnWithPos  0x40    -> 0x25c
  *     0x25c WithMeshClsn               0x1bc   -> 0x418
  *
- * SIZE IS THE ROM'S OWN: `BookShot_Spawn` calls `ActorBase::operator new(1108)`
+ * SIZE IS THE ROM'S OWN: `BookShot_Spawn` calls `fBase_c::operator new(1108)`
  * -- 0x454 -- and stores this class's vtable, so that literal IS this
  * class's sizeof.
  *
  * The ROM's RTTI names this class daBook_c.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct BookShot : Enemy {
+struct BookShot : dEnemyBase_c {
     ModelAnim                    mModelAnim;            /* 0x110 */
     Model                        mModel;                /* 0x174 */
     ShadowModel                  mShadowModel;          /* 0x1c4 */

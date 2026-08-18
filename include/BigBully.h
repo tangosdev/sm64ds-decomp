@@ -9,7 +9,7 @@
  * restate. BigBully_Spawn is byte-for-byte Bully_Spawn apart from the vtable it
  * stores last.
  *
- * SIZE 0x400, the literal in BigBully_Spawn's ActorBase::operator new. The base ends
+ * SIZE 0x400, the literal in BigBully_Spawn's fBase_c::operator new. The base ends
  * at 0x398.
  */
 struct BigBully : daOts_c {

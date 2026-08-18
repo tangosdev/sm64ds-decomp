@@ -1,4 +1,4 @@
-extern void _ZN9ActorBaseC1Ev(void *self);
+extern void _ZN7fBase_cC1Ev(void *self);
 extern void func_ov004_020b8a70(unsigned char *p);
 extern char *func_ov004_020b92c4(char *c);
 extern int func_ov004_020adc3c(void *c);
@@ -6,7 +6,7 @@ extern int func_02013580(int a, int b);
 extern void func_ov004_020adc00(int v);
 
 extern char data_0208e4b8;
-extern char _ZTV5Scene;
+extern char _ZTV8dScene_c;
 extern char data_ov004_020bc0c0;
 extern char data_0209b308;
 extern void *data_ov004_020beb68;
@@ -14,9 +14,9 @@ extern short data_ov004_020bc070[];
 
 void *func_ov004_020b2adc(char *self)
 {
-    _ZN9ActorBaseC1Ev(self);
+    _ZN7fBase_cC1Ev(self);
     *(void **)self = &data_0208e4b8;
-    *(void **)self = &_ZTV5Scene;
+    *(void **)self = &_ZTV8dScene_c;
     {
         unsigned char *p13 = (unsigned char *)(self + 0x13);
         *p13 |= 1;

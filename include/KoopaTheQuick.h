@@ -3,12 +3,12 @@
 
 #include "types.h"
 
-/* Derives from Enemy, on the evidence of its own destructor: `_ZN13KoopaTheQuickD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN13KoopaTheQuickD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
- * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
  *
- * The members close exactly on one another, and Enemy's own 0x110 closes
+ * The members close exactly on one another, and dEnemyBase_c's own 0x110 closes
  * exactly on the first. Member NAMES are the ones this header already used --
  * a rebase should not also rename things its callers spell:
  *
@@ -23,7 +23,7 @@
  * is not independent evidence about the ROM.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "BlendModelAnim.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
@@ -31,7 +31,7 @@
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct KoopaTheQuick : Enemy {
+struct KoopaTheQuick : dEnemyBase_c {
     MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */

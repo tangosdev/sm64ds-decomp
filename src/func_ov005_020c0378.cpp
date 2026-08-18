@@ -26,9 +26,9 @@ extern int data_ov005_020c24dc[];
 int func_ov005_020c00b4(void* self, int n);
 void func_ov005_020c1688(void* self, int n);
 void func_02012790(int n);
-void _ZN5Scene9SetFadersEP15FaderBrightness(void* p);
+void _ZN8dScene_c9SetFadersEP15FaderBrightness(void* p);
 void func_0202ec9c(void* p, int v);
-int _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
+int _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
 void _ZN5Sound22StopLoadedMusic_Layer1Ej(u32 n);
 // 6e: preheader emission order
 #pragma opt_loop_invariants off
@@ -112,13 +112,13 @@ void func_ov005_020c0378(char* c)
 
         func_ov005_020c1688(c, sel);
         func_02012790(0x1e);
-        _ZN5Scene9SetFadersEP15FaderBrightness(&data_0209f61c);
+        _ZN8dScene_c9SetFadersEP15FaderBrightness(&data_0209f61c);
         func_0202ec9c(&data_0209f61c, 0);
         *(int*)((char*)&data_0209b308 + 0x30) = *(int*)(c + 0x5c);
         {
             int k = data_0208a174;
             int m = k * 0x34;
-            _ZN5Scene14StartSceneFadeEjjt(
+            _ZN8dScene_c14StartSceneFadeEjjt(
                 *(u16*)((char*)data_ov005_020c24d8 + m),
                 *(int*)((char*)data_ov005_020c24dc + m),
                 0);

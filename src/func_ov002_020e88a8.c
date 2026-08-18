@@ -13,7 +13,7 @@ extern int func_02037e38(void* p);
 extern int func_02037e58(void* p);
 extern void func_ov002_020e947c(void* self, struct Vector3* p, int d);
 extern void func_ov002_020e9448(void* self);
-extern char* _ZN5Actor13ClosestPlayerEv(void* self);
+extern char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int Vec3_Dist(struct Vector3* a, struct Vector3* b);
 extern short Vec3_HorzAngle(struct Vector3* a, struct Vector3* b);
 
@@ -53,7 +53,7 @@ void func_ov002_020e88a8(char* self) {
     *(int*)(self + 0x448) = *(int*)(self + 0x5c);
     *(int*)(self + 0x44c) = *(int*)(self + 0x60);
     *(int*)(self + 0x450) = *(int*)(self + 0x64);
-    p = _ZN5Actor13ClosestPlayerEv(self);
+    p = _ZN8dActor_c13ClosestPlayerEv(self);
     if (p == 0) return;
     {
         int* s = (int*)((int)(p + 0x5c));
@@ -72,7 +72,7 @@ void func_ov002_020e88a8(char* self) {
             *a = *a + 0x8000;
         }
     } else {
-        char* q = _ZN5Actor14FarthestPlayerEv(self);
+        char* q = _ZN8dActor_c14FarthestPlayerEv(self);
         if (q != 0) {
             q = q + 0x5c;
             *(short*)(self + 0x94) = Vec3_HorzAngle((struct Vector3*)(self + 0x5c), (struct Vector3*)q);

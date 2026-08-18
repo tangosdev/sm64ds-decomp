@@ -50,7 +50,7 @@
 
 #ifdef __cplusplus
 
-struct Actor;
+struct dActor_c;
 struct ClsnResult;
 struct RaycastGround;
 struct RaycastLine;
@@ -65,13 +65,13 @@ struct Vector3_16 { s16 x, y, z; };
 
 struct MeshColliderBase {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
-    Actor *owner;             /* 0x04 - set by Enable, null when free */
+    dActor_c *owner;             /* 0x04 - set by Enable, null when free */
     s32 ownerUniqueID;        /* 0x08 - owner->uniqueID, -1 when free */
     Fix12i unk_0c;            /* 0x0c - init -0x1000 */
     s32 unk_10;               /* 0x10 */
     u8 slotIdx;               /* 0x14 - index into data_020a0c80; 0x18 = disabled */
     u8 pad_15[3];
-    void (*beforeClsnCallback)(MeshColliderBase *self, Actor *actor,
+    void (*beforeClsnCallback)(MeshColliderBase *self, dActor_c *actor,
                                ClsnResult *res, Vector3 *pos,
                                Vector3_16 *motionAng, Vector3_16 *ang); /* 0x18 */
     s32 unk_1c;               /* 0x1c */
@@ -85,14 +85,14 @@ struct MeshColliderBase {
     virtual int DetectClsn(RaycastGround &ray);           /* slot 6 */
     virtual int DetectClsn(RaycastLine &ray);             /* slot 7 */
     virtual int DetectClsn(SphereClsn &sphere);           /* slot 8 */
-    virtual void BeforeClsn(ClsnResult &res, Actor *actor, Vector3 &pos,
+    virtual void BeforeClsn(ClsnResult &res, dActor_c *actor, Vector3 &pos,
                             Vector3_16 *motionAng, Vector3_16 *ang); /* slot 9 */
     virtual int TransformPos(const Vector3 &pos, Vector3 &res);      /* slot 10 */
     virtual s16 GetAngularVelY();                         /* slot 11 */
     virtual void GetVelocity(Vector3 &res);               /* slot 12 */
 
     /* --- non-virtual --- */
-    int Enable(Actor *actor);
+    int Enable(dActor_c *actor);
     int Disable();
     int IsEnabled();
 
@@ -101,16 +101,16 @@ struct MeshColliderBase {
        stored one as (collider, actor, res, pos, motionAng, ang). They
        update POS from the collider's motion; the ClsnResult rides along
        untouched. --- */
-    static void UpdatePosAndAngs(MeshColliderBase &clsn, Actor *clsnActor,
+    static void UpdatePosAndAngs(MeshColliderBase &clsn, dActor_c *clsnActor,
                                  ClsnResult &res, Vector3 &pos,
                                  Vector3_16 *motionAng, Vector3_16 *ang);
-    static void UpdatePosWithVelocity(MeshColliderBase &clsn, Actor *clsnActor,
+    static void UpdatePosWithVelocity(MeshColliderBase &clsn, dActor_c *clsnActor,
                                       ClsnResult &res, Vector3 &pos,
                                       Vector3_16 *motionAng, Vector3_16 *ang);
-    static void UpdatePosWithTransform(MeshColliderBase &clsn, Actor *clsnActor,
+    static void UpdatePosWithTransform(MeshColliderBase &clsn, dActor_c *clsnActor,
                                        ClsnResult &res, Vector3 &pos,
                                        Vector3_16 *motionAng, Vector3_16 *ang);
-    static void UpdateAngsWithAngularVelY(MeshColliderBase &clsn, Actor *clsnActor,
+    static void UpdateAngsWithAngularVelY(MeshColliderBase &clsn, dActor_c *clsnActor,
                                           ClsnResult &res, Vector3 &pos,
                                           Vector3_16 *motionAng, Vector3_16 *ang);
 };
@@ -121,7 +121,7 @@ typedef char MeshColliderBase_size_must_be_0x20[sizeof(MeshColliderBase) == 0x20
 
 struct MeshColliderBase {
     void **vtable;            /* 0x00 */
-    struct Actor *owner;      /* 0x04 */
+    struct dActor_c *owner;      /* 0x04 */
     s32 ownerUniqueID;        /* 0x08 */
     s32 unk_0c;               /* 0x0c */
     s32 unk_10;               /* 0x10 */

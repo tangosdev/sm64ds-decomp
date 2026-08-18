@@ -12,16 +12,16 @@ struct Player {
     struct Vec3 pos;
 };
 
-struct Actor {
+struct dActor_c {
     char pad[0xd4];
     u32 uniqueID;
 };
 
-extern struct Player* _ZN5Actor13ClosestPlayerEv(struct Actor* self);
+extern struct Player* _ZN8dActor_c13ClosestPlayerEv(struct dActor_c* self);
 extern u32 func_02022c3c(u32 uniqueID, u32 effectID, Fix12i x, Fix12i y, Fix12i z, const void* dir);
 
-int func_ov002_020b6d84(struct Actor* self) {
-    struct Vec3* v = (struct Vec3*)(((int)_ZN5Actor13ClosestPlayerEv(self) + 0x5c));
+int func_ov002_020b6d84(struct dActor_c* self) {
+    struct Vec3* v = (struct Vec3*)(((int)_ZN8dActor_c13ClosestPlayerEv(self) + 0x5c));
     self->uniqueID = func_02022c3c(self->uniqueID, 0xb7, v->x, v->y, v->z, 0);
     return 1;
 }

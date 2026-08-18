@@ -1,12 +1,12 @@
 //cpp
 // @symbol _ZN15BookShotSpawnerD1Ev
 
-struct Actor {
-    virtual ~Actor();
+struct dActor_c {
+    virtual ~dActor_c();
 };
 
 
-struct BookShotSpawner : Actor {
+struct BookShotSpawner : dActor_c {
     virtual ~BookShotSpawner();
 };
 

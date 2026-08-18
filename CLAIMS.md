@@ -34,6 +34,7 @@ take over, ping the claimant first.
 | ActorBase -> ActorDerived -> Actor -> Player | andrewboudreau | 2026-08-01 | **active** - ActorBase landed as a real polymorphic class (#974); ActorDerived next, then Actor, then Player |
 | Collision chain: MeshColliderBase, MeshCollider, MovingMeshCollider, ExtendingMeshCollider, WithMeshClsn, CylinderClsn family | tangosdev | 2026-08-02 | **active** - readable conversion, same per-file byte gate as the Model chain |
 | Model chain: ModelBase, Model, CommonModel, ShadowModel, Animation, ModelAnim, BlendModelAnim, ModelAnim2 | tangosdev | 2026-08-01 | **done** - #981, #984, #985: all eight real C++ classes, every converted file byte-matched; MI reproduces (Animation second base at +0x50, thunks stay ROM-supplied). Parked: Func_ method renames, _ZTV9Animation naming, wall 6az gates 5Fix12IiE definitions |
+| CheepCheep, WaterSuction, ChainChomp, Fwoosh, MontyMoleRock, Wiggler, KingBobOmb, MrBlizzard | andrewboudreau | 2026-08-18 | **done** - 13 methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform work excluded |
 
 ## Claims
 
@@ -45,6 +46,7 @@ take over, ping the claimant first.
 | ov007 func_ov007_020caeac (0x020caeac, size 0x530) | lunavyqo | 2026-08-16 | **released** — near-miss **div=152** size-exact 0x530 (first 0x178 byte-identical). Levers: int lo/hi scale homes (fx at sp+0x34), nrm*scale first loop, VTX x/z/round/y interleave, inline w1*12. Residual: uZero/col0 CSE (moveq vs ldreq) + inner-loop schedule. API clm_86cd56fc2f36 released |
 | ov006 func_ov006_021053a8 (0x021053a8, size 0x2c8) | lunavyqo | 2026-08-16 | **released** — near-miss **div=20** (match.py words, size-exact 0x2c8). Prefix through table fill byte-ok. Residual w load dest r8 vs r6 plus wq/hq/y/x cascade. tip in nearmiss/db.jsonl; API clm_a8efc32eec03 released |
 | ov006 func_ov006_0210076c (0x0210076c, size 0x24c) | lunavyqo | 2026-08-16 | **released** — near-miss **div=43** (match.py words, size-exact 0x24c). HIT/mid/far shape + pool OK; pvx@r6; residual self@r8 vs r9 / i vs r8 / z@r9 vs r4. claims API 401; tip in nearmiss/db.jsonl |
+|---|---|---|---|
 | ov005 func_ov005_020c16e4 (0x020c16e4, size 0x33c) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: ++row MultiCopy tail, dest pin `idx?dstp:dstp` / `destOff?dstp:dstp` (equal-arm) for rem-before-quot + increment order; from near-miss 136→18→16→3→0; API clm_84a56ab710d3 kept |
 | ov005 func_ov005_020c0378 (0x020c0378, size 0x354) | lunavyqo | 2026-08-13 | **active** — near-miss improved **77→44** size-exact. 0250-style S.a/S.b has + loop_invariants off + S[idx].d y. Residual pure regperm (idx r1 vs r5, has r3 vs r2) + path-B y early. API clm_3c2c2b05061d |
 | ov015 _ZN14KnockDownPlank13InitResourcesEv (0x02111960, size 0x208) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_propagation off` + u64-mask angle increment + named `zero` for vec stores; API clm_645f51ab54fa kept |

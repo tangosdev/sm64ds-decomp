@@ -4,7 +4,7 @@
 #include "common.h"
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* in, void* m, void* out);
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, struct Vector3* v, u32 a, int fix, u32 b, u32 d, u32 e);
 
 extern unsigned char data_0209f220;
@@ -115,7 +115,7 @@ void func_ov016_02111284(char* c)
     if (id == 0)
         return;
 
-    p = _ZN5Actor10FindWithIDEj(id);
+    p = _ZN8dActor_c10FindWithIDEj(id);
     t = (int)(*(u16*)((char*)p + 0xc) == 0xbf);
     if (t == 0)
         return;

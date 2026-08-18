@@ -11,9 +11,9 @@
 /* resolved: VT0 = _ZTV5Koopa */
 int *KoopaSmall_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(976);
+    int *p = (int *)_ZN7fBase_cnwEj(976);
     if (p) {
-        _ZN5EnemyC2Ev(p);
+        _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV5Koopa;
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0x110);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x144);

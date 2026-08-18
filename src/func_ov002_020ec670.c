@@ -1,21 +1,21 @@
 #include "types.h"
 struct ClsnResult;
-struct Actor;
+struct dActor_c;
 extern int func_0203567c(int p);
 extern int _ZNK10ClsnResult9GetClsnIDEv(struct ClsnResult* thiz);
-extern struct Actor* _ZN5Actor10FindWithIDEj(u32 id);
-extern void func_02123804(struct Actor* a, char* self);
+extern struct dActor_c* _ZN8dActor_c10FindWithIDEj(u32 id);
+extern void func_02123804(struct dActor_c* a, char* self);
 
 void func_ov002_020ec670(char* self, int arg)
 {
     struct ClsnResult* cr;
-    struct Actor* actor;
+    struct dActor_c* actor;
     u16 type;
 
     cr = (struct ClsnResult*)func_0203567c(arg);
     if (_ZNK10ClsnResult9GetClsnIDEv(cr) == -1) return;
 
-    actor = _ZN5Actor10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(cr));
+    actor = _ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(cr));
     if (actor == 0) return;
 
     type = *(u16*)((char*)actor + 0xc);

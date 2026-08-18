@@ -3,12 +3,12 @@
 /* recovered: shared common types */
 #include "common.h"
 
-struct Actor;
+struct dActor_c;
 struct RaycastGround { char buf[0x54]; };
 
 extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void *thiz);
 extern "C" void _ZN13RaycastGroundC1Ev(struct RaycastGround *thiz);
-extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *thiz, const struct Vector3 *v, struct Actor *a);
+extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround *thiz, const struct Vector3 *v, struct dActor_c *a);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *thiz);
 extern "C" void _ZN13RaycastGroundD1Ev(struct RaycastGround *thiz);
 
@@ -29,7 +29,7 @@ extern "C" void func_ov070_02121be4(void *thiz)
         v.y = y;
         v.z = z;
     }
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, (struct Actor *)c);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (struct dActor_c *)c);
     if (_ZN13RaycastGround10DetectClsnEv(&rg) == 0 ||
         *(int *)((char *)&rg + 0x44) < *(int *)(c + 0x60) - 0x32000) {
         *(int *)(c + 0x5c) = *(int *)(c + 0x68);

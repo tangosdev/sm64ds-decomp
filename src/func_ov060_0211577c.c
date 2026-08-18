@@ -14,9 +14,9 @@ extern void _ZN9ModelBase12ApplyOpacityEj(void *self, unsigned int op, int z);
 extern void MulMat4x3Mat4x3(void *dst, void *a, void *b);
 extern void Vec3_LslInPlace(void *v, int sh);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *self, Vec3 *pos, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *self, Vec3 *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *c, void *sm, void *mtx, int rad, int h, unsigned int flags);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *c, void *sm, void *mtx, int rad, int h, unsigned int flags);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 
 extern Mtx43 data_020a0e68;
@@ -73,7 +73,7 @@ skip_angles:
     pos.y = *(int *)(c + 0x60);
     pos.z = *(int *)(c + 0x64);
     pos.y = pos.y + 0x32000;
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rc, &pos, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, &pos, 0);
     if (_ZN13RaycastGround10DetectClsnEv(&rc))
         pos.y = rc.clsnY;
     else
@@ -81,6 +81,6 @@ skip_angles:
     Vec3_Asr(&v2, &pos, 3);
     Matrix4x3_FromTranslation(&data_020a0e68, v2.x, v2.y, v2.z);
     *(Mtx43 *)(c + 0x330) = data_020a0e68;
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x308, c + 0x330, 0x140000, 0x64000, 0xf);
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x308, c + 0x330, 0x140000, 0x64000, 0xf);
     _ZN13RaycastGroundD1Ev(&rc);
 }

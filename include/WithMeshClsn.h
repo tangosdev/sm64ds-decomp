@@ -4,7 +4,7 @@
 #include "types.h"
 #include "BgCh.h"
 
-/* An Actor's mesh-collision query, vtable at 0x02099204 (still unnamed in
+/* An dActor_c's mesh-collision query, vtable at 0x02099204 (still unnamed in
  * symbols.txt).
  *
  * VTABLE, 2 slots, read out of the ROM:
@@ -65,7 +65,7 @@
 
 #ifdef __cplusplus
 
-struct Actor;
+struct dActor_c;
 
 /* Forward-declared, deliberately not defined. common.h defines Vector3_16
    unconditionally and does NOT set VECTOR3_16_DEFINED, so any header that
@@ -76,7 +76,7 @@ struct Vector3_16;   /* pointers only; see the note above */
 
 struct WithMeshClsn : BgCh {
     u32 mFlags;                 /* 0x010 - word, see above */
-    Actor *mActor;              /* 0x014 - Init arg 1 */
+    dActor_c *mActor;              /* 0x014 - Init arg 1 */
     Fix12i unk_018;             /* 0x018 - Init arg 2, the sphere radius */
     Fix12i unk_01c;             /* 0x01c - Init arg 3, a height */
     u8  mSphereClsn;            /* 0x020 - SphereClsn sub-object starts here */
@@ -96,7 +96,7 @@ struct WithMeshClsn : BgCh {
     virtual ~WithMeshClsn();    /* slots 0 (D1), 1 (D0) */
 
     /* --- non-virtual --- */
-    void Init(Actor *actor, Fix12i radius, Fix12i height,
+    void Init(dActor_c *actor, Fix12i radius, Fix12i height,
               Vector3_16 *a, Vector3_16 *b);  /* free definition, wall 6az */
     void ClearAllGroundFlags();
     void ClearGroundFlag();

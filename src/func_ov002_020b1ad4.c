@@ -2,7 +2,7 @@ typedef unsigned char u8;
 typedef struct { int x, y, z; } Vector3;
 struct Bits3ae { u8 lo : 2; u8 field : 3; u8 hi : 3; };
 extern signed char data_0209f2f8;
-extern char *_ZN5Actor13ClosestPlayerEv(char *self);
+extern char *_ZN8dActor_c13ClosestPlayerEv(char *self);
 extern int Vec3_Dist(const Vector3 *a, const Vector3 *b);
 extern void _ZN12WithMeshClsn13SetLimMovFlagEv(char *self);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(char *self);
@@ -19,7 +19,7 @@ void func_ov002_020b1ad4(char *self)
     int v;
 
     if (((struct Bits3ae *)(self + 0x3ae))->field == 0) {
-        player = _ZN5Actor13ClosestPlayerEv(self);
+        player = _ZN8dActor_c13ClosestPlayerEv(self);
         if (player == 0) return;
         r6 = (data_0209f2f8 == 0xb) ? 0x258000 : 0x4b0000;
         if (Vec3_Dist((Vector3 *)(self + 0x5c), (Vector3 *)(player + 0x5c)) > r6) return;

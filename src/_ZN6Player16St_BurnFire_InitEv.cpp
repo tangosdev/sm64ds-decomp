@@ -30,7 +30,7 @@ int Player::St_BurnFire_Init()
     mHorzSpeed = 0;
     mStateWork = 0;
     /* mCamSpacePosX/Y/Z are three consecutive words, which is the Vector3 the
-       sound wants; Actor.h declares them individually rather than as one. */
+       sound wants; dActor_c.h declares them individually rather than as one. */
     _ZN5Sound13PlayCharVoiceEjjRK7Vector3(mCharacter, 0x23, (const Vector3*)&mCamSpacePosX);
     return 1;
 }

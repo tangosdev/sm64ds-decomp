@@ -16,7 +16,7 @@ extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callba
     u32 a, u32 b, int c, int d, int e, void *f, void *g);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(char *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *p);
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_02012694(int a, char *v, int c);
 extern void func_ov089_02131df4(char *thiz, char *player);
 
@@ -107,7 +107,7 @@ case2:
         char *found;
         if (id == 0)
             return;
-        found = _ZN5Actor10FindWithIDEj(id);
+        found = _ZN8dActor_c10FindWithIDEj(id);
         if (found == 0)
             return;
         if ((*(int *)(c + 0x240) & 0x400000) == 0)

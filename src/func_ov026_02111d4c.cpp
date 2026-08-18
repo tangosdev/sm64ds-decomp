@@ -13,7 +13,7 @@ struct Player {
     unsigned char flag6f9;
     void EnterWhirlpool();
 };
-struct Actor {
+struct dActor_c {
     Player* ClosestPlayer();
     int HorzAngleToCPlayer();
 };
@@ -28,7 +28,7 @@ extern char data_020a0e68;
 
 extern "C" int func_ov026_02111d4c(char* c)
 {
-    Player* pl = ((Actor*)c)->ClosestPlayer();
+    Player* pl = ((dActor_c*)c)->ClosestPlayer();
     if (pl != 0) {
         Vector3 v;
         Vector3* p0 = (Vector3*)((int)pl + 0x5c);
@@ -60,7 +60,7 @@ extern "C" int func_ov026_02111d4c(char* c)
                 out.y = 0;
                 out.z = 0;
 
-                Matrix4x3_FromRotationY(&data_020a0e68, (short)(((Actor*)c)->HorzAngleToCPlayer() + 0x8000));
+                Matrix4x3_FromRotationY(&data_020a0e68, (short)(((dActor_c*)c)->HorzAngleToCPlayer() + 0x8000));
                 Matrix4x3_ApplyInPlaceToRotationX(&data_020a0e68, 0x2000);
                 MulVec3Mat4x3(&m, &data_020a0e68, &out);
 

@@ -3,10 +3,10 @@
 #include "common.h"
 #define LAUNDER(p) (p)
 
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int Vec3_Dist(const void *a, const void *b);
 extern short Vec3_HorzAngle(const void *a, const void *b);
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern void func_0201267c(int a, void *b);
 
 void func_ov020_02112e94(char *r4)
@@ -19,7 +19,7 @@ void func_ov020_02112e94(char *r4)
     int *av;
     unsigned short *p39e;
 
-    a = _ZN5Actor10FindWithIDEj(*(unsigned int *)(r4 + 0x37c));
+    a = _ZN8dActor_c10FindWithIDEj(*(unsigned int *)(r4 + 0x37c));
     if (a != 0) {
         av = (int *)(int)LAUNDER((char *)a + 0x5c);
         sp[0] = *av;
@@ -50,7 +50,7 @@ void func_ov020_02112e94(char *r4)
     }
 
     if (*(unsigned short *)(r4 + 0x3a0) != 0) {
-        p = _ZN5Actor13ClosestPlayerEv(r4);
+        p = _ZN8dActor_c13ClosestPlayerEv(r4);
         if (p != 0) {
             if (Vec3_Dist(r4 + 0x5c, (char *)p + 0x5c) < 0x1f4000)
                 *(unsigned short *)(r4 + 0x3a0) = 0;

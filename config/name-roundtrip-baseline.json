@@ -1,0 +1,89 @@
+{
+ "_comment": "Symbols the pinned mwccarm cannot emit. Written by tools/name_roundtrip.py --write-baseline. Every 'proposed' spelling below was produced by the compiler, not hand-derived; more than one means the mangling alone cannot choose.",
+ "version": "2004/b56",
+ "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+ "failing": {
+  "_ZN10MemoryNode6TargetC1EP10MemoryNode": {
+   "verdict": "MISMATCH",
+   "reason": "emitted ['_ZN10MemoryNode6TargetC1EPS_', '_ZN10MemoryNode6TargetC2EPS_'], claimed _ZN10MemoryNode6TargetC1EP10MemoryNode",
+   "cause": "Itanium substitution not applied: the name spells a type out in full where the ABI requires an S_/S0_ back-reference.  Hand-derived, not compiler-derived",
+   "module": "arm9",
+   "addr": "0x0204e938",
+   "proposed": [
+    "_ZN10MemoryNode6TargetC1EPS_"
+   ]
+  },
+  "_ZN13HeapAllocatorC1EjPvPvj": {
+   "verdict": "MISMATCH",
+   "reason": "emitted ['_ZN13HeapAllocatorC1EjPvS0_j', '_ZN13HeapAllocatorC2EjPvS0_j'], claimed _ZN13HeapAllocatorC1EjPvPvj",
+   "cause": "Itanium substitution not applied: the name spells a type out in full where the ABI requires an S_/S0_ back-reference.  Hand-derived, not compiler-derived",
+   "module": "arm9",
+   "addr": "0x0204df54",
+   "proposed": [
+    "_ZN13HeapAllocatorC1EjPvS0_j"
+   ]
+  },
+  "_ZN4HeapC1EPvjP4Heap": {
+   "verdict": "MISMATCH",
+   "reason": "emitted ['_ZN4HeapC1EPvjPS_', '_ZN4HeapC2EPvjPS_'], claimed _ZN4HeapC1EPvjP4Heap",
+   "cause": "Itanium substitution not applied: the name spells a type out in full where the ABI requires an S_/S0_ back-reference.  Hand-derived, not compiler-derived",
+   "module": "arm9",
+   "addr": "0x0203caac",
+   "proposed": [
+    "_ZN4HeapC1EPvjPS_"
+   ]
+  },
+  "_ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE": {
+   "verdict": "MISMATCH",
+   "reason": "emitted ['_ZN4cstd10fdiv_asyncE5Fix12IiES1_'], claimed _ZN4cstd10fdiv_asyncE5Fix12IiE5Fix12IiE",
+   "cause": "Itanium substitution not applied: the name spells a type out in full where the ABI requires an S_/S0_ back-reference.  Hand-derived, not compiler-derived",
+   "module": "arm9",
+   "addr": "0x02052fa4",
+   "proposed": [
+    "_ZN4cstd10fdiv_asyncE5Fix12IiES1_"
+   ]
+  },
+  "_ZN5StageC3Ev": {
+   "verdict": "MISMATCH",
+   "reason": "emitted ['_ZN5StageC1Ev', '_ZN5StageC2Ev'], claimed _ZN5StageC3Ev",
+   "cause": "constructor variant C3 (the allocating constructor); mwccarm emits C1 and C2 only, so no build can have produced this name",
+   "module": "arm9",
+   "addr": "0x0202e088",
+   "proposed": [
+    "_ZN5StageC1Ev",
+    "_ZN5StageC2Ev"
+   ]
+  },
+  "_ZN6PlayerC3Ev": {
+   "verdict": "MISMATCH",
+   "reason": "emitted ['_ZN6PlayerC1Ev', '_ZN6PlayerC2Ev'], claimed _ZN6PlayerC3Ev",
+   "cause": "constructor variant C3 (the allocating constructor); mwccarm emits C1 and C2 only, so no build can have produced this name",
+   "module": "ov002",
+   "addr": "0x020e6c0c",
+   "proposed": [
+    "_ZN6PlayerC1Ev",
+    "_ZN6PlayerC2Ev"
+   ]
+  },
+  "_ZN7fBase_cnwEj": {
+   "verdict": "REJECTED",
+   "reason": "line 4: illegal 'operator' declaration",
+   "cause": "GCC size_t spelling: an allocation operator's size argument is 'j' (unsigned int).  CodeWarrior's size_t is unsigned long, so it will only accept 'm'",
+   "module": "arm9",
+   "addr": "0x02043444",
+   "proposed": [
+    "_ZN7fBase_cnwEm"
+   ]
+  },
+  "_Znwj": {
+   "verdict": "REJECTED",
+   "reason": "line 2: illegal 'operator' declaration",
+   "cause": "GCC size_t spelling: an allocation operator's size argument is 'j' (unsigned int).  CodeWarrior's size_t is unsigned long, so it will only accept 'm'",
+   "module": "arm9",
+   "addr": "0x0203cbe4",
+   "proposed": [
+    "_Znwm"
+   ]
+  }
+ }
+}

@@ -10,14 +10,14 @@ extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callback
     u32 a, u32 b, Fix12 c, Fix12 d, Fix12 e, const void* f, void* g);
 extern void func_0203568c(int *p, int v);
 extern void func_02035684(int *p, int v);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* c);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern int _ZNK12WithMeshClsn12TouchesWaterEv(void* self);
 extern void _ZN13RaycastGroundC1Ev(struct RG*);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RG*, const Vector3*, void*);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RG*, const Vector3*, void*);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RG*);
-extern void _ZN5Actor13SmallPoofDustEv(void* self);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern void _ZN8dActor_c13SmallPoofDustEv(void* self);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern void _ZN13RaycastGroundD1Ev(struct RG*);
 extern void _ZN12WithMeshClsn18StopDetectingWaterEv(void* self);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
@@ -53,7 +53,7 @@ void func_ov002_020b94c4(char* c)
 
     func_0203568c((int*)(c + 0x200), 0x3c000);
     func_02035684((int*)(c + 0x200), 0x3c000);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x1cc);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x1cc);
     WithMeshClsn_UpdateContinuous_Veneer((void*)(c + 0x200));
 
     if (_ZNK12WithMeshClsn12TouchesWaterEv((void*)(c + 0x200))) {
@@ -61,7 +61,7 @@ void func_ov002_020b94c4(char* c)
         pos.y = *(int*)(c + 0x60);
         pos.z = *(int*)(c + 0x64);
         _ZN13RaycastGroundC1Ev(&rg);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &pos, 0);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, 0);
         if (_ZN13RaycastGround10DetectClsnEv(&rg)) {
             gy = rg.detect[12];
             pos.y = gy;
@@ -69,15 +69,15 @@ void func_ov002_020b94c4(char* c)
             if (diff < 0)
                 diff = -diff;
             if (diff > 0x64000) {
-                _ZN5Actor13SmallPoofDustEv(c);
-                _ZN9ActorBase18MarkForDestructionEv(c);
+                _ZN8dActor_c13SmallPoofDustEv(c);
+                _ZN7fBase_c18MarkForDestructionEv(c);
                 _ZN13RaycastGroundD1Ev(&rg);
                 return;
             }
             _ZN12WithMeshClsn18StopDetectingWaterEv((void*)(c + 0x200));
         } else {
-            _ZN5Actor13SmallPoofDustEv(c);
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN8dActor_c13SmallPoofDustEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             _ZN13RaycastGroundD1Ev(&rg);
             return;
         }

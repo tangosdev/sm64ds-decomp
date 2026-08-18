@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout:
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN9WaterRingD1Ev` destroys each member, and
  * `WaterRing_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV9WaterRing`. Everything this header used to restate below
- * 0x110 belongs to Enemy and Actor and is inherited now.
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
@@ -21,17 +21,17 @@
  *   - unk_368 = TextureTransformer.speed
  *
  * SIZE IS THE ROM'S OWN: `WaterRing_Spawn` calls
- * `ActorBase::operator new(912)` -- 0x390 -- and stores this class's
+ * `fBase_c::operator new(912)` -- 0x390 -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
 
-struct WaterRing : Enemy {
+struct WaterRing : dEnemyBase_c {
     MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x110 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x150 */
     Model                        mModel;                /* 0x30c */

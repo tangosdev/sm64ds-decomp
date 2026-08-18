@@ -3,9 +3,9 @@
 /* recovered: shared common types */
 #include "common.h"
 extern signed char data_0209f2f8;
-extern void* _ZN5Actor13ClosestPlayerEv(void* c);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3* p, const void* q, int e, int f);
+extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const struct Vector3* p, const void* q, int e, int f);
 
 void func_ov100_02142b90(char* c)
 {
@@ -22,7 +22,7 @@ void func_ov100_02142b90(char* c)
     if (data_0209f2f8 == 6) r1 = 3; else r1 = 6;
     if (*(u8*)(c + 0x3d2) >= (u32)r1) return;
 
-    pl = _ZN5Actor13ClosestPlayerEv(c);
+    pl = _ZN8dActor_c13ClosestPlayerEv(c);
     if (pl == 0) return;
 
     {
@@ -52,7 +52,7 @@ void func_ov100_02142b90(char* c)
     {
         void* a;
         int cc = *(signed char*)(c + 0xcc);
-        a = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xdc, *(int*)(c + 8),
+        a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xdc, *(int*)(c + 8),
             (struct Vector3*)(c + 0x5c), (const void*)(c + 0x92), cc, -1);
         if (a == 0) return;
         {

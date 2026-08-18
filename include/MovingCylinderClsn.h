@@ -4,7 +4,7 @@
 #include "types.h"
 #include "CylinderClsn.h"
 
-/* A cylinder attached to an Actor, vtable _ZTV18MovingCylinderClsn at
+/* A cylinder attached to an dActor_c, vtable _ZTV18MovingCylinderClsn at
  * 0x0208e6d4.
  *
  * VTABLE, 4 slots, read out of the ROM:
@@ -27,19 +27,19 @@
  * which is where MovingCylinderClsnWithPos starts its own field.
  *
  * BOTH VIRTUALS READ THROUGH owner. GetOwnerID loads owner->uniqueID at
- * Actor + 4, the same offset MeshColliderBase uses. GetPos does NOT return a
- * field of this object at all: it returns the owner's position at Actor +
- * 0x5c, so a moving cylinder tracks its Actor rather than storing a copy.
+ * dActor_c + 4, the same offset MeshColliderBase uses. GetPos does NOT return a
+ * field of this object at all: it returns the owner's position at dActor_c +
+ * 0x5c, so a moving cylinder tracks its dActor_c rather than storing a copy.
  */
 
 #ifdef __cplusplus
 
-struct Actor;
+struct dActor_c;
 
 extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 
 struct MovingCylinderClsn : CylinderClsn {
-    Actor *owner;           /* 0x30 - nulled by C2 */
+    dActor_c *owner;           /* 0x30 - nulled by C2 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
     virtual ~MovingCylinderClsn();      /* slots 0 (D1), 1 (D0) */
@@ -54,11 +54,11 @@ struct MovingCylinderClsn : CylinderClsn {
        because it wildcards relocated words. Only the link catches it.
 
        This family deallocates through Memory::operator_delete2, not the actor
-       heap: every D0 below ends with a call to 0x0203cbcc. Actor's copy of this
+       heap: every D0 below ends with a call to 0x0203cbcc. dActor_c's copy of this
        member calls Memory::Deallocate instead, which is why each needs its own.
 
        Inline, and in the IMMEDIATE base -- mwcc inlines it only when it finds it
-       in the class or one level up, as include/Actor.h records. No layout
+       in the class or one level up, as include/dActor_c.h records. No layout
        effect: a non-virtual inline member adds no field and no vtable slot. */
     void operator delete(void *ptr) { _ZN6Memory16operator_delete2EPv(ptr); }
 
@@ -71,7 +71,7 @@ typedef char MovingCylinderClsn_size_must_be_0x34[
 
 struct MovingCylinderClsn {
     struct CylinderClsn base; /* 0x00 */
-    struct Actor *owner;      /* 0x30 */
+    struct dActor_c *owner;      /* 0x30 */
 };
 
 #endif /* __cplusplus */

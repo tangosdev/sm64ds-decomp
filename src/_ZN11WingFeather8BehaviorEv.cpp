@@ -4,19 +4,19 @@
 /* recovered: named members + shared header, real C++ method */
 #include "WingFeather.h"
 extern "C" {
-void* _ZN5Actor13ClosestPlayerEv(void* self);
+void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 int _ZN6Player15IsCollectingCapEv(void* self);
-void _ZN5Actor13SmallPoofDustEv(void* self);
-void _ZN9ActorBase18MarkForDestructionEv(void* self);
+void _ZN8dActor_c13SmallPoofDustEv(void* self);
+void _ZN7fBase_c18MarkForDestructionEv(void* self);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 kind, u32 sub, int x, int y, int z, void* vec, void* cb);
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* clsn);
 void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 void _Z15ApproachLinear2Rsss(short* ref, short target, short rate);
 void _Z14ApproachLinearRiii(int* ref, int target, int rate);
 u8 DecIfAbove0_Byte(u8* p);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 kind, int x, int y, int z);
-void* _ZN5Actor10FindWithIDEj(u32 id);
+void* _ZN8dActor_c10FindWithIDEj(u32 id);
 void _ZN6Player16InitWingFeathersEb(void* self, int b);
 void _ZN12CylinderClsn5ClearEv(void* self);
 void _ZN12CylinderClsn6UpdateEv(void* self);
@@ -34,10 +34,10 @@ int WingFeather::Behavior()
     {
         int b = (data_0209f2d8 == 1);
         if (!b) {
-            void* p = _ZN5Actor13ClosestPlayerEv(((char*)this));
+            void* p = _ZN8dActor_c13ClosestPlayerEv(((char*)this));
             if (*(int*)((char*)p + 8) != 0 || _ZN6Player15IsCollectingCapEv(p) != 0) {
-                _ZN5Actor13SmallPoofDustEv(((char*)this));
-                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+                _ZN8dActor_c13SmallPoofDustEv(((char*)this));
+                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
                 return 1;
             }
         }
@@ -46,7 +46,7 @@ int WingFeather::Behavior()
     unk_380 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         unk_380, 0x4a, mPosX, mPosY, mPosZ, 0, 0);
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
     WithMeshClsn_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
@@ -54,7 +54,7 @@ int WingFeather::Behavior()
         _Z14ApproachLinearRiii((int*)((char*)&unk_098), 0, 0x555);
         if (DecIfAbove0_Byte((u8*)((char*)&unk_384)) == 0) {
             _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, mPosY, mPosZ);
-            _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+            _ZN7fBase_c18MarkForDestructionEv(((char*)this));
         }
     } else {
         short* angp = (short*)((((s64)((char*)&unk_37c))));
@@ -83,13 +83,13 @@ int WingFeather::Behavior()
 
     u32 id = unk_148;
     if (id != 0) {
-        void* a = _ZN5Actor10FindWithIDEj(id);
+        void* a = _ZN8dActor_c10FindWithIDEj(id);
         if (a != 0) {
             int eq = (*(u16*)((char*)a + 0xc) == 0xbf);
             if (eq) {
                 _ZN6Player16InitWingFeathersEb(a, 1);
                 _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0xd2, mPosX, mPosY, mPosZ);
-                _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+                _ZN7fBase_c18MarkForDestructionEv(((char*)this));
                 return 1;
             }
         }

@@ -9,8 +9,8 @@ struct KCL_File;
 struct CLPS_Block;
 struct MeshCollider;
 struct ObjTable;
-struct Actor;
-struct ActorBase;
+struct dActor_c;
+struct fBase_c;
 
 struct LVL_SubTbl {
     struct ObjTable* table;
@@ -31,7 +31,7 @@ extern "C" {
 
 extern unsigned char data_0209f2d8;
 extern int data_0209caa0[];
-extern struct ActorBase* data_0209f5c0;
+extern struct fBase_c* data_0209f5c0;
 
 extern struct KCL_File* LoadFile(int handle);
 extern void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(struct KCL_File* f);
@@ -39,7 +39,7 @@ extern void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(struct MeshCollide
 extern int _ZNK12MeshCollider16GetOctreeOriginYEv(struct MeshCollider* thiz);
 extern int _ZNK12MeshCollider13GetUnkOctreeYEv(struct MeshCollider* thiz);
 extern void _Z11LoadObjectsRN11LVL_Overlay8ObjTableEij(struct ObjTable* t, int i, unsigned int p);
-extern void _ZN12ActorDerived5SpawnEjP9ActorBaseii(unsigned int id, struct ActorBase* parent, int a, int b);
+extern void _ZN7dBase_c5SpawnEjP7fBase_cii(unsigned int id, struct fBase_c* parent, int a, int b);
 
 void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
 {
@@ -62,7 +62,7 @@ void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
         _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(f);
         _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(mc, f, ovl->clps);
         func_0202a850(_ZNK12MeshCollider16GetOctreeOriginYEv(mc), _ZNK12MeshCollider13GetUnkOctreeYEv(mc));
-        ((MeshColliderBase *)(mc))->Enable((Actor *)(0));
+        ((MeshColliderBase *)(mc))->Enable((dActor_c *)(0));
     }
 
     data_ov002_0211118c = 0;
@@ -91,9 +91,9 @@ void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
 
     isTwo = (data_0209f2d8 == 2);
     if (isTwo == 0) {
-        _ZN12ActorDerived5SpawnEjP9ActorBaseii(0x14f, data_0209f5c0, 0, 0);
+        _ZN7dBase_c5SpawnEjP7fBase_cii(0x14f, data_0209f5c0, 0, 0);
         if (intro == 0)
-            _ZN12ActorDerived5SpawnEjP9ActorBaseii(0x14e, data_0209f5c0, 0, 0);
+            _ZN7dBase_c5SpawnEjP7fBase_cii(0x14e, data_0209f5c0, 0, 0);
     }
 
     if (intro != 0)

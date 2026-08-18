@@ -39,7 +39,7 @@ void _ZN7Message19DisplaySaveMenuTextEt(int m);
 void _ZN7Message21DisplaySaveStatusTextEt(int m);
 void _ZN7Message19DisplayDontSaveTextEt(int m);
 void _ZN7Message25DisplayControllerModeTextEt(int m);
-void _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, int c);
+void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, int c);
 int GetOwnerLanguage(void);
 u16 *_ZN3G2S12GetBG1ScrPtrEv(void);
 void SetControllerMode(int m);
@@ -627,7 +627,7 @@ void Stage::PS_Update()
         }
     }
     case 6: {
-        _ZN5Scene14StartSceneFadeEjjt(1, 0, 0);
+        _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);
         data_0209b454 |= 0x40000000;
         data_0209b464 = data_0209b454;
         data_0209f280 = 1;
@@ -1359,7 +1359,7 @@ void Stage::PS_Update()
             data_0209f2c4 = 2;
             return;
         }
-        _ZN5Scene14StartSceneFadeEjjt(1, 0, 0);
+        _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);
         data_0209f280 = 1;
         _ZN5Stage10PS_CleanupEv();
         data_0209b454 |= 0x40000000;
@@ -1442,7 +1442,7 @@ void Stage::PS_Update()
             data_0209f2c4 = 2;
             return;
         }
-        _ZN5Scene14StartSceneFadeEjjt(1, 0, 0);
+        _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);
         data_0209f280 = 1;
         _ZN5Stage10PS_CleanupEv();
         data_0209b454 |= 0x40000000;
@@ -1452,7 +1452,7 @@ void Stage::PS_Update()
     case 0x13: {
         int t = (data_0209f2d8 == 1);
         if (t != false && data_0209fc68 == 0) {
-            _ZN5Scene14StartSceneFadeEjjt(6, 1, 0);
+            _ZN8dScene_c14StartSceneFadeEjjt(6, 1, 0);
             data_0209f280 = 1;
             _ZN5Stage10PS_CleanupEv();
             data_0209b454 |= 0x40000000;

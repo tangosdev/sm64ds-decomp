@@ -1,5 +1,5 @@
 extern int _ZN9Animation8FinishedEv(char* a);
-extern void _ZN9ActorBase18MarkForDestructionEv(char* c);
+extern void _ZN7fBase_c18MarkForDestructionEv(char* c);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     char* t, void* f, int a, int fix, unsigned int j);
 extern int* data_ov002_020ff0c4[];
@@ -33,7 +33,7 @@ int func_ov002_020b7200(char* c)
         case 0xa:
         case 0xf:
         case 0x16:
-            _ZN9ActorBase18MarkForDestructionEv(c);
+            _ZN7fBase_c18MarkForDestructionEv(c);
             break;
 
         case 0x15:

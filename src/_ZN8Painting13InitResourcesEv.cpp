@@ -16,7 +16,7 @@ struct Disp {
     int pad[4];
 };
 
-extern "C" void _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
+extern "C" void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
 
 extern Disp data_ov080_02128628[];
 extern int data_0209caa0[];
@@ -96,7 +96,7 @@ s32 Painting::InitResources() {
         int hi = (int)((unsigned char)((f >> 4) & 0xf) + 1);
         int a = lo * 0x64000;
         int b = hi * 0x64000;
-        _ZN5Actor9SetRangesE5Fix12IiES1_S1_S1_(c, b / 2, (a / 2) + 0xc8000, 0x1964000, 0x1964000);
+        _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(c, b / 2, (a / 2) + 0xc8000, 0x1964000, 0x1964000);
     }
     {
         unsigned int f = *(unsigned int*)(c + 8);

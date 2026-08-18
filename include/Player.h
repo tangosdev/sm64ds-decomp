@@ -3,9 +3,9 @@
  * explicit padding. Field NAMES cannot change codegen, so they are safe to
  * improve -- but the OFFSETS and WIDTHS are pinned by the bytes.
  *
- * Player derives from Actor: ActorBase -> ActorDerived -> Actor -> Player.
+ * Player derives from dActor_c: fBase_c -> dBase_c -> dActor_c -> Player.
  * See notes/actor-vtables.md. That IS expressed here now: `struct Player :
- * Actor` inherits 0x000..0x0cf rather than duplicating it, and the 31-slot
+ * dActor_c` inherits 0x000..0x0cf rather than duplicating it, and the 31-slot
  * vtable (_ZTV6Player, 0x0210a83c in ov002) has seven of its overrides
  * declared -- the destructor pair plus slots 0, 3, 6, 9, 12 and 18. See the
  * vtable block above the method list; the key-function rule documented there
@@ -24,7 +24,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include "types.h"
-#include "Actor.h"
+#include "dActor_c.h"
 #include "ShadowModel.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "WithMeshClsn.h"
@@ -36,15 +36,15 @@
    for every parameter NAME it could not resolve as well -- 26 of them, `struct
    a;` through `struct x;` -- which declared nothing any declaration below
    refers to. Removed; none was used as a type anywhere in src/ or include/. */
-struct Actor;
-struct ActorBase;
+struct dActor_c;
+struct fBase_c;
 struct Vector3;
 
-struct Player : Actor {
-    /* 0x000..0x0cf is Actor's, inherited rather than duplicated. It used to be
-       written out inline here -- mParam at 0x008 was ActorBase's param1, mPosX
-       at 0x05c was Actor's, and so on. The names were reconciled first so that
-       deleting the block is all that happens here. sizeof(Actor) is 0xd0, so
+struct Player : dActor_c {
+    /* 0x000..0x0cf is dActor_c's, inherited rather than duplicated. It used to be
+       written out inline here -- mParam at 0x008 was fBase_c's param1, mPosX
+       at 0x05c was dActor_c's, and so on. The names were reconciled first so that
+       deleting the block is all that happens here. sizeof(dActor_c) is 0xd0, so
        Player's own fields start exactly where the base ends. */
 
     /* One entry of the player state machine. _ZN6Player7IsStateERNS_5StateE
@@ -276,7 +276,7 @@ struct Player : Actor {
        misses by exactly one word. Nothing anywhere reads it signed -- the
        other five users either store, or cast to u16* first (including
        Behavior's DecIfAbove0_Short(u16*)). Same defect class as the imported
-       parameter widths in Actor.h: a declared type nothing had checked. */
+       parameter widths in dActor_c.h: a declared type nothing had checked. */
     u16 mJumpComboTimer;            /* 0x6a8 */
     u16 unk_6aa;            /* 0x6aa */
     u8  unk_6ac;            /* 0x6ac */
@@ -436,7 +436,7 @@ struct Player : Actor {
     static State ST_WAIT;
     static State ST_OWL;
 
-    /* --- vtable. _ZTV6Player (0x0210a83c, ov002) is Actor's 31 slots with
+    /* --- vtable. _ZTV6Player (0x0210a83c, ov002) is dActor_c's 31 slots with
            eight overridden and NO new virtuals; see notes/actor-vtables.md.
 
            The destructor is declared FIRST on purpose. CW 1.2 emits the vtable
@@ -458,7 +458,7 @@ struct Player : Actor {
     virtual s32  Render();              /* slot  9 */
     virtual void OnPendingDestroy();    /* slot 12 */
     virtual int  OnYoshiTryEat();       /* slot 18 -- int, not u32: it overrides
-                                           Actor::OnYoshiTryEat and CW rejects a
+                                           dActor_c::OnYoshiTryEat and CW rejects a
                                            mismatched return type on an override */
 
     int Burn();
@@ -496,8 +496,8 @@ struct Player : Actor {
        their stack-passed arguments with ldrb, and mwcc never fuses a
        narrowing cast into a narrower load. The symbols were imported ending
        jj and are corrected to hh in this commit. */
-    int ShowMessage(ActorBase & a_, unsigned int b, const Vector3 * v, unsigned char d_, unsigned char e_);
-    int ShowMessage2(ActorBase & actor_, unsigned int msg, const Vector3 * pos, unsigned char d_, unsigned char e_);
+    int ShowMessage(fBase_c & a_, unsigned int b, const Vector3 * v, unsigned char d_, unsigned char e_);
+    int ShowMessage2(fBase_c & actor_, unsigned int msg, const Vector3 * pos, unsigned char d_, unsigned char e_);
     int St_BackFlip_Init();
     int St_Balloon_Cleanup();
     int St_Balloon_Init();
@@ -670,10 +670,10 @@ struct Player : Actor {
     int St_YoshiPower_Cleanup();
     int St_YoshiPower_Init();
     int St_YoshiPower_Main();
-    int StartTalk(ActorBase & actor_, bool b_);
+    int StartTalk(fBase_c & actor_, bool b_);
     int TryEnterStarDoor(Vector3 & pos_, short kind);
     int TryExitWhiteDoorWithStar();
-    int TryGrab(Actor & actor_);
+    int TryGrab(dActor_c & actor_);
     int TryTalkToDoor(unsigned char a);
     int TryTalkToKeyDoor();
     int Unk_020c4f40(unsigned short x);

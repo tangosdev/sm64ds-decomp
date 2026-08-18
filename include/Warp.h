@@ -2,22 +2,22 @@
 #define WARP_H
 
 #include "types.h"
-#include "Actor.h"
+#include "dActor_c.h"
 #include "MovingCylinderClsn.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   Warp_Spawn  ActorBase::operator new(264 = 0x108), Actor::Actor(), stores _ZTV4Warp,
+ *   Warp_Spawn  fBase_c::operator new(264 = 0x108), dActor_c::dActor_c(), stores _ZTV4Warp,
  *                 then the member below in this order.
- *   ~Warp   the same member destroyed in reverse, then ~Actor.
+ *   ~Warp   the same member destroyed in reverse, then ~dActor_c.
  *
  * SIZE 0x108 is the factory's own literal, and the last member closes exactly on it.
  *
- * THE VTABLE was diffed slot by slot against _ZTV5Actor. Only the slots declared
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. Only the slots declared
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
  */
-struct Warp : Actor {
+struct Warp : dActor_c {
     u8  pad_0d0[0x4];
     MovingCylinderClsn     mMovingCylinderClsn; /* 0x0d4 */
 
@@ -25,6 +25,7 @@ struct Warp : Actor {
 
     virtual s32   InitResources();         /* slot  0 */
     virtual s32   CleanupResources();      /* slot  3 */
+    virtual s32   Behavior();              /* slot  6 */
     virtual s32   Render();                /* slot  9 */
     virtual void  OnPendingDestroy();      /* slot 12 */
 };

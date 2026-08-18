@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void *_ZN5Actor10FindWithIDEj(unsigned id);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned a, int x, int y, int z);
 extern void _ZN6Player8BlowAwayEs(void *o, short s);
 extern int _ZN6Player15IsCollectingCapEv(void *o);
@@ -8,7 +8,7 @@ extern int Vec3_HorzAngle(void *a, void *b);
 extern void _ZN6Player18SetNewHatCharacterEjjb(void *o, unsigned a, unsigned b, int c);
 extern int _ZN8SaveData16HasPlayerLostCapEv(void);
 extern void _ZN8SaveData13PlayerLoseCapEv(void);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned fl, void *v, void *v16, int a, int b);
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned id, unsigned fl, void *v, void *v16, int a, int b);
 extern char data_ov027_02113d10;
 
 void func_ov027_02112170(void *cc)
@@ -25,7 +25,7 @@ void func_ov027_02112170(void *cc)
     id = *(int*)(c + 0x24);
     if (id == 0)
         return;
-    e = (char*)_ZN5Actor10FindWithIDEj(id);
+    e = (char*)_ZN8dActor_c10FindWithIDEj(id);
     if (e == 0)
         return;
 
@@ -72,7 +72,7 @@ void func_ov027_02112170(void *cc)
         v[1] = t44;
         v[2] = t48;
     }
-    s = (char*)_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+    s = (char*)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
         0x10d, (*(int*)(e + 8) << 8) | 3, v, vec16, 0, -1);
     if (s == 0)
         return;

@@ -3,9 +3,9 @@
 
 #include "types.h"
 
-/* Derives from Enemy, on the evidence of its own destructor: `_ZN6BulletD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN6BulletD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
- * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
  *
  * The members close exactly on one another:
@@ -21,7 +21,7 @@
  * is not independent evidence about the ROM.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
@@ -30,10 +30,10 @@
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
 
-struct Bullet : Enemy {
+struct Bullet : dEnemyBase_c {
     /* What mCurrentState points at. Behavior calls the handler at +0x08
        through it; only that handler is evidenced. The field was reachable only
-       through the `struct Actor { char pad[0x350]; Holder* h; }` stand-in that
+       through the `struct dActor_c { char pad[0x350]; Holder* h; }` stand-in that
        file used to carry, so the generated header never had it. */
     struct State {
         u8  pad_00[0x8];

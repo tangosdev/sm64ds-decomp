@@ -7,9 +7,9 @@
 /* resolved: VT0 = _ZTV8StarDoor */
 int *StarDoor_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(280);
+    int *p = (int *)_ZN7fBase_cnwEj(280);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV8StarDoor;
         _ZN11CommonModelC1Ev((char *)p + 0xd4);
     }

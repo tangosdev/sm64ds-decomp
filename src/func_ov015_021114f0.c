@@ -1,7 +1,7 @@
 // NONMATCHING: smull dest/reg coloring after Matrix call (div=12). Prologue+epilogue byte-identical with #pragma opt_propagation off + r5-first decl.
 #pragma opt_propagation off
 extern void Matrix4x3_FromRotationY(void *m, short ang);
-extern int _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *mtx, int a, int b, int d, unsigned int e);
+extern int _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *mtx, int a, int b, int d, unsigned int e);
 extern short data_02082214[];
 int func_ov015_021114f0(char *c) {
     int r5;
@@ -41,5 +41,5 @@ int func_ov015_021114f0(char *c) {
     }
     if (*(unsigned char*)(c+0x397) >= 2)
         *(int*)(c+0x370) = *(int*)(c+0x384) >> 3;
-    return _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(c, c+0x320, c+0x348, 0xc8000, 0x12c000, r4, 0xf);
+    return _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(c, c+0x320, c+0x348, 0xc8000, 0x12c000, r4, 0xf);
 }

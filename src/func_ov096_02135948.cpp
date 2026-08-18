@@ -14,8 +14,8 @@ typedef long long s64;
 extern "C" {
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void* pos);
 extern void func_ov096_02135800(void* c);
-extern void* _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, const void* rot, int e, int f);
-extern void* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, const void* rot, int e, int f);
+extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int Vec3_HorzDist(const void* a, const void* b);
 extern int Vec3_HorzAngle(const void* a, const void* b);
 extern s16 data_02082214[];
@@ -47,14 +47,14 @@ void func_ov096_02135948(char* c)
     int vv5[3];
     int x, y, z;
 
-    if (_ZN5Actor7FindEggER12CylinderClsn(c, c + 0x14c) != 0 ||
-        _ZN5Actor18FindExplosionActorER12CylinderClsn(c, c + 0x14c) != 0) {
+    if (_ZN8dActor_c7FindEggER12CylinderClsn(c, c + 0x14c) != 0 ||
+        _ZN8dActor_c18FindExplosionActorER12CylinderClsn(c, c + 0x14c) != 0) {
         _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
         func_ov096_02135800(c);
         {
             int b = (*(unsigned short*)(c + 0xc) == 0xf0);
             if (b) {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x122, 2, c + 0x5c, 0, *(signed char*)(c + 0xcc), -1);
             }
         }
@@ -66,7 +66,7 @@ void func_ov096_02135948(char* c)
     if (id170 == 0)
         return;
 
-    p = (char*)_ZN5Actor10FindWithIDEj(id170);
+    p = (char*)_ZN8dActor_c10FindWithIDEj(id170);
     if (p == 0)
         return;
 

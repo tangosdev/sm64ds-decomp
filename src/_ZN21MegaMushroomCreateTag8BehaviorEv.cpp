@@ -13,11 +13,11 @@ struct CylinderClsn {
     void Update();
 };
 
-struct ActorBase {
+struct fBase_c {
     void MarkForDestruction();
 };
 
-struct Actor : ActorBase {
+struct dActor_c : fBase_c {
     char pad0[0xc];
     unsigned short actorID;   /* 0xc */
     char pad1[0x5c - 0xe];
@@ -31,47 +31,47 @@ struct Actor : ActorBase {
     unsigned char b10b;       /* 0x10b */
     unsigned char b10c;       /* 0x10c */
     char pad4[0x32c - 0x10d];
-    Actor *p32c;              /* 0x32c */
-    static Actor *FindWithActorID(unsigned int id, Actor *after);
+    dActor_c *p32c;              /* 0x32c */
+    static dActor_c *FindWithActorID(unsigned int id, dActor_c *after);
 };
 
 
 int MegaMushroomCreateTag::Behavior()
 {
-    Actor *o;
-    int isTarget = (int)(((Actor *)this)->actorID == 0x140);
+    dActor_c *o;
+    int isTarget = (int)(((dActor_c *)this)->actorID == 0x140);
     if (isTarget) {
-        if (!((Actor *)this)->b10b) {
-            o = Actor::FindWithActorID(0x1b, 0);
+        if (!((dActor_c *)this)->b10b) {
+            o = dActor_c::FindWithActorID(0x1b, 0);
             while (o) {
-                if (Vec3_Dist(&((Actor *)this)->pos, &o->pos) < 0x96000) {
-                    ((Actor *)this)->b108 = 1;
-                    o->p32c = ((Actor *)this);
-                    ((Actor *)this)->b10b = 1;
+                if (Vec3_Dist(&((dActor_c *)this)->pos, &o->pos) < 0x96000) {
+                    ((dActor_c *)this)->b108 = 1;
+                    o->p32c = ((dActor_c *)this);
+                    ((dActor_c *)this)->b10b = 1;
                     return 1;
                 }
-                o = Actor::FindWithActorID(0x1b, o);
+                o = dActor_c::FindWithActorID(0x1b, o);
             }
-            ((Actor *)this)->b10b = 1;
+            ((dActor_c *)this)->b10b = 1;
         }
     }
-    if (!((Actor *)this)->b10a) {
-        o = Actor::FindWithActorID(0x13f, 0);
+    if (!((dActor_c *)this)->b10a) {
+        o = dActor_c::FindWithActorID(0x13f, 0);
         while (o) {
-            if (((Actor *)this)->b109 == o->b109) ((Actor *)this)->b10a = 1;
-            o = Actor::FindWithActorID(0x13f, o);
+            if (((dActor_c *)this)->b109 == o->b109) ((dActor_c *)this)->b10a = 1;
+            o = dActor_c::FindWithActorID(0x13f, o);
         }
-        if (!((Actor *)this)->b10a) ((Actor *)this)->MarkForDestruction();
+        if (!((dActor_c *)this)->b10a) ((dActor_c *)this)->MarkForDestruction();
     }
-    isTarget = (int)(((Actor *)this)->actorID == 0x140);
+    isTarget = (int)(((dActor_c *)this)->actorID == 0x140);
     if (isTarget) {
-        if (((Actor *)this)->b108 == 1) {
-            if (((Actor *)this)->b10c) func_ov002_020b4714(((Actor *)this));
+        if (((dActor_c *)this)->b108 == 1) {
+            if (((dActor_c *)this)->b10c) func_ov002_020b4714(((dActor_c *)this));
         } else {
-            func_ov002_020b47ec(((Actor *)this));
+            func_ov002_020b47ec(((dActor_c *)this));
         }
     }
-    ((Actor *)this)->clsn.Clear();
-    ((Actor *)this)->clsn.Update();
+    ((dActor_c *)this)->clsn.Clear();
+    ((dActor_c *)this)->clsn.Update();
     return 1;
 }

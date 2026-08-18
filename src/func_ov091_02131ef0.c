@@ -1,7 +1,7 @@
 typedef short s16;
 extern void func_020393d4(int* p, int v);
 extern int func_ov091_02131db8(char* c);
-extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
 
 int func_ov091_02131ef0(char* c) {
   s16 old = *(s16*)(c+0x8e);
@@ -9,7 +9,7 @@ int func_ov091_02131ef0(char* c) {
   if (old != *(s16*)(c+0x8e)) {
     func_020393d4((int*)(c+0x124), 0);
   } else {
-    func_020393d4((int*)(c+0x124), (int)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int*)(c+0x124), (int)&_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
   }
   if (*(unsigned char*)(c+0x352) == 0) {
     if (*(unsigned short*)(c+0x354) < 0x14) return *(unsigned short*)(c+0x354);

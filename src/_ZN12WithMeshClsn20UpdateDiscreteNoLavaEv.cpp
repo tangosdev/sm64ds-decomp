@@ -12,7 +12,7 @@ extern "C" {
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
 extern int func_02037938(int p);
 extern void func_02038324(void *arg, int b, int c, int d);
-extern void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(void *self, struct Vector3 *v, int fix, void *actor);
+extern void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void *self, struct Vector3 *v, int fix, void *actor);
 extern void func_020356d4(char *self);
 }
 
@@ -38,7 +38,7 @@ void WithMeshClsn::UpdateDiscreteNoLava()
     v.y = sy;
     v.z = src->z;
     v.y = sy + unk_01c;
-    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP5Actor(((char *)this) + 0x20, &v,
+    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(((char *)this) + 0x20, &v,
         unk_018, *(void **)((char *)&mActor));
     unk_128 = unk_1b8;
     if (src->y - p68->y > 0) {

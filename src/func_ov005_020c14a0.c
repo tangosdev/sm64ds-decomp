@@ -45,7 +45,7 @@ int func_ov005_020c14a0(char* c) {
     } else if (self->unk_098 > 1) {
         *(int*)((int)c + 0x98) -= 1;
         if (self->unk_098 == 1) {
-            _ZN5Scene20SetAndStopColorFaderEv();
+            _ZN8dScene_c20SetAndStopColorFaderEv();
             ExitMinigameMenu();
             _ZN5Sound22StopLoadedMusic_Layer1Ej(0x1e);
             self->unk_0ac = 1;

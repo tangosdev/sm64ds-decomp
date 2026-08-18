@@ -14,7 +14,7 @@ int *_ZN10StarMarkerD0Ev(int *t)
     _ZN11ShadowModelD1Ev((char *)t + 0x164);
     _ZN5ModelD1Ev((char *)t + 0x114);
     _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0xd4);
-    _ZN5ActorD2Ev(t);
+    _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;
 }

@@ -3,9 +3,9 @@
 
 #include "types.h"
 
-/* Derives from Enemy, on the evidence of its own destructor: `_ZN6BobOmbD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN6BobOmbD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
- * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
  *
  * The members close exactly on one another:
@@ -24,12 +24,12 @@
  * also rename things its callers spell.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `BobOmb_Spawn` calls
- * `ActorBase::operator new(1024)` -- 0x400 -- and stores `_ZTV6BobOmb`,
+ * `fBase_c::operator new(1024)` -- 0x400 -- and stores `_ZTV6BobOmb`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x3f8; the difference is trailing space no source reads.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
@@ -38,7 +38,7 @@
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
 
-struct BobOmb : Enemy {
+struct BobOmb : dEnemyBase_c {
     MovingCylinderClsn           mCylinderClsn;         /* 0x110 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */
@@ -72,6 +72,7 @@ struct BobOmb : Enemy {
     virtual ~BobOmb();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

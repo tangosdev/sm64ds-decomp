@@ -65,17 +65,17 @@ extern "C" char data_ov085_021306ac;
 extern "C" char data_ov085_021306bc;
 extern "C" char data_ov085_021306dc;
 
-extern "C" void* _ZN5Actor13ClosestPlayerEv(void* c);
+extern "C" void* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, Fix12i c, Fix12i d, Fix12i e, void* f, void* g);
 extern "C" void _ZN7Message11PrepareTalkEv(void);
 extern "C" int func_02013890(int a, int b);
 extern "C" void _ZN5Sound7PlaySubEjjj5Fix12IiEb(u32 a, u32 b, u32 c, Fix12i d, int e);
 extern "C" int _ZN8SaveData22NumGlowingRabbitsFoundEv(void);
-extern "C" int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* thiz, void* ab, u32 id, const Vector3* pos, u32 e, u32 f);
+extern "C" int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* thiz, void* ab, u32 id, const Vector3* pos, u32 e, u32 f);
 extern "C" void func_02012694(int a, void* b);
 extern "C" int _ZN6Player12GetTalkStateEv(void* c);
 extern "C" void _ZN6Player9DropActorEv(void* c);
-extern "C" int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
+extern "C" int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
 extern "C" void _ZN12CylinderClsn5ClearEv(void* c);
 extern "C" void _ZN12CylinderClsn6UpdateEv(void* c);
 extern "C" void func_ov085_0212bcc8(void* c);
@@ -85,8 +85,8 @@ extern "C" u16 DecIfAbove0_Short(void* p);
 extern "C" void _ZN9Animation7AdvanceEv(void* c);
 extern "C" void func_ov085_0212bdbc(void* c);
 extern "C" void func_ov085_0212bedc(void* c);
-extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void* c, void* cyl);
-extern "C" void _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(void* c, void* w, u32 j);
+extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* c, void* cyl);
+extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* c, void* w, u32 j);
 extern "C" void func_ov085_0212a828(void* c);
 
 int Rabbit::Behavior()
@@ -101,7 +101,7 @@ int Rabbit::Behavior()
             return 1;
         }
     } else {
-        r0p = _ZN5Actor13ClosestPlayerEv(c);
+        r0p = _ZN8dActor_c13ClosestPlayerEv(c);
         if (r0p == 0)
             return 1;
         if (!(data_0209caa0[2] & 0x20000) || mCharacterId != *(u8*)((char*)r0p + 0x6d9)) {
@@ -160,7 +160,7 @@ int Rabbit::Behavior()
                             var_r2 = 0x13b; var_r6 = 0x160;
                         }
                         pos.y += 0x64000;
-                        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(temp_r4, c, var_r2, 0, 0, 0) == 1) {
+                        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(temp_r4, c, var_r2, 0, 0, 0) == 1) {
                             func_02012694(var_r6, &mCamSpacePosX);
                             unk_427 = 1;
                         }
@@ -174,7 +174,7 @@ int Rabbit::Behavior()
         }
     }
 
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(c, &mWithMeshClsn) != 0) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(c, &mWithMeshClsn) != 0) {
         _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsn);
         if (unk_107 != 0) {
             if (unk_104 == 5)
@@ -194,7 +194,7 @@ int Rabbit::Behavior()
         func_ov085_0212bc78(c, &data_ov085_021306ac);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(&mModelAnim, *(void**)((char*)&data_ov085_021305c0 + 4), 0, 0x1000, 0);
         if (*(void**)&unk_45c == 0)
-            *(void**)&unk_45c = _ZN5Actor13ClosestPlayerEv(c);
+            *(void**)&unk_45c = _ZN8dActor_c13ClosestPlayerEv(c);
         return 1;
     }
 
@@ -242,11 +242,11 @@ int Rabbit::Behavior()
         int v = (mFlags & 0x4000) ? 1 : 0;
         if (v == 0) {
             if (*(void**)&unk_364 != (void*)&data_ov085_021306ac || unk_426 != 0)
-                _ZN5Actor9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsn);
+                _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsn);
             mAngleX = mPrevAngleX;
             mAngleY = mPrevAngleY;
             mAngleZ = mPrevAngleZ;
-            _ZN5Enemy12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 0);
+            _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 0);
             if (*(void**)&unk_364 != (void*)&data_ov085_021306ac)
                 func_ov085_0212a828(c);
         }

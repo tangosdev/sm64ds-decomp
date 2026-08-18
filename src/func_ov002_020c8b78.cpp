@@ -3,10 +3,10 @@
 // @symbol func_ov002_020c8b78
 /* recovered: shared common types */
 #include "common.h"
-struct ActorBase {};
+struct fBase_c {};
 struct Animation { char pad[0x50]; int WillHitFrame(int) const; };
 
-struct Player : ActorBase {
+struct Player : fBase_c {
     int dummy;
 };
 
@@ -23,7 +23,7 @@ extern "C" void func_020731dc(void *a, void *b, void *node);
 extern "C" void _ZN7Vector3D1Ev(void);
 extern "C" {
 extern void Vec3_RotateYAndTranslate(Vector3 *, void *, int, void *);
-extern void _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(Player *, ActorBase &, unsigned int, Vector3 const *, unsigned int, unsigned int);
+extern void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(Player *, fBase_c &, unsigned int, Vector3 const *, unsigned int, unsigned int);
 }
 
 extern "C" int data_ov002_0210e154;
@@ -59,7 +59,7 @@ extern "C" int func_ov002_020c8b78(char *self) {
             unsigned int msg = 0x188;
             if (*(u8 *)(self + 0x70c))
                 msg = 0x29;
-            _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(p, *(ActorBase *)p, msg, &v, 0, 2);
+            _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(p, *(fBase_c *)p, msg, &v, 0, 2);
             *(u8 *)(self + 0x70b) = saved;
         }
     }

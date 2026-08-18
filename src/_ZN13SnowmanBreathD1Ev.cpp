@@ -11,7 +11,7 @@ extern void func_ov027_02112158(void*);
 int _ZN13SnowmanBreathD1Ev(char* c){
   *(int**)c = RotatingPlatformRr_SpawnInfo;
   __destroy_arr(c+0xd4, 0x32, 0x60, (void*)func_ov027_02112158);
-  _ZN5ActorD2Ev(c);
+  _ZN8dActor_cD2Ev(c);
   return (int)c;
 }
 }

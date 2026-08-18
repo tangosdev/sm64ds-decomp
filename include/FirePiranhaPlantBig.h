@@ -3,12 +3,12 @@
 
 #include "types.h"
 
-/* Derives from Enemy, on the evidence of its own destructor: `_ZN19FirePiranhaPlantBigD1Ev`
- * stores this vtable, destroys three members, then calls `Enemy::~Enemy`.
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN19FirePiranhaPlantBigD1Ev`
+ * stores this vtable, destroys three members, then calls `dEnemyBase_c::~dEnemyBase_c`.
  * Everything this header used to restate below 0x110 belongs to that chain and
  * is inherited now.
  *
- * The members close exactly on one another, and Enemy's own 0x110 closes
+ * The members close exactly on one another, and dEnemyBase_c's own 0x110 closes
  * exactly on the first:
  *
  *     0x110 ModelAnim                  0x64   -> 0x174
@@ -26,14 +26,14 @@
  * is not independent evidence about the ROM.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "Model.h"
 #include "MovingCylinderClsn.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "WithMeshClsn.h"
 
-struct FirePiranhaPlantBig : Enemy {
+struct FirePiranhaPlantBig : dEnemyBase_c {
     ModelAnim                    mModelAnim;            /* 0x110 */
     MovingCylinderClsn           mMovingCylinderClsn;   /* 0x174 */
     MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x1a8 */
@@ -63,6 +63,7 @@ struct FirePiranhaPlantBig : Enemy {
     virtual ~FirePiranhaPlantBig();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();

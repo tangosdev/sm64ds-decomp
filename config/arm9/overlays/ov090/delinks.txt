@@ -91,7 +91,7 @@ src/_ZN7Skeeter16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02132618 end:0x02132620
 
-src/func_ov090_02132620.cpp:
+src/_ZN7Skeeter13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02132620 end:0x0213264c
 
@@ -191,11 +191,11 @@ src/func_ov090_02133338.c:
     complete
     .text start:0x02133338 end:0x021333ac
 
-src/_ZN10CheepCheep16CleanupResourcesEv.c:
+src/_ZN10CheepCheep16CleanupResourcesEv.cpp:
     complete
     .text start:0x021333ac end:0x021333dc
 
-src/_ZN10CheepCheep16OnPendingDestroyEv.c:
+src/_ZN10CheepCheep16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021333dc end:0x021333e0
 

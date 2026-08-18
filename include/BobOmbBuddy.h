@@ -16,7 +16,7 @@ struct BobOmbBuddy {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x26];
-    /* 0x08e..0x0d4 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x08e..0x0d4 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s16 unk_08e;                 /* 0x08e */
     s16 mAngleZ;                 /* 0x090 */

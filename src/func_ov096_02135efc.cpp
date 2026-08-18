@@ -10,7 +10,7 @@ extern "C" void Matrix4x3_FromTranslation(struct Mtx43* m, Fix12i x, Fix12i y, F
 extern "C" void Matrix4x3_ApplyInPlaceToTranslation(void* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationZXYExt(void* m, int x, int y, int z);
 extern "C" void Matrix4x3_FromRotationY(void* m, int angle);
-extern "C" void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern "C" void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* self, void* sm, void* mtx, Fix12i fx, int t, u32 u);
 
 extern struct Mtx43 data_020a0e68;
@@ -56,7 +56,7 @@ extern "C" void func_ov096_02135efc(char* c)
             *(int*)(c + 0x364) = *(int*)(c + 0x60) >> 3;
             *(int*)(c + 0x368) = *(int*)(c + 0x64) >> 3;
 
-            _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+            _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
                 c, c + 0x124, c + 0x33c, 0xa0000, 0x2bc000, 0xf);
             return;
         }
@@ -69,7 +69,7 @@ extern "C" void func_ov096_02135efc(char* c)
     *(int*)(c + 0x11c) = (*(int*)(c + 0x64) + *(int*)(c + 0x380)) >> 3;
 
     if (*(int*)(c + 0x394) == 0 || *(int*)(c + 0x38c) == 2 || *(int*)(c + 0x38c) == 5) {
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, c + 0x124, c + 0xf0, 0x82000, 0x2bc000, 0xf);
     }
 }

@@ -3,9 +3,9 @@
 
 #include "types.h"
 
-/* Derives from Enemy, on the evidence of its own destructor: `_ZN7HeaveHoD1Ev`
+/* Derives from dEnemyBase_c, on the evidence of its own destructor: `_ZN7HeaveHoD1Ev`
  * stores this vtable, destroys its members in reverse declaration order, then
- * calls `Enemy::~Enemy`. Everything this header used to restate below 0x110
+ * calls `dEnemyBase_c::~dEnemyBase_c`. Everything this header used to restate below 0x110
  * belongs to that chain and is inherited now.
  *
  * The members close exactly on one another:
@@ -24,12 +24,12 @@
  * also rename things its callers spell.
  *
  * SIZE IS THE ROM'S OWN, not a rounded-up field span: `HeaveHo_Spawn` calls
- * `ActorBase::operator new(1068)` -- 0x42c -- and stores `_ZTV7HeaveHo`,
+ * `fBase_c::operator new(1068)` -- 0x42c -- and stores `_ZTV7HeaveHo`,
  * so that literal IS this class's sizeof. The observed fields only span to
  * 0x428; the difference is trailing space no source reads.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
@@ -38,7 +38,7 @@
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
 
-struct HeaveHo : Enemy {
+struct HeaveHo : dEnemyBase_c {
     MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
     MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x144 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x184 */

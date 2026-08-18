@@ -33,5 +33,5 @@ void dScMgBase_c::AfterCleanupResources(u32 arg)
         }
         func_ov004_020b2c84();
     }
-    Scene::AfterCleanupResources(arg);
+    dScene_c::AfterCleanupResources(arg);
 }

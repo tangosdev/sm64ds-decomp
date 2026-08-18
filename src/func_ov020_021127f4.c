@@ -12,9 +12,9 @@
 /* resolved: VT0 = _ZTV8BookShot */
 int *func_ov020_021127f4(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1108);
+    int *p = (int *)_ZN7fBase_cnwEj(1108);
     if (p) {
-        _ZN5EnemyC2Ev(p);
+        _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV8BookShot;
         _ZN9ModelAnimC1Ev((char *)p + 0x110);
         _ZN5ModelC1Ev((char *)p + 0x174);

@@ -24,7 +24,7 @@
 extern "C" {
 extern void func_020374b8(int* a, int* b);
 extern int func_02039e48(void* a, void* b, void* c);
-extern int _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* o, void* a, void* b, void* c);
+extern int _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* o, void* a, void* b, void* c);
 extern int func_02035394(void* o, void* r);
 extern int func_02039e30(void* o, void* a, void* b);
 extern int _ZN10ClsnResultaSERKS_(void* d, void* s);
@@ -53,7 +53,7 @@ int MovingMeshCollider::DetectClsn(RaycastGround & ray_)
   sp0x24[1] = sp0x24[1] - b4c;
   func_02039e48(this, sp0xc, sp0);
   func_02039e48(this, sp0x24, sp0x18);
-  _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(data_020a0d0c, sp0, sp0x18, 0);
+  _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(data_020a0d0c, sp0, sp0x18, 0);
   func_02035394(data_020a0d0c, ray);
   int r = MeshCollider::DetectClsn(*(RaycastLine*)data_020a0d0c);
   if (r) {

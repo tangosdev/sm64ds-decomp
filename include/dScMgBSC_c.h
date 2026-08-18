@@ -6,7 +6,7 @@
  * convention.
  *
  * SIZE 0x51d0, from MgLuckyStars_Spawn.cpp's own
- * `_ZN9ActorBasenwEj(0x51d0)`.
+ * `_ZN7fBase_cnwEj(0x51d0)`.
  *
  * ONE SHARED MEMBER at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64),
  * shared verbatim by five other classes in this family -- left as raw
@@ -35,6 +35,14 @@ extern "C" void NullDestructor_0203d47c(void);
 
 struct dScMgBSC_c : dScMgSingle3DBase_c {
     virtual ~dScMgBSC_c();
+
+    /* --- this class's own vtable slots, named from the table ---
+       Re-overrides of slots fBase_c already owns, NOT new virtuals: the
+       table stays the base's width and no field moves. Declared AFTER the
+       destructor so the destructor is still the first virtual declared. */
+    virtual s32 InitResources(); /* slot 0 -- src/_ZN10dScMgBSC_c13InitResourcesEv.cpp */
+    virtual s32 Behavior();   /* slot 6 -- ov006 0x021254c0 */
+    virtual s32 Render();     /* slot 9 -- ov006 0x021253bc */
 
     u8  mTable[0x270];   /* 0x4f38 -- ctor func_ov006_020c1d80, dtor func_ov006_020c1c64 */
     u8  mArray[0x10];     /* 0x51a8 -- 2 * 8 bytes, ctor func_0203d738, dtor NullDestructor_0203d47c */

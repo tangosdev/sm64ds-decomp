@@ -4,11 +4,11 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void *_ZN5Actor10FindWithIDEj(u32 id);
+extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020ada40(void *c, void *v, void *a, int flag);
 extern void func_02012694(int a, void *p);
-extern int _ZN5Actor18HorzAngleToCPlayerEv(void *c);
-extern int _ZN6Player7TryGrabER5Actor(void *p, void *a);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void *c);
+extern int _ZN6Player7TryGrabER8dActor_c(void *p, void *a);
 extern void Chuckya_ChangeState(void *c, void *p);
 extern int func_ov002_020db5f4(void *c, void *arg);
 extern int data_ov062_0211dea0[];
@@ -25,7 +25,7 @@ void func_ov062_02116010(char *c)
 
     id = *(u32 *)(c + 0x134);
     if (id != 0 &&
-        (a = _ZN5Actor10FindWithIDEj(id)) != 0 &&
+        (a = _ZN8dActor_c10FindWithIDEj(id)) != 0 &&
         (*(int *)(c + 0x130) & 0x10) != 0) {
         v.x = 0x1000;
         v.y = 0;
@@ -40,19 +40,19 @@ void func_ov062_02116010(char *c)
     id = *(u32 *)(c + 0x134);
     if (id == 0)
         return;
-    a = _ZN5Actor10FindWithIDEj(id);
+    a = _ZN8dActor_c10FindWithIDEj(id);
     if (a == 0)
         return;
     b = (int)(*(u16 *)((char *)a + 0xc) == 0xbf);
     if (b == 0)
         return;
-    angle = _ZN5Actor18HorzAngleToCPlayerEv(c);
+    angle = _ZN8dActor_c18HorzAngleToCPlayerEv(c);
     angle = AngleDiff(angle, *(s16 *)(c + 0x8e));
     if (angle > 0x2000) {
         if ((*(int *)(c + 0x130) & 0x1000) == 0)
             return;
         *(int *)(((int)c + 0xb0) & 0xFFFFFFFFFFFFFFFFULL) |= 0x80;
-        if (_ZN6Player7TryGrabER5Actor(a, c) == 0)
+        if (_ZN6Player7TryGrabER8dActor_c(a, c) == 0)
             return;
         *(int *)(c + 0x3f8) = (int)a;
         *(int *)(((long long)(int)(c + 0x128)) & 0xFFFFFFFFFFFFFFFFLL) |= 2;

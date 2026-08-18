@@ -21,7 +21,7 @@ extern u8 data_020a0dea[];
 extern u8 data_020a0deb[];
 extern u8 data_0209d454;
 
-extern void _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
+extern void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
 extern u32 _ZN3G2S13GetBG1CharPtrEv(void);
 extern u32 LoadCompressedFileAt(u16 fileID, void *target);
 extern int LoadFile(int handle);
@@ -78,7 +78,7 @@ int func_02005418(void *arg0)
             if (*(volatile u16 *)(c + 0x50) != 0) {
                 *(u16 *)LADR(c + 0x50) -= r4;
                 if (*(u16 *)(c + 0x50) == 0) {
-                    _ZN5Scene14StartSceneFadeEjjt(func_0203da3c() != 0 ? 6 : 1, 0, 0);
+                    _ZN8dScene_c14StartSceneFadeEjjt(func_0203da3c() != 0 ? 6 : 1, 0, 0);
                 } else if (*(u8 *)(c + 0x52) == 0 && h58 == 0xf03) {
                     u16 lang;
                     int f;

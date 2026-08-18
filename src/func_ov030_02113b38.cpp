@@ -1,7 +1,7 @@
 //cpp
 typedef int Fix12i;
 extern "C" void _ZN9Animation7AdvanceEv(char* a);
-extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(char* c, char* cl);
+extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char* c, char* cl);
 extern "C" void func_ov030_02111f6c(char* c, char* w);
 extern "C" int _ZNK12WithMeshClsn13JustHitGroundEv(char* w);
 extern "C" void _ZN12WithMeshClsn15ClearLimMovFlagEv(char* w);
@@ -13,7 +13,7 @@ extern int data_ov030_02115d18[];
 
 extern "C" int func_ov030_02113b38(char* c){
   _ZN9Animation7AdvanceEv(c+0x124);
-  _ZN5Actor9UpdatePosEP12CylinderClsn(c, c+0x160);
+  _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c+0x160);
   func_ov030_02111f6c(c, c+0x194);
   if (_ZNK12WithMeshClsn13JustHitGroundEv(c+0x194) != 0) {
     _ZN12WithMeshClsn15ClearLimMovFlagEv(c+0x194);

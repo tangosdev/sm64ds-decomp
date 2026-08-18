@@ -19,7 +19,7 @@ extern int Vec3_HorzDist(const void *a, const void *b);
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern void _ZN7Message7EndTalkEv(void);
 extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void *a, void *b, int c);
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov089_02131dcc(char *c, char *p);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void *m, int ang);
@@ -145,7 +145,7 @@ void func_ov089_021311c0(char *c)
         char *found;
         if (id == 0)
             break;
-        found = _ZN5Actor10FindWithIDEj(id);
+        found = _ZN8dActor_c10FindWithIDEj(id);
         if (found == 0)
             break;
         if ((*(int *)(c + 0x240) & 0x400000) == 0)

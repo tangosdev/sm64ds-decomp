@@ -1,13 +1,13 @@
 //cpp
 extern "C" {
-extern char* _ZN5Actor22ClosestNonVanishPlayerEv();
+extern char* _ZN8dActor_c22ClosestNonVanishPlayerEv();
 extern int Vec3_Dist(void* a, void* b);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern void _Z14ApproachLinearRsss(short* p, short target, short step);
 }
 
 extern "C" void func_ov070_02121298(char* c){
-    char* p = _ZN5Actor22ClosestNonVanishPlayerEv();
+    char* p = _ZN8dActor_c22ClosestNonVanishPlayerEv();
     if (p == 0) {
         *(int*)(c + 0x3a4) = 0;
         return;

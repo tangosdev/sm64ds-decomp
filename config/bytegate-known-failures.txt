@@ -1,0 +1,73 @@
+# Source files that are named after a matched symbol but that no compiler in
+# reverify_corpus.ALL_VERSIONS will build. tools/chaos_db_ci.py does not count these
+# as matched (policy D, see audit/enrollment_report.md section 6).
+#
+# Modelled on config/layout-known-issues.txt and config/rombuild-exclude.txt: the debt
+# already in the tree is written down instead of silently allowed. This list should
+# only ever shrink.
+#
+# WHY A LIST AND NOT A LIVE CHECK
+# --------------------------------
+# The other half of the byte-gate-failure class -- a zero-size record sharing an address
+# with a sized function -- IS derived live, in chaos_db_ci.alias_collision_addresses(),
+# because it reads nothing but committed config. This half cannot be: deciding it means
+# running mwccarm, and the two workflows that regenerate chaos-db.json (update-chaos-data
+# and report) run on a stock ubuntu runner with `pip install pyelftools capstone` and
+# nothing else. tools/mwccarm and tools/bin are gitignored and no workflow fetches them,
+# so there is no compiler in the process that computes the published count.
+#
+# THE HASH IS WHAT MAKES THIS SELF-HEALING
+# -----------------------------------------
+# Each row pins the sha256 (first 16 hex) of the source as it stood when the failure was
+# recorded. The exclusion applies ONLY while the file still hashes to that value, so
+# fixing one of these files restores its matched status with no edit to this list and no
+# compiler in CI. Editing a file without fixing it is the case a bare name list would get
+# wrong in silence; here the row goes stale and tools/test_bytegate.py fails on it, which
+# is a loud request to re-run the gate rather than a quietly wrong number.
+#
+# The hash is taken over the file with CRLF folded to LF. There is no `text=auto` rule in
+# .gitattributes, so a Windows clone materialises these files CRLF and the ubuntu runner
+# that publishes the count materialises them LF. A raw-byte pin would miss on every row
+# in CI, lapse every exclusion at once, and quietly restore the pre-policy number while
+# every local check still passed. Do not re-pin these by hand; use --recheck.
+#
+# Format:  <sha256-16> <repo-relative src path> <reason>
+# Lines starting with '#' are comments.
+#
+# TO ADD OR RETIRE A ROW
+#   python tools/bytegate.py --recheck        # needs tools/mwccarm; prints the true set
+#
+# HISTORY
+# --------
+# Recorded at a6dd3d3ec with 18 rows. `--recheck` now confirms 1 and retires 17: the
+# self-healing property did exactly what its docstring promised -- the 17 fixes were
+# made without reference to this file, and the rows lapsed on their own. They are
+# deleted here rather than left to lapse because a lapsed row is indistinguishable
+# from an un-re-checked one, which is what test_bytegate.test_no_row_is_stale exists
+# to refuse.
+#
+#   15 now build AND reproduce the cartridge -- the signature clash was repaired and
+#      the functions are enrolled, so they are counted matched and verified both.
+#    2 now build but do NOT reproduce it (Goomba::InitResources, 916 against 912;
+#      func_ov007_020ba05c, 0x22c against 0x284). Fixing the compile is what revealed
+#      each gap -- it had been hidden behind the compile error. Both now carry a
+#      NONMATCHING banner, so `matched` excludes them by the ordinary route and this
+#      list has nothing left to say about them.
+#
+# linkcheck reported all 18 as NO-SYM and WRONG for none -- "counted without evidence",
+# NOT "proven wrong", and repairing 15 of them into byte matches is what that predicted.
+# See audit/enrollment_report.md 4a.
+
+# --- extern "C" signature clash with include/decl_common.h (1) --------------------
+# The file declares a symbol `extern "C"` with one signature and decl_common.h declares
+# the same symbol with C++ linkage and a different parameter type, so mwccarm rejects the
+# pair as an illegal overload and never reaches codegen.
+#
+# This is the one row of the original 16 that survives, and it is not a harder signature
+# problem -- the same repair compiles it. It stays because compiling it exposes calls to
+# func_02111b64/func_02111b6c, an address that resolves in four overlays (ov008, ov012,
+# ov013, ov017), so resolve_placeholders cannot settle the destination and
+# check_references reports a NEW unresolvable reference. It also fails eligibility rule 2
+# (.text section size against declared size), so repairing it would not enrol it either.
+# Retire this row only together with the co-residency work that settles the callee.
+2371acc5ad305f55 src/func_ov002_020e3e00.cpp extern-c-clash

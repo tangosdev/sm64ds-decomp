@@ -7,7 +7,7 @@ extern void Vec3_Asr(void* dst, void* src, int n);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationZ(void* m, short a);
 extern void Matrix4x3_ApplyInPlaceToRotationY(void* m, short a);
-extern int _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* m, int rad, int h, unsigned u);
+extern int _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* thiz, void* sm, void* m, int rad, int h, unsigned u);
 extern int _ZN9Animation7AdvanceEv(void* a);
 struct PMF { int fn; int ptr; };
 struct Mtx { int w[12]; };
@@ -35,7 +35,7 @@ int Bird::Behavior()
   Matrix4x3_ApplyInPlaceToRotationZ(&data_020a0e68, mAngleZ);
   Matrix4x3_ApplyInPlaceToRotationY(&data_020a0e68, mAngleY);
   *(struct Mtx*)((char*)&mModelAnim.mat4x3) = data_020a0e68;
-  _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(((char*)this), ((char*)this)+0x138, ((char*)this)+0xf0, 0x1e000, 0x7d0000, 0xf);
+  _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(((char*)this), ((char*)this)+0x138, ((char*)this)+0xf0, 0x1e000, 0x7d0000, 0xf);
   _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
   return 1;
 }

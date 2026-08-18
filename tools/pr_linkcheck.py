@@ -10,9 +10,10 @@ a class definition -- are never checked. That gap let PR #86's
 _ZThn80_N9AnimationD1Ev pass local verify and fail review with WRONG-DEST (its
 tail branch relocated to Animation::~Animation when the ROM slot needs
 ModelAnim2::~ModelAnim2). This tool closes the gap by scope: it takes the exact
-files a PR touched, maps each filename to the symbol it defines (in this repo the
-src filename IS the mangled symbol), resolves that symbol's (addr, size, module)
-from the checked-in config/**/symbols.txt, and runs linkcheck on every slot.
+files a PR touched, asks `srcpath.symbols_for` which symbols each one defines --
+the filename for a one-function file, the enrolment table for a merged translation
+unit that owns several -- resolves each symbol's (addr, size, module) from the
+checked-in config/**/symbols.txt, and runs linkcheck on every slot.
 linkcheck's explicit --addr/--size/--module mode needs no ledger row and returns
 WRONG for a wrong-dest thunk (verified: is_benign forgives a branch diff only when
 the ROM's veneer/twin resolves to the exact address the source names).
@@ -48,6 +49,7 @@ sys.path.insert(0, str(REPO / "tools"))
 import affected_src as A  # noqa: E402
 import asm_policy as AP  # noqa: E402
 import linkcheck as LC  # noqa: E402
+import srcpath as SP  # noqa: E402
 
 SRC_SUFFIXES = (".c", ".cpp")
 HDR_SUFFIXES = (".h", ".hpp")
@@ -168,55 +170,74 @@ def _resolve(name, idx, ledger):
 
 
 def check_file(path, idx, ledger):
-    """Link-check every symbol the file compiles to -- the named function AND its
+    """Link-check every symbol the file compiles to -- the ones it OWNS AND its
     compiler-emitted passengers (this-adjusting thunks, weak dtor/ctor copies, local
     helpers) -- not just the filename stem, and not just ledger rows.
 
-    The file is compiled once; every emitted function symbol that resolves to a ROM
-    slot (via config/ledger) is checked against that slot. This is the class the
+    Every emitted function symbol that resolves to a ROM slot (via config/ledger) is
+    checked against that slot. This is the class the
     ledger-scoped checks miss -- e.g. PR #86's `_ZThn80_N9AnimationD1Ev` thunk, whose
     tail branch relocated to the wrong dtor. Emitted symbols with no ROM slot (inline
-    or local emissions) are simply not ROM functions and are ignored."""
-    sym = pathlib.Path(path).stem
-    slots = _resolve(sym, idx, ledger)
-    if not slots:
-        return {"file": path, "symbol": sym, "results": [], "note": "unresolved"}
+    or local emissions) are simply not ROM functions and are ignored.
 
-    # Compile once (winning version/flags for the named symbol) so the named function
-    # and its passengers are read from the very same object the ROM was matched with.
+    WHICH SYMBOLS THE FILE OWNS is `srcpath.symbols_for`, not `Path.stem`. For the
+    11,289 one-function files those are the same string. For a merged translation unit
+    they are not: `src/actors/ActorBase_SceneNode.cpp` holds two functions and is named
+    after neither, so the stem resolved to nothing and the whole file was reported
+    `unresolved` with `0` slots checked -- a file the PR comment listed as examined and
+    that nothing had looked at. It could not fall through to the passenger loop either,
+    since that loop only runs once the lead symbol has produced an object."""
+    owned = SP.symbols_for(path)
+    named = [(sym, _resolve(sym, idx, ledger)) for sym in owned]
+    named = [(sym, slots) for sym, slots in named if slots]
+    if not named:
+        return {"file": path, "symbol": owned[0], "symbols": owned,
+                "results": [], "note": "unresolved"}
+
     import reloc_audit as RA
-    obj = wsym = None
-    for addr, size, mod in slots:
-        obj, wsym, _ = RA.winning_object(sym, addr, size, mod)
-        if obj is not None:
-            break
+    results, checked_passengers = [], set()
+    for sym, slots in named:
+        # ONE OBJECT PER OWNED SYMBOL, not one per file. `winning_object` runs the
+        # compiled object through objisolate the way rombuild does, and isolation prunes
+        # it to the one function it was asked for -- so a TU's second function is simply
+        # not in its sibling's object, and reusing it reports NO-SYM on a file that is
+        # perfectly correct. (Measured on ActorBase_SceneNode: shared object ->
+        # Reset VERIFIED, SceneNode() NO-SYM; per-symbol -> both VERIFIED.) For the
+        # 11,289 one-function files this is exactly one call, as before.
+        obj = wsym = None
+        for addr, size, mod in slots:
+            obj, wsym, _ = RA.winning_object(sym, addr, size, mod)
+            if obj is not None:
+                break
+        for addr, size, mod in slots:
+            r = LC.linkcheck(sym, addr, size, mod, _NAME_INDEX,
+                             obj=obj, sym=(wsym if obj is not None else None))
+            results.append({"sym": sym, "addr": f"0x{addr:08x}", "module": mod,
+                            "verdict": r["verdict"], "diffs": r.get("diffs", []),
+                            "passenger": False})
 
-    results = []
-    for addr, size, mod in slots:
-        r = LC.linkcheck(sym, addr, size, mod, _NAME_INDEX,
-                         obj=obj, sym=(wsym if obj is not None else None))
-        results.append({"sym": sym, "addr": f"0x{addr:08x}", "module": mod,
-                        "verdict": r["verdict"], "diffs": r.get("diffs", []),
-                        "passenger": False})
-
-    # Full-file: every OTHER function symbol this object emits that also owns a ROM
-    # slot. Checked straight out of the object (a thunk has no source file of its own).
-    if obj is not None:
+        # Full-file: every OTHER function symbol this object emits that also owns a ROM
+        # slot. Checked straight out of the object (a thunk has no source file of its
+        # own). Deduped across a TU's objects, which can each carry the same passenger.
+        if obj is None:
+            continue
         import probe_versions as PV
         try:
             emitted = set(PV.funcs_in(obj).keys())
         except Exception:
             emitted = set()
-        for psym in sorted(emitted - {sym, wsym}):
+        for psym in sorted(emitted - {s for s, _ in named} - {wsym} - checked_passengers):
             pslots = _resolve(psym, idx, ledger)
             if not pslots:
                 continue  # emitted symbol with no ROM slot -- normal, nothing to check
+            checked_passengers.add(psym)
             for addr, size, mod in pslots:
                 r = LC.linkcheck(psym, addr, size, mod, _NAME_INDEX, obj=obj, sym=psym)
                 results.append({"sym": psym, "addr": f"0x{addr:08x}", "module": mod,
                                 "verdict": r["verdict"], "diffs": r.get("diffs", []),
                                 "passenger": True})
-    return {"file": path, "symbol": sym, "results": results, "note": ""}
+    return {"file": path, "symbol": " + ".join(sym for sym, _ in named),
+            "symbols": [sym for sym, _ in named], "results": results, "note": ""}
 
 
 def worst(results):

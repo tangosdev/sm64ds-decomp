@@ -38,10 +38,10 @@ extern BMD_File *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr *p);
 extern BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr *p);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, BMD_File *f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void *thiz);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void *thiz, void *actor, Fix12i a, Fix12i b, u32 c, u32 d);
+extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, Fix12i a, Fix12i b, u32 c, u32 d);
 extern int func_02013a44(void);
-extern void *_ZN5Actor13ClosestPlayerEv(void *thiz);
-extern void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *pos, const void *rot, int e, int f);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
+extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *pos, const void *rot, int e, int f);
 extern u8 NumStars(void);
 extern int IsStarCollectedInCurLevel(int s);
 extern void func_ov085_02129524(void *c, int i);
@@ -59,7 +59,7 @@ int Toad::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim,
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_02130480), 1, 0x16);
     _ZN11ShadowModel12InitCylinderEv(&mShadowModel);
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(&mMovingCylinderClsn, this,
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(&mMovingCylinderClsn, this,
         0x78000, 0x8c000, 0x4200004, 0);
     unk_20d = 0xff;
     unk_20e = 0xff;
@@ -74,7 +74,7 @@ int Toad::InitResources()
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9a0);
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9c0);
         if (func_02013a44() != 0) {
-            void *p = _ZN5Actor13ClosestPlayerEv(this);
+            void *p = _ZN8dActor_c13ClosestPlayerEv(this);
             if (p == 0)
                 goto after_spawn;
             {
@@ -82,7 +82,7 @@ int Toad::InitResources()
                 u8 pl = *(u8 *)((char *)p + 0x6d9);
                 s8 cc = mAreaId;
                 int m1 = -1;
-                void *spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+                void *spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                     0x10d, k | ((u32)pl << 8), (Vector3 *)&mPosX, 0, cc, m1);
                 if (spawned != 0)
                     unk_1f4 = *(s32 *)((char *)spawned + 4);
