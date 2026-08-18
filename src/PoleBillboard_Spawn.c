@@ -9,9 +9,9 @@ extern int _ZTV13PoleBillboard[];
 /* vtable identified: VT0 = _ZTV13PoleBillboard */
 int *PoleBillboard_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(292);
+    int *p = (int *)_ZN7fBase_cnwEj(292);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV13PoleBillboard;
         _ZN5ModelC1Ev((char *)p + 0xd4);
     }

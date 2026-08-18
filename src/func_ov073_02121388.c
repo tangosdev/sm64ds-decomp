@@ -3,14 +3,14 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void* _ZN5Actor13ClosestPlayerEv(void* actor);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* actor);
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
 extern void _ZN6Camera9SetLookAtERK7Vector3(void* cam, struct Vector3* v);
 extern void _ZN6Camera6SetPosERK7Vector3(void* cam, struct Vector3* v);
 extern short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern void _Z14ApproachLinearRsss(short* p, short a, short b);
-extern int _ZN6Player9StartTalkER9ActorBaseb(void* self, void* actor, int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msg, const struct Vector3* pos, unsigned int a, unsigned int b);
 extern void func_02012694(int a, void* p);
 extern int ChiefChilly_ChangeState(void* c, void* p);
 
@@ -27,7 +27,7 @@ int func_ov073_02121388(char* c) {
     int msg;
     char* p;
 
-    player = _ZN5Actor13ClosestPlayerEv(c);
+    player = _ZN8dActor_c13ClosestPlayerEv(c);
     if (player == 0) return 1;
 
     {
@@ -64,13 +64,13 @@ int func_ov073_02121388(char* c) {
     *(void**)(c + 0x3e4) = player;
     p = *(char**)(c + 0x3e4);
     msg = (short)(*(int*)(p + 8) + 0xe3);
-    if (_ZN6Player9StartTalkER9ActorBaseb(p, c, 1)) {
+    if (_ZN6Player9StartTalkER7fBase_cb(p, c, 1)) {
         if (*(unsigned char*)(c + 0x4c8) == 0) {
             _ZN5Sound22LoadAndSetMusic_Layer3Ej(0x2c);
             *(unsigned char*)(c + 0x4c8) = 0;
         }
 
-        if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(c + 0x3e4), c, msg, &vmsg, 0, 2)) {
+        if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(c + 0x3e4), c, msg, &vmsg, 0, 2)) {
             func_02012694(0x12a, c + 0x74);
             ChiefChilly_ChangeState(c, &data_ov073_02123350);
         }

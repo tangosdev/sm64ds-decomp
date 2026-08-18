@@ -22,7 +22,7 @@ struct VObj {
 };
 
 extern "C" {
-extern char* _ZN5Actor4NextEPKS_(const char* a);
+extern char* _ZN8dActor_c4NextEPKS_(const char* a);
 extern int Vec3_Dist(const void* a, const void* b);
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern short Vec3_VertAngle(const void* a, const void* b);
@@ -33,7 +33,7 @@ char* func_ov002_020d708c(char* self) {
     char* a;
     char* best = 0;
     int bestAng = 0x238e;
-    a = _ZN5Actor4NextEPKS_(best);
+    a = _ZN8dActor_c4NextEPKS_(best);
     if (a) {
         int thresh = bestAng;
         do {
@@ -52,7 +52,7 @@ char* func_ov002_020d708c(char* self) {
                     }
                 }
             }
-            a = _ZN5Actor4NextEPKS_(a);
+            a = _ZN8dActor_c4NextEPKS_(a);
         } while (a);
     }
     if (best) {

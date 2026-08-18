@@ -8,11 +8,11 @@ extern struct Data02086f2c data_02086f2c;
 
 extern void Vec3_RotateYAndTranslate(struct Vector3 *out, void *a, short ang, int *t);
 extern void _ZN11RaycastLineC1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *self, const struct Vector3 *a, const struct Vector3 *b, void *actor);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, const struct Vector3 *a, const struct Vector3 *b, void *actor);
 extern int _ZN11RaycastLine10DetectClsnEv(void *self);
 extern void _ZN11RaycastLine10GetClsnPosEv(struct Vector3 *out, void *self);
 extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void *self, const struct Vector3 *p, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, const struct Vector3 *p, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void SubVec3(struct Vector3 *a, void *b, struct Vector3 *c);
 extern int Vec3_HorzLen(void *v);
@@ -61,7 +61,7 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
         sp20.z = tz;
     }
     func_0200897c(self, sp74);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(sp74, &sp20, &sp14, 0);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(sp74, &sp20, &sp14, 0);
     if (_ZN11RaycastLine10DetectClsnEv(sp74) != 0) {
         _ZN11RaycastLine10GetClsnPosEv(&sp50, sp74);
         sp8.x = sp50.x;
@@ -72,7 +72,7 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
     sp2C.y = sp8.y + 0x100000;
     sp2C.z = sp8.z;
     func_0200897c(self, sp74);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(sp74, &sp8, &sp2C, 0);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(sp74, &sp8, &sp2C, 0);
     if (_ZN11RaycastLine10DetectClsnEv(sp74) != 0) {
         _ZN11RaycastLine10GetClsnPosEv(&sp5C, sp74);
         sp2C.x = sp5C.x;
@@ -81,7 +81,7 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
     }
     _ZN13RaycastGroundC1Ev(spEC);
     func_0200897c(self, spEC);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(spEC, &sp2C, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(spEC, &sp2C, 0);
     r4 = sp8.y;
     if (_ZN13RaycastGround10DetectClsnEv(spEC) != 0) {
         int d;

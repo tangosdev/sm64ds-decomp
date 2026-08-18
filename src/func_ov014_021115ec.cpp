@@ -4,10 +4,10 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-    void _ZN5Sound15PlaySecretSoundEP5ActorPt(void *actor, u16 *snd);
-    void *_ZN5Actor10FindWithIDEj(unsigned id);
+    void _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void *actor, u16 *snd);
+    void *_ZN8dActor_c10FindWithIDEj(unsigned id);
     void ApproachAngle(void *self, s32 a, s32 b, s32 c, s32 d);
-    s16 _ZN5Actor18HorzAngleToCPlayerEv(void *self);
+    s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
     s16 Vec3_HorzAngle(const Vector3 *a, const Vector3 *b);
     s32 _Z14ApproachLinearRsss(void *dst, s32 target, s32 step);
     u16 DecIfAbove0_Short(void *p);
@@ -16,10 +16,10 @@ extern "C" {
     s32 Vec3_ApproachHorz(Vector3 *out, Vector3 *target, s32 maxStep);
     void func_ov014_02112ea8(void *actor);
     void _ZN6Camera9SetFlag_3Ev(void *cam);
-    void *_ZN5Actor13ClosestPlayerEv(void *self);
+    void *_ZN8dActor_c13ClosestPlayerEv(void *self);
     s32 _ZN6Player12Unk_020ca150Eh(void *player, u8 a);
     void _ZN6Camera9SetLookAtERK7Vector3(void *cam, const Vector3 *v);
-    void _ZN9ActorBase18MarkForDestructionEv(void *self);
+    void _ZN7fBase_c18MarkForDestructionEv(void *self);
     void _ZN9Animation7AdvanceEv(void *self);
     extern s16 data_02082214[];
     extern void *data_0209f318;
@@ -34,8 +34,8 @@ extern "C" void func_ov014_021115ec(u8 *self)
 {
     Vector3 sp4;
     u8 *r4; s16 r7; s16 r6; u8 *r8;
-    _ZN5Sound15PlaySecretSoundEP5ActorPt(self, (u16 *)(self + 0x5fe));
-    r4 = (u8 *)_ZN5Actor10FindWithIDEj(*(unsigned *)(self + 0x60c));
+    _ZN5Sound15PlaySecretSoundEP8dActor_cPt(self, (u16 *)(self + 0x5fe));
+    r4 = (u8 *)_ZN8dActor_c10FindWithIDEj(*(unsigned *)(self + 0x60c));
     {
         s32 *src = (s32 *)(r4 + 0x5c);
         s32 fifth = 0x80;
@@ -47,7 +47,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
         ApproachAngle(ap, z, 4, 0x200, fifth);
     }
     r8 = *(u8 **)&data_0209f318;
-    r7 = _ZN5Actor18HorzAngleToCPlayerEv(self);
+    r7 = _ZN8dActor_c18HorzAngleToCPlayerEv(self);
     r6 = Vec3_HorzAngle((Vector3 *)(self + 0x5c), (Vector3 *)(self + 0x5ec));
     switch (*(u8 *)(self + 0x604)) {
     case 0:
@@ -142,7 +142,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
                 unsigned *flag = (unsigned *)(r8 + 0x154);
                 *flag &= ~8u;
             }
-            if (_ZN6Player12Unk_020ca150Eh(_ZN5Actor13ClosestPlayerEv(self), 4) != 0) {
+            if (_ZN6Player12Unk_020ca150Eh(_ZN8dActor_c13ClosestPlayerEv(self), 4) != 0) {
                 inc604(self);
                 *(u16 *)(self + 0x5fc) = 0x3c;
             }
@@ -152,7 +152,7 @@ extern "C" void func_ov014_021115ec(u8 *self)
         break;
     case 9:
         if (DecIfAbove0_Short(self + 0x5fc) == 0)
-            _ZN9ActorBase18MarkForDestructionEv(self);
+            _ZN7fBase_c18MarkForDestructionEv(self);
         break;
     }
     _ZN9Animation7AdvanceEv(self + 0x1a0);

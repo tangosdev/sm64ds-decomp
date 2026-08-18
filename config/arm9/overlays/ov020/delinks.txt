@@ -21,6 +21,7 @@ src/_ZN15BookShotSpawnerD0Ev.c:
     .text start:0x02111278 end:0x021112b0
 
 src/func_ov020_021112b0.c:
+    complete
     .text start:0x021112b0 end:0x02111340
 
 src/func_ov020_02111340.c:

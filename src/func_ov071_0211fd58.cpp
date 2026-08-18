@@ -2,7 +2,7 @@
 extern "C" {
 int _ZN9Animation7AdvanceEv(void*);
 void Scuttlebug_SetState(void*, int, void*);
-int _ZN5Actor9UpdatePosEP12CylinderClsn(void*, void*);
+int _ZN8dActor_c9UpdatePosEP12CylinderClsn(void*, void*);
 int func_ov071_0211f148(void*, void*);
 int func_ov071_0211f29c(void*);
 int _ZN12CylinderClsn5ClearEv(void*);
@@ -18,7 +18,7 @@ int func_ov071_0211fd58(char* c){
     *(short*)(b+0xa8) = 0x3c;
     Scuttlebug_SetState(c, 2, b);
   }
-  _ZN5Actor9UpdatePosEP12CylinderClsn(c, c+0x160);
+  _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c+0x160);
   func_ov071_0211f148(c, c+0x194);
   func_ov071_0211f29c(c);
   _ZN12CylinderClsn5ClearEv(c+0x160);

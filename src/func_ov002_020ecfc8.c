@@ -11,7 +11,7 @@ extern int func_ov002_020ec654(void* c);
 extern void func_0203568c(void* p, int v);
 extern s16 Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 extern void func_ov002_020edca4(void* c);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* mc, void* a, Fix12i r, unsigned int h, unsigned int x, unsigned int y);
+extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* mc, void* a, Fix12i r, unsigned int h, unsigned int x, unsigned int y);
 extern void* data_ov002_0210e6b0[];
 void func_ov002_020ecfc8(char* c){
   char* r5;
@@ -34,6 +34,6 @@ void func_ov002_020ecfc8(char* c){
         func_ov002_020edca4(c);
     }
   }
-  _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(c + 0x110, c, 0x64000, 0xc8000, 0x202000, 0);
+  _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(c + 0x110, c, 0x64000, 0xc8000, 0x202000, 0);
   *(s16*)(c + 0x94) = *(s16*)(c + 0x8e);
 }

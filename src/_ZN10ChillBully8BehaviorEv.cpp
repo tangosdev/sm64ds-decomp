@@ -9,7 +9,7 @@
  *
  * Every call below is a real method now, so the compiler mangles the names and the
  * signatures become falsifiable -- including UntrackAndSpawnStar's `s8 &`, which is
- * why mStarSlot is signed. See the long note on that symbol in Actor.h.
+ * why mStarSlot is signed. See the long note on that symbol in dActor_c.h.
  */
 #include "ChillBully.h"
 

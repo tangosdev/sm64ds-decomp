@@ -7,7 +7,7 @@ extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
 extern char* _ZNK12WithMeshClsn14GetFloorResultEv(void*);
 extern int SurfaceInfo_TestFlag0x20(int* p);
 extern void func_ov084_021296cc(void*);
-extern void _ZN5Enemy9SpawnCoinEv(void*);
+extern void _ZN12dEnemyBase_c9SpawnCoinEv(void*);
 extern void func_ov084_02129498(void*);
 extern void _ZN8CapEnemy10ReleaseCapERK7Vector3(void*, void*);
 extern void _ZN8CapEnemy15RespawnIfHasCapEv(void*);
@@ -28,7 +28,7 @@ extern "C" void func_ov084_021294d0(char* c)
     char* fr = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x1b4);
     if (SurfaceInfo_TestFlag0x20((int*)(fr + 4))) {
         func_ov084_021296cc(c);
-        _ZN5Enemy9SpawnCoinEv(c);
+        _ZN12dEnemyBase_c9SpawnCoinEv(c);
         func_ov084_02129498(c);
         Vector3 v;
         v.x = 0; v.y = 0x6c000; v.z = 0;
@@ -68,7 +68,7 @@ extern "C" void func_ov084_021294d0(char* c)
     if ((unsigned)(r5 - 4) > 1)
         goto dtor;
 action:
-    _ZN5Enemy9SpawnCoinEv(c);
+    _ZN12dEnemyBase_c9SpawnCoinEv(c);
     func_ov084_02129498(c);
     if ((*(unsigned char*)(c + 0x113) & 0xf) < 6 ||
         *(unsigned char*)(c + 0x464) == 2) {

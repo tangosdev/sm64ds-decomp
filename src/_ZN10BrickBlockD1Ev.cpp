@@ -1,12 +1,12 @@
 //cpp
 // @symbol _ZN10BrickBlockD1Ev
 
-struct Actor {
-    virtual ~Actor();
+struct dActor_c {
+    virtual ~dActor_c();
 };
 
 
-struct BrickBlock : Actor {
+struct BrickBlock : dActor_c {
     virtual ~BrickBlock();
 };
 

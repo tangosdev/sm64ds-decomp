@@ -7,7 +7,7 @@
 /* resolved: VT = _ZTV9MovingBar */
 int *MovingBarBig_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(824);
-    if (p) { _ZN8PlatformC2Ev(p); p[0] = (int)_ZTV9MovingBar; }
+    int *p = (int *)_ZN7fBase_cnwEj(824);
+    if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV9MovingBar; }
     return p;
 }

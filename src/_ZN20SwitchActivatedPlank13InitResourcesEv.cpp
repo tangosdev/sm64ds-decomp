@@ -20,7 +20,7 @@ extern "C" void func_020393d4(int* p, int v);
 extern SharedFilePtr data_ov029_0211432c;
 extern SharedFilePtr data_ov029_02114324;
 extern CLPS_Block data_ov029_0211304c;
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
 int SwitchActivatedPlank::InitResources()
 {
@@ -35,7 +35,7 @@ int SwitchActivatedPlank::InitResources()
             (MovingMeshCollider*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x370),
             0x199, *(short*)(c + 0x8e), data_ov029_0211304c);
     }
-    func_020393d4((int*)(c + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int*)(c + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     *(unsigned char*)(c + 0x3a2) = 0;
     *(short*)(c + 0x3a0) = 0;
     *(unsigned char*)(c + 0x3a3) = 0;

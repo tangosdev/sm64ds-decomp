@@ -13,7 +13,7 @@ extern void func_02035860(char* o, void* src);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, char* v);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, char* v);
 extern void _ZN13RaycastGroundC1Ev(char* rc);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(char* rc, Vector3* v, char* actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(char* rc, Vector3* v, char* actor);
 extern int _ZN13RaycastGround10DetectClsnEv(char* rc);
 extern void _ZN13RaycastGroundD1Ev(char* rc);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
@@ -84,7 +84,7 @@ int Player::St_Teleport_Main()
                     v.y = vy;
                     v.z = vz;
                 }
-                _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rc, &v, ((char*)this));
+                _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rc, &v, ((char*)this));
                 if (_ZN13RaycastGround10DetectClsnEv(rc))
                     hit = 1;
                 _ZN13RaycastGroundD1Ev(rc);

@@ -1,6 +1,6 @@
 typedef struct Vec3 { int x, y, z; } Vec3;
 
-extern void *_ZN5Actor13ClosestPlayerEv(void *thiz);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void func_02012694(int a, void *p);
 extern void func_ov066_021166c8(void *thiz);
 extern int Vec3_ApproachHorz(void *out, void *a, int maxStep);
@@ -20,7 +20,7 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern void func_020393d4(void *p, void *v);
 extern void func_020393c4(void *p, void *v);
 extern void func_020398fc(void *p);
-extern void _ZN16MeshColliderBase6EnableEP5Actor(void *thiz, void *a);
+extern void _ZN16MeshColliderBase6EnableEP8dActor_c(void *thiz, void *a);
 extern void func_ov066_02119454(void *c, void *p);
 
 extern unsigned char data_ov066_0211ae0c;
@@ -30,7 +30,7 @@ extern unsigned char data_ov066_0211ae04;
 extern char data_ov066_0211ae14[];
 extern char data_ov066_0211aeac[];
 extern char data_ov066_0211b06c;
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern int func_02112c08;
 extern int func_02112d48;
 extern int func_ov066_0211a35c;
@@ -43,7 +43,7 @@ int func_ov066_02117bf0(void *thiz)
     switch (*(int *)(c + 0x4a0)) {
     case 0:
         if (data_ov066_0211ae0c == *(int *)(c + 0x49c)) {
-            char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);
+            char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
             if (p != 0) {
                 Vec3 *pp = (Vec3 *)(((int)p + 0x5c));
                 *(int *)(c + 0x4bc) = pp->x;
@@ -80,7 +80,7 @@ int func_ov066_02117bf0(void *thiz)
         if (Vec3_HorzDist(c + 0x5c, c + 0x4bc) <= 0x28000) {
             *(int *)(c + 0x4a0) = 6;
             if (func_ov066_02116a68(c) == 0) {
-                char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);
+                char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
                 if (p != 0) {
                     Vec3 *pp = (Vec3 *)(((int)p + 0x5c));
                     v.x = pp->x;
@@ -151,10 +151,10 @@ int func_ov066_02117bf0(void *thiz)
                 _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
                     c + 0x674, *(void **)(data_ov066_0211aeac + 4), c + 0x83c, 0x199,
                     *(short *)(c + 0x8e), &func_02112d48);
-            func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+            func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
             func_020393c4(c + 0x674, &func_ov066_0211a35c);
             func_020398fc(c + 0x674);
-            _ZN16MeshColliderBase6EnableEP5Actor(c + 0x674, c);
+            _ZN16MeshColliderBase6EnableEP8dActor_c(c + 0x674, c);
             data_ov066_0211ae08 += 1;
             *(int *)(c + 0x4a0) = 7;
         }

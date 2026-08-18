@@ -6,14 +6,14 @@
  * One sub-object, and its offset is checked twice -- once by MovingCylinderClsn's
  * own size assertion, once by closing exactly on the next named field:
  *
- *     Actor               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
+ *     dActor_c               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
  *     MovingCylinderClsn  0x0d4 + 0x034 = 0x108   -> unk_108
  *
  * sizeof is 0x118, which is not inferred from the fields: BowserTail_Spawn asks
- * ActorBase::operator new for 280 bytes.
+ * fBase_c::operator new for 280 bytes.
  *
  * The position fields the generated header declared at 0x5c..0x64 are gone from
- * this half on purpose -- they are Actor's mPosX/mPosY/mPosZ and are inherited
+ * this half on purpose -- they are dActor_c's mPosX/mPosY/mPosZ and are inherited
  * now. The C half below still spells them, because a C translation unit has no
  * base class to inherit them from.
  *
@@ -25,9 +25,9 @@
 
 #ifdef __cplusplus
 
-#include "Actor.h"
+#include "dActor_c.h"
 
-struct BowserTail : Actor {
+struct BowserTail : dActor_c {
     u8  pad_0d0[0x4];
     /* Named by the class's own destructor calling MovingCylinderClsn's D1 at
        +0x0d4 -- a relocation the ROM build checks. */

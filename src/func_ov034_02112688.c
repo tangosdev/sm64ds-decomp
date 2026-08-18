@@ -6,7 +6,7 @@
 /* recovered: shared common types */
 #include "common.h"
 #pragma opt_strength_reduction off
-extern char *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_0201267c(int a, void *b);
 extern void func_ov034_021125b8(char *sl, int i);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, struct Vector3 *v, unsigned int b, int c, unsigned int d, unsigned int e, unsigned int f);
@@ -19,7 +19,7 @@ void func_ov034_02112688(char *sl)
         unsigned int id; int flag; u16 type; struct Vector3 *src;
         id = *(unsigned int *)(sl + (i << 6) + 0x49c);
         if (id == 0) continue;
-        a = _ZN5Actor10FindWithIDEj(id);
+        a = _ZN8dActor_c10FindWithIDEj(id);
         if (a == 0) continue;
         type = *(u16 *)(a + 0xc);
         { int t = (int)(type == 0xbf); flag = t ? one : zero; }
@@ -51,7 +51,7 @@ void func_ov034_02112688(char *sl)
             unsigned int id; int flag; u16 type;
             id = *(unsigned int *)(sl + (j << 6) + 0x5dc);
             if (id == 0) continue;
-            a = _ZN5Actor10FindWithIDEj(id);
+            a = _ZN8dActor_c10FindWithIDEj(id);
             if (a == 0) continue;
             type = *(u16 *)(a + 0xc);
             { int t = (int)(type == 0xbf); flag = t ? o2 : z2; }

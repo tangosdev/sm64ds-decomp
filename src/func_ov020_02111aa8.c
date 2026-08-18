@@ -1,6 +1,6 @@
 extern int func_0201267c(int a, void *b);
 extern void _Z14ApproachLinearRiii(int *p, int target, int step);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
 
 void func_ov020_02111aa8(char *c)
 {
@@ -19,5 +19,5 @@ void func_ov020_02111aa8(char *c)
         func_0201267c(sid, c + 0x74);
     }
     _Z14ApproachLinearRiii((int *)(c + 0x98), 0x32000, 0x1000);
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
 }

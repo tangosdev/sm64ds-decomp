@@ -6,7 +6,7 @@ extern int func_ov060_021145d4(void* c);
 extern void func_0200fa04(void* c, void* v, int a);
 extern void func_ov060_02111cc0(char* c, int idx, int b);
 extern void func_ov060_02115b0c(char* c);
-extern void* _ZN5Actor15FindWithActorIDEjPS_(unsigned int id, void* p);
+extern void* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void* p);
 extern int Bowser_IsAnimAtLastFrame(void* o);
 
 void func_ov060_021143b8(char* self)
@@ -56,7 +56,7 @@ void func_ov060_021143b8(char* self)
         if (*(unsigned char*)(self + 0x414) == 1) {
             void* a;
             *(int*)(self + 0x40c) = 0x13;
-            a = _ZN5Actor15FindWithActorIDEjPS_(0xa6, 0);
+            a = _ZN8dActor_c15FindWithActorIDEjPS_(0xa6, 0);
             if (a != 0) {
                 *(int*)(self + 0x3ac) = *(int*)((char*)a + 4);
             }

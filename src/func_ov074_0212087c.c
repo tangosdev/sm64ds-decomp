@@ -2,7 +2,7 @@
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 #define LI(v) ((int)((long long)(v)))
 
-extern char* _ZN5Actor13ClosestPlayerEv(void* self);
+extern char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern short data_02082214[];
 
 void func_ov074_0212087c(int* out, char* self, int n_)
@@ -15,7 +15,7 @@ void func_ov074_0212087c(int* out, char* self, int n_)
     out[1] = *(int*)(self + 0x60);
     out[2] = *(int*)(self + 0x64);
 
-    if (*(int*)(_ZN5Actor13ClosestPlayerEv(self) + 8) == 3) {
+    if (*(int*)(_ZN8dActor_c13ClosestPlayerEv(self) + 8) == 3) {
         int rem;
         int quo;
         int scale;

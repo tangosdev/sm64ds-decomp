@@ -1,7 +1,7 @@
-"""Rewrite a Platform subclass as real C++, or leave it exactly as it was.
+"""Rewrite a dBgActor_c subclass as real C++, or leave it exactly as it was.
 
-The generated headers restate all of Actor and Platform. This turns one into
-`struct X : Platform` keeping only its own fields, makes its destructor a real
+The generated headers restate all of Actor and dBgActor_c. This turns one into
+`struct X : dBgActor_c` keeping only its own fields, makes its destructor a real
 method, and repoints its sources at the inherited names -- then verifies every
 source the header reaches and REVERTS THE WHOLE CLASS if any one of them fails.
 A class is migrated completely or not at all; nothing half-done is left behind.
@@ -24,9 +24,9 @@ W = {"u8": 1, "s8": 1, "char": 1, "bool": 1, "u16": 2, "s16": 2, "short": 2,
      "u32": 4, "s32": 4, "int": 4, "Fix12i": 4, "PathPtr": 8}
 FIELD = re.compile(r"^\s*([A-Za-z_][\w:<>]*)\s+(\**)(\w+)(\[[^\]]*\])?\s*;\s*/\*\s*(0x[0-9a-fA-F]+)", re.M)
 
-# Platform's DATA size: its last field (unk_31d) ends here, and sizeof rounds to
+# dBgActor_c's DATA size: its last field (unk_31d) ends here, and sizeof rounds to
 # 0x320. So a subclass field can sit at 0x31e/0x31f in the base's tail padding,
-# which the Itanium ABI allows for a non-POD base. include/Platform.h records
+# which the Itanium ABI allows for a non-POD base. include/dBgActor_c.h records
 # the four classes that rule out reading the class as 0x324.
 PLATFORM_DSIZE = 0x31e
 
@@ -39,9 +39,9 @@ CAST_MEMBERS = [False]
 
 
 def inherited_names():
-    """offset -> (name, type) Actor.h / Platform.h gives that offset."""
+    """offset -> (name, type) Actor.h / dBgActor_c.h gives that offset."""
     out, ty_out = {}, {}
-    for h, lo, hi in (("include/Actor.h", 0, 0xd0), ("include/Platform.h", 0xd0, 0x31e)):
+    for h, lo, hi in (("include/Actor.h", 0, 0xd0), ("include/dBgActor_c.h", 0xd0, 0x31e)):
         for ty, star, name, arr, off in FIELD.findall((REPO / h).read_text(errors="replace")):
             o = int(off, 16)
             if lo <= o < hi and not name.startswith("pad_"):
@@ -82,7 +82,7 @@ def members_from_destructor(cls, sizes):
     assertion then has to close on the next field, which is a second and
     independent check on the offset.
 
-    Platform's two (0xd4, 0x124) are skipped -- they belong to the base.
+    dBgActor_c's two (0xd4, 0x124) are skipped -- they belong to the base.
     """
     out = {}
     for suffix in (".c", ".cpp"):
@@ -154,13 +154,13 @@ def build_header(cls, old, sizes=None):
 #define {guard}
 
 #include "types.h"
-#include "Platform.h"
+#include "dBgActor_c.h"
 {incs}
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to Actor. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -168,7 +168,7 @@ def build_header(cls, old, sizes=None):
 
 #ifdef __cplusplus
 
-struct {cls} : Platform {{
+struct {cls} : dBgActor_c {{
 {body}
 
     /* --- vtable --- */
@@ -192,9 +192,9 @@ typedef char {cls}_size_must_be_0x{size:x}[sizeof({cls}) == 0x{size:x} ? 1 : -1]
 
 
 def patch_source(text, oldmap, names, types=None, itypes=None):
-    """Repoint one source at the names Actor and Platform already give it.
+    """Repoint one source at the names Actor and dBgActor_c already give it.
 
-    The width-cast branch below is a leftover safety net. It fired when Platform
+    The width-cast branch below is a leftover safety net. It fired when dBgActor_c
     was briefly read as ending at 0x324 and subclass fields at 0x31e..0x323
     looked inherited; with the base ending at 0x31e those are the subclass's own
     fields again and nothing should reach it.
@@ -222,7 +222,7 @@ def patch_source(text, oldmap, names, types=None, itypes=None):
     # STAND-IN STRUCTS COLLIDE WITH THE REAL TYPES. A source that predates the
     # real header often carries its own one-line placeholder --
     # `struct MeshCollider { int d; };` -- purely so an offset cast has a type
-    # to name. Once Platform.h drags the real class in, that is a redefinition,
+    # to name. Once dBgActor_c.h drags the real class in, that is a redefinition,
     # and mwcc answers some of them with an internal compiler error rather than
     # a diagnostic. Drop any single-line placeholder whose name the tree really
     # declares; anything it does NOT declare is a genuine local type and stays.
@@ -233,7 +233,7 @@ def patch_source(text, oldmap, names, types=None, itypes=None):
     text = re.sub(r"^struct (\w+) \{[^{}]*\};[ \t]*\n", _drop_placeholder, text, flags=re.M)
 
     # A local `typedef int Fix12` shadows the real Fix12 template the moment
-    # Platform.h makes it visible.
+    # dBgActor_c.h makes it visible.
     text = text.replace("typedef int Fix12;\n", "")
     text = re.sub(r"\bFix12\s+(\w+)(?=\s*[,)])", r"int \1", text)
     text = re.sub(r"\bFix12(?=\s*[,)])", "int", text)
@@ -297,9 +297,9 @@ def main():
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
  * Two vtable stores and three destructor calls, every one a consequence of
- * `struct {cls} : Platform`: its own vptr, then Platform's -- inlined,
- * because Platform's destructor is defined in its class body -- then
- * Platform's Model and MovingMeshCollider, then Actor. This class adds no
+ * `struct {cls} : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
+ * because dBgActor_c's destructor is defined in its class body -- then
+ * dBgActor_c's Model and MovingMeshCollider, then Actor. This class adds no
  * member with a destructor of its own.
  */
 #include "{cls}.h"

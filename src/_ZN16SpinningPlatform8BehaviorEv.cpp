@@ -9,8 +9,8 @@ extern int DecIfAbove0_Short(char *p);
 extern int RandomIntInternal(char *p);
 extern void func_020393a4(int *p, int v);
 extern void func_02039394(int *p, int v);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(char *c);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char *c, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char *c);
 }
 extern unsigned char data_0209f2c0[];
 extern int data_0209e650[];
@@ -43,7 +43,7 @@ int SpinningPlatform::Behavior()
     }
     func_ov035_021118a8(((char *)this));
     func_ov035_02111798(((char *)this));
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0x180000, 0x1000))
-        _ZN8Platform19UpdateClsnPosAndRotEv(((char *)this));
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char *)this), 0x180000, 0x1000))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
     return 1;
 }

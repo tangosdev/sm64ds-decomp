@@ -4,13 +4,13 @@
 #pragma opt_common_subs off
 #define M(p) (p)
 
-extern void *_ZN5Actor13ClosestPlayerEv(void *self);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern void Vec3_Sub(struct Vector3 *out, void *a, void *b);
 extern int Vec3_HorzLen(struct Vector3 *v);
 extern short Vec3_HorzAngle(const void *a, const void *b);
 extern short Vec3_VertAngle(const void *a, const void *b);
 extern void _Z14ApproachLinearRsss(short *dst, short target, short step);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *self, void *cyl);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *cyl);
 extern short data_02082214[];
 
 void func_ov100_021415bc(char *c)
@@ -23,7 +23,7 @@ void func_ov100_021415bc(char *c)
     *(int *)(c + 0x60) = *(int *)(c + 0x3d8);
     *(int *)(c + 0x64) = *(int *)(c + 0x3dc);
 
-    player = (char *)_ZN5Actor13ClosestPlayerEv(c);
+    player = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
     if (player != 0) {
         int *pp;
         int k = 0x5000;
@@ -61,7 +61,7 @@ void func_ov100_021415bc(char *c)
         _Z14ApproachLinearRsss((short *)(c + 0x92),
             Vec3_VertAngle(c + 0x5c, &v), 0x500);
 
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
 
         {
         int *p = (int *)(c + 0x60);

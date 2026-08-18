@@ -5,7 +5,8 @@ modules and percentages.
 
 Derived the same way as progress.py --write-readme:
   universe   config/**/symbols.txt  (name, addr, size per module)
-  matched    src/<name>.c[pp] exists and is not marked // NONMATCHING
+  matched    src/<name>.c[pp] exists, is not marked // NONMATCHING, and is not in the
+             byte-gate-failure class (policy D -- see tools/bytegate.py)
   near-miss  nearmiss/db.jsonl (committed) -> div badge
   author     git history: the FIRST contributor to land the surviving match for each
              function (see first_matchers) -- credit follows renames and is not stolen by
@@ -35,7 +36,9 @@ import asm_policy  # noqa: E402
 import srcpath as SP  # noqa: E402
 import relocs as RL  # noqa: E402
 import rombuild_check as RBC  # noqa: E402
+import layout_check as LYC  # noqa: E402
 import tiers as TIERS  # noqa: E402
+import bytegate as BG  # noqa: E402
 
 
 def enrolled_addresses():
@@ -59,6 +62,87 @@ def enrolled_addresses():
             if not rel.startswith("mods/"):
                 out.add((label, addr))
     return out
+
+
+def alias_collision_addresses():
+    """{(module, addr)} where a size-0 function record and a SIZED one collide -- the
+    derived half of the byte-gate-failure class.
+
+    ADDRESSES, not records, so the caller must exclude only the `size == 0` side. Both
+    records live at the same key and dropping both would be the opposite of the fix: the
+    sized primaries here are the bodies that SHOULD be counted once someone matches them,
+    and func_01ff8708 is 1,776 bytes of it.
+
+    config/arm9/itcm/symbols.txt declares four bodies twice, once as a sized function and
+    once as a zero-size alias at the identical address (_dmul beside func_01ff8708,
+    _ll_sdiv beside func_01ffaa34, _s32_div_f beside __aeabi_idiv, _u32_div_f beside
+    __aeabi_uidiv). srcpath resolves src/_dmul.c -- a real HAND-ASM PRIMITIVE match --
+    onto the ZERO-SIZE record, so the same 1,776-byte body was counted matched at 0 bytes
+    as the alias and unmatched at full size as the primary. linkcheck reports all four
+    NO-SYM (len-mismatch), which is the byte gate declining to compare a real function
+    against a zero-length range.
+
+    Deriving this rather than listing it means it self-heals both ways: repointing the
+    alias at the sized symbol in config restores the count, and the four aliases that
+    carry the same defect but are not matched today (__cxa_vec_cleanup, _dadd, _ll_udiv,
+    _ull_mod) are already covered if anyone matches them. Eight such records exist in the
+    universe and every one has a sized twin, so this cannot catch a legitimately
+    zero-size lone symbol.
+
+    Committed config only, no ROM and no compiler, so it runs in the workflows that
+    publish the count. The other half of the class cannot be; see tools/bytegate.py.
+    """
+    out = set()
+    for sym, label in RL.module_universe():
+        sized, zero = set(), []
+        for line in sym.read_text(errors="ignore").splitlines():
+            m = FUNC_RE.match(line)
+            if not m:
+                continue
+            size, addr = int(m.group(2), 16), int(m.group(3), 16)
+            if size == 0:
+                zero.append(addr)
+            else:
+                sized.add(addr)
+        out.update((label, a) for a in zero if a in sized)
+    return out
+
+
+def enrollment_of(label, addr, src_path, enrolled, blocks):
+    """``enrolled`` / ``unenrolled`` / ``no_block`` for one function.
+
+    ``verified`` above is a boolean, and a boolean cannot tell the two halves of its
+    false case apart. They are different facts with different remedies:
+
+      enrolled    a delinks range carries ``complete``: mwccarm compiles this source
+                  and the link byte-compares it against the cartridge. Identical to
+                  ``verified`` for a matched function, by construction: both read the
+                  same enrolled_addresses() set, so the two fields cannot drift.
+      unenrolled  a delinks entry names a source for this range but has no ``complete``.
+                  The source is in the tree and the build reads ROM bytes instead. This
+                  is where a real match that nobody promoted looks exactly like a file
+                  that was never going to build.
+      no_block    no delinks entry names this range at all. Overwhelmingly deliberate:
+                  enroll.py skips thumb functions, addresses that are not 4-aligned,
+                  zero-size alias symbols and everything in config/rombuild-exclude.txt,
+                  and it writes an intentional divergence under mods/ rather than src/.
+
+    Two existing readers, no third delinks parser: enrolled_addresses() for ``complete``
+    (address-keyed, the same set ``verified`` uses) and layout_check.delinks_paths() for
+    "is there an entry at all" (path-keyed, the L1/L5 reader).
+
+    The two keyings disagree for exactly one entry in the tree, and it is worth naming
+    because it is the whole 47-vs-48 discrepancy two independent derivations of this gap
+    produced: mods/Player_ScaleByCharFactor.c (ov002 0x020bf30c) IS marked ``complete``,
+    so an address-coverage test calls it enrolled, but the path it names is not the
+    src/ path, and enrolled_addresses() drops mods/ on purpose, because a deliberate
+    divergence must never be counted as a reproduction of the cartridge. It is reported
+    no_block here, which is the honest answer for src/Player_ScaleByCharFactor.c: that
+    file is compiled by nothing.
+    """
+    if (label, addr) in enrolled:
+        return "enrolled"
+    return "unenrolled" if src_path and src_path in blocks else "no_block"
 
 
 def tier_stats():
@@ -111,13 +195,20 @@ LOGIN_RE = re.compile(r"^(?:\d+\+)?([^@]+)@users\.noreply\.github\.com$")
 # the largest unmatched function in the game.
 COIN_WEIGHTS = {"itcm": 10}
 
-# Bump whenever COIN_WEIGHTS changes. The backend credits the DELTA between a
-# published career total and what it last paid, so a formula change would other-
-# wise read as thousands of new matches and pay a retroactive windfall (and fire a
-# wall of Discord milestones). The backend rebases silently when this number
-# moves: it banks the new totals as already-credited without touching balances, so
-# a weight change only ever affects matches landed AFTER it.
-COIN_FORMULA = 2
+# Bump whenever COIN_WEIGHTS changes, or whenever the DEFINITION of a matched
+# function changes. The backend credits the DELTA between a published career total
+# and what it last paid, so a formula change would otherwise read as thousands of
+# new matches and pay a retroactive windfall (and fire a wall of Discord
+# milestones). The backend rebases silently when this number moves: it banks the new
+# totals as already-credited without touching balances, so a change only ever affects
+# matches landed AFTER it.
+#
+# 2 -> 3: policy D. `matched` now excludes the byte-gate-failure class, which takes 58
+# coins back off five contributors (ruspecial -43, tangosdev -8, lunavyqo -4,
+# andrewboudreau -2, mitch030504 -1). Without the bump the backend would read those as
+# negative deltas and claw the balances back; with it, the smaller totals are banked as
+# the new baseline and nobody's balance moves.
+COIN_FORMULA = 3
 
 # A NONMATCHING file that reproduces the ROM and has no match left to chase - the banner
 # tags which kind. These are NOT pending work, so the viewers paint them apart from real
@@ -438,6 +529,16 @@ def main():
     total_b = matched_b = matched_n = 0
     verified_b = verified_n = 0
     enrolled = enrolled_addresses()
+    # Every src path any delinks.txt names, promoted or not. Read once: delinks_paths
+    # walks all 106 delinks files, and calling it per function would walk them 11,396
+    # times.
+    blocks = set(LYC.delinks_paths())
+    # The byte-gate-failure class, both halves, read once for the same reason. See the
+    # `matched` conjunct below and tools/bytegate.py.
+    alias_addrs = alias_collision_addresses()
+    wont_build = BG.excluded_paths()
+    bytegate_n = collections.Counter()
+    enrollment_n = collections.Counter()
     transcribed_files, unbannered_files = set(), set()
     # Every module, itcm included. relocs.module_universe is the one definition of
     # what "every module" means, and it fails loudly rather than skipping a new one.
@@ -452,11 +553,43 @@ def main():
             text = f.read_text(errors="ignore") if f else ""
             head = text[:200]
             cls = asm_policy.classify(text) if src_path else None
-            matched = (bool(src_path) and not asm_policy.has_draft_banner(text)
-                       and cls != "transcribed")
+            # Policy D (Tango's ruling on audit/enrollment_report.md section 6): a file
+            # that exists is not evidence if the byte gate cannot get a verdict out of
+            # it. linkcheck reports 22 of the 251 matched-but-unverified functions as
+            # NO-SYM -- 18 that no compiler in the sweep will build and 4 zero-size alias
+            # records counting a body their sized twin reports unmatched -- and those 22
+            # stop counting here. Everything that REPRODUCES the cartridge keeps its
+            # matched status, including the 185 unenrolled rows that byte-match but are
+            # not promoted, which is why the report's options B and C were rejected: they
+            # would have deleted matches that are demonstrably correct. `verified` is
+            # unchanged and still published beside this, and none of the 22 was verified,
+            # so that number does not move.
+            #
+            # `size == 0` is load-bearing: alias_collision_addresses keys on the address
+            # and both records sit on it. Dropping the sized side too would refuse to
+            # count func_01ff8708 and friends the day someone matches them, which is the
+            # defect this is meant to clear, not deepen.
+            zero_alias = size == 0 and (label, addr) in alias_addrs
+            # The gate is applied only to records the OLD test would have counted, so
+            # that it is credited with what it actually removed rather than with every
+            # record the class happens to describe. Four of the eight zero-size aliases
+            # have no source at all and were never counted; stamping those would claim a
+            # subtraction that is not this rule's and would make the CI line disagree
+            # with the 22 this policy names.
+            countable = (bool(src_path) and not asm_policy.has_draft_banner(text)
+                         and cls != "transcribed")
+            bytegate_fail = countable and (
+                zero_alias or (src_path is not None and src_path in wont_build))
+            matched = countable and not bytegate_fail
             total_b += size
             rec = {"id": f"{label}:0x{addr:08x}", "module": label, "name": name,
                    "addr": addr, "size": size, "matched": matched}
+            if bytegate_fail:
+                # Recorded on the record, not just subtracted from a total. A reader who
+                # wonders why a src/ file exists for an unmatched function gets the
+                # answer here instead of having to re-run the gate.
+                rec["byteGate"] = "zero-size-alias" if zero_alias else "will-not-build"
+                bytegate_n[rec["byteGate"]] += 1
             if src_path:
                 rec["srcPath"] = src_path
                 if cls == "transcribed":
@@ -489,6 +622,13 @@ def main():
                 r = nm.get((label, addr))
                 if r and r.get("divergences") is not None:
                     rec["div"] = r["divergences"]
+            # Appended last, deliberately. Every field above keeps the position it had
+            # before this existed, so the whole diff against a previous chaos-db is one
+            # inserted key per record and a reviewer can see at a glance that nothing
+            # else moved. Nothing here reads it back, and `matched` is untouched: this
+            # annotation reports the tree, it does not redefine the count.
+            rec["enrollment"] = enrollment_of(label, addr, src_path, enrolled, blocks)
+            enrollment_n[(rec["enrollment"], matched)] += 1
             functions.append(rec)
 
     if transcribed_files:
@@ -547,6 +687,26 @@ def main():
           f"({100.0 * verified_b / total_b:.2f}% vs {100.0 * matched_b / total_b:.2f}% "
           f"matched); {matched_n - verified_n} matched function(s) are compiled by "
           f"nothing")
+    # ...and WHICH KIND of nothing, because the two halves have different remedies. A
+    # matched/unenrolled function has a delinks entry waiting for a `complete`; a
+    # matched/no_block one is almost always deliberate (thumb, alias, exclude list) and
+    # promoting it is not on the table. Printed so the split lands in the CI log next to
+    # the number it explains. See audit/enrollment_report.md.
+    print("  enrollment: " + ", ".join(
+        f"{k[0]}{'/matched' if k[1] else ''}={n}"
+        for k, n in sorted(enrollment_n.items(), key=lambda kv: (kv[0][0], not kv[0][1]))))
+    # The policy-D subtraction, in the log next to the number it explains. A silent
+    # exclusion is the same mistake the enrollment split was added to fix.
+    print("  byte-gate failures (NOT counted matched): " + (", ".join(
+        f"{k}={n}" for k, n in sorted(bytegate_n.items())) or "none"))
+    # A stale manifest row means someone edited one of the will-not-build files without
+    # re-running the gate, so its exclusion has lapsed and that function is being counted
+    # again. Permissive by design -- the count falls back to the old behaviour rather than
+    # guessing -- but it must never be silent, and tools/test_bytegate.py fails on it.
+    for s in BG.stale_rows():
+        print(f"  WARNING: bytegate row {s['problem']} ({s['src']}); its exclusion has "
+              f"lapsed and the function is counted matched again. Re-run "
+              f"`python tools/bytegate.py --recheck`.")
     # Per-module counts in the log, so a module that stops being emitted shows up in
     # the CI diff as a line that vanished. The silent version of this cost itcm its
     # entire visibility; a number that goes to zero is at least readable.

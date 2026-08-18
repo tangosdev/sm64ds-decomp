@@ -1,10 +1,10 @@
-typedef struct Actor Actor;
+typedef struct dActor_c dActor_c;
 typedef int Fix12i;
-extern void func_ov096_02136e54(Actor* t, int x);
-extern Actor* _ZN5Actor13ClosestPlayerEv(Actor* self);
+extern void func_ov096_02136e54(dActor_c* t, int x);
+extern dActor_c* _ZN8dActor_c13ClosestPlayerEv(dActor_c* self);
 extern Fix12i Vec3_HorzDist(const void* a, const void* b);
 #define M(p) (p)
-void func_ov096_02136fd4(Actor* thiz)
+void func_ov096_02136fd4(dActor_c* thiz)
 {
     char* c = (char*)thiz;
     int v = (int)(0x3c - *(unsigned short*)(c + 0x350)) << 0xc;
@@ -18,7 +18,7 @@ rest:;
     }
     *(int*)(c + 0x33c) = 0;
     {
-        Actor* p = _ZN5Actor13ClosestPlayerEv(thiz);
+        dActor_c* p = _ZN8dActor_c13ClosestPlayerEv(thiz);
         if (p) {
             if (Vec3_HorzDist(c + 0x340, (char*)p + 0x5c) > 0x9c4000)
                 *(int*)(c + 0x35c) = 0;

@@ -8,7 +8,7 @@
 extern void DecompressLZ16(void *src, int dst);
 extern int func_0201a244(int a0, int a1, int a2, int a3, int a4);
 extern void func_020308b4(void);
-extern void _ZN5Scene14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
+extern void _ZN8dScene_c14StartSceneFadeEjjt(u32 a, u32 b, u16 c);
 extern void func_02012790(int x);
 
 extern u8 data_0209d45c;
@@ -62,7 +62,7 @@ int func_02034da4(void *arg0)
         /* fallthrough */
     case 7:
         if (func_020308a8() == 0) break;
-        _ZN5Scene14StartSceneFadeEjjt(6, 0, 0x7fff);
+        _ZN8dScene_c14StartSceneFadeEjjt(6, 0, 0x7fff);
         func_02012790(0x11f);
         (*(int *)(((int)self + 0x60)))++;
         break;

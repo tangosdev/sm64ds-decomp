@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-/* Derives from Enemy: the destructor stores this class's vtable, then the
+/* Derives from dEnemyBase_c: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x110 belonged to the
  * chain above and is inherited now.
@@ -14,11 +14,11 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
-struct JetStream : Enemy {
+struct JetStream : dEnemyBase_c {
     MovingCylinderClsn mMovingCylinderClsn;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x144 */
     u8  pad_300[0x14];
@@ -33,9 +33,14 @@ struct JetStream : Enemy {
     virtual s32 InitResources();
     virtual void OnPendingDestroy();
     virtual s32 Render();
+
+    /* Tail padding. The field span stops short of the real size: JetStream_Spawn
+       calls fBase_c::operator new(0x378), read off the retail
+       instruction. A span is only a LOWER BOUND. */
+    u8 pad_31c[0x5c];      /* 0x31c, to the ROM's 0x378 */
 };
 
-typedef char BowserPuzzlePiece_size_must_be_0x31c[sizeof(JetStream) == 0x31c ? 1 : -1];
+typedef char JetStream_size_must_be_0x378[sizeof(JetStream) == 0x378 ? 1 : -1];
 
 #else
 
@@ -46,17 +51,17 @@ struct JetStream {
     u8  pad_000[0x8];
     u32 unk_008;            /* 0x008 */
     u8  pad_00c[0x80];
-    /* Actor::mAngleX -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mAngleX -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
     s16 unk_08c;            /* 0x08c */
-    /* Actor::mAngleY -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mAngleY -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
     s16 unk_08e;            /* 0x08e */
-    /* Actor::mAngleZ -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mAngleZ -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
     s16 unk_090;            /* 0x090 */
-    /* Actor::mPrevAngleX -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPrevAngleX -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
     s16 unk_092;            /* 0x092 */
-    /* Actor::mPrevAngleY -- Actor.h declares s16 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPrevAngleY -- dActor_c.h declares s16 here, and it is de-bannered (hand-reconstructed). */
     s16 unk_094;            /* 0x094 */
-    /* 0x096..0x100 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x096..0x100 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s16 unk_096;                 /* 0x096 */
     s32 mHorzSpeed;              /* 0x098 */

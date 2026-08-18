@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
- * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -15,9 +15,9 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 
-struct FortressWall : Platform {
+struct FortressWall : dBgActor_c {
     u8 unk_31e;                       /* 0x31e */
     u8 unk_31f;                       /* 0x31f */
     u8  pad_320[0x1];
@@ -31,6 +31,11 @@ struct FortressWall : Platform {
     int CleanupResources();
     int InitResources();
     int Render();
+    virtual int OnHitByCannonBlastedChar(dActor_c &other); /* slot 26 */
+    /* dBgActor_c's own slot, overridden here: _ZTV12FortressWall+0x7c relocates to
+       0x02127280 while _ZTV10dBgActor_c+0x7c relocates to _ZN10dBgActor_c4KillEv. An
+       override, so it adds no slot and no field. */
+    virtual void Kill();              /* slot 31 */
 };
 
 typedef char FortressWall_size_must_be_0x324[sizeof(FortressWall) == 0x324 ? 1 : -1];
@@ -45,11 +50,11 @@ struct FortressWall {
     s32 mParam;            /* 0x008 */
     u16 mActorID;            /* 0x00c */
     u8  pad_00e[0x4e];
-    /* Actor::mPosX -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPosX -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
     s32 unk_05c;            /* 0x05c */
-    /* Actor::mPosY -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPosY -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
     s32 unk_060;            /* 0x060 */
-    /* 0x064..0x08e is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x064..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_064;                 /* 0x064 */
     s32 unk_068;                 /* 0x068 */

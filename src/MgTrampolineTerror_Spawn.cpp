@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void *_ZN9ActorBasenwEj(unsigned int sz);
+extern void *_ZN7fBase_cnwEj(unsigned int sz);
 extern int func_ov004_020b2adc(void *p);
 extern void _ZN8Particle10SysTrackerC1Ev(void *);
 extern void func_020733a8(void *p, int a, int b, void *f1, void *f2);
@@ -22,7 +22,7 @@ extern void func_ov006_021225a8();
 
 extern "C" void *MgTrampolineTerror_Spawn(void)
 {
-    char *p = (char *)_ZN9ActorBasenwEj(0x7bac);
+    char *p = (char *)_ZN7fBase_cnwEj(0x7bac);
     if (p) {
         char *it;
         func_ov004_020b2adc(p);

@@ -10,7 +10,7 @@ extern s16 Vec3_HorzAngle(const void* a, const void* b);
 extern s16 Vec3_VertAngle(const void* a, const void* b);
 extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* a, void* b, void* c);
-extern void* _ZN5Actor10FindWithIDEj(u32 id);
+extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN6Player12Unk_020c6a10Ej(void* self, u32 a);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 extern void func_ov073_0211f2c0(void* self, int a);
@@ -64,7 +64,7 @@ int func_ov073_021200e0(u8* thiz)
         if (*(int*)(thiz + 0xa8) < 0) {
             int id = *(int*)(thiz + 0x134);
             if (id != 0) {
-                void* actor = _ZN5Actor10FindWithIDEj((u32)id);
+                void* actor = _ZN8dActor_c10FindWithIDEj((u32)id);
                 if (actor != 0) {
                     enum Bool eq = (enum Bool)(*(u16*)((u8*)actor + 0xc) == 0xbf);
                     if (eq != FALSE) {

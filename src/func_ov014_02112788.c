@@ -5,7 +5,7 @@
 #include "common.h"
 typedef int Fix12;
 typedef short s16;
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, Fix12 a, Fix12 b, unsigned int g);
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, Fix12 a, Fix12 b, unsigned int g);
 
 
 extern const struct Matrix4x3 data_02082128;
@@ -24,7 +24,7 @@ void func_ov014_02112788(char* c) {
     *(int*)(c+0x198) = *(int*)(c+0x64) >> 3;
     t = *(int*)(c+0x60) - *(int*)(c+0x5f0);
     if (t <= 0x1000) t = 0x1000;
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, c+0x1b4, c+0x16c,
         0x15e000 - (int)(((long long)t * 0x180 + 0x800) >> 12),
         t + 0x28000,
@@ -42,7 +42,7 @@ void func_ov014_02112788(char* c) {
         *(int*)(o+0x224) = *(int*)(e+0x52c) >> 3;
         t = *(int*)(e+0x528) - *(int*)(c+0x5f0);
         if (t <= 0x1000) t = 0x1000;
-        _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+        _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
             c, sm, m+0x1c,
             0x78000 - (int)(((long long)t * 0x180 + 0x800) >> 12),
             t + 0x28000,

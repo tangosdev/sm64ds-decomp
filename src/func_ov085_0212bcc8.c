@@ -5,7 +5,7 @@ extern void Vec3_Asr(struct Vector3* d, struct Vector3* s, int sh);
 extern void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(void* m, int x, int y, int z);
 extern void MulMat4x3Mat4x3(void* a, void* b, void* dst);
-extern void _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* thiz, void* sm, void* mtx, int f, int a, unsigned int b);
 
 extern struct Matrix4x3 data_020a0e68;
@@ -25,6 +25,6 @@ void func_ov085_0212bcc8(char* c)
         (*(int*)(c + 0x60) - 0xe000) >> 3,
         *(int*)(c + 0x64) >> 3);
     *(struct Matrix4x3*)(c + 0x390) = data_020a0e68;
-    _ZN5Actor19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
+    _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
         c, (void*)(c + 0x368), (void*)(c + 0x390), 0x46000, 0x258000, 0xf);
 }

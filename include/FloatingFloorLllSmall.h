@@ -5,9 +5,9 @@
 
 /* Lethal Lava Land's floating floor -- both sizes of it.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjUkiyuka_c, which derives from
- * Platform, and the difference is in the bytes rather than only in the RTTI: its
- * destructor stores THREE vptrs -- its own, daObjUkiyuka_c's, then Platform's.
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjUkiyuka_c, which derives from
+ * dBgActor_c, and the difference is in the bytes rather than only in the RTTI: its
+ * destructor stores THREE vptrs -- its own, daObjUkiyuka_c's, then dBgActor_c's.
  * A one-level chain emits two.
  *
  *   _ZTI17daObjFl_Ukiyuka_c  ov022 0x021140b4

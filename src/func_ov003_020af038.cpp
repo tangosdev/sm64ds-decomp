@@ -16,7 +16,7 @@ extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
 extern "C" int IsButtonInputValid(void);
 extern "C" int SublevelToLevel(int i);
-extern "C" void _ZN5Scene14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
+extern "C" void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int a, unsigned int b, unsigned short c);
 extern "C" void _ZN7Message28DisplayStarNameForStarSelectEj(unsigned int id);
 extern "C" void func_02012790(int a);
 extern "C" int func_ov003_020adf50(char* c);
@@ -49,7 +49,7 @@ extern "C" int func_ov003_020af038(char* c) {
                 *(unsigned char*)(((long long)(int)(c + 0x119)) & 0xFFFFFFFFFFFFFFFFLL) -= data_0208ee44;
             }
             if ((U8(0x119) == 0) || ((SublevelToLevel(data_02092110) > 0xE) && (IsButtonInputValid() != 0))) {
-                _ZN5Scene14StartSceneFadeEjjt(3, 0, 0);
+                _ZN8dScene_c14StartSceneFadeEjjt(3, 0, 0);
                 *(short*)((char*)&data_0209f5e8 + 0xc) = 0x7fff;
                 if (SublevelToLevel(data_02092110) <= 0xE) {
                     data_0209f1f0 = U8(0x115) + 1;

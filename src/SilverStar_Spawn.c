@@ -11,9 +11,9 @@
 /* resolved: VT0 = _ZTV9PowerStar */
 int *SilverStar_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(1220);
+    int *p = (int *)_ZN7fBase_cnwEj(1220);
     if (p) {
-        _ZN5EnemyC2Ev(p);
+        _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV9PowerStar;
         _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x110);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x150);

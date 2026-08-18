@@ -5,7 +5,7 @@ typedef struct RaycastGround { int _[0x15]; } RaycastGround;
 typedef struct Entry3 { int a, b, c; } Entry3;
 
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *t);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(RaycastGround *t, const Vector3 *pos, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *t, const Vector3 *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *t);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround *t);
 extern int LenVec3(Vector3 *v);
@@ -48,7 +48,7 @@ void func_0200b798(char *self, short *a1, int arg2)
     }
 
     _ZN13RaycastGroundC1Ev(&ray);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&ray, &pos, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&ray, &pos, 0);
     if (_ZN13RaycastGround10DetectClsnEv(&ray) != 0) {
         pos.y -= ray._[0x11];
     }

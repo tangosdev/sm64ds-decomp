@@ -1,12 +1,12 @@
 //cpp
 // @symbol _ZN10BigBooIconD1Ev
 
-struct Actor {
-    virtual ~Actor();
+struct dActor_c {
+    virtual ~dActor_c();
 };
 
 
-struct BigBooIcon : Actor {
+struct BigBooIcon : dActor_c {
     virtual ~BigBooIcon();
 };
 

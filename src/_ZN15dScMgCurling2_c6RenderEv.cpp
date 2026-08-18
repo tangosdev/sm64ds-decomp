@@ -11,12 +11,12 @@
 extern "C" {
 int func_ov004_020adc1c();
 int func_ov004_020b19f0();
-int func_ov006_020e4a84(void*);
-int func_ov006_020e4fe8(void*);
-int func_ov006_020e507c(void*);
-int func_ov006_020e38b0(void*);
-int func_ov006_020e3bc4(void*);
-int func_ov006_020e4b78(void*);
+void func_ov006_020e4a84(void*);
+void func_ov006_020e4fe8(void*);
+void func_ov006_020e507c(void*);
+void func_ov006_020e38b0(void*);
+void func_ov006_020e3bc4(void*);
+void func_ov006_020e4b78(void*);
 }
 s32 dScMgCurling2_c::Render()
 {

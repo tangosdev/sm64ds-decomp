@@ -3,10 +3,10 @@ typedef short s16;
 
 typedef struct { int x, y, z; } Vector3;
 
-extern int _ZN6Player9StartTalkER9ActorBaseb(void* self, void* ab, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void* self, void* ab, int b);
 extern s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern int _Z14ApproachLinearRsss(s16* ref, s16 target, s16 step);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
     void* self, void* ab, unsigned a, const Vector3* v, unsigned d, unsigned e);
 extern int _ZN6Player12GetTalkStateEv(void* self);
 extern void func_ov085_0212a4a4(void* c, int a);
@@ -16,7 +16,7 @@ int func_ov085_0212a220(char* c)
     Vector3 v;
     switch (*(u8*)(c + 0x368)) {
     case 0:
-        if (_ZN6Player9StartTalkER9ActorBaseb(*(void**)(c + 0x35c), c, 1) != 0)
+        if (_ZN6Player9StartTalkER7fBase_cb(*(void**)(c + 0x35c), c, 1) != 0)
             *(u8*)(((int)c + 0x368)) += 1;
         break;
     case 1:
@@ -28,7 +28,7 @@ int func_ov085_0212a220(char* c)
             v.y = *(int*)(c + 0x60);
             v.z = *(int*)(c + 0x64);
             v.y = v.y + 0xa0000;
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
                     *(void**)(c + 0x35c), c, 0xd0, &v, 0, 0) != 0)
                 *(u8*)(((int)c + 0x368)) += 1;
         }

@@ -9,7 +9,7 @@ extern "C" {
 extern void _ZN13RaycastGroundC1Ev(void* self);
 extern void _ZN4BgCh19StartDetectingWaterEv(void* self);
 extern void _ZN4BgCh21StopDetectingOrdinaryEv(void* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, void* v, void* act);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* v, void* act);
 extern int _ZN13RaycastGround10DetectClsnEv(void* self);
 extern int SurfaceInfo_TestFlag0x20(int* p);
 extern void _ZN13RaycastGroundD1Ev(void* self);
@@ -42,7 +42,7 @@ extern "C" int func_ov002_020cede0(void* thiz_) {
   }
   _ZN4BgCh19StartDetectingWaterEv(rg);
   _ZN4BgCh21StopDetectingOrdinaryEv(rg);
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &v, thiz);
+  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &v, thiz);
   if (_ZN13RaycastGround10DetectClsnEv(rg) != 0 && SurfaceInfo_TestFlag0x20((int*)(rg + 0x14)) != 0) {
     _ZN13RaycastGroundD1Ev(rg);
     return 1;
@@ -50,7 +50,7 @@ extern "C" int func_ov002_020cede0(void* thiz_) {
   v.y = data_0209212c;
   _ZN4BgCh19StartDetectingWaterEv(rg);
   _ZN4BgCh21StopDetectingOrdinaryEv(rg);
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, &v, thiz);
+  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &v, thiz);
   if (_ZN13RaycastGround10DetectClsnEv(rg) != 0 && SurfaceInfo_TestFlag0x20((int*)(rg + 0x14)) != 0) {
     *(int*)(thiz + 0x64c) = *(int*)(rg + 0x44);
     data_0209f32c = *(int*)(thiz + 0x64c);

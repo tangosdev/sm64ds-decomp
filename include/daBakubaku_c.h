@@ -2,7 +2,7 @@
 #define DABAKUBAKU_C_H
 
 #include "types.h"
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "ShadowModel.h"
@@ -17,12 +17,12 @@
  *
  * TWO WITNESSES, and they agree offset for offset:
  *
- *   func_ov032_0211244c is the factory. ActorBase::operator new(0x438), then
- *   _ZN5EnemyC2Ev, then ONE vtable store -- one, not two, which is what says nothing
+ *   func_ov032_0211244c is the factory. fBase_c::operator new(0x438), then
+ *   _ZN12dEnemyBase_cC2Ev, then ONE vtable store -- one, not two, which is what says nothing
  *   derives from this class -- then the five members below in this order.
  *
  *   func_ov032_021111a0 is the destructor: the same five backwards, then
- *   _ZN5EnemyD2Ev. func_ov032_021111f0 is the same again plus Memory::Deallocate,
+ *   _ZN12dEnemyBase_cD2Ev. func_ov032_021111f0 is the same again plus Memory::Deallocate,
  *   so it is the deleting destructor.
  *
  * The vtable is at ov032 0x02113824 and the word before it is 0x021137e4, which is
@@ -41,7 +41,7 @@
  * shape of this correction: a ctor/dtor pair pins the MEMBERS, and only the ordinary
  * methods can pin the scalars between them.
  */
-struct daBakubaku_c : Enemy {
+struct daBakubaku_c : dEnemyBase_c {
     MovingCylinderClsnWithPos  mBodyClsn;       /* 0x110 */
     MovingCylinderClsnWithPos  mHeadClsn;       /* 0x150 */
     WithMeshClsn               mWithMeshClsn;   /* 0x190 */
@@ -66,7 +66,7 @@ struct daBakubaku_c : Enemy {
 
     virtual ~daBakubaku_c();
 
-    /* The slots it overrides, found by diffing all 31 against Enemy's. All six bodies
+    /* The slots it overrides, found by diffing all 31 against dEnemyBase_c's. All six bodies
        are now real methods -- Behavior and InitResources were the last two still
        written as free functions over raw offsets, and both reproduce unchanged. */
     virtual s32  InitResources();       /* slot  0 */

@@ -5,9 +5,9 @@
 
 /* Bowser in the Fire Sea's tilting slab.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjGuragura_c, which derives from
- * Platform, and the difference is in the bytes rather than only in the RTTI: its
- * destructor stores THREE vptrs -- its own, daObjGuragura_c's, then Platform's.
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjGuragura_c, which derives from
+ * dBgActor_c, and the difference is in the bytes rather than only in the RTTI: its
+ * destructor stores THREE vptrs -- its own, daObjGuragura_c's, then dBgActor_c's.
  * A one-level chain emits two.
  *
  *   _ZTI15daObjKm2_Gura_c  ov045 0x02112fd0

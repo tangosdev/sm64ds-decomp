@@ -4,7 +4,7 @@ typedef struct V3 {
     int x, y, z;
 } V3;
 
-int _ZN5Actor13ClosestPlayerEv(void);
+int _ZN8dActor_c13ClosestPlayerEv(void);
 int _ZN6Player17SetNoControlStateEhih(int self, unsigned char a, int b, unsigned char c);
 void func_ov085_0212e728(int c, int a, int b);
 
@@ -13,7 +13,7 @@ extern int data_ov085_02130800[];
 
 int func_ov085_0212e4a4(unsigned int self)
 {
-    int p = _ZN5Actor13ClosestPlayerEv();
+    int p = _ZN8dActor_c13ClosestPlayerEv();
     if (p != 0) {
         V3 v = *(V3 *)(p + 0x5c);
         if ((data_0209caa0[2] & 0x10000) != 0 &&

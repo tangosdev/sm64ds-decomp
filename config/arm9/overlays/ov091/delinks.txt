@@ -4,11 +4,11 @@
     .ctor       start:0x02134b68 end:0x02134b80 kind:rodata align:4
     .data       start:0x02134ba0 end:0x02135440 kind:data align:32
     .bss        start:0x02135440 end:0x021356e0 kind:bss align:32
-src/_ZN25RotatingUpDownPlatformUtmD1Ev.c:
+src/_ZN25RotatingUpDownPlatformUtmD1Ev.cpp:
     complete
     .text start:0x02130f00 end:0x02130f4c
 
-src/_ZN25RotatingUpDownPlatformUtmD0Ev.c:
+src/_ZN25RotatingUpDownPlatformUtmD0Ev.cpp:
     complete
     .text start:0x02130f4c end:0x02130fac
 
@@ -16,11 +16,11 @@ src/func_ov091_02130fac.cpp:
     complete
     .text start:0x02130fac end:0x02131070
 
-src/func_ov091_02131070.cpp:
+src/_ZN25RotatingUpDownPlatformUtm4KillEv.cpp:
     complete
     .text start:0x02131070 end:0x021310fc
 
-src/func_ov091_021310fc.cpp:
+src/_ZN25RotatingUpDownPlatformUtm15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x021310fc end:0x02131160
 
@@ -174,11 +174,11 @@ src/_ZN6ThwompD0Ev.c:
     complete
     .text start:0x02132998 end:0x02132a0c
 
-src/func_ov091_02132a0c.c:
+src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02132a0c end:0x02132a14
 
-src/func_ov091_02132a14.cpp:
+src/_ZN6Thwomp15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02132a14 end:0x02132ab0
 
@@ -194,11 +194,11 @@ src/Thwomp_Spawn.c:
     complete
     .text start:0x02132cb8 end:0x02132d04
 
-src/func_ov091_02132d04.c:
+src/_ZN11daDsnBase_cD0Ev.c:
     complete
     .text start:0x02132d04 end:0x02132d6c
 
-src/func_ov091_02132d6c.c:
+src/_ZN11daDsnBase_cD1Ev.c:
     complete
     .text start:0x02132d6c end:0x02132dc0
 
@@ -258,11 +258,11 @@ src/func_ov091_021334b8.cpp:
     complete
     .text start:0x021334b8 end:0x021335d4
 
-src/func_ov091_021335d4.c:
+src/_ZN5Stump15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x021335d4 end:0x02133648
 
-src/func_ov091_02133648.cpp:
+src/_ZN5Stump15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x02133648 end:0x021336cc
 
@@ -274,11 +274,11 @@ src/_ZN5Stump6RenderEv.cpp:
     complete
     .text start:0x02133710 end:0x02133738
 
-src/func_ov091_02133738.cpp:
+src/_ZN5Stump8BehaviorEv.cpp:
     complete
     .text start:0x02133738 end:0x021338ac
 
-src/func_ov091_021338ac.c:
+src/_ZN5Stump13InitResourcesEv.cpp:
     complete
     .text start:0x021338ac end:0x02133938
 
@@ -334,7 +334,7 @@ src/_ZN6Fwoosh16CleanupResourcesEv.cpp:
     complete
     .text start:0x02134108 end:0x02134180
 
-src/_ZN6Fwoosh16OnPendingDestroyEv.c:
+src/_ZN6Fwoosh16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02134180 end:0x02134184
 
@@ -354,7 +354,7 @@ src/_ZN6Fwoosh16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02134484 end:0x0213448c
 
-src/func_ov091_0213448c.c:
+src/_ZN6Fwoosh13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x0213448c end:0x02134498
 

@@ -17,7 +17,7 @@
  * "dScMgMemory_c" are both 13 characters, so every mangled name keeps its
  * `_ZN13`/`_ZTV13` prefix and no length arithmetic changes.
  *
- * SIZE 0x5340, from MgMemoryMatch_Spawn's own `_ZN9ActorBasenwEj(0x5340)`.
+ * SIZE 0x5340, from MgMemoryMatch_Spawn's own `_ZN7fBase_cnwEj(0x5340)`.
  *
  * SHARED TABLE at 0x4f38, size 0x270, constructed by func_ov006_020c1d80
  * and destroyed by func_ov006_020c1c64 -- the same pair, at the same
@@ -61,6 +61,17 @@ struct dScMgMemory_c : dScMgSingle3DBase_c {
     u8  pad_531c[0x1f];    /* 0x531c */
     u8  unk_533b;          /* 0x533b */
     u8  pad_533c[0x4];     /* 0x533c -- rounds up to the 0x5340 boundary */
+
+    /* --- this class's own vtable overrides, defined out of line under their
+       own mangled names. Each re-uses a slot fBase_c already holds rather
+       than appending one, and none adds a field, so the size assert below is
+       untouched. The destructor above stays the key function, so no
+       translation unit starts emitting _ZTV13dScMgMemory_c because of these.
+       Signatures are include/fBase_c.h's and include/dScMgBase_c.h's own,
+       copied unchanged. --- */
+    s32 InitResources();      /* slot 0 -- ov006 0x020f53e4 */
+    s32 Behavior();           /* slot 6 -- ov006 0x020f5388 */
+    s32 Render();             /* slot 9 -- ov006 0x020f5324 */
 };
 
 typedef char dScMgMemory_c_size_must_be_0x5340[sizeof(dScMgMemory_c) == 0x5340 ? 1 : -1];

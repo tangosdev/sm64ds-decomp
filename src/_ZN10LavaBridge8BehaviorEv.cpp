@@ -11,8 +11,8 @@
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, void* v);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* t, int a, int b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void* t);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* t, int a, int b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* t);
 }
 
 s32 LavaBridge::Behavior() {
@@ -46,7 +46,7 @@ s32 LavaBridge::Behavior() {
     }
     self->unk_090 = self->unk_096;
     func_ov022_02111a1c(c);
-    if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
-        _ZN8Platform19UpdateClsnPosAndRotEv(c);
+    if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0))
+        _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     return 1;
 }

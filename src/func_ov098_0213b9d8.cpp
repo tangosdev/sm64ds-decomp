@@ -4,20 +4,20 @@
 /* recovered: shared common types */
 #include "common.h"
 struct Vector3_16;
-struct Actor;
-extern "C" Actor *_ZN5Actor13ClosestPlayerEv(void);
+struct dActor_c;
+extern "C" dActor_c *_ZN8dActor_c13ClosestPlayerEv(void);
 extern "C" s32 Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
-extern "C" Actor *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32,u32,const Vector3*,const Vector3_16*,s32,s32);
+extern "C" dActor_c *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32,u32,const Vector3*,const Vector3_16*,s32,s32);
 extern "C" void func_0201267c(u32 a, void *b, void *c, int d);
 extern s16 data_02082214[];
 #define M(x) (x)
 
 extern "C" int func_ov098_0213b9d8(char *self)
 {
-    Vector3 v; Actor *player; s32 ang; s32 vel; u32 ua; int factor; int a; s16 sn, cs;
+    Vector3 v; dActor_c *player; s32 ang; s32 vel; u32 ua; int factor; int a; s16 sn, cs;
     int nx, ny, nz; int py, sy;
     if (*(u16 *)(self + 0x100)) return;
-    player = _ZN5Actor13ClosestPlayerEv();
+    player = _ZN8dActor_c13ClosestPlayerEv();
     if (!player) return;
     { char *p = (char *)(int)M((char *)player + 0x5c);
       v.x=*(int*)p; v.y=*(int*)(p+4); v.z=*(int*)(p+8); }
@@ -40,7 +40,7 @@ extern "C" int func_ov098_0213b9d8(char *self)
     v.x = nx;
     nz = factor * sn + v.z;
     v.z = nz;
-    { Actor *spawned = _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xd0,1,&v,0,*(signed char*)(self+0xcc),-1);
+    { dActor_c *spawned = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xd0,1,&v,0,*(signed char*)(self+0xcc),-1);
       *(int*)((char*)spawned+0x98)=0; }
     *(u16*)(self+0x100)=0x96;
     func_0201267c(0xd8, self+0x74, self+0x100, 0x96);

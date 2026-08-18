@@ -9,7 +9,7 @@ extern "C" {
 extern int _ZN6Player7IsStateERNS_5StateE(void* c, void* s);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, unsigned int anim, int a, int b, unsigned int d);
 extern void _ZN11RaycastLineC1Ev(void* self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void* self, void* a, void* b, void* act);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
 extern int _ZN11RaycastLine10DetectClsnEv(void* self);
 extern void _ZN11RaycastLineD1Ev(void* self);
 extern short data_02082214[];
@@ -51,7 +51,7 @@ extern "C" int func_ov002_020d5cec(char* c)
     v2.z = v1.z + (int)(((long long)data_02082214[shifted * 2 + 1] * 0x50000 + 0x800) >> 12);
 
     _ZN11RaycastLineC1Ev(rl);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(rl, &v1, &v2, c);
+    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, c);
     if (_ZN11RaycastLine10DetectClsnEv(rl) != 0) {
         *(int*)(c + 0x5c) = v1.x;
         *(int*)(c + 0x60) = v1.y;

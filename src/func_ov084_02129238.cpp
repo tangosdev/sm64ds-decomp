@@ -4,7 +4,7 @@
 #include "common.h"
 typedef int s32;
 
-struct Actor;
+struct dActor_c;
 
 struct RaycastGround {
     char pad0[0x14];
@@ -17,7 +17,7 @@ struct RaycastGround {
     void StartDetectingWater();
     void StartDetectingToxic();
     void StopDetectingOrdinary();
-    void SetObjAndPos(const Vector3& pos, Actor* a);
+    void SetObjAndPos(const Vector3& pos, dActor_c* a);
     int DetectClsn();
 };
 /* Signature deliberately copied from the local declaration above: the
@@ -32,8 +32,8 @@ extern "C" void _ZN4BgCh21StopDetectingOrdinaryEv(void *);
 extern "C" {
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 int func_02037e20(int* p);
-void _ZN5Enemy9SpawnCoinEv(void* p);
-void _ZN5Actor8PoofDustEv(void* p);
+void _ZN12dEnemyBase_c9SpawnCoinEv(void* p);
+void _ZN8dActor_c8PoofDustEv(void* p);
 void func_ov084_02129498(char* r0);
 void _ZN8CapEnemy10ReleaseCapERK7Vector3(void* thiz, const Vector3* v);
 void _ZN8CapEnemy15RespawnIfHasCapEv(void* p);
@@ -57,13 +57,13 @@ void func_ov084_02129238(char* c)
         _ZN4BgCh19StartDetectingWaterEv(&(rg));
         _ZN4BgCh19StartDetectingToxicEv(&(rg));
         _ZN4BgCh21StopDetectingOrdinaryEv(&(rg));
-        rg.SetObjAndPos(pos, (Actor*)c);
+        rg.SetObjAndPos(pos, (dActor_c*)c);
         if (rg.DetectClsn() != 0) {
             if (func_02037e20(&rg.field14) != 0) {
                 if (rg.field44 != (int)0x80000000) {
                     if (*(int*)(c + 0x60) < rg.field44) {
-                        _ZN5Enemy9SpawnCoinEv(c);
-                        _ZN5Actor8PoofDustEv(c);
+                        _ZN12dEnemyBase_c9SpawnCoinEv(c);
+                        _ZN8dActor_c8PoofDustEv(c);
                         func_ov084_02129498(c);
                         {
                             Vector3 cap;

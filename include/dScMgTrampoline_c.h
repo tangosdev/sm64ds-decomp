@@ -3,7 +3,7 @@
  * (build/rtti.json). Its own vtable is ov006:0x0213fb34.
  *
  * SIZE 0x5dc8, from MgTrampolineTime_Spawn's own
- * `_ZN9ActorBasenwEj(0x5dc8)`. That factory writes dScMgD3DBase_c's vtable,
+ * `_ZN7fBase_cnwEj(0x5dc8)`. That factory writes dScMgD3DBase_c's vtable,
  * then this class's, then the three arrays below; the English _Spawn name
  * is already attributed and is kept.
  *
@@ -28,6 +28,15 @@ extern "C" void func_ov006_02120938(void);
 
 struct dScMgTrampoline_c : dScMgD3DBase_c {
     virtual ~dScMgTrampoline_c();
+
+    /* --- this class's own vtable slots, named from the table ---
+       Re-overrides of slots fBase_c already owns, NOT new virtuals: the
+       table stays the base's width and no field moves. Declared AFTER the
+       destructor so the destructor is still the first virtual declared. */
+    virtual s32 InitResources();     /* slot 0 -- src/_ZN17dScMgTrampoline_c13InitResourcesEv.cpp */
+    virtual s32 CleanupResources();  /* slot 3 -- ov006 0x021212e0 */
+    virtual s32 Behavior();          /* slot 6 -- ov006 0x021214f8 */
+    virtual s32 Render();            /* slot 9 -- ov006 0x021212fc */
 
     u8  pad_5004[0x8];    /* 0x5004 -- no matched access in this class's methods */
     u8  mArray1[0x340];   /* 0x500c -- 4 * 0xd0,  elem dtor func_ov006_020ccfc8 */

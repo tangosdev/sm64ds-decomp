@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern void _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(void* self, struct Vector3* pos, unsigned int n, int flag, unsigned short t, void* src);
+extern void _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(void* self, struct Vector3* pos, unsigned int n, int flag, unsigned short t, void* src);
 extern signed char data_0209f310[];
 
 void func_ov002_020e7218(char* c, char* a, int gate) {
@@ -21,7 +21,7 @@ void func_ov002_020e7218(char* c, char* a, int gate) {
         pos[1].x = pos[0].x;
         pos[1].z = pos[0].z;
         pos[1].y = pos[0].y;
-        _ZN5Actor11SpawnNumberERK7Vector3jbtPS_(c, &pos[1], data_0209f310[*(unsigned char*)(a + 0x6d8)], b, 0x15, a);
+        _ZN8dActor_c11SpawnNumberERK7Vector3jbtPS_(c, &pos[1], data_0209f310[*(unsigned char*)(a + 0x6d8)], b, 0x15, a);
     }
     *(unsigned short*)((int)(c + 0x4a2)) |= 0x40;
     func_ov002_020e7554(c);

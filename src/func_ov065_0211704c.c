@@ -1,17 +1,17 @@
 typedef struct { int x, y, z; } Vector3;
 typedef int Fix12i;
 
-extern char* _ZN5Actor10FindWithIDEj(unsigned int id);
+extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* m, void* f, int a, Fix12i fix, unsigned sp0);
 extern void func_ov002_020aea30(char* c, char* p, int r2);
 extern void func_02012694(int a, char* b);
 extern void func_ov002_020ada40(char* c, short* v, char* p);
-extern int _ZN5Actor24BumpedUnderneathByPlayerER6Player(char* c, char* p);
+extern int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(char* c, char* p);
 extern int _ZN6Player9IsOnShellEv(char* p);
-extern void _ZN5Actor13SmallPoofDustEv(char* c);
-extern void _ZN5Actor24KillAndTrackInDeathTableEv(char* c);
-extern void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(char* c, Vector3* pos, unsigned n, Fix12i fix, short s);
-extern int _ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(char* c, char* clsn, char* p);
+extern void _ZN8dActor_c13SmallPoofDustEv(char* c);
+extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(char* c);
+extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(char* c, Vector3* pos, unsigned n, Fix12i fix, short s);
+extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(char* c, char* clsn, char* p);
 extern void _ZN6Player6BounceE5Fix12IiE(char* p, Fix12i fix);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char* p, Vector3* pos, unsigned a, Fix12i fix, unsigned b, unsigned d, unsigned e);
 extern void func_ov065_02117944(char* c, void* p);
@@ -27,7 +27,7 @@ void func_ov065_0211704c(char* c)
     int b;
 
     if (*(int*)(c + 0x134) == 0) return;
-    p = _ZN5Actor10FindWithIDEj(*(int*)(c + 0x134));
+    p = _ZN8dActor_c10FindWithIDEj(*(int*)(c + 0x134));
     if (p == 0) return;
     flags = *(int*)(c + 0x130);
     if (flags & 0x2400) {
@@ -82,7 +82,7 @@ void func_ov065_0211704c(char* c)
     if (b == 0)
         return;
 
-    if (_ZN5Actor24BumpedUnderneathByPlayerER6Player(c, p) == 1)
+    if (_ZN8dActor_c24BumpedUnderneathByPlayerER6Player(c, p) == 1)
         goto kill;
     if (_ZN6Player9IsOnShellEv(p) == 1)
         goto kill;
@@ -92,19 +92,19 @@ void func_ov065_0211704c(char* c)
 kill:
     {
         int pos[3];
-        _ZN5Actor13SmallPoofDustEv(c);
-        _ZN5Actor24KillAndTrackInDeathTableEv(c);
+        _ZN8dActor_c13SmallPoofDustEv(c);
+        _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
         func_02012694(0x112, c + 0x74);
         pos[0] = *(int*)(c + 0x5c);
         pos[1] = *(int*)(c + 0x60);
         pos[2] = *(int*)(c + 0x64);
-        _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(
+        _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(
             c, (Vector3*)pos, *(unsigned char*)(c + 0x10a) + 1, 0xa000, 0);
         return;
     }
 
 jumped:
-    if (_ZN5Actor16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, p) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, p) != 0) {
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         *(int*)(c + 0x10c) = 1;
         func_ov002_020aea30(c, p, 0);

@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
- * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -15,14 +15,19 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 
-struct MovingBar : Platform {
+struct MovingBar : dBgActor_c {
     u8  pad_31e[0x2];
     s32 unk_320;                      /* 0x320 */
     s32 unk_324;                      /* 0x324 */
     s32 unk_328;                      /* 0x328 */
     s32 mVariant;                     /* 0x32c */
+    /* Both factories storing _ZTV9MovingBar (ov015:0x0211458c) -- MovingBarBig_Spawn
+       and MovingBarSmall_Spawn -- call fBase_c::operator new(0x338). They agree, so
+       they are two spawn-info variants of one actor, and 0x330 was the field span
+       rather than the size. */
+    u8 pad_330[0x8];                  /* 0x330, to the ROM's 0x338 */
 
     /* --- vtable --- */
     virtual ~MovingBar();
@@ -31,9 +36,14 @@ struct MovingBar : Platform {
     int CleanupResources();
     int InitResources();
     int Render();
+    virtual void OnHitByMegaChar(Player &player);   /* slot 27 */
+    /* dBgActor_c's own slot, overridden here: _ZTV9MovingBar+0x7c relocates to
+       0x02111c3c while _ZTV10dBgActor_c+0x7c relocates to _ZN10dBgActor_c4KillEv. An
+       override, so it adds no slot and no field. */
+    virtual void Kill();              /* slot 31 */
 };
 
-typedef char KnockDownPlank_size_must_be_0x330[sizeof(MovingBar) == 0x330 ? 1 : -1];
+typedef char MovingBar_size_must_be_0x338[sizeof(MovingBar) == 0x338 ? 1 : -1];
 
 #else
 
@@ -42,7 +52,7 @@ typedef char KnockDownPlank_size_must_be_0x330[sizeof(MovingBar) == 0x330 ? 1 : 
    can never be migrated. Same arrangement as include/ShadowModel.h. */
 struct MovingBar {
     u8  pad_000[0xc];
-    /* 0x00c..0x05c is ActorBase's, and ActorBase.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x00c..0x05c is fBase_c's, and fBase_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     u16 unk_00c;                 /* 0x00c */
     u8  aliveState;              /* 0x00e */
@@ -55,11 +65,11 @@ struct MovingBar {
     u8  behavNode[0x10];               /* 0x028 */
     u8  renderNode[0x10];              /* 0x038 */
     u8  pad_048[0x14];
-    /* Actor::mPosX -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPosX -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
     s32 unk_05c;            /* 0x05c */
-    /* Actor::mPosY -- Actor.h declares s32 here, and it is de-bannered (hand-reconstructed). */
+    /* dActor_c::mPosY -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
     s32 unk_060;            /* 0x060 */
-    /* 0x064..0x08e is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x064..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_064;                 /* 0x064 */
     s32 unk_068;                 /* 0x068 */

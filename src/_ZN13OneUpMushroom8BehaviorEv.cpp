@@ -10,7 +10,7 @@ struct C {
   char pad[0x500];
 };
 extern "C" {
-extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(char* c, char* clsn);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(char* c, char* clsn);
 extern void _ZN12CylinderClsn5ClearEv(char* c);
 extern void _ZN12CylinderClsn6UpdateEv(char* c);
 extern PMF data_ov002_0210dc00[];
@@ -19,7 +19,7 @@ extern PMF data_ov002_0210dc00[];
 
 int OneUpMushroom::Behavior()
 {
-  if(_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(((char*)this), ((char*)this)+0x144) != 0){
+  if(_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(((char*)this), ((char*)this)+0x144) != 0){
     func_ov002_020af4ec(((char*)this));
     _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
     return 1;

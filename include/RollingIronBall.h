@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout:
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN15RollingIronBallD1Ev` destroys each member, and
  * `RollingIronBall_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV15RollingIronBall`. Everything this header used to restate below
- * 0x110 belongs to Enemy and Actor and is inherited now.
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
@@ -31,18 +31,18 @@
  * this class reproduces.)
  *
  * SIZE IS THE ROM'S OWN: `RollingIronBall_Spawn` calls
- * `ActorBase::operator new(1020)` -- 0x3fc -- and stores this class's
+ * `fBase_c::operator new(1020)` -- 0x3fc -- and stores this class's
  * vtable, so that literal IS this class's sizeof.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "MovingCylinderClsn.h"
 #include "PathPtr.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct RollingIronBall : Enemy {
+struct RollingIronBall : dEnemyBase_c {
     WithMeshClsn                 mWithMeshClsn;         /* 0x110 */
     Model                        mModel;                /* 0x2cc */
     ShadowModel                  mShadowModel;          /* 0x31c */

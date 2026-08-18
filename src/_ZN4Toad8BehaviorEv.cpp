@@ -42,8 +42,8 @@ extern s16 Vec3_VertAngle(const void *a, const void *b);
 extern s32 AngleDiff(s32 a, s32 b);
 extern void _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 rate);
 extern void _Z15ApproachLinear2Riii(s32 *dst, s32 target, s32 rate);
-extern void *_ZN5Actor10FindWithIDEj(u32 id);
-extern void *_ZN5Actor13ClosestPlayerEv(void *c);
+extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *c);
 extern void _ZN9ModelBase12ApplyOpacityEj(void *c, u32 a, int b);
 }
 
@@ -52,7 +52,7 @@ int Toad::Behavior()
     func_ov085_02129570(this);
     mModelAnim.UpdateVerts();
 
-    char *p = (char *)_ZN5Actor13ClosestPlayerEv(this);
+    char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(this);
     if (p != 0) {
         s32 threshold = 0xfa000;
         if (data_0209f2f8 == 0x32)
@@ -98,7 +98,7 @@ int Toad::Behavior()
     {
         u32 id = unk_1f4;
         if (id != 0) {
-            if (_ZN5Actor10FindWithIDEj(id) != 0)
+            if (_ZN8dActor_c10FindWithIDEj(id) != 0)
                 unk_20e = 0xff;
         }
     }

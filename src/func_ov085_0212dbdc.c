@@ -1,6 +1,6 @@
 typedef short s16;
 
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern void func_0201f32c(int a);
 extern void func_ov002_020c3f2c(void* player);
 extern int func_ov085_0212e728(void* c, void* p);
@@ -9,7 +9,7 @@ extern int data_ov085_021307f0[];
 
 int func_ov085_0212dbdc(char* c)
 {
-    char* p = (char*)_ZN5Actor13ClosestPlayerEv(c);
+    char* p = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
     int* pp;
     if (p == 0)
         return 1;

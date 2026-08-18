@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void _ZN13RaycastGroundC1Ev(void* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, void* pos, void* act);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* pos, void* act);
 extern int _ZN13RaycastGround10DetectClsnEv(void* self);
 extern void _ZN13RaycastGroundD1Ev(void* self);
 int func_ov002_020c6538(char* c) {
@@ -14,7 +14,7 @@ int func_ov002_020c6538(char* c) {
     v[1] = y;
     v[2] = *(int*)(c+0x64);
     v[1] = y + 0x32000;
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, v, c);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, v, c);
     if (_ZN13RaycastGround10DetectClsnEv(rg) == 0) {
         _ZN13RaycastGroundD1Ev(rg);
         return 0;

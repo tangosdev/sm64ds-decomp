@@ -1,14 +1,14 @@
 typedef int Fix12i;
 typedef short s16;
 
-extern void *_ZN5Actor13ClosestPlayerEv(void *c);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *c);
 extern Fix12i Vec3_Dist(const void *a, const void *b);
 extern s16 Vec3_HorzAngle(const void *v0, const void *v1);
 extern void _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 step);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *anim, void *file, int n, Fix12i speed, unsigned int flags);
 extern void func_ov030_02111a00(void *c);
 extern void _ZN9Animation7AdvanceEv(void *c);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void *c, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *c, void *clsn);
 extern int func_ov030_02111dd0(void *c);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *c);
 extern void func_ov030_02111f6c(void *c, void *w);
@@ -30,7 +30,7 @@ int func_ov030_02113d20(void *c) {
 
     p = *(void **)((char *)c + 0x3a8);
     if (p == 0)
-        p = _ZN5Actor13ClosestPlayerEv(c);
+        p = _ZN8dActor_c13ClosestPlayerEv(c);
 
     dist = Vec3_Dist((char *)c + 0x5c, (char *)p + 0x5c);
 
@@ -77,12 +77,12 @@ int func_ov030_02113d20(void *c) {
 
     b = (int)(*(unsigned short *)((char *)c + 0xc) == 0x10b);
     if (b) {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, (char *)c + 0x160);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (char *)c + 0x160);
         onWall = (func_ov030_02111dd0(c) | _ZNK12WithMeshClsn8IsOnWallEv((char *)c + 0x194)) != 0;
         func_ov030_02111f6c(c, (char *)c + 0x194);
         func_ov030_02111bc4(c);
     } else {
-        _ZN5Actor9UpdatePosEP12CylinderClsn(c, (char *)c + 0x160);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (char *)c + 0x160);
         func_ov030_02111f6c(c, (char *)c + 0x194);
         func_ov030_02111bc4(c);
         onWall = (func_ov030_02111ea4(c) | _ZNK12WithMeshClsn8IsOnWallEv((char *)c + 0x194)) != 0;

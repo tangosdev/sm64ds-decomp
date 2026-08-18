@@ -19,7 +19,7 @@ struct Obj {
     void *unkE0;
 };
 
-extern void *_Znwj(int sz);
+extern "C" void *_Znwj(int sz);
 
 extern unsigned char data_0209f2d8;
 extern char data_ov002_0211094c;

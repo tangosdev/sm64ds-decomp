@@ -3,7 +3,7 @@
 /* recovered: real C++ constructor -- the compiler emits the whole body
  *
  * Four things happen here and the compiler is responsible for three of them:
- * Enemy's constructor runs because CapEnemy derives from Enemy, the vtable
+ * dEnemyBase_c's constructor runs because CapEnemy derives from dEnemyBase_c, the vtable
  * store happens because the class declares a virtual destructor, and Model's
  * constructor runs because mModel is a member. Only the CapIcon call is
  * written out, and only because that type's constructor is still spelt

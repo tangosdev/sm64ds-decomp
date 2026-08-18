@@ -11,9 +11,9 @@
  *
  * The third parameter is part of the shared loader signature and unused here.
  *
- * Actor::Spawn is called through the hand-spelled symbol that ends in `as`
+ * dActor_c::Spawn is called through the hand-spelled symbol that ends in `as`
  * (s8 area, s16 deathTable). The real header declares those widths, and
- * calling it as `Actor::Spawn` from here inserts s8/s16 truncates that grow
+ * calling it as `dActor_c::Spawn` from here inserts s8/s16 truncates that grow
  * the function by 4 bytes because `areaID` arrives as a full-word `int`.
  * Call-site bytes are insensitive to the declared widths; the linker is not. */
 #include "types.h"
@@ -25,7 +25,7 @@ extern "C" {
 extern s16 data_ov002_0211118c;
 extern u16 data_ov002_0210cbf4[];
 
-void *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 actorID, u32 param1, const Vector3 *pos, const Vector3_16 *rot,
     s32 areaID, s32 deathTableID);
 }
@@ -45,7 +45,7 @@ void LoadStandardObjects(LVL_Overlay::ObjSubTable& tbl, int areaID, u32 param)
         v.z = zz;
         s16 old = data_ov002_0211118c;
         data_ov002_0211118c = (s16)(old + 1);
-        _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(
+        _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
             a, e->param, &v, (const Vector3_16*)&e->rot, areaID, old);
     }
 }

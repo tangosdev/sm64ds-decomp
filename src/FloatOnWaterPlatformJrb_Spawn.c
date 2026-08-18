@@ -9,9 +9,9 @@ extern int _ZTV23FloatOnWaterPlatformJrb[];
 /* vtable identified: VT0 = _ZTV17daObjFloatBoard_c */
 int *FloatOnWaterPlatformJrb_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(840);
+    int *p = (int *)_ZN7fBase_cnwEj(840);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV17daObjFloatBoard_c;
         p[0] = (int)_ZTV23FloatOnWaterPlatformJrb;
     }

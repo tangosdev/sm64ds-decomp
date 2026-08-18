@@ -1,9 +1,15 @@
 //cpp
 #include "types.h"
+extern "C" {
+    extern void func_02019028(void);
+    extern void MultiCopy_Int(int*, int*, int);
+    extern char data_ov004_020bea28[];
+    extern char data_ov004_020beac8[];
+    extern void*data_ov004_020bbf94[];
+}
 // @symbol func_ov004_020af094
 // recovered name: dScMgBase_c_OnAimedAtWithEgg
 /* recovered: renamed to Class_Method, declarations from a shared header */
-#include "decl_common.h"
 /* recovered: renamed to Class_Method */
 /* dScMgBase_c::OnAimedAtWithEgg - recovered from vtable slot identity */
 extern "C" void _ZN4CP1527FlushAndInvalidateDataCacheEjj(void *addr, unsigned int size);

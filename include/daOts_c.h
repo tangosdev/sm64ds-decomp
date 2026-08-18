@@ -2,7 +2,7 @@
 #define DAOTS_C_H
 
 #include "types.h"
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
 #include "ShadowModel.h"
@@ -18,7 +18,7 @@
  *
  *   _ZN7daOts_cD1Ev (ov064 0x02115ee0, 0x48) -- this class's own destructor. It stores
  *   data_ov064_0211b768 and destroys ShadowModel 0x370, MovingCylinderClsn 0x33c,
- *   WithMeshClsn 0x174, ModelAnim 0x110, then chains to _ZN5EnemyD2Ev. D0 at
+ *   WithMeshClsn 0x174, ModelAnim 0x110, then chains to _ZN12dEnemyBase_cD2Ev. D0 at
  *   0x02115f28 is the same plus Memory::Deallocate.
  *
  *   An out-of-line D1/D0 pair and the inline destructor below are not in conflict:
@@ -45,7 +45,7 @@
  * referenced by no child source at all -- so it stays the children's padding rather
  * than being annexed into the base on no evidence.
  */
-/* THE VTABLE, all 31 slots diffed against Enemy's and against all three children's:
+/* THE VTABLE, all 31 slots diffed against dEnemyBase_c's and against all three children's:
  *
  *   slot 0  InitResources    LITERAL ZERO here -- pure virtual. All three children
  *   slot 6  Behavior         override both, which is why they must.
@@ -71,7 +71,7 @@
  * destructor note), and declaring them would change what the children emit for no
  * gain. The zero words are the evidence; the declaration would only restate it.
  */
-struct daOts_c : Enemy {
+struct daOts_c : dEnemyBase_c {
     ModelAnim           mModelAnim;             /* 0x110 */
     WithMeshClsn        mWithMeshClsn;          /* 0x174 */
     /* All three children declare a field here, which is what makes it the base's
@@ -91,7 +91,7 @@ struct daOts_c : Enemy {
        and an out-of-line declaration here would make each child emit a call the ROM
        does not have. Being inline also leaves this class without a key function, so
        merely including this header does not emit _ZTV7daOts_c. Same reasoning, same
-       wording, as include/Platform.h. */
+       wording, as include/dBgActor_c.h. */
     virtual ~daOts_c() {}
 
     /* The three slots this class owns outright, each named by the diff above rather

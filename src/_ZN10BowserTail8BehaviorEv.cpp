@@ -6,15 +6,15 @@
  * this actor 0x8c units out from his position along his facing angle.
  * data_02082214 is a sin/cos table indexed by angle>>4, two shorts per entry.
  *
- * The one-line `struct Actor { static Actor* FindWithID(unsigned int); };` stand-in
- * this file used to carry is gone -- Actor.h already declared FindWithID, so it was
+ * The one-line `struct dActor_c { static dActor_c* FindWithID(unsigned int); };` stand-in
+ * this file used to carry is gone -- dActor_c.h already declared FindWithID, so it was
  * never needed.
  *
  * THE POINTER BUMP AND THE volatile ARE LOAD-BEARING, both measured. Reading
  * Bowser's fields the obvious way -- `bowser->mPrevAngleY`, `bowser->mPosX` and so
- * on, which the real Actor now makes possible -- compiles and does not reproduce
+ * on, which the real dActor_c now makes possible -- compiles and does not reproduce
  * the ROM. The bump to +0x5c and the three loads off it are what the original
- * source did, and the offsets are Actor's: 0x94 is mPrevAngleY, 0x5c..0x64 are
+ * source did, and the offsets are dActor_c's: 0x94 is mPrevAngleY, 0x5c..0x64 are
  * mPosX/mPosY/mPosZ.
  */
 #include "decl_common.h"
@@ -24,11 +24,11 @@ extern short data_02082214[];
 
 int BowserTail::Behavior()
 {
-    Actor* a = Actor::FindWithID(unk_108);
+    dActor_c* a = dActor_c::FindWithID(unk_108);
     if (!a) return 1;
 
-    int ang = *(short*)((char*)a + 0x94);        /* Actor::mPrevAngleY */
-    a = (Actor*)((int)a + 0x5c);                 /* Actor::mPosX */
+    int ang = *(short*)((char*)a + 0x94);        /* dActor_c::mPrevAngleY */
+    a = (dActor_c*)((int)a + 0x5c);                 /* dActor_c::mPosX */
     int x = *(int*)a;
     volatile int v[3];
     v[0] = x;

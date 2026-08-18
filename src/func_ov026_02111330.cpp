@@ -17,7 +17,7 @@ extern "C" {
     int _ZNK7PathPtr5LoopsEv(void* self);
     void _ZN12CylinderClsn5ClearEv(void* self);
     void _ZN13RaycastGroundC1Ev(void* self);
-    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, const Vector3* pos, void* actor);
+    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, const Vector3* pos, void* actor);
     int _ZN13RaycastGround10DetectClsnEv(void* self);
     void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* self, const Vector3* v);
     void _ZN12CylinderClsn6UpdateEv(void* self);
@@ -94,7 +94,7 @@ extern "C" int func_ov026_02111330(void* self)
         rp = *(Vector3*)(c + 0x5c);
         rp.y -= 0x14000;
         _ZN13RaycastGroundC1Ev(&rg);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &rp, 0);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &rp, 0);
         *(s32*)(c + 0x1e0) = rp.y;
         if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
             *(s32*)(c + 0x1e0) = rg.hitY;

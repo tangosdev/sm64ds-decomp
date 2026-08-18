@@ -26,7 +26,7 @@
  * LAYOUT: the base is 0x30, and pos starts at exactly 0x30 (GetPos is
  * `add r0, r0, #0x30'), so the object is 0x3c.
  *
- * Having no owning Actor is what slot 3 encodes: GetOwnerID is a constant 0,
+ * Having no owning dActor_c is what slot 3 encodes: GetOwnerID is a constant 0,
  * where MovingCylinderClsn's reads through its owner pointer.
  */
 

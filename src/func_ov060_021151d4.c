@@ -1,6 +1,6 @@
 extern int RandomIntInternal(int *seed);
 extern int data_0209e650;
-extern int _ZN5Actor13DistToCPlayerEv(void *self);
+extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
 
 void func_ov060_021151d4(char *a)
 {
@@ -12,7 +12,7 @@ void func_ov060_021151d4(char *a)
     if ((*(int *)(a + 0x418) & 2) == 0)
         goto setE;
 
-    if (_ZN5Actor13DistToCPlayerEv(a) < 0x514000) {
+    if (_ZN8dActor_c13DistToCPlayerEv(a) < 0x514000) {
         m = ((unsigned int)RandomIntInternal(&data_0209e650) >> 0x10) % 10;
         if (m < *(unsigned char *)(a + 0x42a)) {
             *(int *)(a + 0x40c) = 0x10;

@@ -40,9 +40,9 @@ extern char data_ov064_0211c9bc[];
 
 extern void func_0201267c(int soundId, Fix12i *camSpacePos);
 extern int _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
-extern int _ZN5Actor13DistToCPlayerEv(char *self);
+extern int _ZN8dActor_c13DistToCPlayerEv(char *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char *ma, int file, int flags, int speed, unsigned int startFrame);
-extern char *_ZN5Actor10FindWithIDEj(int id);
+extern char *_ZN8dActor_c10FindWithIDEj(int id);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char *player, int *src, unsigned int damage, int knockback, unsigned int a, unsigned int b, unsigned int c);
 }
 
@@ -69,7 +69,7 @@ int Clam::Behavior()
             *(int *)&unk_150 &= ~1;
         } else {
             if (mStateTimer > 0x96 &&
-                _ZN5Actor13DistToCPlayerEv((char *)this) < 0x1f4000) {
+                _ZN8dActor_c13DistToCPlayerEv((char *)this) < 0x1f4000) {
                 func_0201267c(0x26, &mCamSpacePosX);
                 u.lungePuff[0] = mPosX;
                 u.lungePuff[1] = mPosY;
@@ -105,7 +105,7 @@ int Clam::Behavior()
     mStateTimer++;
 
     if (unk_15c != 0) {
-        char *touched = _ZN5Actor10FindWithIDEj(unk_15c);
+        char *touched = _ZN8dActor_c10FindWithIDEj(unk_15c);
         if (touched != 0) {
             int isPlayer = (int)(*(u16 *)(touched + 0xc) == 0xbf);
             if (isPlayer != 0) {

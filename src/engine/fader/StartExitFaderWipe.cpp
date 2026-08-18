@@ -36,10 +36,10 @@ struct FaderWipe : Fader {
    zeroes it. Named data_0209f324 because that is the symbol; every other
    consumer of this address spells it the same way. */
 extern FaderWipe* data_0209f324;
-extern "C" void _ZN5Scene9SetFadersEP15FaderBrightness(FaderWipe* f);
+extern "C" void _ZN8dScene_c9SetFadersEP15FaderBrightness(FaderWipe* f);
 
 extern "C" void StartExitFaderWipe(int index) {
     FaderWipe* f = &data_0209f324[index];
-    _ZN5Scene9SetFadersEP15FaderBrightness(f);
+    _ZN8dScene_c9SetFadersEP15FaderBrightness(f);
     f->SetToStart();
 }

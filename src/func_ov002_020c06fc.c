@@ -11,7 +11,7 @@ extern int Vec3_HorzLen(void *v);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int x, int z);
 extern int AngleDiff(int a, int b);
 extern void _ZN11RaycastLineC1Ev(void *ray);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(void *ray, void *a, void *b, void *actor);
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *ray, void *a, void *b, void *actor);
 extern int _ZN11RaycastLine10DetectClsnEv(void *ray);
 extern void _ZN11RaycastLineD1Ev(void *ray);
 extern void ApproachAngle(short *cur, short target, int divisor, int band, int maxStep);
@@ -112,7 +112,7 @@ int func_ov002_020c06fc(char *c, int arg)
             ty = *(int *)(c + 0x60) + 0x32000;
             f.v2.x = tx; f.v2.y = ty; f.v2.z = tz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(f.ray, &f.v1, &f.v2, c);
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(f.ray, &f.v1, &f.v2, c);
         if (_ZN11RaycastLine10DetectClsnEv(f.ray) != 0) {
             f.v0.x = 0;
             f.v0.z = 0;

@@ -34,6 +34,7 @@ take over, ping the claimant first.
 | ActorBase -> ActorDerived -> Actor -> Player | andrewboudreau | 2026-08-01 | **active** - ActorBase landed as a real polymorphic class (#974); ActorDerived next, then Actor, then Player |
 | Collision chain: MeshColliderBase, MeshCollider, MovingMeshCollider, ExtendingMeshCollider, WithMeshClsn, CylinderClsn family | tangosdev | 2026-08-02 | **active** - readable conversion, same per-file byte gate as the Model chain |
 | Model chain: ModelBase, Model, CommonModel, ShadowModel, Animation, ModelAnim, BlendModelAnim, ModelAnim2 | tangosdev | 2026-08-01 | **done** - #981, #984, #985: all eight real C++ classes, every converted file byte-matched; MI reproduces (Animation second base at +0x50, thunks stay ROM-supplied). Parked: Func_ method renames, _ZTV9Animation naming, wall 6az gates 5Fix12IiE definitions |
+| CheepCheep, WaterSuction, ChainChomp, Fwoosh, MontyMoleRock, Wiggler, KingBobOmb, MrBlizzard | andrewboudreau | 2026-08-18 | **done** - 13 methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform work excluded |
 
 ## Claims
 
@@ -51,6 +52,7 @@ take over, ping the claimant first.
 | ov006 func_ov006_020d8408 (0x020d8408, size 0x4fc) | lunavyqo | 2026-08-15 | **released** — near-miss improved **21→7** (size-exact 0x4fc, align 316/319). Levers: step=0 after cnt=1 (ROM zero schedule); dropped 2nd arg on sb==0 call; inline `c+(j<<6)+off` remat after Random/flag paths; ang+= before i++. Residual: loop-head r1↔r2 (row/slot) + z0 load vs add#0x4600 order. API clm_045ac8a8085c released |
 | ov007 func_ov007_020b8fd4 (0x020b8fd4, size 0x1e0) | lunavyqo | 2026-08-15 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: assign A into f8 first, then statement-level volatile C/G, flag-before-inner, 6k decls; API clm_b8fe00ef066b kept |
 | ov006 func_ov006_02106ca4 (0x02106ca4, size 0x214) | lunavyqo | 2026-08-16 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: C++ PMF table dispatch, timer!=0 fallthrough, `#pragma opt_propagation off`, u64-laundered 0x4ec0/0x4ec6 RMW pointers, 0xfe3/0xc3 stores then score ptr; API clm_708466c606e3 kept |
+|---|---|---|---|
 | ov005 func_ov005_020c16e4 (0x020c16e4, size 0x33c) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: ++row MultiCopy tail, dest pin `idx?dstp:dstp` / `destOff?dstp:dstp` (equal-arm) for rem-before-quot + increment order; from near-miss 136→18→16→3→0; API clm_84a56ab710d3 kept |
 | ov005 func_ov005_020c0378 (0x020c0378, size 0x354) | lunavyqo | 2026-08-13 | **active** — near-miss improved **77→44** size-exact. 0250-style S.a/S.b has + loop_invariants off + S[idx].d y. Residual pure regperm (idx r1 vs r5, has r3 vs r2) + path-B y early. API clm_3c2c2b05061d |
 | ov015 _ZN14KnockDownPlank13InitResourcesEv (0x02111960, size 0x208) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_propagation off` + u64-mask angle increment + named `zero` for vec stores; API clm_645f51ab54fa kept |

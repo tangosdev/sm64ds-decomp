@@ -6,7 +6,7 @@
 /* The Wiggler. Five body segments, so five of everything -- and EIGHT arrays,
  * which close on eight consecutive boundaries:
  *
- *     Enemy                        ends 0x110
+ *     dEnemyBase_c                        ends 0x110
  *     ModelAnim[5]                 0x110 + 5*0x64 = 0x304  -> MaterialChanger
  *     MaterialChanger[5]           0x304 + 5*0x14 = 0x368  -> TextureSequence
  *     TextureSequence[5]           0x368 + 5*0x14 = 0x3cc  -> the first triple
@@ -22,14 +22,14 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MaterialChanger.h"
 #include "TextureSequence.h"
 #include "WithMeshClsn.h"
 #include "MovingCylinderClsnWithPos.h"
 
-struct Wiggler : Enemy {
+struct Wiggler : dEnemyBase_c {
     ModelAnim mModelAnims[5];                        /* 0x110 */
     MaterialChanger mMaterialChangers[5];            /* 0x304 */
     TextureSequence mTextureSequences[5];            /* 0x368 */
@@ -44,6 +44,7 @@ struct Wiggler : Enemy {
 
     virtual ~Wiggler();
 
+    int CleanupResources();
     int InitResources();
     int Render();
 };

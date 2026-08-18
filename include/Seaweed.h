@@ -2,22 +2,22 @@
 #define SEAWEED_H
 
 #include "types.h"
-#include "Actor.h"
+#include "dActor_c.h"
 #include "ModelAnim.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
- *   Seaweed_Spawn  ActorBase::operator new(312 = 0x138), Actor::Actor(), stores _ZTV7Seaweed,
+ *   Seaweed_Spawn  fBase_c::operator new(312 = 0x138), dActor_c::dActor_c(), stores _ZTV7Seaweed,
  *                 then the member below in this order.
- *   ~Seaweed   the same member destroyed in reverse, then ~Actor.
+ *   ~Seaweed   the same member destroyed in reverse, then ~dActor_c.
  *
  * SIZE 0x138 is the factory's own literal, and the last member closes exactly on it.
  *
- * THE VTABLE was diffed slot by slot against _ZTV5Actor. Only the slots declared
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. Only the slots declared
  * below differ; every other slot holds the base's own word and is inherited, so it
  * is deliberately not redeclared here.
  */
-struct Seaweed : Actor {
+struct Seaweed : dActor_c {
     u8  pad_0d0[0x4];
     ModelAnim              mModelAnim;   /* 0x0d4 */
 

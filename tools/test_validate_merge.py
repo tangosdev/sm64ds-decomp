@@ -317,6 +317,89 @@ class ValidateMerge(unittest.TestCase):
         self.assertEqual(report["status"], "Passed")
         self.assertEqual(report["asmPolicy"], {"transcribed": [], "unbanneredAsm": []})
 
+    def _claim_without_enrolling(self, name):
+        """A symbol with a src/ file and NO `complete` delinks entry: matched by the
+        filename test, byte-verified by nothing. The population policy D subtracts."""
+        self._declare_symbol(name)
+        (self.repo / "src" / f"{name}.c").write_text(
+            f"int {name}(void) {{ return 0; }}\n", encoding="utf-8")
+        return commit(self.repo, f"claim {name}", "bob")
+
+    def test_withdrawing_an_unverified_claim_warns_instead_of_blocking(self):
+        # Bannering a file that compiles to the wrong length is how this repo says
+        # "not a match". When every exit from `matched` counted as loss, that edit
+        # was the one thing a PR could not do -- so the gate rewarded leaving the
+        # false claim in the tree. The file is still there under the same name and
+        # was never byte-verified, so nothing was lost; a claim was retracted.
+        base = self._claim_without_enrolling("Claimed")
+        self.assertTrue(
+            VM.function_snapshot(base)["functions"]["arm9:0x02000004"]["matched"])
+        (self.repo / "src" / "Claimed.c").write_text(
+            "// NONMATCHING -- compiles to 0x14 against the ROM's 0x10.\n"
+            "int Claimed(void) { return 0; }\n", encoding="utf-8")
+        head = commit(self.repo, "banner Claimed", "bob")
+
+        # Withdrawing also hands the claim's contributor credit back to nobody, which
+        # is its own reason and keeps its own label. That is the real shape of such a
+        # PR: attribution-override for the credit, and this rule for the count. Assert
+        # the two separately so neither can be mistaken for the other.
+        unlabelled = VM.build_report(base, head)
+        self.assertEqual(unlabelled["status"], "Failed")
+        self.assertEqual([r.split(" (")[0] for r in unlabelled["reasons"]],
+                         ["contributor attribution changed or was lost"])
+
+        report = VM.build_report(base, head, allow_attribution_change=True)
+        self.assertEqual(report["status"], "Passed")
+        self.assertEqual(report["coverage"]["delta"]["withdrawnMatchedFunctions"], 1)
+        self.assertEqual(report["coverage"]["delta"]["lostMatchedFunctions"], 0)
+        # The total is deliberately unchanged, so an existing reader of this field
+        # still sees everything that left the set.
+        self.assertEqual(report["coverage"]["delta"]["removedMatchedFunctions"], 1)
+        self.assertEqual([w["path"] for w in report["matchedWithdrawn"]],
+                         ["src/Claimed.c"])
+        self.assertTrue(any("withdrawn" in w for w in report["warnings"]))
+        self.assertFalse(any("lost" in x and "matched" in x
+                             for x in report["reasons"]))
+        self.assertIn("Claims withdrawn", VM.render_markdown(report))
+
+    def test_withdrawing_a_byte_verified_match_still_blocks(self):
+        # The restriction that makes the rule safe. Example.c carries `complete`, so
+        # the ROM build compiles it and compares it to the cartridge -- retracting
+        # that claim is a real coverage loss, not a correction.
+        (self.repo / "src" / "Example.c").write_text(
+            "// NONMATCHING\nint Example(void) { return 0; }\n", encoding="utf-8")
+        head = commit(self.repo, "banner a verified match", "bob")
+        report = VM.build_report(self.base, head)
+        self.assertEqual(report["status"], "Failed")
+        self.assertEqual(report["coverage"]["delta"]["withdrawnMatchedFunctions"], 0)
+        self.assertEqual(report["coverage"]["delta"]["lostMatchedFunctions"], 1)
+        self.assertTrue(any("lost 1 matched function" in x for x in report["reasons"]))
+
+    def test_deleting_a_claimed_source_is_loss_not_withdrawal(self):
+        # No banner, no file: the tree really did shed something. `matched` falls the
+        # same way it does for a withdrawal, and only the surviving-file test tells
+        # the two apart.
+        base = self._claim_without_enrolling("Claimed")
+        (self.repo / "src" / "Claimed.c").unlink()
+        head = commit(self.repo, "delete Claimed", "bob")
+        report = VM.build_report(base, head)
+        self.assertEqual(report["status"], "Failed")
+        self.assertEqual(report["coverage"]["delta"]["withdrawnMatchedFunctions"], 0)
+        self.assertTrue(any("lost 1 matched function" in x for x in report["reasons"]))
+
+    def test_replacing_a_claim_with_a_transcription_is_not_a_withdrawal(self):
+        # A dcd dump is not a retraction, it is a vacuous match wearing a banner's
+        # clothes: the file survives under the same name, so only the transcription
+        # test keeps it out of the withdrawn set.
+        base = self._claim_without_enrolling("Claimed")
+        (self.repo / "src" / "Claimed.c").write_text(
+            "asm void Claimed(void) {\n    dcd 0xe12fff1e\n}\n", encoding="utf-8")
+        head = commit(self.repo, "transcribe Claimed", "bob")
+        report = VM.build_report(base, head)
+        self.assertEqual(report["status"], "Failed")
+        self.assertEqual(report["coverage"]["delta"]["withdrawnMatchedFunctions"], 0)
+        self.assertTrue(any("lost 1 matched function" in x for x in report["reasons"]))
+
     def test_raw_asm_group_verdict_blocks_and_overrides_vacuous_slots(self):
         # pr_linkcheck stamps RAW-ASM on the group row while the transcription's
         # per-slot results read VERIFIED (vacuously -- the dcd words ARE the ROM

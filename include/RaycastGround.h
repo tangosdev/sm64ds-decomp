@@ -16,7 +16,7 @@
 #include "types.h"
 
 /* fwd */
-struct Actor;
+struct dActor_c;
 struct actor_;
 struct vec_;
 struct RaycastGround {
@@ -32,7 +32,7 @@ struct RaycastGround {
     s32 unk_04c;            /* 0x04c */
 #ifdef __cplusplus
     /* methods */
-    void SetObjAndPos(const Vector3 & vec_, Actor * actor_);
+    void SetObjAndPos(const Vector3 & vec_, dActor_c * actor_);
 #endif
 };
 

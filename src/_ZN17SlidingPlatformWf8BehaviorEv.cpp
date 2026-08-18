@@ -8,10 +8,10 @@
 extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(char* c, void* cc);
-extern void _ZN8Platform21UpdateModelPosAndRotYEv(char* c);
-extern int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(char* c, Fix12i a, Fix12i b);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(char* c);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char* c, void* cc);
+extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char* c);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(char* c, Fix12i a, Fix12i b);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char* c);
 }
 
 int SlidingPlatformWf::Behavior()
@@ -24,12 +24,12 @@ int SlidingPlatformWf::Behavior()
       *a += 0x8000;
       unk_31e = 0xf;
     } else {
-      _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
+      _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
     }
   }
-  _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
-  if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0) != 0) {
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
+  if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0) != 0) {
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
   }
   return 1;
 }

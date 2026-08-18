@@ -9,7 +9,7 @@ struct Vector3 {
 };
 
 extern "C" {
-char* _ZN5Actor10FindWithIDEj(unsigned int id);
+char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 s32 Vec3_HorzDist(const Vector3* a, const Vector3* b);
 void func_ov002_020e81e0(char* a0);
 void func_ov002_020e7e24(char* a0);
@@ -20,7 +20,7 @@ extern "C" void func_ov002_020e947c(char* a0, Vector3 v, int a2);
 extern "C" void func_ov002_020ea90c(char* self)
 {
     if (*(s32*)(self + 0xa8) <= -0x20000) {
-        char* other = _ZN5Actor10FindWithIDEj(*(unsigned int*)(self + 0x434));
+        char* other = _ZN8dActor_c10FindWithIDEj(*(unsigned int*)(self + 0x434));
         if (other == 0 || Vec3_HorzDist((Vector3*)(self + 0x5c), (Vector3*)(other + 0x5c)) == 0) {
             *(s32*)(self + 0xa8) = 0x18000;
             *(s32*)(self + 0x440) = 3;

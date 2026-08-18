@@ -15,13 +15,13 @@ extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
-extern void _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(void* thiz, void* actor, s32 a, s32 b, u32 c, u32 d);
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, s32 a, s32 b, void* v, void* w);
+extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, s32 a, s32 b, u32 c, u32 d);
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, s32 a, s32 b, void* v, void* w);
 extern void _ZN7PathPtrC1Ev(void* thiz);
 extern void _ZN7PathPtr6FromIDEj(void* thiz, u32 id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* thiz, void* v, u32 idx);
 extern void func_ov085_0212bcc8(char* c);
-extern void* _ZN5Actor13ClosestPlayerEv(void* c);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern u32 RandomIntInternal(int* seed);
 extern u8 NumStars(void);
 extern void func_ov085_0212bc78(void* c, void* p);
@@ -48,7 +48,7 @@ int Rabbit::InitResources()
     if (unk_438 == 0xff)
         unk_438 = 0;
 
-    /* Actor declares param1 u32, but the ROM shifts these two with ASR, not
+    /* dActor_c declares param1 u32, but the ROM shifts these two with ASR, not
        LSR -- so this call site reads it signed. Without the casts the function
        comes out two words different; the flat header called 0x008 an s32,
        which is why this was invisible before the rebase. */
@@ -82,10 +82,10 @@ check18:
 skip17:
     mVertAccel = -0x1000;
     mTerminalVelocity = -0x1e000;
-    _ZN18MovingCylinderClsn4InitEP5Actor5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x50000, 0x64000, 0xb00004, 0x9000);
+    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x50000, 0x64000, 0xb00004, 0x9000);
     unk_45c = 0;
     mModelAnim.speed = 0x1000;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x28000, 0x28000, 0, 0);
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x28000, 0x28000, 0, 0);
     _ZN7PathPtrC1Ev(sp8);
     _ZN7PathPtr6FromIDEj(sp8, unk_438);
     unk_448 = 1;
@@ -104,7 +104,7 @@ skip17:
         goto block_26;
     }
 
-    r0 = _ZN5Actor13ClosestPlayerEv(((char*)this));
+    r0 = _ZN8dActor_c13ClosestPlayerEv(((char*)this));
     if (r0 == 0)
         return 0;
     if (data_0209f2f8 != 0x32) {
@@ -122,7 +122,7 @@ block_26:
         goto block_out;
     }
 
-    r6 = _ZN5Actor13ClosestPlayerEv(((char*)this));
+    r6 = _ZN8dActor_c13ClosestPlayerEv(((char*)this));
     if (r6 == 0)
         goto block_out;
 

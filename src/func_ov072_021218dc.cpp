@@ -4,7 +4,7 @@ extern "C" int _ZN9Animation8FinishedEv(void* a);
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* f, int b, Fix12i c, unsigned int d);
 extern "C" void func_ov072_02121d50(void* self, int x);
 extern "C" void _ZN9Animation7AdvanceEv(void* a);
-extern "C" void _ZN5Actor9UpdatePosEP12CylinderClsn(void* self, void* clsn);
+extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* clsn);
 extern "C" void func_ov072_02120fd4(int* self, void* clsn);
 extern "C" void func_ov072_02120f14(void* self);
 extern "C" void func_ov072_02120e50(void* self);
@@ -40,7 +40,7 @@ extern "C" int func_ov072_021218dc(char* self){
     break;
   }
   _ZN9Animation7AdvanceEv(self+0x124);
-  _ZN5Actor9UpdatePosEP12CylinderClsn(self, self+0x160);
+  _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, self+0x160);
   func_ov072_02120fd4((int*)self, self+0x194);
   func_ov072_02120f14(self);
   func_ov072_02120e50(self);

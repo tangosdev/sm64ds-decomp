@@ -6,10 +6,10 @@
 struct RaycastGround { char buf[0x68 - 0x18]; };
 extern "C" {
 extern void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(struct RaycastGround *self, const struct Vector3 *v, void *actor);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround *self, const struct Vector3 *v, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+extern void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
     void *self, void *shadow, void *mtx, int fix, int t1, int t2, unsigned int n);
 extern void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
 void func_ov098_021396a4(void *self);
@@ -28,7 +28,7 @@ void func_ov098_021396a4(void *self)
     v.z = *(int*)(c + 0x64);
     v.y -= 0xa000;
     _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(&rg, &v, 0);
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, 0);
     *(int*)(c + 0x5ec) = v.y;
     if (_ZN13RaycastGround10DetectClsnEv(&rg)) {
         *(int*)(c + 0x5ec) = *(int*)((char*)&rg + 0x44);
@@ -41,7 +41,7 @@ void func_ov098_021396a4(void *self)
     *(int*)(c + 0x554) = *(int*)(c + 0x5c) >> 3;
     *(int*)(c + 0x558) = (*(int*)(c + 0x60) - 0x14000) >> 3;
     *(int*)(c + 0x55c) = *(int*)(c + 0x64) >> 3;
-    _ZN5Actor18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
+    _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(
         c, c + 0x508, c + 0x530, r4, r5 + 0x28000, r4, 0xf);
     _ZN13RaycastGroundD1Ev(&rg);
 }

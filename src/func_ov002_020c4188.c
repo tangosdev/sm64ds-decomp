@@ -7,7 +7,7 @@ extern unsigned char data_0209d660;
 extern void func_0200d3f8(void* thiz, unsigned char playerID, void* ptr);
 extern void _ZN6Camera9SetFlag_3Ev(void* thiz);
 extern void func_0201f32c(int arg0);
-extern void* _ZN5Actor13SpawnSoundObjEj(void* thiz, unsigned int a);
+extern void* _ZN8dActor_c13SpawnSoundObjEj(void* thiz, unsigned int a);
 extern void func_0200d81c(void* thiz, int playerID);
 extern void func_ov002_020e444c(char* c);
 
@@ -51,7 +51,7 @@ int func_ov002_020c4188(char* self)
         }
         func_0201f32c(data_ov002_020ff26c[*(u8*)(self + 0x71e) - 1]);
         if (*(u8*)(self + 0x71e) == 6) {
-            *(void**)(self + 0x364) = _ZN5Actor13SpawnSoundObjEj(self, 5);
+            *(void**)(self + 0x364) = _ZN8dActor_c13SpawnSoundObjEj(self, 5);
         }
         (*(u8*)((int)(self + 0x71f)))++;
         break;

@@ -5,9 +5,9 @@
 
 /* Lethal Lava Land's rolling log.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjMaruta_c, which derives
- * from Platform, and the difference is in the bytes rather than only in the RTTI:
- * its destructor stores THREE vptrs -- its own, daObjMaruta_c's, then Platform's.
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjMaruta_c, which derives
+ * from dBgActor_c, and the difference is in the bytes rather than only in the RTTI:
+ * its destructor stores THREE vptrs -- its own, daObjMaruta_c's, then dBgActor_c's.
  * A one-level chain emits two.
  *
  *   _ZTI15daObjFlMaruta_c  ov022 0x02114344
@@ -23,7 +23,7 @@
  *
  * WHAT THIS HEADER USED TO SAY: a `Model mModel` at 0xd4 and a
  * `u8 mMovingMeshCollider` marker at 0x124, over `u8 pad_000[0xd4]`. Both were
- * Platform's, twice removed, and are inherited now. None of this class's three
+ * dBgActor_c's, twice removed, and are inherited now. None of this class's three
  * methods reads either by name -- Behavior reaches the collider as
  * `(char *)this + 0x124` -- so nothing in the tree changes with them.
  */

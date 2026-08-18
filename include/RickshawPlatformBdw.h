@@ -7,8 +7,8 @@
 /* The Bob-omb Battlefield rickshaw platform -- the cart on the axle. ROM name
  * daObjKm1_Kuruma_c.
  *
- * IT DOES NOT DERIVE FROM Platform. It derives from daObjKuruma_c, which derives
- * from Platform. _ZN19RickshawPlatformBdwD1Ev stores three vptrs, not two.
+ * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjKuruma_c, which derives
+ * from dBgActor_c. _ZN19RickshawPlatformBdwD1Ev stores three vptrs, not two.
  *
  *   _ZTI17daObjKm1_Kuruma_c   ov043 0x0211240c
  *   _ZTS17daObjKm1_Kuruma_c   ov043 0x02112424
@@ -16,8 +16,8 @@
  *   kind                      __si_class_type_info, ONE base, offset 0
  *   base                      daObjKuruma_c, ov002 0x02109254
  *
- * NO FIELDS ANYWHERE IN THE CHAIN ABOVE Platform. RickshawPlatformBdw_Spawn
- * passes 800 = 0x320 = sizeof(Platform); there is no room for one. This class
+ * NO FIELDS ANYWHERE IN THE CHAIN ABOVE dBgActor_c. RickshawPlatformBdw_Spawn
+ * passes 800 = 0x320 = sizeof(dBgActor_c); there is no room for one. This class
  * overrides slots 0 and 3, which the base leaves null.
  */
 

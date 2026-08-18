@@ -2,7 +2,7 @@
 struct Vector3_16f;
 struct Callback;
 extern u8 DecIfAbove0_Byte(u8* p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* p);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* p);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 id, u32 a, int x, int y, int z, const struct Vector3_16f* rot, struct Callback* cb);
 typedef struct { int x, y, z; } V3;
@@ -18,7 +18,7 @@ void func_ov002_020b91fc(char* c)
         f = *(int*)(c + 0xb0);
         if ((int)((f & 0x40000) != 0) != 0) break;
         if ((int)((f & 0x20000) != 0) != 0) break;
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     } while (0);
 
     {

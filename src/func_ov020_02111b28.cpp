@@ -10,7 +10,7 @@ int _ZNK12WithMeshClsn8IsOnWallEv(void* self);
 int _ZNK12WithMeshClsn13GetWallResultEv(void* self);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, void* v);
 int _ZN4cstd5atan2E5Fix12IiES1_(int x, int y);
-short _ZN5Actor14GetSubtractionEss(void* self, short a, int b);
+short _ZN8dActor_c14GetSubtractionEss(void* self, short a, int b);
 void func_0201267c(int a, void* p);
 
 void func_ov020_02111b28(char* c){
@@ -32,7 +32,7 @@ void func_ov020_02111b28(char* c){
     void* w = (void*)_ZNK12WithMeshClsn13GetWallResultEv(c+0x25c);
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)w+4, v);
     int a = _ZN4cstd5atan2E5Fix12IiES1_(v[0], v[2]);
-    if (_ZN5Actor14GetSubtractionEss(c, *(short*)(c+0x94), a) <= 0x4000) return;
+    if (_ZN8dActor_c14GetSubtractionEss(c, *(short*)(c+0x94), a) <= 0x4000) return;
   }
   *(unsigned char*)(c+0x108) = 0;
   func_ov020_02112110(c);

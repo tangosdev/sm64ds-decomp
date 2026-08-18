@@ -4,7 +4,7 @@
 extern void* data_0209f318;
 extern short data_02082214[];
 
-extern void* _ZN5Actor13ClosestPlayerEv(void);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void);
 extern void _ZN6Camera9SetFlag_3Ev(void*);
 extern void _ZN6Camera9SetLookAtERK7Vector3(void*, const struct Vector3*);
 extern void _ZN6Camera6SetPosERK7Vector3(void*, const struct Vector3*);
@@ -18,7 +18,7 @@ int func_ov060_02111f08(void* arg0)
 {
     char* self = (char*)arg0;
     void* cam = data_0209f318;
-    char* player = (char*)_ZN5Actor13ClosestPlayerEv();
+    char* player = (char*)_ZN8dActor_c13ClosestPlayerEv();
     struct Vector3 sp;
     struct Vector3* pv;
     unsigned char* p;

@@ -18,10 +18,10 @@ struct VObj {
 };
 
 extern "C" {
-extern void _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
+extern void _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void* c, int a, int b);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* c);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int a, unsigned int b, int x, int y, int z, void* v, void* cb);
 extern void* _ZN8Particle6System12FromUniqueIDEj(unsigned int id);
@@ -38,7 +38,7 @@ int IceBlock::Behavior()
     char* p;
     unsigned int id;
 
-    _ZN8Platform21IsClsnInRangeOnScreenE5Fix12IiES1_(((char*)this), 0, 0);
+    _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(((char*)this), 0, 0);
 
     if (unk_354 != 0) {
         mScale = _ZN4cstd4fdivEii(unk_354 << 12, 0x1e000);
@@ -49,7 +49,7 @@ int IceBlock::Behavior()
                 if (*(unsigned short*)(p + 0xc) == 0xb2)
                     *(unsigned char*)(p + 0x49f) = 0;
             }
-            _ZN9ActorBase18MarkForDestructionEv(((char*)this));
+            _ZN7fBase_c18MarkForDestructionEv(((char*)this));
         } else {
             ((int*)&v)[0] = mPosX;
             ((int*)&v)[1] = mPosY;

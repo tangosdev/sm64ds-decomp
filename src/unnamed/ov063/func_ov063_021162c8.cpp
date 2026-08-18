@@ -4,8 +4,8 @@
 #include "common.h"
 struct Vector3; struct Vector3_16;
 struct CapEnemy { void ReleaseCap(const Vector3 &v); };
-struct Actor {
-    static Actor *Spawn(unsigned int a, unsigned int b, const Vector3 &v,
+struct dActor_c {
+    static dActor_c *Spawn(unsigned int a, unsigned int b, const Vector3 &v,
                         const Vector3_16 *p, signed char e, short f);
 };
 extern "C" void func_0201267c(int a, void *b);
@@ -24,7 +24,7 @@ extern "C" void func_ov063_021162c8(char *self)
         if ((unsigned int)(*(unsigned short*)(self + 0x5d4) << 0x1e) >> 0x1f) {
             unsigned int flags = 2;
             if (*(unsigned short*)(self + 0x4a0) == 0x121) flags |= 0x10;
-            Actor *a = Actor::Spawn(*(unsigned short*)(self + 0x4a0), flags,
+            dActor_c *a = dActor_c::Spawn(*(unsigned short*)(self + 0x4a0), flags,
                                     *(Vector3*)(self + 0x504), 0,
                                     *(signed char*)(self + 0x5d0), -1);
             if (a != 0) {

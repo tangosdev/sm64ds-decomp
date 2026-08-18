@@ -14,17 +14,17 @@ extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
-extern int _ZN5Actor18GetBitInDeathTableEv(void *self);
-extern void _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const void *v, const void *v16, int e, int f);
+extern int _ZN8dActor_c18GetBitInDeathTableEv(void *self);
+extern void _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const void *v, const void *v16, int e, int f);
 extern void _ZN7PathPtrC1Ev(void *self);
 extern void _ZN7PathPtr6FromIDEj(void *self, u32 id);
 }
 extern "C" {
-extern void _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *self, void *actor, const void *v, int d, int e, u32 f, u32 g);
 }
 extern "C" {
-extern void _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *actor, int b, int c, void *v16, int e);
 }
 extern "C" {
@@ -65,13 +65,13 @@ int MrBlizzard::InitResources()
     unk_450 = mPosY;
     unk_454 = mPosZ;
 
-    if (_ZN5Actor18GetBitInDeathTableEv(((char *)this)) != 0) {
+    if (_ZN8dActor_c18GetBitInDeathTableEv(((char *)this)) != 0) {
         if (mType == 2) {
             if (_ZN8SaveData16HasPlayerLostCapEv() != 0) {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x200,
+                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x200,
                     ((char *)this) + 0x44c, 0, mAreaId, -1);
             } else {
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300,
+                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xdf, 0x300,
                     ((char *)this) + 0x44c, 0, mAreaId, -1);
             }
         }
@@ -97,12 +97,12 @@ int MrBlizzard::InitResources()
     v.x = data_ov081_02128998.x;
     v.y = data_ov081_02128998.y;
     v.z = data_ov081_02128998.z;
-    _ZN25MovingCylinderClsnWithPos4InitEP5ActorRK7Vector35Fix12IiES6_jj(
+    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         ((char *)this) + 0x110, ((char *)this), &v, 0x3c000, 0x96000, 0x200004, 0x42050);
 
     mAngleY = mPrevAngleY;
     unk_414 = mAngleY;
-    _ZN12WithMeshClsn4InitEP5Actor5Fix12IiES3_P10Vector3_16S5_(
+    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         ((char *)this) + 0x150, ((char *)this), 0x14000, 0xf000, 0, 0);
 
     unk_108 = 1;

@@ -4,14 +4,14 @@
 #include "DonutBlock.h"
 #include "MeshColliderBase.h"
 extern "C" {
-void _ZN5Actor9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
+void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
 void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
-int _ZN5Actor13DistToCPlayerEv(void* p);
-void _ZN5Actor14TriplePoofDustEv(void* p);
-void _ZN8Platform21UpdateModelPosAndRotYEv(void* p);
-int _ZN8Platform13IsClsnInRangeE5Fix12IiES1_(void* p, int a, int b);
-void _ZN8Platform19UpdateClsnPosAndRotEv(void* p);
+int _ZN8dActor_c13DistToCPlayerEv(void* p);
+void _ZN8dActor_c14TriplePoofDustEv(void* p);
+void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* p);
+int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* p, int a, int b);
+void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* p);
 }
 
 int DonutBlock::Behavior()
@@ -28,12 +28,12 @@ int DonutBlock::Behavior()
         if (unk_4e9 >= 0xf) mState = 1;
         break;
     case 1:
-        _ZN5Actor9UpdatePosEP12CylinderClsn(((char*)this), 0);
+        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
         WithMeshClsn_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
         if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) == 0) {
-            if (_ZN5Actor13DistToCPlayerEv(((char*)this)) <= 0x9c4000) break;
+            if (_ZN8dActor_c13DistToCPlayerEv(((char*)this)) <= 0x9c4000) break;
         }
-        _ZN5Actor14TriplePoofDustEv(((char*)this));
+        _ZN8dActor_c14TriplePoofDustEv(((char*)this));
         if (((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) ((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
         mPosX = unk_4dc;
         mPosY = unk_4e0;
@@ -41,7 +41,7 @@ int DonutBlock::Behavior()
         mState = 2;
         break;
     case 2: {
-        int d = _ZN5Actor13DistToCPlayerEv(((char*)this));
+        int d = _ZN8dActor_c13DistToCPlayerEv(((char*)this));
         if (d <= 0x3e8000) break;
         if (d < 0x7d0000) {
             mVertSpeed = 0;
@@ -52,10 +52,10 @@ int DonutBlock::Behavior()
         break;
     }
     }
-    _ZN8Platform21UpdateModelPosAndRotYEv(((char*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
     if (mState != 2) {
-        if (_ZN8Platform13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0x5dc000, 0) != 0) {
-            _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+        if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0x5dc000, 0) != 0) {
+            _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
         }
     }
     return 1;

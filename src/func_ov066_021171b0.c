@@ -1,7 +1,7 @@
 /* candidate for func_ov066_021171b0 */
 typedef struct Vec3 { int x, y, z; } Vec3;
 
-extern void *_ZN5Actor13ClosestPlayerEv(void *thiz);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void func_02012694(int a, void *b);
 extern void _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(void *out, void *tgt, int step);
 extern int Vec3_Dist(void *a, void *b);
@@ -21,7 +21,7 @@ int func_ov066_021171b0(void *thiz)
 
     switch (*(int *)(c + 0x4a0)) {
     case 0: {
-        char *p = (char *)_ZN5Actor13ClosestPlayerEv(c);
+        char *p = (char *)_ZN8dActor_c13ClosestPlayerEv(c);
         if (p == 0)
             break;
         {

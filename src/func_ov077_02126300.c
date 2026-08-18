@@ -11,7 +11,7 @@ extern char data_020a0e68[];
 
 extern void _ZN11RaycastLineC1Ev(void *self);
 extern void _ZN11RaycastLineD1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(
+extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(
     void *self, Vector3 *a, Vector3 *b, void *actor);
 extern int _ZN11RaycastLine10DetectClsnEv(void *self);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
@@ -69,7 +69,7 @@ int func_ov077_02126300(char *c)
             end.z = sz;
             end.z = sz + oz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&ray1, &start, &end, c);
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray1, &start, &end, c);
 
         start.x = *(int *)(c + 0x5c);
         y = *(int *)(c + 0x60);
@@ -98,7 +98,7 @@ int func_ov077_02126300(char *c)
             end.z = sz;
             end.z = sz + oz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P5Actor(&ray2, &start, &end, c);
+        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray2, &start, &end, c);
 
         if (_ZN11RaycastLine10DetectClsnEv(&ray1) != 0 ||
             _ZN11RaycastLine10DetectClsnEv(&ray2) == 0) {

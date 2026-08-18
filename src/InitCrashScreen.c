@@ -1,4 +1,4 @@
-extern void _ZN5Scene22ResetHardwareRegistersEv(void);
+extern void _ZN8dScene_c22ResetHardwareRegistersEv(void);
 extern void _ZN2GX12SetBankForBGEt(unsigned short b);
 extern void _ZN2GX11LoadBG1CharEPKvjj(const void *p, unsigned int a, unsigned int b);
 extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, unsigned int a, unsigned int b);
@@ -10,7 +10,7 @@ extern char data_0208c178;
 
 void InitCrashScreen(void)
 {
-    _ZN5Scene22ResetHardwareRegistersEv();
+    _ZN8dScene_c22ResetHardwareRegistersEv();
     *(volatile short *)0x4000050 = 0;
     *(volatile short *)0x4001050 = 0;
     _ZN2GX12SetBankForBGEt(8);

@@ -7,7 +7,7 @@
 #include "SharedFilePtr.h"
 #include "MeshColliderBase.h"
 extern "C" {
-extern void _ZN5Actor11UntrackStarERa(void *self, void *p);
+extern void _ZN8dActor_c11UntrackStarERa(void *self, void *p);
 }
 extern char data_ov002_0210da58[];
 extern char data_ov002_0210da18[];
@@ -41,7 +41,7 @@ int QuestionBlock::CleanupResources()
     dosw:
         switch (unk_3f3) {
         case 1:
-            _ZN5Actor11UntrackStarERa(((char *)this), ((char *)this) + 0x3f0);
+            _ZN8dActor_c11UntrackStarERa(((char *)this), ((char *)this) + 0x3f0);
             break;
         case 3:
             ((SharedFilePtr *)(data_ov002_0210da18))->Release();

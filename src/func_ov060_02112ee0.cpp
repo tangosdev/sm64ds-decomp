@@ -1,9 +1,9 @@
 //cpp
 extern "C" {
-extern int _ZN6Player9StartTalkER9ActorBaseb(void *pl, void *a, int b);
+extern int _ZN6Player9StartTalkER7fBase_cb(void *pl, void *a, int b);
 extern int _ZN6Player12GetTalkStateEv(void *pl);
 extern unsigned char NumStars(void);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
     void *pl, void *a, unsigned m, void *v, unsigned d, unsigned e);
 extern void _ZN7Message11PrepareTalkEv(void);
 extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned a);
@@ -33,7 +33,7 @@ extern "C" int func_ov060_02112ee0(void *cc)
 
         switch (*(unsigned char *)(c + 0x424)) {
         case 0:
-            if (_ZN6Player9StartTalkER9ActorBaseb(
+            if (_ZN6Player9StartTalkER7fBase_cb(
                     *(void **)(c + 0x3a0), c, 1)) {
                 unsigned char *p =
                     (unsigned char *)LAUND(c + 0x424);
@@ -44,7 +44,7 @@ extern "C" int func_ov060_02112ee0(void *cc)
         case 1:
             if (_ZN6Player12GetTalkStateEv(*(void **)(c + 0x3a0)) == 0) {
                 unsigned m = (NumStars() != 0x96) ? 0xd1 : 0xd2;
-                if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(
+                if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(
                         *(void **)(c + 0x3a0), c, m, c + 0x5c, 0, 2)) {
                     unsigned char *p =
                         (unsigned char *)LAUND(c + 0x424);

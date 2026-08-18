@@ -1,14 +1,14 @@
 #ifndef BOOTSCENE_H
 #define BOOTSCENE_H
 
-#include "Scene.h"
+#include "dScene_c.h"
 
-/* The boot/intro scene: ActorBase -> ActorDerived -> Scene -> BootScene.
+/* The boot/intro scene: fBase_c -> dBase_c -> dScene_c -> BootScene.
  *
  * The generated header this replaces, include/dScBoot_c.h, named no base and
  * re-declared a 0x50-byte pad in place of the inherited chain, so `dScBoot_c`
- * and `Scene` were unrelated types even though the ROM has one derived from
- * the other. include/Scene.h's own census already flags the split this file
+ * and `dScene_c` were unrelated types even though the ROM has one derived from
+ * the other. include/dScene_c.h's own census already flags the split this file
  * resolves: the class's two known non-destructor methods (InitResources,
  * Behavior) are still reached through dScBoot_c.h and its ROM-name struct --
  * they are NOT part of this migration -- while the class's FUNCTIONS are
@@ -22,7 +22,7 @@
  * 0x020914c8, vtable 0x02091528 (data_02091528) -- and its single base is
  * dScene_c. It is a leaf: no record in the image names dScBoot_c as a base.
  *
- * VTABLE. data_02091528 is 18 slots, the same shape Scene and Stage have, and
+ * VTABLE. data_02091528 is 18 slots, the same shape dScene_c and Stage have, and
  * BootScene overrides two functionally --
  *
  *     0  InitResources   (src/func_02005a58.c, dScBoot_c_InitResources --
@@ -31,7 +31,7 @@
  *                          not migrated by this slice)
  *
  * -- plus the destructor pair at 16/17, which IS this slice. The remaining
- * fourteen still point at Scene's Before/After hooks or at ActorBase.
+ * fourteen still point at dScene_c's Before/After hooks or at fBase_c.
  *
  * KEY FUNCTION. Slot 16 (the D1) is declared first below, which is safe for a
  * derived class (an override takes its base's slot wherever it is declared)
@@ -68,7 +68,7 @@
  * Field NAMES are placeholders and cannot change codegen. Offsets and widths
  * are observed.
  */
-struct BootScene : Scene {
+struct BootScene : dScene_c {
     u16 unk_050;            /* 0x050 */
     u8  unk_052;            /* 0x052 */
     u8  unk_053;            /* 0x053 -- not padding, see LAYOUT above */

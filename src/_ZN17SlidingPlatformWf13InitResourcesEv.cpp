@@ -6,8 +6,8 @@
 extern "C" {
     void* _ZN5Model8LoadFileER13SharedFilePtr(void* shared);
     void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* mb, void* bmd, int a, int b);
-    void _ZN8Platform21UpdateModelPosAndRotYEv(void* self);
-    void _ZN8Platform19UpdateClsnPosAndRotEv(void* self);
+    void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
+    void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
     void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* shared);
     void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* mc, void* kcl, void* mtx, int f, s16 s, void* clps);
     void func_020393d4(void* p, void* v);
@@ -20,7 +20,7 @@ extern char data_ov091_0213502c[];   // clps table, stride 0xc
 extern u16 data_ov091_02134514[];
 extern u16 data_ov091_02134504[];
 extern "C" {
-extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 }
 
 int SlidingPlatformWf::InitResources()
@@ -51,8 +51,8 @@ int SlidingPlatformWf::InitResources()
     *(s32*)(c+0x324) = *(s32*)(c+0x5c);
     *(s32*)(c+0x328) = *(s32*)(c+0x60);
     *(s32*)(c+0x32c) = *(s32*)(c+0x64);
-    _ZN8Platform21UpdateModelPosAndRotYEv(((void*)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((void*)this));
+    _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((void*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((void*)this));
 
     if (*(u8*)(c+0x322) == 6) {
         int oi = *(u8*)(c+0x322) * 0xc;
@@ -65,6 +65,6 @@ int SlidingPlatformWf::InitResources()
         _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             (void*)(c+0x124), kcl, (void*)(c+0x2ec), 0x199, *(s16*)(c+0x8e), *(void**)(data_ov091_0213502c+oi));
     }
-    func_020393d4((void*)(c+0x124), (void*)_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((void*)(c+0x124), (void*)_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     return 1;
 }

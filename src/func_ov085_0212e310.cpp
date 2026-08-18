@@ -7,7 +7,7 @@
 extern "C" {
 
 
-extern void *_ZN5Actor13ClosestPlayerEv(void);
+extern void *_ZN8dActor_c13ClosestPlayerEv(void);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fix, bool loop);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const Vector3 *pos, unsigned int d);
 extern void Matrix4x3_FromRotationY(struct Matrix4x3 *m, int angY);
@@ -25,7 +25,7 @@ int func_ov085_0212e310(char *c)
     Vector3 out;
     char *p;
 
-    p = (char *)_ZN5Actor13ClosestPlayerEv();
+    p = (char *)_ZN8dActor_c13ClosestPlayerEv();
     if (p == 0) {
         return 1;
     }

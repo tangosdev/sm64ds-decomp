@@ -6,7 +6,7 @@
  * matching this tree's current convention.
  *
  * SIZE 0x5400, from MgMushroomRoulette_Spawn.cpp's own
- * `_ZN9ActorBasenwEj(0x5400)`.
+ * `_ZN7fBase_cnwEj(0x5400)`.
  *
  * SHARED TABLE at 0x4f38, size 0x270 (func_ov006_020c1d80/020c1c64), same
  * as five siblings -- see include/dScMgMemory_c.h's own note.
@@ -53,6 +53,15 @@ extern "C" void _ZN5ModelD1Ev(void *);
 
 struct dScMgRoulette_c : dScMgSingle3DBase_c {
     virtual ~dScMgRoulette_c();
+
+    /* --- this class's own vtable slots, named from the table ---
+       Re-overrides of slots fBase_c already owns, NOT new virtuals: the
+       table stays the base's width and no field moves. Declared AFTER the
+       destructor so the destructor is still the first virtual declared. */
+    virtual s32 InitResources();     /* slot 0 -- src/_ZN15dScMgRoulette_c13InitResourcesEv.cpp */
+    virtual s32 CleanupResources();  /* slot 3 -- ov006 0x0210980c */
+    virtual s32 Behavior();          /* slot 6 -- ov006 0x02109aac */
+    virtual s32 Render();            /* slot 9 -- ov006 0x02109834 */
 
     u8    mTable[0x270];  /* 0x4f38 -- ctor func_ov006_020c1d80, dtor func_ov006_020c1c64 */
     u8    mArray[0x104];   /* 0x51a8 -- 5 * 0x34, dtor func_ov006_021079c8 */

@@ -1,8 +1,8 @@
 #include "types.h"
 enum Bool { FALSE, TRUE };
 
-extern void *_ZN5Actor10FindWithIDEj(unsigned int id);
-extern int _ZN5Actor18HorzAngleToCPlayerEv(void *self);
+extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
+extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
 extern int AngleDiff(int a, int b);
 extern void _ZN6Player16IncMegaKillCountEv(void *p);
 extern void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *m, void *f, int a, int b, int fix, u16 t);
@@ -32,11 +32,11 @@ int func_ov066_0211603c(char *self)
     if (id == 0)
         goto fail;
 
-    actor = (char *)_ZN5Actor10FindWithIDEj(id);
+    actor = (char *)_ZN8dActor_c10FindWithIDEj(id);
     if (actor == 0)
         return 0;
 
-    if (AngleDiff(*(s16 *)(self + 0x8e), _ZN5Actor18HorzAngleToCPlayerEv(self)) >= 0x4000)
+    if (AngleDiff(*(s16 *)(self + 0x8e), _ZN8dActor_c18HorzAngleToCPlayerEv(self)) >= 0x4000)
         return 0;
 
     type = *(u16 *)(actor + 0xc);

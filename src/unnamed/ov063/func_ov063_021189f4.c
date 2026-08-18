@@ -1,6 +1,6 @@
 #include "types.h"
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, s32 d, int e);
-extern int _ZN5Sound15PlaySecretSoundEP5ActorPt(void *actor, u16 *p);
+extern int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void *actor, u16 *p);
 extern void func_ov063_02119074(char *c);
 extern void func_ov063_02118f74(char *c);
 extern void func_ov063_02118f50(void *c);
@@ -22,7 +22,7 @@ void func_ov063_021189f4(char *c)
                     *(u16 *)(c + 0x500 + 0xc6) = 0;
             }
         } else {
-            int r = _ZN5Sound15PlaySecretSoundEP5ActorPt(c, (u16 *)(c + 0x5c6));
+            int r = _ZN5Sound15PlaySecretSoundEP8dActor_cPt(c, (u16 *)(c + 0x5c6));
             if (r != 0)
                 *(u16 *)(c + 0x500 + 0xc6) = 0;
         }

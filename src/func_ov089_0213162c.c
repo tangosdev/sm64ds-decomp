@@ -14,12 +14,12 @@ extern void WithMeshClsn_UpdateContinuous_Veneer(char *p);
 extern void _ZN6Camera9SetFlag_3Ev(char *cam);
 extern void _ZN6Camera9SetLookAtERK7Vector3(char *cam, struct Vector3 *v);
 extern void _ZN6Camera6SetPosERK7Vector3(char *cam, struct Vector3 *v);
-extern char *_ZN5Actor13ClosestPlayerEv(char *c);
+extern char *_ZN8dActor_c13ClosestPlayerEv(char *c);
 extern int Vec3_HorzDist(const void *a, const void *b);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(char *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *p);
 extern void func_02012694(int a, char *v, int c);
-extern char *_ZN5Actor10FindWithIDEj(u32 id);
+extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov089_02131df4(char *c, char *p);
 extern void _ZN9Animation7AdvanceEv(void *a);
 extern int _ZN9Animation8FinishedEv(void *a);
@@ -66,7 +66,7 @@ void func_ov089_0213162c(char *c)
         v.z = *(int *)(c + 0x64);
         v.y = v.y + 0x64000;
         _ZN6Camera9SetLookAtERK7Vector3(cam, &v);
-        player = _ZN5Actor13ClosestPlayerEv(c);
+        player = _ZN8dActor_c13ClosestPlayerEv(c);
         ps = (int *)(int)L(player + 0x5c);
         v.x = ps[0];
         v.y = ps[1];
@@ -170,7 +170,7 @@ void func_ov089_0213162c(char *c)
         u8 *sp;
         if (id == 0)
             return;
-        found = _ZN5Actor10FindWithIDEj(id);
+        found = _ZN8dActor_c10FindWithIDEj(id);
         if (found == 0)
             return;
         if ((*(int *)(c + 0x240) & 0x400000) == 0)

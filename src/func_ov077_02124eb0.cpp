@@ -1,10 +1,10 @@
 //cpp
-extern "C" void *_ZN5Actor7FindEggER12CylinderClsn(void *self, void *clsn);
-extern "C" void _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, void *pos, unsigned int a, int fix, short b);
-extern "C" void _ZN5Actor8PoofDustEv(void *self);
+extern "C" void *_ZN8dActor_c7FindEggER12CylinderClsn(void *self, void *clsn);
+extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, void *pos, unsigned int a, int fix, short b);
+extern "C" void _ZN8dActor_c8PoofDustEv(void *self);
 extern "C" void func_02012694(int a, void *pos);
-extern "C" void _ZN9ActorBase18MarkForDestructionEv(void *self);
-extern "C" void *_ZN5Actor10FindWithIDEj(unsigned int id);
+extern "C" void _ZN7fBase_c18MarkForDestructionEv(void *self);
+extern "C" void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void func_ov077_02125e94(void *c, int i);
 extern "C" int _ZN6Player9IsOnShellEv(void *p);
 extern "C" void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void *pos);
@@ -18,15 +18,15 @@ extern "C" void func_ov077_02124eb0(void *thiz)
     unsigned char *r4;
     int b;
 
-    if (_ZN5Actor7FindEggER12CylinderClsn(c, c + 0x1b0) != 0) {
+    if (_ZN8dActor_c7FindEggER12CylinderClsn(c, c + 0x1b0) != 0) {
         int v[3];
         v[0] = *(int *)(c + 0x5c);
         v[1] = *(int *)(c + 0x60);
         v[2] = *(int *)(c + 0x64);
-        _ZN5Actor10SpawnCoinsERK7Vector3j5Fix12IiEs(c, v, 1, 0x2000, 0);
-        _ZN5Actor8PoofDustEv(c);
+        _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(c, v, 1, 0x2000, 0);
+        _ZN8dActor_c8PoofDustEv(c);
         func_02012694(0xc4, c + 0x74);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
         return;
     }
 
@@ -34,7 +34,7 @@ extern "C" void func_ov077_02124eb0(void *thiz)
         unsigned int id = *(unsigned int *)(c + 0x1d4);
         if (id == 0)
             return;
-        r4 = (unsigned char *)_ZN5Actor10FindWithIDEj(id);
+        r4 = (unsigned char *)_ZN8dActor_c10FindWithIDEj(id);
     }
     if (r4 == 0)
         return;

@@ -14,10 +14,10 @@ extern int _ZNK12WithMeshClsn13JustHitGroundEv(void* p);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int a, int b, int c);
 extern void func_0201267c(int a, void* p);
 extern void func_ov077_02125e94(void* c, int a);
-extern void _ZN5Actor8PoofDustEv(void* c);
+extern void _ZN8dActor_c8PoofDustEv(void* c);
 extern void func_02012694(int a, void* p);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* c);
-extern void _ZN5Actor9UpdatePosEP12CylinderClsn(void* c, void* p);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
+extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* c, void* p);
 extern void _ZN12CylinderClsn5ClearEv(void* p);
 extern void _ZN12CylinderClsn6UpdateEv(void* p);
 }
@@ -57,12 +57,12 @@ extern "C" int func_ov077_02125550(char* c)
 
     d = *(int*)(c + 0x3dc) ? *(int*)(c + 0x60) - *(int*)(c + 0x3dc) : 0;
     if (d < -0xc8000) {
-        _ZN5Actor8PoofDustEv(c);
+        _ZN8dActor_c8PoofDustEv(c);
         func_02012694(0x166, c + 0x74);
-        _ZN9ActorBase18MarkForDestructionEv(c);
+        _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
-    _ZN5Actor9UpdatePosEP12CylinderClsn(c, c + 0x1b0);
+    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x1b0);
     func_ov077_02124eb0(c);
     _ZN12CylinderClsn5ClearEv(c + 0x1b0);
     _ZN12CylinderClsn6UpdateEv(c + 0x1b0);

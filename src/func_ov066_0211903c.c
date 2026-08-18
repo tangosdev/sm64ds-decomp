@@ -5,16 +5,16 @@
 /* recovered: shared common types */
 #include "common.h"
 extern void _ZN6Camera9SetFlag_3Ev(void* cam);
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern void _ZN6Player17SetNoControlStateEhih(void* self, unsigned char a, int b, unsigned char c);
 extern void func_020092c4(void* cam, void* out, void* target);
 extern void _ZN5Sound17ChangeMusicVolumeEj5Fix12IiE(unsigned int a, int b);
-extern int _ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(void* self, void* actor, unsigned int msg, struct Vector3* v, unsigned int d, unsigned int e);
+extern int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* self, void* actor, unsigned int msg, struct Vector3* v, unsigned int d, unsigned int e);
 extern void func_02012694(int a, void* b);
 extern int _ZN6Player12GetTalkStateEv(void* self);
 extern void _ZN7Message7EndTalkEv(void);
-extern void _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(void* self, signed char* a, unsigned int b, struct Vector3* v, unsigned int d);
-extern void _ZN9ActorBase18MarkForDestructionEv(void* self);
+extern void _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(void* self, signed char* a, unsigned int b, struct Vector3* v, unsigned int d);
+extern void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern void Matrix4x3_FromRotationY(void* m, short ang);
 extern void MulVec3Mat4x3(void* a, void* m, void* b);
 
@@ -33,7 +33,7 @@ int func_ov066_0211903c(char* self) {
     cam = data_0209f318;
     if (*(int*)(self + 0x4a0) == 0) {
         _ZN6Camera9SetFlag_3Ev(cam);
-        *(void**)(self + 0x490) = _ZN5Actor13ClosestPlayerEv(self);
+        *(void**)(self + 0x490) = _ZN8dActor_c13ClosestPlayerEv(self);
         if (*(void**)(self + 0x490) != 0)
             _ZN6Player17SetNoControlStateEhih(*(void**)(self + 0x490), 5, -1, 0);
         *(int*)(self + 0x4a0) = 1;
@@ -78,7 +78,7 @@ int func_ov066_0211903c(char* self) {
 
             *(unsigned short*)(((int)*(void**)(self + 0x490) + 0x6ce)) |= 0x400;
             _ZN7Message11PrepareTalkEv();
-            if (_ZN6Player11ShowMessageER9ActorBasejPK7Vector3hh(*(void**)(self + 0x490), self, msgid, &out, 0, 0) == 1) {
+            if (_ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(*(void**)(self + 0x490), self, msgid, &out, 0, 0) == 1) {
                 *(int*)(self + 0x498) = 1;
                 func_02012694(0x145, self + 0x74);
             }
@@ -99,8 +99,8 @@ int func_ov066_0211903c(char* self) {
                     star.x = 0;
                     star.y = (int)0xffa24000;
                     star.z = (int)0xff1b4000;
-                    _ZN5Actor19UntrackAndSpawnStarERajRK7Vector3h(self, (signed char*)(self + 0x673), *(unsigned char*)(self + 0x672), &star, 4);
-                    _ZN9ActorBase18MarkForDestructionEv(self);
+                    _ZN8dActor_c19UntrackAndSpawnStarERajRK7Vector3h(self, (signed char*)(self + 0x673), *(unsigned char*)(self + 0x672), &star, 4);
+                    _ZN7fBase_c18MarkForDestructionEv(self);
                 }
             }
         }

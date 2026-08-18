@@ -12,7 +12,7 @@
 
 struct RacingPenguin {
     u8  pad_000[0x80];
-    /* 0x080..0x0d4 is Actor's, and Actor.h is de-bannered -- hand-reconstructed, not generated. Was one u8
+    /* 0x080..0x0d4 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
        marker over the whole range. */
     s32 unk_080;                 /* 0x080 */
     s32 mScaleY;                 /* 0x084 */

@@ -7,7 +7,7 @@ extern int data_ov006_0213cf10[];
 /* vtable identified: VT0 = data_ov006_0213cf10 */
 int *MgWanted_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(21596);
+    int *p = (int *)_ZN7fBase_cnwEj(21596);
     if (p) {
         func_ov004_020b2adc(p);
         p[0] = (int)data_ov006_0213cf10;

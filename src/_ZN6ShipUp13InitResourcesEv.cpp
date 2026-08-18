@@ -8,13 +8,13 @@
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
-extern void _ZN8Platform19UpdateClsnPosAndRotEv(void*);
+extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 extern void func_020393d4(int* p, int v);
 extern int IsStarCollected(int a, int b);
 }
-extern void* _ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern void* _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern unsigned char data_0209f220;
 
 int ShipUp::InitResources()
@@ -32,14 +32,14 @@ int ShipUp::InitResources()
     f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov016_021136e4[idx]);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, f, 1, -1);
     func_ov016_021126a8(((char*)this));
-    _ZN8Platform19UpdateClsnPosAndRotEv(((char*)this));
+    _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
     idx = mModelIndex;
     f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov016_021136dc[idx]);
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x124, f, ((char*)this)+0x2ec, 0x1000, unk_08e, sp8[idx]);
     if (mModelIndex == 0) {
-        func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P5ActorR10ClsnResultR7Vector3P10Vector3_16S8_);
+        func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
     }
-    ((MeshColliderBase *)(((char*)this)+0x124))->Enable((Actor *)(((char*)this)));
+    ((MeshColliderBase *)(((char*)this)+0x124))->Enable((dActor_c *)(((char*)this)));
     unk_324 = 0;
     unk_328 = 0;
     if (data_0209f220 > 1) {

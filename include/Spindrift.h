@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout: the
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout: the
  * class's own destructor `_ZN9SpindriftD1Ev` destroys each member, and
  * `Spindrift_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV9Spindrift`. Everything this header used to restate below 0x110
- * belongs to Enemy and Actor and is inherited now.
+ * belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a reading
  * rather than a guess:
@@ -17,20 +17,20 @@
  *     0x19c MovingCylinderClsn         0x34    -> 0x1d0
  *     0x1d0 WithMeshClsn               0x1bc   -> 0x38c
  *
- * SIZE IS THE ROM'S OWN: `Spindrift_Spawn` calls `ActorBase::operator new(924)`
+ * SIZE IS THE ROM'S OWN: `Spindrift_Spawn` calls `fBase_c::operator new(924)`
  * -- 0x39c -- and stores this class's vtable, so that literal IS this
  * class's sizeof.
  *
  * The ROM's RTTI names this class daHuwa_c.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsn.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct Spindrift : Enemy {
+struct Spindrift : dEnemyBase_c {
     ModelAnim                    mModelAnim;            /* 0x110 */
     ShadowModel                  mShadowModel;          /* 0x174 */
     MovingCylinderClsn           mMovingCylinderClsn;   /* 0x19c */
@@ -44,6 +44,7 @@ struct Spindrift : Enemy {
     virtual ~Spindrift();
 
     virtual s32   OnYoshiTryEat();         /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     /* --- non-virtual --- */

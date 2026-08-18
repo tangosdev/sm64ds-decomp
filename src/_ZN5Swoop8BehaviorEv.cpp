@@ -6,7 +6,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Swoop.h"
 
-/* This file used to open with `struct Enemy { char pad[0x800]; };` and work a
+/* This file used to open with `struct dEnemyBase_c { char pad[0x800]; };` and work a
  * `char *c` through raw offsets. Swoop.h now supplies the real chain, so the
  * stand-in is gone and every offset below is a named field.
  *
@@ -14,12 +14,12 @@
  * `c + 0x3b4` are each one's Animation base (+0x50), so the branch advances
  * mModelAnim1 or mModelAnim2.
  *
- * Enemy::UpdateYoshiEat is still reached by its mangled name -- unlike
+ * dEnemyBase_c::UpdateYoshiEat is still reached by its mangled name -- unlike
  * UpdateDeath, UpdateWMClsn and UpdateKillByInvincibleChar, it is not declared
- * in Enemy.h yet.
+ * in dEnemyBase_c.h yet.
  */
 extern "C" {
-extern int _ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(Enemy *thiz, WithMeshClsn *c);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(dEnemyBase_c *thiz, WithMeshClsn *c);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void func_02012694(int, void *);
 
@@ -28,7 +28,7 @@ extern char data_ov065_0211d6f0[];
 
 int Swoop::Behavior()
 {
-    if (_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
         mMovingCylinderClsn.Clear();
         if (unk_107 != 0) {
             if (unk_104 == 0) {

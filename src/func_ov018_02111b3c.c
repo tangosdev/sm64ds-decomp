@@ -4,11 +4,11 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern char* _ZN5Actor13ClosestPlayerEv(void);
+extern char* _ZN8dActor_c13ClosestPlayerEv(void);
 extern int Vec3_Dist(const struct Vector3* a, const struct Vector3* b);
 
 void func_ov018_02111b3c(char* c) {
-  char* p = _ZN5Actor13ClosestPlayerEv();
+  char* p = _ZN8dActor_c13ClosestPlayerEv();
   char* r1;
   if (p == 0) return;
   if (Vec3_Dist((struct Vector3*)(c+0x364), (struct Vector3*)(p+0x5c)) > 0x5dc000) return;

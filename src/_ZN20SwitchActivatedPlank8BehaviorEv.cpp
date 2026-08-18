@@ -26,7 +26,7 @@ int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
         *(short*)(((char*)self) + 0x300 + 0xa0) = 0;
         self->unk_3a3 = 1;
 
-        ((MeshColliderBase *)(((char*)self)+0x124))->Enable((Actor *)(((char*)self)));
+        ((MeshColliderBase *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
         func_ov029_021126dc(((char*)self));
         _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(((char*)self)+0x124, ((char*)self)+0x370, self->unk_08e);
         break;

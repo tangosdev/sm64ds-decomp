@@ -10,9 +10,9 @@
 /* resolved: VT0 = _ZTV14FlameChompFire */
 int *FlameChompFire_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(816);
+    int *p = (int *)_ZN7fBase_cnwEj(816);
     if (p) {
-        _ZN5ActorC2Ev(p);
+        _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV14FlameChompFire;
         _ZN11ShadowModelC1Ev((char *)p + 0xd4);
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0xfc);

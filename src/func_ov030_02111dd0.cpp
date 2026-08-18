@@ -2,7 +2,7 @@
 extern "C" {
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* thiz);
 extern void _ZN13RaycastGroundC1Ev(void* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(void* self, void* pos, void* act);
+extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* pos, void* act);
 extern int func_02038ea4(void* thiz);
 extern void _ZN13RaycastGroundD1Ev(void* self);
 
@@ -20,7 +20,7 @@ int func_ov030_02111dd0(char* c)
         v[0] = x;
         v[1] = s;
         v[2] = z;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P5Actor(rg, v, c);
+        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, v, c);
         if (func_02038ea4(rg) == 0 || *(int*)(c + 0x60) - *(int*)(rg + 0x44) > 0x2000) {
             *(int*)(c + 0x5c) = *(int*)(c + 0x38c);
             *(int*)(c + 0x60) = *(int*)(c + 0x390);

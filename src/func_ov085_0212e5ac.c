@@ -4,8 +4,8 @@ extern void* data_0209f318;
 extern signed char data_0209f2f8;
 extern int data_020a0e68[];
 
-extern void* _ZN5Actor13ClosestPlayerEv(void* self);
-extern void _ZN5Actor13SpawnSoundObjEj(void* self, unsigned int a);
+extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
+extern void _ZN8dActor_c13SpawnSoundObjEj(void* self, unsigned int a);
 extern int Vec3_HorzDist(Vector3* a, Vector3* b);
 extern short Vec3_HorzAngle(Vector3* a, Vector3* b);
 extern void Matrix4x3_FromRotationY(void* m, int ang);
@@ -30,9 +30,9 @@ int func_ov085_0212e5ac(char* self)
     } else {
         *(int*)(self + 0x5c) = 0x1086000;
         if (*(int*)(self + 0x2cc) == 0) {
-            p = _ZN5Actor13ClosestPlayerEv(self);
+            p = _ZN8dActor_c13ClosestPlayerEv(self);
             if (p != 0 && *(int*)((char*)p + 0x5c) > 0x1086000) {
-                _ZN5Actor13SpawnSoundObjEj(self, 0);
+                _ZN8dActor_c13SpawnSoundObjEj(self, 0);
                 *(int*)(self + 0x2cc) = 1;
             }
         }

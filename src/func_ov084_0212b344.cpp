@@ -6,10 +6,10 @@
 extern "C" {
 void _ZN8CapEnemy15RespawnIfHasCapEv(char *self);
 int _ZN6Player15IsCollectingCapEv(char *p);
-void _ZN5Actor15GivePlayerCoinsER6Playerhj(char *self, char *p, unsigned char a, unsigned int b);
+void _ZN8dActor_c15GivePlayerCoinsER6Playerhj(char *self, char *p, unsigned char a, unsigned int b);
 void func_ov084_021296cc(char *self);
-void _ZN5Actor11UntrackStarERa(char *self, signed char *p);
-char *_ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const void *pos, const void *rot, int e, int f);
+void _ZN8dActor_c11UntrackStarERa(char *self, signed char *p);
+char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const void *pos, const void *rot, int e, int f);
 void _ZN6Player20RegisterEggCoinCountEjbb(char *p, unsigned int a, int b, int c);
 void func_ov084_02129498(char *self);
 }
@@ -54,7 +54,7 @@ extern "C" void func_ov084_0212b344(char *self, char *player)
     if (o->GetState() == 6) {
         if (_ZN6Player15IsCollectingCapEv(player)) {
             if (*(unsigned char *)(self + 0x108) == 1)
-                _ZN5Actor15GivePlayerCoinsER6Playerhj(self, player, 1, 0);
+                _ZN8dActor_c15GivePlayerCoinsER6Playerhj(self, player, 1, 0);
             func_ov084_021296cc(self);
         } else {
             b5 = 0;
@@ -62,13 +62,13 @@ extern "C" void func_ov084_0212b344(char *self, char *player)
             if (*(unsigned char *)(self + 0x108) == 1)
                 b5 = 1;
             if (*(unsigned char *)(self + 0x464) == 1) {
-                _ZN5Actor11UntrackStarERa(self, (signed char *)(self + 0x465));
+                _ZN8dActor_c11UntrackStarERa(self, (signed char *)(self + 0x465));
                 b4 = 1;
-                _ZN5Actor5SpawnEjjRK7Vector3PK10Vector3_16as(0xb4, 0x50, self + 0x41c, 0, *(signed char *)(self + 0xcc), -1);
+                _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xb4, 0x50, self + 0x41c, 0, *(signed char *)(self + 0xcc), -1);
                 *(int *)(self + 8) = *(int *)(self + 8) & 0xff0f;
             } else if (*(unsigned char *)(self + 0x464) == 2) {
                 if (*(unsigned char *)(self + 0x466) == data_0209f344[data_0209f208]) {
-                    _ZN5Actor11UntrackStarERa(self, (signed char *)(self + 0x465));
+                    _ZN8dActor_c11UntrackStarERa(self, (signed char *)(self + 0x465));
                     *(unsigned char *)(self + 0x464) = 3;
                     b4 = 1;
                 }
@@ -77,7 +77,7 @@ extern "C" void func_ov084_0212b344(char *self, char *player)
         }
     } else if (o->GetState() == 4) {
         if (*(unsigned char *)(self + 0x108) == 1)
-            _ZN5Actor15GivePlayerCoinsER6Playerhj(self, player, 1, 0);
+            _ZN8dActor_c15GivePlayerCoinsER6Playerhj(self, player, 1, 0);
     }
 
     func_ov084_02129498(self);

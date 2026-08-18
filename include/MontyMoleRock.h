@@ -3,7 +3,7 @@
 
 #include "types.h"
 
-/* Derives from Enemy: the destructor stores this class's vtable, then the
+/* Derives from dEnemyBase_c: the destructor stores this class's vtable, then the
  * base's, then destroys whatever the base owns before chaining further up.
  * Everything this header used to restate below 0x110 belonged to the
  * chain above and is inherited now.
@@ -14,12 +14,12 @@
 
 #ifdef __cplusplus
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "Model.h"
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
-struct MontyMoleRock : Enemy {
+struct MontyMoleRock : dEnemyBase_c {
     Model mModel;                     /* 0x110 */
     MovingCylinderClsn mMovingCylinderClsn;/* 0x160 */
     WithMeshClsn mWithMeshClsn;       /* 0x194 */
@@ -29,6 +29,7 @@ struct MontyMoleRock : Enemy {
     virtual ~MontyMoleRock();
 
     virtual s32 Behavior();
+    virtual s32 CleanupResources();
     virtual s32 InitResources();
     virtual s32 Render();
 };

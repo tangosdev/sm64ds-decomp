@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Enemy, and TWO INDEPENDENT WITNESSES agree on the layout:
+/* Derives from dEnemyBase_c, and TWO INDEPENDENT WITNESSES agree on the layout:
  * the class's own destructor `_ZN8MantaRayD1Ev` destroys each member, and
  * `MantaRay_Spawn` constructs the same types at the same offsets before
  * storing `_ZTV8MantaRay`. Everything this header used to restate below
- * 0x110 belongs to Enemy and Actor and is inherited now.
+ * 0x110 belongs to dEnemyBase_c and dActor_c and is inherited now.
  *
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
@@ -17,18 +17,18 @@
  *     0x30c ModelAnim                  0x64    -> 0x370
  *
  * SIZE IS THE FACTORY'S LITERAL, NOT THE FIELD SPAN. `MantaRay_Spawn` calls
- * `ActorBase::operator new(1028)` -- 0x404 -- and stores this class's vtable,
+ * `fBase_c::operator new(1028)` -- 0x404 -- and stores this class's vtable,
  * so that literal IS this class's sizeof. The evidenced fields reach only
  * 0x38c; the 0x94 between is trailing space no source reads, and a rounded-up
  * field span would have made this assert wrong by 120 bytes.
  */
 
-#include "Enemy.h"
+#include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "WithMeshClsn.h"
 
-struct MantaRay : Enemy {
+struct MantaRay : dEnemyBase_c {
     MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x110 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x150 */
     ModelAnim                    mModelAnim;            /* 0x30c */

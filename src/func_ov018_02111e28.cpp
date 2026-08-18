@@ -1,6 +1,6 @@
 //cpp
 struct CylinderClsn;
-struct Actor { void UpdatePos(CylinderClsn *c); };
+struct dActor_c { void UpdatePos(CylinderClsn *c); };
 extern "C" short Vec3_HorzAngle(const void *a, const void *b);
 extern "C" void _Z14ApproachLinearRsss(short *dst, short target, short rate);
 extern "C" void func_ov018_02111bf0(char *c, void *w);
@@ -9,7 +9,7 @@ extern "C" void func_0201267c(int a, void *b);
 extern "C" int Vec3_Dist(const void *a, const void *b);
 extern "C" void func_ov018_021123d0(char *c);
 
-extern "C" int func_ov018_02111e28(Actor *self)
+extern "C" int func_ov018_02111e28(dActor_c *self)
 {
     char *s = (char*)self;
     _Z14ApproachLinearRsss((short*)(s + 0x8e),

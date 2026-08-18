@@ -3,11 +3,11 @@
 
 #include "types.h"
 
-/* Derives from Platform: the destructor stores this class's vtable, then
- * Platform's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
- * the Model at 0xd4 before chaining to Actor. All three belong to Platform.
- * Everything this header used to restate below 0x31e was Actor's and
- * Platform's, and is inherited now.
+/* Derives from dBgActor_c: the destructor stores this class's vtable, then
+ * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
+ * Everything this header used to restate below 0x31e was dActor_c's and
+ * dBgActor_c's, and is inherited now.
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -15,10 +15,10 @@
 
 #ifdef __cplusplus
 
-#include "Platform.h"
+#include "dBgActor_c.h"
 #include "ShadowModel.h"
 
-struct KnockDownPlank : Platform {
+struct KnockDownPlank : dBgActor_c {
     u8  pad_31e[0x2];
     ShadowModel mShadowModel;         /* 0x320 */
     u8  pad_348[0x30];
@@ -33,6 +33,10 @@ struct KnockDownPlank : Platform {
     s16 unk_394;                      /* 0x394 */
     s8 unk_396;                       /* 0x396 */
     u8 unk_397;                       /* 0x397 */
+    /* KnockDownPlank_Spawn, the one factory storing _ZTV14KnockDownPlank
+       (ov015:0x02114420), calls fBase_c::operator new(0x39c). The field span
+       stopping at 0x398 is a lower bound, not the size. */
+    u8 pad_398[0x4];                  /* 0x398, to the ROM's 0x39c */
 
     /* --- vtable --- */
     virtual ~KnockDownPlank();
@@ -40,9 +44,13 @@ struct KnockDownPlank : Platform {
     int InitResources();
     int CleanupResources();
     int Render();
+
+    virtual int  OnAttacked2(dActor_c &other);       /* slot 23 */
+    virtual void OnKicked(dActor_c &other);          /* slot 24 */
+    virtual void OnHitByMegaChar(Player &player);     /* slot 27 */
 };
 
-typedef char PoleBillboard_size_must_be_0x398[sizeof(KnockDownPlank) == 0x398 ? 1 : -1];
+typedef char KnockDownPlank_size_must_be_0x39c[sizeof(KnockDownPlank) == 0x39c ? 1 : -1];
 
 #else
 

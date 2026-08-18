@@ -20,15 +20,15 @@
 extern "C" {
 #endif
 
-extern char*_ZN5Actor14FarthestPlayerEv(void*);
-extern int _ZN5Actor15IsPlayerInRangeEi(void*, int);
-extern int _ZN5Actor18FindExplosionActorER12CylinderClsn(void*, void*);
-extern int _ZN5Actor7FindEggER12CylinderClsn(void*, void*);
-extern void _ZN5Actor13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(void*, const void*, const void*, int, int, u32);
-extern void _ZN5Actor17TrackInDeathTableEv(void*);
-extern void _ZN5Actor19DisappearPoofDustAtERK7Vector3(void*, const struct Vector3*);
-extern void _ZN5ActorC2Ev(void*);
-extern void _ZN5ActorD2Ev(void*);
+extern char*_ZN8dActor_c14FarthestPlayerEv(void*);
+extern int _ZN8dActor_c15IsPlayerInRangeEi(void*, int);
+extern int _ZN8dActor_c18FindExplosionActorER12CylinderClsn(void*, void*);
+extern int _ZN8dActor_c7FindEggER12CylinderClsn(void*, void*);
+extern void _ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j(void*, const void*, const void*, int, int, u32);
+extern void _ZN8dActor_c17TrackInDeathTableEv(void*);
+extern void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void*, const struct Vector3*);
+extern void _ZN8dActor_cC2Ev(void*);
+extern void _ZN8dActor_cD2Ev(void*);
 
 
 #ifdef __cplusplus

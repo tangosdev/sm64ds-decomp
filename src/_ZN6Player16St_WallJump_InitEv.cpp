@@ -11,7 +11,7 @@
  * away from the wall instantly rather than spinning.
  *
  * Every offset the placeholder body carried is a named field of Player or of
- * its Actor base, so the shadow `struct Player` it used to declare is gone.
+ * its dActor_c base, so the shadow `struct Player` it used to declare is gone.
  * The vertical speed is chosen by param1: character 2 gets a fixed 0x2aa00,
  * everyone else goes through the ov002 worker with 0x3e000.
  *

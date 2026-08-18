@@ -9,9 +9,9 @@ extern int _ZTV19RickshawPlatformBdw[];
 /* vtable identified: VT0 = _ZTV13daObjKuruma_c */
 int *RickshawPlatformBdw_Spawn(void)
 {
-    int *p = (int *)_ZN9ActorBasenwEj(800);
+    int *p = (int *)_ZN7fBase_cnwEj(800);
     if (p) {
-        _ZN8PlatformC2Ev(p);
+        _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV13daObjKuruma_c;
         p[0] = (int)_ZTV19RickshawPlatformBdw;
     }
