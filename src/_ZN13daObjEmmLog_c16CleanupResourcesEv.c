@@ -1,4 +1,4 @@
-// @symbol func_ov052_0211123c
+// @symbol _ZN13daObjEmmLog_c16CleanupResourcesEv
 // recovered name: daObjEmmLog_c_CleanupResources
 /* recovered: renamed to Class_Method */
 /* daObjEmmLog_c::CleanupResources - name recovered from the vtable slot it fills.
@@ -8,7 +8,7 @@ extern int _ZN16MeshColliderBase9IsEnabledEv();
 extern int _ZN16MeshColliderBase7DisableEv();
 extern int _ZN13SharedFilePtr7ReleaseEv();
 extern int *data_ov052_021124d4[];
-int func_ov052_0211123c(char *c){
+int _ZN13daObjEmmLog_c16CleanupResourcesEv(char *c){
   if(_ZN16MeshColliderBase9IsEnabledEv((char*)c+0x124))
     _ZN16MeshColliderBase7DisableEv((char*)c+0x124);
   _ZN13SharedFilePtr7ReleaseEv(data_ov052_021124d4[0]);

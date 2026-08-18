@@ -1,4 +1,4 @@
-// @symbol func_ov052_021112ac
+// @symbol _ZN13daObjEmmLog_c8BehaviorEv
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daObjEmmLog_c.h"
 // recovered name: daObjEmmLog_c_Behavior
@@ -12,7 +12,7 @@ extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, Fix12 a, int b);
 extern short data_02082214[];
-int func_ov052_021112ac(char *c)
+int _ZN13daObjEmmLog_c8BehaviorEv(char *c)
 {
     struct daObjEmmLog_c *self = (struct daObjEmmLog_c *)(void *)c;
     func_020393a4((int*)(c + 0x124), 0x600000);

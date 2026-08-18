@@ -1,5 +1,5 @@
 //cpp
-// @symbol func_ov052_02111284
+// @symbol _ZN13daObjEmmLog_c6RenderEv
 // recovered name: daObjEmmLog_c_Render
 /* recovered: renamed to Class_Method */
 /* daObjEmmLog_c::Render - name recovered from the vtable slot it fills.
@@ -7,4 +7,4 @@
    inferred stub. */
 struct Base { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 struct Derived { char pad[0xd4]; Base base; };
-extern "C" int func_ov052_02111284(Derived *d) { Base *b = &d->base; b->m(0); return 1; }
+extern "C" int _ZN13daObjEmmLog_c6RenderEv(Derived *d) { Base *b = &d->base; b->m(0); return 1; }
