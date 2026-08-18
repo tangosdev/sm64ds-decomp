@@ -1327,7 +1327,7 @@ src/_ZN11PowerFlower13InitResourcesEv.cpp:
     complete
     .text start:0x020b9c00 end:0x020b9e04
 
-src/func_ov002_020b9e04.c:
+src/_ZN11PowerFlower13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020b9e04 end:0x020b9e0c
 
