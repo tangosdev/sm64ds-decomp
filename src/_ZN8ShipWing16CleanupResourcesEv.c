@@ -1,7 +1,13 @@
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov036_02114070[];
-int _ZN8ShipWing16CleanupResourcesEv(void)
+//cpp
+// @symbol _ZN8ShipWing16CleanupResourcesEv
+
+#include "SharedFilePtr.h"
+#include "ShipWing.h"
+
+extern SharedFilePtr data_ov036_02114070;
+
+int ShipWing::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov036_02114070);
+    data_ov036_02114070.Release();
     return 1;
 }

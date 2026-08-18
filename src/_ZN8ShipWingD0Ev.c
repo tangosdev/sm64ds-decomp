@@ -1,15 +1,8 @@
+//cpp
 // @symbol _ZN8ShipWingD0Ev
-/* recovered: named members + shared header, vtable identified, declarations from a shared header */
-#include "decl_Actor.h"
-#include "decl_common.h"
-/* recovered: named members + shared header, vtable identified */
-/* vtable identified: VT0 = _ZTV14daObjRc_Hane_c */
-extern void *data_020a0eac;
-int *_ZN8ShipWingD0Ev(int *t)
+
+#include "ShipWing.h"
+
+ShipWing::~ShipWing()
 {
-    t[0] = (int)_ZTV14daObjRc_Hane_c;
-    _ZN11CommonModelD1Ev((char *)t + 0xd4);
-    _ZN8dActor_cD2Ev(t);
-    _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
-    return t;
 }
