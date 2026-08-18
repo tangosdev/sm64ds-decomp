@@ -91,7 +91,7 @@ src/_ZN7Skeeter16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02132618 end:0x02132620
 
-src/func_ov090_02132620.cpp:
+src/_ZN7Skeeter13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02132620 end:0x0213264c
 
