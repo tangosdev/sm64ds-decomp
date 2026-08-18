@@ -69,6 +69,9 @@ struct Whomp : dEnemyBase_c {
     virtual ~Whomp();
 
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
+    virtual Vector3 OnAimedAtWithEggReturnVec();       /* slot 30 */
+
+    virtual void OnHitByMegaChar(Player &player);      /* slot 27 */
 
     int Behavior();
     int CleanupResources();

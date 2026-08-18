@@ -20,6 +20,8 @@ struct PowerStarCreate : dActor_c {
     u8  pad_0d0[0x4];
 
     virtual ~PowerStarCreate();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32   Behavior();               /* slot  6 */
 };
 
 typedef char PowerStarCreate_size_must_be_0xd4[sizeof(PowerStarCreate) == 0xd4 ? 1 : -1];

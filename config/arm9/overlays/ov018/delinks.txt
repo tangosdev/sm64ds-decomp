@@ -148,7 +148,7 @@ src/_ZN15PowerStarCreateD0Ev.c:
     complete
     .text start:0x021126f8 end:0x02112730
 
-src/func_ov018_02112730.cpp:
+src/_ZN15PowerStarCreate8BehaviorEv.cpp:
     complete
     .text start:0x02112730 end:0x0211278c
 
