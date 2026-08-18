@@ -1,5 +1,5 @@
 //cpp
-// @symbol func_ov100_02146dec
+// @symbol _ZN15daObjPathLift_cD0Ev
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -13,7 +13,7 @@ extern void* data_ov002_0210af70[];
 extern void* data_020a0eac;
 
 
-void* func_ov100_02146dec(char* p){
+void* _ZN15daObjPathLift_cD0Ev(char* p){
   *(void***)p = (void**)data_ov100_0214857c;
   _ZN11ShadowModelD1Ev(p+0x450);
   *(void***)p = (void**)data_ov002_0210af70;

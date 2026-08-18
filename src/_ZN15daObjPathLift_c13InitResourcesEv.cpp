@@ -1,5 +1,5 @@
 //cpp
-// @symbol func_ov100_021471e0
+// @symbol _ZN15daObjPathLift_c13InitResourcesEv
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
@@ -36,7 +36,7 @@ extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7
 }
 extern unsigned char data_0209f2d8;
 
-extern "C" int func_ov100_021471e0(char* c) {
+extern "C" int _ZN15daObjPathLift_c13InitResourcesEv(char* c) {
     struct daObjPathLift_c *self = (struct daObjPathLift_c *)(void *)c;
   Vector3 pos;
   _ZN5Model8LoadFileER13SharedFilePtr(&data_ov002_0210d9f0);
@@ -46,15 +46,17 @@ extern "C" int func_ov100_021471e0(char* c) {
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
   _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
       c+0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov100_02148a5c),
-      c+0x2ec, 0x1000, self->unk_08e, &data_ov002_0210d7d4);
+      c+0x2ec, 0x1000, self->mAngleY, &data_ov002_0210d7d4);
   func_020393d4((int*)(c+0x124), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
-  self->unk_440 = 0xa000;
-  self->unk_098 = self->unk_440;
+  /* unk_440/unk_43c/unk_42c are PathLift's own generic tail padding, not this
+     class's fields -- see the header comment -- reached by raw offset. */
+  *(s32*)(c + 0x440) = 0xa000;
+  self->mHorzSpeed = *(s32*)(c + 0x440);
   func_ov002_020efaf0(c);
-  self->unk_43c = 1;
-  pos.x = self->unk_05c;
-  pos.y = self->unk_060;
-  pos.z = self->unk_064;
+  *(s32*)(c + 0x43c) = 1;
+  pos.x = self->mPosX;
+  pos.y = self->mPosY;
+  pos.z = self->mPosZ;
   pos.y -= 0x14000;
   {
     RaycastGround rg;
@@ -63,7 +65,7 @@ extern "C" int func_ov100_021471e0(char* c) {
     self->unk_4ac = pos.y;
     if (rg.DetectClsn() != 0)
       self->unk_4ac = rg.result;
-    self->unk_42c = 1;
+    *(u8*)(c + 0x42c) = 1;
     b = (data_0209f2d8 == 1);
     if (b)
       self->unk_4b0 = 0xb4;

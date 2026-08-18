@@ -1,5 +1,5 @@
 //cpp
-// @symbol func_ov100_021470f4
+// @symbol _ZN15daObjPathLift_c8BehaviorEv
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: shared common types, renamed to Class_Method, RTTI class fields named */
@@ -12,7 +12,6 @@
    inferred stub. */
 typedef int Fix12i;
 
-struct PathLift { void BaseBehavior(); };
 extern "C" Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 /* The fifth parameter is a SIGNED SHORT, not an unsigned int. Declared `unsigned
@@ -29,9 +28,6 @@ namespace Sound { unsigned int PlayLong(unsigned int, unsigned int, unsigned int
    different shadow structs grew out of one class that way. The length prefix is the
    only thing that distinguishes them, and the retail relocations for both call sites
    land on dBgActor_c's methods. */
-struct dActor_c;
-struct dBgActor_c { void UpdateClsnPosAndRot(); };
-
 /* IsClsnInRange takes two Fix12<int>, not two ints -- the S1_ back-reference in
    _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_ can only come from a repeated class type.
    It is declared by its final name rather than as a member of dBgActor_c above,
@@ -44,10 +40,9 @@ struct dBgActor_c { void UpdateClsnPosAndRot(); };
 extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern "C" void func_020393a4(int *p, int v);
 extern "C" void func_02039394(int *p, int v);
-struct MeshColliderBase { int IsEnabled(); void Enable(dActor_c *a); };
 extern unsigned char data_0209f2d8;
 
-extern "C" int func_ov100_021470f4(char* c)
+extern "C" int _ZN15daObjPathLift_c8BehaviorEv(char* c)
 {
     struct daObjPathLift_c *self = (struct daObjPathLift_c *)(void *)c;
     func_ov002_020efcf4(c);

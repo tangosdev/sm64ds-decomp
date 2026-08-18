@@ -478,11 +478,11 @@ src/Fish_Spawn.cpp:
     complete
     .text start:0x02146d38 end:0x02146d7c
 
-src/func_ov100_02146d7c.cpp:
+src/_ZN15daObjPathLift_cD1Ev.cpp:
     complete
     .text start:0x02146d7c end:0x02146dec
 
-src/func_ov100_02146dec.cpp:
+src/_ZN15daObjPathLift_cD0Ev.cpp:
     complete
     .text start:0x02146dec end:0x02146e70
 
@@ -494,17 +494,17 @@ src/func_ov100_0214700c.c:
     complete
     .text start:0x0214700c end:0x02147054
 
-src/func_ov100_02147054.c:
+src/_ZN15daObjPathLift_c16CleanupResourcesEv.c:
     .text start:0x02147054 end:0x021470a4
 
-src/func_ov100_021470a4.cpp:
+src/_ZN15daObjPathLift_c6RenderEv.cpp:
     complete
     .text start:0x021470a4 end:0x021470f4
 
-src/func_ov100_021470f4.cpp:
+src/_ZN15daObjPathLift_c8BehaviorEv.cpp:
     .text start:0x021470f4 end:0x021471e0
 
-src/func_ov100_021471e0.cpp:
+src/_ZN15daObjPathLift_c13InitResourcesEv.cpp:
     complete
     .text start:0x021471e0 end:0x02147328
 

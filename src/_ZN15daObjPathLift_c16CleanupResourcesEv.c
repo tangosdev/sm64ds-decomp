@@ -1,4 +1,4 @@
-// @symbol func_ov100_02147054
+// @symbol _ZN15daObjPathLift_c16CleanupResourcesEv
 // recovered name: daObjPathLift_c_CleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
@@ -13,7 +13,7 @@ extern void _ZN13SharedFilePtr7ReleaseEv(void *);
    the latter two by their real names (as scalars, hence the address-of below); it
    also still declares G1[] and G2[], which nothing defines. */
 extern int data_ov002_0210d9f0[];
-int func_ov100_02147054(void *t)
+int _ZN15daObjPathLift_c16CleanupResourcesEv(void *t)
 {
     if (_ZN16MeshColliderBase9IsEnabledEv((char *)t + 0x124)) {
         _ZN16MeshColliderBase7DisableEv((char *)t + 0x124);

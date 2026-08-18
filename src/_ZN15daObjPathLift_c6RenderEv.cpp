@@ -1,5 +1,5 @@
 //cpp
-// @symbol func_ov100_021470a4
+// @symbol _ZN15daObjPathLift_c6RenderEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
@@ -8,12 +8,12 @@
 /* recovered: renamed to Class_Method */
 /* daObjPathLift_c::Render - name recovered from the vtable slot it fills.
    The body is a decompilation verified against the ROM, not an
-   inferred stub. */
+   inferred stub. unk_428 is PathLift's own tail-padding, not this class's --
+   see the header comment -- so it is read by raw offset. */
 struct Obj { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 extern "C" {
-int func_ov100_021470a4(char* c){
-    struct daObjPathLift_c *self = (struct daObjPathLift_c *)(void *)c;
-  unsigned short h = self->unk_428;
+int _ZN15daObjPathLift_c6RenderEv(char* c){
+  unsigned short h = *(unsigned short*)(c + 0x428);
   if(h < 0x5a){
     if(h & 1) return 1;
   }
