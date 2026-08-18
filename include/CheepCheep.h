@@ -32,7 +32,9 @@ struct CheepCheep : dEnemyBase_c {
     virtual ~CheepCheep();
 
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
 
     /* Tail padding. The field span stops short of the real size: CheepCheep_Spawn

@@ -54,7 +54,9 @@ struct KingBobOmb : dEnemyBase_c {
     virtual s32   OnAimedAtWithEgg();      /* slot 29 */
 
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
 };
 

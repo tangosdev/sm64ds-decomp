@@ -191,11 +191,11 @@ src/func_ov090_02133338.c:
     complete
     .text start:0x02133338 end:0x021333ac
 
-src/_ZN10CheepCheep16CleanupResourcesEv.c:
+src/_ZN10CheepCheep16CleanupResourcesEv.cpp:
     complete
     .text start:0x021333ac end:0x021333dc
 
-src/_ZN10CheepCheep16OnPendingDestroyEv.c:
+src/_ZN10CheepCheep16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021333dc end:0x021333e0
 
