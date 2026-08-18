@@ -1,11 +1,13 @@
 //cpp
 #include "types.h"
-// @symbol func_ov075_0211a2b8
-// recovered name: dScEntry_c_Behavior
+// @symbol _ZN10dScEntry_c8BehaviorEv
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScEntry_c::Behavior - recovered from vtable slot identity */
+/* dScEntry_c::Behavior() -- vtable slot 6. extern "C" carries the literal
+ * mangled name unmangled; local `Self` models the fields this function
+ * touches (f283/f284/f285, pmf@0x5c, the icon_c[9] array @0x70) rather than
+ * including the shared header, matching the family convention -- see
+ * include/dScEntry_c.h. */
 extern "C" {
     void func_020551f0(void *s, int v);
     int func_ov075_02119dc4(void *c, void *arg);
@@ -37,7 +39,7 @@ struct Self {
     u8 f285;
 };
 
-extern "C" int func_ov075_0211a2b8(Self *c)
+extern "C" int _ZN10dScEntry_c8BehaviorEv(Self *c)
 {
     char *cc = (char *)c;
 

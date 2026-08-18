@@ -1,10 +1,9 @@
 #include "types.h"
-// @symbol func_0202f708
-// recovered name: dWipe_c_SetForwardTime
+// @symbol _ZN7dWipe_c14SetForwardTimeEj
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dWipe_c::SetForwardTime - recovered from vtable slot identity */
+/* dWipe_c::SetForwardTime(u32 frames) -- vtable slot 4. Plain C function
+ * carrying the literal mangled name -- see include/dWipe_c.h. */
 struct MyFader {
     u32 unk00;
     u32 unk04;
@@ -30,7 +29,7 @@ extern void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned int irq, void (*handler)(void
 extern void _ZN3IRQ10EnableIRQsEj(unsigned int irq);
 
 
-int func_0202f708(struct MyFader *self, u32 frames)
+int _ZN7dWipe_c14SetForwardTimeEj(struct MyFader *self, u32 frames)
 {
     if (self->state == 0 || self->state == 2) {
         int t;
