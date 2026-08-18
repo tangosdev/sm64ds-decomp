@@ -44,6 +44,10 @@ struct KnockDownPlank : dBgActor_c {
     int InitResources();
     int CleanupResources();
     int Render();
+
+    virtual int  OnAttacked2(dActor_c &other);       /* slot 23 */
+    virtual void OnKicked(dActor_c &other);          /* slot 24 */
+    virtual void OnHitByMegaChar(Player &player);     /* slot 27 */
 };
 
 typedef char KnockDownPlank_size_must_be_0x39c[sizeof(KnockDownPlank) == 0x39c ? 1 : -1];

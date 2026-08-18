@@ -36,6 +36,7 @@ struct MovingBar : dBgActor_c {
     int CleanupResources();
     int InitResources();
     int Render();
+    virtual void OnHitByMegaChar(Player &player);   /* slot 27 */
     /* dBgActor_c's own slot, overridden here: _ZTV9MovingBar+0x7c relocates to
        0x02111c3c while _ZTV10dBgActor_c+0x7c relocates to _ZN10dBgActor_c4KillEv. An
        override, so it adds no slot and no field. */
