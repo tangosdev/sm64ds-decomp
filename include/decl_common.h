@@ -532,7 +532,6 @@ extern int _ZTV13daLinelift2_c[];
 extern int _ZTV13daObjBlockL_c[];
 extern int _ZTV13daObjEmmLog_c[];
 extern int _ZTV13daObjEwbIce_c[];
-extern int _ZTV13daObjHmBskt_c[];
 extern int _ZTV13daObjKanban_c[];
 extern int _ZTV13daObjKi_Ita_c[];
 extern int _ZTV13daObjNumber_c[];

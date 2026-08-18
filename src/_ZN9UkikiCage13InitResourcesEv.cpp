@@ -1,8 +1,15 @@
 //cpp
-// @symbol func_ov030_02111410
-// recovered name: daObjHmBskt_c_InitResources
-/* recovered: shared common types, renamed to Class_Method */
-/* daObjHmBskt_c::InitResources - recovered from vtable slot identity */
+// @symbol _ZN9UkikiCage13InitResourcesEv
+/* recovered: shared common types, renamed to Class_Method
+ *
+ * UkikiCage::InitResources -- vtable slot 0, ov030 0x02111410. Attributed by
+ * the vtable: _ZTV9UkikiCage (ov030 0x02115974) carries this address at slot
+ * 0, where _ZTV10dBgActor_c carries fBase_c's generic 0x02043c80.
+ *
+ * Kept as a free function under the literal mangled name rather than a real
+ * `UkikiCage::InitResources()` method: `self` arrives as a raw pointer and
+ * the body still reads/writes by hand offset, unconverted -- the same shape
+ * include/PushBlock.h's InitResources file documents. */
 typedef int Fix12i;
 typedef short s16;
 struct SharedFilePtr { int x; }; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
@@ -21,7 +28,7 @@ extern struct SharedFilePtr data_ov030_02115c88;
 extern struct SharedFilePtr data_ov030_02115c80;
 extern struct CLPS_Block data_ov030_02114ee4;
 
-int func_ov030_02111410(char *self){
+int _ZN9UkikiCage13InitResourcesEv(char *self){
     struct BMD_File *bmd = _ZN5Model8LoadFileER13SharedFilePtr(data_ov030_02115c88);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(self + 0xd4, bmd, 1, -1);
     *(int*)(self + 0x9c) = 0;
