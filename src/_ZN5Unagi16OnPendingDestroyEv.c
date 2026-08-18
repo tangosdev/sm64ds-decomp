@@ -1,3 +1,8 @@
-void _ZN5Unagi16OnPendingDestroyEv(void)
+//cpp
+// @symbol _ZN5Unagi16OnPendingDestroyEv
+
+#include "Unagi.h"
+
+void Unagi::OnPendingDestroy()
 {
 }

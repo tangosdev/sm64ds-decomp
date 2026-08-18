@@ -1,28 +1,39 @@
+//cpp
 // @symbol _ZN5Unagi6RenderEv
-/* recovered: named members + shared header, declarations from a shared header */
-#include "decl_common.h"
-/* recovered: named members + shared header */
+
 #include "Unagi.h"
-extern int func_020167a4(char* p);
-extern int _ZN5Model6RenderEPK7Vector3(char* p, void* v);
-struct DE { int w0, w1, w2; };
-extern struct DE data_ov016_02114908[];
+
+struct UnagiRenderStep {
+    s32 unk_00;
+    s32 unk_04;
+    s32 angleScale;
+};
+
+extern "C" {
+void func_020167a4(BlendModelAnim *model);
+void func_0204531c(ModelComponents *data, s32 weight);
+extern UnagiRenderStep data_ov016_02114908[];
+}
+
 #pragma opt_strength_reduction off
-int _ZN5Unagi6RenderEv(struct Unagi *self) {
+
+s32 Unagi::Render()
+{
     int i;
-    struct DE* dp;
-    char* base;
-    func_020167a4((char*)&self->mBlendModelAnim);
-    base = (char*)(self->unk_360 + 0x34);
-    dp = data_ov016_02114908;
+    UnagiRenderStep *step;
+    char *bone;
+
+    func_020167a4(&mBlendModelAnim);
+    bone = (char *)mBlendModelAnim.data.bones + 0x34;
+    step = data_ov016_02114908;
     for (i = 1; i < 7; i++) {
-        short mv = ((short*)(((char*)self) + 0x400 + 0x18))[i];
-        unsigned short* curr = (unsigned short*)(((int)base + 0x1e));
-        *curr = *curr + (unsigned short)(short)(mv * dp->w2);
-        dp++;
-        base += 0x34;
+        s16 movement = ((s16 *)&unk_418)[i];
+        u16 *angle = (u16 *)(bone + 0x1e);
+        *angle = *angle + (u16)(s16)(movement * step->angleScale);
+        step++;
+        bone += 0x34;
     }
-    func_0204531c(((char*)self)+0x358, self->unk_3b4);
-    _ZN5Model6RenderEPK7Vector3(((char*)self)+0x350, 0);
+    func_0204531c(&mBlendModelAnim.data, mBlendModelAnim.blendWeight);
+    mBlendModelAnim.Model::Render(0);
     return 1;
 }

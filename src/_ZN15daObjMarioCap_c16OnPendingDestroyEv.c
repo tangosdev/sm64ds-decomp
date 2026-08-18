@@ -1,5 +1,13 @@
-extern void func_ov001_020ab110();
-void _ZN15daObjMarioCap_c16OnPendingDestroyEv(char* c){
-  if(*(unsigned char*)(c+0x400)==0xff) return;
-  func_ov001_020ab110(c+0x3d0);
+//cpp
+// @symbol _ZN15daObjMarioCap_c16OnPendingDestroyEv
+
+#include "daObjMarioCap_c.h"
+
+extern "C" void func_ov001_020ab110(CapIcon *icon);
+
+void daObjMarioCap_c::OnPendingDestroy()
+{
+    if (unk_400 == 0xff)
+        return;
+    func_ov001_020ab110(&mCapIcon);
 }

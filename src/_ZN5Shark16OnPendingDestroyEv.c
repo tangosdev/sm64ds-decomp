@@ -1,3 +1,8 @@
-void _ZN5Shark16OnPendingDestroyEv(void)
+//cpp
+// @symbol _ZN5Shark16OnPendingDestroyEv
+
+#include "Shark.h"
+
+void Shark::OnPendingDestroy()
 {
 }

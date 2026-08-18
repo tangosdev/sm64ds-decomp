@@ -1,9 +1,17 @@
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov090_021345a4[];
-extern int data_ov090_021345ac[];
-int _ZN5Shark16CleanupResourcesEv(void)
+//cpp
+// @symbol _ZN5Shark16CleanupResourcesEv
+
+#include "SharedFilePtr.h"
+#include "Shark.h"
+
+extern "C" {
+extern SharedFilePtr data_ov090_021345a4;
+extern SharedFilePtr data_ov090_021345ac;
+}
+
+int Shark::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov090_021345a4);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov090_021345ac);
+    data_ov090_021345a4.Release();
+    data_ov090_021345ac.Release();
     return 1;
 }

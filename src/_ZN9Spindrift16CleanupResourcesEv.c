@@ -1,9 +1,17 @@
-extern void _ZN13SharedFilePtr7ReleaseEv(void *);
-extern int data_ov081_02128d60[];
-extern int data_ov081_02128d68[];
-int _ZN9Spindrift16CleanupResourcesEv(void)
+//cpp
+// @symbol _ZN9Spindrift16CleanupResourcesEv
+
+#include "SharedFilePtr.h"
+#include "Spindrift.h"
+
+extern "C" {
+extern SharedFilePtr data_ov081_02128d60;
+extern SharedFilePtr data_ov081_02128d68;
+}
+
+int Spindrift::CleanupResources()
 {
-    _ZN13SharedFilePtr7ReleaseEv(data_ov081_02128d60);
-    _ZN13SharedFilePtr7ReleaseEv(data_ov081_02128d68);
+    data_ov081_02128d60.Release();
+    data_ov081_02128d68.Release();
     return 1;
 }

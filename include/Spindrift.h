@@ -49,6 +49,7 @@ struct Spindrift : dEnemyBase_c {
 
     /* --- non-virtual --- */
     int Behavior();
+    int CleanupResources();
     int InitResources();
     int Render();
 };
