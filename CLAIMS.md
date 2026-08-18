@@ -37,7 +37,7 @@ take over, ping the claimant first.
 | CheepCheep, WaterSuction, ChainChomp, Fwoosh, MontyMoleRock, Wiggler, KingBobOmb, MrBlizzard | andrewboudreau | 2026-08-18 | **done** - 13 methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform work excluded |
 | BooCage, daObjMarioCap_c, OneUpMushroom, Spindrift, Shark, Unagi, UnchainedChomp | andrewboudreau | 2026-08-18 | **done** - 13 ordinary methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform work excluded |
 | BookShot, daOts_c, BlueFlame, SoundObject | andrewboudreau | 2026-08-18 | **done** - 6 ordinary methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform/collision work excluded |
-| WaterfallMist, Cloud, EnemySpawner, BookShotSpawner | andrewboudreau | 2026-08-18 | **active** - real `dActor_c` layouts plus six ordinary-method C++ migrations; Platform/collision work excluded |
+| WaterfallMist, Cloud, EnemySpawner, BookShotSpawner | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus six ordinary-method C++ migrations; Platform/collision work excluded |
 
 ## Claims
 
