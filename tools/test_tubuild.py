@@ -216,12 +216,97 @@ def test_partial_reproduces_the_production_per_function_objects():
 
 # ------------------------------------------------------------------------------ CLI
 
-def test_promote_refuses_to_mutate_without_dry_run():
-    """The mutating half of `promote` deletes enrolled src/ files and edits tracked
-    delinks.txt. Until that lands it must refuse loudly, not half-execute."""
+def test_promote_mutation_refuses_below_link_verified():
+    """plan sec 7.7: the mutating path is gated on link-verified or better. PoleLift is
+    text-verified, so this must refuse on the status BEFORE compiling or writing
+    anything -- and the refusal must leave the tree untouched."""
+    dl = REPO / "config" / "arm9" / "overlays" / "ov045" / "delinks.txt"
+    before = dl.read_bytes()
     code, out = _run("promote", "ov045/PoleLift")
     assert code != 0
-    assert "only --dry-run is implemented" in out
+    assert "REFUSED -- promotion is not safe" in out
+    assert "status is 'text-verified'" in out
+    assert "Nothing was written." in out
+    assert dl.read_bytes() == before
+    assert (REPO / "src_tu" / "actors" / "PoleLift.cpp").is_file()
+    assert (REPO / "src" / "_ZN8PoleLift6RenderEv.cpp").is_file()
+
+
+def test_promote_mutation_refuses_a_manifest_override_and_a_stale_stem():
+    """Two independent refusal reasons on one link-verified entry, both load-bearing:
+
+    * --manifest away from the tracked config/tu_manifest.json would mutate real src/
+      and config/ while recording the promotion elsewhere -- refused outright, which
+      also makes this test safe to run against the real tree no matter what else
+      regresses (the scratch manifest guarantees at least one reason exists).
+    * ov002/LevelObjects' promoted_source stem ('LevelObjects') matches no class its
+      own licensed symbols name ('Stage'), so the name gate demands --accept-name."""
+    scratch = _scratch_manifest()
+    dl = REPO / "config" / "arm9" / "overlays" / "ov002" / "delinks.txt"
+    before = dl.read_bytes()
+    try:
+        code, out = _run("promote", "ov002/LevelObjects", manifest=scratch)
+    finally:
+        scratch.unlink(missing_ok=True)
+    assert code != 0
+    assert "REFUSED -- promotion is not safe" in out
+    assert "--manifest points away from the tracked config/tu_manifest.json" in out
+    assert "does not match any class the TU's own symbols name" in out
+    assert "--accept-name" in out
+    assert "Nothing was written." in out
+    assert dl.read_bytes() == before
+    assert (REPO / "src_tu" / "stage" / "LevelObjects.cpp").is_file()
+
+
+def test_promote_name_gate_logic():
+    """The stem-vs-classes rule itself: no class-named symbols passes anything (a TU is
+    a file, not a class); class-named symbols demand an exact or <Class>_<Nested>
+    match, so a manifest written before a class rename (Actor -> dActor_c) refuses."""
+    sys.path.insert(0, str(TOOLS))
+    import tubuild as T
+    assert T._promote_name_ok("LevelObjects", [])
+    assert T._promote_name_ok("dScMgBase_c", ["dScMgBase_c"])
+    assert T._promote_name_ok("fBase_c_SceneNode", ["fBase_c"])
+    assert not T._promote_name_ok("Actor", ["dActor_c"])          # substring is NOT a match
+    assert not T._promote_name_ok("ActorBase_SceneNode", ["fBase_c"])
+
+
+def test_promote_ledger_helpers_edit_surgically():
+    """The two mechanical ledger edits, on scratch copies:
+
+    * jsonl retarget touches ONLY the records whose srcPath is promoted away --
+      untouched lines stay byte-identical (tools/cpp_rename.py's version reformats the
+      whole file; a promotion's diff must stay the size of the promotion);
+    * converted-baseline prune removes exactly the deleted paths, keeps the bank's own
+      format (count == len, sorted survivors untouched), and logs each removal to the
+      exceptions file per the ratchet's own removal protocol."""
+    sys.path.insert(0, str(TOOLS))
+    import tubuild as T
+    import json
+    with tempfile.TemporaryDirectory() as td:
+        jl = pathlib.Path(td) / "ledger.jsonl"
+        untouched = '{"id":"x:1","srcPath":"src/Keep.c","weird":  "spacing kept"}'
+        jl.write_text(untouched + "\n"
+                      + '{"id":"x:2","srcPath":"src/Old.c","author":"a"}\n',
+                      encoding="utf-8", newline="\n")
+        n = T._retarget_jsonl_srcpaths(jl, {"src/Old.c": "src/new/TU.cpp"})
+        lines = jl.read_text(encoding="utf-8").splitlines()
+        assert n == 1
+        assert lines[0] == untouched, "untouched line was reformatted"
+        assert json.loads(lines[1])["srcPath"] == "src/new/TU.cpp"
+
+        cb = pathlib.Path(td) / "converted.json"
+        ex = pathlib.Path(td) / "exceptions.jsonl"
+        cb.write_text(json.dumps({"_note": "n", "criteria": ["c"], "count": 3,
+                                  "converted": ["src/A.c", "src/B.c", "src/C.c"]},
+                                 indent=2) + "\n", encoding="utf-8", newline="\n")
+        removed = T._prune_converted_baseline(["src/B.c", "src/NotBanked.c"], "why",
+                                              baseline=cb, exceptions=ex)
+        data = json.loads(cb.read_text(encoding="utf-8"))
+        assert removed == ["src/B.c"]
+        assert data["converted"] == ["src/A.c", "src/C.c"] and data["count"] == 2
+        rows = [json.loads(l) for l in ex.read_text(encoding="utf-8").splitlines()]
+        assert rows == [{"path": "src/B.c", "reason": "why"}]
 
 
 def test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explains():

@@ -19,13 +19,19 @@ Subcommands:
                                                       #   current build makes (plan sec 9)
     python tools/tubuild.py linkcheck ov002/LevelObjects           # whole-range link
     python tools/tubuild.py linkcheck ov045/PoleLift --partial     # N-object link
-    python tools/tubuild.py promote   ...             # only --dry-run (plan sec 7.7)
+    python tools/tubuild.py promote ov002/LevelObjects --dry-run   # the full plan, printed
+    python tools/tubuild.py promote ov002/LevelObjects             # apply it (plan sec 7.7;
+                                                      #   link-verified or better only)
 
-This tool never touches src/, config/**/delinks.txt, or runs real
-`eligible.py --apply` / `rombuild.py`. It only reads production state (the
-committed config/, the extracted ROM, the pinned mwccarm) and writes to
-src_tu/, config/tu_manifest.json, and build/tu/ (gitignored, see .gitignore's
-bare `build/` entry).
+Every subcommand except `promote` never touches src/ or config/**/delinks.txt
+and never runs real `eligible.py --apply` / `rombuild.py`: they only read
+production state (the committed config/, the extracted ROM, the pinned mwccarm)
+and write to src_tu/, config/tu_manifest.json, and build/tu/ (gitignored, see
+.gitignore's bare `build/` entry). `promote` is the ONE deliberate exception --
+plan sec 7.7's explicit, reviewable mutation: it git-mv's the shadow source into
+src/, git-rm's the superseded one-function files, splices the module's
+delinks.txt, and edits the tracked ledgers, all-or-nothing, refusing (or rolling
+back) with a named reason otherwise. It stages but never commits.
 
 Every byte/relocation comparison is delegated to the tree's existing gates --
 tools/match.py (compile + relocation-aware compare), tools/objisolate.py
@@ -2591,19 +2597,16 @@ _PROMOTE_TRACKERS_HISTORY = (
 
 
 def cmd_promote(args):
-    if not args.dry_run:
-        print("tools/tubuild.py promote: only --dry-run is implemented.\n"
-              "The mutating path deletes enrolled src/ files and edits tracked\n"
-              "config/**/delinks.txt, which plan sec 7.7 requires to be an explicit,\n"
-              "reviewable change; it is deliberately not available yet. Re-run with\n"
-              "--dry-run to see exactly what it would do.")
-        return 2
-
     data = load_manifest()
     entry = manifest_entry(data, args.id)
     if entry is None:
         raise SystemExit(f"no manifest entry for {args.id!r}")
+    if args.dry_run:
+        return _promote_dry_run(data, entry)
+    return _promote_apply(args, data, entry)
 
+
+def _promote_dry_run(data, entry):
     status = entry.get("status")
     ok_status = status in ("link-verified", "data-verified")
     module = entry["module"]
@@ -2777,6 +2780,630 @@ def cmd_promote(args):
     return 0 if ok_status else 1
 
 
+# ================================================== `promote` -- the mutating path (7.7)
+#
+# Everything below is ALL-OR-NOTHING by construction: every check runs and every plan
+# value is computed before the first write; the writes themselves are wrapped so any
+# failure -- including a post-apply validation that disagrees with preflight -- rolls
+# the tree back to byte-identical and says so. The refusal discipline is
+# splice_tu_entry's: every failure mode here is silent downstream (dsd fills any range
+# it has no object for with retail ROM bytes and the compare stays green), so an
+# aborted promotion with a named reason always beats a plausible half-applied one.
+
+_PROMOTE_STATUSES = ("link-verified", "data-verified")
+
+
+def _promote_name_ok(stem, classes):
+    """Does the promoted filename still name something the TU's own symbols contain?
+
+    `classes` is every class the licensed symbols themselves mention
+    (srcpath.class_of per symbol). An empty set passes -- a TU is a FILE, and real
+    files are not required to be named after a class at all. A non-empty set demands
+    the stem match one of its classes exactly or as a `<Class>_<Nested>` prefix,
+    because the concrete hazard is a manifest written BEFORE a class rename:
+    `promoted_source` can say src/actors/Actor.cpp while the TU's own symbols now
+    spell the class dActor_c (PRs #1572-#1577), and promoting as-is would mint a
+    canonical file named after a class that no longer exists anywhere in the tree.
+    That is a maintainer decision, not a tool default -- hence --accept-name."""
+    if not classes:
+        return True
+    return any(stem == c or stem.startswith(c + "_") for c in classes)
+
+
+def _promote_git(*argv):
+    r = subprocess.run(["git", "-C", str(REPO), *argv],
+                       capture_output=True, text=True, encoding="utf-8", errors="replace")
+    return r.returncode, (r.stdout + (r.stderr or "")).strip()
+
+
+def _retarget_jsonl_srcpaths(path, mapping):
+    """Rewrite ONLY the ledger lines whose `srcPath` is being promoted away.
+
+    Untouched lines are copied byte-for-byte -- tools/cpp_rename.py's version of this
+    re-serializes every record and so reformats the whole file; a promotion's diff
+    must stay the size of the promotion. Returns how many records were retargeted."""
+    changed, out = 0, []
+    for line in path.read_text(encoding="utf-8").splitlines():
+        s = line.strip()
+        if s:
+            try:
+                obj = json.loads(s)
+            except ValueError:
+                obj = None
+            if isinstance(obj, dict) and obj.get("srcPath") in mapping:
+                obj["srcPath"] = mapping[obj["srcPath"]]
+                out.append(json.dumps(obj, separators=(",", ":"), ensure_ascii=False))
+                changed += 1
+                continue
+        out.append(line)
+    path.write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
+    return changed
+
+
+def _prune_converted_baseline(removed_paths, reason_text, baseline=None, exceptions=None):
+    """Remove deleted legacy paths from the CONVERTED bank, by the bank's own protocol.
+
+    tools/tiers_ratchet.py --check treats a banked path that is no longer a tracked
+    source as a backslide, and its own --update flow refuses removals without a
+    --reason logged to the exceptions file. This performs exactly that pair of edits,
+    surgically (only the promoted paths leave; nothing else in the bank moves)."""
+    baseline = baseline or REPO / "config" / "converted-baseline.json"
+    exceptions = exceptions or REPO / "config" / "converted-backslide-exceptions.jsonl"
+    data = json.loads(baseline.read_text(encoding="utf-8"))
+    gone = set(removed_paths)
+    removed = [p for p in data.get("converted", []) if p in gone]
+    data["converted"] = [p for p in data.get("converted", []) if p not in gone]
+    data["count"] = len(data["converted"])
+    baseline.write_text(json.dumps(data, indent=2) + "\n", encoding="utf-8", newline="\n")
+    with open(exceptions, "a", encoding="utf-8", newline="\n") as f:
+        for rel in removed:
+            f.write(json.dumps({"path": rel, "reason": reason_text}, sort_keys=True) + "\n")
+    return removed
+
+
+def _promote_tracker_plan(legacy, stems, dest_rel, tu_id):
+    """(edits, reasons, warns) for the tracked ledgers a promotion touches.
+
+    Path references are load-bearing (the ledger keys on a file that is about to be
+    deleted) and either have a defined mechanical edit here or refuse. Stem-only
+    references are SYMBOL references -- symbols.txt is untouched by a promotion, so
+    they stay valid -- and only warn."""
+    reasons, warns = [], []
+    edits = {"converted": [], "jsonl": {}}
+    legacy_set = set(legacy)
+    for rel in _PROMOTE_TRACKERS_LIVE:
+        p = REPO / rel
+        if not p.is_file():
+            continue
+        text = p.read_text(encoding="utf-8", errors="ignore")
+        path_hits = [l for l in legacy if l in text]
+        stem_hits = [s for s in stems if s in text]
+        if rel == "config/converted-baseline.json" and path_hits:
+            bank = json.loads(text).get("converted", [])
+            member = [l for l in path_hits if l in set(bank)]
+            stray = [l for l in path_hits if l not in set(bank)]
+            edits["converted"] = member
+            if stray:
+                reasons.append(f"{rel} mentions {stray} outside its `converted` list; "
+                               f"no mechanical edit is defined for that")
+            continue
+        if path_hits:
+            reasons.append(f"{rel} references legacy source path(s) being deleted "
+                           f"({', '.join(path_hits[:3])}{'...' if len(path_hits) > 3 else ''}); "
+                           f"no mechanical edit is defined for this ledger -- resolve it "
+                           f"by hand before promoting")
+        elif stem_hits:
+            warns.append(f"{rel} mentions {len(stem_hits)} legacy STEM(s) (symbol names, "
+                         f"e.g. {stem_hits[0]}); symbols.txt is untouched by a promotion, "
+                         f"so symbol-keyed records stay valid -- not edited")
+    for rel in _PROMOTE_TRACKERS_HISTORY:
+        p = REPO / rel
+        if not p.is_file():
+            continue
+        n = 0
+        for line in p.read_text(encoding="utf-8", errors="ignore").splitlines():
+            s = line.strip()
+            if not s:
+                continue
+            try:
+                obj = json.loads(s)
+            except ValueError:
+                continue
+            if isinstance(obj, dict) and obj.get("srcPath") in legacy_set:
+                n += 1
+        if n:
+            edits["jsonl"][rel] = n
+    return edits, reasons, warns
+
+
+def promote_preflight(data, entry, accept_name):
+    """(plan, reasons, warns). `reasons` empty iff the promotion is safe to apply.
+
+    Everything the dry run enumerates, re-validated as hard gates, plus a fresh
+    compile of the shadow source under the version and flags the PRODUCTION build
+    will use at the promoted path -- because a stale `link-verified` status, an
+    edited source, or a file the build cannot compile are all invisible to every
+    downstream gate (notes/unbuildable-files-invisible.md)."""
+    reasons, warns = [], []
+    plan = {"entry": entry}
+
+    status = entry.get("status")
+    if status not in _PROMOTE_STATUSES:
+        reasons.append(f"status is {status!r}; plan sec 7.7 requires one of "
+                       f"{'/'.join(_PROMOTE_STATUSES)} (run `linkcheck` first)")
+
+    tracked_manifest = REPO / "config" / "tu_manifest.json"
+    if pathlib.Path(MANIFEST).resolve() != tracked_manifest.resolve():
+        reasons.append("--manifest points away from the tracked config/tu_manifest.json; "
+                       "a mutation would edit real src/ and config/ while recording the "
+                       "promotion somewhere else, leaving the tree and its manifest "
+                       "disagreeing silently")
+
+    module = entry["module"]
+    src_rel = entry["source"]
+    src = REPO / src_rel
+    dest_rel = entry.get("promoted_source")
+    legacy = [f["legacy_source"] for f in entry["functions"]]
+    stems = [pathlib.PurePosixPath(l).stem for l in legacy]
+    plan.update(module=module, src=src, src_rel=src_rel, dest_rel=dest_rel,
+                legacy=legacy, stems=stems)
+
+    if not dest_rel:
+        reasons.append("manifest entry has no promoted_source")
+        return plan, reasons, warns
+    dpure = pathlib.PurePosixPath(dest_rel)
+    dest = REPO / pathlib.Path(*dpure.parts)
+    plan["dest"] = dest
+    if dpure.parts[0] != "src" or ".." in dpure.parts or dpure.suffix not in (".c", ".cpp"):
+        reasons.append(f"promoted_source {dest_rel!r} is not a src/ C or C++ path")
+    if not src.is_file():
+        reasons.append(f"shadow source {src_rel} does not exist")
+    if dest.is_file():
+        reasons.append(f"destination {dest_rel} already exists (collision)")
+
+    dest_stem = dpure.stem
+    plan["dest_stem"] = dest_stem
+    others = [p.relative_to(REPO).as_posix() for p in SP.iter_sources()
+              if p.stem == dest_stem]
+    if others:
+        reasons.append(f"stem {dest_stem!r} is not unique under src/ (layout L2): {others}")
+    if dest_stem in all_symbol_homes():
+        reasons.append(f"stem {dest_stem!r} IS a symbol name in a symbols.txt -- "
+                       f"enroll.candidates() would bind that symbol to the promoted file "
+                       f"and rombuild._isolate would then REDUCE the TU object to that one "
+                       f"function, silently un-linking the rest of the span")
+
+    # The classes-vs-stem naming gate (see _promote_name_ok).
+    classes = sorted({c for c in (SP.class_of(f["symbol"]) for f in entry["functions"]) if c})
+    plan["classes"] = classes
+    if not _promote_name_ok(dest_stem, classes) and not accept_name:
+        reasons.append(f"promoted_source stem {dest_stem!r} does not match any class the "
+                       f"TU's own symbols name ({', '.join(classes)}). If the manifest "
+                       f"predates a class rename, fix promoted_source in "
+                       f"config/tu_manifest.json first; to promote under this name anyway, "
+                       f"re-run with --accept-name (the decision is the maintainer's, "
+                       f"not this tool's)")
+
+    text_secs = [s for s in entry.get("sections", []) if s["name"] == ".text"]
+    nontext = [s["name"] for s in entry.get("sections", []) if s["name"] != ".text"]
+    if len(text_secs) != 1 or nontext:
+        reasons.append(f"this round licenses exactly one .text section (plan sec 8); "
+                       f"entry has {len(text_secs)} .text and extras {nontext}")
+        span = None
+    else:
+        span = (int(text_secs[0]["start"], 16), int(text_secs[0]["end"], 16))
+    plan["span"] = span
+    if entry.get("data") or entry.get("bss"):
+        reasons.append("entry licenses data/bss contributions; whole-range promotion "
+                       "currently licenses .text only (plan sec 8; phases E/F are later)")
+
+    dl = module_dir_in(CFG_ARM9, module) / "delinks.txt"
+    plan["delinks"] = dl
+    if not dl.is_file():
+        reasons.append(f"no delinks.txt for module {module} at {dl}")
+    elif span:
+        _h, _e, inside, span_reasons = span_entries(dl, span[0], span[1], legacy)
+        reasons.extend(span_reasons)
+        plan["replaced"] = sorted(rel for _i, rel, _s in inside)
+
+    for rel in legacy:
+        if not (REPO / rel).is_file():
+            reasons.append(f"legacy source {rel} is already absent")
+    for f in entry["functions"]:
+        found = SP.path_for(f["symbol"])
+        found_rel = found.relative_to(REPO).as_posix() if found else None
+        if found_rel != f["legacy_source"]:
+            reasons.append(f"srcpath resolves {f['symbol']} to {found_rel}, but the "
+                           f"manifest says {f['legacy_source']} -- the manifest is stale")
+
+    excluded = EN.excluded() & {f["symbol"] for f in entry["functions"]}
+    if excluded:
+        reasons.append(f"function(s) {sorted(excluded)} are in config/rombuild-exclude.txt "
+                       f"('must stay inside the gap object'); promoting would license them "
+                       f"from source against that record")
+
+    # Version pin: the build keys overrides on the FILE STEM, so the promoted file is
+    # compiled as vers.get(dest_stem, default) -- which must be the pin the TU was
+    # verified under, or the ROM build quietly links different bytes.
+    version, note = resolve_tu_version(entry)
+    if version is None:
+        reasons.append(f"cannot determine the TU's compiler pin: {note}")
+    else:
+        pins = BP.pins()
+        post_version = (pins or {}).get(dest_stem) or BP.DEFAULT_VERSION
+        if version != post_version:
+            reasons.append(f"the build would compile {dest_rel} as {post_version} (stem "
+                           f"keyed) but the TU is verified at {version}; add the line "
+                           f"'{dest_stem} {version}' to config/rombuild-versions.txt first")
+        stale_pins = [s for s in stems if s in (pins or {})]
+        if stale_pins:
+            warns.append(f"config/rombuild-versions.txt pins legacy stem(s) {stale_pins}; "
+                         f"after promotion those lines are dead -- remove them by hand")
+    plan["version"] = version
+
+    flags = BP.flags_for(src) if src.is_file() else None
+    plan["flags"] = flags
+    rec = (entry.get("verification") or {})
+    if not rec:
+        reasons.append("entry has no verification block at all")
+    else:
+        if rec.get("flags") and flags and rec["flags"] != flags:
+            reasons.append(f"the build would compile {src_rel} with flags {flags!r} but the "
+                           f"recorded verification used {rec['flags']!r} (the //cpp marker "
+                           f"or the source changed since verification)")
+        if version and rec.get("toolchain") and f"/{version}/" not in rec["toolchain"]:
+            reasons.append(f"recorded verification toolchain {rec['toolchain']!r} is not the "
+                           f"build's pin {version} -- re-verify before promoting")
+
+    tracker_edits, tr_reasons, tr_warns = _promote_tracker_plan(
+        legacy, stems, dest_rel, entry["id"])
+    reasons.extend(tr_reasons)
+    warns.extend(tr_warns)
+    plan["tracker_edits"] = tracker_edits
+
+    # dsd's linker script selects contributions by object BASENAME (same check
+    # linkcheck runs before its scratch link).
+    if not reasons:
+        try:
+            clash = [p for p in RB.enrolled()
+                     if pathlib.PurePosixPath(p).stem == dest_stem]
+        except RB.BuildError as e:
+            clash = None
+            reasons.append(f"cannot enumerate enrolled sources: {e}")
+        if clash:
+            reasons.append(f"object basename {dest_stem}.o is already claimed by {clash}")
+
+    # Git state: everything about to move/change must be tracked and clean, or a
+    # rollback would destroy uncommitted work and the result would not be reviewable.
+    touched = [src_rel, *legacy, dl.relative_to(REPO).as_posix(),
+               "config/tu_manifest.json"]
+    if tracker_edits["converted"]:
+        touched += ["config/converted-baseline.json",
+                    "config/converted-backslide-exceptions.jsonl"]
+    touched += list(tracker_edits["jsonl"])
+    plan["touched"] = touched
+    code, out = _promote_git("status", "--porcelain", "--", *touched, dest_rel)
+    if code != 0:
+        reasons.append(f"git status failed: {out}")
+    elif out:
+        reasons.append("uncommitted changes in paths this promotion touches:\n      "
+                       + "\n      ".join(out.splitlines()))
+    for rel in [src_rel, *legacy]:
+        code, _o = _promote_git("ls-files", "--error-unmatch", "--", rel)
+        if code != 0:
+            reasons.append(f"{rel} is not git-tracked; git mv/rm cannot record it")
+
+    return plan, reasons, warns
+
+
+def _promote_reverify(plan):
+    """Fresh compile at the BUILD's own pin + the full three-check verification.
+
+    Byte compare (match.py), relocation type/addend (objisolate.plan), relocation
+    destination identity (reloc_audit) -- per function -- plus the licensing audit
+    (no unlicensed symbol or content section), ROM-ascending emission order, and the
+    production-isolation no-op condition: rombuild._isolate will call
+    objisolate.plan(obj, <dest stem>) on this object at its new home, and that must
+    report NOT_A_FUNCTION or the build would reduce the TU to one function."""
+    entry, reasons = plan["entry"], []
+    obj = M.compile_c(plan["src"], plan["version"], plan["flags"])
+    if obj is None:
+        reasons.append(f"{plan['src_rel']} does not compile under {plan['version']} with "
+                       f"the build's flags -- and an uncompilable src/ file is invisible "
+                       f"to every downstream gate")
+        return None, reasons
+    inv = elf_inventory(obj)
+    plan["obj"] = obj
+
+    name_index = RA.build_name_index()
+    config_relocs = RA.build_config_relocs()
+    sym_index = RL.load_all_syms()
+    n_match, sec_order = 0, []
+    for f in sorted(entry["functions"], key=lambda x: x["ordinal"]):
+        sym, addr, size = f["symbol"], int(f["address"], 16), int(f["size"], 16)
+        code, relocs = M.extract_func(obj, sym)
+        if code is None:
+            reasons.append(f"{sym} is not defined in the compiled object")
+            continue
+        secidx = next((s["shndx"] for s in inv["symbols"] if s["name"] == sym), None)
+        if isinstance(secidx, int):
+            sec_order.append((f["ordinal"], secidx))
+        tgt = BP.target_bytes(entry["module"], addr, size)
+        if tgt is None or len(tgt) != size:
+            reasons.append(f"{sym}: no ROM bytes for 0x{addr:08x}+0x{size:x}")
+            continue
+        ok, ndiff = M.compare(tgt, code, relocs, verbose=False)
+        if not ok:
+            reasons.append(f"{sym}: {ndiff} word(s) differ from the ROM")
+            continue
+        p = OI.plan(obj, sym)
+        if p.get("error"):
+            reasons.append(f"{sym}: objisolate: {p['error']}")
+            continue
+        dest_rows, _missing = RA.check_destinations(obj, sym, addr, size, entry["module"],
+                                                    name_index, config_relocs, sym_index)
+        wrong = [r for r in (dest_rows or []) if r["verdict"] == "WRONG-DEST"]
+        if wrong:
+            reasons.append(f"{sym}: {len(wrong)} relocation destination(s) WRONG "
+                           f"(first: {wrong[0]['cand']} != {wrong[0]['cfg']})")
+            continue
+        n_match += 1
+    plan["n_match"] = n_match
+
+    uf, uo, us = unlicensed_inventory(entry, inv)
+    for s in uf:
+        reasons.append(f"unlicensed function {s['name']} (size 0x{s['size']:x}) in the "
+                       f"object -- plan sec 4.5 refuses extra output")
+    for s in uo:
+        reasons.append(f"unlicensed object symbol {s['name']} (size 0x{s['size']:x})")
+    for s in us:
+        reasons.append(f"unlicensed content section {s['name']} (size 0x{s['size']:x})")
+
+    ordered = sorted(sec_order)
+    idxs = [si for _o, si in ordered]
+    if any(idxs[i] >= idxs[i + 1] for i in range(len(idxs) - 1)):
+        reasons.append("licensed functions are not emitted in ROM-ascending section "
+                       "order; a whole-range link cannot reproduce")
+
+    iso = OI.plan(obj, plan["dest_stem"])
+    if iso.get("kind") != OI.NOT_A_FUNCTION:
+        reasons.append(f"objisolate.plan(obj, {plan['dest_stem']!r}) did NOT report "
+                       f"NOT_A_FUNCTION -- rombuild._isolate would reduce the promoted "
+                       f"object to that single function")
+    return obj, reasons
+
+
+def _layout_snapshot():
+    import layout_check as LC
+    SP.invalidate()
+    findings = LC.check()
+    return {code: {h["key"] for h in findings.get(code, [])} for code in LC.ERRORS}
+
+
+def _promote_rollback(snapshots, tracked_restore, dest, created_dirs):
+    """Best-effort return to the pre-promotion tree. Returns [problem, ...]."""
+    problems = []
+    all_paths = sorted({*(p.relative_to(REPO).as_posix() for p in snapshots),
+                        *tracked_restore, dest.relative_to(REPO).as_posix()})
+    code, out = _promote_git("reset", "-q", "HEAD", "--", *all_paths)
+    if code != 0:
+        problems.append(f"git reset: {out}")
+    for path, blob in snapshots.items():
+        try:
+            if blob is None:
+                if path.is_file():
+                    path.unlink()
+            else:
+                path.write_bytes(blob)
+        except OSError as e:
+            problems.append(f"restore {path}: {e}")
+    if tracked_restore:
+        code, out = _promote_git("checkout", "-q", "--", *tracked_restore)
+        if code != 0:
+            problems.append(f"git checkout: {out}")
+    try:
+        if dest.is_file():
+            dest.unlink()
+    except OSError as e:
+        problems.append(f"unlink {dest}: {e}")
+    for d in reversed(created_dirs):
+        try:
+            d.rmdir()
+        except OSError:
+            pass                      # non-empty or already gone; harmless either way
+    code, out = _promote_git("status", "--porcelain", "--", *all_paths)
+    if code == 0 and out:
+        problems.append("paths still dirty after rollback:\n      "
+                        + "\n      ".join(out.splitlines()))
+    return problems
+
+
+def _promote_apply(args, data, entry):
+    tu_id = entry["id"]
+    print(f"=== tubuild promote {tu_id} ===")
+    print("[1/6] preflight -- status gate, paths, span tiling, pins, tracked ledgers")
+    plan, reasons, warns = promote_preflight(data, entry, getattr(args, "accept_name", False))
+    for w in warns:
+        print(f"      WARN: {w}")
+    if not reasons:
+        n = len(plan["legacy"])
+        print(f"      ok: {plan['src_rel']} -> {plan['dest_rel']}, {n} legacy source(s), "
+              f".text 0x{plan['span'][0]:08x}..0x{plan['span'][1]:08x}, pin {plan['version']}")
+        print("[2/6] fresh compile + re-verification at the build's own pin "
+              "(bytes, reloc type/addend, reloc destinations, licensing, emission order)")
+        _obj, rv_reasons = _promote_reverify(plan)
+        reasons.extend(rv_reasons)
+        if not rv_reasons:
+            print(f"      ok: {plan['n_match']}/{n} MATCH, no unlicensed output, "
+                  f"ROM-ascending order, isolation no-op confirmed")
+    if reasons:
+        print("\nREFUSED -- promotion is not safe:")
+        for r in reasons:
+            print(f"  - {r}")
+        print("\nNothing was written.")
+        return 1
+
+    # Contributor attribution, computed BEFORE the tree changes (the gate's own
+    # algorithm; see the dry run's sec 4b for the full argument).
+    owners = None
+    try:
+        import chaos_db_ci as CDB
+        owners = CDB.first_matchers()
+    except Exception as exc:                                     # noqa: BLE001
+        print(f"      note: could not run chaos_db_ci.first_matchers(): {exc}")
+
+    pre_layout = _layout_snapshot()
+
+    dest, dl, span = plan["dest"], plan["delinks"], plan["span"]
+    legacy, dest_rel = plan["legacy"], plan["dest_rel"]
+    edits = plan["tracker_edits"]
+    print("[3/6] applying -- git mv/rm, delinks splice, ledgers, manifest")
+
+    snapshots = {dl: dl.read_bytes(),
+                 pathlib.Path(MANIFEST): pathlib.Path(MANIFEST).read_bytes()}
+    if edits["converted"]:
+        cb = REPO / "config" / "converted-baseline.json"
+        ex = REPO / "config" / "converted-backslide-exceptions.jsonl"
+        snapshots[cb] = cb.read_bytes()
+        snapshots[ex] = ex.read_bytes() if ex.is_file() else None
+    for rel in edits["jsonl"]:
+        p = REPO / rel
+        snapshots[p] = p.read_bytes()
+    tracked_restore = [plan["src_rel"], *legacy]
+    created_dirs = []
+
+    try:
+        parent = dest.parent
+        to_create = []
+        while not parent.is_dir():
+            to_create.append(parent)
+            parent = parent.parent
+        for d in reversed(to_create):
+            d.mkdir()
+            created_dirs.append(d)
+            print(f"      created {d.relative_to(REPO).as_posix()}/ -- a NEW src/ "
+                  f"subdirectory; check port/ source lists")
+
+        code, out = _promote_git("mv", "--", plan["src_rel"], dest_rel)
+        if code != 0:
+            raise RuntimeError(f"git mv failed: {out}")
+        print(f"      git mv {plan['src_rel']} -> {dest_rel}")
+        code, out = _promote_git("rm", "-q", "--", *legacy)
+        if code != 0:
+            raise RuntimeError(f"git rm failed: {out}")
+        print(f"      git rm {len(legacy)} superseded one-function source(s)")
+
+        replaced, sp_reasons = splice_tu_entry(dl, span[0], span[1], dest_rel, legacy)
+        if sp_reasons:
+            raise RuntimeError("delinks splice refused after preflight passed: "
+                               + "; ".join(sp_reasons))
+        print(f"      {dl.relative_to(REPO).as_posix()}: replaced {len(replaced)} "
+              f"entr(y/ies) with one complete .text 0x{span[0]:08x}..0x{span[1]:08x} entry")
+
+        ledger_note = {}
+        if edits["converted"]:
+            removed = _prune_converted_baseline(
+                edits["converted"],
+                f"promoted into {dest_rel} (TU {tu_id}; the one-function file was "
+                f"deleted, not un-converted)")
+            ledger_note["config/converted-baseline.json"] = len(removed)
+            print(f"      config/converted-baseline.json: removed {len(removed)} deleted "
+                  f"path(s), logged to converted-backslide-exceptions.jsonl")
+        mapping = {l: dest_rel for l in legacy}
+        for rel in edits["jsonl"]:
+            nch = _retarget_jsonl_srcpaths(REPO / rel, mapping)
+            ledger_note[rel] = nch
+            print(f"      {rel}: retargeted srcPath on {nch} record(s) (records kept, "
+                  f"never deleted)")
+
+        old_source = entry["source"]
+        entry["status"] = "promoted"
+        entry["source"] = dest_rel
+        entry["promotion"] = {
+            "round": "tools/tubuild.py promote -- preflight (status/span/pin/name/"
+                     "collision/ledger gates) + fresh compile re-verification (bytes, "
+                     "objisolate, reloc destinations, licensing, emission order, "
+                     "isolation no-op) + git mv/rm + delinks splice",
+            "from": old_source,
+            "licensedText": {"start": f"0x{span[0]:08x}", "end": f"0x{span[1]:08x}"},
+            "replacedDelinksEntries": replaced,
+            "toolchain": plan["version"],
+            "flags": plan["flags"],
+            "reverified": f"{plan['n_match']}/{len(legacy)} MATCH at promote time",
+            "trackerEdits": ledger_note,
+        }
+        save_manifest(data)
+        print(f"      config/tu_manifest.json: {tu_id} status -> promoted, "
+              f"source -> {dest_rel}")
+
+        stage = [dl.relative_to(REPO).as_posix(), "config/tu_manifest.json",
+                 *ledger_note]
+        if edits["converted"]:
+            stage.append("config/converted-backslide-exceptions.jsonl")
+        code, out = _promote_git("add", "--", *stage)
+        if code != 0:
+            raise RuntimeError(f"git add failed: {out}")
+
+        print("[4/6] post-apply validation (enrollment, layout bracket)")
+        enrolled_now = set(RB.enrolled())
+        if dest_rel not in enrolled_now:
+            raise RuntimeError(f"{dest_rel} is NOT an enrolled complete source after the "
+                               f"splice")
+        still = [l for l in legacy if l in enrolled_now]
+        if still:
+            raise RuntimeError(f"legacy source(s) still enrolled after the splice: {still}")
+        print(f"      enrolled: {dest_rel} in, all {len(legacy)} legacy source(s) out")
+        post_layout = _layout_snapshot()
+        new_findings = {code: sorted(post_layout[code] - pre_layout[code])
+                        for code in post_layout if post_layout[code] - pre_layout[code]}
+        if new_findings:
+            raise RuntimeError(f"layout_check reports NEW finding(s): {new_findings}")
+        print("      layout_check: no new L1-L4 findings vs the pre-promotion tree")
+    except (RuntimeError, OSError, subprocess.SubprocessError) as exc:
+        print(f"\nFAILED MID-APPLY: {exc}")
+        print("rolling back to the pre-promotion tree...")
+        problems = _promote_rollback(snapshots, tracked_restore, dest, created_dirs)
+        if problems:
+            print("ROLLBACK INCOMPLETE -- fix by hand before trusting this tree:")
+            for p in problems:
+                print(f"  - {p}")
+        else:
+            print("rollback complete; the tree is byte-identical to before.")
+        return 1
+
+    print("[5/6] contributor attribution -- what this promotion costs")
+    if owners is not None:
+        by_author = collections.defaultdict(list)
+        for rel in legacy:
+            by_author[owners.get(rel, "(no lineage found)")].append(rel)
+        for who, rels in sorted(by_author.items(), key=lambda kv: (-len(kv[1]), kv[0])):
+            print(f"      {who:20} {len(rels)} file(s)")
+    print(f"      A promotion is a {len(legacy)}-delete + 1-add collapse; git can pair at "
+          f"most ONE lineage with the add, so tools/prepush_attribution.py WILL report "
+          f"CREDIT LOST for the deleted names. That is structural, not a mistake to fix: "
+          f"the sanctioned route is the attribution-override label "
+          f"(--allow-attribution-change on the merge gate).")
+    print(f"      HARDER, AND NOT WAIVABLE TODAY: validate_merge.py binds functions to "
+          f"sources by FILE STEM, so all {len(legacy)} functions leave `matched` and the "
+          f"merge gate raises `lost {len(legacy)} matched function(s)` plus `source-built "
+          f"function coverage decreased` -- both unconditional. This promotion CANNOT "
+          f"land through CI until validate_merge learns the delinks-based symbol->source "
+          f"mapping. Landing the tree change and teaching the gate are separate changes; "
+          f"sequence them deliberately.")
+
+    print("[6/6] validation to run before pushing anything")
+    print("      python tools/rombuild.py -j 16       (module fidelity 106/106 -- the ROM "
+          "proof that the spliced entry contributes, not a gap object)")
+    print("      python tools/eligible.py             (diff the eligible NAME LIST: it "
+          "loses the superseded stems, nothing else)")
+    print("      python tools/prepush_attribution.py --base origin/main")
+    print("      python tools/port_refcheck.py")
+    print("      python tools/langmode_audit.py --check")
+    print(f"\nPROMOTED. {len(legacy)} one-function file(s) retired; nothing was committed "
+          f"-- review with `git status` and `git diff --cached`.")
+    return 0
+
+
 # =================================================================================== main
 
 def main():
@@ -2850,10 +3477,18 @@ def main():
                    help="delete this TU's scratch tree before running")
     p.set_defaults(func=cmd_linkcheck)
 
-    p = sub.add_parser("promote", help="plan sec 7.7 -- only --dry-run is implemented")
+    p = sub.add_parser("promote", help="plan sec 7.7 -- retire a link-verified TU's "
+                                       "one-function files: git mv the shadow source to "
+                                       "its permanent src/ path, git rm the superseded "
+                                       "sources, splice delinks.txt, edit the tracked "
+                                       "ledgers, mark the manifest entry promoted")
     p.add_argument("id")
     p.add_argument("--dry-run", action="store_true",
                    help="print every planned file move/deletion and config edit, and exit")
+    p.add_argument("--accept-name", action="store_true",
+                   help="promote even though promoted_source's stem matches no class the "
+                        "TU's own symbols name (e.g. a manifest written before a class "
+                        "rename); the name choice is then explicitly the caller's")
     p.set_defaults(func=cmd_promote)
 
     args = ap.parse_args()
