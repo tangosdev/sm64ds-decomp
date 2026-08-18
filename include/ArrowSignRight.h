@@ -31,6 +31,8 @@ struct ArrowSignRight : dBgActor_c {
     int Behavior();
     int CleanupResources();
     int Render();
+    virtual int  OnAttacked1(dActor_c &other);      /* slot 22 */
+    virtual void OnHitByMegaChar(Player &player);   /* slot 27 */
     /* THE VTABLE SAYS SO. _ZTV14ArrowSignRight is ov098 0x0213c3d8 and the word
        at +0x7c relocates to ov098 0x02137ccc, while _ZTV10dBgActor_c carries
        _ZN10dBgActor_c4KillEv at the same slot -- so this is this class's own
