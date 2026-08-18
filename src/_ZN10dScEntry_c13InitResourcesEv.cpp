@@ -1,13 +1,12 @@
 //cpp
 #include "types.h"
-// @symbol func_ov075_0211a410
+// @symbol _ZN10dScEntry_c13InitResourcesEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: renamed to Class_Method, RTTI class fields named */
 #include "dScEntry_c.h"
-// recovered name: dScEntry_c_InitResources
-/* recovered: renamed to Class_Method */
-/* dScEntry_c::InitResources - recovered from vtable slot identity */
+/* dScEntry_c::InitResources() -- vtable slot 0. extern "C" carries the
+ * literal mangled name unmangled -- see include/dScEntry_c.h. */
 extern "C" {
     void Enable3dEngines(void);
     void func_0200f2cc(void);
@@ -44,14 +43,14 @@ extern u8 data_0209f4ae[];
 extern void* data_0209d4a8;
 extern s32 data_0208ee44;
 
-extern "C" int func_ov075_0211a410(char* c)
+extern "C" int _ZN10dScEntry_c13InitResourcesEv(char* c)
 {
     struct dScEntry_c *self = (struct dScEntry_c *)(void *)c;
     Enable3dEngines();
     func_0200f2cc();
 
     {
-        int b = (self->unk_00c == 7);
+        int b = (self->actorID == 7);
         if (b || *(s32*)(c + 8) != 0 || func_0203d9b4() != 0) {
             LoadTextNarcs();
             LoadArchive(0);
@@ -99,7 +98,7 @@ extern "C" int func_ov075_0211a410(char* c)
     LoadFont3D();
 
     {
-        int b6 = (self->unk_00c == 6);
+        int b6 = (self->actorID == 6);
         if (b6) {
             func_ov075_02116ad4(c);
             if (*(s32*)(c + 8) == 0) {
@@ -123,7 +122,7 @@ extern "C" int func_ov075_0211a410(char* c)
     _ZN5Sound16LoadInitialGroupEi(0x2b);
 
     {
-        int b6b = (self->unk_00c == 6);
+        int b6b = (self->actorID == 6);
         if (b6b) {
             if (*(u32*)(c + 8) < 2) {
                 _ZN5Sound22LoadAndSetMusic_Layer1Ei(0x4c);

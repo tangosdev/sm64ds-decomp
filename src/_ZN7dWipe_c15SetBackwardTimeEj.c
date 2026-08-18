@@ -1,10 +1,11 @@
 #include "types.h"
-// @symbol func_0202f928
-// recovered name: dWipe_c_SetBackwardTime
+// @symbol _ZN7dWipe_c15SetBackwardTimeEj
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dWipe_c::SetBackwardTime - recovered from vtable slot identity */
+/* dWipe_c::SetBackwardTime(u32 frames) -- vtable slot 3. Plain C function
+ * carrying the literal mangled name (this codebase's C files, absent a
+ * "//cpp" marker, compile as plain C99, so this is never re-mangled --
+ * see include/dWipe_c.h). */
 /* The third parameter (param_2) is load-bearing: it arrives in r2 and is
  * forwarded to the guard call with zero instructions, which keeps r2 live
  * from entry to the call and forces the cached `type` into r3 as in the ROM.
@@ -32,7 +33,7 @@ struct MyFader {
     u32 unk24;      /* 0x24 */
 };
 
-int func_0202f928(struct MyFader *self, u32 param_1, u32 param_2)
+int _ZN7dWipe_c15SetBackwardTimeEj(struct MyFader *self, u32 param_1, u32 param_2)
 {
     s32 type, unk10;
 
