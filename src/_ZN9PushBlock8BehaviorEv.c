@@ -1,12 +1,16 @@
-// @symbol func_ov002_020b8dd4
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN9PushBlock8BehaviorEv
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header
+ *
+ * PushBlock::Behavior -- vtable slot 6, ov002 0x020b8dd4. Attributed by the
+ * vtable: _ZTV9PushBlock carries this address at slot 6, where
+ * _ZTV10dBgActor_c carries fBase_c's generic 0x02043b24.
+ *
+ * Kept as an extern free function under the literal mangled name, reading the
+ * flat C spelling of PushBlock (include/PushBlock.h's #else half) by hand
+ * offset -- same shape as _ZN9PushBlock13InitResourcesEv.cpp. */
 #include "decl_Platform.h"
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
-#include "daObjPushblock_c.h"
-// recovered name: daObjPushblock_c_Behavior
-/* recovered: renamed to Class_Method */
-/* daObjPushblock_c::Behavior - recovered from vtable slot identity */
+#include "PushBlock.h"
 typedef short s16;
 
 extern Matrix4x3 data_020a0e68;
@@ -29,9 +33,9 @@ extern int Vec3_Dist(Vector3 *a, Vector3 *b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, Vector3 *pos, unsigned int e);
 extern int Vec3_HorzDist(Vector3 *a, Vector3 *b);
 
-int func_ov002_020b8dd4(char *c)
+int _ZN9PushBlock8BehaviorEv(char *c)
 {
-    struct daObjPushblock_c *self = (struct daObjPushblock_c *)(void *)c;
+    struct PushBlock *self = (struct PushBlock *)(void *)c;
     Vector3 v;
     Vector3 dst;
     volatile Vector3 pos;

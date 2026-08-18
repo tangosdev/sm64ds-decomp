@@ -305,13 +305,13 @@ _ZN15daObjMarioCap_c13InitResourcesEv kind:function(arm,size=0x4c8) addr:0x020b8
 Cap_Spawn kind:function(arm,size=0x58) addr:0x020b8b98
 _ZN9PushBlockD1Ev kind:function(arm,size=0x4c) addr:0x020b8bf0
 _ZN9PushBlockD0Ev kind:function(arm,size=0x60) addr:0x020b8c3c
-func_ov002_020b8c9c kind:function(arm,size=0x78) addr:0x020b8c9c
-func_ov002_020b8d14 kind:function(arm,size=0x28) addr:0x020b8d14
-func_ov002_020b8d3c kind:function(arm,size=0x2c) addr:0x020b8d3c
-func_ov002_020b8d68 kind:function(arm,size=0x44) addr:0x020b8d68
-func_ov002_020b8dac kind:function(arm,size=0x28) addr:0x020b8dac
-func_ov002_020b8dd4 kind:function(arm,size=0x20c) addr:0x020b8dd4
-func_ov002_020b8fe0 kind:function(arm,size=0x12c) addr:0x020b8fe0
+_ZN9PushBlock4KillEv kind:function(arm,size=0x78) addr:0x020b8c9c
+_ZN9PushBlock15OnHitByMegaCharER6Player kind:function(arm,size=0x28) addr:0x020b8d14
+_ZN9PushBlock8OnPushedER8dActor_c kind:function(arm,size=0x2c) addr:0x020b8d3c
+_ZN9PushBlock16CleanupResourcesEv kind:function(arm,size=0x44) addr:0x020b8d68
+_ZN9PushBlock6RenderEv kind:function(arm,size=0x28) addr:0x020b8dac
+_ZN9PushBlock8BehaviorEv kind:function(arm,size=0x20c) addr:0x020b8dd4
+_ZN9PushBlock13InitResourcesEv kind:function(arm,size=0x12c) addr:0x020b8fe0
 PushBlock_Spawn kind:function(arm,size=0x3c) addr:0x020b910c
 _ZN11PowerFlowerD1Ev kind:function(arm,size=0x50) addr:0x020b9148
 _ZN11PowerFlowerD0Ev kind:function(arm,size=0x64) addr:0x020b9198
@@ -1825,8 +1825,8 @@ _ZTI15daObjMarioCap_c kind:data(any) addr:0x021095ac
 _ZTS15daObjMarioCap_c kind:data(any) addr:0x021095b8
 Cap_SpawnInfo kind:data(any) addr:0x021095cc ambiguous
 _ZTV15daObjMarioCap_c kind:data(any) addr:0x021095f0
-_ZTI16daObjPushblock_c kind:data(any) addr:0x0210966c
-_ZTS16daObjPushblock_c kind:data(any) addr:0x02109678
+_ZTI9PushBlock kind:data(any) addr:0x0210966c
+_ZTS9PushBlock kind:data(any) addr:0x02109678
 PushBlock_SpawnInfo kind:data(any) addr:0x0210968c
 _ZTV9PushBlock kind:data(any) addr:0x021096b0
 data_ov002_02109730 kind:data(any) addr:0x02109730

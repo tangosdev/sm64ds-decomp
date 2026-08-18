@@ -1,10 +1,19 @@
 //cpp
-// @symbol func_ov002_020b8fe0
-// recovered name: daObjPushblock_c_InitResources
-/* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN9PushBlock13InitResourcesEv
+/* recovered: vtable identified, shared common types, declarations from a shared header
+ *
+ * PushBlock::InitResources -- vtable slot 0, ov002 0x020b8fe0. Attributed by
+ * the vtable: _ZTV9PushBlock (ov002 0x021096b0) carries this address at slot
+ * 0, where _ZTV10dBgActor_c carries fBase_c's generic 0x02043c80.
+ *
+ * Kept as an extern "C" free function under the literal mangled name rather
+ * than a real `PushBlock::InitResources()` method -- the same shape
+ * include/dActor_c.h documents for fBase_c::InitResources and
+ * src/_ZN13BigBrickBlock13InitResourcesEv.c use: `self` arrives as a raw
+ * pointer and the body still reads/writes by hand offset, unconverted. The
+ * mangled name alone is enough to fill the vtable slot correctly; nothing
+ * here requires the class's true member syntax. */
 #include "decl_common.h"
-/* recovered: shared common types, renamed to Class_Method */
-/* daObjPushblock_c::InitResources - recovered from vtable slot identity */
 struct SharedFilePtr;
 struct BMD_File;
 struct KCL_File;
@@ -29,7 +38,7 @@ extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 extern SharedFilePtr data_ov002_0210df9c;
 extern SharedFilePtr data_ov002_0210df94;
 
-extern "C" int func_ov002_020b8fe0(char *self)
+extern "C" int _ZN9PushBlock13InitResourcesEv(char *self)
 {
     RaycastGround rg;
     V3 v;
