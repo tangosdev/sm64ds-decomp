@@ -135,6 +135,24 @@
     "src/func_ov006_021100a8.c": "tangosdev",
     "src/_ZN19cMgSmartball_slot_c12SaveSnapshotEv.cpp": "tangosdev",
     "src/START_INTRO_MINIMAP_ZOOM.c": "tangosdev",
-    "src/_ZN24cMgSmartball_propeller_c12SaveSnapshotEv.cpp": "tangosdev"
+    "src/_ZN24cMgSmartball_propeller_c12SaveSnapshotEv.cpp": "tangosdev",
+    "src/_ZN13BigBrickBlock15OnGroundPoundedER8dActor_c.cpp": "tangosdev",
+    "src/_ZN13BigBrickBlock11OnAttacked1ER8dActor_c.cpp": "tangosdev",
+    "src/_ZN13BigBrickBlock11OnAttacked2ER8dActor_c.cpp": "tangosdev",
+    "src/_ZN13BigBrickBlock8OnKickedER8dActor_c.cpp": "tangosdev",
+    "src/_ZN13BigBrickBlock15OnHitByMegaCharER6Player.cpp": "tangosdev",
+    "src/_ZN13QuestionBlock15OnGroundPoundedER8dActor_c.cpp": "tangosdev",
+    "src/_ZN13QuestionBlock11OnAttacked1ER8dActor_c.cpp": "tangosdev",
+    "src/_ZN13QuestionBlock8OnKickedER8dActor_c.cpp": "tangosdev",
+    "src/_ZN13QuestionBlock15OnHitByMegaCharER6Player.cpp": "tangosdev",
+    "src/_ZN13QuestionBlock19OnHitFromUnderneathER8dActor_c.cpp": "tangosdev",
+    "src/_ZN11VolcanoRing13InitResourcesEv.cpp": "tangosdev",
+    "src/_ZN11VolcanoRing16CleanupResourcesEv.cpp": "tangosdev",
+    "src/_ZN11VolcanoRing8BehaviorEv.cpp": "tangosdev",
+    "src/_ZN11VolcanoRing6RenderEv.cpp": "tangosdev",
+    "src/_ZN5Stump13InitResourcesEv.cpp": "tangosdev",
+    "src/_ZN5Stump8BehaviorEv.cpp": "tangosdev",
+    "src/_ZN5Stump15OnGroundPoundedER8dActor_c.cpp": "tangosdev",
+    "src/_ZN5Stump15OnHitByMegaCharER6Player.cpp": "tangosdev"
   }
 }
