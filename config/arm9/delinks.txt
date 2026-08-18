@@ -6069,6 +6069,7 @@ src/Matrix4x3_ApplyInPlaceToScale.c:
 
 src/func_0203c178.c:
     .text start:0x0203c178 end:0x0203c184
+    complete
 
 src/Matrix4x3_ApplyInPlaceToTranslation.c:
     complete
