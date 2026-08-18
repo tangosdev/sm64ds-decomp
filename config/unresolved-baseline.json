@@ -1,5 +1,5 @@
 {
- "eligible": 11029,
+ "eligible": 11042,
  "unresolved": {
   "arm9:0x02017848": {
    "name": "_ZN5FaderD0Ev",
@@ -83,18 +83,6 @@
     "overlay_66"
    ]
   },
-  "arm9:0x0203b4dc": {
-   "name": "_ZN4cstd5atan2E5Fix12IiES1_",
-   "missing": [
-    "func_01ff98f4"
-   ]
-  },
-  "arm9:0x0203c178": {
-   "name": "func_0203c178",
-   "missing": [
-    "func_020527e9"
-   ]
-  },
   "arm9:0x02044b30": {
    "name": "func_02044b30",
    "missing": [
@@ -115,42 +103,11 @@
     "func_00000600"
    ]
   },
-  "arm9:0x0206ece0": {
-   "name": "func_0206ece0",
-   "missing": [
-    "func_01ff9e2c"
-   ]
-  },
-  "arm9:0x0206f46c": {
-   "name": "func_0206f46c",
-   "missing": [
-    "_deq"
-   ]
-  },
-  "arm9:0x020708b4": {
-   "name": "func_020708b4",
-   "missing": [
-    "_deq"
-   ]
-  },
-  "arm9:0x02070c68": {
-   "name": "func_02070c68",
-   "missing": [
-    "func_01ff9d40"
-   ]
-  },
   "ov002:0x020bd664": {
    "name": "func_ov002_020bd664",
    "missing": [
     "_ZGVtable$8",
     "table$8"
-   ]
-  },
-  "ov002:0x020dc560": {
-   "name": "func_ov002_020dc560",
-   "missing": [
-    "func_01ff98f4",
-    "func_01ff99a4"
    ]
   },
   "ov002:0x020ec670": {
@@ -169,17 +126,12 @@
   "ov002:0x020f83a4": {
    "name": "_ZN14CutsceneObject13InitResourcesEv",
    "missing": [
-    "_Z5_Znwji",
     "func_02113c20"
    ]
   },
   "ov002:0x020feef4": {
    "name": "_ZN6Bullet13InitResourcesEv",
    "missing": [
-    "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPcP8BMD_Fileii",
-    "_Z35_ZN5Model8LoadFileER13SharedFilePtrPv",
-    "_Z53_ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jjPcP8dActor_ciijj",
-    "_Z61_ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_PcP8dActor_ciiP10Vector3_16i",
     "func_0211d610"
    ]
   },
@@ -212,7 +164,7 @@
    ]
   },
   "ov006:0x0210bdb0": {
-   "name": "func_ov006_0210bdb0",
+   "name": "_ZN12dScMgSlot3_c13InitResourcesEv",
    "missing": [
     "func_020bc8b4"
    ]
@@ -237,45 +189,15 @@
     "overlay_102"
    ]
   },
-  "ov015:0x02112da8": {
-   "name": "_ZN11FallBlockWf16CleanupResourcesEv",
-   "missing": [
-    "func_0213a2cc"
-   ]
-  },
-  "ov015:0x02112dbc": {
-   "name": "_ZN11FallBlockWf13InitResourcesEv",
-   "missing": [
-    "func_0213a794"
-   ]
-  },
   "ov021:0x02111434": {
    "name": "func_ov021_02111434",
    "missing": [
     "conv_ov021"
    ]
   },
-  "ov045:0x02111dfc": {
-   "name": "_ZN12FallBlockBfs16CleanupResourcesEv",
-   "missing": [
-    "func_0213a2cc"
-   ]
-  },
-  "ov045:0x02111e10": {
-   "name": "_ZN12FallBlockBfs13InitResourcesEv",
-   "missing": [
-    "func_0213a794"
-   ]
-  },
   "ov060:0x02117c30": {
    "name": "_ZN18BowserFireSeaArena13InitResourcesEv",
    "missing": [
-    "_Z13func_020393d4PvS_",
-    "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPvS_ii",
-    "_Z35_ZN5Model8LoadFileER13SharedFilePtrPv",
-    "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrPv",
-    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_",
-    "_Z91_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_v",
     "func_021115bc"
    ]
   },
@@ -287,37 +209,20 @@
    ]
   },
   "ov065:0x0211a358": {
-   "name": "func_ov065_0211a358",
+   "name": "_ZN16daObjCtMecha03_c13InitResourcesEv",
    "missing": [
-    "_Z30_ZN11ShadowModel10InitCuboidEvPv",
-    "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPvP8BMD_Fileii",
-    "_Z35_ZN5Model8LoadFileER13SharedFilePtrR13SharedFilePtr",
-    "_Z38_ZN10dBgActor_c19UpdateClsnPosAndRotEvPv",
-    "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrR13SharedFilePtr",
-    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvP8KCL_FileRK9Matrix4x3isR10CLPS_Block",
-    "_Z97_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_v",
     "func_02112198"
    ]
   },
   "ov065:0x0211b1d4": {
-   "name": "func_ov065_0211b1d4",
+   "name": "_ZN16daObjCtMecha05_c13InitResourcesEv",
    "missing": [
-    "MeshColliderLoadFile",
-    "ModelLoadFile",
-    "UpdatePosWithTransformSym",
-    "_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x3isR10CLPS_Block",
     "func_02112258"
    ]
   },
   "ov065:0x0211ba88": {
    "name": "_ZN15TtcRotatingGear13InitResourcesEv",
    "missing": [
-    "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPvS_ii",
-    "_Z35_ZN5Model8LoadFileER13SharedFilePtrPv",
-    "_Z38_ZN10dBgActor_c19UpdateClsnPosAndRotEvPv",
-    "_Z40_ZN10dBgActor_c21UpdateModelPosAndRotYEvPv",
-    "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrPv",
-    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPvS_S_isS_",
     "func_021121b8"
    ]
   },
@@ -330,10 +235,9 @@
   "ov066:0x021166c8": {
    "name": "func_ov066_021166c8",
    "missing": [
-    "_Z13func_02112c88v",
-    "_Z13func_02112cc8v",
-    "_Z19func_ov066_0211a35cv",
-    "_Z23func_02112cd8_updateposv"
+    "func_02112c88",
+    "func_02112cc8",
+    "func_02112cd8_updatepos"
    ]
   },
   "ov066:0x02116db0": {
@@ -367,17 +271,6 @@
   "ov066:0x02119ce8": {
    "name": "_ZN6Eyerok13InitResourcesEv",
    "missing": [
-    "_Z13func_020393c4PvS_",
-    "_Z13func_020393d4PvS_",
-    "_Z25_ZN8dActor_c9TrackStarEjjPvjj",
-    "_Z32_ZN11ShadowModel12InitCylinderEvPv",
-    "_Z34_ZN9ModelBase7SetFileEP8BMD_FileiiPvS_ii",
-    "_Z35_ZN5Model8LoadFileER13SharedFilePtrPv",
-    "_Z39_ZN9Animation8LoadFileER13SharedFilePtrPv",
-    "_Z43_ZN12MeshCollider8LoadFileER13SharedFilePtrPv",
-    "_Z46_ZN15TextureSequence8LoadFileER13SharedFilePtrPv",
-    "_Z70_ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jjPvS_P7Vector3iijj",
-    "_Z77_ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_BlockPviS_isS_",
     "func_02112c08",
     "func_02112ca8",
     "func_02112d48"
