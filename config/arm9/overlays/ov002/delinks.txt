@@ -1351,7 +1351,7 @@ src/func_ov002_020b9f80.cpp:
     complete
     .text start:0x020b9f80 end:0x020b9fec
 
-src/func_ov002_020b9fec.c:
+src/_ZN10StarSwitch15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x020b9fec end:0x020ba01c
 
