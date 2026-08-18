@@ -174,11 +174,11 @@ src/_ZN6ThwompD0Ev.c:
     complete
     .text start:0x02132998 end:0x02132a0c
 
-src/func_ov091_02132a0c.c:
+src/_ZN6Thwomp16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02132a0c end:0x02132a14
 
-src/func_ov091_02132a14.cpp:
+src/_ZN6Thwomp15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x02132a14 end:0x02132ab0
 
@@ -194,11 +194,11 @@ src/Thwomp_Spawn.c:
     complete
     .text start:0x02132cb8 end:0x02132d04
 
-src/func_ov091_02132d04.c:
+src/_ZN11daDsnBase_cD0Ev.c:
     complete
     .text start:0x02132d04 end:0x02132d6c
 
-src/func_ov091_02132d6c.c:
+src/_ZN11daDsnBase_cD1Ev.c:
     complete
     .text start:0x02132d6c end:0x02132dc0
 

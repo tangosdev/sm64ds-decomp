@@ -1,4 +1,4 @@
-// @symbol func_ov091_02132d6c
+// @symbol _ZN11daDsnBase_cD1Ev
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -10,7 +10,13 @@ extern int _ZTV10dBgActor_c[];
 /* recovered: vtable identified */
 /* vtable identified: VT0 = _ZTV11daDsnBase_c */
 extern void _ZN15TextureSequenceD1Ev(void *);
-int *func_ov091_02132d6c(int *t)
+/* daDsnBase_c::~daDsnBase_c() [D1, base object], slot 16. The class keeps
+   its destructor declared inline in daDsnBase_c.h so every descendant
+   inlines this body rather than emitting a `bl` here -- but the compiler
+   still needs one out-of-line copy for the vtable slot itself, which is
+   what this file spells directly under the destructor's real mangled
+   name rather than a func_ov091_ placeholder. */
+int *_ZN11daDsnBase_cD1Ev(int *t)
 {
     t[0] = (int)_ZTV11daDsnBase_c;
     _ZN11ShadowModelD1Ev((char *)t + 0x338);

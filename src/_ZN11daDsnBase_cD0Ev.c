@@ -1,4 +1,4 @@
-// @symbol func_ov091_02132d04
+// @symbol _ZN11daDsnBase_cD0Ev
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
@@ -11,7 +11,11 @@ extern int _ZTV10dBgActor_c[];
 /* vtable identified: VT0 = _ZTV11daDsnBase_c */
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *data_020a0eac;
-int *func_ov091_02132d04(int *t)
+/* daDsnBase_c::~daDsnBase_c() [D0, deleting], slot 17. Same reasoning as
+   the D1 file above: the class's own destructor stays inline, but the
+   vtable still needs a real deleting-destructor entry, spelled directly
+   under its mangled name. */
+int *_ZN11daDsnBase_cD0Ev(int *t)
 {
     t[0] = (int)_ZTV11daDsnBase_c;
     _ZN11ShadowModelD1Ev((char *)t + 0x338);
