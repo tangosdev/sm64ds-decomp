@@ -2,17 +2,18 @@
  * dScMgJump2_c : dScMgD3DBase_c, single edge, offset 0 (build/rtti.json).
  * Its own vtable is ov006:0x0213ccfc.
  *
- * SIZE 0x5a78 -- AND ITS FACTORY IS CARRYING ANOTHER CLASS'S NAME ENTIRELY.
- * The allocation lives in `_ZN8PathLift17BaseInitResourcesEv`
- * (ov006:0x020efaf0), which is neither a PathLift method nor a
- * BaseInitResources: its body is `operator new(0x5a78)`, dScMgBase_c's
- * constructor, dScMgD3DBase_c's vtable, mSysTracker, then THIS class's
- * vtable and every member below. A real `PathLift` class does exist -- in
- * ov002, `_ZN8PathLiftD1Ev` and friends at 0x020ef320..0x020eff18 -- so
- * this is a name matched across an OVERLAY BOUNDARY at a near-identical
- * address, not a coined one like MgBounceAndPounce was. Renaming it is a
- * separate change from this slice; it is recorded here so the next reader
- * is not misled, and so nobody concludes PathLift builds minigame scenes.
+ * SIZE 0x5a78 -- AND ITS FACTORY USED TO CARRY ANOTHER CLASS'S NAME ENTIRELY.
+ * The allocation lives in `dScMgJump2_c_Spawn` (ov006:0x020efaf0, renamed from
+ * the mangled `_ZN8PathLift17BaseInitResourcesEv`, which was neither a PathLift
+ * method nor a BaseInitResources): its body is `operator new(0x5a78)`,
+ * dScMgBase_c's constructor, dScMgD3DBase_c's vtable, mSysTracker, then THIS
+ * class's vtable and every member below. A real `PathLift` class does exist --
+ * in ov002, `_ZN8PathLiftD1Ev` and friends at 0x020ef320..0x020eff18 -- so the
+ * old name was matched across an OVERLAY BOUNDARY at a near-identical address,
+ * not a coined one like MgBounceAndPounce was. Renamed to the fallback
+ * `<ClassName>_Spawn` convention (compare daObjEmmLog_c_Spawn): no game object
+ * name is known for this minigame, unlike dScMgJump_c's own factory
+ * MgBounceAndPounce_Spawn.
  *
  * mModel IS DELIBERATELY RAW BYTES, and this is the interesting contrast
  * with dScMgJump_c. The ROM's destructor here destroys the Model FIRST,
