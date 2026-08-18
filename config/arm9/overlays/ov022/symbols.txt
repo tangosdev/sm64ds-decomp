@@ -1,9 +1,9 @@
 _ZN11VolcanoRingD1Ev kind:function(arm,size=0x44) addr:0x021111a0
 _ZN11VolcanoRingD0Ev kind:function(arm,size=0x58) addr:0x021111e4
-func_ov022_0211123c kind:function(arm,size=0x48) addr:0x0211123c
-func_ov022_02111284 kind:function(arm,size=0x28) addr:0x02111284
-func_ov022_021112ac kind:function(arm,size=0x1f0) addr:0x021112ac
-func_ov022_0211149c kind:function(arm,size=0xbc) addr:0x0211149c
+_ZN11VolcanoRing16CleanupResourcesEv kind:function(arm,size=0x48) addr:0x0211123c
+_ZN11VolcanoRing6RenderEv kind:function(arm,size=0x28) addr:0x02111284
+_ZN11VolcanoRing8BehaviorEv kind:function(arm,size=0x1f0) addr:0x021112ac
+_ZN11VolcanoRing13InitResourcesEv kind:function(arm,size=0xbc) addr:0x0211149c
 func_ov022_02111558 kind:function(arm,size=0xc) addr:0x02111558
 func_ov022_02111564 kind:function(arm,size=0x14) addr:0x02111564
 VolcanoRing_Spawn kind:function(arm,size=0x30) addr:0x02111578

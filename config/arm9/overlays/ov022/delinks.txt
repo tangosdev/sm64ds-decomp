@@ -12,19 +12,19 @@ src/_ZN11VolcanoRingD0Ev.c:
     complete
     .text start:0x021111e4 end:0x0211123c
 
-src/func_ov022_0211123c.cpp:
+src/_ZN11VolcanoRing16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211123c end:0x02111284
 
-src/func_ov022_02111284.cpp:
+src/_ZN11VolcanoRing6RenderEv.cpp:
     complete
     .text start:0x02111284 end:0x021112ac
 
-src/func_ov022_021112ac.c:
+src/_ZN11VolcanoRing8BehaviorEv.cpp:
     complete
     .text start:0x021112ac end:0x0211149c
 
-src/func_ov022_0211149c.c:
+src/_ZN11VolcanoRing13InitResourcesEv.cpp:
     complete
     .text start:0x0211149c end:0x02111558
 
