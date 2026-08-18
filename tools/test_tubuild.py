@@ -308,6 +308,17 @@ def test_promote_ledger_helpers_edit_surgically():
         rows = [json.loads(l) for l in ex.read_text(encoding="utf-8").splitlines()]
         assert rows == [{"path": "src/B.c", "reason": "why"}]
 
+        # port slice manifest: first legacy line becomes the TU, later ones drop,
+        # comments and unrelated lines are byte-preserved.
+        sl = pathlib.Path(td) / "slice.txt"
+        sl.write_text("# comment stays\nsrc/Other.c\nsrc/Legacy1.c\n"
+                      "src/Keep.c\nsrc/Legacy2.c\n", encoding="utf-8", newline="\n")
+        rep, drop = T._retarget_port_slice(sl, {"src/Legacy1.c", "src/Legacy2.c"},
+                                           "src/dir/TU.cpp")
+        assert (rep, drop) == (1, 1)
+        assert sl.read_text(encoding="utf-8") == (
+            "# comment stays\nsrc/Other.c\nsrc/dir/TU.cpp\nsrc/Keep.c\n")
+
 
 def test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explains():
     """plan sec 7.7: promotion is refused unless every required gate is green -- and

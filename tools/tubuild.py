@@ -2861,6 +2861,69 @@ def _prune_converted_baseline(removed_paths, reason_text, baseline=None, excepti
     return removed
 
 
+def _promote_port_plan(legacy, stems):
+    """(slice_edits, reasons) for port/'s path-keyed references to the legacy sources.
+
+    port/slice_gate*.txt manifests list repo-relative source paths the MSVC host
+    build compiles; a deleted path strands them (tools/port_refcheck.py check 1), and
+    the mechanical edit is well-defined: the first legacy line in a manifest becomes
+    the promoted TU's path, later ones are dropped (one merged file now defines what
+    N files defined). port/CMakeLists.txt's hostgen `set(*_SYMS ...)` lists are NOT
+    mechanically editable -- hostgen resolves each symbol to src/<sym>.c|.cpp by
+    stem, and a merged TU has no per-symbol file to resolve to -- so those refuse.
+    Reuses port_refcheck's own manifest set and regexes: one definition of what the
+    port references."""
+    reasons, slice_edits = [], {}
+    try:
+        import port_refcheck as PRC
+    except ImportError as exc:
+        return {}, [f"cannot import tools/port_refcheck.py to scan port/ references: {exc}"]
+    legacy_set = set(legacy)
+    for suffix in PRC.SLICE_GATE_SUFFIXES:
+        manifest = PRC.PORT / f"slice_gate{suffix}.txt"
+        if not manifest.is_file():
+            continue
+        hits = [l.strip() for l in manifest.read_text(encoding="utf-8",
+                                                      errors="ignore").splitlines()
+                if l.strip() in legacy_set]
+        if hits:
+            slice_edits[manifest.relative_to(REPO).as_posix()] = hits
+    cmake = PRC.PORT / "CMakeLists.txt"
+    if cmake.is_file():
+        masked = PRC._mask_comments(cmake.read_text(encoding="utf-8", errors="ignore"))
+        for m in PRC.SET_SYMS_RE.finditer(masked):
+            claimed = sorted(set(re.findall(r"\S+", m.group(2))) & set(stems))
+            if claimed:
+                reasons.append(f"port/CMakeLists.txt hostgen list {m.group(1)} names "
+                               f"symbol(s) {claimed} that resolve to legacy files being "
+                               f"deleted; hostgen has no way to resolve a symbol inside "
+                               f"a merged TU -- rework the port gate by hand first")
+    return slice_edits, reasons
+
+
+def _retarget_port_slice(path, legacy_set, dest_rel):
+    """Apply the slice-manifest edit _promote_port_plan planned for one file.
+
+    First legacy line becomes dest_rel (unless the manifest already lists it),
+    later legacy lines are dropped; every other line is copied byte-for-byte.
+    Returns (n_replaced, n_dropped)."""
+    text = path.read_text(encoding="utf-8", errors="ignore")
+    have_dest = any(l.strip() == dest_rel for l in text.splitlines())
+    out, replaced, dropped = [], 0, 0
+    for line in text.splitlines():
+        if line.strip() in legacy_set:
+            if not have_dest:
+                out.append(dest_rel)
+                have_dest = True
+                replaced += 1
+            else:
+                dropped += 1
+            continue
+        out.append(line)
+    path.write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
+    return replaced, dropped
+
+
 def _promote_tracker_plan(legacy, stems, dest_rel, tu_id):
     """(edits, reasons, warns) for the tracked ledgers a promotion touches.
 
@@ -3061,6 +3124,10 @@ def promote_preflight(data, entry, accept_name):
     warns.extend(tr_warns)
     plan["tracker_edits"] = tracker_edits
 
+    slice_edits, port_reasons = _promote_port_plan(legacy, stems)
+    reasons.extend(port_reasons)
+    plan["slice_edits"] = slice_edits
+
     # dsd's linker script selects contributions by object BASENAME (same check
     # linkcheck runs before its scratch link).
     if not reasons:
@@ -3080,7 +3147,7 @@ def promote_preflight(data, entry, accept_name):
     if tracker_edits["converted"]:
         touched += ["config/converted-baseline.json",
                     "config/converted-backslide-exceptions.jsonl"]
-    touched += list(tracker_edits["jsonl"])
+    touched += list(tracker_edits["jsonl"]) + list(slice_edits)
     plan["touched"] = touched
     code, out = _promote_git("status", "--porcelain", "--", *touched, dest_rel)
     if code != 0:
@@ -3269,6 +3336,9 @@ def _promote_apply(args, data, entry):
     for rel in edits["jsonl"]:
         p = REPO / rel
         snapshots[p] = p.read_bytes()
+    for rel in plan["slice_edits"]:
+        p = REPO / rel
+        snapshots[p] = p.read_bytes()
     tracked_restore = [plan["src_rel"], *legacy]
     created_dirs = []
 
@@ -3315,6 +3385,13 @@ def _promote_apply(args, data, entry):
             ledger_note[rel] = nch
             print(f"      {rel}: retargeted srcPath on {nch} record(s) (records kept, "
                   f"never deleted)")
+        for rel, hits in plan["slice_edits"].items():
+            nrep, ndrop = _retarget_port_slice(REPO / rel, set(legacy), dest_rel)
+            ledger_note[rel] = nrep + ndrop
+            print(f"      {rel}: {nrep} legacy line(s) -> {dest_rel}, {ndrop} dropped "
+                  f"(one merged file now defines what {nrep + ndrop} defined). NOTE: "
+                  f"this keeps port_refcheck green but does NOT run the MSVC host "
+                  f"build; run the port gate before trusting it")
 
         old_source = entry["source"]
         entry["status"] = "promoted"
@@ -3359,6 +3436,13 @@ def _promote_apply(args, data, entry):
         if new_findings:
             raise RuntimeError(f"layout_check reports NEW finding(s): {new_findings}")
         print("      layout_check: no new L1-L4 findings vs the pre-promotion tree")
+        head = dest.read_text(encoding="utf-8", errors="ignore")[:2000]
+        if "SHADOW translation unit" in head or "NOT ENROLLED" in head:
+            print("      NOTE: the promoted source still carries its shadow-TU banner "
+                  "(\"NOT ENROLLED\" prose is now false). Update it in a SEPARATE "
+                  "follow-up commit -- never in the move commit, which must stay a pure "
+                  "R100 rename or contributor lineage breaks "
+                  "(tools/prepush_attribution.py's rewrite-or-move rule).")
     except (RuntimeError, OSError, subprocess.SubprocessError) as exc:
         print(f"\nFAILED MID-APPLY: {exc}")
         print("rolling back to the pre-promotion tree...")
