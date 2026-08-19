@@ -331,3 +331,43 @@ func_ov006_0210a608  REAL_DECOMP  runs/link60/status/mgb.md  slot 5 AfterCleanup
 func_ov006_0210a698  REAL_DECOMP  runs/link60/status/mgb.md  slot 7 BeforeBehavior, 0x4c, 16 instructions plus a two-word pool. func_ov004_020b0620(this) with the early return 0; then the `data_020a0db0 & 1` test as ands/beq, and Particle::SysTracker::Update(this+0x471c) only inside it; return 1. Both literals resolve. Shared framework glue
 func_ov006_0210a664  REAL_DECOMP  runs/link60/status/mgb.md  slot 10 BeforeRender, 0x34, 13 instructions, no pool. func_ov004_020b04f4(this) with the conditional-epilogue early return 0 (addeq/moveq/ldmeq/bxeq, four predicated instructions rather than a branch), then Particle::RenderAll, return 1. Shared framework glue
 func_ov006_0210a600  REAL_DECOMP  runs/link60/status/mgb.md  slot 26, 0x8, 2 instructions: mov r0,#1; bx lr. src is `return 1`. There is no room in eight bytes for a body and a guess to differ
+
+# ---------------------------------------------------------------------------
+# run mg5 lane CCN, 2026-08-18. THE COINCENTRATION MINIGAME: dScMgCoin_c,
+# actor id 0x17a (scene 378), spawn symbol MgCoincentration_Spawn, vtable
+# data_ov006_0213bf50. The ROM's own RTTI at 0x0213bf24 reads "11dScMgCoin_c",
+# read out of the image rather than taken from the handover.
+#
+# THE HIERARCHY IS TWO DEEP, NOT THREE, and that is a difference from 0x169.
+# Both of this class's destructor slots are its OWN -- slot 16 (D2,
+# func_ov006_020dbe40) and slot 17 (D0, func_ov006_020dbe64) each write
+# data_ov006_0213bf50 into [this] and then go straight to func_ov004_020b29c0,
+# dScMgBase_c's teardown, with no intermediate table in between. So the chain is
+# Scene -> dScMgBase_c (0x020bc0c0) -> dScMgCoin_c (0x0213bf50) and the seat
+# fills ONE table, the way curling's does.
+#
+# SIX OVERRIDE SLOTS, FIVE MARKERS, which is what port/mg_fanout_costs.txt
+# section 3 predicts for this row and what a fresh diff against dScMgBase_c's
+# table confirms: slots 0, 6, 9, 16, 17 and 18 differ and nothing else does.
+# Slot 16's body carries no marker and needs no line here; it was disassembled
+# with the other five anyway, because it and slot 17 are what resolve the
+# vtable word and prove the hierarchy above.
+#
+# All five were disassembled out of extracted/overlays/overlay_0006.bin at base
+# 0x020bfec0 with port/tools/w13_dump.py -- the shipped image, deliberately not
+# a dsd export -- and compared instruction for instruction with src/. RESULT:
+# 5 REAL DECOMP, 0 genuine guesses, 0 unverifiable. No constant, offset,
+# literal, branch target or instruction count differs on any of the five.
+#
+# THE RECOVERED NAMES DISAGREE WITH THE BODIES ON THREE OF THE FIVE, which is
+# the marker doing what every lane before this one found it doing. Slots 17 and
+# 18 are both named dScMgCoin_c_OnYoshiTryEat and are the deleting destructor
+# and the state reset; the reset's name even carries its own address as a
+# suffix to keep the two apart. The names are wrong and the bodies are exact.
+#
+# Full ROM/src pairing: runs/mg5/out/ccn/adjudication_dumps.txt.
+func_ov006_020de704  REAL_DECOMP  mg_fanout_costs.txt  lane CCN. slot 0 InitResources, 0x23c, 135 instructions plus a nine-word literal pool every word of which src names (0x0209d45c, 0x0400000e, 0x00001210, 0x0000010a, 0x0000010b, 0x0209d454, 0x0400100e, 0x0208ee44). Both engines in ROM order: data_0209d45c |= 8, the 0x0400000e read-modify-write as bic 3 then and 0x43 orr 0x1210; LoadFile(0xa9) -> DecompressLZ16 to func_02054d88()+0x4000 -> Deallocate; LoadFile(0xaa) -> GX::LoadBGPltt(0x1e0, 0x20) -> Deallocate; LoadFile(0xab) -> func_02056314(0, 0x800) -> Deallocate; then the two OBJ files 0x10a and 0x10b held live in r5/r4 across the whole sub-engine block, DecompressLZ16 to 0x06400000 and GX::LoadOBJPltt(0, 0x100); then data_0209d454 |= 8 and the 0x0400100e write with an EXTRA orr 3 the main-engine twin does not have, which src spells; LoadFile(0xa9) -> G2S::GetBG3CharPtr()+0x4000; LoadFile(0xaa) -> GXS::LoadBGPltt(0x1e0, 0x20); LoadFile(0xa8) -> func_020562b4; then the same two held files replayed as DecompressLZ16 to 0x06600000 and GXS::LoadOBJPltt(0, 0x100) and both Deallocated last. Tail: +0xa8 = 0 then +0xac RELOADED FROM +0xa8 rather than from the register (src spells that too), data_0208ee44 = 1, the four class initialisers 020ddf9c / 020dd334 / 020dc7b4 / 020dc2f8, byte 0 at +0x51da and byte 2 at +0x51dc, func_ov004_020b04d0(0x20), +0x51d4 = func_ov004_020adc1c(), +0xa4 = 1, return 1
+func_ov006_020de69c  REAL_DECOMP  mg_fanout_costs.txt  lane CCN. slot 6 Behavior, 0x68, 25 instructions plus a one-word pool holding 0x02141810. The state index is read at c+0x5000+0x1c8 (0x51c8), then `add r3, r1, r0, lsl #3` -- an EIGHT-byte stride into data_ov006_02141810 -- then the five-instruction ARM Itanium pointer-to-member dispatch verbatim: ldr r1,[r3,#4] (the adjustment), add r0,r4,r1,asr#1, ands r1,r1,#1, the ldrne/ldrne/ldrne virtual arm and the ldreq plain arm, blx r1. Then func_ov006_020dc754, _020dc298, _020dc900, _020dce3c in src's order and return 1. That dispatch sequence is compiler-emitted from a real member-pointer call and is not a shape anyone writes into a guess; it is also this class's half of the wall, and the +0x51c8 index cross-confirms slot 18, which zeroes the same offset
+func_ov006_020de63c  REAL_DECOMP  mg_fanout_costs.txt  lane CCN. slot 9 Render, 0x60, 24 instructions, no literal pool. Ten calls with the receiver reloaded from r4 before each: 020dccb8, 020dcd74, 020dc814, 020dd594, 020dc3bc, 020dbe9c, 020dc99c, 020dc870, 020dcea8, 020dcc48, then mov r0,#1 and return. src lists the same ten in the same order and nothing else. The sixth callee, func_ov006_020dbe9c, has a config symbol (0xe0) and NO delink block and NO src file, so this body reaches a floor -- that is a fact about the callee, not a defect in this body
+func_ov006_020dbe64  REAL_DECOMP  mg_fanout_costs.txt  lane CCN. slot 17 D0, 0x38, 12 instructions plus a two-word pool. str data_ov006_0213bf50 into [this] -- this class's OWN vtable, which is the strongest single confirmation that 0x0213bf50 is the right table for this id -- then func_ov004_020b29c0(this), then Memory::Deallocate(this, the word at data_020a0eac loaded BY VALUE), return this. src spells the first as VT and the heap as HEAP, both per-TU PLACEHOLDERS out of include/decl_common.h that exist in no config, and the ROM literal pool resolves them to exactly those two. Its unmarked D2 sibling 020dbe40 stores the SAME vtable word, which cross-confirms the resolution the way curling's 020e0638 does for 020e065c. The recovered NAME says OnYoshiTryEat and is wrong; the body is the deleting destructor
+func_ov006_020de5b0  REAL_DECOMP  mg_fanout_costs.txt  lane CCN. slot 18 state reset, 0x8c, 34 instructions plus a one-word pool holding 0x000051da. The guard is a PREDICATED else-first shape -- ldrb +0x51db, cmp 0, moveq/strbeq zeroing +0x51da and beq past the increment -- which is why src writes the zero in the else arm and the increment in the then arm rather than the other way round; +0x51da is the pooled literal added to r4 rather than an immediate offset, and src spells that site with its own cast. Then +0xa8 = 0 and +0xac RELOADED from +0xa8 (the same idiom slot 0 uses), func_ov006_020ddf9c, bl 0x020b0aa0 with r0 = 0x1d which ov004's symbols.txt names FreeGfxSlotsById, then 020dd334 / 020dc7b4 / 020dc2f8, +0x51d4 = func_ov004_020adc1c(), and +0x51c8 = 0 -- the SAME state index slot 6 dispatches on, which cross-confirms both. Void return. The recovered NAME says OnYoshiTryEat and is wrong

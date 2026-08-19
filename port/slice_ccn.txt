@@ -1,0 +1,175 @@
+# Lane CCN of run mg5: dScMgCoin_c, the Coincentration minigame.
+#
+# actor id 0x17a (scene 378), spawn symbol MgCoincentration_Spawn (0x020de940),
+# SpawnInfo 0x0213bedc, vtable data_ov006_0213bf50, RTTI "11dScMgCoin_c" at
+# 0x0213bf24. Every one of those was re-derived from the ROM by this lane
+# rather than taken from the handover: the doubled-id word 0x017a017a sits at
+# file offset 0x7c020 of extracted/overlays/overlay_0006.bin (base 0x020bfec0),
+# which puts the record at 0x0213bedc with the factory in the word before it.
+#
+# THE WIDTH IS 36 AND IT WAS CHECKED THREE WAYS, port/mg_fanout_costs.txt
+# section 11's checks, because twelve widths in that file's section 3 table
+# were phantoms:
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol
+#      (data_ov006_0213bfe0) exactly 0x90 bytes past the vtable, so 36 words is
+#      an upper bound and a 37th slot cannot exist inside the table.
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, the word every dScMgBase_c-
+#      derived table holds there.
+#   3. WHAT THE WORD PAST IT IS. Index 36 reads 0x01fc00fc, which is an address
+#      in no module -- it is the first word of data_ov006_0213bfe0.
+#
+# SIX OVERRIDES, FIVE MARKERS, which the fan-out table predicts and a fresh
+# diff against dScMgBase_c's own table (data_ov004_020bc0c0) confirms: slots
+# 0, 6, 9, 16, 17 and 18 differ and no other slot does. All five marker bodies
+# were disassembled out of the shipped overlay image and ruled REAL_DECOMP
+# before anything was seated; port/tools/inferred_stub_adjudicated.txt carries
+# the per-body evidence.
+#
+# THE HIERARCHY IS TWO DEEP. Slot 16 (D2, func_ov006_020dbe40) and slot 17
+# (D0, func_ov006_020dbe64) both store data_ov006_0213bf50 into [this] and then
+# call func_ov004_020b29c0 directly, with no intermediate table between. So the
+# seat fills ONE derived table, the way curling's does, and not the two 0x169
+# needed.
+#
+# HOW THIS LIST WAS DERIVED. A relocation closure from TWO roots, the SpawnInfo
+# record and the class's own overlay constructor __sinit_ov006_0213014c, which
+# is the correction port/mg_fanout_costs.txt section 1 makes to a SpawnInfo-only
+# walk. Measured on this class, with module residency enforced (ov002, ov003,
+# ov006 and ov007 share an address window, so an address alone does not name a
+# symbol -- a first version of the walk that resolved by address alone reported
+# the whole window four times over):
+#
+#     SpawnInfo root only      ov006  27 fn   ov004  95 fn   arm9 587 fn
+#     + its own .init root     ov006  64 fn   ov004 162 fn   arm9 598 fn
+#
+# THE arm9 AND ov004 FRAMEWORK HALVES ARE NOT REPEATED HERE. port/slice_mg1.txt
+# already lists 152 ov004 TUs, the 35 overlay constructors and the arm9 waves
+# the framework needed, and CMake appends both lists to the same targets and
+# dedupes identical absolute paths. Only the delta is below.
+#
+# TWO ov006 BODIES IN THE CLOSURE HAVE NO SOURCE AT ALL and are therefore not
+# here. Neither has a delink block in config/arm9/overlays/ov006/delinks.txt
+# and neither has a src file in either extension, checked rather than assumed:
+#     func_ov006_020dbe9c  0xe0   the sixth callee of slot 9, Render
+#     func_ov006_020dd0e0  0x1ec  slot 0 of state table data_ov006_021417b0,
+#                                 which port/tools/stategen.py REFUSES for
+#                                 exactly this reason
+# So this class has TWO hard floors, one on the render path and one state it
+# cannot reach. Both are decomp gaps, not port ones.
+#
+# SEVEN TUs ARE HOST-COPIED AND ARE COMMENTED OUT BELOW. They are the mwcc
+# POINTER-TO-MEMBER dispatchers and the port cannot compile any of them: mwcc's
+# member pointer is eight bytes where MSVC's is four, so the tables stride
+# wrong and the call sequence is a different shape. Their bodies are in
+# port/unmatched/MgCoin_StateDispatch.cpp, each verbatim but for the table
+# declaration and the call.
+#
+# ONLY FOUR OF THE SEVEN WOULD EVER BE NAMED BY A LINK, and this lane swept for
+# `::*` across the whole closure rather than trusting an LNK1120, which is the
+# rule port/mg_fanout_costs.txt section 4 states. THREE ARE SILENT: two declare
+# their Entry table inside extern "C" (func_ov006_020dc298, _020dc754) and one
+# declares it as `extern "C" Entry data_ov006_02141840[]` (func_ov006_020ddd6c),
+# so all three mangle as the plain C name the ov006 mount already defines and
+# the linker is satisfied while the stride is wrong. The sweep found exactly
+# fifteen `::*` TUs in the closure: these seven and the eight ov004 ones
+# MG1/MG2 already host-copied.
+#
+# NONE OF THE SEVEN PUTS A MEMBER POINTER IN AN OBJECT FIELD, which is the
+# worse ov004 defect class (a four-byte field where the ROM has eight moves
+# every field after it). All seven dispatch through a table, so their struct
+# layouts are correct and only the stride and the call sequence are wrong.
+
+# ---- ov006: dScMgCoin_c's own closure --------------------------------------
+src/MgCoincentration_Spawn.cpp
+src/func_ov006_020dbe40.c
+src/func_ov006_020dbe64.c
+src/func_ov006_020dbf7c.c
+src/func_ov006_020dc154.c
+src/func_ov006_020dc1c4.c
+src/func_ov006_020dc26c.c
+src/func_ov006_020dc294.c
+# HOST-COPIED (CCN): src/func_ov006_020dc298.cpp -- table data_ov006_021417c8, arity 1, SILENT (Entry declared inside extern "C")
+src/func_ov006_020dc2f8.c
+src/func_ov006_020dc334.c
+src/func_ov006_020dc348.c
+src/func_ov006_020dc370.c
+src/func_ov006_020dc3bc.c
+src/func_ov006_020dc414.c
+src/func_ov006_020dc4b0.c
+src/func_ov006_020dc4c8.c
+src/func_ov006_020dc5c4.c
+src/func_ov006_020dc6d0.c
+# HOST-COPIED (CCN): src/func_ov006_020dc754.cpp -- table data_ov006_021417e8, arity 1, SILENT (Entry declared inside extern "C")
+src/func_ov006_020dc7b4.c
+src/func_ov006_020dc7fc.c
+src/func_ov006_020dc814.c
+src/func_ov006_020dc870.c
+src/func_ov006_020dc900.c
+src/func_ov006_020dc960.c
+src/func_ov006_020dc99c.c
+src/func_ov006_020dca04.c
+src/func_ov006_020dcb1c.c
+src/func_ov006_020dcc48.c
+src/func_ov006_020dccb8.c
+src/func_ov006_020dcd74.c
+src/func_ov006_020dce3c.c
+src/func_ov006_020dcea8.c
+src/func_ov006_020dcffc.c
+src/func_ov006_020dd000.c
+# HOST-COPIED (CCN): src/func_ov006_020dd2cc.cpp -- table data_ov006_021417b0, arity 1, link-visible as ?..@@3PAUEntry@@A
+src/func_ov006_020dd334.c
+src/func_ov006_020dd4b0.c
+src/func_ov006_020dd594.c
+src/func_ov006_020dd658.c
+src/func_ov006_020dd7bc.c
+src/func_ov006_020dd7c0.c
+src/func_ov006_020dd880.c
+src/func_ov006_020dda94.c
+src/func_ov006_020ddca0.c
+src/func_ov006_020ddcf8.c
+# HOST-COPIED (CCN): src/func_ov006_020ddd6c.cpp -- table data_ov006_02141840, arity 1, SILENT (extern "C" Entry)
+src/func_ov006_020dde28.c
+src/func_ov006_020ddeb0.cpp
+src/func_ov006_020ddf9c.c
+src/func_ov006_020de0e0.cpp
+src/func_ov006_020de1d4.c
+# HOST-COPIED (CCN): src/func_ov006_020de26c.cpp -- table data_ov006_02141840, arity 1, link-visible; ALSO state slot 3 of 02141810
+# HOST-COPIED (CCN): src/func_ov006_020de440.cpp -- table data_ov006_02141840, arity 1, link-visible; ALSO state slot 2 of 02141810
+src/func_ov006_020de584.c
+src/func_ov006_020de5ac.c
+src/func_ov006_020de5b0.c
+src/func_ov006_020de63c.c
+# HOST-COPIED (CCN): src/func_ov006_020de69c.cpp -- table data_ov006_02141810, arity 0, link-visible; VTABLE SLOT 6, Behavior
+src/func_ov006_020de704.c
+
+# ---- ov004: the five the coin closure reaches that slice_mg1.txt does not ---
+# The framework half is slice_mg1.txt's and is not repeated. These five are
+# reached from dScMgCoin_c's own bodies and had no other caller in the build,
+# so /OPT:REF had dropped them. Three more ov004 TUs the closure reaches are
+# DELIBERATELY ABSENT because MG1/MG2 already answered them and adding a line
+# would put a second definition in the link:
+#     func_ov004_020aeed8  host copy, port/unmatched/MgBase_DeclConflict.cpp
+#     func_ov004_020b0620  host copy, port/unmatched/MgBase_Slot7.cpp
+#     func_ov004_020b87e0  the framework's own PMF state setter, a named trap
+#                          in port/hal/scene_mg_faces.cpp
+src/func_ov004_020adf70.c
+src/func_ov004_020adfc4.c
+src/func_ov004_020b023c.cpp
+src/func_ov004_020b0380.cpp
+src/func_ov004_020b1de8.c
+
+# ---- ov001: two more of ov004's touch layer --------------------------------
+# slice_mg1.txt took four ov001 bodies (TouchArea_Update and three siblings);
+# this class reaches two more of the same layer.
+src/func_ov001_020ab54c.c
+src/func_ov001_020ab550.c
+
+# ---- SECOND WAVE: one arm9 TU the first link named ------------------------
+# src/func_020127a4.c is a matched arm9 body (0x48) that three of this class's
+# bodies call -- func_ov006_020dd4b0, _020dd658 and _020dda94 -- and that had
+# no other caller in the build, so /OPT:REF had already dropped it. It is the
+# exception to "the arm9 half comes back for free", the same shape
+# slice_mg1.txt's second wave records for its twenty. A SLICE LINE AND NOT A
+# FACE: the name being unresolved says nothing about which it is, and this one
+# has a matched TU of its own.
+src/func_020127a4.c
