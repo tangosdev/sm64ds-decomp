@@ -1,0 +1,33 @@
+    .text       start:0x021111a0 end:0x02112228 kind:code align:32
+    .rodata     start:0x02112228 end:0x02112458 kind:rodata align:4
+    .init       start:0x02112458 end:0x02112b34 kind:code align:4
+    .ctor       start:0x02112b34 end:0x02112b44 kind:rodata align:4
+    .data       start:0x02112b60 end:0x02113c20 kind:data align:32
+    .bss        start:0x02113c20 end:0x02113ee0 kind:bss align:32
+src_tu/actors/Bird.cpp:
+    .text start:0x021111a0 end:0x02111a70
+    .init start:0x02112458 end:0x02112524
+    .ctor start:0x02112b34 end:0x02112b38
+    .data start:0x021138fc end:0x021139b0
+    .bss start:0x02113c20 end:0x02113c68
+
+src_tu/actors/CastleWater.cpp:
+    .text start:0x02111a70 end:0x02111dc4
+    .init start:0x02112524 end:0x02112a5c
+    .ctor start:0x02112b38 end:0x02112b3c
+    .data start:0x021139f4 end:0x02113a74
+    .bss start:0x02113c68 end:0x02113e88
+
+src_tu/actors/MetalNet.cpp:
+    .text start:0x02111dc4 end:0x02112078
+    .init start:0x02112a5c end:0x02112ac8
+    .ctor start:0x02112b3c end:0x02112b40
+    .data start:0x02113a98 end:0x02113b2c
+    .bss start:0x02113e88 end:0x02113eb0
+
+src_tu/actors/Flag.cpp:
+    .text start:0x02112078 end:0x02112228
+    .init start:0x02112ac8 end:0x02112b34
+    .ctor start:0x02112b40 end:0x02112b44
+    .data start:0x02113b7c end:0x02113c08
+    .bss start:0x02113eb0 end:0x02113ee0
