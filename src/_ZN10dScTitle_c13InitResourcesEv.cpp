@@ -1,9 +1,11 @@
 //cpp
 #include "types.h"
-// @symbol func_ov003_020ada9c
-// recovered name: dScTitle_c_InitResources
+// @symbol _ZN10dScTitle_c13InitResourcesEv
 /* recovered: renamed to Class_Method */
-/* dScTitle_c::InitResources - recovered from vtable slot identity */
+/* dScTitle_c::InitResources() -- vtable slot 0. extern "C" carries the
+ * literal mangled name unmangled -- see include/dScTitle_c.h. This body
+ * never touches its own fields (only forwards `this` on to
+ * func_ov003_020ad6ec), so it does not need the header. */
 extern "C" {
 extern void UnloadArchives(void);
 extern void Enable3dEngines(void);
@@ -31,7 +33,7 @@ namespace GX {
 namespace G2 { unsigned short *GetBG0ScrPtr(); }
 namespace Sound { void LoadInitialGroup(int); void LoadAndSetMusic_Layer1(int); }
 
-extern "C" int func_ov003_020ada9c(int arg)
+extern "C" int _ZN10dScTitle_c13InitResourcesEv(int arg)
 {
     UnloadArchives();
     Enable3dEngines();

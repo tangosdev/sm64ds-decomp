@@ -1,3 +1,7 @@
+// @symbol _ZN13dScGameOver_c8BehaviorEv
+/* dScGameOver_c::Behavior() -- vtable slot 6. Plain C carries the literal
+ * mangled name with no mangling needed -- see include/dScGameOver_c.h.
+ * `self[0x90..0x94]` here are unk_090..unk_094 there. */
 struct VT { void *v0, *v1, *v2, *v3, *v4; int (*m_14)(void *); };
 struct Obj { struct VT *vt; };
 
@@ -18,7 +22,7 @@ extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
 extern int data_0208ee44;
 
-int func_ov003_020b0894(unsigned char *self)
+int _ZN13dScGameOver_c8BehaviorEv(unsigned char *self)
 {
     struct Obj *o = data_0209f5bc;
 

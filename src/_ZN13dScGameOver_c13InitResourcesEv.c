@@ -1,10 +1,12 @@
 #include "types.h"
-// @symbol func_ov003_020b0b3c
-// recovered name: dScGameOver_c_InitResources
+// @symbol _ZN13dScGameOver_c13InitResourcesEv
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScGameOver_c::InitResources - recovered from vtable slot identity */
+/* dScGameOver_c::InitResources() -- vtable slot 0. Plain C carries the
+ * literal mangled name with no mangling needed -- see
+ * include/dScGameOver_c.h. Field writes below stay raw pointer offsets
+ * (this is a plain-C TU, so it cannot include the C++ header); they line
+ * up with unk_050/unk_060/unk_070/unk_080 and unk_090..unk_094 there. */
 extern void _ZN2GX12SetBankForBGEt(u16 v);
 extern void _ZN2GX13SetBankForOBJEt(u16 v);
 extern void _ZN2GX15SetBankForSubBGEt(u16 v);
@@ -26,7 +28,7 @@ extern u8 data_0209d454;
 extern u8 data_0209f204;
 extern int data_0208ee44;
 
-int func_ov003_020b0b3c(void *arg)
+int _ZN13dScGameOver_c13InitResourcesEv(void *arg)
 {
     char *c = (char *)arg;
     int f;
