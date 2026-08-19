@@ -1,12 +1,12 @@
 //cpp
 #include "types.h"
 #include "nitro/hw/registers.h"
-// @symbol _ZN5Stage14GraphCallback2EP12SceneRelated
+// @symbol _ZN5Stage14GraphCallback2Ev
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Stage.h"
-// Stage::GraphCallback2 - sets BG3 affine transform from SceneRelated
+// Stage::GraphCallback2 - sets BG3 affine transform from the callback object
 struct Matrix2x2 {
     s32 unk0;
     s32 unk4;
@@ -36,11 +36,19 @@ struct SceneRelated {
    is what catches it. */
 extern "C" void _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(vu16* reg, struct Matrix2x2* mat, s32 a, s32 b, s32 c, s32 d);
 
-/* Static, and the parameter is what the mangled name has always said it is.
-   This file used to take `struct Stage *self` and then cast it to SceneRelated*
-   on every use -- four casts in one call -- which is the shape of a declaration
-   that lost an argument against a name that kept it. */
-s32 Stage::GraphCallback2(SceneRelated *scene) {
+/* Nullary, and a member: the previous name here,
+   _ZN5Stage14GraphCallback2EP12SceneRelated, guessed a SceneRelated* second
+   argument that no caller ever passes. This is vtable slot 2 of
+   dScStage_c::graphCallback_c (RTTI si-child of dGraph_c::callback_c), and
+   every dispatcher -- func_02018ec0, func_02018efc -- calls it as
+   `ldr r1,[r0]; ldr r1,[r1,#8]; blx r1` with r0 = the callback object and
+   r1 never set as an argument. The "SceneRelated" this body reads is the
+   callback object itself: `this`, vptr at +0 (never touched as data), a
+   fixed-point matrix at +0x4 that the object's static-init constructor at
+   0x02074edc seeds with 0x1000 (1.0). The Stage:: scope is the family's
+   legacy naming for dScStage_c and moves when that class does. */
+s32 Stage::GraphCallback2() {
+    SceneRelated *scene = (SceneRelated *)this;
     _ZN3G2x12SetBGyAffineEPVtP9Matrix2x2iiii(
         REG_DB_BG3PA,
         (struct Matrix2x2*)&scene->unk4,

@@ -228,8 +228,16 @@ struct Stage : dScene_c {
     static void ResetMeshColliders();
     static int  IsPauseDisabled();
     static int  CanPause();
-    static int  GraphCallback1();
-    static int  GraphCallback2(SceneRelated *scene);
+    /* Scene-graph hooks: vtable slots 1/2 of dScStage_c::graphCallback_c
+       (RTTI si-child of dGraph_c::callback_c -- see dGraph_c.h). Virtual
+       and nullary in the ROM: dispatchers call through the object's vptr
+       with r0 = the callback object and no other argument; GraphCallback2
+       reads its fields (fixed-point matrix at +0x4) through `this`. Members
+       of Stage only as the family's legacy scope for dScStage_c; non-static
+       because slot 2 needs `this`, non-virtual to keep their TUs from
+       emitting a vtable the delink ranges do not own. */
+    int  GraphCallback1();
+    int  GraphCallback2();
 };
 
 #endif
