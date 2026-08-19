@@ -2035,6 +2035,29 @@ void *port_mg_curling_spawn(void);
 void port_scene_fill_curling(void);
 }
 
+/* Run mg5, lane PCH. dScMgPachinko_c, actor id 0x170 = scene 368, the Bob-omb
+   Squad slingshot minigame. The row is APPENDED AFTER curling's rather than
+   inserted, and that ordering is load-bearing rather than tidy:
+   port_scene_registry_install walks this table in order and calls every row's
+   fill on every boot, while port_scene_mg_overlay_load runs the thirty-five
+   overlay constructors ONCE PER PROCESS behind a `static int done` reached from
+   the tail of the first minigame row's fill. So the first minigame row in this
+   table is the one whose fill runs the constructors, and a row inserted BEFORE
+   curling's would move that. port/mg_fanout_costs.txt section 11 is the
+   analysis; its conclusion is that a wrong-width fill announces itself or stays
+   latent depending on this order, and that the fix belongs in the WIDTH. This
+   seat's width is 36 and is checked three ways in hal/scene_mg.cpp section 8,
+   so the ordering here is defence in depth rather than the remedy.
+
+   reads_sublevel is 0 for the reason the curling row's comment gives, re-checked
+   for this class: no relocation in ov006 lands on data_02092110 and no TU in
+   this class's closure names it. */
+extern "C" {
+extern unsigned char MgBobOmbSquad_SpawnInfo[];
+void *port_mg_pachinko_spawn(void);
+void port_scene_fill_pachinko(void);
+}
+
 static const PortSceneClass port_scene_classes[] = {
     {4, "SCENE_STAR_SELECT", StarSelect_SpawnInfo, StarSelect_Spawn,
      scene_fill_starsel, 1},
@@ -2045,6 +2068,9 @@ static const PortSceneClass port_scene_classes[] = {
        this table. */
     {374, "SCENE_MG_CURLING", MgShuffleShell_SpawnInfo, port_mg_curling_spawn,
      port_scene_fill_curling, 0},
+    /* 368 is 0x170, spelled in decimal for the reason the row above is. */
+    {368, "SCENE_MG_PACHINKO", MgBobOmbSquad_SpawnInfo, port_mg_pachinko_spawn,
+     port_scene_fill_pachinko, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
