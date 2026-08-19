@@ -981,3 +981,222 @@ extern "C" void port_scene_mg_hits(void)
                     "the 7 trapping sites was reached)\n");
     std::fflush(stdout);
 }
+
+// ============================================================================
+// LANE LUI, run mg5: dScMgLuigi_c, actor id 0x16e = scene 366, "Wanted!".
+// ============================================================================
+//
+// APPENDED AT THE END OF THE FILE ON PURPOSE. Five lanes of run mg5 are each
+// adding one of these blocks to this file at once, and appending is the shape
+// that concatenates. Everything above is reused unchanged: kMgBaseFaces,
+// mg_apply, mg_raw_left, port_scene_mg_mounts, port_scene_mg_prepare,
+// port_scene_fill_rom and the g_mg_hits counters are all shared, which is the
+// split port/mg_fanout_costs.txt section 2 calls the whole cost model.
+//
+// THE CLASS, RE-DERIVED FROM THE ROM RATHER THAN FROM THE COST FILE. The
+// derivation and the three width checks are in port/slice_lui.txt section 1;
+// the short form is that the doubled-id word 0x016e016e sits at 0x0213ce10, so
+// MgWanted_SpawnInfo is 0x0213ce0c and the factory word before the id pair is
+// 0x020f3800; the factory's own load relocation (relocs.txt from:0x020f3830)
+// names data_ov006_0213cf10; and the ROM's RTTI string at 0x0213ce60 reads
+// "12dScMgLuigi_c". The spawn symbol says Wanted and the class says Luigi and
+// both are the ROM's, which is curling's MgShuffleShell/dScMgCurling_c shape
+// exactly.
+//
+// TWO TABLES, NOT THREE. Both deleting destructors (func_ov006_020efc0c slot
+// 16 and func_ov006_020efc30 slot 17) store data_ov006_0213cf10 and then call
+// func_ov004_020b29c0 with nothing in between, so the chain is
+// Scene -> dScMgBase_c -> dScMgLuigi_c and the fill does the base's table and
+// this one. dScMgCup_c needed a third because its destructors write an
+// intermediate base's.
+//
+// ALL SEVEN OVERRIDE SLOTS, and the fill below writes every one of the
+// thirty-six. "ruled" means the body was disassembled out of
+// extracted/overlays/overlay_0006.bin at base 0x020bfec0 with
+// port/tools/w13_dump.py and compared instruction for instruction with src/
+// BEFORE it was seated; the per-body evidence is in
+// port/tools/inferred_stub_adjudicated.txt.
+//
+//   slot  ROM word    module  body
+//    0   020f3460    ov006   InitResources            ruled REAL_DECOMP
+//    5   020efc68    ov006   AfterCleanupResources    ruled REAL_DECOMP
+//    6   020f3414    ov006   Behavior                 ruled REAL_DECOMP
+//    9   020f33c0    ov006   Render                   ruled REAL_DECOMP
+//   16   020efc0c    ov006   D2                       (no marker, checked)
+//   17   020efc30    ov006   D0                       ruled REAL_DECOMP
+//   18   020f3294    ov006   state reset              ruled REAL_DECOMP
+//   --   the other twenty-nine are dScMgBase_c's or arm9's and are already
+//        keyed by address in kMgBaseFaces and port_scene_fill_rom
+//   --   word 36 reads 2f474d2f, the ASCII "/MG/" of the path string slot 0
+//        loads by name, which is what closes the table
+//
+// SLOT 18 TAKES AN ARGUMENT AND THE THUNK CLEANS IT. Every dispatch of vtable
+// offset 0x48 in ov004 and ov006 was scanned out of the two overlay images
+// word by word: twenty-two sites, and every ov006 one sets r1 first (mvn r1,#0
+// at most of them, mov r1,#3/#4/#5 at five). The one ov004 site,
+// func_ov004_020b29a0, does not set r1 -- and its own src spells the virtual
+// as `v18(void*)` and forwards its second parameter, so the host side pushes
+// an argument there too. So mgl_reset below declares the stack parameter and
+// __fastcall cleans four, which is the signature repair
+// port/fader_boot_map.txt section 9 audits twelve of. mg_reset and
+// mb_reset_base above do NOT declare it; that is slice_mg1's to look at, and
+// this comment is the only thing this lane does about it.
+//
+// SLOT 5 IS OVERRIDDEN AND STILL REACHES THE FRAMEWORK'S BODY.
+// func_ov006_020efc68 tears the IRQ 2 handler down and then tail-calls
+// func_ov004_020b0840 with both arguments, which is the ov004 body carrying
+// port/mg_fanout_costs.txt section 6c's delete-with-no-pointer defect. The
+// defect is inside that ov004 body, not in this class's override, so it is not
+// repaired here.
+
+extern "C" {
+
+extern unsigned char data_ov006_0213cf10[];   /* dScMgLuigi_c, 36 slots */
+extern unsigned char MgWanted_SpawnInfo[];
+
+/* the seven override bodies. func_ov006_020f3414 is the host copy in
+   port/unmatched/MgLuigi_StateDispatch.cpp, not the src TU: it is the class's
+   pointer-to-member dispatch and the src cannot be compiled. */
+int   func_ov006_020f3460(void *self);          /* slot  0 InitResources     */
+int   func_ov006_020efc68(int self, int flag);  /* slot  5 AfterCleanup      */
+int   func_ov006_020f3414(void *self);          /* slot  6 Behavior, HOSTED  */
+int   func_ov006_020f33c0(void *self);          /* slot  9 Render            */
+int   func_ov006_020efc0c(int *self);           /* slot 16 D2                */
+int  *func_ov006_020efc30(int *self);           /* slot 17 D0                */
+void  func_ov006_020f3294(char *self, int arg); /* slot 18 state reset       */
+
+int *MgWanted_Spawn(void);
+
+/* the class's state-dispatch witness; MgLuigi_StateDispatch.cpp */
+void port_mg_luigi_counts(unsigned *hits, unsigned *floor, unsigned *nosrc);
+/* the ov004 body with no source that slot 9 reaches; MgLuigi_Faces.cpp */
+unsigned port_mg_luigi_ov004_trap_hits(void);
+
+void port_scene_mg_luigi_hits(void);
+
+}  /* extern "C" */
+
+static int  __fastcall mgl_init(void *s, void *)
+{ MG_SLOT(0);  return func_ov006_020f3460(s); }
+static void __fastcall mgl_aclean(void *s, void *, unsigned f)
+{ MG_SLOT(5);  func_ov006_020efc68((int)(size_t)s, (int)f); }
+static int  __fastcall mgl_beh(void *s, void *)
+{ MG_SLOT(6);  return func_ov006_020f3414(s); }
+static int  __fastcall mgl_render(void *s, void *)
+{ MG_SLOT(9);  return func_ov006_020f33c0(s); }
+static void *__fastcall mgl_d2(void *s, void *)
+{ MG_SLOT(16); return (void *)(size_t)func_ov006_020efc0c((int *)s); }
+static void *__fastcall mgl_d0(void *s, void *)
+{ MG_SLOT(17); return (void *)func_ov006_020efc30((int *)s); }
+static int  __fastcall mgl_reset(void *s, void *, int a)
+{ MG_SLOT(18); func_ov006_020f3294((char *)s, a); return 1; }
+
+/* the two diagnostics, the same pair the curling fill carries */
+static int __fastcall mgl_render_noop(void *, void *)
+{ ++g_mg_render_skipped; return 1; }
+static int __fastcall mgl_init_noop(void *, void *)
+{ ++g_mg_init_skipped; return 1; }
+
+/* dScMgLuigi_c's own seven, keyed on the ROM word each slot holds. None of the
+   seven appears in kMgBaseFaces or in kCurlingFaces -- a word is one address --
+   so the three key sets stay disjoint by construction. */
+static const MgFace kLuigiFaces[] = {
+    {0x020f3460u, (void *)mgl_init},   {0x020efc68u, (void *)mgl_aclean},
+    {0x020f3414u, (void *)mgl_beh},    {0x020f33c0u, (void *)mgl_render},
+    {0x020efc0cu, (void *)mgl_d2},     {0x020efc30u, (void *)mgl_d0},
+    {0x020f3294u, (void *)mgl_reset},
+};
+
+extern "C" void port_scene_fill_luigi(void)
+{
+    /* the mounts before the fill, the curling fill's reason verbatim */
+    port_scene_mg_mounts();
+
+    void **base = (void **)data_ov004_020bc0c0;
+    void **vt   = (void **)data_ov006_0213cf10;
+
+    /* The base table is filled here too. It is idempotent -- mg_apply keys on
+       the DS word and a slot already holding a host thunk matches nothing --
+       so the curling fill having done it on the same boot costs nothing, and
+       this fill is correct read on its own. */
+    port_scene_fill_rom(base, 36);
+    mg_apply(base, 36, kMgBaseFaces,
+             sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
+
+    port_scene_fill_rom(vt, 36);
+    mg_apply(vt, 36, kMgBaseFaces,
+             sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
+    mg_apply(vt, 36, kLuigiFaces,
+             sizeof kLuigiFaces / sizeof kLuigiFaces[0]);
+
+    {
+        const char *s0 = std::getenv("SM64DS_SCENE_SLOT0");
+        const char *s9 = std::getenv("SM64DS_SCENE_SLOT9");
+        if (s0 && s0[0] == '0') vt[0] = (void *)mgl_init_noop;
+        if (s9 && s9[0] == '0') vt[9] = (void *)mgl_render_noop;
+    }
+
+    {
+        const unsigned lv = mg_raw_left(vt, 36);
+        if (lv) {
+            std::fprintf(stderr, "  [scene] MINIGAME FILL INCOMPLETE: "
+                         "dScMgLuigi_c leaves %u of 36 raw DS words. A "
+                         "dispatch of any of them jumps to a DS address as a "
+                         "host one.\n", lv);
+            std::fflush(stderr);
+        }
+    }
+
+    /* THE CONSTRUCTORS, gated on the requested id exactly as the curling fill
+       gates them, and idempotent behind port_scene_mg_overlay_load's own
+       `static int done`. Whichever minigame row's fill runs first is the one
+       that runs them; the rest are no-ops. */
+    port_scene_mg_prepare(port_scene_env_want());
+
+    if (port_scene_env_want() == 366) {
+        static int armed;
+        if (!armed) {
+            armed = 1;
+            std::atexit(port_scene_mg_luigi_hits);
+        }
+    }
+}
+
+/* The registry's factory column is void *(*)(void) and the matched factory
+   returns int *. One typed forwarder, the shape port_mg_curling_spawn has.
+   NO ARGUMENT IS DISPLACED HERE: src/MgWanted_Spawn.c calls
+   func_ov004_020b2adc(p) WITH the object pointer, where dScMgCup_c's factory
+   calls the same base constructor with none. This lane needs no displacement
+   ruling and asks for none. */
+extern "C" void *port_mg_luigi_spawn(void)
+{
+    return (void *)MgWanted_Spawn();
+}
+
+extern "C" void port_scene_mg_luigi_hits(void)
+{
+    std::printf("[scene] dScMgLuigi_c slot hits: init %u, behavior %u, "
+                "render %u, cleanup %u, state-reset %u\n",
+                g_mg_hits[0], g_mg_hits[6], g_mg_hits[9], g_mg_hits[5],
+                g_mg_hits[18]);
+    {
+        unsigned hits = 0, floor = 0, nosrc = 0, calls = 0, unknown = 0;
+        port_mg_luigi_counts(&hits, &floor, &nosrc);
+        port_mg_dispatch_counts(&calls, &unknown);
+        std::printf("[scene] dScMgLuigi_c state dispatch: %u routed to one of "
+                    "its 22 reachable states, %u wanted 0x020f15ac (the state "
+                    "with no body), %u entered the 0x020f2790 trap; the "
+                    "framework switch saw %u call(s) and %u UNHANDLED "
+                    "address(es)\n", hits, floor, nosrc, calls, unknown);
+        /* THE RENDER SLOT'S OWN FLOOR, printed next to the render hit count
+           above so the two are read together. A run with 300 render entries
+           and 300 trap entries has dispatched the slot and drawn nothing
+           through it, which is a different fact from "Render ran" and is the
+           one this line exists to keep visible. */
+        std::printf("[scene] dScMgLuigi_c render floor: %u entry(ies) into the "
+                    "func_ov004_020b0e84 trap, which slot 9 reaches through "
+                    "func_ov004_020b1e34 (port/unmatched/MgLuigi_Faces.cpp "
+                    "section 4)\n", port_mg_luigi_ov004_trap_hits());
+    }
+    std::fflush(stdout);
+}
