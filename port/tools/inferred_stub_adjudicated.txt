@@ -331,3 +331,52 @@ func_ov006_0210a608  REAL_DECOMP  runs/link60/status/mgb.md  slot 5 AfterCleanup
 func_ov006_0210a698  REAL_DECOMP  runs/link60/status/mgb.md  slot 7 BeforeBehavior, 0x4c, 16 instructions plus a two-word pool. func_ov004_020b0620(this) with the early return 0; then the `data_020a0db0 & 1` test as ands/beq, and Particle::SysTracker::Update(this+0x471c) only inside it; return 1. Both literals resolve. Shared framework glue
 func_ov006_0210a664  REAL_DECOMP  runs/link60/status/mgb.md  slot 10 BeforeRender, 0x34, 13 instructions, no pool. func_ov004_020b04f4(this) with the conditional-epilogue early return 0 (addeq/moveq/ldmeq/bxeq, four predicated instructions rather than a branch), then Particle::RenderAll, return 1. Shared framework glue
 func_ov006_0210a600  REAL_DECOMP  runs/link60/status/mgb.md  slot 26, 0x8, 2 instructions: mov r0,#1; bx lr. src is `return 1`. There is no room in eight bytes for a body and a guess to differ
+
+# ---------------------------------------------------------------------------
+# run mg5, lane FLW, 2026-08-18. THE THIRD MINIGAME CLASS SEATED:
+# dScMgFlower_c, actor id 0x186 (390), the "Loves Me...?" petal minigame.
+# RTTI "13dScMgFlower_c" at 0x02140128, vtable data_ov006_02140140, twelve
+# override bodies of which TEN carry the marker.
+#
+# All ten disassembled with capstone out of extracted/overlays/overlay_0006.bin
+# at base 0x020bfec0 -- the shipped image, deliberately not a dsd export, whose
+# relocated words would make literals read as live pointers -- and compared
+# instruction for instruction with src/ BEFORE any seating. RESULT: 10 REAL
+# DECOMP, 0 genuine guesses, 0 unverifiable. No constant, offset, literal,
+# branch target or instruction count differs on any of the ten.
+#
+# SIX OF THE TEN ARE THE 0x0210a6xx FAMILY and were already ruled twice, by
+# lane MGA (dScMgCup_c) and lane MGB (dScMgMemory2_c). They are re-derived here
+# rather than inherited, because the ruling is what lets a body be seated and
+# this lane is the one seating them into a THIRD table; the re-derivation
+# agrees with both earlier ones instruction for instruction, which is worth
+# more than a third copy of the text. They are not re-listed below: the guard
+# already has them and a duplicate line would add nothing.
+#
+# THE MARKER IS RECORDING THE NAME AND NOT THE BODY, AND THIS CLASS IS THE
+# CLEANEST DEMONSTRATION IN THE FILE. Lane MGB found six bodies in
+# dScMgMemory2_c's table named "dScMgFlower_c_*" and correctly read that as the
+# recoverer attributing shared framework glue to whichever class it walked
+# first. Those bodies are in THIS class's table too, so for the 0x0210a6xx
+# group the recovered name happens to be right here and wrong there, out of one
+# and the same recovery pass. A name that is right by coincidence is not
+# evidence, which is why all ten were read out of the ROM anyway.
+#
+# TWO OF THIS CLASS'S OWN FIVE ALSO CARRY A WRONG RECOVERED NAME:
+# func_ov006_0212a5c8 is named dScMgFlower_c_OnYoshiTryEat and is the deleting
+# destructor; func_ov006_0212aa74 is named dScMgFlower_c_OnYoshiTryEat_0212aa74
+# and is the state advance. Both bodies are exact.
+#
+# ---- dScMgFlower_c's own five ----
+func_ov006_0212b480  REAL_DECOMP  port/slice_flw.txt  slot 0 InitResources, 0x378, 194 instructions plus a 26-word literal pool every word of which src names. data_0209d45c / data_0209d454 and data_0208ee44; the object word at +0x5ff0 taking func_ov004_020ad8b8(); THREE identical register sequences on 0x0400000c, 0x0400100c and 0x0400100e (and 0x43 / orr 0x1414 / bic 0x40 / zero 0x4000018, 0x4001018, 0x400101c / bic 3 / orr 3), each with the right companion offset register; then seven func_020adc74 loads in src's order -- 021401d0 into G2::GetBG2CharPtr, 021401f4 into G2S::GetBG2CharPtr, 02140218 into G2::GetBG2ScrPtr, 0214023c into BOTH G2S::GetBG2ScrPtr and G2S::GetBG3ScrPtr off one handle, 02140260 into CP15 flush 0x1a0 then GX::LoadBGPltt(0x60,0x1a0), 02140284 the same into GXS::LoadBGPltt, 021402a8 decompressed to 0x6400000 and 0x6600000, 021402c4 flushed 0x100 then GX and GXS LoadOBJPltt(0,0x100) -- each followed by Ov004_Deallocate at 0x020adc5c. Then 0x4000050 = 0 and G2x::SetBlendAlpha(0x4001050, 4, 8, 6, 0xa) with the fifth argument on the stack; data_0209d45c |= 4 and data_0209d454 |= 0xc; the four ov004 window words 0x40, 0xa0, 0xc0, 0xa0 stored to 0x020bc8a8, 0x020bc898, 0x020bc86c and 0x020bc8a4; +0x5fdc, +0x5fe0 and +0x5fe4 zeroed; func_ov006_0212a764; data_0209d45c |= 1; 0x4000008 bic 3 orr 1; func_ov006_020c3d88(c+0x51f8); func_ov006_020c3b2c(c+0x4660); return 1. Every one of those constants, offsets and call targets matches src, in src's order
+func_ov006_0212ac74  REAL_DECOMP  port/slice_flw.txt  slot 6 Behavior, 0x80c, the largest body in the class and the one that proves this class has NO pointer-to-member state machine. At 0212acf8 it reads +0x5fe8 and does cmp #0 / beq case0, cmp #1 / beq case1, b default -- a plain compiled switch, not the five-instruction ARM Itanium member-pointer sequence curling's 020e3528 and dScMgCup_c's 020e0204 both carry. The head matches src exactly, including the predicated unk_0c4 == 0 block writing 1 to the two bytes at +0xc3 and +0xc4 and 0 to the HALFWORD at +0xc0 (strheq, the width src's struct header gives it). Call census matches src call for call: _ZN5Sound12PlayBank2_2DEj (0x02012754) x9, func_ov004_020b0cac x6, FreeGfxSlotsById (0x020b0aa0) x5, Vec2_Sub (0x0203d6d0) x3, Vec2_Len (0x0203d614) x2, func_ov006_0212a654 x2, func_ov006_020c3b80 x2, _020c3908 x2, _020c38b0 x2, func_ov006_020c3d18, _020c3990 and func_ov004_020b0a54 once each. The literal pool resolves to exactly the five globals src declares (data_020a0e40, data_020a0de8, _de9, _dea, _deb), the six sound ids that are not ARM immediates (0x103, 0x105, 0x106, 0x107, 0x109, 0x10d), the 0x270f score clamp twice, and the ten laundered offsets 0x4f3c, 0x51f8, 0x5fb8, 0x5fc0, 0x5fd0, 0x5fd4, 0x5fd8, 0x5fdc, 0x5fe0, 0x5ff0 -- which is what src's LA() and LB() u64-mask spellings exist to produce, an address rematerialized from the pool in its own block instead of folding into the this+0x5000 base. The distance constant 0x18000, the 0x3c timer, the 0x16 petal count and the 0x14 petal cap all match
+func_ov006_0212aacc  REAL_DECOMP  port/slice_flw.txt  slot 9 Render, 0x1a8, 96 instructions. +0x5ff4 advanced by 0xc0 as a HALFWORD; the sine table data_02082214 indexed ((v>>4)<<1) as an s16, twice; SetSubBg2Offset(off, off+8) at 0x02018f54 with the +0x80 rounding chain (asr #7, add lsr #24, asr #8) and SetSubBg3Offset(off, off) at 0x02018f38 with the mirrored 0x80-v; func_ov004_020afdd0(data_ov006_0213ab94[*(int*)(self+0x5fec)], 0x80, 0x60, -1, 1) with the fifth argument on the stack; then the 22-iteration petal loop -- guard on the byte at +i*0x20+0x4f38, the template copied THROUGH A POINTER (ldr r1,[r4] then ldr [r1] and [r1,#4], which is why src spells it *(struct S2*)data_ov006_0213abe0), the mask 0xc1fffcff and orr 0x100, the selected-petal test against +0x5fc8 choosing 0 or 1, and func_ov004_020af770 with the two fixed-point positions at +0x4f3c and +0x4f40 asr 12, then -1, that flag, 0x1000, and the heading at +0x4f54 plus 0x8000 sign-then-zero-extended through lsl/asr/lsl/lsr #0x10. Then func_ov006_020c3b2c(self+0x4660), func_ov006_020c3bf4(self+0x51f8), return 1. Every offset, every constant and both engine offsets match src
+func_ov006_0212a5c8  REAL_DECOMP  port/slice_flw.txt  slot 17, the deleting destructor, 0x88, 27 instructions plus a seven-word literal pool all of which resolve. THE ROW THAT NAMES THE WHOLE HIERARCHY: it stores data_ov006_02140140 -- this class's OWN vtable, the strongest single confirmation that 0x02140140 is the right table for id 0x186 -- then func_ov006_020c3e70(c+0x51f8), then __destroy_arr(c+0x4f38, 0x16, 0x20, func_ov006_0212a650) with the count, stride and element destructor in r1, r2 and r3, then stores data_ov006_0213e448, THE INTERMEDIATE BASE, which is the same word the factory writes on the way up and the same one dScMgCup_c's 020dea1c and dScMgSingle3DBase_c's own 0210a4e8 write; then Particle SysTracker D1 at c+0x471c, func_ov004_020b29c0(c), Memory Deallocate(c, the word at data_020a0eac loaded BY VALUE), return c. Its unmarked D2 sibling 0212a554 writes the same two vtable words and cross-confirms both resolutions. The recovered NAME says OnYoshiTryEat and is wrong; the body is the D0
+func_ov006_0212aa74  REAL_DECOMP  port/slice_flw.txt  slot 18, 0x58, 20 instructions plus a two-word pool. The counter at +0x5fe4 read through the this+0x5000 base, compared with 0x14, and the branch spelled the ROM's way round: movgt #0 / strgt / bgt is the RESET arm, taken when the value EXCEEDS 0x14, and the increment is the fall-through -- which is exactly what src's own comment says it is spelling and why its increment goes through the volatile u64-mask-laundered pointer (the pool word 0x00005fe4 is that rematerialized address, present in the image). Then func_ov006_020c3bc8(self+0x51f8) off the pool word 0x000051f8, and func_ov006_0212a764(self). Both call targets, both pool words, the constant and the branch polarity match src. The recovered NAME says OnYoshiTryEat_0212aa74 and is wrong; the body is the state advance, and its counter is the same +0x5fe4 that slot 0 zeroes and slot 6 tests against 0x14
+# ---- and one unmarked body read with them, recorded for the next reader ----
+# func_ov006_0210a4b0 carries NO marker and needs no line here; it is named
+# only because it is dScMgSingle3DBase_c's D2 beside 0210a4e8's D0 and a reader
+# of this block will look for it. It was disassembled with the other ten and it
+# matches: own table 0x0213e448 stored, Particle SysTracker D1 at c+0x471c,
+# func_ov004_020b29c0(c), return c -- 0210a4e8 without the Deallocate, which is
+# the D2/D0 difference and is what src spells.
