@@ -18,8 +18,8 @@ int FlameChompFire::InitResources()
         return 0;
     _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0xfc, ((char*)this), 0x37000, 0x78000, 0x200002, 0x8000);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x130, ((char*)this), 0x32000, 0x32000, 0, 0);
-    unk_09c = -0x400;
-    unk_0a0 = -0x5000;
+    mVertAccel = -0x400;
+    mTerminalVelocity = -0x5000;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
