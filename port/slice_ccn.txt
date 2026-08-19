@@ -47,15 +47,21 @@
 # the framework needed, and CMake appends both lists to the same targets and
 # dedupes identical absolute paths. Only the delta is below.
 #
-# TWO ov006 BODIES IN THE CLOSURE HAVE NO SOURCE AT ALL and are therefore not
-# here. Neither has a delink block in config/arm9/overlays/ov006/delinks.txt
-# and neither has a src file in either extension, checked rather than assumed:
+# ONE ov006 BODY IN THE CLOSURE HAS NO SOURCE AT ALL and is therefore not here.
+# It has no delink block in config/arm9/overlays/ov006/delinks.txt and no src
+# file in either extension, checked rather than assumed:
 #     func_ov006_020dbe9c  0xe0   the sixth callee of slot 9, Render
-#     func_ov006_020dd0e0  0x1ec  slot 0 of state table data_ov006_021417b0,
-#                                 which port/tools/stategen.py REFUSES for
-#                                 exactly this reason
-# So this class has TWO hard floors, one on the render path and one state it
-# cannot reach. Both are decomp gaps, not port ones.
+#
+# THE SECOND FLOOR IS CLOSED. func_ov006_020dd0e0 (0x1ec, slot 0 of state table
+# data_ov006_021417b0) was the state this class dispatched every frame and could
+# not reach, which is why the minigame took a stylus tap and did nothing with
+# it. Lane TOUCH of run mg5 matched it; the delink block and src/func_ov006_-
+# 020dd0e0.c came across in the commit before this one and match.py re-verified
+# MATCH on 2004/b56 in THIS tree before the line below was added. Its four
+# callees were already in the build: func_ov006_020dcb1c and _020dd4b0 in this
+# list, src/func_020127a4.c in the second wave below, and
+# src/_ZN5Sound12PlayBank2_2DEj.cpp in slice_mg1.txt. So the class now has ONE
+# hard floor, on the render path, and it is a decomp gap and not a port one.
 #
 # SEVEN TUs ARE HOST-COPIED AND ARE COMMENTED OUT BELOW. They are the mwcc
 # POINTER-TO-MEMBER dispatchers and the port cannot compile any of them: mwcc's
@@ -116,6 +122,7 @@ src/func_ov006_020dce3c.c
 src/func_ov006_020dcea8.c
 src/func_ov006_020dcffc.c
 src/func_ov006_020dd000.c
+src/func_ov006_020dd0e0.c
 # HOST-COPIED (CCN): src/func_ov006_020dd2cc.cpp -- table data_ov006_021417b0, arity 1, link-visible as ?..@@3PAUEntry@@A
 src/func_ov006_020dd334.c
 src/func_ov006_020dd4b0.c

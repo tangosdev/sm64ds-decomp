@@ -23,21 +23,52 @@
 //   data_ov006_02141810  6    0    func_ov006_020de69c  (vtable slot 6)
 //   data_ov006_02141840  6    1    func_ov006_020ddd6c, _020de26c, _020de440
 //
-// STATEGEN REPORTS ONE REFUSAL AND IT IS CARRIED, NOT GUESSED.
-// 0x020dd0e0 is slot 0 of data_ov006_021417b0. config/arm9/overlays/ov006/
-// symbols.txt names it func_ov006_020dd0e0 and sizes it 0x1ec, and there is no
-// delink block covering it and no src file in either extension -- checked, not
-// assumed. So this class cannot reach one of its own states however the
-// dispatch is written. It is handled at the switch site BY ADDRESS, with a
-// report that says which state was wanted, and it is deliberately given no
-// invented symbol: fabricating a definition for a body with no source is the
-// guess port/tools/inferred_stub_guard exists to refuse. If the refusal ever
-// disappears without a src TU landing, something lied.
+// THE REFUSAL AT 0x020dd0e0 IS GONE, AND A src TU LANDED FOR IT.
+// The paragraph this replaces said "if the refusal ever disappears without a
+// src TU landing, something lied", so here is what landed. 0x020dd0e0 is slot 0
+// of data_ov006_021417b0 and it is THE TOUCH STATE: with it missing the port
+// delivered every stylus tap to the DS bottom screen correctly and the minigame
+// did nothing, which is exactly what a live session measured. Lane TOUCH of run
+// mg5 matched it; src/func_ov006_020dd0e0.c and its delink block
+// (.text start:0x020dd0e0 end:0x020dd2cc) came across in the commit before this
+// one, and tools/match.py re-verified MATCH on 2004/b56 in THIS tree, at this
+// size (0x1ec), before the switch case below was changed. The slot is wired to
+// the real symbol now, not to an invented one, so inferred_stub_guard's rule is
+// still kept: nothing here fabricates a definition.
 //
-// A SECOND FLOOR EXISTS AND IT IS NOT A STATE. func_ov006_020dbe9c (0xe0) is
+// THE CALL SHAPE WAS RE-DERIVED FROM THE ROM AND NOT TAKEN ON THE MATCHING
+// LANE'S WORD, because it could not see this file. func_ov006_020dd2cc's own
+// bytes, at file offset 0x1d40c of extracted/overlays/overlay_0006.bin:
+//
+//     mov  r7, r0            r7 = the CLASS BASE, and it never changes
+//     mov  r5, r7            r5 = the per-coin cursor
+//     mov  r6, #0            r6 = i
+//     ldr  r4, [pc, #0x48]   r4 = data_ov006_021417b0   (literal 0x021417b0)
+//   loop:
+//     add  r0, r5, #0x4000
+//     ldrb r0, [r0, #0xad0]  state = *(u8 *)(base + i * 0x18 + 0x4ad0)
+//     add  r3, r4, r0, lsl #3            stride 8, the mwcc pair
+//     ldr  r1, [r3, #4] / ands r1, r1, #1 / ...  the ordinary PMF sequence
+//     add  r0, r7, r1, asr #1            THIS = the class base, adjusted
+//     mov  r1, r6                        ARG  = i, the loop counter
+//     blx  r2
+//     add  r6, r6, #1 / cmp r6, #0x18 / add r5, r5, #0x18 / blt loop
+//
+// So the callee is passed (class base, i) and NOT (per-coin base, i): r5 is
+// only ever used to fetch the state byte. func_ov006_020dd0e0's own prologue
+// agrees, at offset 0x1d220 of the same file -- it reads [r0 + 0x51c8] off the
+// argument, which is a class-level field 0x51c8 past the base and far outside
+// any one 0x18-byte coin record, and then does `mov r0, #0x18 / mul r4, r1, r0`
+// to recover i * 0x18 for itself. Its src signature, void func_ov006_020dd0e0-
+// (char *c, int i), is that pair in the same order. The host dispatch loop
+// further down this file already passes port_mg_coin_call1(c, code, adj, i)
+// with c the class base and i the loop index, so the case below hands those two
+// straight through and no argument is invented, dropped or reordered.
+//
+// THE CLASS'S REMAINING FLOOR IS NOT A STATE. func_ov006_020dbe9c (0xe0) is
 // the sixth callee of vtable slot 9, Render, and has no delink block and no
-// src either. It is not this file's business -- nothing here calls it -- and
-// it is recorded in port/slice_ccn.txt so the two floors are counted together.
+// src. It is not this file's business -- nothing here calls it -- and it is
+// recorded in port/slice_ccn.txt. It is now the only one of the two left.
 //
 // ---- WHY SEVEN HOST COPIES AND NOT FOUR ------------------------------------
 //
@@ -133,6 +164,7 @@ void func_ov006_020dc5c4(char *c, int i);
 void func_ov006_020dc6d0(int o, int idx);
 void func_ov006_020dcffc(void);              /* one-argument slot, bx lr body */
 void func_ov006_020dd000(char *c, int i);
+void func_ov006_020dd0e0(char *c, int i);    /* THE TOUCH STATE, see header */
 void func_ov006_020dd658(char *self, int i);
 void func_ov006_020dd7bc(void);              /* one-argument slot, bx lr body */
 void func_ov006_020dd7c0(char *thiz, int index);
@@ -187,25 +219,16 @@ void func_ov006_020de440(char *c);
 // ---- the class's address switch --------------------------------------------
 
 static unsigned g_coin_state_hits;
+/* THE BODILESS-STATE COUNTER, KEPT AND NOW STRUCTURALLY ZERO. Every state
+   address in the two switches below reaches a real symbol, so nothing
+   increments this any more and hal/scene_mg.cpp's census reports 0 for it. It
+   is kept rather than deleted so that census field keeps its meaning: if a
+   later lane ever adds a state this class cannot reach, this is where it is
+   counted, and a nonzero reading is a regression rather than a new field. */
 static unsigned g_coin_floor_hits;
-
-/* THE ONE STATE WITH NO BODY. Reported by address, never called, never given a
-   symbol. One line per process rather than one per frame, because this sits in
-   a per-frame dispatch. */
-static void coin_floor_020dd0e0(void)
-{
-    static int said;
-    ++g_coin_floor_hits;
-    if (said)
-        return;
-    said = 1;
-    std::fprintf(stderr, "  [scene] dScMgCoin_c STATE 0x020dd0e0 WANTED AND "
-                 "HAS NO BODY: slot 0 of data_ov006_021417b0. No delink block "
-                 "in config/arm9/overlays/ov006/delinks.txt and no src file, "
-                 "so the decomp cannot reach this state. Nothing was called. "
-                 "port/unmatched/MgCoin_StateDispatch.cpp\n");
-    std::fflush(stderr);
-}
+/* How many times the touch state actually RAN. The count the field above used
+   to carry, now that the call goes somewhere. */
+static unsigned g_coin_touch_calls;
 
 static int coin_try_0(void *self, unsigned code)
 {
@@ -226,7 +249,10 @@ static int coin_try_1(void *self, unsigned code, int a)
     char *c = (char *)self;
     switch (code) {
     /* data_ov006_021417b0 */
-    case 0x020dd0e0u: coin_floor_020dd0e0();      return 1;  /* NO BODY */
+    /* THE TOUCH STATE. (class base, coin index), the order func_ov006_020dd2cc
+       passes them in the ROM; see the header for the disassembly. */
+    case 0x020dd0e0u: ++g_coin_touch_calls;
+                      func_ov006_020dd0e0(c, a);  return 1;
     case 0x020dd000u: func_ov006_020dd000(c, a);  return 1;
     case 0x020dcffcu: func_ov006_020dcffc();      return 1;  /* (void) body */
     /* data_ov006_021417c8 */
@@ -283,6 +309,11 @@ extern "C" unsigned port_mg_coin_state_hits(void)
 extern "C" unsigned port_mg_coin_floor_hits(void)
 {
     return g_coin_floor_hits;
+}
+
+extern "C" unsigned port_mg_coin_touch_calls(void)
+{
+    return g_coin_touch_calls;
 }
 
 // ---- the seven host copies -------------------------------------------------

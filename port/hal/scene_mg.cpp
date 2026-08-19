@@ -1727,6 +1727,7 @@ void *MgCoincentration_Spawn(void);
 /* the state machine's witnesses, from unmatched/MgCoin_StateDispatch.cpp */
 unsigned port_mg_coin_state_hits(void);
 unsigned port_mg_coin_floor_hits(void);
+unsigned port_mg_coin_touch_calls(void);
 /* the render-path floor's witness, from unmatched/MgCoin_Faces.cpp */
 unsigned port_mg_coin_trap_hits(void);
 }
@@ -1847,19 +1848,26 @@ extern "C" void port_scene_mg_coin_hits(void)
         unsigned calls = 0, unknown = 0;
         port_mg_dispatch_counts(&calls, &unknown);
         std::printf("[scene] dScMgCoin_c state dispatch: %u routed to a "
-                    "dScMgCoin_c state, %u reached the class's ONE bodiless "
-                    "state (0x020dd0e0), %u framework call(s), %u UNHANDLED "
+                    "dScMgCoin_c state, of which %u ran the touch state "
+                    "0x020dd0e0, %u reached the class's ONE bodiless "
+                    "state (there is none left, 0x020dd0e0 has a body now), "
+                    "%u framework call(s), %u UNHANDLED "
                     "address(es)\n", port_mg_coin_state_hits(),
+                    port_mg_coin_touch_calls(),
                     port_mg_coin_floor_hits(), calls, unknown);
     }
-    /* THE TWO FLOORS, REPORTED WHETHER OR NOT THEY FIRED. Both are decomp
-       gaps and both are silent unless the path that reaches them runs, so a
-       run that prints zero for either has to say WHICH zero it is: the
-       render floor is only reachable with rendering on, and the state floor
-       only if the class ever selects that state. */
+    /* THE FLOORS, REPORTED WHETHER OR NOT THEY FIRED. The render floor is the
+       only one left and it is a decomp gap; it is silent unless rendering is
+       on, so a zero here has to say WHICH zero it is. The state floor is
+       CLOSED -- src/func_ov006_020dd0e0.c is the matched body and lane WIRE
+       wired the slot to it -- and the count that used to say how often the
+       class wanted a state it could not reach now says how often it RAN it. */
     std::printf("[scene] dScMgCoin_c floors: render callee 0x020dbe9c entered "
-                "%u time(s), bodiless state 0x020dd0e0 wanted %u time(s)\n",
-                port_mg_coin_trap_hits(), port_mg_coin_floor_hits());
+                "%u time(s); state floor 0x020dd0e0 CLOSED by "
+                "src/func_ov006_020dd0e0.c, which ran %u time(s) (bodiless "
+                "wants remaining: %u)\n",
+                port_mg_coin_trap_hits(), port_mg_coin_touch_calls(),
+                port_mg_coin_floor_hits());
     if (g_mg_coin_self)
         std::printf("[scene] dScMgCoin_c object at %p, state index %d\n",
                     (void *)g_mg_coin_self,
