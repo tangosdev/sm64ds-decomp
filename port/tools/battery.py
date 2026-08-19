@@ -362,73 +362,58 @@ SCENE_BLOCKED = {
     # retired. The rule they were written under stands unchanged: an advisory
     # is not a battery row and must not become one again.
 
-    # SCENE 376 (0x178), dScMgSmartball_c, run mg5 lane SMB. THE FIRST ROW IN
-    # THIS TABLE WHOSE BLOCKER IS A DECOMP GAP RATHER THAN A PORT SEAT, which
-    # is why it is worth reading before it is worth fixing: every blocker this
-    # table has ever carried was something the port had not built yet, and this
-    # one is something the DECOMP has not built yet.
+    # SCENE 376 (0x178) WAS HERE AND IS RETIRED, run mg5 lane SMBSEAT. The row
+    # had been CONVERTED ONCE and the conversion was a real seat: lane SMB
+    # recorded that two of the class's nine vtable overrides had no source at
+    # all, lane INTEG retired slot 0 InitResources and the aux ball-table
+    # seeder, and the blocker moved one floor deeper to "a sub-object whose
+    # ov006 vtable at 0x0213eca0 holds raw DS addresses (func_ov006_02114458,
+    # not seated), so its first method call jumps into DS space".
     #
-    # TWO OF THE CLASS'S NINE VTABLE OVERRIDES HAVE NO SOURCE AT ALL. No block
-    # in config/arm9/overlays/ov006/delinks.txt covers 0x02118b70 (slot 0,
-    # InitResources) or 0x021173c8 (slot 9, Render), and no src file defines
-    # either; both are named, self-reporting traps in
+    # THAT LAST BLOCKER WAS NOT A DECOMP GAP AND THE ADDRESS IN IT WAS OFF BY
+    # ONE TABLE, which is the part worth keeping. func_ov006_02114458 was
+    # already in src/ here and always had been -- it was simply in no slice,
+    # which reads identically to "no body" from a symbol search and is not the
+    # same thing. And 0x0213eca0 is not a vtable: it is the WORD that holds
+    # 0x02114458, the third slot of a table whose vptr is 0x0213ec98. An
+    # Itanium record walk of overlay_0006.bin finds TWELVE such tables between
+    # 0x0213ec90 and 0x0213eda0, one per cMgSmartball_ class, THREE slots each
+    # -- not the five the config symbol span reads, because config names each
+    # table's vptr rather than its head and the span therefore runs into the
+    # next class's own offset-to-top and typeinfo. Filling five would have
+    # overwritten a neighbour's RTTI with a host code address.
+    #
+    # SMBSEAT RELOCATED ALL TWELVE with the same address-keyed fill every scene
+    # class in hal/scene_mg.cpp already used, seated the thirty-six bodies they
+    # dispatch (thirty-five already in src/, two of those under wrong recovered
+    # names; one, cMgSmartball_board_c::SaveSnapshot at 0x0210f564, brought
+    # across from origin/main by address and re-verified with tools/match.py at
+    # 2004/b56 against overlay_0006.bin in this worktree), and stood slot 9
+    # Render on main's matched __thiscall member behind a cdecl forwarder --
+    # the MgPachinko_Faces section 3 shape, because an alias cannot cross a
+    # calling convention.
+    #
+    # THE COUNTERS ARE THE EVIDENCE AND THE RENDER SLOT IS ONE OF THEM. A bare
+    # 300-frame run with SM64DS_FAULTS_FATAL=1 and nothing switched off:
+    # rc 0, "300 frames of scene 376 (SCENE_MG_SMARTBALL), clean", ov006 slot
+    # hits init 1 / behavior 253 / RENDER 300, 16941 slot entries across the
+    # 36-slot table, dScMgSmartball_c traps entered 0 total, and 8310
+    # dispatches through the twelve relocated three-slot tables. That last
+    # number is the one that cannot be faked by a fill: a table can be
+    # relocated and never entered, and those two look identical from outside.
+    # Neither FILL INCOMPLETE line printed, so zero raw DS words are left in
+    # the class table or in any of the twelve.
+    #
+    # SO THIS IS A RETIREMENT, NOT A SECOND CONVERSION: the scene has no
+    # blocker left to name, and it runs as an ordinary scene selftest row
+    # above. ONE new trap did arrive with the enlarged closure and it is NOT a
+    # blocker -- func_ov006_02115248, named in symbols.txt at size 0x238 with
+    # no delink block here and the identical gap on origin/main, reached from
+    # cMgSmartball_kinoko_c's Update closure. It was not entered on any run in
+    # this lane. It is a named, self-reporting trap in
     # port/unmatched/MgSmartball_Traps.cpp on the func_ov006_020e1854
-    # precedent. Slot 0 is the one that blocks: it is where the class builds
-    # every sub-object its Behavior ticks, so with it trapped the object's
-    # count fields stay zero and its sub-object pointers stay null.
-    #
-    # THE FAULT, from a bare 300-frame run with SM64DS_FAULTS_FATAL=1:
-    #
-    #     FAULT code c0000005 at +0x0005049b accessing 00000000
-    #       walker node 307F9D8C actor 307F9D64 id 0x178
-    #       eax=00000000 ecx=307f9d64
-    #
-    #     port/tools/faultmap.py: _func_ov006_02118488 +0x11b into it
-    #
-    # which is src/func_ov006_02118488.c's case 0 opening statement,
-    # `o = *(char**)(c + 0x4684); (**(VFunc**)o)(o);`, with no null guard --
-    # correct on the ROM, where slot 0 ran.
-    #
-    # THE MARKER IS THE FIELD, NOT THE ADDRESS, and hal/scene_mg.cpp's slot 6
-    # thunk prints it one frame before the fault, the way the fader pre-flight
-    # printed scene 374's. A link offset moves on every build and cannot pin a
-    # blocker; self+0x4684 being null while the state at self+0x4660 is zero
-    # can, and it is a statement about the class rather than about the binary.
-    # A different crash does not reproduce it and reads as a regression, which
-    # is what this table is for.
-    #
-    # WHAT IS ALREADY PROVEN, so a reader knows what the row does NOT cover:
-    # the class registers (the SpawnInfo +4 cross-check passes), both 36-slot
-    # tables fill with ZERO raw DS words left, the factory spawns the object
-    # with a host vptr, and slots 0, 1, 2, 6, 7, 26, 31, 32 and 33 all
-    # dispatch. The seat is complete; the body behind slot 0 is not.
-    #
-    # RETIRING IT IS A BYTE-GATED-TREE JOB and it is routed rather than taken:
-    # 0x02118b70 is 0x8dc bytes and 0x021173c8 is 0x10c0, both inside delink
-    # holes that have to be split before either can be decompiled. Derivation
-    # in port/slice_smb.txt.
-    #
-    # RUN mg5 LANE INTEG MOVED THIS BLOCKER ONE FLOOR DEEPER, which is progress
-    # and is why the marker below changed. InitResources (0x02118b70) is now
-    # seated -- the plain-C _ZN16dScMgSmartball_c13InitResourcesEv aliased onto
-    # the ROM address name -- so slot 6 no longer dereferences a null
-    # self+0x4684 (that marker is gone). The class now BUILDS its sub-objects,
-    # and the first sub-object's method call faults because that sub-object's
-    # ov006 vtable at 0x0213eca0 still holds raw DS addresses (its slot resolves
-    # to func_ov006_02114458, not seated), so the call jumps into DS space.
-    # Seating that whole sub-object class and relocating its vtable is a separate
-    # lane. hal/scene_mg.cpp's 376 SEAT line prints the new marker before the
-    # fault, the way the slot-6 thunk printed the old one. (Baseline check: scene
-    # 390 faults at HEAD 19dc07ef2 too, in an unrelated flower-render floor this
-    # lane did not touch, so it is a pre-existing red rather than this lane's.)
-    376: ("a separate sub-object-class lane (decomp body + port vtable relocation)",
-          "vtable at 0x0213eca0 holds raw DS addresses",
-          "run mg5 lane INTEG seated slot 0 InitResources, clearing the old null "
-          "self+0x4684 deref; the class now builds its sub-objects and the "
-          "blocker moved one floor deeper to a sub-object whose ov006 vtable at "
-          "0x0213eca0 holds raw DS addresses (func_ov006_02114458, not seated), "
-          "so its first method call jumps into DS space. Slot 9 Render stays "
-          "trapped behind the thiscall wall"),
+    # precedent, its counter is in the atexit report, and an advisory is not a
+    # battery row and must not become one.
 }
 
 # A MOUNTED LEVEL WHOSE BLOCKER IS NOT THE MOUNT, AND THE CLASS THAT BLOCKS IT.

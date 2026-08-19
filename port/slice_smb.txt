@@ -220,6 +220,97 @@ src/func_ov006_02118ae4.c
 # mangled symbol; the func_ov006_02118b70 trap name is aliased onto it in
 # MgSmartball_Faces.cpp. Builds the sub-objects the class needs to tick.
 src/_ZN16dScMgSmartball_c13InitResourcesEv.c
+
+# ---- Run mg5, lane SMBSEAT: THE SUB-OBJECT FAMILY, 37 further TUs ---------
+#
+# Slot 9 Render, plus the twelve cMgSmartball_ classes' thirty-six vtable
+# bodies. hal/scene_mg.cpp's kSmartballObjFaces carries the derivation of the
+# twelve tables and of their THREE-slot width; what this list adds is the
+# bodies those thirty-six slots dispatch to. Without them the tables can be
+# relocated and the relocation has nothing to point at.
+#
+# THIRTY-FIVE OF THE THIRTY-SIX WERE ALREADY IN THIS TREE and none of them was
+# in any slice, which is why a symbol search for them came back empty and read
+# as "no body". Two are filed under WRONG RECOVERED NAMES -- delinks.txt calls
+# 0x02111144 START_INTRO_MINIMAP_ZOOM and 0x02110154 _ZN6Player7ST_WAITE, and
+# main has since renamed both onto the cMgSmartball_ classes they belong to.
+# The rename is a byte-gated-tree job and is routed, not taken.
+#
+# TWO CAME ACROSS FROM origin/main BY ADDRESS and they are not the same case:
+#   _ZN20cMgSmartball_board_c12SaveSnapshotEv.cpp   0x0210f564, size 0x3b0.
+#       A genuine hole here. RE-VERIFIED IN THIS WORKTREE with tools/match.py
+#       at 2004/b56 against overlay_0006.bin: MATCH. Delink block added.
+#   _ZN16dScMgSmartball_c6RenderEv.cpp              0x021173c8, size 0x10c0.
+#       Matched on main, and it does NOT get a delink block here: its header
+#       chain needs main's migrated dScMgBase_c and this tree still carries the
+#       flat POD recovery, so mwccarm rejects the class's own size assert. The
+#       port reaches it through the host-ABI declaration in
+#       port/unmatched/MgSmartball_HostAbi.h and the cdecl forwarder in
+#       port/unmatched/MgSmartball_Faces.cpp.
+src/_ZN16dScMgSmartball_c6RenderEv.cpp
+src/_ZN20cMgSmartball_board_c12SaveSnapshotEv.cpp
+src/START_INTRO_MINIMAP_ZOOM.c
+# src/_ZN6Player7ST_WAITE.cpp (0x02110154, cMgSmartball_slot_c's RestoreInitial
+# under a wrong recovered name) is DELIBERATELY ABSENT: it drops the receiver
+# on a call the ROM rides through in r0, and the callee STORES through it.
+# port/unmatched/MgSmartball_SlotRestore.cpp is that body with the argument
+# placed, the same split MgSmartball_Slot18.cpp makes for func_ov006_02118a8c.
+src/func_ov006_0210ddf0.c
+src/func_ov006_0210e014.c
+src/func_ov006_0210e098.c
+src/func_ov006_0210e364.c
+src/func_ov006_0210e3e8.c
+src/func_ov006_0210e460.c
+src/func_ov006_0210e4f4.c
+src/func_ov006_0210f914.c
+src/func_ov006_0210ff1c.c
+src/func_ov006_021100a8.c
+src/func_ov006_02110850.c
+src/func_ov006_02110928.c
+src/func_ov006_02110a20.c
+src/func_ov006_02110bb4.c
+src/func_ov006_021104c0.c
+src/func_ov006_021106b4.c
+src/func_ov006_0211102c.c
+src/func_ov006_021111f0.c
+src/func_ov006_02111268.c
+src/func_ov006_0211134c.c
+src/func_ov006_02111560.c
+src/func_ov006_02111654.c
+src/func_ov006_021116f0.c
+src/func_ov006_02111750.c
+src/func_ov006_021117bc.c
+src/func_ov006_02111b20.c
+src/func_ov006_0211192c.c
+src/func_ov006_02113e54.c
+src/func_ov006_02113f1c.c
+src/func_ov006_02114458.c
+src/func_ov006_02114720.c
+src/func_ov006_02114724.c
+src/func_ov006_02114738.c
+
+# ---- SMBSEAT wave 2: the closure the LINKER asked for, 18 TUs ------------
+# Each line here is an unresolved external from the wave-1 link, resolved by
+# the TU that defines it. Every one already existed in src/ and none needed a
+# face, a host copy or a trap.
+src/func_0203d524.c
+src/func_ov006_0210d8bc.c
+src/func_ov006_0210d93c.c
+src/func_ov006_0210e120.c
+src/func_ov006_0210ef48.c
+src/func_ov006_0210f998.c
+src/func_ov006_0210fa6c.c
+src/func_ov006_0210fb04.c
+src/func_ov006_0210fb58.c
+src/func_ov006_02110e28.c
+src/func_ov006_021128fc.c
+src/func_ov006_02112ad8.c
+src/func_ov006_02113c14.c
+src/func_ov006_02114590.c
+src/func_ov006_02114b10.c
+src/func_ov006_02114ec0.c
+src/func_ov006_02114fd0.c
+src/func_ov006_02115008.c
 src/func_ov006_0211944c.c
 src/func_ov006_02119900.c
 
@@ -299,3 +390,44 @@ src/func_02057410.c
 src/func_02057d30.c
 src/func_02057d94.c
 src/func_02057e00.c
+
+# ---- SMBSEAT wave 3: 25 further TUs, each one an unresolved external
+# from the previous link resolved by the TU that defines it.
+src/func_0203d4d0.c
+src/func_0203d570.c
+src/func_0203d5bc.c
+src/func_ov006_0210eca4.c
+src/func_ov006_0210fa40.c
+src/func_ov006_021115c4.c
+src/func_ov006_021115cc.c
+src/func_ov006_02111b90.c
+src/func_ov006_02111e7c.c
+src/func_ov006_02111e90.c
+src/func_ov006_02111ee8.c
+src/func_ov006_02111f8c.cpp
+src/func_ov006_02112030.c
+src/func_ov006_021120d4.c
+src/func_ov006_02112190.c
+src/func_ov006_021122e0.c
+src/func_ov006_0211248c.c
+src/func_ov006_02112504.c
+src/func_ov006_021126b4.c
+src/func_ov006_021146f4.c
+src/func_ov006_02114dfc.c
+src/func_ov006_02114fb4.c
+src/func_ov006_02115024.c
+src/func_ov006_02115040.c
+src/func_ov006_02115060.c
+
+# ---- SMBSEAT wave 4: 10 further TUs, each one an unresolved external
+# from the previous link resolved by the TU that defines it.
+src/_ZN6Player6ST_OWLE.c
+src/func_ov006_0210dbb0.c
+src/func_ov006_0210e1fc.c
+src/func_ov006_021108bc.c
+src/func_ov006_02110c08.c
+src/func_ov006_02111d4c.c
+src/func_ov006_021146ac.c
+src/func_ov006_02114fec.c
+src/func_ov006_0211507c.c
+src/func_ov006_02115680.c

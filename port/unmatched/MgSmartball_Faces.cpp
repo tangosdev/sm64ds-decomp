@@ -117,3 +117,71 @@
  * main is the __thiscall member dScMgSmartball_c::Render, and an alias cannot
  * cross the calling convention the way this cdecl-to-cdecl one can. */
 #pragma comment(linker, "/alternatename:_func_ov006_02118b70=__ZN16dScMgSmartball_c13InitResourcesEv")
+
+/* ---- 5. Run mg5, lane SMBSEAT: TWO CDECL FORWARDERS ----------------------
+ *
+ * Rows 1 to 4 above are all the ordinary /alternatename kind: a reference
+ * spelled one way and a definition under another name, same convention on both
+ * sides. These two are not. Each stands a __thiscall C++ MEMBER behind a flat
+ * cdecl name the dispatch already calls, which an alias cannot do -- the port's
+ * documented wall, and the reason row 4's note said Render "stays trapped".
+ *
+ * THE SHAPE IS port/unmatched/MgPachinko_Faces.cpp SECTION 3, VERBATIM: a
+ * cdecl forwarder carrying the flat Itanium name, making the QUALIFIED
+ * (non-virtual) call so it reaches this body rather than dispatching through
+ * the object's own table, and an /alternatename row pointing the ROM address
+ * name onto the forwarder. Both LHS names are undefined everywhere else in the
+ * build -- the Render trap is removed from MgSmartball_Traps.cpp and
+ * func_ov006_0210f564 never had a body here -- so neither alias is defeated and
+ * neither needs a row in tools/alternatename_baseline.txt.
+ *
+ * ---- 5a. dScMgSmartball_c::Render, vtable slot 9, 0x021173c8 -------------
+ *
+ * src/_ZN16dScMgSmartball_c6RenderEv.cpp is main's MATCHED body, brought
+ * across by address. It is NOT given a delink block in this tree and that is
+ * deliberate rather than an oversight: it includes include/dScMgSmartball_c.h,
+ * which derives from dScMgBase_c, and this tree's dScMgBase_c is the old flat
+ * POD recovery while main's is the migrated dScene_c child. Compiled here with
+ * mwccarm 2004/b56 the header's own `sizeof == 0x629c` assert fails
+ * ("illegal constant expression"), so a delink block would be a claim this
+ * tree cannot honour and the byte gate would reject it the moment it ran.
+ * Migrating dScMgBase_c is a byte-gated-tree job and is ROUTED, not taken.
+ * The port reaches the body through the host-ABI declaration in
+ * MgSmartball_HostAbi.h, which changes no offset the body actually uses --
+ * every field it touches is a raw offset off `(char *)this`.
+ *
+ * ---- 5b. cMgSmartball_board_c::SaveSnapshot, 0x0210f564 ------------------
+ *
+ * The one sub-object slot with no body in this tree at all: a 0x3b0-byte hole
+ * between `.text start:0x0210ef48 end:0x0210f564` and
+ * `.text start:0x0210f914 end:0x0210f998`. Brought across from origin/main by
+ * address and RE-VERIFIED IN THIS WORKTREE rather than taken on main's word:
+ * tools/match.py at mwccarm 2004/b56 with strict relocs, against
+ * extracted/overlays/overlay_0006.bin at base 0x020bfec0, reports MATCH for
+ * 0x0210f564 size 0x3b0. Its delink block is therefore added to
+ * config/arm9/overlays/ov006/delinks.txt -- unlike 5a, this one this tree can
+ * honour, because cMgSmartball_object_c is a self-contained root that needs
+ * nothing but types.h.
+ *
+ * ---- 5c. AND ONE MORE PLAIN NAME-SPELLING ALIAS --------------------------
+ *
+ * 5b's body declares `namespace Sound { void PlayBank2_2D(u32 id); }`, so MSVC
+ * emits ?PlayBank2_2D@Sound@@YAXI@Z where every C-spelled caller in this binary
+ * emits the Itanium name _ZN5Sound12PlayBank2_2DEj. Identical to row 1's
+ * Memory::Deallocate case in every respect that matters: @@YAX is a free
+ * function, __cdecl, void return, over one unsigned int; the Itanium spelling
+ * is the same function with the same argument and is defined in this binary out
+ * of src/. An alias here changes a name and not a convention.
+ */
+#include "MgSmartball_HostAbi.h"
+#include "cMgSmartball_board_c.h"
+
+extern "C" s32 _ZN16dScMgSmartball_c6RenderEv(void *self)
+{ return ((dScMgSmartball_c *)self)->dScMgSmartball_c::Render(); }
+
+extern "C" void _ZN20cMgSmartball_board_c12SaveSnapshotEv(void *self)
+{ ((cMgSmartball_board_c *)self)->cMgSmartball_board_c::SaveSnapshot(); }
+
+#pragma comment(linker, "/alternatename:_func_ov006_021173c8=__ZN16dScMgSmartball_c6RenderEv")
+#pragma comment(linker, "/alternatename:_func_ov006_0210f564=__ZN20cMgSmartball_board_c12SaveSnapshotEv")
+#pragma comment(linker, "/alternatename:?PlayBank2_2D@Sound@@YAXI@Z=__ZN5Sound12PlayBank2_2DEj")

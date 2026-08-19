@@ -1745,6 +1745,280 @@ static const MgFace kSmartballFaces[] = {
     {0x02118ae4u, (void *)smb_v31},
 };
 
+// ---- THE SUB-OBJECT FAMILY: TWELVE THREE-SLOT VTABLES ---------------------
+//
+// Run mg5, lane SMBSEAT. This is the floor the INTEG seat named and could not
+// clear: with slot 0 InitResources seated the class BUILDS its sub-objects, and
+// the first method call on one of them jumped to 0x02114458 as a host address.
+// Nothing about that was a decomp gap. The bodies were already in this tree;
+// what was missing was the same address-keyed relocation every scene class
+// above this line gets, applied to the tables the sub-objects carry.
+//
+// ---- IDENTITY, RE-DERIVED FROM THE ROM, AND THE ANNOUNCED ADDRESS IS OFF ---
+//
+// The 376 SEAT line used to say "a sub-object whose ov006 vtable at 0x0213eca0
+// holds raw DS addresses". 0x0213eca0 is not a vtable; it is the WORD that
+// holds 0x02114458, and it is the THIRD slot of a table whose vptr is
+// 0x0213ec98. The correction matters because the naive reading -- treat
+// 0x0213eca0 as a head and fill forward -- walks straight off the end of the
+// table it is in.
+//
+// An Itanium record walk of extracted/overlays/overlay_0006.bin at base
+// 0x020bfec0, looking for [0x00000000, ti] pairs whose ti resolves to a name
+// string, finds TWELVE of them between 0x0213ec90 and 0x0213eda0, each on a
+// 0x14 stride, each naming a cMgSmartball_ class:
+//
+//   vptr        class                        slots: s0, s1, s2
+//   0x0213ec98  19cMgSmartball_ball_c        02113f1c 02113e54 02114458
+//   0x0213ecac  20cMgSmartball_dokan_c       02110a20 02110928 02110bb4
+//   0x0213ece8  24cMgSmartball_propeller_c   02111144 0211102c 021111f0
+//   0x0213ecfc  21cMgSmartball_spring_c      0211134c 02111268 02111560
+//   0x0213ed10  21cMgSmartball_object_c      02114724 02114720 02114738
+//   0x0213ed24  19cMgSmartball_wing_c        0210e014 0210ddf0 0210e098
+//   0x0213ed38  25cMgSmartball_pushswitch_c  0210e3e8 0210e364 0210e460
+//   0x0213ed4c  18cMgSmartball_ana_c         021116f0 02111654 02111750
+//   0x0213ed60  20cMgSmartball_board_c       0210f564 0210e4f4 0210f914
+//   0x0213ed74  19cMgSmartball_slot_c        021100a8 0210ff1c 02110154
+//   0x0213ed88  21cMgSmartball_kinoko_c      0211192c 021117bc 02111b20
+//   0x0213ed9c  21cMgSmartball_pakkun_c      021106b4 021104c0 02110850
+//
+// The decomp names those three slots SaveSnapshot, Update and RestoreInitial
+// in that order, and the ROM agrees: the sibling headers on main map each
+// mangled body to the slot it sits in here.
+//
+// cMgSmartball_object_c is the ROOT and the other eleven are its direct
+// children. Every one of the twelve symbols is already in the ov006 mount
+// (port/ov006_syms.txt lines 445-447) and already in the map, so nothing new
+// is mounted here; the words are simply relocated.
+//
+// ---- THE WIDTH IS 3, AND THE SPAN CHECK IS THE ONE THAT LIES --------------
+//
+// This project has corrupted a neighbouring class once by trusting a width it
+// did not derive, so all the checks are written out.
+//
+//   1. THE SPAN CHECK, WHICH IS WRONG HERE AND IS THE WHOLE WARNING. The next
+//      symbol in config/arm9/overlays/ov006/symbols.txt after
+//      data_ov006_0213ec98 is data_ov006_0213ecac, 0x14 bytes on, which reads
+//      as FIVE words. Five is an overrun into the next class: 0x0213eca4 holds
+//      0x00000000 and 0x0213eca8 holds 0x0213ebf8, and the record walk above
+//      identifies those two as cMgSmartball_dokan_c's OWN offset-to-top and
+//      typeinfo pointer. Filling five would overwrite a neighbouring class's
+//      RTTI with a host code address. The span reads 5 because config names the
+//      VPTR of each table and not its head, so each symbol span covers three
+//      slots plus the next table's two-word header.
+//
+//   2. THE STRUCTURE CHECK, which is what settles it. Every one of the twelve
+//      is [0x00000000, typeinfo, f, f, f] on a 0x14 stride with no gap, and the
+//      typeinfo word of record n+1 sits exactly where slot 4 of record n would
+//      be. A 4-slot table anywhere in the run would break the stride, and none
+//      does.
+//
+//   3. THE WORD PAST THE END. For eleven of the twelve, vt[3] is 0x00000000 --
+//      not a code address, and ov006's .text does not reach address zero. For
+//      the twelfth (pakkun, the last), vt[3] is 0x4d633831, which is ASCII
+//      "18cM": the head of the RTTI name-string table, not code at all.
+//
+//   4. A FOURTH WITNESS THAT IS NOT THE ROM. Every cMgSmartball_ class
+//      recovered on the decomp's main declares exactly three virtuals --
+//      SaveSnapshot, Update, RestoreInitial -- and no virtual destructor.
+//      Twelve independent headers, three slots each.
+//
+// ---- THE CONVENTION IS CDECL, NOT __fastcall, AND THAT IS DELIBERATE ------
+//
+// Every other thunk in this file is __fastcall (receiver in ECX) because every
+// caller of a SCENE vtable in this binary is a host dispatcher that puts it
+// there. The sub-object tables are the opposite case: their dominant caller is
+// src/func_ov006_02118488.c, this class's own Behavior, which spells
+// `typedef void (*VFunc)(void*)` and makes twelve `(**(VFunc**)o)(o)` calls --
+// a cdecl call with the receiver PUSHED. A vtable cannot serve both shapes, so
+// these thunks take the receiver on the stack, and the one C++ caller
+// (dScMgSmartball_c::Render, twelve `->f1()` dispatches) is made to match by
+// the __cdecl DispObj declaration in port/unmatched/MgSmartball_HostAbi.h.
+// port/CMakeLists.txt already makes the same ruling for func_02021d1c.
+//
+// ---- TWO SLOTS ARE NOT ORDINARY BODIES -----------------------------------
+//
+//   dokan RestoreInitial (0x02110bb4) is a 0xc-byte TAIL-CALL VENEER --
+//     `ldr ip,[pc]; bx ip; .word 0x02114738` -- so it is the base class's own
+//     RestoreInitial reached under a second address. src/func_ov006_02110bb4.c
+//     spells both sides `void(void)`, which rides r0 through on ARM and drops
+//     the receiver on the host. The thunk dispatches straight to the veneer's
+//     TARGET with the receiver, which is exactly what port_scene_fill_rom does
+//     for the three Scene veneers it carries.
+//
+//   object Update (0x02114720) is a genuinely EMPTY body: its single
+//     instruction is `bx lr`, and cMgSmartball_object_c.h on main says the
+//     same ("empty in this class"). It takes nothing and the thunk passes
+//     nothing.
+//
+// ---- AND TWO OF THE BODIES ARE FILED UNDER WRONG RECOVERED NAMES ----------
+//
+// Not missing -- misnamed, which reads the same from a symbol search and is
+// not the same thing at all. config/arm9/overlays/ov006/delinks.txt in this
+// tree files 0x02111144 as src/START_INTRO_MINIMAP_ZOOM.c and 0x02110154 as
+// src/_ZN6Player7ST_WAITE.cpp. Both are real, matched ov006 bodies at those
+// addresses; the decomp's main has since renamed them
+// _ZN24cMgSmartball_propeller_c12SaveSnapshotEv and
+// _ZN19cMgSmartball_slot_c14RestoreInitialEv. The rename is a byte-gated-tree
+// job and is ROUTED, not taken here: this file calls them by the names this
+// tree gives them and says why.
+//
+// ONE body was genuinely absent: 0x0210f564, cMgSmartball_board_c's
+// SaveSnapshot, is a 0x3b0-byte hole between two delink blocks here. It was
+// brought across from origin/main by address, re-verified in THIS worktree
+// with tools/match.py at mwccarm 2004/b56 against overlay_0006.bin (MATCH),
+// given its delink block, and reached through the cdecl forwarder in
+// port/unmatched/MgSmartball_Faces.cpp because its recovered form is a
+// __thiscall member.
+
+extern "C" {
+/* the twelve tables, all already in the ov006 mount */
+extern unsigned char data_ov006_0213ec98[];  /* cMgSmartball_ball_c       */
+extern unsigned char data_ov006_0213ecac[];  /* cMgSmartball_dokan_c      */
+extern unsigned char data_ov006_0213ece8[];  /* cMgSmartball_propeller_c  */
+extern unsigned char data_ov006_0213ecfc[];  /* cMgSmartball_spring_c     */
+extern unsigned char data_ov006_0213ed10[];  /* cMgSmartball_object_c     */
+extern unsigned char data_ov006_0213ed24[];  /* cMgSmartball_wing_c       */
+extern unsigned char data_ov006_0213ed38[];  /* cMgSmartball_pushswitch_c */
+extern unsigned char data_ov006_0213ed4c[];  /* cMgSmartball_ana_c        */
+extern unsigned char data_ov006_0213ed60[];  /* cMgSmartball_board_c      */
+extern unsigned char data_ov006_0213ed74[];  /* cMgSmartball_slot_c       */
+extern unsigned char data_ov006_0213ed88[];  /* cMgSmartball_kinoko_c     */
+extern unsigned char data_ov006_0213ed9c[];  /* cMgSmartball_pakkun_c     */
+
+/* the thirty-six bodies. Every one takes the receiver and nothing else; the
+   two exceptions are named in the banner. The parameter types the definitions
+   use vary (char *, int *, short *, a per-file struct) and are all one pointer
+   wide, so one spelling here is enough and none of these is a C++ name. */
+void func_ov006_02113f1c(void *);   void func_ov006_02113e54(void *);
+void func_ov006_02114458(void *);
+void func_ov006_02110a20(void *);   void func_ov006_02110928(void *);
+void START_INTRO_MINIMAP_ZOOM(void *);
+void func_ov006_0211102c(void *);   void func_ov006_021111f0(void *);
+void func_ov006_0211134c(void *);   void func_ov006_02111268(void *);
+void func_ov006_02111560(void *);
+void func_ov006_02114724(void *);   void func_ov006_02114720(void);
+void func_ov006_02114738(void *);
+void func_ov006_0210e014(void *);   void func_ov006_0210ddf0(void *);
+void func_ov006_0210e098(void *);
+void func_ov006_0210e3e8(void *);   void func_ov006_0210e364(void *);
+void func_ov006_0210e460(void *);
+void func_ov006_021116f0(void *);   void func_ov006_02111654(void *);
+void func_ov006_02111750(void *);
+void func_ov006_0210f564(void *);   void func_ov006_0210e4f4(void *);
+void func_ov006_0210f914(void *);
+void func_ov006_021100a8(void *);   void func_ov006_0210ff1c(void *);
+void port_mg_smartball_slot_restore(void *);
+void func_ov006_0211192c(void *);   void func_ov006_021117bc(void *);
+void func_ov006_02111b20(void *);
+void func_ov006_021106b4(void *);   void func_ov006_021104c0(void *);
+void func_ov006_02110850(void *);
+}  /* extern "C" */
+
+/* One counter for the whole family. Per-class counters would be thirty-six
+   numbers nobody reads; what a run needs to know is that the tables are being
+   dispatched at all, because a fill that silently never runs and a fill that
+   runs look identical from the outside. */
+static unsigned g_smb_obj_hits;
+
+#define SMB_OBJ(fn)   { ++g_smb_obj_hits; fn; }
+
+static void smb_ball_s0(void *s)  SMB_OBJ(func_ov006_02113f1c(s))
+static void smb_ball_s1(void *s)  SMB_OBJ(func_ov006_02113e54(s))
+static void smb_ball_s2(void *s)  SMB_OBJ(func_ov006_02114458(s))
+static void smb_dok_s0(void *s)   SMB_OBJ(func_ov006_02110a20(s))
+static void smb_dok_s1(void *s)   SMB_OBJ(func_ov006_02110928(s))
+/* the veneer: dispatch its target, with the receiver the veneer rides through */
+static void smb_dok_s2(void *s)   SMB_OBJ(func_ov006_02114738(s))
+static void smb_pro_s0(void *s)   SMB_OBJ(START_INTRO_MINIMAP_ZOOM(s))
+static void smb_pro_s1(void *s)   SMB_OBJ(func_ov006_0211102c(s))
+static void smb_pro_s2(void *s)   SMB_OBJ(func_ov006_021111f0(s))
+static void smb_spr_s0(void *s)   SMB_OBJ(func_ov006_0211134c(s))
+static void smb_spr_s1(void *s)   SMB_OBJ(func_ov006_02111268(s))
+static void smb_spr_s2(void *s)   SMB_OBJ(func_ov006_02111560(s))
+static void smb_obj_s0(void *s)   SMB_OBJ(func_ov006_02114724(s))
+/* the empty body: `bx lr`, and it reads nothing */
+static void smb_obj_s1(void *)    SMB_OBJ(func_ov006_02114720())
+static void smb_obj_s2(void *s)   SMB_OBJ(func_ov006_02114738(s))
+static void smb_wng_s0(void *s)   SMB_OBJ(func_ov006_0210e014(s))
+static void smb_wng_s1(void *s)   SMB_OBJ(func_ov006_0210ddf0(s))
+static void smb_wng_s2(void *s)   SMB_OBJ(func_ov006_0210e098(s))
+static void smb_psw_s0(void *s)   SMB_OBJ(func_ov006_0210e3e8(s))
+static void smb_psw_s1(void *s)   SMB_OBJ(func_ov006_0210e364(s))
+static void smb_psw_s2(void *s)   SMB_OBJ(func_ov006_0210e460(s))
+static void smb_ana_s0(void *s)   SMB_OBJ(func_ov006_021116f0(s))
+static void smb_ana_s1(void *s)   SMB_OBJ(func_ov006_02111654(s))
+static void smb_ana_s2(void *s)   SMB_OBJ(func_ov006_02111750(s))
+static void smb_brd_s0(void *s)   SMB_OBJ(func_ov006_0210f564(s))
+static void smb_brd_s1(void *s)   SMB_OBJ(func_ov006_0210e4f4(s))
+static void smb_brd_s2(void *s)   SMB_OBJ(func_ov006_0210f914(s))
+static void smb_slt_s0(void *s)   SMB_OBJ(func_ov006_021100a8(s))
+static void smb_slt_s1(void *s)   SMB_OBJ(func_ov006_0210ff1c(s))
+static void smb_slt_s2(void *s)   SMB_OBJ(port_mg_smartball_slot_restore(s))
+static void smb_kin_s0(void *s)   SMB_OBJ(func_ov006_0211192c(s))
+static void smb_kin_s1(void *s)   SMB_OBJ(func_ov006_021117bc(s))
+static void smb_kin_s2(void *s)   SMB_OBJ(func_ov006_02111b20(s))
+static void smb_pak_s0(void *s)   SMB_OBJ(func_ov006_021106b4(s))
+static void smb_pak_s1(void *s)   SMB_OBJ(func_ov006_021104c0(s))
+static void smb_pak_s2(void *s)   SMB_OBJ(func_ov006_02110850(s))
+
+#undef SMB_OBJ
+
+/* Address-keyed like every other face array in this file, so the thirty-six
+   keys are disjoint from kMgBaseFaces and kSmartballFaces by construction and
+   a slot that already holds a host pointer matches nothing. */
+static const MgFace kSmartballObjFaces[] = {
+    {0x02113f1cu, (void *)smb_ball_s0}, {0x02113e54u, (void *)smb_ball_s1},
+    {0x02114458u, (void *)smb_ball_s2},
+    {0x02110a20u, (void *)smb_dok_s0},  {0x02110928u, (void *)smb_dok_s1},
+    {0x02110bb4u, (void *)smb_dok_s2},
+    {0x02111144u, (void *)smb_pro_s0},  {0x0211102cu, (void *)smb_pro_s1},
+    {0x021111f0u, (void *)smb_pro_s2},
+    {0x0211134cu, (void *)smb_spr_s0},  {0x02111268u, (void *)smb_spr_s1},
+    {0x02111560u, (void *)smb_spr_s2},
+    {0x02114724u, (void *)smb_obj_s0},  {0x02114720u, (void *)smb_obj_s1},
+    {0x02114738u, (void *)smb_obj_s2},
+    {0x0210e014u, (void *)smb_wng_s0},  {0x0210ddf0u, (void *)smb_wng_s1},
+    {0x0210e098u, (void *)smb_wng_s2},
+    {0x0210e3e8u, (void *)smb_psw_s0},  {0x0210e364u, (void *)smb_psw_s1},
+    {0x0210e460u, (void *)smb_psw_s2},
+    {0x021116f0u, (void *)smb_ana_s0},  {0x02111654u, (void *)smb_ana_s1},
+    {0x02111750u, (void *)smb_ana_s2},
+    {0x0210f564u, (void *)smb_brd_s0},  {0x0210e4f4u, (void *)smb_brd_s1},
+    {0x0210f914u, (void *)smb_brd_s2},
+    {0x021100a8u, (void *)smb_slt_s0},  {0x0210ff1cu, (void *)smb_slt_s1},
+    {0x02110154u, (void *)smb_slt_s2},
+    {0x0211192cu, (void *)smb_kin_s0},  {0x021117bcu, (void *)smb_kin_s1},
+    {0x02111b20u, (void *)smb_kin_s2},
+    {0x021106b4u, (void *)smb_pak_s0},  {0x021104c0u, (void *)smb_pak_s1},
+    {0x02110850u, (void *)smb_pak_s2},
+};
+
+static void * const kSmartballObjVts[] = {
+    data_ov006_0213ec98, data_ov006_0213ecac, data_ov006_0213ece8,
+    data_ov006_0213ecfc, data_ov006_0213ed10, data_ov006_0213ed24,
+    data_ov006_0213ed38, data_ov006_0213ed4c, data_ov006_0213ed60,
+    data_ov006_0213ed74, data_ov006_0213ed88, data_ov006_0213ed9c,
+};
+
+/* THREE per table, never more, and the constant is spelled once so nothing can
+   drift it. Returns the number of slots still holding a DS word, so the caller
+   can say so out loud rather than a wild call being the first news of it. */
+static unsigned port_scene_fill_smartball_objects(void)
+{
+    unsigned left = 0;
+    const unsigned n = sizeof kSmartballObjVts / sizeof kSmartballObjVts[0];
+    for (unsigned i = 0; i < n; ++i) {
+        void **vt = (void **)kSmartballObjVts[i];
+        mg_apply(vt, 3, kSmartballObjFaces,
+                 sizeof kSmartballObjFaces / sizeof kSmartballObjFaces[0]);
+        left += mg_raw_left(vt, 3);
+    }
+    return left;
+}
+
+extern "C" unsigned port_mg_smartball_obj_hits(void) { return g_smb_obj_hits; }
+
 /* the run report for this class, registered only on a 376 boot */
 extern "C" void port_scene_mg_smartball_hits(void);
 
@@ -1777,6 +2051,18 @@ extern "C" void port_scene_fill_smartball(void)
         if (s9 && s9[0] == '0') vt[9] = (void *)mg_render_noop;
     }
 
+    /* the twelve sub-object tables, three slots each. Run mg5 lane SMBSEAT;
+       the derivation of the width and of the identity is above. */
+    {
+        const unsigned lo = port_scene_fill_smartball_objects();
+        if (lo) {
+            std::fprintf(stderr, "  [scene] MINIGAME FILL INCOMPLETE: "
+                         "the cMgSmartball_object_c family leaves %u of 36 raw "
+                         "DS words across its twelve three-slot tables.\n", lo);
+            std::fflush(stderr);
+        }
+    }
+
     {
         const unsigned lv = mg_raw_left(vt, 36);
         if (lv) {
@@ -1799,20 +2085,23 @@ extern "C" void port_scene_fill_smartball(void)
        only on a 376 boot so curling's run is unaffected. */
     if (port_scene_env_want() == 376) {
         std::printf("[scene] dScMgSmartball_c SEATED: vtable 0x0213eefc, 36 "
-                    "slots, 9 overrides. Run mg5 lane INTEG seated slot 0 "
-                    "InitResources (func_ov006_02118b70 aliased onto the plain-C "
+                    "slots, 9 overrides, and ALL NINE now reach a body. Run mg5 "
+                    "lane INTEG seated slot 0 InitResources (func_ov006_02118b70 "
+                    "aliased onto the plain-C "
                     "_ZN16dScMgSmartball_c13InitResourcesEv, NONMATCHING) and the "
-                    "aux ball-table seeder func_ov006_02114800, so the old null "
-                    "self+0x4684 deref in slot 6 is cleared and the class now "
-                    "builds its sub-objects. Slot 9 Render (func_ov006_021173c8) "
-                    "stays trapped: its only recovered form is the __thiscall "
-                    "member dScMgSmartball_c::Render and an alias cannot cross "
-                    "the calling convention. A DEEPER floor remains: init builds "
-                    "a sub-object whose ov006 vtable at 0x0213eca0 holds raw DS "
-                    "addresses (slot -> 0x02114458 = func_ov006_02114458, not "
-                    "seated), so calling that sub-object's method jumps into DS "
-                    "space. Seating that sub-object class is a separate lane; "
-                    "port/unmatched/MgSmartball_Traps.cpp.\n");
+                    "aux ball-table seeder func_ov006_02114800. Run mg5 lane "
+                    "SMBSEAT closed the last two floors: slot 9 Render is "
+                    "src/_ZN16dScMgSmartball_c6RenderEv.cpp, main's matched "
+                    "__thiscall member, reached through a cdecl forwarder in "
+                    "port/unmatched/MgSmartball_Faces.cpp because an alias cannot "
+                    "cross the calling convention; and the sub-object family is "
+                    "relocated. The line this replaces said 'a sub-object whose "
+                    "ov006 vtable at 0x0213eca0 holds raw DS addresses' -- "
+                    "0x0213eca0 is the WORD holding 0x02114458 and is slot 2 of "
+                    "cMgSmartball_ball_c's table, whose vptr is 0x0213ec98. There "
+                    "are TWELVE such tables, one per cMgSmartball_ class, THREE "
+                    "slots each (not the five the config symbol span reads), and "
+                    "all twelve are filled from kSmartballObjFaces above.\n");
         std::fflush(stdout);
         static int armed;
         if (!armed) {
@@ -1848,7 +2137,13 @@ extern "C" void port_scene_mg_smartball_hits(void)
                 port_mg_smartball_trap_hits(),
                 (m & 1) ? "  [slot 0 InitResources]" : "",
                 (m & 2) ? "  [slot 9 Render]" : "",
-                (m & 4) ? "  [func_ov006_02114800]" : "");
+                (m & 4) ? "  [func_ov006_02115248]" : "");
+    /* The sub-object witness. Zero here with a clean run is NOT a pass: it
+       means the twelve tables were relocated and then never dispatched, which
+       is the one failure a fill cannot tell from a success on its own. */
+    std::printf("[scene] cMgSmartball_object_c family dispatches: %u through "
+                "the twelve relocated three-slot tables\n",
+                port_mg_smartball_obj_hits());
     std::fflush(stdout);
 }
 
