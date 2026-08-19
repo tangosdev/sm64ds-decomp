@@ -508,13 +508,19 @@ extern "C" void func_ov004_020b8778(void *self)
 // unchanged for that reason. Only `PMF data_ov004_020bf490[]` becomes MgPmf.
 //
 // data_ov004_020bf490 IS ov004 .bss PAST THE END OF THE OVERLAY IMAGE
-// (overlay_0004.bin covers 0x020ad660..0x020beb60) and no sinit in src/ writes
-// it: the constructor that would is __sinit_ov004_020b955c, one of the two with
-// a config symbol, no delink block and no source. So on the port the table
-// reads zero, the ROM's own `if (data_ov004_020bf490[st])` guard declines, and
-// nothing is dispatched. That is a decomp hole showing through honestly rather
-// than a port bug, and it is the same shape for data_ov004_020bf428 and
-// _020bf4f8 two blocks below it.
+// (overlay_0004.bin covers 0x020ad660..0x020beb60), so nothing in the image
+// itself fills it. The constructor that fills it is __sinit_ov004_020b955c, and
+// that constructor RUNS on the port: src/__sinit_ov004_020b955c.c is a full
+// body, config/arm9/overlays/ov004/delinks.txt carries its block,
+// port/slice_mg1.txt lists it, and a scene boot prints `ov004 4/4`. So the
+// table holds live pairs, the ROM's own `if (data_ov004_020bf490[st])` guard
+// passes, and the slots ARE dispatched.
+//
+// This block used to argue the opposite, from a premise about that constructor
+// having no delink block and no source. Section 5 at the top of the file
+// records the correction, the hole the stale premise hid, which of these slots
+// the switch below routes today, and how data_ov004_020bf428 and _020bf4f8 two
+// blocks down reach their callees, which is not through this body.
 
 struct Obj {
     virtual int m00(); virtual int m01(); virtual int m02(); virtual int m03();
