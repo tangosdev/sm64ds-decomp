@@ -132,7 +132,7 @@ src/func_ov002_020aedbc.c:
     complete
     .text start:0x020aedbc end:0x020aedf4
 
-src/_ZN8CapEnemyD0Ev.c:
+src/_ZN11dCapEnemy_cD0Ev.c:
     complete
     .text start:0x020aedf4 end:0x020aee40
 
@@ -524,11 +524,11 @@ src/_ZN4Coin13InitResourcesEv.c:
     complete
     .text start:0x020b2508 end:0x020b2a34
 
-src/func_ov002_020b2a34.c:
+src/_ZN4Coin13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x020b2a34 end:0x020b2a90
 
-src/func_ov002_020b2a90.c:
+src/_ZN4Coin13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020b2a90 end:0x020b2a98
 
@@ -576,11 +576,11 @@ src/WingFeather_Spawn.c:
     complete
     .text start:0x020b3248 end:0x020b3298
 
-src/_ZN6BubbleD1Ev.c:
+src/_ZN12daObjAbuku_cD1Ev.c:
     complete
     .text start:0x020b3298 end:0x020b32c8
 
-src/_ZN6BubbleD0Ev.c:
+src/_ZN12daObjAbuku_cD0Ev.c:
     complete
     .text start:0x020b32c8 end:0x020b330c
 
@@ -592,15 +592,15 @@ src/func_ov002_020b3344.c:
     complete
     .text start:0x020b3344 end:0x020b33dc
 
-src/func_ov002_020b33dc.cpp:
+src/_ZN12daObjAbuku_c8BehaviorEv.cpp:
     complete
     .text start:0x020b33dc end:0x020b3518
 
-src/func_ov002_020b3518.cpp:
+src/_ZN12daObjAbuku_c13InitResourcesEv.cpp:
     complete
     .text start:0x020b3518 end:0x020b3568
 
-src/Bubble_Spawn.c:
+src/daObjAbuku_c_Spawn.c:
     complete
     .text start:0x020b3568 end:0x020b35a0
 
@@ -1327,7 +1327,7 @@ src/_ZN11PowerFlower13InitResourcesEv.cpp:
     complete
     .text start:0x020b9c00 end:0x020b9e04
 
-src/func_ov002_020b9e04.c:
+src/_ZN11PowerFlower13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x020b9e04 end:0x020b9e0c
 
@@ -4838,11 +4838,11 @@ src/func_ov002_020f035c.c:
     complete
     .text start:0x020f035c end:0x020f03c4
 
-src/_ZN15InvisibleSecretD1Ev.c:
+src/_ZN9daSCoin_cD1Ev.c:
     complete
     .text start:0x020f03c4 end:0x020f03f4
 
-src/_ZN15InvisibleSecretD0Ev.c:
+src/_ZN9daSCoin_cD0Ev.c:
     complete
     .text start:0x020f03f4 end:0x020f0438
 
@@ -4857,19 +4857,19 @@ src/func_ov002_020f05f4.c:
     complete
     .text start:0x020f05f4 end:0x020f069c
 
-src/func_ov002_020f069c.c:
+src/_ZN9daSCoin_c16CleanupResourcesEv.c:
     complete
     .text start:0x020f069c end:0x020f06c0
 
-src/func_ov002_020f06c0.cpp:
+src/_ZN9daSCoin_c8BehaviorEv.cpp:
     complete
     .text start:0x020f06c0 end:0x020f07dc
 
-src/func_ov002_020f07dc.c:
+src/_ZN9daSCoin_c13InitResourcesEv.cpp:
     complete
     .text start:0x020f07dc end:0x020f085c
 
-src/InvisibleSecret_Spawn.c:
+src/daSCoin_c_Spawn.c:
     complete
     .text start:0x020f085c end:0x020f0894
 

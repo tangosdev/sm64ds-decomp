@@ -4,11 +4,11 @@
     .ctor       start:0x0211e6fc end:0x0211e70c kind:rodata align:4
     .data       start:0x0211e720 end:0x0211edc0 kind:data align:32
     .bss        start:0x0211edc0 end:0x0211efe0 kind:bss align:32
-src/actors/Boo/_ZN3BooD1Ev.c:
+src/actors/Boo/_ZN3BooD1Ev.cpp:
     complete
     .text start:0x02115ee0 end:0x02115f48
 
-src/actors/Boo/_ZN3BooD0Ev.c:
+src/actors/Boo/_ZN3BooD0Ev.cpp:
     complete
     .text start:0x02115f48 end:0x02115fc4
 
@@ -28,7 +28,7 @@ src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.c:
     complete
     .text start:0x0211608c end:0x021160c4
 
-src/unnamed/ov063/func_ov063_021160c4.c:
+src/actors/Boo/_ZN3Boo16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021160c4 end:0x021160d4
 
@@ -357,7 +357,7 @@ src/actors/BigBooIcon/_ZN10BigBooIcon13InitResourcesEv.cpp:
     complete
     .text start:0x0211c444 end:0x0211c480
 
-src/unnamed/ov063/func_ov063_0211c480.cpp:
+src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0211c480 end:0x0211c4a0
 

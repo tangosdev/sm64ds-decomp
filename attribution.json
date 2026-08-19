@@ -525,6 +525,10 @@
     "src/_ZN9daSCoin_cD1Ev.c": "tangosdev",
     "src/_ZN9daSCoin_cD1Ev.cpp": "tangosdev",
     "src/_ZN11CrazedCrate13OnYoshiTryEatEv.c": "tangosdev",
-    "src/_ZN11CrazedCrate13OnYoshiTryEatEv.cpp": "tangosdev"
+    "src/_ZN11CrazedCrate13OnYoshiTryEatEv.cpp": "tangosdev",
+    "src/actors/Boo/_ZN3Boo16OnAimedAtWithEggEv.c": "tangosdev",
+    "src/actors/Boo/_ZN3Boo16OnAimedAtWithEggEv.cpp": "tangosdev",
+    "src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.c": "tangosdev",
+    "src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.cpp": "tangosdev"
   }
 }

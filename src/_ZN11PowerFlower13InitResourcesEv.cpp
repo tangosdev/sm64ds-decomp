@@ -5,14 +5,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "PowerFlower.h"
-typedef int Fix12;
-
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *act, Fix12 a, Fix12 b, unsigned int c2, unsigned int d);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, Fix12 a, Fix12 b, void *d, void *e);
+extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *act, Fix12i a, Fix12i b, unsigned int c2, unsigned int d);
+extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, Fix12i a, Fix12i b, void *d, void *e);
 extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void *self);
 extern void _ZN13RaycastGroundC1Ev(void *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, const struct Vector3 *pos, void *act);
@@ -39,8 +37,8 @@ int PowerFlower::InitResources()
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0)
         return 0;
 
-    unk_09c = -0x668;
-    unk_0a0 = -0xf000;
+    mVertAccel = -0x668;
+    mTerminalVelocity = -0xf000;
     func_ov002_020b9a1c(((char *)this));
 
     mScaleX = 0xfa0;
@@ -62,7 +60,7 @@ int PowerFlower::InitResources()
         unk_3bc = *(int *)(ray + 0x44);
     unk_3ca = 0xb4;
 
-    if (mParam == 0xffff) {
+    if (param1 == 0xffff) {
         if (*(int *)((char *)_ZN8dActor_c13ClosestPlayerEv(((char *)this)) + 8) == 1 && _ZN8SaveData16HasPlayerLostCapEv() == 0) {
             func_ov002_020b9704(((char *)this), 2);
         } else {
@@ -72,7 +70,7 @@ int PowerFlower::InitResources()
     } else {
         func_ov002_020b9704(((char *)this), 0);
     }
-    angp = (short *)(int)((char *)&unk_08e);
+    angp = (short *)(int)((char *)&mAngleY);
     *angp = *angp - 0x4000;
     _ZN13RaycastGroundD1Ev(ray);
     return 1;

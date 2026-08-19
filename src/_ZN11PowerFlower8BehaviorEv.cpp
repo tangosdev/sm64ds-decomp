@@ -14,7 +14,7 @@ extern void _ZN7fBase_c18MarkForDestructionEv(char* c);
 
 int PowerFlower::Behavior()
 {
-    int b = (int)((unk_0b0 & 0x40000) != 0);
+    int b = (int)((mFlags & 0x40000) != 0);
     if (b != 0) return 1;
     mScaleX = 0xfa0;
     mScaleY = 0xfa0;

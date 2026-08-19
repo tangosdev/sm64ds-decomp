@@ -41,6 +41,10 @@ struct FlameChompFire {
     s32 unk_324;            /* 0x324 */
     s32 unk_328;            /* 0x328 */
 #ifdef __cplusplus
+    /* --- vtable, own override --- */
+    int OnYoshiTryEat();              /* slot 18, include/dActor_c.h --
+                                          src/_ZN14FlameChompFire13OnYoshiTryEatEv.c */
+
     /* methods */
     int Behavior();
     int InitResources();

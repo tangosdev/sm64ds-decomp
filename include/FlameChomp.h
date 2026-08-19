@@ -42,6 +42,10 @@ struct FlameChomp {
     u8  pad_35d[0x4b];
     s32 unk_3a8;            /* 0x3a8 */
 #ifdef __cplusplus
+    /* --- vtable, own override --- */
+    int OnYoshiTryEat();              /* slot 18, include/dActor_c.h --
+                                          src/_ZN10FlameChomp13OnYoshiTryEatEv.c */
+
     /* methods */
     int Behavior();
     int InitResources();

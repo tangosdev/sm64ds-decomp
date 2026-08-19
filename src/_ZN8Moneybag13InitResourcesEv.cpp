@@ -39,8 +39,8 @@ int Moneybag::InitResources()
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x1e4, ((char*)this), 0x4b000, 0x4b000, 0, 0);
     _ZN12WithMeshClsn19StartDetectingWaterEv((char*)&mWithMeshClsn);
     func_ov081_0212777c(((char*)this), 0);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     {
         int p60;
         pos.x = mPosX;
