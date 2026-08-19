@@ -40,6 +40,7 @@ take over, ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov075 func_ov075_0211a948 (0x0211a948, size 0xb8) | lunavyqo | 2026-08-19 | **released** — no_progress floor reconfirm **div=5** (match.py words, size-exact 0xb8). ov080 sibling G3/struct/pragma size-drifts; ~25 variants land attractors {5,7,11,13,14}. Residual r2/r3 TEXIMAGE_PARAM pack rank-pin. tip remains in nearmiss/db.jsonl; API clm_cf0368e2d124 released |
 | ov005 func_ov005_020c16e4 (0x020c16e4, size 0x33c) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: ++row MultiCopy tail, dest pin `idx?dstp:dstp` / `destOff?dstp:dstp` (equal-arm) for rem-before-quot + increment order; from near-miss 136→18→16→3→0; API clm_84a56ab710d3 kept |
 | ov005 func_ov005_020c0378 (0x020c0378, size 0x354) | lunavyqo | 2026-08-13 | **active** — near-miss improved **77→44** size-exact. 0250-style S.a/S.b has + loop_invariants off + S[idx].d y. Residual pure regperm (idx r1 vs r5, has r3 vs r2) + path-B y early. API clm_3c2c2b05061d |
 | ov015 _ZN14KnockDownPlank13InitResourcesEv (0x02111960, size 0x208) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_propagation off` + u64-mask angle increment + named `zero` for vec stores; API clm_645f51ab54fa kept |
