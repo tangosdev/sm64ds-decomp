@@ -406,6 +406,54 @@ int g_run_pad;                       /* default 0x4000, pad X */
 
 const char *const RUN_MODE_KEY[3] = { "button", "analog", "auto" };
 
+/* ---- THE DS SCREEN GAP -------------------------------------------------
+   The four keys behind the launcher's "remove minigame gap" checkbox and
+   the three that shape the gap when it is left in. See port/hal/screen_gap.h
+   for what the gap IS; these are only how a player says what they want.
+
+     MinigameGap    true (default) leaves the hinge simulated, which is what
+                    the game's own code does and what makes an object that
+                    crosses between the screens move at one speed. The
+                    launcher's checkbox is the INVERSE of this key: ticking
+                    "remove minigame gap" writes false, and false pulls the
+                    two screens back together and puts the seam jump back.
+     GapFillMode    "ambient" (default) or "solid".
+     GapColor       "#RRGGBB" for the solid fill. Default "#000000".
+     GapPeek        false (default). True draws the sprites that are inside
+                    the band over the fill.
+
+   All four are optional and each falls back on its own, so a settings.json
+   written by a launcher that predates any of them is read exactly as a file
+   that sets it to the default -- which is the property that lets the game
+   and the launcher ship on their own schedules. */
+int g_gap_on;                        /* default 1 */
+int g_gap_fill;                      /* default 1, ambient */
+unsigned g_gap_color;                /* default 0xFF000000, black */
+int g_gap_peek;                      /* default 0 */
+
+/* "#RRGGBB" to 0xFFRRGGBB. Returns dflt for anything that is not exactly six
+   hex digits after an optional '#', so a half-typed colour is the default
+   rather than a colour nobody chose. Case insensitive, because a player
+   pasting a colour out of a picker gets either case. */
+unsigned parse_hex_color(const char *s, unsigned dflt)
+{
+    unsigned v = 0;
+    int n = 0;
+    if (!s) return dflt;
+    if (*s == '#') ++s;
+    for (; *s; ++s, ++n) {
+        int d;
+        if (*s >= '0' && *s <= '9') d = *s - '0';
+        else if (*s >= 'a' && *s <= 'f') d = *s - 'a' + 10;
+        else if (*s >= 'A' && *s <= 'F') d = *s - 'A' + 10;
+        else return dflt;
+        if (n >= 6) return dflt;
+        v = (v << 4) | (unsigned)d;
+    }
+    if (n != 6) return dflt;
+    return 0xFF000000u | v;
+}
+
 void load_once(void)
 {
     if (g_loaded) return;
@@ -414,6 +462,10 @@ void load_once(void)
     g_run_mode = 0;
     g_run_key = 0x10;
     g_run_pad = 0x4000;
+    g_gap_on = 1;
+    g_gap_fill = 1;
+    g_gap_color = 0xFF000000u;
+    g_gap_peek = 0;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -445,6 +497,23 @@ void load_once(void)
             const int p = json_int(text, "RunButtonPad", 0x4000);
             if (p >= 0 && p <= 0xffff) g_run_pad = p;
         }
+        /* the screen gap. Each key is read against its OWN default, so a file
+           that sets one of the four and none of the others is honoured for
+           the one it set. */
+        g_gap_on = json_bool(text, "MinigameGap", 1);
+        g_gap_peek = json_bool(text, "GapPeek", 0);
+        {
+            char mode[16];
+            if (json_str(text, "GapFillMode", mode, sizeof mode)) {
+                if (strlen(mode) == 5 && ieq(mode, "solid", 5)) g_gap_fill = 0;
+                else if (strlen(mode) == 7 && ieq(mode, "ambient", 7))
+                    g_gap_fill = 1;
+                /* anything else keeps the default, like every other reader */
+            }
+            char col[16];
+            if (json_str(text, "GapColor", col, sizeof col))
+                g_gap_color = parse_hex_color(col, 0xFF000000u);
+        }
     }
     free(text);
 
@@ -457,6 +526,11 @@ void load_once(void)
         fprintf(stderr, "[settings] RunMode %s key 0x%02x pad 0x%04x (%s)\n",
                 RUN_MODE_KEY[g_run_mode], (unsigned)g_run_key,
                 (unsigned)g_run_pad, path);
+    if (!g_gap_on || !g_gap_fill || g_gap_color != 0xFF000000u || g_gap_peek)
+        fprintf(stderr, "[settings] MinigameGap %s, fill %s #%06x, peek %s "
+                "(%s)\n", g_gap_on ? "on" : "OFF",
+                g_gap_fill ? "ambient" : "solid", g_gap_color & 0xffffffu,
+                g_gap_peek ? "ON" : "off", path);
 }
 
 }  /* namespace */
@@ -493,6 +567,32 @@ extern "C" int host_setting_run_pad(void)
 {
     load_once();
     return g_run_pad;
+}
+
+/* The four screen-gap keys. See the block above load_once for what each one
+   means; hal/screen_gap.cpp is the only reader. */
+extern "C" int host_setting_minigame_gap(void)
+{
+    load_once();
+    return g_gap_on;
+}
+
+extern "C" int host_setting_gap_fill_mode(void)
+{
+    load_once();
+    return g_gap_fill;
+}
+
+extern "C" unsigned host_setting_gap_color(void)
+{
+    load_once();
+    return g_gap_color;
+}
+
+extern "C" int host_setting_gap_peek(void)
+{
+    load_once();
+    return g_gap_peek;
 }
 
 /* Take the three values and PERSIST them, so a choice made in the debug menu

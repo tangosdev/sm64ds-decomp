@@ -83,6 +83,17 @@ constexpr uint32_t kPlttBase = 0x05000400u;  // engine B BG palette
 constexpr uint32_t kObjVram = 0x06600000u;   // engine B OBJ VRAM
 constexpr uint32_t kObjPltt = 0x05000600u;   // engine B OBJ palette
 constexpr uint32_t kOamBase = 0x07000400u;   // engine B OAM
+
+/* ENGINE A's four, for the gap band's peek pass alone -- nothing else in this
+   file reads engine A. Named with the engine in them so a later reader cannot
+   mistake one for the sub engine's above. The live engine-A raster is
+   hal/message_compositor.cpp and has its own copies of these; ntr/ppu.cpp's
+   kEngines table has them too and is not reachable from here without dragging
+   that file's whole EngineMap in for two words. */
+constexpr uint32_t kRegBaseA = 0x04000000u;
+constexpr uint32_t kOamBaseA = 0x07000000u;
+constexpr uint32_t kObjVramA = 0x06400000u;
+constexpr uint32_t kObjPlttA = 0x05000200u;
 // GXS::LoadBGExtPltt's own destination base; slots are 0x2000 apart (its
 // caller passes 0x6000 for BG3).
 constexpr uint32_t kBgExtPltt = 0x06898000u;
@@ -758,15 +769,449 @@ void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
         }
 }
 
+// ---- THE GAP BAND -----------------------------------------------------------
+//
+// WHAT THE BAND IS. The DS's two panels are not edge to edge: there is a hinge
+// between them, and the game KNOWS it. ov004's framework carries a word,
+// data_ov004_020beb6c, that every minigame sets at InitResources to the number
+// of DS rows of hinge to simulate -- 32 for most, 48 for two, 16 for the
+// trampoline family, 80 for the snowball -- and RenderOamBothScreens submits
+// the top engine's sprites at a2 + 0xc0 + that word. So the game's own world is
+// 192 + G + 192 rows tall and the middle G of them are behind the plastic. The
+// port stacked the two screens with nothing between them, which squeezed those
+// G rows out of existence: a shell that rolls off the bottom screen reappears
+// on the top screen one G-th of a screen too high, and the motion jumps.
+//
+// This band puts the missing rows back as PICTURE. It is not the hardware's
+// behaviour and does not claim to be -- the hardware's behaviour is opaque
+// plastic -- so what goes in it is the player's choice and nothing about the
+// simulation changes either way.
+//
+// Two fills, and the ambient one is the point of the feature. See band_fill.
+namespace {
+
+// The ambient fill's column count. Twenty-four over 256 DS columns is a column
+// every ten or so pixels, which is fine enough that a lamp on one side of the
+// screen does not tint the other and coarse enough that the averaging is
+// nothing: 24 columns x 2 edges x a two-column-wide window is under 2500 pixel
+// reads a frame, against the 400 000 the compose already copies.
+constexpr int kAmbCols = 24;
+
+/* HOW WIDE EACH COLUMN SAMPLES. The design says "its own width plus HALF A
+   COLUMN on each side", and then glosses that "1.5 column widths". Those two
+   do not agree -- own width plus a half on each side is TWO column widths --
+   and this takes the words rather than the gloss, so the halo is half a column
+   and the window is two columns wide. It is one constant either way: numerator
+   1 denominator 4 gives the 1.5-total reading. */
+constexpr int kAmbHaloNum = 1, kAmbHaloDen = 2;
+
+struct RGB { int r, g, b; };
+
+/* Column c's own span [x0, x1) in the image's own pixels. Computed by the
+   multiply-then-divide form rather than by accumulating a width, so the last
+   column ends exactly at w whatever the remainder is. */
+void amb_col_span(int w, int c, int &x0, int &x1)
+{
+    x0 = (c * w) / kAmbCols;
+    x1 = ((c + 1) * w) / kAmbCols;
+}
+
+/* And the span it SAMPLES: its own plus the halo on each side, clamped at the
+   image edges. The clamp is why the outermost columns are not lopsided in the
+   other direction -- an unclamped window would read off the row. */
+void amb_sample_span(int w, int c, int &s0, int &s1)
+{
+    int x0, x1;
+    amb_col_span(w, c, x0, x1);
+    const int halo = ((x1 - x0) * kAmbHaloNum) / kAmbHaloDen;
+    s0 = x0 - halo;
+    s1 = x1 + halo;
+    if (s0 < 0) s0 = 0;
+    if (s1 > w) s1 = w;
+}
+
+RGB amb_avg(const uint32_t *row, int s0, int s1)
+{
+    const int n = s1 - s0 > 0 ? s1 - s0 : 1;
+    int r = 0, g = 0, b = 0;
+    for (int x = s0; x < s1; ++x) {
+        const uint32_t p = row[x];
+        r += (int)((p >> 16) & 0xff);
+        g += (int)((p >> 8) & 0xff);
+        b += (int)(p & 0xff);
+    }
+    RGB o = {r / n, g / n, b / n};
+    return o;
+}
+
+/* THE AMBIENT FILL.
+ *
+ * The band is lit by the two pictures it sits between. Each of twenty-four
+ * columns takes the average colour of the top screen's BOTTOM row and of the
+ * bottom screen's TOP row over its own sample window, and is a vertical ramp
+ * from the first to the second; the columns are interpolated between their
+ * CENTRES across the width, so there is no seam where two columns meet. The
+ * edge rows are re-read every frame, so the band glows with the scene rather
+ * than with a colour picked once at load.
+ *
+ * WHY THE RAMP IS SAMPLED AT ROW CENTRES. The band sits BETWEEN the two rows it
+ * interpolates, so its first row is not the top edge and its last is not the
+ * bottom edge; both are half a row in from them. (2k+1) / 2h is that, in
+ * integers, and it is also what keeps a one-row band from being pinned to
+ * either end.
+ *
+ * ALL INTEGER, and that is a testability decision as much as a speed one: a
+ * float ramp is not reproducible from a second implementation, and the proof
+ * this feature ships with is exactly a second implementation re-deriving the
+ * band from the captured edge rows and diffing it. Every divide here is a
+ * truncating integer divide and the checker does the same ones. */
+void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
+{
+    const uint32_t *top_edge = dst + (size_t)(lay.band_y - 1) * dst_w;
+    const uint32_t *bot_edge = dst + (size_t)lay.bottom_y * dst_w;
+    RGB tops[kAmbCols], bots[kAmbCols];
+    int centre[kAmbCols];
+    for (int c = 0; c < kAmbCols; ++c) {
+        int s0, s1, x0, x1;
+        amb_sample_span(lay.w, c, s0, s1);
+        amb_col_span(lay.w, c, x0, x1);
+        tops[c] = amb_avg(top_edge, s0, s1);
+        bots[c] = amb_avg(bot_edge, s0, s1);
+        centre[c] = (x0 + x1) / 2;
+    }
+
+    /* the two endpoint colours for every column of the image, resolved once
+       rather than per row: the horizontal interpolation does not depend on y,
+       and doing it inside the row loop would be band_h times the work for the
+       same answer. Outside the first and last centres the end column's own
+       value stands, which is the honest edge behaviour -- there is nothing
+       beyond it to interpolate towards. */
+    for (int x = 0; x < lay.w; ++x) {
+        RGB t, b;
+        if (x <= centre[0]) {
+            t = tops[0];
+            b = bots[0];
+        } else if (x >= centre[kAmbCols - 1]) {
+            t = tops[kAmbCols - 1];
+            b = bots[kAmbCols - 1];
+        } else {
+            int c = 0;
+            while (c + 1 < kAmbCols && centre[c + 1] <= x) ++c;
+            const int span = centre[c + 1] - centre[c];
+            const int u = x - centre[c], v = span - u;
+            t.r = (tops[c].r * v + tops[c + 1].r * u) / span;
+            t.g = (tops[c].g * v + tops[c + 1].g * u) / span;
+            t.b = (tops[c].b * v + tops[c + 1].b * u) / span;
+            b.r = (bots[c].r * v + bots[c + 1].r * u) / span;
+            b.g = (bots[c].g * v + bots[c + 1].g * u) / span;
+            b.b = (bots[c].b * v + bots[c + 1].b * u) / span;
+        }
+        const int den = 2 * lay.band_h;
+        for (int k = 0; k < lay.band_h; ++k) {
+            const int num = 2 * k + 1;
+            const int r = (t.r * (den - num) + b.r * num) / den;
+            const int g = (t.g * (den - num) + b.g * num) / den;
+            const int bl = (t.b * (den - num) + b.b * num) / den;
+            dst[(size_t)(lay.band_y + k) * dst_w + x] =
+                0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) |
+                (uint32_t)bl;
+        }
+    }
+}
+
+void band_fill(uint32_t *dst, int dst_w, const StackLayout &lay)
+{
+    if (lay.band_h <= 0) return;
+    if (lay.fill_mode == GAP_FILL_AMBIENT) {
+        band_fill_ambient(dst, dst_w, lay);
+        return;
+    }
+    const uint32_t c = lay.fill_color | 0xFF000000u;
+    for (int k = 0; k < lay.band_h; ++k) {
+        uint32_t *out = dst + (size_t)(lay.band_y + k) * dst_w;
+        for (int x = 0; x < lay.w; ++x) out[x] = c;
+    }
+}
+
+/* ---- PEEK: the band's own hidden sprites -----------------------------------
+ *
+ * WHAT IS ACTUALLY IN THERE, and this is measured rather than assumed (run mg5
+ * lane GAPPROBE, its OAM census over 900 frames of six minigames).
+ *
+ * Take world Y with its origin at the top row of the BOTTOM screen. The bottom
+ * screen is rows 0..191, the band is rows -G..-1, and the top screen is
+ * -(192+G)..-(G+1). The two engines' own row numbering then puts the SAME band
+ * rows in two places:
+ *
+ *     main engine row 192 + k   ==   sub engine row -G + k   ==   world -G + k
+ *
+ * so a band row exists in both engines' coordinate systems and neither engine's
+ * hardware draws it. What reaches OAM is decided by OAM::Render's cull, which
+ * is `if (y + h < 0) return; if (y > 0xc0) return;` and then stores y & 0xff:
+ *
+ *   * on the MAIN engine a sprite that straddles the bottom edge of the top
+ *     screen is submitted whole, so its rows past 191 are real OAM rows in
+ *     192..191+G. Scene 376's two hinge sprites are exactly this: 128 rows tall
+ *     at y 80 and 85, so 16 and 21 of their rows are band rows.
+ *   * on the SUB engine a sprite that runs off the TOP of the bottom screen
+ *     wraps into y >= 256 - h, which the DS reads as a negative row, so its
+ *     rows are real OAM rows in -G..-1.
+ *
+ * and BETWEEN those two there is a hole. An object whose sprite ORIGIN sits at
+ * world -G + k is submitted to the main engine as y = 192 + k, which the cull
+ * throws away for every k >= 1, and to the sub engine as y = -G + k, which the
+ * cull throws away until k >= G - h. So origins in k = 1 .. G-h-1 reach NEITHER
+ * engine and the object is simply not drawn -- 23 rows of it for scene 374's
+ * 8x8 dots at G = 32. THAT IS THE ROM'S OWN BEHAVIOUR, not a port defect, and
+ * peek mode reproduces it by construction: this pass draws what the engines
+ * were given and invents nothing, so the hole stays empty.
+ *
+ * A SECOND PASS RATHER THAN A TALLER RASTER. The two live rasterisers
+ * (raster_obj above, engine B, and hal/message_compositor.cpp's, engine A) run
+ * every frame on every path in the program, and growing their buffers by G rows
+ * would put this off-by-default feature's cost and its risk on every level. This
+ * walks OAM once more, only over the band's rows, only when peek is on.
+ *
+ * WHERE THE TWO ENGINES OVERLAP, ENGINE B WINS. Both engines address the same
+ * world rows here, so where both have a pixel they are two submissions of the
+ * same object and either is right; a rule is needed only so the answer does not
+ * depend on OAM index luck. B is drawn second because the band is the bottom
+ * screen's own coordinate space continued upward with no offset term -- sub row
+ * -G + k IS band row k -- while the main engine's contribution needs the 192
+ * subtraction, and when two answers are equally right the one with less
+ * arithmetic between it and the pixel is the one to trust.
+ */
+struct BandPixel {
+    uint32_t color;
+    uint8_t prio;
+    uint8_t hit;
+};
+
+/* One engine's sprites over the band, in DS pixels: band[k][x] for k in
+ * [0, gap_ds). `row_bias` turns an engine row into a band index -- -192 for the
+ * main engine, +G for the sub engine -- and is the whole of what differs
+ * between the two calls.
+ *
+ * Priority resolves sprite against sprite exactly as raster_obj does above:
+ * walk 127 -> 0 so a lower index is processed later, and overwrite when the
+ * pixel is empty or this sprite's priority number is at least as good. */
+int band_trace_frames(void)
+{
+    /* SM64DS_GAP_PEEK_TRACE=1: one census line per peek frame, per engine, of
+       every OAM entry whose BOX reaches the band and how many pixels of it
+       actually landed there. The two numbers are not the same and the gap
+       between them is the thing worth having: a double-size affine sprite has
+       a box twice the size of anything it can draw, so an entry can be
+       "submitted into the band" by every arithmetic you can do on OAM and
+       still contribute nothing, because its texels are all in the middle of
+       its own box. Scene 376's two 64x64 hinge sprites at double size are
+       exactly that case, and without this line the only way to tell them apart
+       from a broken raster is to read the matrix by hand. */
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_GAP_PEEK_TRACE");
+        on = s && *s && *s != '0';
+    }
+    return on;
+}
+
+void band_raster_engine(BandPixel *band, int gap_ds, uint32_t reg_base,
+                        uint32_t oam_base, uint32_t obj_vram,
+                        uint32_t obj_pltt, uint32_t obj_ext, int row_bias,
+                        const char *engine_name)
+{
+    static const int kSizes[3][4][2] = {
+        {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
+        {{16, 8}, {32, 8}, {32, 16}, {64, 32}},
+        {{8, 16}, {8, 32}, {16, 32}, {32, 64}},
+    };
+    const uint32_t dispcnt = rd32(reg_base);
+    if (!((dispcnt >> 12) & 1)) return;              // OBJ layer off
+    const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
+    const bool map1d = (dispcnt >> 4) & 1;
+    const uint32_t objext = ((dispcnt >> 31) & 1) ? obj_ext : 0;
+
+    for (int i = 127; i >= 0; --i) {
+        const uint16_t a0 = rd16(oam_base + i * 8u);
+        const uint16_t a1 = rd16(oam_base + i * 8u + 2);
+        const uint16_t a2 = rd16(oam_base + i * 8u + 4);
+        /* THE EMPTY SLOT, AND IT IS PARKED IN THE BAND. OAM::Reset (matched
+           src/_ZN3OAM5ResetEv.cpp) clears all 128 entries to attribute word
+           0x000000c0 and attribute 2 zero -- y = 0xc0, x = 0, tile 0, palette
+           0, 8x8, mode normal, NOT the disable bit. That works on hardware
+           because 0xc0 is 192, the first row BELOW the visible screen, so an
+           unused slot is hidden by being parked exactly one row past the
+           bottom edge. Which is exactly where this band starts.
+           Measured, before this test was here: scene 376 drew 28 identical 8x8
+           blobs of whatever happens to be in OBJ tile 0 across the top eight
+           rows of the band, and scenes 368 and 374 the same. Every one of them
+           was an empty slot.
+           So the exact reset triple is skipped, and only that triple: a real
+           sprite that genuinely sits at y 192 has an x, a tile or a palette,
+           and keeps its pixels. */
+        if (a0 == 0x00c0 && a1 == 0x0000 && a2 == 0x0000) continue;
+        const bool affine = a0 & 0x100;
+        if (!affine && (a0 & 0x200)) continue;       // disabled
+        const unsigned objmode = (a0 >> 10) & 3;
+        if (objmode == 2 || objmode == 3) continue;  // window mask; bitmap OBJ
+        const int shape = (a0 >> 14) & 3;
+        if (shape == 3) continue;
+        const int size = (a1 >> 14) & 3;
+        const int w = kSizes[shape][size][0], h = kSizes[shape][size][1];
+        const bool dbl = affine && (a0 & 0x200);
+        const int bw = dbl ? w * 2 : w, bh = dbl ? h * 2 : h;
+        int x = a1 & 0x1FF, y = a0 & 0xFF;
+        if (x >= 256) x -= 512;
+        /* THE WRAP, and it is the same expression both live rasterisers use.
+           This is what turns a sub-engine sprite parked at y 224..255 into the
+           negative rows the band is made of, so getting it right here is the
+           whole of whether the bottom half of the band has anything in it. */
+        if (y >= 192 && y >= 256 - bh) y -= 256;
+        const bool c256 = a0 & 0x2000;
+        const bool hflip = !affine && (a1 & 0x1000);
+        const bool vflip = !affine && (a1 & 0x2000);
+        const uint32_t tile = a2 & 0x3FF;
+        const uint32_t pal = (a2 >> 12) & 0xF;
+        const uint8_t prio = (a2 >> 10) & 3;
+
+        int pa = 256, pb = 0, pc = 0, pd = 256;
+        if (affine) {
+            const int grp = (a1 >> 9) & 0x1F;
+            pa = (int16_t)rd16(oam_base + (grp * 4 + 0) * 8u + 6);
+            pb = (int16_t)rd16(oam_base + (grp * 4 + 1) * 8u + 6);
+            pc = (int16_t)rd16(oam_base + (grp * 4 + 2) * 8u + 6);
+            pd = (int16_t)rd16(oam_base + (grp * 4 + 3) * 8u + 6);
+        }
+
+        /* the BOX's reach into the band, before a single texel is read: the
+           number every OAM-only analysis produces, kept beside the number this
+           raster actually draws */
+        int box_rows = 0, drawn = 0;
+        for (int sy = 0; sy < bh; ++sy) {
+            const int kk = y + sy + row_bias;
+            if (kk >= 0 && kk < gap_ds) ++box_rows;
+        }
+
+        for (int sy = 0; sy < bh; ++sy) {
+            const int k = y + sy + row_bias;
+            if (k < 0 || k >= gap_ds) continue;
+            for (int sx = 0; sx < bw; ++sx) {
+                const int px = x + sx;
+                if (px < 0 || px >= 256) continue;
+                int tx, ty;
+                if (affine) {
+                    const int cx = sx - bw / 2, cy = sy - bh / 2;
+                    tx = ((pa * cx + pb * cy) >> 8) + w / 2;
+                    ty = ((pc * cx + pd * cy) >> 8) + h / 2;
+                    if (tx < 0 || tx >= w || ty < 0 || ty >= h) continue;
+                } else {
+                    tx = hflip ? w - 1 - sx : sx;
+                    ty = vflip ? h - 1 - sy : sy;
+                }
+                const int tcol = tx >> 3, trow = ty >> 3;
+                const int fx = tx & 7, fy = ty & 7;
+                const uint32_t slot =
+                    map1d ? (uint32_t)(trow * (w / 8) + tcol) * (c256 ? 2u : 1u)
+                          : (uint32_t)(trow * 32 + (c256 ? tcol * 2 : tcol));
+                const uint32_t cell = obj_vram + tile * boundary + slot * 32u;
+                uint32_t color;
+                if (c256) {
+                    const uint32_t idx = rd8(cell + fy * 8u + fx);
+                    if (!idx) continue;
+                    color = objext
+                                ? bgr555(rd16(objext + (pal * 256u + idx) * 2u))
+                                : bgr555(rd16(obj_pltt + idx * 2u));
+                } else {
+                    const uint8_t bb = rd8(cell + fy * 4u + fx / 2);
+                    const uint32_t idx = (fx & 1) ? (bb >> 4) : (bb & 0xF);
+                    if (!idx) continue;
+                    color = bgr555(rd16(obj_pltt + (pal * 16u + idx) * 2u));
+                }
+                ++drawn;
+                BandPixel &bp = band[(size_t)k * 256 + px];
+                if (bp.hit && prio > bp.prio) continue;
+                bp.color = color;
+                bp.prio = prio;
+                bp.hit = 1;
+            }
+        }
+        if (box_rows && band_trace_frames())
+            std::fprintf(stderr, "[gappeek] %s oam%3d a0=%04x a1=%04x a2=%04x "
+                         "%dx%d%s at (%d,%d): box reaches %d band row(s), "
+                         "%d pixel(s) drawn\n", engine_name, i, a0, a1, a2, w,
+                         h, dbl ? " dbl" : (affine ? " aff" : ""), x, y,
+                         box_rows, drawn);
+    }
+}
+
+void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
+{
+    if (lay.band_h <= 0 || lay.gap_ds <= 0) return;
+    /* GAP_DS_MAX rows of 256 DS pixels, on the stack of the compose. 96 x 256
+       x 6 bytes is 147 KB, which is more stack than this program's thread
+       wants to spend on an off-by-default feature, so it is a file static: the
+       compose is called from one thread on one path and never re-enters. */
+    static BandPixel band[GAP_DS_MAX][256];
+    std::memset(band, 0, sizeof(BandPixel) * (size_t)lay.gap_ds * 256);
+
+    /* ENGINE A FIRST. Its band rows are engine rows 192..191+G, so the bias
+       that turns an engine row into a band index is -192. Engine A's OBJ
+       extended palette store is not modelled anywhere in this program, so it
+       passes 0 and a 256-colour engine-A sprite reads the standard palette --
+       the same answer ntr/ppu.cpp's own engine-A raster gives. */
+    band_raster_engine(&band[0][0], lay.gap_ds, kRegBaseA, kOamBaseA,
+                       kObjVramA, kObjPlttA, 0, -192, "A");
+    /* ENGINE B SECOND, so it wins where both drew; see the header note. Its
+       band rows are engine rows -G..-1, so the bias is +G. */
+    band_raster_engine(&band[0][0], lay.gap_ds, kRegBase, kOamBase, kObjVram,
+                       kObjPltt, kObjExtPltt, lay.gap_ds, "B");
+
+    /* into the image, at the same integer scale the bottom half is drawn at */
+    const int rx = lay.w / SUB_W, ry = lay.scale;
+    for (int k = 0; k < lay.gap_ds; ++k)
+        for (int x = 0; x < 256; ++x) {
+            const BandPixel &bp = band[k][x];
+            if (!bp.hit) continue;
+            for (int oy = 0; oy < ry; ++oy) {
+                uint32_t *out = dst + (size_t)(lay.band_y + k * ry + oy) * dst_w;
+                for (int ox = 0; ox < rx; ++ox) out[x * rx + ox] = bp.color;
+            }
+        }
+}
+
+}  // namespace
+
 // ---- the stacked presentation -----------------------------------------------
 //
-// Two equal halves, no separator, and the header carries the reasoning. This
-// writes every pixel of dst, so the caller does not have to clear it.
+// The layout decides everything; see StackLayout in ntr/ppu.h. This writes
+// every pixel of dst, so the caller does not have to clear it.
+
+StackLayout stack_layout(int gap_ds, int fill_mode, uint32_t fill_color,
+                         int peek)
+{
+    StackLayout l;
+    if (gap_ds < 0) gap_ds = 0;
+    if (gap_ds > GAP_DS_MAX) gap_ds = GAP_DS_MAX;
+    l.gap_ds = gap_ds;
+    l.scale = SCREEN_H / SUB_H;
+    l.w = STACK_W;
+    l.top_y = 0;
+    l.band_y = SCREEN_H;
+    l.band_h = gap_ds * l.scale;
+    l.bottom_y = SCREEN_H + l.band_h;
+    l.h = SCREEN_H * 2 + l.band_h;
+    l.fill_mode = fill_mode == GAP_FILL_SOLID ? GAP_FILL_SOLID
+                                              : GAP_FILL_AMBIENT;
+    l.fill_color = fill_color | 0xFF000000u;
+    l.peek = peek ? 1 : 0;
+    return l;
+}
+
 void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
                          uint32_t *dst, int dst_w, int dst_h, int evy,
-                         int to_white)
+                         int to_white, const StackLayout &lay)
 {
-    if (!top || !dst || dst_w != STACK_W || dst_h != STACK_H) return;
+    if (!top || !dst || dst_w != lay.w || dst_h != lay.h) return;
     if (evy < 0) evy = 0;
     if (evy > 16) evy = 16;
 
@@ -781,7 +1226,7 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
     for (int y = 0; y < SCREEN_H; ++y) {
         const int sy = ry > 0 ? y / ry : (y * SUB_H) / SCREEN_H;
         const uint32_t *src = sub.px[sy < SUB_H ? sy : SUB_H - 1];
-        uint32_t *out = dst + (size_t)(SCREEN_H + y) * dst_w;
+        uint32_t *out = dst + (size_t)(lay.bottom_y + y) * dst_w;
         for (int x = 0; x < SCREEN_W; ++x) {
             const int sx = rx > 0 ? x / rx : (x * SUB_W) / SCREEN_W;
             uint32_t p = src[sx < SUB_W ? sx : SUB_W - 1];
@@ -820,6 +1265,21 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
             out[x] = p;
         }
     }
+
+    /* THE BAND LAST, because the ambient fill reads the two rows the loops
+       above just wrote -- the top screen's bottom row and the bottom screen's
+       top row -- and reading them before they are written would light the band
+       off the previous frame. With no gap band_h is 0 and both calls return
+       immediately, so a gapless image is byte-for-byte what it was before this
+       existed.
+
+       THE FADE IS NOT APPLIED TO THE BAND, and it does not need to be: the
+       ambient fill is a function of two rows that have ALREADY been faded, so
+       it fades with them for free. A solid fill is the player's own colour and
+       fading it would be this program deciding that a preference is part of the
+       picture. */
+    band_fill(dst, dst_w, lay);
+    if (lay.peek) band_peek(dst, dst_w, lay);
 }
 
 }  // namespace ntr

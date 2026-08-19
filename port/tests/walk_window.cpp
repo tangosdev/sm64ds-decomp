@@ -880,9 +880,19 @@ int hal_present_client_to_sub(int cx, int cy, int *dsx, int *dsy);
    image out of the FINISHED framebuffer plus the bottom screen. It is called
    last, after this file's fade composite and debug overlay, so the framebuffer
    it reads is the same framebuffer every ppu_write_bmp site here writes, and
-   hal/sub_screen.cpp owns the buffer so an inset build carries none of it. */
+   hal/sub_screen.cpp owns the buffer so an inset build carries none of it.
+
+   THE IMAGE IS NOT A FIXED SIZE ANY MORE. A minigame that simulates the DS's
+   hinge composes a band between the two screens, so the image is
+   512 x (768 + 2G) at this tier and G is not known until the scene's
+   InitResources has run. hal_sub_screen_stacked_size is the live size and
+   hal_sub_screen_stacked_generation steps whenever it changes; see
+   port/hal/screen_gap.h. Everything in this file that used to spell
+   ntr::STACK_H reads one of those instead. */
 int hal_sub_screen_stacked(void);
 const unsigned int *hal_sub_screen_stacked_image(const unsigned int *top);
+void hal_sub_screen_stacked_size(int *w, int *h);
+unsigned hal_sub_screen_stacked_generation(void);
 /* the focus gate (hal/sub_screen.cpp): 1 when this window is the foreground
    one, so an interactive key read can be trusted to be meant for this program */
 int hal_window_focused(void);
@@ -3448,8 +3458,14 @@ static void present(void)
     if (g_present_stack && g_present_stack_bi) {
         bits = g_present_stack;
         bi = g_present_stack_bi;
-        sw = ntr::STACK_W;
-        sh = ntr::STACK_H;
+        /* THE SOURCE SIZE IS THE HEADER'S, not a constant, and it is read out
+           of the header rather than asked of hal because present() runs from
+           the window procedure inside a modal resize drag. Reading the live
+           layout there would be reading a value the frame loop is between two
+           uses of; the header and the pixels were published together by
+           stack_present_arm below, so they agree by construction. */
+        sw = bi->bmiHeader.biWidth;
+        sh = -bi->bmiHeader.biHeight;
     } else {
         bits = &g_present_fb->px[0][0];
         bi = g_present_bi;
@@ -3601,6 +3617,12 @@ static void mo_release(void)
     if (W.ShowCursor_) while (W.ShowCursor_(TRUE) < 0) {}
 }
 
+/* The player has chosen a window size, by dragging the border or by
+   maximising, so nothing in this program may choose one for them afterwards.
+   Set by the window procedure below; read by stack_present_arm, which is the
+   one thing that would otherwise re-size a running window. */
+static int g_user_sized;
+
 static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
     if (m == WM_DESTROY) { mo_release(); W.PostQuitMessage_(0); return 0; }
@@ -3714,8 +3736,20 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
        of that drag, and presenting the last frame from here is what makes
        the picture follow the edge instead of smearing behind it. */
     case WM_SIZE:
+        /* SIZE_MAXIMIZED (2) is a size the player asked for as much as a drag
+           is, so the stacked layout must not grow out from under it either.
+           SIZE_RESTORED from this program's own SetWindowPos is NOT: that path
+           is stack_present_arm and it sets nothing. */
+        if (w == 2) g_user_sized = 1;
         present();
         return 0;
+    /* THE PLAYER'S HAND ON THE SIZING BORDER, which is the edge the stacked
+       layout has to stop growing at. WM_SIZING arrives only from a border
+       drag -- SetWindowPos does not send it -- so it is the one message that
+       says "this size is a choice" rather than "this size happened". */
+    case WM_SIZING:
+        g_user_sized = 1;
+        break;
     /* Same reason, for the repaints the compositor asks for: a restore from
        minimised, an uncover, a monitor change. Presenting and then
        validating is the whole of it -- without the validate the region stays
@@ -3826,7 +3860,15 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
         if (pf && (pf[0] == 'h' || pf[0] == 'H'))
             g_present_filter = PRESENT_FILTER_HALFTONE;
     }
-    RECT r = stacked ? RECT{0, 0, ntr::STACK_W, ntr::STACK_H}
+    /* THE STACKED SHAPE IS ASKED FOR RATHER THAN SPELLED, because a minigame
+       that simulates the DS's hinge composes a taller image and the number is
+       not known until its InitResources has run. At this point -- before the
+       scene has booted -- the answer is the gapless one, 512x768, which is
+       exactly the window this opened before the gap existed. stack_present_arm
+       grows it later, once, when the scene latches its G. */
+    int stw = ntr::STACK_W, sth = ntr::STACK_H;
+    if (stacked) hal_sub_screen_stacked_size(&stw, &sth);
+    RECT r = stacked ? RECT{0, 0, stw, sth}
                      : RECT{0, 0, ntr::SCREEN_W * ZOOM, ntr::SCREEN_H * ZOOM};
     W.AdjustWindowRect_(&r, WS_OVERLAPPEDWINDOW, FALSE);
     /* ---- WHERE IT OPENS (port mod, Tango's ask: "can it open center screen")
@@ -3917,8 +3959,98 @@ static HWND host_window_open(int stacked, HDC *out_hdc, const char *title)
        frame loop stopped -- a header the frame loop was halfway through
        editing would be read by that path. */
     g_bi_stack = g_bi;
-    g_bi_stack.bmiHeader.biHeight = -ntr::STACK_H;
+    g_bi_stack.bmiHeader.biWidth = stw;
+    g_bi_stack.bmiHeader.biHeight = -sth;
     return hwnd;
+}
+
+/* ---- THE RESPONSIVE STACKED LAYOUT (port mod) -------------------------------
+ *
+ * A minigame's simulated screen gap is not known when the window opens. The
+ * value lives in ov004's framework word and each minigame writes it in its own
+ * InitResources, which runs after the scene has been handed the window, so the
+ * image the frame loop composes gets 2G rows taller partway through the first
+ * few frames of a run. Something has to notice.
+ *
+ * WHAT IT DOES WHEN IT NOTICES. The DIB header takes the new height -- without
+ * that the blit reads the right pixels through the wrong shape and the picture
+ * shears. And the window GROWS by exactly the band, so the image stays at an
+ * integer scale in the client area and the two screens keep the size they had
+ * a frame ago. Growing rather than re-fitting is the point: a fit into the old
+ * client area would shrink both screens to make room for the band, which is
+ * the feature taking picture away to add furniture.
+ *
+ * AND IT DOES NOT FIGHT THE PLAYER. If the window has been resized by hand,
+ * maximised, or put in F12 fullscreen, the size is theirs and the band is
+ * absorbed by the fit -- letterboxed or scaled down inside whatever they chose.
+ * A program that snapped a hand-sized window back to its own idea of correct
+ * would be worse than one that letterboxes.
+ *
+ * NOTHING HERE TOUCHES THE INSET LAYOUT, which has no stacked image and no
+ * band, and nothing here runs at all until the first stacked image exists.
+ */
+static unsigned g_stack_gen = ~0u;
+
+static void stack_present_arm(const uint32_t *img, HWND hwnd)
+{
+    if (!img) return;
+    const unsigned gen = hal_sub_screen_stacked_generation();
+    if (gen != g_stack_gen) {
+        int w = ntr::STACK_W, h = ntr::STACK_H;
+        hal_sub_screen_stacked_size(&w, &h);
+        const int was_h = -g_bi_stack.bmiHeader.biHeight;
+        /* the header first and always: it describes the buffer, and a blit
+           through a stale one is a sheared picture whatever the window does */
+        g_bi_stack.bmiHeader.biWidth = w;
+        g_bi_stack.bmiHeader.biHeight = -h;
+        /* WHAT IT COMPARES AGAINST IS THE HEADER, not a "have I run before"
+           flag, and that distinction cost a windowed run before it was written
+           down. host_window_open opens the window at the layout's size AS IT
+           IS THEN -- which on a minigame is the gapless 512x768, because the
+           scene's InitResources has not run and G is still 0 -- and stamps
+           that size into g_bi_stack. The layout latches G a moment later,
+           inside port_scene_begin, so the FIRST arm this function ever sees is
+           already a change: 768 to 864. A draft that treated the first arm as
+           "no change by definition" left the window at 768 with an 864-row
+           image in it, and the fit letterboxed the whole picture into 455
+           columns of a 512-column client area, with the stylus mapping
+           correctly onto a window nobody wanted. was_h is the header's, the
+           header is the window's, and a difference is a grow whenever it
+           appears. */
+        if (h != was_h && hwnd && !g_user_sized &&
+            !g_fullscreen && W.GetClientRect_ && W.AdjustWindowRect_ &&
+            W.SetWindowPos_ && W.GetWindowLongA_) {
+            RECT cr;
+            if (W.GetClientRect_(hwnd, &cr)) {
+                /* THE GROWTH IS THE CLIENT AREA'S, measured rather than
+                   assumed: the client is grown by the same number of rows the
+                   image grew by, and the frame is re-derived from that with
+                   AdjustWindowRect against the window's CURRENT style. Taking
+                   the delta rather than re-asking for w x h is what keeps a
+                   window a player nudged one pixel wide from snapping back. */
+                const int cw = cr.right - cr.left, ch = cr.bottom - cr.top;
+                RECT want = {0, 0, cw, ch + (h - was_h)};
+                const LONG style = W.GetWindowLongA_(hwnd, GWL_STYLE);
+                W.AdjustWindowRect_(&want, (DWORD)style, FALSE);
+                /* SWP_NOMOVE and SWP_NOZORDER: the top-left corner stays put,
+                   so the window grows downward from where the player left it
+                   rather than re-centring itself mid-game. */
+                W.SetWindowPos_(hwnd, 0, 0, 0, want.right - want.left,
+                                want.bottom - want.top, 0x0002u | 0x0004u);
+                fprintf(stderr, "[gap] the stacked image grew %d -> %d rows; "
+                        "the window client area follows (%dx%d)\n", was_h, h,
+                        cw, ch + (h - was_h));
+            }
+        } else if (h != was_h) {
+            fprintf(stderr, "[gap] the stacked image grew %d -> %d rows; the "
+                    "window keeps the size it has (%s)\n", was_h, h,
+                    g_user_sized ? "the player chose it"
+                                 : g_fullscreen ? "fullscreen" : "no window");
+        }
+        g_stack_gen = gen;
+    }
+    g_present_stack = img;
+    g_present_stack_bi = &g_bi_stack;
 }
 
 /* camera folded into the GX projection matrix: P(perspective) * V(lookAt),
@@ -4188,9 +4320,15 @@ static int scene_window_run(void)
        itself, which is what a scripted proof needs. */
     const int budget = getenv("SM64DS_SCENE_FRAMES")
                            ? port_scene_frames_wanted() : 0;
+    /* THE IMAGE'S shape, which by this line is the scene's own: the window
+       opened before the scene latched its screen gap and is still at the
+       gapless size, and the first frame's stack_present_arm grows it to match
+       and says so on its own line. */
+    int wsw = ntr::STACK_W, wsh = ntr::STACK_H;
+    if (stacked) hal_sub_screen_stacked_size(&wsw, &wsh);
     fprintf(stderr, "[scene] WINDOWED %dx%d, %s, %s\n",
-            stacked ? ntr::STACK_W : ntr::SCREEN_W * ZOOM,
-            stacked ? ntr::STACK_H : ntr::SCREEN_H * ZOOM,
+            stacked ? wsw : ntr::SCREEN_W * ZOOM,
+            stacked ? wsh : ntr::SCREEN_H * ZOOM,
             stacked ? "STACKED (both DS screens, stylus over the bottom half)"
                     : "corner inset panel",
             budget ? "frame budget set" : "runs until the window closes");
@@ -4290,13 +4428,8 @@ static int scene_window_run(void)
            the finished fb with the bottom screen under it. Nothing happens in
            the inset layout; the compose returns 0 and present() keeps reading
            fb. */
-        if (stacked) {
-            const uint32_t *img = hal_sub_screen_stacked_image(&fb.px[0][0]);
-            if (img) {
-                g_present_stack = img;
-                g_present_stack_bi = &g_bi_stack;
-            }
-        }
+        if (stacked)
+            stack_present_arm(hal_sub_screen_stacked_image(&fb.px[0][0]), hwnd);
         present();
         /* the click flag is true for exactly the frame it landed on; the hold
            in g_mouse_left_down is what outlives it */
@@ -8318,13 +8451,8 @@ int main(void)
            in both layouts: the mode adds a downstream consumer and moves
            nothing upstream of it. Nothing happens in the inset layout; the
            compose returns 0 and present() keeps reading fb. */
-        if (stacked) {
-            const uint32_t *img = hal_sub_screen_stacked_image(&fb.px[0][0]);
-            if (img) {
-                g_present_stack = img;
-                g_present_stack_bi = &g_bi_stack;
-            }
-        }
+        if (stacked)
+            stack_present_arm(hal_sub_screen_stacked_image(&fb.px[0][0]), hwnd);
 
         ph_begin(&t_phase);
         present();

@@ -52,6 +52,27 @@ int host_setting_swap_camera_turn(void);
    cannot drift out of step with each other. */
 int host_camera_turn_sign(void);
 
+/* ---- THE DS SCREEN GAP ------------------------------------------------
+   Four optional keys, each with its own default, so a settings.json written
+   before any of them existed reads exactly as one that sets all four to
+   their defaults.
+
+   MinigameGap    1 (default): the hinge between the DS's two screens is
+                  simulated, which is what the game's own code already does
+                  and what makes an object crossing between the screens move
+                  at one speed. 0 pulls the halves together for LAYOUT
+                  purposes only -- the simulation is untouched, so objects go
+                  back to jumping at the seam. The launcher's checkbox is
+                  "remove minigame gap" and is the inverse of this key.
+   GapFillMode    1 ambient (default), 0 solid.
+   GapColor       0xFFRRGGBB for the solid fill. Default 0xFF000000.
+   GapPeek        1 draws the band's own hidden sprites over the fill.
+                  Default 0. */
+int host_setting_minigame_gap(void);
+int host_setting_gap_fill_mode(void);
+unsigned host_setting_gap_color(void);
+int host_setting_gap_peek(void);
+
 #ifdef __cplusplus
 }
 #endif

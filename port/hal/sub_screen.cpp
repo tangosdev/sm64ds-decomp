@@ -83,6 +83,8 @@
 
 #include "ntr/ppu.h"
 
+#include "hal/screen_gap.h"
+
 namespace OAM {
 void Reset();
 }
@@ -1102,24 +1104,57 @@ void hal_sub_screen_set_stacked(int on)
 const unsigned int *hal_sub_screen_stacked_image(const unsigned int *top)
 {
     static unsigned int *px;
+    static size_t cap;
     static int refused;
     if (!hal_sub_screen_stacked() || !g_ready || !top) return 0;
-    if (!px && !refused) {
-        px = (unsigned int *)std::malloc((size_t)ntr::STACK_W * ntr::STACK_H *
-                                         sizeof *px);
-        if (!px) {
+    const ntr::StackLayout &lay = *hal_screen_layout();
+    /* SIZED FOR THE GAP THE LAYOUT ASKS FOR, and grown rather than sized once
+       for the worst case. A minigame's G latches at its InitResources and does
+       not move again, so this reallocates at most once per scene; sizing for
+       GAP_DS_MAX up front would carry 400 KB nobody uses through every gapless
+       run, and the note above is explicit that this allocation is lazy on
+       purpose. Never shrinks: a scene with a smaller gap reuses the block. */
+    const size_t need = (size_t)lay.w * (size_t)lay.h * sizeof *px;
+    if (need > cap && !refused) {
+        unsigned int *bigger = (unsigned int *)std::realloc(px, need);
+        if (bigger) {
+            px = bigger;
+            cap = need;
+        } else {
             refused = 1;
             std::fprintf(stderr, "  [sub] stacked layout: could not allocate "
                          "the %dx%d image; presenting the top screen alone\n",
-                         ntr::STACK_W, ntr::STACK_H);
+                         lay.w, lay.h);
         }
     }
-    if (!px) return 0;
+    if (!px || cap < need) return 0;
     int evy = 0, to_white = 0;
     if (!port_fader_blend_state(&evy, &to_white)) evy = 0;
-    ntr::ppu_compose_stacked(top, g_sub, px, ntr::STACK_W, ntr::STACK_H, evy,
-                             to_white);
+    ntr::ppu_compose_stacked(top, g_sub, px, lay.w, lay.h, evy, to_white, lay);
     return px;
+}
+
+/* The image's live size, for the consumers that need the number and not the
+   pixels: walk_window's DIB header and window sizing, and the stacked BMP
+   capture. Reads the same layout the compose above does, which is the whole
+   point of there being one. */
+void hal_sub_screen_stacked_size(int *w, int *h)
+{
+    const ntr::StackLayout &lay = *hal_screen_layout();
+    if (w) *w = lay.w;
+    if (h) *h = lay.h;
+}
+
+/* A counter that steps whenever that size changes -- which is once, when a
+   minigame's InitResources latches its G. walk_window watches it to know when
+   to re-shape the DIB header and re-size the window; a consumer that reads the
+   size every frame anyway can ignore it.
+   Forwarded from hal/screen_gap.cpp through this file so that walk_window's
+   declaration of it sits beside the other hal_sub_screen_* names and cannot
+   pick up a different linkage from them. */
+unsigned hal_sub_screen_stacked_generation(void)
+{
+    return hal_screen_layout_generation();
 }
 
 /* The bottom screen's camera buttons, through the game's own hit test.
@@ -1220,11 +1255,26 @@ void hal_present_set_rect(int x, int y, int w, int h, int src_w, int src_h)
 static void client_to_src(int cx, int cy, int *x, int *y, int *sw, int *sh)
 {
     /* An old caller of the four-argument setter, or a build whose present path
-       has not run, leaves the source size at zero. Reading the framebuffer's
-       size there is what every caller assumed before the stacked layout
-       existed, so that is what the fallback is. */
-    const int s_w = g_pr_sw > 0 ? g_pr_sw : ntr::SCREEN_W;
-    const int s_h = g_pr_sh > 0 ? g_pr_sh : ntr::SCREEN_H;
+       has not run, leaves the source size at zero. The fallback is the size of
+       the image this run would present, which is the framebuffer's in the
+       inset layout and the LAYOUT's in the stacked one.
+
+       IT USED TO BE THE FRAMEBUFFER'S IN BOTH, which was right while the
+       stacked image did not exist and became a headless run reporting a source
+       one screen tall for an image two screens tall. Nothing on a windowed
+       path reads this branch -- present() publishes a real rectangle on the
+       first frame -- so the only reader is the touch probe on a headless run,
+       and a probe that cannot be believed on the path it was written for is a
+       probe with no purpose. The fallback maps client to source by the zoom
+       divide below either way; only the size the bands are cut out of
+       changes. */
+    const ntr::StackLayout &fb_lay = *hal_screen_layout();
+    const int s_w = g_pr_sw > 0 ? g_pr_sw
+                                : (hal_sub_screen_stacked() ? fb_lay.w
+                                                            : ntr::SCREEN_W);
+    const int s_h = g_pr_sh > 0 ? g_pr_sh
+                                : (hal_sub_screen_stacked() ? fb_lay.h
+                                                            : ntr::SCREEN_H);
     if (sw) *sw = s_w;
     if (sh) *sh = s_h;
     if (g_pr_w > 0 && g_pr_h > 0) {
@@ -1251,11 +1301,19 @@ int hal_present_client_to_fb(int cx, int cy, int *fx, int *fy)
     /* THIS FUNCTION STILL MEANS THE TOP SCREEN, in both layouts, and every one
        of its existing callers still gets exactly what it got before. In the
        inset layout the source IS the framebuffer and the test below is the
-       test that was here. In the stacked layout the source is twice as tall
-       and the top screen is its upper band, so a click in the lower half
+       test that was here. In the stacked layout the source is taller and the
+       top screen is its upper band, so a click in the gap or in the lower half
        answers "not on the picture" -- which is the truth for a caller asking
-       about the top screen. hal_present_client_to_sub is the lower band. */
-    const int inside = x >= 0 && y >= 0 && x < ntr::SCREEN_W && y < ntr::SCREEN_H;
+       about the top screen. hal_present_client_to_sub is the lower band.
+
+       THE TOP SCREEN'S BAND IS THE SAME ROWS WITH OR WITHOUT A GAP, because
+       the gap is inserted BELOW it: top_y is 0 and the screen is SCREEN_H
+       rows. So this test does not need the layout to be right, and it reads
+       it anyway -- if a later change ever moves the top screen, the one place
+       that decides where it is has to be the one place both mappers read. */
+    const ntr::StackLayout &lay = *hal_screen_layout();
+    const int inside = x >= 0 && y >= lay.top_y && x < ntr::SCREEN_W &&
+                       y < lay.top_y + ntr::SCREEN_H;
     if (x < 0) x = 0;
     if (y < 0) y = 0;
     if (x >= ntr::SCREEN_W) x = ntr::SCREEN_W - 1;
@@ -1267,14 +1325,29 @@ int hal_present_client_to_fb(int cx, int cy, int *fx, int *fy)
 
 /* THE TOUCH TRANSFORM FOR THE STACKED LAYOUT: a client point to a DS pixel on
  * the bottom screen. Returns 1 only when the point is genuinely on the bottom
- * half of the picture -- a letterbox bar is not, and neither is the top screen.
+ * half of the picture -- a letterbox bar is not, the top screen is not, AND
+ * THE GAP BAND IS NOT.
  *
- * Three steps and no constants beyond the two screen sizes: undo the fit into
- * source pixels, subtract one screen height to get into the lower band, then
- * scale the band down to the DS's own 256x192. The scale is a ratio rather
- * than a shift because SCREEN_W/SCREEN_H is the tier's, not necessarily two.
+ * Three steps: undo the fit into source pixels, subtract the layout's
+ * bottom_y to get into the bottom screen's own band, then scale that band down
+ * to the DS's own 256x192. The scale is a ratio rather than a shift because
+ * SCREEN_W/SCREEN_H is the tier's, not necessarily two.
  *
- * WHY IT IS EXACT AT THE 2x TIER: the lower band is 512x384 and the DS screen
+ * bottom_y RATHER THAN SCREEN_H, and that one word is the whole of what the
+ * gap changes here. With a 48-row gap the bottom screen starts 96 host rows
+ * lower than it used to, and a mapper that kept subtracting one screen height
+ * would put every press 96 client pixels above where the player aimed -- worse
+ * than an offset, because it would still return "inside" and nothing would say
+ * so. The layout is read rather than recomputed for exactly that reason.
+ *
+ * A CLICK IN THE GAP MAPS TO NOTHING. It is not clamped to the nearest screen:
+ * there is no DS pixel under the hinge, the hardware has no touch there, and a
+ * clamp would publish a stylus press at the top row of the bottom screen for a
+ * click that was never on it. The band is between bottom_y and the top
+ * screen's last row, `by` is negative there, and the test below refuses it --
+ * the same answer a letterbox bar gets, which is the honest one.
+ *
+ * WHY IT IS EXACT AT THE 2x TIER: the bottom band is 512x384 and the DS screen
  * is 256x192, so x maps by (x * 256) / 512 = x / 2 and y the same. Client
  * point -> band pixel -> DS pixel with two integer divides and no rounding
  * term that can drift a row at the seam. The clamp below only ever fires for a
@@ -1284,12 +1357,13 @@ int hal_present_client_to_sub(int cx, int cy, int *dsx, int *dsy)
 {
     int x, y, sw, sh;
     client_to_src(cx, cy, &x, &y, &sw, &sh);
-    /* the lower band of the source image. In the inset layout there is no
-       lower band -- the source is one screen tall -- and this correctly
-       answers "outside" for every point, because in that layout the panel is
-       the bottom screen and poll_touch takes the other branch. */
-    const int band_h = sh - ntr::SCREEN_H;
-    const int by = y - ntr::SCREEN_H;
+    /* the bottom screen's band of the source image. In the inset layout the
+       source is one screen tall, sh - bottom_y is zero, and this correctly
+       answers "outside" for every point -- in that layout the panel is the
+       bottom screen and poll_touch takes the other branch. */
+    const ntr::StackLayout &lay = *hal_screen_layout();
+    const int band_h = sh - lay.bottom_y;
+    const int by = y - lay.bottom_y;
     const int inside = band_h > 0 && x >= 0 && x < sw && by >= 0 && by < band_h;
     int dx = 0, dy = 0;
     if (band_h > 0) {
@@ -1351,9 +1425,15 @@ void hal_touch_client_probe(void)
         std::fprintf(stderr, "[touchmap] NO PRESENT RECTANGLE was ever "
                      "published (headless run, no window). What follows is the "
                      "fixed-zoom fallback, not the windowed transform.\n");
-    std::fprintf(stderr, "[touchmap] rect x%d y%d w%d h%d src %dx%d, layout %s\n",
-                 g_pr_x, g_pr_y, g_pr_w, g_pr_h, g_pr_sw, g_pr_sh,
-                 hal_sub_screen_stacked() ? "stacked" : "inset");
+    {
+        const ntr::StackLayout &lay = *hal_screen_layout();
+        std::fprintf(stderr, "[touchmap] rect x%d y%d w%d h%d src %dx%d, "
+                     "layout %s, image %dx%d top_y %d band %d+%d bottom_y %d\n",
+                     g_pr_x, g_pr_y, g_pr_w, g_pr_h, g_pr_sw, g_pr_sh,
+                     hal_sub_screen_stacked() ? "stacked" : "inset",
+                     lay.w, lay.h, lay.top_y, lay.band_y, lay.band_h,
+                     lay.bottom_y);
+    }
     while (*s) {
         const int cx = std::atoi(s);
         while (*s && *s != ',' && *s != ';') ++s;
@@ -1364,9 +1444,27 @@ void hal_touch_client_probe(void)
         int fx = 0, fy = 0, dx = 0, dy = 0;
         const int on_top = hal_present_client_to_fb(cx, cy, &fx, &fy);
         const int on_sub = hal_present_client_to_sub(cx, cy, &dx, &dy);
-        std::fprintf(stderr, "[touchmap] client (%d,%d) -> top %s fb(%d,%d) "
-                     "| sub %s ds(%d,%d)\n", cx, cy, on_top ? "IN " : "out",
-                     fx, fy, on_sub ? "IN " : "out", dx, dy);
+        /* WHICH BAND OF THE IMAGE IT LANDED IN, said in the source's own rows.
+           "out of both" is three different things -- a letterbox bar, the gap,
+           and a point off the window entirely -- and only the middle one is a
+           feature. Naming it is what makes a gap click PROVABLY nothing rather
+           than merely unclaimed. */
+        const ntr::StackLayout &lay = *hal_screen_layout();
+        int sx = 0, sy = 0, ssw = 0, ssh = 0;
+        client_to_src(cx, cy, &sx, &sy, &ssw, &ssh);
+        const char *where = "bar";
+        if (sx >= 0 && sx < ssw) {
+            if (sy >= lay.top_y && sy < lay.top_y + ntr::SCREEN_H)
+                where = "top screen";
+            else if (lay.band_h > 0 && sy >= lay.band_y && sy < lay.bottom_y)
+                where = "GAP";
+            else if (sy >= lay.bottom_y && sy < ssh)
+                where = "bottom screen";
+        }
+        std::fprintf(stderr, "[touchmap] client (%d,%d) -> src(%d,%d) %s | "
+                     "top %s fb(%d,%d) | sub %s ds(%d,%d)\n", cx, cy, sx, sy,
+                     where, on_top ? "IN " : "out", fx, fy,
+                     on_sub ? "IN " : "out", dx, dy);
     }
     std::fflush(stderr);
 }
