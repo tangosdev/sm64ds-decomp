@@ -1237,9 +1237,10 @@ extern "C" void port_scene_mg_luigi_hits(void)
         std::printf("[scene] dScMgLuigi_c render floor: %u entry(ies) into the "
                     "former func_ov004_020b0e84 trap, which slot 9 reaches "
                     "through func_ov004_020b1e34. Run mg5 lane INTEG seated the "
-                    "real score HUD, so the counter stays 0 (the veneer's dropped "
-                    "0xe0/0x14/1 args remain, port/unmatched/MgLuigi_Faces.cpp "
-                    "section 4)\n", port_mg_luigi_ov004_trap_hits());
+                    "real score HUD, so the counter stays 0; run mg5 lane WTIMER "
+                    "closed the veneer's dropped 0xe0/0x14/1 as PROVABLY DEAD "
+                    "(port/unmatched/MgLuigi_Faces.cpp section 4)\n",
+                    port_mg_luigi_ov004_trap_hits());
     }
     std::fflush(stdout);
 }

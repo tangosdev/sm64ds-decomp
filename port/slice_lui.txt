@@ -130,6 +130,17 @@
 # Its trap and the two arguments the host veneer loses on the way are in
 # port/unmatched/MgLuigi_Faces.cpp section 4.
 #
+# AMENDED, run mg5 lane WTIMER. BOTH HOLES ARE CLOSED AND THE FIRST ONE WAS THE
+# COUNTDOWN TIMER, so "this lane reaches it and adds nothing" was the sentence
+# that hid the defect: reaching a trap 126 times in 300 frames is not nothing.
+# func_ov004_020b2220 is the minigame HUD's scaled number drawer, and
+# src/func_ov006_020f0e28.c hands it this class's countdown at (0x80, 0x28)
+# every frame the HUD is up. It is host-copied in
+# unmatched/MgHud_ScaledNumber.cpp. func_ov004_020b0e84 was seated by lane
+# INTEG, and lane WTIMER closed the veneer's three dropped arguments as
+# provably dead against the ROM listing (MgLuigi_Faces.cpp section 4a), so no
+# veneer repair is owed.
+#
 # ---- 5. TWO DUPLICATE LINES, AND WHY THEY ARE HERE ------------------------
 #
 # src/func_ov004_020af5e0.c and src/func_ov004_020b0cac.c are also in

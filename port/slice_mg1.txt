@@ -34,6 +34,17 @@
 # pointer-to-member pair at 0x0213c2bc -- so this class cannot reach every one
 # of its own states even once the dispatch exists.
 #
+# AMENDED, run mg5 lane WTIMER. FOUR OF THE SIX NOW HAVE HOST COPIES, and this
+# is the running count rather than a rewrite of the paragraph above. Lane CT1
+# transcribed func_ov006_020e1854, lane CUR2 transcribed func_ov006_020e1dc8
+# and func_ov006_020e20bc, and this lane transcribed func_ov004_020b2220 into
+# unmatched/MgHud_ScaledNumber.cpp -- it is the minigame HUD's scaled number
+# drawer and it was why the "Wanted!" countdown never appeared on screen.
+# WHAT DID NOT CHANGE: all six are still genuinely unmatched and still belong
+# out of this list. No delink block covers any of them and no src file defines
+# any of them. The four host copies carry port_ names precisely so that this
+# paragraph stays true.
+#
 # FOUR LINES BELOW ALSO APPEAR IN ANOTHER SLICE, and that is correct rather
 # than a mistake to clean up. src/func_ov004_020adc4c.c is in slice_2d1.txt
 # (the LoadFont wedge, the one ov004 body the port could already reach), and
