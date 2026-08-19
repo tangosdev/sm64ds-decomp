@@ -3461,7 +3461,15 @@ set(SCENE_MG_SOURCES
     # REPLACES src/func_ov004_020b19f0.c (out of slice_mg1.txt) and
     # src/func_ov006_020fba48.c (out of slice_pch.txt), so it is not optional
     # on any target that takes either slice, exactly like the award above.
-    unmatched/MgHud_HighScore.cpp)
+    unmatched/MgHud_HighScore.cpp
+    # Run mg5, lane WTIMER: the minigame HUD's SCALED NUMBER drawer, the third
+    # of the three ov004 addresses with no delink block and no src TU, and the
+    # reason the "Wanted!" countdown never appeared. Same three targets and the
+    # same reason as the two curling collision copies above: the faces in
+    # hal/scene_mg_faces.cpp now call port_mg_hud_scaled_number_020b2220 by
+    # name, so a target that compiles the faces and not this file fails the
+    # link on that symbol. Replaces no src TU, because there is none.
+    unmatched/MgHud_ScaledNumber.cpp)
 
 # Run mg5, lane PCH. dScMgPachinko_c's own closure, the second minigame class.
 # 65 src TUs in wave 1: 59 ov006 and 6 ov004. The arm9 half is deliberately not

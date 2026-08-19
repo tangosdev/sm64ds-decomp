@@ -125,6 +125,48 @@
    is a separate PORT_HOST_ABI veneer repair, not this seat. The counter is kept
    because hal/scene_mg.cpp prints port_mg_luigi_ov004_trap_hits(); it now stays
    0, the honest report that the score HUD is no longer stubbed. */
+
+/* ---- 4a. THE DROPPED ARGUMENTS ARE CLOSED: ALL THREE ARE DEAD -------------
+ *
+ * Run mg5, lane WTIMER. Section 4 above says the veneer's dropped 0xe0/0x14/1
+ * "would be a real defect the day a body lands", and the body landed with the
+ * INTEG seat, so the day arrived and this is the adjudication. The answer is
+ * that all three are dead, so the host veneer's arity costs nothing and the
+ * PORT_HOST_ABI repair section 4 reserves is NOT needed.
+ *
+ * WHY IT WAS WORTH CHECKING RATHER THAN ASSUMING. This project has found six
+ * separate cases of the ROM riding a value through a register a C prototype
+ * drops, and one of them -- unmatched/MgHud_HighScore.cpp -- is on this exact
+ * HUD path and put 999999 on this game family's high score. An earlier ruling
+ * covering two of the registers is not a ruling about the third.
+ *
+ * THE EVIDENCE, read off a capstone listing of extracted/overlays/
+ * overlay_0004.bin at base 0x020AD660 (the same base and the same file the
+ * sibling seat in unmatched/MgHud_ScaledNumber.cpp proves by prologue scan):
+ *
+ *   r1 = 0xe0 never reaches the callee IN THE ROM EITHER. The veneer's own
+ *   second instruction is `ldr r1,[r0,#0xb4]` at 0x020b1e38, which overwrites
+ *   it before the `bx ip` tail call. The host veneer passing a->b4 as the
+ *   second argument is therefore not a drop at all; it is the same value.
+ *
+ *   r2 = 0x14 is clobbered before it is read. func_ov004_020b0e84's fourth
+ *   instruction, `ldr r2,[sl,#0x50]` at 0x020b0e90, writes r2, and nothing
+ *   between the prologue and it reads r2.
+ *
+ *   r3 = 1 is never read at all. Over the whole 0x66c body the first
+ *   instruction that touches r3 is `smull r3, r0, r2, r1` at 0x020b0f54, and
+ *   that is a WRITE. There is no read of r3 before it on any path.
+ *
+ *   AND THERE ARE NO STACK ARGUMENTS EITHER, which is the check that closes
+ *   the gap a register-only sweep would leave: the body contains no
+ *   sp-relative load at or above the incoming-argument boundary (sp+0x30,
+ *   after `push {r4-r8,sb,sl,fp,lr}` and `sub sp,sp,#0xc`). Its only
+ *   sp-relative traffic is its own locals.
+ *
+ * SO THE ROM PASSES THREE VALUES ITS OWN CALLEE IGNORES, and the host dropping
+ * them is faithful by accident rather than by design. Recorded rather than
+ * deleted, because "we checked and it is dead" and "nobody has looked" are
+ * different states and only one of them is finished. */
 static unsigned g_luigi_ov004_trap;
 
 extern "C" unsigned port_mg_luigi_ov004_trap_hits(void)

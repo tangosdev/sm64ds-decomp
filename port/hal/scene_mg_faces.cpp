@@ -450,10 +450,52 @@ extern "C" {
 void port_mg_curling_collide_020e1dc8(char *self, int idx);
 void port_mg_curling_collide_020e20bc(char *self, int idx);
 
+/* Run mg5 lane WTIMER's seated body, in port/unmatched/MgHud_ScaledNumber.cpp. */
+void port_mg_hud_scaled_number_020b2220(int x, int y, int num, int a3, int a4,
+                                        int scale, int angle);
+
 /* no delink block and no src in their own overlay's config */
 int func_ov004_020ae858(void *)             { mg_trap("func_ov004_020ae858"); return 0; }
 int func_ov004_020b1710(void *)             { mg_trap("func_ov004_020b1710"); return 0; }
-int func_ov004_020b2220(void *)             { mg_trap("func_ov004_020b2220"); return 0; }
+
+/* ---- SEATED, run mg5 lane WTIMER ----------------------------------------
+ *
+ * THE THIRD OF THE THREE ov004 ADDRESSES IS NOT A TRAP ANY MORE, and it was
+ * the "Wanted!" countdown timer. func_ov004_020b2220 is the minigame HUD's
+ * scaled number drawer, and returning 0 from it is exactly the defect the
+ * owner reported on 2026-08-19 as "Also time is not showing in wanted":
+ * dScMgLuigi_c computed the countdown correctly, drew the language label
+ * sprite above it correctly, and then handed the number to a stub.
+ *
+ * THE MEASUREMENT THAT FOUND IT. A 300-frame headless boot of scene 366 on
+ * cons 2fbc2c0a1 reported 127 entries into port_mg_trap_hits where every
+ * sibling minigame scene (368, 374, 376, 378, 390) reports exactly 1. A
+ * per-site census of that counter split the 127 as
+ *     func_0202e78c              1     the long-standing pre-existing one
+ *     func_ov004_020b2220      126     this body, roughly every other frame
+ * and an argument probe on the trap showed the timer arriving correctly and
+ * counting down (val=10 on the first calls, val=9 by call 64). The value was
+ * never the problem. Nothing drew it.
+ *
+ * THE SIGNATURE CHANGED WITH THE SEAT, and as with the two curling bodies
+ * below that is not cosmetic: the trap took (void *) where the ROM and all six
+ * of its matched callers take seven arguments, so x, y, the number, the scale
+ * and the angle were all already on the stack and the trap never looked at any
+ * of them. It also returned int where every caller declares void.
+ *
+ * WHAT STILL GETS NO SYMBOL HERE: nothing changes about the decomp hole.
+ * config/arm9/overlays/ov004/delinks.txt still covers no part of 0x020b2220 --
+ * the blocks run 0x020b1ea4..0x020b2220 and then jump to 0x020b2444 -- and
+ * there is still no src TU for it on any branch, origin/main included. The
+ * body is a host copy in port/unmatched/ carrying its provenance banner and a
+ * port_ name, so nothing in this tree claims a decompilation that does not
+ * exist. 0x020b2220 remains open decomp work.
+ */
+void func_ov004_020b2220(int x, int y, int num, int a3, int a4,
+                         int scale, int angle)
+{
+    port_mg_hud_scaled_number_020b2220(x, y, num, a3, a4, scale, angle);
+}
 
 /* ---- SEATED, run link60 lane CUR2 ---------------------------------------
  *
