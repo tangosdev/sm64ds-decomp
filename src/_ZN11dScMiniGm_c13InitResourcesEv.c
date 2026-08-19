@@ -1,11 +1,10 @@
 #include "types.h"
-// @symbol func_ov005_020c1a20
-// recovered name: dScMiniGm_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN11dScMiniGm_c13InitResourcesEv
+/* dScMiniGm_c::InitResources() -- vtable slot 0. See include/dScMiniGm_c.h.
+ * Writes c+0x50, c+0x64, and the c+0x54..0xac field block the header now
+ * declares. */
 #include "decl_Scene.h"
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMiniGm_c::InitResources - recovered from vtable slot identity */
 extern void _ZN2GX12SetBankForBGEt(u16 v);
 extern void _ZN2GX15SetBankForSubBGEt(u16 v);
 extern void _ZN2GX16SetBankForSubOBJEt(u16 v);
@@ -43,7 +42,7 @@ typedef struct Entry {
 
 extern Entry data_ov005_020c24d8[];
 
-int func_ov005_020c1a20(void *arg0)
+int _ZN11dScMiniGm_c13InitResourcesEv(void *arg0)
 {
     char *c = (char *)arg0;
     int i, j;

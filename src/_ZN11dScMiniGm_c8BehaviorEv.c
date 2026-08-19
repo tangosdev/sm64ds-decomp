@@ -1,12 +1,10 @@
-// @symbol func_ov005_020c14a0
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN11dScMiniGm_c8BehaviorEv
+/* dScMiniGm_c::Behavior() -- vtable slot 6. See include/dScMiniGm_c.h.
+ * Plain C, so it cannot include that header (dScene_c-derived, C++-only) --
+ * a local, non-inheriting offset struct stands in instead, matching the
+ * convention _ZN11dScMiniGm_c6RenderEv.c already uses. */
 #include "decl_Scene.h"
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
-#include "dScMiniGm_c.h"
-// recovered name: dScMiniGm_c_Behavior
-/* recovered: renamed to Class_Method */
-/* dScMiniGm_c::Behavior - recovered from vtable slot identity */
 
 extern int func_02012790(int);
 extern int RandomIntInternal(int* seed);
@@ -18,8 +16,21 @@ extern unsigned char data_0209b300;
 extern int data_0209e650;
 extern unsigned char data_0209b304;
 
-int func_ov005_020c14a0(char* c) {
-    struct dScMiniGm_c *self = (struct dScMiniGm_c *)(void *)c;
+struct dScMiniGm_c_shadow {
+    char pad_000[0x54];
+    unsigned char unk_054;
+    char pad_055[0x8c - 0x55];
+    int unk_08c;
+    int unk_090;
+    int unk_094;
+    int unk_098;
+    int unk_09c;
+    char pad_0a0[0xac - 0xa0];
+    unsigned char unk_0ac;
+};
+
+int _ZN11dScMiniGm_c8BehaviorEv(char* c) {
+    struct dScMiniGm_c_shadow *self = (struct dScMiniGm_c_shadow *)(void *)c;
     if ((data_020a0e5a[data_020a0e40 << 1] & 0xfff) != 0) {
         func_02012790(0xe);
     }

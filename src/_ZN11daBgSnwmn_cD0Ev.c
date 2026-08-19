@@ -1,15 +1,16 @@
-// @symbol func_ov072_02120874
-/* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN11daBgSnwmn_cD0Ev
+/* daBgSnwmn_c::~daBgSnwmn_c() (deleting / D0) -- vtable slots 16/17. Same
+ * teardown as D1, then deallocates. Plain C function carrying the literal
+ * mangled name -- see include/daBgSnwmn_c.h. */
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
 extern int data_ov072_02122978[];
-/* recovered: vtable identified, renamed to Class_Method */
 extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
 extern void _ZN15TextureSequenceD1Ev(void *);
 extern void *data_020a0eac;
-int *func_ov072_02120874(int *t)
+int *_ZN11daBgSnwmn_cD0Ev(int *t)
 {
     t[0] = (int)data_ov072_02122978;
     _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0x1b0);

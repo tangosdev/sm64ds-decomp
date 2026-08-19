@@ -1,10 +1,10 @@
 //cpp
-// @symbol func_ov007_020cc4c0
-// recovered name: dScDSMT_c_InitResources
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN9dScDSMT_c13InitResourcesEv
+/* dScDSMT_c::InitResources() -- vtable slot 0. See include/dScDSMT_c.h. The
+ * (dScene_c*)(self+0x54) object expression on the SetFaders call below is
+ * inert (SetFaders is static; only the (FaderBrightness*)(self+0x50)
+ * argument matters), kept as the previous recovery pass wrote it. */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScDSMT_c::InitResources - recovered from vtable slot identity */
 struct FaderBrightness;
 
 struct GX {
@@ -25,7 +25,7 @@ extern unsigned char data_0209f1e0;
 extern int data_0209d4a8;
 extern int data_0208ee44;
 
-extern "C" int func_ov007_020cc4c0(char *self)
+extern "C" int _ZN9dScDSMT_c13InitResourcesEv(char *self)
 {
     if (data_0209f1e0 != 0)
         data_0209b340[1] = 1;

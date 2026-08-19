@@ -1,6 +1,8 @@
+// @symbol _ZN11dScMiniGm_c6RenderEv
 // NONMATCHING: missing logic (ROM does more) (div=30). Logic verified correct vs ROM; not
 // byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+// Counts as decompiled, not matched. dScMiniGm_c::Render() -- vtable slot 9.
+// See include/dScMiniGm_c.h.
 struct Obj {
     char pad0[0x54];
     unsigned char unk54;
@@ -33,7 +35,7 @@ extern int func_ov005_020c00e4(void *);
 extern void func_ov005_020c1130(void *);
 extern void func_ov005_020c0f38(void *);
 
-int func_ov005_020c0b04(struct Obj *arg0)
+int _ZN11dScMiniGm_c6RenderEv(struct Obj *arg0)
 {
     volatile int v[10];
     int sb, fp, r8, r7, r6, r5, r4;
