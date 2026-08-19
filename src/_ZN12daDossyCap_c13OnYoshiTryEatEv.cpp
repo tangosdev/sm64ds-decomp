@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN9DorrieCap13OnYoshiTryEatEv
+// @symbol _ZN12daDossyCap_c13OnYoshiTryEatEv
 
-#include "DorrieCap.h"
+#include "daDossyCap_c.h"
 
-int DorrieCap::OnYoshiTryEat()
+int daDossyCap_c::OnYoshiTryEat()
 {
     return 4;
 }

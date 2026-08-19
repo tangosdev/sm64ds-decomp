@@ -1,16 +1,16 @@
 //cpp
-// @symbol _ZN9DorrieCap8BehaviorEv
+// @symbol _ZN12daDossyCap_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "DorrieCap.h"
+#include "daDossyCap_c.h"
 extern "C" int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, void* rot, int e, int f);
 extern "C" void func_ov001_020ab110(char* c);
 extern "C" void func_ov001_020ab228(char* c, char* a1, int idx, int a3, unsigned char a5);
 extern "C" void _ZN12CylinderClsn5ClearEv(void* self);
 extern "C" void _ZN12CylinderClsn6UpdateEv(void* self);
 
-int DorrieCap::Behavior()
+int daDossyCap_c::Behavior()
 {
   char* p = *(char**)((char*)&unk_174);
   if(p == 0) return 1;

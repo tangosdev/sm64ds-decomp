@@ -45,8 +45,8 @@ _ZN5Swoop13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02117ee0
 Swoop_Spawn kind:function(arm,size=0x58) addr:0x02117ee8
 _ZN6DorrieD1Ev kind:function(arm,size=0x68) addr:0x02117f40
 _ZN6DorrieD0Ev kind:function(arm,size=0x7c) addr:0x02117fa8
-_ZN9DorrieCapD1Ev kind:function(arm,size=0x40) addr:0x02118024
-_ZN9DorrieCapD0Ev kind:function(arm,size=0x54) addr:0x02118064
+_ZN12daDossyCap_cD1Ev kind:function(arm,size=0x40) addr:0x02118024
+_ZN12daDossyCap_cD0Ev kind:function(arm,size=0x54) addr:0x02118064
 func_ov065_021180b8 kind:function(arm,size=0x1c) addr:0x021180b8
 func_ov065_021180d4 kind:function(arm,size=0x174) addr:0x021180d4
 func_ov065_02118248 kind:function(arm,size=0x9c) addr:0x02118248
@@ -58,17 +58,17 @@ func_ov065_02118c4c kind:function(arm,size=0x78) addr:0x02118c4c
 func_ov065_02118cc4 kind:function(arm,size=0x40) addr:0x02118cc4
 _ZN6Dorrie16CleanupResourcesEv kind:function(arm,size=0x7c) addr:0x02118d04
 _ZN6Dorrie6RenderEv kind:function(arm,size=0x28) addr:0x02118d80
-_ZN9DorrieCap6RenderEv kind:function(arm,size=0x48) addr:0x02118da8
+_ZN12daDossyCap_c6RenderEv kind:function(arm,size=0x48) addr:0x02118da8
 _ZN6Dorrie8BehaviorEv kind:function(arm,size=0x2b8) addr:0x02118df0
-_ZN9DorrieCap8BehaviorEv kind:function(arm,size=0x168) addr:0x021190a8
+_ZN12daDossyCap_c8BehaviorEv kind:function(arm,size=0x168) addr:0x021190a8
 func_ov065_02119210 kind:function(arm,size=0x18) addr:0x02119210
 _ZN6Dorrie13InitResourcesEv kind:function(arm,size=0x2c0) addr:0x02119228
-_ZN9DorrieCap13InitResourcesEv kind:function(arm,size=0x84) addr:0x021194e8
+_ZN12daDossyCap_c13InitResourcesEv kind:function(arm,size=0x84) addr:0x021194e8
 func_ov065_0211956c kind:function(arm,size=0x28) addr:0x0211956c
 func_ov065_02119594 kind:function(arm,size=0x28) addr:0x02119594
 func_ov065_021195bc kind:function(arm,size=0x14) addr:0x021195bc
 func_ov065_021195d0 kind:function(arm,size=0x14) addr:0x021195d0
-_ZN9DorrieCap13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x021195e4
+_ZN12daDossyCap_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x021195e4
 DorrieCap_Spawn kind:function(arm,size=0x48) addr:0x021195ec
 Dorrie_Spawn kind:function(arm,size=0x88) addr:0x02119634
 func_ov065_021196bc kind:function(arm,size=0x1c) addr:0x021196bc
@@ -202,7 +202,6 @@ _ZTS12daDossyCap_c kind:data(any) addr:0x0211cd58
 data_ov065_0211cd68 kind:data(any) addr:0x0211cd68
 Dorrie_SpawnInfo kind:data(any) addr:0x0211cd84 ambiguous
 DorrieCap_SpawnInfo kind:data(any) addr:0x0211cda0 ambiguous
-_ZTV9DorrieCap kind:data(any) addr:0x0211cdc4
 _ZTV12daDossyCap_c kind:data(any) addr:0x0211cdc4
 _ZTV6Dorrie kind:data(any) addr:0x0211ce48
 data_ov065_0211cec4 kind:data(any) addr:0x0211cec4

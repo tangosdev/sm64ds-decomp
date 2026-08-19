@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN9DorrieCap6RenderEv
+// @symbol _ZN12daDossyCap_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "DorrieCap.h"
+#include "daDossyCap_c.h"
 struct V { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g3(); virtual int g4(); virtual int g5(void*); };
 
-int DorrieCap::Render()
+int daDossyCap_c::Render()
 {
   unsigned int b = mCapIcon.mFlags;
   if((b<<30)>>31){

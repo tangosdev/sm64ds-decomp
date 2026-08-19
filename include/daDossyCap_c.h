@@ -1,12 +1,13 @@
-#ifndef DORRIECAP_H
-#define DORRIECAP_H
+#ifndef DADOSSYCAP_C_H
+#define DADOSSYCAP_C_H
 
 #include "CapIcon.h"
 #include "Model.h"
 #include "MovingCylinderClsn.h"
 #include "dActor_c.h"
 
-/* DorrieCap is daDossyCap_c in the ROM's own RTTI: the typeinfo at ov065
+/* daDossyCap_c is the ROM's own RTTI name for this class (this tree once
+ * coined it DorrieCap): the typeinfo at ov065
  * 0x0211cd4c names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x0211cdc4 (31 slots, same count as dActor_c's) is what pairs it
  * to DorrieCap_Spawn, which stores that address after allocating 0x184 bytes
@@ -29,13 +30,13 @@
  * THE DESTRUCTORS STAY UNMIGRATED, and the reason is order: D1 destroys
  * MovingCylinderClsn, then Model, then the CapIcon -- exact reverse
  * declaration order -- but CapIcon's destructor is still spelt
- * func_ov001_020ab3a0 rather than CapIcon::~CapIcon, so a real ~DorrieCap()
+ * func_ov001_020ab3a0 rather than CapIcon::~CapIcon, so a real ~daDossyCap_c()
  * would have to call it in the body, which runs BEFORE the implicit member
  * destructors instead of after them. dCapEnemy_c got away with exactly that
  * only because its CapIcon is the LAST member (see _ZN11dCapEnemy_cD2Ev.cpp);
  * here it is the first. Until CapIcon's destructor is a real method, the
  * declaration below is satisfied by the extern "C" free functions in
- * _ZN9DorrieCapD1Ev.c / D0Ev.c, which also keeps this class's key function
+ * _ZN12daDossyCap_cD1Ev.c / D0Ev.c, which also keeps this class's key function
  * undefined in every TU so no object emits a coined-name vtable.
  *
  * The header this replaces was deliberately flat -- a non-deriving struct
@@ -43,7 +44,7 @@
  * non-derived struct a virtual would have inserted a vptr and shifted every
  * offset. Deriving from dActor_c is what makes the declarations below honest.
  */
-struct DorrieCap : dActor_c {
+struct daDossyCap_c : dActor_c {
     /* Used both as a Player* (Behavior chases it through +0x360) and as a raw
        word copied into the spawned cap actor's own 0xd0. Kept s32 as the flat
        header had it; the pointer reads go through explicit casts. */
@@ -57,7 +58,7 @@ struct DorrieCap : dActor_c {
     /* Declared first on purpose, same reasoning as dActor_c.h: the key
        function pins where mwcc anchors the vtable -- and this one is never
        defined as a method, see the header comment. */
-    virtual ~DorrieCap();
+    virtual ~daDossyCap_c();
 
     virtual s32 InitResources();       /* slot 0 */
     virtual s32 Behavior();            /* slot 6 */
@@ -65,7 +66,7 @@ struct DorrieCap : dActor_c {
     virtual int OnYoshiTryEat();       /* slot 18 */
 };
 
-typedef char DorrieCap_size_must_be_0x184[
-    sizeof(DorrieCap) == 0x184 ? 1 : -1];
+typedef char daDossyCap_c_size_must_be_0x184[
+    sizeof(daDossyCap_c) == 0x184 ? 1 : -1];
 
-#endif /* DORRIECAP_H */
+#endif /* DADOSSYCAP_C_H */

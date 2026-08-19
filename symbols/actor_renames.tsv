@@ -1402,15 +1402,15 @@ ov065	0x02117d80	func_ov065_02117d80	_ZN5Swoop13InitResourcesEv	vtable slot 0
 ov065	0x02117ee8	func_ov065_02117ee8	Swoop_Spawn	spawnfunc
 ov065	0x02117f40	func_ov065_02117f40	_ZN6DorrieD1Ev	vtable slot 16
 ov065	0x02117fa8	func_ov065_02117fa8	_ZN6DorrieD0Ev	vtable slot 17
-ov065	0x02118024	func_ov065_02118024	_ZN9DorrieCapD1Ev	vtable slot 16
-ov065	0x02118064	func_ov065_02118064	_ZN9DorrieCapD0Ev	vtable slot 17
+ov065	0x02118024	func_ov065_02118024	_ZN12daDossyCap_cD1Ev	vtable slot 16
+ov065	0x02118064	func_ov065_02118064	_ZN12daDossyCap_cD0Ev	vtable slot 17
 ov065	0x02118d04	func_ov065_02118d04	_ZN6Dorrie16CleanupResourcesEv	vtable slot 3
 ov065	0x02118d80	func_ov065_02118d80	_ZN6Dorrie6RenderEv	vtable slot 9
-ov065	0x02118da8	func_ov065_02118da8	_ZN9DorrieCap6RenderEv	vtable slot 9
+ov065	0x02118da8	func_ov065_02118da8	_ZN12daDossyCap_c6RenderEv	vtable slot 9
 ov065	0x02118df0	func_ov065_02118df0	_ZN6Dorrie8BehaviorEv	vtable slot 6
-ov065	0x021190a8	func_ov065_021190a8	_ZN9DorrieCap8BehaviorEv	vtable slot 6
+ov065	0x021190a8	func_ov065_021190a8	_ZN12daDossyCap_c8BehaviorEv	vtable slot 6
 ov065	0x02119228	func_ov065_02119228	_ZN6Dorrie13InitResourcesEv	vtable slot 0
-ov065	0x021194e8	func_ov065_021194e8	_ZN9DorrieCap13InitResourcesEv	vtable slot 0
+ov065	0x021194e8	func_ov065_021194e8	_ZN12daDossyCap_c13InitResourcesEv	vtable slot 0
 ov065	0x021195ec	func_ov065_021195ec	DorrieCap_Spawn	spawnfunc
 ov065	0x02119634	func_ov065_02119634	Dorrie_Spawn	spawnfunc
 ov065	0x021196d8	func_ov065_021196d8	_ZN15TtcRotatingCubeD1Ev	vtable slot 16
@@ -1459,7 +1459,7 @@ ov065	0x0211cc7c	data_ov065_0211cc7c	Swoop_SpawnInfo	spawninfo
 ov065	0x0211cca0	data_ov065_0211cca0	_ZTV5Swoop	vtable alloc=0x440
 ov065	0x0211cd84	data_ov065_0211cd84	Dorrie_SpawnInfo	spawninfo
 ov065	0x0211cda0	data_ov065_0211cda0	DorrieCap_SpawnInfo	spawninfo
-ov065	0x0211cdc4	data_ov065_0211cdc4	_ZTV9DorrieCap	vtable alloc=0x184
+ov065	0x0211cdc4	data_ov065_0211cdc4	_ZTV12daDossyCap_c	vtable alloc=0x184
 ov065	0x0211ce48	data_ov065_0211ce48	_ZTV6Dorrie	vtable alloc=?
 ov065	0x0211cfe8	data_ov065_0211cfe8	TtcRotatingCube_SpawnInfo	spawninfo
 ov065	0x0211d004	data_ov065_0211d004	TtcRotatingPrism_SpawnInfo	spawninfo
