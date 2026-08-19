@@ -55,6 +55,22 @@ pfnOpen  p_Open;
 pfnHdr   p_Prepare, p_Unprepare, p_Write;
 pfnDev   p_Reset, p_Close;
 
+/* RING HEALTH. The ring is NBUF x OUT_FRAMES frames, refilled once per video
+   frame from sd_out_push, and the device drains it at the device rate no
+   matter what the video loop is doing. Three counters, so "it squealed" can be
+   answered with a number instead of an ear:
+
+     g_pushes     sd_out_push calls that found a live device (= video frames)
+     g_refills    headers handed back to the device across the run
+     g_starved    pushes that arrived with EVERY header already DONE, which
+                  means the device had played the ring dry and was repeating or
+                  outputting nothing while it waited. This is the underrun, and
+                  it is the shape a glitch/squeal has.
+
+   sd_out_report prints them at exit. A healthy run has g_starved == 0 and
+   g_refills close to (run seconds * device rate / OUT_FRAMES). */
+int g_pushes, g_refills, g_starved, g_reported;
+
 HWAVEOUT g_dev;
 WAVEHDR  g_hdr[NBUF];
 sd_s16  *g_buf[NBUF];
@@ -102,6 +118,20 @@ void render_mix(int frames)
     if (frames > MIX_MAX) frames = MIX_MAX;
     sd_mix_render(g_mix, frames);
     sd_wav_write(g_mix, frames);
+}
+
+/* THE RING-HEALTH LINE, once, at exit. Registered from sd_out_open so it only
+   exists on runs that actually opened a device, and guarded so a close
+   followed by the atexit cannot print it twice. */
+void out_report(void)
+{
+    if (g_reported) return;
+    g_reported = 1;
+    fprintf(stderr, "[audio] ring: %d pushes, %d refills, %d starved "
+                    "(%d x %d frames at %d Hz = %.0f ms)\n",
+            g_pushes, g_refills, g_starved, NBUF, OUT_FRAMES, g_devRate,
+            1000.0 * NBUF * OUT_FRAMES / (g_devRate ? g_devRate : 1));
+    fflush(stderr);
 }
 
 }  // namespace
@@ -210,6 +240,7 @@ int sd_out_open(void)
             1000.0 * NBUF * OUT_FRAMES / g_devRate);
     fprintf(stderr, "[audio] master volume %d%%%s\n", out_volume_pct(),
             out_volume_pct() == 0 ? " (silent)" : "");
+    atexit(out_report);
     return 1;
 #else
     fprintf(stderr, "[sdat] no audio backend on this platform -- silent\n");
@@ -242,6 +273,14 @@ void sd_out_push(void)
 
 #if defined(_WIN32)
     if (g_opened > 0) {
+        int free_on_entry = 0;
+        for (int i = 0; i < NBUF; i++)
+            if (g_hdr[i].dwFlags & WHDR_DONE) free_on_entry++;
+        g_pushes++;
+        /* Every header free means the device finished everything queued before
+           this call got here. The first push of the run is the ring being
+           filled for the first time and is not a starve. */
+        if (free_on_entry == NBUF && g_pushes > 1) g_starved++;
         for (int i = 0; i < NBUF; i++) {
             if (!(g_hdr[i].dwFlags & WHDR_DONE)) continue;
             if (g_devRate == SD_MIX_RATE) {
@@ -273,6 +312,7 @@ void sd_out_push(void)
             // output stage), so g_buf holds the level that goes to the speaker.
             g_hdr[i].dwFlags &= ~WHDR_DONE;
             g_hdr[i].dwBufferLength = OUT_FRAMES * 2 * sizeof(sd_s16);
+            g_refills++;
             p_Write(g_dev, &g_hdr[i], sizeof(WAVEHDR));
         }
         return;
