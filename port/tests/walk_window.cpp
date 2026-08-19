@@ -990,7 +990,9 @@ static const int ZOOM = 3;
 static void *g_mc;
 
 /* ---- THE FRAME PACER'S CLOCK ------------------------------------------
-   The loop below sleeps out the remainder of a 33.3ms budget. Sleep's
+   frame_pace below sleeps out the remainder of a frame budget that is 16.65ms
+   or 33.3ms depending on what the running scene put in the ROM's own divider
+   (see frame_pace's banner). Sleep's
    resolution is the SYSTEM TIMER TICK, which defaults to 15.6ms: a request for
    4ms returns after 15.6, so a frame with 4ms of slack overshot the budget by
    a whole tick and the next one came early making it up. That is the judder in
@@ -1044,6 +1046,137 @@ static void pacer_begin(void)
     if (W.timeBeginPeriod_(1) != 0) return;   /* != TIMERR_NOERROR */
     g_pacer_period = 1;
     atexit(pacer_end);
+}
+
+/* ---- THE FRAME BUDGET, OFF THE ROM'S OWN DIVIDER ----------------------
+   HOW FAST A FRAME LOOP MAY RUN IS THE GAME'S DECISION, NOT THE HOST'S, and
+   the game writes it down. IRQ::VBlankHandler (src/_ZN3IRQ13VBlankHandlerEv.c)
+   counts vblanks into data_0209d514 and only wakes the main thread once that
+   count reaches data_0208ee44, so data_0208ee44 is literally vblanks-per-tick:
+
+       1 -> 60 fps      2 -> 30 fps      3 -> 20 fps
+
+   and every scene sets it for itself during its own InitResources:
+
+       src/_ZN5Stage13InitResourcesEv.cpp:362        = 2   the 3D levels
+       src/_ZN16dScMgSmartball_c13InitResourcesEv.c  = 1   a minigame
+       src/func_ov006_020de704.c and its dozen peers = 1   the other minigames
+       src/func_ov002_020f7780.c:23                  = 3
+       src/func_ov075_0211a410.cpp:140               = 2
+
+   BOTH HOST LOOPS USED TO HARDCODE 33.3ms, which is the divider-2 answer. The
+   3D level path was right by accident and every minigame ran at EXACTLY HALF
+   SPEED, which is the "way slower than normal gameplay" report. Nothing was
+   wrong with the sleep, the timer resolution or the present: the loop was
+   pacing to a number the scene had already overruled.
+
+   THE GAME LOGIC IS UNTOUCHED BY THIS. Both loops run exactly ONE game tick per
+   host frame either way, and the ROM's own per-frame increments already scale
+   themselves by this same word (func_02019ac4's `delta`, func_02020768's `acc`,
+   HUD::UpdateHealthMeter, Message::Update). Ticking at 60 with the divider at 1
+   is the DS, and it is the only thing that is. */
+extern "C" int data_0208ee44;
+
+/* One DS vblank in milliseconds. This is the 33.3 the level loop shipped with,
+   divided by the 2 that path's divider holds, so the 3D level path's budget
+   comes out at the identical number it always used and this change cannot move
+   a rate that was already correct. */
+static const double PORT_VBLANK_MS = 33.3 / 2.0;
+
+static int port_frame_divider(void)
+{
+    /* SM64DS_PACE_DIVIDER=<n> overrides the game's word, for A/B measurement
+       only -- "what does this scene sound like if I pace it the way the port
+       used to" is a question worth being able to ask without a second build.
+       Unset (the normal case) and the ROM decides. */
+    static int forced = -1;
+    if (forced < 0) {
+        const char *e = getenv("SM64DS_PACE_DIVIDER");
+        forced = e ? atoi(e) : 0;
+        if (forced < 0 || forced > 4) forced = 0;
+    }
+    if (forced) return forced;
+    const int d = data_0208ee44;
+    /* The ROM writes 1, 2 or 3 and nothing else. Anything outside that is a
+       global nothing has written yet (or one something has stomped), and the
+       safe reading of a garbage divider is the 30fps the port already shipped
+       -- not an uncapped loop and not one frame a second. */
+    return (d >= 1 && d <= 4) ? d : 2;
+}
+
+/* THE PACER ITSELF, one copy for both frame loops.
+
+   A DEADLINE, NOT AN ELAPSED-TIME SUBTRACTION. The old block measured the
+   frame's work and slept `budget - work`, which throws away whatever the Sleep
+   overshot and whatever the (DWORD) cast truncated -- up to a millisecond a
+   frame, which is 3% of a 33.3ms budget and 6% of a 16.65ms one. Carrying an
+   absolute deadline instead makes those errors cancel: a sleep that ran long
+   shortens the next one and the average period is the budget exactly.
+
+   A HITCH IS NOT A DEBT. If a frame blows through its deadline -- a level load,
+   a window drag, the OS taking the core away -- the deadline is pulled up to
+   now rather than left behind, so the loop returns to pace on the next frame
+   instead of sprinting through several to "catch up". Catching up would mean
+   running game ticks faster than the DS runs them, which is the one thing a
+   pacer here must never do. */
+static void frame_pace(void)
+{
+    static LARGE_INTEGER qpf, next;
+    static LARGE_INTEGER rep_t0;
+    static int rep_n;
+    static int trace = -1;
+    LARGE_INTEGER now;
+
+    if (trace < 0) {
+        const char *e = getenv("SM64DS_TRACE_PACE");
+        trace = e ? atoi(e) : 0;
+    }
+    if (!qpf.QuadPart) QueryPerformanceFrequency(&qpf);
+    QueryPerformanceCounter(&now);
+
+    const int div = port_frame_divider();
+    const double budget = PORT_VBLANK_MS * div;
+    const LONGLONG step =
+        (LONGLONG)(budget * (double)qpf.QuadPart / 1000.0 + 0.5);
+
+    double slept = 0.0;
+    if (!next.QuadPart) {
+        next.QuadPart = now.QuadPart;   /* the first frame sets the deadline */
+    } else {
+        next.QuadPart += step;
+        if (next.QuadPart <= now.QuadPart) {
+            next.QuadPart = now.QuadPart;   /* overran: reset, do not sprint */
+        } else {
+            const double ms =
+                (next.QuadPart - now.QuadPart) * 1000.0 / (double)qpf.QuadPart;
+            if (ms >= 1.0) {
+                LARGE_INTEGER a2;
+                Sleep((DWORD)ms);
+                QueryPerformanceCounter(&a2);
+                slept = (a2.QuadPart - now.QuadPart) * 1000.0 /
+                        (double)qpf.QuadPart;
+            }
+        }
+    }
+
+    if (!trace) return;
+    /* SM64DS_TRACE_PACE=2 is the per-frame line, which costs an unbuffered
+       write every frame and therefore distorts the very thing it measures.
+       SM64DS_TRACE_PACE=1 is the cheap one: a rate over the last 120 frames,
+       which is the number to quote. */
+    if (trace >= 2)
+        fprintf(stderr, "[pace] div=%d budget=%.2f slept=%.2f\n",
+                div, budget, slept);
+    if (!rep_t0.QuadPart) { rep_t0 = now; rep_n = 0; return; }
+    if (++rep_n >= 120) {
+        const double s =
+            (now.QuadPart - rep_t0.QuadPart) / (double)qpf.QuadPart;
+        fprintf(stderr, "[fps] %d frames in %.3fs = %.2f fps "
+                "(divider %d, budget %.2fms)\n",
+                rep_n, s, s > 0.0 ? rep_n / s : 0.0, div, budget);
+        rep_t0 = now;
+        rep_n = 0;
+    }
 }
 
 /* ---- THE DEBUG OVERLAY (port mod) -------------------------------------
@@ -4062,32 +4195,40 @@ static int scene_window_run(void)
         /* the click flag is true for exactly the frame it landed on; the hold
            in g_mouse_left_down is what outlives it */
         g_mouse_click_new = 0;
-        /* hosted ARM7, per frame, the way the level loop pumps it. The scene
-           path's own bring-up calls this once and never again, which is fine
-           for a 300-frame capture and is not fine for a minigame somebody is
-           playing: no sequencer progression is no music and no sound effects.
-           Windowed only -- the headless loop is the battery's. */
-        sdat_host_tick();
+        /* THE HOSTED ARM7, EXACTLY ONCE A FRAME -- and port_scene_tick above
+           has already done it on every frame that ticked the game, so this
+           call is only for the frames that did not.
+
+           IT WAS RUNNING TWICE. This call landed first (6482ce682, the scene
+           path's window) and hal/scene_boot.cpp:2763 added a second one inside
+           port_scene_tick the next day (5264b7bea, the minigame music seat)
+           for the headless path, which had none. Both then ran on every
+           windowed frame: 600 frames of scene 368 measured 1201 pushes through
+           the waveOut layer. Tempo survived it -- hal/sdat/mixer.cpp clocks the
+           sequencer off the AUDIO clock at 192 Hz on purpose -- but the ARM9
+           sound frame (func_0204fafc's volume ramps, the player-status
+           publish) stepped twice per video frame, and once the pacer above
+           stopped running minigames at half speed that became four times the
+           rate the DS runs it at.
+
+           NOT DELETED OUTRIGHT, because port_scene_tick's copy is gated on
+           tick_game and the debug menu clears it. A paused scene should not
+           advance the sequencer, but it must still hand the device buffers or
+           the 125ms ring drains and the speaker gets whatever the hardware
+           repeats. So: the game's frames are pumped there, the paused frames
+           are pumped here, and no frame is pumped twice. */
+        if (menu_on) sdat_host_tick();
         ++frame;
         port_last_frame = frame;   /* fault_probe.h: crash.txt/exit.txt context */
         fflush(stdout);
         if (budget && frame >= budget)
             break;
-        /* pace to 30, the same budget and the same arithmetic the level loop
-           uses: SM64DS game logic runs at 30fps (the DS panel scans 60 but
-           gameplay ticks every other vblank). */
-        {
-            static LARGE_INTEGER qpf, last;
-            LARGE_INTEGER now;
-            if (!qpf.QuadPart) QueryPerformanceFrequency(&qpf);
-            QueryPerformanceCounter(&now);
-            if (last.QuadPart) {
-                const double el =
-                    (now.QuadPart - last.QuadPart) * 1000.0 / qpf.QuadPart;
-                if (el < 33.3) Sleep((DWORD)(33.3 - el));
-            }
-            QueryPerformanceCounter(&last);
-        }
+        /* THE PACE, off the scene's own divider and not off a constant. A
+           minigame writes data_0208ee44 = 1 in its InitResources and therefore
+           runs at 60; the 33.3ms this block used to hardcode is the 3D level
+           path's number, and pacing a minigame to it ran the whole minigame at
+           EXACTLY HALF SPEED. See frame_pace's banner. */
+        frame_pace();
     }
     /* THE ORDINARY EXIT. A window close, an Esc, or the minigame row's own
        PostQuitMessage all arrive here the same way, and the census below is
@@ -8369,29 +8510,14 @@ int main(void)
                    *(int *)(c + 0x5c), *(int *)(c + 0x60), *(int *)(c + 0x64));
             return 0;
         }
-        /* pace to 30: SM64DS game logic runs at 30fps (the DS panel
-           scans 60 but gameplay ticks every other vblank). Ticking the
-           game's per-frame constants at 60Hz doubled every speed --
-           the "jump too fast, weird gravity" report. Sleep only the
-           remainder of the 33.3ms budget. */
-        {
-            static LARGE_INTEGER qpf, last;
-            LARGE_INTEGER now;
-            if (!qpf.QuadPart) QueryPerformanceFrequency(&qpf);
-            QueryPerformanceCounter(&now);
-            if (!selftest && last.QuadPart) {
-                const double el =
-                    (now.QuadPart - last.QuadPart) * 1000.0 / qpf.QuadPart;
-                if (el < 33.3) Sleep((DWORD)(33.3 - el));
-                if (getenv("SM64DS_TRACE_PACE")) {
-                    LARGE_INTEGER a2;
-                    QueryPerformanceCounter(&a2);
-                    fprintf(stderr, "[pace] work=%.2f asked=%d slept=%.2f\n",
-                            el, (int)(33.3 - el),
-                            (a2.QuadPart - now.QuadPart) * 1000.0 / qpf.QuadPart);
-                }
-            }
-            QueryPerformanceCounter(&last);
-        }
+        /* THE PACE. Stage::InitResources writes data_0208ee44 = 2 for a 3D
+           level, so frame_pace's budget here is the same 33.3ms this block
+           used to hardcode -- the "jump too fast, weird gravity" report stays
+           fixed and the number it was fixed with is unchanged. What moves is
+           that the constant is now the game's own word rather than the host's
+           guess, which is what the scene loop needed. A selftest stays
+           UNPACED: it is the deterministic comparator run and a sleep in it
+           only makes the battery slower. */
+        if (!selftest) frame_pace();
     }
 }

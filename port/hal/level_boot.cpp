@@ -3330,6 +3330,7 @@ extern "C" void port_debug_spawn_env(void)
    the entrance record: position, rotation, area, entrance id and entrance
    type, all of it the level's own. */
 extern "C" {
+extern int data_0208ee44;              /* vblanks per game tick */
 extern unsigned char data_0209f21c;    /* controller count */
 extern unsigned char data_0209f250;    /* local player index */
 extern int data_0209fc5c[];            /* per-player "this slot is live" */
@@ -3492,6 +3493,24 @@ static void port_a2_seat_body(int make_stage)
                      (int)(data_0209cae4 - data_0209caa0),
                      (int)(data_0209caf4 - data_0209caa0));
     data_0209cad2[0x41 - 0x32] = 0;
+
+    /* THE FRAME DIVIDER, src/_ZN5Stage13InitResourcesEv.cpp:362. One of the
+       twenty InitResources global writes section 2d of port/stage_lifecycle_map.txt
+       lists as ABSENT from the port, and one of the five it lists as having a
+       live reader. The word is vblanks-per-game-tick: IRQ::VBlankHandler only
+       wakes the main thread once its vblank count reaches it, so 2 is the 3D
+       levels' 30fps and 1 is the minigames' 60. The ROM IMAGE'S STATIC VALUE
+       IS 1, so a level that never ran this line was sitting on a minigame's
+       divider for the whole session.
+
+       Two things read it and both were wrong without this.
+       hal/message_pump.cpp:256 uses it as the STEP a message window's close
+       timer counts down by (`data_0209d67c -= data_0208ee44`), so on a level
+       every message hung on screen for twice its ROM duration. And the host
+       frame pacer in tests/walk_window.cpp now takes the loop's budget from
+       it, which is what surfaced this: the level loop asked for the divider
+       and got a minigame's answer. */
+    data_0208ee44 = 2;
 
     /* Engine state the CAMERA's own boot reads, which under the entrance
        path runs inside LoadClsnAndObjects rather than after it. The harness
