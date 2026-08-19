@@ -67,9 +67,30 @@
 #     behind extern "C" and four dispatch an object FIELD and emit no symbol at
 #     all, so a clean link is not a clean detector. The sweep is clean too.
 #
-# So this lane writes no address switch and no dispatcher host copy, and the
-# fan-out cost model gains a fourth shape beside curling's five-TU wall and
-# 0x169's one-TU wall: a minigame with no wall at all.
+# THE CLASS'S OWN STATE MACHINE IS THEREFORE NOT A POINTER-TO-MEMBER ONE, and
+# every sentence above survives. BUT THE CLASS IS STILL BEHIND THE WALL, and
+# the paragraph that used to stand here said the opposite -- "this lane writes
+# no address switch and no dispatcher host copy ... a minigame with no wall at
+# all". THE LINK CLOSED AND THE FIRST FRAME PROVED IT WRONG:
+#
+#     FAULT c0000005 at eip 020c395c accessing 020c395c
+#       flw_beh (slot 6) -> func_ov006_0212ac74 -> func_ov006_020c3d18+0x23
+#
+# eip IS the DS address. src/func_ov006_020c3d18.cpp dispatches a member
+# pointer held in the SUB-OBJECT at self+0x51f8 -- and it does it by OPEN-CODING
+# the ARM Itanium sequence in plain ints, `*(int*)(c+4)` for the adjustment and
+# `c + (v >> 1)` for the this-adjustment, with no member-pointer type anywhere.
+# So it emits no PMF global for a link to name and contains no `::*` for a
+# sweep to find. THAT IS A THIRD SILENT SHAPE, beyond section 4's two, and it
+# is the worst of the three because both of that section's prescribed searches
+# come back clean over it.
+#
+# The four code words are measured, all with adjustment 0, all with matched src
+# TUs already in this slice, and the answer is the ordinary one:
+# port/unmatched/MgFlower_SubDispatch.cpp routes them at the dispatch site.
+# What the cost model should take from this class is not "a minigame with no
+# wall" but "a minigame whose wall is in its SUB-OBJECT and is invisible to
+# both detectors" -- and that only a run convicts.
 #
 # ---- HOW THE LIST WAS DERIVED ---------------------------------------------
 #
@@ -157,7 +178,13 @@
 # ---- the list ---------------------------------------------------------------
 src/Camera_UpdateMatrices.c
 src/func_ov001_020ab550.c
-src/func_ov004_020ad8b8.c
+# HOST-COPIED (mg5 lane FLW, under the coordinator's granted displacement
+# ruling): src/func_ov004_020ad8b8.c. It calls func_ov004_020adc3c with no
+# argument while the ROM rides the pointer loaded from data_ov004_020beb68
+# through r0, and the callee dereferences it on its first statement. Listing
+# the TU here alongside port/unmatched/MgFlower_InitScore.cpp would be an
+# LNK2005; the host copy is the definition. That file states the delta line by
+# line and carries the ROM disassembly it was derived from.
 src/func_ov004_020af770.cpp
 src/func_ov006_020c3528.cpp
 src/func_ov006_020c35a8.cpp
@@ -176,7 +203,13 @@ src/func_ov006_020c3b2c.c
 src/func_ov006_020c3b80.c
 src/func_ov006_020c3bc8.c
 src/func_ov006_020c3bf4.cpp
-src/func_ov006_020c3d18.cpp
+# HOST-COPIED (mg5 lane FLW): src/func_ov006_020c3d18.cpp. IT IS THE
+# POINTER-TO-MEMBER WALL IN A FORM NEITHER THE LINK NOR THE `::*` SWEEP CAN
+# SEE -- it open-codes the ARM Itanium dispatch sequence in plain ints, so it
+# names no member-pointer type, emits no PMF global and links clean, and then
+# jumps to a raw DS address the first time it runs (eip 020c395c). See
+# port/unmatched/MgFlower_SubDispatch.cpp, which is the address switch and the
+# four measured code words. The header block above this list is amended for it.
 src/func_ov006_020c3d88.cpp
 src/func_ov006_020c3e54.c
 src/func_ov006_020c3e70.cpp

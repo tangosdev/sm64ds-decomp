@@ -3454,11 +3454,21 @@ endforeach()
 
 set(SCENE_MG_FLOWER_SOURCES
     hal/scene_mg_flower.cpp
-    # The one ride-through this class owes: func_ov006_0210a6e4 drops the
-    # framework's second argument because the ROM rides it through in r1.
-    # The host copy is only ever reached through the slot-2 face beside it,
-    # so it travels with that file rather than standing on its own.
-    unmatched/MgFlower_Slot2.cpp)
+    # TWO ARGUMENT RIDE-THROUGHS THIS CLASS OWES, both PORT_HOST_ABI host
+    # copies under the coordinator's ruling, both the shape
+    # port/mg_fanout_costs.txt section 6 prescribes for its own (b) and (c).
+    # func_ov006_0210a6e4 drops the framework's second argument because the
+    # ROM rides it through in r1; func_ov004_020ad8b8 drops the pointer the
+    # ROM rides through r0 into func_ov004_020adc3c. Each REPLACES its src TU
+    # rather than joining it -- both are out of slice_flw.txt -- so they are
+    # not optional on any target that compiles the slice.
+    unmatched/MgFlower_Slot2.cpp
+    unmatched/MgFlower_InitScore.cpp
+    # And the class's half of the pointer-to-member wall. It exists after all,
+    # in a form section 4's two silent shapes do not cover: a dispatcher that
+    # open-codes the Itanium sequence in plain ints. Replaces
+    # src/func_ov006_020c3d18.cpp, which is out of the slice.
+    unmatched/MgFlower_SubDispatch.cpp)
 
 # Lane FDR: the arm9 wipe fader's own static initialiser, and the dWipe_c
 # vtable it installs. Rides the SAME three targets as the scene seats above,

@@ -153,9 +153,6 @@ extern unsigned char data_ov006_02140140[];   /* dScMgFlower_c,       36 */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
 extern unsigned char data_ov006_02140114[];   /* the SpawnInfo record     */
 
-/* THE BLOCKER'S SUBJECT. ov004 .bss, hosted by the ov004 mount; declared the
-   way src/func_ov004_020ad8b8.c declares it. See the pre-flight in the fill. */
-extern int data_ov004_020beb68;
 
 /* dScMgSingle3DBase_c's eight overrides */
 void  func_ov006_0210a608(void *c, unsigned f);   /* slot  5 */
@@ -215,22 +212,25 @@ static int  __fastcall s3_v33(void *s, void *)
 { S3D(33); func_ov006_0210a708((char *)s); return 0; }
 
 /* ---- dScMgFlower_c's six ------------------------------------------------ */
-/* ---- THE PRE-FLIGHT CHECK FOR THIS SEAT'S ONE BLOCKER --------------------
-   Defined here and called from the slot-0 face rather than from the fill, and
-   the placement is the whole point: data_ov004_020beb68 is ov004 .bss that
-   NOTHING sets during the fill. It is written by twelve ov004 TUs during the
-   scene's own bring-up (func_ov004_020b2a18, _020b023c, _020b3278 and the OAM
-   pair among them), so a fill-time read of it is zero and would have reported
-   the blocker absent on the very run that hits it. Asked immediately before
-   the body that faults, it is the value that body will see.
+/* ---- THE BLOCKER THAT WAS HERE IS RETIRED -------------------------------
+   A pre-flight check stood here and printed a named line whenever
+   data_ov004_020beb68 was non-zero, because func_ov004_020ad8b8 then called
+   func_ov004_020adc3c with no argument and the host callee read the stack.
+   Under the coordinator's granted displacement ruling that call now places
+   its argument, in port/unmatched/MgFlower_InitScore.cpp, so the condition
+   the check was keyed on is the ORDINARY case and a line keyed on it would
+   print on every healthy boot.
 
-   See the long derivation above the definition; the short form is that
-   func_ov004_020ad8b8 rides a pointer through r0 into
-   func_ov004_020adc3c and the host does not. */
-static void flw_blocker_check(void);
-
+   SO IT IS DELETED RATHER THAN LEFT ANSWERING OVER A SEATED FIX, which is
+   what run link60 Stage 5 lane SEAT8 did with the "MINIGAME FADE MOTION
+   MISSING" advisory for the same reason. The derivation, the ROM
+   disassembly and the fault it produced travel with the host copy, where a
+   reader who wants the history will look for it. The live assertion that
+   replaces it is port/tools/battery.py's scene-390 row, which is an ordinary
+   selftest now: if the host copy is ever dropped, scene 390 faults in
+   InitResources again and that row goes red on the next battery. */
 static int  __fastcall flw_init(void *s, void *)
-{ FLW(0);  flw_blocker_check(); return func_ov006_0212b480(s); }
+{ FLW(0);  return func_ov006_0212b480(s); }
 static int  __fastcall flw_beh(void *s, void *)
 { FLW(6);  return func_ov006_0212ac74((char *)s); }
 static int  __fastcall flw_render(void *s, void *)
@@ -382,6 +382,14 @@ extern "C" void *port_mg_flower_spawn(void)
 }
 
 extern "C" unsigned port_mg_flower_trap_hits(void);
+/* unmatched/MgFlower_SubDispatch.cpp's own counters. The class's slot-6 switch
+   is plain C and needs no instrument beyond the state variable below, but the
+   SUB-OBJECT at +0x51f8 is dispatched through a member pointer and does, for
+   MgBase_StateDispatch's reason: a run with slot hits and zero dispatch calls
+   has ticked the object without entering its state machine, and that reads as
+   a success unless it is printed. */
+extern "C" unsigned port_mg_flower_sub_calls(void);
+extern "C" unsigned port_mg_flower_sub_unknown(void);
 
 extern "C" void port_scene_flower_hits(void)
 {
@@ -427,6 +435,11 @@ extern "C" void port_scene_flower_hits(void)
         std::printf("[scene] flower state: the class never spawned\n");
     }
 
+    std::printf("[scene] sub-object state dispatch (+0x51f8, the member "
+                "pointer func_ov006_020c3d18 open-codes): %u call(s) through "
+                "the address switch, %u UNHANDLED address(es)\n",
+                port_mg_flower_sub_calls(), port_mg_flower_sub_unknown());
+
     if (port_mg_flower_trap_hits())
         std::printf("[scene] func_ov006_0212a764 (undecompiled, no delink "
                     "block, no src) entered %u time(s) -- the petal layout did "
@@ -434,79 +447,6 @@ extern "C" void port_scene_flower_hits(void)
     else
         std::printf("[scene] func_ov006_0212a764 trap entered: 0\n");
     std::fflush(stdout);
-}
-
-static void flw_blocker_check(void)
-{
-    /* ---- THE PRE-FLIGHT CHECK FOR THIS SEAT'S ONE BLOCKER ----------------
-       An ARM ARGUMENT RIDE-THROUGH in ov004, two calls into this class's
-       InitResources, and it is the same family as the two
-       port/mg_fanout_costs.txt section 6 records for slots 5 and 7 -- the
-       third instance, in a third function, found by running rather than by
-       reading.
-
-           flw_init -> func_ov006_0212b480 (slot 0) +0xa
-                    -> func_ov004_020ad8b8 +0x10
-                    -> func_ov004_020adc3c +0x6
-           FAULT c0000005 accessing 0x00000009
-
-       THE ROM, disassembled out of extracted/overlays/overlay_0004.bin at
-       base 0x020ad660:
-
-           020ad8c0  ldr r0,[pc,#0x3c]   ; = 0x020beb68
-           020ad8c4  ldr r0,[r0]         <- r0 = the POINTER the global holds
-           020ad8c8  cmp r0,#0
-           020ad8cc  beq  (return 0)
-           020ad8d0  bl  0x20adc3c       <- r0 STILL holds that pointer
-           ...
-           020adc3c  ldr r0,[r0,#8] / and 0xff00 / lsr #8 / bx lr
-
-       So func_ov004_020adc3c's argument is data_ov004_020beb68 READ AS A
-       POINTER, and the ROM delivers it by never touching r0 between the load
-       and the call. src/func_ov004_020ad8b8.c cannot spell that: it declares
-       `extern int func_ov004_020adc3c(void);` and calls it with no argument,
-       while src/func_ov004_020adc3c.c defines `int func_ov004_020adc3c(void*
-       c)` and dereferences c+8 on its first statement. On ARM that is
-       correct and free; on the host the callee reads [esp+4]. The value the
-       fault report shows it read is 1 (esi=00000001), and 1 + 8 = 9, which is
-       the address in the fault line.
-
-       WHY IT IS NOT FIXED HERE. The remedy is a PORT_HOST_ABI host copy of
-       func_ov004_020ad8b8 in port/unmatched/ that places the argument -- the
-       shape unmatched/MgBase_DeclConflict.cpp already uses for four TUs and
-       unmatched/MgFlower_Slot2.cpp for a fifth. It costs one LINKED FUNCTION,
-       because the src TU leaves the slice when the host copy enters, and this
-       lane's brief reserves an argument-displacing host copy to the
-       coordinator's ruling (port/mg_fanout_costs.txt section 12's precedent,
-       where the same ruling was granted to whichever lane seats 361). The
-       request is filed; the fix is one line and is not this lane's to take.
-
-       THE CHECK EXISTS TO GIVE THE BLOCKER A STABLE NAME, exactly as the
-       curling seat's two did. A link offset changes on every build and cannot
-       be a battery marker; this line can, and it names the CAUSE. Its
-       PREDICATE is the ROM's own branch condition -- func_ov004_020ad8b8
-       returns 0 without calling anything when data_ov004_020beb68 is zero --
-       so the day that global is zero at this point the line stops printing
-       and the fault stops happening, together, and port/tools/battery.py's
-       SCENE_BLOCKED probe reports BLOCK RETIRED. The fault is deliberately
-       not prevented: a scene that limps past its own blocker is worth less
-       than one that names it. */
-    static int said;
-    if (said || data_ov004_020beb68 == 0)
-        return;
-    said = 1;
-    {
-        std::printf("[scene] FLOWER BLOCKED: func_ov004_020ad8b8 calls "
-                    "func_ov004_020adc3c with NO argument while the ROM rides "
-                    "the pointer in data_ov004_020beb68 through r0, and that "
-                    "global is non-zero on this boot (%08x), so the branch is "
-                    "taken. dScMgFlower_c::InitResources faults in "
-                    "func_ov004_020adc3c reading [arg+8] off the stack. Needs "
-                    "an argument-placing host copy of func_ov004_020ad8b8; "
-                    "see port/hal/scene_mg_flower.cpp.\n",
-                    (unsigned)data_ov004_020beb68);
-        std::fflush(stdout);
-    }
 }
 
 /* ---- THE NAMED TRAP ------------------------------------------------------
