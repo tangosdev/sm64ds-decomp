@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN10ClsnResultaSERKS_
+// @symbol _ZN5dBgPiaSERKS_
 /* recovered: named members + shared header */
-#include "ClsnResult.h"
-extern "C" char *_ZN10ClsnResultaSERKS_(struct ClsnResult *self, const char *o) {
+#include "dBgPi.h"
+extern "C" char *_ZN5dBgPiaSERKS_(struct dBgPi *self, const char *o) {
     self->unk_004 = *(const long long *)(o + 4);
     self->unk_00c = *(const int *)(o + 0xc);
     self->unk_010 = *(const int *)(o + 0x10);

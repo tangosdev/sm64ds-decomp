@@ -25,9 +25,9 @@ void func_02035394(void* o, void* r);
 int _ZN7dBgW_Kc10DetectClsnER10SphereClsn(void* o, void* s);
 void func_02037a04(void* o, void* d1, void* d2);
 void func_02037a6c(void* b, int x1, int y1, int z1, int x2, int y2, int z2);
-void _ZN10ClsnResultaSERKS_(void* d, void* s);
+void _ZN5dBgPiaSERKS_(void* d, void* s);
 void* func_02037938(void* p);
-void _ZN10SphereClsn14SetFloorResultERK10ClsnResult(void* o, void* r);
+void _ZN10SphereClsn14SetFloorResultERK5dBgPi(void* o, void* r);
 void func_0203794c(void* d, void* s);
 void* func_020378dc(void* p);
 void func_02037888(void* d, void* s);
@@ -73,13 +73,13 @@ extern "C" int _ZN14dBgW_KcMbgSclY10DetectClsnER10SphereClsn(char* self, char* s
         d[10] = FMUL(d[4], *(int*)(self + 0x50));
         d[11] = FMUL(d[5], *(int*)(self + 0x50));
         func_02037a6c(sphere, d[6], d[7], d[8], d[9], d[10], d[11]);
-        _ZN10ClsnResultaSERKS_(sphere + 0x10, loc.result);
+        _ZN5dBgPiaSERKS_(sphere + 0x10, loc.result);
         *(u8*)(sphere + 0x70) |= 1;
         if (loc.flags & 4) {
             if (*(u8*)(sphere + 0x70) & 4) {
                 r &= ~1;
             } else {
-                _ZN10SphereClsn14SetFloorResultERK10ClsnResult(sphere, func_02037938(&loc));
+                _ZN10SphereClsn14SetFloorResultERK5dBgPi(sphere, func_02037938(&loc));
             }
             *(u8*)(sphere + 0x70) |= 4;
             if (*(int*)(sphere + 0x100) < loc.f_100) {

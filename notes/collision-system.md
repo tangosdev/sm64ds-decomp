@@ -57,7 +57,7 @@ pairing to our coined names is settled by **vtable-address identity**, not infer
 | `dBgCh_Gnd` | `RaycastGround` | 0x02099264 | `data_02099264` — unnamed |
 | `dBgCh_Lin` | `RaycastLine` | 0x020992a4 | `_ZTV11RaycastLine` |
 | `dBgCh_SphCrr` | `SphereClsn` | 0x02099338 | `_ZTV10SphereClsn` |
-| `dBgPi` | `ClsnResult` | 0x02099368 | `data_02099368` — unnamed |
+| `dBgPi` | `dBgPi` | 0x02099368 | `data_02099368` — unnamed |
 | `dBgPc` | *none — no header* | — | base of `dBgPi` at +0x04 |
 | `dM3dGLin` | `RaycastLine::Line` | — | non-polymorphic |
 | `dM3dGSph` | *none* | 0x020994cc | `data_020994cc` — unnamed |
@@ -107,7 +107,7 @@ dBgW      dBgW   the collidable world  ─┐ registered in a
        └ dBgW_KcMbgSclY  dBgW_KcMbgSclY     ─┘
 
 dBgCh     BgCh               a query against it    ─┐ each embeds a
- ├ dBgCh_Gnd    RaycastGround   "what is under me"  │ dBgPi (ClsnResult)
+ ├ dBgCh_Gnd    RaycastGround   "what is under me"  │ dBgPi (dBgPi)
  ├ dBgCh_Lin    RaycastLine     swept segment       │ at +0x10
  ├ dBgCh_SphCrr SphereClsn      penetration + push  │
  └ dBgCh_Actr   WithMeshClsn    an actor's response ─┘ (no dBgPi; owns a
@@ -134,8 +134,8 @@ dBgW chain, dCc_c chain          (single inheritance throughout)
 
 Corroborated by the secondary vtables' offset-to-top words (`0xfffffff0` = −0x10,
 `0xffffffc8` = −0x38) and by eight `this`-adjusting thunks. The note's own open question
-— "`func_020380ec` is *not* `_ZN10ClsnResultD1Ev` … do not rename it" — was answered by
-**#1206**, which landed after it: 0x020380ec is `_ZN10ClsnResultD2Ev`, the **base-object**
+— "`func_020380ec` is *not* `_ZN5dBgPiD1Ev` … do not rename it" — was answered by
+**#1206**, which landed after it: 0x020380ec is `_ZN5dBgPiD2Ev`, the **base-object**
 destructor variant, which is exactly what a base subobject gets. The evidence the note
 read as ruling inheritance out is in fact its signature.
 
@@ -144,7 +144,7 @@ adjustments):
 
 ```
 0x00  dBgCh   0x10 B   vptr, u8 detectMask@0x04, s32 ownerID@0x08, dActor_c* owner@0x0c
-0x10  dBgPi   0x28 B   the ClsnResult the hit is written into — SECOND vptr
+0x10  dBgPi   0x28 B   the dBgPi the hit is written into — SECOND vptr
 0x38  dM3dGLin (0x18) / dM3dGSph (0x14)  — THIRD vptr, SphCrr only
 ```
 
@@ -277,7 +277,7 @@ The two functions with no source are the two unrecovered ITCM `DetectClsn` overl
 Per class: dBgW_Kc 16 fn / 10,840 B · unnamed `func_*` 182 / 8,220 · WithMeshClsn
 27 / 5,860 · dBgW_KcMbg 15 / 2,824 · dBgW_KcMbgSclY 10 / 1,548 ·
 CylinderClsn 8 / 1,428 · SphereClsn 5 / 1,172 · RaycastLine 6 / 900 · dBgW
-19 / 764 · RaycastGround 4 / 676 · BgCh 5 / 452 · ClsnResult 6 / 304 · the three
+19 / 764 · RaycastGround 4 / 676 · BgCh 5 / 452 · dBgPi 6 / 304 · the three
 `MovingCylinder*` families 20 / 712 · remainder small.
 
 No collision function appears in `bytegate-known-failures.txt`, `rombuild-exclude.txt`,
@@ -340,7 +340,7 @@ concentrated in structure, status, and numbers.
 | where | claim | verdict |
 |---|---|---|
 | `collision-query-classes.md:21` | "embedded polymorphic member, **not** inheritance depth" | **WRONG** — RTTI says three public bases (§3.1) |
-| `collision-query-classes.md:43` | "do not rename `func_020380ec` to `ClsnResult`" | **SUPERSEDED** by #1206 — it is `_ZN10ClsnResultD2Ev` |
+| `collision-query-classes.md:43` | "do not rename `func_020380ec` to `dBgPi`" | **SUPERSEDED** by #1206 — it is `_ZN5dBgPiD2Ev` |
 | `collision-query-classes.md:56` | RaycastLine's 0x38 member "is overlay-resident" | dtor **is** in ov002 (4-byte `bx lr`) but the *type* is not — `dM3dGLin`'s RTTI is in arm9 |
 | `collision-query-classes.md` (0x5c) | "0x5c = `lineEnd.z`" | **TRUE** — retracted 2026-08-19; see the dual-role note below |
 | `collision-query-classes.md:882` | wall slab is "**symmetric**", half-width `unk_ec + radius` | **WRONG** — asymmetric `[-(ec+rad), ec-rad]`; the note quoted four instructions and missed the `sub` |
@@ -552,7 +552,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
 this is pure naming. Many are already derivable from the vtables: `func_020354d0/e0` and
 `func_02035504` are `BgCh` D2/D0/D1, `func_02035514` its ctor, `func_020373b8`
 `WithMeshClsn` D0, `func_020374f0` `RaycastGround` D0, `func_02037710` `RaycastLine` D0,
-`func_02037c40` `SphereClsn` D0, `func_02038114`/`func_0203819c` `ClsnResult` D0/C2,
+`func_02037c40` `SphereClsn` D0, `func_02038114`/`func_0203819c` `dBgPi` D0/C2,
 `func_0203ac2c/50/60/70` `dM3dGSph` D0/D1/C1/C2, plus the eight `_ZThn…` thunks. Largest
 unnamed: `func_02036acc` (1,048 B, a `WithMeshClsn::Update*` sibling), `func_02038824`
 (532), `func_0203842c` (368), `func_02038a38` (320).

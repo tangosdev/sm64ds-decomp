@@ -2075,7 +2075,7 @@ extern void func_02037b5c(void*);
 extern void func_02037ee4(void*);
 extern void func_02037f18(void*);
 extern void func_020380c0(void*);
-extern void _ZN10ClsnResultD2Ev(void*);
+extern void _ZN5dBgPiD2Ev(void*);
 extern void func_0203821c(int*, int);
 extern void func_02038224(void*);
 extern void func_02038414(void*);

@@ -1,7 +1,7 @@
 //cpp
 // @symbol func_ov002_020cfbdc
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_ClsnResult.h"
+#include "decl_dBgPi.h"
 /* recovered: shared common types */
 #include "common.h"
 
@@ -32,8 +32,8 @@ extern "C" int func_ov002_020cfbdc(char *self)
         if ((*(unsigned char *)(self + 0x6e9) & 2) != 0) {
             if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x380) != 0) {
                 void *fr = _ZNK12WithMeshClsn14GetFloorResultEv(self + 0x380);
-                if (_ZNK10ClsnResult9GetClsnIDEv(fr) != -1) {
-                    if (_ZN8dActor_c10FindWithIDEj((unsigned int)_ZNK10ClsnResult9GetClsnIDEv(fr)) != 0) {
+                if (_ZNK5dBgPi9GetClsnIDEv(fr) != -1) {
+                    if (_ZN8dActor_c10FindWithIDEj((unsigned int)_ZNK5dBgPi9GetClsnIDEv(fr)) != 0) {
                         func_ov002_020d0948(self);
                         return 1;
                     }

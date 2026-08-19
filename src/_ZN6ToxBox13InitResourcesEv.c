@@ -24,7 +24,7 @@ extern char data_ov092_02132548;
 extern char data_ov092_02132220;
 extern char data_ov092_02132294;
 extern Mtx43 data_020a0e68;
-extern char _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern char _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 int _ZN6ToxBox13InitResourcesEv(char *self)
 {
@@ -71,7 +71,7 @@ int _ZN6ToxBox13InitResourcesEv(char *self)
     f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov092_02132548);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         self + 0x124, f, self + 0x2ec, 0x1000, *(short *)(self + 0x8e), &data_ov092_02132220);
-    func_020393d4(self + 0x124, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(self + 0x124, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     *(unsigned char *)(self + 0x575) = (unsigned char)((*(short *)(self + 0x8c) >> 0xe) & 3);
     {

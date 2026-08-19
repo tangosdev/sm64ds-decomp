@@ -2,7 +2,7 @@
 #include "types.h"
 // @symbol _ZN6Player13St_Shell_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_ClsnResult.h"
+#include "decl_dBgPi.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
@@ -39,8 +39,8 @@ int Player::St_Shell_Main()
     if (func_02035638((u8*)((char*)&mMeshClsn))) {
         flag = 1;
         res = (void*)func_0203564c((int)((char*)&mMeshClsn));
-        if (_ZNK10ClsnResult9GetClsnIDEv(res) != -1) {
-            void* a = _ZN8dActor_c10FindWithIDEj((u32)_ZNK10ClsnResult9GetClsnIDEv(res));
+        if (_ZNK5dBgPi9GetClsnIDEv(res) != -1) {
+            void* a = _ZN8dActor_c10FindWithIDEj((u32)_ZNK5dBgPi9GetClsnIDEv(res));
             if (a) {
                 u16 type = *(u16*)((char*)a + 0xc);
                 if ((type == 0x14 ? flag : 0) || (type == 0x15 ? 1 : 0)) {

@@ -1,12 +1,12 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class ClsnResult: 5 matched functions, 9 evidenced fields.
+ * class dBgPi: 5 matched functions, 9 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef CLSNRESULT_H
-#define CLSNRESULT_H
+#ifndef DBGPI_H
+#define DBGPI_H
 #include "types.h"
 
-struct ClsnResult {
+struct dBgPi {
     u8  pad_000[0x4];
     s64 unk_004;            /* 0x004 */
     s32 unk_00c;            /* 0x00c */

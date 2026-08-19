@@ -13,7 +13,7 @@ extern void func_02035394(void* line, void* arg);
 extern int _ZN7dBgW_Kc10DetectClsnER11RaycastLine(void* thiz, void* line);
 extern void func_0203aa10(void* thiz, const Vector3* v, Vector3* res);
 extern void func_020375ec(int* d, int* s);
-extern void _ZN10ClsnResultaSERKS_(void* dst, const void* src);
+extern void _ZN5dBgPiaSERKS_(void* dst, const void* src);
 
 int _ZN14dBgW_KcMbgSclY10DetectClsnER11RaycastLine(void* thiz, char* line)
 {
@@ -32,7 +32,7 @@ int _ZN14dBgW_KcMbgSclY10DetectClsnER11RaycastLine(void* thiz, char* line)
         func_0203aa10(thiz, (const Vector3*)data_020a0d60, &gp);
         func_020375ec((int*)line, (int*)&gp);
         *(int*)(line + 0x60) = n;
-        _ZN10ClsnResultaSERKS_(line + 0x10, data_020a0d1c);
+        _ZN5dBgPiaSERKS_(line + 0x10, data_020a0d1c);
         *(char*)(line + 0x50) = 1;
     }
     return r;

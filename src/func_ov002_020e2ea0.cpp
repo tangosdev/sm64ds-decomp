@@ -4,7 +4,7 @@ struct WithMeshClsn {
     int IsOnGround() const;
     int GetFloorResult() const;
 };
-struct ClsnResult {
+struct dBgPi {
     int GetClsnID() const;
 };
 struct dActor_c {
@@ -44,7 +44,7 @@ extern "C" int func_ov002_020e2ea0(Player *self) {
         return 0;
     }
 
-    ClsnResult *cr = (ClsnResult *)((WithMeshClsn *)(base + 0x380))->GetFloorResult();
+    dBgPi *cr = (dBgPi *)((WithMeshClsn *)(base + 0x380))->GetFloorResult();
     if (cr->GetClsnID() != -1) {
         if (dActor_c::FindWithID((unsigned int)cr->GetClsnID()) != 0) {
             return 0;

@@ -33,7 +33,7 @@
 /* dBgW_Kc::DetectClsn(SphereClsn &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
 #include "dBgW_Kc.h"
 #include "SphereClsn.h"
-#include "ClsnResult.h"
+#include "dBgPi.h"
 
 extern "C" void func_02037a6c(SphereClsn *self, s32 loX, s32 loY, s32 loZ,
                               s32 hiX, s32 hiY, s32 hiZ);
@@ -42,7 +42,7 @@ extern "C" s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri);
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
 extern "C" s32 func_02039794(s32 normalY);
 extern SurfaceInfo data_020a0cec;
-extern "C" void func_02037fd4(ClsnResult *res, s16 triID, SurfaceInfo *info);
+extern "C" void func_02037fd4(dBgPi *res, s16 triID, SurfaceInfo *info);
 extern "C" void func_020379f4(SphereClsn *self, s16 triID, SurfaceInfo *info);
 extern "C" void func_020379c0(SphereClsn *self, s16 triID, SurfaceInfo *info);
 extern "C" void func_0203798c(SphereClsn *self, s16 triID, SurfaceInfo *info);
@@ -547,7 +547,7 @@ s32 dBgW_Kc::DetectClsn(SphereClsn &sphere)
                         }
                         if (!contactKind) contactKind = k1;
 
-                        func_02037fd4((ClsnResult *)&sphere.unk_010, triID, &data_020a0cec);
+                        func_02037fd4((dBgPi *)&sphere.unk_010, triID, &data_020a0cec);
                         sphere.flags |= 1;
 
                         if (cls == 0) {

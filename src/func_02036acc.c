@@ -2,31 +2,31 @@
 #define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 
 typedef struct Vec3 { int x, y, z; } Vec3;
-typedef struct ClsnResult { char pad[0x28]; } ClsnResult;
+typedef struct dBgPi { char pad[0x28]; } dBgPi;
 
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
 extern int func_020355a0(void* p);
 extern int _ZNK12WithMeshClsn15ShouldUpdatePosEv(void* p);
 extern int func_02037938(void* p);
 extern void func_02038324(int a, int* b, int c, int d);
-extern void _ZN10ClsnResultC1Ev(ClsnResult* r);
+extern void _ZN5dBgPiC1Ev(dBgPi* r);
 extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
 extern int func_0203842c(void* self);
 extern void _ZN11RaycastLine10GetClsnPosEv(Vec3* out, void* self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vec3* out);
 extern int func_02039794(int x);
-extern void _ZNK10ClsnResult6CopyToERS_(void* self, ClsnResult* dst);
+extern void _ZNK5dBgPi6CopyToERS_(void* self, dBgPi* dst);
 extern void _ZN12WithMeshClsn19ClearAllGroundFlagsEv(void* p);
 extern void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* self, Vec3* v, int rad, void* actor);
 extern int func_0203553c(void* p);
-extern void _ZN10SphereClsn14SetFloorResultERK10ClsnResult(void* self, ClsnResult* r);
-extern void _ZN10ClsnResultaSERKS_(void* self, ClsnResult* r);
+extern void _ZN10SphereClsn14SetFloorResultERK5dBgPi(void* self, dBgPi* r);
+extern void _ZN5dBgPiaSERKS_(void* self, dBgPi* r);
 extern void func_020371b0(void* clsn, int justHit);
-extern void func_02037888(void* dst, ClsnResult* src);
+extern void func_02037888(void* dst, dBgPi* src);
 extern int func_02038824(void* self);
 extern int _ZNK12WithMeshClsn16ShouldUpdatePosYEv(void* p);
 extern void func_020356d4(void* self);
-extern void _ZN10ClsnResultD1Ev(ClsnResult* r);
+extern void _ZN5dBgPiD1Ev(dBgPi* r);
 
 #pragma opt_common_subs off
 
@@ -39,8 +39,8 @@ void func_02036acc(char* c)
     int* pos;
     int* prev;
     int handled;
-    ClsnResult res0;
-    ClsnResult res1;
+    dBgPi res0;
+    dBgPi res1;
     Vec3 lineStart, lineEnd;
     Vec3 clsnPos, normal;
     Vec3 newStart, newEnd;
@@ -56,9 +56,9 @@ void func_02036acc(char* c)
         func_02038324(func_02037938(c + 0x20), pos, *(int*)(c + 0x12c), *(int*)(c + 0x130));
 
     floorFlag = 0;
-    _ZN10ClsnResultC1Ev(&res0);
+    _ZN5dBgPiC1Ev(&res0);
     wallFlag = 0;
-    _ZN10ClsnResultC1Ev(&res1);
+    _ZN5dBgPiC1Ev(&res1);
 
     height = *(int*)(c + 0x1c);
     {
@@ -92,10 +92,10 @@ void func_02036acc(char* c)
         r = func_02039794(normal.y);
         if (r == 1) {
             wallFlag = 1;
-            _ZNK10ClsnResult6CopyToERS_(c + 0x144, &res1);
+            _ZNK5dBgPi6CopyToERS_(c + 0x144, &res1);
         } else if (r == 0) {
             floorFlag = 1;
-            _ZNK10ClsnResult6CopyToERS_(c + 0x144, &res0);
+            _ZNK5dBgPi6CopyToERS_(c + 0x144, &res0);
         }
         _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(c + 0x134, &newStart, &newEnd, *(void**)(c + 0x14));
         if (func_0203842c(c + 0x134)) {
@@ -103,7 +103,7 @@ void func_02036acc(char* c)
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3(c + 0x148, &normal2);
             if (func_02039794(normal2.y) == 0) {
                 floorFlag = 1;
-                _ZNK10ClsnResult6CopyToERS_(c + 0x144, &res0);
+                _ZNK5dBgPi6CopyToERS_(c + 0x144, &res0);
             }
             if (_ZNK12WithMeshClsn15ShouldUpdatePosEv(c)) {
                 pos[0] = clsnPos2.x - (normal2.x >> 2);
@@ -132,9 +132,9 @@ void func_02036acc(char* c)
         *(u8*)AT(c, 0x90) |= 0x20;
     if (floorFlag != 0) {
         *(u8*)AT(c, 0x90) |= 4;
-        _ZN10SphereClsn14SetFloorResultERK10ClsnResult(c + 0x20, &res0);
+        _ZN10SphereClsn14SetFloorResultERK5dBgPi(c + 0x20, &res0);
         *(u8*)AT(c, 0x90) |= 1;
-        _ZN10ClsnResultaSERKS_(c + 0x30, &res0);
+        _ZN5dBgPiaSERKS_(c + 0x30, &res0);
         func_020371b0(c, onGround);
         handled = 1;
     }
@@ -142,7 +142,7 @@ void func_02036acc(char* c)
         *(u8*)AT(c, 0x90) |= 8;
         func_02037888(c + 0x20, &res1);
         *(u8*)AT(c, 0x90) |= 1;
-        _ZN10ClsnResultaSERKS_(c + 0x30, &res1);
+        _ZN5dBgPiaSERKS_(c + 0x30, &res1);
     }
     if (func_02038824(c + 0x20)) {
         prev = (int*)(c + 0x6c);
@@ -157,6 +157,6 @@ void func_02036acc(char* c)
     }
     if (onGround && _ZNK12WithMeshClsn10IsOnGroundEv(c) == 0)
         func_020356d4(c);
-    _ZN10ClsnResultD1Ev(&res1);
-    _ZN10ClsnResultD1Ev(&res0);
+    _ZN5dBgPiD1Ev(&res1);
+    _ZN5dBgPiD1Ev(&res0);
 }

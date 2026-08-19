@@ -15,7 +15,7 @@ extern void _Z14ApproachLinearRsss(s16 *p, int a, int b);
 extern void func_0201267c(int a, void *p);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
 extern void *_ZNK12WithMeshClsn13GetWallResultEv(void *self);
-extern int _ZNK10ClsnResult9GetClsnIDEv(void *self);
+extern int _ZNK5dBgPi9GetClsnIDEv(void *self);
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_02012694(int a, void *p);
 extern void _ZN8dActor_c8PoofDustEv(void *c);
@@ -68,9 +68,9 @@ void func_ov079_0212682c(char *c)
     if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x150) != 0)
     {
       void *wr = _ZNK12WithMeshClsn13GetWallResultEv(c + 0x150);
-      if (_ZNK10ClsnResult9GetClsnIDEv(wr) != (-1))
+      if (_ZNK5dBgPi9GetClsnIDEv(wr) != (-1))
       {
-        if (_ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(wr)) != (*((void **) (c + 0x3dc))))
+        if (_ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(wr)) != (*((void **) (c + 0x3dc))))
         {
           hit = 1;
         }

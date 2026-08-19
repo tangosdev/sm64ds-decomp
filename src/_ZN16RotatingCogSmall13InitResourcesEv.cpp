@@ -19,7 +19,7 @@ extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
 extern "C" {
 extern void func_020393d4(void *p, void *v);
 }
-extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 extern int data_ov035_02112c78[];
 extern int data_ov035_02112c70[];
 extern int data_ov035_02112c60[];
@@ -42,7 +42,7 @@ int RotatingCogSmall::InitResources()
             _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov035_02112c68),
             &mClsnMat, 0x1000, mAngleY, data_ov035_021121d8);
         func_020396c0(&mMeshCollider, 0);
-        func_020393d4(&mMeshCollider, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+        func_020393d4(&mMeshCollider, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
         mRotationState = 0;
     } else {
         b = (int)(actorID == 0x79);

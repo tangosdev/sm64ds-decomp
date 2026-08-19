@@ -22,7 +22,7 @@ extern "C" int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_B
    collides with the real Fix12<> template, which BowserFireSeaArena.h reaches
    through dActor_c.h. The parameter is passed in a register either way. */
 extern "C" int func_020393d4(void*, void*);
-extern "C" int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern "C" int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 
 
 int BowserFireSeaArena::InitResources()
@@ -34,7 +34,7 @@ int BowserFireSeaArena::InitResources()
   func_ov060_02117a64(((char*)this));
   kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov060_0211aff4);
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMovingMeshCollider2, kcl, &mClsnMat, 0x1000, mAngleY, &func_021115bc);
-  func_020393d4(&mMovingMeshCollider2, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4(&mMovingMeshCollider2, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
   ((dBgW *)&mMovingMeshCollider2)->Enable((dActor_c *)(((char*)this)));
   unk_31e = 0;
   unk_320 = 0;

@@ -34,7 +34,7 @@
 #include "types.h"
 #include "dBgW_KcMbg.h"
 #include "SphereClsn.h"
-#include "ClsnResult.h"
+#include "dBgPi.h"
 
 typedef struct {
     int head[4];        /* 0x00 */
@@ -59,7 +59,7 @@ extern void func_02037940(void* p, int v);
 extern void func_02035394(void* o, void* r);
 extern void func_02037a04(void* o, void* d1, void* d2);
 extern void func_02037a6c(void* b, int x1, int y1, int z1, int x2, int y2, int z2);
-extern void _ZN10ClsnResultaSERKS_(void* d, void* s);
+extern void _ZN5dBgPiaSERKS_(void* d, void* s);
 extern void func_0203794c(void* d, void* s);
 extern void func_02037888(void* d, void* s);
 extern void func_0203782c(void* d, void* s);
@@ -95,13 +95,13 @@ int dBgW_KcMbg::DetectClsn(SphereClsn & sphere_)
         d[10] = FMUL(d[4], *(int*)&scale);
         d[11] = FMUL(d[5], *(int*)&scale);
         func_02037a6c(sphere, d[6], d[7], d[8], d[9], d[10], d[11]);
-        _ZN10ClsnResultaSERKS_(&sphere->unk_010, loc.result);
+        _ZN5dBgPiaSERKS_(&sphere->unk_010, loc.result);
         *(u8*)(&sphere->flags) |= 1;
         if (loc.flags & 4) {
             if (sphere->flags & 4) {
                 r &= ~1;
             } else {
-                sphere->SetFloorResult(*(ClsnResult*)loc.floorRes);
+                sphere->SetFloorResult(*(dBgPi*)loc.floorRes);
             }
             *(u8*)(&sphere->flags) |= 4;
             if (sphere->unk_100 < loc.f_100) {

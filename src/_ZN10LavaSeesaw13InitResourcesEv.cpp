@@ -22,7 +22,7 @@ extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
     void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern void func_ov022_02111d48(void *self);
 extern void func_020393d4(void *p, void *v);
-extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern void *data_ov022_021145a8;
 extern void *data_ov022_021145a0;
 extern void *data_ov064_0211bacc;
@@ -37,7 +37,7 @@ int LavaSeesaw::InitResources()
     void *k = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov022_021145a0);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, &data_ov064_0211bacc);
-    func_020393d4(&mMeshCollider, (void *)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMeshCollider, (void *)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     mSwingStep = -0x10;
     return 1;
 }

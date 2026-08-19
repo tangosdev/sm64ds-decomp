@@ -37,7 +37,7 @@ extern "C" {
 
 extern void *data_ov065_0211cfd0[];
 extern void *data_ov065_0211cfd4[];
-extern "C" void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern "C" void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern u8 data_0209f2c0;
 extern s32 data_020a0e68[];
 
@@ -93,7 +93,7 @@ int TtcRotatingCube::InitResources()
             *(void **)((char *)data_ov065_0211cfd8 + oi));
     }
 
-    func_020393d4(c + 0x124, (void *)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(c + 0x124, (void *)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     {
         s32 va[3];

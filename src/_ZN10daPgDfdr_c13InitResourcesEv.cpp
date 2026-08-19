@@ -28,7 +28,7 @@ extern void _ZN13RaycastGroundD1Ev(void *o);
 extern char data_ov027_02113c7c;
 extern char data_ov027_02113c94;
 extern char data_ov027_02113c6c;
-extern void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 
 struct RG { char pad[0x54]; };
 
@@ -62,7 +62,7 @@ int _ZN10daPgDfdr_c13InitResourcesEv(void *cc)
     f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov027_02113c6c);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         c + 0x124, f, c + 0x2ec, 0x199, *(short*)(c + 0x8e), &data_ov027_021130e8);
-    func_020393d4(c + 0x124, (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(c + 0x124, (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     *(int*)(c + 0x9c) = 0;
     *(int*)(c + 0xa0) = 0;

@@ -5122,7 +5122,7 @@ src/func_020378dc.c:
     complete
     .text start:0x020378dc end:0x020378e4
 
-src/_ZN10SphereClsn14SetFloorResultERK10ClsnResult.c:
+src/_ZN10SphereClsn14SetFloorResultERK5dBgPi.c:
     complete
     .text start:0x020378e4 end:0x02037938
 
@@ -5284,7 +5284,7 @@ src/func_02037f44.c:
     complete
     .text start:0x02037f44 end:0x02037f4c
 
-src/_ZNK10ClsnResult9GetClsnIDEv.cpp:
+src/_ZNK5dBgPi9GetClsnIDEv.cpp:
     complete
     .text start:0x02037f4c end:0x02037f54
 
@@ -5316,11 +5316,11 @@ src/func_02037fec.c:
     complete
     .text start:0x02037fec end:0x02038018
 
-src/_ZN10ClsnResultaSERKS_.cpp:
+src/_ZN5dBgPiaSERKS_.cpp:
     complete
     .text start:0x02038018 end:0x0203806c
 
-src/_ZNK10ClsnResult6CopyToERS_.c:
+src/_ZNK5dBgPi6CopyToERS_.c:
     complete
     .text start:0x0203806c end:0x020380c0
 
@@ -5328,7 +5328,7 @@ src/func_020380c0.c:
     complete
     .text start:0x020380c0 end:0x020380ec
 
-src/_ZN10ClsnResultD2Ev.c:
+src/_ZN5dBgPiD2Ev.c:
     complete
     .text start:0x020380ec end:0x02038114
 
@@ -5336,11 +5336,11 @@ src/func_02038114.c:
     complete
     .text start:0x02038114 end:0x02038144
 
-src/_ZN10ClsnResultD1Ev.c:
+src/_ZN5dBgPiD1Ev.c:
     complete
     .text start:0x02038144 end:0x0203816c
 
-src/_ZN10ClsnResultC1Ev.c:
+src/_ZN5dBgPiC1Ev.c:
     complete
     .text start:0x0203816c end:0x0203819c
 
@@ -5452,19 +5452,19 @@ src/func_02039218.c:
     complete
     .text start:0x02039218 end:0x0203923c
 
-src/_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_.cpp:
+src/_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_.cpp:
     complete
     .text start:0x0203923c end:0x0203929c
 
-src/_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_.cpp:
+src/_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_.cpp:
     complete
     .text start:0x0203929c end:0x020392f8
 
-src/_ZN4dBgW25UpdateAngsWithAngularVelYERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_.cpp:
+src/_ZN4dBgW25UpdateAngsWithAngularVelYERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_.cpp:
     complete
     .text start:0x020392f8 end:0x02039348
 
-src/_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_.cpp:
+src/_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_.cpp:
     complete
     .text start:0x02039348 end:0x0203938c
 
@@ -5536,7 +5536,7 @@ src/_ZN4dBgW12TransformPosERK7Vector3RS0_.cpp:
     complete
     .text start:0x02039430 end:0x02039438
 
-src/_ZN4dBgW10BeforeClsnER10ClsnResultP8dActor_cR7Vector3P10Vector3_16S7_.cpp:
+src/_ZN4dBgW10BeforeClsnER5dBgPiP8dActor_cR7Vector3P10Vector3_16S7_.cpp:
     complete
     .text start:0x02039438 end:0x02039470
 

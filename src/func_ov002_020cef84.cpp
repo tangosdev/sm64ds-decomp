@@ -20,9 +20,9 @@ extern void _ZN11RaycastLine10GetClsnPosEv(void *ret, void *self);
 extern void func_02035414(void *bgch);
 extern void func_02035428(void *bgch);
 extern int func_02037e38(unsigned int *p);
-extern unsigned _ZNK10ClsnResult9GetClsnIDEv(void *self);
+extern unsigned _ZNK5dBgPi9GetClsnIDEv(void *self);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
-extern void _ZN10ClsnResultD1Ev(void *self);
+extern void _ZN5dBgPiD1Ev(void *self);
 
 extern char data_ov002_0211001c;
 extern int data_02099368;
@@ -101,10 +101,10 @@ extern "C" int func_ov002_020cef84(char *self)
                 tmp.f1c = *(int *)(rl + 0x2c);
                 tmp.f20 = *(int *)(rl + 0x30);
                 tmp.f24 = *(int *)(rl + 0x34);
-                a = _ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(&tmp));
+                a = _ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(&tmp));
                 if (a)
                     (*(void (**)(void *, char *))(*(int *)a + 0x70))(a, self);
-                _ZN10ClsnResultD1Ev(&tmp);
+                _ZN5dBgPiD1Ev(&tmp);
             }
         }
     }

@@ -22,7 +22,7 @@ extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
     void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern void func_ov036_0211123c(void *self);
 extern void func_020393d4(void *p, void *v);
-extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern void *data_ov036_02114028;
 extern void *data_ov036_02114020;
 extern void *data_ov036_02112b68;
@@ -38,6 +38,6 @@ int SwingingPlatform::InitResources()
     void *k = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov036_02114020);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, &data_ov036_02112b68);
-    func_020393d4(&mMeshCollider, (void *)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(&mMeshCollider, (void *)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     return 1;
 }

@@ -23,7 +23,7 @@ extern void func_020393d4(void*,void*);
 extern void func_020393c4(void*,void*);
 }
 
-extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_[];
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_[];
 
 int CccArena::InitResources()
 {
@@ -65,7 +65,7 @@ int CccArena::InitResources()
             ((char *)this) + 0x124, f, ((char *)this) + 0x2ec, 0x1000, mAngleY, *(int*)(data_ov073_021231c4 + i * 0xc));
     }
 
-    func_020393d4(((char *)this) + 0x124, _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(((char *)this) + 0x124, _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393c4(((char *)this) + 0x124, func_ov073_021227d0);
     ((dBgW *)(((char *)this) + 0x124))->Enable((dActor_c *)(((char *)this)));
 

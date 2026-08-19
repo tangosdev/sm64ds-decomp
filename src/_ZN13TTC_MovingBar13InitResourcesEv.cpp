@@ -23,7 +23,7 @@ extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, vo
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void _ZN13RaycastGroundD1Ev(void *self);
 }
-extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 
 struct Vec3 { int x, y, z; };
@@ -60,7 +60,7 @@ int TTC_MovingBar::InitResources()
         mAngleY,
         *(void **)(data_ov065_0211d364 + i * 0xc));
 
-    func_020393d4((int *)((char *)&(*(u8 *)&mMeshCollider)), (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int *)((char *)&(*(u8 *)&mMeshCollider)), (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     pos.x = mPosX;
     pos.y = mPosY;

@@ -22,7 +22,7 @@ extern void* data_ov015_02114a64;
 extern void* data_ov015_02114a5c;
 extern void* data_ov015_02113594;
 extern "C" {
-extern void _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern void func_ov015_021128f8();
 }
 extern s16 data_02082214[];
@@ -44,7 +44,7 @@ extern "C" int _ZN9TowerStep13InitResourcesEv(char* self) {
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
       self+0x124, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov015_02114a5c),
       self+0x2ec, 0x199, *(short*)(self+0x8e), &data_ov015_02113594);
-  func_020393d4((int*)(self+0x124), (int)&_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4((int*)(self+0x124), (int)&_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
   func_020393c4((int*)(self+0x124), (int)&func_ov015_021128f8);
 
   v.x = *(int*)(self+0x5c);

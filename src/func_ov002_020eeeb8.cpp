@@ -17,9 +17,9 @@ extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(
     void *self, void *a, void *b, void *act);
 extern int _ZN11RaycastLine10DetectClsnEv(void *self);
 extern void func_ov002_020d8838(void *actor);
-extern unsigned _ZNK10ClsnResult9GetClsnIDEv(void *self);
+extern unsigned _ZNK5dBgPi9GetClsnIDEv(void *self);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
-extern void _ZN10ClsnResultD1Ev(void *self);
+extern void _ZN5dBgPiD1Ev(void *self);
 
 extern int data_02099368;
 extern short data_02082214[];
@@ -83,19 +83,19 @@ extern "C" int func_ov002_020eeeb8(void *unused, char *actor)
             tmp.f20 = *(int *)(rl + 0x30);
             tmp.f24 = *(int *)(rl + 0x34);
 
-            if (_ZNK10ClsnResult9GetClsnIDEv(&tmp) != 0xffffffff) {
+            if (_ZNK5dBgPi9GetClsnIDEv(&tmp) != 0xffffffff) {
                 void *a = _ZN8dActor_c10FindWithIDEj(
-                    _ZNK10ClsnResult9GetClsnIDEv(&tmp));
+                    _ZNK5dBgPi9GetClsnIDEv(&tmp));
                 if (a) {
                     (*(void (**)(void *, char *))(*(int *)a + 0x60))(
                         a, actor);
-                    _ZN10ClsnResultD1Ev(&tmp);
+                    _ZN5dBgPiD1Ev(&tmp);
                     _ZN11RaycastLineD1Ev(rl);
                     return 1;
                 }
             }
         }
-        _ZN10ClsnResultD1Ev(&tmp);
+        _ZN5dBgPiD1Ev(&tmp);
     }
 
     _ZN11RaycastLineD1Ev(rl);

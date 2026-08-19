@@ -27,7 +27,7 @@ extern int func_02039e48(void* a, void* b, void* c);
 extern int _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* o, void* a, void* b, void* c);
 extern int func_02035394(void* o, void* r);
 extern int func_02039e30(void* o, void* a, void* b);
-extern int _ZN10ClsnResultaSERKS_(void* d, void* s);
+extern int _ZN5dBgPiaSERKS_(void* d, void* s);
 extern char data_020a0d0c[];
 extern char data_020a0d60[];
 extern char data_020a0d1c[];
@@ -58,7 +58,7 @@ int dBgW_KcMbg::DetectClsn(RaycastGround & ray_)
   int r = dBgW_Kc::DetectClsn(*(RaycastLine*)data_020a0d0c);
   if (r) {
     func_02039e30(this, data_020a0d60, sp0x30);
-    _ZN10ClsnResultaSERKS_(&ray->unk_010, data_020a0d1c);
+    _ZN5dBgPiaSERKS_(&ray->unk_010, data_020a0d1c);
     ray->clsnY = sp0x30[1];
     ray->hasClsn = 1;
   }

@@ -30,7 +30,7 @@ extern "C" int data_0208e738;
 extern "C" SharedFilePtr* data_ov060_02119514[];
 extern "C" SharedFilePtr* data_ov060_0211953c[];
 extern "C" CLPS_Block* data_ov060_0211a980[];
-extern "C" void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern "C" void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern "C" void func_ov060_021183f4();
 
 s32 BowserSkyPlatform::InitResources()
@@ -51,7 +51,7 @@ s32 BowserSkyPlatform::InitResources()
             *(Matrix4x3*)(self + 0x2ec), 0x1000, *(short*)(self + 0x8e),
             *data_ov060_0211a980[i]);
     }
-    func_020393d4(self + 0x124, (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(self + 0x124, (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393c4(self + 0x124, (void*)&func_ov060_021183f4);
     ((dBgW*)(self + 0x124))->Enable((dActor_c*)self);
     *(int*)(self + 0x320) = 0;

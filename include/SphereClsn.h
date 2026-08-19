@@ -7,7 +7,7 @@
 #include "types.h"
 
 /* fwd */
-struct ClsnResult;
+struct dBgPi;
 struct src_;
 struct SphereClsn {
     u8  pad_000[0x10];
@@ -25,7 +25,7 @@ struct SphereClsn {
     u8  pad_04c[0x24];
     /* Result flags, read and OR-ed a bit at a time by the same function:
        1 = any hit, 4 = floor, 8 = wall, 0x10 = from underneath. Each bit gates
-       copying the matching ClsnResult below it. */
+       copying the matching dBgPi below it. */
     u8  flags;              /* 0x070 */
     u8  pad_071[0x3];
     u8  mClsnResult1;            /* 0x074 */
@@ -56,7 +56,7 @@ struct SphereClsn {
     s32 unk_108;            /* 0x108 */
 #ifdef __cplusplus
     /* methods */
-    void SetFloorResult(const ClsnResult & src_);
+    void SetFloorResult(const dBgPi & src_);
 #endif
 };
 

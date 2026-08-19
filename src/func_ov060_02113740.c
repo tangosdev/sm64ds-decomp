@@ -10,7 +10,7 @@ typedef struct RaycastGround {
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *self, Vec3 *pos, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
-extern int _ZNK10ClsnResult9GetClsnIDEv(void *self);
+extern int _ZNK5dBgPi9GetClsnIDEv(void *self);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 extern void func_ov060_02113a94(void *c);
 extern void func_ov060_02111cc0(void *c, int a, int b);
@@ -44,7 +44,7 @@ void func_ov060_02113740(char *c)
         _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, &pos, c);
         if (_ZN13RaycastGround10DetectClsnEv(&rc)) {
             ground = rc.clsnY;
-            if (_ZNK10ClsnResult9GetClsnIDEv(&rc.result) != -1)
+            if (_ZNK5dBgPi9GetClsnIDEv(&rc.result) != -1)
                 hit = 1;
         }
         _ZN13RaycastGroundD1Ev(&rc);

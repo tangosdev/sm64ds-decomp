@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_
 /* recovered: named members + shared header, declarations from a shared header */
-#include "decl_ClsnResult.h"
+#include "decl_dBgPi.h"
 /* recovered: named members + shared header */
 #include "dEnemyBase_c.h"
 extern "C" {
@@ -10,9 +10,9 @@ extern void _ZN11RaycastLineC1Ev(void* self);
 extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
 extern void _ZN4BgCh19StartDetectingWaterEv(void* self);
 extern int _ZN11RaycastLine10DetectClsnEv(void* self);
-extern void _ZN10ClsnResultC1Ev(void* self);
-extern void _ZNK10ClsnResult6CopyToERS_(void* self, void* other);
-extern void _ZN10ClsnResultD1Ev(void* self);
+extern void _ZN5dBgPiC1Ev(void* self);
+extern void _ZNK5dBgPi6CopyToERS_(void* self, void* other);
+extern void _ZN5dBgPiD1Ev(void* self);
 extern void _ZN11RaycastLineD1Ev(void* self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, void* v);
 extern short data_02082214[];
@@ -42,15 +42,15 @@ extern "C" int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_
       if (*(int*)(rl + 0x60) - fix6 >= fix2)
         ((char*)self)[0x106] = 1;
       if (a5 == 0) {
-        _ZN10ClsnResultC1Ev(cr);
-        _ZNK10ClsnResult6CopyToERS_(rl + 0x10, cr);
-        if (_ZNK10ClsnResult9GetClsnIDEv(cr) != -1) {
+        _ZN5dBgPiC1Ev(cr);
+        _ZNK5dBgPi6CopyToERS_(rl + 0x10, cr);
+        if (_ZNK5dBgPi9GetClsnIDEv(cr) != -1) {
           ((char*)self)[0x106] = 1;
-          _ZN10ClsnResultD1Ev(cr);
+          _ZN5dBgPiD1Ev(cr);
           _ZN11RaycastLineD1Ev(rl);
           return 1;
         }
-        _ZN10ClsnResultD1Ev(cr);
+        _ZN5dBgPiD1Ev(cr);
       }
       _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rl + 0x14, &normal);
       int idx = ((unsigned short)a3 >> 4) * 2;

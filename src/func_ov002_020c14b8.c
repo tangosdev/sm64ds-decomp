@@ -14,7 +14,7 @@ extern int _ZN6Player12Unk_020c9e5cEh(void *self, unsigned char state);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
 extern int _ZN13RaycastGround10DetectClsnEv(void *self);
 extern void func_ov002_020c16ec(void *o, void *s);
-extern void _ZN10ClsnResultD1Ev(void *self);
+extern void _ZN5dBgPiD1Ev(void *self);
 extern void _ZN4BgCh19StartDetectingWaterEv(void *self);
 extern void _ZN4BgCh19StartDetectingToxicEv(void *self);
 extern void _ZN4BgCh21StopDetectingOrdinaryEv(void *self);
@@ -73,7 +73,7 @@ void func_ov002_020c14b8(void *arg0)
         tmp.f20 = *(int *)(rg + 0x30);
         tmp.f24 = *(int *)(rg + 0x34);
         func_ov002_020c16ec(c, &tmp);
-        _ZN10ClsnResultD1Ev(&tmp);
+        _ZN5dBgPiD1Ev(&tmp);
         *(int *)(c + 0x648) = *(int *)(rg + 0x44);
         *(int *)(c + 0x644) = *(int *)(c + 0x648);
         *(int *)(c + 0x668) = *(int *)(c + 0x664);

@@ -19,7 +19,7 @@ struct dActor_c {
 };
 
 typedef struct { int a, b; } P2;
-struct ClsnResult {
+struct dBgPi {
     Vfn* vtb;
     P2 v;
     int a2, a3, a4;
@@ -27,9 +27,9 @@ struct ClsnResult {
     int t0, t1, t2;
     int GetClsnID() const;
 };
-extern "C" ClsnResult* func_0203567c(WithMeshClsn* w);
-extern "C" int func_02037f44(ClsnResult* r);
-extern "C" void _ZN10ClsnResultD1Ev(ClsnResult* r);
+extern "C" dBgPi* func_0203567c(WithMeshClsn* w);
+extern "C" int func_02037f44(dBgPi* r);
+extern "C" void _ZN5dBgPiD1Ev(dBgPi* r);
 
 extern "C" int func_ov030_02112400(char* c)
 {
@@ -51,7 +51,7 @@ extern "C" int func_ov030_02112400(char* c)
     } else {
         if (((WithMeshClsn*)(c + 0x194))->IsOnGround()) {
             char* r = (char*)func_0203567c((WithMeshClsn*)(c + 0x194));
-            ClsnResult res;
+            dBgPi res;
             int* d = (int*)&res.v;
             *(double*)d = *(double*)(r + 4);
             d[2] = *(int*)(r + 0xc);
@@ -66,7 +66,7 @@ extern "C" int func_ov030_02112400(char* c)
             if (res.GetClsnID() == -1 || func_02037f44(&res) == 0) {
                 func_ov030_021141a8(c, 0);
             }
-            _ZN10ClsnResultD1Ev(&res);
+            _ZN5dBgPiD1Ev(&res);
         }
     }
     return 1;

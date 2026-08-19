@@ -32,7 +32,7 @@ extern signed char data_0209f2f8;
 extern struct Matrix4x3 data_020a0e68;
 extern void *data_ov091_02134c30[];
 extern void *data_ov091_02134c34[];
-extern void *_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern void *_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 int RotatingUpDownPlatformUtm::InitResources()
 {
@@ -109,7 +109,7 @@ int RotatingUpDownPlatformUtm::InitResources()
         ((char *)this) + 0x124, kcl, ((char *)this) + 0x2ec, 0x199, mAngleY,
         *(void**)((char*)data_ov091_02134c38 + idx395 * 0xc));
 
-    func_020393d4(((char *)this) + 0x124, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(((char *)this) + 0x124, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     posVec.x = mPosX;
     posVec.y = mPosY;

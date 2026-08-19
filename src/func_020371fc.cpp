@@ -4,11 +4,11 @@
 #include "common.h"
 
 struct dActor_c;
-struct ClsnResult { char data[0x34]; };
+struct dBgPi { char data[0x34]; };
 
 struct RaycastGround {
     char pad0[0x10];
-    ClsnResult clsn;   /* 0x10 */
+    dBgPi clsn;   /* 0x10 */
     int field44;       /* 0x44 */
     char pad48[0x50 - 0x48];
     RaycastGround();
@@ -20,7 +20,7 @@ struct RaycastGround {
 struct WithMeshClsn { void SetGroundFlag(); };
 
 extern "C" bool _ZN6Player7IsInAirEv(void* p);
-extern "C" void _ZN10ClsnResultaSERKS_(ClsnResult* d, const ClsnResult* s);
+extern "C" void _ZN5dBgPiaSERKS_(dBgPi* d, const dBgPi* s);
 
 extern "C" void func_020371fc(char* self);
 void func_020371fc(char* self)
@@ -44,7 +44,7 @@ void func_020371fc(char* self)
             if (diff > 0 && diff < (*(int*)(self + 0x18) << 1)) {
                 objpos->y = cy;
                 *(unsigned char*)(((int)self + 0x90)) |= 4;
-                _ZN10ClsnResultaSERKS_((ClsnResult*)(self + 0x94), &rg.clsn);
+                _ZN5dBgPiaSERKS_((dBgPi*)(self + 0x94), &rg.clsn);
                 ((WithMeshClsn*)self)->SetGroundFlag();
             }
         }

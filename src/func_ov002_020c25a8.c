@@ -47,7 +47,7 @@ extern int func_02035638(void *p);
 extern void func_020371fc(void *self);
 extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
 extern void func_ov002_020c16ec(void *o, void *s);
-extern void _ZN10ClsnResultD1Ev(void *self);
+extern void _ZN5dBgPiD1Ev(void *self);
 extern int func_02037e58(void *p);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, void *v);
 extern int _ZN4cstd4fdivEii(int a, int b);
@@ -154,7 +154,7 @@ int func_ov002_020c25a8(void *arg0, int arg1)
         tmp.f24 = *(int*)(fr + 0x24);
 
         func_ov002_020c16ec(c, &tmp);
-        _ZN10ClsnResultD1Ev(&tmp);
+        _ZN5dBgPiD1Ev(&tmp);
 
         *(int*)(c + 0x644) = *(int*)(c + 0x60);
         ret = func_02037e58(fr + 4);

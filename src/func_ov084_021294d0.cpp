@@ -13,7 +13,7 @@ extern void _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(void*, void*);
 extern void _ZN11dCapEnemy_c15RespawnIfHasCapEv(void*);
 extern int func_02037e38(unsigned int* p);
 extern int func_02037e84(int* p);
-extern void _ZN10ClsnResultD1Ev(void*);
+extern void _ZN5dBgPiD1Ev(void*);
 extern int data_02099368[];
 }
 
@@ -81,5 +81,5 @@ action:
         _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
     }
 dtor:
-    _ZN10ClsnResultD1Ev(obj);
+    _ZN5dBgPiD1Ev(obj);
 }

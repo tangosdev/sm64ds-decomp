@@ -22,7 +22,7 @@ extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, uns
 }
 
 extern "C" {
-extern void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 }
 
 extern int data_ov065_0211d720;
@@ -51,7 +51,7 @@ int Dorrie::InitResources()
             _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
                 mmc, kcl, mtx, 0x1000, mAngleY, data_ov065_0211cd68[j]);
             if ((unsigned)j <= 2) {
-                func_020393d4(mmc, _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+                func_020393d4(mmc, _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
                 if (j == 2)
                     func_020393c4(mmc, func_ov065_021195bc);
                 else

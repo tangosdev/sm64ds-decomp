@@ -8,7 +8,7 @@
  * the transformed segment, and the base dBgW_Kc::DetectClsn does the real
  * work against the static mesh. A hit is then pushed back out to world space.
  *
- * clsnDist is carried across by hand rather than through the ClsnResult copy:
+ * clsnDist is carried across by hand rather than through the dBgPi copy:
  * it is read off the scratch line before func_020375ec overwrites the caller's
  * leading words, and restored after.
  */
@@ -21,7 +21,7 @@ extern int _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* o, void
 extern int func_02035394(void* o, void* r);
 extern int func_02039e30(void* o, void* a, void* b);
 extern void func_020375ec(int* d, int* s);
-extern int _ZN10ClsnResultaSERKS_(void* d, void* s);
+extern int _ZN5dBgPiaSERKS_(void* d, void* s);
 extern char data_020a0d0c[];
 extern char data_020a0d60[];
 extern char data_020a0d1c[];
@@ -45,7 +45,7 @@ int dBgW_KcMbg::DetectClsn(RaycastLine & ray_)
     func_02039e30(this, data_020a0d60, sp0x18);
     func_020375ec((int*)ray, sp0x18);
     ray->clsnDist = saved;
-    _ZN10ClsnResultaSERKS_(&ray->unk_010, data_020a0d1c);
+    _ZN5dBgPiaSERKS_(&ray->unk_010, data_020a0d1c);
     ray->hasClsn = 1;
   }
   return r;

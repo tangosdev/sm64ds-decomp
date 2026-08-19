@@ -5,7 +5,7 @@
 #include "SphereClsn.h"
 extern void func_02035514(char *c);
 extern int *func_0203819c(int *t);
-extern void _ZN10ClsnResultC1Ev(void *p);
+extern void _ZN5dBgPiC1Ev(void *p);
 
 
 void *_ZN10SphereClsnC1Ev(struct SphereClsn *self) {
@@ -15,9 +15,9 @@ void *_ZN10SphereClsnC1Ev(struct SphereClsn *self) {
     *(int **)((char *)self) = &data_02099338;
     *(int **)((char *)&self->unk_010) = &data_02099348;
     *(int **)((char *)&self->unk_038) = &data_02099358;
-    _ZN10ClsnResultC1Ev((char *)&self->mClsnResult1);
-    _ZN10ClsnResultC1Ev((char *)&self->mClsnResult2);
-    _ZN10ClsnResultC1Ev((char *)&self->mClsnResult3);
+    _ZN5dBgPiC1Ev((char *)&self->mClsnResult1);
+    _ZN5dBgPiC1Ev((char *)&self->mClsnResult2);
+    _ZN5dBgPiC1Ev((char *)&self->mClsnResult3);
     self->unk_0ec = 0;
     return ((char *)self);
 }

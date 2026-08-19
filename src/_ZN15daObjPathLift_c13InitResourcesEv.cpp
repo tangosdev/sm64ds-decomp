@@ -32,7 +32,7 @@ void func_ov002_020efaf0(char* c);
 }
 extern int data_ov002_0210d9f0;
 extern "C" {
-extern void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 }
 extern unsigned char data_0209f2d8;
 
@@ -47,7 +47,7 @@ extern "C" int _ZN15daObjPathLift_c13InitResourcesEv(char* c) {
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
       c+0x124, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov100_02148a5c),
       c+0x2ec, 0x1000, self->mAngleY, &data_ov002_0210d7d4);
-  func_020393d4((int*)(c+0x124), (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+  func_020393d4((int*)(c+0x124), (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
   /* unk_440/unk_43c/unk_42c are PathLift's own generic tail padding, not this
      class's fields -- see the header comment -- reached by raw offset. */
   *(s32*)(c + 0x440) = 0xa000;

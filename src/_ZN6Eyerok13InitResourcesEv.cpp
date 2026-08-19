@@ -32,7 +32,7 @@ extern int data_ov066_0211ae34[];
 extern s8 data_ov066_0211abe0;
 extern s8 data_ov066_0211ae04;
 extern s8 data_ov066_0211ae0c;
-extern "C" char _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern "C" char _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 /* extern "C" is load-bearing on every mangled/C-named declaration below: without
    it a .cpp file mangles the name a SECOND time (e.g.
@@ -155,7 +155,7 @@ int Eyerok::InitResources()
         data_ov066_0211ae04 = 1;
         data_ov066_0211abe0 = 3;
         _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211ae24[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112ca8);
-        func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+        func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
         func_020393c4(c + 0x674, &func_ov066_0211a35c);
         ((dBgW *)(c + 0x674))->Enable((dActor_c *)(c));
         *(s16*)(c + 0x4D2) = 0x64;
@@ -174,7 +174,7 @@ int Eyerok::InitResources()
             _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211aeac[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112d48);
             *(s32*)(((int)c + 0x4A4)) += 0x31F000;
         }
-        func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+        func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
         func_020393c4(c + 0x674, &func_ov066_0211a35c);
         func_020398fc(c + 0x674);
         *(s32*)(((int)c + 0x4AC)) -= 0x32000;

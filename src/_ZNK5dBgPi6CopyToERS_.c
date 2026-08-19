@@ -1,7 +1,7 @@
-// @symbol _ZNK10ClsnResult6CopyToERS_
+// @symbol _ZNK5dBgPi6CopyToERS_
 /* recovered: named members + shared header */
-#include "ClsnResult.h"
-void _ZNK10ClsnResult6CopyToERS_(struct ClsnResult *self, char *dst) {
+#include "dBgPi.h"
+void _ZNK5dBgPi6CopyToERS_(struct dBgPi *self, char *dst) {
     *(long long *)(dst + 4) = *(const long long *)((const char *)&self->unk_004);
     *(int *)(dst + 0xc) = *(const int *)((const char *)&self->unk_00c);
     *(int *)(dst + 0x10) = *(const int *)((const char *)&self->unk_010);

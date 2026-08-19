@@ -2,11 +2,11 @@
  * class RaycastLine::Line: 1 matched functions, 3 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef RAYCASTLINE__LINE_H
-#define RAYCASTLINE__LINE_H
+#ifndef DM3DGLIN_H
+#define DM3DGLIN_H
 #include "types.h"
 
-struct RaycastLine__Line {
+struct dM3dGLin {
     u8  pad_000[0xc];
     s32 unk_00c;            /* 0x00c */
     s32 unk_010;            /* 0x010 */

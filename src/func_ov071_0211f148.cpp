@@ -10,7 +10,7 @@ typedef short s16;
 struct WithMeshClsn;
 struct dActor_c;
 struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
-struct ClsnResult;
+struct dBgPi;
 struct SurfaceInfo;
 
 extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* p);

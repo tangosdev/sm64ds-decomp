@@ -27,7 +27,7 @@ extern unsigned char data_ov066_0211ae04;
 extern char data_ov066_0211b06c;
 extern int func_02112c08;
 extern int func_02112d48;
-extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 extern int func_ov066_0211a35c;
 
 int func_ov066_02118188(void *thiz)
@@ -121,7 +121,7 @@ int func_ov066_02118188(void *thiz)
                 *(short *)(c + 0x8e), &func_02112d48);
         }
 
-        func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+        func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
         func_020393c4(c + 0x674, &func_ov066_0211a35c);
         func_020398fc(c + 0x674);
         _ZN4dBgW6EnableEP8dActor_c(c + 0x674, c);

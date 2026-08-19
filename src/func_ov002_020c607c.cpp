@@ -7,7 +7,7 @@ struct Vector3 {
     Vector3() {}
 };
 
-struct ClsnResult {
+struct dBgPi {
     char pad[0x68];
     int GetClsnID() const;
 };
@@ -20,7 +20,7 @@ struct dActor_c {
 
 struct RaycastLine {
     char head[0x10];
-    ClsnResult mResult;
+    dBgPi mResult;
     RaycastLine();
     ~RaycastLine();
     void SetObjAndLine(const Vector3 &a, const Vector3 &b, dActor_c *actor);

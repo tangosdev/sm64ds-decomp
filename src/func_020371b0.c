@@ -12,17 +12,17 @@ struct WithMeshClsn {
     struct dActor_c *actor; /* 0x14 */
 };
 
-struct ClsnResult;
+struct dBgPi;
 
 extern void func_0203573c(struct WithMeshClsn *clsn);
-extern struct ClsnResult *_ZNK12WithMeshClsn14GetFloorResultEv(struct WithMeshClsn *clsn);
-extern void func_02038234(struct ClsnResult *result, struct dActor_c *actor);
+extern struct dBgPi *_ZNK12WithMeshClsn14GetFloorResultEv(struct WithMeshClsn *clsn);
+extern void func_02038234(struct dBgPi *result, struct dActor_c *actor);
 extern void _ZN12WithMeshClsn13SetGroundFlagEv(struct WithMeshClsn *clsn);
 extern u32 _ZNK12WithMeshClsn13GetLimMovFlagEv(struct WithMeshClsn *clsn);
 
 void func_020371b0(struct WithMeshClsn *clsn, s32 justHit)
 {
-    struct ClsnResult *floorResult;
+    struct dBgPi *floorResult;
     if (justHit == 0)
         func_0203573c(clsn);
     floorResult = _ZNK12WithMeshClsn14GetFloorResultEv(clsn);

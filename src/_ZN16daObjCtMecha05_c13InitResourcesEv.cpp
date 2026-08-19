@@ -52,7 +52,7 @@ extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
     void *thisp, void *kcl, void *mtx, int fix, short sh, void *clps);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
-extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern void func_020393d4(void *p, void *v);
 extern void func_020393a4(void *p, int v);
 extern void func_02039394(void *p, int v);
@@ -87,7 +87,7 @@ int daObjCtMecha05_c::InitResources()
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         self + 0x124, kf, self + 0x2ec, 0x199, *(short*)(self + 0x8e), (void*)&data_ov035_02112258);
     func_020393d4(self + 0x124,
-        (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+        (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393a4(self + 0x124, 0x1c0000);
     func_02039394(self + 0x124, 0x1000);
     *(short*)(self + 0x94) = *(short*)(self + 0x8e);

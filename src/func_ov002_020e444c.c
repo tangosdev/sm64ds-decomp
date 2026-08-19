@@ -1,7 +1,7 @@
 #include "types.h"
 // @symbol func_ov002_020e444c
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_ClsnResult.h"
+#include "decl_dBgPi.h"
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
@@ -83,8 +83,8 @@ void func_ov002_020e444c(char *c)
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380) != 0) {
         void *fr = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380);
-        if (_ZNK10ClsnResult9GetClsnIDEv(fr) != -1) {
-            void *a = _ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(fr));
+        if (_ZNK5dBgPi9GetClsnIDEv(fr) != -1) {
+            void *a = _ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(fr));
             if (a != 0) {
                 b = (int)(*(u16 *)((char *)a + 0xc) == 0xa1);
                 if (b != 0) {

@@ -63,7 +63,7 @@
 #ifdef __cplusplus
 
 struct dActor_c;
-struct ClsnResult;
+struct dBgPi;
 struct RaycastGround;
 struct RaycastLine;
 struct SphereClsn;
@@ -84,7 +84,7 @@ struct dBgW {
     u8 slotIdx;               /* 0x14 - index into data_020a0c80; 0x18 = disabled */
     u8 pad_15[3];
     void (*beforeClsnCallback)(dBgW *self, dActor_c *actor,
-                               ClsnResult *res, Vector3 *pos,
+                               dBgPi *res, Vector3 *pos,
                                Vector3_16 *motionAng, Vector3_16 *ang); /* 0x18 */
     s32 unk_1c;               /* 0x1c */
 
@@ -97,7 +97,7 @@ struct dBgW {
     virtual int DetectClsn(RaycastGround &ray);           /* slot 6 */
     virtual int DetectClsn(RaycastLine &ray);             /* slot 7 */
     virtual int DetectClsn(SphereClsn &sphere);           /* slot 8 */
-    virtual void BeforeClsn(ClsnResult &res, dActor_c *actor, Vector3 &pos,
+    virtual void BeforeClsn(dBgPi &res, dActor_c *actor, Vector3 &pos,
                             Vector3_16 *motionAng, Vector3_16 *ang); /* slot 9 */
     virtual int TransformPos(const Vector3 &pos, Vector3 &res);      /* slot 10 */
     virtual s16 GetAngularVelY();                         /* slot 11 */
@@ -111,19 +111,19 @@ struct dBgW {
     /* --- static: the stock BeforeClsn callbacks. Call sites take their
        addresses and store them via func_020393d4; BeforeClsn invokes the
        stored one as (collider, actor, res, pos, motionAng, ang). They
-       update POS from the collider's motion; the ClsnResult rides along
+       update POS from the collider's motion; the dBgPi rides along
        untouched. --- */
     static void UpdatePosAndAngs(dBgW &clsn, dActor_c *clsnActor,
-                                 ClsnResult &res, Vector3 &pos,
+                                 dBgPi &res, Vector3 &pos,
                                  Vector3_16 *motionAng, Vector3_16 *ang);
     static void UpdatePosWithVelocity(dBgW &clsn, dActor_c *clsnActor,
-                                      ClsnResult &res, Vector3 &pos,
+                                      dBgPi &res, Vector3 &pos,
                                       Vector3_16 *motionAng, Vector3_16 *ang);
     static void UpdatePosWithTransform(dBgW &clsn, dActor_c *clsnActor,
-                                       ClsnResult &res, Vector3 &pos,
+                                       dBgPi &res, Vector3 &pos,
                                        Vector3_16 *motionAng, Vector3_16 *ang);
     static void UpdateAngsWithAngularVelY(dBgW &clsn, dActor_c *clsnActor,
-                                          ClsnResult &res, Vector3 &pos,
+                                          dBgPi &res, Vector3 &pos,
                                           Vector3_16 *motionAng, Vector3_16 *ang);
 };
 

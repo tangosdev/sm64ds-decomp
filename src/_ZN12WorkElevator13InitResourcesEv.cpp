@@ -8,7 +8,7 @@ typedef struct { s32 x, y, z; } Vector3;
 typedef struct { s32 m[12]; } Matrix4x3;
 typedef s32 Fix12;
 struct SharedFilePtr { u32 data[4]; };
-struct BMD_File; struct KCL_File; struct CLPS_Block; struct ClsnResult; struct Vector3_16;
+struct BMD_File; struct KCL_File; struct CLPS_Block; struct dBgPi; struct Vector3_16;
 extern SharedFilePtr data_ov021_021149a0, data_ov021_021149a8, data_ov021_021149b0, data_ov021_021149b8;
 extern Matrix4x3 data_ov021_02113a60, data_ov021_02113a80;
 extern "C" {
@@ -26,7 +26,7 @@ extern void _ZN13RaycastGroundD1Ev(void* thiz);
 extern void func_ov021_02111434(void* p);
 extern void func_ov021_0211129c(void* p);
 }
-extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 extern int func_ov021_02112128, func_ov021_02111fe4, func_ov021_02111f8c, func_ov021_02111f34, func_ov021_02111edc;
 struct RaycastGround { char buf[0x50]; };
 extern "C" int _ZN12WorkElevator13InitResourcesEv(char* sl)
@@ -45,7 +45,7 @@ extern "C" int _ZN12WorkElevator13InitResourcesEv(char* sl)
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         sl + 0x124, (KCL_File*)data_ov021_021149a8.data[1], (Matrix4x3*)(sl + 0x2ec),
         0x199, *(s16*)(sl + 0x8e), (CLPS_Block*)&data_ov021_02113a60);
-    func_020393d4((int*)(sl + 0x124), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int*)(sl + 0x124), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393c4((int*)(sl + 0x124), (int)&func_ov021_02112128);
     _ZN4dBgW6EnableEP8dActor_c(sl + 0x124, sl);
     {
@@ -54,7 +54,7 @@ extern "C" int _ZN12WorkElevator13InitResourcesEv(char* sl)
         char* col = sl + 0x520;
         CLPS_Block* clps = (CLPS_Block*)&data_ov021_02113a80;
         Fix12 fix = 0x199;
-        int upd = (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+        int upd = (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
         SharedFilePtr* kclFile = &data_ov021_021149b8;
         for (; j < 4; j++) {
             _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(

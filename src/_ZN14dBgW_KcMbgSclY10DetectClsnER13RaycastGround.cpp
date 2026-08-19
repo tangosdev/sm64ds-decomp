@@ -12,7 +12,7 @@ extern void func_02035394(RaycastLine *, void *);
 extern int _ZN7dBgW_Kc10DetectClsnER11RaycastLine(void *, RaycastLine *);
 extern Vector3 *_ZN11RaycastLine10GetClsnPosEv(Vector3 *, RaycastLine *);
 extern void func_0203aa10(void *thiz, const Vector3 *v, Vector3 *res);
-extern void _ZN10ClsnResultaSERKS_(void *, const void *);
+extern void _ZN5dBgPiaSERKS_(void *, const void *);
 extern void _ZN11RaycastLineD1Ev(RaycastLine *);
 
 int _ZN14dBgW_KcMbgSclY10DetectClsnER13RaycastGround(void *self, char *ground)
@@ -40,7 +40,7 @@ int _ZN14dBgW_KcMbgSclY10DetectClsnER13RaycastGround(void *self, char *ground)
     if (r) {
         _ZN11RaycastLine10GetClsnPosEv(&v0x30, &ray);
         func_0203aa10(self, &v0x30, &v0x3c);
-        _ZN10ClsnResultaSERKS_(ground + 0x10, ray.data + 0x10);
+        _ZN5dBgPiaSERKS_(ground + 0x10, ray.data + 0x10);
         *(int *)(ground + 0x44) = v0x3c.y;
         *(unsigned char *)(ground + 0x48) = 1;
     }

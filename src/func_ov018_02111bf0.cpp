@@ -7,7 +7,7 @@ struct SurfaceInfo {
   unsigned short f, g;
   int h, i, j;
 };
-struct ClsnResult {
+struct dBgPi {
   void* vt;
   struct SurfaceInfo info;
 };
@@ -17,8 +17,8 @@ void* _ZNK12WithMeshClsn14GetFloorResultEv(WithMeshClsn* w);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(struct SurfaceInfo* s, Vector3* v);
 int _ZN4cstd4fdivEii(int a, int b);
 int _ZNK12WithMeshClsn8IsOnWallEv(WithMeshClsn* w);
-struct ClsnResult* _ZNK12WithMeshClsn13GetWallResultEv(WithMeshClsn* w);
-void _ZN10ClsnResultD1Ev(struct ClsnResult* r);
+struct dBgPi* _ZNK12WithMeshClsn13GetWallResultEv(WithMeshClsn* w);
+void _ZN5dBgPiD1Ev(struct dBgPi* r);
 extern void* data_02099368;
 
 void func_ov018_02111bf0(char* c, WithMeshClsn* w){
@@ -33,8 +33,8 @@ void func_ov018_02111bf0(char* c, WithMeshClsn* w){
     }
   }
   if (_ZNK12WithMeshClsn8IsOnWallEv(w) != 0) {
-    struct ClsnResult* src = _ZNK12WithMeshClsn13GetWallResultEv(w);
-    struct ClsnResult cr;
+    struct dBgPi* src = _ZNK12WithMeshClsn13GetWallResultEv(w);
+    struct dBgPi cr;
     Vector3 wn;
     struct SurfaceInfo* dst = &cr.info;
     // demand a first (should get r4), then b (r1), then dst (r2)
@@ -57,7 +57,7 @@ void func_ov018_02111bf0(char* c, WithMeshClsn* w){
     cr.info.i = *(int*)((char*)src + 0x20);
     cr.info.j = *(int*)((char*)src + 0x24);
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(dst, &wn);
-    _ZN10ClsnResultD1Ev(&cr);
+    _ZN5dBgPiD1Ev(&cr);
   }
 }
 }

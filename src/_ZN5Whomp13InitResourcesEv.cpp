@@ -15,7 +15,7 @@ struct Matrix4x3;
 struct CLPS_Block;
 struct Vector3_16;
 struct dActor_c;
-struct ClsnResult;
+struct dBgPi;
 struct Vector3;
 
 extern "C" {
@@ -49,7 +49,7 @@ extern void *data_ov079_021275ec[];
    bare `extern` mangles the already-mangled name a second time and the address
    taken below points at a _Z88_ZN16... that does not exist. The byte gate cannot
    see it -- relocated words are wildcards -- only check_references can. */
-extern "C" void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern "C" void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern u8 data_0209f21c;
 extern s32 data_0209f394[];
 extern signed char data_0209f2f8;
@@ -138,7 +138,7 @@ int Whomp::InitResources()
     }
 
     func_01ffb0bc((char *)&mMovingMeshCollider);
-    func_020393d4(((char *)this) + 0x418, (void *)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(((char *)this) + 0x418, (void *)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     {
         s32 sp[3];

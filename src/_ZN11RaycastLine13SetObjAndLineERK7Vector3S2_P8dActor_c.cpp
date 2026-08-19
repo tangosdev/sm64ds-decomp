@@ -3,7 +3,7 @@ struct Vector3 { int x, y, z; };
 struct dActor_c;
 
 extern "C" {
-void _ZN11RaycastLine4Line3SetERK7Vector3S3_(void *line, const Vector3 *a, const Vector3 *b);
+void _ZN8dM3dGLin3SetERK7Vector3S2_(void *line, const Vector3 *a, const Vector3 *b);
 void func_020353b0(char *c, void *p);
 void func_02037608(char *thiz);
 void func_0203abd4(int *dst, Vector3 *mid, int w);
@@ -13,7 +13,7 @@ extern "C" void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(
     char *thiz, const Vector3 *a, const Vector3 *b, dActor_c *obj)
 {
     Vector3 mid;
-    _ZN11RaycastLine4Line3SetERK7Vector3S3_(thiz + 0x38, a, b);
+    _ZN8dM3dGLin3SetERK7Vector3S2_(thiz + 0x38, a, b);
     func_020353b0(thiz, obj);
     func_02037608(thiz);
     mid.x = a->x + b->x;

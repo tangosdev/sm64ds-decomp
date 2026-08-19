@@ -10,12 +10,12 @@
 //cpp
 #include "dBgW_Kc.h"
 
-struct ClsnResult { u8 raw[0x1c]; };
+struct dBgPi { u8 raw[0x1c]; };
 struct SurfaceInfo { u8 clps[8]; Vector3 normal; };
 
 struct RaycastLine {
     u8      head[0x10];
-    ClsnResult result;      /* 0x10 */
+    dBgPi result;      /* 0x10 */
     u8      pad_02c[0xc];
     Vector3 lineStart;      /* 0x38 */
     u8      pad_044[0xc];
@@ -30,7 +30,7 @@ int  func_020397dc(s32 x);
 int  func_020397b8(s32 x);
 void func_02037eec(SurfaceInfo *info);
 void func_02037ee8(SurfaceInfo *info);
-void func_02037fd4(ClsnResult *res, s16 triIdx, SurfaceInfo *info);
+void func_02037fd4(dBgPi *res, s16 triIdx, SurfaceInfo *info);
 void func_020375ec(RaycastLine *ray, Vector3 *pos);
 u32  func_020396dc(dBgW_Kc *self, KCL_Tri *prism);
 int  _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *surf,
