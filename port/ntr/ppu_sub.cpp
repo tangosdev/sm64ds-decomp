@@ -985,6 +985,7 @@ struct BandPixel {
     uint32_t color;
     uint8_t prio;
     uint8_t hit;
+    uint8_t eng;    /* which engine wrote it; see the overwrite test */
 };
 
 /* One engine's sprites over the band, in DS pixels: band[k][x] for k in
@@ -1018,7 +1019,7 @@ int band_trace_frames(void)
 void band_raster_engine(BandPixel *band, int gap_ds, uint32_t reg_base,
                         uint32_t oam_base, uint32_t obj_vram,
                         uint32_t obj_pltt, uint32_t obj_ext, int row_bias,
-                        const char *engine_name)
+                        uint8_t eng_id, const char *engine_name)
 {
     static const int kSizes[3][4][2] = {
         {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
@@ -1129,10 +1130,23 @@ void band_raster_engine(BandPixel *band, int gap_ds, uint32_t reg_base,
                 }
                 ++drawn;
                 BandPixel &bp = band[(size_t)k * 256 + px];
-                if (bp.hit && prio > bp.prio) continue;
+                /* WITHIN one engine, OBJ priority resolves and the 127 -> 0
+                   walk breaks ties toward the lower index, exactly as
+                   raster_obj above. ACROSS the two engines it does not, and
+                   the test says so by comparing the engine tag first: engine A
+                   runs first and engine B second, so the only cross-engine
+                   case here is B arriving over an A pixel, and B takes it
+                   whatever the two priority numbers are. Priorities are per
+                   engine on the hardware -- they order layers inside one 2D
+                   unit and have no meaning between units -- so comparing them
+                   across the seam would be arithmetic on two different
+                   scales, and it would make which engine wins depend on scene
+                   content rather than on a rule anyone can state. */
+                if (bp.hit && bp.eng == eng_id && prio > bp.prio) continue;
                 bp.color = color;
                 bp.prio = prio;
                 bp.hit = 1;
+                bp.eng = eng_id;
             }
         }
         if (box_rows && band_trace_frames())
@@ -1147,11 +1161,21 @@ void band_raster_engine(BandPixel *band, int gap_ds, uint32_t reg_base,
 void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     if (lay.band_h <= 0 || lay.gap_ds <= 0) return;
-    /* GAP_DS_MAX rows of 256 DS pixels, on the stack of the compose. 96 x 256
-       x 6 bytes is 147 KB, which is more stack than this program's thread
-       wants to spend on an off-by-default feature, so it is a file static: the
-       compose is called from one thread on one path and never re-enters. */
-    static BandPixel band[GAP_DS_MAX][256];
+    /* GAP_DS_MAX rows of 256 DS pixels, allocated on the first peek frame and
+       never freed -- the same trade hal/sub_screen.cpp makes for the stacked
+       image itself, for the same reason. As a file-scope array it would be
+       192 KB of host .bss in EVERY binary that links this layer, including
+       every smoke and every level run, for a feature that is off by default;
+       as a lazy allocation it is one null pointer until somebody switches peek
+       on. Not the compose's stack for the same size reason. The compose runs
+       on one thread on one path and never re-enters, so a static pointer is
+       the whole of the bookkeeping. */
+    static BandPixel *band;
+    if (!band) {
+        band = (BandPixel *)std::calloc((size_t)GAP_DS_MAX * 256,
+                                        sizeof *band);
+        if (!band) return;              /* no peek this run; the fill stands */
+    }
     std::memset(band, 0, sizeof(BandPixel) * (size_t)lay.gap_ds * 256);
 
     /* ENGINE A FIRST. Its band rows are engine rows 192..191+G, so the bias
@@ -1159,18 +1183,18 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
        extended palette store is not modelled anywhere in this program, so it
        passes 0 and a 256-colour engine-A sprite reads the standard palette --
        the same answer ntr/ppu.cpp's own engine-A raster gives. */
-    band_raster_engine(&band[0][0], lay.gap_ds, kRegBaseA, kOamBaseA,
-                       kObjVramA, kObjPlttA, 0, -192, "A");
+    band_raster_engine(band, lay.gap_ds, kRegBaseA, kOamBaseA,
+                       kObjVramA, kObjPlttA, 0, -192, 0, "A");
     /* ENGINE B SECOND, so it wins where both drew; see the header note. Its
        band rows are engine rows -G..-1, so the bias is +G. */
-    band_raster_engine(&band[0][0], lay.gap_ds, kRegBase, kOamBase, kObjVram,
-                       kObjPltt, kObjExtPltt, lay.gap_ds, "B");
+    band_raster_engine(band, lay.gap_ds, kRegBase, kOamBase, kObjVram,
+                       kObjPltt, kObjExtPltt, lay.gap_ds, 1, "B");
 
     /* into the image, at the same integer scale the bottom half is drawn at */
     const int rx = lay.w / SUB_W, ry = lay.scale;
     for (int k = 0; k < lay.gap_ds; ++k)
         for (int x = 0; x < 256; ++x) {
-            const BandPixel &bp = band[k][x];
+            const BandPixel &bp = band[(size_t)k * 256 + x];
             if (!bp.hit) continue;
             for (int oy = 0; oy < ry; ++oy) {
                 uint32_t *out = dst + (size_t)(lay.band_y + k * ry + oy) * dst_w;
