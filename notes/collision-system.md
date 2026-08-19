@@ -581,11 +581,32 @@ unnamed: `func_02036acc` (1,048 B, a `dBgCh_Actr::Update*` sibling), `func_02038
 Naming a method can emit a vtable — check `eligible-names.txt` after adding any virtual
 declaration.
 
-### Free-standing quick win
+### Free-standing quick win — measured 2026-08-19
 
-`dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr&)`, ov002 0x020ade78, 972 B — a consumer, not
-core. A draft at **2 divergences** is banked under the stale pre-rename symbol
-`_ZN5Enemy14UpdateYoshiEat…`. Cheapest match in this report; independent of every phase.
+`dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr&)`, ov002 0x020ade78, 0x3cc. **Two instructions
+from matching:** `align target=243 cand=243 ratio=0.9877, equal=240, replace=1, insert=2,
+delete=2`.
+
+One of the two reported divergences is not real — `fdiff` labels `+0x3c0` **`reloc
+(wildcard)`** itself: the ROM word `14220802` is little-endian `0x02082214`, the address of
+`data_02082214`, which an isolated compile leaves as zero. The whole residual is a single
+scheduling swap of two independent instructions:
+
+```
+ROM   ldrh r7,[r0,#0x8e]   then   add r1,r6,#0x5c
+ours  add r1,r6,#0x5c      then   ldrh r7,[r0,#0x8e]
+```
+
+Four levers swept against it, all inert or worse, so do not re-walk them: re-spelling the
+RMW load side plainly (**worse** — drops an instruction, so the
+`((long long)(int)x) & 0xFFFF...` laundering on *both* sides is load-bearing); moving the
+`ang`/`idx` declarations ahead of `rnd`; moving `rnd` between the load and `idx`; and
+binding the store address to a `int *pz` temporary declared after the load. mwcc schedules
+the address materialisation first regardless of source order.
+
+**The draft was also unusable until now.** Its banked entry was keyed to
+`_ZN5Enemy14UpdateYoshiEatER12WithMeshClsn` — a symbol two rename campaigns out of date —
+and its body still defined that name. Re-keyed and re-spelled; it compiles and scores again.
 
 ---
 
