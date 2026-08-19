@@ -1217,14 +1217,18 @@ extern "C" void port_scene_fill_smartball(void)
 
 /* The registry's factory column is void *(*)(void) and the matched factory
    returns int *. One typed forwarder, curling's shape.
-   NO DISPLACEMENT RULING IS NEEDED FOR THIS FACTORY and that was checked
-   rather than assumed: section 12's case is a factory that calls the base
-   constructor with NO argument and rides r0 through, and 0x02119824 does not
-   do that -- src/MgBingoBallSlotsShot_Spawn.cpp spells it
-   `func_ov004_020b2adc(o)` and the ROM holds the object in r4 across the
-   call. port/tools/aritycheck.py agrees: it lists func_ov004_020b2adc as
-   DROPS from src/func_ov006_020e0574.cpp (0x169's) and
-   src/MgMushroomRoulette_Spawn.cpp (0x17f's), and not from this one. */
+   NO DISPLACEMENT RULING IS NEEDED FOR THIS FACTORY, and the reason is in the
+   SOURCE rather than in the instructions. Section 12's case is a factory whose
+   src calls the base constructor with NO argument while the ROM rides r0
+   through. At the instruction level 0x02119824 is the same shape -- `movs
+   r4,r0` after the allocator returns, and r0 is never rewritten before
+   `bl 0x20b2adc` -- so the object rides through here too. What differs is the
+   only thing the host sees: src/MgBingoBallSlotsShot_Spawn.cpp spells the call
+   `func_ov004_020b2adc(o)` and 0x169's src/func_ov006_020e0574.cpp spells it
+   `func_ov004_020b2adc()`. port/tools/aritycheck.py finds the same split
+   independently: it lists func_ov004_020b2adc as DROPS from
+   src/func_ov006_020e0574.cpp and src/MgMushroomRoulette_Spawn.cpp, and not
+   from this one. */
 extern "C" void *port_mg_smartball_spawn(void)
 {
     return (void *)MgBingoBallSlotsShot_Spawn();

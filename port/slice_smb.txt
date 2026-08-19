@@ -20,13 +20,21 @@
 #       bl  0x20b2adc               func_ov004_020b2adc(o)   <- WITH the arg
 #       str ip,[r4] ; ip=0x0213eefc data_ov006_0213eefc, the vtable
 #
-# THE FACTORY NEEDS NO DISPLACEMENT RULING. Section 12 of
-# port/mg_fanout_costs.txt records that 0x169's factory calls the base
-# constructor with NO argument and rides r0 through, which needs an
-# argument-displacing host copy. This one does not: it holds the object in r4
-# and does `mov r0,r4`-equivalent before the call, and src/
-# MgBingoBallSlotsShot_Spawn.cpp spells it `func_ov004_020b2adc(o)`. Checked
-# because the ruling is expensive, not assumed because the file is short.
+# THE FACTORY NEEDS NO DISPLACEMENT RULING, AND THE REASON IS IN THE SOURCE
+# RATHER THAN IN THE INSTRUCTIONS. Section 12 of port/mg_fanout_costs.txt
+# records that 0x169's factory calls the base constructor with NO argument and
+# rides r0 through, which needs an argument-displacing host copy. At the
+# INSTRUCTION level this factory is the same shape -- the ROM does
+# `movs r4,r0` after the allocator returns and never rewrites r0 before
+# `bl 0x20b2adc`, so the object rides through in r0 exactly as 0x169's does.
+# What differs is the only thing that matters on the host: 0x169's
+# src/func_ov006_020e0574.cpp spells `func_ov004_020b2adc();` with no
+# argument, and src/MgBingoBallSlotsShot_Spawn.cpp spells
+# `func_ov004_020b2adc(o)` with one. port/tools/aritycheck.py finds the same
+# split without being pointed at it: it lists func_ov004_020b2adc as DROPS from
+# src/func_ov006_020e0574.cpp (0x169's) and src/MgMushroomRoulette_Spawn.cpp
+# (0x17f's) and NOT from this one. Checked because the ruling is expensive, not
+# assumed because the file is short.
 #
 # THE WIDTH IS 36 AND ALL THREE OF SECTION 11's CHECKS SAY SO:
 #   1. SPAN. data_ov006_0213eefc's next config symbol is data_ov006_0213ef8c,
