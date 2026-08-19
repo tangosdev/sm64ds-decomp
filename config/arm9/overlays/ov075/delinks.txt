@@ -216,7 +216,7 @@ src/func_ov075_02116030.c:
     complete
     .text start:0x02116030 end:0x02116040
 
-src/func_ov075_02116040.c:
+src/_ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev.c:
     complete
     .text start:0x02116040 end:0x021160b4
 

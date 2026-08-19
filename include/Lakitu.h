@@ -53,6 +53,8 @@ struct Lakitu : dActor_c {
     int Behavior();
     int InitResources();
     int Render();
+    int CleanupResources();
+    void OnPendingDestroy();
 };
 
 typedef char Lakitu_size_must_be_0x420[sizeof(Lakitu) == 0x420 ? 1 : -1];

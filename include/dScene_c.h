@@ -4,8 +4,10 @@
 #include "dBase_c.h"
 
 /* The scene root: fBase_c -> dBase_c -> dScene_c. Its own code lives at
- * 0x0202e140..0x0202ec9c, plus the four GraphCallbacks stranded at
- * 0x02018ea0..0x02018ec0.
+ * 0x0202e140..0x0202ec9c. (An earlier revision also claimed the four
+ * GraphCallback defaults at 0x02018ea0..0x02018ec0; those are
+ * dGraph_c::callback_c's virtual slot defaults, not dScene_c's -- see
+ * dGraph_c.h -- and dScene_c's own vtable holds none of them.)
  *
  * TEN classes derive from it directly, not the two an earlier draft of this
  * comment named. From the ROM's type graph (tools/rtti_extract.py), every record
@@ -190,13 +192,6 @@ struct dScene_c : dBase_c {
     static void Initialise3dGraphics();
     static void ResetHardwareRegisters();
 
-    /* dScene_c-graph traversal hooks, called through a table of plain function
-       addresses -- which is itself why they cannot be non-static members. All four
-       are the same two instructions, `mov r0,#1; bx lr`. */
-    static int GraphCallback0();
-    static int GraphCallback1();
-    static int GraphCallback2();
-    static int GraphCallback3();
 };
 
 /* Holds fBase_c, dBase_c and dScene_c to the layout the paragraph above

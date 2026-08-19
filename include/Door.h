@@ -2,18 +2,25 @@
 #define DOOR_H
 
 #include "types.h"
-
-#ifdef __cplusplus
 #include "dActor_c.h"
-#endif
+#include "ModelAnim.h"
 
 /* The plain warp door -- the leaf dActor_c child at ov100 0x021443f4..0x02145948,
  * distinct from StarDoor and VirtualDoor which are their own classes/headers.
  *
  * DERIVATION. tools/rtti_extract.py has the RTTI record at ov100 0x02148158,
- * mangled "8daDoor_c" -- the ROM struct name the tree's generated header
- * (include/daDoor_c.h) still carries -- with ONE base, dActor_c, at
- * subobject offset 0. It is a leaf: nothing in the image derives from it.
+ * mangled "8daDoor_c" -- the ROM struct name, which is NOT the name this
+ * header uses -- with ONE base, dActor_c, at subobject offset 0.
+ *
+ * "Door" is a coined name, and the cartridge disagrees with it: _ZTS8daDoor_c
+ * at ov100 0x0214814c is a data symbol whose BYTES spell "8daDoor_c", so
+ * renaming this class to daDoor_c is what would let that string be
+ * data-verified. The tree is currently inconsistent about it -- _ZTV4Door
+ * (coined, from the earlier destructor-pair slice) sits three symbols away
+ * from _ZTS8daDoor_c and _ZTI8daDoor_c (the ROM's own). That inconsistency
+ * predates this header and is deliberately not resolved here; folding both
+ * consumers onto this one header is what makes resolving it a single rename
+ * instead of two. It is a leaf: nothing in the image derives from it.
  *
  * VTABLE. data_02148188 (_ZTV4Door) is 31 slots, the same count as dActor_c's
  * own table -- confirmed with tools/rtti_vtables.py --own daDoor_c, which also
@@ -38,14 +45,27 @@
  * the same idiom src/_ZN7fBase_c13InitResourcesEv.cpp uses for fBase_c's own
  * slot 0: declared here as a virtual override (so the header documents the
  * vtable completely) but never given a `Door::` definition anywhere, so
- * nothing about their bodies or the surrounding field-offset arithmetic
- * (still through include/daDoor_c.h, the flat placeholder, which stays in
- * place and unrenamed) had to change to land the correct mangled symbol.
- * Only src/_ZN4Door13InitResourcesEv.c was ALREADY NONMATCHING before this
- * rename -- config/arm9/overlays/ov100/delinks.txt never carried a `complete`
- * marker for it (999-word diff under the pinned 2004/b56, reproduced on the
- * untouched tree before editing) -- and stays that way; the other four were
- * already byte-verified and are re-verified unchanged under their new names.
+ * nothing about their bodies had to change to land the correct mangled
+ * symbol.
+ *
+ * THEIR FIELD ACCESS, HOWEVER, IS NOW THIS HEADER'S. The naming slice left
+ * Door described by two headers at once: this one, and the generated flat
+ * placeholder include/daDoor_c.h, which restated dActor_c's fields inline as
+ * pad_000[0x5c] + unk_05c/unk_060/... and which _ZN4Door6RenderEv.cpp and
+ * _ZN4Door13InitResourcesEv.c both included. daDoor_c.h is DELETED; both
+ * files now take a Door and name their fields, through the C++ class below
+ * or the C-mode branch after it. Every offset is unchanged and both files
+ * were re-measured: Render is byte-exact under the pinned 2004/b56, and
+ * InitResources compiles to output IDENTICAL to its pre-fold bytes.
+ *
+ * Only src/_ZN4Door13InitResourcesEv.c ALREADY FAILED TO BYTE-MATCH before
+ * the rename -- config/arm9/overlays/ov100/delinks.txt carries no `complete`
+ * marker for it, so dsd supplies that range from the cartridge and the ROM
+ * build never compiles the file -- and stays that way. The gap is one
+ * instruction: candidate 0x300 against the ROM's 0x2fc, measured before and
+ * after the fold and unchanged by it. build_pin reports that as "999 word(s)
+ * differ", which is match.py's sentinel for "the sizes differ at all", not a
+ * count.
  *
  * SIZE. Door_Spawn.c calls `_ZN7fBase_cnwEj(328)` -- 0x148 -- for a fresh Door,
  * then _ZN8dActor_cC2Ev and _ZN9ModelAnimC1Ev at +0xd4. dActor_c is 0xd0
@@ -53,23 +73,31 @@
  * embedded ModelAnim runs 0xd4..0x138 (the same 4-byte alignment pad
  * include/dBgActor_c.h takes before its own Model member). That leaves
  * 0x138..0x147 (0x10 = 16 bytes) as this class's own storage, all of it
- * touched by the five sources above: two heap-owned pointers at 0x138/0x13c
- * (a second Model*, and something released through SharedFilePtr), a
- * callback-node pointer at 0x140 (read in Behavior as a pointer-to-member
+ * touched by the five sources above: two heap-owned pointers at 0x138/0x13c,
+ * a callback-node pointer at 0x140 (read in Behavior as a pointer-to-member
  * dispatch, written in src/func_ov100_021453d8.cpp -- out of this slice), and
- * a key-model index byte at 0x144 -- exactly matching include/daDoor_c.h's
- * existing `unk_144`. None of the four pointer/byte fields were typed more
- * precisely than the existing daDoor_c.h placeholder already has them,
- * because the two Model-shaped virtual calls through 0x138 (CleanupResources'
- * `obj->v1()`, Render's `o->n(...)`/`o2->m(...)`) resolve to unidentified
- * Model vtable slots -- typing that struct is future work, not this pass.
+ * a key-model index byte at 0x144.
+ *
+ * 0x138 IS A Model*, and this header used to say the opposite -- that the
+ * virtual calls through it "resolve to unidentified Model vtable slots" and
+ * typing it was future work. They were never unidentified. include/Model.h
+ * names slot 4 Virtual10(Matrix4x3&) at vtable offset 0x10 and slot 5
+ * Render(const Vector3*) at 0x14, and those are exactly the two the ROM
+ * dispatches in _ZN4Door6RenderEv (`ldr r2,[r2,#0x10]`, `ldr r2,[r2,#0x14]`);
+ * CleanupResources' third call is slot 1, the deleting destructor. Four
+ * independent things agree the object is a Model and not merely Model-shaped:
+ * InitResources allocates it `_Znwj(0x50)` and sizeof(Model) is 0x50; it runs
+ * _ZN5ModelC1Ev on the result; it stores a matrix at +0x1c, which is
+ * Model::mat4x3; and Render hands it this door's own bone transforms. Typed
+ * below, and the shadow structs both consumers carried for it are gone.
+ * 0x13c and 0x140 stay void* -- 0x13c is written from both a SharedFilePtr
+ * and an int global, so typing it is a separate question.
  *
  * Field NAMES elsewhere are placeholders and cannot change codegen. Offsets
  * and widths are observed.
  */
 
 #ifdef __cplusplus
-#include "ModelAnim.h"
 
 struct Door : dActor_c {
     u8  pad_0d0[0x4];
@@ -78,14 +106,12 @@ struct Door : dActor_c {
        mModel. */
     ModelAnim mModel;        /* 0x0d4 */
 
-    /* This class's own storage, 0x138..0x147 -- see SIZE above. Left as
-       opaque pointers/bytes, same as include/daDoor_c.h's existing
-       unk_144, because the virtual calls through 0x138 resolve to
-       unidentified Model vtable slots (future work, not this pass). */
-    void *unk_138;           /* 0x138 -- owned Model*, see SIZE above */
+    /* This class's own storage, 0x138..0x147 -- see SIZE above. NAMES here
+       are still placeholders; the TYPE of 0x138 is not (see SIZE). */
+    Model *unk_138;          /* 0x138 -- owned, see SIZE above */
     void *unk_13c;           /* 0x13c -- released through SharedFilePtr */
     void *unk_140;           /* 0x140 -- callback-node pointer, see SIZE above */
-    s8   unk_144;            /* 0x144 -- key-model index, matches daDoor_c.h */
+    s8   unk_144;            /* 0x144 -- key-model index */
     u8   pad_145[0x3];
 
     /* --- vtable. Declared first, deliberately -- it is already the key
@@ -110,6 +136,45 @@ struct Door : dActor_c {
 /* Holds the chain to the size Door_Spawn.c's operator new(0x148) call
    evidences. A silently-added member anywhere fails this. */
 typedef char Door_size_must_be_0x148[sizeof(Door) == 0x148 ? 1 : -1];
+
+#else
+
+/* Flat layout for the C translation units, which can express neither the base
+   class nor the virtual functions -- the same split include/dActor_c.h and
+   include/ModelAnim.h already carry, and for the same reason.
+
+   This branch is what retired include/daDoor_c.h, the generated flat
+   placeholder this class used to be described by. That header restated
+   dActor_c's fields inline as pad_000[0x5c] + unk_05c/unk_060/... , so the
+   two spellings of one object could drift and the C sources could not see
+   that 0x05c..0x0cf is inherited storage dActor_c has already named. Nesting
+   the bases instead makes drift impossible: the offsets below are not
+   written down here at all, they are whatever dActor_c and ModelAnim say.
+
+   Every field daDoor_c.h named has a home: 0x05c/0x060/0x064 are
+   base.mPosX/Y/Z, 0x080/0x084/0x088 base.mScaleX/Y/Z, 0x08c/0x08e/0x090
+   base.mAngleX/Y/Z, 0x0a4/0x0a8/0x0ac base.unk_0a4/mVertSpeed/unk_0ac,
+   0x0e8 mModel.data.transforms, and unk_144 is this class's own and keeps
+   its name. */
+struct Door {
+    struct dActor_c base;    /* 0x000..0x0cf */
+    u8  pad_0d0[0x4];
+    ModelAnim mModel;        /* 0x0d4..0x137 */
+    Model *unk_138;          /* 0x138 -- owned, see SIZE above */
+    void *unk_13c;           /* 0x13c -- released through SharedFilePtr */
+    void *unk_140;           /* 0x140 -- callback-node pointer, see SIZE above */
+    s8   unk_144;            /* 0x144 -- key-model index */
+    u8   pad_145[0x3];
+};
+
+/* The C++ branch's assert, restated over the nested spelling: if either base
+   changes width the sum stops being 0x148 and this branch fails to compile,
+   which is the whole point of nesting them rather than restating offsets. */
+typedef char Door_size_must_be_0x148[sizeof(struct Door) == 0x148 ? 1 : -1];
+
+/* So a source declaring a Door reads the same in both modes, the way
+   include/ModelAnim.h does it. */
+typedef struct Door Door;
 
 #endif /* __cplusplus */
 

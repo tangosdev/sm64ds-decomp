@@ -76,7 +76,7 @@
  *    destructor last. That is corroboration, not proof, but a wrong cut does not
  *    usually reverse into a tidy file.
  *
- * THE FOUR GraphCallbacks ARE NOT IN THIS TU. _ZN8dScene_c14GraphCallback0Ev..3Ev
+ * THE FOUR GraphCallbacks ARE NOT IN THIS TU. _ZN8dGraph_c10callback_c14GraphCallback0Ev..3Ev
  * live at 0x02018ea0..0x02018ec0, 0x15,2a0 bytes (86 KB) BELOW this run. A
  * single object's .text contribution is one contiguous interval, so they cannot
  * share an object with 0x0202e140..0x0202ec9c -- this is the same rule item 3

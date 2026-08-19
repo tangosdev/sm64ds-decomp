@@ -2813,19 +2813,19 @@ src/func_02018e68.c:
     complete
     .text start:0x02018e68 end:0x02018ea0
 
-src/_ZN8dScene_c14GraphCallback3Ev.cpp:
+src/_ZN8dGraph_c10callback_c14GraphCallback3Ev.cpp:
     complete
     .text start:0x02018ea0 end:0x02018ea8
 
-src/_ZN8dScene_c14GraphCallback2Ev.cpp:
+src/_ZN8dGraph_c10callback_c14GraphCallback2Ev.cpp:
     complete
     .text start:0x02018ea8 end:0x02018eb0
 
-src/_ZN8dScene_c14GraphCallback1Ev.cpp:
+src/_ZN8dGraph_c10callback_c14GraphCallback1Ev.cpp:
     complete
     .text start:0x02018eb0 end:0x02018eb8
 
-src/_ZN8dScene_c14GraphCallback0Ev.cpp:
+src/_ZN8dGraph_c10callback_c14GraphCallback0Ev.cpp:
     complete
     .text start:0x02018eb8 end:0x02018ec0
 
@@ -3847,7 +3847,7 @@ src/IsButtonInputValid.c:
     complete
     .text start:0x02029654 end:0x020297f4
 
-src/_ZN5Stage14GraphCallback2EP12SceneRelated.cpp:
+src/_ZN5Stage14GraphCallback2Ev.cpp:
     .text start:0x020297f4 end:0x02029838
 
 src/_ZN5Stage14GraphCallback1Ev.cpp:
@@ -4681,15 +4681,15 @@ src/func_02034b1c.c:
     complete
     .text start:0x02034b1c end:0x02034b40
 
-src/func_02034b40.c:
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.c:
     complete
     .text start:0x02034b40 end:0x02034d24
 
-src/func_02034d24.c:
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback2Ev.c:
     complete
     .text start:0x02034d24 end:0x02034d2c
 
-src/func_02034d2c.c:
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback0Ev.c:
     complete
     .text start:0x02034d2c end:0x02034d34
 

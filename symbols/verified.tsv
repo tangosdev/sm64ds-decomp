@@ -390,10 +390,10 @@
 0x02018864	UnloadArchive	function
 0x020188a8	LoadArchive	function
 0x02018ad0	FS_LoadOverlay	function
-0x02018ea0	_ZN5Scene14GraphCallback3Ev	function
-0x02018ea8	_ZN5Scene14GraphCallback2Ev	function
-0x02018eb0	_ZN5Scene14GraphCallback1Ev	function
-0x02018eb8	_ZN5Scene14GraphCallback0Ev	function
+0x02018ea0	_ZN8dGraph_c10callback_c14GraphCallback3Ev	function
+0x02018ea8	_ZN8dGraph_c10callback_c14GraphCallback2Ev	function
+0x02018eb0	_ZN8dGraph_c10callback_c14GraphCallback1Ev	function
+0x02018eb8	_ZN8dGraph_c10callback_c14GraphCallback0Ev	function
 0x02018f38	SetSubBg3Offset	function
 0x02018f54	SetSubBg2Offset	function
 0x02018f70	SetSubBg1Offset	function
@@ -510,7 +510,7 @@
 0x0202635c	_ZN5Stage9PS_UpdateEv	function
 0x0202942c	_ZN5Stage7PS_InitEv	function
 0x02029654	IsButtonInputValid	function
-0x020297f4	_ZN5Stage14GraphCallback2EP12SceneRelated	function
+0x020297f4	_ZN5Stage14GraphCallback2Ev	function
 0x02029838	_ZN5Stage14GraphCallback1Ev	function
 0x02029854	UpdateMinimap	function
 0x020298a0	StartEntranceFaderWipe	function

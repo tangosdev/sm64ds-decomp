@@ -786,7 +786,6 @@ extern int _ZTV8dMeter_c[];
 extern int _ZTV8dScene_c[];
 extern int _ZTV8daBook_c[];
 extern int _ZTV8daCoin_c[];
-extern int _ZTV8daDoor_c[];
 extern int _ZTV8daEyBm_c[];
 extern int _ZTV8daEykn_c[];
 extern int _ZTV8daFPkn_c[];
