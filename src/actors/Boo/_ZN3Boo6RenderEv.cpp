@@ -8,7 +8,12 @@
  * rather than a named member. The local ModelVT shadow (renamed from the
  * generated header's placeholder `Model`, which collided with the real
  * include/Model.h class this file also pulls in via Boo.h) simulates only the
- * vtable slot this call needs, not the model's full layout. */
+ * vtable slot this call needs, not the model's full layout. The flags halfword
+ * at 0x5d4 is read through Boo.h's typed mFlags_5d4 bitfield member -- a local
+ * (Flags *)((char *)this + 0x5d4) shadow compiled to a literal-pool address
+ * load (ldr rN,[pc] + ldrh [r4,rN]) where the ROM has add r0,r4,#0x500 +
+ * ldrh [r0,#0xd4]; the typed member was the one instruction between this file
+ * and a byte match. */
 #include "Boo.h"
 struct Vector3;
 struct ModelVT {
@@ -16,7 +21,6 @@ struct ModelVT {
     virtual void f3(); virtual void f4();
     virtual void Render(const Vector3 *);
 };
-struct Flags { unsigned short b0:1, b1:1, b2:1, b3:1; };
 
 extern "C" {
 void _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3(void *thiz, const void *v);
@@ -31,10 +35,9 @@ int Boo::Render()
         return 1;
 
     {
-        Flags *f = (Flags *)((char *)this + 0x5d4);
-        if (!f->b3)
+        if (!mFlags_5d4.b3)
             return 1;
-        if (f->b1) {
+        if (mFlags_5d4.b1) {
             ((ModelVT *)((char *)&mModel))->Render((const Vector3 *)((char *)&unk_510));
         }
         _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3(((char *)this), 0);

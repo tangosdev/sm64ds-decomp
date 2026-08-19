@@ -1,25 +1,39 @@
-extern int LoadKeyModels();
-extern int _ZN9Animation8LoadFileER13SharedFilePtr();
-extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as();
-extern int _ZN5Model8LoadFileER13SharedFilePtr();
-extern int _ZN9ModelBase7SetFileEP8BMD_Fileii();
-extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj();
-extern int _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj();
-extern int _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_();
-extern int LoadBlueCoinModel();
-extern int _ZN11dCapEnemy_c6AddCapEj();
-extern int _ZN11dCapEnemy_c21DestroyIfCapNotNeededEv();
-extern int NumStars();
-extern int _ZN7fBase_c18MarkForDestructionEv();
-extern int IsStarCollectedInCurLevel();
-extern int _ZN11ShadowModel12InitCylinderEv();
-extern int func_02035800();
-extern int _ZN8dActor_c13ClosestPlayerEv();
-extern int Matrix4x3_FromTranslation();
-extern int MulMat4x3Mat4x3();
-extern int SubVec3();
+//cpp
+// @symbol _ZN3Boo13InitResourcesEv
+/* recovered: real C++ method, vtable slot 0 -- Boo::InitResources. Previously a
+ * C free function; only the symbol and self access moved to a real method (the
+ * body still reads the object through raw offsets via `c`, like its siblings).
+ * The extern declarations spell mangled names literally inside extern "C" --
+ * the parameter types are call-ABI spellings, not claims about the real
+ * signatures (every argument is int-sized; a Fix12 passes bit-identical to an
+ * int, see include/math/Fix12.h). */
+#include "Boo.h"
+
+extern "C" {
+void LoadKeyModels(int n);
+int _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
+char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int g);
+int _ZN5Model8LoadFileER13SharedFilePtr(void *f);
+void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, int file, int a, int b);
+void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, int file, int a, int speed, unsigned int d);
+void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, void *pos, int r, int h, unsigned int e, unsigned int g);
+void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int d);
+void LoadBlueCoinModel(void *self);
+void _ZN11dCapEnemy_c6AddCapEj(void *self, unsigned int param);
+int _ZN11dCapEnemy_c21DestroyIfCapNotNeededEv(void *self);
+int NumStars(void);
+void _ZN7fBase_c18MarkForDestructionEv(void *self);
+int IsStarCollectedInCurLevel(int n);
+int _ZN11ShadowModel12InitCylinderEv(void *self);
+void func_02035800(void *self);
+char *_ZN8dActor_c13ClosestPlayerEv(void *self);
+void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
+void MulMat4x3Mat4x3(int a, void *b, void *dst);
+void SubVec3(void *a, void *b, void *dst);
+}
 
 struct G { int w[2]; };
+extern "C" {
 extern struct G data_ov063_0211edd4;
 extern struct G data_ov063_0211edcc;
 extern struct G data_ov063_0211ede4;
@@ -34,8 +48,9 @@ extern signed char data_0209f2f8;
 extern unsigned char data_0209f264;
 extern int data_ov063_0211e22c[];
 extern int data_ov063_0211e1ec[];
+}
 struct H { int w[16]; };
-extern struct H data_020a0e68;
+extern "C" extern struct H data_020a0e68;
 
 #define U8(o)  (*(unsigned char *)(c + (o)))
 #define S8(o)  (*(signed char *)(c + (o)))
@@ -47,8 +62,9 @@ extern struct H data_020a0e68;
 #define FLAGS16 (*(unsigned short *)((long long)(c + 0x5d4)))
 #define FLAGS16T (*(unsigned short *)((long long)((char *)((long long)c) + 0x5d4)))
 
-int _ZN3Boo13InitResourcesEv(char *c)
+int Boo::InitResources()
 {
+    char *c = (char *)this;
     int cond;
     int tmp598;
     void *spawned;
