@@ -567,7 +567,7 @@ overlays:
     name: ov077
     object: ../../build/build/arm9_ov077.bin
     hash: acc34cc03f3743fe
-    delinks: ../../config/arm9/overlays/ov077/delinks.txt
+    delinks: overlays/ov077/delinks.txt
     symbols: ../../config/arm9/overlays/ov077/symbols.txt
     relocations: ../../config/arm9/overlays/ov077/relocs.txt
   - id: 78
