@@ -1560,6 +1560,7 @@ src/_ZN8SignPost8BehaviorEv.cpp:
     .text start:0x020bbea4 end:0x020bc240
 
 src/_ZN8SignPost13InitResourcesEv.cpp:
+    complete
     .text start:0x020bc240 end:0x020bc3c8
 
 src/SignPost_Spawn.c:
@@ -5046,6 +5047,7 @@ src/_ZN19AmbientSoundEffects8BehaviorEv.cpp:
     .text start:0x020f19fc end:0x020f1ac4
 
 src/_ZN19AmbientSoundEffects13InitResourcesEv.cpp:
+    complete
     .text start:0x020f1ac4 end:0x020f1b94
 
 src/AmbientSoundEffects_Spawn.c:

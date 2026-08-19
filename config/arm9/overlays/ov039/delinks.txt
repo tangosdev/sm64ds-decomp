@@ -24,6 +24,7 @@ src/_ZN5Cloud6RenderEv.cpp:
     .text start:0x02111278 end:0x021112a0
 
 src/_ZN5Cloud8BehaviorEv.cpp:
+    complete
     .text start:0x021112a0 end:0x0211132c
 
 src/_ZN5Cloud13InitResourcesEv.cpp:

@@ -361,6 +361,7 @@ src/func_020092c4.c:
     .text start:0x020092c4 end:0x02009374
 
 src/func_02009374.c:
+    complete
     .text start:0x02009374 end:0x020093d4
 
 src/func_020093d4.c:
@@ -1956,6 +1957,7 @@ src/_ZN7Clipper13Func_020156DCEv.cpp:
     .text start:0x020156dc end:0x020156fc
 
 src/_ZN7ClipperD0Ev.c:
+    complete
     .text start:0x020156fc end:0x02015720
 
 src/_ZN7ClipperD1Ev.c:
@@ -3848,6 +3850,7 @@ src/IsButtonInputValid.c:
     .text start:0x02029654 end:0x020297f4
 
 src/_ZN5Stage14GraphCallback2Ev.cpp:
+    complete
     .text start:0x020297f4 end:0x02029838
 
 src/_ZN5Stage14GraphCallback1Ev.cpp:
@@ -6068,8 +6071,8 @@ src/Matrix4x3_ApplyInPlaceToScale.c:
     .text start:0x0203c148 end:0x0203c178
 
 src/func_0203c178.c:
-    .text start:0x0203c178 end:0x0203c184
     complete
+    .text start:0x0203c178 end:0x0203c184
 
 src/Matrix4x3_ApplyInPlaceToTranslation.c:
     complete
@@ -8604,6 +8607,7 @@ src/_ZN4cstd11ldiv_resultEv.cpp:
     .text start:0x02053108 end:0x02053130
 
 src/func_02053130.c:
+    complete
     .text start:0x02053130 end:0x020531a4
 
 src/func_020531a4.c:
@@ -8967,6 +8971,7 @@ src/func_020553a4.c:
     .text start:0x020553a4 end:0x020553c0
 
 src/func_02055454.c:
+    complete
     .text start:0x02055454 end:0x02055464
 
 src/func_02055464.c:
@@ -9262,9 +9267,11 @@ src/func_020570b8.c:
     .text start:0x020570b8 end:0x020570c0
 
 src/func_020570c0.c:
+    complete
     .text start:0x020570c0 end:0x020570d8
 
 src/func_020570d8.c:
+    complete
     .text start:0x020570d8 end:0x020570f0
 
 src/func_020570f0.c:
@@ -9276,9 +9283,11 @@ src/func_0205710c.c:
     .text start:0x0205710c end:0x02057128
 
 src/func_02057128.c:
+    complete
     .text start:0x02057128 end:0x02057140
 
 src/func_02057140.c:
+    complete
     .text start:0x02057140 end:0x02057158
 
 src/func_02057158.c:
@@ -9615,6 +9624,7 @@ src/func_02059624.c:
     .text start:0x02059624 end:0x02059640
 
 src/func_02059640.c:
+    complete
     .text start:0x02059640 end:0x02059650
 
 src/func_02059650.c:
@@ -9714,6 +9724,7 @@ src/func_02059f2c.c:
     .text start:0x02059f2c end:0x02059f48
 
 src/func_02059f48.c:
+    complete
     .text start:0x02059f48 end:0x02059f58
 
 src/func_02059f58.c:
@@ -10409,6 +10420,7 @@ src/func_0205f5fc.c:
     .text start:0x0205f5fc end:0x0205f650
 
 src/func_0205f650.c:
+    complete
     .text start:0x0205f650 end:0x0205f66c
 
 src/func_0205f66c.c:

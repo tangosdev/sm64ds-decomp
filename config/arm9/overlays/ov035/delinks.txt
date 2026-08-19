@@ -69,6 +69,7 @@ src/_ZN16SpinningPlatform8BehaviorEv.cpp:
     .text start:0x0211195c end:0x02111a98
 
 src/_ZN16SpinningPlatform13InitResourcesEv.cpp:
+    complete
     .text start:0x02111a98 end:0x02111b98
 
 src/SpinningPlatform_Spawn.c:

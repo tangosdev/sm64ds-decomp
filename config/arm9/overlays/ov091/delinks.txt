@@ -93,9 +93,11 @@ src/_ZN22RotatingUpDownPlatform6RenderEv.cpp:
     .text start:0x021320e0 end:0x02132108
 
 src/_ZN22RotatingUpDownPlatform8BehaviorEv.cpp:
+    complete
     .text start:0x02132108 end:0x0213220c
 
 src/_ZN22RotatingUpDownPlatform13InitResourcesEv.cpp:
+    complete
     .text start:0x0213220c end:0x02132360
 
 src/func_ov091_02132360.cpp:

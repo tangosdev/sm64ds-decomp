@@ -141,6 +141,7 @@ src/_ZN10Scuttlebug8BehaviorEv.cpp:
     .text start:0x02120398 end:0x021203f8
 
 src/_ZN10Scuttlebug13InitResourcesEv.cpp:
+    complete
     .text start:0x021203f8 end:0x02120580
 
 src/_ZN10Scuttlebug13OnTurnIntoEggER6Player.cpp:
