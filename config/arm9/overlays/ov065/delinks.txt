@@ -192,11 +192,11 @@ src/_ZN6DorrieD0Ev.cpp:
     complete
     .text start:0x02117fa8 end:0x02118024
 
-src/_ZN9DorrieCapD1Ev.c:
+src/_ZN12daDossyCap_cD1Ev.c:
     complete
     .text start:0x02118024 end:0x02118064
 
-src/_ZN9DorrieCapD0Ev.c:
+src/_ZN12daDossyCap_cD0Ev.c:
     complete
     .text start:0x02118064 end:0x021180b8
 
@@ -240,7 +240,7 @@ src/_ZN6Dorrie6RenderEv.cpp:
     complete
     .text start:0x02118d80 end:0x02118da8
 
-src/_ZN9DorrieCap6RenderEv.cpp:
+src/_ZN12daDossyCap_c6RenderEv.cpp:
     complete
     .text start:0x02118da8 end:0x02118df0
 
@@ -248,7 +248,7 @@ src/_ZN6Dorrie8BehaviorEv.cpp:
     complete
     .text start:0x02118df0 end:0x021190a8
 
-src/_ZN9DorrieCap8BehaviorEv.cpp:
+src/_ZN12daDossyCap_c8BehaviorEv.cpp:
     complete
     .text start:0x021190a8 end:0x02119210
 
@@ -260,7 +260,7 @@ src/_ZN6Dorrie13InitResourcesEv.cpp:
     complete
     .text start:0x02119228 end:0x021194e8
 
-src/_ZN9DorrieCap13InitResourcesEv.cpp:
+src/_ZN12daDossyCap_c13InitResourcesEv.cpp:
     complete
     .text start:0x021194e8 end:0x0211956c
 
@@ -280,7 +280,7 @@ src/func_ov065_021195d0.c:
     complete
     .text start:0x021195d0 end:0x021195e4
 
-src/_ZN9DorrieCap13OnYoshiTryEatEv.cpp:
+src/_ZN12daDossyCap_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021195e4 end:0x021195ec
 

@@ -9,7 +9,7 @@
 struct Vector3;
 
 /* The base for the enemies that can wear one of the caps. The ROM's RTTI names it
- * dCapEnemy_c and gives it two children, daKrb_c (Goomba) and daTrs_c (Boo).
+ * dCapEnemy_c and gives it two children, daKrb_c (once coined Goomba) and daTrs_c (once coined Boo).
  *
  * DERIVES FROM dEnemyBase_c, and the class's own constructor and destructor are the two
  * witnesses. dCapEnemy_c::dCapEnemy_c calls _ZN12dEnemyBase_cC2Ev, stores the vtable, then
@@ -20,7 +20,7 @@ struct Vector3;
  * SIZE 0x180. This class is abstract in practice -- nothing allocates a plain
  * dCapEnemy_c -- so there is no `operator new` literal to read the size off, the way
  * a leaf class has. Two other facts close it instead: the CapIcon at 0x164 is 0x1c
- * bytes and so ends exactly at 0x180, and Goomba, which derives from this class,
+ * bytes and so ends exactly at 0x180, and daKrb_c, which derives from this class,
  * puts its own first member at 0x180. A derived member cannot start inside its
  * base, so 0x180 is both the floor and the ceiling.
  *

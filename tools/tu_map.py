@@ -25,7 +25,7 @@ in source order, not grouped by class. ov080:
     MontyMoleRock_Spawn                 MontyMole_Spawn
 
 Cut on name change and ov080's three TUs shatter into thirteen. ov020
-(BookShot/BookShotSpawner) and ov063 (Boo/BooCage/BigBooIcon) do the same.
+(BookShot/BookShotSpawner) and ov063 (daTrs_c/BooCage/BigBooIcon) do the same.
 
 The fix is to stop treating a class as a block and treat it as an INTERVAL.
 Because a TU is contiguous, two classes whose address spans overlap cannot be in
@@ -285,7 +285,7 @@ def _drop_swallowers(spans, k):
     {low:23, medium:2} to {low:119, medium:32, high:12}. At k>=6 NO other module
     changes at all, and the corroborated boundaries of ov020, ov045, ov062, ov063,
     ov080, ov081 and ov090 all hold. k=3 is too aggressive: it splits ov063, whose
-    Boo/BooCage/BigBooIcon interleave is one of the cases this tool exists to get
+    daTrs_c/BooCage/BigBooIcon interleave is one of the cases this tool exists to get
     right. The result is flat across k=6..12, so it is reading a real structural
     feature rather than a tuned cutoff.
     """

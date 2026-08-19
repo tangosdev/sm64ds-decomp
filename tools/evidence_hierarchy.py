@@ -37,7 +37,7 @@ dtor_chain         The last call in `_ZN<D>D1Ev`/`D2Ev` that passes `this` at
                    offset zero is the immediate base's destructor.  Calls that
                    pass `this + 0x...` are member subobjects, not bases.  Some
                    base dtors are unnamed (`func_ov002_020aedbc` in
-                   `_ZN6GoombaD1Ev.c`); those are resolved through the vtable
+                   `_ZN7daKrb_cD1Ev.c`); those are resolved through the vtable
                    literal the unnamed function stores -- see
                    resolve_vtable_symbol() and the anon-dtor fixpoint below.
 
@@ -956,7 +956,7 @@ def build(root, seed_path):
 
     # 3c. resolve the *anonymous* destructors that are actually called as bases.
     #     Fixpoint, because an anonymous base dtor can itself call another one
-    #     (Goomba -> func_ov002_020aedbc -> func_ov002_020aed18 -> Actor).
+    #     (daKrb_c -> func_ov002_020aedbc -> func_ov002_020aed18 -> Actor).
     candidates = set()
     anon_callers = defaultdict(set)
     for (cls, _k), info in sorted(dtor_info.items()):

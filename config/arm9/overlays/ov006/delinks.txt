@@ -1891,6 +1891,7 @@ src/func_ov006_020db9dc.cpp:
     .text start:0x020db9dc end:0x020dbaf0
 
 src/_ZN11dScMgCard_c13InitResourcesEv.cpp:
+    complete
     .text start:0x020dbaf0 end:0x020dbd54
 
 src/MgPicturePoker_Spawn.cpp:
@@ -3482,6 +3483,7 @@ src/_ZN12dScMgLuigi_c21AfterCleanupResourcesEj.cpp:
     .text start:0x020efc68 end:0x020efcf8
 
 src/func_ov006_020efcf8.c:
+    complete
     .text start:0x020efcf8 end:0x020efdac
 
 src/func_ov006_020efdac.c:

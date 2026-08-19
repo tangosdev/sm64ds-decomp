@@ -1231,20 +1231,20 @@ ov062	0x0211dc30	data_ov062_0211dc30	KoopaFlag_SpawnInfo	spawninfo
 ov062	0x0211dc54	data_ov062_0211dc54	_ZTV9KoopaFlag	vtable alloc=0x174
 ov062	0x0211dd38	data_ov062_0211dd38	Klepto_SpawnInfo	spawninfo
 ov062	0x0211dd5c	data_ov062_0211dd5c	_ZTV6Klepto	vtable alloc=0x490
-ov063	0x02115ee0	func_ov063_02115ee0	_ZN3BooD1Ev	vtable slot 16
-ov063	0x02115f48	func_ov063_02115f48	_ZN3BooD0Ev	vtable slot 17
+ov063	0x02115ee0	func_ov063_02115ee0	_ZN7daTrs_cD1Ev	vtable slot 16
+ov063	0x02115f48	func_ov063_02115f48	_ZN7daTrs_cD0Ev	vtable slot 17
 ov063	0x02115fc4	func_ov063_02115fc4	_ZN7BooCageD1Ev	vtable slot 16
 ov063	0x0211600c	func_ov063_0211600c	_ZN7BooCageD0Ev	vtable slot 17
 ov063	0x02116068	func_ov063_02116068	_ZN10BigBooIconD1Ev	vtable slot 16
 ov063	0x0211608c	func_ov063_0211608c	_ZN10BigBooIconD0Ev	vtable slot 17
 ov063	0x0211ae1c	func_ov063_0211ae1c	_ZN7BooCage16CleanupResourcesEv	vtable slot 3
-ov063	0x0211ae40	func_ov063_0211ae40	_ZN3Boo16CleanupResourcesEv	vtable slot 3
-ov063	0x0211af6c	func_ov063_0211af6c	_ZN3Boo16OnPendingDestroyEv	vtable slot 12
-ov063	0x0211af70	func_ov063_0211af70	_ZN3Boo6RenderEv	vtable slot 9
+ov063	0x0211ae40	func_ov063_0211ae40	_ZN7daTrs_c16CleanupResourcesEv	vtable slot 3
+ov063	0x0211af6c	func_ov063_0211af6c	_ZN7daTrs_c16OnPendingDestroyEv	vtable slot 12
+ov063	0x0211af70	func_ov063_0211af70	_ZN7daTrs_c6RenderEv	vtable slot 9
 ov063	0x0211b078	func_ov063_0211b078	_ZN7BooCage6RenderEv	vtable slot 9
-ov063	0x0211b0a4	func_ov063_0211b0a4	_ZN3Boo8BehaviorEv	vtable slot 6
+ov063	0x0211b0a4	func_ov063_0211b0a4	_ZN7daTrs_c8BehaviorEv	vtable slot 6
 ov063	0x0211b888	func_ov063_0211b888	_ZN7BooCage8BehaviorEv	vtable slot 6
-ov063	0x0211b9bc	func_ov063_0211b9bc	_ZN3Boo13InitResourcesEv	vtable slot 0
+ov063	0x0211b9bc	func_ov063_0211b9bc	_ZN7daTrs_c13InitResourcesEv	vtable slot 0
 ov063	0x0211c35c	func_ov063_0211c35c	_ZN7BooCage13InitResourcesEv	vtable slot 0
 ov063	0x0211c444	func_ov063_0211c444	_ZN10BigBooIcon13InitResourcesEv	vtable slot 0
 ov063	0x0211c4a0	func_ov063_0211c4a0	BigBooIcon_Spawn	spawnfunc
@@ -1278,7 +1278,7 @@ ov063	0x0211e770	data_ov063_0211e770	Boo_SpawnInfo	spawninfo
 ov063	0x0211e78c	data_ov063_0211e78c	BigBoo_SpawnInfo	spawninfo
 ov063	0x0211e7a8	data_ov063_0211e7a8	BooCage_SpawnInfo	spawninfo
 ov063	0x0211e7c4	data_ov063_0211e7c4	BigBooIcon_SpawnInfo	spawninfo
-ov063	0x0211e828	data_ov063_0211e828	_ZTV3Boo	vtable alloc=0x5e0
+ov063	0x0211e828	data_ov063_0211e828	_ZTV7daTrs_c	vtable alloc=0x5e0
 ov063	0x0211e8ac	data_ov063_0211e8ac	_ZTV10BigBooIcon	vtable alloc=0x380
 ov063	0x0211e930	data_ov063_0211e930	_ZTV7BooCage	vtable alloc=0x380
 ov063	0x0211ea10	data_ov063_0211ea10	MansionSteps_SpawnInfo	spawninfo
@@ -1402,15 +1402,15 @@ ov065	0x02117d80	func_ov065_02117d80	_ZN5Swoop13InitResourcesEv	vtable slot 0
 ov065	0x02117ee8	func_ov065_02117ee8	Swoop_Spawn	spawnfunc
 ov065	0x02117f40	func_ov065_02117f40	_ZN6DorrieD1Ev	vtable slot 16
 ov065	0x02117fa8	func_ov065_02117fa8	_ZN6DorrieD0Ev	vtable slot 17
-ov065	0x02118024	func_ov065_02118024	_ZN9DorrieCapD1Ev	vtable slot 16
-ov065	0x02118064	func_ov065_02118064	_ZN9DorrieCapD0Ev	vtable slot 17
+ov065	0x02118024	func_ov065_02118024	_ZN12daDossyCap_cD1Ev	vtable slot 16
+ov065	0x02118064	func_ov065_02118064	_ZN12daDossyCap_cD0Ev	vtable slot 17
 ov065	0x02118d04	func_ov065_02118d04	_ZN6Dorrie16CleanupResourcesEv	vtable slot 3
 ov065	0x02118d80	func_ov065_02118d80	_ZN6Dorrie6RenderEv	vtable slot 9
-ov065	0x02118da8	func_ov065_02118da8	_ZN9DorrieCap6RenderEv	vtable slot 9
+ov065	0x02118da8	func_ov065_02118da8	_ZN12daDossyCap_c6RenderEv	vtable slot 9
 ov065	0x02118df0	func_ov065_02118df0	_ZN6Dorrie8BehaviorEv	vtable slot 6
-ov065	0x021190a8	func_ov065_021190a8	_ZN9DorrieCap8BehaviorEv	vtable slot 6
+ov065	0x021190a8	func_ov065_021190a8	_ZN12daDossyCap_c8BehaviorEv	vtable slot 6
 ov065	0x02119228	func_ov065_02119228	_ZN6Dorrie13InitResourcesEv	vtable slot 0
-ov065	0x021194e8	func_ov065_021194e8	_ZN9DorrieCap13InitResourcesEv	vtable slot 0
+ov065	0x021194e8	func_ov065_021194e8	_ZN12daDossyCap_c13InitResourcesEv	vtable slot 0
 ov065	0x021195ec	func_ov065_021195ec	DorrieCap_Spawn	spawnfunc
 ov065	0x02119634	func_ov065_02119634	Dorrie_Spawn	spawnfunc
 ov065	0x021196d8	func_ov065_021196d8	_ZN15TtcRotatingCubeD1Ev	vtable slot 16
@@ -1459,7 +1459,7 @@ ov065	0x0211cc7c	data_ov065_0211cc7c	Swoop_SpawnInfo	spawninfo
 ov065	0x0211cca0	data_ov065_0211cca0	_ZTV5Swoop	vtable alloc=0x440
 ov065	0x0211cd84	data_ov065_0211cd84	Dorrie_SpawnInfo	spawninfo
 ov065	0x0211cda0	data_ov065_0211cda0	DorrieCap_SpawnInfo	spawninfo
-ov065	0x0211cdc4	data_ov065_0211cdc4	_ZTV9DorrieCap	vtable alloc=0x184
+ov065	0x0211cdc4	data_ov065_0211cdc4	_ZTV12daDossyCap_c	vtable alloc=0x184
 ov065	0x0211ce48	data_ov065_0211ce48	_ZTV6Dorrie	vtable alloc=?
 ov065	0x0211cfe8	data_ov065_0211cfe8	TtcRotatingCube_SpawnInfo	spawninfo
 ov065	0x0211d004	data_ov065_0211d004	TtcRotatingPrism_SpawnInfo	spawninfo
@@ -1502,30 +1502,30 @@ ov070	0x02120e24	func_ov070_02120e24	_ZN3Amp6RenderEv	vtable slot 9
 ov070	0x02120e8c	func_ov070_02120e8c	_ZN3Amp8BehaviorEv	vtable slot 6
 ov070	0x02120eec	func_ov070_02120eec	_ZN3Amp13InitResourcesEv	vtable slot 0
 ov070	0x021210ac	func_ov070_021210ac	Amp_Spawn	spawnfunc
-ov070	0x02121118	func_ov070_02121118	_ZN10FlameChompD1Ev	vtable slot 16
-ov070	0x02121160	func_ov070_02121160	_ZN10FlameChompD0Ev	vtable slot 17
-ov070	0x0212189c	func_ov070_0212189c	_ZN10FlameChomp16CleanupResourcesEv	vtable slot 3
-ov070	0x021218c0	func_ov070_021218c0	_ZN10FlameChomp16OnPendingDestroyEv	vtable slot 12
-ov070	0x021218c4	func_ov070_021218c4	_ZN10FlameChomp6RenderEv	vtable slot 9
-ov070	0x021218f4	func_ov070_021218f4	_ZN10FlameChomp8BehaviorEv	vtable slot 6
-ov070	0x02121914	func_ov070_02121914	_ZN10FlameChomp13InitResourcesEv	vtable slot 0
+ov070	0x02121118	func_ov070_02121118	_ZN8daKrpa_cD1Ev	vtable slot 16
+ov070	0x02121160	func_ov070_02121160	_ZN8daKrpa_cD0Ev	vtable slot 17
+ov070	0x0212189c	func_ov070_0212189c	_ZN8daKrpa_c16CleanupResourcesEv	vtable slot 3
+ov070	0x021218c0	func_ov070_021218c0	_ZN8daKrpa_c16OnPendingDestroyEv	vtable slot 12
+ov070	0x021218c4	func_ov070_021218c4	_ZN8daKrpa_c6RenderEv	vtable slot 9
+ov070	0x021218f4	func_ov070_021218f4	_ZN8daKrpa_c8BehaviorEv	vtable slot 6
+ov070	0x02121914	func_ov070_02121914	_ZN8daKrpa_c13InitResourcesEv	vtable slot 0
 ov070	0x02121af8	func_ov070_02121af8	FlameChomp_Spawn	spawnfunc
-ov070	0x02121b48	func_ov070_02121b48	_ZN14FlameChompFireD1Ev	vtable slot 16
-ov070	0x02121b88	func_ov070_02121b88	_ZN14FlameChompFireD0Ev	vtable slot 17
-ov070	0x02122060	func_ov070_02122060	_ZN14FlameChompFire16CleanupResourcesEv	vtable slot 3
-ov070	0x02122068	func_ov070_02122068	_ZN14FlameChompFire16OnPendingDestroyEv	vtable slot 12
-ov070	0x0212206c	func_ov070_0212206c	_ZN14FlameChompFire6RenderEv	vtable slot 9
-ov070	0x02122104	func_ov070_02122104	_ZN14FlameChompFire8BehaviorEv	vtable slot 6
-ov070	0x02122124	func_ov070_02122124	_ZN14FlameChompFire13InitResourcesEv	vtable slot 0
+ov070	0x02121b48	func_ov070_02121b48	_ZN8daKpFr_cD1Ev	vtable slot 16
+ov070	0x02121b88	func_ov070_02121b88	_ZN8daKpFr_cD0Ev	vtable slot 17
+ov070	0x02122060	func_ov070_02122060	_ZN8daKpFr_c16CleanupResourcesEv	vtable slot 3
+ov070	0x02122068	func_ov070_02122068	_ZN8daKpFr_c16OnPendingDestroyEv	vtable slot 12
+ov070	0x0212206c	func_ov070_0212206c	_ZN8daKpFr_c6RenderEv	vtable slot 9
+ov070	0x02122104	func_ov070_02122104	_ZN8daKpFr_c8BehaviorEv	vtable slot 6
+ov070	0x02122124	func_ov070_02122124	_ZN8daKpFr_c13InitResourcesEv	vtable slot 0
 ov070	0x021221fc	func_ov070_021221fc	FlameChompFire_Spawn	spawnfunc
 ov070	0x02123144	data_ov070_02123144	FlyGuy_SpawnInfo	spawninfo
 ov070	0x02123168	data_ov070_02123168	_ZTV6FlyGuy	vtable alloc=0x3e8
 ov070	0x02123254	data_ov070_02123254	Amp_SpawnInfo	spawninfo
 ov070	0x02123278	data_ov070_02123278	_ZTV3Amp	vtable alloc=?
 ov070	0x0212334c	data_ov070_0212334c	FlameChomp_SpawnInfo	spawninfo
-ov070	0x02123370	data_ov070_02123370	_ZTV10FlameChomp	vtable alloc=0x3b0
+ov070	0x02123370	data_ov070_02123370	_ZTV8daKrpa_c	vtable alloc=0x3b0
 ov070	0x02123424	data_ov070_02123424	FlameChompFire_SpawnInfo	spawninfo
-ov070	0x02123448	data_ov070_02123448	_ZTV14FlameChompFire	vtable alloc=0x330
+ov070	0x02123448	data_ov070_02123448	_ZTV8daKpFr_c	vtable alloc=0x330
 ov071	0x0211f000	func_ov071_0211f000	_ZN10ScuttlebugD1Ev	vtable slot 16
 ov071	0x0211f048	func_ov071_0211f048	_ZN10ScuttlebugD0Ev	vtable slot 17
 ov071	0x02120308	func_ov071_02120308	_ZN10Scuttlebug16CleanupResourcesEv	vtable slot 3
@@ -1543,13 +1543,13 @@ ov071	0x021216ec	func_ov071_021216ec	_ZN3MrI8BehaviorEv	vtable slot 6
 ov071	0x02121734	func_ov071_02121734	_ZN3MrI13InitResourcesEv	vtable slot 0
 ov071	0x021219cc	func_ov071_021219cc	BigMrI_Spawn	spawnfunc
 ov071	0x02121a1c	func_ov071_02121a1c	MrI_Spawn	spawnfunc
-ov071	0x02121a6c	func_ov071_02121a6c	_ZN14MrI_ProjectileD1Ev	vtable slot 16
-ov071	0x02121aac	func_ov071_02121aac	_ZN14MrI_ProjectileD0Ev	vtable slot 17
-ov071	0x02121d08	func_ov071_02121d08	_ZN14MrI_Projectile16CleanupResourcesEv	vtable slot 3
-ov071	0x02121d10	func_ov071_02121d10	_ZN14MrI_Projectile16OnPendingDestroyEv	vtable slot 12
-ov071	0x02121d14	func_ov071_02121d14	_ZN14MrI_Projectile6RenderEv	vtable slot 9
-ov071	0x02121d80	func_ov071_02121d80	_ZN14MrI_Projectile8BehaviorEv	vtable slot 6
-ov071	0x02121eb4	func_ov071_02121eb4	_ZN14MrI_Projectile13InitResourcesEv	vtable slot 0
+ov071	0x02121a6c	func_ov071_02121a6c	_ZN8daEyBm_cD1Ev	vtable slot 16
+ov071	0x02121aac	func_ov071_02121aac	_ZN8daEyBm_cD0Ev	vtable slot 17
+ov071	0x02121d08	func_ov071_02121d08	_ZN8daEyBm_c16CleanupResourcesEv	vtable slot 3
+ov071	0x02121d10	func_ov071_02121d10	_ZN8daEyBm_c16OnPendingDestroyEv	vtable slot 12
+ov071	0x02121d14	func_ov071_02121d14	_ZN8daEyBm_c6RenderEv	vtable slot 9
+ov071	0x02121d80	func_ov071_02121d80	_ZN8daEyBm_c8BehaviorEv	vtable slot 6
+ov071	0x02121eb4	func_ov071_02121eb4	_ZN8daEyBm_c13InitResourcesEv	vtable slot 0
 ov071	0x02121f9c	func_ov071_02121f9c	MrI_Projectile_Spawn	spawnfunc
 ov071	0x02121fe4	func_ov071_02121fe4	_ZN6CoffinD1Ev	vtable slot 16
 ov071	0x02122028	func_ov071_02122028	_ZN6CoffinD0Ev	vtable slot 17
@@ -1564,7 +1564,7 @@ ov071	0x02122cf0	data_ov071_02122cf0	MrI_SpawnInfo	spawninfo
 ov071	0x02122d0c	data_ov071_02122d0c	BigMrI_SpawnInfo	spawninfo
 ov071	0x02122d30	data_ov071_02122d30	_ZTV3MrI	vtable alloc=0x218
 ov071	0x02122dc4	data_ov071_02122dc4	MrI_Projectile_SpawnInfo	spawninfo
-ov071	0x02122de8	data_ov071_02122de8	_ZTV14MrI_Projectile	vtable alloc=0x334
+ov071	0x02122de8	data_ov071_02122de8	_ZTV8daEyBm_c	vtable alloc=0x334
 ov071	0x02122eb0	data_ov071_02122eb0	Coffin_SpawnInfo	spawninfo
 ov071	0x02122efc	data_ov071_02122efc	_ZTV6Coffin	vtable alloc=0x32c
 ov072	0x0211f000	func_ov072_0211f000	_ZN11SnowmanBodyD1Ev	vtable slot 16
@@ -1791,13 +1791,13 @@ ov081	0x02128be0	data_ov081_02128be0	Moneybag_SpawnInfo	spawninfo
 ov081	0x02128c04	data_ov081_02128c04	_ZTV8Moneybag	vtable alloc=0x3f4
 ov081	0x02128ca0	data_ov081_02128ca0	IceBlock_SpawnInfo	spawninfo
 ov081	0x02128cc4	data_ov081_02128cc4	_ZTV8IceBlock	vtable alloc=0x368
-ov084	0x02129020	func_ov084_02129020	_ZN6GoombaD1Ev	vtable slot 16
-ov084	0x02129070	func_ov084_02129070	_ZN6GoombaD0Ev	vtable slot 17
-ov084	0x0212b510	func_ov084_0212b510	_ZN6Goomba16CleanupResourcesEv	vtable slot 3
-ov084	0x0212b5b8	func_ov084_0212b5b8	_ZN6Goomba16OnPendingDestroyEv	vtable slot 12
-ov084	0x0212b5bc	func_ov084_0212b5bc	_ZN6Goomba6RenderEv	vtable slot 9
-ov084	0x0212b6ec	func_ov084_0212b6ec	_ZN6Goomba8BehaviorEv	vtable slot 6
-ov084	0x0212bc30	func_ov084_0212bc30	_ZN6Goomba13InitResourcesEv	vtable slot 0
+ov084	0x02129020	func_ov084_02129020	_ZN7daKrb_cD1Ev	vtable slot 16
+ov084	0x02129070	func_ov084_02129070	_ZN7daKrb_cD0Ev	vtable slot 17
+ov084	0x0212b510	func_ov084_0212b510	_ZN7daKrb_c16CleanupResourcesEv	vtable slot 3
+ov084	0x0212b5b8	func_ov084_0212b5b8	_ZN7daKrb_c16OnPendingDestroyEv	vtable slot 12
+ov084	0x0212b5bc	func_ov084_0212b5bc	_ZN7daKrb_c6RenderEv	vtable slot 9
+ov084	0x0212b6ec	func_ov084_0212b6ec	_ZN7daKrb_c8BehaviorEv	vtable slot 6
+ov084	0x0212bc30	func_ov084_0212bc30	_ZN7daKrb_c13InitResourcesEv	vtable slot 0
 ov084	0x0212bff8	func_ov084_0212bff8	GoombaLarge_Spawn	spawnfunc
 ov084	0x0212c054	func_ov084_0212c054	GoombaSmall_Spawn	spawnfunc
 ov084	0x0212c0b0	func_ov084_0212c0b0	Goomba_Spawn	spawnfunc
@@ -1828,7 +1828,7 @@ ov084	0x02130110	func_ov084_02130110	PiranhaPlant_Spawn	spawnfunc
 ov084	0x021308ec	data_ov084_021308ec	Goomba_SpawnInfo	spawninfo
 ov084	0x02130908	data_ov084_02130908	GoombaSmall_SpawnInfo	spawninfo
 ov084	0x02130924	data_ov084_02130924	GoombaLarge_SpawnInfo	spawninfo
-ov084	0x02130948	data_ov084_02130948	_ZTV6Goomba	vtable alloc=?
+ov084	0x02130948	data_ov084_02130948	_ZTV7daKrb_c	vtable alloc=?
 ov084	0x02130a14	data_ov084_02130a14	BobOmbBuddy_SpawnInfo	spawninfo
 ov084	0x02130a38	data_ov084_02130a38	_ZTV11BobOmbBuddy	vtable alloc=0x1f0
 ov084	0x02130acc	data_ov084_02130acc	FirePiranhaPlant_SpawnInfo	spawninfo

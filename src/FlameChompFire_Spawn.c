@@ -7,13 +7,13 @@
 #include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV14FlameChompFire */
+/* resolved: VT0 = _ZTV8daKpFr_c */
 int *FlameChompFire_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(816);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV14FlameChompFire;
+        p[0] = (int)_ZTV8daKpFr_c;
         _ZN11ShadowModelC1Ev((char *)p + 0xd4);
         _ZN7dCcAc_cC1Ev((char *)p + 0xfc);
         _ZN10dBgCh_ActrC1Ev((char *)p + 0x130);

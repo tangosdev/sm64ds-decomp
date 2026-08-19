@@ -16,7 +16,7 @@
  * below reads only w0 and w1, which is the second, independent confirmation of
  * the width.
  *
- * MeshCollider::GetSurfaceInfo hands tri->attribute to that lookup UNMASKED --
+ * dBgW_Kc::GetSurfaceInfo hands tri->attribute to that lookup UNMASKED --
  * in this game the KCL attribute word IS the CLPS index.
  *
  * BIT LAYOUT, decoded from the matched accessors rather than guessed. Each of
@@ -27,7 +27,7 @@
  *   (w0 >> 6)  & 0x3f    func_02037e68
  *   (w0 >> 12) & 0x7     func_02037e58   CLPS type
  *   (w0 >> 15) & 0xf     func_02037e48
- *   (w0 >> 19) & 0x1f    func_02037e38   SURFACE TYPE -- BgCh::ShouldPassThrough
+ *   (w0 >> 19) & 0x1f    func_02037e38   SURFACE TYPE -- dBgCh::ShouldPassThrough
  *                                        Impl special-cases 0x11 and 0x14
  *   w0 & 0x01000000      func_02037e2c
  *   w0 & 0x02000000      func_02037e20
@@ -47,7 +47,7 @@ struct CLPS {
 
 typedef char CLPS_size_must_be_0x8[sizeof(struct CLPS) == 0x8 ? 1 : -1];
 
-/* The block a level or actor hands to MeshCollider::SetFile: an 8-byte header
+/* The block a level or actor hands to dBgW_Kc::SetFile: an 8-byte header
  * whose halfword at +4 is the entry stride, then N entries. Kept opaque because
  * the first four bytes are read by nothing in src/ -- func_020381cc validates
  * +4 and indexes from +8, and no other function touches the header. */

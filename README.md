@@ -18,8 +18,8 @@ New here? Start with **[CONTRIBUTING.md](CONTRIBUTING.md)**, coordinate work in
 
 <!-- progress:start -->
 ```
-Functions  ██████████████████████████████  98.5%   11,232 / 11,401
-Code size  ████████████████████████████░░  94.2%   2,107,704 / 2,238,108 bytes
+Functions  ██████████████████████████████  98.5%   11,233 / 11,401
+Code size  ████████████████████████████░░  94.3%   2,109,724 / 2,238,108 bytes
 ```
 <!-- progress:end -->
 
@@ -41,8 +41,8 @@ here, and they move independently.
 
 <!-- tiers:start -->
 ```
-MATCHED    ██████████████████████████████  98.5%   11,232 / 11,401 functions
-CONVERTED  █████░░░░░░░░░░░░░░░░░░░░░░░░░  15.9%   1,794 / 11,301 files
+MATCHED    ██████████████████████████████  98.5%   11,233 / 11,401 functions
+CONVERTED  █████░░░░░░░░░░░░░░░░░░░░░░░░░  15.9%   1,795 / 11,302 files
 LINKED     ████████████████░░░░░░░░░░░░░░  51.8%   5,831 / 11,250 matched TUs
 ```
 <!-- tiers:end -->

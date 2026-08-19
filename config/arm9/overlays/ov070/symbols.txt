@@ -44,9 +44,9 @@ _ZN3Amp6RenderEv kind:function(arm,size=0x68) addr:0x02120e24
 _ZN3Amp8BehaviorEv kind:function(arm,size=0x60) addr:0x02120e8c
 _ZN3Amp13InitResourcesEv kind:function(arm,size=0x1c0) addr:0x02120eec
 Amp_Spawn kind:function(arm,size=0x6c) addr:0x021210ac
-_ZN10FlameChompD1Ev kind:function(arm,size=0x48) addr:0x02121118
-_ZN10FlameChompD0Ev kind:function(arm,size=0x5c) addr:0x02121160
-_ZN10FlameChomp13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x021211bc
+_ZN8daKrpa_cD1Ev kind:function(arm,size=0x48) addr:0x02121118
+_ZN8daKrpa_cD0Ev kind:function(arm,size=0x5c) addr:0x02121160
+_ZN8daKrpa_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x021211bc
 func_ov070_021211c4 kind:function(arm,size=0xd4) addr:0x021211c4
 func_ov070_02121298 kind:function(arm,size=0x78) addr:0x02121298
 func_ov070_02121310 kind:function(arm,size=0xbc) addr:0x02121310
@@ -61,17 +61,17 @@ func_ov070_021217ac kind:function(arm,size=0x60) addr:0x021217ac
 func_ov070_0212180c kind:function(arm,size=0x3c) addr:0x0212180c
 func_ov070_02121848 kind:function(arm,size=0x38) addr:0x02121848
 func_ov070_02121880 kind:function(arm,size=0x1c) addr:0x02121880
-_ZN10FlameChomp16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x0212189c
-_ZN10FlameChomp16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021218c0
-_ZN10FlameChomp6RenderEv kind:function(arm,size=0x30) addr:0x021218c4
-_ZN10FlameChomp8BehaviorEv kind:function(arm,size=0x20) addr:0x021218f4
-_ZN10FlameChomp13InitResourcesEv kind:function(arm,size=0x150) addr:0x02121914
+_ZN8daKrpa_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x0212189c
+_ZN8daKrpa_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x021218c0
+_ZN8daKrpa_c6RenderEv kind:function(arm,size=0x30) addr:0x021218c4
+_ZN8daKrpa_c8BehaviorEv kind:function(arm,size=0x20) addr:0x021218f4
+_ZN8daKrpa_c13InitResourcesEv kind:function(arm,size=0x150) addr:0x02121914
 func_ov070_02121a64 kind:function(arm,size=0x7c) addr:0x02121a64
 func_ov070_02121ae0 kind:function(arm,size=0x18) addr:0x02121ae0
 FlameChomp_Spawn kind:function(arm,size=0x50) addr:0x02121af8
-_ZN14FlameChompFireD1Ev kind:function(arm,size=0x40) addr:0x02121b48
-_ZN14FlameChompFireD0Ev kind:function(arm,size=0x54) addr:0x02121b88
-_ZN14FlameChompFire13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02121bdc
+_ZN8daKpFr_cD1Ev kind:function(arm,size=0x40) addr:0x02121b48
+_ZN8daKpFr_cD0Ev kind:function(arm,size=0x54) addr:0x02121b88
+_ZN8daKpFr_c13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x02121bdc
 func_ov070_02121be4 kind:function(arm,size=0xa8) addr:0x02121be4
 func_ov070_02121c8c kind:function(arm,size=0x30) addr:0x02121c8c
 func_ov070_02121cbc kind:function(arm,size=0x94) addr:0x02121cbc
@@ -84,11 +84,11 @@ func_ov070_02121fb0 kind:function(arm,size=0x20) addr:0x02121fb0
 func_ov070_02121fd0 kind:function(arm,size=0x3c) addr:0x02121fd0
 func_ov070_0212200c kind:function(arm,size=0x38) addr:0x0212200c
 func_ov070_02122044 kind:function(arm,size=0x1c) addr:0x02122044
-_ZN14FlameChompFire16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x02122060
-_ZN14FlameChompFire16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02122068
-_ZN14FlameChompFire6RenderEv kind:function(arm,size=0x98) addr:0x0212206c
-_ZN14FlameChompFire8BehaviorEv kind:function(arm,size=0x20) addr:0x02122104
-_ZN14FlameChompFire13InitResourcesEv kind:function(arm,size=0xd8) addr:0x02122124
+_ZN8daKpFr_c16CleanupResourcesEv kind:function(arm,size=0x8) addr:0x02122060
+_ZN8daKpFr_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x02122068
+_ZN8daKpFr_c6RenderEv kind:function(arm,size=0x98) addr:0x0212206c
+_ZN8daKpFr_c8BehaviorEv kind:function(arm,size=0x20) addr:0x02122104
+_ZN8daKpFr_c13InitResourcesEv kind:function(arm,size=0xd8) addr:0x02122124
 FlameChompFire_Spawn kind:function(arm,size=0x48) addr:0x021221fc
 data_ov070_02122244 kind:data(any) addr:0x02122244
 data_ov070_02122248 kind:data(any) addr:0x02122248
@@ -160,7 +160,6 @@ data_ov070_0212332c kind:data(any) addr:0x0212332c
 _ZTS8daKrpa_c kind:data(any) addr:0x02123334
 _ZTI8daKrpa_c kind:data(any) addr:0x02123340
 FlameChomp_SpawnInfo kind:data(any) addr:0x0212334c ambiguous
-_ZTV10FlameChomp kind:data(any) addr:0x02123370
 _ZTV8daKrpa_c kind:data(any) addr:0x02123370
 data_ov070_021233ec kind:data(any) addr:0x021233ec
 data_ov070_021233f4 kind:data(any) addr:0x021233f4
@@ -169,7 +168,6 @@ data_ov070_02123404 kind:data(any) addr:0x02123404
 _ZTS8daKpFr_c kind:data(any) addr:0x0212340c
 _ZTI8daKpFr_c kind:data(any) addr:0x02123418
 FlameChompFire_SpawnInfo kind:data(any) addr:0x02123424 ambiguous
-_ZTV14FlameChompFire kind:data(any) addr:0x02123448
 _ZTV8daKpFr_c kind:data(any) addr:0x02123448
 data_ov070_021234c4 kind:data(any) addr:0x021234c4
 data_ov070_021234dc kind:data(any) addr:0x021234dc

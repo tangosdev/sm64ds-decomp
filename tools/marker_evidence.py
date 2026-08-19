@@ -388,7 +388,7 @@ def header_facts(root):
 def derived_map(root, marker_classes):
     """{class -> the marker classes whose storage its methods also address}.
 
-    Single inheritance places every base at offset 0, so `Goomba`'s `this + 0xe0` is
+    Single inheritance places every base at offset 0, so `daKrb_c`'s `this + 0xe0` is
     the SAME storage as `Enemy`'s `unk_0e0`.  A base class whose own methods never
     touch a field gives a per-class scan nothing to see -- the hierarchy pass records
     that blindness for widths (plan section 3, pass 2) and it applies here identically.

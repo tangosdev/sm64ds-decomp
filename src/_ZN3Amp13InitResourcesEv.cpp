@@ -62,7 +62,7 @@ int Amp::InitResources()
     mTerminalVelocity = 0;
     func_ov070_02120da8(this, 1);
 
-    *(M48 *)unk_3d4 = *(M48 *)&data_02082128;
+    *(M48 *)&mMat4x3 = *(M48 *)&data_02082128;
 
     func_ov070_02120724(this);
     return 1;

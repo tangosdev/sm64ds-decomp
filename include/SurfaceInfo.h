@@ -16,7 +16,7 @@
  *     o->v.x = v->x; o->v.y = v->y; o->v.z = v->z;  -> 0x08..0x13  the normal
  *
  * The reader is SurfaceInfo::CopyNormalTo (0x02037dcc), which copies the
- * Vector3 at 0x08. MeshCollider::GetSurfaceInfo (ITCM 0x01ffd920) is what fills
+ * Vector3 at 0x08. dBgW_Kc::GetSurfaceInfo (ITCM 0x01ffd920) is what fills
  * one: a real virtual call to GetNormal, then the CLPS lookup, then this.
  *
  * WHY THIS HEADER EXISTS. Before it, seven src/ files each declared their own

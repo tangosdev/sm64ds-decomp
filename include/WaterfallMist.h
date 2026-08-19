@@ -12,6 +12,10 @@ struct WaterfallMist : dActor_c {
     u8    pad_0d0[0x4];
     u16   mParticleID;       /* 0x0d4 */
     u8    pad_0d6[0x2];
+    /* Stays void*: the only use (Behavior) stores Particle::System::New's
+       result and passes it straight back as a u32 handle on the next call.
+       Nothing ever dereferences it, so no pointee type is evidenced -- naming
+       one would be invention, not recovery. */
     void *mParticle;         /* 0x0d8 */
 
     virtual ~WaterfallMist();

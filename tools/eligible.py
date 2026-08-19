@@ -103,7 +103,28 @@ def defined_symbols():
 def classify(job):
     rel, name, addr, size, sec, known, version, isolate = job
     src = REPO / rel
-    obj = BUILD / pathlib.Path(rel).with_suffix(".o")
+    # One object PER JOB, in this tool's own scratch root, for two reasons that both
+    # bit in practice:
+    #   1. A delinks entry can span several functions (src/func_01ff97d8.c covers five),
+    #      so candidates() legitimately yields several jobs for ONE source file. Keyed
+    #      by file alone they all compiled to the same -o path concurrently: mwccarm
+    #      invocations failed on the locked/half-written file and objisolate mutated an
+    #      object another job was still reading. That made the verdict depend on thread
+    #      interleaving -- func_01ff97d8 flapped in and out of the pass list between
+    #      back-to-back runs on an identical tree.
+    #   2. build/<rel>.o is ALSO where rombuild.compile_one puts the real build's
+    #      objects, so the classifier was clobbering the build tree it shares -- the
+    #      "concurrent builds invent link errors" hazard. A separate root removes this
+    #      tool from that collision surface entirely.
+    # The suffix is the job's own symbol name (mangled identifiers are filesystem-safe),
+    # so the path is unique per (file, function) and the verdict is the same one the
+    # serialized run always produced. Appended ONLY when it differs from the file stem:
+    # almost every file is named after its one symbol, and doubling a 97-character
+    # mangled name pushed the path past Windows' 260-character limit -- mwccarm's -o
+    # open failed and a real eligible function read as "compile failed".
+    p = pathlib.Path(rel)
+    fname = f"{p.stem}.o" if p.stem == name else f"{p.stem}.{name}.o"
+    obj = BUILD / "eligible-scratch" / p.parent / fname
     obj.parent.mkdir(parents=True, exist_ok=True)
     flags = CFLAGS
     try:

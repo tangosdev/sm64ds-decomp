@@ -188,15 +188,15 @@ src/Amp_Spawn.c:
     complete
     .text start:0x021210ac end:0x02121118
 
-src/_ZN10FlameChompD1Ev.cpp:
+src/_ZN8daKrpa_cD1Ev.cpp:
     complete
     .text start:0x02121118 end:0x02121160
 
-src/_ZN10FlameChompD0Ev.cpp:
+src/_ZN8daKrpa_cD0Ev.cpp:
     complete
     .text start:0x02121160 end:0x021211bc
 
-src/_ZN10FlameChomp13OnYoshiTryEatEv.cpp:
+src/_ZN8daKrpa_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021211bc end:0x021211c4
 
@@ -256,23 +256,23 @@ src/func_ov070_02121880.c:
     complete
     .text start:0x02121880 end:0x0212189c
 
-src/_ZN10FlameChomp16CleanupResourcesEv.cpp:
+src/_ZN8daKrpa_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212189c end:0x021218c0
 
-src/_ZN10FlameChomp16OnPendingDestroyEv.cpp:
+src/_ZN8daKrpa_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021218c0 end:0x021218c4
 
-src/_ZN10FlameChomp6RenderEv.cpp:
+src/_ZN8daKrpa_c6RenderEv.cpp:
     complete
     .text start:0x021218c4 end:0x021218f4
 
-src/_ZN10FlameChomp8BehaviorEv.cpp:
+src/_ZN8daKrpa_c8BehaviorEv.cpp:
     complete
     .text start:0x021218f4 end:0x02121914
 
-src/_ZN10FlameChomp13InitResourcesEv.cpp:
+src/_ZN8daKrpa_c13InitResourcesEv.cpp:
     complete
     .text start:0x02121914 end:0x02121a64
 
@@ -288,15 +288,15 @@ src/FlameChomp_Spawn.c:
     complete
     .text start:0x02121af8 end:0x02121b48
 
-src/_ZN14FlameChompFireD1Ev.cpp:
+src/_ZN8daKpFr_cD1Ev.cpp:
     complete
     .text start:0x02121b48 end:0x02121b88
 
-src/_ZN14FlameChompFireD0Ev.cpp:
+src/_ZN8daKpFr_cD0Ev.cpp:
     complete
     .text start:0x02121b88 end:0x02121bdc
 
-src/_ZN14FlameChompFire13OnYoshiTryEatEv.cpp:
+src/_ZN8daKpFr_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02121bdc end:0x02121be4
 
@@ -348,23 +348,23 @@ src/func_ov070_02122044.c:
     complete
     .text start:0x02122044 end:0x02122060
 
-src/_ZN14FlameChompFire16CleanupResourcesEv.cpp:
+src/_ZN8daKpFr_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02122060 end:0x02122068
 
-src/_ZN14FlameChompFire16OnPendingDestroyEv.cpp:
+src/_ZN8daKpFr_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02122068 end:0x0212206c
 
-src/_ZN14FlameChompFire6RenderEv.cpp:
+src/_ZN8daKpFr_c6RenderEv.cpp:
     complete
     .text start:0x0212206c end:0x02122104
 
-src/_ZN14FlameChompFire8BehaviorEv.cpp:
+src/_ZN8daKpFr_c8BehaviorEv.cpp:
     complete
     .text start:0x02122104 end:0x02122124
 
-src/_ZN14FlameChompFire13InitResourcesEv.cpp:
+src/_ZN8daKpFr_c13InitResourcesEv.cpp:
     complete
     .text start:0x02122124 end:0x021221fc
 
