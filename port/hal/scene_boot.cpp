@@ -2033,6 +2033,10 @@ extern "C" {
 extern unsigned char MgShuffleShell_SpawnInfo[];
 void *port_mg_curling_spawn(void);
 void port_scene_fill_curling(void);
+/* run mg5 lane LUI: dScMgLuigi_c, the "Wanted!" minigame. */
+extern unsigned char MgWanted_SpawnInfo[];
+void *port_mg_luigi_spawn(void);
+void port_scene_fill_luigi(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2045,6 +2049,19 @@ static const PortSceneClass port_scene_classes[] = {
        this table. */
     {374, "SCENE_MG_CURLING", MgShuffleShell_SpawnInfo, port_mg_curling_spawn,
      port_scene_fill_curling, 0},
+    /* run mg5 lane LUI. 366 is 0x16e; the spawn symbol is MgWanted and the
+       ROM's own RTTI at 0x0213ce60 reads "12dScMgLuigi_c", so the row is named
+       for the class the way SCENE_MG_CURLING is. APPENDED AFTER CURLING'S ROW
+       on purpose: port_scene_registry_install walks this table in order and
+       port_scene_mg_overlay_load runs the thirty-five constructors once per
+       process at the tail of the FIRST minigame row's fill, so a row placed
+       before curling's would have its fill run before those constructors read
+       the mounted .data. port/mg_fanout_costs.txt section 11 is the
+       derivation. Nothing in this class's fill writes outside its own 36-slot
+       table -- the width is checked three ways in port/slice_lui.txt -- so the
+       ordering is a rule this lane obeys rather than a hazard it relies on. */
+    {366, "SCENE_MG_LUIGI", MgWanted_SpawnInfo, port_mg_luigi_spawn,
+     port_scene_fill_luigi, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

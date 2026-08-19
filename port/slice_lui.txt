@@ -1,0 +1,253 @@
+# Gate LUI: dScMgLuigi_c, actor id 0x16e = scene 366, the "Wanted!" minigame.
+# Run mg5, lane LUI.
+#
+# ---- 1. THE CLASS, RE-DERIVED FROM THE ROM --------------------------------
+#
+# The brief said "do not be confused by the class name" and the ROM agrees with
+# it: 0x16e's spawn symbol is MgWanted_Spawn and the ROM's own RTTI string at
+# 0x0213ce60 reads "12dScMgLuigi_c". Both names are right and the class name is
+# the ROM's, exactly as port/mg_fanout_costs.txt section 2 records for curling.
+#
+# Everything below was read out of extracted/overlays/overlay_0006.bin at base
+# 0x020bfec0 and out of config/arm9/overlays/ov006/, not out of the cost file:
+#
+#   SpawnInfo      0x0213ce0c  MgWanted_SpawnInfo, {factory, id twice}
+#                  the doubled-id word 0x016e016e sits at 0x0213ce10 and the
+#                  word before it is 0x020f3800, which is the factory
+#   factory        0x020f3800  MgWanted_Spawn, 0x34 bytes
+#   vtable         0x0213cf10  named by the factory's OWN load relocation,
+#                  relocs.txt from:0x020f3830 kind:load to:0x0213cf10
+#   width          36          all three of section 11's checks below
+#   overrides      7           slots 0, 5, 6, 9, 16, 17, 18
+#   markers        6           all six ruled REAL_DECOMP before seating
+#   nosrc          0           among the override bodies
+#
+# THE WIDTH CHECKS, section 11's three, re-run rather than inherited:
+#
+#   1. SPAN     data_ov006_0213cf10 -> data_ov006_0213cfa0 is 144 bytes = 36
+#               words. An UPPER bound only, and here it is exactly 36, so a
+#               37th slot cannot exist inside the table.
+#   2. TERMINAL slot 35 (0x0213cf9c) holds 0x020ad660, the word every
+#               dScMgBase_c-derived table holds there. MATCH.
+#   3. THE WORD index 36 (0x0213cfa0) is 0x2f474d2f, ASCII "/MG/" -- a file
+#               path, which is curling's own control case. AND IT IS LIVE:
+#               src/func_ov006_020f3460.c, slot 0, opens with
+#               func_020adc74(&data_ov006_0213cfa0), so a 37-slot fill of this
+#               class would write a host thunk over the first four bytes of
+#               the path its own InitResources loads by name.
+#
+# ONE DERIVED TABLE, NOT THREE. dScMgCup_c (section 12) needed three because
+# both its deleting destructors write an intermediate base's table. This
+# class's two, func_ov006_020efc0c (slot 16) and func_ov006_020efc30 (slot 17),
+# write data_ov006_0213cf10 and then call func_ov004_020b29c0 directly, so the
+# chain is Scene -> dScMgBase_c -> dScMgLuigi_c with nothing in between and the
+# fill has two tables to do, the base's and this one's.
+#
+# NO DISPLACEMENT RULING IS NEEDED FOR THIS CLASS, and that is worth saying
+# because section 12 says the ruling "will be granted to whichever lane seats
+# 361". src/MgWanted_Spawn.c calls `func_ov004_020b2adc(p)` WITH the pointer,
+# where dScMgCup_c's factory calls it with none. Nothing in this lane rides an
+# argument through into the base constructor.
+#
+# ---- 2. HOW THE LIST WAS DERIVED ------------------------------------------
+#
+# A relocation closure over config/arm9/{,overlays/ov00{1,4,6}/}relocs.txt with
+# blocks joined through delinks.txt, from THIRTY-TWO roots: the factory, the
+# class's own overlay constructor __sinit_ov006_02130f64, the seven vtable
+# override bodies and the twenty-three state code words. That is MGA's root set
+# rather than MG1's two, for a measured reason recorded here so the next lane
+# does not repeat the first attempt: a two-root walk that also follows DATA
+# symbol spans reached 251 ov004 functions, which is more than the whole
+# family's union of 227 in section 4. A data symbol's span runs to the next
+# config symbol and sweeps up relocations belonging to whatever sits after it.
+# CODE EDGES ONLY, from explicit roots, is the walk that answers the question.
+#
+#     ov006  54 blocks   ov004  35   ov001  1   arm9 121
+#
+# THE arm9 HALF IS NOT LISTED, section 5's rule: all 121 already have matched
+# TUs compiled into the build and come back through /OPT:REF the moment ov004
+# or ov006 references them.
+#
+# WHAT IS ALREADY LINKED IS NOT LISTED EITHER, and the count is measured
+# against this lane's own baseline map rather than assumed: 1 of the 54 ov006
+# blocks, 29 of the 35 ov004 and the 1 ov001 are already objects in
+# build/port/walk_window.map at 0fe9c7f62, because curling's slice and the
+# framework seat brought them in.
+#
+# ---- 3. THE POINTER-TO-MEMBER WALL, THIS CLASS'S HALF ---------------------
+#
+# SIX ov006 TUs dispatch through an mwcc member pointer and every one of them
+# is host-copied in port/unmatched/MgLuigi_StateDispatch.cpp. They are
+# commented out below rather than deleted, with a pointer back there.
+#
+# A LINK NAMES AT MOST FIVE OF THE SIX, which is section 4's finding holding on
+# a second class. func_ov006_020f300c declares its table INSIDE extern "C" --
+# `extern "C" PMF data_ov006_02142254[];` -- so the global mangles as the plain
+# C name the ov006 mount already defines and the linker is satisfied while the
+# body strides an eight-byte ROM table by four. It was found by sweeping this
+# slice for `::*`, which is the rule section 4 states and the only thing that
+# finds it. The other five wrap the member pointer in a struct, so they mangle
+# as @@3PAUEntry@@A -- the spelling tool finding 1 records that facegen does
+# NOT refuse.
+#
+# TWO ov004 PMF TUs ARE IN THE CLOSURE AND ARE NOT LISTED, because the
+# framework already owns both: src/func_ov004_020b3278.cpp is host-copied in
+# port/unmatched/MgBase_StateDispatch.cpp and src/func_ov004_020b87e0.cpp is
+# the state SETTER that stands as a named trap in hal/scene_mg_faces.cpp. This
+# lane inherits both and adds neither.
+#
+# ---- 4. TWO ov006 BODIES IN THE CLOSURE HAVE NO SOURCE --------------------
+#
+# Neither has a delink block in config/arm9/overlays/ov006/delinks.txt and no
+# src file defines either. The nosrc column in section 3's table is about the
+# seven OVERRIDE bodies and is a correct zero; these two are closure holes, the
+# same class of floor curling met six of.
+#
+#   func_ov006_020f15ac  A LIVE STATE. It is slot 7 of data_ov006_02142254,
+#       the code word of the mwcc pair at 0x0213cd8c, and that load is the ONLY
+#       relocation in the overlay that names it. port/tools/stategen.py reports
+#       it under REFUSALS. So dScMgLuigi_c cannot reach one of its own
+#       twenty-three states, and the address switch reports which state was
+#       wanted rather than inventing a body. Curling's func_ov006_020e1854 was
+#       this exact shape before lane CT1 transcribed it; this lane does NOT
+#       transcribe, and says so.
+#   func_ov006_020f2790  0x528 bytes, called eight times in a loop from
+#       src/func_ov006_020f31dc.c (state slot 1 of data_ov006_02142234).
+#       config/arm9/overlays/ov006/symbols.txt names it, which is why a
+#       name-shaped check would have thought it decompiled. It stands as a
+#       named trap in MgLuigi_StateDispatch.cpp, taking the one argument its
+#       matched caller declares and passes.
+#   NOTE src/func_ov002_020f2790.c EXISTS AND IS A DIFFERENT FUNCTION. ov002
+#       and ov006 are not co-resident and both own bytes at that address. A
+#       lookup by address alone would have seated ov002's body as ov006's.
+#
+# ONE ov004 HOLE IS ALREADY TRAPPED AND ONE IS NEW. func_ov004_020b2220 is one
+# of the three ov004 addresses curling found with no source and
+# hal/scene_mg_faces.cpp already carries its trap; this lane reaches it and
+# adds nothing. func_ov004_020b0e84 (0x66c) is new, is named by ov004's
+# symbols.txt and covered by no delink block, and is ON THIS CLASS'S RENDER
+# PATH -- slot 9 calls func_ov004_020b1e34, whose whole body is a call to it.
+# Its trap and the two arguments the host veneer loses on the way are in
+# port/unmatched/MgLuigi_Faces.cpp section 4.
+#
+# ---- 5. TWO DUPLICATE LINES, AND WHY THEY ARE HERE ------------------------
+#
+# src/func_ov004_020af5e0.c and src/func_ov004_020b0cac.c are also in
+# port/slice_mg1.txt. CMake appends both lists to the same target and dedupes
+# identical absolute paths, so each is compiled once. They are listed here
+# because this file is a statement about what dScMgLuigi_c's closure REACHES,
+# and dropping a line because another class already needed it would make the
+# closure unreadable as a closure. slice_mg1.txt's header states the same rule
+# for its own four.
+#
+# ---- 6. ONE SHARED-HEADER PLACEHOLDER NAME MUST BE RENAMED ----------------
+#
+# src/func_ov006_020efc30.c, the deleting destructor, spells its own vtable as
+# the shared-header placeholder `VT` -- `t[0] = (int)VT;` -- and its heap
+# argument as `HEAP`. include/decl_common.h:415 declares `extern int VT[];` and
+# hal/cxx_aliases.cpp binds bare VT to _data_ov002_021081e4, the ENEMY base
+# table, with a comment saying in as many words that "a second VT-spelling TU
+# cannot join a target that links this reader". This TU is such a second one.
+#
+# THE REMEDY IS THE VirtualDoor / PATH_LIFT ONE, a per-source -D in
+# port/CMakeLists.txt onto this class's real table:
+#
+#     VT=data_ov006_0213cf10
+#
+# and that address is the ROM's, not a guess: the body's own literal pool at
+# 0x020efc60 reads 0213CF10 and the pool at 0x020efc64 reads 020A0EAC, which
+# is the game heap HEAP is already bound to, so only VT is renamed.
+#
+# A FINDING ABOUT THE ALREADY-SHIPPING CLASS, NOT FIXED HERE BECAUSE IT IS NOT
+# THIS LANE'S FILE. src/func_ov006_020e065c.c is dScMgCurling_c's deleting
+# destructor, it is in port/slice_mg1.txt line 151, it has the identical
+# `t[0] = (int)VT;` body, and port/CMakeLists.txt carries no -D for it. Its own
+# pool at 0x020e068c says 0213C304. So the shipping binary writes the Enemy
+# base table into a dying dScMgCurling_c object. It is the same class of defect
+# hal/cxx_aliases.cpp's wave-C block records three of, in the same three lines,
+# and it is left for slice_mg1's owner rather than taken from here.---------------------------------------------------
+src/MgWanted_Spawn.c
+src/func_ov006_020efc0c.c
+# NEEDS A PER-SOURCE -DVT, see section 6 at the foot of this file.
+src/func_ov006_020efc30.c
+src/func_ov006_020efc68.c
+# WAVE 2. The IRQ 2 handler this class installs. The closure walk did not
+# reach it because it is never CALLED: src/func_ov006_020f00a4.cpp passes it
+# to IRQ::SetIRQHandler and slot 5 compares GetIRQHandler(2) against it, so
+# both references are the address as a value and a code-edge walk cannot see
+# it. Named by the link, which is what waves are for.
+# HOST-COPIED (LUI): src/func_ov006_020efcf8.c -- it names VCOUNT as the C
+#   symbol data_04000006, which no linker can place. See
+#   port/unmatched/MgLuigi_Faces.cpp section 5.
+# WAVE 3. The handler's own tail call, the per-frame window-table refill.
+src/func_ov006_020efdac.c
+src/func_ov006_020efdf0.c
+src/func_ov006_020eff20.c
+src/func_ov006_020effb8.c
+src/func_ov006_020f002c.c
+# HOST-COPIED (LUI): src/func_ov006_020f0044.cpp -- PMF, table 021421ec
+src/func_ov006_020f00a4.cpp
+src/func_ov006_020f01d8.c
+src/func_ov006_020f0274.c
+src/func_ov006_020f049c.c
+src/func_ov006_020f04ec.c
+src/func_ov006_020f05d8.c
+src/func_ov006_020f06fc.c
+src/func_ov006_020f088c.c
+src/func_ov006_020f0a6c.c
+# HOST-COPIED (LUI): src/func_ov006_020f0ba0.cpp -- PMF, table 0214221c
+src/func_ov006_020f0bf0.c
+# HOST-COPIED (LUI): src/func_ov006_020f0d58.cpp -- PMF, table 02142204
+src/func_ov006_020f0dd8.c
+src/func_ov006_020f0e28.c
+src/func_ov006_020f0eac.c
+src/func_ov006_020f0f7c.c
+src/func_ov006_020f100c.c
+src/func_ov006_020f10ec.c
+src/func_ov006_020f120c.c
+src/func_ov006_020f12c8.c
+src/func_ov006_020f1318.c
+src/func_ov006_020f13cc.c
+src/func_ov006_020f17fc.c
+src/func_ov006_020f192c.c
+src/func_ov006_020f1a70.c
+src/func_ov006_020f1b98.c
+src/func_ov006_020f1cb4.c
+src/func_ov006_020f1dbc.c
+src/func_ov006_020f1e40.c
+src/func_ov006_020f1e58.c
+# HOST-COPIED (LUI): src/func_ov006_020f1e90.cpp -- PMF, table 02142254
+src/func_ov006_020f1ef8.c
+src/func_ov006_020f1fcc.c
+src/func_ov006_020f2cb8.c
+src/func_ov006_020f2e20.c
+src/func_ov006_020f2ec0.c
+# HOST-COPIED (LUI): src/func_ov006_020f300c.cpp -- PMF, table 02142254, and
+#   the SILENT one: its table is declared inside extern "C" so no link ever
+#   named it. It is also state slot 3 of data_ov006_02142234.
+src/func_ov006_020f319c.c
+src/func_ov006_020f31dc.c
+src/func_ov006_020f3260.c
+src/func_ov006_020f3294.c
+src/func_ov006_020f33c0.c
+# HOST-COPIED (LUI): src/func_ov006_020f3414.cpp -- PMF, table 02142234, and
+#   the class's vtable slot 6, Behavior.
+src/func_ov006_020f3460.c
+
+# ---- arm9: the exception to "the arm9 half comes back for free" -----------
+# WAVE 2. src/func_ov006_020f1fcc.c calls func_020127a4, which is a matched
+# arm9 TU that NO slice in the tree compiles, so /OPT:REF had nothing to keep.
+# port/mg_fanout_costs.txt section 2's wave 2 met twenty of these; this lane
+# meets one.
+src/func_020127a4.c
+
+# ---- ov004: what this class adds over curling's slice ----------------------
+src/func_ov004_020afb20.cpp
+src/func_ov004_020b1e34.c
+# already in port/slice_mg1.txt; listed for the closure, deduped by CMake
+src/func_ov004_020af5e0.c
+src/func_ov004_020b0cac.c
+# HOST-COPIED (MG2), in port/unmatched/MgBase_StateDispatch.cpp:
+#   src/func_ov004_020b3278.cpp
+# TRAPPED (MG1), in port/hal/scene_mg_faces.cpp:
+#   src/func_ov004_020b87e0.cpp
