@@ -1,5 +1,5 @@
-#ifndef DDDBGCH_H
-#define DDDBGCH_H
+#ifndef DBGCH_H
+#define DBGCH_H
 
 #include "types.h"
 
@@ -88,4 +88,4 @@ struct dBgCh {
 
 #endif /* __cplusplus */
 
-#endif /* DDDBGCH_H */
+#endif /* DBGCH_H */
