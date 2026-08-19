@@ -1,5 +1,5 @@
-#ifndef CAPENEMY_H
-#define CAPENEMY_H
+#ifndef DCAPENEMY_C_H
+#define DCAPENEMY_C_H
 
 #include "types.h"
 #include "dEnemyBase_c.h"
@@ -12,23 +12,23 @@ struct Vector3;
  * dCapEnemy_c and gives it two children, daKrb_c (Goomba) and daTrs_c (Boo).
  *
  * DERIVES FROM dEnemyBase_c, and the class's own constructor and destructor are the two
- * witnesses. CapEnemy::CapEnemy calls _ZN12dEnemyBase_cC2Ev, stores the vtable, then
+ * witnesses. dCapEnemy_c::dCapEnemy_c calls _ZN12dEnemyBase_cC2Ev, stores the vtable, then
  * constructs Model at 0x114 and the CapIcon at 0x164; the destructor tears the
  * same two down in the opposite order and chains to _ZN12dEnemyBase_cD2Ev. Forward in one,
  * backward in the other, at the same offsets: a layout read twice.
  *
  * SIZE 0x180. This class is abstract in practice -- nothing allocates a plain
- * CapEnemy -- so there is no `operator new` literal to read the size off, the way
+ * dCapEnemy_c -- so there is no `operator new` literal to read the size off, the way
  * a leaf class has. Two other facts close it instead: the CapIcon at 0x164 is 0x1c
  * bytes and so ends exactly at 0x180, and Goomba, which derives from this class,
  * puts its own first member at 0x180. A derived member cannot start inside its
  * base, so 0x180 is both the floor and the ceiling.
  *
- * VTABLE. CapEnemy overrides exactly one thing: the destructor, at slots 16 and
+ * VTABLE. dCapEnemy_c overrides exactly one thing: the destructor, at slots 16 and
  * 17. All 31 slots were diffed against dEnemyBase_c's and every other one is identical,
  * which is why this class declares no virtual but its destructor.
  */
-struct CapEnemy : dEnemyBase_c {
+struct dCapEnemy_c : dEnemyBase_c {
     /* Which BANK of caps this enemy draws from. AddCap sets it when the spawn
        param is >= 3, and both ReleaseCap and GetCapEatenOffIt branch on it --
        a set flag releases the cap differently and skips the model re-bind. */
@@ -46,8 +46,8 @@ struct CapEnemy : dEnemyBase_c {
     Model   mModel;               /* 0x114 */
     CapIcon mCapIcon;             /* 0x164 */
 
-    CapEnemy();
-    virtual ~CapEnemy();
+    dCapEnemy_c();
+    virtual ~dCapEnemy_c();
 
     /* methods */
     int AddCap(unsigned int param);
@@ -60,6 +60,6 @@ struct CapEnemy : dEnemyBase_c {
     void Unk_02005d94();
 };
 
-typedef char CapEnemy_size_must_be_0x180[sizeof(CapEnemy) == 0x180 ? 1 : -1];
+typedef char dCapEnemy_c_size_must_be_0x180[sizeof(dCapEnemy_c) == 0x180 ? 1 : -1];
 
-#endif /* CAPENEMY_H */
+#endif /* DCAPENEMY_C_H */

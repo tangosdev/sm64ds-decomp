@@ -16,12 +16,12 @@ extern "C" void Matrix4x3_FromTranslation(Matrix4x3* mF, Fix12i x, Fix12i y, Fix
 extern "C" void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3* mF, short x, short y, short z);
 extern Matrix4x3 data_020a0e68;
 
-class CapEnemy {
+class dCapEnemy_c {
 public:
     void UpdateCapPos(const Vector3& pos, const Vector3_16& rot);
 };
 
-void CapEnemy::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
+void dCapEnemy_c::UpdateCapPos(const Vector3& pos, const Vector3_16& rot)
 {
     char* self = (char*)this;
     CapFlags* fl = (CapFlags*)(self + 0x17f);

@@ -7,7 +7,7 @@ typedef int s32;
 typedef struct { s32 x, y, z; } Vector3;
 
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
-extern void _ZN8CapEnemy10ReleaseCapERK7Vector3(void* thiz, const Vector3* v);
+extern void _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(void* thiz, const Vector3* v);
 extern void* func_ov002_020ada40(void* thiz, s16* v, void* r6, s32 flag);
 extern void func_02012694(s32 a, void* b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, s32 i, s32 fx, u32 j);
@@ -65,7 +65,7 @@ void func_ov084_02129ed4(void* c)
 
     if (var_r1 == 0 && (flags & 0x10)) {
         v38.x = 0; v38.y = 0x6c000; v38.z = 0;
-        _ZN8CapEnemy10ReleaseCapERK7Vector3(c, &v38);
+        _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &v38);
         var_r0 = (s32)(U16f(c, 0xc) == 0xc8);
         if (var_r0 != 0) {
             aC[0] = -0x2000; aC[1] = 0; aC[2] = 0;
@@ -129,7 +129,7 @@ void func_ov084_02129ed4(void* c)
             if (var_r0 != 0) {
                 if (U8f(r6, 0x6f9) != 0) {
                     v44.x = 0; v44.y = 0x6c000; v44.z = 0;
-                    _ZN8CapEnemy10ReleaseCapERK7Vector3(c, &v44);
+                    _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &v44);
                     a18[0] = 0x2000; a18[1] = 0; a18[2] = 0;
                     func_ov002_020ada40(c, a18, r6, 0x41000);
                     return;
@@ -199,7 +199,7 @@ void func_ov084_02129ed4(void* c)
 block_68:
     if (I(c, 0x10c) != 0) {
         v74.x = 0; v74.y = 0x6c000; v74.z = 0;
-        _ZN8CapEnemy10ReleaseCapERK7Vector3(c, &v74);
+        _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(c, &v74);
     }
     func_ov002_020aea30(c, r6, (char*)c + 0x1b4);
     if (var_r5 != 0) {
