@@ -1,0 +1,288 @@
+# Gate SMB: dScMgSmartball_c, actor id 0x178 (376). Run mg5, lane SMB.
+#
+# THE CLASS NAME IS THE ROM'S. The RTTI string at 0x0213ec7c reads
+# "16dScMgSmartball_c"; the spawn symbol config/arm9/overlays/ov006/symbols.txt
+# gives is MgBingoBallSlotsShot, after the two menu games the class serves, and
+# every file it loads by name is /MG/d_2d_mg_smart_ball_*. All three names are
+# right and the class name is the ROM's.
+#
+# IDENTITY, RE-DERIVED FROM THE ROM RATHER THAN FROM THE COST TABLE. Scanning
+# extracted/overlays/overlay_0006.bin (load base 0x020bfec0) for the doubled-id
+# word 0x01780178 finds exactly one occurrence, at 0x0213ebd4:
+#
+#     0x0213ebd0  0x02119824      <- SpawnInfo word 0, the factory
+#     0x0213ebd4  0x01780178      <- the doubled id
+#
+# and the factory's own literal pool names the vtable:
+#
+#     02119824  MgBingoBallSlotsShot_Spawn
+#       ldr r0,[pc] ; =0x0000629c   _ZN9ActorBasenwEj(0x629c)
+#       bl  0x20b2adc               func_ov004_020b2adc(o)   <- WITH the arg
+#       str ip,[r4] ; ip=0x0213eefc data_ov006_0213eefc, the vtable
+#
+# THE FACTORY NEEDS NO DISPLACEMENT RULING, AND THE REASON IS IN THE SOURCE
+# RATHER THAN IN THE INSTRUCTIONS. Section 12 of port/mg_fanout_costs.txt
+# records that 0x169's factory calls the base constructor with NO argument and
+# rides r0 through, which needs an argument-displacing host copy. At the
+# INSTRUCTION level this factory is the same shape -- the ROM does
+# `movs r4,r0` after the allocator returns and never rewrites r0 before
+# `bl 0x20b2adc`, so the object rides through in r0 exactly as 0x169's does.
+# What differs is the only thing that matters on the host: 0x169's
+# src/func_ov006_020e0574.cpp spells `func_ov004_020b2adc();` with no
+# argument, and src/MgBingoBallSlotsShot_Spawn.cpp spells
+# `func_ov004_020b2adc(o)` with one. port/tools/aritycheck.py finds the same
+# split without being pointed at it: it lists func_ov004_020b2adc as DROPS from
+# src/func_ov006_020e0574.cpp (0x169's) and src/MgMushroomRoulette_Spawn.cpp
+# (0x17f's) and NOT from this one. Checked because the ruling is expensive, not
+# assumed because the file is short.
+#
+# THE WIDTH IS 36 AND ALL THREE OF SECTION 11's CHECKS SAY SO:
+#   1. SPAN. data_ov006_0213eefc's next config symbol is data_ov006_0213ef8c,
+#      0x90 bytes on, which is 36 words. The check can only refuse, and at 37
+#      it refuses.
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, the word every
+#      dScMgBase_c-derived table in the family holds there.
+#   3. WHAT THE WORD PAST IT IS. 0x0213ef8c holds 0x2f474d2f, ASCII "/MG/",
+#      the head of "/MG/d_2d_mg_smart_ball_lay0%1d_S_ncg.bin". Curling's
+#      control word is the same four bytes.
+#   vtablerows.py --vtable 0x0213eefc --width 36 reports ovr 9, mark 6,
+#   nosrc 2, which is section 3's row for this class re-derived rather than
+#   copied.
+#
+# THE NEIGHBOUR'S PHANTOM SLOT, recorded because section 11 names this class as
+# the victim and a reader here should be able to check it. 0x16c's vtable is
+# data_ov006_0213eb40; slot 35 is at 0x0213ebcc and holds 0x020ad660, so a
+# 37-slot fill of 0x16c would write index 36 at 0x0213ebd0 -- word 0 of THIS
+# class's SpawnInfo, the factory pointer. 0x16c is not seated, so this is
+# background rather than a live hazard, and it is confirmed here out of the
+# image rather than inherited.
+#
+# HOW THIS LIST WAS DERIVED. A relocation closure over config/arm9{,/overlays/
+# ov001,ov004,ov006}/{relocs,delinks}.txt, rooted at the factory and at the
+# SEVEN override bodies that have a delink block. The two that do not are
+# traps (below) and contribute no edges. THE CLASS HAS NO SECOND ROOT: MG1's
+# two-root method adds the class's own overlay constructor because a minigame's
+# states are mwcc pointer-to-member pairs reached only from .init, and this
+# class has no such constructor -- see the next block.
+#
+# THIS CLASS HAS NO POINTER-TO-MEMBER STATE MACHINE, AND THAT IS MEASURED
+# THREE WAYS. It is the largest single difference from the pathfinder and it
+# is why this lane's wall cost is zero.
+#   a. Its Behavior (slot 6, src/func_ov006_02118488.c) dispatches a PLAIN INT:
+#      `switch (*(int *)(c + 0x4660))` with cases 0, 1 and 2. The ROM agrees
+#      instruction for instruction (0x021184b4 ldr r1,[r0,#0x660]; cmp/beq x3).
+#   b. NO overlay constructor in ov006 copies a pair table anywhere in this
+#      class's .data neighbourhood. The thirty-one constructors' copied ranges
+#      were listed and the two nearest are 0x0213e4e0..0x0213e580
+#      (__sinit_ov006_02132894, 0x16c/0x16d's) and 0x0213f4fc..0x0213f6dc
+#      (__sinit_ov006_02132970). Nothing lands between 0x0213e5c0 and
+#      0x0213f4fc, which is where this class's own data lives.
+#   c. THE `::*` SWEEP OF THE WHOLE CLOSURE, which is the detector section 4
+#      says a link cannot replace. All 76 TUs the walk reached were
+#      swept for `::*` and `->*`; exactly ONE hits, func_ov004_020b87e0.cpp,
+#      which is the FRAMEWORK's state setter and is already excluded from
+#      port/slice_mg1.txt and trapped in hal/scene_mg_faces.cpp. The sweep was
+#      validated against all six of the TUs section 4 records as SILENT to a
+#      link (func_ov006_020e1214, _020e3078 behind extern "C";
+#      func_ov004_020b31b4, _020b321c, _020b8714, _020b8778 dispatching an
+#      object FIELD) -- every one of the six carries `::*` and would have been
+#      caught.
+#
+# SO ONE TU IS EXCLUDED AND IT IS NOT THIS CLASS'S:
+#     src/func_ov004_020b87e0.cpp   dScMgBase_c's state setter, the wall.
+# It is trapped by hal/scene_mg_faces.cpp already and stays that way. Listing
+# it here would put a second definition of the trap into the link.
+#
+# ONE MORE TU IS EXCLUDED AND THIS ONE IS THIS CLASS'S OWN. It is a fresh
+# instance of the defect family port/mg_fanout_costs.txt section 6 records as
+# (b) and (c), found here in ov006 rather than ov004:
+#
+#     src/func_ov006_02115b0c.c:113   void func_ov006_02115b0c(char *c)
+#     src/func_ov006_02118a8c.cpp:8   void func_ov006_02115b0c(void);
+#     src/func_ov006_02118a8c.cpp:11  func_ov006_02115b0c();
+#
+# vtable slot 18 is func_ov006_02118a8c and its first statement calls the
+# board teardown-and-rebuild. THE ROM PASSES self: 0x02118a8c's prologue is
+# `stmdb sp!,{lr}; sub sp,sp,#4` and it does not touch r0 before
+# `bl 0x2115b0c`, and 0x02115b0c's own first instruction is `mov r8, r0`. So
+# on ARM this is a ride-through and correct. On the host the callee reads
+# [esp+4] and then walks SEVEN destructor loops off it, double-storing vtable
+# words and calling Memory::operator_delete2 through whatever it found -- a
+# wild WRITE, not a wild read, so no fault is guaranteed and the corruption is
+# silent. port/tools/aritycheck.py finds the same row independently:
+#   DROPS func_ov006_02115b0c  declared 0 at src/func_ov006_02118a8c.cpp:8,
+#   DEFINED 1 at src/func_ov006_02115b0c.c:67
+# Both TUs are matched and read-only, so the answer is the PORT_HOST_ABI shape
+# the section-6 remedy names: port/unmatched/MgSmartball_Slot18.cpp is the
+# caller verbatim with the argument placed, and the src TU is off this list so
+# the link has one definition of the name.
+#
+# TWO OTHER aritycheck ROWS TOUCH THIS SLICE AND NEITHER IS THIS LANE'S WORK,
+# recorded so a reader does not have to re-derive them:
+#   _ZN3G2x13SetBlendAlphaEPVttttt  reads as DROPS (def 6, decl 5) and is
+#     BENIGN. The definition's sixth parameter is never read by its body, the
+#     mangled name says five, the ROM passes five (r0-r3 plus one stack word),
+#     and dScMgCurling_c's own slot 18 src/func_ov006_020e3470.c carries the
+#     identical five-parameter declaration and has shipped since lane MG2.
+#   func_ov004_020b9280 and func_ov004_020b9430 read as DROPS from
+#     src/func_ov004_020b92c4.c and _020b929c.c. All four TUs are inherited
+#     from port/slice_mg1.txt unchanged; the rows predate this lane.
+#
+# THREE BODIES IN THE CLOSURE HAVE NO SOURCE and are therefore NOT here. Each
+# gets a NAMED, SELF-REPORTING trap in port/unmatched/MgSmartball_Traps.cpp,
+# the func_ov006_020e1854 precedent: a trap that says which address was
+# entered, never an invented body.
+#     func_ov006_02118b70   vtable slot 0, InitResources.  gap 0x02118b70..
+#                           0x0211944c between two delink blocks
+#     func_ov006_021173c8   vtable slot 9, Render.         gap 0x021173c8..
+#                           0x02118488
+#     func_ov006_02114800   symbols.txt names it (size 0x310) and no delink
+#                           block covers it. Called from five sites inside
+#                           TUs in this slice (0x0210f7d8, 0x0210f804,
+#                           0x0210f848, 0x02111604, 0x02111e6c), which is why
+#                           it is in the closure at all and why the cost
+#                           table's nosrc column -- a VTABLE measurement --
+#                           says two and this slice says three.
+# DECOMPILING ANY OF THE THREE IS A BYTE-GATED-TREE JOB and is routed, not
+# taken here.
+#
+# THE arm9 HALF IS NOT LISTED, MG1's rule and its reason: the walk reaches 351
+# arm9 blocks and they come back through /OPT:REF the moment ov004 or ov006
+# references them.
+#
+# EIGHTY-SIX LINES IN TOTAL, and the closure walk predicted 74 of them. The
+# other twelve are arm9 TUs the LINKER asked for over four further waves and
+# are listed at the foot of this file with the object that wanted each. That
+# split is the two-wave method port/slice_ov007.txt describes doing what it
+# does, and the shape agrees with port/mg_fanout_costs.txt section 10: each
+# wave was the previous wave's own closure and each was smaller than the last
+# (6, 2, 1, 3). It is FIVE waves rather than the eight section 10 budgets, and
+# the reason is section 4's: three of MG2's eight waves were the
+# pointer-to-member wall and its fallout, and this class has no wall.
+#
+# THIRTY-THREE OF THE FIRST SEVENTY-FOUR ALSO APPEAR IN port/slice_mg1.txt --
+# the whole ov004 half except the excluded wall TU, plus the one ov001 line.
+# That is correct rather than duplication to clean up: CMake appends both
+# lists to the same target and dedupes identical absolute paths, and dropping
+# a line because the pathfinder already needed it would make this file
+# unreadable as a closure. The genuinely new content is the 41 ov006 lines.
+
+# ---- ov006: dScMgSmartball_c's own closure, 41 TUs (42 reached, 1 excluded)
+src/MgBingoBallSlotsShot_Spawn.cpp
+src/func_ov006_0210d740.c
+src/func_ov006_0210d7e0.cpp
+src/func_ov006_0210d894.c
+src/func_ov006_0210d898.c
+src/func_ov006_0210e0d0.c
+src/func_ov006_0210e480.c
+src/func_ov006_0210e4c8.c
+src/func_ov006_0210f9f8.c
+src/func_ov006_021101bc.cpp
+src/func_ov006_02110874.c
+src/func_ov006_02110bc0.c
+src/func_ov006_02111220.c
+src/func_ov006_02111774.c
+src/func_ov006_02111b40.c
+src/func_ov006_02111d6c.c
+src/func_ov006_02111d74.c
+src/func_ov006_02111dcc.c
+src/func_ov006_02111df4.c
+src/func_ov006_02111e48.c
+src/func_ov006_02114548.c
+src/func_ov006_021146cc.c
+src/func_ov006_021146e0.c
+src/func_ov006_0211470c.c
+src/func_ov006_0211474c.c
+src/func_ov006_021147ac.c
+src/func_ov006_021147d0.c
+src/func_ov006_02114c04.c
+src/func_ov006_02114dd0.c
+src/func_ov006_02114f98.c
+src/func_ov006_02115150.c
+src/func_ov006_02115480.c
+src/func_ov006_02115598.cpp
+src/func_ov006_021156f8.c
+src/func_ov006_02115830.c
+src/func_ov006_02115a5c.c
+src/func_ov006_02115b0c.c
+src/func_ov006_02118488.c
+src/func_ov006_02118ae4.c
+src/func_ov006_0211944c.c
+src/func_ov006_02119900.c
+
+# ---- ov004: the framework half, 32 TUs, all inherited from slice_mg1 --
+src/FreeGfxSlotsById.c
+src/GetGameLanguage.c
+src/Ov004_Deallocate.c
+src/_ZN5Enemy20KillByInvincibleCharERK10Vector3_16R6Player.c
+src/func_ov004_020ad6fc.c
+src/func_ov004_020ad90c.c
+src/func_ov004_020ad940.cpp
+src/func_ov004_020ada20.c
+src/func_ov004_020adafc.c
+src/func_ov004_020adb1c.c
+src/func_ov004_020adbc0.c
+src/func_ov004_020adc00.c
+src/func_ov004_020adc1c.c
+src/func_ov004_020adc3c.c
+src/func_ov004_020adc74.c
+src/func_ov004_020ae128.c
+src/func_ov004_020ae1cc.c
+src/func_ov004_020ae1f0.c
+src/func_ov004_020ae20c.c
+src/func_ov004_020b04d0.c
+src/func_ov004_020b0840.c
+src/func_ov004_020b0a54.c
+src/func_ov004_020b29c0.cpp
+src/func_ov004_020b2adc.c
+src/func_ov004_020b2c84.c
+src/func_ov004_020b3194.c
+src/func_ov004_020b8a70.c
+src/func_ov004_020b8dc0.c
+src/func_ov004_020b9280.c
+src/func_ov004_020b929c.c
+src/func_ov004_020b92c4.c
+src/func_ov004_020b9430.c
+
+# ---- ov001: ov004's touch layer, 1 TU, inherited from slice_mg1 ------
+src/func_ov001_020ab5b0.c
+
+# ---- SECOND WAVE: 6 arm9 TUs, and they are MG1's wave-2 exception ---------
+# port/mg_fanout_costs.txt section 5's rule is that the arm9 half comes back
+# through /OPT:REF for free. These six are the exception MG1's own wave 2
+# named: they had NO OTHER CALLER anywhere in the build, so /OPT:REF had
+# already dropped them and there was nothing for a reference to pull back.
+# Named by the link, one object each:
+#   Vec2_Len        wanted by src/func_ov006_02114c04.c
+#   Vec2_Sub        wanted by src/func_ov006_02115830.c
+#   func_0203d388   wanted by src/func_ov006_02114c04.c and _02115830.c
+#   func_0203d434   wanted by src/func_ov006_02114c04.c
+#   func_0203d738   wanted by src/MgBingoBallSlotsShot_Spawn.cpp -- one of the
+#                   two callbacks the factory hands func_020733a8
+#   func_02057d00   wanted by src/func_ov006_02115b0c.c
+src/Vec2_Len.c
+src/Vec2_Sub.c
+src/func_0203d388.c
+src/func_0203d434.c
+src/func_0203d738.c
+src/func_02057d00.c
+
+# ---- THIRD WAVE: 2 more arm9, the second wave's own closure ---------------
+# The converging shape port/mg_fanout_costs.txt section 10 describes: each
+# wave is the previous wave's closure and each is smaller than the last.
+#   func_0203d480   wanted by src/func_0203d434.c
+#   func_02057ce8   wanted by src/func_02057d00.c
+src/func_0203d480.c
+src/func_02057ce8.c
+
+# ---- FOURTH WAVE: 1 arm9, the third wave's own closure --------------------
+#   func_02057410   wanted by src/func_02057ce8.c
+src/func_02057410.c
+
+# ---- FIFTH WAVE: 3 arm9, the fourth wave's own closure --------------------
+#   func_02057d30   wanted by src/func_02057410.c
+#   func_02057d94   wanted by src/func_02057410.c
+#   func_02057e00   wanted by src/func_02057410.c
+src/func_02057d30.c
+src/func_02057d94.c
+src/func_02057e00.c

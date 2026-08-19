@@ -308,6 +308,57 @@ SCENE_BLOCKED = {
     # ROM's own driver for it, so the predicate and the advisory are both
     # retired. The rule they were written under stands unchanged: an advisory
     # is not a battery row and must not become one again.
+
+    # SCENE 376 (0x178), dScMgSmartball_c, run mg5 lane SMB. THE FIRST ROW IN
+    # THIS TABLE WHOSE BLOCKER IS A DECOMP GAP RATHER THAN A PORT SEAT, which
+    # is why it is worth reading before it is worth fixing: every blocker this
+    # table has ever carried was something the port had not built yet, and this
+    # one is something the DECOMP has not built yet.
+    #
+    # TWO OF THE CLASS'S NINE VTABLE OVERRIDES HAVE NO SOURCE AT ALL. No block
+    # in config/arm9/overlays/ov006/delinks.txt covers 0x02118b70 (slot 0,
+    # InitResources) or 0x021173c8 (slot 9, Render), and no src file defines
+    # either; both are named, self-reporting traps in
+    # port/unmatched/MgSmartball_Traps.cpp on the func_ov006_020e1854
+    # precedent. Slot 0 is the one that blocks: it is where the class builds
+    # every sub-object its Behavior ticks, so with it trapped the object's
+    # count fields stay zero and its sub-object pointers stay null.
+    #
+    # THE FAULT, from a bare 300-frame run with SM64DS_FAULTS_FATAL=1:
+    #
+    #     FAULT code c0000005 at +0x0005049b accessing 00000000
+    #       walker node 307F9D8C actor 307F9D64 id 0x178
+    #       eax=00000000 ecx=307f9d64
+    #
+    #     port/tools/faultmap.py: _func_ov006_02118488 +0x11b into it
+    #
+    # which is src/func_ov006_02118488.c's case 0 opening statement,
+    # `o = *(char**)(c + 0x4684); (**(VFunc**)o)(o);`, with no null guard --
+    # correct on the ROM, where slot 0 ran.
+    #
+    # THE MARKER IS THE FIELD, NOT THE ADDRESS, and hal/scene_mg.cpp's slot 6
+    # thunk prints it one frame before the fault, the way the fader pre-flight
+    # printed scene 374's. A link offset moves on every build and cannot pin a
+    # blocker; self+0x4684 being null while the state at self+0x4660 is zero
+    # can, and it is a statement about the class rather than about the binary.
+    # A different crash does not reproduce it and reads as a regression, which
+    # is what this table is for.
+    #
+    # WHAT IS ALREADY PROVEN, so a reader knows what the row does NOT cover:
+    # the class registers (the SpawnInfo +4 cross-check passes), both 36-slot
+    # tables fill with ZERO raw DS words left, the factory spawns the object
+    # with a host vptr, and slots 0, 1, 2, 6, 7, 26, 31, 32 and 33 all
+    # dispatch. The seat is complete; the body behind slot 0 is not.
+    #
+    # RETIRING IT IS A BYTE-GATED-TREE JOB and it is routed rather than taken:
+    # 0x02118b70 is 0x8dc bytes and 0x021173c8 is 0x10c0, both inside delink
+    # holes that have to be split before either can be decompiled. Derivation
+    # in port/slice_smb.txt.
+    376: ("the decomp (src/, byte-gated tree), not the port",
+          "MINIGAME BLOCKED: dScMgSmartball_c slot 6 Behavior",
+          "slot 0 InitResources func_ov006_02118b70 has no decompiled body, "
+          "so Behavior case 0 dereferences a null self+0x4684 on its first "
+          "frame"),
 }
 
 # A MOUNTED LEVEL WHOSE BLOCKER IS NOT THE MOUNT, AND THE CLASS THAT BLOCKS IT.
