@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN10FlameChompD1Ev
+// @symbol _ZN10FlameChompD0Ev
 
 #include "FlameChomp.h"
 

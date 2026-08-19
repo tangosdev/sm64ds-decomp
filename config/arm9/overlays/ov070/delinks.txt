@@ -192,11 +192,11 @@ src/_ZN10FlameChompD1Ev.cpp:
     complete
     .text start:0x02121118 end:0x02121160
 
-src/_ZN10FlameChompD0Ev.c:
+src/_ZN10FlameChompD0Ev.cpp:
     complete
     .text start:0x02121160 end:0x021211bc
 
-src/_ZN10FlameChomp13OnYoshiTryEatEv.c:
+src/_ZN10FlameChomp13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021211bc end:0x021211c4
 
@@ -256,11 +256,11 @@ src/func_ov070_02121880.c:
     complete
     .text start:0x02121880 end:0x0212189c
 
-src/_ZN10FlameChomp16CleanupResourcesEv.c:
+src/_ZN10FlameChomp16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212189c end:0x021218c0
 
-src/_ZN10FlameChomp16OnPendingDestroyEv.c:
+src/_ZN10FlameChomp16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021218c0 end:0x021218c4
 
