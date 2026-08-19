@@ -1,6 +1,13 @@
 /* THREE NAMED TRAPS for dScMgSmartball_c, actor id 0x178 (scene 376).
  * Run mg5, lane SMB.
  *
+ * NONE OF THE THREE IS STILL A TRAP. Runs INTEG and SMBSEAT seated all three
+ * bodies; the closing note at the foot of this file says which lane took which
+ * and where each body now lives. Everything between here and there is the
+ * ORIGINAL derivation, kept verbatim because it is the record of how each hole
+ * was measured, and because a reader who sees one of these addresses come back
+ * needs the measurement and not a summary of it.
+ *
  * THE PRECEDENT IS func_ov006_020e1854, dScMgCurling_c's twenty-fifth state:
  * an address the ROM reaches, no delink block, no src TU in either extension,
  * and therefore no body this tree may write. What goes in its place is a
@@ -108,17 +115,87 @@ unsigned port_mg_smartball_trap_mask(void)
     return (unsigned)(g_smb_said[0] | (g_smb_said[1] << 1) | (g_smb_said[2] << 2));
 }
 
-/* Run mg5, lane INTEG: slot 0 InitResources (func_ov006_02118b70) and the aux
+/* ALL THREE TRAPS ARE GONE AND THIS FILE NOW REPORTS ZERO, which is the
+   result it exists to make legible rather than a reason to delete it.
+
+   Run mg5, lane INTEG: slot 0 InitResources (func_ov006_02118b70) and the aux
    ball-table seeder (func_ov006_02114800) were recovered on branch
-   decomp/smb-bodies and are now sliced, so their traps are gone. InitResources
-   is reached through the alias in MgSmartball_Faces.cpp; the aux body carries
-   its own name. Only the Render trap remains: its recovered form on main is the
-   __thiscall member dScMgSmartball_c::Render, which an alias cannot bridge to
-   the cdecl func_ov006_021173c8 the dispatch calls. */
-int func_ov006_021173c8(void *)
+   decomp/smb-bodies and sliced. InitResources is reached through the alias in
+   MgSmartball_Faces.cpp; the aux body carries its own name.
+
+   Run mg5, lane SMBSEAT: the last one, slot 9 Render. The paragraph this
+   replaces said its recovered form on main "is the __thiscall member
+   dScMgSmartball_c::Render, which an alias cannot bridge to the cdecl
+   func_ov006_021173c8 the dispatch calls", and that is still true -- an alias
+   cannot. What bridges it is a cdecl FORWARDER carrying the flat Itanium name
+   and making the qualified non-virtual call, with the ROM address name aliased
+   onto the forwarder: the shape port/unmatched/MgPachinko_Faces.cpp section 3
+   established for dScMgPachinko_c::InitResources. The forwarder and both
+   rulings live in MgSmartball_Faces.cpp; the body is
+   src/_ZN16dScMgSmartball_c6RenderEv.cpp, brought across from origin/main by
+   address.
+
+   THE FILE STAYS, and smb_trap() with it, for two reasons that are not
+   sentiment. The counters are wired into hal/scene_mg.cpp's atexit report and
+   into port/tools/battery.py's 376 row, so removing them would delete the
+   evidence that the traps are unreached rather than merely unentered on this
+   run. And the three banner paragraphs above are the derivation of where each
+   body lives, which is what a reader needs the day one of them regresses.
+
+   AND ONE NEW HOLE TOOK THE THIRD SLOT, which is why the counter array is
+   still three wide. Seating the sub-object family pulled a much larger ov006
+   closure into the link than the class's own nine slots ever reached, and one
+   address in it has no body ANYWHERE. */
+
+/* func_ov006_02115248. Run mg5, lane SMBSEAT.
+ *
+ * THE func_ov006_02114800 SHAPE EXACTLY, and it is a genuine hole rather than
+ * a name-shaped lookup miss:
+ *   config/arm9/overlays/ov006/symbols.txt:1527 names it --
+ *     `func_ov006_02115248 kind:function(arm,size=0x238) addr:0x02115248`
+ *   and no delink block covers it. The list runs
+ *     `src/func_ov006_02115150.c .text start:0x02115150 end:0x02115248`
+ *   and then jumps to
+ *     `src/func_ov006_02115480.c .text start:0x02115480 end:0x02115598`.
+ *   The 0x238 bytes between are this body.
+ *
+ * NOT AVAILABLE ON main EITHER, which is the check that decides trap versus
+ * copy-across for this lane. Every other missing body this seat needed was
+ * matched upstream and was brought across by address; origin/main's own
+ * config/arm9/overlays/ov006/delinks.txt has the identical gap at this
+ * address, so there is nothing to bring.
+ *
+ * THE SIGNATURE IS READ OUT OF THE ROM AND OUT OF THE CALLER, not chosen.
+ * src/func_ov006_02111b90.c:5 declares it
+ *
+ *     extern void func_ov006_02115248(int a, int* p);
+ *
+ * and calls it once, at line 30, as
+ * `func_ov006_02115248(*(int*)(self + 4), pos)`. That is the ONLY call site in
+ * this binary. The ROM agrees on both halves: the prologue is
+ * `push {r4-fp,lr}; sub sp,sp,#0x24; mov r5,r0` so r0 is live, and the SINGLE
+ * epilogue is
+ *
+ *     0211545c  add sp, sp, #0x24
+ *     02115460  pop {r4, r5, r6, r7, r8, sb, sl, fp, lr}
+ *     02115464  bx  lr
+ *
+ * with nothing writing r0 on the way out -- so `void` is a measurement here
+ * and not a default, the same argument the two vtable traps above make for
+ * their `return 1`.
+ *
+ * WHAT IT COSTS. It is reached from func_ov006_02111b90, which is inside
+ * cMgSmartball_kinoko_c's Update closure. What the class does with the
+ * position it is handed is not modelled by this file and this file does not
+ * guess: a plausible body is exactly what port/tools/inferred_stub_guard
+ * exists to refuse. The trap says which address was entered and returns.
+ *
+ * DECOMPILING IT IS A BYTE-GATED-TREE JOB, routed and not taken: 0x238 bytes
+ * inside a delink hole that has to be split first. */
+void func_ov006_02115248(int, int *)
 {
-    smb_trap(1, "func_ov006_021173c8", "vtable slot 9, Render");
-    return 1;
+    smb_trap(2, "func_ov006_02115248",
+             "reached from func_ov006_02111b90, kinoko Update closure");
 }
 
 }  /* extern "C" */

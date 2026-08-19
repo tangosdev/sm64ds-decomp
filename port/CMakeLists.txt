@@ -3565,7 +3565,38 @@ endforeach()
 set(SCENE_SMB_SOURCES
     unmatched/MgSmartball_Traps.cpp
     unmatched/MgSmartball_Slot18.cpp
-    unmatched/MgSmartball_Faces.cpp)
+    unmatched/MgSmartball_Faces.cpp
+    unmatched/MgSmartball_SlotRestore.cpp)
+
+# Run mg5 lane SMBSEAT: TWO SOURCE PROPERTIES THE SUB-OBJECT SEAT NEEDS.
+#
+# 1. src/_ZN16dScMgSmartball_c6RenderEv.cpp is main's matched __thiscall member
+#    and it is force-fed port/unmatched/MgSmartball_HostAbi.h. That header
+#    shadows two include/ headers by pre-defining their own guard macros, which
+#    is why the src file itself needs no edit: DispObj's two virtuals are
+#    redeclared __cdecl so `p->f1()` pushes its receiver like the twelve
+#    `(**(VFunc**)o)(o)` calls in src/func_ov006_02118488.c that share the same
+#    vtables, and dScMgSmartball_c is redeclared without the `sizeof == 0x629c`
+#    assert MSVC cannot meet (it neither reuses the base's tail padding nor
+#    skips a vfptr for a base that declares no virtual of its own; measured
+#    0x47d0 against the ROM's 0x47c8 for the same prefix). /FI is a FLAG rather
+#    than an include-path entry on purpose -- CMake emits <INCLUDES> before
+#    <FLAGS>, so a /I here would lose to include/ and the shadow would silently
+#    not happen.
+#
+# 2. src/func_ov006_02110a20.c is the ONE .c among the thirty-seven TUs this
+#    lane adds that is really C++ -- a //cpp marker and a top-level
+#    `extern "C" {` block, invalid C. All thirty-seven were swept for the
+#    marker and for `extern "C"`, `virtual`, `class` and `namespace` rather
+#    than this one being found by a compile error and the rest left to luck; it
+#    is the only hit among the .c files.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN16dScMgSmartball_c6RenderEv.cpp"
+    PROPERTIES COMPILE_OPTIONS
+    "/FI${CMAKE_CURRENT_SOURCE_DIR}/unmatched/MgSmartball_HostAbi.h")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_02110a20.c"
+    PROPERTIES LANGUAGE CXX)
 
 # Run mg5 lane CCN: THE SECOND SEATED MINIGAME CLASS, dScMgCoin_c
 # (Coincentration), actor id 0x17a = scene 378. The ROM's own RTTI at
