@@ -369,14 +369,26 @@ Gaps, per cluster, from what the two overlays actually poke:
 
      ppu_sub.cpp now models the OBJ window for real (mask buffer, DISPCNT bit
      15, WINOUT's upper six bits, precedence WIN0 > WIN1 > OBJwin > WINOUT).
-     ppu.cpp and message_compositor.cpp take the corrected skip only; neither
-     can carry the mask, the second because its BG loop runs before raster_obj.
-     port/tests/smoke_objwin.cpp pins the contract.
+     ppu.cpp takes the corrected skip only and is in no live path.
 
-     MEASURED NEED: none yet. Zero mode-1, mode-2 and mode-3 objects on either
-     engine across 1200 sampled frames of level 1 and scene 4. The title screen
-     is still unmeasured for a different reason than "nobody looked": it faults
-     inside InitResources before frame 0, so it reaches no scan-out at all.
+     message_compositor.cpp NOW CARRIES THE MASK TOO, added by run mg5 lane
+     WREND; see i below. The line here used to say it could not, because its BG
+     loop runs before raster_obj. That was a statement about ORDER and it was
+     read as one about possibility: the mask needs the sprite SHAPES only, not
+     their colours or their priority resolution, so a pre-pass over mode-2 OAM
+     entries alone builds it before the BG loop and the full sprite raster stays
+     where it is. port/tests/smoke_objwin.cpp pins the engine B contract; engine
+     A's is pinned by scene 366, which the battery runs.
+
+     MEASURED NEED: REAL, and it was found by a player report rather than by
+     this survey. The old line here read "none yet: zero mode-1, mode-2 and
+     mode-3 objects on either engine across 1200 sampled frames of level 1 and
+     scene 4". Both halves of that are still true and the conclusion drawn from
+     them was not, because level 1 and scene 4 are two scenes out of the set.
+     Scene 366 runs 2612 mode-2 entries across 352 of 400 sampled frames with
+     DISPCNT bit 15 set, and it is the scene Tango reported as black. The title
+     screen is still unmeasured for a different reason than "nobody looked": it
+     faults inside InitResources before frame 0, so it reaches no scan-out.
   b. SEMI-TRANSPARENT SPRITES draw opaque in ppu_sub.cpp, and the colour
      special effects (BLDCNT/BLDALPHA) are only partially there. ov007's
      RequestScreenFade drives a fade; whether it goes through the brightness
@@ -545,6 +557,132 @@ Gaps, per cluster, from what the two overlays actually poke:
      hal/message_compositor.cpp's own header records -- the coverage mask this
      lane adds is what such a blend would need, but the BG loop still resolves
      colour before the blit sees the framebuffer.
+
+  i. THE OBJ WINDOW WAS NEVER READ ON ENGINE A, SO A FULL-SCREEN BLACK CURTAIN
+     COVERED THE ARTWORK. Added and CLOSED by run mg5 lane WREND, opened on
+     Tango's own report that scene 366 (dScMgLuigi_c, "Wanted!") runs perfectly
+     and draws essentially nothing.
+
+     THE DECISIVE MEASUREMENT WAS NOT THE ONE THE BRIEF EXPECTED. The 3D half
+     is a dead end here and the polygon census says so in one line: POLYGONS 0,
+     BEGIN_VTXS 0, every VTX_* 0, triangles 0, drawable 0, VIEWPORT_SETS 0 on
+     all 400 samples. For a 2D minigame that is the ROM's intent, not a defect,
+     and it is the reading ppu_audit.cpp's own 3D note tells a reader to take.
+     There is NO [quarantine] line on any 366 run, so h's defect shape is
+     absent: the class is not frozen, it renders 400 times out of 400.
+
+     THE 2D HALF IS WHERE EVERYTHING IS, and the compositor was not idle -- it
+     covered the screen completely, 49152/49152 px, every frame. What separates
+     "no content" from "content painted black" is the per-layer attribution
+     read together with a per-layer COLOUR census, which is a row this file's
+     tooling did not have before this lane and does now:
+
+       BG2   48119 px   x 0..255  y 0..191    48119 near-black (100.0%)
+       BG3       0 px
+       OBJ    1033 px                           494 near-black  (47.8%)
+       3D        0 px kept, 0 buried
+
+     Owning a pixel and painting a visible one are different facts, and every
+     attribution row above reads healthy while the screen is black.
+
+     WHAT THE TWO BACKGROUNDS ARE, from the cartridge rather than from the
+     picture. Engine A, steady state: BG2 prio 0, chars 06010000, screen
+     0600a000, 4bpp; BG3 prio 2, chars 06018000, screen 06009000, 4bpp.
+
+       BG2 has 2/1024 tiles carrying any data and its 4bpp index histogram over
+       the whole 256x192 screen is a single bucket, i1 x49152. Every one of its
+       768 screen entries names palette bank 2. It is a FLAT SOLID CURTAIN.
+       BG3 has 1024/1024 tiles with data and a full histogram spread i1..i15
+       over banks 3..15. It is the WANTED POSTER.
+
+     THE CURTAIN IS BLACK IN THE ROM, and this is the half a lane will be
+     tempted to "fix". Bank 2 entry 1 reads 0x0000 in the running port, and
+     MG/d_2d_mg_bg_luigi2_ncl.bin -- 32 bytes, the curtain's own 16-colour
+     palette -- reads, straight out of the cartridge:
+
+       73f9 0000 7fff 239f 0000 0000 0000 0000 0000 0000 0000 0000 0000 0000
+       0000 0000
+
+     which is byte for byte what the port had loaded. MG/d_2d_mg_bg_luigi1_ncl
+     .bin (416 bytes = 208 colours = 13 banks) matches banks 3..15 the same way,
+     first bank 0000 190b 1d4c 216e and second 0000 1d2c 216e 25b0, both exact.
+     The ROM even ships a SECOND tilemap for the curtain,
+     MG/d_2d_mg_bg_luigi2_black_nsc.bin, so an all-black curtain is a state the
+     cartridge authors shipped deliberately. NOTHING IS WRONG WITH THE PALETTE
+     LOAD and nothing about this scene's black is a missing asset.
+
+     THE DEFECT IS THAT THE CURTAIN WAS NOT CLIPPED. Steady-state DISPCNT_A is
+     0x00009c00 on 352 of 400 frames: WIN0 off, WIN1 off, bit 15 -- the OBJ
+     WINDOW -- ON. WINOUT reads 0x3814:
+
+       outside every window   0x14 = BG2 + OBJ
+       inside the OBJ window  0x38 = BG3 + OBJ + colour effect
+
+     So the hardware draws the black curtain OUTSIDE the hole and the poster
+     INSIDE it, and the hole is the union of the opaque texels of the mode-2
+     sprites: 2612 of them across 352 of the 400 samples, about seven per frame.
+     That is the minigame's spotlight.
+
+     hal/message_compositor.cpp's read_windows read DISPCNT bits 13 and 14 and
+     nothing else:
+
+         w.on[0] = (dispcnt >> 13) & 1;
+         w.on[1] = (dispcnt >> 14) & 1;
+         w.any   = w.on[0] || w.on[1];
+         if (!w.any) return;
+
+     With both rectangles off and only the OBJ window on, w.any was false,
+     window_mask returned 0x3F, and WININ and WINOUT were ignored entirely --
+     every layer visible everywhere. BG2 is priority 0 and BG3 priority 2, so
+     the unclipped curtain drew IN FRONT of the poster over the whole screen.
+     One unread bit, and the layer the hardware would have shown in a 128x128
+     window covered 256x192 instead.
+
+     THE FIX is build_objwin(), an OAM pre-pass over mode-2 entries only, run
+     before the BG loop; w.obj_on off DISPCNT bit 15 and w.obj_in off WINOUT's
+     upper six; and the hardware precedence WIN0 > WIN1 > OBJwin > WINOUT in
+     window_mask. The geometry is raster_obj's own, copied deliberately -- same
+     size table, same DISPCNT bit-4 mapping, same affine group arithmetic, same
+     index-0-is-transparent test -- because a mask built with different geometry
+     from the sprites it describes cuts the hole in the wrong place. raster_obj
+     still skips mode 2: a window sprite contributes a shape and never a colour.
+
+     AFTER, scene 366, 300 frames headless, same binary:
+
+       BG2   36022 px  100.0% near-black   (the curtain, outside the hole)
+       BG3   12892 px    2.6% near-black   x 64..191  y 32..159
+       OBJ     238 px
+       OBJ window mask covers 12892/49152 px
+
+     BG3's pixel count and the mask's coverage are the same number, and BG3's
+     box is the mask's box, which is the check that says the hole and the layer
+     that shows through it are the same region rather than two things that
+     happen to both be present. The captured top screen goes
+
+       6 distinct colours, 196172/196608 near-black (99.8%)
+       94 distinct colours, 145968/196608 near-black (74.2%)
+
+     A/B ON ONE BINARY, SM64DS_OBJWIN_OFF=1, 300 frames headless, every scene
+     the battery hosts, md5 over the 512x384 capture:
+
+       scene 1    IDENTICAL      scene 368  IDENTICAL      scene 378  IDENTICAL
+       scene 4    IDENTICAL      scene 374  IDENTICAL      scene 390  IDENTICAL
+       scene 366  DIFFERS
+
+     366 is the only scene in the set that sets DISPCNT bit 15, so it is the
+     only one that can move, and it is the only one that does. Level 1's
+     selftest BMP is byte identical at md5 5b783a29d753ce4dfbd35c79a7b2850f,
+     the value notes/port-selftest-bmp-gate.md records; scene 374 answers
+     32557 calls, 32557 routed, 0 UNHANDLED; full battery ALL GREEN.
+
+     WHAT IS STILL OPEN AFTER i. The curtain is correct and the hole is correct,
+     but the 3D-priority half of h and the OBJ half of this one do not meet:
+     raster_obj still draws every sprite over every BG regardless of the
+     sprite's own priority, so the window's OBJ bit is honoured for whether a
+     sprite draws and its priority is still not honoured for where. And
+     tests/smoke_objwin.cpp still programs engine B by hand only; engine A's
+     copy of the contract is pinned by scene 366 in the battery rather than by
+     a test that needs no ROM.
 
 None of a..f blocks LINKING either overlay. They block the overlay doing
 anything visible once linked. That distinction is the whole shape of this

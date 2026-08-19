@@ -64,6 +64,7 @@
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 #include "ntr/gx.h"
 #include "ntr/ppu.h"
@@ -229,14 +230,139 @@ struct Windows {
     bool any;
     int x1[2], x2[2], y1[2], y2[2];
     bool on[2];
-    unsigned in[2], out;
+    bool obj_on;
+    unsigned in[2], obj_in, out;
 };
+
+/* THE OBJ WINDOW'S MASK, engine A. The third window has no rectangle: its
+   region is the union of the opaque texels of every mode-2 sprite, and WINOUT's
+   UPPER six bits say which layers show inside it.
+
+   THIS FILE USED TO SAY IT COULD NOT CARRY THE MASK, and the reason given was
+   structural: the BG loop runs before raster_obj, so the region would not exist
+   yet when the BGs are masked. That is a statement about ORDER, not about
+   possibility -- the mask needs only the sprite SHAPES, not their colours or
+   their priority resolution, so it can be built in a cheap pre-pass before the
+   BG loop and the full sprite raster can stay exactly where it is. Engine B
+   (ntr/ppu_sub.cpp) resolves BGs and sprites together in one pass and so gets
+   the mask for free; engine A pays one extra OAM walk for it, over mode-2
+   entries only.
+
+   The geometry below is raster_obj's own, deliberately: same size table, same
+   DISPCNT bit-4 mapping, same affine group arithmetic, same "index 0 is
+   transparent" test. A mask built with different geometry from the sprites it
+   is meant to describe would cut the hole in the wrong place. */
+uint8_t g_objwin[192][256];
+
+/* SM64DS_OBJWIN_OFF=1 puts the old behaviour back on the SAME binary -- bit 15
+   unread, so a scene with only the OBJ window on leaves the window unit disarmed
+   and every layer draws everywhere. A before/after is then one build at one
+   .dsstate base, which notes/port-selftest-bmp-gate.md requires before two BMPs
+   may be compared at all. Same shape as SM64DS_3D_PRIORITY_OFF above. */
+inline bool objwin_off_env() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_OBJWIN_OFF");
+        v = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return v != 0;
+}
+
+void build_objwin(uint32_t dispcnt) {
+    static const int kSizes[3][4][2] = {
+        {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
+        {{16, 8}, {32, 8}, {32, 16}, {64, 32}},
+        {{8, 16}, {8, 32}, {16, 32}, {32, 64}},
+    };
+    std::memset(g_objwin, 0, sizeof g_objwin);
+    /* No sprites at all means no mask, and the window is then empty rather than
+       absent: WINOUT still governs, which is what the hardware does. */
+    if (!((dispcnt >> 12) & 1) || !((dispcnt >> 15) & 1) || objwin_off_env())
+        return;
+    const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
+    const bool map1d = (dispcnt >> 4) & 1;
+
+    for (int i = 127; i >= 0; --i) {
+        const uint16_t a0 = rd16(kOamBase + i * 8u);
+        const uint16_t a1 = rd16(kOamBase + i * 8u + 2);
+        const uint16_t a2 = rd16(kOamBase + i * 8u + 4);
+        const bool affine = a0 & 0x100;
+        if (!affine && (a0 & 0x200)) continue;          // disabled
+        if (((a0 >> 10) & 3) != 2) continue;            // not an OBJ-window sprite
+        const int shape = (a0 >> 14) & 3;
+        if (shape == 3) continue;
+        const int size = (a1 >> 14) & 3;
+        const int w = kSizes[shape][size][0], h = kSizes[shape][size][1];
+        const bool dbl = affine && (a0 & 0x200);
+        const int bw = dbl ? w * 2 : w, bh = dbl ? h * 2 : h;
+        int x = a1 & 0x1FF, y = a0 & 0xFF;
+        if (x >= 256) x -= 512;
+        if (y >= 192 && y >= 256 - bh) y -= 256;
+        const bool c256 = a0 & 0x2000;
+        const bool hflip = !affine && (a1 & 0x1000);
+        const bool vflip = !affine && (a1 & 0x2000);
+        const uint32_t tile = a2 & 0x3FF;
+
+        int pa = 256, pb = 0, pc = 0, pd = 256;
+        if (affine) {
+            const int grp = (a1 >> 9) & 0x1F;
+            pa = (int16_t)rd16(kOamBase + (grp * 4 + 0) * 8u + 6);
+            pb = (int16_t)rd16(kOamBase + (grp * 4 + 1) * 8u + 6);
+            pc = (int16_t)rd16(kOamBase + (grp * 4 + 2) * 8u + 6);
+            pd = (int16_t)rd16(kOamBase + (grp * 4 + 3) * 8u + 6);
+        }
+
+        for (int sy = 0; sy < bh; ++sy) {
+            const int py = y + sy;
+            if (py < 0 || py >= 192) continue;
+            for (int sx = 0; sx < bw; ++sx) {
+                const int px = x + sx;
+                if (px < 0 || px >= 256) continue;
+                int tx, ty;
+                if (affine) {
+                    const int cx = sx - bw / 2, cy = sy - bh / 2;
+                    tx = ((pa * cx + pb * cy) >> 8) + w / 2;
+                    ty = ((pc * cx + pd * cy) >> 8) + h / 2;
+                    if (tx < 0 || tx >= w || ty < 0 || ty >= h) continue;
+                } else {
+                    tx = hflip ? w - 1 - sx : sx;
+                    ty = vflip ? h - 1 - sy : sy;
+                }
+                const int tcol = tx >> 3, trow = ty >> 3;
+                const int fx = tx & 7, fy = ty & 7;
+                const uint32_t slot =
+                    map1d ? (uint32_t)(trow * (w / 8) + tcol) * (c256 ? 2u : 1u)
+                          : (uint32_t)(trow * 32 + (c256 ? tcol * 2 : tcol));
+                const uint32_t cell = kObjVram + tile * boundary + slot * 32u;
+                uint32_t index;
+                if (c256) {
+                    index = *reinterpret_cast<volatile uint8_t *>(cell + fy * 8u + fx);
+                } else {
+                    const uint8_t b =
+                        *reinterpret_cast<volatile uint8_t *>(cell + fy * 4u + fx / 2);
+                    index = (fx & 1) ? (b >> 4) : (b & 0xF);
+                }
+                /* An opaque texel puts the pixel inside the window; the colour
+                   it would have had is discarded. A window sprite is never
+                   drawn, which is why raster_obj skips mode 2 outright. */
+                if (index) g_objwin[py][px] = 1;
+            }
+        }
+    }
+}
 
 void read_windows(uint32_t dispcnt, Windows &w) {
     w.on[0] = (dispcnt >> 13) & 1;
     w.on[1] = (dispcnt >> 14) & 1;
-    w.any = w.on[0] || w.on[1];
+    /* DISPCNT bit 15 is the OBJ WINDOW ENABLE, and it arms the window unit
+       exactly as bits 13 and 14 do. It used to be unread here, so a scene that
+       enabled ONLY the OBJ window left w.any false, window_mask returned 0x3F,
+       and every layer was drawn everywhere -- WININ and WINOUT ignored. That is
+       what buried scene 366's artwork: see the note above build_objwin. */
+    w.obj_on = ((dispcnt >> 15) & 1) && !objwin_off_env();
+    w.any = w.on[0] || w.on[1] || w.obj_on;
     if (!w.any) return;
+    w.obj_in = (rd16(kRegBase + 0x4A) >> 8) & 0x3F;
     for (int i = 0; i < 2; ++i) {
         const uint16_t hh = rd16(kRegBase + 0x40 + i * 2);
         const uint16_t vv = rd16(kRegBase + 0x44 + i * 2);
@@ -253,11 +379,15 @@ void read_windows(uint32_t dispcnt, Windows &w) {
     w.out = rd16(kRegBase + 0x4A) & 0x3F;
 }
 
+/* Hardware precedence is fixed: window 0 beats window 1, window 1 beats the OBJ
+   window, and WINOUT covers what is in none of them. Same order as
+   ntr/ppu_sub.cpp's. */
 inline unsigned window_mask(const Windows &w, int x, int y) {
     if (!w.any) return 0x3F;
     for (int i = 0; i < 2; ++i)
         if (w.on[i] && x >= w.x1[i] && x < w.x2[i] && y >= w.y1[i] && y < w.y2[i])
             return w.in[i];
+    if (w.obj_on && g_objwin[y][x]) return w.obj_in;
     return w.out;
 }
 
@@ -413,6 +543,50 @@ void attrib_dump() {
                  "layer in front of it (host %dx%d px)%s\n", g_kept3d,
                  g_buried3d, ntr::SCREEN_W, ntr::SCREEN_H,
                  prio3d_off_env() ? "  [SM64DS_3D_PRIORITY_OFF=1]" : "");
+    /* WREND probe: what COLOUR each layer resolved to on that same last frame.
+       Owning a pixel and painting a visible one are different facts, and a
+       layer that composites full-screen in black is invisible while every
+       attribution row above still reads healthy. */
+    for (int o = 0; o < kOwnerN; ++o) {
+        if (!g_attrib[o].px) continue;
+        uint32_t black = 0, n = 0;
+        uint32_t top[4] = {0}; uint32_t cnt[4] = {0};
+        for (int y = 0; y < 192; ++y)
+            for (int x = 0; x < 256; ++x) {
+                if (!g_a[y][x].hit || g_a[y][x].owner != o) continue;
+                ++n;
+                const uint32_t c = g_a[y][x].color & 0xFFFFFFu;
+                if (((c >> 16) & 0xFF) < 16 && ((c >> 8) & 0xFF) < 16 &&
+                    (c & 0xFF) < 16) ++black;
+                for (int k = 0; k < 4; ++k) {
+                    if (cnt[k] && top[k] != c) continue;
+                    top[k] = c; ++cnt[k]; break;
+                }
+            }
+        std::fprintf(stderr, "[msgcomp]   %-3s colour: %u px, %u near-black "
+                     "(%.1f%%), first colours %06x x%u %06x x%u\n",
+                     kOwnerName[o], n, black, n ? 100.0 * black / n : 0.0,
+                     top[0], cnt[0], top[1], cnt[1]);
+    }
+    /* And the engine A BG palette AS IT STANDS AT EXIT, next to the frame-0
+       dump above: a palette that is full at InitResources and empty at the end
+       is a different defect from one that never loaded. */
+    {
+        int nz = 0;
+        for (int e = 0; e < 256; ++e)
+            if (rd16(kPlttBase + e * 2)) ++nz;
+        std::fprintf(stderr, "[msgcomp]   engA BG palette AT EXIT: %d/256 "
+                     "entries nonzero\n", nz);
+        uint32_t inwin = 0;
+        for (int y = 0; y < 192; ++y)
+            for (int x = 0; x < 256; ++x) if (g_objwin[y][x]) ++inwin;
+        const uint32_t dc = rd32(kRegBase);
+        std::fprintf(stderr, "[msgcomp]   OBJ WINDOW: DISPCNT bit 15 = %u, "
+                     "WINOUT %04x (out %02x, objwin-in %02x), mask covers "
+                     "%u/49152 px on the last frame\n", (dc >> 15) & 1u,
+                     rd16(kRegBase + 0x4A), rd16(kRegBase + 0x4A) & 0x3F,
+                     (rd16(kRegBase + 0x4A) >> 8) & 0x3F, inwin);
+    }
 }
 
 // Counts what each layer OWNS in the frame just composited. A pixel belongs to
@@ -496,12 +670,13 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
         // ntr/ppu_sub.cpp; the field position is pinned there from the decomp's
         // own OAM::Render rather than from docs alone.
         //
-        // THE MASK ITSELF IS NOT MODELLED HERE, and that is a structural limit
-        // rather than an oversight: this compositor runs its BG loop BEFORE
-        // raster_obj, so an OBJ-window region would not exist yet when the BGs
-        // are masked. ppu_sub.cpp composites in one pass and does model it.
-        // Skipping the sprite is still strictly closer to hardware than drawing
-        // it, because on hardware it never appears in the image.
+        // THE MASK IS MODELLED NOW, and not here: build_objwin above walks OAM
+        // for mode-2 entries alone and lays the region down before the BG loop
+        // runs, so the BGs can be masked with it. This raster still SKIPS mode
+        // 2, because a window sprite contributes a shape and never a colour.
+        // The line this replaced called the two-pass order a structural limit;
+        // the order was real and the limit was not, because the mask needs the
+        // sprite SHAPES only and those are available before any colour is.
         const unsigned objmode = (a0 >> 10) & 3;
         if (objmode == 2 || objmode == 3) continue;
         const int shape = (a0 >> 14) & 3;
@@ -801,6 +976,12 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     if (!any_bg && !obj_on)
         return;   // nothing 2D enabled: the box is not up, leave the 3D frame
 
+    /* THE OBJ-WINDOW MASK IS BUILT BEFORE THE BG LOOP, which is the whole point
+       of it being a separate pass: the BGs below are masked per pixel and the
+       mask has to exist by then. raster_obj still runs after them and still
+       skips mode-2 sprites, so no sprite is drawn twice. */
+    build_objwin(dispcnt);
+
     Windows win;
     read_windows(dispcnt, win);
 
@@ -919,6 +1100,62 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                     for (int tx = 0; tx < 20; ++tx)
                         std::fprintf(stderr, " %u", rd16(bgs[3].screen + (ry * 32 + tx) * 2) & 0x3FF);
                     std::fprintf(stderr, "\n");
+                }
+            }
+            /* WREND probe: WHICH palette entries the enabled BGs actually
+               index, and what those entries hold. A BG that composites
+               full-screen and reads black is either indexing a bank nobody
+               loaded or reading the wrong palette base, and the two are told
+               apart by printing the bank histogram beside the palette. */
+            for (int b = 0; b < 4; ++b) {
+                if (!bgs[b].enabled) continue;
+                unsigned bank[16] = {0};
+                for (int ty = 0; ty < 24; ++ty)
+                    for (int tx = 0; tx < 32; ++tx)
+                        ++bank[(rd16(screen_entry_addr(bgs[b], tx, ty)) >> 12) & 0xF];
+                std::fprintf(stderr, "[msgcomp]   BG%d screen-entry palette banks:", b);
+                for (int k = 0; k < 16; ++k)
+                    if (bank[k]) std::fprintf(stderr, " bank%d x%u", k, bank[k]);
+                std::fprintf(stderr, "\n");
+                /* the 4bpp index histogram this BG actually samples, and how
+                   much of its char region carries data at all */
+                unsigned idx[16] = {0};
+                for (int y = 0; y < 192; ++y)
+                    for (int x = 0; x < 256; ++x) {
+                        const uint16_t se = rd16(screen_entry_addr(bgs[b], x >> 3, y >> 3));
+                        const uint8_t pr = *reinterpret_cast<volatile uint8_t *>(
+                            bgs[b].chars + (se & 0x3FF) * 32 + (y & 7) * 4 + ((x & 7) >> 1));
+                        ++idx[(x & 1) ? (pr >> 4) : (pr & 0xF)];
+                    }
+                int filled = 0;
+                for (int t = 0; t < 1024; ++t)
+                    for (int k = 0; k < 32; ++k)
+                        if (*reinterpret_cast<volatile uint8_t *>(bgs[b].chars + t * 32 + k)) {
+                            ++filled; break;
+                        }
+                std::fprintf(stderr, "[msgcomp]   BG%d chars %08x %d/1024 tiles "
+                             "with data; 4bpp index histogram:", b, bgs[b].chars, filled);
+                for (int k = 0; k < 16; ++k)
+                    if (idx[k]) std::fprintf(stderr, " i%d x%u", k, idx[k]);
+                std::fprintf(stderr, "\n");
+            }
+            {
+                int nz = 0;
+                for (int e = 0; e < 256; ++e)
+                    if (rd16(kPlttBase + e * 2)) ++nz;
+                std::fprintf(stderr, "[msgcomp]   engA BG palette %08x: %d/256 "
+                             "entries nonzero\n", kPlttBase, nz);
+                for (int bnk = 0; bnk < 16; ++bnk) {
+                    int bnz = 0;
+                    for (int e = 0; e < 16; ++e)
+                        if (rd16(kPlttBase + (bnk * 16 + e) * 2)) ++bnz;
+                    if (bnz) std::fprintf(stderr, "[msgcomp]     bank%-2d %2d/16 "
+                                          "nonzero, e0..e3 %04x %04x %04x %04x\n",
+                                          bnk, bnz,
+                                          rd16(kPlttBase + (bnk * 16 + 0) * 2),
+                                          rd16(kPlttBase + (bnk * 16 + 1) * 2),
+                                          rd16(kPlttBase + (bnk * 16 + 2) * 2),
+                                          rd16(kPlttBase + (bnk * 16 + 3) * 2));
                 }
             }
         }
