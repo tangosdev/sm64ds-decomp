@@ -31,9 +31,12 @@
 //   arrows here and are taken off the game for as long as it is open, so
 //   nothing that reads the menu also walks.
 //   THE MINIGAME ROW lists all thirty ids the ROM's own IsMinigameActorID
-//   accepts, named out of their ov006 typeinfo, and marks the ones the port
-//   can host. Selecting a hosted one starts the program again on the scene
-//   path with SM64DS_SCENE and SM64DS_DUAL_SCREEN set and quits this process;
+//   accepts, under the retail titles a player would recognise, and marks the
+//   ones the port can host. It is ordered WIRED FIRST: the scenes that start
+//   come before the ones that do not, each group in id order, and the "N of M"
+//   counter restarts at 1 where the wired set ends. Selecting a hosted one
+//   starts the program again on the scene path with SM64DS_SCENE and
+//   SM64DS_DUAL_SCREEN set and quits this process;
 //   a level cannot enter a minigame in place, because loading ov006 unloads
 //   the ov002 the level is running out of. Selecting an unhosted one says so
 //   and does nothing. See the MG_SCENE table for the derivation of both.
@@ -1907,53 +1910,103 @@ static int g_fake_snap;
    the ov006 bring-up on. This table makes no membership decision of its own.
    It holds NAMES, and nothing else.
 
-   THE NAMES ARE THE ROM'S TOO, read out of the class typeinfo rather than
-   taken from anywhere else. port/mg_fanout_costs.txt section 3 resolves 29 of
-   the 30 ids to a vtable in ov006; the Itanium record one word below slot 0
-   is the typeinfo and its +4 is the mangled name, and the strings that come
-   back out of extracted/overlays/overlay_0006.bin (base 0x020bfec0,
-   port/tools/ovdata.py) are the dScMg*_c set. The short name below is that
-   class name with its dScMg prefix and _c suffix removed, so 374 reads
-   "curling" because that is what the ROM calls it.
+   THE NAMES ARE THE PLAYER'S, AND THAT IS A CORRECTION. This table used to
+   carry the ROM's own class names, read out of the ov006 typeinfo with the
+   dScMg prefix and _c suffix stripped, so 368 read "pachinko" and 374 read
+   "curling". Those are the right names for CODE, and they are still what the
+   registry rows in hal/scene_boot.cpp are keyed on: SCENE_MG_PACHINKO is 368
+   there and stays that way. They are the wrong names for a MENU, and the
+   failure was not theoretical. A play session read "pachinko" on this row
+   against the Bob-omb slingshot game on screen and concluded the port had
+   wired the scene to the wrong class. It had not. Pachinko is the Japanese
+   name for a slingshot game, that is what Nintendo's developers called
+   dScMgPachinko_c, and the menu was the only thing in the chain that was
+   wrong. A debug menu that makes a correct port look broken is worse than no
+   menu, so the strings below are the retail titles, and the class short name
+   the row used to show now sits in the comment beside it.
 
-   THE Mg* NAMES IN mg_fanout_costs SECTION 3 ARE NOT WRONG, and this file
-   does not claim they are -- section 2 settles 0x176 explicitly: the peer
-   screening named it MgShuffleShell after its spawn symbol, Shuffle Shell is
-   the localised name of the curling minigame, "both names are right and the
-   class name is the ROM's". They are not used here for a duller reason. They
-   are a MIXTURE of spawn-symbol names and retail names with seven ids left
-   blank, and the typeinfo route is one source that covers twenty-nine
-   directly and the thirtieth by elimination. A menu wants the consistent
-   list, and the consistent list is the ROM's.
+   THE TITLES ARE DERIVED AND NOT REMEMBERED, and the derivation is one step.
+   Actor id maps to scene id by identity -- 0x169 IS 361 -- so the rows below
+   are the ov006 ids in order with no arithmetic between the two columns.
+   Twenty-three of the thirty carry an Mg*_SpawnInfo symbol in
+   config/arm9/overlays/ov006/symbols.txt, and that symbol IS the retail title
+   with its spaces taken out: MgBobOmbSquad is Bob-omb Squad,
+   MgCoincentration is Coincentration, MgShuffleShell is Shuffle Shell. All
+   twenty-three are expanded below with nothing added. Twenty-two of them are
+   confirmed a second time by port/mg_fanout_costs.txt section 3, which
+   reaches the same symbol through the factory's own vtable load; the
+   twenty-third is 0x179 and is discussed below. The six seated ids are
+   confirmed a third time by the registry rows in hal/scene_boot.cpp, which
+   name the SpawnInfo symbol they spawn.
 
-   377 IS NAMED BY ELIMINATION AND SAYS SO. It is the one id whose factory
-   reaches no signature table (mg_fanout_costs leaves the row blank rather
-   than guessing it). ov006 carries 32 dScMg*_c typeinfo names, two of which
-   are bases rather than scenes -- dScMgD3DBase_c (0x0213c5d4) and
-   dScMgSingle3DBase_c (0x0213bd00). NOT dScMgBase_c: that one is in ov004
-   (its vtable 0x020bc0c0 is below this overlay's base), which is why it is
-   not in the 32. So thirty scene classes, twenty-nine claimed by an id above,
-   and the one left over is dScMgSnowball_c at 0x0213ffdc -- 0x24 from 0x179's
-   own SpawnInfo at 0x0213ffb8, which is the locality the other twenty-nine
-   rows show too. The peer screening independently called 0x179
-   "MgSnowballSlalom". Its row still carries a question mark: twenty-nine of
-   these names were READ and one was INFERRED, and the menu should not present
-   the two as the same claim.
+   SEVEN IDS HAVE NO SYMBOL AND ARE NOT GUESSED. 0x169, 0x16c, 0x16d, 0x173,
+   0x177, 0x17d and 0x186 reach a bare data_ov006_* address instead of an Mg*
+   name. Six of the seven keep the old class short name with a question mark
+   welded on -- "cup?", "slot1?" -- because a wrong confident title is worse
+   than an honest dev name, and the mark is the whole point: it says the row
+   is not a claim. The seventh is 0x186, and it is not a guess either.
+   hal/scene_boot.cpp pinned it to dScMgFlower_c off the flower asset strings
+   and seated it, so it reads "Loves Me...?" with no mark.
+
+   377 KEEPS ITS QUESTION MARK FOR THE OLDER REASON. It is the one id whose
+   factory reaches no signature table at all. ov006's thirty-second dScMg*_c
+   typeinfo, dScMgSnowball_c at 0x0213ffdc, is 0x24 from 0x179's own
+   MgSnowballSlalom_SpawnInfo at 0x0213ffb8, which is the locality the other
+   twenty-nine rows show, and the peer screening independently called 0x179
+   MgSnowballSlalom. That is an inference and not a read, and the menu should
+   not present the two as the same claim.
+
+   THE STRINGS ARE DISPLAY ONLY. The menu row, the on-screen toast and three
+   stderr lines are their whole readership; nothing outside this file reads
+   them. Renaming a row cannot change which scene the row starts.
+
+   THEY ALSO HAVE A WIDTH BUDGET, and it is measurable rather than a feeling.
+   The overlay font advances 6 pixels a character, walk_window links ntr_2x so
+   ntr::SCREEN_W is 512 and OVL_SCALE is 1, and ovl_text clips at the
+   framebuffer edge, so a row goes silently missing past about 83 characters.
+   The minigame row costs 57 characters before the title, which makes 21 the
+   ceiling, and two titles were shortened to reach it. Both are classes that
+   really do serve two menu games, which is why both halves survive at all:
+   MgBingoBallSlotsShot lost the spaces around its slash ("Slots Shot/Bingo
+   Ball", 21) and MgPuzzlePanelPuzzlePanic lost the repeated word ("Puzzle
+   Panel/Panic", 18). Nothing else was cut.
 
    WHAT IS SELECTABLE IS NOT DECIDED HERE EITHER. port_scene_is_hosted asks
    the registry that hal/scene_boot.cpp refuses unhosted ids out of, so as
-   minigames get seated their rows light up with no edit to this file. */
+   minigames get seated their rows light up with no edit to this file -- and
+   the wired-first display order below re-sorts itself for the same reason. */
 static const struct { short id; const char *name; } MG_SCENE[] = {
-    { 361, "cup"        }, { 362, "memory"     }, { 363, "memory2"    },
-    { 364, "slot1"      }, { 365, "slot3"      }, { 366, "luigi"      },
-    { 367, "sound"      }, { 368, "pachinko"   }, { 369, "pachinko2"  },
-    { 370, "bomroom"    }, { 371, "amida"      }, { 372, "jump"       },
-    { 373, "jump2"      }, { 374, "curling"    }, { 375, "curling2"   },
-    { 376, "smartball"  }, { 377, "snowball?"  }, { 378, "coin"       },
-    { 379, "card"       }, { 380, "panel"      }, { 381, "mcarlo"     },
-    { 382, "mcarlo2"    }, { 383, "roulette"   }, { 384, "trampoline" },
-    { 385, "trampoline2"}, { 386, "hanachan"   }, { 387, "teresa"     },
-    { 388, "bsc"        }, { 389, "3desp"      }, { 390, "flower"     },
+    /*  id      menu title              actor  ov006 class  derivation       */
+    { 361, "cup?"                  }, /* 0x169  cup          no Mg* symbol   */
+    { 362, "Memory Match"          }, /* 0x16a  memory       MgMemoryMatch   */
+    { 363, "Memory Master"         }, /* 0x16b  memory2      MgMemoryMaster  */
+    { 364, "slot1?"                }, /* 0x16c  slot1        no Mg* symbol   */
+    { 365, "slot3?"                }, /* 0x16d  slot3        no Mg* symbol   */
+    { 366, "Wanted!"               }, /* 0x16e  luigi        MgWanted        */
+    { 367, "Boom Box"              }, /* 0x16f  sound        MgBoomBox       */
+    { 368, "Bob-omb Squad"         }, /* 0x170  pachinko     MgBobOmbSquad   */
+    { 369, "Lakitu Launch"         }, /* 0x171  pachinko2    MgLakituLaunch  */
+    { 370, "Sort or 'Splode"       }, /* 0x172  bomroom      MgSortOrSplode  */
+    { 371, "amida?"                }, /* 0x173  amida        no Mg* symbol   */
+    { 372, "Bounce and Pounce"     }, /* 0x174  jump         MgBounceAndPounce  */
+    { 373, "Bounce and Trounce"    }, /* 0x175  jump2        MgBounceAndTrounce */
+    { 374, "Shuffle Shell"         }, /* 0x176  curling      MgShuffleShell  */
+    { 375, "curling2?"             }, /* 0x177  curling2     no Mg* symbol   */
+    { 376, "Slots Shot/Bingo Ball" }, /* 0x178  smartball    MgBingoBallSlotsShot, trimmed */
+    { 377, "Snowball Slalom?"      }, /* 0x179  snowball     MgSnowballSlalom, INFERRED */
+    { 378, "Coincentration"        }, /* 0x17a  coin         MgCoincentration   */
+    { 379, "Picture Poker"         }, /* 0x17b  card         MgPicturePoker  */
+    { 380, "Puzzle Panel/Panic"    }, /* 0x17c  panel        MgPuzzlePanelPuzzlePanic, trimmed */
+    { 381, "mcarlo?"               }, /* 0x17d  mcarlo       no Mg* symbol   */
+    { 382, "Pair-a-Gone and On"    }, /* 0x17e  mcarlo2      MgPairAGoneAndOn   */
+    { 383, "Mushroom Roulette"     }, /* 0x17f  roulette     MgMushroomRoulette */
+    { 384, "Trampoline Time"       }, /* 0x180  trampoline   MgTrampolineTime   */
+    { 385, "Trampoline Terror"     }, /* 0x181  trampoline2  MgTrampolineTerror */
+    { 386, "Which Wiggler?"        }, /* 0x182  hanachan     MgWhichWiggler  */
+    { 387, "Hide and Boo Seek"     }, /* 0x183  teresa       MgHideAndBooSeek   */
+    { 388, "Lucky Stars"           }, /* 0x184  bsc          MgLuckyStars    */
+    { 389, "Psyche Out!"           }, /* 0x185  3desp        MgPsycheOut     */
+    { 390, "Loves Me...?"          }, /* 0x186  flower       pinned dScMgFlower_c */
 };
 enum { MG_COUNT = (int)(sizeof MG_SCENE / sizeof MG_SCENE[0]) };
 
@@ -2049,19 +2102,58 @@ static const char *level_short_name(int id)
     return 0;
 }
 
-/* The row starts on something that will actually boot rather than on 361,
-   which will not: seated LAZILY, on the first read, because the registry is
-   installed during the boot this file's statics are initialised before.
-   Seated once and not on every open, so stepping through the list survives
-   closing the menu. */
+/* THE ROW ORDER IS WIRED FIRST, AND IT IS COMPUTED RATHER THAN WRITTEN DOWN.
+   MG_SCENE is in the ROM's id order, which scatters the handful of scenes the
+   port can actually start across rows 6, 8, 14, 16, 18 and 30 of thirty, so
+   walking the list from the front was two dozen refusals before the first
+   thing that boots. mg_order below is every hosted id in id order followed by
+   every unhosted id in id order. It is built out of port_scene_is_hosted and
+   not out of a second hand-written table, so a scene seated next month sorts
+   itself to the front with no edit here -- the same property that lights its
+   row up in the first place.
+   BUILT ONCE, LAZILY, for the reason the cursor below was already seated
+   lazily: the registry is installed during the boot this file's statics are
+   initialised before. Hosting does not change during a run, so once is enough
+   and the order cannot shift under a cursor that is already pointing into it.
+   EVERY USE GOES THROUGH mg_index(). menu_mg is a DISPLAY row from here on
+   and never an MG_SCENE subscript -- the draw, the launch and the left/right
+   step all resolve it the same way, so the id that starts is always the id
+   the row was showing. An off-by-one between the two would recreate exactly
+   the wrong-game confusion the titles above were fixed to end. */
+static short mg_order[MG_COUNT];
+static int mg_wired;             /* leading rows of mg_order that will boot */
+static int mg_order_built;
+static void mg_order_build(void)
+{
+    int i, n = 0;
+    if (mg_order_built) return;
+    for (i = 0; i < MG_COUNT; ++i)
+        if (port_scene_is_hosted(MG_SCENE[i].id)) mg_order[n++] = (short)i;
+    mg_wired = n;
+    for (i = 0; i < MG_COUNT; ++i)
+        if (!port_scene_is_hosted(MG_SCENE[i].id)) mg_order[n++] = (short)i;
+    mg_order_built = 1;
+}
+/* the MG_SCENE subscript a display row is showing */
+static int mg_index(int row) { mg_order_build(); return mg_order[row]; }
+/* How far into its OWN group a display row sits, and how big that group is.
+   These are the two numbers the row prints, and they are the whole separator
+   the list needs: the count falls back to 1 of 24 on the same step the suffix
+   turns into "not wired yet", so the end of the working set is unmissable
+   without spending a character on a divider the row has no room for. */
+static void mg_group(int row, int *pos, int *of)
+{
+    mg_order_build();
+    if (row < mg_wired) { *pos = row + 1;            *of = mg_wired; }
+    else                { *pos = row - mg_wired + 1; *of = MG_COUNT - mg_wired; }
+}
+/* The cursor starts at display row 0, which is the first thing that will
+   actually boot because the order above put it there. Seated lazily and once,
+   so stepping through the list survives closing the menu. */
 static int menu_mg = -1;
 static int mg_row(void)
 {
-    if (menu_mg < 0) {
-        menu_mg = 0;
-        for (int i = 0; i < MG_COUNT; ++i)
-            if (port_scene_is_hosted(MG_SCENE[i].id)) { menu_mg = i; break; }
-    }
+    if (menu_mg < 0) { mg_order_build(); menu_mg = 0; }
     return menu_mg;
 }
 
@@ -2219,9 +2311,9 @@ static void menu_draw(ntr::Framebuffer &fb)
        id, entrance, overlay and mount state, and at 72 the unmounted form of
        the longest-named row truncated silently (the 86-into-71 defect the row
        code below used to carry a note about). 96 holds the widest row whole --
-       measured worst case is ~74 -- and the panel still auto-sizes to the
-       longest string, so widening the buffer does not widen the panel unless a
-       row actually needs it. */
+       measured worst case is 77, the minigame row under its longest title --
+       and the panel still auto-sizes to the longest string, so widening the
+       buffer does not widen the panel unless a row actually needs it. */
     char ln[MENU_COUNT][96];
     int i, w = 0, x0, y0;
     int ex = 0, ey = 0, ez = 0, eyaw = 0;
@@ -2274,12 +2366,25 @@ static void menu_draw(ntr::Framebuffer &fb)
            said nothing, which is the whole failure mode. ln is now [96] (lane
            DBGNAME widened it for the level-select name; see the buffer decl),
            so this row has ample room and the panel still auto-sizes to the
-           longest string. */
+           longest string.
+           THE TITLE FIELD IS PADDED TO 21 AND THE TITLES ARE CAPPED AT 21, so
+           this row is 77 characters for every one of the thirty and the panel
+           does not breathe in and out as the list is walked. 77 characters is
+           462 pixels of the 512 the framebuffer has; see the width paragraph
+           over MG_SCENE for where the ceiling comes from.
+           THE TWO COUNTERS ARE GROUP-RELATIVE, not 1..30. With the list sorted
+           wired-first they read "N of 6" through the scenes that start and
+           then fall back to "1 of 24" on the first one that does not, which is
+           the only end-of-working-set marker a single-line row has room for
+           and it lands on the same step as the suffix change. */
         const int r = mg_row();
+        const int mi = mg_index(r);
+        int pos, of;
+        mg_group(r, &pos, &of);
         snprintf(ln[MENU_MINIGAME], sizeof ln[0],
-                 "minigame          %d %-11s %2d of %d   %s",
-                 MG_SCENE[r].id, MG_SCENE[r].name, r + 1, MG_COUNT,
-                 port_scene_is_hosted(MG_SCENE[r].id)
+                 "minigame          %d %-21s %2d of %-2d  %s",
+                 MG_SCENE[mi].id, MG_SCENE[mi].name, pos, of,
+                 port_scene_is_hosted(MG_SCENE[mi].id)
                      ? "enter restarts, stacked"
                      : "not wired yet");
     }
@@ -2663,22 +2768,23 @@ static void menu_input(int pad_live, const XPad *pad)
                    leaves the menu exactly where it was. */
                 if (edge & (1u << 5)) {
                     const int r = mg_row();
-                    const int id = MG_SCENE[r].id;
+                    const int mi = mg_index(r);
+                    const int id = MG_SCENE[mi].id;
                     if (!port_scene_is_hosted(id)) {
                         char msg[64];
                         snprintf(msg, sizeof msg,
                                  "%s (%d) is not wired yet",
-                                 MG_SCENE[r].name, id);
+                                 MG_SCENE[mi].name, id);
                         ss_note(msg);
                         fprintf(stderr, "[menu] minigame %d (%s) is "
                                 "not a hosted scene yet -- refused, "
                                 "menu stays open\n", id,
-                                MG_SCENE[r].name);
+                                MG_SCENE[mi].name);
                     } else if (port_menu_relaunch(id, -1)) {
                         fprintf(stderr, "[menu] minigame %d (%s): "
                                 "started SM64DS_SCENE=%d "
                                 "SM64DS_DUAL_SCREEN=1, this process "
-                                "is quitting\n", id, MG_SCENE[r].name,
+                                "is quitting\n", id, MG_SCENE[mi].name,
                                 id);
                         /* the same exit a window close takes: the
                            next PeekMessage returns WM_QUIT */
