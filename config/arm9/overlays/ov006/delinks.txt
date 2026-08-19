@@ -1865,6 +1865,10 @@ src/func_ov006_020dbe40.c:
 src/func_ov006_020dbe64.c:
     .text start:0x020dbe64 end:0x020dbe9c
 
+src/func_ov006_020dbe9c.c:
+    complete
+    .text start:0x020dbe9c end:0x020dbf7c
+
 src/func_ov006_020dbf7c.c:
     complete
     .text start:0x020dbf7c end:0x020dc154

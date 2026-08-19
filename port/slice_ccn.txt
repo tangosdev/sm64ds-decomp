@@ -47,10 +47,10 @@
 # the framework needed, and CMake appends both lists to the same targets and
 # dedupes identical absolute paths. Only the delta is below.
 #
-# ONE ov006 BODY IN THE CLOSURE HAS NO SOURCE AT ALL and is therefore not here.
-# It has no delink block in config/arm9/overlays/ov006/delinks.txt and no src
-# file in either extension, checked rather than assumed:
-#     func_ov006_020dbe9c  0xe0   the sixth callee of slot 9, Render
+# ONE ov006 BODY IN THE CLOSURE HAD NO SOURCE when this lane first ran; it was
+# recovered afterward on branch decomp/coin-render and is now sliced below with
+# its delink block in config/arm9/overlays/ov006/delinks.txt:
+#     func_ov006_020dbe9c  0xe0   the sixth callee of slot 9, Render (NONMATCHING)
 #
 # THE SECOND FLOOR IS CLOSED. func_ov006_020dd0e0 (0x1ec, slot 0 of state table
 # data_ov006_021417b0) was the state this class dispatched every frame and could
@@ -89,6 +89,11 @@
 src/MgCoincentration_Spawn.cpp
 src/func_ov006_020dbe40.c
 src/func_ov006_020dbe64.c
+# Run mg5, lane INTEG: the sixth callee of slot 9 (Render), recovered on branch
+# decomp/coin-render (NONMATCHING div=7). It had no source when the comment
+# above was written; it now has src/func_ov006_020dbe9c.c and a delink block, so
+# the trap in port/unmatched/MgCoin_Faces.cpp is removed and the real body links.
+src/func_ov006_020dbe9c.c
 src/func_ov006_020dbf7c.c
 src/func_ov006_020dc154.c
 src/func_ov006_020dc1c4.c

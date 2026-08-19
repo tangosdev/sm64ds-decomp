@@ -80,25 +80,12 @@
 #pragma comment(linker, "/alternatename:?data_ov006_0212e3d0@@3PAHA=_data_ov006_0212e3d0")
 #pragma comment(linker, "/alternatename:?data_ov006_0212e3e8@@3PAHA=_data_ov006_0212e3e8")
 
+/* Run mg5, lane INTEG: the sixth Render callee was recovered on branch
+   decomp/coin-render as src/func_ov006_020dbe9c.c (NONMATCHING div=7) and is
+   now sliced in port/slice_ccn.txt, so the trap that used to stand in for it is
+   gone and the real body links. The counter is kept because
+   hal/scene_mg.cpp's census prints port_mg_coin_trap_hits(); it now stays 0,
+   which is the honest report that this callee is no longer stubbed. */
 static unsigned g_coin_trap_hits;
 
 extern "C" unsigned port_mg_coin_trap_hits(void) { return g_coin_trap_hits; }
-
-/* THE UNMATCHED RENDER CALLEE. Returns without doing anything and says so
-   once. Declared with one argument because src/func_ov006_020de63c.c's call
-   passes the scene object; a trap that took none would leave the caller's
-   push in place, which is harmless on cdecl but reads as though the ROM
-   passed nothing. */
-extern "C" void func_ov006_020dbe9c(void *)
-{
-    static int said;
-    ++g_coin_trap_hits;
-    if (said)
-        return;
-    said = 1;
-    std::fprintf(stderr, "  [scene] UNMATCHED ov006 body entered: "
-                 "func_ov006_020dbe9c (0xe0, no delink block and no src; the "
-                 "sixth call of dScMgCoin_c::Render). Returns without doing "
-                 "anything. port/unmatched/MgCoin_Faces.cpp\n");
-    std::fflush(stderr);
-}
