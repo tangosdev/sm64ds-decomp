@@ -1,5 +1,23 @@
 # The collision-query class family: RaycastLine, RaycastGround, SphereClsn
 
+> **READ `notes/collision-system.md` FIRST (2026-08-19).** This note is a good *disassembly
+> gazetteer* and a bad *class model*: about thirty of its ROM-mechanism claims were
+> re-verified and held, but it is wrong about the most structural question in the file, and
+> it is layered — later sections silently retract earlier ones. Known defects, each marked
+> inline below:
+>
+> | where | defect |
+> |---|---|
+> | the "embedded member, not inheritance" conclusion | **WRONG** — it is multiple inheritance |
+> | the `func_020380ec` caveat | **SETTLED** by #1206 — it is `ClsnResult`'s D2 |
+> | the wall slab "symmetric" | **WRONG** — asymmetric `[-(ec+rad), ec-rad]` |
+> | the wall "wholly outside … not a real contact" | **INVERTED** — wholly INSIDE rejects |
+> | `sp+0x40` / `orr r0,r0,#4` as the floor bit | **WRONG**, retracted only halfway later in this file |
+> | "RaycastLine's 0x38 member is overlay-resident" | the *destructor* is; the TYPE (`dM3dGLin`) has its RTTI in arm9 |
+>
+> Not a defect, but corrected elsewhere: this note's `0x5c = lineEnd.z` is **right**.
+> 0x54 is dual-role — line end in, collision point out.
+
 Recovered 2026-08-06 while sweeping `MeshCollider::DetectClsn(RaycastLine&)` (ITCM
 0x01ffb0fc). The three types passed to the `DetectClsn` overloads are not independent
 structs — they share a base and a sub-object, and the already-matched destructors prove it
@@ -17,6 +35,14 @@ matched, enrolled source. All three have the identical skeleton:
 func_020380ec(&self->unk_010);          /* destroy the 0x10 sub-object */
 func_020354d0(self);                    /* destroy the shared base */
 ```
+
+> **CORRECTED 2026-08-19 — this conclusion is WRONG.** The ROM's own RTTI settles it the
+> other way: `dBgCh_Gnd`, `dBgCh_Lin` and `dBgCh_SphCrr` are `__vmi_class_type_info` records
+> with PUBLIC NON-VIRTUAL BASES at `dBgCh`@0, `dBgPi`@0x10 and `dM3dG*`@0x38. It is multiple
+> inheritance, not an embedded member. The secondary vtables' offset-to-top words
+> (`0xfffffff0` = -0x10, `0xffffffc8` = -0x38) and eight `this`-adjusting thunks agree.
+> `notes/rtti-reconciliation.md` had this right a day before this note was written.
+> Full map: `notes/collision-system.md` §3.1.
 
 Two vptr stores at two different offsets is an embedded polymorphic member, not inheritance
 depth. So, proven:
@@ -39,6 +65,13 @@ function.
 `RaycastGround.h`'s hand-extended comment already called 0x10 "the 0x28-byte ClsnResult the
 hit is written into"; this generalises it to the whole family and pins the width from the
 stride rather than from one call site.
+
+> **SETTLED by #1206, after this note was written.** `func_020380ec` is
+> `_ZN10ClsnResultD2Ev` — the BASE-OBJECT destructor variant, which is exactly what a base
+> subobject is destroyed by. Neither a derived type nor a wrapper: the third possibility this
+> caveat did not consider. `symbols.txt` carries the name today. Same PR resolved the
+> SphereClsn 0x38 destructor `func_0203ac1c` as `_ZN8dM3dGSphD2Ev`. The evidence read here as
+> ruling inheritance out is in fact its signature.
 
 Caveat kept honest: `func_020380ec` is *not* `_ZN10ClsnResultD1Ev` — `SphereClsn` calls both,
 for different members. So the 0x10 member is ClsnResult-*sized* and ClsnResult-*shaped*, but
@@ -878,6 +911,28 @@ back into `sp+0x18c`/`0x190`/`0x194`. `ea` is `en2` for the first, `en1` for the
 (`smull` / `adds #0x800` / `adc` / `lsr #0xc` / `orr lsl #20`) — note this is a different
 multiply from the `>> 10` used everywhere else in the function, because the axis is Fix12i
 and the edge normals are not.
+
+> **CORRECTED 2026-08-19 — the two sentences below were WRONG in both directions.**
+> Re-read from the ROM; a transcription that follows the original text will be wrong twice.
+>
+> **The slab is ASYMMETRIC.** The original quoted four instructions and stopped one short.
+> `r1` is redefined:
+>
+> ```
+> 01ffcf9c  ldr r6,[fp,#0xec]      wallHeight
+> 01ffcfa0  ldr r3,[fp,#0x48]      radius
+> 01ffcfa8  add r1, r6, r3         HI  =  ec + rad
+> 01ffcfac  rsb r2, r1, #0         LO  = -(ec + rad)
+> 01ffcfb8  sub r1, r6, r3         HI' =  ec - rad     <-- r1 REDEFINED
+> ```
+>
+> So the interval is `[-(ec + rad), ec - rad]`, not `+/- (ec + rad)`.
+>
+> **The reject is WHOLLY-INSIDE, not wholly-outside.** Each of the three dots is tested
+> `blt LO` / `bgt HI'`, and every out-of-range compare branches to `01ffcfe4` — which falls
+> past the block and KEEPS the hit. The final `01ffcfe0 ble` fires only when the last dot is
+> also inside, and jumps to `01ffd314`, the per-prism `continue`. Three vertices inside the
+> slab means REJECT.
 
 The three dots are then compared against `+/- (sphere.unk_ec + sphere.radius)`
 (`0x1ffcf9c`: `ldr r6,[fp,#0xec]`, `ldr r3,[fp,#0x48]`, `add r1,r6,r3`, `rsb r2,r1,#0`) —

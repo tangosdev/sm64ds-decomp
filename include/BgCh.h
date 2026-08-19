@@ -38,10 +38,19 @@
  * src/ spell it, and this pass changes no bodies. StartDetectingWater ORs
  * bit 1 into it; the toxic and ordinary calls work the same byte.
  *
- * ShouldPassThroughImpl is STATIC. Its matched definition takes four
- * parameters -- (void *, const CLPS &, const BgCh &, bool) -- and no this,
- * which is what the mangled name spells. Same shape as the MeshColliderBase
- * UpdatePos callbacks.
+ * ShouldPassThroughImpl is STATIC -- but NOT because of the mangled name.
+ * Itanium never encodes `this' in a mangled signature, so
+ * _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b spells the identical string
+ * whether the member is static or not. It cannot settle the question, and an
+ * earlier version of this comment claimed it could.
+ *
+ * The evidence that DOES settle it is the argument count. The matched body,
+ * src/_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.c, byte-matches with
+ * FOUR parameters in r0-r3 and reads no stack argument. A non-static member
+ * with the four parameters the name spells -- (void *, const CLPS &,
+ * const BgCh &, bool) -- would pass five values (this first) and spill the
+ * bool to the stack. Four registers, four parameters, no this: static.
+ * Same shape as the MeshColliderBase UpdatePos callbacks.
  */
 
 #ifdef __cplusplus

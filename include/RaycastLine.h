@@ -21,9 +21,20 @@ struct RaycastLine {
     u8  pad_011[0x27];
     /* NOT a bare Vector3, despite DetectClsn reading three words here: the
        destructor destroys something at 0x38 via func_ov002_020feab8, so a
-       sub-object lives here whose first member is the line start. Left unnamed
-       until that type is recovered -- see notes/collision-query-classes.md. */
-    u8  unk_038;            /* 0x038 */
+       sub-object lives here whose first member is the line start.
+
+       RECOVERED 2026-08-19. The type is the cartridge's own `dM3dGLin', named
+       in the ROM's RTTI (_ZTS8dM3dGLin at 0x02099284) and listed as a base of
+       dBgCh_Lin -- this class -- at offset 56 = 0x38. It is 0x18 bytes, two
+       Vector3: start at 0x38, end at 0x44. Non-polymorphic, so no vptr, and
+       func_ov002_020feab8 is a 4-byte `bx lr' -- the trivial ~dM3dGLin. Its
+       RTTI lives in arm9, so the TYPE is not overlay-resident even though
+       those three method bodies are. See notes/collision-system.md.
+
+       Its two accessors are named BACKWARDS in some notes. Read the bodies:
+         func_ov002_020fea4c  a[0..2] = b[3..5]  -> reads 0x44  -> GetEnd
+         func_ov002_020fea68  a[0..2] = b[0..2]  -> reads 0x38  -> GetStart */
+    u8  unk_038;            /* 0x038 -- dM3dGLin base: start 0x38, end 0x44 */
     u8  pad_039[0x17];
     /* Set to 1 on the hit path by MeshCollider::DetectClsn(RaycastLine&)
        (`strb r0,[r1,#0x50]`); the role RaycastGround already names at its 0x48. */
@@ -31,8 +42,26 @@ struct RaycastLine {
     u8  pad_051[0x3];
     /* Was unk_054/unk_058/mPosX. ITCM DetectClsn materialises `add r5,r1,#0x54`
        once and reads [r5], [r5,#4], [r5,#8], so these three words are one
-       Vector3 -- and the old `mPosX` at 0x5c was its z. */
-    Vector3 lineEnd;        /* 0x054 */
+       Vector3 -- and the old `mPosX` at 0x5c was its z.
+
+       THIS WORD HAS TWO ROLES and the name only covers the first. Checked
+       2026-08-19 because a survey claimed the field was misnamed and should
+       be `clsnPos'; it is not misnamed, it is dual-purpose:
+
+         IN   func_02037608 seeds it with the line END --
+              func_ov002_020fea4c(&b, thiz+0x38) reads b[3..5], i.e. 0x44, the
+              dM3dGLin's second Vector3. It then sets 0x60 = Vec3_Dist(0x54,
+              start), the full segment length. MovingMeshCollider::DetectClsn
+              relies on this, transforming 0x38 and 0x54 as the two endpoints.
+
+         OUT  on a hit, func_020375ec(d, s) does d[21..23] = s[0..2], and
+              d[21] is 0x54 -- the world-space collision point overwrites the
+              end point. RaycastLine::GetClsnPos (0x020375d0) reads it back and
+              calls it clsnPos, which is correct AFTER a hit and wrong before.
+
+       So both names are right at different times. Keep `lineEnd', which is the
+       value the field is initialised with and the one callers pass in. */
+    Vector3 lineEnd;        /* 0x054 -- in: line end. out: collision point. */
     /* Was mPosY. Read as the search seed on entry (`ldr r1,[r0,#0x60]`) and
        written with the winning distance on exit (`str r1,[r0,#0x60]`). */
     Fix12i clsnDist;        /* 0x060 */

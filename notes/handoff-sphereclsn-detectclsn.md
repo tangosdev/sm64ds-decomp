@@ -1,5 +1,18 @@
 # Handoff: `MeshCollider::DetectClsn(SphereClsn&)`
 
+> **STALE IN ITS TOP HALF (checked 2026-08-19). Use `notes/collision-system.md`.**
+>
+> - **The numbers below are wrong.** The draft in `notes/` was replaced on 2026-08-19 with the
+>   better body banked in `nearmiss/db.jsonl`. Measured on one worktree at 2004/b56:
+>   the new body is `cand=1750  equal=565  ratio=0.3203` — **28 instructions short**. The
+>   body this note describes scored `cand=1725  equal=366  ratio=0.2090` — 53 short, not 34.
+> - **"Every mechanism is written / nothing structural is missing" was never true.** Its own
+>   companion note, in the same PR, calls the wall block "the single largest unwritten region".
+> - **§0's compiler warning is redundant.** #1619 dropped all pins; `2004/b56` is the tree-wide
+>   default and `fdiff --version` already defaults to it.
+> - **"Of 16 installed mwccarm builds"** — 25 are installed now. The conclusion still holds.
+> - §2, §3, §5 and §7 are accurate and worth reading.
+
 Everything needed to land ITCM `0x01ffb830`, size `0x1bc8`. Discovery is done and so is
 transcription: every mechanism is written and the draft is 34 instructions short of the
 target size. What is left is closing codegen differences. See section 1.

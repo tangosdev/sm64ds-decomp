@@ -36,12 +36,24 @@
  *               vtable (currently named _ZN16MeshColliderBaseD2Ev)       -> D2
  *
  * By the #774 rule (a class vtable carries [D1, D0] and never D2; D2 is
- * reached by direct call alone) the symbol names are on the wrong bodies:
- * symbols.txt calls 0x0203968c `_ZN16MeshColliderBaseD1Ev'. Correcting that
- * pair is a symbols.txt rename, deliberately left to its own change so this
- * one stays byte-neutral. MeshCollider next door emits a byte-identical
- * D1/D2 pair too (0x02039864 in the vtable, 0x020397fc direct-called), so
- * "only one body is ever emitted" does not hold for this family.
+ * reached by direct call alone) the symbol names are CORRECT as they stand:
+ * symbols.txt calls 0x0203968c `_ZN16MeshColliderBaseD1Ev' and 0x02039658
+ * `_ZN16MeshColliderBaseD2Ev', which is exactly what the two bullets above
+ * derive. #1203 settled it.
+ *
+ * Re-verified 2026-08-19 against the cartridge: the word in vtable slot 0
+ * (0x02099388) is 0x0203968c; that address has ONE reference in
+ * config/arm9/relocs.txt -- the vtable itself -- and 0x02039658 has THREE,
+ * the direct calls. D1-in-vtable, D2-direct-called, as the rule requires.
+ *
+ * This paragraph used to conclude the opposite ("the symbol names are on the
+ * wrong bodies") while the two bullets directly above it said otherwise, and
+ * it asked for a symbols.txt rename. Do not make that rename; nothing here
+ * is misnamed.
+ *
+ * MeshCollider next door emits a byte-identical D1/D2 pair too (0x02039864
+ * in the vtable, 0x020397fc direct-called), so "only one body is ever
+ * emitted" does not hold for this family.
  *
  * LAYOUT is pinned by the shared init func_02039624 (called from C2) and
  * Enable/Disable/IsEnabled: 0x18 in the slot byte means "not enabled",
