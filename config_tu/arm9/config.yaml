@@ -126,7 +126,7 @@ overlays:
     name: ov014
     object: ../../build/build/arm9_ov014.bin
     hash: 54a8569427e76b09
-    delinks: ../../config/arm9/overlays/ov014/delinks.txt
+    delinks: overlays/ov014/delinks.txt
     symbols: ../../config/arm9/overlays/ov014/symbols.txt
     relocations: ../../config/arm9/overlays/ov014/relocs.txt
   - id: 15

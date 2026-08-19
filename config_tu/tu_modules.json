@@ -61,6 +61,54 @@
     }
    ]
   },
+  "ov014": {
+   "entriesBefore": 46,
+   "entriesAfter": 3,
+   "tuEntries": 3,
+   "carriedEntries": 0,
+   "functions": 43,
+   "textBytes": 7948,
+   "textGrewBy": 0,
+   "sections": {
+    ".text": 7948,
+    ".init": 700,
+    ".ctor": 12,
+    ".data": 836,
+    ".bss": 160
+   },
+   "attribution": [
+    {
+     "section": ".text",
+     "verdict": "claimed",
+     "detail": "3 contiguous runs from build/tu_map.json, tiling 0x021111a0-0x021130ac"
+    },
+    {
+     "section": ".init",
+     "verdict": "claimed",
+     "detail": "3 sinit blocks tiling 0x021130ac-0x02113368; ordinal k -> TU k (counts agree: sinits == .ctor words == TUs)"
+    },
+    {
+     "section": ".ctor",
+     "verdict": "claimed",
+     "detail": "3 words tiling 0x02113368-0x02113374, one per TU, each resolved through its own relocation"
+    },
+    {
+     "section": ".rodata",
+     "verdict": "absent",
+     "detail": "module has no non-empty .rodata"
+    },
+    {
+     "section": ".data",
+     "verdict": "claimed",
+     "detail": "3/3 TUs, 836 of 5568 bytes; 22 seed run(s) whose own code pointers land in one TU, 2 more by closure over their referrers, of 152 symbol runs"
+    },
+    {
+     "section": ".bss",
+     "verdict": "claimed",
+     "detail": "3/3 TUs, 160 of 160 bytes; 16/16 symbol runs whose every self-module referrer is already attributed to one and the same TU"
+    }
+   ]
+  },
   "ov070": {
    "entriesBefore": 96,
    "entriesAfter": 4,

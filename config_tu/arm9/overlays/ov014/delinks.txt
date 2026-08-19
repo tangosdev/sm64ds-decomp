@@ -1,0 +1,25 @@
+    .text       start:0x021111a0 end:0x021130ac kind:code align:32
+    .init       start:0x021130ac end:0x02113368 kind:code align:4
+    .ctor       start:0x02113368 end:0x02113374 kind:rodata align:4
+    .data       start:0x02113380 end:0x02114940 kind:data align:32
+    .bss        start:0x02114940 end:0x021149e0 kind:bss align:32
+src_tu/actors/ShutterBob.cpp:
+    .text start:0x021111a0 end:0x02111308
+    .init start:0x021130ac end:0x02113118
+    .ctor start:0x02113368 end:0x0211336c
+    .data start:0x021145b8 end:0x02114688
+    .bss start:0x02114940 end:0x02114968
+
+src_tu/actors/ChainChomp.cpp:
+    .text start:0x02111308 end:0x02112e0c
+    .init start:0x02113118 end:0x021132fc
+    .ctor start:0x0211336c end:0x02113370
+    .data start:0x021146a0 end:0x02114860
+    .bss start:0x02114968 end:0x021149b8
+
+src_tu/actors/ChainChompFence.cpp:
+    .text start:0x02112e0c end:0x021130ac
+    .init start:0x021132fc end:0x02113368
+    .ctor start:0x02113370 end:0x02113374
+    .data start:0x0211488c end:0x02114940
+    .bss start:0x021149b8 end:0x021149e0
