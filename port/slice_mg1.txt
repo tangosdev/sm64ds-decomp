@@ -300,6 +300,17 @@ src/func_ov004_020b3194.c
 # HOST-COPIED (MG2): src/func_ov004_020b31b4.cpp
 # HOST-COPIED (MG2): src/func_ov004_020b321c.cpp
 # HOST-COPIED (MG2): src/func_ov004_020b3278.cpp
+# THE TWO SLOT-12 FRAMEWORK STATES, run mg5 lane FWK. Both are dispatched
+# through unmatched/MgBase_StateDispatch.cpp's address switch, which had no
+# case for either until that lane added one, so a scene 366 boot reported 174
+# dispatches landing nowhere. 020b35d8 is the real body of the two (0xc0 bytes,
+# a drawing state); 020b3698 is one `bx lr`. Derivation, the relocs.txt rows
+# for both pair words and the disassembly of both call sites are in section 5
+# of that file. func_ov004_020b1aec is 020b35d8's one callee the slice did not
+# already carry: a five-line reader of data_ov004_020beb68, which the slice has.
+src/func_ov004_020b1aec.c
+src/func_ov004_020b35d8.c
+src/func_ov004_020b3698.c
 src/func_ov004_020b40c0.c
 src/func_ov004_020b410c.c
 src/func_ov004_020b4214.c
