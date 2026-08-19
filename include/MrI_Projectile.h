@@ -1,52 +1,58 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class MrI_Projectile: 5 matched functions, 20 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef MRI_PROJECTILE_H
 #define MRI_PROJECTILE_H
-#include "types.h"
 
-struct MrI_Projectile {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x6];
-    s16 mPrevAngleX;            /* 0x092 */
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x2];
-    s32 unk_098;            /* 0x098 */
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  unk_0a4;            /* 0x0a4 */
-    u8  pad_0a5[0xb];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x20];
-    u8  mShadowModel;            /* 0x0d4 */
-    u8  pad_0d5[0x27];
-    u8  mMovingCylinderClsnWithPos;            /* 0x0fc */
-    u8  pad_0fd[0x3f];
-    u8  mWithMeshClsn;            /* 0x13c */
-    u8  pad_13d[0x1bb];
-    u8  unk_2f8;            /* 0x2f8 */
-    u8  pad_2f9[0x2f];
-    s32 unk_328;            /* 0x328 */
-    s32 unk_32c;            /* 0x32c */
-    s16 unk_330;            /* 0x330 */
-#ifdef __cplusplus
-    /* --- vtable, own override --- */
-    int OnYoshiTryEat();              /* slot 18, include/dActor_c.h --
-                                          src/_ZN14MrI_Projectile13OnYoshiTryEatEv.c */
+#include "MovingCylinderClsnWithPos.h"
+#include "ShadowModel.h"
+#include "WithMeshClsn.h"
+#include "dActor_c.h"
 
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+/* MrI_Projectile is daEyBm_c in the ROM's own RTTI: the typeinfo at ov071
+ * 0x02122db8 names dActor_c as the sole base at offset 0, and the class's
+ * vtable at 0x02122de8 (31 slots, same count as dActor_c's) is what pairs it
+ * to MrI_Projectile_Spawn, which stores that address after allocating 0x334
+ * bytes via fBase_c::operator new.
+ *
+ * The Spawn constructs the three owned subobjects below at 0xd4..0x13c in
+ * declaration order; D1 destroys them in exactly the reverse order before
+ * chaining to dActor_c::~dActor_c -- two independent witnesses for each
+ * member's type and offset. The flat header this replaces carried all three
+ * as single u8 markers.
+ *
+ * Own vtable slots, from the ROM table diffed against dActor_c's: 0
+ * InitResources, 3 CleanupResources, 6 Behavior, 9 Render, 12
+ * OnPendingDestroy, 16/17 the destructor pair, 18 OnYoshiTryEat. Every other
+ * slot is inherited.
+ *
+ * The header this replaces was deliberately flat -- a non-deriving struct
+ * whose leading "fields" duplicated dActor_c's storage -- because giving a
+ * non-derived struct a virtual would have inserted a vptr and shifted every
+ * offset. Deriving from dActor_c is what makes the declarations below honest.
+ */
+struct MrI_Projectile : dActor_c {
+    u8                        pad_0d0[0x4];
+    ShadowModel               mShadowModel;                  /* 0x0d4 */
+    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;    /* 0x0fc */
+    WithMeshClsn              mWithMeshClsn;                 /* 0x13c */
+    u8                        unk_2f8;                       /* 0x2f8 */
+    u8                        pad_2f9[0x2f];
+    s32                       unk_328;                       /* 0x328 */
+    s32                       unk_32c;                       /* 0x32c */
+    s16                       unk_330;                       /* 0x330 */
+    u8                        pad_332[0x2];
+
+    /* Declared first on purpose, same reasoning as dActor_c.h: the key
+       function pins where mwcc anchors the vtable. */
+    virtual ~MrI_Projectile();
+
+    virtual s32  InitResources();       /* slot 0 */
+    virtual s32  CleanupResources();    /* slot 3 */
+    virtual s32  Behavior();            /* slot 6 */
+    virtual s32  Render();              /* slot 9 */
+    virtual void OnPendingDestroy();    /* slot 12 */
+    virtual int  OnYoshiTryEat();       /* slot 18 */
 };
 
-#endif
+typedef char MrI_Projectile_size_must_be_0x334[
+    sizeof(MrI_Projectile) == 0x334 ? 1 : -1];
+
+#endif /* MRI_PROJECTILE_H */

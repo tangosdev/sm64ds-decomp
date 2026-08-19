@@ -23,7 +23,7 @@ int MrI_Projectile::Behavior()
 {
     Vector3 v;
     Vector3 r;
-    int flags = unk_0b0;
+    int flags = mFlags;
     int b1 = (int)((flags & 0x40000) != 0);
     int b2;
     if (b1 != 0)
@@ -32,7 +32,7 @@ int MrI_Projectile::Behavior()
     if (b2 == 0) {
         v = data_ov071_021230b8;
         _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this) + 0xfc, v);
-        r.z = unk_098;
+        r.z = mHorzSpeed;
         r.x = 0;
         r.y = 0;
         Matrix4x3_FromRotationY(data_020a0e68, mPrevAngleY);

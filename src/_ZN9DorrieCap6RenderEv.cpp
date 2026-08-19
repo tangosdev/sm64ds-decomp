@@ -6,7 +6,7 @@ struct V { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g3(
 
 int DorrieCap::Render()
 {
-  unsigned int b = unk_0ef;
+  unsigned int b = mCapIcon.mFlags;
   if((b<<30)>>31){
     int buf[3];
     buf[0]=0x2c00; buf[1]=0x2c00; buf[2]=0x2c00;
