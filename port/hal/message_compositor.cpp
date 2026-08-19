@@ -16,7 +16,9 @@
 // is exactly what the DS's layer compositor produces.
 //
 // WHAT IT IMPLEMENTS (faithful to the dialogue box's needs):
-//   - the four engine-A text BGs, by priority, lower priority in front;
+//   - the engine-A text BGs, by priority, lower priority in front -- BG0
+//     EXCLUDED whenever DISPCNT bit 3 makes it the 3D layer rather than a tile
+//     background, which is the rule read_bg's own note derives and measures;
 //   - the window unit (WIN0/WIN1, WININ/WINOUT), because the box uses WIN0 to
 //     reveal BG3 as it animates open -- without it the box tilemap would show
 //     full-screen the instant it is enabled;
@@ -83,9 +85,58 @@ struct BgConfig {
     int hofs, vofs;
 };
 
+// Engine A's DISPCNT bit 3 is the BG0 2D/3D SELECTION, and it is not a setting
+// that modifies a tile background -- it replaces one. With bit 3 set, BG0 is the
+// 3D engine's output layer, BG0CNT's character and screen bases address nothing
+// the game ever wrote, and the 2D unit never reads them.
+//
+// THE DECOMP'S OWN CODE PINS THE BIT. src/_ZN2GX15SetGraphicsModeEiii.c is
+// GX::SetGraphicsMode(dispMode, bgMode, bg0_3d) and its whole use of the third
+// argument is `reg = ((unsigned)c << 3) | reg`. ntr/ppu.cpp's OBJ note already
+// says the same thing from the other side ("its third argument only ever
+// reaches bit 3"), and ppu_audit.cpp's 3D section already prints the rule as
+// prose: "DISPCNT bit 8 (BG0 enable) plus bit 3 (BG0 in 3D mode) is what puts
+// this layer in the picture at all." Nothing implemented it.
+//
+// WHAT NOT IMPLEMENTING IT COST, measured on scene 390 (dScMgFlower_c, the
+// "Loves Me...?" minigame), run mg5 lane YTILE. The scene runs with
+// DISPCNT = 0x00001508 -- bit 3 SET, BG0/BG2/OBJ enabled -- and BG0CNT = 0x0001,
+// so this reader took BG0 for a 4bpp text background with BOTH its tilemap and
+// its tiles at 0x06000000, which this scene never writes, at priority 1: in
+// FRONT of the BG2 artwork at priority 3. It decoded whatever bytes an earlier
+// load had left at the bottom of main BG VRAM into 8x8 blocks and painted 3634
+// of the top screen's 49152 pixels with them.
+//
+// The damage is measurable against the cartridge rather than against taste. A
+// reference image built straight from the ROM's own files -- the LZ77 decode of
+// /MG/d_2d_mg_bg_flower_up_ncg.bin and _nsc.bin through the palette
+// _ncl.bin loads at byte offset 0x60 -- matches a BG2-only capture on
+// 49152 of 49152 pixels, and matches the full frame on 44736 (91.0%), with 55
+// tiles of 768 wrong in all 64 of their pixels. Compositing BG2 with each other
+// layer in turn (SM64DS_ENGINE_A_LAYERS) attributes every one of those 55 tiles
+// to BG0 and none to BG1 or BG3.
+//
+// SCENE 390 IS NOT THE ONLY ONE. Sampled with SM64DS_PPU_AUDIT: scene 1 (the
+// title) runs DISPCNT 0x00011b08 and scene 4 runs 0x08011d08, both with bit 3
+// set and BG0 enabled, so both were painting the same fabricated layer. Scenes
+// 366, 368, 374 and 378 leave BG0 disabled, and every mounted LEVEL runs
+// DISPCNT 0x40011803 -- bit 3 clear, BG0 disabled -- so no level frame changes.
+//
+// WHAT THIS DOES NOT FIX, said plainly so nobody reads more into it. Skipping
+// BG0 stops the port INVENTING a layer; it does not put the real 3D layer in
+// its place. The port renders 3D into the framebuffer before this compositor
+// runs and the compositor only writes over it, so a 2D BG that on hardware sits
+// BEHIND the 3D layer (a higher priority number than BG0's) still covers it
+// here. On scene 390 that is BG2 at priority 3 under the 3D layer at priority 1.
+// Fixing that needs a 3D coverage mask the framebuffer does not carry, it is the
+// same gap the header's "1st-target BG blending over the 3D layer" note already
+// records, and it is not this change.
+inline bool bg0_is_3d(uint32_t dispcnt) { return (dispcnt & 0x8u) != 0; }
+
 BgConfig read_bg(int bg, uint32_t dispcnt) {
     BgConfig c{};
     c.enabled = (dispcnt >> (8 + bg)) & 1;
+    if (bg == 0 && bg0_is_3d(dispcnt)) c.enabled = false;
     if (!c.enabled) return c;
     const uint16_t cnt = rd16(kRegBase + 0x08 + bg * 2);
     c.priority = cnt & 3;
@@ -595,6 +646,17 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                          rd16(kRegBase + 0x08), rd16(kRegBase + 0x0a),
                          rd16(kRegBase + 0x0c), rd16(kRegBase + 0x0e),
                          mask, (unsigned)data_0209d660);
+            /* The bit-3 verdict, printed rather than inferred from BG0's
+               absence in the per-BG dump below. A layer that is skipped and a
+               layer that was never enabled look identical there, and the two
+               are different facts about what the game asked for. */
+            std::fprintf(stderr, "[msgcomp] DISPCNT bit 3 = %u: BG0 is the %s. "
+                         "BG0 enable bit = %u\n", bg0_is_3d(dispcnt) ? 1u : 0u,
+                         bg0_is_3d(dispcnt) ? "3D LAYER, not composited here "
+                                              "(the 3D frame is already in the "
+                                              "framebuffer)"
+                                            : "an ordinary 2D text background",
+                         (dispcnt >> 8) & 1u);
             /* THE VERDICT WORD IS NOT `mask == live`, and the first cut of
                this probe made exactly that mistake. Equal-and-zero is the
                common case on a level, where the mask is 0x00 and the register

@@ -397,10 +397,63 @@ Gaps, per cluster, from what the two overlays actually poke:
      click is published in framebuffer pixels) but no touch-panel register
      model.
 
+  g. BG0 IN 3D MODE WAS COMPOSITED AS A TILE BACKGROUND. Added and CLOSED by
+     run mg5 lane YTILE, which found it by chasing a player report of "blocky
+     solid-colour tiles" on scene 390.
+
+     Engine A's DISPCNT bit 3 is the BG0 2D/3D SELECTION. With it set BG0 is
+     the 3D engine's output layer and BG0CNT's character and screen bases mean
+     nothing. hal/message_compositor.cpp's read_bg never read the bit, so on
+     every scene that set it with BG0 enabled the compositor decoded whatever
+     bytes happened to sit at BG0CNT's bases into 8x8 blocks and painted them
+     OVER the real artwork at BG0's priority. Nothing was missing from the
+     frame; a layer was being invented into it.
+
+     The bit is pinned by the decomp's own code, not by docs:
+     src/_ZN2GX15SetGraphicsModeEiii.c is GX::SetGraphicsMode(dispMode, bgMode,
+     bg0_3d) and its whole use of the third argument is `reg = (c << 3) | reg`.
+     ntr/ppu.cpp's OBJ note says the same thing from the other side and
+     ntr/ppu_audit.cpp's 3D section already printed the rule as prose. Three
+     places in this tree described it and none implemented it.
+
+     MEASURED, scene 390 (dScMgFlower_c), DISPCNT 0x00001508 / BG0CNT 0x0001
+     (chars and screen both 0x06000000, priority 1, over BG2 at priority 3).
+     Against a reference image built from the ROM's own files -- the LZ77
+     decode of /MG/d_2d_mg_bg_flower_up_ncg.bin and _nsc.bin through the
+     palette _ncl.bin loads at byte offset 0x60 -- the top screen went from
+     44736/49152 pixels correct (91.0%, 55 of 768 tiles wrong in all 64 of
+     their pixels) to 48357/49152 (98.4%, 0 tiles fully wrong). The remaining
+     795 are the four HUD sprites the reference does not model.
+
+     IT WAS NEVER FLOWER-SPECIFIC. Sampled with SM64DS_PPU_AUDIT: scene 1
+     (DISPCNT 0x00011b08) was inventing 2172 px and scene 4 (0x08011d08) 8823
+     px, 18% of its top screen. Every mounted LEVEL runs 0x40011803 with BG0
+     disabled, so no level frame moves: level 1's selftest BMP is byte
+     identical across the fix at the same .dsstate base AND span
+     ([0xbcc000, 0xcb63c8), 959432 bytes), which is what
+     notes/port-selftest-bmp-gate.md requires before two BMPs may be compared.
+
+     WHAT IS STILL OPEN, and it is the other half of the same register. The
+     fix stops the port inventing a layer; it does not put the real 3D layer
+     in its place. The port renders 3D into the framebuffer before the
+     compositor runs and the compositor only writes over it, so a 2D BG that
+     on hardware sits BEHIND the 3D layer still covers it here -- on scene 390
+     that is the full-screen opaque BG2 at priority 3 under the 3D layer at
+     priority 1. Closing it needs a 3D coverage mask the framebuffer does not
+     carry, and it is the same gap the "1st-target BG blending over the 3D
+     layer" note in that file's header already records.
+
+     ONE PROXY THAT DOES NOT WORK, recorded because a lane will reach for it:
+     the distinct-colour count of the captured BMP is 188 before the fix and
+     188 after. The invented tiles drew through the scene's own palette, so a
+     colour census cannot see them. The reference-image comparison can.
+
 None of a..f blocks LINKING either overlay. They block the overlay doing
 anything visible once linked. That distinction is the whole shape of this
 category: the code is 97% matched and the hardware is 70% modelled, and what
-is missing is the MODE, not the pixels.
+is missing is the MODE, not the pixels. (g is a different shape from all of
+them: not a mode the port failed to model, a mode it modelled as the wrong
+thing.)
 
 
 8. HONEST SCOPE FOR THE REST
