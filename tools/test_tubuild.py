@@ -373,3 +373,18 @@ def test_sourceless_member_becomes_a_banner_not_a_refusal():
     body, _w = tubuild.assemble_shadow_source("t/T", ord_rows, parsed)
     assert "SOURCELESS member ghost" in body
     assert "int real()" in body
+
+
+def test_anonymous_typedefs_key_by_their_trailing_name():
+    """`typedef struct { ... } X;` used to key as ('typedef','struct'), so two
+    DIFFERENT unnamed types collided and the merger silently dropped one
+    (State300 in ov020). The typedef'd trailing identifier is the key now."""
+    a = tubuild.split_legacy_source(
+        "typedef struct {\n    int x, y, z;\n} Vector3;\nint f(void) { return 0; }\n")
+    b = tubuild.split_legacy_source(
+        "typedef struct {\n    unsigned char _pad[0x9e];\n    unsigned short counter;\n} State300;\nint g(void) { return 0; }\n")
+    (ka, na, _ta), = a["shadow_decls"]
+    (kb, nb, _tb), = b["shadow_decls"]
+    assert (ka, na) == ("typedef", "Vector3")
+    assert (kb, nb) == ("typedef", "State300")
+    assert (ka, na) != (kb, nb), "distinct unnamed types must not share a merge key"

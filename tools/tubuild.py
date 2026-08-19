@@ -626,9 +626,19 @@ def split_legacy_source(text):
         first_word = (stripped.split()[0] if stripped.split() else "").strip("*&")
         if first_word in _DECL_KEYWORDS:
             j = consume_block(i)
+            block = "\n".join(lines[i:j + 1])
             nm = re.match(rf'{first_word}\s+(\w+)', stripped)
             dname = nm.group(1) if nm else f"<anonymous {first_word} in this file>"
-            shadow_decls.append((first_word, dname, "\n".join(lines[i:j + 1])))
+            if first_word == "typedef":
+                # `typedef struct { ... } State300;` -- the word after `typedef`
+                # is `struct`, so keying on it collided every anonymous typedef
+                # in a TU with every other and the merger silently dropped all
+                # but the first (State300 in ov020). The typedef'd NAME is the
+                # trailing identifier; key on that.
+                tail = re.search(r'(\w+)\s*;\s*$', block)
+                if tail:
+                    dname = tail.group(1)
+            shadow_decls.append((first_word, dname, block))
             i = j + 1
             continue
 
