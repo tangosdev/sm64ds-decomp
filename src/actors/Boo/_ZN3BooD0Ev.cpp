@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN3BooD0Ev
-/* recovered: named members + shared header, real derived class (Boo : CapEnemy)
- * -- chains to CapEnemy's out-of-line D1 (func_ov002_020aedbc, not yet
+/* recovered: named members + shared header, real derived class (Boo : dCapEnemy_c)
+ * -- chains to dCapEnemy_c's out-of-line D1 (func_ov002_020aedbc, not yet
  * renamed; see include/Boo.h) the same way _ZN3BooD1Ev.cpp does. */
 #include "Boo.h"
 extern "C" {

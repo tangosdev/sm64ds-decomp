@@ -1,9 +1,9 @@
 //cpp
 // @symbol _ZN3Boo6RenderEv
 /* recovered: named members + shared header, real C++ method.
- * unk_080/unk_0b0/unk_10c are raw-offset reads into the inherited CapEnemy
+ * unk_080/unk_0b0/unk_10c are raw-offset reads into the inherited dCapEnemy_c
  * (really dEnemyBase_c/dActor_c) span, 0x180 bytes this class no longer
- * declares fields for now that Boo.h derives CapEnemy -- reached the same way
+ * declares fields for now that Boo.h derives dCapEnemy_c -- reached the same way
  * dBgActor_c.h documents for other classes' generic padding: `this + offset`
  * rather than a named member. The local ModelVT shadow (renamed from the
  * generated header's placeholder `Model`, which collided with the real

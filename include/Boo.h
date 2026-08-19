@@ -1,6 +1,6 @@
-/* Derives from CapEnemy (on main; the ROM's own RTTI names it daTrs_c and gives
+/* Derives from dCapEnemy_c (on main; the ROM's own RTTI names it daTrs_c and gives
  * dCapEnemy_c two children, daKrb_c/Goomba and daTrs_c/Boo -- the unmerged
- * cpp/goomba-family branch renames CapEnemy -> dCapEnemy_c and will sweep this
+ * cpp/goomba-family branch renames dCapEnemy_c -> dCapEnemy_c and will sweep this
  * file's spelling along with it when it merges, or in a trivial follow-up).
  *
  * rtti_reconcile came back 'no_belief' on this edge (base not auto-inferred),
@@ -11,18 +11,18 @@
  *     exact function _ZN6GoombaD1Ev (src/_ZN6GoombaD1Ev.c) calls after tearing
  *     down its own members. func_ov002_020aedbc sits at 0x020aedbc and is
  *     immediately followed, at 0x020aedf4, by the already-matched
- *     _ZN8CapEnemyD0Ev -- so 0x020aedbc is CapEnemy's own out-of-line D1, and
+ *     _ZN11dCapEnemy_cD0Ev -- so 0x020aedbc is dCapEnemy_c's own out-of-line D1, and
  *     both sibling destructors chain to it.
  *   - Forward: Boo_Spawn (src/actors/Boo/Boo_Spawn.cpp) calls
- *     _ZN8CapEnemyC2Ev(t) before storing _ZTV3Boo -- exactly Goomba_Spawn's
- *     shape, which calls the same _ZN8CapEnemyC2Ev before storing _ZTV6Goomba.
+ *     _ZN11dCapEnemy_cC2Ev(t) before storing _ZTV3Boo -- exactly Goomba_Spawn's
+ *     shape, which calls the same _ZN11dCapEnemy_cC2Ev before storing _ZTV6Goomba.
  *
- * Not renaming func_ov002_020aedbc here -- that is CapEnemy's own file and
+ * Not renaming func_ov002_020aedbc here -- that is dCapEnemy_c's own file and
  * belongs to the goomba-family rename.
  *
  * SIZE 0x5e0, the literal Boo_Spawn passes to fBase_c::operator new
- * (src/actors/Boo/Boo_Spawn.cpp: `_ZN7fBase_cnwEj(0x5e0)`). CapEnemy ends at
- * 0x180 (include/CapEnemy.h); everything from there down is Boo's own.
+ * (src/actors/Boo/Boo_Spawn.cpp: `_ZN7fBase_cnwEj(0x5e0)`). dCapEnemy_c ends at
+ * 0x180 (include/dCapEnemy_c.h); everything from there down is Boo's own.
  *
  * The six members close exactly on one another -- evidenced twice, in the
  * same offsets and order in both Boo_Spawn's construction and
@@ -41,28 +41,31 @@
  * include/dActor_c.h for the slot table.
  *
  * No Boo() constructor is declared: Boo_Spawn builds the object field-by-field
- * (calling CapEnemy::CapEnemy, storing the vtable, then each member's own
+ * (calling dCapEnemy_c::dCapEnemy_c, storing the vtable, then each member's own
  * constructor) rather than through a Boo::Boo(), so declaring one risks an
  * implicit body the compiler would inline somewhere the ROM does not.
  *
  * ~Boo() is declared but not defined in-class -- the destructor's actual
  * bodies are the existing hand-written _ZN3BooD1Ev / _ZN3BooD0Ev, kept as
  * manual `extern "C"` definitions rather than compiler-synthesized ones so
- * the base-chain call keeps spelling func_ov002_020aedbc rather than a
- * not-yet-existing `_ZN8CapEnemyD2Ev` this header cannot introduce.
+ * the base-chain call keeps spelling func_ov002_020aedbc. `_ZN11dCapEnemy_cD2Ev`
+ * now exists (0x0200651c, named by the goomba-family rename) but it is a
+ * DIFFERENT function: the base-chain target here is 0x020aedbc, dCapEnemy_c's
+ * own out-of-line D1, which is still unnamed. A compiler-synthesized destructor
+ * would emit a call to the former, not the latter.
  */
 #ifndef BOO_H
 #define BOO_H
 #include "types.h"
 
-#include "CapEnemy.h"
+#include "dCapEnemy_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
-struct Boo : CapEnemy {
+struct Boo : dCapEnemy_c {
     u8  pad_180[0x4];
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x184 */
     WithMeshClsn               mWithMeshClsn;               /* 0x1c4 */

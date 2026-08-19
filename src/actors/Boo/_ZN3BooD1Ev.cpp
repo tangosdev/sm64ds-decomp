@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN3BooD1Ev
-/* recovered: named members + shared header, real derived class (Boo : CapEnemy)
- * -- chains to CapEnemy's out-of-line D1 (func_ov002_020aedbc, not yet renamed;
+/* recovered: named members + shared header, real derived class (Boo : dCapEnemy_c)
+ * -- chains to dCapEnemy_c's out-of-line D1 (func_ov002_020aedbc, not yet renamed;
  * see include/Boo.h for the base-edge evidence) instead of a compiler-
  * synthesized call, since that symbol does not exist under its mangled name
  * in this tree yet. */
