@@ -439,7 +439,40 @@ gained) and the denominator down exactly 4 by design; `check_header_offsets` 0 m
   `dM3dGSph`@0x38, and both SphereClsn thunks tail-branch to the same D0 at 0x02037c40 —
   one class, two bases.
 
-### Phase 1 — Adopt the cartridge names *(unblocks everything downstream)*
+### Phase 1 — Adopt the cartridge names — **2 of 4 slices done**
+
+**Landed 2026-08-19 on `clsn/phase0`:** the `dCc*` cylinder family (35 symbols) and the
+`dBgW*` mesh-collider spine (59 symbols). Both byte-neutral — rombuild 106/106 exact,
+eligible numerator unchanged at 11061, check_references 45 vs baseline 45, port_refcheck
+393/0, and **94 renamed with credit intact, 0 changed, 0 lost**. Side effect: rombuild's
+"unnamed by config" fell **844 → 784**, so 60 data symbols became attributable purely from
+the spelling agreeing with the ROM's own `_ZTS` bytes.
+
+**Remaining:** `dBgPi` / `dBgPc` / `dM3dGSph` / `dM3dGLin` (support types), then `dBgCh*`
+(5 classes, largest blast radius, do last).
+
+#### The recipe, as it actually works
+
+Two commits per family — `git mv` only, then content. That is what keeps
+`prepush_attribution` reporting *renamed, credit intact* instead of lost.
+
+Substitution order inside the content pass is load-bearing:
+
+1. **Digit-prefixed mangled encodings first, unbounded** — `12MeshCollider` → `7dBgW_Kc`.
+   Doing plain names first turns `_ZN12MeshCollider4InitE` into `_ZN12dBgW_Kc4InitE`, a
+   length prefix that no longer matches its spelling (the defect #1580 cleaned up).
+2. **Include guards**, `DECL_` variants before the bare ones.
+3. **Plain class names LAST, and word-bounded (`…`).** Unbounded, `MeshCollider`
+   rewrote `Stage::ResetMeshColliders` into `ResetdBgW_Kcs`. `layout_check.py` caught it —
+   delinks named a path with no file behind it, which would have let the function fall back
+   to ROM bytes silently. Bounding cut 489 corruptions out of 2,755 substitutions, including
+   309 `mMeshCollider` members.
+4. **`decl_<Class>` needs its own explicit rule.** `` does not fire across an underscore,
+   so 90 `#include "decl_MovingMeshCollider.h"` lines survived a bounded pass while the
+   header had already been renamed. Sweep for unresolvable includes afterwards.
+
+Order the families easiest-first; within a family everything moves at once, because the
+class name appears inside *other* classes' mangled symbols wherever it is a parameter type.
 
 Rename the 17 classes in §2 to their ROM names. This is what lets any collision class
 become a key-function TU, and it is a prerequisite for Phase 4, not a cosmetic follow-up.
