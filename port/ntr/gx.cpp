@@ -108,6 +108,35 @@ struct State {
 State g;
 int g_store_count;
 int g_tex_decodes;            // VRAM texture decodes since the last perf report
+
+/* SM64DS_MAT_LOG census storage -- see mat_report() below for what it is for.
+   Declared here because exec() feeds it and exec() comes first. */
+uint32_t g_matlog_attr[16], g_matlog_difamb[16], g_matlog_speemi[16];
+unsigned g_matlog_nattr, g_matlog_ndifamb, g_matlog_nspeemi;
+unsigned g_matlog_nlightvec, g_matlog_nlightcol;
+/* NORMAL commands executed while each POLYGON_ATTR was latched, plus the
+   ones that ran under an attr the table had no room for. This is the row
+   that decides whether the hardware's own light-enable bits can be honoured
+   without moving a frame: a material with no light bits set and no NORMAL
+   under it never reaches the lighting equation at all. */
+unsigned g_matlog_attr_normals[16], g_matlog_normals_other;
+
+int mat_log() {
+    static int on = -1;
+    if (on < 0) on = getenv("SM64DS_MAT_LOG") ? 1 : 0;
+    return on;
+}
+
+void mat_note(uint32_t *tab, unsigned &n, uint32_t v) {
+    for (unsigned i = 0; i < n; ++i) if (tab[i] == v) return;
+    if (n < 16) tab[n++] = v;
+}
+
+void mat_note_normal(uint32_t attr) {
+    for (unsigned i = 0; i < g_matlog_nattr; ++i)
+        if (g_matlog_attr[i] == attr) { ++g_matlog_attr_normals[i]; return; }
+    ++g_matlog_normals_other;
+}
 extern uint32_t g_teximage;   // defined with the texture cache below
 
 /* SM64DS_FRAME_MS=1: every 30 frames, the raster's own cost on stderr --
@@ -456,6 +485,7 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
         }
         case 0x20: g.color = bgr555_to_argb(static_cast<uint16_t>(p[0] & 0x7FFF)); break;
         case 0x21: {                                             // NORMAL
+            if (mat_log()) mat_note_normal(g.poly_attr);
             // 3 x 10-bit signed, 1.9 fixed point.
             auto n10 = [](uint32_t v) {
                 return (static_cast<int32_t>(v << 22) >> 22) / 512.0f;
@@ -482,9 +512,40 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
             ny = len > 1e-6f ? ty / len : 0;
             nz = len > 1e-6f ? tz / len : 1;
 
+            /* WHICH LIGHTS ARE ON IS THE POLYGON'S OWN BUSINESS. GBATEK puts
+               the four light-enable flags in POLYGON_ATTR bits 0-3, so the
+               material that is latched when a NORMAL executes decides it and
+               nothing else does. The engine had no way to read them: the only
+               source of light_mask was gx_enable_lights(), which is a HARNESS
+               call -- the BMD smokes and walk_window's own level path use it
+               to stand a fixed light up in front of hand-fed geometry that
+               carries no POLYGON_ATTR at all. On the SCENE path nobody calls
+               it, so the mask stayed 0, every NORMAL fell through the loop
+               below, and the vertex colour came out as pure emission. With
+               SPE_EMI at 0 -- which is what every material in this game
+               writes -- that is black, and a fully textured, fully rasterised
+               model draws as a solid silhouette.
+
+               Measured in this tree before the change (SM64DS_MAT_LOG):
+
+                 scene 390   1092 NORMALs, all under POLYGON_ATTR 001f8081
+                             (light 0 enabled), engine light_mask 0
+                 level 1     1442 NORMALs, all under POLYGON_ATTR 011f8081
+                             (light 0 enabled), engine light_mask 1
+
+               and in both runs ZERO NORMALs executed under any of the
+               lights=0000 materials. So reading the bits is exactly what the
+               level path was already doing by accident and is what the scene
+               path was missing.
+
+               light_mask is OR-ed in rather than replaced because the harness
+               geometry it exists for never emits a POLYGON_ATTR: dropping it
+               would darken the smokes instead. It can only ever ADD a light,
+               so nothing that is lit today can go dark through this line. */
+            const uint32_t lmask = (g.poly_attr & 0xFu) | g.light_mask;
             float c[3] = {g.emission[0], g.emission[1], g.emission[2]};
             for (int i = 0; i < 4; ++i) {
-                if (!((g.light_mask >> i) & 1)) continue;
+                if (!((lmask >> i) & 1)) continue;
                 const State::Light &L = g.lights[i];
                 // GBATEK: diffuse level is max(0, -dot(light_vector, normal)).
                 float d = -(L.dx * nx + L.dy * ny + L.dz * nz);
@@ -536,10 +597,14 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
                    static_cast<int16_t>(g.vz + d10((p[0] >> 20) & 0x3FF)));
             break;
         }
-        case 0x29: g.poly_attr = p[0]; break;                    // POLYGON_ATTR
+        case 0x29:                                               // POLYGON_ATTR
+            g.poly_attr = p[0];
+            if (mat_log()) mat_note(g_matlog_attr, g_matlog_nattr, p[0]);
+            break;
         case 0x2A: gx_teximage_param(p[0]); break;               // TEXIMAGE_PARAM
         case 0x2B: gx_pltt_base(p[0]); break;                    // PLTT_BASE
         case 0x30: {                                             // DIF_AMB
+            if (mat_log()) mat_note(g_matlog_difamb, g_matlog_ndifamb, p[0]);
             auto unpack = [](uint32_t v, float *o) {
                 o[0] = (v & 0x1F) / 31.0f;
                 o[1] = ((v >> 5) & 0x1F) / 31.0f;
@@ -557,12 +622,14 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
             break;
         }
         case 0x31: {                                             // SPE_EMI
+            if (mat_log()) mat_note(g_matlog_speemi, g_matlog_nspeemi, p[0]);
             g.emission[0] = ((p[0] >> 16) & 0x1F) / 31.0f;
             g.emission[1] = ((p[0] >> 21) & 0x1F) / 31.0f;
             g.emission[2] = ((p[0] >> 26) & 0x1F) / 31.0f;
             break;
         }
         case 0x32: {                                             // LIGHT_VECTOR
+            ++g_matlog_nlightvec;
             const int i = (p[0] >> 30) & 3;
             auto n10 = [](uint32_t v) {
                 return (static_cast<int32_t>(v << 22) >> 22) / 512.0f;
@@ -573,6 +640,7 @@ void exec(uint8_t cmd, const uint32_t *p, int np) {
             break;
         }
         case 0x33: {                                             // LIGHT_COLOR
+            ++g_matlog_nlightcol;
             const int i = (p[0] >> 30) & 3;
             g.lights[i].r = (p[0] & 0x1F) / 31.0f;
             g.lights[i].g = ((p[0] >> 5) & 0x1F) / 31.0f;
@@ -940,9 +1008,34 @@ void gx_reset() {
     std::vector<GxTriangle> tris = std::move(g.tris);
     strip.clear();
     tris.clear();
+    /* AND KEEP THE LIGHT TABLE, because it is not per-frame state.
+       LIGHT_VECTOR and LIGHT_COLOR are latched registers on the geometry
+       engine and nothing on a DS clears them at a frame boundary. The game
+       programs them ONCE PER SCENE -- dScMgSingle3DBase_c's slot 33 writes
+       both light colours in its one-shot 3D setup, and Scene::Initialise3d-
+       Graphics does the same for the scenes that reach it -- so a reset that
+       wipes them here makes a once-per-scene program unobservable: the
+       colours are gone before the first triangle of the first frame is
+       submitted, every light multiplies to zero, and every lit vertex comes
+       out at the emission colour.
+
+       Measured this way round in run mg5 lane YTEX: after the two writes
+       were routed, "LIGHT_COLOR commands executed: 2" and light 0 STILL read
+       colour 0,0,0 at frame 0, because the reset between the setup and the
+       draw had already thrown them away.
+
+       Only the lights are carried. DIF_AMB, SPE_EMI, POLYGON_ATTR and the
+       vertex colour are re-issued per material per frame by every path in
+       this port, so what the reset does with them is unobservable and is
+       left exactly as it was. */
+    State::Light lights[4];
+    for (int i = 0; i < 4; ++i) lights[i] = g.lights[i];
+    const uint32_t light_mask = g.light_mask;
     g = State{};
     g.strip = std::move(strip);
     g.tris = std::move(tris);
+    for (int i = 0; i < 4; ++i) g.lights[i] = lights[i];
+    g.light_mask = light_mask;
     g_teximage = g_plttbase = 0;
     // The stack slots must start as identity, not zero. Model display lists open
     // with MTX_RESTORE against a slot the *scene* filled in earlier; rendering a
@@ -974,6 +1067,63 @@ void gx_matrix_stack_levels(unsigned &pos_level, unsigned &proj_level) {
 const GxTriangle *gx_polygons(size_t &count) {
     count = g.tris.size();
     return g.tris.empty() ? nullptr : g.tris.data();
+}
+
+/* SM64DS_MAT_LOG=1: once, after the first full frame is assembled, the
+   LIGHTING side of the same picture -- every distinct POLYGON_ATTR, DIF_AMB
+   and SPE_EMI word that reached exec(), the light table the engine is
+   holding, and the words actually SITTING in the mapped I/O window at the
+   four material registers.
+
+   That last column is the one this exists for. ntr maps real memory across
+   0x04000000, so a translation unit that writes a geometry register with a
+   plain store still latches a value there while the geometry engine never
+   sees the command. Reading the latch apart from reading the engine is what
+   separates "the game never asked for a light" from "the game asked and the
+   ask did not arrive", and those two have the same symptom: every lit vertex
+   comes out at the emission colour, which is usually black. */
+static void mat_report() {
+    static int on = -1;
+    if (on < 0) on = mat_log();
+    if (!on) return;
+    on = 0;                              // one frame is the whole report
+    printf("[mat] POLYGON_ATTR words seen (%u distinct):\n", g_matlog_nattr);
+    for (unsigned i = 0; i < g_matlog_nattr; ++i)
+        printf("[mat]   %08x  lights=%u%u%u%u mode=%u cull=%u alpha=%u id=%u "
+               "NORMALs=%u\n",
+               g_matlog_attr[i], g_matlog_attr[i] & 1u,
+               (g_matlog_attr[i] >> 1) & 1u, (g_matlog_attr[i] >> 2) & 1u,
+               (g_matlog_attr[i] >> 3) & 1u, (g_matlog_attr[i] >> 4) & 3u,
+               (g_matlog_attr[i] >> 6) & 3u, (g_matlog_attr[i] >> 16) & 31u,
+               (g_matlog_attr[i] >> 24) & 63u, g_matlog_attr_normals[i]);
+    printf("[mat]   NORMALs under an untabled attr: %u\n",
+           g_matlog_normals_other);
+    printf("[mat] DIF_AMB words seen (%u distinct):", g_matlog_ndifamb);
+    for (unsigned i = 0; i < g_matlog_ndifamb; ++i)
+        printf(" %08x", g_matlog_difamb[i]);
+    printf("\n[mat] SPE_EMI words seen (%u distinct):", g_matlog_nspeemi);
+    for (unsigned i = 0; i < g_matlog_nspeemi; ++i)
+        printf(" %08x", g_matlog_speemi[i]);
+    printf("\n[mat] LIGHT_VECTOR commands executed: %u   LIGHT_COLOR: %u\n",
+           g_matlog_nlightvec, g_matlog_nlightcol);
+    printf("[mat] engine light_mask=%x diffuse=%.3f,%.3f,%.3f "
+           "ambient=%.3f,%.3f,%.3f emission=%.3f,%.3f,%.3f\n",
+           g.light_mask, g.diffuse[0], g.diffuse[1], g.diffuse[2],
+           g.ambient[0], g.ambient[1], g.ambient[2],
+           g.emission[0], g.emission[1], g.emission[2]);
+    for (int i = 0; i < 4; ++i)
+        printf("[mat]   light %d dir=%.3f,%.3f,%.3f col=%.3f,%.3f,%.3f\n", i,
+               g.lights[i].dx, g.lights[i].dy, g.lights[i].dz,
+               g.lights[i].r, g.lights[i].g, g.lights[i].b);
+    /* The latch, read straight out of the mapped window. */
+    const uint32_t a0 = *reinterpret_cast<volatile uint32_t *>(0x040004C0u);
+    const uint32_t a1 = *reinterpret_cast<volatile uint32_t *>(0x040004C4u);
+    const uint32_t a2 = *reinterpret_cast<volatile uint32_t *>(0x040004C8u);
+    const uint32_t a3 = *reinterpret_cast<volatile uint32_t *>(0x040004CCu);
+    printf("[mat] I/O LATCH  DIF_AMB(4c0)=%08x SPE_EMI(4c4)=%08x "
+           "LIGHT_VECTOR(4c8)=%08x LIGHT_COLOR(4cc)=%08x\n", a0, a1, a2, a3);
+    printf("[mat] A NONZERO LATCH WITH A ZERO COMMAND COUNT IS A STORE THAT "
+           "NEVER REACHED THE ENGINE.\n");
 }
 
 /* SM64DS_TRI_LOG=1: once, after the first full frame is assembled, the
@@ -1146,6 +1296,7 @@ void gx_render(Framebuffer &fb) {
     std::chrono::steady_clock::time_point t_enter;
     if (tm) t_enter = std::chrono::steady_clock::now();
     tri_report();
+    mat_report();
     /* Depth clear: 768KB at the window's 2x tier, every frame. 1e30f is not a
        repeating byte pattern so memset cannot do it, but one row can be built
        scalar and the rest copied from it, which is memcpy's problem rather
