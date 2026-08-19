@@ -9,14 +9,15 @@
  * re-declared a 0x50-byte pad in place of the inherited chain, so `dScBoot_c`
  * and `dScene_c` were unrelated types even though the ROM has one derived from
  * the other. include/dScene_c.h's own census already flags the split this file
- * resolves: the class's two known non-destructor methods (InitResources,
- * Behavior) are still reached through dScBoot_c.h and its ROM-name struct --
- * they are NOT part of this migration -- while the class's FUNCTIONS are
- * attributed under the English coinage BootScene, because that is what its
- * destructor symbols (_ZN9BootSceneD1Ev / _ZN9BootSceneD0Ev) mangle to. This
- * header follows include/Stage.h's precedent: named after the coinage, not
- * the ROM struct name. include/dScBoot_c.h is left in place -- src/func_02005a58.c
- * and src/func_02005418.c still include it and are out of this slice's scope.
+ * resolves. The class's FUNCTIONS are attributed under the English coinage
+ * BootScene, because that is what its destructor symbols (_ZN9BootSceneD1Ev /
+ * _ZN9BootSceneD0Ev) mangle to. This header follows include/Stage.h's
+ * precedent: named after the coinage, not the ROM struct name.
+ * include/dScBoot_c.h is left in place -- src/_ZN9BootScene13InitResourcesEv.c
+ * still includes it for field-offset arithmetic (src/_ZN9BootScene8BehaviorEv.c
+ * indexes `c` directly and includes neither header) and both are out of this
+ * slice's LAYOUT scope (see NOT CONVERTED below); only their SYMBOL NAMES are
+ * this slice's work.
  *
  * DERIVATION. The ROM's type graph (tools/rtti_extract.py) has dScBoot_c at
  * 0x020914c8, vtable 0x02091528 (data_02091528) -- and its single base is
@@ -25,22 +26,31 @@
  * VTABLE. data_02091528 is 18 slots, the same shape dScene_c and Stage have, and
  * BootScene overrides two functionally --
  *
- *     0  InitResources   (src/func_02005a58.c, dScBoot_c_InitResources --
- *                          not migrated by this slice)
- *     6  Behavior        (src/func_02005418.c, dScBoot_c_Behavior --
- *                          not migrated by this slice)
+ *     0  InitResources   ov(arm9) 0x02005a58  (src/_ZN9BootScene13InitResourcesEv.c)
+ *     6  Behavior        ov(arm9) 0x02005418  (src/_ZN9BootScene8BehaviorEv.c)
  *
- * -- plus the destructor pair at 16/17, which IS this slice. The remaining
- * fourteen still point at dScene_c's Before/After hooks or at fBase_c.
+ * -- plus the destructor pair at 16/17. The remaining fourteen still point at
+ * dScene_c's Before/After hooks or at fBase_c. Both bytes still match; only
+ * the symbol NAMES were placeholders (func_02005a58 / func_02005418), now
+ * renamed to their mangled form -- confirmed against
+ * config/arm9/relocs.txt's vtable words at 0x02091528 and 0x02091540 (slots
+ * 0 and 6), which load exactly these two addresses.
+ *
+ * NOT CONVERTED TO REAL METHODS BY THIS PASS, same idiom as include/Door.h
+ * and src/_ZN7fBase_c13InitResourcesEv.cpp: both are declared here as
+ * overrides so the header documents the vtable completely, but defined as
+ * free functions taking the object pointer explicitly, never as real
+ * `BootScene::` methods -- so nothing about their bodies or field-offset
+ * arithmetic (still through include/dScBoot_c.h) had to change to land the
+ * correct mangled symbol.
  *
  * KEY FUNCTION. Slot 16 (the D1) is declared first below, which is safe for a
  * derived class (an override takes its base's slot wherever it is declared)
  * and deliberate: it makes ~BootScene the key function, and ~BootScene is
  * only ever defined as a real out-of-line destructor in _ZN9BootSceneD1Ev.cpp
- * and _ZN9BootSceneD0Ev.cpp. No translation unit defines InitResources or
- * Behavior as BootScene methods -- they remain free C functions bound into
- * the vtable purely through the ROM's literal data, exactly as the comment
- * above notes -- so nothing here competes with the destructor for the role.
+ * and _ZN9BootSceneD0Ev.cpp. Declaring InitResources/Behavior as overrides
+ * below does not compete with the destructor for the role, because neither
+ * is ever defined as a real BootScene:: method (see NOT CONVERTED above).
  *
  * LAYOUT. include/dScBoot_c.h (the auto-generated header) put a u16 at 0x050,
  * a u8 at 0x052, an assumed pad at 0x053, then u8s at 0x054 and 0x055, ending
@@ -48,7 +58,7 @@
  * offsets -- both still shadow-struct and out of this slice, but legitimate
  * ROM evidence -- turns up two corrections:
  *
- *   1. 0x053 is NOT padding. src/func_02005418.c (Behavior) both reads and
+ *   1. 0x053 is NOT padding. src/_ZN9BootScene8BehaviorEv.c (Behavior) both reads and
  *      writes it as a real 0/1 value (`*(u8 *)(c + 0x53) = 0;` / `== 1`), and
  *      src/func_02005348.c -- called from Behavior with the same `this` --
  *      compares it against a loop index, `i == s[0x53]`. Two independent
@@ -80,6 +90,11 @@ struct BootScene : dScene_c {
     /* Declared first, deliberately -- see KEY FUNCTION above. Overrides slots
        16 (D1) and 17 (D0); the position in this list does not affect that. */
     virtual ~BootScene();
+
+    /* Overrides of inherited fBase_c slots dScene_c left untouched -- see
+       VTABLE and NOT CONVERTED above. */
+    virtual s32 InitResources();          /* slot 0 */
+    virtual s32 Behavior();               /* slot 6 */
 };
 
 /* Holds the chain to the size func_02023624.c's operator new(0x58) call

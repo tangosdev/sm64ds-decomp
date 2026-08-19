@@ -67,6 +67,7 @@ struct Unagi : dEnemyBase_c {
     virtual s32 CleanupResources();
     virtual s32 Behavior();
     virtual s32 Render();
+    void OnPendingDestroy();
 };
 
 #else

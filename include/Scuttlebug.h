@@ -1,30 +1,46 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Scuttlebug: 5 matched functions, 5 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef SCUTTLEBUG_H
 #define SCUTTLEBUG_H
-#include "types.h"
-#include "ModelAnim.h"
 
-struct Scuttlebug {
-    u8  pad_000[0xd4];
-    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
-    ModelAnim mModelAnim;            /* 0x0d4 */
-    u8  mShadowModel;            /* 0x138 */
-    u8  pad_139[0x27];
-    u8  mMovingCylinderClsn;            /* 0x160 */
-    u8  pad_161[0x33];
-    u8  mWithMeshClsn;            /* 0x194 */
-    u8  pad_195[0x213];
-    u8  unk_3a8;            /* 0x3a8 */
-#ifdef __cplusplus
-    /* methods */
+#include "types.h"
+#include "dActor_c.h"
+#include "ModelAnim.h"
+#include "ShadowModel.h"
+#include "MovingCylinderClsn.h"
+#include "WithMeshClsn.h"
+
+/* TWO WITNESSES, and they close on each other:
+ *
+ *   Scuttlebug_Spawn  fBase_c::operator new(940 = 0x3ac), dActor_c::dActor_c(), stores _ZTV10Scuttlebug,
+ *                 then the four members below in this order.
+ *   ~Scuttlebug   the same members destroyed in reverse, then ~dActor_c.
+ *
+ * SIZE 0x3ac is the factory's own literal, and the trailing byte fields close exactly on it.
+ *
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c (relocs.txt, ov071). Only the
+ * slots declared below differ; every other slot holds the base's own word and is inherited,
+ * so it is deliberately not redeclared here.
+ */
+struct Scuttlebug : dActor_c {
+    u8  pad_0d0[0x4];
+    ModelAnim mModelAnim;                    /* 0x0d4 */
+    ShadowModel mShadowModel;                /* 0x138 */
+    MovingCylinderClsn mMovingCylinderClsn;  /* 0x160 */
+    WithMeshClsn mWithMeshClsn;              /* 0x194 */
+    u8  pad_350[0x58];
+    u8  unk_3a8;                             /* 0x3a8 */
+    u8  pad_3a9[0x3];
+
+    virtual ~Scuttlebug();            /* slots 16 (D1), 17 (D0) */
+
+    virtual int   OnYoshiTryEat();               /* slot 18 */
+    virtual int   OnTurnIntoEgg(Player &player); /* slot 19 */
+    virtual int   OnAimedAtWithEgg();            /* slot 29 */
+
     int Behavior();
     int InitResources();
     int Render();
-#endif
 };
 
-#endif
+typedef char Scuttlebug_size_must_be_0x3ac[sizeof(Scuttlebug) == 0x3ac ? 1 : -1];
+
+#endif /* SCUTTLEBUG_H */

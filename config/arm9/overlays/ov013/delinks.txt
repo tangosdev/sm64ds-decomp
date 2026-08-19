@@ -12,7 +12,7 @@ src/_ZN21ClockPaintingPendulumD0Ev.c:
     complete
     .text start:0x021111d0 end:0x02111214
 
-src/func_ov013_02111214.c:
+src/_ZN21ClockPaintingPendulum16CleanupResourcesEv.c:
     complete
     .text start:0x02111214 end:0x02111238
 
@@ -20,15 +20,15 @@ src/func_ov013_02111238.c:
     complete
     .text start:0x02111238 end:0x02111280
 
-src/func_ov013_02111280.cpp:
+src/_ZN21ClockPaintingPendulum6RenderEv.cpp:
     complete
     .text start:0x02111280 end:0x021112a8
 
-src/func_ov013_021112a8.c:
+src/_ZN21ClockPaintingPendulum8BehaviorEv.c:
     complete
     .text start:0x021112a8 end:0x0211133c
 
-src/func_ov013_0211133c.cpp:
+src/_ZN21ClockPaintingPendulum13InitResourcesEv.cpp:
     complete
     .text start:0x0211133c end:0x02111384
 

@@ -44,8 +44,8 @@ int Ukiki::InitResources()
     mModelAnim.speed = 0x1000;
     _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x160, ((char *)this), 0x28000, 0x64000, 0x800004, 0x49000);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x194, ((char *)this), 0x32000, 0x32000, 0, 0);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     py = (int *)(((int)((char *)this) + 0x384));
     unk_380 = mPosX;
     unk_384 = mPosY;
@@ -60,7 +60,7 @@ int Ukiki::InitResources()
     unk_3a8 = 0;
     unk_3ac = 0;
     unk_3cb = 0x96;
-    h = mActorID;
+    h = actorID;
     b = 0;
     if (h == 0x10b)
         b = 1;

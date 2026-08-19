@@ -3461,7 +3461,7 @@ src/func_ov006_020efaa8.c:
     complete
     .text start:0x020efaa8 end:0x020efaf0
 
-src/_ZN8PathLift17BaseInitResourcesEv.c:
+src/dScMgJump2_c_Spawn.c:
     complete
     .text start:0x020efaf0 end:0x020efc08
 

@@ -22,8 +22,8 @@ int BabyPenguin::InitResources()
     }
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0) return 0;
     _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x160, ((char *)this), 0x28000, 0x50000, 0x800004, 0x9000);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     unk_350 = mPosX;
     unk_354 = mPosY;
     unk_358 = mPosZ;

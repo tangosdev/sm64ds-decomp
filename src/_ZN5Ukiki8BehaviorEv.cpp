@@ -19,8 +19,6 @@ extern void func_ov030_02114134(dActor_c *c);
 extern void func_ov030_02112094(dActor_c *c);
 }
 
-struct dActor_c { char pad[0x800]; };
-
 struct VObj {
     virtual void v0();
     virtual void v1();

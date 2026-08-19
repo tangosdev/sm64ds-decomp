@@ -11,7 +11,7 @@ extern int func_ov077_02123d40(void*);
 
 int Lakitu::Behavior()
 {
-  int v = mParam;
+  int v = param1;
   if(_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char *)this), v ? 0x1068000 : 0x7d0000)) return 1;
   func_ov077_02124718(((char *)this));
   func_ov077_02123d40(((char *)this));

@@ -107,5 +107,63 @@ class Retarget(unittest.TestCase):
         self.assertEqual(self.obj.read_bytes(), before)
 
 
+class VersionPinAudit(unittest.TestCase):
+    """A pin that stops applying is the most expensive failure this build can emit.
+
+    It produces wrong bytes for a function whose source is correct, and every
+    per-file gate keeps calling that function exact, because they all compile it
+    WITH the pin (build_pin reads the same table). Only the whole-module compare
+    disagrees. So the pin table is checked against the tree before the first
+    compile rather than discovered afterwards.
+    """
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.repo = pathlib.Path(self.tmp.name)
+        (self.repo / "src").mkdir()
+        (self.repo / "mods").mkdir()
+        for stem in ("Pinned", "Waiting"):
+            (self.repo / "src" / f"{stem}.c").write_text("int x;\n", encoding="utf-8")
+        self.mw = self.repo / "tools" / "mwccarm"
+        (self.mw / "1.2" / "base").mkdir(parents=True)
+        (self.mw / "1.2" / "base" / "mwccarm.exe").write_bytes(b"stub")
+        self.old_repo, self.old_mw = RB.REPO, RB.MW
+        RB.REPO, RB.MW = self.repo, self.mw
+
+    def tearDown(self):
+        RB.REPO, RB.MW = self.old_repo, self.old_mw
+        self.tmp.cleanup()
+
+    def test_enrolled_pin_is_reported_as_applied(self):
+        applied, inert = RB.audit_version_pins({"Pinned": "1.2/base"}, ["src/Pinned.c"])
+        self.assertEqual(applied, ["Pinned"])
+        self.assertEqual(inert, [])
+
+    def test_pin_on_a_file_that_exists_but_is_not_enrolled_is_inert_not_fatal(self):
+        # Configured and waiting for a `complete` marker. Not a defect.
+        applied, inert = RB.audit_version_pins({"Waiting": "1.2/base"}, ["src/Pinned.c"])
+        self.assertEqual(applied, [])
+        self.assertEqual(inert, ["Waiting"])
+
+    def test_pin_naming_no_file_at_all_is_fatal(self):
+        # The shape of a rename whose pin was not re-keyed in the same commit.
+        with self.assertRaises(RB.BuildError) as caught:
+            RB.audit_version_pins({"func_ov013_021112a8": "1.2/base"}, ["src/Pinned.c"])
+        self.assertIn("func_ov013_021112a8", caught.exception.output)
+        self.assertIn("re-key", caught.exception.output)
+
+    def test_pin_naming_an_uninstalled_compiler_is_fatal(self):
+        # The default-only preflight cannot catch this: it never looks at the pins.
+        with self.assertRaises(RB.BuildError) as caught:
+            RB.audit_version_pins({"Pinned": "1.2/sp4"}, ["src/Pinned.c"])
+        self.assertIn("1.2/sp4", caught.exception.output)
+
+    def test_a_mods_file_satisfies_a_pin(self):
+        (self.repo / "mods" / "Replaced.cpp").write_text("int y;\n", encoding="utf-8")
+        applied, inert = RB.audit_version_pins({"Replaced": "1.2/base"},
+                                               ["mods/Replaced.cpp"])
+        self.assertEqual(applied, ["Replaced"])
+
+
 if __name__ == "__main__":
     unittest.main()

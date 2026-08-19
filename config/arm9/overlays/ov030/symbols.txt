@@ -14,7 +14,7 @@ _ZN13RollingLogTtm13InitResourcesEv kind:function(arm,size=0x14) addr:0x02111638
 RollingLogTtm_Spawn kind:function(arm,size=0x3c) addr:0x0211164c
 _ZN5UkikiD1Ev kind:function(arm,size=0x48) addr:0x02111688
 _ZN5UkikiD0Ev kind:function(arm,size=0x5c) addr:0x021116d0
-func_ov030_0211172c kind:function(arm,size=0x8) addr:0x0211172c
+_ZN5Ukiki13OnYoshiTryEatEv kind:function(arm,size=0x8) addr:0x0211172c
 func_ov030_02111734 kind:function(arm,size=0x15c) addr:0x02111734
 func_ov030_02111890 kind:function(arm,size=0x78) addr:0x02111890
 func_ov030_02111908 kind:function(arm,size=0xf8) addr:0x02111908
@@ -55,7 +55,7 @@ _ZN5Ukiki16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0211422c
 _ZN5Ukiki6RenderEv kind:function(arm,size=0x48) addr:0x02114230
 _ZN5Ukiki8BehaviorEv kind:function(arm,size=0x100) addr:0x02114278
 _ZN5Ukiki13InitResourcesEv kind:function(arm,size=0x25c) addr:0x02114378
-func_ov030_021145d4 kind:function(arm,size=0xc) addr:0x021145d4
+_ZN5Ukiki13OnTurnIntoEggER6Player kind:function(arm,size=0xc) addr:0x021145d4
 UkikiStar_Spawn kind:function(arm,size=0x58) addr:0x021145e0
 UkikiThief_Spawn kind:function(arm,size=0x58) addr:0x02114638
 data_ov030_02114690 kind:data(any) addr:0x02114690

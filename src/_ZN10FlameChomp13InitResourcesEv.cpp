@@ -53,8 +53,8 @@ int FlameChomp::InitResources()
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         ((char*)this) + 0x1a0, ((char*)this), 0x32000, 0x32000, 0, 0);
 
-    unk_09c = 0;
-    unk_0a0 = 0;
+    mVertAccel = 0;
+    mTerminalVelocity = 0;
     func_ov070_02121880(((char*)this), 0);
 
     mScaleX = 0x1000;
@@ -63,7 +63,7 @@ int FlameChomp::InitResources()
     *(struct Blk*)((char*)&unk_35c) = data_02082128;
 
     _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, (struct Vector3*)((char*)&unk_05c), ((char*)this));
+    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, (struct Vector3*)((char*)&mPosX), ((char*)this));
     if (_ZN13RaycastGround10DetectClsnEv(&rg))
         t = (mPosY - rg.f44) + 0x1e000;
     else

@@ -4,7 +4,7 @@
 /* recovered: renamed to Class_Method */
 /* daKrb_c::OnTurnIntoEgg - recovered from vtable slot identity */
 extern "C" {
-void _ZN8CapEnemy15RespawnIfHasCapEv(char *self);
+void _ZN11dCapEnemy_c15RespawnIfHasCapEv(char *self);
 int _ZN6Player15IsCollectingCapEv(char *p);
 void _ZN8dActor_c15GivePlayerCoinsER6Playerhj(char *self, char *p, unsigned char a, unsigned int b);
 void func_ov084_021296cc(char *self);
@@ -48,7 +48,7 @@ extern "C" void func_ov084_0212b344(char *self, char *player)
         *(int *)(self + 0x5c) = *(int *)(self + 0x41c);
         *(int *)(self + 0x60) = *(int *)(self + 0x420);
         *(int *)(self + 0x64) = *(int *)(self + 0x424);
-        _ZN8CapEnemy15RespawnIfHasCapEv(self);
+        _ZN11dCapEnemy_c15RespawnIfHasCapEv(self);
     }
 
     if (o->GetState() == 6) {
@@ -65,7 +65,10 @@ extern "C" void func_ov084_0212b344(char *self, char *player)
                 _ZN8dActor_c11UntrackStarERa(self, (signed char *)(self + 0x465));
                 b4 = 1;
                 _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0xb4, 0x50, self + 0x41c, 0, *(signed char *)(self + 0xcc), -1);
-                *(int *)(self + 8) = *(int *)(self + 8) & 0xff0f;
+                /* unsigned on the load side only: spelling both sides identically
+                   lets mwccarm CSE the field address (add r2,r7,#8 + [r2]),
+                   one instruction the ROM does not have -- it wants [r7,#8] direct */
+                *(int *)(self + 8) = *(unsigned int *)(self + 8) & 0xff0f;
             } else if (*(unsigned char *)(self + 0x464) == 2) {
                 if (*(unsigned char *)(self + 0x466) == data_0209f344[data_0209f208]) {
                     _ZN8dActor_c11UntrackStarERa(self, (signed char *)(self + 0x465));

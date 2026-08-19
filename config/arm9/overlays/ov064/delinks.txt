@@ -12,7 +12,7 @@ src/_ZN7daOts_cD0Ev.c:
     complete
     .text start:0x02115f28 end:0x02115f84
 
-src/_ZN7daOts_c16OnAimedAtWithEggEv.c:
+src/_ZN7daOts_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02115f84 end:0x02115f98
 

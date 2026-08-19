@@ -2474,7 +2474,7 @@
         "TWO FOREIGN-NAMED FUNCTIONS SIT INSIDE THE SPAN and are admitted deliberately: _ZN5Stage12SetVramBanksEv (0x0202e73c) and _ZN2GX15DisableAllBanksEv (0x0202e78c) lie between _ZN8dScene_c20Initialise3dGraphicsEv (0x0202e6c8) and _ZN8dScene_c22ResetHardwareRegistersEv (0x0202e7d4). An object's contribution to a section is a single contiguous interval, so if those two Scene functions share an object then so do the two between them. The data attribution below is what establishes that they do.",
         "STATIC-DATA ATTRIBUTION, which is the decisive reading. This TU's statics form one unbroken .data block ending in the vtable it is the key-function TU for: data_02092660 (u8) / data_02092664 (u16) / data_02092668 (Matrix2x2, 0x10 bytes, ending 0x02092678) / _ZTV8dScene_c's Itanium preamble at 0x02092678 / _ZTV8dScene_c at 0x02092680, 18 slots, ending 0x020926c8 where the next symbol data_020926c8 begins. From config/arm9/relocs.txt those three statics are referenced ONLY from inside this span, and from BOTH SIDES of the foreign pair: data_02092660 <- 0x0202e2f0, 0x0202e344, 0x0202e5e8; data_02092664 <- 0x0202e2f4, 0x0202e340, 0x0202e390, 0x0202e5c4 (all BELOW the pair); data_02092668 <- 0x0202ebe4, which is inside ResetHardwareRegisters, ABOVE the pair. Object k's contribution to EVERY section precedes object k+1's, in ascending disjoint intervals, so one object owns 0x02092660..0x020926c8; both text sub-runs reach into it; therefore both sub-runs are that one object, and the pair between them is inside it.",
         "the source order the reverse-emission rule implies is a coherent file: reversing the ROM address order yields BeforeInitResources then AfterInitResources, then the Cleanup pair, then Behavior, then Render -- each Before immediately before its After, the four groups in ActorBase's own declaration order, destructor last. Corroboration, not proof.",
-        "THE FOUR GraphCallbacks ARE EXCLUDED, on evidence, not omission. _ZN8dScene_c14GraphCallback0Ev..3Ev are at 0x02018ea0..0x02018ec0, 0x152a0 bytes below this run. The same single-contiguous-interval rule the admission of the foreign pair rests on excludes them outright: no object can contribute .text at both 0x02018ea0 and 0x0202e140 with ~86 KB of other objects' code in between. Three further readings agree: (a) their neighbours are func_02018e68, an OS_SleepThread wrapper, and func_02018ec0, a fader slot-2 dispatch -- a system/graphics grab-bag, not a scene class; (b) the pointer tables holding them, 0x0208ee14..0x0208ee20, are ~0x3800 bytes below this TU's .data block and on the far side of _ZTV7dBase_c (0x0208e4b8), i.e. in a much earlier object's data contribution; (c) their own address order reverses to GraphCallback0,1,2,3, so they ARE consecutive definitions in one source file -- just not this one. Which TU is theirs was not established.",
+        "THE FOUR GraphCallbacks ARE EXCLUDED, on evidence, not omission. _ZN8dGraph_c10callback_c14GraphCallback0Ev..3Ev are at 0x02018ea0..0x02018ec0, 0x152a0 bytes below this run. The same single-contiguous-interval rule the admission of the foreign pair rests on excludes them outright: no object can contribute .text at both 0x02018ea0 and 0x0202e140 with ~86 KB of other objects' code in between. Three further readings agree: (a) their neighbours are func_02018e68, an OS_SleepThread wrapper, and func_02018ec0, a fader slot-2 dispatch -- a system/graphics grab-bag, not a scene class; (b) the pointer tables holding them, 0x0208ee14..0x0208ee20, are ~0x3800 bytes below this TU's .data block and on the far side of _ZTV7dBase_c (0x0208e4b8), i.e. in a much earlier object's data contribution; (c) their own address order reverses to GraphCallback0,1,2,3, so they ARE consecutive definitions in one source file -- just not this one. Which TU is theirs was not established.",
         "module sinit corroboration: 23 sinit(s) / 23 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, and NOT narrowing to this TU: `main` has 23 static initialisers against 3067 functions, none of which references any of this TU's four data symbols, so static-initialiser attribution contributes NOTHING here and is recorded as such rather than quoted as support)."
       ],
       "sections": [
@@ -2811,7 +2811,7 @@
       "boundary_evidence": [
         "contiguous linker run: 0x020ad838..0x020aedbc, 31 functions in build/tu_map.json (tools/tu_map.py, run after rtti_extract.py + rtti_vtables.py). THIRTY are declared here; ordinal 4, _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn at 0x020ade78 size 0x3cc, has no source anywhere under src/ and is a hole in the middle of the run.",
         "class label(s): Enemy -- the tree's name for Nintendo's dEnemyBase_c",
-        "neighbours: the function immediately below the span is func_ov002_020ad660 and the one immediately above is func_ov002_020aedbc, which is followed at 0x020aedf4 by the CapEnemy/OneUpMushroom destructor family -- a different class. Every function symbol strictly inside 0x020ad838..0x020aedbc is one of the 31.",
+        "neighbours: the function immediately below the span is func_ov002_020ad660 and the one immediately above is func_ov002_020aedbc, which is followed at 0x020aedf4 by the dCapEnemy_c/OneUpMushroom destructor family -- a different class. Every function symbol strictly inside 0x020ad838..0x020aedbc is one of the 31.",
         "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU).",
         "VTABLE EXTENT, measured: config/arm9/overlays/ov002/symbols.txt puts _ZTS12dEnemyBase_c at 0x021081cc and _ZTI11dCapEnemy_c at 0x02108260, so the vtable OBJECT occupies 0x021081dc..0x02108260 = 0x84 bytes exactly, which is the size this TU's compiled _ZTV12dEnemyBase_c comes out. Its 33 words are offset-to-top 0, typeinfo -> 0x021081c0 (_ZTI12dEnemyBase_c), then 31 slots -- slot 16 = 0x020aed74 (_ZN12dEnemyBase_cD1Ev) and slot 17 = 0x020aed3c (_ZN12dEnemyBase_cD0Ev), both inside this span; the other 29 point into arm9. That independently confirms include/Enemy.h's virtual set: Enemy declares exactly one virtual of its own, the destructor, and adds no new slot to Actor's 31."
       ],
@@ -3573,6 +3573,447 @@
           },
           "symbolCheckNewVsBaseline": [],
           "linkerOutput": null
+        }
+      }
+    },
+    {
+      "id": "ov009/CastleWater",
+      "module": "ov009",
+      "source": "src_tu/actors/CastleWater.cpp",
+      "promoted_source": "src/actors/CastleWater.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x2111a70..0x2111dc4, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): CastleWater",
+        "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x02111a70",
+          "end": "0x02111dc4"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN11CastleWaterD1Ev",
+          "address": "0x02111a70",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN11CastleWaterD1Ev.c",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN11CastleWaterD0Ev",
+          "address": "0x02111abc",
+          "size": "0x00000060",
+          "legacy_source": "src/_ZN11CastleWaterD0Ev.c",
+          "ordinal": 1
+        },
+        {
+          "symbol": "func_ov009_02111b1c",
+          "address": "0x02111b1c",
+          "size": "0x000000b8",
+          "legacy_source": "src/func_ov009_02111b1c.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN11CastleWater16CleanupResourcesEv",
+          "address": "0x02111bd4",
+          "size": "0x00000044",
+          "legacy_source": "src/_ZN11CastleWater16CleanupResourcesEv.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "_ZN11CastleWater6RenderEv",
+          "address": "0x02111c18",
+          "size": "0x00000034",
+          "legacy_source": "src/_ZN11CastleWater6RenderEv.cpp",
+          "ordinal": 4
+        },
+        {
+          "symbol": "_ZN11CastleWater8BehaviorEv",
+          "address": "0x02111c4c",
+          "size": "0x00000028",
+          "legacy_source": "src/_ZN11CastleWater8BehaviorEv.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "_ZN11CastleWater13InitResourcesEv",
+          "address": "0x02111c74",
+          "size": "0x00000118",
+          "legacy_source": "src/_ZN11CastleWater13InitResourcesEv.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "CastleWater_Spawn",
+          "address": "0x02111d8c",
+          "size": "0x00000038",
+          "legacy_source": "src/CastleWater_Spawn.c",
+          "ordinal": 7
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: CONFLICT: extern declaration 'data_0209caa0' differs between the legacy file that used to hold func_ov009_02111b1c and the one that held _ZN11CastleWater13InitResourcesEv; kept the first, the other is commented out for review",
+        "8/8 MATCH, objisolate clean, reloc-destinations clean. Reconciliations: real SharedFilePtr.h wins over the one-line shadow; scalar/array duplicate declarations of data_0209f2d8, data_ov009_02113c68/70 collapsed to the most complete form with address-of fixes at the decayed-use sites; func_ov009_02111b1c declaration aligned to its void definition."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov009-CastleWater/CastleWater.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 8,
+        "functions_declared": 8,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "PASS",
+          "functions_occur_in_expected_order": "PASS",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
+    },
+    {
+      "id": "ov009/MetalNet",
+      "module": "ov009",
+      "source": "src_tu/actors/MetalNet.cpp",
+      "promoted_source": "src/actors/MetalNet.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x2111dc4..0x2112078, 8 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): MetalNet",
+        "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x02111dc4",
+          "end": "0x02112078"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN8MetalNetD1Ev",
+          "address": "0x02111dc4",
+          "size": "0x00000044",
+          "legacy_source": "src/_ZN8MetalNetD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN8MetalNetD0Ev",
+          "address": "0x02111e08",
+          "size": "0x00000058",
+          "legacy_source": "src/_ZN8MetalNetD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN8MetalNet16CleanupResourcesEv",
+          "address": "0x02111e60",
+          "size": "0x00000044",
+          "legacy_source": "src/_ZN8MetalNet16CleanupResourcesEv.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN8MetalNet16OnPendingDestroyEv",
+          "address": "0x02111ea4",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN8MetalNet16OnPendingDestroyEv.c",
+          "ordinal": 3
+        },
+        {
+          "symbol": "_ZN8MetalNet6RenderEv",
+          "address": "0x02111ea8",
+          "size": "0x00000028",
+          "legacy_source": "src/_ZN8MetalNet6RenderEv.cpp",
+          "ordinal": 4
+        },
+        {
+          "symbol": "_ZN8MetalNet8BehaviorEv",
+          "address": "0x02111ed0",
+          "size": "0x00000070",
+          "legacy_source": "src/_ZN8MetalNet8BehaviorEv.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "_ZN8MetalNet13InitResourcesEv",
+          "address": "0x02111f40",
+          "size": "0x00000108",
+          "legacy_source": "src/_ZN8MetalNet13InitResourcesEv.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "MetalNet_Spawn",
+          "address": "0x02112048",
+          "size": "0x00000030",
+          "legacy_source": "src/MetalNet_Spawn.c",
+          "ordinal": 7
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: CONFLICT: extern declaration '_ZN10dBgActor_c21UpdateModelPosAndRotYEv' differs between the legacy file that used to hold _ZN8MetalNet8BehaviorEv and the one that held _ZN8MetalNet13InitResourcesEv; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration '_ZN10dBgActor_c19UpdateClsnPosAndRotEv' differs between the legacy file that used to hold _ZN8MetalNet8BehaviorEv and the one that held _ZN8MetalNet13InitResourcesEv; kept the first, the other is commented out for review",
+        "8/8 MATCH, objisolate clean, reloc-destinations clean. Reconciliations: single ~MetalNet() emits D0+D1 (duplicate definition from the legacy pair collapsed); MetalNet_Spawn stores &_ZTV8MetalNet[2] -- the TU defines the vtable, so the +8 slot-array addend applies (the per-reference rule from the ov045 seed)."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov009-MetalNet/MetalNet.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 8,
+        "functions_declared": 8,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 12 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
+    },
+    {
+      "id": "ov009/Flag",
+      "module": "ov009",
+      "source": "src_tu/actors/Flag.cpp",
+      "promoted_source": "src/actors/Flag.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x2112078..0x2112228, 7 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): Flag",
+        "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x02112078",
+          "end": "0x02112228"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN4FlagD1Ev",
+          "address": "0x02112078",
+          "size": "0x00000030",
+          "legacy_source": "src/_ZN4FlagD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN4FlagD0Ev",
+          "address": "0x021120a8",
+          "size": "0x00000044",
+          "legacy_source": "src/_ZN4FlagD0Ev.c",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN4Flag16CleanupResourcesEv",
+          "address": "0x021120ec",
+          "size": "0x00000030",
+          "legacy_source": "src/_ZN4Flag16CleanupResourcesEv.c",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN4Flag6RenderEv",
+          "address": "0x0211211c",
+          "size": "0x00000028",
+          "legacy_source": "src/_ZN4Flag6RenderEv.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "_ZN4Flag8BehaviorEv",
+          "address": "0x02112144",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN4Flag8BehaviorEv.cpp",
+          "ordinal": 4
+        },
+        {
+          "symbol": "_ZN4Flag13InitResourcesEv",
+          "address": "0x02112190",
+          "size": "0x00000060",
+          "legacy_source": "src/_ZN4Flag13InitResourcesEv.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "Flag_Spawn",
+          "address": "0x021121f0",
+          "size": "0x00000038",
+          "legacy_source": "src/Flag_Spawn.c",
+          "ordinal": 6
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "7/7 MATCH, objisolate clean, reloc-destinations clean -- including the ROM's deleting destructor D0 reproduced from a single real ~Flag() with dActor_c's inline operator delete on the TU-local shadow base. include/Flag.h guard-suppressed (its Flag is the flat C view without a destructor); math/Matrix.h included first so Behavior's .t spelling of Matrix4x3 wins; the legacy hand-mangled D0 file's body dropped (mwccarm ICEs on a hand-mangled D0 plus a real destructor in one TU)."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov009-Flag/Flag.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 7,
+        "functions_declared": 7,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 6 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
+    },
+    {
+      "id": "ov009/Bird",
+      "module": "ov009",
+      "source": "src_tu/actors/Bird.cpp",
+      "promoted_source": "src/actors/Bird.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x21111a0..0x2111a70, 13 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): Bird",
+        "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x021111a0",
+          "end": "0x02111a70"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN4BirdD1Ev",
+          "address": "0x021111a0",
+          "size": "0x00000038",
+          "legacy_source": "src/_ZN4BirdD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN4BirdD0Ev",
+          "address": "0x021111d8",
+          "size": "0x0000004c",
+          "legacy_source": "src/_ZN4BirdD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "func_ov009_02111224",
+          "address": "0x02111224",
+          "size": "0x00000010",
+          "legacy_source": "src/func_ov009_02111224.c",
+          "ordinal": 2
+        },
+        {
+          "symbol": "func_ov009_02111234",
+          "address": "0x02111234",
+          "size": "0x00000228",
+          "legacy_source": "src/func_ov009_02111234.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_ov009_0211145c",
+          "address": "0x0211145c",
+          "size": "0x0000017c",
+          "legacy_source": "src/func_ov009_0211145c.c",
+          "ordinal": 4
+        },
+        {
+          "symbol": "func_ov009_021115d8",
+          "address": "0x021115d8",
+          "size": "0x00000114",
+          "legacy_source": "src/func_ov009_021115d8.c",
+          "ordinal": 5
+        },
+        {
+          "symbol": "func_ov009_021116ec",
+          "address": "0x021116ec",
+          "size": "0x00000150",
+          "legacy_source": "src/func_ov009_021116ec.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "_ZN4Bird16CleanupResourcesEv",
+          "address": "0x0211183c",
+          "size": "0x00000030",
+          "legacy_source": "src/_ZN4Bird16CleanupResourcesEv.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "_ZN4Bird16OnPendingDestroyEv",
+          "address": "0x0211186c",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN4Bird16OnPendingDestroyEv.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "_ZN4Bird6RenderEv",
+          "address": "0x02111870",
+          "size": "0x00000028",
+          "legacy_source": "src/_ZN4Bird6RenderEv.cpp",
+          "ordinal": 9
+        },
+        {
+          "symbol": "_ZN4Bird8BehaviorEv",
+          "address": "0x02111898",
+          "size": "0x000000e4",
+          "legacy_source": "src/_ZN4Bird8BehaviorEv.cpp",
+          "ordinal": 10
+        },
+        {
+          "symbol": "_ZN4Bird13InitResourcesEv",
+          "address": "0x0211197c",
+          "size": "0x000000b4",
+          "legacy_source": "src/_ZN4Bird13InitResourcesEv.cpp",
+          "ordinal": 11
+        },
+        {
+          "symbol": "Bird_Spawn",
+          "address": "0x02111a30",
+          "size": "0x00000040",
+          "legacy_source": "src/Bird_Spawn.c",
+          "ordinal": 12
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: CONFLICT: extern declaration 'Vec3_Sub' differs between the legacy file that used to hold func_ov009_02111234 and the one that held func_ov009_0211145c; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzLen' differs between the legacy file that used to hold func_ov009_02111234 and the one that held func_ov009_0211145c; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'Vec3_Sub' differs between the legacy file that used to hold func_ov009_02111234 and the one that held func_ov009_021115d8; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'Vec3_HorzLen' differs between the legacy file that used to hold func_ov009_02111234 and the one that held func_ov009_021115d8; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c10FindWithIDEj' differs between the legacy file that used to hold func_ov009_02111234 and the one that held func_ov009_021115d8; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration '_ZN7fBase_c18MarkForDestructionEv' differs between the legacy file that used to hold func_ov009_02111234 and the one that held func_ov009_021115d8; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'RandomIntInternal' differs between the legacy file that used to hold func_ov009_0211145c and the one that held func_ov009_021116ec; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration '_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as' differs between the legacy file that used to hold func_ov009_0211145c and the one that held func_ov009_021116ec; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'func_ov009_02111224' differs between the legacy file that used to hold func_ov009_0211145c and the one that held func_ov009_021116ec; kept the first, the other is commented out for review",
+        "tubuild create warning: CONFLICT: extern declaration 'data_0209e650' differs between the legacy file that used to hold func_ov009_0211145c and the one that held func_ov009_021116ec; kept the first, the other is commented out for review",
+        "13/13 MATCH, objisolate clean, reloc-destinations clean (tubuild verify). Reconciliations: RandomIntInternal kept as unsigned (021116ec's own decl; signed % 400 changed codegen and cost 999-word DIFF), decl_common.h's char[] view of the two SharedFilePtr globals kept with casts at 4 sites, Bird_Spawn stores &_ZTV4Bird[2] because this TU now defines the vtable, one ~Bird() emits D0+D1. Member func_ov009_0211145c is the pre-existing NONMATCHING asm hatch, carried verbatim with its banner."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov009-Bird/Bird.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 13,
+        "functions_declared": 13,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
         }
       }
     }

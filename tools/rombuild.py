@@ -97,6 +97,59 @@ def versions():
     return out
 
 
+def audit_version_pins(vers, srcs):
+    """Check every `config/rombuild-versions.txt` pin still names a real source file.
+
+    The pin is keyed by FILE STEM -- `compile_one` does
+    `vers.get(pathlib.Path(rel).stem, VERSION)` -- so renaming a pinned function's
+    file silently DETACHES its pin. The build then falls back to the default
+    compiler and emits wrong bytes for a function whose source is perfectly
+    correct.
+
+    Nothing else in the tree can see that. `build_pin.verify`, `pr_linkcheck` and
+    `eligible.py` all compile with the pin (build_pin.version_for reads this same
+    table), so they keep reporting the function exact; only the full-module compare
+    disagrees, by a handful of bytes, in one module, outside every per-file check.
+    That is the most expensive shape of failure this pipeline can produce, and it
+    cost a day on #1607. A stale pin is therefore a hard error, checked before the
+    first compile.
+
+    A pin whose file EXISTS but carries no `complete` is inert, not broken: the
+    function is configured and waiting to be enrolled. That is reported, not failed.
+
+    Returns (applied, inert) as sorted stem lists.
+    """
+    stems = {p.stem for root in ("src", "mods")
+             for p in (REPO / root).rglob("*")
+             if p.suffix in (".c", ".cpp") and p.is_file()}
+    enrolled_stems = {pathlib.Path(s).stem for s in srcs}
+
+    stale = sorted(k for k in vers if k not in stems)
+    if stale:
+        raise BuildError("preflight", 1,
+                         "stale entry in config/rombuild-versions.txt -- no src/ or "
+                         "mods/ file has this stem, so the pin no longer applies and "
+                         "the build would silently use " + VERSION + " instead:\n  "
+                         + "\n  ".join(stale)
+                         + "\nIf the function was renamed, re-key its pin to "
+                           "the new file stem in the same commit.")
+
+    # The preflight only proves the DEFAULT compiler is installed. A pin naming a
+    # service pack that is not present would otherwise fail deep in the compile with
+    # a path error, or -- worse, on a tree where the pin had already detached -- not
+    # at all.
+    for version in sorted(set(vers.values())):
+        exe = MW / version / "mwccarm.exe"
+        if not exe.is_file():
+            raise BuildError("preflight", 1,
+                             f"config/rombuild-versions.txt pins {version}, but "
+                             f"{exe} is missing - see notes/setup-mwccarm.md")
+
+    applied = sorted(k for k in vers if k in enrolled_stems)
+    inert = sorted(k for k in vers if k in stems and k not in enrolled_stems)
+    return applied, inert
+
+
 def launcher():
     """Wine prefix on the Linux build box; empty on native Windows (see match.py)."""
     return os.environ.get("MWCCARM_LAUNCHER", "").split()
@@ -510,9 +563,19 @@ def main():
 
         srcs = enrolled(config_root)
         vers = versions()
-        n_alt = sum(1 for s in srcs if pathlib.Path(s).stem in vers)
+        # Before the first compile: a pin that no longer names a real file has quietly
+        # stopped applying, and the only symptom downstream is a few wrong bytes in one
+        # module that no per-file check can see.
+        pins_applied, pins_inert = audit_version_pins(vers, srcs)
+        n_alt = len(pins_applied)
         report["enrolledFiles"] = len(srcs)
         report["alternateToolchainFiles"] = n_alt
+        # Named, not just counted. When a module compare disagrees with a per-file
+        # check, the first question is which pins actually ran, and a count cannot
+        # answer it -- see tools/validate_merge.py:_module_fidelity_detail.
+        report["alternateToolchain"] = {
+            "applied": {k: vers[k] for k in pins_applied},
+            "inertNotEnrolled": {k: vers[k] for k in pins_inert}}
         cache = RBK.ObjectCache(args.cache_dir or (BUILD / "objcache"), REPO,
                                 enabled=not args.no_cache)
         init_srcs = init_section_sources()
@@ -523,6 +586,10 @@ def main():
         data_sink = None if args.no_data_check else []
         print(f"[3/6] mwccarm: {len(srcs)} enrolled source file(s), -j{args.jobs}"
               + (f" ({n_alt} on an alternate toolchain version)" if n_alt else ""))
+        for stem in pins_applied:
+            print(f"      pinned {vers[stem]:<12} {stem}")
+        for stem in pins_inert:
+            print(f"      pinned {vers[stem]:<12} {stem}  (not enrolled - pin inert)")
         failures = []
         outcomes = {}
         if srcs:

@@ -3,7 +3,7 @@
 extern "C" {
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *a);
 extern void func_0201267c(u32 id, void *p);
-extern void *_ZN8CapEnemy15RespawnIfHasCapEv(void *a);
+extern void *_ZN11dCapEnemy_c15RespawnIfHasCapEv(void *a);
 extern int _ZN6Player9StartTalkER7fBase_cb(void *p, void *a, int b);
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void *p, void *a, u32 msg, void *v, u32 a4, u32 a5);
@@ -39,7 +39,7 @@ extern "C" void func_ov063_0211934c(char *c)
             *(s16 *)(c + 0x8e) = src[1];
             *(s16 *)(c + 0x90) = src[2];
             
-            cap = _ZN8CapEnemy15RespawnIfHasCapEv(c);
+            cap = _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
             if (cap == 0)
                 return;
             {
@@ -130,7 +130,7 @@ extern "C" void func_ov063_0211934c(char *c)
             *(s16 *)(c + 0x8e) = src[1];
             *(s16 *)(c + 0x90) = src[2];
             
-            cap2 = _ZN8CapEnemy15RespawnIfHasCapEv(c);
+            cap2 = _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
             if (cap2 == 0)
                 return;
             {
@@ -158,7 +158,7 @@ extern "C" void func_ov063_0211934c(char *c)
             *(s16 *)(c + 0x8e) = src[1];
             *(s16 *)(c + 0x90) = src[2];
             
-            cap3 = _ZN8CapEnemy15RespawnIfHasCapEv(c);
+            cap3 = _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
             if (cap3 != 0) {
                 u16 *p = (u16 *)((int)cap3 + 0x5d4);
                 *p &= ~2;
