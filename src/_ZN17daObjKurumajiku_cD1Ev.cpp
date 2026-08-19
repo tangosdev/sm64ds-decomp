@@ -16,7 +16,7 @@
  *
  * The body it forces is dBgActor_c's own layout: this class's own field
  * (mMountedActorIds, a plain u32[4]) has no destructor, so the compiler-
- * generated body destroys only the inherited MovingMeshCollider at 0x124
+ * generated body destroys only the inherited dBgW_KcMbg at 0x124
  * and Model at 0xd4, the same as _ZN10dBgActor_cD1Ev.
  *
  * This class's key function is Behavior (already out of line, in

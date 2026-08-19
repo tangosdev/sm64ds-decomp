@@ -1,21 +1,21 @@
-// @symbol _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block
+// @symbol _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 
 struct KCL_File;
 struct CLPS_Block;
-extern void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(void *thiz, void *f, void *b);
+extern void _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(void *thiz, void *f, void *b);
 extern void InvMat4x3(void *dst, void *src);
 extern void Matrix4x3_ApplyInPlaceToScale(void *m, int x, int y, int z);
 extern void func_02039e18(void *thiz, int *vec, void *p);
 extern Matrix4x3 data_020a0e68;
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *thiz, void *f, const Matrix4x3 *m, int fix, short s, void *b)
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *thiz, void *f, const Matrix4x3 *m, int fix, short s, void *b)
 {
   char *c = (char *) thiz;
   int new_var;
   char stk[0x6c];
-  _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(thiz, f, b);
+  _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(thiz, f, b);
   func_02039624(c);
   *((int *) (c + 0x50)) = fix;
   *((Matrix4x3 *) (c + 0x54)) = *m;

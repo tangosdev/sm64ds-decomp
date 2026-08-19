@@ -2,7 +2,7 @@
 // @symbol _ZN10DonutBlock8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "DonutBlock.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 void _ZN8dActor_c9UpdatePosEP5dCc_c(void* thiz, void* clsn);
 void WithMeshClsn_UpdateContinuous_Veneer(void* p);
@@ -34,7 +34,7 @@ int DonutBlock::Behavior()
             if (_ZN8dActor_c13DistToCPlayerEv(((char*)this)) <= 0x9c4000) break;
         }
         _ZN8dActor_c14TriplePoofDustEv(((char*)this));
-        if (((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) ((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
+        if (((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) ((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
         mPosX = unk_4dc;
         mPosY = unk_4e0;
         mPosZ = unk_4e4;

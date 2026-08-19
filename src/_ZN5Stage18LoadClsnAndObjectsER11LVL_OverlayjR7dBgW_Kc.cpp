@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider
+// @symbol _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "Stage.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 struct KCL_File;
 struct CLPS_Block;
-struct MeshCollider;
+struct dBgW_Kc;
 struct ObjTable;
 struct dActor_c;
 struct fBase_c;
@@ -34,17 +34,17 @@ extern int data_0209caa0[];
 extern struct fBase_c* data_0209f5c0;
 
 extern struct KCL_File* LoadFile(int handle);
-extern void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(struct KCL_File* f);
-extern void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(struct MeshCollider* thiz, struct KCL_File* f, struct CLPS_Block* clps);
-extern int _ZNK12MeshCollider16GetOctreeOriginYEv(struct MeshCollider* thiz);
-extern int _ZNK12MeshCollider13GetUnkOctreeYEv(struct MeshCollider* thiz);
+extern void _ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File(struct KCL_File* f);
+extern void _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(struct dBgW_Kc* thiz, struct KCL_File* f, struct CLPS_Block* clps);
+extern int _ZNK7dBgW_Kc16GetOctreeOriginYEv(struct dBgW_Kc* thiz);
+extern int _ZNK7dBgW_Kc13GetUnkOctreeYEv(struct dBgW_Kc* thiz);
 extern void _Z11LoadObjectsRN11LVL_Overlay8ObjTableEij(struct ObjTable* t, int i, unsigned int p);
 extern void _ZN7dBase_c5SpawnEjP7fBase_cii(unsigned int id, struct fBase_c* parent, int a, int b);
 
-void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
+void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, dBgW_Kc &mcRef)
 {
     struct LVL_Overlay_s *ovl = (struct LVL_Overlay_s *)&ovlRef;
-    struct MeshCollider *mc = (struct MeshCollider *)&mcRef;
+    struct dBgW_Kc *mc = (struct dBgW_Kc *)&mcRef;
     struct KCL_File* f;
     struct LVL_SubTbl* e;
     signed char i;
@@ -59,10 +59,10 @@ void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
 
     if (ovl->kclFileId != 0) {
         f = LoadFile(ovl->kclFileId);
-        _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(f);
-        _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(mc, f, ovl->clps);
-        func_0202a850(_ZNK12MeshCollider16GetOctreeOriginYEv(mc), _ZNK12MeshCollider13GetUnkOctreeYEv(mc));
-        ((MeshColliderBase *)(mc))->Enable((dActor_c *)(0));
+        _ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File(f);
+        _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(mc, f, ovl->clps);
+        func_0202a850(_ZNK7dBgW_Kc16GetOctreeOriginYEv(mc), _ZNK7dBgW_Kc13GetUnkOctreeYEv(mc));
+        ((dBgW *)(mc))->Enable((dActor_c *)(0));
     }
 
     data_ov002_0211118c = 0;

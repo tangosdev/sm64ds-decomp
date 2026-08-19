@@ -3,7 +3,7 @@
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_dCcAc_c.h"
-#include "decl_MovingMeshCollider.h"
+#include "decl_dBgW_KcMbg.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
@@ -17,7 +17,7 @@ int *_ZN8SignPostD1Ev(int *t)
     _ZN11ShadowModelD1Ev((char *)t + 0x358);
     _ZN7dCcAc_cD1Ev((char *)t + 0x320);
     t[0] = (int)_ZTV10dBgActor_c;
-    _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
+    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     return t;

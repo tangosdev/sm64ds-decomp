@@ -13,8 +13,8 @@ extern int data_ov029_0211428c[];
 
 s32 CageLift::CleanupResources() {
     void * t = (void *)this;
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)t + 0x124)) {
-        _ZN16MeshColliderBase7DisableEv((char *)t + 0x124);
+    if (_ZN4dBgW9IsEnabledEv((char *)t + 0x124)) {
+        _ZN4dBgW7DisableEv((char *)t + 0x124);
     }
     _ZN13SharedFilePtr7ReleaseEv(data_ov029_0211428c);
     _ZN13SharedFilePtr7ReleaseEv(data_ov029_02114284);

@@ -18,7 +18,7 @@
  * UpdateClsnPosAndRot is dBgActor_c's own non-virtual member, so it is a call now
  * rather than an `extern "C"` declaration of the mangled symbol. IsClsnInRange stays
  * mangled: include/dBgActor_c.h does not declare it, and that header belongs to the
- * whole dBgActor_c family rather than to this slice. MeshColliderBase's two members
+ * whole dBgActor_c family rather than to this slice. dBgW's two members
  * stay mangled for the same reason.
  *
  * Was a C99 file. The `(int)((expr) != 0) != 0` idiom around the mFlags test is kept
@@ -27,8 +27,8 @@
  * so rewriting it is a byte-level change, not a tidy-up. */
 
 extern "C" {
-int  _ZN16MeshColliderBase9IsEnabledEv(void *thiz);
-void _ZN16MeshColliderBase7DisableEv(void *thiz);
+int  _ZN4dBgW9IsEnabledEv(void *thiz);
+void _ZN4dBgW7DisableEv(void *thiz);
 int  _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *thiz, int x, int z);
 unsigned char DecIfAbove0_Byte(unsigned char *p);
 void Quaternion_SLerp(char *out, char *a, int t, char *b);
@@ -41,8 +41,8 @@ s32 daObjGuragura_c::Behavior()
     char *c = (char *)this;
 
     if ((int)((mFlags & 8) != 0) != 0) {
-        if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124)) {
-            _ZN16MeshColliderBase7DisableEv(c + 0x124);
+        if (_ZN4dBgW9IsEnabledEv(c + 0x124)) {
+            _ZN4dBgW7DisableEv(c + 0x124);
         }
         return 1;
     }

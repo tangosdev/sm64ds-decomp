@@ -5,14 +5,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "CannonHatch.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int data_ov002_0210e124[];
 extern int data_ov002_0210e12c[];
 
 int CannonHatch::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(data_ov002_0210e12c))->Release();
     ((SharedFilePtr *)(data_ov002_0210e124))->Release();

@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN18MovingMeshCollider9GetNormalEsR7Vector3
-#include "MovingMeshCollider.h"
-extern "C" void func_02039db8(MovingMeshCollider *self, Vector3 *v, Vector3 *res);
+// @symbol _ZN10dBgW_KcMbg9GetNormalEsR7Vector3
+#include "dBgW_KcMbg.h"
+extern "C" void func_02039db8(dBgW_KcMbg *self, Vector3 *v, Vector3 *res);
 
-void MovingMeshCollider::GetNormal(s16 triID, Vector3 &res)
+void dBgW_KcMbg::GetNormal(s16 triID, Vector3 &res)
 {
     KCL_File *p = kclFile;
     u16 n = p->tris[triID].normalIdx;

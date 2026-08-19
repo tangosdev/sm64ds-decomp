@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN16MeshColliderBase6EnableEP8dActor_c
-#include "MeshColliderBase.h"
+// @symbol _ZN4dBgW6EnableEP8dActor_c
+#include "dBgW.h"
 extern "C" {
-void func_020395fc(MeshColliderBase *self, dActor_c *actor);
-void func_020393fc(MeshColliderBase *self, int slot);
-extern MeshColliderBase *data_020a0c80[];
+void func_020395fc(dBgW *self, dActor_c *actor);
+void func_020393fc(dBgW *self, int slot);
+extern dBgW *data_020a0c80[];
 }
 
-int MeshColliderBase::Enable(dActor_c *actor)
+int dBgW::Enable(dActor_c *actor)
 {
     s32 i = 0;
     for (;;) {

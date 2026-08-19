@@ -5,13 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ExtendingPlatform.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int PoleLift_ClsnFile[];
 extern int PoleLift_ModelFile[];
 
 int ExtendingPlatform::CleanupResources()
 {
-    ((MeshColliderBase *)((char *)&mCollider))->Disable();
+    ((dBgW *)((char *)&mCollider))->Disable();
     ((SharedFilePtr *)(PoleLift_ModelFile))->Release();
     ((SharedFilePtr *)(PoleLift_ClsnFile))->Release();
     return 1;

@@ -10,10 +10,10 @@
  * than a real method -- same shape as _ZN4Trap13InitResourcesEv.c. */
 #include "decl_common.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" int _ZN4Trap16CleanupResourcesEv(char *self){
-  if(((MeshColliderBase *)(self+0x124))->IsEnabled()){
-    ((MeshColliderBase *)(self+0x124))->Disable();
+  if(((dBgW *)(self+0x124))->IsEnabled()){
+    ((dBgW *)(self+0x124))->Disable();
   }
   if((*(unsigned int*)(self+8) & 0xff) != 0xff){
     ((SharedFilePtr *)(&data_ov010_02112d08))->Release();

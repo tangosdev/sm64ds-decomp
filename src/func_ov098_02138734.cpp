@@ -1,5 +1,5 @@
 //cpp
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 // func_ov098_02138734 at 0x02138734
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
 struct Obj {
@@ -50,7 +50,7 @@ void func_ov098_02138734(char *c)
     if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320)) {
         func_ov098_021396a4(c);
     }
-    if (((MeshColliderBase *)(c + 0x124))->IsEnabled()) {
-        ((MeshColliderBase *)(c + 0x124))->Disable();
+    if (((dBgW *)(c + 0x124))->IsEnabled()) {
+        ((dBgW *)(c + 0x124))->Disable();
     }
 }

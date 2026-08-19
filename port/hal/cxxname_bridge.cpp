@@ -4,7 +4,7 @@
 // real implementation. The forward hop goes through a differently-named
 // extern "C" helper because one TU cannot name both linkages of the same
 // identifier.
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 extern "C" {
 void hal_fileptr_release(void *self);
@@ -14,13 +14,13 @@ void _ZN13SharedFilePtr7ReleaseEv(void *self)
 {
     hal_fileptr_release(self);
 }
-int _ZN16MeshColliderBase9IsEnabledEv(void *self)
+int _ZN4dBgW9IsEnabledEv(void *self)
 {
-    return ((MeshColliderBase *)self)->MeshColliderBase::IsEnabled();
+    return ((dBgW *)self)->dBgW::IsEnabled();
 }
-void _ZN16MeshColliderBase7DisableEv(void *self)
+void _ZN4dBgW7DisableEv(void *self)
 {
-    ((MeshColliderBase *)self)->MeshColliderBase::Disable();
+    ((dBgW *)self)->dBgW::Disable();
 }
 
 // The ov098 file table's second column is addressed through its own symbol
@@ -55,21 +55,21 @@ char data_020ad524[0x40];       /* ShadowModel's template BMD stub */
 void *data_020a0c80[24];        /* the collision actor registry (gate 8) */
 }
 
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 #include "ModelBase.h"
 extern "C" {
-void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp)
-{ return MeshCollider::LoadFile(*(SharedFilePtr *)fp); }
+void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp)
+{ return dBgW_Kc::LoadFile(*(SharedFilePtr *)fp); }
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b)
 { ((ModelBase *)self)->ModelBase::SetFile((BMD_File *)bmd, a, b); }
 }
 #pragma comment(linker, "/alternatename:?data_ov098_0213c380@@3PADA=_data_ov098_0213c380")
 #pragma comment(linker, "/alternatename:?data_ov098_0213c384@@3PADA=_data_ov098_0213c384")
 
-extern "C" void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(
+extern "C" void _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(
     void *self, void *kcl, void *clps)
 {
-    ((MeshCollider *)self)->MeshCollider::SetFile((KCL_File *)kcl,
+    ((dBgW_Kc *)self)->dBgW_Kc::SetFile((KCL_File *)kcl,
                                                   *(CLPS_Block *)clps);
 }
 
@@ -89,10 +89,10 @@ void func_0206e2f8(void *p, int v, unsigned n)
 extern "C" void hal_m43_roty(void *m, int a);
 void Matrix4x3_FromRotationY(void *m, int a) { hal_m43_roty(m, a); }
 
-#include "MeshColliderBase.h"
-extern "C" int _ZN16MeshColliderBase6EnableEP8dActor_c(void *self, void *actor)
+#include "dBgW.h"
+extern "C" int _ZN4dBgW6EnableEP8dActor_c(void *self, void *actor)
 {
-    return ((MeshColliderBase *)self)->MeshColliderBase::Enable((dActor_c *)actor);
+    return ((dBgW *)self)->dBgW::Enable((dActor_c *)actor);
 }
 extern "C" {
 /* player-list globals ClosestPlayer scans: empty world -> null result */

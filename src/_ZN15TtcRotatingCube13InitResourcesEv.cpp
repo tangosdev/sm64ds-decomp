@@ -22,8 +22,8 @@ extern "C" {
     void _ZN11ShadowModel10InitCuboidEv(void *self);
     void func_ov065_0211990c(void *self);
     void func_ov065_021198a0(void *self);
-    void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *shared);
-    void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *shared);
+    void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
     void func_020393d4(void *p, void *v);
     void Matrix4x3_FromRotationY(void *m, int angle);
@@ -37,7 +37,7 @@ extern "C" {
 
 extern void *data_ov065_0211cfd0[];
 extern void *data_ov065_0211cfd4[];
-extern "C" void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern "C" void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
 extern u8 data_0209f2c0;
 extern s32 data_020a0e68[];
 
@@ -81,19 +81,19 @@ int TtcRotatingCube::InitResources()
     idx = *(u8 *)(c + 0x377);
     if (idx == 0) {
         s32 oi = idx * 0xc;
-        void *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov065_0211cfd4 + oi));
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov065_0211cfd4 + oi));
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             c + 0x124, kcl, c + 0x2ec, 0x1000, *(s16 *)(c + 0x8e),
             *(void **)((char *)data_ov065_0211cfd8 + oi));
     } else {
         s32 oi = idx * 0xc;
-        void *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov065_0211cfd4 + oi));
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void **)((char *)data_ov065_0211cfd4 + oi));
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             c + 0x124, kcl, c + 0x2ec, 0x199, *(s16 *)(c + 0x8e),
             *(void **)((char *)data_ov065_0211cfd8 + oi));
     }
 
-    func_020393d4(c + 0x124, (void *)_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(c + 0x124, (void *)_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
 
     {
         s32 va[3];

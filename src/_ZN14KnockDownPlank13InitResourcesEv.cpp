@@ -9,8 +9,8 @@ void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 void _ZN11ShadowModel10InitCuboidEv(void* self);
 void func_ov015_0211166c(char* t);
-void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* f, void* m, int fx, short s, void* b);
+void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* fp);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* f, void* m, int fx, short s, void* b);
 void Matrix4x3_FromRotationY(void* m, int angle);
 void MulVec3Mat4x3(Vector3* v, void* m, Vector3* out);
 void Vec3_Add(Vector3* out, Vector3* a, Vector3* b);
@@ -43,9 +43,9 @@ int KnockDownPlank::InitResources()
     _ZN11ShadowModel10InitCuboidEv(&mShadowModel);
     func_ov015_0211166c((char *)this);
     UpdateClsnPosAndRot();
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider,
-        _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov015_02114974),
+        _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov015_02114974),
         &mClsnMat,
         0x1000,
         mAngleY,

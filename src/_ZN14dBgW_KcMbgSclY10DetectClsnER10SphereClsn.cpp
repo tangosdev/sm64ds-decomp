@@ -22,7 +22,7 @@ void _ZN10SphereClsnC1Ev(void* o);
 void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* o, void* v, int r, void* a);
 void func_02037940(void* p, int v);
 void func_02035394(void* o, void* r);
-int _ZN12MeshCollider10DetectClsnER10SphereClsn(void* o, void* s);
+int _ZN7dBgW_Kc10DetectClsnER10SphereClsn(void* o, void* s);
 void func_02037a04(void* o, void* d1, void* d2);
 void func_02037a6c(void* b, int x1, int y1, int z1, int x2, int y2, int z2);
 void _ZN10ClsnResultaSERKS_(void* d, void* s);
@@ -40,7 +40,7 @@ void _ZN10SphereClsnD1Ev(void* o);
 
 #define FMUL(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
 
-extern "C" int _ZN21ExtendingMeshCollider10DetectClsnER10SphereClsn(char* self, char* sphere)
+extern "C" int _ZN14dBgW_KcMbgSclY10DetectClsnER10SphereClsn(char* self, char* sphere)
 {
     int v1[3];
     int v2[3];
@@ -63,7 +63,7 @@ extern "C" int _ZN21ExtendingMeshCollider10DetectClsnER10SphereClsn(char* self, 
     loc.f_ec = radius2;
     func_02037940(&loc, *(u8*)(sphere + 0x70));
     func_02035394(&loc, sphere);
-    r = _ZN12MeshCollider10DetectClsnER10SphereClsn(self, &loc);
+    r = _ZN7dBgW_Kc10DetectClsnER10SphereClsn(self, &loc);
     if (r) {
         func_02037a04(&loc, d, d + 3);
         d[6] = FMUL(d[0], *(int*)(self + 0x50));

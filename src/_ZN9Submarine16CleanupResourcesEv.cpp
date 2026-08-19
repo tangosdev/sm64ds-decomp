@@ -14,8 +14,8 @@ extern int Submarine_ModelFile[];
 
 s32 Submarine::CleanupResources() {
     void * t = (void *)this;
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)t + 0x124)) {
-        _ZN16MeshColliderBase7DisableEv((char *)t + 0x124);
+    if (_ZN4dBgW9IsEnabledEv((char *)t + 0x124)) {
+        _ZN4dBgW7DisableEv((char *)t + 0x124);
     }
     _ZN13SharedFilePtr7ReleaseEv(Submarine_ModelFile);
     _ZN13SharedFilePtr7ReleaseEv(Submarine_ClsnFile);

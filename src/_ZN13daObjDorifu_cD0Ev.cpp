@@ -17,9 +17,9 @@
  * and brings it back.
  *
  * The array cleanup is this class's own, same as its D1 sibling: a
- * MovingMeshCollider[5] at 0x4b0 and a Model[5] at 0x320 are destroyed
+ * dBgW_KcMbg[5] at 0x4b0 and a Model[5] at 0x320 are destroyed
  * before the vptr is restored to dBgActor_c's, then the inherited
- * MovingMeshCollider (0x124) and Model (0xd4), then dActor_c's base
+ * dBgW_KcMbg (0x124) and Model (0xd4), then dActor_c's base
  * destructor, then the object is handed back through dActor_c's inline
  * operator delete.
  */

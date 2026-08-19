@@ -1,5 +1,5 @@
-// @symbol _ZN18MovingMeshColliderD2Ev
+// @symbol _ZN10dBgW_KcMbgD2Ev
 /* recovered: globals resolved */
-/* resolved: VT = _ZTV18MovingMeshCollider */
-extern int _ZTV18MovingMeshCollider[]; extern int _ZN12MeshColliderD2Ev();
-int _ZN18MovingMeshColliderD2Ev(int *x) { x[0] = (int)_ZTV18MovingMeshCollider; _ZN12MeshColliderD2Ev(x); return (int)x; }
+/* resolved: VT = _ZTV10dBgW_KcMbg */
+extern int _ZTV10dBgW_KcMbg[]; extern int _ZN7dBgW_KcD2Ev();
+int _ZN10dBgW_KcMbgD2Ev(int *x) { x[0] = (int)_ZTV10dBgW_KcMbg; _ZN7dBgW_KcD2Ev(x); return (int)x; }

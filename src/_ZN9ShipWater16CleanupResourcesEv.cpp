@@ -5,14 +5,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ShipWater.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int data_ov017_02111c80[];
 extern int data_ov017_02111c88[];
 
 int ShipWater::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
+    if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(data_ov017_02111c88))->Release();
     ((SharedFilePtr *)(data_ov017_02111c80))->Release();

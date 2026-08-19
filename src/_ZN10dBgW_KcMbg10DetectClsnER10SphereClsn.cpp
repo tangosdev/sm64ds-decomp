@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN18MovingMeshCollider10DetectClsnER10SphereClsn
+// @symbol _ZN10dBgW_KcMbg10DetectClsnER10SphereClsn
 /* recovered: named members + shared header, real C++ method
  *
  * Vtable slot 8, and the same trick as the other two overloads: move the query
  * into the collider's local frame rather than moving the mesh. The caller's
  * sphere centre is transformed by func_02039e48 and its radius scaled by
  * unk_164, a local SphereClsn is aimed at the result, and the base
- * MeshCollider::DetectClsn does the work against the static mesh.
+ * dBgW_Kc::DetectClsn does the work against the static mesh.
  *
  * Coming back out is the part that is not symmetric. The push-out vector pair
  * is scaled by `scale` -- the collider's own uniform scale, NOT unk_164 which
@@ -32,7 +32,7 @@
  * flagged rather than half-converted.
  */
 #include "types.h"
-#include "MovingMeshCollider.h"
+#include "dBgW_KcMbg.h"
 #include "SphereClsn.h"
 #include "ClsnResult.h"
 
@@ -70,7 +70,7 @@ extern void _ZN10SphereClsnD1Ev(void* o);
 
 #define FMUL(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
 
-int MovingMeshCollider::DetectClsn(SphereClsn & sphere_)
+int dBgW_KcMbg::DetectClsn(SphereClsn & sphere_)
 {
     SphereClsn* sphere = &sphere_;
     int pos[3];
@@ -85,7 +85,7 @@ int MovingMeshCollider::DetectClsn(SphereClsn & sphere_)
     loc.f_ec = FMUL(sphere->unk_0ec, unk_164);
     func_02037940(&loc, sphere->flags);
     func_02035394(&loc, sphere);
-    r = MeshCollider::DetectClsn(*(SphereClsn*)&loc);
+    r = dBgW_Kc::DetectClsn(*(SphereClsn*)&loc);
     if (r) {
         func_02037a04(&loc, d, d + 3);
         d[6] = FMUL(d[0], *(int*)&scale);

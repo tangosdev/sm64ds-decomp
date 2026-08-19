@@ -25,8 +25,8 @@
  * 0xa8 more unevidenced bytes (only raw `this + 0x4dc` / `+ 0x4e0` /
  * `+ 0x4e4` -- one Vector3 -- are indexed by name in src/, so the array's
  * OWN span is trusted from the destructor call, not the padding after it)
- * before 0x674, a second, class-owned MovingMeshCollider (named by
- * _ZN18MovingMeshColliderD1Ev in the destructor), distinct from
+ * before 0x674, a second, class-owned dBgW_KcMbg (named by
+ * _ZN10dBgW_KcMbgD1Ev in the destructor), distinct from
  * dBgActor_c's own at 0x124. The last 0x38 bytes (0x83c..0x874) are unused
  * tail: SIZE IS 0x874, the literal src/Eyerok_Spawn.cpp passes to operator
  * new, not the field span -- same rule as BigBrickBlock.
@@ -71,7 +71,7 @@ struct Eyerok : dBgActor_c {
        from any indexed access. */
     Vector3 mUnkVectors[0x14];    /* 0x4dc */
     u8  pad_5cc[0xa8];
-    MovingMeshCollider unk_674;            /* 0x674 -- this class's own, not dBgActor_c's */
+    dBgW_KcMbg unk_674;            /* 0x674 -- this class's own, not dBgActor_c's */
     /* 0x83c..0x874: unused tail, never read or written by any matched
        function; SIZE IS 0x874, the literal src/Eyerok_Spawn.cpp passes to
        operator new, not the field span -- same rule as BigBrickBlock. */

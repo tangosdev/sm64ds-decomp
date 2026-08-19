@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN21ExtendingMeshCollider9Virtual08Ev
-#include "ExtendingMeshCollider.h"
+// @symbol _ZN14dBgW_KcMbgSclY9Virtual08Ev
+#include "dBgW_KcMbgSclY.h"
 
-void ExtendingMeshCollider::Virtual08()
+void dBgW_KcMbgSclY::Virtual08()
 {
 }

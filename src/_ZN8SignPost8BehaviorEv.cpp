@@ -16,8 +16,8 @@ extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern "C" void func_ov002_020baf80(char *t);
 extern "C" int _ZN10dBgActor_c20UpdateKillByMegaCharEsss5Fix12IiE(void *self, short a, short b, short c, int fix);
-extern "C" int _ZN16MeshColliderBase9IsEnabledEv(void *self);
-extern "C" void _ZN16MeshColliderBase7DisableEv(void *self);
+extern "C" int _ZN4dBgW9IsEnabledEv(void *self);
+extern "C" void _ZN4dBgW7DisableEv(void *self);
 extern "C" void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int c, int d, int e, const void *v, void *cb);
 extern "C" void *_ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(u32 a, u32 b, int c, int d, int e, const void *v);
 extern "C" void _ZN8dActor_c19DisappearPoofDustAtERK7Vector3(void *self, const struct Vector3 *vec);
@@ -82,8 +82,8 @@ extern "C" int _ZN8SignPost8BehaviorEv(char *c)
 
     if (*(u8 *)(c + 0x58c) != 0) {
         int x, y, z;
-        if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124))
-            _ZN16MeshColliderBase7DisableEv(c + 0x124);
+        if (_ZN4dBgW9IsEnabledEv(c + 0x124))
+            _ZN4dBgW7DisableEv(c + 0x124);
         x = *(int *)(c + 0x5c);
         z = *(int *)(c + 0x64);
         y = *(int *)(c + 0x60) + 0x50000;

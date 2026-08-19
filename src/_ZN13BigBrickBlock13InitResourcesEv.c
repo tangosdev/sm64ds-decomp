@@ -6,8 +6,8 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* bmd, int a, int
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 extern int _ZN8dActor_c9TrackStarEjj(void* self, unsigned int a, unsigned int b);
-extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, void* mtx, int f, s16 s, void* clps);
+extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* fp);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* kcl, void* mtx, int f, s16 s, void* clps);
 extern int _ZN5Event6GetBitEj(unsigned int b);
 extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int _ZN6Player15IsEnteringLevelEv(void* self);
@@ -63,22 +63,22 @@ int _ZN13BigBrickBlock13InitResourcesEv(void* self)
         int t10 = *(u16*)(c+0xc);
         t10 = t10 == 0x10;
         if (t10 != false) {
-            void* kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(
+            void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(
                 *(void**)((char*)data_ov002_02108ab4 + idx * 0xc));
-            _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
                 c+0x124, kcl, c+0x2ec, 0x1800, *(s16*)(c+0x8e),
                 *(void**)((char*)data_ov002_02108ab8 + idx * 0xc));
         } else {
-            void* kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(
+            void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(
                 *(void**)((char*)data_ov002_02108ab4 + idx * 0xc));
-            _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
                 c+0x124, kcl, c+0x2ec, 0x1000, *(s16*)(c+0x8e),
                 *(void**)((char*)data_ov002_02108ab8 + idx * 0xc));
         }
     } else {
-        void* kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(
+        void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(
             *(void**)((char*)data_ov002_02108ab4 + idx * 0xc));
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             c+0x124, kcl, c+0x2ec, 0x199, *(s16*)(c+0x8e),
             *(void**)((char*)data_ov002_02108ab8 + idx * 0xc));
     }

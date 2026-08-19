@@ -8,7 +8,7 @@
  * THE BASE IS dBgActor_c, and the destructor says so outright. _ZN8SignPostD1Ev
  * (ov002 0x020badd0) stores exactly two vtables -- _ZTV15daObjTatefuda_c, then
  * _ZTV10dBgActor_c -- with this class's own three members destroyed between them
- * and dBgActor_c's Model and MovingMeshCollider destroyed after. Two stores is a
+ * and dBgActor_c's Model and dBgW_KcMbg destroyed after. Two stores is a
  * DIRECT child; an intermediate layer would have put a third one in between.
  * SignPost_Spawn agrees from the other side: it calls _ZN10dBgActor_cC2Ev and then
  * overwrites the vptr with _ZTV8SignPost, which is the same address as

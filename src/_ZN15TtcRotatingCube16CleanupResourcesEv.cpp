@@ -5,15 +5,15 @@
 /* recovered: named members + shared header, real C++ method */
 #include "TtcRotatingCube.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 struct E { void* p; char pad[8]; };
 extern struct E data_ov065_0211cfd0[];
 extern struct E data_ov065_0211cfd4[];
 
 int TtcRotatingCube::CleanupResources()
 {
-    if (((MeshColliderBase *)((char*)&mMovingMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char*)&mMovingMeshCollider))->Disable();
+    if (((dBgW *)((char*)&mMovingMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char*)&mMovingMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(data_ov065_0211c0a8[unk_377]))->Release();
     ((SharedFilePtr *)(data_ov065_0211cfd0[unk_377].p))->Release();

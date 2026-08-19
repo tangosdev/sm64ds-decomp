@@ -4,7 +4,7 @@
  *
  * One vtable store and 6 destructor calls, every one a consequence of
  * `struct Whomp : dEnemyBase_c` and the members that declaration now types:
- * its own vptr, then MovingMeshCollider (0x418), ShadowModel (0x344), 
+ * its own vptr, then dBgW_KcMbg (0x418), ShadowModel (0x344), 
  * TextureSequence (0x330), ModelAnim (0x2cc), 
  * WithMeshClsn (0x110)
  * in reverse declaration order, then dEnemyBase_c::~dEnemyBase_c.

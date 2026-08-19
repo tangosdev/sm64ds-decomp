@@ -7,7 +7,7 @@
  * _ZTS16daObjCtMecha03_c (config/arm9/overlays/ov065/symbols.txt) give the
  * class name; the un-migrated D1 (func_ov065_02119f3c) stores this class's
  * own vtable, then dBgActor_c's -- inlined, because dBgActor_c's destructor
- * is defined in its class body -- then destroys the MovingMeshCollider at
+ * is defined in its class body -- then destroys the dBgW_KcMbg at
  * 0x124 and the Model at 0xd4 before chaining to dActor_c. All three belong
  * to dBgActor_c and are inherited now; nothing below 0x31e restates them.
  *

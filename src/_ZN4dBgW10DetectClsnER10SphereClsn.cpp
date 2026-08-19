@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN16MeshColliderBase10DetectClsnER10SphereClsn
-#include "MeshColliderBase.h"
+// @symbol _ZN4dBgW10DetectClsnER10SphereClsn
+#include "dBgW.h"
 
-int MeshColliderBase::DetectClsn(SphereClsn &sphere)
+int dBgW::DetectClsn(SphereClsn &sphere)
 {
     return 0;
 }

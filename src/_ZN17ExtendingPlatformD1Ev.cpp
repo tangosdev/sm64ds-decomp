@@ -7,11 +7,11 @@ struct dActor_c {
 };
 
 struct Model { char pad[0x80]; ~Model(); };
-struct ExtendingMeshCollider { char pad[0x4]; ~ExtendingMeshCollider(); };
+struct dBgW_KcMbgSclY { char pad[0x4]; ~dBgW_KcMbgSclY(); };
 
 struct ExtendingPlatform : dActor_c {
     Model m0;   /* 0xd8 */
-    ExtendingMeshCollider m1;   /* 0x158 */
+    dBgW_KcMbgSclY m1;   /* 0x158 */
     virtual ~ExtendingPlatform();
 };
 

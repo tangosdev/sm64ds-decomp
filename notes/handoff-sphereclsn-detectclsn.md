@@ -1,4 +1,4 @@
-# Handoff: `MeshCollider::DetectClsn(SphereClsn&)`
+# Handoff: `dBgW_Kc::DetectClsn(SphereClsn&)`
 
 > **STALE IN ITS TOP HALF (checked 2026-08-19). Use `notes/collision-system.md`.**
 >
@@ -43,7 +43,7 @@ re-derive it from size when a function is unmatched.
 
 ```
 python tools/fdiff.py --c <draft>.cpp \
-  --name _ZN12MeshCollider10DetectClsnER10SphereClsn \
+  --name _ZN7dBgW_Kc10DetectClsnER10SphereClsn \
   --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56
 ```
 
@@ -134,7 +134,7 @@ discriminator", for the corrected map. Summary of the corrections:**
 Also newly mapped, none of it anticipated here: an inlined **raw** hardware sqrt at four
 sites that is *not* `cstd::sqrt(u64)`; a per-edge filter using `unk_48` (a **shift count**),
 `unk_4d`, `SphereClsn` flag bits 2 and 0x20, `DotVec3` against the `Vector3` at
-`MeshCollider+0x28`, and `cstd::fdiv` guarded by `func_020397dc` (`|x| <= 8`).
+`dBgW_Kc+0x28`, and `cstd::fdiv` guarded by `func_020397dc` (`|x| <= 8`).
 
 Nothing here remains open: all three vertex blocks are written, and so is the wall block that
 this section never mentioned. See section 1 for where the draft actually stands.
@@ -194,8 +194,8 @@ whether the new code is reachable and has side effects before diagnosing.
 
 ## 8. Fields this function gave a purpose to
 
-`MeshCollider::unk_34`, `unk_35`, `unk_38`, `unk_44` and `unk_4c` are all consumed here as a
+`dBgW_Kc::unk_34`, `unk_35`, `unk_38`, `unk_44` and `unk_4c` are all consumed here as a
 normal filter on the face test — a face-angle cutoff, a preferred-direction test against a
 stored axis, and the gate on edge/vertex handling. The set/clear accessors for `0x34`/`0x35`
 and the writer for the `0x38` vector were among the **original eleven ITCM matches** and had
-no known purpose until now. `include/MeshCollider.h` can name them.
+no known purpose until now. `include/dBgW_Kc.h` can name them.

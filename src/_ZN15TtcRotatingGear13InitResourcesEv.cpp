@@ -10,8 +10,8 @@ extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
 extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
-extern "C" void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern "C" void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void*, void*, void*, int, short, void*);
 
 extern unsigned char data_0209f2c0[];
@@ -28,8 +28,8 @@ int TtcRotatingGear::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, mdl, 1, -1);
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
-    kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov065_0211d97c);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov065_0211d97c);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this) + 0x124, kcl, ((char*)this) + 0x2ec, 0x199, mAngleY, func_021121b8);
     unk_320 = mPosX;
     unk_324 = mPosY;

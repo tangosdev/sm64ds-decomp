@@ -1,16 +1,16 @@
-#ifndef MESHCOLLIDERBASE_H
-#define MESHCOLLIDERBASE_H
+#ifndef DBGW_H
+#define DBGW_H
 
 #include "types.h"
 
-/* The root of the mesh-collision hierarchy, vtable _ZTV16MeshColliderBase
- * at 0x02099388. The chain: MeshColliderBase -> MeshCollider (static KCL
- * mesh) and MeshColliderBase -> ... -> MovingMeshCollider ->
- * ExtendingMeshCollider.
+/* The root of the mesh-collision hierarchy, vtable _ZTV4dBgW
+ * at 0x02099388. The chain: dBgW -> dBgW_Kc (static KCL
+ * mesh) and dBgW -> ... -> dBgW_KcMbg ->
+ * dBgW_KcMbgSclY.
  *
  * VTABLE, 13 slots, read out of the ROM:
  *
- *   slot  0/1  ~MeshColliderBase (see THE TWO DESTRUCTOR BODIES below)
+ *   slot  0/1  ~dBgW (see THE TWO DESTRUCTOR BODIES below)
  *   slot  2    Virtual08()                      - no-op here
  *   slot  3    null - pure; derived tables hold GetSurfaceInfo in ITCM
  *              (0x01ffd920, named in config/arm9/itcm/symbols.txt)
@@ -32,13 +32,13 @@
  * emitted BOTH, so this is not a one-body alias:
  *
  *   0x0203968c  sits in vtable slot 0, and nothing bl's it   -> D1
- *   0x02039658  bl'd by MeshCollider's D0/D1/D2, never in a
- *               vtable (currently named _ZN16MeshColliderBaseD2Ev)       -> D2
+ *   0x02039658  bl'd by dBgW_Kc's D0/D1/D2, never in a
+ *               vtable (currently named _ZN4dBgWD2Ev)       -> D2
  *
  * By the #774 rule (a class vtable carries [D1, D0] and never D2; D2 is
  * reached by direct call alone) the symbol names are CORRECT as they stand:
- * symbols.txt calls 0x0203968c `_ZN16MeshColliderBaseD1Ev' and 0x02039658
- * `_ZN16MeshColliderBaseD2Ev', which is exactly what the two bullets above
+ * symbols.txt calls 0x0203968c `_ZN4dBgWD1Ev' and 0x02039658
+ * `_ZN4dBgWD2Ev', which is exactly what the two bullets above
  * derive. #1203 settled it.
  *
  * Re-verified 2026-08-19 against the cartridge: the word in vtable slot 0
@@ -51,7 +51,7 @@
  * it asked for a symbols.txt rename. Do not make that rename; nothing here
  * is misnamed.
  *
- * MeshCollider next door emits a byte-identical D1/D2 pair too (0x02039864
+ * dBgW_Kc next door emits a byte-identical D1/D2 pair too (0x02039864
  * in the vtable, 0x020397fc direct-called), so "only one body is ever
  * emitted" does not hold for this family.
  *
@@ -75,7 +75,7 @@ struct SurfaceInfo;
 struct Vector3_16 { s16 x, y, z; };
 #endif
 
-struct MeshColliderBase {
+struct dBgW {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
     dActor_c *owner;             /* 0x04 - set by Enable, null when free */
     s32 ownerUniqueID;        /* 0x08 - owner->uniqueID, -1 when free */
@@ -83,13 +83,13 @@ struct MeshColliderBase {
     s32 unk_10;               /* 0x10 */
     u8 slotIdx;               /* 0x14 - index into data_020a0c80; 0x18 = disabled */
     u8 pad_15[3];
-    void (*beforeClsnCallback)(MeshColliderBase *self, dActor_c *actor,
+    void (*beforeClsnCallback)(dBgW *self, dActor_c *actor,
                                ClsnResult *res, Vector3 *pos,
                                Vector3_16 *motionAng, Vector3_16 *ang); /* 0x18 */
     s32 unk_1c;               /* 0x1c */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    virtual ~MeshColliderBase();                          /* slots 0/1 */
+    virtual ~dBgW();                          /* slots 0/1 */
     virtual void Virtual08();                             /* slot 2 */
     virtual void GetSurfaceInfo(s16 triID, SurfaceInfo &res) = 0; /* slot 3 - ITCM in derived */
     virtual void GetNormal(s16 triID, Vector3 &res) = 0;  /* slot 4 */
@@ -113,25 +113,25 @@ struct MeshColliderBase {
        stored one as (collider, actor, res, pos, motionAng, ang). They
        update POS from the collider's motion; the ClsnResult rides along
        untouched. --- */
-    static void UpdatePosAndAngs(MeshColliderBase &clsn, dActor_c *clsnActor,
+    static void UpdatePosAndAngs(dBgW &clsn, dActor_c *clsnActor,
                                  ClsnResult &res, Vector3 &pos,
                                  Vector3_16 *motionAng, Vector3_16 *ang);
-    static void UpdatePosWithVelocity(MeshColliderBase &clsn, dActor_c *clsnActor,
+    static void UpdatePosWithVelocity(dBgW &clsn, dActor_c *clsnActor,
                                       ClsnResult &res, Vector3 &pos,
                                       Vector3_16 *motionAng, Vector3_16 *ang);
-    static void UpdatePosWithTransform(MeshColliderBase &clsn, dActor_c *clsnActor,
+    static void UpdatePosWithTransform(dBgW &clsn, dActor_c *clsnActor,
                                        ClsnResult &res, Vector3 &pos,
                                        Vector3_16 *motionAng, Vector3_16 *ang);
-    static void UpdateAngsWithAngularVelY(MeshColliderBase &clsn, dActor_c *clsnActor,
+    static void UpdateAngsWithAngularVelY(dBgW &clsn, dActor_c *clsnActor,
                                           ClsnResult &res, Vector3 &pos,
                                           Vector3_16 *motionAng, Vector3_16 *ang);
 };
 
-typedef char MeshColliderBase_size_must_be_0x20[sizeof(MeshColliderBase) == 0x20 ? 1 : -1];
+typedef char MeshColliderBase_size_must_be_0x20[sizeof(dBgW) == 0x20 ? 1 : -1];
 
 #else
 
-struct MeshColliderBase {
+struct dBgW {
     void **vtable;            /* 0x00 */
     struct dActor_c *owner;      /* 0x04 */
     s32 ownerUniqueID;        /* 0x08 */
@@ -145,4 +145,4 @@ struct MeshColliderBase {
 
 #endif /* __cplusplus */
 
-#endif /* MESHCOLLIDERBASE_H */
+#endif /* DBGW_H */

@@ -306,7 +306,7 @@
           {
             "symbol": "data_ov045_02112510",
             "address": "0x02112510",
-            "note": "the CLPS_Block InitResources hands to MovingMeshCollider::SetFile; ownership not established"
+            "note": "the CLPS_Block InitResources hands to dBgW_KcMbg::SetFile; ownership not established"
           }
         ],
         "bss": [
@@ -535,10 +535,10 @@
       ],
       "functions": [
         {
-          "symbol": "_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider",
+          "symbol": "_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc",
           "address": "0x020fe190",
           "size": "0x000001ac",
-          "legacy_source": "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp",
+          "legacy_source": "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
           "ordinal": 0
         },
         {
@@ -807,7 +807,7 @@
           "undefReferenced"
         ],
         "substitutedObjectPaths": [
-          "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp",
+          "src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp",
           "src/_Z11LoadObjectsRN11LVL_Overlay8ObjTableEij.cpp",
           "src/_Z21LoadStarCameraObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",
           "src/_Z23LoadUnusedType13ObjectsRN11LVL_Overlay11ObjSubTableEij.cpp",

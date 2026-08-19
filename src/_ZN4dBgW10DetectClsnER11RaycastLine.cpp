@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN16MeshColliderBase10DetectClsnER11RaycastLine
-#include "MeshColliderBase.h"
+// @symbol _ZN4dBgW10DetectClsnER11RaycastLine
+#include "dBgW.h"
 
-int MeshColliderBase::DetectClsn(RaycastLine &ray)
+int dBgW::DetectClsn(RaycastLine &ray)
 {
     return 0;
 }

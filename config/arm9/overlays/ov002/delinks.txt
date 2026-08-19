@@ -5853,7 +5853,7 @@ src/_ZN3HUDC1Ev.c:
     complete
     .text start:0x020fe154 end:0x020fe190
 
-src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp:
+src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp:
     complete
     .text start:0x020fe190 end:0x020fe33c
 

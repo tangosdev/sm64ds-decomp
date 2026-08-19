@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN12MeshCollider8LoadFileER13SharedFilePtr
-#include "MeshCollider.h"
+// @symbol _ZN7dBgW_Kc8LoadFileER13SharedFilePtr
+#include "dBgW_Kc.h"
 
 struct SharedFilePtr {
     u16 fileID;      /* 0x00 */
@@ -11,7 +11,7 @@ struct SharedFilePtr {
     void LoadFile();
 };
 
-char *MeshCollider::LoadFile(SharedFilePtr &ptr)
+char *dBgW_Kc::LoadFile(SharedFilePtr &ptr)
 {
     u8 refs;
     char *file;

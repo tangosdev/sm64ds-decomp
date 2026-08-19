@@ -16,10 +16,10 @@
  * function this file declares and drops the rest.
  *
  * UNLIKE ITS SEVEN SIBLINGS IN THIS SERIES, this class's own destructor body
- * is not a bare copy of dBgActor_c's: it also owns a MovingMeshCollider[5] at
+ * is not a bare copy of dBgActor_c's: it also owns a dBgW_KcMbg[5] at
  * 0x4b0 and a Model[5] at 0x320 (include/daObjDorifu_c.h), so the implicit
  * member-array cleanup the compiler generates for the empty `{}` body runs
- * BEFORE the vptr is restored to dBgActor_c's and the inherited MovingMeshCollider
+ * BEFORE the vptr is restored to dBgActor_c's and the inherited dBgW_KcMbg
  * (0x124) and Model (0xd4) are destroyed -- the same order the pre-existing
  * src/func_ov002_020b4af8.c placeholder already showed.
  *

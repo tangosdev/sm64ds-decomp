@@ -4,7 +4,7 @@
 #include "dCcAc_c.h"
 
 
-/* Slot 3. owner->uniqueID, at dActor_c + 4 -- the same offset MeshColliderBase
+/* Slot 3. owner->uniqueID, at dActor_c + 4 -- the same offset dBgW
    reads for its own ownerUniqueID. */
 u32 dCcAc_c::GetOwnerID()
 {

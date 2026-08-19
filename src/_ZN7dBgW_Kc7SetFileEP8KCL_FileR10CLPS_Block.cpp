@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block
-#include "MeshCollider.h"
+// @symbol _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block
+#include "dBgW_Kc.h"
 extern "C" {
-void func_02039624(MeshColliderBase *self);   /* the shared collider init */
+void func_02039624(dBgW *self);   /* the shared collider init */
 void func_0203821c(u32 *clps, CLPS_Block *block);
 }
 
-void MeshCollider::SetFile(KCL_File *file, CLPS_Block &clpsBlock)
+void dBgW_Kc::SetFile(KCL_File *file, CLPS_Block &clpsBlock)
 {
     func_02039624(this);
     kclFile = file;

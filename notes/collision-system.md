@@ -61,10 +61,10 @@ pairing to our coined names is settled by **vtable-address identity**, not infer
 | `dBgPc` | *none — no header* | — | base of `dBgPi` at +0x04 |
 | `dM3dGLin` | `RaycastLine::Line` | — | non-polymorphic |
 | `dM3dGSph` | *none* | 0x020994cc | `data_020994cc` — unnamed |
-| `dBgW` | `MeshColliderBase` | 0x02099388 | `_ZTV16MeshColliderBase` |
-| `dBgW_Kc` | `MeshCollider` | 0x020993dc | `_ZTV12MeshCollider` |
-| `dBgW_KcMbg` | `MovingMeshCollider` | 0x02099434 | `_ZTV18MovingMeshCollider` |
-| `dBgW_KcMbgSclY` | `ExtendingMeshCollider` | 0x02099490 | `_ZTV21ExtendingMeshCollider` |
+| `dBgW` | `dBgW` | 0x02099388 | `_ZTV4dBgW` |
+| `dBgW_Kc` | `dBgW_Kc` | 0x020993dc | `_ZTV7dBgW_Kc` |
+| `dBgW_KcMbg` | `dBgW_KcMbg` | 0x02099434 | `_ZTV10dBgW_KcMbg` |
+| `dBgW_KcMbgSclY` | `dBgW_KcMbgSclY` | 0x02099490 | `_ZTV14dBgW_KcMbgSclY` |
 | `dCc_c` | `CylinderClsn` | 0x0208e6ec | `_ZTV12CylinderClsn` |
 | `dCcPos_c` | `CylinderClsnWithPos` | 0x0208e6bc | `_ZTV19CylinderClsnWithPos` |
 | `dCcAc_c` | `MovingCylinderClsn` | 0x0208e6d4 | `_ZTV18MovingCylinderClsn` |
@@ -88,7 +88,7 @@ Two coined names are not merely arbitrary but **misleading**:
 
 - `dCcAc_c` is *actor*-attached (`Ac`), not *moving*. `MovingCylinderClsn` returns
   `owner->pos` and `owner->uniqueID`; the "moving" reading has no support.
-- `dBgW_KcMbgSclY` is KCL + moving-bg + **scale-Y**. `ExtendingMeshCollider` extends by
+- `dBgW_KcMbgSclY` is KCL + moving-bg + **scale-Y**. `dBgW_KcMbgSclY` extends by
   scaling in Y, and the cartridge name says which axis.
 
 The tree already adopted this convention on the actor side (`Platform` → `dBgActor_c`,
@@ -101,10 +101,10 @@ The tree already adopted this convention on the actor side (`Platform` → `dBgA
 ### 3.1 Three families
 
 ```
-dBgW      MeshColliderBase   the collidable world  ─┐ registered in a
- └ dBgW_Kc      MeshCollider       static KCL mesh  │ 24-slot global table
-    └ dBgW_KcMbg   MovingMeshCollider  + transform  │ data_020a0c80
-       └ dBgW_KcMbgSclY  ExtendingMeshCollider     ─┘
+dBgW      dBgW   the collidable world  ─┐ registered in a
+ └ dBgW_Kc      dBgW_Kc       static KCL mesh  │ 24-slot global table
+    └ dBgW_KcMbg   dBgW_KcMbg  + transform  │ data_020a0c80
+       └ dBgW_KcMbgSclY  dBgW_KcMbgSclY     ─┘
 
 dBgCh     BgCh               a query against it    ─┐ each embeds a
  ├ dBgCh_Gnd    RaycastGround   "what is under me"  │ dBgPi (ClsnResult)
@@ -166,10 +166,10 @@ adjustments):
 ### 3.3 The mesh side
 
 `KCL_File` (0x38) and `KCL_Tri` (0x10) are typed and documented in
-`include/MeshCollider.h`, gate-clean. **[N✓]** Load path, all matched:
+`include/dBgW_Kc.h`, gate-clean. **[N✓]** Load path, all matched:
 
 1. `Stage::LoadClsnAndObjects` (ov002 0x020fe190) — the level path.
-2. `MeshCollider::LoadFile(SharedFilePtr&)` (0x02017afc) — per-actor; rebases only on the
+2. `dBgW_Kc::LoadFile(SharedFilePtr&)` (0x02017afc) — per-actor; rebases only on the
    first reference.
 3. `UpdateFileOffsets` (0x02039760) — turns the four header words 0x00–0x0c from file
    offsets into pointers. Nothing past 0x0c is a pointer.
@@ -183,8 +183,8 @@ in this game the KCL attribute word *is* the CLPS index. **[P]**
 
 **Unit basis.** World Fix12i → KCL file units is a **plain `>>6`**, the same six bits for
 every collider in the game (`0x01ffb870 asr r1,r5,#6`; `DetectClsn(RaycastLine&)` does the
-same at 0x01ffb110). Routing the conversion through the collider's own `MeshCollider+0x2c`
-instead reduces correctly for the level and for nothing else — `MovingMeshCollider::SetFile`
+same at 0x01ffb110). Routing the conversion through the collider's own `dBgW_Kc+0x2c`
+instead reduces correctly for the level and for nothing else — `dBgW_KcMbg::SetFile`
 leaves those words at 1.0, so every actor-owned collider runs its walk in world units
 against a file-unit mesh and answers no to everything. Found on the port line, where the
 symptom was that no ray could find the moat. **[P, port]**
@@ -196,7 +196,7 @@ type**), `w0 & 0x20` (water), single bits at 0x1000000 / 0x2000000 / 0x4000000, 
 
 ### 3.4 The query side
 
-All three overloads are `MeshCollider` vtable slots 6/7/8, all in **ITCM**:
+All three overloads are `dBgW_Kc` vtable slots 6/7/8, all in **ITCM**:
 
 | overload | addr | size | status |
 |---|---|---|---|
@@ -211,7 +211,7 @@ culled by `func_02035354` (self-collision — the query's `owner`/`ownerID` agai
 collider's) and then by range. `RaycastLine` culls on its own **`dM3dGSph` bounding sphere
 at +0x64** — centre +0x68, radius +0x74. **[P]**
 
-Table lifecycle: `MeshColliderBase::Enable(dActor_c*)` (0x02039184, 52 call sites) claims a
+Table lifecycle: `dBgW::Enable(dActor_c*)` (0x02039184, 52 call sites) claims a
 slot, `Disable()` (0x02039140, 154 sites) frees it, `Stage::ResetMeshColliders()`
 (0x020391f4) zeroes all 24.
 
@@ -249,7 +249,7 @@ engine-driven collision call per frame is `CylinderClsn::Process()` inside
 `Stage::Render()`. **[P]**
 
 `dBgActor_c` is the other half: `UpdateClsnPosAndRot()` copies the model matrix, replaces
-the translation row with the actor position and calls `MovingMeshCollider::Transform`;
+the translation row with the actor position and calls `dBgW_KcMbg::Transform`;
 `IsClsnInRange()` enables/disables the collider by distance to the closest player, which is
 the LOD gate on the 24-slot table.
 
@@ -274,9 +274,9 @@ The two functions with no source are the two unrecovered ITCM `DetectClsn` overl
 0x734 (1,844 B) and 0x1bc8 (7,112 B), read from `config/arm9/itcm/symbols.txt`.
 **A quarter of the subsystem by size is two functions.**
 
-Per class: MeshCollider 16 fn / 10,840 B · unnamed `func_*` 182 / 8,220 · WithMeshClsn
-27 / 5,860 · MovingMeshCollider 15 / 2,824 · ExtendingMeshCollider 10 / 1,548 ·
-CylinderClsn 8 / 1,428 · SphereClsn 5 / 1,172 · RaycastLine 6 / 900 · MeshColliderBase
+Per class: dBgW_Kc 16 fn / 10,840 B · unnamed `func_*` 182 / 8,220 · WithMeshClsn
+27 / 5,860 · dBgW_KcMbg 15 / 2,824 · dBgW_KcMbgSclY 10 / 1,548 ·
+CylinderClsn 8 / 1,428 · SphereClsn 5 / 1,172 · RaycastLine 6 / 900 · dBgW
 19 / 764 · RaycastGround 4 / 676 · BgCh 5 / 452 · ClsnResult 6 / 304 · the three
 `MovingCylinder*` families 20 / 712 · remainder small.
 
@@ -301,7 +301,7 @@ twins *are* correctly bannered. Banner all eight or fix all eight. **[P]**
 (`port/slice_gate8.txt`, `port/tests/smoke_clsn.cpp`) loads the castle-grounds KCL through
 the real card seam, wires the CLPS block, and casts vertical rays through the mesh,
 asserting that floor hits come back with upward normals and hit points inside the probe
-column. **Gate 9** puts a real actor's `MovingMeshCollider` through the same path.
+column. **Gate 9** puts a real actor's `dBgW_KcMbg` through the same path.
 
 This is a **behavioural oracle the matching tree does not have**. A byte gate proves a
 function reproduces the ROM; it cannot tell you an unmatched draft is *logically* right.
@@ -352,12 +352,12 @@ concentrated in structure, status, and numbers.
 | `handoff-…md:14`, several headers | "build at 2004/b56, not 1.2/sp2p3" | **redundant** — #1619 dropped all pins; it is the tree-wide default |
 | `drafts-sphereclsn-detectclsn.cpp:2` | "first draft — head/AABB only, the walk and prism tests are stubs" | **WRONG** — 618 lines, every mechanism written |
 | `include/RaycastLine.h` | spans 0x65 | **understated** — ≥0x78 (0x88 inferred); the `dM3dGSph` at +0x64 is missing entirely. The field naming is NOT wrong — see below |
-| `include/MeshColliderBase.h:40` | "the symbol names are on the wrong bodies" | **WRONG and self-contradicting** — its own bullets say what `symbols.txt` says; #1203 settled it. Delete the paragraph |
+| `include/dBgW.h:40` | "the symbol names are on the wrong bodies" | **WRONG and self-contradicting** — its own bullets say what `symbols.txt` says; #1203 settled it. Delete the paragraph |
 | `include/BgCh.h:41` | `ShouldPassThroughImpl` is static "which is what the mangled name spells" | **WRONG reasoning** — Itanium never encodes `this`; the declared signature also has one arg too many for the ROM's 4-register call |
-| `itcm.md:65` | 6 unnamed MeshCollider funcs, "88 bytes" | **WRONG** — 0x54 = 84 |
-| `itcm.md:384` | "the full 13-slot map is in `include/MeshCollider.h`" | **WRONG pointer** — it is `MeshColliderBase.h:11` |
+| `itcm.md:65` | 6 unnamed dBgW_Kc funcs, "88 bytes" | **WRONG** — 0x54 = 84 |
+| `itcm.md:384` | "the full 13-slot map is in `include/dBgW_Kc.h`" | **WRONG pointer** — it is `dBgW.h:11` |
 | `itcm.md:533` | "the **only** read of `KCL_Prism::length`" | **WRONG** — `DetectClsn(RaycastGround&).cpp:172` reads it too; and the type is `KCL_Tri` |
-| `dtor-variant-audit.md` | "enrolled destructor migrations in this tree: **zero**" | **WRONG** — `src/_ZN12MeshColliderD1Ev.cpp` is one |
+| `dtor-variant-audit.md` | "enrolled destructor migrations in this tree: **zero**" | **WRONG** — `src/_ZN7dBgW_KcD1Ev.cpp` is one |
 | `docs/class-reference.html` | `dCc_c` has "2 live slots" | **WRONG** — 4. **FIXED 2026-08-19**; the same defect also hid `dFader_c` (2→10) and `mHeap::Heap_t` (2→16) |
 | `docs/class-hierarchy.html` §6 | RaycastGround and WithMeshClsn "have no `type_info` record" | **WRONG** — both do; §4 of the same page contradicts it |
 | `docs/class-reference.html` | built 2026-08-07, pre-rename | **regenerate** — stale paths, `unknown_class` joins its own data disproves |
@@ -370,7 +370,7 @@ wrong, and it rested on an inverted premise** — that `func_ov002_020fea4c` is 
 the body: `a[0..2] = b[3..5]` reads offset 0x44, the `dM3dGLin`'s *second* `Vector3`, so it is
 **GetEnd**; `func_ov002_020fea68` (`b[0..2]`) is GetStart.
 
-So `func_02037608` seeds 0x54 from the line **end**, and `MovingMeshCollider::DetectClsn`
+So `func_02037608` seeds 0x54 from the line **end**, and `dBgW_KcMbg::DetectClsn`
 depends on that, transforming 0x38 and 0x54 as the two endpoints of the scratch segment. On a
 hit, `func_020375ec` does `d[21..23] = s[0..2]` — `d[21]` is 0x54 — so the collision point
 overwrites the end point, which is why `GetClsnPos` reads it back under that name.
@@ -388,7 +388,7 @@ top half rewritten. The mesh and cylinder headers are in good shape; the four qu
 headers are auto-generated placeholders with no bases, no virtuals and no size assert.
 
 **Gaps nothing covers:** the cartridge names (§2); multiple inheritance as a codegen
-constraint (what the C++ must look like to emit the observed thunks); `MeshColliderBase`
+constraint (what the C++ must look like to emit the observed thunks); `dBgW`
 itself; `RaycastLine+0x64`; `WithMeshClsn` and the whole cylinder family, which have no
 note at all; and KCL as an asset — `notes/assets.md` has no KCL section.
 
@@ -411,7 +411,7 @@ gained) and the denominator down exactly 4 by design; `check_header_offsets` 0 m
   old `cand=1725 equal=366 ratio=0.2090` (53 short) → new `cand=1750 equal=565
   ratio=0.3203` (28 short). **+199 exactly-equal instructions.** Provenance and the
   swept-lever list are now in the file header.
-- **0b.** Fix the wrong header prose: `MeshColliderBase.h:40` (the conclusion contradicts
+- **0b.** Fix the wrong header prose: `dBgW.h:40` (the conclusion contradicts
   its own bullets), `BgCh.h:41` (the mangling claim), and document `RaycastLine.h`'s
   dual-role field. **DONE 2026-08-19**, byte-verified on four consumers.
 - **0c.** **DONE.** Both notes gained a defect table at the top, and the three most
@@ -504,7 +504,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
 
   ```
   python tools/fdiff.py --c notes/drafts-sphereclsn-detectclsn.cpp \
-    --name _ZN12MeshCollider10DetectClsnER10SphereClsn \
+    --name _ZN7dBgW_Kc10DetectClsnER10SphereClsn \
     --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
   ```
   `--module itcm`, never `arm9/itcm`.
@@ -579,7 +579,7 @@ python -c "import json;[print(json.loads(l)['name'],json.loads(l)['divergences']
 grep -n SphereClsn config/match_attempts.jsonl
 # score a draft (module itcm, never arm9/itcm)
 python tools/fdiff.py --c notes/drafts-sphereclsn-detectclsn.cpp \
-  --name _ZN12MeshCollider10DetectClsnER10SphereClsn \
+  --name _ZN7dBgW_Kc10DetectClsnER10SphereClsn \
   --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
 # the port line
 git show origin/port-mount-noseat-cluster:port/unmatched/MeshCollider_DetectClsn_Sphere.cpp | head -60

@@ -1,16 +1,16 @@
-#ifndef MESHCOLLIDER_H
-#define MESHCOLLIDER_H
+#ifndef DBGW_KC_H
+#define DBGW_KC_H
 
 #include "types.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
-/* The static-mesh collider, vtable _ZTV12MeshCollider at 0x020993dc.
+/* The static-mesh collider, vtable _ZTV7dBgW_Kc at 0x020993dc.
  * Thirteen slots: it overrides Virtual08 and supplies the six collision
  * workers (the three pures at slots 3..5 and the DetectClsn triple at
  * 6..8) from ITCM - 0x01ffd920, 0x01ffd8d8, 0x01ffd890, 0x01ffd3f8,
  * 0x01ffb0fc, 0x01ffb830 - which is why those overrides are declared
  * here but defined nowhere in src/ yet. config/arm9/itcm/symbols.txt
- * already names slot 3's: _ZN12MeshCollider14GetSurfaceInfoEsR11SurfaceInfo,
+ * already names slot 3's: _ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo,
  * i.e. GetSurfaceInfo(s16, SurfaceInfo &). Slots 9..12 stay on the base
  * implementations.
  *
@@ -29,15 +29,15 @@ struct SharedFilePtr;
 
 /* Only what the matched code reads is typed. Triangle records are 0x10
    wide; positions are 12-byte s32 vectors read <<6, normals 6-byte s16
-   vectors read <<2 (MovingMeshCollider::GetTriangleOrigin / GetNormal). */
+   vectors read <<2 (dBgW_KcMbg::GetTriangleOrigin / GetNormal). */
 struct KCL_Tri {
     /* The prism's extent along its third edge normal, read as one 32-bit word by
-       MeshCollider::DetectClsn(RaycastGround&) at 0x01ffd3f8 (`ldr r0,[r7]`). */
+       dBgW_Kc::DetectClsn(RaycastGround&) at 0x01ffd3f8 (`ldr r0,[r7]`). */
     s32 length;            /* 0x00 */
     u16 posIdx;            /* 0x04 */
     u16 normalIdx;         /* 0x06 */
     /* The three edge normals and the surface attribute, read by the ITCM octree
-       walk MeshCollider::DetectClsn(RaycastLine&) at 0x01ffb0fc. `attribute` goes
+       walk dBgW_Kc::DetectClsn(RaycastLine&) at 0x01ffb0fc. `attribute` goes
        to the CLPS lookup as a RAW INDEX with no masking, so in this game the KCL
        attribute word is the CLPS index. */
     u16 edgeNormal1Idx;    /* 0x08 */
@@ -57,11 +57,11 @@ struct KCL_File {
        a Fix12i unit (`lsl #6` on read) and face normals with 1.0 == 0x400
        (`lsl #2`), so none of these is typed Fix12i. */
     s32 unk_10;
-    Vector3 origin;        /* 0x14 - .y pinned by MeshCollider::GetOctreeOriginY;
+    Vector3 origin;        /* 0x14 - .y pinned by dBgW_Kc::GetOctreeOriginY;
                               read as one Vector3 by DetectClsn, which materialises
                               file+0x14 once and reads [r0], [r0,#4], [r0,#8] */
     u32 xMask;             /* 0x20 */
-    u32 yMask;             /* 0x24 - pinned by MeshCollider::GetUnkOctreeY */
+    u32 yMask;             /* 0x24 - pinned by dBgW_Kc::GetUnkOctreeY */
     u32 zMask;             /* 0x28 */
     /* index = (z>>coordShift)<<zShift | (y>>coordShift)<<yShift | (x>>coordShift),
        then coordShift is decremented once per level of descent. */
@@ -72,7 +72,7 @@ struct KCL_File {
 
 extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 
-struct MeshCollider : MeshColliderBase {
+struct dBgW_Kc : dBgW {
     KCL_File *kclFile;        /* 0x20 */
     u32 clps;                 /* 0x24 - set via func_0203821c, released via func_02038224 */
     /* 0x28..0x30 are ONE Vector3, not three scalars: DetectClsn(SphereClsn&)
@@ -107,7 +107,7 @@ struct MeshCollider : MeshColliderBase {
     u8 pad_4e[2];
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    virtual ~MeshCollider();                              /* slots 0/1 */
+    virtual ~dBgW_Kc();                              /* slots 0/1 */
     virtual void Virtual08();                             /* slot 2 */
     virtual void GetSurfaceInfo(s16 triID, SurfaceInfo &res); /* slot 3 - ITCM */
     virtual void GetNormal(s16 triID, Vector3 &res);      /* slot 4 - ITCM */
@@ -145,8 +145,8 @@ struct MeshCollider : MeshColliderBase {
 
 };
 
-typedef char MeshCollider_size_must_be_0x50[sizeof(MeshCollider) == 0x50 ? 1 : -1];
+typedef char MeshCollider_size_must_be_0x50[sizeof(dBgW_Kc) == 0x50 ? 1 : -1];
 
 #endif /* __cplusplus */
 
-#endif /* MESHCOLLIDER_H */
+#endif /* DBGW_KC_H */

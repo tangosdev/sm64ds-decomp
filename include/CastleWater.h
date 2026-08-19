@@ -42,7 +42,7 @@ struct CastleWater {
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1c7];
     /* Real type, not a marker: InitResources hands it to
-       MovingMeshCollider::SetFile through an explicit `Matrix4x3&` cast. */
+       dBgW_KcMbg::SetFile through an explicit `Matrix4x3&` cast. */
     Matrix4x3 mMatrix;            /* 0x2ec */
     u8  pad_31c[0x4];
     u8  mTexTransformer;            /* 0x320 */

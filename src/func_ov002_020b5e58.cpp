@@ -11,8 +11,8 @@ struct KCL_File;
 extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
 extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
-extern "C" KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr &f);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern "C" KCL_File *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr &f);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *k, void *m, int fix, short s, void *clps);
 extern "C" void func_020393c4(void *p, void *v);
 extern "C" void func_020393d4(void *p, void *v);
@@ -24,7 +24,7 @@ extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGro
 extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
 extern "C" void _ZN13RaycastGroundD1Ev(RaycastGround *self);
 
-extern char _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern char _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 extern "C" signed char data_0209f2f8;
 
 extern "C" int func_ov002_020b5e58(char *self, char *fp)
@@ -40,11 +40,11 @@ extern "C" int func_ov002_020b5e58(char *self, char *fp)
     *(char **)(self + 0x32c) = fp;
     func_ov002_020b5b98(self);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
-    kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(**(SharedFilePtr **)(fp + 4));
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(**(SharedFilePtr **)(fp + 4));
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         self + 0x124, kcl, self + 0x2ec, 0x199, *(short *)(self + 0x8e), *(void **)(fp + 8));
     func_020393c4(self + 0x124, &func_ov002_020b5fc4);
-    func_020393d4(self + 0x124, &_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(self + 0x124, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
 
     *(int *)(self + 0x330) = 0;
     *(int *)(self + 0x334) = 0;

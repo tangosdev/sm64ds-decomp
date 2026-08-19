@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN12MeshCollider14GetSurfaceInfoEsR11SurfaceInfo
-/* MeshCollider::GetSurfaceInfo(s16, SurfaceInfo&) at 0x01ffd920 (ITCM)
+// @symbol _ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo
+/* dBgW_Kc::GetSurfaceInfo(s16, SurfaceInfo&) at 0x01ffd920 (ITCM)
  *
  * vtable slot 3. Fills a SurfaceInfo -- the 8-byte CLPS entry describing what the
  * surface is made of, plus its face normal. SurfaceInfo's layout is pinned by
@@ -17,7 +17,7 @@
  * version sweep; declaration order, hoisting the triangle pointer and caching the
  * attribute are all inert against it.
  */
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 
 /* extern "C" because both callees exist unmangled in config/arm9/symbols.txt --
    giving them C++ linkage would mangle the reference and break the link. */
@@ -35,7 +35,7 @@ void func_02037eb0(SurfaceInfo *info, CLPS_Entry entry, Vector3 *normal);
 
 }
 
-void MeshCollider::GetSurfaceInfo(s16 triID, SurfaceInfo &res)
+void dBgW_Kc::GetSurfaceInfo(s16 triID, SurfaceInfo &res)
 {
     CLPS_Entry *entry;
     Vector3 normal;

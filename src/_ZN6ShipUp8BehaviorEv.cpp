@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "ShipUp.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern void func_020393a4(int* p, int v);
 extern int _ZN8dActor_c13DistToCPlayerEv(void* a);
@@ -15,8 +15,8 @@ extern short data_02082214[];
 
 int ShipUp::Behavior()
 {
-  if(((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() == 0){
-    ((MeshColliderBase *)(((char*)this)+0x124))->Enable((dActor_c *)(((char*)this)));
+  if(((dBgW *)((char*)&mMeshCollider))->IsEnabled() == 0){
+    ((dBgW *)(((char*)this)+0x124))->Enable((dActor_c *)(((char*)this)));
   }
   func_020393a4((int*)((char*)&mMeshCollider), 0x2000000);
   if(mModelIndex == 0){

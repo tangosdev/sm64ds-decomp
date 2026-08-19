@@ -8,7 +8,7 @@
  * Everything this header used to declare below 0x31e was dActor_c's and
  * dBgActor_c's, restated. It derives from dBgActor_c now, which the destructor
  * evidences the usual way -- it stores ArmedRotatingPlatform's vtable, then dBgActor_c's,
- * then destroys the MovingMeshCollider at 0x124 and the Model at 0xd4 and
+ * then destroys the dBgW_KcMbg at 0x124 and the Model at 0xd4 and
  * chains to dActor_c. Those three are dBgActor_c's own.
  *
  * unk_31e sits at 0x31e, in dBgActor_c's TAIL PADDING: dBgActor_c's last field

@@ -12,8 +12,8 @@ struct BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, struct BMD_File *f, int a, int b);
 void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
-struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+struct KCL_File *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, struct KCL_File *k, struct Matrix4x3 &m, int fx, short s, struct CLPS_Block &c);
 int IsCannonOpenInCurLevel(void);
 }
@@ -25,8 +25,8 @@ int CannonHatch::InitResources()
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((unsigned char *)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((unsigned char *)this));
     {
-        struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov002_0210e124);
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        struct KCL_File *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov002_0210e124);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             ((unsigned char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((unsigned char *)&(*(u8 *)&mClsnMat)), 0x199,
             mAngleY, data_ov002_0210d7f4);
     }

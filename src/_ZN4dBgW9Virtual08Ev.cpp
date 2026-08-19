@@ -1,7 +1,7 @@
 //cpp
-// @symbol _ZN16MeshColliderBase9Virtual08Ev
-#include "MeshColliderBase.h"
+// @symbol _ZN4dBgW9Virtual08Ev
+#include "dBgW.h"
 
-void MeshColliderBase::Virtual08()
+void dBgW::Virtual08()
 {
 }

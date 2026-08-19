@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN18MovingMeshCollider11GetVelocityER7Vector3
-#include "MovingMeshCollider.h"
+// @symbol _ZN10dBgW_KcMbg11GetVelocityER7Vector3
+#include "dBgW_KcMbg.h"
 
-void MovingMeshCollider::GetVelocity(Vector3 &res)
+void dBgW_KcMbg::GetVelocity(Vector3 &res)
 {
     res.x = velocity.x;
     res.y = velocity.y;

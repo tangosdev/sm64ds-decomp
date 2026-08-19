@@ -25,7 +25,7 @@ struct VObj {
     virtual void v12(struct Vector3* v);
 };
 
-extern "C" void _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(char* self, struct Matrix4x3* mtx, s16 a)
+extern "C" void _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(char* self, struct Matrix4x3* mtx, s16 a)
 {
     *(struct Matrix4x3*)(self + 0xe4) = *(struct Matrix4x3*)(self + 0x54);
     InvMat4x3((struct Matrix4x3*)(self + 0xe4), (struct Matrix4x3*)(self + 0xe4));

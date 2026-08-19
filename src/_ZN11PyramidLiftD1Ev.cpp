@@ -3,7 +3,7 @@
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingMeshCollider.h"
+#include "decl_dBgW_KcMbg.h"
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "PyramidLift.h"
@@ -17,7 +17,7 @@ void* _ZN11PyramidLiftD1Ev(struct PyramidLift *self) {
   __destroy_arr(((char*)self)+0x37c, 0xa, 0xc, (void*)_ZN7Vector3D1Ev);
   _ZN5ModelD1Ev((char*)&self->mModel2);
   *(int**)((char*)self) = _ZTV10dBgActor_c;
-  _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
+  _ZN10dBgW_KcMbgD1Ev((char*)&self->mMeshCollider);
   _ZN5ModelD1Ev((char*)&self->mModel1);
   _ZN8dActor_cD2Ev(((char*)self));
   return ((char*)self);

@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN18MovingMeshCollider17GetTriangleOriginEsR7Vector3
-#include "MovingMeshCollider.h"
-extern "C" void func_02039e30(MovingMeshCollider *self, Vector3 *v, Vector3 *res);
+// @symbol _ZN10dBgW_KcMbg17GetTriangleOriginEsR7Vector3
+#include "dBgW_KcMbg.h"
+extern "C" void func_02039e30(dBgW_KcMbg *self, Vector3 *v, Vector3 *res);
 
-void MovingMeshCollider::GetTriangleOrigin(s16 triID, Vector3 &res)
+void dBgW_KcMbg::GetTriangleOrigin(s16 triID, Vector3 &res)
 {
     KCL_File *p = kclFile;
     u16 n = p->tris[triID].posIdx;

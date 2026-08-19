@@ -5,7 +5,7 @@ void Matrix4x3_ApplyInPlaceToRotationX(void*, s16);
 void Matrix4x3_ApplyInPlaceToRotationY(void*, s16);
 void Matrix4x3_ApplyInPlaceToRotationZ(void*, s16);
 void Matrix4x3_ApplyInPlaceToScale(void*, int, int, int);
-void _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(void*, void*, s16);
+void _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(void*, void*, s16);
 
 void func_ov079_02124008(char* c)
 {
@@ -39,5 +39,5 @@ void func_ov079_02124008(char* c)
     *(int*)(c + 0x608) = *(int*)(c + 0x60) + *(int*)(c + 0x410) - off;
     *(int*)(c + 0x60c) = *(int*)(c + 0x64);
 
-    _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(c + 0x418, c + 0x5e0, *(s16*)(c + 0x3e2));
+    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(c + 0x418, c + 0x5e0, *(s16*)(c + 0x3e2));
 }

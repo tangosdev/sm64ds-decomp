@@ -50,7 +50,7 @@
  * with the four parameters the name spells -- (void *, const CLPS &,
  * const BgCh &, bool) -- would pass five values (this first) and spill the
  * bool to the stack. Four registers, four parameters, no this: static.
- * Same shape as the MeshColliderBase UpdatePos callbacks.
+ * Same shape as the dBgW UpdatePos callbacks.
  */
 
 #ifdef __cplusplus

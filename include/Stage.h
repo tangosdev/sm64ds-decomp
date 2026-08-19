@@ -3,7 +3,7 @@
 
 #include "dScene_c.h"
 #include "Model.h"
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 
 struct SceneRelated;
 struct LVL_Overlay;
@@ -150,8 +150,8 @@ typedef char SysTracker_size_must_be_0x81c[sizeof(SysTracker) == 0x81c ? 1 : -1]
 struct Stage : dScene_c {
     Particle::SysTracker mSysTracker;  /* 0x050 */
     Model mModel;             /* 0x86c */
-    u8  pad_8bc[0x60];       /* Model ends 0x8bc; MeshCollider does not start until 0x91c */
-    MeshCollider mMeshCollider; /* 0x91c */
+    u8  pad_8bc[0x60];       /* Model ends 0x8bc; dBgW_Kc does not start until 0x91c */
+    dBgW_Kc mMeshCollider; /* 0x91c */
     u8  unk_96c;            /* 0x96c */
     u8  pad_96d[0x1f];
     u8  unk_98c;            /* 0x98c */
@@ -200,7 +200,7 @@ struct Stage : dScene_c {
     /* --- static: reached with no object. The pause-screen and menu group all
            take their first declared argument in r0. --- */
     static void CheckInput();
-    static void LoadClsnAndObjects(LVL_Overlay &ovl, u32 param, MeshCollider &mc);
+    static void LoadClsnAndObjects(LVL_Overlay &ovl, u32 param, dBgW_Kc &mc);
     static void RenderVsModeNewStar();
     static void RenderVsModeCountdown();
     static void RenderBouncingArrows();

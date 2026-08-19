@@ -12,14 +12,14 @@ namespace Particle { struct System { static void *NewSimple(unsigned int t, Fix1
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" void * _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int t, Fix12 x, Fix12 y, Fix12 z);
  }
-struct MeshColliderBase { int pad; int IsEnabled(); void Disable(); };
+struct dBgW { int pad; int IsEnabled(); void Disable(); };
 struct ActorS {
     char pad0[0x5c];
     int px, py, pz;
     char pad1[0x74 - 0x68];
     Vector3 v74;
     char pad2[0x124 - 0x80];
-    MeshColliderBase col;
+    dBgW col;
     char pad3[0x31e - 0x128];
     unsigned char flag;
     void PoofDustAt(const Vector3 &v);

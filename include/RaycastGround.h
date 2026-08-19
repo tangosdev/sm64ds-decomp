@@ -3,12 +3,12 @@
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen.
  *
- * HAND-EXTENDED for MeshCollider::DetectClsn(RaycastGround&) at 0x01ffd3f8:
+ * HAND-EXTENDED for dBgW_Kc::DetectClsn(RaycastGround&) at 0x01ffd3f8:
  *   0x010  the ClsnResult the hit is written into (func_02037fd4(ray+0x10, ...))
  *   0x038  the probe position, a Fix12i Vector3, read as .x, .z, .y
  *   0x044  the collision height in Fix12i: the search seed on entry, the hit on exit
  *   0x048  the has-collision byte
- * Consistent with MovingMeshCollider::DetectClsn(RaycastGround&), which writes
+ * Consistent with dBgW_KcMbg::DetectClsn(RaycastGround&), which writes
  * 0x44/0x48 and reads 0x44/0x48/0x4c.
  */
 #ifndef RAYCASTGROUND_H

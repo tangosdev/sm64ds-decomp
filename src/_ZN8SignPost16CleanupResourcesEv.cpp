@@ -5,14 +5,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "SignPost.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int SignPost_ClsnFile[];
 extern int SignPost_ModelFile[];
 
 int SignPost::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(SignPost_ModelFile))->Release();
     ((SharedFilePtr *)(SignPost_ClsnFile))->Release();

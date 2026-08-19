@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN16MeshColliderBase9IsEnabledEv
-#include "MeshColliderBase.h"
+// @symbol _ZN4dBgW9IsEnabledEv
+#include "dBgW.h"
 
-int MeshColliderBase::IsEnabled()
+int dBgW::IsEnabled()
 {
     u8 v = slotIdx;
     if (v != 0x18)

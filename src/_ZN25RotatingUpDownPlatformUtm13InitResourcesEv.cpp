@@ -19,8 +19,8 @@ extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
 extern void func_ov091_02131340(void *c);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *f);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *f);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern void func_020393d4(void *p, void *v);
 extern void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround *self, const Vector3 *v, void *a);
@@ -32,7 +32,7 @@ extern signed char data_0209f2f8;
 extern struct Matrix4x3 data_020a0e68;
 extern void *data_ov091_02134c30[];
 extern void *data_ov091_02134c34[];
-extern void *_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern void *_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
 
 int RotatingUpDownPlatformUtm::InitResources()
 {
@@ -104,12 +104,12 @@ int RotatingUpDownPlatformUtm::InitResources()
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
 
     idx395 = (unsigned char)((char *)this)[0x395];
-    kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void**)((char*)data_ov091_02134c34 + idx395 * 0xc));
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void**)((char*)data_ov091_02134c34 + idx395 * 0xc));
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char *)this) + 0x124, kcl, ((char *)this) + 0x2ec, 0x199, mAngleY,
         *(void**)((char*)data_ov091_02134c38 + idx395 * 0xc));
 
-    func_020393d4(((char *)this) + 0x124, &_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(((char *)this) + 0x124, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
 
     posVec.x = mPosX;
     posVec.y = mPosY;

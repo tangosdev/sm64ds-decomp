@@ -1,5 +1,5 @@
 //cpp
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern int func_ov098_02138ce0(void*);
 extern int _ZN8dActor_c13DistToCPlayerEv(void*);
@@ -18,7 +18,7 @@ void func_ov098_0213814c(char* c){
     _ZN5dCc_c5ClearEv(c+0x5a4);
     func_ov098_02139850(c);
     func_ov098_021397c8(c);
-    if(((MeshColliderBase *)(c+0x124))->IsEnabled())
-        ((MeshColliderBase *)(c+0x124))->Disable();
+    if(((dBgW *)(c+0x124))->IsEnabled())
+        ((dBgW *)(c+0x124))->Disable();
 }
 }

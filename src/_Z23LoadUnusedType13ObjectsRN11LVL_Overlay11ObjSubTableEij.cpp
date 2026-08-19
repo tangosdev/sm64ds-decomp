@@ -12,7 +12,7 @@
  * same word at offset 4 by arithmetic rather than by name. *
  * LVL_Overlay IS A CLASS, NOT A NAMESPACE, and the two are indistinguishable in
  * a mangled name -- `N11LVL_Overlay...E' is emitted for either. What settles it
- * is _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider, which takes
+ * is _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc, which takes
  * `LVL_Overlay&': a reference to a namespace does not exist. One of these files
  * used to declare `namespace LVL_Overlay { struct ObjSubTable ... }' and matched
  * perfectly, because nothing about the choice reaches the bytes. */

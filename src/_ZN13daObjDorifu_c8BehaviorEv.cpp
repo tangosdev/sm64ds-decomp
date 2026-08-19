@@ -11,10 +11,10 @@
  * under a func_ov002_ name.
  *
  * The three collider calls stopped being `extern`-ed mangled names: a bare
- * `extern int _ZN16MeshColliderBase9IsEnabledEv(void *)` is emitted verbatim
+ * `extern int _ZN4dBgW9IsEnabledEv(void *)` is emitted verbatim
  * from C but mangled a SECOND time from C++, which this file now is. See the
- * note at the top of include/SharedFilePtr.h. MovingMeshCollider inherits all
- * three from MeshColliderBase, which declares them, so they are spelled as
+ * note at the top of include/SharedFilePtr.h. dBgW_KcMbg inherits all
+ * three from dBgW, which declares them, so they are spelled as
  * calls.
  *
  * THE `(int)` LAUNDER ON &mActivePlank IS LOAD-BEARING and is kept from the
@@ -30,7 +30,7 @@ unsigned char DecIfAbove0_Byte(unsigned char *p);
 s32 daObjDorifu_c::Behavior()
 {
     int i;
-    MovingMeshCollider *m;
+    dBgW_KcMbg *m;
     unsigned char *p;
 
     switch (mState) {

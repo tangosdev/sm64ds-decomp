@@ -1,13 +1,13 @@
-#ifndef MOVINGMESHCOLLIDER_H
-#define MOVINGMESHCOLLIDER_H
+#ifndef DBGW_KCMBG_H
+#define DBGW_KCMBG_H
 
 #include "types.h"
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 #include "math/Matrix.h"
 
-/* The moving-mesh collider, vtable _ZTV18MovingMeshCollider at 0x02099434.
- * Derives from MeshCollider (SetFile chains to MeshCollider::SetFile and
- * the fields start at exactly 0x50); ExtendingMeshCollider derives from
+/* The moving-mesh collider, vtable _ZTV10dBgW_KcMbg at 0x02099434.
+ * Derives from dBgW_Kc (SetFile chains to dBgW_Kc::SetFile and
+ * the fields start at exactly 0x50); dBgW_KcMbgSclY derives from
  * this in turn. Overrides every slot except BeforeClsn (slot 9) and
  * GetSurfaceInfo (slot 3), both of which it inherits unchanged.
  *
@@ -29,7 +29,7 @@
 
 extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 
-struct MovingMeshCollider : MeshCollider {
+struct dBgW_KcMbg : dBgW_Kc {
     Fix12i scale;              /* 0x50 */
     Matrix4x3 mat;             /* 0x54 */
     Matrix4x3 invRotMat;       /* 0x84 - rotation-only inverse */
@@ -47,10 +47,10 @@ struct MovingMeshCollider : MeshCollider {
     Matrix4x3 prevInvScaledMat;/* 0x198 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    virtual ~MovingMeshCollider();                        /* slots 0/1 */
+    virtual ~dBgW_KcMbg();                        /* slots 0/1 */
     virtual void Virtual08();                             /* slot 2 */
     /* slot 3 GetSurfaceInfo is NOT overridden: this table's word is
-       0x01ffd920, the same one MeshCollider holds, so it is inherited. */
+       0x01ffd920, the same one dBgW_Kc holds, so it is inherited. */
     virtual void GetNormal(s16 triID, Vector3 &res);      /* slot 4 */
     virtual void GetTriangleOrigin(s16 triID, Vector3 &res); /* slot 5 */
     virtual int DetectClsn(RaycastGround &ray);           /* slot 6 - free def */
@@ -83,8 +83,8 @@ struct MovingMeshCollider : MeshCollider {
 
 };
 
-typedef char MovingMeshCollider_size_must_be_0x1c8[sizeof(MovingMeshCollider) == 0x1c8 ? 1 : -1];
+typedef char dBgW_KcMbg_size_must_be_0x1c8[sizeof(dBgW_KcMbg) == 0x1c8 ? 1 : -1];
 
 #endif /* __cplusplus */
 
-#endif /* MOVINGMESHCOLLIDER_H */
+#endif /* DBGW_KCMBG_H */

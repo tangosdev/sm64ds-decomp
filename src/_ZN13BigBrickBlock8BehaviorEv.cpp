@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BigBrickBlock.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" int _ZN5Event6GetBitEj(unsigned int a);
 extern "C" void *_ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void *after);
 extern "C" void func_020393a4(int *p, int v);
@@ -29,8 +29,8 @@ int BigBrickBlock::Behavior()
         }
 
         if (_ZN5Event6GetBitEj(mEventID) == 0 || unk_31e != 0) {
-            if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0)
-                ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
+            if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0)
+                ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
         } else {
             func_020393a4((int *)((char *)&(*(u8 *)&mMeshCollider)), 0x15e000);
             func_02039394((int *)((char *)&(*(u8 *)&mMeshCollider)), 0x64000);

@@ -4,20 +4,20 @@
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "dBgActor_c.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern void* _ZN8dActor_c13ClosestPlayerEv(void*);
 extern int Vec3_Dist(void*, void*);
 int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self, int a, int b) {
   int on = (self->mFlags & 8) != 0;
   if (on) {
-    if (((MeshColliderBase *)((char*)&self->mMeshCollider))->IsEnabled())
-      ((MeshColliderBase *)((char*)&self->mMeshCollider))->Disable();
+    if (((dBgW *)((char*)&self->mMeshCollider))->IsEnabled())
+      ((dBgW *)((char*)&self->mMeshCollider))->Disable();
     return 0;
   }
   if (a == 0) {
-    if (!((MeshColliderBase *)((char*)&self->mMeshCollider))->IsEnabled())
-      ((MeshColliderBase *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
+    if (!((dBgW *)((char*)&self->mMeshCollider))->IsEnabled())
+      ((dBgW *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
     goto done;
   }
   {
@@ -30,12 +30,12 @@ int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self,
   void* p = _ZN8dActor_c13ClosestPlayerEv(((char*)self));
   int d = Vec3_Dist(&v, (char*)p+0x5c);
   if (d > a) {
-    if (((MeshColliderBase *)((char*)&self->mMeshCollider))->IsEnabled())
-      ((MeshColliderBase *)((char*)&self->mMeshCollider))->Disable();
+    if (((dBgW *)((char*)&self->mMeshCollider))->IsEnabled())
+      ((dBgW *)((char*)&self->mMeshCollider))->Disable();
     return 0;
   }
-  if (!((MeshColliderBase *)((char*)&self->mMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
+  if (!((dBgW *)((char*)&self->mMeshCollider))->IsEnabled())
+    ((dBgW *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
   }
 done:
   return 1;

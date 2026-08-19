@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN18MovingMeshCollider10DetectClsnER13RaycastGround
+// @symbol _ZN10dBgW_KcMbg10DetectClsnER13RaycastGround
 /* recovered: named members + shared header, real C++ method
  *
  * Vtable slot 6. A downward ground probe answered as a LINE query: the probe
  * point and a second point b4c below it are pulled into the collider's local
  * frame, and the scratch RaycastLine at 0x020a0d0c is aimed between them, so
- * the base MeshCollider::DetectClsn(RaycastLine&) does the work.
+ * the base dBgW_Kc::DetectClsn(RaycastLine&) does the work.
  *
  * How far down to look is the interesting part. It starts at unk_04c, the
  * caller's search depth; but if the caller already HAS a hit (hasClsn), the
@@ -17,7 +17,7 @@
  * The volatile on the local is load-bearing and original: it forces the
  * probe's y to be re-read from the stack for the subtraction.
  */
-#include "MovingMeshCollider.h"
+#include "dBgW_KcMbg.h"
 #include "RaycastGround.h"
 #include "RaycastLine.h"
 
@@ -33,7 +33,7 @@ extern char data_020a0d60[];
 extern char data_020a0d1c[];
 }
 
-int MovingMeshCollider::DetectClsn(RaycastGround & ray_)
+int dBgW_KcMbg::DetectClsn(RaycastGround & ray_)
 {
   RaycastGround* ray = &ray_;
   int sp0[3];
@@ -55,7 +55,7 @@ int MovingMeshCollider::DetectClsn(RaycastGround & ray_)
   func_02039e48(this, sp0x24, sp0x18);
   _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(data_020a0d0c, sp0, sp0x18, 0);
   func_02035394(data_020a0d0c, ray);
-  int r = MeshCollider::DetectClsn(*(RaycastLine*)data_020a0d0c);
+  int r = dBgW_Kc::DetectClsn(*(RaycastLine*)data_020a0d0c);
   if (r) {
     func_02039e30(this, data_020a0d60, sp0x30);
     _ZN10ClsnResultaSERKS_(&ray->unk_010, data_020a0d1c);

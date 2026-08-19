@@ -6,7 +6,7 @@
  * `struct RotatingUpDownPlatformUtm : dBgActor_c`: its own vptr, then the
  * ShadowModel member at 0x320, then dBgActor_c's vptr -- inlined, because
  * dBgActor_c's destructor is defined in its class body -- then dBgActor_c's
- * MovingMeshCollider and Model, then dActor_c. This class adds no other
+ * dBgW_KcMbg and Model, then dActor_c. This class adds no other
  * member with a destructor of its own.
  */
 #include "RotatingUpDownPlatformUtm.h"

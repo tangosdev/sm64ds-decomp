@@ -9,8 +9,8 @@
  * mClsnMat/mAngleY are dBgActor_c's/dActor_c's own named fields
  * (include/dBgActor_c.h, include/dActor_c.h). ModelBase::SetFile,
  * UpdateModelPosAndRotY and UpdateClsnPosAndRot are real method calls.
- * Model::LoadFile, MeshCollider::LoadFile and MovingMeshCollider::SetFile
- * stay extern "C" under their exact ROM symbols -- MovingMeshCollider::SetFile
+ * Model::LoadFile, dBgW_Kc::LoadFile and dBgW_KcMbg::SetFile
+ * stay extern "C" under their exact ROM symbols -- dBgW_KcMbg::SetFile
  * takes Fix12<int> BY VALUE, which cannot be declared callable here without
  * changing the argument-passing ABI (mwccarm-codegen.md 6az).
  *
@@ -21,8 +21,8 @@
  * sunk and pre-flagged. */
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern int data_0209caa0[];
 extern int data_ov012_021124a8[];
@@ -40,8 +40,8 @@ int SwitchPillar::InitResources()
     }
     UpdateModelPosAndRotY();
     UpdateClsnPosAndRot();
-    void *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov012_021124a0);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov012_021124a0);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, data_ov012_02111cd0);
     return 1;
 }

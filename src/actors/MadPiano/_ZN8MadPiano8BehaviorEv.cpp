@@ -15,7 +15,7 @@ struct dActor_c {
   void UpdatePos(struct dCc_c*);
   struct dActor_c* ClosestPlayer();
 };
-struct MeshColliderBase {
+struct dBgW {
   int IsEnabled();
   void Disable();
 };
@@ -46,8 +46,8 @@ int MadPiano::Behavior()
   func_0203568c(((char*)this)+0x50c, 0x159000);
   func_02035684(((char*)this)+0x50c, 0x159000);
   if (*(unsigned char*)((char*)((struct dActor_c*)((char*)this))->ClosestPlayer()+0x6fb) != 0) {
-    if (((struct MeshColliderBase*)((char*)&mMeshCollider))->IsEnabled() != 0)
-      ((struct MeshColliderBase*)((char*)&mMeshCollider))->Disable();
+    if (((struct dBgW*)((char*)&mMeshCollider))->IsEnabled() != 0)
+      ((struct dBgW*)((char*)&mMeshCollider))->Disable();
   } else {
     _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_((struct dBgActor_c*)((char*)this), 0x1f4000, 0);
   }

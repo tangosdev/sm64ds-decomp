@@ -20,8 +20,8 @@ void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, struct BMD_File *f, int a, i
 void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* actor, int a, int b, void* vr, int e);
 void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
-struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+struct KCL_File *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, struct KCL_File *k, struct Matrix4x3 &m, int fx, short s, struct CLPS_Block &c);
 int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, struct V3*, void*, int, int);
 extern struct SharedFilePtr data_ov030_02115c88;
@@ -41,8 +41,8 @@ int _ZN9UkikiCage13InitResourcesEv(char *self){
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
     {
-        struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov030_02115c80);
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        struct KCL_File *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov030_02115c80);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             self + 0x124, kcl, *(struct Matrix4x3 *)(self + 0x2ec), 0x199,
             *(s16 *)(self + 0x8e), data_ov030_02114ee4);
     }

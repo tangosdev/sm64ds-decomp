@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN16MeshColliderBase14GetAngularVelYEv
-#include "MeshColliderBase.h"
+// @symbol _ZN4dBgW14GetAngularVelYEv
+#include "dBgW.h"
 
-s16 MeshColliderBase::GetAngularVelY()
+s16 dBgW::GetAngularVelY()
 {
     return 0;
 }

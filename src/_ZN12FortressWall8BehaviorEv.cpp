@@ -2,7 +2,7 @@
 struct Vector3 { int x, y, z; };
 struct Vector3_16 { short x, y, z; };
 
-struct MeshColliderBase {
+struct dBgW {
     int IsEnabled();
     void Disable();
 };
@@ -32,8 +32,8 @@ extern "C" int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *, int a, int b)
 extern "C" int _ZN12FortressWall8BehaviorEv(dBgActor_c *self) {
     int ok = (*(unsigned short *)((char *)self + 0xc) == 0x30);
     if (ok != 0 && *(unsigned char *)((char *)self + 0x321) != 0) {
-        if (((MeshColliderBase *)((char *)self + 0x124))->IsEnabled() != 0) {
-            ((MeshColliderBase *)((char *)self + 0x124))->Disable();
+        if (((dBgW *)((char *)self + 0x124))->IsEnabled() != 0) {
+            ((dBgW *)((char *)self + 0x124))->Disable();
         }
         if (Sound::PlaySecretSound((dActor_c *)self, (unsigned short *)((char *)self + 0x322)) != 0) {
             Vector3 pos;

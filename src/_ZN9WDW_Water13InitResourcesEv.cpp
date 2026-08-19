@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "WDW_Water.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *m, void *f, int a, int b);
@@ -13,10 +13,10 @@ extern void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void *bmd, void
 extern void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *tt, void *bta, int a, int fix, unsigned int b);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *sfp);
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *sfp);
 }
 extern "C" {
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *mc, void *kcl, void *mtx, int fix, short s, void *clps);
 }
 
@@ -45,10 +45,10 @@ int WDW_Water::InitResources()
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
 
-    k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov029_02114304);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    k = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov029_02114304);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, &data_ov029_02112fec);
-    ((MeshColliderBase *)(&mMeshCollider))->Enable((dActor_c *)(((char *)this)));
+    ((dBgW *)(&mMeshCollider))->Enable((dActor_c *)(((char *)this)));
 
     unk_340 = (u8)mAreaId;
     mAreaId = -1;

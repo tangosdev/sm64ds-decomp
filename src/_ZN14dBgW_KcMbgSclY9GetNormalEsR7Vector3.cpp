@@ -1,15 +1,15 @@
 //cpp
-// @symbol _ZN21ExtendingMeshCollider9GetNormalEsR7Vector3
-#include "ExtendingMeshCollider.h"
+// @symbol _ZN14dBgW_KcMbgSclY9GetNormalEsR7Vector3
+#include "dBgW_KcMbgSclY.h"
 extern "C" {
 void NormalizeVec3(Vector3 *src, Vector3 *dst);
-void func_02039db8(MovingMeshCollider *self, Vector3 *v, Vector3 *res);
+void func_02039db8(dBgW_KcMbg *self, Vector3 *v, Vector3 *res);
 }
 
 /* The mesh only stretches in y, so the normal's x and z scale by scaleY
    and the vector is re-normalized. The double scaleY read mirrors the
    ROM. */
-void ExtendingMeshCollider::GetNormal(s16 triID, Vector3 &res)
+void dBgW_KcMbgSclY::GetNormal(s16 triID, Vector3 &res)
 {
     KCL_File *p = kclFile;
     u16 n = p->tris[triID].normalIdx;

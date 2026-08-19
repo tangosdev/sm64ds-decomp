@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File
-#include "MeshCollider.h"
+// @symbol _ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File
+#include "dBgW_Kc.h"
 
 /* The four header words of a fresh KCL file are file-relative offsets;
    rebase them into pointers. */
-void MeshCollider::UpdateFileOffsets(KCL_File &file)
+void dBgW_Kc::UpdateFileOffsets(KCL_File &file)
 {
     file.positions = (s32 (*)[3])((char *)&file + (int)file.positions);
     file.normals = (s16 (*)[3])((char *)&file + (int)file.normals);

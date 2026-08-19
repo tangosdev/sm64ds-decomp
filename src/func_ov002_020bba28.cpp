@@ -1,5 +1,5 @@
 //cpp
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" void _Z14ApproachLinearRsss(short* cur, short to, short step);
 extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 extern "C" void WithMeshClsn_UpdateContinuous_Veneer(void* p);
@@ -30,7 +30,7 @@ extern "C" void func_ov002_020bba28(char* self){
         ((struct Obj*)self)->m();
     } else {
         func_ov002_020bafc0(self);
-        if (((MeshColliderBase *)(self + 0x124))->IsEnabled())
-            ((MeshColliderBase *)(self + 0x124))->Disable();
+        if (((dBgW *)(self + 0x124))->IsEnabled())
+            ((dBgW *)(self + 0x124))->Disable();
     }
 }

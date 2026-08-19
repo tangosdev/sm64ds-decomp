@@ -4,7 +4,7 @@ extern void _ZN12WithMeshClsnC1Ev(void *);
 extern void _ZN9ModelAnimC1Ev(void *);
 extern void _ZN15TextureSequenceC1Ev(void *);
 extern void _ZN11ShadowModelC1Ev(void *);
-extern void _ZN18MovingMeshColliderC1Ev(void *);
+extern void _ZN10dBgW_KcMbgC1Ev(void *);
 extern int _ZTV5Whomp[];
 int *WhompKing_Spawn(void)
 {
@@ -16,7 +16,7 @@ int *WhompKing_Spawn(void)
         _ZN9ModelAnimC1Ev((char *)p + 0x2cc);
         _ZN15TextureSequenceC1Ev((char *)p + 0x330);
         _ZN11ShadowModelC1Ev((char *)p + 0x344);
-        _ZN18MovingMeshColliderC1Ev((char *)p + 0x418);
+        _ZN10dBgW_KcMbgC1Ev((char *)p + 0x418);
     }
     return p;
 }

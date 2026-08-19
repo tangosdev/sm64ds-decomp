@@ -29,16 +29,16 @@
 // flat across real gains. mismatches=N/M is frozen at 999 until the sizes match.
 // Map and status: notes/collision-system.md.
 //
-// @symbol _ZN12MeshCollider10DetectClsnER10SphereClsn
-/* MeshCollider::DetectClsn(SphereClsn &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
-#include "MeshCollider.h"
+// @symbol _ZN7dBgW_Kc10DetectClsnER10SphereClsn
+/* dBgW_Kc::DetectClsn(SphereClsn &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
+#include "dBgW_Kc.h"
 #include "SphereClsn.h"
 #include "ClsnResult.h"
 
 extern "C" void func_02037a6c(SphereClsn *self, s32 loX, s32 loY, s32 loZ,
                               s32 hiX, s32 hiY, s32 hiZ);
 extern "C" s32 DotVec3(const s32 *a, const Vector3 *b);
-extern "C" s16 func_020396dc(MeshCollider *self, KCL_Tri *tri);
+extern "C" s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri);
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
 extern "C" s32 func_02039794(s32 normalY);
 extern SurfaceInfo data_020a0cec;
@@ -129,7 +129,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     goto vtail;
 
 /* The filter each edge block runs before its distance is taken, and the reason
-   MeshCollider::unk_48, unk_4d and the 0x28 vector exist. unk_48 is a SHIFT
+   dBgW_Kc::unk_48, unk_4d and the 0x28 vector exist. unk_48 is a SHIFT
    COUNT, not a value: the test is "is the lateral distance outside this edge
    more than faceDot >> unk_48", i.e. a slope tolerance expressed as a fraction
    of the penetration. Only a floor (cls 0) that fails it gets the expensive
@@ -159,7 +159,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
                 > _ZN4cstd4fdivEii(faceDot >> 4, hyp)) continue;              \
     }
 
-s32 MeshCollider::DetectClsn(SphereClsn &sphere)
+s32 dBgW_Kc::DetectClsn(SphereClsn &sphere)
 {
     KCL_File *f;
     s32 loX, hiX;
@@ -363,7 +363,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         }
 
                         /* this->unk_34 / unk_35 gate the face test. These are the
-                           MeshCollider bytes whose set/clear accessors were among
+                           dBgW_Kc bytes whose set/clear accessors were among
                            the original eleven ITCM matches (func_01ffb098/0a4 for
                            0x35, func_01ffb0b0/0bc for 0x34); this is what they are
                            for. unk_38 is the Vector3 func_01ffb07c writes, seeded
@@ -389,7 +389,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         triID = func_020396dc(this, tri);
 
                         /* A REAL virtual call -- slot 3. Same lever as
-                           MeshCollider::GetSurfaceInfo and the RaycastGround twin:
+                           dBgW_Kc::GetSurfaceInfo and the RaycastGround twin:
                            mwccarm's dispatch reads `this` from r0, a hand-rolled
                            one reads it from the callee-saved copy. */
                         GetSurfaceInfo(triID, data_020a0cec);

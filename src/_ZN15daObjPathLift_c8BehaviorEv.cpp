@@ -59,8 +59,8 @@ extern "C" int _ZN15daObjPathLift_c8BehaviorEv(char* c)
     func_02039394((int*)(c + 0x124), 0x1000);
     int b = (int)(data_0209f2d8 == 1);
     if (b != 0) {
-        if (((MeshColliderBase*)(c + 0x124))->IsEnabled() == 0) {
-            ((MeshColliderBase*)(c + 0x124))->Enable((dActor_c*)(void*)c);
+        if (((dBgW*)(c + 0x124))->IsEnabled() == 0) {
+            ((dBgW*)(c + 0x124))->Enable((dActor_c*)(void*)c);
         }
     } else {
         _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);

@@ -1,7 +1,7 @@
 #include "types.h"
-// MeshCollider::MeshCollider() - C1 constructor returning this
+// dBgW_Kc::dBgW_Kc() - C1 constructor returning this
 // Address: 0x020398c8
-struct MeshColliderBase {
+struct dBgW {
     void* vtable;             // 0x00
     void* actor;              // 0x04
     u32   actorUniqueID;      // 0x08
@@ -12,21 +12,21 @@ struct MeshColliderBase {
     void* afterClsnCallback;  // 0x1c
 };
 
-struct MeshCollider {
-    struct MeshColliderBase base; // 0x00..0x1f (size 0x20)
+struct dBgW_Kc {
+    struct dBgW base; // 0x00..0x1f (size 0x20)
     void*  clsnFile;    // 0x20
     void*  clpsBlock;   // 0x24
     u32    unk28;       // 0x28
 };
 
-extern void _ZN16MeshColliderBaseC2Ev(struct MeshColliderBase* self);
+extern void _ZN4dBgWC2Ev(struct dBgW* self);
 extern void func_02038228(void** ptr);
-extern void* _ZTV12MeshCollider;
+extern void* _ZTV7dBgW_Kc;
 
-// MeshCollider C1 constructor - returns this
-struct MeshCollider* func_020398c8(struct MeshCollider* self) {
-    _ZN16MeshColliderBaseC2Ev(&self->base);
-    self->base.vtable = &_ZTV12MeshCollider;
+// dBgW_Kc C1 constructor - returns this
+struct dBgW_Kc* func_020398c8(struct dBgW_Kc* self) {
+    _ZN4dBgWC2Ev(&self->base);
+    self->base.vtable = &_ZTV7dBgW_Kc;
     func_02038228(&self->clpsBlock);
     self->clsnFile = 0;
     return self;

@@ -4,7 +4,7 @@
 #include "types.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
- * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
  * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x320 -- mPosX/mPosY/mPosZ at
  * 0x05c/0x060/0x064, mAngleY at 0x08e, mAreaId at 0x0cc -- was dActor_c's, and

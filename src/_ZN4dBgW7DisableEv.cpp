@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN16MeshColliderBase7DisableEv
-#include "MeshColliderBase.h"
+// @symbol _ZN4dBgW7DisableEv
+#include "dBgW.h"
 extern "C" {
-int func_02039404(MeshColliderBase *self);
-void func_020393f0(MeshColliderBase *self);
-extern MeshColliderBase *data_020a0c80[];
+int func_02039404(dBgW *self);
+void func_020393f0(dBgW *self);
+extern dBgW *data_020a0c80[];
 }
 
-int MeshColliderBase::Disable()
+int dBgW::Disable()
 {
     int i = func_02039404(this);
     if (i != 0x18) {

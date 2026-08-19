@@ -16,7 +16,7 @@
  *     0x2cc ModelAnim                  0x64    -> 0x330
  *     0x330 TextureSequence            0x14    -> 0x344
  *     0x344 ShadowModel                0x28    -> 0x36c
- *     0x418 MovingMeshCollider         0x1c8   -> 0x5e0
+ *     0x418 dBgW_KcMbg         0x1c8   -> 0x5e0
  *
  * Typing them absorbed markers that were their insides:
  *   - unk_338 = TextureSequence.currFrame
@@ -29,7 +29,7 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingMeshCollider.h"
+#include "dBgW_KcMbg.h"
 #include "ShadowModel.h"
 #include "TextureSequence.h"
 #include "WithMeshClsn.h"
@@ -62,7 +62,7 @@ struct Whomp : dEnemyBase_c {
     s32                          unk_410;               /* 0x410 */
     u8                           mIsKing;               /* 0x414 */
     u8  pad_415[0x3];
-    MovingMeshCollider           mMovingMeshCollider;   /* 0x418 */
+    dBgW_KcMbg           mMovingMeshCollider;   /* 0x418 */
     u8  pad_5e0[0x30];
 
     /* --- vtable --- */

@@ -30,13 +30,13 @@
  * the RTTI records, arrived at from the other direction.
  *
  * THE TWO ARRAYS ARE THIS CLASS'S. Its own destructor -- ov002 0x020b4af8, whose
- * body is still under a func_ov002_ name -- destroys a MovingMeshCollider[5] at
+ * body is still under a func_ov002_ name -- destroys a dBgW_KcMbg[5] at
  * 0x4b0 and a Model[5] at 0x320 while the vptr is this class's, before storing
  * dBgActor_c's and destroying dBgActor_c's own two. Both arrays close exactly on the
  * next thing: 0x320 + 5 * sizeof(Model) = 0x320 + 5 * 0x50 = 0x4b0, and
- * 0x4b0 + 5 * sizeof(MovingMeshCollider) = 0x4b0 + 5 * 0x1c8 = 0xd98. The strides
+ * 0x4b0 + 5 * sizeof(dBgW_KcMbg) = 0x4b0 + 5 * 0x1c8 = 0xd98. The strides
  * come from the ROM's __destroy_arr arguments and the sizes from Model.h and
- * MovingMeshCollider.h; they agree without being told to.
+ * dBgW_KcMbg.h; they agree without being told to.
  *
  * THE FOUR BYTES AT 0xdc8 ARE THIS CLASS'S TOO, for the same reason:
  * `func_ov002_020b4bfc` is this class's own Behavior, in this class's own
@@ -49,7 +49,7 @@
  * SIZE 0xdcc closes the class: all three factories that build a descendant of it
  * -- StairsBdw_Spawn, StairsBs_Spawn and TrickyTriangles_Spawn, one per
  * descendant -- pass 0xdcc to fBase_c::operator new, and each of them then
- * constructs the Model[5] and MovingMeshCollider[5] in place at 0x320 and 0x4b0
+ * constructs the Model[5] and dBgW_KcMbg[5] in place at 0x320 and 0x4b0
  * with the same strides the destructor uses.
  *
  * 0xd98..0xdc8 IS UNOBSERVED, not inherited. Nothing this class's own methods
@@ -61,12 +61,12 @@
 
 #include "dBgActor_c.h"
 #include "Model.h"
-#include "MovingMeshCollider.h"
+#include "dBgW_KcMbg.h"
 
 struct daObjDorifu_c : dBgActor_c {
     /* Field NAMES are placeholders. Offsets, widths and types are observed. */
     Model mPlankModels[5];                  /* 0x320 */
-    MovingMeshCollider mPlankClsn[5];       /* 0x4b0 */
+    dBgW_KcMbg mPlankClsn[5];       /* 0x4b0 */
     u8  pad_d98[0x30];
     u8  mActivePlank;       /* 0xdc8 - 0..4, which collider is enabled */
     u8  mStepTimer;         /* 0xdc9 - frames until the next step */

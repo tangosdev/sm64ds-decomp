@@ -19,8 +19,8 @@ int _ZN6Player18HasFinishedTalkingEv(void* self);
 void _ZN7Message7EndTalkEv(void);
 char* _ZN8dActor_c13ClosestPlayerEv(void* self);
 int _ZN6Player9StartTalkER7fBase_cb(void* self, void* actor, int b);
-int _ZN16MeshColliderBase9IsEnabledEv(void* self);
-void _ZN16MeshColliderBase7DisableEv(void* self);
+int _ZN4dBgW9IsEnabledEv(void* self);
+void _ZN4dBgW7DisableEv(void* self);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 int func_ov002_020b4fd0(char* c);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const void* v);
@@ -90,8 +90,8 @@ extern "C" int _ZN14QuestionSwitch8BehaviorEv(char* self)
         u8 f = *(u8*)(self + 0x71a);
         if (f != 0) {
             if (DecIfAbove0_Byte((u8*)(self + 0x718)) == 0) {
-                if (_ZN16MeshColliderBase9IsEnabledEv(*(char**)(self + 0x320)) != 0) {
-                    _ZN16MeshColliderBase7DisableEv(*(char**)(self + 0x320));
+                if (_ZN4dBgW9IsEnabledEv(*(char**)(self + 0x320)) != 0) {
+                    _ZN4dBgW7DisableEv(*(char**)(self + 0x320));
                 }
                 *(char**)(self + 0x320) = self + 0x4ec;
                 data_0209caa0[1] |= 0x80000000;

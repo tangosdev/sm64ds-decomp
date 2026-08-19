@@ -4,7 +4,7 @@
 #include "types.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
- * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
  * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x31e was dActor_c's and
  * dBgActor_c's, and is inherited now.
@@ -69,7 +69,7 @@ struct BlueCoinSwitch {
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1c7];
     /* Real type, not a marker: InitResources hands it to
-       MovingMeshCollider::SetFile as the collider's transform. */
+       dBgW_KcMbg::SetFile as the collider's transform. */
     Matrix4x3 mMatrix;            /* 0x2ec */
     u8  pad_31c[0x4];
     /* Where mPosY stops: seeded at init as mPosY - 0x64000, so the switch

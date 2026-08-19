@@ -3,7 +3,7 @@
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingMeshCollider.h"
+#include "decl_dBgW_KcMbg.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 /* recovered: named members + shared header */
@@ -21,7 +21,7 @@ void* _ZN8MadPianoD1Ev(struct MadPiano *self) {
   _ZN11ShadowModelD1Ev((char*)&self->mShadowModel1);
   _ZN9ModelAnimD1Ev((char*)&self->mModelAnim);
   *(void**)((void*)self) = &_ZTV10dBgActor_c;
-  _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);
+  _ZN10dBgW_KcMbgD1Ev((char*)&self->mMeshCollider);
   _ZN5ModelD1Ev((char*)&self->mModel);
   _ZN8dActor_cD2Ev(((void*)self));
   return ((void*)self);

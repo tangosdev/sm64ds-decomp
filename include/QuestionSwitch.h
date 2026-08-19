@@ -4,7 +4,7 @@
  * fBase_c::operator new(0x724), then dBgActor_c::dBgActor_c(), then stores
  * _ZTV14QuestionSwitch. No intermediate base: one non-base vtable store.
  *
- * dBgActor_c ends at 0x320. Two MovingMeshCollider members follow back to
+ * dBgActor_c ends at 0x320. Two dBgW_KcMbg members follow back to
  * back (0x324..0x4ec..0x6b4, each 0x1c8 -- confirmed by
  * src/QuestionSwitch_Spawn.c constructing both and src/_ZN14QuestionSwitchD1Ev.cpp
  * destroying both before chaining to dBgActor_c), then a ModelAnim at 0x6b4
@@ -23,8 +23,8 @@
 
 struct QuestionSwitch : dBgActor_c {
     s32 mActiveMeshCollider;            /* 0x320 -- points at whichever MMC below is live */
-    MovingMeshCollider unk_324;         /* 0x324 */
-    MovingMeshCollider mMovingMeshCollider;    /* 0x4ec */
+    dBgW_KcMbg unk_324;         /* 0x324 */
+    dBgW_KcMbg mMovingMeshCollider;    /* 0x4ec */
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x6b4 -- a relocation
        the ROM build checks. D1 and not D2, so it is this type and not an
        inlined base. */

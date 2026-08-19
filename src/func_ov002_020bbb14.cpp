@@ -3,7 +3,7 @@
 // @symbol func_ov002_020bbb14
 /* recovered: shared common types */
 #include "common.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
@@ -70,8 +70,8 @@ void func_ov002_020bbb14(char* self)
 
     _Z14ApproachLinearRiii((int*)(self + 0x98), 0, 0x555);
 
-    if (((MeshColliderBase *)(self + 0x124))->IsEnabled() != 0) {
-        ((MeshColliderBase *)(self + 0x124))->Disable();
+    if (((dBgW *)(self + 0x124))->IsEnabled() != 0) {
+        ((dBgW *)(self + 0x124))->Disable();
     }
 
     b = *(int*)(self + 0xb0) & 8;

@@ -1,6 +1,6 @@
 //cpp
-// @symbol _ZN12MeshCollider10DetectClsnER13RaycastGround
-/* MeshCollider::DetectClsn(RaycastGround &) at 0x01ffd3f8 (ITCM)
+// @symbol _ZN7dBgW_Kc10DetectClsnER13RaycastGround
+/* dBgW_Kc::DetectClsn(RaycastGround &) at 0x01ffd3f8 (ITCM)
  *
  * vtable slot 6. The downward ground probe: given a world position, find the
  * highest upward-facing KCL triangle that is below it and above the incoming
@@ -35,7 +35,7 @@
  * probe's own Y rather than the solved one.
  *
  * GetSurfaceInfo IS A REAL VIRTUAL CALL -- see the note on
- * MeshCollider::GetSurfaceInfo: mwccarm's own dispatch reads `this` from r0,
+ * dBgW_Kc::GetSurfaceInfo: mwccarm's own dispatch reads `this` from r0,
  * a hand-rolled `(*(fn**)this)[3](...)` reads it from the callee-saved copy,
  * and that one word is not otherwise reachable.
  *
@@ -56,7 +56,7 @@
  *     compiles to the same nine instructions but swaps two temp slots
  *     (sp+0x38 / sp+0x3c).
  */
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 #include "RaycastGround.h"
 
 /* extern "C" because these exist unmangled in config/arm9/symbols.txt.
@@ -77,7 +77,7 @@ int _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info
 int func_020397dc(int denom);
 
 /* 0x020396dc: (tri - file->tris), i.e. the triangle's index. */
-s16 func_020396dc(MeshCollider *self, KCL_Tri *tri);
+s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri);
 
 /* 0x02037fd4: record a hit -- triangle index and surface into the ClsnResult. */
 void func_02037fd4(void *res, s16 triID, SurfaceInfo *info);
@@ -88,7 +88,7 @@ void func_02037fd4(void *res, s16 triID, SurfaceInfo *info);
    read straight back by ShouldPassThroughImpl and the hit record. */
 extern SurfaceInfo data_020a0cec;
 
-int MeshCollider::DetectClsn(RaycastGround &ray)
+int dBgW_Kc::DetectClsn(RaycastGround &ray)
 {
     KCL_File *file = kclFile;
     Vector3 *pos = &ray.pos;

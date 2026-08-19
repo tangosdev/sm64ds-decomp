@@ -27,7 +27,7 @@
  * which is where dCcAcPos_c starts its own field.
  *
  * BOTH VIRTUALS READ THROUGH owner. GetOwnerID loads owner->uniqueID at
- * dActor_c + 4, the same offset MeshColliderBase uses. GetPos does NOT return a
+ * dActor_c + 4, the same offset dBgW uses. GetPos does NOT return a
  * field of this object at all: it returns the owner's position at dActor_c +
  * 0x5c, so a moving cylinder tracks its dActor_c rather than storing a copy.
  */

@@ -16,7 +16,7 @@
  * are real members rather than markers.
  */
 #include "CastleWater.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 struct SharedFilePtr { int x; };
 struct BMD_File; struct BTA_File; struct KCL_File; struct CLPS_Block;
@@ -29,8 +29,8 @@ void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void* bmd, struct BTA_
 void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void* self, struct BTA_File& bta, int a, int b, unsigned int c);
 void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
-struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+struct KCL_File *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, struct KCL_File *k, Matrix4x3 &m, int fx, short s, struct CLPS_Block &c);
 int func_ov009_02111b1c(char* thiz);
 extern unsigned char data_0209f2d8;
@@ -60,11 +60,11 @@ int CastleWater::InitResources()
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
     {
-        struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov009_02113c70);
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        struct KCL_File *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov009_02113c70);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider, kcl, mMatrix, 0x1000, mAngleY, data_ov009_02112c38);
     }
-    ((MeshColliderBase *)&mMeshCollider)->Enable((dActor_c *)(self));
+    ((dBgW *)&mMeshCollider)->Enable((dActor_c *)(self));
     {
         int v = mPosY - 0x64000;
         if (data_0209f32c > v) data_0209f32c = v;

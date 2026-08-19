@@ -3,7 +3,7 @@
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen.
  *
- * HAND-EXTENDED 2026-08-06 from MeshCollider::DetectClsn(RaycastLine&) at ITCM
+ * HAND-EXTENDED 2026-08-06 from dBgW_Kc::DetectClsn(RaycastLine&) at ITCM
  * 0x01ffb0fc. Do not regenerate over this. Two of the generated names were
  * contradicted by the ROM and are corrected below (mPosX was lineEnd.z, mPosY was
  * clsnDist); 0x50 is newly named. Widths are unchanged -- the three s32 at
@@ -36,7 +36,7 @@ struct RaycastLine {
          func_ov002_020fea68  a[0..2] = b[0..2]  -> reads 0x38  -> GetStart */
     u8  unk_038;            /* 0x038 -- dM3dGLin base: start 0x38, end 0x44 */
     u8  pad_039[0x17];
-    /* Set to 1 on the hit path by MeshCollider::DetectClsn(RaycastLine&)
+    /* Set to 1 on the hit path by dBgW_Kc::DetectClsn(RaycastLine&)
        (`strb r0,[r1,#0x50]`); the role RaycastGround already names at its 0x48. */
     u8  hasClsn;            /* 0x050 */
     u8  pad_051[0x3];
@@ -51,7 +51,7 @@ struct RaycastLine {
          IN   func_02037608 seeds it with the line END --
               func_ov002_020fea4c(&b, thiz+0x38) reads b[3..5], i.e. 0x44, the
               dM3dGLin's second Vector3. It then sets 0x60 = Vec3_Dist(0x54,
-              start), the full segment length. MovingMeshCollider::DetectClsn
+              start), the full segment length. dBgW_KcMbg::DetectClsn
               relies on this, transforming 0x38 and 0x54 as the two endpoints.
 
          OUT  on a hit, func_020375ec(d, s) does d[21..23] = s[0..2], and

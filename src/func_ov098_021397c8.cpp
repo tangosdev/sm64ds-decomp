@@ -6,7 +6,7 @@ extern "C" {
 
 struct MMC { char p[0x124]; };
 struct Obj { char p[0x2ec]; Matrix4x3 m; };
-int _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(MMC*, Matrix4x3&, short);
+int _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(MMC*, Matrix4x3&, short);
 void func_ov098_021397c8(char* self){
     Obj* o = (Obj*)self;
     volatile int tmp[3];
@@ -19,6 +19,6 @@ void func_ov098_021397c8(char* self){
     *(int*)(self+0x310) = tmp[0];
     *(int*)(self+0x314) = tmp[1];
     *(int*)(self+0x318) = tmp[2];
-    _ZN18MovingMeshCollider9TransformERK9Matrix4x3s((MMC*)(self+0x124), o->m, *(short*)(self+0x8e));
+    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s((MMC*)(self+0x124), o->m, *(short*)(self+0x8e));
 }
 }
