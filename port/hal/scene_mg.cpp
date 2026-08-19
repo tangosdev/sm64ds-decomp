@@ -659,6 +659,7 @@ extern "C" void port_scene_mg_prepare(int id)
 
 // ---- the fill --------------------------------------------------------------
 extern "C" void port_scene_mg_hits(void);   /* defined at the foot of this file */
+extern "C" void port_scene_mg_pachinko_report(void);  /* section 8, same */
 
 extern "C" void port_scene_fill_curling(void)
 {
@@ -878,6 +879,12 @@ extern "C" void port_scene_fill_curling(void)
         if (!armed) {
             armed = 1;
             std::atexit(port_scene_mg_hits);
+            /* Run mg5, lane PCH. Section 8's per-class witness, registered
+               beside curling's rather than folded into it: each returns
+               immediately when its own slot counters are all zero, so a run
+               prints exactly the class it booted and the atexit order between
+               the two does not matter. */
+            std::atexit(port_scene_mg_pachinko_report);
         }
     }
 }
@@ -1198,5 +1205,182 @@ extern "C" void port_scene_mg_luigi_hits(void)
                     "func_ov004_020b1e34 (port/unmatched/MgLuigi_Faces.cpp "
                     "section 4)\n", port_mg_luigi_ov004_trap_hits());
     }
+    std::fflush(stdout);
+}
+
+// ---- 8. dScMgPachinko_c, actor id 0x170, scene 368 -------------------------
+//
+// Run mg5, lane PCH. THE SECOND MINIGAME CLASS SEATED, and it is deliberately
+// additive: nothing above this line changed. The split
+// port/mg_fanout_costs.txt section 2 calls the whole cost model is what makes
+// that possible -- everything from the mounts to the thirty-five overlay
+// constructors to kMgBaseFaces to port_scene_fill_rom is the family's and was
+// paid once by lane MG2, and this section is one class's own six overrides,
+// one face array, one fill and one factory forwarder.
+//
+// IDENTITY, RE-DERIVED FROM THE ROM BY THIS LANE rather than inherited:
+//   RTTI       0x0213d960  "15dScMgPachinko_c"
+//   SpawnInfo  0x0213d910  MgBobOmbSquad_SpawnInfo, doubled id 0x01700170 at +4
+//   factory    0x020ff3ec  MgBobOmbSquad_Spawn
+//   vtable     0x0213d9cc  data_ov006_0213d9cc, and the factory's only ov006
+//              literal-pool load is that word, which is how the two are tied
+//              together rather than by name
+//
+// THE TABLE IS 36 SLOTS AND THE 37th WOULD HIT THE NEIGHBOUR. This class was
+// one of the twelve port/mg_fanout_costs.txt section 11 corrected from 37, so
+// all three of that section's checks were re-run here before a line of this
+// section was written. Span in config/arm9/overlays/ov006/symbols.txt is
+// exactly 36 words (data_ov006_0213d9cc -> data_ov006_0213da5c); slot 35 holds
+// 0x020ad660, the family terminator; and the word at index 36 is 0x021019e0
+// with index 37 zero, which is an mwcc {code, adjustment} pair and not a slot.
+//
+// AND THE VICTIM HAS A NAME. src/__sinit_ov006_02131cd0.c line 89 reads
+// `data_ov006_02142734.p4 = data_ov006_0213da5c;`, and that constructor is
+// dScMgPachinko2_c's -- id 0x171, MgLakituLaunch, the SIBLING class. So a
+// 37-slot fill here would write a host thunk over the code word of the
+// sibling's state 4. 0x171 is not seated by this lane and the corruption would
+// have been latent until it was.
+//
+// port_scene_fill_rom is called with 36 below and mg_raw_left checks 36.
+
+extern "C" {
+
+/* the mount storage this fill writes into */
+extern unsigned char data_ov006_0213d9cc[];   /* dScMgPachinko_c, 36 slots */
+extern unsigned char MgBobOmbSquad_SpawnInfo[];
+
+/* the class's own six overrides, in slot order. FOUR ARE SLICED AND TWO ARE
+   NOT WHAT THEY LOOK LIKE:
+     slot  0  func_ov006_020fefc0  NO SRC AT ALL -- the named trap in
+              port/unmatched/MgPachinko_Traps.cpp. This is the class's whole
+              nosrc column in the fan-out cost table.
+     slot  6  func_ov006_020fee24  sliced
+     slot  9  func_ov006_020fedc4  sliced, MARKER, ruled REAL_DECOMP
+     slot 16  func_ov006_020fa75c  sliced
+     slot 17  func_ov006_020fa780  MARKER, ruled REAL_DECOMP, and EXCLUDED from
+              the slice: it spells decl_common.h's shared VT/HEAP placeholders
+              and bare VT is bound to the ov002 Enemy base table. Hosted as
+              port_mg_pachinko_d0 in port/unmatched/MgPachinko_Dtor.cpp.
+     slot 18  func_ov006_020fed58  sliced, MARKER, ruled REAL_DECOMP
+   The three markers were disassembled out of the shipped overlay image and
+   compared instruction for instruction with src before being seated; the
+   rulings and their evidence are in port/tools/inferred_stub_adjudicated.txt. */
+int   func_ov006_020fefc0(void *self);        /* slot  0 InitResources */
+int   func_ov006_020fee24(void *self);        /* slot  6 Behavior      */
+int   func_ov006_020fedc4(void *self);        /* slot  9 Render        */
+int   func_ov006_020fa75c(void *self);        /* slot 16 D2            */
+void *port_mg_pachinko_d0(void *self);        /* slot 17 D0, hosted    */
+void  func_ov006_020fed58(void *self, int n); /* slot 18 state reset   */
+
+/* the factory. IT NEEDS NO DISPLACEMENT RULING, and that was checked rather
+   than assumed: port/mg_fanout_costs.txt section 12 found 0x169's factory
+   calling the base constructor with NO argument where ARM rides r0 through,
+   and granted a host copy for it. src/MgBobOmbSquad_Spawn.c does NOT have that
+   defect -- it reads `func_ov004_020b2adc(p);`, with the argument -- so the
+   matched TU is sliced and called directly. */
+int  *MgBobOmbSquad_Spawn(void);
+
+/* the class's state machine, port/unmatched/MgPachinko_StateDispatch.cpp */
+void port_mg_pachinko_state_counts(unsigned *hits, unsigned *missing);
+unsigned port_mg_pachinko_trap_hits(void);
+
+}  /* extern "C" */
+
+/* This class's own tick witness, kept SEPARATE from g_mg_hits rather than
+   sharing it. Both tables are 36 slots and most of the slots are the same
+   framework bodies, so a shared counter would make "which class ran" a
+   question the report could not answer on a build that hosts both. */
+static unsigned g_pch_hits[36];
+#define PCH_SLOT(n) (++g_pch_hits[(n)])
+
+static int  __fastcall pch_init(void *s, void *)
+{ PCH_SLOT(0);  return func_ov006_020fefc0(s); }
+static int  __fastcall pch_beh(void *s, void *)
+{ PCH_SLOT(6);  return func_ov006_020fee24(s); }
+static int  __fastcall pch_render(void *s, void *)
+{ PCH_SLOT(9);  return func_ov006_020fedc4(s); }
+static void *__fastcall pch_d2(void *s, void *)
+{ PCH_SLOT(16); return (void *)(size_t)func_ov006_020fa75c(s); }
+static void *__fastcall pch_d0(void *s, void *)
+{ PCH_SLOT(17); return port_mg_pachinko_d0(s); }
+/* slot 18 takes a SECOND argument in this class where curling's takes none:
+   src/func_ov006_020fed58.c is (char *c, int n) and the ROM reads r1 (cmp r1,#9
+   at 0x020fed6c). The __fastcall face lands `this` in ecx and the ROM's r1 in
+   the first stack slot, which is where the third parameter of this thunk sits. */
+static int  __fastcall pch_reset(void *s, void *, int n)
+{ PCH_SLOT(18); func_ov006_020fed58(s, n); return 1; }
+
+/* dScMgPachinko_c's own six, the per-class half. */
+static const MgFace kPachinkoFaces[] = {
+    {0x020fefc0u, (void *)pch_init},   {0x020fee24u, (void *)pch_beh},
+    {0x020fedc4u, (void *)pch_render}, {0x020fa75cu, (void *)pch_d2},
+    {0x020fa780u, (void *)pch_d0},     {0x020fed58u, (void *)pch_reset},
+};
+
+extern "C" void *port_mg_pachinko_spawn(void)
+{
+    return (void *)MgBobOmbSquad_Spawn();
+}
+
+extern "C" void port_scene_fill_pachinko(void)
+{
+    /* the same order and the same reasons as port_scene_fill_curling; see its
+       header for why the mounts come before the fill and why the BASE table is
+       filled too rather than only the derived one. */
+    port_scene_mg_mounts();
+
+    void **base = (void **)data_ov004_020bc0c0;
+    void **vt   = (void **)data_ov006_0213d9cc;
+
+    port_scene_fill_rom(base, 36);
+    mg_apply(base, 36, kMgBaseFaces,
+             sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
+
+    port_scene_fill_rom(vt, 36);
+    mg_apply(vt, 36, kMgBaseFaces,
+             sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
+    mg_apply(vt, 36, kPachinkoFaces,
+             sizeof kPachinkoFaces / sizeof kPachinkoFaces[0]);
+
+    {
+        const unsigned lb = mg_raw_left(base, 36);
+        const unsigned lv = mg_raw_left(vt, 36);
+        if (lb || lv) {
+            std::fprintf(stderr, "  [scene] MINIGAME FILL INCOMPLETE: "
+                         "dScMgBase_c leaves %u of 36 raw DS words, "
+                         "dScMgPachinko_c leaves %u. A dispatch of any of them "
+                         "jumps to a DS address as a host one.\n", lb, lv);
+            std::fflush(stderr);
+        }
+    }
+
+    port_scene_mg_prepare(port_scene_env_want());
+}
+
+/* The run report for this class, called from the same place curling's is. */
+extern "C" void port_scene_mg_pachinko_report(void)
+{
+    unsigned total = 0;
+    for (int i = 0; i < 36; ++i) total += g_pch_hits[i];
+    if (!total) return;               /* not this run's class */
+
+    std::printf("[scene] dScMgPachinko_c slot hits: init %u, behavior %u, "
+                "render %u, D2 %u, D0 %u, reset %u\n",
+                g_pch_hits[0], g_pch_hits[6], g_pch_hits[9],
+                g_pch_hits[16], g_pch_hits[17], g_pch_hits[18]);
+    std::printf("[scene] dScMgPachinko_c 36-slot table, %u total slot "
+                "entries; slots entered:", total);
+    for (int i = 0; i < 36; ++i)
+        if (g_pch_hits[i]) std::printf(" %d(x%u)", i, g_pch_hits[i]);
+    std::printf("\n");
+    {
+        unsigned hits = 0, missing = 0;
+        port_mg_pachinko_state_counts(&hits, &missing);
+        std::printf("[scene] dScMgPachinko_c state dispatch: %u routed to one "
+                    "of its 22 decompiled states, %u reached one of the 3 "
+                    "states with NO decompiled body\n", hits, missing);
+    }
+    std::printf("[scene] dScMgPachinko_c unmatched-body traps entered: %u\n",
+                port_mg_pachinko_trap_hits());
     std::fflush(stdout);
 }

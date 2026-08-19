@@ -3421,7 +3421,44 @@ set(SCENE_MG_SOURCES
     # the matched physics TUs link against, so a target that compiles the
     # faces and not these fails the link on both symbols.
     unmatched/MgCurling_Collide_020e1dc8.cpp
-    unmatched/MgCurling_Collide_020e20bc.cpp)
+    unmatched/MgCurling_Collide_020e20bc.cpp
+    # Run mg5, lane PCH: dScMgPachinko_c (id 0x170, scene 368). Same three
+    # targets and the same reason as every file above -- hal/scene_boot.cpp's
+    # port_scene_classes[] now carries the 368 row, so every target that
+    # compiles scene_boot.cpp references port_mg_pachinko_spawn and
+    # port_scene_fill_pachinko by name, and hal/scene_mg.cpp section 8
+    # references port_mg_pachinko_d0, the state counters and the traps.
+    #
+    # THE STATE DISPATCH IS NOT OPTIONAL EITHER, and for the reason the CT1
+    # comment above gives about MgCurling_State_020e1854: this class's five
+    # dispatching TUs are EXCLUDED from slice_pch.txt and defined only in
+    # MgPachinko_StateDispatch.cpp, so a target that takes the slice and not
+    # the dispatch fails the link on all five func_ov006_* names.
+    unmatched/MgPachinko_StateDispatch.cpp
+    unmatched/MgPachinko_Dtor.cpp
+    unmatched/MgPachinko_Traps.cpp
+    unmatched/MgPachinko_Faces.cpp
+    unmatched/MgPachinko_OamRender.cpp)
+
+# Run mg5, lane PCH. dScMgPachinko_c's own closure, the second minigame class.
+# 65 src TUs in wave 1: 59 ov006 and 6 ov004. The arm9 half is deliberately not
+# listed -- port/mg_fanout_costs.txt section 5's /OPT:REF argument -- and the
+# waves the linker asks for are appended to slice_pch.txt with the wave they
+# arrived in named, which is section 10's method.
+#
+# port/slice_pch.txt is the derivation: the two-root closure walk, the three
+# width checks that keep this table at 36 slots, the `::*` sweep that found
+# exactly two pointer-to-member TUs in the class's 623-TU closure, and the
+# eight ov006 addresses with no source at all.
+file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_pch.txt" SLICE_PCH_LINES)
+set(SLICE_PCH_SOURCES "")
+foreach(line IN LISTS SLICE_PCH_LINES)
+    string(STRIP "${line}" line)
+    if(line MATCHES "^#" OR line STREQUAL "")
+        continue()
+    endif()
+    list(APPEND SLICE_PCH_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
 
 # Run mg5, lane LUI: dScMgLuigi_c, actor id 0x16e = scene 366, "Wanted!".
 #
@@ -5082,7 +5119,7 @@ add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_D
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires
@@ -5228,7 +5265,7 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires
@@ -5410,7 +5447,7 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # sitting in slice_gate16.txt line 178 all along, dropped by /OPT:REF for
     # want of a reference edge. Removing the stub from here is what makes the
     # matched body reachable; leaving it would be a duplicate definition.
-    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
+    hal/cxxname_bridge.cpp hal/player_bridges.cpp hal/cxx_aliases.cpp hal/auto_bss.cpp hal/reverse_bridges.cpp hal/method_faces.cpp hal/door_ring_faces.cpp hal/fader_wipes.cpp "${CMAKE_CURRENT_SOURCE_DIR}/../src/engine/fader/_ZN9FaderWipe14LoadAndSetFileEt.cpp" hal/level_boot.cpp hal/scene_boot.cpp hal/scene_actor_faces.cpp unmatched/Scene_AfterCleanupResources.cpp ${SLICE_SCENE1_SOURCES} ${SLICE_OV007_SOURCES} ${SC1_INTERIM_SOURCES} ${SLICE_MG1_SOURCES} ${SCENE_MG_SOURCES} ${SLICE_LUI_SOURCES} ${SLICE_PCH_SOURCES} ${FDR_FADER_SOURCES} ${NFS_NAMES_SOURCES}
     # run link60 lane L2: hal/w8a_stage_storage.cpp is pure zero arm9 BSS and it
     # owns data_0209d4a8, which dScDSMT_c's InitResources and CleanupResources
     # both touch. walk_window already had it; smoke_player and walk_window_hires

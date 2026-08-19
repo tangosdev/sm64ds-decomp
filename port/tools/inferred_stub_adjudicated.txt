@@ -371,3 +371,40 @@ func_ov006_020f3414  REAL_DECOMP  runs/mg5/status/LUI.md  slot 6 Behavior, 0x4c,
 func_ov006_020f33c0  REAL_DECOMP  runs/mg5/status/LUI.md  slot 9 Render, 0x54, 20 instructions, no pool. func_ov004_020b1e34(c,0xe0,0x14,1) with the three immediates in r1/r2/r3, then func_ov006_020f04ec, _020f01d8, _020f100c, _020f12c8, _020f0e28 and _020f0f7c each on c in that order, then return 1. Seven statements, seven matched, and the recovered name Render is one of the few in this class that is right
 func_ov006_020efc30  REAL_DECOMP  runs/mg5/status/LUI.md  slot 17 D0, the deleting destructor, 0x38, 12 instructions plus a two-word pool. str the pooled 0213CF10 into [r4] -- this class's OWN vtable, which is the strongest single confirmation that 0x0213cf10 is the right table for this id -- then func_ov004_020b29c0(t) with NO intermediate base table stored between the two, which is what says the hierarchy is Scene -> dScMgBase_c -> dScMgLuigi_c and not the three-deep chain dScMgCup_c has; then Memory::Deallocate(t, the word at the pooled 020A0EAC loaded BY VALUE); return r4. The recovered name says OnYoshiTryEat and is wrong. THE SRC SPELLS ITS TABLE AS THE SHARED PLACEHOLDER `VT`, which is a seat obligation rather than a fault in the body: bare VT is bound to the Enemy base table in hal/cxx_aliases.cpp, so port/CMakeLists.txt renames it per-source onto data_ov006_0213cf10. Noted here so the ruling and the obligation do not get separated
 func_ov006_020f3294  REAL_DECOMP  runs/mg5/status/LUI.md  slot 18 state reset, 0x12c, 68 instructions plus a five-word pool. The +0x5459 guard reached as add r0,r4,#0x5000 / ldrb [r0,#0x459]; inside it the byte at the pooled 0x00005457 incremented, the int at +0xbc incremented and then clamped as cmp/strhi against the pooled 0x0000270e -- an unsigned compare, which is what the src's cast spells; then the arg1 == 0x12 arm: the halfword 0xa at +0x5172, +0xbc zeroed and clamped again, the pooled 020BEB68 dereferenced twice with movne/strne on +0xb4 and then ldrne/moveq feeding func_ov004_020adb1c; then FreeGfxSlotsById(0x1d) as mov r0,#0x1d / bl 0x20b0aa0, which is the name ov004's symbols.txt gives that address; func_ov006_020f2ec0(c) and func_ov006_020f2e20(c); the zero at +0x4f78, the state index slot 6 reads; data_0209d45c |= 4 and data_0209d454 &= ~4 from the pooled 0209D45C and 0209D454; and func_ov004_020b0cac(0xd,0x80,0xa8,1,-1,0xd) with -1 and 0xd written to [sp] and [sp,#4]. The recovered name says OnYoshiTryEat and is wrong; the body is the state reset, and it and slot 6 agreeing on +0x4f78 is what identifies it
+#
+# ---------------------------------------------------------------------------
+# run mg5 lane PCH, 2026-08-18. dScMgPachinko_c, actor id 0x170, scene 368.
+#
+# The class's RTTI at 0x0213d960 reads "15dScMgPachinko_c"; its SpawnInfo is
+# 0x0213d910 (doubled id 0x01700170 at +4), its factory 0x020ff3ec, and that
+# factory's only ov006 literal-pool load is 0x0213d9cc, which is how the vtable
+# is tied to the id rather than by name. The table is 36 slots wide, checked
+# three ways (see port/slice_pch.txt); six slots are overrides and THREE of the
+# six carry the "recovered from vtable slot identity" marker.
+#
+# All three were disassembled out of extracted/overlays/overlay_0006.bin at base
+# 0x020bfec0 -- the shipped image, deliberately not a dsd export, whose
+# relocated words would make literals read as live pointers -- and compared
+# instruction for instruction against src/ BEFORE any of them was seated.
+# RESULT: 3 REAL DECOMP, 0 guesses, 0 unverifiable. No constant, offset,
+# literal, branch target or instruction count differs on any of the three.
+#
+# TWO OF THE THREE RECOVERED NAMES ARE WRONG IN THE SAME WAY lane MGB and wave
+# 16 recorded, and it is the marker working as designed rather than a defect in
+# these bodies: slots 17 and 18 are both named "dScMgPachinko_c::OnYoshiTryEat"
+# and are the deleting destructor and the state reset. The marker records how a
+# NAME was recovered, not where a BODY came from.
+#
+# ONE OF THE THREE IS RULED HERE AND SEATED AS A HOST COPY RATHER THAN A SLICE
+# LINE, which is a statement about the port and not about the ruling.
+# func_ov006_020fa780 spells include/decl_common.h's shared VT/HEAP
+# placeholders, and hal/cxx_aliases.cpp binds bare VT to the ov002 Enemy base
+# vtable. The ROM says this body wants 0x0213d9cc. The body is REAL_DECOMP; the
+# ALIAS is what cannot be used. port/unmatched/MgPachinko_Dtor.cpp carries it
+# with both pooled addresses spelled, and the full ROM listing.
+#
+# Full per-body evidence: runs/mg5/status/PCH.md and the disassembly logs in
+# runs/mg5/out/pch/.
+func_ov006_020fedc4  REAL_DECOMP  runs/mg5/status/PCH.md  slot 9 Render, 0x60, 24 instructions. Ten sequential calls with `mov r0,r4` before each -- func_ov006_020fba48, _020fba28, _020fb74c, _020fba64, _020fe1d0, _020faf14, _020fc8c0, _020fae20, _020fc144, _020fa7b8 -- then mov r0,#1, pop, bx lr. src is those same ten calls in the same order and `return 1`. Every branch target resolves to an ov006 config symbol and the ORDER is the whole content of the body, so there is nothing here a guess could have got right by shape; the seventh callee (0x020fc8c0) is itself one of this class's no-source bodies and is trapped in port/unmatched/MgPachinko_Traps.cpp. The recovered name is Render and is right
+func_ov006_020fa780  REAL_DECOMP  runs/mg5/status/PCH.md  slot 17 D0 deleting destructor, 0x38, 12 instructions plus a two-word pool. push {r4,lr}; ldr r1,[pc,#0x24] -> pool 0x020fa7b0 = 0x0213d9cc, THIS CLASS'S OWN VTABLE, which is the strongest single confirmation that 0x0213d9cc is the right table for id 0x170 and agrees with the factory's own load; str r1,[r4]; bl 0x020b29c0 (func_ov004_020b29c0, the base D1); ldr r1,[pc,#0x18] -> pool 0x020fa7b4 = 0x020a0eac, then ldr r1,[r1] so the HEAP POINTER is loaded by value the way every other D0 in the family loads it; Memory::Deallocate(r4, r1); mov r0,r4; return this. src is `t[0] = (int)VT; func_ov004_020b29c0(t); Memory::Deallocate(t, HEAP); return t;` -- the same four statements in the same order, with VT and HEAP being decl_common.h's shared placeholders for exactly those two pooled words. Both literals resolve. The recovered NAME says OnYoshiTryEat and is wrong; the body is the deleting destructor
+func_ov006_020fed58  REAL_DECOMP  runs/mg5/status/PCH.md  slot 18 state reset, 0x6c, 26 instructions plus a one-word pool. Zeroes [this+0x5000+0xc10] through an `add r0,r4,#0x5000` then `str r2,[r0,#0xc10]`, the split-offset form src spells as c+0x5000+0xc10; then `cmp r1,#9` -- so this slot takes a SECOND argument where curling's slot 18 takes none, and the face in hal/scene_mg.cpp is built for two; the equal branch increments [this+0xbc] and the unequal branch zeroes it, and BOTH branches then reload [this+0xbc] and clamp it against the pooled 0x0000270e with an UNSIGNED strhi. src reproduces both arms including the clamp in the zeroing arm, where it is dead (0 > 0x270e is never true) -- the ROM emits it too, so the redundancy is the compiler's and the src is faithful to it rather than tidied. Then func_ov006_020fadfc(this) and func_ov006_020fad90(this) in that order. The constant, both offsets, the unsigned comparison and both call targets match. The recovered NAME says OnYoshiTryEat and is wrong
