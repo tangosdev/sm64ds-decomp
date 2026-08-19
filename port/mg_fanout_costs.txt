@@ -167,7 +167,7 @@ matched src TU at all and will need a named trap or a decomp.
   0x182  MgWhichWiggler              0213cab8      36    7     6      0
   0x16c  (data_ov006_0213e560)       0213eb40      36    8     5      1
   0x183  MgHideAndBooSeek            0213fa0c      36    8     6      0
-  0x178  MgBingoBallSlotsShot        0213eefc      36    9     6      2
+  0x178  MgBingoBallSlotsShot        0213eefc      36    9     6      1
   0x173  (data_ov006_0213b814)       0213b918      37   11     5      0
   0x186  (data_ov006_02140114)       02140140      36   12    10      0
   0x169  (data_ov006_0213c020)       0213c154      36   13     9      0

@@ -1636,12 +1636,20 @@ extern "C" void port_scene_fill_smartball(void)
        only on a 376 boot so curling's run is unaffected. */
     if (port_scene_env_want() == 376) {
         std::printf("[scene] dScMgSmartball_c SEATED: vtable 0x0213eefc, 36 "
-                    "slots, 9 overrides, 2 of them UNDECOMPILED (slot 0 "
-                    "InitResources func_ov006_02118b70, slot 9 Render "
-                    "func_ov006_021173c8). Slot 0 is where the class builds "
-                    "its sub-objects, so slot 6 case 0 will dereference a null "
-                    "self+0x4684 on its first frame. That is a decomp gap, not "
-                    "a port one; port/unmatched/MgSmartball_Traps.cpp.\n");
+                    "slots, 9 overrides. Run mg5 lane INTEG seated slot 0 "
+                    "InitResources (func_ov006_02118b70 aliased onto the plain-C "
+                    "_ZN16dScMgSmartball_c13InitResourcesEv, NONMATCHING) and the "
+                    "aux ball-table seeder func_ov006_02114800, so the old null "
+                    "self+0x4684 deref in slot 6 is cleared and the class now "
+                    "builds its sub-objects. Slot 9 Render (func_ov006_021173c8) "
+                    "stays trapped: its only recovered form is the __thiscall "
+                    "member dScMgSmartball_c::Render and an alias cannot cross "
+                    "the calling convention. A DEEPER floor remains: init builds "
+                    "a sub-object whose ov006 vtable at 0x0213eca0 holds raw DS "
+                    "addresses (slot -> 0x02114458 = func_ov006_02114458, not "
+                    "seated), so calling that sub-object's method jumps into DS "
+                    "space. Seating that sub-object class is a separate lane; "
+                    "port/unmatched/MgSmartball_Traps.cpp.\n");
         std::fflush(stdout);
         static int armed;
         if (!armed) {

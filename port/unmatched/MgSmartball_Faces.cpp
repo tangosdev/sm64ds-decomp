@@ -103,3 +103,17 @@
 /* 2 and 3. */
 #pragma comment(linker, "/alternatename:_func_020bc864=_data_ov004_020bc864")
 #pragma comment(linker, "/alternatename:_func_020bc888=_data_ov004_020bc888")
+
+/* 4. Run mg5, lane INTEG. dScMgSmartball_c::InitResources (vtable slot 0) was
+ * recovered on branch decomp/smb-bodies as the plain-C body
+ * src/_ZN16dScMgSmartball_c13InitResourcesEv.c (NONMATCHING, the flagged weak
+ * point). hal/scene_mg.cpp's slot-0 dispatch calls it by its ROM address name
+ * func_ov006_02118b70, so the flat name is aliased onto the mangled one. Both
+ * sides are __cdecl taking one pointer and returning s32 -- exactly the
+ * situation row 1 and section 10's ?Allocate finding describe -- so this
+ * changes a name and not a convention. The func_ov006_02118b70 trap is removed
+ * from MgSmartball_Traps.cpp so the flat name is undefined for the alias to
+ * bind. The Render body at 0x021173c8 stays trapped: its only recovered form on
+ * main is the __thiscall member dScMgSmartball_c::Render, and an alias cannot
+ * cross the calling convention the way this cdecl-to-cdecl one can. */
+#pragma comment(linker, "/alternatename:_func_ov006_02118b70=__ZN16dScMgSmartball_c13InitResourcesEv")

@@ -181,6 +181,11 @@ src/func_ov006_021101bc.cpp
 src/func_ov006_02110874.c
 src/func_ov006_02110bc0.c
 src/func_ov006_02111220.c
+# Run mg5, lane INTEG: the spring placement-new helper the seated InitResources
+# (_ZN16dScMgSmartball_c13InitResourcesEv) calls; the link named it. Matched, has
+# its own delink block; its callees (func_ov006_0211474c, data_ov006_0213ecfc)
+# are already in this slice and the ov006 mount.
+src/func_ov006_0211157c.c
 src/func_ov006_02111774.c
 src/func_ov006_02111b40.c
 src/func_ov006_02111d6c.c
@@ -195,6 +200,9 @@ src/func_ov006_0211470c.c
 src/func_ov006_0211474c.c
 src/func_ov006_021147ac.c
 src/func_ov006_021147d0.c
+# Run mg5, lane INTEG: the ball-table seeder (branch decomp/smb-bodies, MATCHED),
+# recovered with its delink block. Replaces the aux trap in MgSmartball_Traps.cpp.
+src/func_ov006_02114800.c
 src/func_ov006_02114c04.c
 src/func_ov006_02114dd0.c
 src/func_ov006_02114f98.c
@@ -207,6 +215,11 @@ src/func_ov006_02115a5c.c
 src/func_ov006_02115b0c.c
 src/func_ov006_02118488.c
 src/func_ov006_02118ae4.c
+# Run mg5, lane INTEG: dScMgSmartball_c::InitResources, vtable slot 0 (branch
+# decomp/smb-bodies, NONMATCHING, the flagged weak point). Plain C carrying the
+# mangled symbol; the func_ov006_02118b70 trap name is aliased onto it in
+# MgSmartball_Faces.cpp. Builds the sub-objects the class needs to tick.
+src/_ZN16dScMgSmartball_c13InitResourcesEv.c
 src/func_ov006_0211944c.c
 src/func_ov006_02119900.c
 

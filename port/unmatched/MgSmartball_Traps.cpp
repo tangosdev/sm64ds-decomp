@@ -108,24 +108,17 @@ unsigned port_mg_smartball_trap_mask(void)
     return (unsigned)(g_smb_said[0] | (g_smb_said[1] << 1) | (g_smb_said[2] << 2));
 }
 
-int func_ov006_02118b70(void *)
-{
-    smb_trap(0, "func_ov006_02118b70",
-             "vtable slot 0, InitResources -- no sub-object is built, so the "
-             "class cannot run a frame");
-    return 1;
-}
-
+/* Run mg5, lane INTEG: slot 0 InitResources (func_ov006_02118b70) and the aux
+   ball-table seeder (func_ov006_02114800) were recovered on branch
+   decomp/smb-bodies and are now sliced, so their traps are gone. InitResources
+   is reached through the alias in MgSmartball_Faces.cpp; the aux body carries
+   its own name. Only the Render trap remains: its recovered form on main is the
+   __thiscall member dScMgSmartball_c::Render, which an alias cannot bridge to
+   the cdecl func_ov006_021173c8 the dispatch calls. */
 int func_ov006_021173c8(void *)
 {
     smb_trap(1, "func_ov006_021173c8", "vtable slot 9, Render");
     return 1;
-}
-
-void func_ov006_02114800(int, void *, int)
-{
-    smb_trap(2, "func_ov006_02114800",
-             "reached from src/func_ov006_02111e48.c at 0x02111e6c");
 }
 
 }  /* extern "C" */

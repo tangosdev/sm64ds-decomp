@@ -5693,6 +5693,10 @@ src/func_ov006_021147d0.c:
     complete
     .text start:0x021147d0 end:0x02114800
 
+src/func_ov006_02114800.c:
+    complete
+    .text start:0x02114800 end:0x02114b10
+
 src/func_ov006_02114b10.c:
     complete
     .text start:0x02114b10 end:0x02114c04
@@ -5790,6 +5794,10 @@ src/func_ov006_02118a8c.cpp:
 src/func_ov006_02118ae4.c:
     complete
     .text start:0x02118ae4 end:0x02118b70
+
+src/_ZN16dScMgSmartball_c13InitResourcesEv.c:
+    complete
+    .text start:0x02118b70 end:0x0211944c
 
 src/func_ov006_0211944c.c:
     complete
