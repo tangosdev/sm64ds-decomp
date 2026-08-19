@@ -208,7 +208,41 @@ SCENE_TABLE_OPEN = "static const PortSceneClass port_scene_classes[] = {"
 # selftest's own, and the bare run is re-probed on every pass so a skip cannot
 # outlive its bug. Empty is the goal.
 SCENE_SKIPS = {
-    # Empty. Scene 4's SM64DS_SCENE_SLOT9=0 entry retired 2026-08-15 (run
+    # SCENE 390 (0x186), dScMgFlower_c, run mg5 lane FLW. The class BOOTS and
+    # TICKS: 300 frames, exit 0, slot 0 InitResources once, slot 6 Behavior
+    # 253 times, its own state variable at +0x5fe8 advancing 0 -> 1, and its
+    # sub-object member-pointer dispatch routing 253 calls with 0 unhandled
+    # addresses. What it cannot yet do is RENDER, and that path was
+    # unreachable until this seat existed, so this is a frontier the seat
+    # opened rather than a regression it caused.
+    #
+    #   flw_render (slot 9) -> func_ov006_0212aacc -> func_ov006_020c3bf4
+    #     -> ModelAnim::Virtual18 -> ModelAnim::Virtual10
+    #   FAULT c0000005 accessing 00000000, eax=0
+    #
+    # src/func_ov006_020c3bf4.cpp's last statement before the petal loop is a
+    # VIRTUAL call on the ModelAnim at sub-object +0xd18
+    # (`((Obj*)(c + 0xd18))->f5(0)` in its own spelling), and the null is
+    # inside arm9's ModelAnim, not in ov006.
+    #
+    # WHAT IS MEASURED AND WHAT IS NOT, kept apart on purpose. MEASURED: the
+    # fault is UPSTREAM of the 0x16-iteration petal loop, so it is NOT
+    # explained by this class's one undecompiled body (func_ov006_0212a764,
+    # the petal layout, which the run reports entering once and which leaves
+    # every petal record zeroed). NOT MEASURED: whether the ModelAnim at +0xd18
+    # ever received a file. func_ov006_020c3d88 loads one through the
+    # SharedFilePtr at +0xd7c that the factory constructs with id 0x222, and
+    # nobody has checked what that resolves to on the host.
+    #
+    # OWNED BY: whoever takes the ov006 minigame RENDER path next -- it is a
+    # model/animation seam question, not a vtable or dispatch one, and this
+    # lane's brief scopes it out. The bare run is re-probed every pass, so the
+    # day it stops faulting this row prints SKIP RETIRED.
+    390: ("SM64DS_SCENE_SLOT9=0",
+          "run mg5 lane FLW opened it; owned by the ov006 render seam",
+          "null ModelAnim virtual inside func_ov006_020c3bf4, upstream of the "
+          "petal loop"),
+    # Scene 4's SM64DS_SCENE_SLOT9=0 entry retired 2026-08-15 (run
     # link60, lane L1): the blocker was never the model loader the entry named.
     # func_0205a358's spin-wait on GXSTAT bit 25 could not fall through because
     # ntr modelled GXSTAT as a plain latch and func_0205583c's store of 0 wiped
@@ -240,6 +274,33 @@ SCENE_SKIPS = {
 # BLOCK RETIRED, exactly like a retired skip. The marker string is what pins
 # it: without one, any new fault would read as the known one.
 SCENE_BLOCKED = {
+    # SCENE 390 (0x186), dScMgFlower_c, WAS HERE FOR ONE RUN AND IS RETIRED,
+    # run mg5 lane FLW. The row named an ov004 ARM ARGUMENT RIDE-THROUGH two
+    # calls into the class's own InitResources -- the third instance of the
+    # family port/mg_fanout_costs.txt section 6 records for slots 5 and 7, and
+    # the first of the three found by running instead of by reading:
+    #
+    #   flw_init -> func_ov006_0212b480 (slot 0) +0xa
+    #            -> func_ov004_020ad8b8 +0x10 -> func_ov004_020adc3c +0x6
+    #   FAULT c0000005 accessing 0x00000009
+    #
+    # The ROM at 0x020ad8c4 does `ldr r0,[r0]` off data_ov004_020beb68 and then
+    # `bl 0x20adc3c` without touching r0, so one register does the null test
+    # and carries the argument. src/func_ov004_020ad8b8.c declares the callee
+    # (void) and calls it with none; src/func_ov004_020adc3c.c takes void* and
+    # reads c+8 first statement, so on the host it read [esp+4], which held 1.
+    #
+    # RETIRED BY THE FIX SECTION 6 PRESCRIBES, not by a workaround and not by a
+    # skip: port/unmatched/MgFlower_InitScore.cpp is a host copy of
+    # func_ov004_020ad8b8 that places the argument, src/ untouched, and it cost
+    # the one linked function that made it the coordinator's ruling to grant.
+    # Scene 390 now runs 300 frames bare under SM64DS_FAULTS_FATAL=1 with
+    # nothing switched off and its REAL slot-0 InitResources, so it is an
+    # ordinary scene selftest row above and this dict is empty again.
+    #
+    # THE ROW'S REPLACEMENT IS THAT ORDINARY ROW. If the host copy is ever
+    # dropped, scene 390 faults in InitResources again and goes red on the next
+    # battery, which is a stronger signal than a marker string.
     # SCENE 1 WAS HERE AND IS RETIRED, run link60 Stage 5 lane MR1. The row
     # had been CONVERTED FOUR TIMES and every conversion was a real blocker
     # retired by a real seat: func_ov007_020c9688 (lane L2, host transcription
