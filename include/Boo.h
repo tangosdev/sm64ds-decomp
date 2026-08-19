@@ -65,6 +65,11 @@
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
+/* named (not anonymous inline) so check_header_offsets can parse the member
+   declaration; layout identical -- four low bits of one u16. */
+struct BooFlags16 { u16 b0:1, b1:1, b2:1, b3:1; };
+typedef char BooFlags16_size_must_be_0x2[sizeof(BooFlags16) == 0x2 ? 1 : -1];
+
 struct Boo : dCapEnemy_c {
     u8  pad_180[0x4];
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x184 */
@@ -87,7 +92,7 @@ struct Boo : dCapEnemy_c {
     /* 0x5d4 -- the flags halfword InitResources spells FLAGS16; Render reads
        bits 1 and 3. Typed (not a u8 placeholder) so member access compiles to
        the ROM's add+ldrh instead of a literal-pool address load. */
-    struct { u16 b0:1, b1:1, b2:1, b3:1; } mFlags_5d4;
+    BooFlags16 mFlags_5d4;  /* 0x5d4 */
     u8  pad_5d6[0xa];
 
     virtual ~Boo();
