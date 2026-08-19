@@ -70,6 +70,7 @@
 #include "common.h"
 #include "Model.h"
 #include "ModelAnim.h"
+#include "ntr/mmio.h"      /* NTR_MMIO -- see the LIGHT_VECTOR store below */
 
 extern "C" {
 extern void func_0203cd80(struct Vector3 *v, int a);
@@ -98,7 +99,17 @@ void func_ov006_020c3bf4(void *self)
     packed = (((short)v.x >> 3) & 0x3ff)
            | ((((short)v.y >> 3) & 0x3ff) << 10)
            | ((((short)v.z >> 3) & 0x3ff) << 20);
-    *(unsigned int *)0x40004c8 = packed;
+    /* LIGHT_VECTOR, AND IT HAS TO GO THROUGH THE PROXY. This is a host copy,
+       so tools/hostgen.py never sees it, and a plain store to 0x040004c8
+       lands in the real memory ntr maps across the I/O window and stops
+       there -- the geometry engine is never told. Measured on this scene
+       before the change (SM64DS_MAT_LOG): "LIGHT_VECTOR commands executed:
+       0" beside "I/O LATCH LIGHT_VECTOR(4c8)=206003b5", which is this exact
+       store arriving nowhere. The model's own light then had direction 0 and
+       colour 0, so every lit vertex resolved to emission and Yoshi drew as a
+       black silhouette. The stored WORD is the matched source's, unchanged;
+       only the path it takes to the engine is. */
+    NTR_MMIO(unsigned int, 0x40004c8) = packed;
 
     func_02016a14(c + 0xd18, 0x2bff);
     func_02016a04(c + 0xd18, 0x1211);

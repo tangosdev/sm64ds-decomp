@@ -43,12 +43,29 @@ import sys
 # group consumes the trailing paren only when the extra leading one matched,
 # so computed addresses like `*(volatile u32 *)(0xADDR + x)` are left alone
 # (they resolve through the mapped latch window, which is correct for reads).
+# THE TYPEDEF SPELLINGS AND THE INTEGER SUFFIX ARE BOTH PART OF THE PATTERN.
+# types.h carries vu8/vu16/vu32/vu64 (and the signed row) for exactly these
+# registers, and the decomp uses them: src/func_ov006_0210a708.c reaches
+# LIGHT_COLOR as `*(vu32 *)0x40004ccu = 0x7fff;`. That line missed the old
+# pattern TWICE over -- `vu32` was not in the type list, and the `u` suffix on
+# the literal killed the `\b` after seven hex digits -- so the store latched
+# into the mapped window and the geometry engine never got a light. See the
+# LIGHTING note in port/ntr/gx.cpp. A suffix cannot make the match looser:
+# `[uUlL]*` only ever consumes suffix letters, and a longer hex literal still
+# fails the word boundary the same way it did before.
 MMIO_DEREF = re.compile(
     r"\*\s*(\()?\s*\(\s*(?:volatile\s+)?"
-    r"((?:unsigned|signed|long|short|int|char|u8|u16|u32|u64|s8|s16|s32|s64)"
+    r"((?:unsigned|signed|long|short|int|char|u8|u16|u32|u64|s8|s16|s32|s64"
+    r"|vu8|vu16|vu32|vu64|vs8|vs16|vs32|vs64)"
     r"(?:\s+(?:unsigned|signed|long|short|int|char))*)"
-    r"\s*\*\s*\)\s*(0x0?4[0-9A-Fa-f]{6})\b(?(1)\s*\))"
+    r"\s*\*\s*\)\s*(0x0?4[0-9A-Fa-f]{6})[uUlL]*\b(?(1)\s*\))"
 )
+
+# `NTR_MMIO(vu32, ...)` would instantiate Reg<volatile unsigned>, whose
+# operator T() returns a top-level-volatile value. It compiles and it means
+# nothing: the proxy is the volatility. The emitted spelling drops the v.
+MMIO_DEVOL = {"vu8": "u8", "vu16": "u16", "vu32": "u32", "vu64": "u64",
+              "vs8": "s8", "vs16": "s16", "vs32": "s32", "vs64": "s64"}
 
 # A REGISTER REACHED THROUGH A POINTER, which the cast-deref rewrite above
 # cannot see. The decomp writes this whenever mwccarm kept the address in a
@@ -74,11 +91,12 @@ MMIO_DEREF = re.compile(
 # rewrite the tool cannot justify. The binding statement itself stays: it
 # becomes an unused local, which is cheaper to read than a hole in the source.
 MMIO_TYPE = (r"(?:unsigned|signed|long|short|int|char|"
-             r"u8|u16|u32|u64|s8|s16|s32|s64)"
+             r"u8|u16|u32|u64|s8|s16|s32|s64|"
+             r"vu8|vu16|vu32|vu64|vs8|vs16|vs32|vs64)"
              r"(?:\s+(?:unsigned|signed|long|short|int|char))*")
 MMIO_BIND = re.compile(
     r"\b(\w+)\s*=\s*\(\s*(?:volatile\s+)?(?:const\s+)?(" + MMIO_TYPE + r")"
-    r"\s*\*\s*\)\s*(0x0?4[0-9A-Fa-f]{6})\s*;")
+    r"\s*\*\s*\)\s*(0x0?4[0-9A-Fa-f]{6})[uUlL]*\s*;")
 MMIO_WIDTH = {
     "char": 1, "signed char": 1, "unsigned char": 1, "u8": 1, "s8": 1,
     "short": 2, "short int": 2, "signed short": 2, "unsigned short": 2,
@@ -87,6 +105,8 @@ MMIO_WIDTH = {
     "long": 4, "long int": 4, "unsigned long": 4, "u32": 4, "s32": 4,
     "long long": 8, "signed long long": 8, "unsigned long long": 8,
     "unsigned long long int": 8, "u64": 8, "s64": 8,
+    "vu8": 1, "vs8": 1, "vu16": 2, "vs16": 2, "vu32": 4, "vs32": 4,
+    "vu64": 8, "vs64": 8,
 }
 
 
@@ -127,7 +147,8 @@ def mmio_ptr(text):
             ok = False
             break
         if ok and mine:
-            edits += [(a, b, f"NTR_MMIO({ctype}, {c:#x})") for a, b, c in mine]
+            etype = MMIO_DEVOL.get(ctype, ctype)
+            edits += [(a, b, f"NTR_MMIO({etype}, {c:#x})") for a, b, c in mine]
 
     for a, b, rep in sorted(edits, reverse=True):
         text = text[:a] + rep + text[b:]
@@ -264,7 +285,11 @@ def transform(text, extern_data=False):
     """Return (new_text, n_rewrites)."""
     text, n3 = ATTRIBUTE.subn("", text)
     text, n2 = VOIDPP_ARITH.subn(voidpp_char, text)
-    text, n1 = MMIO_DEREF.subn(lambda m: f"NTR_MMIO({m.group(2).strip()}, {m.group(3)})", text)
+    text, n1 = MMIO_DEREF.subn(
+        lambda m: "NTR_MMIO(%s, %s)"
+                  % (MMIO_DEVOL.get(m.group(2).strip(), m.group(2).strip()),
+                     m.group(3)),
+        text)
     text, n5 = mmio_ptr(text)
     text, n6 = CBOOL.subn("bool", text)
     n4 = n7 = 0

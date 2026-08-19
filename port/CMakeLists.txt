@@ -3607,14 +3607,78 @@ endforeach()
 # any of them: hal/scene_boot.cpp's port_scene_classes table now carries the
 # flower row, so every target that compiles scene_boot.cpp references
 # port_mg_flower_spawn and port_scene_fill_flower by name.
+# ONE TU IN THIS SLICE REACHES A GEOMETRY REGISTER, so it builds from a
+# hostgen-emitted copy the way every other MMIO-touching src/ file in this
+# tree does -- src/ itself is never edited.
+#
+# func_ov006_0210a708 is dScMgSingle3DBase_c slot 33, the once-per-boot 3D
+# setup every ov006 3D minigame runs, and its last two statements are
+#
+#     *(vu32 *)0x40004ccu = 0x7fff;        LIGHT_COLOR, light 0 white
+#     *(vu32 *)0x40004ccu = 0x40007fff;    LIGHT_COLOR, light 1 white
+#
+# Compiled straight from src/ those two stores land in the real memory ntr
+# maps across the I/O window and stop there: the geometry engine is never
+# told, so light 0 keeps colour (0,0,0) and every lit vertex in the scene
+# resolves to emission, which every material in this game writes as 0. That
+# is the "Yoshi is a black silhouette" report -- measured, before this line,
+# as "LIGHT_COLOR commands executed: 0" beside "I/O LATCH
+# LIGHT_COLOR(4cc)=40007fff" (SM64DS_MAT_LOG, run mg5 lane YTEX).
+#
+# The pattern missed it TWICE: hostgen's MMIO type list had no vu32 and the
+# `u` suffix on the literal defeated the word boundary after seven hex
+# digits. Both are fixed in tools/hostgen.py, and the fix is proven inert
+# over the 159 files already in the hostgen set (regenerating all of them
+# with the old and new tool gives byte-identical output).
+set(FLW_HOSTGEN_SYMS func_ov006_0210a708)
+set(FLW_HOSTGEN_GEN "")
+set(FLW_HOSTGEN_SKIP "")
+foreach(sym IN LISTS FLW_HOSTGEN_SYMS)
+    if(EXISTS "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.c")
+        list(APPEND FLW_HOSTGEN_SKIP "src/${sym}.c")
+    else()
+        set(sym_src "${PORT_REPO_ROOT_ABS}/src/${sym}.cpp")
+        list(APPEND FLW_HOSTGEN_SKIP "src/${sym}.cpp")
+    endif()
+    set(sym_out "${CMAKE_BINARY_DIR}/host-src/src/${sym}.cpp")
+    add_custom_command(OUTPUT "${sym_out}"
+        COMMAND python "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+                --out "${CMAKE_BINARY_DIR}/host-src" ${sym}
+        DEPENDS "${sym_src}" "${CMAKE_CURRENT_SOURCE_DIR}/tools/hostgen.py"
+        COMMENT "hostgen ${sym}")
+    list(APPEND FLW_HOSTGEN_GEN "${sym_out}")
+endforeach()
+
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_flw.txt" SLICE_FLW_LINES)
-set(SLICE_FLW_SOURCES "")
+set(SLICE_FLW_SOURCES ${FLW_HOSTGEN_GEN})
 foreach(line IN LISTS SLICE_FLW_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
         continue()
     endif()
+    # The hostgen'd copy stands in for the src/ one; taking both would be a
+    # duplicate symbol, and taking neither would drop the body silently.
+    if(line IN_LIST FLW_HOSTGEN_SKIP)
+        continue()
+    endif()
     list(APPEND SLICE_FLW_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
+endforeach()
+# A slice line that stops matching (a rename, a .c that becomes a .cpp) would
+# silently take the src/ copy back and put the defect back with it, so the
+# substitution asserts rather than hopes.
+list(LENGTH FLW_HOSTGEN_SYMS flw_hg_want)
+list(LENGTH FLW_HOSTGEN_GEN flw_hg_have)
+if(NOT flw_hg_want EQUAL flw_hg_have)
+    message(FATAL_ERROR "slice_flw hostgen substitution incomplete: "
+            "${flw_hg_have} of ${flw_hg_want} generated")
+endif()
+foreach(skip IN LISTS FLW_HOSTGEN_SKIP)
+    if(NOT skip IN_LIST SLICE_FLW_LINES)
+        message(FATAL_ERROR "slice_flw.txt no longer lists ${skip}; the "
+                "hostgen substitution for it is now dead and the geometry "
+                "register writes in it would go back to latching silently")
+    endif()
 endforeach()
 
 set(SCENE_MG_FLOWER_SOURCES

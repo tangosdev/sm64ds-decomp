@@ -435,6 +435,49 @@ extern "C" void port_scene_flower_hits(void)
         std::printf("[scene] flower state: the class never spawned\n");
     }
 
+    /* ---- THE PETAL CENSUS ------------------------------------------------
+     *
+     * Twenty-two records at +0x4f38, stride 0x20. func_ov006_0212a764 lays
+     * the live ones out on a ring: +0x4f54 is the angle it picks, +0x4f3c and
+     * +0x4f40 are the position that angle produces through func_0203d388,
+     * +0x4f38 is the live flag.
+     *
+     * THE MEASUREMENT IS THE COUNT OF DISTINCT POSITIONS, not a look at the
+     * screen. "Every petal draws in one place" has two completely different
+     * causes -- a layout that computed one position N times, or a layout that
+     * computed N positions and a draw that ignores them -- and the only thing
+     * that separates them is reading the records the layout wrote. A run with
+     * N live petals and 1 distinct position is a LAYOUT bug; N live petals
+     * and N distinct positions with one blob on screen is a DRAW bug. */
+    if (g_flw_self) {
+        char *c = (char *)g_flw_self;
+        int live = 0, distinct_pos = 0, distinct_ang = 0;
+        int px[22], py[22], pa[22];
+        std::printf("[scene] petal records at +0x4f38 stride 0x20:\n");
+        for (int i = 0; i < 22; ++i) {
+            char *r = c + 0x4f38 + i * 0x20;
+            const int flag = *(unsigned char *)r;
+            const int x = *(int *)(r + 4);          /* +0x4f3c */
+            const int y = *(int *)(r + 8);          /* +0x4f40 */
+            const int a = *(short *)(r + 0x1c);     /* +0x4f54 */
+            std::printf("[scene]   %2d live=%d angle=%6d x=%08x y=%08x\n",
+                        i, flag, a, (unsigned)x, (unsigned)y);
+            if (!flag) continue;
+            int seen = 0;
+            for (int k = 0; k < live; ++k) if (px[k] == x && py[k] == y) seen = 1;
+            if (!seen) ++distinct_pos;
+            seen = 0;
+            for (int k = 0; k < live; ++k) if (pa[k] == a) seen = 1;
+            if (!seen) ++distinct_ang;
+            px[live] = x; py[live] = y; pa[live] = a;
+            ++live;
+        }
+        std::printf("[scene] petals live %d, DISTINCT POSITIONS %d, distinct "
+                    "angles %d%s\n", live, distinct_pos, distinct_ang,
+                    (live > 1 && distinct_pos == 1)
+                        ? "   <-- EVERY LIVE PETAL IS AT ONE POSITION" : "");
+    }
+
     std::printf("[scene] sub-object state dispatch (+0x51f8, the member "
                 "pointer func_ov006_020c3d18 open-codes): %u call(s) through "
                 "the address switch, %u UNHANDLED address(es)\n",
