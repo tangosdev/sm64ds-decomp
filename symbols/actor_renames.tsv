@@ -1543,13 +1543,13 @@ ov071	0x021216ec	func_ov071_021216ec	_ZN3MrI8BehaviorEv	vtable slot 6
 ov071	0x02121734	func_ov071_02121734	_ZN3MrI13InitResourcesEv	vtable slot 0
 ov071	0x021219cc	func_ov071_021219cc	BigMrI_Spawn	spawnfunc
 ov071	0x02121a1c	func_ov071_02121a1c	MrI_Spawn	spawnfunc
-ov071	0x02121a6c	func_ov071_02121a6c	_ZN14MrI_ProjectileD1Ev	vtable slot 16
-ov071	0x02121aac	func_ov071_02121aac	_ZN14MrI_ProjectileD0Ev	vtable slot 17
-ov071	0x02121d08	func_ov071_02121d08	_ZN14MrI_Projectile16CleanupResourcesEv	vtable slot 3
-ov071	0x02121d10	func_ov071_02121d10	_ZN14MrI_Projectile16OnPendingDestroyEv	vtable slot 12
-ov071	0x02121d14	func_ov071_02121d14	_ZN14MrI_Projectile6RenderEv	vtable slot 9
-ov071	0x02121d80	func_ov071_02121d80	_ZN14MrI_Projectile8BehaviorEv	vtable slot 6
-ov071	0x02121eb4	func_ov071_02121eb4	_ZN14MrI_Projectile13InitResourcesEv	vtable slot 0
+ov071	0x02121a6c	func_ov071_02121a6c	_ZN8daEyBm_cD1Ev	vtable slot 16
+ov071	0x02121aac	func_ov071_02121aac	_ZN8daEyBm_cD0Ev	vtable slot 17
+ov071	0x02121d08	func_ov071_02121d08	_ZN8daEyBm_c16CleanupResourcesEv	vtable slot 3
+ov071	0x02121d10	func_ov071_02121d10	_ZN8daEyBm_c16OnPendingDestroyEv	vtable slot 12
+ov071	0x02121d14	func_ov071_02121d14	_ZN8daEyBm_c6RenderEv	vtable slot 9
+ov071	0x02121d80	func_ov071_02121d80	_ZN8daEyBm_c8BehaviorEv	vtable slot 6
+ov071	0x02121eb4	func_ov071_02121eb4	_ZN8daEyBm_c13InitResourcesEv	vtable slot 0
 ov071	0x02121f9c	func_ov071_02121f9c	MrI_Projectile_Spawn	spawnfunc
 ov071	0x02121fe4	func_ov071_02121fe4	_ZN6CoffinD1Ev	vtable slot 16
 ov071	0x02122028	func_ov071_02122028	_ZN6CoffinD0Ev	vtable slot 17
@@ -1564,7 +1564,7 @@ ov071	0x02122cf0	data_ov071_02122cf0	MrI_SpawnInfo	spawninfo
 ov071	0x02122d0c	data_ov071_02122d0c	BigMrI_SpawnInfo	spawninfo
 ov071	0x02122d30	data_ov071_02122d30	_ZTV3MrI	vtable alloc=0x218
 ov071	0x02122dc4	data_ov071_02122dc4	MrI_Projectile_SpawnInfo	spawninfo
-ov071	0x02122de8	data_ov071_02122de8	_ZTV14MrI_Projectile	vtable alloc=0x334
+ov071	0x02122de8	data_ov071_02122de8	_ZTV8daEyBm_c	vtable alloc=0x334
 ov071	0x02122eb0	data_ov071_02122eb0	Coffin_SpawnInfo	spawninfo
 ov071	0x02122efc	data_ov071_02122efc	_ZTV6Coffin	vtable alloc=0x32c
 ov072	0x0211f000	func_ov072_0211f000	_ZN11SnowmanBodyD1Ev	vtable slot 16

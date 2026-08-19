@@ -1,12 +1,13 @@
-#ifndef MRI_PROJECTILE_H
-#define MRI_PROJECTILE_H
+#ifndef DAEYBM_C_H
+#define DAEYBM_C_H
 
 #include "MovingCylinderClsnWithPos.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 #include "dActor_c.h"
 
-/* MrI_Projectile is daEyBm_c in the ROM's own RTTI: the typeinfo at ov071
+/* daEyBm_c is the ROM's own RTTI name for this class (this tree once coined it
+ * MrI_Projectile): the typeinfo at ov071
  * 0x02122db8 names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x02122de8 (31 slots, same count as dActor_c's) is what pairs it
  * to MrI_Projectile_Spawn, which stores that address after allocating 0x334
@@ -28,7 +29,7 @@
  * non-derived struct a virtual would have inserted a vptr and shifted every
  * offset. Deriving from dActor_c is what makes the declarations below honest.
  */
-struct MrI_Projectile : dActor_c {
+struct daEyBm_c : dActor_c {
     u8                        pad_0d0[0x4];
     ShadowModel               mShadowModel;                  /* 0x0d4 */
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;    /* 0x0fc */
@@ -42,7 +43,7 @@ struct MrI_Projectile : dActor_c {
 
     /* Declared first on purpose, same reasoning as dActor_c.h: the key
        function pins where mwcc anchors the vtable. */
-    virtual ~MrI_Projectile();
+    virtual ~daEyBm_c();
 
     virtual s32  InitResources();       /* slot 0 */
     virtual s32  CleanupResources();    /* slot 3 */
@@ -52,7 +53,7 @@ struct MrI_Projectile : dActor_c {
     virtual int  OnYoshiTryEat();       /* slot 18 */
 };
 
-typedef char MrI_Projectile_size_must_be_0x334[
-    sizeof(MrI_Projectile) == 0x334 ? 1 : -1];
+typedef char daEyBm_c_size_must_be_0x334[
+    sizeof(daEyBm_c) == 0x334 ? 1 : -1];
 
-#endif /* MRI_PROJECTILE_H */
+#endif /* DAEYBM_C_H */

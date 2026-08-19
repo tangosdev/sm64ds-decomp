@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN14MrI_Projectile8BehaviorEv
+// @symbol _ZN8daEyBm_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "MrI_Projectile.h"
+#include "daEyBm_c.h"
 typedef short s16;
 
 extern "C" void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* self, const Vector3& v);
@@ -19,7 +19,7 @@ extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
 extern Vector3 data_ov071_021230b8;
 extern int data_020a0e68[];
 
-int MrI_Projectile::Behavior()
+int daEyBm_c::Behavior()
 {
     Vector3 v;
     Vector3 r;

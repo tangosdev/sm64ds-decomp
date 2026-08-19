@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN14MrI_Projectile16CleanupResourcesEv
+// @symbol _ZN8daEyBm_c16CleanupResourcesEv
 
-#include "MrI_Projectile.h"
+#include "daEyBm_c.h"
 
-int MrI_Projectile::CleanupResources()
+int daEyBm_c::CleanupResources()
 {
     return 1;
 }

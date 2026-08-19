@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN14MrI_ProjectileD0Ev
+// @symbol _ZN8daEyBm_cD0Ev
 
-#include "MrI_Projectile.h"
+#include "daEyBm_c.h"
 
-MrI_Projectile::~MrI_Projectile()
+daEyBm_c::~daEyBm_c()
 {
 }

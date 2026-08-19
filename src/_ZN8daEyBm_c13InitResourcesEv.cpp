@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN14MrI_Projectile13InitResourcesEv
+// @symbol _ZN8daEyBm_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
-#include "MrI_Projectile.h"
+#include "daEyBm_c.h"
 /* was `typedef int Fix12;` -- collides with the real Fix12<> template, which
-   MrI_Projectile.h now reaches via dActor_c.h. The typedef WAS int, so
+   daEyBm_c.h now reaches via dActor_c.h. The typedef WAS int, so
    spelling it int below is byte-neutral. */
 extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
@@ -15,7 +15,7 @@ extern void *data_ov071_021230b8;
 struct M48 { int w[12]; };
 extern struct M48 data_02082128;
 
-int MrI_Projectile::InitResources()
+int daEyBm_c::InitResources()
 {
     if (!_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel)) return 0;
     _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char *)this) + 0xfc, ((char *)this), &data_ov071_021230b8, 0x23000, 0x3c000, 0x200002, 0x8000);

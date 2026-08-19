@@ -544,7 +544,6 @@ extern int _ZTV14EnemySwitchTag[];
 extern int _ZTV19AmbientSoundEffects[];
 extern int _ZTV9MovingBar[];
 extern int _ZTV9TowerStep[];
-extern int _ZTV14MrI_Projectile[];
 extern int _ZTV14QuestionSwitch[];
 extern int _ZTV14SquarePathLift[];
 extern int _ZTV14TTC_MovingBeam[];

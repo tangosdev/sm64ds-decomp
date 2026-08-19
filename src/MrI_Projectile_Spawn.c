@@ -7,13 +7,13 @@
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV14MrI_Projectile */
+/* resolved: VT0 = _ZTV8daEyBm_c */
 int *MrI_Projectile_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(820);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV14MrI_Projectile;
+        p[0] = (int)_ZTV8daEyBm_c;
         _ZN11ShadowModelC1Ev((char *)p + 0xd4);
         _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0xfc);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x13c);

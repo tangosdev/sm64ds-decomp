@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN14MrI_Projectile13OnYoshiTryEatEv
+// @symbol _ZN8daEyBm_c13OnYoshiTryEatEv
 
-#include "MrI_Projectile.h"
+#include "daEyBm_c.h"
 
-int MrI_Projectile::OnYoshiTryEat()
+int daEyBm_c::OnYoshiTryEat()
 {
     return 4;
 }

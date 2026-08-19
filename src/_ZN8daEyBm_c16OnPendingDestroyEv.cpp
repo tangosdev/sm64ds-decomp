@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN14MrI_Projectile16OnPendingDestroyEv
+// @symbol _ZN8daEyBm_c16OnPendingDestroyEv
 
-#include "MrI_Projectile.h"
+#include "daEyBm_c.h"
 
-void MrI_Projectile::OnPendingDestroy()
+void daEyBm_c::OnPendingDestroy()
 {
 }
