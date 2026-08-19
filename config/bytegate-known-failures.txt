@@ -48,7 +48,7 @@
 #
 #   15 now build AND reproduce the cartridge -- the signature clash was repaired and
 #      the functions are enrolled, so they are counted matched and verified both.
-#    2 now build but do NOT reproduce it (Goomba::InitResources, 916 against 912;
+#    2 now build but do NOT reproduce it (daKrb_c::InitResources, 916 against 912;
 #      func_ov007_020ba05c, 0x22c against 0x284). Fixing the compile is what revealed
 #      each gap -- it had been hidden behind the compile error. Both now carry a
 #      NONMATCHING banner, so `matched` excludes them by the ordinary route and this

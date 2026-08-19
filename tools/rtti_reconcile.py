@@ -31,7 +31,7 @@ still an unnamed placeholder, so the vtable join could not see that "Enemy" and
 conflict.  Reporting that number would have been worse than reporting nothing.
 
 So the name map is **extended structurally, then corroborated**.  If the vtable join
-already proves Goomba == `daKrb_c`, and the tree believes `Goomba : CapEnemy` while the
+already proves daKrb_c == `daKrb_c`, and the tree believes `daKrb_c : CapEnemy` while the
 ROM says `daKrb_c : dCapEnemy_c`, that is one vote for CapEnemy == `dCapEnemy_c`.
 Aliases are taken by plurality with a margin (see the vote block below), not unanimity.
 

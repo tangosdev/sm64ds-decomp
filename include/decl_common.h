@@ -723,7 +723,6 @@ extern int _ZTV6Cannon[];
 extern int _ZTV6Coffin[];
 extern int _ZTV6Eyerok[];
 extern int _ZTV6FlyGuy[];
-extern int _ZTV6Goomba[];
 extern int _ZTV6Klepto[];
 extern int _ZTV6Lakitu[];
 extern int _ZTV6Rabbit[];

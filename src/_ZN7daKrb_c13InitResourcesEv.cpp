@@ -47,7 +47,7 @@ extern int data_ov084_02130228[];
 extern int data_ov084_02130238[];
 }
 
-extern "C" int _ZN6Goomba13InitResourcesEv(char* c)
+extern "C" int _ZN7daKrb_c13InitResourcesEv(char* c)
 {
     int i;
 

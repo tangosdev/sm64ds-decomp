@@ -9,13 +9,13 @@
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV6Goomba */
+/* resolved: VT0 = _ZTV7daKrb_c */
 int *GoombaSmall_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(1144);
     if (p) {
         _ZN11dCapEnemy_cC2Ev(p);
-        p[0] = (int)_ZTV6Goomba;
+        p[0] = (int)_ZTV7daKrb_c;
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0x180);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x1b4);
         _ZN9ModelAnimC1Ev((char *)p + 0x370);

@@ -1,3 +1,3 @@
-void _ZN6Goomba16OnPendingDestroyEv(void)
+void _ZN7daKrb_c16OnPendingDestroyEv(void)
 {
 }

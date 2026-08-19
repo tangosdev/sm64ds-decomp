@@ -333,7 +333,7 @@ def main():
                 # there -- and testing `dw in allw` first filed exactly those as
                 # `confirmed`, dropping them off the worklist. The markers with the BEST
                 # evidence went missing precisely because the evidence was good:
-                # Goomba.mModelAnim @0x370 sat here while its own destructor D1-called
+                # daKrb_c.mModelAnim @0x370 sat here while its own destructor D1-called
                 # _ZN9ModelAnimD1Ev at that offset. See tools/marker_census.py.
                 bucket = "marker: object, extent unknown"
                 findings[bucket].append({

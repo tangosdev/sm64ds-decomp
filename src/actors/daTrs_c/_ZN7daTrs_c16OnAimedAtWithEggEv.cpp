@@ -6,8 +6,8 @@
    mMovingCylinderClsnWithPos (include/daTrs_c.h, +0x184), i.e. inside that
    member's own MovingCylinderClsn base -- not a separate daTrs_c field. Body
    unchanged from the recovered free function -- only the symbol and self
-   access moved to a real method, the same shape as Goomba::OnAimedAtWithEgg
-   (src/_ZN6Goomba16OnAimedAtWithEggEv.cpp). */
+   access moved to a real method, the same shape as daKrb_c::OnAimedAtWithEgg
+   (src/_ZN7daKrb_c16OnAimedAtWithEggEv.cpp). */
 #include "daTrs_c.h"
 
 int daTrs_c::OnAimedAtWithEgg() {

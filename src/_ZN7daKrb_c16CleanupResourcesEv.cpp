@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN6Goomba16CleanupResourcesEv
+// @symbol _ZN7daKrb_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Goomba.h"
+#include "daKrb_c.h"
 #include "SharedFilePtr.h"
 extern "C" {
 extern void UnloadBlueCoinModel(void* p);
@@ -13,7 +13,7 @@ extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern char data_ov084_02130cf8[];
 extern void* data_ov084_02130278[];
 
-int Goomba::CleanupResources()
+int daKrb_c::CleanupResources()
 {
   int i;
   if (mGoombaType == 2)

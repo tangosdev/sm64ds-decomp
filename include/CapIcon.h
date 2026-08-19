@@ -21,7 +21,7 @@ struct dActor_c;
  * and write every word.
  *
  * SIZE. Three independent facts agree on 0x1c, and none of them is the others:
- * dCapEnemy_c holds one at 0x164 and is 0x180; Goomba derives from dCapEnemy_c and its
+ * dCapEnemy_c holds one at 0x164 and is 0x180; daKrb_c derives from dCapEnemy_c and its
  * first own member is at 0x180, and a derived member cannot begin inside its
  * base; and dCapEnemy_c::GetCapState reads a field at 0x17f, which is 0x164 + 0x1b,
  * the last byte of this struct.

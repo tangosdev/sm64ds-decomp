@@ -1,5 +1,5 @@
-#ifndef GOOMBA_H
-#define GOOMBA_H
+#ifndef DAKRB_C_H
+#define DAKRB_C_H
 #include "types.h"
 #include "dCapEnemy_c.h"
 
@@ -13,11 +13,11 @@
  *
  *   _ZTI7daKrb_c   ov084 0x021308e0
  *   _ZTS7daKrb_c   ov084 0x021308d4   "7daKrb_c"
- *   vtable         ov084 0x02130948, same address _ZTV6Goomba already names --
+ *   vtable         ov084 0x02130948, same address _ZTV7daKrb_c already names --
  *                  symbols.txt carries both today; the class itself is not yet
- *                  renamed daKrb_c, so the compiler still emits _ZTV6Goomba.
+ *                  renamed daKrb_c, so the compiler still emits _ZTV7daKrb_c.
  *
- * DERIVES FROM dCapEnemy_c. _ZN6GoombaD1Ev tears down its own five members and then
+ * DERIVES FROM dCapEnemy_c. _ZN7daKrb_cD1Ev tears down its own five members and then
  * chains to func_ov002_020aedbc, which IS dCapEnemy_c::~dCapEnemy_c (dCapEnemy_c has no
  * named out-of-line D1 of its own to call by name -- see include/dCapEnemy_c.h). Goomba_Spawn
  * (and GoombaSmall_Spawn, GoombaLarge_Spawn -- all three build the identical class,
@@ -31,7 +31,7 @@
  * inside its base, so this is both floor and ceiling, same argument dCapEnemy_c.h makes
  * one level up. Five spans are typed sub-objects, evidenced by both witnesses:
  * Goomba_Spawn constructs them forward (MovingCylinderClsn, WithMeshClsn, ModelAnim,
- * ShadowModel, MaterialChanger) and _ZN6GoombaD1Ev tears them down in the opposite
+ * ShadowModel, MaterialChanger) and _ZN7daKrb_cD1Ev tears them down in the opposite
  * order at the same offsets, before chaining to the base. They stay untyped, one
  * placeholder byte per span plus the sub-fields already evidenced inside them, rather
  * than named typed members: every existing consumer already reaches them through the
@@ -63,7 +63,7 @@
  *
  * All other slots hold dCapEnemy_c's (or an ancestor's) word and are inherited.
  */
-struct Goomba : dCapEnemy_c {
+struct daKrb_c : dCapEnemy_c {
     u8  mMovingCylinderClsn;            /* 0x180 -- MovingCylinderClsn, 0x34 bytes */
     u8  pad_181[0x33];
     u8  mWithMeshClsn;            /* 0x1b4 -- WithMeshClsn, 0x1bc bytes */
@@ -109,7 +109,7 @@ struct Goomba : dCapEnemy_c {
     u8  unk_468;            /* 0x468 */
     u8  pad_469[0xf];
 
-    virtual ~Goomba();
+    virtual ~daKrb_c();
 
     /* methods */
     int Behavior();
@@ -123,6 +123,6 @@ struct Goomba : dCapEnemy_c {
     int OnAimedAtWithEgg();                     /* slot 29 */
 };
 
-typedef char Goomba_size_must_be_0x478[sizeof(Goomba) == 0x478 ? 1 : -1];
+typedef char daKrb_c_size_must_be_0x478[sizeof(daKrb_c) == 0x478 ? 1 : -1];
 
 #endif

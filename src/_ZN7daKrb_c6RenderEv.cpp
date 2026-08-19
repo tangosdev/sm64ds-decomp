@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN6Goomba6RenderEv
+// @symbol _ZN7daKrb_c6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_dCapEnemy_c.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Goomba.h"
+#include "daKrb_c.h"
 #pragma opt_common_subs off
 
 struct Sub {
@@ -20,7 +20,7 @@ extern "C" {
 extern void _ZN15MaterialChanger6UpdateER15ModelComponents(char* self, void* model);
 }
 
-int Goomba::Render()
+int daKrb_c::Render()
 {
     int locked;
     volatile Vector3 backup;

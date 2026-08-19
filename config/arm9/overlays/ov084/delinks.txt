@@ -4,11 +4,11 @@
     .ctor       start:0x02130860 end:0x0213086c kind:rodata align:4
     .data       start:0x02130880 end:0x02130cc0 kind:data align:32
     .bss        start:0x02130cc0 end:0x02130ee0 kind:bss align:32
-src/_ZN6GoombaD1Ev.c:
+src/_ZN7daKrb_cD1Ev.c:
     complete
     .text start:0x02129020 end:0x02129070
 
-src/_ZN6GoombaD0Ev.c:
+src/_ZN7daKrb_cD0Ev.c:
     complete
     .text start:0x02129070 end:0x021290d4
 
@@ -99,30 +99,30 @@ src/func_ov084_0212b2dc.c:
     complete
     .text start:0x0212b2dc end:0x0212b30c
 
-src/_ZN6Goomba16OnAimedAtWithEggEv.cpp:
+src/_ZN7daKrb_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0212b30c end:0x0212b344
 
 src/func_ov084_0212b344.cpp:
     .text start:0x0212b344 end:0x0212b510
 
-src/_ZN6Goomba16CleanupResourcesEv.cpp:
+src/_ZN7daKrb_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0212b510 end:0x0212b5b8
 
-src/_ZN6Goomba16OnPendingDestroyEv.c:
+src/_ZN7daKrb_c16OnPendingDestroyEv.c:
     complete
     .text start:0x0212b5b8 end:0x0212b5bc
 
-src/_ZN6Goomba6RenderEv.cpp:
+src/_ZN7daKrb_c6RenderEv.cpp:
     complete
     .text start:0x0212b5bc end:0x0212b6ec
 
-src/_ZN6Goomba8BehaviorEv.cpp:
+src/_ZN7daKrb_c8BehaviorEv.cpp:
     complete
     .text start:0x0212b6ec end:0x0212bc30
 
-src/_ZN6Goomba13OnYoshiTryEatEv.cpp:
+src/_ZN7daKrb_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0212bfc0 end:0x0212bff8
 

@@ -1,21 +1,21 @@
 /* Derives from dCapEnemy_c (on main; the ROM's own RTTI names it daTrs_c and gives
- * dCapEnemy_c two children, daKrb_c/Goomba and daTrs_c/Boo-as-was -- the unmerged
+ * dCapEnemy_c two children, daKrb_c/Goomba-as-was and daTrs_c/Boo-as-was -- the unmerged
  * cpp/goomba-family branch renames dCapEnemy_c -> dCapEnemy_c and will sweep this
  * file's spelling along with it when it merges, or in a trivial follow-up).
  *
  * rtti_reconcile came back 'no_belief' on this edge (base not auto-inferred),
- * so it is established by hand, the same way as its sibling Goomba:
+ * so it is established by hand, the same way as its sibling daKrb_c:
  *
  *   - Backward: daTrs_c's own destructor (_ZN7daTrs_cD1Ev, src/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp)
  *     tears down its own six members, then calls func_ov002_020aedbc -- the
- *     exact function _ZN6GoombaD1Ev (src/_ZN6GoombaD1Ev.c) calls after tearing
+ *     exact function _ZN7daKrb_cD1Ev (src/_ZN7daKrb_cD1Ev.c) calls after tearing
  *     down its own members. func_ov002_020aedbc sits at 0x020aedbc and is
  *     immediately followed, at 0x020aedf4, by the already-matched
  *     _ZN11dCapEnemy_cD0Ev -- so 0x020aedbc is dCapEnemy_c's own out-of-line D1, and
  *     both sibling destructors chain to it.
  *   - Forward: Boo_Spawn (src/actors/daTrs_c/Boo_Spawn.cpp) calls
  *     _ZN11dCapEnemy_cC2Ev(t) before storing _ZTV7daTrs_c -- exactly Goomba_Spawn's
- *     shape, which calls the same _ZN11dCapEnemy_cC2Ev before storing _ZTV6Goomba.
+ *     shape, which calls the same _ZN11dCapEnemy_cC2Ev before storing _ZTV7daKrb_c.
  *
  * Not renaming func_ov002_020aedbc here -- that is dCapEnemy_c's own file and
  * belongs to the goomba-family rename.

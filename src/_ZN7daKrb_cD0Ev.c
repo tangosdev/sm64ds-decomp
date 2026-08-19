@@ -1,4 +1,4 @@
-// @symbol _ZN6GoombaD0Ev
+// @symbol _ZN7daKrb_cD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_ModelAnim.h"
 #include "decl_MovingCylinderClsn.h"
@@ -10,7 +10,7 @@
 extern void _ZN15MaterialChangerD1Ev(void *);
 extern void func_ov002_020aedbc(void *);
 extern void *data_020a0eac;
-int *_ZN6GoombaD0Ev(int *t)
+int *_ZN7daKrb_cD0Ev(int *t)
 {
     t[0] = (int)_ZTV7daKrb_c;
     _ZN15MaterialChangerD1Ev((char *)t + 0x3fc);

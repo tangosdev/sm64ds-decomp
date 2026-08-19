@@ -1791,13 +1791,13 @@ ov081	0x02128be0	data_ov081_02128be0	Moneybag_SpawnInfo	spawninfo
 ov081	0x02128c04	data_ov081_02128c04	_ZTV8Moneybag	vtable alloc=0x3f4
 ov081	0x02128ca0	data_ov081_02128ca0	IceBlock_SpawnInfo	spawninfo
 ov081	0x02128cc4	data_ov081_02128cc4	_ZTV8IceBlock	vtable alloc=0x368
-ov084	0x02129020	func_ov084_02129020	_ZN6GoombaD1Ev	vtable slot 16
-ov084	0x02129070	func_ov084_02129070	_ZN6GoombaD0Ev	vtable slot 17
-ov084	0x0212b510	func_ov084_0212b510	_ZN6Goomba16CleanupResourcesEv	vtable slot 3
-ov084	0x0212b5b8	func_ov084_0212b5b8	_ZN6Goomba16OnPendingDestroyEv	vtable slot 12
-ov084	0x0212b5bc	func_ov084_0212b5bc	_ZN6Goomba6RenderEv	vtable slot 9
-ov084	0x0212b6ec	func_ov084_0212b6ec	_ZN6Goomba8BehaviorEv	vtable slot 6
-ov084	0x0212bc30	func_ov084_0212bc30	_ZN6Goomba13InitResourcesEv	vtable slot 0
+ov084	0x02129020	func_ov084_02129020	_ZN7daKrb_cD1Ev	vtable slot 16
+ov084	0x02129070	func_ov084_02129070	_ZN7daKrb_cD0Ev	vtable slot 17
+ov084	0x0212b510	func_ov084_0212b510	_ZN7daKrb_c16CleanupResourcesEv	vtable slot 3
+ov084	0x0212b5b8	func_ov084_0212b5b8	_ZN7daKrb_c16OnPendingDestroyEv	vtable slot 12
+ov084	0x0212b5bc	func_ov084_0212b5bc	_ZN7daKrb_c6RenderEv	vtable slot 9
+ov084	0x0212b6ec	func_ov084_0212b6ec	_ZN7daKrb_c8BehaviorEv	vtable slot 6
+ov084	0x0212bc30	func_ov084_0212bc30	_ZN7daKrb_c13InitResourcesEv	vtable slot 0
 ov084	0x0212bff8	func_ov084_0212bff8	GoombaLarge_Spawn	spawnfunc
 ov084	0x0212c054	func_ov084_0212c054	GoombaSmall_Spawn	spawnfunc
 ov084	0x0212c0b0	func_ov084_0212c0b0	Goomba_Spawn	spawnfunc
@@ -1828,7 +1828,7 @@ ov084	0x02130110	func_ov084_02130110	PiranhaPlant_Spawn	spawnfunc
 ov084	0x021308ec	data_ov084_021308ec	Goomba_SpawnInfo	spawninfo
 ov084	0x02130908	data_ov084_02130908	GoombaSmall_SpawnInfo	spawninfo
 ov084	0x02130924	data_ov084_02130924	GoombaLarge_SpawnInfo	spawninfo
-ov084	0x02130948	data_ov084_02130948	_ZTV6Goomba	vtable alloc=?
+ov084	0x02130948	data_ov084_02130948	_ZTV7daKrb_c	vtable alloc=?
 ov084	0x02130a14	data_ov084_02130a14	BobOmbBuddy_SpawnInfo	spawninfo
 ov084	0x02130a38	data_ov084_02130a38	_ZTV11BobOmbBuddy	vtable alloc=0x1f0
 ov084	0x02130acc	data_ov084_02130acc	FirePiranhaPlant_SpawnInfo	spawninfo

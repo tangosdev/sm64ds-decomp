@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN6Goomba8BehaviorEv
+// @symbol _ZN7daKrb_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_dCapEnemy_c.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Goomba.h"
+#include "daKrb_c.h"
 typedef int s32;
 typedef unsigned int u32;
 typedef unsigned short u16;
@@ -34,7 +34,7 @@ extern int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern void _ZN12dEnemyBase_c9SpawnCoinEv(char* c);
 }
 
-int Goomba::Behavior()
+int daKrb_c::Behavior()
 {
     Vector3 v1;
     Vector3 v2;
