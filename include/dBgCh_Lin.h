@@ -65,7 +65,30 @@ struct dBgCh_Lin {
     /* Was mPosY. Read as the search seed on entry (`ldr r1,[r0,#0x60]`) and
        written with the winning distance on exit (`str r1,[r0,#0x60]`). */
     Fix12i clsnDist;        /* 0x060 */
-    u8  unk_064;            /* 0x064 */
+    /* The segment's BOUNDING SPHERE, and the struct does not end at 0x65.
+       Proven three ways, all matched code:
+         C1            constructs it -- func_0203ac60(thiz + 0x64) stores
+                       _ZTV8dM3dGSph
+         D1            destroys it   -- func_0203ac50(&self->unk_064)
+         SetObjAndLine fills it      -- func_0203abd4(thiz + 0x64, &midpoint,
+                       (clsnDist >> 1) + 0x1000)
+       and dBgCh_Lin::DetectClsn culls candidate colliders against it, reading
+       the centre at 0x68 and the radius at 0x74. dM3dGSph is 0x14, so this
+       member alone carries the struct to 0x78. */
+    u8  mBoundSphere[0x14]; /* 0x064 - a dM3dGSph, see include/dM3dGSph.h.
+                               Sized bytes rather than the type because
+                               check_header_offsets cannot size a struct-typed
+                               member and goes UNPARSED, which blinds it to the
+                               rest of the header. */
 };
+
+/* NO SIZE ASSERT ON PURPOSE. 0x78 is the proven floor, not the settled end.
+   dBgCh_Actr embeds a dBgCh_Lin at 0x134 and its next named field is at 0x1b8,
+   which puts the real end at 0x84 -- unless that 0x1b8 word is itself the last
+   member of dBgCh_Lin, in which case it is 0x88. Nothing in src/ distinguishes
+   those two readings yet, and dBgCh_Actr models the region as a flat blob, so
+   no layout depends on the answer. What would settle it: a function that reads
+   or writes dBgCh_Lin + 0x78..0x87 through a dBgCh_Lin pointer rather than
+   through dBgCh_Actr. Do not add an assert until one is found. */
 
 #endif
