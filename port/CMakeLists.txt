@@ -3633,7 +3633,15 @@ set(SCENE_MG_FLOWER_SOURCES
     # in a form section 4's two silent shapes do not cover: a dispatcher that
     # open-codes the Itanium sequence in plain ints. Replaces
     # src/func_ov006_020c3d18.cpp, which is out of the slice.
-    unmatched/MgFlower_SubDispatch.cpp)
+    unmatched/MgFlower_SubDispatch.cpp
+    # Run mg5 lane Y3D: the class's MODEL DRAW, and the reason the minigame
+    # showed its 2D background with no flower and no Yoshi. Same local-shadow-
+    # class defect unmatched/Door_Render.cpp records on the same two classes:
+    # the ROM's vtable BYTE +0x14 is Render, MSVC's sixth word is Virtual18,
+    # so the matched TU handed Virtual18 a null matrix, Model::Virtual10 read
+    # address 0 and the quarantine froze the whole scene actor on frame 0.
+    # Replaces src/func_ov006_020c3bf4.cpp, which is out of the slice.
+    unmatched/MgFlower_ModelRender_020c3bf4.cpp)
 
 # Lane FDR: the arm9 wipe fader's own static initialiser, and the dWipe_c
 # vtable it installs. Rides the SAME three targets as the scene seats above,

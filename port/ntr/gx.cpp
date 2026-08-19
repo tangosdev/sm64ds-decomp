@@ -1131,7 +1131,15 @@ RasterPool &pool(int threads) {
     return p;
 }
 
+/* The 3D coverage mask's storage. Declared out here rather than inside
+   gx_render because gx_coverage() below has to reach it and because the raster
+   bands are lambdas inside that function; a function-local static would work
+   and would read as a private buffer, which it is not. */
+uint8_t g_cover[SCREEN_H][SCREEN_W];
+
 }  // namespace
+
+const uint8_t *gx_coverage() { return &g_cover[0][0]; }
 
 void gx_render(Framebuffer &fb) {
     const int tm = frame_ms();
@@ -1146,6 +1154,16 @@ void gx_render(Framebuffer &fb) {
     for (int x = 0; x < SCREEN_W; ++x) depth[0][x] = 1e30f;
     for (int y = 1; y < SCREEN_H; ++y)
         std::memcpy(depth[y], depth[0], SCREEN_W * sizeof(float));
+
+    /* THE 3D COVERAGE MASK, see gx_coverage() in ntr/gx.h. One byte per pixel,
+       set beside every store into fb.px below and cleared here. It is what
+       lets the 2D compositor tell a pixel this engine drew from a pixel the
+       frame's clear left, which is the whole of "a BG at priority 3 sits
+       BEHIND the 3D layer at priority 1".
+       It is written from the raster bands, and that is safe for the reason
+       the framebuffer itself is: a band owns the rows y == tid (mod nt) and
+       no other band touches them. */
+    std::memset(g_cover, 0, sizeof g_cover);
 
     /* --- shadow-polygon (POLYGON_ATTR mode 3) machinery -------------------
        GBATEK's two-step protocol, and the reason a per-pixel stencil bit and
@@ -1411,6 +1429,7 @@ void gx_render(Framebuffer &fb) {
                         };
                         frow[x] = 0xFF000000u | (bl(0, 16) << 16) |
                                   (bl(1, 8) << 8) | bl(2, 0);
+                        g_cover[y][x] = 1;
                     }
                 }
             }
@@ -1484,6 +1503,7 @@ void gx_render(Framebuffer &fb) {
                     drow[x] = z;
                     frow[x] = 0xFF000000u | (ch(0, 16) << 16) | (ch(1, 8) << 8)
                               | ch(2, 0);
+                    g_cover[y][x] = 1;
                     /* the ID travels with the depth write so a shadow can
                        recognise its own caster; one predictable branch on
                        shadow-free frames, and the colour above is untouched
@@ -1500,6 +1520,7 @@ void gx_render(Framebuffer &fb) {
                     };
                     frow[x] = 0xFF000000u | (bl(0, 16) << 16) | (bl(1, 8) << 8)
                               | bl(2, 0);
+                    g_cover[y][x] = 1;
                 }
             }
         }

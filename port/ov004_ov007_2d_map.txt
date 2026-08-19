@@ -397,10 +397,163 @@ Gaps, per cluster, from what the two overlays actually poke:
      click is published in framebuffer pixels) but no touch-panel register
      model.
 
+  g. BG0 IN 3D MODE WAS COMPOSITED AS A TILE BACKGROUND. Added and CLOSED by
+     run mg5 lane YTILE, which found it by chasing a player report of "blocky
+     solid-colour tiles" on scene 390.
+
+     Engine A's DISPCNT bit 3 is the BG0 2D/3D SELECTION. With it set BG0 is
+     the 3D engine's output layer and BG0CNT's character and screen bases mean
+     nothing. hal/message_compositor.cpp's read_bg never read the bit, so on
+     every scene that set it with BG0 enabled the compositor decoded whatever
+     bytes happened to sit at BG0CNT's bases into 8x8 blocks and painted them
+     OVER the real artwork at BG0's priority. Nothing was missing from the
+     frame; a layer was being invented into it.
+
+     The bit is pinned by the decomp's own code, not by docs:
+     src/_ZN2GX15SetGraphicsModeEiii.c is GX::SetGraphicsMode(dispMode, bgMode,
+     bg0_3d) and its whole use of the third argument is `reg = (c << 3) | reg`.
+     ntr/ppu.cpp's OBJ note says the same thing from the other side and
+     ntr/ppu_audit.cpp's 3D section already printed the rule as prose. Three
+     places in this tree described it and none implemented it.
+
+     MEASURED, scene 390 (dScMgFlower_c), DISPCNT 0x00001508 / BG0CNT 0x0001
+     (chars and screen both 0x06000000, priority 1, over BG2 at priority 3).
+     Against a reference image built from the ROM's own files -- the LZ77
+     decode of /MG/d_2d_mg_bg_flower_up_ncg.bin and _nsc.bin through the
+     palette _ncl.bin loads at byte offset 0x60 -- the top screen went from
+     44736/49152 pixels correct (91.0%, 55 of 768 tiles wrong in all 64 of
+     their pixels) to 48357/49152 (98.4%, 0 tiles fully wrong). The remaining
+     795 are the four HUD sprites the reference does not model.
+
+     IT WAS NEVER FLOWER-SPECIFIC. Sampled with SM64DS_PPU_AUDIT: scene 1
+     (DISPCNT 0x00011b08) was inventing 2172 px and scene 4 (0x08011d08) 8823
+     px, 18% of its top screen. Every mounted LEVEL runs 0x40011803 with BG0
+     disabled, so no level frame moves: level 1's selftest BMP is byte
+     identical across the fix at the same .dsstate base AND span
+     ([0xbcc000, 0xcb63c8), 959432 bytes), which is what
+     notes/port-selftest-bmp-gate.md requires before two BMPs may be compared.
+
+     WHAT WAS STILL OPEN, and it is the other half of the same register. The
+     fix above stops the port inventing a layer; it did not put the real 3D
+     layer in its place. The port renders 3D into the framebuffer before the
+     compositor runs and the compositor only wrote over it, so a 2D BG that on
+     hardware sits BEHIND the 3D layer still covered it here -- on scene 390
+     the full-screen opaque BG2 at priority 3 over the 3D layer at priority 1.
+     CLOSED by run mg5 lane Y3D; see h below.
+
+     ONE PROXY THAT DOES NOT WORK, recorded because a lane will reach for it:
+     the distinct-colour count of the captured BMP is 188 before the fix and
+     188 after. The invented tiles drew through the scene's own palette, so a
+     colour census cannot see them. The reference-image comparison can. (It is
+     blind to THAT defect and not to every one: h below moves the same census
+     from 179 colours to 3652, because 3D shading and texture are not drawn
+     from the scene's 2D palette at all. A proxy is blind to a class, not in
+     general, and the two halves of this register are different classes.)
+
+  h. THE 3D LAYER HAD NO PRIORITY AND NO COVERAGE, AND THE MODELS WERE DRAWN
+     AND BURIED. Added and CLOSED by run mg5 lane Y3D, which was opened on a
+     player report of "no flower and no yoshi model" on scene 390 after g had
+     fixed the background.
+
+     TWO SEPARATE DEFECTS, STACKED, and the lane's first job was deciding
+     which one the report was. The measurement that separates them is the
+     polygon census, not the picture: SM64DS_PPU_AUDIT's POLYGONS row plus the
+     screen-space triangle box.
+
+     THE BLOCKER WAS THE FIRST ONE: NO GEOMETRY WAS SUBMITTED AT ALL.
+     Scene 390, 300 frames, bare, before: POLYGONS 0 on all 300 samples,
+     BEGIN_VTXS 0, every VTX_* 0, triangles 0. The run exits 0 and prints
+     "300 frames of scene 390, clean", and the flight recorder holds
+
+       [quarantine] actor 307FA008 id 390 faulted (c0000005 +0007a78c) FROZEN
+
+     with slot hits init 1, BEHAVIOR 0, render 1. The class faults on its
+     first render and the quarantine freezes it for the rest of the run, so
+     the 2D background InitResources had already programmed stays on screen
+     and nothing else ever happens. Tango's own playlog carries the identical
+     line at his build's +00085cac, which is what he played.
+
+     THE CAUSE IS THE MSVC DTOR-SLOT SHIFT, one slot, and it is the same
+     defect port/unmatched/Door_Render.cpp records on the same two classes.
+     src/func_ov006_020c3bf4.cpp draws the sub-object's model through a LOCAL
+     SHADOW CLASS of six pure virtuals and calls f5(0). That is the ROM's
+     numbering -- byte +0x14 of an Itanium vtable is the sixth word, and on
+     Model and ModelAnim alike that word is Render:
+
+       020c3ca8  mov  r1,#0            ; scale = NULL
+       020c3cb0  ldr  r2,[r0]          ; vptr
+       020c3cb4  ldr  r2,[r2,#0x14]    ; ROM slot 5 -> ModelAnim::Render
+       020c3cb8  blx  r2
+
+     MSVC folds Itanium's D1/D0 pair into one deleting-destructor slot, so on
+     the host that byte is ModelAnim::Virtual18(u32 mat, const Vector3 *), the
+     shadow class passes one argument, mat arrives 0, and Model::Virtual10's
+     `movups xmm0,[eax]` reads address zero. The statement immediately before
+     the call fills the model's own Matrix4x3 at +0xd34 (= the model at +0xd18
+     plus Model::mat4x3 at +0x1c), which is the matrix Render consumes: a
+     second, independent reading that says slot 5 is Render here.
+
+     Seated as port/unmatched/MgFlower_ModelRender_020c3bf4.cpp. AFTER, same
+     scene, same 300 frames: POLYGONS 878 on all 300 samples, triangles 878,
+     drawable 760, no quarantine line, slot hits init 1, behavior 253,
+     RENDER 300.
+
+     THEN THE SECOND DEFECT BECAME VISIBLE, and it is the one this section's g
+     left open. With the models submitting, the compositor buried every one of
+     their pixels. Per-layer attribution on the same frame:
+
+       BG2   48357 px  priority 3     OBJ  795 px  priority 0
+       3D layer BG0CNT priority 1, composited 49152/49152 px
+
+     The 3D layer's coverage now comes from ntr::gx_coverage(), one byte per
+     HOST framebuffer pixel that the rasteriser sets beside every store it
+     makes into fb.px, and hal/message_compositor.cpp resolves it against each
+     2D layer's real priority in the final blit. The DS's own ordering is what
+     is implemented and nothing else: BGs sort by (priority, BG index) so a
+     BG1..BG3 pixel at BG0's priority LOSES to the 3D layer (the test is >=),
+     and OBJ beats a BG at equal priority so a sprite only loses when its own
+     priority number is strictly greater (>).
+
+     A/B ON ONE BINARY, SM64DS_3D_PRIORITY_OFF, scene 390 last frame,
+     512x384 host pixels:
+
+       off (the old unconditional overwrite)  3D kept      0, buried 58941
+       on                                     3D kept  55761, buried  3180
+
+     58941 = 55761 + 3180 and the 3180 are exactly the four HUD sprites at
+     priority 0, which on hardware DO sit in front of the 3D layer. The two
+     captures differ in 55761 of 196608 pixels and the distinct-colour census
+     goes 179 -> 3652.
+
+     NOTHING ELSE MOVES, checked rather than argued, all on one binary at one
+     .dsstate base:
+
+       level 1 selftest BMP   byte identical between the arms, md5
+                              5b783a29d753ce4dfbd35c79a7b2850f, which is also
+                              the value recorded before this lane. Every
+                              mounted level runs DISPCNT 0x40011803 with bit 3
+                              clear, so bg0_3d_shown is false and the new path
+                              is not reached at all.
+       scene 1                byte identical between the arms, 0 px buried
+       scene 4                byte identical between the arms, 0 px buried
+       scene 374 (curling)    32557 calls, 32557 routed, 0 UNHANDLED
+
+     WHAT IS STILL OPEN AFTER h, so the next lane does not read it as done:
+     raster_obj still draws every sprite over every BG regardless of the
+     sprite's priority; only the 3D comparison reads that field. And a
+     1st-target BG alpha-blending over the 3D layer is still the follow-up
+     hal/message_compositor.cpp's own header records -- the coverage mask this
+     lane adds is what such a blend would need, but the BG loop still resolves
+     colour before the blit sees the framebuffer.
+
 None of a..f blocks LINKING either overlay. They block the overlay doing
 anything visible once linked. That distinction is the whole shape of this
 category: the code is 97% matched and the hardware is 70% modelled, and what
-is missing is the MODE, not the pixels.
+is missing is the MODE, not the pixels. (g is a different shape from all of
+them: not a mode the port failed to model, a mode it modelled as the wrong
+thing. h is a third shape again: half of it is not a display mode at all but a
+host ABI defect in a call the byte gate cannot see, because both sides of it
+are matched source.)
 
 
 8. HONEST SCOPE FOR THE REST

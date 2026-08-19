@@ -208,40 +208,32 @@ SCENE_TABLE_OPEN = "static const PortSceneClass port_scene_classes[] = {"
 # selftest's own, and the bare run is re-probed on every pass so a skip cannot
 # outlive its bug. Empty is the goal.
 SCENE_SKIPS = {
-    # SCENE 390 (0x186), dScMgFlower_c, run mg5 lane FLW. The class BOOTS and
-    # TICKS: 300 frames, exit 0, slot 0 InitResources once, slot 6 Behavior
-    # 253 times, its own state variable at +0x5fe8 advancing 0 -> 1, and its
-    # sub-object member-pointer dispatch routing 253 calls with 0 unhandled
-    # addresses. What it cannot yet do is RENDER, and that path was
-    # unreachable until this seat existed, so this is a frontier the seat
-    # opened rather than a regression it caused.
+    # SCENE 390 (0x186), dScMgFlower_c, RETIRED by run mg5 lane Y3D. The row
+    # stood from lane FLW, which seated the class and found that it booted and
+    # ticked but could not RENDER:
     #
     #   flw_render (slot 9) -> func_ov006_0212aacc -> func_ov006_020c3bf4
     #     -> ModelAnim::Virtual18 -> ModelAnim::Virtual10
     #   FAULT c0000005 accessing 00000000, eax=0
     #
-    # src/func_ov006_020c3bf4.cpp's last statement before the petal loop is a
-    # VIRTUAL call on the ModelAnim at sub-object +0xd18
-    # (`((Obj*)(c + 0xd18))->f5(0)` in its own spelling), and the null is
-    # inside arm9's ModelAnim, not in ov006.
+    # The row named it a model/animation seam question and left NOT MEASURED
+    # whether the ModelAnim at +0xd18 ever received a file. It had one; the
+    # null was never the object. src/func_ov006_020c3bf4.cpp calls that virtual
+    # through a LOCAL SHADOW CLASS, so its `f5(0)` is the ROM's vtable byte
+    # +0x14 -- the sixth Itanium word, which on Model and ModelAnim alike is
+    # Render(scale). MSVC folds the D1/D0 pair into one slot, so on the host
+    # that byte is Virtual18(mat, scale), the one-argument call handed it
+    # mat = 0, and Model::Virtual10 read address zero. The MATRIX was null, not
+    # the model. Same defect port/unmatched/Door_Render.cpp records on the same
+    # two classes; the seat is
+    # port/unmatched/MgFlower_ModelRender_020c3bf4.cpp.
     #
-    # WHAT IS MEASURED AND WHAT IS NOT, kept apart on purpose. MEASURED: the
-    # fault is UPSTREAM of the 0x16-iteration petal loop, so it is NOT
-    # explained by this class's one undecompiled body (func_ov006_0212a764,
-    # the petal layout, which the run reports entering once and which leaves
-    # every petal record zeroed). NOT MEASURED: whether the ModelAnim at +0xd18
-    # ever received a file. func_ov006_020c3d88 loads one through the
-    # SharedFilePtr at +0xd7c that the factory constructs with id 0x222, and
-    # nobody has checked what that resolves to on the host.
+    # Scene 390 now runs 300 frames bare under SM64DS_FAULTS_FATAL=1 with
+    # nothing switched off, slot hits init 1, behavior 253, RENDER 300, and
+    # SM64DS_PPU_AUDIT reports POLYGONS 878 on all 300 samples where it read 0
+    # before. If the host copy is ever dropped, the scene's ordinary selftest
+    # row goes red, which is a stronger signal than this entry was.
     #
-    # OWNED BY: whoever takes the ov006 minigame RENDER path next -- it is a
-    # model/animation seam question, not a vtable or dispatch one, and this
-    # lane's brief scopes it out. The bare run is re-probed every pass, so the
-    # day it stops faulting this row prints SKIP RETIRED.
-    390: ("SM64DS_SCENE_SLOT9=0",
-          "run mg5 lane FLW opened it; owned by the ov006 render seam",
-          "null ModelAnim virtual inside func_ov006_020c3bf4, upstream of the "
-          "petal loop"),
     # Scene 4's SM64DS_SCENE_SLOT9=0 entry retired 2026-08-15 (run
     # link60, lane L1): the blocker was never the model loader the entry named.
     # func_0205a358's spin-wait on GXSTAT bit 25 could not fall through because

@@ -202,7 +202,15 @@ src/func_ov006_020c3adc.c
 src/func_ov006_020c3b2c.c
 src/func_ov006_020c3b80.c
 src/func_ov006_020c3bc8.c
-src/func_ov006_020c3bf4.cpp
+# HOST-COPIED (mg5 lane Y3D): src/func_ov006_020c3bf4.cpp. It draws the
+# class's 3D sub-object through a LOCAL SHADOW CLASS, so its `f5(0)` counts in
+# the ROM's vtable numbering (byte +0x14 = the sixth word = Render) while the
+# host's model vtables are MSVC-shaped, where that byte is Virtual18. The call
+# handed Virtual18 a null matrix, Model::Virtual10 read address 0, and the
+# quarantine froze the whole scene actor on frame 0 -- which is why the
+# minigame showed its 2D background and no models at all. See
+# port/unmatched/MgFlower_ModelRender_020c3bf4.cpp; it is the same defect
+# port/unmatched/Door_Render.cpp records on the same two classes.
 # HOST-COPIED (mg5 lane FLW): src/func_ov006_020c3d18.cpp. IT IS THE
 # POINTER-TO-MEMBER WALL IN A FORM NEITHER THE LINK NOR THE `::*` SWEEP CAN
 # SEE -- it open-codes the ARM Itanium dispatch sequence in plain ints, so it

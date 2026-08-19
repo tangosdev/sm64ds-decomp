@@ -109,6 +109,30 @@ const GxTriangle *gx_polygons(size_t &count);
 // Rasterise them into fb with a depth buffer. Does not clear fb -- the 3D layer
 // composites over whatever the 2D engine already drew.
 void gx_render(Framebuffer &fb);
+
+// THE 3D COVERAGE MASK: one byte per host framebuffer pixel, 1 where the LAST
+// gx_render actually wrote a pixel (opaque, translucent or shadow), 0 where it
+// left the framebuffer alone. SCREEN_W stride, SCREEN_H rows.
+//
+// WHY IT EXISTS. On the DS the 3D engine is BG0 in 3D mode, and engine A's 2D
+// unit composites the four BGs and the sprites against it BY PRIORITY: a BG
+// whose priority number is higher than BG0's sits BEHIND the 3D layer and
+// cannot paint over it. The port renders 3D into the framebuffer and then runs
+// hal/message_compositor.cpp over the top, so without this mask that
+// compositor cannot tell a pixel the 3D engine drew from a pixel the frame's
+// clear colour left, and every 2D layer covers 3D unconditionally.
+//
+// Measured on scene 390 (dScMgFlower_c) before the mask existed: BG2 at
+// priority 3 owned 48357 of the top screen's 49152 pixels while the 3D layer
+// at priority 1 submitted 878 polygons a frame, so 100% of the minigame's
+// flower and Yoshi were drawn and then buried.
+//
+// VALID ONLY IMMEDIATELY AFTER gx_render. It is cleared at the head of every
+// gx_render call, so a reader that runs on a frame the port did not rasterise
+// is looking at the previous frame's coverage; both live callers sit directly
+// after the gx_render that filled it.
+const uint8_t *gx_coverage();
+
 void gx_debug_proj(float out[16]);
 
 // The matrix stacks' current depth, for GXSTAT bits 8-12 (position/vector) and
