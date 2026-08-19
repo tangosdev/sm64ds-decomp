@@ -264,7 +264,7 @@ src/_ZN13OneUpMushroom16CleanupResourcesEv.cpp:
     complete
     .text start:0x020affe8 end:0x020b006c
 
-src/_ZN13OneUpMushroom16OnPendingDestroyEv.c:
+src/_ZN13OneUpMushroom16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020b006c end:0x020b0070
 
@@ -1200,7 +1200,7 @@ src/_ZN15daObjMarioCap_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b8284 end:0x020b8394
 
-src/_ZN15daObjMarioCap_c16OnPendingDestroyEv.c:
+src/_ZN15daObjMarioCap_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020b8394 end:0x020b83c4
 

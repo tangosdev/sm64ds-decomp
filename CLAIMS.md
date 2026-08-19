@@ -35,6 +35,7 @@ take over, ping the claimant first.
 | Collision chain: MeshColliderBase, MeshCollider, MovingMeshCollider, ExtendingMeshCollider, WithMeshClsn, CylinderClsn family | tangosdev | 2026-08-02 | **active** - readable conversion, same per-file byte gate as the Model chain |
 | Model chain: ModelBase, Model, CommonModel, ShadowModel, Animation, ModelAnim, BlendModelAnim, ModelAnim2 | tangosdev | 2026-08-01 | **done** - #981, #984, #985: all eight real C++ classes, every converted file byte-matched; MI reproduces (Animation second base at +0x50, thunks stay ROM-supplied). Parked: Func_ method renames, _ZTV9Animation naming, wall 6az gates 5Fix12IiE definitions |
 | CheepCheep, WaterSuction, ChainChomp, Fwoosh, MontyMoleRock, Wiggler, KingBobOmb, MrBlizzard | andrewboudreau | 2026-08-18 | **done** - 13 methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform work excluded |
+| BooCage, daObjMarioCap_c, OneUpMushroom, Spindrift, Shark, Unagi, UnchainedChomp | andrewboudreau | 2026-08-18 | **done** - 13 ordinary methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform work excluded |
 
 ## Claims
 

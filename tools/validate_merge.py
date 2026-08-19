@@ -839,9 +839,83 @@ def render_markdown(r):
                       f"banner, and nothing compiles them -- dsd fills their addresses "
                       f"with the ROM's own bytes. Both together are the "
                       f"{h['matchedFunctions']:,} this project calls matched."]
+    lines += _module_fidelity_detail(head_rom)
     if r["warnings"]:
         lines += ["", "Warnings: " + "; ".join(r["warnings"]) + "."]
     return "\n".join(lines)
+
+
+SHOWN = 12
+
+
+def _module_fidelity_detail(head_rom):
+    """Name the modules and functions behind a `105/106`, instead of only counting them.
+
+    The worker already ships all of this -- `moduleFidelity.results` carries a row per
+    module and `failures` a row per function range -- and the summary table used to
+    drop both. A bare "105/106 exact; 99.999738% compared bytes" says a few bytes are
+    wrong somewhere in three million and gives no way to find them, while every
+    per-file check on the PR stays green, because a per-file check compiles with the
+    right pin and the module compare is the only thing that does not. That combination
+    cost a full day on #1607. rombuild_check.py has printed this to the worker's
+    console all along; this puts it in the comment.
+
+    Returns markdown lines, or [] when the build is exact or said nothing.
+    """
+    analysis = (head_rom or {}).get("analysis")
+    if not analysis:
+        return []
+    mf = analysis.get("moduleFidelity") or {}
+    bad_modules = [m for m in (mf.get("results") or []) if not m.get("exact")]
+    failures = analysis.get("failures") or []
+    if not bad_modules and not failures:
+        return []
+
+    out = ["", f"**Module fidelity detail --- {len(bad_modules)} module(s) differ "
+               f"from the cartridge.**", ""]
+    if bad_modules:
+        out += ["| Module | Bytes differing | Module bytes |", "|---|---:|---:|"]
+        for m in sorted(bad_modules, key=lambda m: -m.get("differingBytes", 0))[:SHOWN]:
+            out.append(f"| `{m.get('module')}` | {m.get('differingBytes', 0):,} "
+                       f"| {m.get('comparedBytes', 0):,} |")
+        out.append("")
+
+    if failures:
+        out += ["Function ranges that account for it:", "",
+                "| Module | Function | Address | Size | Bytes differing |",
+                "|---|---|---|---:|---:|"]
+        for f in sorted(failures,
+                        key=lambda f: -(f.get("differingBytes") or 0))[:SHOWN]:
+            detail = (f"{f['differingBytes']:,}" if f.get("differingBytes") is not None
+                      else f.get("reason", "?"))
+            out.append(f"| `{f.get('module')}` | `{f.get('name')}` "
+                       f"| 0x{f.get('addr', 0):08x} | 0x{f.get('size', 0):x} "
+                       f"| {detail} |")
+        if len(failures) > SHOWN:
+            out.append(f"| ... | {len(failures) - SHOWN} more | | | |")
+        out.append("")
+    else:
+        # The distinction worth calling out: a module can differ with every enrolled
+        # function exact, when the differing bytes fall outside every delink range
+        # (padding, alignment, or data no entry reaches). Nothing per-function can
+        # ever surface those, so say so rather than leave an empty section.
+        out += ["No enrolled function range accounts for these bytes --- they fall "
+                "outside every `delinks.txt` range, so no per-function or per-file "
+                "check can see them.", ""]
+
+    # A function that is pinned to a non-default mwccarm and is ALSO mismatching is
+    # the signature of a pin that did not apply: the source is fine, the compiler was
+    # wrong. Worth naming, because the fix is a config re-key, not a decomp change.
+    pinned = ((analysis.get("alternateToolchain") or {}).get("applied")
+              or (head_rom or {}).get("alternateToolchain", {}).get("applied") or {})
+    hits = [f for f in failures if f.get("name") in pinned]
+    if hits:
+        out += ["Pinned to a non-default mwccarm in `config/rombuild-versions.txt`: "
+                + ", ".join(f"`{f['name']}` ({pinned[f['name']]})" for f in hits)
+                + ". A pinned function that mismatches usually means the ROM build "
+                  "did not apply its pin --- check `alternateToolchainFiles` in the "
+                  "build report before treating this as a source defect.", ""]
+    return out
 
 
 def _credit_table(a):

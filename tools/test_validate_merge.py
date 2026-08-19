@@ -413,5 +413,67 @@ class ValidateMerge(unittest.TestCase):
         self.assertEqual(len(state["blocking"]), 1)
 
 
+class ModuleFidelityDetail(unittest.TestCase):
+    """`105/106` on its own is unactionable -- name the module and the function.
+
+    The worker already ships both (`moduleFidelity.results` and `failures`); the
+    summary table used to drop them, so a few wrong bytes in three million came
+    with no way to find them while every per-file check on the PR stayed green.
+    """
+
+    def detail(self, **analysis):
+        analysis.setdefault("moduleFidelity", {"results": []})
+        analysis.setdefault("failures", [])
+        return "\n".join(VM._module_fidelity_detail({"analysis": analysis}))
+
+    def test_exact_build_renders_nothing(self):
+        self.assertEqual(self.detail(
+            moduleFidelity={"results": [{"module": "ov013", "exact": True}]}), "")
+
+    def test_missing_analysis_renders_nothing(self):
+        self.assertEqual(VM._module_fidelity_detail({"available": False}), [])
+        self.assertEqual(VM._module_fidelity_detail(None), [])
+
+    def test_names_the_module_and_the_function(self):
+        out = self.detail(
+            moduleFidelity={"results": [
+                {"module": "ov013", "exact": False,
+                 "differingBytes": 8, "comparedBytes": 4320},
+                {"module": "arm9", "exact": True, "differingBytes": 0},
+            ]},
+            failures=[{"module": "ov013", "name": "_ZN21ClockPaintingPendulum8BehaviorEv",
+                       "addr": 0x021112a8, "size": 0x94, "differingBytes": 8}])
+        self.assertIn("`ov013`", out)
+        self.assertIn("_ZN21ClockPaintingPendulum8BehaviorEv", out)
+        self.assertIn("0x021112a8", out)
+        self.assertNotIn("`arm9`", out)          # exact modules stay out of the way
+
+    def test_module_differing_with_no_failing_function_says_so(self):
+        # Bytes outside every delink range -- padding, alignment, unreached data.
+        # Nothing per-function can ever surface these, so the absence is the news.
+        out = self.detail(moduleFidelity={"results": [
+            {"module": "arm9", "exact": False,
+             "differingBytes": 8, "comparedBytes": 382212}]})
+        self.assertIn("No enrolled function range accounts", out)
+
+    def test_a_mismatching_pinned_function_is_flagged_as_a_pin_failure(self):
+        out = self.detail(
+            moduleFidelity={"results": [{"module": "ov013", "exact": False,
+                                         "differingBytes": 8, "comparedBytes": 4320}]},
+            failures=[{"module": "ov013", "name": "Behavior",
+                       "addr": 0x021112a8, "size": 0x94, "differingBytes": 8}],
+            alternateToolchain={"applied": {"Behavior": "1.2/base"}})
+        self.assertIn("did not apply its pin", out)
+        self.assertIn("1.2/base", out)
+
+    def test_a_failure_with_a_reason_instead_of_a_count_still_renders(self):
+        out = self.detail(
+            moduleFidelity={"results": [{"module": "ov013", "exact": False,
+                                         "differingBytes": 4, "comparedBytes": 4320}]},
+            failures=[{"module": "ov013", "name": "Odd", "addr": 0x1, "size": 0x4,
+                       "reason": "range outside built or retail module"}])
+        self.assertIn("range outside built or retail module", out)
+
+
 if __name__ == "__main__":
     unittest.main()

@@ -36,7 +36,9 @@ struct Shark : dEnemyBase_c {
     virtual ~Shark();
 
     int Behavior();
+    int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
 
     /* Tail padding. The field span stops short of the real size: Shark_Spawn
