@@ -50,25 +50,25 @@ port gate 8 executes it against the real castle-grounds KCL. The two lines diver
 `build/rtti.json` gives the cartridge's own class names and inheritance edges. The
 pairing to our coined names is settled by **vtable-address identity**, not inference. **[P]**
 
-| cartridge name | our coined name | vtable | vtable symbol today |
+| cartridge name | former coined name | vtable | vtable symbol today |
 |---|---|---|---|
-| `dBgCh` | `dBgCh` | 0x020991d8 | `data_020991d8` — unnamed |
-| `dBgCh_Actr` | `dBgCh_Actr` | 0x02099204 | `data_02099204` — unnamed |
-| `dBgCh_Gnd` | `dBgCh_Gnd` | 0x02099264 | `data_02099264` — unnamed |
+| `dBgCh` | `dBgCh` | 0x020991d8 | `_ZTV5dBgCh` |
+| `dBgCh_Actr` | `dBgCh_Actr` | 0x02099204 | `_ZTV10dBgCh_Actr` |
+| `dBgCh_Gnd` | `dBgCh_Gnd` | 0x02099264 | `_ZTV9dBgCh_Gnd` |
 | `dBgCh_Lin` | `dBgCh_Lin` | 0x020992a4 | `_ZTV9dBgCh_Lin` |
 | `dBgCh_SphCrr` | `dBgCh_SphCrr` | 0x02099338 | `_ZTV12dBgCh_SphCrr` |
-| `dBgPi` | `dBgPi` | 0x02099368 | `data_02099368` — unnamed |
+| `dBgPi` | `dBgPi` | 0x02099368 | `_ZTV5dBgPi` |
 | `dBgPc` | *none — no header* | — | base of `dBgPi` at +0x04 |
 | `dM3dGLin` | `dBgCh_Lin::Line` | — | non-polymorphic |
-| `dM3dGSph` | *none* | 0x020994cc | `data_020994cc` — unnamed |
+| `dM3dGSph` | *none* | 0x020994cc | `_ZTV8dM3dGSph` |
 | `dBgW` | `dBgW` | 0x02099388 | `_ZTV4dBgW` |
 | `dBgW_Kc` | `dBgW_Kc` | 0x020993dc | `_ZTV7dBgW_Kc` |
 | `dBgW_KcMbg` | `dBgW_KcMbg` | 0x02099434 | `_ZTV10dBgW_KcMbg` |
 | `dBgW_KcMbgSclY` | `dBgW_KcMbgSclY` | 0x02099490 | `_ZTV14dBgW_KcMbgSclY` |
-| `dCc_c` | `CylinderClsn` | 0x0208e6ec | `_ZTV12CylinderClsn` |
-| `dCcPos_c` | `CylinderClsnWithPos` | 0x0208e6bc | `_ZTV19CylinderClsnWithPos` |
-| `dCcAc_c` | `MovingCylinderClsn` | 0x0208e6d4 | `_ZTV18MovingCylinderClsn` |
-| `dCcAcPos_c` | `MovingCylinderClsnWithPos` | 0x0208e704 | `_ZTV25MovingCylinderClsnWithPos` |
+| `dCc_c` | `CylinderClsn` | 0x0208e6ec | `_ZTV5dCc_c` |
+| `dCcPos_c` | `CylinderClsnWithPos` | 0x0208e6bc | `_ZTV8dCcPos_c` |
+| `dCcAc_c` | `MovingCylinderClsn` | 0x0208e6d4 | `_ZTV7dCcAc_c` |
+| `dCcAcPos_c` | `MovingCylinderClsnWithPos` | 0x0208e704 | `_ZTV10dCcAcPos_c` |
 
 The `_ZTS` symbols are **already spelled with the cartridge names in `symbols.txt`**
 while the `_ZTV` beside them carries a coined one — a contradiction inside a single
@@ -224,7 +224,7 @@ wall, else underside. **[P]**
 
 ### 3.5 The shape side
 
-`CylinderClsn::Clear()` (237 call sites) and `Update()` (189) are called by actors from
+`dCc_c::Clear()` (237 call sites) and `Update()` (189) are called by actors from
 their own behaviour; `Update` links the object at the head of `data_0209cee8`, so the
 active set is rebuilt each frame by whoever chooses to register. `Process()` (0x02014aa8)
 is O(n²) over that list and has **exactly one caller: `Stage::Render()` at 0x0202ba14** —
@@ -245,7 +245,7 @@ not files, so they run higher than a `grep -l` over `src/`, which corroborates t
 `Behavior()`. The veneers `dBgCh_Actr_UpdateContinuous_Veneer` (44 call sites) and
 `…UpdateDiscreteNoLava_veneer` (19) are spread across ov002/030/070/072/085/098/100;
 `dBgCh_Gnd::DetectClsn` has 105 call sites and `dBgCh_Lin::DetectClsn` 57. The only
-engine-driven collision call per frame is `CylinderClsn::Process()` inside
+engine-driven collision call per frame is `dCc_c::Process()` inside
 `Stage::Render()`. **[P]**
 
 `dBgActor_c` is the other half: `UpdateClsnPosAndRot()` copies the model matrix, replaces
@@ -276,7 +276,7 @@ The two functions with no source are the two unrecovered ITCM `DetectClsn` overl
 
 Per class: dBgW_Kc 16 fn / 10,840 B · unnamed `func_*` 182 / 8,220 · dBgCh_Actr
 27 / 5,860 · dBgW_KcMbg 15 / 2,824 · dBgW_KcMbgSclY 10 / 1,548 ·
-CylinderClsn 8 / 1,428 · dBgCh_SphCrr 5 / 1,172 · dBgCh_Lin 6 / 900 · dBgW
+dCc_c 8 / 1,428 · dBgCh_SphCrr 5 / 1,172 · dBgCh_Lin 6 / 900 · dBgW
 19 / 764 · dBgCh_Gnd 4 / 676 · dBgCh 5 / 452 · dBgPi 6 / 304 · the three
 `MovingCylinder*` families 20 / 712 · remainder small.
 
@@ -439,17 +439,31 @@ gained) and the denominator down exactly 4 by design; `check_header_offsets` 0 m
   `dM3dGSph`@0x38, and both dBgCh_SphCrr thunks tail-branch to the same D0 at 0x02037c40 —
   one class, two bases.
 
-### Phase 1 — Adopt the cartridge names — **2 of 4 slices done**
+### Phase 1 — Adopt the cartridge names — **DONE 2026-08-19** (branch `clsn/phase0`)
 
-**Landed 2026-08-19 on `clsn/phase0`:** the `dCc*` cylinder family (35 symbols) and the
-`dBgW*` mesh-collider spine (59 symbols). Both byte-neutral — rombuild 106/106 exact,
-eligible numerator unchanged at 11061, check_references 45 vs baseline 45, port_refcheck
-393/0, and **94 renamed with credit intact, 0 changed, 0 lost**. Side effect: rombuild's
-"unnamed by config" fell **844 → 784**, so 60 data symbols became attributable purely from
-the spelling agreeing with the ROM's own `_ZTS` bytes.
+All four slices landed, one `git mv` + content pair each:
 
-**Remaining:** `dBgPi` / `dBgPc` / `dM3dGSph` / `dM3dGLin` (support types), then `dBgCh*`
-(5 classes, largest blast radius, do last).
+| slice | classes | symbols |
+|---|---|---|
+| `dCc*` cylinders | 4 | 35 |
+| `dBgW*` mesh spine | 4 | 59 |
+| support types (`dBgPi`, `dM3dGLin`) | 2 | 9 |
+| `dBgCh*` query family | 5 | 51 |
+
+Then a fifth commit named the last five vtables — `dBgCh`, `dBgCh_Actr`, `dBgCh_Gnd`,
+`dBgPi`, `dM3dGSph` had `_ZTS` and `_ZTI` but no `_ZTV` at all, so their triples were
+incomplete and they could not be data-verified. **Every collision class that has a vtable
+now spells all three with the cartridge's own name**; `dM3dGLin` keeps two of three
+legitimately, being non-polymorphic.
+
+Byte-neutral throughout: rombuild **106/106 exact, 100.000000%, 0 mismatching** after every
+slice, `check_references` 45 vs baseline 45, `port_refcheck` 393/0 before and after, and
+**154 renamed with credit intact, 0 changed, 0 lost**.
+
+Two measurable side effects, both the point of the exercise: rombuild's "unnamed by config"
+fell **844 → 784**, so 60 data symbols became attributable purely from the spelling agreeing
+with the ROM's own `_ZTS` bytes; and the `SphereClsn` draft's symbol moved twice yet still
+scores `cand=1750 equal=565 ratio=0.3203`, so Phase 0's gain survived intact.
 
 #### The recipe, as it actually works
 
@@ -462,12 +476,13 @@ Substitution order inside the content pass is load-bearing:
    Doing plain names first turns `_ZN12MeshCollider4InitE` into `_ZN12dBgW_Kc4InitE`, a
    length prefix that no longer matches its spelling (the defect #1580 cleaned up).
 2. **Include guards**, `DECL_` variants before the bare ones.
-3. **Plain class names LAST, and word-bounded (`…`).** Unbounded, `MeshCollider`
+3. **Plain class names LAST, and word-bounded** (a regex word boundary at each end).
+   Unbounded, `MeshCollider`
    rewrote `Stage::ResetMeshColliders` into `ResetdBgW_Kcs`. `layout_check.py` caught it —
    delinks named a path with no file behind it, which would have let the function fall back
    to ROM bytes silently. Bounding cut 489 corruptions out of 2,755 substitutions, including
    309 `mMeshCollider` members.
-4. **`decl_<Class>` needs its own explicit rule.** `` does not fire across an underscore,
+4. **`decl_<Class>` needs its own explicit rule.** `\b` does not fire across an underscore,
    so 90 `#include "decl_MovingMeshCollider.h"` lines survived a bounded pass while the
    header had already been renamed. Sweep for unresolvable includes afterwards.
 
