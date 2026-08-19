@@ -13,7 +13,7 @@ extern void* data_0208a0f8[];
 extern s16 data_02082214[];
 extern int data_0208ee44;
 
-int func_02034b40(char* self)
+int _ZN7dScMB_c15graphCallback_c14GraphCallback3Ev(char* self)
 {
     if (*(void**)(self + 4) != 0)
         func_02034d34(*(void**)(self + 4));

@@ -8,7 +8,7 @@ void _ZN9ModelAnimD2Ev(void*);
 void __destroy_arr(void*, int, int, void*);
 void _ZN6Memory16operator_delete2EPv(void*);
 typedef void (*VFN)(void*);
-void* func_ov002_020f6778(char* c){
+void* _ZN8daDemo_c10anmModel_cD0Ev(char* c){
   void* p;
   int i;
   *(int*)c = (int)data_ov002_0210bcc4;

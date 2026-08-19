@@ -2,7 +2,7 @@ extern int _ZN3G2S12GetBG2ScrPtrEv();
 extern int DecompressLZ16();
 extern void Deallocate(void*);
 extern int func_ov075_021160dc(char*);
-int func_ov075_02116040(char *c){
+int _ZN10dScEntry_c15graphCallback_c14GraphCallback2Ev(char *c){
  unsigned short *reg=(unsigned short*)0x400100c;
  unsigned short v=(unsigned short)(*reg & ~0x1f00);
  *reg=v | (*(int*)(c+0xc)<<8);

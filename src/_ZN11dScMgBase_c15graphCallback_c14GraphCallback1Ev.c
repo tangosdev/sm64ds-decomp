@@ -1,4 +1,4 @@
-int func_ov004_020ae0a4(char *c) {
+int _ZN11dScMgBase_c15graphCallback_c14GraphCallback1Ev(char *c) {
     char *p = *(char**)(c+4);
     if (p != 0) {
         void (*fn)(char*) = *(void(**)(char*))( (char*)(*(void**)p) + 0x58 );

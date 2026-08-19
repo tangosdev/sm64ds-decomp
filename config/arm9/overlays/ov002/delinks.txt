@@ -5523,11 +5523,11 @@ src/func_ov002_020f6618.cpp:
     complete
     .text start:0x020f6618 end:0x020f6778
 
-src/func_ov002_020f6778.cpp:
+src/_ZN8daDemo_c10anmModel_cD0Ev.cpp:
     complete
     .text start:0x020f6778 end:0x020f6870
 
-src/func_ov002_020f6870.cpp:
+src/_ZN8daDemo_c10anmModel_cD1Ev.cpp:
     complete
     .text start:0x020f6870 end:0x020f6960
 
@@ -5535,11 +5535,11 @@ src/func_ov002_020f6960.cpp:
     complete
     .text start:0x020f6960 end:0x020f69a8
 
-src/func_ov002_020f69a8.cpp:
+src/_ZN8daDemo_c13simpleModel_cD0Ev.cpp:
     complete
     .text start:0x020f69a8 end:0x020f6a00
 
-src/func_ov002_020f6a00.cpp:
+src/_ZN8daDemo_c13simpleModel_cD1Ev.cpp:
     complete
     .text start:0x020f6a00 end:0x020f6a50
 

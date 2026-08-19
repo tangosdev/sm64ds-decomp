@@ -4681,15 +4681,15 @@ src/func_02034b1c.c:
     complete
     .text start:0x02034b1c end:0x02034b40
 
-src/func_02034b40.c:
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback3Ev.c:
     complete
     .text start:0x02034b40 end:0x02034d24
 
-src/func_02034d24.c:
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback2Ev.c:
     complete
     .text start:0x02034d24 end:0x02034d2c
 
-src/func_02034d2c.c:
+src/_ZN7dScMB_c15graphCallback_c14GraphCallback0Ev.c:
     complete
     .text start:0x02034d2c end:0x02034d34
 
