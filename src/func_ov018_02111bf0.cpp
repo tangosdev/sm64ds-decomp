@@ -23,7 +23,7 @@ int _ZN4cstd4fdivEii(int a, int b);
 int _ZNK10dBgCh_Actr8IsOnWallEv(dBgCh_Actr* w);
 struct dBgPi* _ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr* w);
 void _ZN5dBgPiD1Ev(struct dBgPi* r);
-extern void* _ZTV5dBgPi;
+extern void* data_02099368;
 
 void func_ov018_02111bf0(char* c, dBgCh_Actr* w){
   dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
@@ -47,7 +47,7 @@ void func_ov018_02111bf0(char* c, dBgCh_Actr* w){
     *(int*)((char*)dst + 0) = b ? a : a;
     *(int*)((char*)dst + 4) = b;
     int t = *(int*)((char*)src + 0xc);
-    void* vt = &_ZTV5dBgPi;
+    void* vt = &data_02099368;
     *(int*)((char*)dst + 8) = t;
     t = *(int*)((char*)src + 0x10);
     *(int*)((char*)dst + 0xc) = t;

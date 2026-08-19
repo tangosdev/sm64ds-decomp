@@ -127,7 +127,7 @@ struct dBgW {
                                           Vector3_16 *motionAng, Vector3_16 *ang);
 };
 
-typedef char MeshColliderBase_size_must_be_0x20[sizeof(dBgW) == 0x20 ? 1 : -1];
+typedef char dBgW_size_must_be_0x20[sizeof(dBgW) == 0x20 ? 1 : -1];
 
 #else
 

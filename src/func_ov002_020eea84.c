@@ -12,7 +12,7 @@ extern void _ZN5dBgPiD1Ev(void *r);
 extern int _ZNK10dBgCh_Actr8IsOnWallEv(char *p);
 extern char *_ZNK10dBgCh_Actr13GetWallResultEv(char *p);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void *v);
-extern void *_ZTV5dBgPi[];
+extern void *data_02099368[];
 
 int func_ov002_020eea84(char *self, char *player)
 {
@@ -33,7 +33,7 @@ int func_ov002_020eea84(char *self, char *player)
         d[2] = *(int *)(r + 0xc);
         d[3] = *(int *)(r + 0x10);
         d[4] = *(int *)(r + 0x14);
-        res.vtb = _ZTV5dBgPi;
+        res.vtb = data_02099368;
         res.f = *(u16 *)(r + 0x18);
         res.g = *(u16 *)(r + 0x1a);
         res.h = *(int *)(r + 0x1c);

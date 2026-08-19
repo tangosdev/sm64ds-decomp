@@ -14,7 +14,7 @@ extern void _ZN11dCapEnemy_c15RespawnIfHasCapEv(void*);
 extern int func_02037e38(unsigned int* p);
 extern int func_02037e84(int* p);
 extern void _ZN5dBgPiD1Ev(void*);
-extern int _ZTV5dBgPi[];
+extern int data_02099368[];
 }
 
 
@@ -51,7 +51,7 @@ extern "C" void func_ov084_021294d0(char* c)
     *(int*)(d + 8) = *(int*)(fr2 + 0xc);
     *(int*)(d + 0xc) = *(int*)(fr2 + 0x10);
     *(int*)(d + 0x10) = *(int*)(fr2 + 0x14);
-    *(int*)(obj) = (int)_ZTV5dBgPi;
+    *(int*)(obj) = (int)data_02099368;
     *(unsigned short*)(obj + 0x18) = *(unsigned short*)(fr2 + 0x18);
     *(unsigned short*)(obj + 0x1a) = *(unsigned short*)(fr2 + 0x1a);
     *(int*)(obj + 0x1c) = *(int*)(fr2 + 0x1c);

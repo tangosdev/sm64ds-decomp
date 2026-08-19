@@ -42,7 +42,7 @@ struct dBgW_KcMbgSclY : dBgW_KcMbg {
     void SetScaleY(Fix12<int> scaleY);                    /* free def, wall 6az */
 };
 
-typedef char ExtendingMeshCollider_size_must_be_0x1d0[sizeof(dBgW_KcMbgSclY) == 0x1d0 ? 1 : -1];
+typedef char dBgW_KcMbgSclY_size_must_be_0x1d0[sizeof(dBgW_KcMbgSclY) == 0x1d0 ? 1 : -1];
 
 #endif /* __cplusplus */
 

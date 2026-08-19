@@ -5,11 +5,11 @@
 
 /* The cartridge's own sphere primitive: a centre and a radius, with a vtable.
  * Named by the ROM's RTTI -- _ZTS8dM3dGSph at 0x020992ec, _ZTI8dM3dGSph at
- * 0x020992e4, vtable _ZTV8dM3dGSph at 0x020994cc.
+ * 0x020992e4, vtable data_020994cc at 0x020994cc.
  *
  * 0x14 BYTES, every offset pinned by a one-line matched function:
  *
- *   func_0203ac60   p[0] = _ZTV8dM3dGSph      the vptr at 0x00
+ *   func_0203ac60   p[0] = data_020994cc      the vptr at 0x00
  *   func_0203ac00   d[1..3] = s[0..2]         the centre  at 0x04
  *   func_0203abcc   p[4] = v                  the radius  at 0x10
  *   func_0203abd4   calls both of the above   -- SetCentreAndRadius

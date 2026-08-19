@@ -23,7 +23,7 @@ extern int func_02037e20(int *p);
 extern void func_ov002_020c133c(void *a);
 extern void _ZN9dBgCh_GndD1Ev(void *self);
 
-extern int _ZTV5dBgPi;
+extern int data_02099368;
 extern int data_0209f32c;
 
 void func_ov002_020c14b8(void *arg0)
@@ -66,7 +66,7 @@ void func_ov002_020c14b8(void *arg0)
         dst[2] = *(int *)(rg + 0x1c);
         dst[3] = *(int *)(rg + 0x20);
         dst[4] = *(int *)(rg + 0x24);
-        tmp.tag = &_ZTV5dBgPi;
+        tmp.tag = &data_02099368;
         tmp.f18 = *(unsigned short *)(rg + 0x28);
         tmp.f1a = *(unsigned short *)(rg + 0x2a);
         tmp.f1c = *(int *)(rg + 0x2c);

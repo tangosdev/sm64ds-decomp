@@ -74,7 +74,7 @@ struct dBgCh {
     void StopDetectingWater();
 };
 
-typedef char BgCh_size_must_be_0x10[sizeof(dBgCh) == 0x10 ? 1 : -1];
+typedef char dBgCh_size_must_be_0x10[sizeof(dBgCh) == 0x10 ? 1 : -1];
 
 #else
 

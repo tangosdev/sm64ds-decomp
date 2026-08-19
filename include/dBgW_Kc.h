@@ -145,7 +145,7 @@ struct dBgW_Kc : dBgW {
 
 };
 
-typedef char MeshCollider_size_must_be_0x50[sizeof(dBgW_Kc) == 0x50 ? 1 : -1];
+typedef char dBgW_Kc_size_must_be_0x50[sizeof(dBgW_Kc) == 0x50 ? 1 : -1];
 
 #endif /* __cplusplus */
 
