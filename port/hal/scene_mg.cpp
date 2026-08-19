@@ -1320,7 +1320,70 @@ int  *MgBobOmbSquad_Spawn(void);
 void port_mg_pachinko_state_counts(unsigned *hits, unsigned *missing);
 unsigned port_mg_pachinko_trap_hits(void);
 
+/* ---- the score-record probe's inputs, all already linked ------------------
+   Nothing here is new storage or a new body. These are the exact objects the
+   ROM's own HUD path reads, named so the probe can PRINT the number rather
+   than leave it to be read off a picture:
+
+     data_ov004_020beb68   the live dScMgBase_c `this`, set by the base ctor
+     func_ov004_020adc1c   returns *(u32*)(that + 0x4650)  -- the HIGH SCORE
+     func_ov004_020adbc0   returns *(u32*)(that + 0x464c)  -- the SCORE
+     func_ov004_020adc3c   (self->field_8 >> 8) & 0xff     -- minigame index
+     data_0209caf4         the 36-entry x 20-byte save record table, hosted
+                           in hal/level_boot.cpp as .dsstate$savblk0004 */
+extern void *data_ov004_020beb68;
+extern unsigned char data_0209caf4[];
+int func_ov004_020adc1c(void);
+int func_ov004_020adbc0(void);
+int func_ov004_020adc3c(void *c);
+
 }  /* extern "C" */
+
+/* ---- SM64DS_MG_SCORE_TRACE ------------------------------------------------
+   Read-only. Prints the raw stored words behind the two HUD numbers so the
+   999999 the owner reported can be attributed to a stored value or to
+   func_ov004_020b1ea4's `if (val >= 0xf423f) val = 0xf423f` clamp. Off unless
+   the variable is set, so no battery run changes shape. */
+static bool mg_score_trace(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_MG_SCORE_TRACE");
+        on = (e && e[0] && e[0] != '0') ? 1 : 0;
+    }
+    return on != 0;
+}
+
+static void mg_score_dump(const char *where)
+{
+    if (!mg_score_trace()) return;
+    unsigned char *g = (unsigned char *)data_ov004_020beb68;
+    std::printf("[score:%s] data_ov004_020beb68 = %p\n", where, (void *)g);
+    if (!g) { std::fflush(stdout); return; }
+    const unsigned f8   = *(unsigned *)(g + 8);
+    const int      idx  = func_ov004_020adc3c(g);
+    const unsigned cur  = *(unsigned *)(g + 0x464c);
+    const unsigned hi   = *(unsigned *)(g + 0x4650);
+    const unsigned thd  = *(unsigned *)(g + 0x4654);
+    std::printf("[score:%s] field_8 = %08x  minigame index = %d (0x%x)\n",
+                where, f8, idx, idx);
+    std::printf("[score:%s] +0x464c SCORE      = %u (0x%08x)\n", where, cur, cur);
+    std::printf("[score:%s] +0x4650 HIGH SCORE = %u (0x%08x)%s\n", where, hi, hi,
+                ((int)hi >= 0xf423f) ? "   <-- OVER THE 999999 CLAMP" : "");
+    std::printf("[score:%s] +0x4654 third      = %u (0x%08x)\n", where, thd, thd);
+    std::printf("[score:%s] getters: func_ov004_020adc1c()=%d "
+                "func_ov004_020adbc0()=%d\n",
+                where, func_ov004_020adc1c(), func_ov004_020adbc0());
+    std::printf("[score:%s] data_0209caf4 = %p, record[%d][0] = %u\n",
+                where, (void *)data_0209caf4, idx,
+                (idx >= 0 && idx < 36)
+                    ? *(unsigned *)(data_0209caf4 + idx * 20) : 0u);
+    std::printf("[score:%s] table head:", where);
+    for (int i = 0; i < 8; ++i)
+        std::printf(" [%d]=%u", i, *(unsigned *)(data_0209caf4 + i * 20));
+    std::printf("\n");
+    std::fflush(stdout);
+}
 
 /* This class's own tick witness, kept SEPARATE from g_mg_hits rather than
    sharing it. Both tables are 36 slots and most of the slots are the same
@@ -1334,7 +1397,15 @@ static int  __fastcall pch_init(void *s, void *)
 static int  __fastcall pch_beh(void *s, void *)
 { PCH_SLOT(6);  return func_ov006_020fee24(s); }
 static int  __fastcall pch_render(void *s, void *)
-{ PCH_SLOT(9);  return func_ov006_020fedc4(s); }
+{
+    PCH_SLOT(9);
+    if (mg_score_trace() && (g_pch_hits[9] <= 3 || (g_pch_hits[9] % 100) == 0)) {
+        char tag[32];
+        std::snprintf(tag, sizeof tag, "render%u", g_pch_hits[9]);
+        mg_score_dump(tag);
+    }
+    return func_ov006_020fedc4(s);
+}
 static void *__fastcall pch_d2(void *s, void *)
 { PCH_SLOT(16); return (void *)(size_t)func_ov006_020fa75c(s); }
 static void *__fastcall pch_d0(void *s, void *)
@@ -1353,9 +1424,90 @@ static const MgFace kPachinkoFaces[] = {
     {0x020fa780u, (void *)pch_d0},     {0x020fed58u, (void *)pch_reset},
 };
 
+/* ---- the award-delivery self-check ---------------------------------------
+ *
+ * WHAT IT MEASURES. dScMgPachinko_c's scoring is two functions:
+ *
+ *     src/func_ov006_020fb7e0.c   the per-item tick that decides an award
+ *     src/func_ov006_020fbb2c.c   the award itself, which adds the points to
+ *                                 the score through func_ov004_020adb1c
+ *
+ * and the ROM hands the POINTS from the first to the second in r2, produced by
+ * the same ldrh that makes the != 0 test (overlay_0006.bin at base 0x020bfec0):
+ *
+ *     020fb8bc  add  r0, r8, #0x5900
+ *     020fb8c0  ldrh r2, [r0, #0x62]     ; *(u16*)(b + 0x5962), THE AWARD
+ *     020fb8c4  cmp  r2, #0
+ *     020fb8c8  beq  0x20fb8d8
+ *     020fb8cc  mov  r0, sl              ; thiz
+ *     020fb8d0  mov  r1, sb              ; i
+ *     020fb8d4  bl   0x20fbb2c
+ *
+ * src spells only the test, declares the callee with TWO parameters and calls
+ * it with two. On ARM that is correct and mwccarm accepted it, so the byte gate
+ * has never had an opinion. On the host the callee reads its third parameter
+ * off a caller stack slot nobody wrote. port/tools/aritycheck.py finds the same
+ * split independently:
+ *
+ *     {"sym":"func_ov006_020fbb2c","def_n":3,
+ *      "def_file":"src/func_ov006_020fbb2c.c","decl_n":2,
+ *      "decl_file":"src/func_ov006_020fb7e0.c","kind":"DROPS"}
+ *
+ * HOW IT MEASURES IT WITHOUT PLAYING. The award path needs a stylus drag and a
+ * live round, which no headless or scripted-stylus run reaches. So the check
+ * drives the two functions directly on a scratch object shaped to take the one
+ * branch that awards, with a sentinel in the ROM's own +0x5962 slot, and reads
+ * back what the callee stored in +0x4cf8. If the delivery is right the two
+ * numbers are equal.
+ *
+ * IT CANNOT TOUCH THE LIVE SCORE. func_ov004_020adb1c and func_ov004_020adbc0
+ * both return immediately when data_ov004_020beb68 is null, so the check parks
+ * that global for the duration and restores it. It runs from the fill, before
+ * the scene is spawned, where the global is null anyway; the park is belt and
+ * braces rather than the mechanism.  */
+#define PCH_AWARD_SENTINEL 0x1234u
+
+extern "C" void func_ov006_020fb7e0(char *thiz);
+
+static void pch_award_abi_check(void)
+{
+    if (!mg_score_trace()) return;
+
+    char *o = (char *)std::calloc(1, 0x5c38);
+    if (!o) return;
+
+    /* the one shape that reaches the award on the first loop iteration:
+       item live, its 6-frame counter about to roll, its step counter one
+       below the limit of 3, no sub-object, and a non-zero award. */
+    *(unsigned char  *)(o + 0x5964) = 1;
+    *(unsigned short *)(o + 0x5960) = 5;
+    *(unsigned char  *)(o + 0x5965) = 2;
+    *(unsigned char  *)(o + 0x5967) = 0;
+    *(unsigned char  *)(o + 0x5968) = 0;
+    *(unsigned short *)(o + 0x5962) = (unsigned short)PCH_AWARD_SENTINEL;
+
+    void *save = data_ov004_020beb68;
+    data_ov004_020beb68 = 0;
+    func_ov006_020fb7e0(o);
+    data_ov004_020beb68 = save;
+
+    /* the award routine takes the first free slot, which on a zeroed object
+       is index 0x1d, and stores the points it was handed at +0x4cf8 + n*0xc */
+    const unsigned got = *(unsigned short *)(o + 0x4cf8 + 0x1d * 0xc);
+    std::printf("[score:award] ROM hands *(u16*)(b+0x5962) = %u in r2; "
+                "the callee received %u -> %s\n",
+                PCH_AWARD_SENTINEL, got,
+                (got == PCH_AWARD_SENTINEL) ? "DELIVERED"
+                                            : "DROPPED (score is garbage)");
+    std::fflush(stdout);
+    std::free(o);
+}
+
 extern "C" void *port_mg_pachinko_spawn(void)
 {
-    return (void *)MgBobOmbSquad_Spawn();
+    void *p = (void *)MgBobOmbSquad_Spawn();
+    mg_score_dump("postctor");
+    return p;
 }
 
 extern "C" void port_scene_fill_pachinko(void)
@@ -1391,6 +1543,8 @@ extern "C" void port_scene_fill_pachinko(void)
     }
 
     port_scene_mg_prepare(port_scene_env_want());
+
+    pch_award_abi_check();
 }
 
 /* The run report for this class, called from the same place curling's is. */

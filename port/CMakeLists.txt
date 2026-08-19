@@ -3445,7 +3445,16 @@ set(SCENE_MG_SOURCES
     unmatched/MgPachinko_Dtor.cpp
     unmatched/MgPachinko_Traps.cpp
     unmatched/MgPachinko_Faces.cpp
-    unmatched/MgPachinko_OamRender.cpp)
+    unmatched/MgPachinko_OamRender.cpp
+    # Run mg5, lane HISCORE: the class's scoring tick, and the one argument
+    # ride-through it owes. func_ov006_020fb7e0 calls the award routine
+    # func_ov006_020fbb2c with two arguments where the definition takes three,
+    # because the ROM carries the points in r2 out of the ldrh that makes the
+    # != 0 test. Same shape and same ruling as unmatched/MgFlower_InitScore.cpp.
+    # REPLACES its src TU -- src/func_ov006_020fb7e0.c is out of slice_pch.txt
+    # -- so it is not optional on any target that takes the slice, exactly like
+    # the state dispatch above.
+    unmatched/MgPachinko_Award.cpp)
 
 # Run mg5, lane PCH. dScMgPachinko_c's own closure, the second minigame class.
 # 65 src TUs in wave 1: 59 ov006 and 6 ov004. The arm9 half is deliberately not
