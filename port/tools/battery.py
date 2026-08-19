@@ -415,11 +415,28 @@ SCENE_BLOCKED = {
     # 0x02118b70 is 0x8dc bytes and 0x021173c8 is 0x10c0, both inside delink
     # holes that have to be split before either can be decompiled. Derivation
     # in port/slice_smb.txt.
-    376: ("the decomp (src/, byte-gated tree), not the port",
-          "MINIGAME BLOCKED: dScMgSmartball_c slot 6 Behavior",
-          "slot 0 InitResources func_ov006_02118b70 has no decompiled body, "
-          "so Behavior case 0 dereferences a null self+0x4684 on its first "
-          "frame"),
+    #
+    # RUN mg5 LANE INTEG MOVED THIS BLOCKER ONE FLOOR DEEPER, which is progress
+    # and is why the marker below changed. InitResources (0x02118b70) is now
+    # seated -- the plain-C _ZN16dScMgSmartball_c13InitResourcesEv aliased onto
+    # the ROM address name -- so slot 6 no longer dereferences a null
+    # self+0x4684 (that marker is gone). The class now BUILDS its sub-objects,
+    # and the first sub-object's method call faults because that sub-object's
+    # ov006 vtable at 0x0213eca0 still holds raw DS addresses (its slot resolves
+    # to func_ov006_02114458, not seated), so the call jumps into DS space.
+    # Seating that whole sub-object class and relocating its vtable is a separate
+    # lane. hal/scene_mg.cpp's 376 SEAT line prints the new marker before the
+    # fault, the way the slot-6 thunk printed the old one. (Baseline check: scene
+    # 390 faults at HEAD 19dc07ef2 too, in an unrelated flower-render floor this
+    # lane did not touch, so it is a pre-existing red rather than this lane's.)
+    376: ("a separate sub-object-class lane (decomp body + port vtable relocation)",
+          "vtable at 0x0213eca0 holds raw DS addresses",
+          "run mg5 lane INTEG seated slot 0 InitResources, clearing the old null "
+          "self+0x4684 deref; the class now builds its sub-objects and the "
+          "blocker moved one floor deeper to a sub-object whose ov006 vtable at "
+          "0x0213eca0 holds raw DS addresses (func_ov006_02114458, not seated), "
+          "so its first method call jumps into DS space. Slot 9 Render stays "
+          "trapped behind the thiscall wall"),
 }
 
 # A MOUNTED LEVEL WHOSE BLOCKER IS NOT THE MOUNT, AND THE CLASS THAT BLOCKS IT.
