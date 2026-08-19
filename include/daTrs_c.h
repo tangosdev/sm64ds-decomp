@@ -101,6 +101,7 @@ struct daTrs_c : dCapEnemy_c {
     virtual int  OnYoshiTryEat();      /* slot 18 */
     virtual int  OnAimedAtWithEgg();   /* slot 29 */
 
+    int  Behavior();           /* slot 6, fBase_c */
     int  CleanupResources();
     int  InitResources();
     void OnPendingDestroy();

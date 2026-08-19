@@ -343,6 +343,10 @@ src/actors/BooCage/_ZN7BooCage6RenderEv.cpp:
     complete
     .text start:0x0211b078 end:0x0211b0a4
 
+src/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp:
+    complete
+    .text start:0x0211b0a4 end:0x0211b888
+
 src/actors/BooCage/_ZN7BooCage8BehaviorEv.cpp:
     complete
     .text start:0x0211b888 end:0x0211b9bc

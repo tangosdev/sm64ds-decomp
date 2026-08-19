@@ -529,6 +529,7 @@
     "src/actors/Boo/_ZN3Boo16OnAimedAtWithEggEv.c": "tangosdev",
     "src/actors/Boo/_ZN3Boo16OnAimedAtWithEggEv.cpp": "tangosdev",
     "src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.c": "tangosdev",
-    "src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.cpp": "tangosdev"
+    "src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.cpp": "tangosdev",
+    "src/actors/daTrs_c/_ZN7daTrs_c8BehaviorEv.cpp": "andrewboudreau"
   }
 }
