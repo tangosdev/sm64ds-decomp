@@ -1,10 +1,7 @@
 #include "types.h"
-// @symbol func_02034da4
-// recovered name: dScMB_c_Behavior
-/* recovered: renamed to Class_Method, declarations from a shared header */
+// @symbol _ZN7dScMB_c8BehaviorEv
+/* dScMB_c::Behavior -- recovered from vtable slot identity */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method */
-/* dScMB_c::Behavior - recovered from vtable slot identity */
 extern void DecompressLZ16(void *src, int dst);
 extern int func_0201a244(int a0, int a1, int a2, int a3, int a4);
 extern void func_020308b4(void);
@@ -14,7 +11,7 @@ extern void func_02012790(int x);
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 
-int func_02034da4(void *arg0)
+int _ZN7dScMB_c8BehaviorEv(void *arg0)
 {
     char *self = (char *)arg0;
 

@@ -1,11 +1,11 @@
-func_ov026_021111a0 kind:function(arm,size=0x40) addr:0x021111a0
-func_ov026_021111e0 kind:function(arm,size=0x54) addr:0x021111e0
+_ZN17daObjWlPolelift_cD1Ev kind:function(arm,size=0x40) addr:0x021111a0
+_ZN17daObjWlPolelift_cD0Ev kind:function(arm,size=0x54) addr:0x021111e0
 func_ov026_02111234 kind:function(arm,size=0x70) addr:0x02111234
 func_ov026_021112a4 kind:function(arm,size=0x40) addr:0x021112a4
-func_ov026_021112e4 kind:function(arm,size=0x24) addr:0x021112e4
-func_ov026_02111308 kind:function(arm,size=0x28) addr:0x02111308
-func_ov026_02111330 kind:function(arm,size=0x268) addr:0x02111330
-func_ov026_02111598 kind:function(arm,size=0xe0) addr:0x02111598
+_ZN17daObjWlPolelift_c16CleanupResourcesEv kind:function(arm,size=0x24) addr:0x021112e4
+_ZN17daObjWlPolelift_c6RenderEv kind:function(arm,size=0x28) addr:0x02111308
+_ZN17daObjWlPolelift_c8BehaviorEv kind:function(arm,size=0x268) addr:0x02111330
+_ZN17daObjWlPolelift_c13InitResourcesEv kind:function(arm,size=0xe0) addr:0x02111598
 func_ov026_02111678 kind:function(arm,size=0x50) addr:0x02111678
 _ZN13BowserShutterD1Ev kind:function(arm,size=0x44) addr:0x021116c8
 _ZN13BowserShutterD0Ev kind:function(arm,size=0x58) addr:0x0211170c
