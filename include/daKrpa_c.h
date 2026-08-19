@@ -1,5 +1,5 @@
-#ifndef FLAMECHOMP_H
-#define FLAMECHOMP_H
+#ifndef DAKRPA_C_H
+#define DAKRPA_C_H
 
 #include "ModelAnim.h"
 #include "MovingCylinderClsnWithPos.h"
@@ -7,7 +7,8 @@
 #include "WithMeshClsn.h"
 #include "dActor_c.h"
 
-/* FlameChomp is daKrpa_c in the ROM's own RTTI: the typeinfo at ov070
+/* daKrpa_c is the ROM's own RTTI name for this class (this tree once coined it
+ * FlameChomp): the typeinfo at ov070
  * 0x02123340 names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x02123370 (31 slots, same count as dActor_c's) is what pairs it
  * to FlameChomp_Spawn, which stores that address after allocating 0x3b0 bytes
@@ -28,7 +29,7 @@
  * non-derived struct a virtual would have inserted a vptr and shifted every
  * offset. Deriving from dActor_c is what makes the declarations below honest.
  */
-struct FlameChomp : dActor_c {
+struct daKrpa_c : dActor_c {
     u8                        pad_0d0[0x4];
     ModelAnim                 mModelAnim;                    /* 0x0d4 */
     ShadowModel               mShadowModel;                  /* 0x138 */
@@ -41,7 +42,7 @@ struct FlameChomp : dActor_c {
 
     /* Declared first on purpose, same reasoning as dActor_c.h: the key
        function pins where mwcc anchors the vtable. */
-    virtual ~FlameChomp();
+    virtual ~daKrpa_c();
 
     virtual s32  InitResources();       /* slot 0 */
     virtual s32  CleanupResources();    /* slot 3 */
@@ -51,7 +52,7 @@ struct FlameChomp : dActor_c {
     virtual int  OnYoshiTryEat();       /* slot 18 */
 };
 
-typedef char FlameChomp_size_must_be_0x3b0[
-    sizeof(FlameChomp) == 0x3b0 ? 1 : -1];
+typedef char daKrpa_c_size_must_be_0x3b0[
+    sizeof(daKrpa_c) == 0x3b0 ? 1 : -1];
 
-#endif /* FLAMECHOMP_H */
+#endif /* DAKRPA_C_H */

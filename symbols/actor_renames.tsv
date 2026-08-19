@@ -1502,13 +1502,13 @@ ov070	0x02120e24	func_ov070_02120e24	_ZN3Amp6RenderEv	vtable slot 9
 ov070	0x02120e8c	func_ov070_02120e8c	_ZN3Amp8BehaviorEv	vtable slot 6
 ov070	0x02120eec	func_ov070_02120eec	_ZN3Amp13InitResourcesEv	vtable slot 0
 ov070	0x021210ac	func_ov070_021210ac	Amp_Spawn	spawnfunc
-ov070	0x02121118	func_ov070_02121118	_ZN10FlameChompD1Ev	vtable slot 16
-ov070	0x02121160	func_ov070_02121160	_ZN10FlameChompD0Ev	vtable slot 17
-ov070	0x0212189c	func_ov070_0212189c	_ZN10FlameChomp16CleanupResourcesEv	vtable slot 3
-ov070	0x021218c0	func_ov070_021218c0	_ZN10FlameChomp16OnPendingDestroyEv	vtable slot 12
-ov070	0x021218c4	func_ov070_021218c4	_ZN10FlameChomp6RenderEv	vtable slot 9
-ov070	0x021218f4	func_ov070_021218f4	_ZN10FlameChomp8BehaviorEv	vtable slot 6
-ov070	0x02121914	func_ov070_02121914	_ZN10FlameChomp13InitResourcesEv	vtable slot 0
+ov070	0x02121118	func_ov070_02121118	_ZN8daKrpa_cD1Ev	vtable slot 16
+ov070	0x02121160	func_ov070_02121160	_ZN8daKrpa_cD0Ev	vtable slot 17
+ov070	0x0212189c	func_ov070_0212189c	_ZN8daKrpa_c16CleanupResourcesEv	vtable slot 3
+ov070	0x021218c0	func_ov070_021218c0	_ZN8daKrpa_c16OnPendingDestroyEv	vtable slot 12
+ov070	0x021218c4	func_ov070_021218c4	_ZN8daKrpa_c6RenderEv	vtable slot 9
+ov070	0x021218f4	func_ov070_021218f4	_ZN8daKrpa_c8BehaviorEv	vtable slot 6
+ov070	0x02121914	func_ov070_02121914	_ZN8daKrpa_c13InitResourcesEv	vtable slot 0
 ov070	0x02121af8	func_ov070_02121af8	FlameChomp_Spawn	spawnfunc
 ov070	0x02121b48	func_ov070_02121b48	_ZN8daKpFr_cD1Ev	vtable slot 16
 ov070	0x02121b88	func_ov070_02121b88	_ZN8daKpFr_cD0Ev	vtable slot 17
@@ -1523,7 +1523,7 @@ ov070	0x02123168	data_ov070_02123168	_ZTV6FlyGuy	vtable alloc=0x3e8
 ov070	0x02123254	data_ov070_02123254	Amp_SpawnInfo	spawninfo
 ov070	0x02123278	data_ov070_02123278	_ZTV3Amp	vtable alloc=?
 ov070	0x0212334c	data_ov070_0212334c	FlameChomp_SpawnInfo	spawninfo
-ov070	0x02123370	data_ov070_02123370	_ZTV10FlameChomp	vtable alloc=0x3b0
+ov070	0x02123370	data_ov070_02123370	_ZTV8daKrpa_c	vtable alloc=0x3b0
 ov070	0x02123424	data_ov070_02123424	FlameChompFire_SpawnInfo	spawninfo
 ov070	0x02123448	data_ov070_02123448	_ZTV8daKpFr_c	vtable alloc=0x330
 ov071	0x0211f000	func_ov071_0211f000	_ZN10ScuttlebugD1Ev	vtable slot 16

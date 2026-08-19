@@ -8,13 +8,13 @@
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV10FlameChomp */
+/* resolved: VT0 = _ZTV8daKrpa_c */
 int *FlameChomp_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(944);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV10FlameChomp;
+        p[0] = (int)_ZTV8daKrpa_c;
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN11ShadowModelC1Ev((char *)p + 0x138);
         _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x160);

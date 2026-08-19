@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN10FlameChomp13InitResourcesEv
+// @symbol _ZN8daKrpa_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 /* was `typedef int Fix12;` -- collides with the real Fix12<> template, which
-   FlameChomp.h now reaches via Model.h. The typedef WAS int, so spelling it
+   daKrpa_c.h now reaches via Model.h. The typedef WAS int, so spelling it
    int below is byte-neutral. */
 struct RG { char pad[0x44]; int f44; char pad2[8]; };
 struct Blk { int w[12]; };
@@ -33,7 +33,7 @@ extern void _ZN13RaycastGroundD1Ev(struct RG* rg);
 
 extern struct Blk data_02082128;
 
-int FlameChomp::InitResources()
+int daKrpa_c::InitResources()
 {
     struct RG rg;
     struct Vector3 v;

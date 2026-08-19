@@ -18,7 +18,7 @@ src_tu/actors/Amp.cpp:
     .data start:0x0212320c end:0x021232f4
     .bss start:0x021235ec end:0x02123698
 
-src_tu/actors/FlameChomp.cpp:
+src_tu/actors/daKrpa_c.cpp:
     .text start:0x02121118 end:0x02121b48
     .init start:0x02122f30 end:0x02123030
     .ctor start:0x021230ac end:0x021230b0

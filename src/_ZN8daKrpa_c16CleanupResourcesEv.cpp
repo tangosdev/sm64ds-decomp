@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN10FlameChomp16CleanupResourcesEv
+// @symbol _ZN8daKrpa_c16CleanupResourcesEv
 
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 #include "SharedFilePtr.h"
 
 extern SharedFilePtr data_ov070_02123698;
 
-int FlameChomp::CleanupResources()
+int daKrpa_c::CleanupResources()
 {
     data_ov070_02123698.Release();
     return 1;

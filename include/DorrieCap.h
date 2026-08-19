@@ -24,7 +24,7 @@
  * Own vtable slots, from the ROM table diffed against dActor_c's: 0
  * InitResources, 6 Behavior, 9 Render, 16/17 the destructor pair, 18
  * OnYoshiTryEat. No CleanupResources or OnPendingDestroy override, unlike its
- * FlameChomp/daKpFr_c/MrI_Projectile siblings.
+ * daKrpa_c/daKpFr_c/MrI_Projectile siblings.
  *
  * THE DESTRUCTORS STAY UNMIGRATED, and the reason is order: D1 destroys
  * MovingCylinderClsn, then Model, then the CapIcon -- exact reverse

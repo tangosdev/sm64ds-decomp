@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN10FlameChomp16OnPendingDestroyEv
+// @symbol _ZN8daKrpa_c16OnPendingDestroyEv
 
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 
-void FlameChomp::OnPendingDestroy()
+void daKrpa_c::OnPendingDestroy()
 {
 }

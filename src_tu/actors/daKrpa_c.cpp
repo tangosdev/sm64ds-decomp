@@ -1,5 +1,5 @@
 //cpp
-/* HAND-ASSEMBLED translation unit -- ov070/FlameChomp (25 function(s)).
+/* HAND-ASSEMBLED translation unit -- ov070/daKrpa_c (25 function(s)).
  * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
  * so this is a raw concatenation of the complete legacy files in REVERSE
  * ROM order (mwccarm emits one .text section per function in the reverse
@@ -7,9 +7,9 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02121118  src/_ZN10FlameChompD1Ev.cpp
- *   [1] 0x02121160  src/_ZN10FlameChompD0Ev.cpp
- *   [2] 0x021211bc  src/_ZN10FlameChomp13OnYoshiTryEatEv.cpp
+ *   [0] 0x02121118  src/_ZN8daKrpa_cD1Ev.cpp
+ *   [1] 0x02121160  src/_ZN8daKrpa_cD0Ev.cpp
+ *   [2] 0x021211bc  src/_ZN8daKrpa_c13OnYoshiTryEatEv.cpp
  *   [3] 0x021211c4  src/func_ov070_021211c4.cpp
  *   [4] 0x02121298  src/func_ov070_02121298.cpp
  *   [5] 0x02121310  src/func_ov070_02121310.cpp
@@ -24,11 +24,11 @@
  *   [14] 0x0212180c  src/func_ov070_0212180c.cpp
  *   [15] 0x02121848  src/func_ov070_02121848.cpp
  *   [16] 0x02121880  src/func_ov070_02121880.c
- *   [17] 0x0212189c  src/_ZN10FlameChomp16CleanupResourcesEv.cpp
- *   [18] 0x021218c0  src/_ZN10FlameChomp16OnPendingDestroyEv.cpp
- *   [19] 0x021218c4  src/_ZN10FlameChomp6RenderEv.cpp
- *   [20] 0x021218f4  src/_ZN10FlameChomp8BehaviorEv.cpp
- *   [21] 0x02121914  src/_ZN10FlameChomp13InitResourcesEv.cpp
+ *   [17] 0x0212189c  src/_ZN8daKrpa_c16CleanupResourcesEv.cpp
+ *   [18] 0x021218c0  src/_ZN8daKrpa_c16OnPendingDestroyEv.cpp
+ *   [19] 0x021218c4  src/_ZN8daKrpa_c6RenderEv.cpp
+ *   [20] 0x021218f4  src/_ZN8daKrpa_c8BehaviorEv.cpp
+ *   [21] 0x02121914  src/_ZN8daKrpa_c13InitResourcesEv.cpp
  *   [22] 0x02121a64  src/func_ov070_02121a64.c
  *   [23] 0x02121ae0  src/func_ov070_02121ae0.c
  *   [24] 0x02121af8  src/FlameChomp_Spawn.c
@@ -48,13 +48,13 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV10FlameChomp */
+/* resolved: VT0 = _ZTV8daKrpa_c */
 int *FlameChomp_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(944);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)&_ZTV10FlameChomp[2]; /* +8: this TU defines the vtable */
+        p[0] = (int)&_ZTV8daKrpa_c[2]; /* +8: this TU defines the vtable */
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN11ShadowModelC1Ev((char *)p + 0x138);
         _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x160);
@@ -106,15 +106,15 @@ int func_ov070_02121a64(void* vc)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 21 -- _ZN10FlameChomp13InitResourcesEv, 0x02121914, size 0x150 */
+/* ROM ordinal 21 -- _ZN8daKrpa_c13InitResourcesEv, 0x02121914, size 0x150 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10FlameChomp13InitResourcesEv
+// @symbol _ZN8daKrpa_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 /* was `typedef int Fix12;` -- collides with the real Fix12<> template, which
-   FlameChomp.h now reaches via Model.h. The typedef WAS int, so spelling it
+   daKrpa_c.h now reaches via Model.h. The typedef WAS int, so spelling it
    int below is byte-neutral. */
 struct RG { char pad[0x44]; int f44; char pad2[8]; };
 struct Blk { int w[12]; };
@@ -142,7 +142,7 @@ extern void _ZN13RaycastGroundD1Ev(struct RG* rg);
 
 extern struct Blk data_02082128;
 
-int FlameChomp::InitResources()
+int daKrpa_c::InitResources()
 {
     struct RG rg;
     struct Vector3 v;
@@ -184,18 +184,18 @@ int FlameChomp::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- _ZN10FlameChomp8BehaviorEv, 0x021218f4, size 0x20 */
+/* ROM ordinal 20 -- _ZN8daKrpa_c8BehaviorEv, 0x021218f4, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10FlameChomp8BehaviorEv
+// @symbol _ZN8daKrpa_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 extern "C" {
 extern void func_ov070_02121310(char* c);
 }
 
-int FlameChomp::Behavior()
+int daKrpa_c::Behavior()
 {
     func_ov070_0212180c(((char*)this));
     func_ov070_02121310(((char*)this));
@@ -203,41 +203,41 @@ int FlameChomp::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN10FlameChomp6RenderEv, 0x021218c4, size 0x30 */
+/* ROM ordinal 19 -- _ZN8daKrpa_c6RenderEv, 0x021218c4, size 0x30 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10FlameChomp6RenderEv
+// @symbol _ZN8daKrpa_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 struct RenderBase { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void M(void*); };
 struct RenderSub : RenderBase { };
 struct RenderView { char p1[0xd4]; RenderSub sub; };  /* was C/Sub/Base; renamed: another member's shadow C has a different layout */
 
-int FlameChomp::Render()
+int daKrpa_c::Render()
 {
   ((RenderView*)this)->sub.M((char*)&mScaleX);
   return 1;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN10FlameChomp16OnPendingDestroyEv, 0x021218c0, size 0x4 */
+/* ROM ordinal 18 -- _ZN8daKrpa_c16OnPendingDestroyEv, 0x021218c0, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10FlameChomp16OnPendingDestroyEv
+// @symbol _ZN8daKrpa_c16OnPendingDestroyEv
 
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 
-void FlameChomp::OnPendingDestroy()
+void daKrpa_c::OnPendingDestroy()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN10FlameChomp16CleanupResourcesEv, 0x0212189c, size 0x24 */
+/* ROM ordinal 17 -- _ZN8daKrpa_c16CleanupResourcesEv, 0x0212189c, size 0x24 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10FlameChomp16CleanupResourcesEv
+// @symbol _ZN8daKrpa_c16CleanupResourcesEv
 
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 #include "SharedFilePtr.h"
 
-int FlameChomp::CleanupResources()
+int daKrpa_c::CleanupResources()
 {
     ((SharedFilePtr *)&data_ov070_02123698)->Release();  /* declared void* earlier in this TU; same object */
     return 1;
@@ -575,35 +575,35 @@ void func_ov070_021211c4(char* c)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN10FlameChomp13OnYoshiTryEatEv, 0x021211bc, size 0x8 */
+/* ROM ordinal 2 -- _ZN8daKrpa_c13OnYoshiTryEatEv, 0x021211bc, size 0x8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10FlameChomp13OnYoshiTryEatEv
+// @symbol _ZN8daKrpa_c13OnYoshiTryEatEv
 
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 
-int FlameChomp::OnYoshiTryEat()
+int daKrpa_c::OnYoshiTryEat()
 {
     return 5;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN10FlameChompD0Ev, 0x02121160, size 0x5c */
+/* ROM ordinal 1 -- _ZN8daKrpa_cD0Ev, 0x02121160, size 0x5c */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10FlameChompD0Ev
+// @symbol _ZN8daKrpa_cD0Ev
 
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 
-/* (no separate definition: the single ~FlameChomp() below emits the D0 and
+/* (no separate definition: the single ~daKrpa_c() below emits the D0 and
  * D1 variants together; mwccarm orders the variant group itself.) */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN10FlameChompD1Ev, 0x02121118, size 0x48 */
+/* ROM ordinal 0 -- _ZN8daKrpa_cD1Ev, 0x02121118, size 0x48 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN10FlameChompD1Ev
+// @symbol _ZN8daKrpa_cD1Ev
 
-#include "FlameChomp.h"
+#include "daKrpa_c.h"
 
-FlameChomp::~FlameChomp()
+daKrpa_c::~daKrpa_c()
 {
 }
 
