@@ -1,10 +1,9 @@
 #include "types.h"
-// @symbol func_0202ee38
-// recovered name: dWipe_c_IsAtStart
+// @symbol _ZN7dWipe_c9IsAtStartEv
 /* recovered: renamed to Class_Method */
-/* dWipe_c::IsAtStart - recovered from vtable slot identity */
-/* func_0202ee38 - IsAtStart wrapper.
- * Attempt 1: same goto pattern as func_0202eddc. ROM structure:
+/* dWipe_c::IsAtStart() -- vtable slot 5. Plain C function carrying the
+ * literal mangled name -- see include/dWipe_c.h.
+ * IsAtStart wrapper. Attempt 1: same goto pattern as _ZN7dWipe_c7IsAtEndEv. ROM structure:
  * if unk14==1: call IsAtStart, return result.
  * else if unk10==0: goto ret1 (return 1)
  * if interpVal < 0x200000: goto ret0 (return 0)
@@ -25,7 +24,7 @@ struct MyFader {
     s32 interpVal;  /* 0x1c */
 };
 
-int func_0202ee38(struct MyFader* self)
+int _ZN7dWipe_c9IsAtStartEv(struct MyFader* self)
 {
     int result;
     if (self->type == 1)
