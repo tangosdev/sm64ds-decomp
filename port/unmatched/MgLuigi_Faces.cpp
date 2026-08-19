@@ -116,22 +116,16 @@
  * The trap takes the two parameters its matched caller declares and passes, so
  * the call site's stack is right whatever happens inside. */
 
+/* Run mg5, lane INTEG: func_ov004_020b0e84 (the "Wanted!" score HUD, 0x66c) was
+   copied across from origin/main as src/func_ov004_020b0e84.cpp with its Obj
+   vtable header include/private/ov004_obj_vtbl.h, and is now in
+   port/slice_lui.txt, so the trap that stood in on dScMgLuigi_c's Render path is
+   gone and the real body runs. The veneer func_ov004_020b1e34 still drops the
+   0xe0/0x14/1 arguments the ROM rides through r2/r3 (see section 4 above); that
+   is a separate PORT_HOST_ABI veneer repair, not this seat. The counter is kept
+   because hal/scene_mg.cpp prints port_mg_luigi_ov004_trap_hits(); it now stays
+   0, the honest report that the score HUD is no longer stubbed. */
 static unsigned g_luigi_ov004_trap;
-
-extern "C" void func_ov004_020b0e84(void *, unsigned)
-{
-    static int said;
-    ++g_luigi_ov004_trap;
-    if (said)
-        return;
-    said = 1;
-    std::fprintf(stderr, "  [scene] TRAP func_ov004_020b0e84: ov004 0x020b0e84 "
-                 "(0x66c bytes) has no delink block and no src TU. Reached "
-                 "from func_ov004_020b1e34, which dScMgLuigi_c slot 9 (Render) "
-                 "calls first. Nothing was done. "
-                 "port/unmatched/MgLuigi_Faces.cpp section 4\n");
-    std::fflush(stderr);
-}
 
 extern "C" unsigned port_mg_luigi_ov004_trap_hits(void)
 {

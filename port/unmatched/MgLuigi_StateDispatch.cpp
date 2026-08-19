@@ -122,6 +122,9 @@ void func_ov006_020f0a6c(char *c, int i);
 void func_ov006_020f0bf0(char *c, int i);
 void func_ov006_020f1318(char *c, int i);
 void func_ov006_020f13cc(char *c, int i);
+/* Run mg5, lane INTEG: slot 7 of data_ov006_02142254, recovered on branch
+   decomp/wanted-layout; was a floor, now a real dispatch below. */
+void func_ov006_020f15ac(char *c, int i);
 void func_ov006_020f17fc(char *c, int i);
 void func_ov006_020f192c(char *c, int i);
 void func_ov006_020f1a70(char *c, int i);
@@ -143,25 +146,15 @@ void func_ov004_020b0a54(int c);
 
 // ---- the two floors --------------------------------------------------------
 
+/* Run mg5, lane INTEG: func_ov006_020f2790 (the "Wanted!" round-setup driver)
+   was recovered on branch decomp/mg-luigi-state as src/func_ov006_020f2790.c
+   (void(char*)) together with the scripted-layout routine func_ov006_020f2224 it
+   calls (branch decomp/wanted-layout), both now in port/slice_lui.txt, so the
+   trap that src/func_ov006_020f31dc.c linked against is gone and the real body
+   runs. src/func_ov002_020f2790.c is a different function in a non-co-resident
+   overlay and is not in this build. The counter is kept because
+   port_mg_luigi_counts reports it; it now stays 0. */
 static unsigned g_luigi_floor_hits;
-
-/* func_ov006_020f2790. NOT a decompiled body and not given the symbol of one:
-   the trap is what src/func_ov006_020f31dc.c links against, and it reports
-   once. Signature from the matched caller, which declares
-   `extern void func_ov006_020f2790(int this);` and passes `this`. */
-extern "C" void func_ov006_020f2790(int)
-{
-    static int said;
-    ++g_luigi_floor_hits;
-    if (said)
-        return;
-    said = 1;
-    std::fprintf(stderr, "  [scene] TRAP func_ov006_020f2790: ov006 0x020f2790 "
-                 "has no delink block and no src TU. Called from "
-                 "func_ov006_020f31dc (state slot 1 of data_ov006_02142234). "
-                 "Nothing was done. port/slice_lui.txt section 4\n");
-    std::fflush(stderr);
-}
 
 // ---- this class's address switch -------------------------------------------
 
@@ -172,19 +165,10 @@ static unsigned g_luigi_state_floor;
 extern "C" void func_ov006_020f0ba0(void *c, int i);
 extern "C" void func_ov006_020f300c(char *o);
 
-static void luigi_state_020f15ac(void)
-{
-    static int said;
-    ++g_luigi_state_floor;
-    if (said)
-        return;
-    said = 1;
-    std::fprintf(stderr, "  [scene] MINIGAME STATE 0x020f15ac WANTED and there "
-                 "is no body: slot 7 of data_ov006_02142254 has no delink "
-                 "block and no src TU, and stategen.py refuses it. Nothing was "
-                 "called. port/unmatched/MgLuigi_StateDispatch.cpp\n");
-    std::fflush(stderr);
-}
+/* Run mg5, lane INTEG: slot 7 of data_ov006_02142254 (func_ov006_020f15ac) was
+   recovered on branch decomp/wanted-layout and is now sliced and dispatched
+   below, so the floor reporter is gone. g_luigi_state_floor is kept because
+   port_mg_luigi_counts reports it; it now stays 0. */
 
 static int luigi_try_0(void *self, unsigned code)
 {
@@ -225,8 +209,8 @@ static int luigi_try_1(void *self, unsigned code, int a)
     case 0x020f17fcu: func_ov006_020f17fc(c, a); return 1;
     case 0x020f13ccu: func_ov006_020f13cc(c, a); return 1;
     case 0x020f1318u: func_ov006_020f1318(c, a); return 1;
-    /* the floor: named, counted, never called */
-    case 0x020f15acu: luigi_state_020f15ac();    return 1;
+    /* run mg5 lane INTEG seated this, so it is a real dispatch now */
+    case 0x020f15acu: func_ov006_020f15ac(c, a); return 1;
     default:                                     return 0;
     }
 }

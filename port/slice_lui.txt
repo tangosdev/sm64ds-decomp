@@ -208,6 +208,10 @@ src/func_ov006_020f120c.c
 src/func_ov006_020f12c8.c
 src/func_ov006_020f1318.c
 src/func_ov006_020f13cc.c
+# Run mg5, lane INTEG: slot 7 of data_ov006_02142254, recovered on branch
+# decomp/wanted-layout, void(char*,int). Was a floor reporter; now sliced and
+# dispatched by MgLuigi_StateDispatch.cpp.
+src/func_ov006_020f15ac.c
 src/func_ov006_020f17fc.c
 src/func_ov006_020f192c.c
 src/func_ov006_020f1a70.c
@@ -219,6 +223,14 @@ src/func_ov006_020f1e58.c
 # HOST-COPIED (LUI): src/func_ov006_020f1e90.cpp -- PMF, table 02142254
 src/func_ov006_020f1ef8.c
 src/func_ov006_020f1fcc.c
+# Run mg5, lane INTEG: the "Wanted!" round setup driver (020f2790, void(char*),
+# branch decomp/mg-luigi-state) and the scripted-layout routine it calls
+# (020f2224, void(char*), branch decomp/wanted-layout). Sliced together because
+# f2224 is reached only through f2790. f2790 replaces the trap in
+# MgLuigi_StateDispatch.cpp. src/func_ov002_020f2790.c is a DIFFERENT function
+# in a non-co-resident overlay and is not in this build.
+src/func_ov006_020f2224.c
+src/func_ov006_020f2790.c
 src/func_ov006_020f2cb8.c
 src/func_ov006_020f2e20.c
 src/func_ov006_020f2ec0.c
@@ -244,6 +256,11 @@ src/func_020127a4.c
 # ---- ov004: what this class adds over curling's slice ----------------------
 src/func_ov004_020afb20.cpp
 src/func_ov004_020b1e34.c
+# Run mg5, lane INTEG: the "Wanted!" score HUD (0x66c), copy-across from
+# origin/main. dScMgLuigi_c slot 9 (Render) reaches it through the veneer
+# func_ov004_020b1e34; it was trapped in MgLuigi_Faces.cpp, now seated. Uses the
+# Obj vtable layout in include/private/ov004_obj_vtbl.h (also copied across).
+src/func_ov004_020b0e84.cpp
 # already in port/slice_mg1.txt; listed for the closure, deduped by CMake
 src/func_ov004_020af5e0.c
 src/func_ov004_020b0cac.c

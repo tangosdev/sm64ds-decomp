@@ -1224,18 +1224,21 @@ extern "C" void port_scene_mg_luigi_hits(void)
         port_mg_luigi_counts(&hits, &floor, &nosrc);
         port_mg_dispatch_counts(&calls, &unknown);
         std::printf("[scene] dScMgLuigi_c state dispatch: %u routed to one of "
-                    "its 22 reachable states, %u wanted 0x020f15ac (the state "
-                    "with no body), %u entered the 0x020f2790 trap; the "
-                    "framework switch saw %u call(s) and %u UNHANDLED "
-                    "address(es)\n", hits, floor, nosrc, calls, unknown);
+                    "its 23 reachable states (run mg5 lane INTEG seated 0x020f15ac "
+                    "and 0x020f2790); residual floor/trap counters for those two "
+                    "are %u/%u and stay 0 now they are real; the framework switch "
+                    "saw %u call(s) and %u UNHANDLED address(es)\n",
+                    hits, floor, nosrc, calls, unknown);
         /* THE RENDER SLOT'S OWN FLOOR, printed next to the render hit count
            above so the two are read together. A run with 300 render entries
            and 300 trap entries has dispatched the slot and drawn nothing
            through it, which is a different fact from "Render ran" and is the
            one this line exists to keep visible. */
         std::printf("[scene] dScMgLuigi_c render floor: %u entry(ies) into the "
-                    "func_ov004_020b0e84 trap, which slot 9 reaches through "
-                    "func_ov004_020b1e34 (port/unmatched/MgLuigi_Faces.cpp "
+                    "former func_ov004_020b0e84 trap, which slot 9 reaches "
+                    "through func_ov004_020b1e34. Run mg5 lane INTEG seated the "
+                    "real score HUD, so the counter stays 0 (the veneer's dropped "
+                    "0xe0/0x14/1 args remain, port/unmatched/MgLuigi_Faces.cpp "
                     "section 4)\n", port_mg_luigi_ov004_trap_hits());
     }
     std::fflush(stdout);

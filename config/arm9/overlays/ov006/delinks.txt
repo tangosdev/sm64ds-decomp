@@ -3520,6 +3520,9 @@ src/func_ov006_020f13cc.c:
     complete
     .text start:0x020f13cc end:0x020f15ac
 
+src/func_ov006_020f15ac.c:
+    .text start:0x020f15ac end:0x020f17fc
+
 src/func_ov006_020f17fc.c:
     .text start:0x020f17fc end:0x020f192c
 
@@ -3558,6 +3561,12 @@ src/func_ov006_020f1ef8.c:
 src/func_ov006_020f1fcc.c:
     complete
     .text start:0x020f1fcc end:0x020f2224
+
+src/func_ov006_020f2224.c:
+    .text start:0x020f2224 end:0x020f2790
+
+src/func_ov006_020f2790.c:
+    .text start:0x020f2790 end:0x020f2cb8
 
 src/func_ov006_020f2cb8.c:
     complete
