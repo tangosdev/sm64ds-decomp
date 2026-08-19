@@ -1281,7 +1281,21 @@ def cmd_verify(args):
     # only the fields this run has an opinion on; leave later-phase fields (symbol
     # addresses, module/ROM build) alone since verify never touches those.
     criteria = entry["verification"].setdefault("criteria", {})
-    criteria.update({
+
+    def _keep_richer(key, verdict):
+        """A curated criteria value often carries evidence prose ('PASS --
+        reloc_audit.check_destinations(): 57 relocations, 57 OK, 0 WRONG-DEST').
+        Overwriting it with a bare verdict destroys strictly more informative
+        text every run (notes/tubuild-defects, defect 1). Keep the existing
+        text whenever it already states the SAME verdict and says more; replace
+        it only when this run's verdict differs."""
+        old = criteria.get(key)
+        if isinstance(old, str) and old.split()[0].rstrip(":,") == verdict.split()[0] \
+                and len(old) > len(verdict):
+            return old
+        return verdict
+
+    for key, verdict in {
         "every_declared_function_defined": "PASS" if not any(v == "MISSING" for _o, _s, v in rows) else "FAIL",
         "every_declared_function_bytes_match": "PASS" if all_bytes_ok else "FAIL",
         "declared_function_set_equals_defined_function_set":
@@ -1290,7 +1304,8 @@ def cmd_verify(args):
         "functions_occur_in_expected_order":
             "PASS" if not bad_pairs else f"PARTIAL -- ordinal pair(s) not in ROM order: {bad_pairs}",
         "relocation_destinations_verified": "PASS" if all_reloc_ok else "FAIL -- see DIFF/objisolate lines above",
-    })
+    }.items():
+        criteria[key] = _keep_richer(key, verdict)
     if text_verified and entry.get("status") == "shadow":
         entry["status"] = "text-verified"
     elif not text_verified and entry.get("status") == "text-verified":
