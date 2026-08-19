@@ -12,11 +12,11 @@ src/_ZN10ScuttlebugD0Ev.c:
     complete
     .text start:0x0211f048 end:0x0211f0a4
 
-src/func_ov071_0211f0a4.c:
+src/_ZN10Scuttlebug13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0211f0a4 end:0x0211f0ac
 
-src/func_ov071_0211f0ac.c:
+src/_ZN10Scuttlebug16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x0211f0ac end:0x0211f0b4
 
@@ -143,7 +143,7 @@ src/_ZN10Scuttlebug8BehaviorEv.cpp:
 src/_ZN10Scuttlebug13InitResourcesEv.cpp:
     .text start:0x021203f8 end:0x02120580
 
-src/func_ov071_02120580.cpp:
+src/_ZN10Scuttlebug13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02120580 end:0x02120618
 

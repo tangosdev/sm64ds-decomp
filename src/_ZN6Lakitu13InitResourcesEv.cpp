@@ -38,14 +38,14 @@ int Lakitu::InitResources()
     _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char *)this) + 0x1c4, ((char *)this), data_ov077_02127b88, 0x41000, 0x78000, 0x200002, 0x6eff0);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x204, ((char *)this), 0x2d000, 0x2d000, 0, 0);
 
-    *(int *)(((int)((char *)&unk_09c)) & 0xFFFFFFFFFFFFFFFFLL) = 0;
-    *(int *)(((int)((char *)&unk_0a0)) & 0xFFFFFFFFFFFFFFFFLL) = 0;
+    *(int *)(((int)((char *)this + 0x9c)) & 0xFFFFFFFFFFFFFFFFLL) = 0;
+    *(int *)(((int)((char *)this + 0xa0)) & 0xFFFFFFFFFFFFFFFFLL) = 0;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    *(int *)(((int)((char *)&unk_3f8)) & 0xFFFFFFFFFFFFFFFFLL) = *(int *)(((int)((char *)&unk_05c)) & 0xFFFFFFFFFFFFFFFFLL);
-    *(int *)(((int)((char *)&unk_3fc)) & 0xFFFFFFFFFFFFFFFFLL) = *(int *)(((int)((char *)&unk_060)) & 0xFFFFFFFFFFFFFFFFLL);
-    unk_400 = *(int *)(((int)((char *)&unk_064)) & 0xFFFFFFFFFFFFFFFFLL);
+    *(int *)(((int)((char *)this + 0x3f8)) & 0xFFFFFFFFFFFFFFFFLL) = *(int *)(((int)((char *)this + 0x5c)) & 0xFFFFFFFFFFFFFFFFLL);
+    *(int *)(((int)((char *)this + 0x3fc)) & 0xFFFFFFFFFFFFFFFFLL) = *(int *)(((int)((char *)this + 0x60)) & 0xFFFFFFFFFFFFFFFFLL);
+    unk_400 = *(int *)(((int)((char *)this + 0x64)) & 0xFFFFFFFFFFFFFFFFLL);
     unk_410 = 0;
 
     func_ov077_0212478c(((char *)this));

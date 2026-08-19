@@ -6,7 +6,7 @@
  * this class declares, destroyed in reverse declaration order, then dEnemyBase_c.
  *
  * The CapIcon call is the exception, and it is written out for the same reason as in
- * CapEnemy -- that type's destructor is still spelt func_ov001_020ab3a0 rather than
+ * dCapEnemy_c -- that type's destructor is still spelt func_ov001_020ab3a0 rather than
  * CapIcon::~CapIcon, so the compiler has nothing to emit. Putting it in the body is
  * not a workaround for the ordering: a destructor body runs BEFORE every member
  * destructor, and mCapIcon is the last member, so "first statement of the body" and

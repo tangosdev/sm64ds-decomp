@@ -7,7 +7,7 @@
 
 void Pokey::OnPendingDestroy()
 {
-    int r1 = *(unsigned short *)((char *)&mActorID);
+    int r1 = *(unsigned short *)((char *)&actorID);
     r1 = (r1 == 0xf1);
     if (r1) return;
     void *p = *(void **)((char *)&unk_394);

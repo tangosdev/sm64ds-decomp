@@ -1,52 +1,43 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Coin: 6 matched functions, 29 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef COIN_H
 #define COIN_H
 #include "types.h"
+#include "dActor_c.h"
 #include "CommonModel.h"
 #include "ShadowModel.h"
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
-struct Coin {
-    u8  pad_000[0x8];
-    u32 mParam;            /* 0x008 */
-    u16 mActorID;            /* 0x00c */
-    u8  pad_00e[0x4e];
-    /* dActor_c::mPosX -- dActor_c.h declares s32 here, and it is de-bannered (hand-reconstructed). */
-    s32 unk_05c;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    /* 0x064..0x074 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s32 unk_064;                 /* 0x064 */
-    s32 unk_068;                 /* 0x068 */
-    s32 unk_06c;                 /* 0x06c */
-    s32 unk_070;                 /* 0x070 */
-    /* 0x074..0x094 is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s32 unk_074;                 /* 0x074 */
-    s32 mCamSpacePosY;           /* 0x078 */
-    s32 mCamSpacePosZ;           /* 0x07c */
-    s32 mScaleX;                 /* 0x080 */
-    s32 mScaleY;                 /* 0x084 */
-    s32 mScaleZ;                 /* 0x088 */
-    s16 mAngleX;                 /* 0x08c */
-    s16 mAngleY;                 /* 0x08e */
-    s16 mAngleZ;                 /* 0x090 */
-    s16 mPrevAngleX;             /* 0x092 */
-    s16 mPrevAngleY;            /* 0x094 */
-    u8  pad_096[0x6];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x4];
-    s32 unk_0a8;            /* 0x0a8 */
-    u8  pad_0ac[0x4];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x18];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x3];
+/* THREE WITNESSES:
+ *
+ *   Coin_Spawn / BlueCoin_Spawn / RedCoin_Spawn
+ *       fBase_c::operator new(948 = 0x3b4), dActor_c::dActor_c(), stores
+ *       _ZTV4Coin, then the five members below in this order.
+ *   _ZN4CoinD0Ev  the same five members destroyed in reverse, then ~dActor_c.
+ *
+ * All three Spawn entry points build the SAME class (same vtable, same
+ * size) -- Coin is the coin actor shared by yellow/blue/red spawn paths.
+ *
+ * SIZE 0x3b4 is the factory's own literal; the last member (unk_3b0, 1 byte)
+ * closes at 0x3b1 and rounds up to 0x3b4 under 4-byte alignment.
+ *
+ * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
+ * names -- dActor_c ends at exactly 0x0d0 (mAreaId + pad_0cd + unk_0ce), so
+ * mEatingPlayer at 0x0d0 is Coin's first own field. Consumers that used the
+ * old duplicated names (mParam, mActorID, mAreaId, unk_074, unk_0b0, ...)
+ * were repointed to the inherited dActor_c/fBase_c names.
+ *
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. Coin overrides
+ * slot 0 (InitResources), slot 3 (CleanupResources), slot 6 (Behavior) and
+ * slot 9 (Render) -- all still fBase_c's own slots in dActor_c -- plus 18
+ * (OnYoshiTryEat) and 19 (OnTurnIntoEgg). Every other slot holds the base's
+ * own word and is inherited, so it is deliberately not redeclared here.
+ * InitResources and CleanupResources are defined as extern "C" free
+ * functions under their mangled names (src/_ZN4Coin13InitResourcesEv.c,
+ * src/_ZN4Coin16CleanupResourcesEv.c), the same idiom fBase_c.h itself uses
+ * for slot 0 -- declaring them here only fills the vtable slot, it does not
+ * make this TU or theirs the key function.
+ */
+struct Coin : dActor_c {
     s32 mEatingPlayer;            /* 0x0d0 */
     s32 unk_0d4;            /* 0x0d4 */
     /* CommonModel member, named by the class's own destructor calling
@@ -83,11 +74,17 @@ struct Coin {
     u8  unk_3ae;            /* 0x3ae */
     u8  pad_3af[0x1];
     u8  unk_3b0;            /* 0x3b0 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int Render();
-#endif
+
+    virtual ~Coin();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32  InitResources();         /* slot  0 */
+    virtual s32  CleanupResources();      /* slot  3 */
+    virtual s32  Behavior();         /* slot  6 */
+    virtual s32  Render();           /* slot  9 */
+    virtual s32  OnYoshiTryEat();         /* slot 18 */
+    virtual int  OnTurnIntoEgg(Player &player); /* slot 19 */
 };
+
+typedef char Coin_size_must_be_0x3b4[sizeof(Coin) == 0x3b4 ? 1 : -1];
 
 #endif

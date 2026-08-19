@@ -6,7 +6,7 @@ struct Sub { virtual int g0(); virtual int g1(); virtual int g2(); virtual int g
 
 int PowerFlower::Render()
 {
-  int f = (int)((unk_0b0 & 0x40000) != 0);
+  int f = (int)((mFlags & 0x40000) != 0);
   if (f != 0) return 1;
   unsigned char st = unk_3ca;
   if (st < 0x2d && (st & 1)) return 1;

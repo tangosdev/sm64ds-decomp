@@ -1,23 +1,8 @@
 //cpp
 // @symbol _ZN5PokeyD1Ev
-
-struct dActor_c {
-    char pad[0xd0];
-    virtual ~dActor_c();
-};
-
-struct Model { char pad[0x50]; ~Model(); };
-struct ShadowModel { char pad[0x28]; ~ShadowModel(); };
-struct MovingCylinderClsn { char pad[0x34]; ~MovingCylinderClsn(); };
-struct WithMeshClsn { char pad[0x4]; ~WithMeshClsn(); };
-
-struct Pokey : dActor_c {
-    Model m0;   /* 0xd4 */
-    ShadowModel m1;   /* 0x124 */
-    MovingCylinderClsn m2;   /* 0x14c */
-    WithMeshClsn m3;   /* 0x180 */
-    virtual ~Pokey();
-};
+/* recovered: real C++ destructor -- the compiler emits the whole body.
+ * Vtable slot 16: one vtable store, the members in reverse, then ~dActor_c. */
+#include "Pokey.h"
 
 Pokey::~Pokey()
 {

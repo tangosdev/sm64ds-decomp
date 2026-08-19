@@ -57,7 +57,7 @@ src/func_02005a58.c:
     complete
     .text start:0x02005a58 end:0x02005d94
 
-src/_ZN8CapEnemy12Unk_02005d94Ev.cpp:
+src/_ZN11dCapEnemy_c12Unk_02005d94Ev.cpp:
     complete
     .text start:0x02005d94 end:0x02005e28
 
@@ -69,46 +69,46 @@ src/func_02005ed8.c:
     complete
     .text start:0x02005ed8 end:0x02005f0c
 
-src/_ZN8CapEnemy21DestroyIfCapNotNeededEv.cpp:
+src/_ZN11dCapEnemy_c21DestroyIfCapNotNeededEv.cpp:
     complete
     .text start:0x02005f0c end:0x02005fa0
 
-src/_ZN8CapEnemy11GetCapStateEv.cpp:
+src/_ZN11dCapEnemy_c11GetCapStateEv.cpp:
     complete
     .text start:0x02005fa0 end:0x02006054
 
-src/_ZN8CapEnemy15RespawnIfHasCapEv.cpp:
+src/_ZN11dCapEnemy_c15RespawnIfHasCapEv.cpp:
     complete
     .text start:0x02006054 end:0x020060f4
 
-src/_ZN8CapEnemy16GetCapEatenOffItERK7Vector3.cpp:
+src/_ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3.cpp:
     complete
     .text start:0x020060f4 end:0x020061b0
 
-src/_ZN8CapEnemy10ReleaseCapERK7Vector3.cpp:
+src/_ZN11dCapEnemy_c10ReleaseCapERK7Vector3.cpp:
     complete
     .text start:0x020061b0 end:0x02006280
 
-src/_ZN8CapEnemy14RenderCapModelEPK7Vector3.cpp:
+src/_ZN11dCapEnemy_c14RenderCapModelEPK7Vector3.cpp:
     complete
     .text start:0x02006280 end:0x020062b8
 
-src/_ZN8CapEnemy12UpdateCapPosERK7Vector3RK10Vector3_16.cpp:
+src/_ZN11dCapEnemy_c12UpdateCapPosERK7Vector3RK10Vector3_16.cpp:
     .text start:0x020062b8 end:0x020063b0
 
-src/_ZN8CapEnemy6AddCapEj.cpp:
+src/_ZN11dCapEnemy_c6AddCapEj.cpp:
     complete
     .text start:0x020063b0 end:0x020064e0
 
-src/_ZN8CapEnemy14UnloadCapModelEv.cpp:
+src/_ZN11dCapEnemy_c14UnloadCapModelEv.cpp:
     complete
     .text start:0x020064e0 end:0x0200651c
 
-src/_ZN8CapEnemyD2Ev.cpp:
+src/_ZN11dCapEnemy_cD2Ev.cpp:
     complete
     .text start:0x0200651c end:0x02006554
 
-src/_ZN8CapEnemyC2Ev.cpp:
+src/_ZN11dCapEnemy_cC2Ev.cpp:
     complete
     .text start:0x02006554 end:0x02006588
 
@@ -2402,23 +2402,23 @@ src/_ZThn80_N10ModelAnim2D1Ev.cpp:
     complete
     .text start:0x020171b8 end:0x020171c8
 
-src/func_020171c8.cpp:
+src/_ZN10dFdDummy_c14SetForwardTimeEj.cpp:
     complete
     .text start:0x020171c8 end:0x020171f0
 
-src/func_020171f0.cpp:
+src/_ZN10dFdDummy_c15SetBackwardTimeEj.cpp:
     complete
     .text start:0x020171f0 end:0x0201721c
 
-src/func_0201721c.c:
+src/_ZN10dFdDummy_c11AdvanceFadeEv.c:
     complete
     .text start:0x0201721c end:0x02017228
 
-src/func_02017228.c:
+src/_ZN10dFdDummy_cD0Ev.c:
     complete
     .text start:0x02017228 end:0x02017254
 
-src/func_02017254.c:
+src/_ZN10dFdDummy_cD1Ev.c:
     complete
     .text start:0x02017254 end:0x02017278
 
@@ -4669,11 +4669,11 @@ src/_ZN7Message10LoadTextVSEv.cpp:
     complete
     .text start:0x020349e0 end:0x02034a78
 
-src/func_02034a78.c:
+src/_ZN7dScMB_cD1Ev.c:
     complete
     .text start:0x02034a78 end:0x02034ac0
 
-src/func_02034ac0.c:
+src/_ZN7dScMB_cD0Ev.c:
     complete
     .text start:0x02034ac0 end:0x02034b1c
 
@@ -4697,22 +4697,22 @@ src/func_02034d34.cpp:
     complete
     .text start:0x02034d34 end:0x02034d70
 
-src/func_02034d70.c:
+src/_ZN7dScMB_c16CleanupResourcesEv.c:
     complete
     .text start:0x02034d70 end:0x02034d9c
 
-src/func_02034d9c.c:
+src/_ZN7dScMB_c6RenderEv.c:
     complete
     .text start:0x02034d9c end:0x02034da4
 
-src/func_02034da4.c:
+src/_ZN7dScMB_c8BehaviorEv.c:
     complete
     .text start:0x02034da4 end:0x02034fbc
 
 src/func_02034fbc.c:
     .text start:0x02034fbc end:0x0203506c
 
-src/func_0203506c.c:
+src/_ZN7dScMB_c13InitResourcesEv.c:
     complete
     .text start:0x0203506c end:0x020352b4
 

@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN6Goomba6RenderEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_CapEnemy.h"
+#include "decl_dCapEnemy_c.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Goomba.h"
@@ -25,14 +25,14 @@ int Goomba::Render()
     int locked;
     volatile Vector3 backup;
 
-    locked = (unk_0b0 & 0x40000) != 0;
+    locked = (mFlags & 0x40000) != 0;
     if (locked || unk_111 != 0) return 1;
 
     backup.x = mScaleX;
     backup.y = mScaleY;
     backup.z = mScaleZ;
 
-    if (mDeathType == 1) {
+    if (mDeathState == 1) {
         mScaleX = (int)(((long long)mScaleX * data_ov084_02130258[mGoombaType] + 0x800) >> 12);
         mScaleY = (int)(((long long)mScaleY * data_ov084_02130258[mGoombaType] + 0x800) >> 12);
         mScaleZ = (int)(((long long)mScaleZ * data_ov084_02130258[mGoombaType] + 0x800) >> 12);
@@ -47,6 +47,6 @@ int Goomba::Render()
     mScaleY = backup.y;
     mScaleZ = backup.z;
     _ZN15MaterialChanger6UpdateER15ModelComponents(((char*)this) + 0x3fc, ((char*)this) + 0x378);
-    _ZN8CapEnemy14RenderCapModelEPK7Vector3(((char*)this), 0);
+    _ZN11dCapEnemy_c14RenderCapModelEPK7Vector3(((char*)this), 0);
     return 1;
 }

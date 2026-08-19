@@ -256,11 +256,11 @@ src/_ZN8MoneybagD0Ev.c:
     complete
     .text start:0x02126554 end:0x021265b8
 
-src/func_ov081_021265b8.c:
+src/_ZN8Moneybag13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x021265b8 end:0x021265c0
 
-src/func_ov081_021265c0.c:
+src/_ZN8Moneybag16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021265c0 end:0x021265c8
 
@@ -387,7 +387,7 @@ src/_ZN8Moneybag13InitResourcesEv.cpp:
     complete
     .text start:0x021278a8 end:0x02127a7c
 
-src/func_ov081_02127a7c.cpp:
+src/_ZN8Moneybag13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02127a7c end:0x02127adc
 

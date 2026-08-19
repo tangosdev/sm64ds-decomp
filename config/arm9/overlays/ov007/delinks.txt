@@ -2063,11 +2063,11 @@ src/func_ov007_020cbf8c.c:
     complete
     .text start:0x020cbf8c end:0x020cc028
 
-src/func_ov007_020cc028.c:
+src/_ZN9dScDSMT_cD1Ev.c:
     complete
     .text start:0x020cc028 end:0x020cc070
 
-src/func_ov007_020cc070.c:
+src/_ZN9dScDSMT_cD0Ev.c:
     complete
     .text start:0x020cc070 end:0x020cc0cc
 
@@ -2095,22 +2095,22 @@ src/func_ov007_020cc168.c:
     complete
     .text start:0x020cc168 end:0x020cc2ac
 
-src/func_ov007_020cc2ac.c:
+src/_ZN9dScDSMT_c16OnPendingDestroyEv.c:
     complete
     .text start:0x020cc2ac end:0x020cc2b0
 
-src/func_ov007_020cc2b0.c:
+src/_ZN9dScDSMT_c6RenderEv.c:
     complete
     .text start:0x020cc2b0 end:0x020cc2cc
 
-src/func_ov007_020cc2cc.c:
+src/_ZN9dScDSMT_c8BehaviorEv.c:
     .text start:0x020cc2cc end:0x020cc45c
 
-src/func_ov007_020cc45c.c:
+src/_ZN9dScDSMT_c16CleanupResourcesEv.c:
     complete
     .text start:0x020cc45c end:0x020cc4c0
 
-src/func_ov007_020cc4c0.cpp:
+src/_ZN9dScDSMT_c13InitResourcesEv.cpp:
     .text start:0x020cc4c0 end:0x020cc600
 
 src/func_ov007_020cc600.c:
