@@ -2029,7 +2029,7 @@ struct PortSceneClass {
    reads_sublevel is 0 and it is measured, not assumed: no relocation anywhere
    in ov006 lands on data_02092110 and no ov006 source TU names it,
    SublevelToLevel or SUBLEVEL_LEVEL_TABLE. A minigame is not about a course. */
-/* THE SECOND MINIGAME ROW, run mg5 lane SMB. dScMgSmartball_c, actor id 0x178
+/* THE SMARTBALL MINIGAME ROW, run mg5 lane SMB. dScMgSmartball_c, actor id 0x178
    (376), spawn symbol MgBingoBallSlotsShot_Spawn; the ROM's own RTTI string at
    0x0213ec7c reads "16dScMgSmartball_c" and Slots Shot and Bingo Ball are the
    two menu games this one class serves. Identity was re-derived from the image
@@ -2059,6 +2059,30 @@ struct PortSceneClass {
 
    reads_sublevel is 0 for curling's reason, unchanged: no relocation anywhere
    in ov006 lands on data_02092110. */
+
+/* THE COINCENTRATION MINIGAME ROW, run mg5 lane CCN. dScMgCoin_c, actor id 0x17a
+   (378), spawn symbol MgCoincentration_Spawn; the ROM's own RTTI string at
+   0x0213bf24 reads "11dScMgCoin_c" and Coincentration is the minigame's
+   localised name. Its SpawnInfo (0x0213bedc), factory (0x020de940) and vtable
+   (data_ov006_0213bf50, width 36, span-checked three ways) were all re-derived
+   from extracted/overlays/overlay_0006.bin by that lane rather than inherited
+   from the fan-out table, and its five marker-carrying override bodies are
+   ruled REAL_DECOMP in port/tools/inferred_stub_adjudicated.txt.
+
+   THE ROW IS APPENDED AFTER CURLING'S AND THE ORDER IS LOAD-BEARING, which
+   port/mg_fanout_costs.txt section 11 is the write-up of.
+   port_scene_registry_install walks this table in TABLE ORDER and calls every
+   row's fill on every boot, while port_scene_mg_overlay_load runs the
+   thirty-five overlay constructors ONCE PER PROCESS at the tail of the first
+   minigame fill that reaches it. So on any boot the curling fill runs the
+   constructors and this fill runs after them. That is safe here for a reason
+   this lane measured rather than assumed: this seat writes 36 words and no
+   more, its span to the next config symbol is exactly 36 words, so it cannot
+   reach past its own table into a .data pointer-to-member pair the way a
+   37-slot fill of 0x169 or 0x16c would.
+
+   reads_sublevel is 0, for the same measured reason curling's is: a minigame
+   is not about a course. */
 extern "C" {
 extern unsigned char MgShuffleShell_SpawnInfo[];
 void *port_mg_curling_spawn(void);
@@ -2095,6 +2119,10 @@ void port_scene_fill_pachinko(void);
 extern unsigned char MgBingoBallSlotsShot_SpawnInfo[];
 void *port_mg_smartball_spawn(void);
 void port_scene_fill_smartball(void);
+/* run mg5 lane CCN: dScMgCoin_c, the Coincentration minigame. */
+extern unsigned char MgCoincentration_SpawnInfo[];
+void *port_mg_coin_spawn(void);
+void port_scene_fill_coin(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2128,6 +2156,12 @@ static const PortSceneClass port_scene_classes[] = {
        gate. */
     {376, "SCENE_MG_SMARTBALL", MgBingoBallSlotsShot_SpawnInfo,
      port_mg_smartball_spawn, port_scene_fill_smartball, 0},
+    /* APPENDED AT THE END, run mg5 lane CCN. 378 is 0x17a, spelled in decimal
+       for the reason the row above gives. See the block above this table for
+       why appending rather than inserting is the correct place for a minigame
+       row. */
+    {378, "SCENE_MG_COIN", MgCoincentration_SpawnInfo, port_mg_coin_spawn,
+     port_scene_fill_coin, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

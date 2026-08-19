@@ -1647,3 +1647,189 @@ extern "C" void port_scene_mg_smartball_hits(void)
                 (m & 4) ? "  [func_ov006_02114800]" : "");
     std::fflush(stdout);
 }
+
+// ============================================================================
+// RUN mg5, LANE CCN: dScMgCoin_c, THE COINCENTRATION MINIGAME (id 0x17a = 378)
+// ============================================================================
+//
+// The second minigame class seated, and it is the fan-out's cheap shape:
+// SIX override slots, five of them marker-carrying and all five ruled
+// REAL_DECOMP against the ROM before anything here was written (see
+// port/tools/inferred_stub_adjudicated.txt). Everything above this line --
+// port_scene_fill_rom, kMgBaseFaces, mg_apply, mg_raw_left, the mounts and the
+// thirty-five overlay constructors -- is reused unchanged, which is the split
+// port/mg_fanout_costs.txt section 2 calls the whole cost model.
+//
+// THE HIERARCHY IS TWO DEEP AND THAT IS MEASURED, not assumed from curling.
+// Slot 16 (D2, func_ov006_020dbe40) and slot 17 (D0, func_ov006_020dbe64)
+// BOTH store data_ov006_0213bf50 into [this] and then call
+// func_ov004_020b29c0, dScMgBase_c's teardown, with no table in between. So
+// there is no intermediate base of the dScMgSingle3DBase_c kind 0x169 needed,
+// and this seat fills ONE derived table plus the shared base one.
+//
+// THE WIDTH IS 36, CHECKED THREE WAYS. Span to the next config symbol
+// (data_ov006_0213bfe0) is exactly 0x90 = 36 words; slot 35 holds 0x020ad660,
+// the terminal word every dScMgBase_c-derived table holds; and the word at
+// index 36 is 0x01fc00fc, an address in no module. port/slice_ccn.txt states
+// all three. A 37-slot fill here would have written a host thunk over the
+// first word of data_ov006_0213bfe0, which is the failure
+// port/mg_fanout_costs.txt section 11 exists to prevent.
+
+extern "C" {
+/* the class's own vtable, in the ov006 mount. 36 slots, span-checked. */
+extern unsigned char data_ov006_0213bf50[];   /* dScMgCoin_c,    36 slots */
+
+/* the class's own six vtable bodies. func_ov006_020de69c is the HOST COPY in
+   unmatched/MgCoin_StateDispatch.cpp, not the src TU: it is the pointer-to-
+   member dispatcher and the port cannot compile the src. */
+int   func_ov006_020de704(void *self);          /* slot 0  InitResources */
+int   func_ov006_020de69c(void *self);          /* slot 6  Behavior, host copy */
+int   func_ov006_020de63c(void *self);          /* slot 9  Render */
+int   func_ov006_020dbe40(int *self);           /* slot 16 D2 */
+int  *func_ov006_020dbe64(int *self);           /* slot 17 D0 */
+void  func_ov006_020de5b0(char *self);          /* slot 18 state reset */
+
+void *MgCoincentration_Spawn(void);
+
+/* the state machine's witnesses, from unmatched/MgCoin_StateDispatch.cpp */
+unsigned port_mg_coin_state_hits(void);
+unsigned port_mg_coin_floor_hits(void);
+/* the render-path floor's witness, from unmatched/MgCoin_Faces.cpp */
+unsigned port_mg_coin_trap_hits(void);
+}
+
+static int  __fastcall mc_init(void *s, void *)
+{ MG_SLOT(0);  return func_ov006_020de704(s); }
+static int  __fastcall mc_beh(void *s, void *)
+{ MG_SLOT(6);  return func_ov006_020de69c(s); }
+static int  __fastcall mc_render(void *s, void *)
+{ MG_SLOT(9);  return func_ov006_020de63c(s); }
+static void *__fastcall mc_d2(void *s, void *)
+{ MG_SLOT(16); return (void *)(size_t)func_ov006_020dbe40((int *)s); }
+static void *__fastcall mc_d0(void *s, void *)
+{ MG_SLOT(17); return (void *)func_ov006_020dbe64((int *)s); }
+static int  __fastcall mc_reset(void *s, void *)
+{ MG_SLOT(18); func_ov006_020de5b0((char *)s); return 1; }
+
+/* dScMgCoin_c's own six, the per-class half. Keyed on the ROM WORD each slot
+   holds, exactly like kCurlingFaces, so the array is order-independent and
+   cannot land on a slot the ROM did not park that body in. */
+static const MgFace kCoinFaces[] = {
+    {0x020de704u, (void *)mc_init},   {0x020de69cu, (void *)mc_beh},
+    {0x020de63cu, (void *)mc_render}, {0x020dbe40u, (void *)mc_d2},
+    {0x020dbe64u, (void *)mc_d0},     {0x020de5b0u, (void *)mc_reset},
+};
+
+/* The scene object, for the run report below. Nothing else reads it. */
+static char *g_mg_coin_self;
+
+extern "C" void *port_mg_coin_spawn(void)
+{
+    void *p = MgCoincentration_Spawn();
+    g_mg_coin_self = (char *)p;
+    return p;
+}
+
+/* THE FACTORY NEEDS NO DISPLACEMENT RULING, and that is worth recording
+   because 0x169's did. src/MgCoincentration_Spawn.cpp calls
+   func_ov004_020b2adc(o) WITH its argument, where src/func_ov006_020e0574.cpp
+   (0x169's factory) calls the same base constructor with none and rides r0
+   through. That callee dereferences on its first statement and then writes
+   three vtable words through the pointer, so the difference is a wild write
+   versus a correct one. This class's factory is on the correct side of it and
+   is linked from the slice rather than host-copied. Verified against the ROM
+   at 0x020de940 (0x48 bytes) during this lane's adjudication pass. */
+
+extern "C" void port_scene_mg_coin_hits(void);
+
+extern "C" void port_scene_fill_coin(void)
+{
+    /* mounts before the fill, for port_scene_fill_curling's reason; both are
+       idempotent behind their own static guards. */
+    port_scene_mg_mounts();
+
+    void **base = (void **)data_ov004_020bc0c0;
+    void **vt   = (void **)data_ov006_0213bf50;
+
+    /* The base table again. port_scene_fill_curling already filled it on this
+       boot -- every row's fill runs on every boot -- and doing it here as well
+       is idempotent, because the fill keys on the ROM word a slot holds and a
+       slot already holding a host thunk matches nothing. It is repeated so this
+       fill is correct read on its own, the way port_scene_mg_overlay_load
+       re-calls the mounts for the same reason. */
+    port_scene_fill_rom(base, 36);
+    mg_apply(base, 36, kMgBaseFaces,
+             sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
+
+    /* the derived table: shared arm9 words, then the framework's twenty-eight,
+       then this class's own six. The three key sets are disjoint by
+       construction, since a word is one address. */
+    port_scene_fill_rom(vt, 36);
+    mg_apply(vt, 36, kMgBaseFaces,
+             sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
+    mg_apply(vt, 36, kCoinFaces,
+             sizeof kCoinFaces / sizeof kCoinFaces[0]);
+
+    {
+        const char *s0 = std::getenv("SM64DS_SCENE_SLOT0");
+        const char *s9 = std::getenv("SM64DS_SCENE_SLOT9");
+        if (s0 && s0[0] == '0') vt[0] = (void *)mg_init_noop;
+        if (s9 && s9[0] == '0') vt[9] = (void *)mg_render_noop;
+    }
+
+    {
+        const unsigned lv = mg_raw_left(vt, 36);
+        if (lv) {
+            std::fprintf(stderr, "  [scene] MINIGAME FILL INCOMPLETE: "
+                         "dScMgCoin_c leaves %u of 36 raw DS words. A dispatch "
+                         "of any of them jumps to a DS address as a host "
+                         "one.\n", lv);
+            std::fflush(stderr);
+        }
+    }
+
+    port_scene_mg_prepare(port_scene_env_want());
+
+    if (port_scene_env_want() == 378) {
+        static int armed;
+        if (!armed) {
+            armed = 1;
+            std::atexit(port_scene_mg_coin_hits);
+        }
+    }
+}
+
+/* This class's own witness. hal/scene_boot.cpp's end-of-run block still has no
+   third branch and is still not this lane's region to widen, so the same
+   std::atexit shape port_scene_fill_curling uses is used here. Registered only
+   when scene 378 is the requested one, so a curling or level run prints
+   nothing extra. */
+extern "C" void port_scene_mg_coin_hits(void)
+{
+    std::printf("[scene] dScMgCoin_c slot hits: init %u, behavior %u, "
+                "render %u, D0 %u, state-reset %u\n",
+                g_mg_hits[0], g_mg_hits[6], g_mg_hits[9], g_mg_hits[17],
+                g_mg_hits[18]);
+    {
+        unsigned calls = 0, unknown = 0;
+        port_mg_dispatch_counts(&calls, &unknown);
+        std::printf("[scene] dScMgCoin_c state dispatch: %u routed to a "
+                    "dScMgCoin_c state, %u reached the class's ONE bodiless "
+                    "state (0x020dd0e0), %u framework call(s), %u UNHANDLED "
+                    "address(es)\n", port_mg_coin_state_hits(),
+                    port_mg_coin_floor_hits(), calls, unknown);
+    }
+    /* THE TWO FLOORS, REPORTED WHETHER OR NOT THEY FIRED. Both are decomp
+       gaps and both are silent unless the path that reaches them runs, so a
+       run that prints zero for either has to say WHICH zero it is: the
+       render floor is only reachable with rendering on, and the state floor
+       only if the class ever selects that state. */
+    std::printf("[scene] dScMgCoin_c floors: render callee 0x020dbe9c entered "
+                "%u time(s), bodiless state 0x020dd0e0 wanted %u time(s)\n",
+                port_mg_coin_trap_hits(), port_mg_coin_floor_hits());
+    if (g_mg_coin_self)
+        std::printf("[scene] dScMgCoin_c object at %p, state index %d\n",
+                    (void *)g_mg_coin_self,
+                    *(int *)(g_mg_coin_self + 0x51c8));
+    std::fflush(stdout);
+}
