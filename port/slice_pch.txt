@@ -322,7 +322,18 @@ src/func_ov004_020af2f8.cpp
 #     func_ov006_020fea70   called by src/func_ov006_020fee24.c (vtable slot 6)
 #     func_ov006_020fc718   state 0 of data_ov006_02142624, called by this
 #                           class's address switch
-src/func_ov006_020fb7e0.c
+# func_ov006_020fb7e0 IS EXCLUDED, host-copied in
+# port/unmatched/MgPachinko_Award.cpp. Run mg5, lane HISCORE: it calls
+# func_ov006_020fbb2c, the award routine, with TWO arguments where the
+# definition takes three, because the ROM rides the points through r2 out of
+# the same ldrh that makes the != 0 test (0x020fb8c0). On the host the callee
+# read its points off a caller stack slot nobody wrote -- measured, 3104 where
+# the object held 0x1234 -- and every award pushed the score up by a number
+# like that until func_ov004_020adb1c's own clamp to data_0209b308+0x0c
+# (0x000f423f) pinned it, and func_ov004_020ada40 promoted the pinned value
+# into the high score. That is the "HIGH SCORE 999999 / SCORE 0" the owner
+# reported. The host copy is src verbatim with the callee declared as it is
+# DEFINED and the ROM's own r2 value passed; see that file's header.
 src/func_ov006_020fc718.c
 src/func_ov006_020fea70.c
 

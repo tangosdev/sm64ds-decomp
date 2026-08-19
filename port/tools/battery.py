@@ -656,12 +656,21 @@ def scene_env(scene, extra=None):
     # inherited one would press buttons into a scene the battery is measuring,
     # and the click and the pad are the same class of input with the same
     # exposure.
+    # SM64DS_MG_SCORE_TRACE JOINS THEM FOR A REASON THAT IS NOT PRINTING. Run
+    # mg5 lane HISCORE added it, and most of what it does is read-only, but one
+    # arm of it -- hal/scene_mg.cpp's pch_award_abi_check -- CALLS GAME CODE
+    # (func_ov006_020fb7e0 and the award routine behind it) on a scratch object
+    # during the pachinko fill. It parks data_ov004_020beb68 so it cannot reach
+    # the live score, and it is off unless the variable is set, but an inherited
+    # value would still run two ov006 bodies inside a row this step is
+    # measuring. Same class as the pad and the click: not input, but not
+    # nothing either.
     for k in ("SM64DS_LEVEL", "SM64DS_SKIP_CLASS", "SM64DS_SCENE_NO_RENDER",
               "SM64DS_SCENE_BMP", "SM64DS_SCENE_BMP_STACKED",
               "SM64DS_SCENE_TRACE", "SM64DS_SCENE_SLOT9",
               "SM64DS_SCENE_SUBLEVEL", "SM64DS_DUAL_SCREEN", "PORT_WATCHDOG",
               "SM64DS_SCENE_WINDOW", "SM64DS_CLICK_TEST", "SM64DS_PAD_TEST",
-              "SM64DS_TOUCH_PROBE"):
+              "SM64DS_TOUCH_PROBE", "SM64DS_MG_SCORE_TRACE"):
         env.pop(k, None)
     if extra:
         for kv in extra.split(","):
