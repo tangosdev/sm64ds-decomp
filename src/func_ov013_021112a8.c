@@ -10,7 +10,12 @@ int func_ov013_021112a8(char* c)
 {
     if (data_02092110[0] <= 0) {
         short* p90 = (short*)(c + 0x90);
-        if (*p90 > 0) {
+        /* The test re-derives +0x90 instead of reading through p90, and that is
+           load-bearing under 2004/b56: the ROM tests the field directly
+           (`ldrsh r0,[r4,#0x90]`) and only then materialises the pointer
+           (`add r3,r4,#0x90`) for the read-modify-write below. Spelled as `*p90`,
+           b56 folds the test into the pointer and emits the two in the other order. */
+        if (*(short*)(c + 0x90) > 0) {
             *(short*)(((long long)(int)(c + 0x124))) -= 8;
         } else {
             *(short*)(((long long)(int)(c + 0x124))) += 8;
