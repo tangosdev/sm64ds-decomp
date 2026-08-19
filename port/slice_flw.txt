@@ -1,0 +1,243 @@
+# Gate FLW: dScMgFlower_c, the "Loves Me...?" petal minigame. Actor id 0x186
+# (390). Run mg5, lane FLW.
+#
+# THE IDENTITY WAS RE-DERIVED FROM THE ROM RATHER THAN TAKEN FROM THE BRIEF,
+# and every number below is reproducible in a minute:
+#
+#   doubled-id word   0x01860186 at 0x02140118, the ONLY occurrence in
+#                     extracted/overlays/overlay_0006.bin (base 0x020bfec0)
+#   SpawnInfo         0x02140114 = {factory 0x0212b7f8, id 0x0186 twice}
+#   typeinfo          0x0214011c {0x0209a764, name 0x02140128, base 0x0213bc64}
+#   RTTI string       0x02140128 reads "13dScMgFlower_c"
+#   vtable            0x02140140 (its typeinfo word at 0x0214013c is
+#                     0x0214011c, which is the record above -- the table is
+#                     closed on both sides)
+#
+# THE HIERARCHY IS THREE DEEP AND THE SEAT FILLS THREE TABLES. Read off the
+# factory and the deleting destructor rather than guessed: func_ov006_0212b7f8
+# writes 0x0213e448 into the object's first word and then 0x02140140 over it,
+# and func_ov006_0212a5c8 (slot 17, the D0) unwinds them in the opposite order.
+#
+#     Scene -> dScMgBase_c         0x020bc0c0  36  (ov004, curling's fill)
+#           -> dScMgSingle3DBase_c 0x0213e448  36  ovr 8,  mark 6,  nosrc 0
+#           -> dScMgFlower_c       0x02140140  36  ovr 12, mark 10, nosrc 0
+#
+# The middle table is the SAME ONE dScMgCup_c (0x169) sits under, so
+# port/slice_mga361.txt's derivation of it and this one agree, and the six
+# 0x0210a6xx bodies are ruled once for both.
+#
+# ---- THE THREE WIDTH CHECKS (port/mg_fanout_costs.txt section 11) ----------
+#
+# Re-run rather than inherited, because twelve of the twenty-nine widths in
+# that file's section 3 table were phantoms:
+#
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt: data_ov006_02140140 ->
+#      next symbol data_ov006_021401d0. 0x90 bytes = 36 words. A 37th slot
+#      cannot exist inside the table. (An UPPER bound only, so it refuses a
+#      width and never grants one.)
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, which every dScMgBase_c-derived
+#      table holds. Both new tables do.
+#   3. WHAT THE WORD PAST THE END IS. Slot 36 would read 0x2f474d2f, the ASCII
+#      "/MG/" of the file-path string at data_ov006_021401d0 -- the same
+#      control curling gives in section 11. It is a path, not a code word.
+#
+# All three agree on 36, and section 3's row for 0x186 (36 / 12 / 10 / 0) is
+# CONFIRMED EXACTLY by port/tools/vtablerows.py --vtable 0x02140140 --width 36.
+#
+# ---- THIS CLASS HAS NO POINTER-TO-MEMBER STATE MACHINE --------------------
+#
+# THE LARGEST SINGLE FINDING OF THIS LANE, and it is a measurement rather than
+# an absence-of-evidence claim. port/mg_fanout_costs.txt section 4 says the
+# mwcc member-pointer wall is "the same one for all thirty". It is not this
+# one's:
+#
+#   - src/func_ov006_0212ac74.c, vtable slot 6, the Behavior, dispatches a
+#     PLAIN C `switch (self->unk_5fe8)` with cases 0 and 1. There is no
+#     `(c->*table[j])()` anywhere in it. The ROM agrees: 0212ad00 is
+#     `cmp r0,#0 / beq / cmp r0,#1 / beq / b default`, not the five-instruction
+#     ARM Itanium sequence curling's 020e3528 and 0x169's 020e0204 both carry.
+#   - ZERO relocations leave ov006's .init CODE (0x0212f4c4..0x02133600) for
+#     this class's cluster (0x0212a554..0x0212b88c). No overlay constructor
+#     builds a pair table for it, so there is no .bss dispatch table to copy
+#     into and no second closure root to walk from. The whole thirty-five
+#     constructors still run -- hal/scene_mg.cpp runs them for the family --
+#     but none of them is this class's.
+#   - A `::*` SWEEP OF EVERY TU IN THIS SLICE FINDS NONE. That sweep is not
+#     redundant with the link: section 4 measures that two dispatchers hide
+#     behind extern "C" and four dispatch an object FIELD and emit no symbol at
+#     all, so a clean link is not a clean detector. The sweep is clean too.
+#
+# So this lane writes no address switch and no dispatcher host copy, and the
+# fan-out cost model gains a fourth shape beside curling's five-TU wall and
+# 0x169's one-TU wall: a minigame with no wall at all.
+#
+# ---- HOW THE LIST WAS DERIVED ---------------------------------------------
+#
+# A relocation closure over config/arm9/{,overlays/ov00{1,4,6}/}relocs.txt,
+# blocks joined through delinks.txt and data symbols spanned symbol-to-next
+# (ov006 has ZERO .data delink blocks, so a vtable has no owning TU and has to
+# be spanned), from three roots: the SpawnInfo 0x02140114, the class vtable
+# 0x02140140 and the intermediate base's 0x0213e448.
+#
+#   ov006  43 TUs      ov004  156 TUs      ov001  5 TUs      arm9  812 TUs
+#
+# THE RESIDENT SET IS RESTRICTED TO main + ov001 + ov004 + ov006 AND THAT IS
+# NOT A CONVENIENCE. Overlays share address space; ov002 and ov006 are never
+# co-resident and their spans overlap, so an unconstrained walk resolves ov006
+# addresses into ov002 and reports 272 ov002 TUs that no minigame boot loads.
+#
+# 204 of the 999 non-arm9 TUs are in this closure; 59 are not already in
+# port/slice_mg1.txt. THIRTEEN of those 59 are removed because the port already
+# answers them and adding them back would double-define:
+#
+#   HOST-COPIED by unmatched/MgBase_StateDispatch.cpp (the pointer-to-member
+#   wall, the FRAMEWORK's rather than this class's):
+#     func_ov004_020add88  _020adf2c  _020b31b4  _020b321c  _020b3278
+#     _020b8714  _020b8778
+#   HOST-COPIED by unmatched/MgBase_DeclConflict.cpp (the decl_common.h C2733
+#   redeclaration, four TUs):
+#     func_ov004_020b0620  _020b0930  _020aeed8  _020af094
+#   HOST-COPIED by unmatched/MgBase_LangTable.cpp (the fabricated 29-entry
+#   initializer MG2 found by running):
+#     func_ov004_020b2cb8
+#   TRAPPED in hal/scene_mg_faces.cpp (the state setter, the wall itself):
+#     func_ov004_020b87e0
+#
+# A FOURTEENTH IS REMOVED FOR A REASON THIS LANE FOUND, and it is the one
+# ride-through this class owes:
+#     func_ov006_0210a6e4   vtable slot 2, AfterInitResources
+# The ROM does `mov r4,r0; bl 0x20b08f0` without ever writing r1, so the
+# framework's SECOND argument rides through in r1. src declares the callee with
+# ONE parameter and calls it with one, while the real body takes two and passes
+# the second to Scene::AfterInitResources -- where vfSuccess == 1 marks the
+# actor for destruction on the first frame. On the host the callee reads the
+# stack. port/unmatched/MgFlower_Slot2.cpp is the PORT_HOST_ABI host copy that
+# lands the argument; src/ is untouched. Lane MGA recorded this ride-through
+# and left it as "a seat obligation"; this is the seat paying it.
+#
+# ONE BODY IN THIS CLOSURE IS UNDECOMPILED, AND THE RELOCATION WALK DID NOT
+# FIND IT. func_ov006_0212a764 (0x310 bytes) has a config SYMBOL in
+# config/arm9/overlays/ov006/symbols.txt, NO delink block -- the block before
+# it ends exactly at 0x0212a764 and the next starts at 0x0212aa74 -- and no src
+# file anywhere defines it. Two matched TUs call it and both are on this
+# class's live path:
+#
+#     from:0x0212b73c  inside func_ov006_0212b480, slot 0 InitResources
+#     from:0x0212aab8  inside func_ov006_0212aa74, slot 18 the state reset
+#
+# IT GETS A NAMED TRAP in hal/scene_mg_flower.cpp, not a plausible body, for
+# the reason port/tools/inferred_stub_guard.py exists. What the trap costs is
+# measured rather than guessed and is written up in that file's section 7.
+#
+# AND THE WAY IT WAS MISSED IS WORTH THE NEXT LANE KNOWING, because it is a
+# defect in the closure method rather than in this class. A relocation walk
+# resolves an address by finding the delink block that contains it; when there
+# is no block, the walk falls through to the symbol-span table -- which DOES
+# have a row, because symbols.txt names the function -- and treats it as data
+# with no owning TU. So an undecompiled body with a config symbol looks exactly
+# like a data word to the walk and is reported under neither the TU list nor
+# the unresolved list. THE SYMBOL-TABLE PROBE IS WHAT CONVICTS: closure.py
+# named _func_ov006_0212a764 in its first pass. A lane that reads only its own
+# relocation closure will under-count this class of floor by exactly the bodies
+# that matter most, since a body with no delink block is the definition of an
+# undecompiled one.
+#
+# vtablerows.py's nosrc column is still RIGHT AT 0 and is not contradicted: it
+# reports on the twelve override bodies, all twelve of which have src. This
+# body is not in any vtable.
+#
+# The walk's own unresolved set is sixteen addresses and every one of them is
+# ITCM (0x01ff8xxx) or DTCM (0x023c0000).
+#
+# THE arm9 HALF IS NOT LISTED, for slice_mg1.txt's reason: the closure reaches
+# 812 arm9 TUs and the matched ones come back through /OPT:REF for free the
+# moment ov004/ov006 reference them. The arm9 lines that ARE below are the ones
+# a closure probe or a link wave proved the image does not already carry.
+#
+# ---- the list ---------------------------------------------------------------
+src/Camera_UpdateMatrices.c
+src/func_ov001_020ab550.c
+src/func_ov004_020ad8b8.c
+src/func_ov004_020af770.cpp
+src/func_ov006_020c3528.cpp
+src/func_ov006_020c35a8.cpp
+src/func_ov006_020c35e8.c
+src/func_ov006_020c3754.c
+src/func_ov006_020c3884.c
+src/func_ov006_020c38ac.c
+src/func_ov006_020c38b0.c
+src/func_ov006_020c3904.c
+src/func_ov006_020c3908.c
+src/func_ov006_020c395c.c
+src/func_ov006_020c3990.c
+src/func_ov006_020c3ad8.c
+src/func_ov006_020c3adc.c
+src/func_ov006_020c3b2c.c
+src/func_ov006_020c3b80.c
+src/func_ov006_020c3bc8.c
+src/func_ov006_020c3bf4.cpp
+src/func_ov006_020c3d18.cpp
+src/func_ov006_020c3d88.cpp
+src/func_ov006_020c3e54.c
+src/func_ov006_020c3e70.cpp
+src/func_ov006_020c3f54.cpp
+src/func_ov006_020c402c.c
+src/func_ov006_0210a4b0.cpp
+src/func_ov006_0210a4e8.cpp
+src/func_ov006_0210a600.c
+src/func_ov006_0210a608.c
+src/func_ov006_0210a664.c
+src/func_ov006_0210a698.cpp
+src/func_ov006_0210a708.c
+src/func_ov006_0210c374.cpp
+src/func_ov006_0212a554.c
+src/func_ov006_0212a5c8.cpp
+src/func_ov006_0212a650.c
+src/func_ov006_0212a654.c
+src/func_ov006_0212aa74.c
+src/func_ov006_0212aacc.c
+src/func_ov006_0212ac74.c
+src/func_ov006_0212b480.c
+src/func_ov006_0212b7f8.cpp
+src/func_ov006_0212b88c.c
+
+# ---- the arm9 lines, and why there are only eight --------------------------
+#
+# The closure reaches 812 arm9 TUs and 804 of them are already compiled into
+# walk_window; listing those would be 804 lines that change nothing. These
+# eight are the ones port/tools/closure.py proved the image does NOT carry,
+# probed against this lane's own baseline map (5831/11250) with the map COPIED
+# ASIDE FIRST -- port/mg_fanout_costs.txt section 10 finding 3 records that a
+# failed link truncates walk_window.map to zero bytes and that closure.py only
+# checks the file EXISTS, so a probe against a zeroed map reports every symbol
+# unresolved under a quiet "map defines 0 symbols" line. The probe run behind
+# these eight says "map defines 37496 symbols".
+#
+# Vec2_Sub and Vec2_Len are the two the Behavior uses for its petal-vs-cursor
+# distance test (the `Vec2_Len(&d) < 0x18000` in src/func_ov006_0212ac74.c).
+# Particle::SysTracker::~SysTracker is the one the destructor chain needs and
+# the one lane MGA's probe named for 0x169 as well.
+src/Vec2_Len.c
+src/Vec2_Sub.c
+# NOT src/_ZN8Particle10SysTrackerD1Ev.cpp. It was in the probe's UNRESOLVED
+# list and listing it produced an LNK2005 on all three targets, because
+# port/slice_gate29.txt already carries it and CMake dedupes only identical
+# absolute paths -- these two lists reach the same file and the second copy
+# becomes a second object. THE PROBE READING WAS THE ERROR DIRECTION
+# closure.py's own docstring warns about: it classifies against
+# walk_window.map, and the symbol is absent from the map because /OPT:REF
+# stripped it for want of a caller, not because the TU is missing. This slice
+# is that caller, so it comes back for free. Lane MGA's probe named the same
+# TU for 0x169 and its slice lists it; whichever lane seats 361 will meet this
+# LNK2005 too.
+src/func_02016a04.c
+src/func_02016a14.c
+src/func_0202ffec.c
+src/func_0203ccd4.c
+src/func_0203cd80.c
+# WAVE 2, named by the linker and by nothing else: func_02016a14 above calls
+# it and no probe wave predicted it, because the probe only asks what the
+# LISTED TUs want and func_02016a14 was itself a wave-1 line.
+src/func_02045f80.c
+# WAVE 3, the previous wave's own closure: func_02045f80 calls it.
+src/func_02045fd4.c

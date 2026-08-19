@@ -533,6 +533,28 @@ static const MgFace kCurlingFaces[] = {
     {0x020e065cu, (void *)mg_d0},     {0x020e3470u, (void *)mg_reset},
 };
 
+/* ---- THE FAN-OUT SEAM, run mg5 lane FLW ----------------------------------
+ *
+ * ONE exported function, and it is the whole of what this file gives a
+ * fan-out lane. Everything a per-class seat needs from the framework half is
+ * behind it -- the mounts, the address-keyed arm9 fill, and kMgBaseFaces --
+ * so a lane seating its own class writes its own file and does not copy the
+ * twenty-eight-row base array into it.
+ *
+ * COPYING THAT ARRAY IS THE FAILURE THIS PREVENTS, and it is not a style
+ * point. kMgBaseFaces is keyed on the ROM WORD a slot holds, so a second copy
+ * in another translation unit would install a DIFFERENT set of host thunks
+ * over the same DS addresses in the same mounted tables, and the per-slot
+ * counters at the top of this file would then count only whichever copy ran
+ * last. The witness would read low and nothing would say so.
+ *
+ * It deliberately does NOT run the constructors and does not print the
+ * raw-word census: the first is gated on the requested id and belongs to the
+ * calling fill (port_scene_mg_prepare), and the second has to be reported per
+ * TABLE by a caller that knows how many tables its class has. dScMgFlower_c
+ * has three. */
+extern "C" unsigned port_scene_mg_fill_shared(void **vt, unsigned n);
+
 static unsigned mg_apply(void **vt, unsigned n, const MgFace *f, unsigned nf)
 {
     unsigned hit = 0;
@@ -541,6 +563,17 @@ static unsigned mg_apply(void **vt, unsigned n, const MgFace *f, unsigned nf)
         for (unsigned k = 0; k < nf; ++k)
             if (f[k].ds == ds) { vt[i] = f[k].host; ++hit; break; }
     }
+    return hit;
+}
+
+static void port_scene_mg_mounts(void);
+
+extern "C" unsigned port_scene_mg_fill_shared(void **vt, unsigned n)
+{
+    port_scene_mg_mounts();
+    unsigned hit = port_scene_fill_rom(vt, n);
+    hit += mg_apply(vt, n, kMgBaseFaces,
+                    sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
     return hit;
 }
 

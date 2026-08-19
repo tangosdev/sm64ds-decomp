@@ -2029,10 +2029,38 @@ struct PortSceneClass {
    reads_sublevel is 0 and it is measured, not assumed: no relocation anywhere
    in ov006 lands on data_02092110 and no ov006 source TU names it,
    SublevelToLevel or SUBLEVEL_LEVEL_TABLE. A minigame is not about a course. */
+/* THE SECOND MINIGAME ROW, run mg5 lane FLW, and it is the fourth scene class.
+   dScMgFlower_c, actor id 0x186 (390) -- the "Loves Me...?" petal minigame.
+   The ROM's own RTTI string at 0x02140128 reads "13dScMgFlower_c", and the
+   SpawnInfo it belongs to was found by scanning
+   extracted/overlays/overlay_0006.bin for the doubled-id word 0x01860186,
+   which occurs exactly once, at 0x02140118.
+
+   THE ROW IS APPENDED AFTER CURLING'S AND THE POSITION IS LOAD-BEARING.
+   port_scene_registry_install below walks this table in order and calls every
+   row's fill on every boot, while hal/scene_mg.cpp runs the thirty-five
+   overlay constructors ONCE PER PROCESS from the tail of the FIRST minigame
+   row's fill. So appending means the constructors have already run against
+   clean ROM words when this fill starts, which is the safe direction
+   port/mg_fanout_costs.txt section 11 argues for. (Section 11's actual hazard
+   -- a fill writing a word a constructor later copies -- is measured absent
+   for this class: zero relocations leave ov006's .init code for either of the
+   two tables this row fills. hal/scene_mg_flower.cpp section 4.)
+
+   Its fill, its factory forwarder, its two face arrays and its one named trap
+   are all in hal/scene_mg_flower.cpp; this row is the only thing this lane
+   changes in this file, which is the shape lane MG2 established.
+
+   reads_sublevel is 0 for the curling row's reason, re-derived rather than
+   copied: no relocation anywhere in ov006 lands on data_02092110 and no ov006
+   source TU names it. A minigame is not about a course. */
 extern "C" {
 extern unsigned char MgShuffleShell_SpawnInfo[];
 void *port_mg_curling_spawn(void);
 void port_scene_fill_curling(void);
+extern unsigned char data_ov006_02140114[];
+void *port_mg_flower_spawn(void);
+void port_scene_fill_flower(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2045,6 +2073,11 @@ static const PortSceneClass port_scene_classes[] = {
        this table. */
     {374, "SCENE_MG_CURLING", MgShuffleShell_SpawnInfo, port_mg_curling_spawn,
      port_scene_fill_curling, 0},
+    /* 390 is 0x186, spelled in decimal for the same two reasons the row above
+       is: the other rows are, and port/tools/battery.py reads its hosted-scene
+       set out of this table. APPENDED LAST, on purpose; see the header. */
+    {390, "SCENE_MG_FLOWER", data_ov006_02140114, port_mg_flower_spawn,
+     port_scene_fill_flower, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

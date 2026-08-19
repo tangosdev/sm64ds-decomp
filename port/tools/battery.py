@@ -240,6 +240,48 @@ SCENE_SKIPS = {
 # BLOCK RETIRED, exactly like a retired skip. The marker string is what pins
 # it: without one, any new fault would read as the known one.
 SCENE_BLOCKED = {
+    # SCENE 390 (0x186), dScMgFlower_c -- the "Loves Me...?" petal minigame,
+    # seated by run mg5 lane FLW. The seat is complete and the blocker is an
+    # ov004 FRAMEWORK defect two calls into the class's own InitResources, not
+    # anything about this class:
+    #
+    #   flw_init -> func_ov006_0212b480 (slot 0) +0xa
+    #            -> func_ov004_020ad8b8 +0x10
+    #            -> func_ov004_020adc3c +0x6
+    #   FAULT c0000005 accessing 0x00000009
+    #
+    # AN ARM ARGUMENT RIDE-THROUGH, the third instance of the family
+    # port/mg_fanout_costs.txt section 6 records for slots 5 and 7, and the
+    # first found by running instead of by reading. The ROM at 0x020ad8c4 does
+    # `ldr r0,[r0]` off data_ov004_020beb68 and then `bl 0x20adc3c` without
+    # touching r0, so the callee's argument is that global read as a POINTER.
+    # src/func_ov004_020ad8b8.c declares `func_ov004_020adc3c(void)` and calls
+    # it with none, while src/func_ov004_020adc3c.c takes `void *c` and reads
+    # c+8 on its first statement -- so on the host it reads [esp+4], which held
+    # 1, and 1+8 is the address in the fault line.
+    #
+    # THE FIX IS ONE LINE AND IS DELIBERATELY NOT HERE. A PORT_HOST_ABI host
+    # copy of func_ov004_020ad8b8 in port/unmatched/ that passes the pointer,
+    # the shape unmatched/MgBase_DeclConflict.cpp uses for four TUs. It costs
+    # one LINKED FUNCTION (the src TU leaves port/slice_flw.txt when the host
+    # copy enters), so it is an argument-displacing host copy and lane FLW's
+    # brief reserves those to the coordinator's ruling -- the precedent being
+    # mg_fanout_costs section 12, where the same ruling was granted to
+    # whichever lane seats 361. The request is filed and the blocker is
+    # recorded rather than worked around.
+    #
+    # THE MARKER IS PRINTED BY A PREDICATE, NOT BY THE FAULT. A link offset
+    # changes on every build and cannot be a battery marker. The line below is
+    # emitted by port/hal/scene_mg_flower.cpp's pre-flight, whose condition is
+    # the ROM's OWN branch condition (data_ov004_020beb68 != 0 is exactly what
+    # makes func_ov004_020ad8b8 call anything at all), so the day the host copy
+    # lands or that global is zero here, the line and the fault stop together
+    # and this row reports BLOCK RETIRED.
+    390: ("run mg5 lane FLW, awaiting the displacement ruling",
+          "FLOWER BLOCKED: func_ov004_020ad8b8 calls func_ov004_020adc3c "
+          "with NO argument",
+          "c0000005 accessing 0x00000009 inside func_ov004_020adc3c, reached "
+          "through dScMgFlower_c::InitResources"),
     # SCENE 1 WAS HERE AND IS RETIRED, run link60 Stage 5 lane MR1. The row
     # had been CONVERTED FOUR TIMES and every conversion was a real blocker
     # retired by a real seat: func_ov007_020c9688 (lane L2, host transcription
