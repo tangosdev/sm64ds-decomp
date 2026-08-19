@@ -130,18 +130,24 @@ extern signed char data_0209f2f8;       /* current level */
    same line; Minimap::Behavior and Message::UpdateWindow are two of them. It
    is the game's own switchboard for what the bottom screen shows. */
 extern unsigned char data_0209d454;
-/* TouchInfo data_020a0de8[4]: {u8 touched, u8 held, u8 x, u8 y} per slot, in
+/* TouchInfo data_020a0de8[4]: {u8 touched, u8 edge, u8 x, u8 y} per slot, in
    DS bottom-screen pixels. Stage::CheckCameraInput and every TouchArea read
    it; nothing on the host was writing it.
 
+   BYTE +1 IS AN EDGE AND NOT A HOLD. src/func_0203bb60.c, the ROM's own
+   producer, writes `p[1] = touch ^ p[0]` -- set on the frame the stylus goes
+   down and again on the frame it comes up. This file called it `held` for a
+   long time and wrote a held flag into it; poll_touch's store carries the
+   derivation and what the wrong shape cost.
+
    THE FOUR NAMES ARE ONE BLOCK. dsd named a symbol at each of slot 0's four
    bytes, and readers reach the fields through whichever name they were
-   decompiled with -- Message::Update reads `held` as data_020a0de9[idx*4] and
-   `y` as data_020a0deb[idx*4]. hal/auto_bss.cpp hosts all four over the one
-   16-byte run so a write here reaches every one of them; the touch probe
+   decompiled with -- Message::Update reads the edge as data_020a0de9[idx*4]
+   and `y` as data_020a0deb[idx*4]. hal/auto_bss.cpp hosts all four over the
+   one 16-byte run so a write here reaches every one of them; the touch probe
    below is what proves it. */
 extern unsigned char data_020a0de8[];   /* +0 touched */
-extern unsigned char data_020a0de9[];   /* +1 held    */
+extern unsigned char data_020a0de9[];   /* +1 edge    */
 extern unsigned char data_020a0dea[];   /* +2 x       */
 extern unsigned char data_020a0deb[];   /* +3 y       */
 /* Stage::CheckCameraInput's own inputs and outputs */
@@ -234,8 +240,11 @@ int env_flag(const char *name, int dflt)
  *
  * One stderr line per listed frame:
  *
- *   [touch] f59 poke=yes(1,120,150) pre={de8=1 de9=0 dea=120 deb=150}
+ *   [touch] f58 poke=yes(1,120,150) pre={de8=0 de9=0 dea=0 deb=0}
  *           post={de8=1 de9=1 dea=120 deb=150} d=(1,2,3) block=01017896 ...
+ *
+ * de9 reads 1 on the press frame and on the release frame and 0 in between,
+ * because it is the ROM's touch-XOR-previous edge; see poll_touch's store.
  *
  * `pre` is what the names read on ENTRY to the poll -- which is what a
  * save-state restore left behind when the load frame is a logged frame --
@@ -311,9 +320,9 @@ unsigned char tp_rd(const unsigned char *p, int i)
     return *(const volatile unsigned char *)(p + i);
 }
 
-// The stylus, from the mouse. `touched` is "down now", `held` adds "and it was
-// down last frame too" -- the pair Stage::CheckCameraInput tests together to
-// tell a press from a hold.
+/* The stylus, from the mouse. Byte +0 is "down now" and byte +1 is THE CHANGE
+   EDGE, new XOR old -- see the block above the two stores at the bottom of
+   this function for the ROM derivation and for what the old spelling cost. */
 void poll_touch(void)
 {
     unsigned char down = 0, sx = 0, sy = 0;
@@ -382,9 +391,68 @@ void poll_touch(void)
         }
     }
 
+    /* ---- BYTE +1 IS THE ROM'S CHANGE EDGE, NOT "HELD FOR TWO FRAMES" ------
+     *
+     * This is link 5 of the chain port/touch_map.txt maps, and the ROM's own
+     * link 5 is src/func_0203bb60.c. Its whole body, per controller slot:
+     *
+     *     p[1] = (u8)(r->field_4 ^ p[0]);   the NEW touch XOR the OLD one
+     *     p[0] = (u8)r->field_4;            touched now
+     *     p[2] = (u8)r->field_0;            x
+     *     p[3] = (u8)r->field_2;            y
+     *
+     * So byte +1 is 1 on exactly two frames of a press: the frame it goes
+     * down and the frame it comes back up. It is a TRANSITION flag. This
+     * function used to write `down && was` there, which is the opposite
+     * shape -- 0 on the press frame and 1 on every frame after it -- and the
+     * whole game reads that byte.
+     *
+     * WHAT IT COST, measured on scene 368 (Bob-omb Squad) with
+     * SM64DS_TOUCH_PROBE and the shot table's own state trace. The plunger is
+     * src/func_ov006_020fe2e4.c (grab) and src/func_ov006_020fe394.c (pull and
+     * release). The grab arms on `data_020a0de8[k*4] && data_020a0de9[k*4]`
+     * and captures ball-minus-stylus into +0x4ee8/+0x4eec; the pull then holds
+     * that offset, so WHERE the stylus is on the arming frame decides where
+     * the ball sits for the rest of the drag and how far down it can be
+     * pulled at all.
+     *
+     *   press for ONE frame              old: never armed. The ROM arms on
+     *                                    that frame, because that frame IS
+     *                                    the edge.
+     *   press, then move on the NEXT     old: armed one frame late, at the
+     *   frame (a fast mouse flick)       moved-to point, so the offset came
+     *                                    out (0,-110); the ball then tracked
+     *                                    110 px above the cursor, never left
+     *                                    the anchor, and the release measured
+     *                                    dist 8 -- under 0x10, which is
+     *                                    func_ov006_020fe394's snap-back, so
+     *                                    the shot never fired.
+     *   press, hold still, then drag     old: worked. That is the whole of
+     *                                    "sometimes I can grab it".
+     *
+     * TWO MORE CLASSES OF READER GET THEIR BEHAVIOUR BACK WITH THIS, and they
+     * are why this is a record fix rather than a pachinko fix.
+     * `de8 && de9` sites (the press edge: curling's func_ov006_020e1b54,
+     * Coincentration's func_ov006_020dd0e0, and two dozen more) fired one
+     * frame late and then EVERY frame of the hold instead of once.
+     * `de8 == 0 && de9` sites (the release edge: src/func_ov006_020d1ba0.c:63,
+     * func_ov006_0212157c.c:49, func_ov006_0211134c.c:82) were identically
+     * false under the old spelling -- a byte that means "down and was down"
+     * cannot be set while `down` is clear -- so release detection did not
+     * exist on this port at all.
+     *
+     * X AND Y STAY LATCHED ON RELEASE, and that is not the same shortcut.
+     * The ROM writes p[2]/p[3] every frame from link 3, and link 3
+     * (src/func_0203b9bc.c) only publishes its idle 0xff/0xff when NO entry in
+     * the four-deep ring carries a touch. On the release-edge frame the ring
+     * is still draining, so neither of its accept branches and neither the
+     * idle branch runs, and data_020a0dd8 keeps the last touched point --
+     * which is exactly what the `if (down)` below leaves in place. The two
+     * spellings differ only once the ring has drained, by which time byte +1
+     * is 0 and no reader is looking. */
     const unsigned char was = data_020a0de8[0];
     data_020a0de8[0] = down;
-    data_020a0de8[1] = (unsigned char)(down && was);
+    data_020a0de8[1] = (unsigned char)(down ^ was);
     if (down) {
         data_020a0de8[2] = sx;
         data_020a0de8[3] = sy;

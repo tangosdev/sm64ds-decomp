@@ -302,7 +302,10 @@ loop (hal/scene_boot.cpp). It writes slot 0 of data_020a0de8 directly:
 
     touched from the left mouse button while the cursor is over the sub screen
     panel, with the present rectangle run backwards to get DS pixels;
-    held  = touched now AND touched last frame;
+    edge  = touched now XOR touched last frame, which is link 5's own
+            expression. Run mg5 lane PLUNGER corrected this: it read
+            "touched now AND touched last frame" when this file was written,
+            and section 5's trace below is that defect rather than the rule;
     x, y  written only while touched, so the last position persists on release.
 
 That is link 5's output, produced by the host, with links 0 through 4 skipped.
@@ -476,8 +479,17 @@ THE STYLUS RECORD DURING THOSE RUNS, from poll_touch's own log:
     f1   poke yes, post touched 1, held 1, x 120, y 150, d=(1,2,3)
     slots 1, 2 and 3 all zero throughout.
 
-held comes up on the second frame of a hold, which is the ROM's own edge rule,
-and it is what func_ov006_020e1b54 waits for.
+THAT SECOND LINE WAS THE PORT'S BUG AND THIS FILE ONCE READ IT AS THE RULE.
+The paragraph here used to say "held comes up on the second frame of a hold,
+which is the ROM's own edge rule". It is not. Section 2 link 5 above quotes
+the ROM's own producer, src/func_0203bb60.c, and its byte +1 is
+p[1] = touch XOR p[0] -- a CHANGE EDGE, set on the frame the stylus goes
+down and again on the frame it comes up, clear for the whole hold in
+between. poll_touch was writing "down and was down", the opposite shape, so the
+trace above is the defect and not the derivation. Run mg5 lane PLUNGER
+measured what it cost on scene 368 and corrected the store; the two frames
+now read touched 1 edge 1 then touched 1 edge 0, and func_ov006_020e1b54
+consumes on the first of them rather than the second.
 
 A THROWAWAY PROBE, SINCE STRIPPED, COUNTED THE STATES. It added per address
 counters to port/unmatched/MgCurling_StateDispatch.cpp and reported at exit.

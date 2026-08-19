@@ -121,12 +121,12 @@ int data_020a0db0[8];
    ONE 16-byte block, not three independent arrays.
 
    On hardware this is TouchInfo[4] -- one 4-byte record per controller,
-   {u8 touched, u8 held, u8 x, u8 y} -- and dsd named a symbol at each of the
+   {u8 touched, u8 edge, u8 x, u8 y} -- and dsd named a symbol at each of the
    FIRST record's four bytes, because code reached the fields through separate
    addresses. config/arm9/symbols.txt has the four one byte apart
 
        data_020a0de8 0x020a0de8   (+0 touched)
-       data_020a0de9 0x020a0de9   (+1 held)
+       data_020a0de9 0x020a0de9   (+1 edge, touch ^ prev)
        data_020a0dea 0x020a0dea   (+2 x)
        data_020a0deb 0x020a0deb   (+3 y)
 
