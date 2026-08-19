@@ -51,10 +51,21 @@
 // The register/VRAM addresses are engine A's, cross-checked against ppu.cpp
 // (same source of truth: the decomp's own G2::GetBG*Ptr shifts) and ppu_sub.cpp
 // (the window unit, mirrored here for engine A's 0x04000000 register base).
+//
+// WHAT IT IMPLEMENTS (the 3D layer's PRIORITY), added run mg5 lane Y3D:
+//   - BG0 in 3D mode is a LAYER WITH A PRIORITY, not a backdrop. A 2D layer
+//     whose priority number puts it behind BG0 may no longer paint over the
+//     pixels the 3D engine actually drew. The 3D engine's own per-pixel
+//     coverage comes from ntr::gx_coverage(), which the rasteriser fills
+//     beside every store it makes into the framebuffer, so "the 3D engine drew
+//     here" is a recorded fact rather than a colour comparison against the
+//     clear. SM64DS_3D_PRIORITY_OFF=1 restores the unconditional overwrite for
+//     A/B on one binary.
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
 
+#include "ntr/gx.h"
 #include "ntr/ppu.h"
 
 namespace {
@@ -122,16 +133,41 @@ struct BgConfig {
 // 366, 368, 374 and 378 leave BG0 disabled, and every mounted LEVEL runs
 // DISPCNT 0x40011803 -- bit 3 clear, BG0 disabled -- so no level frame changes.
 //
-// WHAT THIS DOES NOT FIX, said plainly so nobody reads more into it. Skipping
-// BG0 stops the port INVENTING a layer; it does not put the real 3D layer in
-// its place. The port renders 3D into the framebuffer before this compositor
-// runs and the compositor only writes over it, so a 2D BG that on hardware sits
-// BEHIND the 3D layer (a higher priority number than BG0's) still covers it
-// here. On scene 390 that is BG2 at priority 3 under the 3D layer at priority 1.
-// Fixing that needs a 3D coverage mask the framebuffer does not carry, it is the
-// same gap the header's "1st-target BG blending over the 3D layer" note already
-// records, and it is not this change.
+// THE OTHER HALF OF THE SAME REGISTER, closed by run mg5 lane Y3D. Skipping
+// BG0 stopped the port INVENTING a layer; it did not put the real 3D layer in
+// its place, because the port renders 3D into the framebuffer before this
+// compositor runs and the compositor only wrote over it. A 2D BG that on
+// hardware sits BEHIND the 3D layer (a higher priority number than BG0's)
+// covered it anyway. On scene 390 that was BG2 at priority 3 owning 48357 of
+// the top screen's 49152 pixels while the 3D layer at priority 1 submitted 878
+// polygons a frame: the minigame's flower and Yoshi were drawn and then buried
+// whole. The mask the framebuffer did not carry is ntr::gx_coverage(); the
+// priority arithmetic is layer_behind_3d() and the final blit below.
 inline bool bg0_is_3d(uint32_t dispcnt) { return (dispcnt & 0x8u) != 0; }
+
+// The 3D layer is in the picture only when bit 3 says BG0 IS the 3D engine's
+// output AND BG0's enable bit is up. Bit 3 alone is not enough: a scene can
+// select 3D mode and leave the layer disabled, and then the 2D unit owns every
+// pixel exactly as it did before this change.
+inline bool bg0_3d_shown(uint32_t dispcnt) {
+    return bg0_is_3d(dispcnt) && ((dispcnt >> 8) & 1u) != 0;
+}
+
+// BG0CNT's priority field IS the 3D layer's priority. Same two bits, same
+// register, whether BG0 is a tile background or the 3D engine's output.
+inline int bg0_3d_priority() { return rd16(kRegBase + 0x08) & 3; }
+
+// SM64DS_3D_PRIORITY_OFF=1 puts the unconditional overwrite back on this same
+// binary, so a before/after is one build at one .dsstate base -- what
+// notes/port-selftest-bmp-gate.md requires before two BMPs may be compared.
+inline bool prio3d_off_env() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_3D_PRIORITY_OFF");
+        v = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return v != 0;
+}
 
 BgConfig read_bg(int bg, uint32_t dispcnt) {
     BgConfig c{};
@@ -289,7 +325,14 @@ inline uint32_t blend_alpha(uint32_t top, uint32_t below, int eva, int evb) {
 // same pixels and the picture is their sum, so "the frame is scrambled" names
 // no surface at all. Recording the last writer costs one byte per pixel and
 // turns that report into a question about a named layer.
-struct Cell { uint32_t color; bool hit; uint8_t owner; };
+//
+// THE PRIORITY BYTE IS THE SECOND MEASUREMENT HALF, and it is here for the 3D
+// layer. The owner byte says WHICH layer the viewer sees; it does not say
+// whether that layer is allowed to be in front of the 3D engine's output,
+// which is a question about the layer's PRIORITY and not its identity. Two
+// pixels owned by BG2 on the same frame can answer differently if the game
+// moves BG2CNT's priority field between them.
+struct Cell { uint32_t color; bool hit; uint8_t owner; uint8_t prio; };
 Cell g_a[192][256];
 
 // Owner ids: 0-3 are BG0..BG3 and 4 is the sprite layer. The same numbering is
@@ -297,6 +340,25 @@ Cell g_a[192][256];
 // read against each other without a translation table.
 enum { kOwnerObj = 4, kOwnerN = 5 };
 const char *const kOwnerName[kOwnerN] = {"BG0", "BG1", "BG2", "BG3", "OBJ"};
+
+// Is the layer that owns a composited pixel BEHIND the 3D layer?
+//
+// The DS orders the four BGs by (priority, BG index), lower first, so among
+// equal priorities BG0 -- which in 3D mode IS the 3D layer -- is the frontmost
+// of them. A BG1..BG3 pixel at the SAME priority number as BG0 therefore loses
+// to the 3D layer, which is why the BG test is >= and not >.
+//
+// Sprites are the exception the hardware makes: OBJ at priority p draws in
+// FRONT of a BG at the same priority p, so a sprite only loses to the 3D layer
+// when its own priority number is strictly greater. On scene 390 that is what
+// keeps the four HUD sprites (priority 0) on top of the 3D layer (priority 1)
+// while BG2 (priority 3) goes behind it.
+//
+// Owner 0 cannot reach here while the 3D layer is in the picture: read_bg
+// disables BG0 exactly then, so no pixel is ever owned by it.
+inline bool layer_behind_3d(unsigned owner, int prio, int p3d) {
+    return (owner == (unsigned)kOwnerObj) ? (prio > p3d) : (prio >= p3d);
+}
 
 // SM64DS_ENGINE_A_LAYERS=<hex>: composite only these layers. 0x04 is BG2 alone,
 // 0x10 the sprites alone, and unset is 0x1f -- every layer, which is what every
@@ -323,6 +385,16 @@ Attrib g_attrib[kOwnerN];
 uint32_t g_attrib_frames;
 bool g_attrib_registered;
 
+/* THE 3D LAYER'S OWN ROW, in HOST framebuffer pixels rather than DS ones,
+   because that is the resolution the decision is made at: the blit tests
+   coverage per host pixel so a 3D pixel keeps its full detail instead of being
+   flattened to one sample per DS cell.
+   g_kept3d is where the 3D engine drew AND no 2D layer in front of it covered;
+   g_buried3d is where the 3D engine drew and a 2D layer in front DID cover.
+   The pair is the whole before/after of this file's priority half: with the
+   old unconditional overwrite every covered pixel is buried and kept is 0. */
+uint32_t g_kept3d, g_buried3d;
+
 void attrib_dump() {
     if (!g_attrib_frames) return;
     std::fprintf(stderr, "[msgcomp] LAST COMPOSITED FRAME, per-layer "
@@ -337,6 +409,10 @@ void attrib_dump() {
         std::fprintf(stderr, "[msgcomp]   %-3s  %6u px  x %d..%d  y %d..%d\n",
                      kOwnerName[o], a.px, a.x0, a.x1, a.y0, a.y1);
     }
+    std::fprintf(stderr, "[msgcomp]   3D  %6u px kept, %u px buried under a 2D "
+                 "layer in front of it (host %dx%d px)%s\n", g_kept3d,
+                 g_buried3d, ntr::SCREEN_W, ntr::SCREEN_H,
+                 prio3d_off_env() ? "  [SM64DS_3D_PRIORITY_OFF=1]" : "");
 }
 
 // Counts what each layer OWNS in the frame just composited. A pixel belongs to
@@ -508,6 +584,12 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                 g_a[py][px].color = color;
                 g_a[py][px].hit = true;
                 g_a[py][px].owner = kOwnerObj;
+                /* attribute 2 bits 10-11, this sprite's own priority. It is
+                   read here rather than assumed because the 3D layer's test
+                   below is the only thing in this file that depends on it:
+                   raster_obj still draws sprites over every BG regardless of
+                   priority, which is a separate gap and not this lane's. */
+                g_a[py][px].prio = (uint8_t)((a2 >> 10) & 3);
             }
         }
     }
@@ -751,6 +833,7 @@ extern "C" void port_message_composite_engine_a(void *fbp)
                         g_a[y][x].color = s;
                         g_a[y][x].hit = true;
                         g_a[y][x].owner = (uint8_t)bg;
+                        g_a[y][x].prio = (uint8_t)prio;
                     }
                 }
             }
@@ -845,15 +928,67 @@ extern "C" void port_message_composite_engine_a(void *fbp)
     // and colour-effect bits are already resolved above for BGs; the sprite
     // raster is drawn wherever OAM places it (the cursor is inside the box
     // window in practice). Integer scale from DS 256x192 to SCREEN_W x SCREEN_H.
+    //
+    // THE 3D LAYER'S PRIORITY IS RESOLVED HERE AND NOT IN THE BG LOOP, and the
+    // reason is resolution. The 2D unit is modelled at the DS's own 256x192;
+    // the 3D frame is already in the framebuffer at the host tier, 512x384 at
+    // the window's 2x. Sampling one 3D pixel per DS cell and re-writing the
+    // whole 2x2 block with it would throw away three quarters of the 3D
+    // image's detail to answer a question that can be asked per HOST pixel
+    // instead. So a DS cell whose owner is BEHIND the 3D layer writes only the
+    // host pixels the 3D engine did NOT draw, and leaves the rest untouched --
+    // which is also why there is no colour blit for the 3D layer at all: its
+    // pixels are already where they belong.
     const int sx = ntr::SCREEN_W / 256;
     const int sy = ntr::SCREEN_H / 192;
+    /* TWO QUESTIONS, KEPT APART SO THE A/B ARM STILL MEASURES. `shown3d` is
+       whether the 3D layer is in the picture at all, which decides whether the
+       coverage mask means anything; `honour3d` is whether this run obeys its
+       priority. The kill switch only clears the second, so the disabled arm
+       still counts every 3D pixel it paints over instead of reporting a row of
+       zeroes that could be read as "there was no 3D layer". */
+    const bool shown3d = bg0_3d_shown(dispcnt);
+    const bool honour3d = shown3d && !prio3d_off_env();
+    const int p3d = bg0_3d_priority();
+    const uint8_t *cover = shown3d ? ntr::gx_coverage() : nullptr;
+    uint32_t kept = 0, buried = 0;
     for (int y = 0; y < 192; ++y) {
         for (int x = 0; x < 256; ++x) {
             if (!g_a[y][x].hit) continue;
             const uint32_t c = g_a[y][x].color;
+            if (!honour3d
+                || !layer_behind_3d(g_a[y][x].owner, g_a[y][x].prio, p3d)) {
+                /* the owning 2D layer is in FRONT of the 3D layer (or there is
+                   no 3D layer in the picture): the old unconditional write */
+                for (int dy = 0; dy < sy; ++dy)
+                    for (int dx = 0; dx < sx; ++dx) {
+                        const int hy = y * sy + dy, hx = x * sx + dx;
+                        if (cover && cover[hy * ntr::SCREEN_W + hx]) ++buried;
+                        fb.px[hy][hx] = c;
+                    }
+                continue;
+            }
+            /* BEHIND the 3D layer: it may only fill where 3D drew nothing */
             for (int dy = 0; dy < sy; ++dy)
-                for (int dx = 0; dx < sx; ++dx)
-                    fb.px[y * sy + dy][x * sx + dx] = c;
+                for (int dx = 0; dx < sx; ++dx) {
+                    const int hy = y * sy + dy, hx = x * sx + dx;
+                    if (cover[hy * ntr::SCREEN_W + hx]) { ++kept; continue; }
+                    fb.px[hy][hx] = c;
+                }
         }
     }
+    /* Pixels the 3D engine drew that NO 2D layer covered at all were never in
+       the loop above; they are kept too, and counting them is what makes the
+       row comparable with the host framebuffer's own size. A full-screen sweep
+       is instrumentation and nothing reads it unless the probe is on, so it is
+       gated: an ordinary play frame does not pay for a number nobody prints. */
+    if (honour3d && std::getenv("SM64DS_MSG_COMPOSITE_DEBUG")) {
+        for (int hy = 0; hy < ntr::SCREEN_H; ++hy)
+            for (int hx = 0; hx < ntr::SCREEN_W; ++hx)
+                if (cover[hy * ntr::SCREEN_W + hx]
+                    && !g_a[hy / sy][hx / sx].hit)
+                    ++kept;
+    }
+    g_kept3d = kept;
+    g_buried3d = buried;
 }
