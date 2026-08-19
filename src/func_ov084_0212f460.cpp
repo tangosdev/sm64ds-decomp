@@ -18,10 +18,16 @@ void func_ov084_0212f460(void *self)
     int zero;
 
     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x36, 0x7f, 0, 0xcb33, 0);
+    /* `fp` is assigned BEFORE `zero`, and the test reads through it. Under 2004/b56
+       the callee-saved registers are handed out in assignment order, so this is what
+       puts fp in r7 and zero in r6 as the ROM has them; with `zero = 0` first they come
+       out swapped and nothing else moves. The ROM emits `mov r6,#0; strb` before
+       `add r7,r4,#0x100` regardless -- the store is independent, so it schedules ahead
+       of the address computation that feeds the compare. */
+    u16 *fp = (u16 *)(c + 0x100);
     zero = 0;
     *(unsigned char *)(c + 0x45c) = zero;
-    if (*(u16 *)(c + 0x100) < 0xa) {
-        u16 *fp = (u16 *)(c + 0x100);
+    if (*fp < 0xa) {
         int x = *(int *)(c + 0x5c);
         s16 *sintbl = data_02082214;
         *(volatile int *)&space[0] = x;

@@ -9,12 +9,4 @@
 # Regenerate with:
 #   python tools/rombuild_check.py --out build/bad.txt
 #   python tools/rombuild_versions.py build/bad.txt --write
-func_02062428 1.2/base
-func_0206a6d0 1.2/base
 _ZN11dScMgCard_c13InitResourcesEv 1.2/base
-func_ov006_020ded00 1.2/base
-func_ov006_02111e90 1.2/base
-func_ov013_021112a8 1.2/base
-func_ov015_02111e80 1.2/base
-func_ov081_02127558 1.2/base
-func_ov084_0212f460 1.2/base

@@ -1,40 +1,25 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class MugenBgm: 4 matched functions, 5 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef MUGENBGM_H
 #define MUGENBGM_H
-#include "types.h"
 
-struct MugenBgm {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    /* 0x05c..0x08e is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s32 unk_05c;                 /* 0x05c */
-    s32 mPosY;                   /* 0x060 */
-    s32 mPosZ;                   /* 0x064 */
-    s32 unk_068;                 /* 0x068 */
-    s32 unk_06c;                 /* 0x06c */
-    s32 unk_070;                 /* 0x070 */
-    s32 mCamSpacePosX;           /* 0x074 */
-    s32 mCamSpacePosY;           /* 0x078 */
-    s32 mCamSpacePosZ;           /* 0x07c */
-    s32 mScaleX;                 /* 0x080 */
-    s32 mScaleY;                 /* 0x084 */
-    s32 mScaleZ;                 /* 0x088 */
-    s16 mAngleX;                 /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x8];
-    s32 unk_098;            /* 0x098 */
-    u8  pad_09c[0x30];
-    s8  mAreaId;            /* 0x0cc */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-#endif
+#include "dActor_c.h"
+
+/* MugenBgm_Spawn allocates 0xd4 bytes, constructs dActor_c, and installs
+ * _ZTV8MugenBgm. D1 chains directly to dActor_c::~dActor_c, so the class has
+ * no owned subobjects; its behavior uses only inherited actor state.
+ */
+struct MugenBgm : dActor_c {
+    u8 pad_0d0[0x4];
+
+    virtual ~MugenBgm();
+
+    virtual s32 InitResources();
+    virtual s32 CleanupResources();
+    virtual s32 Behavior();
+    virtual s32 Render();
+    virtual void OnPendingDestroy();
 };
 
-#endif
+typedef char MugenBgm_size_must_be_0xd4[
+    sizeof(MugenBgm) == 0xd4 ? 1 : -1];
+
+#endif /* MUGENBGM_H */

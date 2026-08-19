@@ -38,6 +38,10 @@ take over, ping the claimant first.
 | BooCage, daObjMarioCap_c, OneUpMushroom, Spindrift, Shark, Unagi, UnchainedChomp | andrewboudreau | 2026-08-18 | **done** - 13 ordinary methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform work excluded |
 | BookShot, daOts_c, BlueFlame, SoundObject | andrewboudreau | 2026-08-18 | **done** - 6 ordinary methods migrated to real C++; strict matches and link checks verified with `blind: 0`; Platform/collision work excluded |
 | WaterfallMist, Cloud, EnemySpawner, BookShotSpawner | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus six ordinary methods and three deleting destructors migrated to C++; Platform/collision work excluded |
+| VirtualDoor, StarDoor | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus six ordinary methods and two deleting destructors migrated to C++; strict matches and link checks verified with `blind: 0`; Platform/collision work excluded |
+| MugenBgm, OneUpLogo | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus five ordinary methods and two deleting destructors migrated to C++; strict matches and link checks verified with `blind: 0`; Platform/collision work excluded |
+| OrangeBallBillboard, ShipWing | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four ordinary methods and two deleting destructors migrated to C++; strict matches and link checks verified with `blind: 0`; Platform/collision work excluded |
+| Amp, Bird | andrewboudreau | 2026-08-18 | **done** - real `dActor_c` layouts plus four cleanup hooks and two deleting destructors migrated to C++; all fourteen class consumers strict-matched and link-checked with `blind: 0`; Platform/collision work excluded |
 
 ## Claims
 

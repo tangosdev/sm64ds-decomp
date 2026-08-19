@@ -57,11 +57,11 @@ matched: yes</title></rect><rect x="152.76" y="27.13" width="19.40" height="7.19
 module: arm9
 addr: 0x02005348
 size: 208 bytes
-matched: yes</title></rect><rect x="172.17" y="27.13" width="149.26" height="7.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02005418
+matched: yes</title></rect><rect x="172.17" y="27.13" width="149.26" height="7.19" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9BootScene8BehaviorEv
 module: arm9
 addr: 0x02005418
 size: 1600 bytes
-matched: yes</title></rect><rect x="5.00" y="34.32" width="73.43" height="7.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_02005a58
+matched: yes</title></rect><rect x="5.00" y="34.32" width="73.43" height="7.56" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN9BootScene13InitResourcesEv
 module: arm9
 addr: 0x02005a58
 size: 828 bytes
@@ -30117,7 +30117,7 @@ matched: yes</title></rect><rect x="1221.69" y="59.37" width="5.72" height="3.40
 module: ov013
 addr: 0x021111d0
 size: 68 bytes
-matched: yes</title></rect><rect x="1217.66" y="62.78" width="2.37" height="4.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov013_02111214
+matched: yes</title></rect><rect x="1217.66" y="62.78" width="2.37" height="4.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21ClockPaintingPendulum16CleanupResourcesEv
 module: ov013
 addr: 0x02111214
 size: 36 bytes
@@ -30125,15 +30125,15 @@ matched: yes</title></rect><rect x="1220.03" y="62.78" width="4.74" height="4.34
 module: ov013
 addr: 0x02111238
 size: 72 bytes
-matched: yes</title></rect><rect x="1224.77" y="62.78" width="2.64" height="4.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov013_02111280
+matched: yes</title></rect><rect x="1224.77" y="62.78" width="2.64" height="4.34" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21ClockPaintingPendulum6RenderEv
 module: ov013
 addr: 0x02111280
 size: 40 bytes
-matched: yes</title></rect><rect x="1217.66" y="67.12" width="6.56" height="6.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov013_021112a8
+matched: yes</title></rect><rect x="1217.66" y="67.12" width="6.56" height="6.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21ClockPaintingPendulum8BehaviorEv
 module: ov013
 addr: 0x021112a8
 size: 148 bytes
-matched: yes</title></rect><rect x="1224.22" y="67.12" width="3.19" height="6.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov013_0211133c
+matched: yes</title></rect><rect x="1224.22" y="67.12" width="3.19" height="6.46" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN21ClockPaintingPendulum13InitResourcesEv
 module: ov013
 addr: 0x0211133c
 size: 72 bytes
@@ -44553,19 +44553,19 @@ matched: yes</title></rect><rect x="1467.89" y="915.48" width="7.32" height="5.9
 module: ov100
 addr: 0x021453d8
 size: 84 bytes
-matched: yes</title></rect><rect x="1475.21" y="915.48" width="13.25" height="5.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov100_0214542c
+matched: yes</title></rect><rect x="1475.21" y="915.48" width="13.25" height="5.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4Door16CleanupResourcesEv
 module: ov100
 addr: 0x0214542c
 size: 152 bytes
-matched: yes</title></rect><rect x="1414.19" y="921.74" width="6.96" height="10.17" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov100_021454c8
+matched: yes</title></rect><rect x="1414.19" y="921.74" width="6.96" height="10.17" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4Door6RenderEv
 module: ov100
 addr: 0x021454c8
 size: 136 bytes
-matched: yes</title></rect><rect x="1414.19" y="931.91" width="6.96" height="5.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov100_02145550
+matched: yes</title></rect><rect x="1414.19" y="931.91" width="6.96" height="5.98" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4Door8BehaviorEv
 module: ov100
 addr: 0x02145550
 size: 80 bytes
-matched: yes</title></rect><rect x="1414.19" y="937.89" width="6.96" height="57.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>func_ov100_021455a0
+matched: yes</title></rect><rect x="1414.19" y="937.89" width="6.96" height="57.11" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>_ZN4Door13InitResourcesEv
 module: ov100
 addr: 0x021455a0
 size: 764 bytes

@@ -431,29 +431,63 @@ to pick one. Defaulting to the recovered 2004 build 0056
 7,466 → 7,923, and post-link mismatches **70 → 14**. Note b56 ships *only* `mwccarm.exe`,
 so `LD_VERSION` keeps the link on 1.2/sp2p3's `mwldarm` regardless.
 
-**3. Per-file version overrides.** `config/rombuild-versions.txt` names the exceptions;
-`tools/rombuild_versions.py` finds them by sweeping `match.py`'s version list over
-whatever `rombuild_check.py` reported. Eight enrolled functions match only under
-`1.2/base` (a ninth is pinned but not yet enrolled, so its pin is inert).
+**3. Per-file version overrides -- now empty for the ROM build.** Every enrolled
+function reproduces under the default `2004/b56`, so the ROM build runs ONE compiler.
+`config/rombuild-versions.txt` retains a single entry,
+`_ZN11dScMgCard_c13InitResourcesEv`, which is **not enrolled** and so never reaches a
+ROM build; it is 999 words off under b56 and genuinely still needs `1.2/base` when its
+turn comes. `tools/rombuild_versions.py` regenerates the file by sweeping `match.py`'s
+version list over whatever `rombuild_check.py` reported.
 
-The table is keyed by **file stem** -- `compile_one` does
-`vers.get(pathlib.Path(rel).stem, VERSION)` -- so **renaming a pinned function's file
+The eight that used to need `1.2/base` were not compiler facts, they were **source
+facts**. Retail was built with one toolchain, so a function reproducing only under a
+different one meant our reconstruction differed from the original in a way b56 exposed
+and 1.2/base happened to hide. Two source levers moved all eight, both verified by
+compiling the same snippet under both compilers in isolation:
+
+- **Spell a re-read differently from the write.** Where the ROM stores through a
+  computed address and then RE-READS the field with a base+displacement load, b56
+  recognises the second access as the first lvalue and reuses the register. Writing the
+  two accesses with different expression shapes (`(char *)p + K` vs `(int)p + K`, or an
+  index) stops it. Every sharing site has to be respelled together -- `func_02062428`
+  has three, and respelling any one alone left the other two sharing. Fixed
+  `func_ov015_02111e80`, `func_ov006_020ded00`, `func_ov013_021112a8`, `func_02062428`,
+  `func_ov006_02111e90`.
+- **Prefer pointer arithmetic on a typed pointer over integer arithmetic then a cast.**
+  `ldr` carries a 12-bit displacement and `ldrh`/`ldrsh`/`strh` only 8, so a large
+  offset must be split. Given pointer arithmetic b56 splits it the ROM's way; given
+  integer arithmetic it materialises the whole constant, from the literal pool if
+  needed. In `func_0206a6d0` that one extra pool entry shifted every pc-relative load in
+  the function by 4 -- a 52-word diff from a single spelling. Also fixed
+  `func_ov081_02127558`, where the compound-assignment form is the only spelling b56
+  refuses to split; an explicit read-modify-write through a temporary reproduces, and
+  pre-splitting the base in the source does NOT work -- b56 has to do its own splitting.
+
+`func_ov084_0212f460` was neither: a straight r6/r7 swap. Callee-saved registers are
+handed out in **assignment order** under b56 -- declaration order moves nothing -- so
+hoisting the pointer's assignment above the other local's put them the ROM's way round.
+The ROM emits the two in the opposite order regardless, because the independent store
+schedules ahead of the address computation that feeds the compare.
+
+**The table is still keyed by file stem, and that still matters.** `compile_one` does
+`vers.get(pathlib.Path(rel).stem, VERSION)`, so **renaming a pinned function's file
 detaches its pin unless the same commit re-keys it.** That failure is uniquely
-expensive: the build falls back to `2004/b56` and emits wrong bytes for a function
-whose source is perfectly correct, while every per-file gate keeps calling it exact,
-because `build_pin.verify`, `pr_linkcheck` and `eligible.py` all read this same table
-and compile *with* the pin. Only the whole-module compare disagrees, by a handful of
-bytes, in one module. #1607 spent a day on that shape before
+expensive: the build falls back to `2004/b56` and emits wrong bytes for a function whose
+source is perfectly correct, while every per-file gate keeps calling it exact, because
+`build_pin.verify`, `pr_linkcheck` and `eligible.py` all read this same table and
+compile *with* the pin. Only the whole-module compare disagrees, by a handful of bytes,
+in one module. #1607 spent a day on that shape before
 `_ZN21ClockPaintingPendulum8BehaviorEv` -- the first mangled pin key a ROM build had
-ever exercised -- was identified as the cause.
+ever exercised -- was identified as the cause. With the pins gone that route is closed
+for now, but it reopens the moment a new pin is recorded.
 
-`rombuild.audit_version_pins` now checks the table against the tree before the first
-compile: a pin naming no `src/` or `mods/` file at all is a hard preflight error, a
-pin naming an uninstalled service pack is too, and every applied pin is printed by
-name in phase [3/6] and recorded in the report as `alternateToolchain.applied`.
-`tools/validate_merge.py` renders that alongside the failing module, so a `105/106`
-in a PR comment now names the module, the function, the address and the byte count
-instead of only counting modules.
+`rombuild.audit_version_pins` checks the table against the tree before the first
+compile: a pin naming no `src/` or `mods/` file at all is a hard preflight error, a pin
+naming an uninstalled service pack is too, and every applied pin is printed by name in
+phase [3/6] and recorded in the report as `alternateToolchain.applied`.
+`tools/validate_merge.py` renders that alongside the failing module, so a `105/106` in a
+PR comment names the module, the function, the address and the byte count instead of
+only counting modules.
 
 **4. Per-function diffing beats bisection.** Because eligibility requires the object's
 `.text` to equal the declared size exactly, no function can shift its neighbours, so

@@ -2,9 +2,9 @@
 // @symbol _ZN8StarDoor8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "StarDoor.h"
-struct Base {};
-typedef void (Base::*PMF)(int);
-struct CallbackNode {
+struct StarDoorBase {};
+typedef void (StarDoorBase::*PMF)(int);
+struct StarDoorCallback {
     char pad[8];
     PMF callback;
 };
@@ -25,9 +25,9 @@ extern int func_ov100_02145f00(char *c);
 int StarDoor::Behavior()
 {
     int res = func_ov100_02145f00(((char *)this));
-    CallbackNode *node = *(CallbackNode**)((char*)&unk_110);
+    StarDoorCallback *node = mCallback;
     if (*(int*)&node->callback != 0) {
-        Base *base = (Base*)((char *)this);
+        StarDoorBase *base = (StarDoorBase*)this;
         (base->*(node->callback))(res);
     }
     return 1;

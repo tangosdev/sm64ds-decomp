@@ -49,11 +49,11 @@ src/func_02005348.c:
     complete
     .text start:0x02005348 end:0x02005418
 
-src/func_02005418.c:
+src/_ZN9BootScene8BehaviorEv.c:
     complete
     .text start:0x02005418 end:0x02005a58
 
-src/func_02005a58.c:
+src/_ZN9BootScene13InitResourcesEv.c:
     complete
     .text start:0x02005a58 end:0x02005d94
 

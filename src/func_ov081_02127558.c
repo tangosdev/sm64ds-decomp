@@ -12,8 +12,6 @@ int func_ov081_02127558(char* c)
 {
     u8* pstate;
     int* pflg;
-    int off;
-    char* base;
 
     switch (*(u8*)(c + 0x3f1)) {
     case 0:
@@ -42,9 +40,17 @@ int func_ov081_02127558(char* c)
         break;
     }
 
-    off = 0x300;
-    base = c + off;
-    *(s16*)(base + 0xec) += 0xc00;
+    /* Written as an explicit read-modify-write, not `+= 0xc00`, and against the flat
+       +0x3ec rather than a pre-split base. `ldrsh`/`strh` carry only an 8-bit offset,
+       so 0x3ec cannot be encoded and the address MUST be split; the ROM splits it
+       `add rN,c,#0x300` + `[rN,#0xec]`. Under 2004/b56 the compound-assignment form is
+       the one and only spelling that instead materialises the whole 0x3ec and loads
+       through `[rN]` -- verified in isolation against both compilers. Letting b56 do
+       its own splitting reproduces the ROM; pre-splitting it in the source does not. */
+    {
+        s16 v = *(s16*)(c + 0x3ec);
+        *(s16*)(c + 0x3ec) = (s16)(v + 0xc00);
+    }
     func_ov081_02126758(c);
     _ZN12CylinderClsn5ClearEv(c + 0x1b0);
     _ZN12CylinderClsn6UpdateEv(c + 0x1b0);

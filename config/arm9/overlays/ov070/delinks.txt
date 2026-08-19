@@ -116,7 +116,7 @@ src/_ZN3AmpD1Ev.cpp:
     complete
     .text start:0x02120570 end:0x021205d0
 
-src/_ZN3AmpD0Ev.c:
+src/_ZN3AmpD0Ev.cpp:
     complete
     .text start:0x021205d0 end:0x02120644
 
@@ -164,11 +164,11 @@ src/func_ov070_02120da8.c:
     complete
     .text start:0x02120da8 end:0x02120dc4
 
-src/_ZN3Amp16CleanupResourcesEv.c:
+src/_ZN3Amp16CleanupResourcesEv.cpp:
     complete
     .text start:0x02120dc4 end:0x02120e20
 
-src/_ZN3Amp16OnPendingDestroyEv.c:
+src/_ZN3Amp16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02120e20 end:0x02120e24
 
