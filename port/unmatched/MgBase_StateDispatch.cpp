@@ -126,6 +126,130 @@
 // carry the member-pointer type, so there is nothing for an alias or a stride
 // fix to attach to. It needs its twenty addresses routed the way these are, and
 // that is a lane of its own. Until then the trap reports and sets no state.
+//
+// ---- 5. AMENDED, run mg5 lane FWK. A PREMISE FURTHER DOWN HAS EXPIRED ------
+//
+// THE CORRECTION FIRST, because it is the thing that hid this hole. The
+// func_ov004_020b3278 block at the bottom of this file says
+// data_ov004_020bf490 "reads zero" on the port, and it argues that from this
+// premise:
+//
+//     "no sinit in src/ writes it: the constructor that would is
+//      __sinit_ov004_020b955c, one of the two with a config symbol, no delink
+//      block and no source."
+//
+// THAT PREMISE IS NO LONGER TRUE, and it was re-derived here rather than taken
+// from the sentence. src/__sinit_ov004_020b955c.c EXISTS and is a full body;
+// config/arm9/overlays/ov004/delinks.txt carries its block
+// (`src/__sinit_ov004_020b955c.c: complete / .init start:0x020b955c
+// end:0x020b9ad0`); port/slice_mg1.txt already lists it; and a scene boot
+// prints `ov004 4/4` overlay constructors run, which is the runtime witness
+// that it fired. So all THREE of the tables that constructor fills are live
+// data on the port now, not zeros:
+//
+//   data_ov004_020bf490  13 pairs  dispatched DIRECTLY by func_ov004_020b3278
+//   data_ov004_020bf428  13 pairs  copied to self+0x00/+0x04, dispatched by
+//                                  func_ov004_020b321c
+//   data_ov004_020bf4f8  13 pairs  copied to self+0x08/+0x0c, dispatched by
+//                                  func_ov004_020b31b4
+//
+// The last two are the ones that block calls "the same shape". They are not
+// dispatched by 020b3278 at all: 020b3278 STORES them into the object as the
+// object's own pmf fields, and the two self-field dispatchers listed above
+// call them later. That block read them as inert `Pair` copies because at the
+// time the table was zero and nothing ever came back out of it.
+//
+// The consequence is that its "nothing is dispatched" is now the
+// opposite of what happens, and the switch below was short by the whole set.
+// A scene 366 boot (dScMgLuigi_c, run mg5 lane LUI) reported 174 dispatches
+// hitting the mg_unhandled path at TWO addresses, both of them slot 12:
+//
+//   data_ov004_020bf490.p12 = data_ov004_020bc1d4 -> code 0x020b3698  adj 0
+//   data_ov004_020bf4f8.p12 = data_ov004_020bc194 -> code 0x020b35d8  adj 0
+//
+// Both pair words were read out of extracted/overlays/overlay_0004.bin at
+// (addr - 0x020ad660), and both are confirmed by the overlay's own relocation
+// rows rather than by the raw image alone:
+//
+//   config/arm9/overlays/ov004/relocs.txt:1878
+//       from:0x020bc194 kind:load to:0x020b35d8 module:overlay(4)
+//   config/arm9/overlays/ov004/relocs.txt:1886
+//       from:0x020bc1d4 kind:load to:0x020b3698 module:overlay(4)
+//
+// Every adjustment word in the three tables reads zero, re-measured here over
+// all 39 assignments the constructor makes, so section 1's ruling still holds
+// and both go through the DIRECT case.
+//
+// ---- 5a. THE CALLING CONVENTION, DISASSEMBLED AND NOT ASSUMED -------------
+//
+// BOTH SLOTS ARE ZERO-ARGUMENT SLOTS. The two dispatch sites are byte-identical
+// in shape and neither sets up an argument register:
+//
+//   func_ov004_020b31b4, the self+8 dispatcher
+//     020b31dc  add   r3, r0, #8
+//     020b31e0  ldr   r1, [r3, #4]        ; adjustment
+//     020b31e4  add   r0, r0, r1, asr #1  ; adj 0, so r0 stays `this`
+//     020b31f8  ldreq r1, [r3]            ; r1 is OVERWRITTEN with the code
+//     020b31fc  blx   r1
+//
+//   func_ov004_020b3278, the direct call on data_ov004_020bf490
+//     020b3540  ldr   r0, [r1, r2, lsl #3]  ; stride 8, the pair
+//     020b3548  cmp   r0, #0                ; the ROM's own null-code guard
+//     020b3558  add   r0, r8, r1, asr #1    ; adj 0, so r0 stays `this`
+//     020b356c  ldreq r1, [r3]
+//     020b3570  blx   r1
+//
+// r0 is `this` and r1 is destroyed by the code word itself, so nothing rides
+// through in r1 and there is no argument for a callee to drop. Against that:
+//
+//   func_ov004_020b35d8  0xc0 bytes, and it OPENS `mov r7, r0` then reads
+//     [r7,#0x34], [r7,#0x10], [r7,#0x12], [r7,#0x18], [r7,#0x1c]. It never
+//     touches r1. One argument, `this`, and src/func_ov004_020b35d8.c declares
+//     exactly that (`struct Obj *self` with fields at 0x10/0x12/0x18/0x1c/0x34,
+//     which is the disassembly field for field). It is called with one
+//     argument below and that is not a ride-through, it is the plain case.
+//
+//     The object it wants is the SAME object func_ov004_020b3278 writes: that
+//     body sets [self+0x10], [self+0x12], [self+0x18], [self+0x1c] from its own
+//     arguments and hands `self+0x34` to func_ov004_020af5e0. So the `this` the
+//     dispatch delivers is the one the body's fields were filled by, and that
+//     agreement is independent of the dispatch reasoning above.
+//
+//   func_ov004_020b3698  0x4 bytes. The whole body is `bx lr`. It reads
+//     nothing, so calling it as (void) is exact. This is the benign ARM
+//     ride-through unmatched/MgCurling_StateDispatch.cpp documents for
+//     func_ov006_020e2eb8 and NOT the scene_actor_faces defect class: there is
+//     no callee behind it that wanted an argument, because there is no callee.
+//
+// NEITHER NEEDS A HOST COPY. Both are matched src TUs with delink blocks; the
+// only thing missing was three slice lines and two cases. src/ is untouched.
+//
+// ---- 5b. WHAT IS STILL SHORT, MEASURED AND LEFT ON THE TABLE --------------
+//
+// Closing slot 12 is not closing the framework. Reading all 39 assignments in
+// __sinit_ov004_020b955c and resolving each pair out of the overlay image gives
+// TWENTY-THREE DISTINCT CODE ADDRESSES across the three tables, and before this
+// change the switch below routed NONE of them. Every one has a matched src TU
+// and a delink block, and none of them is in any slice, so the whole set is
+// wiring and not decomposition. Scene 366 only exposes two of them because
+// func_ov004_020b3278 reaches slot 12 alone on that scene (its `case 13:` arm
+// writes 0xc to [self+0x2e]); a scene that drives a different graphic id will
+// meet the other twenty-one the same way this one met these two.
+//
+// The remaining twenty-one, with the table and slot each is reached from, are
+// listed in this lane's scoping artifact rather than repeated here. They are
+// left for a lane that can boot a scene which actually reaches them, because
+// routing an address no run exercises buys a slice line and no evidence.
+//
+// ---- 5c. READING THE CENSUS LINE AFTER THIS CHANGE ------------------------
+//
+// hal/scene_mg.cpp prints `calls`, `port_mg_curling_state_hits()` and
+// `unknown` from port_mg_dispatch_counts. The framework-routed count is not
+// printed separately and does not need to be: it is
+// calls - curling_hits - unknown. On a scene 366 boot that reads 174 - 0 - 0
+// after this change where it read 174 - 0 - 174 before, and the total `calls`
+// is unchanged, which is the shape that says the same dispatches now land
+// somewhere instead of nowhere.
 
 #include <cstdio>
 
@@ -144,6 +268,17 @@ void func_ov004_020adc80(int *c);
 void func_ov004_020adcc8(short *obj);
 void func_ov004_020addcc(char *r5);
 void func_ov004_020adeb0(char *c);
+
+/* THE TWO SLOT-12 STATES, added by run mg5 lane FWK; section 5 is the
+   derivation. Both are matched src TUs with delink blocks, both are reached
+   from a ZERO-ARGUMENT slot, and neither needed a host copy.
+     020b35d8  src/func_ov004_020b35d8.c   0xc0 bytes, reads `this` only
+     020b3698  src/func_ov004_020b3698.c   0x4 bytes, the whole body is `bx lr`
+   Their three slice lines (these two plus src/func_ov004_020b1aec.c, the one
+   callee of 020b35d8 the slice did not already carry) join port/slice_mg1.txt
+   in the same commit as these cases, which is what gives them a caller. */
+void func_ov004_020b35d8(void *self);
+void func_ov004_020b3698(void);
 
 /* the per-class half's switch, tried after this one; the header of
    unmatched/MgCurling_StateDispatch.cpp says why the chain runs this way */
@@ -192,6 +327,13 @@ static int mg_try_ov004_0(void *self, unsigned code)
     case 0x020adcc8u: func_ov004_020adcc8((short *)self); return 1;
     case 0x020addccu: func_ov004_020addcc((char *)self);  return 1;
     case 0x020adeb0u: func_ov004_020adeb0((char *)self);  return 1;
+    /* run mg5 lane FWK. data_ov004_020bf4f8.p12, copied to self+0x08 by
+       func_ov004_020b3278 and dispatched by func_ov004_020b31b4. One argument,
+       `this`, which is the same object 020b3278 filled the fields of. */
+    case 0x020b35d8u: func_ov004_020b35d8(self);          return 1;
+    /* run mg5 lane FWK. data_ov004_020bf490.p12, dispatched directly by
+       func_ov004_020b3278. The ROM body is one `bx lr`, so (void) is exact. */
+    case 0x020b3698u: func_ov004_020b3698();              return 1;
     default:                                              return 0;
     }
 }
