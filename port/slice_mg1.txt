@@ -273,7 +273,13 @@ src/func_ov004_020b0d30.c
 src/func_ov004_020b0d8c.c
 src/func_ov004_020b0de0.c
 src/func_ov004_020b14f0.c
-src/func_ov004_020b19f0.c
+# Run mg5, lane HSDISP. src/func_ov004_020b19f0.c IS EXCLUDED, host-copied in
+# port/unmatched/MgHud_HighScore.cpp. It is the minigame HUD's HIGH SCORE
+# drawer and the ROM takes its one argument, the 32-bit score, in r0 at
+# 0x020b19f8. src spells the parameter as void * and hands it to
+# func_ov004_020b1ea4, whose own definition takes an int there; its caller
+# src/func_ov006_020fba48.c declares the same parameter as s8. The host copy
+# types the value as the word it is at both ends. See that file's banner.
 src/func_ov004_020b1c68.c
 src/func_ov004_020b1cf0.c
 src/func_ov004_020b1d60.c

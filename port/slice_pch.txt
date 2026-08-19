@@ -189,7 +189,16 @@ src/func_ov006_020fb74c.c
 src/func_ov006_020fb8fc.c
 src/func_ov006_020fb97c.c
 src/func_ov006_020fba28.cpp
-src/func_ov006_020fba48.c
+# Run mg5, lane HSDISP. src/func_ov006_020fba48.c IS EXCLUDED, host-copied in
+# port/unmatched/MgHud_HighScore.cpp. It is the HIGH SCORE half of this class's
+# HUD and the ROM rides the 32-bit score from func_ov004_020adc1c into
+# func_ov004_020b19f0 in r0 (0x020fba50, 0x020fba54). The src TU declares that
+# value as an s8 at both ends, so MSVC writes one byte of the outgoing slot
+# (mov byte ptr [ebp-4],al) and hands over all four (push dword ptr [ebp-4]).
+# The drawer received 0x81fc5c00 on a build whose stored high score and both
+# getters measured 0. Litter above the cap paints 999999, litter that lands
+# negative misses func_ov004_020b1ea4's signed clamp and indexes the glyph
+# table out of bounds. See that file's banner for the disassembly.
 src/func_ov006_020fba64.c
 src/func_ov006_020fbad4.c
 src/func_ov006_020fbbe8.c

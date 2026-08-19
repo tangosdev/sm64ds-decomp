@@ -3454,7 +3454,14 @@ set(SCENE_MG_SOURCES
     # REPLACES its src TU -- src/func_ov006_020fb7e0.c is out of slice_pch.txt
     # -- so it is not optional on any target that takes the slice, exactly like
     # the state dispatch above.
-    unmatched/MgPachinko_Award.cpp)
+    unmatched/MgPachinko_Award.cpp
+    # Run mg5, lane HSDISP: the minigame HUD's HIGH SCORE drawer and the one
+    # 32-bit argument its caller declares as a single byte, which is why the
+    # screen read 999999 while the stored word and both getters read zero.
+    # REPLACES src/func_ov004_020b19f0.c (out of slice_mg1.txt) and
+    # src/func_ov006_020fba48.c (out of slice_pch.txt), so it is not optional
+    # on any target that takes either slice, exactly like the award above.
+    unmatched/MgHud_HighScore.cpp)
 
 # Run mg5, lane PCH. dScMgPachinko_c's own closure, the second minigame class.
 # 65 src TUs in wave 1: 59 ov006 and 6 ov004. The arm9 half is deliberately not
