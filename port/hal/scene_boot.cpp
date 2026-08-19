@@ -2029,10 +2029,43 @@ struct PortSceneClass {
    reads_sublevel is 0 and it is measured, not assumed: no relocation anywhere
    in ov006 lands on data_02092110 and no ov006 source TU names it,
    SublevelToLevel or SUBLEVEL_LEVEL_TABLE. A minigame is not about a course. */
+/* THE SECOND MINIGAME ROW, run mg5 lane SMB. dScMgSmartball_c, actor id 0x178
+   (376), spawn symbol MgBingoBallSlotsShot_Spawn; the ROM's own RTTI string at
+   0x0213ec7c reads "16dScMgSmartball_c" and Slots Shot and Bingo Ball are the
+   two menu games this one class serves. Identity was re-derived from the image
+   rather than taken from port/mg_fanout_costs.txt section 3: the doubled-id
+   word 0x01780178 occurs exactly once in overlay_0006.bin, at 0x0213ebd4, so
+   the SpawnInfo is 0x0213ebd0 and its first word 0x02119824 is the factory,
+   and that factory's own literal pool names data_ov006_0213eefc as the vtable.
+   All three of section 11's width checks put the table at 36 slots.
+
+   IT IS APPENDED AFTER CURLING'S AND THAT IS THE POINT OF THE ORDER. Section
+   11's finding is that this function walks the table in order and calls every
+   row's fill on every boot, while the thirty-five overlay constructors run
+   ONCE per process at the tail of the first minigame row's fill. Appending
+   means curling's fill still runs the constructors and this row's fill finds
+   them done. Nothing here depends on that -- both fills are idempotent and
+   neither writes outside its own vtable -- but the rule the fan-out is cut
+   with is "append", and this row obeys it rather than testing it.
+
+   THE CLASS IS SEATED AND IT DOES NOT RUN, and the row is here anyway for the
+   reason port/tools/battery.py exists: the scene list is read out of this
+   table at run time, so a seated class gets a selftest on every battery and
+   its blocker is recorded rather than remembered. Two of the nine override
+   bodies -- slot 0 InitResources and slot 9 Render -- have no delink block and
+   no src TU, so they are named traps, and slot 0 is where the class builds
+   every sub-object its Behavior ticks. hal/scene_mg.cpp's pre-flight says so
+   before the spawn and port/slice_smb.txt carries the derivation.
+
+   reads_sublevel is 0 for curling's reason, unchanged: no relocation anywhere
+   in ov006 lands on data_02092110. */
 extern "C" {
 extern unsigned char MgShuffleShell_SpawnInfo[];
 void *port_mg_curling_spawn(void);
 void port_scene_fill_curling(void);
+extern unsigned char MgBingoBallSlotsShot_SpawnInfo[];
+void *port_mg_smartball_spawn(void);
+void port_scene_fill_smartball(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2045,6 +2078,11 @@ static const PortSceneClass port_scene_classes[] = {
        this table. */
     {374, "SCENE_MG_CURLING", MgShuffleShell_SpawnInfo, port_mg_curling_spawn,
      port_scene_fill_curling, 0},
+    /* 376 is 0x178. Appended, per the rule section 11 of
+       port/mg_fanout_costs.txt derives from the once-per-process constructor
+       gate. */
+    {376, "SCENE_MG_SMARTBALL", MgBingoBallSlotsShot_SpawnInfo,
+     port_mg_smartball_spawn, port_scene_fill_smartball, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

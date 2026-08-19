@@ -981,3 +981,262 @@ extern "C" void port_scene_mg_hits(void)
                     "the 7 trapping sites was reached)\n");
     std::fflush(stdout);
 }
+
+// ============================================================================
+// dScMgSmartball_c, actor id 0x178 (scene 376). Run mg5, lane SMB.
+// ============================================================================
+//
+// THE SECOND MINIGAME CLASS, AND EVERYTHING ABOVE THIS LINE IS REUSED. The
+// mounts, the thirty-five overlay constructors, the twenty-eight-entry
+// kMgBaseFaces, port_scene_fill_rom, mg_apply, mg_raw_left, the two pre-flight
+// assertions and the slot counters are all the family's and are paid. What is
+// below is what a fan-out lane actually costs: nine override thunks, one face
+// array, one fill and one factory forwarder.
+//
+// IDENTITY, RE-DERIVED FROM THE ROM. port/slice_smb.txt carries the full
+// derivation; the three facts this file depends on are:
+//
+//   SpawnInfo   0x0213ebd0, found by scanning overlay_0006.bin for the
+//               doubled-id word 0x01780178 (one occurrence, at 0x0213ebd4)
+//   factory     0x02119824, the word before it, = MgBingoBallSlotsShot_Spawn
+//   vtable      0x0213eefc, from the factory's own literal pool, 36 slots
+//
+// THE RTTI STRING AT 0x0213ec7c READS "16dScMgSmartball_c".
+// MgBingoBallSlotsShot is the spawn symbol, after the two menu games the class
+// serves, and the files it loads are all /MG/d_2d_mg_smart_ball_*. All three
+// names are right and the class name is the ROM's, which is the rule lane MG1
+// set for curling.
+//
+// THE WIDTH IS 36 AND SECTION 11's THREE CHECKS ALL SAY SO: the next config
+// symbol after data_ov006_0213eefc is data_ov006_0213ef8c, exactly 36 words
+// on; slot 35 holds 0x020ad660, the family's terminal word; and the word past
+// it is 0x2f474d2f, ASCII "/MG/", the head of the class's own file-name table.
+//
+// TWO OF THE NINE OVERRIDES HAVE NO DECOMPILED BODY, and they are the two that
+// matter most: slot 0 InitResources and slot 9 Render. Both are named,
+// self-reporting traps in port/unmatched/MgSmartball_Traps.cpp, the
+// func_ov006_020e1854 precedent. THE CONSEQUENCE IS STATED HERE RATHER THAN
+// DISCOVERED AT A FAULT ADDRESS: slot 0 is where the class builds every one of
+// its sub-objects, so with it trapped the object's count fields stay zero and
+// its sub-object pointers stay null, and slot 6's case 0 dereferences
+// self+0x4684 on its first statement without a null check. The pre-flight
+// below says so before the spawn.
+//
+// SLOT 18 IS A HOST COPY AND NOT THE MATCHED TU. src/func_ov006_02118a8c.cpp
+// declares func_ov006_02115b0c with no parameters and calls it with none,
+// while src/func_ov006_02115b0c.c:113 defines it taking the object; ARM rides
+// r0 through and the host does not. port/unmatched/MgSmartball_Slot18.cpp is
+// the src body with the argument placed and the src TU is off the slice.
+//
+// THIS CLASS HAS NO POINTER-TO-MEMBER STATE MACHINE. Its Behavior switches on
+// a plain int at self+0x4660, no ov006 overlay constructor copies a pair table
+// into its .data neighbourhood, and a member-pointer sweep of all 76 closure
+// TUs hits exactly one file, func_ov004_020b87e0.cpp, which is the FRAMEWORK's
+// state setter and is already trapped above. So section 4's wall costs this
+// lane nothing, and port/slice_smb.txt records how each of the three was
+// measured.
+
+extern "C" {
+extern unsigned char data_ov006_0213eefc[];   /* dScMgSmartball_c, 36 slots */
+extern unsigned char MgBingoBallSlotsShot_SpawnInfo[];
+
+/* the class's own nine overrides, in slot order. Six carried the "recovered
+   from vtable slot identity" marker and all six are ruled REAL_DECOMP against
+   the shipped overlay image in port/tools/inferred_stub_adjudicated.txt before
+   any of them was seated. */
+int   func_ov006_02118b70(void *self);        /* slot  0 InitResources  TRAP */
+void  func_ov006_0211944c(char *self, int f); /* slot  5 AfterCleanupResources */
+int   func_ov006_02118488(void *self);        /* slot  6 Behavior       */
+int   func_ov006_021173c8(void *self);        /* slot  9 Render         TRAP */
+void *func_ov006_0210d740(char *self);        /* slot 16 D2             */
+void *func_ov006_0210d7e0(void *self);        /* slot 17 D0             */
+void  func_ov006_02118a8c(void *self);        /* slot 18 reset, HOST COPY */
+int   func_ov006_021147ac(void *self);        /* slot 25                */
+void  func_ov006_02118ae4(void);              /* slot 31, takes nothing */
+
+int  *MgBingoBallSlotsShot_Spawn(void);
+
+unsigned port_mg_smartball_trap_hits(void);
+unsigned port_mg_smartball_trap_mask(void);
+}  /* extern "C" */
+
+/* THE THUNKS. Same shape and the same counters as curling's, because the
+   counters are per SLOT rather than per class and only one scene runs in a
+   process. Two of the arities are the ROM's rather than the family's and are
+   not typos: slot 31's body takes nothing (its prologue is `push {r4,lr}` and
+   it never reads r0) and slot 18's host copy takes the object the matched TU
+   drops. */
+static int  __fastcall smb_init(void *s, void *)
+{ MG_SLOT(0);  return func_ov006_02118b70(s); }
+static void __fastcall smb_aclean(void *s, void *, unsigned f)
+{ MG_SLOT(5);  func_ov006_0211944c((char *)s, (int)f); }
+/* ---- THE BLOCKER, NAMED BEFORE IT HAPPENS AND NOT PREVENTED ---------------
+   The same instrument, and the same ruling, that hal/scene_mg.cpp's fader
+   pre-flight used for scene 374: print the CAUSE by name when the condition
+   holds, then let the fault happen. A link offset changes on every build and
+   cannot be a battery marker; this line can, and it names the field rather
+   than the address the symptom lands on.
+
+   WHY THE CONDITION EXISTS. Slot 0 InitResources (func_ov006_02118b70) has no
+   decompiled body -- no delink block covers 0x02118b70 -- so it is a trap and
+   nothing builds the class's sub-objects. src/func_ov006_02118488.c's case 0
+   opens with
+
+       o = *(char**)(c + 0x4684);
+       (**(VFunc**)o)(o);
+
+   with no null guard, because on the ROM there is nothing to guard: slot 0 ran.
+   The fault is c0000005 accessing 0x00000000 at func_ov006_02118488+0x11b.
+
+   NOT PREVENTED ON PURPOSE. Skipping the call, or seating a plausible object
+   in that field, is the guess port/tools/inferred_stub_guard exists to refuse,
+   and a scene that limps past its own blocker is worth less than one that
+   names it. The day slot 0 is decompiled this line stops printing and
+   port/tools/battery.py's SCENE_BLOCKED probe reports BLOCK RETIRED. */
+static int  __fastcall smb_beh(void *s, void *)
+{
+    MG_SLOT(6);
+    {
+        static int said;
+        char *c = (char *)s;
+        if (!said && *(int *)(c + 0x4660) == 0 &&
+            *(void **)(c + 0x4684) == 0) {
+            said = 1;
+            /* STDOUT, and that is not a style choice. The flight recorder
+               REDIRECTS stderr into playlog/*.log rather than teeing it, so a
+               marker written to stderr never reaches the battery's r.stderr
+               and the SCENE_BLOCKED row would fail as "a different failure".
+               Measured on this lane: the trap lines in
+               port/unmatched/MgSmartball_Traps.cpp land in the playlog and
+               nowhere else, and a bare run redirected with 2>&1 does not
+               contain one. Every "MINIGAME BLOCKED" line already in this file
+               uses std::printf, which is why scene 374's row worked. */
+            std::printf(
+                "[scene] MINIGAME BLOCKED: dScMgSmartball_c slot 6 Behavior "
+                "is about to dereference a NULL self+0x4684, because slot 0 "
+                "InitResources (func_ov006_02118b70) has no decompiled body "
+                "and never built the object. This is a decomp gap, not a port "
+                "one.\n");
+            std::fflush(stdout);
+        }
+    }
+    return func_ov006_02118488(s);
+}
+static int  __fastcall smb_render(void *s, void *)
+{ MG_SLOT(9);  return func_ov006_021173c8(s); }
+static void *__fastcall smb_d2(void *s, void *)
+{ MG_SLOT(16); return func_ov006_0210d740((char *)s); }
+static void *__fastcall smb_d0(void *s, void *)
+{ MG_SLOT(17); return func_ov006_0210d7e0(s); }
+static int  __fastcall smb_reset(void *s, void *)
+{ MG_SLOT(18); func_ov006_02118a8c(s); return 1; }
+static int  __fastcall smb_v25(void *s, void *)
+{ MG_SLOT(25); return func_ov006_021147ac(s); }
+static int  __fastcall smb_v31(void *, void *)
+{ MG_SLOT(31); func_ov006_02118ae4(); return 0; }
+
+/* dScMgSmartball_c's own nine, the per-class half. Keyed on the ROM word each
+   slot holds, exactly like kCurlingFaces, so the three key sets stay disjoint
+   by construction. */
+static const MgFace kSmartballFaces[] = {
+    {0x02118b70u, (void *)smb_init},   {0x0211944cu, (void *)smb_aclean},
+    {0x02118488u, (void *)smb_beh},    {0x021173c8u, (void *)smb_render},
+    {0x0210d740u, (void *)smb_d2},     {0x0210d7e0u, (void *)smb_d0},
+    {0x02118a8cu, (void *)smb_reset},  {0x021147acu, (void *)smb_v25},
+    {0x02118ae4u, (void *)smb_v31},
+};
+
+/* the run report for this class, registered only on a 376 boot */
+extern "C" void port_scene_mg_smartball_hits(void);
+
+extern "C" void port_scene_fill_smartball(void)
+{
+    /* the mounts first, for port_scene_fill_curling's reason */
+    port_scene_mg_mounts();
+
+    void **base = (void **)data_ov004_020bc0c0;
+    void **vt   = (void **)data_ov006_0213eefc;
+
+    /* The base table again, and it is not redundant work: the fills run in
+       port_scene_classes[] order on every boot and each one is idempotent --
+       mg_apply keys on the DS word a slot holds, so a slot already carrying a
+       host pointer matches nothing and is left alone. */
+    port_scene_fill_rom(base, 36);
+    mg_apply(base, 36, kMgBaseFaces,
+             sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
+
+    port_scene_fill_rom(vt, 36);
+    mg_apply(vt, 36, kMgBaseFaces,
+             sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
+    mg_apply(vt, 36, kSmartballFaces,
+             sizeof kSmartballFaces / sizeof kSmartballFaces[0]);
+
+    {
+        const char *s0 = std::getenv("SM64DS_SCENE_SLOT0");
+        const char *s9 = std::getenv("SM64DS_SCENE_SLOT9");
+        if (s0 && s0[0] == '0') vt[0] = (void *)mg_init_noop;
+        if (s9 && s9[0] == '0') vt[9] = (void *)mg_render_noop;
+    }
+
+    {
+        const unsigned lv = mg_raw_left(vt, 36);
+        if (lv) {
+            std::fprintf(stderr, "  [scene] MINIGAME FILL INCOMPLETE: "
+                         "dScMgSmartball_c leaves %u of 36 raw DS words. A "
+                         "dispatch of any of them jumps to a DS address as a "
+                         "host one.\n", lv);
+            std::fflush(stderr);
+        }
+    }
+
+    port_scene_mg_prepare(port_scene_env_want());
+
+    /* ---- THE PRE-FLIGHT THIS SEAT OWNS ---------------------------------
+       Not a blocker in the fader/archive sense -- nothing here is a seat that
+       came apart -- but the same kind of statement, made before the spawn
+       rather than after a fault: this class's InitResources has no decompiled
+       body, so the boot cannot get past its own first Behavior frame, and the
+       reason is a decomp hole rather than anything about the port. Printed
+       only on a 376 boot so curling's run is unaffected. */
+    if (port_scene_env_want() == 376) {
+        std::printf("[scene] dScMgSmartball_c SEATED: vtable 0x0213eefc, 36 "
+                    "slots, 9 overrides, 2 of them UNDECOMPILED (slot 0 "
+                    "InitResources func_ov006_02118b70, slot 9 Render "
+                    "func_ov006_021173c8). Slot 0 is where the class builds "
+                    "its sub-objects, so slot 6 case 0 will dereference a null "
+                    "self+0x4684 on its first frame. That is a decomp gap, not "
+                    "a port one; port/unmatched/MgSmartball_Traps.cpp.\n");
+        std::fflush(stdout);
+        static int armed;
+        if (!armed) {
+            armed = 1;
+            std::atexit(port_scene_mg_smartball_hits);
+        }
+    }
+}
+
+/* The registry's factory column is void *(*)(void) and the matched factory
+   returns int *. One typed forwarder, curling's shape.
+   NO DISPLACEMENT RULING IS NEEDED FOR THIS FACTORY and that was checked
+   rather than assumed: section 12's case is a factory that calls the base
+   constructor with NO argument and rides r0 through, and 0x02119824 does not
+   do that -- src/MgBingoBallSlotsShot_Spawn.cpp spells it
+   `func_ov004_020b2adc(o)` and the ROM holds the object in r4 across the
+   call. port/tools/aritycheck.py agrees: it lists func_ov004_020b2adc as
+   DROPS from src/func_ov006_020e0574.cpp (0x169's) and
+   src/MgMushroomRoulette_Spawn.cpp (0x17f's), and not from this one. */
+extern "C" void *port_mg_smartball_spawn(void)
+{
+    return (void *)MgBingoBallSlotsShot_Spawn();
+}
+
+extern "C" void port_scene_mg_smartball_hits(void)
+{
+    const unsigned m = port_mg_smartball_trap_mask();
+    std::printf("[scene] dScMgSmartball_c traps entered: %u total%s%s%s\n",
+                port_mg_smartball_trap_hits(),
+                (m & 1) ? "  [slot 0 InitResources]" : "",
+                (m & 2) ? "  [slot 9 Render]" : "",
+                (m & 4) ? "  [func_ov006_02114800]" : "");
+    std::fflush(stdout);
+}
