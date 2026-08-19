@@ -49,6 +49,7 @@ take over, ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov075 func_ov075_0211621c (0x0211621c, size 0x394) | lunavyqo | 2026-08-19 | **released** — near-miss improved **300→44→40** (match.py words, size-exact 0x394). Lever: xbase table load before stride (prologue table/shift coloring). Residual i vs hundreds stack-slot swap plus xoff/pid callee-saved rename. tip in nearmiss/db.jsonl; API clm_406f0d90c018 released |
 | ov075 func_ov075_0211a948 (0x0211a948, size 0xb8) | lunavyqo | 2026-08-19 | **released** — no_progress floor reconfirm **div=5** (match.py words, size-exact 0xb8). ov080 sibling G3/struct/pragma size-drifts; ~25 variants land attractors {5,7,11,13,14}. Residual r2/r3 TEXIMAGE_PARAM pack rank-pin. tip remains in nearmiss/db.jsonl; API clm_cf0368e2d124 released |
 | ov080 func_ov080_021261f4 (0x021261f4, size 0x2f8) | lunavyqo | 2026-08-19 | **released** — retry no_progress; tip still **div=5**. G3 8-arg + `opt_propagation off` still unique pack-head match; every head-preserving spelling keeps the 3-insn tail rotate (sizeT and vs pltt0 lsr) + row r6 cascade (67w). Claims API 401, CLAIMS.md only |
 | ov005 func_ov005_020c16e4 (0x020c16e4, size 0x33c) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: ++row MultiCopy tail, dest pin `idx?dstp:dstp` / `destOff?dstp:dstp` (equal-arm) for rem-before-quot + increment order; from near-miss 136→18→16→3→0; API clm_84a56ab710d3 kept |
