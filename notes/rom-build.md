@@ -433,7 +433,27 @@ so `LD_VERSION` keeps the link on 1.2/sp2p3's `mwldarm` regardless.
 
 **3. Per-file version overrides.** `config/rombuild-versions.txt` names the exceptions;
 `tools/rombuild_versions.py` finds them by sweeping `match.py`'s version list over
-whatever `rombuild_check.py` reported. Seven functions match only under `1.2/base`.
+whatever `rombuild_check.py` reported. Eight enrolled functions match only under
+`1.2/base` (a ninth is pinned but not yet enrolled, so its pin is inert).
+
+The table is keyed by **file stem** -- `compile_one` does
+`vers.get(pathlib.Path(rel).stem, VERSION)` -- so **renaming a pinned function's file
+detaches its pin unless the same commit re-keys it.** That failure is uniquely
+expensive: the build falls back to `2004/b56` and emits wrong bytes for a function
+whose source is perfectly correct, while every per-file gate keeps calling it exact,
+because `build_pin.verify`, `pr_linkcheck` and `eligible.py` all read this same table
+and compile *with* the pin. Only the whole-module compare disagrees, by a handful of
+bytes, in one module. #1607 spent a day on that shape before
+`_ZN21ClockPaintingPendulum8BehaviorEv` -- the first mangled pin key a ROM build had
+ever exercised -- was identified as the cause.
+
+`rombuild.audit_version_pins` now checks the table against the tree before the first
+compile: a pin naming no `src/` or `mods/` file at all is a hard preflight error, a
+pin naming an uninstalled service pack is too, and every applied pin is printed by
+name in phase [3/6] and recorded in the report as `alternateToolchain.applied`.
+`tools/validate_merge.py` renders that alongside the failing module, so a `105/106`
+in a PR comment now names the module, the function, the address and the byte count
+instead of only counting modules.
 
 **4. Per-function diffing beats bisection.** Because eligibility requires the object's
 `.text` to equal the declared size exactly, no function can shift its neighbours, so
