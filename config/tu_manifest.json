@@ -4016,6 +4016,830 @@
           "relocation_destinations_verified": "PASS"
         }
       }
+    },
+    {
+      "id": "ov070/Amp",
+      "module": "ov070",
+      "source": "src_tu/actors/Amp.cpp",
+      "promoted_source": "src/actors/Amp.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x2120570..0x2121118, 19 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): Amp",
+        "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x02120570",
+          "end": "0x02121118"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN3AmpD1Ev",
+          "address": "0x02120570",
+          "size": "0x00000060",
+          "legacy_source": "src/_ZN3AmpD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN3AmpD0Ev",
+          "address": "0x021205d0",
+          "size": "0x00000074",
+          "legacy_source": "src/_ZN3AmpD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "func_ov070_02120644",
+          "address": "0x02120644",
+          "size": "0x000000e0",
+          "legacy_source": "src/func_ov070_02120644.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "func_ov070_02120724",
+          "address": "0x02120724",
+          "size": "0x00000180",
+          "legacy_source": "src/func_ov070_02120724.c",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_ov070_021208a4",
+          "address": "0x021208a4",
+          "size": "0x0000006c",
+          "legacy_source": "src/func_ov070_021208a4.c",
+          "ordinal": 4
+        },
+        {
+          "symbol": "func_ov070_02120910",
+          "address": "0x02120910",
+          "size": "0x000000d4",
+          "legacy_source": "src/func_ov070_02120910.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "func_ov070_021209e4",
+          "address": "0x021209e4",
+          "size": "0x00000214",
+          "legacy_source": "src/func_ov070_021209e4.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "func_ov070_02120bf8",
+          "address": "0x02120bf8",
+          "size": "0x000000b4",
+          "legacy_source": "src/func_ov070_02120bf8.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "func_ov070_02120cac",
+          "address": "0x02120cac",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov070_02120cac.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "func_ov070_02120ce4",
+          "address": "0x02120ce4",
+          "size": "0x00000050",
+          "legacy_source": "src/func_ov070_02120ce4.c",
+          "ordinal": 9
+        },
+        {
+          "symbol": "func_ov070_02120d34",
+          "address": "0x02120d34",
+          "size": "0x0000003c",
+          "legacy_source": "src/func_ov070_02120d34.cpp",
+          "ordinal": 10
+        },
+        {
+          "symbol": "func_ov070_02120d70",
+          "address": "0x02120d70",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov070_02120d70.cpp",
+          "ordinal": 11
+        },
+        {
+          "symbol": "func_ov070_02120da8",
+          "address": "0x02120da8",
+          "size": "0x0000001c",
+          "legacy_source": "src/func_ov070_02120da8.c",
+          "ordinal": 12
+        },
+        {
+          "symbol": "_ZN3Amp16CleanupResourcesEv",
+          "address": "0x02120dc4",
+          "size": "0x0000005c",
+          "legacy_source": "src/_ZN3Amp16CleanupResourcesEv.cpp",
+          "ordinal": 13
+        },
+        {
+          "symbol": "_ZN3Amp16OnPendingDestroyEv",
+          "address": "0x02120e20",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN3Amp16OnPendingDestroyEv.cpp",
+          "ordinal": 14
+        },
+        {
+          "symbol": "_ZN3Amp6RenderEv",
+          "address": "0x02120e24",
+          "size": "0x00000068",
+          "legacy_source": "src/_ZN3Amp6RenderEv.cpp",
+          "ordinal": 15
+        },
+        {
+          "symbol": "_ZN3Amp8BehaviorEv",
+          "address": "0x02120e8c",
+          "size": "0x00000060",
+          "legacy_source": "src/_ZN3Amp8BehaviorEv.cpp",
+          "ordinal": 16
+        },
+        {
+          "symbol": "_ZN3Amp13InitResourcesEv",
+          "address": "0x02120eec",
+          "size": "0x000001c0",
+          "legacy_source": "src/_ZN3Amp13InitResourcesEv.cpp",
+          "ordinal": 17
+        },
+        {
+          "symbol": "Amp_Spawn",
+          "address": "0x021210ac",
+          "size": "0x0000006c",
+          "legacy_source": "src/Amp_Spawn.c",
+          "ordinal": 18
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
+        "19/19 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled. Internal state-machine helpers unified on (void*)+cast definitions so every block's declaration agrees under C linkage; one destructor emits D0+D1; Amp_Spawn stores &_ZTV3Amp[2]."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov070-Amp/Amp.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 19,
+        "functions_declared": 19,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
+    },
+    {
+      "id": "ov070/FlameChompFire",
+      "module": "ov070",
+      "source": "src_tu/actors/FlameChompFire.cpp",
+      "promoted_source": "src/actors/FlameChompFire.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x2121b48..0x2122244, 21 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): FlameChompFire",
+        "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x02121b48",
+          "end": "0x02122244"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN14FlameChompFireD1Ev",
+          "address": "0x02121b48",
+          "size": "0x00000040",
+          "legacy_source": "src/_ZN14FlameChompFireD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN14FlameChompFireD0Ev",
+          "address": "0x02121b88",
+          "size": "0x00000054",
+          "legacy_source": "src/_ZN14FlameChompFireD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN14FlameChompFire13OnYoshiTryEatEv",
+          "address": "0x02121bdc",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN14FlameChompFire13OnYoshiTryEatEv.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "func_ov070_02121be4",
+          "address": "0x02121be4",
+          "size": "0x000000a8",
+          "legacy_source": "src/func_ov070_02121be4.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_ov070_02121c8c",
+          "address": "0x02121c8c",
+          "size": "0x00000030",
+          "legacy_source": "src/func_ov070_02121c8c.c",
+          "ordinal": 4
+        },
+        {
+          "symbol": "func_ov070_02121cbc",
+          "address": "0x02121cbc",
+          "size": "0x00000094",
+          "legacy_source": "src/func_ov070_02121cbc.c",
+          "ordinal": 5
+        },
+        {
+          "symbol": "func_ov070_02121d50",
+          "address": "0x02121d50",
+          "size": "0x000000c4",
+          "legacy_source": "src/func_ov070_02121d50.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "func_ov070_02121e14",
+          "address": "0x02121e14",
+          "size": "0x0000009c",
+          "legacy_source": "src/func_ov070_02121e14.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "func_ov070_02121eb0",
+          "address": "0x02121eb0",
+          "size": "0x00000048",
+          "legacy_source": "src/func_ov070_02121eb0.c",
+          "ordinal": 8
+        },
+        {
+          "symbol": "func_ov070_02121ef8",
+          "address": "0x02121ef8",
+          "size": "0x00000020",
+          "legacy_source": "src/func_ov070_02121ef8.c",
+          "ordinal": 9
+        },
+        {
+          "symbol": "func_ov070_02121f18",
+          "address": "0x02121f18",
+          "size": "0x00000098",
+          "legacy_source": "src/func_ov070_02121f18.cpp",
+          "ordinal": 10
+        },
+        {
+          "symbol": "func_ov070_02121fb0",
+          "address": "0x02121fb0",
+          "size": "0x00000020",
+          "legacy_source": "src/func_ov070_02121fb0.c",
+          "ordinal": 11
+        },
+        {
+          "symbol": "func_ov070_02121fd0",
+          "address": "0x02121fd0",
+          "size": "0x0000003c",
+          "legacy_source": "src/func_ov070_02121fd0.cpp",
+          "ordinal": 12
+        },
+        {
+          "symbol": "func_ov070_0212200c",
+          "address": "0x0212200c",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov070_0212200c.cpp",
+          "ordinal": 13
+        },
+        {
+          "symbol": "func_ov070_02122044",
+          "address": "0x02122044",
+          "size": "0x0000001c",
+          "legacy_source": "src/func_ov070_02122044.c",
+          "ordinal": 14
+        },
+        {
+          "symbol": "_ZN14FlameChompFire16CleanupResourcesEv",
+          "address": "0x02122060",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN14FlameChompFire16CleanupResourcesEv.cpp",
+          "ordinal": 15
+        },
+        {
+          "symbol": "_ZN14FlameChompFire16OnPendingDestroyEv",
+          "address": "0x02122068",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN14FlameChompFire16OnPendingDestroyEv.cpp",
+          "ordinal": 16
+        },
+        {
+          "symbol": "_ZN14FlameChompFire6RenderEv",
+          "address": "0x0212206c",
+          "size": "0x00000098",
+          "legacy_source": "src/_ZN14FlameChompFire6RenderEv.cpp",
+          "ordinal": 17
+        },
+        {
+          "symbol": "_ZN14FlameChompFire8BehaviorEv",
+          "address": "0x02122104",
+          "size": "0x00000020",
+          "legacy_source": "src/_ZN14FlameChompFire8BehaviorEv.cpp",
+          "ordinal": 18
+        },
+        {
+          "symbol": "_ZN14FlameChompFire13InitResourcesEv",
+          "address": "0x02122124",
+          "size": "0x000000d8",
+          "legacy_source": "src/_ZN14FlameChompFire13InitResourcesEv.cpp",
+          "ordinal": 19
+        },
+        {
+          "symbol": "FlameChompFire_Spawn",
+          "address": "0x021221fc",
+          "size": "0x00000048",
+          "legacy_source": "src/FlameChompFire_Spawn.c",
+          "ordinal": 20
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
+        "21/21 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled. The legacy WithMeshClsn shadow's extra methods (GetFloorResult, SurfaceInfo::CopyNormalTo) are spelled by their mangled names against the real header type; RaycastGround kept one definition with one extern-C signature set; one destructor emits D0+D1; Spawn stores &_ZTV14FlameChompFire[2]."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov070-FlameChompFire/FlameChompFire.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 21,
+        "functions_declared": 21,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
+    },
+    {
+      "id": "ov070/FlameChomp",
+      "module": "ov070",
+      "source": "src_tu/actors/FlameChomp.cpp",
+      "promoted_source": "src/actors/FlameChomp.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x2121118..0x2121b48, 25 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): FlameChomp",
+        "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x02121118",
+          "end": "0x02121b48"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN10FlameChompD1Ev",
+          "address": "0x02121118",
+          "size": "0x00000048",
+          "legacy_source": "src/_ZN10FlameChompD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN10FlameChompD0Ev",
+          "address": "0x02121160",
+          "size": "0x0000005c",
+          "legacy_source": "src/_ZN10FlameChompD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN10FlameChomp13OnYoshiTryEatEv",
+          "address": "0x021211bc",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN10FlameChomp13OnYoshiTryEatEv.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "func_ov070_021211c4",
+          "address": "0x021211c4",
+          "size": "0x000000d4",
+          "legacy_source": "src/func_ov070_021211c4.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_ov070_02121298",
+          "address": "0x02121298",
+          "size": "0x00000078",
+          "legacy_source": "src/func_ov070_02121298.cpp",
+          "ordinal": 4
+        },
+        {
+          "symbol": "func_ov070_02121310",
+          "address": "0x02121310",
+          "size": "0x000000bc",
+          "legacy_source": "src/func_ov070_02121310.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "func_ov070_021213cc",
+          "address": "0x021213cc",
+          "size": "0x0000006c",
+          "legacy_source": "src/func_ov070_021213cc.c",
+          "ordinal": 6
+        },
+        {
+          "symbol": "func_ov070_02121438",
+          "address": "0x02121438",
+          "size": "0x000000c0",
+          "legacy_source": "src/func_ov070_02121438.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "func_ov070_021214f8",
+          "address": "0x021214f8",
+          "size": "0x00000050",
+          "legacy_source": "src/func_ov070_021214f8.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "func_ov070_02121548",
+          "address": "0x02121548",
+          "size": "0x00000024",
+          "legacy_source": "src/func_ov070_02121548.c",
+          "ordinal": 9
+        },
+        {
+          "symbol": "func_ov070_0212156c",
+          "address": "0x0212156c",
+          "size": "0x0000014c",
+          "legacy_source": "src/func_ov070_0212156c.c",
+          "ordinal": 10
+        },
+        {
+          "symbol": "func_ov070_021216b8",
+          "address": "0x021216b8",
+          "size": "0x00000058",
+          "legacy_source": "src/func_ov070_021216b8.c",
+          "ordinal": 11
+        },
+        {
+          "symbol": "func_ov070_02121710",
+          "address": "0x02121710",
+          "size": "0x0000009c",
+          "legacy_source": "src/func_ov070_02121710.cpp",
+          "ordinal": 12
+        },
+        {
+          "symbol": "func_ov070_021217ac",
+          "address": "0x021217ac",
+          "size": "0x00000060",
+          "legacy_source": "src/func_ov070_021217ac.c",
+          "ordinal": 13
+        },
+        {
+          "symbol": "func_ov070_0212180c",
+          "address": "0x0212180c",
+          "size": "0x0000003c",
+          "legacy_source": "src/func_ov070_0212180c.cpp",
+          "ordinal": 14
+        },
+        {
+          "symbol": "func_ov070_02121848",
+          "address": "0x02121848",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov070_02121848.cpp",
+          "ordinal": 15
+        },
+        {
+          "symbol": "func_ov070_02121880",
+          "address": "0x02121880",
+          "size": "0x0000001c",
+          "legacy_source": "src/func_ov070_02121880.c",
+          "ordinal": 16
+        },
+        {
+          "symbol": "_ZN10FlameChomp16CleanupResourcesEv",
+          "address": "0x0212189c",
+          "size": "0x00000024",
+          "legacy_source": "src/_ZN10FlameChomp16CleanupResourcesEv.cpp",
+          "ordinal": 17
+        },
+        {
+          "symbol": "_ZN10FlameChomp16OnPendingDestroyEv",
+          "address": "0x021218c0",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN10FlameChomp16OnPendingDestroyEv.cpp",
+          "ordinal": 18
+        },
+        {
+          "symbol": "_ZN10FlameChomp6RenderEv",
+          "address": "0x021218c4",
+          "size": "0x00000030",
+          "legacy_source": "src/_ZN10FlameChomp6RenderEv.cpp",
+          "ordinal": 19
+        },
+        {
+          "symbol": "_ZN10FlameChomp8BehaviorEv",
+          "address": "0x021218f4",
+          "size": "0x00000020",
+          "legacy_source": "src/_ZN10FlameChomp8BehaviorEv.cpp",
+          "ordinal": 20
+        },
+        {
+          "symbol": "_ZN10FlameChomp13InitResourcesEv",
+          "address": "0x02121914",
+          "size": "0x00000150",
+          "legacy_source": "src/_ZN10FlameChomp13InitResourcesEv.cpp",
+          "ordinal": 21
+        },
+        {
+          "symbol": "func_ov070_02121a64",
+          "address": "0x02121a64",
+          "size": "0x0000007c",
+          "legacy_source": "src/func_ov070_02121a64.c",
+          "ordinal": 22
+        },
+        {
+          "symbol": "func_ov070_02121ae0",
+          "address": "0x02121ae0",
+          "size": "0x00000018",
+          "legacy_source": "src/func_ov070_02121ae0.c",
+          "ordinal": 23
+        },
+        {
+          "symbol": "FlameChomp_Spawn",
+          "address": "0x02121af8",
+          "size": "0x00000050",
+          "legacy_source": "src/FlameChomp_Spawn.c",
+          "ordinal": 24
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
+        "25/25 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled. Two different legacy shadow structs both named C (a PMF dispatch view and a Render vtable view) -- the Render one renamed TU-locally; decl_common.h's declarations win where they exist (0212180c char*, 02121880 void*); one destructor emits D0+D1; Spawn stores &_ZTV10FlameChomp[2]."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov070-FlameChomp/FlameChomp.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 25,
+        "functions_declared": 25,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
+    },
+    {
+      "id": "ov070/FlyGuy",
+      "module": "ov070",
+      "source": "src_tu/actors/FlyGuy.cpp",
+      "promoted_source": "src/actors/FlyGuy.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x211f000..0x2120570, 27 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): FlyGuy",
+        "module sinit corroboration: 4 sinit(s) / 4 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x0211f000",
+          "end": "0x02120570"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN6FlyGuyD1Ev",
+          "address": "0x0211f000",
+          "size": "0x00000048",
+          "legacy_source": "src/_ZN6FlyGuyD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN6FlyGuyD0Ev",
+          "address": "0x0211f048",
+          "size": "0x0000005c",
+          "legacy_source": "src/_ZN6FlyGuyD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "func_ov070_0211f0a4",
+          "address": "0x0211f0a4",
+          "size": "0x0000005c",
+          "legacy_source": "src/func_ov070_0211f0a4.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "func_ov070_0211f100",
+          "address": "0x0211f100",
+          "size": "0x00000268",
+          "legacy_source": "src/func_ov070_0211f100.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_ov070_0211f368",
+          "address": "0x0211f368",
+          "size": "0x000000e8",
+          "legacy_source": "src/func_ov070_0211f368.cpp",
+          "ordinal": 4
+        },
+        {
+          "symbol": "func_ov070_0211f450",
+          "address": "0x0211f450",
+          "size": "0x0000003c",
+          "legacy_source": "src/func_ov070_0211f450.c",
+          "ordinal": 5
+        },
+        {
+          "symbol": "func_ov070_0211f48c",
+          "address": "0x0211f48c",
+          "size": "0x00000164",
+          "legacy_source": "src/func_ov070_0211f48c.c",
+          "ordinal": 6
+        },
+        {
+          "symbol": "func_ov070_0211f5f0",
+          "address": "0x0211f5f0",
+          "size": "0x0000003c",
+          "legacy_source": "src/func_ov070_0211f5f0.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "func_ov070_0211f62c",
+          "address": "0x0211f62c",
+          "size": "0x00000068",
+          "legacy_source": "src/func_ov070_0211f62c.c",
+          "ordinal": 8
+        },
+        {
+          "symbol": "func_ov070_0211f694",
+          "address": "0x0211f694",
+          "size": "0x0000004c",
+          "legacy_source": "src/func_ov070_0211f694.cpp",
+          "ordinal": 9
+        },
+        {
+          "symbol": "func_ov070_0211f6e0",
+          "address": "0x0211f6e0",
+          "size": "0x000003a0",
+          "legacy_source": "src/func_ov070_0211f6e0.c",
+          "ordinal": 10
+        },
+        {
+          "symbol": "func_ov070_0211fa80",
+          "address": "0x0211fa80",
+          "size": "0x00000064",
+          "legacy_source": "src/func_ov070_0211fa80.c",
+          "ordinal": 11
+        },
+        {
+          "symbol": "func_ov070_0211fae4",
+          "address": "0x0211fae4",
+          "size": "0x0000027c",
+          "legacy_source": "src/func_ov070_0211fae4.c",
+          "ordinal": 12
+        },
+        {
+          "symbol": "func_ov070_0211fd60",
+          "address": "0x0211fd60",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov070_0211fd60.c",
+          "ordinal": 13
+        },
+        {
+          "symbol": "func_ov070_0211fd98",
+          "address": "0x0211fd98",
+          "size": "0x00000210",
+          "legacy_source": "src/func_ov070_0211fd98.c",
+          "ordinal": 14
+        },
+        {
+          "symbol": "func_ov070_0211ffa8",
+          "address": "0x0211ffa8",
+          "size": "0x00000078",
+          "legacy_source": "src/func_ov070_0211ffa8.cpp",
+          "ordinal": 15
+        },
+        {
+          "symbol": "FlyGuy_ChangeState",
+          "address": "0x02120020",
+          "size": "0x00000050",
+          "legacy_source": "src/FlyGuy_ChangeState.cpp",
+          "ordinal": 16
+        },
+        {
+          "symbol": "func_ov070_02120070",
+          "address": "0x02120070",
+          "size": "0x000000e0",
+          "legacy_source": "src/func_ov070_02120070.cpp",
+          "ordinal": 17
+        },
+        {
+          "symbol": "_ZN6FlyGuy16CleanupResourcesEv",
+          "address": "0x02120150",
+          "size": "0x0000006c",
+          "legacy_source": "src/_ZN6FlyGuy16CleanupResourcesEv.cpp",
+          "ordinal": 18
+        },
+        {
+          "symbol": "_ZN6FlyGuy16OnPendingDestroyEv",
+          "address": "0x021201bc",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN6FlyGuy16OnPendingDestroyEv.cpp",
+          "ordinal": 19
+        },
+        {
+          "symbol": "_ZN6FlyGuy6RenderEv",
+          "address": "0x021201c0",
+          "size": "0x00000050",
+          "legacy_source": "src/_ZN6FlyGuy6RenderEv.cpp",
+          "ordinal": 20
+        },
+        {
+          "symbol": "_ZN6FlyGuy8BehaviorEv",
+          "address": "0x02120210",
+          "size": "0x000001a4",
+          "legacy_source": "src/_ZN6FlyGuy8BehaviorEv.cpp",
+          "ordinal": 21
+        },
+        {
+          "symbol": "_ZN6FlyGuy13InitResourcesEv",
+          "address": "0x021203b4",
+          "size": "0x00000130",
+          "legacy_source": "src/_ZN6FlyGuy13InitResourcesEv.cpp",
+          "ordinal": 22
+        },
+        {
+          "symbol": "_ZN6FlyGuy16OnAimedAtWithEggEv",
+          "address": "0x021204e4",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN6FlyGuy16OnAimedAtWithEggEv.cpp",
+          "ordinal": 23
+        },
+        {
+          "symbol": "_ZN6FlyGuy13OnTurnIntoEggER6Player",
+          "address": "0x021204ec",
+          "size": "0x0000002c",
+          "legacy_source": "src/_ZN6FlyGuy13OnTurnIntoEggER6Player.cpp",
+          "ordinal": 24
+        },
+        {
+          "symbol": "_ZN6FlyGuy13OnYoshiTryEatEv",
+          "address": "0x02120518",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN6FlyGuy13OnYoshiTryEatEv.cpp",
+          "ordinal": 25
+        },
+        {
+          "symbol": "FlyGuy_Spawn",
+          "address": "0x02120520",
+          "size": "0x00000050",
+          "legacy_source": "src/FlyGuy_Spawn.c",
+          "ordinal": 26
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
+        "27/27 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled (create refuses extern-C-wrapped bodies). Carries the NEW struct-copy lever: mwccarm's C++ front end scalarizes a plain struct assignment where the C front end emits an ldm/stm block copy; an array-wrapper view (struct V3w { int w[3]; }) restores the block copy -- fixed func_ov070_0211f48c (-4B) and func_ov070_0211f6e0 (+8B) after fdiff proved the idiom byte-exact. Also: two members keep their own int-target ApproachAngle view via BLOCK-SCOPE extern declarations (C++ name hiding), because the TU-wide extern-C declaration cannot serve both signatures and the parameter width is byte-load-bearing. FlyGuy_Spawn stores &_ZTV6FlyGuy[2] (+8 rule)."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov070-FlyGuy/FlyGuy.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 27,
+        "functions_declared": 27,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
     }
   ]
 }
