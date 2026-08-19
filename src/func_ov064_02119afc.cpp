@@ -1,11 +1,7 @@
 //cpp
-#include "types.h"
-// @symbol func_ov064_02119afc
-/* recovered: shared common types, declarations from a shared header */
-/* recovered: shared common types */
 #include "common.h"
+
 extern "C" {
-    extern int data_ov064_0211c944;
 void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* t, const Vector3& v);
 void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 s16 Vec3_VertAngle(const Vector3* v1, const Vector3* v0);
@@ -13,15 +9,10 @@ int AngleDiff(int a, int b);
 short _ZN8dActor_c18HorzAngleToCPlayerEv(void* t);
 void _ZN6Player4HealEi(void* p, int amt);
 void func_ov064_02119ecc(void* c, void* p);
-extern Vector3 data_ov064_0211c3d0;
 }
 
-static inline void CopyVec(Vector3* d, const Vector3* s)
-{
-    d->x = s->x;
-    d->y = s->y;
-    d->z = s->z;
-}
+extern Vector3 data_ov064_0211c3d0;
+extern int data_ov064_0211c944;
 
 extern "C" void func_ov064_02119afc(char* c)
 {
