@@ -388,3 +388,30 @@ def test_anonymous_typedefs_key_by_their_trailing_name():
     assert (ka, na) == ("typedef", "Vector3")
     assert (kb, nb) == ("typedef", "State300")
     assert (ka, na) != (kb, nb), "distinct unnamed types must not share a merge key"
+
+
+def test_forward_decl_folds_into_the_definition_either_order():
+    """A bare `struct C;` forward declaration must never oust or conflict with a
+    full `struct C { ... };` definition of the same name (RacingPenguin, ov019).
+    The definition wins whichever order they arrive in; a forward line that
+    carries MORE than the declaration (e.g. a piggybacked typedef) still flags."""
+    fwd = ("struct", "C", "struct C;")
+    full = ("struct", "C", "struct C { char pad[0x370]; int idx; };")
+    rider = ("struct", "C", "struct C; typedef void (C::*PMF)();")
+
+    def run(first, second):
+        w = []
+        parsed = {"a": {"shadow_decls": [first]}, "b": {"shadow_decls": [second]}}
+        rows = [(0, "a", 0, 4), (1, "b", 4, 4)]
+        live, dead = tubuild._merge_field(rows, parsed, lambda p: p["shadow_decls"],
+                                          lambda i: (i[0], i[1]), "local declaration", w)
+        return live, dead, w
+
+    live, dead, w = run(fwd, full)
+    assert live == [(("struct", "C"), full)] and not dead and not w, \
+        "definition must replace the earlier forward decl silently"
+    live, dead, w = run(full, fwd)
+    assert live == [(("struct", "C"), full)] and not dead and not w, \
+        "a later forward decl must fold into the kept definition silently"
+    live, dead, w = run(rider, full)
+    assert dead and w, "a forward decl with piggybacked text must still flag"

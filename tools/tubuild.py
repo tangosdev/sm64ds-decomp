@@ -670,9 +670,25 @@ def _macro_name_of(line):
     return m.group(1) if m else line
 
 
+def _is_forward_decl(item):
+    """True for a BARE `struct C;`-style forward declaration carried as a shadow
+    declaration (kind, name, text). A forward declaration never CONFLICTS with a
+    full definition of the same name -- one names the type, the other supplies it.
+    RacingPenguin (ov019) had its full `struct C { ... };` conflict-commented away
+    because the forward declaration arrived first. Deliberately strict: a line
+    like `struct C; typedef void (C::*PMF)();` carries MORE than the forward
+    declaration and must still flag, or the extra text is silently lost."""
+    if not (isinstance(item, tuple) and len(item) == 3):
+        return False
+    kind, dname, text = item
+    return re.fullmatch(rf'\s*{re.escape(kind)}\s+{re.escape(dname)}\s*;\s*', text) is not None
+
+
 def _merge_field(ord_rows, parsed, getter, name_of, kind_label, warnings):
     """Union items across a TU's legacy files by name; flag same-name/different-text
-    as a conflict rather than picking a winner silently (plan sec 7.3)."""
+    as a conflict rather than picking a winner silently (plan sec 7.3). The one
+    silent reconciliation: a forward declaration folds into a full definition of
+    the same name (definition wins, whichever order they arrive in)."""
     seen, live, dead = {}, [], []
     for _o, name, _a, _s in ord_rows:
         for item in getter(parsed[name]):
@@ -681,6 +697,15 @@ def _merge_field(ord_rows, parsed, getter, name_of, kind_label, warnings):
                 seen[key] = (item, name)
                 live.append((key, item))
             elif seen[key][0] != item:
+                if kind_label == "local declaration":
+                    if _is_forward_decl(item) and not _is_forward_decl(seen[key][0]):
+                        continue          # new is only a forward decl of the kept definition
+                    if _is_forward_decl(seen[key][0]) and not _is_forward_decl(item):
+                        # kept was only a forward decl; the definition replaces it in place
+                        old = seen[key][0]
+                        seen[key] = (item, name)
+                        live[live.index((key, old))] = (key, item)
+                        continue
                 warnings.append(f"CONFLICT: {kind_label} {key!r} differs between the legacy "
                                 f"file that used to hold {seen[key][1]} and the one that held "
                                 f"{name}; kept the first, the other is commented out for review")
