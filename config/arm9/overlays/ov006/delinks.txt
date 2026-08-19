@@ -1996,6 +1996,10 @@ src/func_ov006_020dd000.c:
     complete
     .text start:0x020dd000 end:0x020dd0e0
 
+src/func_ov006_020dd0e0.c:
+    complete
+    .text start:0x020dd0e0 end:0x020dd2cc
+
 src/func_ov006_020dd2cc.cpp:
     complete
     .text start:0x020dd2cc end:0x020dd334
