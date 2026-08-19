@@ -336,6 +336,7 @@ src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.cpp:
     .text start:0x0211af6c end:0x0211af70
 
 src/actors/Boo/_ZN3Boo6RenderEv.cpp:
+    complete
     .text start:0x0211af70 end:0x0211b078
 
 src/actors/BooCage/_ZN7BooCage6RenderEv.cpp:
@@ -346,7 +347,8 @@ src/actors/BooCage/_ZN7BooCage8BehaviorEv.cpp:
     complete
     .text start:0x0211b888 end:0x0211b9bc
 
-src/actors/Boo/_ZN3Boo13InitResourcesEv.c:
+src/actors/Boo/_ZN3Boo13InitResourcesEv.cpp:
+    complete
     .text start:0x0211b9bc end:0x0211c35c
 
 src/actors/BooCage/_ZN7BooCage13InitResourcesEv.cpp:
