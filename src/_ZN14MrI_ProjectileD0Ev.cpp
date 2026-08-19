@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN14MrI_ProjectileD1Ev
+// @symbol _ZN14MrI_ProjectileD0Ev
 
 #include "MrI_Projectile.h"
 
