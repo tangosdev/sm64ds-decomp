@@ -314,3 +314,62 @@ if __name__ == "__main__":
              "themselves rather than failing)")
     print(f"\n{ran} test(s) run, {fails} failure(s)")
     sys.exit(1 if fails else 0)
+
+
+import tubuild
+
+# ---------------------------------------------------------------- create repairs
+# The three assemble_shadow_source behaviors proven by six modules of
+# hand-assembly (222 byte-verified functions) before being folded into the
+# generator: extern "C" BLOCKS around .c-derived members (defect 2), #pragma
+# long_calls carried in position and bracketed (positional on 2004/b56 -- the
+# ov014 seed), and raw-concatenation fallback instead of refusing a candidate
+# (defect 4). Synthetic: no compiler, no ROM -- these test the emitted TEXT.
+
+def _member(cpp, text, pragmas=(), **over):
+    d = {"error": None, "cpp": cpp, "includes": [], "pragmas": list(pragmas),
+         "macros": [], "externs": [], "shadow_decls": [], "notes": [],
+         "function_text": text, "legacy_path": "src/synthetic.c"}
+    d.update(over)
+    return d
+
+
+def test_c_member_gets_a_linkage_block_not_a_prefix():
+    ord_rows = [(0, "f_lo", 0x1000, 8), (1, "f_hi", 0x1008, 8)]
+    parsed = {"f_lo": _member(False, "int f_lo(void) { return 0; }\n"),
+              "f_hi": _member(True, "int f_hi() { return 1; }\n")}
+    body, _w = tubuild.assemble_shadow_source("t/T", ord_rows, parsed)
+    assert 'extern "C" {' in body, "the .c member must be wrapped in a block"
+    assert 'extern "C" int f_lo' not in body, \
+        "prefixing the first line is defect 2: the linkage lands on a preamble decl"
+    assert body.index("f_hi") < body.index("int f_lo"), "source order must be reverse ROM"
+
+
+def test_long_calls_is_carried_in_position_and_bracketed():
+    ord_rows = [(0, "veneer", 0x1000, 8)]
+    parsed = {"veneer": _member(False, "int veneer(void) { return g(); }\n",
+                                pragmas=["#pragma long_calls on"])}
+    body, _w = tubuild.assemble_shadow_source("t/T", ord_rows, parsed)
+    on = body.index("#pragma long_calls on")
+    off = body.index("#pragma long_calls off")
+    assert on < body.index("int veneer") < off, \
+        "long_calls must open before its own member and close after it"
+
+
+def test_file_global_pragmas_are_still_left_out():
+    ord_rows = [(0, "f", 0x1000, 8)]
+    parsed = {"f": _member(False, "int f(void) { return 0; }\n",
+                           pragmas=["#pragma optimize_for_size on"])}
+    body, _w = tubuild.assemble_shadow_source("t/T", ord_rows, parsed)
+    assert body.count("#pragma optimize_for_size") == 0 or \
+        "NOT carried" in body.split("optimize_for_size", 1)[1][:200], \
+        "file-global pragmas poison a merged TU and stay advisory-only"
+
+
+def test_sourceless_member_becomes_a_banner_not_a_refusal():
+    ord_rows = [(0, "ghost", 0x1000, 8), (1, "real", 0x1008, 8)]
+    parsed = {"ghost": _member(False, "", missing=True),
+              "real": _member(True, "int real() { return 1; }\n")}
+    body, _w = tubuild.assemble_shadow_source("t/T", ord_rows, parsed)
+    assert "SOURCELESS member ghost" in body
+    assert "int real()" in body

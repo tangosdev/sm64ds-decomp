@@ -535,6 +535,7 @@ def cmd_inspect(args):
 
 _CPP_MARKER = "//cpp"
 _PRAGMA_LINE_RE = re.compile(r'^\s*#\s*pragma\b.*$')
+_LONG_CALLS_ON_RE = re.compile(r'^\s*#\s*pragma\s+long_calls\s+on\b')
 _INCLUDE_RE = re.compile(r'^\s*#\s*include\s*.+$')
 _DEFINE_RE = re.compile(r'^\s*#\s*define\b.*$')
 _DECL_KEYWORDS = ("struct", "class", "enum", "typedef", "namespace")
@@ -723,14 +724,17 @@ def assemble_shadow_source(tu_id, ord_rows, parsed):
     out.append("")
 
     if pragma_hits:
-        out.append("/* TUBUILD WARNING -- #pragma directive(s) were present in the legacy")
-        out.append(" * sources of this TU and were NOT carried into this file automatically.")
-        out.append(" * Per notes/translation-unit-reconstruction-plan.md section 10, a pragma")
-        out.append(" * that was FUNCTION-scoped in its own one-function file can become")
-        out.append(" * TU-scoped once merged and silently change codegen for the OTHER")
-        out.append(" * functions here. Decide by hand whether/where each one still applies:")
+        out.append("/* TUBUILD NOTE -- #pragma directive(s) were present in the legacy sources")
+        out.append(" * of this TU. `#pragma long_calls` is POSITIONAL in mwccarm 2004/b56 and is")
+        out.append(" * carried verbatim before its own member below, bracketed with `off` so it")
+        out.append(" * cannot leak into later members (dropping it silently costs the pooled")
+        out.append(" * cross-overlay tail-call -- a byte diff; see ShutterBob in ov014).")
+        out.append(" * Any OTHER pragma is FILE-GLOBAL last-wins (opt_propagation,")
+        out.append(" * optimize_for_size) and is still left out: carried into a merged TU it")
+        out.append(" * would silently recompile every other member. Decide those by hand:")
         for name, p in pragma_hits:
-            out.append(f" *   {name}: {p}")
+            carried = "carried below" if _LONG_CALLS_ON_RE.match(p) else "NOT carried -- review"
+            out.append(f" *   {name}: {p}   [{carried}]")
         out.append(" */")
         out.append("")
 
@@ -783,15 +787,40 @@ def assemble_shadow_source(tu_id, ord_rows, parsed):
         out.append("/* " + "-" * 74 + " */")
         out.append(f"/* ROM ordinal {o} -- {name}, 0x{addr:08x}, size 0x{size:x} */")
         out.append("/* " + "-" * 74 + " */")
+        if p.get("missing"):
+            # No legacy source under src/. The candidate is still worth assembling
+            # for its other members; this range stays the ROM's own bytes and
+            # `verify` will honestly report the member as MISSING.
+            out.append(f"/* SOURCELESS member {name}: no file under src/ supplies it; the")
+            out.append(" * ROM's own bytes cover this range. Recover it before promotion. */")
+            out.append("")
+            continue
         for note in p["notes"]:
             out.append(note)
+        # `#pragma long_calls` is POSITIONAL (measured on 2004/b56, notes in the
+        # ov014 seed): carried verbatim before its own member and closed after it,
+        # so the pooled cross-overlay tail-call it forces cannot leak into later
+        # members. Other pragmas are file-global last-wins and are never carried.
+        long_calls_here = [pr for pr in p["pragmas"] if _LONG_CALLS_ON_RE.match(pr)]
+        for pr in long_calls_here:
+            out.append(pr + "  /* carried verbatim from the legacy file (positional) */")
         func_text = p["function_text"]
         if cpp_needed and not p["cpp"]:
             # A legacy .c file's identifier is unmangled by construction; giving the
             # merged C++ TU the same text without linkage protection would let the
             # compiler mangle it a second time (notes/double-mangling-defect.md).
-            func_text = 'extern "C" ' + func_text
-        out.append(func_text.rstrip("\n"))
+            # The linkage goes on a BLOCK around the member's whole text: prefixing
+            # the first line lands it on a preamble declaration and the definition
+            # is emitted mangled -- the TU then silently fails to define its own
+            # ROM symbol (notes/tubuild-defects, defect 2).
+            out.append('extern "C" {  /* .c-derived member: C linkage for the whole block */')
+            out.append(func_text.rstrip("\n"))
+            out.append("}")
+        else:
+            out.append(func_text.rstrip("\n"))
+        for pr in long_calls_here:
+            out.append("#pragma long_calls off  "
+                       "/* close the bracket: positional, must not leak downward */")
         out.append("")
 
     return "\n".join(out).rstrip("\n") + "\n", warnings
@@ -851,26 +880,41 @@ def cmd_create(args):
     if not ord_rows:
         raise SystemExit(f"{args.id}: tu_map lists no symbols.txt-resolvable functions")
 
-    missing = [name for _o, name, _a, _s in ord_rows if SP.path_for(name) is None]
-    if missing:
-        raise SystemExit(f"{args.id}: {len(missing)} function(s) have no legacy source under "
-                         f"src/, cannot assemble a starting point: {missing}")
-
+    # Neither a sourceless member nor an unsplittable file refuses the whole
+    # candidate any more (notes/tubuild-defects, defect 4): the largest TUs were
+    # only reachable by hand-assembly because one member's shape aborted create.
+    # A sourceless member becomes a banner (verify reports it MISSING, honestly);
+    # an unsplittable file is carried VERBATIM -- raw concatenation is exactly
+    # what six modules' hand-assembly did, byte-verified 222 functions.
+    pre_warnings = []
     parsed = {}
     for _o, name, _a, _s in ord_rows:
         legacy = SP.path_for(name)
+        if legacy is None:
+            pre_warnings.append(f"SOURCELESS: {name} has no legacy file under src/; a banner "
+                                f"marks its slot and verify will report the member MISSING")
+            parsed[name] = {"error": None, "cpp": False, "missing": True,
+                            "includes": [], "pragmas": [], "macros": [], "externs": [],
+                            "shadow_decls": [], "notes": [], "function_text": "",
+                            "legacy_path": f"<none for {name}>"}
+            continue
         text = legacy.read_text(encoding="utf-8", errors="ignore")
         p = split_legacy_source(text)
         p["legacy_path"] = legacy.relative_to(REPO).as_posix()
         if p["error"]:
-            raise SystemExit(
-                f"{args.id}: could not parse {p['legacy_path']} ({name}): {p['error']}\n"
-                f"This file's shape does not match tubuild's one-function-per-file "
-                f"assumption; assemble this TU by hand instead, the way pilot #1 did "
-                f"(see notes/tu-reconstruction-pilot-report.md).")
+            is_cpp = text.startswith("//cpp")
+            raw = text.split("\n", 1)[1] if is_cpp and "\n" in text else text
+            pre_warnings.append(f"RAW: {p['legacy_path']} ({name}) did not split "
+                                f"({p['error']}); carried verbatim -- its own includes/"
+                                f"declarations stay inside its member block")
+            p = {"error": None, "cpp": is_cpp, "raw": True,
+                 "includes": [], "pragmas": [], "macros": [], "externs": [],
+                 "shadow_decls": [], "notes": [], "function_text": raw,
+                 "legacy_path": p["legacy_path"]}
         parsed[name] = p
 
     body, warnings = assemble_shadow_source(args.id, ord_rows, parsed)
+    warnings = pre_warnings + warnings
 
     # mwccarm selects its C vs C++ FRONT END from the file's EXTENSION, not just
     # from -lang: the same source text compiled as .c under "-lang c99" emits the
