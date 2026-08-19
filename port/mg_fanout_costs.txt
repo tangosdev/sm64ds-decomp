@@ -509,7 +509,10 @@ AND THE WALL IS TWELVE TUs, NOT SIX. THIS IS THE MOST IMPORTANT CORRECTION IN
 THIS FILE AND IT CHANGES EVERY FAN-OUT ESTIMATE ABOVE. The seven symbols the
 link names come from six TUs; a sweep of the slice for a pointer-to-member
 dispatch finds twelve. The other six are silent FOR TWO DIFFERENT REASONS, and
-the split matters more than the total:
+the split matters more than the total. (Run mg5 lane FLW found a THIRD reason
+and a thirteenth TU, added at the foot of this list. Twelve was the count a
+`::*` sweep could reach, and the third shape is the one that sweep cannot see,
+so treat twelve as a floor rather than a census.)
 
   TWO declare their PMF table inside extern "C", so the global mangles as the
   plain C name the mount already defines and the linker is satisfied. They
@@ -520,12 +523,68 @@ the split matters more than the total:
   so nothing external is emitted for it in any linkage.
       func_ov004_020b31b4  _020b321c  _020b8714  _020b8778
 
+  AND THERE IS A THIRD REASON, run mg5 lane FLW. The sentence above this list
+  said TWO, and two was what the sweep that produced this list could see. ONE
+  TU OPEN-CODES THE ARM ITANIUM SEQUENCE IN PLAIN INTS.
+      func_ov006_020c3d18
+
+  It declares no member-pointer type and no PMF global. The pair is read out of
+  the object as two ordinary ints, so there is no symbol for a link to fail on
+  AND no `::*` for a source sweep to match. src/func_ov006_020c3d18.cpp sits
+  inside extern "C" and does its own decoding:
+
+      int v = *(int*)(c+4);         /* the adjustment word */
+      void *p = c + (v >> 1);       /* this, advanced, arithmetic shift */
+      if (v & 1) {                  /* the virtual bit, in the LSB */
+          int *vt = *(int**)p;
+          fn = (int*)*(int*)((char*)vt + *(int*)c);
+      } else {
+          fn = (int*)*(int*)c;
+      }
+      ((void(*)(void*))fn)(p);
+
+  which is the five-instruction shape this section opens with, one for one. The
+  ROM at 0x020c3d18, read out of extracted/overlays/overlay_0006.bin at base
+  0x020bfec0:
+
+      ldr   r1,[r4,#4]
+      add   r0,r4,r1,asr#1
+      ands  r1,r1,#1
+      ldrne r2,[r0]  /  ldrne r1,[r4]  /  ldrne r1,[r2,r1]
+      ldreq r1,[r4]
+      blx   r1
+
+  So it compiles, it links, and it reads clean. ONLY A RUN CONVICTS IT, and the
+  first symptom is eip equal to a raw DS address: the two words it decodes are
+  the mounted ROM's, and nothing in the source ever says so.
+
+  ROUTE IT AT THE DISPATCH SITE, NOT BY REWRITING THE STORED PAIR. The ov085 /
+  ov100 shape named further up -- write host addresses over the .data pair
+  before anything reads it -- is wrong for this one, and the reason is a second
+  reader. src/func_ov006_020c3b80.c compares the stored pair against its idle
+  sentinel data_ov006_0213aee0:
+
+      if (r2 == g[0]) { if (c[1] == g[1] || r2 == 0) ip = 0; }
+
+  so it asks "is this slot idle" by value. A host address never equals a DS
+  address, so a seat that rewrote the pair would leave that test permanently
+  false while the dispatch itself looked fine. The host copy replaces the
+  DECODE, and the stored pair keeps the ROM's own words.
+
 SO A LINK IS NOT A COMPLETE DETECTOR FOR THIS WALL, AND THE CONCLUSION IS
 STRONGER FOR THE FOUR THAN FOR THE TWO. The two are hidden by a linkage
 specifier and a lane that re-declared the table at C++ linkage would see them.
 The four cannot be surfaced by any link ever run, because there is no symbol to
 resolve; only reading the source finds them. The fan-out sweeps for `::*` in
 its own slice before it believes an LNK1120.
+
+AND THE `::*` SWEEP IS NOT A COMPLETE DETECTOR EITHER, which lane FLW's third
+shape is the correction to. Both of the detectors this section prescribes --
+the link and the source sweep -- return clean over a TU that decodes the pair
+in ints. The pair of them is still worth running, because between them they
+find twelve of the thirteen; what they cannot do is license the word "none".
+A slice whose class dispatches through a sub-object gets a RUN before that
+claim, and the run is the detector: eip on a DS address is the tell.
 
 The four are also the worse defect on their own terms. MSVC's four-byte member
 pointer inside the object moves every field after it, so they read the WRONG
