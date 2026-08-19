@@ -178,6 +178,10 @@ src/func_ov006_020fc1f8.c
 src/func_ov006_020fc2ec.c
 src/func_ov006_020fc500.c
 src/func_ov006_020fc844.c
+# Run mg5, lane INTEG: dScMgPachinko_c bodies recovered on branch decomp/pach-
+# bodies (78e6499d0). 020fc8c0 = slot-9 render homing helper, void(char*);
+# its trap in MgPachinko_Traps.cpp is removed.
+src/func_ov006_020fc8c0.c
 src/func_ov006_020fc9b0.c
 src/func_ov006_020fca1c.c
 src/func_ov006_020fcd8c.c
@@ -187,10 +191,15 @@ src/func_ov006_020fd088.c
 src/func_ov006_020fd17c.c
 src/func_ov006_020fd894.c
 src/func_ov006_020fd9cc.c
+# Run mg5, lane INTEG: 020fdd40 = slot-6 spawn body, void(char*); trap removed.
+src/func_ov006_020fdd40.c
 src/func_ov006_020fe1a8.c
 src/func_ov006_020fe1d0.c
 src/func_ov006_020fe2bc.c
 src/func_ov006_020fe2e4.c
+# Run mg5, lane INTEG: 020fe394 = state 1 of data_ov006_02142644, void(char*,int);
+# wired into the address switch in MgPachinko_StateDispatch.cpp (was a floor).
+src/func_ov006_020fe394.c
 src/func_ov006_020fe750.c
 src/func_ov006_020fe90c.c
 src/func_ov006_020fea54.c
@@ -198,6 +207,12 @@ src/func_ov006_020feba8.c
 src/func_ov006_020fed58.c
 src/func_ov006_020fedc4.c
 src/func_ov006_020fee24.c
+# Run mg5, lane INTEG: dScMgPachinko_c::InitResources (vtable slot 0), the
+# copy-across black-screen fix from origin/main. Compiles as the __thiscall C++
+# member against include/dScMgPachinko_c.h; a cdecl face in MgPachinko_Faces.cpp
+# forwards to it and MgPachinko_Faces.cpp aliases func_ov006_020fefc0 onto that
+# face. Its trap in MgPachinko_Traps.cpp is removed.
+src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp
 src/func_ov006_0210c374.cpp
 
 # ---- WAVE 1's CORRECTION: FOUR ov004 LINES REMOVED --------------------------
@@ -238,6 +253,10 @@ src/func_ov006_0210c374.cpp
 
 src/func_ov004_020aff38.cpp
 src/func_ov004_020b1a5c.c
+# Run mg5, lane INTEG: the BG-layer setup helper the seated InitResources calls;
+# the link named it. Matched .cpp with its own delink block; its callees are all
+# framework GX/G2/G2S functions already in the build.
+src/func_ov004_020af2f8.cpp
 
 # ---- WAVE 2: THE THREE JOIN-MISS TUs, now that the linker has asked --------
 #

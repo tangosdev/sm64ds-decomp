@@ -156,7 +156,7 @@ need a ROM adjudication before they can be seated. "nosrc" is how many have no
 matched src TU at all and will need a named trap or a decomp.
 
   id     spawn symbol                vtable     width  ovr  mark  nosrc
-  0x170  MgBobOmbSquad               0213d9cc      36    6     3      1
+  0x170  MgBobOmbSquad               0213d9cc      36    6     4      0
   0x171  MgLakituLaunch              0213dbbc      36    6     4      0
   0x172  MgSortOrSplode              0213bbb4      36    6     5      0
   0x176  MgShuffleShell (curling)    0213c304      36    6     5      0   DONE

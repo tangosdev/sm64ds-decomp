@@ -1410,8 +1410,9 @@ extern "C" void port_scene_mg_pachinko_report(void)
         unsigned hits = 0, missing = 0;
         port_mg_pachinko_state_counts(&hits, &missing);
         std::printf("[scene] dScMgPachinko_c state dispatch: %u routed to one "
-                    "of its 22 decompiled states, %u reached one of the 3 "
-                    "states with NO decompiled body\n", hits, missing);
+                    "of its 23 decompiled states, %u reached one of the 2 "
+                    "states with NO decompiled body (run mg5 lane INTEG seated "
+                    "the third, 0x020fe394)\n", hits, missing);
     }
     std::printf("[scene] dScMgPachinko_c unmatched-body traps entered: %u\n",
                 port_mg_pachinko_trap_hits());

@@ -87,20 +87,20 @@ extern "C" unsigned port_mg_pachinko_trap_hits(void) { return g_pch_trap_hits; }
 
 extern "C" {
 
-/* vtable slot 0. The face thunk in hal/scene_mg.cpp calls it and reads its
-   int return, so the trap returns 1 -- the value every other slot-0 body in
-   this family returns for "resources initialised". Returning 0 here would be
-   an invented FAILURE rather than an absent body. */
-int func_ov006_020fefc0(void *)
-{
-    pch_trap("func_ov006_020fefc0 (vtable slot 0)");
-    return 1;
-}
-
-void func_ov006_020fc8c0(void *)          { pch_trap("func_ov006_020fc8c0"); }
+/* Run mg5, lane INTEG: three of these six were recovered and are now seated, so
+   their traps are gone:
+     func_ov006_020fefc0  vtable slot 0 InitResources -- copy-across from main,
+                          reached through the cdecl face + alias in
+                          MgPachinko_Faces.cpp.
+     func_ov006_020fc8c0  slot-9 render homing helper -- sliced, its sliced
+                          caller now links to the real body by name.
+     func_ov006_020fdd40  slot-6 spawn body -- sliced, same.
+   The remaining three stay trapped: they are the floors this seat deliberately
+   does not bring (020fcb4c is called by 020fd2d8 which has no body on main;
+   020fdaf0 is the homing-seed worker recovered only on the pach-bodies tip, not
+   in this lane's set; 020fb230 is a state floor the dispatch reports). */
 void func_ov006_020fcb4c(char *, int)     { pch_trap("func_ov006_020fcb4c"); }
 void func_ov006_020fdaf0(char *, int)     { pch_trap("func_ov006_020fdaf0"); }
-void func_ov006_020fdd40(void *)          { pch_trap("func_ov006_020fdd40"); }
 void func_ov006_020fb230(void *, int)     { pch_trap("func_ov006_020fb230"); }
 
 }  /* extern "C" */

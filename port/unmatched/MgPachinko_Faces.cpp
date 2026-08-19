@@ -58,6 +58,25 @@
 #pragma comment(linker, "/alternatename:__ZTV15dScMgPachinko_c=_data_ov006_0213d9cc")
 #pragma comment(linker, "/alternatename:_func_0205a448=_MultiStore16")
 
+// ---- 3. Run mg5, lane INTEG: THE SLOT-0 InitResources CDECL FACE -----------
+//
+// dScMgPachinko_c::InitResources (vtable slot 0, the black-screen fix) was
+// recovered on origin/main only as the __thiscall C++ member
+// src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp. hal/scene_mg.cpp's slot-0
+// dispatch (pch_init) calls the ROM address name func_ov006_020fefc0 as a plain
+// cdecl (void*). An alias cannot bridge cdecl to __thiscall -- the port's
+// documented wall -- so this is the method_faces.cpp shape instead: a cdecl
+// forwarder carrying the flat Itanium name, doing the qualified (non-virtual)
+// call so it reaches THIS body rather than dispatching through the object's ROM
+// vtable, and an alias pointing the ROM address name onto that forwarder. The
+// trap for func_ov006_020fefc0 is removed from MgPachinko_Traps.cpp so the LHS
+// is undefined for the alias to bind.
+#include "dScMgPachinko_c.h"
+extern "C" int _ZN15dScMgPachinko_c13InitResourcesEv(void *self)
+{ return ((dScMgPachinko_c *)self)->dScMgPachinko_c::InitResources(); }
+
+#pragma comment(linker, "/alternatename:_func_ov006_020fefc0=__ZN15dScMgPachinko_c13InitResourcesEv")
+
 /* MSVC will not emit an object for a translation unit that defines nothing,
    and a dropped object takes its linker directives with it. */
 extern "C" int port_mg_pachinko_faces_anchor(void) { return 0x170; }

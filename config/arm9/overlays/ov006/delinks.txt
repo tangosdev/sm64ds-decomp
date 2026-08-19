@@ -4330,6 +4330,9 @@ src/func_ov006_020fc844.c:
     complete
     .text start:0x020fc844 end:0x020fc8c0
 
+src/func_ov006_020fc8c0.c:
+    .text start:0x020fc8c0 end:0x020fc9b0
+
 src/func_ov006_020fc9b0.c:
     complete
     .text start:0x020fc9b0 end:0x020fca1c
@@ -4370,6 +4373,9 @@ src/func_ov006_020fda7c.cpp:
     complete
     .text start:0x020fda7c end:0x020fdaf0
 
+src/func_ov006_020fdd40.c:
+    .text start:0x020fdd40 end:0x020fe1a8
+
 src/func_ov006_020fe1a8.c:
     complete
     .text start:0x020fe1a8 end:0x020fe1d0
@@ -4389,6 +4395,9 @@ src/func_ov006_020fe2bc.c:
 src/func_ov006_020fe2e4.c:
     complete
     .text start:0x020fe2e4 end:0x020fe394
+
+src/func_ov006_020fe394.c:
+    .text start:0x020fe394 end:0x020fe750
 
 src/func_ov006_020fe750.c:
     complete
@@ -4416,6 +4425,10 @@ src/func_ov006_020fedc4.c:
 src/func_ov006_020fee24.c:
     complete
     .text start:0x020fee24 end:0x020fefc0
+
+src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp:
+    complete
+    .text start:0x020fefc0 end:0x020ff3ec
 
 src/MgBobOmbSquad_Spawn.c:
     .text start:0x020ff3ec end:0x020ff420

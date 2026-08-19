@@ -133,6 +133,9 @@ void func_ov006_020fd17c(void *c, int i);
 void func_ov006_020fd894(void *c, int i);
 void func_ov006_020fd9cc(void *c, int i);
 void func_ov006_020fe2e4(void *c, int i);
+/* Run mg5, lane INTEG: state 1 of data_ov006_02142644, recovered on branch
+   decomp/pach-bodies; was a floor, now sliced and dispatched below. */
+void func_ov006_020fe394(void *c, int i);
 void func_ov006_020fe750(void *c, int i);
 void func_ov006_020fe90c(void *c, int i);
 void func_ov006_020fea54(void *c, int i);
@@ -192,6 +195,8 @@ extern "C" int port_mg_try_pachinko_1(void *self, unsigned code, int a)
     case 0x020fc1f8u: func_ov006_020fc1f8(self, a); return 1;
     /* data_ov006_02142644 */
     case 0x020fe2e4u: func_ov006_020fe2e4(self, a); return 1;
+    /* slot 1: run mg5 lane INTEG seated this, so it is a real dispatch now */
+    case 0x020fe394u: func_ov006_020fe394(self, a); return 1;
     case 0x020fe750u: func_ov006_020fe750(self, a); return 1;
     case 0x020fe90cu: func_ov006_020fe90c(self, a); return 1;
     case 0x020fea54u: func_ov006_020fea54(self, a); return 1;
@@ -208,11 +213,11 @@ extern "C" int port_mg_try_pachinko_1(void *self, unsigned code, int a)
     case 0x020fcec4u: func_ov006_020fcec4(self, a); return 1;
     case 0x020fce04u: func_ov006_020fce04(self, a); return 1;
 
-    /* THE THREE FLOORS. Reported by address and NOT called, and deliberately
-       given no symbol; see this file's header. They are counted separately
-       from the dispatch hits so a run cannot read a floor report as a state
-       having run. */
-    case 0x020fe394u: --g_pachinko_state_hits; pch_floor(code, a); return 1;
+    /* THE TWO REMAINING FLOORS. Reported by address and NOT called, and
+       deliberately given no symbol; see this file's header. They are counted
+       separately from the dispatch hits so a run cannot read a floor report as
+       a state having run. (Run mg5 lane INTEG seated the third, 0x020fe394,
+       which is now a real dispatch above.) */
     case 0x020fb230u: --g_pachinko_state_hits; pch_floor(code, a); return 1;
     case 0x020fd2d8u: --g_pachinko_state_hits; pch_floor(code, a); return 1;
 
