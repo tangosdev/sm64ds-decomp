@@ -532,6 +532,56 @@ types) → `dBgCh*` (5, the multiple-inheritance family, largest blast radius, d
 Every header edit here needs the `eligible.py` bracket — a shared-header change reaches
 neighbours, and `check_header_offsets` is blinded by span-form padding.
 
+#### Phase 2c is BLOCKED, and not on the collision work — measured 2026-08-19
+
+"Promote the four query headers to real classes" cannot be done as a header change on its
+own, and the full form hits a tree-wide wall.
+
+**Why the header half alone is a bad trade.** `check_header_offsets` *skips* polymorphic
+C++ structs — "implicit vptr not modelled" — which is why `dBgCh.h` and `dBgW.h` are
+already skipped. Promoting `dBgPi`, `dBgCh_Gnd`, `dBgCh_Lin` and `dBgCh_SphCrr` would take
+four headers the gate currently checks (0x28, 0x50, 0x78, 0x10c) and make them invisible
+to it, buying nothing until the classes are actually real.
+
+**The code side is PROVEN.** `notes/probe-dM3dGSph-real-class.cpp` is one ordinary C++
+class — two fields, a constructor, a virtual destructor, and the inline `operator delete`
+idiom from `include/Animation.h:86`. Every one of `dM3dGSph`'s five structor bodies comes
+out byte-exact from it at 2004/b56:
+
+| symbol | addr | size | result |
+|---|---|---|---|
+| `_ZN8dM3dGSphD2Ev` | 0x0203ac1c | 0x10 | `match=True 0/4` |
+| `_ZN8dM3dGSphD0Ev` | 0x0203ac2c | 0x24 | `match=True 0/9` |
+| `_ZN8dM3dGSphD1Ev` | 0x0203ac50 | 0x10 | `match=True 0/4` |
+| `_ZN8dM3dGSphC1Ev` | 0x0203ac60 | 0x10 | `match=True 0/4` |
+| `_ZN8dM3dGSphC2Ev` | 0x0203ac70 | 0x10 | `match=True 0/4` |
+
+The five are contiguous — 0x0203ac1c..0x0203ac7f — so they are one translation unit, and
+the class shape (vptr 0x00, centre 0x04, radius 0x10) is confirmed by the bytes rather
+than inferred.
+
+**The link side is the wall.** A class that defines its own key function emits its vtable,
+and nothing in this tree can accept one:
+
+- `0x020994cc` falls inside `.data start:0x02086bc0 end:0x0209b000`, whose owner is
+  **None** — the whole data region is served wholesale from the cartridge.
+- **Zero** delinks entries in the entire repo mention a `_ZTV`. No class here has ever
+  emitted its own vtable.
+
+Landing dM3dGSph means carving its vtable address out of that global section, giving it to
+a source object, and reproducing the vtable's words *and* its `_ZTI` pointer exactly —
+which drags in typeinfo emission. That is engine-wide infrastructure, not collision work,
+and it is the same wall `notes/tu-seed-ov045.md` calls the key-function link wall.
+
+**Consequence for the langmode count.** This is also why `codegen_hacks.extern_vtable` sits
+at 347: every class stores its vptr through an `extern _ZTV` array because none of them
+*can* do otherwise yet. The five collision vtables cannot be named until this wall falls —
+see the Phase 1 note above.
+
+**What to do instead, in order:** Phase 3 (below) does not depend on any of this. When
+Phase 2c is picked up, the first slice is the wall itself — one class, `dM3dGSph`, whose
+code side is already proven byte-exact here — not a header sweep.
+
 ### Phase 3 — The two ITCM bodies *(the 25%)*
 
 - **3a. `DetectClsn(dBgCh_Lin&)`**, 1,844 B, draft at 203 divergences. Do this **first**:
