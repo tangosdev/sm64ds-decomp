@@ -1,0 +1,33 @@
+    .text       start:0x0211f000 end:0x02122244 kind:code align:32
+    .rodata     start:0x02122244 end:0x02122afc kind:rodata align:4
+    .init       start:0x02122afc end:0x021230a4 kind:code align:4
+    .ctor       start:0x021230a4 end:0x021230b4 kind:rodata align:4
+    .data       start:0x021230c0 end:0x02123500 kind:data align:32
+    .bss        start:0x02123500 end:0x02123720 kind:bss align:32
+src_tu/actors/FlyGuy.cpp:
+    .text start:0x0211f000 end:0x02120570
+    .init start:0x02122afc end:0x02122d80
+    .ctor start:0x021230a4 end:0x021230a8
+    .data start:0x021230c0 end:0x021231e4
+    .bss start:0x02123500 end:0x021235ec
+
+src_tu/actors/Amp.cpp:
+    .text start:0x02120570 end:0x02121118
+    .init start:0x02122d80 end:0x02122f30
+    .ctor start:0x021230a8 end:0x021230ac
+    .data start:0x0212320c end:0x021232f4
+    .bss start:0x021235ec end:0x02123698
+
+src_tu/actors/FlameChomp.cpp:
+    .text start:0x02121118 end:0x02121b48
+    .init start:0x02122f30 end:0x02123030
+    .ctor start:0x021230ac end:0x021230b0
+    .data start:0x021232f4 end:0x021233ec
+    .bss start:0x02123698 end:0x021236ec
+
+src_tu/actors/FlameChompFire.cpp:
+    .text start:0x02121b48 end:0x02122244
+    .init start:0x02123030 end:0x021230a4
+    .ctor start:0x021230b0 end:0x021230b4
+    .data start:0x021233ec end:0x021234c4
+    .bss start:0x021236ec end:0x02123720
