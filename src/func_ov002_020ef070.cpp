@@ -17,7 +17,7 @@ extern unsigned _ZNK5dBgPi9GetClsnIDEv(void *self);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned id);
 extern void _ZN5dBgPiD1Ev(void *self);
 
-extern int data_02099368;
+extern int _ZTV5dBgPi;
 extern short data_02082214[];
 }
 
@@ -61,7 +61,7 @@ extern "C" int func_ov002_020ef070(void *unused, char *actor)
             dst[2] = *(int *)(rl + 0x1c);
             dst[3] = *(int *)(rl + 0x20);
             dst[4] = *(int *)(rl + 0x24);
-            tmp.tag = &data_02099368;
+            tmp.tag = &_ZTV5dBgPi;
             tmp.f18 = *(unsigned short *)(rl + 0x28);
             tmp.f1a = *(unsigned short *)(rl + 0x2a);
             tmp.f1c = *(int *)(rl + 0x2c);

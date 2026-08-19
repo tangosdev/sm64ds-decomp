@@ -60,7 +60,7 @@ extern int func_ov002_020c2138(void *self);
 extern char data_ov002_02110514;
 extern char data_ov002_021100f4;
 extern char data_ov002_021102ec;
-extern int data_02099368;
+extern int _ZTV5dBgPi;
 
 int func_ov002_020c25a8(void *arg0, int arg1)
 {
@@ -146,7 +146,7 @@ int func_ov002_020c25a8(void *arg0, int arg1)
         dst[2] = *(int*)(fr + 0xc);
         dst[3] = *(int*)(fr + 0x10);
         dst[4] = *(int*)(fr + 0x14);
-        tmp.tag = &data_02099368;
+        tmp.tag = &_ZTV5dBgPi;
         tmp.f18 = *(unsigned short*)(fr + 0x18);
         tmp.f1a = *(unsigned short*)(fr + 0x1a);
         tmp.f1c = *(int*)(fr + 0x1c);

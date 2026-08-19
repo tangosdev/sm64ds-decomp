@@ -26,7 +26,7 @@ extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callba
     unsigned int a, unsigned int b, int x, int y, int z, const void *v, void *cb);
 
 extern short data_02082214[];
-extern void *data_02099368[];
+extern void *_ZTV5dBgPi[];
 
 int func_ov002_020d6dac(char *self)
 {
@@ -79,7 +79,7 @@ int func_ov002_020d6dac(char *self)
     d[2] = *(int *)(rl + 0x1c);
     d[3] = *(int *)(rl + 0x20);
     d[4] = *(int *)(rl + 0x24);
-    res.vtb = data_02099368;
+    res.vtb = _ZTV5dBgPi;
     res.f = *(u16 *)(rl + 0x28);
     res.g = *(u16 *)(rl + 0x2a);
     res.h = *(int *)(rl + 0x2c);

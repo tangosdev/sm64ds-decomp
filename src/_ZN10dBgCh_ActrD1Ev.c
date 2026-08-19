@@ -15,14 +15,14 @@ struct dBgCh_Actr {
     void **raycastVtable;     /* 0x134: dBgCh_Lin member subobject */
 };
 
-extern void *data_02099204[];                          /* 0x02099204 */
+extern void *_ZTV10dBgCh_Actr[];                          /* 0x02099204 */
 extern void _ZN9dBgCh_LinD1Ev(void *raycast);        /* 0x02037764 */
 extern void _ZN12dBgCh_SphCrrD1Ev(void *sphere);          /* 0x02037cb0 */
 extern void func_020354d0(struct dBgCh_Actr *self); /* 0x020354d0 (base dtor) */
 
 struct dBgCh_Actr *_ZN10dBgCh_ActrD1Ev(struct dBgCh_Actr *self)
 {
-    self->vtable = (void **)data_02099204;
+    self->vtable = (void **)_ZTV10dBgCh_Actr;
     _ZN9dBgCh_LinD1Ev((char *)self + 0x134);
     _ZN12dBgCh_SphCrrD1Ev((char *)self + 0x20);
     func_020354d0(self);

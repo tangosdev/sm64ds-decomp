@@ -12,7 +12,7 @@ extern "C" void func_ov030_02111f6c(char* c, dBgCh_Actr* w);
 extern "C" void func_ov030_02111bc4(void* c);
 extern "C" int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" void func_ov030_021141a8(void* c, int x);
-extern "C" void* data_02099368[];
+extern "C" void* _ZTV5dBgPi[];
 
 struct dActor_c {
     void UpdatePos(dCc_c*);
@@ -57,7 +57,7 @@ extern "C" int func_ov030_02112400(char* c)
             d[2] = *(int*)(r + 0xc);
             d[3] = *(int*)(r + 0x10);
             d[4] = *(int*)(r + 0x14);
-            res.vtb = (Vfn*)data_02099368;
+            res.vtb = (Vfn*)_ZTV5dBgPi;
             res.h0 = *(u16*)(r + 0x18);
             res.h1 = *(u16*)(r + 0x1a);
             res.t0 = *(int*)(r + 0x1c);

@@ -21,7 +21,7 @@ struct dBgPi
 
 extern "C" {
 
-extern u32 data_02099368[];
+extern u32 _ZTV5dBgPi[];
 #pragma opt_common_subs off
 
 #define V3D(v, p, dy) { s32 _x, _y, _z; _z = (p)->z; _y = (p)->y; _x = (p)->x; _y = _y + (dy); (v).x = _x; (v).y = _y; (v).z = _z; }
@@ -294,7 +294,7 @@ void dBgCh_Actr::UpdateExtraContinous()
                     dsi->w3 = src->si.w3;
                     dsi->w4 = src->si.w4;
                 }
-                tmp.vt = data_02099368;
+                tmp.vt = _ZTV5dBgPi;
                 tmp.tri = src->tri;
                 tmp.clsn = src->clsn;
                 tmp.objID = src->objID;

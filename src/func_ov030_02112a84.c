@@ -20,7 +20,7 @@ extern void _ZN9Animation7AdvanceEv(void *p);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *a, void *c);
 extern void func_ov030_02111bc4(void *a);
 extern void _ZN5dCc_c5ClearEv(void *p);
-extern void *data_02099368[];
+extern void *_ZTV5dBgPi[];
 
 int func_ov030_02112a84(char *a)
 {
@@ -43,7 +43,7 @@ int func_ov030_02112a84(char *a)
             d[2] = *(int *)(r + 0xc);
             d[3] = *(int *)(r + 0x10);
             d[4] = *(int *)(r + 0x14);
-            res.vtb = data_02099368;
+            res.vtb = _ZTV5dBgPi;
             res.f = *(u16 *)(r + 0x18);
             res.g = *(u16 *)(r + 0x1a);
             res.h = *(int *)(r + 0x1c);
