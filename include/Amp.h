@@ -24,7 +24,12 @@ struct Amp : dActor_c {
     ShadowModel               mShadowModel;                  /* 0x1b0 */
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;    /* 0x1d8 */
     WithMeshClsn              mWithMeshClsn;                 /* 0x218 */
-    u8                        unk_3d4[0x30];                  /* 0x3d4 */
+    /* Matrix4x3, on three witnesses: InitResources block-copies the identity
+       matrix data_02082128 (0x30 bytes) into it; the state handlers write the
+       position (>>3) at +0x24/+0x28/+0x2c -- exactly the translation row; and
+       func_ov070_021206b0-family passes &this->0x3d4 as the matrix argument of
+       the shadow call. Same role as Lakitu's 0x3f8 translation words. */
+    Matrix4x3                 mMat4x3;                       /* 0x3d4 */
     u8                        pad_404[0xc];
     Vector3                   mCylinderOffset;               /* 0x410 */
     u8                        pad_41c[0x4];
