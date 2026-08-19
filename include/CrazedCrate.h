@@ -1,50 +1,71 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class CrazedCrate: 5 matched functions, 14 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef CRAZEDCRATE_H
 #define CRAZEDCRATE_H
 #include "types.h"
+#include "dActor_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
 #include "MovingCylinderClsn.h"
+#include "WithMeshClsn.h"
 
-struct CrazedCrate {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x10];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0xc];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x20];
+/* TWO WITNESSES:
+ *
+ *   CrazedCrate_Spawn  fBase_c::operator new(888 = 0x378),
+ *       dActor_c::dActor_c(), stores _ZTV11CrazedCrate, then the four
+ *       members below in this order.
+ *   _ZN11CrazedCrateD0Ev  the same four members destroyed in reverse,
+ *       then ~dActor_c.
+ *
+ * SIZE 0x378 is the factory's own literal; unk_374 (4 bytes, 0x374) closes
+ * exactly on it.
+ *
+ * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
+ * names -- dActor_c ends at exactly 0x0d0. Two consumer fields were
+ * repointed to inherited dActor_c names: unk_09c -> mVertAccel, unk_0a0 ->
+ * mTerminalVelocity, unk_0b0 -> mFlags (mPosX/Y/Z and mScaleX/Y/Z already
+ * shared dActor_c's names).
+ *
+ * mWithMeshClsn was mistyped `u8` at 0x180 in the generated header --
+ * CrazedCrate_Spawn calls _ZN12WithMeshClsnC1Ev at that offset, so it is the
+ * real 0x1bc-byte member (0x180..0x33c); the 0x38 bytes from 0x33c..0x374
+ * are genuinely unevidenced padding.
+ *
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. CrazedCrate
+ * overrides slot 0 (InitResources), slot 3 (CleanupResources), slot 6
+ * (Behavior) and slot 9 (Render) -- all still fBase_c's own slots in
+ * dActor_c -- plus slot 12 (OnPendingDestroy, an extern "C" empty-body free
+ * function), 18 (OnYoshiTryEat) and 19 (OnTurnIntoEgg). Every other slot
+ * holds the base's own word and is inherited, so it is deliberately not
+ * redeclared here.
+ */
+struct CrazedCrate : dActor_c {
+    u8  pad_0d0[0x4];
     /* Model member, named by the class's own destructor calling
-       Model's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11CrazedCrateD0Ev.c] */
+       Model's D1 at +0x0d4. [_ZN11CrazedCrateD0Ev.c] */
     Model mModel;            /* 0x0d4 */
     /* ShadowModel member, named by the class's own destructor calling
-       ShadowModel's D1 at +0x124 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11CrazedCrateD0Ev.c] */
+       ShadowModel's D1 at +0x124. [_ZN11CrazedCrateD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x124 */
     /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x14c -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11CrazedCrateD0Ev.c] */
+       MovingCylinderClsn's D1 at +0x14c. [_ZN11CrazedCrateD0Ev.c] */
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x14c */
-    u8  mWithMeshClsn;            /* 0x180 */
-    u8  pad_181[0x1f3];
+    /* WithMeshClsn member, named by CrazedCrate_Spawn's own C1 call and the
+       class's own destructor's D1 call at +0x180.
+       [CrazedCrate_Spawn.c, _ZN11CrazedCrateD0Ev.c] */
+    WithMeshClsn mWithMeshClsn;            /* 0x180 */
+    u8  pad_33c[0x38];
     s32 unk_374;            /* 0x374 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+
+    virtual ~CrazedCrate();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32  InitResources();         /* slot  0 */
+    virtual s32  CleanupResources();      /* slot  3 */
+    virtual s32  Behavior();         /* slot  6 */
+    virtual s32  Render();           /* slot  9 */
+    virtual void OnPendingDestroy();      /* slot 12 */
+    virtual s32  OnYoshiTryEat();         /* slot 18 */
+    virtual int  OnTurnIntoEgg(Player &player); /* slot 19 */
 };
+
+typedef char CrazedCrate_size_must_be_0x378[sizeof(CrazedCrate) == 0x378 ? 1 : -1];
 
 #endif

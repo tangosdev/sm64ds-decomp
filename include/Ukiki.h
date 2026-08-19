@@ -1,55 +1,70 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class Ukiki: 5 matched functions, 27 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef UKIKI_H
 #define UKIKI_H
 #include "types.h"
+#include "dActor_c.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 #include "MovingCylinderClsn.h"
+#include "WithMeshClsn.h"
+#include "PathPtr.h"
 
-struct Ukiki {
-    u8  pad_000[0xc];
-    u16 mActorID;            /* 0x00c */
-    u8  pad_00e[0x4e];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x10];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0xc];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x18];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x7];
+/* THREE WITNESSES:
+ *
+ *   UkikiThief_Spawn / UkikiStar_Spawn
+ *       fBase_c::operator new(972 = 0x3cc), dActor_c::dActor_c(), stores
+ *       _ZTV5Ukiki, then the six members below in this order.
+ *   _ZN5UkikiD0Ev  five of the six destroyed in reverse (PathPtr is
+ *       trivial, no dtor call), then ~dActor_c.
+ *
+ * SIZE 0x3cc is the factory's own literal; unk_3cb (1 byte, 0x3cb) closes
+ * exactly on it under 4-byte alignment.
+ *
+ * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
+ * names -- dActor_c ends at exactly 0x0d0, so pad_0d0 (unevidenced, 4 bytes)
+ * is Ukiki's own first field. Consumers that used the old duplicated names
+ * were repointed to the inherited dActor_c/fBase_c names: mActorID ->
+ * actorID, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
+ * mFlags (mPosX/Y/Z, mScaleX/Y/Z, mAreaId already share dActor_c's names).
+ *
+ * mWithMeshClsn was mistyped `u8` at 0x194 in the generated header --
+ * UkikiThief_Spawn/UkikiStar_Spawn call _ZN12WithMeshClsnC1Ev at that
+ * offset, so it is the real 0x1bc-byte member (0x194..0x350); the 0x30
+ * bytes from 0x350..0x380 are genuinely unevidenced padding.
+ *
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. Ukiki overrides
+ * slot 0 (InitResources), slot 3 (CleanupResources), slot 6 (Behavior),
+ * slot 9 (Render), plus a leaf-only slot (OnPendingDestroy, an extern "C"
+ * empty-body free function -- src/_ZN5Ukiki16OnPendingDestroyEv.c), 18
+ * (OnYoshiTryEat) and 19 (OnTurnIntoEgg). Every other slot holds the base's
+ * own word and is inherited, so it is deliberately not redeclared here.
+ */
+struct Ukiki : dActor_c {
+    u8  pad_0d0[0x4];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build
-       checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
-       stopped short of the object, so the member also takes over unk_130 (+0x5c = speed),
-       which the header declared separately inside it. */
+       checks. */
     ModelAnim mModelAnim;            /* 0x0d4 */
     /* ShadowModel member, named by the class's own destructor calling
-       ShadowModel's D1 at +0x138 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN5UkikiD0Ev.c] */
+       ShadowModel's D1 at +0x138. [_ZN5UkikiD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x138 */
     /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x160 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN5UkikiD0Ev.c] */
+       MovingCylinderClsn's D1 at +0x160. [_ZN5UkikiD0Ev.c] */
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x160 */
-    u8  mWithMeshClsn;            /* 0x194 */
-    u8  pad_195[0x1eb];
+    /* WithMeshClsn member, named by UkikiThief_Spawn/UkikiStar_Spawn's own
+       C1 call and the class's own destructor's D1 call at +0x194.
+       [UkikiThief_Spawn.c, _ZN5UkikiD0Ev.c] */
+    WithMeshClsn mWithMeshClsn;            /* 0x194 */
+    u8  pad_350[0x30];
     s32 unk_380;            /* 0x380 */
     s32 unk_384;            /* 0x384 */
     s32 unk_388;            /* 0x388 */
     s32 unk_38c;            /* 0x38c */
     s32 unk_390;            /* 0x390 */
     s32 unk_394;            /* 0x394 */
-    u8  pad_398[0x10];
+    /* PathPtr member, named by UkikiThief_Spawn/UkikiStar_Spawn's own C1
+       call at +0x398. Trivial (no dtor), so _ZN5UkikiD0Ev does not destroy
+       it. */
+    PathPtr mPathPtr;            /* 0x398 */
+    u8  pad_3a0[0x8];
     s32 unk_3a8;            /* 0x3a8 */
     s32 unk_3ac;            /* 0x3ac */
     u32 unk_3b0;            /* 0x3b0 */
@@ -57,12 +72,18 @@ struct Ukiki {
     u8  unk_3c8;            /* 0x3c8 */
     u8  pad_3c9[0x2];
     u8  unk_3cb;            /* 0x3cb */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+
+    virtual ~Ukiki();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32  InitResources();         /* slot  0 */
+    virtual s32  CleanupResources();      /* slot  3 */
+    virtual s32  Behavior();         /* slot  6 */
+    virtual s32  Render();           /* slot  9 */
+    virtual void OnPendingDestroy();      /* slot 12 */
+    virtual s32  OnYoshiTryEat();         /* slot 18 */
+    virtual int  OnTurnIntoEgg(Player &player); /* slot 19 */
 };
+
+typedef char Ukiki_size_must_be_0x3cc[sizeof(Ukiki) == 0x3cc ? 1 : -1];
 
 #endif

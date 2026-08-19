@@ -20,7 +20,7 @@ src/_ZN13MontyMoleRockD0Ev.cpp:
     complete
     .text start:0x02123804 end:0x02123858
 
-src/func_ov080_02123858.c:
+src/_ZN9MontyMole16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x02123858 end:0x02123860
 
@@ -116,7 +116,7 @@ src/_ZN11CrazedCrateD0Ev.c:
     complete
     .text start:0x02124a68 end:0x02124ac4
 
-src/func_ov080_02124ac4.c:
+src/_ZN11CrazedCrate13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02124ac4 end:0x02124acc
 
@@ -184,7 +184,7 @@ src/_ZN11CrazedCrate13InitResourcesEv.cpp:
     complete
     .text start:0x021251ec end:0x02125318
 
-src/func_ov080_02125318.cpp:
+src/_ZN11CrazedCrate13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02125318 end:0x021253b4
 

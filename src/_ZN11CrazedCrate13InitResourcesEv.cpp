@@ -26,8 +26,8 @@ int CrazedCrate::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, file, 1, 1);
     _ZN11ShadowModel10InitCuboidEv((char*)&mShadowModel);
     _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x14c, ((char*)this), 0x64000, 0x78000, 0x800004, 0x9010);
-    unk_09c = -0x2000;
-    unk_0a0 = -0x3c000;
+    mVertAccel = -0x2000;
+    mTerminalVelocity = -0x3c000;
     {
         int p60;
         pos.x = mPosX;

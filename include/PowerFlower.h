@@ -1,66 +1,73 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class PowerFlower: 5 matched functions, 19 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef POWERFLOWER_H
 #define POWERFLOWER_H
 #include "types.h"
+#include "dActor_c.h"
 #include "Model.h"
+#include "ShadowModel.h"
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
-struct PowerFlower {
-    u8  pad_000[0x8];
-    s32 mParam;            /* 0x008 */
-    u8  pad_00c[0x50];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x2];
-    /* 0x08e..0x09c is dActor_c's, and dActor_c.h is de-bannered -- hand-reconstructed, not generated. Was one u8
-       marker over the whole range. */
-    s16 unk_08e;                 /* 0x08e */
-    s16 mAngleZ;                 /* 0x090 */
-    s16 mPrevAngleX;             /* 0x092 */
-    s16 mPrevAngleY;             /* 0x094 */
-    s16 mPrevAngleZ;             /* 0x096 */
-    s32 mHorzSpeed;              /* 0x098 */
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0xc];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x20];
-    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+/* TWO WITNESSES:
+ *
+ *   PowerFlower_Spawn  fBase_c::operator new(972 = 0x3cc),
+ *       dActor_c::dActor_c(), stores _ZTV11PowerFlower, then the five
+ *       members below in this order.
+ *   _ZN11PowerFlowerD0Ev  the same five members destroyed in reverse,
+ *       then ~dActor_c.
+ *
+ * SIZE 0x3cc is the factory's own literal; unk_3ca (1 byte, 0x3ca) closes
+ * exactly on it under 4-byte alignment.
+ *
+ * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
+ * names -- dActor_c ends at exactly 0x0d0. Consumer fields were repointed to
+ * the inherited dActor_c/fBase_c names: mParam -> param1, unk_08e ->
+ * mAngleY, unk_09c -> mVertAccel, unk_0a0 -> mTerminalVelocity, unk_0b0 ->
+ * mFlags (mPosX/Y/Z and mScaleX/Y/Z already shared dActor_c's names).
+ *
+ * mShadowModel was mistyped `u8` at 0x174 in the generated header --
+ * PowerFlower_Spawn calls _ZN11ShadowModelC1Ev at that offset, so it is the
+ * real 0x28-byte member (0x174..0x19c); the 0x30 bytes from 0x19c..0x1cc
+ * are genuinely unevidenced padding.
+ *
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. PowerFlower
+ * overrides slot 0 (InitResources), slot 3 (CleanupResources), slot 6
+ * (Behavior) and slot 9 (Render) -- all still fBase_c's own slots in
+ * dActor_c -- plus slot 18 (OnYoshiTryEat). Every other slot holds the
+ * base's own word and is inherited, so it is deliberately not redeclared
+ * here.
+ */
+struct PowerFlower : dActor_c {
+    u8  pad_0d0[0x4];
+    /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks. */
     Model mModel1;            /* 0x0d4 */
     /* Model member, named by the class's own destructor calling
-       Model's D1 at +0x124 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11PowerFlowerD0Ev.c] */
+       Model's D1 at +0x124. [_ZN11PowerFlowerD0Ev.c] */
     Model mModel2;            /* 0x124 */
-    u8  mShadowModel;            /* 0x174 */
-    u8  pad_175[0x57];
+    /* ShadowModel member, named by PowerFlower_Spawn's own C1 call and the
+       class's own destructor's D1 call at +0x174.
+       [PowerFlower_Spawn.c, _ZN11PowerFlowerD0Ev.c] */
+    ShadowModel mShadowModel;            /* 0x174 */
+    u8  pad_19c[0x30];
     /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x1cc -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11PowerFlowerD0Ev.c] */
+       MovingCylinderClsn's D1 at +0x1cc. [_ZN11PowerFlowerD0Ev.c] */
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x1cc */
     /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x200 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11PowerFlowerD0Ev.c] */
+       WithMeshClsn's D1 at +0x200. [_ZN11PowerFlowerD0Ev.c] */
     WithMeshClsn mWithMeshClsn;            /* 0x200 */
     s32 unk_3bc;            /* 0x3bc */
     s32 unk_3c0;            /* 0x3c0 */
     u8  pad_3c4[0x6];
     u8  unk_3ca;            /* 0x3ca */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+
+    virtual ~PowerFlower();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32  InitResources();         /* slot  0 */
+    virtual s32  CleanupResources();      /* slot  3 */
+    virtual s32  Behavior();         /* slot  6 */
+    virtual s32  Render();           /* slot  9 */
+    virtual s32  OnYoshiTryEat();         /* slot 18 */
 };
+
+typedef char PowerFlower_size_must_be_0x3cc[sizeof(PowerFlower) == 0x3cc ? 1 : -1];
 
 #endif

@@ -1,28 +1,14 @@
 //cpp
-// @symbol func_ov002_020f06c0
-/* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header */
+// @symbol _ZN9daSCoin_c8BehaviorEv
+/* recovered: renamed to Class_Method, RTTI class fields named, declarations
+ * from a shared header. Was func_ov002_020f06c0, vtable slot 6. */
 #include "decl_common.h"
-/* recovered: renamed to Class_Method, RTTI class fields named */
 #include "daSCoin_c.h"
 // recovered name: daSCoin_c_Behavior
-/* recovered: renamed to Class_Method */
 /* daSCoin_c::Behavior - recovered from vtable slot identity */
-class fBase_c {
-public:
-    void MarkForDestruction();
-};
-class dActor_c {
-public:
-    static dActor_c *FindWithActorID(unsigned int id, dActor_c *p);
-};
-class CylinderClsn {
-public:
-    void Clear();
-    void Update();
-};
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 
-extern "C" int func_ov002_020f06c0(char *c)
+extern "C" int _ZN9daSCoin_c8BehaviorEv(char *c)
 {
     struct daSCoin_c *self = (struct daSCoin_c *)(void *)c;
     if (self->unk_113) {
@@ -55,7 +41,7 @@ extern "C" int func_ov002_020f06c0(char *c)
         return 1;
     }
     func_ov002_020f051c(c);
-    if (self->unk_0f8) {
+    if (*(int *)(c + 0xf8)) {
         func_ov002_020f0438(c);
     }
     ((CylinderClsn *)(c + 0xd4))->Clear();

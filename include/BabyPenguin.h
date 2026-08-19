@@ -1,43 +1,50 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class BabyPenguin: 5 matched functions, 19 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef BABYPENGUIN_H
 #define BABYPENGUIN_H
 #include "types.h"
+#include "dActor_c.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 #include "MovingCylinderClsn.h"
 #include "WithMeshClsn.h"
 
-struct BabyPenguin {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x18];
-    s32 mScaleX;            /* 0x080 */
-    s32 mScaleY;            /* 0x084 */
-    s32 mScaleZ;            /* 0x088 */
-    u8  pad_08c[0x10];
-    s32 unk_09c;            /* 0x09c */
-    s32 unk_0a0;            /* 0x0a0 */
-    u8  pad_0a4[0x2c];
+/* TWO WITNESSES:
+ *
+ *   BabyPenguin_Spawn  fBase_c::operator new(880 = 0x370),
+ *       dActor_c::dActor_c(), stores _ZTV11BabyPenguin, then the four
+ *       members below in this order.
+ *   _ZN11BabyPenguinD0Ev  the same four members destroyed in reverse,
+ *       then ~dActor_c.
+ *
+ * SIZE 0x370 is the factory's own literal; unk_36c (2 bytes, 0x36c) closes
+ * exactly on it under 4-byte alignment.
+ *
+ * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
+ * names -- dActor_c ends at exactly 0x0d0, so mEatingPlayer at 0x0d0 is
+ * BabyPenguin's first own field. Two consumer fields were repointed to the
+ * inherited dActor_c names: unk_09c -> mVertAccel, unk_0a0 ->
+ * mTerminalVelocity (mPosX/Y/Z and mScaleX/Y/Z already shared dActor_c's
+ * names, so needed no change).
+ *
+ * THE VTABLE was diffed slot by slot against _ZTV8dActor_c. BabyPenguin
+ * overrides slot 0 (InitResources), slot 3 (CleanupResources), slot 6
+ * (Behavior) and slot 9 (Render) -- all still fBase_c's own slots in
+ * dActor_c -- plus slot 12 (OnPendingDestroy, an extern "C" empty-body free
+ * function), 18 (OnYoshiTryEat) and 19 (OnTurnIntoEgg). Every other slot
+ * holds the base's own word and is inherited, so it is deliberately not
+ * redeclared here.
+ */
+struct BabyPenguin : dActor_c {
     s32 mEatingPlayer;            /* 0x0d0 */
-    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build checks.
-       D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
+    /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build checks. */
     ModelAnim mModelAnim;            /* 0x0d4 */
     /* ShadowModel member, named by the class's own destructor calling
-       ShadowModel's D1 at +0x138 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11BabyPenguinD0Ev.c] */
+       ShadowModel's D1 at +0x138. [_ZN11BabyPenguinD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x138 */
     /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x160 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11BabyPenguinD0Ev.c] */
+       MovingCylinderClsn's D1 at +0x160. [_ZN11BabyPenguinD0Ev.c] */
     MovingCylinderClsn mMovingCylinderClsn;            /* 0x160 */
     /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x194 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN11BabyPenguinD0Ev.c] */
+       WithMeshClsn's D1 at +0x194. [_ZN11BabyPenguinD0Ev.c] */
     WithMeshClsn mWithMeshClsn;            /* 0x194 */
     s32 unk_350;            /* 0x350 */
     s32 unk_354;            /* 0x354 */
@@ -47,12 +54,18 @@ struct BabyPenguin {
     s32 unk_364;            /* 0x364 */
     u8  pad_368[0x4];
     s16 unk_36c;            /* 0x36c */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+
+    virtual ~BabyPenguin();            /* slots 16 (D1), 17 (D0) */
+
+    virtual s32  InitResources();         /* slot  0 */
+    virtual s32  CleanupResources();      /* slot  3 */
+    virtual s32  Behavior();         /* slot  6 */
+    virtual s32  Render();           /* slot  9 */
+    virtual void OnPendingDestroy();      /* slot 12 */
+    virtual s32  OnYoshiTryEat();         /* slot 18 */
+    virtual int  OnTurnIntoEgg(Player &player); /* slot 19 */
 };
+
+typedef char BabyPenguin_size_must_be_0x370[sizeof(BabyPenguin) == 0x370 ? 1 : -1];
 
 #endif
