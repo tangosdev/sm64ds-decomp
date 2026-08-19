@@ -321,7 +321,7 @@ take over, ping the claimant first.
 | ov075 batch7: func_ov075_02116128 (0x02116128, size 0xf4) | lunavyqo (Grok) | 2026-07-24 | **active** — batch7 from near-miss div=29 |
 | ov062+ov006 batch8: func_ov062_02119af0 (0x02119af0, 0xf0) + func_ov006_020cc8c8 (0x020cc8c8, 0xf0) | lunavyqo (Grok) | 2026-07-24 | **done** — all listed functions verified matched in committed src/ (repo doctor sweep 2026-07-25); batch8 match (CLAIMS.md only; API key expired/revoked) |
 | ov002 func_ov002_020aefb8 (0x020aefb8, size 0x108) | lunavyqo (Grok) | 2026-07-24 | **done** — all listed functions verified matched in committed src/ (repo doctor sweep 2026-07-25); batch4 near-miss refine (prev div=21) |
-| ov075 func_ov075_02117d80 (0x02117d80, size 0x104) | lunavyqo (Grok) | 2026-07-24 | **active** — batch4 near-miss refine (prev div=5) |
+| ov075 func_ov075_02117d80 (0x02117d80, size 0x104) | lunavyqo | 2026-08-19 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_propagation off` + `int cond` + flag `|=4` before pair loads; from near-miss div=5; API clm_359e8966c5f7 kept |
 | ov002 func_ov002_020d708c (0x020d708c, size 0x100) | lunavyqo (Grok) | 2026-07-24 | **active** — batch6 near-miss div=19 |
 | ov080 func_ov080_02125460 (0x02125460, size 0xfc) | lunavyqo (Grok) | 2026-07-24 | **active** — batch6 near-miss div=5 |
 | ov002 func_ov002_020d8944 (0x020d8944, size 0x10c) | lunavyqo (Grok) | 2026-07-24 | **active** — batch2 match from near-miss div=15 |
