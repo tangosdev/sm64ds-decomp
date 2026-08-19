@@ -2,19 +2,23 @@
 extern "C" {
 typedef struct { int x, y, z; } Vector3;
 typedef struct dBgCh_Actr dBgCh_Actr;
-struct SurfaceInfo {
+/* NOT SurfaceInfo. This is the 0x24 remainder of dBgPi after its vptr
+   (0x28 = 4 + 0x24), and it was the only definition in the tree claiming a
+   size other than 0x14 for a type called SurfaceInfo. Renamed 2026-08-19 so
+   the name means one thing; the real one is include/SurfaceInfo.h. */
+struct dBgPiBody {
   int a, b, c, d, e;
   unsigned short f, g;
   int h, i, j;
 };
 struct dBgPi {
   void* vt;
-  struct SurfaceInfo info;
+  struct dBgPiBody info;
 };
 void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* w);
 int _ZNK10dBgCh_Actr10IsOnGroundEv(dBgCh_Actr* w);
 void* _ZNK10dBgCh_Actr14GetFloorResultEv(dBgCh_Actr* w);
-void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(struct SurfaceInfo* s, Vector3* v);
+void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, Vector3* v);
 int _ZN4cstd4fdivEii(int a, int b);
 int _ZNK10dBgCh_Actr8IsOnWallEv(dBgCh_Actr* w);
 struct dBgPi* _ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr* w);
@@ -25,7 +29,7 @@ void func_ov018_02111bf0(char* c, dBgCh_Actr* w){
   dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
   if (_ZNK10dBgCh_Actr10IsOnGroundEv(w) != 0) {
     Vector3 n;
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3((struct SurfaceInfo*)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(w) + 4), &n);
+    _ZNK11SurfaceInfo12CopyNormalToER7Vector3(((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(w) + 4), &n);
     if (n.y != 0) {
       int s = (int)(((long long)n.x * *(int*)(c+0xa4) + 0x800) >> 0xc)
             + (int)(((long long)n.z * *(int*)(c+0xac) + 0x800) >> 0xc);
@@ -36,7 +40,7 @@ void func_ov018_02111bf0(char* c, dBgCh_Actr* w){
     struct dBgPi* src = _ZNK10dBgCh_Actr13GetWallResultEv(w);
     struct dBgPi cr;
     Vector3 wn;
-    struct SurfaceInfo* dst = &cr.info;
+    struct dBgPiBody* dst = &cr.info;
     // demand a first (should get r4), then b (r1), then dst (r2)
     int a = *(int*)((char*)src + 4);
     int b = *(int*)((char*)src + 8);

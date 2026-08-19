@@ -11,6 +11,11 @@
 #include "dBgW_Kc.h"
 
 struct dBgPi { u8 raw[0x1c]; };
+/* Local copy kept deliberately: this file is the host adoption and is not in
+   the NDS build. include/SurfaceInfo.h now carries the real 0x14 definition
+   (added 2026-08-19) -- an earlier comment here saying include/ "only
+   forward-declares it" is stale. Folding this onto that header is a port-build
+   change and wants the port build to verify it, which the NDS gates cannot. */
 struct SurfaceInfo { u8 clps[8]; Vector3 normal; };
 
 struct dBgCh_Lin {

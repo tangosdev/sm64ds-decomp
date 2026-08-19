@@ -6,7 +6,7 @@ typedef unsigned int u32;
 typedef short s16;
 typedef unsigned char u8;
 
-struct SurfaceInfo { s32 w0, w1, w2, w3, w4; };
+#include "SurfaceInfo.h"
 struct dBgCh_Lin { Vector3 GetClsnPos(); };
 struct dBgPi
 {
@@ -286,13 +286,13 @@ void dBgCh_Actr::UpdateExtraContinous()
                 SurfaceInfo *dsi = &tmp.si;
                 {
                     s32 c0, c1;
-                    c0 = *(volatile s32 *)&src->si.w0;
-                    c1 = *(volatile s32 *)&src->si.w1;
-                    dsi->w0 = c0;
-                    dsi->w1 = c1;
-                    dsi->w2 = src->si.w2;
-                    dsi->w3 = src->si.w3;
-                    dsi->w4 = src->si.w4;
+                    c0 = *(volatile s32 *)&src->si.clps.w0;
+                    c1 = *(volatile s32 *)&src->si.clps.w1;
+                    dsi->clps.w0 = c0;
+                    dsi->clps.w1 = c1;
+                    dsi->normal.x = src->si.normal.x;
+                    dsi->normal.y = src->si.normal.y;
+                    dsi->normal.z = src->si.normal.z;
                 }
                 tmp.vt = _ZTV5dBgPi;
                 tmp.tri = src->tri;

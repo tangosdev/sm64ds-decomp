@@ -5,7 +5,7 @@
 /* recovered: shared common types */
 #include "common.h"
 
-struct SurfaceInfo { void CopyNormalTo(Vector3& v) const; };
+#include "SurfaceInfo.h"
 struct dBgCh_Actr {
     bool IsOnGround() const;
     SurfaceInfo* GetFloorResult() const;

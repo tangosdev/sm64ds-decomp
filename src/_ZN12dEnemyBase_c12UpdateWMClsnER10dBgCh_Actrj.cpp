@@ -13,7 +13,7 @@
  */
 #include "dEnemyBase_c.h"
 
-struct SurfaceInfo { s32 pad; };
+#include "SurfaceInfo.h"
 
 extern "C" {
 extern void func_020383f0(dBgCh_Actr *);

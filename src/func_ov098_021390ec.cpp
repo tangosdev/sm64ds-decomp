@@ -8,7 +8,7 @@
 extern "C" short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void* self, int a, int b,
                                                        short c);
 struct dBgPi { int GetClsnID() const; };
-struct SurfaceInfo { void CopyNormalTo(Vector3 &) const; };
+#include "SurfaceInfo.h"
 struct dBgCh_Actr {
     int IsOnWall() const;
     dBgPi *GetWallResult() const;
