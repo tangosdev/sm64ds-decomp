@@ -1,16 +1,21 @@
 //cpp
+#include "EnemySpawner.h"
+
 extern "C" {
 extern int _ZN5Event6GetBitEj(unsigned int bit);
 extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
   unsigned int id, unsigned int a2, void* pos, void* rot, int a5, int a6);
 extern void func_ov102_0214ad14(void* c);
-int _ZN12EnemySpawner8BehaviorEv(char* c){
-  if (_ZN5Event6GetBitEj(*(unsigned char*)(c+0xdc)) && *(int*)(c+0xd8) == 0) {
-    void* a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
-      *(unsigned short*)(c+0xd4), 4, c+0x5c, c+0x92, *(signed char*)(c+0xcc), -1);
-    if (a != 0) func_ov102_0214ad14(a);
-  }
-  *(int*)(c+0xd8) = _ZN5Event6GetBitEj(*(unsigned char*)(c+0xdc));
-  return 1;
 }
+
+int EnemySpawner::Behavior()
+{
+    if (_ZN5Event6GetBitEj(mEventBit) && mPreviousEventBit == 0) {
+        void *actor = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
+            mActorToSpawn, 4, &mPosX, &mPrevAngleX, mAreaId, -1);
+        if (actor != 0)
+            func_ov102_0214ad14(actor);
+    }
+    mPreviousEventBit = _ZN5Event6GetBitEj(mEventBit);
+    return 1;
 }

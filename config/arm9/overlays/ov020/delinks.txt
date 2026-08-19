@@ -16,7 +16,7 @@ src/_ZN15BookShotSpawnerD1Ev.cpp:
     complete
     .text start:0x02111254 end:0x02111278
 
-src/_ZN15BookShotSpawnerD0Ev.c:
+src/_ZN15BookShotSpawnerD0Ev.cpp:
     complete
     .text start:0x02111278 end:0x021112b0
 

@@ -60,15 +60,15 @@ src/func_ov016_02111bf0.cpp:
     complete
     .text start:0x02111bf0 end:0x02111c40
 
-src/_ZN5Unagi16CleanupResourcesEv.c:
+src/_ZN5Unagi16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111f38 end:0x02111f80
 
-src/_ZN5Unagi16OnPendingDestroyEv.c:
+src/_ZN5Unagi16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02111f80 end:0x02111f84
 
-src/_ZN5Unagi6RenderEv.c:
+src/_ZN5Unagi6RenderEv.cpp:
     complete
     .text start:0x02111f84 end:0x02112010
 

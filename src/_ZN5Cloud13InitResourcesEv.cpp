@@ -12,8 +12,8 @@ extern "C" int data_ov039_021118e0;
 int Cloud::InitResources()
 {
   void *f = _ZN5Model8LoadFileER13SharedFilePtr(data_ov039_021118e4);
-  _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this)+0xd4, f, 1, 2);
-  func_ov039_02111214(((char *)this));
+  _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, f, 1, 2);
+  func_ov039_02111214((char *)this);
   data_ov039_021118e0++;
   return 1;
 }

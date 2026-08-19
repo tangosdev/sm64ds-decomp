@@ -1,11 +1,10 @@
 //cpp
-struct Vector3 { int x, y, z; };
+// @symbol _ZN8ShipWing6RenderEv
 
-struct CommonModel {
-    void Render(Vector3 const *);
-};
+#include "ShipWing.h"
 
-extern "C" int _ZN8ShipWing6RenderEv(char *c) {
-    ((CommonModel *)(c + 0xd4))->Render(0);
+int ShipWing::Render()
+{
+    mModel.Render(0);
     return 1;
 }

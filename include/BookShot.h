@@ -53,7 +53,7 @@ struct BookShot : dEnemyBase_c {
     s32                          unk_440;               /* 0x440 */
     u8  pad_444[0x8];
     s32                          unk_44c;               /* 0x44c */
-    s8                           unk_450;               /* 0x450 */
+    u8                           unk_450;               /* 0x450 */
     u8  pad_451[0x3];
 
     /* --- vtable --- */
@@ -66,6 +66,7 @@ struct BookShot : dEnemyBase_c {
     int Behavior();
     int CleanupResources();
     int InitResources();
+    int Render();
 };
 
 typedef char BookShot_size_must_be_0x454[sizeof(BookShot) == 0x454 ? 1 : -1];

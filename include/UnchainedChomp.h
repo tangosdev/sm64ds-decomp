@@ -57,6 +57,9 @@ struct UnchainedChomp : dEnemyBase_c {
 
     /* methods */
     int Behavior();
+    int CleanupResources();
+    int InitResources();
+    void OnPendingDestroy();
     int Render();
 };
 

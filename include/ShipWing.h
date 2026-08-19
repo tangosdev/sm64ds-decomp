@@ -1,36 +1,34 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class ShipWing: 5 matched functions, 11 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef SHIPWING_H
 #define SHIPWING_H
-#include "types.h"
-#include "CommonModel.h"
 
-struct ShipWing {
-    u8  pad_000[0x8];
-    u32 unk_008;            /* 0x008 */
-    u8  pad_00c[0x80];
-    s16 unk_08c;            /* 0x08c */
-    s16 unk_08e;            /* 0x08e */
-    s16 unk_090;            /* 0x090 */
-    u8  pad_092[0x42];
-    /* CommonModel member, named by the class's own destructor calling
-       CommonModel's D1 at +0x0d4 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN8ShipWingD0Ev.c] */
-    CommonModel mCommonModel;            /* 0x0d4 */
-    s16 unk_110;            /* 0x110 */
-    s16 unk_112;            /* 0x112 */
-    s16 unk_114;            /* 0x114 */
-    u16 unk_116;            /* 0x116 */
-    u8  unk_118;            /* 0x118 */
-    u8  unk_119;            /* 0x119 */
-#ifdef __cplusplus
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+#include "CommonModel.h"
+#include "dActor_c.h"
+
+/* ShipWing_Spawn allocates 0x11c bytes, constructs dActor_c, and constructs a
+ * CommonModel at 0xd4. D1 destroys that model before chaining to dActor_c.
+ * InitResources snapshots the three actor angles at 0x110..0x114 and Behavior
+ * advances the frame and two parameter-derived mode flags at 0x116..0x119.
+ */
+struct ShipWing : dActor_c {
+    u8          pad_0d0[0x4];
+    CommonModel mModel;          /* 0x0d4 */
+    s16         mBaseAngleX;     /* 0x110 */
+    s16         mBaseAngleY;     /* 0x112 */
+    s16         mBaseAngleZ;     /* 0x114 */
+    u16         mFrame;          /* 0x116 */
+    u8          mReverseMotion;  /* 0x118 */
+    u8          mPlaySound;      /* 0x119 */
+    u8          pad_11a[0x2];
+
+    virtual ~ShipWing();
+
+    virtual s32 InitResources();
+    virtual s32 CleanupResources();
+    virtual s32 Behavior();
+    virtual s32 Render();
 };
 
-#endif
+typedef char ShipWing_size_must_be_0x11c[
+    sizeof(ShipWing) == 0x11c ? 1 : -1];
+
+#endif /* SHIPWING_H */

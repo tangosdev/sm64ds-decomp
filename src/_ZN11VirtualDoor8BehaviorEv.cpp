@@ -23,7 +23,7 @@ int VirtualDoor::Behavior()
     int v;
 
     obj = data_0209f394[data_0209f250];
-    Vec3_Sub(&d, (struct Vec3*)(obj + 0x5c), (struct Vec3*)((char*)&unk_05c));
+    Vec3_Sub(&d, (struct Vec3*)(obj + 0x5c), (struct Vec3*)&mPosX);
     Vec3_RotateYAndTranslate(&r, &data_020a0ebc, mAngleY, &d);
 
     v = r.x;

@@ -56,6 +56,7 @@ struct OneUpMushroom : dEnemyBase_c {
     int Behavior();
     int CleanupResources();
     int InitResources();
+    void OnPendingDestroy();
     int Render();
 };
 

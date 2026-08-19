@@ -59,11 +59,11 @@ src/_ZN8ShipWingD1Ev.cpp:
     complete
     .text start:0x02111580 end:0x021115b0
 
-src/_ZN8ShipWingD0Ev.c:
+src/_ZN8ShipWingD0Ev.cpp:
     complete
     .text start:0x021115b0 end:0x021115f4
 
-src/_ZN8ShipWing16CleanupResourcesEv.c:
+src/_ZN8ShipWing16CleanupResourcesEv.cpp:
     complete
     .text start:0x021115f4 end:0x02111618
 

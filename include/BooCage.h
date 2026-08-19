@@ -49,6 +49,7 @@ struct BooCage : dEnemyBase_c {
     virtual ~BooCage();
 
     /* methods */
+    int CleanupResources();
     int InitResources();
     int Render();
 };

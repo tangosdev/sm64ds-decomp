@@ -4,14 +4,16 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MugenBgm.h"
-extern void* _Znwj(unsigned int);
-extern void _ZN3Fog4InitEt5Fix12IiES1_(void* thiz, unsigned short a, int b, int d);
+extern "C" {
+void* _Znwj(unsigned int);
+void _ZN3Fog4InitEt5Fix12IiES1_(void* thiz, unsigned short a, int b, int d);
+}
 
 int MugenBgm::InitResources()
 {
     void* p;
-    mParam &= 0xf;
-    if (mParam != 1) {
+    param1 &= 0xf;
+    if (param1 != 1) {
         data_ov002_02110af4 = mAngleY;
         p = _Znwj(0x28);
         data_ov002_02110af8 = p;
@@ -20,7 +22,7 @@ int MugenBgm::InitResources()
         }
         data_ov002_02110af0 = mAreaId;
     }
-    ((char*)this)[0xcc] = -1;
+    mAreaId = -1;
     mAngleY = -mAngleY;
     return 1;
 }
