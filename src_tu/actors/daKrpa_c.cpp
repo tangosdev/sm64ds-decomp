@@ -31,14 +31,14 @@
  *   [21] 0x02121914  src/_ZN8daKrpa_c13InitResourcesEv.cpp
  *   [22] 0x02121a64  src/func_ov070_02121a64.c
  *   [23] 0x02121ae0  src/func_ov070_02121ae0.c
- *   [24] 0x02121af8  src/FlameChomp_Spawn.c
+ *   [24] 0x02121af8  src/daKrpa_c_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 24 -- FlameChomp_Spawn, 0x02121af8, size 0x50 */
+/* ROM ordinal 24 -- daKrpa_c_Spawn, 0x02121af8, size 0x50 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-// @symbol FlameChomp_Spawn
+// @symbol daKrpa_c_Spawn
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -49,7 +49,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV8daKrpa_c */
-int *FlameChomp_Spawn(void)
+int *daKrpa_c_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(944);
     if (p) {

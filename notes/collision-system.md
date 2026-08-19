@@ -450,11 +450,17 @@ All four slices landed, one `git mv` + content pair each:
 | support types (`dBgPi`, `dM3dGLin`) | 2 | 9 |
 | `dBgCh*` query family | 5 | 51 |
 
-Then a fifth commit named the last five vtables — `dBgCh`, `dBgCh_Actr`, `dBgCh_Gnd`,
-`dBgPi`, `dM3dGSph` had `_ZTS` and `_ZTI` but no `_ZTV` at all, so their triples were
-incomplete and they could not be data-verified. **Every collision class that has a vtable
-now spells all three with the cartridge's own name**; `dM3dGLin` keeps two of three
-legitimately, being non-polymorphic.
+**The last five vtables are deliberately NOT named.** `dBgCh`, `dBgCh_Actr`, `dBgCh_Gnd`,
+`dBgPi` and `dM3dGSph` have `_ZTS` and `_ZTI` but no `_ZTV`, so their triples are still
+incomplete. Naming them was tried and backed out: it raises
+`codegen_hacks.extern_vtable` **347 → 374** and `extern_vtable_classes` **188 → 193**,
+failing the langmode ratchet. Nothing gets worse when you name them — those 27 sites
+always stored a vptr through an extern array instead of a real polymorphic class, and
+the metric is *textual*, so hiding behind `data_020991d8` was the only reason it did not
+count them. **The naming and the 27 storage sites have to move together**, which is the
+same Phase 2c/3 work that converts them; doing it then drops the count honestly instead
+of needing the root `langmode-baseline.json` override the tree spent six cycles closing
+(#1632, deleted in #1615).
 
 Byte-neutral throughout: rombuild **106/106 exact, 100.000000%, 0 mismatching** after every
 slice, `check_references` 45 vs baseline 45, `port_refcheck` 393/0 before and after, and
@@ -588,8 +594,9 @@ core. A draft at **2 divergences** is banked under the stale pre-rename symbol
 - **0** — the draft in `notes/` scores 1213, not 1412; the four wrong prose claims are gone;
   `class-reference.html` reports 4 slots for `dCc_c`; all eight thunks agree on banner
   policy.
-- **1** — **MET 2026-08-19.** Every collision `_ZTV`/`_ZTI`/`_ZTS` triple spells the
-  cartridge name; zero `_ZTS<coined>` anywhere in `config/`; the `eligible.py` name-list
+- **1** — **MET for the names, PARTIAL for the triples (2026-08-19).** Every collision
+  `_ZTV`/`_ZTI`/`_ZTS` that exists spells the cartridge name, but five classes still
+  have no `_ZTV` at all — see Phase 1 above for why naming them is coupled to Phase 2c; zero `_ZTS<coined>` anywhere in `config/`; the `eligible.py` name-list
   delta is exactly the renamed symbols each time; ROM build still 106/106 exact.
   *Checking against this wording is what caught the five missing `_ZTV` symbols — "no
   coined names left" and "every triple complete" are not the same claim, and only the

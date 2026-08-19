@@ -27,14 +27,14 @@
  *   [17] 0x0212206c  src/_ZN8daKpFr_c6RenderEv.cpp
  *   [18] 0x02122104  src/_ZN8daKpFr_c8BehaviorEv.cpp
  *   [19] 0x02122124  src/_ZN8daKpFr_c13InitResourcesEv.cpp
- *   [20] 0x021221fc  src/FlameChompFire_Spawn.c
+ *   [20] 0x021221fc  src/daKpFr_c_Spawn.c
  */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 20 -- FlameChompFire_Spawn, 0x021221fc, size 0x48 */
+/* ROM ordinal 20 -- daKpFr_c_Spawn, 0x021221fc, size 0x48 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-// @symbol FlameChompFire_Spawn
+// @symbol daKpFr_c_Spawn
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -44,7 +44,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV8daKpFr_c */
-int *FlameChompFire_Spawn(void)
+int *daKpFr_c_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(816);
     if (p) {

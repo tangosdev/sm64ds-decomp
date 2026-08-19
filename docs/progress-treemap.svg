@@ -38045,7 +38045,7 @@ matched: yes</title></rect><rect x="1553.14" y="486.57" width="4.54" height="2.3
 module: ov070
 addr: 0x02121ae0
 size: 24 bytes
-matched: yes</title></rect><rect x="1553.14" y="488.96" width="4.54" height="7.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlameChomp_Spawn
+matched: yes</title></rect><rect x="1553.14" y="488.96" width="4.54" height="7.96" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>daKrpa_c_Spawn
 module: ov070
 addr: 0x02121af8
 size: 80 bytes
@@ -38129,7 +38129,7 @@ matched: yes</title></rect><rect x="1566.70" y="483.91" width="4.69" height="20.
 module: ov070
 addr: 0x02122124
 size: 216 bytes
-matched: yes</title></rect><rect x="1566.70" y="504.72" width="4.69" height="6.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>FlameChompFire_Spawn
+matched: yes</title></rect><rect x="1566.70" y="504.72" width="4.69" height="6.94" fill="#3fa75a" stroke="#2c7a41" stroke-width="0.4"><title>daKpFr_c_Spawn
 module: ov070
 addr: 0x021221fc
 size: 72 bytes
