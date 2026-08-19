@@ -9,7 +9,7 @@ void func_02037608(char *thiz);
 void func_0203abd4(int *dst, Vector3 *mid, int w);
 }
 
-extern "C" void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(
+extern "C" void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(
     char *thiz, const Vector3 *a, const Vector3 *b, dActor_c *obj)
 {
     Vector3 mid;

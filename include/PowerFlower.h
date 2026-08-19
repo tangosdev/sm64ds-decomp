@@ -5,7 +5,7 @@
 #include "Model.h"
 #include "ShadowModel.h"
 #include "dCcAc_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 /* TWO WITNESSES:
  *
@@ -51,9 +51,9 @@ struct PowerFlower : dActor_c {
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x1cc. [_ZN11PowerFlowerD0Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x1cc */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x200. [_ZN11PowerFlowerD0Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x200 */
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x200. [_ZN11PowerFlowerD0Ev.c] */
+    dBgCh_Actr mWithMeshClsn;            /* 0x200 */
     s32 unk_3bc;            /* 0x3bc */
     s32 unk_3c0;            /* 0x3c0 */
     u8  pad_3c4[0x6];

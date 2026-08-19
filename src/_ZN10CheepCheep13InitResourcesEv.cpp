@@ -20,7 +20,7 @@ extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *thisp, struct dActor_c *, struct Vector3 const &, int, int, unsigned int, unsigned int);
 }
 extern "C" {
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *thisp, struct dActor_c *, int, int, struct Vector3_16 *, int);
 }
 extern "C" {
@@ -52,8 +52,8 @@ int CheepCheep::InitResources()
     unk_378 = mPosY;
     unk_37c = mPosZ;
     mAngleY = mPrevAngleY;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        (void *)((char *)&(*(WithMeshClsn *)&mWithMeshClsn)), (struct dActor_c *)((char *)this), 0x1e000, 0x1e000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+        (void *)((char *)&(*(dBgCh_Actr *)&mWithMeshClsn)), (struct dActor_c *)((char *)this), 0x1e000, 0x1e000, 0, 0);
 
     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
         (void *)((char *)&(*(u8 *)&mModelAnim)), data_ov090_0213455c.file, 0, 0x1000, 0);

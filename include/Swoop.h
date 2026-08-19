@@ -13,7 +13,7 @@
  * makes the pair at 0x300 and 0x364 two members rather than one and a gap:
  *
  *     0x110 dCcAc_c  0x34   -> 0x144
- *     0x144 WithMeshClsn        0x1bc  -> 0x300
+ *     0x144 dBgCh_Actr        0x1bc  -> 0x300
  *     0x300 ModelAnim           0x64   -> 0x364
  *     0x364 ModelAnim           0x64   -> 0x3c8
  *     0x3c8 ShadowModel         0x28   -> 0x3f0
@@ -31,7 +31,7 @@
 #include "ModelAnim.h"
 #include "dCcAc_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Swoop : dEnemyBase_c {
     /* What mCurrentState points at. Behavior compares it against objects in
@@ -43,7 +43,7 @@ struct Swoop : dEnemyBase_c {
     };
 
     dCcAc_c mdCcAc_c; /* 0x110 */
-    WithMeshClsn mWithMeshClsn;       /* 0x144 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x144 */
     ModelAnim mModelAnim1;            /* 0x300 */
     ModelAnim mModelAnim2;            /* 0x364 */
     ShadowModel mShadowModel;         /* 0x3c8 */

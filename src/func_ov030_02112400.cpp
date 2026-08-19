@@ -4,11 +4,11 @@ typedef void* (*Vfn)();
 
 struct Animation { void Advance(); };
 struct dCc_c { void Clear(); void Update(); };
-struct WithMeshClsn { int IsOnGround() const; };
+struct dBgCh_Actr { int IsOnGround() const; };
 struct Vector3;
 
 extern "C" void func_ov030_02111a00(void* c);
-extern "C" void func_ov030_02111f6c(char* c, WithMeshClsn* w);
+extern "C" void func_ov030_02111f6c(char* c, dBgCh_Actr* w);
 extern "C" void func_ov030_02111bc4(void* c);
 extern "C" int Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" void func_ov030_021141a8(void* c, int x);
@@ -27,7 +27,7 @@ struct dBgPi {
     int t0, t1, t2;
     int GetClsnID() const;
 };
-extern "C" dBgPi* func_0203567c(WithMeshClsn* w);
+extern "C" dBgPi* func_0203567c(dBgCh_Actr* w);
 extern "C" int func_02037f44(dBgPi* r);
 extern "C" void _ZN5dBgPiD1Ev(dBgPi* r);
 
@@ -36,7 +36,7 @@ extern "C" int func_ov030_02112400(char* c)
     func_ov030_02111a00(c);
     ((Animation*)(c + 0x124))->Advance();
     ((dActor_c*)c)->UpdatePos((dCc_c*)(c + 0x160));
-    func_ov030_02111f6c(c, (WithMeshClsn*)(c + 0x194));
+    func_ov030_02111f6c(c, (dBgCh_Actr*)(c + 0x194));
     func_ov030_02111bc4(c);
     ((dCc_c*)(c + 0x160))->Clear();
     ((dCc_c*)(c + 0x160))->Update();
@@ -49,8 +49,8 @@ extern "C" int func_ov030_02112400(char* c)
             }
         }
     } else {
-        if (((WithMeshClsn*)(c + 0x194))->IsOnGround()) {
-            char* r = (char*)func_0203567c((WithMeshClsn*)(c + 0x194));
+        if (((dBgCh_Actr*)(c + 0x194))->IsOnGround()) {
+            char* r = (char*)func_0203567c((dBgCh_Actr*)(c + 0x194));
             dBgPi res;
             int* d = (int*)&res.v;
             *(double*)d = *(double*)(r + 4);

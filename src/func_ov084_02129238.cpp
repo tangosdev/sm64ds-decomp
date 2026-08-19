@@ -6,14 +6,14 @@ typedef int s32;
 
 struct dActor_c;
 
-struct RaycastGround {
+struct dBgCh_Gnd {
     char pad0[0x14];
     int field14;     /* 0x14 */
     char pad18[0x44 - 0x18];
     int field44;     /* 0x44 */
     char pad48[0x50 - 0x48];
-    RaycastGround();
-    ~RaycastGround();
+    dBgCh_Gnd();
+    ~dBgCh_Gnd();
     void StartDetectingWater();
     void StartDetectingToxic();
     void StopDetectingOrdinary();
@@ -24,13 +24,13 @@ struct RaycastGround {
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN4BgCh19StartDetectingWaterEv(void *);
-extern "C" void _ZN4BgCh19StartDetectingToxicEv(void *);
-extern "C" void _ZN4BgCh21StopDetectingOrdinaryEv(void *);
+extern "C" void _ZN5dBgCh19StartDetectingWaterEv(void *);
+extern "C" void _ZN5dBgCh19StartDetectingToxicEv(void *);
+extern "C" void _ZN5dBgCh21StopDetectingOrdinaryEv(void *);
 
 
 extern "C" {
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
 int func_02037e20(int* p);
 void _ZN12dEnemyBase_c9SpawnCoinEv(void* p);
 void _ZN8dActor_c8PoofDustEv(void* p);
@@ -42,7 +42,7 @@ void _ZN11dCapEnemy_c15RespawnIfHasCapEv(void* p);
 extern "C" void func_ov084_02129238(char* c);
 void func_ov084_02129238(char* c)
 {
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1b4) != 0) return;
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1b4) != 0) return;
     {
         Vector3 pos;
         {
@@ -53,10 +53,10 @@ void func_ov084_02129238(char* c)
             pos.y = vy;
             pos.z = vz;
         }
-        RaycastGround rg;
-        _ZN4BgCh19StartDetectingWaterEv(&(rg));
-        _ZN4BgCh19StartDetectingToxicEv(&(rg));
-        _ZN4BgCh21StopDetectingOrdinaryEv(&(rg));
+        dBgCh_Gnd rg;
+        _ZN5dBgCh19StartDetectingWaterEv(&(rg));
+        _ZN5dBgCh19StartDetectingToxicEv(&(rg));
+        _ZN5dBgCh21StopDetectingOrdinaryEv(&(rg));
         rg.SetObjAndPos(pos, (dActor_c*)c);
         if (rg.DetectClsn() != 0) {
             if (func_02037e20(&rg.field14) != 0) {

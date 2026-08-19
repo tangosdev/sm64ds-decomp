@@ -20,10 +20,10 @@ extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *o, void *kcl, void *m, int fx, short s, void *clps);
 extern void func_020393d4(void *p, int v);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *o, void *act, int a, int b, unsigned c, unsigned d);
-extern void _ZN13RaycastGroundC1Ev(void *o);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *o, void *v, void *act);
-extern int _ZN13RaycastGround10DetectClsnEv(void *o);
-extern void _ZN13RaycastGroundD1Ev(void *o);
+extern void _ZN9dBgCh_GndC1Ev(void *o);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *o, void *v, void *act);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *o);
+extern void _ZN9dBgCh_GndD1Ev(void *o);
 
 extern char data_ov027_02113c7c;
 extern char data_ov027_02113c94;
@@ -73,16 +73,16 @@ int _ZN10daPgDfdr_c13InitResourcesEv(void *cc)
     v[1] = *(int*)(c + 0x60);
     v[2] = *(int*)(c + 0x64);
     v[1] = v[1] + 0x14000;
-    _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, v, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(&rg))
+    _ZN9dBgCh_GndC1Ev(&rg);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, v, 0);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg))
         *(int*)(c + 0x60) = *(int*)((char*)&rg + 0x44);
     else
         *(int*)(c + 0x60) = v[1];
     *(int*)(c + 0x80) = 0x1000;
     *(int*)(c + 0x84) = 0x1000;
     *(int*)(c + 0x88) = 0x1000;
-    _ZN13RaycastGroundD1Ev(&rg);
+    _ZN9dBgCh_GndD1Ev(&rg);
     return 1;
 }
 }

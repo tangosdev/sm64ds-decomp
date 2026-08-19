@@ -16,7 +16,7 @@
  *     0x178 Model                      0x50    -> 0x1c8
  *     0x1c8 ShadowModel                0x28    -> 0x1f0
  *     0x220 dCcAcPos_c  0x40    -> 0x260
- *     0x260 WithMeshClsn               0x1bc   -> 0x41c
+ *     0x260 dBgCh_Actr               0x1bc   -> 0x41c
  *
  * Typing them absorbed markers that were their insides:
  *   - unk_124 = ModelAnim.data.bones
@@ -38,7 +38,7 @@
 #include "ModelAnim.h"
 #include "dCcAcPos_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Key : dEnemyBase_c {
     s32                          unk_110;               /* 0x110 */
@@ -47,7 +47,7 @@ struct Key : dEnemyBase_c {
     ShadowModel                  mShadowModel;          /* 0x1c8 */
     u8  pad_1f0[0x30];
     dCcAcPos_c    mdCcAcPos_c; /* 0x220 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x260 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x260 */
     s32                          unk_41c;               /* 0x41c */
     s32                          unk_420;               /* 0x420 */
     s32                          unk_424;               /* 0x424 */

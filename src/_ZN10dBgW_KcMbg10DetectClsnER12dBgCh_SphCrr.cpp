@@ -1,17 +1,17 @@
 //cpp
-// @symbol _ZN10dBgW_KcMbg10DetectClsnER10SphereClsn
+// @symbol _ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr
 /* recovered: named members + shared header, real C++ method
  *
  * Vtable slot 8, and the same trick as the other two overloads: move the query
  * into the collider's local frame rather than moving the mesh. The caller's
  * sphere centre is transformed by func_02039e48 and its radius scaled by
- * unk_164, a local SphereClsn is aimed at the result, and the base
+ * unk_164, a local dBgCh_SphCrr is aimed at the result, and the base
  * dBgW_Kc::DetectClsn does the work against the static mesh.
  *
  * Coming back out is the part that is not symmetric. The push-out vector pair
  * is scaled by `scale` -- the collider's own uniform scale, NOT unk_164 which
  * scaled the radius on the way in -- and the three result slots are merged
- * INDEPENDENTLY, each behind its own bit of SphereClsn::flags:
+ * INDEPENDENTLY, each behind its own bit of dBgCh_SphCrr::flags:
  *
  *   floor (4)  first writer wins. If the caller already has a floor, this one
  *              is dropped AND the return value's bit 0 is cleared, so the hit
@@ -26,14 +26,14 @@
  * against `scale` are deliberately not CSE'd.
  *
  * STILL A SHADOW: the local query object. It needs an exact 0x110 footprint
- * with explicit C1/D1 calls, while SphereClsn as declared spans 0x10c and
+ * with explicit C1/D1 calls, while dBgCh_SphCrr as declared spans 0x10c and
  * declares no structors -- giving it real ones is its own slice, since it
  * changes every by-value use of the type. Kept as a byte-exact stand-in and
  * flagged rather than half-converted.
  */
 #include "types.h"
 #include "dBgW_KcMbg.h"
-#include "SphereClsn.h"
+#include "dBgCh_SphCrr.h"
 #include "dBgPi.h"
 
 typedef struct {
@@ -52,9 +52,9 @@ typedef struct {
 } LocSphere;
 
 extern "C" {
-extern void _ZN10SphereClsnC1Ev(void* o);
+extern void _ZN12dBgCh_SphCrrC1Ev(void* o);
 extern void func_02039e48(void* m, void* v, void* c);
-extern void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* o, void* v, int r, void* a);
+extern void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* o, void* v, int r, void* a);
 extern void func_02037940(void* p, int v);
 extern void func_02035394(void* o, void* r);
 extern void func_02037a04(void* o, void* d1, void* d2);
@@ -63,29 +63,29 @@ extern void _ZN5dBgPiaSERKS_(void* d, void* s);
 extern void func_0203794c(void* d, void* s);
 extern void func_02037888(void* d, void* s);
 extern void func_0203782c(void* d, void* s);
-extern void _ZN10SphereClsnD1Ev(void* o);
+extern void _ZN12dBgCh_SphCrrD1Ev(void* o);
 }
 
 #pragma opt_common_subs off
 
 #define FMUL(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
 
-int dBgW_KcMbg::DetectClsn(SphereClsn & sphere_)
+int dBgW_KcMbg::DetectClsn(dBgCh_SphCrr & sphere_)
 {
-    SphereClsn* sphere = &sphere_;
+    dBgCh_SphCrr* sphere = &sphere_;
     int pos[3];
     int d[12];
     LocSphere loc;
     int r;
 
-    _ZN10SphereClsnC1Ev(&loc);
+    _ZN12dBgCh_SphCrrC1Ev(&loc);
     func_02039e48(this, &sphere->pos, pos);
-    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, pos,
+    _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, pos,
         FMUL(*(int*)&sphere->radius, unk_164), 0);
     loc.f_ec = FMUL(sphere->unk_0ec, unk_164);
     func_02037940(&loc, sphere->flags);
     func_02035394(&loc, sphere);
-    r = dBgW_Kc::DetectClsn(*(SphereClsn*)&loc);
+    r = dBgW_Kc::DetectClsn(*(dBgCh_SphCrr*)&loc);
     if (r) {
         func_02037a04(&loc, d, d + 3);
         d[6] = FMUL(d[0], *(int*)&scale);
@@ -117,6 +117,6 @@ int dBgW_KcMbg::DetectClsn(SphereClsn & sphere_)
             *(u8*)(&sphere->flags) |= 0x10;
         }
     }
-    _ZN10SphereClsnD1Ev(&loc);
+    _ZN12dBgCh_SphCrrD1Ev(&loc);
     return r;
 }

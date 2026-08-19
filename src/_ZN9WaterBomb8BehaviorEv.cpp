@@ -7,8 +7,8 @@
 extern "C" {
 extern void func_ov098_0213b63c(char* c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* a, void* b);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* a, void* b, unsigned int j);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* a, void* b, unsigned int j);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* p);
 extern void _ZN5dCc_c5ClearEv(void* p);
 extern void _ZN5dCc_c6UpdateEv(void* p);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* p);
@@ -38,8 +38,8 @@ int WaterBomb::Behavior()
 
     if (unk_3c8 != 0) {
         _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this) + 0x110);
-        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x144, 0);
-        if (_ZNK12WithMeshClsn8IsOnWallEv((char*)&mWithMeshClsn)) {
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char*)this), ((char*)this) + 0x144, 0);
+        if (_ZNK10dBgCh_Actr8IsOnWallEv((char*)&mWithMeshClsn)) {
             if (unk_3c8 == 1) {
                 func_ov098_0213b63c(((char*)this));
             } else {

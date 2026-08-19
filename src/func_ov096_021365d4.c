@@ -13,7 +13,7 @@ void func_ov096_02135e2c(int* self, void* clsn);
 void func_ov096_02135948(char* c);
 void _ZN5dCc_c5ClearEv(void* p);
 void _ZN5dCc_c6UpdateEv(void* p);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
 void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
 
 int func_ov096_021365d4(char* c) {
@@ -48,7 +48,7 @@ int func_ov096_021365d4(char* c) {
     func_ov096_02135948(c);
     _ZN5dCc_c5ClearEv(c + 0x14c);
     _ZN5dCc_c6UpdateEv(c + 0x14c);
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x180) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x180) != 0) {
         _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
     }
     return 1;

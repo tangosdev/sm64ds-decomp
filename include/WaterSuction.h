@@ -16,11 +16,11 @@
 
 #include "dEnemyBase_c.h"
 #include "dCcAcPos_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct WaterSuction : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c;/* 0x110 */
-    WithMeshClsn mWithMeshClsn;       /* 0x150 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x150 */
     u8  pad_30c[0x8];
     s32 unk_314;                      /* 0x314 */
 

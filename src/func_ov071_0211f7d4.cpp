@@ -1,13 +1,13 @@
 //cpp
 struct dCc_c;
 struct dActor_c { void UpdatePos(dCc_c *c); };
-struct WithMeshClsn {
+struct dBgCh_Actr {
     int JustHitGround() const;
     void *GetFloorResult() const;
     int IsOnGround() const;
     void ClearLimMovFlag();
 };
-extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void *p);
+extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *p);
 extern "C" int func_02037e38(unsigned int *p);
 extern "C" void func_ov071_0211f498(char *c);
 extern "C" void Scuttlebug_SetState(char *c, int x);
@@ -24,16 +24,16 @@ extern "C" void _ZN5dCc_c6UpdateEv(void *);
 extern "C" int func_ov071_0211f7d4(dActor_c *self)
 {
     char *s = (char*)self;
-    WithMeshClsn_UpdateDiscreteNoLava_veneer(s + 0x194);
+    dBgCh_Actr_UpdateDiscreteNoLava_veneer(s + 0x194);
     *(short*)(s + 0x8c) = *(short*)(s + 0x8c) + 0x1000;
-    if (((WithMeshClsn*)(s + 0x194))->JustHitGround()) {
-        if (func_02037e38((unsigned int*)((char*)((WithMeshClsn*)(s + 0x194))->GetFloorResult() + 4)) == 4) {
+    if (((dBgCh_Actr*)(s + 0x194))->JustHitGround()) {
+        if (func_02037e38((unsigned int*)((char*)((dBgCh_Actr*)(s + 0x194))->GetFloorResult() + 4)) == 4) {
             func_ov071_0211f498(s);
         } else {
             *(int*)(s + 0xa8) = (*(int*)(s + 0xa8) * -0x3c) / 0x64;
         }
-    } else if (((WithMeshClsn*)(s + 0x194))->IsOnGround()) {
-        WithMeshClsn *wm = (WithMeshClsn*)(s + 0x194);
+    } else if (((dBgCh_Actr*)(s + 0x194))->IsOnGround()) {
+        dBgCh_Actr *wm = (dBgCh_Actr*)(s + 0x194);
         *(int*)(s + 0xa8) = 0;
         wm->ClearLimMovFlag();
         *(int *)(s + 0xb0) |= 1;

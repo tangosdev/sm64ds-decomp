@@ -1,5 +1,5 @@
 extern int _ZN9Animation7AdvanceEv(void*);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
 extern int Scuttlebug_SetState(void*,int);
 extern int _ZN8dActor_c9UpdatePosEP5dCc_c(void*,void*);
 extern int func_ov071_0211f148(void*,void*);
@@ -8,7 +8,7 @@ extern int _ZN5dCc_c5ClearEv(void*);
 extern int _ZN5dCc_c6UpdateEv(void*);
 int func_ov071_0211fc60(char* c){
   _ZN9Animation7AdvanceEv((char*)c+0x124);
-  if(_ZNK12WithMeshClsn10IsOnGroundEv((char*)c+0x194)){
+  if(_ZNK10dBgCh_Actr10IsOnGroundEv((char*)c+0x194)){
     *(short*)(c+0x3a8)=0x3c;
     Scuttlebug_SetState(c, 2);
   }

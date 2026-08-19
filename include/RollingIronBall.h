@@ -12,7 +12,7 @@
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
  *
- *     0x110 WithMeshClsn               0x1bc   -> 0x2cc
+ *     0x110 dBgCh_Actr               0x1bc   -> 0x2cc
  *     0x2cc Model                      0x50    -> 0x31c
  *     0x31c ShadowModel                0x28    -> 0x344
  *     0x374 dCcAc_c         0x34    -> 0x3a8
@@ -40,10 +40,10 @@
 #include "dCcAc_c.h"
 #include "PathPtr.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct RollingIronBall : dEnemyBase_c {
-    WithMeshClsn                 mWithMeshClsn;         /* 0x110 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x110 */
     Model                        mModel;                /* 0x2cc */
     ShadowModel                  mShadowModel;          /* 0x31c */
     u8  pad_344[0x30];

@@ -8,7 +8,7 @@ typedef unsigned char u8;
 struct Vector3 { int x, y, z; };
 
 extern "C" {
-int _ZNK12WithMeshClsn8IsOnWallEv(void* self);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
 void _ZN8dActor_c10PoofDustAtERK7Vector3(void* self, const struct Vector3* v);
 void _ZN8dActor_c8PoofDustEv(void* self);
 void* _ZN8dActor_c10FindWithIDEj(u32 id);
@@ -31,7 +31,7 @@ extern "C" int func_ov063_0211a3d0(char* c)
         *(u8*)(c + 0x5c9) = 8;
 
     if (*(u16*)(c + 0x100) <= 0x1e) {
-        if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x1c4) == 0)
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x1c4) == 0)
             goto fall;
     }
 

@@ -11,10 +11,10 @@ extern int func_02012694(int, char *);
 extern void func_ov100_02141fb0(char *);
 extern int func_ov100_0214233c(char *);
 extern void _Z14ApproachLinearRsss(char *, int, int);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char *);
 extern void func_ov100_02142130(char *);
 extern int _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(char *, int, int, int);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(char *);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(char *);
 extern void _ZN8dActor_c11LandingDustEb(char *, int);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(int, unsigned int, unsigned int, char *, unsigned int);
 extern void _Z14ApproachLinearRiii(char *, int, int);
@@ -51,7 +51,7 @@ int func_ov100_021424c0(char *c)
 
     if (r == -1) {
         *(u8 *)(c + 0x3d0) = 3;
-        if (*(u8 *)(c + 0x3d0) != 4 && _ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110) != 0) {
+        if (*(u8 *)(c + 0x3d0) != 4 && _ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x110) != 0) {
             *(int *)(c + 0xa8) = 0;
             *(int *)(int)(c + 0x60) += 0xf000;
         } else {
@@ -66,8 +66,8 @@ int func_ov100_021424c0(char *c)
                                                                       *(int *)(c + 0xe8),
                                                                       *(s16 *)(c + 0x94));
             *(int *)(c + 0x3cc) = 0;
-        } else if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110) != 0) {
-            if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x110) != 0) {
+        } else if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x110) != 0) {
+            if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x110) != 0) {
                 func_02012694(0x40, c + 0x74);
                 _ZN8dActor_c11LandingDustEb(c, 1);
                 if (vy < -0x14000)

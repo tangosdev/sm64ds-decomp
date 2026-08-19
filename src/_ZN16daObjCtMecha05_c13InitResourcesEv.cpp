@@ -62,14 +62,14 @@ struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix
 struct CLPS_Block; struct SharedFilePtr;
 extern "C" unsigned char data_0209f2c0;
 extern "C" int data_ov035_02112258;
-struct RaycastGround {
+struct dBgCh_Gnd {
     int pad[0x11];
     int result;       // offset 0x44
     int pad2[3];      // pad to 0x54 total
-    RaycastGround();
+    dBgCh_Gnd();
     void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
-    ~RaycastGround();
+    ~dBgCh_Gnd();
 };
 
 struct V3 { int x, y, z; };
@@ -101,7 +101,7 @@ int daObjCtMecha05_c::InitResources()
     v.y = *(int*)(self + 0x60);
     v.z = *(int*)(self + 0x64);
     v.y = v.y - 0xa000;
-    RaycastGround rg;
+    dBgCh_Gnd rg;
     rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     *(int*)(self + 0x338) = v.y;
     if (rg.DetectClsn() != 0)

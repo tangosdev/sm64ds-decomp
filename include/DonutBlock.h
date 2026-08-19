@@ -16,11 +16,11 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct DonutBlock : dBgActor_c {
     u8  pad_31e[0x2];
-    WithMeshClsn mWithMeshClsn;       /* 0x320 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x320 */
     s32 unk_4dc;                      /* 0x4dc */
     s32 unk_4e0;                      /* 0x4e0 */
     s32 unk_4e4;                      /* 0x4e4 */
@@ -62,10 +62,10 @@ struct DonutBlock {
     Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x320 -- a relocation the ROM build
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x320 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10DonutBlockD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x320 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x320 */
     s32 unk_4dc;            /* 0x4dc */
     s32 unk_4e0;            /* 0x4e0 */
     s32 unk_4e4;            /* 0x4e4 */

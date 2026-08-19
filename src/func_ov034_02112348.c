@@ -10,7 +10,7 @@ extern void func_ov034_021125b8(void* c, int i);
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern int RandomIntInternal(int* seed);
 extern short _ZN8dActor_c18HorzAngleToCPlayerEv(void* c);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* c);
 extern short Vec3_HorzAngle(const void* a, const void* b);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
 
@@ -43,7 +43,7 @@ void func_ov034_02112348(char* c)
         *(unsigned char*)(c + 0x8da) = data_ov034_0211433c[*(unsigned char*)(c + 0x8db)];
     }
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x708) || len > 0x5dc000) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x708) || len > 0x5dc000) {
         *(short*)(c + 0x8d8) = Vec3_HorzAngle(c + 0x5c, c + 0x8cc);
         *(unsigned char*)(c + 0x8da) = data_ov034_0211433c[*(unsigned char*)(c + 0x8db)];
     }

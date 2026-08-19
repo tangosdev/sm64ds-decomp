@@ -35,12 +35,12 @@ struct Info {
     int pB8;
 };
 
-class RaycastLine {
+class dBgCh_Lin {
 public:
     int DetectClsn();
 };
 
-int RaycastLine::DetectClsn()
+int dBgCh_Lin::DetectClsn()
 {
     int result = 0;
     int i;

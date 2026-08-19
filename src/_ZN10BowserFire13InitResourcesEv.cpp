@@ -7,11 +7,11 @@
  *
  * All three shadow declarations are gone:
  *   - `struct Vector3 { int x, y, z; }`   -> the real types.h Vector3.
- *   - `struct RaycastGround { ... }`      -> the real RaycastGround.h.
+ *   - `struct dBgCh_Gnd { ... }`      -> the real dBgCh_Gnd.h.
  *   - `struct dActor_c { }`                  -> the real dActor_c.h.
  * ...along with the magic offsets on `char *c`, now named BowserFire members.
  *
- * The RaycastGround one is the interesting fix. The stand-in declared
+ * The dBgCh_Gnd one is the interesting fix. The stand-in declared
  * `int floor[12]` at 0x14 and then read `floor[12]` -- one PAST its own bound,
  * so the index was a magic offset in disguise: 0x14 + 12*4 = 0x44. The real
  * header names that field `clsnY` and documents it as the search seed on entry
@@ -34,7 +34,7 @@
  * seed is read into a local, stored, then overwritten with seed + 0x32000.
  */
 #include "BowserFire.h"
-#include "RaycastGround.h"
+#include "dBgCh_Gnd.h"
 #include "dActor_c.h"
 
 typedef void (dActor_c::*ActorFn)();
@@ -42,17 +42,17 @@ typedef void (dActor_c::*ActorFn)();
 extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
-extern void _ZN13RaycastGroundC1Ev(RaycastGround *self);
-extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
-extern void _ZN13RaycastGroundD1Ev(RaycastGround *self);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
+extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
+extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);
 }
 
 extern ActorFn data_ov060_0211af74[];
 
 int BowserFire::InitResources()
 {
-    RaycastGround rc;
+    dBgCh_Gnd rc;
     Vector3 pos;
 
     if (_ZN11ShadowModel12InitCylinderEv(&this->mShadowModel) == 0)
@@ -60,7 +60,7 @@ int BowserFire::InitResources()
 
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         &this->mdCcAc_c, this, 0x28000, 0x50000, 0x200002, 0);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         &this->mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
 
     this->mVertAccel = -0x4000;
@@ -80,7 +80,7 @@ int BowserFire::InitResources()
     this->unk_37c = this->unk_380;
     this->unk_2cc = 0;
 
-    _ZN13RaycastGroundC1Ev(&rc);
+    _ZN9dBgCh_GndC1Ev(&rc);
     {
         int p60;
         pos.x = this->mPosX;
@@ -90,7 +90,7 @@ int BowserFire::InitResources()
         pos.y = p60 + 0x32000;
     }
     rc.SetObjAndPos(pos, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(&rc))
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc))
         this->unk_364 = rc.clsnY;
     else
         this->unk_364 = this->mPosY;
@@ -99,6 +99,6 @@ int BowserFire::InitResources()
 
     this->unk_384 = 0;
     this->unk_388 = 0;
-    _ZN13RaycastGroundD1Ev(&rc);
+    _ZN9dBgCh_GndD1Ev(&rc);
     return 1;
 }

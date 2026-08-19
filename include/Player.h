@@ -27,7 +27,7 @@
 #include "dActor_c.h"
 #include "ShadowModel.h"
 #include "dCcAcPos_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "ModelAnim.h"
 #include "TextureSequence.h"
 #include "MaterialChanger.h"
@@ -177,9 +177,9 @@ struct Player : dActor_c {
     State *mRequestedState;            /* 0x378 */
     u8  unk_37c;            /* 0x37c */
     u8  pad_37d[0x3];
-    /* ~Player calls _ZN12WithMeshClsnD1Ev on this FIRST, and WithMeshClsn
+    /* ~Player calls _ZN10dBgCh_ActrD1Ev on this FIRST, and dBgCh_Actr
        asserts 0x1bc -- which closes exactly at mSpawnPosX. */
-    WithMeshClsn mMeshClsn;            /* 0x380 */
+    dBgCh_Actr mMeshClsn;            /* 0x380 */
     /* The spawn point, saved once and restored on death. Player::InitResources
        writes all four from the live values (0x53c..0x544 <- mPosX/Y/Z, and
        mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.

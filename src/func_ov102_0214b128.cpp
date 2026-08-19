@@ -7,7 +7,7 @@ extern void func_ov102_0214b384(void* c, int a1);
 extern void* _ZN8dActor_c10FindWithIDEj(unsigned int);
 extern void func_ov102_0214bc20(void* c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void*, void*);
-extern void _ZN12WithMeshClsn15ClearGroundFlagEv(void*);
+extern void _ZN10dBgCh_Actr15ClearGroundFlagEv(void*);
 void func_ov102_0214b128(char* c) {
     int t;
     if (_ZN8dActor_c7FindEggER5dCc_c(c, c + 0x110) || (*(int*)(c + 0x130) & 0x20000)) {
@@ -37,7 +37,7 @@ void func_ov102_0214b128(char* c) {
         func_ov102_0214bc20(c);
         *(short*)(c + 0x94) = *(short*)((char*)r5 + 0x8e);
         _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x110);
-        _ZN12WithMeshClsn15ClearGroundFlagEv(c + 0x144);
+        _ZN10dBgCh_Actr15ClearGroundFlagEv(c + 0x144);
     }
 }
 }

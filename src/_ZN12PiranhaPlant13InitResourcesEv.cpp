@@ -25,7 +25,7 @@ extern "C" {
 void LoadBlueCoinModel(void* c);
 void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, int r, int h, unsigned int e, unsigned int g);
 void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, void* a, const Vector3* v, int r, int h, unsigned int e, unsigned int g);
-void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, int b, int cc, void* d, void* e);
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, int b, int cc, void* d, void* e);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* f, int a, int b, unsigned int cc);
 
 extern SharedFilePtr* data_ov084_021302f4[];
@@ -64,7 +64,7 @@ int PiranhaPlant::InitResources()
     unk_100 = 0;
     unk_108 = 3;
     unk_46c = 0;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
     unk_440 = mPosX;
     unk_444 = mPosY;
     unk_448 = mPosZ;

@@ -9,9 +9,9 @@ void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
 void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 s16 Vec3_VertAngle(void* v1, void* v0);
-void WithMeshClsn_UpdateContinuous_Veneer(void* c);
-int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+void dBgCh_Actr_UpdateContinuous_Veneer(void* c);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void* c);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 int func_02035638(void* c);
 void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, struct Vector3* pos, unsigned int a, int b, unsigned int c, unsigned int d, unsigned int e);
@@ -54,15 +54,15 @@ extern "C" void func_ov100_02140e44(char* c)
         _Z14ApproachLinearRsss((s16*)(c + 0x92), Vec3_VertAngle(c + 0x5c, (char*)player + 0x5c), 0x320);
     }
 
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x1d8);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x1d8);
 
     {
         int noId = (*(int*)(c + 0x3b8) == 0);
         r5 = (noId == 0);
     }
     if (r5 == 0) {
-        if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x1d8) == 0) {
-            if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1d8) == 0) {
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x1d8) == 0) {
+            if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1d8) == 0) {
                 if (func_02035638(c + 0x1d8) == 0) {
                     if (*(int*)(c + 0x3e8) <= 0x9d)
                         goto cylinder_only;

@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN13OneUpMushroom13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "OneUpMushroom.h"
@@ -21,7 +21,7 @@ extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void* self);
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, int q);
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, int q);
 extern "C" int IsStarCollectedInCurLevel(int a);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* self);
 
@@ -89,8 +89,8 @@ int OneUpMushroom::InitResources()
     unk_380 = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, (dActor_c*)((char*)this), 0x32000, 0x32000, 0, 0);
-    _ZN12WithMeshClsn13SetLimMovFlagEv((char*)&mWithMeshClsn);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, (dActor_c*)((char*)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr13SetLimMovFlagEv((char*)&mWithMeshClsn);
     unk_394 = 0;
 
     if (data_0209f2f8 == 7 && mPosY == 0xdac000 && mPosZ == 0

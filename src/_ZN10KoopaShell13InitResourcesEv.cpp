@@ -25,7 +25,7 @@ struct Vector3_16;
 
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c* a, int r, int h, unsigned int d, unsigned int e);
 
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c* a, int b, int c, Vector3_16* d, int e);
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c* a, int b, int c, Vector3_16* d, int e);
 
 extern "C" void func_ov102_0214d1f8(void* c, void* p);
 
@@ -50,8 +50,8 @@ int KoopaShell::InitResources()
     mTerminalVelocity = -0x32000;
     unk_100 = 0x14;
     unk_3c0 = 0;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&mMeshClsn, (dActor_c*)this, 0x28000, 0x28000, 0, 0);
-    ((WithMeshClsn*)&mMeshClsn)->StartDetectingWater();
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((dBgCh_Actr*)&mMeshClsn, (dActor_c*)this, 0x28000, 0x28000, 0, 0);
+    ((dBgCh_Actr*)&mMeshClsn)->StartDetectingWater();
     func_ov102_0214d1f8(this, &data_ov102_0214ea68);
     unk_3d4 = 0;
     unk_3d0 = unk_3d4;

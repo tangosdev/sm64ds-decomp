@@ -5,8 +5,8 @@ typedef struct { int m[12]; } Mtx43;
 
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, void *, int, int);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, void *, int, int, void *, int);
-extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, void *, int, int, void *, int);
+extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *);
 extern void _ZN7PathPtr6FromIDEj(void *, unsigned int);
 extern int _ZNK7PathPtr8NumNodesEv(void *);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *, void *, unsigned int);
@@ -35,8 +35,8 @@ int _ZN6ToxBox13InitResourcesEv(char *self)
     f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov092_02132540);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(self + 0xd4, f, 1, -1);
 
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(self + 0x324, self, 0xfa000, 0, 0, 0);
-    _ZN12WithMeshClsn13SetLimMovFlagEv(self + 0x324);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(self + 0x324, self, 0xfa000, 0, 0, 0);
+    _ZN10dBgCh_Actr13SetLimMovFlagEv(self + 0x324);
 
     idx = *(int *)(self + 8) & 3;
     *(unsigned char *)(self + 0x574) = (unsigned char)idx;

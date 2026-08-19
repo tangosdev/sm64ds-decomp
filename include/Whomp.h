@@ -12,7 +12,7 @@
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
  *
- *     0x110 WithMeshClsn               0x1bc   -> 0x2cc
+ *     0x110 dBgCh_Actr               0x1bc   -> 0x2cc
  *     0x2cc ModelAnim                  0x64    -> 0x330
  *     0x330 TextureSequence            0x14    -> 0x344
  *     0x344 ShadowModel                0x28    -> 0x36c
@@ -32,10 +32,10 @@
 #include "dBgW_KcMbg.h"
 #include "ShadowModel.h"
 #include "TextureSequence.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Whomp : dEnemyBase_c {
-    WithMeshClsn                 mWithMeshClsn;         /* 0x110 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x110 */
     ModelAnim                    mModelAnim;            /* 0x2cc */
     TextureSequence              mTextureSequence;      /* 0x330 */
     ShadowModel                  mShadowModel;          /* 0x344 */

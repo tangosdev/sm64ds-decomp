@@ -13,7 +13,7 @@
  * reading rather than a guess:
  *
  *     0x110 dCcAc_c         0x34    -> 0x144
- *     0x144 WithMeshClsn               0x1bc   -> 0x300
+ *     0x144 dBgCh_Actr               0x1bc   -> 0x300
  *     0x300 ModelAnim                  0x64    -> 0x364
  *     0x368 ShadowModel                0x28    -> 0x390
  *     0x3c0 ShadowModel                0x28    -> 0x3e8
@@ -32,11 +32,11 @@
 #include "ModelAnim.h"
 #include "dCcAc_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Rabbit : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */
     s32                          unk_364;               /* 0x364 */
     ShadowModel                  mShadowModel1;         /* 0x368 */

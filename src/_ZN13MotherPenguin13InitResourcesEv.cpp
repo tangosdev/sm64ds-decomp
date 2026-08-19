@@ -12,12 +12,12 @@ extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *f);
 extern void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *act, int a, int b, unsigned int c2, unsigned int d);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, int a, int b, void *c2, void *d);
-extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
-extern int _ZN13RaycastGround10DetectClsnEv(void *self);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, int a, int b, void *c2, void *d);
+extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
 extern void func_ov018_02111d28(char *c, int r1);
-extern void _ZN13RaycastGroundD1Ev(void *self);
+extern void _ZN9dBgCh_GndD1Ev(void *self);
 extern int data_ov018_02113c00[];
 extern int data_ov018_02112c04[];
 }
@@ -41,16 +41,16 @@ int MotherPenguin::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this)+0x1a8, ((char *)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this)+0x1a8, ((char *)this), 0x32000, 0x32000, 0, 0);
     char rg[0x54];
     int v[3];
     v[0] = mPosX;
     v[1] = mPosY;
     v[2] = mPosZ;
     v[1] += 0x14000;
-    _ZN13RaycastGroundC1Ev(rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, v, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(rg))
+    _ZN9dBgCh_GndC1Ev(rg);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, v, 0);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(rg))
         mPosY = *(int*)(rg+0x44);
     else
         mPosY = v[1];
@@ -59,6 +59,6 @@ int MotherPenguin::InitResources()
     unk_36c = mPosZ;
     unk_374 = 0;
     func_ov018_02111d28(((char *)this), 0);
-    _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_GndD1Ev(rg);
     return 1;
 }

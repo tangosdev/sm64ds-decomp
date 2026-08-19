@@ -32,14 +32,14 @@
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct dCc_c;
-struct WithMeshClsn;
+struct dBgCh_Actr;
 
 extern "C" {
-int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* wm, void* anim, unsigned int n);
+int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void* self, void* wm, void* anim, unsigned int n);
 unsigned short DecIfAbove0_Short(unsigned short* p);
 void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, dCc_c* cc);
-int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, WithMeshClsn* wm, int a, s16 b, int c, int d, void* e);
-void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, WithMeshClsn* wm, unsigned int j);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(void* self, dBgCh_Actr* wm, int a, s16 b, int c, int d, void* e);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* self, dBgCh_Actr* wm, unsigned int j);
 void func_ov062_02116010(void* self);
 void _ZN5dCc_c5ClearEv(dCc_c* self);
 void _ZN5dCc_c6UpdateEv(dCc_c* self);
@@ -61,7 +61,7 @@ int Chuckya::Behavior()
 {
     char* c = (char*)this;
 
-    if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, &mMeshClsn, &mModel, 3))
+    if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(c, &mMeshClsn, &mModel, 3))
         return 1;
 
     DecIfAbove0_Short((unsigned short *)&unk_100);
@@ -93,8 +93,8 @@ int Chuckya::Behavior()
             }
             if (r2 != 0
                 || (mHorzSpeed != 0
-                    && _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
-                           c, (WithMeshClsn*)&mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, (void*)0x32000))) {
+                    && _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(
+                           c, (dBgCh_Actr*)&mMeshClsn, 0x3c000, (s16)0x2888, 0, 1, (void*)0x32000))) {
                 mHorzSpeed = 0;
                 unk_3e4 = 1;
                 mPosX = mPrevPosX;
@@ -108,7 +108,7 @@ int Chuckya::Behavior()
         mPrevPosX = mPosX;
         mPrevPosY = mPosY;
         mPrevPosZ = mPosZ;
-        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, (WithMeshClsn*)&mMeshClsn, 3);
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, (dBgCh_Actr*)&mMeshClsn, 3);
     }
 
     if (mState == (void*)data_ov062_0211ded0

@@ -1,5 +1,5 @@
 extern int _Z14ApproachLinearRsss(short *a, short b, short c);
-extern unsigned char _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs(void *self, void *clsn, short *a);
+extern unsigned char _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs(void *self, void *clsn, short *a);
 extern void func_ov062_02117724(void *c, int a, int b, int d, int e);
 extern void func_ov062_021181a0(void *c);
 extern void func_ov062_0211811c(void *c);
@@ -13,7 +13,7 @@ void func_ov062_02118cdc(char *c)
         if (*(int*)(c+0x3b8) >= 0x61a8000) {
             *(short*)(c+0x3c2) = *(short*)(c+0x3c0);
         }
-        *(unsigned char*)(c+0x3cc) = _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs(c, c+0x144, (short*)(c+0x3c2));
+        *(unsigned char*)(c+0x3cc) = _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs(c, c+0x144, (short*)(c+0x3c2));
         _Z14ApproachLinearRsss((short*)(c+0x94), *(short*)(c+0x3c2), 0x200);
     }
     if (*(unsigned char*)(c+0x398) == 1) {

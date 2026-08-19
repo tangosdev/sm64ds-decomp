@@ -7,7 +7,7 @@ extern void _ZN9ModelAnimC1Ev(void*);
 extern void _ZN15MaterialChangerC1Ev(void*);
 extern void _ZN15TextureSequenceC1Ev(void*);
 extern void _ZN18TextureTransformerC1Ev(void*);
-extern void _ZN12WithMeshClsnC1Ev(void*);
+extern void _ZN10dBgCh_ActrC1Ev(void*);
 extern void _ZN10dCcAcPos_cD1Ev(void*);
 extern void _ZN10dCcAcPos_cC1Ev(void*);
 extern void _ZN11ShadowModelD1Ev(void*);
@@ -27,7 +27,7 @@ void* Goomboss_Spawn(void){
     _ZN15MaterialChangerC1Ev(p+0x3d0);
     _ZN15TextureSequenceC1Ev(p+0x3e4);
     _ZN18TextureTransformerC1Ev(p+0x3f8);
-    _ZN12WithMeshClsnC1Ev(p+0x40c);
+    _ZN10dBgCh_ActrC1Ev(p+0x40c);
   }
   return p;
 }

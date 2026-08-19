@@ -26,7 +26,7 @@
 #include "ModelAnim.h"
 #include "MaterialChanger.h"
 #include "TextureSequence.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"
 
 struct Wiggler : dEnemyBase_c {
@@ -40,7 +40,7 @@ struct Wiggler : dEnemyBase_c {
     dCcAcPos_c mdCc_cs1[5];    /* 0x478 */
     dCcAcPos_c mdCc_cs2[5];    /* 0x5b8 */
     u8  pad_6f8[0x10];
-    WithMeshClsn mWithMeshClsn;                      /* 0x708 */
+    dBgCh_Actr mWithMeshClsn;                      /* 0x708 */
 
     virtual ~Wiggler();
 

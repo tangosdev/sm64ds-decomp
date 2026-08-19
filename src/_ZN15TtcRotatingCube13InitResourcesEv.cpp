@@ -29,10 +29,10 @@ extern "C" {
     void Matrix4x3_FromRotationY(void *m, int angle);
     void MulVec3Mat4x3(void *dst, void *mtx, void *src);
     void AddVec3(void *a, void *b, void *c);
-    void _ZN13RaycastGroundC1Ev(void *self);
-    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *actor);
-    int _ZN13RaycastGround10DetectClsnEv(void *self);
-    void _ZN13RaycastGroundD1Ev(void *self);
+    void _ZN9dBgCh_GndC1Ev(void *self);
+    void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *actor);
+    int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
+    void _ZN9dBgCh_GndD1Ev(void *self);
 }
 
 extern void *data_ov065_0211cfd0[];
@@ -41,7 +41,7 @@ extern "C" void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P1
 extern u8 data_0209f2c0;
 extern s32 data_020a0e68[];
 
-struct RaycastGround {
+struct dBgCh_Gnd {
     char pad[0x44];
     s32 hitY;
     char pad2[0xc];
@@ -113,11 +113,11 @@ int TtcRotatingCube::InitResources()
         AddVec3(vb, c + 0x5c, vb);
         vb[1] -= 0xd2000;
 
-        RaycastGround rg;
-        _ZN13RaycastGroundC1Ev(&rg);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, vb, 0);
+        dBgCh_Gnd rg;
+        _ZN9dBgCh_GndC1Ev(&rg);
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, vb, 0);
         *(s32 *)(c + 0x37c) = vb[1];
-        if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
             *(s32 *)(c + 0x37c) = rg.hitY;
         }
 
@@ -126,15 +126,15 @@ int TtcRotatingCube::InitResources()
         vb[2] = *(s32 *)(c + 0x64);
         vb[1] -= 0xd2000;
 
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, vb, 0);
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, vb, 0);
         s32 r5 = vb[1];
-        if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
             r5 = rg.hitY;
         }
         if (r5 != *(s32 *)(c + 0x37c)) {
             *(u8 *)(c + 0x37a) = 1;
         }
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
     }
 
     return 1;

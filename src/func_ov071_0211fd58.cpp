@@ -7,7 +7,7 @@ int func_ov071_0211f148(void*, void*);
 int func_ov071_0211f29c(void*);
 int _ZN5dCc_c5ClearEv(void*);
 int _ZN5dCc_c6UpdateEv(void*);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
 int func_0201267c(int, void*);
 int func_ov071_0211fd58(char* c){
   _ZN9Animation7AdvanceEv(c+0x124);
@@ -23,7 +23,7 @@ int func_ov071_0211fd58(char* c){
   func_ov071_0211f29c(c);
   _ZN5dCc_c5ClearEv(c+0x160);
   _ZN5dCc_c6UpdateEv(c+0x160);
-  if(_ZNK12WithMeshClsn10IsOnGroundEv(c+0x194) != 0){
+  if(_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x194) != 0){
     unsigned int t = (unsigned int)(*(int*)(c+0x12c) << 4) >> 0x10;
     if((t <= 2) || (t >= 8 && t <= 0xa) || (t >= 0x18 && t <= 0x1a) || (t >= 0x20 && t <= 0x22)){
       func_0201267c(0xf0, c+0x74);

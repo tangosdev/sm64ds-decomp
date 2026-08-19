@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-int _ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn(void* self, void* wm);
+int _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(void* self, void* wm);
 void _ZN9Animation7AdvanceEv(void* self);
 char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN12dEnemyBase_c9SpawnCoinEv(void* self);
@@ -14,7 +14,7 @@ void _ZN8dActor_c19UntrackInDeathTableEv(void* self);
 extern int data_ov084_02130218[];
 
 int func_ov084_021298d0(char* c){
-    int r4 = _ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn(c, c + 0x1b4);
+    int r4 = _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(c, c + 0x1b4);
     if ((unsigned int)(*(int*)(c + 0x10c) - 2) > 4) goto L_a4;
     *(int*)(c + 0x3cc) = 0x1000;
     _ZN9Animation7AdvanceEv(c + 0x3c0);

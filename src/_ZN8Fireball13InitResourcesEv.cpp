@@ -5,8 +5,8 @@
 extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, int fix12, int t, unsigned int a, unsigned int b);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int fix12, int t, void* vec, int last);
-extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void* thiz);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int fix12, int t, void* vec, int last);
+extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void* thiz);
 }
 
 int Fireball::InitResources()
@@ -14,8 +14,8 @@ int Fireball::InitResources()
     if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
         return 0;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x28000, 0x50000, 0x200002, 0);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x32000, 0x32000, 0, 0);
-    _ZN12WithMeshClsn19StartDetectingWaterEv((char*)&mWithMeshClsn);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr19StartDetectingWaterEv((char*)&mWithMeshClsn);
     unk_100 = 0;
     unk_36a = 0;
     unk_360 = 0;

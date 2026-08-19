@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
-void* _ZNK12WithMeshClsn14GetFloorResultEv(void* c);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
+void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* c);
 unsigned int _ZNK5dBgPi9GetClsnIDEv(void* r);
 void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 }
@@ -14,8 +14,8 @@ struct dActor_c {
   virtual void v50(); virtual void m54(int arg);
 };
 extern "C" int func_ov002_020ef2a4(void* c, int arg){
-  if(_ZNK12WithMeshClsn10IsOnGroundEv(c)){
-    void* res = _ZNK12WithMeshClsn14GetFloorResultEv(c);
+  if(_ZNK10dBgCh_Actr10IsOnGroundEv(c)){
+    void* res = _ZNK10dBgCh_Actr14GetFloorResultEv(c);
     if(_ZNK5dBgPi9GetClsnIDEv(res) != 0xffffffff){
       dActor_c* a = (dActor_c*)_ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(res));
       if(a != 0){

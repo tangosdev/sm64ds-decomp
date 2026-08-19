@@ -6,16 +6,16 @@
 #include "Moneybag.h"
 extern "C" {
 extern void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(char* c, char* clsn);
-extern int _ZNK12WithMeshClsn14GetResultFlag1Ev(char* clsn);
-extern int _ZNK12WithMeshClsn12TouchesWaterEv(char* clsn);
+extern int _ZNK10dBgCh_Actr14GetResultFlag1Ev(char* clsn);
+extern int _ZNK10dBgCh_Actr12TouchesWaterEv(char* clsn);
 }
 
 int Moneybag::Behavior()
 {
     func_ov081_02127708(((char*)this));
     _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), ((char*)this) + 0x1b0);
-    if (_ZNK12WithMeshClsn14GetResultFlag1Ev((char*)&mWithMeshClsn) != 0) {
-        if (_ZNK12WithMeshClsn12TouchesWaterEv((char*)&mWithMeshClsn) != 0) {
+    if (_ZNK10dBgCh_Actr14GetResultFlag1Ev((char*)&mWithMeshClsn) != 0) {
+        if (_ZNK10dBgCh_Actr12TouchesWaterEv((char*)&mWithMeshClsn) != 0) {
             func_ov081_02126700(((char*)this));
         }
     }

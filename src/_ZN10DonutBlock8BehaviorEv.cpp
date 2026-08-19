@@ -5,8 +5,8 @@
 #include "dBgW.h"
 extern "C" {
 void _ZN8dActor_c9UpdatePosEP5dCc_c(void* thiz, void* clsn);
-void WithMeshClsn_UpdateContinuous_Veneer(void* p);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
+void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
 int _ZN8dActor_c13DistToCPlayerEv(void* p);
 void _ZN8dActor_c14TriplePoofDustEv(void* p);
 void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* p);
@@ -29,8 +29,8 @@ int DonutBlock::Behavior()
         break;
     case 1:
         _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
-        WithMeshClsn_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
-        if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) == 0) {
+        dBgCh_Actr_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn) == 0) {
             if (_ZN8dActor_c13DistToCPlayerEv(((char*)this)) <= 0x9c4000) break;
         }
         _ZN8dActor_c14TriplePoofDustEv(((char*)this));

@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN4BgCh18StopDetectingWaterEv
+// @symbol _ZN5dBgCh18StopDetectingWaterEv
 /* recovered: named members + shared header, real C++ method */
-#include "BgCh.h"
+#include "dBgCh.h"
 
 
-void BgCh::StopDetectingWater()
+void dBgCh::StopDetectingWater()
 {
     *(unsigned char *)((char *)&unk_004) &= ~2;
 }

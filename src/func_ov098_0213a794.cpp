@@ -13,10 +13,10 @@ extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 extern "C" void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* fp);
 extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* f, void* m, int fx, short s, void* b);
 extern "C" void func_020393c4(int* p, int v);
-extern "C" void _ZN13RaycastGroundC1Ev(void* self);
-extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* pos, void* actor);
-extern "C" int _ZN13RaycastGround10DetectClsnEv(void* self);
-extern "C" void _ZN13RaycastGroundD1Ev(void* self);
+extern "C" void _ZN9dBgCh_GndC1Ev(void* self);
+extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* pos, void* actor);
+extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(void* self);
+extern "C" void _ZN9dBgCh_GndD1Ev(void* self);
 
 
 struct RG { char b[0x4c]; };
@@ -36,10 +36,10 @@ extern "C" int func_ov098_0213a794(char* self, char** fp){
   v.y = y;
   v.z = *(int*)(self+0x64);
   v.y = y - 0x64000;
-  _ZN13RaycastGroundC1Ev(&rc);
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, &v, 0);
+  _ZN9dBgCh_GndC1Ev(&rc);
+  _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &v, 0);
   *(int*)(self+0x32c) = v.y;
-  if(_ZN13RaycastGround10DetectClsnEv(&rc)){
+  if(_ZN9dBgCh_Gnd10DetectClsnEv(&rc)){
     *(int*)(self+0x32c) = *(int*)((char*)&rc + 0x44);
   }
   *(int*)(self+0x9c) = -0x4000;
@@ -53,6 +53,6 @@ extern "C" int func_ov098_0213a794(char* self, char** fp){
   *(int*)(self+0x330) = 0;
   if(*(unsigned short*)(self+0xc) != 0x53) r2 = 0;
   if(r2 != 0) *(unsigned char*)(self+0x342) = 1;
-  _ZN13RaycastGroundD1Ev(&rc);
+  _ZN9dBgCh_GndD1Ev(&rc);
   return 1;
 }

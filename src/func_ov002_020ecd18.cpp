@@ -5,7 +5,7 @@ struct Vec3 { s32 x, y, z; Vec3() {} Vec3(const Vec3 &o) { x = o.x; y = o.y; z =
 extern "C" {
 extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020ed63c(void *self, s32 a);
-extern s32 _ZNK12WithMeshClsn14GetResultFlag1Ev(void *self);
+extern s32 _ZNK10dBgCh_Actr14GetResultFlag1Ev(void *self);
 extern void func_ov002_020ec670(void *self, void *clsn);
 extern void func_ov002_020edca4(void *self);
 extern s32 _Z14ApproachLinearR7Vector3RKS_5Fix12IiE(struct Vec3 *dst, struct Vec3 *src, s32 step);
@@ -17,7 +17,7 @@ extern s32 func_ov002_020ed6cc(void *self);
 extern void _ZN5dCc_c5ClearEv(void *self);
 extern void _ZN5dCc_c6UpdateEv(void *self);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
-extern void WithMeshClsn_UpdateContinuous_Veneer(void *self);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void *self);
 }
 struct VObj {
     virtual void v00();
@@ -87,7 +87,7 @@ void func_ov002_020ecd18(void *arg0)
         } else {
             b = (s32)((fb0 & 0x400) != 0);
             if (b != 0) {
-                if (_ZNK12WithMeshClsn14GetResultFlag1Ev(c + 0x144) != 0) {
+                if (_ZNK10dBgCh_Actr14GetResultFlag1Ev(c + 0x144) != 0) {
                     func_ov002_020ec670(c, c + 0x144);
                     func_ov002_020edca4(c);
                     return;
@@ -130,5 +130,5 @@ void func_ov002_020ecd18(void *arg0)
         _ZN5dCc_c6UpdateEv(c + 0x110);
     if (o == 0)
         _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x110);
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x144);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x144);
 }

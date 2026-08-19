@@ -1,21 +1,21 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RaycastLine: 4 matched functions, 7 evidenced fields.
+ * class dBgCh_Lin: 4 matched functions, 7 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen.
  *
- * HAND-EXTENDED 2026-08-06 from dBgW_Kc::DetectClsn(RaycastLine&) at ITCM
+ * HAND-EXTENDED 2026-08-06 from dBgW_Kc::DetectClsn(dBgCh_Lin&) at ITCM
  * 0x01ffb0fc. Do not regenerate over this. Two of the generated names were
  * contradicted by the ROM and are corrected below (mPosX was lineEnd.z, mPosY was
  * clsnDist); 0x50 is newly named. Widths are unchanged -- the three s32 at
  * 0x54..0x5c became one Vector3 covering the same twelve bytes, and the struct
- * still spans 0x68. Byte-gated: _ZN11RaycastLineD1Ev (0x02037764) still MATCHes.
+ * still spans 0x68. Byte-gated: _ZN9dBgCh_LinD1Ev (0x02037764) still MATCHes.
  * The class family this belongs to is written up in
  * notes/collision-query-classes.md. */
-#ifndef RAYCASTLINE_H
-#define RAYCASTLINE_H
+#ifndef DBGCH_LIN_H
+#define DBGCH_LIN_H
 #include "types.h"
 
-struct RaycastLine {
+struct dBgCh_Lin {
     u8  pad_000[0x10];
     u8  unk_010;            /* 0x010 */
     u8  pad_011[0x27];
@@ -36,8 +36,8 @@ struct RaycastLine {
          func_ov002_020fea68  a[0..2] = b[0..2]  -> reads 0x38  -> GetStart */
     u8  unk_038;            /* 0x038 -- dM3dGLin base: start 0x38, end 0x44 */
     u8  pad_039[0x17];
-    /* Set to 1 on the hit path by dBgW_Kc::DetectClsn(RaycastLine&)
-       (`strb r0,[r1,#0x50]`); the role RaycastGround already names at its 0x48. */
+    /* Set to 1 on the hit path by dBgW_Kc::DetectClsn(dBgCh_Lin&)
+       (`strb r0,[r1,#0x50]`); the role dBgCh_Gnd already names at its 0x48. */
     u8  hasClsn;            /* 0x050 */
     u8  pad_051[0x3];
     /* Was unk_054/unk_058/mPosX. ITCM DetectClsn materialises `add r5,r1,#0x54`
@@ -56,7 +56,7 @@ struct RaycastLine {
 
          OUT  on a hit, func_020375ec(d, s) does d[21..23] = s[0..2], and
               d[21] is 0x54 -- the world-space collision point overwrites the
-              end point. RaycastLine::GetClsnPos (0x020375d0) reads it back and
+              end point. dBgCh_Lin::GetClsnPos (0x020375d0) reads it back and
               calls it clsnPos, which is correct AFTER a hit and wrong before.
 
        So both names are right at different times. Keep `lineEnd', which is the

@@ -19,7 +19,7 @@
 // en1-en2 placement, all byte-neutral; frame-size chasing (the surplus is register
 // pressure from structural difference); loop rotation (mwccarm rotates this loop
 // unprompted and always did). "Declaration order IS the stack layout" holds for the
-// 0x498 RaycastGround twin and NOT for this 0x1bc8 function.
+// 0x498 dBgCh_Gnd twin and NOT for this 0x1bc8 function.
 //
 // What is left: source-shape change that reduces simultaneous liveness across the
 // prism body. This draft reloads edge normals (ldr [sp,#0xc4] three times in ten
@@ -29,13 +29,13 @@
 // flat across real gains. mismatches=N/M is frozen at 999 until the sizes match.
 // Map and status: notes/collision-system.md.
 //
-// @symbol _ZN7dBgW_Kc10DetectClsnER10SphereClsn
-/* dBgW_Kc::DetectClsn(SphereClsn &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
+// @symbol _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr
+/* dBgW_Kc::DetectClsn(dBgCh_SphCrr &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
 #include "dBgW_Kc.h"
-#include "SphereClsn.h"
+#include "dBgCh_SphCrr.h"
 #include "dBgPi.h"
 
-extern "C" void func_02037a6c(SphereClsn *self, s32 loX, s32 loY, s32 loZ,
+extern "C" void func_02037a6c(dBgCh_SphCrr *self, s32 loX, s32 loY, s32 loZ,
                               s32 hiX, s32 hiY, s32 hiZ);
 extern "C" s32 DotVec3(const s32 *a, const Vector3 *b);
 extern "C" s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri);
@@ -43,12 +43,12 @@ extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vec
 extern "C" s32 func_02039794(s32 normalY);
 extern SurfaceInfo data_020a0cec;
 extern "C" void func_02037fd4(dBgPi *res, s16 triID, SurfaceInfo *info);
-extern "C" void func_020379f4(SphereClsn *self, s16 triID, SurfaceInfo *info);
-extern "C" void func_020379c0(SphereClsn *self, s16 triID, SurfaceInfo *info);
-extern "C" void func_0203798c(SphereClsn *self, s16 triID, SurfaceInfo *info);
-extern "C" void func_0203794c(SphereClsn *self, const Vector3 *n);
-extern "C" int _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info,
-                                                              SphereClsn *q, int flag);
+extern "C" void func_020379f4(dBgCh_SphCrr *self, s16 triID, SurfaceInfo *info);
+extern "C" void func_020379c0(dBgCh_SphCrr *self, s16 triID, SurfaceInfo *info);
+extern "C" void func_0203798c(dBgCh_SphCrr *self, s16 triID, SurfaceInfo *info);
+extern "C" void func_0203794c(dBgCh_SphCrr *self, const Vector3 *n);
+extern "C" int _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info,
+                                                              dBgCh_SphCrr *q, int flag);
 extern "C" int func_020397dc(int x);
 extern "C" int func_02037e58(unsigned int *p);
 extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
@@ -159,7 +159,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
                 > _ZN4cstd4fdivEii(faceDot >> 4, hyp)) continue;              \
     }
 
-s32 dBgW_Kc::DetectClsn(SphereClsn &sphere)
+s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 {
     KCL_File *f;
     s32 loX, hiX;
@@ -327,7 +327,7 @@ s32 dBgW_Kc::DetectClsn(SphereClsn &sphere)
                     }
 
                     /* Same three side-plane rejects as the matched
-                       DetectClsn(RaycastGround&) twin, but the sphere's tolerance
+                       DetectClsn(dBgCh_Gnd&) twin, but the sphere's tolerance
                        is its own radius (raw units x 0x400, matching the normals'
                        1.0 == 0x400 scale) where the twin uses a fixed 0x20000. */
                     while (*++leaf) {
@@ -389,7 +389,7 @@ s32 dBgW_Kc::DetectClsn(SphereClsn &sphere)
                         triID = func_020396dc(this, tri);
 
                         /* A REAL virtual call -- slot 3. Same lever as
-                           dBgW_Kc::GetSurfaceInfo and the RaycastGround twin:
+                           dBgW_Kc::GetSurfaceInfo and the dBgCh_Gnd twin:
                            mwccarm's dispatch reads `this` from r0, a hand-rolled
                            one reads it from the callee-saved copy. */
                         GetSurfaceInfo(triID, data_020a0cec);
@@ -402,7 +402,7 @@ s32 dBgW_Kc::DetectClsn(SphereClsn &sphere)
                         contactKind = k0;
                         passArg = k1;
                         if (cls != 1) passArg = k0;
-                        if (_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
+                        if (_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
                                 this, &data_020a0cec, &sphere, passArg))
                             continue;
 

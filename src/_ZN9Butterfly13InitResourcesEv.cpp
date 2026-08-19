@@ -12,7 +12,7 @@ extern "C" {
     int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* mb, void* bmd, int a, int b);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* bca, int a, int f, u32 e);
     int _ZN11ShadowModel12InitCylinderEv(void* sm);
-    void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* w, void* a, int r, int rr, void* v, void* vv);
+    void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* w, void* a, int r, int rr, void* v, void* vv);
     void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* c, void* a, void* pos, int r, int rr, u32 e, u32 f);
     int RandomIntInternal(int* seed);
     int _ZNK9Animation13GetFrameCountEv(void* anim);
@@ -39,7 +39,7 @@ int Butterfly::InitResources()
     if (_ZN9ModelBase7SetFileEP8BMD_Fileii((void*)(c+0x138), data_ov100_02148668.b, 1, 1) == 0) return 0;
     if (_ZN11ShadowModel12InitCylinderEv((void*)(c+0x1b0)) == 0) return 0;
 
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((void*)(c+0x1d8), ((void*)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((void*)(c+0x1d8), ((void*)this), 0x32000, 0x32000, 0, 0);
 
     Vec3 v;
     v.x = 0;

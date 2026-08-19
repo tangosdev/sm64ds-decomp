@@ -6,7 +6,7 @@
 // (4x strb post-inc). Pure C never emits that for a heap pointer under
 // -O4,p (only stack u8[N]={0} does); small asm block reproduces it.
 // Also: pin data_0209f2d8 in local `d` so ==2 keeps r1 bool (preserves r0);
-// decl order td,tx,tz + load order for RaycastGround pos regs.
+// decl order td,tx,tz + load order for dBgCh_Gnd pos regs.
 typedef signed char s8;
 typedef unsigned char u8;
 typedef short s16;
@@ -25,18 +25,18 @@ extern "C" {
     void* func_02073470(int a, int b, int c, void* d, void* e);
     void* _ZN6Memory13operator_new2Ej(unsigned int sz);
     void func_ov002_020e63a4(void* p);
-    void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int a, int b, void* v1, void* v2);
+    void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int a, int b, void* v1, void* v2);
     void func_02035644(void* p, int a);
     void func_ov002_020d6368(void* p);
     void LoadSilverStarAndNumber(void);
     int _ZN8SaveData16HasPlayerLostCapEv(void);
     void func_02013a00(void);
     void func_ov002_020c7dd0(void* p, int a);
-    void _ZN13RaycastGroundC1Ev(void* p);
-    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* p, void* v, void* a);
-    void _ZN4BgCh19StartDetectingWaterEv(void* p);
+    void _ZN9dBgCh_GndC1Ev(void* p);
+    void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* p, void* v, void* a);
+    void _ZN5dBgCh19StartDetectingWaterEv(void* p);
     int StartWithFarCamera(void);
-    void _ZN13RaycastGroundD1Ev(void* p);
+    void _ZN9dBgCh_GndD1Ev(void* p);
     void _ZN7Vector3D1Ev(void);
     void func_0203d384(void);
 
@@ -136,7 +136,7 @@ Ld0:
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
     func_ov002_020e63a4(c);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x380, c, 0x32000, 0x32000, c + 0x92, c + 0x8c);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x380, c, 0x32000, 0x32000, c + 0x92, c + 0x8c);
     func_02035644(c + 0x380, 0x28000);
     mTerminalVelocity = -0x4b000;
     mSpawnPosX = mPosX;
@@ -167,7 +167,7 @@ Ld0:
         if (_ZN8SaveData16HasPlayerLostCapEv() != 0) func_02013a00();
     }
     func_ov002_020c7dd0(c, n8);
-    _ZN13RaycastGroundC1Ev(rc);
+    _ZN9dBgCh_GndC1Ev(rc);
     tz = mPosZ;
     tx = mPosX;
     td = data_0209212c;
@@ -175,14 +175,14 @@ Ld0:
     pos.y = td;
     pos.z = tz;
     *(int*)(rc + 0x4c) = td * 2;
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rc, &pos, c);
-    _ZN4BgCh19StartDetectingWaterEv(rc);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rc, &pos, c);
+    _ZN5dBgCh19StartDetectingWaterEv(rc);
     if (data_0209f2f8 == 0x1d) {
         data_0209211c = 2;
         data_0209f200 = 0xe;
     }
     if (StartWithFarCamera() != 0) unk_715 = 1;
     mPeakY = mPosY;
-    _ZN13RaycastGroundD1Ev(rc);
+    _ZN9dBgCh_GndD1Ev(rc);
     return 1;
 }

@@ -1,16 +1,16 @@
 #include "types.h"
 typedef struct V3 { int x, y, z; } V3;
-typedef struct RaycastLine { char pad[0x14]; char surf[0x64]; } RaycastLine;
+typedef struct dBgCh_Lin { char pad[0x14]; char surf[0x64]; } dBgCh_Lin;
 
 extern s16 Vec3_HorzAngle(const V3 *a, const V3 *b);
-extern void _ZN11RaycastLineC1Ev(RaycastLine *rc);
-extern void func_0200897c(char *self, RaycastLine *rc);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLine *rc, V3 *a, V3 *b, void *actor);
-extern int _ZN11RaycastLine10DetectClsnEv(RaycastLine *rc);
+extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin *rc);
+extern void func_0200897c(char *self, dBgCh_Lin *rc);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_Lin *rc, V3 *a, V3 *b, void *actor);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_Lin *rc);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *surf, V3 *out);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern int AngleDiff(int a, int b);
-extern void _ZN11RaycastLineD1Ev(RaycastLine *rc);
+extern void _ZN9dBgCh_LinD1Ev(dBgCh_Lin *rc);
 extern void _Z14ApproachLinearRsss(s16 *v, s16 step, s16 rate);
 extern signed char data_0209f2f8;
 
@@ -39,22 +39,22 @@ void func_0200b990(char *self, char *arg1, int arg2)
         if (b1 == 0xff) {
             signed char zone = data_0209f2f8;
             if (zone != 0x16 && zone != 0xa && zone != 0x10) {
-                RaycastLine rc;
+                dBgCh_Lin rc;
                 V3 lineB;
-                _ZN11RaycastLineC1Ev(&rc);
+                _ZN9dBgCh_LinC1Ev(&rc);
                 func_0200897c(self, &rc);
                 lineB.y = *(int *)(self + 0x84);
                 lineB.x = v.x;
                 lineB.z = v.z;
-                _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc, (V3 *)(self + 0x80), &lineB, 0);
-                if (_ZN11RaycastLine10DetectClsnEv(&rc) != 0) {
+                _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc, (V3 *)(self + 0x80), &lineB, 0);
+                if (_ZN9dBgCh_Lin10DetectClsnEv(&rc) != 0) {
                     V3 normal;
                     s16 a2;
                     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rc.surf, &normal);
                     a2 = _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z);
                     if (AngleDiff(a2, angle) < 0x1800) angle = a2;
                 }
-                _ZN11RaycastLineD1Ev(&rc);
+                _ZN9dBgCh_LinD1Ev(&rc);
             }
             step = 0x2000;
         } else {

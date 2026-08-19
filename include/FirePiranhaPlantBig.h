@@ -31,7 +31,7 @@
 #include "Model.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct FirePiranhaPlantBig : dEnemyBase_c {
     ModelAnim                    mModelAnim;            /* 0x110 */

@@ -9,8 +9,8 @@ extern unsigned int _ZNK5dBgPi9GetClsnIDEv(void *r);
 extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, void *v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
 extern void _ZN5dBgPiD1Ev(void *r);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(char *p);
-extern char *_ZNK12WithMeshClsn13GetWallResultEv(char *p);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(char *p);
+extern char *_ZNK10dBgCh_Actr13GetWallResultEv(char *p);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, void *v);
 extern void *data_02099368[];
 
@@ -51,8 +51,8 @@ int func_ov002_020eea84(char *self, char *player)
         _ZN5dBgPiD1Ev(&res);
     }
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(self)) {
-        char *wr = _ZNK12WithMeshClsn13GetWallResultEv(self);
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(self)) {
+        char *wr = _ZNK10dBgCh_Actr13GetWallResultEv(self);
         if (_ZNK5dBgPi9GetClsnIDEv(wr) != 0xffffffff) {
             actor = _ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(wr));
             if (actor != 0 && (b = (int)(*(u16 *)(actor + 0xc) == 0x139)) != 0) {

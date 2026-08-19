@@ -8,7 +8,7 @@
 extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern int _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, void *v, int r, int t1, unsigned int u1, unsigned int u2);
-extern int _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
+extern int _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
 extern void func_ov071_02121c6c(char *c);
 }
 extern void *data_ov071_021230b8;
@@ -22,7 +22,7 @@ int MrI_Projectile::InitResources()
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x13c, ((char *)this), 0x19000, 0x19000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x13c, ((char *)this), 0x19000, 0x19000, 0, 0);
     mVertAccel = 0;
     mTerminalVelocity = 0;
     mHorzSpeed = 0xa000;

@@ -9,7 +9,7 @@
 #include "TextureSequence.h"
 #include "ShadowModel.h"
 #include "dCcAc_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct MotherPenguin {
     u8  pad_000[0x5c];
@@ -42,10 +42,10 @@ struct MotherPenguin {
        dCcAc_c's D1 at +0x174 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x174 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x1a8 -- a relocation the ROM build
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x1a8 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13MotherPenguinD0Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x1a8 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x1a8 */
     s32 unk_364;            /* 0x364 */
     s32 unk_368;            /* 0x368 */
     s32 unk_36c;            /* 0x36c */

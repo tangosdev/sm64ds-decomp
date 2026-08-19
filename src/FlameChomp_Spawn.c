@@ -5,7 +5,7 @@
 #include "decl_ModelAnim.h"
 #include "decl_dCcAcPos_c.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV10FlameChomp */
@@ -18,7 +18,7 @@ int *FlameChomp_Spawn(void)
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN11ShadowModelC1Ev((char *)p + 0x138);
         _ZN10dCcAcPos_cC1Ev((char *)p + 0x160);
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x1a0);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x1a0);
     }
     return p;
 }

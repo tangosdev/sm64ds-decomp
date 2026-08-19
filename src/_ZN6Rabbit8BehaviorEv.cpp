@@ -75,7 +75,7 @@ extern "C" int _ZN6Player11ShowMessageER7fBase_cjPK7Vector3hh(void* thiz, void* 
 extern "C" void func_02012694(int a, void* b);
 extern "C" int _ZN6Player12GetTalkStateEv(void* c);
 extern "C" void _ZN6Player9DropActorEv(void* c);
-extern "C" int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
+extern "C" int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void* c, void* w);
 extern "C" void _ZN5dCc_c5ClearEv(void* c);
 extern "C" void _ZN5dCc_c6UpdateEv(void* c);
 extern "C" void func_ov085_0212bcc8(void* c);
@@ -86,7 +86,7 @@ extern "C" void _ZN9Animation7AdvanceEv(void* c);
 extern "C" void func_ov085_0212bdbc(void* c);
 extern "C" void func_ov085_0212bedc(void* c);
 extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* cyl);
-extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* c, void* w, u32 j);
+extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* c, void* w, u32 j);
 extern "C" void func_ov085_0212a828(void* c);
 
 int Rabbit::Behavior()
@@ -174,7 +174,7 @@ int Rabbit::Behavior()
         }
     }
 
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(c, &mWithMeshClsn) != 0) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, &mWithMeshClsn) != 0) {
         _ZN5dCc_c5ClearEv(&mdCcAc_c);
         if (unk_107 != 0) {
             if (unk_104 == 5)
@@ -246,7 +246,7 @@ int Rabbit::Behavior()
             mAngleX = mPrevAngleX;
             mAngleY = mPrevAngleY;
             mAngleZ = mPrevAngleZ;
-            _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 0);
+            _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, &mWithMeshClsn, 0);
             if (*(void**)&unk_364 != (void*)&data_ov085_021306ac)
                 func_ov085_0212a828(c);
         }

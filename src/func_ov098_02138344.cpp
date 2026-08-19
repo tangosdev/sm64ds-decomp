@@ -41,9 +41,9 @@ struct Obj {
 
 extern "C" {
 void _ZN8dActor_c9UpdatePosEP5dCc_c(void* thiz, void* clsn);
-void WithMeshClsn_UpdateContinuous_Veneer(void* p);
+void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 void _Z14ApproachLinearRiii(int* dst, int target, int step);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, const struct Vector3* v);
 unsigned char DecIfAbove0_Byte(unsigned char* p);
 void Crate_SetState(char* c, int i);
@@ -61,9 +61,9 @@ void func_ov098_021397c8(char* c);
 
 extern "C" void func_ov098_02138344(char* c) {
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x564);
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x320);
     _Z14ApproachLinearRiii((int*)(c + 0x98), 0, 0x555);
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x320) != 0) {
         _ZN5Sound9PlayBank3EjRK7Vector3(0x51, (struct Vector3*)(c + 0x74));
         DecIfAbove0_Byte((unsigned char*)(c + 0x604));
         *(int*)(c + 0xa8) = *(unsigned char*)(c + 0x604) * 0xa000;
@@ -81,7 +81,7 @@ extern "C" void func_ov098_02138344(char* c) {
     _ZN5dCc_c5ClearEv(c + 0x564);
     _ZN5dCc_c6UpdateEv(c + 0x564);
     func_ov098_02139850(c);
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320) == 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x320) == 0) {
         func_ov098_021396a4(c);
     }
     if (_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0, 0) != 0) {

@@ -6,7 +6,7 @@
 #include "decl_dCcAcPos_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_TextureSequence.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV6Bowser */
@@ -18,7 +18,7 @@ int *Bowser_Spawn(void)
         p[0] = (int)_ZTV6Bowser;
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN15TextureSequenceC1Ev((char *)p + 0x138);
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x14c);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x14c);
         _ZN11ShadowModelC1Ev((char *)p + 0x308);
         _ZN10dCcAcPos_cC1Ev((char *)p + 0x360);
     }

@@ -25,7 +25,7 @@ extern "C" struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(char* self);
 extern "C" void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
 extern "C" char data_ov079_02128300[];
 extern "C" char data_ov079_021282f0[];
 
@@ -47,7 +47,7 @@ int BulletBill::InitResources()
     }
     mState = 0;
     unk_100 = 0;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((char*)&mWithMeshClsn, (struct dActor_c*)c, 0x32000, 0, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((char*)&mWithMeshClsn, (struct dActor_c*)c, 0x32000, 0, 0, 0);
     unk_3d8 = 0;
     return 1;
 }

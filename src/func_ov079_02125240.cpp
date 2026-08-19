@@ -8,7 +8,7 @@
 struct Anim { int _pad; void *f; };
 extern struct Anim *data_ov079_021275ec[];
 
-extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void *thiz);
+extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void *thiz);
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *file, int a, int b, unsigned int e);
 extern "C" void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *thiz, struct Vector3 *v, int f);
 extern "C" void func_020393c4(int *p, int v);
@@ -21,7 +21,7 @@ extern "C" void func_ov079_02125240(char *c){
   struct Vector3 a;
   struct Vector3 b;
   if(*(unsigned char*)(c+0x40c)) return;
-  if(!_ZNK12WithMeshClsn10IsOnGroundEv(c+0x110)) return;
+  if(!_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x110)) return;
   *(int*)(c+0xa8) = 0;
   func_01ffb098(c+0x418);
   func_01ffb0bc(c+0x418);

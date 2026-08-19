@@ -1,7 +1,7 @@
-extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void *p);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *p);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
-extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void *p);
+extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *p);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *p);
+extern void _ZN10dBgCh_Actr15ClearLimMovFlagEv(void *p);
 extern void _ZN8dActor_c8PoofDustEv(void *p);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *p);
 extern void _ZN9Animation7AdvanceEv(void *p);
@@ -16,15 +16,15 @@ int func_ov077_02125908(char *c)
 {
     int v;
 
-    WithMeshClsn_UpdateDiscreteNoLava_veneer(c + 0x1e4);
-    if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1e4) != 0)
+    dBgCh_Actr_UpdateDiscreteNoLava_veneer(c + 0x1e4);
+    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1e4) != 0)
     {
         *(int *)(c + 0xa8) = *(int *)(c + 0xa8) * -50 / 100;
     }
-    else if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1e4) != 0)
+    else if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1e4) != 0)
     {
         *(int *)(c + 0xa8) = 0;
-        _ZN12WithMeshClsn15ClearLimMovFlagEv(c + 0x1e4);
+        _ZN10dBgCh_Actr15ClearLimMovFlagEv(c + 0x1e4);
         *(int *)(c + 0x3d4) = 0;
         *(short *)(c + 0x94) = *(short *)(c + 0x8e);
         func_ov077_02125e94(c, 1);

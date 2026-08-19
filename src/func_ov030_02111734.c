@@ -2,12 +2,12 @@
 /* recovered: shared common types */
 #include "common.h"
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
-extern void _ZN11RaycastLineC1Ev(void* self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* actor);
-extern int _ZN11RaycastLine10DetectClsnEv(void* self);
+extern void _ZN9dBgCh_LinC1Ev(void* self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* actor);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
 extern void Vec3_Asr(void* d, void* s, int sh);
 extern int _ZN7Clipper13Func_02015560ER9Matrix4x3R7Vector35Fix12IiES3_(void* m, void* v, void* w, int fix, void* out);
-extern void _ZN11RaycastLineD1Ev(void* self);
+extern void _ZN9dBgCh_LinD1Ev(void* self);
 extern void func_ov030_02112094(void* c);
 
 extern char data_0209f43c;
@@ -23,7 +23,7 @@ void func_ov030_02111734(char* c)
     if (DecIfAbove0_Byte((unsigned char*)(c + 0x3cb)))
         return;
 
-    _ZN11RaycastLineC1Ev(rc);
+    _ZN9dBgCh_LinC1Ev(rc);
 
     a.x = *(int*)(c + 0x5c);
     a.y = *(int*)(c + 0x60);
@@ -33,10 +33,10 @@ void func_ov030_02111734(char* c)
     b.y = *(int*)(c + 0x60);
     b.z = *(int*)(c + 0x64);
     b.y = b.y - 0x96000;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rc, &a, &b, c);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rc, &a, &b, c);
 
     if (*(int*)(c + 0x384) - *(int*)(c + 0x60) <= 0x96000) {
-        if (!_ZN11RaycastLine10DetectClsnEv(rc))
+        if (!_ZN9dBgCh_Lin10DetectClsnEv(rc))
             goto done;
     }
 
@@ -58,5 +58,5 @@ void func_ov030_02111734(char* c)
     *(unsigned char*)(c + 0x3cb) = 0x96;
 
 done:
-    _ZN11RaycastLineD1Ev(rc);
+    _ZN9dBgCh_LinD1Ev(rc);
 }

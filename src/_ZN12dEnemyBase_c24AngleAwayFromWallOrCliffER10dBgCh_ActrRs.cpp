@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs
+// @symbol _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs
 /* recovered: named members + shared header, real C++ method
  *
  * On a wall, reflect the heading off it; on a cliff edge (unk_106), turn
@@ -12,17 +12,17 @@
  */
 #include "dEnemyBase_c.h"
 extern "C" {
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *clsn);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *clsn);
 /* ReflectAngle takes Fix12<int> by value -- the mwccarm 6az wall, runbook
    section 7 -- so it stays extern "C" with scalars in those slots. */
 extern short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *actor, int a, int b, short c);
 }
 
-int dEnemyBase_c::AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngle_)
+int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_)
 {
     void *clsn = &clsn_;
     short *outAngle = &outAngle_;
-    if (_ZNK12WithMeshClsn8IsOnWallEv(clsn)) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
         *outAngle = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(this,
             mWallNormalX, mWallNormalZ, *outAngle);
     } else if (unk_106) {

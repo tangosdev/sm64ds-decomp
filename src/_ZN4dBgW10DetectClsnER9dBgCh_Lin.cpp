@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN4dBgW10DetectClsnER11RaycastLine
+// @symbol _ZN4dBgW10DetectClsnER9dBgCh_Lin
 #include "dBgW.h"
 
-int dBgW::DetectClsn(RaycastLine &ray)
+int dBgW::DetectClsn(dBgCh_Lin &ray)
 {
     return 0;
 }

@@ -32,12 +32,12 @@ struct SharedFilePtr;
    vectors read <<2 (dBgW_KcMbg::GetTriangleOrigin / GetNormal). */
 struct KCL_Tri {
     /* The prism's extent along its third edge normal, read as one 32-bit word by
-       dBgW_Kc::DetectClsn(RaycastGround&) at 0x01ffd3f8 (`ldr r0,[r7]`). */
+       dBgW_Kc::DetectClsn(dBgCh_Gnd&) at 0x01ffd3f8 (`ldr r0,[r7]`). */
     s32 length;            /* 0x00 */
     u16 posIdx;            /* 0x04 */
     u16 normalIdx;         /* 0x06 */
     /* The three edge normals and the surface attribute, read by the ITCM octree
-       walk dBgW_Kc::DetectClsn(RaycastLine&) at 0x01ffb0fc. `attribute` goes
+       walk dBgW_Kc::DetectClsn(dBgCh_Lin&) at 0x01ffb0fc. `attribute` goes
        to the CLPS lookup as a RAW INDEX with no masking, so in this game the KCL
        attribute word is the CLPS index. */
     u16 edgeNormal1Idx;    /* 0x08 */
@@ -75,7 +75,7 @@ extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 struct dBgW_Kc : dBgW {
     KCL_File *kclFile;        /* 0x20 */
     u32 clps;                 /* 0x24 - set via func_0203821c, released via func_02038224 */
-    /* 0x28..0x30 are ONE Vector3, not three scalars: DetectClsn(SphereClsn&)
+    /* 0x28..0x30 are ONE Vector3, not three scalars: DetectClsn(dBgCh_SphCrr&)
        hands `this + 0x28` straight to DotVec3 as a vector (0x01ffc278,
        `add r1, sl, #0x28`) and compares the result against a contact angle. It
        is the collider's preferred-contact axis. Left as three fields only
@@ -92,7 +92,7 @@ struct dBgW_Kc : dBgW {
     s32 unk_3c;               /* 0x3c - init 0 */
     s32 unk_40;               /* 0x40 - init 0 */
     Fix12i unk_44;            /* 0x44 - init -0x1000 */
-    /* All four are consumed by DetectClsn(SphereClsn&) as one edge-contact
+    /* All four are consumed by DetectClsn(dBgCh_SphCrr&) as one edge-contact
        policy -- see notes/collision-query-classes.md.
          unk_44  the threshold DotVec3(faceNormal, unk_38) is tested against
          unk_48  a SHIFT COUNT, not a value: an edge hit is rejected when the
@@ -112,9 +112,9 @@ struct dBgW_Kc : dBgW {
     virtual void GetSurfaceInfo(s16 triID, SurfaceInfo &res); /* slot 3 - ITCM */
     virtual void GetNormal(s16 triID, Vector3 &res);      /* slot 4 - ITCM */
     virtual void GetTriangleOrigin(s16 triID, Vector3 &res); /* slot 5 - ITCM */
-    virtual int DetectClsn(RaycastGround &ray);           /* slot 6 - ITCM */
-    virtual int DetectClsn(RaycastLine &ray);             /* slot 7 - ITCM */
-    virtual int DetectClsn(SphereClsn &sphere);           /* slot 8 - ITCM */
+    virtual int DetectClsn(dBgCh_Gnd &ray);           /* slot 6 - ITCM */
+    virtual int DetectClsn(dBgCh_Lin &ray);             /* slot 7 - ITCM */
+    virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 - ITCM */
 
     /* --- non-virtual --- */
     void SetFile(KCL_File *file, CLPS_Block &clps);

@@ -12,7 +12,7 @@ extern void Matrix4x3_FromRotationY(void* m, int angle);
 extern void MulVec3Mat4x3(void* a, void* b, void* c);
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN6Player12Unk_020c6a10Ej(void* self, u32 a);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 extern void func_ov073_0211f2c0(void* self, int a);
 extern void ChiefChilly_ChangeState(void* self, void* p);
 
@@ -78,7 +78,7 @@ int func_ov073_021200e0(u8* thiz)
         }
     }
     /* 0x1a8 */
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(thiz + 0x150) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(thiz + 0x150) != 0) {
         if (*(int*)(thiz + 0x4b4) == 0) {
             *(int*)(thiz + 0x98) = 0;
             *(int*)(thiz + 0xa4) = 0;

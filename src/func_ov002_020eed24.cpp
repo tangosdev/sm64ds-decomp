@@ -1,6 +1,6 @@
 //cpp
-extern "C" int _ZNK12WithMeshClsn8IsOnWallEv(void*);
-extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
+extern "C" int _ZNK10dBgCh_Actr8IsOnWallEv(void*);
+extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
 extern "C" int func_02035638(void*);
 extern "C" void* func_0203567c(void*);
 extern "C" int _ZNK5dBgPi9GetClsnIDEv(void*);
@@ -21,8 +21,8 @@ extern "C" dActor_c* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" int func_ov002_020eed24(void* c, void* arg){
     void* r;
     dActor_c* a;
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c)
-        || _ZNK12WithMeshClsn10IsOnGroundEv(c)
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c)
+        || _ZNK10dBgCh_Actr10IsOnGroundEv(c)
         || func_02035638(c)) {
         r = func_0203567c(c);
         if (_ZNK5dBgPi9GetClsnIDEv(r) != -1) {

@@ -8,7 +8,7 @@ extern int Vec3_Dist(void* a, void* b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
 extern int func_ov077_02126300(char* c);
 extern void func_ov077_02126d5c(char* c, void* p);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* p);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern void _Z14ApproachLinearRsss(short* a, short b, short cc);
 extern void* _ZN8dActor_c13ClosestPlayerEv(char* c);
@@ -29,7 +29,7 @@ int func_ov077_02126ad0(char* c)
         return 1;
     }
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x184) != 0) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x184) != 0) {
         *(int*)(c + 0x5c) = *(int*)(c + 0x410);
         *(int*)(c + 0x60) = *(int*)(c + 0x414);
         *(int*)(c + 0x64) = *(int*)(c + 0x418);

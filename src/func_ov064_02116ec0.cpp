@@ -25,12 +25,12 @@ struct dCcAc_c { void Init(dActor_c* a, Fix12 r, Fix12 h, unsigned int d, unsign
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c* a, Fix12 r, Fix12 h, unsigned int d, unsigned int e);
 
-struct WithMeshClsn { void Init(dActor_c* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e); };
+struct dBgCh_Actr { void Init(dActor_c* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e); };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c* a, Fix12 b, Fix12 c, Vector3_16* d, Fix12 e);
 
 
 struct Desc {
@@ -58,7 +58,7 @@ struct Obj {
     short f100;                    /* 0x100 */
     char g102[0x110 - 0x102];
     char f110[0x174 - 0x110];      /* ModelBase/ModelAnim at 0x110 */
-    char f174[0x330 - 0x174];      /* WithMeshClsn at 0x174 */
+    char f174[0x330 - 0x174];      /* dBgCh_Actr at 0x174 */
     Desc* f330;                    /* 0x330 */
     int f334, f338;                /* 334,338 */
     char f33c[0x358 - 0x33c];      /* dCcAc_c at 0x33c */
@@ -102,7 +102,7 @@ extern "C" int func_ov064_02116ec0(Obj* obj)
     obj->f3e8 = obj->f330->f1c;
     obj->f3ec = obj->f330->f20;
     obj->f100 = 0;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((WithMeshClsn*)&obj->f174, (dActor_c*)obj, obj->f330->f24, obj->f330->f24, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((dBgCh_Actr*)&obj->f174, (dActor_c*)obj, obj->f330->f24, obj->f330->f24, 0, 0);
     obj->f3f0 = obj->f330->f28;
     obj->f338 = 0;
     obj->f334 = obj->f338;

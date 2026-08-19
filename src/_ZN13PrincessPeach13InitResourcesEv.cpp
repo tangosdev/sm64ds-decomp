@@ -11,11 +11,11 @@ struct BMD_File; struct dActor_c; struct Vector3_16;
 struct ShadowModel { int InitCylinder(); };
 /* Declared by final name, not as members: both take Fix12<int> where these calls pass
    int literals, and Fix12<int> is an aggregate with no converting constructor from int.
-   WithMeshClsn::Init's last parameter is a Vector3_16* as well -- the S5_ in
+   dBgCh_Actr::Init's last parameter is a Vector3_16* as well -- the S5_ in
    ...P10Vector3_16S5_ back-references the pointer type, it is not an int. */
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
 extern "C" void func_ov085_02129fdc(char *c);
 
@@ -30,7 +30,7 @@ int PrincessPeach::InitResources()
         return 0;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         s + 0x160, ((dActor_c *)this), 0x90000, 0xc0000, 0x4800004, 0);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         s + 0x194, ((dActor_c *)this), 0x40000, 0x40000, (Vector3_16*)0, (Vector3_16*)0);
     *(int*)(s + 0x9c) = -0x2000;
     *(int*)(s + 0xa0) = -0x3c000;

@@ -2,7 +2,7 @@
 // func_ov098_021389f8 at 0x021389f8
 extern "C" {
 void _ZN8dActor_c9UpdatePosEP5dCc_c(void *, void *);
-void WithMeshClsn_UpdateContinuous_Veneer(void *);
+void dBgCh_Actr_UpdateContinuous_Veneer(void *);
 void func_ov098_02139228(void *);
 void func_ov098_02138e6c(void *);
 void func_ov098_021390ec(void *);
@@ -11,7 +11,7 @@ int func_ov098_02138bfc(void *);
 void _ZN5dCc_c5ClearEv(void *);
 void _ZN5dCc_c6UpdateEv(void *);
 void func_ov098_02139850(void *);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *);
 void func_ov098_021396a4(void *);
 int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *, int, int);
 void func_ov098_021397c8(void *);
@@ -39,7 +39,7 @@ void func_ov098_021389f8(char *c) {
         }
     }
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x564);
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x320);
     func_ov098_02139228(c);
     func_ov098_02138e6c(c);
     func_ov098_021390ec(c);
@@ -51,7 +51,7 @@ void func_ov098_021389f8(char *c) {
     _ZN5dCc_c5ClearEv(c + 0x5a4);
     _ZN5dCc_c6UpdateEv(c + 0x5a4);
     func_ov098_02139850(c);
-    if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320)) {
+    if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x320)) {
         func_ov098_021396a4(c);
     }
     if (!_ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(c, 0x600000, 0)) {

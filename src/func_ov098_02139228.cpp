@@ -17,8 +17,8 @@ struct C {
 };
 
 extern "C" {
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 extern int func_02037e38(u32 *p);
 extern void Crate_SetState(void *c, int i);
 extern int _Z14ApproachLinearRiii(int *a, int b, int c);
@@ -53,10 +53,10 @@ extern "C" int func_ov098_02139228(char *c)
     Vector3 a2;
     Vector3 sum;
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320) == 0)
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x320) == 0)
         return 0;
 
-    fr = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x320);
+    fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x320);
     switch (func_02037e38((u32 *)((char *)fr + 4))) {
     case 6:
         *(s32 *)(c + 0x5f0) = 0x1e000;

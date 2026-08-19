@@ -16,11 +16,11 @@
 
 #include "dEnemyBase_c.h"
 #include "dCcAc_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct JetStream : dEnemyBase_c {
     dCcAc_c mdCcAc_c;/* 0x110 */
-    WithMeshClsn mWithMeshClsn;       /* 0x144 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x144 */
     u8  pad_300[0x14];
     s32 unk_314;                      /* 0x314 */
     s32 unk_318;                      /* 0x318 */

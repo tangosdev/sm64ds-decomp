@@ -11,9 +11,9 @@ extern "C" int func_02035354(void*, ClsnObj*);
 extern "C" void func_02037fec(char*, int, int, int, ClsnActor*);
 extern "C" int Vec3_HorzDist(Vec3*, Vec3*);
 extern "C" ClsnActor* data_020a0c80[];
-class RaycastGround { public: char pad[0x38]; Vec3 f38; int DetectClsn(); };
+class dBgCh_Gnd { public: char pad[0x38]; Vec3 f38; int DetectClsn(); };
 
-int RaycastGround::DetectClsn()
+int dBgCh_Gnd::DetectClsn()
 {
     int ret = 0;
     func_02037464(this);

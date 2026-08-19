@@ -6,10 +6,10 @@ extern int Vec3_HorzDist(const Vector3 *a, const Vector3 *b);
 extern void func_0200897c(void *self, void *arg);
 extern int func_020092c4(int arg0, Vector3 *out, Vector3 *target);
 
-extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, const Vector3 *pos, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(void *self);
-extern void _ZN13RaycastGroundD1Ev(void *self);
+extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, const Vector3 *pos, void *actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_GndD1Ev(void *self);
 
 extern Vector3 data_02086e84;
 
@@ -64,10 +64,10 @@ void func_0200b590(char *c, short *a1, int arg2)
     pos.x = selfX + (int)(((long long)dx * 0xb33 + 0x800) >> 12);
     pos.z = selfZ + (int)(((long long)dz * 0xb33 + 0x800) >> 12);
 
-    _ZN13RaycastGroundC1Ev(rg);
+    _ZN9dBgCh_GndC1Ev(rg);
     func_0200897c(c, rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(rg)) {
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, 0);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(rg)) {
         hitY = *(int *)(rg + 0x44);
         rotated.y = hitY;
         if (hitY < arg2)
@@ -87,5 +87,5 @@ void func_0200b590(char *c, short *a1, int arg2)
     }
 
     *(short *)(c + 0x17c) = Vec3_HorzAngle((Vector3 *)(c + 0x80), (Vector3 *)(c + 0x8c));
-    _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_GndD1Ev(rg);
 }

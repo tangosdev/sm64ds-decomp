@@ -32,9 +32,9 @@ struct dBgW_KcMbgSclY : dBgW_KcMbg {
     virtual ~dBgW_KcMbgSclY();                     /* slots 0/1 */
     virtual void Virtual08();                             /* slot 2 */
     virtual void GetNormal(s16 triID, Vector3 &res);      /* slot 4 */
-    virtual int DetectClsn(RaycastGround &ray);           /* slot 6 - free def */
-    virtual int DetectClsn(RaycastLine &ray);             /* slot 7 - free def */
-    virtual int DetectClsn(SphereClsn &sphere);           /* slot 8 - free def */
+    virtual int DetectClsn(dBgCh_Gnd &ray);           /* slot 6 - free def */
+    virtual int DetectClsn(dBgCh_Lin &ray);             /* slot 7 - free def */
+    virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 - free def */
 
     /* --- non-virtual --- */
     void SetFile(KCL_File *file, const Matrix4x3 &mat, Fix12<int> scale,

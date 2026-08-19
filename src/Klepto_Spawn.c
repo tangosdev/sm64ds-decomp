@@ -5,7 +5,7 @@
 #include "decl_Enemy.h"
 #include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV6Klepto */
@@ -17,7 +17,7 @@ int *Klepto_Spawn(void)
         p[0] = (int)_ZTV6Klepto;
         _ZN7dCcAc_cC1Ev((char *)p + 0x110);
         _ZN7dCcAc_cC1Ev((char *)p + 0x144);
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x178);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x178);
         _ZN14BlendModelAnimC1Ev((char *)p + 0x334);
         _ZN11ShadowModelC1Ev((char *)p + 0x3a4);
     }

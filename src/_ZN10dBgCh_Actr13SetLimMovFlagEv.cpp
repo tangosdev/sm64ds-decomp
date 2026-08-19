@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN12WithMeshClsn13SetLimMovFlagEv
+// @symbol _ZN10dBgCh_Actr13SetLimMovFlagEv
 /* recovered: named members + shared header, real C++ method */
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 
-void WithMeshClsn::SetLimMovFlag()
+void dBgCh_Actr::SetLimMovFlag()
 {
     *(unsigned int *)((char *)&mFlags) |= 0x80;
 }

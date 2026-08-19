@@ -10,12 +10,12 @@
    The body is a decompilation verified against the ROM, not an
    inferred stub. */
 struct dActor_c;
-struct RaycastGround {
+struct dBgCh_Gnd {
   char pad[0x44];
   int result;
   char pad2[0xc];
-  RaycastGround();
-  ~RaycastGround();
+  dBgCh_Gnd();
+  ~dBgCh_Gnd();
   void SetObjAndPos(const Vector3& pos, dActor_c* a);
   int DetectClsn();
 };
@@ -59,7 +59,7 @@ extern "C" int _ZN15daObjPathLift_c13InitResourcesEv(char* c) {
   pos.z = self->mPosZ;
   pos.y -= 0x14000;
   {
-    RaycastGround rg;
+    dBgCh_Gnd rg;
     int b;
     rg.SetObjAndPos(pos, 0);
     self->unk_4ac = pos.y;

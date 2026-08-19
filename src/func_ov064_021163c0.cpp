@@ -1,7 +1,7 @@
 //cpp
 typedef int Fix12;
 struct BCA_File;
-struct WithMeshClsn { int IsOnGround() const; };
+struct dBgCh_Actr { int IsOnGround() const; };
 struct ModelAnim { void SetAnim(BCA_File *f, int a, Fix12 b, unsigned int c); };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
@@ -15,7 +15,7 @@ void ApproachLinear(short &v, short t, short step);
 extern "C" void func_ov064_021163c0(char *c)
 {
     if (*(unsigned short *)(c + 0x100) == 0) {
-        if (((WithMeshClsn *)(c + 0x174))->IsOnGround()) {
+        if (((dBgCh_Actr *)(c + 0x174))->IsOnGround()) {
             *(short *)(((int)c + 0x94)) = (short)((*(short *)(((int)c + 0x94))) + 0x8000);
         }
     }

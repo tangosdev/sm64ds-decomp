@@ -4,7 +4,7 @@
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_dBgW_KcMbg.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: named members + shared header */
 #include "ToxBox.h"
@@ -16,7 +16,7 @@ extern void* data_020a0eac;
 void* _ZN6ToxBoxD0Ev(struct ToxBox *self) {
   *(int**)(((char*)self))=_ZTV6ToxBox;
   _ZN10dCcAcPos_cD1Ev((char*)&self->mdCcAcPos_c);
-  _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
+  _ZN10dBgCh_ActrD1Ev((char*)&self->mWithMeshClsn);
   *(int**)(((char*)self))=_ZTV10dBgActor_c;
   _ZN10dBgW_KcMbgD1Ev((char*)&self->mMeshCollider);
   _ZN5ModelD1Ev((char*)&self->mModel);

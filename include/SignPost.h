@@ -20,7 +20,7 @@
  *
  * THE THREE MEMBERS ARE PLACED BY THE FACTORY, not by field-span guesswork:
  * SignPost_Spawn runs dCcAc_c's constructor at this+0x320,
- * ShadowModel's at this+0x358 and WithMeshClsn's at this+0x3c8, and the
+ * ShadowModel's at this+0x358 and dBgCh_Actr's at this+0x3c8, and the
  * destructor tears the same three down in reverse. Two of them are typed here
  * and each closes on its own class's size assert -- dCcAc_c 0x34 ends
  * at 0x354, ShadowModel 0x28 ends at 0x380 -- which is a second check on both

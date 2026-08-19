@@ -1,5 +1,5 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class RaycastLine::Line: 1 matched functions, 3 evidenced fields.
+ * class dBgCh_Lin::Line: 1 matched functions, 3 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef DM3DGLIN_H

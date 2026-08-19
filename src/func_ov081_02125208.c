@@ -5,7 +5,7 @@
 #include "common.h"
 struct PathPtr { int a, b; };
 
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 extern void func_02012694(int a, void *b);
 extern int func_ov081_02125488(void *c, void *p);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
@@ -44,7 +44,7 @@ int func_ov081_02125208(char *c) {
         goto exit;
     }
 
-    if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x150)) {
+    if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x150)) {
         goto exit;
     }
 

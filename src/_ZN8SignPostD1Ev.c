@@ -5,7 +5,7 @@
 #include "decl_dCcAc_c.h"
 #include "decl_dBgW_KcMbg.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 extern int _ZTV10dBgActor_c[];
 /* recovered: named members + shared header, vtable identified */
@@ -13,7 +13,7 @@ extern int _ZTV10dBgActor_c[];
 int *_ZN8SignPostD1Ev(int *t)
 {
     t[0] = (int)_ZTV15daObjTatefuda_c;
-    _ZN12WithMeshClsnD1Ev((char *)t + 0x3c8);
+    _ZN10dBgCh_ActrD1Ev((char *)t + 0x3c8);
     _ZN11ShadowModelD1Ev((char *)t + 0x358);
     _ZN7dCcAc_cD1Ev((char *)t + 0x320);
     t[0] = (int)_ZTV10dBgActor_c;

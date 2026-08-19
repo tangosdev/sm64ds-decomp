@@ -6,18 +6,18 @@
 #include "common.h"
 
 struct SurfaceInfo { void CopyNormalTo(Vector3& v) const; };
-struct WithMeshClsn {
+struct dBgCh_Actr {
     bool IsOnGround() const;
     SurfaceInfo* GetFloorResult() const;
     bool IsOnWall() const;
 };
 namespace cstd { int fdiv(int a, int b); }
 
-extern "C" void WithMeshClsn_UpdateContinuous_Veneer(void* c);
+extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void* c);
 
-extern "C" void func_ov070_02121d50(int* self, WithMeshClsn* clsn) {
+extern "C" void func_ov070_02121d50(int* self, dBgCh_Actr* clsn) {
     Vector3 n;
-    WithMeshClsn_UpdateContinuous_Veneer(clsn);
+    dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
         ((SurfaceInfo*)((char*)clsn->GetFloorResult() + 4))->CopyNormalTo(n);
         if (n.y != 0) {

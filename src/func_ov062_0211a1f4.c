@@ -29,7 +29,7 @@ extern int Vec3_Dist(const void *a, const void *b);
 extern void _Z14ApproachLinearRiii(int *r, int a, int b);
 extern void _Z14ApproachLinearRsss(s16 *r, s16 a, s16 b);
 extern int _ZN9Animation8FinishedEv(void *a);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 a, int x, int y, int z);
 
 void func_ov062_0211a1f4(char *a)
@@ -122,7 +122,7 @@ void func_ov062_0211a1f4(char *a)
             func_ov062_02119954(a);
             return;
         }
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(a + 0x144) != 0)
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(a + 0x144) != 0)
             return;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(a + 0x300, data_ov062_0211e02c[1], 0x40000000, 0x1000, 0);
         *(int *)(a + 0xa8) = 0xa000;
@@ -142,7 +142,7 @@ void func_ov062_0211a1f4(char *a)
             return;
         }
         _Z14ApproachLinearRsss((s16 *)(a + 0x94), *(s16 *)(a + 0x3a8), 0x800);
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(a + 0x144) == 0)
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(a + 0x144) == 0)
             return;
         *(u8 *)(a + 0x390) = 2;
         *(int *)(a + 0x9c) = -0x2000;

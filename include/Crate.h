@@ -7,7 +7,7 @@
  * SIZE 0x608, the literal Crate_Spawn (src/Crate_Spawn.cpp) passes to
  * fBase_c::operator new. dBgActor_c ends 0x320; everything from there down is
  * this class's own, confirmed by _ZN5CrateD1Ev.cpp destroying
- * dCcAcPos_c x2, ShadowModel and WithMeshClsn in reverse before
+ * dCcAcPos_c x2, ShadowModel and dBgCh_Actr in reverse before
  * storing _ZTV10dBgActor_c (inlined) and chaining to dActor_c.
  *
  * 0x0d0..0x0d4 is dBgActor_c's own generic pad (include/dBgActor_c.h), not a
@@ -36,12 +36,12 @@ typedef struct Player Player;
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "ShadowModel.h"
 #include "dCcAcPos_c.h"
 
 struct Crate : dBgActor_c {
-    WithMeshClsn mWithMeshClsn;                       /* 0x320 */
+    dBgCh_Actr mWithMeshClsn;                       /* 0x320 */
     u8  pad_4dc[0xc];
     s32 unk_4e8;            /* 0x4e8 */
     s32 unk_4ec;            /* 0x4ec */

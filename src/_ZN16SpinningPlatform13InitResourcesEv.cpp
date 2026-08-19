@@ -19,14 +19,14 @@ struct dBgActor_c { void UpdateClsnPosAndRot(); };
 extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *f, const Matrix4x3 &m, int fix, short sh, CLPS_Block &b);
 extern "C" void func_020393d4(void *p, void *v);
-struct RaycastGround {
+struct dBgCh_Gnd {
     int pad[0x11];
     int result;       // offset 0x44
     int pad2[3];      // pad to 0x54 total
-    RaycastGround();
+    dBgCh_Gnd();
     void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
-    ~RaycastGround();
+    ~dBgCh_Gnd();
 };
 extern "C" CLPS_Block data_ov035_02112238;
 
@@ -50,7 +50,7 @@ int SpinningPlatform::InitResources()
     v.y = mPosY;
     v.z = mPosZ;
     v.y = v.y - 0xa000;
-    RaycastGround rg;
+    dBgCh_Gnd rg;
     rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     unk_324 = v.y;
     if (rg.DetectClsn() != 0)

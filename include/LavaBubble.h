@@ -13,7 +13,7 @@
  * reading rather than a guess:
  *
  *     0x110 dCcAc_c         0x34    -> 0x144
- *     0x144 WithMeshClsn               0x1bc   -> 0x300
+ *     0x144 dBgCh_Actr               0x1bc   -> 0x300
  *
  * Typing them absorbed markers that were their insides:
  *   - unk_128 = dCcAc_c.flags
@@ -27,11 +27,11 @@
 
 #include "dEnemyBase_c.h"
 #include "dCcAc_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct LavaBubble : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     s32                          unk_300;               /* 0x300 */
     s32                          unk_304;               /* 0x304 */
     s32                          unk_308;               /* 0x308 */

@@ -10,7 +10,7 @@ extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *clsn);
 extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int f, int t1, int t2, const void *v, void *cb);
 extern unsigned _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unsigned a, unsigned b, int f, int t1, int t2, const void *v);
 extern void *_ZN8Particle6System12FromUniqueIDEj(unsigned id);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *p);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
 
 int func_ov096_02136434(void *c)
 {
@@ -36,7 +36,7 @@ int func_ov096_02136434(void *c)
         if (p1) *(int*)((char*)p1+0x50) = 0x7fff;
     }
     func_02038414(s+0x180);
-    if (_ZNK12WithMeshClsn13JustHitGroundEv(s+0x180) != 0)
+    if (_ZNK10dBgCh_Actr13JustHitGroundEv(s+0x180) != 0)
         func_ov096_0213585c(c);
     return 1;
 }

@@ -31,12 +31,12 @@ extern "C" {
     void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
     void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
     void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
-    void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         void *self, void *actor, s32 fa, s32 fb, void *v0, void *v1);
-    void _ZN13RaycastGroundC1Ev(void *self);
-    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *actor);
-    int _ZN13RaycastGround10DetectClsnEv(void *self);
-    void _ZN13RaycastGroundD1Ev(void *self);
+    void _ZN9dBgCh_GndC1Ev(void *self);
+    void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *actor);
+    int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
+    void _ZN9dBgCh_GndD1Ev(void *self);
     void func_ov074_02121300(void *c);
     void func_ov074_0212195c(void *t);
 }
@@ -142,7 +142,7 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     *(s32 *)(self + 0x3f0) = 0;
     *(s32 *)(self + 0x3d8) = (s32)(data_ov074_02122e04[*(u8 *)(self + 0x604)] << 0xc);
 
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(self + 0x40c, self, 0x14000, 0x14000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(self + 0x40c, self, 0x14000, 0x14000, 0, 0);
 
     *(s32 *)(self + 0x5f0) = -1;
     *(s16 *)(self + 0x5f8) = (s16)(*(s32 *)(self + 0x5f0) * data_ov074_02122dfc[*(u8 *)(self + 0x604)]);
@@ -170,9 +170,9 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
         v[2] = a1;
     }
 
-    _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, v, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
+    _ZN9dBgCh_GndC1Ev(&rg);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, v, 0);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
         *(s32 *)(self + 0x60) = *(s32 *)((char *)&rg + 0x44);
     }
 
@@ -183,7 +183,7 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     *(u8 *)(self + 0x60a) = 1;
     *(s32 *)(self + 0x5e4) = 0x1000;
 
-    _ZN13RaycastGroundD1Ev(&rg);
+    _ZN9dBgCh_GndD1Ev(&rg);
 
     return 1;
 }

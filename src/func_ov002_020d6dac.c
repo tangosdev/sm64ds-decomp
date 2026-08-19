@@ -8,14 +8,14 @@ typedef struct P2 { int a, b; } P2;
 typedef struct dBgPi { void *vtb; int s0, s1, s2, s3, s4; u16 f, g; int h, i, j; } dBgPi;
 typedef struct Vec3_16 { s16 x, y, z; } Vec3_16;
 
-extern void _ZN11RaycastLineC1Ev(void *self);
-extern void _ZN11RaycastLineD1Ev(void *self);
+extern void _ZN9dBgCh_LinC1Ev(void *self);
+extern void _ZN9dBgCh_LinD1Ev(void *self);
 extern int _ZNK6Player14GetBodyModelIDEjb(void *thiz, unsigned int a, int b);
 extern void MulVec3Mat4x3(void *v, void *m, void *dst);
 extern void Vec3_MulScalarInPlace(int *v, int s);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
-extern int _ZN11RaycastLine10DetectClsnEv(void *self);
-extern void _ZN11RaycastLine10GetClsnPosEv(void *res, void *self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(void *res, void *self);
 extern unsigned int _ZNK5dBgPi9GetClsnIDEv(void *r);
 extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void _ZN5dBgPiD1Ev(void *r);
@@ -43,7 +43,7 @@ int func_ov002_020d6dac(char *self)
     int t;
     int idx;
 
-    _ZN11RaycastLineC1Ev(rl);
+    _ZN9dBgCh_LinC1Ev(rl);
 
     {
         u8 b = *(u8 *)(self + 0x714);
@@ -67,10 +67,10 @@ int func_ov002_020d6dac(char *self)
         Vec3_MulScalarInPlace((int *)&p2, 0x8000);
     }
 
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &p1, &p2, self);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &p1, &p2, self);
 
-    if (_ZN11RaycastLine10DetectClsnEv(rl) == 0) {
-        _ZN11RaycastLineD1Ev(rl);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(rl) == 0) {
+        _ZN9dBgCh_LinD1Ev(rl);
         return 0;
     }
 
@@ -89,11 +89,11 @@ int func_ov002_020d6dac(char *self)
     actor = _ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(&res));
     if (actor != 0 && (t = (int)(*(u16 *)(actor + 0xc) == 0xc2)) != 0) {
         _ZN5dBgPiD1Ev(&res);
-        _ZN11RaycastLineD1Ev(rl);
+        _ZN9dBgCh_LinD1Ev(rl);
         return 0;
     }
 
-    _ZN11RaycastLine10GetClsnPosEv(&clsnPos, rl);
+    _ZN9dBgCh_Lin10GetClsnPosEv(&clsnPos, rl);
     *(int *)(self + 0x654) = func_02053274((int *)&p1, (int *)&clsnPos);
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rl + 0x14, &normal);
     ang = _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z);
@@ -107,6 +107,6 @@ int func_ov002_020d6dac(char *self)
         0, 0x13f, clsnPos.x, clsnPos.y, clsnPos.z, &dir, 0);
 
     _ZN5dBgPiD1Ev(&res);
-    _ZN11RaycastLineD1Ev(rl);
+    _ZN9dBgCh_LinD1Ev(rl);
     return 1;
 }

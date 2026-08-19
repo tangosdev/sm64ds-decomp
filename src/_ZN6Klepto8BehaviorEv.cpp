@@ -7,11 +7,11 @@
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct dCc_c;
-struct WithMeshClsn;
+struct dBgCh_Actr;
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
 void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, dCc_c *cc);
-void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm, unsigned int j);
 void func_ov062_0211c6a8(void *self);
 void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_02012790(int a, int b);
@@ -46,7 +46,7 @@ int Klepto::Behavior()
         unk_0ac = t;
     }
     _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(((char *)this), (dCc_c *)((char *)&mdCcAc_c1));
-    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0);
 
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;

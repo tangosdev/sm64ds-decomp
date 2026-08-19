@@ -12,11 +12,11 @@ extern "C" {
 extern int _ZN6Player7IsInAirEv(void *self);
 extern int _ZN6Player7IsStateERNS_5StateE(void *self, void *st);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void *self, void *st);
-extern void _ZN11RaycastLineC1Ev(void *self);
-extern void _ZN11RaycastLineD1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
-extern int _ZN11RaycastLine10DetectClsnEv(void *self);
-extern void _ZN11RaycastLine10GetClsnPosEv(void *ret, void *self);
+extern void _ZN9dBgCh_LinC1Ev(void *self);
+extern void _ZN9dBgCh_LinD1Ev(void *self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(void *ret, void *self);
 extern void func_02035414(void *bgch);
 extern void func_02035428(void *bgch);
 extern int func_02037e38(unsigned int *p);
@@ -35,12 +35,12 @@ extern "C" int func_ov002_020cef84(char *self)
     ClsnResultTmp tmp;
     int lim;
 
-    _ZN11RaycastLineC1Ev(rl);
+    _ZN9dBgCh_LinC1Ev(rl);
     if (!_ZN6Player7IsInAirEv(self) || *(unsigned char *)(self + 0x706) != 0 ||
         *(int *)(self + 0xa8) <= 0 || _ZN6Player7IsStateERNS_5StateE(self, &data_ov002_0211001c) ||
         *(unsigned char *)(self + 0x703) != 0 || *(unsigned char *)(self + 0x708) != 0 ||
         *(unsigned char *)(self + 0x709) != 0) {
-        _ZN11RaycastLineD1Ev(rl);
+        _ZN9dBgCh_LinD1Ev(rl);
         return 0;
     }
 
@@ -67,15 +67,15 @@ extern "C" int func_ov002_020cef84(char *self)
     func_02035414(rl);
     if (*(unsigned char *)(self + 0x6fb) != 0)
         func_02035428(rl);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, self);
-    if (_ZN11RaycastLine10DetectClsnEv(rl)) {
-        _ZN11RaycastLine10GetClsnPosEv(&cp, rl);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, self);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
+        _ZN9dBgCh_Lin10GetClsnPosEv(&cp, rl);
         if (func_02037e38((unsigned int *)(rl + 0x14)) == 3) {
             int t2 = *(int *)(self + 0x358) != 0;
             if (t2 == false) {
                 _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_0211001c);
                 *(int *)(self + 0x60) = cp.y - 0x78000;
-                _ZN11RaycastLineD1Ev(rl);
+                _ZN9dBgCh_LinD1Ev(rl);
                 return 1;
             }
         }
@@ -108,6 +108,6 @@ extern "C" int func_ov002_020cef84(char *self)
             }
         }
     }
-    _ZN11RaycastLineD1Ev(rl);
+    _ZN9dBgCh_LinD1Ev(rl);
     return 0;
 }

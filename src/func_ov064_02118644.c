@@ -1,11 +1,11 @@
 
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(int self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(int self);
 extern void _Z14ApproachLinearRiii(int *dst, int a, int b);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int fix, int d, int e, int vec, int cb);
 extern int _ZN7fBase_c18MarkForDestructionEv(int self);
 int func_ov064_02118644(unsigned int c)
 {
-  if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) != 0)
+  if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x144) != 0)
   {
     if ((*((int *) (c + 0x98))) == 0)
     {

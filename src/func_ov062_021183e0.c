@@ -4,7 +4,7 @@ extern int _Z14ApproachLinearRsss(short *a, short b, short c);
 extern void *func_ov062_02117b9c(void *c);
 extern int Vec3_Dist(void *a, void *b);
 extern short Vec3_HorzAngle(void *a, void *b);
-extern unsigned char _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs(void *self, void *clsn, short *a);
+extern unsigned char _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs(void *self, void *clsn, short *a);
 extern int _ZN8dActor_c14GetSubtractionEss(void *self, short a, short b);
 extern void _Z14ApproachLinearRiii(int *a, int b, int c);
 extern int func_ov062_02118058(char *c);
@@ -28,7 +28,7 @@ void func_ov062_021183e0(char *c)
             if (dist < 0xc8000)
                 *(short*)(c + 0x3c2) = Vec3_HorzAngle(c + 0x5c, other + 0x5c);
         }
-        *(unsigned char*)(c + 0x3cc) = _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs(c, c + 0x144, (short*)(c + 0x3c2));
+        *(unsigned char*)(c + 0x3cc) = _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs(c, c + 0x144, (short*)(c + 0x3c2));
         _Z14ApproachLinearRsss((short*)(c + 0x94), *(short*)(c + 0x3c2), 0x200);
     }
 

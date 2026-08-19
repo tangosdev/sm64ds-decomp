@@ -32,7 +32,7 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, i
 extern void _ZN11ShadowModel12InitCylinderEv(void* self);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, Vector3* v, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, Fix12i r, Fix12i h, Vector3_16* p, Vector3_16* q);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, Fix12i r, Fix12i h, Vector3_16* p, Vector3_16* q);
 extern unsigned char _ZN8dActor_c9TrackStarEjj(void* self, unsigned int a, unsigned int b);
 extern int RandomIntInternal(int* seed);
 extern void KingBobOmb_SetState(void* c, PMF* p);
@@ -76,8 +76,8 @@ int KingBobOmb::InitResources()
     unk_4d4 = 0xb1d000;
     unk_4d8 = 0x1060000;
     unk_4dc = 0xfee15000;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x110, (dActor_c*)((char*)this), 0x190000, 0x190000, 0, 0);
-    func_02035550((char*)&(*(WithMeshClsn *)&mWithMeshClsn));
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x110, (dActor_c*)((char*)this), 0x190000, 0x190000, 0, 0);
+    func_02035550((char*)&(*(dBgCh_Actr *)&mWithMeshClsn));
     unk_4fc = 1;
     unk_500 = 3;
     unk_509 = (*(s32 *)&param1) & 0xf;

@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN4BgCh19StartDetectingToxicEv
+// @symbol _ZN5dBgCh19StartDetectingToxicEv
 /* recovered: named members + shared header, real C++ method */
-#include "BgCh.h"
+#include "dBgCh.h"
 
 
-void BgCh::StartDetectingToxic()
+void dBgCh::StartDetectingToxic()
 {
     *(unsigned char *)((char *)&unk_004) |= 8;
 }

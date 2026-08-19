@@ -6,7 +6,7 @@
 #include "RotatingUpDownPlatformUtm.h"
 enum Bool { FALSE, TRUE };
 
-struct RaycastGround { char buf[0x44]; int f44; char rest[8]; };
+struct dBgCh_Gnd { char buf[0x44]; int f44; char rest[8]; };
 
 extern "C" {
 extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *self, int a, int b, int c, int d);
@@ -22,10 +22,10 @@ extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern void func_020393d4(void *p, void *v);
-extern void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround *self, const Vector3 *v, void *a);
-extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
-extern void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
+extern void _ZN9dBgCh_GndC1Ev(struct dBgCh_Gnd *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(struct dBgCh_Gnd *self, const Vector3 *v, void *a);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(struct dBgCh_Gnd *self);
+extern void _ZN9dBgCh_GndD1Ev(struct dBgCh_Gnd *self);
 }
 
 extern signed char data_0209f2f8;
@@ -40,7 +40,7 @@ int RotatingUpDownPlatformUtm::InitResources()
     Vector3 rotated;
     Vector3 posVec;
     Vector3 v2;
-    struct RaycastGround rg;
+    struct dBgCh_Gnd rg;
     unsigned char idx394, idx395;
     void *bmd;
     void *kcl;
@@ -116,16 +116,16 @@ int RotatingUpDownPlatformUtm::InitResources()
     posVec.z = mPosZ;
     posVec.y -= 0x14000;
 
-    _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &posVec, 0);
+    _ZN9dBgCh_GndC1Ev(&rg);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &posVec, 0);
     unk_37c = posVec.y;
-    if (_ZN13RaycastGround10DetectClsnEv(&rg))
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg))
         unk_37c = rg.f44;
 
     unk_380 = mAngleX;
     unk_382 = mAngleY;
     unk_384 = mAngleZ;
 
-    _ZN13RaycastGroundD1Ev(&rg);
+    _ZN9dBgCh_GndD1Ev(&rg);
     return 1;
 }

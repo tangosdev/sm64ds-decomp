@@ -17,8 +17,8 @@ extern "C" int  _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int 
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, BCA_File *f, int b, int c, unsigned int d);
 extern "C" int  _ZN11ShadowModel12InitCylinderEv(void *self);
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, dActor_c *a, int r, int h, unsigned int d, unsigned int e);
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int r, int h, void *v, void *w);
-extern "C" void _ZN12WithMeshClsn19StartDetectingWaterEv(void *self);
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int r, int h, void *v, void *w);
+extern "C" void _ZN10dBgCh_Actr19StartDetectingWaterEv(void *self);
 
 int Spindrift::InitResources()
 {
@@ -30,8 +30,8 @@ int Spindrift::InitResources()
     if (_ZN11ShadowModel12InitCylinderEv(s + 0x174) == 0)
         return 0;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(s + 0x19c, ((dActor_c *)this), 0x3c000, 0x78000, 0x200000, 0xa6efe0);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(s + 0x1d0, ((dActor_c *)this), 0x3c000, 0x3c000, 0, 0);
-    _ZN12WithMeshClsn19StartDetectingWaterEv(s + 0x1d0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(s + 0x1d0, ((dActor_c *)this), 0x3c000, 0x3c000, 0, 0);
+    _ZN10dBgCh_Actr19StartDetectingWaterEv(s + 0x1d0);
     *(int*)(s + 0x38c) = *(int*)(s + 0x5c);
     *(int*)(s + 0x390) = *(int*)(s + 0x60);
     *(int*)(s + 0x394) = *(int*)(s + 0x64);

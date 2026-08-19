@@ -3,7 +3,7 @@ struct BCA_File;
 struct dCc_c;
 
 extern "C" {
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, int d);
 void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void* self, dCc_c& c);
 int func_ov064_021166f0(unsigned char* t);
@@ -34,7 +34,7 @@ struct Base {
 
 extern "C" int func_ov064_02116d1c(unsigned char* thiz)
 {
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(thiz + 0x174) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(thiz + 0x174) != 0) {
         if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(thiz, 0x5dc000) != 0) return 1;
     }
 

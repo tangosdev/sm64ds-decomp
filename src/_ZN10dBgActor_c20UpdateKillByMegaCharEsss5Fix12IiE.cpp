@@ -16,9 +16,9 @@ extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void func_ov002_020ee5d0(unsigned char* self, int arg);
 }
 
-struct RaycastLine {
-    RaycastLine();
-    ~RaycastLine();
+struct dBgCh_Lin {
+    dBgCh_Lin();
+    ~dBgCh_Lin();
     void SetObjAndLine(Vector3 const& a, Vector3 const& b, dActor_c* c);
     int DetectClsn();
     char buf[0x78];
@@ -71,7 +71,7 @@ int dBgActor_c::UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d)
     Vec3_Add(&vout, &this->pos, &vmid);
     vmid = vout;
 
-    RaycastLine ray;
+    dBgCh_Lin ray;
     ray.SetObjAndLine(this->pos, vmid, (dActor_c*)this);
     if (ray.DetectClsn()) {
         *(short*)((int)((char*)this + 0x94)) =

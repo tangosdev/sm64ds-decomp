@@ -14,7 +14,7 @@
  *
  *     0x110 dCcAc_c       0x34   -> 0x144
  *     0x144 dCcAc_c       0x34   -> 0x178
- *     0x178 WithMeshClsn             0x1bc  -> 0x334
+ *     0x178 dBgCh_Actr             0x1bc  -> 0x334
  *     0x334 BlendModelAnim           0x70   -> 0x3a4
  *     0x3a4 ShadowModel              0x28   -> 0x3cc
  *
@@ -28,12 +28,12 @@
 #include "dCcAc_c.h"
 #include "PathPtr.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Klepto : dEnemyBase_c {
     dCcAc_c           mdCcAc_c1;  /* 0x110 */
     dCcAc_c           mdCcAc_c2;  /* 0x144 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x178 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x178 */
     BlendModelAnim               mBlendModelAnim;       /* 0x334 */
     ShadowModel                  mShadowModel;          /* 0x3a4 */
     u8  pad_3cc[0x60];

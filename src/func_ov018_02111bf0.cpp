@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 typedef struct { int x, y, z; } Vector3;
-typedef struct WithMeshClsn WithMeshClsn;
+typedef struct dBgCh_Actr dBgCh_Actr;
 struct SurfaceInfo {
   int a, b, c, d, e;
   unsigned short f, g;
@@ -11,29 +11,29 @@ struct dBgPi {
   void* vt;
   struct SurfaceInfo info;
 };
-void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* w);
-int _ZNK12WithMeshClsn10IsOnGroundEv(WithMeshClsn* w);
-void* _ZNK12WithMeshClsn14GetFloorResultEv(WithMeshClsn* w);
+void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* w);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(dBgCh_Actr* w);
+void* _ZNK10dBgCh_Actr14GetFloorResultEv(dBgCh_Actr* w);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(struct SurfaceInfo* s, Vector3* v);
 int _ZN4cstd4fdivEii(int a, int b);
-int _ZNK12WithMeshClsn8IsOnWallEv(WithMeshClsn* w);
-struct dBgPi* _ZNK12WithMeshClsn13GetWallResultEv(WithMeshClsn* w);
+int _ZNK10dBgCh_Actr8IsOnWallEv(dBgCh_Actr* w);
+struct dBgPi* _ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr* w);
 void _ZN5dBgPiD1Ev(struct dBgPi* r);
 extern void* data_02099368;
 
-void func_ov018_02111bf0(char* c, WithMeshClsn* w){
-  WithMeshClsn_UpdateDiscreteNoLava_veneer(w);
-  if (_ZNK12WithMeshClsn10IsOnGroundEv(w) != 0) {
+void func_ov018_02111bf0(char* c, dBgCh_Actr* w){
+  dBgCh_Actr_UpdateDiscreteNoLava_veneer(w);
+  if (_ZNK10dBgCh_Actr10IsOnGroundEv(w) != 0) {
     Vector3 n;
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3((struct SurfaceInfo*)((char*)_ZNK12WithMeshClsn14GetFloorResultEv(w) + 4), &n);
+    _ZNK11SurfaceInfo12CopyNormalToER7Vector3((struct SurfaceInfo*)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(w) + 4), &n);
     if (n.y != 0) {
       int s = (int)(((long long)n.x * *(int*)(c+0xa4) + 0x800) >> 0xc)
             + (int)(((long long)n.z * *(int*)(c+0xac) + 0x800) >> 0xc);
       *(int*)(c+0xa8) = -(_ZN4cstd4fdivEii(s, n.y) + 0x8000);
     }
   }
-  if (_ZNK12WithMeshClsn8IsOnWallEv(w) != 0) {
-    struct dBgPi* src = _ZNK12WithMeshClsn13GetWallResultEv(w);
+  if (_ZNK10dBgCh_Actr8IsOnWallEv(w) != 0) {
+    struct dBgPi* src = _ZNK10dBgCh_Actr13GetWallResultEv(w);
     struct dBgPi cr;
     Vector3 wn;
     struct SurfaceInfo* dst = &cr.info;

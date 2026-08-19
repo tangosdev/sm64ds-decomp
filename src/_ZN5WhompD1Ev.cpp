@@ -6,7 +6,7 @@
  * `struct Whomp : dEnemyBase_c` and the members that declaration now types:
  * its own vptr, then dBgW_KcMbg (0x418), ShadowModel (0x344), 
  * TextureSequence (0x330), ModelAnim (0x2cc), 
- * WithMeshClsn (0x110)
+ * dBgCh_Actr (0x110)
  * in reverse declaration order, then dEnemyBase_c::~dEnemyBase_c.
  *
  * This body is the evidence for the header. It was the hand-written C that

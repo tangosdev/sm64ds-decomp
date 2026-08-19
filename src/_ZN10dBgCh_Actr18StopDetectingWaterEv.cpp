@@ -1,12 +1,12 @@
 //cpp
-// @symbol _ZN12WithMeshClsn18StopDetectingWaterEv
+// @symbol _ZN10dBgCh_Actr18StopDetectingWaterEv
 /* recovered: named members + shared header, real C++ method */
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
-/* Mirror of StartDetectingWater: RaycastLine at 0x134 first, SphereClsn at
+/* Mirror of StartDetectingWater: dBgCh_Lin at 0x134 first, dBgCh_SphCrr at
    0x20 second. See that file and the header for the casts. */
-void WithMeshClsn::StopDetectingWater()
+void dBgCh_Actr::StopDetectingWater()
 {
-    ((BgCh *)&mRaycastLine)->StopDetectingWater();
-    ((BgCh *)&mSphereClsn)->StopDetectingWater();
+    ((dBgCh *)&mRaycastLine)->StopDetectingWater();
+    ((dBgCh *)&mSphereClsn)->StopDetectingWater();
 }

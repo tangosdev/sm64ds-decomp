@@ -7,7 +7,7 @@
 #include "SharedFilePtr.h"
 extern "C" {
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void*, void*, int*, int, int, unsigned int, unsigned int);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void*, void*, int, int, void*, int);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void*, void*, int, int, void*, int);
 extern int func_ov094_02136188(void*, void*);
 extern int IsStarCollectedInCurLevel(int);
 }
@@ -36,7 +36,7 @@ int HootTheOwl::InitResources()
     mTerminalVelocity = -0x1e000;
     mAnimSpeed = 0x1000;
     unk_3e4 = 0x1f;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x50000, 0x64000, (void*)0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x50000, 0x64000, (void*)0, 0);
     func_ov094_02136188(this, &data_ov094_02136b40);
 
     if (data_0209f2f8 != 7) goto ret1;

@@ -8,10 +8,10 @@ extern void func_ov100_02141fb0(void*);
 extern void func_ov100_02142130(void*);
 extern void _ZN8dActor_c14TriplePoofDustEv(void*);
 extern void _ZN7fBase_c18MarkForDestructionEv(void*);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
 extern int Vec3_HorzLen(void*);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int, int);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void*);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void*);
 extern void _ZN8dActor_c11LandingDustEb(void*, int);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void*, unsigned int);
 extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void*, int);
@@ -55,7 +55,7 @@ extern "C" void func_ov100_0214272c(char *c)
     return;
 
 ground:
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110)) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x110)) {
         int *pa4;
         int *pac;
 
@@ -70,7 +70,7 @@ ground:
             _ZN4cstd5atan2E5Fix12IiES1_(
                 *(int *)(c + 0xa4), *(int *)(c + 0xac));
 
-        if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x110)) {
+        if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x110)) {
             func_02012694(0x40, c + 0x74);
             _ZN8dActor_c11LandingDustEb(c, 1);
 

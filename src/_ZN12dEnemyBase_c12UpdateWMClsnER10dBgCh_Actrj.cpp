@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj
+// @symbol _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj
 /* recovered: named members + shared header, real C++ method
  *
  * Runs the mesh collision (sel picks which of four update flavours), then
@@ -16,33 +16,33 @@
 struct SurfaceInfo { s32 pad; };
 
 extern "C" {
-extern void func_020383f0(WithMeshClsn *);
-extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(WithMeshClsn *);
-extern void func_02038414(WithMeshClsn *);
-extern void WithMeshClsn_UpdateContinuous_Veneer(WithMeshClsn *);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(WithMeshClsn *);
-extern struct SurfaceInfo *_ZNK12WithMeshClsn14GetFloorResultEv(WithMeshClsn *);
+extern void func_020383f0(dBgCh_Actr *);
+extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *);
+extern void func_02038414(dBgCh_Actr *);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(dBgCh_Actr *);
+extern struct SurfaceInfo *_ZNK10dBgCh_Actr14GetFloorResultEv(dBgCh_Actr *);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(struct SurfaceInfo *, Vector3 *);
-extern int _ZNK12WithMeshClsn13GetLimMovFlagEv(WithMeshClsn *);
+extern int _ZNK10dBgCh_Actr13GetLimMovFlagEv(dBgCh_Actr *);
 extern int _ZN4cstd4fdivEii(int, int);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(WithMeshClsn *);
-extern struct SurfaceInfo *_ZNK12WithMeshClsn13GetWallResultEv(WithMeshClsn *);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(dBgCh_Actr *);
+extern struct SurfaceInfo *_ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr *);
 }
 
-void dEnemyBase_c::UpdateWMClsn(WithMeshClsn & clsn_, unsigned int sel)
+void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr & clsn_, unsigned int sel)
 {
-    WithMeshClsn *clsn = &clsn_;
+    dBgCh_Actr *clsn = &clsn_;
 
     switch (sel) {
     case 1: func_020383f0(clsn); break;
-    case 2: WithMeshClsn_UpdateDiscreteNoLava_veneer(clsn); break;
+    case 2: dBgCh_Actr_UpdateDiscreteNoLava_veneer(clsn); break;
     case 3: func_02038414(clsn); break;
-    default: WithMeshClsn_UpdateContinuous_Veneer(clsn); break;
+    default: dBgCh_Actr_UpdateContinuous_Veneer(clsn); break;
     }
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
 
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((struct SurfaceInfo*)((char*)_ZNK12WithMeshClsn14GetFloorResultEv(clsn)+4), (Vector3*)&mFloorNormalX);
-        if (_ZNK12WithMeshClsn13GetLimMovFlagEv(clsn) == 0) {
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((struct SurfaceInfo*)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn)+4), (Vector3*)&mFloorNormalX);
+        if (_ZNK10dBgCh_Actr13GetLimMovFlagEv(clsn) == 0) {
             int dz = mFloorNormalY;
             if (dz != 0) {
                 int nx = mFloorNormalX;
@@ -57,8 +57,8 @@ void dEnemyBase_c::UpdateWMClsn(WithMeshClsn & clsn_, unsigned int sel)
             }
         }
     }
-    if (_ZNK12WithMeshClsn8IsOnWallEv(clsn)) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((struct SurfaceInfo*)((char*)_ZNK12WithMeshClsn13GetWallResultEv(clsn)+4), (Vector3*)&mWallNormalX);
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((struct SurfaceInfo*)((char*)_ZNK10dBgCh_Actr13GetWallResultEv(clsn)+4), (Vector3*)&mWallNormalX);
     }
 
 }

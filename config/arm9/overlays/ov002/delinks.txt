@@ -8,7 +8,7 @@ src/func_ov002_020ad660.cpp:
     complete
     .text start:0x020ad660 end:0x020ad838
 
-src/_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj.cpp:
+src/_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj.cpp:
     complete
     .text start:0x020ad838 end:0x020ada40
 
@@ -24,11 +24,11 @@ src/_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c.cpp:
     complete
     .text start:0x020addc0 end:0x020ade78
 
-src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs.cpp:
+src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp:
     complete
     .text start:0x020ae244 end:0x020ae2b8
 
-src/_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_.cpp:
+src/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_.cpp:
     complete
     .text start:0x020ae2b8 end:0x020ae454
 
@@ -52,7 +52,7 @@ src/func_ov002_020ae64c.c:
     complete
     .text start:0x020ae64c end:0x020ae6a8
 
-src/_ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn.cpp:
+src/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp:
     complete
     .text start:0x020ae6a8 end:0x020ae73c
 
@@ -108,7 +108,7 @@ src/_ZN12dEnemyBase_c9SpawnCoinEv.cpp:
     complete
     .text start:0x020aeabc end:0x020aebf8
 
-src/_ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj.cpp:
+src/_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj.cpp:
     complete
     .text start:0x020aebf8 end:0x020aed18
 

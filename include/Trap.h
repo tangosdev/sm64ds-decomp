@@ -13,7 +13,7 @@
  * SIZE IS 0x3b0 (944 decimal), THE LITERAL Trap_Spawn.c passes to
  * fBase_c::operator new -- not merely the observed field span, though here
  * they agree: dBgActor_c ends at 0x320 and this class adds exactly one bare
- * Model (0x50, unlike the WithMeshClsn siblings) plus trailing scalars,
+ * Model (0x50, unlike the dBgCh_Actr siblings) plus trailing scalars,
  * landing on 0x3b0.
  *
  * THIS IS THE MID-RENAME CLASS. Before this change the header was a flat,
@@ -37,8 +37,8 @@ struct dActor_c;
 struct Player;
 
 struct Trap : dBgActor_c {
-    /* Bare Model, not WithMeshClsn -- Trap_Spawn.c calls
-       _ZN5ModelC1Ev((char*)p + 0x320) directly, no WithMeshClsn wrapper. Named
+    /* Bare Model, not dBgCh_Actr -- Trap_Spawn.c calls
+       _ZN5ModelC1Ev((char*)p + 0x320) directly, no dBgCh_Actr wrapper. Named
        "mModel" (not "mModel2") because dBgActor_c's own Model at 0xd4 is
        inherited, not restated here -- this is the only Model this struct
        declares. Matches the established convention for this exact shape: see

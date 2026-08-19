@@ -1,7 +1,7 @@
 struct Vector3;
 extern void func_ov002_020aefb8(void *c);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, struct Vector3 *v);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
 extern void func_ov002_020af3a8(void *c);
 extern int func_ov002_020af218(void *c, int a);
 extern void func_ov002_020aeee4(void *c);
@@ -15,7 +15,7 @@ void func_ov002_020af724(unsigned char *self)
         *(int *)((int)self + 0x388) += 1;
         break;
     case 1:
-        if (_ZNK12WithMeshClsn10IsOnGroundEv((void *)((int)self + 0x144)) != 0) {
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv((void *)((int)self + 0x144)) != 0) {
             *(int *)((int)self + 0x128) &= ~1;
             *(int *)((int)self + 0x388) += 1;
         }

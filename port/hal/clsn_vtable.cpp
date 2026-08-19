@@ -20,7 +20,7 @@ static void __fastcall slot_norm(void *self, void *, s16 tri, Vector3 *res)
 { ((dBgW_Kc *)self)->dBgW_Kc::GetNormal(tri, *res); }
 static void __fastcall slot_orig(void *self, void *, s16 tri, Vector3 *res)
 { ((dBgW_Kc *)self)->dBgW_Kc::GetTriangleOrigin(tri, *res); }
-static int __fastcall slot_ray(void *self, void *, RaycastLine *ray)
+static int __fastcall slot_ray(void *self, void *, dBgCh_Lin *ray)
 { return ((dBgW_Kc *)self)->dBgW_Kc::DetectClsn(*ray); }
 
 #define TRAP(n) \
@@ -44,9 +44,9 @@ extern "C" void *_ZTV7dBgW_Kc[13] = {
     (void *)slot_surf,          /* 2: GetSurfaceInfo */
     (void *)slot_norm,          /* 3: GetNormal -- the walk's hot slot */
     (void *)slot_orig,          /* 4: GetTriangleOrigin */
-    (void *)slot_trap1,         /* 5: DetectClsn(SphereClsn) -- unmatched */
-    (void *)slot_ray,           /* 6: DetectClsn(RaycastLine) */
-    (void *)slot_trap6,         /* 7: DetectClsn(RaycastGround) -- unmatched */
+    (void *)slot_trap1,         /* 5: DetectClsn(dBgCh_SphCrr) -- unmatched */
+    (void *)slot_ray,           /* 6: DetectClsn(dBgCh_Lin) */
+    (void *)slot_trap6,         /* 7: DetectClsn(dBgCh_Gnd) -- unmatched */
     (void *)slot_trap8,
     (void *)slot_trap9, (void *)slot_trap10,
     (void *)slot_trap11, (void *)slot_trap12,

@@ -4,7 +4,7 @@
  *
  * One vtable store and 5 destructor calls, every one a consequence of
  * `struct WaterBomb : dEnemyBase_c` and the members that declaration now types:
- * its own vptr, then ShadowModel (0x350), Model (0x300), WithMeshClsn (0x144), 
+ * its own vptr, then ShadowModel (0x350), Model (0x300), dBgCh_Actr (0x144), 
  * dCcAc_c (0x110)
  * in reverse declaration order, then dEnemyBase_c::~dEnemyBase_c.
  *

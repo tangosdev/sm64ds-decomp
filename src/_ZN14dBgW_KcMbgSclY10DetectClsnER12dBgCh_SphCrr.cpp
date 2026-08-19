@@ -18,29 +18,29 @@ typedef struct {
 extern "C" {
 void func_0203abb0(int* a, int* b);
 void func_0203aa74(void* thiz, int* v, int* res);
-void _ZN10SphereClsnC1Ev(void* o);
-void _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* o, void* v, int r, void* a);
+void _ZN12dBgCh_SphCrrC1Ev(void* o);
+void _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(void* o, void* v, int r, void* a);
 void func_02037940(void* p, int v);
 void func_02035394(void* o, void* r);
-int _ZN7dBgW_Kc10DetectClsnER10SphereClsn(void* o, void* s);
+int _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr(void* o, void* s);
 void func_02037a04(void* o, void* d1, void* d2);
 void func_02037a6c(void* b, int x1, int y1, int z1, int x2, int y2, int z2);
 void _ZN5dBgPiaSERKS_(void* d, void* s);
 void* func_02037938(void* p);
-void _ZN10SphereClsn14SetFloorResultERK5dBgPi(void* o, void* r);
+void _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(void* o, void* r);
 void func_0203794c(void* d, void* s);
 void* func_020378dc(void* p);
 void func_02037888(void* d, void* s);
 void* func_02037880(void* p);
 void func_0203782c(void* d, void* s);
-void _ZN10SphereClsnD1Ev(void* o);
+void _ZN12dBgCh_SphCrrD1Ev(void* o);
 }
 
 #pragma opt_common_subs off
 
 #define FMUL(a, b) ((int)(((s64)(a) * (b) + 0x800) >> 12))
 
-extern "C" int _ZN14dBgW_KcMbgSclY10DetectClsnER10SphereClsn(char* self, char* sphere)
+extern "C" int _ZN14dBgW_KcMbgSclY10DetectClsnER12dBgCh_SphCrr(char* self, char* sphere)
 {
     int v1[3];
     int v2[3];
@@ -58,12 +58,12 @@ extern "C" int _ZN14dBgW_KcMbgSclY10DetectClsnER10SphereClsn(char* self, char* s
     radius1 = FMUL(*(int*)(sphere + 0x48), scale);
     radius2 = FMUL(*(int*)(sphere + 0xec), scale);
 
-    _ZN10SphereClsnC1Ev(&loc);
-    _ZN10SphereClsn15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, v2, radius1, 0);
+    _ZN12dBgCh_SphCrrC1Ev(&loc);
+    _ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c(&loc, v2, radius1, 0);
     loc.f_ec = radius2;
     func_02037940(&loc, *(u8*)(sphere + 0x70));
     func_02035394(&loc, sphere);
-    r = _ZN7dBgW_Kc10DetectClsnER10SphereClsn(self, &loc);
+    r = _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr(self, &loc);
     if (r) {
         func_02037a04(&loc, d, d + 3);
         d[6] = FMUL(d[0], *(int*)(self + 0x50));
@@ -79,7 +79,7 @@ extern "C" int _ZN14dBgW_KcMbgSclY10DetectClsnER10SphereClsn(char* self, char* s
             if (*(u8*)(sphere + 0x70) & 4) {
                 r &= ~1;
             } else {
-                _ZN10SphereClsn14SetFloorResultERK5dBgPi(sphere, func_02037938(&loc));
+                _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(sphere, func_02037938(&loc));
             }
             *(u8*)(sphere + 0x70) |= 4;
             if (*(int*)(sphere + 0x100) < loc.f_100) {
@@ -95,6 +95,6 @@ extern "C" int _ZN14dBgW_KcMbgSclY10DetectClsnER10SphereClsn(char* self, char* s
             *(u8*)(sphere + 0x70) |= 0x10;
         }
     }
-    _ZN10SphereClsnD1Ev(&loc);
+    _ZN12dBgCh_SphCrrD1Ev(&loc);
     return r;
 }

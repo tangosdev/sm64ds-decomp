@@ -30,7 +30,7 @@
  * OWN MEMBERS start at 0x180, where dCapEnemy_c ends -- a derived member cannot start
  * inside its base, so this is both floor and ceiling, same argument dCapEnemy_c.h makes
  * one level up. Five spans are typed sub-objects, evidenced by both witnesses:
- * Goomba_Spawn constructs them forward (dCcAc_c, WithMeshClsn, ModelAnim,
+ * Goomba_Spawn constructs them forward (dCcAc_c, dBgCh_Actr, ModelAnim,
  * ShadowModel, MaterialChanger) and _ZN6GoombaD1Ev tears them down in the opposite
  * order at the same offsets, before chaining to the base. They stay untyped, one
  * placeholder byte per span plus the sub-fields already evidenced inside them, rather
@@ -66,7 +66,7 @@
 struct Goomba : dCapEnemy_c {
     u8  mdCcAc_c;            /* 0x180 -- dCcAc_c, 0x34 bytes */
     u8  pad_181[0x33];
-    u8  mWithMeshClsn;            /* 0x1b4 -- WithMeshClsn, 0x1bc bytes */
+    u8  mWithMeshClsn;            /* 0x1b4 -- dBgCh_Actr, 0x1bc bytes */
     u8  pad_1b5[0x1bb];
     u8  mModelAnim;            /* 0x370 -- ModelAnim, 0x64 bytes */
     u8  pad_371[0x4f];

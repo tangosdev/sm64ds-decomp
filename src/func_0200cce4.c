@@ -4,8 +4,8 @@ typedef signed char s8;
 
 typedef struct Vector3 { int x, y, z; } Vector3;
 
-typedef struct RaycastLine { int _[0x1e]; } RaycastLine;
-typedef struct RaycastGround { int _[0x15]; } RaycastGround;
+typedef struct dBgCh_Lin { int _[0x1e]; } dBgCh_Lin;
+typedef struct dBgCh_Gnd { int _[0x15]; } dBgCh_Gnd;
 
 extern Vector3 data_02086f2c;
 extern Vector3 data_02086f20;
@@ -13,16 +13,16 @@ extern Vector3 data_02086f20;
 extern u32 func_020093f4(void* p, int x);
 extern u32 func_020093d4(void* p, int a);
 extern void Vec3_RotateYAndTranslate(Vector3* out, Vector3* in, s16 angle, Vector3* src);
-extern void _ZN11RaycastLineC1Ev(RaycastLine* t);
-extern void _ZN11RaycastLineD1Ev(RaycastLine* t);
+extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin* t);
+extern void _ZN9dBgCh_LinD1Ev(dBgCh_Lin* t);
 extern void func_0200897c(void* self, void* arg);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLine* t, Vector3* a, Vector3* b, void* actor);
-extern int _ZN11RaycastLine10DetectClsnEv(RaycastLine* t);
-extern void _ZN11RaycastLine10GetClsnPosEv(Vector3* ret, RaycastLine* t);
-extern void _ZN13RaycastGroundC1Ev(RaycastGround* t);
-extern void _ZN13RaycastGroundD1Ev(RaycastGround* t);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* t, Vector3* a, void* actor);
-extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround* t);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_Lin* t, Vector3* a, Vector3* b, void* actor);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_Lin* t);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3* ret, dBgCh_Lin* t);
+extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* t);
+extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* t);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* t, Vector3* a, void* actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* t);
 extern void func_0200928c(void* cam);
 extern void ChangeArea(int areaID);
 
@@ -32,8 +32,8 @@ void func_0200cce4(char* cam)
     Vector3 tmp1;
     Vector3 tmp2;
     Vector3 cp;
-    RaycastLine line;
-    RaycastGround ground;
+    dBgCh_Lin line;
+    dBgCh_Gnd ground;
     u32 d;
 
     if (*(char**)(cam + 0x110) != 0) {
@@ -65,7 +65,7 @@ void func_0200cce4(char* cam)
         Vec3_RotateYAndTranslate((Vector3*)(cam + 0x8c), (Vector3*)(cam + 0x80),
             *(s16*)(*(char**)(cam + 0x110) + 0x8e), &tmp2);
 
-        _ZN11RaycastLineC1Ev(&line);
+        _ZN9dBgCh_LinC1Ev(&line);
         func_0200897c(cam, &line);
         {
             int tx;
@@ -78,17 +78,17 @@ void func_0200cce4(char* cam)
             vec.y = ty;
             vec.z = tz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&line, (Vector3*)(cam + 0x8c), &vec, 0);
-        if (_ZN11RaycastLine10DetectClsnEv(&line) != 0) {
-            _ZN11RaycastLine10GetClsnPosEv(&cp, &line);
+        _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&line, (Vector3*)(cam + 0x8c), &vec, 0);
+        if (_ZN9dBgCh_Lin10DetectClsnEv(&line) != 0) {
+            _ZN9dBgCh_Lin10GetClsnPosEv(&cp, &line);
             vec.x = cp.x;
             vec.y = cp.y;
             vec.z = cp.z;
         }
-        _ZN13RaycastGroundC1Ev(&ground);
+        _ZN9dBgCh_GndC1Ev(&ground);
         func_0200897c(cam, &ground);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&ground, &vec, 0);
-        if (_ZN13RaycastGround10DetectClsnEv(&ground) != 0) {
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&ground, &vec, 0);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&ground) != 0) {
             *(int*)(cam + 0x90) = d + ground._[0x11];
         }
         *(int*)(((int)cam + 0x90)) += func_020093d4(cam, 0x3c286);
@@ -113,8 +113,8 @@ void func_0200cce4(char* cam)
         }
         func_0200928c(cam);
         ChangeArea(*(s8*)(*(char**)(cam + 0x110) + 0xcc));
-        _ZN13RaycastGroundD1Ev(&ground);
-        _ZN11RaycastLineD1Ev(&line);
+        _ZN9dBgCh_GndD1Ev(&ground);
+        _ZN9dBgCh_LinD1Ev(&line);
     }
     *(int*)(((int)cam + 0x154)) |= 4;
 }

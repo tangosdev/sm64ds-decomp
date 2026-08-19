@@ -1,24 +1,24 @@
 /* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class SphereClsn: 4 matched functions, 16 evidenced fields.
+ * class dBgCh_SphCrr: 4 matched functions, 16 evidenced fields.
  * Offsets/widths are observed, not guessed. Gaps are explicit padding.
  * Field NAMES are placeholders - renaming cannot change codegen. */
-#ifndef SPHERECLSN_H
-#define SPHERECLSN_H
+#ifndef DBGCH_SPHCRR_H
+#define DBGCH_SPHCRR_H
 #include "types.h"
 
 /* fwd */
 struct dBgPi;
 struct src_;
-struct SphereClsn {
+struct dBgCh_SphCrr {
     u8  pad_000[0x10];
     u8  unk_010;            /* 0x010 */
     u8  pad_011[0x27];
     u8  unk_038;            /* 0x038 */
     u8  pad_039[0x3];
-    /* The query sphere. dBgW_KcMbg::DetectClsn(SphereClsn&) hands 0x03c
+    /* The query sphere. dBgW_KcMbg::DetectClsn(dBgCh_SphCrr&) hands 0x03c
        to func_02039e48, which transforms a Vector3 into the collider's local
        frame, and scales 0x048 by the collider's uniform scale before passing it
-       as the `Fix12<int> radius` argument of SphereClsn::SetObjAndSphere -- so
+       as the `Fix12<int> radius` argument of dBgCh_SphCrr::SetObjAndSphere -- so
        0x03c is twelve bytes of centre and 0x048 is the radius that follows it. */
     Vector3 pos;            /* 0x03c */
     Fix12i radius;          /* 0x048 */
@@ -46,7 +46,7 @@ struct SphereClsn {
     s32 unk_0ec;            /* 0x0ec */
     u8  pad_0f0[0xc];
     /* An adjacent pair, kept unnamed. All that is evidenced is the shape of
-       their use in dBgW_KcMbg::DetectClsn(SphereClsn&): 0x100 is
+       their use in dBgW_KcMbg::DetectClsn(dBgCh_SphCrr&): 0x100 is
        compared `<` against the local query's own 0x100, and on winning, 0x0fc
        is handed BY ADDRESS to func_0203794c -- i.e. a score at 0x100 selecting
        a payload that starts at 0x0fc. What the payload is is not settled here. */

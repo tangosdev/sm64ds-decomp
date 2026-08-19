@@ -10,7 +10,7 @@ typedef void (C::*PMF)();
 struct V3 { int x, y, z; };
 
 extern "C" {
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(char *c, char *clsn);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(char *c, char *clsn);
 extern void func_ov002_020d718c(void *p);
 extern void _ZN5dCc_c5ClearEv(char *c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char *c, void *clsn);
@@ -31,7 +31,7 @@ int PowerStar::Behavior()
     unk_4ac = 0;
     unk_4b0 = 0;
 
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(((char *)this), ((char *)this) + 0x150) != 0) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char *)this), ((char *)this) + 0x150) != 0) {
         int state = unk_440;
         if (state >= 5 && state <= 7 && *(void **)((char *)&mEatingPlayer) != 0) {
             func_ov002_020d718c(*(void **)((char *)&mEatingPlayer));

@@ -3,8 +3,8 @@ typedef unsigned short u16;
 typedef signed char s8;
 
 typedef struct Vector3 { int x, y, z; } Vector3;
-typedef struct RaycastLine { int _[0x1e]; } RaycastLine;
-typedef struct RaycastGround { int _[0x15]; } RaycastGround;
+typedef struct dBgCh_Lin { int _[0x1e]; } dBgCh_Lin;
+typedef struct dBgCh_Gnd { int _[0x15]; } dBgCh_Gnd;
 
 extern signed char data_0209f2f8;
 extern char data_02086ff4;
@@ -17,15 +17,15 @@ extern char data_020871ac;
 extern char data_020871d4;
 extern char data_02087404;
 
-extern void _ZN11RaycastLineC1Ev(RaycastLine* t);
-extern void _ZN11RaycastLineD1Ev(RaycastLine* t);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLine* t, Vector3* a, Vector3* b, void* actor);
-extern int _ZN11RaycastLine10DetectClsnEv(RaycastLine* t);
-extern void _ZN11RaycastLine10GetClsnPosEv(Vector3* ret, RaycastLine* t);
-extern void _ZN13RaycastGroundC1Ev(RaycastGround* t);
-extern void _ZN13RaycastGroundD1Ev(RaycastGround* t);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* t, Vector3* a, void* actor);
-extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround* t);
+extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin* t);
+extern void _ZN9dBgCh_LinD1Ev(dBgCh_Lin* t);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_Lin* t, Vector3* a, Vector3* b, void* actor);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_Lin* t);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vector3* ret, dBgCh_Lin* t);
+extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* t);
+extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* t);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* t, Vector3* a, void* actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* t);
 extern void func_0200897c(void* self, void* arg);
 extern int func_02037e48(u32* p);
 extern int func_02037e68(u32* p);
@@ -36,8 +36,8 @@ int func_0200c66c(char* self, Vector3* pos, void** out2, void** out1, int arg5)
 {
     Vector3 tmp;
     Vector3 clsn;
-    RaycastLine line;
-    RaycastGround ground;
+    dBgCh_Lin line;
+    dBgCh_Gnd ground;
     int hval;
     int col1;
     int col2;
@@ -62,7 +62,7 @@ int func_0200c66c(char* self, Vector3* pos, void** out2, void** out1, int arg5)
         col2 = *(int*)((char*)obj + 0x660) & 0xff;
         hval = res;
     } else {
-        _ZN11RaycastLineC1Ev(&line);
+        _ZN9dBgCh_LinC1Ev(&line);
         func_0200897c(self, &line);
         {
             int tx, tz, ty;
@@ -73,17 +73,17 @@ int func_0200c66c(char* self, Vector3* pos, void** out2, void** out1, int arg5)
             tmp.y = ty;
             tmp.z = tz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&line, pos, &tmp, 0);
-        if (_ZN11RaycastLine10DetectClsnEv(&line) != 0) {
-            _ZN11RaycastLine10GetClsnPosEv(&clsn, &line);
+        _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&line, pos, &tmp, 0);
+        if (_ZN9dBgCh_Lin10DetectClsnEv(&line) != 0) {
+            _ZN9dBgCh_Lin10GetClsnPosEv(&clsn, &line);
             tmp.x = clsn.x;
             tmp.y = clsn.y;
             tmp.z = clsn.z;
         }
-        _ZN13RaycastGroundC1Ev(&ground);
+        _ZN9dBgCh_GndC1Ev(&ground);
         func_0200897c(self, &ground);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&ground, &tmp, 0);
-        if (_ZN13RaycastGround10DetectClsnEv(&ground) == 0) {
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&ground, &tmp, 0);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&ground) == 0) {
             hval = pos->y;
             col1 = 0;
             col2 = 0x3f;
@@ -92,8 +92,8 @@ int func_0200c66c(char* self, Vector3* pos, void** out2, void** out1, int arg5)
             col1 = func_02037e48((u32*)&ground._[5]) & 0xff;
             col2 = func_02037e68((u32*)&ground._[5]) & 0xff;
         }
-        _ZN13RaycastGroundD1Ev(&ground);
-        _ZN11RaycastLineD1Ev(&line);
+        _ZN9dBgCh_GndD1Ev(&ground);
+        _ZN9dBgCh_LinD1Ev(&line);
     }
 
     if (col1 == 0 || (*(u32*)(self + 0x154) & 0x400) != 0) {

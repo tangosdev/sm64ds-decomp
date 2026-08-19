@@ -44,7 +44,7 @@ void *_ZN7dBgW_KcC1Ev(void *self);
 
 static int probe_one(dBgW_Kc *mc, RayS *ray)
 {
-    return mc->dBgW_Kc::DetectClsn(*(RaycastLine *)ray);
+    return mc->dBgW_Kc::DetectClsn(*(dBgCh_Lin *)ray);
 }
 static int probe_filter(EXCEPTION_POINTERS *ep)
 {
@@ -115,7 +115,7 @@ int main(void)
         for (int gz = -2; gz <= 2; ++gz) {
             RayS ray;
             memset(&ray, 0, sizeof ray);
-            ray.head[4] = 1;    /* the BgCh "collide with ordinary surfaces"
+            ray.head[4] = 1;    /* the dBgCh "collide with ordinary surfaces"
                                    default (func_02035514 sets it; the pass-
                                    through predicate reads head[4] & 1) */
             ray.sx = cx + gx * sx_step; ray.sy = top; ray.sz = cz + gz * sz_step;

@@ -7,14 +7,14 @@ typedef signed char s8;
 
 struct dActor_c;
 
-struct RaycastGround {
+struct dBgCh_Gnd {
     char pad0[0x14];
     int field14;     /* 0x14 */
     char pad18[0x44 - 0x18];
     int field44;     /* 0x44 */
     char pad48[0x54 - 0x48];
-    RaycastGround();
-    ~RaycastGround();
+    dBgCh_Gnd();
+    ~dBgCh_Gnd();
     void StartDetectingWater();
     void SetObjAndPos(const Vector3& pos, dActor_c* a);
     int DetectClsn();
@@ -23,7 +23,7 @@ struct RaycastGround {
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN4BgCh19StartDetectingWaterEv(void *);
+extern "C" void _ZN5dBgCh19StartDetectingWaterEv(void *);
 
 
 extern "C" int SurfaceInfo_TestFlag0x20(int* p);
@@ -46,7 +46,7 @@ int func_ov002_020b5ab4(char* c)
     }
     {
         Vector3 vec;
-        RaycastGround rg;
+        dBgCh_Gnd rg;
         {
             int vx = *(int*)(c+0x5c);
             int vz = *(int*)(c+0x64);
@@ -55,7 +55,7 @@ int func_ov002_020b5ab4(char* c)
             vec.y = vy;
             vec.z = vz;
         }
-        _ZN4BgCh19StartDetectingWaterEv(&(rg));
+        _ZN5dBgCh19StartDetectingWaterEv(&(rg));
         rg.SetObjAndPos(vec, (dActor_c*)c);
         if (rg.DetectClsn() != 0) {
             *(int*)(c+0x324) = rg.field44;

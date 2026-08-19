@@ -15,9 +15,9 @@
 // the PR #1072 shape. Bannered 2026-08-19; see notes/collision-system.md.
 //
 // WHAT IT REALLY IS, read out of the cartridge:
-//   0x0203780c  _ZThn16_N11RaycastLineD0Ev
+//   0x0203780c  _ZThn16_N9dBgCh_LinD0Ev
 //   ldr ip,[pc,#4] ; add r0,r0,ip ; b 0x02037710   with the adjustment word 0x10
-//   i.e. adjust this by -0x10 -- the dBgPi base of RaycastLine (dBgCh_Lin) --
+//   i.e. adjust this by -0x10 -- the dBgPi base of dBgCh_Lin (dBgCh_Lin) --
 //   and tail-branch to that class's deleting destructor.
 //
 // Recovering it for real needs the ROM's actual derived class, which is the

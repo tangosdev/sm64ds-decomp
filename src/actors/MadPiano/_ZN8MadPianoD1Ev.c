@@ -5,7 +5,7 @@
 #include "decl_ModelAnim.h"
 #include "decl_dBgW_KcMbg.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 /* recovered: named members + shared header */
 #include "MadPiano.h"
 extern int __destroy_arr(void*, int, int, void*);
@@ -14,7 +14,7 @@ extern void* _ZTV8MadPiano;
 extern void* _ZTV10dBgActor_c;
 void* _ZN8MadPianoD1Ev(struct MadPiano *self) {
   *(void**)((void*)self) = &_ZTV8MadPiano;
-  _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
+  _ZN10dBgCh_ActrD1Ev((char*)&self->mWithMeshClsn);
   __destroy_arr((char*)((void*)self)+0x48c, 2, 0x40, &_ZN10dCcAcPos_cD1Ev);
   _ZN11ShadowModelD1Ev((char*)&self->mShadowModel3);
   _ZN11ShadowModelD1Ev((char*)&self->mShadowModel2);

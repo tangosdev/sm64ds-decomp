@@ -8,7 +8,7 @@ typedef int Fix12i;
 
 struct dCc_c;
 struct dActor_c;
-struct WithMeshClsn { int JustHitGround() const; };
+struct dBgCh_Actr { int JustHitGround() const; };
 struct dActor_c {
     static dActor_c* FindWithActorID(unsigned int id, dActor_c* a);
     static dActor_c* FindWithID(unsigned int id);
@@ -30,7 +30,7 @@ extern "C" void func_ov060_021168c4(char* c)
     } else {
         r4 = (char*)dActor_c::FindWithID(*(unsigned int*)(c + 0x2cc));
     }
-    if (((WithMeshClsn*)(c + 0x110))->JustHitGround() != 0) {
+    if (((dBgCh_Actr*)(c + 0x110))->JustHitGround() != 0) {
         *(int*)(c + 0xa8) = 0x1e000;
     }
     ((dActor_c*)c)->UpdatePos((dCc_c*)0);

@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn
+// @symbol _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr
 /* recovered: named members + shared header, real C++ method
  *
  * Runs one frame of the death animation. unk_10c selects which death handler
@@ -12,23 +12,23 @@
  */
 #include "dEnemyBase_c.h"
 
-extern int (dEnemyBase_c::*data_ov002_0210dbc0[])(WithMeshClsn &);
+extern int (dEnemyBase_c::*data_ov002_0210dbc0[])(dBgCh_Actr &);
 
 extern "C" {
 extern void DecIfAbove0_Short(unsigned short *p);
 extern int _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *clsn);
-extern int _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *thiz, WithMeshClsn *clsn, u32 sel);
+extern int _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *thiz, dBgCh_Actr *clsn, u32 sel);
 }
 
-int dEnemyBase_c::UpdateDeath(WithMeshClsn & clsn_)
+int dEnemyBase_c::UpdateDeath(dBgCh_Actr & clsn_)
 {
-    WithMeshClsn *clsn = &clsn_;
+    dBgCh_Actr *clsn = &clsn_;
     int ret;
     if (mDeathState == 0)
         return 0;
     DecIfAbove0_Short(&mDeathTimer);
     ret = (this->*data_ov002_0210dbc0[mDeathState - 1])(*clsn);
     _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
-    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(this, clsn, 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, clsn, 0);
     return ret;
 }

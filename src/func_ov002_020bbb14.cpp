@@ -6,10 +6,10 @@
 #include "dBgW.h"
 extern "C" {
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
-extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
-extern int _ZNK12WithMeshClsn12TouchesWaterEv(void* p);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* p);
+extern int _ZNK10dBgCh_Actr12TouchesWaterEv(void* p);
 extern void* _ZN8dActor_c10FindWithIDEj(unsigned id);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* thiz, void* v, unsigned a, int b, unsigned c, unsigned d, unsigned e);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
@@ -42,11 +42,11 @@ void func_ov002_020bbb14(char* self)
         *pa = *pa + 0x2000;
     }
     _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
-    WithMeshClsn_UpdateContinuous_Veneer(self + 0x3c8);
+    dBgCh_Actr_UpdateContinuous_Veneer(self + 0x3c8);
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x3c8) != 0 ||
-        _ZNK12WithMeshClsn8IsOnWallEv(self + 0x3c8) != 0 ||
-        _ZNK12WithMeshClsn12TouchesWaterEv(self + 0x3c8) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x3c8) != 0 ||
+        _ZNK10dBgCh_Actr8IsOnWallEv(self + 0x3c8) != 0 ||
+        _ZNK10dBgCh_Actr12TouchesWaterEv(self + 0x3c8) != 0) {
         ((Obj*)self)->v31();
         return;
     }

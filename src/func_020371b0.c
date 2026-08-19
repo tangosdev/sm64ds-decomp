@@ -6,7 +6,7 @@ struct dActor_c {
     int speed_z; /* 0xac */
 };
 
-struct WithMeshClsn {
+struct dBgCh_Actr {
     char pad[0x10];
     u32 flags;   /* 0x10 */
     struct dActor_c *actor; /* 0x14 */
@@ -14,20 +14,20 @@ struct WithMeshClsn {
 
 struct dBgPi;
 
-extern void func_0203573c(struct WithMeshClsn *clsn);
-extern struct dBgPi *_ZNK12WithMeshClsn14GetFloorResultEv(struct WithMeshClsn *clsn);
+extern void func_0203573c(struct dBgCh_Actr *clsn);
+extern struct dBgPi *_ZNK10dBgCh_Actr14GetFloorResultEv(struct dBgCh_Actr *clsn);
 extern void func_02038234(struct dBgPi *result, struct dActor_c *actor);
-extern void _ZN12WithMeshClsn13SetGroundFlagEv(struct WithMeshClsn *clsn);
-extern u32 _ZNK12WithMeshClsn13GetLimMovFlagEv(struct WithMeshClsn *clsn);
+extern void _ZN10dBgCh_Actr13SetGroundFlagEv(struct dBgCh_Actr *clsn);
+extern u32 _ZNK10dBgCh_Actr13GetLimMovFlagEv(struct dBgCh_Actr *clsn);
 
-void func_020371b0(struct WithMeshClsn *clsn, s32 justHit)
+void func_020371b0(struct dBgCh_Actr *clsn, s32 justHit)
 {
     struct dBgPi *floorResult;
     if (justHit == 0)
         func_0203573c(clsn);
-    floorResult = _ZNK12WithMeshClsn14GetFloorResultEv(clsn);
+    floorResult = _ZNK10dBgCh_Actr14GetFloorResultEv(clsn);
     func_02038234(floorResult, clsn->actor);
-    _ZN12WithMeshClsn13SetGroundFlagEv(clsn);
-    if (_ZNK12WithMeshClsn13GetLimMovFlagEv(clsn) == 0)
+    _ZN10dBgCh_Actr13SetGroundFlagEv(clsn);
+    if (_ZNK10dBgCh_Actr13GetLimMovFlagEv(clsn) == 0)
         clsn->actor->speed_y = 0;
 }

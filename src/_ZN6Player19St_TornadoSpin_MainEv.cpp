@@ -5,21 +5,21 @@
  * Being carried up a tornado. The player orbits mAttachedActor: the horizontal
  * offset is rotated by an ever-increasing mAngleYSpeed while mAttachOffsetY
  * climbs at mVertSpeed. Leaving happens at the tornado's own height limit
- * (+0xdc on it) or on a collision bit. A RaycastGround from 0x64000 above the
+ * (+0xdc on it) or on a collision bit. A dBgCh_Gnd from 0x64000 above the
  * candidate position decides whether the player is placed there or clamped to
  * mGroundY.
  */
 #include "Player.h"
 
-struct RaycastGround { int filler[21]; };
+struct dBgCh_Gnd { int filler[21]; };
 
 extern "C" {
 extern void _ZN6Player11ChangeStateERNS_5StateE(void* self, int state);
-extern void _ZN13RaycastGroundC1Ev(struct RaycastGround* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround* self, const Vector3* pos, void* actor);
-extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround* self);
+extern void _ZN9dBgCh_GndC1Ev(struct dBgCh_Gnd* self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(struct dBgCh_Gnd* self, const Vector3* pos, void* actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(struct dBgCh_Gnd* self);
 extern void Player_AdvanceAnims(void* self);
-extern void _ZN13RaycastGroundD1Ev(struct RaycastGround* self);
+extern void _ZN9dBgCh_GndD1Ev(struct dBgCh_Gnd* self);
 extern int data_ov002_02110454[];
 extern short data_02082214[];
 }
@@ -28,7 +28,7 @@ int Player::St_TornadoSpin_Main()
 {
     Vector3 pos;
     Vector3 clsnPos;
-    struct RaycastGround rc;
+    struct dBgCh_Gnd rc;
     int dx = mPosX - ((dActor_c*)mAttachedActor)->mPosX;
     int dz = mPosZ - ((dActor_c*)mAttachedActor)->mPosZ;
     int sx = (int)((dx * 0xf33LL + 0x800) >> 12);
@@ -66,11 +66,11 @@ int Player::St_TornadoSpin_Main()
             ((int*)&pos)[1] = mAttachOffsetY + ((dActor_c*)mAttachedActor)->mPosY;
         }
     }
-    _ZN13RaycastGroundC1Ev(&rc);
+    _ZN9dBgCh_GndC1Ev(&rc);
     clsnPos = pos;
     clsnPos.y += 0x64000;
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, &clsnPos, this);
-    if (_ZN13RaycastGround10DetectClsnEv(&rc) != 0) {
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &clsnPos, this);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc) != 0) {
         mPosX = pos.x;
         mPosY = pos.y;
         mPosZ = pos.z;
@@ -81,6 +81,6 @@ int Player::St_TornadoSpin_Main()
             mPosY = mGroundY;
     }
     Player_AdvanceAnims(this);
-    _ZN13RaycastGroundD1Ev(&rc);
+    _ZN9dBgCh_GndD1Ev(&rc);
     return 1;
 }

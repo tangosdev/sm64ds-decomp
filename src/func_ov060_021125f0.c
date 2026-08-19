@@ -1,7 +1,7 @@
 extern int func_ov060_02111cc0(char *c, int a, int b);
 extern int Bowser_IsAnimAtLastFrame(char *c);
 extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern int _ZN12WithMeshClsn15ClearGroundFlagEv(char *c);
+extern int _ZN10dBgCh_Actr15ClearGroundFlagEv(char *c);
 extern short data_02082214[];
 
 #pragma opt_common_subs off
@@ -47,6 +47,6 @@ void func_ov060_021125f0(char *c)
     {
         char *mesh = c + 0x14c;
         *(unsigned char *)(c + 0x423) = 0;
-        _ZN12WithMeshClsn15ClearGroundFlagEv(mesh);
+        _ZN10dBgCh_Actr15ClearGroundFlagEv(mesh);
     }
 }

@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN7dBgW_Kc10DetectClsnER13RaycastGround
-/* dBgW_Kc::DetectClsn(RaycastGround &) at 0x01ffd3f8 (ITCM)
+// @symbol _ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd
+/* dBgW_Kc::DetectClsn(dBgCh_Gnd &) at 0x01ffd3f8 (ITCM)
  *
  * vtable slot 6. The downward ground probe: given a world position, find the
  * highest upward-facing KCL triangle that is below it and above the incoming
- * `clsnY`, and record it. Same octree walk as DetectClsn(RaycastLine &) next
+ * `clsnY`, and record it. Same octree walk as DetectClsn(dBgCh_Lin &) next
  * door, but a ground query is a vertical probe through a single (x, z) column,
  * so only Y marches -- which is why the frame is 0x4c and not 0xfc.
  *
@@ -57,21 +57,21 @@
  *     (sp+0x38 / sp+0x3c).
  */
 #include "dBgW_Kc.h"
-#include "RaycastGround.h"
+#include "dBgCh_Gnd.h"
 
 /* extern "C" because these exist unmangled in config/arm9/symbols.txt.
    ShouldPassThroughImpl is a real mangled C++ static, spelled out rather than
-   declared in BgCh.h so this file changes no shared header it does not have to. */
+   declared in dBgCh.h so this file changes no shared header it does not have to. */
 extern "C" {
 
 /* cstd::fdiv(int, int) at 0x02053258 -- (a << 12) / b. */
 Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
 
-/* BgCh::ShouldPassThroughImpl(void *, const CLPS &, const BgCh &, bool) at
+/* dBgCh::ShouldPassThroughImpl(void *, const CLPS &, const dBgCh &, bool) at
    0x02039488. Static: no `this`. The collider goes in as the void *, the
-   SurfaceInfo as the CLPS, and the query object as the BgCh. */
-int _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info,
-                                                   RaycastGround *ray, int flag);
+   SurfaceInfo as the CLPS, and the query object as the dBgCh. */
+int _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info,
+                                                   dBgCh_Gnd *ray, int flag);
 
 /* 0x020397dc: true when the argument is too near zero to divide by. */
 int func_020397dc(int denom);
@@ -88,7 +88,7 @@ void func_02037fd4(void *res, s16 triID, SurfaceInfo *info);
    read straight back by ShouldPassThroughImpl and the hit record. */
 extern SurfaceInfo data_020a0cec;
 
-int dBgW_Kc::DetectClsn(RaycastGround &ray)
+int dBgW_Kc::DetectClsn(dBgCh_Gnd &ray)
 {
     KCL_File *file = kclFile;
     Vector3 *pos = &ray.pos;
@@ -177,7 +177,7 @@ int dBgW_Kc::DetectClsn(RaycastGround &ray)
               + (s64)dz * normal[2] < 0) continue;
 
             GetSurfaceInfo(func_020396dc(this, tri), data_020a0cec);
-            if (_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(this, &data_020a0cec, &ray, 0))
+            if (_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(this, &data_020a0cec, &ray, 0))
                 continue;
 
             if (dy + vtx[1] < file->origin.y) continue;   /* below the octree */

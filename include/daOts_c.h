@@ -6,7 +6,7 @@
 #include "ModelAnim.h"
 #include "dCcAc_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 /* The shared base of the three Bully variants. The ROM's RTTI names it daOts_c and
  * gives it exactly three children: daDonketu_c (Bully), daBDonketu_c (BigBully) and
@@ -18,7 +18,7 @@
  *
  *   _ZN7daOts_cD1Ev (ov064 0x02115ee0, 0x48) -- this class's own destructor. It stores
  *   data_ov064_0211b768 and destroys ShadowModel 0x370, dCcAc_c 0x33c,
- *   WithMeshClsn 0x174, ModelAnim 0x110, then chains to _ZN12dEnemyBase_cD2Ev. D0 at
+ *   dBgCh_Actr 0x174, ModelAnim 0x110, then chains to _ZN12dEnemyBase_cD2Ev. D0 at
  *   0x02115f28 is the same plus Memory::Deallocate.
  *
  *   An out-of-line D1/D0 pair and the inline destructor below are not in conflict:
@@ -38,7 +38,7 @@
  * table will lie to you.)
  *
  * SIZE 0x398, and every member closes exactly on the next: ModelAnim 0x64 ends at
- * 0x174, WithMeshClsn 0x1bc ends at 0x330, mFileTable and its padding end at 0x33c,
+ * 0x174, dBgCh_Actr 0x1bc ends at 0x330, mFileTable and its padding end at 0x33c,
  * dCcAc_c 0x34 ends at 0x370, ShadowModel 0x28 ends at 0x398. Nothing
  * allocates a plain daOts_c, so the ceiling comes from the children instead: the
  * earliest own field any of the three declares is at 0x3fa, and 0x398..0x3f9 is
@@ -73,7 +73,7 @@
  */
 struct daOts_c : dEnemyBase_c {
     ModelAnim           mModelAnim;             /* 0x110 */
-    WithMeshClsn        mWithMeshClsn;          /* 0x174 */
+    dBgCh_Actr        mWithMeshClsn;          /* 0x174 */
     /* All three children declare a field here, which is what makes it the base's
        rather than any one of theirs. Bully is the only one that says what it is,
        and says it twice: InitResources points it at data_ov064_0211b834, and

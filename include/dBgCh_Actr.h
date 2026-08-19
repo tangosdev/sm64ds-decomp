@@ -1,26 +1,26 @@
-#ifndef WITHMESHCLSN_H
-#define WITHMESHCLSN_H
+#ifndef DBGCH_ACTR_H
+#define DBGCH_ACTR_H
 
 #include "types.h"
-#include "BgCh.h"
+#include "dBgCh.h"
 
 /* An dActor_c's mesh-collision query, vtable at 0x02099204 (still unnamed in
  * symbols.txt).
  *
  * VTABLE, 2 slots, read out of the ROM:
  *
- *   slot 0  0x020373f8  ~WithMeshClsn (D1)
- *   slot 1  0x020373b8  ~WithMeshClsn (D0)  - currently func_020373b8
+ *   slot 0  0x020373f8  ~dBgCh_Actr (D1)
+ *   slot 1  0x020373b8  ~dBgCh_Actr (D0)  - currently func_020373b8
  *
  * Exactly two: the word after slot 1 is the "5dBgPi" RTTI name string, not a
  * third slot. C1, D1 and the D0 all store the same literal, 0x02099204, into
  * [this+0], and no other word in the image references that address.
  *
- * DERIVES FROM BgCh. Its typeinfo at 0x020991e0 is the 12-byte
- * __si_class_type_info kind whose base pointer is 0x020991c8 -- BgCh's root
+ * DERIVES FROM dBgCh. Its typeinfo at 0x020991e0 is the 12-byte
+ * __si_class_type_info kind whose base pointer is 0x020991c8 -- dBgCh's root
  * record. The ROM names this class dBgCh_Actr and the base dBgCh. C1 agrees
- * from the other side: it calls BgCh's constructor (0x02035514) before
- * storing this vtable, and D1/D0 call BgCh's D2 (0x020354d0) after tearing
+ * from the other side: it calls dBgCh's constructor (0x02035514) before
+ * storing this vtable, and D1/D0 call dBgCh's D2 (0x020354d0) after tearing
  * the members down.
  *
  * NOTHING DERIVES FROM THIS. An image-wide scan finds the only reference to
@@ -31,11 +31,11 @@
  * key-function arrangement from include/ModelBase.h.
  *
  * WHY THE FIELD LIST IS FLAT. Two members are whole sub-objects: a
- * SphereClsn at 0x20 (C1 does `add r0,r4,#0x20' then SphereClsn's C1) and a
- * RaycastLine at 0x134 (`add r0,r4,#0x134' then RaycastLine's C1). They are
+ * dBgCh_SphCrr at 0x20 (C1 does `add r0,r4,#0x20' then dBgCh_SphCrr's C1) and a
+ * dBgCh_Lin at 0x134 (`add r0,r4,#0x134' then dBgCh_Lin's C1). They are
  * NOT typed as such here, because a dozen already-matched bodies reach into
  * their interiors by absolute offset -- self+0x30, +0x34, +0x90, +0x144,
- * +0x148 -- and SphereClsn.h / RaycastLine.h are still auto-generated
+ * +0x148 -- and dBgCh_SphCrr.h / dBgCh_Lin.h are still auto-generated
  * placeholders whose sizeof cannot be trusted. Typing the members would
  * rewrite those bodies for no byte benefit. Interior offsets worth knowing:
  * 0x30 sphere.result, 0x34 its SurfaceInfo, 0x6c a Vector3 displacement,
@@ -55,9 +55,9 @@
  *     the FIELDS are pointer-typed is a separate question from what Init
  *     stores, and UpdateDiscreteNoLava passes them straight on to
  *     func_02038324, which takes ints. They could also formally be the
- *     SphereClsn's tail; no SphereClsn-side access to them exists, so they
+ *     dBgCh_SphCrr's tail; no dBgCh_SphCrr-side access to them exists, so they
  *     are treated as ours.
- *   - 0x1b8 likewise sits at the RaycastLine boundary.
+ *   - 0x1b8 likewise sits at the dBgCh_Lin boundary.
  *   - The 0x1bc size is convergent evidence, not a single instruction: some
  *     forty embedding actor headers place their next field at exactly
  *     mWithMeshClsn + 0x1bc. Nothing in matched code allocates by sizeof.
@@ -74,12 +74,12 @@ struct dActor_c;
    enough and the collision is avoided outright. */
 struct Vector3_16;   /* pointers only; see the note above */
 
-struct WithMeshClsn : BgCh {
+struct dBgCh_Actr : dBgCh {
     u32 mFlags;                 /* 0x010 - word, see above */
     dActor_c *mActor;              /* 0x014 - Init arg 1 */
     Fix12i unk_018;             /* 0x018 - Init arg 2, the sphere radius */
     Fix12i unk_01c;             /* 0x01c - Init arg 3, a height */
-    u8  mSphereClsn;            /* 0x020 - SphereClsn sub-object starts here */
+    u8  mSphereClsn;            /* 0x020 - dBgCh_SphCrr sub-object starts here */
     u8  pad_021[0x4b];
     u8  unk_06c;                /* 0x06c - a Vector3 displacement */
     u8  pad_06d[0x23];
@@ -88,12 +88,12 @@ struct WithMeshClsn : BgCh {
     s32 unk_128;                /* 0x128 - copied from unk_1b8 each update */
     s32 unk_12c;                /* 0x12c - Init stores its Vector3_16 * arg 4 */
     s32 unk_130;                /* 0x130 - Init stores its Vector3_16 * arg 5 */
-    u8  mRaycastLine;           /* 0x134 - RaycastLine sub-object starts here */
+    u8  mRaycastLine;           /* 0x134 - dBgCh_Lin sub-object starts here */
     u8  pad_135[0x83];
     Fix12i unk_1b8;             /* 0x1b8 - (?) Init sets 0x1000 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    virtual ~WithMeshClsn();    /* slots 0 (D1), 1 (D0) */
+    virtual ~dBgCh_Actr();    /* slots 0 (D1), 1 (D0) */
 
     /* --- non-virtual --- */
     void Init(dActor_c *actor, Fix12i radius, Fix12i height,
@@ -104,9 +104,9 @@ struct WithMeshClsn : BgCh {
     void ClearLimMovFlag();
     void SetGroundFlag();
     void SetLimMovFlag();
-    /* These two hide BgCh's same-named methods rather than overriding them --
+    /* These two hide dBgCh's same-named methods rather than overriding them --
        they are separate symbols in the ROM, and they fan the call out to both
-       sub-objects instead of touching this object's own BgCh base. */
+       sub-objects instead of touching this object's own dBgCh base. */
     void StartDetectingWater();
     void StopDetectingWater();
     void UpdateContinuous();
@@ -130,7 +130,7 @@ struct WithMeshClsn : BgCh {
 
        The first five read mFlags (word, 0x10) except GetResultFlag1 and
        IsOnWall, which read mClsnFlags with `ldrb` at 0x90 -- the byte inside
-       the SphereClsn sub-object, not a field of our own. --- */
+       the dBgCh_SphCrr sub-object, not a field of our own. --- */
     s32 GetResultFlag1() const;    /* mClsnFlags & 0x01 -- collision exists */
     s32 IsOnWall() const;          /* mClsnFlags & 0x08 */
     s32 GetLimMovFlag() const;     /* mFlags & 0x80 -- limited movement */
@@ -140,8 +140,8 @@ struct WithMeshClsn : BgCh {
     s32 ShouldUpdatePosY() const;  /* !(mFlags & 0x1000) */
 };
 
-typedef char WithMeshClsn_size_must_be_0x1bc[
-    sizeof(WithMeshClsn) == 0x1bc ? 1 : -1];
+typedef char dBgCh_Actr_size_must_be_0x1bc[
+    sizeof(dBgCh_Actr) == 0x1bc ? 1 : -1];
 
 #else
 
@@ -153,8 +153,8 @@ typedef char WithMeshClsn_size_must_be_0x1bc[
    "proven equal to the ROM" into "cannot be checked at all". The corrected
    widths live on the C++ side above; a .c file inherits them when it is
    converted, not before. */
-struct WithMeshClsn {
-    u8  pad_000[0x10];      /* BgCh base */
+struct dBgCh_Actr {
+    u8  pad_000[0x10];      /* dBgCh base */
     u8  mFlags;             /* 0x010 - u32 on the C++ side; see above */
     u8  pad_011[0x3];
     u8  mActor;             /* 0x014 */
@@ -177,4 +177,4 @@ struct WithMeshClsn {
 
 #endif /* __cplusplus */
 
-#endif /* WITHMESHCLSN_H */
+#endif /* DBGCH_ACTR_H */

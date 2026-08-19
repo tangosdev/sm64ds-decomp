@@ -10,7 +10,7 @@ extern void func_ov030_02111a00(void *c);
 extern void _ZN9Animation7AdvanceEv(void *c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *clsn);
 extern int func_ov030_02111dd0(void *c);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *c);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *c);
 extern void func_ov030_02111f6c(void *c, void *w);
 extern void func_ov030_02111bc4(void *c);
 extern int func_ov030_02111ea4(void *c);
@@ -78,14 +78,14 @@ int func_ov030_02113d20(void *c) {
     b = (int)(*(unsigned short *)((char *)c + 0xc) == 0x10b);
     if (b) {
         _ZN8dActor_c9UpdatePosEP5dCc_c(c, (char *)c + 0x160);
-        onWall = (func_ov030_02111dd0(c) | _ZNK12WithMeshClsn8IsOnWallEv((char *)c + 0x194)) != 0;
+        onWall = (func_ov030_02111dd0(c) | _ZNK10dBgCh_Actr8IsOnWallEv((char *)c + 0x194)) != 0;
         func_ov030_02111f6c(c, (char *)c + 0x194);
         func_ov030_02111bc4(c);
     } else {
         _ZN8dActor_c9UpdatePosEP5dCc_c(c, (char *)c + 0x160);
         func_ov030_02111f6c(c, (char *)c + 0x194);
         func_ov030_02111bc4(c);
-        onWall = (func_ov030_02111ea4(c) | _ZNK12WithMeshClsn8IsOnWallEv((char *)c + 0x194)) != 0;
+        onWall = (func_ov030_02111ea4(c) | _ZNK10dBgCh_Actr8IsOnWallEv((char *)c + 0x194)) != 0;
     }
 
     if (*(int *)((char *)c + 0x3b4) == 1 && onWall && dist < 0x12c000) {

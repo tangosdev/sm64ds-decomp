@@ -1,5 +1,5 @@
 //cpp
-// @symbol _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj
+// @symbol _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj
 /* recovered: named members + shared header, real C++ method
  *
  * One frame of the death an invincible (mega) character inflicts.
@@ -24,8 +24,8 @@
 #include "dEnemyBase_c.h"
 
 extern "C" {
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *clsn);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *clsn);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *clsn);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *clsn);
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *actor);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *actor, void *clsn);
 /* ReflectAngle takes Fix12<int> by value -- the mwccarm 6az wall, runbook
@@ -91,9 +91,9 @@ struct M48 { int w[12]; };
 
 #define LAUNDER(p) ((int)(p))
 
-int dEnemyBase_c::UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_, unsigned int flags)
+int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, unsigned int flags)
 {
-    WithMeshClsn *clsn = &ww_;
+    dBgCh_Actr *clsn = &ww_;
     ModelAnim *anim = &mm_;
     int v[3];
 
@@ -104,7 +104,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_
         *(unsigned short *)LAUNDER(&mDeathTimer) -= 1;
 
     if (mDeathTimer == 0 ||
-        (clsn != 0 && _ZNK12WithMeshClsn10IsOnGroundEv(clsn) != 0 && mVertSpeed < 0)) {
+        (clsn != 0 && _ZNK10dBgCh_Actr10IsOnGroundEv(clsn) != 0 && mVertSpeed < 0)) {
         if (flags & 1)
             SpawnCoin();
         if (flags & 2)
@@ -116,7 +116,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_
     _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
     if (clsn != 0) {
         UpdateWMClsn(*clsn, 0);
-        if (_ZNK12WithMeshClsn8IsOnWallEv(clsn) != 0)
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn) != 0)
             mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(
                 this, mWallNormalX, mWallNormalZ, mPrevAngleY);
     }

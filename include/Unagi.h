@@ -8,8 +8,8 @@
  *
  *     dEnemyBase_c                     ends 0x110
  *     dCcAcPos_c 0x110 + 0x040 = 0x150  -> the second one
- *     dCcAcPos_c 0x150 + 0x040 = 0x190  -> WithMeshClsn
- *     WithMeshClsn              0x190 + 0x1bc = 0x34c  -> unk_34c
+ *     dCcAcPos_c 0x150 + 0x040 = 0x190  -> dBgCh_Actr
+ *     dBgCh_Actr              0x190 + 0x1bc = 0x34c  -> unk_34c
  *     BlendModelAnim            0x350 + 0x070 = 0x3c0
  *     Vector3[7]                0x448 + 0x054 = 0x49c  -> mStarUniqueID
  *
@@ -26,13 +26,13 @@
 
 #include "dEnemyBase_c.h"
 #include "BlendModelAnim.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"
 
 struct Unagi : dEnemyBase_c {
     dCcAcPos_c mdCcAcPos_c1;  /* 0x110 */
     dCcAcPos_c mdCcAcPos_c2;  /* 0x150 */
-    WithMeshClsn mWithMeshClsn;                             /* 0x190 */
+    dBgCh_Actr mWithMeshClsn;                             /* 0x190 */
     s32 unk_34c;                                            /* 0x34c */
     BlendModelAnim mBlendModelAnim;                         /* 0x350 */
     s32 unk_3c0;                                            /* 0x3c0 */

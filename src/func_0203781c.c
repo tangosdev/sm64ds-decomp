@@ -21,7 +21,7 @@
  * tail-branches to the complete object destructor.  It cannot be expressed as
  * plain C; the byte-identical thunk is emitted by compiling the C++ multiple-
  * inheritance class below, where the secondary base sits at offset 16.
- * Matched symbol: _ZThn16_N7DerivedD1Ev  (== func_0203781c, tailcalls RaycastLine::~RaycastLine).
+ * Matched symbol: _ZThn16_N7DerivedD1Ev  (== func_0203781c, tailcalls dBgCh_Lin::~dBgCh_Lin).
  *
  * compile as C++:  mwccarm -lang=c++ -O4,p -enum int -char signed -interworking -proc arm946e -gccext,on
  */

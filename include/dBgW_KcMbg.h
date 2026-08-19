@@ -53,9 +53,9 @@ struct dBgW_KcMbg : dBgW_Kc {
        0x01ffd920, the same one dBgW_Kc holds, so it is inherited. */
     virtual void GetNormal(s16 triID, Vector3 &res);      /* slot 4 */
     virtual void GetTriangleOrigin(s16 triID, Vector3 &res); /* slot 5 */
-    virtual int DetectClsn(RaycastGround &ray);           /* slot 6 - free def */
-    virtual int DetectClsn(RaycastLine &ray);             /* slot 7 - free def */
-    virtual int DetectClsn(SphereClsn &sphere);           /* slot 8 - free def */
+    virtual int DetectClsn(dBgCh_Gnd &ray);           /* slot 6 - free def */
+    virtual int DetectClsn(dBgCh_Lin &ray);             /* slot 7 - free def */
+    virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 - free def */
     virtual int TransformPos(const Vector3 &pos, Vector3 &res); /* slot 10 */
     virtual s16 GetAngularVelY();                         /* slot 11 */
     virtual void GetVelocity(Vector3 &res);               /* slot 12 */

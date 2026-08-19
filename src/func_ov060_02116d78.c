@@ -1,6 +1,6 @@
 #include "types.h"
 extern void func_ov060_02116518(char *self, unsigned int kind, int a2, int a3);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 extern int RandomIntInternal(int *seed);
 extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int kind, unsigned int b, Vector3 *pos, void *vtab, int e, int f);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
@@ -40,7 +40,7 @@ void func_ov060_02116d78(char *c)
     *(int*)(c+0x64) += *(int*)(c+0xac);
 
     func_ov060_02116518(c, 0x9a, 1, *(int*)(c+0x360) * 0xc);
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c+0x110) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x110) != 0) {
         int r = RandomIntInternal(&data_0209e650);
         unsigned int r3 = (unsigned int)r >> 16;
         if (r3 % 17 != 0)

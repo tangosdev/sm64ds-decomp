@@ -13,13 +13,13 @@
  * UpdateDeath and UpdateWMClsn, it is not declared in dEnemyBase_c.h yet.
  */
 extern "C" {
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(dEnemyBase_c *thiz, WithMeshClsn *c);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(dEnemyBase_c *thiz, dBgCh_Actr *c);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
 int FlyGuy::Behavior()
 {
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
         if (unk_107 != 0) {
             if (unk_104 == 0) {

@@ -9,7 +9,7 @@ extern int _ZN6Player14IsFrontSlidingEv(char* p);
 extern int _ZN6Player17LostGrabbedObjectEv(char* p);
 extern void Math_Function_0203b14c(char* dst, int a, int b, int c, int d);
 extern char* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(char* self, char* player, const struct Vector3* v);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(char* self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char* self);
 
 void func_ov098_02139850(char* self)
 {
@@ -56,7 +56,7 @@ other:
         *(int*)(self + 0x4f4) = 0;
         *(int*)(self + 0x4f8) = 0;
         *(int*)(self + 0x4fc) = 0;
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x320) != 0) {
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x320) != 0) {
             *(u32*)(((int)self + 0xb0)) &= ~0x4000000;
         }
     }

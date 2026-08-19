@@ -7,10 +7,10 @@
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
 struct dCc_c;
-struct WithMeshClsn;
+struct dBgCh_Actr;
 extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
 extern "C" void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, dCc_c *cc);
-extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
+extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm, unsigned int j);
 extern "C" void _ZN5dCc_c5ClearEv(dCc_c *self);
 extern "C" void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern "C" void _ZN5dCc_c6UpdateEv(dCc_c *self);
@@ -29,7 +29,7 @@ int Snowball::Behavior()
     mVertSpeed = hi;
     unk_0ac = tmp;
     _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(((char *)this), (dCc_c *)((char *)&mdCcAc_c));
-    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0);
     mAngleY = mPrevAngleY;
     func_ov081_02126224(((char *)this));
     _ZN5dCc_c5ClearEv((dCc_c *)((char *)&mdCcAc_c));

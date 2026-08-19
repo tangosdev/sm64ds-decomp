@@ -19,10 +19,10 @@
 #include "CommonModel.h"
 #include "dCcAcPos_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct KingBobOmb : dEnemyBase_c {
-    WithMeshClsn mWithMeshClsn;       /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x110 */
     BlendModelAnim mBlendModelAnim;   /* 0x2cc */
     dCcAcPos_c mdCcAcPos_c;/* 0x33c */
     dCcAcPos_c mdCcAcPos_c_37c;/* 0x37c */
@@ -93,10 +93,10 @@ struct KingBobOmb {
     u8  pad_0cd[0x1];
     s16 unk_0ce;                 /* 0x0ce */
     u8  pad_0d0[0x40];
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x110 -- a relocation the ROM build
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x110 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10KingBobOmbD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x110 */
     /* BlendModelAnim member, named by _ZN14BlendModelAnimD1Ev at +0x2cc -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     BlendModelAnim mBlendModelAnim;            /* 0x2cc */

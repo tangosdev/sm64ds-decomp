@@ -5,7 +5,7 @@ extern int Vec3_HorzDist(void *a, void *b);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
 extern int RandomIntInternal(int *seed);
 extern short _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void _Z14ApproachLinearRiii(int *p, int target, int step);
 extern void func_ov034_02112688(void *c);
@@ -51,7 +51,7 @@ void func_ov034_02111c48(void *thiz)
             *(unsigned char *)(c + 0x8da) = 0;
     }
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x708) != 0 || len > 0x5dc000) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x708) != 0 || len > 0x5dc000) {
         r4 = RandomIntInternal(&data_0209e650);
         *(short *)(c + 0x800 + 0xd8) = Vec3_HorzAngle(c + 0x5c, c + 0x8cc);
         *(unsigned char *)(c + 0x8da) = (unsigned char)((unsigned int)(r4 + 0x1e) >> 0x1b);

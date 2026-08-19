@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN12WithMeshClsn15ClearGroundFlagEv
+// @symbol _ZN10dBgCh_Actr15ClearGroundFlagEv
 /* recovered: named members + shared header, real C++ method */
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 
-void WithMeshClsn::ClearGroundFlag()
+void dBgCh_Actr::ClearGroundFlag()
 {
     *(unsigned int *)((char *)&mFlags) &= ~0x10;
 }

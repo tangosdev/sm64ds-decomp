@@ -3,7 +3,7 @@
 
 #include "dCcAc_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "dActor_c.h"
 
 /* FlameChompFire is daKpFr_c in the ROM's own RTTI: the typeinfo at ov070
@@ -31,7 +31,7 @@ struct FlameChompFire : dActor_c {
     u8                 pad_0d0[0x4];
     ShadowModel        mShadowModel;           /* 0x0d4 */
     dCcAc_c mdCcAc_c;    /* 0x0fc */
-    WithMeshClsn       mWithMeshClsn;          /* 0x130 */
+    dBgCh_Actr       mWithMeshClsn;          /* 0x130 */
     u8                 unk_2ec;                /* 0x2ec */
     u8                 pad_2ed[0x37];
     s32                unk_324;                /* 0x324 */

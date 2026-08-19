@@ -19,19 +19,19 @@ extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Bloc
 extern void func_020393d4(int* p, int v);
 extern void func_020393c4(int* p, int v);
 extern void _ZN4dBgW6EnableEP8dActor_c(void* thiz, void* actor);
-extern void _ZN13RaycastGroundC1Ev(void* thiz);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* thiz, const Vector3* pos, void* actor);
-extern int _ZN13RaycastGround10DetectClsnEv(void* thiz);
-extern void _ZN13RaycastGroundD1Ev(void* thiz);
+extern void _ZN9dBgCh_GndC1Ev(void* thiz);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* thiz, const Vector3* pos, void* actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void* thiz);
+extern void _ZN9dBgCh_GndD1Ev(void* thiz);
 extern void func_ov021_02111434(void* p);
 extern void func_ov021_0211129c(void* p);
 }
 extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 extern int func_ov021_02112128, func_ov021_02111fe4, func_ov021_02111f8c, func_ov021_02111f34, func_ov021_02111edc;
-struct RaycastGround { char buf[0x50]; };
+struct dBgCh_Gnd { char buf[0x50]; };
 extern "C" int _ZN12WorkElevator13InitResourcesEv(char* sl)
 {
-    int i; char* p; RaycastGround ray; Vector3 objPos;
+    int i; char* p; dBgCh_Gnd ray; Vector3 objPos;
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov021_021149a0);
     _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov021_021149a8);
     _ZN5Model8LoadFileER13SharedFilePtr(&data_ov021_021149b0);
@@ -73,10 +73,10 @@ extern "C" int _ZN12WorkElevator13InitResourcesEv(char* sl)
     *(s32*)(sl + 0xc48) = *(s32*)(sl + 0x64);
     objPos.x = *(s32*)(sl + 0x5c); objPos.y = *(s32*)(sl + 0x60); objPos.z = *(s32*)(sl + 0x64);
     objPos.y = objPos.y - 0x14000;
-    _ZN13RaycastGroundC1Ev(&ray);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&ray, &objPos, (void*)0);
+    _ZN9dBgCh_GndC1Ev(&ray);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&ray, &objPos, (void*)0);
     *(s32*)(sl + 0xc6c) = objPos.y;
-    if (_ZN13RaycastGround10DetectClsnEv(&ray)) *(s32*)(sl + 0xc6c) = *(s32*)((char*)&ray + 0x44);
-    _ZN13RaycastGroundD1Ev(&ray);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&ray)) *(s32*)(sl + 0xc6c) = *(s32*)((char*)&ray + 0x44);
+    _ZN9dBgCh_GndD1Ev(&ray);
     return 1;
 }

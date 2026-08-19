@@ -17,12 +17,12 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "dCcAc_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct MontyMoleRock : dEnemyBase_c {
     Model mModel;                     /* 0x110 */
     dCcAc_c mdCcAc_c;/* 0x160 */
-    WithMeshClsn mWithMeshClsn;       /* 0x194 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x194 */
     u8 unk_350;                       /* 0x350 */
 
     /* --- vtable --- */
@@ -59,10 +59,10 @@ struct MontyMoleRock {
        dCcAc_c's D1 at +0x160 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13MontyMoleRockD1Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x160 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x194 -- a relocation the ROM build
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x194 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13MontyMoleRockD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x194 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x194 */
     u8  unk_350;            /* 0x350 */
 };
 

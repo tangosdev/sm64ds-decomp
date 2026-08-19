@@ -9,7 +9,7 @@ extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *file, int a
 extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void *thiz);
 extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, int r, int h, unsigned int a, unsigned int b);
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, int r, int h, void *v, int b);
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, int r, int h, void *v, int b);
 extern "C" void func_ov072_02121d50(void *c);
 
 int BabyPenguin::InitResources()
@@ -30,7 +30,7 @@ int BabyPenguin::InitResources()
     mScaleX = 0x400;
     mScaleY = 0x400;
     mScaleZ = 0x400;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x194, ((char *)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x194, ((char *)this), 0x32000, 0x32000, 0, 0);
     mEatingPlayer = 0;
     unk_360 = 0;
     func_ov072_02121d50(((char *)this));

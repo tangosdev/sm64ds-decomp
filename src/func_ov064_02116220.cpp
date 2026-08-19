@@ -15,17 +15,17 @@ extern "C" {
 typedef struct { int x, y, z; } Vector3;
 typedef struct dActor_c dActor_c;
 typedef struct BCA_File BCA_File;
-struct RaycastGround { char buf[0x50]; };
-void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3* p, dActor_c* a);
-int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
+struct dBgCh_Gnd { char buf[0x50]; };
+void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
+void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, const Vector3* p, dActor_c* a);
+int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
 int func_02037e38(unsigned int* p);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, BCA_File* f, int a, int b, unsigned int e);
-void _ZN13RaycastGroundD1Ev(RaycastGround* self);
+void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 
 void func_ov064_02116220(char* c){
-  RaycastGround rg;
-  _ZN13RaycastGroundC1Ev(&rg);
+  dBgCh_Gnd rg;
+  _ZN9dBgCh_GndC1Ev(&rg);
   Vector3 v;
   int y = *(int*)(c+0x60);
   int yoff = *(int*)(c+0x3ec);
@@ -37,8 +37,8 @@ void func_ov064_02116220(char* c){
   v.y = yv;
   v.z = z;
 
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (dActor_c*)c);
-  if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
+  _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (dActor_c*)c);
+  if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
     *(int*)(c+0x3f4) = *(int*)(rg.buf + 0x44);
     if (*(int*)(c+0x60) <= *(int*)(rg.buf + 0x44) + 0x14000) {
       int r = func_02037e38((unsigned int*)(rg.buf + 0x14));
@@ -57,6 +57,6 @@ void func_ov064_02116220(char* c){
       }
     }
   }
-  _ZN13RaycastGroundD1Ev(&rg);
+  _ZN9dBgCh_GndD1Ev(&rg);
 }
 }

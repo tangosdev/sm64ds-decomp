@@ -2,7 +2,7 @@
 #include "types.h"
 // @symbol func_ov100_02141fb0
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 /* recovered: shared common types */
 #include "common.h"
 struct Obj {
@@ -48,7 +48,7 @@ extern "C" void func_ov100_02141fb0(Obj *thiz)
         *(int *)(((int)c + 0x60)) += r;
         s.x = 0; s.y = 0; s.z = 0;
         func_ov002_020ada40(c, &s, a, 0);
-        _ZN12WithMeshClsn15ClearGroundFlagEv(c + 0x110);
+        _ZN10dBgCh_Actr15ClearGroundFlagEv(c + 0x110);
         return;
     }
     if ((fl & 0x3c0) != 0) {

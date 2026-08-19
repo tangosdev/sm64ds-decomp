@@ -14,7 +14,7 @@
  * in dEnemyBase_c.h yet.
  */
 extern "C" {
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(dEnemyBase_c *thiz, WithMeshClsn *c);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(dEnemyBase_c *thiz, dBgCh_Actr *c);
 extern int ApproachAngle(short *target, short from, short start, short speed, short max);
 extern void _Z14ApproachLinearRiii(int *x, int target, int step);
 extern int func_ov065_0211691c(void *c, void *p);
@@ -26,7 +26,7 @@ extern int data_ov065_0211d670[];
 
 int Snufit::Behavior()
 {
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
         mdCcAc_c.Clear();
         if (unk_107 != 0) {
             if (unk_104 == 0) {

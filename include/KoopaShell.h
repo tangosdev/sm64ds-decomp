@@ -6,8 +6,8 @@
 /* Six boundaries close on sizes other headers assert:
  *
  *     dEnemyBase_c              ends 0x110
- *     dCcAc_c 0x110 + 0x034 = 0x144  -> WithMeshClsn
- *     WithMeshClsn       0x144 + 0x1bc = 0x300  -> Model
+ *     dCcAc_c 0x110 + 0x034 = 0x144  -> dBgCh_Actr
+ *     dBgCh_Actr       0x144 + 0x1bc = 0x300  -> Model
  *     Model              0x300 + 0x050 = 0x350  -> ShadowModel
  *     ShadowModel        0x350 + 0x028 = 0x378  -> the second cylinder
  *     dCcAc_c 0x378 + 0x034 = 0x3ac  -> mState
@@ -20,12 +20,12 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "dCcAc_c.h"
 
 struct KoopaShell : dEnemyBase_c {
     dCcAc_c mdCc_c;        /* 0x110 */
-    WithMeshClsn mMeshClsn;                  /* 0x144 */
+    dBgCh_Actr mMeshClsn;                  /* 0x144 */
     Model mModel;                            /* 0x300 */
     ShadowModel mShadowModel;                /* 0x350 */
     dCcAc_c mdCc_c2;       /* 0x378 */

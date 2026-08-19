@@ -1,5 +1,5 @@
 //cpp
-struct WithMeshClsn {
+struct dBgCh_Actr {
     char pad[1];
     bool IsOnGround() const;
 };
@@ -14,7 +14,7 @@ struct Particle {
 extern "C" void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
 
 extern "C" void func_ov062_02118004(void *c, int a1) {
-    int r = ((WithMeshClsn*)((char*)c + 0x144))->IsOnGround();
+    int r = ((dBgCh_Actr*)((char*)c + 0x144))->IsOnGround();
     if (r == 0) return;
     _Z14ApproachLinearRiii(*(int*)((char*)c + 0x98), 0, a1);
     int x = *(int*)((char*)c + 0x5c);

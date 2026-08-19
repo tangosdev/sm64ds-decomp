@@ -6,7 +6,7 @@
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 #include "dCcAc_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
@@ -25,7 +25,7 @@ struct Scuttlebug : dActor_c {
     ModelAnim mModelAnim;                    /* 0x0d4 */
     ShadowModel mShadowModel;                /* 0x138 */
     dCcAc_c mdCcAc_c;  /* 0x160 */
-    WithMeshClsn mWithMeshClsn;              /* 0x194 */
+    dBgCh_Actr mWithMeshClsn;              /* 0x194 */
     u8  pad_350[0x58];
     u8  unk_3a8;                             /* 0x3a8 */
     u8  pad_3a9[0x3];

@@ -10,12 +10,12 @@ struct CLPS_Block;
 
 struct Vector3 { int x, y, z; };
 
-struct RaycastGround {
+struct dBgCh_Gnd {
     char pad[0x44];
     int result;       /* 0x44 */
     char pad2[0x54 - 0x48];
-    RaycastGround();
-    ~RaycastGround();
+    dBgCh_Gnd();
+    ~dBgCh_Gnd();
     int SetObjAndPos(const Vector3 &p, dActor_c *a);
     int DetectClsn();
 };
@@ -63,7 +63,7 @@ extern "C" int _ZN14TTC_MovingBeam13InitResourcesEv(char *c)
     v.y = *(int *)(c + 0x60);
     v.z = *(int *)(c + 0x64);
     v.y -= 0xa000;
-    RaycastGround rc;
+    dBgCh_Gnd rc;
     rc.SetObjAndPos(v, 0);
     *(int *)(c + 0x330) = v.y;
     if (rc.DetectClsn())

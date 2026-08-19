@@ -3,7 +3,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Spiny.h"
 extern "C" {
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void* c, int d);
 unsigned char DecIfAbove0_Byte(unsigned char* p);
 void _ZN7fBase_c18MarkForDestructionEv(void* c);
@@ -20,7 +20,7 @@ extern signed char data_0209f2f8;
 int Spiny::Behavior()
 {
     int s = unk_3d8;
-    if (s != 1 || _ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn)) {
+    if (s != 1 || _ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn)) {
         s = unk_3d8;
         if (s != 4 && s != 5 && _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char*)this), 0x5dc000)) {
             if (DecIfAbove0_Byte((unsigned char*)((char*)&unk_3e9)) == 0) {

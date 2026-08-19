@@ -15,7 +15,7 @@ extern void Vec3_LslInPlace(void* v, int sh);
 extern void AddVec3(void* d, void* a, void* b);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int x, int y, int z, const void* v, void* cb);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void* c, void* w);
 extern void _ZN5dCc_c5ClearEv(void* c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* cyl);
 extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* c, void* v);
@@ -92,7 +92,7 @@ int Key::Behavior()
         return 1;
     }
 
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(((char*)this), ((char*)this) + 0x260)) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char*)this), ((char*)this) + 0x260)) {
         func_ov089_02131f54(((char*)this));
         _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
         return 1;

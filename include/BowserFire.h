@@ -7,7 +7,7 @@
  * that class's own static assertion, so the offsets below are checked twice --
  * once by the assert, once by closing exactly on the next named field:
  *
- *     WithMeshClsn        0x110 + 0x1bc = 0x2cc   -> unk_2cc
+ *     dBgCh_Actr        0x110 + 0x1bc = 0x2cc   -> unk_2cc
  *     dCcAc_c  0x2d0 + 0x034 = 0x304   -> mShadowModel
  *     ShadowModel         0x304 + 0x028 = 0x32c   -> padding
  *
@@ -27,12 +27,12 @@
 #ifdef __cplusplus
 
 #include "dEnemyBase_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "dCcAc_c.h"
 #include "ShadowModel.h"
 
 struct BowserFire : dEnemyBase_c {
-    WithMeshClsn mWithMeshClsn;                 /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;                 /* 0x110 */
     s32 unk_2cc;                                /* 0x2cc */
     dCcAc_c mdCcAc_c;     /* 0x2d0 */
     ShadowModel mShadowModel;                   /* 0x304 */

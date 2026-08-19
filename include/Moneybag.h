@@ -7,7 +7,7 @@
 #include "Model.h"
 #include "ShadowModel.h"
 #include "dCcAc_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
@@ -27,7 +27,7 @@ struct Moneybag : dActor_c {
     Model mModel;                            /* 0x138 */
     ShadowModel mShadowModel;                /* 0x188 */
     dCcAc_c mdCcAc_c;  /* 0x1b0 */
-    WithMeshClsn mWithMeshClsn;              /* 0x1e4 */
+    dBgCh_Actr mWithMeshClsn;              /* 0x1e4 */
     u8  unk_3a0;            /* 0x3a0 */
     u8  pad_3a1[0x2f];
     s32 unk_3d0;            /* 0x3d0 */

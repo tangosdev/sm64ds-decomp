@@ -11,7 +11,7 @@
  *
  * SIZE IS 0x4f4, THE LITERAL PushBlock_Spawn.c passes to fBase_c::operator
  * new (1268 decimal) -- not merely the observed field span, though here they
- * agree: dBgActor_c ends at 0x320 and this class adds exactly one WithMeshClsn
+ * agree: dBgActor_c ends at 0x320 and this class adds exactly one dBgCh_Actr
  * (0x1bc) plus six trailing scalars, landing on 0x4f4 with no padding.
  *
  * THIS IS THE MID-RENAME CLASS. Before this change the header was a flat,
@@ -29,13 +29,13 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct dActor_c;
 struct Player;
 
 struct PushBlock : dBgActor_c {
-    WithMeshClsn mWithMeshClsn;       /* 0x320 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x320 */
     s32 unk_4dc;                      /* 0x4dc */
     s32 unk_4e0;                      /* 0x4e0 */
     s32 unk_4e4;                      /* 0x4e4 */

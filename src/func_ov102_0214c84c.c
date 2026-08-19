@@ -1,11 +1,11 @@
 #include "types.h"
 extern int data_ov102_0214ea48[];
 
-extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN4BgCh19StartDetectingWaterEv(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
-extern int _ZN13RaycastGround10DetectClsnEv(void *self);
-extern void _ZN13RaycastGroundD1Ev(void *self);
+extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void _ZN5dBgCh19StartDetectingWaterEv(void *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_GndD1Ev(void *self);
 extern int SurfaceInfo_TestFlag0x20(int *p);
 extern int func_02037e84(int *p);
 extern int func_02037e38(unsigned int *p);
@@ -27,8 +27,8 @@ void func_ov102_0214c84c(char *c)
         && *(void **)(c + 0x3c0) != 0
         && *(u8 *)(*(char **)(c + 0x3c0) + 0x6de) == 0)
     {
-        _ZN13RaycastGroundC1Ev(rg);
-        _ZN4BgCh19StartDetectingWaterEv(rg);
+        _ZN9dBgCh_GndC1Ev(rg);
+        _ZN5dBgCh19StartDetectingWaterEv(rg);
         {
             int vx = *(int *)(c + 0x5c);
             int vz = *(int *)(c + 0x64);
@@ -37,8 +37,8 @@ void func_ov102_0214c84c(char *c)
             pv[4] = vy;
             pv[5] = vz;
         }
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &pv[3], c);
-        if (_ZN13RaycastGround10DetectClsnEv(rg))
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &pv[3], c);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(rg))
         {
             if (SurfaceInfo_TestFlag0x20((int *)(rg + 0x14)))
             {
@@ -53,7 +53,7 @@ void func_ov102_0214c84c(char *c)
                 *(int *)(c + 0x3dc) = func_02037e84((int *)(rg + 0x14)) + 0xf2;
                 *(u32 *)(c + 0x3d8) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                     *(u32 *)(c + 0x3d8), 0, *(u32 *)(c + 0x3dc), c + 0x74, 0);
-                _ZN13RaycastGroundD1Ev(rg);
+                _ZN9dBgCh_GndD1Ev(rg);
                 return;
             }
             if (func_02037e38((unsigned int *)(rg + 0x14)) == 1)
@@ -86,7 +86,7 @@ void func_ov102_0214c84c(char *c)
                     *(u32 *)(c + 0x3d8) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
                         *(u32 *)(c + 0x3d8), 0, *(u32 *)(c + 0x3dc), c + 0x74, 0);
                 }
-                _ZN13RaycastGroundD1Ev(rg);
+                _ZN9dBgCh_GndD1Ev(rg);
                 return;
             }
             if (*(int *)(c + 0x3dc) != func_02037e84((int *)(rg + 0x14)) + 0xf2)
@@ -100,7 +100,7 @@ void func_ov102_0214c84c(char *c)
             *(int *)(c + 0x3d8) = 0;
             *(int *)(c + 0x3dc) = 0;
         }
-        _ZN13RaycastGroundD1Ev(rg);
+        _ZN9dBgCh_GndD1Ev(rg);
     }
 
     *(int *)(c + 0x3d0) = 0;

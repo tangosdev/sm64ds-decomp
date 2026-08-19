@@ -7,7 +7,7 @@
 #include "ShadowModel.h"
 #include "TextureSequence.h"
 #include "TextureTransformer.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "dActor_c.h"
 
 /* Amp_Spawn allocates 0x434 bytes, constructs dActor_c, then constructs the
@@ -23,7 +23,7 @@ struct Amp : dActor_c {
     TextureTransformer        mTextureTransformer;           /* 0x19c */
     ShadowModel               mShadowModel;                  /* 0x1b0 */
     dCcAcPos_c mdCcAcPos_c;    /* 0x1d8 */
-    WithMeshClsn              mWithMeshClsn;                 /* 0x218 */
+    dBgCh_Actr              mWithMeshClsn;                 /* 0x218 */
     u8                        unk_3d4[0x30];                  /* 0x3d4 */
     u8                        pad_404[0xc];
     Vector3                   mCylinderOffset;               /* 0x410 */

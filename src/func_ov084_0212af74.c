@@ -10,13 +10,13 @@ extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int i, int fx, u32 j);
 extern void func_ov074_0212087c(Vector3 *out, void *player, u8 flag);
 extern int ApproachAngle(s16 *cur, s16 target, int divisor, int band, int maxStep);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 extern int Vec3_HorzDist(void *a, void *b);
 extern int DecIfAbove0_Byte(void *p);
 extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void *self);
 extern s32 _ZN8dActor_c13DistToCPlayerEv(void *self);
 extern s32 AngleDiff(s16 a, s16 b);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *self);
 extern void _ZN8dActor_c11LandingDustEb(void *self, int b);
 extern int DecIfAbove0_Short(void *p);
 extern u32 RandomIntInternal(int *seed);
@@ -63,7 +63,7 @@ void func_ov084_0212af74(char *c)
     func_ov074_0212087c(&sp4, player, *(u8 *)(c + 0x474));
 
     if (ApproachAngle((s16 *)(c + 0x94), *(s16 *)(c + 0x45a), 4, 0x1000, 0x400) == 0 &&
-        _ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1b4) != 0)
+        _ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1b4) != 0)
     {
         Vec3_HorzDist(c + 0x5c, c + 0x41c);
         dist = Vec3_HorzDist(c + 0x5c, &sp4);
@@ -90,7 +90,7 @@ void func_ov084_0212af74(char *c)
                     *(s32 *)(c + 0x98) = 0;
                     *(s32 *)(c + 0x444) = data_ov084_02130268[*(s32 *)(c + 0x460)];
                 }
-                if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1b4) != 0) {
+                if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1b4) != 0) {
                     _ZN8dActor_c11LandingDustEb(c, 1);
                 }
             } else {

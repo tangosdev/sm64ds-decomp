@@ -3,7 +3,7 @@ typedef unsigned short u16;
 typedef long long s64;
 typedef struct { int x, y, z; } Vector3;
 extern int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(void* self, Vector3* a, Vector3* b, int cc);
-extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void* self);
+extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void* self);
 extern s16 data_02082214[];
 
 int func_ov081_02126e28(char* c) {
@@ -50,7 +50,7 @@ int func_ov081_02126e28(char* c) {
 
   _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(c, &v, (Vector3*)(c + 0x5c), 1);
   *(int*)(c + 0xd0) = zero;
-  _ZN12WithMeshClsn13SetLimMovFlagEv(c + 0x1e4);
+  _ZN10dBgCh_Actr13SetLimMovFlagEv(c + 0x1e4);
   *(int*)(c + 0x3e0) = 7;
   return 1;
 }

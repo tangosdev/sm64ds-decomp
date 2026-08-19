@@ -2,26 +2,26 @@ typedef struct Vector3 {
     int x, y, z;
 } Vector3;
 
-typedef struct RaycastLine {
+typedef struct dBgCh_Lin {
     char pad[0x78];
-} RaycastLine;
+} dBgCh_Lin;
 
 extern signed char data_0209f2f8;
 extern char data_020a0e68[];
 
-extern void _ZN11RaycastLineC1Ev(void *self);
-extern void _ZN11RaycastLineD1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(
+extern void _ZN9dBgCh_LinC1Ev(void *self);
+extern void _ZN9dBgCh_LinD1Ev(void *self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(
     void *self, Vector3 *a, Vector3 *b, void *actor);
-extern int _ZN11RaycastLine10DetectClsnEv(void *self);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
 
 int func_ov077_02126300(char *c)
 {
-    RaycastLine ray1;
-    RaycastLine ray2;
+    dBgCh_Lin ray1;
+    dBgCh_Lin ray2;
     Vector3 start;
     Vector3 end;
     Vector3 dir;
@@ -29,8 +29,8 @@ int func_ov077_02126300(char *c)
     int y;
 
     if (data_0209f2f8 == 0x2a) {
-        _ZN11RaycastLineC1Ev(&ray1);
-        _ZN11RaycastLineC1Ev(&ray2);
+        _ZN9dBgCh_LinC1Ev(&ray1);
+        _ZN9dBgCh_LinC1Ev(&ray2);
 
         start.x = 0;
         start.y = 0;
@@ -69,7 +69,7 @@ int func_ov077_02126300(char *c)
             end.z = sz;
             end.z = sz + oz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray1, &start, &end, c);
+        _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray1, &start, &end, c);
 
         start.x = *(int *)(c + 0x5c);
         y = *(int *)(c + 0x60);
@@ -98,20 +98,20 @@ int func_ov077_02126300(char *c)
             end.z = sz;
             end.z = sz + oz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray2, &start, &end, c);
+        _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray2, &start, &end, c);
 
-        if (_ZN11RaycastLine10DetectClsnEv(&ray1) != 0 ||
-            _ZN11RaycastLine10DetectClsnEv(&ray2) == 0) {
+        if (_ZN9dBgCh_Lin10DetectClsnEv(&ray1) != 0 ||
+            _ZN9dBgCh_Lin10DetectClsnEv(&ray2) == 0) {
             *(int *)(c + 0x5c) = *(int *)(c + 0x410);
             *(int *)(c + 0x60) = *(int *)(c + 0x414);
             *(int *)(c + 0x64) = *(int *)(c + 0x418);
             *(int *)(c + 0x98) = 0;
-            _ZN11RaycastLineD1Ev(&ray2);
-            _ZN11RaycastLineD1Ev(&ray1);
+            _ZN9dBgCh_LinD1Ev(&ray2);
+            _ZN9dBgCh_LinD1Ev(&ray1);
             return 1;
         }
-        _ZN11RaycastLineD1Ev(&ray2);
-        _ZN11RaycastLineD1Ev(&ray1);
+        _ZN9dBgCh_LinD1Ev(&ray2);
+        _ZN9dBgCh_LinD1Ev(&ray1);
     }
     return 0;
 }

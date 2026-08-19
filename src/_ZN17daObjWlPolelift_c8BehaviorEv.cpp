@@ -13,25 +13,25 @@ extern "C" {
     void SubVec3(Vector3* a, Vector3* b, Vector3* c);
     int _ZNK7PathPtr5LoopsEv(void* self);
     void _ZN5dCc_c5ClearEv(void* self);
-    void _ZN13RaycastGroundC1Ev(void* self);
-    void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, const Vector3* pos, void* actor);
-    int _ZN13RaycastGround10DetectClsnEv(void* self);
+    void _ZN9dBgCh_GndC1Ev(void* self);
+    void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* self, const Vector3* pos, void* actor);
+    int _ZN9dBgCh_Gnd10DetectClsnEv(void* self);
     void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* self, const Vector3* v);
     void _ZN5dCc_c6UpdateEv(void* self);
     void func_ov026_021112a4(void* t);
     void func_ov026_02111234(void* c);
-    void _ZN13RaycastGroundD1Ev(void* self);
+    void _ZN9dBgCh_GndD1Ev(void* self);
 }
 
 
-struct RaycastGround { char pad[0x44]; s32 hitY; char pad2[8]; };
+struct dBgCh_Gnd { char pad[0x44]; s32 hitY; char pad2[8]; };
 
 
 extern "C" int _ZN17daObjWlPolelift_c8BehaviorEv(void* self)
 {
     u8* c = (u8*)self;
     Vector3 a, b, sub, rp, mul, rel;
-    RaycastGround rg;
+    dBgCh_Gnd rg;
     int moved;
     int idx;
     int spd, cur, len, s, flag;
@@ -90,10 +90,10 @@ extern "C" int _ZN17daObjWlPolelift_c8BehaviorEv(void* self)
     if (!flag) {
         rp = *(Vector3*)(c + 0x5c);
         rp.y -= 0x14000;
-        _ZN13RaycastGroundC1Ev(&rg);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &rp, 0);
+        _ZN9dBgCh_GndC1Ev(&rg);
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &rp, 0);
         *(s32*)(c + 0x1e0) = rp.y;
-        if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
             *(s32*)(c + 0x1e0) = rg.hitY;
         }
         rel = data_ov026_02113a9c;
@@ -101,7 +101,7 @@ extern "C" int _ZN17daObjWlPolelift_c8BehaviorEv(void* self)
         _ZN5dCc_c6UpdateEv(c + 0x124);
         func_ov026_021112a4(self);
         func_ov026_02111234(self);
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
     }
     return 1;
 }

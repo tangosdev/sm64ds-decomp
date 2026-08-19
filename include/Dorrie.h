@@ -6,7 +6,7 @@
 #define DORRIE_H
 #include "types.h"
 #include "ModelAnim.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "dCcAc_c.h"
 #include "dCcAcPos_c.h"
 
@@ -38,10 +38,10 @@ struct Dorrie {
        accounted for even though nothing names the element type. */
     ModelAnim mModelAnim;            /* 0x0ec */
     u8  pad_150[0xe00];
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0xf50 -- a relocation the ROM build
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0xf50 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN6DorrieD1Ev.cpp] */
-    WithMeshClsn mWithMeshClsn;            /* 0xf50 */
+    dBgCh_Actr mWithMeshClsn;            /* 0xf50 */
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x110c -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN6DorrieD1Ev.cpp] */

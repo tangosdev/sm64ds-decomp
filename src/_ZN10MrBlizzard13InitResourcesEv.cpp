@@ -24,7 +24,7 @@ extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *self, void *actor, const void *v, int d, int e, u32 f, u32 g);
 }
 extern "C" {
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *actor, int b, int c, void *v16, int e);
 }
 extern "C" {
@@ -102,7 +102,7 @@ int MrBlizzard::InitResources()
 
     mAngleY = mPrevAngleY;
     unk_414 = mAngleY;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         ((char *)this) + 0x150, ((char *)this), 0x14000, 0xf000, 0, 0);
 
     unk_108 = 1;

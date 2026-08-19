@@ -34,7 +34,7 @@ extern "C" {
         void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
     void func_01ffb0bc(void *self);
     void func_020393d4(void *p, void *v);
-    void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *c, void *d);
+    void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *c, void *d);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
     int IsStarCollectedInCurLevel(int a);
     void _ZN7fBase_c18MarkForDestructionEv(void *self);
@@ -150,7 +150,7 @@ int Whomp::InitResources()
 
     func_020396d0((int *)&mMovingMeshCollider, 0xb50);
 
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x32000, 0x32000, 0, 0);
 
     unk_3b0 = 0;
     *(s16 *)(((char *)this) + 0x300 + 0xb8) = mPrevAngleY;

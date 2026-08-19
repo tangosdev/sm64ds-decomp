@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN12WithMeshClsn15ClearLimMovFlagEv
+// @symbol _ZN10dBgCh_Actr15ClearLimMovFlagEv
 /* recovered: named members + shared header, real C++ method */
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 
-void WithMeshClsn::ClearLimMovFlag()
+void dBgCh_Actr::ClearLimMovFlag()
 {
     *(unsigned int *)((char *)&mFlags) &= ~0x80;
 }

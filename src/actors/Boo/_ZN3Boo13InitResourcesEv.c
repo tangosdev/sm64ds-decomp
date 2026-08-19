@@ -5,7 +5,7 @@ extern int _ZN5Model8LoadFileER13SharedFilePtr();
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii();
 extern int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj();
 extern int _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj();
-extern int _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_();
+extern int _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_();
 extern int LoadBlueCoinModel();
 extern int _ZN11dCapEnemy_c6AddCapEj();
 extern int _ZN11dCapEnemy_c21DestroyIfCapNotNeededEv();
@@ -84,9 +84,9 @@ int _ZN3Boo13InitResourcesEv(char *c)
         S32(0x53c) = tmp598;
         _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x184, c, c + 0x534, S32(0x590) << 0xc, S32(0x594) << 0xc, 0x200000, 0x207e0);
         if (U8(0x5cf) != 0xf) {
-            _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0xdc000, 0xdc000, 0, 0);
+            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0xdc000, 0xdc000, 0, 0);
         } else {
-            _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0xc8000, 0xb4000, 0, 0);
+            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0xc8000, 0xb4000, 0, 0);
         }
     } else {
         U8(0x5cf) = U32(8) & 0xf;
@@ -115,7 +115,7 @@ int _ZN3Boo13InitResourcesEv(char *c)
         if (data_0209f2f8 == 0xc && S32(0x5c) == 0xbb8000 && S8(0xcc) == 2) {
             FLAGS16 = (FLAGS16 & ~1) | 1;
         }
-        _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0x32000, 0x32000, 0, 0);
+        _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1c4, c, 0x32000, 0x32000, 0, 0);
     }
 
     U16(0x4a0) = 0x187;

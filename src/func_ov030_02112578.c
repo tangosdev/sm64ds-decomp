@@ -14,7 +14,7 @@ void _ZN9Animation8SetFlagsEi(void *thiz, int flags);
 void func_0201267c(int a, void *b);
 int _ZN6Player12GetTalkStateEv(void);
 void _ZN6Player18HasFinishedTalkingEv(void *player);
-int _ZNK12WithMeshClsn13JustHitGroundEv(const void *thiz);
+int _ZNK10dBgCh_Actr13JustHitGroundEv(const void *thiz);
 int _ZN9Animation8FinishedEv(void *thiz);
 void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fx, int e);
 u8 DecIfAbove0_Byte(u8 *p);
@@ -91,7 +91,7 @@ int func_ov030_02112578(void *arg0)
         }
         break;
     case 5:
-        if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x194) != 0) {
+        if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x194) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115d10[1], 0x40000000, 0x1000, 0);
             *(s32 *)(c + 0x98) = 0;
             { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }

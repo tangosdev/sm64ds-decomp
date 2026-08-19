@@ -15,8 +15,8 @@ extern int func_ov002_020becf4(void *self, u32 v, int arg2);
 extern int func_ov002_020d225c(void *o);
 extern void Matrix4x3_ApplyInPlaceToTranslation(struct Matrix4x3 *mF, Fix12i x, Fix12i y, Fix12i z);
 extern void func_ov002_020e4374(void *c, int *p1, int *p2);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void *self, void *sm, void *mtx, Fix12i a, Fix12i b, u32 flags);
 
@@ -81,8 +81,8 @@ void func_ov002_020e444c(char *c)
     if ((*(u8 *)(c + 0x6f5) | *(u8 *)(c + 0x6fb)) == 0)
         *(u8 *)(c + 0x717) = 1;
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380) != 0) {
-        void *fr = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380);
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380) != 0) {
+        void *fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x380);
         if (_ZNK5dBgPi9GetClsnIDEv(fr) != -1) {
             void *a = _ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(fr));
             if (a != 0) {

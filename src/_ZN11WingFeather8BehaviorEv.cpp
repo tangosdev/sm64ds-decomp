@@ -10,8 +10,8 @@ void _ZN8dActor_c13SmallPoofDustEv(void* self);
 void _ZN7fBase_c18MarkForDestructionEv(void* self);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 kind, u32 sub, int x, int y, int z, void* vec, void* cb);
 void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* clsn);
-void WithMeshClsn_UpdateContinuous_Veneer(void* p);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
+void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 void _Z15ApproachLinear2Rsss(short* ref, short target, short rate);
 void _Z14ApproachLinearRiii(int* ref, int target, int rate);
 u8 DecIfAbove0_Byte(u8* p);
@@ -47,9 +47,9 @@ int WingFeather::Behavior()
         unk_380, 0x4a, mPosX, mPosY, mPosZ, 0, 0);
 
     _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
-    WithMeshClsn_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
+    dBgCh_Actr_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
         _Z15ApproachLinear2Rsss((short*)((char*)&unk_37c), 0, 0x50);
         _Z14ApproachLinearRiii((int*)((char*)&unk_098), 0, 0x555);
         if (DecIfAbove0_Byte((u8*)((char*)&unk_384)) == 0) {

@@ -13,8 +13,8 @@
  *     Vector3[3]                   0x3ac + 3*0x0c = 0x3d0  -> MaterialChanger
  *     MaterialChanger              0x3d0 +   0x14 = 0x3e4  -> TextureSequence
  *     TextureSequence              0x3e4 +   0x14 = 0x3f8  -> TextureTransformer
- *     TextureTransformer           0x3f8 +   0x14 = 0x40c  -> WithMeshClsn
- *     WithMeshClsn                 0x40c +  0x1bc = 0x5c8
+ *     TextureTransformer           0x3f8 +   0x14 = 0x40c  -> dBgCh_Actr
+ *     dBgCh_Actr                 0x40c +  0x1bc = 0x5c8
  *
  * SIX OF THE GENERATED FIELDS WERE THE Vector3 ARRAY'S OWN COMPONENTS.
  * unk_3b8/3bc/3c0 are element 1's x/y/z and unk_3c4/3c8/3cc are element 2's --
@@ -31,7 +31,7 @@
 #include "MaterialChanger.h"
 #include "TextureSequence.h"
 #include "TextureTransformer.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "dCcAcPos_c.h"
 
 struct Goomboss : dEnemyBase_c {
@@ -43,7 +43,7 @@ struct Goomboss : dEnemyBase_c {
     MaterialChanger mMaterialChanger;             /* 0x3d0 */
     TextureSequence mTextureSequence;             /* 0x3e4 */
     TextureTransformer mTextureTransformer;       /* 0x3f8 */
-    WithMeshClsn mWithMeshClsn;                   /* 0x40c */
+    dBgCh_Actr mWithMeshClsn;                   /* 0x40c */
     u8  pad_5c8[0x4];
     s32 unk_5cc;            /* 0x5cc */
     s32 unk_5d0;            /* 0x5d0 */

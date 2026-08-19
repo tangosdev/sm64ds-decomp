@@ -497,12 +497,12 @@
     "Sph": {
       "gloss": "sphere",
       "confidence": "high",
-      "note": "dM3dGSph is the sphere primitive; dBgCh_SphCrr is the tree's SphereClsn."
+      "note": "dM3dGSph is the sphere primitive; dBgCh_SphCrr is the tree's dBgCh_SphCrr."
     },
     "Lin": {
       "gloss": "line",
       "confidence": "high",
-      "note": "dM3dGLin is the line primitive; dBgCh_Lin is the tree's RaycastLine."
+      "note": "dM3dGLin is the line primitive; dBgCh_Lin is the tree's dBgCh_Lin."
     },
     "Base": {
       "gloss": "base class of a family",

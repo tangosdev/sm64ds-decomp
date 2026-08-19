@@ -4,7 +4,7 @@
 #include "ModelAnim.h"
 #include "dCcAcPos_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "dActor_c.h"
 
 /* FlameChomp is daKrpa_c in the ROM's own RTTI: the typeinfo at ov070
@@ -33,7 +33,7 @@ struct FlameChomp : dActor_c {
     ModelAnim                 mModelAnim;                    /* 0x0d4 */
     ShadowModel               mShadowModel;                  /* 0x138 */
     dCcAcPos_c mdCcAcPos_c;    /* 0x160 */
-    WithMeshClsn              mWithMeshClsn;                 /* 0x1a0 */
+    dBgCh_Actr              mWithMeshClsn;                 /* 0x1a0 */
     u8                        unk_35c;                       /* 0x35c */
     u8                        pad_35d[0x4b];
     s32                       unk_3a8;                       /* 0x3a8 */

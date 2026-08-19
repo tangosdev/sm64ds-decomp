@@ -6,13 +6,13 @@
 #include "common.h"
 
 extern "C" {
-extern void _ZN13RaycastGroundC1Ev(void* self);
-extern void _ZN4BgCh19StartDetectingWaterEv(void* self);
-extern void _ZN4BgCh21StopDetectingOrdinaryEv(void* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* v, void* act);
-extern int _ZN13RaycastGround10DetectClsnEv(void* self);
+extern void _ZN9dBgCh_GndC1Ev(void* self);
+extern void _ZN5dBgCh19StartDetectingWaterEv(void* self);
+extern void _ZN5dBgCh21StopDetectingOrdinaryEv(void* self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* v, void* act);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void* self);
 extern int SurfaceInfo_TestFlag0x20(int* p);
-extern void _ZN13RaycastGroundD1Ev(void* self);
+extern void _ZN9dBgCh_GndD1Ev(void* self);
 extern int data_0209f32c;
 extern signed char data_0209f2f8;
 }
@@ -31,7 +31,7 @@ extern "C" int func_ov002_020cede0(void* thiz_) {
     if (d >= 0xc8000)
       return 1;
   }
-  _ZN13RaycastGroundC1Ev(rg);
+  _ZN9dBgCh_GndC1Ev(rg);
   {
     int z = *(int*)(thiz + 0x64);
     int yy = data_0209f32c + 0xc8000;
@@ -40,29 +40,29 @@ extern "C" int func_ov002_020cede0(void* thiz_) {
     v.y = yy;
     v.z = z;
   }
-  _ZN4BgCh19StartDetectingWaterEv(rg);
-  _ZN4BgCh21StopDetectingOrdinaryEv(rg);
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &v, thiz);
-  if (_ZN13RaycastGround10DetectClsnEv(rg) != 0 && SurfaceInfo_TestFlag0x20((int*)(rg + 0x14)) != 0) {
-    _ZN13RaycastGroundD1Ev(rg);
+  _ZN5dBgCh19StartDetectingWaterEv(rg);
+  _ZN5dBgCh21StopDetectingOrdinaryEv(rg);
+  _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &v, thiz);
+  if (_ZN9dBgCh_Gnd10DetectClsnEv(rg) != 0 && SurfaceInfo_TestFlag0x20((int*)(rg + 0x14)) != 0) {
+    _ZN9dBgCh_GndD1Ev(rg);
     return 1;
   }
   v.y = data_0209212c;
-  _ZN4BgCh19StartDetectingWaterEv(rg);
-  _ZN4BgCh21StopDetectingOrdinaryEv(rg);
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &v, thiz);
-  if (_ZN13RaycastGround10DetectClsnEv(rg) != 0 && SurfaceInfo_TestFlag0x20((int*)(rg + 0x14)) != 0) {
+  _ZN5dBgCh19StartDetectingWaterEv(rg);
+  _ZN5dBgCh21StopDetectingOrdinaryEv(rg);
+  _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &v, thiz);
+  if (_ZN9dBgCh_Gnd10DetectClsnEv(rg) != 0 && SurfaceInfo_TestFlag0x20((int*)(rg + 0x14)) != 0) {
     *(int*)(thiz + 0x64c) = *(int*)(rg + 0x44);
     data_0209f32c = *(int*)(thiz + 0x64c);
-    _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_GndD1Ev(rg);
     return 1;
   }
   if (data_0209f2f8 == 0x21) {
     *(int*)(thiz + 0x64c) = 0x80000000;
     data_0209f32c = *(int*)(thiz + 0x64c);
-    _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_GndD1Ev(rg);
     return 0;
   }
-  _ZN13RaycastGroundD1Ev(rg);
+  _ZN9dBgCh_GndD1Ev(rg);
   return 1;
 }

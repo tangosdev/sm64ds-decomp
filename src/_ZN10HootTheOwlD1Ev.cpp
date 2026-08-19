@@ -4,7 +4,7 @@
  *
  * One vtable store and five destructor calls, every one a consequence of
  * `struct HootTheOwl : dEnemyBase_c` and the four members that declaration now types:
- * its own vptr, then ShadowModel (0x370), ModelAnim (0x30c), WithMeshClsn
+ * its own vptr, then ShadowModel (0x370), ModelAnim (0x30c), dBgCh_Actr
  * (0x150) and dCcAcPos_c (0x110) in reverse declaration order,
  * then dEnemyBase_c::~dEnemyBase_c.
  *

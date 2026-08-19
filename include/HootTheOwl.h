@@ -14,7 +14,7 @@
  * confirmations of one layout rather than four guesses:
  *
  *     0x110 dCcAcPos_c  0x40   -> 0x150
- *     0x150 WithMeshClsn               0x1bc  -> 0x30c
+ *     0x150 dBgCh_Actr               0x1bc  -> 0x30c
  *     0x30c ModelAnim                  0x64   -> 0x370
  *     0x370 ShadowModel                0x28   -> 0x398
  *
@@ -39,7 +39,7 @@
 #include "ModelAnim.h"
 #include "dCcAcPos_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct HootTheOwl : dEnemyBase_c {
     /* What mCurrentState points at. The field was declared `s32` and every one
@@ -53,7 +53,7 @@ struct HootTheOwl : dEnemyBase_c {
     };
 
     dCcAcPos_c mdCcAcPos_c; /* 0x110 */
-    WithMeshClsn mWithMeshClsn;       /* 0x150 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
     ShadowModel mShadowModel;         /* 0x370 */
     u8  pad_398[0x30];

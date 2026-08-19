@@ -10,7 +10,7 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void*);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void*, void*, int, int, unsigned int, unsigned int);
 extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void*, void*, void*, int, int, unsigned int, unsigned int);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void*, void*, int, int, void*, int);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void*, void*, int, int, void*, int);
 extern void func_ov077_02126d5c(void*, void*);
 struct V3 { int x, y, z; };
 extern struct V3 data_ov077_02127a5c;
@@ -33,7 +33,7 @@ int HeaveHo::InitResources()
   v.z = data_ov077_02127a5c.z;
   _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this) + 0x144, ((char*)this), &v, 0x54000, 0x32000, 0x200004, 0);
   mAngleY = mPrevAngleY;
-  _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x184, ((char*)this), 0x64000, 0x64000, 0, 0);
+  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x184, ((char*)this), 0x64000, 0x64000, 0, 0);
   unk_400 = 0;
   unk_404 = mPosX;
   unk_408 = mPosY;

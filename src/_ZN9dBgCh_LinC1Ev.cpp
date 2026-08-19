@@ -5,9 +5,9 @@ extern "C" void func_0203ac60(void *p);
 extern void *data_020992a4;
 extern void *data_020992b4;
 
-extern "C" void *_ZN11RaycastLineC1Ev(char *thiz);
+extern "C" void *_ZN9dBgCh_LinC1Ev(char *thiz);
 
-void *_ZN11RaycastLineC1Ev(char *thiz)
+void *_ZN9dBgCh_LinC1Ev(char *thiz)
 {
     func_02035514(thiz);
     func_0203819c(thiz + 0x10);

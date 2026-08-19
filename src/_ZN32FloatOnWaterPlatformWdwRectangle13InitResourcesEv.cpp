@@ -10,11 +10,11 @@
 extern "C" {
 extern int func_ov002_020b5e58(void* c, void* d);
 extern int _ZN8dActor_c17GetWaterHeightWDWEv(void* c);
-extern void _ZN11RaycastLineC1Ev(void*);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void*, void*, void*, void*);
-extern int _ZN11RaycastLine10DetectClsnEv(void*);
-extern void _ZN11RaycastLine10GetClsnPosEv(void*, void*);
-extern void _ZN11RaycastLineD1Ev(void*);
+extern void _ZN9dBgCh_LinC1Ev(void*);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void*, void*, void*, void*);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void*);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(void*, void*);
+extern void _ZN9dBgCh_LinD1Ev(void*);
 extern int data_ov029_02113f00[];
 }
 
@@ -30,7 +30,7 @@ int FloatOnWaterPlatformWdwRectangle::InitResources()
     if (func_ov002_020b5e58(c, data_ov029_02113f00) != 0) {
         wh = _ZN8dActor_c17GetWaterHeightWDWEv(c);
         if (mPosY > wh) {
-            _ZN11RaycastLineC1Ev(rl);
+            _ZN9dBgCh_LinC1Ev(rl);
             x = mPosX;
             sppad[3] = x;
             y = mPosY;
@@ -42,14 +42,14 @@ int FloatOnWaterPlatformWdwRectangle::InitResources()
             sppad[2] = z;
             sppad[1] = y + 0x14000;
             sppad[4] = wh;
-            _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &sppad[0], &sppad[3], c);
-            if (_ZN11RaycastLine10DetectClsnEv(rl) == 0) {
+            _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &sppad[0], &sppad[3], c);
+            if (_ZN9dBgCh_Lin10DetectClsnEv(rl) == 0) {
                 mPosY = wh;
             } else {
-                _ZN11RaycastLine10GetClsnPosEv(pos, rl);
+                _ZN9dBgCh_Lin10GetClsnPosEv(pos, rl);
                 mPosY = pos[1];
             }
-            _ZN11RaycastLineD1Ev(rl);
+            _ZN9dBgCh_LinD1Ev(rl);
         }
         *(int*)(c + 0x320) = mPosX;
         mWaterY = mPosY;

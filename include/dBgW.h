@@ -16,9 +16,9 @@
  *              (0x01ffd920, named in config/arm9/itcm/symbols.txt)
  *   slot  4    null - pure; GetNormal(s16, Vector3 &) in derived tables
  *   slot  5    null - pure; GetTriangleOrigin(s16, Vector3 &) in derived
- *   slot  6    DetectClsn(RaycastGround &)      - returns false here
- *   slot  7    DetectClsn(RaycastLine &)        - returns false here
- *   slot  8    DetectClsn(SphereClsn &)         - returns false here
+ *   slot  6    DetectClsn(dBgCh_Gnd &)      - returns false here
+ *   slot  7    DetectClsn(dBgCh_Lin &)        - returns false here
+ *   slot  8    DetectClsn(dBgCh_SphCrr &)         - returns false here
  *   slot  9    BeforeClsn(...)                  - invokes the callback
  *   slot 10    TransformPos(const Vector3 &, Vector3 &) - false here
  *   slot 11    GetAngularVelY()                 - 0 here
@@ -64,9 +64,9 @@
 
 struct dActor_c;
 struct dBgPi;
-struct RaycastGround;
-struct RaycastLine;
-struct SphereClsn;
+struct dBgCh_Gnd;
+struct dBgCh_Lin;
+struct dBgCh_SphCrr;
 struct SurfaceInfo;
 
 #ifndef VECTOR3_16_DEFINED
@@ -94,9 +94,9 @@ struct dBgW {
     virtual void GetSurfaceInfo(s16 triID, SurfaceInfo &res) = 0; /* slot 3 - ITCM in derived */
     virtual void GetNormal(s16 triID, Vector3 &res) = 0;  /* slot 4 */
     virtual void GetTriangleOrigin(s16 triID, Vector3 &res) = 0; /* slot 5 */
-    virtual int DetectClsn(RaycastGround &ray);           /* slot 6 */
-    virtual int DetectClsn(RaycastLine &ray);             /* slot 7 */
-    virtual int DetectClsn(SphereClsn &sphere);           /* slot 8 */
+    virtual int DetectClsn(dBgCh_Gnd &ray);           /* slot 6 */
+    virtual int DetectClsn(dBgCh_Lin &ray);             /* slot 7 */
+    virtual int DetectClsn(dBgCh_SphCrr &sphere);           /* slot 8 */
     virtual void BeforeClsn(dBgPi &res, dActor_c *actor, Vector3 &pos,
                             Vector3_16 *motionAng, Vector3_16 *ang); /* slot 9 */
     virtual int TransformPos(const Vector3 &pos, Vector3 &res);      /* slot 10 */

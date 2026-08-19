@@ -5,7 +5,7 @@
 #include "decl_Model.h"
 #include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV11WingFeather */
@@ -17,7 +17,7 @@ int *WingFeather_Spawn(void)
         p[0] = (int)_ZTV11WingFeather;
         _ZN5ModelC1Ev((char *)p + 0xd4);
         _ZN7dCcAc_cC1Ev((char *)p + 0x124);
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x158);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x158);
         _ZN11ShadowModelC1Ev((char *)p + 0x314);
     }
     return p;

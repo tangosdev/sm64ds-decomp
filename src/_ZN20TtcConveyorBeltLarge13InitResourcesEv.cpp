@@ -53,15 +53,15 @@ extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_
 
 extern "C" void func_020393c4(void *p, void *v);
 
-struct RaycastGround {
+struct dBgCh_Gnd {
     int pad[0x11];
     int result;
     int pad2[2];
 
-    RaycastGround();
+    dBgCh_Gnd();
     void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
-    ~RaycastGround();
+    ~dBgCh_Gnd();
 };
 
 struct Entry3 {
@@ -141,7 +141,7 @@ int TtcConveyorBeltLarge::InitResources()
     v.y = v.y - 0xa000;
 
     {
-        RaycastGround rg;
+        dBgCh_Gnd rg;
 
         rg.SetObjAndPos(*(Vector3 *)&v, (dActor_c *)0);
         unk_394 = v.y;

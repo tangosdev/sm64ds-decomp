@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN4BgCh21StopDetectingOrdinaryEv
+// @symbol _ZN5dBgCh21StopDetectingOrdinaryEv
 /* recovered: named members + shared header, real C++ method */
-#include "BgCh.h"
+#include "dBgCh.h"
 
 
-void BgCh::StopDetectingOrdinary()
+void dBgCh::StopDetectingOrdinary()
 {
     *(unsigned char *)((char *)&unk_004) &= ~1;
 }

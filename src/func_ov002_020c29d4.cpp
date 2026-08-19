@@ -1,6 +1,6 @@
 //cpp
 struct State {};
-struct WithMeshClsn {
+struct dBgCh_Actr {
     int IsOnGround() const;
     int GetFloorResult() const;
 };
@@ -38,8 +38,8 @@ extern "C" void func_ov002_020c29d4(Player *self)
         }
         *(unsigned char *)(base + 0x6eb) = 0x80;
     } else if (flags & 0x80) {
-        if (((WithMeshClsn *)(base + 0x380))->IsOnGround()) {
-            int r = func_02037e38((unsigned int *)((char *)((WithMeshClsn *)(base + 0x380))->GetFloorResult() + 4));
+        if (((dBgCh_Actr *)(base + 0x380))->IsOnGround()) {
+            int r = func_02037e38((unsigned int *)((char *)((dBgCh_Actr *)(base + 0x380))->GetFloorResult() + 4));
             if (r >= 6 && r <= 9) return;
             *(unsigned char *)(base + 0x6eb) = 0;
             *(short *)(base + 0x6bc) = 0;

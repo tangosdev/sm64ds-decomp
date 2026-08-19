@@ -1,13 +1,13 @@
-// @symbol _ZN11RaycastLineD1Ev
+// @symbol _ZN9dBgCh_LinD1Ev
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "RaycastLine.h"
-extern int _ZTV11RaycastLine[];
-extern int VTable_ClsnResult_RaycastLineThunk[];
-int *_ZN11RaycastLineD1Ev(struct RaycastLine *self) {
-    ((int *)self)[0] = (int)_ZTV11RaycastLine;
-    *(int *)((char *)&self->unk_010) = (int)VTable_ClsnResult_RaycastLineThunk;
+#include "dBgCh_Lin.h"
+extern int _ZTV9dBgCh_Lin[];
+extern int VTable_dBgPi_dBgCh_LinThunk[];
+int *_ZN9dBgCh_LinD1Ev(struct dBgCh_Lin *self) {
+    ((int *)self)[0] = (int)_ZTV9dBgCh_Lin;
+    *(int *)((char *)&self->unk_010) = (int)VTable_dBgPi_dBgCh_LinThunk;
     func_0203ac50((char *)&self->unk_064);
     func_ov002_020feab8((char *)&self->unk_038);
     _ZN5dBgPiD2Ev((char *)&self->unk_010);

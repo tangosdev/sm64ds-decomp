@@ -18,8 +18,8 @@ extern int func_ov002_020cec2c(void*);
 extern void func_ov002_020cd71c(void*);
 extern void func_ov002_020cd550(void*);
 extern unsigned int func_02022d44(unsigned int, unsigned int, int, int, int, void*);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
-extern void* _ZNK12WithMeshClsn14GetFloorResultEv(void*);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
+extern void* _ZNK10dBgCh_Actr14GetFloorResultEv(void*);
 extern void* func_02037dc4(void*);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int, int);
 extern void Vec3_RotateYAndTranslate(int*, void*, short, int*);
@@ -109,8 +109,8 @@ int Player::St_Swim_Main()
         *(unsigned int*)&unk_630 = func_02022d44(*(volatile unsigned int*)(&unk_630), eid, pos[0], pos[1], z, 0);
     }
 
-    if (mPrevVertSpeed == 0 && _ZNK12WithMeshClsn10IsOnGroundEv(&mMeshClsn) != 0) {
-        fr = (int*)func_02037dc4((char*)_ZNK12WithMeshClsn14GetFloorResultEv(&mMeshClsn) + 4);
+    if (mPrevVertSpeed == 0 && _ZNK10dBgCh_Actr10IsOnGroundEv(&mMeshClsn) != 0) {
+        fr = (int*)func_02037dc4((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(&mMeshClsn) + 4);
         ang = fr[1];
         if (ang < 0x720 && ang > 0x400 && mPosY >= unk_64c - 0xc8000) {
             int at;

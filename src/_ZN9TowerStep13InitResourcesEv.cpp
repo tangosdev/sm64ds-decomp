@@ -10,10 +10,10 @@ void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* fp);
 void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* f, void* m, int fx, short s, void* b);
 void func_020393d4(int* p, int v);
 void func_020393c4(int* p, int v);
-void _ZN13RaycastGroundC1Ev(void* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* pos, void* actor);
-int _ZN13RaycastGround10DetectClsnEv(void* self);
-void _ZN13RaycastGroundD1Ev(void* self);
+void _ZN9dBgCh_GndC1Ev(void* self);
+void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* self, void* pos, void* actor);
+int _ZN9dBgCh_Gnd10DetectClsnEv(void* self);
+void _ZN9dBgCh_GndD1Ev(void* self);
 void func_ov015_021123c8(char* c);
 int IsStarCollectedInCurLevel(int a);
 }
@@ -52,10 +52,10 @@ extern "C" int _ZN9TowerStep13InitResourcesEv(char* self) {
   v.z = *(int*)(self+0x64);
   v.y -= 0x14000;
 
-  _ZN13RaycastGroundC1Ev(&rc);
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, &v, 0);
+  _ZN9dBgCh_GndC1Ev(&rc);
+  _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &v, 0);
   *(int*)(self+0x378) = v.y;
-  if (_ZN13RaycastGround10DetectClsnEv(&rc) != 0) {
+  if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc) != 0) {
     *(int*)(self+0x378) = *(int*)((char*)&rc + 0x44);
   }
 
@@ -82,10 +82,10 @@ extern "C" int _ZN9TowerStep13InitResourcesEv(char* self) {
   }
 
   if (data_0209f2f8 == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(1) == 0) && *(int*)(self+0x60) >= 0xdac000) {
-    _ZN13RaycastGroundD1Ev(&rc);
+    _ZN9dBgCh_GndD1Ev(&rc);
     return 0;
   }
 
-  _ZN13RaycastGroundD1Ev(&rc);
+  _ZN9dBgCh_GndD1Ev(&rc);
   return 1;
 }

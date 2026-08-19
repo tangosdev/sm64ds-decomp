@@ -13,8 +13,8 @@ extern "C" {
 extern void func_ov102_0214ae1c(void*);
 extern int func_ov102_0214ab1c(void*);
 extern int func_ov102_0214aa18(void*);
-extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void*,void*,void*,unsigned int);
-extern void _ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn(void*,void*);
+extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void*,void*,void*,unsigned int);
+extern void _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(void*,void*);
 extern void func_ov102_0214b128(void*);
 extern void func_ov102_0214b53c(void*);
 extern void _ZN5dCc_c5ClearEv(void*);
@@ -23,11 +23,11 @@ extern void func_ov102_0214b03c(void*);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int);
 extern void func_ov002_020ada40(void*,void*,void*,unsigned int);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void*,void*);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void*,void*,unsigned int);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
-extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void*);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void*,void*,unsigned int);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
+extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void*);
 extern int SurfaceInfo_TestFlag0x20(int*);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void*);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void*);
 extern void func_ov102_0214beb4(void*);
 extern int func_ov102_0214b248(void*);
 extern void func_ov102_0214b384(void*,int);
@@ -53,7 +53,7 @@ int BobOmb::Behavior()
         return 1;
     }
 
-    r0 = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(this, (char *)&mWithMeshClsn, (char *)&mModelAnim, 0);
+    r0 = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(this, (char *)&mWithMeshClsn, (char *)&mModelAnim, 0);
     if (r0 != 0) {
         if (r0 == 2) {
             func_ov102_0214ae1c(this);
@@ -62,7 +62,7 @@ int BobOmb::Behavior()
     }
 
     if (mDeathState != 0) {
-        _ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn(this, (char *)&mWithMeshClsn);
+        _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(this, (char *)&mWithMeshClsn);
         func_ov102_0214b128(this);
         flag = mFlags & 0x100;
         flag = flag != 0;
@@ -87,7 +87,7 @@ int BobOmb::Behavior()
                 v[2] = 0;
                 func_ov002_020ada40(this, v, other, 0x32000);
                 _ZN8dActor_c9UpdatePosEP5dCc_c(this, (char *)&mdCc_c);
-                _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(this, (char *)&mWithMeshClsn, 0);
+                _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 0);
                 _ZN5dCc_c5ClearEv((char *)&mdCc_c);
                 return 1;
             }
@@ -95,20 +95,20 @@ int BobOmb::Behavior()
             _ZN8dActor_c9UpdatePosEP5dCc_c(this, (char *)&mdCc_c);
             if (data_0209f2f8 == 6 && data_0209f220 == 3) {
                 if (mHorzSpeed == 0x5000) {
-                    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(this, (char *)&mWithMeshClsn, 3);
+                    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 3);
                 } else {
-                    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(this, (char *)&mWithMeshClsn, 2);
+                    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 2);
                 }
             } else {
-                _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(this, (char *)&mWithMeshClsn, 2);
+                _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(this, (char *)&mWithMeshClsn, 2);
             }
 
-            if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn)) {
-                if (SurfaceInfo_TestFlag0x20((int*)((char*)_ZNK12WithMeshClsn14GetFloorResultEv((char *)&mWithMeshClsn)+4))) {
+            if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn)) {
+                if (SurfaceInfo_TestFlag0x20((int*)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn)+4))) {
                     func_ov102_0214ae1c(this);
                     return 1;
                 }
-                if (_ZNK12WithMeshClsn8IsOnWallEv((char *)&mWithMeshClsn) && unk_3dc == 0) {
+                if (_ZNK10dBgCh_Actr8IsOnWallEv((char *)&mWithMeshClsn) && unk_3dc == 0) {
                     func_ov102_0214beb4(this);
                 }
             }

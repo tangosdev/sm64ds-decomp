@@ -6,7 +6,7 @@
 #include "BookShot.h"
 extern "C" {
 extern void func_0200f760(void* a, void* b);
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void* thiz, void* w);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void* thiz, void* w);
 extern void _ZN5dCc_c5ClearEv(void* thiz);
 extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* thiz, const Vector3& v);
 extern void _ZN5dCc_c6UpdateEv(void* thiz);
@@ -15,7 +15,7 @@ extern void _ZN5dCc_c6UpdateEv(void* thiz);
 int BookShot::Behavior()
 {
     func_0200f760(((char*)this), ((char*)this) + 0x21c);
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(((char*)this), ((char*)this) + 0x25c) != 0) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char*)this), ((char*)this) + 0x25c) != 0) {
         if (unk_107 != 0 && unk_104 == 5) {
             unk_428 = mState;
             mState = 5;

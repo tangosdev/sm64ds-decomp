@@ -1,4 +1,4 @@
-void _ZN10SphereClsn14SetFloorResultERK5dBgPi(char *thiz, const char *src)
+void _ZN12dBgCh_SphCrr14SetFloorResultERK5dBgPi(char *thiz, const char *src)
 {
     *(long long *)(thiz + 0x78) = *(const long long *)(src + 4);
     *(int *)(thiz + 0x80) = *(const int *)(src + 0xc);

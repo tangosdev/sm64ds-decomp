@@ -44,7 +44,7 @@
  *   0x1b0  Matrix4x3 dropShadowMtx -- copy of the model's own matrix (0xf0),
  *                              fed to dActor_c::DropShadowScaleXYZ (0x30 bytes,
  *                              ends 0x1e0)
- *   0x1e0  s32  groundY     -- RaycastGround hit height beneath the lift;
+ *   0x1e0  s32  groundY     -- dBgCh_Gnd hit height beneath the lift;
  *                              last field, 0x1e0 + sizeof(s32) == 0x1e4 == SIZE
  * Field-span and allocator witnesses agree exactly on 0x1e4.
  *

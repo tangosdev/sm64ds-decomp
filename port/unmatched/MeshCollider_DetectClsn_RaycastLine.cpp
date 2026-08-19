@@ -1,6 +1,6 @@
 // HOST ADOPTION of the banked near-miss draft -- not byte-verified.
 //
-// Source: nearmiss/db.jsonl, _ZN7dBgW_Kc10DetectClsnER11RaycastLine,
+// Source: nearmiss/db.jsonl, _ZN7dBgW_Kc10DetectClsnER9dBgCh_Lin,
 // banked at div=476. Per notes/itcm.md the residual is REGISTER ALLOCATION
 // (the ROM's 0xfc frame vs our 0xc4 -- fourteen spilled scalars), not
 // logic: every step of the algorithm is confirmed against the disassembly
@@ -13,7 +13,7 @@
 struct dBgPi { u8 raw[0x1c]; };
 struct SurfaceInfo { u8 clps[8]; Vector3 normal; };
 
-struct RaycastLine {
+struct dBgCh_Lin {
     u8      head[0x10];
     dBgPi result;      /* 0x10 */
     u8      pad_02c[0xc];
@@ -31,10 +31,10 @@ int  func_020397b8(s32 x);
 void func_02037eec(SurfaceInfo *info);
 void func_02037ee8(SurfaceInfo *info);
 void func_02037fd4(dBgPi *res, s16 triIdx, SurfaceInfo *info);
-void func_020375ec(RaycastLine *ray, Vector3 *pos);
+void func_020375ec(dBgCh_Lin *ray, Vector3 *pos);
 u32  func_020396dc(dBgW_Kc *self, KCL_Tri *prism);
-int  _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *surf,
-                                                    RaycastLine *ray, int isSteep);
+int  _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *surf,
+                                                    dBgCh_Lin *ray, int isSteep);
 Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 s32  _ZN4cstd4fdivEii(s32 a, s32 b);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
@@ -45,7 +45,7 @@ extern "C" int g_walk_dbg[16] = {0};
    [4] planeE [5..7] edge rejections [8] e3-high [9] denom [10] parallel
    [11] dist [12] pass-through. Cheap enough to keep permanently. */
 
-s32 dBgW_Kc::DetectClsn(RaycastLine &ray)
+s32 dBgW_Kc::DetectClsn(dBgCh_Lin &ray)
 {
     s32 loX, hiX;
     s32 loY, hiY;
@@ -216,7 +216,7 @@ s32 dBgW_Kc::DetectClsn(RaycastLine &ray)
                        no dependence on the synthetic vtable being filled */
                     dBgW_Kc::GetSurfaceInfo(triIdx, info);
                     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&info, &normal);
-                    if (!_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
+                    if (!_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
                             this, &info, &ray, func_020397b8(normal.y))) {
                         best.x = hit.x;
                         best.y = hit.y;

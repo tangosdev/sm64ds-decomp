@@ -1,14 +1,14 @@
-// @symbol _ZN10SphereClsnC1Ev
+// @symbol _ZN12dBgCh_SphCrrC1Ev
 /* recovered: named members + shared header, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header */
-#include "SphereClsn.h"
+#include "dBgCh_SphCrr.h"
 extern void func_02035514(char *c);
 extern int *func_0203819c(int *t);
 extern void _ZN5dBgPiC1Ev(void *p);
 
 
-void *_ZN10SphereClsnC1Ev(struct SphereClsn *self) {
+void *_ZN12dBgCh_SphCrrC1Ev(struct dBgCh_SphCrr *self) {
     func_02035514(((char *)self));
     func_0203819c((int *)((char *)&self->unk_010));
     func_0203ac70((int *)((char *)&self->unk_038));

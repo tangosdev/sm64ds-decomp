@@ -7,7 +7,7 @@
 extern "C" {
 extern void _ZN9Animation7AdvanceEv(void* p);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* a, void* b);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* a, void* b, unsigned int j);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* a, void* b, unsigned int j);
 extern void _ZN5dCc_c5ClearEv(void* p);
 extern void _ZN5dCc_c6UpdateEv(void* p);
 }
@@ -25,7 +25,7 @@ int KoopaTheQuick::Behavior()
   _ZN9Animation7AdvanceEv((char*)(Animation *)&mModelAnim);
   mAngleY = mPrevAngleY;
   _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this)+0x110);
-  _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this)+0x144, 0);
+  _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char*)this), ((char*)this)+0x144, 0);
   _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
   _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);
   func_ov062_0211aac0(((char*)this));

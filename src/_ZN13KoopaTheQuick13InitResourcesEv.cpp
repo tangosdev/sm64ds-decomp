@@ -13,7 +13,7 @@ extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b)
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int n, int speed, unsigned int flags);
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int r, int h, unsigned int d, unsigned int e);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int r, int h, void *p, int q);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int r, int h, void *p, int q);
 extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int idx);
 extern unsigned char _ZN8dActor_c9TrackStarEjj(void *self, unsigned int a, unsigned int b);
@@ -59,7 +59,7 @@ int KoopaTheQuick::InitResources()
     *(int *)((char *)&unk_3a4) = *(int *)((char *)&mPosZ);
     *(int *)((char *)&mVertAccel) = -0x2000;
     *(int *)((char *)&mTerminalVelocity) = -0x3c000;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((char *)((void *)this) + 0x144, ((void *)this), 0x78000, 0x78000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((char *)((void *)this) + 0x144, ((void *)this), 0x78000, 0x78000, 0, 0);
     _ZN7PathPtr6FromIDEj((char *)((void *)this) + 0x3d8, *(unsigned int *)((char *)&param1) & 0xf);
     *(int *)((char *)&unk_3b8) = _ZNK7PathPtr8NumNodesEv((char *)&mPathPtr);
     *(int *)((char *)&unk_3bc) = zero;

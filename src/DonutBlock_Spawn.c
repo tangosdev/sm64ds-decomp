@@ -2,7 +2,7 @@
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV10DonutBlock */
@@ -12,7 +12,7 @@ int *DonutBlock_Spawn(void)
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV10DonutBlock;
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x320);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x320);
     }
     return p;
 }

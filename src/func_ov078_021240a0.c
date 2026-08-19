@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 extern int _ZN8dActor_c18HorzAngleToCPlayerEv(char* c);
 extern void ApproachAngle(short* p, int target, int a, int b, int c);
 extern int _ZN6Player9StartTalkER7fBase_cb(void* pl, char* c, int b);
@@ -31,7 +31,7 @@ int func_ov078_021240a0(char* c)
     short msg;
     int lim;
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x110) != 0) {
         if (*(int*)(c + 0x500) <= 0) {
             if (*(int*)(c + 0x98) != 0) {
                 *(int*)(c + 0x98) = 0;

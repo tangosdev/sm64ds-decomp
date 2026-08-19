@@ -518,7 +518,7 @@
         "single caller chain: _Z11LoadObjects is referenced by exactly one function in the ROM, _ZN5Stage18LoadClsnAndObjects, which is the function immediately below it in address order; nothing outside the span calls either",
         "shared signature: fifteen of the seventeen are _Z-mangled FREE functions (no class component) whose parameter list is identical -- (LVL_Overlay::ObjSubTable&, int, unsigned) -- because LoadObjects calls them all through the one table",
         "left boundary: _ZN3HUDC1Ev ends exactly at 0x020fe190 and is the last function of the HUD class TU (a D1/D0/C1-bearing object, plainly a different translation unit)",
-        "right boundary: the four functions at 0x020fea4c..0x020feabc are a RaycastLine group, not part of this TU -- func_ov002_020fea4c and func_ov002_020fea68 copy a Vector3 out of offsets 0x0c and 0x00 of the very struct _ZN8dM3dGLin3SetERK7Vector3S2_ writes at 0x020fea84, and all four are called from one main function at 0x02037624..0x02037788. build/tu_map.json cuts at 0x020fea84 instead; this entry's cut is the corrected one.",
+        "right boundary: the four functions at 0x020fea4c..0x020feabc are a dBgCh_Lin group, not part of this TU -- func_ov002_020fea4c and func_ov002_020fea68 copy a Vector3 out of offsets 0x0c and 0x00 of the very struct _ZN8dM3dGLin3SetERK7Vector3S2_ writes at 0x020fea84, and all four are called from one main function at 0x02037624..0x02037788. build/tu_map.json cuts at 0x020fea84 instead; this entry's cut is the corrected one.",
         "source-order corroboration (independent of everything above): mwccarm's section order is the reverse of source order, so the original file's reading order was the reverse of the ROM's addresses. Read that way the file is exactly define-before-use -- fifteen loaders, then the dispatcher, then the public entry point -- and the loaders after LoadSimpleObjects fall in ascending handler-table index 0,1,2,3,4,6,7,8,9,10,11,12,13,14."
       ],
       "boundary_caveats": [
@@ -968,7 +968,7 @@
         "NOT link-verified: the range is still linked from 11 contributions, and the vtable/RTTI ownership question is deferred, not answered. The 10 unlicensed symbols (_ZTV10dBgActor_c, the _ZTI/_ZTS records for Platform/Actor/ActorDerived/ActorBase, and _ZN7Vector3D1Ev) are the expected key-function side effect: Platform::Kill is the key function because ~Platform is inline on purpose.",
         "MANGLED-NAME PARAMETER TYPES ARE NOT EVIDENCE. Four members stay defined under their mangled symbols with scalar parameters rather than as real C++ methods. The two IsClsnInRange* names claim Fix12<int> BY VALUE; the ROM refuses it (CW homes a class-typed by-value parameter to the stack, +0x14 -- see include/Actor.h). Contrast UpdateKillByMegaChar, whose by-value Fix12<int> IS measured and which is now a real Platform:: method.",
         "FINDING, not fixed here: the ROM has an out-of-line _ZN10dBgActor_cC2Ev, so the original class declared its constructor, but include/Platform.h does not. Adding that declaration would stop every subclass constructor inlining the implicit one; this TU cannot measure that blast radius, so the constructor stays extern \"C\".",
-        "FINDING, not fixed here: RaycastLine must be 0x78 for UpdateKillByMegaChar to reproduce (it is a stack local whose size sets the frame). include/RaycastLine.h describes a 0x68-byte object -- last field unk_064 at 0x064. The 0x78 declaration is kept local to this TU; RaycastLine.h is shared and re-sizing it is a separate, measured change.",
+        "FINDING, not fixed here: dBgCh_Lin must be 0x78 for UpdateKillByMegaChar to reproduce (it is a stack local whose size sets the frame). include/dBgCh_Lin.h describes a 0x68-byte object -- last field unk_064 at 0x064. The 0x78 declaration is kept local to this TU; dBgCh_Lin.h is shared and re-sizing it is a separate, measured change.",
         "FINDING, measured here: UpdateKillByMegaChar needs the RAW-CAST spelling `*(short *)((char *)this + 0x8c)` for its four angle read-modify-writes. Written as the named members mAngleX/mAngleY/mAngleZ/mPrevAngleY, mwcc folds each into a direct [r7,#imm] offset and the function comes out 0x148 against the ROM 0x158; the cartridge materialises each field address into a scratch register and reuses it across the load and the store. The choice is per-function: the same class's UpdateClsnPosAndRot and UpdateModelPosAndRotY match with named members."
       ],
       "verification": {
@@ -2809,7 +2809,7 @@
       "status": "text-verified",
       "boundary_confidence": "medium",
       "boundary_evidence": [
-        "contiguous linker run: 0x020ad838..0x020aedbc, 31 functions in build/tu_map.json (tools/tu_map.py, run after rtti_extract.py + rtti_vtables.py). THIRTY are declared here; ordinal 4, _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn at 0x020ade78 size 0x3cc, has no source anywhere under src/ and is a hole in the middle of the run.",
+        "contiguous linker run: 0x020ad838..0x020aedbc, 31 functions in build/tu_map.json (tools/tu_map.py, run after rtti_extract.py + rtti_vtables.py). THIRTY are declared here; ordinal 4, _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr at 0x020ade78 size 0x3cc, has no source anywhere under src/ and is a hole in the middle of the run.",
         "class label(s): Enemy -- the tree's name for Nintendo's dEnemyBase_c",
         "neighbours: the function immediately below the span is func_ov002_020ad660 and the one immediately above is func_ov002_020aedbc, which is followed at 0x020aedf4 by the dCapEnemy_c/OneUpMushroom destructor family -- a different class. Every function symbol strictly inside 0x020ad838..0x020aedbc is one of the 31.",
         "module sinit corroboration: 26 sinit(s) / 26 .ctor entries, sinit_vs_tu=ok, corroborated=False (module-wide, NOT narrowed to this one TU).",
@@ -2824,10 +2824,10 @@
       ],
       "functions": [
         {
-          "symbol": "_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj",
+          "symbol": "_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj",
           "address": "0x020ad838",
           "size": "0x00000208",
-          "legacy_source": "src/_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj.cpp",
+          "legacy_source": "src/_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj.cpp",
           "ordinal": 0
         },
         {
@@ -2852,17 +2852,17 @@
           "ordinal": 3
         },
         {
-          "symbol": "_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs",
+          "symbol": "_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs",
           "address": "0x020ae244",
           "size": "0x00000074",
-          "legacy_source": "src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs.cpp",
+          "legacy_source": "src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp",
           "ordinal": 5
         },
         {
-          "symbol": "_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_",
+          "symbol": "_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_",
           "address": "0x020ae2b8",
           "size": "0x0000019c",
-          "legacy_source": "src/_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_.cpp",
+          "legacy_source": "src/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_.cpp",
           "ordinal": 6
         },
         {
@@ -2901,10 +2901,10 @@
           "ordinal": 11
         },
         {
-          "symbol": "_ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn",
+          "symbol": "_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr",
           "address": "0x020ae6a8",
           "size": "0x00000094",
-          "legacy_source": "src/_ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn.cpp",
+          "legacy_source": "src/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp",
           "ordinal": 12
         },
         {
@@ -2999,10 +2999,10 @@
           "ordinal": 25
         },
         {
-          "symbol": "_ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj",
+          "symbol": "_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj",
           "address": "0x020aebf8",
           "size": "0x00000120",
-          "legacy_source": "src/_ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj.cpp",
+          "legacy_source": "src/_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj.cpp",
           "ordinal": 26
         },
         {
@@ -3038,7 +3038,7 @@
       "bss": [],
       "notes": [
         "HAND-ASSEMBLED, not `tubuild.py create`. That generator refuses this candidate twice over: one member has no legacy source at all, and three of the thirty legacy files (func_ov002_020ada40.cpp, func_ov002_020ae454.cpp, _ZN12dEnemyBase_cC2Ev.cpp) wrap their whole body in `extern \"C\" { ... }`, which its splitter cannot parse. The manifest entry is still tubuild's own, built through tubuild.build_manifest_entry.",
-        "ONE MEMBER IS NOT ADMITTED: _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn, 0x020ade78, size 0x3cc, ordinal 4. It is ov002's one unmatched function inside this span and no file for it exists under src/. That hole is why the TU can never be link-verified as it stands: `linkcheck --partial` refuses the whole span with 'range gap/overlap at 0x020ade78'.",
+        "ONE MEMBER IS NOT ADMITTED: _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr, 0x020ade78, size 0x3cc, ordinal 4. It is ov002's one unmatched function inside this span and no file for it exists under src/. That hole is why the TU can never be link-verified as it stands: `linkcheck --partial` refuses the whole span with 'range gap/overlap at 0x020ade78'.",
         "THE SECOND ARGUMENT TO func_ov002_020ae5c8 IS REAL. Its own file defines it `(void *c)` and never reads a second argument; func_ov002_020ae64c's file declared it `(char *, int)` and passed one. Merged the one-argument way, func_ov002_020ae64c compiles to 0x50 against the ROM's 0x5c -- three instructions short, because `x` no longer has to survive the body in a callee-saved register. Both observations are true at once and the definition here carries the parameter unused. This is a declaration conflict that per-function compilation could not have exposed.",
         "KEY-FUNCTION SIDE EFFECT, expected and inventoried rather than verified: Enemy's first non-inline virtual is ~Enemy and this TU defines it, so the object also emits _ZTV12dEnemyBase_c (0x84, STB_GLOBAL), _ZTI12dEnemyBase_c/_ZTS12dEnemyBase_c and the inherited Actor/ActorDerived/ActorBase RTTI records, plus a vague-linkage _ZN7Vector3D1Ev from types.h's Vector3 destructor. Ten unlicensed symbols; none is claimed correct here.",
         "THE VTABLE DATA CANNOT DATA-VERIFY UNTIL THE CLASS IS RENAMED, and that is a measurement, not a guess: the ROM's typeinfo record at 0x021081c0 is _ZTI12dEnemyBase_c with the name string _ZTS12dEnemyBase_c, while this tree calls the class `Enemy`, so the compiler emits _ZTI12dEnemyBase_c / _ZTS12dEnemyBase_c (a 7-byte string where the ROM holds sixteen). The vtable's 33 slot words are structurally right; only the RTTI names are not. Renaming Enemy -> dEnemyBase_c is a tree-wide change and is out of scope here.",
@@ -3083,7 +3083,7 @@
         "axisNote": "Orthogonal to `status` (plan sec 6). This entry's `status` describes whole-range linking; this block describes a source consolidation whose linker contribution stays per-function."
       },
       "sub_span_link": {
-        "round": "tools/tubuild.py linkcheck --partial, run TWICE against the two contiguous sub-spans the hole at ordinal 4 leaves behind. The whole span cannot be run: `linkcheck --partial` refuses it with 'range gap/overlap at 0x020ade78: next entry src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs.cpp starts at 0x020ae244'. config/**/delinks.txt was NOT changed in either run: the same entries, the same object paths, only the source that produced those objects.",
+        "round": "tools/tubuild.py linkcheck --partial, run TWICE against the two contiguous sub-spans the hole at ordinal 4 leaves behind. The whole span cannot be run: `linkcheck --partial` refuses it with 'range gap/overlap at 0x020ade78: next entry src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp starts at 0x020ae244'. config/**/delinks.txt was NOT changed in either run: the same entries, the same object paths, only the source that produced those objects.",
         "lower": {
           "span": "0x020ad838..0x020ade78",
           "functions": "ordinals 0..3",

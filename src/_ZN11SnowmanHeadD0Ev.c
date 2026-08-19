@@ -3,7 +3,7 @@
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_dCcAc_c.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV12daBgSnmHed_c */
@@ -12,7 +12,7 @@ extern void *data_020a0eac;
 int *_ZN11SnowmanHeadD0Ev(int *t)
 {
     t[0] = (int)_ZTV12daBgSnmHed_c;
-    _ZN12WithMeshClsnD1Ev((char *)t + 0x16c);
+    _ZN10dBgCh_ActrD1Ev((char *)t + 0x16c);
     _ZN7dCcAc_cD1Ev((char *)t + 0x138);
     _ZN15TextureSequenceD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);

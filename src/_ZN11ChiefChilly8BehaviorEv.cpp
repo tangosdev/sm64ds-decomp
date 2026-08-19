@@ -63,14 +63,14 @@ extern void MulMat4x3Mat4x3(void *d, void *a, void *b);
 extern void Vec3_Lsl(Vector3 *d, Vector3 *s, int sh);
 extern void func_02012694(int a, void *b);
 extern void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(void *self, Vector3 *v, int b);
-extern void _ZN11RaycastLineC1Ev(void *self);
+extern void _ZN9dBgCh_LinC1Ev(void *self);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angX);
 extern void MulVec3Mat4x3(void *a, void *m, void *out);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, const Vector3 *a, const Vector3 *b, void *actor);
-extern int _ZN11RaycastLine10DetectClsnEv(void *self);
-extern void _ZN11RaycastLineD1Ev(void *self);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, void *wmc, unsigned int flags);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, const Vector3 *a, const Vector3 *b, void *actor);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_LinD1Ev(void *self);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wmc, unsigned int flags);
 extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
 extern void func_ov073_0211f61c(void *self);
 extern void _ZN5dCc_c5ClearEv(void *self);
@@ -138,7 +138,7 @@ int ChiefChilly::Behavior()
         && (char *)c->pp != data_ov073_02123320
         && (char *)c->pp != data_ov073_02123340
         && (char *)c->pp != data_ov073_02123380) {
-        _ZN11RaycastLineC1Ev(line);
+        _ZN9dBgCh_LinC1Ev(line);
         rp.start.x = 0; rp.start.y = 0; rp.start.z = 0;
         rp.end.x = 0; rp.end.y = 0; rp.end.z = 0;
         rp.in.x = 0; rp.in.y = 0; rp.in.z = 0;
@@ -174,8 +174,8 @@ int ChiefChilly::Behavior()
             rp.end.z = sz;
             rp.end.z = sz + oz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(line, &rp.start, &rp.end, self);
-        if (_ZN11RaycastLine10DetectClsnEv(line) == 0) {
+        _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(line, &rp.start, &rp.end, self);
+        if (_ZN9dBgCh_Lin10DetectClsnEv(line) == 0) {
             if (mHorzSpeed > 0xa000) {
                 unk_4c9 = 1;
             }
@@ -191,10 +191,10 @@ int ChiefChilly::Behavior()
         } else {
             unk_4c9 = 0;
         }
-        _ZN11RaycastLineD1Ev(line);
+        _ZN9dBgCh_LinD1Ev(line);
     }
 
-    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(self, &mWithMeshClsn, 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(self, &mWithMeshClsn, 0);
 
     v54 = data_ov073_02123040;
     _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(&mdCcAcPos_c, &v54);

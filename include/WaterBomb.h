@@ -13,7 +13,7 @@
  * reading rather than a guess:
  *
  *     0x110 dCcAc_c         0x34    -> 0x144
- *     0x144 WithMeshClsn               0x1bc   -> 0x300
+ *     0x144 dBgCh_Actr               0x1bc   -> 0x300
  *     0x300 Model                      0x50    -> 0x350
  *     0x350 ShadowModel                0x28    -> 0x378
  *
@@ -26,11 +26,11 @@
 #include "Model.h"
 #include "dCcAc_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct WaterBomb : dEnemyBase_c {
     dCcAc_c           mdCcAc_c;   /* 0x110 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     Model                        mModel;                /* 0x300 */
     ShadowModel                  mShadowModel;          /* 0x350 */
     u8  pad_378[0x30];

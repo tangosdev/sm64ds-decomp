@@ -5,7 +5,7 @@
  * The stand-in typedefs this file used to carry (`typedef int Fix12;`, a
  * two-word SharedFilePtr, a three-short Vector3_16, opaque dActor_c/BMD_File)
  * all name real types now that Snufit.h pulls in the dEnemyBase_c chain, so they are
- * gone. dCcAc_c::Init and WithMeshClsn::Init are still reached
+ * gone. dCcAc_c::Init and dBgCh_Actr::Init are still reached
  * through their mangled names because neither is declared as a method yet.
  */
 #include "Snufit.h"
@@ -21,7 +21,7 @@ extern PMF data_ov065_0211d670;
 
 extern "C" {
 extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, Vector3_16* q);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, Vector3_16* q);
 extern int func_ov065_0211691c(void* c, PMF* p);
 }
 
@@ -35,7 +35,7 @@ int Snufit::InitResources()
     mTerminalVelocity = -0x1e000;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x38000, 0x7e000, 0x200000, 0x7eff0);
     mAngleY = mPrevAngleY;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x46000, 0, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x46000, 0, 0, 0);
     unk_108 = 1;
     unk_10a = 1;
     mHomePosX = mPosX;

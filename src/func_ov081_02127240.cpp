@@ -1,7 +1,7 @@
 //cpp
 extern "C" {
 extern void func_0201267c(int, void*);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void*);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void*);
 extern void func_ov081_021265c8(void*);
 extern void _ZN9Animation7AdvanceEv(void*);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void*, void*);
@@ -20,7 +20,7 @@ int func_ov081_02127240(char* c){
     }
     break;
   case 1:
-    if(_ZNK12WithMeshClsn13JustHitGroundEv(c+0x1e4)){
+    if(_ZNK10dBgCh_Actr13JustHitGroundEv(c+0x1e4)){
       func_0201267c(0x71, c+0x74);
       func_ov081_021265c8(c);
     }

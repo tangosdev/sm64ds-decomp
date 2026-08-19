@@ -17,7 +17,7 @@ open question. Read §6 before trusting any of it.
 **1. The ROM carries the real name of every collision class, and we use coined names for
 all of them.** The subsystem was compiled with RTTI on. A `_ZTS` string is not metadata
 *about* a class — its bytes **are** the mangled class name, so a class named
-`SphereClsn` cannot produce the bytes `12dBgCh_SphCrr`. Until the family is renamed, no
+`dBgCh_SphCrr` cannot produce the bytes `12dBgCh_SphCrr`. Until the family is renamed, no
 collision class can become a key-function TU. See §2.
 
 **2. The best draft of the biggest unmatched function is not the one the notes point
@@ -52,14 +52,14 @@ pairing to our coined names is settled by **vtable-address identity**, not infer
 
 | cartridge name | our coined name | vtable | vtable symbol today |
 |---|---|---|---|
-| `dBgCh` | `BgCh` | 0x020991d8 | `data_020991d8` — unnamed |
-| `dBgCh_Actr` | `WithMeshClsn` | 0x02099204 | `data_02099204` — unnamed |
-| `dBgCh_Gnd` | `RaycastGround` | 0x02099264 | `data_02099264` — unnamed |
-| `dBgCh_Lin` | `RaycastLine` | 0x020992a4 | `_ZTV11RaycastLine` |
-| `dBgCh_SphCrr` | `SphereClsn` | 0x02099338 | `_ZTV10SphereClsn` |
+| `dBgCh` | `dBgCh` | 0x020991d8 | `data_020991d8` — unnamed |
+| `dBgCh_Actr` | `dBgCh_Actr` | 0x02099204 | `data_02099204` — unnamed |
+| `dBgCh_Gnd` | `dBgCh_Gnd` | 0x02099264 | `data_02099264` — unnamed |
+| `dBgCh_Lin` | `dBgCh_Lin` | 0x020992a4 | `_ZTV9dBgCh_Lin` |
+| `dBgCh_SphCrr` | `dBgCh_SphCrr` | 0x02099338 | `_ZTV12dBgCh_SphCrr` |
 | `dBgPi` | `dBgPi` | 0x02099368 | `data_02099368` — unnamed |
 | `dBgPc` | *none — no header* | — | base of `dBgPi` at +0x04 |
-| `dM3dGLin` | `RaycastLine::Line` | — | non-polymorphic |
+| `dM3dGLin` | `dBgCh_Lin::Line` | — | non-polymorphic |
 | `dM3dGSph` | *none* | 0x020994cc | `data_020994cc` — unnamed |
 | `dBgW` | `dBgW` | 0x02099388 | `_ZTV4dBgW` |
 | `dBgW_Kc` | `dBgW_Kc` | 0x020993dc | `_ZTV7dBgW_Kc` |
@@ -81,7 +81,7 @@ file 0x951ee  "10dBgCh_Actr\0"        file 0x95225  "9dBgCh_Gnd\0"
 file 0x95476  "14dBgW_KcMbgSclY\0"    file 0x8a669  "7dCcAc_c\0"
 ```
 
-Itanium length prefixes, exact. `_ZTV10SphereClsn` sits 0x40 bytes from a string that
+Itanium length prefixes, exact. `_ZTV12dBgCh_SphCrr` sits 0x40 bytes from a string that
 says the class is `dBgCh_SphCrr`. **[P]**
 
 Two coined names are not merely arbitrary but **misleading**:
@@ -106,12 +106,12 @@ dBgW      dBgW   the collidable world  ─┐ registered in a
     └ dBgW_KcMbg   dBgW_KcMbg  + transform  │ data_020a0c80
        └ dBgW_KcMbgSclY  dBgW_KcMbgSclY     ─┘
 
-dBgCh     BgCh               a query against it    ─┐ each embeds a
- ├ dBgCh_Gnd    RaycastGround   "what is under me"  │ dBgPi (dBgPi)
- ├ dBgCh_Lin    RaycastLine     swept segment       │ at +0x10
- ├ dBgCh_SphCrr SphereClsn      penetration + push  │
- └ dBgCh_Actr   WithMeshClsn    an actor's response ─┘ (no dBgPi; owns a
-                                                        SphereClsn + RaycastLine)
+dBgCh     dBgCh               a query against it    ─┐ each embeds a
+ ├ dBgCh_Gnd    dBgCh_Gnd   "what is under me"  │ dBgPi (dBgPi)
+ ├ dBgCh_Lin    dBgCh_Lin     swept segment       │ at +0x10
+ ├ dBgCh_SphCrr dBgCh_SphCrr      penetration + push  │
+ └ dBgCh_Actr   dBgCh_Actr    an actor's response ─┘ (no dBgPi; owns a
+                                                        dBgCh_SphCrr + dBgCh_Lin)
 
 dCc_c     CylinderClsn       actor-vs-actor volume ─┐ intrusive list head
  ├ dCcPos_c    CylinderClsnWithPos                  │ data_0209cee8, swept
@@ -158,7 +158,7 @@ adjustments):
 | `dM3dGSph` | 0x14 **[P]** | vptr, centre +0x04, radius +0x10 |
 | `dBgCh_Gnd` | 0x50 **[P]** | header spans it, gate-clean |
 | `dBgCh_Lin` | **0x88** **[I]** | header says **0x65 — wrong**, see §6 |
-| `dBgCh_SphCrr` | **0x114** **[I]** | header spans 0x10c; `WithMeshClsn` 0x134 − 0x20 |
+| `dBgCh_SphCrr` | **0x114** **[I]** | header spans 0x10c; `dBgCh_Actr` 0x134 − 0x20 |
 | `dBgCh_Actr` | 0x1bc **[I]** | ~40 embedding actor headers put the next field at +0x1bc |
 | `dBgW` / `_Kc` / `_KcMbg` / `_KcMbgSclY` | 0x20 / 0x50 / 0x1c8 / 0x1d0 **[P]** | asserted, gate-clean |
 | `dCc_c` / `Pos` / `Ac` / `AcPos` | 0x30 / 0x3c / 0x34 / 0x40 **[P]** | asserted, gate-clean |
@@ -182,7 +182,7 @@ decremented each level. `KCL_Tri::attribute` is used as a **raw, unmasked CLPS i
 in this game the KCL attribute word *is* the CLPS index. **[P]**
 
 **Unit basis.** World Fix12i → KCL file units is a **plain `>>6`**, the same six bits for
-every collider in the game (`0x01ffb870 asr r1,r5,#6`; `DetectClsn(RaycastLine&)` does the
+every collider in the game (`0x01ffb870 asr r1,r5,#6`; `DetectClsn(dBgCh_Lin&)` does the
 same at 0x01ffb110). Routing the conversion through the collider's own `dBgW_Kc+0x2c`
 instead reduces correctly for the level and for nothing else — `dBgW_KcMbg::SetFile`
 leaves those words at 1.0, so every actor-owned collider runs its walk in world units
@@ -200,23 +200,23 @@ All three overloads are `dBgW_Kc` vtable slots 6/7/8, all in **ITCM**:
 
 | overload | addr | size | status |
 |---|---|---|---|
-| `DetectClsn(RaycastGround&)` | 0x01ffd3f8 | 1,176 | **matched, enrolled** |
-| `DetectClsn(RaycastLine&)` | 0x01ffb0fc | 1,844 | unrecovered — draft at 203 divergences |
-| `DetectClsn(SphereClsn&)` | 0x01ffb830 | 7,112 | unrecovered — **largest unmatched function in the ROM** |
+| `DetectClsn(dBgCh_Gnd&)` | 0x01ffd3f8 | 1,176 | **matched, enrolled** |
+| `DetectClsn(dBgCh_Lin&)` | 0x01ffb0fc | 1,844 | unrecovered — draft at 203 divergences |
+| `DetectClsn(dBgCh_SphCrr&)` | 0x01ffb830 | 7,112 | unrecovered — **largest unmatched function in the ROM** |
 
-The drivers `RaycastGround::DetectClsn()`, `RaycastLine::DetectClsn()` and
-`SphereClsn::DetectClsn()` are all matched and enrolled. Each walks the 24-entry table
+The drivers `dBgCh_Gnd::DetectClsn()`, `dBgCh_Lin::DetectClsn()` and
+`dBgCh_SphCrr::DetectClsn()` are all matched and enrolled. Each walks the 24-entry table
 `data_020a0c80`: slot 0 is the stage's static mesh and skips broad phase; slots 1–23 are
 culled by `func_02035354` (self-collision — the query's `owner`/`ownerID` against the
-collider's) and then by range. `RaycastLine` culls on its own **`dM3dGSph` bounding sphere
+collider's) and then by range. `dBgCh_Lin` culls on its own **`dM3dGSph` bounding sphere
 at +0x64** — centre +0x68, radius +0x74. **[P]**
 
 Table lifecycle: `dBgW::Enable(dActor_c*)` (0x02039184, 52 call sites) claims a
 slot, `Disable()` (0x02039140, 154 sites) frees it, `Stage::ResetMeshColliders()`
 (0x020391f4) zeroes all 24.
 
-`BgCh::ShouldPassThroughImpl` (0x02039488, matched, **static**) is the per-triangle filter:
-CLPS bits against the query's `detectMask` at `BgCh+0x04` — water, toxic, ordinary, and
+`dBgCh::ShouldPassThroughImpl` (0x02039488, matched, **static**) is the per-triangle filter:
+CLPS bits against the query's `detectMask` at `dBgCh+0x04` — water, toxic, ordinary, and
 surface types 0x11 and 0x14.
 
 The floor/wall/underside classifier is `func_02039794`: `y > 0x600` floor, `y > -0xccc`
@@ -242,9 +242,9 @@ not files, so they run higher than a `grep -l` over `src/`, which corroborates t
 ### 3.6 What drives collision per frame
 
 **There is no central mesh-collision sweep.** Every actor calls it from its own
-`Behavior()`. The veneers `WithMeshClsn_UpdateContinuous_Veneer` (44 call sites) and
+`Behavior()`. The veneers `dBgCh_Actr_UpdateContinuous_Veneer` (44 call sites) and
 `…UpdateDiscreteNoLava_veneer` (19) are spread across ov002/030/070/072/085/098/100;
-`RaycastGround::DetectClsn` has 105 call sites and `RaycastLine::DetectClsn` 57. The only
+`dBgCh_Gnd::DetectClsn` has 105 call sites and `dBgCh_Lin::DetectClsn` 57. The only
 engine-driven collision call per frame is `CylinderClsn::Process()` inside
 `Stage::Render()`. **[P]**
 
@@ -274,10 +274,10 @@ The two functions with no source are the two unrecovered ITCM `DetectClsn` overl
 0x734 (1,844 B) and 0x1bc8 (7,112 B), read from `config/arm9/itcm/symbols.txt`.
 **A quarter of the subsystem by size is two functions.**
 
-Per class: dBgW_Kc 16 fn / 10,840 B · unnamed `func_*` 182 / 8,220 · WithMeshClsn
+Per class: dBgW_Kc 16 fn / 10,840 B · unnamed `func_*` 182 / 8,220 · dBgCh_Actr
 27 / 5,860 · dBgW_KcMbg 15 / 2,824 · dBgW_KcMbgSclY 10 / 1,548 ·
-CylinderClsn 8 / 1,428 · SphereClsn 5 / 1,172 · RaycastLine 6 / 900 · dBgW
-19 / 764 · RaycastGround 4 / 676 · BgCh 5 / 452 · dBgPi 6 / 304 · the three
+CylinderClsn 8 / 1,428 · dBgCh_SphCrr 5 / 1,172 · dBgCh_Lin 6 / 900 · dBgW
+19 / 764 · dBgCh_Gnd 4 / 676 · dBgCh 5 / 452 · dBgPi 6 / 304 · the three
 `MovingCylinder*` families 20 / 712 · remainder small.
 
 No collision function appears in `bytegate-known-failures.txt`, `rombuild-exclude.txt`,
@@ -310,7 +310,7 @@ the moat, not by any byte comparison.
 
 Three things on that branch are harvestable into `main` with no byte risk:
 
-1. **A fully typed `SphereClsn` layout**, every offset pinned to the matched function that
+1. **A fully typed `dBgCh_SphCrr` layout**, every offset pinned to the matched function that
    writes it and backed by an `offsetof` assert: `resolvedPush` 0x4c, `pushMin` 0x58,
    `pushMax` 0x64, `wallHeight` 0xec, `bestFloorNormal` 0xfc, `maxNormalY` 0x108. `main`
    still carries all six as `unk_*`. It also derives three more flag bits (gate, no-slope,
@@ -341,7 +341,7 @@ concentrated in structure, status, and numbers.
 |---|---|---|
 | `collision-query-classes.md:21` | "embedded polymorphic member, **not** inheritance depth" | **WRONG** — RTTI says three public bases (§3.1) |
 | `collision-query-classes.md:43` | "do not rename `func_020380ec` to `dBgPi`" | **SUPERSEDED** by #1206 — it is `_ZN5dBgPiD2Ev` |
-| `collision-query-classes.md:56` | RaycastLine's 0x38 member "is overlay-resident" | dtor **is** in ov002 (4-byte `bx lr`) but the *type* is not — `dM3dGLin`'s RTTI is in arm9 |
+| `collision-query-classes.md:56` | dBgCh_Lin's 0x38 member "is overlay-resident" | dtor **is** in ov002 (4-byte `bx lr`) but the *type* is not — `dM3dGLin`'s RTTI is in arm9 |
 | `collision-query-classes.md` (0x5c) | "0x5c = `lineEnd.z`" | **TRUE** — retracted 2026-08-19; see the dual-role note below |
 | `collision-query-classes.md:882` | wall slab is "**symmetric**", half-width `unk_ec + radius` | **WRONG** — asymmetric `[-(ec+rad), ec-rad]`; the note quoted four instructions and missed the `sub` |
 | `collision-query-classes.md:886` | a wall "wholly **outside** the slab is not a real contact" | **INVERTED** — all three vertices *inside* ⇒ reject |
@@ -351,19 +351,19 @@ concentrated in structure, status, and numbers.
 | `handoff-sphereclsn-detectclsn.md:18` | "of **16** installed mwccarm builds" | **STALE** — 25 installed |
 | `handoff-…md:14`, several headers | "build at 2004/b56, not 1.2/sp2p3" | **redundant** — #1619 dropped all pins; it is the tree-wide default |
 | `drafts-sphereclsn-detectclsn.cpp:2` | "first draft — head/AABB only, the walk and prism tests are stubs" | **WRONG** — 618 lines, every mechanism written |
-| `include/RaycastLine.h` | spans 0x65 | **understated** — ≥0x78 (0x88 inferred); the `dM3dGSph` at +0x64 is missing entirely. The field naming is NOT wrong — see below |
+| `include/dBgCh_Lin.h` | spans 0x65 | **understated** — ≥0x78 (0x88 inferred); the `dM3dGSph` at +0x64 is missing entirely. The field naming is NOT wrong — see below |
 | `include/dBgW.h:40` | "the symbol names are on the wrong bodies" | **WRONG and self-contradicting** — its own bullets say what `symbols.txt` says; #1203 settled it. Delete the paragraph |
-| `include/BgCh.h:41` | `ShouldPassThroughImpl` is static "which is what the mangled name spells" | **WRONG reasoning** — Itanium never encodes `this`; the declared signature also has one arg too many for the ROM's 4-register call |
+| `include/dBgCh.h:41` | `ShouldPassThroughImpl` is static "which is what the mangled name spells" | **WRONG reasoning** — Itanium never encodes `this`; the declared signature also has one arg too many for the ROM's 4-register call |
 | `itcm.md:65` | 6 unnamed dBgW_Kc funcs, "88 bytes" | **WRONG** — 0x54 = 84 |
 | `itcm.md:384` | "the full 13-slot map is in `include/dBgW_Kc.h`" | **WRONG pointer** — it is `dBgW.h:11` |
-| `itcm.md:533` | "the **only** read of `KCL_Prism::length`" | **WRONG** — `DetectClsn(RaycastGround&).cpp:172` reads it too; and the type is `KCL_Tri` |
+| `itcm.md:533` | "the **only** read of `KCL_Prism::length`" | **WRONG** — `DetectClsn(dBgCh_Gnd&).cpp:172` reads it too; and the type is `KCL_Tri` |
 | `dtor-variant-audit.md` | "enrolled destructor migrations in this tree: **zero**" | **WRONG** — `src/_ZN7dBgW_KcD1Ev.cpp` is one |
 | `docs/class-reference.html` | `dCc_c` has "2 live slots" | **WRONG** — 4. **FIXED 2026-08-19**; the same defect also hid `dFader_c` (2→10) and `mHeap::Heap_t` (2→16) |
-| `docs/class-hierarchy.html` §6 | RaycastGround and WithMeshClsn "have no `type_info` record" | **WRONG** — both do; §4 of the same page contradicts it |
+| `docs/class-hierarchy.html` §6 | dBgCh_Gnd and dBgCh_Actr "have no `type_info` record" | **WRONG** — both do; §4 of the same page contradicts it |
 | `docs/class-reference.html` | built 2026-08-07, pre-rename | **regenerate** — stale paths, `unknown_class` joins its own data disproves |
 | `archive/func_ov079_02124008-floor.md` | "near-miss banked" | **STALE** — that function matched and is enrolled |
 
-#### Retraction: `RaycastLine` 0x54 is not misnamed
+#### Retraction: `dBgCh_Lin` 0x54 is not misnamed
 
 A first pass of this survey reported that 0x54 should be `clsnPos`, not `lineEnd`. **That was
 wrong, and it rested on an inverted premise** — that `func_ov002_020fea4c` is `GetStart`. Read
@@ -389,7 +389,7 @@ headers are auto-generated placeholders with no bases, no virtuals and no size a
 
 **Gaps nothing covers:** the cartridge names (§2); multiple inheritance as a codegen
 constraint (what the C++ must look like to emit the observed thunks); `dBgW`
-itself; `RaycastLine+0x64`; `WithMeshClsn` and the whole cylinder family, which have no
+itself; `dBgCh_Lin+0x64`; `dBgCh_Actr` and the whole cylinder family, which have no
 note at all; and KCL as an asset — `notes/assets.md` has no KCL section.
 
 ---
@@ -412,7 +412,7 @@ gained) and the denominator down exactly 4 by design; `check_header_offsets` 0 m
   ratio=0.3203` (28 short). **+199 exactly-equal instructions.** Provenance and the
   swept-lever list are now in the file header.
 - **0b.** Fix the wrong header prose: `dBgW.h:40` (the conclusion contradicts
-  its own bullets), `BgCh.h:41` (the mangling claim), and document `RaycastLine.h`'s
+  its own bullets), `dBgCh.h:41` (the mangling claim), and document `dBgCh_Lin.h`'s
   dual-role field. **DONE 2026-08-19**, byte-verified on four consumers.
 - **0c.** **DONE.** Both notes gained a defect table at the top, and the three most
   dangerous spots are marked inline. The wall block was re-read from the ROM to confirm:
@@ -436,7 +436,7 @@ gained) and the denominator down exactly 4 by design; `check_header_offsets` 0 m
   confirms each: "func_… is not in the object 2004/b56 produced". Candidates 11189 → 11185,
   numerator unchanged at 11061. Decoded each thunk from the cartridge while bannering:
   three adjust −0x10 and one −0x38, matching the RTTI base offsets `dBgPi`@0x10 and
-  `dM3dGSph`@0x38, and both SphereClsn thunks tail-branch to the same D0 at 0x02037c40 —
+  `dM3dGSph`@0x38, and both dBgCh_SphCrr thunks tail-branch to the same D0 at 0x02037c40 —
   one class, two bases.
 
 ### Phase 1 — Adopt the cartridge names — **2 of 4 slices done**
@@ -481,7 +481,7 @@ It also lets the six currently-`data_*` vtables be named.
 Sequencing, from the tree's own scar tissue:
 
 - One class family per PR, one commit pair per chain step — the attribution permutation bug
-  is real and this family is large (`WithMeshClsn` alone has 27 symbols and 63 external
+  is real and this family is large (`dBgCh_Actr` alone has 27 symbols and 63 external
   veneer call sites).
 - Grep **other branches** for each old name before landing; a rename has broken three
   sibling PRs before.
@@ -505,19 +505,19 @@ types) → `dBgCh*` (5, the multiple-inheritance family, largest blast radius, d
 - **2b.** Type `CLPS` and `CLPS_Block`; the bit layout is already decoded (§3.3). Give
   `data_020a0c78`, `data_020a0c80` and `data_0209cee8` typed declarations.
 - **2c.** Promote the four query headers to real classes with their bases, virtuals and
-  size asserts (§3.1–3.2). Harvest the `SphereClsn` field names from the port branch (§5).
-- **2d.** Correct `RaycastLine.h` to its real span and add the `dM3dGSph` member at 0x64.
+  size asserts (§3.1–3.2). Harvest the `dBgCh_SphCrr` field names from the port branch (§5).
+- **2d.** Correct `dBgCh_Lin.h` to its real span and add the `dM3dGSph` member at 0x64.
 
 Every header edit here needs the `eligible.py` bracket — a shared-header change reaches
 neighbours, and `check_header_offsets` is blinded by span-form padding.
 
 ### Phase 3 — The two ITCM bodies *(the 25%)*
 
-- **3a. `DetectClsn(RaycastLine&)`**, 1,844 B, draft at 203 divergences. Do this **first**:
-  it shares the octree walk verbatim with the already-matched `RaycastGround` twin, so it
+- **3a. `DetectClsn(dBgCh_Lin&)`**, 1,844 B, draft at 203 divergences. Do this **first**:
+  it shares the octree walk verbatim with the already-matched `dBgCh_Gnd` twin, so it
   is the calibration run for 3b. Its recorded floor is a `this` register allocation
   (r7 vs r8) at 2004/b56.
-- **3b. `DetectClsn(SphereClsn&)`**, 7,112 B, best draft 28 instructions short after 0a.
+- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B, best draft 28 instructions short after 0a.
 
   What is already **swept and dead** — do not re-walk: nineteen declaration-level variants
   across five classes of lever (hoist, permutation, re-scoping, folding, moving `en1`/`en2`),
@@ -537,7 +537,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
 
   ```
   python tools/fdiff.py --c notes/drafts-sphereclsn-detectclsn.cpp \
-    --name _ZN7dBgW_Kc10DetectClsnER10SphereClsn \
+    --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
     --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
   ```
   `--module itcm`, never `arm9/itcm`.
@@ -550,11 +550,11 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
 
 182 of the 330 core functions still carry `func_*` names (8,220 B). All build and match, so
 this is pure naming. Many are already derivable from the vtables: `func_020354d0/e0` and
-`func_02035504` are `BgCh` D2/D0/D1, `func_02035514` its ctor, `func_020373b8`
-`WithMeshClsn` D0, `func_020374f0` `RaycastGround` D0, `func_02037710` `RaycastLine` D0,
-`func_02037c40` `SphereClsn` D0, `func_02038114`/`func_0203819c` `dBgPi` D0/C2,
+`func_02035504` are `dBgCh` D2/D0/D1, `func_02035514` its ctor, `func_020373b8`
+`dBgCh_Actr` D0, `func_020374f0` `dBgCh_Gnd` D0, `func_02037710` `dBgCh_Lin` D0,
+`func_02037c40` `dBgCh_SphCrr` D0, `func_02038114`/`func_0203819c` `dBgPi` D0/C2,
 `func_0203ac2c/50/60/70` `dM3dGSph` D0/D1/C1/C2, plus the eight `_ZThn…` thunks. Largest
-unnamed: `func_02036acc` (1,048 B, a `WithMeshClsn::Update*` sibling), `func_02038824`
+unnamed: `func_02036acc` (1,048 B, a `dBgCh_Actr::Update*` sibling), `func_02038824`
 (532), `func_0203842c` (368), `func_02038a38` (320).
 
 Naming a method can emit a vtable — check `eligible-names.txt` after adding any virtual
@@ -562,7 +562,7 @@ declaration.
 
 ### Free-standing quick win
 
-`dEnemyBase_c::UpdateYoshiEat(WithMeshClsn&)`, ov002 0x020ade78, 972 B — a consumer, not
+`dEnemyBase_c::UpdateYoshiEat(dBgCh_Actr&)`, ov002 0x020ade78, 972 B — a consumer, not
 core. A draft at **2 divergences** is banked under the stale pre-rename symbol
 `_ZN5Enemy14UpdateYoshiEat…`. Cheapest match in this report; independent of every phase.
 
@@ -609,10 +609,10 @@ python -c "import pathlib;b=pathlib.Path('extracted/arm9_dec.bin').read_bytes();
 grep -c complete config/arm9/delinks.txt
 # the banked drafts
 python -c "import json;[print(json.loads(l)['name'],json.loads(l)['divergences']) for l in open('nearmiss/db.jsonl',encoding='utf-8')]"
-grep -n SphereClsn config/match_attempts.jsonl
+grep -n dBgCh_SphCrr config/match_attempts.jsonl
 # score a draft (module itcm, never arm9/itcm)
 python tools/fdiff.py --c notes/drafts-sphereclsn-detectclsn.cpp \
-  --name _ZN7dBgW_Kc10DetectClsnER10SphereClsn \
+  --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
   --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
 # the port line
 git show origin/port-mount-noseat-cluster:port/unmatched/MeshCollider_DetectClsn_Sphere.cpp | head -60

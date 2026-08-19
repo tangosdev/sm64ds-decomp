@@ -1,7 +1,7 @@
 #include "types.h"
 // @symbol func_ov077_021256b4
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 /* recovered: shared common types */
 #include "common.h"
 extern s16 data_02082214[];
@@ -67,7 +67,7 @@ int func_ov077_021256b4(char *o)
     _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(o, &v, (struct Vector3 *)(o + 0x5c), one);
 
     *(int *)(o + 0xd0) = 0;
-    _ZN12WithMeshClsn13SetLimMovFlagEv(o + 0x1e4);
+    _ZN10dBgCh_Actr13SetLimMovFlagEv(o + 0x1e4);
 
     *(int *)(o + 0x3d8) = 4;
     return 1;

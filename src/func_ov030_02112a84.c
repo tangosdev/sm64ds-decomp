@@ -8,9 +8,9 @@ typedef struct dBgPi {
     int h, i, j;
 } dBgPi;
 
-extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *p);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *p);
 extern void *func_0203567c(void *p);
 extern u32 _ZNK5dBgPi9GetClsnIDEv(void *r);
 extern void func_ov030_021141a8(void *a, int m);
@@ -26,8 +26,8 @@ int func_ov030_02112a84(char *a)
 {
     dBgPi res;
 
-    WithMeshClsn_UpdateContinuous_Veneer(a + 0x194);
-    if (_ZNK12WithMeshClsn13JustHitGroundEv(a + 0x194) || _ZNK12WithMeshClsn10IsOnGroundEv(a + 0x194)) {
+    dBgCh_Actr_UpdateContinuous_Veneer(a + 0x194);
+    if (_ZNK10dBgCh_Actr13JustHitGroundEv(a + 0x194) || _ZNK10dBgCh_Actr10IsOnGroundEv(a + 0x194)) {
         int b;
         u16 id;
 

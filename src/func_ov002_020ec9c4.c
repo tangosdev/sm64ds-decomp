@@ -5,9 +5,9 @@ extern int func_ov002_020d6048(void* c);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
 extern void _ZN5dCc_c5ClearEv(void* p);
 extern void _ZN5dCc_c6UpdateEv(void* p);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* cc);
-extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern s16 data_ov002_021000a8[];
 void func_ov002_020ec9c4(char* c){
   if (*(unsigned char*)(c + 0x41d) != 0){
@@ -32,7 +32,7 @@ void func_ov002_020ec9c4(char* c){
     _ZN7fBase_c18MarkForDestructionEv(c);
   _ZN5dCc_c5ClearEv(c + 0x110);
   _ZN5dCc_c6UpdateEv(c + 0x110);
-  if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144))
+  if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x144))
     _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x110);
-  WithMeshClsn_UpdateContinuous_Veneer(c + 0x144);
+  dBgCh_Actr_UpdateContinuous_Veneer(c + 0x144);
 }

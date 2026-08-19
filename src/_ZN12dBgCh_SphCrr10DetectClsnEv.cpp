@@ -40,12 +40,12 @@ struct Info {
     int pB8;
 };
 
-class SphereClsn {
+class dBgCh_SphCrr {
 public:
     int DetectClsn();
 };
 
-int SphereClsn::DetectClsn()
+int dBgCh_SphCrr::DetectClsn()
 {
     int result = 0;
     int mask;

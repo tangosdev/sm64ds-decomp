@@ -10,7 +10,7 @@
      bx lr
    The moveq/movne pair is the compiler normalising to a truth value, which is
    what makes bool the honest return type rather than int -- contrast the
-   WithMeshClsn accessors, which return a raw mask straight out of an `and`.
+   dBgCh_Actr accessors, which return a raw mask straight out of an `and`.
 
    The parameter is a reference, so the caller passes an address and this
    compares pointer identity: two distinct State objects with identical
