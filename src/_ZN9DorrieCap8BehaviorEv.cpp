@@ -14,7 +14,7 @@ int DorrieCap::Behavior()
 {
   char* p = *(char**)((char*)&unk_174);
   if(p == 0) return 1;
-  int b = (unk_0b0 & 0x20000) != 0;
+  int b = (mFlags & 0x20000) != 0;
   if(b != 0){
     char* s = (char*)_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(0x10d, 0x1210, ((char*)this)+0x5c, ((char*)this)+0x8c, mAreaId, -1);
     if(s != 0){
@@ -25,7 +25,7 @@ int DorrieCap::Behavior()
       int* qt = (int*)((int)((char*)this) + 0xb0);
       *qt = *qt & ~0x20000;
       mEatingPlayer = 0;
-      func_ov001_020ab110((char*)&unk_0d4);
+      func_ov001_020ab110((char*)&mCapIcon);
       func_ov001_020ab228(((char*)this)+0xd4, ((char*)this), 2, 0, 0);
     }
     return 1;
@@ -36,7 +36,7 @@ int DorrieCap::Behavior()
   mPosZ = *(int*)(p+8);
   mAngleX = *(short*)(*(char**)((char*)&unk_174)+0xe4);
   mAngleY = *(short*)(*(char**)((char*)&unk_174)+0x8e);
-  if(((unsigned int)unk_0ef << 30) >> 31){
+  if(((unsigned int)mCapIcon.mFlags << 30) >> 31){
     func_ov065_02118c4c(((char*)this));
     if(func_ov065_021180d4(((char*)this)) != 0){
       _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);

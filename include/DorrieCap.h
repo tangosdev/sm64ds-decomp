@@ -1,49 +1,71 @@
-/* AUTO-GENERATED from matched-function evidence by tools/gen_header.py
- * class DorrieCap: 5 matched functions, 13 evidenced fields.
- * Offsets/widths are observed, not guessed. Gaps are explicit padding.
- * Field NAMES are placeholders - renaming cannot change codegen. */
 #ifndef DORRIECAP_H
 #define DORRIECAP_H
-#include "types.h"
+
+#include "CapIcon.h"
 #include "Model.h"
 #include "MovingCylinderClsn.h"
+#include "dActor_c.h"
 
-struct DorrieCap {
-    u8  pad_000[0x5c];
-    s32 mPosX;            /* 0x05c */
-    s32 mPosY;            /* 0x060 */
-    s32 mPosZ;            /* 0x064 */
-    u8  pad_068[0x24];
-    s16 mAngleX;            /* 0x08c */
-    s16 mAngleY;            /* 0x08e */
-    u8  pad_090[0x20];
-    s32 unk_0b0;            /* 0x0b0 */
-    u8  pad_0b4[0x18];
-    s8  mAreaId;            /* 0x0cc */
-    u8  pad_0cd[0x3];
-    s32 mEatingPlayer;            /* 0x0d0 */
-    u8  unk_0d4;            /* 0x0d4 */
-    u8  pad_0d5[0x1a];
-    u8  unk_0ef;            /* 0x0ef */
-    /* Model member, named by the class's own destructor calling
-       Model's D1 at +0x0f0 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9DorrieCapD1Ev.c] */
-    Model mModel;            /* 0x0f0 */
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x140 -- a relocation the ROM build
-       checks. Was a u8 marker. [_ZN9DorrieCapD1Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x140 */
-    s32 unk_174;            /* 0x174 */
-#ifdef __cplusplus
-    /* --- vtable, own override --- */
-    int OnYoshiTryEat();              /* slot 18, include/dActor_c.h --
-                                          src/_ZN9DorrieCap13OnYoshiTryEatEv.c */
+/* DorrieCap is daDossyCap_c in the ROM's own RTTI: the typeinfo at ov065
+ * 0x0211cd4c names dActor_c as the sole base at offset 0, and the class's
+ * vtable at 0x0211cdc4 (31 slots, same count as dActor_c's) is what pairs it
+ * to DorrieCap_Spawn, which stores that address after allocating 0x184 bytes
+ * via fBase_c::operator new.
+ *
+ * The Spawn constructs the three owned subobjects below at 0xd4..0x140 in
+ * declaration order; D1 destroys them in exactly the reverse order before
+ * chaining to dActor_c::~dActor_c -- two independent witnesses for each
+ * member's type and offset. The 0xd4 member is a CapIcon: its ctor/dtor are
+ * func_ov001_020ab3c4 / func_ov001_020ab3a0, the same pair dCapEnemy_c holds
+ * at its own 0x164, typed in include/CapIcon.h. The flat header this replaces
+ * read into it as two loose bytes: unk_0d4 (its vtable word) and unk_0ef
+ * (mCapIcon.mFlags, 0xd4 + 0x1b).
+ *
+ * Own vtable slots, from the ROM table diffed against dActor_c's: 0
+ * InitResources, 6 Behavior, 9 Render, 16/17 the destructor pair, 18
+ * OnYoshiTryEat. No CleanupResources or OnPendingDestroy override, unlike its
+ * FlameChomp/FlameChompFire/MrI_Projectile siblings.
+ *
+ * THE DESTRUCTORS STAY UNMIGRATED, and the reason is order: D1 destroys
+ * MovingCylinderClsn, then Model, then the CapIcon -- exact reverse
+ * declaration order -- but CapIcon's destructor is still spelt
+ * func_ov001_020ab3a0 rather than CapIcon::~CapIcon, so a real ~DorrieCap()
+ * would have to call it in the body, which runs BEFORE the implicit member
+ * destructors instead of after them. dCapEnemy_c got away with exactly that
+ * only because its CapIcon is the LAST member (see _ZN11dCapEnemy_cD2Ev.cpp);
+ * here it is the first. Until CapIcon's destructor is a real method, the
+ * declaration below is satisfied by the extern "C" free functions in
+ * _ZN9DorrieCapD1Ev.c / D0Ev.c, which also keeps this class's key function
+ * undefined in every TU so no object emits a coined-name vtable.
+ *
+ * The header this replaces was deliberately flat -- a non-deriving struct
+ * whose leading "fields" duplicated dActor_c's storage -- because giving a
+ * non-derived struct a virtual would have inserted a vptr and shifted every
+ * offset. Deriving from dActor_c is what makes the declarations below honest.
+ */
+struct DorrieCap : dActor_c {
+    /* Used both as a Player* (Behavior chases it through +0x360) and as a raw
+       word copied into the spawned cap actor's own 0xd0. Kept s32 as the flat
+       header had it; the pointer reads go through explicit casts. */
+    s32                mEatingPlayer;           /* 0x0d0 */
+    CapIcon            mCapIcon;                /* 0x0d4 */
+    Model              mModel;                  /* 0x0f0 */
+    MovingCylinderClsn mMovingCylinderClsn;     /* 0x140 */
+    s32                unk_174;                 /* 0x174 */
+    u8                 pad_178[0xc];
 
-    /* methods */
-    int Behavior();
-    int InitResources();
-    int Render();
-#endif
+    /* Declared first on purpose, same reasoning as dActor_c.h: the key
+       function pins where mwcc anchors the vtable -- and this one is never
+       defined as a method, see the header comment. */
+    virtual ~DorrieCap();
+
+    virtual s32 InitResources();       /* slot 0 */
+    virtual s32 Behavior();            /* slot 6 */
+    virtual s32 Render();              /* slot 9 */
+    virtual int OnYoshiTryEat();       /* slot 18 */
 };
 
-#endif
+typedef char DorrieCap_size_must_be_0x184[
+    sizeof(DorrieCap) == 0x184 ? 1 : -1];
+
+#endif /* DORRIECAP_H */
