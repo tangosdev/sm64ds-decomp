@@ -462,27 +462,15 @@ extern "C" void port_scene_flower_hits(void)
  * access through sb). A trap that took void would compile and would silently
  * become a different function the day somebody transcribes the body.
  */
+/* Run mg5, lane INTEG: the petal-array layout was recovered on branch
+   decomp/yoshi-petal as src/func_ov006_0212a764.c (NONMATCHING regperm floor)
+   and is now sliced in port/slice_flw.txt, so the trap that stood in for it is
+   gone and the real body lays out the petals. The counter is kept because the
+   census above prints port_mg_flower_trap_hits(); it now stays 0, the honest
+   report that the petal layout is no longer stubbed. */
 static unsigned g_flw_trap_hits;
 
 extern "C" unsigned port_mg_flower_trap_hits(void) { return g_flw_trap_hits; }
-
-extern "C" void func_ov006_0212a764(void *)
-{
-    static int said;
-    ++g_flw_trap_hits;
-    if (!said) {
-        said = 1;
-        std::fprintf(stderr, "  [scene] UNDECOMPILED ov006 BODY entered: "
-                     "func_ov006_0212a764 (0x310 bytes, no delink block in "
-                     "config/arm9/overlays/ov006/delinks.txt and no src TU). "
-                     "It is dScMgFlower_c's petal-array layout, called from "
-                     "slot 0 InitResources and slot 18. Returns without doing "
-                     "anything: the twenty-two petal records at +0x4f38 stay "
-                     "zeroed, so no petal is on the board. "
-                     "port/hal/scene_mg_flower.cpp section 7.\n");
-        std::fflush(stderr);
-    }
-}
 
 /* ---- THE NAME-SPELLING FACES --------------------------------------------
  *

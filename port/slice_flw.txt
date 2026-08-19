@@ -227,6 +227,11 @@ src/func_ov006_0212a554.c
 src/func_ov006_0212a5c8.cpp
 src/func_ov006_0212a650.c
 src/func_ov006_0212a654.c
+# Run mg5, lane INTEG: the petal-array layout, recovered on branch
+# decomp/yoshi-petal (NONMATCHING regperm floor). It had a config symbol but no
+# delink block and no src when the comment above was written; both exist now, so
+# the trap in port/hal/scene_mg_flower.cpp is removed and the real body links.
+src/func_ov006_0212a764.c
 src/func_ov006_0212aa74.c
 src/func_ov006_0212aacc.c
 src/func_ov006_0212ac74.c
