@@ -1,11 +1,11 @@
 //cpp
-// @symbol _ZN14FlameChompFire8BehaviorEv
+// @symbol _ZN8daKpFr_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-int FlameChompFire::Behavior()
+int daKpFr_c::Behavior()
 {
     func_ov070_02121fd0(((char*)this));
     func_ov070_02121e14(((char*)this));

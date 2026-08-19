@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN14FlameChompFire13InitResourcesEv
+// @symbol _ZN8daKpFr_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 struct M48 { int w[12]; };
 extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
@@ -12,7 +12,7 @@ extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* 
 extern int data_02082128[];
 }
 
-int FlameChompFire::InitResources()
+int daKpFr_c::InitResources()
 {
     if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
         return 0;

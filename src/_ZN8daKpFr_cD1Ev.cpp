@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN14FlameChompFireD1Ev
+// @symbol _ZN8daKpFr_cD1Ev
 
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-FlameChompFire::~FlameChompFire()
+daKpFr_c::~daKpFr_c()
 {
 }

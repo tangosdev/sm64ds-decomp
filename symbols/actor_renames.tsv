@@ -1510,13 +1510,13 @@ ov070	0x021218c4	func_ov070_021218c4	_ZN10FlameChomp6RenderEv	vtable slot 9
 ov070	0x021218f4	func_ov070_021218f4	_ZN10FlameChomp8BehaviorEv	vtable slot 6
 ov070	0x02121914	func_ov070_02121914	_ZN10FlameChomp13InitResourcesEv	vtable slot 0
 ov070	0x02121af8	func_ov070_02121af8	FlameChomp_Spawn	spawnfunc
-ov070	0x02121b48	func_ov070_02121b48	_ZN14FlameChompFireD1Ev	vtable slot 16
-ov070	0x02121b88	func_ov070_02121b88	_ZN14FlameChompFireD0Ev	vtable slot 17
-ov070	0x02122060	func_ov070_02122060	_ZN14FlameChompFire16CleanupResourcesEv	vtable slot 3
-ov070	0x02122068	func_ov070_02122068	_ZN14FlameChompFire16OnPendingDestroyEv	vtable slot 12
-ov070	0x0212206c	func_ov070_0212206c	_ZN14FlameChompFire6RenderEv	vtable slot 9
-ov070	0x02122104	func_ov070_02122104	_ZN14FlameChompFire8BehaviorEv	vtable slot 6
-ov070	0x02122124	func_ov070_02122124	_ZN14FlameChompFire13InitResourcesEv	vtable slot 0
+ov070	0x02121b48	func_ov070_02121b48	_ZN8daKpFr_cD1Ev	vtable slot 16
+ov070	0x02121b88	func_ov070_02121b88	_ZN8daKpFr_cD0Ev	vtable slot 17
+ov070	0x02122060	func_ov070_02122060	_ZN8daKpFr_c16CleanupResourcesEv	vtable slot 3
+ov070	0x02122068	func_ov070_02122068	_ZN8daKpFr_c16OnPendingDestroyEv	vtable slot 12
+ov070	0x0212206c	func_ov070_0212206c	_ZN8daKpFr_c6RenderEv	vtable slot 9
+ov070	0x02122104	func_ov070_02122104	_ZN8daKpFr_c8BehaviorEv	vtable slot 6
+ov070	0x02122124	func_ov070_02122124	_ZN8daKpFr_c13InitResourcesEv	vtable slot 0
 ov070	0x021221fc	func_ov070_021221fc	FlameChompFire_Spawn	spawnfunc
 ov070	0x02123144	data_ov070_02123144	FlyGuy_SpawnInfo	spawninfo
 ov070	0x02123168	data_ov070_02123168	_ZTV6FlyGuy	vtable alloc=0x3e8
@@ -1525,7 +1525,7 @@ ov070	0x02123278	data_ov070_02123278	_ZTV3Amp	vtable alloc=?
 ov070	0x0212334c	data_ov070_0212334c	FlameChomp_SpawnInfo	spawninfo
 ov070	0x02123370	data_ov070_02123370	_ZTV10FlameChomp	vtable alloc=0x3b0
 ov070	0x02123424	data_ov070_02123424	FlameChompFire_SpawnInfo	spawninfo
-ov070	0x02123448	data_ov070_02123448	_ZTV14FlameChompFire	vtable alloc=0x330
+ov070	0x02123448	data_ov070_02123448	_ZTV8daKpFr_c	vtable alloc=0x330
 ov071	0x0211f000	func_ov071_0211f000	_ZN10ScuttlebugD1Ev	vtable slot 16
 ov071	0x0211f048	func_ov071_0211f048	_ZN10ScuttlebugD0Ev	vtable slot 17
 ov071	0x02120308	func_ov071_02120308	_ZN10Scuttlebug16CleanupResourcesEv	vtable slot 3

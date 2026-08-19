@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN14FlameChompFire13OnYoshiTryEatEv
+// @symbol _ZN8daKpFr_c13OnYoshiTryEatEv
 
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-int FlameChompFire::OnYoshiTryEat()
+int daKpFr_c::OnYoshiTryEat()
 {
     return 5;
 }

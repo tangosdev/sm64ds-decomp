@@ -1,12 +1,13 @@
-#ifndef FLAMECHOMPFIRE_H
-#define FLAMECHOMPFIRE_H
+#ifndef DAKPFR_C_H
+#define DAKPFR_C_H
 
 #include "MovingCylinderClsn.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 #include "dActor_c.h"
 
-/* FlameChompFire is daKpFr_c in the ROM's own RTTI: the typeinfo at ov070
+/* daKpFr_c is the ROM's own RTTI name for this class (this tree once coined it
+ * FlameChompFire): the typeinfo at ov070
  * 0x02123418 names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x02123448 (31 slots, same count as dActor_c's) is what pairs it
  * to FlameChompFire_Spawn, which stores that address after allocating 0x330
@@ -27,7 +28,7 @@
  * non-derived struct a virtual would have inserted a vptr and shifted every
  * offset. Deriving from dActor_c is what makes the declarations below honest.
  */
-struct FlameChompFire : dActor_c {
+struct daKpFr_c : dActor_c {
     u8                 pad_0d0[0x4];
     ShadowModel        mShadowModel;           /* 0x0d4 */
     MovingCylinderClsn mMovingCylinderClsn;    /* 0x0fc */
@@ -40,7 +41,7 @@ struct FlameChompFire : dActor_c {
 
     /* Declared first on purpose, same reasoning as dActor_c.h: the key
        function pins where mwcc anchors the vtable. */
-    virtual ~FlameChompFire();
+    virtual ~daKpFr_c();
 
     virtual s32  InitResources();       /* slot 0 */
     virtual s32  CleanupResources();    /* slot 3 */
@@ -50,7 +51,7 @@ struct FlameChompFire : dActor_c {
     virtual int  OnYoshiTryEat();       /* slot 18 */
 };
 
-typedef char FlameChompFire_size_must_be_0x330[
-    sizeof(FlameChompFire) == 0x330 ? 1 : -1];
+typedef char daKpFr_c_size_must_be_0x330[
+    sizeof(daKpFr_c) == 0x330 ? 1 : -1];
 
-#endif /* FLAMECHOMPFIRE_H */
+#endif /* DAKPFR_C_H */

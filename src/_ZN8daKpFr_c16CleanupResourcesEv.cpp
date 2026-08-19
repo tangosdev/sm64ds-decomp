@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN14FlameChompFire16CleanupResourcesEv
+// @symbol _ZN8daKpFr_c16CleanupResourcesEv
 
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-int FlameChompFire::CleanupResources()
+int daKpFr_c::CleanupResources()
 {
     return 1;
 }

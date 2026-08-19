@@ -1,8 +1,8 @@
 //cpp
-// @symbol _ZN14FlameChompFire16OnPendingDestroyEv
+// @symbol _ZN8daKpFr_c16OnPendingDestroyEv
 
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-void FlameChompFire::OnPendingDestroy()
+void daKpFr_c::OnPendingDestroy()
 {
 }

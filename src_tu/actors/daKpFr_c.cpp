@@ -1,5 +1,5 @@
 //cpp
-/* HAND-ASSEMBLED translation unit -- ov070/FlameChompFire (21 function(s)).
+/* HAND-ASSEMBLED translation unit -- ov070/daKpFr_c (21 function(s)).
  * tubuild create refused this TU (legacy bodies wrapped in extern "C" { }),
  * so this is a raw concatenation of the complete legacy files in REVERSE
  * ROM order (mwccarm emits one .text section per function in the reverse
@@ -7,9 +7,9 @@
  * the manifest notes.
  *
  * Assembled from these legacy one-function sources (ROM address order):
- *   [0] 0x02121b48  src/_ZN14FlameChompFireD1Ev.cpp
- *   [1] 0x02121b88  src/_ZN14FlameChompFireD0Ev.cpp
- *   [2] 0x02121bdc  src/_ZN14FlameChompFire13OnYoshiTryEatEv.cpp
+ *   [0] 0x02121b48  src/_ZN8daKpFr_cD1Ev.cpp
+ *   [1] 0x02121b88  src/_ZN8daKpFr_cD0Ev.cpp
+ *   [2] 0x02121bdc  src/_ZN8daKpFr_c13OnYoshiTryEatEv.cpp
  *   [3] 0x02121be4  src/func_ov070_02121be4.cpp
  *   [4] 0x02121c8c  src/func_ov070_02121c8c.c
  *   [5] 0x02121cbc  src/func_ov070_02121cbc.c
@@ -22,11 +22,11 @@
  *   [12] 0x02121fd0  src/func_ov070_02121fd0.cpp
  *   [13] 0x0212200c  src/func_ov070_0212200c.cpp
  *   [14] 0x02122044  src/func_ov070_02122044.c
- *   [15] 0x02122060  src/_ZN14FlameChompFire16CleanupResourcesEv.cpp
- *   [16] 0x02122068  src/_ZN14FlameChompFire16OnPendingDestroyEv.cpp
- *   [17] 0x0212206c  src/_ZN14FlameChompFire6RenderEv.cpp
- *   [18] 0x02122104  src/_ZN14FlameChompFire8BehaviorEv.cpp
- *   [19] 0x02122124  src/_ZN14FlameChompFire13InitResourcesEv.cpp
+ *   [15] 0x02122060  src/_ZN8daKpFr_c16CleanupResourcesEv.cpp
+ *   [16] 0x02122068  src/_ZN8daKpFr_c16OnPendingDestroyEv.cpp
+ *   [17] 0x0212206c  src/_ZN8daKpFr_c6RenderEv.cpp
+ *   [18] 0x02122104  src/_ZN8daKpFr_c8BehaviorEv.cpp
+ *   [19] 0x02122124  src/_ZN8daKpFr_c13InitResourcesEv.cpp
  *   [20] 0x021221fc  src/FlameChompFire_Spawn.c
  */
 
@@ -43,13 +43,13 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV14FlameChompFire */
+/* resolved: VT0 = _ZTV8daKpFr_c */
 int *FlameChompFire_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(816);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)&_ZTV14FlameChompFire[2]; /* +8: this TU defines the vtable */
+        p[0] = (int)&_ZTV8daKpFr_c[2]; /* +8: this TU defines the vtable */
         _ZN11ShadowModelC1Ev((char *)p + 0xd4);
         _ZN18MovingCylinderClsnC1Ev((char *)p + 0xfc);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x130);
@@ -59,13 +59,13 @@ int *FlameChompFire_Spawn(void)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 19 -- _ZN14FlameChompFire13InitResourcesEv, 0x02122124, size 0xd8 */
+/* ROM ordinal 19 -- _ZN8daKpFr_c13InitResourcesEv, 0x02122124, size 0xd8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14FlameChompFire13InitResourcesEv
+// @symbol _ZN8daKpFr_c13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 struct M48 { int w[12]; };
 extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
@@ -74,7 +74,7 @@ extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* 
 extern int data_02082128[];
 }
 
-int FlameChompFire::InitResources()
+int daKpFr_c::InitResources()
 {
     if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
         return 0;
@@ -91,15 +91,15 @@ int FlameChompFire::InitResources()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 18 -- _ZN14FlameChompFire8BehaviorEv, 0x02122104, size 0x20 */
+/* ROM ordinal 18 -- _ZN8daKpFr_c8BehaviorEv, 0x02122104, size 0x20 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14FlameChompFire8BehaviorEv
+// @symbol _ZN8daKpFr_c8BehaviorEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-int FlameChompFire::Behavior()
+int daKpFr_c::Behavior()
 {
     func_ov070_02121fd0(((char*)this));
     func_ov070_02121e14(((char*)this));
@@ -107,16 +107,16 @@ int FlameChompFire::Behavior()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 17 -- _ZN14FlameChompFire6RenderEv, 0x0212206c, size 0x98 */
+/* ROM ordinal 17 -- _ZN8daKpFr_c6RenderEv, 0x0212206c, size 0x98 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14FlameChompFire6RenderEv
+// @symbol _ZN8daKpFr_c6RenderEv
 /* recovered: named members + shared header, real C++ method */
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 extern "C" {
 extern int _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unsigned int a, unsigned int b, int c, int d, int e, void* f);
 }
 
-int FlameChompFire::Render()
+int daKpFr_c::Render()
 {
   int b = (mFlags & 0x40000) != 0;
   if (b) return 1;
@@ -128,24 +128,24 @@ int FlameChompFire::Render()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 16 -- _ZN14FlameChompFire16OnPendingDestroyEv, 0x02122068, size 0x4 */
+/* ROM ordinal 16 -- _ZN8daKpFr_c16OnPendingDestroyEv, 0x02122068, size 0x4 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14FlameChompFire16OnPendingDestroyEv
+// @symbol _ZN8daKpFr_c16OnPendingDestroyEv
 
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-void FlameChompFire::OnPendingDestroy()
+void daKpFr_c::OnPendingDestroy()
 {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 15 -- _ZN14FlameChompFire16CleanupResourcesEv, 0x02122060, size 0x8 */
+/* ROM ordinal 15 -- _ZN8daKpFr_c16CleanupResourcesEv, 0x02122060, size 0x8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14FlameChompFire16CleanupResourcesEv
+// @symbol _ZN8daKpFr_c16CleanupResourcesEv
 
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-int FlameChompFire::CleanupResources()
+int daKpFr_c::CleanupResources()
 {
     return 1;
 }
@@ -407,35 +407,35 @@ extern "C" void func_ov070_02121be4(void *thiz)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 2 -- _ZN14FlameChompFire13OnYoshiTryEatEv, 0x02121bdc, size 0x8 */
+/* ROM ordinal 2 -- _ZN8daKpFr_c13OnYoshiTryEatEv, 0x02121bdc, size 0x8 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14FlameChompFire13OnYoshiTryEatEv
+// @symbol _ZN8daKpFr_c13OnYoshiTryEatEv
 
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-int FlameChompFire::OnYoshiTryEat()
+int daKpFr_c::OnYoshiTryEat()
 {
     return 5;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 1 -- _ZN14FlameChompFireD0Ev, 0x02121b88, size 0x54 */
+/* ROM ordinal 1 -- _ZN8daKpFr_cD0Ev, 0x02121b88, size 0x54 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14FlameChompFireD0Ev
+// @symbol _ZN8daKpFr_cD0Ev
 
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-/* (no separate definition: the single ~FlameChompFire() below emits the D0 and
+/* (no separate definition: the single ~daKpFr_c() below emits the D0 and
  * D1 variants together; mwccarm orders the variant group itself.) */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN14FlameChompFireD1Ev, 0x02121b48, size 0x40 */
+/* ROM ordinal 0 -- _ZN8daKpFr_cD1Ev, 0x02121b48, size 0x40 */
 /* -------------------------------------------------------------------------- */
-// @symbol _ZN14FlameChompFireD1Ev
+// @symbol _ZN8daKpFr_cD1Ev
 
-#include "FlameChompFire.h"
+#include "daKpFr_c.h"
 
-FlameChompFire::~FlameChompFire()
+daKpFr_c::~daKpFr_c()
 {
 }
 
