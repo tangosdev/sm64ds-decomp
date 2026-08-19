@@ -319,7 +319,7 @@ take over, ping the claimant first.
 | arm9 func_02009e70 (0x02009e70, size 0x109c) | lunavyqo (Grok) | 2026-07-24 | **active** — batch1 near-miss refine (1613 matching); API clm_e01deb2c5b27 |
 | ov006 batch7: func_ov006_02125f68 (0x02125f68, size 0x9e0) | lunavyqo (Grok) | 2026-07-24 | **active** — batch7 match; API clm_90177cda2e3e |
 | ov002 batch7: func_ov002_020ae4cc (0x020ae4cc, size 0xfc) | lunavyqo (Grok) | 2026-07-24 | **active** — batch7 from near-miss div=9 |
-| ov075 batch7: func_ov075_02116128 (0x02116128, size 0xf4) | lunavyqo (Grok) | 2026-07-24 | **active** — batch7 from near-miss div=29 |
+| ov075 func_ov075_02116128 (0x02116128, size 0xf4) | lunavyqo | 2026-08-19 | **released** — near-miss improved **29→26** (size-exact). Return-lo pins r0; C89 `angle,hi,lo` then `i` then `p` puts p@r2. Residual r1↔r3 on angle/i + delayed lsl#16. tip in nearmiss/db.jsonl; API clm_02ee0daa67f6 released |
 | ov062+ov006 batch8: func_ov062_02119af0 (0x02119af0, 0xf0) + func_ov006_020cc8c8 (0x020cc8c8, 0xf0) | lunavyqo (Grok) | 2026-07-24 | **done** — all listed functions verified matched in committed src/ (repo doctor sweep 2026-07-25); batch8 match (CLAIMS.md only; API key expired/revoked) |
 | ov002 func_ov002_020aefb8 (0x020aefb8, size 0x108) | lunavyqo (Grok) | 2026-07-24 | **done** — all listed functions verified matched in committed src/ (repo doctor sweep 2026-07-25); batch4 near-miss refine (prev div=21) |
 | ov075 func_ov075_02117d80 (0x02117d80, size 0x104) | lunavyqo (Grok) | 2026-07-24 | **active** — batch4 near-miss refine (prev div=5) |
