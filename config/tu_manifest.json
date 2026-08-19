@@ -4840,6 +4840,757 @@
           "relocation_destinations_verified": "PASS"
         }
       }
+    },
+    {
+      "id": "ov077/HeaveHo",
+      "module": "ov077",
+      "source": "src_tu/actors/HeaveHo.cpp",
+      "promoted_source": "src/actors/HeaveHo.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x212624c..0x2127230, 22 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): HeaveHo",
+        "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x0212624c",
+          "end": "0x02127230"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN7HeaveHoD1Ev",
+          "address": "0x0212624c",
+          "size": "0x00000050",
+          "legacy_source": "src/_ZN7HeaveHoD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN7HeaveHoD0Ev",
+          "address": "0x0212629c",
+          "size": "0x00000064",
+          "legacy_source": "src/_ZN7HeaveHoD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "func_ov077_02126300",
+          "address": "0x02126300",
+          "size": "0x00000228",
+          "legacy_source": "src/func_ov077_02126300.c",
+          "ordinal": 2
+        },
+        {
+          "symbol": "func_ov077_02126528",
+          "address": "0x02126528",
+          "size": "0x00000118",
+          "legacy_source": "src/func_ov077_02126528.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_ov077_02126640",
+          "address": "0x02126640",
+          "size": "0x00000118",
+          "legacy_source": "src/func_ov077_02126640.cpp",
+          "ordinal": 4
+        },
+        {
+          "symbol": "func_ov077_02126758",
+          "address": "0x02126758",
+          "size": "0x00000044",
+          "legacy_source": "src/func_ov077_02126758.cpp",
+          "ordinal": 5
+        },
+        {
+          "symbol": "func_ov077_0212679c",
+          "address": "0x0212679c",
+          "size": "0x00000194",
+          "legacy_source": "src/func_ov077_0212679c.c",
+          "ordinal": 6
+        },
+        {
+          "symbol": "func_ov077_02126930",
+          "address": "0x02126930",
+          "size": "0x00000078",
+          "legacy_source": "src/func_ov077_02126930.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "func_ov077_021269a8",
+          "address": "0x021269a8",
+          "size": "0x0000005c",
+          "legacy_source": "src/func_ov077_021269a8.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "func_ov077_02126a04",
+          "address": "0x02126a04",
+          "size": "0x0000004c",
+          "legacy_source": "src/func_ov077_02126a04.c",
+          "ordinal": 9
+        },
+        {
+          "symbol": "func_ov077_02126a50",
+          "address": "0x02126a50",
+          "size": "0x00000034",
+          "legacy_source": "src/func_ov077_02126a50.c",
+          "ordinal": 10
+        },
+        {
+          "symbol": "func_ov077_02126a84",
+          "address": "0x02126a84",
+          "size": "0x0000004c",
+          "legacy_source": "src/func_ov077_02126a84.c",
+          "ordinal": 11
+        },
+        {
+          "symbol": "func_ov077_02126ad0",
+          "address": "0x02126ad0",
+          "size": "0x00000204",
+          "legacy_source": "src/func_ov077_02126ad0.c",
+          "ordinal": 12
+        },
+        {
+          "symbol": "func_ov077_02126cd4",
+          "address": "0x02126cd4",
+          "size": "0x00000088",
+          "legacy_source": "src/func_ov077_02126cd4.cpp",
+          "ordinal": 13
+        },
+        {
+          "symbol": "func_ov077_02126d5c",
+          "address": "0x02126d5c",
+          "size": "0x00000050",
+          "legacy_source": "src/func_ov077_02126d5c.cpp",
+          "ordinal": 14
+        },
+        {
+          "symbol": "func_ov077_02126dac",
+          "address": "0x02126dac",
+          "size": "0x00000040",
+          "legacy_source": "src/func_ov077_02126dac.c",
+          "ordinal": 15
+        },
+        {
+          "symbol": "_ZN7HeaveHo16CleanupResourcesEv",
+          "address": "0x02126dec",
+          "size": "0x00000048",
+          "legacy_source": "src/_ZN7HeaveHo16CleanupResourcesEv.cpp",
+          "ordinal": 16
+        },
+        {
+          "symbol": "_ZN7HeaveHo16OnPendingDestroyEv",
+          "address": "0x02126e34",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN7HeaveHo16OnPendingDestroyEv.cpp",
+          "ordinal": 17
+        },
+        {
+          "symbol": "_ZN7HeaveHo6RenderEv",
+          "address": "0x02126e38",
+          "size": "0x00000050",
+          "legacy_source": "src/_ZN7HeaveHo6RenderEv.cpp",
+          "ordinal": 18
+        },
+        {
+          "symbol": "_ZN7HeaveHo8BehaviorEv",
+          "address": "0x02126e88",
+          "size": "0x000001e4",
+          "legacy_source": "src/_ZN7HeaveHo8BehaviorEv.cpp",
+          "ordinal": 19
+        },
+        {
+          "symbol": "_ZN7HeaveHo13InitResourcesEv",
+          "address": "0x0212706c",
+          "size": "0x00000168",
+          "legacy_source": "src/_ZN7HeaveHo13InitResourcesEv.cpp",
+          "ordinal": 20
+        },
+        {
+          "symbol": "HeaveHo_Spawn",
+          "address": "0x021271d4",
+          "size": "0x0000005c",
+          "legacy_source": "src/HeaveHo_Spawn.c",
+          "ordinal": 21
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
+        "22/22 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled. Two different pointer-to-member shadows both named PMF (a Klass-dispatch view and the state-machine view) -- the state one renamed TU-locally; AngleDiff keeps its byte-load-bearing (short, short) view via a block-scope extern declaration against decl_common's (int, int); one ~HeaveHo() emits D0+D1; Spawn stores &_ZTV7HeaveHo[2]."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov077-HeaveHo/HeaveHo.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 22,
+        "functions_declared": 22,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 13 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
+    },
+    {
+      "id": "ov077/Lakitu",
+      "module": "ov077",
+      "source": "src_tu/actors/Lakitu.cpp",
+      "promoted_source": "src/actors/Lakitu.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x2123740..0x2124b64, 32 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): Lakitu",
+        "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x02123740",
+          "end": "0x02124b64"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN6LakituD1Ev",
+          "address": "0x02123740",
+          "size": "0x00000058",
+          "legacy_source": "src/_ZN6LakituD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN6LakituD0Ev",
+          "address": "0x02123798",
+          "size": "0x0000006c",
+          "legacy_source": "src/_ZN6LakituD0Ev.cpp",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN6Lakitu13OnYoshiTryEatEv",
+          "address": "0x02123804",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN6Lakitu13OnYoshiTryEatEv.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN6Lakitu16OnAimedAtWithEggEv",
+          "address": "0x0212380c",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN6Lakitu16OnAimedAtWithEggEv.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_ov077_02123814",
+          "address": "0x02123814",
+          "size": "0x0000006c",
+          "legacy_source": "src/func_ov077_02123814.c",
+          "ordinal": 4
+        },
+        {
+          "symbol": "func_ov077_02123880",
+          "address": "0x02123880",
+          "size": "0x0000003c",
+          "legacy_source": "src/func_ov077_02123880.c",
+          "ordinal": 5
+        },
+        {
+          "symbol": "func_ov077_021238bc",
+          "address": "0x021238bc",
+          "size": "0x00000050",
+          "legacy_source": "src/func_ov077_021238bc.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "func_ov077_0212390c",
+          "address": "0x0212390c",
+          "size": "0x00000110",
+          "legacy_source": "src/func_ov077_0212390c.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "func_ov077_02123a1c",
+          "address": "0x02123a1c",
+          "size": "0x00000058",
+          "legacy_source": "src/func_ov077_02123a1c.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "func_ov077_02123a74",
+          "address": "0x02123a74",
+          "size": "0x000001f8",
+          "legacy_source": "src/func_ov077_02123a74.cpp",
+          "ordinal": 9
+        },
+        {
+          "symbol": "func_ov077_02123c6c",
+          "address": "0x02123c6c",
+          "size": "0x000000d4",
+          "legacy_source": "src/func_ov077_02123c6c.cpp",
+          "ordinal": 10
+        },
+        {
+          "symbol": "func_ov077_02123d40",
+          "address": "0x02123d40",
+          "size": "0x0000028c",
+          "legacy_source": "src/func_ov077_02123d40.cpp",
+          "ordinal": 11
+        },
+        {
+          "symbol": "func_ov077_02123fcc",
+          "address": "0x02123fcc",
+          "size": "0x0000006c",
+          "legacy_source": "src/func_ov077_02123fcc.c",
+          "ordinal": 12
+        },
+        {
+          "symbol": "func_ov077_02124038",
+          "address": "0x02124038",
+          "size": "0x000000e0",
+          "legacy_source": "src/func_ov077_02124038.cpp",
+          "ordinal": 13
+        },
+        {
+          "symbol": "func_ov077_02124118",
+          "address": "0x02124118",
+          "size": "0x00000094",
+          "legacy_source": "src/func_ov077_02124118.cpp",
+          "ordinal": 14
+        },
+        {
+          "symbol": "func_ov077_021241ac",
+          "address": "0x021241ac",
+          "size": "0x00000144",
+          "legacy_source": "src/func_ov077_021241ac.c",
+          "ordinal": 15
+        },
+        {
+          "symbol": "func_ov077_021242f0",
+          "address": "0x021242f0",
+          "size": "0x000000a4",
+          "legacy_source": "src/func_ov077_021242f0.c",
+          "ordinal": 16
+        },
+        {
+          "symbol": "func_ov077_02124394",
+          "address": "0x02124394",
+          "size": "0x0000002c",
+          "legacy_source": "src/func_ov077_02124394.c",
+          "ordinal": 17
+        },
+        {
+          "symbol": "func_ov077_021243c0",
+          "address": "0x021243c0",
+          "size": "0x00000114",
+          "legacy_source": "src/func_ov077_021243c0.cpp",
+          "ordinal": 18
+        },
+        {
+          "symbol": "func_ov077_021244d4",
+          "address": "0x021244d4",
+          "size": "0x00000090",
+          "legacy_source": "src/func_ov077_021244d4.cpp",
+          "ordinal": 19
+        },
+        {
+          "symbol": "func_ov077_02124564",
+          "address": "0x02124564",
+          "size": "0x00000134",
+          "legacy_source": "src/func_ov077_02124564.c",
+          "ordinal": 20
+        },
+        {
+          "symbol": "func_ov077_02124698",
+          "address": "0x02124698",
+          "size": "0x00000080",
+          "legacy_source": "src/func_ov077_02124698.c",
+          "ordinal": 21
+        },
+        {
+          "symbol": "func_ov077_02124718",
+          "address": "0x02124718",
+          "size": "0x0000003c",
+          "legacy_source": "src/func_ov077_02124718.cpp",
+          "ordinal": 22
+        },
+        {
+          "symbol": "func_ov077_02124754",
+          "address": "0x02124754",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov077_02124754.cpp",
+          "ordinal": 23
+        },
+        {
+          "symbol": "func_ov077_0212478c",
+          "address": "0x0212478c",
+          "size": "0x0000001c",
+          "legacy_source": "src/func_ov077_0212478c.c",
+          "ordinal": 24
+        },
+        {
+          "symbol": "_ZN6Lakitu16CleanupResourcesEv",
+          "address": "0x021247a8",
+          "size": "0x0000007c",
+          "legacy_source": "src/_ZN6Lakitu16CleanupResourcesEv.cpp",
+          "ordinal": 25
+        },
+        {
+          "symbol": "_ZN6Lakitu16OnPendingDestroyEv",
+          "address": "0x02124824",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN6Lakitu16OnPendingDestroyEv.cpp",
+          "ordinal": 26
+        },
+        {
+          "symbol": "_ZN6Lakitu6RenderEv",
+          "address": "0x02124828",
+          "size": "0x00000090",
+          "legacy_source": "src/_ZN6Lakitu6RenderEv.cpp",
+          "ordinal": 27
+        },
+        {
+          "symbol": "_ZN6Lakitu8BehaviorEv",
+          "address": "0x021248b8",
+          "size": "0x00000050",
+          "legacy_source": "src/_ZN6Lakitu8BehaviorEv.cpp",
+          "ordinal": 28
+        },
+        {
+          "symbol": "_ZN6Lakitu13InitResourcesEv",
+          "address": "0x02124908",
+          "size": "0x0000019c",
+          "legacy_source": "src/_ZN6Lakitu13InitResourcesEv.cpp",
+          "ordinal": 29
+        },
+        {
+          "symbol": "_ZN6Lakitu13OnTurnIntoEggER6Player",
+          "address": "0x02124aa4",
+          "size": "0x00000060",
+          "legacy_source": "src/_ZN6Lakitu13OnTurnIntoEggER6Player.cpp",
+          "ordinal": 30
+        },
+        {
+          "symbol": "Lakitu_Spawn",
+          "address": "0x02124b04",
+          "size": "0x00000060",
+          "legacy_source": "src/Lakitu_Spawn.c",
+          "ordinal": 31
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
+        "32/32 MATCH, objisolate clean, reloc-destinations clean. Hand-assembled. Carries the NEW namespace repair for divergent extern-C declaration views: decl_common.h declares func_ov077_0212478c with ONE parameter and Lakitu::InitResources's call byte-requires that shape (no r1 setup), while the definition and every other caller need (void*, int) -- a namespace-wrapped extern \"C\" declaration/definition binds the same C symbol under a distinct C++ name, so both views coexist (probed on 2004/b56 before use; block-scope extern cannot serve here because the divergent caller is a C++ member). Same repair for the zero-arg views of _ZN8dActor_c22ClosestNonVanishPlayerEv and func_ov077_02123880. One ~Lakitu() emits D0+D1; Spawn stores &_ZTV6Lakitu[2]."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov077-Lakitu/Lakitu.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 32,
+        "functions_declared": 32,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
+    },
+    {
+      "id": "ov077/Spiny",
+      "module": "ov077",
+      "source": "src_tu/actors/Spiny.cpp",
+      "promoted_source": "src/actors/Spiny.cpp",
+      "status": "text-verified",
+      "boundary_confidence": "high",
+      "boundary_evidence": [
+        "contiguous linker run: 0x2124b64..0x212624c, 34 function(s), from build/tu_map.json (tools/tu_map.py)",
+        "class label(s): Spiny",
+        "module sinit corroboration: 3 sinit(s) / 3 .ctor entries, sinit_vs_tu=ok, corroborated=True (module-wide, NOT narrowed to this one TU -- see notes/tu-reconstruction-pilot-report.md sec 2 for the by-hand narrowing step)"
+      ],
+      "sections": [
+        {
+          "name": ".text",
+          "start": "0x02124b64",
+          "end": "0x0212624c"
+        }
+      ],
+      "functions": [
+        {
+          "symbol": "_ZN5SpinyD1Ev",
+          "address": "0x02124b64",
+          "size": "0x00000050",
+          "legacy_source": "src/_ZN5SpinyD1Ev.cpp",
+          "ordinal": 0
+        },
+        {
+          "symbol": "_ZN5SpinyD0Ev",
+          "address": "0x02124bb4",
+          "size": "0x00000064",
+          "legacy_source": "src/_ZN5SpinyD0Ev.c",
+          "ordinal": 1
+        },
+        {
+          "symbol": "_ZN5Spiny13OnYoshiTryEatEv",
+          "address": "0x02124c18",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN5Spiny13OnYoshiTryEatEv.cpp",
+          "ordinal": 2
+        },
+        {
+          "symbol": "_ZN5Spiny16OnAimedAtWithEggEv",
+          "address": "0x02124c20",
+          "size": "0x00000008",
+          "legacy_source": "src/_ZN5Spiny16OnAimedAtWithEggEv.cpp",
+          "ordinal": 3
+        },
+        {
+          "symbol": "func_ov077_02124c28",
+          "address": "0x02124c28",
+          "size": "0x000000bc",
+          "legacy_source": "src/func_ov077_02124c28.cpp",
+          "ordinal": 4
+        },
+        {
+          "symbol": "func_ov077_02124ce4",
+          "address": "0x02124ce4",
+          "size": "0x00000024",
+          "legacy_source": "src/func_ov077_02124ce4.c",
+          "ordinal": 5
+        },
+        {
+          "symbol": "func_ov077_02124d08",
+          "address": "0x02124d08",
+          "size": "0x000001a8",
+          "legacy_source": "src/func_ov077_02124d08.cpp",
+          "ordinal": 6
+        },
+        {
+          "symbol": "func_ov077_02124eb0",
+          "address": "0x02124eb0",
+          "size": "0x000001f8",
+          "legacy_source": "src/func_ov077_02124eb0.cpp",
+          "ordinal": 7
+        },
+        {
+          "symbol": "func_ov077_021250a8",
+          "address": "0x021250a8",
+          "size": "0x00000128",
+          "legacy_source": "src/func_ov077_021250a8.cpp",
+          "ordinal": 8
+        },
+        {
+          "symbol": "func_ov077_021251d0",
+          "address": "0x021251d0",
+          "size": "0x000000c0",
+          "legacy_source": "src/func_ov077_021251d0.cpp",
+          "ordinal": 9
+        },
+        {
+          "symbol": "func_ov077_02125290",
+          "address": "0x02125290",
+          "size": "0x00000074",
+          "legacy_source": "src/func_ov077_02125290.c",
+          "ordinal": 10
+        },
+        {
+          "symbol": "func_ov077_02125304",
+          "address": "0x02125304",
+          "size": "0x000000a0",
+          "legacy_source": "src/func_ov077_02125304.cpp",
+          "ordinal": 11
+        },
+        {
+          "symbol": "func_ov077_021253a4",
+          "address": "0x021253a4",
+          "size": "0x000000dc",
+          "legacy_source": "src/func_ov077_021253a4.cpp",
+          "ordinal": 12
+        },
+        {
+          "symbol": "func_ov077_02125480",
+          "address": "0x02125480",
+          "size": "0x000000d0",
+          "legacy_source": "src/func_ov077_02125480.cpp",
+          "ordinal": 13
+        },
+        {
+          "symbol": "func_ov077_02125550",
+          "address": "0x02125550",
+          "size": "0x00000164",
+          "legacy_source": "src/func_ov077_02125550.cpp",
+          "ordinal": 14
+        },
+        {
+          "symbol": "func_ov077_021256b4",
+          "address": "0x021256b4",
+          "size": "0x0000017c",
+          "legacy_source": "src/func_ov077_021256b4.c",
+          "ordinal": 15
+        },
+        {
+          "symbol": "func_ov077_02125830",
+          "address": "0x02125830",
+          "size": "0x000000ac",
+          "legacy_source": "src/func_ov077_02125830.c",
+          "ordinal": 16
+        },
+        {
+          "symbol": "func_ov077_021258dc",
+          "address": "0x021258dc",
+          "size": "0x0000002c",
+          "legacy_source": "src/func_ov077_021258dc.c",
+          "ordinal": 17
+        },
+        {
+          "symbol": "func_ov077_02125908",
+          "address": "0x02125908",
+          "size": "0x00000104",
+          "legacy_source": "src/func_ov077_02125908.c",
+          "ordinal": 18
+        },
+        {
+          "symbol": "func_ov077_02125a0c",
+          "address": "0x02125a0c",
+          "size": "0x00000048",
+          "legacy_source": "src/func_ov077_02125a0c.c",
+          "ordinal": 19
+        },
+        {
+          "symbol": "func_ov077_02125a54",
+          "address": "0x02125a54",
+          "size": "0x000000c8",
+          "legacy_source": "src/func_ov077_02125a54.c",
+          "ordinal": 20
+        },
+        {
+          "symbol": "func_ov077_02125b1c",
+          "address": "0x02125b1c",
+          "size": "0x00000098",
+          "legacy_source": "src/func_ov077_02125b1c.cpp",
+          "ordinal": 21
+        },
+        {
+          "symbol": "func_ov077_02125bb4",
+          "address": "0x02125bb4",
+          "size": "0x00000220",
+          "legacy_source": "src/func_ov077_02125bb4.c",
+          "ordinal": 22
+        },
+        {
+          "symbol": "func_ov077_02125dd4",
+          "address": "0x02125dd4",
+          "size": "0x0000004c",
+          "legacy_source": "src/func_ov077_02125dd4.c",
+          "ordinal": 23
+        },
+        {
+          "symbol": "func_ov077_02125e20",
+          "address": "0x02125e20",
+          "size": "0x0000003c",
+          "legacy_source": "src/func_ov077_02125e20.cpp",
+          "ordinal": 24
+        },
+        {
+          "symbol": "func_ov077_02125e5c",
+          "address": "0x02125e5c",
+          "size": "0x00000038",
+          "legacy_source": "src/func_ov077_02125e5c.cpp",
+          "ordinal": 25
+        },
+        {
+          "symbol": "func_ov077_02125e94",
+          "address": "0x02125e94",
+          "size": "0x0000001c",
+          "legacy_source": "src/func_ov077_02125e94.c",
+          "ordinal": 26
+        },
+        {
+          "symbol": "_ZN5Spiny16CleanupResourcesEv",
+          "address": "0x02125eb0",
+          "size": "0x0000003c",
+          "legacy_source": "src/_ZN5Spiny16CleanupResourcesEv.c",
+          "ordinal": 27
+        },
+        {
+          "symbol": "_ZN5Spiny16OnPendingDestroyEv",
+          "address": "0x02125eec",
+          "size": "0x00000004",
+          "legacy_source": "src/_ZN5Spiny16OnPendingDestroyEv.c",
+          "ordinal": 28
+        },
+        {
+          "symbol": "_ZN5Spiny6RenderEv",
+          "address": "0x02125ef0",
+          "size": "0x00000078",
+          "legacy_source": "src/_ZN5Spiny6RenderEv.cpp",
+          "ordinal": 29
+        },
+        {
+          "symbol": "_ZN5Spiny8BehaviorEv",
+          "address": "0x02125f68",
+          "size": "0x000000f0",
+          "legacy_source": "src/_ZN5Spiny8BehaviorEv.cpp",
+          "ordinal": 30
+        },
+        {
+          "symbol": "_ZN5Spiny13InitResourcesEv",
+          "address": "0x02126058",
+          "size": "0x0000013c",
+          "legacy_source": "src/_ZN5Spiny13InitResourcesEv.cpp",
+          "ordinal": 31
+        },
+        {
+          "symbol": "_ZN5Spiny13OnTurnIntoEggER6Player",
+          "address": "0x02126194",
+          "size": "0x00000060",
+          "legacy_source": "src/_ZN5Spiny13OnTurnIntoEggER6Player.cpp",
+          "ordinal": 32
+        },
+        {
+          "symbol": "Spiny_Spawn",
+          "address": "0x021261f4",
+          "size": "0x00000058",
+          "legacy_source": "src/Spiny_Spawn.c",
+          "ordinal": 33
+        }
+      ],
+      "data": [],
+      "bss": [],
+      "notes": [
+        "Generated by tools/tubuild.py create. See the file's own header comment for what was and was not reconciled, and notes/translation-unit-reconstruction-plan.md section 7.3 for what this generator does and does not attempt to resolve automatically.",
+        "tubuild create warning: hand-assembled: raw concatenation in reverse ROM order; tubuild create refused this TU (extern \"C\"-wrapped legacy bodies)",
+        "34/34 MATCH, objisolate clean, reloc-destinations clean -- the largest TU reconstructed so far. Hand-assembled. Two RaycastGround shadow views of DIFFERENT sizes (0x50 and 0x54) are both stack-frame-load-bearing; the 0x54 view lives in namespace rg54, binding the same C symbols. InitResources byte-requires a THREE-argument call to func_ov077_02125e94 (r2 = 0x2c) against the TU's (void*, int) definition -- namespaced three-arg view. The hand-mangled D0 body is dropped (mwccarm ICE ELFgen.c:483 with a real destructor in the same TU); one ~Spiny() emits both variants. Spawn stores &_ZTV5Spiny[2]."
+      ],
+      "verification": {
+        "round": "tools/tubuild.py verify -- text-only, whole shadow TU compiled once",
+        "toolchain": "tools/mwccarm/2004/b56/mwccarm.exe",
+        "flags": "-O4,p -enum int -lang c++ -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc -Cpp_exceptions off",
+        "object": "build/tu/ov077-Spiny/Spiny.o (gitignored)",
+        "comparison": "tools/match.py extract_func+compare (bytes/relocs) AND tools/objisolate.py plan() (relocation type/addend) AND tools/reloc_audit.py check_destinations() (relocation target identity)",
+        "functions_matched": 34,
+        "functions_declared": 34,
+        "criteria": {
+          "every_declared_function_defined": "PASS",
+          "every_declared_function_bytes_match": "PASS",
+          "declared_function_set_equals_defined_function_set": "FAIL-BY-DESIGN -- 11 unlicensed section/symbol(s); see unlicensed_output_observed",
+          "functions_occur_in_expected_order": "PARTIAL -- ordinal pair(s) not in ROM order: [(0, 1)]",
+          "relocation_destinations_verified": "PASS"
+        }
+      }
     }
   ]
 }
