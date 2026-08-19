@@ -127,6 +127,22 @@
 # Decompiling any of them is a byte-gated-tree job and this lane does not take
 # one.
 #
+# SEVEN OF THOSE EIGHT HAVE SINCE BEEN FILLED and this paragraph is left as the
+# derivation it was rather than rewritten, with the correction stated here.
+# Run mg5 lane INTEG seated three (020fefc0, 020fc8c0, 020fdd40) and run mg5
+# lane PCOLL seated four more (020fb230, 020fd2d8, 020fdaf0, 020fcb4c); see the
+# wave 5 section at the foot of this file. ONE of the eight is still a floor:
+#
+#     0x020fdd40  seated by INTEG           0x020fefc0  seated by INTEG
+#     0x020fc8c0  seated by INTEG           0x020fe394  seated by INTEG
+#     0x020fb230  seated by PCOLL           0x020fd2d8  seated by PCOLL
+#     0x020fdaf0  seated by PCOLL           0x020fcb4c  seated by PCOLL
+#
+# and the residual floor is none of these eight but 0x020fe394's sibling
+# accounting: the dispatch switch in unmatched/MgPachinko_StateDispatch.cpp now
+# reports ZERO floors for this class. The claim "each is a named trap" above is
+# therefore historical; MgPachinko_Traps.cpp no longer defines any trap body.
+#
 # ov004 func_ov004_020ae858 is the same class of hole and is already named by
 # port/slice_mg1.txt.
 #
@@ -159,6 +175,13 @@ src/func_ov006_020faf14.c
 src/func_ov006_020faf6c.c
 src/func_ov006_020fb0fc.c
 src/func_ov006_020fb1c4.c
+# Run mg5, lane PCOLL, the HIT-DETECTION CHAIN; see the wave 5 section at the
+# foot of this file for the whole chain and where each of its four bodies came
+# from. 020fb230 = state 2 of data_ov006_0214266c and a callee of
+# src/func_ov006_020fb45c.c, void(char*,int) over the 0x1c-stride array; from
+# origin/main, byte-matched there. Was a reported floor in the dispatch switch
+# AND a trap; both are gone and the switch calls it.
+src/func_ov006_020fb230.c
 src/func_ov006_020fb45c.c
 src/func_ov006_020fb4e0.c
 src/func_ov006_020fb670.c
@@ -184,13 +207,41 @@ src/func_ov006_020fc844.c
 src/func_ov006_020fc8c0.c
 src/func_ov006_020fc9b0.c
 src/func_ov006_020fca1c.c
+# Run mg5, lane PCOLL, wave 5. 020fcb4c = THE HIT REACTION, void(char*,int);
+# from branch decomp/pach-bodies (ba851ff71) where it is BYTE-MATCHED. Tail-
+# called from three sites -- 0x020fd2b0 in func_ov006_020fd17c, 0x020fd864 in
+# func_ov006_020fd2d8, 0x020fd9b0 in func_ov006_020fd894 -- all three of which
+# are already in this slice, so before this line all three tail calls landed in
+# the do-nothing trap. Its trap is removed.
+src/func_ov006_020fcb4c.c
 src/func_ov006_020fcd8c.c
 src/func_ov006_020fce04.c
 src/func_ov006_020fcec4.c
 src/func_ov006_020fd088.c
 src/func_ov006_020fd17c.c
+# Run mg5, lane PCOLL, wave 5. 020fd2d8 = state 2 of data_ov006_02142694, the
+# IN-FLIGHT state, void(char*,int); from origin/main, byte-matched there. It is
+# the frame driver of the whole chain: it integrates the slot's velocity,
+# bounces it off the board edges, then calls func_ov006_020fdaf0 (the proximity
+# scan), func_ov006_020fca1c and func_ov006_020fc9b0, and tail-calls
+# func_ov006_020fcb4c. It was a reported floor in the dispatch switch, so with
+# it absent the other three could not run even when they were present.
+#
+# ONE HOST-SAFETY EDIT WAS MADE TO THIS COPY and it is documented in the TU's
+# own header: origin/main's version launders three store addresses through
+# `(char *)(int)` macros, which is free on the DS and TRUNCATES A 64-BIT HOST
+# POINTER here. The three sites are rewritten as char* plus integer offset. The
+# decomp-side TU on main is deliberately left alone.
+src/func_ov006_020fd2d8.c
 src/func_ov006_020fd894.c
 src/func_ov006_020fd9cc.c
+# Run mg5, lane PCOLL, wave 5. 020fdaf0 = THE PROXIMITY SCAN, void(char*,int);
+# from branch decomp/pach-bodies (34e6c0e8c). NONMATCHING (size 0x23c vs 0x250,
+# codegen residue only) but logic-verified against the ROM disassembly, and
+# audited host-safe by this lane: all five of its `(int)` casts are integer-on-
+# integer, none of them touches a pointer. Called by func_ov006_020fd088,
+# _020fd17c and _020fd2d8; its trap is removed.
+src/func_ov006_020fdaf0.c
 # Run mg5, lane INTEG: 020fdd40 = slot-6 spawn body, void(char*); trap removed.
 src/func_ov006_020fdd40.c
 src/func_ov006_020fe1a8.c
@@ -322,3 +373,45 @@ src/func_ov006_020fbb2c.c
 # would have passed OAM::Render a null attribute pointer silently. The host
 # copy is the src body verbatim with `extern` added, the MgBase_DeclConflict
 # treatment. The decomp-side one-token fix is routed, not taken.
+
+# ---- WAVE 5: THE HIT-DETECTION CHAIN, AND WHY IT NEEDED FOUR AT ONCE ------
+#
+# Run mg5, lane PCOLL. Reported from live play on the shipped build: the
+# slingshot fires, and a hit does nothing. The playlog named the whole gap in
+# four lines and there were exactly four holes behind them:
+#
+#     [scene] dScMgPachinko_c STATE WITH NO DECOMPILED BODY: 0x020fd2d8
+#     [scene] UNMATCHED ov006 body entered: func_ov006_020fb230
+#     [scene] UNMATCHED ov006 body entered: func_ov006_020fdaf0
+#     [scene] UNMATCHED ov006 body entered: func_ov006_020fcb4c
+#
+# Everything else on the chain was already seated by lanes PCH and INTEG:
+# 020fd088, 020fca1c, 020fc9b0, 020fcd8c, 020fcec4, 020fc1b4, 020fd17c and
+# 020fd894 are all in this file above. So the chain was a rope with four cut
+# strands and no partial fix could show anything: 020fd2d8 is the state the
+# dispatcher enters every frame a slot is in flight, and the other three hang
+# off it and off its two sibling states.
+#
+#     0x020fd2d8   origin/main            state 2, the in-flight driver
+#     0x020fb230   origin/main            state 2 of the other table, 0x1c stride
+#     0x020fdaf0   decomp/pach-bodies     the proximity scan   (NONMATCHING)
+#     0x020fcb4c   decomp/pach-bodies     the hit reaction     (byte-MATCHED)
+#
+# WHAT A HIT ACTUALLY IS, in offsets, because the next lane will want them.
+# The 30-entry 0x38-stride array based at +0x4660 is dispatched by
+# func_ov006_020fda7c off data_ov006_02142694 (live byte +0x468c, state index
+# +0x468f). 020fdaf0 scans the 48-entry 0x38-stride array at +0x4ed8 for a live
+# target (+0x4f0c) in state >= 2 (+0x4f0d) within sqrt-distance 0x18, and on a
+# find it stamps the FLYING slot's own state to 5 and bumps the target's hit
+# count at +0x4f0f. 020fcb4c then re-aims the slot at a random live goal hole
+# (the four 0xc-stride records at +0x5bcc), plays sound 0x186, and stamps state
+# +0x468f = 4 with the chosen hole index at +0x4694. func_ov006_020fca1c is
+# what later clears +0x468c/+0x468d and retires the slot.
+#
+# NO NEW slice line was needed for any callee of the four. Every external they
+# name -- cstd::sqrt, cstd::atan2, RandomIntInternal, func_02012718,
+# func_020126e8, func_020126ac, func_02012468, func_ov006_020fb8fc,
+# data_02082214, data_ov006_0212eb94, data_ov006_0213d954, data_0209d4b8 --
+# was already resolved in this build, which is what /OPT:REF plus the arm9
+# argument in this file's header predicts and is worth recording as a
+# confirmation of it rather than as an absence of work.

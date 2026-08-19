@@ -1412,10 +1412,15 @@ extern "C" void port_scene_mg_pachinko_report(void)
     {
         unsigned hits = 0, missing = 0;
         port_mg_pachinko_state_counts(&hits, &missing);
+        /* Run mg5 lane PCOLL seated the last two floors (0x020fb230 and
+           0x020fd2d8), so all 25 of this class's state addresses are real
+           dispatches and `missing` is now a measured zero rather than a live
+           count. It is still printed: a 0 here is the evidence that the switch
+           in unmatched/MgPachinko_StateDispatch.cpp is complete. */
         std::printf("[scene] dScMgPachinko_c state dispatch: %u routed to one "
-                    "of its 23 decompiled states, %u reached one of the 2 "
-                    "states with NO decompiled body (run mg5 lane INTEG seated "
-                    "the third, 0x020fe394)\n", hits, missing);
+                    "of its 25 decompiled states, %u reached a state with NO "
+                    "decompiled body (there are none left; lanes INTEG and "
+                    "PCOLL seated the last three)\n", hits, missing);
     }
     std::printf("[scene] dScMgPachinko_c unmatched-body traps entered: %u\n",
                 port_mg_pachinko_trap_hits());

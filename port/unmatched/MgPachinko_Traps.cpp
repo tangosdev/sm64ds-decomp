@@ -3,6 +3,12 @@
 // body or the vtable fill reaches by name. Actor id 0x170, scene 368.
 // Run mg5, lane PCH.
 //
+// READ THE "THIS FILE NOW DEFINES NO TRAP BODY" SECTION AT THE FOOT FIRST. Runs
+// mg5 INTEG and PCOLL seated all six of the bodies this header derives, so the
+// derivation below is history and the file is now the counter alone. It is kept
+// as written rather than rewritten because the arity and address work in it is
+// what the seated bodies were checked AGAINST, and it is the record of that.
+//
 // ---- WHY A TRAP AND NOT A BODY -------------------------------------------
 //
 // port/hal/scene_mg_faces.cpp section 3 is the precedent and its argument is
@@ -63,44 +69,42 @@
 // src/, and these are host traps in port/unmatched/ carrying this banner.
 // Decompiling any of the eight is a byte-gated-tree job. Routed, not taken.
 
-#include <cstdio>
+// ---- THIS FILE NOW DEFINES NO TRAP BODY, AND THAT IS THE FINISHED STATE ----
+//
+// Run mg5, lane PCOLL. All six of the trap bodies this file was written to
+// carry have been seated, in two steps, and the counter below is kept so the
+// run report's "unmatched-body traps entered" line keeps printing a measured
+// zero instead of disappearing. A line that vanishes is not evidence; a line
+// that prints 0 is.
+//
+//   lane INTEG   020fefc0  vtable slot 0 InitResources -- copy-across from
+//                          main, reached through the cdecl face + alias in
+//                          MgPachinko_Faces.cpp
+//                020fc8c0  slot-9 render homing helper
+//                020fdd40  slot-6 spawn body
+//
+//   lane PCOLL   020fcb4c  THE HIT REACTION, byte-matched on decomp/pach-
+//                          bodies. Its three tail-call sites (0x020fd2b0 in
+//                          func_ov006_020fd17c, 0x020fd864 in _020fd2d8,
+//                          0x020fd9b0 in _020fd894) all landed here before.
+//                020fdaf0  the proximity scan, NONMATCHING but logic-verified
+//                020fb230  state 2 of data_ov006_0214266c, byte-matched on
+//                          origin/main; it was BOTH a trap here and a reported
+//                          floor in the dispatch switch, because it is reached
+//                          two ways (by name from func_ov006_020fb45c, and
+//                          through the mounted pair word)
+//
+// A DEFINITION HERE BESIDE A REAL ONE IS A DUPLICATE SYMBOL, which is why the
+// three bodies are deleted rather than left in place next to the slice lines:
+// port/slice_pch.txt now carries all three src TUs and MSVC would fail the
+// link on LNK2005 for each. The counter and its accessor are NOT dead code --
+// hal/scene_mg.cpp calls port_mg_pachinko_trap_hits by name at line 1421 and a
+// target that dropped it would fail the link there.
+//
+// IF A LATER LANE ADDS A TRAP BACK, the helper this file used to carry is in
+// git history at this path; it deduplicated by name pointer and printed one
+// line per distinct body. Nothing about the reporting contract has changed.
 
 static unsigned g_pch_trap_hits;
 
-static void pch_trap(const char *name)
-{
-    static const char *said[8];
-    static int nsaid;
-    ++g_pch_trap_hits;
-    for (int i = 0; i < nsaid; ++i)
-        if (said[i] == name)
-            return;
-    if (nsaid < 8)
-        said[nsaid++] = name;
-    std::fprintf(stderr, "  [scene] UNMATCHED ov006 body entered: %s "
-                 "(dScMgPachinko_c; returns without acting; "
-                 "port/unmatched/MgPachinko_Traps.cpp)\n", name);
-    std::fflush(stderr);
-}
-
 extern "C" unsigned port_mg_pachinko_trap_hits(void) { return g_pch_trap_hits; }
-
-extern "C" {
-
-/* Run mg5, lane INTEG: three of these six were recovered and are now seated, so
-   their traps are gone:
-     func_ov006_020fefc0  vtable slot 0 InitResources -- copy-across from main,
-                          reached through the cdecl face + alias in
-                          MgPachinko_Faces.cpp.
-     func_ov006_020fc8c0  slot-9 render homing helper -- sliced, its sliced
-                          caller now links to the real body by name.
-     func_ov006_020fdd40  slot-6 spawn body -- sliced, same.
-   The remaining three stay trapped: they are the floors this seat deliberately
-   does not bring (020fcb4c is called by 020fd2d8 which has no body on main;
-   020fdaf0 is the homing-seed worker recovered only on the pach-bodies tip, not
-   in this lane's set; 020fb230 is a state floor the dispatch reports). */
-void func_ov006_020fcb4c(char *, int)     { pch_trap("func_ov006_020fcb4c"); }
-void func_ov006_020fdaf0(char *, int)     { pch_trap("func_ov006_020fdaf0"); }
-void func_ov006_020fb230(void *, int)     { pch_trap("func_ov006_020fb230"); }
-
-}  /* extern "C" */

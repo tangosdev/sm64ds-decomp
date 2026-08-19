@@ -41,6 +41,14 @@
 //   0x020fd2d8  slot 2 of data_ov006_02142694   NO delink block, NO src file
 //   0x020fc718  slot 0 of data_ov006_02142624   no delink block, src EXISTS
 //
+// ALL FOUR REFUSALS ARE NOW SEATED and this paragraph is kept as the
+// derivation rather than rewritten. 0x020fc718 went in with lane PCH as the
+// ordinary slice line it always was, run mg5 lane INTEG seated 0x020fe394, and
+// run mg5 lane PCOLL seated 0x020fb230 and 0x020fd2d8 from origin/main, where
+// both are byte-matched. The switch below therefore has twenty-five real
+// dispatches and no reporting case. The three-floors argument that follows is
+// what those seats were checked against and is left standing for that reason.
+//
 // THREE HARD FLOORS WHERE CURLING HAD ONE. Each of the three is the
 // func_ov006_020e1854 shape as it stood BEFORE run link60 lane CT1 hosted it:
 // the case below reports which state was wanted, by address, and calls
@@ -107,8 +115,11 @@ extern "C" {
 /* the framework's entry point; see unmatched/MgBase_StateDispatch.cpp */
 void port_mg_call1(void *self, unsigned code, int adj, int a);
 
-/* ---- the twenty-two matched state bodies, in address order --------------
-   All twenty-two take (self, index) in their own src, so none of them is the
+/* ---- ALL TWENTY-FIVE state bodies, in address order ---------------------
+   Twenty-two when lane PCH wrote this, then 0x020fe394 (lane INTEG) and
+   0x020fb230 and 0x020fd2d8 (lane PCOLL), which is every address in the five
+   tables above and leaves the switch below with no reporting case.
+   All twenty-five take (self, index) in their own src, so none of them is the
    ARM ride-through curling met at func_ov006_020e2eb8 and _020e285c. They are
    declared with void* here rather than with each src's own struct type: these
    are C-linkage symbols, the declaration cannot change the mangling, and a
@@ -120,6 +131,12 @@ void func_ov006_020fab70(void *c, int i);
 void func_ov006_020fac48(void *c, int i);
 void func_ov006_020fb0fc(void *c, int i);
 void func_ov006_020fb1c4(void *c, int i);
+/* Run mg5, lane PCOLL: state 2 of data_ov006_0214266c, seated from
+   origin/main where it is byte-matched. Was a reported floor AND a trap. Its
+   ROM prologue at 0x020fb230 reads `mov r7, r0` and `mul r5, r1, #0x1c`, so it
+   takes (self, index) over the 0x1c-stride array and the arity is the table's,
+   not an assumption carried over from the trap's declaration. */
+void func_ov006_020fb230(void *c, int i);
 void func_ov006_020fb45c(void *c, int i);
 void func_ov006_020fb4e0(void *c, int i);
 void func_ov006_020fc1f8(void *c, int i);
@@ -130,6 +147,13 @@ void func_ov006_020fce04(void *c, int i);
 void func_ov006_020fcec4(void *c, int i);
 void func_ov006_020fd088(void *c, int i);
 void func_ov006_020fd17c(void *c, int i);
+/* Run mg5, lane PCOLL: state 2 of data_ov006_02142694, the IN-FLIGHT state,
+   seated from origin/main where it is byte-matched. Its ROM prologue at
+   0x020fd2d8 reads `mov r7, r0`, `mov r6, r1` and `mul r8, r6, #0x38`, so it
+   takes (self, index) over this table's own 0x38-stride array -- the same
+   stride func_ov006_020fda7c walks below, which is the cross-check that the
+   index this switch passes is the index the body expects. */
+void func_ov006_020fd2d8(void *c, int i);
 void func_ov006_020fd894(void *c, int i);
 void func_ov006_020fd9cc(void *c, int i);
 void func_ov006_020fe2e4(void *c, int i);
@@ -157,27 +181,23 @@ void func_ov006_020faf6c(void *c, int a);
 // ---- the class's address switch --------------------------------------------
 
 static unsigned g_pachinko_state_hits;
-static unsigned g_pachinko_state_missing;
 
-/* One line per distinct floor address, so a per-frame dispatch loop cannot
-   flood the log and a single occurrence cannot hide in one. */
-static void pch_floor(unsigned code, int a)
-{
-    static unsigned said[4];
-    static int nsaid;
-    ++g_pachinko_state_missing;
-    for (int i = 0; i < nsaid; ++i)
-        if (said[i] == code)
-            return;
-    if (nsaid < 4)
-        said[nsaid++] = code;
-    std::fprintf(stderr, "  [scene] dScMgPachinko_c STATE WITH NO DECOMPILED "
-                 "BODY: DS address 0x%08x (index %d). No delink block and no "
-                 "src TU defines it, so nothing was called and no body was "
-                 "invented. port/unmatched/MgPachinko_StateDispatch.cpp\n",
-                 code, a);
-    std::fflush(stderr);
-}
+/* THE FLOOR COUNTER IS KEPT AT A MEASURED ZERO AND ITS PRINTER IS GONE.
+   Run mg5 lane PCOLL seated the last two floor addresses, so this file has no
+   caller left for the one-line-per-distinct-address reporter that used to sit
+   here and it is deleted rather than left unreferenced. The counter itself
+   stays because hal/scene_mg.cpp reads it through port_mg_pachinko_state_counts
+   and prints it every run: a reported 0 is evidence that the switch is complete,
+   where a removed line would just be a line nobody looks for any more.
+
+   NOTHING IS UNREPORTED AS A RESULT. An address this switch has never seen --
+   what a mount rebase or a stategen drift would actually produce, and the only
+   remaining way to get one -- takes the default arm, returns 0, and reaches
+   port_mg_call1's own mg_unhandled in unmatched/MgBase_StateDispatch.cpp, which
+   is the single reporting site this file's header says the fall-through exists
+   to preserve. The class-level reporter was only ever the more specific of the
+   two, and it was specific to three addresses that are now bodies. */
+static const unsigned g_pachinko_state_missing = 0;
 
 extern "C" int port_mg_try_pachinko_1(void *self, unsigned code, int a)
 {
@@ -203,23 +223,30 @@ extern "C" int port_mg_try_pachinko_1(void *self, unsigned code, int a)
     /* data_ov006_0214266c */
     case 0x020fb4e0u: func_ov006_020fb4e0(self, a); return 1;
     case 0x020fb45cu: func_ov006_020fb45c(self, a); return 1;
+    /* slot 2: run mg5 lane PCOLL seated this, so it is a real dispatch now */
+    case 0x020fb230u: func_ov006_020fb230(self, a); return 1;
     case 0x020fb1c4u: func_ov006_020fb1c4(self, a); return 1;
     case 0x020fb0fcu: func_ov006_020fb0fc(self, a); return 1;
     /* data_ov006_02142694 */
     case 0x020fd9ccu: func_ov006_020fd9cc(self, a); return 1;
     case 0x020fd894u: func_ov006_020fd894(self, a); return 1;
+    /* slot 2: run mg5 lane PCOLL seated this, so it is a real dispatch now.
+       THIS ONE IS THE CHAIN'S FRAME DRIVER -- it is the state a bob-omb sits in
+       while it is in flight, and it is what calls the proximity scan and tail-
+       calls the hit reaction. With it reported instead of called, seating the
+       other three would have changed nothing observable. */
+    case 0x020fd2d8u: func_ov006_020fd2d8(self, a); return 1;
     case 0x020fd17cu: func_ov006_020fd17c(self, a); return 1;
     case 0x020fd088u: func_ov006_020fd088(self, a); return 1;
     case 0x020fcec4u: func_ov006_020fcec4(self, a); return 1;
     case 0x020fce04u: func_ov006_020fce04(self, a); return 1;
 
-    /* THE TWO REMAINING FLOORS. Reported by address and NOT called, and
-       deliberately given no symbol; see this file's header. They are counted
-       separately from the dispatch hits so a run cannot read a floor report as
-       a state having run. (Run mg5 lane INTEG seated the third, 0x020fe394,
-       which is now a real dispatch above.) */
-    case 0x020fb230u: --g_pachinko_state_hits; pch_floor(code, a); return 1;
-    case 0x020fd2d8u: --g_pachinko_state_hits; pch_floor(code, a); return 1;
+    /* NO FLOOR REMAINS. All twenty-five of this class's state addresses are
+       now real dispatches: run mg5 lane INTEG seated 0x020fe394 and lane PCOLL
+       seated the last two, 0x020fb230 and 0x020fd2d8. The two `case` arms that
+       used to report an address and call nothing are gone with them; see the
+       note above g_pachinko_state_missing for where an unknown address is
+       reported now. */
 
     default: --g_pachinko_state_hits;          return 0;
     }
@@ -332,6 +359,7 @@ extern "C" void func_ov006_020fe248(void *self)
 /* src/func_ov006_020fda7c.cpp, table data_ov006_02142694. Thirty entries of
    stride 0x38; live flag at +0x468c, state index at +0x468f. The three-byte
    gap between the two is the src's own and is left alone. */
+
 extern "C" void func_ov006_020fda7c(void *self)
 {
     char *c = (char *)self;
