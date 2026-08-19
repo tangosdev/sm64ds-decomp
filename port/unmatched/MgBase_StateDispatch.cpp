@@ -176,9 +176,11 @@
 //   config/arm9/overlays/ov004/relocs.txt:1886
 //       from:0x020bc1d4 kind:load to:0x020b3698 module:overlay(4)
 //
-// Every adjustment word in the three tables reads zero, re-measured here over
-// all 39 assignments the constructor makes, so section 1's ruling still holds
-// and both go through the DIRECT case.
+// The constructor makes 39 slot assignments across the three tables; 30 of them
+// name an ov004 .data pair by symbol and the other 9 copy the same arm9 pair
+// (data_02086b58) through a local. Every one of those 30 pairs was resolved out
+// of the image here and EVERY SECOND WORD READS ZERO, so section 1's ruling
+// still holds and both of these go through the DIRECT case.
 //
 // ---- 5a. THE CALLING CONVENTION, DISASSEMBLED AND NOT ASSUMED -------------
 //
@@ -226,20 +228,22 @@
 //
 // ---- 5b. WHAT IS STILL SHORT, MEASURED AND LEFT ON THE TABLE --------------
 //
-// Closing slot 12 is not closing the framework. Reading all 39 assignments in
-// __sinit_ov004_020b955c and resolving each pair out of the overlay image gives
-// TWENTY-THREE DISTINCT CODE ADDRESSES across the three tables, and before this
-// change the switch below routed NONE of them. Every one has a matched src TU
-// and a delink block, and none of them is in any slice, so the whole set is
-// wiring and not decomposition. Scene 366 only exposes two of them because
+// Closing slot 12 is not closing the framework. Resolving the 30 pair-bearing
+// slots of __sinit_ov004_020b955c out of the overlay image gives TWENTY-FOUR
+// DISTINCT CODE ADDRESSES across the three tables, and before this change the
+// switch below routed NONE of them. Every one has a matched src TU and a delink
+// block, and none of them was in any slice, so the whole set is wiring and not
+// decomposition. Scene 366 only exposes two of them because
 // func_ov004_020b3278 reaches slot 12 alone on that scene (its `case 13:` arm
 // writes 0xc to [self+0x2e]); a scene that drives a different graphic id will
 // meet the other twenty-one the same way this one met these two.
 //
-// The remaining twenty-one, with the table and slot each is reached from, are
-// listed in this lane's scoping artifact rather than repeated here. They are
-// left for a lane that can boot a scene which actually reaches them, because
-// routing an address no run exercises buys a slice line and no evidence.
+// THE OTHER TWENTY-TWO ARE STILL UNROUTED, and each one will print the same
+// report the day a scene reaches it. They are left for a lane that can boot a
+// scene which actually exercises them: routing an address no run touches buys a
+// slice line, a closure, and no evidence that any of it is right. The full
+// table-and-slot listing is this lane's scoping artifact rather than a comment,
+// because it is a worklist and not a ruling.
 //
 // ---- 5c. READING THE CENSUS LINE AFTER THIS CHANGE ------------------------
 //
