@@ -6,7 +6,7 @@ extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(char *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *thiz, void *anim, int a, int fix, u32 flags);
 extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN6Player16IncMegaKillCountEv(void *p);
-extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(char *self, void *clsn, char *player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(char *self, void *clsn, char *player);
 extern void _ZN6Player6BounceE5Fix12IiE(char *p, int fix);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char *self, const void *pos, u32 a, int fix, u32 b, u32 c, u32 d);
 
@@ -76,7 +76,7 @@ void func_ov084_0212d86c(char *r5)
     }
     t = (int)(*(u16 *)(r5 + 0xc) == 0xfc);
     if (t != 0) {
-        if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(r5, r5 + 0x174, r4) != 0) {
+        if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(r5, r5 + 0x174, r4) != 0) {
             _ZN5Sound9PlayBank0EjRK7Vector3(0xb6, r5 + 0x74);
             _ZN6Player6BounceE5Fix12IiE(r4, 0x28000);
             goto activate_path;

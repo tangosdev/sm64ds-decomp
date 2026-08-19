@@ -6,10 +6,10 @@ struct dActor_c {
     virtual ~dActor_c();
 };
 
-struct MovingCylinderClsn { char pad[0x4]; ~MovingCylinderClsn(); };
+struct dCcAc_c { char pad[0x4]; ~dCcAc_c(); };
 
 struct PyramidTag : dActor_c {
-    MovingCylinderClsn m0;   /* 0xd4 */
+    dCcAc_c m0;   /* 0xd4 */
     virtual ~PyramidTag();
 };
 

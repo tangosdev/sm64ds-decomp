@@ -11,7 +11,7 @@
 extern "C" {
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char*, unsigned int, int, int, unsigned int);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int, unsigned int, void*);
-extern void _ZN12CylinderClsn5ClearEv(void*);
+extern void _ZN5dCc_c5ClearEv(void*);
 extern void func_ov002_020ed63c(void*, int);
 }
 
@@ -40,7 +40,7 @@ int Player::St_YoshiPower_Init()
             }
             mStateStep = 0;
             mStateArg = 0;
-            _ZN12CylinderClsn5ClearEv((char*)&mAttackClsn);
+            _ZN5dCc_c5ClearEv((char*)&mAttackClsn);
             func_ov002_020d708c(((char*)this));
             _ZN5Sound13PlayCharVoiceEjjRK7Vector3(0, 0xfc, ((char*)this)+0x74);
         } else {

@@ -29,7 +29,7 @@ extern void func_ov002_020e6df8(void *self);
 extern s32 SublevelToLevel(s32 sub);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, s32 a, s32 spd, u32 g);
 extern s32 _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *self, void *actor, struct Vec3 *v, s32 a, s32 b, u32 c, u32 d);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
@@ -146,7 +146,7 @@ s32 PowerStar::InitResources()
     v2.x = data_ov002_0210aa0c.x;
     v2.y = data_ov002_0210aa0c.y;
     v2.z = data_ov002_0210aa0c.z;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         t + 0x110, t, &v2, 0x64000, 0x96000, 0x100002, 0x8000);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(t + 0x150, t, 0x50000, 0, 0, 0);
     _ZN12WithMeshClsn13SetLimMovFlagEv(t + 0x150);

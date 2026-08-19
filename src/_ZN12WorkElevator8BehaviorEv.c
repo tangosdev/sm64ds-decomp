@@ -24,7 +24,7 @@ extern void _ZN11RaycastLineC1Ev(void *self);
 extern void _ZN11RaycastLineD1Ev(void *self);
 extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *actor);
 extern s32 _ZN11RaycastLine10DetectClsnEv(void *self);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *c);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *c);
 extern void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
 extern s32 Vec3_Equal(void *a, void *b);
 extern void func_ov021_02111434(void *c);
@@ -171,7 +171,7 @@ s32 _ZN12WorkElevator8BehaviorEv(void *arg0)
                 r8 += 1;
                 r7_2 += 0x78;
             } while (i < 3);
-            _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+            _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
             _ZN11RaycastLineD1Ev(sp170);
             _ZN11RaycastLineD1Ev(spF8);
             _ZN11RaycastLineD1Ev(sp80);

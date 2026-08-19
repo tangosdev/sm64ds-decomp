@@ -15,7 +15,7 @@
  *     0x110 ModelAnim                  0x64    -> 0x174
  *     0x174 Model                      0x50    -> 0x1c4
  *     0x1c4 ShadowModel                0x28    -> 0x1ec
- *     0x21c MovingCylinderClsnWithPos  0x40    -> 0x25c
+ *     0x21c dCcAcPos_c  0x40    -> 0x25c
  *     0x25c WithMeshClsn               0x1bc   -> 0x418
  *
  * SIZE IS THE ROM'S OWN: `BookShot_Spawn` calls `fBase_c::operator new(1108)`
@@ -28,7 +28,7 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
@@ -38,7 +38,7 @@ struct BookShot : dEnemyBase_c {
     ShadowModel                  mShadowModel;          /* 0x1c4 */
     u8                           unk_1ec;               /* 0x1ec */
     u8  pad_1ed[0x2f];
-    MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x21c */
+    dCcAcPos_c    mdCcAcPos_c; /* 0x21c */
     WithMeshClsn                 mWithMeshClsn;         /* 0x25c */
     s32                          unk_418;               /* 0x418 */
     s32                          unk_41c;               /* 0x41c */

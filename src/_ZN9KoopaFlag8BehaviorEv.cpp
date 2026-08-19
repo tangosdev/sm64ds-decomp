@@ -9,8 +9,8 @@ extern "C" {
 extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int d, int e);
 extern void _ZN9Animation7AdvanceEv(void *a);
-extern void _ZN12CylinderClsn5ClearEv(void *c);
-extern void _ZN12CylinderClsn6UpdateEv(void *c);
+extern void _ZN5dCc_c5ClearEv(void *c);
+extern void _ZN5dCc_c6UpdateEv(void *c);
 }
 extern char data_0209d4c8[];
 
@@ -48,7 +48,7 @@ int KoopaFlag::Behavior()
 
     _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
     func_ov062_0211afbc(((char *)this));
-    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
+    _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
+    _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
     return 1;
 }

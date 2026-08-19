@@ -2,7 +2,7 @@
 typedef int Fix12i;
 extern "C" void func_ov002_020bfa74(void* self);
 extern "C" void func_ov002_020c0108(void* self, int x);
-extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 extern "C" void func_ov002_020ce798(void* self);
 
 extern "C" void func_ov002_020bf36c(char* self, void* arg){
@@ -17,7 +17,7 @@ extern "C" void func_ov002_020bf36c(char* self, void* arg){
     saved = *(Fix12i*)(self + 0x98);
     if (*(unsigned char*)(self + 0x6e9) & 1)
         *(Fix12i*)(self + 0x98) = (Fix12i)(((long long)saved * *(Fix12i*)(self + 0x558) + 0x800) >> 12);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, arg);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(self, arg);
     *(Fix12i*)(self + 0x98) = saved;
     func_ov002_020ce798(self);
 }

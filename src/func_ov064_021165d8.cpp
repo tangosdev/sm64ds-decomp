@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, void* wm, int fix12, short s, int b1, int b2, int t);
 int _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix12, unsigned int j);
 void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, void* wm, unsigned int j);
@@ -23,7 +23,7 @@ struct Base {
 
 extern "C" void func_ov064_021165d8(unsigned char* c)
 {
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
 
     if (_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
             c, c + 0x174,

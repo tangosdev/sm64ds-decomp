@@ -3,8 +3,8 @@ struct C; typedef void (C::*PMF)();
 extern PMF data_ov060_0211ae9c[];
 extern "C" {
 extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void _ZN12CylinderClsn5ClearEv(void* cc);
-extern void _ZN12CylinderClsn6UpdateEv(void* cc);
+extern void _ZN5dCc_c5ClearEv(void* cc);
+extern void _ZN5dCc_c6UpdateEv(void* cc);
 }
 struct C { char pad[0x800]; };
 extern "C" void func_ov060_02115b84(char* c) {
@@ -23,6 +23,6 @@ extern "C" void func_ov060_02115b84(char* c) {
     short* z = (short*)(c + 0x100);
     z[0xa] = 0;
   }
-  _ZN12CylinderClsn5ClearEv(c + 0xd4);
-  _ZN12CylinderClsn6UpdateEv(c + 0xd4);
+  _ZN5dCc_c5ClearEv(c + 0xd4);
+  _ZN5dCc_c6UpdateEv(c + 0xd4);
 }

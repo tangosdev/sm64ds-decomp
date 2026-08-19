@@ -15,7 +15,7 @@
  *     0x110 WithMeshClsn               0x1bc   -> 0x2cc
  *     0x2cc Model                      0x50    -> 0x31c
  *     0x31c ShadowModel                0x28    -> 0x344
- *     0x374 MovingCylinderClsn         0x34    -> 0x3a8
+ *     0x374 dCcAc_c         0x34    -> 0x3a8
  *     0x3f4 PathPtr                    0x8     -> 0x3fc
  *
  * THE FIFTH MEMBER HAS NO DESTRUCTOR, so only the factory witnesses it:
@@ -37,7 +37,7 @@
 
 #include "dEnemyBase_c.h"
 #include "Model.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "PathPtr.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
@@ -47,7 +47,7 @@ struct RollingIronBall : dEnemyBase_c {
     Model                        mModel;                /* 0x2cc */
     ShadowModel                  mShadowModel;          /* 0x31c */
     u8  pad_344[0x30];
-    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x374 */
+    dCcAc_c           mdCcAc_c;   /* 0x374 */
     s32                          unk_3a8;               /* 0x3a8 */
     s32                          unk_3ac;               /* 0x3ac */
     s32                          unk_3b0;               /* 0x3b0 */

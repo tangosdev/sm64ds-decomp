@@ -1,6 +1,6 @@
 extern void *_ZN7fBase_cnwEj(unsigned);
 extern void _ZN12dEnemyBase_cC2Ev(void *);
-extern void _ZN25MovingCylinderClsnWithPosC1Ev(void *);
+extern void _ZN10dCcAcPos_cC1Ev(void *);
 extern void _ZN12WithMeshClsnC1Ev(void *);
 extern void _ZN14BlendModelAnimC1Ev(void *);
 extern void func_020733a8(void*, int, int, void*, void*);
@@ -13,8 +13,8 @@ int *Unagi_Spawn(void)
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV5Unagi;
-        _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x110);
-        _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x150);
+        _ZN10dCcAcPos_cC1Ev((char *)p + 0x110);
+        _ZN10dCcAcPos_cC1Ev((char *)p + 0x150);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x190);
         _ZN14BlendModelAnimC1Ev((char *)p + 0x350);
         func_020733a8((char *)p + 0x448, 7, 0xc, (void*)func_0203d384, (void*)_ZN7Vector3D1Ev);

@@ -2,7 +2,7 @@
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_MovingMeshCollider.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
@@ -15,7 +15,7 @@ int *_ZN8SignPostD1Ev(int *t)
     t[0] = (int)_ZTV15daObjTatefuda_c;
     _ZN12WithMeshClsnD1Ev((char *)t + 0x3c8);
     _ZN11ShadowModelD1Ev((char *)t + 0x358);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0x320);
+    _ZN7dCcAc_cD1Ev((char *)t + 0x320);
     t[0] = (int)_ZTV10dBgActor_c;
     _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);

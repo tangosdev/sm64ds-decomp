@@ -29,10 +29,10 @@ extern char data_ov065_0211d6f0[];
 int Swoop::Behavior()
 {
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
-        mMovingCylinderClsn.Clear();
+        mdCcAc_c.Clear();
         if (unk_107 != 0) {
             if (unk_104 == 0) {
-                mMovingCylinderClsn.Update();
+                mdCcAc_c.Update();
             }
         }
         func_ov065_02117994((char *)this);
@@ -77,7 +77,7 @@ int Swoop::Behavior()
         mVertSpeed = clamped;
         unk_0ac = keep;
     }
-    UpdatePosWithOnlySpeed(&mMovingCylinderClsn);
+    UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
@@ -86,11 +86,11 @@ int Swoop::Behavior()
     if (unk_43c == 1) {
         func_ov065_0211704c((char *)this);
     }
-    mMovingCylinderClsn.Clear();
+    mdCcAc_c.Clear();
     {
         char *p = (char *)ClosestPlayer();
         if (p != 0 && *(unsigned char *)(p + 0x6fb) == 0) {
-            mMovingCylinderClsn.Update();
+            mdCcAc_c.Update();
         }
     }
     if (unk_43c == 1) {

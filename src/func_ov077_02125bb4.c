@@ -9,7 +9,7 @@ typedef int Fix12i;
 
 
 
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *c, void *p);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *p);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern void func_02012694(int id, void *pos);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -22,8 +22,8 @@ extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern void func_ov077_02125e94(void *c, int a);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
 extern void func_0201267c(int id, void *pos);
-extern void _ZN12CylinderClsn5ClearEv(void *p);
-extern void _ZN12CylinderClsn6UpdateEv(void *p);
+extern void _ZN5dCc_c5ClearEv(void *p);
+extern void _ZN5dCc_c6UpdateEv(void *p);
 
 extern int data_0209f32c;
 
@@ -35,7 +35,7 @@ int func_ov077_02125bb4(char *c)
     struct Vector3 vec;
 
     *(short *)(c + 0x8c) = *(short *)(c + 0x8c) + 0x4e20;
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x1b0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
     func_ov077_021250a8(c);
     _ZN12WithMeshClsn13SetLimMovFlagEv(c + 0x1e4);
     WithMeshClsn_UpdateContinuous_Veneer(c + 0x1e4);
@@ -89,7 +89,7 @@ int func_ov077_02125bb4(char *c)
         }
     }
 
-    _ZN12CylinderClsn5ClearEv(c + 0x1b0);
-    _ZN12CylinderClsn6UpdateEv(c + 0x1b0);
+    _ZN5dCc_c5ClearEv(c + 0x1b0);
+    _ZN5dCc_c6UpdateEv(c + 0x1b0);
     return 1;
 }

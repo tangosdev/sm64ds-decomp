@@ -3,7 +3,7 @@
 
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
 #include "TextureSequence.h"
 #include "TextureTransformer.h"
@@ -22,7 +22,7 @@ struct Amp : dActor_c {
     TextureSequence           mTextureSequence;              /* 0x188 */
     TextureTransformer        mTextureTransformer;           /* 0x19c */
     ShadowModel               mShadowModel;                  /* 0x1b0 */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;    /* 0x1d8 */
+    dCcAcPos_c mdCcAcPos_c;    /* 0x1d8 */
     WithMeshClsn              mWithMeshClsn;                 /* 0x218 */
     u8                        unk_3d4[0x30];                  /* 0x3d4 */
     u8                        pad_404[0xc];

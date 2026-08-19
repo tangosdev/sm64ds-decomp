@@ -16,7 +16,7 @@ struct PrincessPeach {
     ModelAnim mModelAnim;            /* 0x0d4 */
     u8  mShadowModel;            /* 0x138 */
     u8  pad_139[0x27];
-    u8  mMovingCylinderClsn;            /* 0x160 */
+    u8  mdCcAc_c;            /* 0x160 */
     u8  pad_161[0x33];
     u8  mWithMeshClsn;            /* 0x194 */
     u8  pad_195[0x1bf];

@@ -32,7 +32,7 @@ struct Tornado {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x30];
-    u8  mMovingCylinderClsn;            /* 0x0d4 */
+    u8  mdCcAc_c;            /* 0x0d4 */
     u8  pad_0d5[0x1f];
     s32 unk_0f4;            /* 0x0f4 */
     u32 unk_0f8;            /* 0x0f8 */

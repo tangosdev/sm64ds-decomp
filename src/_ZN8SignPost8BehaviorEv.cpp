@@ -25,8 +25,8 @@ extern "C" void func_ov002_020bae9c(char *c);
 extern "C" void _ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j(void *self, void *sm, void *m, int a, int b, int c, u32 j);
 extern "C" void _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 extern "C" void func_ov002_020bbda4(char *c);
-extern "C" void _ZN12CylinderClsn5ClearEv(void *self);
-extern "C" void _ZN12CylinderClsn6UpdateEv(void *self);
+extern "C" void _ZN5dCc_c5ClearEv(void *self);
+extern "C" void _ZN5dCc_c6UpdateEv(void *self);
 extern "C" void func_ov002_020bafc0(char *self);
 
 extern "C" int _ZN8SignPost8BehaviorEv(char *c)
@@ -117,8 +117,8 @@ extern "C" int _ZN8SignPost8BehaviorEv(char *c)
     if (*(u8 *)(c + 0x590) == 0)
         _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(c, 0, 0);
     func_ov002_020bbda4(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x320);
-    _ZN12CylinderClsn6UpdateEv(c + 0x320);
+    _ZN5dCc_c5ClearEv(c + 0x320);
+    _ZN5dCc_c6UpdateEv(c + 0x320);
     {
         int s = *(int *)(c + 0x354);
         if (s == 3) {

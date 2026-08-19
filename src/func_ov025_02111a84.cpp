@@ -4,7 +4,7 @@
 #include "common.h"
 
 extern "C" {
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* thiz, void* cc);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* thiz, void* cc);
 extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void* thiz, const Vector3& v, int f);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int n, int x, int y, int z);
 extern void func_0201267c(int a, void* v);
@@ -12,7 +12,7 @@ extern void func_0201267c(int a, void* v);
 void func_ov025_02111a84(char* c)
 {
     Vector3 v[2];
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
     if (*(int*)(c + 0xa8) >= 0)
         *(int*)(c + 0x9c) = -0x4000;
     else

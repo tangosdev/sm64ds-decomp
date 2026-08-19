@@ -6,14 +6,14 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV12daStarBase_c */
-extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
+extern void _ZN10dCcAcPos_cD1Ev(void *);
 extern void *data_020a0eac;
 int *_ZN10StarMarkerD0Ev(int *t)
 {
     t[0] = (int)_ZTV12daStarBase_c;
     _ZN11ShadowModelD1Ev((char *)t + 0x164);
     _ZN5ModelD1Ev((char *)t + 0x114);
-    _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0xd4);
+    _ZN10dCcAcPos_cD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;

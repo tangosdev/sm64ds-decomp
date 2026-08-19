@@ -4,7 +4,7 @@ extern int DecIfAbove0_Byte(u8 *p);
 extern int Vec3_Dist(void *a, void *b);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern int AngleDiff(int a, int b);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *a, void *b);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *a, void *b);
 extern void Vec3_Sub(void *out, void *a, void *b);
 extern int LenVec3(void *v);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int, void *);
@@ -84,7 +84,7 @@ int func_ov080_0212714c(char *c, int *p2)
         int t = d + ((unsigned)(d >> 5) >> 26);
         *(int *)(c + 0x98) = (t >> 6) << 12;
     }
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
     Vec3_Sub(tmp, c + 0x5c, c + 0x320);
     len = LenVec3(tmp);
     ang = Vec3_HorzAngle(c + 0x5c, c + 0x320);

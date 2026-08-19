@@ -1,22 +1,22 @@
 //cpp
-// @symbol _ZN12CylinderClsn7ProcessEv
+// @symbol _ZN5dCc_c7ProcessEv
 /* recovered: named members + shared header, real C++ method */
-#include "CylinderClsn.h"
+#include "dCc_c.h"
 
 extern "C" {
-extern CylinderClsn* data_0209cee8;
+extern dCc_c* data_0209cee8;
 extern Fix12i Vec3_HorzLen(const Vector3* v);
-extern void func_02014f44(unsigned int id, CylinderClsn* clsn);
+extern void func_02014f44(unsigned int id, dCc_c* clsn);
 }
 
 namespace cstd { int fdiv(int a, int b); }
 
-void CylinderClsn::Process()
+void dCc_c::Process()
 {
     u32 owner0;
     Fix12i vertDist;
     Vector3* pos0;
-    CylinderClsn* other;
+    dCc_c* other;
     Fix12i dist;
     Fix12i overlap;
     u32 sharedFlags;
@@ -177,7 +177,7 @@ void CylinderClsn::Process()
         }
 
         {
-            CylinderClsn* nxt = data_0209cee8->next;
+            dCc_c* nxt = data_0209cee8->next;
             data_0209cee8->prev = 0;
             data_0209cee8->next = 0;
             data_0209cee8 = nxt;

@@ -8,7 +8,7 @@
 
 struct EnemySwitchTag {
     u8  pad_000[0xd4];
-    u8  mMovingCylinderClsn;            /* 0x0d4 */
+    u8  mdCcAc_c;            /* 0x0d4 */
     u8  pad_0d5[0x17];
     u8  unk_0ec;            /* 0x0ec */
     u8  pad_0ed[0xb];

@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dActor_c.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
@@ -19,7 +19,7 @@
  */
 struct Warp : dActor_c {
     u8  pad_0d0[0x4];
-    MovingCylinderClsn     mMovingCylinderClsn; /* 0x0d4 */
+    dCcAc_c     mdCcAc_c; /* 0x0d4 */
 
     virtual ~Warp();            /* slots 16 (D1), 17 (D0) */
 

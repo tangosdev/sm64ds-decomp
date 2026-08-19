@@ -1,5 +1,5 @@
 //cpp
-struct CylinderClsn;
+struct dCc_c;
 struct WithMeshClsn {
     int IsOnGround() const;
     int JustHitGround() const;
@@ -7,7 +7,7 @@ struct WithMeshClsn {
 };
 struct dActor_c {
     void UpdatePosWithHorzSpeedAndAng();
-    void UpdatePosWithOnlySpeed(CylinderClsn*);
+    void UpdatePosWithOnlySpeed(dCc_c*);
     short ReflectAngle(int, int, short);
 };
 /* Signature deliberately copied from the local declaration above: the
@@ -41,7 +41,7 @@ void func_ov002_020aefb8(char* self) {
             if (*(int*)(self + 0x98) >= 0xf000) *(int*)(self + 0x98) = 0xf000;
         }
     }
-    ((dActor_c*)self)->UpdatePosWithOnlySpeed((CylinderClsn*)(self + 0x110));
+    ((dActor_c*)self)->UpdatePosWithOnlySpeed((dCc_c*)(self + 0x110));
     ((dEnemyBase_c*)self)->UpdateWMClsn(*(WithMeshClsn*)(self + 0x144), 0);
     if (!((WithMeshClsn*)(self + 0x144))->IsOnWall()) return;
     *(short*)(self + 0x94) = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s((dActor_c*)self, *(int*)(self + 0xe0), *(int*)(self + 0xe8), *(short*)(self + 0x94));

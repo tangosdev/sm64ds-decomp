@@ -3,7 +3,7 @@
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
 #include "decl_Model.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
@@ -19,7 +19,7 @@ int *RollingIronBall_Spawn(void)
         _ZN12WithMeshClsnC1Ev((char *)p + 0x110);
         _ZN5ModelC1Ev((char *)p + 0x2cc);
         _ZN11ShadowModelC1Ev((char *)p + 0x31c);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x374);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x374);
         _ZN7PathPtrC1Ev((char *)p + 0x3f4);
     }
     return p;

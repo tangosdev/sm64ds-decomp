@@ -12,7 +12,7 @@
  * (confirmed against src/Eyerok_Spawn.cpp and src/_ZN6EyerokD1Ev.c, which
  * construct/destroy each in this order):
  *
- *     MovingCylinderClsnWithPos  0x320 + 0x40 = 0x360
+ *     dCcAcPos_c  0x320 + 0x40 = 0x360
  *     BlendModelAnim             0x360 + 0x70 = 0x3d0
  *     Model                      0x3d0 + 0x50 = 0x420
  *     ShadowModel                0x420 + 0x28 = 0x448
@@ -38,13 +38,13 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "BlendModelAnim.h"
 #include "ShadowModel.h"
 #include "TextureSequence.h"
 
 struct Eyerok : dBgActor_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x320 */
+    dCcAcPos_c mdCcAcPos_c;  /* 0x320 */
     BlendModelAnim mBlendModelAnim;                        /* 0x360 */
     Model mModel2;                                         /* 0x3d0 */
     ShadowModel mShadowModel;                               /* 0x420 */
@@ -111,7 +111,7 @@ struct Eyerok {
     u8  pad_0d5[0x4f];
     u8  unk_124;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mMovingCylinderClsnWithPos;            /* 0x320 */
+    u8  mdCcAcPos_c;            /* 0x320 */
     u8  pad_321[0x33];
     s32 unk_354;            /* 0x354 */
     s32 unk_358;            /* 0x358 */

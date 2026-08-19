@@ -6,7 +6,7 @@
 #include "QuestionBlock.h"
 #include "MeshColliderBase.h"
 extern "C" {
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* clsn);
 extern void func_020393a4(int* p, int v);
 extern void func_02039394(int* p, int v);
 extern void _ZN9Animation7AdvanceEv(void* a);
@@ -20,7 +20,7 @@ int QuestionBlock::Behavior()
 {
     func_ov102_02149df0(((char*)this));
     if (unk_3e8 != 2) {
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
         if (mPosY <= unk_3e0) mPosY = unk_3e0;
         func_ov102_02149ff0(((char*)this));
         func_ov102_02149ea4(((char*)this));

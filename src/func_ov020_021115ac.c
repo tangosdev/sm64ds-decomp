@@ -7,7 +7,7 @@ typedef struct { int x, y, z; } Vec3;
 
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern int _ZN8dActor_c24BumpedUnderneathByPlayerER6Player(void *thiz, void *player);
-extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void *thiz, void *clsn, void *player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void *thiz, void *clsn, void *player);
 
 int func_ov020_021115ac(char *c)
 {
@@ -55,7 +55,7 @@ int func_ov020_021115ac(char *c)
         return 1;
     }
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x21c, found) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x21c, found) != 0) {
         *(void **)(c + 0x41c) = found;
         return ~1;
     }

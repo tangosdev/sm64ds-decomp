@@ -23,8 +23,8 @@
 
 extern "C" {
 void LoadBlueCoinModel(void* c);
-void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, int r, int h, unsigned int e, unsigned int g);
-void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, void* a, const Vector3* v, int r, int h, unsigned int e, unsigned int g);
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, int r, int h, unsigned int e, unsigned int g);
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, void* a, const Vector3* v, int r, int h, unsigned int e, unsigned int g);
 void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, int b, int cc, void* d, void* e);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* f, int a, int b, unsigned int cc);
 
@@ -48,10 +48,10 @@ int PiranhaPlant::InitResources()
         return 0;
     if (mModel.SetFile((BMD_File *)data_ov002_0210da38.file, 1, -1) == 0)
         return 0;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(&mMovingCylinderClsn1, this, 0x32000, 0x64000, 0x200004, 0x423e0);
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(&mMovingCylinderClsn2, this, 0x82000, 0x64000, 2, 0x423e0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c1, this, 0x32000, 0x64000, 0x200004, 0x423e0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c2, this, 0x82000, 0x64000, 2, 0x423e0);
     v.x = 0; v.y = 0; v.z = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, this, &v, 0x46000, 0x64000, 0x200002, 0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, &v, 0x46000, 0x64000, 0x200002, 0);
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;

@@ -15,7 +15,7 @@ void* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void* a);
 void func_0201267c(int a, void* t);
 int _ZNK12WithMeshClsn13JustHitGroundEv(void* self);
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void* self, const Vector3* v, int fix);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 }
 
 extern "C" int func_ov072_0211f65c(unsigned char* thiz)
@@ -64,7 +64,7 @@ extern "C" int func_ov072_0211f65c(unsigned char* thiz)
     }
 
     func_ov072_0211f158((char*)thiz);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(thiz, thiz + 0x14c);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(thiz, thiz + 0x14c);
     func_ov072_0211f330((char*)thiz, thiz + 0x180);
     func_ov072_0211f280((char*)thiz);
     return 1;

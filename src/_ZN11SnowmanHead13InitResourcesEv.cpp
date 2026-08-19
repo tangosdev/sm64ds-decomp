@@ -13,7 +13,7 @@ extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *ref);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *base, void *file, int a, int b);
 extern void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *ref);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *t, void *a, int b, int c, unsigned int d, unsigned int e);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *t, void *a, int b, int c, unsigned int d, unsigned int e);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *t, void *a, int b, int c, void *d, void *e);
 extern void _ZN13RaycastGroundC1Ev(void *t);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *t, const struct Vector3 *pos, void *actor);
@@ -39,7 +39,7 @@ int SnowmanHead::InitResources()
                                  *(BTP_File *)((void **)tex)[1]);
     }
 
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x138, ((char *)this), 0x96000, 0x12c000, 0x800004, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x138, ((char *)this), 0x96000, 0x12c000, 0x800004, 0);
     mScaleX = 0x1800;
     mScaleY = 0x1800;
     mScaleZ = 0x1800;

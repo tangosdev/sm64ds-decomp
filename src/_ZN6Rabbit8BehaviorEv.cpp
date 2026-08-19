@@ -76,8 +76,8 @@ extern "C" void func_02012694(int a, void* b);
 extern "C" int _ZN6Player12GetTalkStateEv(void* c);
 extern "C" void _ZN6Player9DropActorEv(void* c);
 extern "C" int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
-extern "C" void _ZN12CylinderClsn5ClearEv(void* c);
-extern "C" void _ZN12CylinderClsn6UpdateEv(void* c);
+extern "C" void _ZN5dCc_c5ClearEv(void* c);
+extern "C" void _ZN5dCc_c6UpdateEv(void* c);
 extern "C" void func_ov085_0212bcc8(void* c);
 extern "C" void func_ov085_0212bc78(void*, void*);
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* c, void* f, int i, Fix12i fx, u32 j);
@@ -85,7 +85,7 @@ extern "C" u16 DecIfAbove0_Short(void* p);
 extern "C" void _ZN9Animation7AdvanceEv(void* c);
 extern "C" void func_ov085_0212bdbc(void* c);
 extern "C" void func_ov085_0212bedc(void* c);
-extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* c, void* cyl);
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* cyl);
 extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* c, void* w, u32 j);
 extern "C" void func_ov085_0212a828(void* c);
 
@@ -175,12 +175,12 @@ int Rabbit::Behavior()
     }
 
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(c, &mWithMeshClsn) != 0) {
-        _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsn);
+        _ZN5dCc_c5ClearEv(&mdCcAc_c);
         if (unk_107 != 0) {
             if (unk_104 == 5)
                 mHorzSpeed = 0;
             if (unk_104 == 0)
-                _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsn);
+                _ZN5dCc_c6UpdateEv(&mdCcAc_c);
         }
         if (unk_107 == 1) {
             *(u8*)((long long)(int)(c + 0x42a)) = *(u8*)((long long)(int)(c + 0x42a)) + 1;
@@ -242,7 +242,7 @@ int Rabbit::Behavior()
         int v = (mFlags & 0x4000) ? 1 : 0;
         if (v == 0) {
             if (*(void**)&unk_364 != (void*)&data_ov085_021306ac || unk_426 != 0)
-                _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsn);
+                _ZN8dActor_c9UpdatePosEP5dCc_c(c, &mdCcAc_c);
             mAngleX = mPrevAngleX;
             mAngleY = mPrevAngleY;
             mAngleZ = mPrevAngleZ;
@@ -253,8 +253,8 @@ int Rabbit::Behavior()
     }
 
     if (*(void**)&unk_364 != (void*)&data_ov085_021306ac) {
-        _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsn);
-        _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsn);
+        _ZN5dCc_c5ClearEv(&mdCcAc_c);
+        _ZN5dCc_c6UpdateEv(&mdCcAc_c);
     }
 
     return 1;

@@ -4,8 +4,8 @@
 #include "decl_Enemy.h"
 #include "decl_Model.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
-#include "decl_MovingCylinderClsnWithPos.h"
+#include "decl_dCcAc_c.h"
+#include "decl_dCcAcPos_c.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
@@ -19,9 +19,9 @@ int *PiranhaPlant_Spawn(void)
         _ZN9ModelAnimC1Ev((char *)p + 0x110);
         _ZN5ModelC1Ev((char *)p + 0x174);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x1c4);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x380);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x3b4);
-        _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x3e8);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x380);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x3b4);
+        _ZN10dCcAcPos_cC1Ev((char *)p + 0x3e8);
     }
     return p;
 }

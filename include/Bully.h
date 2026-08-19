@@ -6,7 +6,7 @@
 
 /* daDonketu_c in the ROM's RTTI. Derives from daOts_c, which owns every member this
  * header used to restate -- the ModelAnim, the WithMeshClsn, the file table, the
- * MovingCylinderClsn and the ShadowModel are all the base's, and Bully_Spawn proves
+ * dCcAc_c and the ShadowModel are all the base's, and Bully_Spawn proves
  * it by constructing them between the two vtable stores.
  *
  * SIZE 0x400, which is the literal in Bully_Spawn's fBase_c::operator new. The base

@@ -46,7 +46,7 @@ struct HealingHeart {
        Animation base), unk_130 (+0x5c = speed), which the header declared separately
        inside it. */
     ModelAnim mModelAnim;            /* 0x0d4 */
-    u8  mMovingCylinderClsn;            /* 0x138 */
+    u8  mdCcAc_c;            /* 0x138 */
     u8  pad_139[0x23];
     s32 unk_15c;            /* 0x15c */
     u8  pad_160[0xc];

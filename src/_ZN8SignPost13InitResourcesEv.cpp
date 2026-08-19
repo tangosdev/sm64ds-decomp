@@ -30,15 +30,15 @@ extern "C" void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
                            match.py compares relocated words as wildcards, so
                            nothing caught it.
 
-   The remaining shadows -- ShadowModel, MovingCylinderClsn, WithMeshClsn,
+   The remaining shadows -- ShadowModel, dCcAc_c, WithMeshClsn,
    RaycastGround -- are untouched: dBgActor_c.h does not pull those headers in, so
-   they still compile, and MovingCylinderClsn::Init and WithMeshClsn::Init have
+   they still compile, and dCcAc_c::Init and WithMeshClsn::Init have
    the same Fix12<int> problem with no collision forcing the issue yet. */
 struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr; struct Vector3_16;
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh, CLPS_Block &b);
-extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *self, dActor_c *a, s32 radius, s32 height, u32 u0, u32 u1);
 extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v, Vector3_16 *v2);
@@ -82,8 +82,8 @@ int SignPost::InitResources()
     _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, (KCL_File*)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
 
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
-        &mMovingCylinderClsn, (dActor_c*)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+        &mdCcAc_c, (dActor_c*)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
 
     unk_58e = 2;
     unk_3b0 = mPosX;

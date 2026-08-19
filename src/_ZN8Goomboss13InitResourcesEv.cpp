@@ -24,7 +24,7 @@ extern "C" {
     void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *mb, void *bmd, int a, int b);
     void _ZN11ShadowModel12InitCylinderEv(void *self);
     s32 func_01ffa344(s32 a);
-    void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         void *self, void *actor, void *pos, s32 fx, s32 fy, u32 a, u32 b);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, int a, s32 fix, u32 c);
     void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void *bmd, void *bta);
@@ -117,7 +117,7 @@ extern "C" int _ZN8Goomboss13InitResourcesEv(char *self)
     c8 = self + 0x110;
     k = 0;
     do {
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
             c8, self, self + 0x5c, *(s32 *)(self + 0x80) * 0xa, *(s32 *)(self + 0x84) * 0xa, 0x200004, 0x26fe0);
         k++;
         c8 += 0x40;

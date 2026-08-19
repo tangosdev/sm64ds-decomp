@@ -16,11 +16,11 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "WithMeshClsn.h"
 
 struct Shark : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x110 */
+    dCcAcPos_c mdCcAcPos_c;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
     s32 unk_370;                      /* 0x370 */
@@ -88,10 +88,10 @@ struct Shark {
     u8  pad_0b0[0x50];
     u8  unk_100;            /* 0x100 */
     u8  pad_101[0xf];
-    /* MovingCylinderClsnWithPos member, named by the class's own destructor calling
-       MovingCylinderClsnWithPos's D1 at +0x110 -- a relocation the ROM build
+    /* dCcAcPos_c member, named by the class's own destructor calling
+       dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN5SharkD1Ev.c] */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;            /* 0x110 */
+    dCcAcPos_c mdCcAcPos_c;            /* 0x110 */
     /* WithMeshClsn member, named by the class's own destructor calling
        WithMeshClsn's D1 at +0x150 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN5SharkD1Ev.c] */

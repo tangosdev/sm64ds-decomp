@@ -12,9 +12,9 @@ extern void func_ov021_021123b0(char *c);
 extern void func_ov021_021127b4(char *c);
 extern void func_ov021_02112544(char *c);
 extern int func_ov021_021122fc(char *c);
-extern void _ZN12CylinderClsn5ClearEv(void *thiz);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *thiz, const struct Vector3 *v);
-extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
+extern void _ZN5dCc_c5ClearEv(void *thiz);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *thiz, const struct Vector3 *v);
+extern void _ZN5dCc_c6UpdateEv(void *thiz);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN8dActor_c11UntrackStarERa(void *thiz, s8 *ref);
@@ -42,22 +42,22 @@ int _ZN11RollingRock8BehaviorEv(char *c)
             func_ov021_02112544(c);
         }
         func_ov021_021122fc(c);
-        _ZN12CylinderClsn5ClearEv(c + 0x1b8);
+        _ZN5dCc_c5ClearEv(c + 0x1b8);
 
         if (*(int*)(c + 0x64) >= (int)0xfe82c000) {
             struct Vector3 v;
             v.x = 0;
             v.y = (int)0xffebb000;
             v.z = 0;
-            _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x1b8, &v);
+            _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x1b8, &v);
         } else {
             struct Vector3 v;
             v.x = 0;
             v.y = -0xe1000;
             v.z = 0;
-            _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x1b8, &v);
+            _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x1b8, &v);
         }
-        _ZN12CylinderClsn6UpdateEv(c + 0x1b8);
+        _ZN5dCc_c6UpdateEv(c + 0x1b8);
 
         if (*(u8*)(c + 0x3be) != 4) {
             if (*(int*)(c + 0x60) < -0x3e8000) {

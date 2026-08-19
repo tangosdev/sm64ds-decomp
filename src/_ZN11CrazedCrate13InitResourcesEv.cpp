@@ -9,7 +9,7 @@ struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
 extern "C" void _ZN11ShadowModel10InitCuboidEv(void* self);
-extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int a, int b, unsigned int c, unsigned int d);
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int a, int b, unsigned int c, unsigned int d);
 extern "C" void _ZN13RaycastGroundC1Ev(RaycastGround* self);
 extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3& v, void* actor);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
@@ -25,7 +25,7 @@ int CrazedCrate::InitResources()
     void* file = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov080_02128468);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, file, 1, 1);
     _ZN11ShadowModel10InitCuboidEv((char*)&mShadowModel);
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x14c, ((char*)this), 0x64000, 0x78000, 0x800004, 0x9010);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x14c, ((char*)this), 0x64000, 0x78000, 0x800004, 0x9010);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     {

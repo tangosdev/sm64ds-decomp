@@ -7,13 +7,13 @@ extern "C" void func_ov030_02111a00(char* c);
 extern "C" s16 _ZN8dActor_c18HorzAngleToCPlayerEv(char* c);
 extern "C" void _Z14ApproachLinearRsss(s16* p, s16 target, s16 step);
 extern "C" void _ZN9Animation7AdvanceEv(char* a);
-extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char* c, char* cl);
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(char* c, char* cl);
 extern "C" void func_ov030_02111dd0(char* c);
 extern "C" void func_ov030_02111f6c(char* c, char* w);
 extern "C" void func_ov030_02111bc4(char* c);
 extern "C" void func_ov030_02111ea4(char* c);
-extern "C" void _ZN12CylinderClsn5ClearEv(char* cl);
-extern "C" void _ZN12CylinderClsn6UpdateEv(char* cl);
+extern "C" void _ZN5dCc_c5ClearEv(char* cl);
+extern "C" void _ZN5dCc_c6UpdateEv(char* cl);
 extern "C" void func_ov030_02111890(char* c);
 extern int data_ov030_02115d18[];
 
@@ -33,18 +33,18 @@ extern "C" int func_ov030_02113ff0(char* c){
   _ZN9Animation7AdvanceEv(c+0x124);
   b = (*(unsigned short*)(c+0xc) == 0x10b);
   if (b) {
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c+0x160);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c+0x160);
     func_ov030_02111dd0(c);
     func_ov030_02111f6c(c, c+0x194);
     func_ov030_02111bc4(c);
   } else {
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c+0x160);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c+0x160);
     func_ov030_02111f6c(c, c+0x194);
     func_ov030_02111bc4(c);
     func_ov030_02111ea4(c);
   }
-  _ZN12CylinderClsn5ClearEv(c+0x160);
-  _ZN12CylinderClsn6UpdateEv(c+0x160);
+  _ZN5dCc_c5ClearEv(c+0x160);
+  _ZN5dCc_c6UpdateEv(c+0x160);
   func_ov030_02111890(c);
   return 1;
 }

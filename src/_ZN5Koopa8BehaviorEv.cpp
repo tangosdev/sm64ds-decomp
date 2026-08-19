@@ -8,15 +8,15 @@
 #include "Koopa.h"
 extern "C" {
 extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void *self, void *wm, void *ma, unsigned int j);
-extern void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void *self, void *c);
+extern void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void *self, void *c);
 extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void *self, void *c);
 extern void _ZN8dActor_c8PoofDustEv(void *self);
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
-extern void _ZN12CylinderClsn5ClearEv(void *c);
-extern void _ZN12CylinderClsn6UpdateEv(void *c);
+extern void _ZN5dCc_c5ClearEv(void *c);
+extern void _ZN5dCc_c6UpdateEv(void *c);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
 extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *self, int d);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *c);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *c);
 extern int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void *self, void *wm, int a, s16 b, int c, int d, int e);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm, unsigned int j);
 extern void _ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn(void *self, void *wm);
@@ -31,12 +31,12 @@ int Koopa::Behavior()
             ((char *)this), ((char *)this) + 0x144, ((char *)this) + 0x300, 3) != 0)
         return 1;
 
-    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(((char *)this), ((char *)this) + 0x110);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char *)this), ((char *)this) + 0x110);
 
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(((char *)this), ((char *)this) + 0x144) != 0) {
         int *pb0 = (int *)((char *)&mFlags);
         *pb0 = *pb0 & ~0x10000000;
-        if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(((char *)this), ((char *)this) + 0x110) != 0) {
+        if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(((char *)this), ((char *)this) + 0x110) != 0) {
             _ZN8dActor_c8PoofDustEv(((char *)this));
             func_ov062_021179e4(((char *)this));
             _ZN8dActor_c24KillAndTrackInDeathTableEv(((char *)this));
@@ -44,9 +44,9 @@ int Koopa::Behavior()
         if (unk_107 != 0)
             func_ov062_02117570(((char *)this));
         func_ov062_02118334(((char *)this));
-        _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
+        _ZN5dCc_c5ClearEv((char *)&mdCc_c);
         if (unk_107 != 0 && unk_104 == 0)
-            _ZN12CylinderClsn6UpdateEv((char *)&mCylinderClsn);
+            _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
         if (mKoopaVariant == 1)
             mState = 4;
         else
@@ -99,7 +99,7 @@ int Koopa::Behavior()
             unk_3c4 = 0;
         }
         func_ov062_02117c98(((char *)this));
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char *)this), ((char *)this) + 0x110);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), ((char *)this) + 0x110);
 
         if (mDeathState == 0 && mState != 0) {
             if (_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(
@@ -116,10 +116,10 @@ int Koopa::Behavior()
 
         _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char *)this), ((char *)this) + 0x144, 0);
         func_ov062_02117570(((char *)this));
-        _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
+        _ZN5dCc_c5ClearEv((char *)&mdCc_c);
         if (mDeathState == 0) {
             if (unk_3ca == 0) {
-                _ZN12CylinderClsn6UpdateEv((char *)&mCylinderClsn);
+                _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
             } else {
                 *(u16 *)((char *)&unk_3ca) -= 1;
             }

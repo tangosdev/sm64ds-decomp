@@ -1,15 +1,15 @@
 //cpp
 #include "types.h"
-// @symbol _ZN19CylinderClsnWithPos10GetOwnerIDEv
+// @symbol _ZN8dCcPos_c10GetOwnerIDEv
 /* recovered: named members + shared header, real C++ method */
-#include "CylinderClsnWithPos.h"
-/* CylinderClsnWithPos::GetOwnerID() at 0x02014818
+#include "dCcPos_c.h"
+/* dCcPos_c::GetOwnerID() at 0x02014818
  * vtable slot 3. A positional cylinder has no owning dActor_c, so its owner ID
  * is always 0.
  */
-struct CylinderClsnWithPos;
+struct dCcPos_c;
 
-u32 CylinderClsnWithPos::GetOwnerID()
+u32 dCcPos_c::GetOwnerID()
 {
     (void)this;
     return 0;

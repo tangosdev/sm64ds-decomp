@@ -8,9 +8,9 @@
 struct RaycastLine { int head[5]; int surf; int rest[25]; };
 
 extern int _ZNK6Player14GetBodyModelIDEjb(char* p, unsigned int j, int b);
-extern void _ZN12CylinderClsn5ClearEv(void* c);
+extern void _ZN5dCc_c5ClearEv(void* c);
 extern void func_ov002_020dbf4c(char* c);
-extern void _ZN12CylinderClsn6UpdateEv(void* c);
+extern void _ZN5dCc_c6UpdateEv(void* c);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, struct Vector3* v);
 extern void _ZN11RaycastLineC1Ev(struct RaycastLine* r);
 extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(struct RaycastLine* r, struct Vector3* a, struct Vector3* b, void* actor);
@@ -34,7 +34,7 @@ void func_ov002_020d8a50(char* self, int which)
     frame = (u16)(*(int*)(anim + 8) >> 12);
     if (frame < data_ov002_0210a5cc[i2] || frame > data_ov002_0210a5cc[i2 + 1]) {
         flag = 0;
-        _ZN12CylinderClsn5ClearEv(self + 0x314);
+        _ZN5dCc_c5ClearEv(self + 0x314);
     }
 
     if (*(u8*)(self + 0x726) != 0)
@@ -53,9 +53,9 @@ void func_ov002_020d8a50(char* self, int which)
         func_ov002_020d8854(self);
     }
 
-    _ZN12CylinderClsn5ClearEv(self + 0x314);
+    _ZN5dCc_c5ClearEv(self + 0x314);
     if (flag == 1)
-        _ZN12CylinderClsn6UpdateEv(self + 0x314);
+        _ZN5dCc_c6UpdateEv(self + 0x314);
 
     model = *(char**)(self + _ZNK6Player14GetBodyModelIDEjb(self, *(u32*)(self + 8) & 0xff, 0) * 4 + 0xdc);
     if (!_ZNK9Animation12WillHitFrameEi(model + 0x50, data_ov002_0210a5cc[i2]))

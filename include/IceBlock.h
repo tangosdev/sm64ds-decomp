@@ -16,13 +16,13 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 struct Player;
 
 struct IceBlock : dBgActor_c {
     u8  pad_31e[0x2];
-    MovingCylinderClsn mMovingCylinderClsn;/* 0x320 */
+    dCcAc_c mdCcAc_c;/* 0x320 */
     u8 unk_354;                       /* 0x354 */
     u8  pad_355[0x3];
     s32 mScale;                       /* 0x358 */
@@ -69,7 +69,7 @@ struct IceBlock {
     Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mMovingCylinderClsn;            /* 0x320 */
+    u8  mdCcAc_c;            /* 0x320 */
     u8  pad_321[0x1f];
     s32 unk_340;            /* 0x340 */
     s32 unk_344;            /* 0x344 */

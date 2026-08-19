@@ -5,7 +5,7 @@
 /* recovered: renamed to Class_Method */
 /* daBtfly_c::Kill - recovered from vtable slot identity */
 extern "C" {
-void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void* self, void* c);
+void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void* self, void* c);
 int func_ov002_020ad660(void* a, void* b, void* d, int e);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void func_02012694(int a, void* p);
@@ -19,10 +19,10 @@ void _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(void* self);
 int _ZNK12WithMeshClsn13JustHitGroundEv(void* c);
 void _ZN8dActor_c11LandingDustEb(void* self, int b);
 void* _ZN5Sound8PlayLongEjjjRK7Vector3s(void* a, unsigned int b, unsigned int c, void* v, unsigned int d);
-void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void* self, void* c);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void* self, void* c);
 void func_ov100_02142264(char* c);
-void _ZN12CylinderClsn5ClearEv(void* c);
-void _ZN12CylinderClsn6UpdateEv(void* c);
+void _ZN5dCc_c5ClearEv(void* c);
+void _ZN5dCc_c6UpdateEv(void* c);
 }
 
 extern s16 data_02082214[];
@@ -30,7 +30,7 @@ extern s16 data_02082214[];
 extern "C" void func_ov100_02142918(char* c)
 {
     int r;
-    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x374);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(c, c + 0x374);
     r = func_ov002_020ad660(c, c + 0x110, c + 0x2cc, 3);
     if (r != 0) {
         if (r != 2)
@@ -94,8 +94,8 @@ Lend:
             lim = nv;
         *(int*)(c + 0xa8) = lim;
     }
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(c, 0);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, 0);
     func_ov100_02142264(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x374);
-    _ZN12CylinderClsn6UpdateEv(c + 0x374);
+    _ZN5dCc_c5ClearEv(c + 0x374);
+    _ZN5dCc_c6UpdateEv(c + 0x374);
 }

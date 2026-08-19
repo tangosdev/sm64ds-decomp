@@ -4,7 +4,7 @@
 #include "dActor_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "WithMeshClsn.h"
 
 /* TWO WITNESSES:
@@ -45,9 +45,9 @@ struct CrazedCrate : dActor_c {
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x124. [_ZN11CrazedCrateD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x124 */
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x14c. [_ZN11CrazedCrateD0Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x14c */
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x14c. [_ZN11CrazedCrateD0Ev.c] */
+    dCcAc_c mdCcAc_c;            /* 0x14c */
     /* WithMeshClsn member, named by CrazedCrate_Spawn's own C1 call and the
        class's own destructor's D1 call at +0x180.
        [CrazedCrate_Spawn.c, _ZN11CrazedCrateD0Ev.c] */

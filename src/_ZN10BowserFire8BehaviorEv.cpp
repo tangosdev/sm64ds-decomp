@@ -28,7 +28,7 @@ int BowserFire::Behavior()
     }
     func_ov060_02116740(((char *)this));
     func_ov060_02117624(((char *)this));
-    mMovingCylinderClsn.Clear();
-    mMovingCylinderClsn.Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

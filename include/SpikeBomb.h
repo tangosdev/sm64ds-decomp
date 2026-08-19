@@ -7,12 +7,12 @@
  * once by closing exactly on the next named field:
  *
  *     dActor_c                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
- *     Model                      0x0d4 + 0x050 = 0x124   -> mMovingCylinderClsnWithPos
- *     MovingCylinderClsnWithPos  0x124 + 0x040 = 0x164   -> padding, then unk_170
+ *     Model                      0x0d4 + 0x050 = 0x124   -> mdCcAcPos_c
+ *     dCcAcPos_c  0x124 + 0x040 = 0x164   -> padding, then unk_170
  *
- * mMovingCylinderClsnWithPos was a `u8` marker with 0x4b bytes of pad behind it.
+ * mdCcAcPos_c was a `u8` marker with 0x4b bytes of pad behind it.
  * The pad was the object: the class's own destructor calls
- * MovingCylinderClsnWithPos's D1 at +0x124, and 0x40 lands exactly where the next
+ * dCcAcPos_c's D1 at +0x124, and 0x40 lands exactly where the next
  * declared field starts.
  *
  * sizeof is 0x1b0, and it IS the field span: the last field unk_1ae ends at 0x1af.
@@ -29,7 +29,7 @@
 #define SPIKEBOMB_H
 #include "types.h"
 #include "Model.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 
 #ifdef __cplusplus
 
@@ -40,7 +40,7 @@ struct SpikeBomb : dActor_c {
     /* Named by the class's own destructor calling Model's D1 at +0x0d4 -- a
        relocation the ROM build checks. */
     Model mModel;                                               /* 0x0d4 */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;       /* 0x124 */
+    dCcAcPos_c mdCcAcPos_c;       /* 0x124 */
     u8  pad_164[0xc];
     s32 unk_170;            /* 0x170 */
     s32 unk_174;            /* 0x174 */
@@ -82,7 +82,7 @@ struct SpikeBomb {
        Model's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN9SpikeBombD0Ev.c] */
     Model mModel;            /* 0x0d4 */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;       /* 0x124 */
+    dCcAcPos_c mdCcAcPos_c;       /* 0x124 */
     u8  pad_164[0xc];
     s32 unk_170;            /* 0x170 */
     s32 unk_174;            /* 0x174 */

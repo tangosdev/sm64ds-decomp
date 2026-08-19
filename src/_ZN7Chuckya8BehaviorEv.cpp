@@ -31,18 +31,18 @@
 
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
-struct CylinderClsn;
+struct dCc_c;
 struct WithMeshClsn;
 
 extern "C" {
 int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* wm, void* anim, unsigned int n);
 unsigned short DecIfAbove0_Short(unsigned short* p);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, CylinderClsn* cc);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, dCc_c* cc);
 int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void* self, WithMeshClsn* wm, int a, s16 b, int c, int d, void* e);
 void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, WithMeshClsn* wm, unsigned int j);
 void func_ov062_02116010(void* self);
-void _ZN12CylinderClsn5ClearEv(CylinderClsn* self);
-void _ZN12CylinderClsn6UpdateEv(CylinderClsn* self);
+void _ZN5dCc_c5ClearEv(dCc_c* self);
+void _ZN5dCc_c6UpdateEv(dCc_c* self);
 void _ZN9Animation7AdvanceEv(void* self);
 void func_ov062_02116d28(char* c);
 void func_ov062_02116e80(void* c);
@@ -77,7 +77,7 @@ int Chuckya::Behavior()
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (CylinderClsn*)&mCylinderClsn);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, (dCc_c*)&mdCc_c);
 
     if (mState != (void*)data_ov062_0211dea0) {
         if (mState != (void*)data_ov062_0211dec0
@@ -118,7 +118,7 @@ int Chuckya::Behavior()
         func_ov062_02116010(c);
     }
 
-    _ZN12CylinderClsn5ClearEv((CylinderClsn*)&mCylinderClsn);
+    _ZN5dCc_c5ClearEv((dCc_c*)&mdCc_c);
     mModel.Advance();
 
     {
@@ -139,7 +139,7 @@ int Chuckya::Behavior()
         }
     }
 
-    _ZN12CylinderClsn6UpdateEv((CylinderClsn*)&mCylinderClsn);
+    _ZN5dCc_c6UpdateEv((dCc_c*)&mdCc_c);
     unk_42c = 0;
     unk_430 = 0;
     unk_434 = 0;

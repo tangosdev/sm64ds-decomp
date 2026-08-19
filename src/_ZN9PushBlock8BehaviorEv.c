@@ -22,7 +22,7 @@ extern void _ZN13RaycastGroundC1Ev(char *thiz);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(char *thiz, Vector3 *v, void *actor);
 extern int _ZN13RaycastGround10DetectClsnEv(char *thiz);
 extern void _ZN13RaycastGroundD1Ev(char *thiz);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *clsn);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *thiz);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *thiz);
@@ -65,7 +65,7 @@ int _ZN9PushBlock8BehaviorEv(char *c)
         } else {
             self->unk_098 = 0;
         }
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
         WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
         _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);

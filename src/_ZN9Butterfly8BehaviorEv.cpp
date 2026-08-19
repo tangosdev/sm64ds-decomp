@@ -8,7 +8,7 @@ extern "C" {
 void Vec3_Asr(void* d, void* s, int sh);
 void Matrix4x3_FromTranslation(void* m, int x, int y, int z);
 void Matrix4x3_ApplyInPlaceToRotationY(void* m, s16 ang);
-void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void* a, void* clsn);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void* a, void* clsn);
 void _ZN9Animation7AdvanceEv(void* a);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void* a, void* sm, void* m, Fix12 r, Fix12 h, unsigned int f);
@@ -58,7 +58,7 @@ extern "C" int _ZN9Butterfly8BehaviorEv(char* c)
                 *(int*)(c + 0xac) = (int)((p + 0x800) >> 0xc);
             }
         }
-        _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(c, 0);
+        _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, 0);
         (*(int*)(((int)c + 0x3e8)))++;
     }
 

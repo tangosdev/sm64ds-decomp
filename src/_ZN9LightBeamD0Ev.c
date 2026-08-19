@@ -5,12 +5,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV15daObjC1Hikari_c */
-extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
+extern void _ZN10dCcAcPos_cD1Ev(void *);
 extern void *data_020a0eac;
 int *_ZN9LightBeamD0Ev(int *t)
 {
     t[0] = (int)_ZTV15daObjC1Hikari_c;
-    _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0x124);
+    _ZN10dCcAcPos_cD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);

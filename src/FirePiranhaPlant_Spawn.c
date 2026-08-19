@@ -3,8 +3,8 @@
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
-#include "decl_MovingCylinderClsnWithPos.h"
+#include "decl_dCcAc_c.h"
+#include "decl_dCcAcPos_c.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV19FirePiranhaPlantBig */
@@ -15,8 +15,8 @@ int *FirePiranhaPlant_Spawn(void)
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV19FirePiranhaPlantBig;
         _ZN9ModelAnimC1Ev((char *)p + 0x110);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x174);
-        _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x1a8);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x174);
+        _ZN10dCcAcPos_cC1Ev((char *)p + 0x1a8);
     }
     return p;
 }

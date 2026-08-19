@@ -28,7 +28,7 @@
  * same offsets and order in both Boo_Spawn's construction and
  * _ZN3BooD1Ev / _ZN3BooD0Ev's teardown (reverse order):
  *
- *     0x184 MovingCylinderClsnWithPos   0x40  -> 0x1c4
+ *     0x184 dCcAcPos_c   0x40  -> 0x1c4
  *     0x1c4 WithMeshClsn                0x1bc -> 0x380
  *     0x380 ModelAnim                   0x64  -> 0x3e4
  *     0x3e4 Model                       0x50  -> 0x434
@@ -61,13 +61,13 @@
 #include "dCapEnemy_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
 struct Boo : dCapEnemy_c {
     u8  pad_180[0x4];
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x184 */
+    dCcAcPos_c mdCcAcPos_c;  /* 0x184 */
     WithMeshClsn               mWithMeshClsn;               /* 0x1c4 */
     ModelAnim                  mModelAnim;                  /* 0x380 */
     Model                      mModel;                      /* 0x3e4 */

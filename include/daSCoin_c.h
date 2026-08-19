@@ -2,13 +2,13 @@
 #define DASCOIN_C_H
 #include "types.h"
 #include "dActor_c.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 /* TWO WITNESSES:
  *
  *   daSCoin_c_Spawn  fBase_c::operator new(276 = 0x114),
  *       dActor_c::dActor_c(), stores the class vtable, then the
- *       MovingCylinderClsn member below.
+ *       dCcAc_c member below.
  *   _ZN9daSCoin_cD0Ev  the same member destroyed, then ~dActor_c.
  *
  * SIZE 0x114 is the factory's own literal; unk_113 (1 byte, 0x113) closes
@@ -23,8 +23,8 @@
  *
  * Everything below 0x0d0 is this class's own -- dActor_c ends at exactly
  * 0x0d0, and pad_0d0 (unevidenced, 4 bytes) is the gap before the
- * MovingCylinderClsn member at 0x0d4. The old generated header placed a
- * field at 0x0f8, inside MovingCylinderClsn's own 0x0d4..0x108 span;
+ * dCcAc_c member at 0x0d4. The old generated header placed a
+ * field at 0x0f8, inside dCcAc_c's own 0x0d4..0x108 span;
  * daSCoin_c_Behavior reads that word directly out of the collision
  * sub-object's own bytes (via a raw offset cast in the consumer, not a
  * field of this class), the same shape as daObjAbuku_c's 0x0f8.
@@ -47,10 +47,10 @@
  */
 struct daSCoin_c : dActor_c {
     u8  pad_0d0[0x4];
-    /* MovingCylinderClsn member, named by daSCoin_c_Spawn's own C1 call and
+    /* dCcAc_c member, named by daSCoin_c_Spawn's own C1 call and
        the class's own destructors' D1 call at +0xd4.
        [daSCoin_c_Spawn.c, _ZN9daSCoin_cD1Ev.c, _ZN9daSCoin_cD0Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x0d4 */
+    dCcAc_c mdCcAc_c;            /* 0x0d4 */
     s32 unk_108;            /* 0x108 */
     u8  pad_10c[0x1];
     u8  unk_10d;            /* 0x10d */

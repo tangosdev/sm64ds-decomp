@@ -26,7 +26,7 @@ struct Flamethrower {
     s16 mAngleY;            /* 0x08e */
     s16 mAngleZ;            /* 0x090 */
     /* TODO: Behavior reads past this generated span:
-       CylinderClsn mClsn[12] at 0x0d4 (stride 0x3c),
+       dCc_c mClsn[12] at 0x0d4 (stride 0x3c),
        Vector3 mPartPos[12] at 0x3a4 (stride 0xc),
        Matrix4x3 at 0x434, then u8 state 0x464 / u8 active 0x465 /
        u16 timer 0x466 / u32 sound handle 0x468. */

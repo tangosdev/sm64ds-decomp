@@ -40,10 +40,10 @@ short Vec3_VertAngle(Vector3* v0, Vector3* v1);
 void Matrix4x3_FromRotationY(void* m, int angle);
 void Matrix4x3_ApplyInPlaceToRotationX(void* m, short angle);
 void MulVec3Mat4x3(Vector3* v, void* m, Vector3* out);
-void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void* thiz, void* clsn);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void* thiz, void* clsn);
 void func_ov090_02132b14(void* c);
-void _ZN12CylinderClsn5ClearEv(void* c);
-void _ZN12CylinderClsn6UpdateEv(void* c);
+void _ZN5dCc_c5ClearEv(void* c);
+void _ZN5dCc_c6UpdateEv(void* c);
 extern char data_020a0e68[];
 }
 
@@ -94,9 +94,9 @@ int MantaRay::Behavior()
         mVertSpeed = m2;
         unk_0ac = ac;
     }
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, &mdCcAcPos_c);
     func_ov090_02132b14(c);
-    _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsnWithPos);
-    _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
+    _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
     return 1;
 }

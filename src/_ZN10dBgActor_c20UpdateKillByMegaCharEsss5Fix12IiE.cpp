@@ -2,10 +2,10 @@
 template<class T> struct Fix12 { T v; };
 struct Vector3 { int x, y, z; };
 struct Matrix4x3 { int m[12]; };
-struct CylinderClsn;
+struct dCc_c;
 
 struct dActor_c {
-    void UpdatePos(CylinderClsn* c);
+    void UpdatePos(dCc_c* c);
 };
 
 extern "C" {

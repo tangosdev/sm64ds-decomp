@@ -16,11 +16,11 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "WithMeshClsn.h"
 
 struct CheepCheep : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x110 */
+    dCcAcPos_c mdCcAcPos_c;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
     u8  pad_370[0x4];
@@ -62,10 +62,10 @@ struct CheepCheep {
     u8  pad_096[0x1a];
     u32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x5c];
-    /* MovingCylinderClsnWithPos member, named by the class's own destructor calling
-       MovingCylinderClsnWithPos's D1 at +0x110 -- a relocation the ROM build
+    /* dCcAcPos_c member, named by the class's own destructor calling
+       dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10CheepCheepD1Ev.c] */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;            /* 0x110 */
+    dCcAcPos_c mdCcAcPos_c;            /* 0x110 */
     /* WithMeshClsn member, named by the class's own destructor calling
        WithMeshClsn's D1 at +0x150 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10CheepCheepD1Ev.c] */

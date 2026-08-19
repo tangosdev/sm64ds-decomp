@@ -20,8 +20,8 @@ typedef struct
   char pad[0x50];
 } RaycastGround;
 extern "C" {
-extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void *c, void *cyl);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *c, void *cyl);
+extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *c, void *cyl);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *cyl);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *rc);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *rc, const Vec3 *v, void *actor);
 extern s32 _ZN13RaycastGround10DetectClsnEv(RaycastGround *rc);
@@ -53,11 +53,11 @@ int CutsceneObject::Behavior()
   }
   if ((((u32) t) >= 0x1a) && (((u32) t) <= 0x2d))
   {
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(c, 0);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, 0);
   }
   else
   {
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
   }
   {
     char *g = *((char **) (c + 0xe0));

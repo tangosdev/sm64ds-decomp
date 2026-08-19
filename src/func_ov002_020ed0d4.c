@@ -16,7 +16,7 @@ extern void Math_Function_0203b14c(void* ptr, int target, int rate, int limit, i
 extern void ApproachAngle(void* cur, short target, int divisor, int band, int maxStep);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* file, int a, int b, unsigned int c);
 extern int func_ov002_020ec654(unsigned char* p);
-extern void _ZN12CylinderClsn5ClearEv(void* self);
+extern void _ZN5dCc_c5ClearEv(void* self);
 extern int Vec3_Dist(void* a, void* b);
 extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* self);
 
@@ -156,7 +156,7 @@ void func_ov002_020ed0d4(char* self)
         func_ov002_020ed738(self);
     }
 
-    _ZN12CylinderClsn5ClearEv(self + 0x110);
+    _ZN5dCc_c5ClearEv(self + 0x110);
     {
         int dist = Vec3_Dist(self + 0x5c, com + 0x5c);
         if (*(unsigned char*)(*(char**)(self + 0x38c) + 0x709) != 0) return;

@@ -14,7 +14,7 @@ struct Obj {
 };
 
 extern "C" {
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *actor, void *cyl);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *actor, void *cyl);
 void WithMeshClsn_UpdateContinuous_Veneer(void *p);
 int func_ov098_02139228(void *c);
 void Crate_SetState(void *c, int i);
@@ -22,8 +22,8 @@ void _Z14ApproachLinearRiii(int *a, int b, int c);
 void func_ov098_02138e6c(void *c);
 void func_ov098_021390ec(void *c);
 int func_ov098_02138bb8(void *c);
-void _ZN12CylinderClsn5ClearEv(void *cyl);
-void _ZN12CylinderClsn6UpdateEv(void *cyl);
+void _ZN5dCc_c5ClearEv(void *cyl);
+void _ZN5dCc_c6UpdateEv(void *cyl);
 void func_ov098_02139850(void *c);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
 void func_ov098_021396a4(void *c);
@@ -32,7 +32,7 @@ void func_ov098_02138734(char *c);
 
 void func_ov098_02138734(char *c)
 {
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x564);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x564);
     WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
     if (func_ov098_02139228(c)) {
         Crate_SetState(c, 0);
@@ -44,8 +44,8 @@ void func_ov098_02138734(char *c)
     if (func_ov098_02138bb8(c)) {
         ((Obj *)c)->m31();
     }
-    _ZN12CylinderClsn5ClearEv(c + 0x564);
-    _ZN12CylinderClsn6UpdateEv(c + 0x564);
+    _ZN5dCc_c5ClearEv(c + 0x564);
+    _ZN5dCc_c6UpdateEv(c + 0x564);
     func_ov098_02139850(c);
     if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x320)) {
         func_ov098_021396a4(c);

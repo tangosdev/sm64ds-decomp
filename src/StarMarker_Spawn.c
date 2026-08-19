@@ -3,7 +3,7 @@
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
-#include "decl_MovingCylinderClsnWithPos.h"
+#include "decl_dCcAcPos_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
@@ -14,7 +14,7 @@ int *StarMarker_Spawn(void)
     if (p) {
         _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV10StarMarker;
-        _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0xd4);
+        _ZN10dCcAcPos_cC1Ev((char *)p + 0xd4);
         _ZN5ModelC1Ev((char *)p + 0x114);
         _ZN11ShadowModelC1Ev((char *)p + 0x164);
     }

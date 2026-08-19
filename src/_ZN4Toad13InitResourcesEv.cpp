@@ -38,7 +38,7 @@ extern BMD_File *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr *p);
 extern BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr *p);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, BMD_File *f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void *thiz);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, Fix12i a, Fix12i b, u32 c, u32 d);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, Fix12i a, Fix12i b, u32 c, u32 d);
 extern int func_02013a44(void);
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *pos, const void *rot, int e, int f);
@@ -59,7 +59,7 @@ int Toad::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim,
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_02130480), 1, 0x16);
     _ZN11ShadowModel12InitCylinderEv(&mShadowModel);
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(&mMovingCylinderClsn, this,
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this,
         0x78000, 0x8c000, 0x4200004, 0);
     unk_20d = 0xff;
     unk_20e = 0xff;

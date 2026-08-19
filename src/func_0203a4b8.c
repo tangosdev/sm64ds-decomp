@@ -1,6 +1,6 @@
 /* func_0203a4b8 at 0x02014878
  * MovingMeshCollider C1 (complete object) constructor:
- *   call base CylinderClsn::CylinderClsn() (C2), then set own vtable.
+ *   call base dCc_c::dCc_c() (C2), then set own vtable.
  */
 struct Obj { void *vtable; };
 extern void *_ZTV18MovingMeshCollider[];

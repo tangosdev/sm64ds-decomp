@@ -19,10 +19,10 @@
  * bytes of tail stay padding.
  *
  * THE THREE MEMBERS ARE PLACED BY THE FACTORY, not by field-span guesswork:
- * SignPost_Spawn runs MovingCylinderClsn's constructor at this+0x320,
+ * SignPost_Spawn runs dCcAc_c's constructor at this+0x320,
  * ShadowModel's at this+0x358 and WithMeshClsn's at this+0x3c8, and the
  * destructor tears the same three down in reverse. Two of them are typed here
- * and each closes on its own class's size assert -- MovingCylinderClsn 0x34 ends
+ * and each closes on its own class's size assert -- dCcAc_c 0x34 ends
  * at 0x354, ShadowModel 0x28 ends at 0x380 -- which is a second check on both
  * offsets. Typing them is not cosmetic: `(char *)&member` on a u8 marker in the
  * DERIVED part of this object made mwcc materialise the offset through the
@@ -51,11 +51,11 @@ typedef struct Player Player;
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "ShadowModel.h"
 
 struct SignPost : dBgActor_c {
-    MovingCylinderClsn mMovingCylinderClsn;  /* 0x320 */
+    dCcAc_c mdCcAc_c;  /* 0x320 */
     u8  pad_354[0x4];
     ShadowModel mShadowModel;   /* 0x358 */
     u8  pad_380[0x30];
@@ -142,7 +142,7 @@ struct SignPost {
     u8  pad_125[0x1c7];
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x33];
-    u8  mMovingCylinderClsn;            /* 0x320 */
+    u8  mdCcAc_c;            /* 0x320 */
     u8  pad_321[0x37];
     u8  mShadowModel;            /* 0x358 */
     u8  pad_359[0x57];

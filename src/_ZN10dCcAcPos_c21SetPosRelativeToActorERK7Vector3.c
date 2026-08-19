@@ -12,15 +12,15 @@ typedef struct dActor_c {
     s16 angZ;
 } dActor_c;
 
-typedef struct MovingCylinderClsnWithPos {
+typedef struct dCcAcPos_c {
     char pad[0x30];
     dActor_c *owner;
     Vector3 pos;
-} MovingCylinderClsnWithPos;
+} dCcAcPos_c;
 
 extern void Vec3_RotateYAndTranslate(Vector3* res, const Vector3* translation, s16 angY, const Vector3* v);
 
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(MovingCylinderClsnWithPos* self, const Vector3* v) {
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(dCcAcPos_c* self, const Vector3* v) {
     dActor_c *actor = self->owner;
     Vec3_RotateYAndTranslate(&self->pos, &actor->pos, actor->angY, v);
 }

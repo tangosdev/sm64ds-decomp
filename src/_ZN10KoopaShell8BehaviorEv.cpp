@@ -43,19 +43,19 @@ extern int func_ov002_020ad660(char *, char *, char *, int);
 extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(char *, char *);
 extern void func_ov102_0214d1f8(char *, void *);
 extern void func_ov102_0214ce60(char *);
-extern void _ZN12CylinderClsn5ClearEv(char *);
+extern void _ZN5dCc_c5ClearEv(char *);
 extern int DecIfAbove0_Byte(char *);
 extern void _ZN7fBase_c18MarkForDestructionEv(char *);
 extern int DecIfAbove0_Short(char *);
 extern void func_ov102_0214cbec(char *);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char *, char *);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char *, char *);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(char *, char *, u32);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(char *);
 extern void _ZN8dActor_c8PoofDustEv(char *);
 extern void func_ov102_0214c7fc(char *);
 extern void func_ov102_0214c84c(char *);
-extern void _ZN12CylinderClsn6UpdateEv(char *);
+extern void _ZN5dCc_c6UpdateEv(char *);
 }
 
 int KoopaShell::Behavior()
@@ -73,7 +73,7 @@ int KoopaShell::Behavior()
             unk_107 = 0;
         }
         func_ov102_0214ce60(c);
-        _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
+        _ZN5dCc_c5ClearEv((char *)&mdCc_c);
         return 1;
     }
 
@@ -103,7 +103,7 @@ int KoopaShell::Behavior()
     func_ov102_0214cbec(c);
 
     if (mVertAccel != 0) {
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (char *)&mCylinderClsn);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, (char *)&mdCc_c);
         _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, (char *)&mMeshClsn, 0);
         if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mMeshClsn) != 0 ||
             _ZNK12WithMeshClsn8IsOnWallEv((char *)&mMeshClsn) != 0) {
@@ -129,8 +129,8 @@ int KoopaShell::Behavior()
     if (mModelIndex == 0)
         func_ov102_0214c84c(c);
     func_ov102_0214ce60(c);
-    _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
+    _ZN5dCc_c5ClearEv((char *)&mdCc_c);
     if (mState != (void *)&data_ov102_0214ea48)
-        _ZN12CylinderClsn6UpdateEv((char *)&mCylinderClsn);
+        _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
     return 1;
 }

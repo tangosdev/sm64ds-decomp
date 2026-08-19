@@ -4,7 +4,7 @@
 #include "types.h"
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
@@ -22,7 +22,7 @@
  * subobject. It disappears here because the type expresses it.
  */
 struct YoshiEgg : dEnemyBase_c {
-    MovingCylinderClsn  mMovingCylinderClsn;    /* 0x110 */
+    dCcAc_c  mdCcAc_c;    /* 0x110 */
     WithMeshClsn        mWithMeshClsn;          /* 0x144 */
     ModelAnim           mModelAnim;             /* 0x300 */
     ShadowModel         mShadowModel;           /* 0x364 */

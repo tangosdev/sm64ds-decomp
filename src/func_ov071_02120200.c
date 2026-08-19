@@ -1,4 +1,4 @@
-extern void _ZN12CylinderClsn5ClearEv(void* p);
+extern void _ZN5dCc_c5ClearEv(void* p);
 
 int func_ov071_02120200(char* c)
 {
@@ -18,7 +18,7 @@ int func_ov071_02120200(char* c)
     *(short*)(c + 0x90) = z;
     *(int*)(c + 0x98) = z;
     *(short*)(c + 0x3a8) = 0x1e;
-    _ZN12CylinderClsn5ClearEv(c + 0x160);
+    _ZN5dCc_c5ClearEv(c + 0x160);
     *(int*)(c + 0x39c) = 0;
     return 1;
 }

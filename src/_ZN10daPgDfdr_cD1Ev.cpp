@@ -2,7 +2,7 @@
 // @symbol _ZN10daPgDfdr_cD1Ev
 /* recovered: real C++ destructor -- the compiler emits the whole body
  *
- * Own vtable store, then (in reverse declaration order) MovingCylinderClsn's
+ * Own vtable store, then (in reverse declaration order) dCcAc_c's
  * destructor, TextureSequence's, ModelAnim's -- the three members this class
  * declares -- then dBgActor_c's vtable store (inlined, since dBgActor_c's own
  * destructor is defined in its class body), then dBgActor_c's MovingMeshCollider

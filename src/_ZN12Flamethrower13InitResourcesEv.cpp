@@ -8,7 +8,7 @@
 struct Vec3 { int x, y, z; };
 extern "C" void MulVec3Mat4x3(struct Vec3 *v, void *m, struct Vec3 *dst);
 extern "C" void Vec3_Add(struct Vec3 *out, struct Vec3 *a, struct Vec3 *b);
-extern "C" void _ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj(void *self, struct Vec3 *pos, int fix, int t, unsigned int a, unsigned int b);
+extern "C" void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(void *self, struct Vec3 *pos, int fix, int t, unsigned int a, unsigned int b);
 
 extern signed char data_0209f2f8;
 
@@ -60,7 +60,7 @@ int Flamethrower::InitResources()
         }
         {
             short v = data_ov095_02136f80[i];
-            _ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj(p4, (struct Vec3 *)p5, v * 0x14, v * 0x28, 0x200002, flag);
+            _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(p4, (struct Vec3 *)p5, v * 0x14, v * 0x28, 0x200002, flag);
         }
         p6 += 0xc;
         p5 += 0xc;

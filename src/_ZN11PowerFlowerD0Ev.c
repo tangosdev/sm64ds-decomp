@@ -2,7 +2,7 @@
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
@@ -13,7 +13,7 @@ int *_ZN11PowerFlowerD0Ev(int *t)
 {
     t[0] = (int)_ZTV18daObjPowerUpItem_c;
     _ZN12WithMeshClsnD1Ev((char *)t + 0x200);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0x1cc);
+    _ZN7dCcAc_cD1Ev((char *)t + 0x1cc);
     _ZN11ShadowModelD1Ev((char *)t + 0x174);
     _ZN5ModelD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);

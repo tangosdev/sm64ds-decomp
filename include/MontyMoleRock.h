@@ -16,12 +16,12 @@
 
 #include "dEnemyBase_c.h"
 #include "Model.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "WithMeshClsn.h"
 
 struct MontyMoleRock : dEnemyBase_c {
     Model mModel;                     /* 0x110 */
-    MovingCylinderClsn mMovingCylinderClsn;/* 0x160 */
+    dCcAc_c mdCcAc_c;/* 0x160 */
     WithMeshClsn mWithMeshClsn;       /* 0x194 */
     u8 unk_350;                       /* 0x350 */
 
@@ -55,10 +55,10 @@ struct MontyMoleRock {
     /* Model member, named by _ZN5ModelD1Ev at +0x110 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x110 */
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x160 -- a relocation the ROM build
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x160 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13MontyMoleRockD1Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x160 */
+    dCcAc_c mdCcAc_c;            /* 0x160 */
     /* WithMeshClsn member, named by the class's own destructor calling
        WithMeshClsn's D1 at +0x194 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13MontyMoleRockD1Ev.c] */

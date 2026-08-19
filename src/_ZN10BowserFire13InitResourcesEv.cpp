@@ -24,8 +24,8 @@
  * stand-in for the real dActor_c is byte-identical.
  *
  * The `|= 1` at 0x2e8 was briefly named as a BowserFire field of its own. It
- * is not one. 0x2d0 + 0x18 lands inside mMovingCylinderClsn, and
- * CylinderClsn::flags is at 0x18, documented as "bit 0 makes Update bail" --
+ * is not one. 0x2d0 + 0x18 lands inside mdCcAc_c, and
+ * dCc_c::flags is at 0x18, documented as "bit 0 makes Update bail" --
  * which is precisely what setting bit 0 does, and precisely what this branch
  * wants when unk_35c is zero. Same mistake, and same correction, as Player's
  * `mBodyClsnFlags`.
@@ -41,7 +41,7 @@ typedef void (dActor_c::*ActorFn)();
 
 extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *actor, int a, int b, unsigned int c, unsigned int d);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *v, int c);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround *self);
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
@@ -58,8 +58,8 @@ int BowserFire::InitResources()
     if (_ZN11ShadowModel12InitCylinderEv(&this->mShadowModel) == 0)
         return 0;
 
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
-        &this->mMovingCylinderClsn, this, 0x28000, 0x50000, 0x200002, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+        &this->mdCcAc_c, this, 0x28000, 0x50000, 0x200002, 0);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         &this->mWithMeshClsn, this, 0x32000, 0x32000, 0, 0);
 
@@ -74,7 +74,7 @@ int BowserFire::InitResources()
     this->unk_36c = 0;
     this->unk_378 = ((unsigned int)this->param1 >> 4) & 3;
     if (this->unk_35c == 0)
-        this->mMovingCylinderClsn.flags |= 1;
+        this->mdCcAc_c.flags |= 1;
     this->unk_360 = 0x2000;
     this->unk_380 = 0;
     this->unk_37c = this->unk_380;

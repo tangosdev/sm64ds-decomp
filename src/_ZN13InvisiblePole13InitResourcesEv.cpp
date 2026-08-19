@@ -8,8 +8,8 @@ extern "C" {
 /* Both carry Fix12<int> parameters, so their definitions stay mangled free
    functions -- see include/ShadowModel.h. A call is unaffected. */
 void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(dActor_c *self, int a, int b, int c, int d);
-void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
-        MovingCylinderClsn *self, dActor_c *actor, int radius, int height, u32 e, u32 f);
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+        dCcAc_c *self, dActor_c *actor, int radius, int height, u32 e, u32 f);
 }
 
 s32 InvisiblePole::InitResources()
@@ -19,7 +19,7 @@ s32 InvisiblePole::InitResources()
     if (height <= 0) height = 0x1000;
     half = height >> 1;
     _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, half, half, half + 0x640000, 0);
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         &mClsn, this, 0x35555, height,
         (param1 & 0x100) ? 0x280000c : 0x80000c, 0);
     return 1;

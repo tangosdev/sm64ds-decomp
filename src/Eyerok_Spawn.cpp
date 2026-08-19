@@ -1,7 +1,7 @@
 //cpp
 extern "C" void *_ZN7fBase_cnwEj(unsigned int sz);
 extern "C" void _ZN10dBgActor_cC2Ev(void *thiz);
-extern "C" void _ZN25MovingCylinderClsnWithPosC1Ev(void *thiz);
+extern "C" void _ZN10dCcAcPos_cC1Ev(void *thiz);
 extern "C" void _ZN14BlendModelAnimC1Ev(void *thiz);
 extern "C" void _ZN5ModelC1Ev(void *thiz);
 extern "C" void _ZN11ShadowModelC1Ev(void *thiz);
@@ -18,7 +18,7 @@ extern "C" void *Eyerok_Spawn(void)
     if (c) {
         _ZN10dBgActor_cC2Ev(c);
         *(void **)c = _ZTV6Eyerok;
-        _ZN25MovingCylinderClsnWithPosC1Ev(c + 0x320);
+        _ZN10dCcAcPos_cC1Ev(c + 0x320);
         _ZN14BlendModelAnimC1Ev(c + 0x360);
         _ZN5ModelC1Ev(c + 0x3d0);
         _ZN11ShadowModelC1Ev(c + 0x420);

@@ -12,7 +12,7 @@ extern "C" {
     int _ZN11ShadowModel12InitCylinderEv(void* sm);
     void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* w, void* a, int r, int rr, void* v, void* vv);
     void _ZN12WithMeshClsn13SetLimMovFlagEv(void* w);
-    void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* c, void* a, void* pos, int r, int rr, u32 e, u32 f);
+    void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* c, void* a, void* pos, int r, int rr, u32 e, u32 f);
     // r0=this, r1=actor, r2=&pos, r3=r(Fix12i), [sp]=rr, [sp+4]=e, [sp+8]=f
     u8 _ZN8dActor_c9TrackStarEjj(void* a, u32 x, u32 y);
 }
@@ -45,11 +45,11 @@ int RollingRock::InitResources()
             Vec3 pos;
             *(u8*)(c+0x3c1) = (u8)((*(u32*)(c+8) >> 8) & 0xf);
             pos.x = 0; pos.y = 0; pos.z = 0;
-            _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj((void*)(c+0x1b8), ((void*)this), &pos, 0x10e000, 0x226000, 0x200004, 0x3c0);
+            _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj((void*)(c+0x1b8), ((void*)this), &pos, 0x10e000, 0x226000, 0x200004, 0x3c0);
         } else {
             Vec3 pos;
             pos.x = 0; pos.y = 0; pos.z = 0;
-            _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj((void*)(c+0x1b8), ((void*)this), &pos, 0xf3000, 0x226000, 0x200004, 0x3c0);
+            _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj((void*)(c+0x1b8), ((void*)this), &pos, 0xf3000, 0x226000, 0x200004, 0x3c0);
 
             if (*(u8*)(c+0x3be) == 3) {
                 *(u8*)(c+0x3c1) = (u8)((*(u32*)(c+8) >> 8) & 0xf);

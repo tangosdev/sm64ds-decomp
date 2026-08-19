@@ -17,7 +17,7 @@ extern void func_ov092_02131a88(char *self);
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, void *, void *, int, short, void *);
 extern void func_020393d4(void *p, void *v);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *, void *, void *, int, int, unsigned int, unsigned int);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *, void *, void *, int, int, unsigned int, unsigned int);
 
 extern char data_ov092_02132540;
 extern char data_ov092_02132548;
@@ -85,7 +85,7 @@ int _ZN6ToxBox13InitResourcesEv(char *self)
         stk[0] = 0;
         stk[1] = -0xfa000;
         stk[2] = 0;
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
             self + 0x4e8, self, (void *)&stk[0], 0xc8000, 0x190000, 2, 0x6003c0);
     }
 

@@ -8,7 +8,7 @@ enum Bool { FALSE, TRUE };
 
 extern Vector3 data_ov100_02148008;
 
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* clsn, const Vector3* pos);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* clsn, const Vector3* pos);
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* pos, u32 a, int b, u32 c, u32 d, u32 e);
 
@@ -23,7 +23,7 @@ void func_ov100_0214344c(char* self)
     v.x = data_ov100_02148008.x;
     v.y = data_ov100_02148008.y;
     v.z = data_ov100_02148008.z;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(self + 0x110, &v);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(self + 0x110, &v);
     id = *(u32*)(self + 0x134);
     if (id == 0) return;
     other = (char*)_ZN8dActor_c10FindWithIDEj(id);

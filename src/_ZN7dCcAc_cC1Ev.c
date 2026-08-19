@@ -1,20 +1,20 @@
-/* _ZN18MovingCylinderClsnC1Ev at 0x020149c8
- * MovingCylinderClsn C1 (complete object) constructor:
- *   call base CylinderClsn::CylinderClsn() (C2), set own vtable, zero owner ptr.
+/* _ZN7dCcAc_cC1Ev at 0x020149c8
+ * dCcAc_c C1 (complete object) constructor:
+ *   call base dCc_c::dCc_c() (C2), set own vtable, zero owner ptr.
  */
-struct MovingCylinderClsn {
+struct dCcAc_c {
     void *vtable;       /* 0x00 */
     char pad[0x30 - 4];
     void *owner;        /* 0x30 */
 };
 
-extern void *_ZTV18MovingCylinderClsn[];
-extern void _ZN12CylinderClsnC2Ev(struct MovingCylinderClsn *thiz); /* 0x020150cc */
+extern void *_ZTV7dCcAc_c[];
+extern void _ZN5dCc_cC2Ev(struct dCcAc_c *thiz); /* 0x020150cc */
 
-struct MovingCylinderClsn *_ZN18MovingCylinderClsnC1Ev(struct MovingCylinderClsn *thiz)
+struct dCcAc_c *_ZN7dCcAc_cC1Ev(struct dCcAc_c *thiz)
 {
-    _ZN12CylinderClsnC2Ev(thiz);
-    thiz->vtable = (void *)_ZTV18MovingCylinderClsn;
+    _ZN5dCc_cC2Ev(thiz);
+    thiz->vtable = (void *)_ZTV7dCcAc_c;
     thiz->owner = (void *)0;
     return thiz;
 }

@@ -9,13 +9,13 @@
 /* recovered: named members + shared header */
 #include "ToxBox.h"
 extern "C" {
-extern void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
+extern void _ZN10dCcAcPos_cD1Ev(void*);
 extern int _ZTV6ToxBox[];
 extern int _ZTV10dBgActor_c[];
 extern void* data_020a0eac;
 void* _ZN6ToxBoxD0Ev(struct ToxBox *self) {
   *(int**)(((char*)self))=_ZTV6ToxBox;
-  _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
+  _ZN10dCcAcPos_cD1Ev((char*)&self->mdCcAcPos_c);
   _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
   *(int**)(((char*)self))=_ZTV10dBgActor_c;
   _ZN18MovingMeshColliderD1Ev((char*)&self->mMeshCollider);

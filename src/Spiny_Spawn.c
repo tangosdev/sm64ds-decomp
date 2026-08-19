@@ -4,7 +4,7 @@
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
@@ -19,7 +19,7 @@ int *Spiny_Spawn(void)
         _ZN5ModelC1Ev((char *)p + 0xd4);
         _ZN9ModelAnimC1Ev((char *)p + 0x124);
         _ZN11ShadowModelC1Ev((char *)p + 0x188);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x1b0);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x1b0);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x1e4);
     }
     return p;

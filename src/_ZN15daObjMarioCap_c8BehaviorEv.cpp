@@ -30,15 +30,15 @@ struct Flags3eb {
 extern "C" {
 extern void _ZN8dActor_c13SmallPoofDustEv(MistPmfSelf *thiz);
 extern void _Z14ApproachLinearRiii(int *x, int target, int step);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(MistPmfSelf *thiz, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(MistPmfSelf *thiz, void *clsn);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(MistPmfSelf *thiz, WithMeshClsn *wm, u32 j);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *thiz);
 extern void func_ov002_020b7f7c(char *c);
 extern void _ZN9Animation7AdvanceEv(void *thiz);
 extern void func_020167a4(char *p);
 extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(MistPmfSelf *thiz, WithMeshClsn *wm);
-extern void _ZN12CylinderClsn5ClearEv(void *thiz);
-extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
+extern void _ZN5dCc_c5ClearEv(void *thiz);
+extern void _ZN5dCc_c6UpdateEv(void *thiz);
 }
 
 int daObjMarioCap_c::Behavior()
@@ -69,7 +69,7 @@ int daObjMarioCap_c::Behavior()
         _Z14ApproachLinearRiii((int *)(c + 0x80), *(int *)(c + 0x40c), 0x400);
         *(int *)(c + 0x88) = *(int *)(c + 0x80);
         *(int *)(c + 0x84) = *(int *)(c + 0x88);
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((MistPmfSelf *)this), c + 0x110);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(((MistPmfSelf *)this), c + 0x110);
         _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((MistPmfSelf *)this), (WithMeshClsn *)(c + 0x144), 0);
         if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) != 0) {
             if (*(int *)(c + 0x80) == 0x1000) {
@@ -101,12 +101,12 @@ int daObjMarioCap_c::Behavior()
         int v = *(int *)(c + 0x3f0);
         if (v != 4 && v != 0x11 && v != 6 && v != 8 && v != 0xc && v != 0xa
             && v != 0x13 && v != 0xf && v != 0x14 && v != 0x15 && v != 0x16 && v != 0xd) {
-            _ZN8dActor_c9UpdatePosEP12CylinderClsn(((MistPmfSelf *)this), c + 0x110);
+            _ZN8dActor_c9UpdatePosEP5dCc_c(((MistPmfSelf *)this), c + 0x110);
             _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((MistPmfSelf *)this), (WithMeshClsn *)(c + 0x144), 0);
         }
     }
 
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    _ZN5dCc_c5ClearEv(c + 0x110);
+    _ZN5dCc_c6UpdateEv(c + 0x110);
     return 1;
 }

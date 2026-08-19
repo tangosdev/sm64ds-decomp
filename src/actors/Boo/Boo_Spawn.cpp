@@ -3,7 +3,7 @@
 extern "C" {
 void* _ZN7fBase_cnwEj(u32 sz);
 void _ZN11dCapEnemy_cC2Ev(void* t);
-void _ZN25MovingCylinderClsnWithPosC1Ev(void* t);
+void _ZN10dCcAcPos_cC1Ev(void* t);
 void _ZN12WithMeshClsnC1Ev(void* t);
 void _ZN9ModelAnimC1Ev(void* t);
 void _ZN5ModelC1Ev(void* t);
@@ -14,7 +14,7 @@ void* Boo_Spawn(void){
   if(t){
     _ZN11dCapEnemy_cC2Ev(t);
     *(void**)t = &_ZTV3Boo;
-    _ZN25MovingCylinderClsnWithPosC1Ev(t+0x184);
+    _ZN10dCcAcPos_cC1Ev(t+0x184);
     _ZN12WithMeshClsnC1Ev(t+0x1c4);
     _ZN9ModelAnimC1Ev(t+0x380);
     _ZN5ModelC1Ev(t+0x3e4);

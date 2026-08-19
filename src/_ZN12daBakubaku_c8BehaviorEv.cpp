@@ -14,7 +14,7 @@
  * migrated once the header named its fields.
  */
 #include "daBakubaku_c.h"
-#include "CylinderClsn.h"
+#include "dCc_c.h"
 #include "Player.h"
 
 /* Deliberately never defined. See above. */

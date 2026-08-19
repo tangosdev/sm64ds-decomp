@@ -10,7 +10,7 @@
  *
  * The members close exactly on one another:
  *
- *     0x110 MovingCylinderClsn         0x34   -> 0x144
+ *     0x110 dCcAc_c         0x34   -> 0x144
  *     0x144 WithMeshClsn               0x1bc  -> 0x300
  *     0x300 ModelAnim                  0x64   -> 0x364
  *     0x364 ShadowModel                0x28   -> 0x38c
@@ -27,8 +27,8 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAc_c.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
@@ -43,7 +43,7 @@ struct FlyGuy : dEnemyBase_c {
         void (FlyGuy::*mMain)();      /* 0x08 */
     };
 
-    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
+    dCcAc_c           mdCcAc_c;   /* 0x110 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */
     ShadowModel                  mShadowModel;          /* 0x364 */

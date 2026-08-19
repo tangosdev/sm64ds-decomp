@@ -50,7 +50,7 @@ struct Butterfly {
        WithMeshClsn's D1 at +0x1d8 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN9ButterflyD0Ev.c] */
     WithMeshClsn mWithMeshClsn;            /* 0x1d8 */
-    u8  mMovingCylinderClsnWithPos;            /* 0x394 */
+    u8  mdCcAcPos_c;            /* 0x394 */
     u8  pad_395[0x4b];
     s32 unk_3e0;            /* 0x3e0 */
     s32 unk_3e4;            /* 0x3e4 */

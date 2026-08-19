@@ -7,8 +7,8 @@
 extern "C" void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void *_ZN8dActor_c18ClosestWithActorIDEj(void *actor, unsigned int id);
 extern "C" int Vec3_Dist(void *a, void *b);
-extern "C" void _ZN12CylinderClsn5ClearEv(void *thiz);
-extern "C" void _ZN12CylinderClsn6UpdateEv(void *thiz);
+extern "C" void _ZN5dCc_c5ClearEv(void *thiz);
+extern "C" void _ZN5dCc_c6UpdateEv(void *thiz);
 extern "C" void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern "C" void _ZN9Animation7AdvanceEv(void *thiz);
 
@@ -40,8 +40,8 @@ int Tornado::Behavior()
             }
         }
     }
-    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
+    _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
+    _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
     Matrix4x3_FromTranslation(((char *)this) + 0x2e0, mPosX >> 3, mPosY >> 3, mPosZ >> 3);
     _ZN9Animation7AdvanceEv((char *)(Animation *)&mModelAnim);
     _ZN9Animation7AdvanceEv((char *)&mTextureTransformer);

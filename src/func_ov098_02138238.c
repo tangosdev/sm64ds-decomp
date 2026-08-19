@@ -1,7 +1,7 @@
 enum { false, true };
 
 extern void Crate_SetState(void *c, int i);
-extern void _ZN12CylinderClsn5ClearEv(void *c);
+extern void _ZN5dCc_c5ClearEv(void *c);
 extern void func_ov098_02139850(void *self);
 extern int _ZN16MeshColliderBase9IsEnabledEv(void *c);
 extern void _ZN16MeshColliderBase7DisableEv(void *c);
@@ -46,7 +46,7 @@ void func_ov098_02138238(void *thiz)
     }
   }
 
-  _ZN12CylinderClsn5ClearEv(c + 0x564);
+  _ZN5dCc_c5ClearEv(c + 0x564);
   func_ov098_02139850(c);
   if (!_ZN16MeshColliderBase9IsEnabledEv(c + 0x124)) return;
   _ZN16MeshColliderBase7DisableEv(c + 0x124);

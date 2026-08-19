@@ -1,5 +1,5 @@
 //cpp
-/* dActor_c::JumpedOnByPlayer(CylinderClsn&, Player&) at 0x0201054c, 0x80 bytes.
+/* dActor_c::JumpedOnByPlayer(dCc_c&, Player&) at 0x0201054c, 0x80 bytes.
  *
  * "Did that player land on me, as opposed to walking into me?" Two different
  * tests, chosen by whether the cylinder reports a side hit.
@@ -33,9 +33,9 @@
  */
 #include "dActor_c.h"
 #include "Player.h"
-#include "CylinderClsn.h"
+#include "dCc_c.h"
 
-int dActor_c::JumpedOnByPlayer(CylinderClsn &clsn, Player &player)
+int dActor_c::JumpedOnByPlayer(dCc_c &clsn, Player &player)
 {
     volatile s32 pad[4];
     s32 vel = player.mVertSpeed;

@@ -3,11 +3,11 @@
  *
  * class BowserTail: 4 matched functions.
  *
- * One sub-object, and its offset is checked twice -- once by MovingCylinderClsn's
+ * One sub-object, and its offset is checked twice -- once by dCcAc_c's
  * own size assertion, once by closing exactly on the next named field:
  *
  *     dActor_c               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
- *     MovingCylinderClsn  0x0d4 + 0x034 = 0x108   -> unk_108
+ *     dCcAc_c  0x0d4 + 0x034 = 0x108   -> unk_108
  *
  * sizeof is 0x118, which is not inferred from the fields: BowserTail_Spawn asks
  * fBase_c::operator new for 280 bytes.
@@ -21,7 +21,7 @@
 #ifndef BOWSERTAIL_H
 #define BOWSERTAIL_H
 #include "types.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 #ifdef __cplusplus
 
@@ -29,9 +29,9 @@
 
 struct BowserTail : dActor_c {
     u8  pad_0d0[0x4];
-    /* Named by the class's own destructor calling MovingCylinderClsn's D1 at
+    /* Named by the class's own destructor calling dCcAc_c's D1 at
        +0x0d4 -- a relocation the ROM build checks. */
-    MovingCylinderClsn mMovingCylinderClsn;     /* 0x0d4 */
+    dCcAc_c mdCcAc_c;     /* 0x0d4 */
     u32 unk_108;                                /* 0x108 */
     u8  pad_10c[0xc];
 
@@ -55,10 +55,10 @@ struct BowserTail {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x6c];
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x0d4 -- a relocation the ROM build
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10BowserTailD0Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x0d4 */
+    dCcAc_c mdCcAc_c;            /* 0x0d4 */
     u32 unk_108;            /* 0x108 */
     u8  pad_10c[0xc];
 };

@@ -17,8 +17,8 @@ extern void _ZN7Message7EndTalkEv(void);
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern s16 Vec3_HorzAngle(const Vector3* v0, const Vector3* v1);
 extern int _ZN6Player9StartTalkER7fBase_cb(void* p, void* base, int b);
-extern void _ZN12CylinderClsn5ClearEv(void* c);
-extern void _ZN12CylinderClsn6UpdateEv(void* c);
+extern void _ZN5dCc_c5ClearEv(void* c);
+extern void _ZN5dCc_c6UpdateEv(void* c);
 }
 
 extern Matrix4x3 data_020a0e68;
@@ -29,7 +29,7 @@ struct Obj {
     char pad1[0x8e - 0x68];
     s16 angle_8e;       /* 0x8e */
     char pad2[0x124 - 0x90];
-    u32 clsn_124;       /* 0x124 CylinderClsn */
+    u32 clsn_124;       /* 0x124 dCc_c */
     u32 f128;           /* 0x128 */
     char pad3[0x144 - 0x12c];
     u32 f144;           /* 0x144 */
@@ -110,7 +110,7 @@ int LightBeam::Behavior()
     ((Obj*)this)->vec_158.y = vRes2.y;
     ((Obj*)this)->vec_158.z = vRes2.z;
     ((Obj*)this)->f128 = 0xf0000;
-    _ZN12CylinderClsn5ClearEv(&((Obj*)this)->clsn_124);
-    _ZN12CylinderClsn6UpdateEv(&((Obj*)this)->clsn_124);
+    _ZN5dCc_c5ClearEv(&((Obj*)this)->clsn_124);
+    _ZN5dCc_c6UpdateEv(&((Obj*)this)->clsn_124);
     return 1;
 }

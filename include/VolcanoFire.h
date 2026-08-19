@@ -8,7 +8,7 @@
 
 struct VolcanoFire {
     u8  pad_000[0xd4];
-    u8  mMovingCylinderClsn;            /* 0x0d4 */
+    u8  mdCcAc_c;            /* 0x0d4 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

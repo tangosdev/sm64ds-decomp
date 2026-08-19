@@ -1092,10 +1092,10 @@
           "ordinal": 2
         },
         {
-          "symbol": "_ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn",
+          "symbol": "_ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c",
           "address": "0x0200f7a8",
           "size": "0x00000048",
-          "legacy_source": "src/_ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn.cpp",
+          "legacy_source": "src/_ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c.cpp",
           "ordinal": 3
         },
         {
@@ -1421,17 +1421,17 @@
           "ordinal": 49
         },
         {
-          "symbol": "_ZN8dActor_c18FindExplosionActorER12CylinderClsn",
+          "symbol": "_ZN8dActor_c18FindExplosionActorER5dCc_c",
           "address": "0x02010374",
           "size": "0x00000040",
-          "legacy_source": "src/_ZN8dActor_c18FindExplosionActorER12CylinderClsn.cpp",
+          "legacy_source": "src/_ZN8dActor_c18FindExplosionActorER5dCc_c.cpp",
           "ordinal": 50
         },
         {
-          "symbol": "_ZN8dActor_c7FindEggER12CylinderClsn",
+          "symbol": "_ZN8dActor_c7FindEggER5dCc_c",
           "address": "0x020103b4",
           "size": "0x00000040",
-          "legacy_source": "src/_ZN8dActor_c7FindEggER12CylinderClsn.cpp",
+          "legacy_source": "src/_ZN8dActor_c7FindEggER5dCc_c.cpp",
           "ordinal": 51
         },
         {
@@ -1477,10 +1477,10 @@
           "ordinal": 57
         },
         {
-          "symbol": "_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player",
+          "symbol": "_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player",
           "address": "0x0201054c",
           "size": "0x00000080",
-          "legacy_source": "src/_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player.cpp",
+          "legacy_source": "src/_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player.cpp",
           "ordinal": 58
         },
         {
@@ -1582,10 +1582,10 @@
           "ordinal": 72
         },
         {
-          "symbol": "_ZN8dActor_c9UpdatePosEP12CylinderClsn",
+          "symbol": "_ZN8dActor_c9UpdatePosEP5dCc_c",
           "address": "0x02010c30",
           "size": "0x0000002c",
-          "legacy_source": "src/_ZN8dActor_c9UpdatePosEP12CylinderClsn.cpp",
+          "legacy_source": "src/_ZN8dActor_c9UpdatePosEP5dCc_c.cpp",
           "ordinal": 73
         },
         {
@@ -1596,10 +1596,10 @@
           "ordinal": 74
         },
         {
-          "symbol": "_ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn",
+          "symbol": "_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c",
           "address": "0x02010d40",
           "size": "0x00000064",
-          "legacy_source": "src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn.cpp",
+          "legacy_source": "src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c.cpp",
           "ordinal": 75
         },
         {
@@ -1841,7 +1841,7 @@
           "src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp",
           "src/_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE.cpp",
           "src/func_0200f760.c",
-          "src/_ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn.cpp",
+          "src/_ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c.cpp",
           "src/func_0200f7f0.c",
           "src/_ZN5Sound20PlaySmallSecretSoundEP8dActor_cPt.cpp",
           "src/_ZN5Sound15PlaySecretSoundEP8dActor_cPt.cpp",
@@ -1888,15 +1888,15 @@
           "src/_ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3.cpp",
           "src/_ZN8dActor_c13SpawnFireballERK7Vector3PK10Vector3_165Fix12IiES7_j.c",
           "src/func_02010304.cpp",
-          "src/_ZN8dActor_c18FindExplosionActorER12CylinderClsn.cpp",
-          "src/_ZN8dActor_c7FindEggER12CylinderClsn.cpp",
+          "src/_ZN8dActor_c18FindExplosionActorER5dCc_c.cpp",
+          "src/_ZN8dActor_c7FindEggER5dCc_c.cpp",
           "src/_ZN8dActor_c14GetSubtractionEss.cpp",
           "src/_ZN8dActor_c12ReflectAngleE5Fix12IiES1_s.c",
           "src/_ZN8dActor_c15IsPlayerInRangeERK7Vector3i.cpp",
           "src/_ZN8dActor_c15IsPlayerInRangeE5Fix12IiES1_S1_i.c",
           "src/_ZN8dActor_c15IsPlayerInRangeEi.cpp",
           "src/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp",
-          "src/_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player.cpp",
+          "src/_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player.cpp",
           "src/func_020105cc.c",
           "src/_ZN8dActor_c15GivePlayerCoinsER6Playerhj.cpp",
           "src/_ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs.c",
@@ -1911,9 +1911,9 @@
           "src/_ZN8dActor_c13ClosestPlayerEv.cpp",
           "src/_ZN8dActor_c18DropShadowScaleXYZER11ShadowModelR9Matrix4x35Fix12IiES5_S5_j.c",
           "src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c",
-          "src/_ZN8dActor_c9UpdatePosEP12CylinderClsn.cpp",
+          "src/_ZN8dActor_c9UpdatePosEP5dCc_c.cpp",
           "src/_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv.cpp",
-          "src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn.cpp",
+          "src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c.cpp",
           "src/func_02010da4.c",
           "src/_ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_.cpp",
           "src/_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as.cpp",
@@ -2845,10 +2845,10 @@
           "ordinal": 2
         },
         {
-          "symbol": "_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn",
+          "symbol": "_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c",
           "address": "0x020addc0",
           "size": "0x000000b8",
-          "legacy_source": "src/_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn.cpp",
+          "legacy_source": "src/_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c.cpp",
           "ordinal": 3
         },
         {

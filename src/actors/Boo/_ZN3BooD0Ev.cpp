@@ -9,7 +9,7 @@ extern int _ZN11ShadowModelD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
 extern int _ZN9ModelAnimD1Ev(void*);
 extern int _ZN12WithMeshClsnD1Ev(void*);
-extern int _ZN25MovingCylinderClsnWithPosD1Ev(void*);
+extern int _ZN10dCcAcPos_cD1Ev(void*);
 extern int func_ov002_020aedbc(void*);
 extern int _ZTV3Boo[];
 
@@ -20,7 +20,7 @@ int *_ZN3BooD0Ev(struct Boo *self) {
     _ZN5ModelD1Ev((char *)&self->mModel);
     _ZN9ModelAnimD1Ev((char *)&self->mModelAnim);
     _ZN12WithMeshClsnD1Ev((char *)&self->mWithMeshClsn);
-    _ZN25MovingCylinderClsnWithPosD1Ev((char *)&self->mMovingCylinderClsnWithPos);
+    _ZN10dCcAcPos_cD1Ev((char *)&self->mdCcAcPos_c);
     func_ov002_020aedbc(((int *)self));
     _ZN6Memory10DeallocateEPvP4Heap(((int *)self), data_020a0eac);
     return ((int *)self);

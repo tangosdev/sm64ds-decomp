@@ -16,7 +16,7 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisp, struct BMD_File *, i
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(struct SharedFilePtr &);
 }
 extern "C" {
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *thisp, struct dActor_c *, struct Vector3 const &, int, int, unsigned int, unsigned int);
 }
 extern "C" {
@@ -45,8 +45,8 @@ int CheepCheep::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(*(struct SharedFilePtr *)&data_ov090_0213455c);
 
     v = data_ov090_021342d8;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        (void *)((char *)&(*(MovingCylinderClsnWithPos *)&mMovingCylinderClsnWithPos)), (struct dActor_c *)((char *)this), v, 0x32000, 0x3c000, 0x200004, 0x8000);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+        (void *)((char *)&(*(dCcAcPos_c *)&mdCcAcPos_c)), (struct dActor_c *)((char *)this), v, 0x32000, 0x3c000, 0x200004, 0x8000);
 
     unk_374 = mPosX;
     unk_378 = mPosY;

@@ -10,8 +10,8 @@
  *
  * The members close exactly on one another:
  *
- *     0x110 MovingCylinderClsn         0x34   -> 0x144
- *     0x144 MovingCylinderClsnWithPos  0x40   -> 0x184
+ *     0x110 dCcAc_c         0x34   -> 0x144
+ *     0x144 dCcAcPos_c  0x40   -> 0x184
  *     0x184 WithMeshClsn               0x1bc  -> 0x340
  *     0x340 ModelAnim                  0x64   -> 0x3a4
  *     0x3a4 ShadowModel                0x28   -> 0x3cc
@@ -32,15 +32,15 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAc_c.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
 
 struct HeaveHo : dEnemyBase_c {
-    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
-    MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x144 */
+    dCcAc_c           mdCcAc_c;   /* 0x110 */
+    dCcAcPos_c    mdCcAcPos_c; /* 0x144 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x184 */
     ModelAnim                    mModelAnim;            /* 0x340 */
     ShadowModel                  mShadowModel;          /* 0x3a4 */

@@ -18,7 +18,7 @@ extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a
 extern "C" void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, dActor_c *a, Vector3 const &b, int c, int d, unsigned int e, unsigned int f);
+extern "C" void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, dActor_c *a, Vector3 const &b, int c, int d, unsigned int e, unsigned int f);
 extern "C" unsigned char _ZN8dActor_c9TrackStarEjj(dActor_c *self, unsigned int a, unsigned int b);
 extern "C" void func_ov071_02121634(void *self, int a);
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, BCA_File *f, int a, int b, unsigned int c);
@@ -69,7 +69,7 @@ extern "C" int _ZN3MrI13InitResourcesEv(char *c)
         v.x = 0;
         v.y = -0x4b000;
         v.z = 0;
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x174, (dActor_c *)c, v, 0x55000, 0x96000, 0x200004, 0x42000);
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x174, (dActor_c *)c, v, 0x55000, 0x96000, 0x200004, 0x42000);
         *(int *)(c + 0x80) = 0x1000;
         *(int *)(c + 0x84) = 0x1000;
         *(int *)(c + 0x88) = 0x1000;
@@ -81,7 +81,7 @@ extern "C" int _ZN3MrI13InitResourcesEv(char *c)
             v.x = 0;
             v.y = -0x96000;
             v.z = 0;
-            _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x174, (dActor_c *)c, v, 0xaa000, 0x12c000, 0x200004, 0);
+            _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x174, (dActor_c *)c, v, 0xaa000, 0x12c000, 0x200004, 0);
             *(int *)(c + 0x80) = 0x2000;
             *(int *)(c + 0x84) = 0x2000;
             *(int *)(c + 0x88) = 0x2000;

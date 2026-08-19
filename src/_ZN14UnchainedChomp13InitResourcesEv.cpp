@@ -15,8 +15,8 @@ struct PathPtr {
 
 extern "C" {
 void LoadSilverStarAndNumber();
-void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-    MovingCylinderClsnWithPos *clsn, dActor_c *actor, const Vector3 &offset,
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    dCcAcPos_c *clsn, dActor_c *actor, const Vector3 &offset,
     s32 radius, s32 height, u32 flags, u32 vulnFlags);
 void func_ov100_02143b18(UnchainedChomp *chomp, void *data);
 
@@ -78,8 +78,8 @@ int UnchainedChomp::InitResources()
         offset.x = data_ov100_02148008[0];
         offset.y = data_ov100_02148008[1];
         offset.z = data_ov100_02148008[2];
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-            &mMovingCylinderClsnWithPos, this, offset,
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+            &mdCcAcPos_c, this, offset,
             0xaa000, 0x140000, 0x200004, 0x6010);
     }
 

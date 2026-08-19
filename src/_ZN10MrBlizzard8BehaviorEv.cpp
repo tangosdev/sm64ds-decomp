@@ -16,10 +16,10 @@ extern void func_02012694(int a, void* p);
 extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void* self, int a, int b, int c, int d);
 extern void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* cyl);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cyl);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, void* wm, unsigned n);
-extern void _ZN12CylinderClsn5ClearEv(void* self);
-extern void _ZN12CylinderClsn6UpdateEv(void* self);
+extern void _ZN5dCc_c5ClearEv(void* self);
+extern void _ZN5dCc_c6UpdateEv(void* self);
 extern void _ZN9Animation7AdvanceEv(void* self);
 extern char data_ov081_02128e24;
 extern char data_ov081_02128e84;
@@ -86,7 +86,7 @@ int MrBlizzard::Behavior()
         PMF* p = ((C*)this)->pp + 1;
         (((C*)this)->**p)();
     }
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x110);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x110);
     if (*(int*)(c + 0x41c) == 0)
         _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 0);
     func_ov081_021254d8(c);
@@ -95,11 +95,11 @@ int MrBlizzard::Behavior()
         && (char*)((C*)this)->pp != &data_ov081_02128e94
         && (char*)((C*)this)->pp != &data_ov081_02128e24)
         func_ov081_021243cc(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
+    _ZN5dCc_c5ClearEv(c + 0x110);
     {
         p = (char*)_ZN8dActor_c13ClosestPlayerEv(c);
         if (p != 0 && *(unsigned char*)(p + 0x6fb) == 0)
-            _ZN12CylinderClsn6UpdateEv(c + 0x110);
+            _ZN5dCc_c6UpdateEv(c + 0x110);
     }
     *(int*)(c + 0x368) = 0x1000;
     _ZN9Animation7AdvanceEv(c + 0x35c);

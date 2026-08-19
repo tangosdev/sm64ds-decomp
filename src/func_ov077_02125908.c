@@ -5,9 +5,9 @@ extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void *p);
 extern void _ZN8dActor_c8PoofDustEv(void *p);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *p);
 extern void _ZN9Animation7AdvanceEv(void *p);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *p, void *cc);
-extern void _ZN12CylinderClsn5ClearEv(void *p);
-extern void _ZN12CylinderClsn6UpdateEv(void *p);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *p, void *cc);
+extern void _ZN5dCc_c5ClearEv(void *p);
+extern void _ZN5dCc_c6UpdateEv(void *p);
 extern void func_02012694(int a, void *b);
 extern void func_ov077_02125e94(void *p, int v);
 extern void func_ov077_02124eb0(void *p);
@@ -43,9 +43,9 @@ int func_ov077_02125908(char *c)
     }
 
     _ZN9Animation7AdvanceEv(c + 0x174);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x1b0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
     func_ov077_02124eb0(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x1b0);
-    _ZN12CylinderClsn6UpdateEv(c + 0x1b0);
+    _ZN5dCc_c5ClearEv(c + 0x1b0);
+    _ZN5dCc_c6UpdateEv(c + 0x1b0);
     return 1;
 }

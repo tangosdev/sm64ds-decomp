@@ -16,8 +16,8 @@ extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10C
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, Fix12i r, Fix12i h, void* p, void* q);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, void* a, void* pos, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, void* a, void* pos, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
 extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, void* rot, int e, int f);
 }
 
@@ -72,14 +72,14 @@ int Dorrie::InitResources()
     }
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         ((char*)this) + 0xf50, ((char*)this), 0x1e0000, 0xa0000, 0, 0);
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         ((char*)this) + 0x110c, ((char*)this), 0xdc000, 0xfa000, 2, 0x20);
     {
         int v[3];
         v[0] = 0;
         v[1] = 0x50000;
         v[2] = 0x150000;
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
             ((char*)this) + 0x1140, ((char*)this), v, 0x60000, 0x1b0000, 2, 0x400000);
     }
     {

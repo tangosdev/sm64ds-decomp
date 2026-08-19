@@ -20,9 +20,9 @@ void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned in
 u8 DecIfAbove0_Byte(u8 *p);
 void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
 void _ZN9Animation7AdvanceEv(void *thiz);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 void func_ov030_02111f6c(void *c, void *w);
-void _ZN12CylinderClsn5ClearEv(void *thiz);
+void _ZN5dCc_c5ClearEv(void *thiz);
 
 extern void *data_ov030_02115cd0[];
 extern void *data_ov030_02115cf8[];
@@ -137,8 +137,8 @@ int func_ov030_02112578(void *arg0)
     }
 
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(arg0, c + 0x160);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(arg0, c + 0x160);
     func_ov030_02111f6c(arg0, c + 0x194);
-    _ZN12CylinderClsn5ClearEv(c + 0x160);
+    _ZN5dCc_c5ClearEv(c + 0x160);
     return 1;
 }

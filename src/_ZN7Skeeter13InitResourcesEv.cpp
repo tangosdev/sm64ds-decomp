@@ -38,7 +38,7 @@ extern "C" {
 BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(LocSharedFilePtr* f);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 void _ZN9Animation8LoadFileER13SharedFilePtr(LocSharedFilePtr* f);
-void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, LocVec3* v, LocFix12 r, LocFix12 h, unsigned int e, unsigned int g);
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, LocVec3* v, LocFix12 r, LocFix12 h, unsigned int e, unsigned int g);
 void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, LocFix12 r, LocFix12 h, LocVector3_16* p, LocVector3_16* q);
 void func_0203558c(void* self);
 int func_ov090_02131e00(void* c, PMF* p);
@@ -85,7 +85,7 @@ int Skeeter::InitResources()
     v.x = data_ov090_0213412c.x;
     v.y = data_ov090_0213412c.y;
     v.z = data_ov090_0213412c.z;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, (dActor_c*)c, &v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, (dActor_c*)c, &v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
 
     mAngleY = mPrevAngleY;
     unk_3a4 = 0x1000;

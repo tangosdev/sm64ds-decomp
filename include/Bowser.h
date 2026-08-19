@@ -11,7 +11,7 @@
  *     TextureSequence            0x138 + 0x014 = 0x14c   -> mWithMeshClsn
  *     WithMeshClsn               0x14c + 0x1bc = 0x308   -> mShadowModel
  *     ShadowModel                0x308 + 0x028 = 0x330   -> padding
- *     MovingCylinderClsnWithPos  0x360 + 0x040 = 0x3a0   -> mTargetPlayer
+ *     dCcAcPos_c  0x360 + 0x040 = 0x3a0   -> mTargetPlayer
  *
  * TWO OF THE GENERATED HEADER'S FIELDS WERE THE ModelAnim'S OWN INSIDES and are
  * gone from this half: `mAnimation` at 0x124 is 0x0d4 + 0x50, the Animation base
@@ -31,7 +31,7 @@
 #include "TextureSequence.h"
 #include "WithMeshClsn.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 
 #ifdef __cplusplus
 
@@ -44,7 +44,7 @@ struct Bowser : dActor_c {
     WithMeshClsn mWithMeshClsn;                             /* 0x14c */
     ShadowModel mShadowModel;                               /* 0x308 */
     u8  pad_330[0x30];
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;   /* 0x360 */
+    dCcAcPos_c mdCcAcPos_c;   /* 0x360 */
     s32 mTargetPlayer;      /* 0x3a0 */
     u8  pad_3a4[0x4];
     s32 unk_3a8;            /* 0x3a8 */
@@ -132,7 +132,7 @@ struct Bowser {
     WithMeshClsn mWithMeshClsn;                             /* 0x14c */
     ShadowModel mShadowModel;                               /* 0x308 */
     u8  pad_330[0x30];
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;   /* 0x360 */
+    dCcAcPos_c mdCcAcPos_c;   /* 0x360 */
     s32 mTargetPlayer;            /* 0x3a0 */
     u8  pad_3a4[0x4];
     s32 unk_3a8;            /* 0x3a8 */

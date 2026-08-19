@@ -2,13 +2,13 @@
 #define DAOBJABUKU_C_H
 #include "types.h"
 #include "dActor_c.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 /* TWO WITNESSES:
  *
  *   daObjAbuku_c_Spawn  fBase_c::operator new(276 = 0x114),
  *       dActor_c::dActor_c(), stores the class vtable, then the
- *       MovingCylinderClsn member below.
+ *       dCcAc_c member below.
  *   _ZN12daObjAbuku_cD0Ev  the same member destroyed, then ~dActor_c.
  *
  * SIZE 0x114 is the factory's own literal; unk_110 (4 bytes, 0x110) closes
@@ -27,7 +27,7 @@
  * mHorzSpeed at 0x098 already share dActor_c's names). dActor_c ends at
  * exactly 0x0d0, so pad_0d0 (unevidenced, 4 bytes) is this class's own first
  * field. The old header also placed a field at 0x0f8, inside
- * MovingCylinderClsn's own 0x0d4..0x108 span -- daObjAbuku_c_Behavior reads
+ * dCcAc_c's own 0x0d4..0x108 span -- daObjAbuku_c_Behavior reads
  * that word directly out of the collision sub-object's own bytes, not out of
  * a field of this class, so no field is declared for it here. The old
  * header also padded 0x10c..0x10e as unevidenced, but
@@ -47,10 +47,10 @@
  */
 struct daObjAbuku_c : dActor_c {
     u8  pad_0d0[0x4];
-    /* MovingCylinderClsn member, named by daObjAbuku_c_Spawn's own C1 call
+    /* dCcAc_c member, named by daObjAbuku_c_Spawn's own C1 call
        and the class's own destructors' D1 call at +0xd4.
        [daObjAbuku_c_Spawn.c, _ZN12daObjAbuku_cD1Ev.c, _ZN12daObjAbuku_cD0Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x0d4 */
+    dCcAc_c mdCcAc_c;            /* 0x0d4 */
     s32 unk_108;            /* 0x108 */
     s16 unk_10c;            /* 0x10c */
     s16 unk_10e;            /* 0x10e */

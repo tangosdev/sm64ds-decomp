@@ -15,7 +15,7 @@
  *     0x114 ModelAnim                  0x64    -> 0x178
  *     0x178 Model                      0x50    -> 0x1c8
  *     0x1c8 ShadowModel                0x28    -> 0x1f0
- *     0x220 MovingCylinderClsnWithPos  0x40    -> 0x260
+ *     0x220 dCcAcPos_c  0x40    -> 0x260
  *     0x260 WithMeshClsn               0x1bc   -> 0x41c
  *
  * Typing them absorbed markers that were their insides:
@@ -36,7 +36,7 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
@@ -46,7 +46,7 @@ struct Key : dEnemyBase_c {
     Model                        mModel;                /* 0x178 */
     ShadowModel                  mShadowModel;          /* 0x1c8 */
     u8  pad_1f0[0x30];
-    MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x220 */
+    dCcAcPos_c    mdCcAcPos_c; /* 0x220 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x260 */
     s32                          unk_41c;               /* 0x41c */
     s32                          unk_420;               /* 0x420 */

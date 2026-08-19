@@ -5,7 +5,7 @@
 
 extern "C" {
 extern void _ZN9Animation7AdvanceEv(void*);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void*, void*);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void*, void*);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void*);
 extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void*);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void*);
@@ -19,7 +19,7 @@ int func_ov077_021253a4(char* c)
 {
     *(short*)(c + 0x8c) = *(short*)(c + 0x8c) - 0x1000;
     _ZN9Animation7AdvanceEv(c + 0x174);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x1b0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
 
     if (*(int*)(c + 0x98) >= *(int*)(c + 0x1fc) || *(int*)(c + 0xa8) >= *(int*)(c + 0x1fc)) {
         WithMeshClsn_UpdateContinuous_Veneer(c + 0x1e4);

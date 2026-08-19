@@ -13,7 +13,7 @@ struct ShadowModel { int InitCylinder(); };
    int literals, and Fix12<int> is an aggregate with no converting constructor from int.
    WithMeshClsn::Init's last parameter is a Vector3_16* as well -- the S5_ in
    ...P10Vector3_16S5_ back-references the pointer type, it is not an int. */
-extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);
 extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
@@ -28,7 +28,7 @@ int PrincessPeach::InitResources()
         _ZN9Animation8LoadFileER13SharedFilePtr((void*)data_ov085_0212f280[i]);
     if (((ShadowModel*)(s + 0x138))->InitCylinder() == 0)
         return 0;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         s + 0x160, ((dActor_c *)this), 0x90000, 0xc0000, 0x4800004, 0);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         s + 0x194, ((dActor_c *)this), 0x40000, 0x40000, (Vector3_16*)0, (Vector3_16*)0);

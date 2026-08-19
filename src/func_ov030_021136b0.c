@@ -27,7 +27,7 @@ extern void _ZN6Player18SetNewHatCharacterEjjb(void *self, unsigned int a, unsig
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov030_021141a8(char *c, int v);
 extern void _ZN9Animation7AdvanceEv(void *self);
-extern void _ZN12CylinderClsn5ClearEv(void *self);
+extern void _ZN5dCc_c5ClearEv(void *self);
 
 extern void *data_0209f318;
 extern Mtx43 data_020a0e68;
@@ -197,6 +197,6 @@ int func_ov030_021136b0(char *c)
     }
 
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN12CylinderClsn5ClearEv(c + 0x160);
+    _ZN5dCc_c5ClearEv(c + 0x160);
     return 1;
 }

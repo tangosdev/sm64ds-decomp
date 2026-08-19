@@ -22,7 +22,7 @@ struct Clam {
        stopped short of the object, so the member also takes over mAnimation (+0x50 = the
        Animation base), which the header declared separately inside it. */
     ModelAnim mModelAnim;            /* 0x0d4 */
-    u8  mMovingCylinderClsn;            /* 0x138 */
+    u8  mdCcAc_c;            /* 0x138 */
     u8  pad_139[0x17];
     u8  unk_150;            /* 0x150 */
     u8  pad_151[0xb];

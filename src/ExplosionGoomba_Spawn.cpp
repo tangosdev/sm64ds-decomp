@@ -8,8 +8,8 @@ extern void _ZN15MaterialChangerC1Ev(void*);
 extern void _ZN15TextureSequenceC1Ev(void*);
 extern void _ZN18TextureTransformerC1Ev(void*);
 extern void _ZN12WithMeshClsnC1Ev(void*);
-extern void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
-extern void _ZN25MovingCylinderClsnWithPosC1Ev(void*);
+extern void _ZN10dCcAcPos_cD1Ev(void*);
+extern void _ZN10dCcAcPos_cC1Ev(void*);
 extern void _ZN11ShadowModelD1Ev(void*);
 extern void _ZN11ShadowModelC1Ev(void*);
 extern void _ZN7Vector3D1Ev(void*);
@@ -20,7 +20,7 @@ void* ExplosionGoomba_Spawn(void){
   if(p){
     _ZN12dEnemyBase_cC2Ev(p);
     *(void***)p=(void**)_ZTV8Goomboss;
-    func_020733a8(p+0x110, 4, 0x40, _ZN25MovingCylinderClsnWithPosC1Ev, _ZN25MovingCylinderClsnWithPosD1Ev);
+    func_020733a8(p+0x110, 4, 0x40, _ZN10dCcAcPos_cC1Ev, _ZN10dCcAcPos_cD1Ev);
     _ZN9ModelAnimC1Ev(p+0x210);
     func_020733a8(p+0x274, 3, 0x28, _ZN11ShadowModelC1Ev, _ZN11ShadowModelD1Ev);
     func_020733a8(p+0x3ac, 3, 0xc, func_0203d384, _ZN7Vector3D1Ev);

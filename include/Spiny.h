@@ -6,7 +6,7 @@
 #include "Model.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "WithMeshClsn.h"
 
 /* TWO WITNESSES, and they close on each other:
@@ -26,7 +26,7 @@ struct Spiny : dActor_c {
     Model mModel;                            /* 0x0d4 */
     ModelAnim mModelAnim;                    /* 0x124 */
     ShadowModel mShadowModel;                /* 0x188 */
-    MovingCylinderClsn mMovingCylinderClsn;  /* 0x1b0 */
+    dCcAc_c mdCcAc_c;  /* 0x1b0 */
     WithMeshClsn mWithMeshClsn;              /* 0x1e4 */
     u8  unk_3a0;            /* 0x3a0 */
     u8  pad_3a1[0x37];

@@ -11,7 +11,7 @@ extern struct BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(char* self);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
 }
 struct M48 { int w[12]; };
 extern struct M48 data_02082128;
@@ -25,7 +25,7 @@ int HauntedChair::InitResources()
     unk_38c = 0;
     unk_390 = 0;
     unk_394 = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x17c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&unk_38c), 0x32000, 0x64000, 0x200004, 0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x17c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&unk_38c), 0x32000, 0x64000, 0x200004, 0);
     unk_378 = 0;
     unk_380 = mPosX;
     unk_384 = mPosY;

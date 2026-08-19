@@ -8,7 +8,7 @@
 #include "dActor_c.h"
 
 /* fwd */
-struct CylinderClsn;
+struct dCc_c;
 struct ModelAnim;
 struct Player;
 struct Vector3_16;
@@ -93,13 +93,13 @@ struct dEnemyBase_c : dActor_c {
        local `struct dEnemyBase_c : dActor_c` shadow. Declared here so callers need not
        spell the mangled name. */
     void SpawnCoin();
-    int SpawnParticlesIfHitOtherObj(CylinderClsn & clsn_);
+    int SpawnParticlesIfHitOtherObj(dCc_c & clsn_);
     /* Its own file still builds this from a local `struct dEnemyBase_c { char pad[0x100]; }`
        shadow, but SpawnParticlesIfHitOtherObj -- which shares its translation unit,
        ov002 0x020ad838..0x020aedbc -- calls it, so the merged TU needs the real
        declaration. Non-virtual, so it cannot move a vtable slot or change which TU
        is dEnemyBase_c's key function; ~dEnemyBase_c is still the first virtual declared. The
-       second parameter is the CylinderClsn the caller was handed, passed as raw
+       second parameter is the dCc_c the caller was handed, passed as raw
        bytes because that class has no header here. */
     void SpawnMegaCharParticles(dActor_c & a, char * p);
     int UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_, unsigned int flags);

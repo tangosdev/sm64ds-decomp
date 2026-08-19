@@ -1,25 +1,25 @@
-#ifndef CYLINDERCLSN_H
-#define CYLINDERCLSN_H
+#ifndef DCC_C_H
+#define DCC_C_H
 
 #include "types.h"
 
-/* The cylinder-collision root, vtable _ZTV12CylinderClsn at 0x0208e6ec
+/* The cylinder-collision root, vtable _ZTV5dCc_c at 0x0208e6ec
  * (also reachable as data_0208e6ec, kept as an alias so existing consumers
  * and their relocations stay untouched -- the #972 pattern).
  *
  * VTABLE, 4 slots, read out of the ROM:
  *
- *   slot 0  0x020150a8  ~CylinderClsn (D1)
- *   slot 1  0x0201507c  ~CylinderClsn (D0)
+ *   slot 0  0x020150a8  ~dCc_c (D1)
+ *   slot 1  0x0201507c  ~dCc_c (D0)
  *   slot 2  0x00000000  null - pure; GetPos() in every derived table
  *   slot 3  0x00000000  null - pure; GetOwnerID() in every derived table
  *
  * A ROOT, not a derived class. Its typeinfo at 0x0208e660 is the 8-byte
  * __class_type_info kind, which carries no base pointer; the ROM's own name
  * for it is dCc_c. The three children are __si_class_type_info records
- * pointing back at it: dCcPos_c (CylinderClsnWithPos), dCcAc_c
- * (MovingCylinderClsn) and, one level further down, dCcAcPos_c
- * (MovingCylinderClsnWithPos, based on dCcAc_c).
+ * pointing back at it: dCcPos_c (dCcPos_c), dCcAc_c
+ * (dCcAc_c) and, one level further down, dCcAcPos_c
+ * (dCcAcPos_c, based on dCcAc_c).
  *
  * THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD -- the
  * key-function arrangement from include/ModelBase.h. D0/D1/D2 stay
@@ -52,7 +52,7 @@
 
 extern "C" void _ZN6Memory16operator_delete2EPv(void *);
 
-struct CylinderClsn {
+struct dCc_c {
     /* 0x00 is the vptr, placed implicitly by the first virtual declaration. */
     Fix12i radius;          /* 0x04 - Init arg 1 */
     Fix12i height;          /* 0x08 - Init arg 2 */
@@ -61,11 +61,11 @@ struct CylinderClsn {
     u32 vulnFlags;          /* 0x1c - Init arg 4 */
     u32 hitFlags;           /* 0x20 - cleared by Clear */
     u32 otherOwner;         /* 0x24 - cleared by Clear */
-    CylinderClsn *prev;     /* 0x28 - intrusive list, zeroed by C2 */
-    CylinderClsn *next;     /* 0x2c - intrusive list, zeroed by C2 */
+    dCc_c *prev;     /* 0x28 - intrusive list, zeroed by C2 */
+    dCc_c *next;     /* 0x2c - intrusive list, zeroed by C2 */
 
     /* --- vtable, in ROM order. Do not reorder. --- */
-    virtual ~CylinderClsn();            /* slots 0 (D1), 1 (D0) */
+    virtual ~dCc_c();            /* slots 0 (D1), 1 (D0) */
     virtual Vector3 &GetPos() = 0;      /* slot 2 - null in the ROM table */
     virtual u32 GetOwnerID() = 0;       /* slot 3 - null in the ROM table */
 
@@ -93,11 +93,11 @@ struct CylinderClsn {
 
 };
 
-typedef char CylinderClsn_size_must_be_0x30[sizeof(CylinderClsn) == 0x30 ? 1 : -1];
+typedef char dCc_c_size_must_be_0x30[sizeof(dCc_c) == 0x30 ? 1 : -1];
 
 #else
 
-struct CylinderClsn {
+struct dCc_c {
     void **vtable;             /* 0x00 */
     s32 radius;                /* 0x04 */
     s32 height;                /* 0x08 */
@@ -108,10 +108,10 @@ struct CylinderClsn {
     u32 vulnFlags;             /* 0x1c */
     u32 hitFlags;              /* 0x20 */
     u32 otherOwner;            /* 0x24 */
-    struct CylinderClsn *prev; /* 0x28 */
-    struct CylinderClsn *next; /* 0x2c */
+    struct dCc_c *prev; /* 0x28 */
+    struct dCc_c *next; /* 0x2c */
 };
 
 #endif /* __cplusplus */
 
-#endif /* CYLINDERCLSN_H */
+#endif /* DCC_C_H */

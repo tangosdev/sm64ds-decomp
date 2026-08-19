@@ -17,9 +17,9 @@ struct G_ee90 {
 extern "C" {
 extern u16 DecIfAbove0_Short(u16 *p);
 extern s16 GetAngleToCamera(u8 playerID);
-extern void _ZN12CylinderClsn5ClearEv(void *self);
-extern void _ZN12CylinderClsn6UpdateEv(void *self);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
+extern void _ZN5dCc_c5ClearEv(void *self);
+extern void _ZN5dCc_c6UpdateEv(void *self);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 charID, u32 soundID, const Vector3 *pos);
 extern int _ZN6Player11ChangeStateERNS_5StateE(void *self, Player::State *s);
 extern int _ZN6Player7IsStateERNS_5StateE(void *self, Player::State *s);
@@ -85,7 +85,7 @@ int Player::Behavior()
     temp = (s32)(((s64)r2 * 0x32000 + 0x800) >> 12);
     func_0203568c(((char *)this) + 0x380, temp);
     func_02035684(((char *)this) + 0x380, temp);
-    mMovingCylinderClsnWithPos.radius = scale * 0x28;
+    mdCcAcPos_c.radius = scale * 0x28;
     mul = 0x96;
     if (_ZN6Player7IsStateERNS_5StateE(((char *)this), &data_ov002_021104e4)
         || _ZN6Player7IsStateERNS_5StateE(((char *)this), &data_ov002_02110514)
@@ -96,12 +96,12 @@ int Player::Behavior()
         || _ZN6Player7IsStateERNS_5StateE(((char *)this), &data_ov002_02110634)) {
         mul = 0x5a;
     }
-    mMovingCylinderClsnWithPos.height = mul * scale;
+    mdCcAcPos_c.height = mul * scale;
 
     if (mIsMega != 0)
-        *(u32 *)LAU((char *)&mMovingCylinderClsnWithPos.flags) |= 0x10;
+        *(u32 *)LAU((char *)&mdCcAcPos_c.flags) |= 0x10;
     else
-        *(u32 *)LAU((char *)&mMovingCylinderClsnWithPos.flags) &= ~0x10;
+        *(u32 *)LAU((char *)&mdCcAcPos_c.flags) &= ~0x10;
 
     if (data_0209fc68 == 0) {
         if (data_0209fc48 != 0)
@@ -250,7 +250,7 @@ after_player_slot:
     v1.x = v0.x;
     v1.y = v0.y;
     v1.z = v0.z;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char *)this) + 0x2d4, &v1);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char *)this) + 0x2d4, &v1);
     func_ov002_020c2db8(((char *)this));
 
     if (mIsInShallowWater != 0)
@@ -270,15 +270,15 @@ after_player_slot:
         u16 t = mInvincibleTimer;
         if (t != 0) {
             if (t == 1)
-                *(u32 *)LAU((char *)&mMovingCylinderClsnWithPos.vulnFlags) |= 0x10000000;
+                *(u32 *)LAU((char *)&mdCcAcPos_c.vulnFlags) |= 0x10000000;
             else
-                *(u32 *)LAU((char *)&mMovingCylinderClsnWithPos.vulnFlags) &= ~0x10000000;
+                *(u32 *)LAU((char *)&mdCcAcPos_c.vulnFlags) &= ~0x10000000;
         }
     }
 
-    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c5ClearEv((char *)&mdCcAcPos_c);
     if (mIsBodyClsnEnabled != 0)
-        _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsnWithPos);
+        _ZN5dCc_c6UpdateEv((char *)&mdCcAcPos_c);
 
     if (data_0209fc68 == 0)
         data_020a0e40 = 0;

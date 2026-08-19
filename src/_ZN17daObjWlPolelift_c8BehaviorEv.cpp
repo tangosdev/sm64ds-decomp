@@ -12,12 +12,12 @@ extern "C" {
     void Vec3_MulScalar(Vector3* out, Vector3* a, int s);
     void SubVec3(Vector3* a, Vector3* b, Vector3* c);
     int _ZNK7PathPtr5LoopsEv(void* self);
-    void _ZN12CylinderClsn5ClearEv(void* self);
+    void _ZN5dCc_c5ClearEv(void* self);
     void _ZN13RaycastGroundC1Ev(void* self);
     void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, const Vector3* pos, void* actor);
     int _ZN13RaycastGround10DetectClsnEv(void* self);
-    void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* self, const Vector3* v);
-    void _ZN12CylinderClsn6UpdateEv(void* self);
+    void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* self, const Vector3* v);
+    void _ZN5dCc_c6UpdateEv(void* self);
     void func_ov026_021112a4(void* t);
     void func_ov026_02111234(void* c);
     void _ZN13RaycastGroundD1Ev(void* self);
@@ -85,7 +85,7 @@ extern "C" int _ZN17daObjWlPolelift_c8BehaviorEv(void* self)
         }
     }
 
-    _ZN12CylinderClsn5ClearEv(c + 0x124);
+    _ZN5dCc_c5ClearEv(c + 0x124);
     flag = (*(s32*)(c + 0xb0) & 8) != 0;
     if (!flag) {
         rp = *(Vector3*)(c + 0x5c);
@@ -97,8 +97,8 @@ extern "C" int _ZN17daObjWlPolelift_c8BehaviorEv(void* self)
             *(s32*)(c + 0x1e0) = rg.hitY;
         }
         rel = data_ov026_02113a9c;
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x124, &rel);
-        _ZN12CylinderClsn6UpdateEv(c + 0x124);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x124, &rel);
+        _ZN5dCc_c6UpdateEv(c + 0x124);
         func_ov026_021112a4(self);
         func_ov026_02111234(self);
         _ZN13RaycastGroundD1Ev(&rg);

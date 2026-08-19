@@ -3,7 +3,7 @@
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_TextureSequence.h"
 #include "decl_WithMeshClsn.h"
@@ -19,7 +19,7 @@ int *MotherPenguin_Spawn(void)
         _ZN9ModelAnimC1Ev((char *)p + 0xd4);
         _ZN15TextureSequenceC1Ev((char *)p + 0x138);
         _ZN11ShadowModelC1Ev((char *)p + 0x14c);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x174);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x174);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x1a8);
     }
     return p;

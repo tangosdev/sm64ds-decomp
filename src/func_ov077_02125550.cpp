@@ -17,9 +17,9 @@ extern void func_ov077_02125e94(void* c, int a);
 extern void _ZN8dActor_c8PoofDustEv(void* c);
 extern void func_02012694(int a, void* p);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* c, void* p);
-extern void _ZN12CylinderClsn5ClearEv(void* p);
-extern void _ZN12CylinderClsn6UpdateEv(void* p);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* p);
+extern void _ZN5dCc_c5ClearEv(void* p);
+extern void _ZN5dCc_c6UpdateEv(void* p);
 }
 
 extern "C" int func_ov077_02125550(char* c)
@@ -62,9 +62,9 @@ extern "C" int func_ov077_02125550(char* c)
         _ZN7fBase_c18MarkForDestructionEv(c);
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x1b0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
     func_ov077_02124eb0(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x1b0);
-    _ZN12CylinderClsn6UpdateEv(c + 0x1b0);
+    _ZN5dCc_c5ClearEv(c + 0x1b0);
+    _ZN5dCc_c6UpdateEv(c + 0x1b0);
     return 1;
 }

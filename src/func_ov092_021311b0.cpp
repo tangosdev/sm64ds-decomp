@@ -6,7 +6,7 @@
 typedef short s16;
 #define LA(p) (p)
 extern "C" {
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
 void _ZN8dActor_c14TriplePoofDustEv(void *self);
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
@@ -38,7 +38,7 @@ extern "C" void func_ov092_021311b0(void *thiz)
         *p90 += ((s16 *)(c + 0x400))[0xe4 / 2];
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
 
     saved[0] = *(int *)(c + 0x5c);
     saved[1] = *(int *)(c + 0x60);

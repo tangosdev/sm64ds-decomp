@@ -6,7 +6,7 @@
 struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50 - 0x14 - 0x30]; };
 #define AT(p,off) ((void*)(int)((char*)(p)+(off)))
 struct WithMeshClsn;
-struct CylinderClsn;
+struct dCc_c;
 struct ShadowModel;
 struct Matrix4x3;
 
@@ -24,7 +24,7 @@ extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround 
 extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
 extern int func_02037e20(int *p);
 extern void _ZN13RaycastGroundD1Ev(RaycastGround *self);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, CylinderClsn *cc);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, dCc_c *cc);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, ShadowModel *sm, Matrix4x3 *mtx, Fix12i h, Fix12i g, unsigned int u);
@@ -89,7 +89,7 @@ int func_ov074_021223bc(char *c)
     }
 
     if (*(u16 *)(c + 0x5fc) < 0x60) {
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
         _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, (WithMeshClsn *)(c + 0x40c), 0);
 
         *(s16 *)AT(c, 0x8c) = *(s16 *)AT(c, 0x8c) + 0x1800;

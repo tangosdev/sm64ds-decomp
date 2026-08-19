@@ -8,7 +8,7 @@
 extern "C" {
 typedef int Fix12i;
 extern int _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *, Fix12i, Fix12i, Fix12i, Fix12i);
-extern int _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *, void *, Fix12i, Fix12i, unsigned int, unsigned int);
+extern int _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, void *, Fix12i, Fix12i, unsigned int, unsigned int);
 }
 
 s32 Warp::InitResources() {
@@ -16,6 +16,6 @@ s32 Warp::InitResources() {
   int v = *((int *) (((char *) c) + 8));
   int r = (((*((int *) (((char *) c) + 8))) & 0xf) + 1) << 0x12;
   _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(c, 0, r, r + 0x7d0000, 0);
-  _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *) c) + 0xd4, c, r, ((((v & 0xFFFFFFFFu) >> 4) & 0xf) + 1) << 0x12, 2, 0x400000);
+  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *) c) + 0xd4, c, r, ((((v & 0xFFFFFFFFu) >> 4) & 0xf) + 1) << 0x12, 2, 0x400000);
   return 1;
 }

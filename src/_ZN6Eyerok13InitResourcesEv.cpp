@@ -47,7 +47,7 @@ extern "C" void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void* sfp);
 extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
 extern "C" void _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
 extern "C" void _ZN11ShadowModel12InitCylinderEv(void* thiz);
-extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* thiz, void* actor, Vector3* v, s32 f1, s32 f2, u32 a, u32 b);
+extern "C" void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* thiz, void* actor, Vector3* v, s32 f1, s32 f2, u32 a, u32 b);
 extern "C" void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 b, Vector3* pos, void* p, int e, int f);
 extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, int kcl, void* mtx, s32 fix, s16 s, void* clps);
 extern "C" void func_020393d4(void* p, void* v);
@@ -111,7 +111,7 @@ int Eyerok::InitResources()
         w.x = data_ov066_0211ad18[0];
         w.y = data_ov066_0211ad18[1];
         w.z = data_ov066_0211ad18[2];
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x320, c, &w, 0x64000, 0x64000, 0x200002, 0);
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x320, c, &w, 0x64000, 0x64000, 0x200002, 0);
     }
 
     {

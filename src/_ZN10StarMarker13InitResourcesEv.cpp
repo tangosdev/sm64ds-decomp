@@ -9,7 +9,7 @@ struct Vec3 { s32 x, y, z; };
 struct RaycastGround { char pad[0x50]; };
 
 extern "C" {
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, const void *v, int d, int e, u32 f, u32 g);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, const void *v, int d, int e, u32 f, u32 g);
 extern void _ZN13RaycastGroundC1Ev(void *self);
 extern void _ZN4BgCh19StartDetectingWaterEv(void *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, const void *v, void *actor);
@@ -46,7 +46,7 @@ int StarMarker::InitResources()
     v0.x = 0;
     v0.y = -0x50000;
     v0.z = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char *)this) + 0xd4, ((char *)this), &v0, 0x50000, 0xa0000, 0x100002, 0x8000);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char *)this) + 0xd4, ((char *)this), &v0, 0x50000, 0xa0000, 0x100002, 0x8000);
     _ZN13RaycastGroundC1Ev(&rg);
     _ZN4BgCh19StartDetectingWaterEv(&rg);
 
@@ -87,14 +87,14 @@ int StarMarker::InitResources()
         v4.x = 0;
         v4.y = -0x50000;
         v4.z = 0;
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char *)this) + 0xd4, ((char *)this), &v4, 0x50000, 0xa0000, 0x100004, 0);
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char *)this) + 0xd4, ((char *)this), &v4, 0x50000, 0xa0000, 0x100004, 0);
         mAppearTimer = 0;
     } else if (kind == 5) {
         mState = 3;
         v5.x = 0;
         v5.y = -0x50000;
         v5.z = 0;
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char *)this) + 0xd4, ((char *)this), &v5, 0x50000, 0xa0000, 1, 0);
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char *)this) + 0xd4, ((char *)this), &v5, 0x50000, 0xa0000, 1, 0);
     } else if (kind & 1) {
         mState = 1;
         if (kind & 2) {

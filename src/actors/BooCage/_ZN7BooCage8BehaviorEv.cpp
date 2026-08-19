@@ -6,11 +6,11 @@ struct WithMeshClsn {
     bool JustHitGround() const;
     bool IsOnGround() const;
 };
-struct CylinderClsn;
+struct dCc_c;
 struct dActor_c {
     static dActor_c* FindWithID(unsigned int id);
     void LandingDust(bool b);
-    void UpdatePos(CylinderClsn* cyl);
+    void UpdatePos(dCc_c* cyl);
 };
 struct Player {
     void JumpIntoBooCage(Vector3& v);
@@ -18,7 +18,7 @@ struct Player {
 struct dEnemyBase_c {
     void UpdateWMClsn(WithMeshClsn& w, unsigned int f);
 };
-struct CylinderClsn {
+struct dCc_c {
     void Clear();
     void Update();
 };
@@ -71,7 +71,7 @@ int BooCage::Behavior()
     ((dActor_c*)self)->UpdatePos(0);
     ((dEnemyBase_c*)self)->UpdateWMClsn(*(WithMeshClsn*)(self + 0x144), 0);
     func_ov063_021169c4(self);
-    ((CylinderClsn*)(self + 0x110))->Clear();
-    ((CylinderClsn*)(self + 0x110))->Update();
+    ((dCc_c*)(self + 0x110))->Clear();
+    ((dCc_c*)(self + 0x110))->Update();
     return 1;
 }

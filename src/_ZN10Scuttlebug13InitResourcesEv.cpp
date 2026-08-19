@@ -14,7 +14,7 @@ struct BMD_File; struct BCA_File; struct Vector3_16;
    int literals, and Fix12<int> is an aggregate with no converting constructor from int.
    WithMeshClsn::Init's last parameter is a Vector3_16* as well -- the S5_ in
    ...P10Vector3_16S5_ back-references the pointer type, it is not an int. */
-extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *self, dActor_c *a, int b, int c, unsigned int d, unsigned int e);
 extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
@@ -32,7 +32,7 @@ int Scuttlebug::InitResources()
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov071_02122f88);
     if (((ShadowModel*)(s + 0x138))->InitCylinder() == 0)
         return 0;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         s + 0x160, ((dActor_c *)this), 0x46000, 0x64000, 0x200000, 0x6eff0);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         s + 0x194, ((dActor_c *)this), 0x50000, 0x50000, (Vector3_16*)0, (Vector3_16*)0);

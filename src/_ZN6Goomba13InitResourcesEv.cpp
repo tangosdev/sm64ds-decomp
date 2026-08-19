@@ -31,7 +31,7 @@ int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 int _ZN11ShadowModel12InitCylinderEv(void* self);
 void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void* self, void* bma, int a, Fix12i b, unsigned int cc);
 void LoadBlueCoinModel(void* c);
-void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* a, Fix12i r, Fix12i h, unsigned int e, unsigned int g);
 void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, void* a, Fix12i b, Fix12i cc, void* d, Fix12i e);
 void _ZN12WithMeshClsn19StartDetectingWaterEv(void* self);
 void func_ov084_021290d4(void* c);
@@ -127,7 +127,7 @@ extern "C" int _ZN6Goomba13InitResourcesEv(char* c)
         *(int*)(c + 0x84) = scale;
         *(int*)(c + 0x88) = scale;
     }
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(c + 0x180, c, *(int*)(c + 0x80) * 0x3c, data_ov084_02130208[*(int*)(c + 0x460)], 0x200000, 0xa6efe0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(c + 0x180, c, *(int*)(c + 0x80) * 0x3c, data_ov084_02130208[*(int*)(c + 0x460)], 0x200000, 0xa6efe0);
 
     if (*(int*)(c + 0x460) == 2)
         *(int*)(((int)c + 0x19c) & 0xFFFFFFFFFFFFFFFF) &= ~0x8000;

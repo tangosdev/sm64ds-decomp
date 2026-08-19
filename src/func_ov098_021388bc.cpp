@@ -20,7 +20,7 @@ void *_ZNK12WithMeshClsn14GetFloorResultEv(void *p);
 int SurfaceInfo_TestFlag0x20(int *p);
 void _ZN6Player9DropActorEv(void *p);
 void Crate_SetState(void *c, int i);
-void _ZN12CylinderClsn5ClearEv(void *p);
+void _ZN5dCc_c5ClearEv(void *p);
 void func_ov098_02139850(void *c);
 void func_ov098_021396a4(void *c);
 }
@@ -58,7 +58,7 @@ extern "C" void func_ov098_021388bc(char *c)
         }
     }
 
-    _ZN12CylinderClsn5ClearEv(c + 0x564);
+    _ZN5dCc_c5ClearEv(c + 0x564);
     func_ov098_02139850(c);
     func_ov098_021396a4(c);
     if (((MeshColliderBase *)(c + 0x124))->IsEnabled()) {

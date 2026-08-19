@@ -37,7 +37,7 @@ extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int b, unsigned int d);
 extern void _ZN9Animation8SetFlagsEi(void *self, int flags);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *act, void *pos, int c3, int d, unsigned int e, unsigned int f);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *act, void *pos, int c3, int d, unsigned int e, unsigned int f);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, int a, int b, void *d1, void *d2);
 extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *self);
 extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *dir, int e, int f);
@@ -88,8 +88,8 @@ int Bowser::InitResources()
     pos.x = 0;
     pos.y = 0;
     pos.z = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
-        &this->mMovingCylinderClsnWithPos, this, &pos, 0x78000, 0x118000, 0x200004, 0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+        &this->mdCcAcPos_c, this, &pos, 0x78000, 0x118000, 0x200004, 0);
 
     this->unk_3b0 = this->mPosX;
     this->unk_3b4 = this->mPosY;

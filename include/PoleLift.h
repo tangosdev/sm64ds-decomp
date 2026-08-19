@@ -16,11 +16,11 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 struct PoleLift : dBgActor_c {
     u8  pad_31e[0x2];
-    MovingCylinderClsn mMovingCylinderClsn;/* 0x320 */
+    dCcAc_c mdCcAc_c;/* 0x320 */
     u16 unk_354;                      /* 0x354 */
 
     /* --- vtable --- */
@@ -50,10 +50,10 @@ struct PoleLift {
     Model mModel;            /* 0x0d4 */
     u8  mMovingMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x320 -- a relocation the ROM build
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x320 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN8PoleLiftD1Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x320 */
+    dCcAc_c mdCcAc_c;            /* 0x320 */
     u16 unk_354;            /* 0x354 */
 };
 

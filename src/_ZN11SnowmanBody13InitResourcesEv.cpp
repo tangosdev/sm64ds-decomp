@@ -9,7 +9,7 @@ struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* file, int a, int b);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void* self);
-extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int a, int b, unsigned int c, unsigned int d);
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int a, int b, unsigned int c, unsigned int d);
 extern "C" void _ZN13RaycastGroundC1Ev(RaycastGround* self);
 extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3& v, void* actor);
 extern "C" int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
@@ -30,7 +30,7 @@ int SnowmanBody::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, file, 1, 1);
     if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
         return 0;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x14c, ((char*)this), 0x82000, 0x104000, 0x800004, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x14c, ((char*)this), 0x82000, 0x104000, 0x800004, 0);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x180, ((char*)this), 0x82000, 0x82000, 0, 0);
     {
         int p60;

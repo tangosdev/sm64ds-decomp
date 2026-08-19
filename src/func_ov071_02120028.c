@@ -1,7 +1,7 @@
 typedef struct { int x, y, z; } Vec3;
 
 extern void _ZN9Animation7AdvanceEv(void*);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void*, void*);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void*, void*);
 extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void*);
 extern int _ZNK12WithMeshClsn13JustHitGroundEv(void*);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
@@ -9,13 +9,13 @@ extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void*);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
 extern void Scuttlebug_SetState(void*, int);
 extern void func_ov071_0211f29c(void*);
-extern void _ZN12CylinderClsn5ClearEv(void*);
-extern void _ZN12CylinderClsn6UpdateEv(void*);
+extern void _ZN5dCc_c5ClearEv(void*);
+extern void _ZN5dCc_c6UpdateEv(void*);
 
 int func_ov071_02120028(char *c)
 {
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x160);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x160);
     WithMeshClsn_UpdateDiscreteNoLava_veneer(c + 0x194);
     if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x194)) {
         Vec3 v;
@@ -40,7 +40,7 @@ int func_ov071_02120028(char *c)
         Scuttlebug_SetState(c, 2);
     }
     func_ov071_0211f29c(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x160);
-    _ZN12CylinderClsn6UpdateEv(c + 0x160);
+    _ZN5dCc_c5ClearEv(c + 0x160);
+    _ZN5dCc_c6UpdateEv(c + 0x160);
     return 1;
 }

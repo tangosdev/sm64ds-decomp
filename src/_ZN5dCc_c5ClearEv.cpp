@@ -1,10 +1,10 @@
 //cpp
-// @symbol _ZN12CylinderClsn5ClearEv
+// @symbol _ZN5dCc_c5ClearEv
 /* recovered: named members + shared header, real C++ method */
-#include "CylinderClsn.h"
+#include "dCc_c.h"
 
 
-void CylinderClsn::Clear()
+void dCc_c::Clear()
 {
     pushback.x = 0;
     pushback.y = 0;

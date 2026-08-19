@@ -12,7 +12,7 @@ extern void _ZN11ShadowModel12InitCylinderEv(void *);
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, void *, int, int, unsigned int);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, void *, int, int, void *, int);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *, void *, void *, int, int, unsigned int, unsigned int);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *, void *, void *, int, int, unsigned int, unsigned int);
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, void *, void *, int, short, void *);
 extern void func_ov063_0211d5f4(char *);
@@ -39,7 +39,7 @@ int MadPiano::InitResources()
     unk_6dc = mPosZ;
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x50c, ((char *)this), 0x159000, 0x159000, 0, 0);
     for (i = 0, p = ((char *)this) + 0x48c; i < 2; i++) {
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
             p, ((char *)this), ((char *)this) + 0x5c, 0x9b000, 0xfa000, 0x200004, 0);
         p += 0x40;
     }

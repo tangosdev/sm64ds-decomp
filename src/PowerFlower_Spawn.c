@@ -3,7 +3,7 @@
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
@@ -18,7 +18,7 @@ int *PowerFlower_Spawn(void)
         _ZN5ModelC1Ev((char *)p + 0xd4);
         _ZN5ModelC1Ev((char *)p + 0x124);
         _ZN11ShadowModelC1Ev((char *)p + 0x174);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x1cc);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x1cc);
         _ZN12WithMeshClsnC1Ev((char *)p + 0x200);
     }
     return p;

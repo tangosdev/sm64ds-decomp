@@ -2,7 +2,7 @@
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
@@ -15,7 +15,7 @@ int *BowserFire_Spawn(void)
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)_ZTV10BowserFire;
         _ZN12WithMeshClsnC1Ev((char *)p + 0x110);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x2d0);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x2d0);
         _ZN11ShadowModelC1Ev((char *)p + 0x304);
     }
     return p;

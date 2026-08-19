@@ -1,5 +1,5 @@
 //cpp
-extern "C" void *_ZN8dActor_c7FindEggER12CylinderClsn(void *self, void *clsn);
+extern "C" void *_ZN8dActor_c7FindEggER5dCc_c(void *self, void *clsn);
 extern "C" void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void *self, void *pos, unsigned int a, int fix, short b);
 extern "C" void _ZN8dActor_c8PoofDustEv(void *self);
 extern "C" void func_02012694(int a, void *pos);
@@ -18,7 +18,7 @@ extern "C" void func_ov077_02124eb0(void *thiz)
     unsigned char *r4;
     int b;
 
-    if (_ZN8dActor_c7FindEggER12CylinderClsn(c, c + 0x1b0) != 0) {
+    if (_ZN8dActor_c7FindEggER5dCc_c(c, c + 0x1b0) != 0) {
         int v[3];
         v[0] = *(int *)(c + 0x5c);
         v[1] = *(int *)(c + 0x60);

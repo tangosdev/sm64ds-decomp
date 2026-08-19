@@ -65,7 +65,7 @@ int HootTheOwl::Behavior()
         mVertSpeed = clamped;
         unk_0ac = keep;
     }
-    UpdatePosWithOnlySpeed(&mMovingCylinderClsnWithPos);
+    UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
@@ -73,7 +73,7 @@ int HootTheOwl::Behavior()
     if (mCurrentState == (State *)data_ov094_02136b60 && unk_3d4 == 2) {
         func_ov094_021357a4(this);
     }
-    mMovingCylinderClsnWithPos.Clear();
-    mMovingCylinderClsnWithPos.Update();
+    mdCcAcPos_c.Clear();
+    mdCcAcPos_c.Update();
     return 1;
 }

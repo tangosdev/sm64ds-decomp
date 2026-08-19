@@ -8,7 +8,7 @@
  * gone. Both ModelAnims are loaded here, which is the other half of the
  * evidence that 0x300 and 0x364 are two members and not one and a gap.
  *
- * MovingCylinderClsn::Init and WithMeshClsn::Init are still reached through
+ * dCcAc_c::Init and WithMeshClsn::Init are still reached through
  * their mangled names because neither is declared as a method yet.
  */
 #include "Swoop.h"
@@ -23,7 +23,7 @@ extern SharedFilePtr data_ov065_0211d6a0;
 extern PMF data_ov065_0211d700;
 
 extern "C" {
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, Vector3_16* q);
 extern int func_ov065_02117944(void* c, PMF* p);
 }
@@ -36,7 +36,7 @@ int Swoop::InitResources()
     Animation::LoadFile(data_ov065_0211d690);
     Animation::LoadFile(data_ov065_0211d6a0);
     mTerminalVelocity = -0xa000;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(&mMovingCylinderClsn, this, 0x28000, 0x28000, 0x200000, 0x7eff0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x28000, 0x28000, 0x200000, 0x7eff0);
     mAngleY = mPrevAngleY;
     mPrevAngleX = -0x8000;
     mAngleX = mPrevAngleX;

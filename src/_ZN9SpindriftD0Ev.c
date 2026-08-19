@@ -1,7 +1,7 @@
 // @symbol _ZN9SpindriftD0Ev
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
@@ -13,7 +13,7 @@ int *_ZN9SpindriftD0Ev(int *t)
 {
     t[0] = (int)_ZTV8daHuwa_c;
     _ZN12WithMeshClsnD1Ev((char *)t + 0x1d0);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0x19c);
+    _ZN7dCcAc_cD1Ev((char *)t + 0x19c);
     _ZN11ShadowModelD1Ev((char *)t + 0x174);
     _ZN9ModelAnimD1Ev((char *)t + 0x110);
     _ZN12dEnemyBase_cD2Ev(t);

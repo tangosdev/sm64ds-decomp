@@ -6,7 +6,7 @@
 /* Five boundaries close on sizes other headers assert:
  *
  *     dEnemyBase_c                     ends 0x110
- *     MovingCylinderClsnWithPos 0x110 + 0x040 = 0x150  -> WithMeshClsn
+ *     dCcAcPos_c 0x110 + 0x040 = 0x150  -> WithMeshClsn
  *     WithMeshClsn              0x150 + 0x1bc = 0x30c  -> the first Model
  *     Model                     0x30c + 0x050 = 0x35c  -> the second
  *     Model                     0x35c + 0x050 = 0x3ac  -> the shadow
@@ -15,7 +15,7 @@
  * The ShadowModel at 0x3ac is destroyed like the rest, and 0x3ac + 0x28 closes
  * exactly on mState.
  *
- * unk_130 and unk_134 are gone: both fall inside the MovingCylinderClsnWithPos
+ * unk_130 and unk_134 are gone: both fall inside the dCcAcPos_c
  * at 0x110 (+0x20 and +0x24).
  */
 
@@ -25,10 +25,10 @@
 #include "Model.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 
 struct BulletBill : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
+    dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
     WithMeshClsn mWithMeshClsn;                            /* 0x150 */
     Model mModel1;                                         /* 0x30c */
     Model mModel2;                                         /* 0x35c */
@@ -76,7 +76,7 @@ struct BulletBill {
     u8  pad_098[0x68];
     s16 unk_100;            /* 0x100 */
     u8  pad_102[0xe];
-    u8  mMovingCylinderClsnWithPos;            /* 0x110 */
+    u8  mdCcAcPos_c;            /* 0x110 */
     u8  pad_111[0x1f];
     s32 unk_130;            /* 0x130 */
     u32 unk_134;            /* 0x134 */

@@ -6,8 +6,8 @@
 /* recovered: named members + shared header, real C++ method */
 #include "PowerFlower.h"
 extern "C" {
-extern void _ZN12CylinderClsn5ClearEv(char* t);
-extern void _ZN12CylinderClsn6UpdateEv(char* t);
+extern void _ZN5dCc_c5ClearEv(char* t);
+extern void _ZN5dCc_c6UpdateEv(char* t);
 extern void _ZN8dActor_c13SmallPoofDustEv(char* c);
 extern void _ZN7fBase_c18MarkForDestructionEv(char* c);
 }
@@ -23,8 +23,8 @@ int PowerFlower::Behavior()
     func_ov002_020b979c(((char*)this));
     func_ov002_020b9a1c(((char*)this));
     func_ov002_020b993c(((char*)this));
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
+    _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);
     if (_ZN8SaveData16HasPlayerLostCapEv()) {
         _ZN8dActor_c13SmallPoofDustEv(((char*)this));
         _ZN7fBase_c18MarkForDestructionEv(((char*)this));

@@ -3,7 +3,7 @@
 #include "decl_Actor.h"
 #include "decl_Model.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_WithMeshClsn.h"
 #include "decl_common.h"
@@ -14,7 +14,7 @@ int *_ZN8MoneybagD0Ev(int *t)
 {
     t[0] = (int)_ZTV8daGmch_c;
     _ZN12WithMeshClsnD1Ev((char *)t + 0x1e4);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0x1b0);
+    _ZN7dCcAc_cD1Ev((char *)t + 0x1b0);
     _ZN11ShadowModelD1Ev((char *)t + 0x188);
     _ZN5ModelD1Ev((char *)t + 0x138);
     _ZN9ModelAnimD1Ev((char *)t + 0xd4);

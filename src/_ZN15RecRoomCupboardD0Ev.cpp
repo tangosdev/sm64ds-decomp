@@ -10,13 +10,13 @@ struct Memory {
 };
 
 extern int _ZTV15RecRoomCupboard;
-extern int _ZN25MovingCylinderClsnWithPosD1Ev;
+extern int _ZN10dCcAcPos_cD1Ev;
 extern int data_020a0eac;
 extern "C" int __destroy_arr(char *, int, int, int);
 
 extern "C" void *_ZN15RecRoomCupboardD0Ev(char *c) {
     *(int *)c = (int)&_ZTV15RecRoomCupboard;
-    __destroy_arr(c + 0xd4, 5, 0x40, (int)&_ZN25MovingCylinderClsnWithPosD1Ev);
+    __destroy_arr(c + 0xd4, 5, 0x40, (int)&_ZN10dCcAcPos_cD1Ev);
     ((dActor_c *)c)->~dActor_c();
     Memory::Deallocate(c, (Heap *)*(int *)&data_020a0eac);
     return c;

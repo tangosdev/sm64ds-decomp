@@ -7,13 +7,13 @@
 typedef long long s64;
 extern short data_02082214[];
 extern "C" void _Z14ApproachLinearRiii(int* p, int b, int c);
-extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char* self, void* c);
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(char* self, void* c);
 extern "C" char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void _ZN6Player4HealEi(char* self, int amt);
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
 extern "C" void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int c, int d, int e, const void* f, void* g);
-extern "C" void _ZN12CylinderClsn5ClearEv(char* cl);
-extern "C" void _ZN12CylinderClsn6UpdateEv(char* cl);
+extern "C" void _ZN5dCc_c5ClearEv(char* cl);
+extern "C" void _ZN5dCc_c6UpdateEv(char* cl);
 
 extern "C" int _ZN12daObjAbuku_c8BehaviorEv(char* self)
 {
@@ -23,7 +23,7 @@ extern "C" int _ZN12daObjAbuku_c8BehaviorEv(char* self)
     short tv = data_02082214[2*x + 1];
     *(int*)(self + 0x98) = (int)(((s64)*(int*)(self + 0x108) * tv + 0x800) >> 12);
     _Z14ApproachLinearRiii((int*)(self + 0x108), 0x6000, 0x332);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
     unsigned int id = *(unsigned int*)(self + 0xf8);
     if (id) {
         char* found = _ZN8dActor_c10FindWithIDEj(id);
@@ -40,7 +40,7 @@ extern "C" int _ZN12daObjAbuku_c8BehaviorEv(char* self)
     }
     *(int*)(self + 0x110) = (int)_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         *(unsigned int*)(self + 0x110), 1, *(int*)(self + 0x5c), *(int*)(self + 0x60), *(int*)(self + 0x64), 0, 0);
-    _ZN12CylinderClsn5ClearEv(self + 0xd4);
-    _ZN12CylinderClsn6UpdateEv(self + 0xd4);
+    _ZN5dCc_c5ClearEv(self + 0xd4);
+    _ZN5dCc_c6UpdateEv(self + 0xd4);
     return 1;
 }

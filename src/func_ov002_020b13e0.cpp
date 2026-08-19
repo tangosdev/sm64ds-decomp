@@ -3,7 +3,7 @@ extern "C" {
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(char* c);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char* self, void* cyl);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char* self, void* cyl);
 extern int LenVec3(void* v);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* p);
@@ -20,7 +20,7 @@ void func_ov002_020b13e0(char* self){
     _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
     return;
   }
-  _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, self+0x178);
+  _ZN8dActor_c9UpdatePosEP5dCc_c(self, self+0x178);
   if (LenVec3(self+0xa4) > *(int*)(self+0x1c4))
     WithMeshClsn_UpdateContinuous_Veneer(self+0x1ac);
   else

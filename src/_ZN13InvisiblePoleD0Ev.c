@@ -1,7 +1,7 @@
 // @symbol _ZN13InvisiblePoleD0Ev
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_common.h"
 extern int _ZTV13InvisiblePole[];
 /* recovered: vtable identified, renamed to Class_Method */
@@ -13,7 +13,7 @@ extern void *data_020a0eac;
 int *_ZN13InvisiblePoleD0Ev(int *t)
 {
     t[0] = (int)_ZTV13InvisiblePole;
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);
+    _ZN7dCcAc_cD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;

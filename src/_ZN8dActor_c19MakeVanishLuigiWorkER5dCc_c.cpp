@@ -1,5 +1,5 @@
 //cpp
-/* dActor_c::MakeVanishLuigiWork(CylinderClsn&) at 0x0200f7a8, 0x48 bytes.
+/* dActor_c::MakeVanishLuigiWork(dCc_c&) at 0x0200f7a8, 0x48 bytes.
  *
  * Vanish-cap Luigi passes through things. This is how an actor opts its own
  * collision cylinder into that: clear flag bit 1, then set it again only if
@@ -31,9 +31,9 @@
  * contains the word.
  */
 #include "dActor_c.h"
-#include "CylinderClsn.h"
+#include "dCc_c.h"
 
-void dActor_c::MakeVanishLuigiWork(CylinderClsn &clsn)
+void dActor_c::MakeVanishLuigiWork(dCc_c &clsn)
 {
     Player *player;
 

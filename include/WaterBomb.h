@@ -12,7 +12,7 @@
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
  *
- *     0x110 MovingCylinderClsn         0x34    -> 0x144
+ *     0x110 dCcAc_c         0x34    -> 0x144
  *     0x144 WithMeshClsn               0x1bc   -> 0x300
  *     0x300 Model                      0x50    -> 0x350
  *     0x350 ShadowModel                0x28    -> 0x378
@@ -24,12 +24,12 @@
 
 #include "dEnemyBase_c.h"
 #include "Model.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
 struct WaterBomb : dEnemyBase_c {
-    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
+    dCcAc_c           mdCcAc_c;   /* 0x110 */
     WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
     Model                        mModel;                /* 0x300 */
     ShadowModel                  mShadowModel;          /* 0x350 */

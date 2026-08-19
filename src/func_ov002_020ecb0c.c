@@ -17,9 +17,9 @@ extern s32 _ZNK12WithMeshClsn8IsOnWallEv(void *self);
 extern s32 func_02035638(void *self);
 extern void func_ov002_020edca4(void *self);
 extern s32 func_ov002_020ed6cc(void *self);
-extern void _ZN12CylinderClsn5ClearEv(void *self);
-extern void _ZN12CylinderClsn6UpdateEv(void *self);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *cc);
+extern void _ZN5dCc_c5ClearEv(void *self);
+extern void _ZN5dCc_c6UpdateEv(void *self);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void *self);
 
 void func_ov002_020ecb0c(void *arg0)
@@ -96,9 +96,9 @@ void func_ov002_020ecb0c(void *arg0)
         func_ov002_020edca4(c);
         return;
     }
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
+    _ZN5dCc_c5ClearEv(c + 0x110);
     if (flag == 1)
-        _ZN12CylinderClsn6UpdateEv(c + 0x110);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x110);
+        _ZN5dCc_c6UpdateEv(c + 0x110);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x110);
     WithMeshClsn_UpdateContinuous_Veneer(c + 0x144);
 }

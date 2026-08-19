@@ -15,7 +15,7 @@ extern "C" int func_0201267c(int a, void* b);
 extern "C" int _ZN6Player12GetTalkStateEv(void* self);
 extern "C" void _ZN6Player9DropActorEv(void* self);
 extern "C" void _ZN9Animation7AdvanceEv(void* self);
-extern "C" void _ZN12CylinderClsn5ClearEv(void* self);
+extern "C" void _ZN5dCc_c5ClearEv(void* self);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char* p);
 
 extern void* data_0209f318;
@@ -119,6 +119,6 @@ skip_raycast:
     }
 
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN12CylinderClsn5ClearEv(c + 0x160);
+    _ZN5dCc_c5ClearEv(c + 0x160);
     return 1;
 }

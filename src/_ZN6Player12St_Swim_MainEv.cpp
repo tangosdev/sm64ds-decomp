@@ -38,8 +38,8 @@ extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);
 extern void func_ov002_020cd2c4(void*);
 extern void func_ov002_020cd308(void*);
 extern void func_ov002_020dbf4c(void*);
-extern void _ZN12CylinderClsn5ClearEv(void*);
-extern void _ZN12CylinderClsn6UpdateEv(void*);
+extern void _ZN5dCc_c5ClearEv(void*);
+extern void _ZN5dCc_c6UpdateEv(void*);
 extern void func_ov002_020bd928(void*, unsigned int);
 extern void func_ov002_020bd8c0(void*, unsigned int);
 extern void Player_ReleaseHeldActor(void*);
@@ -243,11 +243,11 @@ int Player::St_Swim_Main()
                 func_ov002_020cd2c4(this);
             }
         }
-        _ZN12CylinderClsn5ClearEv(&mAttackClsn);
+        _ZN5dCc_c5ClearEv(&mAttackClsn);
         sub = (int*)((char*)(*(int*)((char*)this + _ZNK6Player14GetBodyModelIDEjb(this, (unsigned char)*(int*)&param1, 0)*4 + 0xdc)) + 0x50);
         t5 = ((unsigned int)(*(int*)((char*)sub + 8)) << 4) >> 0x10;
         if ((int)t5 >= 5 && (int)t5 <= 7) {
-            _ZN12CylinderClsn6UpdateEv(&mAttackClsn);
+            _ZN5dCc_c6UpdateEv(&mAttackClsn);
         }
         break;
     case 7:

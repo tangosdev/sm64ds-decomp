@@ -6,22 +6,22 @@
 /* The rotating bar of flames. Derives from dBgActor_c, and the ONE thing it adds
  * is the array of collision cylinders -- one per flame.
  *
- *     CylinderClsnWithPos[8]   0x360 + 8 * 0x3c = 0x540
+ *     dCcPos_c[8]   0x360 + 8 * 0x3c = 0x540
  *
  * The ROM destroys it with
- * __destroy_arr(this + 0x360, 8, 0x3c, _ZN19CylinderClsnWithPosD1Ev): 0x3c is
- * sizeof(CylinderClsnWithPos) and the element destructor is a name the tree
+ * __destroy_arr(this + 0x360, 8, 0x3c, _ZN8dCcPos_cD1Ev): 0x3c is
+ * sizeof(dCcPos_c) and the element destructor is a name the tree
  * already had, so this class needed no new type.
  */
 
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "CylinderClsnWithPos.h"
+#include "dCcPos_c.h"
 
 struct RotatingFirebar : dBgActor_c {
     u8  pad_31e[0x42];
-    CylinderClsnWithPos mCylinderClsns[8];   /* 0x360 */
+    dCcPos_c mdCc_cs[8];   /* 0x360 */
 
     virtual ~RotatingFirebar();
 

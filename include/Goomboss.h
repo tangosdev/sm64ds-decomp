@@ -7,7 +7,7 @@
  * sizes other headers assert:
  *
  *     dEnemyBase_c                        ends 0x110
- *     MovingCylinderClsnWithPos[4] 0x110 + 4*0x40 = 0x210  -> ModelAnim
+ *     dCcAcPos_c[4] 0x110 + 4*0x40 = 0x210  -> ModelAnim
  *     ModelAnim                    0x210 +   0x64 = 0x274  -> the shadows
  *     ShadowModel[3]               0x274 + 3*0x28 = 0x2ec
  *     Vector3[3]                   0x3ac + 3*0x0c = 0x3d0  -> MaterialChanger
@@ -32,10 +32,10 @@
 #include "TextureSequence.h"
 #include "TextureTransformer.h"
 #include "WithMeshClsn.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 
 struct Goomboss : dEnemyBase_c {
-    MovingCylinderClsnWithPos mCylinderClsns[4];  /* 0x110 */
+    dCcAcPos_c mdCc_cs[4];  /* 0x110 */
     ModelAnim mModelAnim;                         /* 0x210 */
     ShadowModel mShadowModels[3];                 /* 0x274 */
     u8  pad_2ec[0xc0];

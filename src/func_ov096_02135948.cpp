@@ -47,8 +47,8 @@ void func_ov096_02135948(char* c)
     int vv5[3];
     int x, y, z;
 
-    if (_ZN8dActor_c7FindEggER12CylinderClsn(c, c + 0x14c) != 0 ||
-        _ZN8dActor_c18FindExplosionActorER12CylinderClsn(c, c + 0x14c) != 0) {
+    if (_ZN8dActor_c7FindEggER5dCc_c(c, c + 0x14c) != 0 ||
+        _ZN8dActor_c18FindExplosionActorER5dCc_c(c, c + 0x14c) != 0) {
         _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
         func_ov096_02135800(c);
         {

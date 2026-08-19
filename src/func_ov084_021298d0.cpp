@@ -5,8 +5,8 @@ void _ZN9Animation7AdvanceEv(void* self);
 char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN12dEnemyBase_c9SpawnCoinEv(void* self);
 void func_ov084_02129498(char* r0);
-void _ZN12CylinderClsn5ClearEv(void* self);
-void _ZN12CylinderClsn6UpdateEv(void* self);
+void _ZN5dCc_c5ClearEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* self);
 void func_02012694(int a, void* p);
 void func_ov084_021296cc(char* c);
 void _ZN11dCapEnemy_c15RespawnIfHasCapEv(void* self);
@@ -34,8 +34,8 @@ int func_ov084_021298d0(char* c){
     }
     /* cast launder: force add r2,r5,#0x198 materialization (sibling ov084 idiom) */
     *(int*)(((int)c + 0x198)) |= 0x20000;
-    _ZN12CylinderClsn5ClearEv(c + 0x180);
-    _ZN12CylinderClsn6UpdateEv(c + 0x180);
+    _ZN5dCc_c5ClearEv(c + 0x180);
+    _ZN5dCc_c6UpdateEv(c + 0x180);
 
 L_a4:
     if (r4 == 0) goto L_end;

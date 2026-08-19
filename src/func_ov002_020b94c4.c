@@ -10,7 +10,7 @@ extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Callback
     u32 a, u32 b, Fix12 c, Fix12 d, Fix12 e, const void* f, void* g);
 extern void func_0203568c(int *p, int v);
 extern void func_02035684(int *p, int v);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern int _ZNK12WithMeshClsn12TouchesWaterEv(void* self);
 extern void _ZN13RaycastGroundC1Ev(struct RG*);
@@ -53,7 +53,7 @@ void func_ov002_020b94c4(char* c)
 
     func_0203568c((int*)(c + 0x200), 0x3c000);
     func_02035684((int*)(c + 0x200), 0x3c000);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x1cc);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1cc);
     WithMeshClsn_UpdateContinuous_Veneer((void*)(c + 0x200));
 
     if (_ZNK12WithMeshClsn12TouchesWaterEv((void*)(c + 0x200))) {

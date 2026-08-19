@@ -9,7 +9,7 @@ unsigned char DecIfAbove0_Byte(unsigned char* p);
 void _ZN7fBase_c18MarkForDestructionEv(void* c);
 void func_ov077_02124c28(void* c);
 void func_ov077_02125e20(void* c);
-void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void* c, void* cyl);
+void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void* c, void* cyl);
 void func_ov077_02125304(char* c);
 void _ZN8dActor_c8PoofDustEv(void* c);
 void func_02012694(int a, void* p);
@@ -32,7 +32,7 @@ int Spiny::Behavior()
     }
     func_ov077_02124c28(((char*)this));
     func_ov077_02125e20(((char*)this));
-    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(((char*)this), ((char*)this) + 0x1b0);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), ((char*)this) + 0x1b0);
     func_ov077_02125304(((char*)this));
     if (data_0209f2f8 == 0x1c && mPosY <= -0x1600000) {
         _ZN8dActor_c8PoofDustEv(((char*)this));

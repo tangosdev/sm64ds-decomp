@@ -4,7 +4,7 @@
 #include "Fireball.h"
 extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, int fix12, int t, unsigned int a, unsigned int b);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, int fix12, int t, unsigned int a, unsigned int b);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int fix12, int t, void* vec, int last);
 extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void* thiz);
 }
@@ -13,7 +13,7 @@ int Fireball::InitResources()
 {
     if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
         return 0;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x28000, 0x50000, 0x200002, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x28000, 0x50000, 0x200002, 0);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x32000, 0x32000, 0, 0);
     _ZN12WithMeshClsn19StartDetectingWaterEv((char*)&mWithMeshClsn);
     unk_100 = 0;
@@ -26,7 +26,7 @@ int Fireball::InitResources()
     {
         unsigned char v = unk_36d;
         if (v != 0 && v != 4) {
-            *(unsigned int*)(((int)((char*)&mMovingCylinderClsn.vulnFlags))) |= 0x8000;
+            *(unsigned int*)(((int)((char*)&mdCcAc_c.vulnFlags))) |= 0x8000;
         }
     }
     return 1;

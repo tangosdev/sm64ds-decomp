@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MadPiano.h"
-struct CylinderClsn;
+struct dCc_c;
 extern "C" int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
 extern "C" void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern "C" void func_0203568c(void* p, int v);
@@ -12,7 +12,7 @@ extern "C" void func_02035684(void* p, int v);
 extern "C" void func_ov063_0211d5f4(void* self);
 
 struct dActor_c {
-  void UpdatePos(struct CylinderClsn*);
+  void UpdatePos(struct dCc_c*);
   struct dActor_c* ClosestPlayer();
 };
 struct MeshColliderBase {

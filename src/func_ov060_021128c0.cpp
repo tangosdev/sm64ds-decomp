@@ -8,7 +8,7 @@
 extern "C" {
     void* _ZN8dActor_c10FindWithIDEj(u32 id);
     void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3& v, u32 a, Fix12i b, u32 c, u32 d, u32 e);
-    void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* cc);
+    void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cc);
     void func_02038408(void* p);
     void WithMeshClsn_UpdateContinuous_Veneer(void* p);
     int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
@@ -61,7 +61,7 @@ extern "C" void func_ov060_021128c0(char* c)
         *(u16*)((char*)(((int)c + 0x300)) + 0xfc) = 0;
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x360);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x360);
 
     if (*(u8*)(c + 0x414) == 1)
         func_02038408(c + 0x14c);

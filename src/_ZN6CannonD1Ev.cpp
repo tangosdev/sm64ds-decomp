@@ -7,11 +7,11 @@ struct dActor_c {
 };
 
 struct Model { char pad[0x50]; ~Model(); };
-struct MovingCylinderClsn { char pad[0x4]; ~MovingCylinderClsn(); };
+struct dCcAc_c { char pad[0x4]; ~dCcAc_c(); };
 
 struct Cannon : dActor_c {
     Model m0;   /* 0xd4 */
-    MovingCylinderClsn m1;   /* 0x124 */
+    dCcAc_c m1;   /* 0x124 */
     virtual ~Cannon();
 };
 

@@ -4,11 +4,11 @@
 #include "common.h"
 typedef int Fix12i;
 
-struct MovingCylinderClsnWithPos { int d; };
+struct dCcAcPos_c { int d; };
 struct Player;
 
-extern "C" void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
-    MovingCylinderClsnWithPos*, const Vector3&);
+extern "C" void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(
+    dCcAcPos_c*, const Vector3&);
 extern "C" Player* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(
     Player*, const Vector3&, unsigned int, Fix12i, unsigned int, unsigned int, unsigned int);
@@ -22,8 +22,8 @@ extern "C" void func_ov090_021330c8(char* thiz)
     v.x = data_ov090_021342d8.x;
     v.y = data_ov090_021342d8.y;
     v.z = data_ov090_021342d8.z;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(
-        (MovingCylinderClsnWithPos*)(c + 0x110), v);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(
+        (dCcAcPos_c*)(c + 0x110), v);
     {
         unsigned int id = *(unsigned int*)(c + 0x134);
         if (id == 0) return;

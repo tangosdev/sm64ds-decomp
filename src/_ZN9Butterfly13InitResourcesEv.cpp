@@ -13,7 +13,7 @@ extern "C" {
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* ma, void* bca, int a, int f, u32 e);
     int _ZN11ShadowModel12InitCylinderEv(void* sm);
     void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* w, void* a, int r, int rr, void* v, void* vv);
-    void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* c, void* a, void* pos, int r, int rr, u32 e, u32 f);
+    void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* c, void* a, void* pos, int r, int rr, u32 e, u32 f);
     int RandomIntInternal(int* seed);
     int _ZNK9Animation13GetFrameCountEv(void* anim);
     u32 __aeabi_uidiv(u32 a, u32 b);
@@ -45,7 +45,7 @@ int Butterfly::InitResources()
     v.x = 0;
     v.y = -0x32000;
     v.z = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj((void*)(c+0x394), ((void*)this), &v, 0x32000, 0x64000, 0x200000, 0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj((void*)(c+0x394), ((void*)this), &v, 0x32000, 0x64000, 0x200000, 0);
 
     int sub = (int)(u8)(*(u32*)(c+8) & 0x30);
     if (sub != 0x10 && sub != 0x20) {

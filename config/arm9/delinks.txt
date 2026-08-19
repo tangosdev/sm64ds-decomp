@@ -835,7 +835,7 @@ src/func_0200f760.c:
     complete
     .text start:0x0200f760 end:0x0200f7a8
 
-src/_ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn.cpp:
+src/_ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c.cpp:
     complete
     .text start:0x0200f7a8 end:0x0200f7f0
 
@@ -1023,11 +1023,11 @@ src/func_02010304.cpp:
     complete
     .text start:0x02010304 end:0x02010374
 
-src/_ZN8dActor_c18FindExplosionActorER12CylinderClsn.cpp:
+src/_ZN8dActor_c18FindExplosionActorER5dCc_c.cpp:
     complete
     .text start:0x02010374 end:0x020103b4
 
-src/_ZN8dActor_c7FindEggER12CylinderClsn.cpp:
+src/_ZN8dActor_c7FindEggER5dCc_c.cpp:
     complete
     .text start:0x020103b4 end:0x020103f4
 
@@ -1055,7 +1055,7 @@ src/_ZN8dActor_c24BumpedUnderneathByPlayerER6Player.cpp:
     complete
     .text start:0x02010518 end:0x0201054c
 
-src/_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player.cpp:
+src/_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player.cpp:
     complete
     .text start:0x0201054c end:0x020105cc
 
@@ -1115,7 +1115,7 @@ src/_ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j.c:
     complete
     .text start:0x02010be8 end:0x02010c30
 
-src/_ZN8dActor_c9UpdatePosEP12CylinderClsn.cpp:
+src/_ZN8dActor_c9UpdatePosEP5dCc_c.cpp:
     complete
     .text start:0x02010c30 end:0x02010c5c
 
@@ -1123,7 +1123,7 @@ src/_ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv.cpp:
     complete
     .text start:0x02010c5c end:0x02010d40
 
-src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn.cpp:
+src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c.cpp:
     complete
     .text start:0x02010d40 end:0x02010da4
 
@@ -1811,67 +1811,67 @@ src/func_020147bc.c:
     complete
     .text start:0x020147bc end:0x020147d4
 
-src/_ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj.c:
+src/_ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj.c:
     complete
     .text start:0x020147d4 end:0x02014818
 
-src/_ZN19CylinderClsnWithPos10GetOwnerIDEv.cpp:
+src/_ZN8dCcPos_c10GetOwnerIDEv.cpp:
     complete
     .text start:0x02014818 end:0x02014820
 
-src/_ZN19CylinderClsnWithPos6GetPosEv.c:
+src/_ZN8dCcPos_c6GetPosEv.c:
     complete
     .text start:0x02014820 end:0x02014828
 
-src/_ZN19CylinderClsnWithPosD0Ev.cpp:
+src/_ZN8dCcPos_cD0Ev.cpp:
     complete
     .text start:0x02014828 end:0x02014854
 
-src/_ZN19CylinderClsnWithPosD1Ev.cpp:
+src/_ZN8dCcPos_cD1Ev.cpp:
     complete
     .text start:0x02014854 end:0x02014878
 
-src/_ZN19CylinderClsnWithPosC1Ev.c:
+src/_ZN8dCcPos_cC1Ev.c:
     complete
     .text start:0x02014878 end:0x0201489c
 
-src/_ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3.c:
+src/_ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3.c:
     complete
     .text start:0x0201489c end:0x020148c8
 
-src/_ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.c:
+src/_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.c:
     complete
     .text start:0x020148c8 end:0x0201490c
 
-src/_ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj.c:
+src/_ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj.c:
     complete
     .text start:0x0201490c end:0x0201493c
 
-src/_ZN18MovingCylinderClsn10GetOwnerIDEv.cpp:
+src/_ZN7dCcAc_c10GetOwnerIDEv.cpp:
     complete
     .text start:0x0201493c end:0x02014948
 
-src/_ZN18MovingCylinderClsn6GetPosEv.cpp:
+src/_ZN7dCcAc_c6GetPosEv.cpp:
     complete
     .text start:0x02014948 end:0x02014954
 
-src/_ZN18MovingCylinderClsnD2Ev.c:
+src/_ZN7dCcAc_cD2Ev.c:
     complete
     .text start:0x02014954 end:0x02014978
 
-src/_ZN18MovingCylinderClsnD0Ev.cpp:
+src/_ZN7dCcAc_cD0Ev.cpp:
     complete
     .text start:0x02014978 end:0x020149a4
 
-src/_ZN18MovingCylinderClsnD1Ev.cpp:
+src/_ZN7dCcAc_cD1Ev.cpp:
     complete
     .text start:0x020149a4 end:0x020149c8
 
-src/_ZN18MovingCylinderClsnC1Ev.c:
+src/_ZN7dCcAc_cC1Ev.c:
     complete
     .text start:0x020149c8 end:0x020149f4
 
-src/_ZN18MovingCylinderClsnC2Ev.c:
+src/_ZN7dCcAc_cC2Ev.c:
     complete
     .text start:0x020149f4 end:0x02014a20
 
@@ -1879,23 +1879,23 @@ src/func_02014a20.c:
     complete
     .text start:0x02014a20 end:0x02014a2c
 
-src/_ZN25MovingCylinderClsnWithPos6GetPosEv.c:
+src/_ZN10dCcAcPos_c6GetPosEv.c:
     complete
     .text start:0x02014a2c end:0x02014a34
 
-src/_ZN25MovingCylinderClsnWithPosD0Ev.cpp:
+src/_ZN10dCcAcPos_cD0Ev.cpp:
     complete
     .text start:0x02014a34 end:0x02014a60
 
-src/_ZN25MovingCylinderClsnWithPosD1Ev.cpp:
+src/_ZN10dCcAcPos_cD1Ev.cpp:
     complete
     .text start:0x02014a60 end:0x02014a84
 
-src/_ZN25MovingCylinderClsnWithPosC1Ev.c:
+src/_ZN10dCcAcPos_cC1Ev.c:
     complete
     .text start:0x02014a84 end:0x02014aa8
 
-src/_ZN12CylinderClsn7ProcessEv.cpp:
+src/_ZN5dCc_c7ProcessEv.cpp:
     complete
     .text start:0x02014aa8 end:0x02014f44
 
@@ -1911,31 +1911,31 @@ src/func_02014fa4.c:
     complete
     .text start:0x02014fa4 end:0x02014ff0
 
-src/_ZN12CylinderClsn6UpdateEv.cpp:
+src/_ZN5dCc_c6UpdateEv.cpp:
     complete
     .text start:0x02014ff0 end:0x02015024
 
-src/_ZN12CylinderClsn5ClearEv.cpp:
+src/_ZN5dCc_c5ClearEv.cpp:
     complete
     .text start:0x02015024 end:0x02015040
 
-src/_ZN12CylinderClsn4InitE5Fix12IiES1_jj.cpp:
+src/_ZN5dCc_c4InitE5Fix12IiES1_jj.cpp:
     complete
     .text start:0x02015040 end:0x02015058
 
-src/_ZN12CylinderClsnD2Ev.c:
+src/_ZN5dCc_cD2Ev.c:
     complete
     .text start:0x02015058 end:0x0201507c
 
-src/_ZN12CylinderClsnD0Ev.c:
+src/_ZN5dCc_cD0Ev.c:
     complete
     .text start:0x0201507c end:0x020150a8
 
-src/_ZN12CylinderClsnD1Ev.c:
+src/_ZN5dCc_cD1Ev.c:
     complete
     .text start:0x020150a8 end:0x020150cc
 
-src/_ZN12CylinderClsnC2Ev.cpp:
+src/_ZN5dCc_cC2Ev.cpp:
     complete
     .text start:0x020150cc end:0x020150e8
 

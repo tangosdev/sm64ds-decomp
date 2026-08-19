@@ -16,7 +16,7 @@ extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b)
 extern int _ZN11ShadowModel12InitCylinderEv(void* self);
 }
 extern "C" {
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void* self, void* actor, const struct Vector3* v, int a, int b, unsigned int c, unsigned int d);
 }
 extern "C" {
@@ -48,7 +48,7 @@ int FlameChomp::InitResources()
     v.x = 0;
     v.y = -0x32000;
     v.z = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         ((char*)this) + 0x160, ((char*)this), &v, 0x32000, 0x64000, 0x200002, 0x8000);
     _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         ((char*)this) + 0x1a0, ((char*)this), 0x32000, 0x32000, 0, 0);

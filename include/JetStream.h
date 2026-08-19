@@ -15,11 +15,11 @@
 #ifdef __cplusplus
 
 #include "dEnemyBase_c.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "WithMeshClsn.h"
 
 struct JetStream : dEnemyBase_c {
-    MovingCylinderClsn mMovingCylinderClsn;/* 0x110 */
+    dCcAc_c mdCcAc_c;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x144 */
     u8  pad_300[0x14];
     s32 unk_314;                      /* 0x314 */
@@ -83,7 +83,7 @@ struct JetStream {
     u8  pad_0d0[0x30];
     u8  unk_100;            /* 0x100 */
     u8  pad_101[0xf];
-    u8  mMovingCylinderClsn;            /* 0x110 */
+    u8  mdCcAc_c;            /* 0x110 */
     u8  pad_111[0x33];
     u8  mWithMeshClsn;            /* 0x144 */
     u8  pad_145[0x1cf];

@@ -9,8 +9,8 @@ extern void _ZN6Player4HealEi(char* p, int amt);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int a, const struct Vector3* v);
 extern void Math_Function_0203b14c(int* p, int a, int b, int c, int d);
 extern void _ZN9Animation7AdvanceEv(char* a);
-extern void _ZN12CylinderClsn5ClearEv(char* c);
-extern void _ZN12CylinderClsn6UpdateEv(char* c);
+extern void _ZN5dCc_c5ClearEv(char* c);
+extern void _ZN5dCc_c6UpdateEv(char* c);
 
 int _ZN12HealingHeart8BehaviorEv(char* self)
 {
@@ -48,7 +48,7 @@ int _ZN12HealingHeart8BehaviorEv(char* self)
     Math_Function_0203b14c((int*)(self + 0x16c), spin, 0x400, 0x2000, 0x80);
     *(int*)(self + 0x130) = *(int*)(self + 0x16c);
     _ZN9Animation7AdvanceEv(self + 0x124);
-    _ZN12CylinderClsn5ClearEv(self + 0x138);
-    _ZN12CylinderClsn6UpdateEv(self + 0x138);
+    _ZN5dCc_c5ClearEv(self + 0x138);
+    _ZN5dCc_c6UpdateEv(self + 0x138);
     return 1;
 }

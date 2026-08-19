@@ -14,7 +14,7 @@ extern "C" M48 data_020a0e68;
 
 extern "C" int* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(C* c);
-extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(C* c, int clsn);
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(C* c, int clsn);
 extern "C" void Vec3_Asr(Vec3* d, Vec3* s, int sh);
 extern "C" void Matrix4x3_FromTranslation(M48* m, int x, int y, int z);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationY(M48* m, short angY);
@@ -52,7 +52,7 @@ int Fish::Behavior()
             _ZN7fBase_c18MarkForDestructionEv(((C*)this));
         } else {
             (((C*)this)->*data_ov100_02148a1c[((C*)this)->idx].pmf)();
-            _ZN8dActor_c9UpdatePosEP12CylinderClsn(((C*)this), 0);
+            _ZN8dActor_c9UpdatePosEP5dCc_c(((C*)this), 0);
             {
                 int* cp = (int*)(((int)((C*)this) + 0x150));
                 *cp = *cp + 1;

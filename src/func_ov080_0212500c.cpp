@@ -1,7 +1,7 @@
 //cpp
-struct CylinderClsn { void Clear(); void Update(); };
+struct dCc_c { void Clear(); void Update(); };
 struct WithMeshClsn { int JustHitGround() const; int IsOnGround() const; };
-struct dActor_c { void UpdatePos(CylinderClsn *cc); };
+struct dActor_c { void UpdatePos(dCc_c *cc); };
 
 extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(WithMeshClsn *w);
 extern "C" void func_ov080_02124acc(char *c);
@@ -15,9 +15,9 @@ extern "C" int func_ov080_0212500c(char *c)
     } else if (((WithMeshClsn *)(c + 0x180))->IsOnGround()) {
         *(int *)(c + 0xa8) = 0xc000;
     }
-    ((dActor_c *)c)->UpdatePos((CylinderClsn *)(c + 0x14c));
+    ((dActor_c *)c)->UpdatePos((dCc_c *)(c + 0x14c));
     func_ov080_02124acc(c);
-    ((CylinderClsn *)(c + 0x14c))->Clear();
-    ((CylinderClsn *)(c + 0x14c))->Update();
+    ((dCc_c *)(c + 0x14c))->Clear();
+    ((dCc_c *)(c + 0x14c))->Update();
     return 1;
 }

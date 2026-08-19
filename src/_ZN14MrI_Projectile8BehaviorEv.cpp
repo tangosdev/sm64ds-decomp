@@ -6,14 +6,14 @@
 #include "MrI_Projectile.h"
 typedef short s16;
 
-extern "C" void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* self, const Vector3& v);
+extern "C" void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* self, const Vector3& v);
 extern "C" void Matrix4x3_FromRotationY(void* m, s16 ang);
 extern "C" void Matrix4x3_ApplyInPlaceToRotationX(void* m, s16 ang);
 extern "C" void MulVec3Mat4x3(void* dst, void* m, void* src);
-extern "C" void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void* self, void* clsn);
+extern "C" void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void* self, void* clsn);
 extern "C" void func_ov071_02121c6c(void* c);
-extern "C" void _ZN12CylinderClsn5ClearEv(void* cl);
-extern "C" void _ZN12CylinderClsn6UpdateEv(void* cl);
+extern "C" void _ZN5dCc_c5ClearEv(void* cl);
+extern "C" void _ZN5dCc_c6UpdateEv(void* cl);
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
 
 extern Vector3 data_ov071_021230b8;
@@ -31,7 +31,7 @@ int MrI_Projectile::Behavior()
     b2 = (int)((flags & 0x20000) != 0);
     if (b2 == 0) {
         v = data_ov071_021230b8;
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this) + 0xfc, v);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0xfc, v);
         r.z = mHorzSpeed;
         r.x = 0;
         r.y = 0;
@@ -39,12 +39,12 @@ int MrI_Projectile::Behavior()
         Matrix4x3_ApplyInPlaceToRotationX(data_020a0e68, mPrevAngleX);
         MulVec3Mat4x3(&r, data_020a0e68, ((char*)this) + 0xa4);
         *(Vector3*)((char*)&unk_0a4) = *(Vector3*)((char*)&unk_0a4);
-        _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(((char*)this), ((char*)this) + 0xfc);
+        _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(((char*)this), ((char*)this) + 0xfc);
         func_ov071_02121b50(((char*)this), ((char*)this) + 0x13c);
         func_ov071_02121ba4(((char*)this));
         func_ov071_02121c6c(((char*)this));
-        _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
-        _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
+        _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
+        _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
         if (DecIfAbove0_Short((unsigned short*)((char*)&unk_330)) == 0)
             func_ov071_02121b08(((char*)this));
     } else {

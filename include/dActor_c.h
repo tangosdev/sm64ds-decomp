@@ -57,7 +57,7 @@
 struct Player;
 struct Vector3;
 struct Vector3_16;
-struct CylinderClsn;
+struct dCc_c;
 /* Only ever named through a pointer below; the definition lives in common.h /
    math/Matrix.h, which this header deliberately does not pull in. */
 struct Matrix4x3;
@@ -261,7 +261,7 @@ struct dActor_c : dBase_c {
     Matrix4x3 *UpdateCarry(Player &player, const Vector3 &vec);
 
     /* The cylinder-collision group, 0x0200f7a8..0x02010c5c. Everything here
-       reads a CylinderClsn the caller already has; see include/CylinderClsn.h
+       reads a dCc_c the caller already has; see include/dCc_c.h
        for the layout (0x18 flags, 0x20 hitFlags, 0x24 otherOwner).
 
        All five are members. UpdatePos, MakeVanishLuigiWork and
@@ -277,14 +277,14 @@ struct dActor_c : dBase_c {
        two.
 
        UpdatePos takes a POINTER where the rest take references -- the mangled
-       name says `P12CylinderClsn`, not `R`. It is a two-line forwarder and
+       name says `P5dCc_c`, not `R`. It is a two-line forwarder and
        passes the pointer straight through to UpdatePosWithOnlySpeed. */
-    dActor_c *FindEgg(CylinderClsn &clsn);               /* hitFlags 0x2000 */
-    dActor_c *FindExplosionActor(CylinderClsn &clsn);    /* hitFlags 0x4000 */
-    void   MakeVanishLuigiWork(CylinderClsn &clsn);
-    int    JumpedOnByPlayer(CylinderClsn &clsn, Player &player);
-    void   UpdatePos(CylinderClsn *clsn);
-    void   UpdatePosWithOnlySpeed(CylinderClsn *clsn);
+    dActor_c *FindEgg(dCc_c &clsn);               /* hitFlags 0x2000 */
+    dActor_c *FindExplosionActor(dCc_c &clsn);    /* hitFlags 0x4000 */
+    void   MakeVanishLuigiWork(dCc_c &clsn);
+    int    JumpedOnByPlayer(dCc_c &clsn, Player &player);
+    void   UpdatePos(dCc_c *clsn);
+    void   UpdatePosWithOnlySpeed(dCc_c *clsn);
     /* The dust group, 0x0200fac4..0x0200fe70. Two shapes, paired:
        an `...At` worker taking a position, and a no-argument wrapper that
        copies the actor's own 0x5c..0x64 into a stack Vector3 and calls it.

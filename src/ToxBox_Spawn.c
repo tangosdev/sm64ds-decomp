@@ -1,7 +1,7 @@
 extern void* _ZN7fBase_cnwEj(unsigned int size);
 extern void _ZN10dBgActor_cC2Ev(void *p);
 extern void _ZN12WithMeshClsnC1Ev(void *p);
-extern void _ZN25MovingCylinderClsnWithPosC1Ev(void *p);
+extern void _ZN10dCcAcPos_cC1Ev(void *p);
 extern void _ZN7PathPtrC1Ev(void *p);
 extern int _ZTV6ToxBox[];
 
@@ -11,7 +11,7 @@ int* ToxBox_Spawn(void) {
         _ZN10dBgActor_cC2Ev(p);
         *(int**)p = _ZTV6ToxBox;
         _ZN12WithMeshClsnC1Ev((char*)p + 0x324);
-        _ZN25MovingCylinderClsnWithPosC1Ev((char*)p + 0x4e8);
+        _ZN10dCcAcPos_cC1Ev((char*)p + 0x4e8);
         _ZN7PathPtrC1Ev((char*)p + 0x58c);
     }
     return p;

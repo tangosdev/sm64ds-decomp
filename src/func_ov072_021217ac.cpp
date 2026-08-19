@@ -9,7 +9,7 @@ extern "C" int func_0201267c(int id, void *p);
 extern "C" {
 extern bool _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(dActor_c *thiz, Vector3 &a, Vector3 &b, bool c);
 extern void _ZN9Animation7AdvanceEv(void *anim);
-extern void _ZN12CylinderClsn5ClearEv(void *clsn);
+extern void _ZN5dCc_c5ClearEv(void *clsn);
 }
 extern "C" int func_ov072_021217ac(dActor_c *thiz)
 {
@@ -43,7 +43,7 @@ extern "C" int func_ov072_021217ac(dActor_c *thiz)
     }
 after_ray:
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN12CylinderClsn5ClearEv(c + 0x160);
+    _ZN5dCc_c5ClearEv(c + 0x160);
     if (*(int *)(c + 8) == 0) {
         unsigned int t = (unsigned int)(*(int *)(c + 0x12c) << 4) >> 16;
         if (t == 0x10 || t == 0x25) {

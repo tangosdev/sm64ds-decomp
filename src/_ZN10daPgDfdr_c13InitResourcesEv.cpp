@@ -19,7 +19,7 @@ extern void func_ov027_02111994(void *c);
 extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *o, void *kcl, void *m, int fx, short s, void *clps);
 extern void func_020393d4(void *p, int v);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *o, void *act, int a, int b, unsigned c, unsigned d);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *o, void *act, int a, int b, unsigned c, unsigned d);
 extern void _ZN13RaycastGroundC1Ev(void *o);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *o, void *v, void *act);
 extern int _ZN13RaycastGround10DetectClsnEv(void *o);
@@ -66,7 +66,7 @@ int _ZN10daPgDfdr_c13InitResourcesEv(void *cc)
 
     *(int*)(c + 0x9c) = 0;
     *(int*)(c + 0xa0) = 0;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(c + 0x398, c, 0x82000, 0xc8000, 0x800004, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(c + 0x398, c, 0x82000, 0xc8000, 0x800004, 0);
     func_ov027_02111d70(c, 1);
 
     v[0] = *(int*)(c + 0x5c);

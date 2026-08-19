@@ -21,7 +21,7 @@ struct StarMarker {
     u8  pad_090[0x3c];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
-    u8  mMovingCylinderClsnWithPos;            /* 0x0d4 */
+    u8  mdCcAcPos_c;            /* 0x0d4 */
     u8  pad_0d5[0x1f];
     s32 unk_0f4;            /* 0x0f4 */
     s32 unk_0f8;            /* 0x0f8 */

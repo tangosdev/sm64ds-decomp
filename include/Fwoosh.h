@@ -16,11 +16,11 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "WithMeshClsn.h"
 
 struct Fwoosh : dEnemyBase_c {
-    MovingCylinderClsn mMovingCylinderClsn;/* 0x110 */
+    dCcAc_c mdCcAc_c;/* 0x110 */
     WithMeshClsn mWithMeshClsn;       /* 0x144 */
     ModelAnim mModelAnim;             /* 0x300 */
     u8  pad_364[0x10];
@@ -55,10 +55,10 @@ struct Fwoosh {
     u8  pad_0a4[0xc];
     s32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x5c];
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x110 -- a relocation the ROM build
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x110 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN6FwooshD1Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x110 */
+    dCcAc_c mdCcAc_c;            /* 0x110 */
     /* WithMeshClsn member, named by the class's own destructor calling
        WithMeshClsn's D1 at +0x144 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN6FwooshD1Ev.c] */

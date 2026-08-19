@@ -4,8 +4,8 @@
 #include "Cannon.h"
 extern "C" {
 int func_ov098_0213a984(void* c);
-void _ZN12CylinderClsn5ClearEv(void* self);
-void _ZN12CylinderClsn6UpdateEv(void* self);
+void _ZN5dCc_c5ClearEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* self);
 }
 
 struct C;
@@ -25,7 +25,7 @@ int Cannon::Behavior()
         (((C*)this)->*data_ov098_0213c8fc[((C*)this)->idx].pmf)();
     }
     func_ov098_0213a984(((C*)this));
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
+    _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);
     return 1;
 }

@@ -4,7 +4,7 @@
 #include "DonutBlock.h"
 #include "MeshColliderBase.h"
 extern "C" {
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* thiz, void* clsn);
 void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 int _ZN8dActor_c13DistToCPlayerEv(void* p);
@@ -28,7 +28,7 @@ int DonutBlock::Behavior()
         if (unk_4e9 >= 0xf) mState = 1;
         break;
     case 1:
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
         WithMeshClsn_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
         if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) == 0) {
             if (_ZN8dActor_c13DistToCPlayerEv(((char*)this)) <= 0x9c4000) break;

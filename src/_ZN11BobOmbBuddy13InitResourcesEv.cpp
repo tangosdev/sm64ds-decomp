@@ -7,7 +7,7 @@
 struct RaycastGround { char buf0[0x14]; int floor[12]; char buf1[0x50-0x14-0x30]; };
 
 extern "C" {
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, Fix12i b, Fix12i c, unsigned int d, unsigned int e);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, Fix12i b, Fix12i c, unsigned int d, unsigned int e);
 extern void func_ov084_0212c960(void* c, int i);
 extern void _ZN13RaycastGroundC1Ev(RaycastGround* self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3& v, void* actor);
@@ -35,7 +35,7 @@ int BobOmbBuddy::InitResources()
     mModelAnim.SetFile(modelFile, 1, -1);
     mShadowModel.InitCylinder();
     Animation::LoadFile(data_ov084_02130d9c);
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(&mMovingCylinderClsn, this, 0x8c000, 0x8c000, 0x4200004, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this, 0x8c000, 0x8c000, 0x4200004, 0);
     func_ov084_0212c960(this, 0);
     unk_198 = 0;
 

@@ -5,7 +5,7 @@
 #include "common.h"
 #include "MeshColliderBase.h"
 extern "C" {
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 extern void WithMeshClsn_UpdateContinuous_Veneer(void* p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
@@ -41,7 +41,7 @@ void func_ov002_020bbb14(char* self)
         s16* pa = (s16*)(self + 0x8c);
         *pa = *pa + 0x2000;
     }
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
     WithMeshClsn_UpdateContinuous_Veneer(self + 0x3c8);
 
     if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x3c8) != 0 ||

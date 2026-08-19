@@ -6,7 +6,7 @@ extern void _ZN6Player16IncMegaKillCountEv(struct dActor_c* p);
 extern void func_02012694(u32 id, void* pos);
 extern void func_020105cc(struct dActor_c* thiz, u32 flags);
 extern void func_ov084_0212ebb4(void* c);
-extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(struct dActor_c* self, void* clsn, struct dActor_c* player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(struct dActor_c* self, void* clsn, struct dActor_c* player);
 extern void _ZN6Player6BounceE5Fix12IiE(struct dActor_c* p, int fix);
 extern int _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(struct dActor_c* self, const void* pos, u32 a, int fix, u32 b, u32 c, u32 d);
 extern int data_ov084_02130e0c[];
@@ -46,7 +46,7 @@ int func_ov084_0212ef00(char* self)
     goto successA;
 
 jumpA:
-    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player((struct dActor_c*)self, self + 0x380, actor) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player((struct dActor_c*)self, self + 0x380, actor) != 0) {
         _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
         func_ov084_0212ebb4(self);
         goto successA;
@@ -109,7 +109,7 @@ second:
     return 1;
 
 jumpB:
-    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player((struct dActor_c*)self, self + 0x380, actor) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player((struct dActor_c*)self, self + 0x380, actor) != 0) {
         _ZN6Player6BounceE5Fix12IiE(actor, 0x28000);
         func_ov084_0212ebb4(self);
         return 1;

@@ -14,7 +14,7 @@ extern void LoadBlueCoinModel(void* c);
 extern int _ZN11ShadowModel12InitCylinderEv(char* self);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* self, struct dActor_c* a, int r, int h, struct Vector3_16* rot, int f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(char* self, struct BMD_File* f, int a, int b);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* self, struct dActor_c* a, struct Vector3* pos, int r, int h, u32 f1, u32 f2);
 }
 
 extern SharedFilePtr data_ov020_02114aa0;
@@ -43,7 +43,7 @@ int BookShot::InitResources()
     unk_438 = 0;
     unk_43c = 0;
     unk_440 = 0;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x21c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&unk_438), 0x19000, 0x32000, 0x200001, 0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this)+0x21c, (struct dActor_c*)((char*)this), (struct Vector3*)((char*)&unk_438), 0x19000, 0x32000, 0x200001, 0);
 
     unk_418 = 0;
     unk_41c = 0;
@@ -71,7 +71,7 @@ int BookShot::InitResources()
             unk_420 = 0;
             mState = 4;
             unk_108 = 0;
-            *(int*)(int)LDR((char*)&mMovingCylinderClsnWithPos.vulnFlags) |= 0x26fe0;
+            *(int*)(int)LDR((char*)&mdCcAcPos_c.vulnFlags) |= 0x26fe0;
             goto success;
         }
         {
@@ -81,7 +81,7 @@ int BookShot::InitResources()
                 unk_420 = 0;
                 mState = 0;
                 unk_108 = 3;
-                *(int*)(int)LDR((char*)&mMovingCylinderClsnWithPos.vulnFlags) |= 0x2efe0;
+                *(int*)(int)LDR((char*)&mdCcAcPos_c.vulnFlags) |= 0x2efe0;
                 goto success;
             }
         }
@@ -92,8 +92,8 @@ int BookShot::InitResources()
                 unk_420 = 1;
                 mState = 6;
                 unk_108 = 0;
-                *(int*)(int)LDR((char*)&mMovingCylinderClsnWithPos.flags) |= 4;
-                *(int*)(int)LDR((char*)&mMovingCylinderClsnWithPos.vulnFlags) |= 0x3c0;
+                *(int*)(int)LDR((char*)&mdCcAcPos_c.flags) |= 4;
+                *(int*)(int)LDR((char*)&mdCcAcPos_c.vulnFlags) |= 0x3c0;
                 mScaleX = 0x1000;
                 mScaleY = 0x800;
                 mScaleZ = 0x800;

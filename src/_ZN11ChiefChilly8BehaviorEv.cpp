@@ -56,8 +56,8 @@ extern char data_ov073_021233f0[];
 extern char data_ov073_02123400[];
 
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
+extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, void *clsn);
 extern int _ZNK9Animation12WillHitFrameEi(void *self, int f);
 extern void MulMat4x3Mat4x3(void *d, void *a, void *b);
 extern void Vec3_Lsl(Vector3 *d, Vector3 *s, int sh);
@@ -71,10 +71,10 @@ extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, 
 extern int _ZN11RaycastLine10DetectClsnEv(void *self);
 extern void _ZN11RaycastLineD1Ev(void *self);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, void *wmc, unsigned int flags);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
 extern void func_ov073_0211f61c(void *self);
-extern void _ZN12CylinderClsn5ClearEv(void *self);
-extern void _ZN12CylinderClsn6UpdateEv(void *self);
+extern void _ZN5dCc_c5ClearEv(void *self);
+extern void _ZN5dCc_c6UpdateEv(void *self);
 extern void func_ov073_021215cc(void *self);
 extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
 }
@@ -106,7 +106,7 @@ int ChiefChilly::Behavior()
     if ((char *)c->pp != data_ov073_02123400
         && (char *)c->pp != data_ov073_02123320
         && (char *)c->pp != data_ov073_02123340) {
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, &mMovingCylinderClsnWithPos);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(self, &mdCcAcPos_c);
     } else {
         int sum = mVertSpeed + mVertAccel;
         int m = mTerminalVelocity;
@@ -114,7 +114,7 @@ int ChiefChilly::Behavior()
         if (sum >= m) m = sum;
         mVertSpeed = m;
         unk_0ac = ac;
-        _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(self, &mMovingCylinderClsnWithPos);
+        _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(self, &mdCcAcPos_c);
     }
 
     if (((char *)c->pp == data_ov073_02123330 || (char *)c->pp == data_ov073_02123350)
@@ -197,14 +197,14 @@ int ChiefChilly::Behavior()
     _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(self, &mWithMeshClsn, 0);
 
     v54 = data_ov073_02123040;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(&mMovingCylinderClsnWithPos, &v54);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(&mdCcAcPos_c, &v54);
 
     if ((char *)c->pp == data_ov073_02123360
         || (char *)c->pp == data_ov073_02123390) {
         func_ov073_0211f61c(self);
     }
-    _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsnWithPos);
-    _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
+    _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
     func_ov073_021215cc(self);
     _ZN14BlendModelAnim7AdvanceEv(&mBlendModelAnim);
     return 1;

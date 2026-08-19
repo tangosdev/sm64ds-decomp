@@ -27,7 +27,7 @@ extern "C" {
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *clsn);
 extern int _ZNK12WithMeshClsn8IsOnWallEv(void *clsn);
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *actor);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *actor, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *actor, void *clsn);
 /* ReflectAngle takes Fix12<int> by value -- the mwccarm 6az wall, runbook
    section 7 -- so it stays extern "C" with scalars in those slots. */
 extern short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *actor, int a, int b, short s);
@@ -113,7 +113,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_
         return 2;
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(this, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
     if (clsn != 0) {
         UpdateWMClsn(*clsn, 0);
         if (_ZNK12WithMeshClsn8IsOnWallEv(clsn) != 0)

@@ -11,7 +11,7 @@ extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *f, int a, int b
 extern void *_ZN9Animation8LoadFileER13SharedFilePtr(void *f);
 extern void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *act, int a, int b, unsigned int c2, unsigned int d);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *act, int a, int b, unsigned int c2, unsigned int d);
 extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *act, int a, int b, void *c2, void *d);
 extern void _ZN13RaycastGroundC1Ev(void *self);
 extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
@@ -34,7 +34,7 @@ int MotherPenguin::InitResources()
         TextureSequence::Prepare(*(BMD_File *)data_ov018_02113c00[1], *(BTP_File *)((int*)t)[1]);
     }
     if (_ZN11ShadowModel12InitCylinderEv((char *)&mShadowModel) == 0) return 0;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this)+0x174, ((char *)this), 0x104000, 0x12c000, 0x4800004, 0x900000);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this)+0x174, ((char *)this), 0x104000, 0x12c000, 0x4800004, 0x900000);
     func_ov018_021123d0((char *)this, 0);
     unk_09c = -0x2000;
     unk_0a0 = -0x3c000;

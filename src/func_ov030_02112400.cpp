@@ -3,7 +3,7 @@
 typedef void* (*Vfn)();
 
 struct Animation { void Advance(); };
-struct CylinderClsn { void Clear(); void Update(); };
+struct dCc_c { void Clear(); void Update(); };
 struct WithMeshClsn { int IsOnGround() const; };
 struct Vector3;
 
@@ -15,7 +15,7 @@ extern "C" void func_ov030_021141a8(void* c, int x);
 extern "C" void* data_02099368[];
 
 struct dActor_c {
-    void UpdatePos(CylinderClsn*);
+    void UpdatePos(dCc_c*);
 };
 
 typedef struct { int a, b; } P2;
@@ -35,11 +35,11 @@ extern "C" int func_ov030_02112400(char* c)
 {
     func_ov030_02111a00(c);
     ((Animation*)(c + 0x124))->Advance();
-    ((dActor_c*)c)->UpdatePos((CylinderClsn*)(c + 0x160));
+    ((dActor_c*)c)->UpdatePos((dCc_c*)(c + 0x160));
     func_ov030_02111f6c(c, (WithMeshClsn*)(c + 0x194));
     func_ov030_02111bc4(c);
-    ((CylinderClsn*)(c + 0x160))->Clear();
-    ((CylinderClsn*)(c + 0x160))->Update();
+    ((dCc_c*)(c + 0x160))->Clear();
+    ((dCc_c*)(c + 0x160))->Update();
 
     int b = (int)(*(u16*)(c + 0xc) == 0x10c);
     if (b != 0) {

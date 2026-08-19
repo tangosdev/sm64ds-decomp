@@ -6,7 +6,7 @@ struct Vec3 { int x, y, z; };
 extern "C" {
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(char* c, unsigned int anim, int a, int fix, unsigned int z);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int a, unsigned int b, void* v);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(char* o, struct Vec3* p);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char* o, struct Vec3* p);
 }
 
 int Player::St_LedgeHang_Init()
@@ -30,7 +30,7 @@ int Player::St_LedgeHang_Init()
     off.x = z3.x;
     off.y = z3.y;
     off.z = z3.z;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this)+0x2d4, &off);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this)+0x2d4, &off);
   }
   unk_6e6 = 0;
   return 1;

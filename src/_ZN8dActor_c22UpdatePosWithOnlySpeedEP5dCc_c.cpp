@@ -3,7 +3,7 @@ typedef int s32;
 
 struct Vec3 { s32 x, y, z; };
 
-struct CylinderClsn {
+struct dCc_c {
     s32 pad[3];
     s32 dx;
     s32 pad2;
@@ -18,10 +18,10 @@ struct dActor_c {
     Vec3 pos;
     char pad2[0xa4 - 0x68];
     Vec3 speed;
-    void UpdatePosWithOnlySpeed(CylinderClsn *clsn);
+    void UpdatePosWithOnlySpeed(dCc_c *clsn);
 };
 
-void dActor_c::UpdatePosWithOnlySpeed(CylinderClsn *clsn) {
+void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
     AddVec3(&pos, &speed, &pos);
     if (clsn != 0) {
         *(s32 *)(&pos.x) += clsn->dx;

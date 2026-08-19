@@ -20,10 +20,10 @@ extern unsigned short DecIfAbove0_Short(unsigned short *p);
 int FlyGuy::Behavior()
 {
     if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
-        mMovingCylinderClsn.Clear();
+        mdCcAc_c.Clear();
         if (unk_107 != 0) {
             if (unk_104 == 0) {
-                mMovingCylinderClsn.Update();
+                mdCcAc_c.Update();
             }
         }
         func_ov070_02120070((char *)this);
@@ -64,7 +64,7 @@ int FlyGuy::Behavior()
         unk_0ac = tmp;
     }
 
-    UpdatePosWithOnlySpeed(&mMovingCylinderClsn);
+    UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
 
     if (mCurrentState != (State *)data_ov070_021235bc) {
@@ -78,11 +78,11 @@ int FlyGuy::Behavior()
         func_ov070_0211f100((char *)this);
     }
 
-    mMovingCylinderClsn.Clear();
+    mdCcAc_c.Clear();
     {
         char *p = (char *)ClosestPlayer();
         if (p != 0 && *(unsigned char *)(p + 0x6fb) == 0) {
-            mMovingCylinderClsn.Update();
+            mdCcAc_c.Update();
         }
     }
 

@@ -74,12 +74,12 @@ done:
     ((int*)&t)[1] = mPosY;
     ((int*)&t)[2] = mPosZ;
     ((int*)&t)[1] = t.y - unk_5f4;
-    mMovingCylinderClsnWithPos1.pos.x = t.x;
-    mMovingCylinderClsnWithPos1.pos.y = t.y;
-    mMovingCylinderClsnWithPos1.pos.z = t.z;
-    mMovingCylinderClsnWithPos2.pos.x = t.x;
-    mMovingCylinderClsnWithPos2.pos.y = t.y;
-    mMovingCylinderClsnWithPos2.pos.z = t.z;
+    mdCcAcPos_c1.pos.x = t.x;
+    mdCcAcPos_c1.pos.y = t.y;
+    mdCcAcPos_c1.pos.z = t.z;
+    mdCcAcPos_c2.pos.x = t.x;
+    mdCcAcPos_c2.pos.y = t.y;
+    mdCcAcPos_c2.pos.z = t.z;
     func_ov098_02138b70(((char*)this));
     return 1;
 }

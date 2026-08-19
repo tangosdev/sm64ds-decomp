@@ -6,7 +6,7 @@
 #include "common.h"
 extern "C" {
     extern int data_ov064_0211c944;
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* t, const Vector3& v);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* t, const Vector3& v);
 void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 s16 Vec3_VertAngle(const Vector3* v1, const Vector3* v0);
 int AngleDiff(int a, int b);
@@ -33,7 +33,7 @@ extern "C" void func_ov064_02119afc(char* c)
 
     *(int*)(c + 0x368) = 0x1000;
     v = data_ov064_0211c3d0;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x110, v);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x110, v);
     id = *(u32*)(c + 0x134);
     if (id == 0) return;
     a = (char*)_ZN8dActor_c10FindWithIDEj(id);

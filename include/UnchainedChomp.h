@@ -5,7 +5,7 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
 #include "WithMeshClsn.h"
 
@@ -26,7 +26,7 @@
  * padding.
  */
 struct UnchainedChomp : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
+    dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
     WithMeshClsn        mWithMeshClsn;      /* 0x150 */
     ModelAnim           mModelAnim;         /* 0x30c */
     Model               mModels[6];         /* 0x370 */

@@ -6,9 +6,9 @@
 #include "WaterRing.h"
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char* self, char* cc);
-extern void _ZN12CylinderClsn5ClearEv(char* c);
-extern void _ZN12CylinderClsn6UpdateEv(char* c);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char* self, char* cc);
+extern void _ZN5dCc_c5ClearEv(char* c);
+extern void _ZN5dCc_c6UpdateEv(char* c);
 extern void _ZN9Animation7AdvanceEv(char* c);
 }
 struct C;
@@ -23,13 +23,13 @@ int WaterRing::Behavior()
     C* c = (C*)((char*)this);
     (c->**p)();
   }
-  _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
+  _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this) + 0x110);
   mAngleX = mPrevAngleX;
   mAngleY = mPrevAngleY;
   mAngleZ = mPrevAngleZ;
   func_ov064_02119f1c(((char*)this));
-  _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
-  _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
+  _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
+  _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
   _ZN9Animation7AdvanceEv((char*)&mTextureTransformer);
   return 1;
 }

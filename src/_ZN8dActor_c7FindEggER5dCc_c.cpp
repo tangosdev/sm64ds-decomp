@@ -1,5 +1,5 @@
 //cpp
-/* dActor_c::FindEgg(CylinderClsn&) at 0x020103b4, 0x40 bytes.
+/* dActor_c::FindEgg(dCc_c&) at 0x020103b4, 0x40 bytes.
  *
  * "Did the thing that hit me have an owner, and was the hit an egg strike?" If so,
  * resolve that owner id to a live dActor_c; otherwise nobody.
@@ -13,13 +13,13 @@
  * is written by every caller and read by nobody here. See include/dActor_c.h for
  * why that settles static-vs-member given the mangled name.
  *
- * The shadow `struct CylinderClsn` this file used to carry is replaced by the
- * real include/CylinderClsn.h: 0x24 is otherOwner, 0x20 is hitFlags.
+ * The shadow `struct dCc_c` this file used to carry is replaced by the
+ * real include/dCc_c.h: 0x24 is otherOwner, 0x20 is hitFlags.
  */
 #include "dActor_c.h"
-#include "CylinderClsn.h"
+#include "dCc_c.h"
 
-dActor_c *dActor_c::FindEgg(CylinderClsn &clsn)
+dActor_c *dActor_c::FindEgg(dCc_c &clsn)
 {
     u32 id = clsn.otherOwner;
     u32 flags;

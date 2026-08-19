@@ -16,11 +16,11 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 
 struct WallSign : dBgActor_c {
     u8  pad_31e[0x2];
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x320 */
+    dCcAcPos_c mdCcAcPos_c;/* 0x320 */
 
     /* --- vtable --- */
     virtual ~WallSign();
@@ -50,7 +50,7 @@ struct WallSign {
     Model mModel;            /* 0x0d4 */
     u8  mMovingMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mMovingCylinderClsnWithPos;            /* 0x320 */
+    u8  mdCcAcPos_c;            /* 0x320 */
 };
 
 #endif /* __cplusplus */

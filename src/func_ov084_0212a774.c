@@ -19,7 +19,7 @@ extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void func_02012694(int a, void *p);
 extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(void *self, void *c);
+extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(void *self, void *c);
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020aea30(void *a, void *b, void *c, int d);
 extern void *data_ov084_02130ce8[];
@@ -113,7 +113,7 @@ void func_ov084_0212a774(char *c)
         }
     }
     *(u8 *)(c + 0x107) = 1;
-    if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(c, c + 0x180) != 0) {
+    if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(c, c + 0x180) != 0) {
         void *a = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x1a4));
         *(s32 *)(c + 0x10c) = 7;
         func_ov002_020aea30(c, a, c + 0x1b4, 7);

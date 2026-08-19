@@ -8,8 +8,8 @@ extern s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void *c);
 extern void Matrix4x3_FromRotationY(void *m, s16 angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, s16 angX);
 extern void MulVec3Mat4x3(struct Vec3 *in, void *m, struct Vec3 *out);
-extern void _ZN12CylinderClsn5ClearEv(void *c);
-extern void _ZN12CylinderClsn6UpdateEv(void *c);
+extern void _ZN5dCc_c5ClearEv(void *c);
+extern void _ZN5dCc_c6UpdateEv(void *c);
 extern int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     int a, int b, int x, int y, int z, int f, int cb);
 extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
@@ -78,8 +78,8 @@ int func_ov064_021193b4(char *c)
                 *(int *)(p + 0x64) = base.z;
             }
         }
-        _ZN12CylinderClsn5ClearEv(c + 0x110);
-        _ZN12CylinderClsn6UpdateEv(c + 0x110);
+        _ZN5dCc_c5ClearEv(c + 0x110);
+        _ZN5dCc_c6UpdateEv(c + 0x110);
         if (dist > 0x7d0000 && *(int *)(c + 0x30c) < 5) {
             *(int *)(c + 0x30c) = 0;
         }

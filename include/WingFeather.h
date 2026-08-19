@@ -27,7 +27,7 @@ struct WingFeather {
        Model's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN11WingFeatherD0Ev.c] */
     Model mModel;            /* 0x0d4 */
-    u8  mMovingCylinderClsn;            /* 0x124 */
+    u8  mdCcAc_c;            /* 0x124 */
     u8  pad_125[0x23];
     u32 unk_148;            /* 0x148 */
     u8  pad_14c[0xc];

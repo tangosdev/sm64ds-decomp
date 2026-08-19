@@ -19,8 +19,8 @@ extern int _ZN6Player12FinishedAnimEv(void* c);
 extern void _ZN6Player7SetAnimEji5Fix12IiEj(void* c, u32 anim, int a, Fix12i b, u32 d);
 extern void func_ov002_020c18b0(void* c, u32 a);
 extern void func_ov002_020e25f0(void* c, int a);
-extern void _ZN12CylinderClsn5ClearEv(void* c);
-extern void _ZN12CylinderClsn6UpdateEv(void* c);
+extern void _ZN5dCc_c5ClearEv(void* c);
+extern void _ZN5dCc_c6UpdateEv(void* c);
 extern void func_ov002_020dc560(void* c);
 extern int func_ov002_020e0ccc(void* c, short* st);
 extern Fix12i _ZN4cstd5atan2E5Fix12IiES1_(Fix12i a, Fix12i b);
@@ -116,14 +116,14 @@ int Player::St_StomachSlide_Main()
             }
         }
         func_ov002_020dba0c(((char*)this));
-        _ZN12CylinderClsn5ClearEv((char*)&mAttackClsn);
-        _ZN12CylinderClsn6UpdateEv((char*)&mAttackClsn);
+        _ZN5dCc_c5ClearEv((char*)&mAttackClsn);
+        _ZN5dCc_c6UpdateEv((char*)&mAttackClsn);
         goto end;
 
     case 1:
         func_ov002_020dba0c(((char*)this));
-        _ZN12CylinderClsn5ClearEv((char*)&mAttackClsn);
-        _ZN12CylinderClsn6UpdateEv((char*)&mAttackClsn);
+        _ZN5dCc_c5ClearEv((char*)&mAttackClsn);
+        _ZN5dCc_c6UpdateEv((char*)&mAttackClsn);
         if (mIsAirborne == 0) {
             unk_6e6 = 0;
             mVertSpeed = 0;

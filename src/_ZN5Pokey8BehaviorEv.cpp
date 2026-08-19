@@ -6,7 +6,7 @@
 #include "Pokey.h"
 extern "C" {
 extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void *c, int d);
-extern void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void *c, void *cyl);
+extern void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void *c, void *cyl);
 }
 
 int Pokey::Behavior()
@@ -16,7 +16,7 @@ int Pokey::Behavior()
         if (_ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(((char *)this), 0x5dc000)) return 1;
     }
     func_ov096_021368b4(((char *)this));
-    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(((char *)this), ((char *)this) + 0x14c);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char *)this), ((char *)this) + 0x14c);
     func_ov096_02135efc(((char *)this));
     return 1;
 }

@@ -2,8 +2,8 @@
 // @symbol _ZN4Warp8BehaviorEv
 // recovered name: Warp::Behavior
 /* Warp::Behavior - vtable slot 6, overriding fBase_c::Behavior(). Migrated
- * to a real member: `c + 0xf8` is mMovingCylinderClsn.otherOwner
- * (include/CylinderClsn.h, 0x24 into the embedded MovingCylinderClsn at
+ * to a real member: `c + 0xf8` is mdCcAc_c.otherOwner
+ * (include/dCc_c.h, 0x24 into the embedded dCcAc_c at
  * 0xd4 -- 0xd4 + 0x24 = 0xf8) and `c + 0xd4` casts to that same member's
  * base for Clear()/Update(); `c + 0x8e` and `c + 8` are dActor_c's own
  * mAngleY and param1, already recovered in dActor_c.h (mAngleY is
@@ -18,7 +18,7 @@ extern "C" void WarpPlayer(int i, int val);
 
 s32 Warp::Behavior()
 {
-    unsigned int id = mMovingCylinderClsn.otherOwner;
+    unsigned int id = mdCcAc_c.otherOwner;
     if (id != 0) {
         if (mAngleY == 0) {
             dActor_c *a = dActor_c::FindWithID(id);
@@ -39,7 +39,7 @@ s32 Warp::Behavior()
         mAngleY = 0;
     }
 
-    mMovingCylinderClsn.Clear();
-    mMovingCylinderClsn.Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

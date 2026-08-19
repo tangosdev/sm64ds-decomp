@@ -10,7 +10,7 @@ extern void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
-extern void _ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj(void* thiz, void* v, int f1, int f2, unsigned int a, unsigned int b);
+extern void _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(void* thiz, void* v, int f1, int f2, unsigned int a, unsigned int b);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* thiz);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* thiz);
 extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
@@ -26,7 +26,7 @@ int RotatingFirebar::InitResources()
         _ZN5Model8LoadFileER13SharedFilePtr(data_ov064_0211adbc[0]), 1, -1);
     p = ((char*)this) + 0x360;
     for (i = 0; i < 8; i++) {
-        _ZN19CylinderClsnWithPos4InitERK7Vector35Fix12IiES4_jj(p, ((char*)this) + 0x5c, 0x4b000, 0x96000, 0x200002, 0);
+        _ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj(p, ((char*)this) + 0x5c, 0x4b000, 0x96000, 0x200002, 0);
         p += 0x3c;
     }
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
