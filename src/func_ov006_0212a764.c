@@ -1,6 +1,38 @@
+// NONMATCHING: register-allocation permutation plus an 8-byte frame-size difference
+// (div=43). Logic verified correct vs ROM; not byte-matchable from C at mwccarm
+// 2004/b56. Counts as decompiled, not matched.
+//
+// dScMgFlower_c ("Loves Me...?", scene 390) petal layout. Picks the petal count, picks a
+// random base angle, then spreads the petals evenly around the circle at
+//   angle_i = angbase + (i * 0x10000) / count
+// and finally shuffles the laid-out records so the petals are not plucked in ring order.
+//
+// CORRECTS AN EARLIER RECREATION OF OURS. The first version of this file (branch
+// decomp/yoshi-petal) declared the divide helper at 0x01ffabe4 with ONE parameter and
+// called it with one argument. It takes TWO: it is __aeabi_idiv / _s32_div_f, the
+// signed divide the compiler emits for `/`, numerator in r0 and DENOMINATOR IN r1.
+// The ROM proves the second argument is the petal count:
+//     0212a894  ldr r1, [r2, #0xfd8]   ; r1 = count, before the loop
+//     0212a8d4  mov r0, r7             ; r0 = i * 0x10000
+//     0212a8dc  bl  #0x1ffabe4         ; r0 / r1
+//     0212a8e0  add r0, fp, r0         ; + angbase
+//     0212a948  ldr r1, [r0, #0xfd8]   ; count reloaded at the loop bottom
+// With one argument the compiler saw r1 as dead and put the 0x4f54 pool constant there,
+// so the divisor became 20308 instead of the count and every petal landed on the same
+// spot. The `bl` is a wildcarded relocation, so the byte gate could not see it, and the
+// wrong register was previously filed with the harmless register renames. Reading the
+// count inline at the call site is also what reproduces the ROM's register liveness,
+// because r1 arrives from that loop-bottom reload.
+//
+// The 43 remaining divergences were checked individually for argument liveness, not just
+// matching opcodes. Executed against the ROM on every branch of the count selector, this
+// body issues an IDENTICAL call trace (same callee, same r0..r3, same [sp] slot at every
+// call) and identical writes to the actor struct. The only write differences are 4
+// spills to this function's own stack frame, same values and widths at a constant +8
+// offset, which is the frame-size difference and is popped on return.
 extern int RandomIntInternal(int *seed);
 extern void func_0203d388(int *p, short angle);
-extern int func_01ffabe4(int angle);
+extern int __aeabi_idiv(int num, int den);
 extern void func_ov004_020b04d0(int n);
 extern void _ZN3G2x13SetBlendAlphaEPVttttt(
     volatile void *reg,
@@ -59,7 +91,7 @@ void func_ov006_0212a764(char *c)
         pang = (int *)(c + 0x4f3c);
         ang = 0;
         do {
-            *(short *)(((int)(c + i2 * 0x20) + 0x4f54) & 0xFFFFFFFFFFFFFFFF) = angbase + func_01ffabe4(ang);
+            *(short *)(((int)(c + i2 * 0x20) + 0x4f54) & 0xFFFFFFFFFFFFFFFF) = angbase + __aeabi_idiv(ang, *(int *)(c + 0x5fd8));
             *(int *)(((int)(c + i2 * 0x20) + 0x4f3c) & 0xFFFFFFFFFFFFFFFF) = 0;
             *(int *)(((int)(c + i2 * 0x20) + 0x4f40) & 0xFFFFFFFFFFFFFFFF) = 0x30000;
             func_0203d388(pang, *(short *)(((int)(c + i2 * 0x20) + 0x4f54) & 0xFFFFFFFFFFFFFFFF));
