@@ -525,9 +525,15 @@ struct dActor_c {
     s32 mHorzSpeed;         /* 0x098 */
     s32 mVertAccel;         /* 0x09c */
     s32 mTerminalVelocity;  /* 0x0a0 */
-    u8  pad_0a4[0x4];
+    /* Were pad_0a4/pad_0ac here long after the C++ branch above promoted them
+       to real s32 fields on dEnemyBase_c's evidence -- a drift no gate could
+       catch, because until include/Door.h's own C branch nested this struct,
+       NO C translation unit in the tree included this header at all and the
+       whole #else was dead. Same offsets, same total 0xd0; the two spellings
+       now agree field for field. */
+    s32 unk_0a4;            /* 0x0a4 */
     s32 mVertSpeed;         /* 0x0a8 */
-    u8  pad_0ac[0x4];
+    s32 unk_0ac;            /* 0x0ac */
     u32 mFlags;             /* 0x0b0 */
     s32 unk_0b4;
     s32 unk_0b8;

@@ -3,32 +3,44 @@
 // recovered name: Door::CleanupResources
 /* recovered: renamed to Class_Method, declarations from a shared header */
 #include "decl_common.h"
+#include "Door.h"
 #include "SharedFilePtr.h"
 /* recovered: renamed to Class_Method, vtable slot 3 */
-/* Door::CleanupResources -- vtable slot 3, ov100 0x0214542c. Same idiom as
- * _ZN4Door13InitResourcesEv.c: declared as an override in include/Door.h,
- * defined here as an extern "C" free function under the mangled symbol so
- * nothing about the field layout has to change to land the right name. */
-struct V { virtual void v0(); virtual void v1(); };
+/* Door::CleanupResources -- vtable slot 3, ov100 0x0214542c. Declared as an
+ * override in include/Door.h, defined here as an extern "C" free function
+ * under the mangled symbol, the same idiom the rest of the class uses.
+ *
+ * FOLDED ONTO include/Door.h with the two files that used to include the
+ * retired flat header. This one never included it -- it reached 0x008, 0x138
+ * and 0x13c as raw `c + 0xNN` instead -- so it was invisible to a grep for
+ * daDoor_c, and leaving it would have kept a second spelling of Door's layout
+ * alive in the tree. Byte-exact under the pinned 2004/b56 before and after.
+ *
+ * `delete key` IS the ROM's `ldr r1,[r0]; ldr r1,[r1,#4]; blx r1` -- vtable
+ * slot 1, Model's deleting destructor -- and it is also where the doubled
+ * null check at 0x02149b04/0x02149b0c comes from: the explicit `if` emits one
+ * and `delete` emits its own. The old source spelt that as a local `struct V`
+ * with two dummy virtuals plus a hand-written second `if (obj != 0)`, which
+ * produced the same bytes for the wrong reason. include/Door.h now types
+ * 0x138 as Model*, so the shadow struct is gone. */
 struct Elem { void* a; void* b; char pad[8]; };
 extern Elem data_ov100_02148204[];
 extern "C" {
 extern void* data_ov100_02148744;
-int _ZN4Door16CleanupResourcesEv(char* c) {
-  int idx = *(int*)(c + 8);
-  Elem* e = &data_ov100_02148204[idx];
-  V* obj;
+int _ZN4Door16CleanupResourcesEv(Door* self) {
+  Elem* e = &data_ov100_02148204[self->param1];
+  Model* key;
   ((SharedFilePtr *)(e->a))->Release();
   ((SharedFilePtr *)(&data_ov100_02148744))->Release();
-  obj = (V*)*(void**)(c + 0x138);
-  if (obj != 0) {
-    if (obj != 0) obj->v1();
+  key = self->unk_138;
+  if (key != 0) {
+    delete key;
     ((SharedFilePtr *)(e->b))->Release();
   }
-  if (*(void**)(c + 0x13c) != 0) {
-    unsigned int v = *(unsigned int*)(c + 8);
+  if (self->unk_13c != 0) {
+    unsigned int v = self->param1;
     if (v >= 9 && v <= 0xd) UnloadKeyModels(v - 7);
-    ((SharedFilePtr *)(*(void**)(c + 0x13c)))->Release();
+    ((SharedFilePtr *)(self->unk_13c))->Release();
   }
   return 1;
 }
