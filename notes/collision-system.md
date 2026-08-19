@@ -588,9 +588,12 @@ core. A draft at **2 divergences** is banked under the stale pre-rename symbol
 - **0** — the draft in `notes/` scores 1213, not 1412; the four wrong prose claims are gone;
   `class-reference.html` reports 4 slots for `dCc_c`; all eight thunks agree on banner
   policy.
-- **1** — every collision `_ZTV`/`_ZTI`/`_ZTS` triple spells the cartridge name; zero
-  `_ZTS<coined>` anywhere in `config/`; `eligible.py` name-list delta is zero or explained;
-  ROM build still 106/106 exact.
+- **1** — **MET 2026-08-19.** Every collision `_ZTV`/`_ZTI`/`_ZTS` triple spells the
+  cartridge name; zero `_ZTS<coined>` anywhere in `config/`; the `eligible.py` name-list
+  delta is exactly the renamed symbols each time; ROM build still 106/106 exact.
+  *Checking against this wording is what caught the five missing `_ZTV` symbols — "no
+  coined names left" and "every triple complete" are not the same claim, and only the
+  second one is the goal.*
 - **2** — `SurfaceInfo` defined once; `check_header_offsets` clean with the query classes
   actually spanned (not skipped as polymorphic); no `src/` file carries a private
   redefinition of a collision type.
