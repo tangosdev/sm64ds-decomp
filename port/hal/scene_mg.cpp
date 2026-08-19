@@ -2132,11 +2132,17 @@ extern "C" void *port_mg_smartball_spawn(void)
 
 extern "C" void port_scene_mg_smartball_hits(void)
 {
+    /* ONLY BIT 2 CAN FIRE TODAY, and the other two labels are kept rather
+       than deleted. Bits 0 and 1 were slot 0 InitResources and slot 9 Render;
+       both bodies are seated now (runs INTEG and SMBSEAT) and their traps are
+       gone from port/unmatched/MgSmartball_Traps.cpp, so those two bits are
+       structurally unreachable and a reader who sees either label print is
+       looking at a re-armed trap, which is exactly what the labels are for. */
     const unsigned m = port_mg_smartball_trap_mask();
     std::printf("[scene] dScMgSmartball_c traps entered: %u total%s%s%s\n",
                 port_mg_smartball_trap_hits(),
-                (m & 1) ? "  [slot 0 InitResources]" : "",
-                (m & 2) ? "  [slot 9 Render]" : "",
+                (m & 1) ? "  [slot 0 InitResources RE-ARMED]" : "",
+                (m & 2) ? "  [slot 9 Render RE-ARMED]" : "",
                 (m & 4) ? "  [func_ov006_02115248]" : "");
     /* The sub-object witness. Zero here with a clean run is NOT a pass: it
        means the twelve tables were relocated and then never dispatched, which
