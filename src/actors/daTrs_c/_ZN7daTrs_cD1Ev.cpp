@@ -1,21 +1,21 @@
 //cpp
-// @symbol _ZN3BooD1Ev
-/* recovered: named members + shared header, real derived class (Boo : dCapEnemy_c)
+// @symbol _ZN7daTrs_cD1Ev
+/* recovered: named members + shared header, real derived class (daTrs_c : dCapEnemy_c)
  * -- chains to dCapEnemy_c's out-of-line D1 (func_ov002_020aedbc, not yet renamed;
- * see include/Boo.h for the base-edge evidence) instead of a compiler-
+ * see include/daTrs_c.h for the base-edge evidence) instead of a compiler-
  * synthesized call, since that symbol does not exist under its mangled name
  * in this tree yet. */
-#include "Boo.h"
+#include "daTrs_c.h"
 extern "C" {
-extern int _ZTV3Boo[];
+extern int _ZTV7daTrs_c[];
 extern int _ZN11ShadowModelD1Ev(void*);
 extern int _ZN5ModelD1Ev(void*);
 extern int _ZN9ModelAnimD1Ev(void*);
 extern int _ZN12WithMeshClsnD1Ev(void*);
 extern int _ZN25MovingCylinderClsnWithPosD1Ev(void*);
 extern int* func_ov002_020aedbc(int*);
-int _ZN3BooD1Ev(struct Boo *self) {
-  *(int*)((char*)self)=(int)_ZTV3Boo;
+int _ZN7daTrs_cD1Ev(struct daTrs_c *self) {
+  *(int*)((char*)self)=(int)_ZTV7daTrs_c;
   _ZN11ShadowModelD1Ev((char*)&self->mShadowModel2);
   _ZN11ShadowModelD1Ev((char*)&self->mShadowModel1);
   _ZN5ModelD1Ev((char*)&self->mModel);

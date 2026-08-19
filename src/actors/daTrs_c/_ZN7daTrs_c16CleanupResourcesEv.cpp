@@ -1,9 +1,9 @@
 //cpp
-// @symbol _ZN3Boo16CleanupResourcesEv
+// @symbol _ZN7daTrs_c16CleanupResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
-#include "Boo.h"
+#include "daTrs_c.h"
 #include "SharedFilePtr.h"
 struct dActor_c;
 extern "C" dActor_c *_ZN8dActor_c10FindWithIDEj(unsigned int id);
@@ -34,7 +34,7 @@ struct O {
     unsigned char f5cf;       // +0x5cf
 };
 
-int Boo::CleanupResources()
+int daTrs_c::CleanupResources()
 {
     int b;
     int *cnt;

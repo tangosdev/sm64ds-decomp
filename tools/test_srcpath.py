@@ -104,13 +104,13 @@ class SrcPath(unittest.TestCase):
         self.assertEqual(SP.module_of("__sinit_ov002_02100560"), "ov002")
         self.assertEqual(SP.module_of("func_0205c410"), "arm9")
         self.assertEqual(SP.module_of("__sinit_02073a24"), "arm9")
-        self.assertIsNone(SP.module_of("_ZN3Boo6RenderEv"))
+        self.assertIsNone(SP.module_of("_ZN7daTrs_c6RenderEv"))
         self.assertIsNone(SP.module_of("AngleDiff"))
 
     def test_class_of_takes_the_outer_component(self):
-        self.assertEqual(SP.class_of("_ZN3Boo6RenderEv"), "Boo")
+        self.assertEqual(SP.class_of("_ZN7daTrs_c6RenderEv"), "daTrs_c")
         self.assertEqual(SP.class_of("_ZN15FaderBrightness8SetToEndEv"), "FaderBrightness")
-        self.assertEqual(SP.class_of("Boo_Spawn"), "Boo")
+        self.assertEqual(SP.class_of("Boo_Spawn"), "Boo")  # factory keeps its coined name; class_of is textual
         # const method
         self.assertEqual(SP.class_of("_ZNK5Actor7GetPosEv"), "Actor")
 
@@ -144,10 +144,10 @@ class SrcPath(unittest.TestCase):
         self.assertEqual(SP.new_path_for("func_02012345", "c"), SP.SRC / "func_02012345.c")
 
     def test_a_class_follows_its_siblings(self):
-        self.write("actors/Boo/Boo_Spawn.cpp")
-        self.write("actors/Boo/_ZN3BooD1Ev.c")
-        self.assertEqual(SP.new_path_for("_ZN3Boo6RenderEv", "cpp"),
-                         SP.SRC / "actors/Boo/_ZN3Boo6RenderEv.cpp")
+        self.write("actors/daTrs_c/daTrs_c_Spawn.cpp")
+        self.write("actors/daTrs_c/_ZN7daTrs_cD1Ev.c")
+        self.assertEqual(SP.new_path_for("_ZN7daTrs_c6RenderEv", "cpp"),
+                         SP.SRC / "actors/daTrs_c/_ZN7daTrs_c6RenderEv.cpp")
 
     def test_a_spawn_follows_its_class(self):
         self.write("actors/MadPiano/_ZN8MadPianoD1Ev.c")
@@ -157,25 +157,25 @@ class SrcPath(unittest.TestCase):
     def test_flat_siblings_do_not_outvote_a_subdirectory(self):
         """A partly-migrated class keeps going to the subdirectory it has; the root is the
         unmigrated default, not a rival choice."""
-        self.write("_ZN3BooD0Ev.c")
-        self.write("_ZN3BooD1Ev.c")
-        self.write("actors/Boo/Boo_Spawn.cpp")
-        self.assertEqual(SP.new_path_for("_ZN3Boo6RenderEv", "cpp"),
-                         SP.SRC / "actors/Boo/_ZN3Boo6RenderEv.cpp")
+        self.write("_ZN7daTrs_cD0Ev.c")
+        self.write("_ZN7daTrs_cD1Ev.c")
+        self.write("actors/daTrs_c/daTrs_c_Spawn.cpp")
+        self.assertEqual(SP.new_path_for("_ZN7daTrs_c6RenderEv", "cpp"),
+                         SP.SRC / "actors/daTrs_c/_ZN7daTrs_c6RenderEv.cpp")
 
     def test_two_subdirectories_are_left_alone(self):
-        self.write("actors/Boo/Boo_Spawn.cpp")
-        self.write("engine/ghosts/_ZN3BooD1Ev.c")
-        self.assertEqual(SP.new_path_for("_ZN3Boo6RenderEv", "cpp"),
-                         SP.SRC / "_ZN3Boo6RenderEv.cpp")
+        self.write("actors/daTrs_c/daTrs_c_Spawn.cpp")
+        self.write("engine/ghosts/_ZN7daTrs_cD1Ev.c")
+        self.assertEqual(SP.new_path_for("_ZN7daTrs_c6RenderEv", "cpp"),
+                         SP.SRC / "_ZN7daTrs_c6RenderEv.cpp")
 
     def test_an_unknown_class_stays_flat(self):
-        self.write("actors/Boo/Boo_Spawn.cpp")
+        self.write("actors/daTrs_c/daTrs_c_Spawn.cpp")
         self.assertEqual(SP.new_path_for("_ZN6Player4InitEv", "cpp"),
                          SP.SRC / "_ZN6Player4InitEv.cpp")
 
     def test_free_functions_and_plain_names_stay_flat(self):
-        self.write("actors/Boo/Boo_Spawn.cpp")
+        self.write("actors/daTrs_c/daTrs_c_Spawn.cpp")
         self.assertEqual(SP.new_path_for("_Z14ApproachLinearRiii", "c"),
                          SP.SRC / "_Z14ApproachLinearRiii.c")
         self.assertEqual(SP.new_path_for("AngleDiff", "c"), SP.SRC / "AngleDiff.c")
@@ -191,14 +191,14 @@ class SrcPath(unittest.TestCase):
         itself AND splits its class across two directories, which disables placement for
         every other method of that class."""
         p = self.write("unnamed/ov006/func_ov006_02100000.c")
-        self.assertEqual(SP.rename_target(p, "_ZN3Boo6RenderEv"),
-                         SP.SRC / "_ZN3Boo6RenderEv.c")
+        self.assertEqual(SP.rename_target(p, "_ZN7daTrs_c6RenderEv"),
+                         SP.SRC / "_ZN7daTrs_c6RenderEv.c")
 
     def test_rename_into_the_classs_existing_home(self):
-        self.write("actors/Boo/Boo_Spawn.cpp")
+        self.write("actors/daTrs_c/daTrs_c_Spawn.cpp")
         p = self.write("unnamed/ov006/func_ov006_02100000.c")
-        self.assertEqual(SP.rename_target(p, "_ZN3Boo6RenderEv"),
-                         SP.SRC / "actors/Boo/_ZN3Boo6RenderEv.c")
+        self.assertEqual(SP.rename_target(p, "_ZN7daTrs_c6RenderEv"),
+                         SP.SRC / "actors/daTrs_c/_ZN7daTrs_c6RenderEv.c")
 
     def test_rename_stays_in_its_bucket_when_still_address_named(self):
         p = self.write("unnamed/ov006/func_ov006_02100000.c")
@@ -219,15 +219,15 @@ class SrcPath(unittest.TestCase):
 
     def test_rename_keeps_a_multi_suffix_extension(self):
         p = self.write("unnamed/ov006/func_ov006_02100000.cpp")
-        self.assertEqual(SP.rename_target(p, "_ZN3Boo6RenderEv").suffix, ".cpp")
+        self.assertEqual(SP.rename_target(p, "_ZN7daTrs_c6RenderEv").suffix, ".cpp")
 
     def test_placement_never_overrides_where_a_file_already_is(self):
         """Migration decides; placement only follows. A file that exists is not relocated
         even when its cohort has since moved elsewhere."""
-        self.write("actors/Boo/Boo_Spawn.cpp")
-        self.write("_ZN3Boo6RenderEv.c")
-        self.assertEqual(SP.new_path_for("_ZN3Boo6RenderEv", "cpp"),
-                         SP.SRC / "_ZN3Boo6RenderEv.cpp")
+        self.write("actors/daTrs_c/daTrs_c_Spawn.cpp")
+        self.write("_ZN7daTrs_c6RenderEv.c")
+        self.assertEqual(SP.new_path_for("_ZN7daTrs_c6RenderEv", "cpp"),
+                         SP.SRC / "_ZN7daTrs_c6RenderEv.cpp")
 
     # --- bulk ---------------------------------------------------------------
     def test_index_and_iter_cover_nested_files(self):

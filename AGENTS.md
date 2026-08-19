@@ -55,7 +55,7 @@ highest-yield input to the refine tier — but its home is the DB, not `src/`.
 ### Which directory under `src/`
 
 Most files are in `src/` itself, but that is a fact about the tree, not a rule. Parts of
-it are grouped (`src/engine/fader/`, `src/actors/Boo/`, `src/unnamed/ov063/`), and more
+it are grouped (`src/engine/fader/`, `src/actors/daTrs_c/`, `src/unnamed/ov063/`), and more
 will be. **Do not compose the path yourself** — ask:
 
 ```
@@ -71,7 +71,7 @@ bytes instead of erroring.
 
 Placement follows migration rather than leading it. A new file goes into a subdirectory
 only when the files it belongs with are already there and agree on which one — a new
-`Boo` method joins the other seven, a new `func_ov063_*` joins `src/unnamed/ov063/`.
+`daTrs_c` method joins the other seven, a new `func_ov063_*` joins `src/unnamed/ov063/`.
 Everything else stays in the root. Nothing relocates on its own; moving a group is a
 deliberate, separate, **rename-only** PR (see #970 and #975).
 

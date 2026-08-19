@@ -7,7 +7,7 @@
  * dEnemyBase_c directly -- the tree used to believe `Goomba : Enemy`, which skipped the
  * whole cap-wearing layer (see notes/rtti-reconciliation.md and the old handoff note
  * this header replaces). rtti_reconcile.py's alias vote (build/rtti_reconcile.json)
- * corroborates dCapEnemy_c's identity with a margin of 2: this class and Boo (daTrs_c)
+ * corroborates dCapEnemy_c's identity with a margin of 2: this class and daTrs_c (once coined Boo)
  * both derive from it per their own destructor chains, so neither alone made the
  * pairing circular.
  *

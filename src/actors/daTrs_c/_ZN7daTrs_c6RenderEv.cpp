@@ -1,20 +1,20 @@
 //cpp
-// @symbol _ZN3Boo6RenderEv
+// @symbol _ZN7daTrs_c6RenderEv
 /* recovered: named members + shared header, real C++ method.
  * unk_080/unk_0b0/unk_10c are raw-offset reads into the inherited dCapEnemy_c
  * (really dEnemyBase_c/dActor_c) span, 0x180 bytes this class no longer
- * declares fields for now that Boo.h derives dCapEnemy_c -- reached the same way
+ * declares fields for now that daTrs_c.h derives dCapEnemy_c -- reached the same way
  * dBgActor_c.h documents for other classes' generic padding: `this + offset`
  * rather than a named member. The local ModelVT shadow (renamed from the
  * generated header's placeholder `Model`, which collided with the real
- * include/Model.h class this file also pulls in via Boo.h) simulates only the
+ * include/Model.h class this file also pulls in via daTrs_c.h) simulates only the
  * vtable slot this call needs, not the model's full layout. The flags halfword
- * at 0x5d4 is read through Boo.h's typed mFlags_5d4 bitfield member -- a local
+ * at 0x5d4 is read through daTrs_c.h's typed mFlags_5d4 bitfield member -- a local
  * (Flags *)((char *)this + 0x5d4) shadow compiled to a literal-pool address
  * load (ldr rN,[pc] + ldrh [r4,rN]) where the ROM has add r0,r4,#0x500 +
  * ldrh [r0,#0xd4]; the typed member was the one instruction between this file
  * and a byte match. */
-#include "Boo.h"
+#include "daTrs_c.h"
 struct Vector3;
 struct ModelVT {
     virtual void f0(); virtual void f1(); virtual void f2();
@@ -28,7 +28,7 @@ void _ZN5Model12HideMaterialEii(void *thiz, int a, int b);
 void _ZN5Model6RenderEPK7Vector3(void *thiz, const void *v);
 }
 
-int Boo::Render()
+int daTrs_c::Render()
 {
     int b = (int)(((*(int *)((char *)this + 0xb0)) & 0x40000) != 0);
     if (b != 0)

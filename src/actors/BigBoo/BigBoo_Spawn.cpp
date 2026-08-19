@@ -8,12 +8,12 @@ void _ZN12WithMeshClsnC1Ev(void* t);
 void _ZN9ModelAnimC1Ev(void* t);
 void _ZN5ModelC1Ev(void* t);
 void _ZN11ShadowModelC1Ev(void* t);
-extern void* _ZTV3Boo;
+extern void* _ZTV7daTrs_c;
 void* BigBoo_Spawn(void){
   char* t=(char*)_ZN7fBase_cnwEj(0x5e0);
   if(t){
     _ZN11dCapEnemy_cC2Ev(t);
-    *(void**)t = &_ZTV3Boo;
+    *(void**)t = &_ZTV7daTrs_c;
     _ZN25MovingCylinderClsnWithPosC1Ev(t+0x184);
     _ZN12WithMeshClsnC1Ev(t+0x1c4);
     _ZN9ModelAnimC1Ev(t+0x380);

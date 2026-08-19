@@ -1,32 +1,32 @@
 /* Derives from dCapEnemy_c (on main; the ROM's own RTTI names it daTrs_c and gives
- * dCapEnemy_c two children, daKrb_c/Goomba and daTrs_c/Boo -- the unmerged
+ * dCapEnemy_c two children, daKrb_c/Goomba and daTrs_c/Boo-as-was -- the unmerged
  * cpp/goomba-family branch renames dCapEnemy_c -> dCapEnemy_c and will sweep this
  * file's spelling along with it when it merges, or in a trivial follow-up).
  *
  * rtti_reconcile came back 'no_belief' on this edge (base not auto-inferred),
  * so it is established by hand, the same way as its sibling Goomba:
  *
- *   - Backward: Boo's own destructor (_ZN3BooD1Ev, src/actors/Boo/_ZN3BooD1Ev.cpp)
+ *   - Backward: daTrs_c's own destructor (_ZN7daTrs_cD1Ev, src/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp)
  *     tears down its own six members, then calls func_ov002_020aedbc -- the
  *     exact function _ZN6GoombaD1Ev (src/_ZN6GoombaD1Ev.c) calls after tearing
  *     down its own members. func_ov002_020aedbc sits at 0x020aedbc and is
  *     immediately followed, at 0x020aedf4, by the already-matched
  *     _ZN11dCapEnemy_cD0Ev -- so 0x020aedbc is dCapEnemy_c's own out-of-line D1, and
  *     both sibling destructors chain to it.
- *   - Forward: Boo_Spawn (src/actors/Boo/Boo_Spawn.cpp) calls
- *     _ZN11dCapEnemy_cC2Ev(t) before storing _ZTV3Boo -- exactly Goomba_Spawn's
+ *   - Forward: Boo_Spawn (src/actors/daTrs_c/Boo_Spawn.cpp) calls
+ *     _ZN11dCapEnemy_cC2Ev(t) before storing _ZTV7daTrs_c -- exactly Goomba_Spawn's
  *     shape, which calls the same _ZN11dCapEnemy_cC2Ev before storing _ZTV6Goomba.
  *
  * Not renaming func_ov002_020aedbc here -- that is dCapEnemy_c's own file and
  * belongs to the goomba-family rename.
  *
  * SIZE 0x5e0, the literal Boo_Spawn passes to fBase_c::operator new
- * (src/actors/Boo/Boo_Spawn.cpp: `_ZN7fBase_cnwEj(0x5e0)`). dCapEnemy_c ends at
- * 0x180 (include/dCapEnemy_c.h); everything from there down is Boo's own.
+ * (src/actors/daTrs_c/Boo_Spawn.cpp: `_ZN7fBase_cnwEj(0x5e0)`). dCapEnemy_c ends at
+ * 0x180 (include/dCapEnemy_c.h); everything from there down is daTrs_c's own.
  *
  * The six members close exactly on one another -- evidenced twice, in the
  * same offsets and order in both Boo_Spawn's construction and
- * _ZN3BooD1Ev / _ZN3BooD0Ev's teardown (reverse order):
+ * _ZN7daTrs_cD1Ev / _ZN7daTrs_cD0Ev's teardown (reverse order):
  *
  *     0x184 MovingCylinderClsnWithPos   0x40  -> 0x1c4
  *     0x1c4 WithMeshClsn                0x1bc -> 0x380
@@ -40,13 +40,13 @@
  * 29 (OnAimedAtWithEgg) are this class's own overrides -- see
  * include/dActor_c.h for the slot table.
  *
- * No Boo() constructor is declared: Boo_Spawn builds the object field-by-field
+ * No daTrs_c() constructor is declared: Boo_Spawn builds the object field-by-field
  * (calling dCapEnemy_c::dCapEnemy_c, storing the vtable, then each member's own
- * constructor) rather than through a Boo::Boo(), so declaring one risks an
+ * constructor) rather than through a daTrs_c::daTrs_c(), so declaring one risks an
  * implicit body the compiler would inline somewhere the ROM does not.
  *
- * ~Boo() is declared but not defined in-class -- the destructor's actual
- * bodies are the existing hand-written _ZN3BooD1Ev / _ZN3BooD0Ev, kept as
+ * ~daTrs_c() is declared but not defined in-class -- the destructor's actual
+ * bodies are the existing hand-written _ZN7daTrs_cD1Ev / _ZN7daTrs_cD0Ev, kept as
  * manual `extern "C"` definitions rather than compiler-synthesized ones so
  * the base-chain call keeps spelling func_ov002_020aedbc. `_ZN11dCapEnemy_cD2Ev`
  * now exists (0x0200651c, named by the goomba-family rename) but it is a
@@ -54,8 +54,8 @@
  * own out-of-line D1, which is still unnamed. A compiler-synthesized destructor
  * would emit a call to the former, not the latter.
  */
-#ifndef BOO_H
-#define BOO_H
+#ifndef DATRS_C_H
+#define DATRS_C_H
 #include "types.h"
 
 #include "dCapEnemy_c.h"
@@ -70,7 +70,7 @@
 struct BooFlags16 { u16 b0:1, b1:1, b2:1, b3:1; };
 typedef char BooFlags16_size_must_be_0x2[sizeof(BooFlags16) == 0x2 ? 1 : -1];
 
-struct Boo : dCapEnemy_c {
+struct daTrs_c : dCapEnemy_c {
     u8  pad_180[0x4];
     MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x184 */
     WithMeshClsn               mWithMeshClsn;               /* 0x1c4 */
@@ -95,7 +95,7 @@ struct Boo : dCapEnemy_c {
     BooFlags16 mFlags_5d4;  /* 0x5d4 */
     u8  pad_5d6[0xa];
 
-    virtual ~Boo();
+    virtual ~daTrs_c();
 
     /* --- vtable, own overrides --- */
     virtual int  OnYoshiTryEat();      /* slot 18 */
@@ -107,6 +107,6 @@ struct Boo : dCapEnemy_c {
     int  Render();
 };
 
-typedef char Boo_size_must_be_0x5e0[sizeof(Boo) == 0x5e0 ? 1 : -1];
+typedef char daTrs_c_size_must_be_0x5e0[sizeof(daTrs_c) == 0x5e0 ? 1 : -1];
 
 #endif

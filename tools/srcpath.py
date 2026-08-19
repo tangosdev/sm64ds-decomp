@@ -57,8 +57,8 @@ when the files it belongs with are ALREADY nested, and only when they agree on w
     **if that directory exists**. Creating it is the migration's explicit opt-in; until
     then its module's files stay in the root, which is where the rest of them are.
   * a class-named symbol goes wherever its class already lives, if its existing files
-    occupy exactly one subdirectory. `_ZN3Boo6RenderEv` follows the other seven `Boo`
-    files into `src/actors/Boo/`; a `Player` method stays flat because all 248 of them
+    occupy exactly one subdirectory. `_ZN7daTrs_c6RenderEv` follows the other seven `daTrs_c`
+    files into `src/actors/daTrs_c/`; a `Player` method stays flat because all 248 of them
     are still flat.
   * anything else -- free functions, thunks, plain names -- stays in the root.
 
@@ -323,11 +323,11 @@ def rename_target(path, new_symbol):
     """Where a file must live once its symbol is renamed to ``new_symbol``.
 
     Renaming in place is the norm and stays the norm; this differs only when the old
-    directory would become a lie. A `func_ov006_*` that becomes `_ZN3Boo6RenderEv` cannot
+    directory would become a lie. A `func_ov006_*` that becomes `_ZN7daTrs_c6RenderEv` cannot
     stay in `src/unnamed/ov006/`: that directory means "address-named symbols of ov006".
-    Leaving it there misfiles the file and, worse, puts class `Boo` in two directories at
+    Leaving it there misfiles the file and, worse, puts class `daTrs_c` in two directories at
     once -- which is exactly the state `placement_for` reads as disagreement, so every
-    future `Boo` method silently goes back to landing in the root.
+    future `daTrs_c` method silently goes back to landing in the root.
 
     Renaming is the single most common way a file's correct home changes: 1,282 files
     went from `func_*` to a real name in the 60 days to 2026-08-04."""

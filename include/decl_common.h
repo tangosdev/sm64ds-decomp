@@ -697,7 +697,7 @@ extern int _ZTV25RotatingUpDownPlatformUtm[];
 extern int _ZTV25SlideDecorationSilverStar[];
 extern int _ZTV9ArrowLift[];
 extern int _ZTV3Amp[];
-extern int _ZTV3Boo[];
+extern int _ZTV7daTrs_c[];
 extern int _ZTV3Key[];
 extern int _ZTV3MrI[];
 extern int _ZTV4Bird[];

@@ -1,13 +1,13 @@
 //cpp
-// @symbol _ZN3Boo13InitResourcesEv
-/* recovered: real C++ method, vtable slot 0 -- Boo::InitResources. Previously a
+// @symbol _ZN7daTrs_c13InitResourcesEv
+/* recovered: real C++ method, vtable slot 0 -- daTrs_c::InitResources. Previously a
  * C free function; only the symbol and self access moved to a real method (the
  * body still reads the object through raw offsets via `c`, like its siblings).
  * The extern declarations spell mangled names literally inside extern "C" --
  * the parameter types are call-ABI spellings, not claims about the real
  * signatures (every argument is int-sized; a Fix12 passes bit-identical to an
  * int, see include/math/Fix12.h). */
-#include "Boo.h"
+#include "daTrs_c.h"
 
 extern "C" {
 void LoadKeyModels(int n);
@@ -62,7 +62,7 @@ extern "C" extern struct H data_020a0e68;
 #define FLAGS16 (*(unsigned short *)((long long)(c + 0x5d4)))
 #define FLAGS16T (*(unsigned short *)((long long)((char *)((long long)c) + 0x5d4)))
 
-int Boo::InitResources()
+int daTrs_c::InitResources()
 {
     char *c = (char *)this;
     int cond;

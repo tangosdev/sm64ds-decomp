@@ -9,7 +9,7 @@
 struct Vector3;
 
 /* The base for the enemies that can wear one of the caps. The ROM's RTTI names it
- * dCapEnemy_c and gives it two children, daKrb_c (Goomba) and daTrs_c (Boo).
+ * dCapEnemy_c and gives it two children, daKrb_c (Goomba) and daTrs_c (once coined Boo).
  *
  * DERIVES FROM dEnemyBase_c, and the class's own constructor and destructor are the two
  * witnesses. dCapEnemy_c::dCapEnemy_c calls _ZN12dEnemyBase_cC2Ev, stores the vtable, then

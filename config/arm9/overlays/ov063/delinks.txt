@@ -4,11 +4,11 @@
     .ctor       start:0x0211e6fc end:0x0211e70c kind:rodata align:4
     .data       start:0x0211e720 end:0x0211edc0 kind:data align:32
     .bss        start:0x0211edc0 end:0x0211efe0 kind:bss align:32
-src/actors/Boo/_ZN3BooD1Ev.cpp:
+src/actors/daTrs_c/_ZN7daTrs_cD1Ev.cpp:
     complete
     .text start:0x02115ee0 end:0x02115f48
 
-src/actors/Boo/_ZN3BooD0Ev.cpp:
+src/actors/daTrs_c/_ZN7daTrs_cD0Ev.cpp:
     complete
     .text start:0x02115f48 end:0x02115fc4
 
@@ -28,7 +28,7 @@ src/actors/BigBooIcon/_ZN10BigBooIconD0Ev.c:
     complete
     .text start:0x0211608c end:0x021160c4
 
-src/actors/Boo/_ZN3Boo16OnAimedAtWithEggEv.cpp:
+src/actors/daTrs_c/_ZN7daTrs_c16OnAimedAtWithEggEv.cpp:
     complete
     .text start:0x021160c4 end:0x021160d4
 
@@ -327,15 +327,15 @@ src/actors/BooCage/_ZN7BooCage16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211ae1c end:0x0211ae40
 
-src/actors/Boo/_ZN3Boo16CleanupResourcesEv.cpp:
+src/actors/daTrs_c/_ZN7daTrs_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211ae40 end:0x0211af6c
 
-src/actors/Boo/_ZN3Boo16OnPendingDestroyEv.cpp:
+src/actors/daTrs_c/_ZN7daTrs_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211af6c end:0x0211af70
 
-src/actors/Boo/_ZN3Boo6RenderEv.cpp:
+src/actors/daTrs_c/_ZN7daTrs_c6RenderEv.cpp:
     complete
     .text start:0x0211af70 end:0x0211b078
 
@@ -347,7 +347,7 @@ src/actors/BooCage/_ZN7BooCage8BehaviorEv.cpp:
     complete
     .text start:0x0211b888 end:0x0211b9bc
 
-src/actors/Boo/_ZN3Boo13InitResourcesEv.cpp:
+src/actors/daTrs_c/_ZN7daTrs_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211b9bc end:0x0211c35c
 
@@ -359,7 +359,7 @@ src/actors/BigBooIcon/_ZN10BigBooIcon13InitResourcesEv.cpp:
     complete
     .text start:0x0211c444 end:0x0211c480
 
-src/actors/Boo/_ZN3Boo13OnYoshiTryEatEv.cpp:
+src/actors/daTrs_c/_ZN7daTrs_c13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x0211c480 end:0x0211c4a0
 
@@ -375,7 +375,7 @@ src/actors/BigBoo/BigBoo_Spawn.cpp:
     complete
     .text start:0x0211c520 end:0x0211c590
 
-src/actors/Boo/Boo_Spawn.cpp:
+src/actors/daTrs_c/Boo_Spawn.cpp:
     complete
     .text start:0x0211c590 end:0x0211c600
 
