@@ -284,7 +284,7 @@ src/func_ov070_02121ae0.c:
     complete
     .text start:0x02121ae0 end:0x02121af8
 
-src/FlameChomp_Spawn.c:
+src/daKrpa_c_Spawn.c:
     complete
     .text start:0x02121af8 end:0x02121b48
 
@@ -368,7 +368,7 @@ src/_ZN8daKpFr_c13InitResourcesEv.cpp:
     complete
     .text start:0x02122124 end:0x021221fc
 
-src/FlameChompFire_Spawn.c:
+src/daKpFr_c_Spawn.c:
     complete
     .text start:0x021221fc end:0x02122244
 

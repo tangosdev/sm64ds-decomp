@@ -11,7 +11,7 @@
  * FlameChomp): the typeinfo at ov070
  * 0x02123340 names dActor_c as the sole base at offset 0, and the class's
  * vtable at 0x02123370 (31 slots, same count as dActor_c's) is what pairs it
- * to FlameChomp_Spawn, which stores that address after allocating 0x3b0 bytes
+ * to daKrpa_c_Spawn (renamed with the class; was FlameChomp_Spawn), which stores that address after allocating 0x3b0 bytes
  * via fBase_c::operator new.
  *
  * The Spawn constructs the four owned subobjects below at 0xd4..0x1a0 in

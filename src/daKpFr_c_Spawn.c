@@ -1,4 +1,4 @@
-// @symbol FlameChompFire_Spawn
+// @symbol daKpFr_c_Spawn
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
@@ -8,7 +8,7 @@
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV8daKpFr_c */
-int *FlameChompFire_Spawn(void)
+int *daKpFr_c_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(816);
     if (p) {
