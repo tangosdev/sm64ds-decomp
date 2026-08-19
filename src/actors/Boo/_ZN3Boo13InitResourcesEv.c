@@ -148,7 +148,11 @@ int _ZN3Boo13InitResourcesEv(char *c)
         capIdx = (U32(8) >> 8) & 0xf;
         _ZN11dCapEnemy_c6AddCapEj(c, capIdx);
         if ((U8(0x113) & 7) < 6) {
-            U32(8) = U32(8) & 0xfff;
+            /* int on the store side only: spelling both sides identically (U32)
+               lets mwccarm CSE the field address (addlt r2,r4,#8 + [r2]),
+               one instruction the ROM does not have -- it wants [r4,#8] direct.
+               Same lever as src/func_ov084_0212b344.cpp. */
+            S32(8) = U32(8) & 0xfff;
         }
         if (_ZN11dCapEnemy_c21DestroyIfCapNotNeededEv(c) == 0) {
             return 0;
