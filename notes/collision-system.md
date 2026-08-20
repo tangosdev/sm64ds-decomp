@@ -610,16 +610,58 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   - Binding it **above `SqrtRaw`** as well, which is the ROM's actual order: **exactly
     scoring-neutral** (0.3404 / 601 / 1753). mwcc reschedules both spellings back.
 
+  ### The three edge blocks: FIXED
+
+  They were the dominant repeat -- each ran +84 bytes long before `DotVec3` then
+  -88 short after it, three times over. Hoisting `DotVec3` above `SqrtRaw` fixed
+  all three at once:
+
+  ```
+  gap 6->7 (CLPS read -> DotVec3)   ROM 120, cand 204 -> 108   (+84 -> -12)
+  gap 7->8 (DotVec3 -> guard)       ROM 108, cand  20 -> 112   (-88 -> +4)
+  equal 816 -> 825,  ratio 0.4622 -> 0.4673,  divergences 962 -> 953
+  ```
+
+  That lever had been measured INERT twice earlier the same day, before the
+  block-layout and declaration-order fixes. Third instance of the re-test lesson.
+
+  Do NOT bind the two `>>4` shifts to temporaries first, even though that is
+  literally what the ROM does (`asr r7,r8,#4` / `asr r6,sb,#4` straddling the
+  call at 0x01ffc270..0x01ffc280): `rom_order` -1, `rom_order_d4_late` -4, both
+  growing the candidate to 1759. The shifts must stay inline in the `SqrtRaw`
+  argument; only the call moves. Binding them without hoisting is inert.
+
+  ### The wall slab is NOT the post-accept deficit
+
+  `call 27->28` runs +168 (ROM 608, cand 776) and the obvious suspect was the slab
+  test naming `AXIS_DOT` twice per vertex -- six three-term dot products where the
+  ROM's 12 `smull` allow four. It is not:
+
+  | variant | equal | cand |
+  |---|---|---|
+  | baseline | 825 | 1753 |
+  | bind all three dots up front | 820 (-5) | 1722 |
+  | bind each lazily, nested | 825 (inert) | 1753 |
+  | bind lazily with goto-out | 825 (inert) | 1753 |
+
+  The lazy forms are byte-identical, so **mwcc already CSEs the repeated
+  `AXIS_DOT` within the `&&` chain**. Binding all three up front forces eager
+  evaluation, which is 31 instructions shorter but costs 5 matches and takes the
+  candidate to 56 short instead of 25. Look elsewhere in the post-accept chain.
+
   ### Where the remaining gap is, measured
 
   | region | drift | note |
   |---|---|---|
-  | calls 0-6 (head) | constant **-36** | 9 instructions short before the first `DotVec3` |
-  | each of the 3 edge blocks | **+88 then -96** | `DotVec3` sits late; the ROM's 108 bytes between it and the guard are the hardware sqrt at `0x01ffc2a8`. Two source spellings failed to move it |
-  | calls 27->28 | **+168** | corner tail too long |
+  | calls 0-6 (head) | constant **-36** | 9 instructions short in the prologue/setup/octree descent, ROM 1456 bytes vs cand 1420. Constant, so it does not misalign anything downstream |
+  | calls 27->28 | **+168** | post-accept chain too long; NOT the wall slab, see above |
   | calls 31->32 | **-128** | record block too short |
+  | call 18 | **-40** | ROM 136 vs cand 96 |
+  | calls 22 / 24 / 26 | -28 / -32 / +36 | corner blocks |
 
-  The three edge blocks repeat one defect, so a fix there lands three times.
+  The edge blocks are done. `27->28` and `31->32` are the two big ones left and
+  they may be one defect: +168 then -128 across adjacent regions looks like work
+  sitting on the wrong side of a boundary, the same shape the edge blocks had.
 
   ### A correction carried in from the reloc table
 
