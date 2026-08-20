@@ -1,133 +1,199 @@
 //cpp
-// NONMATCHING: size 0x1bc8 -- INSTRUCTION COUNT EXACT.  align equal=1374 ratio=0.773
-//              Frame exact too: sub sp,#0x1b4 and 102 stack slots, both matching
+// NONMATCHING: size 0x1bc8.  1778 instructions, exactly the ROM's, in a frame of
+//              exactly the ROM's size.  809 of them are now byte-for-byte right
+//              AT THE RIGHT INDEX, against 276 at the start of this session.
 //
-// 2026-08-20, second session (equal 1047 -> 1335).  Every gain below is a
-// SPELLING: each one re-reads a value the candidate already had in a register,
-// because the ROM does not share it.  None changes what the function computes.
+// 2026-08-20, third session.  Every gain is a SPELLING -- none changes what the
+// function computes -- and two of them also delete a construct this draft had
+// invented.
 //
-//   +153 `en3 = f->normals[tri->edgeNormal3Idx];` between the two KCL_VERTEX
-//        rounds.  mwcc was CSE-ing the three en3[i] loads across both rounds;
-//        the ROM reloads them.  One line.  It took the alignment's `delete`
-//        count from 100 to 21, so it is a structural fix, not an alignment
-//        accident -- confirmed independently below.
-//   +56  the sphere centre re-bound per COMPONENT in the slab block, TOGETHER
-//        with reading `cr` through a `(volatile s16 *)` view in KCL_VERTEX.
-//        Neither alone helps: separately they are -27 and -64.
-//   +6   six branch-polarity flips in the Voronoi dispatch -- `if (MUL10(nn,
-//        dotA) > dotB) goto edgeN; goto vXX;` instead of the `<=` form.  The
-//        ROM branches INTO the vertex block; we branched into the edge block.
-//        Exactly +1 each, independent and additive (all 64 subsets swept).
-//   +42  the prism origin read through `tpv` at five of six vertex-tail sites.
-//        This one came from the permuter and is documented at its site.
-//   +36  the `tpv` alias RE-SWEPT after the frame fix: round 1 now reads the
-//        array directly and only round 2's [0] and [1] go through the pointer.
-//        The slot map is what pointed at it -- the ROM's three `tp` slots are
-//        (2 loads, 2 stores, 0 address-takes) and ours were (1,2,5), i.e. the
-//        ROM never takes tp's address at all.  Sixth time a swept lever came
-//        back after a structural change.  This is what took `cand` to 1778.
-//   +29  THE FRAME LEVER (measured on the anchored count, not on `equal` --
-//        see below).  `tp`/`vb`/`vc` are `Vtx3`, an aggregate with a
-//        user-declared empty destructor, because mwccarm was SCALARIZING vb
-//        and vc into loose stack slots where the ROM keeps them as arrays.
-//        Frame goes 0x1bc -> 0x1b4 and 105 slots -> 102, both exactly the
-//        ROM's, and the load deficit reaches zero.  Found by diffing the two
-//        frames slot by slot: the ROM had nine slots with two stores each
-//        that we did not, and we had eight loose one-load/one-store slots
-//        that it did not.  The destructor is what blocks the scalarization --
-//        the same aggregate WITHOUT it is byte-identical to the old draft.
-//   +31  TWO declaration moves -- `rawX/rawY/rawZ` and `den12/den23/den31`.
-//        Found by a greedy sweep over every declaration line x every position
-//        (3,135 compiles per round, converged in three rounds).  The recorded
-//        verdict this overturned was "377 compiles, ZERO improving moves",
-//        measured before the four edits above changed the allocator's input.
-//        Fifth time the re-test rule has paid on this function.
+// FOUR METRICS, AND THEY DISAGREE.  That is the whole methodology here, so read
+// this before trusting any number below.
 //
-// HOW THE GAINS WERE CHECKED.  `equal` comes out of a difflib alignment, which
-// can re-anchor: deleting instructions can raise it without anything getting
-// closer.  So every step was also scored on an alignment-free metric -- the 34
-// call sites are fixed anchors both streams agree on, and inside each gap
-// instruction i is compared to instruction i with no slack at all:
+//   equal     difflib LCS over the two instruction streams.  Can RISE when
+//             instructions are deleted, so it can reward a change for making
+//             the candidate shorter.
+//   anchored  the 34 call sites are anchors both streams agree on; inside each
+//             gap, instruction i is compared to instruction i with no slack.
+//             Immune to the above, but blind to nothing else.
+//   shape     `fdiff.shape`, which erases register names and stack offsets.
+//             Says whether the CODE is right, ignoring allocation.
+//   strict    instruction i against instruction i across all 1778, no gaps and
+//             no slack.  Only meaningful once the counts agree -- which they now
+//             do -- and it is the one closest to a byte match.
 //
-//     session start   equal 1047   anchored 496/1778 (0.2790)   cand 1734
-//     after +153      equal 1200   anchored 558/1778 (0.3138)   cand 1745
-//     after +56/+6    equal 1262   anchored 574/1778 (0.3228)   cand 1752
-//     after +42       equal 1304   anchored 629/1778 (0.3538)   cand 1777
-//     after +31       equal 1335   anchored 656/1778 (0.3690)   cand 1777
-//     after the frame equal 1338   anchored 685/1778 (0.3853)   cand 1780
-//     now             equal 1374   anchored 765/1778 (0.4303)   cand 1778
+// This session they disagreed in both directions, and each disagreement was a
+// real finding rather than noise:
 //
-// The last row is why the anchored metric is kept.  The frame fix moved
-// `equal` by THREE and the anchored count by TWENTY-NINE; on `equal` alone it
-// would have looked like noise and been discarded.
+//   * the Voronoi dispatch fix is +180 anchored and +2 equal.  `equal` barely
+//     moved because difflib was already sliding to find those matches; what
+//     changed is that they are now at the right OFFSET.
+//   * the prologue fix is +290 anchored and MINUS 2 equal.
+//   * the tpv subset that wins on anchored (000111, +2) costs 22 shape.
+//   * hoisting the two sqrt shifts is +48 equal and -46 anchored: a pure
+//     re-anchoring artifact, and it is rejected on that basis.
 //
-// Both metrics move together at every step.  The tool is scratchpad
-// `anchored.py`; it is worth rebuilding before believing any future gain.
+// SHAPE IS WHAT MADE THIS ROUND WORK.  Measured per call-gap at the start:
 //
-// WHAT IS LEFT.  The frame SIZE is solved and so is the instruction count; the
-// frame ASSIGNMENT is not, and is not reachable from source.  78 of the 102
-// slots now carry identical traffic; the other 24 hold the wrong variable.
-// Measured and dead on THIS structure: declaration order (8,464 candidates,
-// twice), the order of the ten hoisted constant initialisations (90), BLOCK
-// SCOPE (hoisting the inner declarations to the top is byte-identical, so
-// mwccarm does not key slot assignment on lexical scope), redundant re-reads
-// (58 sites), `cr` read spellings (48, all byte-identical), and the slab
-// block's rebind x interleave x chain-split product (12).
+//     whole function   shape 1666/1778 -- the code was already 93.7% right
+//     146 wrong insns  89 of them in ONE gap, number 28
 //
-// Two residuals are named and unreachable: the ROM's busiest slot [sp,#0x94] is
-// `en3` with 21 loads against our 20 -- the missing read is inside an
-// expression, not between statements -- and `cr` has its address materialised
-// 15 times against our 12.
+// That turned an open-ended search into named defects.  The order-independent
+// version -- the multiset of instruction shapes we emit too many or too few of
+// -- is now surplus 10, deficit 10, across 1778 instructions.
 //
-// (superseded) The structure is done: 27 instructions of drift summed over
-// all 35 call-gap regions, one instruction short overall, and the load deficit
-// that drove everything above is down to 2.  What remains is allocation, and
-// 340 of the 544 `replace`s are one thing, THE STACK FRAME: `str r0,[sp,#0xc4]`
-// against `str r0,[sp,#0x104]`, the same instruction on a different slot.
-// Declaration order is the lever for that and it is now EXHAUSTED -- the greedy
-// sweep converged, and re-running the other three axes on the new structure
-// (186 compiles: 64 tpv subsets, 64 polarity subsets, 58 re-read sites) moved
-// nothing.  The next lever on the frame is not a source reorder.
+// THE GAINS
 //
-// Swept and dead ON THIS STRUCTURE (re-run them after any structural change --
-// that rule has now paid four times):
-//   * 58 redundant re-read insertions for fn/en1/en2/en3/vtx/tri/c at every
-//     use site: all byte-neutral or worse.  The en3 win above is not one of a
-//     family; it is the only site where the CSE spanned two rounds.
-//   * 32-way product of centre-rebind granularity x cr spelling x collider-axis
-//     spelling: nothing beats what is here.
-//   * all 36 non-degenerate (cross, denominator) pairings of the KCL vertex
-//     formula.  The draft's is the documented Mario Kart Wii form and stays.
-//     Several alternatives score higher; every one of them is degenerate
-//     (cross(n,X) . X == 0) or reuses a denominator, i.e. they win by removing
-//     arithmetic, not by being right.  Do not take them.
+//   +13  `sphere.flags & 0x20` re-read through a CONST reference cast, at the
+//        three EDGE_FILTER sites.  The ROM reads sphere.flags EIGHT times; we
+//        read it five, and the three missing ones are exactly these.  What
+//        defeats mwcc's CSE is the CV-QUALIFIER CHANGE, not volatile: const
+//        pointer cast, const reference cast, volatile view and volatile
+//        reference cast all give identical bytes, while `(&sphere)->flags`, a
+//        u8 temp and a rebound local pointer all leave the CSE in place.  Const
+//        is the honest spelling -- it does not claim the memory changes.
+//
+//   +71  DELETING `en3 = f->normals[tri->edgeNormal3Idx];`, the line that was
+//        worth +153 last session.  The lever reversed; this is not a retraction
+//        of the old measurement.  The recompute costs seven instructions (ldr f,
+//        ldr normals, ldr tri, ldrh idx, mov #6, mul, add) where the ROM reloads
+//        the POINTER from its home in one, `ldr r0,[sp,#0x98]`.  Right idea,
+//        wrong spelling.  Took gap 26 from 60 missed instructions to 4.
+//
+//   +180 THE VORONOI DISPATCH IS A REAL if/else.  Gap 6 was short exactly two
+//        unconditional branches, and the shape diff put both at the top of the
+//        dispatch: the ROM tests dot1 vs dot2, branches to the dot2 arm, and
+//        ENDS BOTH ARMS in a branch to their own body.  The draft wrote the
+//        dot1 arm as a block that falls through into the dot2 arm, so mwcc laid
+//        it out the other way and dropped the two branches -- which shifted the
+//        whole 218-instruction gap by two and cost 180 positions.  Writing it as
+//        an if/else with the bodies behind `feat1:`/`feat2:` labels also makes
+//        the three-edge symmetry visible instead of hiding it in fall-through.
+//
+//   +290 THE PROLOGUE READS THE CENTRE THROUGH A VOLATILE POINTEE.  Gap 0 was
+//        short exactly one `ldr r,[sp]`: the ROM loads `c` TWICE for the three
+//        `raw` components (y and z off the first load, x off the second) and we
+//        loaded it once.  Declaring `c` as `const volatile Vector3 *` supplies
+//        it.  That single instruction brought the count back to exactly 1778 --
+//        and because a length mismatch had been shifting all of gap 0, it moved
+//        290 instructions back onto their correct index.
+//        A `(const Vector3 *)c` cast does NOT work here and should not be
+//        expected to: `c` is already const, so that cast changes no qualifier.
+//        It is the QUALIFIER CHANGE that re-issues a load, every time.
+//
+//   +5   two selects the ROM writes as if/else and the draft wrote as
+//        assign-then-override -- the vtail guard (`ldreq r1,[sp,#0x10c]` /
+//        `ldrne r1,[sp,#0x154]`, BOTH arms predicated) and the
+//        ShouldPassThrough argument (`ldreq r3,[sp,#0x10c]` / `movne r3,r0`).
+//        Found from the mix deficit, additive at +2 and +3.
+//
+// THREE INVENTED CONSTRUCTS RETIRED, all byte-neutral or better
+//
+//   * `struct Vtx3 { s32 e[3]; ~Vtx3(){} }` was this draft's own type, invented
+//     to block mwccarm's scalarization of tp/vb/vc.  include/types.h already has
+//     `Vector3`: same three words, same empty destructor, declared for the same
+//     reason.  BYTE-IDENTICAL.  It also lets AXIS_DOT0 take the vector instead
+//     of `&v.x` -- also byte-identical, and it stops the source claiming a
+//     Vector3 is an array.
+//
+//   * `volatile s16 cr[3]`, read back through `((volatile s16 *)cr)[i]`.
+//     Nothing about that scratch is volatile.  A plain `s16 cr[3]` re-read
+//     through a `const s16 *` view is within one instruction -- and, see below,
+//     it is what made deleting the en3 recompute a +71 instead of a -210.
+//
+//   * four of the six `c = &sphere.pos;` no-op re-assignments in the slab block.
+//     All 64 subsets were swept individually (the previous sweep only ever tried
+//     all six against none, which cannot find a per-site answer); keeping only
+//     the two in the vc block is identical on strict and anchored and +3 shape.
+//
+// THE INTERACTION IS THE POINT.  Full 2^4 factorial on the anchored count:
+//
+//     cr const alone                     +0      looks like pure readability
+//     drop the en3 recompute alone     -210      looks like a catastrophe
+//     both together                     +71
+//     both + the flags re-read          +84
+//
+// Fourth time on this function that two levers were worthless alone and paid
+// only together, and the FIRST time one of them sign-flipped another.  A
+// swept-and-dead verdict here is scoped to the structure it was measured
+// against; that rule has now paid eight times.  Do not trust any "dead" note
+// below without re-running it.
+//
+// PROGRESSION (build flags -- see SCORING at the end)
+//
+//     session start          strict 276  anchored  820  shape 1666  cand 1778
+//     + flags re-read                    anchored  833  shape 1669  cand 1781
+//     + Vector3                          anchored  833  shape 1669  cand 1781
+//     + cr const                         anchored  833  shape 1668  cand 1782
+//     + drop en3 recompute               anchored  904  shape 1680  cand 1775
+//     + AXIS_DOT0 by value               anchored  904  shape 1680  cand 1775
+//     + two if/else selects              anchored  909  shape 1683  cand 1775
+//     + dispatch if/else                 anchored 1089  shape 1685  cand 1777
+//     + const volatile centre  strict 809  anchored 1379  shape 1684  cand 1778
+//     + rebinds trimmed        strict 809  anchored 1379  shape 1687  cand 1778
+//
+// (strict is 0 while cand != 1778, which is why it is only quoted at the ends.)
+//
+// WHAT IS LEFT, by call-gap
+//
+//     gap 28  0x01ffcda4  151 insn   norm-miss 127   shape-miss 66
+//     gap  0  0x01ffb830  364 insn   norm-miss  59   shape-miss 10
+//     gap  6  0x01ffbea0  218 insn   norm-miss  32   shape-miss  2
+//     gaps 8/12/16 (the three EDGE_FILTER sqrt expansions)  18 norm / 5 shape
+//     everything else                                       0-14 norm / 0-2 shape
+//
+// One region holds half the remaining shape defect and a third of the whole
+// divergence: the slab block, from the second KCL_VERTEX round through the three
+// axis dot products.  Its instruction MIX is nearly exact -- surplus 7, deficit 4
+// of 151 -- so what is wrong there is ORDER, i.e. mwccarm scheduling under
+// register pressure, and no statement reordering tried so far reaches it.
+//
+// Named, understood, and not yet reachable:
+//   * the ROM computes both `>> 4` halves of the hypotenuse BEFORE the DotVec3
+//     call; we compute them inside the sqrt expansion after it.  Four hoist
+//     spellings tried, all negative on anchored.
+//   * the ROM writes the 64-bit sqrt parameter as `str / mov r2,r3 / str [r2,#4]`
+//     -- a second, COPIED pointer -- where we emit two stores off one base.
+//     Three spellings tried, all neutral or worse.  This is 3 of the function's
+//     10 remaining deficit entries (`mov r,r`).
+//   * one `vc.z -= c->z` is addressed straight off the object (`ldr r8,[fp,#0x44]`)
+//     instead of through `c`; mwcc folds that one rebind away and the ROM never
+//     does.  Worth 3 of the 10 deficit entries.
+//
+// RE-SWEPT AND AT A LOCAL OPTIMUM ON THIS EXACT STRUCTURE -- all re-run after the
+// changes above, because the rule above says a stale verdict is worthless:
+//   * tpv subsets, all 64.  000110 wins on anchored; 000111 is +2 anchored but
+//     -22 shape, and shape is the one that is right about structure.
+//   * branch polarity in the dispatch, all 64 -- the all-`>` form wins outright.
+//   * cr read spelling -- const, volatile and per-component addressing are
+//     byte-identical; a plain read is -576 anchored, so the re-read is
+//     load-bearing and only its qualifier is free.
+//   * centre re-bind sites, all 64 individually.
+//   * the centre pointer's declaration: const / const volatile / volatile
+//     pointee x prologue spelling x rebinds, 12 combinations.
+//   * slab-bound placement -- computing them after the third dot product, where
+//     the ROM does, is -220 anchored.  Giving them their own `lo`/`hi` locals
+//     instead of reusing the `t`/`u` scratch is byte-identical.
+//   * multiply operand order in AXIS_DOT0 / AXIS_DOT / EDGENORMAL_DOT, all 8.
+//   * the four sqrt hoist spellings x three u64-store spellings, 12.
+//
+// Do not take the alternative (cross, denominator) pairings of the KCL vertex
+// formula: all 36 non-degenerate ones were swept and several score higher, but
+// every one wins by being degenerate (cross(n,X) . X == 0) or by reusing a
+// denominator -- by removing arithmetic, not by being right.
 //
 // PROVENANCE. Restored 2026-08-19 from nearmiss/db.jsonl, attempt
-// 8273344dc1434a9e86882b88eebf7ffa (divergences 1213, parent 1332).
-// This body was banked but never committed back to notes/, so the file that lived
-// here was the WORSE, earlier draft. Both were re-scored on one worktree at
-// 2004/b56 before the swap:
+// 8273344dc1434a9e86882b88eebf7ffa (divergences 1213, parent 1332).  This body
+// was banked but never committed back to notes/, so the file that lived here was
+// the WORSE, earlier draft, whose banner falsely claimed the walk and prism tests
+// were stubs.  Do not reinstate it.
 //
-//     this body          cand=1750  equal=565  ratio=0.3203  delete=159  (28 insn short)
-//     what it replaced   cand=1725  equal=366  ratio=0.2090  delete=182  (53 insn short)
-//
-// The replaced file's banner claimed "first draft -- head/AABB only, the walk and
-// prism tests are stubs". That was false: it was 618 lines with every mechanism
-// written. Do not reinstate it.
-//
-// Levers already swept and DEAD (#1197, positive controls on each): nineteen
-// declaration-level variants across hoist / permutation / re-scoping / folding /
-// en1-en2 placement, all byte-neutral; frame-size chasing (the surplus is register
-// pressure from structural difference); loop rotation (mwccarm rotates this loop
-// unprompted and always did). "Declaration order IS the stack layout" holds for the
-// 0x498 dBgCh_Gnd twin and NOT for this 0x1bc8 function.
-//
-// What is left: source-shape change that reduces simultaneous liveness across the
-// prism body. This draft reloads edge normals (ldr [sp,#0xc4] three times in ten
-// instructions) where the ROM keeps en1 in r5, en2 in r4 and spills only en3.
-//
-// Score with plain --align; --align-shape normalises away stack offsets and reads
-// flat across real gains. mismatches=N/M is frozen at 999 until the sizes match.
+// SCORING.  Use the flags that BUILD the ROM, not the ones fdiff defaults to:
+// `rombuild.CFLAGS` with the language swapped carries `-Cpp_exceptions off` where
+// `swarm.CPP_FLAGS` carries `-w illpragmas`.  Across 550 enrolled //cpp files the
+// two are byte-identical; on this draft, which has a destructor on a stack local
+// inside loops that `continue` out of its scope, they differ by one instruction
+// in the build's favour.  Every number above is a build-flag number.
 // Map and status: notes/collision-system.md.
 //
 // @symbol _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr
@@ -195,7 +261,12 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    `pos + cross(fn, ea) * (length / dot(cross(fn, ea), en3))`. The cross goes
    through a 6-byte s16 scratch (sp+0x16c, reused by both rounds), so it really
    does truncate to 16 bits. The quotient's `>> 2` and the product's `>> 14` are
-   fdiv's Fix12 result reconciled with the 0x400 normal scale. */
+   fdiv's Fix12 result reconciled with the 0x400 normal scale.
+   The three components are written plainly and read back through a `const s16 *`
+   view.  That is not decoration: without the qualifier change mwcc shares the loads
+   across the two rounds and the block is -576 anchored.  It used to be spelled
+   `volatile`, which said something untrue about a stack scratch; const reaches the
+   same bytes and is the reason deleting the en3 recompute became a gain. */
 #define KCL_VERTEX(out, ea, o0, o1, o2)                                                   \
     cr[0] = (s16)(MUL10(fn[1], (ea)[2]) - MUL10(fn[2], (ea)[1]));             \
     cr[1] = (s16)(MUL10(fn[2], (ea)[0]) - MUL10(fn[0], (ea)[2]));             \
@@ -203,19 +274,14 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     t = MUL10(cr[0], en3[0]) + MUL10(cr[1], en3[1]) + MUL10(cr[2], en3[2]);   \
     if (func_020397dc(t)) continue;                                           \
     u = cstd::fdiv(tri->length, t) >> 2;                                \
-    (out)[0] = (o0) + (s32)(((s64)((volatile s16 *)cr)[0] * u) >> 14);                         \
-    (out)[1] = (o1) + (s32)(((s64)((volatile s16 *)cr)[1] * u) >> 14);                         \
-    (out)[2] = (o2) + (s32)(((s64)((volatile s16 *)cr)[2] * u) >> 14);
+    (out)[0] = (o0) + (s32)(((s64)((const s16 *)cr)[0] * u) >> 14);                         \
+    (out)[1] = (o1) + (s32)(((s64)((const s16 *)cr)[1] * u) >> 14);                         \
+    (out)[2] = (o2) + (s32)(((s64)((const s16 *)cr)[2] * u) >> 14);
 
 /* Post-subtraction form: components already relative to the centre. */
-#define AXIS_DOT0(v) (FX12((v)[0], unk_28)                                    \
-                    + FX12((v)[1], unk_2c)                                    \
-                    + FX12((v)[2], unk_30))
-
-/* That vertex's offset from the sphere centre, projected on the collider axis. */
-#define AXIS_DOT(v) (FX12((v)[0] - c->x, unk_28)                              \
-                   + FX12((v)[1] - c->y, unk_2c)                              \
-                   + FX12((v)[2] - c->z, unk_30))
+#define AXIS_DOT0(v) (FX12((v).x, unk_28)                                     \
+                    + FX12((v).y, unk_2c)                                     \
+                    + FX12((v).z, unk_30))
 
 /* A vertex region: the closest point is where edge normals `ea` and `eb` meet.
    `nn` is their cosine, already formed by the dispatch. Solve the 2x2 for the
@@ -257,7 +323,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
         s32 hyp;                                                          \
         s32 axisDot;                                                      \
         if (cls != 0) continue;                                           \
-        if (sphere.flags & 0x20) continue;                                \
+        if (((const dBgCh_SphCrr &)sphere).flags & 0x20) continue;        \
         axisDot = DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28);    \
         hyp = SqrtRaw((u64)((s64)((d) >> 4) * ((d) >> 4)                  \
                           + (s64)(faceDot >> 4) * (faceDot >> 4)), zval, k1); \
@@ -270,16 +336,6 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
         if ((d) > faceDot) continue;                                          \
     } else if ((d) > (faceDot >> unk_48)) continue;                           \
     dsqL:;
-
-/* A three-word vertex held as an AGGREGATE, not scalarized.  mwccarm splits a
-   plain `s32 v[3]` local into independent stack slots; a user-declared destructor
-   blocks that, which is the same lever include/types.h uses on Vector3 and the same
-   one the dBgCh_Lin twin needed.  The destructor is empty: this costs nothing at
-   runtime and changes nothing the function computes. */
-struct Vtx3 {
-    s32 e[3];
-    ~Vtx3() {}
-};
 
 s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 {
@@ -322,7 +378,15 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s16 triID;
     s32 cls;
     s32 contactKind;
-    const Vector3 *c;
+    /* volatile POINTEE, not a volatile pointer.  The ROM loads `c` from its stack
+       home before almost every component read -- twice for the three `raw` reads in
+       the prologue alone -- and mwcc will otherwise keep it in a register and read
+       through it once.  `const volatile` is worth 290 instructions back onto their
+       correct index and is what brings the count to exactly 1778.  A plain
+       `(const Vector3 *)c` cast does nothing here: `c` is already const, so it
+       changes no qualifier, and it is the QUALIFIER CHANGE that re-issues a load.
+       Making the POINTER volatile instead (`const Vector3 *volatile c`) is -57 shape. */
+    const volatile Vector3 *c;
     s32 d1h;
     s32 d2h;
     s32 d3h;
@@ -361,7 +425,10 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 dot1;
     s32 dot2;
     s32 dot3;
-    volatile s16 cr[3];
+    /* Read back through a `const s16 *` view in KCL_VERTEX -- see the macro.  Plain
+       reads are -576 anchored, so the re-read is load-bearing; only its qualifier is
+       free, and const is the true one. */
+    s16 cr[3];
     s32 nrm[3];
     s32 depth;
     s16 *fn;
@@ -373,9 +440,14 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s16 *en3;
     s32 *tpv;
     Vector3 sn;
-    Vtx3 tp;
-    Vtx3 vb;
-    Vtx3 vc;
+    /* These three MUST be a type with a user-declared destructor.  mwccarm
+       scalarizes a plain `s32[3]` local into loose stack slots; the ROM keeps all
+       three as three-word objects, and the empty `~Vector3()` in include/types.h is
+       what blocks the scalarization.  It is the difference between a 0x1bc frame with
+       105 slots and the ROM's 0x1b4 with 102.  Do not "simplify" this to s32[3]. */
+    Vector3 tp;
+    Vector3 vb;
+    Vector3 vc;
 
     c = &sphere.pos;
     f = kclFile;
@@ -556,8 +628,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            flag bits respectively. */
                         cls = func_02039794(sn.y);
                         contactKind = k0;
-                        passArg = k1;
-                        if (cls != 1) passArg = k0;
+                        if (cls == 1) passArg = k1; else passArg = k0;
                         if (_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
                                 this, &data_020a0cec, &sphere, passArg))
                             continue;
@@ -589,6 +660,13 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            faithful spelling here. */
                         if (dot1 > dot2) {
                             if (dot1 <= dot3) goto feat3;
+                            goto feat1;
+                        } else {
+                            if (dot2 <= dot3) goto feat3;
+                            goto feat2;
+                        }
+                    feat1:
+                        {
                             if (dot1 <= 0) goto face;
                             if (!unk_4c) continue;
                             if (dot2 > dot3) {
@@ -606,7 +684,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             }
                             goto edge1;
                         }
-                        if (dot2 <= dot3) goto feat3;
+                    feat2:
                         if (dot2 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot3 > dot1) {
@@ -665,8 +743,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                     v31:  VERTEX_BLOCK(nn, nnh, den31, en3, en1, dot3, dot1)
 
                     vtail:
-                        v = k1;
-                        if (sphere.flags & 0x40) v = z154;
+                        if (sphere.flags & 0x40) v = z154; else v = k1;
                         if (!v) continue;
                         dsq = (s64)vx * vx + (s64)vy * vy + (s64)vz * vz;
                         if (faceDot < 0) continue;
@@ -701,54 +778,59 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         if (sphere.unk_0ec > 0 && cls == 1
                                 && !(tri->length & 0xf0000000)) {
 
-                            tp.e[0] = vtx[0] << 6;
-                            tp.e[1] = vtx[1] << 6;
-                            tp.e[2] = vtx[2] << 6;
-                            /* The prism origin is read through a POINTER at five of
-                               the six vertex-tail sites, not as the array.  Same
-                               object, same value -- but mwcc addresses an array name
-                               as sp+imm and a pointer out of a register, and the ROM
-                               wants the register form here.  Worth +42 equal, and it
-                               brings the instruction count to 1777 against the ROM's
-                               1778.  The one exception (round 2's [1]) is what the
-                               byte gate asks for -- all six through the pointer is
-                               only +21 -- and is not yet understood.  Found by the
-                               permuter (run 3, --stack-diffs) and then swept over
-                               all 64 site subsets. */
-                            tpv = tp.e;
+                            tp.x = vtx[0] << 6;
+                            tp.y = vtx[1] << 6;
+                            tp.z = vtx[2] << 6;
+                            /* Round 1 reads the prism origin as the object; round 2's
+                               first two components read it through this pointer.  Same
+                               object, same value -- but mwcc addresses a member as
+                               sp+imm and a pointer out of a register, and the ROM wants
+                               the register form at exactly those two sites.  All 64
+                               subsets have been swept three times, most recently after
+                               the dispatch and centre-pointer changes; 000110 wins on
+                               anchored each time.  000111 is +2 anchored and -22 shape,
+                               and shape is the metric that is right about structure, so
+                               it is not taken. */
+                            tpv = &tp.x;
 
-                            KCL_VERTEX(vb.e, en2, tp.e[0], tp.e[1], tp.e[2])
-                            /* The ROM re-reads the denominator normal for the
-                               second round; mwcc otherwise CSEs the three en3[i]
-                               loads across both rounds.  Same pointer, same value
-                               -- this is a spelling, not a semantic change.
-                               Worth +153 equal (1047 -> 1200), and it took the
-                               alignment's `delete` count from 100 to 21. */
-                            en3 = f->normals[tri->edgeNormal3Idx];
-                            KCL_VERTEX(vc.e, en1, tpv[0], tpv[1], tp.e[2])
+                            KCL_VERTEX(&vb.x, en2, tp.x, tp.y, tp.z)
+                            /* There used to be an `en3 = f->normals[tri->edgeNormal3Idx];`
+                               re-read here, worth +153 when `cr` was volatile.  It is
+                               deleted: the ROM reloads the POINTER from its home in one
+                               instruction (`ldr r0,[sp,#0x98]`) and the recompute costs
+                               seven.  With `cr` read through a const view instead, mwcc
+                               no longer shares the en3 loads across the two rounds and
+                               the recompute is pure cost -- +71 anchored to remove it,
+                               and gap 26 went from 60 missed instructions to 4.
+                               Do not put it back without re-measuring BOTH. */
+                            KCL_VERTEX(&vc.x, en1, tpv[0], tpv[1], tp.z)
 
                             t = -(sphere.unk_0ec + sphere.radius);
                             u =   sphere.unk_0ec - sphere.radius;
                             {
                             s32 da, db, dc;
-                            /* The ROM reloads the centre pointer from its stack home before EACH
-                               component (ldr [sp,#0xc4] three times in call-gap 28); the candidate
-                               loaded it once and indexed off it.  `c` already holds &sphere.pos,
-                               so each re-bind is a no-op -- it only denies mwcc the CSE.  Worth
-                               +56 equal, but ONLY together with the cr pointer-view reads in
-                               KCL_VERTEX: alone the two are -27 and -64. */
-                            tp.e[0] -= c->x; c = &sphere.pos;
-                            tp.e[1] -= c->y; c = &sphere.pos;
-                            tp.e[2] -= c->z;
-                            da = AXIS_DOT0(tp.e);
-                            vb.e[0] -= c->x; c = &sphere.pos;
-                            vb.e[1] -= c->y; c = &sphere.pos;
-                            vb.e[2] -= c->z;
-                            db = AXIS_DOT0(vb.e);
-                            vc.e[0] -= c->x; c = &sphere.pos;
-                            vc.e[1] -= c->y; c = &sphere.pos;
-                            vc.e[2] -= c->z;
-                            dc = AXIS_DOT0(vc.e);
+                            /* `c` being a volatile pointee already forces most of the
+                               reloads the ROM makes (ldr [sp,#0xc4], nine times in this
+                               block).  These two re-binds are what is left: without them
+                               mwcc folds `c` back to `sphere.pos` and addresses the
+                               component straight off the object.  Each is a no-op --
+                               `c` already holds &sphere.pos.  All 64 site subsets were
+                               swept individually; four of the original six are
+                               unnecessary and are gone.  One fold survives even so:
+                               `vc.z -= c->z` still compiles to `ldr r8,[fp,#0x44]`
+                               where the ROM goes through the pointer. */
+                            tp.x -= c->x;
+                            tp.y -= c->y;
+                            tp.z -= c->z;
+                            da = AXIS_DOT0(tp);
+                            vb.x -= c->x;
+                            vb.y -= c->y;
+                            vb.z -= c->z;
+                            db = AXIS_DOT0(vb);
+                            vc.x -= c->x; c = &sphere.pos;
+                            vc.y -= c->y; c = &sphere.pos;
+                            vc.z -= c->z;
+                            dc = AXIS_DOT0(vc);
                             if (da >= t && da <= u
                              && db >= t && db <= u
                              && dc >= t && dc <= u)

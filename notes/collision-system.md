@@ -795,6 +795,138 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   * *"the next productive lever is probably another global one"* -- the four gains
     since were all local, and all one mechanism (a CSE the ROM does not make).
 
+  ### 2026-08-20, third session: 1493 mismatching words -> 978
+
+  `python tools/fdiff.py --align` on the draft, before and after:
+
+  ```
+  before   ratio 0.7728   equal 1374   mismatches 1493/1778
+  after    ratio 0.8121   equal 1444   mismatches  978/1778
+  ```
+
+  Both were taken with the flags that BUILD the ROM (see "two definitions of the
+  C++ flags" below), and the bank entry is re-scored from the banked body, not from
+  the notes body -- `divergences` 404 -> 334.
+
+  Two of the findings generalise past this function.
+
+  ### A CV-QUALIFIER CHANGE is what re-issues a CSE'd load. Not volatile.
+
+  This function's dominant defect has always been that mwccarm shares a load the ROM
+  re-issues, and the standing workaround was `volatile` -- on a stack scratch array,
+  on a pointer, wherever it was needed. That is a lie about the memory, and it was
+  going to have to come out before any of this reached `src/`.
+
+  It turns out volatile was never the mechanism. Sweeping eight spellings of one
+  re-read (`sphere.flags & 0x20`, which the ROM issues and we did not):
+
+  ```
+  reaches the ROM's 8 reads          leaves the CSE in place
+    (const dBgCh_SphCrr *)&sphere      (&sphere)->flags
+    (const dBgCh_SphCrr &)sphere       (u8)sphere.flags
+    (volatile u8 *)&sphere.flags       q = &sphere; q->flags
+    (volatile u8 &)sphere.flags        sphere.flags            (control)
+  ```
+
+  All four that work produce **identical bytes**. What they have in common is that
+  they change a cv-qualifier on the access; what the four failures have in common is
+  that they do not. `const` is therefore always available where `volatile` was being
+  used for this, and it asserts nothing untrue.
+
+  One corollary that cost a wrong prediction before it was measured: `(const T *)p`
+  where `p` is ALREADY `const T *` does nothing, because it changes no qualifier. The
+  prologue needed `const volatile Vector3 *c` at the declaration instead.
+
+  ### Score the SHAPE as well, or you cannot tell wrong code from bad allocation
+
+  `fdiff.norm` keeps register names and stack offsets, so a region that is
+  structurally perfect and allocated differently scores near zero on it.
+  `fdiff.shape` erases both. Reported per call-gap, the two together say where effort
+  belongs, and on this function the answer was not what the raw diff suggested:
+
+  ```
+  whole function    shape 1666/1778  -- the CODE was already 93.7% right
+  146 wrong insns   89 of them in ONE call-gap
+  ```
+
+  The order-independent version is better still: take the multiset of shapes each
+  side emits and difference it. That reads "surplus 10, deficit 10" out of 1778 --
+  and each deficit entry is a specific missing instruction you can go and find. Two
+  of this session's gains came straight out of it (`-2 ldreq r,[sp]`, `-2 b`).
+
+  A fourth metric earns its place once the instruction counts agree: instruction `i`
+  against instruction `i` across the whole function, no gaps and no slack. It is the
+  one closest to a byte match, and it went **276 -> 809 of 1778**.
+
+  The four disagree, in both directions, and every disagreement was informative:
+
+  * the dispatch fix is +180 anchored and +2 `equal` -- difflib was already sliding
+    to find those matches; what changed is that they moved to the right OFFSET.
+  * the prologue fix is +290 anchored and MINUS 2 `equal`.
+  * hoisting the sqrt shifts is +48 `equal` and -46 anchored: a pure re-anchoring
+    artifact, rejected on that basis.
+  * the tpv subset that wins on anchored costs 22 shape.
+
+  ### The gains themselves
+
+  * **+290** the prologue reads the sphere centre through a volatile POINTEE. Gap 0
+    was short exactly one `ldr r,[sp]`: the ROM loads `c` twice for the three `raw`
+    components and we loaded it once. That one instruction restored the exact 1778
+    count, and because the length mismatch had been shifting the whole 364-instruction
+    gap, it put 290 instructions back on their correct index.
+  * **+180** the Voronoi dispatch is a real `if/else`. The ROM ends BOTH arms in a
+    branch to their own body; the draft wrote the first arm as a block falling
+    through into the second, so mwcc laid it out the other way and dropped two
+    branches -- shifting a 218-instruction gap by two.
+  * **+71** DELETING the `en3 = f->normals[tri->edgeNormal3Idx];` re-read that was
+    worth +153 last session. See the interaction note below.
+  * **+13** the `sphere.flags & 0x20` re-read, three sites.
+  * **+5** two selects the ROM writes as if/else and the draft wrote as
+    assign-then-override.
+
+  ### A lever SIGN-FLIPPED another one
+
+  The re-test rule on this function has been "a dead verdict is scoped to the
+  structure it was measured against". This session it went further. Full 2^4
+  factorial on the anchored count:
+
+  ```
+  cr volatile -> const, alone          +0     looks like pure readability
+  drop the en3 recompute, alone      -210     looks like a catastrophe
+  both together                       +71
+  both + the flags re-read            +84
+  ```
+
+  So a change that measures as a no-op can be the enabler for a change that measures
+  as a disaster. Neither would ever be found by accepting improvements one at a time,
+  which is what every greedy sweep in this file does. The only defence is the
+  factorial: when a readability change measures neutral, keep it and re-test the
+  levers around it.
+
+  ### Three invented constructs retired, all byte-neutral or better
+
+  * `struct Vtx3 { s32 e[3]; ~Vtx3(){} }` was the draft's own type, invented to block
+    scalarization. `include/types.h` already has `Vector3` -- same three words, same
+    empty destructor, declared for the same reason. Byte-identical.
+  * `volatile s16 cr[3]` read through a volatile view -> plain `s16 cr[3]` read
+    through a `const s16 *` view. Within one instruction, and it is the enabler above.
+  * four of the six no-op `c = &sphere.pos;` re-binds. All 64 subsets swept
+    individually; the previous sweep had only ever tried all six against none.
+
+  ### Still open, and now precisely named
+
+  Gap 28 -- the slab block, second KCL_VERTEX round through the three axis dot
+  products -- holds 127 of the 331 remaining divergences and 66 of the 91 remaining
+  shape defects. Its instruction MIX is nearly exact (surplus 7, deficit 4 of 151),
+  so what is wrong there is ORDER: mwccarm scheduling under register pressure. No
+  statement reordering tried so far reaches it, and declaration order is now
+  converged (8,464 candidates, zero improving moves, ranked on the strict metric).
+
+  Three deficits are understood and unreached: the ROM computes both `>> 4` halves of
+  the hypotenuse before the DotVec3 call; it writes the 64-bit sqrt parameter through
+  a second, copied pointer (`mov r2,r3`); and it never folds `c` back to the object,
+  where mwcc does so once (`ldr r8,[fp,#0x44]`).
+
   ### Two process corrections worth more than any single lever
 
   **A compile+score round trip is ~0.45 s, not 30-60 s.** I asserted the slower
