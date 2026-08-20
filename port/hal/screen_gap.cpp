@@ -8,6 +8,7 @@
 #include "hal/host_settings.h"
 
 #include <cstdio>
+#include <cstdlib>
 
 /* THE GAME'S OWN WORD, and it is read through the mount rather than hosted a
    second time. build/port/host-src/ov004_syms.c defines data_ov004_020beb6c as
@@ -31,6 +32,13 @@ namespace {
 int g_have;
 int g_raw = -1;              /* the last G read out of the game */
 int g_scene = -2;            /* the scene the last latch was for */
+int g_head = -1;             /* the headroom the last layout was built with */
+/* G_rom: the G THE SCENE'S OWN InitResources WROTE, captured by the gapless
+   latch below at the instant before it stores zero over it, because that is the
+   only moment the number exists. Everything after the latch reads zero, and the
+   headroom is exactly this many DS rows -- the world's top rows the zeroed G
+   pushed off the top of the top screen. Zero until a latch engages. */
+int g_gapless_head_ds;
 unsigned g_gen;              /* steps whenever the layout's shape changes */
 ntr::StackLayout g_lay;
 
@@ -40,6 +48,31 @@ int read_raw(void)
                  ((unsigned)data_ov004_020beb6c[1] << 8) |
                  ((unsigned)data_ov004_020beb6c[2] << 16) |
                  ((unsigned)data_ov004_020beb6c[3] << 24));
+}
+
+/* THE HEADROOM THE LAYOUT SHOULD CARRY RIGHT NOW, in DS rows, and zero is the
+   answer for everything that is not a gapless minigame in progress.
+
+   It is g_gapless_head_ds -- the G the running scene's own InitResources wrote,
+   captured by the latch below before it stored zero over it -- gated on the mod
+   being engaged FOR THE SCENE NOW RUNNING, which is the same test
+   hal_gapless_engaged makes and for the same reason: the flag alone keeps
+   reading 1 after the minigame that set it has ended, and a headroom that
+   outlived its own scene would make the next scene's window the wrong height.
+
+   SM64DS_GAPLESS_HEADROOM=0 is the A/B arm, on the same binary. It suppresses
+   the headroom and nothing else, so the run composes the 512x768 image gapless
+   produced before this feature, from the build that also produces the 512x832
+   one. Read once. */
+int headroom_ds(void)
+{
+    static int off = -1;
+    if (off < 0) {
+        const char *s = std::getenv("SM64DS_GAPLESS_HEADROOM");
+        off = s && *s && *s == '0';
+    }
+    if (off || !hal_gapless_engaged()) return 0;
+    return g_gapless_head_ds;
 }
 
 }  // namespace
@@ -55,16 +88,34 @@ const ntr::StackLayout *hal_screen_layout(void)
        precisely what the setting promises -- "remove the gap" gives back the
        picture the port had before this feature, jump and all. */
     const int want = host_setting_minigame_gap() ? raw : 0;
+    /* THE HEADROOM, and it is a DISPLAY answer to a SIMULATION cost. See the
+       StackLayout note in ntr/ppu.h: gapless zeroes G, the game's own fixed
+       constants keep placing actors in a world 192 + G_rom + 192 rows tall, and
+       the top G_rom rows of it fall above the top screen. Giving the IMAGE
+       those rows back shows them without touching a constant or the zeroed
+       word. It is asked for ONLY while the mod is engaged for the scene now
+       running, so every other layout in the program carries a zero.
+
+       SM64DS_GAPLESS_HEADROOM=0 turns it off on the same binary, which is what
+       an A/B of the picture needs: notes/port-selftest-bmp-gate.md is explicit
+       that two BMPs may only be compared out of one build. */
+    const int head = headroom_ds();
     /* THE SCENE IS PART OF THE LATCH, and it has to be: two minigames with the
        same G give the same LAYOUT and not the same BAND. 368 and 374 are both
        G = 32, and the art and the continuity reader are per scene, so latching
        on G alone would have left Curling wearing Bob-omb Squad's picture. */
     const int scene = hal_gap_scene_id();
-    if (g_have && want == g_raw && scene == g_scene) return &g_lay;
+    /* AND THE HEADROOM IS PART OF THE LATCH TOO. It cannot move without `want`
+       moving today -- gapless zeroes G, so engaging changes both -- and it is
+       in the key anyway, because a cache whose key is a subset of its inputs is
+       one edit away from serving a stale answer. */
+    if (g_have && want == g_raw && scene == g_scene && head == g_head)
+        return &g_lay;
 
     const int was_h = g_have ? g_lay.h : 0;
     g_raw = want;
     g_scene = scene;
+    g_head = head;
 
     const int mode = host_setting_gap_fill_mode();
     const int peek = host_setting_gap_peek();
@@ -78,7 +129,8 @@ const ntr::StackLayout *hal_screen_layout(void)
     if (want && (peek || mode == ntr::GAP_FILL_CUSTOM))
         art = hal_gap_art(scene, want, mode == ntr::GAP_FILL_CUSTOM);
 
-    g_lay = ntr::stack_layout(want, mode, host_setting_gap_color(), peek, art);
+    g_lay = ntr::stack_layout(want, head, mode, host_setting_gap_color(), peek,
+                              art);
     /* and the band's per-scene continuity reader, installed at the same moment
        for the same reason: it is per scene, and installing clears the cached
        OAM attributes so nothing crosses from the last minigame into this one */
@@ -100,6 +152,14 @@ const ntr::StackLayout *hal_screen_layout(void)
            to it, the band's height in host rows, the image the window now has to
            carry, and whether the scene's art was found. A capture with no such
            line is a capture with no gap. */
+        if (g_lay.head_ds)
+            std::fprintf(stderr, "[gapless] scene %d: HEADROOM %d DS rows "
+                         "(%d host rows) above the top screen, image %dx%d. "
+                         "The world's rows -%d..-%d -- the ones zeroing G "
+                         "pushed off the top -- are back in the picture; the "
+                         "simulation is untouched.\n", scene, g_lay.head_ds,
+                         g_lay.head_h, g_lay.w, g_lay.h,
+                         192 + g_lay.head_ds, 193);
         if (raw)
             std::fprintf(stderr, "[gap] scene %d, G %d DS rows%s -> band %d "
                          "host rows, image %dx%d, fill %s, peek %s, art %s\n",
@@ -253,6 +313,10 @@ void hal_gapless_minigames_latch(void)
     /* A scene must never inherit the last one's answer. */
     g_gapless_on = 0;
     g_gapless_scene = scene;
+    /* AND THE HEADROOM IS DROPPED WITH IT, for the reason the two lines above
+       exist: a scene must never inherit the last one's answer, and a stale
+       G_rom would size the next minigame's window off the last one's hinge. */
+    g_gapless_head_ds = 0;
 
     if (!on) {
         std::fprintf(stderr, "[gapless] scene %d: off (GaplessMinigames is "
@@ -272,6 +336,12 @@ void hal_gapless_minigames_latch(void)
     }
 
     const int was = read_raw();
+    /* CAPTURED HERE BECAUSE HERE IS THE ONLY PLACE IT EXISTS. This is the G the
+       scene's own InitResources wrote, one statement before the store below
+       replaces it with zero, and after that store nothing in the program can
+       recover it -- the word reads zero and no other copy is kept. The display
+       headroom is exactly this many DS rows. */
+    g_gapless_head_ds = was;
     /* WRITTEN AS FOUR BYTES rather than through a declared `int`, for the
        reason the block over data_ov004_020beb6c gives: the mount owns this
        storage as u8[4] and a second declaration of it as an int would be an

@@ -145,15 +145,40 @@ constexpr int GAP_DS_MAX = 96;
 // gap_ds == 0 is the layout that shipped before this: h == STACK_H, band_h ==
 // 0, bottom_y == SCREEN_H, and every band-shaped branch in the compose is
 // skipped so the image is byte-for-byte what it was.
+//
+// ---- THE HEADROOM, and it exists only in gapless mode -----------------------
+//
+// GaplessMinigames writes ZERO into the game's own G (hal/screen_gap.h states
+// the mod and its audit). The world a minigame simulates is still 192 + G_rom
+// + 192 rows tall, because the actors are placed by FIXED constants -- Bob-omb
+// Squad's parachute spawn is a flat world -256, and its Lakitu cruises with the
+// top of its sprite on world row -192 -- but with G zeroed the top engine takes
+// world y to y + 192 instead of y + 224, so the world's top G_rom rows now fall
+// ABOVE the top screen's first row and are drawn by nobody. Lakitu ends up flat
+// against the first row of the picture and loses rows off the top whenever it
+// rises, which is what a player reports as "the Lakitu is cut off at the top".
+//
+// The headroom is the display's answer and NOTHING ELSE: G_rom extra rows of
+// IMAGE above the top screen, so the full original world -224..191 is one
+// continuous picture again. The game's constants and the zeroed G are not
+// touched, the simulation is bit-for-bit what gapless already was, and the
+// image is the same total height gap-on mode has -- the rows are simply on top
+// instead of in the middle.
+//
+// head_ds is 0 in every other layout, which is every level and every gap-on
+// minigame, and a zero headroom makes every field below exactly what it was
+// before this existed.
 struct StackLayout {
     int gap_ds;        // G, the simulated gap in DS rows. 0 = no gap.
+    int head_ds;       // the headroom in DS rows above the top screen. 0 = none.
     int scale;         // host rows per DS row: SCREEN_H / SUB_H
     int w;             // the image width, STACK_W
-    int h;             // the image height, SCREEN_H * 2 + band_h
-    int top_y;         // first row of the top screen, always 0
-    int band_y;        // first row of the gap band, always SCREEN_H
+    int h;             // the image height, head_h + SCREEN_H * 2 + band_h
+    int head_h;        // head_ds * scale, host rows; 0 with no headroom
+    int top_y;         // first row of the top screen, head_h
+    int band_y;        // first row of the gap band, head_h + SCREEN_H
     int band_h;        // gap_ds * scale, host rows; 0 with no gap
-    int bottom_y;      // first row of the bottom screen, SCREEN_H + band_h
+    int bottom_y;      // first row of the bottom screen, band_y + band_h
     int fill_mode;     // GAP_FILL_SOLID, _AMBIENT or _CUSTOM; peek ignores it
     uint32_t fill_color;   // 0xFFRRGGBB, GAP_FILL_SOLID only
     // 1: the band's own hidden sprites, drawn OVER the backdrop. PEEK
@@ -183,10 +208,11 @@ struct StackLayout {
 
 enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1, GAP_FILL_CUSTOM = 2 };
 
-// The one computation. gap_ds is clamped to [0, GAP_DS_MAX]; everything else
-// is derived. Pure: same arguments, same answer, no globals read.
-StackLayout stack_layout(int gap_ds, int fill_mode, uint32_t fill_color,
-                         int peek, const uint32_t *art);
+// The one computation. gap_ds and head_ds are each clamped to [0, GAP_DS_MAX];
+// everything else is derived. Pure: same arguments, same answer, no globals
+// read.
+StackLayout stack_layout(int gap_ds, int head_ds, int fill_mode,
+                         uint32_t fill_color, int peek, const uint32_t *art);
 
 // ---- BAND CONTINUITY --------------------------------------------------------
 //
