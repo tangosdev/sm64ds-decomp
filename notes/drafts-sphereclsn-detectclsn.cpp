@@ -1,5 +1,51 @@
 //cpp
-// NONMATCHING: size 0x1be4 vs 0x1bc8 (7 insn OVER), align equal=855 ratio=0.480
+// NONMATCHING: size 0x1b18 vs 0x1bc8 (44 insn SHORT), align equal=1047 ratio=0.596
+//
+// 2026-08-20 session (equal 855 -> 1047, all measured on plain --align):
+//   +27  EDGE_FILTER restructure: the flags&2 arm is a labelled block placed
+//        AFTER the sqrt path (goto armN_/dsqN_), matching the ROM's exile of
+//        that arm to T880-888 with fallthrough into the dsq block.
+//   +4   `if (!hitFlags && !hitFlags2) goto ret0;` + a labelled `return 0;` at
+//        the very end -- the ROM branches (beq) to a shared return-0 epilogue,
+//        the draft's inline conditional epilogue (addeq/popeq) was +3/-4.
+//   +130 fold nn12/nn23/nn31 + n12h/n23h/n31h into ONE nn/nnh pair.  This was
+//        measured DEAD (-16) on the pre-exile structure; structural change
+//        invalidates dead-lever verdicts, again.
+//   +23  slab-test restructure (region A): subtract the sphere centre IN PLACE
+//        (tp[j] -= c->x; ...), per-vertex sub-then-dot interleave, dots bound
+//        to locals da/db/dc so all six bound-compares run AFTER all three dots
+//        (the ROM computes r0/r5/r4 then compares; the && chain used to
+//        interleave), bounds t/u formed before the dots.
+//   +7   slack spelled per-site as (rad6 + 0x40) x6 -- the ROM rematerializes
+//        add rX,r3,#0x40 at each of the six clamp sites; plus s1=s2=s3=z108
+//        split into three statements (store-order swap).
+//   +20  volatile s16 cr[3] -- the ONE non-natural spelling in this file.  It
+//        forces the cross scratch through memory (strh/ldrsh at its slot,
+//        smull instead of umull+mla widening, no lsl/asr#16 truncation pairs),
+//        which is what the ROM does in both KCL_VERTEX rounds.  Removing it on
+//        the final structure costs -20 equal and +51 insns.  The natural
+//        spelling that reproduces the memory-residency has not been found:
+//        read/write pointer views are either folded (byte-identical) or
+//        perturb allocation (-19..-23), an inline Cross helper is
+//        byte-identical, and an untracked crw = cr + z15c pointer reproduces
+//        the ROM's reload TRAFFIC almost exactly but costs -36 in register
+//        churn.
+//
+// What remains (drift per call-gap region, cand minus ROM, insns):
+//   0:-4 6:-2 7/11/15:-3 8/12/16:+1 20:+3 22:-3 24:-13 26:-7 28:-12
+// Every deficit is the same family: the ROM re-reads pointer locals (c, tri,
+// fn, en3, vtx) from their stack homes once per USE (e.g. nine ldr-c/ldr-comp
+// pairs in the slab block, fn reloaded per cross component), and keeps
+// en1=r5, en2=r4 register-resident; the candidate CSEs the loads and
+// register-homes {en2, en3} instead.  Swept and dead on THIS structure:
+// every en/fn/en3 declaration reorder (-19..-545), register hints (inert),
+// web-demotion copies e3/fnw (byte-identical), cw/w pointer re-read spellings
+// (byte-identical or worse), spos_direct (-79), d4/f4 sqrt-shift pre-binding
+// in 3 placements (-10 each), assignment-chain splits (inert), greedy
+// one-decl relocation over 56 lines x 7 positions (377 compiles, ZERO
+// improving moves), #pragma opt_common_subs off (-379, cand collapses to
+// 1617; the ROM's CSE is selective, so the missing-CSE look is allocation,
+// not a pragma bracket).
 //
 // PROVENANCE. Restored 2026-08-19 from nearmiss/db.jsonl, attempt
 // 8273344dc1434a9e86882b88eebf7ffa (divergences 1213, parent 1332).
@@ -106,6 +152,11 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     (out)[1] = tp[1] + (s32)(((s64)cr[1] * u) >> 14);                         \
     (out)[2] = tp[2] + (s32)(((s64)cr[2] * u) >> 14);
 
+/* Post-subtraction form: components already relative to the centre. */
+#define AXIS_DOT0(v) (FX12((v)[0], unk_28)                                    \
+                    + FX12((v)[1], unk_2c)                                    \
+                    + FX12((v)[2], unk_30))
+
 /* That vertex's offset from the sphere centre, projected on the collider axis. */
 #define AXIS_DOT(v) (FX12((v)[0] - c->x, unk_28)                              \
                    + FX12((v)[1] - c->y, unk_2c)                              \
@@ -137,11 +188,9 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    path -- a real hypotenuse through the hardware sqrt, then the contact angle
    through cstd::fdiv, compared against the collider's stored axis at +0x28.
    func_020397dc guards the divisor: |x| <= 8 means near-zero, so bail. */
-#define EDGE_FILTER(d, zval)                                                  \
-    if (sphere.flags & 2) {                                                   \
-        if (cls == 1) { if ((d) > faceDot) continue; }                        \
-        else if ((d) > (faceDot >> unk_48)) continue;                         \
-    } else if (cls == 1) {                                                    \
+#define EDGE_FILTER(d, zval, armA, dsqL)                                      \
+    if (sphere.flags & 2) goto armA;                                          \
+    if (cls == 1) {                                                           \
         if (func_02037e58((unsigned int *)&data_020a0cec) == 1) {             \
             if ((d) > (faceDot >> unk_48)) continue;                          \
         } else if (unk_4d) {                                                  \
@@ -159,7 +208,13 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
                           + (s64)(faceDot >> 4) * (faceDot >> 4)), zval, k1); \
         if (func_020397dc(hyp)) continue;                                 \
         if (axisDot > cstd::fdiv(faceDot >> 4, hyp)) continue;            \
-    }
+    }                                                                         \
+    goto dsqL;                                                                \
+    armA:                                                                     \
+    if (cls == 1) {                                                           \
+        if ((d) > faceDot) continue;                                          \
+    } else if ((d) > (faceDot >> unk_48)) continue;                           \
+    dsqL:;
 
 s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 {
@@ -188,9 +243,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     const Vector3 *c;
     s32 rawX, rawY, rawZ;
     s32 d1h, d2h, d3h;
-    s32 nn12, n12h;
-    s32 nn23, n23h;
-    s32 nn31, n31h;
+    s32 nn, nnh;
     s32 rsc;
     s32 z108;
     s32 k1;
@@ -213,7 +266,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 faceDot;
     s32 v;
     s32 dot1, dot2, dot3;
-    s16 cr[3];
+    volatile s16 cr[3];
     s32 nrm[3];
     s32 depth;
     s32 den12, den23, den31;
@@ -226,27 +279,27 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     f = kclFile;
     {
         const Vector3 *origin = &f->origin;
-        s32 slack = (sphere.radius >> 6) + 0x40;
+        s32 rad6 = sphere.radius >> 6;
 
         rawX = c->x >> 6;
         rawY = c->y >> 6;
         rawZ = c->z >> 6;
 
-        loX = (rawX - origin->x - slack) >> 6;
+        loX = (rawX - origin->x - (rad6 + 0x40)) >> 6;
         if (loX < 0) loX = 0;
-        hiX = (rawX - origin->x + slack) >> 6;
+        hiX = (rawX - origin->x + (rad6 + 0x40)) >> 6;
         if (hiX > (s32)~f->xMask) hiX = ~f->xMask;
         if (loX >= hiX) return 0;
 
-        loY = (rawY - origin->y - slack) >> 6;
+        loY = (rawY - origin->y - (rad6 + 0x40)) >> 6;
         if (loY < 0) loY = 0;
-        hiY = (rawY - origin->y + slack) >> 6;
+        hiY = (rawY - origin->y + (rad6 + 0x40)) >> 6;
         if (hiY > (s32)~f->yMask) hiY = ~f->yMask;
         if (loY >= hiY) return 0;
 
-        loZ = (rawZ - origin->z - slack) >> 6;
+        loZ = (rawZ - origin->z - (rad6 + 0x40)) >> 6;
         if (loZ < 0) loZ = 0;
-        hiZ = (rawZ - origin->z + slack) >> 6;
+        hiZ = (rawZ - origin->z + (rad6 + 0x40)) >> 6;
         if (hiZ > (s32)~f->zMask) hiZ = ~f->zMask;
         if (loZ >= hiZ) return 0;
     }
@@ -278,7 +331,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
         y = loY;
         do {
             stepY = 1000000;
-            s1 = s2 = s3 = z108;
+            s1 = z108; s2 = z108; s3 = z108;
             x = loX;
             do {
                 shift = f->coordShift;
@@ -437,15 +490,15 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             if (dot1 <= 0) goto face;
                             if (!unk_4c) continue;
                             if (dot2 > dot3) {
-                                nn12 = EDGENORMAL_DOT(en1, en2);
+                                nn = EDGENORMAL_DOT(en1, en2);
                                 d1h = dot1 >> 31;
-                                n12h = nn12 >> 31;
-                                if (MUL10(nn12, dot1) <= dot2) goto v12;
+                                nnh = nn >> 31;
+                                if (MUL10(nn, dot1) <= dot2) goto v12;
                             } else {
-                                nn31 = EDGENORMAL_DOT(en1, en3);
+                                nn = EDGENORMAL_DOT(en1, en3);
                                 d1h = dot1 >> 31;
-                                n31h = nn31 >> 31;
-                                if (MUL10(nn31, dot1) <= dot3) goto v31;
+                                nnh = nn >> 31;
+                                if (MUL10(nn, dot1) <= dot3) goto v31;
                             }
                             goto edge1;
                         }
@@ -453,15 +506,15 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         if (dot2 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot3 > dot1) {
-                            nn23 = EDGENORMAL_DOT(en2, en3);
+                            nn = EDGENORMAL_DOT(en2, en3);
                             d2h = dot2 >> 31;
-                            n23h = nn23 >> 31;
-                            if (MUL10(nn23, dot2) <= dot3) goto v23;
+                            nnh = nn >> 31;
+                            if (MUL10(nn, dot2) <= dot3) goto v23;
                         } else {
-                            nn12 = EDGENORMAL_DOT(en2, en1);
+                            nn = EDGENORMAL_DOT(en2, en1);
                             d2h = dot2 >> 31;
-                            n12h = nn12 >> 31;
-                            if (MUL10(nn12, dot2) <= dot1) goto v12;
+                            nnh = nn >> 31;
+                            if (MUL10(nn, dot2) <= dot1) goto v12;
                         }
                         goto edge2;
 
@@ -469,39 +522,39 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         if (dot3 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot1 > dot2) {
-                            nn31 = EDGENORMAL_DOT(en3, en1);
+                            nn = EDGENORMAL_DOT(en3, en1);
                             d3h = dot3 >> 31;
-                            n31h = nn31 >> 31;
-                            if (MUL10(nn31, dot3) <= dot1) goto v31;
+                            nnh = nn >> 31;
+                            if (MUL10(nn, dot3) <= dot1) goto v31;
                         } else {
-                            nn23 = EDGENORMAL_DOT(en3, en2);
+                            nn = EDGENORMAL_DOT(en3, en2);
                             d3h = dot3 >> 31;
-                            n23h = nn23 >> 31;
-                            if (MUL10(nn23, dot3) <= dot2) goto v23;
+                            nnh = nn >> 31;
+                            if (MUL10(nn, dot3) <= dot2) goto v23;
                         }
                         goto edge3;
 
                     edge1:
-                        EDGE_FILTER(dot1, z118)
+                        EDGE_FILTER(dot1, z118, arm1_, dsq1_)
                         d1h = dot1 >> 31;
                         dsq = rsq - (s64)dot1 * dot1;
                         goto tail;
 
                     edge2:
-                        EDGE_FILTER(dot2, z11c)
+                        EDGE_FILTER(dot2, z11c, arm2_, dsq2_)
                         d2h = dot2 >> 31;
                         dsq = rsq - (s64)dot2 * dot2;
                         goto tail;
 
                     edge3:
-                        EDGE_FILTER(dot3, z120)
+                        EDGE_FILTER(dot3, z120, arm3_, dsq3_)
                         d3h = dot3 >> 31;
                         dsq = rsq - (s64)dot3 * dot3;
                         goto tail;
 
-                    v12:  VERTEX_BLOCK(nn12, n12h, den12, en1, en2, dot1, dot2)
-                    v23:  VERTEX_BLOCK(nn23, n23h, den23, en2, en3, dot2, dot3)
-                    v31:  VERTEX_BLOCK(nn31, n31h, den31, en3, en1, dot3, dot1)
+                    v12:  VERTEX_BLOCK(nn, nnh, den12, en1, en2, dot1, dot2)
+                    v23:  VERTEX_BLOCK(nn, nnh, den23, en2, en3, dot2, dot3)
+                    v31:  VERTEX_BLOCK(nn, nnh, den31, en3, en1, dot3, dot1)
 
                     vtail:
                         v = k1;
@@ -549,11 +602,19 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 
                             t = -(sphere.unk_0ec + sphere.radius);
                             u =   sphere.unk_0ec - sphere.radius;
-
-                            if (AXIS_DOT(tp) >= t && AXIS_DOT(tp) <= u
-                             && AXIS_DOT(vb) >= t && AXIS_DOT(vb) <= u
-                             && AXIS_DOT(vc) >= t && AXIS_DOT(vc) <= u)
+                            {
+                            s32 da, db, dc;
+                            tp[0] -= c->x; tp[1] -= c->y; tp[2] -= c->z;
+                            da = AXIS_DOT0(tp);
+                            vb[0] -= c->x; vb[1] -= c->y; vb[2] -= c->z;
+                            db = AXIS_DOT0(vb);
+                            vc[0] -= c->x; vc[1] -= c->y; vc[2] -= c->z;
+                            dc = AXIS_DOT0(vc);
+                            if (da >= t && da <= u
+                             && db >= t && db <= u
+                             && dc >= t && dc <= u)
                                 continue;
+                            }
                         }
                         if (!contactKind) contactKind = k1;
 
@@ -611,7 +672,9 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 
     /* The accumulated extent goes back as two corners; the flags word is the
        return value. func_02037a6c (0x02037a6c, 0xb0) is still unnamed. */
-    if (!hitFlags && !hitFlags2) return 0;
+    if (!hitFlags && !hitFlags2) goto ret0;
     func_02037a6c(&sphere, loPX, loPY, loPZ, hiPX, hiPY, hiPZ);
     return hitFlags;
+ret0:
+    return 0;
 }

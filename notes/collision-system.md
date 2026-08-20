@@ -538,9 +538,60 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   it shares the octree walk verbatim with the already-matched `dBgCh_Gnd` twin, so it
   is the calibration run for 3b. Its recorded floor is a `this` register allocation
   (r7 vs r8) at 2004/b56.
-- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 962 divergences /
-  816 equal / ratio 0.4622, 25 instructions short** (was 1213 / 565 / 0.3203 / 28
-  at the start of the session; 1177 / 601 after the block-layout fix alone).
+- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 731 divergences /
+  1047 equal / ratio 0.5962** (was 1213 / 565 / 0.3203 at the start of the day).
+  Candidate is 1734 instructions, 44 short of 1778.
+
+  Progression: 565 -> 601 (block layout) -> 816 (declaration order) -> 825 (edge
+  blocks) -> 855 (min/max duplicate arms) -> **1047** (a fresh-context pass; see
+  the draft's own banner for its six edits).
+
+  ### Two process corrections worth more than any single lever
+
+  **A compile+score round trip is ~0.45 s, not 30-60 s.** I asserted the slower
+  figure without measuring it and it shaped the whole approach: I ran ~40 scored
+  variants where 430+ were affordable. A 377-compile greedy sweep costs under
+  three minutes. **Measure the loop cost before choosing a search strategy.**
+
+  **`fold_nn` was worth +130 after previously measuring -16.** Folding
+  `nn12/nn23/nn31` + `n12h/n23h/n31h` into one `nn`/`nnh` pair was recorded dead
+  on the old structure. Re-run on the new one it is the largest single lever of
+  the whole day. Fourth and biggest confirmation of the re-test rule.
+
+  ### Region A is CLOSED
+
+  `call 27 -> 28`: ROM 608 bytes / 152 insns, candidate 560 / 140 — **-48 bytes,
+  from +168**. Verified independently. The fix was an in-place centre
+  subtraction (`tp[j] -= c->x;`) with the three dots bound to locals `da/db/dc`
+  so all six bound-compares run after all three dots. Note the dead list had
+  tried *fresh* bindings and loops but never **in-place** subtraction — the
+  25 dead variants had a hole in them.
+
+  ### One non-natural spelling, flagged for review before this ever enters src/
+
+  `volatile s16 cr[3]` is worth +20 and is the only unnatural construct in the
+  draft. It forces the cross scratch through memory (strh/ldrsh, `smull` instead
+  of `umull`+`mla` widening), which is what the ROM does in both `KCL_VERTEX`
+  rounds. Removing it on the final structure costs -20 equal and +51 insns. A
+  natural spelling reproducing the memory residency has not been found: pointer
+  views fold or perturb allocation (-19..-23), an inline `Cross` helper is
+  byte-identical, and an untracked `crw = cr + z15c` reproduces the ROM's reload
+  *traffic* but loses -36 to register churn. Harmless in `notes/` and the bank;
+  **must be revisited if this becomes an enrolled `src/` file.**
+
+  ### The remaining wall, named
+
+  All residual drift (0:-4, 6:-2, 7/11/15:-3, 8/12/16:+1, 20:+3, 22:-3, 24:-13,
+  26:-7, 28:-12) is one family: the ROM re-reads pointer locals (`c`, `tri`,
+  `fn`, `en3`, `vtx`) from their stack homes once per *use*, and keeps
+  **en1=r5, en2=r4** register-resident, where the candidate CSEs those loads and
+  register-homes `{en2, en3}` instead. Mechanism proven, not guessed: the
+  `crw = cr + z15c` probe reproduces the reload traffic almost exactly. It is
+  allocation/homing, not width and not a pragma — `opt_common_subs off` collapses
+  the candidate by 379 and `opt_lifetimes off` by 477, killing that hypothesis
+  measurably. No source spelling found flips the en1<->en3 homing. Worth roughly
+  the remaining ~35 insns of count drift, and the natural target for
+  `tools/permuter/`.
 
   ### RE-TEST YOUR DEAD LEVERS AFTER ANY STRUCTURAL CHANGE
 
