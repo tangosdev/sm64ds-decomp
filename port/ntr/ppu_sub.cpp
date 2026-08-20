@@ -1259,12 +1259,53 @@ struct BandPixel {
    now -- the two peek rasters and the continuity re-render -- so "engine A,
    biased by -192" is spelled once at each call site rather than as six loose
    arguments at each of them. */
+/* ---- WHAT THE TOP SCREEN IS SHOWING, and it is not what engine A's OAM says
+ *
+ * DECLARED HERE, ABOVE THE BAND MACHINERY, because two passes need it now. See
+ * THE TWO SCREENS ARE ONE FRAME APART further down for the measurement: this
+ * program composites engine A BEFORE the OAM upload and rasters engine B after
+ * it, so the top screen is upload N-1 and the bottom screen is upload N.
+ * ppu_seam_oam_mark copies engine A's OAM immediately before the upload, which
+ * makes this copy the state the top screen was really drawn from.
+ *
+ * The seam straddle pass reads it to decide what the top half has. hinge_paint
+ * reads it because the band rows it draws are the top screen's own picture
+ * continued past its bottom edge, and a continuation taken from the LIVE OAM
+ * would be one frame ahead of the screen it continues. That is not the existing
+ * top-versus-bottom lag, it would be a second one, inside a single engine's own
+ * output, at the boundary a player is watching an object cross. */
+uint8_t g_oam_a_shown[1024];
+int g_oam_a_have;
+
+uint16_t shown_rd16(int off)
+{
+    return (uint16_t)((unsigned)g_oam_a_shown[off] |
+                      ((unsigned)g_oam_a_shown[off + 1] << 8));
+}
+
 struct BandEngine {
     uint32_t reg, oam, vram, pltt, ext;
     int row_bias;        /* engine row -> band index: -192 (A), +gap_ds (B) */
     uint8_t id;
     const char *name;
+    /* NON-NULL MEANS READ THE SNAPSHOT ABOVE INSTEAD OF THIS ENGINE'S LIVE OAM,
+       attribute words and affine matrices alike. Only engine A ever has one,
+       only hinge_paint sets one, and every other binding leaves it null and
+       reads the hardware, which is what every pass here did before. */
+    const uint8_t *shadow;
 };
+
+/* One OAM halfword of a binding, from wherever that binding says its OAM is.
+   The two readers below are the ONLY places a band pass touches OAM storage, so
+   a binding that carries a snapshot carries it into the entries AND into the
+   affine matrices, which are OAM words too and would otherwise be read live
+   under a snapshot's attributes. */
+uint16_t band_oam16(const BandEngine &e, unsigned off)
+{
+    return e.shadow ? (uint16_t)((unsigned)e.shadow[off] |
+                                 ((unsigned)e.shadow[off + 1] << 8))
+                    : rd16(e.oam + off);
+}
 
 /* What one OAM entry decodes to, before a texel is read. The BOX is what the
    hardware scans -- twice the sprite in each axis for a double-size affine
@@ -1358,10 +1399,10 @@ int band_texels(const BandEngine &e, uint16_t a0, uint16_t a1, uint16_t a2,
     o.pa = 256; o.pb = 0; o.pc = 0; o.pd = 256;
     if (d.affine) {
         const int grp = (a1 >> 9) & 0x1F;
-        o.pa = (int16_t)rd16(e.oam + (grp * 4 + 0) * 8u + 6);
-        o.pb = (int16_t)rd16(e.oam + (grp * 4 + 1) * 8u + 6);
-        o.pc = (int16_t)rd16(e.oam + (grp * 4 + 2) * 8u + 6);
-        o.pd = (int16_t)rd16(e.oam + (grp * 4 + 3) * 8u + 6);
+        o.pa = (int16_t)band_oam16(e, (grp * 4 + 0) * 8u + 6);
+        o.pb = (int16_t)band_oam16(e, (grp * 4 + 1) * 8u + 6);
+        o.pc = (int16_t)band_oam16(e, (grp * 4 + 2) * 8u + 6);
+        o.pd = (int16_t)band_oam16(e, (grp * 4 + 3) * 8u + 6);
     }
     return 1;
 }
@@ -1508,9 +1549,9 @@ void band_raster_engine(BandPixel *band, int gap_ds, const BandEngine &e,
     if (!((rd32(e.reg) >> 12) & 1)) return;          // OBJ layer off
     if (trace < 0) trace = band_trace_frames();
     for (int i = 127; i >= 0; --i) {
-        const uint16_t a0 = rd16(e.oam + i * 8u);
-        const uint16_t a1 = rd16(e.oam + i * 8u + 2);
-        const uint16_t a2 = rd16(e.oam + i * 8u + 4);
+        const uint16_t a0 = band_oam16(e, i * 8u);
+        const uint16_t a1 = band_oam16(e, i * 8u + 2);
+        const uint16_t a2 = band_oam16(e, i * 8u + 4);
         BandEntry d;
         if (!band_decode(a0, a1, a2, d)) continue;
 
@@ -1685,11 +1726,11 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
        passes 0 and a 256-colour engine-A sprite reads the standard palette --
        the same answer ntr/ppu.cpp's own engine-A raster gives. */
     const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           -192, 0, "A"};
+                           -192, 0, "A", 0};
     /* ENGINE B SECOND, so it wins where both drew; see the header note. Its
        band rows are engine rows -G..-1, so the bias is +G. */
     const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
-                           lay.gap_ds, 1, "B"};
+                           lay.gap_ds, 1, "B", 0};
     band_raster_engine(band, lay.gap_ds, ea);
     band_raster_engine(band, lay.gap_ds, eb);
     /* AND THE DEAD ZONE LAST, so "did an engine draw this pixel" is asked of
@@ -1707,6 +1748,111 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
                 for (int ox = 0; ox < rx; ++ox) out[x * rx + ox] = bp.color;
             }
         }
+}
+
+/* ---- THE HINGE ROWS: the band, when the band is the world's own rows -------
+ *
+ * WHAT IT IS FOR. See THE OBJECT SHIFT in ntr/ppu.h. With the GaplessMinigames
+ * mod engaged and the shift on, the top engine's OBJ layer is displayed
+ * obj_shift_ds rows lower than the engine puts it, which is where the ROM puts
+ * it, and the image carries obj_shift_ds extra rows BELOW the top screen so the
+ * rows a shifted sprite runs off the bottom edge into are still in the picture.
+ * Those rows are world -obj_shift_ds..-1. This draws them.
+ *
+ * IT IS THE SAME BAND, WITH SOMETHING REAL IN IT. band_fill has already laid
+ * the backdrop down by the player's own fill setting, exactly as it does for a
+ * gap-on minigame, so a run with the shift on and a run with the ROM's gap look
+ * alike where nothing is crossing. What is different is that these rows are
+ * addressed: the top engine submits into them, so this puts the engine's own
+ * texels over the fill rather than leaving decoration in front of a hole.
+ *
+ * THE BIAS IS obj_shift_ds - 192 AND THAT IS THE WHOLE ARITHMETIC. Engine A's
+ * entry at OAM row y is world row y - 192 (the mod has zeroed G, so the game
+ * submits at world + 0xc0 exactly). Band index k is world row + obj_shift_ds,
+ * because band row 0 IS world row -obj_shift_ds. So k = y - 192 + obj_shift_ds,
+ * which is band_raster_engine's row_bias and nothing else. Band index 0 is
+ * engine row 192 - obj_shift_ds, the first row the shifted top screen clipped,
+ * so the strip begins exactly where the screen ends and the join is continuous
+ * by construction rather than by a fudge.
+ *
+ * READ OUT OF THE SNAPSHOT, NOT THE LIVE OAM, and that is not a detail. These
+ * rows are the top screen's picture continued, and the top screen is upload
+ * N-1 (see THE TWO SCREENS ARE ONE FRAME APART below). Reading the live OAM
+ * would put a continuation one frame ahead of the thing it continues, so an
+ * object leaving the top screen would jump forward as it crossed the join. The
+ * shadow binding is what BandEngine::shadow is for, and it carries into the
+ * affine matrices as well as the attribute words. No snapshot yet, on the
+ * program's first composed frame or on a path that never uploads, means this
+ * pass declines rather than guesses, which leaves the band as band_fill left
+ * it.
+ *
+ * A TARGETED PASS RATHER THAN A TALLER LIVE RASTER, band_peek's own trade for
+ * band_peek's own reason: growing engine A's buffers by G_rom rows would put
+ * this mode's cost on every level in the program. This walks engine A's OAM
+ * once more, over the band's rows alone, only when a shifted layout is live.
+ *
+ * PEEK AND THE BAND'S CONTINUITY PASS ARE NOT RUN IN THIS MODE, and that is
+ * decided in ppu_compose_stacked rather than here. Both were built to answer
+ * "what is hidden in the rows neither engine can address", and under the shift
+ * the top engine addresses them. Peek's engine-B binding would also be wrong:
+ * its bias is +gap_ds, which reads the band as a hinge below the bottom
+ * screen's own frame, and here the band sits ABOVE world row 0 where engine B
+ * has nothing to say at all.
+ */
+/* THE SAME SWITCH THE ENGINE-A RASTER USES, so one variable lights both halves
+   of the shift: hal/message_compositor.cpp names what the top screen kept and
+   this names what the band drew, off one run, with one grep. */
+int hinge_trace_on(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_OBJSHIFT_TRACE");
+        on = s && *s && *s != '0';
+    }
+    return on;
+}
+
+unsigned g_hinge_frame;
+
+void hinge_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
+{
+    if (lay.obj_shift_ds <= 0 || lay.band_h <= 0) return;
+    if (!g_oam_a_have) return;
+    /* GAP_DS_MAX rows of 256 DS pixels, allocated on the first hinge frame and
+       never freed: band_peek's trade, for band_peek's reason. */
+    static BandPixel *hinge;
+    if (!hinge) {
+        hinge = (BandPixel *)std::calloc((size_t)GAP_DS_MAX * 256,
+                                         sizeof *hinge);
+        if (!hinge) return;
+    }
+    const int rows = lay.obj_shift_ds < lay.gap_ds ? lay.obj_shift_ds
+                                                   : lay.gap_ds;
+    if (rows <= 0 || rows > GAP_DS_MAX) return;
+    std::memset(hinge, 0, sizeof(BandPixel) * (size_t)rows * 256);
+    const int trace = hinge_trace_on();
+    ++g_hinge_frame;
+    const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                           lay.obj_shift_ds - 192, 0, "A", g_oam_a_shown};
+    band_raster_engine(hinge, rows, ea, trace, "hinge");
+
+    const int rx = lay.w / SUB_W, ry = lay.scale;
+    if (rx <= 0 || ry <= 0) return;
+    int px_drawn = 0;
+    for (int k = 0; k < rows; ++k)
+        for (int x = 0; x < SUB_W; ++x) {
+            const BandPixel &bp = hinge[(size_t)k * 256 + x];
+            if (!bp.hit) continue;
+            ++px_drawn;
+            for (int oy = 0; oy < ry; ++oy) {
+                uint32_t *out = dst + (size_t)(lay.band_y + k * ry + oy) * dst_w;
+                for (int ox = 0; ox < rx; ++ox) out[x * rx + ox] = bp.color;
+            }
+        }
+    if (trace)
+        std::fprintf(stderr, "[hinge] f%u band %d DS row(s) (world -%d..-1, "
+                     "engine rows %d..191): %d DS pixel(s) drawn over the "
+                     "fill\n", g_hinge_frame, rows, rows, 192 - rows, px_drawn);
 }
 
 /* ---- HEADROOM: the rows above the top screen, and what goes in them --------
@@ -1811,14 +1957,22 @@ int head_trace_on(void)
  * over the seam entirely and pops to the other screen when its centre crosses.
  * This pass draws those rows, out of the entry the game itself submitted.
  *
- * WORLD ROW -> COMPOSED IMAGE ROW, and the whole pass rests on the two halves
- * sharing one arithmetic. The bottom screen's world row r sits at
- * lay.bottom_y + r * scale. The top screen's world row r (negative) is engine
- * row r + 192, at (r + 192) * scale = SCREEN_H + r * scale -- and with no band
- * lay.bottom_y IS SCREEN_H, so both halves are `bottom_y + r * scale`. THAT
- * IDENTITY IS WHAT GAPLESS MEANS, and it is why this refuses to run when
- * lay.gap_ds is non-zero: with a band the two halves are that many rows apart
- * and a sprite drawn across the seam would be drawn across a hinge.
+ * WORLD ROW -> COMPOSED IMAGE ROW, and the whole pass rests on the image and
+ * the world running at one rate through the seam. The bottom screen's world row
+ * r sits at lay.bottom_y + r * scale. The top screen's world row r (negative)
+ * is engine row r + 192, at (r + 192) * scale = SCREEN_H + r * scale, and with
+ * no band lay.bottom_y IS SCREEN_H, so both halves are `bottom_y + r * scale`.
+ * THAT IDENTITY IS WHAT GAPLESS MEANS.
+ *
+ * IT SURVIVES THE OBJECT SHIFT, AND NOTHING ELSE. With obj_shift_ds set the
+ * image has a band again, but its rows ARE world -obj_shift_ds..-1 and the top
+ * engine draws into them at its own shifted submission, so bottom_y grew by
+ * exactly the rows the picture gained and the one expression is still the world
+ * row's place everywhere in the image. With an ORDINARY band it does not
+ * survive: those rows are a hinge no engine addresses, the halves are that many
+ * rows apart in the picture and not in the world, and a sprite drawn across the
+ * seam would be drawn across the hinge. seam_straddle's guard is that
+ * distinction, and it is not a test for a band.
  *
  * THE RULE IS ABOUT THE PICTURE, NOT ABOUT THE SIMULATION, and that is not a
  * stylistic choice -- see THE TWO SCREENS ARE ONE FRAME APART below. For a
@@ -1908,7 +2062,7 @@ void head_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
        anywhere in this program, so it passes 0 -- the same answer band_peek's
        engine-A pass gives, for the same reason. */
     const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           lay.head_ds, 0, "A"};
+                           lay.head_ds, 0, "A", 0};
     band_raster_engine(strip, rows, ea, trace, "headroom", lay.head_ds);
 
     /* ---- the backdrop ---- */
@@ -2017,16 +2171,10 @@ unsigned g_seam_frame;
  * two builds while the per-frame trace showed the completion happening.
  *
  * Engine B needs no such thing: its raster runs after the upload, so its own
- * OAM is what its half of the picture holds. */
-uint8_t g_oam_a_shown[1024];
-int g_oam_a_have;
-
-uint16_t shown_rd16(int off)
-{
-    return (uint16_t)((unsigned)g_oam_a_shown[off] |
-                      ((unsigned)g_oam_a_shown[off + 1] << 8));
-}
-
+ * OAM is what its half of the picture holds.
+ *
+ * g_oam_a_shown and shown_rd16 are declared at the top of the band machinery,
+ * because hinge_paint reads them too; the note there says why. */
 
 
 /* WHERE THE TOP SCREEN REALLY HAS IT. Matched on the sprite's SIZE and on
@@ -2399,19 +2547,40 @@ void seam_straddle(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
 {
     /* THE TWO CONDITIONS ARE READ TOGETHER and neither implies the other.
        lay.seam is the mod: the GAME's own G is zero, so the two screens are
-       one continuous world. lay.gap_ds is the picture: no band. Every level in
-       the game has gap_ds 0 with a real G behind it, and MinigameGap off gives
-       gap_ds 0 with a real G behind it too -- in both, a sprite that leaves one
-       screen has genuinely gone behind the hinge and joining it across the seam
-       would be inventing a continuity the game does not have. */
-    if (!lay.seam || lay.gap_ds) return;
+       one continuous world. The second condition is the PICTURE, and it is
+       about the ruler rather than about the band: this pass writes at
+       `bottom_y + r * scale` for a world row r, and that expression is only the
+       right place when the image's rows and the world's rows run at the same
+       rate through the seam.
+
+       WITH NO BAND they do, which is the case this shipped with: bottom_y IS
+       SCREEN_H, so the top screen's world row r is at (r + 192) * scale and the
+       bottom screen's is at bottom_y + r * scale, and those are one expression.
+
+       WITH AN ORDINARY BAND they do not. Every level in the game has gap_ds 0
+       with a real G behind it, and MinigameGap off gives gap_ds 0 with a real G
+       behind it too; a gap-on minigame has a band whose rows the engines cannot
+       address at all. In each of those a sprite that leaves one screen has
+       genuinely gone behind the hinge, and joining it across the seam would be
+       inventing a continuity the game does not have.
+
+       WITH A SHIFTED BAND they do again, and that is why obj_shift_ds is named
+       here rather than the pass being switched off. Those band rows ARE world
+       rows -obj_shift_ds..-1, drawn by the top engine at its own shifted
+       submission, so the ruler runs unbroken from image row 0 to the last row
+       and `bottom_y + r * scale` is the world row's place everywhere in it.
+       hinge_paint draws what engine A HAS; this draws the rows the router gave
+       to one engine and that engine's own screen edge then clipped, which is a
+       different hole and is still open. The two never write the same pixel: a
+       completion is only ever drawn on the side its own half cannot address. */
+    if (!lay.seam || (lay.gap_ds && !lay.obj_shift_ds)) return;
     ++g_seam_frame;
     /* the same two bindings the band's passes use, with engine B's row bias at
        the gapless G: engine row -> world row is -192 for A and 0 for B */
     const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           -192, 0, "A"};
+                           -192, 0, "A", 0};
     const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
-                           0, 1, "B"};
+                           0, 1, "B", 0};
     if (seam_trace_frames())
         seam_census(dst, dst_w, lay, ea, eb, evy, to_white);
     if (g_track_fn) seam_complete(dst, dst_w, lay, ea, eb, evy, to_white);
@@ -2424,12 +2593,22 @@ void seam_straddle(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
 // The layout decides everything; see StackLayout in ntr/ppu.h. This writes
 // every pixel of dst, so the caller does not have to clear it.
 
-StackLayout stack_layout(int gap_ds, int head_ds, int fill_mode,
-                         uint32_t fill_color, int peek, const uint32_t *art)
+StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
+                         int fill_mode, uint32_t fill_color, int peek,
+                         const uint32_t *art)
 {
     StackLayout l;
     if (gap_ds < 0) gap_ds = 0;
     if (gap_ds > GAP_DS_MAX) gap_ds = GAP_DS_MAX;
+    /* THE SHIFT IS CLAMPED TO THE BAND IT NEEDS, not just to the ceiling. The
+       rows a shifted object is pushed into are the band's rows; a shift with no
+       band, or a shift taller than the band, would push texels into image rows
+       that do not exist, so the number that survives here is the one the image
+       can actually carry. A caller that means the mode passes the same value
+       twice. */
+    if (obj_shift_ds < 0) obj_shift_ds = 0;
+    if (obj_shift_ds > GAP_DS_MAX) obj_shift_ds = GAP_DS_MAX;
+    if (obj_shift_ds > gap_ds) obj_shift_ds = gap_ds;
     /* THE HEADROOM IS CLAMPED BY THE SAME CEILING AND FOR THE SAME REASON: it
        comes from the same framework word, one scene's InitResources having
        written it before the gapless mod zeroed it, and a wild read must not be
@@ -2437,6 +2616,7 @@ StackLayout stack_layout(int gap_ds, int head_ds, int fill_mode,
     if (head_ds < 0) head_ds = 0;
     if (head_ds > GAP_DS_MAX) head_ds = GAP_DS_MAX;
     l.gap_ds = gap_ds;
+    l.obj_shift_ds = obj_shift_ds;
     l.head_ds = head_ds;
     l.scale = SCREEN_H / SUB_H;
     l.w = STACK_W;
@@ -2584,7 +2764,19 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
        fading it would be this program deciding that a preference is part of the
        picture. */
     band_fill(dst, dst_w, lay);
-    if (lay.peek) band_peek(dst, dst_w, lay);
+    /* PEEK IS THE HINGE'S PASS AND THE HINGE'S ALONE. With the object shift on
+       the band is not a hinge: the top engine submits into those rows and
+       hinge_paint below draws what it submitted. Running peek there as well
+       would put a second rendering of the same objects into the same rows off a
+       binding whose engine-B bias assumes a gap that is not there. The layout
+       already carries peek 0 in this mode (hal/screen_gap.cpp forces it, and
+       says so), so this test is the belt beside that brace. */
+    if (lay.peek && !lay.obj_shift_ds) band_peek(dst, dst_w, lay);
+    /* AND THE BAND'S OWN CONTENT, when the band has any: engine A's texels for
+       the world rows the shift moved into it, over the fill that was just laid
+       down. Returns immediately with no shift, so a gap-on band is byte-for-byte
+       what it was before this existed. */
+    hinge_paint(dst, dst_w, lay);
 
     /* AND THE SEAM LAST, after everything that could have written the rows
        either side of it. It is the band's mirror image: the band draws rows no

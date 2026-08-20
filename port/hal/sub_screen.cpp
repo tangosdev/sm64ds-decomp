@@ -1273,6 +1273,22 @@ int hal_sub_screen_stacked_headroom(void)
     return hal_screen_layout()->head_h;
 }
 
+/* And whether the rows BETWEEN the halves are a hinge or the world's own rows,
+   in DS rows, for the same one consumer and for the same reason. With the
+   object shift on the band is world -obj_shift_ds..-1 with the top engine
+   drawing into it, and a capture line that called that a gap would put a gap-on
+   word on the one picture that has none.
+
+   FORWARDED THROUGH THIS FILE rather than read from hal/screen_gap.cpp
+   directly, which is the shape hal_sub_screen_stacked_generation already has
+   and for a harder reason than tidiness: not every binary that links
+   hal/scene_boot.cpp links the layout owner, and a direct call from there is an
+   unresolved symbol in smoke_player. */
+int hal_sub_screen_stacked_obj_shift(void)
+{
+    return hal_screen_layout()->obj_shift_ds;
+}
+
 /* A counter that steps whenever that size changes -- which is once, when a
    minigame's InitResources latches its G. walk_window watches it to know when
    to re-shape the DIB header and re-size the window; a consumer that reads the

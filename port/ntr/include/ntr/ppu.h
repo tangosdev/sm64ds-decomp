@@ -168,8 +168,72 @@ constexpr int GAP_DS_MAX = 96;
 // head_ds is 0 in every other layout, which is every level and every gap-on
 // minigame, and a zero headroom makes every field below exactly what it was
 // before this existed.
+//
+// AND THE HEADROOM IS NOT THE ANSWER. It was built on the premise that the
+// world's top G_rom rows carry artwork the zeroed G pushed off the screen, and
+// that premise was measured and is false: on scene 368, in BOTH arms, on all
+// 400 frames of the census, engine A's backgrounds put 0 of 8192 opaque texels
+// in engine rows -32..-1, and the beam and wings the report is about are ON the
+// screen at engine rows 0..31, byte-identical between the arms. See headroom_ds
+// in hal/screen_gap.cpp for the numbers. The strip is opt-in and off, and what
+// follows is what replaced it.
+//
+// ---- THE OBJECT SHIFT, built, measured, and OFF ------------------------------
+//
+// READ hal/screen_gap.cpp's obj_shift_ds BEFORE THIS. The mechanism below is
+// whole and does exactly what it says; the premise it was built on is false,
+// so it is opt-in behind SM64DS_GAPLESS_OBJ_SHIFT=1 and nothing turns it on.
+// The geometry is documented because it is right and a per-entry version of the
+// shift can be dropped into it without rebuilding any of this.
+//
+// THE IDEA. The top engine takes world y to y + 0xc0 + G, so with G forced to
+// zero a sprite lands G rows higher up a picture that did not move with it, and
+// the report is a sprite jammed against the wooden beam and cut. obj_shift_ds
+// is a DISPLAY shift of the TOP ENGINE'S OBJ LAYER, by exactly the G the
+// scene's own InitResources wrote before the mod zeroed it: the OBJ raster
+// reads each entry as though it had been submitted at y + obj_shift_ds, which
+// is the y the ROM itself submits at, so the window unit, the alpha blend and
+// the screen clip all answer for the row the texel is really shown on.
+//
+// WHY IT IS OFF. "The OBJ layer" is not one thing. Only the sprites the
+// framework's own OAM router placed move with G; the score rows and the top
+// screen's own artwork are placed in SCREEN space and are at the same engine
+// row in both arms. On scene 368, one sprite identity of twelve follows G, so
+// the layer shift moves eleven that were never displaced. The numbers are in
+// obj_shift_ds and the tool that took them is port/tools/objshift.py.
+//
+// AND THE IMAGE GROWS BY obj_shift_ds ROWS BELOW THE TOP SCREEN, not above it.
+// The rows a shifted sprite runs off the top screen's bottom edge into are the
+// world's own rows -obj_shift_ds..-1, the rows behind the hinge on hardware, so
+// they go where the hinge is: between the halves. gap_ds carries their height,
+// so band_y, band_h, bottom_y, h, the DIB header, the window size, the BMP
+// writer and both stylus mappers are the arithmetic they already were, and the
+// image is 192 + G_rom + 192 DS rows, which is gap-on's own shape.
+//
+// WHAT obj_shift_ds MEANS TO THE BAND is the one thing it changes there: those
+// rows are LIVE. In a gap-on layout the band is rows neither engine can address
+// and band_fill decorates them; here the same rows are world rows the top
+// engine draws into, so hinge_paint puts engine A's own texels over the fill.
+// The peek pass and the band's continuity pass are OFF in this mode, because
+// both exist to answer "what is hidden in the hinge" and the hinge is not
+// hidden any more.
+//
+// THE ONE IDENTITY THE WHOLE MODE RESTS ON: with the shift, world row r sits at
+// bottom_y + r * scale for EVERY r in the image, negative and positive alike.
+// Top screen, band and bottom screen are one continuous ruler, which is the
+// property gap-on has and the property the seam straddle pass below needs. It
+// is why that pass keeps running here and refuses on an ordinary band, where
+// the same expression would draw a sprite across a hinge.
+//
+// 0 in every other layout, which is every level, every gap-on minigame and
+// every gapless run with SM64DS_GAPLESS_OBJ_SHIFT=0, and a zero shift makes
+// every field below exactly what it was before this existed.
 struct StackLayout {
-    int gap_ds;        // G, the simulated gap in DS rows. 0 = no gap.
+    int gap_ds;        // the DS rows of image between the halves. 0 = none.
+                       // With obj_shift_ds 0 these are the simulated hinge G;
+                       // with obj_shift_ds set they are world -gap_ds..-1.
+    int obj_shift_ds;  // the top engine's OBJ display shift, in DS rows, and
+                       // equally the world rows the band carries. 0 = neither.
     int head_ds;       // the headroom in DS rows above the top screen. 0 = none.
     int scale;         // host rows per DS row: SCREEN_H / SUB_H
     int w;             // the image width, STACK_W
@@ -227,11 +291,19 @@ struct StackLayout {
 
 enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1, GAP_FILL_CUSTOM = 2 };
 
-// The one computation. gap_ds and head_ds are each clamped to [0, GAP_DS_MAX];
-// everything else is derived. Pure: same arguments, same answer, no globals
-// read.
-StackLayout stack_layout(int gap_ds, int head_ds, int fill_mode,
-                         uint32_t fill_color, int peek, const uint32_t *art);
+// The one computation. gap_ds, head_ds and obj_shift_ds are each clamped to
+// [0, GAP_DS_MAX]; everything else is derived. Pure: same arguments, same
+// answer, no globals read.
+//
+// obj_shift_ds is a STATEMENT ABOUT gap_ds's ROWS and not a second height: a
+// caller that sets it passes the same number for gap_ds, because the rows the
+// shifted objects need are exactly the world rows the band is made of. A shift
+// with no band under it would push objects into rows the image does not have,
+// so a non-zero obj_shift_ds with a zero gap_ds is dropped to zero here rather
+// than trusted.
+StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
+                         int fill_mode, uint32_t fill_color, int peek,
+                         const uint32_t *art);
 
 // ---- BAND CONTINUITY --------------------------------------------------------
 //

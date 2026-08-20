@@ -69,6 +69,32 @@
 #include "ntr/gx.h"
 #include "ntr/ppu.h"
 
+/* THE TOP ENGINE'S OBJ DISPLAY SHIFT, in DS rows, from hal/screen_gap.cpp.
+ *
+ * ZERO UNLESS SOMEBODY ASKS, AND NOTHING ASKS. It is the G the running
+ * minigame's own InitResources wrote, and it is non-zero only while the
+ * GaplessMinigames mod is engaged FOR THE SCENE NOW RUNNING and
+ * SM64DS_GAPLESS_OBJ_SHIFT=1 has turned the shift on, which is one scene in the
+ * program behind two switches that both default off. hal/screen_gap.cpp's
+ * obj_shift_ds carries the measurement that made it opt-in: only the sprites
+ * the framework's OAM router placed move with G, and this moves the layer. On
+ * every other path this file is byte-for-byte the compositor it was.
+ *
+ * WHAT IT MEANS HERE. The mod stores zero into the framework word the ROM's OAM
+ * router adds to every top-screen submission, so the game submits at world +
+ * 0xc0 instead of world + 0xc0 + G and every sprite lands G rows higher up a
+ * background that did not move with it. Adding it back at the raster is the
+ * same picture the ROM composes: the two rasters below read each entry as
+ * though it had been submitted at y + shift, so the window unit, the alpha
+ * blend and the screen clip all answer for the row the texel is really shown
+ * on. See THE OBJECT SHIFT in ntr/ppu.h; ntr/ppu_sub.cpp's hinge_paint draws
+ * the rows this then clips off the bottom.
+ *
+ * Declared rather than included because hal/screen_gap.h pulls the whole layout
+ * in and this file needs one int. C++ linkage, matching every other hal_ name
+ * this file reaches and the definition in hal/screen_gap.cpp. */
+int hal_gapless_obj_shift_ds(void);
+
 namespace {
 
 // Engine A only.
@@ -259,6 +285,20 @@ uint8_t g_objwin[192][256];
    and every layer draws everywhere. A before/after is then one build at one
    .dsstate base, which notes/port-selftest-bmp-gate.md requires before two BMPs
    may be compared at all. Same shape as SM64DS_3D_PRIORITY_OFF above. */
+/* THE OBJECT SHIFT'S CENSUS SWITCH, and its frame counter. The counter steps
+   once per engine A composite, which is once per frame on both frame loops, so
+   a line's f number is the frame the top screen was drawn on. */
+unsigned g_obj_frame;
+
+inline bool objshift_trace_on() {
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_OBJSHIFT_TRACE");
+        on = e && *e && *e != '0';
+    }
+    return on != 0;
+}
+
 inline bool objwin_off_env() {
     static int v = -1;
     if (v < 0) {
@@ -281,6 +321,13 @@ void build_objwin(uint32_t dispcnt) {
         return;
     const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
     const bool map1d = (dispcnt >> 4) & 1;
+    /* THE MASK SHIFTS WITH THE SPRITES THAT MAKE IT. A window sprite's region
+       is its own opaque texels, so if the OBJ layer is being read at y + shift
+       then the region those sprites define is at y + shift too. Leaving it here
+       would mask the backgrounds at rows no sprite is shown on any more, which
+       is the one way this feature could put a hole in artwork rather than move
+       an object. Zero shift, and this is the line it was. */
+    const int shift = hal_gapless_obj_shift_ds();
 
     for (int i = 127; i >= 0; --i) {
         const uint16_t a0 = rd16(kOamBase + i * 8u);
@@ -298,6 +345,11 @@ void build_objwin(uint32_t dispcnt) {
         int x = a1 & 0x1FF, y = a0 & 0xFF;
         if (x >= 256) x -= 512;
         if (y >= 192 && y >= 256 - bh) y -= 256;
+        /* AFTER THE WRAP, NEVER BEFORE IT. The 8-bit y is the hardware's, and
+           the sign it carries comes out of the sprite's own box height; adding
+           to it first would turn a sprite parked at 224 into one at 256 and
+           lose the negative row it was standing on. */
+        y += shift;
         const bool c256 = a0 & 0x2000;
         const bool hflip = !affine && (a1 & 0x1000);
         const bool vflip = !affine && (a1 & 0x2000);
@@ -822,6 +874,26 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
     // tiles out consecutively, so its expectations are 1D expectations and a
     // flipped default would have broken them instead of honouring the bit.
     const bool map1d = (dispcnt >> 4) & 1;
+    /* THE DISPLAY SHIFT, read once for the walk. See the note over
+       hal_gapless_obj_shift_ds at the top of this file: it is zero on every
+       path in the program but one, and where it is not zero it puts this
+       engine's sprites back on the rows the ROM submits them at. It is applied
+       to the ENTRY's y and not to the pixel, so the screen clip below, the
+       window test and the alpha blend are all this engine's own answers for the
+       row the texel is really shown on -- the picture engine A composes when
+       the framework word carries its own value, which is the picture gap-on
+       mode composes. The rows this then clips off the bottom edge are drawn by
+       ntr/ppu_sub.cpp's hinge_paint, out of the same entries. */
+    const int shift = hal_gapless_obj_shift_ds();
+    /* SM64DS_OBJSHIFT_TRACE=1 prints the per-entry census this is proven with,
+       and it prints in BOTH ARMS. With the shift on it names the DISPLAY row
+       each entry lands on; with it off it names the row the engine put it on,
+       which on a gap-on run is the row the ROM itself submits at. Those two
+       numbers are the whole claim, and port/tools/objshift.py reads exactly
+       these lines and compares them frame for frame. Off, this loop is the loop
+       it was. */
+    const int trace = objshift_trace_on();
+    ++g_obj_frame;
 
     for (int i = 127; i >= 0; --i) {
         const uint16_t a0 = rd16(kOamBase + i * 8u);
@@ -855,11 +927,39 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
         int x = a1 & 0x1FF, y = a0 & 0xFF;
         if (x >= 256) x -= 512;
         if (y >= 192 && y >= 256 - bh) y -= 256;
+        /* AFTER THE WRAP, NEVER BEFORE IT. The 8-bit y is the hardware's, and
+           the sign it carries comes out of the sprite's own box height; adding
+           to it first would turn a sprite parked at 224 into one at 256 and
+           lose the negative row it was standing on. */
+        y += shift;
         const bool c256 = a0 & 0x2000;
         const bool hflip = !affine && (a1 & 0x1000);
         const bool vflip = !affine && (a1 & 0x2000);
         const uint32_t tile = a2 & 0x3FF;
         const uint32_t pal = (a2 >> 12) & 0xF;
+
+        /* ONE LINE PER DRAWABLE ENTRY, before a texel is read, so it is the
+           SUBMISSION and the clip rather than a count of what survived. `at`
+           is the engine row the game put the box on, WITHOUT the shift, which
+           is the number the two arms differ in; `display` is where it is drawn.
+           `top` is how many of the box's rows the top screen keeps and `band`
+           how many fall past its bottom edge into the rows hinge_paint draws;
+           `above` is what is lost off the top, which is what the ROM loses too
+           when its own submission runs off that edge. */
+        if (trace) {
+            const int d0 = y, d1 = y + bh - 1;
+            int above = 0, on = 0, band = 0;
+            for (int k = d0; k <= d1; ++k) {
+                if (k < 0) ++above;
+                else if (k < 192) ++on;
+                else ++band;
+            }
+            std::fprintf(stderr, "[objshift] f%u oam%3d a0=%04x a1=%04x "
+                         "a2=%04x %dx%d%s at (%d,%d) shift %d display %d..%d: "
+                         "%d above, %d top, %d band\n", g_obj_frame, i, a0, a1,
+                         a2, w, h, dbl ? " dbl" : (affine ? " aff" : ""), x,
+                         y - shift, shift, d0, d1, above, on, band);
+        }
 
         int pa = 256, pb = 0, pc = 0, pd = 256;
         if (affine) {
