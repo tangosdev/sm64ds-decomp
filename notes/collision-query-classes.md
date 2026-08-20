@@ -118,7 +118,7 @@ hit path, i.e. a `hasClsn` byte, the same role `RaycastGround.h` already names a
 `include/SphereClsn.h` does not have — both fall inside its `pad_039[0x3b]`, and both land
 inside the polymorphic sub-object at 0x38 identified above. Straight off the entry code:
 
-```
+```arm
 add r0, fp, #0x3c     then [r0], [r0,#4], [r0,#8]   -> a Vector3 CENTRE at 0x3c
 ldr r0, [fp, #0x48]                                 -> the RADIUS at 0x48
 ```
@@ -215,7 +215,7 @@ loop supplies, not a source defect -- do not chase it before the body exists.
 
 **Where the sphere diverges, and it is the thing to design around.** After the descent:
 
-```
+```arm
 ldr r2,[sp,#0x88]                     the leaf just found
 cmp r2,[sp,#0x48] -> beq skip         THREE previously-visited leaves
 cmp r2,[sp,#0x4c] -> beq skip
@@ -241,7 +241,7 @@ novel part.
 The score is `cy`, the cell's remaining Y extent — the same key the Line overload uses for
 its single `rowStep`/`rowLeaf`, kept three deep and sorted descending:
 
-```
+```arm
 cmp cy,[0x7c]  ble skip     s3 -- below all three, no insert
 cmp cy,[0x78]  ble ins3
 cmp cy,[0x74]  ble ins2
@@ -286,7 +286,7 @@ All fourteen now have meanings, which fixes declaration order for the whole func
 
 **The first six are three running min/max pairs.** Every write site is the same shape:
 
-```
+```arm
 cmp v,[sp,#0x2c] ; strgt v,[sp,#0x2c] ; bgt skip      if (v > hi) hi = v
 cmp v,[sp,#0x28] ; strlt v,[sp,#0x28]                 else if (v < lo) lo = v
 ```
@@ -423,13 +423,13 @@ The claim above that our target "never writes through `fp` -- there is not one
 Grepping for the `[fp, #imm]` addressing form cannot see a write that goes through a register
 derived from `fp`, and that is exactly what this function does:
 
-```
-01FFCFFC  add  r0, fp, #0x10      &sphere->result
+```arm
+01FFCFFC  add  r0, fp, #0x10     ; &sphere->result
 01FFD000  bl   0x2037fd4          func_02037fd4(&sphere->result, triID, info)
-01FFD008  add  r4, fp, #0x70      r4 = &sphere->flags
+01FFD008  add  r4, fp, #0x70      ; r4 = &sphere->flags
 01FFD010  ldrb r0, [r4]
-01FFD014  orr  r0, r0, #1         flags |= 1   (general hit)
-01FFD018  strb r0, [r4]           <-- a write to the object
+01FFD014  orr  r0, r0, #1         ; flags |= 1   (general hit)
+01FFD018  strb r0, [r4]          ; <-- a write to the object
 ```
 
 Counted properly — every `str`/`strb` whose base is not `sp` — there are **eight**: four
@@ -465,7 +465,7 @@ The per-prism opening is the matched `DetectClsn(RaycastGround&)` twin's, with o
 substitution — where the twin uses a fixed `0x20000` tolerance the sphere uses **its own
 radius**:
 
-```
+```arm
 ldrh r2,[r0,#2]!         *++leaf, the writeback walker
 add  r0, r1, r2, lsl #4  tri = &file->tris[lv]
 mul  r1, tri->posIdx, #0xc
@@ -487,7 +487,7 @@ The units work out: `d` is raw, normals are `1.0 == 0x400`, and `rsc = radius <<
 
 Straight after the face test:
 
-```
+```arm
 ldrb r0,[sl,#0x34]        this->unk_34
   set   -> reject unless faceDot >= -0x50000
 ldrb r0,[sl,#0x35]        this->unk_35
@@ -541,7 +541,7 @@ classification**, and it lines up one-for-one with what the wrappers told us:
 
 The accept path, in order:
 
-```
+```arm
 sub  r0, rsc, faceDot ; str [sp,#0x9c]     penetration depth along the face normal
 bl   func_020396dc    ; str [sp,#0xa0]     triID
 ldr  r3,[r3,#0xc] ; blx r3                 GetSurfaceInfo -- REAL virtual call, slot 3
@@ -579,7 +579,7 @@ return 0/1/2), and these three one-line recorders (which offset each writes). Cl
 
 Per hit, in ROM order:
 
-```
+```c
 func_02037fd4(&sphere->result /*0x10*/, triID, info)    always, the shared result
 sphere->flags |= 1
   cls 0 floor: if !(flags & 4) { func_020379f4(...); ret |= 1 }
@@ -614,7 +614,7 @@ address.
 The unexamined 0x1ffbe80..0x1ffcff0 -- about 1100 of the function's 1778 words -- has a
 simple shape once you see the dispatch:
 
-```
+```arm
 bl 0x2039488 ; cmp r0,#0 ; bne reject     ShouldPassThroughImpl(this, info, sphere, flag)
 cmp r8,r7 / cmp r8,r6 / cmp r7,r6         which of the three EDGE dots is largest
 cmp r8,#0  ; ble 0x1ffcaa4                largest <= 0 -> centre is INSIDE -> face case
@@ -644,7 +644,7 @@ allowed to pass through never reaches the accumulators.
 
 **Order of the per-prism body, settled:**
 
-```
+```text
 1  three edge-normal rejects, then the face-normal reject
 2  depth = rsc - faceDot
 3  triID, GetSurfaceInfo (real virtual call), CopyNormalTo, classify on normal.Y
@@ -664,7 +664,7 @@ Inside each of the three symmetric branches, before any distance is computed, th
 test that decides **edge contact vs vertex contact**. For the branch where edge 1's dot is
 largest:
 
-```
+```arm
 smull en1.z, en2.z ; >>10        three component products of the two EDGE NORMALS,
 smull en1.x, en2.x ; >>10        summed:
 smull en1.y, en2.y ; >>10          nn = dot(en1, en2) >> 10
@@ -706,7 +706,7 @@ reproduce the ROM's control flow.
 
 What is actually there:
 
-```
+```arm
 0x1ffbea8   dispatch: which of dot1/dot2/dot3 is largest      -> 3 blocks
 0x1ffc1ec   E1   closest point is on edge 1                   \
 0x1ffc35c   E2   closest point is on edge 2                    > 3 EDGE blocks
@@ -742,7 +742,7 @@ Confirmed exhaustively -- every dispatch target, both arms:
 case's answer**. Every edge and vertex region overwrites it in the shared tail at
 `0x1ffca80`:
 
-```
+```c
 depth = SqrtRaw(rsq - d*d) - faceDot;      /* d = the winning edge dot */
 if (depth < 0) continue;                    /* `bmi 0x1ffd314` */
 ```
@@ -826,7 +826,7 @@ until the candidate is the target's size. Score the intermediate drafts with the
 ratio instead, and note that `--align-shape` is a *modifier*: without `--align` it prints
 nothing at all and you get a silent no-op.
 
-```
+```python
 python tools/fdiff.py --c <draft> --name _ZN12MeshCollider10DetectClsnER10SphereClsn \
   --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 \
   --align --align-shape --align-changes 0 --quiet
@@ -847,7 +847,7 @@ them.
 
 It is gated four ways, all of which must pass:
 
-```
+```c
 sphere.unk_108 >= surfaceNormal.y      0x1ffcaa4   (already in the draft)
 sphere.unk_ec  >  0                    0x1ffcab4
 cls == 1                               0x1ffcac0   walls only
@@ -918,7 +918,7 @@ and the edge normals are not.
 > **The slab is ASYMMETRIC.** The original quoted four instructions and stopped one short.
 > `r1` is redefined:
 >
-> ```
+> ```arm
 > 01ffcf9c  ldr r6,[fp,#0xec]      wallHeight
 > 01ffcfa0  ldr r3,[fp,#0x48]      radius
 > 01ffcfa8  add r1, r6, r3         HI  =  ec + rad
@@ -1021,7 +1021,7 @@ into codegen. Section 1 of the handoff has been corrected.
 
 ### What the frame comparison actually shows (2026-08-06)
 
-```
+```c
 ROM        sub sp, sp, #0x1b4     f -> sp+0x0c      &centre -> sp+0xc4
 candidate  sub sp, sp, #0x1dc     f -> sp+0x0c      &centre -> sp+0x10
 ```
@@ -1095,7 +1095,7 @@ The ROM's aggregate block, read straight off the frame and now mirrored in the d
 declaration order (byte-neutral, but it is the known-correct answer so there is no reason to
 hold a different one):
 
-```
+```arm
 0x16c  cr[3]   s16, 2 words   the cross scratch, reused by both KCL_VERTEX rounds
 0x174  nrm[3]                 the DotVec3 argument in the unk_35 branch
 0x180  sn                     the surface normal
@@ -1137,7 +1137,7 @@ Re-scoping does not free one either, so C scope is not driving slot reuse.
 
 And the decisive measurement:
 
-```
+```arm
 below 0x180 : ROM 87   cand 87
 below 0x1a0 : ROM 95   cand 95
 below 0x1b0 : ROM 99   cand 99      <- ROM's highest slot is 0x1ac
@@ -1211,7 +1211,7 @@ are live at once across the prism body — not anything in the declaration block
 The theory was that the draft holds loop state in registers where the ROM spills it, starving
 the prism body. **It does not.** The ROM's loop tails are pure memory traffic:
 
-```
+```arm
 0x1ffd314  ldr r0,[sp,#0x88] ; ldrh r2,[r0,#2]! ; str r0,[sp,#0x88] ; cmp r2,#0 -> body
 0x1ffd328  x += [sp+0x68] ; cmp against [sp+0x14]      (x at 0x84, stepX 0x68, hiX 0x14)
 0x1ffd344  y += [sp+0x6c] ; cmp against [sp+0x1c]      (y at 0x80, stepY 0x6c, hiY 0x1c)
