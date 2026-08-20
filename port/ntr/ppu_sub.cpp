@@ -1283,6 +1283,34 @@ uint16_t shown_rd16(int off)
                       ((unsigned)g_oam_a_shown[off + 1] << 8));
 }
 
+/* ---- THE ROUTED SET, in the three states the OAM itself is in ---------------
+ *
+ * See ppu_obj_routed_record in ntr/ppu.h for what a mark IS and why it cannot
+ * be derived at the raster. These are the storage, and they are HERE, four
+ * lines under g_oam_a_shown, because that is the invariant: a mark is only
+ * meaningful against the OAM block it was made for, and the three blocks are
+ * the shadow being filled, the block hardware OAM holds, and the block the top
+ * screen was drawn from. ppu_seam_oam_mark rotates the marks in the same
+ * statement it takes the snapshot, so the two can never drift apart.
+ *
+ * The residual is 0 or the scene's G_rom, so a signed char is the type and not
+ * a narrowing: G_rom is 32 on every gapless scene the port has proven and
+ * GAP_DS_MAX bounds it well inside a byte either way. */
+signed char g_obj_resid_shadow[128];
+signed char g_obj_resid_live[128];
+signed char g_obj_resid_shown[128];
+uint8_t g_obj_routed_shadow[128];
+uint8_t g_obj_routed_live[128];
+uint8_t g_obj_routed_shown[128];
+/* THE LAST SLOT A ROUTED SUBMISSION TOOK, and it is a fill detector rather than
+   a statistic. OAM::Render hands out slots from a counter that OAM::Reset puts
+   back to zero, so within one fill the slots a router takes only ever ascend; a
+   slot that does not is the first routed submission of a NEW fill and the marks
+   from the last one have to go before it lands. The rotation below clears the
+   shadow every frame that uploads, which is every frame on the frame path, and
+   this is what covers a frame that does not. */
+int g_obj_routed_last = -1;
+
 struct BandEngine {
     uint32_t reg, oam, vram, pltt, ext;
     int row_bias;        /* engine row -> band index: -192 (A), +gap_ds (B) */
@@ -1293,7 +1321,45 @@ struct BandEngine {
        only hinge_paint sets one, and every other binding leaves it null and
        reads the hardware, which is what every pass here did before. */
     const uint8_t *shadow;
+    /* THE PER-ENTRY TERMS, and both are null on every binding that predates the
+       per-entry correction, which leaves band_row_of below exactly the
+       `d.y + e.row_bias` it has always been.
+
+       resid   per OAM slot, the DS rows this entry still has to move down by.
+               Added to row_bias for THAT SLOT ONLY. See ppu_obj_routed_record.
+       routed  per OAM slot, 1 if the framework's router placed this entry in
+               world coordinates. A binding that carries one SKIPS every other
+               entry, because a screen-space entry has no world row at all and a
+               pass that reads one out of it is reading a number that does not
+               exist. hinge_paint is the binding that needs this: without it the
+               score row, which lives at engine y 168 in both arms, is drawn
+               into the band -- measured, and it is the picture that falsified
+               the layer shift. */
+    const signed char *resid;
+    const uint8_t *routed;
 };
+
+/* THE ONE PLACE AN ENTRY'S ROW IS TURNED INTO A BAND OR WORLD ROW. Every pass
+   below asked `d.y + e.row_bias` for this; the per-entry correction adds one
+   term that is per slot rather than per engine, and it is added here so that
+   the census, the pairing test, the completion and the two band rasters cannot
+   answer the question differently from each other. */
+inline int band_row_of(const BandEngine &e, int slot, int y)
+{
+    return y + e.row_bias + (e.resid ? (int)e.resid[slot] : 0);
+}
+
+/* THE PER ENTRY CORRECTION IN DS ROWS, spelled once. The band's world rows and
+   the LAYER shift are two different questions about the same rows, and the
+   difference between them is how much of the correction was made per entry:
+   the whole of it in the default, none of it in the falsified layer arm, and
+   zero either way in a layout with no band. Every binding below that needs to
+   know which arm it is in asks this rather than testing an environment
+   variable, because the layout is the one thing every pass already has. */
+inline int per_entry_ds(const StackLayout &lay)
+{
+    return lay.obj_shift_ds - lay.obj_raster_ds;
+}
 
 /* One OAM halfword of a binding, from wherever that binding says its OAM is.
    The two readers below are the ONLY places a band pass touches OAM storage, so
@@ -1558,7 +1624,11 @@ void band_raster_engine(BandPixel *band, int gap_ds, const BandEngine &e,
         /* the BOX's reach into the band, before a single texel is read: the
            number every OAM-only analysis produces, kept beside the number this
            raster actually draws */
-        const int ktop = d.y + e.row_bias;
+        /* A BINDING THAT NAMES THE ROUTED SET DRAWS NOTHING ELSE. See the
+           routed field on BandEngine: a screen-space entry has no world row,
+           and the band's rows are world rows. */
+        if (e.routed && !e.routed[i]) continue;
+        const int ktop = band_row_of(e, i, d.y);
         int box_rows = 0;
         for (int sy = 0; sy < d.bh; ++sy)
             if (ktop + sy >= 0 && ktop + sy < gap_ds) ++box_rows;
@@ -1630,7 +1700,7 @@ int band_find_live(const BandEngine &e, const BandTrack &t, BandCache &out)
         const uint16_t a2 = rd16(e.oam + i * 8u + 4);
         BandEntry d;
         if (!band_decode(a0, a1, a2, d)) continue;
-        if (d.x != t.x || d.y + e.row_bias != t.y) continue;
+        if (d.x != t.x || band_row_of(e, i, d.y) != t.y) continue;
         if (d.w != t.w || d.h != t.h) continue;
         out.have = 1;
         out.a0 = a0;
@@ -1832,8 +1902,24 @@ void hinge_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
     std::memset(hinge, 0, sizeof(BandPixel) * (size_t)rows * 256);
     const int trace = hinge_trace_on();
     ++g_hinge_frame;
+    /* THE BAND INDEX OF AN ENTRY, in both arms and in one expression. Band row
+       0 is world row -obj_shift_ds and the world row of an engine A entry is
+       its OAM y plus whatever of the correction has not been made yet, so
+       k = y + obj_raster_ds + resid - 192. In the layer arm obj_raster_ds
+       carries all of it and there are no residuals, which is the
+       `obj_shift_ds - 192` this shipped with; in the per-entry default it
+       carries none and the residuals carry the rest.
+
+       AND THE ROUTED FILTER, which is the falsification's own fix. The layer
+       arm drew every entry engine A had into the band, so the score row at
+       engine y 168 was pushed into it along with the crossing ball. Only a
+       routed entry has a world row at all, so only a routed entry belongs in
+       rows that ARE world rows. */
+    const int pe = per_entry_ds(lay);
     const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           lay.obj_shift_ds - 192, 0, "A", g_oam_a_shown};
+                           lay.obj_raster_ds - 192, 0, "A", g_oam_a_shown,
+                           pe ? g_obj_resid_shown : 0,
+                           pe ? g_obj_routed_shown : 0};
     band_raster_engine(hinge, rows, ea, trace, "hinge");
 
     const int rx = lay.w / SUB_W, ry = lay.scale;
@@ -1850,9 +1936,11 @@ void hinge_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
             }
         }
     if (trace)
-        std::fprintf(stderr, "[hinge] f%u band %d DS row(s) (world -%d..-1, "
-                     "engine rows %d..191): %d DS pixel(s) drawn over the "
-                     "fill\n", g_hinge_frame, rows, rows, 192 - rows, px_drawn);
+        std::fprintf(stderr, "[hinge] f%u band %d DS row(s) (world -%d..-1), "
+                     "%s: %d DS pixel(s) drawn over the fill\n",
+                     g_hinge_frame, rows, rows,
+                     pe ? "routed entries only, corrected per entry"
+                        : "every engine A entry, layer shift", px_drawn);
 }
 
 /* ---- HEADROOM: the rows above the top screen, and what goes in them --------
@@ -2213,7 +2301,7 @@ int seam_shown_a(const BandEngine &ea, const BandTrack &t, BandCache &out,
         BandEntry d;
         if (!band_decode(a0, a1, a2, d)) continue;
         if (d.w != t.w || d.h != t.h) continue;
-        const int r = d.y + ea.row_bias;
+        const int r = band_row_of(ea, i, d.y);
         int dy = r - t.y, dx = d.x - t.x;
         if (dy < 0) dy = -dy;
         if (dx < 0) dx = -dx;
@@ -2373,7 +2461,7 @@ int seam_census_paired(const BandEngine &other, int from_shadow,
            ONLY" for a bob-omb that both halves plainly had, on exactly the
            frames it was moving sideways. Same tile, same size, within a frame
            of travel in both axes is the object. */
-        const int r = e.y + other.row_bias;
+        const int r = band_row_of(other, i, e.y);
         int dy = r - rtop, dx = e.x - x;
         if (dy < 0) dy = -dy;
         if (dx < 0) dx = -dx;
@@ -2407,7 +2495,7 @@ void seam_census(const uint32_t *dst, int dst_w, const StackLayout &lay,
             }
             BandEntry d;
             if (!band_decode(a0, a1, a2, d)) continue;
-            const int rtop = d.y + e.row_bias;
+            const int rtop = band_row_of(e, i, d.y);
             if (rtop >= 0 || rtop + d.bh <= 0) continue;   // does not cross
             BandCache c;
             c.have = 1;
@@ -2577,10 +2665,21 @@ void seam_straddle(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
     ++g_seam_frame;
     /* the same two bindings the band's passes use, with engine B's row bias at
        the gapless G: engine row -> world row is -192 for A and 0 for B */
+    /* ENGINE ROW -> WORLD ROW, and the per-entry correction moves it. An
+       engine A entry sits at world + 0xc0 in the arm this pass shipped for, so
+       -192 was the whole answer; with the correction made at the router's call
+       a routed entry sits at world + 0xc0 + G_rom instead, and what is left of
+       the correction is the entry's own residual. So the bias is -(192 + pe)
+       and band_row_of adds the residual back per slot -- which comes to -192
+       again for an entry the band is carrying, and to -224 for one the top
+       screen is. Engine B is world row for world row in every arm. */
+    const int pe = per_entry_ds(lay);
     const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           -192, 0, "A", 0};
+                           -192 - pe, 0, "A", 0,
+                           pe ? g_obj_resid_shown : 0,
+                           pe ? g_obj_routed_shown : 0};
     const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
-                           0, 1, "B", 0};
+                           0, 1, "B", 0, 0, 0};
     if (seam_trace_frames())
         seam_census(dst, dst_w, lay, ea, eb, evy, to_white);
     if (g_track_fn) seam_complete(dst, dst_w, lay, ea, eb, evy, to_white);
@@ -2643,6 +2742,12 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        note in ntr/ppu.h. A layout built and never touched again is a layout
        with the pass off, which is the behaviour this shipped with. */
     l.seam = 0;
+    /* NOT AN INPUT HERE EITHER, for the reason the seam flag is not: this is
+       told the BAND's height and the layer shift is a separate question about
+       the same rows. It is zero unless the falsified layer arm is asked for,
+       and hal/screen_gap.cpp sets it on the struct at the same latch it sets
+       the seam flag, clamped to the band this function just decided. */
+    l.obj_raster_ds = 0;
     /* NO BAND, NO ART. The art is exactly gap_ds rows tall, so a layout with no
        band cannot carry one, and dropping it here means no consumer has to ask
        the question twice. */
@@ -2669,6 +2774,58 @@ void ppu_seam_oam_mark(void)
     for (int i = 0; i < 1024; ++i)
         g_oam_a_shown[i] = rd8(kOamBaseA + (unsigned)i);
     g_oam_a_have = 1;
+    /* AND THE ROUTED MARKS ROTATE IN THE SAME BREATH, which is the only reason
+       they are stored in this file. The copy above is upload N-1, the block the
+       engine A compositor rasterised from a few lines earlier; the marks that
+       describe it are the ones in LIVE, because the shadow has been filling
+       with frame N's submissions ever since. So SHOWN takes what LIVE holds,
+       LIVE takes the shadow that OAM::Load is about to send to the hardware,
+       and the shadow starts clean for frame N+1. Three assignments in the one
+       place that knows the upload happened; anywhere else and a mark would sit
+       one frame away from the entry it describes. */
+    for (int i = 0; i < 128; ++i) {
+        g_obj_resid_shown[i] = g_obj_resid_live[i];
+        g_obj_routed_shown[i] = g_obj_routed_live[i];
+        g_obj_resid_live[i] = g_obj_resid_shadow[i];
+        g_obj_routed_live[i] = g_obj_routed_shadow[i];
+        g_obj_resid_shadow[i] = 0;
+        g_obj_routed_shadow[i] = 0;
+    }
+    g_obj_routed_last = -1;
+}
+
+void ppu_obj_routed_shadow_reset(void)
+{
+    for (int i = 0; i < 128; ++i) {
+        g_obj_resid_shadow[i] = 0;
+        g_obj_routed_shadow[i] = 0;
+    }
+    g_obj_routed_last = -1;
+}
+
+void ppu_obj_routed_record(int slot, int resid)
+{
+    if (slot < 0 || slot >= 128) return;
+    /* THE FILL DETECTOR, and it is not an optimisation. See g_obj_routed_last:
+       slots only ascend inside one fill, so a slot that does not ascend is the
+       first routed submission of a new one and last fill's marks would
+       otherwise sit under this fill's entries. */
+    if (slot <= g_obj_routed_last) ppu_obj_routed_shadow_reset();
+    g_obj_routed_last = slot;
+    g_obj_routed_shadow[slot] = 1;
+    g_obj_resid_shadow[slot] = (signed char)resid;
+}
+
+int ppu_obj_routed_live_resid(int slot)
+{
+    if (slot < 0 || slot >= 128) return 0;
+    return (int)g_obj_resid_live[slot];
+}
+
+int ppu_obj_routed_live_is(int slot)
+{
+    if (slot < 0 || slot >= 128) return 0;
+    return g_obj_routed_live[slot] ? 1 : 0;
 }
 
 /* DROPPING THE MEMORY IS THE WHOLE OF ITS LIFETIME MANAGEMENT, and it is the

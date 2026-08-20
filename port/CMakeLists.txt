@@ -5043,6 +5043,66 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/_ZN8MugenBgmD0Ev.c"
     PROPERTIES COMPILE_DEFINITIONS "VT=_ZTV8MugenBgm")
 
+# ---- THE GAPLESS PER-ENTRY CORRECTION: the five G-adding OAM routers ---------
+#
+# Read THE ROUTER HOOK at the foot of port/hal/screen_gap.cpp before this. The
+# gapless minigame mod zeroes the framework's screen-gap word, which takes G out
+# of every submission these five bodies make to the top engine, and the fix has
+# to put it back for THOSE submissions and for no others -- the score rows and
+# the top screen's artwork are placed in screen space and were never displaced.
+# Nothing in the finished OAM tells the two apart, so the routed set is recorded
+# at the call, and this is the only place a call can be got at without editing
+# src/.
+#
+# TWO RENAMES PER TU, and both are the R-series remedy this file already uses a
+# dozen times over:
+#
+#   <router>=<router>__rom   the TU defines its body under a private name, and
+#                            hal/screen_gap.cpp defines the real name as a
+#                            wrapper that captures the world row and calls it.
+#                            Every caller in the program links the wrapper.
+#   OAM::Render=port_...     the TU declares its OAM::Render overload extern "C"
+#                            by mangled name, so renaming that name redirects
+#                            THAT TU's calls -- and only that TU's -- to the
+#                            shim in hal/screen_gap.cpp. The overload's own
+#                            definition, and every other caller of it in the
+#                            program, is untouched.
+#
+# EACH FILE IS ON EXACTLY ONE SLICE and those slices ride smoke_player,
+# walk_window and walk_window_hires, all three of which link hal/screen_gap.cpp,
+# so the shims and wrappers are present wherever the renamed TUs are. Checked
+# rather than assumed: the five appear once each across every port/slice_*.txt.
+#
+# WHICH OVERLOAD EACH TU CALLS, off the TU's own declaration:
+#   func_ov004_020aff38   ..._Fix12IiEi        8 args   -> port_oam_render_routed_8
+#   func_ov004_020afdd0   ..._Fix12IiES3_ii   10 args   -> port_oam_render_routed_10
+#   func_ov004_020b023c   ...P9Matrix2x2       7 args   -> port_oam_render_routed_mtx
+#   func_ov004_020b0380   ...P9Matrix2x2       7 args   -> port_oam_render_routed_mtx
+#   RenderOamBothScreens  ...P9Matrix2x2       7 args   -> port_oam_render_routed_mtx
+# func_ov004_020afdd0 also calls OAM::RenderSub for the bottom engine, which is
+# a different symbol, is not renamed, and needs no correction: the bottom
+# engine's y is the world row itself in every arm.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov004_020aff38.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_ov004_020aff38=func_ov004_020aff38__rom;_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi=port_oam_render_routed_8")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov004_020afdd0.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_ov004_020afdd0=func_ov004_020afdd0__rom;_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii=port_oam_render_routed_10")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov004_020b023c.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_ov004_020b023c=func_ov004_020b023c__rom;_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2=port_oam_render_routed_mtx")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov004_020b0380.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "func_ov004_020b0380=func_ov004_020b0380__rom;_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2=port_oam_render_routed_mtx")
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/RenderOamBothScreens.cpp"
+    PROPERTIES COMPILE_DEFINITIONS
+    "RenderOamBothScreens=RenderOamBothScreens__rom;_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2=port_oam_render_routed_mtx")
+
 # Lane w8-shadows (run linkw): the SHADOWS bucket. One matched TU by name --
 # TextureTransformer::Prepare, whose header declares it STATIC, which is what
 # makes the matched body callable through the C-name face that used to

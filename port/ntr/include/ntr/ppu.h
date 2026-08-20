@@ -178,29 +178,36 @@ constexpr int GAP_DS_MAX = 96;
 // in hal/screen_gap.cpp for the numbers. The strip is opt-in and off, and what
 // follows is what replaced it.
 //
-// ---- THE OBJECT SHIFT, built, measured, and OFF ------------------------------
+// ---- THE OBJECT SHIFT: the layer version is OFF, the PER ENTRY version is on -
 //
-// READ hal/screen_gap.cpp's obj_shift_ds BEFORE THIS. The mechanism below is
-// whole and does exactly what it says; the premise it was built on is false,
-// so it is opt-in behind SM64DS_GAPLESS_OBJ_SHIFT=1 and nothing turns it on.
-// The geometry is documented because it is right and a per-entry version of the
-// shift can be dropped into it without rebuilding any of this.
+// READ hal/screen_gap.cpp's obj_shift_ds BEFORE THIS. There are two mechanisms
+// here and they share this geometry. The LAYER shift moves the whole top OBJ
+// layer and is falsified and opt-in behind SM64DS_GAPLESS_OBJ_SHIFT=1. The PER
+// ENTRY correction moves the framework-routed submissions only, is the default
+// behaviour of the gapless mod, and is switched off for A/B with
+// SM64DS_GAPLESS_PER_ENTRY=0.
 //
-// THE IDEA. The top engine takes world y to y + 0xc0 + G, so with G forced to
-// zero a sprite lands G rows higher up a picture that did not move with it, and
-// the report is a sprite jammed against the wooden beam and cut. obj_shift_ds
-// is a DISPLAY shift of the TOP ENGINE'S OBJ LAYER, by exactly the G the
-// scene's own InitResources wrote before the mod zeroed it: the OBJ raster
-// reads each entry as though it had been submitted at y + obj_shift_ds, which
-// is the y the ROM itself submits at, so the window unit, the alpha blend and
-// the screen clip all answer for the row the texel is really shown on.
+// THE IDEA, common to both. The top engine takes world y to y + 0xc0 + G, so
+// with G forced to zero a sprite lands G rows higher up a picture that did not
+// move with it, and the report is a sprite jammed against the wooden beam and
+// cut. Putting G back where the ROM had it is the whole fix; the two mechanisms
+// differ only in WHICH sprites they put it back for.
 //
-// WHY IT IS OFF. "The OBJ layer" is not one thing. Only the sprites the
-// framework's own OAM router placed move with G; the score rows and the top
-// screen's own artwork are placed in SCREEN space and are at the same engine
-// row in both arms. On scene 368, one sprite identity of twelve follows G, so
-// the layer shift moves eleven that were never displaced. The numbers are in
-// obj_shift_ds and the tool that took them is port/tools/objshift.py.
+// WHY THE LAYER VERSION IS OFF. "The OBJ layer" is not one thing. Only the
+// sprites the framework's own OAM router placed move with G; the score rows and
+// the top screen's own artwork are placed in SCREEN space and are at the same
+// engine row in both arms. On scene 368, one sprite identity of twelve follows
+// G, so the layer shift moves eleven that were never displaced. The numbers are
+// in obj_shift_ds and the tool that took them is port/tools/objshift.py.
+//
+// WHY THE PER ENTRY VERSION IS THE DEFAULT. It is applied at the router's own
+// call, to the submissions that carry the G term and to no others, so the
+// eleven screen-space identities are untouched BY CONSTRUCTION rather than by a
+// rule that has to be got right. It also lands before OAM::Render's culls, and
+// that recovers submissions the layer shift cannot: a routed sprite's y is G
+// lower under the mod, so `y + h < 0` threw 215 of them away over 300 frames on
+// scene 368 and no display pass can draw an entry the engine was never given.
+// See ppu_obj_routed_record below for how the routed set is carried here.
 //
 // AND THE IMAGE GROWS BY obj_shift_ds ROWS BELOW THE TOP SCREEN, not above it.
 // The rows a shifted sprite runs off the top screen's bottom edge into are the
@@ -226,14 +233,23 @@ constexpr int GAP_DS_MAX = 96;
 // the same expression would draw a sprite across a hinge.
 //
 // 0 in every other layout, which is every level, every gap-on minigame and
-// every gapless run with SM64DS_GAPLESS_OBJ_SHIFT=0, and a zero shift makes
+// every gapless run with SM64DS_GAPLESS_PER_ENTRY=0, and a zero shift makes
 // every field below exactly what it was before this existed.
 struct StackLayout {
     int gap_ds;        // the DS rows of image between the halves. 0 = none.
                        // With obj_shift_ds 0 these are the simulated hinge G;
                        // with obj_shift_ds set they are world -gap_ds..-1.
-    int obj_shift_ds;  // the top engine's OBJ display shift, in DS rows, and
-                       // equally the world rows the band carries. 0 = neither.
+    int obj_shift_ds;  // the world rows the band carries, in DS rows, and in
+                       // the falsified layer arm equally the top engine's OBJ
+                       // display shift. 0 = an ordinary band or no band. The
+                       // per-entry default sets this and leaves the LAYER
+                       // shift at zero; hal_gapless_obj_raster_shift_ds is the
+                       // layer term and it is a separate question.
+    int obj_raster_ds; // the LAYER display shift, in DS rows: the falsified
+                       // arm's own term, 0 in the per-entry default and 0 in
+                       // every layout with no band. obj_shift_ds MINUS this is
+                       // the PER ENTRY correction, and that difference is the
+                       // form every pass in ntr/ppu_sub.cpp reads it in.
     int head_ds;       // the headroom in DS rows above the top screen. 0 = none.
     int scale;         // host rows per DS row: SCREEN_H / SUB_H
     int w;             // the image width, STACK_W
@@ -396,6 +412,46 @@ void ppu_band_continuity(BandTrackFn fn);
 // half to complete from, which is a pass that declines rather than one that
 // guesses.
 void ppu_seam_oam_mark(void);
+
+// ---- WHICH OAM ENTRIES THE FRAMEWORK'S ROUTER PLACED ------------------------
+//
+// WHY THIS EXISTS AT ALL. The per-entry correction has to know, at the raster,
+// which of engine A's 128 entries were submitted in WORLD coordinates by one of
+// the framework's five G-adding OAM routers and which were placed in SCREEN
+// coordinates by everybody else. Nothing in the finished OAM says: same
+// attribute words, same slot allocation, interleaved indices, and a table of
+// attribute words would stop being true the first time a sprite changed tile.
+// So the set is RECORDED AT THE CALL -- hal/screen_gap.cpp wraps the five
+// routers and marks the slot OAM::Render returns -- and carried here.
+//
+// AND IT IS CARRIED ON THE SAME THREE-STATE PATH THE OAM WORDS ARE, which is
+// the whole reason it lives beside g_oam_a_shown rather than in hal. A mark is
+// only meaningful against the OAM block it was made for:
+//
+//   SHADOW  the fill in progress. Every routed submission writes here.
+//   LIVE    what hardware OAM holds, which is upload N-1 while the engine A
+//           compositor is reading it.
+//   SHOWN   what the top screen was really drawn from, taken at the same
+//           instant ppu_seam_oam_mark takes the OAM itself.
+//
+// ppu_seam_oam_mark rotates all three in one place, so a mark cannot get one
+// upload out of step with the entry it describes. See THE TWO SCREENS ARE ONE
+// FRAME APART in ntr/ppu_sub.cpp for why there are three and not one.
+//
+// THE RESIDUAL is the DS rows this entry still has to be moved down by at the
+// raster, and it is 0 or the scene's G_rom and nothing else. It is 0 when the
+// router's own submission already carried the ROM's row -- which is the normal
+// case and the one that recovers the culled entries -- and G_rom for the entries
+// whose ROM row is past 0xc0, where OAM::Render's `y > 0xc0` cull would have
+// thrown the entry away rather than let it reach the band. Read hal/screen_gap.cpp's
+// routed_render for that split; it is the one place it is decided.
+void ppu_obj_routed_record(int slot, int resid);
+void ppu_obj_routed_shadow_reset(void);
+// The residual for a slot of the block hardware OAM holds now, 0 if that slot
+// was not routed. The engine A compositor's per-entry term.
+int ppu_obj_routed_live_resid(int slot);
+// 1 if that slot of the block hardware OAM holds now was a routed submission.
+int ppu_obj_routed_live_is(int slot);
 
 // ---- THE AMBIENT FILL'S MEMORY ----------------------------------------------
 //

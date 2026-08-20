@@ -214,7 +214,7 @@ int headroom_ds(void)
  * the layout below sizes the band from it and the engine A compositor shifts
  * its raster by it, so this reads the captured word and the engagement test
  * rather than caching an answer of its own. */
-int obj_shift_ds(void)
+int obj_layer_shift_ds(void)
 {
     static int on = -1;
     if (on < 0) {
@@ -225,9 +225,63 @@ int obj_shift_ds(void)
     return g_gapless_head_ds;
 }
 
+/* THE PER-ENTRY CORRECTION, in DS rows, and THIS ONE IS THE DEFAULT.
+ *
+ * WHAT IT IS. The same G_rom the layer shift adds, added to the submissions the
+ * framework's five G-adding OAM routers make and to NOTHING else. Read the
+ * router hook below for how the routed set is recorded; read obj_layer_shift_ds
+ * above for the measurement that says the set matters. In one line: eleven of
+ * the twelve sprite identities on scene 368 are placed in screen space and are
+ * at the same engine row whether the framework word reads 32 or 0, so the fix
+ * has to be able to tell the twelfth from them, and the only place that
+ * distinction exists is at the call.
+ *
+ * IT IS ON BY DEFAULT, which the two features before it were not, and the
+ * difference is that this one is measured RIGHT rather than measured wrong.
+ * SM64DS_GAPLESS_PER_ENTRY=0 turns it off and gives back the picture the mod
+ * composed before this lane, on the same binary, which is what
+ * notes/port-selftest-bmp-gate.md requires before two BMPs may be compared at
+ * all.
+ *
+ * AND IT STANDS DOWN FOR THE LAYER ARM. Both mechanisms put G_rom back and they
+ * would put it back twice; more to the point, an A/B is only readable if it is
+ * one mechanism against the other. With SM64DS_GAPLESS_OBJ_SHIFT=1 the layer
+ * arm is the whole answer and this is zero, which is the arm lane OBJSHIFT
+ * measured and the arm its numbers still describe.
+ *
+ * READ FROM TWO PLACES within a frame -- the router hook adds it at submission,
+ * the layout sizes the band from it -- so it reads the captured word and the
+ * engagement test rather than caching an answer of its own. */
+int per_entry_ds(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_GAPLESS_PER_ENTRY");
+        on = !(s && *s && *s == '0');
+    }
+    if (!on || !hal_gapless_engaged()) return 0;
+    if (obj_layer_shift_ds()) return 0;
+    return g_gapless_head_ds;
+}
+
+/* THE BAND'S WORLD ROWS, which both arms need and which is what the LAYOUT is
+   told. The two arms differ in where the correction is applied, not in the
+   shape of the image it needs: either way the rows a corrected sprite runs off
+   the top screen's bottom edge into are world -G_rom..-1, and either way they
+   go between the halves. */
+int obj_shift_ds(void)
+{
+    const int pe = per_entry_ds();
+    return pe ? pe : obj_layer_shift_ds();
+}
+
 }  // namespace
 
 int hal_gapless_obj_shift_ds(void) { return obj_shift_ds(); }
+
+int hal_gapless_obj_raster_shift_ds(void) { return obj_layer_shift_ds(); }
+
+int hal_gapless_per_entry_ds(void) { return per_entry_ds(); }
 
 int hal_screen_gap_raw(void) { return read_raw(); }
 
@@ -289,9 +343,17 @@ const ntr::StackLayout *hal_screen_layout(void)
     /* AND THE SHIFT IS PART OF THE LATCH, for the reason the headroom is: it
        cannot move without `want` moving today, and a cache whose key is a
        subset of its inputs is one edit away from serving a stale answer. */
+    /* THE LAYER TERM, set on both paths out of here for the reason the seam
+       flag is: it is not in the latch key, so a cached layout has to be told it
+       too. It is clamped to the band stack_layout actually built rather than to
+       the number asked for, so the two can never disagree about rows that do
+       not exist. Zero in the per-entry default, which is every run that does
+       not ask for the falsified arm. */
+    const int raster = obj_layer_shift_ds();
     if (g_have && want == g_raw && scene == g_scene && head == g_head &&
         shift == g_shift) {
         g_lay.seam = seam;
+        g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
         return &g_lay;
     }
 
@@ -324,6 +386,7 @@ const ntr::StackLayout *hal_screen_layout(void)
     g_lay = ntr::stack_layout(want, head, shift, mode,
                               host_setting_gap_color(), peek, art);
     g_lay.seam = seam;
+    g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
     /* and the band's per-scene continuity reader, installed at the same moment
        for the same reason: it is per scene, and installing clears the cached
        OAM attributes so nothing crosses from the last minigame into this one */
@@ -589,3 +652,301 @@ int hal_gapless_engaged(void)
 {
     return g_gapless_on && hal_gap_scene_id() == g_gapless_scene;
 }
+
+/* ---- THE ROUTER HOOK: which OAM entries were placed in WORLD coordinates ----
+ *
+ * WHY THERE IS A HOOK AT ALL. The per-entry correction has to be applied to the
+ * submissions the framework's five G-adding OAM routers make and to no others,
+ * and nothing in the finished OAM tells the two apart: same attribute words,
+ * same slot allocation, interleaved indices, and a table of attribute words
+ * would be a guess that stopped being true the first time a sprite changed
+ * tile. So the routed set is RECORDED AT THE CALL. This is that recording.
+ *
+ * AND IT IS PORT-SIDE, which was the constraint. src/ and include/ are not
+ * touched: port/CMakeLists.txt gives the five router TUs -- and only those five
+ * -- two compile definitions each, using the same set_source_files_properties
+ * mechanism this port already uses in a dozen places to rename a symbol inside
+ * one translation unit. The first renames the router's own definition to
+ * <name>__rom so that the wrapper below can carry the real name; the second
+ * renames the OAM::Render overload that TU declares extern "C" so that its own
+ * calls land on the shims below. Every other caller of OAM::Render in the
+ * program, and every other definition of anything, is untouched.
+ *
+ * WHICH CALL IS THE ROUTED ONE, and this is the whole reason the wrapper takes
+ * the router's arguments rather than just setting a flag. Each of the five
+ * bodies reaches OAM::Render on more than one path:
+ *
+ *     Render(0, attr, x, a2 + 0xc0 + G, ...)   the WORLD-frame top-engine
+ *                                              submission, the one that carries
+ *                                              the G term
+ *     Render(0 or 1, attr, x, a2, ...)         the same object handed to the
+ *                                              other engine, or to this one in
+ *                                              screen space, with no G term
+ *
+ * so "inside a router" is not enough, and the engine argument is not enough
+ * either -- func_ov004_020aff38's two-player branch passes 0 on both. What IS
+ * enough is a2 itself: the wrapper has it, it is the third argument of all five
+ * bodies, and 0xc0 + G is never zero, so `py == a2 + 0xc0 + G` picks the
+ * G-carrying call and can pick nothing else. No band test is duplicated here
+ * and no branch of the ROM's is second-guessed.
+ *
+ * WHERE THE CORRECTION GOES, and there are two answers because OAM::Render has
+ * TWO culls: `y + h < 0` and `y > 0xc0`.
+ *
+ *   AT SUBMISSION, normally. The ROM's own row is py + G_rom, so that is what
+ *   is submitted, and OAM::Render then culls on the ROM's number rather than on
+ *   one G_rom lower. That is what recovers the entries the mod loses outright
+ *   -- 215 of them over 300 frames on scene 368, sprites entering from the top
+ *   whose whole box was above row 0 once the mod had moved it up. A display
+ *   pass cannot recover those: they never reached OAM.
+ *
+ *   AT THE RASTER, for the band. A world row in -G_rom..-1 has a ROM row past
+ *   0xc0, which is off the bottom of a DS's top screen, and OAM::Render's
+ *   `y > 0xc0` throws it away rather than let it reach the band the gapless
+ *   picture draws it in. So when the corrected submission is refused, the
+ *   uncorrected one is made instead -- the submission the mod makes today,
+ *   which OAM::Render accepts -- and the entry carries a RESIDUAL of G_rom
+ *   that the engine A raster and hinge_paint add for that slot alone.
+ *
+ * THE REFUSAL IS THE TEST, rather than a prediction of it. OAM::Render's cull
+ * runs after the cel offset, the affine doubling and the rotation have moved
+ * the box, so a test here would be a copy of that arithmetic that could drift
+ * from it. A culled call writes nothing and increments no counter, so trying
+ * the ROM's row first costs one call and cannot leave a mark behind; the affine
+ * allocator deduplicates on the matrix, so even the affine overloads allocate
+ * once. And the fallback cannot invent an entry the ROM would not have: a call
+ * refused by the BOTTOM cull is refused again at a LOWER y, so the only
+ * submission the second call can win is the one the top cull refused.
+ *
+ * OFF, ALL OF THIS IS TWO STORES. per_entry_ds is zero on every path in the
+ * program except a scene the GaplessMinigames mod is engaged for, so the
+ * wrapper pushes an int and pops it and the shims forward. */
+
+extern "C" {
+
+/* THE REAL OAM::Render OVERLOADS, under their own names. This TU carries no
+   rename, so these declarations are the ROM bodies and not the shims. The
+   signatures are the ones the router TUs themselves declare, argument for
+   argument; the return is spelled as a pointer here because the slot is read
+   out of it. */
+void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(int, void *, int, int, int, int,
+                                              int, int);
+void *_ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(int, void *, int, int, int, int,
+                                               void *);
+void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, void *, int, int, int,
+                                                  int, int, int, int, int);
+
+/* THE MAIN OAM SHADOW, reached AS BYTES for the reason the block over
+   data_ov004_020beb6c gives: the mount owns this storage and a second
+   declaration of it as a struct array would be an opinion about the layout
+   rather than a use of it. Only its address is taken, to turn the pointer
+   OAM::Render returns into a slot index. data_0209e660 is the dual-OAM flag,
+   read for the one thing it decides here: which hardware OAM this shadow
+   reaches. */
+extern unsigned char data_0209e674[];
+extern unsigned char data_0209e660;
+
+/* The five router bodies, renamed inside their own TUs by the port's build. */
+int func_ov004_020aff38__rom(void *, int, int, int, int, int, int);
+void func_ov004_020afdd0__rom(void *, int, int, int, int);
+void func_ov004_020b023c__rom(void *, int, int, int, void *);
+void func_ov004_020b0380__rom(void *, int, int, void *);
+void RenderOamBothScreens__rom(void *, int, int, int, int, void *);
+
+}  /* extern "C" */
+
+namespace {
+
+/* THE ROUTER'S OWN a2, for as long as its body is running. A stack rather than
+   a single int, because one router calling another is a shape this file must
+   not have an opinion about; four deep is more than the ROM has and the guard
+   is what keeps a wrong opinion from becoming a memory bug. */
+enum { ROUTE_MAX = 4 };
+int g_route_depth;
+int g_route_a2[ROUTE_MAX];
+
+struct RoutedCall {
+    explicit RoutedCall(int a2)
+    {
+        if (g_route_depth >= 0 && g_route_depth < ROUTE_MAX)
+            g_route_a2[g_route_depth] = a2;
+        ++g_route_depth;
+    }
+    ~RoutedCall() { --g_route_depth; }
+};
+
+/* THE CORRECTION THIS CALL EARNS, in DS rows, and zero for every call that is
+   not the routed one. See WHICH CALL IS THE ROUTED ONE above: the G-carrying
+   submission is the only y that can equal a2 + 0xc0 + G, because 0xc0 + G is
+   never zero. */
+int routed_adjust(int py)
+{
+    if (g_route_depth <= 0 || g_route_depth > ROUTE_MAX) return 0;
+    const int adj = per_entry_ds();
+    if (!adj) return 0;
+    if (py != g_route_a2[g_route_depth - 1] + 0xc0 + read_raw()) return 0;
+    return adj;
+}
+
+/* IS THE MAIN SHADOW THE BLOCK ENGINE A WILL BE SHOWING? OAM::Load's own test,
+   mirrored rather than assumed: with the dual-OAM flag set it always sends
+   data_0209e674 to 0x07000000, and otherwise POWCNT1's display-swap bit
+   decides. A mark against the wrong engine's OAM would be a residual applied to
+   somebody else's sprite, so this is checked rather than taken on trust. */
+int main_shadow_is_e674(void)
+{
+    if (data_0209e660) return 1;
+    return ((*(volatile unsigned short *)0x04000304 & 0x8000) >> 15) == 1;
+}
+
+/* THE SPLIT, COUNTED, because a mechanism with two branches and evidence for
+   one of them is a mechanism half proven. SM64DS_OBJSHIFT_TRACE=1 names every
+   entry the top cull refused at the ROM's row -- the ones the band carries on a
+   residual -- and the totals say how often each branch ran. Off, this is two
+   increments of a static. */
+int routed_trace(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_OBJSHIFT_TRACE");
+        on = s && *s && *s != '0';
+    }
+    return on;
+}
+
+unsigned g_routed_rom, g_routed_band;
+
+void routed_split(int py, int adj, int fell_back)
+{
+    if (fell_back) ++g_routed_band; else ++g_routed_rom;
+    if (!routed_trace()) return;
+    std::fprintf(stderr, "[routed] world %d: %s (submitted %d, ROM row %d); "
+                 "%u at the ROM's row, %u on a band residual\n",
+                 py - 0xc0 - read_raw(),
+                 fell_back ? "the top cull refused the ROM's row, so the band "
+                             "carries it on a residual"
+                           : "submitted at the ROM's row",
+                 fell_back ? py : py + adj, py + adj, g_routed_rom,
+                 g_routed_band);
+}
+
+/* RECORD THE SLOT OAM::Render JUST WROTE. The pointer it returns is the entry
+   inside the shadow, so the slot is exact and needs no counter of this file's
+   own; the range test is what rejects a pointer into the OTHER shadow, which
+   sits one 0x400 block along and would otherwise read as slot 128 and up. */
+void routed_mark(void *res, int resid)
+{
+    if (!res || !main_shadow_is_e674()) return;
+    const unsigned char *base = data_0209e674;
+    const long off = (long)((const unsigned char *)res - base);
+    if (off < 0 || off >= 1024 || (off & 7)) return;
+    ntr::ppu_obj_routed_record((int)(off >> 3), resid);
+}
+
+}  /* namespace */
+
+extern "C" {
+
+void *port_oam_render_routed_8(int draw, void *obj, int px, int py, int pal,
+                               int prio, int scale, int rot)
+{
+    const int adj = routed_adjust(py);
+    if (!adj)
+        return _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(draw, obj, px, py, pal,
+                                                       prio, scale, rot);
+    void *r = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(draw, obj, px, py + adj,
+                                                      pal, prio, scale, rot);
+    if (r) {
+        routed_mark(r, 0);
+        routed_split(py, adj, 0);
+        return r;
+    }
+    r = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(draw, obj, px, py, pal, prio,
+                                                scale, rot);
+    routed_mark(r, adj);
+    if (r) routed_split(py, adj, 1);
+    return r;
+}
+
+void *port_oam_render_routed_mtx(int draw, void *obj, int px, int py, int pal,
+                                 int prio, void *mtx)
+{
+    const int adj = routed_adjust(py);
+    if (!adj)
+        return _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(draw, obj, px, py, pal,
+                                                        prio, mtx);
+    void *r = _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(draw, obj, px, py + adj,
+                                                       pal, prio, mtx);
+    if (r) {
+        routed_mark(r, 0);
+        routed_split(py, adj, 0);
+        return r;
+    }
+    r = _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(draw, obj, px, py, pal, prio,
+                                                 mtx);
+    routed_mark(r, adj);
+    if (r) routed_split(py, adj, 1);
+    return r;
+}
+
+void *port_oam_render_routed_10(int draw, void *obj, int px, int py, int pal,
+                                int prio, int sx, int sy, int a8, int a9)
+{
+    const int adj = routed_adjust(py);
+    if (!adj)
+        return _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(draw, obj, px, py,
+                                                           pal, prio, sx, sy,
+                                                           a8, a9);
+    void *r = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(draw, obj, px,
+                                                          py + adj, pal, prio,
+                                                          sx, sy, a8, a9);
+    if (r) {
+        routed_mark(r, 0);
+        routed_split(py, adj, 0);
+        return r;
+    }
+    r = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(draw, obj, px, py, pal,
+                                                    prio, sx, sy, a8, a9);
+    routed_mark(r, adj);
+    if (r) routed_split(py, adj, 1);
+    return r;
+}
+
+/* THE FIVE WRAPPERS. Each carries the real name every caller in the program
+   spells, captures the world row its body is about to route, and hands the call
+   straight to the ROM body under its renamed symbol. Nothing else: no test, no
+   branch of the router's repeated here, and with the mode off the whole of this
+   is a push and a pop. */
+
+int func_ov004_020aff38(void *a0, int a1, int a2, int a3, int a4, int a5,
+                        int a6)
+{
+    RoutedCall rc(a2);
+    return func_ov004_020aff38__rom(a0, a1, a2, a3, a4, a5, a6);
+}
+
+void func_ov004_020afdd0(void *a0, int a1, int a2, int a3, int a4)
+{
+    RoutedCall rc(a2);
+    func_ov004_020afdd0__rom(a0, a1, a2, a3, a4);
+}
+
+void func_ov004_020b023c(void *a0, int a1, int a2, int a3, void *a4)
+{
+    RoutedCall rc(a2);
+    func_ov004_020b023c__rom(a0, a1, a2, a3, a4);
+}
+
+void func_ov004_020b0380(void *a0, int a1, int a2, void *a3)
+{
+    RoutedCall rc(a2);
+    func_ov004_020b0380__rom(a0, a1, a2, a3);
+}
+
+void RenderOamBothScreens(void *a0, int a1, int a2, int a3, int a4, void *a5)
+{
+    RoutedCall rc(a2);
+    RenderOamBothScreens__rom(a0, a1, a2, a3, a4, a5);
+}
+
+}  /* extern "C" */

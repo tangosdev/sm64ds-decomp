@@ -92,8 +92,18 @@
  *
  * Declared rather than included because hal/screen_gap.h pulls the whole layout
  * in and this file needs one int. C++ linkage, matching every other hal_ name
- * this file reaches and the definition in hal/screen_gap.cpp. */
-int hal_gapless_obj_shift_ds(void);
+ * this file reaches and the definition in hal/screen_gap.cpp.
+ *
+ * AND THIS ONE IS THE LAYER TERM ALONE. The correction this file really applies
+ * is per entry now: the five routers' own submissions are marked at the call
+ * (hal/screen_gap.cpp) and carried to this raster on the OAM's own snapshot
+ * path (ntr::ppu_obj_routed_live_resid), so the two rasters below add a term
+ * that is different for entry 3 and entry 4 of the same frame. The layer term
+ * is what the falsified arm adds to all 128 of them, it is zero unless
+ * SM64DS_GAPLESS_OBJ_SHIFT=1 asks for it, and the two are never both non-zero
+ * -- the per-entry correction stands down when the layer arm is on, so that an
+ * A/B is one mechanism against the other and not one on top of the other. */
+int hal_gapless_obj_raster_shift_ds(void);
 
 namespace {
 
@@ -326,8 +336,12 @@ void build_objwin(uint32_t dispcnt) {
        then the region those sprites define is at y + shift too. Leaving it here
        would mask the backgrounds at rows no sprite is shown on any more, which
        is the one way this feature could put a hole in artwork rather than move
-       an object. Zero shift, and this is the line it was. */
-    const int shift = hal_gapless_obj_shift_ds();
+       an object. Zero shift, and this is the line it was.
+
+       PER ENTRY, so the mask follows the sprites that make it entry by entry:
+       a routed window sprite moves and a screen-space one does not, which is
+       the same rule the OBJ raster below reads. */
+    const int layer = hal_gapless_obj_raster_shift_ds();
 
     for (int i = 127; i >= 0; --i) {
         const uint16_t a0 = rd16(kOamBase + i * 8u);
@@ -349,6 +363,7 @@ void build_objwin(uint32_t dispcnt) {
            the sign it carries comes out of the sprite's own box height; adding
            to it first would turn a sprite parked at 224 into one at 256 and
            lose the negative row it was standing on. */
+        const int shift = layer + ntr::ppu_obj_routed_live_resid(i);
         y += shift;
         const bool c256 = a0 & 0x2000;
         const bool hflip = !affine && (a1 & 0x1000);
@@ -884,7 +899,7 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
        the framework word carries its own value, which is the picture gap-on
        mode composes. The rows this then clips off the bottom edge are drawn by
        ntr/ppu_sub.cpp's hinge_paint, out of the same entries. */
-    const int shift = hal_gapless_obj_shift_ds();
+    const int layer = hal_gapless_obj_raster_shift_ds();
     /* SM64DS_OBJSHIFT_TRACE=1 prints the per-entry census this is proven with,
        and it prints in BOTH ARMS. With the shift on it names the DISPLAY row
        each entry lands on; with it off it names the row the engine put it on,
@@ -931,6 +946,7 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
            the sign it carries comes out of the sprite's own box height; adding
            to it first would turn a sprite parked at 224 into one at 256 and
            lose the negative row it was standing on. */
+        const int shift = layer + ntr::ppu_obj_routed_live_resid(i);
         y += shift;
         const bool c256 = a0 & 0x2000;
         const bool hflip = !affine && (a1 & 0x1000);
