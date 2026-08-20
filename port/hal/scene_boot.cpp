@@ -440,6 +440,10 @@ const unsigned int *hal_sub_screen_stacked_image(const unsigned int *top);
 void hal_sub_screen_stacked_size(int *w, int *h);
 /* and how many of its rows are the gapless headroom above the top screen */
 int hal_sub_screen_stacked_headroom(void);
+/* and whether the rows between the halves are a hinge or the world's own rows,
+   which is the top engine's OBJ display shift; hal/screen_gap.h carries the
+   note and hal/sub_screen.cpp says why it is forwarded rather than read */
+int hal_sub_screen_stacked_obj_shift(void);
 int IsMinigameActorID(unsigned int id);
 void port_message_composite_engine_a(void *fb);
 void sdat_host_tick(void);           /* hal/sdat/consumer.cpp */
@@ -2832,12 +2836,20 @@ extern "C" int port_scene_finish(int frames_run)
            that reported that sum under the gap's name would call a 64-row
            headroom a 64-row gap on a run that has no gap at all. */
         const int head = hal_sub_screen_stacked_headroom();
+        /* AND THE BAND IS NAMED FOR WHAT IT IS. With the object shift on the
+           rows between the halves are not a hinge: they are world -G_rom..-1,
+           the top engine draws into them, and calling them a gap in a capture
+           line would put a gap-on word on the one picture that has none. */
+        const int shift = hal_sub_screen_stacked_obj_shift();
         if (img && ntr::ppu_write_bmp_px(bmp_stacked, img, iw, ih))
             std::printf("[scene] wrote %s, %dx%d: the top screen over the "
                         "bottom screen, each %dx%d, with %d row(s) of headroom "
-                        "above and %d row(s) of gap between them\n",
+                        "above and %d row(s) of %s between them\n",
                         bmp_stacked, iw, ih, ntr::SCREEN_W, ntr::SCREEN_H, head,
-                        ih - ntr::SCREEN_H * 2 - head);
+                        ih - ntr::SCREEN_H * 2 - head,
+                        shift ? "the world's own rows, drawn by the top engine "
+                                "at its shifted submission,"
+                              : "gap");
         else
             std::fprintf(stderr, "  [scene] SM64DS_SCENE_BMP_STACKED asked for "
                          "%s but the stacked layout is %s and the bottom "

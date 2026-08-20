@@ -93,4 +93,23 @@ void hal_gapless_minigames_latch(void);
  * program's own answer to "is this run the ROM's timing or not". */
 int hal_gapless_engaged(void);
 
+/* ---- THE OBJECT SHIFT, the display half of the mod above -------------------
+ *
+ * THE DS ROWS THE TOP ENGINE'S OBJ LAYER IS DRAWN LOWER THAN THE ENGINE PUTS
+ * IT, which is G_rom, the value the running minigame's own InitResources wrote
+ * before hal_gapless_minigames_latch stored zero over it.
+ *
+ * ZERO UNLESS SM64DS_GAPLESS_OBJ_SHIFT=1 ASKS FOR IT, and nothing asks. Zeroing
+ * G moves only the sprites the framework's own OAM router placed, and this
+ * moves ALL of them, so with it on the score rows and the top screen's artwork
+ * go 32 rows down a screen they were never displaced from. hal/screen_gap.cpp's
+ * obj_shift_ds carries the measurement and names what a correct version needs;
+ * ntr/ppu.h carries the geometry under THE OBJECT SHIFT, and
+ * port/tools/objshift.py is how both were measured.
+ *
+ * TWO READERS, and they must agree within a frame: hal/message_compositor.cpp
+ * shifts engine A's OBJ raster by it, and hal_screen_layout sizes the band from
+ * it so the rows a shifted sprite is pushed into exist in the image. */
+int hal_gapless_obj_shift_ds(void);
+
 #endif /* PORT_SCREEN_GAP_H */

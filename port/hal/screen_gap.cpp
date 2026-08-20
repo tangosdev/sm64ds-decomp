@@ -33,6 +33,7 @@ int g_have;
 int g_raw = -1;              /* the last G read out of the game */
 int g_scene = -2;            /* the scene the last latch was for */
 int g_head = -1;             /* the headroom the last layout was built with */
+int g_shift = -1;            /* the OBJ display shift the last layout used */
 /* G_rom: the G THE SCENE'S OWN InitResources WROTE, captured by the gapless
    latch below at the instant before it stores zero over it, because that is the
    only moment the number exists. Everything after the latch reads zero, and the
@@ -41,6 +42,8 @@ int g_head = -1;             /* the headroom the last layout was built with */
 int g_gapless_head_ds;
 unsigned g_gen;              /* steps whenever the layout's shape changes */
 ntr::StackLayout g_lay;
+
+int obj_shift_ds(void);
 
 int read_raw(void)
 {
@@ -93,12 +96,14 @@ int read_raw(void)
  * drawn against: Lakitu, which the ROM puts 32 rows below the beam, ends up
  * flat against the top edge and loses rows off it. Adding image ABOVE the
  * artwork cannot fix that, because the artwork is the top of the picture.
- * Putting the objects back where the ROM draws them can: give the top engine's
- * OBJ layer a display shift of +G_rom and give the image G_rom extra rows
- * BELOW the artwork, where the ROM's own hinge rows are, so the objects that
- * shift past the bottom of the top screen are still shown and a crossing stays
- * continuous. That is a change to how engine A composites and it takes the
- * seam-straddle pass with it, so it is not this file's to make quietly.
+ *
+ * THAT WAS THE OBJECT SHIFT, and it is built and it is ALSO OFF. obj_shift_ds
+ * below carries its own measurement: only ONE sprite identity of the twelve on
+ * this scene follows G, and moving the whole OBJ layer puts the other eleven,
+ * the score rows and the top screen's own artwork, 32 rows down a screen they
+ * were never displaced from. Both fixes for this report are now in the tree
+ * behind switches, because both are measurements and neither is an
+ * improvement. Read obj_shift_ds for what would be.
  *
  * WHEN IT IS ON (the opt-in), the value is g_gapless_head_ds, the G the running
  * scene's own InitResources wrote, captured by the latch below before it stored
@@ -115,10 +120,114 @@ int headroom_ds(void)
         on = s && *s && *s != '0';
     }
     if (!on || !hal_gapless_engaged()) return 0;
+    /* AND NEVER WITH THE OBJECT SHIFT ON. Both are opt-in and both are wrong,
+       so nothing turns either on; what this refuses is the ONE combination
+       whose picture could not be attributed afterwards. The strip fills rows
+       above the artwork from the top screen's own first row, and under the
+       shift that row is a different row, so a capture of the two together would
+       carry one feature's error smeared through the other's and no way to read
+       which was which. A measurement kept for its numbers has to stay
+       separable. */
+    if (obj_shift_ds()) return 0;
+    return g_gapless_head_ds;
+}
+
+/* THE TOP ENGINE'S OBJ DISPLAY SHIFT, in DS rows.
+ *
+ * IT IS ZERO, AND IT IS ZERO BY DEFAULT BECAUSE THE FEATURE IS WRONG, which is
+ * the second time that sentence has been written in this file about a fix for
+ * the same report. Read headroom_ds above for the first. The mechanism is whole
+ * and it works exactly as designed; the design rests on a premise that has now
+ * been measured and does not hold. What follows is the measurement, because the
+ * next lane needs the numbers and not the story.
+ *
+ * THE IDEA. Zeroing G takes the top engine's submission from world y + 0xc0 + G
+ * to world y + 0xc0, so a sprite lands G rows higher up a background that did
+ * not move with it. Adding G back at the raster would put every sprite on the
+ * row the ROM draws it on, and the image would gain G rows below the top screen
+ * for the sprites that then run off its bottom edge. That is what this builds:
+ * hal/message_compositor.cpp adds it to the entry's y, ntr/ppu_sub.cpp's
+ * hinge_paint draws the overflow, and ntr/ppu.h carries the geometry.
+ *
+ * THE PREMISE IS THAT THE WHOLE OBJ LAYER MOVES WITH G. It does not. Only the
+ * submissions that go through the framework's own OAM router do; the rest are
+ * placed in SCREEN space and are at the same engine row in both arms. Measured
+ * on scene 368 over 300 frames, one headless run per arm, with
+ * SM64DS_OBJSHIFT_TRACE (port/tools/objshift.py register), reporting gap-on's
+ * engine row minus gapless's for every entry the two arms share:
+ *
+ *   a2=1010  32x32 dbl    116 sightings   +32 on 116 of them
+ *   a2=211c  32x64 dbl    699 sightings     0 on 699 of them
+ *   a2=211c  32x64          4 sightings     0 on 4
+ *   a2=e2d7/e2db/e2dc     299 each          0 on every one
+ *   a2=d280/e2df          598 / 299         0 on every one
+ *   a2=8256/825a/825e/a254  226 each        0 on every one
+ *
+ * ONE identity of twelve follows G. The other eleven are the top screen's own
+ * furniture: the score and timer rows parked at engine y 4 and y 168, and the
+ * three 32x64 double-size entries at x 0, 64 and 128 that sit at engine y -32
+ * in BOTH arms. A blanket shift moves all twelve, so it puts the score readout
+ * into the band and the artwork 32 rows down its own screen.
+ *
+ * AND THE PICTURE SAYS THE SAME THING. Top screen, 512x384, gap-on against each
+ * gapless arm at frame 300:
+ *
+ *   gap-on vs gapless, shift OFF    2940 of 196608 pixels differ, rows 0..99
+ *   gap-on vs gapless, shift ON    28152 of 196608 pixels differ, rows 0..177
+ *                                  and 336..367
+ *
+ * The unshifted gapless top screen is ALREADY the ROM's picture almost
+ * everywhere; what is wrong with it is 1.5% of one screen, and it is the routed
+ * sprite alone. Turning the shift on multiplies the disagreement by ten.
+ *
+ * THERE IS A SECOND COST THE SHIFT CANNOT TOUCH, found in the same run.
+ * OAM::Render culls at submission with `if (y + h < 0) return`, and a routed
+ * sprite's y is G lower in this arm, so 215 submissions over those 300 frames
+ * reached OAM in gap-on and reached it in NO form under the mod. A display
+ * shift can only move what was submitted.
+ *
+ * WHAT WOULD BE RIGHT, stated precisely because it is buildable and this is
+ * not. The shift has to be per entry, applied to the submissions the
+ * framework's G-adding routers made and to no others. Those are
+ * func_ov004_020aff38, func_ov004_020b023c, func_ov004_020b0380,
+ * func_ov004_020afdd0 and RenderOamBothScreens, all of which reach
+ * OAM::Render with `a2 + 0xc0 + G` while every other submitter passes a plain
+ * engine row. Nothing in the finished OAM distinguishes the two, so the port
+ * cannot tell them apart at the raster: the routed set has to be recorded AT
+ * THE CALL, and that is a hook at those five bodies rather than anything the
+ * display side can derive. A table of attribute words would be a guess with a
+ * measurement standing behind it today and nothing standing behind it the first
+ * time a sprite changes tile.
+ *
+ * SO IT IS OPT-IN, behind SM64DS_GAPLESS_OBJ_SHIFT=1, and nothing turns it on.
+ * The switch stays so an A/B of the picture is one binary, which is what
+ * notes/port-selftest-bmp-gate.md requires before two BMPs may be compared at
+ * all, and so the next lane can put the per-entry version behind the same
+ * geometry without rebuilding the band, the layout or the proofs.
+ *
+ * WHEN IT IS ON, the value is g_gapless_head_ds: the G the running scene's own
+ * InitResources wrote, captured by the latch below one statement before it
+ * stores zero over it, gated on the mod being engaged FOR THE SCENE NOW RUNNING
+ * because the flag alone keeps reading 1 after that minigame has ended.
+ *
+ * READ FROM TWO PLACES and it must give both the same answer within a frame:
+ * the layout below sizes the band from it and the engine A compositor shifts
+ * its raster by it, so this reads the captured word and the engagement test
+ * rather than caching an answer of its own. */
+int obj_shift_ds(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_GAPLESS_OBJ_SHIFT");
+        on = s && *s && *s != '0';
+    }
+    if (!on || !hal_gapless_engaged()) return 0;
     return g_gapless_head_ds;
 }
 
 }  // namespace
+
+int hal_gapless_obj_shift_ds(void) { return obj_shift_ds(); }
 
 int hal_screen_gap_raw(void) { return read_raw(); }
 
@@ -130,7 +239,20 @@ const ntr::StackLayout *hal_screen_layout(void)
        still runs at a2 + 0xc0 + G and objects still vanish at the seam. That is
        precisely what the setting promises -- "remove the gap" gives back the
        picture the port had before this feature, jump and all. */
-    const int want = host_setting_minigame_gap() ? raw : 0;
+    const int want_gap = host_setting_minigame_gap() ? raw : 0;
+    /* THE SHIFT, AND THE BAND IT NEEDS. See obj_shift_ds above. With the mode
+       engaged the game's own G reads zero, so `want_gap` is zero and there is
+       no band; the shifted objects need one, because the rows they are pushed
+       into past the top screen's bottom edge are world -G_rom..-1 and those
+       rows have to be somewhere in the image. They go where the hinge goes,
+       between the halves, so the band's height is the shift and the image is
+       192 + G_rom + 192 DS rows, which is gap-on's own shape.
+
+       THE TWO CANNOT BOTH BE NON-ZERO. `want_gap` is the game's G, which the
+       mod has zeroed before anything can engage the shift, so this is a choice
+       between a real gap and a shifted band and never a sum. */
+    const int shift = obj_shift_ds();
+    const int want = shift ? shift : want_gap;
     /* THE HEADROOM, and it is a DISPLAY answer to a SIMULATION cost. See the
        StackLayout note in ntr/ppu.h: gapless zeroes G, the game's own fixed
        constants keep placing actors in a world 192 + G_rom + 192 rows tall, and
@@ -164,7 +286,11 @@ const ntr::StackLayout *hal_screen_layout(void)
        shape of defect a "latch it with everything else" reading produces and
        nothing downstream would report. It is one int and it costs a call. */
     const int seam = hal_gapless_engaged() ? 1 : 0;
-    if (g_have && want == g_raw && scene == g_scene && head == g_head) {
+    /* AND THE SHIFT IS PART OF THE LATCH, for the reason the headroom is: it
+       cannot move without `want` moving today, and a cache whose key is a
+       subset of its inputs is one edit away from serving a stale answer. */
+    if (g_have && want == g_raw && scene == g_scene && head == g_head &&
+        shift == g_shift) {
         g_lay.seam = seam;
         return &g_lay;
     }
@@ -173,9 +299,18 @@ const ntr::StackLayout *hal_screen_layout(void)
     g_raw = want;
     g_scene = scene;
     g_head = head;
+    g_shift = shift;
 
     const int mode = host_setting_gap_fill_mode();
-    const int peek = host_setting_gap_peek();
+    /* PEEK IS OFF IN THE SHIFTED MODE, decided here so that the layout every
+       consumer reads already carries the answer and no pass has to ask the
+       question a second time. Peek shows what the engines put in rows nobody
+       displays; under the shift the top engine displays those rows itself, so
+       there is nothing left for peek to reveal and a second rendering of the
+       same objects is all it could add. It also drops the band to a black
+       backdrop, which would replace the fill the picture is supposed to share
+       with gap-on mode. */
+    const int peek = shift ? 0 : host_setting_gap_peek();
     /* THE ART IS LOADED HERE, ONCE, and this is the only place that asks for
        it. Both askers are here: the "custom" fill mode wants it with peek off,
        and peek wants it as its backdrop whatever the fill mode says. Asking at
@@ -186,8 +321,8 @@ const ntr::StackLayout *hal_screen_layout(void)
     if (want && (peek || mode == ntr::GAP_FILL_CUSTOM))
         art = hal_gap_art(scene, want, mode == ntr::GAP_FILL_CUSTOM);
 
-    g_lay = ntr::stack_layout(want, head, mode, host_setting_gap_color(), peek,
-                              art);
+    g_lay = ntr::stack_layout(want, head, shift, mode,
+                              host_setting_gap_color(), peek, art);
     g_lay.seam = seam;
     /* and the band's per-scene continuity reader, installed at the same moment
        for the same reason: it is per scene, and installing clears the cached
@@ -218,6 +353,21 @@ const ntr::StackLayout *hal_screen_layout(void)
                          "simulation is untouched.\n", scene, g_lay.head_ds,
                          g_lay.head_h, g_lay.w, g_lay.h,
                          192 + g_lay.head_ds, 193);
+        /* SAID ONCE PER LATCH IN THE SHIFTED MODE, and it is the line that
+           tells a capture from this mode apart from a gap-on capture of the
+           same scene. The two images are the same size and the same shape by
+           design, so the size cannot do it and a run report with no such line
+           is a run report about a different picture. */
+        if (g_lay.obj_shift_ds)
+            std::fprintf(stderr, "[gapless] scene %d: OBJ SHIFT %d DS rows "
+                         "(%d host rows) -- the top engine's sprites are drawn "
+                         "at the rows the ROM submits them at, and the band "
+                         "below the top screen is world -%d..-1 with the top "
+                         "engine drawing into it. Image %dx%d, the same shape "
+                         "gap-on composes. The simulation is untouched and is "
+                         "still gapless: nothing crosses a hinge.\n", scene,
+                         g_lay.obj_shift_ds, g_lay.band_h, g_lay.obj_shift_ds,
+                         g_lay.w, g_lay.h);
         if (raw)
             std::fprintf(stderr, "[gap] scene %d, G %d DS rows%s -> band %d "
                          "host rows, image %dx%d, fill %s, peek %s, art %s\n",
@@ -418,11 +568,18 @@ void hal_gapless_minigames_latch(void)
        same word this just zeroed: no band, so the fill, the art and the peek
        have nothing to act on for this scene. */
     std::fprintf(stderr, "[gapless] scene %d: ENGAGED for %s -- G %d -> 0. The "
-                 "screen gap is now gone from the SIMULATION as well as the "
-                 "picture: objects cross the seam directly and arrive %d rows "
-                 "sooner than a DS delivers them, and there is no band left "
-                 "for the fill, the art or the peek to act on. THIS IS NOT THE "
-                 "ROM'S BEHAVIOUR.\n", scene, row->what, was, was);
+                 "screen gap is now gone from the SIMULATION: objects cross the "
+                 "seam directly and arrive %d rows sooner than a DS delivers "
+                 "them. THIS IS NOT THE ROM'S BEHAVIOUR. The PICTURE keeps the "
+                 "%d rows: %s\n", scene, row->what, was, was, was,
+                 obj_shift_ds()
+                     ? "the OBJ display shift is ON, which is opt-in and "
+                       "MEASURED WRONG: it moves the whole top engine OBJ "
+                       "layer, and only the framework-routed sprites are "
+                       "displaced. Read obj_shift_ds in hal/screen_gap.cpp"
+                     : "the halves are edge to edge, and the sprites the "
+                       "framework's OAM router placed sit G rows above the "
+                       "artwork they were drawn against");
 }
 
 /* THE SCENE IS PART OF THE ANSWER. The flag alone would keep reading 1 after
