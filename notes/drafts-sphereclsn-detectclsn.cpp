@@ -1,5 +1,5 @@
 //cpp
-// NONMATCHING: size 0x1b64 vs 0x1bc8 (25 insn short), align equal=825 ratio=0.467
+// NONMATCHING: size 0x1be4 vs 0x1bc8 (7 insn OVER), align equal=855 ratio=0.480
 //
 // PROVENANCE. Restored 2026-08-19 from nearmiss/db.jsonl, attempt
 // 8273344dc1434a9e86882b88eebf7ffa (divergences 1213, parent 1332).
@@ -574,14 +574,19 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             sphere.flags |= 8;
                             func_020379c0(&sphere, triID, &data_020a0cec);
                             hitFlags |= 2;
-                            v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
-                            if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
-                            if (contactKind != 1) {
+                            if (contactKind == 1) {
+                                v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
+                                if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
+                                v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
+                                if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
+                            } else {
+                                v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
+                                if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
                                 v = (s32)(((s64)depth * sn.y) >> 14) >> 2;
                                 if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
+                                v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
+                                if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
                             }
-                            v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
-                            if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
                         } else {
                             sphere.flags |= 0x10;
                             func_0203798c(&sphere, triID, &data_020a0cec);

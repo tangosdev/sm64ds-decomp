@@ -649,19 +649,63 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   evaluation, which is 31 instructions shorter but costs 5 matches and takes the
   candidate to 56 short instead of 25. Look elsewhere in the post-accept chain.
 
+  ### Region B (calls 31->32) is EXACT: the ROM duplicates where the draft shares
+
+  They were NOT one boundary defect. +168 and -128 looked adjacent and opposite,
+  but fixing B left A at +168 unchanged. Two independent defects.
+
+  B was the min/max accumulate. The ROM gates it on `contactKind` and emits TWO
+  COMPLETE ARMS, duplicating the x and z clones into both; the draft shared them
+  and wrapped only the y clone in `if (contactKind != 1)`.
+
+  ```
+  0x01ffd0d8  cmp contactKind,#1 ; hitFlags |= 2 ; bne 0x01ffd170
+  0x01ffd0f0    clone [sp,#0x180] x        <- contactKind == 1 arm: x, z
+  0x01ffd12c    clone [sp,#0x188] z
+              b continue
+  0x01ffd170  clone [sp,#0x180] x          <- second copy of x
+  0x01ffd1ac  clone [sp,#0x184] y
+  ```
+
+  Spelling it as two duplicated arms: **equal 825 -> 855, ratio 0.4673 -> 0.4799,
+  gap 31->32 -128 -> +0 (ROM 372, cand 372, exact)**. Candidate size 1753 -> 1785,
+  so it is now 7 instructions OVER 1778 rather than 25 under.
+
+  **Arm order is load-bearing**: `contactKind == 1` first, matching the ROM's
+  fallthrough, is +30; `!= 1` first is only +15.
+
+  Third instance of share-vs-duplicate in this function (block layout, edge
+  blocks, now min/max). **When a region is short, suspect the ROM duplicates
+  something the draft shares.**
+
+  ### Dead ends in region B, all with cand unchanged (mwcc eliminated them)
+
+  The `asr r0,r0,#0x1f` in the first clone looks like a dead sign-extension and
+  is not -- it is `depth`'s high word, consumed two clones later by
+  `mla r4, r0, r3, r4`, part of a **full signed 64x64** expansion
+  (`umull` + two `mla`) where the draft emits a 32x32 `smull`. But:
+
+  - adding `dpH = depth >> 31` before / after / with laundering: all inert, and
+    `cand` never moved, so mwcc dead-code-eliminates it (nothing reads it).
+  - casting both operands, `(s64)depth * (s64)sn.c`, for any subset of x/y/z: all
+    inert, `cand` never moved -- mwcc narrows it straight back to `smull`.
+
+  Forcing the 64x64 needs an operand mwcc cannot prove is 32-bit. Unresolved, and
+  it did not block region B closing by other means.
+
   ### Where the remaining gap is, measured
 
   | region | drift | note |
   |---|---|---|
   | calls 0-6 (head) | constant **-36** | 9 instructions short in the prologue/setup/octree descent, ROM 1456 bytes vs cand 1420. Constant, so it does not misalign anything downstream |
-  | calls 27->28 | **+168** | post-accept chain too long; NOT the wall slab, see above |
-  | calls 31->32 | **-128** | record block too short |
+  | calls 27->28 | **+168** | post-accept chain too long; NOT the wall slab, see above. The one big region left |
+  | calls 31->32 | **EXACT** | closed by the duplicate-arms fix above |
   | call 18 | **-40** | ROM 136 vs cand 96 |
   | calls 22 / 24 / 26 | -28 / -32 / +36 | corner blocks |
 
-  The edge blocks are done. `27->28` and `31->32` are the two big ones left and
-  they may be one defect: +168 then -128 across adjacent regions looks like work
-  sitting on the wrong side of a boundary, the same shape the edge blocks had.
+  The edge blocks and `31->32` are done. `27->28` (+168) is the one big region
+  left; the "adjacent and opposite, so one boundary defect" reading was WRONG --
+  closing B moved A by nothing at all.
 
   ### A correction carried in from the reloc table
 
