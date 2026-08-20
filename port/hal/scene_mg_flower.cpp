@@ -132,6 +132,8 @@
 // unmatched/MgCurling_Collide_020e1dc8.cpp (lane CUR2), both carrying port_
 // names so the decomp's own accounting is unchanged. This lane did not take it.
 
+#include "hal/screen_gap.h"
+
 #include <cstdio>
 #include <cstdlib>
 
@@ -230,7 +232,12 @@ static int  __fastcall s3_v33(void *s, void *)
    selftest now: if the host copy is ever dropped, scene 390 faults in
    InitResources again and that row goes red on the next battery. */
 static int  __fastcall flw_init(void *s, void *)
-{ FLW(0);  return func_ov006_0212b480(s); }
+{ FLW(0);  const int r = func_ov006_0212b480(s);
+  /* the GaplessMinigames latch, for hal/scene_mg.cpp's reason: every seated
+     minigame calls it so the ones the gapless table does not name can say
+     "unsupported" instead of doing nothing quietly. 0x180 is not in that
+     table -- its G is 16 and nobody has walked its consumers. */
+  hal_gapless_minigames_latch(); return r; }
 static int  __fastcall flw_beh(void *s, void *)
 { FLW(6);  return func_ov006_0212ac74((char *)s); }
 static int  __fastcall flw_render(void *s, void *)

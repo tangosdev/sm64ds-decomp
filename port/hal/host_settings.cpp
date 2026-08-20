@@ -470,6 +470,20 @@ int g_gap_fill;                      /* default 1, ambient */
 unsigned g_gap_color;                /* default 0xFF000000, black */
 int g_gap_peek;                      /* default 0 */
 
+/* ---- GaplessMinigames, and it is not one of the four ----------------------
+   The four above are the player's taste in a PICTURE and none of them writes
+   the game's own G. This one writes it, to zero, once a SUPPORTED minigame's
+   InitResources has finished, and that changes what the GAME does: a crossing
+   object stops spending the hinge's rows in a place neither screen shows, so
+   it arrives on the top screen sooner than the DS delivers it.
+
+   SO IT IS A MOD, IT IS DEFAULTED OFF, AND IT IS "WHEN ABLE".
+   port/hal/host_settings.h carries the full statement of what it costs, and
+   hal/screen_gap.cpp carries the mechanism, the table of scenes it is proven
+   for, and the one line it prints at every minigame latch. Nothing reads this
+   except that file. */
+int g_gapless_minigames;             /* default 0, and 0 is the ROM */
+
 /* "#RRGGBB" to 0xFFRRGGBB. Returns dflt for anything that is not exactly six
    hex digits after an optional '#', so a half-typed colour is the default
    rather than a colour nobody chose. Case insensitive, because a player
@@ -505,6 +519,7 @@ void load_once(void)
     g_gap_fill = 1;
     g_gap_color = 0xFF000000u;
     g_gap_peek = 0;
+    g_gapless_minigames = 0;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -541,6 +556,10 @@ void load_once(void)
            the one it set. */
         g_gap_on = json_bool(text, "MinigameGap", 1);
         g_gap_peek = json_bool(text, "GapPeek", 0);
+        /* read beside the other four and defaulted on its own, so a file
+           written before this key existed reads as a file that turned it
+           off -- which is the ROM */
+        g_gapless_minigames = json_bool(text, "GaplessMinigames", 0);
         {
             char mode[16];
             if (json_str(text, "GapFillMode", mode, sizeof mode)) {
@@ -575,6 +594,16 @@ void load_once(void)
                 : g_gap_fill == 2 ? "custom"
                                   : "ambient",
                 g_gap_color & 0xffffffu, g_gap_peek ? "ON" : "off", path);
+    /* SAID ON ITS OWN LINE AND IN PLAIN WORDS, because this is the one key
+       in the file that makes the program stop agreeing with the ROM. A
+       support log that carries it should say so without anybody having to
+       know what the key is called. */
+    if (g_gapless_minigames)
+        fprintf(stderr, "[settings] GaplessMinigames ON -- a supported "
+                        "minigame's screen gap is removed from the SIMULATION, "
+                        "not just the picture. Objects cross the seam sooner "
+                        "than they do on a DS. This is a mod, not the game. "
+                        "(%s)\n", path);
 }
 
 }  /* namespace */
@@ -637,6 +666,15 @@ extern "C" int host_setting_gap_peek(void)
 {
     load_once();
     return g_gap_peek;
+}
+
+/* GaplessMinigames. Not one of the four: this one changes the GAME, and only
+   for a scene the table in hal/screen_gap.cpp names. See the block over
+   g_gapless_minigames and port/hal/host_settings.h. */
+extern "C" int host_setting_gapless_minigames(void)
+{
+    load_once();
+    return g_gapless_minigames;
 }
 
 /* Take the three values and PERSIST them, so a choice made in the debug menu

@@ -116,3 +116,186 @@ unsigned hal_screen_layout_generation(void)
     hal_screen_layout();
     return g_gen;
 }
+
+/* ---- GaplessMinigames: THE MOD, its table, and the audit behind it ---------
+ *
+ * WHAT IT DOES. One store of zero into the game's own word, from the running
+ * minigame's InitResources thunk, after the real body has finished. Nothing
+ * else in this program or in the ROM is patched, redirected or special-cased:
+ * every consumer of G below simply reads a zero where it used to read 32, and
+ * the ROM's own arithmetic does the rest.
+ *
+ * WHY THAT IS ENOUGH, and this is the analysis rather than a hope. G is not a
+ * flag, it is the OFFSET BETWEEN TWO COORDINATE FRAMES. The world a minigame
+ * simulates runs from the top screen's top row to the bottom screen's bottom
+ * row with its origin at the BOTTOM screen's top row, so world row y lands on
+ * the top engine at y + 0xc0 + G and on the bottom engine at y, and the G rows
+ * at [-G, -1] land on neither. Set G to zero and the two frames become
+ * adjacent: world -1 is the top engine's last row, world 0 is the bottom
+ * engine's first, and there are no rows in between.
+ *
+ * SO THE ONLY WAY TO GET THIS WRONG is to have one party compute a coordinate
+ * with one G while another submits it with a different one. That makes the
+ * question a lifetime question rather than a maths question, and the answer
+ * had to be measured. THE READERS LINKED INTO THIS PROGRAM, all of them ov004,
+ * and what each does with the value:
+ *
+ *   PER FRAME, so they adapt the instant the word changes and cannot go stale:
+ *     RenderOamBothScreens 0x020b0104   both engines, y + 0xc0 + G on the top
+ *     func_ov004_020afdd0  0x020afdd0   top engine + RenderSub
+ *     func_ov004_020aff38  0x020aff38   THE ROUTER. Picks ONE engine by a band
+ *                                       test on world y and returns; this is
+ *                                       the body that makes a crossing object
+ *                                       disappear, and the one this mode is
+ *                                       really aimed at. Bob-omb Squad's balls
+ *                                       go through it.
+ *     func_ov004_020b023c  0x020b023c   top engine, matrix form. The falling
+ *                                       bob-ombs go through it.
+ *     func_ov004_020b0380  0x020b0380   top engine, matrix form
+ *     func_ov004_020ae3b4  0x020ae3b4   the BG pixel plotter, dScMgBase_c slot
+ *                                       34: picks a char base by the same band
+ *                                       test and adds G + 0xc0 for the top
+ *     func_ov004_020b04c0  0x020b04c0   the getter itself
+ *
+ *   WRITERS:
+ *     func_ov004_020b04d0  0x020b04d0   the setter, called once per minigame
+ *                                       from its InitResources
+ *     func_ov004_020b265c  0x020b265c   slot 33, stores 0 during scene setup,
+ *                                       which is why G already reads 0 on
+ *                                       entry to any InitResources
+ *
+ *   READ ONCE AND CACHED -- the stale-G class, and the reason the write is
+ *   placed where it is:
+ *     func_ov004_020b7854  0x020b7854   passes data_ov004_020bc8ac - (G + 0xc0)
+ *     func_ov004_020b6ddc  0x020b6ddc   passes data_ov004_020bc864 - G
+ *       both through func_ov004_020b0cac -> func_ov004_020b3278, which STORES
+ *       the y into the banner element at +0x12 and draws from the stored copy
+ *       every frame afterwards. Both are dScMgBase_c state bodies that run
+ *       DURING a minigame, long after InitResources, so with the write placed
+ *       at the end of init they read the zero and place against the same frame
+ *       they are submitted in. Neither is a hazard here; both WOULD be if the
+ *       write moved later.
+ *
+ * AND THE ONES THE ROM HAS THAT THIS PROGRAM DOES NOT. The score and
+ * name-entry HUD parks -- func_ov004_020b3888 (which is the worst of them:
+ * *(short *)(r0 + 0x12) = -(G + 0x60), a cached park), _020b4e78, _020b53f0,
+ * _020b556c, _020b5f6c, _020b612c, _020b682c -- and ov006's own G readers,
+ * including the player clamp func_ov006_020eee3c at -(184 + G) << 12 and the
+ * BG2 scroller func_ov006_021211e0, are in src/ but appear in no
+ * port/slice_*.txt, so nothing compiles them and nothing can run them. They
+ * are named here so a later lane that seats one of them knows this audit has
+ * to be re-run rather than inherited.
+ *
+ * BOB-OMB SQUAD'S OWN CODE READS G NOWHERE. Every ov006 body in
+ * port/slice_pch.txt was checked: the only mention of the word or the getter
+ * in the whole class is the setter call at the tail of its InitResources. The
+ * ball physics, the plunger, the collision scan and the spawner are all in
+ * world coordinates with fixed constants -- the parachute spawn is a flat
+ * -0x100000, world row -256 -- so the SIMULATION is bit-for-bit what it was
+ * and only the mapping onto the two engines changes.
+ *
+ * WHAT IT COSTS, stated because it is real and a player should be told. The
+ * world is 192 + G + 192 rows tall and the two screens are 384. With G at its
+ * own value the 32 rows the screens cannot show are the ones behind the hinge,
+ * in the middle. With G forced to zero they are the TOP 32 -- world rows -224
+ * to -193 -- which fall off the top of the top screen, and the top screen's
+ * background art, which is a fixed picture and not a window onto the world,
+ * stays where it is while the sprites over it move up by 32. In Bob-omb Squad
+ * that background is sky, so the cost is that a parachuting bob-omb becomes
+ * visible 32 rows later than it does on hardware. In a minigame whose top
+ * screen art lines up with its playfield it would be a visible misregistration,
+ * which is the other half of why this is scene-gated.
+ *
+ * THE TABLE IS THE "WHEN ABLE" IN THE LAUNCHER'S LABEL, and it is a table
+ * rather than a policy because the audit above is the only thing that makes
+ * this safe and the audit is per game. A scene that is not a row keeps its
+ * full gap simulation with the setting on, and says "unsupported" rather than
+ * failing quietly. ADDING A GAME IS: one row here, the same call in that
+ * scene's InitResources thunk, and the same walk of its own bodies for G
+ * reads and for cached G-derived coordinates -- plus the crossing trace that
+ * shows the object arriving on the adjacent row. */
+namespace {
+
+struct GaplessScene {
+    int scene_id;
+    const char *what;
+};
+
+/* Proven gapless. Nothing goes in here on an argument; it goes in here on a
+   measured crossing. */
+const GaplessScene kGaplessScenes[] = {
+    {368, "dScMgPachinko_c, Bob-omb Squad"},
+};
+
+int g_gapless_on;        /* 1 once the write has engaged for the scene running */
+int g_gapless_scene = -2;
+
+const GaplessScene *gapless_row(int scene)
+{
+    for (unsigned i = 0; i < sizeof kGaplessScenes / sizeof *kGaplessScenes; ++i)
+        if (kGaplessScenes[i].scene_id == scene) return &kGaplessScenes[i];
+    return 0;
+}
+
+}  // namespace
+
+void hal_gapless_minigames_latch(void)
+{
+    const int scene = hal_gap_scene_id();
+    const int on = host_setting_gapless_minigames();
+    const GaplessScene *row = gapless_row(scene);
+
+    /* A scene must never inherit the last one's answer. */
+    g_gapless_on = 0;
+    g_gapless_scene = scene;
+
+    if (!on) {
+        std::fprintf(stderr, "[gapless] scene %d: off (GaplessMinigames is "
+                     "false) -- the DS screen gap is simulated, which is the "
+                     "game\n", scene);
+        return;
+    }
+    if (!row) {
+        /* THE HONEST HALF OF "WHEN ABLE". A player who ticked the box and
+           started a game this is not proven for is owed the reason on the
+           spot, not a silent nothing. */
+        std::fprintf(stderr, "[gapless] scene %d: UNSUPPORTED -- "
+                     "GaplessMinigames is on, but this minigame is not one the "
+                     "port has proven gapless, so its screen gap is left "
+                     "simulated\n", scene);
+        return;
+    }
+
+    const int was = read_raw();
+    /* WRITTEN AS FOUR BYTES rather than through a declared `int`, for the
+       reason the block over data_ov004_020beb6c gives: the mount owns this
+       storage as u8[4] and a second declaration of it as an int would be an
+       opinion about the storage rather than a use of it. Four zero bytes is
+       the integer zero on either endianness, so nothing is being assumed. */
+    data_ov004_020beb6c[0] = 0;
+    data_ov004_020beb6c[1] = 0;
+    data_ov004_020beb6c[2] = 0;
+    data_ov004_020beb6c[3] = 0;
+    g_gapless_on = 1;
+
+    /* SAID EVERY TIME IT ENGAGES, and said as a warning rather than as a
+       status. A capture or a bug report from a run with this on is not a
+       report about this game, and the line is how that is told apart later.
+       It also states the display consequence, because the layout reads the
+       same word this just zeroed: no band, so the fill, the art and the peek
+       have nothing to act on for this scene. */
+    std::fprintf(stderr, "[gapless] scene %d: ENGAGED for %s -- G %d -> 0. The "
+                 "screen gap is now gone from the SIMULATION as well as the "
+                 "picture: objects cross the seam directly and arrive %d rows "
+                 "sooner than a DS delivers them, and there is no band left "
+                 "for the fill, the art or the peek to act on. THIS IS NOT THE "
+                 "ROM'S BEHAVIOUR.\n", scene, row->what, was, was);
+}
+
+/* THE SCENE IS PART OF THE ANSWER. The flag alone would keep reading 1 after
+   the minigame that engaged it has ended, and a run report that says "gapless"
+   about a scene this never touched is worse than no line at all. */
+int hal_gapless_engaged(void)
+{
+    return g_gapless_on && hal_gap_scene_id() == g_gapless_scene;
+}

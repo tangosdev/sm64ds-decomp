@@ -87,6 +87,44 @@ int host_setting_gap_fill_mode(void);
 unsigned host_setting_gap_color(void);
 int host_setting_gap_peek(void);
 
+/* ---- GaplessMinigames: THE ONE KEY THAT IS A MOD -----------------------
+   Default 0, and the default is the only setting that is the ROM. This is
+   the game half of the launcher's Mods section, where its label reads "use
+   gapless version of minigame when able".
+
+   The four keys above are about the PICTURE. Every one of them leaves the
+   game's own G alone, so the simulation runs exactly as the DS runs it and
+   the argument between them is only how many rows of image sit between the
+   halves and what is drawn in them.
+
+   This one is not that. With it on, a SUPPORTED minigame's G is set to zero
+   in the game's own word once its InitResources has finished, so the ROM's
+   OAM router puts the two screens edge to edge in the SIMULATION: a thing
+   crossing the seam leaves the bottom screen's top row and arrives on the
+   top screen's bottom row on the very next frame, with no hidden band and
+   no rows of travel behind plastic.
+
+   THAT IS A DIFFERENT GAME, and the difference is measurable rather than
+   cosmetic. A crossing loses the G rows it used to spend in the hinge --
+   32 of them in Bob-omb Squad, three frames at the ball's own speed -- so a
+   shot arrives sooner than it does on hardware, and the top 32 world rows
+   the top screen used to show are pushed off the top of it. The port's
+   north star is that the port BE the decomp, so this ships off and stays
+   off unless a player asks for it by name.
+
+   "WHEN ABLE" IS A TABLE, NOT A HOPE. It applies only to a minigame whose G
+   consumers have actually been enumerated and whose gapless behaviour has
+   been proven, and every other minigame keeps its full gap simulation with
+   this key on. The table and the audit behind its one row live in
+   hal/screen_gap.cpp, and every minigame launch says on stderr which of the
+   three it got: engaged, unsupported, or off.
+
+   IT MOOTS THE OTHER FOUR for the scene it engages on, and not by a rule
+   written here: it works by zeroing the same word the layout reads, so
+   there is no band, and a band that does not exist cannot be filled, drawn
+   on, or peeked into. */
+int host_setting_gapless_minigames(void);
+
 #ifdef __cplusplus
 }
 #endif

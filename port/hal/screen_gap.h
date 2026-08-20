@@ -17,9 +17,14 @@
  * with the sprites that are genuinely inside it -- including the ones the ROM's
  * own OAM cull drops for the middle of a crossing (hal/gap_continuity.cpp).
  *
- * NOTHING HERE TOUCHES THE SIMULATION. The game's own G is read and never
- * written; the actors move exactly as they did. This decides how many rows of
- * IMAGE sit between the halves and what goes in them, and that is all.
+ * NOTHING HERE TOUCHES THE SIMULATION, with ONE named exception at the foot of
+ * this header. The game's own G is read and never written by the layout, the
+ * fills, the art or the peek; the actors move exactly as they did, and all four
+ * of those decide how many rows of IMAGE sit between the halves and what goes
+ * in them and nothing else. The exception is hal_gapless_minigames_latch,
+ * which is the opt-in GaplessMinigames mod, is off by default, and says so out
+ * loud every time a minigame starts -- read its block before assuming the
+ * sentence above is still absolute.
  *
  * WHY ONE STRUCT. Before the gap, "the bottom screen starts one screen height
  * down" was true by construction, so the blit and the stylus inverse could each
@@ -53,5 +58,39 @@ unsigned hal_screen_layout_generation(void);
 /* The game's own G, before the MinigameGap setting is applied: the raw
  * data_ov004_020beb6c. For diagnostics -- the layout is the thing to use. */
 int hal_screen_gap_raw(void);
+
+/* ---- GaplessMinigames, THE ONE THING IN THIS FEATURE THAT IS A MOD ---------
+ *
+ * Everything else here reads the game's G and never writes it, which is what
+ * lets the header above open with "NOTHING HERE TOUCHES THE SIMULATION". This
+ * function is the exception and it is deliberately the only one: when the
+ * player has set GaplessMinigames and the scene is one this port has PROVEN
+ * gapless, it writes ZERO into the game's own word, and from that moment the
+ * ROM's own OAM router behaves as if the two screens were adjacent -- an object
+ * leaves the bottom screen's top row and is on the top screen's bottom row on
+ * the next frame, with no hidden rows in between.
+ *
+ * CALLED FROM EVERY SEATED MINIGAME'S InitResources THUNK, immediately after
+ * the real body returns, and that placement is the whole safety argument. A
+ * minigame's InitResources is where its G is set (Bob-omb Squad's setter call
+ * is the last statement before the field writes at the tail of
+ * src/_ZN15dScMgPachinko_c13InitResourcesEv.cpp), so writing zero any earlier
+ * is overwritten and writing it later leaves a window in which something can
+ * bake a coordinate off the old value. hal/screen_gap.cpp carries the audit of
+ * every G reader that is linked into this program and which of them cache.
+ *
+ * "WHEN ABLE" IS A TABLE, and it is a table rather than a policy for the
+ * honest reason: only a scene whose G consumers have actually been enumerated
+ * and whose gapless behaviour has been measured is in it. Every other minigame
+ * keeps the DS's behaviour with the setting on, and says so.
+ *
+ * IT ALWAYS SAYS WHICH OF THE THREE IT DID -- engaged, unsupported, or off --
+ * one line per minigame latch, because "I ticked the box and nothing happened"
+ * has to be answerable from a log rather than from a guess. */
+void hal_gapless_minigames_latch(void);
+
+/* 1 when the mode is on AND it engaged for the scene now running: the
+ * program's own answer to "is this run the ROM's timing or not". */
+int hal_gapless_engaged(void);
 
 #endif /* PORT_SCREEN_GAP_H */

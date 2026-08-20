@@ -268,6 +268,8 @@
 // neither can be exercised until the dispatch in section 4 exists, and a host
 // copy nobody can call is a count rather than a port.
 
+#include "hal/screen_gap.h"
+
 #include <cstdio>
 #include <cstdlib>
 
@@ -420,7 +422,8 @@ static unsigned g_mg_hits[36];
 #define MG_SLOT(n) (++g_mg_hits[(n)])
 
 static int  __fastcall mg_init(void *s, void *)
-{ MG_SLOT(0);  return func_ov006_020e3578(s); }
+{ MG_SLOT(0);  const int r = func_ov006_020e3578(s);
+  hal_gapless_minigames_latch(); return r; }
 static int  __fastcall mg_beh(void *s, void *)
 { MG_SLOT(6);  return func_ov006_020e3528(s); }
 static int  __fastcall mg_render(void *s, void *)
@@ -1117,7 +1120,8 @@ void port_scene_mg_luigi_hits(void);
 }  /* extern "C" */
 
 static int  __fastcall mgl_init(void *s, void *)
-{ MG_SLOT(0);  return func_ov006_020f3460(s); }
+{ MG_SLOT(0);  const int r = func_ov006_020f3460(s);
+  hal_gapless_minigames_latch(); return r; }
 static void __fastcall mgl_aclean(void *s, void *, unsigned f)
 { MG_SLOT(5);  func_ov006_020efc68((int)(size_t)s, (int)f); }
 static int  __fastcall mgl_beh(void *s, void *)
@@ -1393,8 +1397,103 @@ static void mg_score_dump(const char *where)
 static unsigned g_pch_hits[36];
 #define PCH_SLOT(n) (++g_pch_hits[(n)])
 
+/* ---- SM64DS_PCH_BALL_TRACE: where the slingshot balls are, per frame -------
+ *
+ * READ-ONLY, off unless the variable is set, and it exists because the one
+ * claim the GaplessMinigames mod makes is a claim about a SEQUENCE OF ROWS that
+ * no capture can carry: a still frame cannot show that a ball was on the
+ * bottom screen's top row last frame and the top screen's bottom row this one.
+ *
+ * The two words per ball are the ones hal/gap_continuity.cpp reads and the
+ * ones dScMgPachinko_c's own render loop reads a moment later -- slot i at
+ * scene + 0x4ed8 + i * 0x38, X then Y, both Fix12, with the visible flag at
+ * +0x4f0e of the same slot. The engine column applies the ROM's OWN band test,
+ * transcribed from src/func_ov004_020aff38.cpp rather than restated:
+ *
+ *     world y in [-0x100 - G, -G)   the TOP engine, at y + 0xc0 + G
+ *     else world y in [-0x40, 0xc0) the BOTTOM engine, at y
+ *     else                          neither, and nothing is drawn
+ *
+ * so "band" in the column below is not an extra rule -- it is exactly the rows
+ * that fail the first test and are then thrown away by OAM::Render's own
+ * y + h < 0 cull, which is the hole the mod closes. */
+static bool pch_ball_trace(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_PCH_BALL_TRACE");
+        on = (e && e[0] && e[0] != '0') ? 1 : 0;
+    }
+    return on != 0;
+}
+
+static void pch_ball_dump(void *self, unsigned frame)
+{
+    if (!pch_ball_trace()) return;
+    unsigned char *b = (unsigned char *)self;
+    const int g = hal_screen_gap_raw();
+    for (int i = 0; i < 0x30; ++i) {
+        const int at = i * 0x38;
+        if (!*(unsigned char *)(b + 0x4f0e + at)) continue;
+        const int x = *(int *)(b + 0x4ed8 + at) >> 12;
+        const int y = *(int *)(b + 0x4ed8 + 4 + at) >> 12;
+        enum { ENG_NONE, ENG_TOP, ENG_BOTTOM };
+        int engine, sy;
+        if (y >= -0x100 - g && y < -g)   { engine = ENG_TOP;    sy = y + 0xc0 + g; }
+        else if (y >= -0x40 && y < 0xc0) { engine = ENG_BOTTOM; sy = y; }
+        else                             { engine = ENG_NONE;   sy = 0; }
+        /* the sprite is 16x16 with a -8 cel offset, so this is the row the
+           first pixel of it actually lands on, and it is what OAM::Render's
+           cull is applied to */
+        const int top_row = sy - 8;
+        /* THE HOLE, named where it happens: the ball reached the bottom engine
+           because the top engine's band test rejected it, and then every row of
+           it landed above the bottom screen, so OAM::Render's `y + h < 0` threw
+           it away and no engine drew it at all. With G at zero the top test
+           reaches world -1 and this branch cannot be taken. */
+        const int culled = (engine == ENG_BOTTOM && top_row + 16 <= 0);
+        std::fprintf(stderr, "[ball] f%u G=%d slot%d world=(%d,%d) %s "
+                     "sy=%d rows=[%d,%d]%s\n", frame, g, i, x, y,
+                     engine == ENG_TOP      ? "top"
+                     : engine == ENG_BOTTOM ? "bottom"
+                                            : "none",
+                     sy, top_row, top_row + 15,
+                     culled ? "  CULLED (in the hinge)" : "");
+    }
+    /* THE PARACHUTING BOB-OMBS, the other half of what crosses the seam here,
+       and they take a DIFFERENT route: 30 slots at scene + 0x4660, stride the
+       same 0x38, live flag at +0x468c and state at +0x468f, drawn through
+       func_ov004_020b023c -- which submits to BOTH engines unconditionally and
+       lets each one's own clip decide, so there is no engine to pick and both
+       rows are reported. They spawn at a flat -0x100000, world row -256, which
+       is above the top screen at any G: this line is how far above is measured
+       rather than assumed. */
+    for (int i = 0; i < 0x1e; ++i) {
+        const int at = i * 0x38;
+        if (!*(unsigned char *)(b + 0x468c + at)) continue;
+        const int x = *(int *)(b + 0x4660 + at) >> 12;
+        const int y = *(int *)(b + 0x4664 + at) >> 12;
+        std::fprintf(stderr, "[bomb] f%u G=%d slot%d world=(%d,%d) state=%d "
+                     "topsy=%d botsy=%d\n", frame, g, i, x, y,
+                     (int)*(unsigned char *)(b + 0x468f + at), y + 0xc0 + g, y);
+    }
+    std::fflush(stderr);
+}
+
 static int  __fastcall pch_init(void *s, void *)
-{ PCH_SLOT(0);  return func_ov006_020fefc0(s); }
+{
+    PCH_SLOT(0);
+    const int r = func_ov006_020fefc0(s);
+    /* AFTER THE REAL BODY, NOT INSTEAD OF IT. The class's own setter call is
+       inside that body, and this is where the opt-in GaplessMinigames mod
+       undoes it. Every seated minigame calls this, not just this one: the
+       gapless TABLE decides which of them it engages for, and the ones it does
+       not engage for are exactly the ones that have to be able to SAY so.
+       hal/screen_gap.cpp carries the table and the consumer audit that says
+       this is the right moment. */
+    hal_gapless_minigames_latch();
+    return r;
+}
 static int  __fastcall pch_beh(void *s, void *)
 { PCH_SLOT(6);  return func_ov006_020fee24(s); }
 static int  __fastcall pch_render(void *s, void *)
@@ -1405,6 +1504,10 @@ static int  __fastcall pch_render(void *s, void *)
         std::snprintf(tag, sizeof tag, "render%u", g_pch_hits[9]);
         mg_score_dump(tag);
     }
+    /* BEFORE the ROM's render loop, so the numbers printed are the ones it is
+       about to read, and counted off slot 9 so the frame column is the class's
+       own render count rather than a host clock. */
+    pch_ball_dump(s, g_pch_hits[9]);
     return func_ov006_020fedc4(s);
 }
 static void *__fastcall pch_d2(void *s, void *)
@@ -1559,6 +1662,14 @@ extern "C" void port_scene_mg_pachinko_report(void)
                 "render %u, D2 %u, D0 %u, reset %u\n",
                 g_pch_hits[0], g_pch_hits[6], g_pch_hits[9],
                 g_pch_hits[16], g_pch_hits[17], g_pch_hits[18]);
+    /* AND WHETHER THIS RUN WAS THE GAME. A run with GaplessMinigames engaged
+       has different crossing timing from the DS by design, so the report a
+       reader takes numbers out of has to say which of the two it is rather
+       than leaving it to be found in the settings line further up. */
+    std::printf("[scene] dScMgPachinko_c screen gap: %s\n",
+                hal_gapless_engaged()
+                    ? "GAPLESS (GaplessMinigames engaged -- NOT the ROM's timing)"
+                    : "simulated, as the ROM does it");
     std::printf("[scene] dScMgPachinko_c 36-slot table, %u total slot "
                 "entries; slots entered:", total);
     for (int i = 0; i < 36; ++i)
@@ -1667,7 +1778,8 @@ unsigned port_mg_smartball_trap_mask(void);
    it never reads r0) and slot 18's host copy takes the object the matched TU
    drops. */
 static int  __fastcall smb_init(void *s, void *)
-{ MG_SLOT(0);  return func_ov006_02118b70(s); }
+{ MG_SLOT(0);  const int r = func_ov006_02118b70(s);
+  hal_gapless_minigames_latch(); return r; }
 static void __fastcall smb_aclean(void *s, void *, unsigned f)
 { MG_SLOT(5);  func_ov006_0211944c((char *)s, (int)f); }
 /* ---- THE BLOCKER, NAMED BEFORE IT HAPPENS AND NOT PREVENTED ---------------
@@ -2206,7 +2318,8 @@ unsigned port_mg_coin_trap_hits(void);
 }
 
 static int  __fastcall mc_init(void *s, void *)
-{ MG_SLOT(0);  return func_ov006_020de704(s); }
+{ MG_SLOT(0);  const int r = func_ov006_020de704(s);
+  hal_gapless_minigames_latch(); return r; }
 static int  __fastcall mc_beh(void *s, void *)
 { MG_SLOT(6);  return func_ov006_020de69c(s); }
 static int  __fastcall mc_render(void *s, void *)
