@@ -1,5 +1,5 @@
 //cpp
-// NONMATCHING: size 0x1b64 vs 0x1bc8 (25 insn short), align equal=816 ratio=0.462
+// NONMATCHING: size 0x1b64 vs 0x1bc8 (25 insn short), align equal=825 ratio=0.467
 //
 // PROVENANCE. Restored 2026-08-19 from nearmiss/db.jsonl, attempt
 // 8273344dc1434a9e86882b88eebf7ffa (divergences 1213, parent 1332).
@@ -150,14 +150,15 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
             if ((d) > faceDot) continue;                                      \
         }                                                                     \
     } else if ((d) > (faceDot >> unk_48)) {                                   \
-        s32 hyp;                                                              \
-        if (cls != 0) continue;                                               \
-        if (sphere.flags & 0x20) continue;                                    \
-        hyp = SqrtRaw((u64)((s64)((d) >> 4) * ((d) >> 4)                       \
+        s32 hyp;                                                          \
+        s32 axisDot;                                                      \
+        if (cls != 0) continue;                                           \
+        if (sphere.flags & 0x20) continue;                                \
+        axisDot = DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28);    \
+        hyp = SqrtRaw((u64)((s64)((d) >> 4) * ((d) >> 4)                  \
                           + (s64)(faceDot >> 4) * (faceDot >> 4)), zval, k1); \
-        if (func_020397dc(hyp)) continue;                                     \
-        if (DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28)               \
-                > cstd::fdiv(faceDot >> 4, hyp)) continue;              \
+        if (func_020397dc(hyp)) continue;                                 \
+        if (axisDot > cstd::fdiv(faceDot >> 4, hyp)) continue;            \
     }
 
 s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
