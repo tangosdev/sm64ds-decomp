@@ -153,9 +153,9 @@
 //     ROM  0xc8 0xd0 0xd8 0xe0   (stride 8)
 //     cand 0xd4 0xdc 0xe4 0xec   each +0xc
 //
-// and the three busiest slots in the function are simply relocated: the ROM's
-// 0x94 / 0x98 / 0x9c carry 22 / 11 / 14 references, and the same three variables
-// live at our 0xc4 / 0xb4 / 0xb0.
+// and the three busiest slots are relocated too -- the ROM's 0x94 / 0x98 / 0x9c
+// carry 22 / 11 / 14 references where ours carry 2 / 3 / 3.  WHICH variables those
+// are is NOT established; do not assume, identify them structurally.
 //
 // THERE ARE TWO SLOT POOLS, AND DECLARATION ORDER ONLY CONTROLS ONE OF THEM.
 // Swapping each adjacent pair of declarations and diffing the slot traffic gives
@@ -167,16 +167,31 @@
 //     33 rawX -> 0x94   34 rawY -> 0x98   35 rawZ -> 0x9c   80 depth -> 0xb0
 //     81 fn   -> 0xb4   21 rsq  -> 0x60   30 leaf -> 0x88   31 tri   -> 0x8c
 //
-// The hot loop-local spills are NOT in that pool.  Proof, not inference: move
-// `en3`'s declaration to every one of the 91 other positions and record which
-// slot it lands in.  **It lands at 0xc4 all 91 times.  It never reaches 0x94.**
-// Moving en3, fn and depth together to where the raw* trio sits -- all 18
-// distinct orderings -- costs two instructions and helps nothing.
+// The hot loop-local spills are NOT in that pool.  IDENTIFY THEM STRUCTURALLY
+// BEFORE MEASURING: en3 is the store that follows the `tri->edgeNormal3Idx` load
+// at tri+0xc, which puts it at **0x104 in our build and 0x110 in the ROM** -- a
+// -0xc displacement like the others.  (Pairing "the busiest slot in each stream"
+// instead gives 0xc4 / 0x94, which is wrong, and an earlier session's note that
+// the ROM's 0x94 is en3 is also wrong.  That error was committed here once.)
 //
-// So the 136 slot-only mismatches are NOT reachable from the declaration axis,
-// and further declaration-order work on this function is wasted effort.  What
-// would move them is a change to en3's LIVE RANGE, i.e. to the loop body, not to
-// the declaration block.  That is the open question, and it is the last big one.
+// With en3 identified properly, two axes are exhausted and both are inert:
+//
+//   * DECLARATION POSITION.  Moved to every one of the 91 other positions, en3's
+//     slot is 0x104 in all 91.  It never reaches 0x110.  Moving en3, fn and depth
+//     together to where the raw* trio sits -- all 18 distinct orderings, verified
+//     distinct by hash -- costs two instructions and helps nothing.
+//   * LIVE RANGE.  Writing it later, splitting it via a copy, scoping it to the
+//     prism loop, scoping the whole en1/en2/en3 group, and hoisting `f->normals`
+//     to a shared base are ALL BYTE-IDENTICAL, and en3 stays at 0x104 in every
+//     one.  mwccarm normalises all five away.
+//
+// So the 136 slot-only mismatches are not reachable from declaration order, and
+// not from any live-range reshaping tried so far.  I do NOT have a demonstrated
+// mechanism for moving them; treat "change the live range" as an untested guess
+// rather than a plan.  The one framing that is at least concrete: our en3 sits
+// 0xc BELOW the ROM's, so the ROM has three more words allocated ahead of it in
+// whatever order the allocator uses -- it spills something we keep in a register.
+// Finding what would be the next real lead.
 //
 // This is also the precise sense in which "declaration order IS the stack layout"
 // is true for the 0x498 dBgCh_Gnd twin and false here: the twin has only the
