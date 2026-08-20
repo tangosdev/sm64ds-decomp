@@ -20,10 +20,19 @@ run, so "look at it" is not a check.
                                          headroom off, and the containment set
   python port/tools/headroom.py touch    the stylus inverse over the four bands
   python port/tools/headroom.py shots F  the before/after crops at frame F
+  python port/tools/headroom.py evidence the gapped top rows against the strip,
+                                         with the background-only numbers
 
-THE TWO ARMS COME OFF ONE BINARY. SM64DS_GAPLESS_HEADROOM=0 suppresses the
-headroom and nothing else, which is what notes/port-selftest-bmp-gate.md
-requires before two BMPs may be compared at all.
+THE HEADROOM IS OFF BY DEFAULT and every step here that wants it asks for it
+with SM64DS_GAPLESS_HEADROOM=1. Read headroom_ds in hal/screen_gap.cpp for the
+measurement that made it opt-in: there is no background content above the top
+screen in either arm on any frame, so the strip can only ever be invented fill
+sitting over the picture's own top edge. The steps are kept because they are the
+measurement, not because the feature is.
+
+THE TWO ARMS COME OFF ONE BINARY, which is what
+notes/port-selftest-bmp-gate.md requires before two BMPs may be compared at
+all.
 
 THE CENSUS IS A WINDOWED RUN AND THE CAPTURES ARE NOT. A headless scene run
 composes ONCE, at the end, when the capture asks for the image, so it has
@@ -120,7 +129,8 @@ def ident(e):
 
 def census(frames=400):
     r, text, bmp = run("census", frames, GAPLESS,
-                       {"SM64DS_HEADROOM_TRACE": "1"}, windowed=True)
+                       {"SM64DS_HEADROOM_TRACE": "1",
+                        "SM64DS_GAPLESS_HEADROOM": "1"}, windowed=True)
     fr = parse(text)
     print("frames censused: %d (rc=%d)" % (len(fr), r.returncode))
     if not fr:
@@ -174,7 +184,8 @@ def timing(frames=400):
     Comparing two runs would add run-to-run variance to a difference this is
     trying to measure."""
     r, text, bmp = run("timing", frames, GAPLESS,
-                       {"SM64DS_HEADROOM_TRACE": "1"}, windowed=True)
+                       {"SM64DS_HEADROOM_TRACE": "1",
+                        "SM64DS_GAPLESS_HEADROOM": "1"}, windowed=True)
     fr = parse(text)
     print("frames: %d (rc=%d)" % (len(fr), r.returncode))
     # An OAM SLOT's own history: a slot is reused, so a run of frames in which
@@ -247,7 +258,8 @@ def seam(frames=300):
     And the SOURCE's own flatness, which is the ceiling on how faithful any
     upward extension of one row can be: if the picture's top two DS rows already
     differ, no fill built from one of them can look like more of the other."""
-    r, text, bmp = run("seam", frames, GAPLESS)
+    r, text, bmp = run("seam", frames, GAPLESS,
+                       {"SM64DS_GAPLESS_HEADROOM": "1"})
     if not bmp:
         print("no capture (rc=%d)" % r.returncode)
         return
@@ -312,9 +324,8 @@ def arms(frames=300):
     print("%-24s %-9s %s" % ("run", "image", "md5"))
     out = {}
     for tag, settings, extra in (
-            ("gapless + headroom", GAPLESS, None),
-            ("gapless, headroom OFF", GAPLESS,
-             {"SM64DS_GAPLESS_HEADROOM": "0"}),
+            ("gapless + headroom", GAPLESS, {"SM64DS_GAPLESS_HEADROOM": "1"}),
+            ("gapless, headroom OFF", GAPLESS, None),
             ("gap on (the ROM)", None, None),
             ("MinigameGap false", {"MinigameGap": False}, None)):
         bmp = os.path.join(OUT, "arm_%s.bmp" % re.sub(r"\W+", "_", tag))
@@ -336,7 +347,8 @@ def touch(frames=30):
     pts = [(4, 4), (4, 40), (4, 120), (4, 500), (4, 800), (4, 1000)]
     bmp = os.path.join(OUT, "touch.bmp")
     r = G.scene_run(SCENE, frames, bmp, settings=GAPLESS,
-                    extra_env={"SM64DS_TOUCH_CLIENT_PROBE":
+                    extra_env={"SM64DS_GAPLESS_HEADROOM": "1",
+                               "SM64DS_TOUCH_CLIENT_PROBE":
                                ";".join("%d,%d" % p for p in pts)})
     for ln in (r.stdout + r.stderr).splitlines():
         if "[touchmap]" in ln:
@@ -382,10 +394,10 @@ def shot(frame, keep=128):
     os.makedirs(SHOTS, exist_ok=True)
     off = os.path.join(SHOTS, "f%d_off.bmp" % frame)
     on = os.path.join(SHOTS, "f%d_on.bmp" % frame)
-    G.scene_run(SCENE, frame, off, settings=GAPLESS,
-                extra_env={"SM64DS_GAPLESS_HEADROOM": "0"})
+    G.scene_run(SCENE, frame, off, settings=GAPLESS)
     r = G.scene_run(SCENE, frame, on, settings=GAPLESS,
-                    extra_env={"SM64DS_HEADROOM_TRACE": "1"})
+                    extra_env={"SM64DS_HEADROOM_TRACE": "1",
+                               "SM64DS_GAPLESS_HEADROOM": "1"})
     with open(os.path.join(SHOTS, "f%d_on.log" % frame), "w") as f:
         f.write(r.stdout + r.stderr)
     wo, ho, ro = G.read_bmp(off)
@@ -413,6 +425,87 @@ def shot(frame, keep=128):
     return drawn
 
 
+
+# ---- the evidence panel -----------------------------------------------------
+#
+# THE COMPARISON A PERSON CAN JUDGE, and the numbers under it. Four strips of
+# 32 DS rows, stacked, each 512 host px wide:
+#
+#   1  GAPPED, image rows 0..63       the ROM's own top 32 rows. World -224..-193.
+#                                     This is the ground truth: the beam, the
+#                                     wings, the top of the playfield.
+#   2  GAPLESS+HEADROOM, rows 0..63   the headroom strip. The SAME world rows,
+#                                     as this feature draws them.
+#   3  GAPLESS+HEADROOM, rows 64..127 the gapless top screen's own first 32 DS
+#                                     rows -- which is where the artwork in 1
+#                                     actually is in this arm.
+#   4  GAPPED minus GAPLESS strip     a per-pixel difference of 1 against 2,
+#                                     black where they agree.
+#
+# The point of putting 3 in is that 1 and 3 are byte-identical: the artwork is
+# not missing from the gapless picture and it is not above the screen either. It
+# is on the screen, and the strip is a band of nothing sitting over the top of
+# it.
+def evidence(frames=300):
+    os.makedirs(SHOTS, exist_ok=True)
+    caps = {}
+    for tag, settings, extra in (
+            ("gapped", None, None),
+            ("gapless", GAPLESS, {"SM64DS_GAPLESS_HEADROOM": "1"}),
+            ("gapped_bg", None, {"SM64DS_ENGINE_A_LAYERS": "0f"}),
+            ("gapless_bg", GAPLESS, {"SM64DS_ENGINE_A_LAYERS": "0f",
+                                     "SM64DS_GAPLESS_HEADROOM": "1"})):
+        p = os.path.join(SHOTS, "ev_%s.bmp" % tag)
+        G.scene_run(SCENE, frames, p, settings=settings, extra_env=extra)
+        caps[tag] = G.read_bmp(p)
+
+    wg, hg, gp = caps["gapped"]
+    wl, hl, gl = caps["gapless"]
+    head = hl - hg + 64 if hl != hg else 64
+    head = 64            # G_rom 32 DS rows at the 2x tier
+
+    def band(rows, y0, n=64):
+        return [list(rows[y0 + k]) for k in range(n)]
+
+    def delta(a, b):
+        out = []
+        for ra, rb in zip(a, b):
+            out.append([tuple(min(255, abs(p[i] - q[i]) * 3) for i in range(3))
+                        for p, q in zip(ra, rb)])
+        return out
+
+    rule = [[(96, 96, 96)] * wg for _ in range(4)]
+    panel = (band(gp, 0) + rule + band(gl, 0) + rule + band(gl, 64) + rule
+             + delta(band(gp, 0), band(gl, 0)))
+    write_bmp(os.path.join(SHOTS, "evidence.bmp"), panel)
+    print("wrote %s: gapped top 32 DS rows, the headroom strip, the gapless "
+          "top screen's own first 32 DS rows, and the difference of the first "
+          "two" % os.path.join(SHOTS, "evidence.bmp"))
+
+    def diff(a, ay, b, by, n=64):
+        bad = worst = 0
+        for k in range(n):
+            for x in range(wg):
+                p, q = a[ay + k][x], b[by + k][x]
+                if p != q:
+                    bad += 1
+                    worst = max(worst, max(abs(p[i] - q[i]) for i in range(3)))
+        return bad, worst
+
+    _, _, pb = caps["gapped_bg"]
+    _, _, lb = caps["gapless_bg"]
+    print("BACKGROUND ONLY (the OBJ layer masked off both arms, so this is the "
+          "artwork and nothing else):")
+    for label, a, ay, b, by in (
+            ("gapped rows 0..63   vs gapless rows 64..127", pb, 0, lb, 64),
+            ("gapped rows 0..63   vs gapless rows 0..63  ", pb, 0, lb, 0),
+            ("gapped rows 0..63   vs gapped  rows 64..127", pb, 0, pb, 64)):
+        n, w = diff(a, ay, b, by)
+        print("  %s: %d of %d px differ, max per-channel %d"
+              % (label, n, 64 * wg, w))
+    return caps
+
+
 if __name__ == "__main__":
     step = sys.argv[1] if len(sys.argv) > 1 else "census"
     n = int(sys.argv[2]) if len(sys.argv) > 2 else None
@@ -421,5 +514,5 @@ if __name__ == "__main__":
             shot(f)
         raise SystemExit(0)
     fn = {"census": census, "timing": timing, "seam": seam, "arms": arms,
-          "touch": touch}[step]
+          "touch": touch, "evidence": evidence}[step]
     fn(n) if n else fn()

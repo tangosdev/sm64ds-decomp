@@ -617,6 +617,173 @@ void attrib_take() {
     ++g_attrib_frames;
 }
 
+/* ---- SM64DS_ENGA_LAYERS: engine A's layers, per frame, in whatever arm ----
+ *
+ * WHY IT EXISTS AND WHAT IT REPLACES. The one-shot dump above fires on the
+ * FIRST frame that finds any 2D enabled and again at the peak-coverage frame,
+ * and it reads its per-BG lines through read_bg, which returns an empty config
+ * for a layer DISPCNT has not enabled. Both of those cost a lane a wrong
+ * conclusion: a layer that is configured and switched on later reads as absent,
+ * and a scroll register that moves during the scene is never sampled twice.
+ * Scene 368 is exactly that shape -- BG2CNT is a 512x256 layout that the layer
+ * mask does not carry on frame one -- and the headroom lane concluded "there is
+ * nothing above the screen to draw" off a single frame of a single arm.
+ *
+ * So this reads the RAW registers for all four backgrounds whether or not they
+ * are enabled, every frame, and prints on the first frame, on every change of
+ * the whole register signature, and once every 60 frames so a still scene still
+ * leaves a trail. The pixel census under it is the finished hit buffer, which
+ * is the only place "which layer did the viewer actually see" is answerable.
+ *
+ * IT IS THE ARM-COMPARISON TOOL, and that is its point. GaplessMinigames writes
+ * zero into the game's own G, and whether a scene's BACKGROUND scroll follows G
+ * is a per-scene fact nobody can argue from source: the framework's own BG
+ * plotter (func_ov004_020ae3b4) adds G + 0xc0 for the top engine, so a scene
+ * whose layers are placed through it moves when G moves and a scene that writes
+ * BGnVOFS itself may not. Run this in both arms and diff the two logs.
+ */
+int enga_layers_on(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_ENGA_LAYERS");
+        on = s && *s && *s != '0';
+    }
+    return on;
+}
+
+unsigned g_enga_frame;
+
+/* `mask` is data_0209d45c, the software layer mask, passed IN rather than
+   declared here: this block is inside the anonymous namespace, where an extern
+   declaration takes internal linkage and names a variable nothing defines. The
+   one caller is inside the extern "C" function that already declares it. */
+void enga_layer_regs(uint32_t dispcnt, unsigned mask)
+{
+    if (!enga_layers_on()) return;
+    ++g_enga_frame;
+    /* THE SIGNATURE IS EVERY REGISTER THIS PROBE PRINTS, so "no line since f12"
+       means "nothing this probe can see has changed since f12" and not "nobody
+       looked". Scroll registers included: a scroll that moves once mid-scene is
+       the whole question here. */
+    uint32_t sig = dispcnt ^ (mask << 3);
+    for (int b = 0; b < 4; ++b)
+        sig = sig * 131u + rd16(kRegBase + 0x08 + b * 2)
+              + (uint32_t)rd16(kRegBase + 0x10 + b * 4) * 7u
+              + (uint32_t)rd16(kRegBase + 0x12 + b * 4) * 13u;
+    static uint32_t last_sig;
+    static int have;
+    const int changed = !have || sig != last_sig;
+    if (!changed && g_enga_frame % 60) return;
+    have = 1;
+    last_sig = sig;
+    std::fprintf(stderr, "[engA] f%u DISPCNT=%08x d45c=%02x enables=%02x "
+                 "bg0_3d=%d%s\n", g_enga_frame, dispcnt, mask,
+                 (dispcnt >> 8) & 0x1F,
+                 bg0_is_3d(dispcnt) ? 1 : 0, changed ? " CHANGED" : "");
+    for (int b = 0; b < 4; ++b) {
+        const uint16_t cnt = rd16(kRegBase + 0x08 + b * 2);
+        const unsigned sz = (cnt >> 14) & 3;
+        const int tw = (sz & 1) ? 64 : 32, th = (sz & 2) ? 64 : 32;
+        const uint32_t char_off = ((dispcnt >> 24) & 7) << 16;
+        const uint32_t scr_off = ((dispcnt >> 27) & 7) << 16;
+        /* READ WHETHER OR NOT IT IS ENABLED. A disabled layer's registers are
+           still the game's own statement about where that layer would be, and
+           this probe's whole job is to be readable before the layer is on. */
+        std::fprintf(stderr, "[engA] f%u   BG%d %-8s cnt=%04x prio=%d bpp%d "
+                     "%dx%d screen=%08x chars=%08x ofs(%d,%d)\n",
+                     g_enga_frame, b,
+                     ((dispcnt >> (8 + b)) & 1)
+                         ? (b == 0 && bg0_is_3d(dispcnt) ? "3D" : "ON")
+                         : "off",
+                     cnt, cnt & 3, ((cnt >> 7) & 1) ? 8 : 4, tw, th,
+                     kVramBase + scr_off + (((cnt >> 8) & 0x1F) << 11),
+                     kVramBase + char_off + (((cnt & 0x3c) >> 2) << 14),
+                     rd16(kRegBase + 0x10 + b * 4) & 0x1FF,
+                     rd16(kRegBase + 0x12 + b * 4) & 0x1FF);
+    }
+}
+
+/* THE SAME FRAME'S PIXELS, after the whole 2D raster has run. Printed on the
+   frames the register half printed, so one grep gives a layer's configuration
+   and what it actually put on the screen side by side. `top32` is the count in
+   engine rows 0..31 alone, which is the band the gapless headroom has to
+   reproduce: it is the world's rows -224..-193 in the ROM's own gapped frame,
+   and a layer with nothing there has nothing for the strip to draw. */
+void enga_layer_px(void)
+{
+    if (!enga_layers_on()) return;
+    static unsigned last_printed;
+    if (last_printed == g_enga_frame) return;
+    last_printed = g_enga_frame;
+    unsigned px[kOwnerN] = {0}, top32[kOwnerN] = {0};
+    int y0[kOwnerN], y1[kOwnerN];
+    for (int o = 0; o < kOwnerN; ++o) { y0[o] = 192; y1[o] = -1; }
+    for (int y = 0; y < 192; ++y)
+        for (int x = 0; x < 256; ++x) {
+            if (!g_a[y][x].hit) continue;
+            const unsigned o = g_a[y][x].owner;
+            ++px[o];
+            if (y < 32) ++top32[o];
+            if (y < y0[o]) y0[o] = y;
+            if (y > y1[o]) y1[o] = y;
+        }
+    for (int o = 0; o < kOwnerN; ++o)
+        if (px[o])
+            std::fprintf(stderr, "[engA] f%u   %-3s %6u px, rows %d..%d, "
+                         "%u of them in engine rows 0..31\n", g_enga_frame,
+                         kOwnerName[o], px[o], y0[o], y1[o], top32[o]);
+}
+
+/* ---- WHAT EACH BACKGROUND HOLDS ABOVE THE SCREEN --------------------------
+ *
+ * THE MEASUREMENT THE HEADROOM LANE OWED AND DID NOT TAKE. Engine A's 2D
+ * backgrounds are maps that WRAP: sample_bg masks (y + vofs) with the map's own
+ * height, so engine row -1 is a real map row and not an error. Which map row it
+ * is depends on the layer, and the two layers scene 368 runs disagree:
+ *
+ *   BG3  32x32 tiles, 256 px tall, vofs 0    engine -32..-1 -> map rows 224..255
+ *   BG2  64x32 tiles, 256 px tall, vofs 64   engine -32..-1 -> map rows  32..63
+ *
+ * so "the rows above the screen" is a different question per layer and cannot
+ * be answered for the engine as a whole. This prints, per enabled background,
+ * how many of the 32x256 texels above the screen are opaque, how many of the 32
+ * rows AT the top of the screen are, and whether the two bands are the same
+ * picture -- because if they are, drawing the upper band into a strip above the
+ * lower one paints the same artwork twice.
+ */
+void enga_strip_probe(uint32_t dispcnt)
+{
+    if (!enga_layers_on()) return;
+    static unsigned last;
+    if (last == g_enga_frame) return;
+    last = g_enga_frame;
+    Windows win;
+    read_windows(dispcnt, win);
+    for (int b = 0; b < 4; ++b) {
+        const BgConfig c = read_bg(b, dispcnt);
+        if (!c.enabled) continue;
+        unsigned above = 0, top = 0, same = 0;
+        for (int k = 0; k < 32; ++k)
+            for (int x = 0; x < 256; ++x) {
+                uint32_t a = 0, t = 0;
+                const bool ha = sample_bg(c, x, k - 32, a);
+                const bool ht = sample_bg(c, x, k, t);
+                if (ha) ++above;
+                if (ht) ++top;
+                if (ha == ht && (!ha || a == t)) ++same;
+            }
+        const int vh = c.tiles_h * 8;
+        std::fprintf(stderr, "[engA] f%u   BG%d strip: engine rows -32..-1 are "
+                     "map rows %d..%d, %u/8192 opaque; engine rows 0..31 are "
+                     "map rows %d..%d, %u/8192 opaque; the two bands agree on "
+                     "%u/8192 pixels\n", g_enga_frame, b,
+                     ((-32 + c.vofs) % vh + vh) % vh,
+                     ((-1 + c.vofs) % vh + vh) % vh, above,
+                     c.vofs % vh, (31 + c.vofs) % vh, top, same);
+    }
+}
+
 // ---- OBJ (sprites): the cursor arrows -------------------------------------
 // Engine-A OAM at 0x07000000, OBJ VRAM at 0x06400000, OBJ palette pltt+0x200.
 // Composites into g_a (only non-transparent texels), on top of the BGs, same
@@ -872,6 +1039,13 @@ extern "C" void port_message_composite_engine_a(void *fbp)
 
     const uint32_t dispcnt = rd32(kRegBase);
     const unsigned disp_mode = (dispcnt >> 16) & 3;
+    /* the per-frame layer census, BEFORE the forced-blank exit below, because
+       a frame the compositor declines is still a frame whose registers are the
+       game's own statement about its layers. */
+    {
+        extern unsigned char data_0209d45c;
+        enga_layer_regs(dispcnt, (unsigned)data_0209d45c);
+    }
     const bool forced_blank = (dispcnt >> 7) & 1;
 
     /* raw engine-A register dump before any early-return, so a headless run
@@ -1023,6 +1197,9 @@ extern "C" void port_message_composite_engine_a(void *fbp)
 
     if (obj_on && (lmask & (1u << kOwnerObj)))
         raster_obj(dispcnt, bl, win, fb);
+
+    enga_layer_px();
+    enga_strip_probe(dispcnt);
 
     if (std::getenv("SM64DS_MSG_COMPOSITE_DEBUG"))
         attrib_take();
