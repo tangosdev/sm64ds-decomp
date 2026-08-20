@@ -132,6 +132,13 @@ extern signed char data_0209f2f8;       /* current level */
    same line; Minimap::Behavior and Message::UpdateWindow are two of them. It
    is the game's own switchboard for what the bottom screen shows. */
 extern unsigned char data_0209d454;
+/* the engine A layer mask and the eight BG-offset shadows func_02019144
+   publishes; all arm9 BSS, hosted by span in hal/scene_boot.cpp's blocks */
+extern unsigned char data_0209d45c;
+extern short data_0209d468, data_0209d46c, data_0209d4a4, data_0209d4a0;
+extern short data_0209d49c, data_0209d478, data_0209d48c, data_0209d490;
+extern short data_0209d494, data_0209d498, data_0209d484, data_0209d480;
+extern short data_0209d47c, data_0209d470, data_0209d474, data_0209d488;
 /* TouchInfo data_020a0de8[4]: {u8 touched, u8 edge, u8 x, u8 y} per slot, in
    DS bottom-screen pixels. Stage::CheckCameraInput and every TouchArea read
    it; nothing on the host was writing it.
@@ -1117,6 +1124,49 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
            advance a snapshot the picture had not moved past. */
         ntr::ppu_seam_oam_mark();
         _ZN3OAM4LoadEv();
+
+        /* func_02019144's EIGHT BG-OFFSET PUBLISHES, the last of its beats the
+           port was still skipping. SetBgNOffset (src) writes SHADOW words, and
+           on the DS this once-per-frame sync is the only thing that carries
+           them into the hardware registers. hal/message_pump.cpp copies the
+           engine A BG3 line while a message box is up; nothing copied any of
+           them the rest of the time, so a scene that scrolls through the ROM's
+           own setters scrolled a register that never moved. Scene 368 is the
+           measured case: dScMgPachinko_c's pan calls SetBg2Offset every frame,
+           the hardware BG2 offset stayed at the one raw init write forever,
+           and the Bob-omb Squad airship hull (map rows 0..3, loaded and
+           stamped correctly) sat above a window that never scrolled up to it
+           -- reported as "the screen is just not showing the top".
+           Register order and the BG0-A 3D branch are func_02019144's own,
+           lines 46..61, and it runs under the same run_tail verdict the ROM
+           gates it with. */
+        *(volatile unsigned *)0x04000000 =
+            (*(volatile unsigned *)0x04000000 & ~0x1f00u)
+            | ((unsigned)data_0209d45c << 8);
+        if (!(*(volatile unsigned *)0x04000000 & 8)) {
+            *(volatile unsigned *)0x04000010 =
+                (data_0209d468 & 0x1ff) | (0x1ff0000u & (data_0209d46c << 16));
+        }
+        /* The else branch is func_02055454(data_0209d468): with BG0 as the 3D
+           plane the ROM routes the X shadow to the 3D scroll word instead of
+           the register. That TU is not in this link and the port's 3D path
+           has never read the word it writes, so the branch is left unseated
+           rather than half-seated; a level frame behaves exactly as before
+           this publish existed. */
+        *(volatile unsigned *)0x04000014 =
+            (data_0209d4a4 & 0x1ff) | (0x1ff0000u & (data_0209d4a0 << 16));
+        *(volatile unsigned *)0x04000018 =
+            (data_0209d49c & 0x1ff) | (0x1ff0000u & (data_0209d478 << 16));
+        *(volatile unsigned *)0x0400001c =
+            (data_0209d48c & 0x1ff) | (0x1ff0000u & (data_0209d490 << 16));
+        *(volatile unsigned *)0x04001010 =
+            (data_0209d494 & 0x1ff) | (0x1ff0000u & (data_0209d498 << 16));
+        *(volatile unsigned *)0x04001014 =
+            (data_0209d484 & 0x1ff) | (0x1ff0000u & (data_0209d480 << 16));
+        *(volatile unsigned *)0x04001018 =
+            (data_0209d47c & 0x1ff) | (0x1ff0000u & (data_0209d470 << 16));
+        *(volatile unsigned *)0x0400101c =
+            (data_0209d474 & 0x1ff) | (0x1ff0000u & (data_0209d488 << 16));
     }
     if (!g_on) return;
     ntr::ppu_scanout_sub(g_sub);

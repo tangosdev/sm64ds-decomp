@@ -1840,6 +1840,39 @@ static int  __fastcall pch_beh(void *s, void *)
                          *(int *)(w + 0x4e5c) >> 12);
         }
         std::fprintf(stderr, "\n");
+        /* One shot at frame 120: is the hull actually IN video memory? The
+           layer census reads zero opaque; this says whether the map, the
+           tiles or the palette is the empty link. */
+        if (g_pch_hits[6] == 120) {
+            volatile unsigned short *map = (volatile unsigned short *)0x0600a000;
+            volatile unsigned char *chr = (volatile unsigned char *)0x06018000;
+            volatile unsigned short *plt = (volatile unsigned short *)0x05000000;
+            unsigned nzc = 0, nzm = 0, nzp = 0;
+            for (unsigned k = 0; k < 0x4000; k++) if (chr[k]) nzc++;
+            for (unsigned k = 0; k < 0x1000; k++) if (map[k]) nzm++;
+            for (unsigned k = 0; k < 0x100; k++) if (plt[k]) nzp++;
+            std::fprintf(stderr, "[hull] map[0..7]=%04x %04x %04x %04x %04x %04x %04x %04x  "
+                         "nonzero: map %u/4096 chr %u/16384 pltt %u/256\n",
+                         map[0], map[1], map[2], map[3], map[4], map[5], map[6], map[7],
+                         nzm, nzc, nzp);
+            unsigned lo = 0xffffffff, hi = 0;
+            for (unsigned k = 0; k < 0x8000; k++) {
+                if (((volatile unsigned char *)0x06018000)[k]) { if (k < lo) lo = k; hi = k; }
+            }
+            std::fprintf(stderr, "[hull] chr nonzero span 0x%x..0x%x (tiles %u..%u)\n",
+                         lo, hi, lo / 32, hi / 32);
+            /* which map ROWS carry cells whose tile has any nonzero byte */
+            for (unsigned row = 0; row < 32; row++) {
+                unsigned live = 0;
+                for (unsigned col = 0; col < 64; col++) {
+                    unsigned ent = (col < 32) ? row * 32 + col : 0x400 + row * 32 + (col - 32);
+                    unsigned t = map[ent] & 0x3ff;
+                    volatile unsigned char *tp = chr + t * 32;
+                    for (int k2 = 0; k2 < 32; k2++) if (tp[k2]) { live++; break; }
+                }
+                if (live) std::fprintf(stderr, "[hull] map row %u: %u/64 cells have inked tiles\n", row, live);
+            }
+        }
     }
     return func_ov006_020fee24(s);
 }
