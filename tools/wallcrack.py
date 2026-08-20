@@ -43,8 +43,12 @@ import tempfile
 REPO = pathlib.Path(__file__).resolve().parents[1]
 MW = REPO / "tools" / "mwccarm"
 LICENSE = MW / "license.dat"
-FLAGS = ("-O4,p -enum int -lang c99 -char signed -interworking -proc arm946e "
-         "-gccext,on -msgstyle gcc")
+# Import the build's flags; do NOT re-spell them. This was a hand-copied
+# duplicate of rombuild.CFLAGS that had drifted -- it was missing
+# `-Cpp_exceptions off`, so every //cpp draft was scored against a compile the
+# ROM build never performs (measured: 7012 bytes here vs the build's 6996).
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+from rombuild import CFLAGS as FLAGS                                # noqa: E402
 
 from capstone import Cs, CS_ARCH_ARM, CS_MODE_ARM
 from elftools.elf.elffile import ELFFile
@@ -62,10 +66,18 @@ def compile_c(src_text, lang_cpp=False, version="2004/b56"):
         cf.write_text(src_text, encoding="utf-8", errors="replace")
         out_o = pathlib.Path(td) / "out.o"
         env = dict(os.environ, LM_LICENSE_FILE=str(LICENSE))
-        r = subprocess.run([str(exe), *flags.split(), "-c", str(cf), "-o", str(out_o)],
-                           capture_output=True, text=True, env=env, timeout=90)
+        # -I<path> JOINED, not "-I", "<path>" -- mwccarm parses the split form as
+        # "-I with no argument" and aborts. Without it every draft that includes a
+        # repo header fails to compile and report() reads "Errors caused tool to
+        # abort", which looks like a broken draft rather than a missing flag.
+        inc = "-I" + str(REPO / "include")
+        r = subprocess.run([str(exe), *flags.split(), inc, "-c", str(cf), "-o", str(out_o)],
+                           capture_output=True, text=True, env=env, timeout=180,
+                           cwd=str(REPO))
         if r.returncode != 0 or not out_o.is_file():
-            return None, r.stderr.strip()[:500]
+            # -msgstyle gcc puts diagnostics on stdout; stderr alone is just the
+            # "Errors caused tool to abort" banner.
+            return None, ((r.stdout or "") + (r.stderr or "")).strip()[:500]
         return out_o.read_bytes(), None
 
 
