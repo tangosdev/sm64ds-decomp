@@ -574,6 +574,13 @@ def selftest_env(lvl, skip=None):
     # one changing the level-1 selftest BMP (524 probe lines, d2cec869 instead
     # of the baseline). It is dropped in both env builders for that reason.
     env.pop("SM64DS_TOUCH_PROBE", None)
+    # SM64DS_RNG_MENU_FRAMES (run mg5, lane RNGSEED) pins the minigame RNG's
+    # menu dwell and forces the seed, which moves data_0209d4b8 off the .bss
+    # zero every draw in this tree is measured from. It is DETERMINISTIC -- the
+    # same n is the same state -- so an inherited one could not make a row
+    # flaky, only wrong in a stable way, which is the harder kind to notice.
+    # Dropped in both env builders for the reason the four above it are.
+    env.pop("SM64DS_RNG_MENU_FRAMES", None)
     return env
 
 
@@ -647,7 +654,8 @@ def scene_env(scene, extra=None):
               "SM64DS_SCENE_TRACE", "SM64DS_SCENE_SLOT9",
               "SM64DS_SCENE_SUBLEVEL", "SM64DS_DUAL_SCREEN", "PORT_WATCHDOG",
               "SM64DS_SCENE_WINDOW", "SM64DS_CLICK_TEST", "SM64DS_PAD_TEST",
-              "SM64DS_TOUCH_PROBE", "SM64DS_MG_SCORE_TRACE"):
+              "SM64DS_TOUCH_PROBE", "SM64DS_MG_SCORE_TRACE",
+              "SM64DS_RNG_MENU_FRAMES"):
         env.pop(k, None)
     if extra:
         for kv in extra.split(","):

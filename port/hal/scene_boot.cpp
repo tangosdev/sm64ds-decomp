@@ -358,6 +358,10 @@ void _ZN5Scene9SetFadersEP15FaderBrightness(void *thiz);
 
 void port_scene_a2_seat(void);
 
+/* the minigame RNG seed, hal/scene_mg.cpp. Gates itself on the ROM's
+   IsMinigameActorID and on the run's shape; see its header there. */
+void port_scene_mg_seed_rng(int id, int windowed);
+
 /* ---- func_02019144's FIRST BEAT, the current scene's graphics block --------
  *
  * THE DEFECT THIS CLOSES, derived off the ROM's own sources and then measured.
@@ -2492,6 +2496,26 @@ extern "C" int port_scene_begin(void *hwnd, int zoom)
        in for is src/func_0201a054.c, the game's own IRQ init, which is in no
        slice. See port/irq2_map.txt section 2. */
     ntr::rt_irq_boot_state();
+
+    /* THE MINIGAME RNG SEED (run mg5, lane RNGSEED). Frozen randomness: the
+       launcher's F5 boots straight into SM64DS_SCENE=<id> and so never runs
+       dScMiniGm_c, the minigame MENU scene, whose per-frame tick
+       func_ov005_020c14a0 is the ONLY thing that advances data_0209d4b8 on the
+       way in. With no menu frames the state sits at the port's .bss zero and
+       every launch replays one sequence -- which is why "Loves Me...?" always
+       opened with 12 petals.
+
+       HERE BECAUSE THIS IS WHERE BOTH FACTS ARE KNOWN AND NOTHING HAS DRAWN
+       YET. `hwnd` is the windowed/headless answer port_scene_want_window
+       already computed (a real window or nullptr), the frame budget is read
+       just above, and the scene's own InitResources -- which is what calls the
+       petal layout -- is not reached until the spawn, well below. The seeder
+       gates itself on the ROM's IsMinigameActorID, so a non-minigame scene is
+       a no-op and the level path never reaches this function at all.
+
+       hal/scene_mg.cpp carries the derivation, the ROM addresses and the
+       gating rule in full. */
+    port_scene_mg_seed_rng(scene, hwnd != nullptr);
 
     /* The seat, minus the Stage. Everything in it -- the message archive, the
        registry and its gate, the five processing-list callbacks, the model and

@@ -21,7 +21,8 @@ MAGENTA = "#ff00ff"
 def selftest():
     env = dict(os.environ)
     for k in ("SM64DS_SKIP_CLASS", "SM64DS_DUAL_SCREEN", "SM64DS_CLICK_TEST",
-              "SM64DS_TOUCH_PROBE", "SM64DS_SCENE", "SM64DS_SCENE_BMP",
+              "SM64DS_TOUCH_PROBE", "SM64DS_RNG_MENU_FRAMES",
+              "SM64DS_SCENE", "SM64DS_SCENE_BMP",
               "SM64DS_SCENE_BMP_STACKED"):
         env.pop(k, None)
     env["SM64DS_LEVEL"] = "1"
