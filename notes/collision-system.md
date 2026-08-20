@@ -907,65 +907,85 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   `rawX` (+25), `c` just after `den31` (+15), `rad6` before `origin` (+10), `cy`
   before `cz` (+8), `-(radius + unk_0ec)` (+3).
 
-  ### The frame model, worked out
-
-  mwcc lays declared locals out as **one declaration-ordered chain that first-fits
-  around a pre-placed block of compiler TEMPORARIES.** The chain runs from the frame
-  base, is interrupted by the temp block, and resumes in its gaps.
-
-  **The temp block's base is set by how many chain members precede it.** Verified both
-  directions: merging two locals into one removes two chain members and moves the temp
-  block DOWN exactly 8 bytes; the fixes above added two and moved it UP 8.
-
-  **Chain-vs-temp membership is derived from USE, not from declaration form.** `den12`
-  (2 defs, 2 refs, live across a call) is a chain member; `hyp` (1 def, 2 refs, live
-  across a call) is a temp -- and block scope, three distinct function-scope names,
-  declaration-with-initialiser and last-in-block are all byte-identical. Unused dummy
-  locals are dropped, so the chain cannot be padded. **The one lever that moves a
-  variable between pools is reducing its DEFINITION COUNT:** `c` had three definitions
-  and was a temp; with one it became a chain member.
-
-  ### Identify a slot from the variable's FULL DEFINING SEQUENCE
-
-  This cost two wrong conclusions in one session, in OPPOSITE directions, and an
-  earlier version of this very section stated the second one as fact.
-
-  1. Pairing "the busiest slot in each stream" matches two *different* variables that
-     happen to share a reference count.
-  2. "The first `str` after the index load" also fails:
+  ### 125 -> 39: ask the compiler for the frame map
 
   ```
-  ldrh r1,[r1,#0xc]    ; tri->edgeNormal3Idx
-  ldr  r6,[r6]         ; tri->length        <-- intervenes
-  str  r6,[sp,#0x110]  ; tlen               <-- a naive detector stops here
-  mul  r6,r1,r0
-  add  r1,r2,r6
-  str  r1,[sp,#0x94]   ; en3
+  ratio 0.9781   mismatches 39/1778
   ```
 
-  **`en3` is ROM 0x94 / draft 0xc4. 0x110 is `tlen`.** The inherited note saying the
-  ROM's busiest slot 0x94 is en3 was RIGHT; a detector that stopped at the first store
-  reported 0x110, that was committed as a "correction" to it, and a 91-position
-  reachability sweep built on it was silently measuring `tlen` -- whose slot does not
-  move when you move `en3`'s declaration, so its null result was vacuous.
+  Bank `divergences` 120 -> 34. Every declared local now sits at the cartridge's own
+  frame offset except two, and those two are exactly swapped.
 
-  Follow the whole dataflow to the store. Never a count, never the nearest store.
+  **The method is the result.** Two sessions were spent identifying one variable's
+  stack slot by hand; it came out wrong twice, in opposite directions, once into a
+  commit. mwccarm emits DWARF under `-g`, the flag is byte-neutral, and
+  `DW_AT_location` gives every local's frame offset by name. And because the two
+  instruction streams are position-aligned at 1778, the ROM's slot referenced at
+  position *k* holds whatever ours holds there -- so naming our frame names the
+  CARTRIDGE'S frame. That turned "109 slot-only mismatches" into five named variables
+  in the wrong place. `scratchpad/perm/frame2.py` does it.
 
-  ### What is left: 125
+  Three gotchas, all of which bit: pyelftools needs
+  `get_dwarf_info(relocate_dwarf_sections=False)`; a `DW_AT_location` that is a loclist
+  comes back as an `int` and `bytes(<int>)` silently yields a zero buffer, dropping half
+  the variables; and **absence of a DWARF entry is not proof a variable left the frame
+  chain** -- ten "wins" in one sweep were byte-identical.
 
-  * **109 slot-only.** Correct now: `fn` 0x98, `depth` 0x9c, `triID` 0xa0, `cls` 0xa4,
-    `contactKind` 0xa8, `den12/23/31` 0xb8/bc/c0, `c` 0xc4. Wrong: `rawX` and `en3` are
-    exactly SWAPPED (0x94 <-> 0xc8, 24 refs), `rsc`/`rawY`/`rawZ` sit in the ROM's three
-    `hyp` slots, and the temp block plus the `z*`/`k*` tail are uniformly -8.
-    **One two-word fix would recover ~65 references at once**, gated entirely on getting
-    two `hyp`s into the chain. Declaring `en1;en2;en3;` before `rawX` DOES reach the
-    ROM's map at 1778 instructions but permutes 303 register names (strict 1652 ->
-    1376); moving `en3` alone costs +2 prologue instructions because it flips the
-    `sphere` parameter from `fp` to `sb`.
-  * **12 prologue scheduling positions** (indices 2-17): same instructions, one register
-    apart. Five prologue spellings are byte-identical.
-  * **4 commutative `add` operand orders** (indices 34, 57, 83, 1502): mwcc emits
-    `add rd, <later-defined>, <earlier-defined>` and the ROM the reverse.
+  ### The frame model, corrected
+
+  The frame is `[outgoing args][chain][spill pool][aggregates]`. The **chain** holds the
+  declared locals mwcc made memory-resident, in DECLARATION ORDER, contiguously -- so
+  its length sets where the spill pool begins, and one surplus chain word displaces
+  every pool slot. On this function that single 4-byte surplus was worth 44 references.
+
+  **A SECOND DEFINITION moves a local out of the chain into the pool.** That is what
+  `c = &sphere.pos;` does, and it is worth +24 here. The second definition has to be in
+  a different block -- on the next line it is a dead store and mwcc folds it. A local
+  assigned a compile-time constant is coalesced regardless, which is why `k0/k1/z108/…`
+  live in the pool.
+
+  **Callee-saved registers go to the six hottest locals, numbered r9 down to r4 in
+  declaration order, and the seventh loses and takes a chain slot.** Moving a hot local
+  earlier makes it win a register and pushes the loss onto whoever is now last; moving
+  the whole group earlier rotates every callee-saved register (strict 1652 -> 1308).
+
+  Those two rules look like they conflict when the cartridge wants the spilled local
+  EARLY in the frame. They do not: the chain is ordered only over locals that HAVE
+  slots, and the six register winners have none. So `en3` can be declared after en1/en2
+  and still be the 34th slot. That is the declaration order the draft now uses.
+
+  The previous version of this section said pool membership "is derived from USE" and
+  that the only lever was reducing definition count. Both were wrong, and the second is
+  backwards.
+
+  ### Two retractions
+
+  * "136 slot-only mismatches are NOT reachable from declaration order" was wrong -- and
+    wrong because the sweep behind it was measuring the wrong variable. Nearly all of
+    them are now fixed.
+  * "the one lever that moves a variable between pools is reducing its DEFINITION
+    COUNT" is backwards. A second definition moves a local OUT of the chain.
+
+  ### What is left: 39
+
+  * **19 -- one slot swap.** The ROM has `c` in the chain at 0xc4 and `rsc` in the pool
+    at 0x104; we have the reverse. The second-definition lever fires on `c` and not on
+    `rsc`: duplicate assignment, `= rsc`, `|= k0`, `+= k0`, `-= k0`, `^= k0` at every
+    statement site in the function -- 1,810 compiles -- and none shortens the chain.
+    Probably because `&sphere.pos` is one instruction to rematerialise and
+    `radius << 4` is two -- a guess, not a measurement.
+  * **12 -- prologue scheduling**, indices 2-17: same 17 instructions, same registers,
+    different order.
+  * **4 -- commutative `add` operand order** at 34, 57, 83, 1502. The ROM is consistent
+    when read by role (`add Rd, <difference>, <rad6 + 0x40>`), but all seven subsets of
+    the source flip are byte-identical: mwcc normalises the operands.
+  * **1 -- index 1046 is a literal-pool word**, not an instruction.
+
+  Dead this session, measured: naming the sqrt results at function scope (every
+  position), block scope, an out-parameter helper, the edge test as a `static inline`
+  function, `register`, `volatile` on the declaration (works, +3 instructions), `rsc` as
+  a CSE (right structure -- pool lands on 0xd8 -- but `sphere` moves fp -> sb and the
+  frame grows to 0x1bc), and seven pragmas.
 
 
   ### A CV-QUALIFIER CHANGE is what re-issues a CSE'd load. Not volatile.

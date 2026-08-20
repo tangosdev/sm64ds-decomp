@@ -1,14 +1,12 @@
 //cpp
-// NONMATCHING: size 0x1bc8.  mismatches 71/1778, ratio 0.9601.
+// NONMATCHING: size 0x1bc8.  mismatches 39/1778, ratio 0.9781.
 //              1778 instructions, a 0x1b4 frame, every call-gap length AND the
-//              whole-function instruction multiset, all exactly the ROM's -- and
-//              now EVERY DECLARED LOCAL IS AT THE CARTRIDGE'S OWN FRAME OFFSET.
-//              (The one multiset entry left is an `andeq` pair: literal-pool DATA
-//              that capstone renders as an instruction.)  All 71 are scheduling,
-//              and 51 of them are a single variable, `rsc`.
+//              whole-function instruction multiset, all exactly the ROM's, and
+//              every stack slot but two.  (One of the 39 is not an instruction at
+//              all: a literal-pool word capstone renders as `andeq`.)
 //
-// 2026-08-20.  1493 -> 125 -> 71 mismatching words.  Every change is a SPELLING;
-// none changes what the function computes.  The step from 125 came from asking
+// 2026-08-20.  1493 -> 125 -> 39 mismatching words.  Every change is a SPELLING;
+// none changes what the function computes.  The whole step came from asking
 // mwccarm for its own frame map instead of inferring it -- see the DWARF section.
 //
 // ==================== HOW TO MEASURE, AND HOW IT MISLEADS ===================
@@ -159,25 +157,38 @@
 // follows it in the frame also follows it in the block.  That is the order the
 // draft now uses, and it is why `fn` onwards sits below `en3`.
 //
-// ======================== WHAT IS LEFT: 71 ==================================
+// ======================== WHAT IS LEFT: 39 ==================================
 //
-// Every declared local is now at the cartridge's own offset (frame2.py: none
-// wrong).  What remains:
+//    19  ONE SLOT SWAP.  `c` and `rsc` are exactly exchanged: the cartridge has c
+//        in the chain at 0xc4 and rsc in the spill pool at 0x104, and we have rsc
+//        at 0xc4 and c at 0x104.  Everything else in the frame is exact.
 //
-//    51  slot-only, and ALL of them are one variable.  `rsc` is our last chain
-//        member at 0xd4; the ROM keeps that value at 0x104, inside the temp pool,
-//        so it is NOT a declared local there -- it is the CSE of an expression.
-//        Our 0xd4 pushes the whole temp pool up 4 bytes, which is the other 44.
-//        Spelling it inline puts the pool at the ROM's 0xd8 and rsc in the pool,
-//        but `sphere` then moves fp -> sb, the frame grows to 0x1bc and the prism
-//        reject chain reshuffles.  Dead so far: `register`, block scope, a second
-//        assignment, volatile/const casts on the radius read, an accessor inline,
-//        and every declaration position (it lands at 0x94 or 0xd4, nothing else).
+//        This is a consequence of the lever below, and it is the whole remaining
+//        slot defect.  A SECOND DEFINITION moves a local out of the declaration
+//        chain and into the spill pool -- that is what `c = &sphere.pos;` does,
+//        and it is worth +24 because the chain then ends at 0xd4 instead of 0xd8
+//        and the whole spill pool lands on the ROM's addresses.  But it moves the
+//        WRONG variable.  Aimed at rsc the lever does not fire: a duplicate
+//        assignment, `rsc = rsc`, and `rsc |= k0` / `+= k0` / `-= k0` / `^= k0`
+//        were tried at every statement site in the function -- 1,810 compiles --
+//        and none of them shortens the chain.  The difference is probably that
+//        `&sphere.pos` is one instruction to rematerialise and `radius << 4` is
+//        two, but that is a guess, not a measurement.
+//
+//        WARNING: a variable can lose its DW_AT_location entry and keep its slot.
+//        Ten placements looked like wins on the DWARF test and were byte-identical.
+//        Judge pool membership by `strict`, or by where the chain ends -- never by
+//        the absence of a DWARF entry.
+//
 //    12  prologue scheduling, indices 2-17: same 17 instructions, same registers,
-//        different order.  The one real dependence difference is that the ROM
-//        reloads `c` from its home before reading `c->x` where we read through the
-//        register `add r0,fp,#0x3c` just produced.
-//     3  commutative `add` operand order at indices 34, 57, 83.
+//        different order.  Statement order (f before c, all six raw* orders) and
+//        further re-binds are byte-neutral or worse.
+//     4  commutative `add` operand order at indices 34, 57, 83, 1502.  Read by
+//        ROLE the ROM is consistent -- `add Rd, <difference>, <rad6 + 0x40>` at all
+//        three bounds sites -- but writing the source in that order changes
+//        nothing: all seven subsets of the hi* flips are byte-identical, so mwcc
+//        normalises the operands and the source cannot reach them.
+//     1  index 1046 is a literal-pool word, not an instruction.
 //
 // ==================== MEASURED AND DEAD -- DO NOT RE-DERIVE =================
 //   * A PRAGMA.  `#pragma opt_common_subs off` costs 140 INSTRUCTIONS here, even
@@ -488,10 +499,10 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 den23;
     s32 den31;
     const volatile Vector3 *c;
+    s32 rsc;
     s32 rawX;
     s32 rawY;
     s32 rawZ;
-    s32 rsc;
     Vector3 sn;
     /* These three MUST be a type with a user-declared destructor.  mwccarm
        scalarizes a plain `s32[3]` local into loose stack slots; the ROM keeps all
@@ -509,6 +520,12 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
         const Vector3 *origin = &f->origin;
 
         rawX = c->x >> 6;
+        /* A no-op re-bind, and load-bearing: the cartridge RELOADS `c` from
+           its home here rather than reusing the pointer the `add` above just
+           produced, and re-assigning it to the value it already holds is what
+           re-issues that load.  Worth +24.  Reading sphere.pos directly, or
+           through `&sphere.pos`, changes the instruction count instead. */
+        c = &sphere.pos;
         rawY = c->y >> 6;
         rawZ = c->z >> 6;
 
