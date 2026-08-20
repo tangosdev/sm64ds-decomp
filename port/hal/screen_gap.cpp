@@ -44,6 +44,8 @@ unsigned g_gen;              /* steps whenever the layout's shape changes */
 ntr::StackLayout g_lay;
 
 int obj_shift_ds(void);
+int obj_layer_shift_ds(void);
+int headroom_ds(void);
 
 int read_raw(void)
 {
@@ -114,10 +116,21 @@ int read_raw(void)
  */
 int headroom_ds(void)
 {
+    /* ON BY DEFAULT NOW, and the history is worth one paragraph because this
+       flag has flipped twice. It shipped on (the strip showed the world's top
+       G_rom rows), then was turned off on a measurement that found nothing
+       above the top screen to draw. That measurement was taken while the
+       once-per-frame BG-offset publish did not exist, so every scrolling
+       layer it sampled was FROZEN at its init offset; with the publish seated
+       (hal/sub_screen.cpp) the rows above the screen carry real content. The
+       strip is also what lets the bandless gapless picture keep the world's
+       top rows on screen instead of trading them for the seam -- the owner's
+       2026-08-20 spec. SM64DS_GAPLESS_HEADROOM=0 turns it off for an A/B on
+       one binary. */
     static int on = -1;
     if (on < 0) {
         const char *s = std::getenv("SM64DS_GAPLESS_HEADROOM");
-        on = s && *s && *s != '0';
+        on = !(s && *s && *s == '0');
     }
     if (!on || !hal_gapless_engaged()) return 0;
     /* AND NEVER WITH THE OBJECT SHIFT ON. Both are opt-in and both are wrong,
@@ -127,8 +140,14 @@ int headroom_ds(void)
        shift that row is a different row, so a capture of the two together would
        carry one feature's error smeared through the other's and no way to read
        which was which. A measurement kept for its numbers has to stay
-       separable. */
-    if (obj_shift_ds()) return 0;
+       separable.
+
+       THE REFUSAL NAMES THE LAYER ARM DIRECTLY rather than obj_shift_ds:
+       obj_shift_ds reads per_entry_ds, and per_entry_ds now stands down for
+       THIS function, so asking the combined question from here would be a
+       cycle. The layer arm is the only picture that cannot share a frame
+       with the strip, and it is asked for by name. */
+    if (obj_layer_shift_ds()) return 0;
     return g_gapless_head_ds;
 }
 
@@ -261,6 +280,15 @@ int per_entry_ds(void)
     }
     if (!on || !hal_gapless_engaged()) return 0;
     if (obj_layer_shift_ds()) return 0;
+    /* AND IT STANDS DOWN FOR THE HEADROOM, which is the default regime now.
+       The correction exists to serve the banded picture: it pushes routed
+       sprites back to ROM rows so the band between the halves can carry what
+       runs off the top screen's bottom edge. With the strip on there is no
+       band -- the halves are edge to edge, the G=0 mapping is the consistent
+       one for every sprite, and the world's top rows live in the strip. A
+       correction on top of that would displace the routed set 32 rows down a
+       picture that already shows every world row once. */
+    if (headroom_ds()) return 0;
     return g_gapless_head_ds;
 }
 
@@ -285,6 +313,8 @@ int hal_gapless_per_entry_ds(void) { return per_entry_ds(); }
 
 int hal_screen_gap_raw(void) { return read_raw(); }
 
+int hal_gapless_visual(void);   /* defined beside the latch below */
+
 const ntr::StackLayout *hal_screen_layout(void)
 {
     const int raw = read_raw();
@@ -293,7 +323,12 @@ const ntr::StackLayout *hal_screen_layout(void)
        still runs at a2 + 0xc0 + G and objects still vanish at the seam. That is
        precisely what the setting promises -- "remove the gap" gives back the
        picture the port had before this feature, jump and all. */
-    const int want_gap = host_setting_minigame_gap() ? raw : 0;
+    int want_gap = host_setting_minigame_gap() ? raw : 0;
+    /* A VISUAL row drops the band the same way MinigameGap false does, and by
+       the same mechanism: layout only. The word is untouched, the game still
+       submits at a2 + 0xc0 + G, and nothing crosses in these games, so no
+       object is ever in the rows that stopped being displayed. */
+    if (hal_gapless_visual()) want_gap = 0;
     /* THE SHIFT, AND THE BAND IT NEEDS. See obj_shift_ds above. With the mode
        engaged the game's own G reads zero, so `want_gap` is zero and there is
        no band; the shifted objects need one, because the rows they are pushed
@@ -554,16 +589,30 @@ namespace {
 
 struct GaplessScene {
     int scene_id;
+    /* 1 = FULL: zero the game's G, the halves go edge to edge and the strip
+       above the top screen keeps the world's top rows -- objects genuinely
+       cross the seam. 0 = VISUAL: the game's G is NOT touched; the picture
+       just loses the band, which is all "gapless" can mean for a game where
+       nothing travels between the screens. */
+    int full;
     const char *what;
 };
 
-/* Proven gapless. Nothing goes in here on an argument; it goes in here on a
-   measured crossing. */
+/* The rows and their modes are the owner's 2026-08-20 spec: full gapless for
+   the four games where things cross the seam, visual-only for the two where
+   nothing does. Each row still owes the audit the table's note above
+   describes; the captures for tonight's rows are in runs/mg5/out/bandless/. */
 const GaplessScene kGaplessScenes[] = {
-    {368, "dScMgPachinko_c, Bob-omb Squad"},
+    {368, 1, "dScMgPachinko_c, Bob-omb Squad"},
+    {374, 1, "dScMgCurling_c, Shuffle Shell"},
+    {376, 1, "dScMgSmartball_c, Slots Shot"},
+    {378, 1, "MgCoincentration, Coincentration"},
+    {366, 0, "dScMgLuigi_c, Wanted!"},
+    {390, 0, "dScMgFlower_c, Loves Me...?"},
 };
 
 int g_gapless_on;        /* 1 once the write has engaged for the scene running */
+int g_gapless_visual;    /* 1 for a VISUAL row: band gone, simulation untouched */
 int g_gapless_scene = -2;
 
 const GaplessScene *gapless_row(int scene)
@@ -583,6 +632,7 @@ void hal_gapless_minigames_latch(void)
 
     /* A scene must never inherit the last one's answer. */
     g_gapless_on = 0;
+    g_gapless_visual = 0;
     g_gapless_scene = scene;
     /* AND THE HEADROOM IS DROPPED WITH IT, for the reason the two lines above
        exist: a scene must never inherit the last one's answer, and a stale
@@ -603,6 +653,21 @@ void hal_gapless_minigames_latch(void)
                      "GaplessMinigames is on, but this minigame is not one the "
                      "port has proven gapless, so its screen gap is left "
                      "simulated\n", scene);
+        return;
+    }
+
+    if (!row->full) {
+        /* THE VISUAL HALF OF THE TABLE. The game's G word is not touched:
+           nothing in this minigame travels between the screens, so zeroing G
+           would change gameplay math for no visible gain, and the owner's
+           spec for these two is explicit -- no gameplay changes. All
+           "gapless" means here is the picture: the layout reads the flag
+           below and builds no band, so the halves sit edge to edge. */
+        g_gapless_visual = 1;
+        std::fprintf(stderr, "[gapless] scene %d: VISUAL for %s -- the band "
+                     "leaves the PICTURE and the halves sit edge to edge. The "
+                     "simulation is untouched: G stays %d, exactly the ROM.\n",
+                     scene, row->what, read_raw());
         return;
     }
 
@@ -633,19 +698,21 @@ void hal_gapless_minigames_latch(void)
     std::fprintf(stderr, "[gapless] scene %d: ENGAGED for %s -- G %d -> 0. The "
                  "screen gap is now gone from the SIMULATION: objects cross the "
                  "seam directly and arrive %d rows sooner than a DS delivers "
-                 "them. THIS IS NOT THE ROM'S BEHAVIOUR. The PICTURE keeps the "
-                 "%d rows: %s\n", scene, row->what, was, was, was,
-                 /* WHICH ARM IS ACTUALLY RUNNING, and this used to be read off
-                    obj_shift_ds(), which is non-zero for BOTH arms. Every
-                    engaged run therefore printed the layer arm's "MEASURED
-                    WRONG" sentence while the per-entry arm was the one running,
-                    and any capture or crash report a player sent in carried it.
-                    The two are told apart by asking each for itself. */
-                 per_entry_ds()
+                 "them. THIS IS NOT THE ROM'S BEHAVIOUR. The PICTURE: %s\n",
+                 scene, row->what, was, was,
+                 /* WHICH ARM IS ACTUALLY RUNNING, asked of each for itself --
+                    the default is now the bandless regime (headroom strip, no
+                    correction), and the two measured-wrong arms stay behind
+                    their switches. */
+                 headroom_ds()
+                     ? "the halves sit edge to edge with no band, and the "
+                       "strip above the top screen keeps the world's top rows "
+                       "on screen"
+                     : per_entry_ds()
                      ? "the framework's routed sprites are corrected at their "
-                       "own submissions, so they sit on the rows the ROM draws "
-                       "them on, and the rows they run off the top screen's "
-                       "bottom edge into are the band between the halves"
+                       "own submissions and the band between the halves "
+                       "carries what runs off the top screen's bottom edge "
+                       "(SM64DS_GAPLESS_HEADROOM=0 arm)"
                      : obj_layer_shift_ds()
                      ? "the OBJ display shift is ON, which is opt-in and "
                        "MEASURED WRONG: it moves the whole top engine OBJ "
@@ -654,6 +721,14 @@ void hal_gapless_minigames_latch(void)
                      : "the halves are edge to edge, and the sprites the "
                        "framework's OAM router placed sit G rows above the "
                        "artwork they were drawn against");
+}
+
+/* THE VISUAL FLAG, scene-checked the way hal_gapless_engaged is and for the
+   same reason: it must stop answering the moment the minigame that set it is
+   gone. Only the layout reads it. */
+int hal_gapless_visual(void)
+{
+    return g_gapless_visual && g_gapless_scene == hal_gap_scene_id();
 }
 
 /* THE SCENE IS PART OF THE ANSWER. The flag alone would keep reading 1 after
