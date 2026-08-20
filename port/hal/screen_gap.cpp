@@ -116,21 +116,19 @@ int read_raw(void)
  */
 int headroom_ds(void)
 {
-    /* ON BY DEFAULT NOW, and the history is worth one paragraph because this
-       flag has flipped twice. It shipped on (the strip showed the world's top
-       G_rom rows), then was turned off on a measurement that found nothing
-       above the top screen to draw. That measurement was taken while the
-       once-per-frame BG-offset publish did not exist, so every scrolling
-       layer it sampled was FROZEN at its init offset; with the publish seated
-       (hal/sub_screen.cpp) the rows above the screen carry real content. The
-       strip is also what lets the bandless gapless picture keep the world's
-       top rows on screen instead of trading them for the seam -- the owner's
-       2026-08-20 spec. SM64DS_GAPLESS_HEADROOM=0 turns it off for an A/B on
-       one binary. */
+    /* OPT-IN AGAIN, third flip, and this one is the owner's morning-after
+       verdict on the played build rather than a measurement: the strip's
+       backdrop smears the top screen's first image row downward (head_paint's
+       fill), which on Bob-omb Squad is the airship hull, and every engaged
+       game wore some version of that streak. Gapless now means the two
+       screens edge to edge and nothing else -- window 512x768 -- and the
+       world's top G rows go undisplayed, exactly as they do on a DS whose
+       player is not inside the hinge. SM64DS_GAPLESS_HEADROOM=1 brings the
+       strip back for measurement. */
     static int on = -1;
     if (on < 0) {
         const char *s = std::getenv("SM64DS_GAPLESS_HEADROOM");
-        on = !(s && *s && *s == '0');
+        on = s && *s && *s != '0';
     }
     if (!on || !hal_gapless_engaged()) return 0;
     /* AND NEVER WITH THE OBJECT SHIFT ON. Both are opt-in and both are wrong,
@@ -273,10 +271,15 @@ int obj_layer_shift_ds(void)
  * engagement test rather than caching an answer of its own. */
 int per_entry_ds(void)
 {
+    /* OPT-IN NOW, like the other two arms. The correction and the band it
+       needs were one regime; the owner's verdict retired that regime for the
+       plain edge-to-edge picture, so the default carries no correction and
+       no band. SM64DS_GAPLESS_PER_ENTRY=1 brings the banded arm back for
+       measurement on one binary. */
     static int on = -1;
     if (on < 0) {
         const char *s = std::getenv("SM64DS_GAPLESS_PER_ENTRY");
-        on = !(s && *s && *s == '0');
+        on = s && *s && *s == '1';
     }
     if (!on || !hal_gapless_engaged()) return 0;
     if (obj_layer_shift_ds()) return 0;
@@ -605,7 +608,15 @@ struct GaplessScene {
 const GaplessScene kGaplessScenes[] = {
     {368, 1, "dScMgPachinko_c, Bob-omb Squad"},
     {374, 1, "dScMgCurling_c, Shuffle Shell"},
-    {376, 1, "dScMgSmartball_c, Slots Shot"},
+    /* 376 is VISUAL, and it was FULL for one evening. Its pegboard art is
+       ANCHORED top-screen art: the ball (routed, follows G) and the board
+       (BG, does not) disagree the moment G reads zero, and the owner's play
+       report named it exactly -- "the pegs hitbox is higher than the pegs
+       are drawn". A game whose playfield art registers against physics
+       cannot compress its world; the honest gapless for it is the band gone
+       and the ball blinking across the seam the way the DS's own hinge hides
+       it. */
+    {376, 0, "dScMgSmartball_c, Slots Shot"},
     {378, 1, "MgCoincentration, Coincentration"},
     {366, 0, "dScMgLuigi_c, Wanted!"},
     {390, 0, "dScMgFlower_c, Loves Me...?"},
@@ -882,10 +893,32 @@ struct RoutedCall {
 int routed_adjust(int py)
 {
     if (g_route_depth <= 0 || g_route_depth > ROUTE_MAX) return 0;
-    const int adj = per_entry_ds();
-    if (!adj) return 0;
     if (py != g_route_a2[g_route_depth - 1] + 0xc0 + read_raw()) return 0;
-    return adj;
+    /* The banded measurement arm keeps its constant correction. */
+    const int adj = per_entry_ds();
+    if (adj) return adj;
+    /* THE RAMP, and it is the bandless default's whole correction policy.
+       Two truths collide in a bandless picture: top-screen art does not move
+       when G reads zero, so a routed sprite needs +G back to register with
+       it (Coincentration's Wario, the parachute drops against the ROM's own
+       spawn heights); and a sprite CROSSING the seam needs no correction at
+       all, because the G=0 row is the one that lines up with its bottom
+       screen copy. A constant does one and breaks the other -- corrected
+       crossers vanish into rows 192..192+G that no screen shows.
+
+       So the correction fades over the 2G rows above the seam: full G high
+       on the screen, zero at row 192. The drawn row py + adj(py) stays
+       strictly increasing (slope of the ramp is -1/2), so a falling object
+       never pops -- it covers the squeeze zone at 1.5x apparent speed and
+       meets its bottom-screen copy exactly at the seam. */
+    if (!hal_gapless_engaged()) return 0;
+    if (obj_layer_shift_ds()) return 0;
+    const int g = g_gapless_head_ds;
+    if (g <= 0) return 0;
+    const int zone = 2 * g;
+    if (py <= 0xc0 - zone) return g;
+    if (py >= 0xc0) return 0;
+    return g * (0xc0 - py) / zone;
 }
 
 /* IS THE MAIN SHADOW THE BLOCK ENGINE A WILL BE SHOWING? OAM::Load's own test,
