@@ -810,6 +810,117 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
 
   Two of the findings generalise past this function.
 
+  ### Later the same day: 978 -> 253, and the count was lying to us
+
+  ```
+  after round 1   ratio 0.8121   equal 1444   mismatches 978/1778
+  end of day      ratio 0.8341   equal 1483   mismatches 253/1778
+  ```
+
+  Bank `divergences` 404 -> 213. Instruction count 1778, frame 0x1b4, and **every
+  call-gap length** now exactly the ROM's. The whole-function instruction multiset
+  is **surplus 3 / deficit 3**, one pair of which is literal-pool data that capstone
+  renders as `andeq` -- so two real instructions are wrong function-wide and
+  everything else is register and stack-slot allocation.
+
+  ### The sqrt region was the SUM OPERAND ORDER
+
+  mwccarm evaluates a two-term 64-bit sum RIGHT TO LEFT: the `smull` takes the right
+  addend and the `smlal` accumulates the left. The ROM emits `d^2` then `faceDot^2`,
+  so the source has to read `fh*fh + dh*dh`. Written the other way round, hoisting
+  the two `>> 4` shifts makes `axisDot` spill instead of staying in a callee-saved
+  register -- which is exactly the failure that got the hoist rejected **four**
+  separate times and recorded here as a re-anchoring artifact. With the terms
+  swapped, all six sqrt gaps (7/8, 11/12, 15/16) become the ROM's exact code.
+  Control: swap them back, -95 anchored.
+
+  Two related negatives from the same 2,922-candidate sweep: the ROM's `mov r2, r3`
+  in the 64-bit store is EMERGENT once the shifts hoist, not a source construct (ten
+  of twelve store spellings are byte-identical -- leave `SqrtRaw` alone); and the
+  three per-block `hyp` copies really are three separate block-scope locals.
+
+  ### `cand == 1778` WAS A COINCIDENCE, NOT AN INVARIANT
+
+  This is the methodological lesson of the day. ROM gap 7 is 29 words and gap 8 is 26
+  -- 55 per site -- where the draft had 27+27 = 54. **The sqrt region was three words
+  short and gap 28 was three words long, and the two cancelled.** Treating the total
+  as a correctness invariant nearly rejected the largest fix of the session.
+
+  **Check per-gap lengths (`shapegap.py`), never the total.** Once the sqrt region was
+  right, gap 28's three surplus words were the only gap-length mismatch left, and
+  three surplus words displace everything after them: removing them took 978 -> 302
+  in one step.
+
+  ### The slab bounds are not locals
+
+  The ROM materialises the upper bound LAZILY, between the first and second compare:
+
+  ```
+  add r1,r6,r3 / rsb r2,r1,#0 / cmp r0,r2 / blt reject / sub r1,r6,r3 / cmp r0,r1
+  ```
+
+  A named local cannot produce that split -- it forces both to be emitted together.
+  Lazy split materialisation is the signature of a CSE'd repeated expression, so both
+  bounds are now written out in full at all six comparison sites. The two tests
+  recorded here previously (move `t`/`u` later; give them their own `lo`/`hi` locals)
+  both used named locals and so could not have found it. Came from the independent
+  port transcription and was ROM-verified before use.
+
+  ### The axis dot: operand order AND term order
+
+  `FX12(unk_28, (v).x) + FX12(unk_30, (v).z) + FX12(unk_2c, (v).y)` -- axis in Rm, and
+  the terms x, z, y. Worth 302 -> 253 and took gap 28's norm-miss from 135 to 53. All
+  144 operand x term x association orderings were enumerated. **This axis had been
+  measured twice the same day at +1 and +0**; it only pays once gap 28's length is
+  right, because until then the whole tail was displaced and the gate could not see it.
+
+  ### A fourth invented construct retired
+
+  The `s32 *tpv` pointer alias -- worth +42 and then +36 in earlier sessions -- is
+  dead and byte-neutral to delete. The ROM has ZERO `add r,sp,#0x18c`; it reads the
+  three prism-origin slots directly. With `Vtx3`, the volatile cross-product array and
+  four of six no-op re-binds already gone, **the file contains no untrue construct.**
+
+  ### Where the remaining 253 are, and what is closed
+
+  ```
+  exact 1490 | slot-number-only 136 | register-name-only 32 | both 3 | shape/order 83
+  ```
+
+  136 of 253 are positions where the instruction is RIGHT and only the stack offset
+  differs. The frame is a PERMUTATION of the ROM's at the same 0x1b4 size: 99 distinct
+  slots each side, 80 of 103 with identical traffic.
+
+  **mwccarm has two slot pools and declaration order controls only one.** Swapping
+  each adjacent pair of declarations and diffing the slot traffic gives the
+  declaration->slot map in 91 compiles; 61 of the 91 are byte-neutral, and the 30 that
+  are not all move low-region slots or the trailing aggregates. The hot loop-local
+  spills are not in that pool: `en3` sits at 0x104 in **all 91** declaration positions
+  and never reaches the ROM's 0x110. Five live-range reshapings -- writing it later,
+  splitting it via a copy, scoping it to the prism loop, scoping the whole
+  en1/en2/en3 group, hoisting `f->normals` -- are **all byte-identical**.
+
+  So the declaration axis is closed four independent ways and the live-range axis is
+  closed five. There is currently **no demonstrated mechanism** for moving these slots.
+
+  ### Identify a variable's slot STRUCTURALLY, never by traffic count
+
+  Worth its own heading because it produced a confident wrong conclusion that reached
+  a commit message. en3 was paired across the two streams by "the busiest slot in
+  each" (ROM 0x94 with 22 references, ours 0xc4 with 22) plus an older note in this
+  repo asserting the ROM's 0x94 is en3. Both wrong. Pin it to the instruction sequence
+  that COMPUTES the value -- the store following the `tri->edgeNormal3Idx` load at
+  tri+0xc -- and it is 0x104 / 0x110. Two different variables happened to share a
+  reference count. The conclusion survived re-testing; the evidence did not.
+
+  ### The one lead still standing
+
+  Our `en3` sits 0xc BELOW the ROM's, and a whole run of other slots shows the same
+  -0xc. That means the ROM has **three more words allocated ahead of it** in the
+  allocator's order -- it is spilling something we keep in a register, or it has a
+  local we do not. Finding what would be the next real step. Everything else about
+  the slot permutation is measured and inert.
+
   ### A CV-QUALIFIER CHANGE is what re-issues a CSE'd load. Not volatile.
 
   This function's dominant defect has always been that mwccarm shares a load the ROM
