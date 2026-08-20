@@ -1,7 +1,7 @@
 //cpp
-// NONMATCHING: size 0x1bc4 vs 0x1bc8 (1 insn SHORT), align equal=1304 ratio=0.734
+// NONMATCHING: size 0x1bc4 vs 0x1bc8 (1 insn SHORT), align equal=1335 ratio=0.751
 //
-// 2026-08-20, second session (equal 1047 -> 1304).  Every gain below is a
+// 2026-08-20, second session (equal 1047 -> 1335).  Every gain below is a
 // SPELLING: each one re-reads a value the candidate already had in a register,
 // because the ROM does not share it.  None changes what the function computes.
 //
@@ -19,6 +19,12 @@
 //        Exactly +1 each, independent and additive (all 64 subsets swept).
 //   +42  the prism origin read through `tpv` at five of six vertex-tail sites.
 //        This one came from the permuter and is documented at its site.
+//   +31  TWO declaration moves -- `rawX/rawY/rawZ` and `den12/den23/den31`.
+//        Found by a greedy sweep over every declaration line x every position
+//        (3,135 compiles per round, converged in three rounds).  The recorded
+//        verdict this overturned was "377 compiles, ZERO improving moves",
+//        measured before the four edits above changed the allocator's input.
+//        Fifth time the re-test rule has paid on this function.
 //
 // HOW THE GAINS WERE CHECKED.  `equal` comes out of a difflib alignment, which
 // can re-anchor: deleting instructions can raise it without anything getting
@@ -29,17 +35,21 @@
 //     session start   equal 1047   anchored 496/1778 (0.2790)   cand 1734
 //     after +153      equal 1200   anchored 558/1778 (0.3138)   cand 1745
 //     after +56/+6    equal 1262   anchored 574/1778 (0.3228)   cand 1752
-//     now             equal 1304   anchored 629/1778 (0.3538)   cand 1777
+//     after +42       equal 1304   anchored 629/1778 (0.3538)   cand 1777
+//     now             equal 1335   anchored 656/1778 (0.3690)   cand 1777
 //
 // Both metrics move together at every step.  The tool is scratchpad
 // `anchored.py`; it is worth rebuilding before believing any future gain.
 //
-// WHAT IS LEFT.  The structure is essentially done: 27 instructions of drift
-// summed over all 35 call-gap regions, one instruction short overall, and the
-// load deficit that drove everything above is down to 2.  The remaining 575
-// `replace`s are allocation -- and 358 of them are one thing, THE STACK FRAME:
-// `str r0,[sp,#0xc4]` against `str r0,[sp,#0x104]`, the same instruction on a
-// different slot.  Declaration order is the only lever known to move that.
+// WHAT IS LEFT.  The structure is done: 27 instructions of drift summed over
+// all 35 call-gap regions, one instruction short overall, and the load deficit
+// that drove everything above is down to 2.  What remains is allocation, and
+// 340 of the 544 `replace`s are one thing, THE STACK FRAME: `str r0,[sp,#0xc4]`
+// against `str r0,[sp,#0x104]`, the same instruction on a different slot.
+// Declaration order is the lever for that and it is now EXHAUSTED -- the greedy
+// sweep converged, and re-running the other three axes on the new structure
+// (186 compiles: 64 tpv subsets, 64 polarity subsets, 58 re-read sites) moved
+// nothing.  The next lever on the frame is not a source reorder.
 //
 // Swept and dead ON THIS STRUCTURE (re-run them after any structural change --
 // that rule has now paid four times):
@@ -244,11 +254,11 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     u16 *leaf;
     KCL_Tri *tri;
     s32 *vtx;
+    s32 rawX, rawY, rawZ;
     s16 triID;
     s32 cls;
     s32 contactKind;
     const Vector3 *c;
-    s32 rawX, rawY, rawZ;
     s32 d1h, d2h, d3h;
     s32 nn, nnh;
     s32 rsc;
@@ -276,8 +286,8 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     volatile s16 cr[3];
     s32 nrm[3];
     s32 depth;
-    s32 den12, den23, den31;
     s16 *fn;
+    s32 den12, den23, den31;
     s16 *en1, *en2, *en3;
     s32 *tpv;
     Vector3 sn;

@@ -538,8 +538,8 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   it shares the octree walk verbatim with the already-matched `dBgCh_Gnd` twin, so it
   is the calibration run for 3b. Its recorded floor is a `this` register allocation
   (r7 vs r8) at 2004/b56.
-- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 474 divergences /
-  1304 equal / ratio 0.7336, and 1,777 instructions against the ROM's 1,778** - one
+- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 443 divergences /
+  1335 equal / ratio 0.7511, and 1,777 instructions against the ROM's 1,778** - one
   short. It began the previous session at 1213 / 565 / 0.3203.
 
   Progression: 565 -> 601 (block layout) -> 816 (declaration order) -> 825 (edge
@@ -560,6 +560,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   | **+56** | the sphere centre re-bound per *component* in the slab block, **together with** reading `cr` through a `(volatile s16 *)` view. Separately these are **-27** and **-64**; only the pair pays |
   | **+6** | six branch-polarity flips in the Voronoi dispatch - `if (MUL10(nn, dotA) > dotB) goto edgeN; goto vXX;`. The ROM branches *into* the vertex block. Exactly +1 each, additive, all 64 subsets swept |
   | **+42** | the prism origin read through a pointer alias `tpv` at five of the six vertex-tail sites. Found by the permuter, then swept over all 64 subsets |
+  | **+31** | two declaration moves, `rawX/rawY/rawZ` and `den12/den23/den31`. Not the same mechanism - this one is the frame. Found by a greedy sweep over **every declaration line x every position**, 3,135 compiles a round, converged in three |
 
   After these, the structure is essentially finished: **27 instructions of drift
   summed over all 35 call-gap regions** (was 39, and before that a single region was
@@ -582,7 +583,8 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   | session start | 1047 | 496 / 1778 (0.2790) | 1734 |
   | after +153 | 1200 | 558 / 1778 (0.3138) | 1745 |
   | after +56 / +6 | 1262 | 574 / 1778 (0.3228) | 1752 |
-  | now | **1304** | **629 / 1778 (0.3538)** | **1777** |
+  | after +42 | 1304 | 629 / 1778 (0.3538) | 1777 |
+  | now | **1335** | **656 / 1778 (0.3690)** | **1777** |
 
   Both metrics move together at every step. **Rebuild the anchored check before
   believing any future gain on this function.**
@@ -631,15 +633,25 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   must be read before it is believed**, then re-swept by hand, because it samples one
   arbitrary subset of a lever the byte gate can enumerate exhaustively.
 
-  ### Where the remaining 474 divergences are
+  ### Where the remaining 443 divergences are
 
-  `575` of the alignment's `replace`s, and **358 of those are one thing: the stack
+  `544` of the alignment's `replace`s, and **340 of those are one thing: the stack
   frame.** `str r0,[sp,#0xc4]` against `str r0,[sp,#0x104]` - the same instruction on
-  a different slot. Declaration order is the only lever known to move that, and it is
-  what produced the +215 two sessions ago.
+  a different slot.
 
-  Also outstanding: 134 mnemonic-class replaces (the six branch flips above were the
-  largest family in that bucket and are now closed), and 51 pure register renames.
+  **Declaration order is that lever, and it is now exhausted.** The greedy sweep
+  converged after two accepted moves (+25, +6) with a third round finding nothing;
+  the recorded verdict it overturned was *"377 compiles, ZERO improving moves"*, which
+  had been measured before the four CSE edits changed the allocator's input. Fifth
+  time the re-test rule has paid here. **The next lever on the frame is not a source
+  reorder** - and the frame is what is left.
+
+  Also outstanding: 85 mnemonic-class replaces (down from 134; the six branch flips
+  were the largest family and are closed) and 27 pure register renames (down from 51).
+
+  Re-running the other three axes on the post-reorder structure moved nothing - 186
+  compiles: all 64 `tpv` site subsets, all 64 polarity subsets, all 58 re-read
+  insertion sites. Each is at its optimum for this structure.
 
   ### Swept and dead ON THIS STRUCTURE
 
