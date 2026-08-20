@@ -49,6 +49,7 @@ take over, ping the claimant first.
 
 | Range | Who | Claimed | Status |
 |---|---|---|---|
+| ov007 func_ov007_020b1718 (0x020b1718, size 0x434) | lunavyqo | 2026-08-20 | **done** — verified byte-identical + linkcheck VERIFIED blind 0 (mwccarm 2004/b56); levers: named p3c, w=0x1000 after w-curve, named wr=w-r3 for y-store smlal Rm/Rs, mode copy of ease-out into r7val, ge28 leftover flags + flag-after tail; API clm_82862f842115 kept |
 | ov005 func_ov005_020c16e4 (0x020c16e4, size 0x33c) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: ++row MultiCopy tail, dest pin `idx?dstp:dstp` / `destOff?dstp:dstp` (equal-arm) for rem-before-quot + increment order; from near-miss 136→18→16→3→0; API clm_84a56ab710d3 kept |
 | ov005 func_ov005_020c0378 (0x020c0378, size 0x354) | lunavyqo | 2026-08-13 | **active** — near-miss improved **77→44** size-exact. 0250-style S.a/S.b has + loop_invariants off + S[idx].d y. Residual pure regperm (idx r1 vs r5, has r3 vs r2) + path-B y early. API clm_3c2c2b05061d |
 | ov015 _ZN14KnockDownPlank13InitResourcesEv (0x02111960, size 0x208) | lunavyqo | 2026-08-13 | **done** — verified byte-identical + linkcheck VERIFIED (mwccarm 2004/b56); levers: `#pragma opt_propagation off` + u64-mask angle increment + named `zero` for vec stores; API clm_645f51ab54fa kept |
