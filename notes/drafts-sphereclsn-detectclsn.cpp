@@ -1,6 +1,6 @@
 //cpp
-// NONMATCHING: size 0x1bd0 vs 0x1bc8 (2 insn OVER), align equal=1338 ratio=0.752
-//              FRAME NOW EXACT: sub sp,#0x1b4 and 102 stack slots, both matching
+// NONMATCHING: size 0x1bc8 -- INSTRUCTION COUNT EXACT.  align equal=1374 ratio=0.773
+//              Frame exact too: sub sp,#0x1b4 and 102 stack slots, both matching
 //
 // 2026-08-20, second session (equal 1047 -> 1335).  Every gain below is a
 // SPELLING: each one re-reads a value the candidate already had in a register,
@@ -20,6 +20,12 @@
 //        Exactly +1 each, independent and additive (all 64 subsets swept).
 //   +42  the prism origin read through `tpv` at five of six vertex-tail sites.
 //        This one came from the permuter and is documented at its site.
+//   +36  the `tpv` alias RE-SWEPT after the frame fix: round 1 now reads the
+//        array directly and only round 2's [0] and [1] go through the pointer.
+//        The slot map is what pointed at it -- the ROM's three `tp` slots are
+//        (2 loads, 2 stores, 0 address-takes) and ours were (1,2,5), i.e. the
+//        ROM never takes tp's address at all.  Sixth time a swept lever came
+//        back after a structural change.  This is what took `cand` to 1778.
 //   +29  THE FRAME LEVER (measured on the anchored count, not on `equal` --
 //        see below).  `tp`/`vb`/`vc` are `Vtx3`, an aggregate with a
 //        user-declared empty destructor, because mwccarm was SCALARIZING vb
@@ -48,7 +54,8 @@
 //     after +56/+6    equal 1262   anchored 574/1778 (0.3228)   cand 1752
 //     after +42       equal 1304   anchored 629/1778 (0.3538)   cand 1777
 //     after +31       equal 1335   anchored 656/1778 (0.3690)   cand 1777
-//     now             equal 1338   anchored 685/1778 (0.3853)   cand 1780
+//     after the frame equal 1338   anchored 685/1778 (0.3853)   cand 1780
+//     now             equal 1374   anchored 765/1778 (0.4303)   cand 1778
 //
 // The last row is why the anchored metric is kept.  The frame fix moved
 // `equal` by THREE and the anchored count by TWENTY-NINE; on `equal` alone it
@@ -695,7 +702,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                                all 64 site subsets. */
                             tpv = tp.e;
 
-                            KCL_VERTEX(vb.e, en2, tpv[0], tpv[1], tpv[2])
+                            KCL_VERTEX(vb.e, en2, tp.e[0], tp.e[1], tp.e[2])
                             /* The ROM re-reads the denominator normal for the
                                second round; mwcc otherwise CSEs the three en3[i]
                                loads across both rounds.  Same pointer, same value
@@ -703,7 +710,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                                Worth +153 equal (1047 -> 1200), and it took the
                                alignment's `delete` count from 100 to 21. */
                             en3 = f->normals[tri->edgeNormal3Idx];
-                            KCL_VERTEX(vc.e, en1, tpv[0], tp.e[1], tpv[2])
+                            KCL_VERTEX(vc.e, en1, tpv[0], tpv[1], tp.e[2])
 
                             t = -(sphere.unk_0ec + sphere.radius);
                             u =   sphere.unk_0ec - sphere.radius;
