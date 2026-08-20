@@ -188,6 +188,48 @@ enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1, GAP_FILL_CUSTOM = 2 };
 StackLayout stack_layout(int gap_ds, int fill_mode, uint32_t fill_color,
                          int peek, const uint32_t *art);
 
+// ---- BAND CONTINUITY --------------------------------------------------------
+//
+// ONE OBJECT THE GAME IS STILL SIMULATING WHILE NEITHER ENGINE DRAWS IT.
+//
+// The ROM's own OAM cull (see the note over band_raster_engine) leaves a hole:
+// a sprite h rows tall whose origin sits at band row 1 .. G-h-1 is submitted to
+// the main engine as y = 192 + k, which its `y > 0xc0` test throws away, and to
+// the sub engine as y = -G + k, which its `y + h < 0` test throws away. So for
+// those G - h - 1 rows the object is not drawn AT ALL, on hardware as much as
+// here, and the peek pass reproduces that by construction because it draws only
+// what the engines were given.
+//
+// A player following an object across the band wants it to stay visible anyway,
+// and that is what this is for. The game names, per scene, the objects it wants
+// kept continuous and where each one is RIGHT NOW, and the peek pass re-renders
+// them from THE OAM ENTRY THE GAME ITSELF LAST SUBMITTED -- same tile, same
+// palette, same size, same flip, same engine's VRAM -- into band pixels neither
+// engine wrote. NOTHING IS INVENTED: an object that has not been submitted yet
+// in this scene has no cached entry and is not drawn, and a pixel an engine did
+// write is never overpainted.
+//
+// The hook fills `out` and returns how many it wrote. Coordinates are DS pixels
+// in the BAND's own frame: x is the sprite's left edge on the 256-pixel row, y
+// is its top edge as a band row index, 0 being world row -G and gap_ds-1 being
+// world row -1. Either may sit outside the band -- an object entering it has a
+// negative y -- and the pass clips.
+//
+// `slot` is the caller's own stable id for the object, 0..BAND_TRACK_MAX-1, and
+// it is what the attribute cache is keyed on, so one object must keep one slot
+// for as long as the scene runs.
+struct BandTrack {
+    int slot;
+    int x, y;
+    int w, h;      // the sprite's size in DS pixels, for the identity match
+};
+
+enum { BAND_TRACK_MAX = 8 };
+
+// Called once per peek frame, after both engines have rasterised. Null clears
+// the hook, and no hook is the behaviour this shipped with.
+typedef int (*BandTrackFn)(BandTrack *out, int max, int gap_ds);
+void ppu_band_continuity(BandTrackFn fn);
 
 // `top` is SCREEN_W x SCREEN_H row-major -- a Framebuffer's px, taken as a
 // plain pointer because the one caller reaches this across an extern "C" seam

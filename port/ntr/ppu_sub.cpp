@@ -1001,7 +1001,6 @@ void band_fill(uint32_t *dst, int dst_w, const StackLayout &lay)
         band_art(dst, dst_w, lay);
 }
 
-
 /* ---- PEEK: the band's own hidden sprites -----------------------------------
  *
  * WHAT IS ACTUALLY IN THERE, and this is measured rather than assumed (run mg5
@@ -1057,14 +1056,176 @@ struct BandPixel {
     uint8_t eng;    /* which engine wrote it; see the overwrite test */
 };
 
-/* One engine's sprites over the band, in DS pixels: band[k][x] for k in
- * [0, gap_ds). `row_bias` turns an engine row into a band index -- -192 for the
- * main engine, +G for the sub engine -- and is the whole of what differs
- * between the two calls.
+/* THE ENGINE BINDING: which 2D unit a band pass reads, and where that unit's
+   registers, OAM, OBJ VRAM and palettes live. Three passes take one of these
+   now -- the two peek rasters and the continuity re-render -- so "engine A,
+   biased by -192" is spelled once at each call site rather than as six loose
+   arguments at each of them. */
+struct BandEngine {
+    uint32_t reg, oam, vram, pltt, ext;
+    int row_bias;        /* engine row -> band index: -192 (A), +gap_ds (B) */
+    uint8_t id;
+    const char *name;
+};
+
+/* What one OAM entry decodes to, before a texel is read. The BOX is what the
+   hardware scans -- twice the sprite in each axis for a double-size affine
+   entry -- and the sprite is what the tiles are. */
+struct BandEntry {
+    int x, y;            /* the BOX's left and top edge, in engine pixels */
+    int w, h;            /* the SPRITE's size */
+    int bw, bh;          /* the BOX's size */
+    int affine, dbl;
+};
+
+/* Geometry and drawability, and nothing that reads VRAM. 0 means the entry
+   draws nothing anywhere and every caller skips it. */
+int band_decode(uint16_t a0, uint16_t a1, uint16_t a2, BandEntry &o)
+{
+    static const int kSizes[3][4][2] = {
+        {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
+        {{16, 8}, {32, 8}, {32, 16}, {64, 32}},
+        {{8, 16}, {8, 32}, {16, 32}, {32, 64}},
+    };
+    /* THE EMPTY SLOT, AND IT IS PARKED IN THE BAND. OAM::Reset (matched
+       src/_ZN3OAM5ResetEv.cpp) clears all 128 entries to attribute word
+       0x000000c0 and attribute 2 zero -- y = 0xc0, x = 0, tile 0, palette
+       0, 8x8, mode normal, NOT the disable bit. That works on hardware
+       because 0xc0 is 192, the first row BELOW the visible screen, so an
+       unused slot is hidden by being parked exactly one row past the
+       bottom edge. Which is exactly where this band starts.
+       Measured, before this test was here: scene 376 drew 28 identical 8x8
+       blobs of whatever happens to be in OBJ tile 0 across the top eight
+       rows of the band, and scenes 368 and 374 the same. Every one of them
+       was an empty slot.
+       So the exact reset triple is skipped, and only that triple: a real
+       sprite that genuinely sits at y 192 has an x, a tile or a palette,
+       and keeps its pixels. */
+    if (a0 == 0x00c0 && a1 == 0x0000 && a2 == 0x0000) return 0;
+    const bool affine = (a0 & 0x100) != 0;
+    if (!affine && (a0 & 0x200)) return 0;           // disabled
+    const unsigned objmode = (a0 >> 10) & 3;
+    if (objmode == 2 || objmode == 3) return 0;      // window mask; bitmap OBJ
+    const int shape = (a0 >> 14) & 3;
+    if (shape == 3) return 0;
+    const int size = (a1 >> 14) & 3;
+    o.w = kSizes[shape][size][0];
+    o.h = kSizes[shape][size][1];
+    o.affine = affine;
+    o.dbl = affine && (a0 & 0x200) ? 1 : 0;
+    o.bw = o.dbl ? o.w * 2 : o.w;
+    o.bh = o.dbl ? o.h * 2 : o.h;
+    o.x = a1 & 0x1FF;
+    o.y = a0 & 0xFF;
+    if (o.x >= 256) o.x -= 512;
+    /* THE WRAP, and it is the same expression both live rasterisers use.
+       This is what turns a sub-engine sprite parked at y 224..255 into the
+       negative rows the band is made of, so getting it right here is the
+       whole of whether the bottom half of the band has anything in it. */
+    if (o.y >= 192 && o.y >= 256 - o.bh) o.y -= 256;
+    return 1;
+}
+
+/* ONE ENTRY'S TEXELS INTO THE BAND, at a row the caller names.
  *
- * Priority resolves sprite against sprite exactly as raster_obj does above:
- * walk 127 -> 0 so a lower index is processed later, and overwrite when the
- * pixel is empty or this sprite's priority number is at least as good. */
+ * `ktop` is the band row the entry's BOX starts on, which for a live raster is
+ * its own decoded y plus the engine's bias and for the continuity pass is where
+ * the game says the object is right now. `only_empty` is the continuity pass's
+ * rule: write nothing over a pixel an engine already drew.
+ *
+ * Every VRAM and palette read goes through the BandEngine, so a cached engine-A
+ * entry re-rendered later still reads engine A's tiles through engine A's
+ * palette, which is the whole of what makes the synthesized pixels the same
+ * pixels the engine would have produced. */
+int band_draw_entry(BandPixel *band, int gap_ds, const BandEngine &e,
+                    uint16_t a0, uint16_t a1, uint16_t a2, const BandEntry &d,
+                    int ktop, int x, int only_empty)
+{
+    const uint32_t dispcnt = rd32(e.reg);
+    if (!((dispcnt >> 12) & 1)) return 0;            // OBJ layer off
+    const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
+    const bool map1d = (dispcnt >> 4) & 1;
+    const uint32_t objext = ((dispcnt >> 31) & 1) ? e.ext : 0;
+    const bool c256 = (a0 & 0x2000) != 0;
+    const bool hflip = !d.affine && (a1 & 0x1000);
+    const bool vflip = !d.affine && (a1 & 0x2000);
+    const uint32_t tile = a2 & 0x3FF;
+    const uint32_t pal = (a2 >> 12) & 0xF;
+    const uint8_t prio = (a2 >> 10) & 3;
+
+    int pa = 256, pb = 0, pc = 0, pd = 256;
+    if (d.affine) {
+        const int grp = (a1 >> 9) & 0x1F;
+        pa = (int16_t)rd16(e.oam + (grp * 4 + 0) * 8u + 6);
+        pb = (int16_t)rd16(e.oam + (grp * 4 + 1) * 8u + 6);
+        pc = (int16_t)rd16(e.oam + (grp * 4 + 2) * 8u + 6);
+        pd = (int16_t)rd16(e.oam + (grp * 4 + 3) * 8u + 6);
+    }
+
+    int drawn = 0;
+    for (int sy = 0; sy < d.bh; ++sy) {
+        const int k = ktop + sy;
+        if (k < 0 || k >= gap_ds) continue;
+        for (int sx = 0; sx < d.bw; ++sx) {
+            const int px = x + sx;
+            if (px < 0 || px >= 256) continue;
+            int tx, ty;
+            if (d.affine) {
+                const int cx = sx - d.bw / 2, cy = sy - d.bh / 2;
+                tx = ((pa * cx + pb * cy) >> 8) + d.w / 2;
+                ty = ((pc * cx + pd * cy) >> 8) + d.h / 2;
+                if (tx < 0 || tx >= d.w || ty < 0 || ty >= d.h) continue;
+            } else {
+                tx = hflip ? d.w - 1 - sx : sx;
+                ty = vflip ? d.h - 1 - sy : sy;
+            }
+            const int tcol = tx >> 3, trow = ty >> 3;
+            const int fx = tx & 7, fy = ty & 7;
+            const uint32_t slot =
+                map1d ? (uint32_t)(trow * (d.w / 8) + tcol) * (c256 ? 2u : 1u)
+                      : (uint32_t)(trow * 32 + (c256 ? tcol * 2 : tcol));
+            const uint32_t cell = e.vram + tile * boundary + slot * 32u;
+            uint32_t color;
+            if (c256) {
+                const uint32_t idx = rd8(cell + fy * 8u + fx);
+                if (!idx) continue;
+                color = objext ? bgr555(rd16(objext + (pal * 256u + idx) * 2u))
+                               : bgr555(rd16(e.pltt + idx * 2u));
+            } else {
+                const uint8_t bb = rd8(cell + fy * 4u + fx / 2);
+                const uint32_t idx = (fx & 1) ? (bb >> 4) : (bb & 0xF);
+                if (!idx) continue;
+                color = bgr555(rd16(e.pltt + (pal * 16u + idx) * 2u));
+            }
+            BandPixel &bp = band[(size_t)k * 256 + px];
+            /* THE CONTINUITY PASS NEVER OVERPAINTS AN ENGINE. Its whole claim
+               is that it fills rows the engines did not draw, and a pass that
+               could also change a pixel an engine DID draw would make that
+               claim unverifiable from the picture. */
+            if (only_empty && bp.hit) continue;
+            ++drawn;
+            /* WITHIN one engine, OBJ priority resolves and the 127 -> 0
+               walk breaks ties toward the lower index, exactly as
+               raster_obj above. ACROSS the two engines it does not, and
+               the test says so by comparing the engine tag first: engine A
+               runs first and engine B second, so the only cross-engine
+               case here is B arriving over an A pixel, and B takes it
+               whatever the two priority numbers are. Priorities are per
+               engine on the hardware -- they order layers inside one 2D
+               unit and have no meaning between units -- so comparing them
+               across the seam would be arithmetic on two different
+               scales, and it would make which engine wins depend on scene
+               content rather than on a rule anyone can state. */
+            if (bp.hit && bp.eng == e.id && prio > bp.prio) continue;
+            bp.color = color;
+            bp.prio = prio;
+            bp.hit = 1;
+            bp.eng = e.id;
+        }
+    }
+    return drawn;
+}
+
 int band_trace_frames(void)
 {
     /* SM64DS_GAP_PEEK_TRACE=1: one census line per peek frame, per engine, of
@@ -1076,7 +1237,12 @@ int band_trace_frames(void)
        still contribute nothing, because its texels are all in the middle of
        its own box. Scene 376's two 64x64 hinge sprites at double size are
        exactly that case, and without this line the only way to tell them apart
-       from a broken raster is to read the matrix by hand. */
+       from a broken raster is to read the matrix by hand.
+
+       The continuity pass prints on the same switch, one line per tracked
+       object per frame, because the question it answers -- was this object
+       drawn by an engine, or synthesized, or neither -- is the same kind of
+       question and is read off the same census. */
     static int on = -1;
     if (on < 0) {
         const char *s = std::getenv("SM64DS_GAP_PEEK_TRACE");
@@ -1085,145 +1251,149 @@ int band_trace_frames(void)
     return on;
 }
 
-void band_raster_engine(BandPixel *band, int gap_ds, uint32_t reg_base,
-                        uint32_t oam_base, uint32_t obj_vram,
-                        uint32_t obj_pltt, uint32_t obj_ext, int row_bias,
-                        uint8_t eng_id, const char *engine_name)
+/* One engine's sprites over the band, in DS pixels: band[k][x] for k in
+ * [0, gap_ds).
+ *
+ * Priority resolves sprite against sprite exactly as raster_obj does above:
+ * walk 127 -> 0 so a lower index is processed later, and overwrite when the
+ * pixel is empty or this sprite's priority number is at least as good. */
+void band_raster_engine(BandPixel *band, int gap_ds, const BandEngine &e)
 {
-    static const int kSizes[3][4][2] = {
-        {{8, 8}, {16, 16}, {32, 32}, {64, 64}},
-        {{16, 8}, {32, 8}, {32, 16}, {64, 32}},
-        {{8, 16}, {8, 32}, {16, 32}, {32, 64}},
-    };
-    const uint32_t dispcnt = rd32(reg_base);
-    if (!((dispcnt >> 12) & 1)) return;              // OBJ layer off
-    const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
-    const bool map1d = (dispcnt >> 4) & 1;
-    const uint32_t objext = ((dispcnt >> 31) & 1) ? obj_ext : 0;
-
+    if (!((rd32(e.reg) >> 12) & 1)) return;          // OBJ layer off
     for (int i = 127; i >= 0; --i) {
-        const uint16_t a0 = rd16(oam_base + i * 8u);
-        const uint16_t a1 = rd16(oam_base + i * 8u + 2);
-        const uint16_t a2 = rd16(oam_base + i * 8u + 4);
-        /* THE EMPTY SLOT, AND IT IS PARKED IN THE BAND. OAM::Reset (matched
-           src/_ZN3OAM5ResetEv.cpp) clears all 128 entries to attribute word
-           0x000000c0 and attribute 2 zero -- y = 0xc0, x = 0, tile 0, palette
-           0, 8x8, mode normal, NOT the disable bit. That works on hardware
-           because 0xc0 is 192, the first row BELOW the visible screen, so an
-           unused slot is hidden by being parked exactly one row past the
-           bottom edge. Which is exactly where this band starts.
-           Measured, before this test was here: scene 376 drew 28 identical 8x8
-           blobs of whatever happens to be in OBJ tile 0 across the top eight
-           rows of the band, and scenes 368 and 374 the same. Every one of them
-           was an empty slot.
-           So the exact reset triple is skipped, and only that triple: a real
-           sprite that genuinely sits at y 192 has an x, a tile or a palette,
-           and keeps its pixels. */
-        if (a0 == 0x00c0 && a1 == 0x0000 && a2 == 0x0000) continue;
-        const bool affine = a0 & 0x100;
-        if (!affine && (a0 & 0x200)) continue;       // disabled
-        const unsigned objmode = (a0 >> 10) & 3;
-        if (objmode == 2 || objmode == 3) continue;  // window mask; bitmap OBJ
-        const int shape = (a0 >> 14) & 3;
-        if (shape == 3) continue;
-        const int size = (a1 >> 14) & 3;
-        const int w = kSizes[shape][size][0], h = kSizes[shape][size][1];
-        const bool dbl = affine && (a0 & 0x200);
-        const int bw = dbl ? w * 2 : w, bh = dbl ? h * 2 : h;
-        int x = a1 & 0x1FF, y = a0 & 0xFF;
-        if (x >= 256) x -= 512;
-        /* THE WRAP, and it is the same expression both live rasterisers use.
-           This is what turns a sub-engine sprite parked at y 224..255 into the
-           negative rows the band is made of, so getting it right here is the
-           whole of whether the bottom half of the band has anything in it. */
-        if (y >= 192 && y >= 256 - bh) y -= 256;
-        const bool c256 = a0 & 0x2000;
-        const bool hflip = !affine && (a1 & 0x1000);
-        const bool vflip = !affine && (a1 & 0x2000);
-        const uint32_t tile = a2 & 0x3FF;
-        const uint32_t pal = (a2 >> 12) & 0xF;
-        const uint8_t prio = (a2 >> 10) & 3;
-
-        int pa = 256, pb = 0, pc = 0, pd = 256;
-        if (affine) {
-            const int grp = (a1 >> 9) & 0x1F;
-            pa = (int16_t)rd16(oam_base + (grp * 4 + 0) * 8u + 6);
-            pb = (int16_t)rd16(oam_base + (grp * 4 + 1) * 8u + 6);
-            pc = (int16_t)rd16(oam_base + (grp * 4 + 2) * 8u + 6);
-            pd = (int16_t)rd16(oam_base + (grp * 4 + 3) * 8u + 6);
-        }
+        const uint16_t a0 = rd16(e.oam + i * 8u);
+        const uint16_t a1 = rd16(e.oam + i * 8u + 2);
+        const uint16_t a2 = rd16(e.oam + i * 8u + 4);
+        BandEntry d;
+        if (!band_decode(a0, a1, a2, d)) continue;
 
         /* the BOX's reach into the band, before a single texel is read: the
            number every OAM-only analysis produces, kept beside the number this
            raster actually draws */
-        int box_rows = 0, drawn = 0;
-        for (int sy = 0; sy < bh; ++sy) {
-            const int kk = y + sy + row_bias;
-            if (kk >= 0 && kk < gap_ds) ++box_rows;
-        }
+        const int ktop = d.y + e.row_bias;
+        int box_rows = 0;
+        for (int sy = 0; sy < d.bh; ++sy)
+            if (ktop + sy >= 0 && ktop + sy < gap_ds) ++box_rows;
 
-        for (int sy = 0; sy < bh; ++sy) {
-            const int k = y + sy + row_bias;
-            if (k < 0 || k >= gap_ds) continue;
-            for (int sx = 0; sx < bw; ++sx) {
-                const int px = x + sx;
-                if (px < 0 || px >= 256) continue;
-                int tx, ty;
-                if (affine) {
-                    const int cx = sx - bw / 2, cy = sy - bh / 2;
-                    tx = ((pa * cx + pb * cy) >> 8) + w / 2;
-                    ty = ((pc * cx + pd * cy) >> 8) + h / 2;
-                    if (tx < 0 || tx >= w || ty < 0 || ty >= h) continue;
-                } else {
-                    tx = hflip ? w - 1 - sx : sx;
-                    ty = vflip ? h - 1 - sy : sy;
-                }
-                const int tcol = tx >> 3, trow = ty >> 3;
-                const int fx = tx & 7, fy = ty & 7;
-                const uint32_t slot =
-                    map1d ? (uint32_t)(trow * (w / 8) + tcol) * (c256 ? 2u : 1u)
-                          : (uint32_t)(trow * 32 + (c256 ? tcol * 2 : tcol));
-                const uint32_t cell = obj_vram + tile * boundary + slot * 32u;
-                uint32_t color;
-                if (c256) {
-                    const uint32_t idx = rd8(cell + fy * 8u + fx);
-                    if (!idx) continue;
-                    color = objext
-                                ? bgr555(rd16(objext + (pal * 256u + idx) * 2u))
-                                : bgr555(rd16(obj_pltt + idx * 2u));
-                } else {
-                    const uint8_t bb = rd8(cell + fy * 4u + fx / 2);
-                    const uint32_t idx = (fx & 1) ? (bb >> 4) : (bb & 0xF);
-                    if (!idx) continue;
-                    color = bgr555(rd16(obj_pltt + (pal * 16u + idx) * 2u));
-                }
-                ++drawn;
-                BandPixel &bp = band[(size_t)k * 256 + px];
-                /* WITHIN one engine, OBJ priority resolves and the 127 -> 0
-                   walk breaks ties toward the lower index, exactly as
-                   raster_obj above. ACROSS the two engines it does not, and
-                   the test says so by comparing the engine tag first: engine A
-                   runs first and engine B second, so the only cross-engine
-                   case here is B arriving over an A pixel, and B takes it
-                   whatever the two priority numbers are. Priorities are per
-                   engine on the hardware -- they order layers inside one 2D
-                   unit and have no meaning between units -- so comparing them
-                   across the seam would be arithmetic on two different
-                   scales, and it would make which engine wins depend on scene
-                   content rather than on a rule anyone can state. */
-                if (bp.hit && bp.eng == eng_id && prio > bp.prio) continue;
-                bp.color = color;
-                bp.prio = prio;
-                bp.hit = 1;
-                bp.eng = eng_id;
-            }
-        }
+        const int drawn =
+            band_draw_entry(band, gap_ds, e, a0, a1, a2, d, ktop, d.x, 0);
         if (box_rows && band_trace_frames())
             std::fprintf(stderr, "[gappeek] %s oam%3d a0=%04x a1=%04x a2=%04x "
                          "%dx%d%s at (%d,%d): box reaches %d band row(s), "
-                         "%d pixel(s) drawn\n", engine_name, i, a0, a1, a2, w,
-                         h, dbl ? " dbl" : (affine ? " aff" : ""), x, y,
-                         box_rows, drawn);
+                         "%d pixel(s) drawn\n", e.name, i, a0, a1, a2, d.w,
+                         d.h, d.dbl ? " dbl" : (d.affine ? " aff" : ""), d.x,
+                         d.y, box_rows, drawn);
+    }
+}
+
+/* ---- CONTINUITY: the objects the game asks to be kept whole ----------------
+ *
+ * See the note over BandTrack in ntr/ppu.h for what this is and why it invents
+ * nothing. The mechanism is two halves:
+ *
+ *   * WHILE AN ENGINE IS DRAWING THE OBJECT, its live OAM entry is found by
+ *     matching the position and size the hook reports against the entries that
+ *     engine really submitted, and the three attribute words are cached. The
+ *     match is exact -- same box left edge, same band row for the box's top
+ *     edge, same sprite size -- so an entry that merely happens to be nearby
+ *     cannot be mistaken for the object.
+ *   * WHILE NEITHER IS, the cached entry is re-rendered at the position the
+ *     hook reports, into band pixels no engine wrote. That is the dead zone,
+ *     and the pixels are the game's own tiles out of the same engine's VRAM
+ *     through the same palette.
+ *
+ * A slot with no cached entry draws NOTHING. That is the honest answer for an
+ * object that has not been submitted yet in this scene -- a ball still sitting
+ * in the plunger has never been an OAM entry, and this pass has nothing to say
+ * about what it would look like. */
+struct BandCache {
+    int have;
+    uint16_t a0, a1, a2;
+    BandEngine eng;
+};
+
+BandTrackFn g_track_fn;
+BandCache g_track[BAND_TRACK_MAX];
+/* PEEK FRAMES SINCE THE PROGRAM STARTED, and it is on the continuity lines
+   rather than on the raster's because of what the two censuses are read for.
+   The raster's is a list of what is in ONE frame and its reader is looking at a
+   frame at a time. The continuity one is read as a SEQUENCE -- an object is
+   drawn by an engine, then synthesized, then drawn again -- and "no frame in
+   that sequence is missing" is not a claim a reader can make without a frame
+   number to count. */
+unsigned g_peek_frame;
+
+int band_find_live(const BandEngine &e, const BandTrack &t, BandCache &out)
+{
+    for (int i = 127; i >= 0; --i) {
+        const uint16_t a0 = rd16(e.oam + i * 8u);
+        const uint16_t a1 = rd16(e.oam + i * 8u + 2);
+        const uint16_t a2 = rd16(e.oam + i * 8u + 4);
+        BandEntry d;
+        if (!band_decode(a0, a1, a2, d)) continue;
+        if (d.x != t.x || d.y + e.row_bias != t.y) continue;
+        if (d.w != t.w || d.h != t.h) continue;
+        out.have = 1;
+        out.a0 = a0;
+        out.a1 = a1;
+        out.a2 = a2;
+        out.eng = e;
+        return 1;
+    }
+    return 0;
+}
+
+void band_continuity(BandPixel *band, int gap_ds, const BandEngine &ea,
+                     const BandEngine &eb)
+{
+    if (!g_track_fn) return;
+    BandTrack tr[BAND_TRACK_MAX];
+    const int n = g_track_fn(tr, BAND_TRACK_MAX, gap_ds);
+    for (int i = 0; i < n && i < BAND_TRACK_MAX; ++i) {
+        const BandTrack &t = tr[i];
+        if (t.slot < 0 || t.slot >= BAND_TRACK_MAX) continue;
+        BandCache &c = g_track[t.slot];
+        /* the box has to reach the band at all before anything else is asked.
+           THE CENSUS SAYS SO ANYWAY, because "the object never came near the
+           band" and "the object was in the band and nothing drew it" are the
+           two answers a report about a vanishing object has to be told apart
+           by, and without this line they look identical from outside. */
+        if (t.y + t.h <= 0 || t.y >= gap_ds) {
+            if (band_trace_frames())
+                std::fprintf(stderr, "[gapcont] f%u slot %d %dx%d at (%d,%d): "
+                             "outside the band\n", g_peek_frame, t.slot, t.w,
+                             t.h, t.x, t.y);
+            continue;
+        }
+        int live = band_find_live(ea, t, c);
+        if (!live) live = band_find_live(eb, t, c);
+        if (live) {
+            if (band_trace_frames())
+                std::fprintf(stderr, "[gapcont] f%u slot %d %dx%d at (%d,%d): "
+                             "engine %s submitted it, attributes cached "
+                             "a0=%04x a1=%04x a2=%04x\n", g_peek_frame,
+                             t.slot, t.w, t.h, t.x, t.y, c.eng.name, c.a0,
+                             c.a1, c.a2);
+            continue;
+        }
+        if (!c.have) {
+            if (band_trace_frames())
+                std::fprintf(stderr, "[gapcont] f%u slot %d %dx%d at (%d,%d): "
+                             "no engine has it and nothing is cached, drawing "
+                             "nothing\n", g_peek_frame, t.slot, t.w, t.h,
+                             t.x, t.y);
+            continue;
+        }
+        BandEntry d;
+        if (!band_decode(c.a0, c.a1, c.a2, d)) continue;
+        const int drawn = band_draw_entry(band, gap_ds, c.eng, c.a0, c.a1,
+                                          c.a2, d, t.y, t.x, 1);
+        if (band_trace_frames())
+            std::fprintf(stderr, "[gapcont] f%u slot %d %dx%d at (%d,%d): DEAD "
+                         "ZONE, re-rendered engine %s a0=%04x a1=%04x a2=%04x, "
+                         "%d pixel(s) synthesized\n", g_peek_frame, t.slot,
+                         t.w, t.h, t.x, t.y, c.eng.name, c.a0, c.a1, c.a2,
+                         drawn);
     }
 }
 
@@ -1243,24 +1413,30 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
     if (!band) {
         band = (BandPixel *)std::calloc((size_t)GAP_DS_MAX * 256,
                                         sizeof *band);
-        /* no peek this run. band_fill has already painted black, which is
-           an empty band rather than a wrong one: peek's own answer for a
+        /* no peek this run. band_fill has already painted the backdrop, which
+           is an empty band rather than a wrong one: peek's own answer for a
            row with nothing in it. */
         if (!band) return;
     }
     std::memset(band, 0, sizeof(BandPixel) * (size_t)lay.gap_ds * 256);
+    ++g_peek_frame;
 
     /* ENGINE A FIRST. Its band rows are engine rows 192..191+G, so the bias
        that turns an engine row into a band index is -192. Engine A's OBJ
        extended palette store is not modelled anywhere in this program, so it
        passes 0 and a 256-colour engine-A sprite reads the standard palette --
        the same answer ntr/ppu.cpp's own engine-A raster gives. */
-    band_raster_engine(band, lay.gap_ds, kRegBaseA, kOamBaseA,
-                       kObjVramA, kObjPlttA, 0, -192, 0, "A");
+    const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                           -192, 0, "A"};
     /* ENGINE B SECOND, so it wins where both drew; see the header note. Its
        band rows are engine rows -G..-1, so the bias is +G. */
-    band_raster_engine(band, lay.gap_ds, kRegBase, kOamBase, kObjVram,
-                       kObjPltt, kObjExtPltt, lay.gap_ds, 1, "B");
+    const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
+                           lay.gap_ds, 1, "B"};
+    band_raster_engine(band, lay.gap_ds, ea);
+    band_raster_engine(band, lay.gap_ds, eb);
+    /* AND THE DEAD ZONE LAST, so "did an engine draw this pixel" is asked of
+       the finished merge rather than of half of it. */
+    band_continuity(band, lay.gap_ds, ea, eb);
 
     /* into the image, at the same integer scale the bottom half is drawn at */
     const int rx = lay.w / SUB_W, ry = lay.scale;
@@ -1296,7 +1472,7 @@ StackLayout stack_layout(int gap_ds, int fill_mode, uint32_t fill_color,
     l.band_h = gap_ds * l.scale;
     l.bottom_y = SCREEN_H + l.band_h;
     l.h = SCREEN_H * 2 + l.band_h;
-    l.fill_mode = fill_mode == GAP_FILL_SOLID    ? GAP_FILL_SOLID
+    l.fill_mode = fill_mode == GAP_FILL_SOLID   ? GAP_FILL_SOLID
                   : fill_mode == GAP_FILL_CUSTOM ? GAP_FILL_CUSTOM
                                                  : GAP_FILL_AMBIENT;
     l.fill_color = fill_color | 0xFF000000u;
@@ -1306,6 +1482,17 @@ StackLayout stack_layout(int gap_ds, int fill_mode, uint32_t fill_color,
        the question twice. */
     l.art = gap_ds ? art : 0;
     return l;
+}
+
+/* Installing the hook CLEARS THE ATTRIBUTE CACHE, and that is the whole of the
+   cache's lifetime management. hal/screen_gap.cpp installs at every latch --
+   which is every time the scene or its G changes -- so a cached entry can never
+   outlive the scene whose OAM it was read from, and a stale tile number cannot
+   be re-rendered into the next minigame's band. */
+void ppu_band_continuity(BandTrackFn fn)
+{
+    g_track_fn = fn;
+    for (int i = 0; i < BAND_TRACK_MAX; ++i) g_track[i].have = 0;
 }
 
 void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,

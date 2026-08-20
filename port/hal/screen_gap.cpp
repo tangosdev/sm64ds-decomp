@@ -4,6 +4,7 @@
 #include "hal/screen_gap.h"
 
 #include "hal/gap_art.h"
+#include "hal/gap_continuity.h"
 #include "hal/host_settings.h"
 
 #include <cstdio>
@@ -78,6 +79,10 @@ const ntr::StackLayout *hal_screen_layout(void)
         art = hal_gap_art(scene, want, mode == ntr::GAP_FILL_CUSTOM);
 
     g_lay = ntr::stack_layout(want, mode, host_setting_gap_color(), peek, art);
+    /* and the band's per-scene continuity reader, installed at the same moment
+       for the same reason: it is per scene, and installing clears the cached
+       OAM attributes so nothing crosses from the last minigame into this one */
+    hal_band_continuity_latch(scene);
     g_have = 1;
     /* THE GENERATION IS THE SHAPE'S, not the latch's. walk_window re-sizes the
        window and re-shapes the DIB header off this counter, and a scene change
