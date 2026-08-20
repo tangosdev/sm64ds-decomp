@@ -7,8 +7,8 @@ extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, void *, int, int);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
-extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int f, short s, void *blk);
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *);
+extern int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int f, short s, void *blk);
 }
 struct E12 { void *p; int pad[2]; };
 extern struct E12 data_ov079_02128058[];
@@ -34,8 +34,8 @@ int FortressWall::InitResources()
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
         {
             int idx2 = unk_31e;
-            void *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov079_0212805c[idx2].p);
-            _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, data_ov079_02128060[idx2].p);
+            void *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov079_0212805c[idx2].p);
+            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, data_ov079_02128060[idx2].p);
         }
     }
     return 1;

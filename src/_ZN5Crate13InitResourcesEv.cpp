@@ -8,10 +8,10 @@ extern "C" {
 extern int _ZN5Model8LoadFileER13SharedFilePtr(char* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(char* thiz, int f, int a, int b);
 extern void _ZN11ShadowModel10InitCuboidEv(char* thiz);
-extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(char* f);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(char* thiz, int f, char* m, int fix, short s, int blk);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* thiz, char* actor, int b, int d, void* v, int f);
-extern void _ZN12WithMeshClsn19StartDetectingWaterEv(char* thiz);
+extern int _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(char* f);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(char* thiz, int f, char* m, int fix, short s, int blk);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(char* thiz, char* actor, int b, int d, void* v, int f);
+extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(char* thiz);
 extern void Crate_SetState(char* c, int i);
 }
 extern char data_ov098_0213c4c8[];
@@ -29,11 +29,11 @@ int Crate::InitResources()
     unk_504 = mAngleZ;
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(*(char**)(f)), 1, -1);
     _ZN11ShadowModel10InitCuboidEv((char*)&mShadowModel);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-        ((char*)this) + 0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(char**)(f + 4)),
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        ((char*)this) + 0x124, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(char**)(f + 4)),
         ((char*)this) + 0x2ec, 0x199, mAngleY, *(int*)(f + 8));
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x320, ((char*)this), 0x28000, 0x28000, 0, 0);
-    _ZN12WithMeshClsn19StartDetectingWaterEv((char*)&mWithMeshClsn);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x320, ((char*)this), 0x28000, 0x28000, 0, 0);
+    _ZN10dBgCh_Actr19StartDetectingWaterEv((char*)&mWithMeshClsn);
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
     Crate_SetState(((char*)this), 0);

@@ -1,7 +1,7 @@
 typedef short s16;
 
 extern int Vec3_Dist(void *a, void *b);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *m);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *m);
 extern s16 Vec3_HorzAngle(void *a, void *b);
 extern void ApproachAngle(s16 *p, s16 target, int a, int b, int limit);
 extern void Matrix4x3_FromRotationY(void *m, int ang);
@@ -25,7 +25,7 @@ int func_ov065_02116744(char *c)
     in[2] = 0;
 
     if (Vec3_Dist(c + 0x5c, c + 0x3cc) > 0x1f4000 ||
-        _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0) {
+        _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) != 0) {
         *(s16 *)(c + 0x300 + 0xe0) =
             Vec3_HorzAngle(c + 0x5c, c + 0x3cc);
         if (*(unsigned short *)(c + 0x100) < 0x14)

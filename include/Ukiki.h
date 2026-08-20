@@ -4,8 +4,8 @@
 #include "dActor_c.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsn.h"
-#include "WithMeshClsn.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 #include "PathPtr.h"
 
 /* THREE WITNESSES:
@@ -27,7 +27,7 @@
  * mFlags (mPosX/Y/Z, mScaleX/Y/Z, mAreaId already share dActor_c's names).
  *
  * mWithMeshClsn was mistyped `u8` at 0x194 in the generated header --
- * UkikiThief_Spawn/UkikiStar_Spawn call _ZN12WithMeshClsnC1Ev at that
+ * UkikiThief_Spawn/UkikiStar_Spawn call _ZN10dBgCh_ActrC1Ev at that
  * offset, so it is the real 0x1bc-byte member (0x194..0x350); the 0x30
  * bytes from 0x350..0x380 are genuinely unevidenced padding.
  *
@@ -46,13 +46,13 @@ struct Ukiki : dActor_c {
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x138. [_ZN5UkikiD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x138 */
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x160. [_ZN5UkikiD0Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x160 */
-    /* WithMeshClsn member, named by UkikiThief_Spawn/UkikiStar_Spawn's own
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x160. [_ZN5UkikiD0Ev.c] */
+    dCcAc_c mdCcAc_c;            /* 0x160 */
+    /* dBgCh_Actr member, named by UkikiThief_Spawn/UkikiStar_Spawn's own
        C1 call and the class's own destructor's D1 call at +0x194.
        [UkikiThief_Spawn.c, _ZN5UkikiD0Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x194 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x194 */
     u8  pad_350[0x30];
     s32 unk_380;            /* 0x380 */
     s32 unk_384;            /* 0x384 */

@@ -12,9 +12,9 @@ int Amp::Behavior()
 {
     func_ov070_02120d34(this);
     mCylinderOffset.y += data_ov070_0212365c[1];
-    mMovingCylinderClsnWithPos.SetPosRelativeToActor(mCylinderOffset);
-    mMovingCylinderClsnWithPos.Clear();
-    mMovingCylinderClsnWithPos.Update();
+    mdCcAcPos_c.SetPosRelativeToActor(mCylinderOffset);
+    mdCcAcPos_c.Clear();
+    mdCcAcPos_c.Update();
     func_ov070_02120724(this);
     return 1;
 }

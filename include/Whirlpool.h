@@ -26,11 +26,11 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAc_c.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
 #include "TextureTransformer.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Whirlpool : dEnemyBase_c {
     s32                          unk_110;               /* 0x110 */

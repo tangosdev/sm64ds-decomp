@@ -6,8 +6,8 @@ extern "C" void _ZN5Event8ClearBitEj(unsigned int b);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, int f, int a, int b);
 extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 extern "C" void func_ov002_020b9f80(char *self);
-extern "C" int _ZN12MeshCollider8LoadFileER13SharedFilePtr(int p);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern "C" int _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(int p);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, int f, void *mtx, int fix, s16 s, int clps);
 extern "C" void func_020393c4(void *p, void *v);
 
@@ -57,8 +57,8 @@ extern "C" int _ZN10StarSwitch13InitResourcesEv(char *c) {
     func_ov002_020b9f80(c);
 
     idx = *(u8*)(c + 0x34c);
-    f = _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(int*)(data_ov002_021098ec + idx * 0xc));
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    f = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(int*)(data_ov002_021098ec + idx * 0xc));
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         c + 0x124, f, c + 0x2ec, 0x199, *(s16*)(c + 0x8e), *(int*)(data_ov002_021098f0 + idx * 0xc));
 
     func_020393c4(c + 0x124, &func_ov002_020baa98);

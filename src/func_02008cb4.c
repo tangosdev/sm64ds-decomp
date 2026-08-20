@@ -2,7 +2,7 @@
 enum { false, true };
 
 typedef struct Vec3 { int x, y, z; } Vec3;
-typedef struct RaycastLine { char pad[0x14]; char surf[0x64]; } RaycastLine;
+typedef struct dBgCh_Lin { char pad[0x14]; char surf[0x64]; } dBgCh_Lin;
 
 extern int func_ov002_020ca270(char* p);
 extern void Vec3_Sub(Vec3* out, Vec3* a, Vec3* b);
@@ -10,14 +10,14 @@ extern int LenVec3(Vec3* v);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Vec3_MulScalarInPlace(Vec3* v, int s);
 extern void Vec3_Add(Vec3* out, Vec3* a, Vec3* b);
-extern void _ZN11RaycastLineC1Ev(RaycastLine* rc);
-extern void func_0200897c(char* self, RaycastLine* rc);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLine* rc, Vec3* a, Vec3* b, void* actor);
-extern int _ZN11RaycastLine10DetectClsnEv(RaycastLine* rc);
+extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin* rc);
+extern void func_0200897c(char* self, dBgCh_Lin* rc);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_Lin* rc, Vec3* a, Vec3* b, void* actor);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_Lin* rc);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* surf, Vec3* out);
 extern int DotVec3(Vec3* a, Vec3* b);
-extern void _ZN11RaycastLineD1Ev(RaycastLine* rc);
-extern void _ZN11RaycastLine10GetClsnPosEv(Vec3* out, RaycastLine* rc);
+extern void _ZN9dBgCh_LinD1Ev(dBgCh_Lin* rc);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vec3* out, dBgCh_Lin* rc);
 extern int Vec3_Dist(Vec3* a, Vec3* b);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern int AngleDiff(int a, int b);
@@ -36,8 +36,8 @@ int func_02008cb4(char* c)
     Vec3 cp2;
     Vec3 np;
     Vec3 cl;
-    RaycastLine rc1;
-    RaycastLine rc2;
+    dBgCh_Lin rc1;
+    dBgCh_Lin rc2;
     int vy;
     int vz;
     int vx;
@@ -68,20 +68,20 @@ int func_02008cb4(char* c)
         if (len != 0) {
             Vec3_MulScalarInPlace(&dir1, _ZN4cstd4fdivEii(0x100000, len));
             Vec3_Add(&end1, (Vec3*)(c + 0x8c), &dir1);
-            _ZN11RaycastLineC1Ev(&rc1);
+            _ZN9dBgCh_LinC1Ev(&rc1);
             func_0200897c(c, &rc1);
-            _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc1, &end1, &v0, 0);
-            if (_ZN11RaycastLine10DetectClsnEv(&rc1) != 0) {
+            _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc1, &end1, &v0, 0);
+            if (_ZN9dBgCh_Lin10DetectClsnEv(&rc1) != 0) {
                 _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rc1.surf, &n1);
                 if (DotVec3((Vec3*)(c + 0xec), &n1) > 0) {
                     *(u32*)(((int)c + 0x154)) &= ~0x80000;
-                    _ZN11RaycastLineD1Ev(&rc1);
+                    _ZN9dBgCh_LinD1Ev(&rc1);
                     return 0;
                 }
-                _ZN11RaycastLine10GetClsnPosEv(&cp1, &rc1);
+                _ZN9dBgCh_Lin10GetClsnPosEv(&cp1, &rc1);
                 if (Vec3_Dist((Vec3*)(c + 0xe0), &cp1) < 0x80000) {
                     *(u32*)(((int)c + 0x154)) &= ~0x80000;
-                    _ZN11RaycastLineD1Ev(&rc1);
+                    _ZN9dBgCh_LinD1Ev(&rc1);
                     return 0;
                 }
                 {
@@ -95,7 +95,7 @@ int func_02008cb4(char* c)
                     }
                 }
             }
-            _ZN11RaycastLineD1Ev(&rc1);
+            _ZN9dBgCh_LinD1Ev(&rc1);
         }
         scale = 0x1000;
     }
@@ -125,12 +125,12 @@ int func_02008cb4(char* c)
     }
     Vec3_MulScalarInPlace(&dir2, _ZN4cstd4fdivEii(0x60000, len));
     Vec3_Add(&end2, (Vec3*)(c + 0x8c), &dir2);
-    _ZN11RaycastLineC1Ev(&rc2);
+    _ZN9dBgCh_LinC1Ev(&rc2);
     func_0200897c(c, &rc2);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc2, &v0, &end2, 0);
-    if (_ZN11RaycastLine10DetectClsnEv(&rc2) == 0) {
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&rc2, &v0, &end2, 0);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(&rc2) == 0) {
         *(u32*)(((int)c + 0x154)) &= ~0x80000;
-        _ZN11RaycastLineD1Ev(&rc2);
+        _ZN9dBgCh_LinD1Ev(&rc2);
         return 0;
     }
     if (!(*(u32*)(c + 0x154) & 0x80100)) {
@@ -139,13 +139,13 @@ int func_02008cb4(char* c)
         t = n2.y;
         if (t < 0) t = -t;
         if (t > 0xb50) {
-            _ZN11RaycastLineD1Ev(&rc2);
+            _ZN9dBgCh_LinD1Ev(&rc2);
             return 0;
         }
     }
     d = Vec3_Dist((Vec3*)(c + 0x8c), (Vec3*)(c + 0x80));
     Vec3_MulScalarInPlace(&dir2, scale);
-    _ZN11RaycastLine10GetClsnPosEv(&cp2, &rc2);
+    _ZN9dBgCh_Lin10GetClsnPosEv(&cp2, &rc2);
     Vec3_Sub(&np, &cp2, &dir2);
     *(int*)(c + 0x8c) = np.x;
     *(int*)(c + 0x90) = np.y;
@@ -163,6 +163,6 @@ int func_02008cb4(char* c)
         *(u16*)(c + 0x1a0) = 0;
     }
     *(u32*)(((int)c + 0x154)) &= ~0x80000;
-    _ZN11RaycastLineD1Ev(&rc2);
+    _ZN9dBgCh_LinD1Ev(&rc2);
     return 1;
 }

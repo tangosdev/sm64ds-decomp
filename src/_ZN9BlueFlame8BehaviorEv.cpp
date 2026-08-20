@@ -24,7 +24,7 @@ int BlueFlame::Behavior()
     pos.y += 0x32000;
 
     if (DecIfAbove0_Byte(&mDisappearTimer) != 0) {
-        mMovingCylinderClsn.Clear();
+        mdCcAc_c.Clear();
         if (mDisappearTimer == 1) {
             ((int *)&dust)[0] = ((int *)&pos)[0];
             ((int *)&dust)[1] = ((int *)&pos)[1];
@@ -55,12 +55,12 @@ int BlueFlame::Behavior()
     }
 
     {
-        int id = mMovingCylinderClsn.otherOwner;
+        int id = mdCcAc_c.otherOwner;
         if (id != 0) {
             dActor_c *actor = FindWithID(id);
             if (actor != 0) {
                 if ((int)(actor->actorID == 0xbf) != 0) {
-                    if ((mMovingCylinderClsn.hitFlags & 0x8000) == 0) {
+                    if ((mdCcAc_c.hitFlags & 0x8000) == 0) {
                         ((Player *)actor)->Burn();
                     }
                 }
@@ -68,7 +68,7 @@ int BlueFlame::Behavior()
         }
     }
 
-    mMovingCylinderClsn.Clear();
-    mMovingCylinderClsn.Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

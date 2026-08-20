@@ -5,7 +5,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "WDW_Water.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern int IsAreaShowing(int idx);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
@@ -25,12 +25,12 @@ int WDW_Water::Behavior()
     /* area id at 0x340: ROM does add r0,r4,#0x300; ldrsb r0,[r0,#0x40] */
     if (IsAreaShowing(*(s8 *)((u8 *)(((int)((u8 *)this) + 0x300)) + 0x40)) == 0) {
         mAreaId = *(s8 *)((u8 *)(((unsigned)((u8 *)this) + 0x300)) + 0x40);
-        if (((MeshColliderBase *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) {
-            ((MeshColliderBase *)((u8 *)&(*(u8 *)&mMeshCollider)))->Disable();
+        if (((dBgW *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) {
+            ((dBgW *)((u8 *)&(*(u8 *)&mMeshCollider)))->Disable();
         }
     } else {
-        if (((MeshColliderBase *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() == 0) {
-            ((MeshColliderBase *)(((u8 *)this) + 0x124))->Enable((dActor_c *)(((u8 *)this)));
+        if (((dBgW *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() == 0) {
+            ((dBgW *)(((u8 *)this) + 0x124))->Enable((dActor_c *)(((u8 *)this)));
         }
     }
 

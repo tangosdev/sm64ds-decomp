@@ -11,7 +11,7 @@ extern int _ZN6Player9IsOnShellEv(char* p);
 extern void _ZN8dActor_c13SmallPoofDustEv(char* c);
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(char* c);
 extern void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(char* c, Vector3* pos, unsigned n, Fix12i fix, short s);
-extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(char* c, char* clsn, char* p);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(char* c, char* clsn, char* p);
 extern void _ZN6Player6BounceE5Fix12IiE(char* p, Fix12i fix);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(char* p, Vector3* pos, unsigned a, Fix12i fix, unsigned b, unsigned d, unsigned e);
 extern void func_ov065_02117944(char* c, void* p);
@@ -104,7 +104,7 @@ kill:
     }
 
 jumped:
-    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, p) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, p) != 0) {
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         *(int*)(c + 0x10c) = 1;
         func_ov002_020aea30(c, p, 0);

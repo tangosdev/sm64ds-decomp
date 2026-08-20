@@ -14,7 +14,7 @@
  * in dEnemyBase_c.h yet.
  */
 extern "C" {
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(dEnemyBase_c *thiz, WithMeshClsn *c);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(dEnemyBase_c *thiz, dBgCh_Actr *c);
 extern int ApproachAngle(short *target, short from, short start, short speed, short max);
 extern void _Z14ApproachLinearRiii(int *x, int target, int step);
 extern int func_ov065_0211691c(void *c, void *p);
@@ -26,11 +26,11 @@ extern int data_ov065_0211d670[];
 
 int Snufit::Behavior()
 {
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
-        mMovingCylinderClsn.Clear();
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
+        mdCcAc_c.Clear();
         if (unk_107 != 0) {
             if (unk_104 == 0) {
-                mMovingCylinderClsn.Update();
+                mdCcAc_c.Update();
             }
         }
         func_ov065_0211696c((char *)this);
@@ -89,7 +89,7 @@ int Snufit::Behavior()
         result = (int)(((long long)tbl * 0x46000 + 0x800) >> 12);
         _Z14ApproachLinearRiii(&mPosY, mHomePosY + (result + 0xb4000), 0x3000);
     }
-    UpdatePosWithOnlySpeed(&mMovingCylinderClsn);
+    UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
     func_ov065_0211696c((char *)this);
     if (mCurrentState != (State *)data_ov065_0211d660) {
@@ -98,11 +98,11 @@ int Snufit::Behavior()
         mAngleZ = mPrevAngleZ;
         func_ov065_02115ff0((char *)this);
     }
-    mMovingCylinderClsn.Clear();
+    mdCcAc_c.Clear();
     {
         char *p = (char *)ClosestPlayer();
         if (p != 0 && *(unsigned char *)(p + 0x6fb) == 0) {
-            mMovingCylinderClsn.Update();
+            mdCcAc_c.Update();
         }
     }
     mModelAnim.Advance();

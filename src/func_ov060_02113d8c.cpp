@@ -5,7 +5,7 @@ typedef unsigned short u16;
 struct Fix12 { int v; Fix12(int a) : v(a) {} };
 
 struct dActor_c { int GetSubtraction(short a, short b); };
-struct WithMeshClsn { int IsOnGround() const; };
+struct dBgCh_Actr { int IsOnGround() const; };
 
 extern "C" {
 void func_ov060_02111cc0(char *c, int idx, int fix);
@@ -74,7 +74,7 @@ extern "C" void func_ov060_02113d8c(char *r4)
         break;
     }
 
-    if (((WithMeshClsn *)(r4 + 0x14c))->IsOnGround())
+    if (((dBgCh_Actr *)(r4 + 0x14c))->IsOnGround())
         return;
     *(int *)(r4 + 0x40c) = 0xa;
     *(int *)(r4 + 0x5c) = *(int *)(r4 + 0x3c8);

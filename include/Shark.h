@@ -16,12 +16,12 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "WithMeshClsn.h"
+#include "dCcAcPos_c.h"
+#include "dBgCh_Actr.h"
 
 struct Shark : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x110 */
-    WithMeshClsn mWithMeshClsn;       /* 0x150 */
+    dCcAcPos_c mdCcAcPos_c;/* 0x110 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
     s32 unk_370;                      /* 0x370 */
     s32 unk_374;                      /* 0x374 */
@@ -88,14 +88,14 @@ struct Shark {
     u8  pad_0b0[0x50];
     u8  unk_100;            /* 0x100 */
     u8  pad_101[0xf];
-    /* MovingCylinderClsnWithPos member, named by the class's own destructor calling
-       MovingCylinderClsnWithPos's D1 at +0x110 -- a relocation the ROM build
+    /* dCcAcPos_c member, named by the class's own destructor calling
+       dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN5SharkD1Ev.c] */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;            /* 0x110 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x150 -- a relocation the ROM build
+    dCcAcPos_c mdCcAcPos_c;            /* 0x110 */
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x150 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN5SharkD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x150 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x150 */
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x30c -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     ModelAnim mModelAnim;            /* 0x30c */

@@ -7,13 +7,13 @@ struct Data02086f2c { int unk0, unk4, unk8; };
 extern struct Data02086f2c data_02086f2c;
 
 extern void Vec3_RotateYAndTranslate(struct Vector3 *out, void *a, short ang, int *t);
-extern void _ZN11RaycastLineC1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, const struct Vector3 *a, const struct Vector3 *b, void *actor);
-extern int _ZN11RaycastLine10DetectClsnEv(void *self);
-extern void _ZN11RaycastLine10GetClsnPosEv(struct Vector3 *out, void *self);
-extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, const struct Vector3 *p, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_LinC1Ev(void *self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, const struct Vector3 *a, const struct Vector3 *b, void *actor);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(struct Vector3 *out, void *self);
+extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, const struct Vector3 *p, void *actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
 extern void SubVec3(struct Vector3 *a, void *b, struct Vector3 *c);
 extern int Vec3_HorzLen(void *v);
 extern void Vec3_MulScalar(void *out, void *in, int scale);
@@ -21,8 +21,8 @@ extern void AddVec3(struct Vector3 *a, void *b, struct Vector3 *c);
 extern void Vec3_Sub(struct Vector3 *out, struct Vector3 *a, void *b);
 extern void Math_Function_0203b14c(int *a, int b, int c, int d, int e);
 extern int _ZN4cstd4fdivEii(int a, int b);
-extern void _ZN13RaycastGroundD1Ev(void *self);
-extern void _ZN11RaycastLineD1Ev(void *self);
+extern void _ZN9dBgCh_GndD1Ev(void *self);
+extern void _ZN9dBgCh_LinD1Ev(void *self);
 extern void _Z14ApproachLinearRiii(int *r, int b, int c);
 
 int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
@@ -48,7 +48,7 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
     sp44.x = data_02086f2c.unk0;
     sp44.y = data_02086f2c.unk4;
     Vec3_RotateYAndTranslate(&sp8, arg1, *(short*)(*(char**)(self + 0x110) + 0x8e), (int*)&sp44);
-    _ZN11RaycastLineC1Ev(sp74);
+    _ZN9dBgCh_LinC1Ev(sp74);
     sp14.x = sp8.x;
     sp14.y = sp8.y + 0x32000;
     sp14.z = sp8.z;
@@ -61,9 +61,9 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
         sp20.z = tz;
     }
     func_0200897c(self, sp74);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(sp74, &sp20, &sp14, 0);
-    if (_ZN11RaycastLine10DetectClsnEv(sp74) != 0) {
-        _ZN11RaycastLine10GetClsnPosEv(&sp50, sp74);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(sp74, &sp20, &sp14, 0);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(sp74) != 0) {
+        _ZN9dBgCh_Lin10GetClsnPosEv(&sp50, sp74);
         sp8.x = sp50.x;
         sp8.y = sp50.y;
         sp8.z = sp50.z;
@@ -72,18 +72,18 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
     sp2C.y = sp8.y + 0x100000;
     sp2C.z = sp8.z;
     func_0200897c(self, sp74);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(sp74, &sp8, &sp2C, 0);
-    if (_ZN11RaycastLine10DetectClsnEv(sp74) != 0) {
-        _ZN11RaycastLine10GetClsnPosEv(&sp5C, sp74);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(sp74, &sp8, &sp2C, 0);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(sp74) != 0) {
+        _ZN9dBgCh_Lin10GetClsnPosEv(&sp5C, sp74);
         sp2C.x = sp5C.x;
         sp2C.y = sp5C.y;
         sp2C.z = sp5C.z;
     }
-    _ZN13RaycastGroundC1Ev(spEC);
+    _ZN9dBgCh_GndC1Ev(spEC);
     func_0200897c(self, spEC);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(spEC, &sp2C, 0);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(spEC, &sp2C, 0);
     r4 = sp8.y;
-    if (_ZN13RaycastGround10DetectClsnEv(spEC) != 0) {
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(spEC) != 0) {
         int d;
         r4 = *(int*)(spEC + 0x44);
         d = r4 - sp8.y;
@@ -131,8 +131,8 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
             *(int*)(self + 0xa8) = sp8.y - (int)(((long long)diff * 0xf80 + 0x800) >> 12);
         }
         if (*(int*)(self + 0x154) & 0x400) {
-            _ZN13RaycastGroundD1Ev(spEC);
-            _ZN11RaycastLineD1Ev(sp74);
+            _ZN9dBgCh_GndD1Ev(spEC);
+            _ZN9dBgCh_LinD1Ev(sp74);
             return r4;
         }
     }
@@ -160,7 +160,7 @@ int func_0200bec4(char *self, int *arg1, int arg2, char *arg3, int arg4)
             }
         }
     }
-    _ZN13RaycastGroundD1Ev(spEC);
-    _ZN11RaycastLineD1Ev(sp74);
+    _ZN9dBgCh_GndD1Ev(spEC);
+    _ZN9dBgCh_LinD1Ev(sp74);
     return r4;
 }

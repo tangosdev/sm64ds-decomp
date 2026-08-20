@@ -1,9 +1,9 @@
 extern void* _ZN7fBase_cnwEj(unsigned int sz);
 extern void _ZN12dEnemyBase_cC2Ev(void *p);
 extern int func_020733a8(void *p, int a, int b, void *ctor, void *dtor);
-extern int _ZN12WithMeshClsnC1Ev(void *p);
-extern int _ZN25MovingCylinderClsnWithPosC1Ev(void *p);
-extern int _ZN25MovingCylinderClsnWithPosD1Ev(void *p);
+extern int _ZN10dBgCh_ActrC1Ev(void *p);
+extern int _ZN10dCcAcPos_cC1Ev(void *p);
+extern int _ZN10dCcAcPos_cD1Ev(void *p);
 extern int func_0203d73c(void *p);
 extern int _ZN8Vector3sD1Ev(void *p);
 extern int func_0203d384(void *p);
@@ -27,9 +27,9 @@ void *Wiggler_Spawn(void){
     func_020733a8(c+0x3cc, 5, 0xc, func_0203d384, _ZN7Vector3D1Ev);
     func_020733a8(c+0x408, 5, 0xc, func_0203d384, _ZN7Vector3D1Ev);
     func_020733a8(c+0x444, 5, 6, func_0203d73c, _ZN8Vector3sD1Ev);
-    func_020733a8(c+0x478, 5, 0x40, _ZN25MovingCylinderClsnWithPosC1Ev, _ZN25MovingCylinderClsnWithPosD1Ev);
-    func_020733a8(c+0x5b8, 5, 0x40, _ZN25MovingCylinderClsnWithPosC1Ev, _ZN25MovingCylinderClsnWithPosD1Ev);
-    _ZN12WithMeshClsnC1Ev(c+0x708);
+    func_020733a8(c+0x478, 5, 0x40, _ZN10dCcAcPos_cC1Ev, _ZN10dCcAcPos_cD1Ev);
+    func_020733a8(c+0x5b8, 5, 0x40, _ZN10dCcAcPos_cC1Ev, _ZN10dCcAcPos_cD1Ev);
+    _ZN10dBgCh_ActrC1Ev(c+0x708);
   }
   return c;
 }

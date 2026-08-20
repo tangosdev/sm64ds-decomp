@@ -9,8 +9,8 @@ extern "C" {
 extern void _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void* t, int a, int b);
 extern void* _ZN8dActor_c13ClosestPlayerEv(void* c);
 extern void _ZN9Animation7AdvanceEv(void* a);
-extern void _ZN12CylinderClsn5ClearEv(void* a);
-extern void _ZN12CylinderClsn6UpdateEv(void* a);
+extern void _ZN5dCc_c5ClearEv(void* a);
+extern void _ZN5dCc_c6UpdateEv(void* a);
 extern void func_ov027_02111994(char* c);
 
 int _ZN10daPgDfdr_c8BehaviorEv(char* c){
@@ -23,8 +23,8 @@ int _ZN10daPgDfdr_c8BehaviorEv(char* c){
   }
   _ZN9Animation7AdvanceEv(c+0x370);
   _ZN9Animation7AdvanceEv(c+0x384);
-  _ZN12CylinderClsn5ClearEv(c+0x398);
-  _ZN12CylinderClsn6UpdateEv(c+0x398);
+  _ZN5dCc_c5ClearEv(c+0x398);
+  _ZN5dCc_c6UpdateEv(c+0x398);
   func_ov027_02111994(c);
   return 1;
 }

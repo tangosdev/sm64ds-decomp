@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dActor_c.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
@@ -22,7 +22,7 @@ struct BlueFlame : dActor_c {
     Vector3                mFlamePos;            /* 0x0d4 */
     u8                     mDisappearTimer;      /* 0x0e0 */
     u8  pad_0e1[0x3];
-    MovingCylinderClsn     mMovingCylinderClsn; /* 0x0e4 */
+    dCcAc_c     mdCcAc_c; /* 0x0e4 */
 
     virtual ~BlueFlame();            /* slots 16 (D1), 17 (D0) */
 

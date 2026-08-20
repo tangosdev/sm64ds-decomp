@@ -4,10 +4,10 @@
 #include "common.h"
 extern "C" {
 
-extern void _ZN11RaycastLineC1Ev(void* self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
-extern int _ZN11RaycastLine10DetectClsnEv(void* self);
-extern void _ZN11RaycastLineD1Ev(void* self);
+extern void _ZN9dBgCh_LinC1Ev(void* self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
+extern void _ZN9dBgCh_LinD1Ev(void* self);
 
 int func_ov100_02143370(char* c)
 {
@@ -16,8 +16,8 @@ int func_ov100_02143370(char* c)
     Vector3 va;
     Vector3 vb;
     int ya, yb;
-    _ZN11RaycastLineC1Ev(rl1);
-    _ZN11RaycastLineC1Ev(rl2);
+    _ZN9dBgCh_LinC1Ev(rl1);
+    _ZN9dBgCh_LinC1Ev(rl2);
     va.x = 0; va.y = 0; va.z = 0;
     vb.x = 0; vb.y = 0; vb.z = 0;
     va.x = *(int*)(c + 0x5c);
@@ -30,14 +30,14 @@ int func_ov100_02143370(char* c)
     vb.z = *(int*)(c + 0x64);
     va.y = ya + 0xa000;
     vb.y = yb - 0xb8000;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl1, &va, &vb, c);
-    if (_ZN11RaycastLine10DetectClsnEv(rl1) != 0) {
-        _ZN11RaycastLineD1Ev(rl2);
-        _ZN11RaycastLineD1Ev(rl1);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl1, &va, &vb, c);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(rl1) != 0) {
+        _ZN9dBgCh_LinD1Ev(rl2);
+        _ZN9dBgCh_LinD1Ev(rl1);
         return 1;
     }
-    _ZN11RaycastLineD1Ev(rl2);
-    _ZN11RaycastLineD1Ev(rl1);
+    _ZN9dBgCh_LinD1Ev(rl2);
+    _ZN9dBgCh_LinD1Ev(rl1);
     return 0;
 }
 }

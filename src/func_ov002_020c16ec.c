@@ -3,7 +3,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-struct SurfaceInfo { char dummy; };
+#include "SurfaceInfo.h"
 
 
 struct Obj {

@@ -17,7 +17,7 @@
  * destructor out of line, matching D1 (func_ov025_021118c8) and D0
  * (func_ov025_02111928): own vptr, then daDsnBase_c's (inlined --
  * ShadowModel@0x338 then TextureSequence@0x324), then dBgActor_c's (also
- * inlined, per its own header's convention -- MovingMeshCollider@0x124 and
+ * inlined, per its own header's convention -- dBgW_KcMbg@0x124 and
  * Model@0xd4), then dActor_c::~dActor_c.
  *
  * daDsnBase_c ends its own data at 0x360; this class's own storage starts

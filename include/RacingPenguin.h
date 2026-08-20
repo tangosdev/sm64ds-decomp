@@ -8,7 +8,7 @@
 #include "ModelAnim.h"
 #include "TextureSequence.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 struct RacingPenguin {
     u8  pad_000[0x80];
@@ -53,10 +53,10 @@ struct RacingPenguin {
        ShadowModel's D1 at +0x14c -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13RacingPenguinD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x14c */
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x174 -- a relocation the ROM build
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x174 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13RacingPenguinD0Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x174 */
+    dCcAc_c mdCcAc_c;            /* 0x174 */
     u8  mWithMeshClsn;            /* 0x1a8 */
 #ifdef __cplusplus
     /* methods */

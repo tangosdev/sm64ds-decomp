@@ -1,7 +1,7 @@
 //cpp
 // @symbol _ZN13OneUpMushroom13InitResourcesEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "OneUpMushroom.h"
@@ -20,8 +20,8 @@ extern unsigned char data_0209f220;
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern "C" int _ZN11ShadowModel12InitCylinderEv(void* self);
-extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, int q);
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, int q);
 extern "C" int IsStarCollectedInCurLevel(int a);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* self);
 
@@ -57,22 +57,22 @@ int OneUpMushroom::InitResources()
         return 0;
 
     if (mMushroomType == 6 || mMushroomType == 8 || (unsigned int)(mMushroomType - 0xb) <= 1) {
-        _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, (dActor_c*)((char*)this), 0x64000, 0x40000, 0x100002, 0);
+        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, (dActor_c*)((char*)this), 0x64000, 0x40000, 0x100002, 0);
         if ((unsigned int)(mMushroomType - 0xb) <= 1) {
-            *(int*)((long long)((char*)&mMovingCylinderClsn.vulnFlags)) |= 0x8000;
+            *(int*)((long long)((char*)&mdCcAc_c.vulnFlags)) |= 0x8000;
         }
     } else {
         isKind115 = (actorID == 0x115);
         if (isKind115) {
-            _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, (dActor_c*)((char*)this), 0x41000, 0x41000, 0x100002, 0);
+            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, (dActor_c*)((char*)this), 0x41000, 0x41000, 0x100002, 0);
         } else {
-            _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, (dActor_c*)((char*)this), 0x32000, 0x32000, 0x100002, 0);
+            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, (dActor_c*)((char*)this), 0x32000, 0x32000, 0x100002, 0);
         }
     }
 
     unk_388 = 0;
     if (data_ov002_020ff040[mMushroomType] == 0) {
-        *(int*)((long long)((char*)&mMovingCylinderClsn.flags)) |= 1;
+        *(int*)((long long)((char*)&mdCcAc_c.flags)) |= 1;
     }
     if (data_ov002_020ff050[mMushroomType] == 0) {
         *(int*)((long long)((char*)&mFlags)) &= ~1;
@@ -89,8 +89,8 @@ int OneUpMushroom::InitResources()
     unk_380 = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x32000;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, (dActor_c*)((char*)this), 0x32000, 0x32000, 0, 0);
-    _ZN12WithMeshClsn13SetLimMovFlagEv((char*)&mWithMeshClsn);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, (dActor_c*)((char*)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr13SetLimMovFlagEv((char*)&mWithMeshClsn);
     unk_394 = 0;
 
     if (data_0209f2f8 == 7 && mPosY == 0xdac000 && mPosZ == 0

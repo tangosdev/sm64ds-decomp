@@ -3,11 +3,11 @@ extern void _ZN6Player11ChangeStateERNS_5StateE(void *thiz, void *st);
 extern void func_ov002_020de968(void *c);
 extern void func_ov002_020bdd2c(void *c);
 extern int func_ov002_020c607c(void *c, int a, int b, int *out);
-extern void _ZN13RaycastGroundC1Ev(void *p);
-extern void _ZN4BgCh19StartDetectingWaterEv(void *p);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *p, void *v, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(void *p);
-extern void _ZN13RaycastGroundD1Ev(void *p);
+extern void _ZN9dBgCh_GndC1Ev(void *p);
+extern void _ZN5dBgCh19StartDetectingWaterEv(void *p);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *p, void *v, void *actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *p);
+extern void _ZN9dBgCh_GndD1Ev(void *p);
 
 extern char data_ov002_021102ec;
 extern char data_ov002_021106dc;
@@ -49,10 +49,10 @@ int func_ov002_020c61ac(char *c) {
             v[0] = xv;
             v[1] = yv;
             v[2] = zv;
-            _ZN13RaycastGroundC1Ev(obj);
-            _ZN4BgCh19StartDetectingWaterEv(obj);
-            _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(obj, v, c);
-            if (_ZN13RaycastGround10DetectClsnEv(obj)) {
+            _ZN9dBgCh_GndC1Ev(obj);
+            _ZN5dBgCh19StartDetectingWaterEv(obj);
+            _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(obj, v, c);
+            if (_ZN9dBgCh_Gnd10DetectClsnEv(obj)) {
                 *(int *)(c + 0x644) = *(int *)((char *)obj + 0x44);
                 *(int *)(c + 0x60) = *(int *)(c + 0x644);
             }
@@ -62,10 +62,10 @@ int func_ov002_020c61ac(char *c) {
             } else {
                 func_ov002_020bdd2c(c);
                 _ZN6Player11ChangeStateERNS_5StateE(c, &data_ov002_021101b4);
-                _ZN13RaycastGroundD1Ev(obj);
+                _ZN9dBgCh_GndD1Ev(obj);
                 return 1;
             }
-            _ZN13RaycastGroundD1Ev(obj);
+            _ZN9dBgCh_GndD1Ev(obj);
         }
     }
     a = func_ov002_020c607c(c, *(int *)(c + 0x60) - 0x20000, *(int *)(c + 0x60) + 0xa0000, &outA);

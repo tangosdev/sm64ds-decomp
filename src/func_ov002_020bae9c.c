@@ -3,10 +3,10 @@ extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char *c);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char *c);
 extern void func_ov002_020baf80(char *c);
 extern void func_ov002_020bbd5c(char *c, int i);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(char *thiz, char *actor, int b, int d, unsigned int e, unsigned int f);
-extern int _ZN16MeshColliderBase9IsEnabledEv(char *c);
-extern void _ZN16MeshColliderBase7DisableEv(char *c);
-extern void _ZN12CylinderClsn5ClearEv(char *c);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(char *thiz, char *actor, int b, int d, unsigned int e, unsigned int f);
+extern int _ZN4dBgW9IsEnabledEv(char *c);
+extern void _ZN4dBgW7DisableEv(char *c);
+extern void _ZN5dCc_c5ClearEv(char *c);
 void func_ov002_020bae9c(char *c)
 {
   *((unsigned char *) (c + 0x590)) = 1;
@@ -26,10 +26,10 @@ void func_ov002_020bae9c(char *c)
   func_ov002_020baf80(c);
   func_ov002_020bbd5c(c, 0);
   *((unsigned char *) (c + 0x31c)) = 0;
-  _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(c + 0x320, c, 0x64000, 0x64000, 0x4800002, 0x41000);
-  if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124))
+  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(c + 0x320, c, 0x64000, 0x64000, 0x4800002, 0x41000);
+  if (_ZN4dBgW9IsEnabledEv(c + 0x124))
   {
-    _ZN16MeshColliderBase7DisableEv(c + 0x124);
+    _ZN4dBgW7DisableEv(c + 0x124);
   }
-  _ZN12CylinderClsn5ClearEv(c + 0x320);
+  _ZN5dCc_c5ClearEv(c + 0x320);
 }

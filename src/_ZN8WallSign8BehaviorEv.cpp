@@ -15,8 +15,8 @@ extern void _ZN6Player12ShowMessage2ER7fBase_cjPK7Vector3hh(void *actor, void *s
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern int AngleDiff(int a, int b);
 extern int _ZN6Player9StartTalkER7fBase_cb(void *actor, void *self, int b);
-extern void _ZN12CylinderClsn5ClearEv(void *self);
-extern void _ZN12CylinderClsn6UpdateEv(void *self);
+extern void _ZN5dCc_c5ClearEv(void *self);
+extern void _ZN5dCc_c6UpdateEv(void *self);
 extern s16 data_02082214[];
 }
 
@@ -106,7 +106,7 @@ int WallSign::Behavior()
             }
         }
     }
-    _ZN12CylinderClsn5ClearEv(self + 0x320);
-    _ZN12CylinderClsn6UpdateEv(self + 0x320);
+    _ZN5dCc_c5ClearEv(self + 0x320);
+    _ZN5dCc_c6UpdateEv(self + 0x320);
     return 1;
 }

@@ -1,6 +1,6 @@
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 extern void _Z14ApproachLinearRiii(int* p, int a, int b);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* a, void* clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* a, void* clsn);
 extern void func_ov073_021223a4(void* c, void* p);
 extern short data_02082214[];
 extern int data_02092138;
@@ -23,7 +23,7 @@ int func_ov073_021220c0(char* c)
     }
     *(short*)(c + 0x8c) = 0;
     *(int*)(c + 0x9c) = -0xa000;
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
     if (*(unsigned char*)(c + 0x32c) != 0) goto end;
     {
         int v = data_02092138 + 0x96000;

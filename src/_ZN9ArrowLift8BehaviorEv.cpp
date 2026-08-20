@@ -5,7 +5,7 @@
 #include "ArrowLift.h"
 extern "C" {
 extern void func_02012694(int a, void* p);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* clsn);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
 extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void* self, int a, int b);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
@@ -26,7 +26,7 @@ int ArrowLift::Behavior()
         break;
     case 1:
     case 3:
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((u8*)this), 0);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(((u8*)this), 0);
         {
             int* p = (int*)(((int)((u8*)this) + 0x320));
             *p = *p + unk_098;

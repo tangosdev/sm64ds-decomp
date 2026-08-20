@@ -5,12 +5,12 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
-typedef struct RaycastGround {
+typedef struct dBgCh_Gnd {
     char pre[0x10];
     char result[0x34];
     int clsnY;
     char post[0x8];
-} RaycastGround;
+} dBgCh_Gnd;
 
 extern "C" {
 int _ZN8SaveData16HasPlayerLostCapEv(void);
@@ -18,13 +18,13 @@ void _ZN6Player7SetAnimEji5Fix12IiEj(void* self, u32 anim, int a, int fix, u32 b
 int _ZNK6Player14GetBodyModelIDEjb(void* self, u32 a, int b);
 void _ZN9Animation8SetFlagsEi(void* self, int flags);
 void Player_DisableInteraction(char* self);
-void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, Vector3* pos, void* actor);
-int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
+void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
+void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, Vector3* pos, void* actor);
+int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
 int func_ov002_020c7cbc(char* self);
 void func_02012790(int a);
 void _ZN6Player16InitWingFeathersEb(void* self, int b);
-void _ZN13RaycastGroundD1Ev(RaycastGround* self);
+void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 }
 
 extern u8 data_0209f2d8;
@@ -35,7 +35,7 @@ extern u8 data_0209f2fc;
 
 int Player::St_LevelEnter_Init()
 {
-    RaycastGround rg;
+    dBgCh_Gnd rg;
 
     u32 anim = data_ov002_0210a7e8[mStateStep];
     if (_ZN8SaveData16HasPlayerLostCapEv() != 0) {
@@ -61,7 +61,7 @@ int Player::St_LevelEnter_Init()
     mStateArg = 0;
     mPrevAngleY = mAngleY;
     mStateWork = 0;
-    _ZN13RaycastGroundC1Ev(&rg);
+    _ZN9dBgCh_GndC1Ev(&rg);
 
     switch (mStateStep) {
     case 0: {
@@ -74,9 +74,9 @@ int Player::St_LevelEnter_Init()
         pos.x = x;
         pos.y = w;
         pos.z = z;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, ((char*)this));
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, ((char*)this));
         hit = 0x80000000;
-        if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) hit = rg.clsnY;
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) hit = rg.clsnY;
         mPosY = hit;
         mStateWork = 2;
         {
@@ -160,6 +160,6 @@ int Player::St_LevelEnter_Init()
         }
     }
 
-    _ZN13RaycastGroundD1Ev(&rg);
+    _ZN9dBgCh_GndD1Ev(&rg);
     return 1;
 }

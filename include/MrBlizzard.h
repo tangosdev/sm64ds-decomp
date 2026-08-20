@@ -16,13 +16,13 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct MrBlizzard : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x110 */
-    WithMeshClsn mWithMeshClsn;       /* 0x150 */
+    dCcAcPos_c mdCcAcPos_c;/* 0x110 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x150 */
     ModelAnim mModelAnim;             /* 0x30c */
     ShadowModel mShadowModel;         /* 0x370 */
     u8  pad_398[0x64];
@@ -91,14 +91,14 @@ struct MrBlizzard {
     u8  pad_109[0x1];
     u8  unk_10a;            /* 0x10a */
     u8  pad_10b[0x5];
-    /* MovingCylinderClsnWithPos member, named by the class's own destructor calling
-       MovingCylinderClsnWithPos's D1 at +0x110 -- a relocation the ROM build
+    /* dCcAcPos_c member, named by the class's own destructor calling
+       dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10MrBlizzardD1Ev.c] */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;            /* 0x110 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x150 -- a relocation the ROM build
+    dCcAcPos_c mdCcAcPos_c;            /* 0x110 */
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x150 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10MrBlizzardD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x150 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x150 */
     /* ModelAnim member, named by the class's own destructor calling
        ModelAnim's D1 at +0x30c -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10MrBlizzardD1Ev.c] */

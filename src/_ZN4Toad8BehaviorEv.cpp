@@ -30,7 +30,7 @@
  * adjustment.
  */
 #include "Toad.h"
-#include "CylinderClsn.h"
+#include "dCc_c.h"
 
 extern "C" {
 extern s8 data_0209f2f8;
@@ -119,8 +119,8 @@ int Toad::Behavior()
 
     _ZN9ModelBase12ApplyOpacityEj(&mModelAnim, (u32)(u8)(unk_20d >> 3), 1);
 
-    ((CylinderClsn *)&mMovingCylinderClsn)->Clear();
-    ((CylinderClsn *)&mMovingCylinderClsn)->Update();
+    ((dCc_c *)&mdCcAc_c)->Clear();
+    ((dCc_c *)&mdCcAc_c)->Update();
 
     return 1;
 }

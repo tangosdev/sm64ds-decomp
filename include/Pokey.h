@@ -5,8 +5,8 @@
 #include "dActor_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsn.h"
-#include "WithMeshClsn.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
@@ -24,8 +24,8 @@ struct Pokey : dActor_c {
     u8  pad_0d0[0x4];
     Model mModel;                            /* 0x0d4 */
     ShadowModel mShadowModel;                /* 0x124 */
-    MovingCylinderClsn mMovingCylinderClsn;  /* 0x14c */
-    WithMeshClsn mWithMeshClsn;              /* 0x180 */
+    dCcAc_c mdCcAc_c;  /* 0x14c */
+    dBgCh_Actr mWithMeshClsn;              /* 0x180 */
     u8  unk_33c;            /* 0x33c */
     u8  pad_33d[0x2f];
     s32 unk_36c;            /* 0x36c */

@@ -9,7 +9,7 @@
  * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjDorifu_c, which derives
  * from dBgActor_c. The destructor stores three vptrs -- its own, daObjDorifu_c's,
  * then dBgActor_c's -- and destroys daObjDorifu_c's Model[5] and
- * MovingMeshCollider[5] in between. All of that comes out of the base
+ * dBgW_KcMbg[5] in between. All of that comes out of the base
  * declaration now, so the destructor body is empty.
  *
  *   _ZTI17daObjKm1_Dorifu_c  ov043 0x021124dc

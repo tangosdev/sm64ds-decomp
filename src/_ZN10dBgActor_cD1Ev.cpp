@@ -14,7 +14,7 @@
  * file declares and drops the rest.
  *
  * The body it forces is the class's own layout evidence: the ROM destroys a
- * MovingMeshCollider at 0x124 and a Model at 0xd4, and both offsets are where
+ * dBgW_KcMbg at 0x124 and a Model at 0xd4, and both offsets are where
  * those classes' asserted sizes put them.
  */
 #include "dBgActor_c.h"

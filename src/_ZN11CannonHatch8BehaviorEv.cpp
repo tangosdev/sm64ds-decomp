@@ -9,8 +9,8 @@ char *_ZN8dActor_c13ClosestPlayerEv(char *self);
 int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(char *c, int a, int b);
 void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(char *c);
 void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char *c);
-int _ZN16MeshColliderBase9IsEnabledEv(char *c);
-void _ZN16MeshColliderBase7DisableEv(char *c);
+int _ZN4dBgW9IsEnabledEv(char *c);
+void _ZN4dBgW7DisableEv(char *c);
 void Matrix4x3_FromRotationY(void *m, int angle);
 void MulVec3Mat4x3(Vector3 *v, void *m, Vector3 *dst);
 void AddVec3(Vector3 *a, Vector3 *b, Vector3 *d);
@@ -32,8 +32,8 @@ extern "C" int _ZN11CannonHatch8BehaviorEv(char *c)
                 _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
             }
         } else {
-            if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124)) {
-                _ZN16MeshColliderBase7DisableEv(c + 0x124);
+            if (_ZN4dBgW9IsEnabledEv(c + 0x124)) {
+                _ZN4dBgW7DisableEv(c + 0x124);
             }
         }
         return 1;

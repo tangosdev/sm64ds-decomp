@@ -15,12 +15,12 @@
 #ifdef __cplusplus
 
 #include "dEnemyBase_c.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "WithMeshClsn.h"
+#include "dCcAcPos_c.h"
+#include "dBgCh_Actr.h"
 
 struct WaterSuction : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x110 */
-    WithMeshClsn mWithMeshClsn;       /* 0x150 */
+    dCcAcPos_c mdCcAcPos_c;/* 0x110 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x150 */
     u8  pad_30c[0x8];
     s32 unk_314;                      /* 0x314 */
 
@@ -54,10 +54,10 @@ struct WaterSuction {
     u8  pad_098[0x68];
     u8  unk_100;            /* 0x100 */
     u8  pad_101[0xf];
-    /* MovingCylinderClsnWithPos member, named by the class's own destructor calling
-       MovingCylinderClsnWithPos's D1 at +0x110 -- a relocation the ROM build
+    /* dCcAcPos_c member, named by the class's own destructor calling
+       dCcAcPos_c's D1 at +0x110 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN12WaterSuctionD1Ev.c] */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;            /* 0x110 */
+    dCcAcPos_c mdCcAcPos_c;            /* 0x110 */
     u8  mWithMeshClsn;            /* 0x150 */
     u8  pad_151[0x1c3];
     s32 unk_314;            /* 0x314 */

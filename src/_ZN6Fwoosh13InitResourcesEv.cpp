@@ -5,8 +5,8 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Fwoosh.h"
 extern "C" {
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, int fix, int t, unsigned int a, unsigned int b);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, int fix, int t, void *v, int t2);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, int fix, int t, unsigned int a, unsigned int b);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, int fix, int t, void *v, int t2);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *f, int a, int b);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *f);
@@ -27,13 +27,13 @@ int Fwoosh::InitResources()
     if (mVariant == 0xff)
         mVariant = 0;
     if (mVariant == 1) {
-        _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x3c000, 0x14000, 0x200002, 0);
+        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x3c000, 0x14000, 0x200002, 0);
         func_ov091_02134044(((char *)this), data_ov091_021356c0);
-        _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x14000, 0, 0, 0);
+        _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x14000, 0, 0, 0);
         (*(s32 *)&mFlags) = 0;
         return 1;
     }
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0x200002, 0x4a010);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0x200002, 0x4a010);
     (*(s32 *)&mFlags) = 0x10000000;
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210da40);
     _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a0);

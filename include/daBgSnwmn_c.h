@@ -4,7 +4,7 @@
 #include "Model.h"
 #include "TextureSequence.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 
 /* An dActor_c-side class (da* prefix, not a scene class) -- a background
  * snowman actor. It had a FLAT header before this pass, with no base
@@ -35,11 +35,11 @@
  *     _ZN5ModelC1Ev(p + 0x124)                    -- Model, sizeof 0x50
  *     _ZN15TextureSequenceC1Ev(p + 0x174)         -- TextureSequence, 0x14
  *     _ZN11ShadowModelC1Ev(p + 0x188)             -- ShadowModel, 0x28
- *     _ZN25MovingCylinderClsnWithPosC1Ev(p + 0x1b0) -- MovingCylinderClsnWithPos, 0x40
+ *     _ZN10dCcAcPos_cC1Ev(p + 0x1b0) -- dCcAcPos_c, 0x40
  * THE LAST MEMBER CLOSES EXACTLY ON THE ALLOCATION LITERAL:
  * 0x1b0 + 0x40 = 0x1f0. Nothing is left over. The destructor
  * (func_ov072_02120824 / _02120874) tears the same five down in exactly the
- * reverse order -- MovingCylinderClsnWithPos, ShadowModel, TextureSequence,
+ * reverse order -- dCcAcPos_c, ShadowModel, TextureSequence,
  * Model, Model -- which is what a compiler-generated body emits for typed
  * members declared in ascending-offset order, so they are declared typed
  * below rather than left as opaque storage.
@@ -79,7 +79,7 @@ struct daBgSnwmn_c : dActor_c {
     Model mModel2;                 /* 0x124 */
     TextureSequence mTexSeq;       /* 0x174 */
     ShadowModel mShadow;           /* 0x188 */
-    MovingCylinderClsnWithPos mCylClsn; /* 0x1b0 */
+    dCcAcPos_c mCylClsn; /* 0x1b0 */
 
     /* Declared first -- key function; see the family convention discussed
        in dActor_c.h. Never defined as a real method in any TU: both D1 and

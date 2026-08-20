@@ -4,8 +4,8 @@
 #include "dActor_c.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsn.h"
-#include "WithMeshClsn.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 
 /* TWO WITNESSES:
  *
@@ -40,12 +40,12 @@ struct BabyPenguin : dActor_c {
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x138. [_ZN11BabyPenguinD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x138 */
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x160. [_ZN11BabyPenguinD0Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x160 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x194. [_ZN11BabyPenguinD0Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x194 */
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x160. [_ZN11BabyPenguinD0Ev.c] */
+    dCcAc_c mdCcAc_c;            /* 0x160 */
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x194. [_ZN11BabyPenguinD0Ev.c] */
+    dBgCh_Actr mWithMeshClsn;            /* 0x194 */
     s32 unk_350;            /* 0x350 */
     s32 unk_354;            /* 0x354 */
     s32 unk_358;            /* 0x358 */

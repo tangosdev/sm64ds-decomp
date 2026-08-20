@@ -5,11 +5,11 @@
 /* recovered: named members + shared header, real C++ method */
 #include "MansionSteps.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 int MansionSteps::CleanupResources()
 {
-    ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
     int idx = *(int*)((char*)&unk_140);
     ((SharedFilePtr *)((void*)(data_ov063_0211e27c[idx])))->Release();
     idx = *(int*)((char*)&unk_140);

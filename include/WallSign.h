@@ -4,7 +4,7 @@
 #include "types.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
- * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
  * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x31e was dActor_c's and
  * dBgActor_c's, and is inherited now.
@@ -16,11 +16,11 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 
 struct WallSign : dBgActor_c {
     u8  pad_31e[0x2];
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;/* 0x320 */
+    dCcAcPos_c mdCcAcPos_c;/* 0x320 */
 
     /* --- vtable --- */
     virtual ~WallSign();
@@ -50,7 +50,7 @@ struct WallSign {
     Model mModel;            /* 0x0d4 */
     u8  mMovingMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mMovingCylinderClsnWithPos;            /* 0x320 */
+    u8  mdCcAcPos_c;            /* 0x320 */
 };
 
 #endif /* __cplusplus */

@@ -17,9 +17,9 @@ extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *ts, void *b
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(void *dst, void *mtx, void *src);
 extern void Vec3_Add(void *out, void *a, void *b);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, void *pos, int fix, u32 a, u32 b, u32 cc);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, void *pos, int fix, u32 a, u32 b, u32 cc);
 extern void func_ov034_021125b8(void *c, int i);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int fix1, int fix2, void *v, int t);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int fix1, int fix2, void *v, int t);
 }
 
 extern s32 data_ov034_021138c4[];
@@ -124,8 +124,8 @@ int Wiggler::InitResources()
         *(s32 *)(r7p + 0x40c) = 0x1000;
         *(s32 *)(r7p + 0x410) = 0x1000;
         sp28 = data_ov034_021138d8[i];
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(sp10, c, r5p, sp28 + 0xA000, sp40, sp44, 0x26FE0);
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(sp14, c, r5p, sp28, sp48, 0x200004, 0x26FE0);
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(sp10, c, r5p, sp28 + 0xA000, sp40, sp44, 0x26FE0);
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(sp14, c, r5p, sp28, sp48, 0x200004, 0x26FE0);
         spC += 0x14;
         r8p += 0x64;
         sp10 += 0x40;
@@ -150,7 +150,7 @@ int Wiggler::InitResources()
     } while (j < 5);
 
     func_ov034_021125b8(c, 0);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x708, c, 0x14000, 0x14000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x708, c, 0x14000, 0x14000, 0, 0);
     *(u8 *)(c + 0x8db) = 4;
     func_ov034_021129ec(c);
     *(s32 *)(c + 0x8cc) = *(s32 *)(c + 0x5c);

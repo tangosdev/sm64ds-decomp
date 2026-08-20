@@ -2,7 +2,7 @@
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_Platform.h"
 #include "decl_TextureSequence.h"
 #include "decl_common.h"
@@ -17,7 +17,7 @@ int *func_ov027_0211207c(void)
         p[0] = (int)_ZTV10daPgDfdr_c;
         _ZN9ModelAnimC1Ev((char *)p + 0x320);
         _ZN15TextureSequenceC1Ev((char *)p + 0x384);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x398);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x398);
     }
     return p;
 }

@@ -6,13 +6,13 @@
 #include "common.h"
 typedef int Fix12i;
 
-struct CylinderClsn;
+struct dCc_c;
 struct dActor_c;
-struct WithMeshClsn { int JustHitGround() const; };
+struct dBgCh_Actr { int JustHitGround() const; };
 struct dActor_c {
     static dActor_c* FindWithActorID(unsigned int id, dActor_c* a);
     static dActor_c* FindWithID(unsigned int id);
-    void UpdatePos(CylinderClsn* c);
+    void UpdatePos(dCc_c* c);
 };
 struct fBase_c { void MarkForDestruction(); };
 extern "C" int func_ov060_02116518(char* c, int a, int b, int d);
@@ -30,10 +30,10 @@ extern "C" void func_ov060_021168c4(char* c)
     } else {
         r4 = (char*)dActor_c::FindWithID(*(unsigned int*)(c + 0x2cc));
     }
-    if (((WithMeshClsn*)(c + 0x110))->JustHitGround() != 0) {
+    if (((dBgCh_Actr*)(c + 0x110))->JustHitGround() != 0) {
         *(int*)(c + 0xa8) = 0x1e000;
     }
-    ((dActor_c*)c)->UpdatePos((CylinderClsn*)0);
+    ((dActor_c*)c)->UpdatePos((dCc_c*)0);
     func_ov060_02116518(c, 0xa6, 0, 0x32000);
     if (func_ov060_021172c8((unsigned char*)c, 0x96) != 0) {
         ((fBase_c*)c)->MarkForDestruction();

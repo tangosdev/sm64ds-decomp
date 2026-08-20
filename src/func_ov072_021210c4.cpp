@@ -3,18 +3,18 @@
 /* recovered: shared common types */
 #include "common.h"
 
-struct RaycastGround { char buf[0x68 - 0x18]; };
+struct dBgCh_Gnd { char buf[0x68 - 0x18]; };
 extern "C" {
 extern int _ZN6Player14IsFrontSlidingEv(void*);
 extern int _ZN6Player17LostGrabbedObjectEv(void*);
 extern void* _ZN8dActor_c11UpdateCarryER6PlayerRK7Vector3(void*, void*, void*);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void _ZN13RaycastGroundC1Ev(struct RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround *self, const struct Vector3 *v, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *self);
+extern void _ZN9dBgCh_GndC1Ev(struct dBgCh_Gnd *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(struct dBgCh_Gnd *self, const struct Vector3 *v, void *actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(struct dBgCh_Gnd *self);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *shadow, void *mtx, int fix, int t1, unsigned int t2);
-extern void _ZN13RaycastGroundD1Ev(struct RaycastGround *self);
+extern void _ZN9dBgCh_GndD1Ev(struct dBgCh_Gnd *self);
 extern char data_ov072_02122d3c[];
 
 
@@ -26,7 +26,7 @@ void func_ov072_021210c4(void *self)
     char *c = (char*)self;
     int idx;
     void *res;
-    struct RaycastGround rg;
+    struct dBgCh_Gnd rg;
     struct Vector3 v;
     int r5;
     int r4;
@@ -60,9 +60,9 @@ void func_ov072_021210c4(void *self)
         v.y = *(int*)(c + 0x60);
         v.z = *(int*)(c + 0x64);
         v.y -= 0xa000;
-        _ZN13RaycastGroundC1Ev(&rg);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, 0);
-        if (_ZN13RaycastGround10DetectClsnEv(&rg)) {
+        _ZN9dBgCh_GndC1Ev(&rg);
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, 0);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg)) {
             r5 = *(int*)(c + 0x60) - *(int*)((char*)&rg + 0x44);
             if (r5 < 0x1000) r5 = 0x1000;
             tmp = (long long)r5 * 0x180 + 0x800;
@@ -71,7 +71,7 @@ void func_ov072_021210c4(void *self)
             if (r4 > 0x5a000) r4 = 0x5a000;
             r5 = r5 + 0x28000;
         }
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
     }
 
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(

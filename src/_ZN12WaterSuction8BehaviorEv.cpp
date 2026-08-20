@@ -6,9 +6,9 @@
 #include "WaterSuction.h"
 extern "C" {
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
-extern void _ZN12CylinderClsn5ClearEv(void* a);
-extern void _ZN12CylinderClsn6UpdateEv(void* a);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* thiz, void* clsn);
+extern void _ZN5dCc_c5ClearEv(void* a);
+extern void _ZN5dCc_c6UpdateEv(void* a);
 }
 
 struct C;
@@ -27,12 +27,12 @@ int WaterSuction::Behavior()
     if (*(int*)((char*)o + 8) != 0) {
         (c->*(o->pmf))();
     }
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this) + 0x110);
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
     func_ov026_02112324(((char*)this));
-    _ZN12CylinderClsn5ClearEv((char*)&(*(MovingCylinderClsnWithPos *)&mMovingCylinderClsnWithPos));
-    _ZN12CylinderClsn6UpdateEv((char*)&(*(MovingCylinderClsnWithPos *)&mMovingCylinderClsnWithPos));
+    _ZN5dCc_c5ClearEv((char*)&(*(dCcAcPos_c *)&mdCcAcPos_c));
+    _ZN5dCc_c6UpdateEv((char*)&(*(dCcAcPos_c *)&mdCcAcPos_c));
     return 1;
 }

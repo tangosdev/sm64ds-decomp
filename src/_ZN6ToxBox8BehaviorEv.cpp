@@ -18,9 +18,9 @@ extern "C" {
 void func_ov092_02131aec(void* c);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 void func_ov092_02131a88(char* self);
-void _ZN12CylinderClsn5ClearEv(void* m);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* m, Vector3* v);
-void _ZN12CylinderClsn6UpdateEv(void* m);
+void _ZN5dCc_c5ClearEv(void* m);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* m, Vector3* v);
+void _ZN5dCc_c6UpdateEv(void* m);
 }
 
 extern "C" int _ZN6ToxBox8BehaviorEv(ToxBox* self) {
@@ -51,11 +51,11 @@ extern "C" int _ZN6ToxBox8BehaviorEv(ToxBox* self) {
             *(short*)(c+0x90) = 0;
         }
     }
-    _ZN12CylinderClsn5ClearEv(c+0x4e8);
+    _ZN5dCc_c5ClearEv(c+0x4e8);
     v.x = 0;
     v.y = -0xfa000;
     v.z = 0;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c+0x4e8, &v);
-    _ZN12CylinderClsn6UpdateEv(c+0x4e8);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c+0x4e8, &v);
+    _ZN5dCc_c6UpdateEv(c+0x4e8);
     return 1;
 }

@@ -2,7 +2,7 @@
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
-#include "decl_ExtendingMeshCollider.h"
+#include "decl_dBgW_KcMbgSclY.h"
 #include "decl_Model.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
@@ -14,7 +14,7 @@ int *ExtendingPlatform_Spawn(void)
         _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV17ExtendingPlatform;
         _ZN5ModelC1Ev((char *)p + 0xd8);
-        _ZN21ExtendingMeshColliderC1Ev((char *)p + 0x158);
+        _ZN14dBgW_KcMbgSclYC1Ev((char *)p + 0x158);
     }
     return p;
 }

@@ -2,13 +2,13 @@
 extern "C" {
 typedef struct { int x, y, z; } Vector3;
 typedef struct dActor_c dActor_c;
-struct RaycastGround { char buf[0x54]; };
+struct dBgCh_Gnd { char buf[0x54]; };
 extern void func_ov090_02130f94(void* c);
-void _ZN13RaycastGroundC1Ev(RaycastGround* self);
+void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
 int Vec3_HorzDist(const Vector3* a, const Vector3* b);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3* p, dActor_c* a);
-int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
-void _ZN13RaycastGroundD1Ev(RaycastGround* self);
+void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, const Vector3* p, dActor_c* a);
+int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
+void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 extern unsigned char data_0209f2d8;
 extern signed char data_0209f2f8;
 extern int data_0209f32c;
@@ -21,8 +21,8 @@ void func_ov090_02131378(char* c){
       return;
     }
   }
-  RaycastGround rg;
-  _ZN13RaycastGroundC1Ev(&rg);
+  dBgCh_Gnd rg;
+  _ZN9dBgCh_GndC1Ev(&rg);
   Vector3 v;
   int vz = *(int*)(c+0x64);
   int vy = *(int*)(c+0x60) + 0x32000;
@@ -31,8 +31,8 @@ void func_ov090_02131378(char* c){
   v.z = vz;
   *(unsigned char*)(c+0x39c) = 0;
   if (Vec3_HorzDist((Vector3*)(c+0x5c), (Vector3*)(c+0x68)) != 0) {
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (dActor_c*)c);
-    if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0)
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (dActor_c*)c);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0)
       *(int*)(c+0x3a8) = *(int*)(rg.buf + 0x44);
   }
   if (*(int*)(c+0x3a8) < data_0209f32c) {
@@ -48,6 +48,6 @@ void func_ov090_02131378(char* c){
     *(int*)(c+0x60) = *(int*)(c+0x3ac);
     *(int*)(c+0xa8) = 0;
   }
-  _ZN13RaycastGroundD1Ev(&rg);
+  _ZN9dBgCh_GndD1Ev(&rg);
 }
 }

@@ -6,8 +6,8 @@
 #include "ModelAnim.h"
 #include "Model.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsn.h"
-#include "WithMeshClsn.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
@@ -26,8 +26,8 @@ struct Moneybag : dActor_c {
     ModelAnim mModelAnim;                    /* 0x0d4 */
     Model mModel;                            /* 0x138 */
     ShadowModel mShadowModel;                /* 0x188 */
-    MovingCylinderClsn mMovingCylinderClsn;  /* 0x1b0 */
-    WithMeshClsn mWithMeshClsn;              /* 0x1e4 */
+    dCcAc_c mdCcAc_c;  /* 0x1b0 */
+    dBgCh_Actr mWithMeshClsn;              /* 0x1e4 */
     u8  unk_3a0;            /* 0x3a0 */
     u8  pad_3a1[0x2f];
     s32 unk_3d0;            /* 0x3d0 */

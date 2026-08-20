@@ -17,11 +17,11 @@ extern void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void *f);
 extern void _ZN15TextureSequence7PrepareER8BMD_FileR8BTP_File(void *bmd, void *btp);
 extern void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, u32 u);
 extern int _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *act, void *pos, int f1, int f2, u32 u1, u32 u2);
-extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
-extern int _ZN13RaycastGround10DetectClsnEv(void *self);
-extern void _ZN13RaycastGroundD1Ev(void *self);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *act, void *pos, int f1, int f2, u32 u1, u32 u2);
+extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_GndD1Ev(void *self);
 
 extern int data_ov072_02122c70[];
 
@@ -66,15 +66,15 @@ int _ZN11daBgSnwmn_c13InitResourcesEv(char *c)
     if (_ZN11ShadowModel12InitCylinderEv(c + 0x188) == 0)
         return 0;
 
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x1b0, c, data_ov072_02122c70, 0xc3000, 0x17c000, 0x800004, 0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x1b0, c, data_ov072_02122c70, 0xc3000, 0x17c000, 0x800004, 0);
 
     v[0] = self->unk_05c;
     v[1] = self->unk_060;
     v[2] = self->unk_064;
     v[1] += 0x14000;
-    _ZN13RaycastGroundC1Ev(rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, v, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(rg))
+    _ZN9dBgCh_GndC1Ev(rg);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, v, 0);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(rg))
         self->unk_060 = *(int *)(rg + 0x44);
     else
         self->unk_060 = v[1];
@@ -85,6 +85,6 @@ int _ZN11daBgSnwmn_c13InitResourcesEv(char *c)
     self->unk_084 = 0x1800;
     self->unk_088 = 0x1800;
     func_ov072_021208d8(c);
-    _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_GndD1Ev(rg);
     return 1;
 }

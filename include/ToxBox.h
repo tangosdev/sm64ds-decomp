@@ -29,7 +29,7 @@ struct ToxBox {
     s32 unk_320;            /* 0x320 */
     u8  mWithMeshClsn;            /* 0x324 */
     u8  pad_325[0x1c3];
-    u8  mMovingCylinderClsnWithPos;            /* 0x4e8 */
+    u8  mdCcAcPos_c;            /* 0x4e8 */
     u8  pad_4e9[0x3f];
     u8  unk_528;            /* 0x528 */
     u8  pad_529[0x2f];

@@ -14,7 +14,7 @@ extern int data_ov064_0211c730[];
 
 s32 MetalNetLift::CleanupResources() {
     void * t = (void *)this;
-    _ZN16MeshColliderBase7DisableEv((char *)t + 0x124);
+    _ZN4dBgW7DisableEv((char *)t + 0x124);
     _ZN13SharedFilePtr7ReleaseEv(data_ov064_0211c730);
     _ZN13SharedFilePtr7ReleaseEv(data_ov064_0211c728);
     return 1;

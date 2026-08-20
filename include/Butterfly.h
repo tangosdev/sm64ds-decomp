@@ -8,7 +8,7 @@
 #include "ModelAnim.h"
 #include "Model.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Butterfly {
     u8  pad_000[0x80];
@@ -46,11 +46,11 @@ struct Butterfly {
        ShadowModel's D1 at +0x1b0 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN9ButterflyD0Ev.c] */
     ShadowModel mShadowModel2;            /* 0x1b0 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x1d8 -- a relocation the ROM build
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x1d8 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN9ButterflyD0Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x1d8 */
-    u8  mMovingCylinderClsnWithPos;            /* 0x394 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x1d8 */
+    u8  mdCcAcPos_c;            /* 0x394 */
     u8  pad_395[0x4b];
     s32 unk_3e0;            /* 0x3e0 */
     s32 unk_3e4;            /* 0x3e4 */

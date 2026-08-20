@@ -6,7 +6,7 @@
 typedef int Fix12i;
 
 
-extern int _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+extern int _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, const struct Vector3 *v, Fix12i mag);
 extern int func_0201267c(int a, void *b);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
@@ -20,7 +20,7 @@ int func_ov072_021201d4(char *self)
     switch (*(unsigned char *)(self + 0x334))
     {
     case 0:
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, self + 0x138);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(self, self + 0x138);
         if (*(int *)(self + 0xa8) < 0 && *(int *)(self + 0x60) < (int)0xffc427c0)
         {
             v.x = *(int *)(self + 0x5c);

@@ -19,8 +19,8 @@ extern void func_02022774(Fix12i x, Fix12i y, Fix12i z, s16 ang1, int ang2);
 extern void func_020226fc(Fix12i x, Fix12i y, Fix12i z, s16 ang1, s16 ang2);
 extern void func_02022864(Fix12i x, Fix12i y, Fix12i z, s16 ang1, int ang2);
 extern void func_020227ec(Fix12i x, Fix12i y, Fix12i z, s16 ang1, s16 ang2);
-extern void _ZN12CylinderClsn5ClearEv(void *thiz);
-extern void _ZN12CylinderClsn6UpdateEv(void *thiz);
+extern void _ZN5dCc_c5ClearEv(void *thiz);
+extern void _ZN5dCc_c6UpdateEv(void *thiz);
 }
 
 int Flamethrower::Behavior()
@@ -186,9 +186,9 @@ int Flamethrower::Behavior()
     if (count > 0) {
         char *pc = self + 0xd4;
         do {
-            _ZN12CylinderClsn5ClearEv(pc);
+            _ZN5dCc_c5ClearEv(pc);
             if (j < (int)(*((u8 *)(self + 0x465))))
-                _ZN12CylinderClsn6UpdateEv(pc);
+                _ZN5dCc_c6UpdateEv(pc);
             j++;
             pc += 0x3c;
         } while (j < count);

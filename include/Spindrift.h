@@ -14,8 +14,8 @@
  *
  *     0x110 ModelAnim                  0x64    -> 0x174
  *     0x174 ShadowModel                0x28    -> 0x19c
- *     0x19c MovingCylinderClsn         0x34    -> 0x1d0
- *     0x1d0 WithMeshClsn               0x1bc   -> 0x38c
+ *     0x19c dCcAc_c         0x34    -> 0x1d0
+ *     0x1d0 dBgCh_Actr               0x1bc   -> 0x38c
  *
  * SIZE IS THE ROM'S OWN: `Spindrift_Spawn` calls `fBase_c::operator new(924)`
  * -- 0x39c -- and stores this class's vtable, so that literal IS this
@@ -26,15 +26,15 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Spindrift : dEnemyBase_c {
     ModelAnim                    mModelAnim;            /* 0x110 */
     ShadowModel                  mShadowModel;          /* 0x174 */
-    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x19c */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x1d0 */
+    dCcAc_c           mdCcAc_c;   /* 0x19c */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x1d0 */
     u8  pad_38c[0xc];
     s16                          unk_398;               /* 0x398 */
     u8                           unk_39a;               /* 0x39a */

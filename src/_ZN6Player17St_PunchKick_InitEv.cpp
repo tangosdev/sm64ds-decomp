@@ -6,8 +6,8 @@
 #include "Player.h"
 extern "C" {
 extern int _ZN6Player15IsCollectingCapEv(void*);
-extern int _ZN12CylinderClsn5ClearEv(void*);
-extern int _ZN12CylinderClsn6UpdateEv(void*);
+extern int _ZN5dCc_c5ClearEv(void*);
+extern int _ZN5dCc_c6UpdateEv(void*);
 }
 
 int Player::St_PunchKick_Init()
@@ -19,10 +19,10 @@ int Player::St_PunchKick_Init()
   if(*(unsigned char*)((char*)&mPunchKickStep)==2 || _ZN6Player15IsCollectingCapEv(((void*)this))) return 1;
   if(*(unsigned char*)((char*)&mIsMega)==0){
     func_ov002_020dc020(((void*)this));
-    _ZN12CylinderClsn5ClearEv((char*)&mAttackClsn);
-    _ZN12CylinderClsn6UpdateEv((char*)&mAttackClsn);
+    _ZN5dCc_c5ClearEv((char*)&mAttackClsn);
+    _ZN5dCc_c6UpdateEv((char*)&mAttackClsn);
   } else {
-    _ZN12CylinderClsn5ClearEv((char*)&mAttackClsn);
+    _ZN5dCc_c5ClearEv((char*)&mAttackClsn);
   }
   return 1;
 }

@@ -9,19 +9,19 @@ typedef struct {
 
 typedef struct { int x, y, z; } Vector3i;
 
-extern void _ZN13RaycastGroundC1Ev(void *self);
+extern void _ZN9dBgCh_GndC1Ev(void *self);
 extern int _ZN6Player12Unk_020c9e5cEh(void *self, unsigned char state);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
-extern int _ZN13RaycastGround10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
 extern void func_ov002_020c16ec(void *o, void *s);
-extern void _ZN10ClsnResultD1Ev(void *self);
-extern void _ZN4BgCh19StartDetectingWaterEv(void *self);
-extern void _ZN4BgCh19StartDetectingToxicEv(void *self);
-extern void _ZN4BgCh21StopDetectingOrdinaryEv(void *self);
+extern void _ZN5dBgPiD1Ev(void *self);
+extern void _ZN5dBgCh19StartDetectingWaterEv(void *self);
+extern void _ZN5dBgCh19StartDetectingToxicEv(void *self);
+extern void _ZN5dBgCh21StopDetectingOrdinaryEv(void *self);
 extern int SurfaceInfo_TestFlag0x20(int *p);
 extern int func_02037e20(int *p);
 extern void func_ov002_020c133c(void *a);
-extern void _ZN13RaycastGroundD1Ev(void *self);
+extern void _ZN9dBgCh_GndD1Ev(void *self);
 
 extern int data_02099368;
 extern int data_0209f32c;
@@ -34,7 +34,7 @@ void func_ov002_020c14b8(void *arg0)
     ClsnResultTmp tmp;
     int savedY;
 
-    _ZN13RaycastGroundC1Ev(rg);
+    _ZN9dBgCh_GndC1Ev(rg);
 
     savedY = 0x80000000;
     if (_ZN6Player12Unk_020c9e5cEh(c, 7) || _ZN6Player12Unk_020c9e5cEh(c, 0xa) ||
@@ -59,8 +59,8 @@ void func_ov002_020c14b8(void *arg0)
         pos.y = y;
         pos.z = z;
     }
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, c);
-    if (_ZN13RaycastGround10DetectClsnEv(rg)) {
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, c);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(rg)) {
         int *dst = &tmp.f04;
         *(Pair2i *)dst = *(Pair2i *)(rg + 0x14);
         dst[2] = *(int *)(rg + 0x1c);
@@ -73,18 +73,18 @@ void func_ov002_020c14b8(void *arg0)
         tmp.f20 = *(int *)(rg + 0x30);
         tmp.f24 = *(int *)(rg + 0x34);
         func_ov002_020c16ec(c, &tmp);
-        _ZN10ClsnResultD1Ev(&tmp);
+        _ZN5dBgPiD1Ev(&tmp);
         *(int *)(c + 0x648) = *(int *)(rg + 0x44);
         *(int *)(c + 0x644) = *(int *)(c + 0x648);
         *(int *)(c + 0x668) = *(int *)(c + 0x664);
     }
 
     pos.y = *(int *)(c + 0x60) + 0x12c000;
-    _ZN4BgCh19StartDetectingWaterEv(rg);
-    _ZN4BgCh19StartDetectingToxicEv(rg);
-    _ZN4BgCh21StopDetectingOrdinaryEv(rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, c);
-    if (_ZN13RaycastGround10DetectClsnEv(rg)) {
+    _ZN5dBgCh19StartDetectingWaterEv(rg);
+    _ZN5dBgCh19StartDetectingToxicEv(rg);
+    _ZN5dBgCh21StopDetectingOrdinaryEv(rg);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos, c);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(rg)) {
         if (SurfaceInfo_TestFlag0x20((int *)(rg + 0x14)) != 0) {
             *(int *)(c + 0x64c) = *(int *)(rg + 0x44);
             data_0209f32c = *(int *)(c + 0x64c);
@@ -101,5 +101,5 @@ void func_ov002_020c14b8(void *arg0)
     if (savedY != (int)0x80000000)
         *(int *)(c + 0x644) = savedY;
 
-    _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_GndD1Ev(rg);
 }

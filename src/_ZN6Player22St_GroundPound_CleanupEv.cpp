@@ -8,6 +8,6 @@
 
 int Player::St_GroundPound_Cleanup()
 {
-    *(unsigned int *)((char *)&mMovingCylinderClsnWithPos.flags) &= ~0x20;
+    *(unsigned int *)((char *)&mdCcAcPos_c.flags) &= ~0x20;
     return 1;
 }

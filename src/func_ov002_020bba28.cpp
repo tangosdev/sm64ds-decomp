@@ -1,11 +1,11 @@
 //cpp
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" void _Z14ApproachLinearRsss(short* cur, short to, short step);
-extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
-extern "C" void WithMeshClsn_UpdateContinuous_Veneer(void* p);
-extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
-extern "C" int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
-extern "C" int _ZNK12WithMeshClsn12TouchesWaterEv(void* p);
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
+extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
+extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
+extern "C" int _ZNK10dBgCh_Actr8IsOnWallEv(void* p);
+extern "C" int _ZNK10dBgCh_Actr12TouchesWaterEv(void* p);
 extern "C" void func_ov002_020bafc0(void* self);
 
 struct Obj {
@@ -22,15 +22,15 @@ struct Obj {
 
 extern "C" void func_ov002_020bba28(char* self){
     _Z14ApproachLinearRsss((short*)(self + 0x8c), 0x4000, 0x1000);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, 0);
-    WithMeshClsn_UpdateContinuous_Veneer(self + 0x3c8);
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x3c8)
-        || _ZNK12WithMeshClsn8IsOnWallEv(self + 0x3c8)
-        || _ZNK12WithMeshClsn12TouchesWaterEv(self + 0x3c8)) {
+    _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
+    dBgCh_Actr_UpdateContinuous_Veneer(self + 0x3c8);
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x3c8)
+        || _ZNK10dBgCh_Actr8IsOnWallEv(self + 0x3c8)
+        || _ZNK10dBgCh_Actr12TouchesWaterEv(self + 0x3c8)) {
         ((struct Obj*)self)->m();
     } else {
         func_ov002_020bafc0(self);
-        if (((MeshColliderBase *)(self + 0x124))->IsEnabled())
-            ((MeshColliderBase *)(self + 0x124))->Disable();
+        if (((dBgW *)(self + 0x124))->IsEnabled())
+            ((dBgW *)(self + 0x124))->Disable();
     }
 }

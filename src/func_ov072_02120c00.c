@@ -3,7 +3,7 @@
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
-#include "decl_MovingCylinderClsnWithPos.h"
+#include "decl_dCcAcPos_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_TextureSequence.h"
 #include "decl_common.h"
@@ -20,7 +20,7 @@ int *func_ov072_02120c00(void)
         _ZN5ModelC1Ev((char *)p + 0x124);
         _ZN15TextureSequenceC1Ev((char *)p + 0x174);
         _ZN11ShadowModelC1Ev((char *)p + 0x188);
-        _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x1b0);
+        _ZN10dCcAcPos_cC1Ev((char *)p + 0x1b0);
     }
     return p;
 }

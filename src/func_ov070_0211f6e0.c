@@ -19,7 +19,7 @@ extern int ApproachAngle(s16* angle, int target, int step, int maxDelta, int min
 extern int _ZN9Animation8FinishedEv(void* thiz);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thisp, void* bca, int a, int fix, unsigned int j);
 extern void FlyGuy_ChangeState(void* c, void* p);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* thiz);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* thiz);
 extern void* _ZN8dActor_c22ClosestNonVanishPlayerEv(void* thiz);
 extern s16 Vec3_VertAngle(const Vector3* v1, const Vector3* v0);
 extern Fix12 Vec3_Dist(const Vector3* a, const Vector3* b);
@@ -56,7 +56,7 @@ int func_ov070_0211f6e0(char* c)
         }
     }
 
-    if (*(u16*)(c + 0x100) == 0 || _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144)) {
+    if (*(u16*)(c + 0x100) == 0 || _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144)) {
         if (data_0209f2f8 != 0x16) {
             *(s32*)(c + 0x3c0) = *(s32*)(c + 0x5c);
             *(s32*)(c + 0x3c4) = *(s32*)(c + 0x60);

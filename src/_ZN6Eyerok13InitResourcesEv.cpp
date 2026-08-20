@@ -6,7 +6,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Eyerok.h"
 #include "TextureSequence.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int data_ov066_0211ae6c[];
 extern int data_ov066_0211ae4c[];
 extern int data_ov066_0211aeb4[];
@@ -32,7 +32,7 @@ extern int data_ov066_0211ae34[];
 extern s8 data_ov066_0211abe0;
 extern s8 data_ov066_0211ae04;
 extern s8 data_ov066_0211ae0c;
-extern "C" char _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern "C" char _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 /* extern "C" is load-bearing on every mangled/C-named declaration below: without
    it a .cpp file mangles the name a SECOND time (e.g.
@@ -45,11 +45,11 @@ extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
 extern "C" void _ZN15TextureSequence8LoadFileER13SharedFilePtr(void* sfp);
 extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
-extern "C" void _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
+extern "C" void _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* sfp);
 extern "C" void _ZN11ShadowModel12InitCylinderEv(void* thiz);
-extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* thiz, void* actor, Vector3* v, s32 f1, s32 f2, u32 a, u32 b);
+extern "C" void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* thiz, void* actor, Vector3* v, s32 f1, s32 f2, u32 a, u32 b);
 extern "C" void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 id, u32 b, Vector3* pos, void* p, int e, int f);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, int kcl, void* mtx, s32 fix, s16 s, void* clps);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, int kcl, void* mtx, s32 fix, s16 s, void* clps);
 extern "C" void func_020393d4(void* p, void* v);
 extern "C" void func_020393c4(void* p, void* v);
 
@@ -86,11 +86,11 @@ int Eyerok::InitResources()
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov066_0211ae44);
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov066_0211ae74);
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov066_0211ae7c);
-        _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov066_0211ae24);
-        _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov066_0211aeac);
-        _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov066_0211ae14);
-        _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov066_0211ae1c);
-        _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov066_0211ae34);
+        _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov066_0211ae24);
+        _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov066_0211aeac);
+        _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov066_0211ae14);
+        _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov066_0211ae1c);
+        _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov066_0211ae34);
         break;
     case 1:
         if (_ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x360, (void*)data_ov066_0211ae4c[1], 1, -1) == 0)
@@ -111,7 +111,7 @@ int Eyerok::InitResources()
         w.x = data_ov066_0211ad18[0];
         w.y = data_ov066_0211ad18[1];
         w.z = data_ov066_0211ad18[2];
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x320, c, &w, 0x64000, 0x64000, 0x200002, 0);
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(c + 0x320, c, &w, 0x64000, 0x64000, 0x200002, 0);
     }
 
     {
@@ -154,10 +154,10 @@ int Eyerok::InitResources()
         data_ov066_0211abe4 = 1;
         data_ov066_0211ae04 = 1;
         data_ov066_0211abe0 = 3;
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211ae24[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112ca8);
-        func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211ae24[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112ca8);
+        func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
         func_020393c4(c + 0x674, &func_ov066_0211a35c);
-        ((MeshColliderBase *)(c + 0x674))->Enable((dActor_c *)(c));
+        ((dBgW *)(c + 0x674))->Enable((dActor_c *)(c));
         *(s16*)(c + 0x4D2) = 0x64;
         func_ov066_02119454(c, data_ov066_0211b09c);
     } else {
@@ -168,13 +168,13 @@ int Eyerok::InitResources()
         *(s32*)(c + 0x4B4) = *(s32*)(c + 0x60);
         *(s32*)(c + 0x4B8) = *(s32*)(c + 0x64);
         if (*(s32*)(c + 0x49C) == 1) {
-            _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211ae14[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112c08);
+            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211ae14[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112c08);
             *(s32*)(((int)c + 0x4A4)) -= 0x31F000;
         } else {
-            _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211aeac[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112d48);
+            _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, data_ov066_0211aeac[1], c + 0x83C, 0x199, *(s16*)(c + 0x8E), &func_02112d48);
             *(s32*)(((int)c + 0x4A4)) += 0x31F000;
         }
-        func_020393d4(c + 0x674, &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+        func_020393d4(c + 0x674, &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
         func_020393c4(c + 0x674, &func_ov066_0211a35c);
         func_020398fc(c + 0x674);
         *(s32*)(((int)c + 0x4AC)) -= 0x32000;

@@ -21,8 +21,8 @@ void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 short Vec3_HorzAngle(const struct Vector3* a, const struct Vector3* b);
 int AngleDiff(int a, int b);
 int _ZN6Player9StartTalkER7fBase_cb(void* actor, void* self, int b);
-void _ZN12CylinderClsn5ClearEv(void* self);
-void _ZN12CylinderClsn6UpdateEv(void* self);
+void _ZN5dCc_c5ClearEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* self);
 }
 
 extern s16 data_02082214[];
@@ -152,8 +152,8 @@ extern "C" int _ZN15RecRoomCupboard8BehaviorEv(char* self)
                 *(int*)(entry + 0x10c) = pos.y;
                 *(int*)(entry + 0x110) = pos.z;
             }
-            _ZN12CylinderClsn5ClearEv(cyl);
-            _ZN12CylinderClsn6UpdateEv(cyl);
+            _ZN5dCc_c5ClearEv(cyl);
+            _ZN5dCc_c6UpdateEv(cyl);
             cyl += 0x40;
         }
     }

@@ -3,8 +3,8 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
-extern char* _ZNK12WithMeshClsn14GetFloorResultEv(void*);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
+extern char* _ZNK10dBgCh_Actr14GetFloorResultEv(void*);
 extern int SurfaceInfo_TestFlag0x20(int* p);
 extern void func_ov084_021296cc(void*);
 extern void _ZN12dEnemyBase_c9SpawnCoinEv(void*);
@@ -13,7 +13,7 @@ extern void _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(void*, void*);
 extern void _ZN11dCapEnemy_c15RespawnIfHasCapEv(void*);
 extern int func_02037e38(unsigned int* p);
 extern int func_02037e84(int* p);
-extern void _ZN10ClsnResultD1Ev(void*);
+extern void _ZN5dBgPiD1Ev(void*);
 extern int data_02099368[];
 }
 
@@ -22,10 +22,10 @@ extern int data_02099368[];
 extern "C" void func_ov084_021294d0(char* c)
 {
     char obj[0x28];
-    if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1b4))
+    if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1b4))
         return;
 
-    char* fr = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x1b4);
+    char* fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x1b4);
     if (SurfaceInfo_TestFlag0x20((int*)(fr + 4))) {
         func_ov084_021296cc(c);
         _ZN12dEnemyBase_c9SpawnCoinEv(c);
@@ -40,7 +40,7 @@ extern "C" void func_ov084_021294d0(char* c)
         return;
     }
 
-    char* fr2 = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x1b4);
+    char* fr2 = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x1b4);
     int r5;
     {
     char* d = obj + 4;
@@ -81,5 +81,5 @@ action:
         _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
     }
 dtor:
-    _ZN10ClsnResultD1Ev(obj);
+    _ZN5dBgPiD1Ev(obj);
 }

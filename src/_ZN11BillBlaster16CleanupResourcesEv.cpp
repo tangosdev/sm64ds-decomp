@@ -15,8 +15,8 @@ extern void* data_ov079_021282f0;
 
 s32 BillBlaster::CleanupResources() {
     char * t = (char *)this;
-  if(_ZN16MeshColliderBase9IsEnabledEv(t+0x124))
-    _ZN16MeshColliderBase7DisableEv(t+0x124);
+  if(_ZN4dBgW9IsEnabledEv(t+0x124))
+    _ZN4dBgW7DisableEv(t+0x124);
   _ZN13SharedFilePtr7ReleaseEv(data_ov079_02127f64[0]);
   _ZN13SharedFilePtr7ReleaseEv(data_ov079_02127f64[1]);
   _ZN13SharedFilePtr7ReleaseEv(&data_ov079_02128300);

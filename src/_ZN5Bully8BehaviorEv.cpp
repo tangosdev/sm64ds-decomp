@@ -28,8 +28,8 @@
 #include "Bully.h"
 
 extern "C" {
-extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
-    char *self, WithMeshClsn *wm, ModelAnim *ma, unsigned int flags);
+extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(
+    char *self, dBgCh_Actr *wm, ModelAnim *ma, unsigned int flags);
 extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     unsigned int actorId, unsigned int param, const Vector3 *pos,
     const Vector3s *rot, int areaId, int f);
@@ -41,7 +41,7 @@ extern int func_ov064_02116d1c(char *self);
 
 int Bully::Behavior()
 {
-    int ret = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(
+    int ret = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(
         (char *)this, &mWithMeshClsn, &mModelAnim, 3);
     if (ret != 0) {
         if (ret == 2) {

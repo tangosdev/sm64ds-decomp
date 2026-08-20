@@ -6,11 +6,11 @@
 #include "WaterBomb.h"
 extern "C" {
 extern void func_ov098_0213b63c(char* c);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* a, void* b);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* a, void* b, unsigned int j);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
-extern void _ZN12CylinderClsn5ClearEv(void* p);
-extern void _ZN12CylinderClsn6UpdateEv(void* p);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* a, void* b);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* a, void* b, unsigned int j);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* p);
+extern void _ZN5dCc_c5ClearEv(void* p);
+extern void _ZN5dCc_c6UpdateEv(void* p);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* p);
 extern unsigned short DecIfAbove0_Short(unsigned short* p);
 }
@@ -19,7 +19,7 @@ int WaterBomb::Behavior()
 {
     if (func_ov098_0213b6e0(((char*)this))) {
         func_ov098_0213b584(((char*)this));
-        _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
+        _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
         return 1;
     }
 
@@ -37,9 +37,9 @@ int WaterBomb::Behavior()
     ((void (*)(char*))fn)(self);
 
     if (unk_3c8 != 0) {
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
-        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x144, 0);
-        if (_ZNK12WithMeshClsn8IsOnWallEv((char*)&mWithMeshClsn)) {
+        _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this) + 0x110);
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char*)this), ((char*)this) + 0x144, 0);
+        if (_ZNK10dBgCh_Actr8IsOnWallEv((char*)&mWithMeshClsn)) {
             if (unk_3c8 == 1) {
                 func_ov098_0213b63c(((char*)this));
             } else {
@@ -48,8 +48,8 @@ int WaterBomb::Behavior()
             return 0;
         }
         func_ov098_0213b584(((char*)this));
-        _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
-        _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
+        _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
+        _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);
     } else {
         DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
     }

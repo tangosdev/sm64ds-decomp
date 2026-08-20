@@ -7,8 +7,8 @@
 typedef short s16;
 extern "C" {
 extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void _ZN12CylinderClsn5ClearEv(void* self);
-extern void _ZN12CylinderClsn6UpdateEv(void* self);
+extern void _ZN5dCc_c5ClearEv(void* self);
+extern void _ZN5dCc_c6UpdateEv(void* self);
 }
 
 int WaterDiamond::Behavior()
@@ -32,7 +32,7 @@ int WaterDiamond::Behavior()
         }
     }
     func_ov029_021118c8(((char*)this));
-    _ZN12CylinderClsn5ClearEv((void*)((char*)&mMovingCylinderClsn));
-    _ZN12CylinderClsn6UpdateEv((void*)((char*)&mMovingCylinderClsn));
+    _ZN5dCc_c5ClearEv((void*)((char*)&mdCcAc_c));
+    _ZN5dCc_c6UpdateEv((void*)((char*)&mdCcAc_c));
     return 1;
 }

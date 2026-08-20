@@ -2,10 +2,10 @@
 typedef int Fix12i;
 struct Vector3 { Fix12i x, y, z; };
 struct dActor_c;
-struct RaycastGround {
+struct dBgCh_Gnd {
     char buf[0x50];
-    RaycastGround();
-    ~RaycastGround();
+    dBgCh_Gnd();
+    ~dBgCh_Gnd();
     void SetObjAndPos(const Vector3 &pos, dActor_c *actor);
     int DetectClsn();
 };
@@ -22,7 +22,7 @@ extern "C" void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, 
 extern "C" void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(dActor_c *self, Vector3 *pos, bool b)
 {
     if (b) {
-        RaycastGround rc;
+        dBgCh_Gnd rc;
         *(Fix12i*)((int)pos + 4) += 0x32000;
         rc.SetObjAndPos(*pos, 0);
         if (rc.DetectClsn())

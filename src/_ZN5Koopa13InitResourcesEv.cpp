@@ -15,9 +15,9 @@ extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void* self);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, int q);
-extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void* self);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, int q);
+extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void* self);
 extern void LoadBlueCoinModel(void* c);
 }
 
@@ -65,7 +65,7 @@ int Koopa::InitResources()
         _ZN5Model8LoadFileER13SharedFilePtr(data_ov062_0211cee0[mModelIndex]);
     }
 
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, (dActor_c*)((char*)this), r, h, 0x200000, 0xb6efe0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, (dActor_c*)((char*)this), r, h, 0x200000, 0xb6efe0);
 
     unk_100 = 0;
     *(short*)(((char*)this) + 0x300 + 0xc4) = 0;
@@ -79,9 +79,9 @@ int Koopa::InitResources()
     unk_3a4 = mPosZ;
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, (dActor_c*)((char*)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, (dActor_c*)((char*)this), 0x32000, 0x32000, 0, 0);
 
-    _ZN12WithMeshClsn19StartDetectingWaterEv((char*)&mWithMeshClsn);
+    _ZN10dBgCh_Actr19StartDetectingWaterEv((char*)&mWithMeshClsn);
 
     unk_108 = 3;
     LoadBlueCoinModel(((char*)this));

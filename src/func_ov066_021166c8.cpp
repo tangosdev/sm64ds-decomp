@@ -1,8 +1,8 @@
 //cpp
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *bca, int a, int b, int fix, unsigned short t);
 extern "C" void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, unsigned int b);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, void *kcl, void *mtx, int fix, short s, void *clps);
 extern "C" void func_020393d4(void *p, void *v);
 extern "C" void func_020393c4(void *p, void *v);
 extern "C" void func_020398fc(void *p);
@@ -33,21 +33,21 @@ extern "C" void func_ov066_021166c8(void *thiz)
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(c + 0x448, (&data_ov066_0211ae9c)[1], 0x40000000, 0x1000, 0);
     }
 
-    if (((MeshColliderBase *)(c + 0x674))->IsEnabled() != 0)
-        ((MeshColliderBase *)(c + 0x674))->Disable();
+    if (((dBgW *)(c + 0x674))->IsEnabled() != 0)
+        ((dBgW *)(c + 0x674))->Disable();
 
     if (*(int *)(c + 0x49c) == 1) {
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, (&data_ov066_0211ae34)[1], c + 0x83c, 0x199,
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, (&data_ov066_0211ae34)[1], c + 0x83c, 0x199,
                                    *(short *)(c + 0x8e), (void *)func_02112cc8);
     } else {
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, (&data_ov066_0211ae1c)[1], c + 0x83c, 0x199,
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x674, (&data_ov066_0211ae1c)[1], c + 0x83c, 0x199,
                                    *(short *)(c + 0x8e), (void *)func_02112c88);
     }
 
     func_020393d4(c + 0x674, (void *)func_02112cd8_updatepos);
     func_020393c4(c + 0x674, (void *)func_ov066_0211a35c);
     func_020398fc(c + 0x674);
-    ((MeshColliderBase *)(c + 0x674))->Enable((dActor_c *)(c));
+    ((dBgW *)(c + 0x674))->Enable((dActor_c *)(c));
 
     {
         int n = _ZNK9Animation13GetFrameCountEv(c + 0x3b0);

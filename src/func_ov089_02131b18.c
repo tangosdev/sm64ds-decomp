@@ -6,7 +6,7 @@
 
 
 
-extern void WithMeshClsn_UpdateContinuous_Veneer(char *p);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(char *p);
 extern char *data_0209f318;
 extern int data_0209b454;
 extern void _ZN6Camera9SetFlag_3Ev(char *cam);
@@ -14,8 +14,8 @@ extern void _ZN6Camera9SetLookAtERK7Vector3(char *cam, struct Vector3 *v);
 extern void _ZN6Camera6SetPosERK7Vector3(char *cam, struct Vector3 *v);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, int c, int d, int e, void *f, void *g);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(char *p);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *p);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(char *p);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char *p);
 extern char *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_02012694(int a, char *v, int c);
 extern void func_ov089_02131df4(char *thiz, char *player);
@@ -26,7 +26,7 @@ void func_ov089_02131b18(char *c)
     struct Vector3 v;
     u8 st;
 
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x260);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x260);
 
     st = *(u8 *)(c + 0x442);
     if (st == 0)
@@ -75,13 +75,13 @@ case1:
     v.y = v.y + 0x1c000;
     *(void **)(c + 0x464) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         *(u32 *)(c + 0x464), 0x81, v.x, v.y, v.z, 0, 0);
-    if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x260)) {
+    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x260)) {
         int t = (-*(int *)(c + 0xa8)) >> 1;
         *(int *)(c + 0xa8) = t;
         func_02012694(0x36, c + 0x74, t);
         return;
     }
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x260) == 0)
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x260) == 0)
         return;
     _ZN6Camera9SetLookAtERK7Vector3(cam, (struct Vector3 *)(int)L(c + 0x44c));
     _ZN6Camera6SetPosERK7Vector3(cam, (struct Vector3 *)(int)L(c + 0x458));

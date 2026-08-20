@@ -20,7 +20,7 @@ struct ShadowModel {
     static void RenderAll();
 };
 
-struct CylinderClsn {
+struct dCc_c {
     static void Process();
 };
 
@@ -121,7 +121,7 @@ int Stage::Render() {
             func_0203083c();
         }
     }
-    CylinderClsn::Process();
+    dCc_c::Process();
     func_ov001_020aaf40();
     {
         int x = 0;

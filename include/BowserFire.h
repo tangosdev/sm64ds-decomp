@@ -7,14 +7,14 @@
  * that class's own static assertion, so the offsets below are checked twice --
  * once by the assert, once by closing exactly on the next named field:
  *
- *     WithMeshClsn        0x110 + 0x1bc = 0x2cc   -> unk_2cc
- *     MovingCylinderClsn  0x2d0 + 0x034 = 0x304   -> mShadowModel
+ *     dBgCh_Actr        0x110 + 0x1bc = 0x2cc   -> unk_2cc
+ *     dCcAc_c  0x2d0 + 0x034 = 0x304   -> mShadowModel
  *     ShadowModel         0x304 + 0x028 = 0x32c   -> padding
  *
  * There is NO unk_2e8 here any more, and its absence is the point. An earlier
  * revision named 0x2e8 as a BowserFire field on the strength of a single
- * `|= 1`. It is not one: 0x2d0 + 0x18 lands inside mMovingCylinderClsn, and
- * CylinderClsn::flags is at 0x18 and is documented as "bit 0 makes Update
+ * `|= 1`. It is not one: 0x2d0 + 0x18 lands inside mdCcAc_c, and
+ * dCc_c::flags is at 0x18 and is documented as "bit 0 makes Update
  * bail" -- which is exactly what setting bit 0 does. It was the sub-object's
  * own field all along, the same mistake as Player's `mBodyClsnFlags`.
  *
@@ -27,14 +27,14 @@
 #ifdef __cplusplus
 
 #include "dEnemyBase_c.h"
-#include "WithMeshClsn.h"
-#include "MovingCylinderClsn.h"
+#include "dBgCh_Actr.h"
+#include "dCcAc_c.h"
 #include "ShadowModel.h"
 
 struct BowserFire : dEnemyBase_c {
-    WithMeshClsn mWithMeshClsn;                 /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;                 /* 0x110 */
     s32 unk_2cc;                                /* 0x2cc */
-    MovingCylinderClsn mMovingCylinderClsn;     /* 0x2d0 */
+    dCcAc_c mdCcAc_c;     /* 0x2d0 */
     ShadowModel mShadowModel;                   /* 0x304 */
     u8  pad_32c[0x30];
     s32 unk_35c;            /* 0x35c */
@@ -83,7 +83,7 @@ struct BowserFire {
     u8  mWithMeshClsn;            /* 0x110 */
     u8  pad_111[0x1bb];
     s32 unk_2cc;            /* 0x2cc */
-    u8  mMovingCylinderClsn;            /* 0x2d0 */
+    u8  mdCcAc_c;            /* 0x2d0 */
     u8  pad_2d1[0x33];
     u8  mShadowModel;            /* 0x304 */
     u8  pad_305[0x57];

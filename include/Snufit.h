@@ -11,8 +11,8 @@
  * The four members close exactly on one another, and dEnemyBase_c's own 0x110 closes
  * exactly on the first:
  *
- *     0x110 MovingCylinderClsn  0x34   -> 0x144
- *     0x144 WithMeshClsn        0x1bc  -> 0x300
+ *     0x110 dCcAc_c  0x34   -> 0x144
+ *     0x144 dBgCh_Actr        0x1bc  -> 0x300
  *     0x300 ModelAnim           0x64   -> 0x364
  *     0x364 ShadowModel         0x28   -> 0x38c
  *
@@ -33,9 +33,9 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Snufit : dEnemyBase_c {
     /* What mCurrentState points at. Behavior compares it against three objects
@@ -46,8 +46,8 @@ struct Snufit : dEnemyBase_c {
         void (Snufit::*mMain)();      /* 0x08 */
     };
 
-    MovingCylinderClsn mMovingCylinderClsn; /* 0x110 */
-    WithMeshClsn mWithMeshClsn;       /* 0x144 */
+    dCcAc_c mdCcAc_c; /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x144 */
     ModelAnim mModelAnim;             /* 0x300 */
     ShadowModel mShadowModel;         /* 0x364 */
     u8  pad_38c[0x30];

@@ -3,7 +3,7 @@ extern int _ZN7fBase_cnwEj(unsigned int);
 extern int _ZN7fBase_cC1Ev(void *);
 extern int _ZN8Particle10SysTrackerC1Ev(void *);
 extern int _ZN5ModelC1Ev(void *);
-extern int _ZN12MeshColliderC1Ev(void *);
+extern int _ZN7dBgW_KcC1Ev(void *);
 extern int data_0208e4b8[];
 extern int _ZTV8dScene_c[];
 extern int _ZTV5Stage[];
@@ -20,7 +20,7 @@ void *_ZN5StageC3Ev(void)
         *(int*)(p) = (int)_ZTV5Stage;
         _ZN8Particle10SysTrackerC1Ev(p+0x50);
         _ZN5ModelC1Ev(p+0x86c);
-        _ZN12MeshColliderC1Ev(p+0x91c);
+        _ZN7dBgW_KcC1Ev(p+0x91c);
     }
     return p;
 }

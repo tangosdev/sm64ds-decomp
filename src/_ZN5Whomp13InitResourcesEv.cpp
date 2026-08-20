@@ -15,7 +15,7 @@ struct Matrix4x3;
 struct CLPS_Block;
 struct Vector3_16;
 struct dActor_c;
-struct ClsnResult;
+struct dBgPi;
 struct Vector3;
 
 extern "C" {
@@ -23,18 +23,18 @@ extern "C" {
     void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *mb, void *bmd, int a, int b);
     void *_ZN9Animation8LoadFileER13SharedFilePtr(void *shared);
     void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *shared);
-    void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *shared);
+    void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *shared);
     int _ZN11ShadowModel10InitCuboidEv(void *self);
     void _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(void *self, void *btp, int a, int fix, unsigned int b);
     void _ZN9Animation8SetFlagsEi(void *self, int flags);
     u8 _ZN8dActor_c9TrackStarEjj(void *self, unsigned int a, unsigned int b);
     void func_ov079_02124188(void *self);
     void func_ov079_02124008(void *self);
-    void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         void *mc, void *kcl, void *mtx, int fix, s16 s, void *clps);
     void func_01ffb0bc(void *self);
     void func_020393d4(void *p, void *v);
-    void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *c, void *d);
+    void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *actor, int a, int b, void *c, void *d);
     void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
     int IsStarCollectedInCurLevel(int a);
     void _ZN7fBase_c18MarkForDestructionEv(void *self);
@@ -49,7 +49,7 @@ extern void *data_ov079_021275ec[];
    bare `extern` mangles the already-mangled name a second time and the address
    taken below points at a _Z88_ZN16... that does not exist. The byte gate cannot
    see it -- relocated words are wildcards -- only check_references can. */
-extern "C" void _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern "C" void _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern u8 data_0209f21c;
 extern s32 data_0209f394[];
 extern signed char data_0209f2f8;
@@ -101,7 +101,7 @@ int Whomp::InitResources()
     }
 
     idx = mIsKing;
-    kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov079_02127bf0[idx]);
+    kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov079_02127bf0[idx]);
     (void)kcl;
 
     if (_ZN11ShadowModel10InitCuboidEv((char *)&mShadowModel) == 0) {
@@ -128,17 +128,17 @@ int Whomp::InitResources()
 
     idx = mIsKing;
     if (idx == 0) {
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             ((char *)this) + 0x418, *(void **)((char *)data_ov079_02127bf0[idx] + 4), ((char *)this) + 0x5e0,
             0x199, mAngleY, &data_ov079_02127ba0);
     } else {
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             ((char *)this) + 0x418, *(void **)((char *)data_ov079_02127bf0[idx] + 4), ((char *)this) + 0x5e0,
             0x1000, mAngleY, &func_021135d4);
     }
 
     func_01ffb0bc((char *)&mMovingMeshCollider);
-    func_020393d4(((char *)this) + 0x418, (void *)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(((char *)this) + 0x418, (void *)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
 
     {
         s32 sp[3];
@@ -150,7 +150,7 @@ int Whomp::InitResources()
 
     func_020396d0((int *)&mMovingMeshCollider, 0xb50);
 
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x32000, 0x32000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x110, ((char *)this), 0x32000, 0x32000, 0, 0);
 
     unk_3b0 = 0;
     *(s16 *)(((char *)this) + 0x300 + 0xb8) = mPrevAngleY;

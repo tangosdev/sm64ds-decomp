@@ -16,9 +16,9 @@ extern unsigned char data_0209f2d8;
 
 extern "C" {
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, char *pos);
-extern void _ZN12CylinderClsn5ClearEv(char *c);
+extern void _ZN5dCc_c5ClearEv(char *c);
 extern int LenVec3(char *v);
-extern void _ZN12CylinderClsn6UpdateEv(char *c);
+extern void _ZN5dCc_c6UpdateEv(char *c);
 }
 
 int Coin::Behavior()
@@ -35,7 +35,7 @@ int Coin::Behavior()
     *(short *)(((int)((char *)this) + 0x8e)) += 0xc00;
     if (func_ov002_020b12ec(((char *)this)) != 0) {
         func_ov002_020b14d8(((char *)this));
-        _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
+        _ZN5dCc_c5ClearEv((char *)&mdCc_c);
         return 1;
     }
     func_ov002_020b10e4(((char *)this));
@@ -43,17 +43,17 @@ int Coin::Behavior()
     if (func_ov002_020b19dc(((char *)this)) != 0) return 1;
     (((C *)((char *)this))->*data_ov002_0210dc70[mBehaviorType])();
     if ((int)(data_0209f2d8 == 1) == 0 && (int)((mFlags & 8) != 0) != 0) {
-        _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
+        _ZN5dCc_c5ClearEv((char *)&mdCc_c);
         if (unk_3aa == 0 && LenVec3((char *)&mCamSpacePosX) < 0x64000) {
             if (mCoinType != 1 || unk_3b0 == 0)
-                _ZN12CylinderClsn6UpdateEv((char *)&mCylinderClsn);
+                _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
         }
     } else {
         func_ov002_020b14d8(((char *)this));
-        _ZN12CylinderClsn5ClearEv((char *)&mCylinderClsn);
+        _ZN5dCc_c5ClearEv((char *)&mdCc_c);
         if (unk_3aa == 0) {
             if (mCoinType != 1 || unk_3b0 == 0)
-                _ZN12CylinderClsn6UpdateEv((char *)&mCylinderClsn);
+                _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
         }
     }
     return 1;

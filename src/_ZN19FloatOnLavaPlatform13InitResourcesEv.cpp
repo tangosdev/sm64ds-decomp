@@ -9,14 +9,14 @@ extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
 extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
-extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
-extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
+extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
+extern int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 extern int func_020393d4(void*, void*);
 extern int func_020393c4(void*, void*);
 }
 extern char data_ov022_02114558[];
 extern "C" {
-extern int _ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern int _ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 }
 
 int FloatOnLavaPlatform::InitResources()
@@ -27,9 +27,9 @@ int FloatOnLavaPlatform::InitResources()
   _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModel, mdl, 1, -1);
   _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
-  kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov022_02114550);
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, data_ov064_0211bb0c);
-  func_020393d4(&mMeshCollider, &_ZN16MeshColliderBase21UpdatePosWithVelocityERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+  kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov022_02114550);
+  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, data_ov064_0211bb0c);
+  func_020393d4(&mMeshCollider, &_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
   func_020393c4(&mMeshCollider, &func_ov022_0211193c);
   unk_320 = mPosY;
   return 1;

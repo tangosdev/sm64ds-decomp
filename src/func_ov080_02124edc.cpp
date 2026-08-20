@@ -10,7 +10,7 @@ void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int 
 void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, const Vector3& v, unsigned n, int f, short s);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, const Vector3& pos);
 void _ZN7fBase_c18MarkForDestructionEv(void* self);
-void _ZN12CylinderClsn5ClearEv(void* self);
+void _ZN5dCc_c5ClearEv(void* self);
 }
 
 extern "C" int func_ov080_02124edc(char* c);
@@ -60,6 +60,6 @@ int func_ov080_02124edc(char* c)
         }
     }
 clear:
-    _ZN12CylinderClsn5ClearEv(c + 0x14c);
+    _ZN5dCc_c5ClearEv(c + 0x14c);
     return 1;
 }

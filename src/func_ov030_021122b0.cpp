@@ -1,8 +1,8 @@
 //cpp
-struct CylinderClsn { void Clear(); void Update(); };
+struct dCc_c { void Clear(); void Update(); };
 struct dActor_c {
     short HorzAngleToCPlayer();
-    void UpdatePos(CylinderClsn *c);
+    void UpdatePos(dCc_c *c);
 };
 extern "C" void _Z14ApproachLinearRsss(short *dst, short target, short rate);
 extern "C" unsigned char DecIfAbove0_Byte(unsigned char *p);
@@ -25,18 +25,18 @@ extern "C" int func_ov030_021122b0(dActor_c *self)
     ((Animation*)(s + 0x124))->Advance();
     int b = (int)(*(unsigned short*)(s + 0xc) == 0x10b);
     if (b) {
-        self->UpdatePos((CylinderClsn*)(s + 0x160));
+        self->UpdatePos((dCc_c*)(s + 0x160));
         func_ov030_02111dd0(s);
         func_ov030_02111f6c(s, s + 0x194);
         func_ov030_02111bc4(s);
     } else {
-        self->UpdatePos((CylinderClsn*)(s + 0x160));
+        self->UpdatePos((dCc_c*)(s + 0x160));
         func_ov030_02111f6c(s, s + 0x194);
         func_ov030_02111bc4(s);
         func_ov030_02111ea4(s);
     }
-    ((CylinderClsn*)(s + 0x160))->Clear();
-    ((CylinderClsn*)(s + 0x160))->Update();
+    ((dCc_c*)(s + 0x160))->Clear();
+    ((dCc_c*)(s + 0x160))->Update();
     func_ov030_02111890(s);
     return 1;
 }

@@ -19,7 +19,7 @@ extern s32 LenVec3(const Vector3 *v);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void Vec3_MulScalar(Vector3 *out, const Vector3 *v, int s);
 extern void SubVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *);
 int func_ov085_0212b4b4(char *c)
 {
   void *pl;
@@ -138,7 +138,7 @@ int func_ov085_0212b4b4(char *c)
       }
       if ((*((s32 *) (c + 0x41c))) == 0)
       {
-        if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0)
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) != 0)
         {
           *((s32 *) (c + 0xa8)) = 0xa000;
           *((s32 *) (c + 0x41c)) = 1;

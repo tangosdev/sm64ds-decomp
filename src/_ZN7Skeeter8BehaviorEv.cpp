@@ -28,21 +28,21 @@ typedef void (ActorC::*ActorFn)();
 struct PmfNode { char pad[8]; ActorFn fn; };
 
 extern "C" {
-int  _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void* self, void* wm);
-void _ZN12CylinderClsn5ClearEv(void* self);
-void _ZN12CylinderClsn6UpdateEv(void* self);
+int  _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void* self, void* wm);
+void _ZN5dCc_c5ClearEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* self);
 void func_ov090_02131e50(void* c);
-int  _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void* self, void* wm, void* anim, u32 n);
+int  _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void* self, void* wm, void* anim, u32 n);
 void func_02035684(int* p, int v);
-void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, void* wm, u32 n);
-int  _ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn(void* self, void* wm);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* self, void* wm, u32 n);
+int  _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(void* self, void* wm);
 void func_ov090_02131378(void* c);
 void _ZN8dActor_c8PoofDustEv(void* self);
 void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 int  AngleDiff(int a, int b);
 void _ZN8dActor_c10SpawnCoinsERK7Vector3j5Fix12IiEs(void* self, const void* v, u32 n, s32 fix, s16 s);
 void _ZN8dActor_c24KillAndTrackInDeathTableEv(void* self);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* cyl);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cyl);
 int  func_02035638(u8* p);
 void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 void func_ov002_020aea30(void* self, void* p, int n);
@@ -56,21 +56,21 @@ int Skeeter::Behavior()
 {
     char* c = (char*)this;
 
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(c, &mWithMeshClsn)) {
-        _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsnWithPos);
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(c, &mWithMeshClsn)) {
+        _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
         if (unk_107 != 0 && unk_104 == 0)
-            _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsnWithPos);
+            _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
         func_ov090_02131e50(c);
         return 1;
     }
 
-    if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(c, &mWithMeshClsn, &mModelAnim, 3))
+    if (_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(c, &mWithMeshClsn, &mModelAnim, 3))
         return 1;
 
     if (mDeathState != 0) {
         func_02035684((int*)(&mWithMeshClsn), 0xd2000);
-        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 0);
-        if (_ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn(c, &mWithMeshClsn))
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, &mWithMeshClsn, 0);
+        if (_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr(c, &mWithMeshClsn))
             return 1;
         func_ov090_02131378(c);
         func_ov090_02131e50(c);
@@ -99,10 +99,10 @@ int Skeeter::Behavior()
     int flag = (mFlags & 8) != 0;
     if (flag) {
         mHorzSpeed = 0;
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, &mdCcAcPos_c);
         func_ov090_02131378(c);
         if (data_0209f2f8 == 0x15 && mAreaId == 1) {
-            _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 2);
+            _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, &mWithMeshClsn, 2);
             if (func_02035638((u8*)(&mWithMeshClsn))) {
                 mVertAccel = 0;
                 unk_0a4 = 0;
@@ -117,13 +117,13 @@ int Skeeter::Behavior()
     }
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, &mMovingCylinderClsnWithPos);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, &mdCcAcPos_c);
     func_ov090_02131378(c);
     DecIfAbove0_Short((u16 *)&unk_100);
     DecIfAbove0_Short(&unk_394);
     DecIfAbove0_Short(&unk_396);
     DecIfAbove0_Short(&unk_398);
-    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, &mWithMeshClsn, 2);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, &mWithMeshClsn, 2);
     if (mPosY <= unk_3ac)
         mPosY = unk_3ac;
     if (data_0209f2f8 == 0x15 && mAreaId == 1 && func_02035638((u8*)(&mWithMeshClsn))) {
@@ -152,11 +152,11 @@ int Skeeter::Behavior()
     _ZN9Animation7AdvanceEv(c + 0x35c);
     func_ov090_02131e50(c);
     func_ov090_021310b4(c);
-    _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
     {
         void* p = _ZN8dActor_c13ClosestPlayerEv(c);
         if (p != 0 && *(u8*)((char*)p + 0x6fb) == 0)
-            _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsnWithPos);
+            _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
     }
     return 1;
 }

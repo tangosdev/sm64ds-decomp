@@ -4,7 +4,7 @@
 #include "types.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
- * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
  * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x320 -- mPosX/mPosY/mPosZ at
  * 0x05c/0x060/0x064, mAngleY at 0x08e, mAreaId at 0x0cc -- was dActor_c's, and
@@ -13,7 +13,7 @@
  * SIZE IS 0x3b0 (944 decimal), THE LITERAL Trap_Spawn.c passes to
  * fBase_c::operator new -- not merely the observed field span, though here
  * they agree: dBgActor_c ends at 0x320 and this class adds exactly one bare
- * Model (0x50, unlike the WithMeshClsn siblings) plus trailing scalars,
+ * Model (0x50, unlike the dBgCh_Actr siblings) plus trailing scalars,
  * landing on 0x3b0.
  *
  * THIS IS THE MID-RENAME CLASS. Before this change the header was a flat,
@@ -37,8 +37,8 @@ struct dActor_c;
 struct Player;
 
 struct Trap : dBgActor_c {
-    /* Bare Model, not WithMeshClsn -- Trap_Spawn.c calls
-       _ZN5ModelC1Ev((char*)p + 0x320) directly, no WithMeshClsn wrapper. Named
+    /* Bare Model, not dBgCh_Actr -- Trap_Spawn.c calls
+       _ZN5ModelC1Ev((char*)p + 0x320) directly, no dBgCh_Actr wrapper. Named
        "mModel" (not "mModel2") because dBgActor_c's own Model at 0xd4 is
        inherited, not restated here -- this is the only Model this struct
        declares. Matches the established convention for this exact shape: see

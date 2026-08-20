@@ -4,9 +4,9 @@
 #include "types.h"
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 /* daYegg_c in the ROM's RTTI. Derives from dEnemyBase_c, and both witnesses agree:
  * YoshiEgg_Spawn allocates 0x42c, calls _ZN12dEnemyBase_cC2Ev, stores _ZTV8YoshiEgg and
@@ -22,8 +22,8 @@
  * subobject. It disappears here because the type expresses it.
  */
 struct YoshiEgg : dEnemyBase_c {
-    MovingCylinderClsn  mMovingCylinderClsn;    /* 0x110 */
-    WithMeshClsn        mWithMeshClsn;          /* 0x144 */
+    dCcAc_c  mdCcAc_c;    /* 0x110 */
+    dBgCh_Actr        mWithMeshClsn;          /* 0x144 */
     ModelAnim           mModelAnim;             /* 0x300 */
     ShadowModel         mShadowModel;           /* 0x364 */
     /* The ROM loads this WORD and passes it to _ZN6Player16IsInsideOfCannonEv as that

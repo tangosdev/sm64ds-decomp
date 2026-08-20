@@ -5,14 +5,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "SpinningPlatform.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int RotatingClockHand_ClsnFile[];
 extern int RotatingClockHand_ModelFile[];
 
 int SpinningPlatform::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(RotatingClockHand_ModelFile))->Release();
     ((SharedFilePtr *)(RotatingClockHand_ClsnFile))->Release();

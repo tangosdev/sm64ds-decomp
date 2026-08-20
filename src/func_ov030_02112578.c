@@ -14,15 +14,15 @@ void _ZN9Animation8SetFlagsEi(void *thiz, int flags);
 void func_0201267c(int a, void *b);
 int _ZN6Player12GetTalkStateEv(void);
 void _ZN6Player18HasFinishedTalkingEv(void *player);
-int _ZNK12WithMeshClsn13JustHitGroundEv(const void *thiz);
+int _ZNK10dBgCh_Actr13JustHitGroundEv(const void *thiz);
 int _ZN9Animation8FinishedEv(void *thiz);
 void _ZN5Sound7PlaySubEjjj5Fix12IiEb(unsigned int a, unsigned int b, unsigned int c, int fx, int e);
 u8 DecIfAbove0_Byte(u8 *p);
 void _ZN7fBase_c18MarkForDestructionEv(void *thiz);
 void _ZN9Animation7AdvanceEv(void *thiz);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 void func_ov030_02111f6c(void *c, void *w);
-void _ZN12CylinderClsn5ClearEv(void *thiz);
+void _ZN5dCc_c5ClearEv(void *thiz);
 
 extern void *data_ov030_02115cd0[];
 extern void *data_ov030_02115cf8[];
@@ -91,7 +91,7 @@ int func_ov030_02112578(void *arg0)
         }
         break;
     case 5:
-        if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x194) != 0) {
+        if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x194) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0xd4, data_ov030_02115d10[1], 0x40000000, 0x1000, 0);
             *(s32 *)(c + 0x98) = 0;
             { u8 *p = (u8 *)((unsigned int)c + 0x3c7); *p = *p + 1; }
@@ -137,8 +137,8 @@ int func_ov030_02112578(void *arg0)
     }
 
     _ZN9Animation7AdvanceEv(c + 0x124);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(arg0, c + 0x160);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(arg0, c + 0x160);
     func_ov030_02111f6c(arg0, c + 0x194);
-    _ZN12CylinderClsn5ClearEv(c + 0x160);
+    _ZN5dCc_c5ClearEv(c + 0x160);
     return 1;
 }

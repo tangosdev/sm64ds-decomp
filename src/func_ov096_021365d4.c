@@ -8,12 +8,12 @@ extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, const struct Vector3* pos, const void* rot, int e, int f);
 void func_ov096_02136928(char* c, int n);
 char* func_ov096_021357b4(char* c);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* thiz, void* clsn);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* thiz, void* clsn);
 void func_ov096_02135e2c(int* self, void* clsn);
 void func_ov096_02135948(char* c);
-void _ZN12CylinderClsn5ClearEv(void* p);
-void _ZN12CylinderClsn6UpdateEv(void* p);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* p);
+void _ZN5dCc_c5ClearEv(void* p);
+void _ZN5dCc_c6UpdateEv(void* p);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* p);
 void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
 
 int func_ov096_021365d4(char* c) {
@@ -43,12 +43,12 @@ int func_ov096_021365d4(char* c) {
             }
         }
     }
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x14c);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x14c);
     func_ov096_02135e2c((int*)c, c + 0x180);
     func_ov096_02135948(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x14c);
-    _ZN12CylinderClsn6UpdateEv(c + 0x14c);
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x180) != 0) {
+    _ZN5dCc_c5ClearEv(c + 0x14c);
+    _ZN5dCc_c6UpdateEv(c + 0x14c);
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x180) != 0) {
         _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int*)(c + 0x5c), *(int*)(c + 0x60), *(int*)(c + 0x64));
     }
     return 1;

@@ -12,7 +12,7 @@
  * (confirmed against src/Eyerok_Spawn.cpp and src/_ZN6EyerokD1Ev.c, which
  * construct/destroy each in this order):
  *
- *     MovingCylinderClsnWithPos  0x320 + 0x40 = 0x360
+ *     dCcAcPos_c  0x320 + 0x40 = 0x360
  *     BlendModelAnim             0x360 + 0x70 = 0x3d0
  *     Model                      0x3d0 + 0x50 = 0x420
  *     ShadowModel                0x420 + 0x28 = 0x448
@@ -25,8 +25,8 @@
  * 0xa8 more unevidenced bytes (only raw `this + 0x4dc` / `+ 0x4e0` /
  * `+ 0x4e4` -- one Vector3 -- are indexed by name in src/, so the array's
  * OWN span is trusted from the destructor call, not the padding after it)
- * before 0x674, a second, class-owned MovingMeshCollider (named by
- * _ZN18MovingMeshColliderD1Ev in the destructor), distinct from
+ * before 0x674, a second, class-owned dBgW_KcMbg (named by
+ * _ZN10dBgW_KcMbgD1Ev in the destructor), distinct from
  * dBgActor_c's own at 0x124. The last 0x38 bytes (0x83c..0x874) are unused
  * tail: SIZE IS 0x874, the literal src/Eyerok_Spawn.cpp passes to operator
  * new, not the field span -- same rule as BigBrickBlock.
@@ -38,13 +38,13 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "BlendModelAnim.h"
 #include "ShadowModel.h"
 #include "TextureSequence.h"
 
 struct Eyerok : dBgActor_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x320 */
+    dCcAcPos_c mdCcAcPos_c;  /* 0x320 */
     BlendModelAnim mBlendModelAnim;                        /* 0x360 */
     Model mModel2;                                         /* 0x3d0 */
     ShadowModel mShadowModel;                               /* 0x420 */
@@ -71,7 +71,7 @@ struct Eyerok : dBgActor_c {
        from any indexed access. */
     Vector3 mUnkVectors[0x14];    /* 0x4dc */
     u8  pad_5cc[0xa8];
-    MovingMeshCollider unk_674;            /* 0x674 -- this class's own, not dBgActor_c's */
+    dBgW_KcMbg unk_674;            /* 0x674 -- this class's own, not dBgActor_c's */
     /* 0x83c..0x874: unused tail, never read or written by any matched
        function; SIZE IS 0x874, the literal src/Eyerok_Spawn.cpp passes to
        operator new, not the field span -- same rule as BigBrickBlock. */
@@ -111,7 +111,7 @@ struct Eyerok {
     u8  pad_0d5[0x4f];
     u8  unk_124;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mMovingCylinderClsnWithPos;            /* 0x320 */
+    u8  mdCcAcPos_c;            /* 0x320 */
     u8  pad_321[0x33];
     s32 unk_354;            /* 0x354 */
     s32 unk_358;            /* 0x358 */

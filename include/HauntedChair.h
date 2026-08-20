@@ -7,8 +7,8 @@
 #include "types.h"
 #include "Model.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "WithMeshClsn.h"
+#include "dCcAcPos_c.h"
+#include "dBgCh_Actr.h"
 
 struct HauntedChair {
     u8  pad_000[0x5c];
@@ -25,14 +25,14 @@ struct HauntedChair {
     ShadowModel mShadowModel;            /* 0x124 */
     u8  unk_14c;            /* 0x14c */
     u8  pad_14d[0x2f];
-    /* MovingCylinderClsnWithPos member, named by the class's own destructor calling
-       MovingCylinderClsnWithPos's D1 at +0x17c -- a relocation the ROM build
+    /* dCcAcPos_c member, named by the class's own destructor calling
+       dCcAcPos_c's D1 at +0x17c -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN12HauntedChairD0Ev.c] */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;            /* 0x17c */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x1bc -- a relocation the ROM build
+    dCcAcPos_c mdCcAcPos_c;            /* 0x17c */
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x1bc -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN12HauntedChairD0Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x1bc */
+    dBgCh_Actr mWithMeshClsn;            /* 0x1bc */
     s32 unk_378;            /* 0x378 */
     u8  pad_37c[0x4];
     s32 unk_380;            /* 0x380 */

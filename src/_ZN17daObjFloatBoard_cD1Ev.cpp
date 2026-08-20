@@ -17,7 +17,7 @@
  *
  * The body it forces is dBgActor_c's own layout: this class adds fields of
  * its own (mWaterY etc.) but none of them has a destructor, so the compiler-
- * generated body destroys only the inherited MovingMeshCollider at 0x124 and
+ * generated body destroys only the inherited dBgW_KcMbg at 0x124 and
  * Model at 0xd4, the same as _ZN10dBgActor_cD1Ev.
  *
  * This class's key function is Behavior (src/_ZN17daObjFloatBoard_c8BehaviorEv.cpp),

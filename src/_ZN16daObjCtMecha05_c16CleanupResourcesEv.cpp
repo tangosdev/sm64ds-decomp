@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "daObjCtMecha05_c.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 /* The ROM's own bss symbol names for this class's model/collision files really
    are spelled TTC_MovingBar_ModelFile / TTC_MovingBar_ClsnFile -- not a naming
@@ -16,8 +16,8 @@ extern int TTC_MovingBar_ClsnFile[];
 
 int daObjCtMecha05_c::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)this + 0x124))->IsEnabled())
-        ((MeshColliderBase *)((char *)this + 0x124))->Disable();
+    if (((dBgW *)((char *)this + 0x124))->IsEnabled())
+        ((dBgW *)((char *)this + 0x124))->Disable();
     ((SharedFilePtr *)TTC_MovingBar_ModelFile)->Release();
     ((SharedFilePtr *)TTC_MovingBar_ClsnFile)->Release();
     return 1;

@@ -13,9 +13,9 @@ void func_ov077_0212390c(char* c);
 void func_ov077_02123814(char* c);
 void _ZN9Animation7AdvanceEv(void* self);
 void func_ov077_02123a74(char* c);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* self, struct Vector3* v);
-void _ZN12CylinderClsn5ClearEv(void* self);
-void _ZN12CylinderClsn6UpdateEv(void* self);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* self, struct Vector3* v);
+void _ZN5dCc_c5ClearEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* self);
 int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, void* v, unsigned int d);
 extern int data_ov077_02127b88[];
 
@@ -42,10 +42,10 @@ int func_ov077_021243c0(char* c){
         int x = d[0];
         struct Vector3 v;
         v.x = x; v.y = y; v.z = z;
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x1c4, &v);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x1c4, &v);
     }
-    _ZN12CylinderClsn5ClearEv(c + 0x1c4);
-    _ZN12CylinderClsn6UpdateEv(c + 0x1c4);
+    _ZN5dCc_c5ClearEv(c + 0x1c4);
+    _ZN5dCc_c6UpdateEv(c + 0x1c4);
     *(int*)(c + 0x410) = _ZN5Sound8PlayLongEjjjRK7Vector3s(
         *(unsigned int*)(c + 0x410), 3, 0x182, c + 0x74, 0);
     return 1;

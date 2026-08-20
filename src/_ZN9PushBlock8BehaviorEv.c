@@ -18,12 +18,12 @@ extern Matrix4x3 data_020a0e68;
 extern void Matrix4x3_FromRotationY(Matrix4x3 *m, int angle);
 extern void MulVec3Mat4x3(Vector3 *v, Matrix4x3 *m, Vector3 *dst);
 extern void AddVec3(Vector3 *a, Vector3 *b, Vector3 *c);
-extern void _ZN13RaycastGroundC1Ev(char *thiz);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(char *thiz, Vector3 *v, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(char *thiz);
-extern void _ZN13RaycastGroundD1Ev(char *thiz);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
-extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
+extern void _ZN9dBgCh_GndC1Ev(char *thiz);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(char *thiz, Vector3 *v, void *actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(char *thiz);
+extern void _ZN9dBgCh_GndD1Ev(char *thiz);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *clsn);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *thiz);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *thiz);
 extern void func_020393a4(int *p, int v);
@@ -56,20 +56,20 @@ int _ZN9PushBlock8BehaviorEv(char *c)
         Matrix4x3_FromRotationY(&data_020a0e68, self->unk_094);
         MulVec3Mat4x3(&v, &data_020a0e68, &dst);
         AddVec3(&dst, (Vector3 *)(c + 0x5c), &dst);
-        _ZN13RaycastGroundC1Ev(ray);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(ray, &dst, 0);
-        if (_ZN13RaycastGround10DetectClsnEv(ray) != 0) {
+        _ZN9dBgCh_GndC1Ev(ray);
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(ray, &dst, 0);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(ray) != 0) {
             if (self->unk_4e8 != *(int *)(ray + 0x44)) {
                 self->unk_098 = 0;
             }
         } else {
             self->unk_098 = 0;
         }
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
-        WithMeshClsn_UpdateContinuous_Veneer(c + 0x320);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+        dBgCh_Actr_UpdateContinuous_Veneer(c + 0x320);
         _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
-        _ZN13RaycastGroundD1Ev(ray);
+        _ZN9dBgCh_GndD1Ev(ray);
     }
 
     func_020393a4((int *)(c + 0x124), 0x12c000);

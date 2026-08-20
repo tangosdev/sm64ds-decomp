@@ -3,7 +3,7 @@
  * table (func_ov052_02111410, the Spawn). The destructor confirms the same
  * shape in reverse: one vtable store to this class's own table, then one to
  * _ZTV10dBgActor_c -- inlined, per include/dBgActor_c.h -- destroying
- * MovingMeshCollider at 0x124 and Model at 0xd4 before chaining to dActor_c.
+ * dBgW_KcMbg at 0x124 and Model at 0xd4 before chaining to dActor_c.
  * No new virtual is added (Kill is inherited unmodified from dBgActor_c), so
  * the out-of-line destructor is this class's key function.
  *

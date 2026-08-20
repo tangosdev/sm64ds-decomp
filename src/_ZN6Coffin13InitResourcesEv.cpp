@@ -12,24 +12,24 @@ struct BMD_File;
 struct KCL_File;
 struct CLPS_Block;
 
-struct MeshCollider {
+struct dBgW_Kc {
     static KCL_File* LoadFile(SharedFilePtr& f);
 };
-struct MovingMeshCollider {
+struct dBgW_KcMbg {
     int SetFile(KCL_File* f, const Matrix4x3& m, Fix12 s, short n, CLPS_Block& c);
 };
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, KCL_File* f, const Matrix4x3& m, Fix12 s, short n, CLPS_Block& c);
+extern "C" int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, KCL_File* f, const Matrix4x3& m, Fix12 s, short n, CLPS_Block& c);
 
 struct dBgActor_c {
     void UpdateClsnPosAndRot();
 };
 
-KCL_File* MeshCollider::LoadFile(SharedFilePtr&);
-int MovingMeshCollider::SetFile(KCL_File*, const Matrix4x3&, Fix12, short, CLPS_Block&);
+KCL_File* dBgW_Kc::LoadFile(SharedFilePtr&);
+int dBgW_KcMbg::SetFile(KCL_File*, const Matrix4x3&, Fix12, short, CLPS_Block&);
 void dBgActor_c::UpdateClsnPosAndRot();
 
 extern "C" {
@@ -44,7 +44,7 @@ extern SharedFilePtr data_ov071_021230d8;
 extern CLPS_Block data_ov063_0211ebd8;
 }
 
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 int Coffin::InitResources()
 {
@@ -68,7 +68,7 @@ int Coffin::InitResources()
     mPosZ = res.z;
     func_ov071_02122080(((char*)this));
     ((dBgActor_c*)((char*)this))->UpdateClsnPosAndRot();
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((MovingMeshCollider*)((char*)&mMeshCollider), MeshCollider::LoadFile(data_ov071_021230d8), *(Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, data_ov063_0211ebd8);
-    func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((dBgW_KcMbg*)((char*)&mMeshCollider), dBgW_Kc::LoadFile(data_ov071_021230d8), *(Matrix4x3*)((char*)&unk_2ec), 0x199, mAngleY, data_ov063_0211ebd8);
+    func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     return 1;
 }

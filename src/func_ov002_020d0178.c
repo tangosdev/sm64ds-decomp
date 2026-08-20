@@ -1,15 +1,15 @@
 #include "types.h"
 typedef struct Vec3 { int x, y, z; } Vec3;
 
-extern void _ZN13RaycastGroundC1Ev(void* self);
-extern void _ZN13RaycastGroundD1Ev(void* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void* self, Vec3* pos, void* actor);
-extern int _ZN13RaycastGround10DetectClsnEv(void* self);
-extern void _ZN11RaycastLineC1Ev(void* self);
-extern void _ZN11RaycastLineD1Ev(void* self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
-extern int _ZN11RaycastLine10DetectClsnEv(void* self);
-extern void _ZN11RaycastLine10GetClsnPosEv(Vec3* out, void* self);
+extern void _ZN9dBgCh_GndC1Ev(void* self);
+extern void _ZN9dBgCh_GndD1Ev(void* self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void* self, Vec3* pos, void* actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void* self);
+extern void _ZN9dBgCh_LinC1Ev(void* self);
+extern void _ZN9dBgCh_LinD1Ev(void* self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, Vec3* a, Vec3* b, void* actor);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(Vec3* out, void* self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vec3* out);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int x, int z);
 extern int AngleDiff(int a, int b);
@@ -28,7 +28,7 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
     int gy;
     int res;
 
-    _ZN13RaycastGroundC1Ev(rg);
+    _ZN9dBgCh_GndC1Ev(rg);
     if (flag != 0)
         ang = (s16)(*(s16*)(c + 0x8e) + 0x8000);
     else
@@ -60,15 +60,15 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
             pos1.z = tz;
         }
     }
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos1, c);
-    if (!_ZN13RaycastGround10DetectClsnEv(rg)) {
-        _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, &pos1, c);
+    if (!_ZN9dBgCh_Gnd10DetectClsnEv(rg)) {
+        _ZN9dBgCh_GndD1Ev(rg);
         return 0;
     }
     gy = *(int*)(rg + 0x44);
     if (flag != 0) {
         if (gy > *(int*)(c + 0x60) + 0x64000 || gy < *(int*)(c + 0x60)) {
-            _ZN13RaycastGroundD1Ev(rg);
+            _ZN9dBgCh_GndD1Ev(rg);
             return 0;
         }
     } else {
@@ -76,16 +76,16 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
         if (*(u8*)(c + 0x703) != 0)
             lo = 0x190;
         if (gy > *(int*)(c + 0x60) + ((lo + 0x64) << 12) || gy < *(int*)(c + 0x60) + (lo << 12)) {
-            _ZN13RaycastGroundD1Ev(rg);
+            _ZN9dBgCh_GndD1Ev(rg);
             return 0;
         }
     }
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rg + 0x14, &normal);
     if (normal.y < 0xf04) {
-        _ZN13RaycastGroundD1Ev(rg);
+        _ZN9dBgCh_GndD1Ev(rg);
         return 0;
     }
-    _ZN11RaycastLineC1Ev(rl);
+    _ZN9dBgCh_LinC1Ev(rl);
     pos1.y = gy;
     {
         int tz = *(int*)(c + 0x64);
@@ -94,16 +94,16 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
         lineStart.y = arg1;
         lineStart.z = tz;
     }
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &pos1, c);
-    if (!_ZN11RaycastLine10DetectClsnEv(rl)) {
-        _ZN11RaycastLineD1Ev(rl);
-        _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &pos1, c);
+    if (!_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
+        _ZN9dBgCh_LinD1Ev(rl);
+        _ZN9dBgCh_GndD1Ev(rg);
         return 0;
     }
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rl + 0x14, &normal);
     if (normal.y >= 0x2c7) {
-        _ZN11RaycastLineD1Ev(rl);
-        _ZN13RaycastGroundD1Ev(rg);
+        _ZN9dBgCh_LinD1Ev(rl);
+        _ZN9dBgCh_GndD1Ev(rg);
         return 0;
     }
     res = _ZN4cstd5atan2E5Fix12IiES1_(normal.x, normal.z);
@@ -113,27 +113,27 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
             if (diff < 0)
                 diff = -diff;
             if (diff > 0x4000) {
-                _ZN11RaycastLineD1Ev(rl);
-                _ZN13RaycastGroundD1Ev(rg);
+                _ZN9dBgCh_LinD1Ev(rl);
+                _ZN9dBgCh_GndD1Ev(rg);
                 return 0;
             }
         } else {
             if (diff < 0)
                 diff = -diff;
             if (diff < 0x4000) {
-                _ZN11RaycastLineD1Ev(rl);
-                _ZN13RaycastGroundD1Ev(rg);
+                _ZN9dBgCh_LinD1Ev(rl);
+                _ZN9dBgCh_GndD1Ev(rg);
                 return 0;
             }
         }
     }
-    _ZN11RaycastLine10GetClsnPosEv(&clsnPos, rl);
+    _ZN9dBgCh_Lin10GetClsnPosEv(&clsnPos, rl);
     lineStart.y += 0x64000;
     pos1.y += 0x64000;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &pos1, c);
-    if (_ZN11RaycastLine10DetectClsnEv(rl)) {
-        _ZN11RaycastLineD1Ev(rl);
-        _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &pos1, c);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
+        _ZN9dBgCh_LinD1Ev(rl);
+        _ZN9dBgCh_GndD1Ev(rg);
         return 0;
     }
     lineStart.y = *(int*)(c + 0x60);
@@ -141,17 +141,17 @@ int func_ov002_020d0178(char* c, int arg1, int flag)
     line2.y = *(int*)(c + 0x60);
     line2.z = *(int*)(c + 0x64);
     line2.y = gy + 0xa000;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &line2, c);
-    if (_ZN11RaycastLine10DetectClsnEv(rl)) {
-        _ZN11RaycastLineD1Ev(rl);
-        _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &lineStart, &line2, c);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(rl)) {
+        _ZN9dBgCh_LinD1Ev(rl);
+        _ZN9dBgCh_GndD1Ev(rg);
         return 0;
     }
     *(int*)(c + 0x5c) = clsnPos.x - normal.x;
     *(int*)(c + 0x64) = clsnPos.z - normal.z;
     *(int*)(c + 0x60) = gy;
     *(s16*)(c + 0x8e) = (u16)(res + 0x8000);
-    _ZN11RaycastLineD1Ev(rl);
-    _ZN13RaycastGroundD1Ev(rg);
+    _ZN9dBgCh_LinD1Ev(rl);
+    _ZN9dBgCh_GndD1Ev(rg);
     return 1;
 }

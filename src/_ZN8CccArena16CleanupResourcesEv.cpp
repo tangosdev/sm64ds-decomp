@@ -5,12 +5,12 @@
 /* recovered: named members + shared header, real C++ method */
 #include "CccArena.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 int CccArena::CleanupResources()
 {
-  if(((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+  if(((dBgW *)((char *)&mMeshCollider))->IsEnabled())
+    ((dBgW *)((char *)&mMeshCollider))->Disable();
   ((SharedFilePtr *)(*(void**)(data_ov073_021231bc + (unsigned char)((char *)this)[0x32c]*0xc)))->Release();
   ((SharedFilePtr *)(*(void**)(data_ov073_021231c0 + (unsigned char)((char *)this)[0x32c]*0xc)))->Release();
   return 1;

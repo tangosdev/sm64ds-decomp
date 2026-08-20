@@ -9,14 +9,14 @@ struct C;
 typedef void (C::*PMF)();
 
 extern "C" u16 DecIfAbove0_Short(u16* p);
-extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* cc);
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cc);
 extern "C" void* _ZN8dActor_c10FindWithIDEj(unsigned id);
 extern "C" void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern "C" int Vec3_Dist(const void* a, const void* b);
 extern "C" void _ZN7fBase_c18MarkForDestructionEv(void* self);
 extern "C" void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned a, unsigned b, const Vector3& pos, const Vector3_16* rot, int e, int f);
-extern "C" void _ZN12CylinderClsn5ClearEv(void* self);
-extern "C" void _ZN12CylinderClsn6UpdateEv(void* self);
+extern "C" void _ZN5dCc_c5ClearEv(void* self);
+extern "C" void _ZN5dCc_c6UpdateEv(void* self);
 extern "C" void _ZN14BlendModelAnim7AdvanceEv(void* self);
 
 struct Disp { int unused[2]; PMF pmf; };
@@ -38,7 +38,7 @@ int Unagi::Behavior()
             (((C*)((char*)this))->*(d->pmf))();
         }
     }
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this) + 0x110);
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
     mAngleZ = mPrevAngleZ;
@@ -87,11 +87,11 @@ int Unagi::Behavior()
     }
 
     func_ov016_02111284(((char*)this));
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos1);
-    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos1);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c1);
+    _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c1);
     if (data_0209f220 == 1 && *(void**)((char*)&unk_34c) != &data_ov016_02114dbc) {
-        _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos2);
-        _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos2);
+        _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c2);
+        _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c2);
     }
     _ZN14BlendModelAnim7AdvanceEv((char*)&mBlendModelAnim);
     return 1;

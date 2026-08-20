@@ -26,8 +26,8 @@ extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_
     unsigned int a, unsigned int b, int x, int y, int z, void* v, void* cb);
 extern void* _ZN8Particle6System12FromUniqueIDEj(unsigned int id);
 extern void func_02012694(int a, void* p);
-extern void _ZN12CylinderClsn5ClearEv(void* p);
-extern void _ZN12CylinderClsn6UpdateEv(void* p);
+extern void _ZN5dCc_c5ClearEv(void* p);
+extern void _ZN5dCc_c6UpdateEv(void* p);
 }
 
 int IceBlock::Behavior()
@@ -78,18 +78,18 @@ int IceBlock::Behavior()
         return 1;
     }
 
-    if ((*(s32 *)((char *)&mMovingCylinderClsn + 0x24)) != 0) {
-        if (((*(s32 *)((char *)&mMovingCylinderClsn + 0x20)) & 0x40000) != 0) {
+    if ((*(s32 *)((char *)&mdCcAc_c + 0x24)) != 0) {
+        if (((*(s32 *)((char *)&mdCcAc_c + 0x20)) & 0x40000) != 0) {
             unk_354 = 0x1e;
             func_02012694(0x7a, ((char*)this) + 0x74);
             func_ov081_02127be0(((char*)this));
         }
-        if (((*(s32 *)((char *)&mMovingCylinderClsn + 0x20)) & 0x4000) != 0) {
+        if (((*(s32 *)((char *)&mdCcAc_c + 0x20)) & 0x4000) != 0) {
             ((VObj*)((char*)this))->OnHit();
         }
     }
 
-    _ZN12CylinderClsn5ClearEv((char*)&(*(u8 *)&mMovingCylinderClsn));
-    _ZN12CylinderClsn6UpdateEv((char*)&(*(u8 *)&mMovingCylinderClsn));
+    _ZN5dCc_c5ClearEv((char*)&(*(u8 *)&mdCcAc_c));
+    _ZN5dCc_c6UpdateEv((char*)&(*(u8 *)&mdCcAc_c));
     return 1;
 }

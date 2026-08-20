@@ -1,33 +1,33 @@
 #include "types.h"
 typedef struct P2 { int a, b; } P2;
 
-typedef struct ClsnResult {
+typedef struct dBgPi {
     void *vtb;
     int s0, s1, s2, s3, s4;
     u16 f, g;
     int h, i, j;
-} ClsnResult;
+} dBgPi;
 
-extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *p);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *p);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *p);
 extern void *func_0203567c(void *p);
-extern u32 _ZNK10ClsnResult9GetClsnIDEv(void *r);
+extern u32 _ZNK5dBgPi9GetClsnIDEv(void *r);
 extern void func_ov030_021141a8(void *a, int m);
-extern void _ZN10ClsnResultD1Ev(void *r);
+extern void _ZN5dBgPiD1Ev(void *r);
 extern int Vec3_Dist(void *a, void *b);
 extern void _ZN9Animation7AdvanceEv(void *p);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *a, void *c);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *a, void *c);
 extern void func_ov030_02111bc4(void *a);
-extern void _ZN12CylinderClsn5ClearEv(void *p);
+extern void _ZN5dCc_c5ClearEv(void *p);
 extern void *data_02099368[];
 
 int func_ov030_02112a84(char *a)
 {
-    ClsnResult res;
+    dBgPi res;
 
-    WithMeshClsn_UpdateContinuous_Veneer(a + 0x194);
-    if (_ZNK12WithMeshClsn13JustHitGroundEv(a + 0x194) || _ZNK12WithMeshClsn10IsOnGroundEv(a + 0x194)) {
+    dBgCh_Actr_UpdateContinuous_Veneer(a + 0x194);
+    if (_ZNK10dBgCh_Actr13JustHitGroundEv(a + 0x194) || _ZNK10dBgCh_Actr10IsOnGroundEv(a + 0x194)) {
         int b;
         u16 id;
 
@@ -49,11 +49,11 @@ int func_ov030_02112a84(char *a)
             res.h = *(int *)(r + 0x1c);
             res.i = *(int *)(r + 0x20);
             res.j = *(int *)(r + 0x24);
-            if (_ZNK10ClsnResult9GetClsnIDEv(&res) != 0xffffffff)
+            if (_ZNK5dBgPi9GetClsnIDEv(&res) != 0xffffffff)
                 func_ov030_021141a8(a, 9);
             else
                 func_ov030_021141a8(a, *(int *)(a + 0x3b8));
-            _ZN10ClsnResultD1Ev(&res);
+            _ZN5dBgPiD1Ev(&res);
         } else {
             int t = (int)(id == 0x10c);
             if (t != 0) {
@@ -68,8 +68,8 @@ int func_ov030_02112a84(char *a)
     }
 
     _ZN9Animation7AdvanceEv(a + 0x124);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(a, a + 0x160);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(a, a + 0x160);
     func_ov030_02111bc4(a);
-    _ZN12CylinderClsn5ClearEv(a + 0x160);
+    _ZN5dCc_c5ClearEv(a + 0x160);
     return 1;
 }

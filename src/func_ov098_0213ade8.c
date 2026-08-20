@@ -7,7 +7,7 @@ extern int _ZN8dActor_c13ClosestPlayerEv(void* self);
 extern int Vec3_Dist(void* a, void* b);
 extern void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void* pos);
 extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void* pos, void* rot, int area, int death);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 extern void _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int slot, unsigned int unk, Fix12i x, Fix12i y, Fix12i z, void* rot, void* cb);
 
@@ -77,7 +77,7 @@ void func_ov098_0213ade8(char* self)
             *(s16*)(a + 0x96) = 0;
         }
 
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(a, 0);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(a, 0);
 
         {
             int *vp = (int*)(int)(a + 0xa4);

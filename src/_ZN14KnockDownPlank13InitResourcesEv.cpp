@@ -2,23 +2,23 @@
 // @symbol _ZN14KnockDownPlank13InitResourcesEv
 /* recovered: named members + shared header, real C++ method */
 #include "KnockDownPlank.h"
-#include "RaycastGround.h"
+#include "dBgCh_Gnd.h"
 
 extern "C" {
 void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* f, int a, int b);
 void _ZN11ShadowModel10InitCuboidEv(void* self);
 void func_ov015_0211166c(char* t);
-void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* f, void* m, int fx, short s, void* b);
+void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* fp);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, void* f, void* m, int fx, short s, void* b);
 void Matrix4x3_FromRotationY(void* m, int angle);
 void MulVec3Mat4x3(Vector3* v, void* m, Vector3* out);
 void Vec3_Add(Vector3* out, Vector3* a, Vector3* b);
-void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, Vector3* v, void* a);
-int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
+void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
+void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, Vector3* v, void* a);
+int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
 int IsStarCollectedInCurLevel(int starID);
-void _ZN13RaycastGroundD1Ev(RaycastGround* self);
+void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 }
 
 extern int data_ov015_0211497c;
@@ -32,7 +32,7 @@ extern unsigned char data_0209f220;
 #pragma opt_propagation off
 int KnockDownPlank::InitResources()
 {
-    RaycastGround rg;
+    dBgCh_Gnd rg;
     Vector3 a, b, c, d;
     int zero, one;
 
@@ -43,9 +43,9 @@ int KnockDownPlank::InitResources()
     _ZN11ShadowModel10InitCuboidEv(&mShadowModel);
     func_ov015_0211166c((char *)this);
     UpdateClsnPosAndRot();
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider,
-        _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov015_02114974),
+        _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov015_02114974),
         &mClsnMat,
         0x1000,
         mAngleY,
@@ -59,10 +59,10 @@ int KnockDownPlank::InitResources()
     MulVec3Mat4x3(&a, &data_020a0e68, &b);
     Vec3_Add(&c, &b, (Vector3 *)&mPosX);
     c.y += 0x14000;
-    _ZN13RaycastGroundC1Ev(&rg);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &c, 0);
+    _ZN9dBgCh_GndC1Ev(&rg);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &c, 0);
     unk_384 = c.y;
-    if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0)
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0)
         unk_384 = rg.clsnY;
 
     zero = 0;
@@ -82,9 +82,9 @@ int KnockDownPlank::InitResources()
     if (data_0209f2f8 == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(one) == 0)
         && mPosY >= 0xdac000)
     {
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
         return 0;
     }
-    _ZN13RaycastGroundD1Ev(&rg);
+    _ZN9dBgCh_GndD1Ev(&rg);
     return 1;
 }

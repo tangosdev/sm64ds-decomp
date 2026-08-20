@@ -5,14 +5,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "TTC_MovingBeam.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int data_ov065_0211d9cc[];
 extern int data_ov065_0211d9d4[];
 
 int TTC_MovingBeam::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(data_ov065_0211d9d4))->Release();
     ((SharedFilePtr *)(data_ov065_0211d9cc))->Release();

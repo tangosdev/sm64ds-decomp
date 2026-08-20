@@ -1,7 +1,7 @@
 //cpp
 struct Vector3 { int x, y, z; Vector3() {} };
 extern "C" {
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *thiz, const Vector3 &v);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *thiz, const Vector3 &v);
 void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 int _ZN6Player12GetHurtStateEv(void *p);
 int _ZN6Player15IsCollectingCapEv(void *p);
@@ -18,7 +18,7 @@ extern "C" void func_ov077_02126528(char *c)
     v.x = data_ov077_02127a5c[0];
     v.y = data_ov077_02127a5c[1];
     v.z = data_ov077_02127a5c[2];
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x144, v);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x144, v);
     if (*(int *)(c + 0x168) == 0) return;
     a = (char *)_ZN8dActor_c10FindWithIDEj(*(int *)(c + 0x168));
     if (a == 0) return;

@@ -6,7 +6,7 @@
 /* recovered: renamed to Class_Method */
 /* daObjCtMecha03_c::InitResources - recovered from vtable slot identity */
 #include "daObjCtMecha03_c.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 /* Every ROM symbol below is spelled by its already-mangled name: an ordinary
    (non-"C") declaration would mangle it a SECOND time (_Z35_ZN5Model... instead
@@ -20,13 +20,13 @@ extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisp, void *bmd, int a, int b);
 extern void _ZN11ShadowModel10InitCuboidEv(void *thisp);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *thisp);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *thisp, void *kcl, void *mtx, int fix, short s, void *clps);
 extern void func_020393a4(void *p, int v);
 extern void func_02039394(void *p, int v);
 extern void func_020393d4(void *p, void *v);
-extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 }
 
 extern int data_ov065_0211d88c[];
@@ -66,8 +66,8 @@ int daObjCtMecha03_c::InitResources()
     func_ov065_0211a114(self);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
 
-    kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov065_0211d894);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov065_0211d894);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         (void *)(self + 0x124), kcl, (void *)(self + 0x2ec), 0x1000,
         mAngleY, (void *)&data_ov035_02112198);
 
@@ -76,7 +76,7 @@ int daObjCtMecha03_c::InitResources()
 
     if (data_0209f2c0 != 3) {
         func_020393d4((void *)(self + 0x124),
-            (void *)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+            (void *)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     }
     return 1;
 }

@@ -14,7 +14,7 @@
  * unresolvable. void* everywhere, mirroring the un-migrated
  * func_ov065_0211b1d4 this file replaces and daObjCtMecha03_c's own
  * InitResources, which took the same route rather than calling through the
- * real Model/ShadowModel/MovingMeshCollider members now reachable via
+ * real Model/ShadowModel/dBgW_KcMbg members now reachable via
  * daObjCtMecha05_c.h -- a class-typed by-value Fix12<int> argument is not
  * safe to assume matches the ROM through a real method call (see the
  * warning in include/dBgActor_c.h and include/dActor_c.h about CW homing
@@ -48,11 +48,11 @@ extern void *_ZN9ModelBase7SetFileEP8BMD_Fileii(void *thisp, void *bmd, int a, i
 extern void _ZN11ShadowModel10InitCuboidEv(void *thisp);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *thisp);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *thisp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *thisp, void *kcl, void *mtx, int fix, short sh, void *clps);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
-extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
+extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 extern void func_020393d4(void *p, void *v);
 extern void func_020393a4(void *p, int v);
 extern void func_02039394(void *p, int v);
@@ -62,14 +62,14 @@ struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix
 struct CLPS_Block; struct SharedFilePtr;
 extern "C" unsigned char data_0209f2c0;
 extern "C" int data_ov035_02112258;
-struct RaycastGround {
+struct dBgCh_Gnd {
     int pad[0x11];
     int result;       // offset 0x44
     int pad2[3];      // pad to 0x54 total
-    RaycastGround();
+    dBgCh_Gnd();
     void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
-    ~RaycastGround();
+    ~dBgCh_Gnd();
 };
 
 struct V3 { int x, y, z; };
@@ -83,11 +83,11 @@ int daObjCtMecha05_c::InitResources()
     _ZN11ShadowModel10InitCuboidEv(self + 0x33c);
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
-    void *kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov065_0211d90c);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *kf = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov065_0211d90c);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         self + 0x124, kf, self + 0x2ec, 0x199, *(short*)(self + 0x8e), (void*)&data_ov035_02112258);
     func_020393d4(self + 0x124,
-        (void*)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+        (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393a4(self + 0x124, 0x1c0000);
     func_02039394(self + 0x124, 0x1000);
     *(short*)(self + 0x94) = *(short*)(self + 0x8e);
@@ -101,7 +101,7 @@ int daObjCtMecha05_c::InitResources()
     v.y = *(int*)(self + 0x60);
     v.z = *(int*)(self + 0x64);
     v.y = v.y - 0xa000;
-    RaycastGround rg;
+    dBgCh_Gnd rg;
     rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     *(int*)(self + 0x338) = v.y;
     if (rg.DetectClsn() != 0)

@@ -18,11 +18,11 @@ extern void _ZN9ModelBase12ApplyOpacityEj(char *, int, int);
 extern void Vec3_Asr(int *, char *, int);
 extern void Matrix4x3_FromTranslation(Matrix4x3 *, int, int, int);
 extern void Matrix4x3_ApplyInPlaceToRotationXYZExt(Matrix4x3 *, int, int, int);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *);
-extern void _ZN13RaycastGroundC1Ev(char *);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(char *, int *, int);
-extern int _ZN13RaycastGround10DetectClsnEv(char *);
-extern void _ZN13RaycastGroundD1Ev(char *);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char *);
+extern void _ZN9dBgCh_GndC1Ev(char *);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(char *, int *, int);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(char *);
+extern void _ZN9dBgCh_GndD1Ev(char *);
 extern void Matrix4x3_FromRotationY(char *, int);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(char *, char *, char *, int, int, int);
 
@@ -69,17 +69,17 @@ void func_ov002_020b7f7c(char *c)
     {
         int y = *(int *)(c + 0x60);
         int off;
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) == 0) {
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x144) == 0) {
             v2[0] = *(int *)(c + 0x5c);
             v2[1] = *(int *)(c + 0x60);
             v2[2] = *(int *)(c + 0x64);
             v2[1] = v2[1] + 0x28000;
-            _ZN13RaycastGroundC1Ev(ray);
-            _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(ray, v2, 0);
+            _ZN9dBgCh_GndC1Ev(ray);
+            _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(ray, v2, 0);
             y = v2[1];
-            if (_ZN13RaycastGround10DetectClsnEv(ray) != 0)
+            if (_ZN9dBgCh_Gnd10DetectClsnEv(ray) != 0)
                 y = *(int *)(ray + 0x44);
-            _ZN13RaycastGroundD1Ev(ray);
+            _ZN9dBgCh_GndD1Ev(ray);
         }
 
         off = 0;

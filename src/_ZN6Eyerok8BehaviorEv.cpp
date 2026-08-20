@@ -23,12 +23,12 @@ extern void MulVec3Mat4x3(void *src, void *m, void *dst);
 extern u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     u32 a, u32 b, int x, int y, int z, const void *v, void *cb);
 extern void func_ov066_021194fc(char *c);
-extern int _ZN16MeshColliderBase9IsEnabledEv(char *c);
+extern int _ZN4dBgW9IsEnabledEv(char *c);
 extern void func_ov066_021194a4(char *c);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char *c, void *clsn);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(char *c, const Vector3 *v);
-extern void _ZN12CylinderClsn5ClearEv(char *c);
-extern void _ZN12CylinderClsn6UpdateEv(char *c);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char *c, void *clsn);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char *c, const Vector3 *v);
+extern void _ZN5dCc_c5ClearEv(char *c);
+extern void _ZN5dCc_c6UpdateEv(char *c);
 extern void _ZN14BlendModelAnim7AdvanceEv(char *c);
 extern void _ZN9Animation7AdvanceEv(char *c);
 
@@ -155,7 +155,7 @@ extern "C" int _ZN6Eyerok8BehaviorEv(char *c)
 
     if (*(int *)(c + 0x49c) == 0) {
         func_ov066_021194fc(c);
-        if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x674) != 0)
+        if (_ZN4dBgW9IsEnabledEv(c + 0x674) != 0)
             func_ov066_021194a4(c);
         return 1;
     }
@@ -163,19 +163,19 @@ extern "C" int _ZN6Eyerok8BehaviorEv(char *c)
     {
         Vector3 vrel;
         *(int *)(c + 0x4a8) = *(int *)(c + 0x4b4) + 0x8000;
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
         *(int *)(c + 0x354) = *(int *)(c + 0x5c);
         *(int *)(c + 0x358) = *(int *)(c + 0x60);
         *(int *)(c + 0x35c) = *(int *)(c + 0x64);
         vrel.x = data_ov066_0211ad18[0];
         vrel.y = data_ov066_0211ad18[1];
         vrel.z = data_ov066_0211ad18[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x320, &vrel);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x320, &vrel);
         func_ov066_021194fc(c);
-        if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x674) != 0)
+        if (_ZN4dBgW9IsEnabledEv(c + 0x674) != 0)
             func_ov066_021194a4(c);
-        _ZN12CylinderClsn5ClearEv(c + 0x320);
-        _ZN12CylinderClsn6UpdateEv(c + 0x320);
+        _ZN5dCc_c5ClearEv(c + 0x320);
+        _ZN5dCc_c6UpdateEv(c + 0x320);
         _ZN14BlendModelAnim7AdvanceEv(c + 0x360);
         _ZN9Animation7AdvanceEv(c + 0x448);
     }

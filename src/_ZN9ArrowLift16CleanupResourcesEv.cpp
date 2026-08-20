@@ -5,14 +5,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ArrowLift.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int data_ov029_02114248[];
 extern int data_ov029_02114250[];
 
 int ArrowLift::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMovingMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(data_ov029_02114250))->Release();
     ((SharedFilePtr *)(data_ov029_02114248))->Release();

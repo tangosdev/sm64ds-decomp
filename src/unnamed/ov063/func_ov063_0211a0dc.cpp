@@ -10,7 +10,7 @@ typedef s32 Fix12;
 
 extern "C" {
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
-extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* clsn, void* player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* self, void* clsn, void* player);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, Fix12 f);
 extern int func_0201267c(u32 a, void* b);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, Fix12 f, u32 b, u32 c, u32 d);
@@ -62,7 +62,7 @@ extern "C" int func_ov063_0211a0dc(char* c)
         return 1;
     }
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x184, r4) != 0) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x184, r4) != 0) {
         _ZN6Player6BounceE5Fix12IiE(r4, 0x28000);
         func_0201267c(0x149, c + 0x74);
         return -1;

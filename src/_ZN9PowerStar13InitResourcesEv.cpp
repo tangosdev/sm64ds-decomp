@@ -29,16 +29,16 @@ extern void func_ov002_020e6df8(void *self);
 extern s32 SublevelToLevel(s32 sub);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *f, s32 a, s32 spd, u32 g);
 extern s32 _ZN11ShadowModel12InitCylinderEv(void *self);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
     void *self, void *actor, struct Vec3 *v, s32 a, s32 b, u32 c, u32 d);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, void *actor, s32 a, s32 b, void *p1, void *p2);
-extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *self);
+extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *self);
 extern char *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
     u32 id, u32 param, struct Vec3 *pos, void *rot, s32 a, s32 b);
 extern s32 NumVsStarsObtained(void);
 extern void func_ov002_020e9448(void *self);
-extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void *self);
+extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void *self);
 extern s32 IsStarCollectedInCurLevel(u32 idx);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 extern void func_ov002_020e8dd8(void *self);
@@ -146,10 +146,10 @@ s32 PowerStar::InitResources()
     v2.x = data_ov002_0210aa0c.x;
     v2.y = data_ov002_0210aa0c.y;
     v2.z = data_ov002_0210aa0c.z;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
         t + 0x110, t, &v2, 0x64000, 0x96000, 0x100002, 0x8000);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(t + 0x150, t, 0x50000, 0, 0, 0);
-    _ZN12WithMeshClsn13SetLimMovFlagEv(t + 0x150);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(t + 0x150, t, 0x50000, 0, 0, 0);
+    _ZN10dBgCh_Actr13SetLimMovFlagEv(t + 0x150);
     U8(0x49d) = (u8)(*(u32 *)(t + 8) & 0xf);
     if (S32(0x43c) != 7 && S32(0x43c) != 3)
         LU16(0x4a2) |= 2;
@@ -192,7 +192,7 @@ s32 PowerStar::InitResources()
         func_ov002_020e9448(t);
         U16(0x100) = 0xf;
         U16(0x494) = 0x32;
-        _ZN12WithMeshClsn19StartDetectingWaterEv(t + 0x150);
+        _ZN10dBgCh_Actr19StartDetectingWaterEv(t + 0x150);
     } else if (kind == 2 || kind == 4) {
         S32(0x440) = 0;
         LU32(0x128) |= 1;

@@ -19,7 +19,7 @@ extern "C" int _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(
     void*, BMA_File&, int, int, u32);
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
     void*, BCA_File*, int, int, u32);
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void*, dActor_c*, int, int, Vector3_16*, int);
 
 extern SharedFilePtr data_ov084_02130cf8;
@@ -62,7 +62,7 @@ extern "C" int func_ov074_02122634(char* self)
     *(int*)(self + 0xa0) = -0x3c000;
     *(int*)(self + 0x5dc) = 0;
 
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         (void*)(self + 0x40c),
         (dActor_c*)self,
         0x14000, 0x14000,

@@ -8,16 +8,16 @@ extern void _Z14ApproachLinearRsss(s16 *dst, s16 target, s16 step);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *anim, void *file, int n, Fix12i speed, unsigned int flags);
 extern void func_ov030_02111a00(void *c);
 extern void _ZN9Animation7AdvanceEv(void *c);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *c, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *clsn);
 extern int func_ov030_02111dd0(void *c);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *c);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *c);
 extern void func_ov030_02111f6c(void *c, void *w);
 extern void func_ov030_02111bc4(void *c);
 extern int func_ov030_02111ea4(void *c);
 extern int _ZN6Player7IsInAirEv(void *p);
 extern void func_ov030_021141a8(void *c, int mode);
-extern void _ZN12CylinderClsn5ClearEv(void *c);
-extern void _ZN12CylinderClsn6UpdateEv(void *c);
+extern void _ZN5dCc_c5ClearEv(void *c);
+extern void _ZN5dCc_c6UpdateEv(void *c);
 extern void func_ov030_02111890(void *c);
 extern void *data_ov030_02115d18;
 
@@ -77,15 +77,15 @@ int func_ov030_02113d20(void *c) {
 
     b = (int)(*(unsigned short *)((char *)c + 0xc) == 0x10b);
     if (b) {
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (char *)c + 0x160);
-        onWall = (func_ov030_02111dd0(c) | _ZNK12WithMeshClsn8IsOnWallEv((char *)c + 0x194)) != 0;
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, (char *)c + 0x160);
+        onWall = (func_ov030_02111dd0(c) | _ZNK10dBgCh_Actr8IsOnWallEv((char *)c + 0x194)) != 0;
         func_ov030_02111f6c(c, (char *)c + 0x194);
         func_ov030_02111bc4(c);
     } else {
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (char *)c + 0x160);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, (char *)c + 0x160);
         func_ov030_02111f6c(c, (char *)c + 0x194);
         func_ov030_02111bc4(c);
-        onWall = (func_ov030_02111ea4(c) | _ZNK12WithMeshClsn8IsOnWallEv((char *)c + 0x194)) != 0;
+        onWall = (func_ov030_02111ea4(c) | _ZNK10dBgCh_Actr8IsOnWallEv((char *)c + 0x194)) != 0;
     }
 
     if (*(int *)((char *)c + 0x3b4) == 1 && onWall && dist < 0x12c000) {
@@ -95,9 +95,9 @@ int func_ov030_02113d20(void *c) {
         }
     }
 
-    _ZN12CylinderClsn5ClearEv((char *)c + 0x160);
+    _ZN5dCc_c5ClearEv((char *)c + 0x160);
     if (*(int *)((char *)c + 0x3b4) == 1)
-        _ZN12CylinderClsn6UpdateEv((char *)c + 0x160);
+        _ZN5dCc_c6UpdateEv((char *)c + 0x160);
     func_ov030_02111890(c);
     return 1;
 }

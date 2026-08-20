@@ -3,15 +3,15 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Whomp.h"
 struct dActor_c; typedef int (dActor_c::*PMF)();
-struct WithMeshClsn;
-struct CylinderClsn;
+struct dBgCh_Actr;
+struct dCc_c;
 
 extern "C" {
 int _ZN8dActor_c13DistToCPlayerEv(dActor_c* self);
 void func_ov079_02123f34(dActor_c* self);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(dActor_c* self, CylinderClsn* c);
-int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(dActor_c* self, WithMeshClsn* w, int a, short b, int c, int d, void* e);
-void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(dActor_c* self, WithMeshClsn* w, unsigned int n);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(dActor_c* self, dCc_c* c);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(dActor_c* self, dBgCh_Actr* w, int a, short b, int c, int d, void* e);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(dActor_c* self, dBgCh_Actr* w, unsigned int n);
 void func_ov079_02124188(dActor_c* self);
 int func_ov079_021243e0(char* c, int r4);
 int func_ov079_02123a8c(dActor_c* self);
@@ -32,10 +32,10 @@ int Whomp::Behavior()
     }
 
     func_ov079_02123f34(((dActor_c*)this));
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((dActor_c*)this), 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(((dActor_c*)this), 0);
 
     if (*(int*)(c + 0x98) != 0) {
-        if (_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(((dActor_c*)this), (WithMeshClsn*)(c + 0x110), 0x3c000, (short)0x2888, 0, 0, (void*)0x32000)) {
+        if (_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((dActor_c*)this), (dBgCh_Actr*)(c + 0x110), 0x3c000, (short)0x2888, 0, 0, (void*)0x32000)) {
             *(int*)(c + 0x5c) = *(int*)(c + 0x3d4);
             *(int*)(c + 0x60) = *(int*)(c + 0x3d8);
             *(int*)(c + 0x64) = *(int*)(c + 0x3dc);
@@ -50,7 +50,7 @@ int Whomp::Behavior()
         *(int*)(c + 0x3dc) = *(int*)(c + 0x64);
     }
 
-    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((dActor_c*)this), (WithMeshClsn*)(c + 0x110), 0);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((dActor_c*)this), (dBgCh_Actr*)(c + 0x110), 0);
 
     {
         int idx = *(int*)(c + 0x3b0);

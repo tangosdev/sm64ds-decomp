@@ -36,7 +36,7 @@ struct MrI {
     u8  pad_148[0x4];
     u8  mShadowModel;            /* 0x14c */
     u8  pad_14d[0x27];
-    u8  mMovingCylinderClsnWithPos;            /* 0x174 */
+    u8  mdCcAcPos_c;            /* 0x174 */
     u8  pad_175[0x3f];
     u8  unk_1b4;            /* 0x1b4 */
     u8  pad_1b5[0x37];

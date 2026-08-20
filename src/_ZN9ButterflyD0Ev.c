@@ -4,17 +4,17 @@
 #include "decl_Model.h"
 #include "decl_ModelAnim.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV9daBtfly_c */
-extern void _ZN25MovingCylinderClsnWithPosD1Ev(void *);
+extern void _ZN10dCcAcPos_cD1Ev(void *);
 extern void *data_020a0eac;
 int *_ZN9ButterflyD0Ev(int *t)
 {
     t[0] = (int)_ZTV9daBtfly_c;
-    _ZN25MovingCylinderClsnWithPosD1Ev((char *)t + 0x394);
-    _ZN12WithMeshClsnD1Ev((char *)t + 0x1d8);
+    _ZN10dCcAcPos_cD1Ev((char *)t + 0x394);
+    _ZN10dBgCh_ActrD1Ev((char *)t + 0x1d8);
     _ZN11ShadowModelD1Ev((char *)t + 0x1b0);
     _ZN11ShadowModelD1Ev((char *)t + 0x188);
     _ZN5ModelD1Ev((char *)t + 0x138);

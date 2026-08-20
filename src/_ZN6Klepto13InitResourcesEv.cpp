@@ -16,8 +16,8 @@ extern void *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr *f);
 extern void _ZN7PathPtrC1Ev(void *self);
 extern void _ZN7PathPtr6FromIDEj(void *self, unsigned int id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *self, void *v, unsigned int idx);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *self, void *a, Fix12i r, Fix12i h, unsigned int d, unsigned int e);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, void *a, Fix12i b, Fix12i c, void *d, void *e);
 extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *rot, int e, int f);
 extern void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void *self, Fix12i a, Fix12i b, Fix12i c, Fix12i d);
 extern void func_ov062_0211c658(void *c, void *p);
@@ -76,9 +76,9 @@ int Klepto::InitResources()
     unk_484 = mPosX;
     unk_488 = mPosY;
     unk_48c = mPosZ;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x64000, 0xa0000, 0x200002, 0x3eff0);
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x144, ((char *)this), 0x3c000, 0xa0000, 0x200000, 0);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x178, ((char *)this), 0x1e000, 0x1e000, 0, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x64000, 0xa0000, 0x200002, 0x3eff0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x144, ((char *)this), 0x3c000, 0xa0000, 0x200000, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x178, ((char *)this), 0x1e000, 0x1e000, 0, 0);
 
     _ZN7PathPtrC1Ev(path2);
     _ZN7PathPtr6FromIDEj(path2, mPathId);

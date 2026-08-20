@@ -98,7 +98,7 @@ overlays:
     name: ov010
     object: ../../build/build/arm9_ov010.bin
     hash: a14e74b7ced23637
-    delinks: ../../config/arm9/overlays/ov010/delinks.txt
+    delinks: overlays/ov010/delinks.txt
     symbols: ../../config/arm9/overlays/ov010/symbols.txt
     relocations: ../../config/arm9/overlays/ov010/relocs.txt
   - id: 11
@@ -126,7 +126,7 @@ overlays:
     name: ov014
     object: ../../build/build/arm9_ov014.bin
     hash: 54a8569427e76b09
-    delinks: ../../config/arm9/overlays/ov014/delinks.txt
+    delinks: overlays/ov014/delinks.txt
     symbols: ../../config/arm9/overlays/ov014/symbols.txt
     relocations: ../../config/arm9/overlays/ov014/relocs.txt
   - id: 15
@@ -161,14 +161,14 @@ overlays:
     name: ov019
     object: ../../build/build/arm9_ov019.bin
     hash: a3284afade8cf9e2
-    delinks: ../../config/arm9/overlays/ov019/delinks.txt
+    delinks: overlays/ov019/delinks.txt
     symbols: ../../config/arm9/overlays/ov019/symbols.txt
     relocations: ../../config/arm9/overlays/ov019/relocs.txt
   - id: 20
     name: ov020
     object: ../../build/build/arm9_ov020.bin
     hash: 9fa28d2d62d8c3e8
-    delinks: ../../config/arm9/overlays/ov020/delinks.txt
+    delinks: overlays/ov020/delinks.txt
     symbols: ../../config/arm9/overlays/ov020/symbols.txt
     relocations: ../../config/arm9/overlays/ov020/relocs.txt
   - id: 21
@@ -231,7 +231,7 @@ overlays:
     name: ov029
     object: ../../build/build/arm9_ov029.bin
     hash: 0dd23c8a45a15f25
-    delinks: ../../config/arm9/overlays/ov029/delinks.txt
+    delinks: overlays/ov029/delinks.txt
     symbols: ../../config/arm9/overlays/ov029/symbols.txt
     relocations: ../../config/arm9/overlays/ov029/relocs.txt
   - id: 30
@@ -518,7 +518,7 @@ overlays:
     name: ov070
     object: ../../build/build/arm9_ov070.bin
     hash: faaf020ce867bfbb
-    delinks: ../../config/arm9/overlays/ov070/delinks.txt
+    delinks: overlays/ov070/delinks.txt
     symbols: ../../config/arm9/overlays/ov070/symbols.txt
     relocations: ../../config/arm9/overlays/ov070/relocs.txt
   - id: 71
@@ -567,7 +567,7 @@ overlays:
     name: ov077
     object: ../../build/build/arm9_ov077.bin
     hash: acc34cc03f3743fe
-    delinks: ../../config/arm9/overlays/ov077/delinks.txt
+    delinks: overlays/ov077/delinks.txt
     symbols: ../../config/arm9/overlays/ov077/symbols.txt
     relocations: ../../config/arm9/overlays/ov077/relocs.txt
   - id: 78

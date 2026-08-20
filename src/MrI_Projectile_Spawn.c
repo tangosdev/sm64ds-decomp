@@ -2,21 +2,21 @@
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
-#include "decl_MovingCylinderClsnWithPos.h"
+#include "decl_dCcAcPos_c.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
-/* resolved: VT0 = _ZTV14MrI_Projectile */
+/* resolved: VT0 = _ZTV8daEyBm_c */
 int *MrI_Projectile_Spawn(void)
 {
     int *p = (int *)_ZN7fBase_cnwEj(820);
     if (p) {
         _ZN8dActor_cC2Ev(p);
-        p[0] = (int)_ZTV14MrI_Projectile;
+        p[0] = (int)_ZTV8daEyBm_c;
         _ZN11ShadowModelC1Ev((char *)p + 0xd4);
-        _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0xfc);
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x13c);
+        _ZN10dCcAcPos_cC1Ev((char *)p + 0xfc);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x13c);
     }
     return p;
 }

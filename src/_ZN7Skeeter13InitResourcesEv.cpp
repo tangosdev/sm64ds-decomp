@@ -6,7 +6,7 @@
  * FINDS THE WATER LINE -- which is the part that matters.
  *
  * It raycasts straight down from 0x32000 above the spawn point using a local
- * RaycastGround, and what it does with the hit depends on a surface flag: a
+ * dBgCh_Gnd, and what it does with the hit depends on a surface flag: a
  * 0x20 surface sets unk_39c and only records the height, while any other
  * surface records it as both unk_3a8 and unk_3ac. mPosY is then snapped to
  * unk_3ac, so the skeeter starts exactly on the surface it found.
@@ -38,16 +38,16 @@ extern "C" {
 BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(LocSharedFilePtr* f);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 void _ZN9Animation8LoadFileER13SharedFilePtr(LocSharedFilePtr* f);
-void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, LocVec3* v, LocFix12 r, LocFix12 h, unsigned int e, unsigned int g);
-void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, LocFix12 r, LocFix12 h, LocVector3_16* p, LocVector3_16* q);
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void* self, dActor_c* a, LocVec3* v, LocFix12 r, LocFix12 h, unsigned int e, unsigned int g);
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, LocFix12 r, LocFix12 h, LocVector3_16* p, LocVector3_16* q);
 void func_0203558c(void* self);
 int func_ov090_02131e00(void* c, PMF* p);
-void _ZN13RaycastGroundC1Ev(RG* self);
-void _ZN4BgCh19StartDetectingWaterEv(RG* self);
-void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RG* self, const LocVec3* v, dActor_c* a);
-int _ZN13RaycastGround10DetectClsnEv(RG* self);
+void _ZN9dBgCh_GndC1Ev(RG* self);
+void _ZN5dBgCh19StartDetectingWaterEv(RG* self);
+void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(RG* self, const LocVec3* v, dActor_c* a);
+int _ZN9dBgCh_Gnd10DetectClsnEv(RG* self);
 int SurfaceInfo_TestFlag0x20(int* p);
-void _ZN13RaycastGroundD1Ev(RG* self);
+void _ZN9dBgCh_GndD1Ev(RG* self);
 int RandomIntInternal(int* seed);
 
 extern LocSharedFilePtr data_ov090_021344a0;
@@ -85,14 +85,14 @@ int Skeeter::InitResources()
     v.x = data_ov090_0213412c.x;
     v.y = data_ov090_0213412c.y;
     v.z = data_ov090_0213412c.z;
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, (dActor_c*)c, &v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, (dActor_c*)c, &v, 0x5a000, 0x5a000, 0x200000, 0x7eff0);
 
     mAngleY = mPrevAngleY;
     unk_3a4 = 0x1000;
     mScaleX = 0x1000;
     mScaleY = 0x1000;
     mScaleZ = 0x1000;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (dActor_c*)c, 0xc8000, 0, (LocVector3_16*)0, (LocVector3_16*)0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (dActor_c*)c, 0xc8000, 0, (LocVector3_16*)0, (LocVector3_16*)0);
     func_0203558c(&mWithMeshClsn);
 
     unk_108 = 1;
@@ -113,9 +113,9 @@ int Skeeter::InitResources()
     }
 
     {
-        _ZN13RaycastGroundC1Ev(&rg);
+        _ZN9dBgCh_GndC1Ev(&rg);
         *(int*)((char*)&rg + 0x4c) = 0xbb8000;
-        _ZN4BgCh19StartDetectingWaterEv(&rg);
+        _ZN5dBgCh19StartDetectingWaterEv(&rg);
         {
             int py = mPosY;
             int pz = mPosZ;
@@ -125,9 +125,9 @@ int Skeeter::InitResources()
             pos.y = ip;
             pos.z = pz;
         }
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, (dActor_c*)c);
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, (dActor_c*)c);
         unk_3a8 = data_02092138;
-        if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
             if (SurfaceInfo_TestFlag0x20(rg.detect) != 0) {
                 unk_39c = 1;
                 unk_3ac = rg.detect[12];
@@ -144,7 +144,7 @@ int Skeeter::InitResources()
 
         if (unk_39c != 0) {
             func_ov090_02131e00(c, &data_ov090_021344f4);
-            _ZN13RaycastGroundD1Ev(&rg);
+            _ZN9dBgCh_GndD1Ev(&rg);
             return 1;
         }
 
@@ -156,7 +156,7 @@ int Skeeter::InitResources()
             mAngleY = mPrevAngleY;
         }
         func_ov090_02131e00(c, &data_ov090_021344e4);
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
     }
 
     return 1;

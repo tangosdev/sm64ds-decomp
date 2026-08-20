@@ -12,9 +12,9 @@
  * exactly on the first. Member NAMES are the ones this header already used --
  * a rebase should not also rename things its callers spell:
  *
- *     0x110 MovingCylinderClsn       0x34   -> 0x144
- *     0x144 MovingCylinderClsn       0x34   -> 0x178
- *     0x178 WithMeshClsn             0x1bc  -> 0x334
+ *     0x110 dCcAc_c       0x34   -> 0x144
+ *     0x144 dCcAc_c       0x34   -> 0x178
+ *     0x178 dBgCh_Actr             0x1bc  -> 0x334
  *     0x334 BlendModelAnim           0x70   -> 0x3a4
  *     0x3a4 ShadowModel              0x28   -> 0x3cc
  *
@@ -25,15 +25,15 @@
 #include "dEnemyBase_c.h"
 #include "BlendModelAnim.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "PathPtr.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Klepto : dEnemyBase_c {
-    MovingCylinderClsn           mMovingCylinderClsn1;  /* 0x110 */
-    MovingCylinderClsn           mMovingCylinderClsn2;  /* 0x144 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x178 */
+    dCcAc_c           mdCcAc_c1;  /* 0x110 */
+    dCcAc_c           mdCcAc_c2;  /* 0x144 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x178 */
     BlendModelAnim               mBlendModelAnim;       /* 0x334 */
     ShadowModel                  mShadowModel;          /* 0x3a4 */
     u8  pad_3cc[0x60];

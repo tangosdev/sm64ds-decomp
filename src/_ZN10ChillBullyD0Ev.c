@@ -8,9 +8,9 @@
  * tears the object down and then calls Memory::Deallocate, which no eat handler does.
  */
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 extern int _ZTV10ChillBully[];
 extern int _ZTV7daOts_c[];
@@ -21,8 +21,8 @@ int *_ZN10ChillBullyD0Ev(int *t)
     t[0] = (int)_ZTV10ChillBully;
     t[0] = (int)_ZTV7daOts_c;
     _ZN11ShadowModelD1Ev((char *)t + 0x370);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0x33c);
-    _ZN12WithMeshClsnD1Ev((char *)t + 0x174);
+    _ZN7dCcAc_cD1Ev((char *)t + 0x33c);
+    _ZN10dBgCh_ActrD1Ev((char *)t + 0x174);
     _ZN9ModelAnimD1Ev((char *)t + 0x110);
     _ZN12dEnemyBase_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);

@@ -10,9 +10,9 @@ typedef short s16;
 extern "C" Fix12i Vec3_Dist(const Vector3* a, const Vector3* b);
 extern "C" s16 Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern "C" void _Z14ApproachLinearRsss(s16& v, s16 target, s16 step);
-struct CylinderClsn { void Clear(); void Update(); };
+struct dCc_c { void Clear(); void Update(); };
 struct Animation { void Advance(); };
-struct dActor_c { void UpdatePos(CylinderClsn* c); };
+struct dActor_c { void UpdatePos(dCc_c* c); };
 
 struct Obj {
     char pad0[0x5c];
@@ -42,13 +42,13 @@ extern "C" int func_ov081_02127070(Obj* self)
         self->f94 = self->f8e;
     }
     ((Animation*)self->anim)->Advance();
-    ((dActor_c*)self)->UpdatePos((CylinderClsn*)self->clsn);
+    ((dActor_c*)self)->UpdatePos((dCc_c*)self->clsn);
     func_ov081_02126950(self, self->field1e4);
     func_ov081_02126758(self);
     if (d < 0xa000) {
         func_ov081_021265c8(self);
     }
-    ((CylinderClsn*)self->clsn)->Clear();
-    ((CylinderClsn*)self->clsn)->Update();
+    ((dCc_c*)self->clsn)->Clear();
+    ((dCc_c*)self->clsn)->Update();
     return 1;
 }

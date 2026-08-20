@@ -12,8 +12,8 @@ int _ZN10daPgDfdr_c16CleanupResourcesEv(char* c){
   _ZN13SharedFilePtr7ReleaseEv(&data_ov027_02113c7c);
   for(i=0;i<3;i++) _ZN13SharedFilePtr7ReleaseEv(data_ov027_02112ca4[i]);
   _ZN13SharedFilePtr7ReleaseEv(&data_ov027_02113c94);
-  if(_ZN16MeshColliderBase9IsEnabledEv(c+0x124))
-    _ZN16MeshColliderBase7DisableEv(c+0x124);
+  if(_ZN4dBgW9IsEnabledEv(c+0x124))
+    _ZN4dBgW7DisableEv(c+0x124);
   _ZN13SharedFilePtr7ReleaseEv(&data_ov027_02113c6c);
   return 1;
 }

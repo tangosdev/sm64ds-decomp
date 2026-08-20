@@ -9,12 +9,12 @@ extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *anim, void *file, 
 extern void _ZN9Animation7AdvanceEv(void *anim);
 extern void func_ov072_02120e20(void *c);
 extern void func_ov072_02120ddc(void *c);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *c, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *clsn);
 extern void func_ov072_02120fd4(void *c, void *clsn);
 extern void func_ov072_02120f14(void *c);
 extern void func_ov072_02120e50(void *c);
-extern void _ZN12CylinderClsn5ClearEv(void *clsn);
-extern void _ZN12CylinderClsn6UpdateEv(void *clsn);
+extern void _ZN5dCc_c5ClearEv(void *clsn);
+extern void _ZN5dCc_c6UpdateEv(void *clsn);
 extern void func_0201267c(int id, void *dst);
 
 extern char data_ov072_02122cbc[];
@@ -70,12 +70,12 @@ int func_ov072_02121a84(void *c)
     _ZN9Animation7AdvanceEv((char *)c + 0x124);
     func_ov072_02120e20(c);
     func_ov072_02120ddc(c);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (char *)c + 0x160);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, (char *)c + 0x160);
     func_ov072_02120fd4(c, (char *)c + 0x194);
     func_ov072_02120f14(c);
     func_ov072_02120e50(c);
-    _ZN12CylinderClsn5ClearEv((char *)c + 0x160);
-    _ZN12CylinderClsn6UpdateEv((char *)c + 0x160);
+    _ZN5dCc_c5ClearEv((char *)c + 0x160);
+    _ZN5dCc_c6UpdateEv((char *)c + 0x160);
     if (*(int *)((char *)c + 0x134) == *(int *)(data_ov072_02122cbc + 4)) {
         frame = (int)((*(unsigned int *)((char *)c + 0x12c) << 4) >> 16);
         if (frame == 9 || frame == 0x15) {

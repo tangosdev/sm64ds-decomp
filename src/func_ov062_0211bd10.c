@@ -1,6 +1,6 @@
 #include "types.h"
 
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 extern s16 Vec3_HorzAngle(const void *a, const void *b);
 extern s16 Vec3_VertAngle(const void *a, const void *b);
 extern int _Z14ApproachLinearRsss(s16 *cur, s16 target, s16 step);
@@ -41,7 +41,7 @@ int func_ov062_0211bd10(char *c)
     int flag;
 
     if (*(u16 *)(c + 0x444) != 0) {
-        if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x178) != 0) {
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x178) != 0) {
             *(s16 *)(c + 0x44a) = (s16)(*(s16 *)(c + 0x94) + 0x4000);
         } else {
             *(s16 *)(c + 0x44a) = Vec3_HorzAngle(c + 0x5c, c + 0x484);

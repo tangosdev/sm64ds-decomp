@@ -11,8 +11,8 @@ extern "C" {
 int __destroy_arr(void*, int, int, void*);
 int _ZN11ShadowModelD1Ev(void*);
 int _ZN9ModelAnimD1Ev(void*);
-int _ZN12WithMeshClsnD1Ev(void*);
-int _ZN25MovingCylinderClsnWithPosD1Ev(void*);
+int _ZN10dBgCh_ActrD1Ev(void*);
+int _ZN10dCcAcPos_cD1Ev(void*);
 int _ZN12dEnemyBase_cD2Ev(void*);
 extern int _ZTV14UnchainedChomp[];
 extern void _ZN8Vector3sD1Ev();
@@ -27,8 +27,8 @@ void* _ZN14UnchainedChompD0Ev(struct UnchainedChomp *self) {
   __destroy_arr(((char*)self)+0x550, 6, 0x28, (void*)_ZN11ShadowModelD1Ev);
   __destroy_arr(((char*)self)+0x370, 6, 0x50, (void*)_ZN5ModelD1Ev);
   _ZN9ModelAnimD1Ev((char*)&self->mModelAnim);
-  _ZN12WithMeshClsnD1Ev((char*)&self->mWithMeshClsn);
-  _ZN25MovingCylinderClsnWithPosD1Ev((char*)&self->mMovingCylinderClsnWithPos);
+  _ZN10dBgCh_ActrD1Ev((char*)&self->mWithMeshClsn);
+  _ZN10dCcAcPos_cD1Ev((char*)&self->mdCcAcPos_c);
   _ZN12dEnemyBase_cD2Ev(((char*)self));
   _ZN6Memory10DeallocateEPvP4Heap(((char*)self), data_020a0eac);
   return ((char*)self);

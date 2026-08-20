@@ -2,7 +2,7 @@
 /* recovered: vtable identified, declarations from a shared header */
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 extern int _ZTV9UkikiCage[];
 /* recovered: vtable identified */
@@ -13,7 +13,7 @@ int *UkikiCage_Spawn(void)
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)_ZTV9UkikiCage;
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x320);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x320);
     }
     return p;
 }

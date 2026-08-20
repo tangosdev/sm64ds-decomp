@@ -1,20 +1,20 @@
 //cpp
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 // func_ov098_021384fc at 0x021384fc
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov098).
 extern "C" {
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *, void *);
-void WithMeshClsn_UpdateContinuous_Veneer(void *);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *, void *);
+void dBgCh_Actr_UpdateContinuous_Veneer(void *);
 int func_ov098_02139228(void *);
 void Crate_SetState(void *, int);
 void _Z14ApproachLinearRiii(int *, int, int);
 void func_ov098_02138e6c(void *);
 void func_ov098_021390ec(void *);
 int func_ov098_02138bb8(void *);
-void _ZN12CylinderClsn5ClearEv(void *);
-void _ZN12CylinderClsn6UpdateEv(void *);
+void _ZN5dCc_c5ClearEv(void *);
+void _ZN5dCc_c6UpdateEv(void *);
 void func_ov098_02139850(void *);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *);
 void func_ov098_021396a4(void *);
 }
 
@@ -32,8 +32,8 @@ struct Obj {
 extern "C" void func_ov098_021384fc(void *c);
 void func_ov098_021384fc(void *c) {
     char *b = (char *)c;
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, b + 0x564);
-    WithMeshClsn_UpdateContinuous_Veneer(b + 0x320);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, b + 0x564);
+    dBgCh_Actr_UpdateContinuous_Veneer(b + 0x320);
     if (func_ov098_02139228(c)) {
         Crate_SetState(c, 0);
         return;
@@ -44,13 +44,13 @@ void func_ov098_021384fc(void *c) {
     if (func_ov098_02138bb8(c)) {
         ((Obj *)c)->v31();
     }
-    _ZN12CylinderClsn5ClearEv(b + 0x564);
-    _ZN12CylinderClsn6UpdateEv(b + 0x564);
+    _ZN5dCc_c5ClearEv(b + 0x564);
+    _ZN5dCc_c6UpdateEv(b + 0x564);
     func_ov098_02139850(c);
-    if (!_ZNK12WithMeshClsn10IsOnGroundEv(b + 0x320)) {
+    if (!_ZNK10dBgCh_Actr10IsOnGroundEv(b + 0x320)) {
         func_ov098_021396a4(c);
     }
-    if (((MeshColliderBase *)(b + 0x124))->IsEnabled()) {
-        ((MeshColliderBase *)(b + 0x124))->Disable();
+    if (((dBgW *)(b + 0x124))->IsEnabled()) {
+        ((dBgW *)(b + 0x124))->Disable();
     }
 }

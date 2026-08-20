@@ -5,7 +5,7 @@ struct Vec3
   int y;
   int z;
 };
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, void *wm, u32 a);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wm, u32 a);
 extern void _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(void *c);
 extern void Vec3_Add(struct Vec3 *out, struct Vec3 *a, struct Vec3 *b);
 extern void *_ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 a, u32 b, int d, int e, int f, void *v16, void *cb);
@@ -13,9 +13,9 @@ extern int _ZN8dActor_c13DistToCPlayerEv(void *c);
 extern int _ZN8dActor_c18HorzAngleToCPlayerEv(void *c);
 extern void _Z14ApproachLinearRsss(s16 *p, int a, int b);
 extern void func_0201267c(int a, void *p);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
-extern void *_ZNK12WithMeshClsn13GetWallResultEv(void *self);
-extern int _ZNK10ClsnResult9GetClsnIDEv(void *self);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
+extern void *_ZNK10dBgCh_Actr13GetWallResultEv(void *self);
+extern int _ZNK5dBgPi9GetClsnIDEv(void *self);
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_02012694(int a, void *p);
 extern void _ZN8dActor_c8PoofDustEv(void *c);
@@ -43,7 +43,7 @@ void func_ov079_0212682c(char *c)
     }
     return;
   }
-  _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, c + 0x150, 0);
+  _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, c + 0x150, 0);
   *((s32 *) (c + 0x98)) = -0x1e000;
   _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(c);
   Vec3_Add(&sum, (struct Vec3 *) (c + 0x5c), (struct Vec3 *) (c + 0xa4));
@@ -65,12 +65,12 @@ void func_ov079_0212682c(char *c)
     {
       hit = 1;
     }
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x150) != 0)
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x150) != 0)
     {
-      void *wr = _ZNK12WithMeshClsn13GetWallResultEv(c + 0x150);
-      if (_ZNK10ClsnResult9GetClsnIDEv(wr) != (-1))
+      void *wr = _ZNK10dBgCh_Actr13GetWallResultEv(c + 0x150);
+      if (_ZNK5dBgPi9GetClsnIDEv(wr) != (-1))
       {
-        if (_ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(wr)) != (*((void **) (c + 0x3dc))))
+        if (_ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(wr)) != (*((void **) (c + 0x3dc))))
         {
           hit = 1;
         }

@@ -6,8 +6,8 @@
 #include "HootTheOwl.h"
 #include "SharedFilePtr.h"
 extern "C" {
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void*, void*, int*, int, int, unsigned int, unsigned int);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void*, void*, int, int, void*, int);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void*, void*, int*, int, int, unsigned int, unsigned int);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void*, void*, int, int, void*, int);
 extern int func_ov094_02136188(void*, void*);
 extern int IsStarCollectedInCurLevel(int);
 }
@@ -29,14 +29,14 @@ int HootTheOwl::InitResources()
     v0[0] = data_ov094_02136a1c[0];
     v0[1] = data_ov094_02136a1c[1];
     v0[2] = data_ov094_02136a1c[2];
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, this, v0, 0x64000, 0x64000, 0x800004, 0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, v0, 0x64000, 0x64000, 0x800004, 0);
 
     unk_3cc = 0;
-    mMovingCylinderClsnWithPos.flags |= 2;
+    mdCcAcPos_c.flags |= 2;
     mTerminalVelocity = -0x1e000;
     mAnimSpeed = 0x1000;
     unk_3e4 = 0x1f;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x50000, 0x64000, (void*)0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x50000, 0x64000, (void*)0, 0);
     func_ov094_02136188(this, &data_ov094_02136b40);
 
     if (data_0209f2f8 != 7) goto ret1;

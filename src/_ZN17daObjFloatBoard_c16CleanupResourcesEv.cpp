@@ -11,8 +11,8 @@
  * was still sitting under a func_ov002_ name.
  *
  * BOTH CALLEES HAD TO STOP BEING `extern`-ed MANGLED NAMES. The pre-migration
- * file reached MeshColliderBase and SharedFilePtr through bare
- * `extern int _ZN16MeshColliderBase9IsEnabledEv(void *)` declarations, which
+ * file reached dBgW and SharedFilePtr through bare
+ * `extern int _ZN4dBgW9IsEnabledEv(void *)` declarations, which
  * only work in a C translation unit: a file compiled as C++ -- which this one
  * now is -- mangles that identifier a SECOND time and emits a reference to
  * _Z28_ZN13SharedFilePtr7ReleaseEvPv, which nothing defines. See the note at

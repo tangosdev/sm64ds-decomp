@@ -9,17 +9,17 @@ void* _ZN8dActor_c13ClosestPlayerEv(void* self);
 s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
 void _Z14ApproachLinearRsss(s16* p, s16 a, s16 b);
 s16 Vec3_VertAngle(void* v1, void* v0);
-void WithMeshClsn_UpdateContinuous_Veneer(void* c);
-int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+void dBgCh_Actr_UpdateContinuous_Veneer(void* c);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void* c);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 int func_02035638(void* c);
 void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, struct Vector3* pos, unsigned int a, int b, unsigned int c, unsigned int d, unsigned int e);
 void _ZN8dActor_c14TriplePoofDustEv(void* self);
 void _ZN7fBase_c18MarkForDestructionEv(void* self);
-void _ZN12CylinderClsn5ClearEv(void* c);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, struct Vector3* v);
-void _ZN12CylinderClsn6UpdateEv(void* c);
+void _ZN5dCc_c5ClearEv(void* c);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* c, struct Vector3* v);
+void _ZN5dCc_c6UpdateEv(void* c);
 }
 
 extern s16 data_02082214[];
@@ -54,15 +54,15 @@ extern "C" void func_ov100_02140e44(char* c)
         _Z14ApproachLinearRsss((s16*)(c + 0x92), Vec3_VertAngle(c + 0x5c, (char*)player + 0x5c), 0x320);
     }
 
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x1d8);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x1d8);
 
     {
         int noId = (*(int*)(c + 0x3b8) == 0);
         r5 = (noId == 0);
     }
     if (r5 == 0) {
-        if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x1d8) == 0) {
-            if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1d8) == 0) {
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x1d8) == 0) {
+            if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1d8) == 0) {
                 if (func_02035638(c + 0x1d8) == 0) {
                     if (*(int*)(c + 0x3e8) <= 0x9d)
                         goto cylinder_only;
@@ -89,13 +89,13 @@ extern "C" void func_ov100_02140e44(char* c)
     _ZN7fBase_c18MarkForDestructionEv(c);
 
 cylinder_only:
-    _ZN12CylinderClsn5ClearEv(c + 0x394);
+    _ZN5dCc_c5ClearEv(c + 0x394);
     {
         struct Vector3 off;
         off.x = 0;
         off.y = -0x32000;
         off.z = 0;
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x394, &off);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x394, &off);
     }
-    _ZN12CylinderClsn6UpdateEv(c + 0x394);
+    _ZN5dCc_c6UpdateEv(c + 0x394);
 }

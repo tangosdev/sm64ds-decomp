@@ -5,17 +5,17 @@ typedef signed short s16;
 typedef unsigned char u8;
 typedef struct { s32 x, y, z; } Vector3;
 
-extern void WithMeshClsn_UpdateContinuous_Veneer(void *);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void *);
 extern void func_ov020_02113148(void *, void *, void *, int, int, int, int);
 extern void func_0201267c(int, void *);
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *);
 extern void Vec3_Sub(Vector3 *res, const Vector3 *v0, const Vector3 *v1);
 extern s16 _ZN4cstd5atan2E5Fix12IiES1_(s32 y, s32 x);
 extern s32 Vec3_HorzLen(const Vector3 *v0);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *);
 extern void func_ov020_021131f8(void *);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *);
-extern void *_ZNK12WithMeshClsn13GetWallResultEv(void *);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *);
+extern void *_ZNK10dBgCh_Actr13GetWallResultEv(void *);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *, Vector3 *);
 extern int _ZN8dActor_c14GetSubtractionEss(void *, s16, s16);
 extern void AddVec3(void *, void *, void *);
@@ -36,7 +36,7 @@ typedef struct {
 
 void func_ov020_02112b00(char *c)
 {
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x1bc);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x1bc);
     (*(u16 *)(((int)c + 0x39e)))++;
 
     if (ST->counter <= 0x46) {
@@ -80,10 +80,10 @@ void func_ov020_02112b00(char *c)
                 }
             }
         } else {
-            if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1bc) != 0) {
+            if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1bc) != 0) {
                 func_ov020_021131f8(c);
-            } else if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x1bc) != 0) {
-                void *wr = _ZNK12WithMeshClsn13GetWallResultEv(c + 0x1bc);
+            } else if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x1bc) != 0) {
+                void *wr = _ZNK10dBgCh_Actr13GetWallResultEv(c + 0x1bc);
                 Vector3 normal;
                 _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wr + 4, &normal);
                 if (_ZN8dActor_c14GetSubtractionEss(c, *(s16 *)(c + 0x94),

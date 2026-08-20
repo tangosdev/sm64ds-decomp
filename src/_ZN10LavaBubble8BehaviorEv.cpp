@@ -5,8 +5,8 @@
 #include "LavaBubble.h"
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
-struct CylinderClsn;
-struct WithMeshClsn;
+struct dCc_c;
+struct dBgCh_Actr;
 
 extern "C" {
 int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(void* self, Fix12i d);
@@ -14,10 +14,10 @@ void _ZN7fBase_c18MarkForDestructionEv(void* self);
 unsigned short DecIfAbove0_Short(unsigned short* p);
 void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 void _ZN6Player4BurnEv(void* self);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, CylinderClsn* cc);
-void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* self, WithMeshClsn* wm, unsigned int j);
-void _ZN12CylinderClsn5ClearEv(CylinderClsn* self);
-void _ZN12CylinderClsn6UpdateEv(CylinderClsn* self);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, dCc_c* cc);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* self, dBgCh_Actr* wm, unsigned int j);
+void _ZN5dCc_c5ClearEv(dCc_c* self);
+void _ZN5dCc_c6UpdateEv(dCc_c* self);
 }
 
 int LavaBubble::Behavior()
@@ -47,9 +47,9 @@ int LavaBubble::Behavior()
     DecIfAbove0_Short((unsigned short*)((char*)&unk_100));
 
     {
-        unsigned int id = mMovingCylinderClsn.otherOwner;
+        unsigned int id = mdCcAc_c.otherOwner;
         if (id != 0) {
-            if ((mMovingCylinderClsn.hitFlags & 0x8000) == 0) {
+            if ((mdCcAc_c.hitFlags & 0x8000) == 0) {
                 char* a = (char*)_ZN8dActor_c10FindWithIDEj(id);
                 if (a != 0) {
                     int hit = (*(u16*)(a + 0xc) == 0xbf);
@@ -57,7 +57,7 @@ int LavaBubble::Behavior()
                         _ZN6Player4BurnEv(a);
                 }
             } else {
-                mMovingCylinderClsn.flags |= 1;
+                mdCcAc_c.flags |= 1;
             }
         }
     }
@@ -68,12 +68,12 @@ int LavaBubble::Behavior()
             (((Klass*)((char*)this))->*(m->pmf))();
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), (CylinderClsn*)((char*)&mMovingCylinderClsn));
+    _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), (dCc_c*)((char*)&mdCcAc_c));
 
     if (mVertAccel != 0)
-        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), (WithMeshClsn*)((char*)&mWithMeshClsn), 0);
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char*)this), (dBgCh_Actr*)((char*)&mWithMeshClsn), 0);
 
-    _ZN12CylinderClsn5ClearEv((CylinderClsn*)((char*)&mMovingCylinderClsn));
-    _ZN12CylinderClsn6UpdateEv((CylinderClsn*)((char*)&mMovingCylinderClsn));
+    _ZN5dCc_c5ClearEv((dCc_c*)((char*)&mdCcAc_c));
+    _ZN5dCc_c6UpdateEv((dCc_c*)((char*)&mdCcAc_c));
     return 1;
 }

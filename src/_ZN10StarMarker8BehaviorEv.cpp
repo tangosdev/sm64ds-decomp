@@ -15,8 +15,8 @@ extern void Matrix4x3_FromRotationY(void *m, int ang);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *self, void *sm, void *mtx, int rad, int h, unsigned int g);
 extern char *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void _ZN12CylinderClsn5ClearEv(void *p);
-extern void _ZN12CylinderClsn6UpdateEv(void *p);
+extern void _ZN5dCc_c5ClearEv(void *p);
+extern void _ZN5dCc_c6UpdateEv(void *p);
 
 extern unsigned char data_0209f208;
 extern unsigned char *data_0209f344;
@@ -86,8 +86,8 @@ int StarMarker::Behavior()
                     }
                 }
             }
-            _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsnWithPos);
-            _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsnWithPos);
+            _ZN5dCc_c5ClearEv((char *)&mdCcAcPos_c);
+            _ZN5dCc_c6UpdateEv((char *)&mdCcAcPos_c);
         }
     }
     return 1;

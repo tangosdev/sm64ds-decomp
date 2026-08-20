@@ -6,7 +6,7 @@
 #define SLIDINGBOX_H
 #include "types.h"
 #include "Model.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct SlidingBox {
     u8  pad_000[0x5c];
@@ -33,10 +33,10 @@ struct SlidingBox {
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
     s32 unk_320;            /* 0x320 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x324 -- a relocation the ROM build
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x324 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10SlidingBoxD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x324 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x324 */
     s32 unk_4e0;            /* 0x4e0 */
     s32 unk_4e4;            /* 0x4e4 */
     s32 unk_4e8;            /* 0x4e8 */

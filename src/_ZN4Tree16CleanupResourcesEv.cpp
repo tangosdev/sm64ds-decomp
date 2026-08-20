@@ -3,7 +3,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Tree.h"
 extern "C" {
-void _ZN19CylinderClsnWithPosD1Ev(void* c);
+void _ZN8dCcPos_cD1Ev(void* c);
 void _ZN6Memory16operator_delete2EPv(void* p);
 }
 extern char* data_ov002_02110a48[];
@@ -19,7 +19,7 @@ int Tree::CleanupResources()
         char* r4 = *r6;
         *r6 = *(char**)(r4 + 0x48);
         if (r4 != 0){
-          _ZN19CylinderClsnWithPosD1Ev(r4 + 0xc);
+          _ZN8dCcPos_cD1Ev(r4 + 0xc);
           _ZN6Memory16operator_delete2EPv(r4);
         }
       }

@@ -5,9 +5,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "SpikeBomb.h"
 extern "C" {
-extern void _ZN12CylinderClsn5ClearEv(void* p);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* p, void* v);
-extern void _ZN12CylinderClsn6UpdateEv(void* p);
+extern void _ZN5dCc_c5ClearEv(void* p);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* p, void* v);
+extern void _ZN5dCc_c6UpdateEv(void* p);
 struct V3 { int x,y,z; };
 }
 
@@ -22,12 +22,12 @@ int SpikeBomb::Behavior()
   else fn=*(void**)ent;
   ((void(*)(char*))fn)(self);
   func_ov060_02118690(((char*)this));
-  _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
+  _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
   struct V3 v;
   v.x = 0;
   v.y = -0x96000;
   v.z = 0;
-  _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this)+0x124, &v);
-  _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
+  _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this)+0x124, &v);
+  _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
   return 1;
 }

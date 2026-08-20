@@ -15,11 +15,11 @@ extern void Vec3_LslInPlace(void* v, int sh);
 extern void AddVec3(void* d, void* a, void* b);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned int a, unsigned int b, int x, int y, int z, const void* v, void* cb);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* c);
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void* c, void* w);
-extern void _ZN12CylinderClsn5ClearEv(void* c);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* c, void* cyl);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, void* v);
-extern void _ZN12CylinderClsn6UpdateEv(void* c);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void* c, void* w);
+extern void _ZN5dCc_c5ClearEv(void* c);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* cyl);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* c, void* v);
+extern void _ZN5dCc_c6UpdateEv(void* c);
 
 extern char data_020a0e68;
 extern int data_ov089_02132c40[];
@@ -92,9 +92,9 @@ int Key::Behavior()
         return 1;
     }
 
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(((char*)this), ((char*)this) + 0x260)) {
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char*)this), ((char*)this) + 0x260)) {
         func_ov089_02131f54(((char*)this));
-        _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
+        _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
         return 1;
     }
     mEatingPlayer = 0;
@@ -108,21 +108,21 @@ int Key::Behavior()
         short* ang = (short*)(int)LAUNDER((char*)&mAngleY);
         *ang = *ang + mSpinSpeed;
     }
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
     (((C*)((char*)this))->*PMFTABLE[mState].pmf)();
     func_ov089_02131f54(((char*)this));
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
     if (mState == 7) {
         p7[0] = data_ov089_02132b40[0];
         p7[1] = data_ov089_02132b40[1];
         p7[2] = data_ov089_02132b40[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x220, p7);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x220, p7);
     } else {
         pe[0] = data_ov089_02132ca4[0];
         pe[1] = data_ov089_02132ca4[1];
         pe[2] = data_ov089_02132ca4[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x220, pe);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x220, pe);
     }
-    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
     return 1;
 }

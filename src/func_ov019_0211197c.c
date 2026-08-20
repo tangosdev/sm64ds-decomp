@@ -9,7 +9,7 @@ extern int func_ov019_0211131c(void *self);
 extern void func_ov019_021113b0(void *self);
 extern int _ZN9Animation8FinishedEv(void *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int frame, int rate, u32 flags);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 extern int func_ov019_0211140c(void *self, void *clsn);
 extern int func_ov019_0211127c(void *self, Vector3 *v, u32 j);
 extern int _ZNK7PathPtr8NumNodesEv(void *self);
@@ -40,7 +40,7 @@ int func_ov019_0211197c(void *self)
             *(int *)(c + 0x130) = 0x1000;
             LB(0x38f)++;
         }
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x174);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x174);
         func_ov019_0211140c(c, c + 0x1a8);
         if (c[0x394] == 0 && c[0x393] == 0) {
             {
@@ -75,7 +75,7 @@ int func_ov019_0211197c(void *self)
                 func_ov019_021113b0(c);
             }
         }
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x174);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x174);
         func_ov019_0211140c(c, c + 0x1a8);
         if (c[0x394] == 0 && c[0x393] == 0 &&
             *(int *)(c + 0x36c) < _ZNK7PathPtr8NumNodesEv(c + 0x364) - 2) {

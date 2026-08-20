@@ -26,8 +26,8 @@
 #include "types.h"
 #include "dActor_c.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "WithMeshClsn.h"
+#include "dCcAcPos_c.h"
+#include "dBgCh_Actr.h"
 #include "ModelAnim.h"
 #include "TextureSequence.h"
 #include "MaterialChanger.h"
@@ -144,20 +144,20 @@ struct Player : dActor_c {
     u8  unk_28c;            /* 0x28c */
     u8  pad_28d[0x1f];
     /* ~Player calls _ZN11ShadowModelD1Ev on this, and ShadowModel asserts
-       0x28 -- which closes exactly at mMovingCylinderClsnWithPos. */
+       0x28 -- which closes exactly at mdCcAcPos_c. */
     ShadowModel mShadowModel;            /* 0x2ac */
-    /* ~Player calls _ZN25MovingCylinderClsnWithPosD1Ev on this too, and the
+    /* ~Player calls _ZN10dCcAcPos_cD1Ev on this too, and the
        0x40 it asserts closes exactly at mAttackClsn. The four markers it
-       absorbs are all CylinderClsn's own, reached through the base:
+       absorbs are all dCc_c's own, reached through the base:
        unk_2d8 = radius (+0x04), unk_2dc = height (+0x08),
        mBodyClsnFlags = flags (+0x18), unk_2f0 = vulnFlags (+0x1c).
        mBodyClsnFlags in particular was never a Player field -- it is the
        body collider's flags word, which is why thirteen Player methods
        set and clear bits in it. */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;            /* 0x2d4 */
-    /* ~Player calls _ZN25MovingCylinderClsnWithPosD1Ev on this, and that
+    dCcAcPos_c mdCcAcPos_c;            /* 0x2d4 */
+    /* ~Player calls _ZN10dCcAcPos_cD1Ev on this, and that
        type asserts 0x40 -- which closes exactly at mRidingShell. */
-    MovingCylinderClsnWithPos mAttackClsn;            /* 0x314 */
+    dCcAcPos_c mAttackClsn;            /* 0x314 */
     s32 mRidingShell;            /* 0x354 */
     s32 mHeldObj;            /* 0x358 */
     s32 unk_35c;            /* 0x35c */
@@ -177,9 +177,9 @@ struct Player : dActor_c {
     State *mRequestedState;            /* 0x378 */
     u8  unk_37c;            /* 0x37c */
     u8  pad_37d[0x3];
-    /* ~Player calls _ZN12WithMeshClsnD1Ev on this FIRST, and WithMeshClsn
+    /* ~Player calls _ZN10dBgCh_ActrD1Ev on this FIRST, and dBgCh_Actr
        asserts 0x1bc -- which closes exactly at mSpawnPosX. */
-    WithMeshClsn mMeshClsn;            /* 0x380 */
+    dBgCh_Actr mMeshClsn;            /* 0x380 */
     /* The spawn point, saved once and restored on death. Player::InitResources
        writes all four from the live values (0x53c..0x544 <- mPosX/Y/Z, and
        mSpawnAngleY <- mAngleY); St_Respawn_Init reads them back the other way.

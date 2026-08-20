@@ -4,14 +4,14 @@
 #include "types.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
- * dBgActor_c's -- inlined -- then destroys the MovingMeshCollider at 0x124 and
+ * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
  * the Model at 0xd4 before chaining to dActor_c. All three belong to dBgActor_c.
  * Everything this header used to restate below 0x320 was dActor_c's and
  * dBgActor_c's, and is inherited now.
  *
  * SIZE IS 0x4f4, THE LITERAL PushBlock_Spawn.c passes to fBase_c::operator
  * new (1268 decimal) -- not merely the observed field span, though here they
- * agree: dBgActor_c ends at 0x320 and this class adds exactly one WithMeshClsn
+ * agree: dBgActor_c ends at 0x320 and this class adds exactly one dBgCh_Actr
  * (0x1bc) plus six trailing scalars, landing on 0x4f4 with no padding.
  *
  * THIS IS THE MID-RENAME CLASS. Before this change the header was a flat,
@@ -29,13 +29,13 @@
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct dActor_c;
 struct Player;
 
 struct PushBlock : dBgActor_c {
-    WithMeshClsn mWithMeshClsn;       /* 0x320 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x320 */
     s32 unk_4dc;                      /* 0x4dc */
     s32 unk_4e0;                      /* 0x4e0 */
     s32 unk_4e4;                      /* 0x4e4 */

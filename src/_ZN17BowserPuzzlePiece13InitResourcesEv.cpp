@@ -13,8 +13,8 @@ BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, BMD_File*, int, int);
 void func_ov064_02119010(char* c);
 void func_ov064_02118fa4(void* c);
-KCL_File* _ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr&);
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, KCL_File*, const Matrix4x3&, int fix, short s, CLPS_Block&);
+KCL_File* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr&);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, KCL_File*, const Matrix4x3&, int fix, short s, CLPS_Block&);
 void func_020393c4(int* p, int v);
 }
 extern SharedFilePtr* data_ov064_0211adc8[];
@@ -28,9 +28,9 @@ void BowserPuzzlePiece::InitResources()
         _ZN5Model8LoadFileER13SharedFilePtr(*data_ov064_0211adc8[unk_337]), 1, -1);
     func_ov064_02119010(((char*)this));
     func_ov064_02118fa4(((char*)this));
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this) + 0x124,
-        _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov064_0211c800),
+        _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov064_0211c800),
         *(const Matrix4x3*)((char*)&unk_2ec), 0x1000, unk_08e, data_ov064_0211baac);
     func_020393c4((int*)((char*)&mMovingMeshCollider), (int)&func_ov064_021192bc);
     unk_324 = data_ov064_0211c198[unk_337];

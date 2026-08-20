@@ -22,8 +22,8 @@ void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, const Vector3* v);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void func_0200d8c8(void* cam, const void* v, int strength);
 void func_ov002_020dbc94(void* c);
-void _ZN12CylinderClsn5ClearEv(void* self);
-void _ZN12CylinderClsn6UpdateEv(void* self);
+void _ZN5dCc_c5ClearEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* self);
 void _ZN6Player11ChangeStateERNS_5StateE(void* self, void* state);
 int func_ov002_020d36d8(void* c, int arg);
 void Player_AdvanceAnims(void* self);
@@ -68,7 +68,7 @@ int Player::St_GroundPound_Main()
                 func_ov002_020c2f64(this);
                 _ZN6Player7SetAnimEji5Fix12IiEj(this, 0x42, 0x40000000, 0x1000, 0);
                 mStateStep = 0xff;
-                *(u32*)&mMovingCylinderClsnWithPos.flags &= ~0x20;
+                *(u32*)&mdCcAcPos_c.flags &= ~0x20;
             }
             {
                 u16 f = mStateFlags & 1;
@@ -138,8 +138,8 @@ int Player::St_GroundPound_Main()
                 mStateTimer = 6;
             } else {
                 func_ov002_020dbc94(this);
-                _ZN12CylinderClsn5ClearEv(&mAttackClsn);
-                _ZN12CylinderClsn6UpdateEv(&mAttackClsn);
+                _ZN5dCc_c5ClearEv(&mAttackClsn);
+                _ZN5dCc_c6UpdateEv(&mAttackClsn);
             }
         }
     } else {

@@ -8,7 +8,7 @@
    slot is Kill(), already a named virtual on this class (its own key
    function, per daObjFallBlock_c.h), so this calls it directly. UpdatePos
    is dActor_c's own named member (dActor_c.h), inherited; the
-   MeshColliderBase calls go through the real named mMeshCollider member
+   dBgW calls go through the real named mMeshCollider member
    (dBgActor_c.h) instead of a raw offset-0x124 cast. The Fix12<int>-typed
    dBgActor_c calls stay spelled as their extern "C" mangled names -- see
    dBgActor_c.h's note on why declaring the true types there breaks the

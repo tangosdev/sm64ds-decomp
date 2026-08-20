@@ -22,10 +22,10 @@ extern char data_ov002_0210eb78[];
    functions -- see the note in include/ShadowModel.h about CW homing class-typed
    by-value parameters. A CALL is unaffected, it emits the same symbol either way.
    extern "C" so the reference is mangled once and not twice. */
-void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
-        MovingCylinderClsn *self, dActor_c *actor, int radius, int height, u32 d, u32 e);
-void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
-        WithMeshClsn *self, dActor_c *actor, int radius, int height, void *a, void *b);
+void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+        dCcAc_c *self, dActor_c *actor, int radius, int height, u32 d, u32 e);
+void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+        dBgCh_Actr *self, dActor_c *actor, int radius, int height, void *a, void *b);
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(
         ModelAnim *self, void *animFile, int flags, int speed, u32 startFrame);
 
@@ -82,18 +82,18 @@ int YoshiEgg::InitResources()
         mScaleX = 0x1000;
         mScaleY = 0x1000;
         mScaleZ = 0x1000;
-        _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
-            &mMovingCylinderClsn, this, 0x46000, 0x8c000, 0x200002, 0xa08000);
-        _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+            &mdCcAc_c, this, 0x46000, 0x8c000, 0x200002, 0xa08000);
+        _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
             &mWithMeshClsn, this, 0x28000, 0x28000, 0, 0);
         break;
     case 2:
         mScaleX = 0x2000;
         mScaleY = 0x2000;
         mScaleZ = 0x2000;
-        _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
-            &mMovingCylinderClsn, this, 0x78000, 0xa0000, 0x200002, 0xa08000);
-        _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+        _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+            &mdCcAc_c, this, 0x78000, 0xa0000, 0x200002, 0xa08000);
+        _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
             &mWithMeshClsn, this, 0x64000, 0x64000, 0, 0);
         break;
     default:

@@ -126,7 +126,7 @@ void _ZN5Stage14LoadGraphics2DEbi(int b, int level);
 void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 void _ZN9FaderWipe14LoadAndSetFileEt(int thiz, u16 fileID);
 void _ZN5Stage9LoadModelEv(void *thiz);
-void _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider(void *ov, u32 flags, void *mc);
+void _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc(void *ov, u32 flags, void *mc);
 void _ZN5Sound22LoadAndSetMusic_Layer1Ei(int x);
 int _ZN5Sound8SetMusicEjj(u32 a, u32 b);
 void _ZN5Stage7LoadFogEv(void *thiz);
@@ -360,7 +360,7 @@ L_after304:
         data_0209f340 = data_02092208[data_0209f2f8];
         _ZN5Stage9LoadModelEv(thiz);
         data_0208ee44 = 2;
-        _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider((void*)data_0209f340, data_0209f264, (char*)thiz + 0x91c);
+        _ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc((void*)data_0209f340, data_0209f264, (char*)thiz + 0x91c);
 
         int v0_8 = (data_0209f2d8 == 1) ? 1 : 0;
         if (v0_8 == 0) {

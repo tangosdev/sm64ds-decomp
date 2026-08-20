@@ -4,14 +4,14 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SnowmanHead.h"
-struct CylinderClsn { void Clear(); void Update(); };
+struct dCc_c { void Clear(); void Update(); };
 extern "C" void func_ov072_0211ffd8(void *c);
 
 int SnowmanHead::Behavior()
 {
     func_ov072_02120560(((char *)this));
-    ((CylinderClsn*)((char *)&mMovingCylinderClsn))->Clear();
-    ((CylinderClsn*)((char *)&mMovingCylinderClsn))->Update();
+    ((dCc_c*)((char *)&mdCcAc_c))->Clear();
+    ((dCc_c*)((char *)&mdCcAc_c))->Update();
     func_ov072_0211ffd8(((char *)this));
     return 1;
 }

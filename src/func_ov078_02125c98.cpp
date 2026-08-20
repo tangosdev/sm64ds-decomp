@@ -8,26 +8,26 @@
  */
 struct Vector3;
 struct dActor_c;
-struct RaycastGround {
+struct dBgCh_Gnd {
   char pad[0x44];
   int result;
   char pad2[8];
-  RaycastGround();
-  ~RaycastGround();
+  dBgCh_Gnd();
+  ~dBgCh_Gnd();
   void SetObjAndPos(const Vector3& pos, dActor_c* a);
   int DetectClsn();
 };
 
 extern "C" {
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
 }
 extern Matrix4x3 data_02082128;
 
 extern "C" void func_ov078_02125c98(char* c) {
   int h = *(int*)(c+0x60);
-  if (_ZNK12WithMeshClsn10IsOnGroundEv(c+0x110) == 0) {
-    RaycastGround rg;
+  if (_ZNK10dBgCh_Actr10IsOnGroundEv(c+0x110) == 0) {
+    dBgCh_Gnd rg;
     rg.SetObjAndPos(*(const Vector3*)(c+0x5c), 0);
     if (rg.DetectClsn() != 0)
       h = rg.result;

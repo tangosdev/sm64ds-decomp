@@ -20,8 +20,8 @@ extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *, BMD_File *f, int a, in
    by-value class parameters (Fix12<int>), which mwccarm passes differently at
    the call site, so declaring the true types breaks the byte match.
    See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c* a, s32 r, s32 h, unsigned int d, unsigned int e);
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c* a, s32 b, s32 c, Vector3_16* d, s32 e);
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *, dActor_c* a, s32 r, s32 h, unsigned int d, unsigned int e);
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *, dActor_c* a, s32 b, s32 c, Vector3_16* d, s32 e);
 
 extern char data_ov002_0210da38[];
 extern char data_ov098_0213c91c[];
@@ -63,16 +63,16 @@ int WaterBomb::InitResources()
             mScaleX = 0x800;
             mScaleY = 0x800;
             mScaleZ = 0x800;
-            _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(&mMovingCylinderClsn, (dActor_c*)this, 0x14000, 0x28000, 0x200004, 0);
-            _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (dActor_c*)this, 0x1e000, 0x1e000, 0, 0);
+            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, (dActor_c*)this, 0x14000, 0x28000, 0x200004, 0);
+            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (dActor_c*)this, 0x1e000, 0x1e000, 0, 0);
         }
         else
         {
             mScaleX = 0x1000;
             mScaleY = 0x1000;
             mScaleZ = 0x1000;
-            _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(&mMovingCylinderClsn, (dActor_c*)this, 0x28000, 0x50000, 0x204004, 0);
-            _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (dActor_c*)this, 0x32000, 0x32000, 0, 0);
+            _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, (dActor_c*)this, 0x28000, 0x50000, 0x204004, 0);
+            _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, (dActor_c*)this, 0x32000, 0x32000, 0, 0);
         }
     }
 

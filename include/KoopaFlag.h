@@ -9,7 +9,7 @@
 
 struct KoopaFlag {
     u8  pad_000[0xd4];
-    u8  mMovingCylinderClsn;            /* 0x0d4 */
+    u8  mdCcAc_c;            /* 0x0d4 */
     u8  pad_0d5[0x23];
     u32 unk_0f8;            /* 0x0f8 */
     u8  pad_0fc[0xc];

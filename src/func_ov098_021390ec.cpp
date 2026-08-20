@@ -7,11 +7,11 @@
    site has an int. See src/_ZN17BowserSkyPlatform13InitResourcesEv.cpp for the same case. */
 extern "C" short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void* self, int a, int b,
                                                        short c);
-struct ClsnResult { int GetClsnID() const; };
-struct SurfaceInfo { void CopyNormalTo(Vector3 &) const; };
-struct WithMeshClsn {
+struct dBgPi { int GetClsnID() const; };
+#include "SurfaceInfo.h"
+struct dBgCh_Actr {
     int IsOnWall() const;
-    ClsnResult *GetWallResult() const;
+    dBgPi *GetWallResult() const;
 };
 struct dActor_c {
     virtual void v0();
@@ -57,8 +57,8 @@ extern "C" void func_ov098_021390ec(char *cc)
     dActor_c *c = (dActor_c *)cc;
     if (DecIfAbove0_Byte((u8 *)((char *)c + 0x605)) != 0)
         return;
-    if (((WithMeshClsn *)((char *)c + 0x320))->IsOnWall() != 0) {
-        ClsnResult *wr = ((WithMeshClsn *)((char *)c + 0x320))->GetWallResult();
+    if (((dBgCh_Actr *)((char *)c + 0x320))->IsOnWall() != 0) {
+        dBgPi *wr = ((dBgCh_Actr *)((char *)c + 0x320))->GetWallResult();
         if (wr->GetClsnID() != -1) {
             dActor_c *a = dActor_c::FindWithID((u32)wr->GetClsnID());
             if (a != 0) {
@@ -74,14 +74,14 @@ extern "C" void func_ov098_021390ec(char *cc)
         *(u8 *)((char *)c + 0x605) = 3;
         return;
     }
-    if (((WithMeshClsn *)((char *)c + 0x320))->IsOnWall() == 0)
+    if (((dBgCh_Actr *)((char *)c + 0x320))->IsOnWall() == 0)
         return;
     if (*(int *)((char *)c + 0x98) > 0x14000) {
         c->vcall();
         return;
     }
     Vector3 v;
-    ((SurfaceInfo *)((char *)((WithMeshClsn *)((char *)c + 0x320))->GetWallResult() + 4))->CopyNormalTo(v);
+    ((SurfaceInfo *)((char *)((dBgCh_Actr *)((char *)c + 0x320))->GetWallResult() + 4))->CopyNormalTo(v);
     *(s16 *)((char *)c + 0x94) =
         _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(c, v.x, v.z, *(s16 *)((char *)c + 0x94));
 }

@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "QuestionBlock.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern void _ZN8dActor_c11UntrackStarERa(void *self, void *p);
 }
@@ -26,8 +26,8 @@ extern char data_ov102_0214e7d0[];
 int QuestionBlock::CleanupResources()
 {
     int b, b2, b3;
-    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
-        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
+    if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+        ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
 
     b = (int)(actorID == 0x16);
     if (b)

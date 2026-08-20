@@ -16,12 +16,12 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
-#include "WithMeshClsn.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 
 struct Fwoosh : dEnemyBase_c {
-    MovingCylinderClsn mMovingCylinderClsn;/* 0x110 */
-    WithMeshClsn mWithMeshClsn;       /* 0x144 */
+    dCcAc_c mdCcAc_c;/* 0x110 */
+    dBgCh_Actr mWithMeshClsn;       /* 0x144 */
     ModelAnim mModelAnim;             /* 0x300 */
     u8  pad_364[0x10];
     s32 mVariant;                     /* 0x374 */
@@ -55,14 +55,14 @@ struct Fwoosh {
     u8  pad_0a4[0xc];
     s32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x5c];
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x110 -- a relocation the ROM build
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x110 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN6FwooshD1Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x110 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x144 -- a relocation the ROM build
+    dCcAc_c mdCcAc_c;            /* 0x110 */
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x144 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN6FwooshD1Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x144 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x144 */
     u8  mModelAnim;            /* 0x300 */
     u8  pad_301[0x5b];
     s32 unk_35c;            /* 0x35c */

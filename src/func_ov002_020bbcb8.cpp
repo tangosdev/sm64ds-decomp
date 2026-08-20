@@ -1,5 +1,5 @@
 //cpp
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 // func_ov002_020bbcb8 at 0x020bbcb8
 // Matched byte-for-byte with mwccarm 1.2/sp2p3 (ov002).
 extern "C" {
@@ -26,7 +26,7 @@ extern "C" void func_ov002_020bbcb8(char* c)
         }
     }
 
-    if (((MeshColliderBase *)(c + 0x124))->IsEnabled()) {
-        ((MeshColliderBase *)(c + 0x124))->Disable();
+    if (((dBgW *)(c + 0x124))->IsEnabled()) {
+        ((dBgW *)(c + 0x124))->Disable();
     }
 }

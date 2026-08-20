@@ -11,8 +11,8 @@
  *     _ZN7fBase_cnwEj(0x380)      <- the allocation, so 0x380 IS the sizeof
  *     _ZN12dEnemyBase_cC2Ev                 <- the base, so this derives from dEnemyBase_c
  *     str  _ZTV7BooCage             <- and it is this class, not a relative
- *     +0x110 _ZN18MovingCylinderClsnC1Ev
- *     +0x144 _ZN12WithMeshClsnC1Ev
+ *     +0x110 _ZN7dCcAc_cC1Ev
+ *     +0x144 _ZN10dBgCh_ActrC1Ev
  *     +0x300 _ZN5ModelC1Ev
  *     +0x350 _ZN11ShadowModelC1Ev
  *
@@ -31,13 +31,13 @@
 
 #include "dEnemyBase_c.h"
 #include "Model.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct BooCage : dEnemyBase_c {
-    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
+    dCcAc_c           mdCcAc_c;   /* 0x110 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     Model                        mModel;                /* 0x300 */
     ShadowModel                  mShadowModel;          /* 0x350 */
     s32                          unk_378;               /* 0x378 */

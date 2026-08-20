@@ -1,7 +1,7 @@
 // @symbol func_ov077_02125bb4
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Particle.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
@@ -9,21 +9,21 @@ typedef int Fix12i;
 
 
 
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *c, void *p);
-extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *p);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
 extern void func_02012694(int id, void *pos);
 extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
     unsigned int uniqueID, unsigned int effectID,
     Fix12i x, Fix12i y, Fix12i z,
     const void *dir, void *callback);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *p);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *p);
 extern void _ZN8dActor_c8PoofDustEv(void *c);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *c);
 extern void func_ov077_02125e94(void *c, int a);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, Fix12i x, Fix12i y, Fix12i z);
 extern void func_0201267c(int id, void *pos);
-extern void _ZN12CylinderClsn5ClearEv(void *p);
-extern void _ZN12CylinderClsn6UpdateEv(void *p);
+extern void _ZN5dCc_c5ClearEv(void *p);
+extern void _ZN5dCc_c6UpdateEv(void *p);
 
 extern int data_0209f32c;
 
@@ -35,10 +35,10 @@ int func_ov077_02125bb4(char *c)
     struct Vector3 vec;
 
     *(short *)(c + 0x8c) = *(short *)(c + 0x8c) + 0x4e20;
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x1b0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x1b0);
     func_ov077_021250a8(c);
-    _ZN12WithMeshClsn13SetLimMovFlagEv(c + 0x1e4);
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x1e4);
+    _ZN10dBgCh_Actr13SetLimMovFlagEv(c + 0x1e4);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x1e4);
 
     r4 = func_ov077_02124ce4(c);
     if (r4) {
@@ -62,7 +62,7 @@ int func_ov077_02125bb4(char *c)
     }
     *(unsigned char *)(c + 0x3e4) = (unsigned char)r4;
 
-    if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1e4)) {
+    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1e4)) {
         *(int *)(c + 0xa8) = (*(int *)(c + 0xa8) * -0x3c) / 100;
         d = *(int *)(c + 0x3dc) ? *(int *)(c + 0x60) - *(int *)(c + 0x3dc) : 0;
         if (d < -0xc8000) {
@@ -74,7 +74,7 @@ int func_ov077_02125bb4(char *c)
             *(short *)(c + 0x8c) = *(short *)(c + 0x92);
             *(short *)(c + 0x8e) = *(short *)(c + 0x94);
             *(short *)(c + 0x90) = *(short *)(c + 0x96);
-            _ZN12WithMeshClsn15ClearLimMovFlagEv(c + 0x1e4);
+            _ZN10dBgCh_Actr15ClearLimMovFlagEv(c + 0x1e4);
             *(unsigned int *)(c + 0xb0) |= 0x10000000u;
             func_ov077_02125e94(c, 1);
         } else {
@@ -89,7 +89,7 @@ int func_ov077_02125bb4(char *c)
         }
     }
 
-    _ZN12CylinderClsn5ClearEv(c + 0x1b0);
-    _ZN12CylinderClsn6UpdateEv(c + 0x1b0);
+    _ZN5dCc_c5ClearEv(c + 0x1b0);
+    _ZN5dCc_c6UpdateEv(c + 0x1b0);
     return 1;
 }

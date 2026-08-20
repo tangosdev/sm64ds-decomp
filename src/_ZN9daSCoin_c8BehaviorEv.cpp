@@ -44,9 +44,9 @@ extern "C" int _ZN9daSCoin_c8BehaviorEv(char *c)
     if (*(int *)(c + 0xf8)) {
         func_ov002_020f0438(c);
     }
-    ((CylinderClsn *)(c + 0xd4))->Clear();
+    ((dCc_c *)(c + 0xd4))->Clear();
     if (self->unk_111 == 0) {
-        ((CylinderClsn *)(c + 0xd4))->Update();
+        ((dCc_c *)(c + 0xd4))->Update();
     }
     return 1;
 }

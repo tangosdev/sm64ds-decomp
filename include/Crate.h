@@ -7,7 +7,7 @@
  * SIZE 0x608, the literal Crate_Spawn (src/Crate_Spawn.cpp) passes to
  * fBase_c::operator new. dBgActor_c ends 0x320; everything from there down is
  * this class's own, confirmed by _ZN5CrateD1Ev.cpp destroying
- * MovingCylinderClsnWithPos x2, ShadowModel and WithMeshClsn in reverse before
+ * dCcAcPos_c x2, ShadowModel and dBgCh_Actr in reverse before
  * storing _ZTV10dBgActor_c (inlined) and chaining to dActor_c.
  *
  * 0x0d0..0x0d4 is dBgActor_c's own generic pad (include/dBgActor_c.h), not a
@@ -16,7 +16,7 @@
  * ArmedRotatingPlatform's tail-padding field.
  *
  * Field NAMES are placeholders except where a method's own body already named
- * them (mWithMeshClsn, mShadowModel, mMovingCylinderClsnWithPos1/2, the
+ * them (mWithMeshClsn, mShadowModel, mdCcAcPos_c1/2, the
  * Player* at 0x5e4). Slots 18 (OnYoshiTryEat), 19 (OnTurnIntoEgg), 21
  * (OnGroundPounded) and 31 (Kill) are this class's own overrides -- see
  * include/dActor_c.h / include/dBgActor_c.h for the slot table. */
@@ -36,12 +36,12 @@ typedef struct Player Player;
 #ifdef __cplusplus
 
 #include "dBgActor_c.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 
 struct Crate : dBgActor_c {
-    WithMeshClsn mWithMeshClsn;                       /* 0x320 */
+    dBgCh_Actr mWithMeshClsn;                       /* 0x320 */
     u8  pad_4dc[0xc];
     s32 unk_4e8;            /* 0x4e8 */
     s32 unk_4ec;            /* 0x4ec */
@@ -54,8 +54,8 @@ struct Crate : dBgActor_c {
     ShadowModel mShadowModel;                         /* 0x508 */
     u8  pad_530[0x30];
     s32 unk_560;            /* 0x560 */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos1;   /* 0x564 */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos2;   /* 0x5a4 */
+    dCcAcPos_c mdCcAcPos_c1;   /* 0x564 */
+    dCcAcPos_c mdCcAcPos_c2;   /* 0x5a4 */
     /* Player * -- the ROM loads this WORD and passes it to _ZN6Player9DropActorEv as that
        function's `this`, which is an object address, so the word is a Player *. It says
        nothing about the rest of the marker's span, which stays explicit padding. Was a u8
@@ -126,12 +126,12 @@ struct Crate {
     u8  mShadowModel;            /* 0x508 */
     u8  pad_509[0x57];
     s32 unk_560;            /* 0x560 */
-    u8  mMovingCylinderClsnWithPos1;            /* 0x564 */
+    u8  mdCcAcPos_c1;            /* 0x564 */
     u8  pad_565[0x33];
     s32 unk_598;            /* 0x598 */
     s32 unk_59c;            /* 0x59c */
     s32 unk_5a0;            /* 0x5a0 */
-    u8  mMovingCylinderClsnWithPos2;            /* 0x5a4 */
+    u8  mdCcAcPos_c2;            /* 0x5a4 */
     u8  pad_5a5[0x33];
     s32 unk_5d8;            /* 0x5d8 */
     s32 unk_5dc;            /* 0x5dc */

@@ -5,7 +5,7 @@
 /* recovered: renamed to Class_Method */
 /* daBtfly_c::Kill - recovered from vtable slot identity */
 extern "C" {
-void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void* self, void* c);
+void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void* self, void* c);
 int func_ov002_020ad660(void* a, void* b, void* d, int e);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 void func_02012694(int a, void* p);
@@ -13,16 +13,16 @@ void func_ov100_02141fb0(void* c);
 void func_ov100_02142130(char* c);
 s16 _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void* self, int a, int b, s16 ang);
 int Vec3_HorzLen(void* v);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 s16 _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 void _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(void* self);
-int _ZNK12WithMeshClsn13JustHitGroundEv(void* c);
+int _ZNK10dBgCh_Actr13JustHitGroundEv(void* c);
 void _ZN8dActor_c11LandingDustEb(void* self, int b);
 void* _ZN5Sound8PlayLongEjjjRK7Vector3s(void* a, unsigned int b, unsigned int c, void* v, unsigned int d);
-void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void* self, void* c);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void* self, void* c);
 void func_ov100_02142264(char* c);
-void _ZN12CylinderClsn5ClearEv(void* c);
-void _ZN12CylinderClsn6UpdateEv(void* c);
+void _ZN5dCc_c5ClearEv(void* c);
+void _ZN5dCc_c6UpdateEv(void* c);
 }
 
 extern s16 data_02082214[];
@@ -30,7 +30,7 @@ extern s16 data_02082214[];
 extern "C" void func_ov100_02142918(char* c)
 {
     int r;
-    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x374);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(c, c + 0x374);
     r = func_ov002_020ad660(c, c + 0x110, c + 0x2cc, 3);
     if (r != 0) {
         if (r != 2)
@@ -62,7 +62,7 @@ extern "C" void func_ov100_02142918(char* c)
         goto Lend;
     }
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110) == 0)
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x110) == 0)
         goto Lend;
 
     {
@@ -78,7 +78,7 @@ extern "C" void func_ov100_02142918(char* c)
         _ZN8dActor_c28UpdatePosWithHorzSpeedAndAngEv(c);
     }
 
-    if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x110) != 0) {
+    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x110) != 0) {
         func_02012694(0x40, c + 0x74);
         _ZN8dActor_c11LandingDustEb(c, 1);
         goto Lend;
@@ -94,8 +94,8 @@ Lend:
             lim = nv;
         *(int*)(c + 0xa8) = lim;
     }
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(c, 0);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, 0);
     func_ov100_02142264(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x374);
-    _ZN12CylinderClsn6UpdateEv(c + 0x374);
+    _ZN5dCc_c5ClearEv(c + 0x374);
+    _ZN5dCc_c6UpdateEv(c + 0x374);
 }

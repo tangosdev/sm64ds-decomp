@@ -16,7 +16,7 @@
  * instead, unconverted from the pre-migration bytes. */
 #include "decl_common.h"
 extern "C" int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(char *c, int a, int b);
-extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char *c, char *clsn);
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(char *c, char *clsn);
 extern "C" int _ZN9UkikiCage8BehaviorEv(char *c) {
     volatile int dummy[4];
     (void)&dummy;
@@ -24,7 +24,7 @@ extern "C" int _ZN9UkikiCage8BehaviorEv(char *c) {
     *(short *)(c + 0x8e) = *(short *)(c + 0x8e) + *(int *)(c + 0x98);
     if (*(int *)(c + 0x9c) != 0) {
         *(int *)(((int)c + 0xb0)) = *(int *)(((int)c + 0xb0)) & ~1;
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, (char*)0);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, (char*)0);
         func_ov030_0211124c(c, c+0x320);
         int a0 = *(int *)(c + 0x60);
         int a1 = *(int *)(c + 0x64);

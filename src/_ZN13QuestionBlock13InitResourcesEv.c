@@ -6,8 +6,8 @@ extern void _ZN11ShadowModel10InitCuboidEv(void* thiz);
 extern void func_ov102_02149da8(void* c, int i);
 extern void func_ov102_02149ff0(char* c);
 extern void func_ov102_02149e38(char* self);
-extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* sfp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
+extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* sfp);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
 extern unsigned char _ZN8dActor_c9TrackStarEjj(void* c, unsigned int a, unsigned int b);
 
 extern char data_ov102_0214e7e8, data_ov102_0214e808, data_ov102_0214e7f8;
@@ -62,8 +62,8 @@ int _ZN13QuestionBlock13InitResourcesEv(char* c)
     func_ov102_02149e38(c);
     *(struct M12*)(c + 0x3ac) = *(struct M12*)(c + 0xf0);
     {
-        void* kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov102_0214e7d0);
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x124, kcl, c + 0x2ec, 0x199, *(short*)(c + 0x8e), &data_ov002_0210d954);
+        void* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov102_0214e7d0);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(c + 0x124, kcl, c + 0x2ec, 0x199, *(short*)(c + 0x8e), &data_ov002_0210d954);
     }
     *(int*)(c + 0x3e0) = *(int*)(c + 0x60);
     *(unsigned char*)(c + 0x3f3) = (unsigned char)*(int*)(c + 8);

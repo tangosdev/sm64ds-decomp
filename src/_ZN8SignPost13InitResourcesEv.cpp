@@ -4,22 +4,22 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "SignPost.h"
-/* Model::LoadFile and MeshCollider::LoadFile by their real ROM symbols, carried
+/* Model::LoadFile and dBgW_Kc::LoadFile by their real ROM symbols, carried
    forward from #1554. decl_common.h's ModelLoadFile / MeshColliderLoadFile are
    phantoms -- names no module defines -- and match.py compares relocated words as
    wildcards, so the byte gate never saw it. */
 extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *);
-extern "C" void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
+extern "C" void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *);
 /* THREE OF THE SHADOWS ARE GONE, because SignPost.h now says `SignPost :
    dBgActor_c` and dBgActor_c.h brings in the real dBgActor_c, Model/ModelBase and
-   MovingMeshCollider. Each one is replaced by the thing it was standing in for:
+   dBgW_KcMbg. Each one is replaced by the thing it was standing in for:
 
      ModelBase          -> mModel.SetFile, whose real declaration in
                            include/ModelBase.h mangles identically
                            (_ZN9ModelBase7SetFileEP8BMD_Fileii) -- only the
                            return type differed, and that is not mangled.
      dBgActor_c           -> the two calls are unqualified members now.
-     MovingMeshCollider -> its real SetFile takes Fix12<int> BY VALUE, so it
+     dBgW_KcMbg -> its real SetFile takes Fix12<int> BY VALUE, so it
                            cannot be declared as a callable method here without
                            changing how the caller passes the argument
                            (notes/mwccarm-codegen.md 6az). It keeps a scalar
@@ -30,29 +30,29 @@ extern "C" void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *);
                            match.py compares relocated words as wildcards, so
                            nothing caught it.
 
-   The remaining shadows -- ShadowModel, MovingCylinderClsn, WithMeshClsn,
-   RaycastGround -- are untouched: dBgActor_c.h does not pull those headers in, so
-   they still compile, and MovingCylinderClsn::Init and WithMeshClsn::Init have
+   The remaining shadows -- ShadowModel, dCcAc_c, dBgCh_Actr,
+   dBgCh_Gnd -- are untouched: dBgActor_c.h does not pull those headers in, so
+   they still compile, and dCcAc_c::Init and dBgCh_Actr::Init have
    the same Fix12<int> problem with no collision forcing the issue yet. */
 struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr; struct Vector3_16;
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *f, const Matrix4x3 &m, s32 fix, s16 sh, CLPS_Block &b);
-extern "C" void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *self, dActor_c *a, s32 radius, s32 height, u32 u0, u32 u1);
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v, Vector3_16 *v2);
-struct WithMeshClsn {
+struct dBgCh_Actr {
     void StartDetectingWater();
 };
-struct RaycastGround {
+struct dBgCh_Gnd {
     int pad[0x11];
     int result;       // offset 0x44
     int pad2[2];      // pad to 0x50 total
-    RaycastGround();
+    dBgCh_Gnd();
     void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
-    ~RaycastGround();
+    ~dBgCh_Gnd();
 };
 extern "C" CLPS_Block data_ov002_0210d714;
 
@@ -69,7 +69,7 @@ int SignPost::InitResources()
     int px = mPosX;
     int py2 = py + 0x64000;
     V3 v = { px, py2, pz };
-    RaycastGround rg;
+    dBgCh_Gnd rg;
     rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
     if (rg.DetectClsn() != 0)
         mPosY = rg.result;
@@ -78,12 +78,12 @@ int SignPost::InitResources()
     UpdateClsnPosAndRot();
     func_ov002_020baf80(((char *)this));
 
-    void *kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov002_0210e05c);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void *kf = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov002_0210e05c);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, (KCL_File*)kf, mClsnMat, 0x199, mAngleY, data_ov002_0210d714);
 
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
-        &mMovingCylinderClsn, (dActor_c*)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
+        &mdCcAc_c, (dActor_c*)((char *)this), 0x64000, 0x64000, 0x4800002, 0x41000);
 
     unk_58e = 2;
     unk_3b0 = mPosX;
@@ -95,9 +95,9 @@ int SignPost::InitResources()
     mVertAccel = -0x2000;
     mTerminalVelocity = -0x3c000;
 
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
         (char *)&mWithMeshClsn, (dActor_c*)((char *)this), 0x28000, 0x28000, 0, 0);
-    ((WithMeshClsn*)((char *)&mWithMeshClsn))->StartDetectingWater();
+    ((dBgCh_Actr*)((char *)&mWithMeshClsn))->StartDetectingWater();
 
     return 1;
 }

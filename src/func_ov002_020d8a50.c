@@ -5,19 +5,19 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-struct RaycastLine { int head[5]; int surf; int rest[25]; };
+struct dBgCh_Lin { int head[5]; int surf; int rest[25]; };
 
 extern int _ZNK6Player14GetBodyModelIDEjb(char* p, unsigned int j, int b);
-extern void _ZN12CylinderClsn5ClearEv(void* c);
+extern void _ZN5dCc_c5ClearEv(void* c);
 extern void func_ov002_020dbf4c(char* c);
-extern void _ZN12CylinderClsn6UpdateEv(void* c);
+extern void _ZN5dCc_c6UpdateEv(void* c);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int id, struct Vector3* v);
-extern void _ZN11RaycastLineC1Ev(struct RaycastLine* r);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(struct RaycastLine* r, struct Vector3* a, struct Vector3* b, void* actor);
-extern int _ZN11RaycastLine10DetectClsnEv(struct RaycastLine* r);
+extern void _ZN9dBgCh_LinC1Ev(struct dBgCh_Lin* r);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(struct dBgCh_Lin* r, struct Vector3* a, struct Vector3* b, void* actor);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(struct dBgCh_Lin* r);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* s, struct Vector3* n);
-extern void _ZN11RaycastLine10GetClsnPosEv(struct Vector3* ret, struct RaycastLine* r);
-extern void _ZN11RaycastLineD1Ev(struct RaycastLine* r);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(struct Vector3* ret, struct dBgCh_Lin* r);
+extern void _ZN9dBgCh_LinD1Ev(struct dBgCh_Lin* r);
 
 extern s16 data_02082214[];
 
@@ -34,7 +34,7 @@ void func_ov002_020d8a50(char* self, int which)
     frame = (u16)(*(int*)(anim + 8) >> 12);
     if (frame < data_ov002_0210a5cc[i2] || frame > data_ov002_0210a5cc[i2 + 1]) {
         flag = 0;
-        _ZN12CylinderClsn5ClearEv(self + 0x314);
+        _ZN5dCc_c5ClearEv(self + 0x314);
     }
 
     if (*(u8*)(self + 0x726) != 0)
@@ -53,9 +53,9 @@ void func_ov002_020d8a50(char* self, int which)
         func_ov002_020d8854(self);
     }
 
-    _ZN12CylinderClsn5ClearEv(self + 0x314);
+    _ZN5dCc_c5ClearEv(self + 0x314);
     if (flag == 1)
-        _ZN12CylinderClsn6UpdateEv(self + 0x314);
+        _ZN5dCc_c6UpdateEv(self + 0x314);
 
     model = *(char**)(self + _ZNK6Player14GetBodyModelIDEjb(self, *(u32*)(self + 8) & 0xff, 0) * 4 + 0xdc);
     if (!_ZNK9Animation12WillHitFrameEi(model + 0x50, data_ov002_0210a5cc[i2]))
@@ -83,14 +83,14 @@ void func_ov002_020d8a50(char* self, int which)
 
     {
         u16 ang = *(u16*)(self + 0x8e);
-        struct RaycastLine ray;
+        struct dBgCh_Lin ray;
         struct Vector3 v1;
         struct Vector3 v2;
         struct Vector3 normal;
         struct Vector3 clsnPos;
         int idx;
 
-        _ZN11RaycastLineC1Ev(&ray);
+        _ZN9dBgCh_LinC1Ev(&ray);
         idx = ang >> 4;
         v1.x = *(int*)(self + 0x5c);
         v1.y = *(int*)(self + 0x60);
@@ -101,16 +101,16 @@ void func_ov002_020d8a50(char* self, int which)
         v2.z = v1.z;
         v2.x += data_02082214[idx * 2] * 0x64;
         v2.z += data_02082214[idx * 2 + 1] * 0x64;
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray, &v1, &v2, self);
-        if (_ZN11RaycastLine10DetectClsnEv(&ray)) {
+        _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray, &v1, &v2, self);
+        if (_ZN9dBgCh_Lin10DetectClsnEv(&ray)) {
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&ray.surf, &normal);
             if (normal.y == 0) {
                 *(int*)(self + 0x98) = 0xa000;
                 *(s16*)(self + 0x94) = *(s16*)(self + 0x8e) + 0x8000;
-                _ZN11RaycastLine10GetClsnPosEv(&clsnPos, &ray);
+                _ZN9dBgCh_Lin10GetClsnPosEv(&clsnPos, &ray);
                 func_ov002_020d8d10(self, &clsnPos);
             }
         }
-        _ZN11RaycastLineD1Ev(&ray);
+        _ZN9dBgCh_LinD1Ev(&ray);
     }
 }

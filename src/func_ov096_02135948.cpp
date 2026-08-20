@@ -23,7 +23,7 @@ extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8Cal
 extern unsigned _ZN8Particle6System17NewUnkCallback818Ejj5Fix12IiES2_S2_PK11Vector3_16f(unsigned a, unsigned b, int f, int t1, int t2, const void* v);
 extern void _ZN6Player16IncMegaKillCountEv(void* p);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, unsigned int a, int fix, unsigned int b, unsigned int d, unsigned int e);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* thiz);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* thiz);
 
 void func_ov096_02135948(char* c)
 {
@@ -47,8 +47,8 @@ void func_ov096_02135948(char* c)
     int vv5[3];
     int x, y, z;
 
-    if (_ZN8dActor_c7FindEggER12CylinderClsn(c, c + 0x14c) != 0 ||
-        _ZN8dActor_c18FindExplosionActorER12CylinderClsn(c, c + 0x14c) != 0) {
+    if (_ZN8dActor_c7FindEggER5dCc_c(c, c + 0x14c) != 0 ||
+        _ZN8dActor_c18FindExplosionActorER5dCc_c(c, c + 0x14c) != 0) {
         _ZN5Sound9PlayBank0EjRK7Vector3(9, c + 0x74);
         func_ov096_02135800(c);
         {
@@ -137,13 +137,13 @@ void func_ov096_02135948(char* c)
                 }
             } else if (st38c == 1) {
                 if (*(void**)(c + 0x390) == 0) {
-                    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x180) != 0) {
+                    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x180) != 0) {
                         vv3[0] = *(int*)(c + 0x5c);
                         vv3[1] = *(int*)(c + 0x60);
                         vv3[2] = *(int*)(c + 0x64);
                         _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(p, vv3, 2, 0xc000, 1, 0, 1);
                     }
-                } else if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x180) != 0 &&
+                } else if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x180) != 0 &&
                            *(int*)(*(char**)(c + 0x390) + 0xa8) == 0) {
                     vv4[0] = *(int*)(c + 0x5c);
                     vv4[1] = *(int*)(c + 0x60);

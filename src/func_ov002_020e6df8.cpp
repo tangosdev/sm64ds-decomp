@@ -14,7 +14,7 @@ extern int data_ov002_0210aa0c[3];
 
 extern "C" {
 void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(char* thiz, void* file, int b, Fix12i d, unsigned int e);
-void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* thiz, char* actor, const Vector3* v, int rad, int e, unsigned int f, unsigned int g);
+void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(char* thiz, char* actor, const Vector3* v, int rad, int e, unsigned int f, unsigned int g);
 
 void func_ov002_020e6df8(char* c)
 {
@@ -26,7 +26,7 @@ void func_ov002_020e6df8(char* c)
     v.x = data_ov002_0210aa0c[0];
     v.y = data_ov002_0210aa0c[1];
     v.z = data_ov002_0210aa0c[2];
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
       c + 0x110, c, &v, 0x64000, 0x96000, 1, 0);
   }
   {

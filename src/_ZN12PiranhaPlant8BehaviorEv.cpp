@@ -8,11 +8,11 @@ struct Cls { virtual void dummy(); };
 typedef void (Cls::*PMF)();
 extern PMF data_ov084_02130e80[];
 extern "C" {
-extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(void*, void*, void*, unsigned int);
-extern void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void*, void*);
-extern void _ZN12CylinderClsn5ClearEv(void*);
-extern void _ZN12CylinderClsn6UpdateEv(void*);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void*, void*);
+extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(void*, void*, void*, unsigned int);
+extern void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void*, void*);
+extern void _ZN5dCc_c5ClearEv(void*);
+extern void _ZN5dCc_c6UpdateEv(void*);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void*, void*);
 }
 
 int PiranhaPlant::Behavior()
@@ -20,7 +20,7 @@ int PiranhaPlant::Behavior()
     int r;
     int old;
     int cur;
-    r = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj(((char*)this), ((char*)this) + 0x1c4, ((char*)this) + 0x110, 1);
+    r = _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(((char*)this), ((char*)this) + 0x1c4, ((char*)this) + 0x110, 1);
     if (r != 0) {
         if (r == 2) {
             unk_108 = 0;
@@ -34,7 +34,7 @@ int PiranhaPlant::Behavior()
         }
         return 1;
     }
-    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(((char*)this), ((char*)this) + 0x380);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), ((char*)this) + 0x380);
     mModelAnim.Advance();
     func_ov084_0212f204(((char*)this));
     old = mState;
@@ -53,15 +53,15 @@ int PiranhaPlant::Behavior()
         unk_478 = 0;
     }
     func_ov084_0212ec60(((char*)this));
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn1);
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn2);
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAc_c1);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAc_c2);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
     if (unk_45c != 0) {
-        _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn1);
-        _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn2);
+        _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c1);
+        _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c2);
         if (mState == 2) {
-            _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x3e8, ((char*)this) + 0x440);
-            _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
+            _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x3e8, ((char*)this) + 0x440);
+            _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
         }
     }
     return 1;

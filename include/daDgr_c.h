@@ -29,7 +29,7 @@
  *
  * MEMBERS. dBgActor_c ends at 0x320; daDgr_c adds 0x14 more bytes and destructs
  * none of them (func_ov025_021111a0 tears down only dBgActor_c's own Model and
- * MovingMeshCollider, then chains to dActor_c -- nothing at 0x320 or later).
+ * dBgW_KcMbg, then chains to dActor_c -- nothing at 0x320 or later).
  * That means everything from 0x320 to 0x334 is POD, read from InitResources
  * (func_ov025_021117dc) and Behavior (func_ov025_021113f0):
  *

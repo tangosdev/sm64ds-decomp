@@ -68,7 +68,7 @@ s32 BlueCoinSwitch::Behavior()
                 mPosY = unk_320;
                 _ZN5Event6SetBitEj(unk_32d);
                 unk_328 = unk_32a;
-                _ZN16MeshColliderBase7DisableEv(&(*(u8 *)&mMeshCollider));
+                _ZN4dBgW7DisableEv(&(*(u8 *)&mMeshCollider));
                 _ZN8dActor_c8PoofDustEv(c);
             }
         }

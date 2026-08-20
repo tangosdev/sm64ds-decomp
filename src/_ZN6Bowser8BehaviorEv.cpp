@@ -7,13 +7,13 @@
  * global at data_0209f318+0x114, then rebuild the body cylinder 0x50000 in front of
  * the actor.
  *
- * FOUR STAND-IN STRUCTS ARE GONE -- `dActor_c`, `Animation`, `CylinderClsn` and
- * `MovingCylinderClsnWithPos`, each declared here with just the one or two methods
+ * FOUR STAND-IN STRUCTS ARE GONE -- `dActor_c`, `Animation`, `dCc_c` and
+ * `dCcAcPos_c`, each declared here with just the one or two methods
  * this file called, then "defined" again below with a set of bodyless declarations
  * that existed only to stop the compiler mangling them differently. All four are
  * the real classes now, and the casts that reached them go with them:
- * mMovingCylinderClsnWithPos IS a CylinderClsn by inheritance
- * (MovingCylinderClsnWithPos -> MovingCylinderClsn -> CylinderClsn), so Clear() and
+ * mdCcAcPos_c IS a dCc_c by inheritance
+ * (dCcAcPos_c -> dCcAc_c -> dCc_c), so Clear() and
  * Update() are called directly.
  *
  * The two fields this used to spell as its own were the ModelAnim's: `mAnimation`
@@ -50,13 +50,13 @@ int Bowser::Behavior()
     mModelAnim.Advance();
     func_ov060_0211577c(((char*)this));
     *(char**)(data_0209f318 + 0x114) = ((char*)this);
-    mMovingCylinderClsnWithPos.Clear();
+    mdCcAcPos_c.Clear();
     Vector3 v;
     v.z = 0x50000;
     v.x = 0;
     v.y = 0;
-    mMovingCylinderClsnWithPos.SetPosRelativeToActor(v);
-    mMovingCylinderClsnWithPos.Update();
+    mdCcAcPos_c.SetPosRelativeToActor(v);
+    mdCcAcPos_c.Update();
     if (unk_42b != 0) {
         dActor_c* f = dActor_c::FindWithActorID(0x10d, 0);
         if (f == 0) unk_42b = 0;

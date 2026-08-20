@@ -32,7 +32,7 @@
  * free, and are gone. One compile settles each; the idiom is per-site.
  */
 #include "Clam.h"
-#include "CylinderClsn.h"
+#include "dCc_c.h"
 
 extern "C" {
 extern char data_ov064_0211c9cc[];
@@ -119,7 +119,7 @@ int Clam::Behavior()
     }
 
     mModelAnim.Advance();
-    ((CylinderClsn *)&mMovingCylinderClsn)->Clear();
-    ((CylinderClsn *)&mMovingCylinderClsn)->Update();
+    ((dCc_c *)&mdCcAc_c)->Clear();
+    ((dCc_c *)&mdCcAc_c)->Update();
     return 1;
 }

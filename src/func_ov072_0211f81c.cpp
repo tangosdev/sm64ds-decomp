@@ -13,7 +13,7 @@ extern "C" void func_02035684(int *p, int v);
 extern "C" void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(void* self, Fix12 a, Fix12 b, Fix12 c, Fix12 d);
 extern "C" void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(Fix12 a, Fix12 b, Fix12 c);
 extern "C" int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, const struct Vector3* v, unsigned e);
-extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* cc);
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cc);
 extern "C" int Vec3_Dist(const void* a, const void* b);
 
 extern "C" int func_ov072_0211f81c(char* c) {
@@ -45,7 +45,7 @@ extern "C" int func_ov072_0211f81c(char* c) {
     _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(*(int*)(c+0x5c), *(int*)(c+0x60), *(int*)(c+0x64));
     *(int*)(c+0x39c) = _ZN5Sound8PlayLongEjjjRK7Vector3s(*(unsigned*)(c+0x39c), 3, 0x8a, (const struct Vector3*)(c+0x74), 0);
     func_ov072_0211f158(c);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c+0x14c);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c+0x14c);
     func_ov072_0211f330(c, c+0x180);
     func_ov072_0211f280(c);
     if (*(unsigned char*)(c+0x3a3) == 0) {

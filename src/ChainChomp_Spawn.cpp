@@ -2,7 +2,7 @@
 extern "C" {
 void* _ZN7fBase_cnwEj(unsigned int);
 void _ZN12dEnemyBase_cC2Ev(void*);
-int _ZN25MovingCylinderClsnWithPosC1Ev(void*);
+int _ZN10dCcAcPos_cC1Ev(void*);
 int _ZN9ModelAnimC1Ev(void*);
 int _ZN11ShadowModelC1Ev(void*);
 int func_020733a8(void*, int, int, void*, void*);
@@ -17,7 +17,7 @@ void* ChainChomp_Spawn(void){
   if(c){
     _ZN12dEnemyBase_cC2Ev(c);
     *(int**)c = _ZTV10ChainChomp;
-    _ZN25MovingCylinderClsnWithPosC1Ev(c+0x110);
+    _ZN10dCcAcPos_cC1Ev(c+0x110);
     _ZN9ModelAnimC1Ev(c+0x150);
     _ZN11ShadowModelC1Ev(c+0x1b4);
     func_020733a8(c+0x1dc, 7, 0x50, (void*)_ZN5ModelC1Ev, (void*)_ZN5ModelD1Ev);

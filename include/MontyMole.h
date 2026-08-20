@@ -3,7 +3,7 @@
 #include "types.h"
 #include "dActor_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 /* TWO WITNESSES:
  *
@@ -32,9 +32,9 @@ struct MontyMole : dActor_c {
     u8  pad_0d0[0x4];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build checks. */
     ModelAnim mModelAnim;            /* 0x0d4 */
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x138. [_ZN9MontyMoleD0Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x138 */
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x138. [_ZN9MontyMoleD0Ev.c] */
+    dCcAc_c mdCcAc_c;            /* 0x138 */
     u8  unk_16c;            /* 0x16c */
     u8  pad_16d[0xf];
     s32 unk_17c;            /* 0x17c */

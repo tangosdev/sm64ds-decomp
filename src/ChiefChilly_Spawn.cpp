@@ -1,8 +1,8 @@
 //cpp
 extern "C" void* _ZN7fBase_cnwEj(unsigned int sz);
 extern "C" void _ZN12dEnemyBase_cC2Ev(void*);
-extern "C" void _ZN25MovingCylinderClsnWithPosC1Ev(void*);
-extern "C" void _ZN12WithMeshClsnC1Ev(void*);
+extern "C" void _ZN10dCcAcPos_cC1Ev(void*);
+extern "C" void _ZN10dBgCh_ActrC1Ev(void*);
 extern "C" void _ZN14BlendModelAnimC1Ev(void*);
 extern "C" void _ZN11ShadowModelC1Ev(void*);
 extern "C" void func_020733a8(void* p, int a, int b, void* f1, void* f2);
@@ -17,8 +17,8 @@ extern "C" void* ChiefChilly_Spawn(void)
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         *(void**)p = &_ZTV11ChiefChilly;
-        _ZN25MovingCylinderClsnWithPosC1Ev(p + 0x110);
-        _ZN12WithMeshClsnC1Ev(p + 0x150);
+        _ZN10dCcAcPos_cC1Ev(p + 0x110);
+        _ZN10dBgCh_ActrC1Ev(p + 0x150);
         _ZN14BlendModelAnimC1Ev(p + 0x30c);
         _ZN11ShadowModelC1Ev(p + 0x380);
         func_020733a8(p + 0x3e8, 8, 0xc, (void*)&func_0203d384, (void*)&_ZN7Vector3D1Ev);

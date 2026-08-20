@@ -2,7 +2,7 @@
 // @symbol func_ov072_02121368
 // recovered name: daBgSnwmn_c_Kill
 /* recovered: shared common types, renamed to Class_Method, declarations from a shared header */
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 /* recovered: shared common types, renamed to Class_Method */
 /* daBgSnwmn_c::Kill - recovered from vtable slot identity */
 extern s16 data_02082214[];
@@ -76,7 +76,7 @@ int func_ov072_02121368(char *self)
     _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(self, vp, (struct Vector3 *)pos, flag);
 
     *(int *)(self + 0xd0) = 0;
-    _ZN12WithMeshClsn13SetLimMovFlagEv(self + 0x194);
+    _ZN10dBgCh_Actr13SetLimMovFlagEv(self + 0x194);
     *(int *)(self + 0x368) = 5;
     return 1;
 }

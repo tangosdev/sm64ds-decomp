@@ -7,11 +7,11 @@ struct dActor_c {
 };
 
 struct Model { char pad[0x88]; ~Model(); };
-struct MovingMeshCollider { char pad[0x4]; ~MovingMeshCollider(); };
+struct dBgW_KcMbg { char pad[0x4]; ~dBgW_KcMbg(); };
 
 struct MansionSteps : dActor_c {
     Model m0;   /* 0xd4 */
-    MovingMeshCollider m1;   /* 0x15c */
+    dBgW_KcMbg m1;   /* 0x15c */
     virtual ~MansionSteps();
 };
 

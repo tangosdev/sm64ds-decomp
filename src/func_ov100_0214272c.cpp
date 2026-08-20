@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern void _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(void*, void*);
+extern void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(void*, void*);
 extern int func_ov002_020ad660(void*, void*, void*, int);
 extern void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int, int, int, int);
 extern void func_02012694(int, void*);
@@ -8,23 +8,23 @@ extern void func_ov100_02141fb0(void*);
 extern void func_ov100_02142130(void*);
 extern void _ZN8dActor_c14TriplePoofDustEv(void*);
 extern void _ZN7fBase_c18MarkForDestructionEv(void*);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
 extern int Vec3_HorzLen(void*);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int, int);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void*);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void*);
 extern void _ZN8dActor_c11LandingDustEb(void*, int);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int, unsigned int, unsigned int, void*, unsigned int);
-extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void*, int);
+extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void*, int);
 extern void func_ov100_02142264(void*);
-extern void _ZN12CylinderClsn5ClearEv(void*);
-extern void _ZN12CylinderClsn6UpdateEv(void*);
+extern void _ZN5dCc_c5ClearEv(void*);
+extern void _ZN5dCc_c6UpdateEv(void*);
 }
 
 extern "C" void func_ov100_0214272c(char *c)
 {
     int r;
 
-    _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn(c, c + 0x374);
+    _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(c, c + 0x374);
     r = func_ov002_020ad660(c, c + 0x110, c + 0x2cc, 3);
     if (r != 0) {
         if (r != 2)
@@ -55,7 +55,7 @@ extern "C" void func_ov100_0214272c(char *c)
     return;
 
 ground:
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x110)) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x110)) {
         int *pa4;
         int *pac;
 
@@ -70,7 +70,7 @@ ground:
             _ZN4cstd5atan2E5Fix12IiES1_(
                 *(int *)(c + 0xa4), *(int *)(c + 0xac));
 
-        if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x110)) {
+        if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x110)) {
             func_02012694(0x40, c + 0x74);
             _ZN8dActor_c11LandingDustEb(c, 1);
 
@@ -94,8 +94,8 @@ ground:
         *(int *)(c + 0xa8) = lim;
     }
 
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(c, 0);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, 0);
     func_ov100_02142264(c);
-    _ZN12CylinderClsn5ClearEv(c + 0x374);
-    _ZN12CylinderClsn6UpdateEv(c + 0x374);
+    _ZN5dCc_c5ClearEv(c + 0x374);
+    _ZN5dCc_c6UpdateEv(c + 0x374);
 }

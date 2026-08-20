@@ -2,11 +2,11 @@
 struct Vector3 { int x, y, z; };
 struct dActor_c;
 
-struct RaycastGround {
+struct dBgCh_Gnd {
     char pad0[0x14];
     unsigned int sub[(0x50 - 0x14) / 4];
-    RaycastGround();
-    ~RaycastGround();
+    dBgCh_Gnd();
+    ~dBgCh_Gnd();
     void SetObjAndPos(const Vector3 &pos, dActor_c *obj);
     int DetectClsn();
 };
@@ -42,7 +42,7 @@ void CheckLavaCallback::SpawnParticles(System &sys)
         int sx = n->f14 + n->f8;
         int sy = n->f18 + n->fc;
         int sz = n->f1c + n->f10;
-        RaycastGround rg;
+        dBgCh_Gnd rg;
         int vy = (sy << 3) + 0x12c000;
         Vector3 v;
         v.x = vy ? sx << 3 : sx << 3;

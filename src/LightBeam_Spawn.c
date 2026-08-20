@@ -3,7 +3,7 @@
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
-#include "decl_MovingCylinderClsnWithPos.h"
+#include "decl_dCcAcPos_c.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV9LightBeam */
@@ -14,7 +14,7 @@ int *LightBeam_Spawn(void)
         _ZN8dActor_cC2Ev(p);
         p[0] = (int)_ZTV9LightBeam;
         _ZN5ModelC1Ev((char *)p + 0xd4);
-        _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x124);
+        _ZN10dCcAcPos_cC1Ev((char *)p + 0x124);
     }
     return p;
 }

@@ -7,7 +7,7 @@ typedef struct { s32 x, y, z; } Vector3;
 extern void _ZN9Animation7AdvanceEv(void *self);
 extern int _ZN9Animation8FinishedEv(void *self);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *file, int i, int fix, u32 j);
-extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void *self);
+extern void _ZN10dBgCh_Actr15ClearLimMovFlagEv(void *self);
 extern void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void *bmd, void *bma);
 extern void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *self, void *file, int i, int fix, u32 j);
 extern void func_ov084_021296cc(char *c);
@@ -15,11 +15,11 @@ extern void _ZN12dEnemyBase_c9SpawnCoinEv(void *self);
 extern void func_ov084_02129498(char *r0);
 extern void _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(void *self, const Vector3 *v);
 extern void _ZN11dCapEnemy_c15RespawnIfHasCapEv(void *self);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *self);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern void func_02012694(int a, void *p);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(void *self, void *c);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(void *self, void *c);
 extern void *_ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020aea30(void *a, void *b, void *c, int d);
 extern void *data_ov084_02130ce8[];
@@ -40,7 +40,7 @@ void func_ov084_0212a774(char *c)
         *(s32 *)(c + 0x434) = 0;
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x370, data_ov084_02130ce8[1], 0, 0x1000, 0);
         *(void **)(c + 0x444) = data_ov084_02130228[*(s32 *)(c + 0x460)];
-        _ZN12WithMeshClsn15ClearLimMovFlagEv(c + 0x1b4);
+        _ZN10dBgCh_Actr15ClearLimMovFlagEv(c + 0x1b4);
         {
             s32 *f198 = (s32 *)(((long long)(int)(c + 0x198)));
             *(s16 *)(c + 0x94) = *(s16 *)(c + 0x8e);
@@ -67,7 +67,7 @@ void func_ov084_0212a774(char *c)
             _ZN11dCapEnemy_c15RespawnIfHasCapEv(c);
         }
     }
-    if (_ZNK12WithMeshClsn13JustHitGroundEv(c + 0x1b4) != 0) {
+    if (_ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x1b4) != 0) {
         int a8;
         int cnt;
         if (*(u16 *)(c + 0x452) > 0x3c)
@@ -104,8 +104,8 @@ void func_ov084_0212a774(char *c)
         }
         *(u8 *)(((long long)(int)(c + 0x467))) += 1;
     } else {
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1b4) != 0) {
-            _ZN12WithMeshClsn15ClearLimMovFlagEv(c + 0x1b4);
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1b4) != 0) {
+            _ZN10dBgCh_Actr15ClearLimMovFlagEv(c + 0x1b4);
             *(s32 *)(c + 0x98) = 0;
             *(s32 *)(c + 0xa8) = 0;
             if (*(u16 *)(c + 0x452) > 0x3c)
@@ -113,7 +113,7 @@ void func_ov084_0212a774(char *c)
         }
     }
     *(u8 *)(c + 0x107) = 1;
-    if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(c, c + 0x180) != 0) {
+    if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(c, c + 0x180) != 0) {
         void *a = _ZN8dActor_c10FindWithIDEj(*(u32 *)(c + 0x1a4));
         *(s32 *)(c + 0x10c) = 7;
         func_ov002_020aea30(c, a, c + 0x1b4, 7);

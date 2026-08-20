@@ -1,10 +1,10 @@
 
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
 extern void ApproachAngle(short *a, short b, short c, short d, int e);
 extern short data_02082214[];
 void func_ov074_021216f4(char *c)
 {
-  if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x40c))
+  if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x40c))
   {
     *((short *) (((int) c + 0x5f4))) += *((short *) (c + 0x5f6));
     *((int *) (c + 0x5c)) = (int) (((((long long) data_02082214[((*((unsigned short *) (c + 0x5f4))) >> 4) << 1]) * 0x546000) + 0x800) >> 12);

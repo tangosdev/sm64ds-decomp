@@ -5,7 +5,7 @@
  * Two vtable stores and three destructor calls, every one a consequence of
  * `struct ArmedRotatingPlatform : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
  * because dBgActor_c's destructor is defined in its class body -- then
- * dBgActor_c's Model and MovingMeshCollider, then dActor_c. ArmedRotatingPlatform adds one
+ * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. ArmedRotatingPlatform adds one
  * s16, which has no destructor.
  */
 #include "ArmedRotatingPlatform.h"

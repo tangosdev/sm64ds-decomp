@@ -4,18 +4,18 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MadPiano.h"
-struct CylinderClsn;
+struct dCc_c;
 extern "C" int Vec3_HorzDist(const struct Vector3* a, const struct Vector3* b);
-extern "C" void WithMeshClsn_UpdateContinuous_Veneer(void* p);
+extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 extern "C" void func_0203568c(void* p, int v);
 extern "C" void func_02035684(void* p, int v);
 extern "C" void func_ov063_0211d5f4(void* self);
 
 struct dActor_c {
-  void UpdatePos(struct CylinderClsn*);
+  void UpdatePos(struct dCc_c*);
   struct dActor_c* ClosestPlayer();
 };
-struct MeshColliderBase {
+struct dBgW {
   int IsEnabled();
   void Disable();
 };
@@ -42,12 +42,12 @@ int MadPiano::Behavior()
     int r1 = unk_6cc;
     if (mPosY <= r1) mPosY = r1;
   }
-  WithMeshClsn_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
+  dBgCh_Actr_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
   func_0203568c(((char*)this)+0x50c, 0x159000);
   func_02035684(((char*)this)+0x50c, 0x159000);
   if (*(unsigned char*)((char*)((struct dActor_c*)((char*)this))->ClosestPlayer()+0x6fb) != 0) {
-    if (((struct MeshColliderBase*)((char*)&mMeshCollider))->IsEnabled() != 0)
-      ((struct MeshColliderBase*)((char*)&mMeshCollider))->Disable();
+    if (((struct dBgW*)((char*)&mMeshCollider))->IsEnabled() != 0)
+      ((struct dBgW*)((char*)&mMeshCollider))->Disable();
   } else {
     _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_((struct dBgActor_c*)((char*)this), 0x1f4000, 0);
   }

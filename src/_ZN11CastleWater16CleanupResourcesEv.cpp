@@ -7,7 +7,7 @@
  */
 #include "CastleWater.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 extern "C" {
 extern int data_ov009_02113c68[];
@@ -18,7 +18,7 @@ int CastleWater::CleanupResources()
 {
     ((SharedFilePtr *)((void*)data_ov009_02113c68))->Release();
     ((SharedFilePtr *)((void*)data_ov009_02113c70))->Release();
-    if (((MeshColliderBase *)&mMeshCollider)->IsEnabled())
-        ((MeshColliderBase *)&mMeshCollider)->Disable();
+    if (((dBgW *)&mMeshCollider)->IsEnabled())
+        ((dBgW *)&mMeshCollider)->Disable();
     return 1;
 }

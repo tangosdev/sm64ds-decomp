@@ -2,12 +2,12 @@
 // @symbol _ZN20SwitchActivatedPlank8BehaviorEv
 /* recovered: named members + shared header */
 #include "SwitchActivatedPlank.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 void func_020393a4(void* p, int v);
 int _ZN5Event6GetBitEj(unsigned int);
 void func_ov029_021126dc(char* c);
-int _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(void*, void*, int);
+int _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(void*, void*, int);
 
 #pragma optimize_for_size on
 
@@ -26,9 +26,9 @@ int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
         *(short*)(((char*)self) + 0x300 + 0xa0) = 0;
         self->unk_3a3 = 1;
 
-        ((MeshColliderBase *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
+        ((dBgW *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
         func_ov029_021126dc(((char*)self));
-        _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(((char*)self)+0x124, ((char*)self)+0x370, self->unk_08e);
+        _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(((char*)self)+0x124, ((char*)self)+0x370, self->unk_08e);
         break;
 
     case 1: {
@@ -38,7 +38,7 @@ int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
         }
         *p = *p + 1;
         if (_ZN5Event6GetBitEj(self->unk_3a4) != 0) break;
-        ((MeshColliderBase *)((char*)&self->mMovingMeshCollider))->Disable();
+        ((dBgW *)((char*)&self->mMovingMeshCollider))->Disable();
         self->unk_3a2 = 0;
         self->unk_3a3 = 0;
         break;

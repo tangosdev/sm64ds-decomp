@@ -14,10 +14,10 @@ extern short Vec3_HorzAngle(const Vector3* a, const Vector3* b);
 extern short data_02082214[];
 }
 
-struct RaycastLine {
+struct dBgCh_Lin {
     char pad[0x78];
-    RaycastLine();
-    ~RaycastLine();
+    dBgCh_Lin();
+    ~dBgCh_Lin();
     int DetectClsn();
     void SetObjAndLine(const Vector3& a, const Vector3& b, dActor_c* obj);
 };
@@ -73,7 +73,7 @@ extern "C" void func_ov002_020e7934(char* self, void* cam)
             return;
 
         {
-            RaycastLine rl;
+            dBgCh_Lin rl;
             Vector3 a;
             Vector3 b;
             a.x = *(int*)(self + 0x5c);

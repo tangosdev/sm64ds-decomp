@@ -11,7 +11,7 @@
  *
  *     dActor_c               0x000 + 0x0d0 = 0x0d0   -> pad_0d0
  *     Model               0x0d4 + 0x050 = 0x124   -> mMeshCollider
- *     MovingMeshCollider  0x124 + 0x1c8 = 0x2ec   -> padding, then unk_310
+ *     dBgW_KcMbg  0x124 + 0x1c8 = 0x2ec   -> padding, then unk_310
  *
  * FOUR OF THE GENERATED HEADER'S FIELDS WERE THE Model'S OWN INSIDES and are gone
  * from this half: unk_0f0 (0x0d4 + 0x1c) and unk_114 / unk_118 / unk_11c
@@ -28,7 +28,7 @@
  *     PyramidTop      daObjDlPyramid_c   Model                      @ 0x320
  *     BasementWater    daObjC0Water_c     TextureTransformer         @ 0x320
  *     TowerStep  daObjBk_Lift_c     ShadowModel                @ 0x320
- *     WallSign        daObjKanban_c      MovingCylinderClsnWithPos  @ 0x320
+ *     WallSign        daObjKanban_c      dCcAcPos_c  @ 0x320
  *
  * Each is read straight off that class's destructor, which destroys its own
  * member at 0x320 before storing _ZTV10dBgActor_c and running the base.
@@ -64,14 +64,14 @@ struct player_;
 
 #include "dActor_c.h"
 #include "Model.h"
-#include "MovingMeshCollider.h"
+#include "dBgW_KcMbg.h"
 
 struct dBgActor_c : dActor_c {
     u8  pad_0d0[0x4];
     /* Named by the class's own destructor calling Model's D1 at +0x0d4 and
-       MovingMeshCollider's at +0x124 -- relocations the ROM build checks. */
+       dBgW_KcMbg's at +0x124 -- relocations the ROM build checks. */
     Model mModel;                           /* 0x0d4 */
-    MovingMeshCollider mMeshCollider;       /* 0x124 */
+    dBgW_KcMbg mMeshCollider;       /* 0x124 */
     /* 0x2ec: a Matrix4x3, and the generated header's unk_310 / unk_314 / unk_318
        were its translation row -- m[9], m[10], m[11], at +0x24/+0x28/+0x2c.
        UpdateClsnPosAndRot copies mModel.mat4x3 in here and then overwrites exactly

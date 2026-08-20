@@ -8,8 +8,8 @@ struct dActor_c;
 typedef void (dActor_c::*PMF)();
 struct Entry { PMF pmf; };
 extern "C" Entry data_ov060_0211afb4[];
-extern "C" void WithMeshClsn_UpdateDiscreteNoLava_veneer(void *p);
-extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void *c);
+extern "C" void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *p);
+extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void *c);
 
 int BowserFire::Behavior()
 {
@@ -18,9 +18,9 @@ int BowserFire::Behavior()
     (self->*data_ov060_0211afb4[unk_35c].pmf)();
     *(unsigned short*)(((int)((char *)this) + 0x374)) += 1;
     if (mVertAccel != 0) {
-        WithMeshClsn_UpdateDiscreteNoLava_veneer((char *)&mWithMeshClsn);
+        dBgCh_Actr_UpdateDiscreteNoLava_veneer((char *)&mWithMeshClsn);
         if (unk_35c != 4) {
-            if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn) != 0) {
+            if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn) != 0) {
                 mVertSpeed = 0;
                 mVertAccel = 0;
             }
@@ -28,7 +28,7 @@ int BowserFire::Behavior()
     }
     func_ov060_02116740(((char *)this));
     func_ov060_02117624(((char *)this));
-    mMovingCylinderClsn.Clear();
-    mMovingCylinderClsn.Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

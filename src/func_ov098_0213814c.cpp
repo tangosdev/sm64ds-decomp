@@ -1,10 +1,10 @@
 //cpp
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern int func_ov098_02138ce0(void*);
 extern int _ZN8dActor_c13DistToCPlayerEv(void*);
 extern int Crate_SetState(void*, int);
-extern int _ZN12CylinderClsn5ClearEv(void*);
+extern int _ZN5dCc_c5ClearEv(void*);
 extern int func_ov098_02139850(void*);
 extern int func_ov098_021397c8(void*);
 void func_ov098_0213814c(char* c){
@@ -14,11 +14,11 @@ void func_ov098_0213814c(char* c){
         Crate_SetState(c, 0);
         return;
     }
-    _ZN12CylinderClsn5ClearEv(c+0x564);
-    _ZN12CylinderClsn5ClearEv(c+0x5a4);
+    _ZN5dCc_c5ClearEv(c+0x564);
+    _ZN5dCc_c5ClearEv(c+0x5a4);
     func_ov098_02139850(c);
     func_ov098_021397c8(c);
-    if(((MeshColliderBase *)(c+0x124))->IsEnabled())
-        ((MeshColliderBase *)(c+0x124))->Disable();
+    if(((dBgW *)(c+0x124))->IsEnabled())
+        ((dBgW *)(c+0x124))->Disable();
 }
 }

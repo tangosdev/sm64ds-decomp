@@ -3,10 +3,10 @@
 // u32 reads CSE the c+0x134 load into the FindWithID arg; laundered flags def
 // rotates the p/flags r5/r4 coloring; ternary + laundered test materializes the
 // ==0xbf bool (moveq #1/movne #0/cmp) instead of jump-threading.
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* thiz, void* v);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* thiz, void* v);
 extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_ov002_020aea30(char* c, void* p, int a, int b);
-extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(char* c, void* cyl, void* p);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(char* c, void* cyl, void* p);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, int f);
 extern void func_ov002_020ada40(char* c, void* v, void* p, int a);
 extern void func_02012694(int a, void* b);
@@ -36,7 +36,7 @@ void func_ov090_021310b4(char* c)
     sv.z = z;
     sv.x = x;
     sv.y = y;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x110, &sv);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x110, &sv);
 
     if (*(unsigned int*)(c + 0x134) == 0) return;
     if ((p = (char*)_ZN8dActor_c10FindWithIDEj(*(unsigned int*)(c + 0x134))) == 0) return;
@@ -57,7 +57,7 @@ void func_ov090_021310b4(char* c)
         func_ov002_020aea30(c, p, 0, 2);
         return;
     }
-    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, p)) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, p)) {
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         *(int*)(c + 0x10c) = 1;
         func_ov002_020aea30(c, p, 0, 1);

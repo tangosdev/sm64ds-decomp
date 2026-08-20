@@ -15,8 +15,8 @@ extern void _ZN9Animation8LoadFileER13SharedFilePtr(void* sfp);
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, s32 a, s32 b, u32 c, u32 d);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, s32 a, s32 b, void* v, void* w);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, s32 a, s32 b, u32 c, u32 d);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, s32 a, s32 b, void* v, void* w);
 extern void _ZN7PathPtrC1Ev(void* thiz);
 extern void _ZN7PathPtr6FromIDEj(void* thiz, u32 id);
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void* thiz, void* v, u32 idx);
@@ -82,10 +82,10 @@ check18:
 skip17:
     mVertAccel = -0x1000;
     mTerminalVelocity = -0x1e000;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x50000, 0x64000, 0xb00004, 0x9000);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x50000, 0x64000, 0xb00004, 0x9000);
     unk_45c = 0;
     mModelAnim.speed = 0x1000;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x28000, 0x28000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x144, ((char*)this), 0x28000, 0x28000, 0, 0);
     _ZN7PathPtrC1Ev(sp8);
     _ZN7PathPtr6FromIDEj(sp8, unk_438);
     unk_448 = 1;

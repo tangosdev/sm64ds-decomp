@@ -12,7 +12,7 @@ extern void* func_ov002_020ada40(void* thiz, s16* v, void* r6, s32 flag);
 extern void func_02012694(s32 a, void* b);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* thiz, void* f, s32 i, s32 fx, u32 j);
 extern s32 _ZN6Player9IsOnShellEv(void* p);
-extern s32 _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* thiz, void* clsn, void* player);
+extern s32 _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* thiz, void* clsn, void* player);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, s32 f);
 extern void _ZN8dActor_c13SmallPoofDustEv(void* thiz);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, const Vector3* v, u32 a, s32 f, u32 b, u32 cc, u32 d);
@@ -141,7 +141,7 @@ void func_ov084_02129ed4(void* c)
                     _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj((char*)c + 0x370, data_ov084_02130ce0[1], 0x40000000, 0x1000, 0);
                     goto block_68;
                 }
-                if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, (char*)c + 0x180, r6) != 0) {
+                if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, (char*)c + 0x180, r6) != 0) {
                     _ZN6Player6BounceE5Fix12IiE(r6, 0x28000);
                     func_02012694(0xe0, (char*)c + 0x74);
                     I(c, 0x10c) = 1;
@@ -176,7 +176,7 @@ void func_ov084_02129ed4(void* c)
     var_r0 = (s32)(U16f(r6, 0xc) == 0xbf);
     if (var_r0 != 0) {
         { Vector3* pp = (Vector3*)(((int)r6 + 0x5c) & 0xffffffffffffffffULL); v2c.x = pp->x; v2c.y = pp->y; v2c.z = pp->z; }
-        if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, (char*)c + 0x180, r6) != 0) {
+        if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, (char*)c + 0x180, r6) != 0) {
             _ZN6Player6BounceE5Fix12IiE(r6, 0x28000);
             func_02012694(0xe0, (char*)c + 0x74);
             I(c, 0x10c) = 1;

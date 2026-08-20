@@ -8,7 +8,7 @@
  * IT DOES NOT DERIVE FROM dBgActor_c. It derives from daObjDorifu_c, which derives
  * from dBgActor_c. The destructor stores three vptrs -- its own, daObjDorifu_c's,
  * then dBgActor_c's -- and destroys daObjDorifu_c's Model[5] and
- * MovingMeshCollider[5] in between, all of it from the base declaration.
+ * dBgW_KcMbg[5] in between, all of it from the base declaration.
  *
  *   _ZTI16daObjRc_Dorifu_c  ov036 0x02113e4c
  *   _ZTS16daObjRc_Dorifu_c  ov036 0x02113e58

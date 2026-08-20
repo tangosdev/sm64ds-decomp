@@ -9,8 +9,8 @@ extern void _ZN9Animation8LoadFileER13SharedFilePtr(void *sfp);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *bmd, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void *thiz);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, s32 f1, s32 f2, u32 a, u32 b);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, s32 f1, s32 f2, u32 a, u32 b);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *thiz, void *actor, s32 f1, s32 f2, void *v, void *w);
 extern int _ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void func_ov002_020b7f2c(void *c, void *p);
 extern void func_ov002_020b7f7c(void *thiz);
@@ -95,8 +95,8 @@ int daObjMarioCap_c::InitResources()
 
     flag = 0;
 
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x1e000, 0x1e000, 0x800002, 0);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x1e000, 0x16000, 0, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x1e000, 0x1e000, 0x800002, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x1e000, 0x16000, 0, 0);
 
     unk_3c4 = mPosX;
     unk_3c8 = mPosY;
@@ -109,7 +109,7 @@ int daObjMarioCap_c::InitResources()
     default:
         break;
     case 0:
-        *(s32 *)(((long long)((char *)&mMovingCylinderClsn.vulnFlags))) |= 0x8000;
+        *(s32 *)(((long long)((char *)&mdCcAc_c.vulnFlags))) |= 0x8000;
         unk_400 = 4;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df64);
         break;
@@ -118,7 +118,7 @@ int daObjMarioCap_c::InitResources()
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df84);
         break;
     case 2:
-        *(s32 *)(((long long)((char *)&mMovingCylinderClsn.vulnFlags))) |= 0x8000;
+        *(s32 *)(((long long)((char *)&mdCcAc_c.vulnFlags))) |= 0x8000;
         unk_400 = 4;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df04);
         break;
@@ -152,15 +152,15 @@ int daObjMarioCap_c::InitResources()
         break;
     case 14:
         unk_400 = 2;
-        mMovingCylinderClsn.radius = 0x32000;
-        mMovingCylinderClsn.height = 0x32000;
+        mdCcAc_c.radius = 0x32000;
+        mdCcAc_c.height = 0x32000;
         param1 -= 0xa;
         mType = 4;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
     case 17:
-        mMovingCylinderClsn.radius = 0x32000;
-        mMovingCylinderClsn.height = 0x32000;
+        mdCcAc_c.radius = 0x32000;
+        mdCcAc_c.height = 0x32000;
         flag = 1;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
@@ -169,8 +169,8 @@ int daObjMarioCap_c::InitResources()
     case 8:
     case 9:
         unk_400 = 0xff;
-        mMovingCylinderClsn.radius = 0x32000;
-        mMovingCylinderClsn.height = 0x32000;
+        mdCcAc_c.radius = 0x32000;
+        mdCcAc_c.height = 0x32000;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
     case 5:
@@ -182,8 +182,8 @@ int daObjMarioCap_c::InitResources()
         unk_400 = 3;
         /* fallthrough */
     case 4:
-        mMovingCylinderClsn.radius = 0x32000;
-        mMovingCylinderClsn.height = 0x32000;
+        mdCcAc_c.radius = 0x32000;
+        mdCcAc_c.height = 0x32000;
         func_ov002_020b7f2c(((char *)this), &data_ov002_0210df34);
         break;
     }

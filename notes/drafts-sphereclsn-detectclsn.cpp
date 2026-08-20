@@ -1,25 +1,54 @@
 //cpp
-// NONMATCHING: size 0x1b58 vs 0x1bc8 (28 insn short), align equal=565 ratio=0.320
-// @symbol _ZN12MeshCollider10DetectClsnER10SphereClsn
-/* MeshCollider::DetectClsn(SphereClsn &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
-#include "MeshCollider.h"
-#include "SphereClsn.h"
-#include "ClsnResult.h"
+// NONMATCHING: size 0x1b64 vs 0x1bc8 (25 insn short), align equal=601 ratio=0.340
+//
+// PROVENANCE. Restored 2026-08-19 from nearmiss/db.jsonl, attempt
+// 8273344dc1434a9e86882b88eebf7ffa (divergences 1213, parent 1332).
+// This body was banked but never committed back to notes/, so the file that lived
+// here was the WORSE, earlier draft. Both were re-scored on one worktree at
+// 2004/b56 before the swap:
+//
+//     this body          cand=1750  equal=565  ratio=0.3203  delete=159  (28 insn short)
+//     what it replaced   cand=1725  equal=366  ratio=0.2090  delete=182  (53 insn short)
+//
+// The replaced file's banner claimed "first draft -- head/AABB only, the walk and
+// prism tests are stubs". That was false: it was 618 lines with every mechanism
+// written. Do not reinstate it.
+//
+// Levers already swept and DEAD (#1197, positive controls on each): nineteen
+// declaration-level variants across hoist / permutation / re-scoping / folding /
+// en1-en2 placement, all byte-neutral; frame-size chasing (the surplus is register
+// pressure from structural difference); loop rotation (mwccarm rotates this loop
+// unprompted and always did). "Declaration order IS the stack layout" holds for the
+// 0x498 dBgCh_Gnd twin and NOT for this 0x1bc8 function.
+//
+// What is left: source-shape change that reduces simultaneous liveness across the
+// prism body. This draft reloads edge normals (ldr [sp,#0xc4] three times in ten
+// instructions) where the ROM keeps en1 in r5, en2 in r4 and spills only en3.
+//
+// Score with plain --align; --align-shape normalises away stack offsets and reads
+// flat across real gains. mismatches=N/M is frozen at 999 until the sizes match.
+// Map and status: notes/collision-system.md.
+//
+// @symbol _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr
+/* dBgW_Kc::DetectClsn(dBgCh_SphCrr &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
+#include "dBgW_Kc.h"
+#include "dBgCh_SphCrr.h"
+#include "dBgPi.h"
 
-extern "C" void func_02037a6c(SphereClsn *self, s32 loX, s32 loY, s32 loZ,
+extern "C" void func_02037a6c(dBgCh_SphCrr *self, s32 loX, s32 loY, s32 loZ,
                               s32 hiX, s32 hiY, s32 hiZ);
 extern "C" s32 DotVec3(const s32 *a, const Vector3 *b);
-extern "C" s16 func_020396dc(MeshCollider *self, KCL_Tri *tri);
+extern "C" s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri);
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
 extern "C" s32 func_02039794(s32 normalY);
 extern SurfaceInfo data_020a0cec;
-extern "C" void func_02037fd4(ClsnResult *res, s16 triID, SurfaceInfo *info);
-extern "C" void func_020379f4(SphereClsn *self, s16 triID, SurfaceInfo *info);
-extern "C" void func_020379c0(SphereClsn *self, s16 triID, SurfaceInfo *info);
-extern "C" void func_0203798c(SphereClsn *self, s16 triID, SurfaceInfo *info);
-extern "C" void func_0203794c(SphereClsn *self, const Vector3 *n);
-extern "C" int _ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info,
-                                                              SphereClsn *q, int flag);
+extern "C" void func_02037fd4(dBgPi *res, s16 triID, SurfaceInfo *info);
+extern "C" void func_020379f4(dBgCh_SphCrr *self, s16 triID, SurfaceInfo *info);
+extern "C" void func_020379c0(dBgCh_SphCrr *self, s16 triID, SurfaceInfo *info);
+extern "C" void func_0203798c(dBgCh_SphCrr *self, s16 triID, SurfaceInfo *info);
+extern "C" void func_0203794c(dBgCh_SphCrr *self, const Vector3 *n);
+extern "C" int _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, SurfaceInfo *info,
+                                                              dBgCh_SphCrr *q, int flag);
 extern "C" int func_020397dc(int x);
 extern "C" int func_02037e58(unsigned int *p);
 extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
@@ -100,7 +129,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     goto vtail;
 
 /* The filter each edge block runs before its distance is taken, and the reason
-   MeshCollider::unk_48, unk_4d and the 0x28 vector exist. unk_48 is a SHIFT
+   dBgW_Kc::unk_48, unk_4d and the 0x28 vector exist. unk_48 is a SHIFT
    COUNT, not a value: the test is "is the lateral distance outside this edge
    more than faceDot >> unk_48", i.e. a slope tolerance expressed as a fraction
    of the penetration. Only a floor (cls 0) that fails it gets the expensive
@@ -130,7 +159,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
                 > _ZN4cstd4fdivEii(faceDot >> 4, hyp)) continue;              \
     }
 
-s32 MeshCollider::DetectClsn(SphereClsn &sphere)
+s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 {
     KCL_File *f;
     s32 loX, hiX;
@@ -298,7 +327,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                     }
 
                     /* Same three side-plane rejects as the matched
-                       DetectClsn(RaycastGround&) twin, but the sphere's tolerance
+                       DetectClsn(dBgCh_Gnd&) twin, but the sphere's tolerance
                        is its own radius (raw units x 0x400, matching the normals'
                        1.0 == 0x400 scale) where the twin uses a fixed 0x20000. */
                     while (*++leaf) {
@@ -334,7 +363,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         }
 
                         /* this->unk_34 / unk_35 gate the face test. These are the
-                           MeshCollider bytes whose set/clear accessors were among
+                           dBgW_Kc bytes whose set/clear accessors were among
                            the original eleven ITCM matches (func_01ffb098/0a4 for
                            0x35, func_01ffb0b0/0bc for 0x34); this is what they are
                            for. unk_38 is the Vector3 func_01ffb07c writes, seeded
@@ -360,7 +389,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         triID = func_020396dc(this, tri);
 
                         /* A REAL virtual call -- slot 3. Same lever as
-                           MeshCollider::GetSurfaceInfo and the RaycastGround twin:
+                           dBgW_Kc::GetSurfaceInfo and the dBgCh_Gnd twin:
                            mwccarm's dispatch reads `this` from r0, a hand-rolled
                            one reads it from the callee-saved copy. */
                         GetSurfaceInfo(triID, data_020a0cec);
@@ -373,7 +402,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         contactKind = k0;
                         passArg = k1;
                         if (cls != 1) passArg = k0;
-                        if (_ZN4BgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
+                        if (_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
                                 this, &data_020a0cec, &sphere, passArg))
                             continue;
 
@@ -403,7 +432,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                            instead of falling through, and why gotos are the
                            faithful spelling here. */
                         if (dot1 > dot2) {
-                            if (dot1 <= dot3) goto edge3;
+                            if (dot1 <= dot3) goto feat3;
                             if (dot1 <= 0) goto face;
                             if (!unk_4c) continue;
                             if (dot2 > dot3) {
@@ -417,12 +446,9 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                                 n31h = nn31 >> 31;
                                 if (MUL10(nn31, dot1) <= dot3) goto v31;
                             }
-                            EDGE_FILTER(dot1, z118)
-                            d1h = dot1 >> 31;
-                            dsq = rsq - (s64)dot1 * dot1;
-                            goto tail;
+                            goto edge1;
                         }
-                        if (dot2 <= dot3) goto edge3;
+                        if (dot2 <= dot3) goto feat3;
                         if (dot2 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot3 > dot1) {
@@ -436,12 +462,9 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                             n12h = nn12 >> 31;
                             if (MUL10(nn12, dot2) <= dot1) goto v12;
                         }
-                        EDGE_FILTER(dot2, z11c)
-                        d2h = dot2 >> 31;
-                        dsq = rsq - (s64)dot2 * dot2;
-                        goto tail;
+                        goto edge2;
 
-                    edge3:
+                    feat3:
                         if (dot3 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot1 > dot2) {
@@ -455,6 +478,21 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                             n23h = nn23 >> 31;
                             if (MUL10(nn23, dot3) <= dot2) goto v23;
                         }
+                        goto edge3;
+
+                    edge1:
+                        EDGE_FILTER(dot1, z118)
+                        d1h = dot1 >> 31;
+                        dsq = rsq - (s64)dot1 * dot1;
+                        goto tail;
+
+                    edge2:
+                        EDGE_FILTER(dot2, z11c)
+                        d2h = dot2 >> 31;
+                        dsq = rsq - (s64)dot2 * dot2;
+                        goto tail;
+
+                    edge3:
                         EDGE_FILTER(dot3, z120)
                         d3h = dot3 >> 31;
                         dsq = rsq - (s64)dot3 * dot3;
@@ -518,7 +556,7 @@ s32 MeshCollider::DetectClsn(SphereClsn &sphere)
                         }
                         if (!contactKind) contactKind = k1;
 
-                        func_02037fd4((ClsnResult *)&sphere.unk_010, triID, &data_020a0cec);
+                        func_02037fd4((dBgPi *)&sphere.unk_010, triID, &data_020a0cec);
                         sphere.flags |= 1;
 
                         if (cls == 0) {

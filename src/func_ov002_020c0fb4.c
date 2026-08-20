@@ -14,7 +14,7 @@ extern void _ZN5Timer9StopTimerEv(unsigned char *self);
 extern unsigned long long _ZN5Timer7GetTimeEv(unsigned char *self);
 extern int _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int, unsigned int, const Vector3 *, const void *, int, int);
 extern int func_ov002_020d5338(char *c);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char *self);
 extern int func_ov002_020bfec0(char *self);
 extern int func_ov002_020c0d90(char *c, int y);
 extern int func_ov002_020d06c0(char *p);
@@ -106,7 +106,7 @@ int func_ov002_020c0fb4(char *c)
       }
     }
   }
-  if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
+  if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380))
   {
     if ((*((int *) (c + 0x668))) == 1)
     {

@@ -4,22 +4,22 @@ typedef unsigned char u8;
 
 typedef struct Vector3 { int x, y, z; } Vector3;
 
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(void *self, void *clsn);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(void *self, void *clsn);
 extern int _ZN11dCapEnemy_c16GetCapEatenOffItERK7Vector3(void *self, Vector3 *v);
 extern void func_ov084_02129168(char *c, char *actor);
 extern void _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File(void *bmd, void *bma);
 extern void _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(void *m, void *f, int a, int fix, unsigned int j);
-extern void _ZN12CylinderClsn5ClearEv(void *self);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(void *self, void *clsn);
+extern void _ZN5dCc_c5ClearEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+extern int _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(void *self, void *clsn);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 extern void func_ov002_020aea30(void *self, void *actor, void *clsn, int a);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *m, void *f, int a, int fix, unsigned int j);
 extern void func_ov084_0212a580(void *self);
 extern void func_ov084_021294d0(void *self);
-extern void _ZN12CylinderClsn6UpdateEv(void *self);
+extern void _ZN5dCc_c6UpdateEv(void *self);
 extern void _ZN9Animation7AdvanceEv(void *self);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *self);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *self);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
 
 extern int *data_ov084_02130cf8;
@@ -27,7 +27,7 @@ extern int *data_ov084_0213088c;
 extern int *data_ov084_02130ce0;
 
 int func_ov084_02129a00(char *self) {
-    int r4 = _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(self, self + 0x1b4);
+    int r4 = _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(self, self + 0x1b4);
     if (r4 == 0)
         goto ret0;
     if (r4 == 1) {
@@ -43,15 +43,15 @@ int func_ov084_02129a00(char *self) {
             _ZN15MaterialChanger7PrepareER8BMD_FileR8BMA_File((void *)((int *)&data_ov084_02130cf8)[1], &data_ov084_0213088c);
             _ZN15MaterialChanger7SetFileER8BMA_Filei5Fix12IiEj(self + 0x3fc, &data_ov084_0213088c, 0x40000000, 0x1000, 0);
             *(int *)(self + 0x404) = 0;
-            _ZN12CylinderClsn5ClearEv(self + 0x180);
+            _ZN5dCc_c5ClearEv(self + 0x180);
             return 0;
         }
     } else if (r4 == 3) {
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x1b4))
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x1b4))
             *(int *)(((int)self + 0x98)) >>= 1;
     }
 
-    if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn(self, self + 0x180) != 0) {
+    if (_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c(self, self + 0x180) != 0) {
         void *actor = _ZN8dActor_c10FindWithIDEj(*(int *)(self + 0x1a4));
         *(int *)(self + 0x10c) = 7;
         func_ov002_020aea30(self, actor, self + 0x1b4, 7);
@@ -61,13 +61,13 @@ int func_ov084_02129a00(char *self) {
     }
 
     func_ov084_0212a580(self);
-    _ZN12CylinderClsn5ClearEv(self + 0x180);
+    _ZN5dCc_c5ClearEv(self + 0x180);
     if (*(u8 *)(self + 0x107) != 0) {
         func_ov084_021294d0(self);
         {
             u16 s = *(u16 *)(self + 0x104);
             if (s == 0) {
-                _ZN12CylinderClsn6UpdateEv(self + 0x180);
+                _ZN5dCc_c6UpdateEv(self + 0x180);
             } else if (s == 5) {
                 _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(self + 0x370, (void *)((int *)&data_ov084_02130ce0)[1], 0x40000000, 0x1000, 0);
                 *(s16 *)(((int)self + 0x94)) += 0x8000;
@@ -78,7 +78,7 @@ int func_ov084_02129a00(char *self) {
             }
         }
         _ZN9Animation7AdvanceEv(self + 0x3c0);
-        if (_ZNK12WithMeshClsn13JustHitGroundEv(self + 0x1b4))
+        if (_ZNK10dBgCh_Actr13JustHitGroundEv(self + 0x1b4))
             func_ov084_02129168(self, 0);
     }
 

@@ -8,7 +8,7 @@
 
 struct PathPtr { int a, b; };
 
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 extern void func_02012694(int a, void *b);
 extern int func_ov081_02125488(void *c, void *p);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
@@ -32,7 +32,7 @@ int func_ov081_021250c8(char *c) {
     struct Vector3 scaled;
     int len;
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x150)) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x150)) {
         func_02012694(0xe5, c + 0x74);
         func_ov081_02125488(c, data_ov081_02128e54);
         _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c + 0x30c, *(void**)(data_ov081_02128da0 + 4), 0x40000000, 0x1000, 0);

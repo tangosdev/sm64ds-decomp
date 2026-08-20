@@ -8,8 +8,8 @@
 extern "C" {
 extern int _ZN5Sound15PlaySecretSoundEP8dActor_cPt(void* a, u16* p);
 extern int func_ov064_02116d1c(void* c);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void* c, void* clsn, unsigned f);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void* c, void* clsn, unsigned f);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 }
 
 int BigBully::Behavior()
@@ -34,8 +34,8 @@ int BigBully::Behavior()
         mVertSpeed = m;
         p = (int*)(((int)((char*)this) + 0x60));
         *p = *p + mVertSpeed;
-        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char*)this), ((char*)this) + 0x174, 0);
-        if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char*)this), ((char*)this) + 0x174, 0);
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
             u8* q;
             func_0200fa8c(((char*)this), 0);
             q = (u8*)(((int)((char*)this) + 0x3fe));

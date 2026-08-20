@@ -20,7 +20,7 @@ extern int data_ov002_0210af70[];
 extern int _ZTV10dBgActor_c[];
 void _ZN11ShadowModelD1Ev(void*);
 void __destroy_arr(void*,int,int,void*);
-void _ZN18MovingMeshColliderD1Ev(void*);
+void _ZN10dBgW_KcMbgD1Ev(void*);
 void _ZN5ModelD1Ev(void*);
 void _ZN8dActor_cD2Ev(void*);
 }
@@ -30,7 +30,7 @@ extern "C" int _ZN15daObjPathLift_cD1Ev(char* c){
   *(int**)c=(int*)data_ov002_0210af70;
   __destroy_arr(c+0x320,3,0x50,(void*)_ZN5ModelD1Ev);
   *(int**)c=(int*)_ZTV10dBgActor_c;
-  _ZN18MovingMeshColliderD1Ev(c+0x124);
+  _ZN10dBgW_KcMbgD1Ev(c+0x124);
   _ZN5ModelD1Ev(c+0xd4);
   _ZN8dActor_cD2Ev(c);
   return (int)c;

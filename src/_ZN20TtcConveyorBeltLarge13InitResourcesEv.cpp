@@ -38,9 +38,9 @@ struct dBgActor_c {
     void UpdateClsnPosAndRot();
 };
 
-extern "C" void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
+extern "C" void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
 
-struct MovingMeshCollider {
+struct dBgW_KcMbg {
     void SetFile(KCL_File *f, const Matrix4x3 &m, int fix, short sh,
                  CLPS_Block &b);
 };
@@ -48,20 +48,20 @@ struct MovingMeshCollider {
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, KCL_File *f, const Matrix4x3 &m, int fix, short sh, CLPS_Block &b);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *, KCL_File *f, const Matrix4x3 &m, int fix, short sh, CLPS_Block &b);
 
 
 extern "C" void func_020393c4(void *p, void *v);
 
-struct RaycastGround {
+struct dBgCh_Gnd {
     int pad[0x11];
     int result;
     int pad2[2];
 
-    RaycastGround();
+    dBgCh_Gnd();
     void SetObjAndPos(const Vector3 &v, dActor_c *a);
     int DetectClsn();
-    ~RaycastGround();
+    ~dBgCh_Gnd();
 };
 
 struct Entry3 {
@@ -120,9 +120,9 @@ int TtcConveyorBeltLarge::InitResources()
     ((dBgActor_c *)((char *)this))->UpdateClsnPosAndRot();
 
     e = mVariant;
-    kf = _ZN12MeshCollider8LoadFileER13SharedFilePtr(
+    kf = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(
         data_ov065_0211d198[e].a);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((MovingMeshCollider *)((char *)&mMeshCollider), (KCL_File *)kf, *(Matrix4x3 *)((char *)&unk_2ec), 0x199, mAngleY, *(CLPS_Block *)data_ov065_0211d19c[e].a);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((dBgW_KcMbg *)((char *)&mMeshCollider), (KCL_File *)kf, *(Matrix4x3 *)((char *)&unk_2ec), 0x199, mAngleY, *(CLPS_Block *)data_ov065_0211d19c[e].a);
 
     func_020393c4(
         ((char *)this) + 0x124,
@@ -141,7 +141,7 @@ int TtcConveyorBeltLarge::InitResources()
     v.y = v.y - 0xa000;
 
     {
-        RaycastGround rg;
+        dBgCh_Gnd rg;
 
         rg.SetObjAndPos(*(Vector3 *)&v, (dActor_c *)0);
         unk_394 = v.y;

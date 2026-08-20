@@ -2,11 +2,11 @@
 // @symbol func_ov062_02118a50
 /* recovered: shared common types, declarations from a shared header */
 #include "decl_Animation.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *w);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *w);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, struct Vector3 *v);
 extern s16 _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *self, int a, int b, s16 ang);
 extern int _ZN9Animation8FinishedEv(void *anim);
@@ -14,8 +14,8 @@ extern int _ZN9Animation8FinishedEv(void *anim);
 void func_ov062_02118a50(char *c)
 {
     if (*(int *)(c + 0x98) != 0) {
-        if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0) {
-            void *sr = _ZNK12WithMeshClsn13GetWallResultEv(c + 0x144);
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) != 0) {
+            void *sr = _ZNK10dBgCh_Actr13GetWallResultEv(c + 0x144);
             _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)sr + 4, (struct Vector3 *)(c + 0xe0));
             *(s16 *)(c + 0x94) = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(
                 c, *(int *)(c + 0xe0), *(int *)(c + 0xe8), *(s16 *)(c + 0x94));

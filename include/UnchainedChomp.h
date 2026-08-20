@@ -5,9 +5,9 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 /* daWanwan2_c in the ROM's RTTI. Derives from dEnemyBase_c, and the destructor is an
  * unusually strong witness because six of the nine members are ARRAYS: __destroy_arr
@@ -26,8 +26,8 @@
  * padding.
  */
 struct UnchainedChomp : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
-    WithMeshClsn        mWithMeshClsn;      /* 0x150 */
+    dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
+    dBgCh_Actr        mWithMeshClsn;      /* 0x150 */
     ModelAnim           mModelAnim;         /* 0x30c */
     Model               mModels[6];         /* 0x370 */
     ShadowModel         mShadowModels[6];   /* 0x550 */

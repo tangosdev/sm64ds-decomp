@@ -23,8 +23,8 @@ typedef struct {
 } ClsnResultTmp;
 
 extern void func_02037318(void *self);
-extern void _ZN12WithMeshClsn18StopDetectingWaterEv(void *self);
-extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void *self);
+extern void _ZN10dBgCh_Actr18StopDetectingWaterEv(void *self);
+extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void *self);
 extern void func_020357e0(void *self);
 extern void func_02035800(void *self);
 extern void func_02035770(void *self);
@@ -34,26 +34,26 @@ extern int _ZN6Player7IsStateERNS_5StateE(void *thiz, void *st);
 extern void func_020357c0(void *self);
 extern void func_020355e8(void *self);
 extern void func_020355fc(void *self);
-extern void _ZN12WithMeshClsn15ClearLimMovFlagEv(void *self);
-extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void *self);
+extern void _ZN10dBgCh_Actr15ClearLimMovFlagEv(void *self);
+extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void *self);
 extern void func_020355c8(void *self);
 extern void func_020355b4(void *self);
 extern void func_020383e4(void *self);
 extern void func_ov002_020eed24(void *c, void *arg);
-extern void _ZN12WithMeshClsn15ClearGroundFlagEv(void *self);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
+extern void _ZN10dBgCh_Actr15ClearGroundFlagEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 extern int func_02035638(void *p);
 extern void func_020371fc(void *self);
-extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
+extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 extern void func_ov002_020c16ec(void *o, void *s);
-extern void _ZN10ClsnResultD1Ev(void *self);
+extern void _ZN5dBgPiD1Ev(void *self);
 extern int func_02037e58(void *p);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, void *v);
 extern int _ZN4cstd4fdivEii(int a, int b);
 extern int func_020356c8(void *p);
 extern void func_ov002_020cef84(void *c);
-extern void *_ZNK12WithMeshClsn13GetWallResultEv(void *self);
+extern void *_ZNK10dBgCh_Actr13GetWallResultEv(void *self);
 extern int func_ov002_020d0580(void *p);
 extern int func_ov002_020c2138(void *self);
 
@@ -73,14 +73,14 @@ int func_ov002_020c25a8(void *arg0, int arg1)
     int *dst;
 
     func_02037318(c + 0x380);
-    _ZN12WithMeshClsn18StopDetectingWaterEv(c + 0x380);
+    _ZN10dBgCh_Actr18StopDetectingWaterEv(c + 0x380);
 
     {
         int b1;
         b1 = *(int*)(c + 0x354);
         b1 = (b1 != 0);
         if (b1 || *(unsigned char*)(c + 0x6ec) || *(unsigned char*)(c + 0x6fd))
-            _ZN12WithMeshClsn19StartDetectingWaterEv(c + 0x380);
+            _ZN10dBgCh_Actr19StartDetectingWaterEv(c + 0x380);
     }
 
     func_020357e0(c + 0x380);
@@ -108,10 +108,10 @@ int func_ov002_020c25a8(void *arg0, int arg1)
             func_020355fc(c + 0x380);
     }
 
-    _ZN12WithMeshClsn15ClearLimMovFlagEv(c + 0x380);
+    _ZN10dBgCh_Actr15ClearLimMovFlagEv(c + 0x380);
 
     if (_ZN6Player7IsStateERNS_5StateE(c, &data_ov002_021100f4) && *(int*)(c + 0xa8) > 0)
-        _ZN12WithMeshClsn13SetLimMovFlagEv(c + 0x380);
+        _ZN10dBgCh_Actr13SetLimMovFlagEv(c + 0x380);
 
     func_020355c8(c + 0x380);
 
@@ -124,12 +124,12 @@ int func_ov002_020c25a8(void *arg0, int arg1)
         func_ov002_020eed24(c + 0x380, c);
 
     if (*(int*)(c + 0xa8) > 0x1e000)
-        _ZN12WithMeshClsn15ClearGroundFlagEv(c + 0x380);
+        _ZN10dBgCh_Actr15ClearGroundFlagEv(c + 0x380);
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380))
         *(unsigned char*)(c + 0x6e9) |= 1;
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x380))
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x380))
         *(unsigned char*)(c + 0x6e9) |= 2;
 
     if (func_02035638(c + 0x380))
@@ -139,7 +139,7 @@ int func_ov002_020c25a8(void *arg0, int arg1)
         func_020371fc(c + 0x380);
 
     if (*(unsigned char*)(c + 0x6e9) & 1) {
-        fr = (char*)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380);
+        fr = (char*)_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x380);
         dst = &tmp.f04;
 
         *(Pair2i*)dst = *(Pair2i*)(fr + 0x4);
@@ -154,7 +154,7 @@ int func_ov002_020c25a8(void *arg0, int arg1)
         tmp.f24 = *(int*)(fr + 0x24);
 
         func_ov002_020c16ec(c, &tmp);
-        _ZN10ClsnResultD1Ev(&tmp);
+        _ZN5dBgPiD1Ev(&tmp);
 
         *(int*)(c + 0x644) = *(int*)(c + 0x60);
         ret = func_02037e58(fr + 4);
@@ -195,7 +195,7 @@ int func_ov002_020c25a8(void *arg0, int arg1)
             return wallFlag;
     }
 
-    _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK12WithMeshClsn13GetWallResultEv(c + 0x380) + 4, &wn);
+    _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr13GetWallResultEv(c + 0x380) + 4, &wn);
     *(int*)(c + 0x560) = wn.x;
     *(int*)(c + 0x564) = wn.y;
     *(int*)(c + 0x568) = wn.z;

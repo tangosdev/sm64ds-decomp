@@ -7,8 +7,8 @@
  * exactly on the next one:
  *
  *     dEnemyBase_c                      ends 0x110
- *     MovingCylinderClsnWithPos  0x110 + 0x040 = 0x150
- *     WithMeshClsn               0x150 + 0x1bc = 0x30c
+ *     dCcAcPos_c  0x110 + 0x040 = 0x150
+ *     dBgCh_Actr               0x150 + 0x1bc = 0x30c
  *     BlendModelAnim             0x30c + 0x070 = 0x37c   -> mState
  *     ShadowModel                0x380 + 0x028 = 0x3a8
  *     Vector3[8]                 0x3e8 + 0x060 = 0x448   -> the next array
@@ -31,12 +31,12 @@
 #include "dEnemyBase_c.h"
 #include "ShadowModel.h"
 #include "BlendModelAnim.h"
-#include "WithMeshClsn.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dBgCh_Actr.h"
+#include "dCcAcPos_c.h"
 
 struct ChiefChilly : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
-    WithMeshClsn mWithMeshClsn;                            /* 0x150 */
+    dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;                            /* 0x150 */
     BlendModelAnim mBlendModelAnim;                        /* 0x30c */
     void *mState;                                          /* 0x37c */
     ShadowModel mShadowModel;                              /* 0x380 */

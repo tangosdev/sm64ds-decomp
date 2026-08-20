@@ -12,15 +12,15 @@
  * exactly on the first:
  *
  *     0x110 ModelAnim                  0x64   -> 0x174
- *     0x174 MovingCylinderClsn         0x34   -> 0x1a8
- *     0x1a8 MovingCylinderClsnWithPos  0x40   -> 0x1e8
+ *     0x174 dCcAc_c         0x34   -> 0x1a8
+ *     0x1a8 dCcAcPos_c  0x40   -> 0x1e8
  *
  * Typing them absorbed these markers, which were a member's insides:
  *   - 0x160 mAnimation   = the Animation base of mModelAnim
- *   - 0x178 unk_178      = mMovingCylinderClsn.radius (+0x04)
- *   - 0x17c unk_17c      = mMovingCylinderClsn.height (+0x08)
- *   - 0x1ac unk_1ac      = mMovingCylinderClsnWithPos.radius (+0x04)
- *   - 0x1b0 unk_1b0      = mMovingCylinderClsnWithPos.height (+0x08)
+ *   - 0x178 unk_178      = mdCcAc_c.radius (+0x04)
+ *   - 0x17c unk_17c      = mdCcAc_c.height (+0x08)
+ *   - 0x1ac unk_1ac      = mdCcAcPos_c.radius (+0x04)
+ *   - 0x1b0 unk_1b0      = mdCcAcPos_c.height (+0x08)
  *
  * SIZE IS THE OBSERVED FIELD SPAN, rounded up. It guards this declaration; it
  * is not independent evidence about the ROM.
@@ -29,14 +29,14 @@
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "Model.h"
-#include "MovingCylinderClsn.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "WithMeshClsn.h"
+#include "dCcAc_c.h"
+#include "dCcAcPos_c.h"
+#include "dBgCh_Actr.h"
 
 struct FirePiranhaPlantBig : dEnemyBase_c {
     ModelAnim                    mModelAnim;            /* 0x110 */
-    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x174 */
-    MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x1a8 */
+    dCcAc_c           mdCcAc_c;   /* 0x174 */
+    dCcAcPos_c    mdCcAcPos_c; /* 0x1a8 */
     s32                          unk_1e8;               /* 0x1e8 */
     s32                          mState;                /* 0x1ec */
     s32                          unk_1f0;               /* 0x1f0 */

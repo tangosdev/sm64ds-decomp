@@ -7,7 +7,7 @@ struct Vector3_16_local { unsigned short x, y, z; };
 
 extern "C" {
 extern void Matrix4x3_FromRotationY(void* m, int angle);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* o);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* o);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* self, void* sm, void* mtx, int fix, int t, unsigned int j);
 extern short data_02082214[];
 }
@@ -36,7 +36,7 @@ extern "C" void func_ov084_0212a580(char* c){
     s16.y = *(short*)(c + 0x8e);
     s16.z = *(short*)(c + 0x90);
     if ((*(int*)(c + 0xb0) & 0x40000 ? 1 : 0) == 0) {
-        if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x1b4)) {
+        if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x1b4)) {
             _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3d4, c + 0x38c, *(int*)(c + 0x80) * 0x50, 0x1e000, 0xf);
         } else {
             _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0x3d4, c + 0x38c, *(int*)(c + 0x80) * 0x50, 0x96000, 0xf);

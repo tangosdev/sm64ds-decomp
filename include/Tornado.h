@@ -6,7 +6,7 @@
 #define TORNADO_H
 #include "types.h"
 #include "ModelAnim.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "TextureTransformer.h"
 
 struct Tornado {
@@ -32,15 +32,15 @@ struct Tornado {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x30];
-    u8  mMovingCylinderClsn;            /* 0x0d4 */
+    u8  mdCcAc_c;            /* 0x0d4 */
     u8  pad_0d5[0x1f];
     s32 unk_0f4;            /* 0x0f4 */
     u32 unk_0f8;            /* 0x0f8 */
     u8  pad_0fc[0xc];
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x108 -- a relocation the ROM build
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x108 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN7TornadoD0Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x108 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x108 */
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x2c4 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
        stopped short of the object, so the member also takes over mAnimation (+0x50 = the

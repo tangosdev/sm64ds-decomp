@@ -16,15 +16,15 @@ extern int _ZN8dActor_c13DistToCPlayerEv(void *self);
 extern void _ZN14BlendModelAnim7AdvanceEv(void *self);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern unsigned char DecIfAbove0_Byte(unsigned char *p);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, void *clsn);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, void *wmc, unsigned int flags);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
+extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, void *clsn);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, void *wmc, unsigned int flags);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 extern int KingBobOmb_SetState(void *c, void *p);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
-extern void _ZN12CylinderClsn5ClearEv(void *self);
-extern void _ZN12CylinderClsn6UpdateEv(void *self);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *v);
+extern void _ZN5dCc_c5ClearEv(void *self);
+extern void _ZN5dCc_c6UpdateEv(void *self);
 
 extern void *data_0209f318;
 extern char data_ov078_0212707c[];
@@ -72,18 +72,18 @@ int KingBobOmb::Behavior()
     DecIfAbove0_Byte((unsigned char *)(self + 0x504));
 
     if ((char *)((C *)this)->pp != data_ov078_021270bc) {
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, self + 0x33c);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(self, self + 0x33c);
     } else {
-        _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(self, self + 0x33c);
+        _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(self, self + 0x33c);
     }
 
     if ((char *)((C *)this)->pp != data_ov078_021270bc || *(unsigned char *)(self + 0x499) == 1) {
-        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(self, self + 0x110, 0);
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(self, self + 0x110, 0);
     }
 
     if ((char *)((C *)this)->pp == data_ov078_0212703c || (char *)((C *)this)->pp == data_ov078_021270fc) {
-        if (_ZNK12WithMeshClsn8IsOnWallEv(self + 0x110) != 0
-            || _ZNK12WithMeshClsn10IsOnGroundEv(self + 0x110) == 0
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(self + 0x110) != 0
+            || _ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x110) == 0
             || (*(int *)(self + 0x4d8) - 0x28000) > *(int *)(self + 0x60)) {
             KingBobOmb_SetState(self, data_ov078_021270bc);
         }
@@ -94,19 +94,19 @@ int KingBobOmb::Behavior()
         v.x = data_ov078_02126e00.x;
         v.y = data_ov078_02126e00.y;
         v.z = data_ov078_02126e00.z;
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(self + 0x33c, &v);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(self + 0x33c, &v);
     }
     {
         Vector3 v;
         v.x = data_ov078_02126e00.x;
         v.y = data_ov078_02126e00.y;
         v.z = data_ov078_02126e00.z;
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(self + 0x37c, &v);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(self + 0x37c, &v);
     }
-    _ZN12CylinderClsn5ClearEv(self + 0x33c);
-    _ZN12CylinderClsn6UpdateEv(self + 0x33c);
-    _ZN12CylinderClsn5ClearEv(self + 0x37c);
-    _ZN12CylinderClsn6UpdateEv(self + 0x37c);
+    _ZN5dCc_c5ClearEv(self + 0x33c);
+    _ZN5dCc_c6UpdateEv(self + 0x33c);
+    _ZN5dCc_c5ClearEv(self + 0x37c);
+    _ZN5dCc_c6UpdateEv(self + 0x37c);
 
     func_ov078_02125de0(self);
     func_ov078_02125c98(self);

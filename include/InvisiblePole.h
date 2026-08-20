@@ -3,7 +3,7 @@
 
 #include "types.h"
 #include "dActor_c.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 /* daBar_c in the ROM's RTTI -- the invisible climbing pole. The decomp's own name is
  * kept, as it is for every other actor whose factory names it: InvisiblePole_Spawn
@@ -13,12 +13,12 @@
  * TWO WITNESSES, and they close on each other exactly:
  *
  *   InvisiblePole_Spawn  fBase_c::operator new(264 = 0x108), dActor_c::dActor_c(),
- *                        stores _ZTV13InvisiblePole, then MovingCylinderClsn at 0xd4.
- *   ~InvisiblePole       the same vtable store, MovingCylinderClsn::~MovingCylinderClsn
+ *                        stores _ZTV13InvisiblePole, then dCcAc_c at 0xd4.
+ *   ~InvisiblePole       the same vtable store, dCcAc_c::~dCcAc_c
  *                        at 0xd4, then dActor_c::~dActor_c.
  *
  * SIZE 0x108, the factory's own literal. dActor_c ends at 0xd0, the one member starts at
- * 0xd4 and MovingCylinderClsn is 0x34, so 0xd4 + 0x34 = 0x108 closes the object with
+ * 0xd4 and dCcAc_c is 0x34, so 0xd4 + 0x34 = 0x108 closes the object with
  * nothing left over. The four bytes at 0xd0 are the only padding this class has, and
  * they are padding because both witnesses skip them.
  *
@@ -32,7 +32,7 @@
  */
 struct InvisiblePole : dActor_c {
     u8                  pad_0d0[0x4];
-    MovingCylinderClsn  mClsn;           /* 0x0d4 */
+    dCcAc_c  mClsn;           /* 0x0d4 */
 
     virtual ~InvisiblePole();            /* slots 16 (D1), 17 (D0) */
 

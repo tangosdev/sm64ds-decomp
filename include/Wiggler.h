@@ -13,8 +13,8 @@
  *     Vector3[5]                   0x3cc + 5*0x0c = 0x408  -> the second
  *     Vector3[5]                   0x408 + 5*0x0c = 0x444  -> the shorts
  *     Vector3s[5]                  0x444 + 5*0x06 = 0x462
- *     MovingCylinderClsnWithPos[5] 0x478 + 5*0x40 = 0x5b8  -> the second set
- *     MovingCylinderClsnWithPos[5] 0x5b8 + 5*0x40 = 0x6f8
+ *     dCcAcPos_c[5] 0x478 + 5*0x40 = 0x5b8  -> the second set
+ *     dCcAcPos_c[5] 0x5b8 + 5*0x40 = 0x6f8
  *
  * The Vector3s array is what named func_02011508 -- see the note on Vector3s in
  * include/types.h and src/_ZN8Vector3sD1Ev.cpp.
@@ -26,8 +26,8 @@
 #include "ModelAnim.h"
 #include "MaterialChanger.h"
 #include "TextureSequence.h"
-#include "WithMeshClsn.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dBgCh_Actr.h"
+#include "dCcAcPos_c.h"
 
 struct Wiggler : dEnemyBase_c {
     ModelAnim mModelAnims[5];                        /* 0x110 */
@@ -37,10 +37,10 @@ struct Wiggler : dEnemyBase_c {
     Vector3 unk_408[5];                              /* 0x408 */
     Vector3s unk_444[5];                             /* 0x444 */
     u8  pad_462[0x16];
-    MovingCylinderClsnWithPos mCylinderClsns1[5];    /* 0x478 */
-    MovingCylinderClsnWithPos mCylinderClsns2[5];    /* 0x5b8 */
+    dCcAcPos_c mdCc_cs1[5];    /* 0x478 */
+    dCcAcPos_c mdCc_cs2[5];    /* 0x5b8 */
     u8  pad_6f8[0x10];
-    WithMeshClsn mWithMeshClsn;                      /* 0x708 */
+    dBgCh_Actr mWithMeshClsn;                      /* 0x708 */
 
     virtual ~Wiggler();
 

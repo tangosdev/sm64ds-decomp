@@ -4,22 +4,22 @@
 #include "common.h"
 
 struct dActor_c;
-struct RaycastGround { char buf[0x54]; };
+struct dBgCh_Gnd { char buf[0x54]; };
 
-extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void *thiz);
-extern "C" void _ZN13RaycastGroundC1Ev(struct RaycastGround *thiz);
-extern "C" void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(struct RaycastGround *thiz, const struct Vector3 *v, struct dActor_c *a);
-extern "C" int _ZN13RaycastGround10DetectClsnEv(struct RaycastGround *thiz);
-extern "C" void _ZN13RaycastGroundD1Ev(struct RaycastGround *thiz);
+extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void *thiz);
+extern "C" void _ZN9dBgCh_GndC1Ev(struct dBgCh_Gnd *thiz);
+extern "C" void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(struct dBgCh_Gnd *thiz, const struct Vector3 *v, struct dActor_c *a);
+extern "C" int _ZN9dBgCh_Gnd10DetectClsnEv(struct dBgCh_Gnd *thiz);
+extern "C" void _ZN9dBgCh_GndD1Ev(struct dBgCh_Gnd *thiz);
 
 extern "C" int func_ov072_02120f14(void *thiz)
 {
     unsigned char *c = (unsigned char *)thiz;
-    struct RaycastGround rg;
+    struct dBgCh_Gnd rg;
     struct Vector3 v;
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x194)) {
-        _ZN13RaycastGroundC1Ev(&rg);
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x194)) {
+        _ZN9dBgCh_GndC1Ev(&rg);
         {
             int z = *(int *)(c + 0x64);
             int y = *(int *)(c + 0x60) + 0x1e000;
@@ -28,8 +28,8 @@ extern "C" int func_ov072_02120f14(void *thiz)
             v.y = y;
             v.z = z;
         }
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (struct dActor_c *)c);
-        if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (struct dActor_c *)c);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
             int d = *(int *)((char *)&rg + 0x44) - *(int *)(c + 0x60);
             if (d < 0) d = -d;
             if (d <= 0x1900) goto bail;
@@ -37,10 +37,10 @@ extern "C" int func_ov072_02120f14(void *thiz)
         *(int *)(c + 0x5c) = *(int *)(c + 0x68);
         *(int *)(c + 0x60) = *(int *)(c + 0x6c);
         *(int *)(c + 0x64) = *(int *)(c + 0x70);
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
         return 1;
     bail:
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
     }
     return 0;
 }

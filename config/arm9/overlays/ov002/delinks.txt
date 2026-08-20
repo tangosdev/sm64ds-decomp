@@ -8,7 +8,7 @@ src/func_ov002_020ad660.cpp:
     complete
     .text start:0x020ad660 end:0x020ad838
 
-src/_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsnR9ModelAnimj.cpp:
+src/_ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj.cpp:
     complete
     .text start:0x020ad838 end:0x020ada40
 
@@ -20,15 +20,15 @@ src/_ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc.cpp:
     complete
     .text start:0x020adb40 end:0x020addc0
 
-src/_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn.cpp:
+src/_ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c.cpp:
     complete
     .text start:0x020addc0 end:0x020ade78
 
-src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs.cpp:
+src/_ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs.cpp:
     complete
     .text start:0x020ae244 end:0x020ae2b8
 
-src/_ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_.cpp:
+src/_ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_.cpp:
     complete
     .text start:0x020ae2b8 end:0x020ae454
 
@@ -52,7 +52,7 @@ src/func_ov002_020ae64c.c:
     complete
     .text start:0x020ae64c end:0x020ae6a8
 
-src/_ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn.cpp:
+src/_ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr.cpp:
     complete
     .text start:0x020ae6a8 end:0x020ae73c
 
@@ -108,7 +108,7 @@ src/_ZN12dEnemyBase_c9SpawnCoinEv.cpp:
     complete
     .text start:0x020aeabc end:0x020aebf8
 
-src/_ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj.cpp:
+src/_ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj.cpp:
     complete
     .text start:0x020aebf8 end:0x020aed18
 
@@ -1560,6 +1560,7 @@ src/_ZN8SignPost8BehaviorEv.cpp:
     .text start:0x020bbea4 end:0x020bc240
 
 src/_ZN8SignPost13InitResourcesEv.cpp:
+    complete
     .text start:0x020bc240 end:0x020bc3c8
 
 src/SignPost_Spawn.c:
@@ -5046,6 +5047,7 @@ src/_ZN19AmbientSoundEffects8BehaviorEv.cpp:
     .text start:0x020f19fc end:0x020f1ac4
 
 src/_ZN19AmbientSoundEffects13InitResourcesEv.cpp:
+    complete
     .text start:0x020f1ac4 end:0x020f1b94
 
 src/AmbientSoundEffects_Spawn.c:
@@ -5853,7 +5855,7 @@ src/_ZN3HUDC1Ev.c:
     complete
     .text start:0x020fe154 end:0x020fe190
 
-src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR12MeshCollider.cpp:
+src/_ZN5Stage18LoadClsnAndObjectsER11LVL_OverlayjR7dBgW_Kc.cpp:
     complete
     .text start:0x020fe190 end:0x020fe33c
 
@@ -5929,7 +5931,7 @@ src/func_ov002_020fea68.c:
     complete
     .text start:0x020fea68 end:0x020fea84
 
-src/_ZN11RaycastLine4Line3SetERK7Vector3S3_.c:
+src/_ZN8dM3dGLin3SetERK7Vector3S2_.c:
     complete
     .text start:0x020fea84 end:0x020feab8
 

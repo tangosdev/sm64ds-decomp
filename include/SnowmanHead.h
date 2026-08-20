@@ -22,7 +22,7 @@ struct SnowmanHead {
     Model mModel;            /* 0x0d4 */
     u8  mTextureSequence;            /* 0x124 */
     u8  pad_125[0x13];
-    u8  mMovingCylinderClsn;            /* 0x138 */
+    u8  mdCcAc_c;            /* 0x138 */
     u8  pad_139[0x33];
     u8  mWithMeshClsn;            /* 0x16c */
 #ifdef __cplusplus

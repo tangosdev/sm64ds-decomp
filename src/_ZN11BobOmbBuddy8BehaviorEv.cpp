@@ -28,7 +28,7 @@ int BobOmbBuddy::Behavior()
     if ((unsigned short)(mModelAnim.currFrame >> 12) == 0)
         func_02012694(0xd7, &mCamSpacePosX);
     func_ov084_0212ce50(this);
-    mMovingCylinderClsn.Clear();
-    mMovingCylinderClsn.Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

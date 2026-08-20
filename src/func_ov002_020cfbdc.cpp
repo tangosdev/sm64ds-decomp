@@ -1,20 +1,20 @@
 //cpp
 // @symbol func_ov002_020cfbdc
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_ClsnResult.h"
+#include "decl_dBgPi.h"
 /* recovered: shared common types */
 #include "common.h"
 
 
 extern "C" {
     extern void func_ov002_020d0948(void*);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 extern void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void _ZN11RaycastLineC1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
-extern int _ZN11RaycastLine10DetectClsnEv(void *self);
-extern void _ZN11RaycastLineD1Ev(void *self);
+extern void _ZN9dBgCh_LinC1Ev(void *self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *act);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_LinD1Ev(void *self);
 extern void _ZN6Player11ChangeStateERNS_5StateE(void *self, void *st);
 extern short data_02082214[];
 extern int data_ov002_021101b4;
@@ -30,10 +30,10 @@ extern "C" int func_ov002_020cfbdc(char *self)
 
     if (*(unsigned short *)(self + 0x6a6) == 0) {
         if ((*(unsigned char *)(self + 0x6e9) & 2) != 0) {
-            if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x380) != 0) {
-                void *fr = _ZNK12WithMeshClsn14GetFloorResultEv(self + 0x380);
-                if (_ZNK10ClsnResult9GetClsnIDEv(fr) != -1) {
-                    if (_ZN8dActor_c10FindWithIDEj((unsigned int)_ZNK10ClsnResult9GetClsnIDEv(fr)) != 0) {
+            if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x380) != 0) {
+                void *fr = _ZNK10dBgCh_Actr14GetFloorResultEv(self + 0x380);
+                if (_ZNK5dBgPi9GetClsnIDEv(fr) != -1) {
+                    if (_ZN8dActor_c10FindWithIDEj((unsigned int)_ZNK5dBgPi9GetClsnIDEv(fr)) != 0) {
                         func_ov002_020d0948(self);
                         return 1;
                     }
@@ -59,16 +59,16 @@ extern "C" int func_ov002_020cfbdc(char *self)
         pts[2].z = bz;
     }
 
-    _ZN11RaycastLineC1Ev(rl);
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &pts[1], &pts[2], self);
-    if (_ZN11RaycastLine10DetectClsnEv(rl) != 0) {
+    _ZN9dBgCh_LinC1Ev(rl);
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &pts[1], &pts[2], self);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(rl) != 0) {
         *(int *)((int)(self + 0x5c)) += r5 * 0x60;
         *(int *)((int)(self + 0x60)) -= 0x80000;
         *(int *)((int)(self + 0x64)) += r5 * 0x60;
         _ZN6Player11ChangeStateERNS_5StateE(self, &data_ov002_021101b4);
-        _ZN11RaycastLineD1Ev(rl);
+        _ZN9dBgCh_LinD1Ev(rl);
         return 1;
     }
-    _ZN11RaycastLineD1Ev(rl);
+    _ZN9dBgCh_LinD1Ev(rl);
     return 0;
 }

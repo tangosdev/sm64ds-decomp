@@ -6,10 +6,10 @@ typedef int Fix12;
 
 struct dActor_c;
 
-struct RaycastGround {
+struct dBgCh_Gnd {
     char pad0[0x54];
-    RaycastGround();
-    ~RaycastGround();
+    dBgCh_Gnd();
+    ~dBgCh_Gnd();
     void SetObjAndPos(const Vector3& pos, dActor_c* actor);
     int DetectClsn();
 };
@@ -21,7 +21,7 @@ struct Self {
 
 extern "C" void func_ov002_020e7d08(Self* self)
 {
-    RaycastGround rc;
+    dBgCh_Gnd rc;
     Vector3 v;
     v.x = self->x;
     v.y = self->y;

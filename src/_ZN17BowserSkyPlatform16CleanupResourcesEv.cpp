@@ -19,7 +19,7 @@ extern void *data_ov060_0211953c[];
 s32 BowserSkyPlatform::CleanupResources() {
     char * c = (char *)this;
     struct daKpa3Bg_c *self = (struct daKpa3Bg_c *)(void *)c;
-    _ZN16MeshColliderBase7DisableEv(c + 0x124);
+    _ZN4dBgW7DisableEv(c + 0x124);
     _ZN13SharedFilePtr7ReleaseEv(data_ov060_02119514[self->unk_329]);
     _ZN13SharedFilePtr7ReleaseEv(data_ov060_0211953c[self->unk_329]);
     return 1;

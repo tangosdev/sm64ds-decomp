@@ -12,10 +12,10 @@ extern Obj* GetTeleportDestObj(int i);
 extern void func_02035860(char* o, void* src);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(u32 a, u32 b, char* v);
 extern void _ZN5Sound9PlayBank0EjRK7Vector3(u32 a, char* v);
-extern void _ZN13RaycastGroundC1Ev(char* rc);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(char* rc, Vector3* v, char* actor);
-extern int _ZN13RaycastGround10DetectClsnEv(char* rc);
-extern void _ZN13RaycastGroundD1Ev(char* rc);
+extern void _ZN9dBgCh_GndC1Ev(char* rc);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(char* rc, Vector3* v, char* actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(char* rc);
+extern void _ZN9dBgCh_GndD1Ev(char* rc);
 extern void _ZN6Player11ChangeStateERNS_5StateE(char* c, void* s);
 extern u32 func_02012790(u32 a);
 extern void _ZN3G2x18SetBlendBrightnessEPVtts(volatile u16* p, u16 a, s16 b);
@@ -75,7 +75,7 @@ int Player::St_Teleport_Main()
             if (data_0209f32c >= mPosY + 0x64000) {
                 Vector3 v;
                 char rc[0x50];
-                _ZN13RaycastGroundC1Ev(rc);
+                _ZN9dBgCh_GndC1Ev(rc);
                 {
                     int vz = mPosZ;
                     int vy = data_0209f32c + 0x64000;
@@ -84,10 +84,10 @@ int Player::St_Teleport_Main()
                     v.y = vy;
                     v.z = vz;
                 }
-                _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rc, &v, ((char*)this));
-                if (_ZN13RaycastGround10DetectClsnEv(rc))
+                _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rc, &v, ((char*)this));
+                if (_ZN9dBgCh_Gnd10DetectClsnEv(rc))
                     hit = 1;
-                _ZN13RaycastGroundD1Ev(rc);
+                _ZN9dBgCh_GndD1Ev(rc);
             }
             if (hit)
                 _ZN6Player11ChangeStateERNS_5StateE(((char*)this), data_ov002_0211067c);

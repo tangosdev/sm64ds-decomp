@@ -30,16 +30,16 @@ s16 Vec3_HorzAngle(const void* a, const void* b);
 void* _ZN8dActor_c10FindWithIDEj(u32 id);
 void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, const void* pos);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 id, s32 x, s32 y, s32 z);
-void _ZN12CylinderClsn5ClearEv(void* self);
-void _ZN12CylinderClsn6UpdateEv(void* self);
+void _ZN5dCc_c5ClearEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* self);
 void _ZN6Player4BurnEv(void* self);
 void func_02012694(u32 id, const void* v);
 void _ZN7fBase_c18MarkForDestructionEv(void* self);
-void WithMeshClsn_UpdateContinuous_Veneer(void* p);
+void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
 int _Z14ApproachLinearRiii(void* p, s32 target, s32 step);
 int _Z14ApproachLinearRsss(void* p, s16 target, s16 step);
-int _ZNK12WithMeshClsn8IsOnWallEv(void* self);
-int _ZNK12WithMeshClsn12TouchesWaterEv(void* self);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void* self);
+int _ZNK10dBgCh_Actr12TouchesWaterEv(void* self);
 void func_ov002_020f897c(void* self);
 void func_ov002_020f88ec(void* self);
 extern s16 data_02082214[];
@@ -131,7 +131,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
                     }
                     _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x44, pt.x, pt.y, pt.z);
                     func_ov002_020f8b24(c);
-                    _ZN12CylinderClsn5ClearEv(c + 0x110);
+                    _ZN5dCc_c5ClearEv(c + 0x110);
                     return 1;
                 }
                 {
@@ -162,7 +162,7 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
         }
     }
 
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x144);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x144);
     if (_Z14ApproachLinearRiii(c + 0x98, *(int*)(c + 0x35c), 0x999) != 0) {
         _Z14ApproachLinearRsss(c + 0x94, *(s16*)(c + 0x368), 0x200);
     }
@@ -175,17 +175,17 @@ extern "C" int _ZN8Fireball8BehaviorEv(void* arg0) {
     *(int*)(((int)c + 0x60)) += *(int*)(c + 0xa8);
     *(int*)(((int)c + 0x64)) += *(int*)(c + 0xac);
 
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
-    _ZN12CylinderClsn6UpdateEv(c + 0x110);
+    _ZN5dCc_c5ClearEv(c + 0x110);
+    _ZN5dCc_c6UpdateEv(c + 0x110);
     *(int*)(((int)c + 0x360)) += *(int*)(c + 0x98);
 
     if (*(int*)(c + 0x360) > *(int*)(c + 0x364)
-        || _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) != 0
-        || _ZNK12WithMeshClsn12TouchesWaterEv(c + 0x144) != 0) {
+        || _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) != 0
+        || _ZNK10dBgCh_Actr12TouchesWaterEv(c + 0x144) != 0) {
         u8 st = *(u8*)(c + 0x36d);
         if (st == 0) {
             func_ov002_020f897c(c);
-        } else if (st == 4 && _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144) == 0) {
+        } else if (st == 4 && _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144) == 0) {
             func_ov002_020f88ec(c);
         }
         {

@@ -7,8 +7,8 @@
 #include "Model.h"
 #include "ShadowModel.h"
 #include "TextureSequence.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "WithMeshClsn.h"
+#include "dCcAcPos_c.h"
+#include "dBgCh_Actr.h"
 
 /* TWO WITNESSES, and they close on each other:
  *
@@ -28,8 +28,8 @@ struct Lakitu : dActor_c {
     Model mModel;                                        /* 0x138 */
     ShadowModel mShadowModel;                            /* 0x188 */
     TextureSequence mTextureSequence;                    /* 0x1b0 */
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos; /* 0x1c4 */
-    WithMeshClsn mWithMeshClsn;                          /* 0x204 */
+    dCcAcPos_c mdCcAcPos_c; /* 0x1c4 */
+    dBgCh_Actr mWithMeshClsn;                          /* 0x204 */
     u8  unk_3c0;            /* 0x3c0 */
     u8  pad_3c1[0x33];
     s32 unk_3f4;            /* 0x3f4 */

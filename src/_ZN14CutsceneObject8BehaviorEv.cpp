@@ -18,14 +18,14 @@ typedef struct
 typedef struct 
 {
   char pad[0x50];
-} RaycastGround;
+} dBgCh_Gnd;
 extern "C" {
-extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void *c, void *cyl);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *c, void *cyl);
-extern void _ZN13RaycastGroundC1Ev(RaycastGround *rc);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *rc, const Vec3 *v, void *actor);
-extern s32 _ZN13RaycastGround10DetectClsnEv(RaycastGround *rc);
-extern void _ZN13RaycastGroundD1Ev(RaycastGround *rc);
+extern void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *c, void *cyl);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *c, void *cyl);
+extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *rc);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *rc, const Vec3 *v, void *actor);
+extern s32 _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *rc);
+extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *rc);
 extern void Vec3_Asr(Vec3 *d, Vec3 *s, int sh);
 extern void Matrix4x3_FromTranslation(Mtx43 *m, s32 x, s32 y, s32 z);
 extern void Matrix4x3_ApplyInPlaceToRotationZXYExt(void *m, s32 x, s32 y, s32 z);
@@ -37,7 +37,7 @@ int CutsceneObject::Behavior()
 {
   char *c = (char *) ((void *)this);
   s32 *new_var;
-  RaycastGround rc;
+  dBgCh_Gnd rc;
   Vec3 v;
   Vec3 asr;
   int new_var2;
@@ -53,11 +53,11 @@ int CutsceneObject::Behavior()
   }
   if ((((u32) t) >= 0x1a) && (((u32) t) <= 0x2d))
   {
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(c, 0);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(c, 0);
   }
   else
   {
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
   }
   {
     char *g = *((char **) (c + 0xe0));
@@ -72,9 +72,9 @@ int CutsceneObject::Behavior()
         v.y = new_var2;
         v.z = zz;
       }
-      _ZN13RaycastGroundC1Ev(&rc);
-      _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, &v, 0);
-      if (_ZN13RaycastGround10DetectClsnEv(&rc) != 0)
+      _ZN9dBgCh_GndC1Ev(&rc);
+      _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &v, 0);
+      if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc) != 0)
       {
         s32 h = *(new_var = (s32 *) (((char *) (&rc)) + 0x44));
         if ((*((s32 *) (c + 0x60))) < h)
@@ -83,7 +83,7 @@ int CutsceneObject::Behavior()
           *((u8 *) ((((int) c) + 0x103))) |= 1;
         }
       }
-      _ZN13RaycastGroundD1Ev(&rc);
+      _ZN9dBgCh_GndD1Ev(&rc);
     }
   }
   Vec3_Asr(&asr, (Vec3 *) (c + 0x5c), 3);

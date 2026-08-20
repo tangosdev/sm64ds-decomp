@@ -17,20 +17,20 @@ typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 struct Model { int d; };
 struct ModelBase { int d; };
-struct MeshCollider { int d; };
-struct MovingMeshCollider { int d; };
+struct dBgW_Kc { int d; };
+struct dBgW_KcMbg { int d; };
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);
-extern "C" KCL_File* _ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr&);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    MovingMeshCollider*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
+extern "C" KCL_File* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr&);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
 extern "C" void func_020393d4(int* p, int v);
 
 extern SharedFilePtr data_ov025_02113a68;
 extern SharedFilePtr data_ov025_02113a60;
 extern CLPS_Block data_ov025_02112c28;
-extern int _ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 extern "C" int _ZN7daDgr_c13InitResourcesEv(char* thiz)
 {
@@ -42,12 +42,12 @@ extern "C" int _ZN7daDgr_c13InitResourcesEv(char* thiz)
         _ZN9ModelBase7SetFileEP8BMD_Fileii((ModelBase*)(c + 0xd4), bmd, 1, -1);
     }
     {
-        KCL_File* kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov025_02113a60);
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            (MovingMeshCollider*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x2ec),
+        KCL_File* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov025_02113a60);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            (dBgW_KcMbg*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x2ec),
             0x1000, *(short*)(c + 0x8e), data_ov025_02112c28);
     }
-    func_020393d4((int*)(c + 0x124), (int)&_ZN16MeshColliderBase16UpdatePosAndAngsERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int*)(c + 0x124), (int)&_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     *(short*)(c + 0x8e) = 0;
     *(int*)(c + 0x320) = *(int*)(c + 0x60);
     *(short*)(c + 0x324) = 0;

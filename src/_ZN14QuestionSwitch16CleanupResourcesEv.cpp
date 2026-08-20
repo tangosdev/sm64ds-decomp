@@ -5,7 +5,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "QuestionSwitch.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int data_ov002_0210dd60[];
 extern int data_ov002_0210dd68[];
 extern int data_ov002_0210dd58[];
@@ -13,8 +13,8 @@ extern int data_ov002_0210dd50[];
 
 int QuestionSwitch::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&unk_324))->IsEnabled()) ((MeshColliderBase *)((char *)&unk_324))->Disable();
-    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    if (((dBgW *)((char *)&unk_324))->IsEnabled()) ((dBgW *)((char *)&unk_324))->Disable();
+    if (((dBgW *)((char *)&mMovingMeshCollider))->IsEnabled()) ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
     ((SharedFilePtr *)(data_ov002_0210dd60))->Release();
     ((SharedFilePtr *)(data_ov002_0210dd68))->Release();
     ((SharedFilePtr *)(data_ov002_0210dd58))->Release();

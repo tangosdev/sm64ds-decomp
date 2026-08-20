@@ -17,11 +17,11 @@
 extern "C" {
 extern int data_ov025_02113814[];
 extern int func_ov091_02133254(void* c);
-extern void _ZN11RaycastLineC1Ev(void* self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
-extern int _ZN11RaycastLine10DetectClsnEv(void* self);
-extern void _ZN11RaycastLine10GetClsnPosEv(void* out, void* self);
-extern void _ZN11RaycastLineD1Ev(void* self);
+extern void _ZN9dBgCh_LinC1Ev(void* self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(void* out, void* self);
+extern void _ZN9dBgCh_LinD1Ev(void* self);
 }
 
 int daDkk_c::InitResources()
@@ -38,7 +38,7 @@ int daDkk_c::InitResources()
         Vector3 vb;
         Vector3 p1;
         Vector3 p2;
-        _ZN11RaycastLineC1Ev(rl);
+        _ZN9dBgCh_LinC1Ev(rl);
         int x = *(int *)(c + 0x5c);
         vb.x = x;
         int y = *(int *)(c + 0x60);
@@ -49,13 +49,13 @@ int daDkk_c::InitResources()
         va.y = y;
         va.z = z;
         vb.y = y + 0x7d0000;
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &va, &vb, c);
-        if (_ZN11RaycastLine10DetectClsnEv(rl) != 0) {
-            _ZN11RaycastLine10GetClsnPosEv(&p1, rl);
-            _ZN11RaycastLine10GetClsnPosEv(&p2, rl);
+        _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &va, &vb, c);
+        if (_ZN9dBgCh_Lin10DetectClsnEv(rl) != 0) {
+            _ZN9dBgCh_Lin10GetClsnPosEv(&p1, rl);
+            _ZN9dBgCh_Lin10GetClsnPosEv(&p2, rl);
             mProbeHeight = p2.y - 0x190000;
         }
-        _ZN11RaycastLineD1Ev(rl);
+        _ZN9dBgCh_LinD1Ev(rl);
     }
     return r;
 }

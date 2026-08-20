@@ -1,22 +1,22 @@
 typedef struct Vector3 { int x, y, z; } Vector3;
-typedef struct RaycastGround { int filler[17]; int resultY; int pad[2]; } RaycastGround;
+typedef struct dBgCh_Gnd { int filler[17]; int resultY; int pad[2]; } dBgCh_Gnd;
 
-extern void _ZN13RaycastGroundC1Ev(RaycastGround* c);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* c, Vector3* pos, void* actor);
-extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround* c);
-extern void _ZN13RaycastGroundD1Ev(RaycastGround* c);
+extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* c);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* c, Vector3* pos, void* actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* c);
+extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* c);
 extern int _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, int x, int y, int z);
 
 int func_0200fc44(int a, Vector3* pos, int flag) {
     if (flag) {
-        RaycastGround rg;
-        _ZN13RaycastGroundC1Ev(&rg);
+        dBgCh_Gnd rg;
+        _ZN9dBgCh_GndC1Ev(&rg);
         int* yp = (int*)((int)pos + 4);
         *yp += 0x32000;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, pos, 0);
-        if (_ZN13RaycastGround10DetectClsnEv(&rg))
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, pos, 0);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg))
             pos->y = rg.resultY;
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
     }
     int* yp2 = (int*)((int)pos + 4);
     *yp2 += 0x19000;

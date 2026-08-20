@@ -29,7 +29,7 @@ struct SnowmanBody {
     Model mModel;            /* 0x0d4 */
     u8  mShadowModel;            /* 0x124 */
     u8  pad_125[0x27];
-    u8  mMovingCylinderClsn;            /* 0x14c */
+    u8  mdCcAc_c;            /* 0x14c */
     u8  pad_14d[0x33];
     u8  mWithMeshClsn;            /* 0x180 */
     u8  pad_181[0x1bb];

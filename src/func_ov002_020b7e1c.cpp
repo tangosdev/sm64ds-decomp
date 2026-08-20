@@ -4,7 +4,7 @@
 #include "common.h"
 
 
-struct WithMeshClsn { int IsOnGround() const; };
+struct dBgCh_Actr { int IsOnGround() const; };
 struct fBase_c { void MarkForDestruction(); };
 struct dActor_c : fBase_c {
     static int Spawn(unsigned int, unsigned int, const Vector3&, const Vector3_16*, signed char, short);
@@ -27,7 +27,7 @@ extern int data_02092138;
 extern "C" int func_ov002_020b7e1c(char* self);
 int func_ov002_020b7e1c(char* self) {
     if (*(int*)(self + 0xc8) == 0 && !SaveData::HasPlayerLostCap()) {
-        if (*(unsigned short*)(self + 0x100) == 0 && ((WithMeshClsn*)(self + 0x144))->IsOnGround()) {
+        if (*(unsigned short*)(self + 0x100) == 0 && ((dBgCh_Actr*)(self + 0x144))->IsOnGround()) {
             if (dActor_c::Spawn(0x10d, *(int*)(self + 8) | 0x12, *(Vector3*)(self + 0x5c), 0, *(signed char*)(self + 0xcc), -1)) {
                 *(unsigned short*)(self + 0x100) = 3;
             }

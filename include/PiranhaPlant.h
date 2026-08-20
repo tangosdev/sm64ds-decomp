@@ -13,10 +13,10 @@
  *
  *     0x110 ModelAnim                  0x64   -> 0x174
  *     0x174 Model                      0x50   -> 0x1c4
- *     0x1c4 WithMeshClsn               0x1bc  -> 0x380
- *     0x380 MovingCylinderClsn         0x34   -> 0x3b4
- *     0x3b4 MovingCylinderClsn         0x34   -> 0x3e8
- *     0x3e8 MovingCylinderClsnWithPos  0x40   -> 0x428
+ *     0x1c4 dBgCh_Actr               0x1bc  -> 0x380
+ *     0x380 dCcAc_c         0x34   -> 0x3b4
+ *     0x3b4 dCcAc_c         0x34   -> 0x3e8
+ *     0x3e8 dCcAcPos_c  0x40   -> 0x428
  *
  * Typing them absorbed these markers, which were a member's insides:
  *   - 0x160 mAnimation   = the Animation base of mModelAnim
@@ -29,17 +29,17 @@
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
 #include "Model.h"
-#include "MovingCylinderClsn.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "WithMeshClsn.h"
+#include "dCcAc_c.h"
+#include "dCcAcPos_c.h"
+#include "dBgCh_Actr.h"
 
 struct PiranhaPlant : dEnemyBase_c {
     ModelAnim                    mModelAnim;            /* 0x110 */
     Model                        mModel;                /* 0x174 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x1c4 */
-    MovingCylinderClsn           mMovingCylinderClsn1;  /* 0x380 */
-    MovingCylinderClsn           mMovingCylinderClsn2;  /* 0x3b4 */
-    MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x3e8 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x1c4 */
+    dCcAc_c           mdCcAc_c1;  /* 0x380 */
+    dCcAc_c           mdCcAc_c2;  /* 0x3b4 */
+    dCcAcPos_c    mdCcAcPos_c; /* 0x3e8 */
     u8                           unk_428;               /* 0x428 */
     u8  pad_429[0xb];
     s32                          unk_434;               /* 0x434 */

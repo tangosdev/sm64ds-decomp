@@ -20,11 +20,11 @@ extern void _ZN5Sound9PlayBank3EjRK7Vector3(u32 a, void *v);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void MulVec3Mat4x3(void *dst, void *mtx, void *src);
 extern void AddVec3(void *a, void *b, void *c);
-extern void _ZN11RaycastLineC1Ev(void *self);
-extern void _ZN11RaycastLineD1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *actor);
-extern s32 _ZN11RaycastLine10DetectClsnEv(void *self);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *c);
+extern void _ZN9dBgCh_LinC1Ev(void *self);
+extern void _ZN9dBgCh_LinD1Ev(void *self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void *self, void *a, void *b, void *actor);
+extern s32 _ZN9dBgCh_Lin10DetectClsnEv(void *self);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *c);
 extern void Quaternion_SLerp(void *q0, void *q1, int t, void *out);
 extern s32 Vec3_Equal(void *a, void *b);
 extern void func_ov021_02111434(void *c);
@@ -150,17 +150,17 @@ s32 _ZN12WorkElevator8BehaviorEv(void *arg0)
                 r7 += 1;
                 i++;
             } while (i < 3);
-            _ZN11RaycastLineC1Ev(sp80);
-            _ZN11RaycastLineC1Ev(spF8);
-            _ZN11RaycastLineC1Ev(sp170);
+            _ZN9dBgCh_LinC1Ev(sp80);
+            _ZN9dBgCh_LinC1Ev(spF8);
+            _ZN9dBgCh_LinC1Ev(sp170);
             i = 0;
             rsb = vc;
             r8 = vb;
             r7_2 = sp80;
             sp4 = 0x1B;
             do {
-                _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(r7_2, r8, rsb, c);
-                if (_ZN11RaycastLine10DetectClsnEv(r7_2) != 0 && *(s32 *)(r7_2 + 0x60) <= 0x1F000) {
+                _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(r7_2, r8, rsb, c);
+                if (_ZN9dBgCh_Lin10DetectClsnEv(r7_2) != 0 && *(s32 *)(r7_2 + 0x60) <= 0x1F000) {
                     *(s32 *)(c + 0x98) = 0;
                     *(u8 *)(c + 0xC7D) = 1;
                     *(u16 *)(c + 0xC78) = 0x3C;
@@ -171,10 +171,10 @@ s32 _ZN12WorkElevator8BehaviorEv(void *arg0)
                 r8 += 1;
                 r7_2 += 0x78;
             } while (i < 3);
-            _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
-            _ZN11RaycastLineD1Ev(sp170);
-            _ZN11RaycastLineD1Ev(spF8);
-            _ZN11RaycastLineD1Ev(sp80);
+            _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+            _ZN9dBgCh_LinD1Ev(sp170);
+            _ZN9dBgCh_LinD1Ev(spF8);
+            _ZN9dBgCh_LinD1Ev(sp80);
         }
         if (DecIfAbove0_Byte((u8 *)(c + 0xC7C)) == 0) {
             *(s32 *)(c + 0xC5C) = data_02092768[0];

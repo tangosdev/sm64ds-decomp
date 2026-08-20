@@ -1,13 +1,13 @@
 typedef long long s64;
 
 typedef struct Vector3 { int x, y, z; } Vector3;
-typedef struct RaycastGround { int _[0x15]; } RaycastGround;
+typedef struct dBgCh_Gnd { int _[0x15]; } dBgCh_Gnd;
 typedef struct Entry3 { int a, b, c; } Entry3;
 
-extern void _ZN13RaycastGroundC1Ev(RaycastGround *t);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *t, const Vector3 *pos, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *t);
-extern void _ZN13RaycastGroundD1Ev(RaycastGround *t);
+extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *t);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *t, const Vector3 *pos, void *actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *t);
+extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *t);
 extern int LenVec3(Vector3 *v);
 extern void Vec3_Sub(Vector3 *out, Vector3 *a, Vector3 *b);
 extern int _ZN4cstd4fdivEii(int a, int b);
@@ -20,7 +20,7 @@ extern Entry3 data_02086f58[];
 
 void func_0200b798(char *self, short *a1, int arg2)
 {
-    RaycastGround ray;
+    dBgCh_Gnd ray;
     Vector3 pos;
     Vector3 v1;
     Vector3 v2;
@@ -47,9 +47,9 @@ void func_0200b798(char *self, short *a1, int arg2)
         pos.z = tz;
     }
 
-    _ZN13RaycastGroundC1Ev(&ray);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&ray, &pos, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(&ray) != 0) {
+    _ZN9dBgCh_GndC1Ev(&ray);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&ray, &pos, 0);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&ray) != 0) {
         pos.y -= ray._[0x11];
     }
 
@@ -103,5 +103,5 @@ void func_0200b798(char *self, short *a1, int arg2)
     *(short *)(self + 0x17c) =
         Vec3_HorzAngle((Vector3 *)(self + 0x80), (Vector3 *)(self + 0x8c));
 
-    _ZN13RaycastGroundD1Ev(&ray);
+    _ZN9dBgCh_GndD1Ev(&ray);
 }

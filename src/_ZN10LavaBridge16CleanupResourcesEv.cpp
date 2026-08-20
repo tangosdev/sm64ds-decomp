@@ -14,8 +14,8 @@ extern int data_ov022_02114580[];
 
 s32 LavaBridge::CleanupResources() {
     void * t = (void *)this;
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)t + 0x124)) {
-        _ZN16MeshColliderBase7DisableEv((char *)t + 0x124);
+    if (_ZN4dBgW9IsEnabledEv((char *)t + 0x124)) {
+        _ZN4dBgW7DisableEv((char *)t + 0x124);
     }
     _ZN13SharedFilePtr7ReleaseEv(data_ov022_02114580);
     _ZN13SharedFilePtr7ReleaseEv(data_ov022_02114578);

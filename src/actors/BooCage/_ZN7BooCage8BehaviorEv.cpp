@@ -2,23 +2,23 @@
 struct Vector3 { int x, y, z; };
 typedef int Fix12i;
 
-struct WithMeshClsn {
+struct dBgCh_Actr {
     bool JustHitGround() const;
     bool IsOnGround() const;
 };
-struct CylinderClsn;
+struct dCc_c;
 struct dActor_c {
     static dActor_c* FindWithID(unsigned int id);
     void LandingDust(bool b);
-    void UpdatePos(CylinderClsn* cyl);
+    void UpdatePos(dCc_c* cyl);
 };
 struct Player {
     void JumpIntoBooCage(Vector3& v);
 };
 struct dEnemyBase_c {
-    void UpdateWMClsn(WithMeshClsn& w, unsigned int f);
+    void UpdateWMClsn(dBgCh_Actr& w, unsigned int f);
 };
-struct CylinderClsn {
+struct dCc_c {
     void Clear();
     void Update();
 };
@@ -40,11 +40,11 @@ int BooCage::Behavior()
     if (*(unsigned char*)(self + 0x37e) == 0)
         r6 = _ZN5Sound15PlaySecretSoundEP8dActor_cPt(self, (unsigned short*)(self + 0x37c));
 
-    if (((WithMeshClsn*)(self + 0x144))->JustHitGround()) {
+    if (((dBgCh_Actr*)(self + 0x144))->JustHitGround()) {
         int v = *(int*)(self + 0xa8);
         *(int*)(self + 0xa8) = (-v) >> 1;
         ((dActor_c*)self)->LandingDust(0);
-    } else if (((WithMeshClsn*)(self + 0x144))->IsOnGround()) {
+    } else if (((dBgCh_Actr*)(self + 0x144))->IsOnGround()) {
         r4 = 1;
         /* secret non-zero skips timer gate; secret zero requires timer > 0x3c */
         if (r6 != 0 || *(unsigned short*)(self + 0x300 + 0x7c) > 0x3c) {
@@ -69,9 +69,9 @@ int BooCage::Behavior()
     }
 
     ((dActor_c*)self)->UpdatePos(0);
-    ((dEnemyBase_c*)self)->UpdateWMClsn(*(WithMeshClsn*)(self + 0x144), 0);
+    ((dEnemyBase_c*)self)->UpdateWMClsn(*(dBgCh_Actr*)(self + 0x144), 0);
     func_ov063_021169c4(self);
-    ((CylinderClsn*)(self + 0x110))->Clear();
-    ((CylinderClsn*)(self + 0x110))->Update();
+    ((dCc_c*)(self + 0x110))->Clear();
+    ((dCc_c*)(self + 0x110))->Update();
     return 1;
 }

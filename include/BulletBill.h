@@ -6,8 +6,8 @@
 /* Five boundaries close on sizes other headers assert:
  *
  *     dEnemyBase_c                     ends 0x110
- *     MovingCylinderClsnWithPos 0x110 + 0x040 = 0x150  -> WithMeshClsn
- *     WithMeshClsn              0x150 + 0x1bc = 0x30c  -> the first Model
+ *     dCcAcPos_c 0x110 + 0x040 = 0x150  -> dBgCh_Actr
+ *     dBgCh_Actr              0x150 + 0x1bc = 0x30c  -> the first Model
  *     Model                     0x30c + 0x050 = 0x35c  -> the second
  *     Model                     0x35c + 0x050 = 0x3ac  -> the shadow
  *     (0x28 of shadow)          0x3ac + 0x028 = 0x3d4  -> mState
@@ -15,7 +15,7 @@
  * The ShadowModel at 0x3ac is destroyed like the rest, and 0x3ac + 0x28 closes
  * exactly on mState.
  *
- * unk_130 and unk_134 are gone: both fall inside the MovingCylinderClsnWithPos
+ * unk_130 and unk_134 are gone: both fall inside the dCcAcPos_c
  * at 0x110 (+0x20 and +0x24).
  */
 
@@ -24,12 +24,12 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dBgCh_Actr.h"
+#include "dCcAcPos_c.h"
 
 struct BulletBill : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
-    WithMeshClsn mWithMeshClsn;                            /* 0x150 */
+    dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
+    dBgCh_Actr mWithMeshClsn;                            /* 0x150 */
     Model mModel1;                                         /* 0x30c */
     Model mModel2;                                         /* 0x35c */
     ShadowModel mShadowModel;                              /* 0x3ac */
@@ -76,13 +76,13 @@ struct BulletBill {
     u8  pad_098[0x68];
     s16 unk_100;            /* 0x100 */
     u8  pad_102[0xe];
-    u8  mMovingCylinderClsnWithPos;            /* 0x110 */
+    u8  mdCcAcPos_c;            /* 0x110 */
     u8  pad_111[0x1f];
     s32 unk_130;            /* 0x130 */
     u32 unk_134;            /* 0x134 */
     u8  pad_138[0x18];
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x150 -- a relocation the ROM build
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x150 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10BulletBillD1Ev.c] */
     u8  mWithMeshClsn[0x1bc];            /* 0x150 */
     /* Model member, named by _ZN5ModelD1Ev at +0x30c -- a relocation the ROM build checks.

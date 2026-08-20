@@ -6,8 +6,8 @@ extern void _ZN9Animation7AdvanceEv(void* a);
 extern int func_ov070_02121a64(void* p);
 extern void func_ov070_02121298(char* c);
 extern void func_ov070_021211c4(char* c);
-extern void _ZN12CylinderClsn5ClearEv(void* cc);
-extern void _ZN12CylinderClsn6UpdateEv(void* cc);
+extern void _ZN5dCc_c5ClearEv(void* cc);
+extern void _ZN5dCc_c6UpdateEv(void* cc);
 extern int data_0209f32c;
 int func_ov070_02121710(char* c) {
   int r;
@@ -26,8 +26,8 @@ int func_ov070_02121710(char* c) {
   *(int*)(c + 0x88) = r;
   func_ov070_02121298(c);
   func_ov070_021211c4(c);
-  _ZN12CylinderClsn5ClearEv(c + 0x160);
-  _ZN12CylinderClsn6UpdateEv(c + 0x160);
+  _ZN5dCc_c5ClearEv(c + 0x160);
+  _ZN5dCc_c6UpdateEv(c + 0x160);
   return 1;
 }
 }

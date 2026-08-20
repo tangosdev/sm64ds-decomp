@@ -5,7 +5,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* clsn, void* player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* self, void* clsn, void* player);
 extern void _ZN6Player16IncMegaKillCountEv(void* player);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* player, void* pos, unsigned int a, int b, unsigned int d, unsigned int e, unsigned int f);
 extern void func_02012694(int a, void* p);
@@ -32,7 +32,7 @@ void func_ov080_02124208(char* c)
     if ((*(int*)(c + 0x158) & 0x400000) == 0)
         return;
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x138, p)) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x138, p)) {
         func_ov080_02124088(c);
         _ZN6Player6BounceE5Fix12IiE(p, 0x28000);
         return;

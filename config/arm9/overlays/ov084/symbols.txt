@@ -1,5 +1,5 @@
-_ZN6GoombaD1Ev kind:function(arm,size=0x50) addr:0x02129020
-_ZN6GoombaD0Ev kind:function(arm,size=0x64) addr:0x02129070
+_ZN7daKrb_cD1Ev kind:function(arm,size=0x50) addr:0x02129020
+_ZN7daKrb_cD0Ev kind:function(arm,size=0x64) addr:0x02129070
 func_ov084_021290d4 kind:function(arm,size=0x94) addr:0x021290d4
 func_ov084_02129168 kind:function(arm,size=0xd0) addr:0x02129168
 func_ov084_02129238 kind:function(arm,size=0x114) addr:0x02129238
@@ -22,14 +22,14 @@ func_ov084_0212ab48 kind:function(arm,size=0x8c) addr:0x0212ab48
 func_ov084_0212abd4 kind:function(arm,size=0x3a0) addr:0x0212abd4
 func_ov084_0212af74 kind:function(arm,size=0x368) addr:0x0212af74
 func_ov084_0212b2dc kind:function(arm,size=0x30) addr:0x0212b2dc
-_ZN6Goomba16OnAimedAtWithEggEv kind:function(arm,size=0x38) addr:0x0212b30c
+_ZN7daKrb_c16OnAimedAtWithEggEv kind:function(arm,size=0x38) addr:0x0212b30c
 func_ov084_0212b344 kind:function(arm,size=0x1cc) addr:0x0212b344
-_ZN6Goomba16CleanupResourcesEv kind:function(arm,size=0xa8) addr:0x0212b510
-_ZN6Goomba16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0212b5b8
-_ZN6Goomba6RenderEv kind:function(arm,size=0x130) addr:0x0212b5bc
-_ZN6Goomba8BehaviorEv kind:function(arm,size=0x544) addr:0x0212b6ec
-_ZN6Goomba13InitResourcesEv kind:function(arm,size=0x390) addr:0x0212bc30
-_ZN6Goomba13OnYoshiTryEatEv kind:function(arm,size=0x38) addr:0x0212bfc0
+_ZN7daKrb_c16CleanupResourcesEv kind:function(arm,size=0xa8) addr:0x0212b510
+_ZN7daKrb_c16OnPendingDestroyEv kind:function(arm,size=0x4) addr:0x0212b5b8
+_ZN7daKrb_c6RenderEv kind:function(arm,size=0x130) addr:0x0212b5bc
+_ZN7daKrb_c8BehaviorEv kind:function(arm,size=0x544) addr:0x0212b6ec
+_ZN7daKrb_c13InitResourcesEv kind:function(arm,size=0x390) addr:0x0212bc30
+_ZN7daKrb_c13OnYoshiTryEatEv kind:function(arm,size=0x38) addr:0x0212bfc0
 GoombaLarge_Spawn kind:function(arm,size=0x5c) addr:0x0212bff8
 GoombaSmall_Spawn kind:function(arm,size=0x5c) addr:0x0212c054
 Goomba_Spawn kind:function(arm,size=0x5c) addr:0x0212c0b0
@@ -144,7 +144,6 @@ _ZTI7daKrb_c kind:data(any) addr:0x021308e0
 Goomba_SpawnInfo kind:data(any) addr:0x021308ec
 GoombaSmall_SpawnInfo kind:data(any) addr:0x02130908
 GoombaLarge_SpawnInfo kind:data(any) addr:0x02130924
-_ZTV6Goomba kind:data(any) addr:0x02130948
 _ZTV7daKrb_c kind:data(any) addr:0x02130948
 data_ov084_021309c4 kind:data(any) addr:0x021309c4
 data_ov084_021309cc kind:data(any) addr:0x021309cc

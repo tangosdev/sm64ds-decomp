@@ -13,8 +13,8 @@ extern int data_ov032_02113ad4[];
 
 s32 HugeCover::CleanupResources() {
     void * t = (void *)this;
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)t + 0x124)) {
-        _ZN16MeshColliderBase7DisableEv((char *)t + 0x124);
+    if (_ZN4dBgW9IsEnabledEv((char *)t + 0x124)) {
+        _ZN4dBgW7DisableEv((char *)t + 0x124);
     }
     _ZN13SharedFilePtr7ReleaseEv(data_ov032_02113ad4);
     _ZN13SharedFilePtr7ReleaseEv(data_ov032_02113acc);

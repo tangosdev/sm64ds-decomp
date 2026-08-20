@@ -7,8 +7,8 @@ extern "C" {
 extern void _ZN5Event8ClearBitEj(u32 bit);
 extern void _ZN5Event6SetBitEj(u32 bit);
 extern void _ZN7fBase_c18MarkForDestructionEv(void* p);
-extern void _ZN12CylinderClsn5ClearEv(void* p);
-extern void _ZN12CylinderClsn6UpdateEv(void* p);
+extern void _ZN5dCc_c5ClearEv(void* p);
+extern void _ZN5dCc_c6UpdateEv(void* p);
 }
 
 int EnemySwitchTag::Behavior()
@@ -29,7 +29,7 @@ int EnemySwitchTag::Behavior()
             _ZN7fBase_c18MarkForDestructionEv(((char*)this));
         }
     }
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
+    _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);
     return 1;
 }

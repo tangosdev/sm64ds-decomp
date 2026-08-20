@@ -5,9 +5,9 @@
 extern "C" {
 extern void *_ZTV6Dorrie;
 extern void func_ov065_021180b8(void);
-void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
-void _ZN18MovingCylinderClsnD1Ev(void*);
-void _ZN12WithMeshClsnD1Ev(void*);
+void _ZN10dCcAcPos_cD1Ev(void*);
+void _ZN7dCcAc_cD1Ev(void*);
+void _ZN10dBgCh_ActrD1Ev(void*);
 void __destroy_arr(void*, int, int, void*);
 void _ZN9ModelAnimD1Ev(void*);
 void _ZN8dActor_cD2Ev(void*);
@@ -16,9 +16,9 @@ void *_ZN6DorrieD1Ev(void* thiz);
 void *_ZN6DorrieD1Ev(void* thiz) {
     char *c = (char*)thiz;
     *(void**)c = &_ZTV6Dorrie;
-    _ZN25MovingCylinderClsnWithPosD1Ev(c + 0x1140);
-    _ZN18MovingCylinderClsnD1Ev(c + 0x110c);
-    _ZN12WithMeshClsnD1Ev(c + 0xf50);
+    _ZN10dCcAcPos_cD1Ev(c + 0x1140);
+    _ZN7dCcAc_cD1Ev(c + 0x110c);
+    _ZN10dBgCh_ActrD1Ev(c + 0xf50);
     __destroy_arr(c + 0x150, 7, 0x200, (void*)func_ov065_021180b8);
     _ZN9ModelAnimD1Ev(c + 0xec);
     _ZN8dActor_cD2Ev(c);

@@ -6,23 +6,23 @@
 #include "common.h"
 
 struct dActor_c;
-struct RaycastGround {
+struct dBgCh_Gnd {
     char pad0[0x14];
     int f14;
     char pad1[0x38];
-    RaycastGround();
-    ~RaycastGround();
+    dBgCh_Gnd();
+    ~dBgCh_Gnd();
     void SetObjAndPos(const Vector3&, dActor_c*);
     int DetectClsn();
 };
-extern "C" void _ZN4BgCh19StartDetectingWaterEv(RaycastGround*);
+extern "C" void _ZN5dBgCh19StartDetectingWaterEv(dBgCh_Gnd*);
 extern "C" int SurfaceInfo_TestFlag0x20(int* p);
 extern int data_0209f32c;
 
 extern "C" void func_ov002_020c72a4(void* thisptr)
 {
     unsigned char* r4 = (unsigned char*)thisptr;
-    RaycastGround rg;
+    dBgCh_Gnd rg;
     Vector3 v;
     int z = *(int*)(r4 + 0x64);
     int d = data_0209212c;
@@ -32,7 +32,7 @@ extern "C" void func_ov002_020c72a4(void* thisptr)
     v.z = z;
     *(int*)((char*)&rg + 0x4c) = d << 1;
     rg.SetObjAndPos(v, (dActor_c*)thisptr);
-    _ZN4BgCh19StartDetectingWaterEv(&rg);
+    _ZN5dBgCh19StartDetectingWaterEv(&rg);
     if (rg.DetectClsn()) {
         if (SurfaceInfo_TestFlag0x20(&rg.f14) != 0) {
             *(int*)(r4 + 0x64c) = *(int*)((char*)&rg + 0x44);

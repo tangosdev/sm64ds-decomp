@@ -81,13 +81,13 @@ int Shark::Behavior()
         mVertSpeed = terminalVelocity;
         unk_0ac = unk;
     }
-    UpdatePosWithOnlySpeed(&mMovingCylinderClsnWithPos);
+    UpdatePosWithOnlySpeed(&mdCcAcPos_c);
     func_ov090_02133904(this);
-    mMovingCylinderClsnWithPos.Clear();
+    mdCcAcPos_c.Clear();
     {
         Player *player = ClosestPlayer();
         if (player != 0 && *((u8 *)player + 0x6fb) == 0)
-            mMovingCylinderClsnWithPos.Update();
+            mdCcAcPos_c.Update();
     }
     return 1;
 }

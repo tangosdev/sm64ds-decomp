@@ -2,10 +2,10 @@
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *self, void *bca, int a, int fix, unsigned int b);
 extern "C" int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void *pos, unsigned int d);
 extern "C" int func_ov002_020df7f4(void *c);
-extern "C" int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
+extern "C" int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 extern "C" int func_02035638(void *p);
 extern "C" int func_ov002_020df7ac(void *thiz);
-extern "C" void _ZN12WithMeshClsn12Unk_0203589cEv(void *self);
+extern "C" void _ZN10dBgCh_Actr12Unk_0203589cEv(void *self);
 extern "C" void func_ov094_02136188(void *c, void *p);
 extern "C" int func_02012694(int a, void *pos);
 extern "C" int ApproachAngle(short *p, int target, int a, int b, int c);
@@ -47,10 +47,10 @@ extern "C" int func_ov094_021359d8(void *thiz)
 
     ApproachAngle((short *)(c + 0x92), 0, 0xa, 0x200, 0x100);
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x150) != 0 || func_02035638(c + 0x150) != 0) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x150) != 0 || func_02035638(c + 0x150) != 0) {
         rider = *(void **)(c + 0x3cc);
         if (rider != 0 && func_ov002_020df7ac(rider) != 0) {
-            _ZN12WithMeshClsn12Unk_0203589cEv(c + 0x150);
+            _ZN10dBgCh_Actr12Unk_0203589cEv(c + 0x150);
             *(int *)(c + 0x3cc) = 0;
             *(int *)(c + 0x3e8) = 0;
             *(unsigned short *)(c + 0x100) = 0;

@@ -4,8 +4,8 @@
 /* recovered: renamed to Class_Method */
 /* daKing_Donketu_c::Kill - recovered from vtable slot identity */
 typedef short s16;
-struct CylinderClsn;
-extern "C" void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* a, CylinderClsn* c);
+struct dCc_c;
+extern "C" void _ZN8dActor_c9UpdatePosEP5dCc_c(void* a, dCc_c* c);
 extern "C" void func_02012694(int a, void* p);
 extern "C" int _Z14ApproachLinearRsss(short& v, short a, short b);
 extern "C" unsigned short DecIfAbove0_Short(unsigned short* p);
@@ -15,7 +15,7 @@ extern int data_02092138;
 extern "C" int func_ov073_02122200(char* thiz)
 {
     char* c = thiz;
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
     if (*(unsigned short*)(c + 0x330) < 0x18d) {
         *(int*)(c + 0x9c) = 0;
         *(int*)(c + 0xa8) = 0;

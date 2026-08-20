@@ -2,7 +2,7 @@
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified */
@@ -13,7 +13,7 @@ int *_ZN4ToadD0Ev(int *t)
     t[0] = (int)_ZTV11daKinopio_c;
     _ZN11ShadowModelD1Ev((char *)t + 0x16c);
     _ZN9ModelAnimD1Ev((char *)t + 0x108);
-    _ZN18MovingCylinderClsnD1Ev((char *)t + 0xd4);
+    _ZN7dCcAc_cD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
     return t;

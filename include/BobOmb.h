@@ -10,15 +10,15 @@
  *
  * The members close exactly on one another:
  *
- *     0x110 MovingCylinderClsn         0x34   -> 0x144
- *     0x144 WithMeshClsn               0x1bc  -> 0x300
+ *     0x110 dCcAc_c         0x34   -> 0x144
+ *     0x144 dBgCh_Actr               0x1bc  -> 0x300
  *     0x300 ModelAnim                  0x64   -> 0x364
  *     0x364 ShadowModel                0x28   -> 0x38c
  *
  * Typing them absorbed these markers, which were a member's insides:
- *   - 0x128 unk_128      = mCylinderClsn + 0x18
- *   - 0x130 unk_130      = mCylinderClsn + 0x20
- *   - 0x134 unk_134      = mCylinderClsn + 0x24
+ *   - 0x128 unk_128      = mdCc_c + 0x18
+ *   - 0x130 unk_130      = mdCc_c + 0x20
+ *   - 0x134 unk_134      = mdCc_c + 0x24
  *
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
@@ -32,15 +32,15 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAc_c.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
 #include "TextureTransformer.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct BobOmb : dEnemyBase_c {
-    MovingCylinderClsn           mCylinderClsn;         /* 0x110 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
+    dCcAc_c           mdCc_c;         /* 0x110 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */
     ShadowModel                  mShadowModel;          /* 0x364 */
     u8  pad_38c[0x4];

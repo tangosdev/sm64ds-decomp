@@ -52,27 +52,27 @@ src/func_01ffb0c8.cpp:
     complete
     .text start:0x01ffb0c8 end:0x01ffb0d0
 
-src/_ZNK12MeshCollider13GetUnkOctreeYEv.cpp:
+src/_ZNK7dBgW_Kc13GetUnkOctreeYEv.cpp:
     complete
     .text start:0x01ffb0d0 end:0x01ffb0ec
 
-src/_ZNK12MeshCollider16GetOctreeOriginYEv.cpp:
+src/_ZNK7dBgW_Kc16GetOctreeOriginYEv.cpp:
     complete
     .text start:0x01ffb0ec end:0x01ffb0fc
 
-src/_ZN12MeshCollider10DetectClsnER13RaycastGround.cpp:
+src/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp:
     complete
     .text start:0x01ffd3f8 end:0x01ffd890
 
-src/_ZN12MeshCollider17GetTriangleOriginEsR7Vector3.cpp:
+src/_ZN7dBgW_Kc17GetTriangleOriginEsR7Vector3.cpp:
     complete
     .text start:0x01ffd890 end:0x01ffd8d8
 
-src/_ZN12MeshCollider9GetNormalEsR7Vector3.cpp:
+src/_ZN7dBgW_Kc9GetNormalEsR7Vector3.cpp:
     complete
     .text start:0x01ffd8d8 end:0x01ffd920
 
-src/_ZN12MeshCollider14GetSurfaceInfoEsR11SurfaceInfo.cpp:
+src/_ZN7dBgW_Kc14GetSurfaceInfoEsR11SurfaceInfo.cpp:
     complete
     .text start:0x01ffd920 end:0x01ffd97c
 

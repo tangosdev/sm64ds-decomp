@@ -14,7 +14,7 @@
 #include <cstdlib>
 #include <cstring>
 
-#include "MeshCollider.h"
+#include "dBgW_Kc.h"
 
 #include "ntr/mmio.h"
 
@@ -39,12 +39,12 @@ extern int g_walk_dbg[16];
 struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 SharedFilePtrC *_ZN13SharedFilePtr9ConstructEj(SharedFilePtrC *self, u32 ov0FileID);
 void *_ZN4Heap13SetupRootHeapEv(void);
-void *_ZN12MeshColliderC1Ev(void *self);
+void *_ZN7dBgW_KcC1Ev(void *self);
 }
 
-static int probe_one(MeshCollider *mc, RayS *ray)
+static int probe_one(dBgW_Kc *mc, RayS *ray)
 {
-    return mc->MeshCollider::DetectClsn(*(RaycastLine *)ray);
+    return mc->dBgW_Kc::DetectClsn(*(dBgCh_Lin *)ray);
 }
 static int probe_filter(EXCEPTION_POINTERS *ep)
 {
@@ -54,7 +54,7 @@ static int probe_filter(EXCEPTION_POINTERS *ep)
            (unsigned)((char *)ep->ExceptionRecord->ExceptionAddress - base));
     return EXCEPTION_EXECUTE_HANDLER;
 }
-static int probe_seh(MeshCollider *mc, RayS *ray)
+static int probe_seh(dBgW_Kc *mc, RayS *ray)
 {
     __try {
         return probe_one(mc, ray);
@@ -81,15 +81,15 @@ int main(void)
     SharedFilePtrC ptr;
     _ZN13SharedFilePtr9ConstructEj(&ptr, 1941);
     static char mc_storage[0x60];
-    MeshCollider *mc = (MeshCollider *)mc_storage;
-    _ZN12MeshColliderC1Ev(mc_storage);
-    char *kcl = MeshCollider::LoadFile(*(SharedFilePtr *)&ptr);
+    dBgW_Kc *mc = (dBgW_Kc *)mc_storage;
+    _ZN7dBgW_KcC1Ev(mc_storage);
+    char *kcl = dBgW_Kc::LoadFile(*(SharedFilePtr *)&ptr);
     CHECK(kcl != NULL);
 
     /* CLPS_Block is opaque; a zeroed buffer takes the lookup's
        wrong-version default path, which is what stages without a CLPS do */
     static char clps_storage[0x100];
-    mc->MeshCollider::SetFile((KCL_File *)kcl, *(CLPS_Block *)clps_storage);
+    mc->dBgW_Kc::SetFile((KCL_File *)kcl, *(CLPS_Block *)clps_storage);
 
     {
         KCL_File *f = (KCL_File *)kcl;
@@ -115,7 +115,7 @@ int main(void)
         for (int gz = -2; gz <= 2; ++gz) {
             RayS ray;
             memset(&ray, 0, sizeof ray);
-            ray.head[4] = 1;    /* the BgCh "collide with ordinary surfaces"
+            ray.head[4] = 1;    /* the dBgCh "collide with ordinary surfaces"
                                    default (func_02035514 sets it; the pass-
                                    through predicate reads head[4] & 1) */
             ray.sx = cx + gx * sx_step; ray.sy = top; ray.sz = cz + gz * sz_step;

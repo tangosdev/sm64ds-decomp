@@ -7,11 +7,11 @@ struct dActor_c {
 };
 
 struct ModelAnim { char pad[0x64]; ~ModelAnim(); };
-struct MovingCylinderClsn { char pad[0x4]; ~MovingCylinderClsn(); };
+struct dCcAc_c { char pad[0x4]; ~dCcAc_c(); };
 
 struct TreasureChest : dActor_c {
     ModelAnim m0;   /* 0xd4 */
-    MovingCylinderClsn m1;   /* 0x138 */
+    dCcAc_c m1;   /* 0x138 */
     virtual ~TreasureChest();
 };
 

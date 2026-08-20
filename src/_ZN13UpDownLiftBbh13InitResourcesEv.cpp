@@ -14,12 +14,12 @@ extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(int sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *m, void *f, int a, int b);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(int sfp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *mc, void *kcl, void *mtx, int fix, short s, int clps);
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(int sfp);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *mc, void *kcl, void *mtx, int fix, short s, int clps);
 extern void func_020393d4(void *p, void *v);
 extern void func_020393c4(void *p, void *v);
 }
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 extern int data_ov095_02136f68[];
 extern int data_ov095_02136f74[];
 
@@ -55,10 +55,10 @@ int UpDownLiftBbh::InitResources()
   idx = *((int *) ((char *)&mVariant));
 
   _ZN9ModelBase7SetFileEP8BMD_Fileii(((char *)this) + 0xd4, _ZN5Model8LoadFileER13SharedFilePtr(data_ov095_02136f68[idx]), 1, -1);
-  new_var = &_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+  new_var = &_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
   idx = *((int *) ((char *)&mVariant));
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char *)this) + 0x124, _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov095_02136f74[idx]), ((char *)this) + 0x2ec, 0x199, *((s16 *) ((char *)&unk_08e)), data_ov095_021375a4[idx]);
+  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char *)this) + 0x124, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov095_02136f74[idx]), ((char *)this) + 0x2ec, 0x199, *((s16 *) ((char *)&unk_08e)), data_ov095_021375a4[idx]);
   func_020393d4(((char *)this) + 0x124, new_var);
   func_020393c4(((char *)this) + 0x124, &func_ov095_02136788);
   *((int *) ((char *)&unk_320)) = 0;

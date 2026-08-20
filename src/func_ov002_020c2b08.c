@@ -1,12 +1,12 @@
 #include "types.h"
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+extern void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 extern int SurfaceInfo_TestFlag0x20(int *p);
 extern int Player_ScaleByCharFactor(void *c, int a);
-extern void _ZN13RaycastGroundC1Ev(void *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
-extern int _ZN13RaycastGround10DetectClsnEv(void *self);
-extern void _ZN13RaycastGroundD1Ev(void *self);
+extern void _ZN9dBgCh_GndC1Ev(void *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *self, void *pos, void *act);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *self);
+extern void _ZN9dBgCh_GndD1Ev(void *self);
 extern int _ZN6Player7IsStateERNS_5StateE(void *thiz, void *st);
 
 extern char data_ov002_0211013c;
@@ -25,9 +25,9 @@ void func_ov002_020c2b08(void *arg0)
     if (*(u8 *)(c + 0x6ea) == 0) {
         int limit;
 
-        if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
+        if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380))
             return;
-        if (!SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)))
+        if (!SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x380) + 4)))
             return;
 
         limit = Player_ScaleByCharFactor(c, 0x20000);
@@ -40,9 +40,9 @@ void func_ov002_020c2b08(void *arg0)
     }
 
     if (*(u16 *)(c + 0x6ba) != 0) {
-        if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
+        if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380))
             goto clear_timer;
-        if (!SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)))
+        if (!SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x380) + 4)))
             goto clear_timer;
 
         *(u8 *)(c + 0x707) = 1;
@@ -84,16 +84,16 @@ void func_ov002_020c2b08(void *arg0)
                 v[2] = zz;
             }
 
-            _ZN13RaycastGroundC1Ev(rg);
-            _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(rg, v, c);
+            _ZN9dBgCh_GndC1Ev(rg);
+            _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(rg, v, c);
 
-            if (_ZN13RaycastGround10DetectClsnEv(rg) != 0) {
+            if (_ZN9dBgCh_Gnd10DetectClsnEv(rg) != 0) {
                 *(int *)(c + 0x644) = *(int *)(rg + 0x44);
                 if (*(int *)(c + 0x60) + *(int *)(c + 0x690) < *(int *)(rg + 0x44))
                     *(u16 *)(c + 0x6ba) = 0;
             }
 
-            _ZN13RaycastGroundD1Ev(rg);
+            _ZN9dBgCh_GndD1Ev(rg);
             return;
         }
 
@@ -103,9 +103,9 @@ void func_ov002_020c2b08(void *arg0)
     }
 
     *(u8 *)(c + 0x6ec) = 0;
-    if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x380))
+    if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x380))
         return;
-    if (SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x380) + 4)) != 0)
+    if (SurfaceInfo_TestFlag0x20((int *)((char *)_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x380) + 4)) != 0)
         return;
     if (*(u8 *)(c + 0x707) != 0)
         return;

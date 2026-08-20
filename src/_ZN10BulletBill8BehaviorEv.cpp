@@ -5,7 +5,7 @@
  * One frame of the bullet: move, run the current state's tick out of the pmf
  * table, then resolve whatever the cylinder hit.
  *
- * (*(u32 *)((char *)&mMovingCylinderClsnWithPos + 0x24)) is the ID of whatever it collided with, and (*(s32 *)((char *)&mMovingCylinderClsnWithPos + 0x20)) the flags of that
+ * (*(u32 *)((char *)&mdCcAcPos_c + 0x24)) is the ID of whatever it collided with, and (*(s32 *)((char *)&mdCcAcPos_c + 0x20)) the flags of that
  * hit -- three outcomes in priority order:
  *   0x10      hit by a mega character: the bullet dies, credits the kill, and
  *             spawns particle 0x8f at its own position
@@ -36,7 +36,7 @@ struct M { PMF pmf; };
 
 extern "C" {
 void func_0200f760(void *self, void *cc);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *cc);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *cc);
 void *_ZN8dActor_c10FindWithIDEj(u32 id);
 void _ZN6Player16IncMegaKillCountEv();
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32, int, int, int);
@@ -45,9 +45,9 @@ void func_02012694(int a, void *b);
 void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, const Vector3 *pos);
 void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void *self, const Vector3 *pos, u32 a, LocFix12 b, u32 c, u32 d, u32 e);
 void func_ov079_02126704(char *c);
-void _ZN12CylinderClsn5ClearEv(void *self);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *pos);
-void _ZN12CylinderClsn6UpdateEv(void *self);
+void _ZN5dCc_c5ClearEv(void *self);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *self, const Vector3 *pos);
+void _ZN5dCc_c6UpdateEv(void *self);
 
 extern M data_ov079_021282e0[];
 }
@@ -59,8 +59,8 @@ int BulletBill::Behavior()
     u32 which;
     u32 id;
 
-    func_0200f760(c, &mMovingCylinderClsnWithPos);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    func_0200f760(c, &mdCcAcPos_c);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
 
     which = (u32)mState;
     {
@@ -68,9 +68,9 @@ int BulletBill::Behavior()
         (((Klass *)c)->*(m->pmf))();
     }
 
-    id = (*(u32 *)((char *)&mMovingCylinderClsnWithPos + 0x24));
+    id = (*(u32 *)((char *)&mdCcAcPos_c + 0x24));
     if (id != 0) {
-        flags = (*(s32 *)((char *)&mMovingCylinderClsnWithPos + 0x20));
+        flags = (*(s32 *)((char *)&mdCcAcPos_c + 0x20));
         if (flags & 0x10) {
             _ZN8dActor_c10FindWithIDEj(id);
             _ZN6Player16IncMegaKillCountEv();
@@ -120,15 +120,15 @@ int BulletBill::Behavior()
 
     func_ov079_02126704(c);
 
-    _ZN12CylinderClsn5ClearEv(&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c5ClearEv(&mdCcAcPos_c);
     {
         Vector3 pos;
         pos.x = 0;
         pos.y = -0x50000;
         pos.z = 0;
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(&mMovingCylinderClsnWithPos, &pos);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(&mdCcAcPos_c, &pos);
     }
-    _ZN12CylinderClsn6UpdateEv(&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c6UpdateEv(&mdCcAcPos_c);
 
     mPrevAngleX = mAngleX;
     mPrevAngleY = mAngleY;

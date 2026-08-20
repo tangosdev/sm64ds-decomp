@@ -10,12 +10,12 @@ struct CLPS_Block;
 
 struct Vector3 { int x, y, z; };
 
-struct RaycastGround {
+struct dBgCh_Gnd {
     char pad[0x44];
     int result;       /* 0x44 */
     char pad2[0x54 - 0x48];
-    RaycastGround();
-    ~RaycastGround();
+    dBgCh_Gnd();
+    ~dBgCh_Gnd();
     int SetObjAndPos(const Vector3 &p, dActor_c *a);
     int DetectClsn();
 };
@@ -25,8 +25,8 @@ extern "C" int _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a
 extern "C" int _ZN11ShadowModel10InitCuboidEv(void *self);
 extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
-extern "C" KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr &f);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, KCL_File *f, const Matrix4x3 &m, int fx, s16 s, CLPS_Block &b);
+extern "C" KCL_File *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr &f);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void *self, KCL_File *f, const Matrix4x3 &m, int fx, s16 s, CLPS_Block &b);
 
 extern SharedFilePtr data_ov065_0211d9d4;
 extern SharedFilePtr data_ov065_0211d9cc;
@@ -43,8 +43,8 @@ extern "C" int _ZN14TTC_MovingBeam13InitResourcesEv(char *c)
     _ZN11ShadowModel10InitCuboidEv(c + 0x334);
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
-    kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov065_0211d9cc);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov065_0211d9cc);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         c + 0x124, kcl, *(Matrix4x3 *)(c + 0x2ec), 0x1000, *(s16 *)(c + 0x8e), func_02112118);
 
     *(int *)(c + 0x320) = *(int *)(c + 0x60);
@@ -63,7 +63,7 @@ extern "C" int _ZN14TTC_MovingBeam13InitResourcesEv(char *c)
     v.y = *(int *)(c + 0x60);
     v.z = *(int *)(c + 0x64);
     v.y -= 0xa000;
-    RaycastGround rc;
+    dBgCh_Gnd rc;
     rc.SetObjAndPos(v, 0);
     *(int *)(c + 0x330) = v.y;
     if (rc.DetectClsn())

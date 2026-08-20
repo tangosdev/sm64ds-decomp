@@ -2,7 +2,7 @@
 // @symbol func_ov025_0211123c
 /* recovered: shared common types */
 #include "common.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 struct dActor_c {
     virtual void f00(); virtual void f01(); virtual void f02(); virtual void f03();
@@ -27,8 +27,8 @@ int func_ov025_0211123c(char* c) {
         v.z = *(int*)(c + 0x64);
         v.y = v.y + ((dActor_c*)c)->f29();
         if (Vec3_Dist((char*)c + 0x5c, (char*)p + 0x5c) < (*(int*)(c + 0xb8) << 3)) {
-            if (!((MeshColliderBase *)(c + 0x124))->IsEnabled()) {
-                ((MeshColliderBase *)(c + 0x124))->Enable((dActor_c *)(c));
+            if (!((dBgW *)(c + 0x124))->IsEnabled()) {
+                ((dBgW *)(c + 0x124))->Enable((dActor_c *)(c));
                 return 1;
             }
         }

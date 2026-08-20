@@ -6,19 +6,19 @@
 typedef short s16;
 #define LA(p) (p)
 extern "C" {
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-int _ZNK12WithMeshClsn8IsOnWallEv(void *self);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
+int _ZNK10dBgCh_Actr8IsOnWallEv(void *self);
 void _ZN8dActor_c14TriplePoofDustEv(void *self);
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
 void _ZN5Sound9PlayBank3EjRK7Vector3(unsigned int id, void *pos);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 int func_02037e38(void *p);
 int func_02037e84(void *p);
 void func_0203568c(void *p, int v);
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, Vector3 *pos, int fix);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int a, int b, int cc, int d);
-void WithMeshClsn_UpdateContinuous_Veneer(void *self);
+void dBgCh_Actr_UpdateContinuous_Veneer(void *self);
 void func_02012694(int a, void *pos);
 }
 extern "C" void func_ov092_021311b0(void *thiz)
@@ -38,25 +38,25 @@ extern "C" void func_ov092_021311b0(void *thiz)
         *p90 += ((s16 *)(c + 0x400))[0xe4 / 2];
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
 
     saved[0] = *(int *)(c + 0x5c);
     saved[1] = *(int *)(c + 0x60);
     saved[2] = *(int *)(c + 0x64);
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x324);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x324);
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x324) != 0) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x324) != 0) {
         _ZN8dActor_c14TriplePoofDustEv(c);
         _ZN7fBase_c18MarkForDestructionEv(c);
         _ZN5Sound9PlayBank3EjRK7Vector3(0x41, c + 0x74);
         return;
     }
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x324) == 0)
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x324) == 0)
         return;
 
     *(int *)(c + 0x55c) = *(int *)(c + 0x60);
-    fr = (char *)_ZNK12WithMeshClsn14GetFloorResultEv(c + 0x324);
+    fr = (char *)_ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x324);
 
     if (func_02037e38(fr + 4) == 9) {
         int z;

@@ -16,7 +16,7 @@
  *
  * The body it forces is dBgActor_c's own layout: this class has no fields of
  * its own, so the compiler-generated body destroys only the inherited
- * MovingMeshCollider at 0x124 and Model at 0xd4, the same as
+ * dBgW_KcMbg at 0x124 and Model at 0xd4, the same as
  * _ZN10dBgActor_cD1Ev.
  *
  * UNLIKE ITS SEVEN SIBLINGS IN THIS SERIES, this class declares no

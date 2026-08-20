@@ -2,15 +2,15 @@
 #include "types.h"
 // @symbol _ZN6Player13St_Shell_MainEv
 /* recovered: named members + shared header, real C++ method, declarations from a shared header */
-#include "decl_ClsnResult.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgPi.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "Player.h"
 extern "C" {
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov002_020eeca8(void* c, int arg);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* c);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* c);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int a, int b);
 extern int func_02037e58(u32* p);
 extern void ApproachAngle(short* cur, short target, int divisor, int band, int maxStep);
@@ -39,8 +39,8 @@ int Player::St_Shell_Main()
     if (func_02035638((u8*)((char*)&mMeshClsn))) {
         flag = 1;
         res = (void*)func_0203564c((int)((char*)&mMeshClsn));
-        if (_ZNK10ClsnResult9GetClsnIDEv(res) != -1) {
-            void* a = _ZN8dActor_c10FindWithIDEj((u32)_ZNK10ClsnResult9GetClsnIDEv(res));
+        if (_ZNK5dBgPi9GetClsnIDEv(res) != -1) {
+            void* a = _ZN8dActor_c10FindWithIDEj((u32)_ZNK5dBgPi9GetClsnIDEv(res));
             if (a) {
                 u16 type = *(u16*)((char*)a + 0xc);
                 if ((type == 0x14 ? flag : 0) || (type == 0x15 ? 1 : 0)) {
@@ -51,10 +51,10 @@ int Player::St_Shell_Main()
         }
     }
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv((void*)((char*)&mMeshClsn))) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv((void*)((char*)&mMeshClsn))) {
         int ang = _ZN4cstd5atan2E5Fix12IiES1_(unk_560, unk_568);
         if (AngleDiff(ang, mPrevAngleY) > 0x6000) {
-            if (func_02037e58((u32*)((char*)_ZNK12WithMeshClsn13GetWallResultEv((void*)((char*)&mMeshClsn)) + 4)) != 1) {
+            if (func_02037e58((u32*)((char*)_ZNK10dBgCh_Actr13GetWallResultEv((void*)((char*)&mMeshClsn)) + 4)) != 1) {
                 flag = 1;
             }
         }

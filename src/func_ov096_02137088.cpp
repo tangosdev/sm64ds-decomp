@@ -1,7 +1,7 @@
 //cpp
 // @symbol func_ov096_02137088
 /* recovered: shared common types, declarations from a shared header */
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
@@ -14,9 +14,9 @@ extern int Vec3_Dist(const void *a, const void *b);
 extern unsigned _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, const void *v, unsigned e);
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 extern void _Z14ApproachLinearRsss(short *v, short target, short step);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
-extern void WithMeshClsn_UpdateContinuous_Veneer(void *p);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *p);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(void *p);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *p);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *s, int *out);
 extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
 extern unsigned _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(unsigned a, unsigned b, int x, int y, int z, const void *v, void *cb);
@@ -82,11 +82,11 @@ cont:
         *(int *)(c + 0x35c) = 2;
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
-    WithMeshClsn_UpdateContinuous_Veneer(c + 0x108);
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x108) != 0) {
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
+    dBgCh_Actr_UpdateContinuous_Veneer(c + 0x108);
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x108) != 0) {
         int n[3];
-        void *wr = _ZNK12WithMeshClsn13GetWallResultEv(c + 0x108);
+        void *wr = _ZNK10dBgCh_Actr13GetWallResultEv(c + 0x108);
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)wr + 4, n);
         *(short *)(c + 0x94) = _ZN4cstd5atan2E5Fix12IiES1_(n[0], n[2]);
     }

@@ -10,9 +10,9 @@ typedef short s16;
 extern "C" {
 void *_ZN8dActor_c13ClosestPlayerEv(void *self);
 int func_ov002_020de328(void);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *c);
-void WithMeshClsn_UpdateContinuous_Veneer(void *a);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *c);
+void dBgCh_Actr_UpdateContinuous_Veneer(void *a);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *self, const Vector3 *v, int fix);
 void func_02012694(int a, int *t);
 void _ZN8dActor_c13LandingDustAtER7Vector3b(void *self, Vector3 *v, int b);
@@ -49,10 +49,10 @@ extern "C" int func_ov092_02131010(unsigned char *thiz)
         if (v == 0) return v;
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(thiz, 0);
-    WithMeshClsn_UpdateContinuous_Veneer(thiz + 0x324);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(thiz, 0);
+    dBgCh_Actr_UpdateContinuous_Veneer(thiz + 0x324);
     {
-        int g = _ZNK12WithMeshClsn10IsOnGroundEv(thiz + 0x324);
+        int g = _ZNK10dBgCh_Actr10IsOnGroundEv(thiz + 0x324);
         if (g == 0) return g;
     }
 

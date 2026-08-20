@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "MetalNet.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
 extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
@@ -19,8 +19,8 @@ int MetalNet::Behavior()
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((void*)this));
     b = (int)(data_0209f2d8 == 1);
     if (b != 0) {
-        if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() == 0)
-            ((MeshColliderBase *)((char*)((void*)this)+0x124))->Enable((dActor_c *)(((void*)this)));
+        if (((dBgW *)((char*)&mMeshCollider))->IsEnabled() == 0)
+            ((dBgW *)((char*)((void*)this)+0x124))->Enable((dActor_c *)(((void*)this)));
     } else {
         _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((void*)this), 0, 0);
     }

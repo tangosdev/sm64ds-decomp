@@ -3,8 +3,8 @@
 /* recovered: named members + shared header, real C++ method */
 #include "PoleLift.h"
 extern "C" {
-extern void _ZN12CylinderClsn5ClearEv(void *self);
-extern void _ZN12CylinderClsn6UpdateEv(void *self);
+extern void _ZN5dCc_c5ClearEv(void *self);
+extern void _ZN5dCc_c6UpdateEv(void *self);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
@@ -13,8 +13,8 @@ extern short data_02082214[];
 
 int PoleLift::Behavior()
 {
-    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
+    _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
+    _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
     if ((*(s32 *)&param1) != 0xffff) {
         int idx = unk_354 >> 4;
         int s = *(short*)((char*)data_02082214 + (idx << 2));

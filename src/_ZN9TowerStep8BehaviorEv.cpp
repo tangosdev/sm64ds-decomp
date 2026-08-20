@@ -5,7 +5,7 @@
 
 extern "C" {
 int DecIfAbove0_Byte(u8 *p);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, void *clsn);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, void *clsn);
 int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *self, int a, int b);
 int Vec3_Dist(void *a, void *b);
 unsigned _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void *pos, s16 e);
@@ -28,7 +28,7 @@ int TowerStep::Behavior()
             *p = v;
             unk_390 = b;
         }
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, 0);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
         UpdateModelPosAndRotY();
         if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000) != 0)
             UpdateClsnPosAndRot();
@@ -39,7 +39,7 @@ int TowerStep::Behavior()
                 int bound;
                 int y;
 
-                _ZN8dActor_c9UpdatePosEP12CylinderClsn(self, 0);
+                _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
                 bound = unk_37c;
                 y = mPosY;
                 flag = (y >= bound);

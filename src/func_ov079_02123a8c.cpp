@@ -4,7 +4,7 @@
 #include "decl_common.h"
 /* recovered: shared common types */
 #include "common.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 
 struct dActor_c {
@@ -36,8 +36,8 @@ extern "C" int func_ov079_02123a8c(dActor_c *self)
         v.y = v.y + self->vf29();
         int dist = Vec3_Dist(&v, (char*)closest + 0x5c);
         if (dist < (*(int*)((char*)self + 0xb8) << 3)) {
-            if (!((MeshColliderBase *)((char*)self + 0x418))->IsEnabled())
-                ((MeshColliderBase *)((char*)self + 0x418))->Enable((dActor_c *)(self));
+            if (!((dBgW *)((char*)self + 0x418))->IsEnabled())
+                ((dBgW *)((char*)self + 0x418))->Enable((dActor_c *)(self));
             return 1;
         }
     }

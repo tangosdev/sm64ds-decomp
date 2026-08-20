@@ -12,11 +12,11 @@
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
  *
- *     0x110 WithMeshClsn               0x1bc   -> 0x2cc
+ *     0x110 dBgCh_Actr               0x1bc   -> 0x2cc
  *     0x2cc ModelAnim                  0x64    -> 0x330
  *     0x330 TextureSequence            0x14    -> 0x344
  *     0x344 ShadowModel                0x28    -> 0x36c
- *     0x418 MovingMeshCollider         0x1c8   -> 0x5e0
+ *     0x418 dBgW_KcMbg         0x1c8   -> 0x5e0
  *
  * Typing them absorbed markers that were their insides:
  *   - unk_338 = TextureSequence.currFrame
@@ -29,13 +29,13 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingMeshCollider.h"
+#include "dBgW_KcMbg.h"
 #include "ShadowModel.h"
 #include "TextureSequence.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Whomp : dEnemyBase_c {
-    WithMeshClsn                 mWithMeshClsn;         /* 0x110 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x110 */
     ModelAnim                    mModelAnim;            /* 0x2cc */
     TextureSequence              mTextureSequence;      /* 0x330 */
     ShadowModel                  mShadowModel;          /* 0x344 */
@@ -62,7 +62,7 @@ struct Whomp : dEnemyBase_c {
     s32                          unk_410;               /* 0x410 */
     u8                           mIsKing;               /* 0x414 */
     u8  pad_415[0x3];
-    MovingMeshCollider           mMovingMeshCollider;   /* 0x418 */
+    dBgW_KcMbg           mMovingMeshCollider;   /* 0x418 */
     u8  pad_5e0[0x30];
 
     /* --- vtable --- */

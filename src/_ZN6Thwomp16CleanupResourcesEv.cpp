@@ -5,13 +5,13 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Thwomp.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 int Thwomp::CleanupResources()
 {
     void **fp;
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
     }
     fp = *(void***)((char *)&mFileTable);
     ((SharedFilePtr *)(fp[0]))->Release();

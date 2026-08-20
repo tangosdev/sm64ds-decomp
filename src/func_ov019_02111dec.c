@@ -1,8 +1,8 @@
 extern int _ZN6Player12Unk_020c4f40Et(void* p, unsigned short a);
 extern void _Z11UpdateAngleRssis(short* p, short a, int b, short c);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* clsn);
 extern int func_ov019_0211140c(int* self, void* clsn);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void* m);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void* m);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* m, void* f, int a, int b, unsigned int d);
 extern int _ZN9Animation8FinishedEv(void* a);
 extern int _ZN6Player12GetTalkStateEv(void* p);
@@ -27,9 +27,9 @@ int func_ov019_02111dec(char* c) {
             *(short *)((char *)(((int)c + 0x300)) + 0x8c),
             2, 0x800);
         *(short*)(c+0x8e) = *(short*)(c+0x94);
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c+0x174);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(c, c+0x174);
         func_ov019_0211140c((int*)c, c+0x1a8);
-        if (_ZNK12WithMeshClsn13JustHitGroundEv(c+0x1a8) != 0) {
+        if (_ZNK10dBgCh_Actr13JustHitGroundEv(c+0x1a8) != 0) {
             _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(c+0xd4, (void*)data_ov019_02113460[1], 0x40000000, 0x1000, 0);
             LB(0x38f) = LB(0x38f) + 1;
         }

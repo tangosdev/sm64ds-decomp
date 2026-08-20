@@ -2,7 +2,7 @@
 #define DAOBJWLPOLELIFT_C_H
 #include "dActor_c.h"
 #include "Model.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "PathPtr.h"
 #include "ShadowModel.h"
 
@@ -21,7 +21,7 @@
  * 0x1e4 is read directly off the allocator call. The same constructor
  * placement-constructs four sub-objects after installing the vtable chain:
  *   Model                       at 0x0d4 (sizeof 0x50, ends 0x124)
- *   MovingCylinderClsnWithPos   at 0x124 (sizeof 0x40, ends 0x164)
+ *   dCcAcPos_c   at 0x124 (sizeof 0x40, ends 0x164)
  *   PathPtr                     at 0x164 (sizeof 0x08, ends 0x16c)
  *   ShadowModel                 at 0x188 (sizeof 0x28, ends 0x1b0)
  * dActor_c's own fields run to 0xd0 (dActor_c.h); the Model sub-object
@@ -29,7 +29,7 @@
  *
  * The destructor (func_ov026_021111a0 / _021111e0) tears down the same
  * three sub-objects that have non-trivial destructors -- ShadowModel,
- * MovingCylinderClsnWithPos, Model -- in reverse-ish order (PathPtr has no
+ * dCcAcPos_c, Model -- in reverse-ish order (PathPtr has no
  * destructor call at all, consistent with it being POD).
  *
  * MEMBERS BETWEEN THE SUB-OBJECTS, read from InitResources/Behavior/Render
@@ -44,7 +44,7 @@
  *   0x1b0  Matrix4x3 dropShadowMtx -- copy of the model's own matrix (0xf0),
  *                              fed to dActor_c::DropShadowScaleXYZ (0x30 bytes,
  *                              ends 0x1e0)
- *   0x1e0  s32  groundY     -- RaycastGround hit height beneath the lift;
+ *   0x1e0  s32  groundY     -- dBgCh_Gnd hit height beneath the lift;
  *                              last field, 0x1e0 + sizeof(s32) == 0x1e4 == SIZE
  * Field-span and allocator witnesses agree exactly on 0x1e4.
  *
@@ -56,7 +56,7 @@
 struct daObjWlPolelift_c : dActor_c {
     u8   pad_0d0[0x4];              /* 0x0d0 -- unobserved */
     Model model;                     /* 0x0d4 */
-    MovingCylinderClsnWithPos clsn;  /* 0x124 */
+    dCcAcPos_c clsn;  /* 0x124 */
     PathPtr path;                    /* 0x164 */
     s32  numNodes;                   /* 0x16c */
     s32  curNodeIdx;                 /* 0x170 */

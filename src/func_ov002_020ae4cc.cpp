@@ -1,6 +1,6 @@
 //cpp
 extern "C" {
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(char* w);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char* w);
 extern void _ZN12dEnemyBase_c9SpawnCoinEv(char* c);
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(char* c);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
@@ -26,7 +26,7 @@ extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
     v[1] = y;
     v[2] = z;
   }
-  if (_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
+  if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
     _ZN12dEnemyBase_c9SpawnCoinEv(self);
     _ZN8dActor_c24KillAndTrackInDeathTableEv(self);
     *(int*)(self+0x10c) = 0;

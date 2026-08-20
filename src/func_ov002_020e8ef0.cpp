@@ -5,7 +5,7 @@ extern "C" {
     void LinkSilverStarAndStarMarker(void* a, void* b);
     int _ZN6Player9IsOnShellEv(void* p);
     void func_02012790(int a);
-    void _ZN12CylinderClsn5ClearEv(void* c);
+    void _ZN5dCc_c5ClearEv(void* c);
     void func_ov002_020e6fbc(char* c, int arg);
     int func_ov002_020e73ac(char* c);
     int _ZN6Player17SetNoControlStateEhih(void* p, int a, int b, int d);
@@ -57,7 +57,7 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
             *(u32*)(c + 0x4b4) = *(u32*)(c + 0x4b8);
             func_02012790(0x2d);
             *(u32*)(((int)c + 0x128)) |= 1;
-            _ZN12CylinderClsn5ClearEv(c + 0x110);
+            _ZN5dCc_c5ClearEv(c + 0x110);
             func_ov002_020e6fbc(c, 0x14);
             *(u8*)(c + 0x49c) = 1;
             return 1;
@@ -156,7 +156,7 @@ extern "C" int func_ov002_020e8ef0(char* c, void* p)
         }
     }
     *(u32*)(((int)c + 0x128)) |= 1;
-    _ZN12CylinderClsn5ClearEv(c + 0x110);
+    _ZN5dCc_c5ClearEv(c + 0x110);
     {
         int b5 = (*(u16*)(c + 0xc) == 0xb2);
         if (b5 && r4 != 0) {

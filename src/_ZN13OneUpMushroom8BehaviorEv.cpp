@@ -10,18 +10,18 @@ struct C {
   char pad[0x500];
 };
 extern "C" {
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(char* c, char* clsn);
-extern void _ZN12CylinderClsn5ClearEv(char* c);
-extern void _ZN12CylinderClsn6UpdateEv(char* c);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(char* c, char* clsn);
+extern void _ZN5dCc_c5ClearEv(char* c);
+extern void _ZN5dCc_c6UpdateEv(char* c);
 extern PMF data_ov002_0210dc00[];
 #define AT(p, off) ((void*)(int)((char*)(p) + (off)))
 }
 
 int OneUpMushroom::Behavior()
 {
-  if(_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(((char*)this), ((char*)this)+0x144) != 0){
+  if(_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(((char*)this), ((char*)this)+0x144) != 0){
     func_ov002_020af4ec(((char*)this));
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
     return 1;
   }
   mEatingPlayer = 0;
@@ -36,8 +36,8 @@ int OneUpMushroom::Behavior()
       *(unsigned short*)(((char*)this)+0x300+0x8c) = 0;
     }
   }
-  _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
-  _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
+  _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
+  _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);
   func_ov002_020af4ec(((char*)this));
   return 1;
 }

@@ -35,12 +35,12 @@ int Bullet::Behavior()
         if (np >= lim) lim = np;
         mVertSpeed = lim;
         unk_0ac = ac;
-        UpdatePosWithOnlySpeed(&mMovingCylinderClsn);
+        UpdatePosWithOnlySpeed(&mdCcAc_c);
     }
     UpdateWMClsn(mWithMeshClsn, 0);
     mAngleY = mPrevAngleY;
     func_ov002_020fed7c((char*)this);
-    mMovingCylinderClsn.Clear();
-    mMovingCylinderClsn.Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

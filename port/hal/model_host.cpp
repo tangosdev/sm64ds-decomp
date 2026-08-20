@@ -153,7 +153,7 @@ void *_ZTV5Model[8];
 void *_ZTV9Animation[8];
 void *_ZTV9ModelAnim[10];
 void *VTable_Animation_ModelAnimThunk[8];
-void *_ZTV16MeshColliderBase[13];   /* base: never dispatched in the gates */
+void *_ZTV4dBgW[13];   /* base: never dispatched in the gates */
 unsigned char data_020a0c78[8]; /* the default CLPS ENTRY (8-byte storage,
                                    func_02037e9c fills it on first lookup) */
 

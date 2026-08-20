@@ -2,7 +2,7 @@
 // @symbol _ZN9SeesawBob8BehaviorEv
 /* recovered: named members + shared header, real C++ method */
 #include "SeesawBob.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 typedef short s16;
 struct V3 { int x, y, z; };
 extern "C" {
@@ -17,8 +17,8 @@ int SeesawBob::Behavior()
 {
     int b = (int)(((*(s32 *)&mFlags) & 8) != 0);
     if (b != 0) {
-        if (((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
-            ((MeshColliderBase *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
+        if (((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+            ((dBgW *)((char*)&(*(u8 *)&mMeshCollider)))->Disable();
         }
         return 1;
     }

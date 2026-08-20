@@ -4,7 +4,7 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Stage.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 /* _ZN5Stage16CleanupResourcesEv @ 0x0202c9a8 (arm9, size 0x264)
  * Releases the level file handles, tears down fader/mesh-collider/message
  * state and unloads the level overlays/archive. Returns 1.
@@ -99,7 +99,7 @@ int Stage::CleanupResources()
     func_02073244(data_0209f324, 0x60, 8, _ZN9FaderWipeD1Ev);
     data_0209f324 = 0;
     CleanCommonModelDataArr();
-    ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    ((dBgW *)((char *)&mMeshCollider))->Disable();
     _ZN5Stage18ResetMeshCollidersEv();
     func_01ffb0c8((char *)&mMeshCollider);
     Deallocate();

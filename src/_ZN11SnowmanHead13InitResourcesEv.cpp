@@ -13,13 +13,13 @@ extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *ref);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *base, void *file, int a, int b);
 extern void *_ZN15TextureSequence8LoadFileER13SharedFilePtr(void *ref);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *t, void *a, int b, int c, unsigned int d, unsigned int e);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *t, void *a, int b, int c, void *d, void *e);
-extern void _ZN13RaycastGroundC1Ev(void *t);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *t, const struct Vector3 *pos, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(void *t);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *t, void *a, int b, int c, unsigned int d, unsigned int e);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *t, void *a, int b, int c, void *d, void *e);
+extern void _ZN9dBgCh_GndC1Ev(void *t);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *t, const struct Vector3 *pos, void *actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *t);
 extern void func_ov072_0211ffd8(char *c);
-extern void _ZN13RaycastGroundD1Ev(void *t);
+extern void _ZN9dBgCh_GndD1Ev(void *t);
 
 }
 
@@ -39,25 +39,25 @@ int SnowmanHead::InitResources()
                                  *(BTP_File *)((void **)tex)[1]);
     }
 
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x138, ((char *)this), 0x96000, 0x12c000, 0x800004, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x138, ((char *)this), 0x96000, 0x12c000, 0x800004, 0);
     mScaleX = 0x1800;
     mScaleY = 0x1800;
     mScaleZ = 0x1800;
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x16c, ((char *)this), 0x96000, 0x96000, 0, 0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x16c, ((char *)this), 0x96000, 0x96000, 0, 0);
 
     pos.x = mPosX;
     pos.y = mPosY;
     pos.z = mPosZ;
     pos.y += 0x14000;
-    _ZN13RaycastGroundC1Ev(ray);
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(ray, &pos, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(ray) != 0)
+    _ZN9dBgCh_GndC1Ev(ray);
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(ray, &pos, 0);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(ray) != 0)
         mPosY = *(int *)(ray + 0x44);
     else
         mPosY = pos.y;
 
     func_ov072_021205d4(((char *)this), 0);
     func_ov072_0211ffd8(((char *)this));
-    _ZN13RaycastGroundD1Ev(ray);
+    _ZN9dBgCh_GndD1Ev(ray);
     return 1;
 }

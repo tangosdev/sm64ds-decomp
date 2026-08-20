@@ -9,9 +9,9 @@
  *     dActor_c                      0x000 + 0x0d0 = 0x0d0   -> pad_0d0
  *     ModelAnim                  0x0d4 + 0x064 = 0x138   -> mTextureSequence
  *     TextureSequence            0x138 + 0x014 = 0x14c   -> mWithMeshClsn
- *     WithMeshClsn               0x14c + 0x1bc = 0x308   -> mShadowModel
+ *     dBgCh_Actr               0x14c + 0x1bc = 0x308   -> mShadowModel
  *     ShadowModel                0x308 + 0x028 = 0x330   -> padding
- *     MovingCylinderClsnWithPos  0x360 + 0x040 = 0x3a0   -> mTargetPlayer
+ *     dCcAcPos_c  0x360 + 0x040 = 0x3a0   -> mTargetPlayer
  *
  * TWO OF THE GENERATED HEADER'S FIELDS WERE THE ModelAnim'S OWN INSIDES and are
  * gone from this half: `mAnimation` at 0x124 is 0x0d4 + 0x50, the Animation base
@@ -29,9 +29,9 @@
 #include "types.h"
 #include "ModelAnim.h"
 #include "TextureSequence.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 
 #ifdef __cplusplus
 
@@ -41,10 +41,10 @@ struct Bowser : dActor_c {
     u8  pad_0d0[0x4];
     ModelAnim mModelAnim;                                   /* 0x0d4 */
     TextureSequence mTextureSequence;                       /* 0x138 */
-    WithMeshClsn mWithMeshClsn;                             /* 0x14c */
+    dBgCh_Actr mWithMeshClsn;                             /* 0x14c */
     ShadowModel mShadowModel;                               /* 0x308 */
     u8  pad_330[0x30];
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;   /* 0x360 */
+    dCcAcPos_c mdCcAcPos_c;   /* 0x360 */
     s32 mTargetPlayer;      /* 0x3a0 */
     u8  pad_3a4[0x4];
     s32 unk_3a8;            /* 0x3a8 */
@@ -129,10 +129,10 @@ struct Bowser {
     u8  pad_0cd[0x7];
     ModelAnim mModelAnim;                                   /* 0x0d4 */
     TextureSequence mTextureSequence;                       /* 0x138 */
-    WithMeshClsn mWithMeshClsn;                             /* 0x14c */
+    dBgCh_Actr mWithMeshClsn;                             /* 0x14c */
     ShadowModel mShadowModel;                               /* 0x308 */
     u8  pad_330[0x30];
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;   /* 0x360 */
+    dCcAcPos_c mdCcAcPos_c;   /* 0x360 */
     s32 mTargetPlayer;            /* 0x3a0 */
     u8  pad_3a4[0x4];
     s32 unk_3a8;            /* 0x3a8 */

@@ -4,10 +4,10 @@ typedef struct { int w[12]; } M48;
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *bmd, int a, int b);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *sfp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *sfp);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *thiz, void *kcl, void *mtx, int fix, short s, void *clps);
-extern void _ZN16MeshColliderBase6EnableEP8dActor_c(void *thiz, void *actor);
+extern void _ZN4dBgW6EnableEP8dActor_c(void *thiz, void *actor);
 
 int func_ov002_020b4d58(char *c, char *arg)
 {
@@ -47,11 +47,11 @@ int func_ov002_020b4d58(char *c, char *arg)
     cl = c + 0x4b0;
     for (; j < 5; j++) {
         *(M48 *)(dst + 0x1c) = *(M48 *)mtx;
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            cl, _ZN12MeshCollider8LoadFileER13SharedFilePtr(*(void **)(arg + 4)),
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            cl, _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(*(void **)(arg + 4)),
             c + 0xd98, fix, *(s16 *)(c + 0x8e), *(void **)(arg + 8));
         if (j == *(u8 *)(c + 0xdc8))
-            _ZN16MeshColliderBase6EnableEP8dActor_c(cl, c);
+            _ZN4dBgW6EnableEP8dActor_c(cl, c);
         dst += 0x50;
         arg += 0xc;
         cl += 0x1c8;

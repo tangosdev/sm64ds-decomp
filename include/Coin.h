@@ -4,8 +4,8 @@
 #include "dActor_c.h"
 #include "CommonModel.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsn.h"
-#include "WithMeshClsn.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 
 /* THREE WITNESSES:
  *
@@ -52,14 +52,14 @@ struct Coin : dActor_c {
        ShadowModel's D1 at +0x150 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN4CoinD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x150 */
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x178 -- a relocation the ROM build
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x178 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN4CoinD0Ev.c] */
-    MovingCylinderClsn mCylinderClsn;            /* 0x178 */
-    /* WithMeshClsn member, named by the class's own destructor calling
-       WithMeshClsn's D1 at +0x1ac -- a relocation the ROM build
+    dCcAc_c mdCc_c;            /* 0x178 */
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x1ac -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN4CoinD0Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x1ac */
+    dBgCh_Actr mWithMeshClsn;            /* 0x1ac */
     u8  unk_368;            /* 0x368 */
     u8  pad_369[0x2f];
     s32 unk_398;            /* 0x398 */

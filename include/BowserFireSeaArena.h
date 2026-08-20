@@ -13,7 +13,7 @@
  *
  *     dBgActor_c            0x000 + 0x324 = 0x324   -> mModel2
  *     Model               0x324 + 0x050 = 0x374   -> mMovingMeshCollider2
- *     MovingMeshCollider  0x374 + 0x1c8 = 0x53c   -> padding, then unk_56c
+ *     dBgW_KcMbg  0x374 + 0x1c8 = 0x53c   -> padding, then unk_56c
  *
  * mMovingMeshCollider2 was a `u8` marker with 0x1f7 bytes of pad behind it; the pad
  * was the object.
@@ -26,7 +26,7 @@
 #define BOWSERFIRESEAARENA_H
 #include "types.h"
 #include "Model.h"
-#include "MovingMeshCollider.h"
+#include "dBgW_KcMbg.h"
 
 #ifdef __cplusplus
 
@@ -40,7 +40,7 @@ struct BowserFireSeaArena : dBgActor_c {
     s16 unk_320;                                /* 0x320 */
     s16 unk_322;                                /* 0x322 */
     Model mModel2;                              /* 0x324 */
-    MovingMeshCollider mMovingMeshCollider2;    /* 0x374 */
+    dBgW_KcMbg mMovingMeshCollider2;    /* 0x374 */
     u8  pad_53c[0x30];
     s32 unk_56c;            /* 0x56c */
 
@@ -69,7 +69,7 @@ struct BowserFireSeaArena {
        Model's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN18BowserFireSeaArenaD1Ev.c] */
     Model mModel1;            /* 0x0d4 */
-    MovingMeshCollider mMovingMeshCollider1;    /* 0x124 */
+    dBgW_KcMbg mMovingMeshCollider1;    /* 0x124 */
     u8  pad_2ec[0x32];
     s16 unk_31e;            /* 0x31e */
     s16 unk_320;            /* 0x320 */
@@ -77,7 +77,7 @@ struct BowserFireSeaArena {
     /* Model member, named by _ZN5ModelD1Ev at +0x324 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel2;            /* 0x324 */
-    MovingMeshCollider mMovingMeshCollider2;    /* 0x374 */
+    dBgW_KcMbg mMovingMeshCollider2;    /* 0x374 */
     u8  pad_53c[0x30];
     s32 unk_56c;            /* 0x56c */
 };

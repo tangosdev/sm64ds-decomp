@@ -6,14 +6,14 @@
 #include "Snowball.h"
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
-struct CylinderClsn;
-struct WithMeshClsn;
+struct dCc_c;
+struct dBgCh_Actr;
 extern "C" unsigned short DecIfAbove0_Short(unsigned short *p);
-extern "C" void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, CylinderClsn *cc);
-extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
-extern "C" void _ZN12CylinderClsn5ClearEv(CylinderClsn *self);
+extern "C" void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, dCc_c *cc);
+extern "C" void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm, unsigned int j);
+extern "C" void _ZN5dCc_c5ClearEv(dCc_c *self);
 extern "C" void *_ZN8dActor_c13ClosestPlayerEv(void *self);
-extern "C" void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
+extern "C" void _ZN5dCc_c6UpdateEv(dCc_c *self);
 
 int Snowball::Behavior()
 {
@@ -28,13 +28,13 @@ int Snowball::Behavior()
     int tmp = unk_0ac;
     mVertSpeed = hi;
     unk_0ac = tmp;
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsn));
-    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 0);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(((char *)this), (dCc_c *)((char *)&mdCcAc_c));
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0);
     mAngleY = mPrevAngleY;
     func_ov081_02126224(((char *)this));
-    _ZN12CylinderClsn5ClearEv((CylinderClsn *)((char *)&mMovingCylinderClsn));
+    _ZN5dCc_c5ClearEv((dCc_c *)((char *)&mdCcAc_c));
     void *p = _ZN8dActor_c13ClosestPlayerEv(((char *)this));
     if (p != 0 && *(unsigned char *)((char *)p + 0x6fb) == 0)
-        _ZN12CylinderClsn6UpdateEv((CylinderClsn *)((char *)&mMovingCylinderClsn));
+        _ZN5dCc_c6UpdateEv((dCc_c *)((char *)&mdCcAc_c));
     return 1;
 }

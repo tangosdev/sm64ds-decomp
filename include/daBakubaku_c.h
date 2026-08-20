@@ -4,9 +4,9 @@
 #include "types.h"
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 /* The last of the three intermediate bases the RTTI puts under dEnemyBase_c -- except
  * that this one has NO children, so it is only "intermediate" by where it sits in the
@@ -42,9 +42,9 @@
  * methods can pin the scalars between them.
  */
 struct daBakubaku_c : dEnemyBase_c {
-    MovingCylinderClsnWithPos  mBodyClsn;       /* 0x110 */
-    MovingCylinderClsnWithPos  mHeadClsn;       /* 0x150 */
-    WithMeshClsn               mWithMeshClsn;   /* 0x190 */
+    dCcAcPos_c  mBodyClsn;       /* 0x110 */
+    dCcAcPos_c  mHeadClsn;       /* 0x150 */
+    dBgCh_Actr               mWithMeshClsn;   /* 0x190 */
     ModelAnim                  mModelAnim;      /* 0x34c */
     /* NOT padding after all. Behavior loads this WORD, reads a pointer-to-member
        out of the thing it points at and calls it on `this`, then compares the word

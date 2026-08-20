@@ -2,7 +2,7 @@
 extern "C" {
 int func_02035638(void* p);
 void* func_0203567c(void* p);
-unsigned int _ZNK10ClsnResult9GetClsnIDEv(void* r);
+unsigned int _ZNK5dBgPi9GetClsnIDEv(void* r);
 void* _ZN8dActor_c10FindWithIDEj(unsigned int id);
 }
 struct dActor_c {
@@ -18,8 +18,8 @@ struct dActor_c {
 extern "C" int func_ov002_020eeca8(void* c, int arg){
   if(func_02035638(c)){
     void* res = func_0203567c(c);
-    if(_ZNK10ClsnResult9GetClsnIDEv(res) != 0xffffffff){
-      dActor_c* a = (dActor_c*)_ZN8dActor_c10FindWithIDEj(_ZNK10ClsnResult9GetClsnIDEv(res));
+    if(_ZNK5dBgPi9GetClsnIDEv(res) != 0xffffffff){
+      dActor_c* a = (dActor_c*)_ZN8dActor_c10FindWithIDEj(_ZNK5dBgPi9GetClsnIDEv(res));
       if(a != 0){
         a->m70(arg);
         return 1;

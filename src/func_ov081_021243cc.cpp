@@ -4,7 +4,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-    void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, void* v);
+    void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* c, void* v);
     void* _ZN8dActor_c10FindWithIDEj(u32 id);
     void func_ov002_020aea30(void* self, void* a, int b);
     s16 _ZN8dActor_c18HorzAngleToCPlayerEv(void* self);
@@ -25,7 +25,7 @@ extern "C" void func_ov081_021243cc(void* self)
     v.x = data_ov081_02128998.x;
     v.y = data_ov081_02128998.y;
     v.z = data_ov081_02128998.z;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3((void*)(c+0x110), &v);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3((void*)(c+0x110), &v);
 
     u32 id = *(u32*)(c+0x134);
     if (id == 0) return;

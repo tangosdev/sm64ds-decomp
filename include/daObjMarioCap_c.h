@@ -5,14 +5,14 @@
 #include "dEnemyBase_c.h"
 #include "CapIcon.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 /* Derives from dEnemyBase_c, and both witnesses agree offset for offset:
  *
  *   Cap_Spawn (ov002) allocates 0x410, calls _ZN12dEnemyBase_cC2Ev, stores
- *   _ZTV15daObjMarioCap_c, then constructs MovingCylinderClsn 0x110, WithMeshClsn 0x144,
+ *   _ZTV15daObjMarioCap_c, then constructs dCcAc_c 0x110, dBgCh_Actr 0x144,
  *   ModelAnim 0x300, ShadowModel 0x364 and the CapIcon at 0x3d0.
  *
  *   _ZN15daObjMarioCap_cD1Ev tears the same five down in exactly the reverse order and
@@ -46,8 +46,8 @@
  * names the wrong table, one entry along.
  */
 struct daObjMarioCap_c : dEnemyBase_c {
-    MovingCylinderClsn  mMovingCylinderClsn;    /* 0x110 */
-    WithMeshClsn        mWithMeshClsn;          /* 0x144 */
+    dCcAc_c  mdCcAc_c;    /* 0x110 */
+    dBgCh_Actr        mWithMeshClsn;          /* 0x144 */
     ModelAnim           mModelAnim;             /* 0x300 */
     ShadowModel         mShadowModel;           /* 0x364 */
     u8  pad_38c[0x30];

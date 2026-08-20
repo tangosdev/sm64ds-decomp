@@ -12,10 +12,10 @@ extern int _ZN8dActor_c18GetBitInDeathTableEv(void* actor);
 extern void SetStarMarker(int i, void* actor, int v2);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* bmd, int a, int b);
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, s32 f1, s32 f2, u32 a, u32 b);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, s32 f1, s32 f2, void* v, s32 f3);
-extern void _ZN12WithMeshClsn13SetLimMovFlagEv(void* thiz);
-extern void _ZN12WithMeshClsn19StartDetectingWaterEv(void* thiz);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, s32 f1, s32 f2, u32 a, u32 b);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, s32 f1, s32 f2, void* v, s32 f3);
+extern void _ZN10dBgCh_Actr13SetLimMovFlagEv(void* thiz);
+extern void _ZN10dBgCh_Actr19StartDetectingWaterEv(void* thiz);
 
 extern Blob48 data_02082128;
 extern s8 data_0209f2f8;
@@ -150,10 +150,10 @@ shared140:;
         return 0;
     }
 
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(c + 0x178, c, r5, r4, 0x100002, 0x8000);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1ac, c, 0x3c000, 0x3c000, 0, 0);
-    _ZN12WithMeshClsn13SetLimMovFlagEv(c + 0x1ac);
-    _ZN12WithMeshClsn19StartDetectingWaterEv(c + 0x1ac);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(c + 0x178, c, r5, r4, 0x100002, 0x8000);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(c + 0x1ac, c, 0x3c000, 0x3c000, 0, 0);
+    _ZN10dBgCh_Actr13SetLimMovFlagEv(c + 0x1ac);
+    _ZN10dBgCh_Actr19StartDetectingWaterEv(c + 0x1ac);
 
     t = *(s32*)(c + 0x3a4);
     if (t == 8) {

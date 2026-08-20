@@ -13,9 +13,9 @@ void _ZN8Particle20RunningSlidingDustAtE5Fix12IiES1_S1_(int a, int b, int c);
 unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int c, const Vector3& v, unsigned int e);
 void* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int id, void* a);
 void func_0201267c(int a, void* t);
-int _ZNK12WithMeshClsn13JustHitGroundEv(void* self);
+int _ZNK10dBgCh_Actr13JustHitGroundEv(void* self);
 void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void* self, const Vector3* v, int fix);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* c);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* c);
 }
 
 extern "C" int func_ov072_0211f65c(unsigned char* thiz)
@@ -42,7 +42,7 @@ extern "C" int func_ov072_0211f65c(unsigned char* thiz)
         }
         break;
     case 1:
-        if (_ZNK12WithMeshClsn13JustHitGroundEv(thiz + 0x180) != 0) {
+        if (_ZNK10dBgCh_Actr13JustHitGroundEv(thiz + 0x180) != 0) {
             Vector3 v;
             v.x = *(int*)(thiz + 0x5c);
             v.y = *(int*)(thiz + 0x60);
@@ -64,7 +64,7 @@ extern "C" int func_ov072_0211f65c(unsigned char* thiz)
     }
 
     func_ov072_0211f158((char*)thiz);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(thiz, thiz + 0x14c);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(thiz, thiz + 0x14c);
     func_ov072_0211f330((char*)thiz, thiz + 0x180);
     func_ov072_0211f280((char*)thiz);
     return 1;

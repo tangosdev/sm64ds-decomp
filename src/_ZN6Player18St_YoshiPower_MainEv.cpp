@@ -45,8 +45,8 @@ extern void func_ov002_020d5cec(void*);
 extern void _ZN5Sound13PlayCharVoiceEjjRK7Vector3(unsigned int, unsigned int, void*);
 extern void* _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(void*, unsigned int, int, int, int, void*, void*);
 extern void func_ov002_020dc09c(char*);
-extern void _ZN12CylinderClsn5ClearEv(void*);
-extern void _ZN12CylinderClsn6UpdateEv(void*);
+extern void _ZN5dCc_c5ClearEv(void*);
+extern void _ZN5dCc_c6UpdateEv(void*);
 extern void ApproachAngle(void*, short, int, int, int);
 extern void func_ov002_020daa74(char*);
 extern void Player_AdvanceAnims(char*);
@@ -268,8 +268,8 @@ int Player::St_YoshiPower_Main()
                 *(void**)(&unk_628) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(&unk_628), 0x13c, pos.x, pos.y, pos.z, (Vec3s*)((int)&dir), 0);
                 *(void**)(&mParticle2) = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(*(void**)(&mParticle2), 0x13d, pos.x, pos.y, pos.z, &dir, 0);
                 func_ov002_020dc09c(c);
-                _ZN12CylinderClsn5ClearEv(&mAttackClsn);
-                _ZN12CylinderClsn6UpdateEv(&mAttackClsn);
+                _ZN5dCc_c5ClearEv(&mAttackClsn);
+                _ZN5dCc_c6UpdateEv(&mAttackClsn);
                 if (mStateTimer == 1 && unk_6f4 == 0) {
                     int z2 = 0;
                     mUseAltBodyModel = z2;

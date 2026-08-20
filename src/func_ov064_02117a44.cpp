@@ -4,7 +4,7 @@
 #include "common.h"
 
 extern "C" {
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(char* self, void* c);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(char* self, void* c);
 int Vec3_HorzDist(const void* a, const void* b);
 int _Z14ApproachLinearRiii(int* v, int target, int step);
 void _ZNK7PathPtr7GetNodeER7Vector3j(void* self, void* v, unsigned int j);
@@ -15,7 +15,7 @@ extern "C" int func_ov064_02117a44(char* c) {
   Vector3 a;
   Vector3 b;
   int r;
-  _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+  _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
   r = (Vec3_HorzDist(c+0x5c, c+0x354) < 0x69000) ? 0 : 0xa000;
   if (_Z14ApproachLinearRiii((int*)(c+0x98), r, 0x800) != 0 && r == 0) {
     *(int*)(c+0x348) = *(int*)(c+0x354);

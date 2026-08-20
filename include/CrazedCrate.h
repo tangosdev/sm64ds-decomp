@@ -4,8 +4,8 @@
 #include "dActor_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsn.h"
-#include "WithMeshClsn.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 
 /* TWO WITNESSES:
  *
@@ -25,7 +25,7 @@
  * shared dActor_c's names).
  *
  * mWithMeshClsn was mistyped `u8` at 0x180 in the generated header --
- * CrazedCrate_Spawn calls _ZN12WithMeshClsnC1Ev at that offset, so it is the
+ * CrazedCrate_Spawn calls _ZN10dBgCh_ActrC1Ev at that offset, so it is the
  * real 0x1bc-byte member (0x180..0x33c); the 0x38 bytes from 0x33c..0x374
  * are genuinely unevidenced padding.
  *
@@ -45,13 +45,13 @@ struct CrazedCrate : dActor_c {
     /* ShadowModel member, named by the class's own destructor calling
        ShadowModel's D1 at +0x124. [_ZN11CrazedCrateD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x124 */
-    /* MovingCylinderClsn member, named by the class's own destructor calling
-       MovingCylinderClsn's D1 at +0x14c. [_ZN11CrazedCrateD0Ev.c] */
-    MovingCylinderClsn mMovingCylinderClsn;            /* 0x14c */
-    /* WithMeshClsn member, named by CrazedCrate_Spawn's own C1 call and the
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x14c. [_ZN11CrazedCrateD0Ev.c] */
+    dCcAc_c mdCcAc_c;            /* 0x14c */
+    /* dBgCh_Actr member, named by CrazedCrate_Spawn's own C1 call and the
        class's own destructor's D1 call at +0x180.
        [CrazedCrate_Spawn.c, _ZN11CrazedCrateD0Ev.c] */
-    WithMeshClsn mWithMeshClsn;            /* 0x180 */
+    dBgCh_Actr mWithMeshClsn;            /* 0x180 */
     u8  pad_33c[0x38];
     s32 unk_374;            /* 0x374 */
 

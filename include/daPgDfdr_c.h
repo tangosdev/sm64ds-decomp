@@ -8,7 +8,7 @@
 #include "dBgActor_c.h"
 #include "ModelAnim.h"
 #include "TextureSequence.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 /* No header existed under any name -- confirmed against build/rtti.json (RTTI
  * record ov027:0x021139e4, mangled `10daPgDfdr_c`) and against
@@ -26,13 +26,13 @@
  * The factory, func_ov027_0211207c, is: `fBase_c::operator new(988)`,
  * `dBgActor_c::dBgActor_c()`, store `_ZTV10daPgDfdr_c`, then three member
  * constructors run in field order -- `ModelAnim::ModelAnim()` at +0x320,
- * `TextureSequence::TextureSequence()` at +0x384, `MovingCylinderClsn::MovingCylinderClsn()`
+ * `TextureSequence::TextureSequence()` at +0x384, `dCcAc_c::dCcAc_c()`
  * at +0x398. func_ov027_021118c8 (D1) is the same three in reverse --
- * MovingCylinderClsn at +0x398, TextureSequence at +0x384, ModelAnim at +0x320
+ * dCcAc_c at +0x398, TextureSequence at +0x384, ModelAnim at +0x320
  * -- before it inlines dBgActor_c's own teardown. Constructor and destructor
  * witnesses agree exactly; there is no undestructed gap to close.
  *
- * 0x398 + sizeof(MovingCylinderClsn) (0x34) = 0x3cc. The remaining 0x10 bytes,
+ * 0x398 + sizeof(dCcAc_c) (0x34) = 0x3cc. The remaining 0x10 bytes,
  * 0x3cc..0x3dc, are POD -- nothing in the class destructs them -- and are read
  * across InitResources (func_ov027_02111eb4), the state-dispatch pair
  * func_ov027_02111d38/02111cfc, and OnGroundHit-family helpers
@@ -61,7 +61,7 @@
 struct daPgDfdr_c : dBgActor_c {
     ModelAnim mModelAnim;                  /* 0x320 */
     TextureSequence mTextureSequence;      /* 0x384 */
-    MovingCylinderClsn mMovingCylinderClsn; /* 0x398 */
+    dCcAc_c mdCcAc_c; /* 0x398 */
     void *unk_3cc;
     s32   unk_3d0;
     s32   unk_3d4;
@@ -75,7 +75,7 @@ struct daPgDfdr_c : dBgActor_c {
      * include/BigBrickBlock.h). Defined as a real method in
      * src/_ZN10daPgDfdr_cD1Ev.cpp / src/_ZN10daPgDfdr_cD0Ev.cpp -- both empty
      * bodies; the compiler emits the three member teardowns (in reverse
-     * declaration order: MovingCylinderClsn, TextureSequence, ModelAnim), the
+     * declaration order: dCcAc_c, TextureSequence, ModelAnim), the
      * two inherited vtable stores and the two dBgActor_c member teardowns on
      * its own. */
     virtual ~daPgDfdr_c();
@@ -100,7 +100,7 @@ typedef char daPgDfdr_c_size_must_be_0x3dc[sizeof(daPgDfdr_c) == 0x3dc ? 1 : -1]
 /* The same object for a C translation unit, which has no base class to
    inherit dBgActor_c's fields from and so spells the whole layout flat.
    dBgActor_c's own C-side layout is duplicated from include/dBgActor_c.h;
-   ModelAnim/TextureSequence/MovingCylinderClsn are opaque byte blobs here
+   ModelAnim/TextureSequence/dCcAc_c are opaque byte blobs here
    because their own headers are C++-only. */
 struct daPgDfdr_c {
     u8  pad_000[0x5c];
@@ -145,7 +145,7 @@ struct daPgDfdr_c {
     /* daPgDfdr_c's own bytes, from the header comment above. */
     u8  mModelAnim[0x64];             /* 0x320 */
     u8  mTextureSequence[0x14];       /* 0x384 */
-    u8  mMovingCylinderClsn[0x34];    /* 0x398 */
+    u8  mdCcAc_c[0x34];    /* 0x398 */
     void *unk_3cc;                    /* 0x3cc */
     s32   unk_3d0;                    /* 0x3d0 */
     s32   unk_3d4;                    /* 0x3d4 */

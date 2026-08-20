@@ -6,7 +6,7 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-    void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* c, void* v);
+    void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* c, void* v);
     void* _ZN8dActor_c10FindWithIDEj(u32 id);
     void _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(void* self, void* a, void* p);
     void _ZN8dActor_c8PoofDustEv(void* self);
@@ -28,7 +28,7 @@ extern "C" void func_ov032_021113fc(void* self)
     v1.x = data_ov032_021137cc.x;
     v1.y = data_ov032_021137cc.y;
     v1.z = data_ov032_021137cc.z;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3((void*)(c+0x110), &v1);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3((void*)(c+0x110), &v1);
 
     u32 id1 = *(u32*)(c+0x134);
     if (id1 != 0) {
@@ -57,7 +57,7 @@ extern "C" void func_ov032_021113fc(void* self)
     v2.x = data_ov032_021137d8.x;
     v2.y = data_ov032_021137d8.y;
     v2.z = data_ov032_021137d8.z;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3((void*)(c+0x150), &v2);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3((void*)(c+0x150), &v2);
 
     u32 id2 = *(u32*)(c+0x174);
     if (id2 == 0) return;

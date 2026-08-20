@@ -6,19 +6,19 @@
 #include "Klepto.h"
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
-struct CylinderClsn;
-struct WithMeshClsn;
+struct dCc_c;
+struct dBgCh_Actr;
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(void *self, CylinderClsn *cc);
-void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
+void _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(void *self, dCc_c *cc);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm, unsigned int j);
 void func_ov062_0211c6a8(void *self);
 void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 void func_02012790(int a, int b);
 void func_ov062_0211c658(void *c, PMF *p);
 void _ZN7fBase_c18MarkForDestructionEv(void *self);
-void _ZN12CylinderClsn5ClearEv(CylinderClsn *self);
-void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
+void _ZN5dCc_c5ClearEv(dCc_c *self);
+void _ZN5dCc_c6UpdateEv(dCc_c *self);
 extern char data_ov062_0211e17c[];
 }
 
@@ -45,8 +45,8 @@ int Klepto::Behavior()
         mVertSpeed = lim;
         unk_0ac = t;
     }
-    _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsn1));
-    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 0);
+    _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c(((char *)this), (dCc_c *)((char *)&mdCcAc_c1));
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0);
 
     mAngleX = mPrevAngleX;
     mAngleY = mPrevAngleY;
@@ -95,10 +95,10 @@ skip_destroy:
         func_ov062_0211b51c(((char *)this));
     }
 
-    _ZN12CylinderClsn5ClearEv((CylinderClsn *)((char *)&mMovingCylinderClsn1));
-    _ZN12CylinderClsn6UpdateEv((CylinderClsn *)((char *)&mMovingCylinderClsn1));
-    _ZN12CylinderClsn5ClearEv((CylinderClsn *)((char *)&mMovingCylinderClsn2));
-    _ZN12CylinderClsn6UpdateEv((CylinderClsn *)((char *)&mMovingCylinderClsn2));
+    _ZN5dCc_c5ClearEv((dCc_c *)((char *)&mdCcAc_c1));
+    _ZN5dCc_c6UpdateEv((dCc_c *)((char *)&mdCcAc_c1));
+    _ZN5dCc_c5ClearEv((dCc_c *)((char *)&mdCcAc_c2));
+    _ZN5dCc_c6UpdateEv((dCc_c *)((char *)&mdCcAc_c2));
 
     return 1;
 }

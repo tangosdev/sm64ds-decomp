@@ -5,12 +5,12 @@
 /* recovered: named members + shared header, real C++ method */
 #include "SlidingPlatformWf.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 int SlidingPlatformWf::CleanupResources()
 {
-  if(((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
-    ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
+  if(((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled())
+    ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
   ((SharedFilePtr *)(*(void**)(data_ov091_02135024 + (unsigned char)((char *)this)[0x322]*0xc)))->Release();
   ((SharedFilePtr *)(*(void**)(data_ov091_02135028 + (unsigned char)((char *)this)[0x322]*0xc)))->Release();
   return 1;

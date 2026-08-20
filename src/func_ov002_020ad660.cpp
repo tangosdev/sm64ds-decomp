@@ -3,12 +3,12 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *o);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *o);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *o);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *o);
 extern void _ZN12dEnemyBase_c9SpawnCoinEv(void *o);
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *o);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *o, void *cc);
-extern void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *o, void *w, unsigned int j);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void *o, void *cc);
+extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *o, void *w, unsigned int j);
 extern void Vec3_Asr(void *d, const void *s, int sh);
 extern void Matrix4x3_FromTranslation(void *m, int x, int y, int z);
 extern void Matrix4x3_ApplyInPlaceToTranslation(void *m, int x, int y, int z);
@@ -64,7 +64,7 @@ extern "C" int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags)
         return 0;
 
     if (*(unsigned short *)(c + 0x102) == 0 ||
-        (p != 0 && (_ZNK12WithMeshClsn10IsOnGroundEv(p) || _ZNK12WithMeshClsn8IsOnWallEv(p)))) {
+        (p != 0 && (_ZNK10dBgCh_Actr10IsOnGroundEv(p) || _ZNK10dBgCh_Actr8IsOnWallEv(p)))) {
         if (flags & 1)
             _ZN12dEnemyBase_c9SpawnCoinEv(c);
         if (flags & 2)
@@ -74,9 +74,9 @@ extern "C" int func_ov002_020ad660(void *cc, void *pp, void *r5p, int flags)
     }
 
     *(unsigned short *)LAUNDER(c + 0x102) -= 1;
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, 0);
     if (p != 0)
-        _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(c, p, 0);
+        _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(c, p, 0);
 
     if (r5 != 0) {
         *(short *)LAUNDER(c + 0x8c) += *(short *)(c + 0xec);

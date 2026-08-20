@@ -12,13 +12,13 @@
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
  *
- *     0x110 MovingCylinderClsn         0x34    -> 0x144
- *     0x144 WithMeshClsn               0x1bc   -> 0x300
+ *     0x110 dCcAc_c         0x34    -> 0x144
+ *     0x144 dBgCh_Actr               0x1bc   -> 0x300
  *
  * Typing them absorbed markers that were their insides:
- *   - unk_128 = MovingCylinderClsn.flags
- *   - unk_130 = MovingCylinderClsn.hitFlags
- *   - unk_134 = MovingCylinderClsn.otherOwner
+ *   - unk_128 = dCcAc_c.flags
+ *   - unk_130 = dCcAc_c.hitFlags
+ *   - unk_134 = dCcAc_c.otherOwner
  *
  * SIZE IS THE ROM'S OWN: `LavaBubble_Spawn` calls
  * `fBase_c::operator new(796)` -- 0x31c -- and stores this class's
@@ -26,12 +26,12 @@
  */
 
 #include "dEnemyBase_c.h"
-#include "MovingCylinderClsn.h"
-#include "WithMeshClsn.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 
 struct LavaBubble : dEnemyBase_c {
-    MovingCylinderClsn           mMovingCylinderClsn;   /* 0x110 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x144 */
+    dCcAc_c           mdCcAc_c;   /* 0x110 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     s32                          unk_300;               /* 0x300 */
     s32                          unk_304;               /* 0x304 */
     s32                          unk_308;               /* 0x308 */

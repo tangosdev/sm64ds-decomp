@@ -7,7 +7,7 @@
 
 extern unsigned char DecIfAbove0_Byte(unsigned char* p);
 extern void MulVec3Mat4x3(void* a, void* m, void* out);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 extern void Vec3_Add(void* out, void* a, void* b);
 extern int Vec3_HorzDist(void* a, void* b);
 extern short Vec3_HorzAngle(void* a, void* b);
@@ -16,9 +16,9 @@ extern void Math_Function_0203b14c(void* ptr, int target, int rate, int limit, i
 extern void ApproachAngle(void* cur, short target, int divisor, int band, int maxStep);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* file, int a, int b, unsigned int c);
 extern int func_ov002_020ec654(unsigned char* p);
-extern void _ZN12CylinderClsn5ClearEv(void* self);
+extern void _ZN5dCc_c5ClearEv(void* self);
 extern int Vec3_Dist(void* a, void* b);
-extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(void* self);
+extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(void* self);
 
 extern int data_020a0e68[];
 extern void* data_ov002_0210e6b0[];
@@ -53,7 +53,7 @@ void func_ov002_020ed0d4(char* self)
         if (*(int*)(*(char**)(self + 0x38c) + 0x37c) != 0
             || func_ov002_020cf700(*(char**)(self + 0x38c)) != 0
             || func_ov002_020d0d2c(*(char**)(self + 0x38c)) != 0) {
-            if (_ZNK12WithMeshClsn10IsOnGroundEv(self + 0x144) != 0) {
+            if (_ZNK10dBgCh_Actr10IsOnGroundEv(self + 0x144) != 0) {
                 *(short*)(self + 0x3e4) = *(short*)(*(char**)(self + 0x38c) + 0x8c);
                 *(short*)(self + 0x3e8) = *(short*)(*(char**)(self + 0x38c) + 0x90);
                 pt1 = (int*)(com + 0x68);
@@ -156,11 +156,11 @@ void func_ov002_020ed0d4(char* self)
         func_ov002_020ed738(self);
     }
 
-    _ZN12CylinderClsn5ClearEv(self + 0x110);
+    _ZN5dCc_c5ClearEv(self + 0x110);
     {
         int dist = Vec3_Dist(self + 0x5c, com + 0x5c);
         if (*(unsigned char*)(*(char**)(self + 0x38c) + 0x709) != 0) return;
         if (dist >= 0x190000) return;
-        WithMeshClsn_UpdateDiscreteNoLava_veneer(self + 0x144);
+        dBgCh_Actr_UpdateDiscreteNoLava_veneer(self + 0x144);
     }
 }

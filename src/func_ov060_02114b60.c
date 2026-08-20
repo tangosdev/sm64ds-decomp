@@ -1,7 +1,7 @@
 #include "types.h"
 extern void func_02012694(int a, void *b);
 extern int _ZN8dActor_c14GetSubtractionEss(char *self, s16 a, s16 b);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(char *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(char *self);
 void func_ov060_02114b60(char *c)
 {
   int *pflag = (int *) ((((int) c) + 0x378));
@@ -51,7 +51,7 @@ void func_ov060_02114b60(char *c)
           r4 = 1;
         }
       }
-      if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x14c) == 0)
+      if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x14c) == 0)
       {
         *((int *) (c + 0x5c)) = *((int *) (c + 0x3c8));
         *((int *) (c + 0x60)) = *((int *) (c + 0x3cc));

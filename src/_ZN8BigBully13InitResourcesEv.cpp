@@ -7,14 +7,14 @@
 #include "BigBully.h"
 extern "C" {
 typedef struct dActor_c dActor_c;
-struct RaycastGround { char buf[0x50]; };
+struct dBgCh_Gnd { char buf[0x50]; };
 
 extern int func_ov064_02116ec0(void* obj);
 extern int _ZN8dActor_c9TrackStarEjj(dActor_c* self, unsigned int a, unsigned int b);
-extern void _ZN13RaycastGroundC1Ev(RaycastGround* self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* self, const Vector3* p, dActor_c* a);
-extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround* self);
-extern void _ZN13RaycastGroundD1Ev(RaycastGround* self);
+extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* self, const Vector3* p, dActor_c* a);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* self);
+extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* self);
 extern dActor_c* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 actorID, u32 param1, const Vector3* pos, const Vector3_16* rot, s8 areaID, s16 deathTableID);
 extern s16 data_02082214[];
 }
@@ -30,14 +30,14 @@ int BigBully::InitResources()
     mSecretSoundCounter = 0;
 
     if ((param1 & 0xff00) == 0x100) {
-        RaycastGround rg;
+        dBgCh_Gnd rg;
         Vector3 pos;
         Vector3 v;
         int i;
         int ang;
 
         unk_3fe = 0;
-        _ZN13RaycastGroundC1Ev(&rg);
+        _ZN9dBgCh_GndC1Ev(&rg);
 
         {
             int tz = mPosZ;
@@ -47,9 +47,9 @@ int BigBully::InitResources()
             v.y = ty;
             v.z = tz;
         }
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (dActor_c*)((char*)this));
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (dActor_c*)((char*)this));
 
-        if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
             pos.y = *(int*)(rg.buf + 0x44);
         }
 
@@ -66,7 +66,7 @@ int BigBully::InitResources()
             if (spawned != 0) {
                 *(int*)((char*)spawned + 0x3fc) = uniqueID;
             } else {
-                _ZN13RaycastGroundD1Ev(&rg);
+                _ZN9dBgCh_GndD1Ev(&rg);
                 return 0;
             }
 
@@ -74,7 +74,7 @@ int BigBully::InitResources()
             ang += 0x5555;
         } while (i < 3);
 
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
         goto done;
     }
 

@@ -8,7 +8,7 @@
  * the longest unbroken run this branch has found:
  *
  *     dEnemyBase_c                     ends 0x110
- *     MovingCylinderClsnWithPos 0x110 +   0x40  = 0x150  -> ModelAnim
+ *     dCcAcPos_c 0x110 +   0x40  = 0x150  -> ModelAnim
  *     ModelAnim                 0x150 +   0x64  = 0x1b4  -> ShadowModel
  *     ShadowModel               0x1b4 +   0x28  = 0x1dc  -> the link models
  *     Model[7]                  0x1dc + 7*0x50  = 0x40c  -> the link shadows
@@ -26,10 +26,10 @@
 #include "Model.h"
 #include "ModelAnim.h"
 #include "ShadowModel.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAcPos_c.h"
 
 struct ChainChomp : dEnemyBase_c {
-    MovingCylinderClsnWithPos mMovingCylinderClsnWithPos;  /* 0x110 */
+    dCcAcPos_c mdCcAcPos_c;  /* 0x110 */
     ModelAnim mModelAnim;                                  /* 0x150 */
     ShadowModel mShadowModel;                              /* 0x1b4 */
     Model mLinkModels[7];                                  /* 0x1dc */
@@ -89,7 +89,7 @@ struct ChainChomp {
     u8  pad_0cd[0x1];
     s16 unk_0ce;                 /* 0x0ce */
     u8  pad_0d0[0x40];
-    u8  mMovingCylinderClsnWithPos;            /* 0x110 */
+    u8  mdCcAcPos_c;            /* 0x110 */
     u8  pad_111[0x3f];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x150 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */

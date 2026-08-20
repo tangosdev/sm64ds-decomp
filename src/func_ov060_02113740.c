@@ -1,17 +1,17 @@
 #include "types.h"
 typedef struct Vec3 { int x, y, z; } Vec3;
-typedef struct RaycastGround {
+typedef struct dBgCh_Gnd {
     char pre[0x10];
     char result[0x34];
     int clsnY;
     char post[0x8];
-} RaycastGround;
+} dBgCh_Gnd;
 
-extern void _ZN13RaycastGroundC1Ev(RaycastGround *self);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround *self, Vec3 *pos, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround *self);
-extern int _ZNK10ClsnResult9GetClsnIDEv(void *self);
-extern void _ZN13RaycastGroundD1Ev(RaycastGround *self);
+extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd *self);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd *self, Vec3 *pos, void *actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd *self);
+extern int _ZNK5dBgPi9GetClsnIDEv(void *self);
+extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd *self);
 extern void func_ov060_02113a94(void *c);
 extern void func_ov060_02111cc0(void *c, int a, int b);
 extern void func_02012694(int a, void *p);
@@ -25,14 +25,14 @@ extern int Bowser_IsAnimAtLastFrame(void *c);
 void func_ov060_02113740(char *c)
 {
     Vec3 pos;
-    RaycastGround rc;
+    dBgCh_Gnd rc;
     int hit;
     int ground;
 
     ground = *(int*)(c + 0x3b4) - 0x7d0000;
     hit = 0;
     if (*(int*)(c + 0x60) >= *(int*)(c + 0x3b4)) {
-        _ZN13RaycastGroundC1Ev(&rc);
+        _ZN9dBgCh_GndC1Ev(&rc);
         {
             int pz = *(int*)(c + 0x64);
             int py = *(int*)(c + 0x3b4) + 0x96000;
@@ -41,13 +41,13 @@ void func_ov060_02113740(char *c)
             pos.y = py;
             pos.z = pz;
         }
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, &pos, c);
-        if (_ZN13RaycastGround10DetectClsnEv(&rc)) {
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, &pos, c);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc)) {
             ground = rc.clsnY;
-            if (_ZNK10ClsnResult9GetClsnIDEv(&rc.result) != -1)
+            if (_ZNK5dBgPi9GetClsnIDEv(&rc.result) != -1)
                 hit = 1;
         }
-        _ZN13RaycastGroundD1Ev(&rc);
+        _ZN9dBgCh_GndD1Ev(&rc);
     }
 
     *(int*)(c + 0x418) |= 0x10000;

@@ -8,13 +8,13 @@
 extern "C" {
     void* _ZN8dActor_c10FindWithIDEj(u32 id);
     void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* self, const Vector3& v, u32 a, Fix12i b, u32 c, u32 d, u32 e);
-    void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* cc);
+    void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cc);
     void func_02038408(void* p);
-    void WithMeshClsn_UpdateContinuous_Veneer(void* p);
-    int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
-    void* _ZNK12WithMeshClsn14GetFloorResultEv(void* self);
+    void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
+    int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
+    void* _ZNK10dBgCh_Actr14GetFloorResultEv(void* self);
     void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void* self, Vector3* out);
-    int _ZNK12WithMeshClsn13JustHitGroundEv(void* self);
+    int _ZNK10dBgCh_Actr13JustHitGroundEv(void* self);
     int _ZN4cstd4fdivEii(int a, int b);
     int func_ov060_02112ba8(char* c);
 }
@@ -61,20 +61,20 @@ extern "C" void func_ov060_021128c0(char* c)
         *(u16*)((char*)(((int)c + 0x300)) + 0xfc) = 0;
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0x360);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0x360);
 
     if (*(u8*)(c + 0x414) == 1)
         func_02038408(c + 0x14c);
     else
-        WithMeshClsn_UpdateContinuous_Veneer(c + 0x14c);
+        dBgCh_Actr_UpdateContinuous_Veneer(c + 0x14c);
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x14c)) {
-        void* fr = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x14c);
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x14c)) {
+        void* fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x14c);
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)fr + 4, (Vector3*)(c + 0x3bc));
         *(s32*)(c + 0x3c8) = *(s32*)(c + 0x5c);
         *(s32*)(c + 0x3cc) = *(s32*)(c + 0x60);
         *(s32*)(c + 0x3d0) = *(s32*)(c + 0x64);
-        if (*(u8*)(c + 0x427) != 0 && _ZNK12WithMeshClsn13JustHitGroundEv(c + 0x14c)) {
+        if (*(u8*)(c + 0x427) != 0 && _ZNK10dBgCh_Actr13JustHitGroundEv(c + 0x14c)) {
             *(s32*)(c + 0xa8) = (*(s32*)(c + 0xa8) * -60) / 100;
             if (*(s32*)(c + 0xa8) >= 0x14000)
                 *(s32*)(c + 0xa8) = 0x14000;
@@ -87,7 +87,7 @@ extern "C" void func_ov060_021128c0(char* c)
     }
 
     if (data_ov060_02119268[idx] != 0) {
-        if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x14c)) {
+        if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x14c)) {
             char* p400 = (char*)(((int)c + 0x400));
             s32* px = (s32*)(((int)c + 0x5c));
             s32* pz = (s32*)(((int)c + 0x64));

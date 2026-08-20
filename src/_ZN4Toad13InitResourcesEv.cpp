@@ -16,9 +16,9 @@
  * data_ov085_0212f27c requires -- which is how one Toad says different things
  * before and after you have earned what he is guarding.
  *
- * Finally he is dropped onto the ground: a RaycastGround is aimed 0x14000
+ * Finally he is dropped onto the ground: a dBgCh_Gnd is aimed 0x14000
  * above his spawn point and, if it hits, mPosY is snapped to the surface. That
- * `(char *)&ray + 0x44` in the placeholder body is RaycastGround::clsnY, so it
+ * `(char *)&ray + 0x44` in the placeholder body is dBgCh_Gnd::clsnY, so it
  * is a member read now, and the local's `char buf[0x50]` stand-in is gone.
  *
  * `#pragma opt_propagation off` IS LOAD-BEARING and stays. Without it mwcc
@@ -27,7 +27,7 @@
  */
 #pragma opt_propagation off
 #include "Toad.h"
-#include "RaycastGround.h"
+#include "dBgCh_Gnd.h"
 #include "SharedFilePtr.h"
 
 extern "C" {
@@ -38,28 +38,28 @@ extern BMD_File *_ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr *p);
 extern BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr *p);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, BMD_File *f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void *thiz);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, Fix12i a, Fix12i b, u32 c, u32 d);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void *thiz, void *actor, Fix12i a, Fix12i b, u32 c, u32 d);
 extern int func_02013a44(void);
 extern void *_ZN8dActor_c13ClosestPlayerEv(void *thiz);
 extern void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3 *pos, const void *rot, int e, int f);
 extern u8 NumStars(void);
 extern int IsStarCollectedInCurLevel(int s);
 extern void func_ov085_02129524(void *c, int i);
-extern void _ZN13RaycastGroundC1Ev(void *thiz);
-extern int _ZN13RaycastGround10DetectClsnEv(void *thiz);
-extern void _ZN13RaycastGroundD1Ev(void *thiz);
+extern void _ZN9dBgCh_GndC1Ev(void *thiz);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *thiz);
+extern void _ZN9dBgCh_GndD1Ev(void *thiz);
 }
 
 int Toad::InitResources()
 {
-    RaycastGround ray;
+    dBgCh_Gnd ray;
     Vector3 objPos;
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_02130488);
     _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov085_02130490);
     _ZN9ModelBase7SetFileEP8BMD_Fileii(&mModelAnim,
         _ZN5Model8LoadFileER13SharedFilePtr(&data_ov085_02130480), 1, 0x16);
     _ZN11ShadowModel12InitCylinderEv(&mShadowModel);
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(&mMovingCylinderClsn, this,
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(&mdCcAc_c, this,
         0x78000, 0x8c000, 0x4200004, 0);
     unk_20d = 0xff;
     unk_20e = 0xff;
@@ -112,10 +112,10 @@ int Toad::InitResources()
     objPos.y = mPosY;
     objPos.z = mPosZ;
     objPos.y = objPos.y + 0x14000;
-    _ZN13RaycastGroundC1Ev(&ray);
+    _ZN9dBgCh_GndC1Ev(&ray);
     ray.SetObjAndPos(objPos, 0);
-    if (_ZN13RaycastGround10DetectClsnEv(&ray))
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&ray))
         mPosY = ray.clsnY;
-    _ZN13RaycastGroundD1Ev(&ray);
+    _ZN9dBgCh_GndD1Ev(&ray);
     return 1;
 }

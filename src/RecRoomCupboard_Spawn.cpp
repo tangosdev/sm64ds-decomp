@@ -2,8 +2,8 @@
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int);
 extern void _ZN8dActor_cC2Ev(void*);
-extern void _ZN25MovingCylinderClsnWithPosD1Ev(void*);
-extern void _ZN25MovingCylinderClsnWithPosC1Ev(void*);
+extern void _ZN10dCcAcPos_cD1Ev(void*);
+extern void _ZN10dCcAcPos_cC1Ev(void*);
 extern void func_020733a8(void* arr, int count, int size, void(*ctor)(void*), void(*dtor)(void*));
 extern void* _ZTV15RecRoomCupboard[];
 int* RecRoomCupboard_Spawn(void){
@@ -11,7 +11,7 @@ int* RecRoomCupboard_Spawn(void){
   if(p){
     _ZN8dActor_cC2Ev(p);
     *(void***)p = (void**)_ZTV15RecRoomCupboard;
-    func_020733a8((char*)p+0xd4, 5, 0x40, _ZN25MovingCylinderClsnWithPosC1Ev, _ZN25MovingCylinderClsnWithPosD1Ev);
+    func_020733a8((char*)p+0xd4, 5, 0x40, _ZN10dCcAcPos_cC1Ev, _ZN10dCcAcPos_cD1Ev);
   }
   return p;
 }

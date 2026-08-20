@@ -1,4 +1,17 @@
-# Handoff: `MeshCollider::DetectClsn(SphereClsn&)`
+# Handoff: `dBgW_Kc::DetectClsn(dBgCh_SphCrr&)`
+
+> **STALE IN ITS TOP HALF (checked 2026-08-19). Use `notes/collision-system.md`.**
+>
+> - **The numbers below are wrong.** The draft in `notes/` was replaced on 2026-08-19 with the
+>   better body banked in `nearmiss/db.jsonl`. Measured on one worktree at 2004/b56:
+>   the new body is `cand=1750  equal=565  ratio=0.3203` — **28 instructions short**. The
+>   body this note describes scored `cand=1725  equal=366  ratio=0.2090` — 53 short, not 34.
+> - **"Every mechanism is written / nothing structural is missing" was never true.** Its own
+>   companion note, in the same PR, calls the wall block "the single largest unwritten region".
+> - **§0's compiler warning is redundant.** #1619 dropped all pins; `2004/b56` is the tree-wide
+>   default and `fdiff --version` already defaults to it.
+> - **"Of 16 installed mwccarm builds"** — 25 are installed now. The conclusion still holds.
+> - §2, §3, §5 and §7 are accurate and worth reading.
 
 Everything needed to land ITCM `0x01ffb830`, size `0x1bc8`. Discovery is done and so is
 transcription: every mechanism is written and the draft is 34 instructions short of the
@@ -13,11 +26,11 @@ summary.
 
 **Build at `2004/b56`. Not 1.2/sp2p3.**
 
-The previous floor for the sibling `DetectClsn(RaycastLine&)` was pinned to 1.2/sp2p3 and
+The previous floor for the sibling `DetectClsn(dBgCh_Lin&)` was pinned to 1.2/sp2p3 and
 every lever in it was measured on the wrong compiler. Of **16 installed mwccarm builds,
 exactly one reproduces the ROM's size** for these functions:
 
-| builds | size for RaycastLine |
+| builds | size for dBgCh_Lin |
 |---|---|
 | 1.2/base, 1.2/sp2, 1.2/sp2p3 | 0x73c |
 | 1.2/sp3, 1.2/sp4 | 0x728 |
@@ -25,12 +38,12 @@ exactly one reproduces the ROM's size** for these functions:
 | **2004/b56** | **0x734 — exact** |
 
 An exact size is evidence about the *build*, not only about the source. Derive the build from
-the twin that already matched (`DetectClsn(RaycastGround&)` matched on 2004/b56), and
+the twin that already matched (`DetectClsn(dBgCh_Gnd&)` matched on 2004/b56), and
 re-derive it from size when a function is unmatched.
 
 ```
 python tools/fdiff.py --c <draft>.cpp \
-  --name _ZN12MeshCollider10DetectClsnER10SphereClsn \
+  --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
   --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56
 ```
 
@@ -65,8 +78,8 @@ in. Nothing structural is known to be missing.
 **The work left is codegen, not transcription.** The divergences are scattered 1–8
 instruction ranges throughout — register allocation, scheduling and expression form — with no
 missing block anywhere. Per `notes/matching-style.md` and the batch playbook, that is the
-point to stop sweeping and go read the matched siblings: `DetectClsn(RaycastGround&)` is the
-twin that already matches on this build, and `DetectClsn(RaycastLine&)` shares the octree
+point to stop sweeping and go read the matched siblings: `DetectClsn(dBgCh_Gnd&)` is the
+twin that already matches on this build, and `DetectClsn(dBgCh_Lin&)` shares the octree
 walk verbatim. The largest single gap is `target[129:137]`, eight words in the entry's
 constant-hoisting block — the frame slots the four inlined sqrt expansions share.
 
@@ -76,7 +89,7 @@ constant-hoisting block — the frame slots the four inlined sqrt expansions sha
 1  three edge-normal rejects (tri+0x8, +0xa, +0xc), then the face reject (tri+0x6)
 2  depth = rsc - faceDot
 3  triID via func_020396dc; GetSurfaceInfo (REAL virtual call); CopyNormalTo; classify
-4  BgCh::ShouldPassThroughImpl -> reject
+4  dBgCh::ShouldPassThroughImpl -> reject
 5  Voronoi dispatch: face, or the edge/vertex distance -- sqrt'd, not compared
 6  record into the class slot, set the class bit, accumulate depth x normal
 ```
@@ -120,8 +133,8 @@ discriminator", for the corrected map. Summary of the corrections:**
 
 Also newly mapped, none of it anticipated here: an inlined **raw** hardware sqrt at four
 sites that is *not* `cstd::sqrt(u64)`; a per-edge filter using `unk_48` (a **shift count**),
-`unk_4d`, `SphereClsn` flag bits 2 and 0x20, `DotVec3` against the `Vector3` at
-`MeshCollider+0x28`, and `cstd::fdiv` guarded by `func_020397dc` (`|x| <= 8`).
+`unk_4d`, `dBgCh_SphCrr` flag bits 2 and 0x20, `DotVec3` against the `Vector3` at
+`dBgW_Kc+0x28`, and `cstd::fdiv` guarded by `func_020397dc` (`|x| <= 8`).
 
 Nothing here remains open: all three vertex blocks are written, and so is the wall block that
 this section never mentioned. See section 1 for where the draft actually stands.
@@ -141,7 +154,7 @@ every reject compare match, and `>>10` is scale-preserving for a normal-normal p
 
 ## 5. The frame
 
-Declaration order **is** the frame on this compiler — the matched `RaycastGround` twin's first
+Declaration order **is** the frame on this compiler — the matched `dBgCh_Gnd` twin's first
 lever. The fourteen zeroed words, in order, are already placed in the draft:
 
 | slot | | slot | |
@@ -181,8 +194,8 @@ whether the new code is reachable and has side effects before diagnosing.
 
 ## 8. Fields this function gave a purpose to
 
-`MeshCollider::unk_34`, `unk_35`, `unk_38`, `unk_44` and `unk_4c` are all consumed here as a
+`dBgW_Kc::unk_34`, `unk_35`, `unk_38`, `unk_44` and `unk_4c` are all consumed here as a
 normal filter on the face test — a face-angle cutoff, a preferred-direction test against a
 stored axis, and the gate on edge/vertex handling. The set/clear accessors for `0x34`/`0x35`
 and the writer for the `0x38` vector were among the **original eleven ITCM matches** and had
-no known purpose until now. `include/MeshCollider.h` can name them.
+no known purpose until now. `include/dBgW_Kc.h` can name them.

@@ -8,7 +8,7 @@ struct Flags { unsigned short b0 : 1, b1 : 1, b2 : 1, b3 : 1, fld : 2; };
 
 
 extern void func_02012694(int a, void* p);
-extern char* _ZNK12WithMeshClsn14GetFloorResultEv(void* c);
+extern char* _ZNK10dBgCh_Actr14GetFloorResultEv(void* c);
 extern int func_02037e38(void* p);
 extern int func_02037e58(void* p);
 extern void func_ov002_020e947c(void* self, struct Vector3* p, int d);
@@ -37,7 +37,7 @@ void func_ov002_020e88a8(char* self) {
         *(int*)(self + 0x98) = 0xc000;
         *(int*)(self + 0xa8) = 0x17000;
     }
-    r = func_02037e38(_ZNK12WithMeshClsn14GetFloorResultEv(self + 0x150) + 4);
+    r = func_02037e38(_ZNK10dBgCh_Actr14GetFloorResultEv(self + 0x150) + 4);
     if (r == 1 || r == 9) {
         w.x = *(int*)(self + 0x448);
         w.y = *(int*)(self + 0x44c);
@@ -65,7 +65,7 @@ void func_ov002_020e88a8(char* self) {
         *(short*)(self + 0x94) = Vec3_HorzAngle(&v, (struct Vector3*)(self + 0x5c));
         if (*(int*)(self + 0xd8) >= *(short*)(data_02082714 + 0x56)) {
             if (data_0209f2f8 != 0x1d) return;
-            if (func_02037e58(_ZNK12WithMeshClsn14GetFloorResultEv(self + 0x150) + 4) != 5) return;
+            if (func_02037e58(_ZNK10dBgCh_Actr14GetFloorResultEv(self + 0x150) + 4) != 5) return;
         }
         {
             short* a = (short*)((int)(((long long)(int)(self + 0x94)) | 0LL));

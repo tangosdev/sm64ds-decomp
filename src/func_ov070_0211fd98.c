@@ -3,7 +3,7 @@ typedef short s16;
 typedef struct Vector3 { int x, y, z; } Vector3;
 
 extern int Vec3_Dist(void *a, void *b);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *p);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *p);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(void *a, void *b);
@@ -30,7 +30,7 @@ int func_ov070_0211fd98(char *c)
     out[0] = 0; out[1] = 0; out[2] = 0;
 
     if (Vec3_Dist(c + 0x5c, c + 0x3c0) > 0x1f4000 ||
-        _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144)) {
+        _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144)) {
         *(s16 *)(c + 0x300 + 0xe6) = Vec3_HorzAngle(c + 0x5c, c + 0x3c0);
         if (*(unsigned short *)(c + 0x100) < 0x14)
             *(unsigned short *)(c + 0x100) = 0x14;

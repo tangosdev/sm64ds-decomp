@@ -12,8 +12,8 @@
  * The members close on each other, which is what makes the layout a
  * reading rather than a guess:
  *
- *     0x110 MovingCylinderClsnWithPos  0x40    -> 0x150
- *     0x150 WithMeshClsn               0x1bc   -> 0x30c
+ *     0x110 dCcAcPos_c  0x40    -> 0x150
+ *     0x150 dBgCh_Actr               0x1bc   -> 0x30c
  *     0x30c ModelAnim                  0x64    -> 0x370
  *
  * SIZE IS THE ROM'S OWN: `Skeeter_Spawn` calls
@@ -23,12 +23,12 @@
 
 #include "dEnemyBase_c.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsnWithPos.h"
-#include "WithMeshClsn.h"
+#include "dCcAcPos_c.h"
+#include "dBgCh_Actr.h"
 
 struct Skeeter : dEnemyBase_c {
-    MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x110 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x150 */
+    dCcAcPos_c    mdCcAcPos_c; /* 0x110 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x150 */
     ModelAnim                    mModelAnim;            /* 0x30c */
     void*                        mState;                /* 0x370 */
     s32                          unk_374;               /* 0x374 */

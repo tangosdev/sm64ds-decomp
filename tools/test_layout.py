@@ -67,7 +67,7 @@ class LayoutCheck(unittest.TestCase):
 
     # --- L3 -----------------------------------------------------------------
     def test_L3_catches_a_named_symbol_in_an_unnamed_bucket(self):
-        self.write("unnamed/ov006/_ZN3Boo6RenderEv.c")
+        self.write("unnamed/ov006/_ZN7daTrs_c6RenderEv.c")
         r = self.run_check(self.delinks())
         self.assertEqual(len(r["L3"]), 1)
         self.assertIn("not an address", r["L3"][0]["why"])
@@ -84,16 +84,16 @@ class LayoutCheck(unittest.TestCase):
 
     # --- L4 -----------------------------------------------------------------
     def test_L4_catches_a_class_split_across_directories(self):
-        self.write("actors/Boo/Boo_Spawn.cpp")
-        self.write("unnamed/ov006/_ZN3Boo6RenderEv.c")
+        self.write("actors/daTrs_c/daTrs_c_Spawn.cpp")
+        self.write("unnamed/ov006/_ZN7daTrs_c6RenderEv.c")
         r = self.run_check(self.delinks())
-        self.assertEqual([h["key"] for h in r["L4"]], ["Boo"])
-        self.assertEqual(r["L4"][0]["dirs"], ["actors/Boo", "unnamed/ov006"])
+        self.assertEqual([h["key"] for h in r["L4"]], ["daTrs_c"])
+        self.assertEqual(r["L4"][0]["dirs"], ["actors/daTrs_c", "unnamed/ov006"])
 
     def test_L4_ignores_flat_files(self):
         """The root is the unmigrated default, not a second home."""
-        self.write("actors/Boo/Boo_Spawn.cpp")
-        self.write("_ZN3Boo6RenderEv.c")
+        self.write("actors/daTrs_c/daTrs_c_Spawn.cpp")
+        self.write("_ZN7daTrs_c6RenderEv.c")
         self.assertEqual(self.run_check(self.delinks())["L4"], [])
 
     # --- waivers ------------------------------------------------------------
@@ -105,8 +105,8 @@ class LayoutCheck(unittest.TestCase):
         self.assertEqual([w["check"] for w in r["waived"]], ["L2"])
 
     def test_a_waiver_does_not_leak_across_checks(self):
-        self.write("unnamed/ov006/_ZN3Boo6RenderEv.c")
-        r = self.run_check(self.delinks(), known={("L2", "src/unnamed/ov006/_ZN3Boo6RenderEv.c")})
+        self.write("unnamed/ov006/_ZN7daTrs_c6RenderEv.c")
+        r = self.run_check(self.delinks(), known={("L2", "src/unnamed/ov006/_ZN7daTrs_c6RenderEv.c")})
         self.assertEqual(len(r["L3"]), 1)
 
     def test_known_issues_file_parses_comments_and_blanks(self):

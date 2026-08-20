@@ -16,7 +16,7 @@
  *
  * The body it forces is dBgActor_c's own layout: this class's own fields
  * (mTilt, mTiltTarget, mBumped, mSettleDelay) have no destructor, so the
- * compiler-generated body destroys only the inherited MovingMeshCollider at
+ * compiler-generated body destroys only the inherited dBgW_KcMbg at
  * 0x124 and Model at 0xd4, the same as _ZN10dBgActor_cD1Ev.
  *
  * include/daObjGuragura_c.h's own banner explains why this file does not

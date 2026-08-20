@@ -224,6 +224,7 @@ def read_slots(mods, mod_name, vt, record_addrs):
     """Slots of the vtable at `vt`.  None entries are pure-virtual."""
     m = mods[mod_name]
     out = []
+    bounded = False                  # did we stop AT a proven end-of-table?
     for i in range(MAX_SLOTS):
         a = vt + 4 * i
         if not m.has(a):
@@ -234,6 +235,7 @@ def read_slots(mods, mod_name, vt, record_addrs):
             # offset-to-top of the NEXT vtable, not a slot of this one
             nxt = m.word(a + 4) if m.has(a + 4) else 0
             if nxt in record_addrs:
+                bounded = True
                 break
             out.append(None)
             continue
@@ -241,8 +243,20 @@ def read_slots(mods, mod_name, vt, record_addrs):
             out.append(w)
             continue
         break
-    while out and out[-1] is None:
-        out.pop()                    # trailing nulls belong to no slot we can prove
+    # Trailing nulls are dropped only when we DON'T know where the table ended:
+    # the walk ran off the module or hit a non-code word, so a trailing zero is
+    # as likely to be padding as a pure virtual and we decline to claim it.
+    #
+    # When `bounded`, the next record's offset-to-top proved the boundary, so
+    # every zero before it IS a slot of this table -- a pure virtual. Popping
+    # them truncated any class whose table ENDS in pure virtuals. dCc_c
+    # (CylinderClsn) is the clear case: [D1, D0, 0, 0] at 0x0208e6ec, reported
+    # as 2 slots while all three of its derived tables report 4 and fill 2/3
+    # with GetPos/GetOwnerID. src/_ZN12CylinderClsn7ProcessEv.cpp dispatches
+    # both virtually through a CylinderClsn*, so the slots are certainly real.
+    if not bounded:
+        while out and out[-1] is None:
+            out.pop()
     return out
 
 

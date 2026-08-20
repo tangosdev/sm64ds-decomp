@@ -20,7 +20,7 @@ extern "C" {
 extern u16 DecIfAbove0_Short(void* p);
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern void func_ov073_0211f494(void* c, void* p);
-extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* c, void* clsn, void* player);
 extern void func_02012694(int a, void* b);
 extern int RandomIntInternal(u16* seed);
 extern void* _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(u32 a, u32 b, const Vector3* v, void* rot, s32 e, s32 f);
@@ -74,7 +74,7 @@ extern "C" s32 func_ov073_0211f61c(char* c)
             }
             if (r4 == 0) {
                 if ((*(s32*)(c + 0x130) & 0x70) || (*(u8*)((char*)r5 + 0x6f9) != 0)
-                    || (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, r5) != 0)) {
+                    || (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, r5) != 0)) {
                     func_ov073_0211f494(c, c);
                     *(s32*)(c + 0x98) = 0x20000;
                     r4 = 1;

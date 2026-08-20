@@ -9,7 +9,7 @@ extern void func_ov002_020ada40(void* self, void* v, void* a, int f);
 extern void func_ov062_02117bf4(void* self);
 extern void func_ov002_020aea30(void* self, void* a, int b);
 extern int _ZN6Player9IsOnShellEv(void* p);
-extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* self, void* clsn, void* player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* self, void* clsn, void* player);
 extern void func_0201267c(int a, void* p);
 extern void _ZN6Player6BounceE5Fix12IiE(void* p, int f);
 extern void _ZN6Player4HurtERK7Vector3j5Fix12IiEjjj(void* p, void* v, u32 a, int f, u32 b, u32 c, u32 d);
@@ -107,7 +107,7 @@ void func_ov062_02117c98(void* self)
             r5 = 1;
             goto tail;
         }
-        if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(self, (void*)(c + 0x110), found)) {
+        if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(self, (void*)(c + 0x110), found)) {
             if (*(s32*)(c + 0x390) == 0) {
                 func_ov062_02117bf4(self);
             } else {

@@ -6,9 +6,9 @@
 #include "HauntedChair.h"
 extern "C" {
 extern void func_0200f760(char* a, char* b);
-extern void _ZN12CylinderClsn5ClearEv(char* c);
-extern void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(char* c, char* v);
-extern void _ZN12CylinderClsn6UpdateEv(char* c);
+extern void _ZN5dCc_c5ClearEv(char* c);
+extern void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(char* c, char* v);
+extern void _ZN5dCc_c6UpdateEv(char* c);
 }
 
 int HauntedChair::Behavior()
@@ -21,8 +21,8 @@ int HauntedChair::Behavior()
   case 3: func_ov020_021129dc(((char*)this)); break;
   }
   func_ov020_02113240(((char*)this));
-  _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
-  _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x17c, ((char*)this) + 0x38c);
-  _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
+  _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
+  _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x17c, ((char*)this) + 0x38c);
+  _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
   return 1;
 }

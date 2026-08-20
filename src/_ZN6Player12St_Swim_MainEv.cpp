@@ -18,8 +18,8 @@ extern int func_ov002_020cec2c(void*);
 extern void func_ov002_020cd71c(void*);
 extern void func_ov002_020cd550(void*);
 extern unsigned int func_02022d44(unsigned int, unsigned int, int, int, int, void*);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void*);
-extern void* _ZNK12WithMeshClsn14GetFloorResultEv(void*);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void*);
+extern void* _ZNK10dBgCh_Actr14GetFloorResultEv(void*);
 extern void* func_02037dc4(void*);
 extern int _ZN4cstd5atan2E5Fix12IiES1_(int, int);
 extern void Vec3_RotateYAndTranslate(int*, void*, short, int*);
@@ -38,8 +38,8 @@ extern void _ZN5Sound9PlayBank0EjRK7Vector3(unsigned int, void*);
 extern void func_ov002_020cd2c4(void*);
 extern void func_ov002_020cd308(void*);
 extern void func_ov002_020dbf4c(void*);
-extern void _ZN12CylinderClsn5ClearEv(void*);
-extern void _ZN12CylinderClsn6UpdateEv(void*);
+extern void _ZN5dCc_c5ClearEv(void*);
+extern void _ZN5dCc_c6UpdateEv(void*);
 extern void func_ov002_020bd928(void*, unsigned int);
 extern void func_ov002_020bd8c0(void*, unsigned int);
 extern void Player_ReleaseHeldActor(void*);
@@ -109,8 +109,8 @@ int Player::St_Swim_Main()
         *(unsigned int*)&unk_630 = func_02022d44(*(volatile unsigned int*)(&unk_630), eid, pos[0], pos[1], z, 0);
     }
 
-    if (mPrevVertSpeed == 0 && _ZNK12WithMeshClsn10IsOnGroundEv(&mMeshClsn) != 0) {
-        fr = (int*)func_02037dc4((char*)_ZNK12WithMeshClsn14GetFloorResultEv(&mMeshClsn) + 4);
+    if (mPrevVertSpeed == 0 && _ZNK10dBgCh_Actr10IsOnGroundEv(&mMeshClsn) != 0) {
+        fr = (int*)func_02037dc4((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(&mMeshClsn) + 4);
         ang = fr[1];
         if (ang < 0x720 && ang > 0x400 && mPosY >= unk_64c - 0xc8000) {
             int at;
@@ -243,11 +243,11 @@ int Player::St_Swim_Main()
                 func_ov002_020cd2c4(this);
             }
         }
-        _ZN12CylinderClsn5ClearEv(&mAttackClsn);
+        _ZN5dCc_c5ClearEv(&mAttackClsn);
         sub = (int*)((char*)(*(int*)((char*)this + _ZNK6Player14GetBodyModelIDEjb(this, (unsigned char)*(int*)&param1, 0)*4 + 0xdc)) + 0x50);
         t5 = ((unsigned int)(*(int*)((char*)sub + 8)) << 4) >> 0x10;
         if ((int)t5 >= 5 && (int)t5 <= 7) {
-            _ZN12CylinderClsn6UpdateEv(&mAttackClsn);
+            _ZN5dCc_c6UpdateEv(&mAttackClsn);
         }
         break;
     case 7:

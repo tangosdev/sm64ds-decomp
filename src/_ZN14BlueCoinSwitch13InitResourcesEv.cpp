@@ -46,8 +46,8 @@ extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* m, void* f, int a, int b);
 extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* c);
 extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* c);
-extern "C" void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern "C" void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* fp);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void* mc, void* f, void* mtx, Fix12i fx, short s, void* clps);
 extern "C" void func_020393c4(void* p, void* v);
 
@@ -69,8 +69,8 @@ int BlueCoinSwitch::InitResources()
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
 
-    kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(&data_ov002_02110ac4);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov002_02110ac4);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &(*(u8 *)&mMeshCollider), kcl, &mClsnMat, 0x199, mAngleY,
         &data_ov002_0210d6f4);
 

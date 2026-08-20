@@ -15,8 +15,8 @@
  */
 #include "dBgActor_c.h"
 
-extern "C" int _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(
-    MovingMeshCollider *self, const Matrix4x3 &mat, short angleY);
+extern "C" int _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(
+    dBgW_KcMbg *self, const Matrix4x3 &mat, short angleY);
 
 void dBgActor_c::UpdateClsnPosAndRot()
 {
@@ -24,5 +24,5 @@ void dBgActor_c::UpdateClsnPosAndRot()
     mClsnMat.m[9]  = mPosX;
     mClsnMat.m[10] = mPosY;
     mClsnMat.m[11] = mPosZ;
-    _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(&mMeshCollider, mClsnMat, mAngleY);
+    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(&mMeshCollider, mClsnMat, mAngleY);
 }

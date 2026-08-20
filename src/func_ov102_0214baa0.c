@@ -1,6 +1,6 @@
 #include "types.h"
 extern void _ZN8dActor_c24KillAndTrackInDeathTableEv(void *self);
-extern void _ZN12CylinderClsn5ClearEv(void *self);
+extern void _ZN5dCc_c5ClearEv(void *self);
 extern void func_0203568c(int *value, int target);
 extern void func_02035684(int *value, int target);
 
@@ -22,7 +22,7 @@ void func_ov102_0214baa0(char *self)
 
     *(int *)(self + 0x3dc) = 5;
     *(int *)(self + 0x98) = 0;
-    _ZN12CylinderClsn5ClearEv(self + 0x110);
+    _ZN5dCc_c5ClearEv(self + 0x110);
 
     *LAUNDER_PTR(self + 0xb0) &= 0xfff1fffe;
     *(int *)(self + 0x5c) = *(int *)(self + 0x3c4);

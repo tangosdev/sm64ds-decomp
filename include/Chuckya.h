@@ -12,8 +12,8 @@
  * exactly on the first. Member NAMES are the ones this header already used --
  * a rebase should not also rename things its callers spell:
  *
- *     0x110 MovingCylinderClsn       0x34   -> 0x144
- *     0x144 WithMeshClsn             0x1bc  -> 0x300
+ *     0x110 dCcAc_c       0x34   -> 0x144
+ *     0x144 dBgCh_Actr             0x1bc  -> 0x300
  *     0x300 ModelAnim                0x64   -> 0x364
  *     0x368 ShadowModel              0x28   -> 0x390
  *
@@ -24,14 +24,14 @@
 #include "dEnemyBase_c.h"
 #include "BlendModelAnim.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 #include "PathPtr.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct Chuckya : dEnemyBase_c {
-    MovingCylinderClsn           mCylinderClsn;         /* 0x110 */
-    WithMeshClsn                 mMeshClsn;             /* 0x144 */
+    dCcAc_c           mdCc_c;         /* 0x110 */
+    dBgCh_Actr                 mMeshClsn;             /* 0x144 */
     ModelAnim                    mModel;                /* 0x300 */
     /* The state pointer, between the ModelAnim that ends at 0x364 and the
        ShadowModel that starts at 0x368. */

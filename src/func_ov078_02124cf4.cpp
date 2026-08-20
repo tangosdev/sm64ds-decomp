@@ -9,7 +9,7 @@ struct fBase_c;
 extern "C" {
     extern int data_ov078_021270ac;
     extern int data_ov078_021270ec;
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 void KingBobOmb_SetState(void* c, void* p);
 void func_02012694(int a, int* t);
 void func_ov078_02125c24(void* c, int a);
@@ -24,7 +24,7 @@ extern unsigned char data_0209f220;
 
 extern "C" int func_ov078_02124cf4(unsigned char* thiz)
 {
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(thiz + 0x110) == 0) goto done;
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(thiz + 0x110) == 0) goto done;
     *(int*)(thiz + 0x98) = 0;
     if ((int)(*(int*)(thiz + 0x4d8) - 0x28000) > *(int*)(thiz + 0x60)) {
         func_02012694(0x128, (int*)(thiz + 0x74));

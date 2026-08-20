@@ -4,8 +4,8 @@
 /* recovered: shared common types */
 #include "common.h"
 extern "C" {
-    void* _ZN8dActor_c7FindEggER12CylinderClsn(void* self, void* c);
-    void* _ZN8dActor_c18FindExplosionActorER12CylinderClsn(void* self, void* c);
+    void* _ZN8dActor_c7FindEggER5dCc_c(void* self, void* c);
+    void* _ZN8dActor_c18FindExplosionActorER5dCc_c(void* self, void* c);
     void _ZN5Sound9PlayBank0EjRK7Vector3(u32 id, const void* v);
     void func_ov071_02121634(void* self, int a);
     void* _ZN8dActor_c10FindWithIDEj(u32 id);
@@ -18,13 +18,13 @@ extern "C" void func_ov071_02120b14(void* self)
 {
     u8* c = (u8*)self;
 
-    void* egg = _ZN8dActor_c7FindEggER12CylinderClsn(self, (void*)(c+0x174));
+    void* egg = _ZN8dActor_c7FindEggER5dCc_c(self, (void*)(c+0x174));
     if (egg != 0) {
         int isEgg9 = (int)(*(u16*)((u8*)egg+0xc) == 9);
         if (isEgg9) goto playSound;
     }
 
-    if (_ZN8dActor_c18FindExplosionActorER12CylinderClsn(self, (void*)(c+0x174)) == 0) goto idCheck;
+    if (_ZN8dActor_c18FindExplosionActorER5dCc_c(self, (void*)(c+0x174)) == 0) goto idCheck;
 
 playSound:
     _ZN5Sound9PlayBank0EjRK7Vector3(9, (void*)(c+0x74));

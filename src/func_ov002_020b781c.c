@@ -9,8 +9,8 @@ extern short data_02082214[];
 extern void func_ov002_020b6fcc(void *self);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 extern void _ZN7fBase_c18MarkForDestructionEv(void *self);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-extern char *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+extern char *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, void *out);
 extern int func_02037e58(void *p);
 extern short _ZN4cstd5atan2E5Fix12IiES1_(int y, int x);
@@ -54,7 +54,7 @@ int func_ov002_020b781c(char *c)
             return 1;
         }
     }
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) == 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x144) == 0) {
         *(int *)(c + 0x408) = *(int *)(c + 0x98);
         return 1;
     }
@@ -68,7 +68,7 @@ int func_ov002_020b781c(char *c)
         *(int *)(c + 0x98) = 0;
         return 1;
     }
-    fr = _ZNK12WithMeshClsn14GetFloorResultEv(c + 0x144);
+    fr = _ZNK10dBgCh_Actr14GetFloorResultEv(c + 0x144);
     _ZNK11SurfaceInfo12CopyNormalToER7Vector3(fr + 4, c + 0xd4);
     r6 = func_02037e58(fr + 4);
     *(short *)(c + 0x3fc) = _ZN4cstd5atan2E5Fix12IiES1_(*(int *)(c + 0xd4), *(int *)(c + 0xdc));

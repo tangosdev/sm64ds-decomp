@@ -6,11 +6,11 @@
 /* Six boundaries close on sizes other headers assert:
  *
  *     dEnemyBase_c              ends 0x110
- *     MovingCylinderClsn 0x110 + 0x034 = 0x144  -> WithMeshClsn
- *     WithMeshClsn       0x144 + 0x1bc = 0x300  -> Model
+ *     dCcAc_c 0x110 + 0x034 = 0x144  -> dBgCh_Actr
+ *     dBgCh_Actr       0x144 + 0x1bc = 0x300  -> Model
  *     Model              0x300 + 0x050 = 0x350  -> ShadowModel
  *     ShadowModel        0x350 + 0x028 = 0x378  -> the second cylinder
- *     MovingCylinderClsn 0x378 + 0x034 = 0x3ac  -> mState
+ *     dCcAc_c 0x378 + 0x034 = 0x3ac  -> mState
  *
  * Two cylinder collisions, one at each end of the shell.
  */
@@ -20,15 +20,15 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ShadowModel.h"
-#include "WithMeshClsn.h"
-#include "MovingCylinderClsn.h"
+#include "dBgCh_Actr.h"
+#include "dCcAc_c.h"
 
 struct KoopaShell : dEnemyBase_c {
-    MovingCylinderClsn mCylinderClsn;        /* 0x110 */
-    WithMeshClsn mMeshClsn;                  /* 0x144 */
+    dCcAc_c mdCc_c;        /* 0x110 */
+    dBgCh_Actr mMeshClsn;                  /* 0x144 */
     Model mModel;                            /* 0x300 */
     ShadowModel mShadowModel;                /* 0x350 */
-    MovingCylinderClsn mCylinderClsn2;       /* 0x378 */
+    dCcAc_c mdCc_c2;       /* 0x378 */
     void* mState;            /* 0x3ac */
     /* Where it was spawned: InitResources copies mPos here verbatim, and
        Behavior stashes mPrevAngleY into mSpawnAngleY when the shell is spat
@@ -94,9 +94,9 @@ struct KoopaShell {
     /* Sub-objects, kept as byte markers: their sizes are fixed by the NEXT
        marker's offset, which is what the ROM evidences, and none of the five
        functions here needs a view into one. 0x110 is initialised as a
-       MovingCylinderClsn and later driven through CylinderClsn::Clear/Update,
+       dCcAc_c and later driven through dCc_c::Clear/Update,
        so the moving flavour derives from the plain one. */
-    u8  mCylinderClsn;            /* 0x110 */
+    u8  mdCc_c;            /* 0x110 */
     u8  pad_111[0x33];
     u8  mMeshClsn;            /* 0x144 */
     u8  pad_145[0x1bb];

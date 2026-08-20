@@ -9,17 +9,17 @@ int _ZN6Player15IsCollectingCapEv(void* self);
 void _ZN8dActor_c13SmallPoofDustEv(void* self);
 void _ZN7fBase_c18MarkForDestructionEv(void* self);
 u32 _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(u32 kind, u32 sub, int x, int y, int z, void* vec, void* cb);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* clsn);
-void WithMeshClsn_UpdateContinuous_Veneer(void* p);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void* self);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* clsn);
+void dBgCh_Actr_UpdateContinuous_Veneer(void* p);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void* self);
 void _Z15ApproachLinear2Rsss(short* ref, short target, short rate);
 void _Z14ApproachLinearRiii(int* ref, int target, int rate);
 u8 DecIfAbove0_Byte(u8* p);
 void _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(u32 kind, int x, int y, int z);
 void* _ZN8dActor_c10FindWithIDEj(u32 id);
 void _ZN6Player16InitWingFeathersEb(void* self, int b);
-void _ZN12CylinderClsn5ClearEv(void* self);
-void _ZN12CylinderClsn6UpdateEv(void* self);
+void _ZN5dCc_c5ClearEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* self);
 void func_ov002_020b2c44(char* c);
 }
 
@@ -46,10 +46,10 @@ int WingFeather::Behavior()
     unk_380 = _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_8CallbackE(
         unk_380, 0x4a, mPosX, mPosY, mPosZ, 0, 0);
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), 0);
-    WithMeshClsn_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
+    dBgCh_Actr_UpdateContinuous_Veneer((char*)&mWithMeshClsn);
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv((char*)&mWithMeshClsn) != 0) {
         _Z15ApproachLinear2Rsss((short*)((char*)&unk_37c), 0, 0x50);
         _Z14ApproachLinearRiii((int*)((char*)&unk_098), 0, 0x555);
         if (DecIfAbove0_Byte((u8*)((char*)&unk_384)) == 0) {
@@ -95,8 +95,8 @@ int WingFeather::Behavior()
         }
     }
 
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsn);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAc_c);
+    _ZN5dCc_c6UpdateEv((char*)&mdCcAc_c);
     func_ov002_020b2c44(((char*)this));
     return 1;
 }

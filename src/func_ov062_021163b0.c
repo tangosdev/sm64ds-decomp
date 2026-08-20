@@ -7,7 +7,7 @@ typedef int Fix12i;
 typedef struct { int x, y, z; } Vector3;
 
 extern int _ZN8dActor_c24KillAndTrackInDeathTableEv(void* c);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void* c);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 extern int _ZN8dActor_c14TriplePoofDustEv(void* c);
 extern int func_02012694(int a, void* p);
 extern void func_0200d8c8(void* cam, void* v, int strength);
@@ -22,7 +22,7 @@ int func_ov062_021163b0(char* c)
         _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
         return 1;
     }
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x144) != 0) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x144) != 0) {
         _ZN8dActor_c14TriplePoofDustEv(c);
         _ZN8dActor_c24KillAndTrackInDeathTableEv(c);
         func_02012694(0x125, c + 0x74);

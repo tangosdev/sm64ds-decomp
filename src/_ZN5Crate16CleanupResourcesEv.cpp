@@ -5,14 +5,14 @@
 /* recovered: named members + shared header, real C++ method */
 #include "Crate.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int data_ov098_0213c4c8[];
 
 int Crate::CleanupResources()
 {
   int* f;
-  if(((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled())
-    ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+  if(((dBgW *)((char *)&mMeshCollider))->IsEnabled())
+    ((dBgW *)((char *)&mMeshCollider))->Disable();
   f = 0;
   if(actorID == 0xc2) f = data_ov098_0213c4c8;
   if(f){

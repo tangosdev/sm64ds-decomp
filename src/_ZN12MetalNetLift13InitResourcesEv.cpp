@@ -18,8 +18,8 @@ extern "C" BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr &f);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, BMD_File *f, int a, int b);
 extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
-extern "C" KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr &f);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern "C" KCL_File *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr &f);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *self, KCL_File *k, Matrix4x3 *m, int fix, short s, CLPS_Block *clps);
 extern "C" void func_020393d4(void *p, void *v);
 extern "C" void func_020393c4(void *p, void *v);
@@ -31,7 +31,7 @@ extern SharedFilePtr data_ov064_0211c730;
 extern SharedFilePtr data_ov064_0211c728;
 extern CLPS_Block data_ov064_0211bb6c;
 extern "C" {
-extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_();
+extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_();
 }
 
 struct V3 { int x, y, z; };
@@ -58,11 +58,11 @@ s32 MetalNetLift::InitResources() {
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
 
-    kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov064_0211c728);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov064_0211c728);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         self + 0x124, kcl, (Matrix4x3 *)(self + 0x2ec), 0x199, *(short *)(self + 0x8e), &data_ov064_0211bb6c);
 
-    func_020393d4(self + 0x124, (void *)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(self + 0x124, (void *)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393c4(self + 0x124, (void *)&func_ov064_02117fd4);
 
     _ZN7PathPtr6FromIDEj(self + 0x360, *(int *)(self + 8) & 0xf);

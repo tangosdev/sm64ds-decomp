@@ -12,8 +12,8 @@
  *
  *     0x110 Model                      0x50   -> 0x160
  *     0x160 ShadowModel                0x28   -> 0x188
- *     0x1b8 MovingCylinderClsnWithPos  0x40   -> 0x1f8
- *     0x1f8 WithMeshClsn               0x1bc  -> 0x3b4
+ *     0x1b8 dCcAcPos_c  0x40   -> 0x1f8
+ *     0x1f8 dBgCh_Actr               0x1bc  -> 0x3b4
  *
  * Member NAMES are the ones this header already used -- a rebase should not
  * also rename things its callers spell.
@@ -27,18 +27,18 @@
 #include "dEnemyBase_c.h"
 #include "Model.h"
 #include "ModelAnim.h"
-#include "MovingCylinderClsn.h"
-#include "MovingCylinderClsnWithPos.h"
+#include "dCcAc_c.h"
+#include "dCcAcPos_c.h"
 #include "ShadowModel.h"
 #include "TextureTransformer.h"
-#include "WithMeshClsn.h"
+#include "dBgCh_Actr.h"
 
 struct RollingRock : dEnemyBase_c {
     Model                        mModel;                /* 0x110 */
     ShadowModel                  mShadowModel;          /* 0x160 */
     u8  pad_188[0x30];
-    MovingCylinderClsnWithPos    mMovingCylinderClsnWithPos; /* 0x1b8 */
-    WithMeshClsn                 mWithMeshClsn;         /* 0x1f8 */
+    dCcAcPos_c    mdCcAcPos_c; /* 0x1b8 */
+    dBgCh_Actr                 mWithMeshClsn;         /* 0x1f8 */
     u32                          unk_3b4;               /* 0x3b4 */
     u8  pad_3b8[0x6];
     u8                           mType;                 /* 0x3be */
