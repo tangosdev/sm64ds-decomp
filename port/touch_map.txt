@@ -1258,3 +1258,33 @@ at its own tip, so the page shift moved no pixel at any count either file has
 ever found sensitive. The "before" binary is this lane's own control: the same
 tree with only the ball trace's state column added and none of the touch change,
 so the two rows differ by the fix and by the page the linker chose.
+
+
+10e. THE INSET PANEL, OBSERVED RATHER THAN SCRIPTED
+------------------------------------------------------
+
+Section 8d's rule still holds: the level path is the regression surface, and
+the latch is in the branch above both layouts rather than inside either one, so
+the inset arithmetic is untouched exactly the way section 8d says it was
+untouched before. What is new is that the clamp now runs on the inset panel
+too, and the panel is a small rectangle in a corner rather than half the
+picture, so almost every point in that window is off the stylus surface.
+
+Level 1, SM64DS_DUAL_SCREEN=0, panel layout, a real pointer:
+
+    [touch] f1  PRESS client(812,580) -> DS (60,20) on the bottom (inset panel)
+    [touch] f22 drag LEFT the stylus surface at client(865,537), holding at
+                DS (112,0) until the button comes up
+    [touch] f36 release after 35 frame(s), last DS (255,0). The button came up
+                OFF the stylus surface, which is where the release edge belongs
+
+which is the same three lines the stacked runs produce, through the other
+mapper, clamped into the panel's own 256x192 rather than into a screen band.
+
+IT IS AN OBSERVATION AND NOT A FIXTURE, and it is labelled so rather than
+dressed up. Those frames are not the script this run carried: another lane's
+pointer made that press. Every attempt at a clean scripted level fixture in the
+same window lost its button mid-hold to the same contention, so what this
+section claims is that the inset branch was seen doing the right thing, not
+that a fixture was run against it. The stacked claims in 10b are the measured
+ones.
