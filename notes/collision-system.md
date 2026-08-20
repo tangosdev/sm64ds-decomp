@@ -693,6 +693,62 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   Forcing the 64x64 needs an operand mwcc cannot prove is 32-bit. Unresolved, and
   it did not block region B closing by other means.
 
+  ### Region A (calls 27->28, +168) is an ORDERING defect, not a width one
+
+  Eleven variants across five hypotheses, all dead. But the measurement narrowed
+  it a lot, so do not start over.
+
+  **First, a false lead worth knowing about.** A mnemonic histogram of region A
+  alone reads as a multiply-width defect and it is NOT one:
+
+  | mnemonic | ROM | cand | |
+  |---|---|---|---|
+  | smull | 12 | 3 | -9 |
+  | umull | 0 | 9 | +9 |
+  | mla | 0 | 18 | +18 |
+  | ldr | 39 | 57 | +18 |
+
+  That looks like nine 32x32 multiplies replaced by nine full 64x64 ones. It is an
+  artefact of comparing two spans that do not hold the same source. The
+  WHOLE-FUNCTION shift census is **identical** -- 9 `>>12` sites and 15 `>>14`
+  sites in both ROM and candidate -- so nothing anywhere is computed at the wrong
+  width. **Always census the whole function before believing a per-region
+  histogram.**
+
+  What is actually wrong is the ORDER. Region A holds the same work in both (9 of
+  the `>>12` and 3 of the `>>14`):
+
+  ```
+  ROM   0x158c 0x15a0 0x15cc  >>14   KCL_VERTEX(vc) finishes FIRST
+        0x1630 ... 0x175c     >>12   then all nine AXIS_DOT terms
+  CAND  0x1580 0x15ac 0x15d0  >>12   one AXIS_DOT starts early
+        0x15fc 0x161c 0x1644  >>14   KCL_VERTEX(vc) interleaved into it
+        0x16b0 ... 0x17ac     >>12   the other two AXIS_DOTs
+  ```
+
+  mwcc interleaves the second `KCL_VERTEX` with the first `AXIS_DOT`. That raises
+  simultaneous liveness, and the +18 `ldr` is the resulting spill traffic. The
+  +42 instructions are spills and reloads, not extra arithmetic.
+
+  ### Region A: swept and dead (11 variants)
+
+  - **Wall slab, 3 variants.** Binding the three `AXIS_DOT`s up front: -5, though
+    it does cut 31 instructions. Binding each lazily / with goto-out: byte
+    identical to baseline, so mwcc already CSEs the repeated `AXIS_DOT` inside the
+    `&&` chain.
+  - **Difference binding, 3 variants.** The ROM stores the three
+    `(v)[i] - c->i` differences to a stack Vector3 (`sp+0x198/0x19c/0x1a0`) before
+    multiplying. Reproducing that in source is worse, and grows the candidate:
+    `s32[3]` -13 (cand 1800), three scalars -13 (cand 1800), a real `Vector3`
+    **-181** (cand 1864).
+  - **`t`/`u` reuse, 2 variants.** `t` and `u` are `KCL_VERTEX` scratch and then
+    the slab bounds; the false dependency looked like the interleaving cause.
+    Giving the bounds their own names is **inert** (mwcc coalesces them back);
+    also computing them before the `KCL_VERTEX` pair is **-48**.
+
+  Untried: forcing `KCL_VERTEX(vc)` to complete via a sequence point mwcc cannot
+  schedule across, or splitting the slab test into its own function.
+
   ### Where the remaining gap is, measured
 
   | region | drift | note |
