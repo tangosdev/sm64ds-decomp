@@ -1,8 +1,8 @@
 //cpp
 // @symbol _ZN12dScStarSel_c8BehaviorEv
-// NONMATCHING: different op / idiom (div=112). Logic verified correct vs ROM; not
-// byte-matchable from C at mwccarm 1.2/sp2p3 (see notes/matching-style.md).
-// Counts as decompiled, not matched.
+// NONMATCHING: size-exact 0x834, 27 words (mwccarm 2004/b56). Residual is the
+// touch-loop register web: idx dest-reuses the player-index pool load
+// (ldrb r0,[r0] vs ROM ldrb r2,[r0]) and cascades found/b0/idx4/count.
 /* dScStarSel_c::Behavior() -- vtable slot 6. extern "C" carries the literal
  * mangled name unmangled -- see include/dScStarSel_c.h. */
 struct Obj {
@@ -32,9 +32,8 @@ extern unsigned char data_02092128;
 extern unsigned char data_02092114;
 extern unsigned char data_0209caa0[];
 extern unsigned char data_020a0e40;
-struct Row020a0de8 { unsigned char b0, b1, b2, b3; };
-extern struct Row020a0de8 data_020a0de8[];
-extern unsigned char data_020a0de9[][4];
+extern unsigned char data_020a0de8[];
+extern unsigned char data_020a0de9[];
 extern unsigned short data_020a0e58[];
 extern unsigned short data_020a0e5a[];
 extern unsigned char data_0209f1f0;
@@ -83,22 +82,25 @@ extern "C" int _ZN12dScStarSel_c8BehaviorEv(char* c) {
                 func_02012790(data_0209caa0[0x41] + 0x3C);
             }
         } else if (SublevelToLevel(data_02092110) <= 0xE) {
+            unsigned char idx = data_020a0e40;
+            unsigned char *tbl = data_020a0de8;
             int var_r4 = U8(0x115);
             int var_lr = 0;
-            struct Row020a0de8 *row = &data_020a0de8[data_020a0e40];
-            unsigned char temp_r1_2 = row->b0;
+            unsigned char temp_r1_2 = tbl[idx * 4];
+            int idx4 = idx << 2;
             if (temp_r1_2 != 0) {
                 unsigned char temp_r0_2 = U8(0x114);
-                int var_ip = 0;
+                int var_ip = var_lr;
                 if ((int)temp_r0_2 > 0) {
-                    unsigned char row_b2 = row->b2;
-                    unsigned char row_b3 = row->b3;
+                    unsigned char *row = tbl + idx4;
+                    unsigned char row_b2 = row[2];
+                    unsigned char row_b3 = row[3];
                     do {
                         if (((unsigned)(unsigned char)((row_b2 - *(unsigned char*)(c + var_ip + 0x11A)) + 8) < 0x10U)
                             && ((unsigned)row_b3 < 0x28U)
                             && ((U8(0x131) >> var_ip) & 1)) {
                             int var_r0;
-                            if ((temp_r1_2 != 0) && (data_020a0de9[data_020a0e40][0] != 0)) {
+                            if ((temp_r1_2 != 0) && (data_020a0de9[idx * 4] != 0)) {
                                 var_r0 = 1;
                             } else {
                                 var_r0 = 0;
@@ -119,7 +121,8 @@ extern "C" int _ZN12dScStarSel_c8BehaviorEv(char* c) {
                 }
             }
             if ((var_lr == 0) && (U8(0x135) == 2) && (U8(0x133) == 0) && (data_0209caa0[0x42] == 0)) {
-                if (data_020a0e58[0] & 0x20) {
+                unsigned short held = data_020a0e58[0];
+                if (held & 0x20) {
                     int temp_r1_3 = data_020a0e58[1] & 0x20;
                     if ((temp_r1_3 != 0) || (U16(0x104) == 0)) {
                         unsigned short var_r1;
@@ -136,9 +139,9 @@ extern "C" int _ZN12dScStarSel_c8BehaviorEv(char* c) {
                             func_02012790(0x12E);
                         }
                     }
-                } else {
+                } else if (held & 0x10) {
                     int temp_r1_5 = data_020a0e58[1] & 0x10;
-                    if ((data_020a0e58[0] & 0x10) && ((temp_r1_5 != 0) || (U16(0x104) == 0))) {
+                    if ((temp_r1_5 != 0) || (U16(0x104) == 0)) {
                         unsigned short var_r1_2;
                         if (temp_r1_5 != 0) var_r1_2 = 0x10; else var_r1_2 = 8;
                         U16(0x104) = var_r1_2;
