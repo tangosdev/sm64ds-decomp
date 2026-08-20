@@ -692,6 +692,39 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   reach, not of an ordering. The productive direction is the other 88 mnemonic-class
   and 72 register-class replaces, concentrated in call-gaps 28 (79), 0 (62) and 6 (56).
 
+  ### The tree has two definitions of "the C++ flags", and the gates use the wrong one
+
+  Worth knowing before quoting any `//cpp` byte score:
+
+  ```
+  swarm.CPP_FLAGS         = match.DEFAULT_FLAGS + -lang c++   ->  -w illpragmas
+  mangle / name_roundtrip = rombuild.CFLAGS     + -lang c++   ->  -Cpp_exceptions off
+  ```
+
+  `-w illpragmas` is a warning switch. **`-Cpp_exceptions off` is codegen.** The build
+  that produces the ROM uses the second (`rombuild.py:411-414` swaps the language on
+  the `//cpp` marker); every tool that *verifies* -- `fdiff`, `bytegate`, `abverify`,
+  `reverify_corpus`, `nearmiss_db`, `reloc_audit` -- uses the first.
+
+  **Measured blast radius: nil.** 550 enrolled `//cpp` files compiled under both and
+  compared byte for byte -- a 300-file spread sample of all 4,235, plus 250 of the 536
+  that contain a destructor, which is the population `-Cpp_exceptions` should actually
+  affect. **Zero differences.** So this is not a live gate defect and the shared
+  constant is deliberately left alone; changing it is tree-wide risk for no measured
+  benefit.
+
+  It is not nil on **this** draft, which is now the unusual case: a destructor on a
+  stack local inside loops that `continue` out of its scope.
+
+  ```
+  fdiff / verify   (-w illpragmas)        equal 1374   cand 1778   frame 0x1b4
+  rombuild / SHIPS (-Cpp_exceptions off)  equal 1375   cand 1778   frame 0x1b4
+  ```
+
+  One instruction, and **the shipping flags are the better one**, so nothing measured
+  this session is invalidated -- the real build is one instruction closer than every
+  number recorded above. Score this function with the build flags from here.
+
   ### The permuter path is now CLOSED on this function
 
   The SROA block needs a C++ destructor, and `mkbase.py`'s C99 stand-in cannot express
