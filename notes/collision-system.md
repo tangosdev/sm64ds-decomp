@@ -538,13 +538,169 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   it shares the octree walk verbatim with the already-matched `dBgCh_Gnd` twin, so it
   is the calibration run for 3b. Its recorded floor is a `this` register allocation
   (r7 vs r8) at 2004/b56.
-- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 731 divergences /
-  1047 equal / ratio 0.5962** (was 1213 / 565 / 0.3203 at the start of the day).
-  Candidate is 1734 instructions, 44 short of 1778.
+- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 474 divergences /
+  1304 equal / ratio 0.7336, and 1,777 instructions against the ROM's 1,778** - one
+  short. It began the previous session at 1213 / 565 / 0.3203.
 
   Progression: 565 -> 601 (block layout) -> 816 (declaration order) -> 825 (edge
-  blocks) -> 855 (min/max duplicate arms) -> **1047** (a fresh-context pass; see
-  the draft's own banner for its six edits).
+  blocks) -> 855 (min/max duplicate arms) -> 1047 (a fresh-context pass) -> **1304**
+  (the permuter session below).
+
+  ### The whole remaining defect turned out to be one thing
+
+  Every gain in the 1047 -> 1304 run is the **same mechanism**: mwccarm common-
+  subexpression-eliminates a load that the ROM re-issues. Each fix re-reads a value
+  the candidate already had in a register. **None of them changes what the function
+  computes** - every one assigns a variable the value it already holds, or spells an
+  identical read differently.
+
+  | gain | edit |
+  |---|---|
+  | **+153** | `en3 = f->normals[tri->edgeNormal3Idx];` between the two `KCL_VERTEX` rounds. mwcc was sharing the three `en3[i]` loads across both rounds. **One line.** It took the alignment's `delete` count from 100 to 21 |
+  | **+56** | the sphere centre re-bound per *component* in the slab block, **together with** reading `cr` through a `(volatile s16 *)` view. Separately these are **-27** and **-64**; only the pair pays |
+  | **+6** | six branch-polarity flips in the Voronoi dispatch - `if (MUL10(nn, dotA) > dotB) goto edgeN; goto vXX;`. The ROM branches *into* the vertex block. Exactly +1 each, additive, all 64 subsets swept |
+  | **+42** | the prism origin read through a pointer alias `tpv` at five of the six vertex-tail sites. Found by the permuter, then swept over all 64 subsets |
+
+  After these, the structure is essentially finished: **27 instructions of drift
+  summed over all 35 call-gap regions** (was 39, and before that a single region was
+  +168 on its own), and the load deficit that drove all of the above is down to 2.
+
+  ### Believe `equal` only with a second opinion
+
+  `equal` comes out of a difflib alignment, and an alignment can **re-anchor**: a
+  change that deletes instructions can raise `equal` by letting a long downstream
+  block line up again, without anything actually getting closer. The first candidate
+  the permuter produced did exactly that - it scored +136 by deleting a dot product
+  it was not allowed to delete.
+
+  So every step was also scored on an **alignment-free** metric: the 34 call sites
+  are anchors both streams agree on, and inside each gap instruction *i* is compared
+  to instruction *i* with no slack at all (`anchored.py`).
+
+  | draft | `equal` | anchored exact | cand |
+  |---|---|---|---|
+  | session start | 1047 | 496 / 1778 (0.2790) | 1734 |
+  | after +153 | 1200 | 558 / 1778 (0.3138) | 1745 |
+  | after +56 / +6 | 1262 | 574 / 1778 (0.3228) | 1752 |
+  | now | **1304** | **629 / 1778 (0.3538)** | **1777** |
+
+  Both metrics move together at every step. **Rebuild the anchored check before
+  believing any future gain on this function.**
+
+  ### The permuter: how it actually earned its keep
+
+  `tools/permuter/` was pointed at this function for the first time. It needed three
+  things:
+
+  1. **Re-cloning `vendor/decomp-permuter`** - gitignored, so it was not in the
+     worktree and not on the machine at all. The four Windows-compat patches in
+     `tools/permuter/README.md` had to be re-applied; all four are still correct.
+  2. **A C99 stand-in for the C++ draft.** The randomizer is pycparser-based and
+     cannot see a member-function definition, a reference parameter, a namespace-
+     qualified call or a virtual call. `mkbase.py` mechanically flattens all of them
+     (headers to flat structs at the same offsets, `extern "C"` dropped, `cstd::fdiv`
+     to `_ZN4cstd4fdivEii`, the slot-3 dispatch hand-rolled). That is legitimate only
+     because `check.py` proves the two compile to the same bytes: **9 differing words
+     out of 1,777**, both accounted for - a four-slot permutation in the prologue's
+     zero-init, and a five-instruction reordering of the virtual dispatch, which
+     mwcc's C++ frontend emits as `mov r0,this` then `ldr r3,[r0]` where C emits
+     `ldr r3,[sl]` and moves later. One trap worth recording:
+     `(*(void (**)(...))p)(...)` costs a whole extra instruction over
+     `((void (*)(...))p)(...)` - two casts, two loads.
+  3. **Re-scoring every output with fdiff.** The permuter's Scorer and our `equal`
+     are poorly correlated here; its own best-scoring candidate was not in the top
+     ten by `equal`.
+
+  What it produced, per run:
+
+  | run | base | wall | best on our metric | what it was worth |
+  |---|---|---|---|---|
+  | 1 | 1045 | 2 min | 1181 | **the hint that unlocked +153** - semantically invalid (it read `cr` across a rewrite of `cr`), but a +136 from deleting arithmetic said the ROM does not compute what we compute there |
+  | 2 | 1198 | 35 min | 1207 | +9. Not worth the wall clock |
+  | 3 | 1256, **`--stack-diffs`** | 30 min | 1283 | the `tpv` pointer-alias idea, which swept out to **+42** |
+
+  **`--stack-diffs` is not optional here.** Without it the scorer ignores stack
+  offsets, and stack offsets are the single largest remaining defect. Runs 1 and 2
+  were without it and returned +9; run 3 with it returned the alias and the first
+  candidates ever to reach the exact 1,778 instruction count.
+
+  Treat it as a **hypothesis generator, not an optimiser**: two of the four gains
+  above started as permuter output and neither was taken as written. Its
+  transformations are not always semantics-preserving - it narrowed a parameter to
+  `char`, and it moved reads across writes of a `volatile` array - so **every output
+  must be read before it is believed**, then re-swept by hand, because it samples one
+  arbitrary subset of a lever the byte gate can enumerate exhaustively.
+
+  ### Where the remaining 474 divergences are
+
+  `575` of the alignment's `replace`s, and **358 of those are one thing: the stack
+  frame.** `str r0,[sp,#0xc4]` against `str r0,[sp,#0x104]` - the same instruction on
+  a different slot. Declaration order is the only lever known to move that, and it is
+  what produced the +215 two sessions ago.
+
+  Also outstanding: 134 mnemonic-class replaces (the six branch flips above were the
+  largest family in that bucket and are now closed), and 51 pure register renames.
+
+  ### Swept and dead ON THIS STRUCTURE
+
+  Re-run these after any structural change - that rule has now paid four times.
+
+  * **58 redundant re-read insertions** for `fn`/`en1`/`en2`/`en3`/`vtx`/`tri`/`c` at
+    every use site: all byte-neutral or worse. The `en3` win is **not** one of a
+    family; it is the only site where the CSE spanned two rounds.
+  * a **32-way product** of centre-rebind granularity x `cr` spelling x collider-axis
+    spelling: nothing beats what is in the draft.
+  * all **36 non-degenerate (cross, denominator) pairings** of the KCL vertex formula.
+    The draft's is the documented Mario Kart Wii form and stays. Several alternatives
+    score higher - every one of them is either degenerate (`cross(n,X) . X == 0`, so
+    the guard would always fire) or reuses a denominator. They win by removing
+    arithmetic, not by being right. **Do not take them.**
+
+  ### A correction carried in from the reloc table
+
+  There **is** a square root - four of them. The ROM drives the DS hardware unit by MMIO
+  (`0x040002b0` SQRTCNT x8, `0x040002b4` RESULT x4, `0x040002b8` PARAM x4, each inside an
+  IME `0x04000208` critical section), so it never appears as a call and a reloc-table read
+  says "no sqrt". Sites: `0x1ffc2a8`, `0x1ffc418`, `0x1ffc588`, `0x1ffca30` - the three
+  edge gates and the shared `do_sqrt`. Both drafts already model it.
+
+  ### Nothing here waits on the C++ conversion
+
+  ITCM is an **autoload** (`config/arm9/config.yaml:11`) - a linker section memcpy'd at
+  boot - so it constrains no source language; 15 of the 27 enrolled ITCM files are `.c`
+  and 12 are `.cpp`, and the sibling `DetectClsn(dBgCh_Gnd&)` byte-matches today as
+  `//cpp`. There is exactly **one** virtual dispatch in all 1,778 instructions
+  (`0x1ffbe60 blx r3`, slot 3 on `this`, already-matched `GetSurfaceInfo`) and **zero**
+  through the `dBgCh_SphCrr&` parameter, so promoting that class (Phase 2c) is a
+  readability convenience here, not a prerequisite.
+
+  ### Reproducing
+
+  Score with plain `--align`; `--align-shape` normalises away stack offsets and will
+  read flat across real gains. `mismatches=N/M` is frozen at 999 until the sizes match.
+
+  ```
+  python tools/fdiff.py --c notes/drafts-sphereclsn-detectclsn.cpp \
+    --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
+    --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
+  ```
+  `--module itcm`, never `arm9/itcm`. A compile+score round trip is **~0.45 s warm**,
+  so a sweep here should be exhaustive over an axis, never a sample of it.
+
+  ### Appendix: the 2026-08-19 analysis, SUPERSEDED
+
+  Kept because a measured negative is still evidence, and deleted evidence gets
+  re-derived. But **every verdict below was measured on a source structure that no
+  longer exists** -- the +153 / +56 / +42 edits above each changed the register
+  allocator's input, and that has invalidated a recorded dead-lever list four times
+  on this function now. Read it for the *mechanisms* it names, never for its
+  numbers, and re-run anything you intend to rely on.
+
+  In particular, two of its conclusions are now known to be wrong:
+
+  * *"region A may not be reachable from local source"* -- it was reached, twice.
+  * *"the next productive lever is probably another global one"* -- the four gains
+    since were all local, and all one mechanism (a CSE the ROM does not make).
 
   ### Two process corrections worth more than any single lever
 

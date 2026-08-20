@@ -1,51 +1,58 @@
 //cpp
-// NONMATCHING: size 0x1b18 vs 0x1bc8 (44 insn SHORT), align equal=1047 ratio=0.596
+// NONMATCHING: size 0x1bc4 vs 0x1bc8 (1 insn SHORT), align equal=1304 ratio=0.734
 //
-// 2026-08-20 session (equal 855 -> 1047, all measured on plain --align):
-//   +27  EDGE_FILTER restructure: the flags&2 arm is a labelled block placed
-//        AFTER the sqrt path (goto armN_/dsqN_), matching the ROM's exile of
-//        that arm to T880-888 with fallthrough into the dsq block.
-//   +4   `if (!hitFlags && !hitFlags2) goto ret0;` + a labelled `return 0;` at
-//        the very end -- the ROM branches (beq) to a shared return-0 epilogue,
-//        the draft's inline conditional epilogue (addeq/popeq) was +3/-4.
-//   +130 fold nn12/nn23/nn31 + n12h/n23h/n31h into ONE nn/nnh pair.  This was
-//        measured DEAD (-16) on the pre-exile structure; structural change
-//        invalidates dead-lever verdicts, again.
-//   +23  slab-test restructure (region A): subtract the sphere centre IN PLACE
-//        (tp[j] -= c->x; ...), per-vertex sub-then-dot interleave, dots bound
-//        to locals da/db/dc so all six bound-compares run AFTER all three dots
-//        (the ROM computes r0/r5/r4 then compares; the && chain used to
-//        interleave), bounds t/u formed before the dots.
-//   +7   slack spelled per-site as (rad6 + 0x40) x6 -- the ROM rematerializes
-//        add rX,r3,#0x40 at each of the six clamp sites; plus s1=s2=s3=z108
-//        split into three statements (store-order swap).
-//   +20  volatile s16 cr[3] -- the ONE non-natural spelling in this file.  It
-//        forces the cross scratch through memory (strh/ldrsh at its slot,
-//        smull instead of umull+mla widening, no lsl/asr#16 truncation pairs),
-//        which is what the ROM does in both KCL_VERTEX rounds.  Removing it on
-//        the final structure costs -20 equal and +51 insns.  The natural
-//        spelling that reproduces the memory-residency has not been found:
-//        read/write pointer views are either folded (byte-identical) or
-//        perturb allocation (-19..-23), an inline Cross helper is
-//        byte-identical, and an untracked crw = cr + z15c pointer reproduces
-//        the ROM's reload TRAFFIC almost exactly but costs -36 in register
-//        churn.
+// 2026-08-20, second session (equal 1047 -> 1304).  Every gain below is a
+// SPELLING: each one re-reads a value the candidate already had in a register,
+// because the ROM does not share it.  None changes what the function computes.
 //
-// What remains (drift per call-gap region, cand minus ROM, insns):
-//   0:-4 6:-2 7/11/15:-3 8/12/16:+1 20:+3 22:-3 24:-13 26:-7 28:-12
-// Every deficit is the same family: the ROM re-reads pointer locals (c, tri,
-// fn, en3, vtx) from their stack homes once per USE (e.g. nine ldr-c/ldr-comp
-// pairs in the slab block, fn reloaded per cross component), and keeps
-// en1=r5, en2=r4 register-resident; the candidate CSEs the loads and
-// register-homes {en2, en3} instead.  Swept and dead on THIS structure:
-// every en/fn/en3 declaration reorder (-19..-545), register hints (inert),
-// web-demotion copies e3/fnw (byte-identical), cw/w pointer re-read spellings
-// (byte-identical or worse), spos_direct (-79), d4/f4 sqrt-shift pre-binding
-// in 3 placements (-10 each), assignment-chain splits (inert), greedy
-// one-decl relocation over 56 lines x 7 positions (377 compiles, ZERO
-// improving moves), #pragma opt_common_subs off (-379, cand collapses to
-// 1617; the ROM's CSE is selective, so the missing-CSE look is allocation,
-// not a pragma bracket).
+//   +153 `en3 = f->normals[tri->edgeNormal3Idx];` between the two KCL_VERTEX
+//        rounds.  mwcc was CSE-ing the three en3[i] loads across both rounds;
+//        the ROM reloads them.  One line.  It took the alignment's `delete`
+//        count from 100 to 21, so it is a structural fix, not an alignment
+//        accident -- confirmed independently below.
+//   +56  the sphere centre re-bound per COMPONENT in the slab block, TOGETHER
+//        with reading `cr` through a `(volatile s16 *)` view in KCL_VERTEX.
+//        Neither alone helps: separately they are -27 and -64.
+//   +6   six branch-polarity flips in the Voronoi dispatch -- `if (MUL10(nn,
+//        dotA) > dotB) goto edgeN; goto vXX;` instead of the `<=` form.  The
+//        ROM branches INTO the vertex block; we branched into the edge block.
+//        Exactly +1 each, independent and additive (all 64 subsets swept).
+//   +42  the prism origin read through `tpv` at five of six vertex-tail sites.
+//        This one came from the permuter and is documented at its site.
+//
+// HOW THE GAINS WERE CHECKED.  `equal` comes out of a difflib alignment, which
+// can re-anchor: deleting instructions can raise it without anything getting
+// closer.  So every step was also scored on an alignment-free metric -- the 34
+// call sites are fixed anchors both streams agree on, and inside each gap
+// instruction i is compared to instruction i with no slack at all:
+//
+//     session start   equal 1047   anchored 496/1778 (0.2790)   cand 1734
+//     after +153      equal 1200   anchored 558/1778 (0.3138)   cand 1745
+//     after +56/+6    equal 1262   anchored 574/1778 (0.3228)   cand 1752
+//     now             equal 1304   anchored 629/1778 (0.3538)   cand 1777
+//
+// Both metrics move together at every step.  The tool is scratchpad
+// `anchored.py`; it is worth rebuilding before believing any future gain.
+//
+// WHAT IS LEFT.  The structure is essentially done: 27 instructions of drift
+// summed over all 35 call-gap regions, one instruction short overall, and the
+// load deficit that drove everything above is down to 2.  The remaining 575
+// `replace`s are allocation -- and 358 of them are one thing, THE STACK FRAME:
+// `str r0,[sp,#0xc4]` against `str r0,[sp,#0x104]`, the same instruction on a
+// different slot.  Declaration order is the only lever known to move that.
+//
+// Swept and dead ON THIS STRUCTURE (re-run them after any structural change --
+// that rule has now paid four times):
+//   * 58 redundant re-read insertions for fn/en1/en2/en3/vtx/tri/c at every
+//     use site: all byte-neutral or worse.  The en3 win above is not one of a
+//     family; it is the only site where the CSE spanned two rounds.
+//   * 32-way product of centre-rebind granularity x cr spelling x collider-axis
+//     spelling: nothing beats what is here.
+//   * all 36 non-degenerate (cross, denominator) pairings of the KCL vertex
+//     formula.  The draft's is the documented Mario Kart Wii form and stays.
+//     Several alternatives score higher; every one of them is degenerate
+//     (cross(n,X) . X == 0) or reuses a denominator, i.e. they win by removing
+//     arithmetic, not by being right.  Do not take them.
 //
 // PROVENANCE. Restored 2026-08-19 from nearmiss/db.jsonl, attempt
 // 8273344dc1434a9e86882b88eebf7ffa (divergences 1213, parent 1332).
@@ -141,16 +148,16 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    through a 6-byte s16 scratch (sp+0x16c, reused by both rounds), so it really
    does truncate to 16 bits. The quotient's `>> 2` and the product's `>> 14` are
    fdiv's Fix12 result reconciled with the 0x400 normal scale. */
-#define KCL_VERTEX(out, ea)                                                   \
+#define KCL_VERTEX(out, ea, o0, o1, o2)                                                   \
     cr[0] = (s16)(MUL10(fn[1], (ea)[2]) - MUL10(fn[2], (ea)[1]));             \
     cr[1] = (s16)(MUL10(fn[2], (ea)[0]) - MUL10(fn[0], (ea)[2]));             \
     cr[2] = (s16)(MUL10(fn[0], (ea)[1]) - MUL10(fn[1], (ea)[0]));             \
     t = MUL10(cr[0], en3[0]) + MUL10(cr[1], en3[1]) + MUL10(cr[2], en3[2]);   \
     if (func_020397dc(t)) continue;                                           \
     u = cstd::fdiv(tri->length, t) >> 2;                                \
-    (out)[0] = tp[0] + (s32)(((s64)cr[0] * u) >> 14);                         \
-    (out)[1] = tp[1] + (s32)(((s64)cr[1] * u) >> 14);                         \
-    (out)[2] = tp[2] + (s32)(((s64)cr[2] * u) >> 14);
+    (out)[0] = (o0) + (s32)(((s64)((volatile s16 *)cr)[0] * u) >> 14);                         \
+    (out)[1] = (o1) + (s32)(((s64)((volatile s16 *)cr)[1] * u) >> 14);                         \
+    (out)[2] = (o2) + (s32)(((s64)((volatile s16 *)cr)[2] * u) >> 14);
 
 /* Post-subtraction form: components already relative to the centre. */
 #define AXIS_DOT0(v) (FX12((v)[0], unk_28)                                    \
@@ -272,6 +279,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 den12, den23, den31;
     s16 *fn;
     s16 *en1, *en2, *en3;
+    s32 *tpv;
     Vector3 sn;
     s32 tp[3], vb[3], vc[3];
 
@@ -493,12 +501,14 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                                 nn = EDGENORMAL_DOT(en1, en2);
                                 d1h = dot1 >> 31;
                                 nnh = nn >> 31;
-                                if (MUL10(nn, dot1) <= dot2) goto v12;
+                                if (MUL10(nn, dot1) > dot2) goto edge1;
+                                goto v12;
                             } else {
                                 nn = EDGENORMAL_DOT(en1, en3);
                                 d1h = dot1 >> 31;
                                 nnh = nn >> 31;
-                                if (MUL10(nn, dot1) <= dot3) goto v31;
+                                if (MUL10(nn, dot1) > dot3) goto edge1;
+                                goto v31;
                             }
                             goto edge1;
                         }
@@ -509,12 +519,14 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             nn = EDGENORMAL_DOT(en2, en3);
                             d2h = dot2 >> 31;
                             nnh = nn >> 31;
-                            if (MUL10(nn, dot2) <= dot3) goto v23;
+                            if (MUL10(nn, dot2) > dot3) goto edge2;
+                            goto v23;
                         } else {
                             nn = EDGENORMAL_DOT(en2, en1);
                             d2h = dot2 >> 31;
                             nnh = nn >> 31;
-                            if (MUL10(nn, dot2) <= dot1) goto v12;
+                            if (MUL10(nn, dot2) > dot1) goto edge2;
+                            goto v12;
                         }
                         goto edge2;
 
@@ -525,12 +537,14 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             nn = EDGENORMAL_DOT(en3, en1);
                             d3h = dot3 >> 31;
                             nnh = nn >> 31;
-                            if (MUL10(nn, dot3) <= dot1) goto v31;
+                            if (MUL10(nn, dot3) > dot1) goto edge3;
+                            goto v31;
                         } else {
                             nn = EDGENORMAL_DOT(en3, en2);
                             d3h = dot3 >> 31;
                             nnh = nn >> 31;
-                            if (MUL10(nn, dot3) <= dot2) goto v23;
+                            if (MUL10(nn, dot3) > dot2) goto edge3;
+                            goto v23;
                         }
                         goto edge3;
 
@@ -596,19 +610,50 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             tp[0] = vtx[0] << 6;
                             tp[1] = vtx[1] << 6;
                             tp[2] = vtx[2] << 6;
+                            /* The prism origin is read through a POINTER at five of
+                               the six vertex-tail sites, not as the array.  Same
+                               object, same value -- but mwcc addresses an array name
+                               as sp+imm and a pointer out of a register, and the ROM
+                               wants the register form here.  Worth +42 equal, and it
+                               brings the instruction count to 1777 against the ROM's
+                               1778.  The one exception (round 2's [1]) is what the
+                               byte gate asks for -- all six through the pointer is
+                               only +21 -- and is not yet understood.  Found by the
+                               permuter (run 3, --stack-diffs) and then swept over
+                               all 64 site subsets. */
+                            tpv = tp;
 
-                            KCL_VERTEX(vb, en2)
-                            KCL_VERTEX(vc, en1)
+                            KCL_VERTEX(vb, en2, tpv[0], tpv[1], tpv[2])
+                            /* The ROM re-reads the denominator normal for the
+                               second round; mwcc otherwise CSEs the three en3[i]
+                               loads across both rounds.  Same pointer, same value
+                               -- this is a spelling, not a semantic change.
+                               Worth +153 equal (1047 -> 1200), and it took the
+                               alignment's `delete` count from 100 to 21. */
+                            en3 = f->normals[tri->edgeNormal3Idx];
+                            KCL_VERTEX(vc, en1, tpv[0], tp[1], tpv[2])
 
                             t = -(sphere.unk_0ec + sphere.radius);
                             u =   sphere.unk_0ec - sphere.radius;
                             {
                             s32 da, db, dc;
-                            tp[0] -= c->x; tp[1] -= c->y; tp[2] -= c->z;
+                            /* The ROM reloads the centre pointer from its stack home before EACH
+                               component (ldr [sp,#0xc4] three times in call-gap 28); the candidate
+                               loaded it once and indexed off it.  `c` already holds &sphere.pos,
+                               so each re-bind is a no-op -- it only denies mwcc the CSE.  Worth
+                               +56 equal, but ONLY together with the cr pointer-view reads in
+                               KCL_VERTEX: alone the two are -27 and -64. */
+                            tp[0] -= c->x; c = &sphere.pos;
+                            tp[1] -= c->y; c = &sphere.pos;
+                            tp[2] -= c->z;
                             da = AXIS_DOT0(tp);
-                            vb[0] -= c->x; vb[1] -= c->y; vb[2] -= c->z;
+                            vb[0] -= c->x; c = &sphere.pos;
+                            vb[1] -= c->y; c = &sphere.pos;
+                            vb[2] -= c->z;
                             db = AXIS_DOT0(vb);
-                            vc[0] -= c->x; vc[1] -= c->y; vc[2] -= c->z;
+                            vc[0] -= c->x; c = &sphere.pos;
+                            vc[1] -= c->y; c = &sphere.pos;
+                            vc[2] -= c->z;
                             dc = AXIS_DOT0(vc);
                             if (da >= t && da <= u
                              && db >= t && db <= u
