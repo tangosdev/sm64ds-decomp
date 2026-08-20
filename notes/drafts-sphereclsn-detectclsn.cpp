@@ -96,10 +96,15 @@
 //     of `&v.x` -- also byte-identical, and it stops the source claiming a
 //     Vector3 is an array.
 //
-//   * `volatile s16 cr[3]`, read back through `((volatile s16 *)cr)[i]`.
-//     Nothing about that scratch is volatile.  A plain `s16 cr[3]` re-read
-//     through a `const s16 *` view is within one instruction -- and, see below,
-//     it is what made deleting the en3 recompute a +71 instead of a -210.
+//   * `volatile s16 cr[3]` read through `((volatile s16 *)cr)[i]`, and then the
+//     `const s16 *` view that replaced it.  BOTH were treating the symptom.  The
+//     cross product of two normals is a VECTOR: declared `Vector3s cr;` and read
+//     as `cr.x/.y/.z` with no cast anywhere, it is byte-identical to the const
+//     view.  The mechanism was never the qualifier, it was NON-POD-NESS -- the
+//     same lever as `Vector3 tp/vb/vc`, so the file now uses one mechanism where
+//     it used two.  Control: a plain s16 array with plain reads is strict 0,
+//     anchored -676, and the frame blows out to 0x1dc.  It is also what made
+//     deleting the en3 recompute a +71 instead of a -210.
 //
 //   * four of the six `c = &sphere.pos;` no-op re-assignments in the slab block.
 //     All 64 subsets were swept individually (the previous sweep only ever tried
@@ -165,9 +170,10 @@
 //   * tpv subsets, all 64.  000110 wins on anchored; 000111 is +2 anchored but
 //     -22 shape, and shape is the one that is right about structure.
 //   * branch polarity in the dispatch, all 64 -- the all-`>` form wins outright.
-//   * cr read spelling -- const, volatile and per-component addressing are
-//     byte-identical; a plain read is -576 anchored, so the re-read is
-//     load-bearing and only its qualifier is free.
+//   * cr representation, nine spellings -- s16 array or Vector3s, x member read /
+//     const view / volatile view / per-component address.  ALL NINE byte-identical.
+//     That axis is saturated: only non-POD-ness matters, and the count of `&cr`
+//     materialisations sits at 14 against the ROM's 15 no matter what.
 //   * centre re-bind sites, all 64 individually.
 //   * the centre pointer's declaration: const / const volatile / volatile
 //     pointee x prologue spelling x rebinds, 12 combinations.
@@ -176,6 +182,45 @@
 //     instead of reusing the `t`/`u` scratch is byte-identical.
 //   * multiply operand order in AXIS_DOT0 / AXIS_DOT / EDGENORMAL_DOT, all 8.
 //   * the four sqrt hoist spellings x three u64-store spellings, 12.
+//
+//
+// FOUR OUT-OF-FUNCTION HYPOTHESES, ALL MEASURED AND ALL NEGATIVE.  These are the
+// expensive questions -- do not re-open one without reading the number.
+//
+//   * A PRAGMA.  The byte-matched sibling that wraps this function,
+//     `src/_ZN10dBgW_KcMbg10DetectClsnER12dBgCh_SphCrr.cpp`, carries
+//     `#pragma opt_common_subs off` and calls it "original and load-bearing", and
+//     the tree has 158 files using that pragma and 171 using
+//     opt_strength_reduction.  Since this function's whole defect family is a CSE
+//     the ROM does not make, it was the obvious hypothesis.  It is wrong, and
+//     decisively: `opt_common_subs off` costs 140 INSTRUCTIONS and 1120 anchored.
+//     opt_propagation, opt_dead_assignments, opt_lifetimes and optimize_for_size
+//     are all negative too; opt_strength_reduction, opt_loop_invariants,
+//     scheduling, opt_unroll_loops and opt_vectorize_loops are inert.
+//     **This function was compiled with CSE ON.** The ROM's extra loads are
+//     genuinely different source expressions, which is what justifies the
+//     per-site approach.
+//
+//   * A HEADER RETYPE.  include/dBgW_Kc.h says `0x28..0x30 are ONE Vector3, not
+//     three scalars ... left as three fields only because retyping it would touch
+//     already-matched callers`, and those three are read NINE times inside the one
+//     gap still structurally wrong.  Reading them through a Vector3 view instead
+//     is BYTE-IDENTICAL, so the retype is free but buys nothing here.  Binding
+//     them to a local pointer or reference first is -368 anchored and +8
+//     instructions.  Same answer for the 0x38 vector.
+//
+//   * THE AUTHOR'S OWN DECLARATION STYLE.  The byte-matched twin
+//     `src/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp` opens with
+//     `KCL_File *file = kclFile; Vector3 *pos = &ray.pos;` above the C89 block, and
+//     its `pos` is a PLAIN `Vector3 *`.  Hoisting our two initialised pointers the
+//     same way is byte-identical (so it is adopted), but the plain pointer is not:
+//     const-only and non-const both lose 290.  The volatile pointee stays.
+//
+//   * THE VERTEX TAIL AS A LOOP.  The ROM re-materialises `&cr` once per component
+//     (`add rX,sp,#0x16c` three times) where we take the address once, which is
+//     what an unrolled loop looks like.  Written as `for (i = 0; i < 3; i++)` mwcc
+//     unrolls it and then CSEs the address anyway, coming out SIX INSTRUCTIONS
+//     SHORT and -307 anchored.  Six variants tried.  Not a loop.
 //
 // Do not take the alternative (cross, denominator) pairings of the KCL vertex
 // formula: all 36 non-degenerate ones were swept and several score higher, but
@@ -262,21 +307,19 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    through a 6-byte s16 scratch (sp+0x16c, reused by both rounds), so it really
    does truncate to 16 bits. The quotient's `>> 2` and the product's `>> 14` are
    fdiv's Fix12 result reconciled with the 0x400 normal scale.
-   The three components are written plainly and read back through a `const s16 *`
-   view.  That is not decoration: without the qualifier change mwcc shares the loads
-   across the two rounds and the block is -576 anchored.  It used to be spelled
-   `volatile`, which said something untrue about a stack scratch; const reaches the
-   same bytes and is the reason deleting the en3 recompute became a gain. */
+
+   `cr` being a Vector3s rather than an `s16[3]` is load-bearing and is why nothing
+   here needs a cast -- see its declaration. */
 #define KCL_VERTEX(out, ea, o0, o1, o2)                                                   \
-    cr[0] = (s16)(MUL10(fn[1], (ea)[2]) - MUL10(fn[2], (ea)[1]));             \
-    cr[1] = (s16)(MUL10(fn[2], (ea)[0]) - MUL10(fn[0], (ea)[2]));             \
-    cr[2] = (s16)(MUL10(fn[0], (ea)[1]) - MUL10(fn[1], (ea)[0]));             \
-    t = MUL10(cr[0], en3[0]) + MUL10(cr[1], en3[1]) + MUL10(cr[2], en3[2]);   \
+    cr.x = (s16)(MUL10(fn[1], (ea)[2]) - MUL10(fn[2], (ea)[1]));             \
+    cr.y = (s16)(MUL10(fn[2], (ea)[0]) - MUL10(fn[0], (ea)[2]));             \
+    cr.z = (s16)(MUL10(fn[0], (ea)[1]) - MUL10(fn[1], (ea)[0]));             \
+    t = MUL10(cr.x, en3[0]) + MUL10(cr.y, en3[1]) + MUL10(cr.z, en3[2]);   \
     if (func_020397dc(t)) continue;                                           \
     u = cstd::fdiv(tri->length, t) >> 2;                                \
-    (out)[0] = (o0) + (s32)(((s64)((const s16 *)cr)[0] * u) >> 14);                         \
-    (out)[1] = (o1) + (s32)(((s64)((const s16 *)cr)[1] * u) >> 14);                         \
-    (out)[2] = (o2) + (s32)(((s64)((const s16 *)cr)[2] * u) >> 14);
+    (out)[0] = (o0) + (s32)(((s64)cr.x * u) >> 14);                         \
+    (out)[1] = (o1) + (s32)(((s64)cr.y * u) >> 14);                         \
+    (out)[2] = (o2) + (s32)(((s64)cr.z * u) >> 14);
 
 /* Post-subtraction form: components already relative to the centre. */
 #define AXIS_DOT0(v) (FX12((v).x, unk_28)                                     \
@@ -425,10 +468,14 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 dot1;
     s32 dot2;
     s32 dot3;
-    /* Read back through a `const s16 *` view in KCL_VERTEX -- see the macro.  Plain
-       reads are -576 anchored, so the re-read is load-bearing; only its qualifier is
-       free, and const is the true one. */
-    s16 cr[3];
+    /* The cross product of two normals, and therefore a vector -- not a scratch
+       array.  It has to be a NON-POD type: as a plain three-element s16 array with
+       plain reads, mwccarm scalarizes it and shares the loads, which is strict 0,
+       anchored -676, and a frame of 0x1dc instead of 0x1b4.  Vector3s carries the
+       same empty destructor Vector3 does, for the same reason, and fixes it with no
+       cast anywhere -- the `(const s16 *)` view this used to need was treating the
+       symptom. */
+    Vector3s cr;
     s32 nrm[3];
     s32 depth;
     s16 *fn;
