@@ -538,8 +538,44 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   it shares the octree walk verbatim with the already-matched `dBgCh_Gnd` twin, so it
   is the calibration run for 3b. Its recorded floor is a `this` register allocation
   (r7 vs r8) at 2004/b56.
-- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 1177 divergences /
-  601 equal / ratio 0.3404, 25 instructions short** (was 1213 / 565 / 0.3203 / 28).
+- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 962 divergences /
+  816 equal / ratio 0.4622, 25 instructions short** (was 1213 / 565 / 0.3203 / 28
+  at the start of the session; 1177 / 601 after the block-layout fix alone).
+
+  ### RE-TEST YOUR DEAD LEVERS AFTER ANY STRUCTURAL CHANGE
+
+  The single most valuable thing learned here. #1197 concluded that declaration
+  order was **byte-neutral** for this function — "the lore that declaration order
+  IS the stack layout holds for the 0x498 twin and **not** for this 0x1bc8 one",
+  measured with positive controls across nineteen variants. That was true *of the
+  structure it was measured against*. Once the block layout was fixed, the same
+  class of lever became the largest single win available:
+
+  | lever | equal | vs baseline |
+  |---|---|---|
+  | baseline (post block-layout) | 601 | — |
+  | **`en1`/`en2`/`en3` declared LAST in the block** | **810** | **+209** |
+  | + greedy: `fn`, `den12/23/31`, `depth` also moved last | **816** | **+215** |
+
+  Five declaration lines. Nothing else changed. **A "swept and dead" verdict is
+  scoped to the structure it was measured against — re-run the sweep whenever the
+  structure moves.**
+
+  The win is specific, not a rule: `ptr_last`, `ptr_first`, `arr_last`,
+  `consts_first`, `consts_last`, `reverse`, `reverse_tail_half`, `s64_last` were
+  all tested as whole-block reorderings and every one was inert or much worse
+  (`reverse` costs 407). It is the position of those particular declarations, not
+  a sortable property.
+
+  ### Verdicts that SURVIVED re-test
+
+  - **Frame-size chasing is still dead.** The candidate frame stayed `sub sp,#0x1fc`
+    against the ROM's `#0x1b4` across all twenty orderings tried, including the
+    +215 win. Declaration order changes *allocation* without changing *frame size*,
+    so the 72-byte surplus really is structural, exactly as #1197 said.
+  - **Folding is still dead.** `den12/23/31` into one `den` (−1), `nn*`/`n*h` into
+    one pair (−16), `d1h/d2h/d3h` into one `dh` (inert), all three together (−10).
+  - Hoisting `t/u/vx/vy/vz` to the block tail: inert.
 
   **3c is done, and it moved 3b.** The cross-read (below) found the shortfall was *block
   layout*, not missing code. Both `nearmiss/db.jsonl` and

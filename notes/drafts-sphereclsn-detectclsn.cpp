@@ -1,5 +1,5 @@
 //cpp
-// NONMATCHING: size 0x1b64 vs 0x1bc8 (25 insn short), align equal=601 ratio=0.340
+// NONMATCHING: size 0x1b64 vs 0x1bc8 (25 insn short), align equal=816 ratio=0.462
 //
 // PROVENANCE. Restored 2026-08-19 from nearmiss/db.jsonl, attempt
 // 8273344dc1434a9e86882b88eebf7ffa (divergences 1213, parent 1332).
@@ -181,13 +181,9 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     u16 *leaf;
     KCL_Tri *tri;
     s32 *vtx;
-    s16 *en3;
-    s16 *fn;
-    s32 depth;
     s16 triID;
     s32 cls;
     s32 contactKind;
-    s32 den12, den23, den31;
     const Vector3 *c;
     s32 rawX, rawY, rawZ;
     s32 d1h, d2h, d3h;
@@ -205,7 +201,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 tlen;
     s32 passArg;
     u32 z;
-    s16 *en1, *en2;
     u32 shift;
     u32 *node;
     u32 idx;
@@ -219,6 +214,10 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 dot1, dot2, dot3;
     s16 cr[3];
     s32 nrm[3];
+    s32 depth;
+    s32 den12, den23, den31;
+    s16 *fn;
+    s16 *en1, *en2, *en3;
     Vector3 sn;
     s32 tp[3], vb[3], vc[3];
 
