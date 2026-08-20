@@ -844,6 +844,35 @@ RGB amb_avg(const uint32_t *row, int s0, int s1)
     return o;
 }
 
+/* THE SAME AVERAGE WITH THE SPRITES LEFT OUT. The wash is supposed to be the
+   SCENE's glow, and the plain average reads whatever is on the edge row --
+   including a bob-omb mid-crossing, whose black then pink turned whole
+   columns black then pink for as long as it straddled the edge (the owner's
+   2026-08-20 report). mask256 marks the DS columns of this edge row that an
+   OBJ covers; those host pixels are skipped, so the wash is background only.
+   A span the sprite covers END TO END falls back to the plain average: a
+   wrong-but-stable colour beats an uninitialised one, and the follower above
+   it smooths the moment anyway. */
+RGB amb_avg_bg(const uint32_t *row, int s0, int s1, const uint8_t *mask256,
+               int w)
+{
+    if (!mask256) return amb_avg(row, s0, s1);
+    const int rx = w / 256 > 0 ? w / 256 : 1;
+    int r = 0, g = 0, b = 0, n = 0;
+    for (int x = s0; x < s1; ++x) {
+        const int dsx = x / rx;
+        if (dsx < 256 && mask256[dsx]) continue;
+        const uint32_t p = row[x];
+        r += (int)((p >> 16) & 0xff);
+        g += (int)((p >> 8) & 0xff);
+        b += (int)(p & 0xff);
+        ++n;
+    }
+    if (!n) return amb_avg(row, s0, s1);
+    RGB o = {r / n, g / n, b / n};
+    return o;
+}
+
 /* ---- THE BAND'S PERSISTENCE ------------------------------------------------
  *
  * WHAT WAS WRONG WITH READING THE EDGE COLD. The fill re-read both edge rows
@@ -1035,10 +1064,16 @@ void amb_trace_list(const char *name, const RGB *v)
  * this feature ships with is exactly a second implementation re-deriving the
  * band from the captured edge rows and diffing it. Every divide here is a
  * truncating integer divide and the checker does the same ones. */
+void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot);  /* defined after the
+    band raster below; the masks say which DS columns of the two edge rows an
+    OBJ covers, so the wash can sample the background alone */
+
 void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     const uint32_t *top_edge = dst + (size_t)(lay.band_y - 1) * dst_w;
     const uint32_t *bot_edge = dst + (size_t)lay.bottom_y * dst_w;
+    uint8_t mtop[256], mbot[256];
+    band_edge_obj_masks(mtop, mbot);
     RGB tops[kAmbCols], bots[kAmbCols];
     RGB raw_t[kAmbCols], raw_b[kAmbCols];
     int centre[kAmbCols];
@@ -1046,8 +1081,8 @@ void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
         int s0, s1, x0, x1;
         amb_sample_span(lay.w, c, s0, s1);
         amb_col_span(lay.w, c, x0, x1);
-        raw_t[c] = amb_avg(top_edge, s0, s1);
-        raw_b[c] = amb_avg(bot_edge, s0, s1);
+        raw_t[c] = amb_avg_bg(top_edge, s0, s1, mtop, lay.w);
+        raw_b[c] = amb_avg_bg(bot_edge, s0, s1, mbot, lay.w);
         centre[c] = (x0 + x1) / 2;
     }
 
@@ -1764,6 +1799,145 @@ void band_continuity(BandPixel *band, int gap_ds, const BandEngine &ea,
                          t.w, t.h, t.x, t.y, c.eng.name, c.a0, c.a1, c.a2,
                          drawn);
     }
+}
+
+/* THE EDGE ROWS' OBJ COVERAGE, one byte per DS column per row. Rastered off
+   the two engines' own OAM exactly the way the band passes do -- engine A's
+   screen row 191 is band index 0 under a bias of -191, engine B's row 0 under
+   a bias of 0 -- so "an OBJ covers this column" is the same answer the screens
+   themselves drew, not a guess from pixel colours. */
+void band_edge_obj_masks(uint8_t *mtop, uint8_t *mbot)
+{
+    static BandPixel rowbuf[256];
+    const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                           -191, 0, "A", 0};
+    std::memset(rowbuf, 0, sizeof rowbuf);
+    band_raster_engine(rowbuf, 1, ea);
+    for (int x = 0; x < 256; ++x) mtop[x] = rowbuf[x].hit;
+    const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
+                           0, 1, "B", 0};
+    std::memset(rowbuf, 0, sizeof rowbuf);
+    band_raster_engine(rowbuf, 1, eb);
+    for (int x = 0; x < 256; ++x) mbot[x] = rowbuf[x].hit;
+}
+
+/* ---- THE GHOST: what is crossing the gap, blurred behind the glow ----------
+ *
+ * The owner's spec, 2026-08-20: the wash is the BACKGROUND's glow (the masks
+ * above), and a thing travelling through the gap should read as a blurred
+ * shape passing behind it -- not as its colours flooding whole columns of the
+ * wash, and not as a crisp sprite floating on decoration (the retired band
+ * regime's look). So this rasters exactly what band_peek would show --
+ * both engines' band rows plus the continuity pass's dead-zone entries, the
+ * game's own tiles out of the game's own VRAM -- then box-blurs it and lays
+ * it over the fill at three-quarter strength. Peek itself is untouched: peek
+ * is the honest view and stays crisp.
+ *
+ * Radius 2 DS pixels, two separable passes, integers only. The grid is at
+ * most GAP_DS_MAX x 256, so the cost is a band-sized blur once per composed
+ * frame, only while a real band is on screen. */
+void band_ghost(uint32_t *dst, int dst_w, const StackLayout &lay)
+{
+    if (lay.band_h <= 0 || lay.gap_ds <= 0) return;
+    static BandPixel *band;
+    static int *acc;    /* r,g,b,a quads, blur scratch, two planes */
+    if (!band) {
+        band = (BandPixel *)std::calloc((size_t)GAP_DS_MAX * 256,
+                                        sizeof *band);
+        acc = (int *)std::calloc((size_t)GAP_DS_MAX * 256 * 8, sizeof *acc);
+        if (!band || !acc) return;
+    }
+    std::memset(band, 0, sizeof(BandPixel) * (size_t)lay.gap_ds * 256);
+    const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                           -192, 0, "A", 0};
+    const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
+                           lay.gap_ds, 1, "B", 0};
+    band_raster_engine(band, lay.gap_ds, ea);
+    band_raster_engine(band, lay.gap_ds, eb);
+    band_continuity(band, lay.gap_ds, ea, eb);
+
+    const int H = lay.gap_ds, W = 256, R = 2;
+    int *p0 = acc, *p1 = acc + (size_t)GAP_DS_MAX * 256 * 4;
+    int any = 0;
+    for (int k = 0; k < H; ++k)
+        for (int x = 0; x < W; ++x) {
+            int *o = p0 + ((size_t)k * W + x) * 4;
+            const BandPixel &bp = band[(size_t)k * W + x];
+            if (bp.hit) {
+                o[0] = (int)((bp.color >> 16) & 0xff);
+                o[1] = (int)((bp.color >> 8) & 0xff);
+                o[2] = (int)(bp.color & 0xff);
+                o[3] = 255;
+                any = 1;
+            } else {
+                o[0] = o[1] = o[2] = o[3] = 0;
+            }
+        }
+    if (!any) return;
+    /* horizontal then vertical box, premultiplied by coverage so a blurred
+       edge fades instead of smearing black */
+    for (int k = 0; k < H; ++k)
+        for (int x = 0; x < W; ++x) {
+            int s[4] = {0, 0, 0, 0};
+            int n = 0;
+            for (int d = -R; d <= R; ++d) {
+                const int u = x + d;
+                if (u < 0 || u >= W) continue;
+                const int *o = p0 + ((size_t)k * W + u) * 4;
+                s[0] += o[0] * o[3]; s[1] += o[1] * o[3];
+                s[2] += o[2] * o[3]; s[3] += o[3];
+                ++n;
+            }
+            int *q = p1 + ((size_t)k * W + x) * 4;
+            if (s[3]) {
+                q[0] = s[0] / s[3]; q[1] = s[1] / s[3]; q[2] = s[2] / s[3];
+                q[3] = s[3] / (n ? n : 1);
+            } else {
+                q[0] = q[1] = q[2] = q[3] = 0;
+            }
+        }
+    for (int k = 0; k < H; ++k)
+        for (int x = 0; x < W; ++x) {
+            int s[4] = {0, 0, 0, 0};
+            int n = 0;
+            for (int d = -R; d <= R; ++d) {
+                const int u = k + d;
+                if (u < 0 || u >= H) continue;
+                const int *o = p1 + ((size_t)u * W + x) * 4;
+                s[0] += o[0] * o[3]; s[1] += o[1] * o[3];
+                s[2] += o[2] * o[3]; s[3] += o[3];
+                ++n;
+            }
+            int *q = p0 + ((size_t)k * W + x) * 4;
+            if (s[3]) {
+                q[0] = s[0] / s[3]; q[1] = s[1] / s[3]; q[2] = s[2] / s[3];
+                q[3] = (s[3] / (n ? n : 1)) * 3 / 4;   /* behind the glow */
+            } else {
+                q[0] = q[1] = q[2] = q[3] = 0;
+            }
+        }
+    const int rx = lay.w / SUB_W, ry = lay.scale;
+    if (rx <= 0 || ry <= 0) return;
+    for (int k = 0; k < H; ++k)
+        for (int x = 0; x < W; ++x) {
+            const int *q = p0 + ((size_t)k * W + x) * 4;
+            const int a = q[3];
+            if (!a) continue;
+            for (int oy = 0; oy < ry; ++oy) {
+                uint32_t *out = dst + (size_t)(lay.band_y + k * ry + oy) * dst_w;
+                for (int ox = 0; ox < rx; ++ox) {
+                    uint32_t *px = &out[x * rx + ox];
+                    const int wr = (int)((*px >> 16) & 0xff);
+                    const int wg = (int)((*px >> 8) & 0xff);
+                    const int wb = (int)(*px & 0xff);
+                    const int r = wr + (q[0] - wr) * a / 255;
+                    const int g = wg + (q[1] - wg) * a / 255;
+                    const int b = wb + (q[2] - wb) * a / 255;
+                    *px = 0xFF000000u | ((uint32_t)r << 16) |
+                          ((uint32_t)g << 8) | (uint32_t)b;
+                }
+            }
+        }
 }
 
 void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
@@ -2929,6 +3103,11 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
        already carries peek 0 in this mode (hal/screen_gap.cpp forces it, and
        says so), so this test is the belt beside that brace. */
     if (lay.peek && !lay.obj_shift_ds) band_peek(dst, dst_w, lay);
+    /* and the ghost when peek is OFF: whatever is really crossing the gap
+       shows as a blurred shape behind the glow instead of vanishing or
+       flooding the wash. Peek keeps the crisp honest view; the hinge mode
+       draws those rows itself. */
+    if (!lay.peek && !lay.obj_shift_ds) band_ghost(dst, dst_w, lay);
     /* AND THE BAND'S OWN CONTENT, when the band has any: engine A's texels for
        the world rows the shift moved into it, over the fill that was just laid
        down. Returns immediately with no shift, so a gap-on band is byte-for-byte
