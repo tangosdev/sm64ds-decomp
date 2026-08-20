@@ -166,6 +166,25 @@ struct StackLayout {
     // picture is read as a picture and not mistaken for content, and BLACK
     // when there is no art. See band_fill.
     int peek;
+    // 1: THE TWO HALVES ARE ONE CONTINUOUS PICTURE and the seam between them
+    // is a joint rather than a boundary, because the GAME's own G has been
+    // set to zero as well as the layout's. That is the GaplessMinigames mod
+    // and nothing else sets it: with the mod off, or on a scene it does not
+    // cover, this is 0 even when gap_ds is 0, because a level composes with
+    // no band and is still two separate screens.
+    //
+    // NOT DERIVABLE FROM gap_ds, which is why it is its own field. gap_ds is
+    // 0 for every level in the game and for the MinigameGap-off picture, and
+    // in both of those the game is still submitting sprites against a real G
+    // -- so joining a sprite across the seam there would be inventing a
+    // continuity the game does not have. The two conditions are read together
+    // by the seam straddle pass below.
+    //
+    // Set per frame rather than at the layout latch (hal/screen_gap.cpp): the
+    // mod engages from the running minigame's InitResources, which can be
+    // after the first latch for that scene, and a cached 0 would leave the
+    // pass off for the whole game.
+    int seam;
     // THE SCENE'S HAND-DRAWN BAND, or null. 256 * gap_ds DS pixels, row
     // major, top row first, 0xAARRGGBB, and alpha 0 means the magenta key:
     // the artist's "leave this pixel to whatever is behind me".
@@ -230,6 +249,55 @@ enum { BAND_TRACK_MAX = 8 };
 // the hook, and no hook is the behaviour this shipped with.
 typedef int (*BandTrackFn)(BandTrack *out, int max, int gap_ds);
 void ppu_band_continuity(BandTrackFn fn);
+
+// ---- THE SEAM STRADDLE, and it is the same hook read at gap_ds == 0 ---------
+//
+// THE OTHER HALF OF THE SAME HOLE. Everything above is about the band, the G
+// rows between the screens that neither engine can address. With
+// GaplessMinigames on there is no band -- G is zero in the game as well as in
+// the layout -- and the hole does not go away, it shrinks to the seam itself.
+//
+// The ROM's OAM router (src/func_ov004_020aff38.cpp) picks ONE engine by a
+// band test on world y and returns. At G = 0 its two tests are y in [-256, -1]
+// for the top engine and y in [-64, 191] for the bottom, so a sprite is
+// submitted to exactly one of them and each engine's own raster then clips it
+// at its own screen edge. A 16x16 sprite whose box crosses world row 0 is
+// therefore drawn on ONE screen only, and the rows hanging over the seam are
+// drawn NOWHERE -- until the object's centre crosses and the whole sprite pops
+// to the other screen. On hardware the hinge hid that; with the halves edge to
+// edge it is the most visible thing on the screen.
+//
+// So the pass: for a TRACKED object -- the same per-scene hook above, read
+// with gap_ds 0, where a BandTrack's y IS the world row of the sprite box's
+// top edge -- ask which HALF OF THE COMPOSED IMAGE is showing it, and if
+// exactly one is and its box crosses world row 0, re-render that half's own
+// OAM entry into the rows on the other side of the seam. Same tile, same
+// palette, same size, same flip, same engine's VRAM, at that entry's own
+// position. NOTHING IS INVENTED here either: an object neither half has draws
+// nothing, and an object BOTH halves have is left alone -- which is what a
+// 32x32 double-size bob-omb through func_ov004_020b023c already is, because
+// that router submits to both OAM buffers and lets each engine clip its own
+// side.
+//
+// It runs only when StackLayout::seam is set, so it is the mod's own
+// behaviour and no level, no ordinary minigame and no MinigameGap-off picture
+// can reach it.
+//
+// SM64DS_GAP_STRADDLE_TRACE=1 prints the per-frame census this was proven
+// with: for every tracked crossing object, the pixels of it standing in each
+// half of the composed image BEFORE the pass and AFTER it, plus a walk of both
+// engines' OAM for every entry that crosses the seam and which engines have
+// it.
+
+// WHAT THE TOP SCREEN IS SHOWING. Call this immediately before the OAM upload,
+// which is once per frame at hal/sub_screen.cpp's OAM::Load, and the pass gets
+// the engine A OAM the engine A compositor really rasterised from -- see THE
+// TWO SCREENS ARE ONE FRAME APART in ntr/ppu_sub.cpp, which is a property of
+// this port's frame order and not of this pass. Costs one 1 KB copy per frame
+// and nothing else; a program that never calls it leaves the pass with no top
+// half to complete from, which is a pass that declines rather than one that
+// guesses.
+void ppu_seam_oam_mark(void);
 
 // ---- THE AMBIENT FILL'S MEMORY ----------------------------------------------
 //

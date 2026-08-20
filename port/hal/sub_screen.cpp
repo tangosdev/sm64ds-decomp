@@ -998,6 +998,20 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
        publish above and the OAM upload below. */
     if (run_tail) {
         port_minimap_affine_update();
+        /* IMMEDIATELY BEFORE THE UPLOAD, and that placement is the whole point.
+           port_message_composite_engine_a ran a few lines earlier in both frame
+           loops and rasterised engine A's sprites out of 0x07000000 as it
+           stands RIGHT NOW -- the previous frame's upload. The line below
+           replaces that with this frame's, so from here on the top screen in
+           the framebuffer and engine A's OAM are one frame apart. The gapless
+           seam pass has to know which of the two the picture was drawn from
+           before it may complete an object across the seam, so it is handed the
+           answer here rather than left to infer it from a compose count. See
+           ntr/ppu.h's ppu_seam_oam_mark and the note in ntr/ppu_sub.cpp.
+           INSIDE the run_tail branch because that is what makes it true: with
+           no upload the OAM does not change, and a mark taken anyway would
+           advance a snapshot the picture had not moved past. */
+        ntr::ppu_seam_oam_mark();
         _ZN3OAM4LoadEv();
     }
     if (!g_on) return;

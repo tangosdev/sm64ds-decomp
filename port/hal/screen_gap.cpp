@@ -60,7 +60,19 @@ const ntr::StackLayout *hal_screen_layout(void)
        G = 32, and the art and the continuity reader are per scene, so latching
        on G alone would have left Curling wearing Bob-omb Squad's picture. */
     const int scene = hal_gap_scene_id();
-    if (g_have && want == g_raw && scene == g_scene) return &g_lay;
+    /* THE SEAM FLAG IS NOT LATCHED, and that is the whole of why it is set on
+       both paths out of here rather than inside the rebuild below. The latch
+       fires when the scene or its G changes; GaplessMinigames engages from the
+       running minigame's InitResources, which is after the scene has changed
+       and can be after this has already latched a layout for it. A cached zero
+       would leave the seam pass off for the entire game, which is exactly the
+       shape of defect a "latch it with everything else" reading produces and
+       nothing downstream would report. It is one int and it costs a call. */
+    const int seam = hal_gapless_engaged() ? 1 : 0;
+    if (g_have && want == g_raw && scene == g_scene) {
+        g_lay.seam = seam;
+        return &g_lay;
+    }
 
     const int was_h = g_have ? g_lay.h : 0;
     g_raw = want;
@@ -79,6 +91,7 @@ const ntr::StackLayout *hal_screen_layout(void)
         art = hal_gap_art(scene, want, mode == ntr::GAP_FILL_CUSTOM);
 
     g_lay = ntr::stack_layout(want, mode, host_setting_gap_color(), peek, art);
+    g_lay.seam = seam;
     /* and the band's per-scene continuity reader, installed at the same moment
        for the same reason: it is per scene, and installing clears the cached
        OAM attributes so nothing crosses from the last minigame into this one */
