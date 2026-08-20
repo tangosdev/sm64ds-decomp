@@ -123,6 +123,20 @@
 // SO THE TRAP IS THE HONEST SEAT. It returns without dispatching and says so.
 // A minigame whose framework reaches this function does not run past it, and
 // the run reports that rather than jumping to a DS address as a host one.
+//
+// SEATED, run mg5 lane BASESET, AND EVERYTHING ABOVE IS NOW HISTORY. The trap
+// is deleted from this file and func_ov004_020b87e0 is a host copy in
+// port/unmatched/MgBase_StateSetter.cpp, which carries the derivation: the
+// twenty globals with their code words and relocation rows, the ROM
+// disassembly of the table build and the dispatch, and the object layout the
+// offsets force. src/func_ov004_020b87e0.cpp stays off every slice.
+//
+// READ THE SECTION ABOVE FOR WHAT THE TRAP COST RATHER THAN FOR WHAT TO DO.
+// "A minigame whose framework reaches this function does not run past it" was
+// exactly right and it was a FREEZE in a player's hands, twice on 0.2.8.108:
+// Wanted!'s fifth-win score collapse asked for state 1 and Coincentration's tap
+// asked for state 16, and both times the frame loop and the music kept running
+// over a class that could not advance.
 
 #include <cstdio>
 #include "dsstate_seg.h"
@@ -538,24 +552,29 @@ void func_ov006_020e20bc(char *self, int idx)
 /* an arm9 address with no config symbol at all, the func_02054c80 shape */
 int func_0202e78c(void *)                   { mg_trap("func_0202e78c"); return 0; }
 
-/* THE WALL. See section 4 of the header. Not a body, and deliberately not a
-   plausible one: the ROM assigns self->onUpdate from a twenty-entry table of
-   mwcc member pointers and then dispatches it, and there is no host form of
-   that call until the address switch exists. */
-void func_ov004_020b87e0(void *, int idx)
-{
-    static int said;
-    ++g_mg_trap_hits;
-    if (!said) {
-        said = 1;
-        std::fprintf(stderr, "  [scene] mwcc POINTER-TO-MEMBER WALL: "
-                     "func_ov004_020b87e0(idx=%d) is the state-setter for "
-                     "dScMgBase_c and MSVC cannot compile its TU (8-byte mwcc "
-                     "member pointers, DS code addresses, ARM Itanium "
-                     "dispatch). No state was set and nothing was dispatched. "
-                     "port/mg_fanout_costs.txt section 4.\n", idx);
-        std::fflush(stderr);
-    }
-}
+/* THE WALL WAS HERE AND IT IS GONE. Run mg5, lane BASESET.
+ *
+ * func_ov004_020b87e0 stood at this spot as a named trap that incremented
+ * g_mg_trap_hits, printed one line and set no state. Section 4 of this file's
+ * header records what it was and why; what follows is what replaced it.
+ *
+ * It is now a host copy in port/unmatched/MgBase_StateSetter.cpp: the src body
+ * statement for statement, the twenty-entry member-pointer table re-typed as
+ * {code, adjustment} int pairs read out of the mount's own bytes, and the
+ * dispatch routed through port_mg_call0 like every other framework state. All
+ * twenty of its addresses have matched src TUs and delink blocks, so not one
+ * case in that switch is a floor.
+ *
+ * NO SYMBOL IS DEFINED HERE FOR IT ANY MORE. That is the point of removing the
+ * trap rather than leaving it beside the host copy: two definitions of
+ * func_ov004_020b87e0 in one build is a link error, and a trap kept "just in
+ * case" behind an #if is a second opinion nobody reads.
+ *
+ * g_mg_trap_hits and port_mg_trap_hits() STAY. The counter is shared with
+ * mg_trap() above and hal/scene_mg.cpp prints it as "unmatched ov004/ov006
+ * traps entered"; the setter was one of the seven sites feeding it and is now
+ * six. A census that used to read 2 on a scene 378 sweep because the setter was
+ * called twice now reads 0, and that drop is the seat rather than a regression.
+ */
 
 }  /* extern "C" */

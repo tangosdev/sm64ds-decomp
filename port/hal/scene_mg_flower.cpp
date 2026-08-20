@@ -101,8 +101,11 @@
 //
 // The FRAMEWORK's wall is still the framework's and is still paid: this class
 // reaches func_ov004_020b87e0 through dScMgBase_c exactly as curling does, and
-// hal/scene_mg_faces.cpp's trap and unmatched/MgBase_StateDispatch.cpp's
-// address switch are inherited unchanged.
+// unmatched/MgBase_StateDispatch.cpp's address switch is inherited unchanged.
+// AMENDED, run mg5 lane BASESET: the trap that used to stand in
+// hal/scene_mg_faces.cpp beside that switch is GONE. The setter is host-copied
+// in unmatched/MgBase_StateSetter.cpp and its forty addresses are routed, so
+// this class inherits a framework state machine that runs.
 //
 // ---- 7. ONE HARD FLOOR, AND IT IS NOT IN THE VTABLE -----------------------
 //

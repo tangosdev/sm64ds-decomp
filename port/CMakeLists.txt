@@ -3416,6 +3416,28 @@ set(SCENE_MG_SOURCES
     unmatched/MgBase_DeclConflict.cpp unmatched/MgBase_Slot1.cpp
     unmatched/MgBase_Slot7.cpp unmatched/MgBase_StateDispatch.cpp
     unmatched/MgCurling_StateDispatch.cpp unmatched/MgBase_LangTable.cpp
+    # Run mg5, lane BASESET. The framework's STATE SETTER, which was the last
+    # named trap in the minigame stack and was a FREEZE in a player's hands:
+    # func_ov004_020b87e0 set no state, so a class that asked to advance never
+    # did. Not optional on any of the three targets and for a stronger reason
+    # than the files above it, which is that its symbol is no longer defined
+    # anywhere else: hal/scene_mg_faces.cpp's trap is DELETED, and
+    # unmatched/MgBase_StateDispatch.cpp calls port_mg_try_base_state by name
+    # from port_mg_call0, so a target that compiles the dispatch and not this
+    # fails the link twice over.
+    #
+    # It also DEFINES func_ov004_020b7460, the slot 12 tail-jump veneer whose
+    # src TU drops the pointer its two callers already pass, so
+    # src/func_ov004_020b7460.c is off port/slice_mg1.txt for this file.
+    unmatched/MgBase_StateSetter.cpp
+    # Run mg5, lane BASESET. dScMgBase_c slot 5, the second of the two argument
+    # ride-throughs port/mg_fanout_costs.txt section 6 named and left. Its src
+    # TU calls func_0203cbc0 with no argument where the ROM has the pointer
+    # being freed live in r0, and the port's func_0203cbc0 is operator delete,
+    # so the src form frees a stack slot on every minigame teardown.
+    # src/func_ov004_020b0840.c is off BOTH port/slice_mg1.txt and
+    # port/slice_smb.txt for this file.
+    unmatched/MgBase_Slot5.cpp
     # Lane CT1: dScMgCurling_c's twenty-fifth state, the one with no src TU.
     # Rides the same three targets as the dispatch that calls it -- it is only
     # ever reached through that switch, so any target compiling the dispatch
@@ -3540,8 +3562,10 @@ set_source_files_properties(
 # MgCurling_StateDispatch.cpp give curling. The three measurements behind that
 # claim are in port/slice_smb.txt; the one that matters here is that a
 # member-pointer sweep of all 76 TUs the closure reaches hits exactly one file,
-# src/func_ov004_020b87e0.cpp, which is the FRAMEWORK's state setter and is
-# already excluded and trapped by the MG1 block above.
+# src/func_ov004_020b87e0.cpp, which is the FRAMEWORK's state setter. It stays
+# excluded from every slice; run mg5 lane BASESET replaced the MG1 block's trap
+# with the host copy unmatched/MgBase_StateSetter.cpp, which this slice
+# inherits along with the rest of the framework.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_smb.txt" SLICE_SMB_LINES)
 set(SLICE_SMB_SOURCES "")
 foreach(line IN LISTS SLICE_SMB_LINES)

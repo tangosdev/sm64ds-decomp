@@ -335,7 +335,12 @@ src/func_ov004_020ae1cc.c
 src/func_ov004_020ae1f0.c
 src/func_ov004_020ae20c.c
 src/func_ov004_020b04d0.c
-src/func_ov004_020b0840.c
+# Run mg5, lane BASESET. src/func_ov004_020b0840.c IS EXCLUDED, host-copied in
+# port/unmatched/MgBase_Slot5.cpp. This slice carried the line as well as
+# slice_mg1.txt, and both had to drop it: CMake dedupes identical absolute paths
+# within a target, so leaving it in either list would keep the src body in the
+# build and collide with the host copy. See slice_mg1.txt for the derivation.
+# HOST-COPIED (BASESET): src/func_ov004_020b0840.c
 src/func_ov004_020b0a54.c
 src/func_ov004_020b29c0.cpp
 src/func_ov004_020b2adc.c

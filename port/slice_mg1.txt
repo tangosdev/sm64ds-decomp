@@ -275,7 +275,15 @@ src/func_ov004_020b04e8.c
 src/func_ov004_020b04ec.c
 src/func_ov004_020b04f4.cpp
 src/func_ov004_020b0618.c
-src/func_ov004_020b0840.c
+# Run mg5, lane BASESET. src/func_ov004_020b0840.c IS EXCLUDED, host-copied in
+# port/unmatched/MgBase_Slot5.cpp. It is dScMgBase_c slot 5,
+# AfterCleanupResources, and it declares func_0203cbc0 with NO parameter and
+# calls it with none while the ROM has the pointer being freed live in r0 at
+# 0x020b0898. The port's own func_0203cbc0 is operator delete, so the src form
+# frees a stack slot. This is section 6c of port/mg_fanout_costs.txt, the second
+# of the two argument ride-throughs that file named and left; slot 7 is the
+# first and is MgBase_Slot7.cpp. ONE CALL differs from src.
+# HOST-COPIED (BASESET): src/func_ov004_020b0840.c
 src/func_ov004_020b08f0.cpp
 src/func_ov004_020b0a54.c
 src/func_ov004_020b0b1c.c
@@ -327,6 +335,41 @@ src/func_ov004_020b3194.c
 # already carry: a five-line reader of data_ov004_020beb68, which the slice has.
 src/func_ov004_020b1aec.c
 src/func_ov004_020b35d8.c
+# Run mg5, lane BASESET. THE OTHER TWENTY-TWO OF __sinit_ov004_020b955c'S
+# TWENTY-FOUR. Lane FWK routed two of that constructor's distinct code words
+# (0x020b35d8 and 0x020b3698, the line above and its neighbour) and left
+# twenty-two with the note that each would report the day a scene reached it.
+# Seating the framework state setter reached SEVEN of them on the first run,
+# 2561 times over a scene 378 sweep, so the whole set is routed rather than the
+# seven a run witnessed. The derivation, the departure from FWK's own rule and
+# the per-slot table are in port/unmatched/MgBase_StateDispatch.cpp beside the
+# cases. Every one is a matched src TU with a delink block, reached from a
+# ZERO-ARGUMENT slot with `this` in r0, and none needed a host copy. They are
+# here rather than anywhere else because these lines are what give them a
+# caller: the pair words are mounted DATA holding DS addresses, so /OPT:REF had
+# dropped all twenty-two.
+src/func_ov004_020b3834.c
+src/func_ov004_020b3888.c
+src/func_ov004_020b3b38.cpp
+src/func_ov004_020b3c58.c
+src/func_ov004_020b3c9c.c
+src/func_ov004_020b3cb8.c
+src/func_ov004_020b3e9c.c
+src/func_ov004_020b4080.cpp
+src/func_ov004_020b40ac.c
+src/func_ov004_020b433c.c
+src/func_ov004_020b4360.c
+src/func_ov004_020b45c0.c
+src/func_ov004_020b4820.cpp
+src/func_ov004_020b484c.c
+src/func_ov004_020b49b8.c
+src/func_ov004_020b49e4.c
+src/func_ov004_020b49f0.c
+src/func_ov004_020b4a1c.c
+src/func_ov004_020b4a28.c
+src/func_ov004_020b4a40.c
+src/func_ov004_020b4a4c.c
+src/func_ov004_020b4a64.c
 src/func_ov004_020b3698.c
 src/func_ov004_020b40c0.c
 src/func_ov004_020b410c.c
@@ -349,7 +392,16 @@ src/func_ov004_020b7124.cpp
 src/func_ov004_020b724c.c
 src/func_ov004_020b72d4.cpp
 src/func_ov004_020b743c.c
-src/func_ov004_020b7460.c
+# Run mg5, lane BASESET. src/func_ov004_020b7460.c IS EXCLUDED, host-copied in
+# port/unmatched/MgBase_StateSetter.cpp. The ROM at 0x020b7460 is a three-word
+# tail-jump veneer (`ldr ip,[pc]; bx ip; .word 0x020b743c`) that preserves r0,
+# and its target writes through that pointer on its first instruction pair. The
+# src TU spells BOTH sides with no parameter, so on the host the target stores
+# 10 through a stack slot. Its three call paths are slot 12 of the setter's own
+# state table, src/func_ov004_020b6ddc.c:39 and src/func_ov004_020b6f88.c:24,
+# and the two src callers ALREADY declare and pass the pointer: only the
+# definition drops it. ONE PARAMETER differs from src.
+# HOST-COPIED (BASESET): src/func_ov004_020b7460.c
 src/func_ov004_020b746c.cpp
 src/func_ov004_020b7594.cpp
 src/func_ov004_020b75e4.c
@@ -542,3 +594,34 @@ src/func_ov004_020adeb0.c
 src/func_0203d630.c
 src/func_ov004_020b1b40.c
 src/func_ov004_020b1ba0.c
+# ---- BASESET WAVE 2 ----
+# Run mg5, lane BASESET. The linker's own answer, which is the second wave
+# port/slice_ov007.txt's two-wave method predicts and port/mg_fanout_costs.txt
+# section 2 says to budget for. Routing the twenty-two framework state bodies
+# above gave them a caller for the first time, and their own callees had none
+# either. Nothing here was derived by a closure walk; each line is a symbol the
+# link named, checked to have a matched src TU and a delink block before it was
+# added.
+src/func_ov004_020b37f0.c
+src/func_ov004_020b39a4.c
+src/func_0203d704.c
+# Run mg5, lane BASESET, WAVE 3. The rest of the ov004 member-pointer
+# universe (section 8 of port/unmatched/MgBase_StateSetter.cpp bounds it at
+# sixty installs plus the setter's own twenty) and the two ordinary callees
+# the linker asked for once they had a caller. Every line is a matched src TU
+# with a delink block; none of them had a caller in the build before, because
+# the pair words are mounted DATA holding DS addresses and /OPT:REF drops a
+# body nothing names.
+src/func_ov004_020b369c.c
+src/func_ov004_020b37c4.cpp
+src/func_ov004_020b38ac.c
+src/func_ov004_020b3978.cpp
+src/func_ov004_020b4aa4.c
+src/func_ov004_020b4c30.c
+src/func_ov004_020b4d50.c
+src/func_ov004_020b4dfc.c
+src/func_ov004_020b4f44.c
+src/func_ov004_020b4ff0.c
+src/func_ov004_020b5288.cpp
+src/func_ov004_020b5334.c
+src/func_ov004_020b51e4.c
