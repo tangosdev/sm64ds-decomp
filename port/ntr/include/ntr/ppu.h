@@ -231,6 +231,18 @@ enum { BAND_TRACK_MAX = 8 };
 typedef int (*BandTrackFn)(BandTrack *out, int max, int gap_ds);
 void ppu_band_continuity(BandTrackFn fn);
 
+// ---- THE AMBIENT FILL'S MEMORY ----------------------------------------------
+//
+// The ambient band does not read the two edge rows cold any more; it follows
+// them, fast towards a disturbance and slowly back. See band_fill_ambient in
+// ntr/ppu_sub.cpp for what that is and why. This DROPS the memory, so the next
+// scene's band is lit by the next scene and not by a fade of the last one's,
+// and the first frame after it is the direct sample exactly.
+//
+// Called from the same place ppu_band_continuity is, at hal/screen_gap.cpp's
+// latch, for the same reason: per-scene state whose lifetime is the scene.
+void ppu_band_ambient_reset(void);
+
 // `top` is SCREEN_W x SCREEN_H row-major -- a Framebuffer's px, taken as a
 // plain pointer because the one caller reaches this across an extern "C" seam
 // (hal/sub_screen.cpp) and a reference would only be a cast in disguise there.

@@ -844,15 +844,185 @@ RGB amb_avg(const uint32_t *row, int s0, int s1)
     return o;
 }
 
+/* ---- THE BAND'S PERSISTENCE ------------------------------------------------
+ *
+ * WHAT WAS WRONG WITH READING THE EDGE COLD. The fill re-read both edge rows
+ * every frame and kept nothing, so the band's colour was a function of one
+ * frame and of nothing before it. That is right for a still picture and wrong
+ * for the thing the band exists to show: something crossing the seam. MEASURED
+ * on scene 368, column 12, with SM64DS_GAP_AMB_TRACE over a scripted slingshot
+ * launch -- the bottom edge sat at (184,200,254), dropped to (138,144,162) and
+ * (106,115,142) as the ball passed over it, and was back at (184,200,254) the
+ * next frame. Two frames, then a snap. The top edge was worse: one frame,
+ * (178,196,247) -> (103,111,130) -> (178,196,247). A player sees a blink,
+ * which is what the report said: "it renders for only like 2 frames".
+ *
+ * WHAT IT DOES NOW. Each column of each edge FOLLOWS its sample instead of
+ * taking it: fast towards a disturbance, slowly back to rest. A crosser paints
+ * a pulse that lands in a frame or two and fades over about ten, which is what
+ * a strip of light behind the hinge would do.
+ *
+ * ATTACK AND DECAY ARE NOT UP AND DOWN, and that is the whole design decision
+ * here rather than a detail. The obvious asymmetric follower attacks when the
+ * sample RISES and decays when it falls -- a phosphor -- and the measurement
+ * above is why that is the wrong shape for this band: the crossing object is
+ * DARKER than the sky it crosses, so a phosphor would smear the ball away and
+ * leave the picture the report already complains about. What "attack" has to
+ * mean is the deviation GROWING, whichever way it points, and "decay" the
+ * deviation shrinking. That needs a rest to measure deviation from, so there
+ * are two followers per channel:
+ *
+ *   rest   the settled light, tracking the sample slowly and always. What the
+ *          scene looks like when nothing is crossing.
+ *   glow   what is drawn. Attacks while the sample is further from rest than
+ *          glow is, decays otherwise.
+ *
+ * SO A SUSTAINED CHANGE IS FOLLOWED AND A BRIEF ONE LINGERS, and both fall out
+ * of the same test rather than being special-cased. A fade, a scene's own
+ * lighting change, a lamp that comes on and stays on: rest lags the sample, so
+ * the deviation keeps growing, so glow attacks the whole way and the band does
+ * not trail the picture. A ball that is gone in two frames: rest barely moved,
+ * so the deviation collapses the moment it leaves and glow decays home.
+ *
+ * IT CONVERGES EXACTLY, which is a requirement and not a nicety: a still scene
+ * has to end up at the same pixels the cold read gave, or every capture in the
+ * feature's picture set changes meaning. Both followers step by CEILING of the
+ * fraction of the remaining distance, never past the target, and NEVER BY LESS
+ * THAN ONE WHOLE CHANNEL. All three clauses earn their place:
+ *
+ *   the ceiling      an integer follower that truncates stalls short of its
+ *                    target and sits there forever;
+ *   the clamp        num <= den, so the step cannot exceed the distance: no
+ *                    overshoot, no oscillation, monotone approach;
+ *   the floor        MEASURED, and it is the one that is not obvious. With the
+ *                    step allowed to fall to a 256th of a channel the follower
+ *                    is exponential all the way down, so the last WHOLE channel
+ *                    of a decay takes about seventy frames -- the band sat one
+ *                    unit off the direct read for over a second after a pulse
+ *                    was long invisible. A floor of one channel closes that in
+ *                    one frame per unit and bounds convergence at about sixty
+ *                    frames from the worst deviation there is. It binds only
+ *                    below fifteen channels of remaining distance, so the
+ *                    curve a player actually sees is untouched.
+ *
+ * ALL INTEGER AND FRAME-INDEXED, for the reason the ramp below is: no wall
+ * clock is read, so a headless run and a windowed run of the same frames give
+ * the same band, and tools/gapproof.py can re-derive it from the sample series
+ * with the same arithmetic. */
+
+/* 1/256 of a channel step, so the tail of a decay is a curve rather than a
+   staircase. The eight bits are the ONLY fixed point here: samples in, drawn
+   colour out, both plain 0..255. */
+constexpr int kAmbFixBits = 8;
+
+/* ATTACK: seven eighths of the remaining distance per frame. 87.5% of a change
+   is there in one frame and 98.4% in two, which is the "lands within a frame or
+   two" the report asks for without making the leading edge a hard step. */
+constexpr int kAmbAttackNum = 7, kAmbAttackDen = 8;
+
+/* DECAY: one fifteenth per frame, a half-life of 10.0 frames (ln 2 / -ln(14/15)
+   = 10.05), so a pulse is still half lit a sixth of a second later and gone by
+   about a third. */
+constexpr int kAmbDecayNum = 1, kAmbDecayDen = 15;
+
+/* REST: one sixteenth per frame, half-life 10.7 frames. Slow enough that a
+   two-frame crosser barely moves it -- which is what makes the crossing read as
+   a deviation at all -- and quick enough that a real lighting change becomes
+   the new rest within about a third of a second. */
+constexpr int kAmbRestNum = 1, kAmbRestDen = 16;
+
+/* One follower's move for one frame: the ceiling of num/den of the remaining
+   distance, floored at a whole channel and clamped to the distance itself. See
+   the three clauses in the note above. */
+int amb_step(int d, int num, int den)
+{
+    if (d == 0) return 0;
+    const int a = d > 0 ? d : -d;
+    int s = (a * num + den - 1) / den;
+    if (s < 1 << kAmbFixBits) s = 1 << kAmbFixBits;
+    if (s > a) s = a;
+    return d > 0 ? s : -s;
+}
+
+struct AmbMemory {
+    int have;                       /* 0 until a scene's first ambient frame */
+    int rest[2][kAmbCols][3];       /* [edge][column][channel], fixed point */
+    int glow[2][kAmbCols][3];
+};
+/* Edge 0 is the top screen's bottom row, edge 1 the bottom screen's top row.
+   One instance: the compose runs on one thread on one path and never re-enters,
+   the same bookkeeping band_peek's scratch band makes. 1.1 KB of .bss. */
+AmbMemory g_amb;
+
+/* One channel of one column of one edge. Returns the colour to draw. */
+int amb_follow(int e, int c, int i, int sample)
+{
+    const int t = sample << kAmbFixBits;
+    int &rest = g_amb.rest[e][c][i];
+    int &glow = g_amb.glow[e][c][i];
+    rest += amb_step(t - rest, kAmbRestNum, kAmbRestDen);
+    const int dt = t > rest ? t - rest : rest - t;
+    const int dg = glow > rest ? glow - rest : rest - glow;
+    if (dt >= dg)
+        glow += amb_step(t - glow, kAmbAttackNum, kAmbAttackDen);
+    else
+        glow += amb_step(t - glow, kAmbDecayNum, kAmbDecayDen);
+    return glow >> kAmbFixBits;
+}
+
+/* The scene's first ambient frame is the direct sample EXACTLY, not a ramp up
+   from black: a minigame's band is lit correctly on the frame it appears. */
+void amb_seed(int e, int c, const RGB &v)
+{
+    const int ch[3] = {v.r, v.g, v.b};
+    for (int i = 0; i < 3; ++i)
+        g_amb.rest[e][c][i] = g_amb.glow[e][c][i] = ch[i] << kAmbFixBits;
+}
+
+/* SM64DS_GAP_AMB_TRACE=1: one line per composed ambient frame carrying the
+   twenty-four column colours of BOTH edges, as the fill read them and as the
+   fill used them.
+ *
+ * WHY BOTH NUMBERS. A captured BMP is one frame, and one frame cannot show
+ * what the band did over time -- which is exactly the question a player asks
+ * about a fast crosser. This is the series, and it is also what lets the
+ * checker re-derive a smoothed band at all: tools/gapproof.py reads t_raw as
+ * the input history, runs its OWN follower over it, and must land on t_out.
+ *
+ * stderr, and off unless asked, so no capture and no play session carries it. */
+int amb_trace_on(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_GAP_AMB_TRACE");
+        on = s && *s && *s != '0';
+    }
+    return on;
+}
+
+unsigned g_amb_frame;
+
+void amb_trace_list(const char *name, const RGB *v)
+{
+    std::fprintf(stderr, " %s=", name);
+    for (int c = 0; c < kAmbCols; ++c)
+        std::fprintf(stderr, "%s%02x%02x%02x", c ? "," : "", v[c].r & 0xff,
+                     v[c].g & 0xff, v[c].b & 0xff);
+}
+
 /* THE AMBIENT FILL.
  *
  * The band is lit by the two pictures it sits between. Each of twenty-four
  * columns takes the average colour of the top screen's BOTTOM row and of the
  * bottom screen's TOP row over its own sample window, and is a vertical ramp
  * from the first to the second; the columns are interpolated between their
- * CENTRES across the width, so there is no seam where two columns meet. The
- * edge rows are re-read every frame, so the band glows with the scene rather
- * than with a colour picked once at load.
+ * CENTRES across the width, so there is no seam where two columns meet.
+ *
+ * THE EDGE ROWS ARE RE-READ EVERY FRAME AND FOLLOWED RATHER THAN TAKEN, so the
+ * band glows with the scene rather than with a colour picked once at load, and
+ * something that crosses the seam in two frames leaves a pulse rather than a
+ * blink. See THE BAND'S PERSISTENCE above for what the follower is and why its
+ * asymmetry is not up-and-down.
  *
  * WHY THE RAMP IS SAMPLED AT ROW CENTRES. The band sits BETWEEN the two rows it
  * interpolates, so its first row is not the top edge and its last is not the
@@ -870,14 +1040,42 @@ void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
     const uint32_t *top_edge = dst + (size_t)(lay.band_y - 1) * dst_w;
     const uint32_t *bot_edge = dst + (size_t)lay.bottom_y * dst_w;
     RGB tops[kAmbCols], bots[kAmbCols];
+    RGB raw_t[kAmbCols], raw_b[kAmbCols];
     int centre[kAmbCols];
     for (int c = 0; c < kAmbCols; ++c) {
         int s0, s1, x0, x1;
         amb_sample_span(lay.w, c, s0, s1);
         amb_col_span(lay.w, c, x0, x1);
-        tops[c] = amb_avg(top_edge, s0, s1);
-        bots[c] = amb_avg(bot_edge, s0, s1);
+        raw_t[c] = amb_avg(top_edge, s0, s1);
+        raw_b[c] = amb_avg(bot_edge, s0, s1);
         centre[c] = (x0 + x1) / 2;
+    }
+
+    /* SEEDED FROM THIS FRAME'S OWN SAMPLE, once per scene. See amb_seed. */
+    if (!g_amb.have) {
+        for (int c = 0; c < kAmbCols; ++c) {
+            amb_seed(0, c, raw_t[c]);
+            amb_seed(1, c, raw_b[c]);
+        }
+        g_amb.have = 1;
+    }
+    for (int c = 0; c < kAmbCols; ++c) {
+        tops[c].r = amb_follow(0, c, 0, raw_t[c].r);
+        tops[c].g = amb_follow(0, c, 1, raw_t[c].g);
+        tops[c].b = amb_follow(0, c, 2, raw_t[c].b);
+        bots[c].r = amb_follow(1, c, 0, raw_b[c].r);
+        bots[c].g = amb_follow(1, c, 1, raw_b[c].g);
+        bots[c].b = amb_follow(1, c, 2, raw_b[c].b);
+    }
+
+    ++g_amb_frame;
+    if (amb_trace_on()) {
+        std::fprintf(stderr, "[ambtrace] f%u", g_amb_frame);
+        amb_trace_list("t_raw", raw_t);
+        amb_trace_list("t_out", tops);
+        amb_trace_list("b_raw", raw_b);
+        amb_trace_list("b_out", bots);
+        std::fprintf(stderr, "\n");
     }
 
     /* the two endpoint colours for every column of the image, resolved once
@@ -1493,6 +1691,18 @@ void ppu_band_continuity(BandTrackFn fn)
 {
     g_track_fn = fn;
     for (int i = 0; i < BAND_TRACK_MAX; ++i) g_track[i].have = 0;
+}
+
+/* DROPPING THE MEMORY IS THE WHOLE OF ITS LIFETIME MANAGEMENT, and it is the
+   same rule the attribute cache above follows: hal/screen_gap.cpp calls this at
+   every latch, which is every time the scene or its G changes, so one
+   minigame's glow can never be what the next one's band starts from. Clearing
+   `have` rather than zeroing the arrays is deliberate -- the next ambient frame
+   seeds them from its own sample, so the first frame of a scene is the direct
+   read and not a ramp up out of black. */
+void ppu_band_ambient_reset(void)
+{
+    g_amb.have = 0;
 }
 
 void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
