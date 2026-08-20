@@ -109,8 +109,19 @@ const ntr::StackLayout *hal_screen_layout(void)
        moving today -- gapless zeroes G, so engaging changes both -- and it is
        in the key anyway, because a cache whose key is a subset of its inputs is
        one edit away from serving a stale answer. */
-    if (g_have && want == g_raw && scene == g_scene && head == g_head)
+    /* THE SEAM FLAG IS NOT LATCHED, and that is the whole of why it is set on
+       both paths out of here rather than inside the rebuild below. The latch
+       fires when the scene or its G changes; GaplessMinigames engages from the
+       running minigame's InitResources, which is after the scene has changed
+       and can be after this has already latched a layout for it. A cached zero
+       would leave the seam pass off for the entire game, which is exactly the
+       shape of defect a "latch it with everything else" reading produces and
+       nothing downstream would report. It is one int and it costs a call. */
+    const int seam = hal_gapless_engaged() ? 1 : 0;
+    if (g_have && want == g_raw && scene == g_scene && head == g_head) {
+        g_lay.seam = seam;
         return &g_lay;
+    }
 
     const int was_h = g_have ? g_lay.h : 0;
     g_raw = want;
@@ -131,6 +142,7 @@ const ntr::StackLayout *hal_screen_layout(void)
 
     g_lay = ntr::stack_layout(want, head, mode, host_setting_gap_color(), peek,
                               art);
+    g_lay.seam = seam;
     /* and the band's per-scene continuity reader, installed at the same moment
        for the same reason: it is per scene, and installing clears the cached
        OAM attributes so nothing crosses from the last minigame into this one */

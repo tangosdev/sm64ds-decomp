@@ -1324,6 +1324,84 @@ int band_decode(uint16_t a0, uint16_t a1, uint16_t a2, BandEntry &o)
     return 1;
 }
 
+/* WHAT ONE ENTRY'S TEXELS ARE, decoded once instead of per pixel: the tile
+ * addressing, the palette, the flips and the affine matrix. Two passes read
+ * texels now -- the band's, below, and the seam straddle's at the bottom of
+ * this file -- and the DS's OBJ tile addressing is the last thing in this file
+ * that should exist in two transcriptions, so it exists in one and both read
+ * it through band_texel. 0 means the entry draws nothing at all. */
+struct BandTexels {
+    uint32_t vram, pltt, objext;
+    uint32_t boundary, tile, pal;
+    int map1d, c256, hflip, vflip;
+    int pa, pb, pc, pd;
+    uint8_t prio;
+};
+
+int band_texels(const BandEngine &e, uint16_t a0, uint16_t a1, uint16_t a2,
+                const BandEntry &d, BandTexels &o)
+{
+    const uint32_t dispcnt = rd32(e.reg);
+    if (!((dispcnt >> 12) & 1)) return 0;            // OBJ layer off
+    o.vram = e.vram;
+    o.pltt = e.pltt;
+    o.boundary = 32u << ((dispcnt >> 20) & 3);
+    o.map1d = (dispcnt >> 4) & 1;
+    o.objext = ((dispcnt >> 31) & 1) ? e.ext : 0;
+    o.c256 = (a0 & 0x2000) != 0;
+    o.hflip = !d.affine && (a1 & 0x1000);
+    o.vflip = !d.affine && (a1 & 0x2000);
+    o.tile = a2 & 0x3FF;
+    o.pal = (a2 >> 12) & 0xF;
+    o.prio = (a2 >> 10) & 3;
+
+    o.pa = 256; o.pb = 0; o.pc = 0; o.pd = 256;
+    if (d.affine) {
+        const int grp = (a1 >> 9) & 0x1F;
+        o.pa = (int16_t)rd16(e.oam + (grp * 4 + 0) * 8u + 6);
+        o.pb = (int16_t)rd16(e.oam + (grp * 4 + 1) * 8u + 6);
+        o.pc = (int16_t)rd16(e.oam + (grp * 4 + 2) * 8u + 6);
+        o.pd = (int16_t)rd16(e.oam + (grp * 4 + 3) * 8u + 6);
+    }
+    return 1;
+}
+
+/* ONE TEXEL of a decoded entry. (sx, sy) walk the BOX, which for a double-size
+   affine entry is twice the sprite in each axis. 0 means transparent, or a box
+   pixel the matrix maps outside the sprite -- either way, nothing to draw. */
+int band_texel(const BandTexels &t, const BandEntry &d, int sx, int sy,
+               uint32_t &color)
+{
+    int tx, ty;
+    if (d.affine) {
+        const int cx = sx - d.bw / 2, cy = sy - d.bh / 2;
+        tx = ((t.pa * cx + t.pb * cy) >> 8) + d.w / 2;
+        ty = ((t.pc * cx + t.pd * cy) >> 8) + d.h / 2;
+        if (tx < 0 || tx >= d.w || ty < 0 || ty >= d.h) return 0;
+    } else {
+        tx = t.hflip ? d.w - 1 - sx : sx;
+        ty = t.vflip ? d.h - 1 - sy : sy;
+    }
+    const int tcol = tx >> 3, trow = ty >> 3;
+    const int fx = tx & 7, fy = ty & 7;
+    const uint32_t slot =
+        t.map1d ? (uint32_t)(trow * (d.w / 8) + tcol) * (t.c256 ? 2u : 1u)
+                : (uint32_t)(trow * 32 + (t.c256 ? tcol * 2 : tcol));
+    const uint32_t cell = t.vram + t.tile * t.boundary + slot * 32u;
+    if (t.c256) {
+        const uint32_t idx = rd8(cell + fy * 8u + fx);
+        if (!idx) return 0;
+        color = t.objext ? bgr555(rd16(t.objext + (t.pal * 256u + idx) * 2u))
+                         : bgr555(rd16(t.pltt + idx * 2u));
+    } else {
+        const uint8_t bb = rd8(cell + fy * 4u + fx / 2);
+        const uint32_t idx = (fx & 1) ? (bb >> 4) : (bb & 0xF);
+        if (!idx) return 0;
+        color = bgr555(rd16(t.pltt + (t.pal * 16u + idx) * 2u));
+    }
+    return 1;
+}
+
 /* ONE ENTRY'S TEXELS INTO THE BAND, at a row the caller names.
  *
  * `ktop` is the band row the entry's BOX starts on, which for a live raster is
@@ -1349,26 +1427,9 @@ int band_draw_entry(BandPixel *band, int gap_ds, const BandEngine &e,
                     int ktop, int x, int only_empty, int split = -1,
                     int *n_below = 0)
 {
-    const uint32_t dispcnt = rd32(e.reg);
-    if (!((dispcnt >> 12) & 1)) return 0;            // OBJ layer off
-    const uint32_t boundary = 32u << ((dispcnt >> 20) & 3);
-    const bool map1d = (dispcnt >> 4) & 1;
-    const uint32_t objext = ((dispcnt >> 31) & 1) ? e.ext : 0;
-    const bool c256 = (a0 & 0x2000) != 0;
-    const bool hflip = !d.affine && (a1 & 0x1000);
-    const bool vflip = !d.affine && (a1 & 0x2000);
-    const uint32_t tile = a2 & 0x3FF;
-    const uint32_t pal = (a2 >> 12) & 0xF;
-    const uint8_t prio = (a2 >> 10) & 3;
-
-    int pa = 256, pb = 0, pc = 0, pd = 256;
-    if (d.affine) {
-        const int grp = (a1 >> 9) & 0x1F;
-        pa = (int16_t)rd16(e.oam + (grp * 4 + 0) * 8u + 6);
-        pb = (int16_t)rd16(e.oam + (grp * 4 + 1) * 8u + 6);
-        pc = (int16_t)rd16(e.oam + (grp * 4 + 2) * 8u + 6);
-        pd = (int16_t)rd16(e.oam + (grp * 4 + 3) * 8u + 6);
-    }
+    BandTexels t;
+    if (!band_texels(e, a0, a1, a2, d, t)) return 0;
+    const uint8_t prio = t.prio;
 
     int drawn = 0;
     for (int sy = 0; sy < d.bh; ++sy) {
@@ -1377,34 +1438,8 @@ int band_draw_entry(BandPixel *band, int gap_ds, const BandEngine &e,
         for (int sx = 0; sx < d.bw; ++sx) {
             const int px = x + sx;
             if (px < 0 || px >= 256) continue;
-            int tx, ty;
-            if (d.affine) {
-                const int cx = sx - d.bw / 2, cy = sy - d.bh / 2;
-                tx = ((pa * cx + pb * cy) >> 8) + d.w / 2;
-                ty = ((pc * cx + pd * cy) >> 8) + d.h / 2;
-                if (tx < 0 || tx >= d.w || ty < 0 || ty >= d.h) continue;
-            } else {
-                tx = hflip ? d.w - 1 - sx : sx;
-                ty = vflip ? d.h - 1 - sy : sy;
-            }
-            const int tcol = tx >> 3, trow = ty >> 3;
-            const int fx = tx & 7, fy = ty & 7;
-            const uint32_t slot =
-                map1d ? (uint32_t)(trow * (d.w / 8) + tcol) * (c256 ? 2u : 1u)
-                      : (uint32_t)(trow * 32 + (c256 ? tcol * 2 : tcol));
-            const uint32_t cell = e.vram + tile * boundary + slot * 32u;
             uint32_t color;
-            if (c256) {
-                const uint32_t idx = rd8(cell + fy * 8u + fx);
-                if (!idx) continue;
-                color = objext ? bgr555(rd16(objext + (pal * 256u + idx) * 2u))
-                               : bgr555(rd16(e.pltt + idx * 2u));
-            } else {
-                const uint8_t bb = rd8(cell + fy * 4u + fx / 2);
-                const uint32_t idx = (fx & 1) ? (bb >> 4) : (bb & 0xF);
-                if (!idx) continue;
-                color = bgr555(rd16(e.pltt + (pal * 16u + idx) * 2u));
-            }
+            if (!band_texel(t, d, sx, sy, color)) continue;
             BandPixel &bp = band[(size_t)k * 256 + px];
             /* THE CONTINUITY PASS NEVER OVERPAINTS AN ENGINE. Its whole claim
                is that it fills rows the engines did not draw, and a pass that
@@ -1760,6 +1795,65 @@ int head_trace_on(void)
     static int on = -1;
     if (on < 0) {
         const char *s = std::getenv("SM64DS_HEADROOM_TRACE");
+/* ---- THE SEAM STRADDLE: the same hole with the band taken away -------------
+ *
+ * See the note over ppu_band_continuity in ntr/ppu.h for what this is. In one
+ * paragraph: with GaplessMinigames on the game's own G is zero, so the ROM's
+ * OAM router (src/func_ov004_020aff38.cpp) submits a sprite to EXACTLY ONE
+ * engine -- world y in [-256, -1] to the top, [-64, 191] to the bottom, first
+ * match returns -- and that engine's raster then clips it at its own screen
+ * edge. A 16x16 sprite whose box crosses world row 0 loses the rows hanging
+ * over the seam entirely and pops to the other screen when its centre crosses.
+ * This pass draws those rows, out of the entry the game itself submitted.
+ *
+ * WORLD ROW -> COMPOSED IMAGE ROW, and the whole pass rests on the two halves
+ * sharing one arithmetic. The bottom screen's world row r sits at
+ * lay.bottom_y + r * scale. The top screen's world row r (negative) is engine
+ * row r + 192, at (r + 192) * scale = SCREEN_H + r * scale -- and with no band
+ * lay.bottom_y IS SCREEN_H, so both halves are `bottom_y + r * scale`. THAT
+ * IDENTITY IS WHAT GAPLESS MEANS, and it is why this refuses to run when
+ * lay.gap_ds is non-zero: with a band the two halves are that many rows apart
+ * and a sprite drawn across the seam would be drawn across a hinge.
+ *
+ * THE RULE IS ABOUT THE PICTURE, NOT ABOUT THE SIMULATION, and that is not a
+ * stylistic choice -- see THE TWO SCREENS ARE ONE FRAME APART below. For a
+ * tracked object, ask which half of the composed image is actually showing it:
+ *
+ *   BOTH halves have it     draw nothing. The both-engine router
+ *                           (func_ov004_020b023c) puts its objects in both OAM
+ *                           buffers and each engine clips its own half, so
+ *                           they already arrive whole; the parachuting
+ *                           bob-ombs are that case. This is also the answer on
+ *                           the one frame where the two halves are showing two
+ *                           different states of the same object, where drawing
+ *                           anything would be adding a second copy of it.
+ *   ONE half has it         and its box crosses the seam: draw the rows on the
+ *                           other side of the seam, from THAT half's entry, at
+ *                           THAT entry's own position.
+ *   NEITHER half has it     draw nothing. That is the honest answer for an
+ *                           object that has not been submitted yet, and for
+ *                           the one frame the display lag leaves empty.
+ *
+ * WHY IT WRITES OVER THE COMPOSED PIXEL, where the band's continuity pass
+ * refuses to. The band fills rows NO engine addressed, so "was this pixel
+ * drawn" is a question with an answer and the pass can decline. These rows are
+ * ordinary screen rows: fully painted, by an engine, every frame. Declining
+ * would mean drawing nothing, which is the defect. So the rule is the one the
+ * hardware would apply if the router had submitted to both engines: the
+ * sprite's own opaque texels land over what is there. Bob-omb Squad's ball is
+ * OBJ priority 0, the highest a sprite can have, so on a continuous display
+ * there is nothing under it that would win -- and only an object the scene
+ * NAMES reaches this at all, which is the containment. What this pass does NOT
+ * do is invent: the texels are the submitted entry's own, out of the same
+ * engine's VRAM through the same palette, and the half that already has the
+ * object is never written to.
+ */
+
+int seam_trace_frames(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_GAP_STRADDLE_TRACE");
         on = s && *s && *s != '0';
     }
     return on;
@@ -1869,6 +1963,451 @@ void head_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
                      "a sprite over the top screen's first row and were "
                      "reconstructed\n", g_head_frame, lay.head_ds, lay.head_ds,
                      px_drawn, lay.w - n_free, lay.w);
+/* COMPOSE FRAMES SINCE THE PROGRAM STARTED, for the band continuity counter's
+   reason: the claim this pass makes is about a SEQUENCE -- an object drawn on
+   one half, then on the other -- and "no frame in it is missing" is not
+   readable off a census with no frame number in it. */
+unsigned g_seam_frame;
+
+/* ---- THE TWO SCREENS ARE ONE FRAME APART IN THIS PORT ----------------------
+ *
+ * MEASURED HERE, and this pass cannot be written correctly without it. The
+ * ROM's display sync (src/func_02019144.c) is `OAM::Flush(); OAM::Load();` at
+ * VBlank, so on hardware both engines scan out the same uploaded OAM. The port
+ * reproduces that tail inside hal/sub_screen.cpp's hal_sub_screen_present, and
+ * BOTH frame loops -- port/tests/walk_window.cpp's and hal/scene_boot.cpp's
+ * port_scene_run -- call port_message_composite_engine_a immediately BEFORE
+ * it. So engine A's raster reads 0x07000000 before this frame's upload and
+ * engine B's reads it after:
+ *
+ *     top screen    = upload N-1
+ *     bottom screen = upload N
+ *
+ * The numbers, scene 368 gapless, scripted launch, headless captures one frame
+ * apart: the ball's engine A entry is y = 178 at frame 231, and the composed
+ * image that carries it at y = 178 is frame 232's. Frame 233 carries frame
+ * 232's y = 169 and frame 234 carries 160. One frame, every frame, both loops.
+ *
+ * THAT IS NOT THIS PASS'S DEFECT AND NOT ITS FIX. Moving the upload ahead of
+ * the engine A composite changes the timing of every sprite on the top screen
+ * in every level in the program; it is another lane's change over another
+ * lane's files and it would move every capture in the tree. What this pass
+ * owes is to be RIGHT IN ITS PRESENCE. Completing an object out of the entry
+ * engine A holds NOW would put rows on the bottom screen for a ball whose top
+ * half is not in the picture yet -- a new artifact, not a fix -- so the entry
+ * engine A's half of the picture was really drawn from is kept here.
+ *
+ * TAKEN AT THE UPLOAD, NOT AT THE COMPOSE, and that is the difference between
+ * a snapshot that is right and one that is usually right. hal/sub_screen.cpp
+ * calls ppu_seam_oam_mark immediately before OAM::Load, so the copy is the OAM
+ * engine A's compositor rasterised from a few lines earlier -- once per frame,
+ * on the one path that uploads. Keeping it at the end of this pass instead
+ * assumed one compose per frame, and the capture path composes a SECOND time
+ * over the same framebuffer to write its BMP: that second compose read a
+ * snapshot one upload ahead of the picture it was looking at, so the pass
+ * declined on exactly the frame a before/after capture was taken for. Measured
+ * -- SM64DS_SCENE_BMP_STACKED at frame 232 came out byte-identical between the
+ * two builds while the per-frame trace showed the completion happening.
+ *
+ * Engine B needs no such thing: its raster runs after the upload, so its own
+ * OAM is what its half of the picture holds. */
+uint8_t g_oam_a_shown[1024];
+int g_oam_a_have;
+
+uint16_t shown_rd16(int off)
+{
+    return (uint16_t)((unsigned)g_oam_a_shown[off] |
+                      ((unsigned)g_oam_a_shown[off + 1] << 8));
+}
+
+
+
+/* WHERE THE TOP SCREEN REALLY HAS IT. Matched on the sprite's SIZE and on
+   NEITHER coordinate, because both are what a frame of lag changes: an object
+   moving diagonally is at a different x and a different y in the two halves.
+   Of the entries that match the size, the one nearest the position the game
+   reports is the object, and an entry further away than a whole frame of
+   travel is somebody else's. kSeamLag is that bound: Bob-omb Squad's ball
+   moves nine rows in a frame at the speed the plunger gives it, and 32 is
+   comfortably clear of that while still being narrower than the chase it would
+   take to confuse two balls.
+
+   IT RETURNS THE ENTRY'S OWN x AND y, and every consumer uses those and not
+   the game's. The whole point of reading the snapshot is that the picture is a
+   frame behind the simulation; drawing the completion at the simulation's
+   position would put it beside the half it is completing. */
+const int kSeamLag = 32;
+
+int seam_shown_a(const BandEngine &ea, const BandTrack &t, BandCache &out,
+                 int &row, int &col)
+{
+    if (!g_oam_a_have) return 0;
+    /* FOUND IS ITS OWN FLAG and the row is not a sentinel. Every row this can
+       return is NEGATIVE -- an entry that reaches the top screen at all sits
+       above world row 0 -- so "-1 means nothing found" is a value in range and
+       reading it as one throws away every match. It did, on the first cut of
+       this: the completion reported "top half: no" on the exact frames the
+       census reported the entry with 192 of 192 texels standing in the
+       picture. */
+    int found = 0, best = 0, bestx = 0, best_d = 0;
+    uint16_t b0 = 0, b1 = 0, b2 = 0;
+    for (int i = 127; i >= 0; --i) {
+        const uint16_t a0 = shown_rd16(i * 8);
+        const uint16_t a1 = shown_rd16(i * 8 + 2);
+        const uint16_t a2 = shown_rd16(i * 8 + 4);
+        BandEntry d;
+        if (!band_decode(a0, a1, a2, d)) continue;
+        if (d.w != t.w || d.h != t.h) continue;
+        const int r = d.y + ea.row_bias;
+        int dy = r - t.y, dx = d.x - t.x;
+        if (dy < 0) dy = -dy;
+        if (dx < 0) dx = -dx;
+        if (dy > kSeamLag || dx > kSeamLag) continue;
+        const int dist = dy + dx;
+        if (!found || dist < best_d) {
+            found = 1;
+            best = r;
+            bestx = d.x;
+            best_d = dist;
+            b0 = a0;
+            b1 = a1;
+            b2 = a2;
+        }
+    }
+    if (!found) return 0;
+    out.have = 1;
+    out.a0 = b0;
+    out.a1 = b1;
+    out.a2 = b2;
+    out.eng = ea;
+    row = best;
+    col = bestx;
+    return 1;
+}
+
+/* The bottom half's own fade, spelled here because a pixel written into the
+   composed image after the compose has to carry the fade the compose applied.
+   Both halves get it: the top half arrives already faded (walk_window's own
+   composite ran over the framebuffer) and the bottom half is faded by the loop
+   in ppu_compose_stacked, so a synthesized pixel is faded whichever half it
+   lands in. Same expression, one place. */
+uint32_t seam_fade(uint32_t p, int evy, int to_white)
+{
+    if (!evy) return p;
+    int r = (p >> 16) & 0xff, g = (p >> 8) & 0xff, b = p & 0xff;
+    if (to_white) {
+        r += ((255 - r) * evy) >> 4;
+        g += ((255 - g) * evy) >> 4;
+        b += ((255 - b) * evy) >> 4;
+    } else {
+        r -= (r * evy) >> 4;
+        g -= (g * evy) >> 4;
+        b -= (b * evy) >> 4;
+    }
+    return 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
+}
+
+/* One entry's texels into the composed image, for world rows in [rlo, rhi).
+   `rtop` is the world row the BOX starts on and `x` its left DS column. */
+int seam_draw_entry(uint32_t *dst, int dst_w, const StackLayout &lay,
+                    const BandCache &c, const BandEntry &d, int rtop, int x,
+                    int rlo, int rhi, int evy, int to_white)
+{
+    BandTexels t;
+    if (!band_texels(c.eng, c.a0, c.a1, c.a2, d, t)) return 0;
+    const int rx = lay.w / SUB_W, ry = lay.scale;
+    if (rx <= 0 || ry <= 0) return 0;
+    int drawn = 0;
+    for (int sy = 0; sy < d.bh; ++sy) {
+        const int r = rtop + sy;
+        if (r < rlo || r >= rhi) continue;
+        const int hy = lay.bottom_y + r * ry;
+        if (hy < 0 || hy + ry > lay.h) continue;
+        for (int sx = 0; sx < d.bw; ++sx) {
+            const int px = x + sx;
+            if (px < 0 || px >= SUB_W) continue;
+            uint32_t color;
+            if (!band_texel(t, d, sx, sy, color)) continue;
+            color = seam_fade(color, evy, to_white);
+            ++drawn;
+            for (int oy = 0; oy < ry; ++oy) {
+                uint32_t *out = dst + (size_t)(hy + oy) * dst_w;
+                for (int ox = 0; ox < rx; ++ox) out[px * rx + ox] = color;
+            }
+        }
+    }
+    return drawn;
+}
+
+/* THE MEASUREMENT, and it is read off the composed image rather than off this
+   pass's own bookkeeping. For every opaque texel of the entry: which half of
+   the image its world row falls in, and whether the pixel standing there IS
+   that texel. `op_*` is how many the sprite has on that side and `hit_*` how
+   many of them the picture actually shows, so hit == op on both sides is the
+   whole claim -- the object is whole across the seam, in the game's own texels
+   -- and the two numbers read separately are what tells "the rows are missing"
+   apart from "the rows are there and wrong". */
+struct SeamCount {
+    int op_top, op_bot, hit_top, hit_bot;
+};
+
+void seam_measure(const uint32_t *dst, int dst_w, const StackLayout &lay,
+                  const BandCache &c, const BandEntry &d, int rtop, int x,
+                  int evy, int to_white, SeamCount &o)
+{
+    o.op_top = o.op_bot = o.hit_top = o.hit_bot = 0;
+    BandTexels t;
+    if (!band_texels(c.eng, c.a0, c.a1, c.a2, d, t)) return;
+    const int rx = lay.w / SUB_W, ry = lay.scale;
+    if (rx <= 0 || ry <= 0) return;
+    for (int sy = 0; sy < d.bh; ++sy) {
+        const int r = rtop + sy;
+        const int hy = lay.bottom_y + r * ry;
+        if (hy < 0 || hy + ry > lay.h) continue;
+        for (int sx = 0; sx < d.bw; ++sx) {
+            const int px = x + sx;
+            if (px < 0 || px >= SUB_W) continue;
+            uint32_t color;
+            if (!band_texel(t, d, sx, sy, color)) continue;
+            color = seam_fade(color, evy, to_white);
+            /* the block's top-left host pixel. The blit is nearest neighbour
+               at a whole-number ratio, so every pixel of the block carries the
+               same colour and one of them is the block. */
+            const uint32_t got = dst[(size_t)hy * dst_w + px * rx];
+            const int hit = (got & 0xFFFFFFu) == (color & 0xFFFFFFu);
+            if (r < 0) {
+                ++o.op_top;
+                o.hit_top += hit;
+            } else {
+                ++o.op_bot;
+                o.hit_bot += hit;
+            }
+        }
+    }
+}
+
+/* THE CENSUS: every entry, in the state its own half of the picture was drawn
+   from, whose box crosses the seam -- engine A out of the shown snapshot,
+   engine B out of its live OAM -- and whether the other half carries the same
+   object. It is how the both-engine router's objects are told apart from the
+   one-engine router's WITHOUT a table naming which is which, so the bob-omb
+   statement is read straight off it, and it is the line a report about a
+   wrong-looking crossing gets answered from. It runs BEFORE the completion
+   below, so its numbers are always the picture as the two engines left it. */
+int seam_census_paired(const BandEngine &other, int from_shadow,
+                       const BandEntry &d, int rtop, int x, uint16_t a2,
+                       int &idx, int &row)
+{
+    for (int i = 127; i >= 0; --i) {
+        uint16_t b0, b1, b2;
+        if (from_shadow) {
+            b0 = shown_rd16(i * 8);
+            b1 = shown_rd16(i * 8 + 2);
+            b2 = shown_rd16(i * 8 + 4);
+        } else {
+            b0 = rd16(other.oam + i * 8u);
+            b1 = rd16(other.oam + i * 8u + 2);
+            b2 = rd16(other.oam + i * 8u + 4);
+        }
+        BandEntry e;
+        if (!band_decode(b0, b1, b2, e)) continue;
+        if (e.w != d.w || e.h != d.h || b2 != a2) continue;
+        /* THE TOLERANCE IS ON BOTH AXES, and it has to be. The two halves are
+           an upload apart, so a moving object is at a different x AND a
+           different y in them; an exact-x pairing test reported "ONE HALF
+           ONLY" for a bob-omb that both halves plainly had, on exactly the
+           frames it was moving sideways. Same tile, same size, within a frame
+           of travel in both axes is the object. */
+        const int r = e.y + other.row_bias;
+        int dy = r - rtop, dx = e.x - x;
+        if (dy < 0) dy = -dy;
+        if (dx < 0) dx = -dx;
+        if (dy > kSeamLag || dx > kSeamLag) continue;
+        idx = i;
+        row = r;
+        return 1;
+    }
+    return 0;
+}
+
+void seam_census(const uint32_t *dst, int dst_w, const StackLayout &lay,
+                 const BandEngine &ea, const BandEngine &eb, int evy,
+                 int to_white)
+{
+    for (int s = 0; s < 2; ++s) {
+        const int from_shadow = (s == 0);
+        const BandEngine &e = from_shadow ? ea : eb;
+        const BandEngine &other = from_shadow ? eb : ea;
+        if (from_shadow && !g_oam_a_have) continue;
+        for (int i = 127; i >= 0; --i) {
+            uint16_t a0, a1, a2;
+            if (from_shadow) {
+                a0 = shown_rd16(i * 8);
+                a1 = shown_rd16(i * 8 + 2);
+                a2 = shown_rd16(i * 8 + 4);
+            } else {
+                a0 = rd16(e.oam + i * 8u);
+                a1 = rd16(e.oam + i * 8u + 2);
+                a2 = rd16(e.oam + i * 8u + 4);
+            }
+            BandEntry d;
+            if (!band_decode(a0, a1, a2, d)) continue;
+            const int rtop = d.y + e.row_bias;
+            if (rtop >= 0 || rtop + d.bh <= 0) continue;   // does not cross
+            BandCache c;
+            c.have = 1;
+            c.a0 = a0;
+            c.a1 = a1;
+            c.a2 = a2;
+            c.eng = e;
+            SeamCount n;
+            seam_measure(dst, dst_w, lay, c, d, rtop, d.x, evy, to_white, n);
+            int pi = -1, pr = 0;
+            /* THE OTHER HALF, IN ITS OWN STATE: engine B's live OAM when
+               this entry came out of the snapshot, and the snapshot when it
+               came out of engine B. */
+            const int pair = seam_census_paired(other, !from_shadow, d, rtop,
+                                                d.x, a2, pi, pr);
+            std::fprintf(stderr, "[gapseam] f%u %s%s oam%3d a0=%04x a1=%04x "
+                         "a2=%04x %dx%d%s at (%d,%d world): image top %d/%d "
+                         "bot %d/%d, %s\n", g_seam_frame, e.name,
+                         from_shadow ? " shown" : "", i, a0, a1, a2, d.w, d.h,
+                         d.dbl ? " dbl" : (d.affine ? " aff" : ""), d.x, rtop,
+                         n.hit_top, n.op_top, n.hit_bot, n.op_bot,
+                         pair ? "BOTH HALVES" : "ONE HALF ONLY");
+            if (pair)
+                std::fprintf(stderr, "[gapseam] f%u     the other half has it "
+                             "as %s oam%d at world %d, so both sides of the "
+                             "seam are the engines' own\n", g_seam_frame,
+                             other.name, pi, pr);
+        }
+    }
+}
+
+/* The completion itself, over the objects the scene NAMES. Read with gap_ds 0,
+   a BandTrack's y is the world row of the sprite box's top edge -- the band
+   frame's row 0 is world row -G and G is zero -- so the same per-scene reader
+   the band uses answers this pass with no second contract. */
+void seam_complete(uint32_t *dst, int dst_w, const StackLayout &lay,
+                   const BandEngine &ea, const BandEngine &eb, int evy,
+                   int to_white)
+{
+    const int trace = seam_trace_frames();
+    BandTrack tr[BAND_TRACK_MAX];
+    const int n = g_track_fn(tr, BAND_TRACK_MAX, 0);
+    for (int i = 0; i < n && i < BAND_TRACK_MAX; ++i) {
+        const BandTrack &t = tr[i];
+        if (t.slot < 0 || t.slot >= BAND_TRACK_MAX) continue;
+        /* NEAR THE SEAM AT ALL, which is a wider window than the one the
+           completion acts on. The trace wants the frames either side of a
+           crossing as much as the crossing itself -- "the object arrived on
+           the adjacent row and no frame in between is missing" is a claim
+           about a sequence -- so the census window is the box plus a frame of
+           travel and the completion's window is the box crossing row 0. */
+        if (t.y + t.h <= -kSeamLag || t.y >= kSeamLag) continue;
+
+        /* WHICH HALF OF THE PICTURE HAS IT. The bottom half is engine B's own
+           OAM, which its raster read after the upload, so the match is exact.
+           The top half is the snapshot, and there the match is on the sprite's
+           size with BOTH coordinates left free, because a frame of lag moves
+           an object in both; see kSeamLag. */
+        BandCache cb, ca;
+        cb.have = ca.have = 0;
+        int ra = 0, xa = 0;
+        const int has_bot = band_find_live(eb, t, cb);
+        const int has_top = seam_shown_a(ea, t, ca, ra, xa);
+
+        /* BOTH DIRECTIONS ARE ONE TEST. A box that starts above the seam and
+           ends below it straddles, and it does not matter whether the object
+           is rising or falling: the rows that are missing are the ones on the
+           side its own half cannot address, and which side that is follows
+           from which half has it. */
+        BandEntry db, da;
+        const int ok_b = has_bot && band_decode(cb.a0, cb.a1, cb.a2, db);
+        const int ok_a = has_top && band_decode(ca.a0, ca.a1, ca.a2, da);
+        const int str_b = ok_b && t.y < 0 && t.y + db.bh > 0;
+        const int str_a = ok_a && ra < 0 && ra + da.bh > 0;
+
+        const BandCache *use = 0;
+        const BandEntry *ud = 0;
+        int rtop = 0, xtop = 0, rlo = 0, rhi = 0;
+        const char *why = "";
+        if (has_top && has_bot) {
+            why = "both halves have it, nothing to complete";
+        } else if (str_b) {
+            use = &cb;
+            ud = &db;
+            rtop = t.y;
+            xtop = t.x;
+            rlo = t.y;
+            rhi = 0;            /* the rows the bottom screen cannot address */
+            why = "bottom half only";
+        } else if (str_a) {
+            use = &ca;
+            ud = &da;
+            rtop = ra;
+            xtop = xa;          /* the snapshot's own column, not the game's */
+            rlo = 0;
+            rhi = ra + da.bh;   /* the rows the top screen cannot address */
+            why = "top half only";
+        } else if (!has_top && !has_bot) {
+            why = "neither half has it, drawing nothing";
+        } else {
+            why = "in one half and not across the seam";
+        }
+
+        if (!use) {
+            if (trace)
+                std::fprintf(stderr, "[gapstraddle] f%u slot %d %dx%d at "
+                             "(%d,%d world): top %s, bottom %s -- %s\n",
+                             g_seam_frame, t.slot, t.w, t.h, t.x, t.y,
+                             has_top ? "HAS IT" : "no", has_bot ? "HAS IT"
+                                                                : "no", why);
+            continue;
+        }
+        SeamCount before, after;
+        if (trace)
+            seam_measure(dst, dst_w, lay, *use, *ud, rtop, xtop, evy, to_white,
+                         before);
+        const int drawn = seam_draw_entry(dst, dst_w, lay, *use, *ud, rtop,
+                                          xtop, rlo, rhi, evy, to_white);
+        if (!trace) continue;
+        seam_measure(dst, dst_w, lay, *use, *ud, rtop, xtop, evy, to_white,
+                     after);
+        std::fprintf(stderr, "[gapstraddle] f%u slot %d %dx%d at (%d,%d world) "
+                     "%s, drawn from %s a0=%04x a1=%04x a2=%04x at (%d,%d "
+                     "world): before top %d/%d bot %d/%d, after top %d/%d "
+                     "bot %d/%d, %d synthesized, total %d/%d\n",
+                     g_seam_frame, t.slot,
+                     t.w, t.h, t.x, t.y, why, use->eng.name, use->a0, use->a1,
+                     use->a2, xtop, rtop, before.hit_top, before.op_top,
+                     before.hit_bot, before.op_bot, after.hit_top, after.op_top,
+                     after.hit_bot, after.op_bot, drawn,
+                     after.hit_top + after.hit_bot, after.op_top + after.op_bot);
+    }
+}
+
+void seam_straddle(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
+                   int to_white)
+{
+    /* THE TWO CONDITIONS ARE READ TOGETHER and neither implies the other.
+       lay.seam is the mod: the GAME's own G is zero, so the two screens are
+       one continuous world. lay.gap_ds is the picture: no band. Every level in
+       the game has gap_ds 0 with a real G behind it, and MinigameGap off gives
+       gap_ds 0 with a real G behind it too -- in both, a sprite that leaves one
+       screen has genuinely gone behind the hinge and joining it across the seam
+       would be inventing a continuity the game does not have. */
+    if (!lay.seam || lay.gap_ds) return;
+    ++g_seam_frame;
+    /* the same two bindings the band's passes use, with engine B's row bias at
+       the gapless G: engine row -> world row is -192 for A and 0 for B */
+    const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                           -192, 0, "A"};
+    const BandEngine eb = {kRegBase, kOamBase, kObjVram, kObjPltt, kObjExtPltt,
+                           0, 1, "B"};
+    if (seam_trace_frames())
+        seam_census(dst, dst_w, lay, ea, eb, evy, to_white);
+    if (g_track_fn) seam_complete(dst, dst_w, lay, ea, eb, evy, to_white);
 }
 
 }  // namespace
@@ -1910,6 +2449,13 @@ StackLayout stack_layout(int gap_ds, int head_ds, int fill_mode,
                                                  : GAP_FILL_AMBIENT;
     l.fill_color = fill_color | 0xFF000000u;
     l.peek = peek ? 1 : 0;
+    /* NOT AN INPUT HERE, and deliberately so. The seam flag is the GAME's own G
+       being zero, which this function is not told about -- it is handed the
+       LAYOUT's G, and the two are the same number only when the mod is on.
+       hal/screen_gap.cpp sets it on the struct every frame; see the field's
+       note in ntr/ppu.h. A layout built and never touched again is a layout
+       with the pass off, which is the behaviour this shipped with. */
+    l.seam = 0;
     /* NO BAND, NO ART. The art is exactly gap_ds rows tall, so a layout with no
        band cannot carry one, and dropping it here means no consumer has to ask
        the question twice. */
@@ -1926,6 +2472,16 @@ void ppu_band_continuity(BandTrackFn fn)
 {
     g_track_fn = fn;
     for (int i = 0; i < BAND_TRACK_MAX; ++i) g_track[i].have = 0;
+}
+
+/* The engine A OAM copy the seam straddle pass reads as "what the top screen is
+   showing". See the note over g_oam_a_shown for why it exists and why the
+   caller is the one place in the program that uploads OAM. */
+void ppu_seam_oam_mark(void)
+{
+    for (int i = 0; i < 1024; ++i)
+        g_oam_a_shown[i] = rd8(kOamBaseA + (unsigned)i);
+    g_oam_a_have = 1;
 }
 
 /* DROPPING THE MEMORY IS THE WHOLE OF ITS LIFETIME MANAGEMENT, and it is the
@@ -2022,6 +2578,14 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
        picture. */
     band_fill(dst, dst_w, lay);
     if (lay.peek) band_peek(dst, dst_w, lay);
+
+    /* AND THE SEAM LAST, after everything that could have written the rows
+       either side of it. It is the band's mirror image: the band draws rows no
+       engine can address, this draws rows an engine addressed and then clipped
+       at its own screen edge, and the two never both run -- one needs a band
+       and the other needs none. With the mod off it returns on its first test,
+       so a gapless image is byte-for-byte what it was before this existed. */
+    seam_straddle(dst, dst_w, lay, evy, to_white);
 }
 
 }  // namespace ntr
