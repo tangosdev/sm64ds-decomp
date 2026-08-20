@@ -50,28 +50,71 @@ int read_raw(void)
                  ((unsigned)data_ov004_020beb6c[3] << 24));
 }
 
-/* THE HEADROOM THE LAYOUT SHOULD CARRY RIGHT NOW, in DS rows, and zero is the
-   answer for everything that is not a gapless minigame in progress.
-
-   It is g_gapless_head_ds -- the G the running scene's own InitResources wrote,
-   captured by the latch below before it stored zero over it -- gated on the mod
-   being engaged FOR THE SCENE NOW RUNNING, which is the same test
-   hal_gapless_engaged makes and for the same reason: the flag alone keeps
-   reading 1 after the minigame that set it has ended, and a headroom that
-   outlived its own scene would make the next scene's window the wrong height.
-
-   SM64DS_GAPLESS_HEADROOM=0 is the A/B arm, on the same binary. It suppresses
-   the headroom and nothing else, so the run composes the 512x768 image gapless
-   produced before this feature, from the build that also produces the 512x832
-   one. Read once. */
+/* THE HEADROOM THE LAYOUT SHOULD CARRY RIGHT NOW, in DS rows.
+ *
+ * IT IS ZERO, AND IT IS ZERO BY DEFAULT BECAUSE THE FEATURE IS WRONG. The
+ * strip above the top screen was built on a premise that has since been
+ * measured and does not hold, so it is opt-in behind
+ * SM64DS_GAPLESS_HEADROOM=1 and nothing turns it on. What follows is the
+ * measurement, because the next lane to look at this needs the numbers and not
+ * the story.
+ *
+ * THE PREMISE. Gapless zeroes G, so the top engine takes world y to y + 192
+ * instead of y + 224, and the world's top 32 rows -- -224..-193 -- fall above
+ * the top screen's first row. The strip was meant to give those rows back.
+ *
+ * WHAT IS ACTUALLY IN THEM. Nothing. Measured on scene 368 over 400 frames in
+ * BOTH arms with SM64DS_ENGA_LAYERS (hal/message_compositor.cpp), sampling each
+ * enabled engine-A background through the game's own sampler:
+ *
+ *   BG3  32x32 tiles, vofs 0    engine rows -32..-1 are map rows 224..255,
+ *                               0 of 8192 texels opaque
+ *                               engine rows 0..31 are map rows 0..31,
+ *                               8192 of 8192 texels opaque
+ *   BG2  64x32 tiles, ofs(256,64)  engine rows -32..-1 are map rows 32..63,
+ *                               0 of 8192 opaque, and 0 of 8192 opaque on the
+ *                               screen as well: BG2 is enabled and contributes
+ *                               no pixel anywhere on any frame
+ *
+ * and the scroll registers are IDENTICAL in the two arms on every frame, so the
+ * background does not follow G and there is no other window to look in.
+ *
+ * SO THE ARTWORK THE STRIP WAS SUPPOSED TO SHOW IS NOT ABOVE THE SCREEN. It is
+ * ON the screen, at engine rows 0..31, fully opaque, and it is the same picture
+ * in both arms: with the OBJ layer masked off, the gapped image's rows 0..63
+ * and the gapless-plus-headroom image's rows 64..127 differ in 0 of 32768
+ * pixels. The strip's own 64 rows differ from that artwork in 24240 of 32768.
+ * A player sees a band of invented fill sitting on top of the picture's own top
+ * edge, which is what this was reported as.
+ *
+ * WHAT THE REAL DEFECT IS, since the strip is not it. Zeroing G moves the
+ * OBJECTS 32 rows up the screen and leaves the BACKGROUND where it is, so
+ * everything the game draws is 32 rows out of register with the artwork it was
+ * drawn against: Lakitu, which the ROM puts 32 rows below the beam, ends up
+ * flat against the top edge and loses rows off it. Adding image ABOVE the
+ * artwork cannot fix that, because the artwork is the top of the picture.
+ * Putting the objects back where the ROM draws them can: give the top engine's
+ * OBJ layer a display shift of +G_rom and give the image G_rom extra rows
+ * BELOW the artwork, where the ROM's own hinge rows are, so the objects that
+ * shift past the bottom of the top screen are still shown and a crossing stays
+ * continuous. That is a change to how engine A composites and it takes the
+ * seam-straddle pass with it, so it is not this file's to make quietly.
+ *
+ * WHEN IT IS ON (the opt-in), the value is g_gapless_head_ds, the G the running
+ * scene's own InitResources wrote, captured by the latch below before it stored
+ * zero over it, gated on the mod being engaged FOR THE SCENE NOW RUNNING --
+ * hal_gapless_engaged's own test, because the flag alone keeps reading 1 after
+ * the minigame that set it has ended and a headroom that outlived its scene
+ * would size the next one's window wrong. Read once.
+ */
 int headroom_ds(void)
 {
-    static int off = -1;
-    if (off < 0) {
+    static int on = -1;
+    if (on < 0) {
         const char *s = std::getenv("SM64DS_GAPLESS_HEADROOM");
-        off = s && *s && *s == '0';
+        on = s && *s && *s != '0';
     }
-    if (off || !hal_gapless_engaged()) return 0;
+    if (!on || !hal_gapless_engaged()) return 0;
     return g_gapless_head_ds;
 }
 
@@ -96,9 +139,12 @@ const ntr::StackLayout *hal_screen_layout(void)
        word. It is asked for ONLY while the mod is engaged for the scene now
        running, so every other layout in the program carries a zero.
 
-       SM64DS_GAPLESS_HEADROOM=0 turns it off on the same binary, which is what
-       an A/B of the picture needs: notes/port-selftest-bmp-gate.md is explicit
-       that two BMPs may only be compared out of one build. */
+       IT IS OFF UNLESS SM64DS_GAPLESS_HEADROOM=1 ASKS FOR IT, and headroom_ds
+       above carries the measurement that made it opt-in: there is nothing above
+       the top screen to draw, in either arm, on any frame. The switch stays so
+       an A/B of the picture is one binary, which is what
+       notes/port-selftest-bmp-gate.md requires before two BMPs may be compared
+       at all. */
     const int head = headroom_ds();
     /* THE SCENE IS PART OF THE LATCH, and it has to be: two minigames with the
        same G give the same LAYOUT and not the same BAND. 368 and 374 are both
