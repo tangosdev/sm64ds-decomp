@@ -1,13 +1,15 @@
 //cpp
-// NONMATCHING: size 0x1bc8.  mismatches 125/1778, ratio 0.9325.
-//              1778 instructions, a 0x1b4 frame and every call-gap length, all
-//              exactly the ROM's -- and THE INSTRUCTION MULTISET IS NOW EXACT.
-//              The only entry left in the whole-function multiset diff is an
-//              `andeq` pair, which is literal-pool DATA that capstone renders as
-//              an instruction.  Every one of the 125 is scheduling or allocation.
+// NONMATCHING: size 0x1bc8.  mismatches 71/1778, ratio 0.9601.
+//              1778 instructions, a 0x1b4 frame, every call-gap length AND the
+//              whole-function instruction multiset, all exactly the ROM's -- and
+//              now EVERY DECLARED LOCAL IS AT THE CARTRIDGE'S OWN FRAME OFFSET.
+//              (The one multiset entry left is an `andeq` pair: literal-pool DATA
+//              that capstone renders as an instruction.)  All 71 are scheduling,
+//              and 51 of them are a single variable, `rsc`.
 //
-// 2026-08-20.  Session went 1493 -> 125 mismatching words.  Every change is a
-// SPELLING; none changes what the function computes.
+// 2026-08-20.  1493 -> 125 -> 71 mismatching words.  Every change is a SPELLING;
+// none changes what the function computes.  The step from 125 came from asking
+// mwccarm for its own frame map instead of inferring it -- see the DWARF section.
 //
 // ==================== HOW TO MEASURE, AND HOW IT MISLEADS ===================
 //
@@ -102,45 +104,80 @@
 //     what promoted `c` from a compiler temporary to a declared-chain member.
 //   * the slab bounds as `t`/`u` locals.
 //
+// ============ ASK THE COMPILER FOR THE FRAME MAP -- DO NOT INFER IT =========
+//
+// `-g` makes mwccarm emit DWARF, and its DW_AT_location entries give the frame
+// offset of every declared local BY NAME.  It is byte-neutral, so the map applies
+// to the shipping build unchanged.  And because the two instruction streams are
+// position-aligned at 1778, the ROM slot referenced at position k holds whatever
+// our slot at position k holds -- so naming ours names the CARTRIDGE'S frame too.
+//
+//     python scratchpad/perm/frame2.py     -> per-name ours/ROM/delta
+//
+// Two sessions were spent identifying `en3`'s slot by hand and it came out wrong
+// twice, in opposite directions, once into a commit.  The compiler knew all along.
+// DWARF also splits the two pools cleanly: exactly the declaration chain and the
+// aggregates get DW_AT_location entries, and nothing in the temp pool does.
+//
 // ===================== TWO SLOT POOLS -- THE FRAME MODEL ====================
 //
-// mwcc lays declared locals out as ONE DECLARATION-ORDERED CHAIN that first-fits
-// around a pre-placed block of COMPILER TEMPORARIES.  The chain runs `f`..`vtx`
-// at 0xc..0x90, continues at 0x94, is interrupted by the temp block, and resumes
-// in its gaps (`z154/k3/z15c/k2` land at 0x154-0x160, past a 12-word temp run).
+// The frame is [chain][temps][aggregates].  The CHAIN holds declared locals that
+// mwcc kept in memory, in DECLARATION ORDER; the temp pool holds compiler
+// temporaries; the aggregates go last, above both.
 //
-// **The temp block's base is set by how many chain members precede it.**  Verified
-// both directions: merging `den23`/`den31` into `den12` removes two chain members
-// and moves the temp block down exactly 8 bytes; the fixes above added two and
-// moved it up 8.
+// **What decides which pool a declared local lands in is the cv-qualifier on the
+// lvalue its value is READ FROM.**  A local assigned straight from a VOLATILE
+// lvalue is coalesced with the temporary that read it and lives in the temp pool;
+// read the same address through a plain or `const` pointer and the same local
+// takes a chain slot.  That one qualifier moved the three hypotenuses from
+// 0x110/0x118/0x120 to the cartridge's 0xac/0xb0/0xb4 and was worth 54 references.
+// Only a bare read counts -- `x + 0` and `x | 0` fold away and still coalesce,
+// while `x * k1` does not fold and does not coalesce.
 //
-// Chain-vs-temp membership is derived from USE, not from where you write the
-// declaration.  `den12` (2 defs, 2 refs, live across a call) is a chain member;
-// `hyp` (1 def, 2 refs, live across a call) is a temp, and no declaration form
-// moves it -- block scope, three distinct function-scope `hyp1/2/3`,
-// declaration-with-initialiser and last-in-block are all byte-identical.  Unused
-// dummy locals are dropped, so the chain cannot be padded.  The ONE lever found
-// that moves a variable between pools is reducing its definition count: `c` had
-// three definitions and was a temp; with one it became a chain member.
+// The previous version of this section said membership "is derived from USE" and
+// that the only lever is definition count.  Both are wrong.  Re-measured here:
+// declaration position (all placements), block scope, an out-parameter helper, a
+// second no-op assignment in five spellings, and turning the whole test into a
+// static inline function are ALL byte-identical and none of them move a variable
+// between pools.  `volatile` on the declaration does move it, and costs three
+// instructions; the qualifier on the SOURCE does it for free.
 //
-// ======================== WHAT IS LEFT: 125 =================================
+// ================== DECLARATION ORDER IS LOAD-BEARING =======================
 //
-//   109  slot-only.  Correct now: fn 0x98, depth 0x9c, triID 0xa0, cls 0xa4,
-//        contactKind 0xa8, den12/23/31 0xb8/bc/c0, c 0xc4.  Wrong: `rawX` and
-//        `en3` are exactly SWAPPED (0x94 <-> 0xc8, 24 refs), `rsc/rawY/rawZ` sit
-//        in the ROM's three `hyp` slots, and the temp block plus the `z*/k*` tail
-//        are uniformly -8.  **One two-word fix would recover ~65 references at
-//        once**, and it is entirely gated on getting two `hyp`s into the chain.
-//        Declaring `en1;en2;en3;` before `rawX` DOES reach the ROM's map at 1778
-//        instructions -- but permutes 303 register names (strict 1652 -> 1376).
-//        Moving `en3` alone costs +2 prologue instructions (it flips the `sphere`
-//        parameter from fp to sb).
-//    12  prologue scheduling, indices 2-17: same instructions, one register apart.
-//        The one real dependence difference is that the ROM reloads `c` from its
-//        home before reading `c->x` where we read through the register the
-//        `add r0,fp,#0x3c` just produced.  Five prologue spellings are identical.
-//     4  commutative `add` operand order at indices 34, 57, 83, 1502 -- mwcc emits
-//        `add rd, <later-defined>, <earlier-defined>` and the ROM the reverse.
+// Two rules, and they look like they conflict:
+//
+//   * the six hottest locals win callee-saved registers, numbered r9 DOWN TO r4 in
+//     declaration order, and the SEVENTH loses and takes a stack slot;
+//   * slots are handed out in declaration order too -- but only across the locals
+//     that HAVE slots.
+//
+// So `en3` has to be declared after en1/en2 or it wins a register and en2 loses
+// instead (measured over all six orderings), and moving the group early rotates
+// every callee-saved register by two (strict 1652 -> 1308).  But en1/en2 and the
+// dot* group occupy no slots, so en3 can be declared after them and still be the
+// 34th SLOT -- 0x94, where the cartridge has it -- provided everything that
+// follows it in the frame also follows it in the block.  That is the order the
+// draft now uses, and it is why `fn` onwards sits below `en3`.
+//
+// ======================== WHAT IS LEFT: 71 ==================================
+//
+// Every declared local is now at the cartridge's own offset (frame2.py: none
+// wrong).  What remains:
+//
+//    51  slot-only, and ALL of them are one variable.  `rsc` is our last chain
+//        member at 0xd4; the ROM keeps that value at 0x104, inside the temp pool,
+//        so it is NOT a declared local there -- it is the CSE of an expression.
+//        Our 0xd4 pushes the whole temp pool up 4 bytes, which is the other 44.
+//        Spelling it inline puts the pool at the ROM's 0xd8 and rsc in the pool,
+//        but `sphere` then moves fp -> sb, the frame grows to 0x1bc and the prism
+//        reject chain reshuffles.  Dead so far: `register`, block scope, a second
+//        assignment, volatile/const casts on the radius read, an accessor inline,
+//        and every declaration position (it lands at 0x94 or 0xd4, nothing else).
+//    12  prologue scheduling, indices 2-17: same 17 instructions, same registers,
+//        different order.  The one real dependence difference is that the ROM
+//        reloads `c` from its home before reading `c->x` where we read through the
+//        register `add r0,fp,#0x3c` just produced.
+//     3  commutative `add` operand order at indices 34, 57, 83.
 //
 // ==================== MEASURED AND DEAD -- DO NOT RE-DERIVE =================
 //   * A PRAGMA.  `#pragma opt_common_subs off` costs 140 INSTRUCTIONS here, even
@@ -199,6 +236,28 @@ namespace cstd { int fdiv(int a, int b); }
    inline helper, and the `0` and `1` it writes are loaded from frame slots
    (sp+0x118, sp+0x10c) rather than immediates -- which is what four expansions
    of one inline function look like on this compiler. */
+/* The sqrt unit's result register.  Read through a CONST pointer, not a volatile
+   one, and that is load-bearing rather than sloppy: mwccarm coalesces a local that is
+   assigned straight from a volatile lvalue into a compiler temporary, so a volatile
+   read here puts the three hypotenuses in the spill pool at 0x110/0x118/0x120.  The
+   cartridge has them at 0xac/0xb0/0xb4 -- packed inside the declaration chain, which
+   is where an ordinary local goes.  The busy-wait in SqrtStart is the synchronisation;
+   by the time this is read the value is already settled. */
+#define SQRT_RESULT (*(const s32 *)0x40002b4)
+
+static inline void SqrtStart(u64 x, s32 zval, s32 one)
+{
+    volatile u16 *ime = (volatile u16 *)0x4000208;
+    u16 saved = *ime;
+    *ime = (u16)zval;
+    *(volatile u16 *)0x40002b0 = (u16)one;
+    *(volatile u64 *)0x40002b8 = x;
+    *ime;
+    *ime = saved;
+    while (*(volatile u16 *)0x40002b0 & 0x8000)
+        ;
+}
+
 static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
 {
     volatile u16 *ime = (volatile u16 *)0x4000208;
@@ -279,7 +338,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    path -- a real hypotenuse through the hardware sqrt, then the contact angle
    through cstd::fdiv, compared against the collider's stored axis at +0x28.
    func_020397dc guards the divisor: |x| <= 8 means near-zero, so bail. */
-#define EDGE_FILTER(d, zval, armA, dsqL)                                      \
+#define EDGE_FILTER(d, zval, armA, dsqL, hypv)                                      \
     if (sphere.flags & 2) goto armA;                                          \
     if (cls == 1) {                                                           \
         if (func_02037e58((unsigned int *)&data_020a0cec) == 1) {             \
@@ -290,7 +349,6 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
             if ((d) > faceDot) continue;                                      \
         }                                                                     \
     } else if ((d) > (faceDot >> unk_48)) {                                   \
-        s32 hyp;                                                          \
         s32 axisDot;                                                      \
         s32 dh;                                                           \
         s32 fh;                                                           \
@@ -299,9 +357,10 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
         dh = (d) >> 4;                                                    \
         fh = faceDot >> 4;                                                \
         axisDot = DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28);    \
-        hyp = SqrtRaw((u64)((s64)fh * fh + (s64)dh * dh), zval, k1);      \
-        if (func_020397dc(hyp)) continue;                                 \
-        if (axisDot > cstd::fdiv(fh, hyp)) continue;                      \
+        SqrtStart((u64)((s64)fh * fh + (s64)dh * dh), zval, k1);        \
+        hypv = SQRT_RESULT;      \
+        if (func_020397dc(hypv)) continue;                                 \
+        if (axisDot > cstd::fdiv(fh, hypv)) continue;                      \
     }                                                                         \
     goto dsqL;                                                                \
     armA:                                                                     \
@@ -312,6 +371,21 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
 
 s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 {
+    /* DECLARATION ORDER BELOW IS LOAD-BEARING -- do not tidy it.
+       Two mwccarm rules constrain it, and together they fix the whole frame:
+
+         * The six hottest locals win callee-saved registers, numbered r9 down to r4
+           in declaration order, and the SEVENTH loses and takes a stack slot.  So
+           faceDot, dot1, dot2, dot3, en1, en2 must be declared in that order and en3
+           after them, or every callee-saved register rotates.
+         * The stack slots are handed out in declaration order too, but only over the
+           locals that HAVE slots.  en1/en2 and the dot* group take none, so en3 can
+           be declared after them and still be the 34th slot -- which is where the
+           cartridge has it, at 0x94.
+
+       That is why everything from fn onwards is declared after en3: it has to follow
+       en3 in the frame, so it has to follow en3 here.  Reordering this block back into
+       a natural reading order costs 58 instructions. */
     KCL_File *f;
     s32 loX;
     s32 hiX;
@@ -345,12 +419,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     u16 *leaf;
     KCL_Tri *tri;
     s32 *vtx;
-    s32 rawX;
-    s16 *fn;
-    s32 depth;
-    s16 triID;
-    s32 cls;
-    s32 contactKind;
     /* volatile POINTEE, not a volatile pointer.  The ROM loads `c` from its stack
        home before almost every component read -- twice for the three `raw` reads in
        the prologue alone -- and mwcc will otherwise keep it in a register and read
@@ -364,9 +432,6 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     s32 d3h;
     s32 nn;
     s32 nnh;
-    s32 rsc;
-    s32 rawY;
-    s32 rawZ;
     s32 z108;
     s32 k1;
     s32 k0;
@@ -408,13 +473,25 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
        symptom. */
     Vector3s cr;
     s32 nrm[3];
+    s16 *en1;
+    s16 *en2;
+    s16 *en3;
+    s16 *fn;
+    s32 depth;
+    s16 triID;
+    s32 cls;
+    s32 contactKind;
+    s32 hyp1;
+    s32 hyp2;
+    s32 hyp3;
     s32 den12;
     s32 den23;
     s32 den31;
     const volatile Vector3 *c;
-    s16 *en1;
-    s16 *en2;
-    s16 *en3;
+    s32 rawX;
+    s32 rawY;
+    s32 rawZ;
+    s32 rsc;
     Vector3 sn;
     /* These three MUST be a type with a user-declared destructor.  mwccarm
        scalarizes a plain `s32[3]` local into loose stack slots; the ROM keeps all
@@ -697,19 +774,19 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         goto edge3;
 
                     edge1:
-                        EDGE_FILTER(dot1, z118, arm1_, dsq1_)
+                        EDGE_FILTER(dot1, z118, arm1_, dsq1_, hyp1)
                         d1h = dot1 >> 31;
                         dsq = rsq - (s64)dot1 * dot1;
                         goto tail;
 
                     edge2:
-                        EDGE_FILTER(dot2, z11c, arm2_, dsq2_)
+                        EDGE_FILTER(dot2, z11c, arm2_, dsq2_, hyp2)
                         d2h = dot2 >> 31;
                         dsq = rsq - (s64)dot2 * dot2;
                         goto tail;
 
                     edge3:
-                        EDGE_FILTER(dot3, z120, arm3_, dsq3_)
+                        EDGE_FILTER(dot3, z120, arm3_, dsq3_, hyp3)
                         d3h = dot3 >> 31;
                         dsq = rsq - (s64)dot3 * dot3;
                         goto tail;
