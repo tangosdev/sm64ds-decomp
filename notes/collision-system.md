@@ -538,7 +538,70 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   it shares the octree walk verbatim with the already-matched `dBgCh_Gnd` twin, so it
   is the calibration run for 3b. Its recorded floor is a `this` register allocation
   (r7 vs r8) at 2004/b56.
-- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B, best draft 28 instructions short after 0a.
+- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 1177 divergences /
+  601 equal / ratio 0.3404, 25 instructions short** (was 1213 / 565 / 0.3203 / 28).
+
+  **3c is done, and it moved 3b.** The cross-read (below) found the shortfall was *block
+  layout*, not missing code. Both `nearmiss/db.jsonl` and
+  `notes/drafts-sphereclsn-detectclsn.cpp` carry the improved body.
+
+  ### What the cross-read established
+
+  The skeleton was already right: ROM and candidate emit **34 calls, same callees, same
+  order** (33 `bl` + one `blx r3`). Aligning them by offset localises every deficit.
+
+  The ROM lays the Voronoi region out in three contiguous runs — all six arms
+  (`0x01ffbea8..0x01ffc1e8`), then the three edge blocks (`0x01ffc1ec`, `0x01ffc35c`,
+  `0x01ffc4cc`), then the three corner blocks (`0x01ffc63c`, `0x01ffc750`, `0x01ffc89c`).
+  With `EDGE_FILTER` expanded inline at the tail of each feature block, mwcc emitted
+  feat1+armA+armB+EDGE1 as one fallthrough run and **exiled feat2 to candidate `+0x8d4`
+  and feat3 to `+0xb3c`**. Everything after the first exiled block then landed at the
+  wrong index — which is why the whole `0x01ffbf20..0x01ffcf50` band scored 0-15% while
+  the instructions in it were largely correct. Branching to labelled `edge1`/`edge2`/
+  `edge3` blocks restores the ROM's three runs: the drift at the first four edge-block
+  calls went **-552 / -468 / -556 / -560 to -36 / +48 / -40 / -44**, and `delete` in the
+  alignment counts collapsed **159 to 25**.
+
+  The two readings each held half the truth and neither had it whole: the port
+  transcription had the corner **pairing** right (A=e1e2, B=e2e3, C=e3e1); the banked
+  draft had the **two-entries-per-corner** sharing right. A branch-target census settles
+  it — `0x1ffc63c`/`0x1ffc750`/`0x1ffc89c` have exactly two sources each.
+
+  ### Newly swept and dead — do not re-walk
+
+  - Binding `DotVec3` to a temp **above the divisor guard** in `EDGE_FILTER`: inert on
+    layout (gap 6->7 stayed 208 vs the ROM's 120), +3 instructions, ratio 0.3404 -> 0.3401.
+  - Binding it **above `SqrtRaw`** as well, which is the ROM's actual order: **exactly
+    scoring-neutral** (0.3404 / 601 / 1753). mwcc reschedules both spellings back.
+
+  ### Where the remaining gap is, measured
+
+  | region | drift | note |
+  |---|---|---|
+  | calls 0-6 (head) | constant **-36** | 9 instructions short before the first `DotVec3` |
+  | each of the 3 edge blocks | **+88 then -96** | `DotVec3` sits late; the ROM's 108 bytes between it and the guard are the hardware sqrt at `0x01ffc2a8`. Two source spellings failed to move it |
+  | calls 27->28 | **+168** | corner tail too long |
+  | calls 31->32 | **-128** | record block too short |
+
+  The three edge blocks repeat one defect, so a fix there lands three times.
+
+  ### A correction carried in from the reloc table
+
+  There **is** a square root — four of them. The ROM drives the DS hardware unit by MMIO
+  (`0x040002b0` SQRTCNT x8, `0x040002b4` RESULT x4, `0x040002b8` PARAM x4, each inside an
+  IME `0x04000208` critical section), so it never appears as a call and a reloc-table read
+  says "no sqrt". Sites: `0x1ffc2a8`, `0x1ffc418`, `0x1ffc588`, `0x1ffca30` — the three
+  edge gates and the shared `do_sqrt`. Both drafts already model it.
+
+  ### Nothing here waits on the C++ conversion
+
+  ITCM is an **autoload** (`config/arm9/config.yaml:11`) — a linker section memcpy'd at
+  boot — so it constrains no source language; 15 of the 27 enrolled ITCM files are `.c`
+  and 12 are `.cpp`, and the sibling `DetectClsn(dBgCh_Gnd&)` byte-matches today as
+  `//cpp`. There is exactly **one** virtual dispatch in all 1,778 instructions
+  (`0x1ffbe60 blx r3`, slot 3 on `this`, already-matched `GetSurfaceInfo`) and **zero**
+  through the `dBgCh_SphCrr&` parameter, so promoting that class (Phase 2c) is a
+  readability convenience here, not a prerequisite.
 
   What is already **swept and dead** — do not re-walk: nineteen declaration-level variants
   across five classes of lever (hoist, permutation, re-scoping, folding, moving `en1`/`en2`),
@@ -563,9 +626,10 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   ```
   `--module itcm`, never `arm9/itcm`.
 
-- **3c.** Cross-read the port transcription (§5) against the draft. Two independent readings
-  of one function is a rare asset; where they disagree, one of them is wrong about the ROM,
-  and gate 8 can adjudicate the semantics that byte-scoring cannot.
+- **3c. DONE** — cross-read of the port transcription (§5) against the banked draft; the
+  result is folded into 3b above. It was worth the hour: neither reading was right about
+  block layout, and the ROM's own branch-target census was the adjudicator, not either
+  document.
 
 ### Phase 4 — Naming debt *(mechanical, after Phase 1)*
 

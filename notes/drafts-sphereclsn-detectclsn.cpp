@@ -1,5 +1,5 @@
 //cpp
-// NONMATCHING: size 0x1b58 vs 0x1bc8 (28 insn short), align equal=565 ratio=0.320
+// NONMATCHING: size 0x1b64 vs 0x1bc8 (25 insn short), align equal=601 ratio=0.340
 //
 // PROVENANCE. Restored 2026-08-19 from nearmiss/db.jsonl, attempt
 // 8273344dc1434a9e86882b88eebf7ffa (divergences 1213, parent 1332).
@@ -432,7 +432,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            instead of falling through, and why gotos are the
                            faithful spelling here. */
                         if (dot1 > dot2) {
-                            if (dot1 <= dot3) goto edge3;
+                            if (dot1 <= dot3) goto feat3;
                             if (dot1 <= 0) goto face;
                             if (!unk_4c) continue;
                             if (dot2 > dot3) {
@@ -446,12 +446,9 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                                 n31h = nn31 >> 31;
                                 if (MUL10(nn31, dot1) <= dot3) goto v31;
                             }
-                            EDGE_FILTER(dot1, z118)
-                            d1h = dot1 >> 31;
-                            dsq = rsq - (s64)dot1 * dot1;
-                            goto tail;
+                            goto edge1;
                         }
-                        if (dot2 <= dot3) goto edge3;
+                        if (dot2 <= dot3) goto feat3;
                         if (dot2 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot3 > dot1) {
@@ -465,12 +462,9 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             n12h = nn12 >> 31;
                             if (MUL10(nn12, dot2) <= dot1) goto v12;
                         }
-                        EDGE_FILTER(dot2, z11c)
-                        d2h = dot2 >> 31;
-                        dsq = rsq - (s64)dot2 * dot2;
-                        goto tail;
+                        goto edge2;
 
-                    edge3:
+                    feat3:
                         if (dot3 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot1 > dot2) {
@@ -484,6 +478,21 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             n23h = nn23 >> 31;
                             if (MUL10(nn23, dot3) <= dot2) goto v23;
                         }
+                        goto edge3;
+
+                    edge1:
+                        EDGE_FILTER(dot1, z118)
+                        d1h = dot1 >> 31;
+                        dsq = rsq - (s64)dot1 * dot1;
+                        goto tail;
+
+                    edge2:
+                        EDGE_FILTER(dot2, z11c)
+                        d2h = dot2 >> 31;
+                        dsq = rsq - (s64)dot2 * dot2;
+                        goto tail;
+
+                    edge3:
                         EDGE_FILTER(dot3, z120)
                         d3h = dot3 >> 31;
                         dsq = rsq - (s64)dot3 * dot3;
