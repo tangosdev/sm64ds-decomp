@@ -881,45 +881,92 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   three prism-origin slots directly. With `Vtx3`, the volatile cross-product array and
   four of six no-op re-binds already gone, **the file contains no untrue construct.**
 
-  ### Where the remaining 253 are, and what is closed
+  ### End of day: 253 -> 125, and the instruction multiset is EXACT
 
   ```
-  exact 1490 | slot-number-only 136 | register-name-only 32 | both 3 | shape/order 83
+  ratio 0.9325   equal 1658   mismatches 125/1778
   ```
 
-  136 of 253 are positions where the instruction is RIGHT and only the stack offset
-  differs. The frame is a PERMUTATION of the ROM's at the same 0x1b4 size: 99 distinct
-  slots each side, 80 of 103 with identical traffic.
+  Bank `divergences` 404 -> 120. Count, frame, **every call-gap length AND the
+  whole-function instruction multiset** are now the ROM's -- the only entry left in
+  the multiset diff is an `andeq` pair, which is literal-pool DATA that capstone
+  renders as an instruction. **Every instruction in the function is the right one.**
+  All 125 remaining differences are scheduling and register/slot allocation.
 
-  **mwccarm has two slot pools and declaration order controls only one.** Swapping
-  each adjacent pair of declarations and diffing the slot traffic gives the
-  declaration->slot map in 91 compiles; 61 of the 91 are byte-neutral, and the 30 that
-  are not all move low-region slots or the trailing aggregates. The hot loop-local
-  spills are not in that pool: `en3` sits at 0x104 in **all 91** declaration positions
-  and never reaches the ROM's 0x110. Five live-range reshapings -- writing it later,
-  splitting it via a copy, scoping it to the prism loop, scoping the whole
-  en1/en2/en3 group, hoisting `f->normals` -- are **all byte-identical**.
+  The final gain was an interaction: `AXIS_DOT0` back in NATURAL x, y, z order
+  **together with** deleting both remaining `c = &sphere.pos;` re-binds. +67, and it
+  erased the entire 64-instruction shape run in gap 28. Neither half works alone --
+  the natural term order takes shape 1747 -> 1768 but costs one instruction, and
+  deleting the re-binds saves that instruction but is -29 by itself.
 
-  So the declaration axis is closed four independent ways and the live-range axis is
-  closed five. There is currently **no demonstrated mechanism** for moving these slots.
+  Note the trap in the earlier record: a sweep here was logged as "multiply operand
+  order in AXIS_DOT0, all 8". That was operand order INSIDE `FX12`. **Term order --
+  the order of the three addends -- is a different axis and had never been swept.**
 
-  ### Identify a variable's slot STRUCTURALLY, never by traffic count
+  The rest is declaration order, re-run after that landed: `fn`/`depth` just after
+  `rawX` (+25), `c` just after `den31` (+15), `rad6` before `origin` (+10), `cy`
+  before `cz` (+8), `-(radius + unk_0ec)` (+3).
 
-  Worth its own heading because it produced a confident wrong conclusion that reached
-  a commit message. en3 was paired across the two streams by "the busiest slot in
-  each" (ROM 0x94 with 22 references, ours 0xc4 with 22) plus an older note in this
-  repo asserting the ROM's 0x94 is en3. Both wrong. Pin it to the instruction sequence
-  that COMPUTES the value -- the store following the `tri->edgeNormal3Idx` load at
-  tri+0xc -- and it is 0x104 / 0x110. Two different variables happened to share a
-  reference count. The conclusion survived re-testing; the evidence did not.
+  ### The frame model, worked out
 
-  ### The one lead still standing
+  mwcc lays declared locals out as **one declaration-ordered chain that first-fits
+  around a pre-placed block of compiler TEMPORARIES.** The chain runs from the frame
+  base, is interrupted by the temp block, and resumes in its gaps.
 
-  Our `en3` sits 0xc BELOW the ROM's, and a whole run of other slots shows the same
-  -0xc. That means the ROM has **three more words allocated ahead of it** in the
-  allocator's order -- it is spilling something we keep in a register, or it has a
-  local we do not. Finding what would be the next real step. Everything else about
-  the slot permutation is measured and inert.
+  **The temp block's base is set by how many chain members precede it.** Verified both
+  directions: merging two locals into one removes two chain members and moves the temp
+  block DOWN exactly 8 bytes; the fixes above added two and moved it UP 8.
+
+  **Chain-vs-temp membership is derived from USE, not from declaration form.** `den12`
+  (2 defs, 2 refs, live across a call) is a chain member; `hyp` (1 def, 2 refs, live
+  across a call) is a temp -- and block scope, three distinct function-scope names,
+  declaration-with-initialiser and last-in-block are all byte-identical. Unused dummy
+  locals are dropped, so the chain cannot be padded. **The one lever that moves a
+  variable between pools is reducing its DEFINITION COUNT:** `c` had three definitions
+  and was a temp; with one it became a chain member.
+
+  ### Identify a slot from the variable's FULL DEFINING SEQUENCE
+
+  This cost two wrong conclusions in one session, in OPPOSITE directions, and an
+  earlier version of this very section stated the second one as fact.
+
+  1. Pairing "the busiest slot in each stream" matches two *different* variables that
+     happen to share a reference count.
+  2. "The first `str` after the index load" also fails:
+
+  ```
+  ldrh r1,[r1,#0xc]    ; tri->edgeNormal3Idx
+  ldr  r6,[r6]         ; tri->length        <-- intervenes
+  str  r6,[sp,#0x110]  ; tlen               <-- a naive detector stops here
+  mul  r6,r1,r0
+  add  r1,r2,r6
+  str  r1,[sp,#0x94]   ; en3
+  ```
+
+  **`en3` is ROM 0x94 / draft 0xc4. 0x110 is `tlen`.** The inherited note saying the
+  ROM's busiest slot 0x94 is en3 was RIGHT; a detector that stopped at the first store
+  reported 0x110, that was committed as a "correction" to it, and a 91-position
+  reachability sweep built on it was silently measuring `tlen` -- whose slot does not
+  move when you move `en3`'s declaration, so its null result was vacuous.
+
+  Follow the whole dataflow to the store. Never a count, never the nearest store.
+
+  ### What is left: 125
+
+  * **109 slot-only.** Correct now: `fn` 0x98, `depth` 0x9c, `triID` 0xa0, `cls` 0xa4,
+    `contactKind` 0xa8, `den12/23/31` 0xb8/bc/c0, `c` 0xc4. Wrong: `rawX` and `en3` are
+    exactly SWAPPED (0x94 <-> 0xc8, 24 refs), `rsc`/`rawY`/`rawZ` sit in the ROM's three
+    `hyp` slots, and the temp block plus the `z*`/`k*` tail are uniformly -8.
+    **One two-word fix would recover ~65 references at once**, gated entirely on getting
+    two `hyp`s into the chain. Declaring `en1;en2;en3;` before `rawX` DOES reach the
+    ROM's map at 1778 instructions but permutes 303 register names (strict 1652 ->
+    1376); moving `en3` alone costs +2 prologue instructions because it flips the
+    `sphere` parameter from `fp` to `sb`.
+  * **12 prologue scheduling positions** (indices 2-17): same instructions, one register
+    apart. Five prologue spellings are byte-identical.
+  * **4 commutative `add` operand orders** (indices 34, 57, 83, 1502): mwcc emits
+    `add rd, <later-defined>, <earlier-defined>` and the ROM the reverse.
+
 
   ### A CV-QUALIFIER CHANGE is what re-issues a CSE'd load. Not volatile.
 
