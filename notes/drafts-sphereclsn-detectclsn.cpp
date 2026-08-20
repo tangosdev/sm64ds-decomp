@@ -1,5 +1,5 @@
 //cpp
-// NONMATCHING: size 0x1bc8.  mismatches 302/1778, ratio 0.8341.
+// NONMATCHING: size 0x1bc8.  mismatches 253/1778, ratio 0.8341.
 //              1778 instructions and a 0x1b4 frame, both exactly the ROM's, and
 //              EVERY call-gap is now exactly the ROM's length.
 //              The instruction MULTISET is surplus 3 / deficit 3 across the whole
@@ -266,9 +266,9 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     (out)[2] = (o2) + (s32)(((s64)cr.z * u) >> 14);
 
 /* Post-subtraction form: components already relative to the centre. */
-#define AXIS_DOT0(v) (FX12((v).x, unk_28)                                     \
-                    + FX12((v).y, unk_2c)                                     \
-                    + FX12((v).z, unk_30))
+#define AXIS_DOT0(v) (FX12(unk_28, (v).x)                             \
+                    + FX12(unk_30, (v).z)                             \
+                    + FX12(unk_2c, (v).y))
 
 /* A vertex region: the closest point is where edge normals `ea` and `eb` meet.
    `nn` is their cosine, already formed by the dispatch. Solve the 2x2 for the
