@@ -5367,6 +5367,13 @@ endforeach()
 # needs the host dispatcher too or the first ChangeState calls a mwcc
 # member-function pointer.
 add_executable(smoke_player tests/smoke_player.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
+    # hal/sub_screen.cpp is in this target's list below, and since the screen
+    # gap landed it asks hal/screen_gap.cpp for the stacked layout -- which in
+    # turn asks hal/host_settings.cpp for the player's four gap keys. Neither
+    # of those was in this harness before: it never read settings.json and
+    # never composed a stacked image. They are here to close the link, and a
+    # harness with no settings.json beside it gets every default.
+    hal/screen_gap.cpp hal/host_settings.cpp hal/gap_art.cpp hal/gap_continuity.cpp
     hal/heap_globals.cpp hal/os_arena.cpp hal/heap_vtable.cpp hal/fs.cpp
     hal/model_host.cpp hal/meshcolliderbase_vtable.cpp hal/meshcollider_dtor_seat.cpp hal/lk1_eh_vmax_seat.cpp hal/lk2_platform_dtor_seat.cpp hal/model_dtor_seat.cpp hal/lk4_eh_dtor_seat.cpp hal/lk4_solidheap_seat.cpp hal/gx_upload_bridge.cpp hal/cstd_div.c
     hal/clsn_vtable.cpp hal/actor_vtables.cpp hal/anim_bridge.cpp
@@ -5508,8 +5515,12 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # dialogue pipeline (2026-08-08): the box pump (Stage::UpdateMessage's
     # dialogue arm), the engine-A 2D-over-3D compositor, and the headless probe.
     hal/message_pump.cpp hal/message_compositor.cpp hal/message_probe.cpp hal/message_gen_text.cpp hal/input_probe.cpp
-    # the launcher's settings.json, read by the game (camera turn direction)
-    hal/host_settings.cpp
+    # the launcher's settings.json, read by the game (camera turn direction,
+    # and the four screen-gap keys hal/screen_gap.cpp reads)
+    hal/host_settings.cpp hal/screen_gap.cpp
+    # the scene's hand-drawn gap band and the band's per-scene continuity
+    # table, both asked for at the same latch hal/screen_gap.cpp does
+    hal/gap_art.cpp hal/gap_continuity.cpp
     # in-memory save state (lane lk6): F8/F9 snapshot and restore of the hosted
     # DS arena plus the out-of-arena game globals.
     hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp
@@ -5690,8 +5701,12 @@ add_custom_command(TARGET walk_window POST_BUILD
 add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_OV_DATA}
     # dialogue pipeline (2026-08-08): pump, engine-A compositor, headless probe.
     hal/message_pump.cpp hal/message_compositor.cpp hal/message_probe.cpp hal/message_gen_text.cpp hal/input_probe.cpp
-    # the launcher's settings.json, read by the game (camera turn direction)
-    hal/host_settings.cpp
+    # the launcher's settings.json, read by the game (camera turn direction,
+    # and the four screen-gap keys hal/screen_gap.cpp reads)
+    hal/host_settings.cpp hal/screen_gap.cpp
+    # the scene's hand-drawn gap band and the band's per-scene continuity
+    # table, both asked for at the same latch hal/screen_gap.cpp does
+    hal/gap_art.cpp hal/gap_continuity.cpp
     # in-memory save state (lane lk6): F8/F9 snapshot and restore of the hosted
     # DS arena plus the out-of-arena game globals.
     hal/lk6_savestate.cpp hal/lk7_persist.cpp hal/dsstate_seg.cpp

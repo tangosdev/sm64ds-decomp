@@ -432,6 +432,8 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h);
 void hal_sub_screen_set_stacked(int on);
 int hal_sub_screen_stacked(void);
 const unsigned int *hal_sub_screen_stacked_image(const unsigned int *top);
+/* the stacked image's live size, which the screen gap makes a variable */
+void hal_sub_screen_stacked_size(int *w, int *h);
 int IsMinigameActorID(unsigned int id);
 void port_message_composite_engine_a(void *fb);
 void sdat_host_tick(void);           /* hal/sdat/consumer.cpp */
@@ -2789,12 +2791,19 @@ extern "C" int port_scene_finish(int frames_run)
        because fb is what it writes and the stacked mode never touches fb. */
     if (bmp_stacked && !no_render) {
         const unsigned int *img = hal_sub_screen_stacked_image(&fb.px[0][0]);
-        if (img && ntr::ppu_write_bmp_px(bmp_stacked, img, ntr::STACK_W,
-                                         ntr::STACK_H))
+        /* THE SIZE COMES OFF THE LAYOUT, not off STACK_H, because a scene with
+           a simulated screen gap composes a TALLER image -- 512x864 at G = 48
+           against 512x768 with no gap. Asking for the constant here would have
+           written the first 768 rows of a 864-row image and called it the
+           capture, which is the stale-artifact shape: a real file, from the
+           real run, that is not the picture the run made. */
+        int iw = 0, ih = 0;
+        hal_sub_screen_stacked_size(&iw, &ih);
+        if (img && ntr::ppu_write_bmp_px(bmp_stacked, img, iw, ih))
             std::printf("[scene] wrote %s, %dx%d: the top screen over the "
-                        "bottom screen, each %dx%d\n", bmp_stacked,
-                        ntr::STACK_W, ntr::STACK_H, ntr::SCREEN_W,
-                        ntr::SCREEN_H);
+                        "bottom screen, each %dx%d, with %d row(s) of gap "
+                        "between them\n", bmp_stacked, iw, ih, ntr::SCREEN_W,
+                        ntr::SCREEN_H, ih - ntr::SCREEN_H * 2);
         else
             std::fprintf(stderr, "  [scene] SM64DS_SCENE_BMP_STACKED asked for "
                          "%s but the stacked layout is %s and the bottom "

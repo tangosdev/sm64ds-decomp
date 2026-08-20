@@ -95,12 +95,10 @@ void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
 // whole number, so there is nothing to interpolate and a filter would only
 // invent pixels the DS never drew.
 //
-// NO SEPARATOR ROW BETWEEN THE HALVES. The DS has a hinge and this does not,
-// and the reason is arithmetic rather than taste: with the halves exactly
-// equal, a client point in the lower half maps to a DS pixel by subtracting
-// one screen height and dividing, with no fudge term for anyone to get wrong
-// later. A hinge would cost a row of real game picture or an odd total height,
-// and either one puts a constant into the touch transform.
+// THERE IS A SEPARATOR BAND WHEN, AND ONLY WHEN, THE GAME ASKS FOR ONE. See
+// StackLayout below. With no gap the halves are exactly equal and touch back to
+// back, which is the shape this note was written for and is still what every
+// level and every scene with no gap gets.
 //
 // evy / to_white are the MAIN engine's master-brightness fade as
 // port_fader_blend_state reports it, applied to the BOTTOM half only. The top
@@ -110,14 +108,138 @@ void ppu_compose_sub(const SubFramebuffer &sub, uint32_t *dst, int dst_w,
 // the main engine's fade lands on it -- so switching layout changes the
 // layout and nothing else. Pass evy 0 for no fade.
 constexpr int STACK_W = SCREEN_W;
+// The image with NO gap, which is what every level and every gapless scene
+// composes and what the shape of this presentation was before the gap existed.
+// It is NOT the size of the buffer any more -- read that off a StackLayout.
 constexpr int STACK_H = SCREEN_H * 2;
+
+// The largest simulated gap this presentation will honour, in DS rows. The
+// game's own values run 0, 16, 32, 48 and 80 (the snowball minigame is the 80);
+// the cap is here so a wild read of the framework word cannot ask for a buffer
+// the size of the desktop, and it is well clear of every value the ROM sets.
+constexpr int GAP_DS_MAX = 96;
+
+// ---- THE ONE LAYOUT ---------------------------------------------------------
+//
+// EVERY consumer of the stacked image derives its geometry from one of these
+// and none of them recomputes it: the compose writes at these offsets, the DIB
+// header takes this height, the BMP writer takes this size, the window sizes
+// itself to it, and the stylus inverse (hal_present_client_to_fb and
+// hal_present_client_to_sub) splits the source image into bands with it.
+//
+// That last one is the reason the struct exists rather than a pair of loose
+// ints. Before the gap the inverse could say "the bottom screen starts one
+// screen height down" and be right by construction. With a band between the
+// halves that sentence is wrong by exactly the band's height, and a display
+// and a touch transform that disagree by 96 client pixels is the defect this
+// shape is built to make impossible: there is one arithmetic, computed once,
+// and the blit and the mapper read the same fields of it.
+//
+// THE INPUTS ARE (G, the settings). The client size is NOT one of them, and
+// that is deliberate: the fit from this image into a client area already lives
+// in walk_window's present() and its inverse in client_to_src, and both of
+// those already take the source size as an argument. So the chain is
+//   G + settings -> StackLayout -> (present fit | inverse | DIB | BMP)
+// and a resize re-runs the second arrow only.
+//
+// gap_ds == 0 is the layout that shipped before this: h == STACK_H, band_h ==
+// 0, bottom_y == SCREEN_H, and every band-shaped branch in the compose is
+// skipped so the image is byte-for-byte what it was.
+struct StackLayout {
+    int gap_ds;        // G, the simulated gap in DS rows. 0 = no gap.
+    int scale;         // host rows per DS row: SCREEN_H / SUB_H
+    int w;             // the image width, STACK_W
+    int h;             // the image height, SCREEN_H * 2 + band_h
+    int top_y;         // first row of the top screen, always 0
+    int band_y;        // first row of the gap band, always SCREEN_H
+    int band_h;        // gap_ds * scale, host rows; 0 with no gap
+    int bottom_y;      // first row of the bottom screen, SCREEN_H + band_h
+    int fill_mode;     // GAP_FILL_SOLID, _AMBIENT or _CUSTOM; peek ignores it
+    uint32_t fill_color;   // 0xFFRRGGBB, GAP_FILL_SOLID only
+    // 1: the band's own hidden sprites, drawn OVER the backdrop. PEEK
+    // IGNORES THE FILL MODE: with peek on the band is a view of what is
+    // really in those rows, not decoration, and an ambient wash or a
+    // chosen colour behind it would put something over the answer -- a
+    // wash blurs into the sprites it sits behind, and a flat colour cannot
+    // be told apart from a sprite of the same colour. What peek does allow
+    // behind the sprites is the scene's own hand-drawn art, because a
+    // picture is read as a picture and not mistaken for content, and BLACK
+    // when there is no art. See band_fill.
+    int peek;
+    // THE SCENE'S HAND-DRAWN BAND, or null. 256 * gap_ds DS pixels, row
+    // major, top row first, 0xAARRGGBB, and alpha 0 means the magenta key:
+    // the artist's "leave this pixel to whatever is behind me".
+    //
+    // Owned by whoever built the layout (hal/gap_art.cpp in the game) and
+    // valid until the next latch, which is also when the layout is next
+    // rebuilt, so the pointer and the picture cannot fall out of step.
+    //
+    // It is an INPUT to the layout rather than something the compose looks
+    // up, for the same reason G is: the compose does one arithmetic on
+    // values it was handed, and every consumer that has to agree with it
+    // reads the same struct.
+    const uint32_t *art;
+};
+
+enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1, GAP_FILL_CUSTOM = 2 };
+
+// The one computation. gap_ds is clamped to [0, GAP_DS_MAX]; everything else
+// is derived. Pure: same arguments, same answer, no globals read.
+StackLayout stack_layout(int gap_ds, int fill_mode, uint32_t fill_color,
+                         int peek, const uint32_t *art);
+
+// ---- BAND CONTINUITY --------------------------------------------------------
+//
+// ONE OBJECT THE GAME IS STILL SIMULATING WHILE NEITHER ENGINE DRAWS IT.
+//
+// The ROM's own OAM cull (see the note over band_raster_engine) leaves a hole:
+// a sprite h rows tall whose origin sits at band row 1 .. G-h-1 is submitted to
+// the main engine as y = 192 + k, which its `y > 0xc0` test throws away, and to
+// the sub engine as y = -G + k, which its `y + h < 0` test throws away. So for
+// those G - h - 1 rows the object is not drawn AT ALL, on hardware as much as
+// here, and the peek pass reproduces that by construction because it draws only
+// what the engines were given.
+//
+// A player following an object across the band wants it to stay visible anyway,
+// and that is what this is for. The game names, per scene, the objects it wants
+// kept continuous and where each one is RIGHT NOW, and the peek pass re-renders
+// them from THE OAM ENTRY THE GAME ITSELF LAST SUBMITTED -- same tile, same
+// palette, same size, same flip, same engine's VRAM -- into band pixels neither
+// engine wrote. NOTHING IS INVENTED: an object that has not been submitted yet
+// in this scene has no cached entry and is not drawn, and a pixel an engine did
+// write is never overpainted.
+//
+// The hook fills `out` and returns how many it wrote. Coordinates are DS pixels
+// in the BAND's own frame: x is the sprite's left edge on the 256-pixel row, y
+// is its top edge as a band row index, 0 being world row -G and gap_ds-1 being
+// world row -1. Either may sit outside the band -- an object entering it has a
+// negative y -- and the pass clips.
+//
+// `slot` is the caller's own stable id for the object, 0..BAND_TRACK_MAX-1, and
+// it is what the attribute cache is keyed on, so one object must keep one slot
+// for as long as the scene runs.
+struct BandTrack {
+    int slot;
+    int x, y;
+    int w, h;      // the sprite's size in DS pixels, for the identity match
+};
+
+enum { BAND_TRACK_MAX = 8 };
+
+// Called once per peek frame, after both engines have rasterised. Null clears
+// the hook, and no hook is the behaviour this shipped with.
+typedef int (*BandTrackFn)(BandTrack *out, int max, int gap_ds);
+void ppu_band_continuity(BandTrackFn fn);
 
 // `top` is SCREEN_W x SCREEN_H row-major -- a Framebuffer's px, taken as a
 // plain pointer because the one caller reaches this across an extern "C" seam
 // (hal/sub_screen.cpp) and a reference would only be a cast in disguise there.
+//
+// dst must be lay.w x lay.h. The whole of it is written, band included, so the
+// caller does not have to clear it.
 void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
                          uint32_t *dst, int dst_w, int dst_h, int evy,
-                         int to_white);
+                         int to_white, const StackLayout &lay);
 
 }  // namespace ntr
 
