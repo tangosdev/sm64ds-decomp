@@ -410,6 +410,15 @@ void port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 unsigned port_mg_curling_state_hits(void);
 unsigned port_mg_trap_hits(void);
 
+/* Run mg5 lane BASESET: the framework STATE SETTER's own four numbers.
+   port/unmatched/MgBase_StateSetter.cpp. They are printed next to the dispatch
+   counts above because a run can have both a nonzero call count and a setter
+   that never ran, and the two facts read the same in the old line. */
+void port_mg_base_setter_counts(unsigned *calls, unsigned *dispatched,
+                                unsigned *states, unsigned *ticks,
+                                unsigned *closure);
+unsigned port_mg_base_setter_index_hits(unsigned *out, unsigned n);
+
 /* Lane CUR2's two seated collision bodies. They are counted for the same
    reason the dispatch above is: "the shells collide now" has to be a
    measurement, and until this lane both addresses were faces whose only
@@ -441,7 +450,47 @@ static void *__fastcall mg_d2(void *s, void *)
 { MG_SLOT(16); return (void *)(size_t)func_ov006_020e0638(s); }
 static void *__fastcall mg_d0(void *s, void *)
 { MG_SLOT(17); return (void *)(size_t)func_ov006_020e065c(s); }
-static int  __fastcall mg_reset(void *s, void *)
+/* ---- SLOTS 18 AND 19 TAKE ONE ARGUMENT, AND THE THUNK MUST POP IT ---------
+ *
+ * Run mg5, lane BASESET. Added because seating the framework state setter made
+ * these two slots reachable for the first time and the first run that reached
+ * them FAULTED. It is a stack imbalance, not a mis-seated table.
+ *
+ * A __fastcall thunk stands in for a __thiscall vtable entry: `this` arrives in
+ * ecx, the second parameter is the ignored register slot, and EVERY FURTHER
+ * PARAMETER IS A STACK PARAMETER THE CALLEE POPS. So a thunk declared
+ * `(void *s, void *)` compiles to a bare `ret`, and a ROM caller whose src
+ * spells the virtual with an argument pushes four bytes that nobody takes back.
+ * Four bytes leak per dispatch, the caller's own `ret` eventually takes a
+ * garbage return address, and the fault lands at an address that MOVES WITH THE
+ * BUILD because it is stack litter. Measured on scene 378 and scene 366, both
+ * through func_ov004_020b8778 -> port_mg_call0 -> a framework state body.
+ *
+ * BOTH SLOTS WERE SCANNED OUT OF THE TWO OVERLAY IMAGES word by word rather
+ * than argued from one call site. runs/mg5/out/baseset/slot18_19_scan.txt is
+ * the listing and it REPRODUCES the slot-18 census the dScMgLuigi_c block below
+ * already recorded:
+ *
+ *   offset 0x48, slot 18   22 sites, 21 set r1 first (mvn r1,#0 at fifteen,
+ *                          mov r1,#3/#4/#5 at six). The one that does not is
+ *                          func_ov004_020b29a0 at 0x020b29ac, and its own src
+ *                          spells the virtual `v18(void*)` and forwards its
+ *                          second parameter, so the host pushes one there too.
+ *   offset 0x4c, slot 19   14 sites, ALL FOURTEEN set r1 first, every one of
+ *                          them `ldr r1, [rX, #0x18]`, the message index.
+ *
+ * So the argument count is ONE at every site of both slots, and there is no
+ * caller anywhere in either overlay for which a popping thunk is wrong.
+ *
+ * mgl_reset below ALREADY declared its stack parameter and its block already
+ * carried the slot-18 census, ending "mg_reset and mb_reset_base above do NOT
+ * declare it; that is slice_mg1's to look at". This is that look. The four
+ * slot-18 thunks that were short and the one slot-19 thunk now all declare the
+ * ride-through, and none of them uses it: the parameter exists so __fastcall
+ * cleans four bytes, which is the signature repair port/fader_boot_map.txt
+ * section 9 audits twelve of.
+ */
+static int  __fastcall mg_reset(void *s, void *, int /*ridethrough*/)
 { MG_SLOT(18); func_ov006_020e3470(s); return 1; }
 
 /* SM64DS_SCENE_SLOT9=0 and SM64DS_SCENE_SLOT0=0, the two diagnostics the ov003
@@ -460,7 +509,7 @@ static void __fastcall mb_aclean(void *s, void *, unsigned f){ MG_SLOT(5);  func
 static int  __fastcall mb_bbeh(void *s, void *)    { MG_SLOT(7);  return func_ov004_020b0620(s); }
 static int  __fastcall mb_bren(void *s, void *)    { MG_SLOT(10); return func_ov004_020b04f4(s); }
 static int  __fastcall mb_pdes(void *, void *)     { MG_SLOT(12); func_ov004_020b04e8(); return 0; }
-static int  __fastcall mb_v19(void *, void *)      { MG_SLOT(19); return func_ov004_020b2994(); }
+static int  __fastcall mb_v19(void *, void *, int) { MG_SLOT(19); return func_ov004_020b2994(); }
 static int  __fastcall mb_v20(void *, void *)      { MG_SLOT(20); func_ov004_020b2990(); return 0; }
 static int  __fastcall mb_v21(void *, void *)      { MG_SLOT(21); func_ov004_020b298c(); return 0; }
 static int  __fastcall mb_v22(void *, void *)      { MG_SLOT(22); return func_ov004_020ae198(); }
@@ -510,7 +559,7 @@ static void *__fastcall mb_d2_base(void *s, void *)
 { MG_SLOT(16); return func_ov004_020b2a84(s); }
 static void *__fastcall mb_d0_base(void *s, void *)
 { MG_SLOT(17); return func_ov004_020b2a18(s); }
-static int  __fastcall mb_reset_base(void *, void *)
+static int  __fastcall mb_reset_base(void *, void *, int /*ridethrough*/)
 { MG_SLOT(18); func_ov004_020b299c(); return 1; }
 
 /* The framework's own twenty-three, keyed on the ROM word each slot holds, so
@@ -1243,6 +1292,36 @@ extern "C" void port_scene_mg_hits(void)
                     "switch, %u routed to a dScMgCurling_c state, %u UNHANDLED "
                     "address(es)\n", calls, port_mg_curling_state_hits(),
                     unknown);
+    }
+    /* Run mg5 lane BASESET. THE SETTER'S OWN WITNESS, and it is a separate
+       number from the line above on purpose. func_ov004_020b87e0 is the only
+       writer of the message object's +0x18, and the framework's two per-frame
+       self-field dispatchers return on their first line while that field reads
+       -1. So before this seat every minigame reported dispatch calls and zero
+       unhandled addresses while dispatching NONE of the forty framework state
+       and tick bodies, because none of them was ever reached. "setter 0" next
+       to a nonzero call count is that state of affairs, and it is worth being
+       able to see rather than infer. */
+    {
+        unsigned scalls = 0, sdisp = 0, sstates = 0, sticks = 0, sclos = 0;
+        port_mg_base_setter_counts(&scalls, &sdisp, &sstates, &sticks, &sclos);
+        std::printf("[scene] framework state setter: %u call(s) into "
+                    "func_ov004_020b87e0, %u of them dispatched a state, %u "
+                    "state body, %u per-frame tick and %u closure entr(ies) "
+                    "routed by MgBase_StateSetter.cpp\n",
+                    scalls, sdisp, sstates, sticks, sclos);
+        {
+            unsigned h[20] = {0};
+            unsigned n = port_mg_base_setter_index_hits(h, 20);
+            std::printf("[scene] framework message indices asked for:");
+            unsigned any = 0;
+            for (unsigned i = 0; i < n; ++i)
+                if (h[i]) { std::printf(" %u(x%u)", i, h[i]); any = 1; }
+            if (!any)
+                std::printf(" none (no gameplay asked the framework to change"
+                            " state on this run)");
+            std::printf("\n");
+        }
     }
     port_mg_curling_shell_census();
     std::printf("[scene] curling collision: shot separation 0x020e1dc8 "
@@ -1985,9 +2064,12 @@ extern "C" void port_scene_mg_pachinko_report(void)
 // a plain int at self+0x4660, no ov006 overlay constructor copies a pair table
 // into its .data neighbourhood, and a member-pointer sweep of all 76 closure
 // TUs hits exactly one file, func_ov004_020b87e0.cpp, which is the FRAMEWORK's
-// state setter and is already trapped above. So section 4's wall costs this
-// lane nothing, and port/slice_smb.txt records how each of the three was
-// measured.
+// state setter and was a trap above when this block was written. So section 4's
+// wall costs this lane nothing, and port/slice_smb.txt records how each of the
+// three was measured. AMENDED, run mg5 lane BASESET: that setter is SEATED, in
+// port/unmatched/MgBase_StateSetter.cpp, so what this class inherits from the
+// framework is a working state machine rather than a reporting trap. The
+// measurement about this class's own Behavior is unchanged.
 
 extern "C" {
 extern unsigned char data_ov006_0213eefc[];   /* dScMgSmartball_c, 36 slots */
@@ -2082,7 +2164,7 @@ static void *__fastcall smb_d2(void *s, void *)
 { MG_SLOT(16); return func_ov006_0210d740((char *)s); }
 static void *__fastcall smb_d0(void *s, void *)
 { MG_SLOT(17); return func_ov006_0210d7e0(s); }
-static int  __fastcall smb_reset(void *s, void *)
+static int  __fastcall smb_reset(void *s, void *, int /*ridethrough*/)
 { MG_SLOT(18); func_ov006_02118a8c(s); return 1; }
 static int  __fastcall smb_v25(void *s, void *)
 { MG_SLOT(25); return func_ov006_021147ac(s); }
@@ -2570,7 +2652,7 @@ static void *__fastcall mc_d2(void *s, void *)
 { MG_SLOT(16); return (void *)(size_t)func_ov006_020dbe40((int *)s); }
 static void *__fastcall mc_d0(void *s, void *)
 { MG_SLOT(17); return (void *)func_ov006_020dbe64((int *)s); }
-static int  __fastcall mc_reset(void *s, void *)
+static int  __fastcall mc_reset(void *s, void *, int /*ridethrough*/)
 { MG_SLOT(18); func_ov006_020de5b0((char *)s); return 1; }
 
 /* dScMgCoin_c's own six, the per-class half. Keyed on the ROM WORD each slot

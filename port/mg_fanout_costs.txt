@@ -403,6 +403,35 @@ that reports itself and sets no state. Solving it is worth more than any single
 minigame: it is one 63-line host copy plus twenty routed addresses, and it
 unblocks the framework half of all thirty.
 
+  SOLVED, run mg5 lane BASESET. The trap is DELETED from hal/scene_mg_faces.cpp
+  and the TU is host-copied in port/unmatched/MgBase_StateSetter.cpp, which
+  carries the derivation: the twenty globals with their code words and their
+  relocation rows, the ROM disassembly of the one-time table build and the
+  dispatch, and the object layout the offsets force. Every adjustment word
+  reads zero and all twenty bodies are matched, delinked and already sliced.
+
+  "ONE 63-LINE HOST COPY PLUS TWENTY ROUTED ADDRESSES" WAS LOW, and the way it
+  was low is the useful part. The setter is the ONLY writer of the message
+  object's +0x18, and the framework's two per-frame self-field dispatchers
+  (func_ov004_020b8714 and _020b8778) return on their first line while that
+  field reads -1. So while the setter was a trap, NEITHER of them ever reached
+  its call, and a run could report framework dispatch calls and zero unhandled
+  addresses while dispatching none of the framework's state bodies at all. The
+  real seat is the whole ov004 member-pointer universe, bounded from the source
+  at SIXTY installs plus the setter's own twenty, and all eighty are routed:
+  fifty-six in MgBase_StateSetter.cpp and twenty-four in
+  MgBase_StateDispatch.cpp. runs/mg5/out/baseset/pmf_universe.txt is the
+  listing.
+
+  IT ALSO FOUND A THIRD ARGUMENT RIDE-THROUGH, and this one crashed rather than
+  read a wrong value. hal/scene_mg.cpp's vtable thunks for slots 18 and 19 were
+  declared with no stack parameter while every ROM caller pushes one, so each
+  dispatch leaked four bytes of stack and a later `ret` took a garbage return
+  address. Both slots were scanned out of the two overlay images word by word
+  (runs/mg5/out/baseset/slot18_19_scan.txt): offset 0x48 is 22 sites, offset
+  0x4c is 14, and the argument count is ONE at every one of them. Four slot-18
+  thunks and one slot-19 thunk gained the ride-through parameter.
+
 THE PORT ALREADY HAS THE ANSWER AND IT IS NOT CHEAP. port/unmatched/
 Player_ChangeState.cpp is the precedent: a host copy of the dispatching TU with
 the member-pointer site replaced by an address switch, plus
@@ -698,6 +727,9 @@ recorded here because each bites a specific fan-out lane at a specific moment.
      defect rather than a convention. NOT FIXED HERE, and it is a blocker for
      the first lane that dispatches slot 7 of any minigame table -- which is
      every one of them, since dScMgBase_c owns that slot.
+     FIXED, run link60 lane MG1, in port/unmatched/MgBase_Slot7.cpp: one added
+     line and one added argument, with decl_Scene.h deliberately not included
+     so the corrected call is not a hard error. Nothing is owed here.
 
   c. A DELETE WITH NO POINTER ON SLOT 5. src/func_ov004_020b0840.c:12 declares
      `extern void func_0203cbc0(void);` and calls it with no argument at line
@@ -705,7 +737,20 @@ recorded here because each bites a specific fan-out lane at a specific moment.
      host body is `func_0203cbc0(void *p) { _ZdlPv(p); }` in
      port/unmatched/func_02073244_hostcopy.c, so the call hands operator delete
      whatever is on the stack. Seven other src TUs declare the same function
-     WITH a pointer parameter. Same ride-through family as (b). NOT FIXED HERE.
+     WITH a pointer parameter. Same ride-through family as (b).
+     FIXED, run mg5 lane BASESET, in port/unmatched/MgBase_Slot5.cpp: the src
+     body with that one call given `data_ov004_020beb60[0]`, which is the value
+     the ROM has in r0 at 0x020b0898. src/func_ov004_020b0840.c is off BOTH
+     port/slice_mg1.txt and port/slice_smb.txt, which are the two slices that
+     carried it.
+     ITS REACHABILITY IS WORTH CORRECTING WHILE THE ROW IS OPEN. The paragraph
+     below groups (b) and (c) as "cannot be EXERCISED until section 4's
+     dispatch exists", and that is right about (b) and wrong about this one:
+     slot 5 is a vtable slot the scene machinery dispatches at teardown, and
+     data_ov004_020beb60 is allocated by slot 1 on every minigame boot, so the
+     wild free was live on every minigame exit the whole time. No unattended
+     run enters it (every census in lane BASESET reports slot 5 zero), which is
+     why nothing had ever caught it.
 
   Both (b) and (c) want the same remedy as (a): a PORT_HOST_ABI host copy in
   port/unmatched/ that places the argument, leaving src/ and the byte gate

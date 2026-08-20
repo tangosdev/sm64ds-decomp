@@ -117,15 +117,27 @@
 // layouts are re-derived from the disassembly below, one offset at a time,
 // rather than from the src structs.
 //
-// ---- 4. WHAT IS NOT HERE ---------------------------------------------------
+// ---- 4. WHAT IS NOT HERE, AND IT IS NOT A TRAP ANY MORE --------------------
 //
-// func_ov004_020b87e0, dScMgBase_c's state SETTER, stays excluded from the
-// slice and trapped in hal/scene_mg_faces.cpp. It is a different problem from
+// func_ov004_020b87e0, dScMgBase_c's state SETTER, is a different problem from
 // these seven: it does not dispatch a table the mount holds, it BUILDS a
 // twenty-entry static table out of twenty ov004 globals whose MSVC symbol names
 // carry the member-pointer type, so there is nothing for an alias or a stride
 // fix to attach to. It needs its twenty addresses routed the way these are, and
-// that is a lane of its own. Until then the trap reports and sets no state.
+// that was a lane of its own.
+//
+// AMENDED, run mg5 lane BASESET. THAT LANE RAN. The setter is host-copied in
+// port/unmatched/MgBase_StateSetter.cpp, its trap is gone from
+// hal/scene_mg_faces.cpp, and port_mg_try_base_state below carries its forty
+// addresses: the twenty its own table holds and the twenty its state bodies
+// install as per-frame ticks. The second twenty are this file's business too,
+// because they are dispatched by func_ov004_020b8714 and func_ov004_020b8778
+// further down, both of which return on their first line while the message
+// object's +0x18 reads -1. The setter is the only writer of that field, so
+// while it was a trap NEITHER of those two host copies ever reached its call.
+// That is why this file measured 0 UNHANDLED addresses on runs that were in
+// fact dispatching nothing at all, and it is worth reading twice before
+// treating a zero here as coverage.
 //
 // ---- 5. AMENDED, run mg5 lane FWK. A PREMISE FURTHER DOWN HAS EXPIRED ------
 //
@@ -284,10 +296,70 @@ void func_ov004_020adeb0(char *c);
 void func_ov004_020b35d8(void *self);
 void func_ov004_020b3698(void);
 
+/* THE OTHER TWENTY-TWO, added by run mg5 lane BASESET. Section 5b left these on
+   the table with the note that "each one will print the same report the day a
+   scene reaches it", and it was right: seating the framework state setter made
+   a scene 378 sweep reach SEVEN of them at once (0x020b4360, 0x020b4820,
+   0x020b484c, 0x020b49b8, 0x020b49e4, 0x020b49f0, 0x020b4a1c), 2561 times
+   between them, on the first run after the seat.
+
+   THE WHOLE TWENTY-TWO ARE ROUTED RATHER THAN THE SEVEN A RUN WITNESSED, and
+   that is a deliberate departure from 5b's rule. 5b's argument was that routing
+   an address no run touches buys a slice line and no evidence, and that argument
+   holds when the addresses are a heterogeneous set. These are not: all
+   twenty-four come from ONE constructor, __sinit_ov004_020b955c, whose thirty
+   pair-bearing assignments were re-resolved here out of
+   extracted/overlays/overlay_0004.bin one assignment at a time (NOT swept over
+   an address range, per mg_fanout_costs section 4) and EVERY SECOND WORD READS
+   ZERO. All three destination tables are dispatched by the three sites section
+   5a disassembles, all zero-argument with `this` in r0. Every one of the
+   twenty-four has a matched src TU and a delink block, a `::*` and `->*` sweep
+   over all twenty-two new files is clean, and the only zero-argument extern any
+   of them declares is NullDestructor_0203d47c, which is one `bx lr` in the ROM.
+   So the evidence here is per-FAMILY and the seven that ran are its witness.
+
+   The cost of the other rule is what changed the call: with the setter seated,
+   the framework runs in a player's hands, and an unrouted address is a dead end
+   a player meets rather than a line a lane owes.
+
+   Their twenty-two slice lines join port/slice_mg1.txt in the same commit as
+   these cases, which is what gives them a caller. Each takes one pointer, its
+   src TU's own spelling, and none needed a host copy. */
+void func_ov004_020b3834(void *self);
+void func_ov004_020b3888(void *self);
+void func_ov004_020b3b38(void *self);
+void func_ov004_020b3c58(void *self);
+void func_ov004_020b3c9c(void *self);
+void func_ov004_020b3cb8(void *self);
+void func_ov004_020b3e9c(void *self);
+void func_ov004_020b4080(void *self);
+void func_ov004_020b40ac(void *self);
+void func_ov004_020b433c(void *self);
+void func_ov004_020b4360(void *self);
+void func_ov004_020b45c0(void *self);
+void func_ov004_020b4820(void *self);
+void func_ov004_020b484c(void *self);
+void func_ov004_020b49b8(void *self);
+void func_ov004_020b49e4(void *self);
+void func_ov004_020b49f0(void *self);
+void func_ov004_020b4a1c(void *self);
+void func_ov004_020b4a28(void *self);
+void func_ov004_020b4a40(void *self);
+void func_ov004_020b4a4c(void *self);
+void func_ov004_020b4a64(void *self);
+
 /* the per-class half's switch, tried after this one; the header of
    unmatched/MgCurling_StateDispatch.cpp says why the chain runs this way */
 int port_mg_try_ov006_0(void *self, unsigned code);
 int port_mg_try_ov006_1(void *self, unsigned code, int a);
+
+/* Run mg5 lane BASESET. The framework's STATE SETTER half, forty more ov004
+   addresses: the twenty src/func_ov004_020b87e0.cpp's own table holds and the
+   twenty its state bodies install as per-frame ticks. It joins the chain here
+   rather than growing mg_try_ov004_0, because the two sets are derived from
+   different ROM structures and a reader should be able to tell which file ruled
+   which address. port/unmatched/MgBase_StateSetter.cpp. */
+int port_mg_try_base_state(void *self, unsigned code);
 
 /* the bodies the host copies below call, unchanged from their src */
 void DecompressLZ16(int src, int dst);
@@ -338,6 +410,35 @@ static int mg_try_ov004_0(void *self, unsigned code)
     /* run mg5 lane FWK. data_ov004_020bf490.p12, dispatched directly by
        func_ov004_020b3278. The ROM body is one `bx lr`, so (void) is exact. */
     case 0x020b3698u: func_ov004_020b3698();              return 1;
+
+    /* run mg5 lane BASESET: the other twenty-two of __sinit_ov004_020b955c's
+       twenty-four. The comment above their declarations is the derivation. The
+       slot each one arrives from is named so a reader can go back to the
+       constructor without re-resolving anything; * marks the seven a scene 378
+       sweep reached on the first run after the state setter was seated. */
+    case 0x020b3834u: func_ov004_020b3834(self);          return 1;  /* bf428.p11 */
+    case 0x020b3888u: func_ov004_020b3888(self);          return 1;  /* bf490.p11 */
+    case 0x020b3b38u: func_ov004_020b3b38(self);          return 1;  /* bf4f8.p10 */
+    case 0x020b3c58u: func_ov004_020b3c58(self);          return 1;  /* bf428.p10 */
+    case 0x020b3c9cu: func_ov004_020b3c9c(self);          return 1;  /* bf490.p10 */
+    case 0x020b3cb8u: func_ov004_020b3cb8(self);          return 1;  /* bf4f8.p9  */
+    case 0x020b3e9cu: func_ov004_020b3e9c(self);          return 1;  /* bf4f8.p6  */
+    case 0x020b4080u: func_ov004_020b4080(self);          return 1;  /* bf428.p6, p9 */
+    case 0x020b40acu: func_ov004_020b40ac(self);          return 1;  /* bf490.p6, p9 */
+    case 0x020b433cu: func_ov004_020b433c(self);          return 1;  /* bf490.p7  */
+    case 0x020b4360u: func_ov004_020b4360(self);          return 1;  /* bf4f8.p8  * */
+    case 0x020b45c0u: func_ov004_020b45c0(self);          return 1;  /* bf4f8.p5, p7 */
+    case 0x020b4820u: func_ov004_020b4820(self);          return 1;  /* bf428.p5, p7, p8 * */
+    case 0x020b484cu: func_ov004_020b484c(self);          return 1;  /* bf490.p5, p8 * */
+    case 0x020b49b8u: func_ov004_020b49b8(self);          return 1;  /* bf428.p4  * */
+    case 0x020b49e4u: func_ov004_020b49e4(self);          return 1;  /* bf490.p4  * */
+    case 0x020b49f0u: func_ov004_020b49f0(self);          return 1;  /* bf428.p3  * */
+    case 0x020b4a1cu: func_ov004_020b4a1c(self);          return 1;  /* bf490.p3  * */
+    case 0x020b4a28u: func_ov004_020b4a28(self);          return 1;  /* bf428.p2  */
+    case 0x020b4a40u: func_ov004_020b4a40(self);          return 1;  /* bf490.p2  */
+    case 0x020b4a4cu: func_ov004_020b4a4c(self);          return 1;  /* bf428.p1  */
+    case 0x020b4a64u: func_ov004_020b4a64(self);          return 1;  /* bf490.p1  */
+
     default:                                              return 0;
     }
 }
@@ -361,6 +462,8 @@ extern "C" void port_mg_call0(void *self, unsigned code, int adj)
         return;
     }
     if (mg_try_ov004_0(self, code))
+        return;
+    if (port_mg_try_base_state(self, code))
         return;
     if (port_mg_try_ov006_0(self, code))
         return;
