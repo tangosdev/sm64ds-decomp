@@ -1145,6 +1145,16 @@ void hal_sub_screen_stacked_size(int *w, int *h)
     if (h) *h = lay.h;
 }
 
+/* The image's HEADROOM in host rows, for the one consumer that has to name the
+   parts of the image rather than just its size: the scene capture's own line in
+   hal/scene_boot.cpp, which used to derive "the gap" by subtracting two screen
+   heights from the image height and would now be reporting headroom plus gap
+   under the gap's name. Reads the same layout everything else does. */
+int hal_sub_screen_stacked_headroom(void)
+{
+    return hal_screen_layout()->head_h;
+}
+
 /* A counter that steps whenever that size changes -- which is once, when a
    minigame's InitResources latches its G. walk_window watches it to know when
    to re-shape the DIB header and re-size the window; a consumer that reads the
@@ -1314,6 +1324,21 @@ int hal_present_client_to_fb(int cx, int cy, int *fx, int *fy)
     const ntr::StackLayout &lay = *hal_screen_layout();
     const int inside = x >= 0 && y >= lay.top_y && x < ntr::SCREEN_W &&
                        y < lay.top_y + ntr::SCREEN_H;
+    /* AND THE FRAMEBUFFER ROW IS THE SOURCE ROW MINUS top_y, which was a no-op
+       for as long as top_y was zero and is not one any more: the gapless
+       headroom puts head_h rows of image ABOVE the top screen, so a click on
+       the top screen's first row arrives here as source row head_h and the
+       framebuffer row it means is 0. The paragraph above already said the one
+       place that decides where the top screen is has to be the one place both
+       mappers read; this is that promise being kept. With no headroom top_y is
+       0 and the subtraction changes nothing.
+       A CLICK IN THE HEADROOM MAPS TO NOTHING, the gap band's own rule and for
+       the same reason: those rows are picture with no panel under them, the
+       hardware has no touch there, and a clamp would publish a press on the top
+       screen's first row for a click that was never on it. `y` goes negative,
+       `inside` is already false, and the clamp below only ever fires for a
+       caller that ignores the return. */
+    y -= lay.top_y;
     if (x < 0) x = 0;
     if (y < 0) y = 0;
     if (x >= ntr::SCREEN_W) x = ntr::SCREEN_W - 1;
@@ -1454,7 +1479,9 @@ void hal_touch_client_probe(void)
         client_to_src(cx, cy, &sx, &sy, &ssw, &ssh);
         const char *where = "bar";
         if (sx >= 0 && sx < ssw) {
-            if (sy >= lay.top_y && sy < lay.top_y + ntr::SCREEN_H)
+            if (lay.head_h > 0 && sy >= 0 && sy < lay.top_y)
+                where = "HEADROOM";
+            else if (sy >= lay.top_y && sy < lay.top_y + ntr::SCREEN_H)
                 where = "top screen";
             else if (lay.band_h > 0 && sy >= lay.band_y && sy < lay.bottom_y)
                 where = "GAP";

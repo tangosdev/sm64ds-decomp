@@ -434,6 +434,8 @@ int hal_sub_screen_stacked(void);
 const unsigned int *hal_sub_screen_stacked_image(const unsigned int *top);
 /* the stacked image's live size, which the screen gap makes a variable */
 void hal_sub_screen_stacked_size(int *w, int *h);
+/* and how many of its rows are the gapless headroom above the top screen */
+int hal_sub_screen_stacked_headroom(void);
 int IsMinigameActorID(unsigned int id);
 void port_message_composite_engine_a(void *fb);
 void sdat_host_tick(void);           /* hal/sdat/consumer.cpp */
@@ -2799,11 +2801,19 @@ extern "C" int port_scene_finish(int frames_run)
            real run, that is not the picture the run made. */
         int iw = 0, ih = 0;
         hal_sub_screen_stacked_size(&iw, &ih);
+        /* THE TWO EXTRA BANDS ARE NAMED SEPARATELY, because there are two of
+           them now and they sit at opposite ends of the image: the gapless
+           headroom above the top screen and the simulated hinge between the
+           halves. Subtracting two screen heights gives their SUM, and a line
+           that reported that sum under the gap's name would call a 64-row
+           headroom a 64-row gap on a run that has no gap at all. */
+        const int head = hal_sub_screen_stacked_headroom();
         if (img && ntr::ppu_write_bmp_px(bmp_stacked, img, iw, ih))
             std::printf("[scene] wrote %s, %dx%d: the top screen over the "
-                        "bottom screen, each %dx%d, with %d row(s) of gap "
-                        "between them\n", bmp_stacked, iw, ih, ntr::SCREEN_W,
-                        ntr::SCREEN_H, ih - ntr::SCREEN_H * 2);
+                        "bottom screen, each %dx%d, with %d row(s) of headroom "
+                        "above and %d row(s) of gap between them\n",
+                        bmp_stacked, iw, ih, ntr::SCREEN_W, ntr::SCREEN_H, head,
+                        ih - ntr::SCREEN_H * 2 - head);
         else
             std::fprintf(stderr, "  [scene] SM64DS_SCENE_BMP_STACKED asked for "
                          "%s but the stacked layout is %s and the bottom "

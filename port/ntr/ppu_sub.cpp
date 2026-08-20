@@ -1334,10 +1334,20 @@ int band_decode(uint16_t a0, uint16_t a1, uint16_t a2, BandEntry &o)
  * Every VRAM and palette read goes through the BandEngine, so a cached engine-A
  * entry re-rendered later still reads engine A's tiles through engine A's
  * palette, which is the whole of what makes the synthesized pixels the same
- * pixels the engine would have produced. */
+ * pixels the engine would have produced.
+ *
+ * `split` AND `n_below` ARE THE HEADROOM PASS'S CENSUS and nothing else reads
+ * them, which is why they default to "no census". With split >= 0 the texels
+ * this entry lands at band index >= split are counted into *n_below as well as
+ * into the return, so ONE raster over ONE OAM walk reports "how much of this
+ * sprite is in the strip" beside "how much of it is on the screen". Those two
+ * numbers are the before and the after of the clipping the headroom fixes, and
+ * taking them from the same frame of the same run is what makes them comparable
+ * at all. Every other caller passes neither and is unchanged. */
 int band_draw_entry(BandPixel *band, int gap_ds, const BandEngine &e,
                     uint16_t a0, uint16_t a1, uint16_t a2, const BandEntry &d,
-                    int ktop, int x, int only_empty)
+                    int ktop, int x, int only_empty, int split = -1,
+                    int *n_below = 0)
 {
     const uint32_t dispcnt = rd32(e.reg);
     if (!((dispcnt >> 12) & 1)) return 0;            // OBJ layer off
@@ -1402,6 +1412,7 @@ int band_draw_entry(BandPixel *band, int gap_ds, const BandEngine &e,
                claim unverifiable from the picture. */
             if (only_empty && bp.hit) continue;
             ++drawn;
+            if (split >= 0 && k >= split && n_below) ++*n_below;
             /* WITHIN one engine, OBJ priority resolves and the 127 -> 0
                walk breaks ties toward the lower index, exactly as
                raster_obj above. ACROSS the two engines it does not, and
@@ -1455,9 +1466,12 @@ int band_trace_frames(void)
  * Priority resolves sprite against sprite exactly as raster_obj does above:
  * walk 127 -> 0 so a lower index is processed later, and overwrite when the
  * pixel is empty or this sprite's priority number is at least as good. */
-void band_raster_engine(BandPixel *band, int gap_ds, const BandEngine &e)
+void band_raster_engine(BandPixel *band, int gap_ds, const BandEngine &e,
+                        int trace = -1, const char *tag = "gappeek",
+                        int split = -1)
 {
     if (!((rd32(e.reg) >> 12) & 1)) return;          // OBJ layer off
+    if (trace < 0) trace = band_trace_frames();
     for (int i = 127; i >= 0; --i) {
         const uint16_t a0 = rd16(e.oam + i * 8u);
         const uint16_t a1 = rd16(e.oam + i * 8u + 2);
@@ -1473,14 +1487,25 @@ void band_raster_engine(BandPixel *band, int gap_ds, const BandEngine &e)
         for (int sy = 0; sy < d.bh; ++sy)
             if (ktop + sy >= 0 && ktop + sy < gap_ds) ++box_rows;
 
-        const int drawn =
-            band_draw_entry(band, gap_ds, e, a0, a1, a2, d, ktop, d.x, 0);
-        if (box_rows && band_trace_frames())
-            std::fprintf(stderr, "[gappeek] %s oam%3d a0=%04x a1=%04x a2=%04x "
-                         "%dx%d%s at (%d,%d): box reaches %d band row(s), "
-                         "%d pixel(s) drawn\n", e.name, i, a0, a1, a2, d.w,
-                         d.h, d.dbl ? " dbl" : (d.affine ? " aff" : ""), d.x,
-                         d.y, box_rows, drawn);
+        int below = 0;
+        const int drawn = band_draw_entry(band, gap_ds, e, a0, a1, a2, d, ktop,
+                                          d.x, 0, split, &below);
+        if (box_rows && trace)
+            std::fprintf(stderr, "[%s] %s oam%3d a0=%04x a1=%04x a2=%04x "
+                         "%dx%d%s at (%d,%d): box reaches %d row(s), %d "
+                         "pixel(s) drawn%s\n", tag, e.name, i, a0, a1, a2,
+                         d.w, d.h, d.dbl ? " dbl" : (d.affine ? " aff" : ""),
+                         d.x, d.y, box_rows, drawn,
+                         split < 0 ? "" : (below ? ", SOME OF IT ON THE SCREEN"
+                                                 : ", ALL OF IT OFF-SCREEN"));
+        /* THE SPLIT IS THE MEASUREMENT, printed on its own line so a log can be
+           read with one grep: how much of this sprite the headroom strip shows
+           and how much of it the top screen was already showing. Before the
+           strip existed the first number was the number of pixels DROPPED. */
+        if (split >= 0 && trace && (drawn || below))
+            std::fprintf(stderr, "[%s] %s oam%3d split: %d px in the strip, "
+                         "%d px on the screen\n", tag, e.name, i,
+                         drawn - below, below);
     }
 }
 
@@ -1649,6 +1674,203 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
         }
 }
 
+/* ---- HEADROOM: the rows above the top screen, and what goes in them --------
+ *
+ * WHAT IT IS FOR. See the StackLayout note in ntr/ppu.h. With the
+ * GaplessMinigames mod engaged the game's G is zero, the world a minigame
+ * simulates is still 192 + G_rom + 192 rows tall because its actors are placed
+ * by fixed constants, and the top G_rom rows of that world -- Bob-omb Squad's
+ * -224..-193 -- land ABOVE the top screen's first row. The layout gives the
+ * image G_rom extra rows there. This fills them.
+ *
+ * WHAT THE RASTERISERS DO WITH A WRAPPED y, because that decides how much of an
+ * object is left to draw at all. OAM::Render culls at submission -- `if
+ * (y + h < 0) return; if (y > 0xc0) return;` -- and stores y & 0xff, so an
+ * object ENTIRELY above the top screen never reaches OAM and cannot be drawn by
+ * anything, here or on hardware, while one that straddles the top edge is
+ * submitted with a wrapped 8-bit y. Both live rasters -- engine A's in
+ * hal/message_compositor.cpp and engine B's raster_obj above -- undo the wrap
+ * with the same expression band_decode uses, `if (y >= 192 && y >= 256 - bh)
+ * y -= 256`, and then clip every row with `if (py < 0 || py >= 192) continue`.
+ * So the port ALREADY reads a wrapped y as negative and ALREADY drops the
+ * negative rows, and the strip below is exactly the rows it drops.
+ *
+ * WHAT IS UP THERE ON SCENE 368, measured over 401 frames by this pass's own
+ * census (SM64DS_HEADROOM_TRACE, and port/tools/headroom.py reads it):
+ *
+ *   LAKITU, a 32x64 double-size affine entry that cruises across near the old
+ *   top edge, has the top row of its sprite at engine rows -7..0 -- jammed flat
+ *   against the first row of the picture, where the ROM puts it 32 rows down --
+ *   and loses 1 to 7 of its rows on 174 of those frames. That is the report.
+ *
+ *   THE PARACHUTING BOB-OMBS, 32x32 double-size, spawn at world -256 and enter
+ *   wholly above the top screen. Without the strip the first of them is not
+ *   drawn AT ALL for 45 to 55 frames after it is submitted, and one of them
+ *   never reached the screen at all in a 400-frame run. They are most of what
+ *   the strip draws: 79039 of 79401 strip pixels over that census.
+ *
+ * A TARGETED STRIP PASS RATHER THAN A TALLER LIVE RASTER, which is the trade
+ * band_peek's own note argues and for the same reason: growing engine A's
+ * buffers by G_rom rows would put this mode's cost and its risk on every level
+ * in the program. This walks engine A's OAM once more, over the strip's rows
+ * alone, only when a headroom layout is live.
+ *
+ * ONE EXTRA ROW IS RASTERED AND NEVER DRAWN. The strip is head_ds rows and the
+ * raster is head_ds + 1, so index head_ds is engine row 0 -- the top screen's
+ * own first row -- and it exists purely as a COVERAGE MASK for the backdrop.
+ * It is not composited.
+ *
+ * THE BACKDROP IS THE PICTURE'S OWN TOP ROW, NOT THE BACKGROUND LAYER'S, and
+ * that is measured rather than assumed. The strip's BG rows were never meant to
+ * render and reading them cold gives garbage rather than nothing: engine A's
+ * only enabled background on scene 368 is BG3, a 32x32 text map at vofs 0, so
+ * strip rows -32..-1 are map rows 24..31 -- and that map carries a 32x24 blit.
+ * SM64DS_MSG_COMPOSITE_DEBUG's own char census reports 768 of its 1024 tiles
+ * with data, which is exactly the 24 rows the screen shows, so the eight rows
+ * above index tiles that carry none, or index tile 0 over and over. Neither is
+ * sky.
+ *
+ * So the strip is FILLED, per column, from the top screen's own first rendered
+ * row. The seam is continuous BY CONSTRUCTION -- the row above the top screen's
+ * first row is the top screen's first row -- and it stays continuous a whole
+ * strip up because the picture is vertically flat where it meets the seam: on
+ * scene 368 the top of the image is a horizontal sky gradient whose DS row 0
+ * and DS row 1 differ by a mean of 2.6 of 255 per channel over all 512 columns.
+ * The ambient band's twenty-four-column wash was the other candidate and is not
+ * used: it would average that gradient into bands and put a horizontal step
+ * where there is none.
+ *
+ * AND THE COLUMNS A SPRITE COVERS ARE RECONSTRUCTED, which is what the extra
+ * rastered row is for. Sampling the composed image blind would sample LAKITU
+ * wherever Lakitu is pinned against the top edge and smear its surviving rows
+ * up the entire strip, in exactly the columns the strip is about to draw the
+ * rest of Lakitu into. So a column whose engine row 0 carries an engine-A
+ * sprite takes its backdrop from a linear ramp between the nearest uncovered
+ * columns either side of it -- the sky behind the sprite, rebuilt from the sky
+ * beside it -- and only a frame in which EVERY column is covered leaves the
+ * composed row standing as it is.
+ *
+ * THE FILL FADES AND THE SPRITES DO NOT, which is the peek band's behaviour and
+ * is deliberate: the fill is a copy of framebuffer rows walk_window has already
+ * run its fade composite over, so it fades with them for free, and the strip's
+ * sprites are the engine's own texels exactly as band_peek draws them.
+ */
+int head_trace_on(void)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *s = std::getenv("SM64DS_HEADROOM_TRACE");
+        on = s && *s && *s != '0';
+    }
+    return on;
+}
+
+unsigned g_head_frame;
+
+/* One column of backdrop between two known ones. Integer and truncating, for
+   the reason band_fill_ambient's note gives: a ramp a second implementation
+   cannot reproduce exactly is a ramp nobody can check. */
+uint32_t head_lerp(uint32_t c0, uint32_t c1, int u, int span)
+{
+    const int v = span - u;
+    const int r = ((int)((c0 >> 16) & 0xff) * v + (int)((c1 >> 16) & 0xff) * u) / span;
+    const int g = ((int)((c0 >> 8) & 0xff) * v + (int)((c1 >> 8) & 0xff) * u) / span;
+    const int b = ((int)(c0 & 0xff) * v + (int)(c1 & 0xff) * u) / span;
+    return 0xFF000000u | ((uint32_t)r << 16) | ((uint32_t)g << 8) | (uint32_t)b;
+}
+
+void head_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
+{
+    if (lay.head_h <= 0 || lay.head_ds <= 0) return;
+    /* GAP_DS_MAX + SUB_H rows of 256 DS pixels, allocated on the first headroom
+       frame and never freed: band_peek's trade, for band_peek's reason. As a
+       file-scope array it would be host .bss in EVERY binary that links this
+       layer -- every smoke, every level run -- for a mode that is off by
+       default and reachable on one scene. */
+    static BandPixel *strip;
+    if (!strip) {
+        strip = (BandPixel *)std::calloc((size_t)(GAP_DS_MAX + SUB_H) * 256,
+                                         sizeof *strip);
+        if (!strip) return;
+    }
+    const int trace = head_trace_on();
+    /* head_ds rows of strip, then the coverage row -- and under the trace the
+       whole top screen as well, so the census can say which frame an object
+       first has texels ON the screen. That is the frame it would have become
+       visible WITHOUT this feature, and having both numbers off one frame of
+       one run is what makes the before and the after comparable. */
+    const int rows = lay.head_ds + (trace ? SUB_H : 1);
+    std::memset(strip, 0, sizeof(BandPixel) * (size_t)rows * 256);
+    ++g_head_frame;
+    /* ENGINE A ONLY: the headroom is above the TOP screen and engine B has
+       nothing to say about it. The bias that turns an engine row into a strip
+       index is +head_ds, so engine row -head_ds is index 0 and engine row 0 is
+       index head_ds. Engine A's OBJ extended palette store is not modelled
+       anywhere in this program, so it passes 0 -- the same answer band_peek's
+       engine-A pass gives, for the same reason. */
+    const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                           lay.head_ds, 0, "A"};
+    band_raster_engine(strip, rows, ea, trace, "headroom", lay.head_ds);
+
+    /* ---- the backdrop ---- */
+    const uint32_t *edge = dst + (size_t)lay.top_y * dst_w;
+    const int rx = lay.w / SUB_W, ry = lay.scale;
+    uint32_t fill[STACK_W];
+    int covered[STACK_W];
+    int n_free = 0;
+    for (int x = 0; x < lay.w; ++x) {
+        const int dsx = rx > 0 ? x / rx : 0;
+        covered[x] = strip[(size_t)lay.head_ds * 256 +
+                           (dsx < SUB_W ? dsx : SUB_W - 1)].hit ? 1 : 0;
+        fill[x] = edge[x];
+        if (!covered[x]) ++n_free;
+    }
+    if (n_free && n_free < lay.w) {
+        int x = 0;
+        while (x < lay.w) {
+            if (!covered[x]) { ++x; continue; }
+            const int a = x;
+            while (x < lay.w && covered[x]) ++x;
+            const int b = x - 1;                 /* the covered run is [a, b] */
+            /* the nearest uncovered column on each side, and that side's own
+               value where the run touches an edge of the image. Both reads are
+               of columns this loop never writes, so they are the sampled row's
+               own colours and never a ramp of a ramp. */
+            const uint32_t left = a > 0 ? fill[a - 1] : fill[x];
+            const uint32_t right = x < lay.w ? fill[x] : fill[a - 1];
+            const int span = b - a + 2;
+            for (int k = a; k <= b; ++k)
+                fill[k] = head_lerp(left, right, k - a + 1, span);
+        }
+    }
+    for (int y = 0; y < lay.head_h; ++y) {
+        uint32_t *out = dst + (size_t)y * dst_w;
+        for (int x = 0; x < lay.w; ++x) out[x] = fill[x];
+    }
+
+    /* ---- and the strip's own sprites over it, at the bottom half's scale ---
+       Strip index k is engine row k - head_ds, which is image row
+       top_y + (k - head_ds) * scale == k * scale, so the strip starts at image
+       row 0 and ends exactly where the top screen begins. */
+    int px_drawn = 0;
+    for (int k = 0; k < lay.head_ds; ++k)
+        for (int x = 0; x < SUB_W; ++x) {
+            const BandPixel &bp = strip[(size_t)k * 256 + x];
+            if (!bp.hit) continue;
+            ++px_drawn;
+            for (int oy = 0; oy < ry; ++oy) {
+                uint32_t *out = dst + (size_t)(k * ry + oy) * dst_w;
+                for (int ox = 0; ox < rx; ++ox) out[x * rx + ox] = bp.color;
+            }
+        }
+    if (trace)
+        std::fprintf(stderr, "[headroom] f%u strip %d DS row(s) (engine rows "
+                     "-%d..-1): %d DS pixel(s) drawn, %d of %d column(s) had "
+                     "a sprite over the top screen's first row and were "
+                     "reconstructed\n", g_head_frame, lay.head_ds, lay.head_ds,
+                     px_drawn, lay.w - n_free, lay.w);
+}
+
 }  // namespace
 
 // ---- the stacked presentation -----------------------------------------------
@@ -1656,20 +1878,33 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
 // The layout decides everything; see StackLayout in ntr/ppu.h. This writes
 // every pixel of dst, so the caller does not have to clear it.
 
-StackLayout stack_layout(int gap_ds, int fill_mode, uint32_t fill_color,
-                         int peek, const uint32_t *art)
+StackLayout stack_layout(int gap_ds, int head_ds, int fill_mode,
+                         uint32_t fill_color, int peek, const uint32_t *art)
 {
     StackLayout l;
     if (gap_ds < 0) gap_ds = 0;
     if (gap_ds > GAP_DS_MAX) gap_ds = GAP_DS_MAX;
+    /* THE HEADROOM IS CLAMPED BY THE SAME CEILING AND FOR THE SAME REASON: it
+       comes from the same framework word, one scene's InitResources having
+       written it before the gapless mod zeroed it, and a wild read must not be
+       able to ask for a buffer the size of the desktop. */
+    if (head_ds < 0) head_ds = 0;
+    if (head_ds > GAP_DS_MAX) head_ds = GAP_DS_MAX;
     l.gap_ds = gap_ds;
+    l.head_ds = head_ds;
     l.scale = SCREEN_H / SUB_H;
     l.w = STACK_W;
-    l.top_y = 0;
-    l.band_y = SCREEN_H;
+    l.head_h = head_ds * l.scale;
+    /* EVERY BAND SHIFTS TOGETHER, which is the whole reason the headroom is a
+       field of this struct rather than a second arithmetic somewhere: the
+       compose, the DIB header, the window size, the BMP writer and both stylus
+       mappers read top_y / band_y / bottom_y and none of them recomputes them.
+       With head_h zero all four are exactly what they were. */
+    l.top_y = l.head_h;
+    l.band_y = l.head_h + SCREEN_H;
     l.band_h = gap_ds * l.scale;
-    l.bottom_y = SCREEN_H + l.band_h;
-    l.h = SCREEN_H * 2 + l.band_h;
+    l.bottom_y = l.band_y + l.band_h;
+    l.h = l.head_h + SCREEN_H * 2 + l.band_h;
     l.fill_mode = fill_mode == GAP_FILL_SOLID   ? GAP_FILL_SOLID
                   : fill_mode == GAP_FILL_CUSTOM ? GAP_FILL_CUSTOM
                                                  : GAP_FILL_AMBIENT;
@@ -1714,8 +1949,17 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
     if (evy > 16) evy = 16;
 
     // the top half, verbatim: it is already faded and already carries the F3
-    // overlay, because it is the framebuffer the caller finished with
-    std::memcpy(dst, top, (size_t)SCREEN_W * SCREEN_H * 4);
+    // overlay, because it is the framebuffer the caller finished with.
+    // AT top_y RATHER THAN AT ROW ZERO, which is the one word the headroom
+    // changes here: with a headroom the top screen starts head_h rows down and
+    // with none top_y is 0 and this is the memcpy it always was.
+    std::memcpy(dst + (size_t)lay.top_y * dst_w, top,
+                (size_t)SCREEN_W * SCREEN_H * 4);
+    /* THE HEADROOM, here because it reads the row the memcpy above just wrote
+       and nothing else in the image. With no headroom head_h is 0 and this
+       returns immediately, so a layout without one is byte-for-byte what it
+       was before this existed. */
+    head_paint(dst, dst_w, lay);
 
     /* The bottom half. The ratio is a whole number at every tier the port
        builds (1, 2 and 4), and a SHIFT rather than a divide would be wrong the
