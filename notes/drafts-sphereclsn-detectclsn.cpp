@@ -1,5 +1,6 @@
 //cpp
-// NONMATCHING: size 0x1bc4 vs 0x1bc8 (1 insn SHORT), align equal=1335 ratio=0.751
+// NONMATCHING: size 0x1bd0 vs 0x1bc8 (2 insn OVER), align equal=1338 ratio=0.752
+//              FRAME NOW EXACT: sub sp,#0x1b4 and 102 stack slots, both matching
 //
 // 2026-08-20, second session (equal 1047 -> 1335).  Every gain below is a
 // SPELLING: each one re-reads a value the candidate already had in a register,
@@ -19,6 +20,16 @@
 //        Exactly +1 each, independent and additive (all 64 subsets swept).
 //   +42  the prism origin read through `tpv` at five of six vertex-tail sites.
 //        This one came from the permuter and is documented at its site.
+//   +29  THE FRAME LEVER (measured on the anchored count, not on `equal` --
+//        see below).  `tp`/`vb`/`vc` are `Vtx3`, an aggregate with a
+//        user-declared empty destructor, because mwccarm was SCALARIZING vb
+//        and vc into loose stack slots where the ROM keeps them as arrays.
+//        Frame goes 0x1bc -> 0x1b4 and 105 slots -> 102, both exactly the
+//        ROM's, and the load deficit reaches zero.  Found by diffing the two
+//        frames slot by slot: the ROM had nine slots with two stores each
+//        that we did not, and we had eight loose one-load/one-store slots
+//        that it did not.  The destructor is what blocks the scalarization --
+//        the same aggregate WITHOUT it is byte-identical to the old draft.
 //   +31  TWO declaration moves -- `rawX/rawY/rawZ` and `den12/den23/den31`.
 //        Found by a greedy sweep over every declaration line x every position
 //        (3,135 compiles per round, converged in three rounds).  The recorded
@@ -36,7 +47,12 @@
 //     after +153      equal 1200   anchored 558/1778 (0.3138)   cand 1745
 //     after +56/+6    equal 1262   anchored 574/1778 (0.3228)   cand 1752
 //     after +42       equal 1304   anchored 629/1778 (0.3538)   cand 1777
-//     now             equal 1335   anchored 656/1778 (0.3690)   cand 1777
+//     after +31       equal 1335   anchored 656/1778 (0.3690)   cand 1777
+//     now             equal 1338   anchored 685/1778 (0.3853)   cand 1780
+//
+// The last row is why the anchored metric is kept.  The frame fix moved
+// `equal` by THREE and the anchored count by TWENTY-NINE; on `equal` alone it
+// would have looked like noise and been discarded.
 //
 // Both metrics move together at every step.  The tool is scratchpad
 // `anchored.py`; it is worth rebuilding before believing any future gain.
@@ -233,39 +249,71 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     } else if ((d) > (faceDot >> unk_48)) continue;                           \
     dsqL:;
 
+/* A three-word vertex held as an AGGREGATE, not scalarized.  mwccarm splits a
+   plain `s32 v[3]` local into independent stack slots; a user-declared destructor
+   blocks that, which is the same lever include/types.h uses on Vector3 and the same
+   one the dBgCh_Lin twin needed.  The destructor is empty: this costs nothing at
+   runtime and changes nothing the function computes. */
+struct Vtx3 {
+    s32 e[3];
+    ~Vtx3() {}
+};
+
 s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 {
     KCL_File *f;
-    s32 loX, hiX;
-    s32 loY, hiY;
-    s32 loZ, hiZ;
-    s32 loPX, hiPX;
-    s32 loPY, hiPY;
-    s32 loPZ, hiPZ;
+    s32 loX;
+    s32 hiX;
+    s32 loY;
+    s32 hiY;
+    s32 loZ;
+    s32 hiZ;
+    s32 loPX;
+    s32 hiPX;
+    s32 loPY;
+    s32 hiPY;
+    s32 loPZ;
+    s32 hiPZ;
     s32 hitFlags;
     s32 hitFlags2;
-    u16 *prev1, *prev2, *prev3;
-    u16 *p1, *p2, *p3;
+    u16 *prev1;
+    u16 *prev2;
+    u16 *prev3;
+    u16 *p1;
+    u16 *p2;
+    u16 *p3;
     s64 rsq;
     s32 stepX;
-    s32 stepY, stepZ;
-    s32 s1, s2, s3;
-    u32 y, x;
+    s32 stepY;
+    s32 stepZ;
+    s32 s1;
+    s32 s2;
+    s32 s3;
+    u32 y;
+    u32 x;
     u16 *leaf;
     KCL_Tri *tri;
     s32 *vtx;
-    s32 rawX, rawY, rawZ;
+    s32 rawX;
+    s32 rawY;
+    s32 rawZ;
     s16 triID;
     s32 cls;
     s32 contactKind;
     const Vector3 *c;
-    s32 d1h, d2h, d3h;
-    s32 nn, nnh;
+    s32 d1h;
+    s32 d2h;
+    s32 d3h;
+    s32 nn;
+    s32 nnh;
     s32 rsc;
     s32 z108;
     s32 k1;
     s32 k0;
-    s32 z118, z11c, z120, z154;
+    s32 z118;
+    s32 z11c;
+    s32 z120;
+    s32 z154;
     s32 k3;
     s32 z15c;
     s32 k2;
@@ -276,22 +324,36 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     u32 *node;
     u32 idx;
     s32 word;
-    s32 size, mask, cy, cz;
+    s32 size;
+    s32 mask;
+    s32 cy;
+    s32 cz;
     s64 dsq;
-    s32 t, u;
-    s32 vx, vy, vz;
+    s32 t;
+    s32 u;
+    s32 vx;
+    s32 vy;
+    s32 vz;
     s32 faceDot;
     s32 v;
-    s32 dot1, dot2, dot3;
+    s32 dot1;
+    s32 dot2;
+    s32 dot3;
     volatile s16 cr[3];
     s32 nrm[3];
     s32 depth;
     s16 *fn;
-    s32 den12, den23, den31;
-    s16 *en1, *en2, *en3;
+    s32 den12;
+    s32 den23;
+    s32 den31;
+    s16 *en1;
+    s16 *en2;
+    s16 *en3;
     s32 *tpv;
     Vector3 sn;
-    s32 tp[3], vb[3], vc[3];
+    Vtx3 tp;
+    Vtx3 vb;
+    Vtx3 vc;
 
     c = &sphere.pos;
     f = kclFile;
@@ -617,9 +679,9 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         if (sphere.unk_0ec > 0 && cls == 1
                                 && !(tri->length & 0xf0000000)) {
 
-                            tp[0] = vtx[0] << 6;
-                            tp[1] = vtx[1] << 6;
-                            tp[2] = vtx[2] << 6;
+                            tp.e[0] = vtx[0] << 6;
+                            tp.e[1] = vtx[1] << 6;
+                            tp.e[2] = vtx[2] << 6;
                             /* The prism origin is read through a POINTER at five of
                                the six vertex-tail sites, not as the array.  Same
                                object, same value -- but mwcc addresses an array name
@@ -631,9 +693,9 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                                only +21 -- and is not yet understood.  Found by the
                                permuter (run 3, --stack-diffs) and then swept over
                                all 64 site subsets. */
-                            tpv = tp;
+                            tpv = tp.e;
 
-                            KCL_VERTEX(vb, en2, tpv[0], tpv[1], tpv[2])
+                            KCL_VERTEX(vb.e, en2, tpv[0], tpv[1], tpv[2])
                             /* The ROM re-reads the denominator normal for the
                                second round; mwcc otherwise CSEs the three en3[i]
                                loads across both rounds.  Same pointer, same value
@@ -641,7 +703,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                                Worth +153 equal (1047 -> 1200), and it took the
                                alignment's `delete` count from 100 to 21. */
                             en3 = f->normals[tri->edgeNormal3Idx];
-                            KCL_VERTEX(vc, en1, tpv[0], tp[1], tpv[2])
+                            KCL_VERTEX(vc.e, en1, tpv[0], tp.e[1], tpv[2])
 
                             t = -(sphere.unk_0ec + sphere.radius);
                             u =   sphere.unk_0ec - sphere.radius;
@@ -653,18 +715,18 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                                so each re-bind is a no-op -- it only denies mwcc the CSE.  Worth
                                +56 equal, but ONLY together with the cr pointer-view reads in
                                KCL_VERTEX: alone the two are -27 and -64. */
-                            tp[0] -= c->x; c = &sphere.pos;
-                            tp[1] -= c->y; c = &sphere.pos;
-                            tp[2] -= c->z;
-                            da = AXIS_DOT0(tp);
-                            vb[0] -= c->x; c = &sphere.pos;
-                            vb[1] -= c->y; c = &sphere.pos;
-                            vb[2] -= c->z;
-                            db = AXIS_DOT0(vb);
-                            vc[0] -= c->x; c = &sphere.pos;
-                            vc[1] -= c->y; c = &sphere.pos;
-                            vc[2] -= c->z;
-                            dc = AXIS_DOT0(vc);
+                            tp.e[0] -= c->x; c = &sphere.pos;
+                            tp.e[1] -= c->y; c = &sphere.pos;
+                            tp.e[2] -= c->z;
+                            da = AXIS_DOT0(tp.e);
+                            vb.e[0] -= c->x; c = &sphere.pos;
+                            vb.e[1] -= c->y; c = &sphere.pos;
+                            vb.e[2] -= c->z;
+                            db = AXIS_DOT0(vb.e);
+                            vc.e[0] -= c->x; c = &sphere.pos;
+                            vc.e[1] -= c->y; c = &sphere.pos;
+                            vc.e[2] -= c->z;
+                            dc = AXIS_DOT0(vc.e);
                             if (da >= t && da <= u
                              && db >= t && db <= u
                              && dc >= t && dc <= u)

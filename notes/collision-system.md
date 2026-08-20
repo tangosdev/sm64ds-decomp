@@ -538,9 +538,9 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   it shares the octree walk verbatim with the already-matched `dBgCh_Gnd` twin, so it
   is the calibration run for 3b. Its recorded floor is a `this` register allocation
   (r7 vs r8) at 2004/b56.
-- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 443 divergences /
-  1335 equal / ratio 0.7511, and 1,777 instructions against the ROM's 1,778** - one
-  short. It began the previous session at 1213 / 565 / 0.3203.
+- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 440 divergences /
+  1338 equal / ratio 0.7521, and the STACK FRAME IS EXACT** - `sub sp,#0x1b4` and 102
+  slots, both the ROM's. It began the previous session at 1213 / 565 / 0.3203.
 
   Progression: 565 -> 601 (block layout) -> 816 (declaration order) -> 825 (edge
   blocks) -> 855 (min/max duplicate arms) -> 1047 (a fresh-context pass) -> **1304**
@@ -561,6 +561,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   | **+6** | six branch-polarity flips in the Voronoi dispatch - `if (MUL10(nn, dotA) > dotB) goto edgeN; goto vXX;`. The ROM branches *into* the vertex block. Exactly +1 each, additive, all 64 subsets swept |
   | **+42** | the prism origin read through a pointer alias `tpv` at five of the six vertex-tail sites. Found by the permuter, then swept over all 64 subsets |
   | **+31** | two declaration moves, `rawX/rawY/rawZ` and `den12/den23/den31`. Not the same mechanism - this one is the frame. Found by a greedy sweep over **every declaration line x every position**, 3,135 compiles a round, converged in three |
+  | **+29** | **the frame lever.** `tp`/`vb`/`vc` retyped as `Vtx3` - an aggregate with a user-declared empty destructor - because mwccarm was scalarizing `vb` and `vc` where the ROM keeps them as arrays. Frame `0x1bc -> 0x1b4`, slots `105 -> 102`, both exactly the ROM's, and the load deficit reaches zero. **This one is +29 on the anchored count and only +3 on `equal`** |
 
   After these, the structure is essentially finished: **27 instructions of drift
   summed over all 35 call-gap regions** (was 39, and before that a single region was
@@ -584,7 +585,12 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   | after +153 | 1200 | 558 / 1778 (0.3138) | 1745 |
   | after +56 / +6 | 1262 | 574 / 1778 (0.3228) | 1752 |
   | after +42 | 1304 | 629 / 1778 (0.3538) | 1777 |
-  | now | **1335** | **656 / 1778 (0.3690)** | **1777** |
+  | after +31 | 1335 | 656 / 1778 (0.3690) | 1777 |
+  | now | **1338** | **685 / 1778 (0.3853)** | 1780 |
+
+  That last row is the case for keeping the anchored metric. The frame fix moved
+  `equal` by **three** and the anchored count by **twenty-nine**; judged on `equal`
+  alone it would have read as noise and been thrown away.
 
   Both metrics move together at every step. **Rebuild the anchored check before
   believing any future gain on this function.**
