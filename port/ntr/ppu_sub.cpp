@@ -1795,6 +1795,11 @@ int head_trace_on(void)
     static int on = -1;
     if (on < 0) {
         const char *s = std::getenv("SM64DS_HEADROOM_TRACE");
+        on = s && *s && *s != '0';
+    }
+    return on;
+}
+
 /* ---- THE SEAM STRADDLE: the same hole with the band taken away -------------
  *
  * See the note over ppu_band_continuity in ntr/ppu.h for what this is. In one
@@ -1963,6 +1968,8 @@ void head_paint(uint32_t *dst, int dst_w, const StackLayout &lay)
                      "a sprite over the top screen's first row and were "
                      "reconstructed\n", g_head_frame, lay.head_ds, lay.head_ds,
                      px_drawn, lay.w - n_free, lay.w);
+}
+
 /* COMPOSE FRAMES SINCE THE PROGRAM STARTED, for the band continuity counter's
    reason: the claim this pass makes is about a SEQUENCE -- an object drawn on
    one half, then on the other -- and "no frame in it is missing" is not
