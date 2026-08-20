@@ -549,8 +549,38 @@ void func_ov006_020e20bc(char *self, int idx)
     port_mg_curling_collide_020e20bc(self, idx);
 }
 
-/* an arm9 address with no config symbol at all, the func_02054c80 shape */
-int func_0202e78c(void *)                   { mg_trap("func_0202e78c"); return 0; }
+/* ---- SEATED: GX::DisableAllBanks ------------------------------------------
+ *
+ * NOT A TRAP ANY MORE, and it was the missing airship. 0x0202e78c is
+ * _ZN2GX15DisableAllBanksEv in config/arm9/symbols.txt: thirteen calls, one
+ * per VRAM bank family, each already matched in src/ and already in this
+ * link (func_02053ee0..func_02054018). The minigame framework's graphics init
+ * (func_ov004_020b265c -> func_ov004_020b2980) calls it FIRST, so every bank
+ * the 3D game had mapped is released before InitResources re-banks for 2D.
+ * With this trapped as return-0, scene 368's engine A BG2 character load
+ * (LoadFile 0x46, the Bob-omb Squad airship hull) landed in whatever banking
+ * the 3D game left behind, the layer read as 8192/8192 transparent texels,
+ * and the ship flew with its wings and no body. That census line was read
+ * tonight as "there is nothing above the top screen to draw"; it was this.
+ *
+ * The call order is the ROM's, read off the disassembly at 0x0202e78c, not
+ * alphabetical and not the symbol table's. */
+extern "C" int func_02053f58(void); extern "C" int func_02054018(void);
+extern "C" int func_02054004(void); extern "C" int func_02053f6c(void);
+extern "C" int func_02053fa8(void); extern "C" int func_02053f94(void);
+extern "C" int func_02053f80(void); extern "C" int func_02053fe0(void);
+extern "C" int func_02053fbc(void); extern "C" int func_02053f44(void);
+extern "C" int func_02053f30(void); extern "C" int func_02053f08(void);
+extern "C" int func_02053ee0(void);
+
+int func_0202e78c(void *)
+{
+    func_02053f58(); func_02054018(); func_02054004(); func_02053f6c();
+    func_02053fa8(); func_02053f94(); func_02053f80(); func_02053fe0();
+    func_02053fbc(); func_02053f44(); func_02053f30(); func_02053f08();
+    func_02053ee0();
+    return 0;
+}
 
 /* THE WALL WAS HERE AND IT IS GONE. Run mg5, lane BASESET.
  *
