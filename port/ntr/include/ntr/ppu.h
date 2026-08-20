@@ -154,9 +154,14 @@ struct StackLayout {
     int band_y;        // first row of the gap band, always SCREEN_H
     int band_h;        // gap_ds * scale, host rows; 0 with no gap
     int bottom_y;      // first row of the bottom screen, SCREEN_H + band_h
-    int fill_mode;     // GAP_FILL_SOLID or GAP_FILL_AMBIENT
+    int fill_mode;     // GAP_FILL_SOLID or GAP_FILL_AMBIENT; peek ignores it
     uint32_t fill_color;   // 0xFFRRGGBB, GAP_FILL_SOLID only
-    int peek;          // 1: draw the band's own hidden sprites over the fill
+    // 1: the band's own hidden sprites, on a plain black backdrop. PEEK
+    // OVERRIDES THE FILL: with peek on the band is a view of what is
+    // really in those rows, not decoration, and a fill behind it would
+    // put something over the answer. Black is the absence of a fill
+    // rather than a fifth one.
+    int peek;
 };
 
 enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1 };

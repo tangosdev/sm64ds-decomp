@@ -7,8 +7,12 @@ Named so a reader can tell them apart without opening them:
     nogap      MinigameGap false -- the picture before this feature
     ambient    the default fill
     solid      a flat colour, so the band's extent is unmistakable
-    peekon     ambient, with the band's own hidden sprites over it
-    peekoff    ambient, without them (the pair for peekon)
+    peekon     the band's own hidden sprites on a plain black backdrop.
+               PEEK OVERRIDES THE FILL, so this row's GapFillMode is ignored
+               by design and the backdrop is black rather than the ambient
+               wash; see hal/host_settings.cpp.
+    peekoff    the same scene with peek off, which is the ambient fill again
+               (the pair for peekon)
 
 `python tools/gapshots.py <outdir>`.
 """
@@ -18,6 +22,8 @@ import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import gapproof as G
+
+SHEET_SUFFIX = os.environ.get("GAPSHEET_SUFFIX", "")
 
 GAP = {366: 48, 368: 32, 374: 32, 376: 48, 378: 32, 390: 32}
 
@@ -46,7 +52,7 @@ def to_png(bmp, png):
     return True
 
 
-def seam_sheet(outdir, sc, g):
+def seam_sheet(outdir, sc, g, suffix=""):
     """One PNG per scene showing the seam four ways, side by side.
 
     A full 512x864 capture is mostly two screens nobody is judging; the
@@ -80,8 +86,11 @@ def seam_sheet(outdir, sc, g):
     for c in crops:
         sheet.paste(c, (x, (hmax - c.height) // 2))
         x += c.width + pad
-    out = os.path.join(outdir, "s%d_G%d_seam_nogap-ambient-solid-peek.png"
-                       % (sc, g))
+    # the suffix keeps an earlier sheet beside a new one, which is the
+    # whole point when the change under review is what one panel looks like
+    out = os.path.join(outdir,
+                       "s%d_G%d_seam_nogap-ambient-solid-peek%s.png"
+                       % (sc, g, suffix))
     sheet.save(out)
     return out
 
@@ -103,7 +112,7 @@ def main(outdir, scenes):
             shutil.move(tmp, dst)
             png = to_png(dst, os.path.join(outdir, name + ".png"))
             print("%-28s %dx%d%s" % (name, w, h, "  +png" if png else ""))
-        sheet = seam_sheet(outdir, sc, GAP[sc])
+        sheet = seam_sheet(outdir, sc, GAP[sc], SHEET_SUFFIX)
         if sheet:
             print("%-28s %s" % ("seam sheet", os.path.basename(sheet)))
 

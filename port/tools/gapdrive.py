@@ -155,18 +155,38 @@ def rowspans(rows):
 
 
 def check_peek(scene):
+    """Peek's contract in two halves.
+
+    PEEK ON paints the band BLACK and draws only what the two engines really
+    submitted for those rows, so every non-black band pixel is content and the
+    count of them is the measurement. The fill keys are set to a loud magenta
+    on this run ON PURPOSE: peek is supposed to ignore them, so a single
+    magenta pixel in the band would be the override failing, and the check
+    reports magenta separately from non-black for exactly that reason.
+
+    PEEK OFF is the pair, with the same magenta fill, and its band must be
+    magenta everywhere -- which is what says the two paths did not swap."""
     g = GAP[scene]
     band_h = 2 * g
-    fill = (0xff, 0x00, 0xff)
+    magenta = (0xff, 0x00, 0xff)
+    black = (0, 0, 0)
     off = cap(scene, "peekoff", {"GapFillMode": "solid", "GapColor": MAGENTA,
                                  "GapPeek": False})
     on = cap(scene, "peekon", {"GapFillMode": "solid", "GapColor": MAGENTA,
                                "GapPeek": True})
-    n_off, rows_off, w, h = band_stats(off, band_h, fill)
-    n_on, rows_on, _, _ = band_stats(on, band_h, fill)
-    print("  peek OFF: %d non-fill band pixels" % n_off)
-    print("  peek ON : %d non-fill band pixels, in host band rows %s" %
-          (n_on, rowspans(rows_on)))
+    n_off, _, w, _ = band_stats(off, band_h, magenta)
+    n_on, rows_on, _, _ = band_stats(on, band_h, black)
+    n_on_mag, _, _, _ = band_stats(on, band_h, magenta)
+    total = band_h * w
+    print("  peek OFF: %d of %d band pixels are not the magenta fill" %
+          (n_off, total))
+    print("  peek ON : %d of %d band pixels are not black (%.4f%%), in host "
+          "band rows %s" % (n_on, total, 100.0 * n_on / total,
+                            rowspans(rows_on)))
+    print("  peek ON : %d of %d band pixels are BLACK (%.4f%%)" %
+          (total - n_on, total, 100.0 * (total - n_on) / total))
+    print("  peek ON : %d band pixels carry the magenta fill colour "
+          "(0 = the fill keys are correctly ignored)" % (total - n_on_mag))
     print("  DS band rows carrying peek pixels: %s of 0..%d" %
           (rowspans([(k // 2, c) for k, c in rows_on if k % 2 == 0]), g - 1))
     return n_off, n_on, rows_on

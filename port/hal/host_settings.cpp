@@ -417,10 +417,23 @@ const char *const RUN_MODE_KEY[3] = { "button", "analog", "auto" };
                     launcher's checkbox is the INVERSE of this key: ticking
                     "remove minigame gap" writes false, and false pulls the
                     two screens back together and puts the seam jump back.
-     GapFillMode    "ambient" (default) or "solid".
-     GapColor       "#RRGGBB" for the solid fill. Default "#000000".
-     GapPeek        false (default). True draws the sprites that are inside
-                    the band over the fill.
+     GapFillMode    "ambient" (default) or "solid". Ignored when GapPeek is
+                    true; see below.
+     GapColor       "#RRGGBB" for the solid fill. Default "#000000". Ignored
+                    when GapPeek is true; see below.
+     GapPeek        false (default). True draws the sprites that are genuinely
+                    inside the band, on a PLAIN BLACK backdrop.
+
+   PEEK OVERRIDES THE FILL, and that is a decision about what the mode is FOR
+   rather than a shortcut. With peek off the band is decoration and these two
+   keys are the player's taste in it. With peek on the band stops being
+   decoration and becomes a view of what is actually in those rows, and the
+   true state of a row with no sprite in it is empty. A fill behind that would
+   put something over the answer and call the mixture the answer: an ambient
+   wash blurs into the sprites it sits behind, and a chosen colour cannot be
+   told apart from a sprite of the same colour. So peek paints black, which is
+   not a fifth fill mode but the absence of one, and every non-black pixel in
+   the band is then something the game really submitted.
 
    All four are optional and each falls back on its own, so a settings.json
    written by a launcher that predates any of them is read exactly as a file

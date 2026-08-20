@@ -919,18 +919,41 @@ void band_fill_ambient(uint32_t *dst, int dst_w, const StackLayout &lay)
     }
 }
 
-void band_fill(uint32_t *dst, int dst_w, const StackLayout &lay)
+void band_flat(uint32_t *dst, int dst_w, const StackLayout &lay, uint32_t c)
 {
-    if (lay.band_h <= 0) return;
-    if (lay.fill_mode == GAP_FILL_AMBIENT) {
-        band_fill_ambient(dst, dst_w, lay);
-        return;
-    }
-    const uint32_t c = lay.fill_color | 0xFF000000u;
     for (int k = 0; k < lay.band_h; ++k) {
         uint32_t *out = dst + (size_t)(lay.band_y + k) * dst_w;
         for (int x = 0; x < lay.w; ++x) out[x] = c;
     }
+}
+
+/* WHAT GOES BEHIND THE BAND'S CONTENT, and PEEK OVERRIDES THE FILL.
+ *
+ * With peek off the band is decoration and the player picks it: an ambient
+ * wash of the two pictures around it, or a flat colour.
+ *
+ * With peek on it is not decoration any more, it is a view of what is actually
+ * there, and the true state of a band row with no sprite in it is EMPTY. A fill
+ * behind that content would be this program drawing something over the answer
+ * and calling the mixture the answer: an ambient wash blurs into the sprites it
+ * sits behind, and a chosen colour is indistinguishable from a sprite of the
+ * same colour. Black is not a fifth fill mode, it is the absence of one, and it
+ * is what makes "there is nothing in that row" readable as nothing.
+ *
+ * So GapFillMode and GapColor apply only when GapPeek is false, and the
+ * settings note in hal/host_settings.cpp says so in those words. */
+void band_fill(uint32_t *dst, int dst_w, const StackLayout &lay)
+{
+    if (lay.band_h <= 0) return;
+    if (lay.peek) {
+        band_flat(dst, dst_w, lay, 0xFF000000u);
+        return;
+    }
+    if (lay.fill_mode == GAP_FILL_AMBIENT) {
+        band_fill_ambient(dst, dst_w, lay);
+        return;
+    }
+    band_flat(dst, dst_w, lay, lay.fill_color | 0xFF000000u);
 }
 
 /* ---- PEEK: the band's own hidden sprites -----------------------------------
@@ -1174,7 +1197,10 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
     if (!band) {
         band = (BandPixel *)std::calloc((size_t)GAP_DS_MAX * 256,
                                         sizeof *band);
-        if (!band) return;              /* no peek this run; the fill stands */
+        /* no peek this run. band_fill has already painted black, which is
+           an empty band rather than a wrong one: peek's own answer for a
+           row with nothing in it. */
+        if (!band) return;
     }
     std::memset(band, 0, sizeof(BandPixel) * (size_t)lay.gap_ds * 256);
 
