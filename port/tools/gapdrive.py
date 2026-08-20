@@ -192,6 +192,109 @@ def check_peek(scene):
     return n_off, n_on, rows_on
 
 
+# ---- the band's memory -----------------------------------------------------
+#
+# WHY THESE RUNS ARE WINDOWED AND THE REST ARE NOT. A headless scene run
+# composes ONCE, at the end, when the capture asks for the image -- so it has
+# exactly one ambient frame and a follower cannot be seen at all: it is seeded
+# and read on the same frame, and the band is the cold read by construction.
+# That makes headless the right mode for every other claim here and useless for
+# this one. SM64DS_SCENE_WINDOW=1 runs the real frame loop, so the band gets a
+# history, and the capture at the end is the last frame of it.
+#
+# A WINDOWED RUN FLASHES A REAL WINDOW. Expected.
+
+# The scripted slingshot launch in Bob-omb Squad: grab the ball where it rests
+# (128, 40), drag to (128, 180), let go. See src/func_ov006_020fe2e4.c for the
+# grab -- it arms on the press EDGE and captures ball-minus-stylus, so the press
+# has to land on the ball or the pull holds the wrong offset -- and
+# src/func_ov006_020fe394.c for the release, which fires towards (128, 32) with
+# a speed the pull distance sets. Straight up, across the band.
+LAUNCH = "200:128:40,201-210:128:180,211-215"
+
+
+def ambrun(tag, frames=400, probe=None):
+    """One windowed ambient run: the capture, and the per-frame trace under it."""
+    path = os.path.join(OUT, "amb_%s.bmp" % tag)
+    extra = {"SM64DS_SCENE_WINDOW": "1", "SM64DS_GAP_AMB_TRACE": "1"}
+    if probe:
+        extra["SM64DS_TOUCH_PROBE"] = probe
+    r = G.scene_run(368, frames, path, settings={"GapFillMode": "ambient"},
+                    extra_env=extra)
+    text = r.stdout + r.stderr
+    open(os.path.join(OUT, "amb_%s.log" % tag), "w").write(text)
+    return r, text, (path if os.path.exists(path) else None)
+
+
+def check_glow(tag, text, path):
+    """The three parities, from the trace and the capture and nothing else.
+
+    ONE  the follower. Feed this checker's OWN AmbientGlow the t_raw/b_raw
+         series the port traced, and it must produce the port's t_out/b_out on
+         every frame. Two implementations of the memory agreeing.
+    TWO  the samples. The LAST traced frame is the frame the capture holds, so
+         its t_raw/b_raw must equal what this checker reads off the capture's
+         own two edge rows. That is what stops ONE from being a check of the
+         port against itself: the input series is anchored to real pixels.
+    THREE the band. Draw the band from the last frame's SMOOTHED columns and
+         diff it against the capture's band, which must be zero pixels.
+    """
+    fr = G.read_trace(text)
+    print("  frames traced: %d" % len(fr))
+    if not fr or not path:
+        print("  NO TRACE OR NO CAPTURE -- nothing checked")
+        return False
+
+    glow = G.AmbientGlow()
+    bad_frames, first_bad = 0, None
+    last = None
+    for rec in fr:
+        tops, bots = glow.sample(rec["t_raw"], rec["b_raw"])
+        if tops != rec["t_out"] or bots != rec["b_out"]:
+            bad_frames += 1
+            if first_bad is None:
+                first_bad = rec["f"]
+        last = (tops, bots)
+    print("  follower: %d of %d frames differ from the re-derivation%s"
+          % (bad_frames, len(fr),
+             "" if first_bad is None else " (first at f%d)" % first_bad))
+
+    w, h, rows = G.read_bmp(path)
+    band_h = h - 2 * SCREEN_H
+    got_t = G.sample_cols(w, rows[SCREEN_H - 1])
+    got_b = G.sample_cols(w, rows[SCREEN_H + band_h])
+    off = sum(1 for c in range(G.AMBIENT_COLS)
+              if got_t[c] != fr[-1]["t_raw"][c] or got_b[c] != fr[-1]["b_raw"][c])
+    print("  samples : %d of %d columns of the last traced frame disagree with "
+          "the capture's own edge rows" % (off, 2 * G.AMBIENT_COLS))
+
+    want = G.band_from_cols(w, band_h, last[0], last[1])
+    worst, pix = [0, 0, 0], 0
+    for k in range(band_h):
+        for x in range(w):
+            d = [abs(rows[SCREEN_H + k][x][i] - want[k][x][i]) for i in range(3)]
+            if max(d):
+                pix += 1
+                worst = [max(worst[i], d[i]) for i in range(3)]
+    print("  band    : %d of %d band pixels differ from the re-derivation, "
+          "max per-channel delta r%d g%d b%d"
+          % (pix, band_h * w, worst[0], worst[1], worst[2]))
+    return bad_frames == 0 and off == 0 and pix == 0
+
+
+def glow_series(text, col, lo, hi):
+    """The per-frame edge colours of one column: the claim about the picture."""
+    fr = {r["f"]: r for r in G.read_trace(text)}
+    print("  frame   top edge raw    drawn        bottom edge raw drawn")
+    for f in range(lo, hi + 1):
+        r = fr.get(f)
+        if not r:
+            continue
+        print("  f%-6d %-15s %-12s %-15s %s"
+              % (f, r["t_raw"][col], r["t_out"][col], r["b_raw"][col],
+                 r["b_out"][col]))
+
+
 def touchmap(scene, points):
     """Drive the real mappers over client points and print what they answer."""
     path = os.path.join(OUT, "s%d_touch.bmp" % scene)
@@ -237,6 +340,32 @@ if __name__ == "__main__":
             if p:
                 w, h, _ = G.read_bmp(p)
                 print("  MinigameGap false -> %dx%d (want 512x768)" % (w, h))
+    elif step == "glow":
+        # STILL first: with nothing moving at the edges the follower has to be
+        # invisible, and both the re-derivation and the cold read must land on
+        # the capture. That is the regression half.
+        print("scene 368 windowed, no launch")
+        r, text, path = ambrun("still")
+        ok_still = check_glow("still", text, path)
+        if path:
+            w, h, rows = G.read_bmp(path)
+            band_h = h - 2 * SCREEN_H
+            cold = G.expect_ambient(w, band_h, rows[SCREEN_H - 1],
+                                    rows[SCREEN_H + band_h])
+            n = sum(1 for k in range(band_h) for x in range(w)
+                    if rows[SCREEN_H + k][x] != cold[k][x])
+            print("  cold    : %d of %d band pixels differ from the COLD read "
+                  "(0 = the band has converged on a still scene)"
+                  % (n, band_h * w))
+        # then the crossing, which is the behaviour half
+        print("scene 368 windowed, scripted slingshot launch")
+        r, text, path = ambrun("cross", probe=LAUNCH)
+        ok_cross = check_glow("cross", text, path)
+        col = int(sys.argv[2]) if len(sys.argv) > 2 else 12
+        lo = int(sys.argv[3]) if len(sys.argv) > 3 else 228
+        print("  column %d through the crossing:" % col)
+        glow_series(text, col, lo, lo + 24)
+        print("verdict: %s" % ("OK" if ok_still and ok_cross else "FAILED"))
     elif step == "touch":
         touchmap(376, [(4, 4), (4, 500), (4, 800), (4, 900), (4, 1000)])
     elif step == "cap":

@@ -27,6 +27,7 @@ be read by the next battery run.
 import hashlib
 import json
 import os
+import re
 import struct
 import subprocess
 import sys
@@ -111,10 +112,25 @@ def avg_span(row, s0, s1):
     return (r // n, g // n, b // n)
 
 
+def sample_cols(w, edge):
+    """One edge row's twenty-four column colours, as the fill reads them."""
+    return [avg_span(edge, *col_bounds(w, c)[2:]) for c in range(AMBIENT_COLS)]
+
+
 def expect_ambient(w, band_h, top_edge, bot_edge):
-    """The band the description asks for, rows[k][x] = (r, g, b)."""
-    tops = [avg_span(top_edge, *col_bounds(w, c)[2:]) for c in range(AMBIENT_COLS)]
-    bots = [avg_span(bot_edge, *col_bounds(w, c)[2:]) for c in range(AMBIENT_COLS)]
+    """The band the description asks for, rows[k][x] = (r, g, b).
+
+    THE COLD READ, which is what a band with no history draws: the first
+    ambient frame of a scene, and every frame of a still one. A run whose
+    band has been following a moving edge is band_from_cols() of what the
+    follower says instead -- see AmbientGlow.
+    """
+    return band_from_cols(w, band_h, sample_cols(w, top_edge),
+                          sample_cols(w, bot_edge))
+
+
+def band_from_cols(w, band_h, tops, bots):
+    """The band drawn from twenty-four column colours per edge."""
     centres = [col_centre(w, c) for c in range(AMBIENT_COLS)]
 
     def lerp_x(vals, x):
@@ -144,6 +160,125 @@ def expect_ambient(w, band_h, top_edge, bot_edge):
             row.append(tuple((t[i] * (den - num) + b[i] * num) // den
                              for i in range(3)))
         out.append(row)
+    return out
+
+
+# ---- the band's memory, re-derived -----------------------------------------
+# A SECOND IMPLEMENTATION of ntr/ppu_sub.cpp's ambient follower, on the same
+# terms as expect_ambient above: written from the description of what it does,
+# not transcribed from the C, in the same integer arithmetic.
+#
+# THE DESCRIPTION. Each of the twenty-four columns of each of the two edges
+# keeps two numbers per channel in 8-bit fixed point. `rest` is the settled
+# light, and it moves towards this frame's sample slowly and unconditionally.
+# `glow` is what gets drawn: it moves towards the sample FAST while the sample
+# is further from rest than glow is -- the deviation is growing, so something
+# is arriving -- and SLOWLY otherwise, which is a deviation collapsing and a
+# glow that should fade rather than snap. Every move is the ceiling of its
+# fraction of the remaining distance, at least one whole channel, and never
+# past the target, so both numbers reach the sample exactly and neither can
+# overshoot.
+#
+# WHY IT IS NOT UP-AND-DOWN. The obvious asymmetric follower attacks on a
+# rising sample and decays on a falling one. Measured, the thing that crosses
+# scene 368's seam is DARKER than the sky it crosses, so that shape would fade
+# the crossing away instead of holding it. Growing-versus-shrinking deviation
+# is direction-blind and holds both.
+
+AMBIENT_FIX_BITS = 8
+AMBIENT_ATTACK_NUM, AMBIENT_ATTACK_DEN = 7, 8      # 0.875 per frame
+AMBIENT_DECAY_NUM, AMBIENT_DECAY_DEN = 1, 15       # half-life 10.05 frames
+AMBIENT_REST_NUM, AMBIENT_REST_DEN = 1, 16         # half-life 10.71 frames
+AMBIENT_UNIT = 1 << AMBIENT_FIX_BITS
+
+
+def follow_step(d, num, den):
+    """Ceiling of num/den of d, floored at a whole channel, clamped to d."""
+    if d == 0:
+        return 0
+    a = -d if d < 0 else d
+    s = (a * num + den - 1) // den
+    if s < AMBIENT_UNIT:
+        s = AMBIENT_UNIT
+    if s > a:
+        s = a
+    return s if d > 0 else -s
+
+
+class AmbientGlow(object):
+    """The two edges' followers. Feed it sample() per composed frame, in order.
+
+    Seeded from the first frame's own sample, so a scene's first band is the
+    direct read exactly and not a ramp up out of black; the port drops the
+    whole thing at every layout latch, so one minigame's glow never lights the
+    next one's band.
+    """
+
+    def __init__(self):
+        self.rest = None
+        self.glow = None
+
+    def sample(self, tops, bots):
+        """One frame. tops/bots are 24 (r, g, b) each; returns the pair drawn."""
+        want = [list(tops), list(bots)]
+        if self.rest is None:
+            self.rest = [[[v << AMBIENT_FIX_BITS for v in col] for col in edge]
+                         for edge in want]
+            self.glow = [[[v << AMBIENT_FIX_BITS for v in col] for col in edge]
+                         for edge in want]
+        out = []
+        for e in range(2):
+            edge = []
+            for c in range(AMBIENT_COLS):
+                px = []
+                for i in range(3):
+                    t = want[e][c][i] << AMBIENT_FIX_BITS
+                    rest = self.rest[e][c][i]
+                    rest += follow_step(t - rest, AMBIENT_REST_NUM,
+                                        AMBIENT_REST_DEN)
+                    self.rest[e][c][i] = rest
+                    glow = self.glow[e][c][i]
+                    dt = abs(t - rest)
+                    dg = abs(glow - rest)
+                    if dt >= dg:
+                        glow += follow_step(t - glow, AMBIENT_ATTACK_NUM,
+                                            AMBIENT_ATTACK_DEN)
+                    else:
+                        glow += follow_step(t - glow, AMBIENT_DECAY_NUM,
+                                            AMBIENT_DECAY_DEN)
+                    self.glow[e][c][i] = glow
+                    px.append(glow >> AMBIENT_FIX_BITS)
+                edge.append(tuple(px))
+            out.append(edge)
+        return out[0], out[1]
+
+
+# ---- SM64DS_GAP_AMB_TRACE ---------------------------------------------------
+# The port's own per-frame line, parsed. Four lists of twenty-four hex colours:
+# what each edge's columns SAMPLED (t_raw, b_raw) and what the fill drew them
+# as (t_out, b_out). The raws are this checker's input and the outs are what it
+# has to land on.
+
+TRACE_RE = re.compile(r"\[ambtrace\] f(\d+) (.*)")
+TRACE_KEYS = ("t_raw", "t_out", "b_raw", "b_out")
+
+
+def read_trace(text):
+    """[{'f': n, 't_raw': [(r,g,b)]*24, ...}] in frame order."""
+    out = []
+    for line in text.splitlines():
+        m = TRACE_RE.match(line.strip())
+        if not m:
+            continue
+        rec = {"f": int(m.group(1))}
+        for field in m.group(2).split():
+            k, _, v = field.partition("=")
+            if k not in TRACE_KEYS:
+                continue
+            rec[k] = [(int(c[0:2], 16), int(c[2:4], 16), int(c[4:6], 16))
+                      for c in v.split(",")]
+        if all(k in rec for k in TRACE_KEYS):
+            out.append(rec)
     return out
 
 

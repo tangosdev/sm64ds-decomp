@@ -83,6 +83,11 @@ const ntr::StackLayout *hal_screen_layout(void)
        for the same reason: it is per scene, and installing clears the cached
        OAM attributes so nothing crosses from the last minigame into this one */
     hal_band_continuity_latch(scene);
+    /* and the ambient fill's memory, dropped here for the third time in the
+       same sentence: the band now FOLLOWS the two edge rows rather than reading
+       them cold, and a decaying glow that outlived its own minigame would light
+       the next one's first frames off the last one's picture. */
+    ntr::ppu_band_ambient_reset();
     g_have = 1;
     /* THE GENERATION IS THE SHAPE'S, not the latch's. walk_window re-sizes the
        window and re-shapes the DIB header off this counter, and a scene change
