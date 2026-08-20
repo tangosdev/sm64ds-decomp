@@ -137,6 +137,51 @@
 //     gap 24  0x01ffc910  192 insn   norm-miss  14   shape-miss  0
 //     everything else                norm-miss 0-10, shape-miss 0-1
 //
+// ========= THE REMAINING DEFECT, DECOMPOSED AND LARGELY CLOSED OFF ==========
+//
+// All 253 remaining mismatches by KIND (position-for-position):
+//
+//     exact 1490 | slot-number-only 136 | register-name-only 32 | both 3 |
+//     shape or order 83
+//
+// So 136 of 253 -- over half -- are positions where the instruction is RIGHT and
+// only the stack offset differs.  Our frame is a PERMUTATION of the ROM's at the
+// same 0x1b4 size: 99 distinct slots each side, 80 of 103 carrying identical
+// traffic, and the differences form a near-perfect bijection over 28 pairs.
+// Four slots are displaced by exactly three words:
+//
+//     ROM  0xc8 0xd0 0xd8 0xe0   (stride 8)
+//     cand 0xd4 0xdc 0xe4 0xec   each +0xc
+//
+// and the three busiest slots in the function are simply relocated: the ROM's
+// 0x94 / 0x98 / 0x9c carry 22 / 11 / 14 references, and the same three variables
+// live at our 0xc4 / 0xb4 / 0xb0.
+//
+// THERE ARE TWO SLOT POOLS, AND DECLARATION ORDER ONLY CONTROLS ONE OF THEM.
+// Swapping each adjacent pair of declarations and diffing the slot traffic gives
+// the declaration -> slot map directly.  61 of the 91 adjacent swaps are
+// BYTE-NEUTRAL; the 30 that are not all move slots in 0xc..0xb8 or the four
+// Vector3s at 0x180+.  Those are the function-wide locals, and for them mwccarm
+// really does assign in declaration order:
+//
+//     33 rawX -> 0x94   34 rawY -> 0x98   35 rawZ -> 0x9c   80 depth -> 0xb0
+//     81 fn   -> 0xb4   21 rsq  -> 0x60   30 leaf -> 0x88   31 tri   -> 0x8c
+//
+// The hot loop-local spills are NOT in that pool.  Proof, not inference: move
+// `en3`'s declaration to every one of the 91 other positions and record which
+// slot it lands in.  **It lands at 0xc4 all 91 times.  It never reaches 0x94.**
+// Moving en3, fn and depth together to where the raw* trio sits -- all 18
+// distinct orderings -- costs two instructions and helps nothing.
+//
+// So the 136 slot-only mismatches are NOT reachable from the declaration axis,
+// and further declaration-order work on this function is wasted effort.  What
+// would move them is a change to en3's LIVE RANGE, i.e. to the loop body, not to
+// the declaration block.  That is the open question, and it is the last big one.
+//
+// This is also the precise sense in which "declaration order IS the stack layout"
+// is true for the 0x498 dBgCh_Gnd twin and false here: the twin has only the
+// function-wide pool.
+//
 // ============ RE-SWEPT AND AT A LOCAL OPTIMUM ON THIS STRUCTURE =============
 //   * declaration order at full resolution: 93 movable units, 8,464 candidates,
 //     ZERO improving moves.  (An earlier run of this reported "converged" after
@@ -155,6 +200,11 @@
 //     `mov r2,r3` is EMERGENT once the shifts hoist, not a source construct.
 //     Leave SqrtRaw alone.
 //   * multiply operand order in AXIS_DOT0 / EDGENORMAL_DOT, all 8.
+//   * declaration PAIR SWAPS -- 2,000 of 4,278 scored before the run was killed,
+//     none better.  Combined with the converged single-move sweep and the 91
+//     adjacent swaps, the declaration axis is closed three ways.
+//   * moving en3 alone to all 91 other positions: byte-neutral or worse in every
+//     one, and its slot never changes.
 //
 // ============ MEASURED AND DEAD, INCLUDING OUT-OF-FUNCTION ==================
 //   * A PRAGMA.  The byte-matched sibling that wraps this function carries
