@@ -1816,7 +1816,33 @@ static int  __fastcall pch_init(void *s, void *)
     return r;
 }
 static int  __fastcall pch_beh(void *s, void *)
-{ PCH_SLOT(6);  return func_ov006_020fee24(s); }
+{
+    PCH_SLOT(6);
+    /* SM64DS_PCH_SCROLL_TRACE=1: the pan channels and the three ship slots,
+       once per frame, stderr. TEMPORARY probe for the clipped-ships defect:
+       ships copy -channel0.y at spawn, so the value here IS their altitude. */
+    static int scroll_trace = -1;
+    if (scroll_trace < 0) {
+        const char *e = std::getenv("SM64DS_PCH_SCROLL_TRACE");
+        scroll_trace = (e && e[0] && e[0] != '0') ? 1 : 0;
+    }
+    if (scroll_trace) {
+        unsigned char *b = (unsigned char *)s;
+        std::fprintf(stderr, "[pan] beh%u ch0=(%d,%d) ch1=(%d,%d) ch2=(%d,%d)",
+                     g_pch_hits[6],
+                     *(int *)(b + 0x5bfc) >> 12, *(int *)(b + 0x5c00) >> 12,
+                     *(int *)(b + 0x5bfc + 0x14) >> 12, *(int *)(b + 0x5c00 + 0x14) >> 12,
+                     *(int *)(b + 0x5bfc + 0x28) >> 12, *(int *)(b + 0x5c00 + 0x28) >> 12);
+        for (int i = 0; i < 3; i++) {
+            unsigned char *w = b + i * 0x18;
+            std::fprintf(stderr, "  ship%d live=%d y=%d", i,
+                         (int)*(unsigned char *)(w + 0x4e6d),
+                         *(int *)(w + 0x4e5c) >> 12);
+        }
+        std::fprintf(stderr, "\n");
+    }
+    return func_ov006_020fee24(s);
+}
 static int  __fastcall pch_render(void *s, void *)
 {
     PCH_SLOT(9);
