@@ -749,6 +749,86 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   Untried: forcing `KCL_VERTEX(vc)` to complete via a sequence point mwcc cannot
   schedule across, or splitting the slab test into its own function.
 
+  ### The compiler and its flags are PROVEN for this TU, not assumed
+
+  Worth settling before anyone spends time on "maybe it is the wrong compiler".
+  The ITCM `dBgW_Kc` block is one unbroken run with zero gaps between symbols:
+
+  ```
+  0x1ffb0d0  GetUnkOctreeY        0x1c    MATCHED, enrolled
+  0x1ffb0ec  GetOctreeOriginY     0x10    MATCHED, enrolled
+  0x1ffb0fc  DetectClsn(Lin)      0x734   unmatched
+  0x1ffb830  DetectClsn(SphCrr)   0x1bc8  unmatched   <- ours
+  0x1ffd3f8  DetectClsn(Gnd)      0x498   MATCHED, enrolled
+  0x1ffd890  GetTriangleOrigin    0x48    MATCHED, enrolled
+  0x1ffd8d8  GetNormal            0x48    MATCHED, enrolled
+  ```
+
+  Contiguous means **one translation unit**, and compiler flags are per-TU. Five
+  of the seven byte-match at 2004/b56 under plain `-O4,p` with **no pragma**, and
+  our target is sandwiched between matched functions on both sides. So the
+  compiler, version and flags are settled for this exact TU.
+
+  This was a live hypothesis, not a straw man: **441 files in this tree carry
+  optimisation pragmas** (`opt_strength_reduction` x169, `opt_common_subs` x157,
+  `long_calls` x92, `optimize_for_size` x26, `opt_lifetimes` x4), and
+  `opt_lifetimes` bears directly on the register-liveness problem region A has.
+  The sandwich rules it out here.
+
+  ### "Write it the way a human would" -- sound reasoning, 7 more dead variants
+
+  The draft is macro soup (`FX12`, `MUL10`, `AXIS_DOT`, `KCL_VERTEX`,
+  `EDGE_FILTER`, `VERTEX_BLOCK`). Nobody writes a 7KB function that way, and a
+  macro splices into the caller's expression tree where an inline function is
+  parsed as a unit -- so "what a person would write" and "what stops the
+  interleaving" looked like the same change. They are not:
+
+  | variant | equal | cand |
+  |---|---|---|
+  | `AXIS_DOT` as a `static inline` fn, same `&&` chain | **855, BYTE-IDENTICAL** | 1785 |
+  | inline fn holding a real `Vector3` difference | 855 (inert) | 1791 |
+  | inline fn + `Vector3` + hand-unrolled nesting | 855 (inert) | 1791 |
+  | inline fn + `Vector3` + a real loop over `verts[3]` | 830 (-25) | 1722 |
+  | inline fn, no `Vector3`, + loop | 828 (-27) | 1715 |
+  | one `s32 verts[3][3]`, unrolled reads | 846 (-9) | 1790 |
+  | same, rebuild writing through a pointer into it | 847 (-8) | 1789 |
+
+  **`static inline` is byte-identical to the macro** -- mwcc inlines it away, so
+  there is no scheduling boundary to buy. The array-aliasing idea (three separate
+  locals let mwcc prove `AXIS_DOT(tp)` independent of the code filling `vc`; one
+  array should not) does not hold either.
+
+  Ground truth on house style, from the matched sibling in the SAME TU
+  (`src/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp`): it uses **no macros and no
+  helpers at all** -- named scalar intermediates and fully written-out
+  expressions, e.g.
+
+  ```c
+  dy = -(cstd::fdiv((s32)(((s64)dx * normal[0]) >> 10)
+                  + (s32)(((s64)dz * normal[2]) >> 10), normal[1]) >> 2);
+  ```
+
+  ### The real conclusion: region A may not be reachable from local source
+
+  At `-O4,p` mwcc normalises away nearly every source-level distinction we can
+  express here -- macro vs inline (identical), array vs scalars (no dependency
+  respected), both-operand casts (narrowed back), dead sign-extensions (DCE'd),
+  fresh names for reused temporaries (coalesced back). **25 variants across 8
+  hypotheses, all dead.**
+
+  Note where the value actually came from: the biggest win of the session (+215)
+  was a **global** change, declaration order. Region-local edits bought +9 and
+  +30. So the next productive lever is probably another global one -- whole-
+  function register allocation, e.g. the permuter (`tools/permuter/`, validated,
+  scores 0 for a true match) -- rather than more region-A surgery.
+
+  ### A free readability win, banked for later
+
+  Since `static inline` is byte-identical to the macro, the whole draft could be
+  de-macroed at **zero byte cost** whenever readability is the goal. Project goal
+  order is accurate-C++-and-byte-match first, then portability, then readability,
+  so this is noted, not done.
+
   ### Where the remaining gap is, measured
 
   | region | drift | note |
