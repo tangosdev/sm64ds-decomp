@@ -3702,6 +3702,18 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
         const int on_picture = hal_present_client_to_fb(mx, my, &cx, &cy);
         const int on_sub = hal_present_client_to_sub(mx, my, &dsx, &dsy);
         g_mouse_left_down = 1;
+        /* THE MOUSE IS CAPTURED FOR THE LENGTH OF THE HOLD, so the motion and
+           the button-up keep arriving while the pointer is outside the window.
+           The STYLUS does not need this and never did, because poll_touch
+           reads GetCursorPos and GetAsyncKeyState, which are machine-global and
+           were never interrupted. g_mouse_left_down did: without a capture a
+           release outside the window delivers WM_LBUTTONUP to whatever is under
+           the pointer instead, and the hold below latched at 1 for the rest of
+           the session. Armed here rather than after the on-picture test, on
+           purpose: a press in a letterbox bar already latches the hold, and a
+           hold that latches without a capture is the half-state this closes.
+           Released in WM_LBUTTONUP. */
+        if (W.SetCapture_) W.SetCapture_(h);
         if (!on_picture) {
             if (on_sub)
                 fprintf(stderr, "[mouse] click %d,%d client is on the BOTTOM "
@@ -3724,6 +3736,9 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
     }
     case WM_LBUTTONUP:
         g_mouse_left_down = 0;
+        /* and only when the right-button look is not holding a capture of its
+           own, which mo_release owns and would lose here */
+        if (!mo_look && W.ReleaseCapture_) W.ReleaseCapture_();
         return 0;
     case WM_MOUSEWHEEL:
         mo_wheel += (short)HIWORD(w) / WHEEL_DELTA;

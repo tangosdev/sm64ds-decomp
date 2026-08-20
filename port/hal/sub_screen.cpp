@@ -325,6 +325,50 @@ unsigned char tp_rd(const unsigned char *p, int i)
 /* The stylus, from the mouse. Byte +0 is "down now" and byte +1 is THE CHANGE
    EDGE, new XOR old -- see the block above the two stores at the bottom of
    this function for the ROM derivation and for what the old spelling cost. */
+/* ---- A DRAG OWNS THE STYLUS UNTIL THE BUTTON COMES UP ---------------------
+ *
+ * ON A DS THE STYLUS CANNOT LEAVE THE SCREEN MID-DRAG. There is no edge to
+ * fall off: the panel is the whole input device, so every game on the machine
+ * was written knowing that a release is something the player DID. This port
+ * gave the player four edges the hardware has none of (the letterbox bars,
+ * the hinge band, the top screen, and the desktop past the window) and
+ * published a RELEASE the frame the cursor crossed any of them, because the
+ * surface test was what gated `down` and nothing else held it.
+ *
+ * WHAT THAT COST, from a live session: "when i drag off screen it releases the
+ * touch". On scene 368 that is the slingshot firing itself. The pull is
+ * src/func_ov006_020fe394.c and its whole body is one branch on
+ * `data_020a0de8[k * 4] != 0`: the true side keeps the ball at the captured
+ * offset, and the FALSE side is the shot. It writes 2 into the slot's state
+ * byte at +0x4f0d and either snaps the ball home or launches it. So a hand
+ * that strayed past the window while the player was pulling back did not pause
+ * the pull. It took the shot.
+ *
+ * SO THE LATCH. The first poll of a button-hold that resolves ON the surface
+ * arms `drag_own`, and from there until the PHYSICAL button comes up the
+ * stylus belongs to that drag: an off-surface point publishes the nearest
+ * point on the bottom screen rather than publishing nothing. Both mappers
+ * already compute exactly that point and already throw it away. Each one
+ * clamps its output into the screen's own range and answers inside/outside
+ * separately through the return value, so this consumes an answer that was
+ * being discarded rather than adding a second opinion about where the screen
+ * is. Display and touch keep deriving from the one StackLayout.
+ *
+ * WHAT IT DOES NOT CHANGE, and each of these is a test.
+ *   * A press that STARTS off the surface publishes nothing, exactly as
+ *     before. The latch can only be armed by a genuinely on-surface point, so
+ *     a click in a bar is still a click in a bar and THE GAP BAND'S DEAD-CLICK
+ *     RULE STILL HOLDS FOR PRESSES. What crossing the band cannot do any more
+ *     is kill a drag that is already running.
+ *   * A drag that never leaves the surface takes the same branch with the same
+ *     arithmetic: on the surface the two clamps below are no-ops.
+ *   * Byte +1 is untouched. It is still `down ^ was`, so the release edge is
+ *     still exactly one frame, and it now lands on the real button-up wherever
+ *     the cursor is, which is the whole of what the ROM means by a release.
+ *   * No top-screen coordinate is ever published for a drag. The clamp is into
+ *     the BOTTOM screen's range in both layouts; there is no branch here that
+ *     can reach the other band.
+ */
 void poll_touch(void)
 {
     unsigned char down = 0, sx = 0, sy = 0;
@@ -332,10 +376,20 @@ void poll_touch(void)
        means the button was physically down and the cursor resolved to a client
        point; `on` means that point was on the stylus surface. The pair is what
        tells "no press" apart from "a press the transform refused", and only
-       the second of those is a bug worth chasing. */
-    int live_cx = 0, live_cy = 0, live_seen = 0, live_on = 0;
-    if (!g_headless && g_on && GetCursorPos_ && ScreenToClient_ &&
-        GetAsyncKeyState_ && (GetAsyncKeyState_(VK_LBUTTON) & 0x8000)) {
+       the second of those is a bug worth chasing. `clamped` is the third
+       answer the latch adds: off the surface, and published anyway. */
+    int live_cx = 0, live_cy = 0, live_seen = 0, live_on = 0, live_clamped = 0;
+    /* THE GESTURE'S OWN STATE, and a host static on purpose rather than
+       anything in .dsstate: a save-state load must not restore a half-finished
+       drag onto a hand that is not holding the button any more. Same argument
+       the touch probe's bookkeeping makes a few lines above. */
+    static int drag_own;
+    /* THE PHYSICAL BUTTON, asked once, because it is now the thing that ends a
+       drag and no longer merely the thing that starts one. */
+    const int btn = !g_headless && g_on && GetAsyncKeyState_ &&
+                    (GetAsyncKeyState_(VK_LBUTTON) & 0x8000) ? 1 : 0;
+    if (!btn) drag_own = 0;
+    if (btn && GetCursorPos_ && ScreenToClient_) {
         POINT p;
         if (GetCursorPos_(&p) && ScreenToClient_(g_hwnd, &p)) {
             /* THE TRANSFORM HAS TWO SHAPES NOW, one per layout, and which one
@@ -365,13 +419,34 @@ void poll_touch(void)
             live_cx = (int)p.x;
             live_cy = (int)p.y;
             live_seen = 1;
-            if (on_picture && fx >= 0 && fx < ntr::SUB_W && fy >= 0 &&
-                fy < ntr::SUB_H) {
+            const int on_surface = on_picture && fx >= 0 && fx < ntr::SUB_W &&
+                                   fy >= 0 && fy < ntr::SUB_H;
+            /* the arming edge, and the only one there is */
+            if (on_surface) drag_own = 1;
+            if (on_surface || drag_own) {
+                /* THE NEAREST POINT ON THE BOTTOM SCREEN. On the surface both
+                   of these are no-ops, which is why a drag that stays on the
+                   screen cannot tell this branch from the one it replaces. */
+                const int qx = fx < 0 ? 0
+                                      : (fx >= ntr::SUB_W ? ntr::SUB_W - 1 : fx);
+                const int qy = fy < 0 ? 0
+                                      : (fy >= ntr::SUB_H ? ntr::SUB_H - 1 : fy);
                 down = 1;
-                live_on = 1;
-                sx = (unsigned char)fx;
-                sy = (unsigned char)fy;
+                live_on = on_surface;
+                live_clamped = !on_surface;
+                sx = (unsigned char)qx;
+                sy = (unsigned char)qy;
             }
+        } else if (drag_own) {
+            /* THE QUERY FAILED, NOT THE DRAG. ScreenToClient does not fail for
+               a live window, but an owned drag must not end on something that
+               is not the player's hand. Ending on anything else is the exact
+               defect this latch exists to close. Hold the record where it is:
+               `down` stays set, and feeding the published point back through
+               the two stores below leaves the last one standing. */
+            down = 1;
+            sx = data_020a0de8[2];
+            sy = data_020a0de8[3];
         }
     }
     if (g_tp_n < 0) touch_probe_parse();
@@ -489,7 +564,7 @@ void poll_touch(void)
      * BMP battery cannot see these lines and neither can stdout: this is
      * stderr, which walk_window has already pointed at playlog/. */
     {
-        static int down_was, held_from, refused_said;
+        static int down_was, held_from, refused_said, off_was;
         static unsigned char last_x, last_y;
         if (down && !down_was) {
             /* THE CLIENT POINT IS ONLY PRINTED WHEN THERE WAS ONE. A
@@ -510,11 +585,40 @@ void poll_touch(void)
             std::fflush(stderr);
             held_from = f;
             refused_said = 0;
+            off_was = 0;
         } else if (!down && down_was) {
             std::fprintf(stderr, "[touch] f%d release after %d frame(s), last "
-                         "DS (%u,%u)\n", f, f - held_from, last_x, last_y);
+                         "DS (%u,%u)%s\n", f, f - held_from, last_x, last_y,
+                         off_was ? ". The button came up OFF the stylus "
+                                   "surface, which is where the release edge "
+                                   "belongs." : "");
             std::fflush(stderr);
             refused_said = 0;
+            off_was = 0;
+        }
+        /* BOTH ENDS OF AN EXCURSION, because the middle of one is now a thing
+           that happens. A player who drags past the window edge and back gets
+           two lines and keeps ONE press between them; the old build put a
+           release here and a fresh press on the way back, and whatever the
+           player was dragging read that release as an instruction. Two lines
+           rather than one per frame, for the reason the refusal below is said
+           once: a held button over the desktop is one decision, not thirty a
+           second. */
+        if (down && live_seen) {
+            if (live_clamped && !off_was) {
+                off_was = 1;
+                std::fprintf(stderr, "[touch] f%d drag LEFT the stylus surface "
+                             "at client(%d,%d), holding at DS (%u,%u) until "
+                             "the button comes up\n",
+                             f, live_cx, live_cy, sx, sy);
+                std::fflush(stderr);
+            } else if (!live_clamped && off_was) {
+                off_was = 0;
+                std::fprintf(stderr, "[touch] f%d drag back ON the stylus "
+                             "surface at client(%d,%d) -> DS (%u,%u)\n",
+                             f, live_cx, live_cy, sx, sy);
+                std::fflush(stderr);
+            }
         }
         /* THE LATCH CLEARS ON THE BUTTON, NOT ON THE TOUCH. `refused_said`
            stops a held press over the top screen printing thirty lines a

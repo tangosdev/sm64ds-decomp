@@ -1042,3 +1042,219 @@ VERIFIED, run link60 lane CT1: a scene-374 click-driver run now ends with
     [click] release at exit (button was not marked down; released anyway)
 
 which is the branch the old `if (g_ct_down)` skipped entirely.
+
+================================================================================
+10. THE DRAG THAT LEFT THE SCREEN (2026-08-20, run mg5, lane DRAGCAP)
+================================================================================
+
+Worktree C:/tmp/sm64ds-snd, branch port/drag-capture, off 0c0419c75. Private
+build C:/tmp/sm64ds-snd/build/port, CMAKE_HOME_DIRECTORY verified
+C:/tmp/sm64ds-snd/port.
+
+REPORTED FROM LIVE PLAY: "when i drag off screen it releases the touch. Can it
+not do that incase i go off screen so it doesnt release on accident."
+
+
+10a. WHAT WAS ACTUALLY HAPPENING
+----------------------------------
+
+poll_touch gated `down` on the surface test and on nothing else. Cross any edge
+of the bottom screen with the button still held and the next poll published
+down = 0, which is byte +1's release edge (section 5 and src/func_0203bb60.c).
+The port has four such edges and the DS has none: the letterbox bars, the hinge
+band, the top screen, and the desktop past the window.
+
+Measured on scene 368 (Bob-omb Squad), stacked, client 512x832, G = 32, so the
+bottom screen is client rows 448..831 and DS = (cx / 2, (cy - 448) / 2). The
+plunger rests at DS (128,40), client (256,528). One gesture, driven by
+SM64DS_CLICK_TEST, pressing on the plunger and dragging out of the window
+bottom and back before letting go:
+
+    SM64DS_CLICK_TEST="256,528@60-99,256,528>256,950@100-139,
+                       256,950@140-179,256,950>256,528@180-219,256,528@220-259"
+
+    BEFORE      [touch] f60  PRESS client(256,528) -> DS (128,40)
+                [touch] f129 release after 69 frame(s), last DS (128,191)
+                [touch] f129 press client(256,841) is NOT on the stylus
+                             surface: it is in a letterbox bar
+                [touch] f191 PRESS client(256,831) -> DS (128,191)
+                [touch] f260 release after 69 frame(s), last DS (128,40)
+
+                de8 runs   1..59 = 0, 60..128 = 1, 129..190 = 0,
+                           191..259 = 1, 260.. = 0
+                de9 edges  60, 129, 191, 260        FOUR, for one gesture
+
+THE GAME BELIEVED IT. dScMgPachinko_c slot 0's state byte at +0x4f0d went
+
+                frames 17..60   st = 0    idle
+                frames 61..129  st = 1    grabbed, tracking the stylus
+                frames 130..194 st = 2    THE SHOT, fired by the accident
+                frames 195      st = 4
+                frames 272..    st = 0    respawned
+
+src/func_ov006_020fe394.c is one branch on `data_020a0de8[k * 4] != 0`, and its
+else side writes 2 into +0x4f0d and snaps or launches the ball. So the player
+pulling back did not pause the pull when their hand left the window. They took
+the shot. The ball's world y in the same trace walks 40, -207, -279 over the
+frames after f129, which is it leaving up the screen.
+
+The gap band is worse rather than better, because it is INSIDE the window.
+Dragging UP from the same press releases at f110, at client (256,444), which is
+the band and not the top screen. There is nothing on screen to tell a player
+that a 64 pixel stripe in the middle of the picture ends their drag.
+
+
+10b. THE CURE, AND WHAT IT DID NOT TOUCH
+------------------------------------------
+
+A `drag_own` latch in poll_touch. The first poll of a button-hold that resolves
+ON the surface arms it, the physical button coming up is the only thing that
+clears it, and while it is armed an off-surface point publishes the NEAREST
+point on the bottom screen instead of publishing nothing.
+
+The nearest point was already being computed and thrown away. Both mappers
+clamp their output into the screen's own range and answer inside/outside
+separately through the return value (section 8a), so this consumes an existing
+answer rather than adding a second opinion about where the screen is. Display
+and touch still derive from the one StackLayout.
+
+Byte +1 is untouched. It is still `down ^ was`, so a release is still exactly
+one frame, and it now lands on the real button-up wherever the cursor is.
+
+    AFTER       [touch] f60  PRESS client(256,528) -> DS (128,40)
+                [touch] f129 drag LEFT the stylus surface at client(256,841),
+                             holding at DS (128,191) until the button comes up
+                [touch] f191 drag back ON the stylus surface at client(256,831)
+                             -> DS (128,191)
+                [touch] f260 release after 200 frame(s), last DS (128,40)
+
+                de8 runs   1..59 = 0, 60..259 = 1, 260.. = 0
+                de9 edges  60, 260                 TWO, for one gesture
+                +0x4f0d    st = 1 from f61 to f260, then 0
+
+and the published DS coordinate is pinned at (128,191) for every frame of the
+excursion, f128 through f191, which is the bottom screen's bottom row.
+
+THE TOP-SCREEN CASE IS THE STRONGER ONE, because it is the case where a wrong
+clamp would be invisible. Dragging up across the band and onto the top screen
+and back:
+
+    AFTER       [touch] f60  PRESS client(256,528) -> DS (128,40)
+                [touch] f110 drag LEFT the stylus surface at client(256,444),
+                             holding at DS (128,0)
+                [touch] f210 drag back ON the stylus surface at client(256,452)
+                             -> DS (128,2)
+                [touch] f260 release after 200 frame(s), last DS (128,40)
+
+The set of distinct (dea,deb) pairs published across f110..f209 has exactly ONE
+member, (128,0). No top-screen coordinate reaches the record, and none can: the
+clamp is into the bottom screen's range in both layouts and no branch in
+poll_touch reaches the other band.
+
+RELEASING WHILE OFF THE SURFACE. Press on the plunger, drag out of the window,
+let go there. BEFORE the release edge fired at f129 when the cursor left, and
+the REAL button-up at f200 produced no edge at all, because a byte that is
+already 0 cannot fall again. AFTER the edge is at f200 with the last clamped
+DS (128,191), and +0x4f0d goes 1 to 2 on that frame, which is the shot the
+player actually asked for.
+
+A PRESS THAT STARTS OFF THE SURFACE IS UNCHANGED, and that is a rule and not an
+accident: the latch can only be armed by a genuinely on-surface point. Three
+presses starting in the band and on the top screen publish nothing on both
+builds, with de8 flat at 0 for the whole run, and the WndProc still says
+"off-picture (letterbox bar), not published". THE GAP BAND'S DEAD-CLICK RULE
+STILL HOLDS FOR PRESSES (section 8a). What crossing the band cannot do any more
+is kill a drag that is already running.
+
+tests/walk_window.cpp takes a SetCapture on WM_LBUTTONDOWN and gives it back on
+WM_LBUTTONUP. That is not what fixes the stylus, and saying so is the point:
+poll_touch reads GetCursorPos and GetAsyncKeyState, which are machine-global and
+were never interrupted by the pointer leaving the window. What had no capture
+was g_mouse_left_down, which latched at 1 forever when a release landed on
+another window. Released only when the right-button look is not holding a
+capture of its own.
+
+
+10c. WHAT PROVED IT, AND WHAT COULD NOT
+-----------------------------------------
+
+SM64DS_TOUCH_PROBE CANNOT EXPRESS AN OFF-SURFACE DRAG. It pokes DS pixels
+straight into the record and never runs the transform, so there is no way to
+say "the cursor is at a client point that is not on the surface" with it. It is
+still the right tool for the per-frame record and every trace above uses it in
+its log-only form for exactly that.
+
+SM64DS_CLICK_TEST CAN, with no change to it. It takes client pixels, drives
+SetCursorPos plus SendInput, supports `cx,cy>dx,dy@f0-f1`, and its pid gate
+guards only the PRESS edge, so a drag that walks off the window keeps the
+button down and keeps being steered. NO NEW TEST HOOK WAS ADDED FOR THIS LANE.
+
+CONTENTION IS REAL ON A SHARED DESKTOP AND IT IS NOT SECTION 9's HAZARD. Two
+other lanes were running walk_window with their own click scripts while these
+runs were taken, and their presses appear in these logs as strays at client
+points no fixture named, one of which published a one-frame press. Section 9's
+stuck button is a superset of it and its rule is not enough on its own. What
+this lane did: clear VK_LBUTTON before every run, and re-run every fixture until
+its [touch] edge list matches the script exactly and nothing else. A run whose
+edge list carries an extra press is discarded, not explained.
+
+THE REGRESSION SURFACE, both builds, same fixtures.
+
+    scene 378, 24 scripted taps through SM64DS_TOUCH_PROBE, 2200 frames
+        state index 5, dScMgCoin_c state dispatch 60701 routed, 6480 through
+        the touch state 0x020dd0e0, 0 bodiless, 192 framework, 0 UNHANDLED,
+        slot hits init 1 / behavior 2199 / render 2200. The whole log is
+        identical once host addresses and the audio ring's refill counter are
+        normalised.
+    scene 368, 8 on-surface taps through SM64DS_CLICK_TEST
+        8 presses, 8 releases, 0 excursions, and the de8 run table and the
+        de9 edge list are identical line for line.
+
+THE ONE THING NOT SETTLED. poll_touch still has no focus gate (section 8f), and
+the latch inherits that: a drag armed in this window keeps publishing while the
+player alt-tabs, because GetAsyncKeyState is machine-global. That is the same
+behaviour the press had before this lane and it is not what was reported.
+
+
+10d. THE GATE
+---------------
+
+    battery         ALL GREEN. 8 smokes, every mounted level, all 8 hosted
+                    scenes, linkage 6219 (55.2%), ptr_audit 0 unhosted code
+                    pointers.
+    canary 374      SM64DS_SCENE=374 SM64DS_SCENE_FRAMES=300
+                    SM64DS_SCENE_NO_RENDER=1 SM64DS_FAULTS_FATAL=1, exit 0,
+                    "state dispatch: 32557 call(s), 32557 routed, 0 UNHANDLED".
+    pacing          SM64DS_SCENE=374 SM64DS_SCENE_WINDOW=1
+                    SM64DS_SCENE_FRAMES=600, exit 0, 10.14 s wall, which is
+                    59.2 fps.
+    level 1 BMP     5b783a29d753ce4dfbd35c79a7b2850f at 300 frames, the pinned
+                    value.
+
+THE .dsstate BASE MOVED AND THE SPAN DID NOT, and this block exists because a
+BMP compare at 300 frames alone would not have been allowed to close it.
+Host statics are not hosted DS data, so nothing inside .dsstate could move, and
+dsstate_guard confirms it: 11697 symbols, 959432 bytes captured, both builds.
+But the added host code pushed the preceding sections past a page boundary and
+the section base went 0xc16000 to 0xc17000.
+
+battery.py's own note says a 4 KB base move is the perturbation that leaves one
+pixel at 296 frames and nothing at 300, so 300 is exactly the count that is
+blind to it. The A/B was therefore run at all seven counts port/gap_truncations
+section 9 measured, on the two binaries this lane built, level 1,
+SM64DS_FAULTS_FATAL=1:
+
+    count  md5                               before == after
+    291    a76abb6b537d47d340043f9c326b42eb  SAME
+    292    6181b18f0a86b4659ae3151649aa72af  SAME
+    296    a45bb566591cb8ac702c70f77ad73aa0  SAME
+    298    48cdb19742af3ff6a335828a701ee218  SAME
+    300    5b783a29d753ce4dfbd35c79a7b2850f  SAME
+    302    01ad50bdfa5463f30869a23e1ab78cec  SAME
+    303    77423118d3283ae552ff4660900d9258  SAME
+
+Every one of the seven also equals the value gap_truncations section 9 recorded
+at its own tip, so the page shift moved no pixel at any count either file has
+ever found sensitive. The "before" binary is this lane's own control: the same
+tree with only the ball trace's state column added and none of the touch change,
+so the two rows differ by the fix and by the page the linker chose.

@@ -1452,8 +1452,16 @@ static void pch_ball_dump(void *self, unsigned frame)
            it away and no engine drew it at all. With G at zero the top test
            reaches world -1 and this branch cannot be taken. */
         const int culled = (engine == ENG_BOTTOM && top_row + 16 <= 0);
-        std::fprintf(stderr, "[ball] f%u G=%d slot%d world=(%d,%d) %s "
-                     "sy=%d rows=[%d,%d]%s\n", frame, g, i, x, y,
+        /* THE SLOT'S STATE BYTE, because where a ball is only means something
+           next to what it is doing. src/func_ov006_020fe2e4.c writes 1 here on
+           the stylus press edge (grabbed, and the ball now tracks the stylus at
+           a captured offset) and src/func_ov006_020fe394.c writes 2 on the
+           release (shot). A trace of positions alone cannot tell a ball that is
+           being pulled from one that has just been fired at the same place,
+           which is the distinction a drag that leaves the window turns on. */
+        const int st = *(unsigned char *)(b + 0x4f0d + at);
+        std::fprintf(stderr, "[ball] f%u G=%d slot%d world=(%d,%d) st=%d %s "
+                     "sy=%d rows=[%d,%d]%s\n", frame, g, i, x, y, st,
                      engine == ENG_TOP      ? "top"
                      : engine == ENG_BOTTOM ? "bottom"
                                             : "none",
