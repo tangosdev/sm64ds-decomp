@@ -34,12 +34,13 @@
 #include "dBgW_Kc.h"
 #include "dBgCh_SphCrr.h"
 #include "dBgPi.h"
+#include "SurfaceInfo.h"   /* for the real CopyNormalTo call below */
 
 extern "C" void func_02037a6c(dBgCh_SphCrr *self, s32 loX, s32 loY, s32 loZ,
                               s32 hiX, s32 hiY, s32 hiZ);
 extern "C" s32 DotVec3(const s32 *a, const Vector3 *b);
 extern "C" s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri);
-extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
+/* SurfaceInfo::CopyNormalTo is declared in include/SurfaceInfo.h. */
 extern "C" s32 func_02039794(s32 normalY);
 extern SurfaceInfo data_020a0cec;
 extern "C" void func_02037fd4(dBgPi *res, s16 triID, SurfaceInfo *info);
@@ -51,7 +52,7 @@ extern "C" int _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, Surfa
                                                               dBgCh_SphCrr *q, int flag);
 extern "C" int func_020397dc(int x);
 extern "C" int func_02037e58(unsigned int *p);
-extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
+namespace cstd { int fdiv(int a, int b); }
 
 /* The ROM inlines a RAW hardware sqrt at four sites -- NOT cstd::sqrt(u64)
    (0x0203d744), which pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`.
@@ -100,7 +101,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     cr[2] = (s16)(MUL10(fn[0], (ea)[1]) - MUL10(fn[1], (ea)[0]));             \
     t = MUL10(cr[0], en3[0]) + MUL10(cr[1], en3[1]) + MUL10(cr[2], en3[2]);   \
     if (func_020397dc(t)) continue;                                           \
-    u = _ZN4cstd4fdivEii(tri->length, t) >> 2;                                \
+    u = cstd::fdiv(tri->length, t) >> 2;                                \
     (out)[0] = tp[0] + (s32)(((s64)cr[0] * u) >> 14);                         \
     (out)[1] = tp[1] + (s32)(((s64)cr[1] * u) >> 14);                         \
     (out)[2] = tp[2] + (s32)(((s64)cr[2] * u) >> 14);
@@ -121,7 +122,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     den = MUL10(nn, nn) - 0x400;                                              \
     den += (nnh) - (nnh);                                                     \
     if (func_020397dc(den)) continue;                                         \
-    t = _ZN4cstd4fdivEii(MUL10(nn, dotJ) - (dotI), den) >> 2;                  \
+    t = cstd::fdiv(MUL10(nn, dotJ) - (dotI), den) >> 2;                  \
     u = (dotJ) - MUL10(t, nn);                                                \
     vx = MUL10(t, (ea)[0]) + MUL10(u, (eb)[0]);                               \
     vy = MUL10(t, (ea)[1]) + MUL10(u, (eb)[1]);                               \
@@ -156,7 +157,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
                           + (s64)(faceDot >> 4) * (faceDot >> 4)), zval, k1); \
         if (func_020397dc(hyp)) continue;                                     \
         if (DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28)               \
-                > _ZN4cstd4fdivEii(faceDot >> 4, hyp)) continue;              \
+                > cstd::fdiv(faceDot >> 4, hyp)) continue;              \
     }
 
 s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
@@ -393,7 +394,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            mwccarm's dispatch reads `this` from r0, a hand-rolled
                            one reads it from the callee-saved copy. */
                         GetSurfaceInfo(triID, data_020a0cec);
-                        _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&data_020a0cec, &sn);
+                        data_020a0cec.CopyNormalTo(sn);
 
                         /* 0 = floor, 1 = wall, 2 = underside -- and those select
                            the 0x74 / 0x9c / 0xc4 result slots and the 4 / 8 / 0x10
