@@ -109,7 +109,28 @@ int hal_gapless_engaged(void);
  *
  * TWO READERS, and they must agree within a frame: hal/message_compositor.cpp
  * shifts engine A's OBJ raster by it, and hal_screen_layout sizes the band from
- * it so the rows a shifted sprite is pushed into exist in the image. */
+ * it so the rows a shifted sprite is pushed into exist in the image.
+ *
+ * WHAT THAT SENTENCE MEANS NOW. There are two mechanisms behind it and the
+ * three functions below say which is which:
+ *
+ *   hal_gapless_obj_shift_ds        the BAND's world rows. Non-zero whenever
+ *                                   either mechanism is live, because either
+ *                                   way the image needs the same G_rom rows
+ *                                   between the halves. This is what the
+ *                                   layout is told.
+ *   hal_gapless_obj_raster_shift_ds the LAYER shift, the falsified one, zero
+ *                                   unless SM64DS_GAPLESS_OBJ_SHIFT=1.
+ *   hal_gapless_per_entry_ds        the PER ENTRY correction, which is the
+ *                                   default, and SM64DS_GAPLESS_PER_ENTRY=0
+ *                                   is its kill switch. Applied at the five
+ *                                   routers' own calls; see THE ROUTER HOOK at
+ *                                   the foot of hal/screen_gap.cpp.
+ *
+ * The last two are never both non-zero, so an A/B is one mechanism against the
+ * other rather than one on top of the other. */
 int hal_gapless_obj_shift_ds(void);
+int hal_gapless_obj_raster_shift_ds(void);
+int hal_gapless_per_entry_ds(void);
 
 #endif /* PORT_SCREEN_GAP_H */
