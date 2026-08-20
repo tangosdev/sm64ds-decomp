@@ -662,6 +662,45 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   compiles: all 64 `tpv` site subsets, all 64 polarity subsets, all 58 re-read
   insertion sites. Each is at its optimum for this structure.
 
+  ### The frame SIZE is solved; the frame ASSIGNMENT is not, and not from source
+
+  102 slots on both sides, at the same total, and **78 of the 102 offsets now carry
+  identical traffic**. The other 24 hold the wrong variable, and nothing expressible
+  in the source moves them. Everything below was measured on the current structure,
+  after the frame fix, and is a negative:
+
+  | axis | candidates | result |
+  |---|---|---|
+  | declaration order, one line x every position | 8,464 (twice) | zero improving moves |
+  | order of the ten hoisted constant initialisations | 90 | inert |
+  | **block scope** | probe | hoisting the existing inner declarations to the top is **byte-identical** - mwccarm does not key slot assignment on lexical scope at all, so the axis closes in one measurement |
+  | redundant re-reads, 7 pointers x every use site | 58 | nothing |
+  | `cr` read spelling, dot product x vertex tail | 48 | every spelling byte-identical |
+  | slab block: rebind granularity x interleave x chain split | 12 | the draft is the optimum |
+
+  Two specific residuals are named and **not** source-reachable:
+
+  * The ROM's busiest slot is `[sp,#0x94]`: a `s16 *` into the normals array, stored
+    once and read **21 times**. It is `en3` - the draft's own note says the ROM keeps
+    `en1` in r5, `en2` in r4 and spills `en3`. Ours carries **20** loads. The one
+    missing read is inside an expression, not between statements: every statement that
+    mentions `en3` has had a redundant re-read inserted before it and all are inert.
+  * `cr` sits at the same offset on both sides, but the ROM materialises its address
+    **15** times to our **12**. All 48 spellings of those reads are byte-identical.
+
+  So the remaining slot difference is a consequence of live ranges the source cannot
+  reach, not of an ordering. The productive direction is the other 88 mnemonic-class
+  and 72 register-class replaces, concentrated in call-gaps 28 (79), 0 (62) and 6 (56).
+
+  ### The permuter path is now CLOSED on this function
+
+  The SROA block needs a C++ destructor, and `mkbase.py`'s C99 stand-in cannot express
+  one - the same aggregate without a destructor is byte-identical to the *pre-frame*
+  draft, which is exactly the point. So there is no longer a C base that compiles to
+  the same bytes, and a permuter run would be optimising a different function. It can
+  come back if a C-side SROA blocker is ever found; dead `&x`, references and launders
+  are already known not to work.
+
   ### Swept and dead ON THIS STRUCTURE
 
   Re-run these after any structural change - that rule has now paid four times.

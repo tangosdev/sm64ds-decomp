@@ -64,7 +64,22 @@
 // Both metrics move together at every step.  The tool is scratchpad
 // `anchored.py`; it is worth rebuilding before believing any future gain.
 //
-// WHAT IS LEFT.  The structure is done: 27 instructions of drift summed over
+// WHAT IS LEFT.  The frame SIZE is solved and so is the instruction count; the
+// frame ASSIGNMENT is not, and is not reachable from source.  78 of the 102
+// slots now carry identical traffic; the other 24 hold the wrong variable.
+// Measured and dead on THIS structure: declaration order (8,464 candidates,
+// twice), the order of the ten hoisted constant initialisations (90), BLOCK
+// SCOPE (hoisting the inner declarations to the top is byte-identical, so
+// mwccarm does not key slot assignment on lexical scope), redundant re-reads
+// (58 sites), `cr` read spellings (48, all byte-identical), and the slab
+// block's rebind x interleave x chain-split product (12).
+//
+// Two residuals are named and unreachable: the ROM's busiest slot [sp,#0x94] is
+// `en3` with 21 loads against our 20 -- the missing read is inside an
+// expression, not between statements -- and `cr` has its address materialised
+// 15 times against our 12.
+//
+// (superseded) The structure is done: 27 instructions of drift summed over
 // all 35 call-gap regions, one instruction short overall, and the load deficit
 // that drove everything above is down to 2.  What remains is allocation, and
 // 340 of the 544 `replace`s are one thing, THE STACK FRAME: `str r0,[sp,#0xc4]`
