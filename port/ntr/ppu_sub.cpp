@@ -927,34 +927,80 @@ void band_flat(uint32_t *dst, int dst_w, const StackLayout &lay, uint32_t c)
     }
 }
 
-/* WHAT GOES BEHIND THE BAND'S CONTENT, and PEEK OVERRIDES THE FILL.
+/* THE SCENE'S OWN BAND, PAINTED OVER WHATEVER IS BEHIND IT.
  *
- * With peek off the band is decoration and the player picks it: an ambient
- * wash of the two pictures around it, or a flat colour.
+ * lay.art is 256 x gap_ds DS pixels and the band is drawn at the same integer
+ * scale the bottom half is, so one art pixel is one DS pixel and nothing is
+ * interpolated -- the same decision the sub framebuffer's own blit makes, for
+ * the same reason: every tier's ratio is a whole number and a filter would only
+ * invent pixels nobody drew.
+ *
+ * ALPHA 0 IS THE MAGENTA KEY and it is a SKIP, not a blend. The artist's
+ * transparent pixel means "leave this one to whatever is behind me", so the
+ * backdrop this was called after -- black under peek, the ambient wash
+ * otherwise -- is what stays there. There is no partial alpha: the key is one
+ * exact colour in the file and this is one exact test. */
+void band_art(uint32_t *dst, int dst_w, const StackLayout &lay)
+{
+    const int rx = lay.w / SUB_W, ry = lay.scale;
+    for (int k = 0; k < lay.gap_ds; ++k)
+        for (int x = 0; x < 256; ++x) {
+            const uint32_t p = lay.art[(size_t)k * 256 + x];
+            if (!(p >> 24)) continue;                 /* the key: leave it */
+            for (int oy = 0; oy < ry; ++oy) {
+                uint32_t *out =
+                    dst + (size_t)(lay.band_y + k * ry + oy) * dst_w;
+                for (int ox = 0; ox < rx; ++ox)
+                    out[x * rx + ox] = p | 0xFF000000u;
+            }
+        }
+}
+
+/* WHAT GOES BEHIND THE BAND'S CONTENT, and PEEK IGNORES THE FILL MODE.
+ *
+ * With peek off the band is decoration and the player picks it: an ambient wash
+ * of the two pictures around it, a flat colour, or the scene's own hand-drawn
+ * art over the ambient wash.
  *
  * With peek on it is not decoration any more, it is a view of what is actually
- * there, and the true state of a band row with no sprite in it is EMPTY. A fill
- * behind that content would be this program drawing something over the answer
- * and calling the mixture the answer: an ambient wash blurs into the sprites it
- * sits behind, and a chosen colour is indistinguishable from a sprite of the
- * same colour. Black is not a fifth fill mode, it is the absence of one, and it
- * is what makes "there is nothing in that row" readable as nothing.
+ * there, and the true state of a band row with no sprite in it is EMPTY. A
+ * chosen FILL behind that content would be this program drawing something over
+ * the answer and calling the mixture the answer: an ambient wash blurs into the
+ * sprites it sits behind, and a flat colour cannot be told apart from a sprite
+ * of the same colour. So neither fill runs under peek.
  *
- * So GapFillMode and GapColor apply only when GapPeek is false, and the
- * settings note in hal/host_settings.cpp says so in those words. */
+ * THE ART DOES, and that is a different question rather than an exception to
+ * this one. A hand-drawn band is read as a picture -- a hinge, a machine, a
+ * painted backing -- and nobody mistakes it for the game submitting a sprite,
+ * which is exactly what an ambient wash or a flat colour invites. So peek's
+ * backdrop is the scene's art when there is art and BLACK when there is not,
+ * and every pixel over that backdrop is still only what the engines really
+ * submitted plus what the continuity pass re-rendered from their own entries.
+ *
+ * So GapFillMode and GapColor apply only when GapPeek is false, the art applies
+ * either way, and the settings note in hal/host_settings.cpp says so in those
+ * words. */
 void band_fill(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     if (lay.band_h <= 0) return;
     if (lay.peek) {
         band_flat(dst, dst_w, lay, 0xFF000000u);
+        if (lay.art) band_art(dst, dst_w, lay);
         return;
     }
-    if (lay.fill_mode == GAP_FILL_AMBIENT) {
-        band_fill_ambient(dst, dst_w, lay);
+    if (lay.fill_mode == GAP_FILL_SOLID) {
+        band_flat(dst, dst_w, lay, lay.fill_color | 0xFF000000u);
         return;
     }
-    band_flat(dst, dst_w, lay, lay.fill_color | 0xFF000000u);
+    /* AMBIENT IS ALSO CUSTOM'S BACKDROP. A custom band with no art file is an
+       ambient band -- that is the fallback -- and a custom band whose art is
+       transparent in places shows the ambient wash through those places, which
+       is what "the default backdrop" means in the file contract. */
+    band_fill_ambient(dst, dst_w, lay);
+    if (lay.fill_mode == GAP_FILL_CUSTOM && lay.art)
+        band_art(dst, dst_w, lay);
 }
+
 
 /* ---- PEEK: the band's own hidden sprites -----------------------------------
  *
@@ -1237,7 +1283,7 @@ void band_peek(uint32_t *dst, int dst_w, const StackLayout &lay)
 // every pixel of dst, so the caller does not have to clear it.
 
 StackLayout stack_layout(int gap_ds, int fill_mode, uint32_t fill_color,
-                         int peek)
+                         int peek, const uint32_t *art)
 {
     StackLayout l;
     if (gap_ds < 0) gap_ds = 0;
@@ -1250,10 +1296,15 @@ StackLayout stack_layout(int gap_ds, int fill_mode, uint32_t fill_color,
     l.band_h = gap_ds * l.scale;
     l.bottom_y = SCREEN_H + l.band_h;
     l.h = SCREEN_H * 2 + l.band_h;
-    l.fill_mode = fill_mode == GAP_FILL_SOLID ? GAP_FILL_SOLID
-                                              : GAP_FILL_AMBIENT;
+    l.fill_mode = fill_mode == GAP_FILL_SOLID    ? GAP_FILL_SOLID
+                  : fill_mode == GAP_FILL_CUSTOM ? GAP_FILL_CUSTOM
+                                                 : GAP_FILL_AMBIENT;
     l.fill_color = fill_color | 0xFF000000u;
     l.peek = peek ? 1 : 0;
+    /* NO BAND, NO ART. The art is exactly gap_ds rows tall, so a layout with no
+       band cannot carry one, and dropping it here means no consumer has to ask
+       the question twice. */
+    l.art = gap_ds ? art : 0;
     return l;
 }
 

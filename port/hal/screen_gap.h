@@ -12,8 +12,10 @@
  * rows out and made anything crossing between the screens jump.
  *
  * This is the seam put back. A band of G DS rows is drawn between the halves,
- * filled either with a colour or with the light of the two pictures around it,
- * and optionally with the sprites that are genuinely inside it.
+ * filled with a colour, with the light of the two pictures around it, or with a
+ * picture drawn by hand for that one minigame (hal/gap_art.h), and optionally
+ * with the sprites that are genuinely inside it -- including the ones the ROM's
+ * own OAM cull drops for the middle of a crossing (hal/gap_continuity.cpp).
  *
  * NOTHING HERE TOUCHES THE SIMULATION. The game's own G is read and never
  * written; the actors move exactly as they did. This decides how many rows of

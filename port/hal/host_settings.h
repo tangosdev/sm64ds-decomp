@@ -64,18 +64,24 @@ int host_camera_turn_sign(void);
                   purposes only -- the simulation is untouched, so objects go
                   back to jumping at the seam. The launcher's checkbox is
                   "remove minigame gap" and is the inverse of this key.
-   GapFillMode    1 ambient (default), 0 solid. Ignored when GapPeek is 1.
+   GapFillMode    1 ambient (default), 0 solid, 2 the scene's own hand-drawn
+                  band, gap/scene_<id>.bmp. Ignored when GapPeek is 1 -- except
+                  that the art is peek's backdrop either way; see below.
    GapColor       0xFFRRGGBB for the solid fill. Default 0xFF000000. Ignored
                   when GapPeek is 1.
-   GapPeek        1 draws the band's own hidden sprites on a PLAIN BLACK
-                  backdrop. Default 0.
+   GapPeek        1 draws the band's own hidden sprites over the scene's own
+                  art if there is any and over PLAIN BLACK if there is not.
+                  Default 0.
 
-   PEEK OVERRIDES THE FILL. With peek off the band is decoration and the two
+   PEEK IGNORES THE FILL MODE. With peek off the band is decoration and the two
    fill keys are the player's taste in it; with peek on the band is a view of
    what is really in those rows, and the true state of a row with no sprite in
-   it is empty. Black is the absence of a fill rather than a fifth one, so
-   every non-black pixel in the band is something the game really submitted.
-   hal/host_settings.cpp carries the long form. */
+   it is empty. Neither fill runs behind that, because a wash blurs into the
+   sprites and a flat colour cannot be told from one. The scene's hand-drawn
+   art DOES, because a picture is read as a picture: peek's backdrop is
+   gap/scene_<id>.bmp when that file is there and black when it is not, and
+   everything over the backdrop is still only what the game submitted.
+   hal/host_settings.cpp and hal/gap_art.h carry the long form. */
 int host_setting_minigame_gap(void);
 int host_setting_gap_fill_mode(void);
 unsigned host_setting_gap_color(void);

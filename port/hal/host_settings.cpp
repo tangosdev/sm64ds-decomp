@@ -417,29 +417,55 @@ const char *const RUN_MODE_KEY[3] = { "button", "analog", "auto" };
                     launcher's checkbox is the INVERSE of this key: ticking
                     "remove minigame gap" writes false, and false pulls the
                     two screens back together and puts the seam jump back.
-     GapFillMode    "ambient" (default) or "solid". Ignored when GapPeek is
-                    true; see below.
+     GapFillMode    "ambient" (default), "solid" or "custom". Ignored when
+                    GapPeek is true; see below.
      GapColor       "#RRGGBB" for the solid fill. Default "#000000". Ignored
                     when GapPeek is true; see below.
      GapPeek        false (default). True draws the sprites that are genuinely
-                    inside the band, on a PLAIN BLACK backdrop.
+                    inside the band, over the scene's own art if there is any
+                    and over BLACK if there is not.
 
-   PEEK OVERRIDES THE FILL, and that is a decision about what the mode is FOR
-   rather than a shortcut. With peek off the band is decoration and these two
+   "CUSTOM" IS A PICTURE DRAWN FOR ONE MINIGAME, and it comes off disk rather
+   than out of a setting:
+
+       <bundle>/gap/scene_<id>.bmp        gap/scene_368.bmp is Bob-omb Squad
+
+   in the same folder settings.json is looked for, named by the scene's own id.
+   24-bit or 32-bit uncompressed BMP, 256 x G or 512 x 2G (the 2x sheet, taken
+   down by nearest sampling), BAND ROWS ONLY -- no top-screen or bottom-screen
+   context rows. MAGENTA #FF00FF IS THE TRANSPARENCY KEY: a keyed pixel shows
+   whatever is behind the art, which is the ambient wash with peek off and
+   black with peek on, so a band can be a painted machine down the middle and
+   the ordinary backdrop either side of it. Anything wrong with the file -- not
+   there, wrong size, wrong depth, truncated -- is ONE LINE on stderr and the
+   ambient fill, never a crash and never a guess. hal/gap_art.h carries the
+   long form.
+
+   PEEK IGNORES THE FILL MODE, and that is a decision about what the mode is
+   FOR rather than a shortcut. With peek off the band is decoration and these
    keys are the player's taste in it. With peek on the band stops being
    decoration and becomes a view of what is actually in those rows, and the
-   true state of a row with no sprite in it is empty. A fill behind that would
+   true state of a row with no sprite in it is empty. A FILL behind that would
    put something over the answer and call the mixture the answer: an ambient
    wash blurs into the sprites it sits behind, and a chosen colour cannot be
-   told apart from a sprite of the same colour. So peek paints black, which is
-   not a fifth fill mode but the absence of one, and every non-black pixel in
-   the band is then something the game really submitted.
+   told apart from a sprite of the same colour.
+
+   THE ART IS ALLOWED BEHIND PEEK ANYWAY, because it is a different kind of
+   thing. A hand-drawn band reads as a picture -- a hinge, a machine, a painted
+   backing -- and nobody mistakes it for the game submitting a sprite, which is
+   exactly what a wash or a flat colour invites. So peek's backdrop is the
+   scene's art when the file is there and black when it is not, and everything
+   over that backdrop is still only what the engines really submitted.
 
    All four are optional and each falls back on its own, so a settings.json
    written by a launcher that predates any of them is read exactly as a file
    that sets it to the default -- which is the property that lets the game
    and the launcher ship on their own schedules. */
 int g_gap_on;                        /* default 1 */
+/* 0 solid, 1 ambient, 2 custom -- the ntr::GAP_FILL_* numbering, which is what
+   hal/screen_gap.cpp hands straight to ntr::stack_layout. That function
+   re-validates it and reads anything it does not know as ambient, so the two
+   spellings cannot disagree about an unknown value. */
 int g_gap_fill;                      /* default 1, ambient */
 unsigned g_gap_color;                /* default 0xFF000000, black */
 int g_gap_peek;                      /* default 0 */
@@ -521,6 +547,8 @@ void load_once(void)
                 if (strlen(mode) == 5 && ieq(mode, "solid", 5)) g_gap_fill = 0;
                 else if (strlen(mode) == 7 && ieq(mode, "ambient", 7))
                     g_gap_fill = 1;
+                else if (strlen(mode) == 6 && ieq(mode, "custom", 6))
+                    g_gap_fill = 2;
                 /* anything else keeps the default, like every other reader */
             }
             char col[16];
@@ -539,11 +567,14 @@ void load_once(void)
         fprintf(stderr, "[settings] RunMode %s key 0x%02x pad 0x%04x (%s)\n",
                 RUN_MODE_KEY[g_run_mode], (unsigned)g_run_key,
                 (unsigned)g_run_pad, path);
-    if (!g_gap_on || !g_gap_fill || g_gap_color != 0xFF000000u || g_gap_peek)
+    if (!g_gap_on || g_gap_fill != 1 || g_gap_color != 0xFF000000u ||
+        g_gap_peek)
         fprintf(stderr, "[settings] MinigameGap %s, fill %s #%06x, peek %s "
                 "(%s)\n", g_gap_on ? "on" : "OFF",
-                g_gap_fill ? "ambient" : "solid", g_gap_color & 0xffffffu,
-                g_gap_peek ? "ON" : "off", path);
+                g_gap_fill == 0   ? "solid"
+                : g_gap_fill == 2 ? "custom"
+                                  : "ambient",
+                g_gap_color & 0xffffffu, g_gap_peek ? "ON" : "off", path);
 }
 
 }  /* namespace */

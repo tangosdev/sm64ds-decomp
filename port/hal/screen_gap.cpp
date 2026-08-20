@@ -3,6 +3,7 @@
 
 #include "hal/screen_gap.h"
 
+#include "hal/gap_art.h"
 #include "hal/host_settings.h"
 
 #include <cstdio>
@@ -28,6 +29,7 @@ namespace {
 
 int g_have;
 int g_raw = -1;              /* the last G read out of the game */
+int g_scene = -2;            /* the scene the last latch was for */
 unsigned g_gen;              /* steps whenever the layout's shape changes */
 ntr::StackLayout g_lay;
 
@@ -52,30 +54,54 @@ const ntr::StackLayout *hal_screen_layout(void)
        precisely what the setting promises -- "remove the gap" gives back the
        picture the port had before this feature, jump and all. */
     const int want = host_setting_minigame_gap() ? raw : 0;
-    if (g_have && want == g_raw) return &g_lay;
+    /* THE SCENE IS PART OF THE LATCH, and it has to be: two minigames with the
+       same G give the same LAYOUT and not the same BAND. 368 and 374 are both
+       G = 32, and the art and the continuity reader are per scene, so latching
+       on G alone would have left Curling wearing Bob-omb Squad's picture. */
+    const int scene = hal_gap_scene_id();
+    if (g_have && want == g_raw && scene == g_scene) return &g_lay;
 
     const int was_h = g_have ? g_lay.h : 0;
     g_raw = want;
-    g_lay = ntr::stack_layout(want, host_setting_gap_fill_mode()
-                                        ? ntr::GAP_FILL_AMBIENT
-                                        : ntr::GAP_FILL_SOLID,
-                              host_setting_gap_color(),
-                              host_setting_gap_peek());
+    g_scene = scene;
+
+    const int mode = host_setting_gap_fill_mode();
+    const int peek = host_setting_gap_peek();
+    /* THE ART IS LOADED HERE, ONCE, and this is the only place that asks for
+       it. Both askers are here: the "custom" fill mode wants it with peek off,
+       and peek wants it as its backdrop whatever the fill mode says. Asking at
+       the latch rather than per frame is what keeps a file read off the frame
+       path -- the loader caches on the same (scene, G) pair this does, so the
+       second ask in a scene is a pointer compare. */
+    const uint32_t *art = 0;
+    if (want && (peek || mode == ntr::GAP_FILL_CUSTOM))
+        art = hal_gap_art(scene, want, mode == ntr::GAP_FILL_CUSTOM);
+
+    g_lay = ntr::stack_layout(want, mode, host_setting_gap_color(), peek, art);
     g_have = 1;
-    if (g_lay.h != was_h) {
-        ++g_gen;
+    /* THE GENERATION IS THE SHAPE'S, not the latch's. walk_window re-sizes the
+       window and re-shapes the DIB header off this counter, and a scene change
+       that keeps the same G changes the band's CONTENT and not its size, so
+       stepping it there would ask for a resize to the size it already is. */
+    if (g_lay.h != was_h) ++g_gen;
+    {
         /* SAID ONCE PER LATCH, and it is the line a report about a wrong-looking
-           gap is answered from: the scene's own G, what the setting did to it,
-           the band's height in host rows and the image the window now has to
-           carry. A capture with no such line is a capture with no gap. */
+           gap is answered from: which minigame, its own G, what the setting did
+           to it, the band's height in host rows, the image the window now has to
+           carry, and whether the scene's art was found. A capture with no such
+           line is a capture with no gap. */
         if (raw)
-            std::fprintf(stderr, "[gap] G %d DS rows%s -> band %d host rows, "
-                         "image %dx%d, fill %s, peek %s\n", raw,
+            std::fprintf(stderr, "[gap] scene %d, G %d DS rows%s -> band %d "
+                         "host rows, image %dx%d, fill %s, peek %s, art %s\n",
+                         scene, raw,
                          want == raw ? "" : " (MinigameGap off: layout uses 0)",
                          g_lay.band_h, g_lay.w, g_lay.h,
-                         g_lay.fill_mode == ntr::GAP_FILL_AMBIENT ? "ambient"
-                                                                  : "solid",
-                         g_lay.peek ? "ON" : "off");
+                         g_lay.fill_mode == ntr::GAP_FILL_SOLID  ? "solid"
+                         : g_lay.fill_mode == ntr::GAP_FILL_CUSTOM
+                             ? "custom"
+                             : "ambient",
+                         g_lay.peek ? "ON" : "off",
+                         g_lay.art ? "loaded" : "none");
     }
     return &g_lay;
 }

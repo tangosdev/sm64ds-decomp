@@ -154,22 +154,40 @@ struct StackLayout {
     int band_y;        // first row of the gap band, always SCREEN_H
     int band_h;        // gap_ds * scale, host rows; 0 with no gap
     int bottom_y;      // first row of the bottom screen, SCREEN_H + band_h
-    int fill_mode;     // GAP_FILL_SOLID or GAP_FILL_AMBIENT; peek ignores it
+    int fill_mode;     // GAP_FILL_SOLID, _AMBIENT or _CUSTOM; peek ignores it
     uint32_t fill_color;   // 0xFFRRGGBB, GAP_FILL_SOLID only
-    // 1: the band's own hidden sprites, on a plain black backdrop. PEEK
-    // OVERRIDES THE FILL: with peek on the band is a view of what is
-    // really in those rows, not decoration, and a fill behind it would
-    // put something over the answer. Black is the absence of a fill
-    // rather than a fifth one.
+    // 1: the band's own hidden sprites, drawn OVER the backdrop. PEEK
+    // IGNORES THE FILL MODE: with peek on the band is a view of what is
+    // really in those rows, not decoration, and an ambient wash or a
+    // chosen colour behind it would put something over the answer -- a
+    // wash blurs into the sprites it sits behind, and a flat colour cannot
+    // be told apart from a sprite of the same colour. What peek does allow
+    // behind the sprites is the scene's own hand-drawn art, because a
+    // picture is read as a picture and not mistaken for content, and BLACK
+    // when there is no art. See band_fill.
     int peek;
+    // THE SCENE'S HAND-DRAWN BAND, or null. 256 * gap_ds DS pixels, row
+    // major, top row first, 0xAARRGGBB, and alpha 0 means the magenta key:
+    // the artist's "leave this pixel to whatever is behind me".
+    //
+    // Owned by whoever built the layout (hal/gap_art.cpp in the game) and
+    // valid until the next latch, which is also when the layout is next
+    // rebuilt, so the pointer and the picture cannot fall out of step.
+    //
+    // It is an INPUT to the layout rather than something the compose looks
+    // up, for the same reason G is: the compose does one arithmetic on
+    // values it was handed, and every consumer that has to agree with it
+    // reads the same struct.
+    const uint32_t *art;
 };
 
-enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1 };
+enum { GAP_FILL_SOLID = 0, GAP_FILL_AMBIENT = 1, GAP_FILL_CUSTOM = 2 };
 
 // The one computation. gap_ds is clamped to [0, GAP_DS_MAX]; everything else
 // is derived. Pure: same arguments, same answer, no globals read.
 StackLayout stack_layout(int gap_ds, int fill_mode, uint32_t fill_color,
-                         int peek);
+                         int peek, const uint32_t *art);
+
 
 // `top` is SCREEN_W x SCREEN_H row-major -- a Framebuffer's px, taken as a
 // plain pointer because the one caller reaches this across an extern "C" seam
