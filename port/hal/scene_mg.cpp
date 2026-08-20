@@ -272,6 +272,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <chrono>
 
 extern "C" {
 
@@ -286,6 +287,14 @@ void port_ov006_syms_patch(void);
 
 /* the ROM's own predicate, matched, linked from the slice. Not re-spelled. */
 int IsMinigameActorID(unsigned int id);
+
+/* the two arm9 RNG states, for the minigame seed at the foot of this section.
+   data_0209d4b8 is hosted in hal/scene_mg_faces.cpp (sized by ROM span) and
+   data_0209e650 in hal/auto_bss.cpp as int[8]; both are inside .dsstate, so a
+   save state captures whatever the seed left. Spelled with the definitions'
+   own types, so neither needs an /alternatename row. */
+extern unsigned int data_0209d4b8;
+extern int data_0209e650[];
 
 /* ov004's four .init constructors, all four. */
 void __sinit_ov004_020b948c(void);
@@ -691,6 +700,231 @@ extern "C" void port_scene_mg_prepare(int id)
     if (!IsMinigameActorID((unsigned)id))
         return;
     port_scene_mg_overlay_load();
+}
+
+/* ---- THE MINIGAME RNG SEED (run mg5, lane RNGSEED) ------------------------
+ *
+ * THE COMPLAINT. "Loves Me...?" opens with the same number of petals on every
+ * launch. It is not the petal code. It is the arm9 RNG state, and on the
+ * port's direct scene boot that state is FROZEN.
+ *
+ * 1. THE ROM DOES NOT SEED FROM A CLOCK, AND THERE IS NO RTC READ ANYWHERE ON
+ *    THIS PATH. src/RandomIntInternal.c is a plain LCG,
+ *
+ *        *seed = *seed * 0x19660d + 0x3c6ef35f
+ *
+ *    and its seeder src/func_0203b9b4.c is a one-line store. Both arm9 states
+ *    are set to CONSTANTS and never to anything else:
+ *
+ *        __sinit_02074dc4    func_0203b9b4(&data_0209d4b8, 1)
+ *        func_020196cc       func_0203b9b4(data_0209d4b8, 0x4d2)
+ *                            <- the boot value, called once from
+ *                               src/func_0201a054.c after PrepareToSpawnBoot
+ *        __sinit_02074e44    func_0203b9b4(&data_0209e650, 1)
+ *
+ * 2. SO THE ENTROPY IS NOT IN THE SEED, IT IS IN THE DRAW COUNT. The function
+ *    this seeder replicates is
+ *
+ *        func_ov005_020c14a0   dScMiniGm_c::Behavior, at 0x020c14a0
+ *
+ *    the minigame MENU scene's per-frame tick. Two of its statements are
+ *
+ *        RandomIntInternal(&data_0209d4b8);
+ *        RandomIntInternal(&data_0209e650);
+ *
+ *    with both results thrown away. That is the whole mechanism. The menu
+ *    advances both states once per frame for as long as a player sits in it,
+ *    so HOW LONG A HUMAN TOOK TO CHOOSE A GAME is what decides the layout of
+ *    the game they chose. A DS that reaches "Loves Me...?" is a DS whose state
+ *    is the boot constant advanced N times, N being the frames spent in the
+ *    menu. Nothing else on the way in touches data_0209d4b8.
+ *
+ * 3. WHY THE PORT IS FROZEN. The launcher's F5 relaunches straight into
+ *    SM64DS_SCENE=<id>. dScMiniGm_c never runs, so N is zero -- and the port
+ *    runs neither of the ROM's two constant seeders on this path either, so
+ *    the state is whatever .bss left it: literally 0, since
+ *    hal/scene_mg_faces.cpp hosts data_0209d4b8 as zero-initialised storage.
+ *    Every boot therefore replays ONE sequence. Modelled against the ROM's own
+ *    arithmetic the successive rounds of scene 390 are
+ *
+ *        12, 20, 9, 10, 15, 14, ...
+ *
+ *    and the measured first round of the unfixed binary is 12, on every frame
+ *    budget from 60 to 300. That is the complaint, exactly.
+ *
+ *    IT ALSO RETIRES AN EARLIER LANE'S "IT DOES VARY" READING. A lane that saw
+ *    the count come out 10 and 12 was not seeing entropy: those are round 1
+ *    and round 4 of that one fixed sequence, reached by a run that got further
+ *    in. +0x5fd8 is ALSO decremented once per petal plucked
+ *    (src/func_ov006_0212ac74.c), so a run with hands on it reports a smaller
+ *    number for a third reason. All three are positions in a frozen sequence.
+ *
+ * 4. WHAT THIS DOES. The faithful equivalent of the journey the launcher
+ *    skips: put both states back to the ROM's own boot constants and then run
+ *    the menu's two draws N times, N being a menu dwell taken from the host
+ *    clock. Every state this can produce is a state the ROM reaches by a
+ *    player taking N frames to choose, so this invents no distribution -- it
+ *    lands on the ROM's own, which for scene 390 is 8..15 nine times in ten
+ *    and 20..21 one time in ten.
+ *
+ *    GENERIC AT THE MINIGAME LATCH, NOT PER GAME. The gate is the ROM's own
+ *    IsMinigameActorID, the same predicate port_scene_mg_prepare uses, so
+ *    Bob-omb Squad's spawn patterns, Slots Shot, Coincentration's layouts and
+ *    Wanted's rounds all get the same unfreezing from this one place. THE
+ *    LEVEL PATH IS NOT TOUCHED: port_scene_begin is the scene path only, and
+ *    this refuses any id the predicate declines. (The ROM has nothing to
+ *    replicate there anyway -- func_020196cc's 0x4d2 is a boot constant for
+ *    the whole game, and the level path has no per-frame stirrer of its own
+ *    the way the minigame menu does.)
+ */
+
+/* THE GATING RULE, VERBATIM:
+ *
+ *     The seed varies only when the run is WINDOWED and UNBOUNDED and carries
+ *     no scripted-input or capture knob. Windowed means port_scene_begin was
+ *     handed a real hwnd. Unbounded means SM64DS_SCENE_FRAMES is unset.
+ *     Everything else -- every selftest, every battery row, every BMP gate,
+ *     every scripted pad or touch probe, every paced run -- is seeded-fixed,
+ *     which means NOT SEEDED AT ALL: the state is left at the .bss zero it has
+ *     today and every draw reproduces byte for byte.
+ *
+ * WHY WINDOWED-AND-UNBOUNDED IS THE RIGHT PAIR, and why neither half alone
+ * would do. `windowed` is not re-derived here: port_scene_want_window() in
+ * tests/walk_window.cpp already owns that decision and its three gates, and
+ * the ANSWER arrives here as port_scene_begin's hwnd argument -- a real window
+ * or nullptr. A second copy of that predicate is the thing
+ * port/scene_window.txt section 3 warns about, so there is not one.
+ *
+ * But windowed alone is NOT sufficient, and this is the trap the rule exists
+ * for: SM64DS_SCENE_WINDOW=1 with SM64DS_SCENE_FRAMES=N is a REAL WINDOW
+ * DRIVEN BY A SCRIPT, and it is how every touch and pad claim on this path is
+ * proved without hands. Those runs have an hwnd and must stay byte-identical.
+ * The frame budget is what separates them: a run that says how many frames to
+ * run is a MEASUREMENT, and a run that does not is a SESSION. Nobody sitting
+ * down to play "Loves Me...?" says how many frames to play it for, and no
+ * automated run in this tree omits the number.
+ *
+ * THE NAMED KNOBS BELOW ARE BELT AND BRACES AND ARE MEANT TO BE. Every one of
+ * them is already excluded by the frame budget today -- battery.py's scene_env
+ * sets SM64DS_SCENE_FRAMES on every scene row, and so does every quoted scene
+ * command line in port/ -- so none of these lines changes an answer now. They
+ * are here so that the day somebody writes a capture or a scripted probe that
+ * forgets to name a count, it comes out fixed rather than random, which is the
+ * direction a wrong guess should fail in.
+ *
+ * SM64DS_FAULTS_FATAL IS DELIBERATELY NOT IN THE LIST. It is set by
+ * real-shaped runs as well as by the battery, so gating on it would freeze the
+ * very shape this is trying to unfreeze. It needs no line: the battery rows
+ * that set it also set SM64DS_SCENE_FRAMES, and they are headless besides. */
+static int rng_run_is_real_play(void)
+{
+    if (std::getenv("SM64DS_WINDOW_SELFTEST"))   return 0;
+    if (std::getenv("SM64DS_SCENE_FRAMES"))      return 0;
+    if (std::getenv("SM64DS_SCENE_BMP"))         return 0;
+    if (std::getenv("SM64DS_SCENE_BMP_STACKED")) return 0;
+    if (std::getenv("SM64DS_TOUCH_PROBE"))       return 0;
+    if (std::getenv("SM64DS_PAD_TEST"))          return 0;
+    if (std::getenv("SM64DS_PROBE_INPUT"))       return 0;
+    if (std::getenv("SM64DS_PACE_DIVIDER"))      return 0;
+    return 1;
+}
+
+/* HOW LONG THE PLAYER STOOD IN THE MENU. One to 3600 frames is a sixtieth of a
+ * second to a minute at the DS's 60Hz, which is the honest range for choosing
+ * a game off a grid, and the LCG scrambles the low bits hard enough that the
+ * resulting counts spread across the ROM's distribution rather than cluster at
+ * one end of it.
+ *
+ * TAKEN FROM THE HOST CLOCK ONCE, AT THE LATCH, which is the only source
+ * available: the ROM's entropy is a human's reaction time, and a launcher that
+ * skips the menu has no human to time. The counter is mixed with the process
+ * id so two launches inside one clock tick -- a relaunch, or a scripted loop
+ * -- cannot collide.
+ *
+ * SM64DS_RNG_MENU_FRAMES=<n> replaces this read entirely; see the seeder. */
+static unsigned rng_menu_frames(void)
+{
+    /* <chrono> rather than windows.h, deliberately: this TU is thousands of
+       lines of vtable seats, and pulling the platform header in for two clock
+       reads is how a macro collision arrives in a file nobody expects one in.
+       The two clocks are mixed because they answer different questions --
+       system_clock moves with the wall date, steady_clock with this machine's
+       uptime -- so two launches agree on neither. */
+    unsigned long long e =
+        (unsigned long long)std::chrono::system_clock::now()
+            .time_since_epoch().count();
+    e ^= (unsigned long long)std::chrono::steady_clock::now()
+            .time_since_epoch().count() << 17;
+    /* one round of a 64-bit mix, so the low bits are not just the counter's */
+    e ^= e >> 33; e *= 0xff51afd7ed558ccdull;
+    e ^= e >> 33; e *= 0xc4ceb9fe1a85ec53ull;
+    e ^= e >> 33;
+    return (unsigned)(e % 3600ull) + 1u;
+}
+
+extern "C" void port_scene_mg_seed_rng(int id, int windowed)
+{
+    if (!IsMinigameActorID((unsigned)id))
+        return;
+
+    /* Once per process. The latch is reached from port_scene_begin, which runs
+       once, but a second call must never re-roll a state the scene has already
+       drawn from. */
+    static int done;
+    if (done)
+        return;
+    done = 1;
+
+    /* SM64DS_RNG_MENU_FRAMES=<n> PINS THE DWELL AND FORCES THE SEED. It is the
+       only way to ask this code a question from a script, because the shape it
+       normally fires in -- windowed and unbounded -- is by definition a run
+       that never ends by itself, and a 200-sample sweep of the distribution
+       cannot be done by hand two hundred times.
+
+       FORCING IS SAFE HERE AND WOULD NOT BE IF THE KNOB CARRIED ENTROPY. It
+       carries a NUMBER: the same n always walks the LCG the same number of
+       steps from the same two constants, so a run under it is exactly as
+       reproducible as a run without it, just from a different base. That is
+       what separates it from SM64DS_TOUCH_PROBE and SM64DS_PAD_TEST, which
+       inject something a comparator cannot predict. It still gets a pop in
+       both of tools/battery.py's env builders, on the principle that a step
+       measuring a baseline should control every knob that can move it rather
+       than rely on nobody setting it.
+
+       It is also the REPRO HOOK: a player who reports a layout can have it
+       reproduced exactly by pinning the dwell their playlog's seeded-varying
+       line recorded. */
+    const char *pin = std::getenv("SM64DS_RNG_MENU_FRAMES");
+
+    if (!pin && !(windowed && rng_run_is_real_play())) {
+        std::fprintf(stderr, "  [rng] seeded-fixed: data_0209d4b8 left at the "
+                     "port's .bss zero, every draw reproducible (windowed=%d)\n",
+                     windowed);
+        std::fflush(stderr);
+        return;
+    }
+
+    /* THE ROM'S BOOT CONSTANTS, then N frames of func_ov005_020c14a0's two
+       draws. Open-coded rather than calling RandomIntInternal so this file
+       takes no link dependency on an ov-scoped body for four lines of
+       arithmetic; the constants are src/RandomIntInternal.c's, verbatim. */
+    const unsigned n = pin ? (unsigned)std::strtoul(pin, nullptr, 0)
+                           : rng_menu_frames();
+    unsigned a = 0x4d2u;   /* func_020196cc's value for data_0209d4b8 */
+    unsigned b = 1u;       /* __sinit_02074e44's value for data_0209e650 */
+    for (unsigned i = 0; i < n; ++i) {
+        a = a * 0x19660du + 0x3c6ef35fu;
+        b = b * 0x19660du + 0x3c6ef35fu;
+    }
+    data_0209d4b8    = a;
+    data_0209e650[0] = (int)b;
+
+    std::fprintf(stderr, "  [rng] seeded-varying%s: %u menu frames of "
+                 "func_ov005_020c14a0 (dScMiniGm_c::Behavior, 0x020c14a0) "
+                 "replayed from the ROM's boot constants -- "
+                 "data_0209d4b8=0x%08x data_0209e650=0x%08x\n",
+                 pin ? " (pinned)" : "", n, a, (unsigned)b);
+    std::fflush(stderr);
 }
 
 // ---- the fill --------------------------------------------------------------

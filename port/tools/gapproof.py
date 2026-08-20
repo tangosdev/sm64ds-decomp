@@ -304,7 +304,12 @@ def scene_run(scene, frames, out_bmp, settings=None, extra_env=None):
               "SM64DS_SCENE_BMP", "SM64DS_SCENE_TRACE", "SM64DS_SCENE_SLOT9",
               "SM64DS_SCENE_SUBLEVEL", "SM64DS_DUAL_SCREEN", "PORT_WATCHDOG",
               "SM64DS_SCENE_WINDOW", "SM64DS_CLICK_TEST", "SM64DS_PAD_TEST",
-              "SM64DS_TOUCH_PROBE", "SM64DS_MG_SCORE_TRACE"):
+              "SM64DS_TOUCH_PROBE", "SM64DS_MG_SCORE_TRACE",
+              # run mg5 lane RNGSEED: pins the minigame RNG's menu dwell and
+              # forces the seed off the .bss zero every capture here is
+              # measured from. Deterministic, so an inherited one is stably
+              # wrong rather than flaky -- the harder kind to spot.
+              "SM64DS_RNG_MENU_FRAMES"):
         env.pop(k, None)
     env["SM64DS_SCENE"] = str(scene)
     env["SM64DS_SCENE_FRAMES"] = str(frames)
