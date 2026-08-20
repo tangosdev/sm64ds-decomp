@@ -635,7 +635,18 @@ void hal_gapless_minigames_latch(void)
                  "seam directly and arrive %d rows sooner than a DS delivers "
                  "them. THIS IS NOT THE ROM'S BEHAVIOUR. The PICTURE keeps the "
                  "%d rows: %s\n", scene, row->what, was, was, was,
-                 obj_shift_ds()
+                 /* WHICH ARM IS ACTUALLY RUNNING, and this used to be read off
+                    obj_shift_ds(), which is non-zero for BOTH arms. Every
+                    engaged run therefore printed the layer arm's "MEASURED
+                    WRONG" sentence while the per-entry arm was the one running,
+                    and any capture or crash report a player sent in carried it.
+                    The two are told apart by asking each for itself. */
+                 per_entry_ds()
+                     ? "the framework's routed sprites are corrected at their "
+                       "own submissions, so they sit on the rows the ROM draws "
+                       "them on, and the rows they run off the top screen's "
+                       "bottom edge into are the band between the halves"
+                     : obj_layer_shift_ds()
                      ? "the OBJ display shift is ON, which is opt-in and "
                        "MEASURED WRONG: it moves the whole top engine OBJ "
                        "layer, and only the framework-routed sprites are "
@@ -746,6 +757,20 @@ void *_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(int, void *, int, int, int,
 extern unsigned char data_0209e674[];
 extern unsigned char data_0209e660;
 
+/* THE MAIN SHADOW'S ENTRY COUNTER, and it is the whole of why this file no
+   longer reads OAM::Render's return value. See WHAT THE RETURN VALUE IS WORTH
+   below: two of the three overloads never produce the pointer this used to
+   test. The counter is the thing OAM::Render actually maintains -- it names the
+   next free slot, it is incremented once per entry the call accepts, and it is
+   the same word whether the call was culled early or late. Declared `int`, the
+   type its own definition and every ROM reader spells.
+
+   ALWAYS THIS COUNTER AND NEVER data_0209e670, because OAM::Render picks its
+   pair on `!draw || data_0209e660 == 1` and every G-carrying submission the
+   five routers make passes draw = 0. Checked in all five bodies rather than
+   assumed. */
+extern int data_0209e664;
+
 /* The five router bodies, renamed inside their own TUs by the port's build. */
 int func_ov004_020aff38__rom(void *, int, int, int, int, int, int);
 void func_ov004_020afdd0__rom(void *, int, int, int, int);
@@ -830,17 +855,62 @@ void routed_split(int py, int adj, int fell_back)
                  g_routed_band);
 }
 
-/* RECORD THE SLOT OAM::Render JUST WROTE. The pointer it returns is the entry
-   inside the shadow, so the slot is exact and needs no counter of this file's
-   own; the range test is what rejects a pointer into the OTHER shadow, which
-   sits one 0x400 block along and would otherwise read as slot 128 and up. */
-void routed_mark(void *res, int resid)
+/* ---- WHAT THE RETURN VALUE IS WORTH, AND WHY THIS COUNTS SLOTS INSTEAD ------
+ *
+ * THE SHIMS USED TO TEST OAM::Render's RETURN VALUE, on the reading that a
+ * culled call returns a null pointer and an accepted one returns the entry. That
+ * is true of exactly ONE of the three overloads this file calls, and the other
+ * two never produce it:
+ *
+ *   8 args, ..._Fix12IiEi     src defines it returning OamAttr *, null on every
+ *                             cull. THE READING HOLDS HERE and this overload's
+ *                             behaviour is unchanged by what follows.
+ *
+ *   7 args, ...P9Matrix2x2    src defines it returning VOID. Whatever is in the
+ *                             return register at each exit is leftover
+ *                             arithmetic -- the counter, x+w, y+h -- and it is
+ *                             never zero. So `if (r)` was always taken, the
+ *                             fallback below it was dead code, and the pointer
+ *                             handed to the old routed_mark pointed outside the
+ *                             shadow and failed its range test. Entries the top
+ *                             cull refused were therefore DROPPED: never
+ *                             re-submitted, never marked, never drawn in the
+ *                             band.
+ *
+ *   10 args, ..._Fix12IiES3_ii  the C-linkage name is a forwarder in
+ *                             hal/reverse_bridges.cpp that calls the C++ member
+ *                             and returns 0 unconditionally. So `if (r)` was
+ *                             NEVER taken, the second call ALWAYS ran, and every
+ *                             routed submission through func_ov004_020afdd0 was
+ *                             rendered TWICE -- once at the ROM's row and once
+ *                             at the mod's row, 32 rows apart, with no mark on
+ *                             either. That is the doubled sprite the player
+ *                             reported.
+ *
+ * SO THE TEST IS THE COUNTER, which is the thing OAM::Render actually maintains
+ * and the one signal all three overloads produce identically. data_0209e664
+ * names the next free slot in the main shadow; the call increments it once per
+ * entry it accepts and leaves it alone on every cull. Reading it either side of
+ * the call says whether the submission landed and, exactly, WHICH SLOTS it
+ * landed in -- which the 10-argument overload needs anyway, because it walks a
+ * list and can accept several entries in one call where the old
+ * pointer-and-one-slot reading could only ever record the last.
+ *
+ * AND EACH ENTRY IS THEN DRAWN EXACTLY ONCE. The second call is made only when
+ * the first allocated NOTHING, so the two can never both be in the shadow;
+ * whatever the second one allocates is marked with the residual, and the band
+ * draws those rows while the top screen's raster clips them. */
+
+int oam_slot_count(void) { return data_0209e664; }
+
+/* MARK THE SLOTS A CALL JUST TOOK, from c0 up to but not including c1. The
+   bounds test is the shadow's own 128 entries; a counter outside them is a
+   state this file should record nothing about rather than guess at. */
+void routed_mark_range(int c0, int c1, int resid)
 {
-    if (!res || !main_shadow_is_e674()) return;
-    const unsigned char *base = data_0209e674;
-    const long off = (long)((const unsigned char *)res - base);
-    if (off < 0 || off >= 1024 || (off & 7)) return;
-    ntr::ppu_obj_routed_record((int)(off >> 3), resid);
+    if (!main_shadow_is_e674()) return;
+    for (int s = c0; s < c1; ++s)
+        if (s >= 0 && s < 128) ntr::ppu_obj_routed_record(s, resid);
 }
 
 }  /* namespace */
@@ -854,17 +924,20 @@ void *port_oam_render_routed_8(int draw, void *obj, int px, int py, int pal,
     if (!adj)
         return _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(draw, obj, px, py, pal,
                                                        prio, scale, rot);
+    const int c0 = oam_slot_count();
     void *r = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(draw, obj, px, py + adj,
                                                       pal, prio, scale, rot);
-    if (r) {
-        routed_mark(r, 0);
+    const int c1 = oam_slot_count();
+    if (c1 != c0) {
+        routed_mark_range(c0, c1, 0);
         routed_split(py, adj, 0);
         return r;
     }
     r = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiEi(draw, obj, px, py, pal, prio,
                                                 scale, rot);
-    routed_mark(r, adj);
-    if (r) routed_split(py, adj, 1);
+    const int c2 = oam_slot_count();
+    routed_mark_range(c0, c2, adj);
+    if (c2 != c0) routed_split(py, adj, 1);
     return r;
 }
 
@@ -875,17 +948,20 @@ void *port_oam_render_routed_mtx(int draw, void *obj, int px, int py, int pal,
     if (!adj)
         return _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(draw, obj, px, py, pal,
                                                         prio, mtx);
+    const int c0 = oam_slot_count();
     void *r = _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(draw, obj, px, py + adj,
                                                        pal, prio, mtx);
-    if (r) {
-        routed_mark(r, 0);
+    const int c1 = oam_slot_count();
+    if (c1 != c0) {
+        routed_mark_range(c0, c1, 0);
         routed_split(py, adj, 0);
         return r;
     }
     r = _ZN3OAM6RenderEbP7OamAttriiiiP9Matrix2x2(draw, obj, px, py, pal, prio,
                                                  mtx);
-    routed_mark(r, adj);
-    if (r) routed_split(py, adj, 1);
+    const int c2 = oam_slot_count();
+    routed_mark_range(c0, c2, adj);
+    if (c2 != c0) routed_split(py, adj, 1);
     return r;
 }
 
@@ -897,18 +973,21 @@ void *port_oam_render_routed_10(int draw, void *obj, int px, int py, int pal,
         return _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(draw, obj, px, py,
                                                            pal, prio, sx, sy,
                                                            a8, a9);
+    const int c0 = oam_slot_count();
     void *r = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(draw, obj, px,
                                                           py + adj, pal, prio,
                                                           sx, sy, a8, a9);
-    if (r) {
-        routed_mark(r, 0);
+    const int c1 = oam_slot_count();
+    if (c1 != c0) {
+        routed_mark_range(c0, c1, 0);
         routed_split(py, adj, 0);
         return r;
     }
     r = _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(draw, obj, px, py, pal,
                                                     prio, sx, sy, a8, a9);
-    routed_mark(r, adj);
-    if (r) routed_split(py, adj, 1);
+    const int c2 = oam_slot_count();
+    routed_mark_range(c0, c2, adj);
+    if (c2 != c0) routed_split(py, adj, 1);
     return r;
 }
 
