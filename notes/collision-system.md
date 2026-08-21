@@ -907,10 +907,10 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   `rawX` (+25), `c` just after `den31` (+15), `rad6` before `origin` (+10), `cy`
   before `cz` (+8), `-(radius + unk_0ec)` (+3).
 
-  ### 125 -> 36: ask the compiler for the frame map
+  ### 125 -> 31: ask the compiler for the frame map
 
   ```
-  ratio 0.9798   mismatches 36/1778
+  ratio 0.9826   31 mismatching words / 1778
   ```
 
   Bank `divergences` 120 -> 34. Every declared local now sits at the cartridge's own
@@ -980,28 +980,86 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   or `rsc` (`sphere.radius << 4`, a load and a shift). **It needs a value that
   rematerialises without touching memory.**
 
-  ### What is left: 36
+  ### Count the relocations out
 
-  * **19 -- one slot swap, and it is the whole remaining slot defect.** The ROM has
-    `c` in the chain at 0xc4 and `rsc` in the pool at 0x104; we have the reverse.
-    Aimed at rsc the lever never fires: duplicate assignment, `= rsc`, `|= k0`,
-    `+= k0`, `-= k0`, `^= k0`, `&= ~k0`, `*= k1` at every statement site it reaches
-    (1,810 compiles), and naming the radius first so `rsc = rad << 4` is one shift
-    from a register (another 181). rsc is not reachable as a plain CSE either:
-    spelled inline the chain and pool land exactly right, but the temp first-fits
-    into the 4-byte alignment gap at 0xd4 -- which the ROM leaves EMPTY -- and
-    `sphere` goes hot enough to move fp -> sb with the frame at 0x1bc.
-  * **15 -- prologue scheduling**, indices 2-17: same 17 instructions, same
-    registers, different order. The cartridge issues the three centre loads as
-    y, x, z and never reads through the pointer the `add` just produced. Statement
-    order, both orders of c and f, all six raw* orders, splitting the loads from the
-    shifts, loading into temps first, reading x via sphere.pos and a volatile
-    pointer are all byte-neutral or worse.
-  * **1 -- index 1502**, a commutative add. The other three went away by NAMING THE
-    DIFFERENCE (`s32 dX = rawX - origin->x;`), which reads better than repeating the
-    subtraction. This one resists: flipping the source terms swaps the two LOADS
-    instead and costs three.
-  * **1 -- index 1046 is a literal-pool word**, not an instruction.
+  The raw word diff against the cartridge is 65, and 34 of those are link-time
+  wildcards: 33 `bl` targets, plus ONE DATA WORD at index 1046 (ROM `0x020a0cec`,
+  ours `0x00000000`) which is the unrelocated `&data_020a0cec` the source already
+  passes to `func_02037fd4`. An earlier note called that word "a literal-pool word,
+  not an instruction" and carried it as an unfixable defect. It is a relocation. The
+  honest remaining count is **31**, and it was 32 before this session's one win.
+
+  ### The two remaining defects are independent
+
+  Worth stating because it was assumed the other way for two sessions: compile with
+  the re-bind dropped, so `c` is chained at 0xc4 where the cartridge has it, and the
+  prologue schedule comes out instruction-for-instruction identical -- only the slot
+  number moves. The fifteen scheduling words are **not** downstream of the sixteen
+  slot words.
+
+  ### 32 -> 31: decouple the load order from the operand order
+
+  Index 1502 is `add r1, r6, r3` in the ROM and `add r1, r3, r6` in ours, where r6 is
+  `sphere.unk_0ec` and r3 is `sphere.radius`. Flipping the source terms was measured
+  twice and rejected twice: it re-orders the two LOADS at 1499/1500 instead and takes
+  the `sub` at 1506 with them, three words for nothing.
+
+  The reason is that one expression was carrying two orderings at once. Written as
+  `-(sphere.radius + sphere.unk_0ec)`, the load order and the add's operand order are
+  welded together and mwcc takes both from the source. Name the two reads and they
+  come apart:
+
+  ```c
+  s32 ext = sphere.unk_0ec;
+  s32 rad = sphere.radius;
+  if (da >= -(ext + rad) && da <= ext - rad && ...)
+  ```
+
+  Loads in the cartridge's order, add in the cartridge's order, nothing else touched.
+  This is the same shape as the earlier `s32 dX = rawX - origin->x;` win, and the
+  general rule is worth keeping: **when a spelling is pinned by two orderings at
+  once, give the operands names and the orderings separate.**
+
+  ### What is left: 31
+
+  * **16 -- one slot swap, and it is the whole slot defect.** All 99 slots the two
+    streams touch agree on address and reference count except two, exactly exchanged:
+    the cartridge has `c` chained at 0xc4 (12 refs) and `rsc` pooled at 0x104 (7); we
+    have the reverse. 0xd4 is referenced by neither, so nothing is hiding in the
+    alignment gap.
+
+    Pool membership is conserved -- it must hold exactly one of the two -- so drop the
+    re-bind and `c` lands on 0xc4 correctly but `rsc` takes 0xc8 and pushes
+    rawX/rawY/rawZ up, 72 words wrong instead of 16. The whole problem is therefore
+    "make `rsc` pool-resident", and it will not go. Roughly 500 compiles across eight
+    mechanism families, on both structures: second definitions; an EXHAUSTIVE sweep of
+    all 92 declaration sites (rsc lands on 0xc4/0xc8/0xcc/0xd0/0xd4 and nowhere else);
+    declaration-with-initializer including `const` and the C++ ctor form; `register`;
+    block scope spanning exactly the live range; volatile- and const-lvalue sources; a
+    compile-time constant first; SROA via one-element array, struct and union; an
+    inlined helper; and every allocation pragma mwccarm has, all of which are already
+    at the ROM's setting.
+
+    Why `c` moves and `rsc` cannot, measured rather than guessed: the re-bind only
+    works because **c's pointee is volatile**. Respell it `const Vector3 *` and mwcc
+    folds the second `&sphere.pos` into the first and c stays chained. A scalar has no
+    analogue -- you cannot make reads of a plain local volatile without taking its
+    address, which forces it into memory anyway.
+
+    And the pool is genuinely temps, not a second chain: 0xfc/0x100 hold the two halves
+    of a 64-bit value at 4-mod-8 alignment, which no declared `s64` could be given.
+
+  * **15 -- prologue scheduling**, indices 2-17: the same 17 instructions in the same
+    registers, differently ordered. The cartridge does both parameter moves first, then
+    computes and stores `c`, and only then loads `f` -- so `ldr r0,[sl,#0x20]` clobbers
+    the add result and all three centre reads come from reloads, {y,z} off one and {x}
+    off a second. We load f between the two moves, the add result survives, and it
+    serves `c->x` directly. Byte-neutral: both orders of the c and f assignments;
+    either or both moved inside the block; origin taken from kclFile so f is assigned
+    last; rad6 hoisted out; all six orders of the three centre reads; and a re-bind
+    before any subset of the three reads (32 combinations -- the count and placement
+    of re-binds make no difference, only that one exists before the z read).
+
 
   ### A metric defect that hid work
 

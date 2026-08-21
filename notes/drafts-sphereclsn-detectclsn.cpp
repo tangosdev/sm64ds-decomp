@@ -1,13 +1,19 @@
 //cpp
-// NONMATCHING: size 0x1bc8.  mismatches 36/1778, ratio 0.9798.
+// NONMATCHING: size 0x1bc8.  31 mismatching words / 1778, ratio 0.9826.
 //              1778 instructions, a 0x1b4 frame, every call-gap length AND the
 //              whole-function instruction multiset, all exactly the ROM's, and
-//              every stack slot but ONE SWAPPED PAIR.  (One of the 36 is not an
-//              instruction at all: a literal-pool word rendered as `andeq`.)
+//              every stack slot but ONE SWAPPED PAIR.
 //
-// 2026-08-20.  1493 -> 125 -> 36 mismatching words.  Every change is a SPELLING;
-// none changes what the function computes.  The whole step came from asking
-// mwccarm for its own frame map instead of inferring it -- see the DWARF section.
+// 2026-08-21.  1493 -> 125 -> 36 -> 31.  Every change is a SPELLING; none changes
+// what the function computes.  The 125 -> 36 step came from asking mwccarm for its
+// own frame map instead of inferring it -- see the DWARF section.
+//
+// COUNT THE RELOCATIONS OUT.  The raw word diff is 65, of which 34 are link-time
+// wildcards: 33 `bl` targets and ONE DATA WORD -- index 1046, ROM 0x020a0cec, ours
+// 0x00000000, which is the unrelocated `&data_020a0cec` the source already passes to
+// func_02037fd4.  An earlier revision of this banner called that one "a literal-pool
+// word, not an instruction", i.e. counted it as an unfixable defect.  It is neither
+// unfixable nor a defect; it is a reloc, and the honest remaining count is 31.
 //
 // ==================== HOW TO MEASURE, AND HOW IT MISLEADS ===================
 //
@@ -157,40 +163,64 @@
 // follows it in the frame also follows it in the block.  That is the order the
 // draft now uses, and it is why `fn` onwards sits below `en3`.
 //
-// ======================== WHAT IS LEFT: 36 ==================================
+// ======================== WHAT IS LEFT: 31 ==================================
 //
-//    19  ONE SLOT SWAP, and it is the whole remaining slot defect.  `c` and `rsc`
-//        are exactly exchanged: the cartridge has c in the chain at 0xc4 and rsc
-//        in the spill pool at 0x104; we have rsc at 0xc4 and c at 0x104.
+//        Two defects, and they are INDEPENDENT of each other -- proven, not assumed:
+//        compile with the re-bind dropped so `c` is chained at 0xc4, and the prologue
+//        schedule comes out instruction-for-instruction identical, only the slot
+//        number moves.  So the fifteen are not downstream of the sixteen.
 //
-//        The lever is the re-bind above -- a second definition moves a local out
-//        of the chain -- and it fires on `c` and not on `rsc`.  Characterised:
-//        it moves `c` (`&sphere.pos`, one `add` from fp) and does NOT move `f`
-//        (`this->kclFile`, a load) or `rsc` (a load and a shift), so it needs a
-//        value that rematerialises WITHOUT touching memory.  Aimed at rsc:
-//        duplicate assignment, `= rsc`, `|= k0`, `+= k0`, `-= k0`, `^= k0`,
-//        `&= ~k0`, `*= k1` at every statement site the variable reaches -- 1,810
-//        compiles -- and none of them shortens the chain.  Naming the radius
-//        first, so `rsc = rad << 4` is one shift from a register, does not help
-//        either (another 181).
+//    16  ONE SLOT SWAP.  Every one of the 99 stack slots the two streams touch
+//        agrees on address AND reference count except two, which are exactly
+//        exchanged: the cartridge has `c` in the declaration chain at 0xc4 (12
+//        references) and `rsc` in the temp pool at 0x104 (7); we have rsc at 0xc4
+//        and c at 0x104.  0xd4 is referenced by NEITHER stream, so there is no
+//        unidentified local hiding in the alignment gap.
 //
-//        rsc is also NOT reachable as a plain CSE.  Spelled inline the chain and
-//        pool land exactly right, but the temp first-fits into the 4-byte
-//        alignment gap at 0xd4 -- which the ROM leaves EMPTY -- and `sphere` goes
-//        hot enough to move fp -> sb with the frame at 0x1bc.
+//        Pool membership is conserved: the pool must hold exactly one of the two.
+//        Drop the re-bind and c lands on 0xc4 correctly, but rsc then takes 0xc8 and
+//        pushes rawX/rawY/rawZ four bytes high -- 72 words wrong, not 16.  So the
+//        whole problem reduces to: make `rsc` pool-resident.
 //
-//    15  prologue scheduling, indices 2-17: the same 17 instructions in the same
-//        registers, differently ordered.  The cartridge issues the three centre
-//        loads as y, x, z and never reads through the pointer the `add` just
-//        produced; we read x from it directly.  Statement order, both orders of
-//        c and f, all six raw* orders, splitting the loads from the shifts,
-//        loading into temps first, reading x via sphere.pos, and a volatile
-//        pointer are all byte-neutral or worse.
-//     1  index 1502, a commutative `add`.  The other three went away by NAMING
-//        THE DIFFERENCE (`s32 dX = rawX - origin->x;`), which also reads better.
-//        This one resists: flipping the source terms swaps the two LOADS instead
-//        and costs three.
-//     1  index 1046 is a literal-pool word, not an instruction.
+//        It will not go.  Eight mechanism families, ~500 compiles, on BOTH structures:
+//          * second definition -- the lever that pools c -- in four forms
+//          * declaration position: EXHAUSTIVE, all 92 declaration sites, both
+//            structures.  rsc lands at 0xc4/0xc8/0xcc/0xd0/0xd4 and nowhere else
+//          * declaration WITH INITIALIZER, incl. `const` and the C++ ctor form
+//          * `register`, and `register const`
+//          * block scope spanning exactly its live range
+//          * volatile-lvalue source and const-lvalue source (both change the count)
+//          * a compile-time constant first, then the real value
+//          * SROA: one-element array, struct field, union field
+//          * an inlined helper returning the value
+//          * every allocation pragma mwccarm has -- opt_lifetimes, opt_dead_assignments,
+//            opt_propagation, opt_common_subs, opt_dead_code and the two propagate*
+//            ones.  All are already at the ROM's setting; turning any of them off
+//            changes the instruction count.
+//
+//        Why c goes and rsc does not, measured: the re-bind only works because c's
+//        POINTEE IS VOLATILE.  Respell it `const Vector3 *` and mwcc folds the second
+//        `&sphere.pos` into the first, the count changes, and c stays chained.  There
+//        is no analogue for a scalar: you cannot make the reads of a plain local
+//        volatile without taking its address, which forces it into memory anyway.
+//
+//        And the pool really is temps, not a second chain: 0xfc/0x100 hold the two
+//        halves of a 64-bit value at 4-mod-8 alignment, which no declared `s64` could
+//        ever be given.
+//
+//    15  PROLOGUE SCHEDULING, indices 2-17: the same 17 instructions in the same
+//        registers, differently ordered.  The cartridge does both parameter moves
+//        first, then computes and stores c, and only THEN loads f -- so `ldr r0,
+//        [sl,#0x20]` clobbers the add result and all three centre reads have to come
+//        from reloads ({y,z} off one, {x} off a second).  We load f between the two
+//        moves, the add result survives, and it serves c->x directly.
+//
+//        Swept and byte-neutral: both orders of the c and f assignments; either or
+//        both moved inside the block; origin taken from kclFile so f is assigned
+//        last; rad6 hoisted out; all six orders of the three centre reads; and a
+//        re-bind before ANY SUBSET of the three reads (32 combinations -- the number
+//        and placement of re-binds makes no difference at all, only that one exists
+//        before the z read).  Qualifying either pointer volatile changes the count.
 //
 // ==================== MEASURED AND DEAD -- DO NOT RE-DERIVE =================
 //   * A PRAGMA.  `#pragma opt_common_subs off` costs 140 INSTRUCTIONS here, even
@@ -532,7 +562,8 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 
            The cost is that `c` then sits at 0x104 where the ROM has it at 0xc4,
            and `rsc` takes 0xc4 where the ROM has it at 0x104.  Those two are the
-           only misplaced locals left; see WHAT IS LEFT. */
+           only misplaced locals left, and they are the whole slot
+           defect; see WHAT IS LEFT. */
         c = &sphere.pos;
         rawY = c->y >> 6;
         rawZ = c->z >> 6;
@@ -898,9 +929,17 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             vc.y -= c->y;
                             vc.z -= c->z;
                             dc = AXIS_DOT0(vc);
-                            if (da >= -(sphere.radius + sphere.unk_0ec) && da <= sphere.unk_0ec - sphere.radius
-                             && db >= -(sphere.radius + sphere.unk_0ec) && db <= sphere.unk_0ec - sphere.radius
-                             && dc >= -(sphere.radius + sphere.unk_0ec) && dc <= sphere.unk_0ec - sphere.radius)
+                            /* The two loads and the add have to be spelled apart.  The cartridge
+                               loads unk_0ec first and radius second, then adds them in that same
+                               order; written as one expression those two orders are welded together
+                               and mwcc picks the operand order from the source, so flipping the sum
+                               re-orders the LOADS instead and costs three.  Naming the two reads
+                               makes them independent knobs, and then both land. */
+                            s32 ext = sphere.unk_0ec;
+                            s32 rad = sphere.radius;
+                            if (da >= -(ext + rad) && da <= ext - rad
+                             && db >= -(ext + rad) && db <= ext - rad
+                             && dc >= -(ext + rad) && dc <= ext - rad)
                                 continue;
                             }
                         }
