@@ -793,8 +793,8 @@ def adjacency(doc, hdr, sizes, aliases):
                 decl = hdr[hn]["fields"].get(off + sz) if hn else None
                 later = sorted(o for o in fields if o > off)
                 room = (later[0] - off) if later else None
-                if decl and decl[0] == want:
-                    v, note = "CONFIRMED", "header declares %s %s" % decl
+                if decl and any(t == want for t, _ in decl):
+                    v, note = "CONFIRMED", "the header declares a %s there" % want
                 elif room is None:
                     v, note = "TAIL", "no later proven member"
                 elif room < sz + wsz:
