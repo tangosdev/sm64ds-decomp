@@ -3334,3 +3334,76 @@ cause.** Type them and the length falls out; no coloring lever is involved.
 
 Same family as 6ar (a hoisted address local colors by its declared type) seen from
 the layout side rather than the register side.
+
+## 6bj. The pool's regions, park membership, and the DESTINATION of a free second definition (DetectClsn(SphCrr) MATCHED, 2026-08-21)
+
+The frame under 2004/b56 `-O4,p` is ordered regions:
+
+```
+low  [outgoing args][CHAIN][pool: webs / singles / coalesced band][aggregates]  high
+```
+
+The CHAIN holds declared locals kept in memory, in declaration order, and it
+CLOSES at the first aggregate declaration -- a scalar declared among the
+aggregates is exiled to the pool. The pool always begins at chain end + 8 (one
+structural pad word -- on this function it is the dead high-word leg of the
+`(s64)x * x` widening, present in every build), so ANY chained placement of a
+variable, an apparently-free 4-byte alignment gap included, shifts every pool
+slot by four.
+
+Coalesced-band membership (named locals that live among the temps) has
+measured triggers: an all-remat web (a no-op re-bind of `&object.field`
+qualifies -- it rematerialises from a register), a propagated compile-time
+constant (including `k = zeroVar` copies), an iteration-contained in-loop
+coalesce (an in-loop bare-load local whose uses stay inside the iteration),
+a volatile-source bare read -- and, the one that closed this function, **a
+zero-code volatile round-trip second definition**:
+
+```c
+rsc = sphere.radius << 4;
+rsc = (s32)(volatile s32)rsc;   /* emits NOTHING; demotes rsc into the band */
+```
+
+The FLAVOUR of a free second definition picks the destination: `x = x + k0`
+folds and demotes nothing; `x = x * k1` demotes only to the annex right after
+the chain (shifting the pool); the volatile round-trip demotes into the band
+proper, landing on the source-position-ordered slot. A null result on a lever
+spelled one way is not a null result on the lever. (The round-trip is a
+matching hack -- no 2004 author wrote it; it proves the allocator state and
+the mechanism, not the original spelling.)
+
+Bands order by source position of the entity's defining/first-materialization
+point (first-def for values, first-use for constants); a park's position does
+not move when the demoting statement moves. Storage webs (multi-def non-remat
+locals like `dotN >> 31` highs) allocate as 8-byte pairs and can never take a
+4-byte band slot; every arithmetic demotion of a load-derived scalar fuses it
+with the widening pad word into such a pair, which is why only the round-trip
+reaches the band. Full data: notes/collision-system.md Phase 3b.
+
+## 6bk. Four transferable results from the same campaign
+
+* **A per-site cv-qualifier CAST is its own CSE class.** ~350 statement-level
+  rewrites of a prologue were byte-neutral because mwcc canonicalises them to
+  one IR before allocation -- but `((const T *)p)->x` against a
+  `const volatile T *` declaration never joins the bare `p->x` web: it stops
+  the just-computed address register being consumed directly and lets a read
+  subset share one reload. Statement reordering cannot reach scheduling
+  effects that a per-site qualifier cast reaches for free.
+* **A two-leaf sum emits right-load-first, and the add is always
+  `add rd, LEFT, RIGHT`.** The ROM's operand order on a commutative add over
+  two loaded terms is unreachable from any two-leaf spelling; name the term
+  whose load the ROM does not re-issue at the site so it becomes a register
+  leaf and the add commutes.
+* **Score with the flags that build the ROM.** fdiff's `-w illpragmas` regime
+  read a fully matched file as 4/1778: a literal-pool word and the ORDER of
+  four hoisted zero-init stores are `-Cpp_exceptions off` codegen. Two
+  phantom "defects" and one inflated bucket count came from the wrong regime.
+* **The compiler's own pragma table is extractable.** The full list of names
+  `#pragma <name>` accepts is embedded as plain strings in mwccarm.exe -- 81
+  legal names under 2004/b56, including undocumented internals
+  (`opt_marknonregtemps`, `opt_scalarizeliveranges`,
+  `opt_optimizenonregaccess`, `opt_serializeassignments`,
+  `opt_decomposeaggregates`). Probe legality via the `illegal #pragma`
+  warning match.compile_c surfaces; `opt_generateconditionalassignments on`
+  ICEs this build. On this function all 81 x on/off were inert or
+  regressions -- the census exists so nobody re-guesses pragma names.
