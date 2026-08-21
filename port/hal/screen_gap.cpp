@@ -631,7 +631,17 @@ struct GaplessScene {
 const GaplessScene kGaplessScenes[] = {
     {368, GL_ZERO_G, "dScMgPachinko_c, Bob-omb Squad"},
     {374, GL_ZERO_G, "dScMgCurling_c, Shuffle Shell"},
-    {376, GL_SPLICE, "dScMgSmartball_c, Slots Shot"},
+    /* 376, Slots Shot, is DELIBERATELY NOT A ROW -- the owner's 2026-08-21
+       verdict after playing both candidate modes. Its top screen is a
+       registered playfield, so zero-G lifts every world sprite and hitbox
+       off the board; and any mode that keeps the ROM's registration leaves
+       48 hidden rows at the seam, where crossers visibly shrink out and pop
+       back -- the exact artifact the mod exists to remove. The only clean
+       geometry is zero-G with the board art extended 48 rows so it can
+       follow the world down, and that is ART WORK, not code: the map rows
+       below the visible board would have to be painted. Until someone
+       paints them, the honest answer is the one the latch already gives an
+       unlisted scene: gap simulated, said out loud. */
     {378, GL_ZERO_G, "MgCoincentration, Coincentration"},
     {366, GL_VISUAL, "dScMgLuigi_c, Wanted!"},
     {390, GL_VISUAL, "dScMgFlower_c, Loves Me...?"},
