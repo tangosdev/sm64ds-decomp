@@ -438,6 +438,7 @@ def audit():
     z = lambda: {"c": 0, "cpp": 0}
     local_body, no_include, pad, asm_files, launder = z(), z(), z(), z(), z()
     launder_sites = z()
+    cv_launder, cv_launder_sites = z(), z()
     extern_vtable, extern_vtable_classes = z(), set()
     for p in srcs:
         try:
@@ -463,10 +464,26 @@ def audit():
         # The launder kinds only. delaunder's default kind set also carries PARENS,
         # which is a cosmetic tidy for the parentheses a removal exposes, not a codegen
         # hack -- counting it here would inflate this number by thousands.
-        sites = delaunder.find_sites(t, ("MASK", "ROUNDTRIP", "WIDEN"))
+        sites = delaunder.find_sites(t, delaunder.LAUNDER_KINDS)
         if sites:
             launder[k] += 1
             launder_sites[k] += len(sites)
+        # THE CV-QUALIFIER FAMILY, counted separately and for a reason. The three
+        # idioms above are sometimes real: `(s64)a * b >> 12` is how you write a
+        # Q12 multiply, and the metric cannot tell that from a crutch. These two
+        # can be told. `(s32)(volatile s32)x` casts a prvalue to a cv-qualified
+        # non-class type, which the language says discards the qualifier -- it
+        # emits nothing and means nothing, so it exists only to steer the
+        # allocator. Its partner declares a pointee volatile so loads are not CSEd
+        # and then casts the volatile back off at every read, which is the same
+        # trick wearing a hat. Both were used to match
+        # dBgW_Kc::DetectClsn(dBgCh_SphCrr&) and NO gate in this tree could see
+        # either; that is what this family is here to fix. Genuine hardware
+        # volatile is not counted -- see delaunder's module docstring.
+        cv = delaunder.find_sites(t, delaunder.CV_KINDS)
+        if cv:
+            cv_launder[k] += 1
+            cv_launder_sites[k] += len(cv)
         # THE FAKE VTABLE. `extern int _ZTV6ToxBox[]; *(int**)p = _ZTV6ToxBox;` stores a
         # vptr by hand because no polymorphic class exists to emit one. It byte-matches
         # permanently -- storing the address of the ROM's own vtable is exactly what the
@@ -491,6 +508,8 @@ def audit():
     r["codegen_hacks"] = {"inline_asm": tot(asm_files),
                           "launder_or_forced": tot(launder),
                           "launder_sites": tot(launder_sites),
+                          "cv_launder": tot(cv_launder),
+                          "cv_launder_sites": tot(cv_launder_sites),
                           "extern_vtable": tot(extern_vtable),
                           # Distinct classes, not files: many files fake the SAME class
                           # (`_ZTV8Platform` alone appears in 161 of them), and modelling
@@ -533,6 +552,8 @@ RATCHET = [
     ("codegen_hacks", "inline_asm"),
     ("codegen_hacks", "launder_or_forced"),
     ("codegen_hacks", "launder_sites"),
+    ("codegen_hacks", "cv_launder"),
+    ("codegen_hacks", "cv_launder_sites"),
     ("codegen_hacks", "extern_vtable"),
     ("codegen_hacks", "extern_vtable_classes"),
 ]
@@ -584,6 +605,8 @@ def summary(r):
                f"   ({ch['extern_vtable_classes']} class(es) unmodelled)")
     out.append(f"    launder / forced         {ch['launder_or_forced']:6d}"
                f"   ({ch['launder_sites']} site(s) in code)")
+    out.append(f"    cv-qualifier launder     {ch['cv_launder']:6d}"
+               f"   ({ch['cv_launder_sites']} site(s) in code)")
     return "\n".join(out)
 
 
