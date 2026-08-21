@@ -907,10 +907,10 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   `rawX` (+25), `c` just after `den31` (+15), `rad6` before `origin` (+10), `cy`
   before `cz` (+8), `-(radius + unk_0ec)` (+3).
 
-  ### 125 -> 31: ask the compiler for the frame map
+  ### 125 -> 15: ask the compiler for the frame map
 
   ```
-  ratio 0.9826   31 mismatching words / 1778
+  ratio 0.9916   15 mismatching words / 1778
   ```
 
   Bank `divergences` 120 -> 34. Every declared local now sits at the cartridge's own
@@ -1020,45 +1020,77 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   general rule is worth keeping: **when a spelling is pinned by two orderings at
   once, give the operands names and the orderings separate.**
 
-  ### What is left: 31
+  ### 31 -> 15: the slot swap, solved by a zero-cost volatile round-trip
 
-  * **16 -- one slot swap, and it is the whole slot defect.** All 99 slots the two
-    streams touch agree on address and reference count except two, exactly exchanged:
-    the cartridge has `c` chained at 0xc4 (12 refs) and `rsc` pooled at 0x104 (7); we
-    have the reverse. 0xd4 is referenced by neither, so nothing is hiding in the
-    alignment gap.
+  The whole 16-word slot defect came down to one thing: the cartridge chains `c` at
+  0xc4 and pools `rsc` at 0x104, and we had it the other way round. Pool membership is
+  conserved, so the task was to demote `rsc` into the pool while leaving `c` chained.
+  Roughly 500 compiles across eight mechanism families had failed to move it.
 
-    Pool membership is conserved -- it must hold exactly one of the two -- so drop the
-    re-bind and `c` lands on 0xc4 correctly but `rsc` takes 0xc8 and pushes
-    rawX/rawY/rawZ up, 72 words wrong instead of 16. The whole problem is therefore
-    "make `rsc` pool-resident", and it will not go. Roughly 500 compiles across eight
-    mechanism families, on both structures: second definitions; an EXHAUSTIVE sweep of
-    all 92 declaration sites (rsc lands on 0xc4/0xc8/0xcc/0xd0/0xd4 and nowhere else);
-    declaration-with-initializer including `const` and the C++ ctor form; `register`;
-    block scope spanning exactly the live range; volatile- and const-lvalue sources; a
-    compile-time constant first; SROA via one-element array, struct and union; an
-    inlined helper; and every allocation pragma mwccarm has, all of which are already
-    at the ROM's setting.
+  Two edits:
 
-    Why `c` moves and `rsc` cannot, measured rather than guessed: the re-bind only
-    works because **c's pointee is volatile**. Respell it `const Vector3 *` and mwcc
-    folds the second `&sphere.pos` into the first and c stays chained. A scalar has no
-    analogue -- you cannot make reads of a plain local volatile without taking its
-    address, which forces it into memory anyway.
+  ```c
+  /* 1. delete the re-bind -- c then chains at 0xc4 by itself */
+  /* 2. after `rsc = sphere.radius << 4;` add: */
+  rsc = (s32)(volatile s32)rsc;
+  ```
 
-    And the pool is genuinely temps, not a second chain: 0xfc/0x100 hold the two halves
-    of a 64-bit value at 4-mod-8 alignment, which no declared `s64` could be given.
+  Casting a prvalue to a cv-qualified scalar type discards the qualifier, so **that
+  statement generates no code at all** -- the count stays exactly 1778 -- but it marks
+  the value volatile inside mwcc's front end and that demotes `rsc` out of the
+  declaration chain into the coalesced-locals band of the temp pool, landing on 0x104.
+  Frame afterwards: den31 0xc0, c 0xc4, rawX 0xc8, rawY 0xcc, rawZ 0xd0, rsc pooled.
+  All 99 slots now agree with the cartridge on address and reference count.
 
-  * **15 -- prologue scheduling**, indices 2-17: the same 17 instructions in the same
-    registers, differently ordered. The cartridge does both parameter moves first, then
-    computes and stores `c`, and only then loads `f` -- so `ldr r0,[sl,#0x20]` clobbers
-    the add result and all three centre reads come from reloads, {y,z} off one and {x}
-    off a second. We load f between the two moves, the add result survives, and it
-    serves `c->x` directly. Byte-neutral: both orders of the c and f assignments;
-    either or both moved inside the block; origin taken from kclFile so f is assigned
-    last; rad6 hoisted out; all six orders of the three centre reads; and a re-bind
-    before any subset of the three reads (32 combinations -- the count and placement
-    of re-binds make no difference, only that one exists before the z read).
+  **The flavour of the demotion picks the landing zone**, which is why nothing else
+  worked:
+
+  | second definition | effect |
+  |---|---|
+  | `rsc + k0` (k0 == 0 at runtime) | folds and forgets -- no demotion |
+  | `rsc * k1` (k1 == 1) | demotes only to the annex at 0xd4, right after the last chained local |
+  | volatile round-trip | demotes into the pool's coalesced band at 0x104 |
+
+  And a structural fact that explains why the 0xd4 "gap" was never usable: **the pool
+  always begins at chain end + 8**, one structural pad word, so any chained placement
+  of rsc -- 0xd4 included -- shifts every temp by four.
+
+  This is a MATCHING HACK, not a reconstruction. No 2004 author wrote
+  `(s32)(volatile s32)rsc`. What it establishes is the mechanism, plus one fact about
+  the original: the cartridge's rsc is a **demoted named local, not an inline
+  subexpression** -- spelled inline, mwcc recomputes rather than building the 0x104
+  temp and the count goes to 1779. Finding the spelling the author actually used is
+  open work.
+
+  ### What is left: 15
+
+  Fifteen words of prologue scheduling, indices 2-17, and nothing else anywhere in the
+  function. Same 17 instructions, same registers, different order. The cartridge does
+  both parameter moves first, then computes and stores `c`, and only then loads `f` --
+  so `ldr r0,[sl,#0x20]` clobbers the add result and all three centre reads come from
+  reloads, {y,z} off one and {x} off a second. We load f between the two moves, the add
+  result survives, and it serves `c->x` directly.
+
+  It is downstream of **one allocator decision**, not of statement order: whether the
+  add result is forwarded to the first centre read. That invariant held across every
+  size-preserving variant of ~350 compiles, because mwcc canonicalises these local
+  rewrites to the same IR before allocation. Byte-neutral on this structure: both
+  orders of the c and f assignments, either or both moved into the block, origin taken
+  from kclFile, rad6 hoisted, a volatile view on the f load, empty `asm { }` blocks,
+  `do {} while (0)` wrappers, goto/label splits, and hoisted extra definitions (all
+  DCE'd -- which is why re-bind count and placement never mattered).
+
+  Two spellings *do* flip the basin and produce an instantly ROM-shaped prologue --
+  `const volatile Vector3 *volatile c`, and a volatile-home store through
+  `*(const volatile Vector3 *volatile *)&c`. Both are dead: on the old structure they
+  cost `c` its slot, and re-run on the new one they no longer preserve the instruction
+  count at all (1772, 1766, 1772, 1771). Aiming the rsc round-trip at `c` demotes `c`
+  as well and undoes the slot fix. **The prologue's lever and the slot fix want
+  opposite things from `c`.**
+
+  Note the read order became load-bearing only after the slot fix -- all six
+  permutations were byte-neutral before it, and now XYZ is the only one that scores 15.
+  That is `dead-levers-are-scoped-to-structure` in one line.
 
 
   ### A metric defect that hid work
