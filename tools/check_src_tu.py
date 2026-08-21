@@ -241,7 +241,11 @@ def main(argv=None):
         if args.json == "-":
             sys.stdout.write(text)
         else:
-            pathlib.Path(args.json).write_text(text)
+            # build/ is gitignored, so a fresh CI checkout has no such directory --
+            # writing the report must not be what fails the gate.
+            out = pathlib.Path(args.json)
+            out.parent.mkdir(parents=True, exist_ok=True)
+            out.write_text(text)
 
     c = report["checked"]
     print(f"check_src_tu: {c['sources']} translation unit(s), {c['includes']} include(s), "
