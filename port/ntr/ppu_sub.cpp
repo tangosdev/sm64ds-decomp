@@ -1255,7 +1255,34 @@ void band_fill(uint32_t *dst, int dst_w, const StackLayout &lay)
        really there. The chosen fill mode, the scene art and the flat colour
        all stand down: this band is not the player's decoration. */
     if (lay.world_band) {
-        band_fill_ambient(dst, dst_w, lay);
+        /* ART-CONTINUED BACKDROP, not the wash: the wash is the gap-mode
+           glow and the owner reads it as a gap wherever it appears. These
+           rows are playfield, so each column continues the scene's own art:
+           the per-column MEDIAN of the 24 composed rows above the band,
+           which follows vertical art structure (brick pillars, curtains)
+           and throws away anything transient passing through the sample,
+           so a falling coin cannot smear itself into the backdrop. */
+        for (int x = 0; x < lay.w; ++x) {
+            unsigned char rs[24], gs[24], bs[24];
+            for (int k = 0; k < 24; ++k) {
+                const uint32_t p =
+                    dst[(size_t)(lay.band_y - 24 + k) * dst_w + x];
+                rs[k] = (unsigned char)(p >> 16);
+                gs[k] = (unsigned char)(p >> 8);
+                bs[k] = (unsigned char)p;
+            }
+            for (int a = 0; a < 24; ++a)
+                for (int b2 = a + 1; b2 < 24; ++b2) {
+                    unsigned char t;
+                    if (rs[b2] < rs[a]) { t = rs[a]; rs[a] = rs[b2]; rs[b2] = t; }
+                    if (gs[b2] < gs[a]) { t = gs[a]; gs[a] = gs[b2]; gs[b2] = t; }
+                    if (bs[b2] < bs[a]) { t = bs[a]; bs[a] = bs[b2]; bs[b2] = t; }
+                }
+            const uint32_t c = 0xFF000000u | ((uint32_t)rs[12] << 16) |
+                               ((uint32_t)gs[12] << 8) | (uint32_t)bs[12];
+            for (int k = 0; k < lay.band_h; ++k)
+                dst[(size_t)(lay.band_y + k) * dst_w + x] = c;
+        }
         return;
     }
     if (lay.peek) {

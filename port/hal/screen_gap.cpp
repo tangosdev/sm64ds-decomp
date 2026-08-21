@@ -327,6 +327,7 @@ int hal_screen_gap_raw(void) { return read_raw(); }
 
 int hal_gapless_visual(void);   /* defined beside the latch below */
 int hal_gapless_world(void);    /* same */
+int hal_gapless_world_rows(void); /* same */
 
 const ntr::StackLayout *hal_screen_layout(void)
 {
@@ -408,7 +409,7 @@ const ntr::StackLayout *hal_screen_layout(void)
     if (g_have && want == g_raw && scene == g_scene && head == g_head &&
         shift == g_shift) {
         g_lay.seam = seam;
-        g_lay.world_band = hal_gapless_world() ? 1 : 0;
+        g_lay.world_band = (hal_gapless_world() || hal_gapless_world_rows()) ? 1 : 0;
         g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
         return &g_lay;
     }
@@ -442,7 +443,7 @@ const ntr::StackLayout *hal_screen_layout(void)
     g_lay = ntr::stack_layout(want, head, shift, mode,
                               host_setting_gap_color(), peek, art);
     g_lay.seam = seam;
-    g_lay.world_band = hal_gapless_world() ? 1 : 0;
+    g_lay.world_band = (hal_gapless_world() || hal_gapless_world_rows()) ? 1 : 0;
     g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
     /* and the band's per-scene continuity reader, installed at the same moment
        for the same reason: it is per scene, and installing clears the cached
@@ -612,6 +613,13 @@ namespace {
 enum {
     GL_VISUAL = 0,   /* G untouched; the picture just loses the band */
     GL_ZERO_G = 1,   /* G -> 0: the world compresses, crossings continuous */
+    GL_WORLD_ROWS = 4, /* G untouched: both screens are the ROM's exact
+                        picture -- score line at the top, Wario on his
+                        blocks -- and the hidden hinge rows are drawn as
+                        real rows between the screens, backdrop continued
+                        from the scene's own art, crossers crisp inside
+                        them via the peek raster and the continuity reader.
+                        The picture is G rows taller and nothing vanishes. */
     GL_ZERO_G_TALL = 3, /* zero-G plus the headroom strip: the picture gains
                         G rows above the top screen showing the world's own
                         top rows. For a game whose upper strip carries real
@@ -650,7 +658,7 @@ const GaplessScene kGaplessScenes[] = {
        below the visible board would have to be painted. Until someone
        paints them, the honest answer is the one the latch already gives an
        unlisted scene: gap simulated, said out loud. */
-    {378, GL_ZERO_G_TALL, "MgCoincentration, Coincentration"},
+    {378, GL_WORLD_ROWS, "MgCoincentration, Coincentration"},
     {366, GL_VISUAL, "dScMgLuigi_c, Wanted!"},
     {390, GL_VISUAL, "dScMgFlower_c, Loves Me...?"},
 };
@@ -659,6 +667,7 @@ int g_gapless_on;        /* 1 once the write has engaged for the scene running *
 int g_gapless_visual;    /* 1 for a VISUAL row: band gone, simulation untouched */
 int g_gapless_world;     /* 1 for a FULL row: ROM sim, hinge rows drawn as world */
 int g_gapless_tall;      /* 1 for a TALL row: the headroom strip is on */
+int g_gapless_wrows;     /* 1 for a WORLD_ROWS row: banded, band = world */
 int g_gapless_scene = -2;
 
 const GaplessScene *gapless_row(int scene)
@@ -681,6 +690,7 @@ void hal_gapless_minigames_latch(void)
     g_gapless_visual = 0;
     g_gapless_world = 0;
     g_gapless_tall = 0;
+    g_gapless_wrows = 0;
     g_gapless_scene = scene;
     /* AND THE HEADROOM IS DROPPED WITH IT, for the reason the two lines above
        exist: a scene must never inherit the last one's answer, and a stale
@@ -751,6 +761,16 @@ void hal_gapless_minigames_latch(void)
        spinning star, ramps and peg hitboxes all rode 48 rows above the
        board under zero-G. Neither is globally correct; that lesson cost a
        whole night. */
+    if (row->mode == GL_WORLD_ROWS) {
+        g_gapless_wrows = 1;
+        std::fprintf(stderr, "[gapless] scene %d: WORLD-ROWS for %s -- both "
+                     "screens keep the ROM's exact picture and the %d hidden "
+                     "hinge rows are drawn as real world rows between them, "
+                     "art-continued backdrop, crossers crisp. The picture is "
+                     "taller; nothing is displaced and nothing vanishes.\n",
+                     scene, row->what, was);
+        return;
+    }
     if (row->mode == GL_ZERO_G || row->mode == GL_ZERO_G_TALL) {
         g_gapless_tall = row->mode == GL_ZERO_G_TALL;
         data_ov004_020beb6c[0] = 0;
@@ -787,6 +807,13 @@ int hal_gapless_visual(void)
 int hal_gapless_world(void)
 {
     return g_gapless_world && g_gapless_scene == hal_gap_scene_id();
+}
+
+/* WORLD_ROWS: the band stays and is painted as world. Only the layout and
+   the band painters read it. */
+int hal_gapless_world_rows(void)
+{
+    return g_gapless_wrows && g_gapless_scene == hal_gap_scene_id();
 }
 
 /* ---- THE SPLICE: the rows the mod removed, removed from trajectories too ---
