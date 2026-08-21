@@ -6,6 +6,9 @@
 #define SNOWMANBODY_H
 #include "types.h"
 #include "Model.h"
+#include "ShadowModel.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 
 struct SnowmanBody {
     u8  pad_000[0x8];
@@ -27,12 +30,18 @@ struct SnowmanBody {
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
-    u8  mShadowModel;            /* 0x124 */
-    u8  pad_125[0x27];
-    u8  mdCcAc_c;            /* 0x14c */
-    u8  pad_14d[0x33];
-    u8  mWithMeshClsn;            /* 0x180 */
-    u8  pad_181[0x1bb];
+    /* ShadowModel member. The cartridge's own ~SnowmanBody calls _ZN11ShadowModelD1Ev
+       at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    ShadowModel mShadowModel;            /* 0x124 */
+    /* dCcAc_c member. The cartridge's own ~SnowmanBody calls _ZN7dCcAc_cD1Ev at +0x14c
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    dCcAc_c mdCcAc_c;            /* 0x14c */
+    /* dBgCh_Actr member. The cartridge's own ~SnowmanBody calls _ZN10dBgCh_ActrD1Ev at
+       +0x180 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgCh_Actr mWithMeshClsn;            /* 0x180 */
     s32 unk_33c;            /* 0x33c */
     s32 unk_340;            /* 0x340 */
     s32 unk_344;            /* 0x344 */

@@ -6,6 +6,7 @@
 #define MADPIANO_H
 #include "types.h"
 #include "ModelAnim.h"
+#include "Model.h"
 
 struct MadPiano {
     u8  pad_000[0x5c];
@@ -21,8 +22,10 @@ struct MadPiano {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x30];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member. The cartridge's own ~MadPiano calls _ZN5ModelD1Ev at +0x0d4
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x320 -- a relocation the ROM build checks.

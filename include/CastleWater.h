@@ -21,6 +21,7 @@
 #include "types.h"
 #include "math/Matrix.h"
 #include "TextureTransformer.h"
+#include "dBgW_KcMbg.h"
 
 struct CastleWater {
     u8  pad_000[0x5c];
@@ -40,8 +41,10 @@ struct CastleWater {
     u8  pad_0d5[0x7];
     u8  mModelComponents;            /* 0x0dc */
     u8  pad_0dd[0x47];
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1c7];
+    /* dBgW_KcMbg member. The cartridge's own ~CastleWater calls _ZN10dBgW_KcMbgD1Ev at
+       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
     /* Real type, not a marker: InitResources hands it to
        dBgW_KcMbg::SetFile through an explicit `Matrix4x3&` cast. */
     Matrix4x3 mMatrix;            /* 0x2ec */

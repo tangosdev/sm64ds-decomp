@@ -2,6 +2,7 @@
 #define BIGBRICKBLOCK_H
 
 #include "types.h"
+#include "dBgW_KcMbg.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
@@ -119,8 +120,11 @@ struct BigBrickBlock {
        Model's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13BigBrickBlockD1Ev.c] */
     Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1f9];
+    /* dBgW_KcMbg member. The cartridge's own ~BigBrickBlock calls _ZN10dBgW_KcMbgD1Ev
+       at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x32];
     u8  unk_31e;            /* 0x31e */
     u8  unk_31f;            /* 0x31f */
     u8  mEventID;            /* 0x320 */

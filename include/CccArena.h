@@ -14,6 +14,7 @@
 #ifndef CCCARENA_H
 #define CCCARENA_H
 #include "types.h"
+#include "dBgW_KcMbg.h"
 
 #ifdef __cplusplus
 
@@ -74,8 +75,11 @@ struct CccArena {
     s16 mAngleZ;            /* 0x090 */
     u8  pad_092[0x42];
     Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
+    /* dBgW_KcMbg member. The cartridge's own ~CccArena calls _ZN10dBgW_KcMbgD1Ev at
+       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x34];
     u8  unk_320;            /* 0x320 */
     u8  pad_321[0xf];
     u16 unk_330;            /* 0x330 */

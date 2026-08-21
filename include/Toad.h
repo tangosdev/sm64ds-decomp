@@ -7,6 +7,7 @@
 #include "types.h"
 #include "ModelAnim.h"
 #include "dCcAc_c.h"
+#include "ShadowModel.h"
 
 struct Toad {
     u8  pad_000[0x8];
@@ -30,8 +31,11 @@ struct Toad {
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x108 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     ModelAnim mModelAnim;            /* 0x108 */
-    u8  mShadowModel;            /* 0x16c */
-    u8  pad_16d[0x87];
+    /* ShadowModel member. The cartridge's own ~Toad calls _ZN11ShadowModelD1Ev at
+       +0x16c (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    ShadowModel mShadowModel;            /* 0x16c */
+    u8  pad_194[0x60];
     s32 unk_1f4;            /* 0x1f4 */
     u8  pad_1f8[0x8];
     /* Two ApproachLinear pairs: 0x200 chases 0x202 and 0x204 chases 0x206,

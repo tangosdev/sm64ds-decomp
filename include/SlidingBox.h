@@ -7,6 +7,7 @@
 #include "types.h"
 #include "Model.h"
 #include "dBgCh_Actr.h"
+#include "dBgW_KcMbg.h"
 
 struct SlidingBox {
     u8  pad_000[0x5c];
@@ -30,8 +31,11 @@ struct SlidingBox {
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
+    /* dBgW_KcMbg member. The cartridge's own ~SlidingBox calls _ZN10dBgW_KcMbgD1Ev at
+       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x34];
     s32 mShip;            /* 0x320 */
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x324 -- a relocation the ROM build

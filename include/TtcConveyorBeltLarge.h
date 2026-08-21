@@ -6,6 +6,8 @@
 #define TTCCONVEYORBELTLARGE_H
 #include "types.h"
 #include "Model.h"
+#include "dBgW_KcMbg.h"
+#include "ShadowModel.h"
 
 struct TtcConveyorBeltLarge {
     u8  pad_000[0xc];
@@ -24,16 +26,23 @@ struct TtcConveyorBeltLarge {
        short of the object, so the member also takes over unk_0dc (+0x8 = data), which the
        header declared separately inside it. */
     Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1c7];
+    /* dBgW_KcMbg member. The cartridge's own ~TtcConveyorBeltLarge calls
+       _ZN10dBgW_KcMbgD1Ev at +0x124 (D0/D1), a relocation the ROM build checks;
+       recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
+       inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x33];
     u8  mTextureTransformer;            /* 0x320 */
     u8  pad_321[0xb];
     s32 unk_32c;            /* 0x32c */
     u8  pad_330[0x4];
-    u8  mShadowModel;            /* 0x334 */
-    u8  pad_335[0x57];
+    /* ShadowModel member. The cartridge's own ~TtcConveyorBeltLarge calls
+       _ZN11ShadowModelD1Ev at +0x334 (D0/D1), a relocation the ROM build checks;
+       recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
+       inlined base. */
+    ShadowModel mShadowModel;            /* 0x334 */
+    u8  pad_35c[0x30];
     s32 mBeltSpeed;            /* 0x38c */
     s32 mTargetBeltSpeed;            /* 0x390 */
     s32 unk_394;            /* 0x394 */

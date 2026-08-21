@@ -9,6 +9,7 @@
 #include "Model.h"
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
+#include "dCcAcPos_c.h"
 
 struct Butterfly {
     u8  pad_000[0x80];
@@ -50,8 +51,11 @@ struct Butterfly {
        dBgCh_Actr's D1 at +0x1d8 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN9ButterflyD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x1d8 */
-    u8  mdCcAcPos_c;            /* 0x394 */
-    u8  pad_395[0x4b];
+    /* dCcAcPos_c member. The cartridge's own ~Butterfly calls _ZN10dCcAcPos_cD1Ev at
+       +0x394 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dCcAcPos_c mdCcAcPos_c;            /* 0x394 */
+    u8  pad_3d4[0xc];
     s32 unk_3e0;            /* 0x3e0 */
     s32 unk_3e4;            /* 0x3e4 */
     u8  pad_3e8[0x8];

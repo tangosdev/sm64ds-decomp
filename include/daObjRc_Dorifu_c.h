@@ -2,6 +2,7 @@
 #define DAOBJRC_DORIFU_C_H
 
 #include "types.h"
+#include "Model.h"
 
 /* The Rainbow Ride drifting platform. Only ever named by its ROM name.
  *
@@ -46,8 +47,10 @@ typedef char daObjRc_Dorifu_c_size_must_be_0xdcc[sizeof(daObjRc_Dorifu_c) == 0xd
    can never be migrated. Same arrangement as include/dBgActor_c.h. */
 struct daObjRc_Dorifu_c {
     u8  pad_000[0xd4];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
+    /* Model member. The cartridge's own ~daObjRc_Dorifu_c calls _ZN5ModelD1Ev at +0x0d4
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    Model mModel;            /* 0x0d4 */
     u8  mMovingMeshCollider;            /* 0x124 */
 };
 

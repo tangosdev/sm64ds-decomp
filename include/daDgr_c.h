@@ -2,6 +2,7 @@
 #define DADGR_C_H
 
 #include "types.h"
+#include "dBgW_KcMbg.h"
 
 #ifdef __cplusplus
 
@@ -126,8 +127,10 @@ struct daDgr_c {
     s32 unk_118;                 /* 0x118 */
     s32 unk_11c;                 /* 0x11c */
     u8  pad_120[0x4];
-    u8  mMeshCollider;           /* 0x124 */
-    u8  pad_125[0x1c7];
+    /* dBgW_KcMbg member. The cartridge's own ~daDgr_c calls _ZN10dBgW_KcMbgD1Ev at
+       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
     struct Matrix4x3 mClsnMat;   /* 0x2ec */
     u8  unk_31c;                 /* 0x31c */
     u8  unk_31d;                 /* 0x31d */

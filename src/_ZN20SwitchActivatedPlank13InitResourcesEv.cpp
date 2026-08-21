@@ -6,9 +6,10 @@
 #include "SwitchActivatedPlank.h"
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
-/* Model and ModelBase are the real classes now, through this actor's header. */
-struct dBgW_Kc { int d; };
-struct dBgW_KcMbg { int d; };
+/* Model, ModelBase and dBgW_KcMbg are the real classes now, through this
+   actor's header. The placeholder `struct dBgW_KcMbg { int d; };` was only
+   ever a cast target and redefining the real one ICEd mwccarm; dBgW_Kc was
+   never used as a type at all. */
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);

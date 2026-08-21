@@ -6,6 +6,8 @@
 #define MRI_H
 #include "types.h"
 #include "ModelAnim.h"
+#include "ShadowModel.h"
+#include "dCcAcPos_c.h"
 
 struct MrI {
     u8  pad_000[0x8];
@@ -34,10 +36,14 @@ struct MrI {
     u8  pad_139[0xb];
     s32 unk_144;            /* 0x144 */
     u8  pad_148[0x4];
-    u8  mShadowModel;            /* 0x14c */
-    u8  pad_14d[0x27];
-    u8  mdCcAcPos_c;            /* 0x174 */
-    u8  pad_175[0x3f];
+    /* ShadowModel member. The cartridge's own ~MrI calls _ZN11ShadowModelD1Ev at +0x14c
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    ShadowModel mShadowModel;            /* 0x14c */
+    /* dCcAcPos_c member. The cartridge's own ~MrI calls _ZN10dCcAcPos_cD1Ev at +0x174
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    dCcAcPos_c mdCcAcPos_c;            /* 0x174 */
     u8  unk_1b4;            /* 0x1b4 */
     u8  pad_1b5[0x37];
     s32 unk_1ec;            /* 0x1ec */

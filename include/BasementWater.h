@@ -2,6 +2,7 @@
 #define BASEMENTWATER_H
 
 #include "types.h"
+#include "dBgW_KcMbg.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
@@ -62,8 +63,11 @@ struct BasementWater {
        short of the object, so the member also takes over unk_0dc (+0x8 = data), which the
        header declared separately inside it. */
     Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
+    /* dBgW_KcMbg member. The cartridge's own ~BasementWater calls _ZN10dBgW_KcMbgD1Ev
+       at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x34];
     TextureTransformer mTextureTransformer; /* 0x320 */
     s32 mLoweredY;            /* 0x334 */
     u32 mSoundID;            /* 0x338 */

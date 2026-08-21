@@ -2,6 +2,7 @@
 #define QUESTIONBLOCK_H
 
 #include "types.h"
+#include "dBgW_KcMbg.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
@@ -99,8 +100,11 @@ struct QuestionBlock {
     u8  pad_0d5[0x1b];
     u8  unk_0f0;            /* 0x0f0 */
     u8  pad_0f1[0x33];
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
+    /* dBgW_KcMbg member. The cartridge's own ~QuestionBlock calls _ZN10dBgW_KcMbgD1Ev
+       at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x34];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x320 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
        stopped short of the object, so the member also takes over mAnimation (+0x50 = the

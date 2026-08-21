@@ -5,6 +5,7 @@
 #ifndef FISH_H
 #define FISH_H
 #include "types.h"
+#include "ModelAnim.h"
 
 struct Fish {
     u8  pad_000[0x4];
@@ -13,8 +14,11 @@ struct Fish {
     u8  pad_00c[0x54];
     s32 mPosY;            /* 0x060 */
     u8  pad_064[0x70];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x67];
+    /* ModelAnim member. The cartridge's own ~Fish calls _ZN9ModelAnimD1Ev at +0x0d4
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    ModelAnim mModelAnim;            /* 0x0d4 */
+    u8  pad_138[0x4];
     s32 unk_13c;            /* 0x13c */
     s32 unk_140;            /* 0x140 */
     u8  pad_144[0x8];

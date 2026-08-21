@@ -2,6 +2,8 @@
 #define PATHLIFT_H
 
 #include "types.h"
+#include "Model.h"
+#include "dBgW_KcMbg.h"
 
 /* A lift that runs along a path. Derives from dBgActor_c, and its own data starts
  * in the base's tail padding at 0x31e (dBgActor_c's last field ends there and its
@@ -44,10 +46,15 @@ struct PathLift {
     u8  pad_000[0xc];
     u16 unk_00c;            /* 0x00c */
     u8  pad_00e[0xc6];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
-    u8  mMovingMeshCollider;            /* 0x124 */
-    u8  pad_125[0x305];
+    /* Model member. The cartridge's own ~PathLift calls _ZN5ModelD1Ev at +0x0d4
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    Model mModel;            /* 0x0d4 */
+    /* dBgW_KcMbg member. The cartridge's own ~PathLift calls _ZN10dBgW_KcMbgD1Ev at
+       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x13e];
     u8  unk_42a;            /* 0x42a */
     u8  unk_42b;            /* 0x42b */
     u8  pad_42c[0x20];

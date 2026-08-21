@@ -6,6 +6,7 @@
 #define WINGFEATHER_H
 #include "types.h"
 #include "Model.h"
+#include "ShadowModel.h"
 
 struct WingFeather {
     u8  pad_000[0x5c];
@@ -35,8 +36,11 @@ struct WingFeather {
     u8  pad_159[0x1a7];
     u8  unk_300;            /* 0x300 */
     u8  pad_301[0x13];
-    u8  mShadowModel;            /* 0x314 */
-    u8  pad_315[0x63];
+    /* ShadowModel member. The cartridge's own ~WingFeather calls _ZN11ShadowModelD1Ev
+       at +0x314 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    ShadowModel mShadowModel;            /* 0x314 */
+    u8  pad_33c[0x3c];
     s32 unk_378;            /* 0x378 */
     u16 unk_37c;            /* 0x37c */
     u8  pad_37e[0x2];

@@ -34,6 +34,8 @@
 #ifndef EYEROK_H
 #define EYEROK_H
 #include "types.h"
+#include "Model.h"
+#include "dBgW_KcMbg.h"
 
 #ifdef __cplusplus
 
@@ -107,10 +109,15 @@ struct Eyerok {
     u8  pad_068[0x26];
     s16 mAngleY;            /* 0x08e */
     u8  pad_090[0x44];
-    u8  mModel1;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
-    u8  unk_124;            /* 0x124 */
-    u8  pad_125[0x1fb];
+    /* Model member. The cartridge's own ~Eyerok calls _ZN5ModelD1Ev at +0x0d4 (D0/D1),
+       a relocation the ROM build checks; recovered by tools/dtor_members.py. D1 and not
+       D2, so it is this type and not an inlined base. */
+    Model mModel1;            /* 0x0d4 */
+    /* dBgW_KcMbg member. The cartridge's own ~Eyerok calls _ZN10dBgW_KcMbgD1Ev at
+       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg unk_124;            /* 0x124 */
+    u8  pad_2ec[0x34];
     u8  mdCcAcPos_c;            /* 0x320 */
     u8  pad_321[0x33];
     s32 unk_354;            /* 0x354 */
