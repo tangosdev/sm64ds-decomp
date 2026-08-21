@@ -56,4 +56,6 @@ struct IceSlideManager {
 #endif
 };
 
+typedef char IceSlideManager_size_must_be_0xd8[sizeof(struct IceSlideManager) == 0xd8 ? 1 : -1];
+
 #endif

@@ -50,4 +50,6 @@ struct WingFeather {
 #endif
 };
 
+typedef char WingFeather_size_must_be_0x388[sizeof(struct WingFeather) == 0x388 ? 1 : -1];
+
 #endif

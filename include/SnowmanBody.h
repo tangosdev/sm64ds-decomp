@@ -53,4 +53,6 @@ struct SnowmanBody {
 #endif
 };
 
+typedef char SnowmanBody_size_must_be_0x3a8[sizeof(struct SnowmanBody) == 0x3a8 ? 1 : -1];
+
 #endif

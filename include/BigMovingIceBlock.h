@@ -37,4 +37,7 @@ struct BigMovingIceBlock {
 #endif
 };
 
+typedef char BigMovingIceBlock_size_must_be_0x330[
+    sizeof(struct BigMovingIceBlock) == 0x330 ? 1 : -1];
+
 #endif

@@ -42,4 +42,7 @@ struct BowserPuzzlePiece {
 #endif
 };
 
+typedef char BowserPuzzlePiece_size_must_be_0x33c[
+    sizeof(struct BowserPuzzlePiece) == 0x33c ? 1 : -1];
+
 #endif

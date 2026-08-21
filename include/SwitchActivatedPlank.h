@@ -35,4 +35,7 @@ struct SwitchActivatedPlank {
 #endif
 };
 
+typedef char SwitchActivatedPlank_size_must_be_0x3a8[
+    sizeof(struct SwitchActivatedPlank) == 0x3a8 ? 1 : -1];
+
 #endif

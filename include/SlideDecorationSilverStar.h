@@ -23,4 +23,7 @@ struct SlideDecorationSilverStar {
 #endif
 };
 
+typedef char SlideDecorationSilverStar_size_must_be_0x128[
+    sizeof(struct SlideDecorationSilverStar) == 0x128 ? 1 : -1];
+
 #endif

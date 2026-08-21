@@ -1,4 +1,4 @@
-"""The three traps that have already cost this project landed work, as tests.
+"""The four traps that have already cost this project landed work, as tests.
 
 `opnew_sizes.py` recovers a class's size from the literal the ROM hands
 `fBase_c::operator new`, and attributes it by the vtable the factory installs. Each of
@@ -7,6 +7,12 @@ instead of the last (#1559/#1560 reverted 2 of 13), reading past the factory's o
 (commit 3f760a354, the mechanism behind the 41 misnamed classes of #1418-#1423), and
 crediting a member subobject's vptr to its owner -- is a case below, driven through
 synthetic ARM rather than the ROM so it runs in a checkout with no `extracted/`.
+
+The fourth is this file's own: attribution by address is worth nothing if the HEADER is
+then looked up by name. One vtable address carries several `_ZTV` spellings and only one
+of them has a file, so the single-spelling join reported NO HEADER for 125 classes the
+tree describes -- and their sizes went uncompared. Four cases cover it, and a live
+ratchet holds the residue at the two classes that really have no header.
 
 The two end-to-end cases skip themselves when the ROM dump is not installed, the same
 way tools/test_build_pin.py does.
@@ -189,6 +195,47 @@ def test_header_sizes_reads_the_assert_and_notices_one_that_is_missing(tmp_path)
     assert got["B"]["assert"] is None and got["B"]["header"].name == "B.h"
 
 
+def test_a_class_is_found_under_the_name_its_vtable_alias_carries():
+    """THE `--gap` defect.  Attribution is by address; the header lookup was by name.
+
+    One vtable address routinely carries several `_ZTV` symbols -- 0x021280b0 is
+    `_ZTV12FortressWall`, `_ZTV9MontyMole` and `_ZTV11daChoropu_c` at once -- and only
+    one of those spellings has a file.  Keying the header lookup on whichever spelling
+    the attribution happened to carry reported NO HEADER for 125 classes `include/`
+    describes, so their sizes were never compared to the header that describes them.
+    """
+    hdr = {"MontyMole": {"assert": 0x18C, "header": pathlib.Path("MontyMole.h")}}
+    assert O.resolve_header_name("daChoropu_c", ["FortressWall", "MontyMole"], hdr) \
+        == ("MontyMole", "vtable alias")
+
+
+def test_a_class_that_has_its_own_header_is_never_redirected_to_an_alias():
+    """The class's own key wins, so a real header is never shadowed by a sibling's."""
+    hdr = {"A": {"assert": 1, "header": None}, "B": {"assert": 2, "header": None}}
+    assert O.resolve_header_name("A", ["B"], hdr) == ("A", "name")
+
+
+def test_no_header_survives_only_when_no_spelling_has_one():
+    hdr = {"Other": {"assert": 1, "header": None}}
+    assert O.resolve_header_name("BigBooIcon", ["BigBooIcon"], hdr) == (None, None)
+    assert O.resolve_header_name("BigBooIcon", [], hdr) == (None, None)
+
+
+def test_every_ZTV_name_at_an_address_is_kept_not_just_the_last(tmp_path):
+    """The collapse that caused it: a dict keyed on (module, addr) keeps one name."""
+    cfg = tmp_path / "config" / "arm9"
+    (cfg / "overlays").mkdir(parents=True)
+    (cfg / "symbols.txt").write_text(
+        "_ZTV12FortressWall kind:data(any) addr:0x021280b0\n"
+        "_ZTV9MontyMole kind:data(any) addr:0x021280b0\n"
+        "_ZTV11daChoropu_c kind:data(any) addr:0x021280b0\n"
+        "_ZTV6Camera kind:data(any) addr:0x02100000\n")
+    st = collections.Counter()
+    got = O.load_vtable_symbols(tmp_path, {"arm9": (0, b"")}, st)
+    assert len(got[("arm9", 0x021280B0)]) == 3
+    assert st["vtable_addresses_with_more_than_one_name"] == 1
+
+
 def test_subclass_index_is_transitive(tmp_path):
     inc = tmp_path / "include"
     inc.mkdir()
@@ -225,3 +272,17 @@ def test_every_site_the_ROM_has_is_attributed_to_a_class():
     doc = O.build(REPO, REPO / "extracted")
     assert doc["meta"]["stats"]["sites_unattributed"] == 0
     assert all(s["size"] is not None for s in doc["sites"])
+
+
+def test_only_two_live_classes_are_genuinely_headerless():
+    """The ratchet on the alias join: it silently reverts to 127 if the join regresses.
+
+    `BigBooIcon` (0xd8) and `RecRoomCupboard` (0x21c) are the only two sized classes in
+    this ROM that no header in `include/` describes under any spelling their vtable
+    carries.  The probe is off: the header LOOKUP is what is under test, not sizeof."""
+    if not _rom():
+        return
+    doc = O.build(REPO, REPO / "extracted")
+    buckets, _hdr, _st = O.gap(REPO, doc, probe=False)
+    assert sorted(n for n, *_ in buckets["NO HEADER"]) == \
+        ["BigBooIcon", "RecRoomCupboard"], buckets["NO HEADER"]

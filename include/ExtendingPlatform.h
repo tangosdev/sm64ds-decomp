@@ -29,4 +29,7 @@ struct ExtendingPlatform {
 #endif
 };
 
+typedef char ExtendingPlatform_size_must_be_0x328[
+    sizeof(struct ExtendingPlatform) == 0x328 ? 1 : -1];
+
 #endif

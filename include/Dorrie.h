@@ -73,4 +73,6 @@ struct Dorrie {
 #endif
 };
 
+typedef char Dorrie_size_must_be_0x11b8[sizeof(struct Dorrie) == 0x11b8 ? 1 : -1];
+
 #endif

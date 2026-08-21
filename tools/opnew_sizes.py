@@ -17,6 +17,12 @@ are complements: one says where the fields are, this one says where the object e
     python tools/opnew_sizes.py --gap             # ROM size vs each header's declaration
     python tools/opnew_sizes.py --check           # fail unless the frozen census reproduces
 
+`--gap` buckets AGREES separately from NO ASSERT because only the first is CHECKED.  An
+`X_size_must_be_0xN` typedef is how `check_header_offsets.py` sizes X when X appears as a
+MEMBER of another struct; without one, every header that types a member as X reports
+UNPARSED, and that gate exits 1 on unparsed, not merely on mismatched (PR #1659, where
+`Stage.h`'s `Fog unk_96c` failed CI for exactly this).  NO ASSERT is the actionable list.
+
 Output: build/opnew_sizes.json -- per class, its ROM size, the factories that prove it,
 the vtable it was attributed through, and whether any two sites disagree.
 
@@ -29,8 +35,20 @@ How a site is read
 
 The class is then whichever RTTI record in `build/rtti.json` owns that vtable.
 
-Four traps, three of which have already cost this project landed work
+Five traps, four of which have already cost this project landed work
 ---------------------------------------------------------------------
+join the HEADER   The one this file got wrong itself.  Attribution is by address, but the
+by address too    class then has to be found in `include/`, and a file can only be found
+                  under a SPELLING.  Joining on the single spelling the attribution
+                  happened to carry made `--gap` report NO HEADER for 125 classes the
+                  tree describes perfectly well: the cartridge's RTTI calls a class
+                  `daStar_c` and this tree calls the same object `PowerStar`, both
+                  `_ZTV` symbols sit at one address, and only the second has a file.
+                  So the candidate set is every `_ZTV` spelling at the vtable's address
+                  plus the RTTI name, and the first with a header wins -- see
+                  `resolve_header_name`.  Those 125 were never compared to the header
+                  that describes them; 16 of them turned out to be SHORT.
+
 pair by vtable    Never by name.  PR #1556 had to retract 2 of 21 "wrong sizes" that
                   were artifacts of pairing a class to a factory by name; if a name
                   defect and a value defect share a table, the names are wrong first.
@@ -213,18 +231,25 @@ def load_symbols(root, mods, stats):
 
 
 def load_vtable_symbols(root, mods, stats):
-    """(module, addr) -> the tree's own name for the class whose vtable sits there.
+    """(module, addr) -> EVERY name the tree gives the class whose vtable sits there.
 
     The cartridge's RTTI name and this tree's name for the same class are often
     different -- `_ZTV6Camera` and `dCamera_c` are one class -- because most of the
     English names predate the RTTI pass and have not been renamed yet.  A header can
     only be found under the name the tree uses, so both are carried.
 
+    One address routinely carries SEVERAL `_ZTV` symbols, because a class being renamed
+    keeps its old spelling as an alias until every consumer moves: 0x021280b0 is
+    `_ZTV12FortressWall`, `_ZTV9MontyMole` and `_ZTV11daChoropu_c` at once, and only
+    `MontyMole` has a header.  Collapsing that to one name -- whichever happened to come
+    last in the file -- is what made `--gap` report NO HEADER for 125 classes the tree
+    describes perfectly well.  All of them are kept, sorted, and the header join picks.
+
     This is still a VTABLE-ADDRESS join, not a name join: the address decides which
-    symbol is read, and the symbol only supplies the spelling.  Pairing a class to a
+    symbols are read, and the symbols only supply the spellings.  Pairing a class to a
     factory by name is what PR #1556 had to retract 2 of 21 findings for.
     """
-    out = {}
+    out = collections.defaultdict(list)
     paths = [("arm9", root / "config" / "arm9" / "symbols.txt")]
     for d in sorted((root / "config" / "arm9" / "overlays").glob("ov*")):
         paths.append((d.name, d / "symbols.txt"))
@@ -236,9 +261,11 @@ def load_vtable_symbols(root, mods, stats):
                 continue
             m = SYM_ANY.match(line)
             if m:
-                out[(mod, int(m.group(2), 16))] = m.group(1)
-    stats["vtable_symbols_named_in_config"] = len(out)
-    return out
+                out[(mod, int(m.group(2), 16))].append(m.group(1))
+    stats["vtable_symbols_named_in_config"] = sum(len(v) for v in out.values())
+    stats["vtable_addresses_with_more_than_one_name"] = sum(
+        1 for v in out.values() if len(v) > 1)
+    return dict(out)
 
 
 def demangle_ztv(sym):
@@ -663,12 +690,20 @@ def build(root, ext):
     vtsyms = load_vtable_symbols(root, mods, stats)
     img = Image(mods, syms)
 
-    def tree_class(mod, vt):
+    def tree_names(mod, vt):
+        """(primary, every alias) the tree spells for the vtable at (mod, vt).
+
+        The primary keeps the historical pick -- the last symbol the config file lists
+        -- so the per-class keys of build/opnew_sizes.json do not move under anyone.
+        The aliases are what the header join actually consults.
+        """
         for m in (mod, "arm9"):
-            s = vtsyms.get((m, vt))
-            if s:
-                return demangle_ztv(s)
-        return None
+            syms = vtsyms.get((m, vt))
+            if syms:
+                names = [n for n in (demangle_ztv(s) for s in syms) if n]
+                if names:
+                    return names[-1], sorted(set(names))
+        return None, []
 
     records, warnings = [], []
     for mod, site in sites:
@@ -690,7 +725,7 @@ def build(root, ext):
             cls, cls_how = class_for_vtable(by_addr, mod, vt, stats)
         if cls:
             audit_derived_most(by_addr, anc, mod, cls, events, stats, warnings)
-        tcls = tree_class(mod, vt) if vt else None
+        tcls, taliases = tree_names(mod, vt) if vt else (None, [])
         if vt:
             stats["vtables_the_tree_has_not_named" if not tcls
                   else "vtables_named_by_the_tree"] += 1
@@ -703,6 +738,7 @@ def build(root, ext):
             "vtable": ("0x%08x" % vt) if vt else None,
             "attribution": how, "resolved_by": cls_how if vt else None,
             "via": via, "class": cls, "tree_class": tcls,
+            "tree_class_aliases": taliases,
         })
         stats["size_" + size_conf] += 1
         stats["attribution_" + (cls_how if vt else how)] += 1
@@ -717,7 +753,17 @@ def build(root, ext):
     classes = {}
     for name, rs in sorted(per.items()):
         sizes = sorted({r["size"] for r in rs})
+        # Every spelling this class's VTABLE ADDRESS is known by -- the tree's `_ZTV`
+        # aliases and the cartridge's own RTTI name.  Still an address join; the names
+        # are only what the address resolves to.  `gap` looks for a header under each.
+        aliases = set()
+        for r in rs:
+            aliases.update(r.get("tree_class_aliases") or ())
+            if r["class"]:
+                aliases.add(r["class"])
+        aliases.discard(name)
         classes[name] = {
+            "aliases": sorted(aliases),
             "size": sizes[0] if len(sizes) == 1 else None,
             "size_hex": ("0x%x" % sizes[0]) if len(sizes) == 1 else None,
             "ambiguous": len(sizes) > 1,
@@ -797,8 +843,8 @@ def header_sizes(root):
     return out
 
 
-BUCKETS = ("AGREES", "HEADER SHORT", "HEADER LONG", "BASE, NOT SHORT", "NO SIZE",
-           "NO HEADER", "AMBIGUOUS")
+BUCKETS = ("AGREES", "NO ASSERT", "HEADER SHORT", "HEADER LONG", "BASE, NOT SHORT",
+           "NO SIZE", "NO HEADER", "AMBIGUOUS")
 
 INHERITS = re.compile(r"^[ \t]*(?:class|struct)[ \t]+(\w+)[ \t]*:([^{;]+)\{", re.M)
 ACCESS = {"public", "protected", "private", "virtual"}
@@ -827,6 +873,30 @@ def subclass_index(root):
             stack.extend(kids.get(n, ()))
         out[b] = seen
     return out
+
+
+def resolve_header_name(name, aliases, hdr):
+    """(the name this class's header is written under, how) or (None, None).
+
+    THE defect this function exists to close.  Sizes are attributed by vtable address
+    -- trap 1, never by name -- but the class then has to be looked up in `include/`,
+    and a header can only be found under a spelling.  Joining on the ONE spelling the
+    attribution happened to carry reported NO HEADER for 125 classes: the cartridge's
+    RTTI calls a class `daStar_c` and this tree calls it `PowerStar`, both `_ZTV`
+    symbols sit at the same address, and only the second has a file.
+
+    So the candidate set is every spelling that address resolves to, and the first one
+    with a header wins.  The class's own key is tried first so a class that has its own
+    header is never redirected to an alias's.  The plain name join survives only as the
+    zero-alias case.
+    """
+    if name in hdr:
+        return name, "name"
+    for a in aliases:                                  # sorted upstream, so this is stable
+        if a in hdr:
+            return a, "vtable alias"
+    return None, None
+
 
 PROBE_SRC = '#include "%s"\nchar opnew_probe[sizeof(%s)];\n'
 
@@ -905,29 +975,55 @@ def gap(root, doc, probe=True):
     The declared size is the compiler's answer where the probe can build, and the size
     assert only where it cannot -- the assert is a human's claim, `sizeof` is the fact.
     A header with neither is NO SIZE: unmeasured, never guessed at.
+
+    AGREES and NO ASSERT are both "the header is right".  They are separated because
+    only the first is CHECKED: an `X_size_must_be_` typedef is how check_header_offsets
+    sizes X when X appears as a MEMBER of another struct, and a header with no assert
+    makes every struct that types a member as X report UNPARSED -- which fails that gate
+    outright.  NO ASSERT is therefore the actionable list, not a footnote.
     """
     hdr = header_sizes(root)
     stats = collections.Counter()
+
+    # class key -> the name its header is written under.  See resolve_header_name.
+    hname, hhow = {}, {}
+    for name, c in sorted(doc["classes"].items()):
+        if c["ambiguous"]:
+            continue
+        n, how = resolve_header_name(name, c.get("aliases") or (), hdr)
+        if n is not None:
+            hname[name], hhow[name] = n, how
+            stats["header_found_by_" + how.replace(" ", "_")] += 1
+        else:
+            stats["header_not_found"] += 1
+    # the ROM size of whatever class each header describes, keyed by the header's name
+    rom_by_header = {}
+    for name, n in sorted(hname.items()):
+        rom_by_header.setdefault(n, doc["classes"][name]["size"])
+
     measured, why = ({}, "probe disabled")
     if probe:
-        wanted = {n: hdr[n]["header"].name for n in doc["classes"] if n in hdr}
+        wanted = {n: str(hdr[n]["header"].relative_to(root / "include")).replace("\\", "/")
+                  for n in set(hname.values())}
         measured, why = probe_sizes(root, wanted, stats)
     kids = subclass_index(root)
 
-    def agreeing_descendants(name):
+    def agreeing_descendants(hn):
         """Descendants whose own declared size already matches their own ROM size.
 
         One of those is proof the base is NOT short: growing it moves every one of them.
-        See the fifth trap in the module docstring -- this is what dActor_c is."""
+        See the fifth trap in the module docstring -- this is what dActor_c is.
+        Keyed by HEADER name throughout: `subclass_index` reads `include/`, so a ROM
+        size filed under an RTTI spelling has to come back through rom_by_header."""
         out = []
-        for k in sorted(kids.get(name, ())):
-            c = doc["classes"].get(k)
-            if not c or c["ambiguous"]:
+        for k in sorted(kids.get(hn, ())):
+            rom = rom_by_header.get(k)
+            if rom is None:
                 continue
             d = measured.get(k, (None, None))[0]
             if d is None and k in hdr:
                 d = hdr[k]["assert"]
-            if d is not None and d == c["size"]:
+            if d is not None and d == rom:
                 out.append(k)
         return out
 
@@ -937,30 +1033,34 @@ def gap(root, doc, probe=True):
             buckets["AMBIGUOUS"].append((name, None, c["sizes_seen"], None, "-"))
             continue
         rom = c["size"]
-        e = hdr.get(name)
-        if e is None:
+        hn = hname.get(name)
+        if hn is None:
             buckets["NO HEADER"].append((name, None, rom, None, "-"))
             continue
+        e = hdr[hn]
+        label = name if hn == name else "%s (%s)" % (hn, name)
         path = str(e["header"].relative_to(root)).replace("\\", "/")
-        dec, how = measured.get(name, (None, None))
+        dec, how = measured.get(hn, (None, None))
         how = "sizeof"
         if dec is None:
             dec, how = e["assert"], "assert"
         if dec is None:
-            buckets["NO SIZE"].append((name, None, rom, path,
-                                       measured.get(name, (None, why))[1] or "-"))
+            buckets["NO SIZE"].append((label, None, rom, path,
+                                       measured.get(hn, (None, why))[1] or "-"))
         elif dec == rom:
-            buckets["AGREES"].append((name, dec, rom, path, how))
+            buckets["AGREES" if e["assert"] is not None else "NO ASSERT"].append(
+                (label, dec, rom, path, how if e["assert"] is not None
+                 else "sizeof agrees, no typedef"))
         elif dec < rom:
-            agree = agreeing_descendants(name)
+            agree = agreeing_descendants(hn)
             if agree:
                 buckets["BASE, NOT SHORT"].append(
-                    (name, dec, rom, path,
+                    (label, dec, rom, path,
                      "%d agreeing subclasses, e.g. %s" % (len(agree), agree[0])))
             else:
-                buckets["HEADER SHORT"].append((name, dec, rom, path, how))
+                buckets["HEADER SHORT"].append((label, dec, rom, path, how))
         else:
-            buckets["HEADER LONG"].append((name, dec, rom, path, how))
+            buckets["HEADER LONG"].append((label, dec, rom, path, how))
     return buckets, hdr, stats
 
 
@@ -1021,11 +1121,13 @@ def main(argv=None):
             print("  (%s %s)" % (k, gstats[k]))
         for b in BUCKETS:
             print("  %-13s %d" % (b, len(buckets[b])))
-        for b in ("HEADER LONG", "HEADER SHORT", "BASE, NOT SHORT", "NO SIZE"):
+        for b in ("HEADER LONG", "HEADER SHORT", "BASE, NOT SHORT", "NO SIZE",
+                  "NO ASSERT", "NO HEADER"):
             print("\n-- %s (%d) --" % (b, len(buckets[b])))
             for name, dec, rom, path, how in buckets[b]:
                 d = ("0x%x" % dec) if dec is not None else how
-                print("  %-34s header %-9s rom 0x%-6x %s" % (name, d, rom, path))
+                print("  %-42s header %-9s rom 0x%-6x %s"
+                      % (name, d, rom, path or "-"))
 
     os.makedirs(os.path.dirname(out) or ".", exist_ok=True)
     with open(out, "w", encoding="utf-8", newline="\n") as fh:

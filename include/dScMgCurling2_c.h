@@ -28,4 +28,6 @@ struct dScMgCurling2_c : dScMgBase_c {
     u8  unk_55c3;            /* 0x55c3 */
 };
 
+typedef char dScMgCurling2_c_size_must_be_0x55c4[sizeof(dScMgCurling2_c) == 0x55c4 ? 1 : -1];
+
 #endif

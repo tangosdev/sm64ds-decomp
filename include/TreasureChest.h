@@ -30,4 +30,6 @@ struct TreasureChest {
 #endif
 };
 
+typedef char TreasureChest_size_must_be_0x178[sizeof(struct TreasureChest) == 0x178 ? 1 : -1];
+
 #endif

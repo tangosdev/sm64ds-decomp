@@ -34,4 +34,6 @@ struct ShipUp {
 #endif
 };
 
+typedef char ShipUp_size_must_be_0x32c[sizeof(struct ShipUp) == 0x32c ? 1 : -1];
+
 #endif

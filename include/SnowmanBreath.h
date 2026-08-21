@@ -44,4 +44,6 @@ struct SnowmanBreath {
 #endif
 };
 
+typedef char SnowmanBreath_size_must_be_0x13d4[sizeof(struct SnowmanBreath) == 0x13d4 ? 1 : -1];
+
 #endif

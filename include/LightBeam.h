@@ -24,4 +24,6 @@ struct LightBeam {
 #endif
 };
 
+typedef char LightBeam_size_must_be_0x16c[sizeof(struct LightBeam) == 0x16c ? 1 : -1];
+
 #endif

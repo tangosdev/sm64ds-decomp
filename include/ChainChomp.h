@@ -54,6 +54,8 @@ struct ChainChomp : dEnemyBase_c {
     int Render();
 };
 
+typedef char ChainChomp_size_must_be_0x620[sizeof(ChainChomp) == 0x620 ? 1 : -1];
+
 #else
 
 /* The same object for a C translation unit, flat. */

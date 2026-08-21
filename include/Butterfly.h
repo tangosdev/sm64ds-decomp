@@ -64,4 +64,6 @@ struct Butterfly {
 #endif
 };
 
+typedef char Butterfly_size_must_be_0x3f4[sizeof(struct Butterfly) == 0x3f4 ? 1 : -1];
+
 #endif

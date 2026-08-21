@@ -51,4 +51,6 @@ struct CutsceneObject {
 #endif
 };
 
+typedef char CutsceneObject_size_must_be_0x104[sizeof(struct CutsceneObject) == 0x104 ? 1 : -1];
+
 #endif

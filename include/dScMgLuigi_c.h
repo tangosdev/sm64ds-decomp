@@ -29,4 +29,6 @@ struct dScMgLuigi_c : dScMgBase_c {
     u8  unk_5459;            /* 0x5459 */
 };
 
+typedef char dScMgLuigi_c_size_must_be_0x545c[sizeof(dScMgLuigi_c) == 0x545c ? 1 : -1];
+
 #endif

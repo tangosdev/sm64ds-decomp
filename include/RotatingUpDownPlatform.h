@@ -56,4 +56,7 @@ struct RotatingUpDownPlatform {
 #endif
 };
 
+typedef char RotatingUpDownPlatform_size_must_be_0x358[
+    sizeof(struct RotatingUpDownPlatform) == 0x358 ? 1 : -1];
+
 #endif

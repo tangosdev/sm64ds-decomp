@@ -61,4 +61,6 @@ struct HealingHeart {
 #endif
 };
 
+typedef char HealingHeart_size_must_be_0x174[sizeof(struct HealingHeart) == 0x174 ? 1 : -1];
+
 #endif

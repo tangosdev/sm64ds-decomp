@@ -64,4 +64,6 @@ struct StarMarker {
 #endif
 };
 
+typedef char StarMarker_size_must_be_0x1dc[sizeof(struct StarMarker) == 0x1dc ? 1 : -1];
+
 #endif

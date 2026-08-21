@@ -51,4 +51,6 @@ struct SlidingBox {
 #endif
 };
 
+typedef char SlidingBox_size_must_be_0x4f8[sizeof(struct SlidingBox) == 0x4f8 ? 1 : -1];
+
 #endif

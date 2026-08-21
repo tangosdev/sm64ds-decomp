@@ -58,4 +58,6 @@ struct Toad {
 #endif
 };
 
+typedef char Toad_size_must_be_0x210[sizeof(struct Toad) == 0x210 ? 1 : -1];
+
 #endif

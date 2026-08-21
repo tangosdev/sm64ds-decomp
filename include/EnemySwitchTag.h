@@ -26,4 +26,6 @@ struct EnemySwitchTag {
 #endif
 };
 
+typedef char EnemySwitchTag_size_must_be_0x110[sizeof(struct EnemySwitchTag) == 0x110 ? 1 : -1];
+
 #endif

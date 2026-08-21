@@ -97,4 +97,6 @@ struct UpDownLiftBbh {
 #endif
 };
 
+typedef char UpDownLiftBbh_size_must_be_0x34c[sizeof(struct UpDownLiftBbh) == 0x34c ? 1 : -1];
+
 #endif

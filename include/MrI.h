@@ -56,4 +56,6 @@ struct MrI {
 #endif
 };
 
+typedef char MrI_size_must_be_0x218[sizeof(struct MrI) == 0x218 ? 1 : -1];
+
 #endif

@@ -45,4 +45,6 @@ struct PyramidLift {
 #endif
 };
 
+typedef char PyramidLift_size_must_be_0x3fc[sizeof(struct PyramidLift) == 0x3fc ? 1 : -1];
+
 #endif

@@ -34,4 +34,6 @@ struct Fish {
 #endif
 };
 
+typedef char Fish_size_must_be_0x160[sizeof(struct Fish) == 0x160 ? 1 : -1];
+
 #endif

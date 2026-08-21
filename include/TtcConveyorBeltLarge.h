@@ -49,4 +49,7 @@ struct TtcConveyorBeltLarge {
 #endif
 };
 
+typedef char TtcConveyorBeltLarge_size_must_be_0x3a0[
+    sizeof(struct TtcConveyorBeltLarge) == 0x3a0 ? 1 : -1];
+
 #endif

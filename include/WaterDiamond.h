@@ -34,4 +34,6 @@ struct WaterDiamond {
 #endif
 };
 
+typedef char WaterDiamond_size_must_be_0x160[sizeof(struct WaterDiamond) == 0x160 ? 1 : -1];
+
 #endif

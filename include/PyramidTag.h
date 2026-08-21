@@ -18,4 +18,6 @@ struct PyramidTag {
 #endif
 };
 
+typedef char PyramidTag_size_must_be_0x10c[sizeof(struct PyramidTag) == 0x10c ? 1 : -1];
+
 #endif
