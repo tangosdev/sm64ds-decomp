@@ -1,6 +1,6 @@
 # Ask the Compiler
 
-*What matching the ROM's largest unmatched function taught me — `dBgW_Kc::DetectClsn(dBgCh_SphCrr&)`, 1,778 instructions, 1493 → 31 mismatching words.*
+*What matching the ROM's largest unmatched function taught me — `dBgW_Kc::DetectClsn(dBgCh_SphCrr&)`, 1,778 instructions, 1493 → 15 mismatching words.*
 
 ---
 
@@ -14,9 +14,9 @@ I'd spent two prior sessions trying to work out which slot held which variable b
 
 The unlock was embarrassingly simple: **instead of reverse-engineering where the compiler puts each variable, I asked it.** There's a debug flag that makes it just tell you, and — this is the part that makes it usable — turning it on doesn't change the generated code at all. So I can ask, get a map of every variable's stack slot by name, then throw the debug info away and ship the identical bytes.
 
-That one change took the function from 125 wrong instructions to 36 in a single session, and later work took it to 31.
+That one change took the function from 125 wrong instructions to 36 in a single session, and later work took it to 15 — every one of the function's 99 stack slots now matches the cartridge exactly.
 
-The rest of this doc is the detail, plus seven other things that cost me real time.
+The rest of this doc is the detail, plus eight other things that cost me real time.
 
 ---
 
@@ -165,6 +165,37 @@ Loads in the cartridge's order, add in the cartridge's order, nothing else moved
 
 This is the second instance of the same shape — §6's `s32 dX = rawX - origin->x;` took three commutative adds that no permutation of the original expression could reach. Two independent hits makes it a rule rather than a coincidence, and it retires a belief I'd been carrying: *"naming a subexpression is byte-neutral, so it can't be the lever."* It's byte-neutral when the expression is pinned by one thing. When it's pinned by two, naming is the only way to separate them.
 
+---
+
+## 9. A free statement can still change the allocator's mind
+
+The slot swap in §7 was the big one: 16 of the remaining words, and I had declared it a characterised wall after ~500 compiles across eight families — second definitions, an *exhaustive* sweep of all 92 declaration sites, initializers, `register`, block scope, volatile and const sources, SROA, inlined helpers, every allocation pragma the compiler has. Nothing moved the variable out of the declaration chain.
+
+The answer was one statement that compiles to nothing at all:
+
+```c
+rsc = sphere.radius << 4;
+rsc = (s32)(volatile s32)rsc;   /* generates NO code */
+```
+
+Casting a value to a cv-qualified scalar type discards the qualifier, so the statement emits zero instructions — the function's length doesn't change by a single word. But it marks the value volatile inside the compiler's front end, and *that* demotes the local out of the declaration chain into the temp pool, landing on precisely the cartridge's slot.
+
+The reason eight families of search missed it is the actual lesson. **The flavour of a free second definition picks where the variable lands:**
+
+| written as | effect |
+|---|---|
+| `x = x + k0` (`k0` a variable holding 0) | folds and forgets — no demotion at all |
+| `x = x * k1` (`k1` a variable holding 1) | demotes, but only to the slot right after the chain |
+| `x = (T)(volatile T)x` | demotes into the temp pool proper |
+
+I had been treating "give it a second definition" as one binary lever and testing whether it fired. It isn't binary — it's a lever with a *destination*, and I'd only ever tried the two flavours that land in the wrong place. A null result on a lever you've only spelled one way is not a null result on the lever.
+
+Two structural facts fell out alongside it. The pool always begins at chain-end **plus eight** — one structural pad word — so any chained placement of the variable, including an apparently free four-byte alignment gap, shifts every pool slot. And an inline subexpression is not the same thing as a demoted local: spelled inline, the compiler recomputed the value instead of building the pool temp, and the code got longer. That last one is genuine evidence about the original source — whoever wrote this in 2004 declared a named variable there.
+
+One caveat I want to keep attached to this: `(s32)(volatile s32)rsc` is a **matching hack, not a reconstruction**. No human wrote that. It proves the allocator state is reachable and it isolates the mechanism, but the spelling the original author used is still an open question. Those are different claims and it's worth not letting the byte count blur them — which is the §4 lesson again, in a happier register.
+
 ## The one-line takeaway
 
-Every one of these is the same shape: **I was inferring something the toolchain would have told me, and I trusted a measurement I hadn't validated.** The frame map, the metric defect, the false comment, the untimed loop, the miscounted relocations, the twice-rejected flip — six instances of guessing where asking was available. Ask first; it is nearly always cheaper than the inference, and it doesn't quietly return the wrong answer.
+Every one of these is the same shape: **I was inferring something the toolchain would have told me, and I trusted a measurement I hadn't validated.** The frame map, the metric defect, the false comment, the untimed loop, the miscounted relocations, the twice-rejected flip, the one-flavour lever — seven instances of guessing where asking was available. Ask first; it is nearly always cheaper than the inference, and it doesn't quietly return the wrong answer.
+
+And a corollary from §9, which is the one I'd most like to remember: **"I swept that exhaustively" is a claim about the axis you swept, not about the lever.** Twice now the wall came down not to a new idea but to the same idea spelled a different way.
