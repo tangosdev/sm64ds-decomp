@@ -2952,12 +2952,15 @@ struct SeamGhost {
     int active;         /* 0 free, 1 tracking, 2 falling as ghost */
     int x, y;           /* engine-A rows/cols, <<4 for sub-pixel drift */
     int vx, vy;         /* per frame, <<4 */
+    int sx, sy;         /* where tracking began, for the velocity baseline */
+    int age;            /* frames tracked */
     int miss;
     uint16_t a0, a1, a2;
 };
 enum { GHOST_MAX = 96 };
 SeamGhost g_ghost[GHOST_MAX];
 GhostAttrFn g_ghost_attr_fn;
+int g_ghost_field_moved;
 
 void seam_ghosts(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
                  int to_white)
@@ -2970,6 +2973,7 @@ void seam_ghosts(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
         return;
     }
     if (!g_oam_a_have) return;
+    g_ghost_field_moved = 0;
     /* mark all trackers unseen */
     for (int i = 0; i < GHOST_MAX; ++i)
         if (g_ghost[i].active == 1) g_ghost[i].miss = 1;
@@ -3001,17 +3005,23 @@ void seam_ghosts(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
         }
         if (best >= 0) {
             SeamGhost &t = g_ghost[best];
-            /* smoothed drift: half old, half observed */
-            t.vx = (t.vx + (fx - t.x)) / 2;
-            t.vy = (t.vy + (fy - t.y)) / 2;
+            /* THE VELOCITY IS A BASELINE, NOT A SMOOTHING. Snow moves less
+               than a pixel per frame, so on most frames the observed step is
+               ZERO; an average that folds those zeroes in decays to nothing
+               and the ghost stalls the moment it is born -- the owner's
+               'loses all momentum'. Position-at-birth over frames-tracked
+               measures the true sub-pixel rate exactly. */
+            if (fx != t.x || fy != t.y) g_ghost_field_moved = 1;
             t.x = fx;
             t.y = fy;
+            t.age++;
             t.a0 = a0; t.a1 = a1; t.a2 = a2;
             t.miss = 0;
         } else {
             for (int g = 0; g < GHOST_MAX; ++g)
                 if (!g_ghost[g].active) {
-                    g_ghost[g] = SeamGhost{1, fx, fy, 0, 16, 0, a0, a1, a2};
+                    g_ghost[g] =
+                        SeamGhost{1, fx, fy, 0, 8, fx, fy, 0, 0, a0, a1, a2};
                     break;
                 }
         }
@@ -3021,16 +3031,29 @@ void seam_ghosts(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
     for (int g = 0; g < GHOST_MAX; ++g) {
         SeamGhost &t = g_ghost[g];
         if (t.active == 1 && t.miss) {
-            if (t.y >= 176 * 16 && t.vy > 0) t.active = 2;
-            else t.active = 0;
+            if (t.y >= 176 * 16 && t.age >= 8) {
+                t.vx = (t.x - t.sx) / t.age;
+                t.vy = (t.y - t.sy) / t.age;
+                t.active = t.vy > 0 ? 2 : 0;
+            } else {
+                t.active = 0;
+            }
         }
     }
-    /* advance and draw the ghosts */
+    /* advance and draw the ghosts -- advance ONLY when the live snow field
+       itself moved this frame. The compose runs whether or not the game
+       ticks, and a paused game (the owner pressed F5) froze every real
+       flake while the ghosts sailed on. With ~50 live flakes stepping every
+       couple of frames, "did any tracked flake move" is a faithful proxy
+       for "did the game simulate", with no reach into the game's own
+       pause state. */
     for (int g = 0; g < GHOST_MAX; ++g) {
         SeamGhost &t = g_ghost[g];
         if (t.active != 2) continue;
-        t.x += t.vx;
-        t.y += t.vy;
+        if (g_ghost_field_moved) {
+            t.x += t.vx;
+            t.y += t.vy;
+        }
         const int wy = (t.y >> 4) - 192;      /* world row of the flake top */
         if (wy > 192 || t.vy <= 0) { t.active = 0; continue; }
         BandCache c;
