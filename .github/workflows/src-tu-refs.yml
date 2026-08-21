@@ -57,9 +57,12 @@ jobs:
       - name: Every src_tu include and mangled reference resolves
         run: python tools/check_src_tu.py --json build/src_tu_refs.json
 
+      # unittest, not pytest: pytest is not installed on this runner and the point of
+      # this step is that the gate's FAILURE branches still work, so it must not be the
+      # step that needs a dependency.
       - name: The gate's own tests
         if: always()
-        run: python -m pytest tools/test_check_src_tu.py -q
+        run: python tools/test_check_src_tu.py
 
       - name: Upload report
         if: always()
