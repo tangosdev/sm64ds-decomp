@@ -701,20 +701,34 @@ void hal_gapless_minigames_latch(void)
        SM64DS_GAPLESS_ZERO_G=1 restores the old G write for measurement. */
     const int was = read_raw();
     g_gapless_head_ds = was;
-    static int zero_g = -1;
-    if (zero_g < 0) {
-        const char *s = std::getenv("SM64DS_GAPLESS_ZERO_G");
-        zero_g = s && *s && *s != '0';
+    /* ZERO-G IS THE SHIPPED MODE, restored by the owner's order after one
+       night of playing every alternative. The record, so the next lane does
+       not walk this ring again: G -> 0 with no band, no strip and no
+       correction gives seamless crossings everywhere -- every visible row of
+       an object's path is on screen, both engine copies agree -- at the cost
+       of world-anchored sprites sitting G rows above screen-anchored art
+       (Coincentration's Wario; Slots Shot's ball against its pegs). The
+       owner has played both trades and prefers this one. The splice arm
+       (v4), which keeps the ROM registration and teleports objects across
+       the hidden rows instead, stays behind SM64DS_GAPLESS_SPLICE=1; the
+       per-sprite handoff hop it costs at the seam read as broken in play. */
+    static int splice = -1;
+    if (splice < 0) {
+        const char *s = std::getenv("SM64DS_GAPLESS_SPLICE");
+        splice = s && *s && *s != '0';
     }
-    if (zero_g) {
+    if (!splice) {
         data_ov004_020beb6c[0] = 0;
         data_ov004_020beb6c[1] = 0;
         data_ov004_020beb6c[2] = 0;
         data_ov004_020beb6c[3] = 0;
         g_gapless_on = 1;
-        std::fprintf(stderr, "[gapless] scene %d: ZERO-G measurement arm for "
-                     "%s -- G %d -> 0. THIS IS NOT THE ROM'S BEHAVIOUR and it "
-                     "is not the shipped mode.\n", scene, row->what, was);
+        std::fprintf(stderr, "[gapless] scene %d: ENGAGED for %s -- G %d -> 0,"
+                     " no band, no strip, no correction. Objects cross the "
+                     "seam in one unbroken line; world-anchored sprites sit "
+                     "%d rows above the top screen's own art, which is the "
+                     "trade this mode ships with.\n",
+                     scene, row->what, was, was);
         return;
     }
     g_gapless_world = 1;
