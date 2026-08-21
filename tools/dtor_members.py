@@ -1029,8 +1029,11 @@ def main(argv=None):
         only = set(a.only.split(",")) if a.only else None
         picked, held = plan(root, buckets, hdr, sizes, only)
         done, refused = apply(root, picked, sizes, write=a.apply)
-        print("\n%s: %d members in %d headers"
-              % ("applied" if a.apply else "would apply", len(done),
+        # `done` is one entry per DECLARATION written, and a class defined twice in one
+        # header takes two.  Report both, so neither number can be read as the other.
+        wrote = {(r["owner"], r["offset"]) for r in done}
+        print("\n%s: %d declaration(s), %d pair(s), %d header(s)"
+              % ("applied" if a.apply else "would apply", len(done), len(wrote),
                  len({r["header_path"] for r in done})))
         for k, v in held.most_common():
             print("  held  %3d  %s" % (v, k))
