@@ -26,7 +26,7 @@ Only enrollment plus the ROM link is.
 Never guess from the name. The name is what a recovery pass wrote down; it is the thing
 under suspicion. The authority is dsd's analysis of the real ROM:
 
-```
+```python
 config/**/relocs.txt     from:0x021111e8 kind:load to:0x021099e4 module:overlay(2)
 config/**/symbols.txt    _ZN5Actor5SpawnEjj... kind:function(arm,size=0x4c) addr:0x02010e2c
 ```
@@ -156,7 +156,7 @@ python tools/check_references.py                           # must not regress
 
 The only line that matters in the build output:
 
-```
+```python
 module fidelity: 106/106 exact, 100.000000% of compared bytes
 ROM-build analysis: PASS
 ```

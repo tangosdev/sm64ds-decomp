@@ -25,7 +25,7 @@ to read a record and documented 11 classes. There are **429**.
 | primary vtables | 422 |
 | secondary (thunk) vtables | 8 |
 
-```
+```sh
 fBase_c            1 child,   337 below
 └── dBase_c        6 children, 336 below
     ├── dActor_c      95 children, 287 below

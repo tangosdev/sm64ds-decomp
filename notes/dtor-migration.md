@@ -57,7 +57,7 @@ yet -- the measurement is unambiguous.
 
 `Scene::~Scene` in the ROM stores **two** vptrs and then calls `ActorBase::~ActorBase`:
 
-```
+```arm
 str r2, [r4]        ; _ZTV5Scene
 str r1, [r4]        ; _ZTV12ActorDerived   <- ActorDerived's D2, INLINED
 bl  ActorBase::~ActorBase
@@ -95,7 +95,7 @@ have the two-vtable-store shape**, so that is the size of the prize.
 
 `ModelAnim : Model, Animation` and its derivatives fail eligibility with:
 
-```
+```sh
 isolate: _ZTV9ModelAnim: unexpected reloc type=2 addend=44
 ```
 
@@ -125,7 +125,7 @@ plausibly have resolved differently.
 
 It does not. With `_ZN5ModelD1Ev` removed from the exclude list:
 
-```
+```sh
 eligible          10805 -> 10806, gained _ZN5ModelD1Ev, lost nothing
 rombuild -j16     105/106 exact, 1 mismatching
                   arm9  _ZN5ModelD1Ev  0x02016d20 size 0x38   1 word

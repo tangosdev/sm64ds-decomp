@@ -267,7 +267,7 @@ The real bases:
 | ov006 | **0x020bfec0** | `extracted/overlays/overlay_0006.bin` |
 | any overlay | that overlay's **lowest symbol address** | its first function sits at file offset 0 |
 
-```
+```sh
 disasm {"binary":"extracted/arm9_dec.bin","base":"0x02004000","offset":"<vaddr - 0x02004000>"}
 ```
 Why this is dangerous rather than merely wrong: with a bad base every function disassembles
@@ -303,7 +303,7 @@ an EMPTY set, and the tool believes nothing is matched. It then prints a plausib
 two agents were spawned onto spans another contributor (`tangosdev`, "glm-5.2 sweep") had
 already locked, and two of that session's near-misses (`func_0204af3c`, `func_0205fb58`) were
 being ground on while held by `lunavyqo`. The board is genuinely crowded.
-```
+```sh
 claims_check {"module":"ov006","start":"0x...","end":"0x..."}   # needs start+end despite the schema
 claims_lock  {"module":"ov006","start":"0x...","end":"0x...","note":"func_..."}
 claims_release {"id":"clm_..."}

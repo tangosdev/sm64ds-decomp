@@ -33,7 +33,7 @@ That is rule **E2**, and everything else narrows it further.
 `dsd lcf` reconstructs the NitroSDK stacking tree into `build/arm9.lcf`, and it
 matches the level tables in §5 exactly:
 
-```
+```sh
 OV000 : AFTER(ARM9)                    OV001 : AFTER(ARM9)
 OV002 : AFTER(OV001)   OV003, OV004, OV007 : AFTER(OV001)
 OV005, OV006 : AFTER(OV003, OV004)
@@ -164,7 +164,7 @@ The model is one-sided: it rules candidates out, never in, and a caller only has
 answer when exactly one survives. It was checked against every verdict dsd reached
 without help:
 
-```
+```sh
 $ python tools/overlay_residency.py --check
 cross-module unambiguous verdicts: {'call': 2322, 'load': 926}
 forbidden by this model: 10

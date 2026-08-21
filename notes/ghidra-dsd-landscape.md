@@ -251,14 +251,14 @@ By what contains the ambiguous word:
 **G5.1 — The mechanism, exactly.** [high] `config/**/relocs.txt` records the resolved
 module per relocation. A normal line is unambiguous:
 
-```
+```sh
 from:0x020c027c kind:arm_call to:0x0203aed8 module:main
 ```
 
 An ambiguous one names a *candidate set* — dsd knows the target address but not which
 overlay owns it:
 
-```
+```sh
 from:0x020e0554 kind:load     to:0x020bc880 module:overlays(0,4)
 from:0x02117d4c kind:arm_call to:0x020aea30 module:overlays(2,4)
 ```

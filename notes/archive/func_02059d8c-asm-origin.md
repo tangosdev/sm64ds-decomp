@@ -8,7 +8,7 @@
 
 ## ROM shape
 
-```
+```arm
 02059d8c  subs r0, r0, #4
 02059d90  bhs  0x02059d8c
 02059d94  bx   lr
@@ -41,8 +41,8 @@ spellings).
 
 The only C that *does* name the pre-subtraction value forces a separate `cmp`:
 
-```
-cmp r0, #4        <- extra word
+```arm
+cmp r0, #4       ; <- extra word
 sub r0, r0, #4
 bhs …
 bx  lr
@@ -77,11 +77,11 @@ compiled game C.
 `func_02059d8c` sits in the middle of the SDK's CP15/processor-state assembly file, between two
 routines already accepted as asm-origin and counted as matched:
 
-```
-02059d74  mrs r0, cpsr / and r0,r0,#0x1f / bx lr      ARMProcessorMode          (asm, matched)
-02059d80  mov r0,#0 / mcr p15,0,r0,c7,c0,4 / bx lr    CP15::WaitForInterrupt    (asm, matched)
-02059d8c  subs r0,r0,#4 / bhs / bx lr                 func_02059d8c             <- this one
-02059d98  …                                           func_02059d98
+```arm
+02059d74  mrs r0, cpsr / and r0,r0,#0x1f / bx lr     ; ARMProcessorMode          (asm, matched)
+02059d80  mov r0,#0 / mcr p15,0,r0,c7,c0,4 / bx lr   ; CP15::WaitForInterrupt    (asm, matched)
+02059d8c  subs r0,r0,#4 / bhs / bx lr                ; func_02059d8c             <- this one
+02059d98  …                                          ; func_02059d98
 ```
 
 `mrs` and `mcr` are on the `notes/asm-policy.md` inexpressible list. A delay loop wedged between a

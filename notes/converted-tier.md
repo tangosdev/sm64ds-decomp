@@ -22,7 +22,7 @@ For a C++ method the linker symbol is necessarily mangled. `mwccarm` emits
 rejects otherwise with `defines X, expected Y`, which is a live rejection in the
 current tree:
 
-```
+```sh
 1  defines daObjFl_Fall_Block_c_OnYoshiTryEat, expected func_ov022_021123d0
 ```
 
@@ -60,7 +60,7 @@ failed the files that had done the work and passed ones that had not.
 Ask the question of the name a *reader* sees, by demangling the file's own symbol
 with `tools/demangle.py`, and reject any component that is still a placeholder.
 
-```
+```sh
 real_name   972 -> 3,807
 CONVERTED   426 (3.8%) -> 1,558 (13.8%)      +1,139 gained, -7 lost
 ```
@@ -131,7 +131,7 @@ with the backslide discussed on its own terms.
 Under the corrected metric the cohort structure changes, and so does the answer to
 "what is the next big slice":
 
-```
+```sh
 4/5 cohort  3,565 files       (was 3,898)
 real_name still the sole blocker for most of them
 ```

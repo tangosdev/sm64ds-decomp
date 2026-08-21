@@ -64,7 +64,7 @@ so the source controls the allocation:
     `this` from the incoming argument register, a hand-rolled call reads it from the
     callee-saved copy the allocator made for the post-call uses.
 
-    ```
+    ```arm
     ROM:  ldr r3,[r0]     <- compiler-generated dispatch
     ours: ldr r3,[r6]     <- hand-rolled function-pointer call
     ```

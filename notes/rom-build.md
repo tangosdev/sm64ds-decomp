@@ -19,7 +19,7 @@ minute, with all 106 modules byte-identical to the ROM. **9,115 functions — 1,
 code bytes, 66.7% of the project's total — are compiled from `src/` by mwccarm**; the
 rest of each module is supplied from delinked ROM bytes. All four milestones are complete. Results are recorded under each milestone below.
 
-```
+```sh
 python tools/eligible.py             # classify: which files may be compiled in
 python tools/enroll.py --complete-list build/eligible-names.txt
 python tools/rombuild.py             # build and verify the stock profile (default)
@@ -61,7 +61,7 @@ the 2004 toolchain ships no `mwldarm`.
 
 ## The pipeline
 
-```
+```sh
 src/*.c|cpp  --mwccarm-->  build/src/*.o  ─┐
                                            ├─ mwldarm ─> build/final_link.o (ELF)
 config/**/delinks.txt --dsd delink--> build/delinks/*.o  ─┘   + build/*.bin per region
@@ -79,7 +79,7 @@ config/**/delinks.txt --dsd delink--> build/delinks/*.o  ─┘   + build/*.bin 
 Commands (matching the reference dsd project, `DQIX/dqix-decomp`, adjusted for the
 0.11.0 CLI actually on disk):
 
-```
+```sh
 dsd lcf        -c config/arm9/config.yaml            # writes arm9.lcf + objects.txt to build_path
 mwldarm  -proc arm946e -nostdlib -interworking -m Entry -map closure,unused \
          -msgstyle gcc -nodead @build/objects.txt build/arm9.lcf -o build/final_link.o
@@ -100,7 +100,7 @@ for the base tree, once for the merged tree — to check a handful of edited fil
 `tools/rombuild_cache.py` keys each object on its exact inputs and skips the compiler
 on a hit:
 
-```
+```sh
 source key = sha256(schema, source path, compiler version, compiler bytes,
                     final flags, source bytes)
 manifest   = the header list mwccarm reported for that source key last time
@@ -169,7 +169,7 @@ file; in the main module, 3,084 of 3,090.
 Verified by running dsd 0.11.0 against an isolated copy of the config. A *file entry* is
 an unindented path ending in `:`, followed by indented lines:
 
-```
+```sh
     .text       start:0x02004000 end:0x020736f4 kind:code align:32
     ...
 src/AngleDiff.c:
@@ -287,7 +287,7 @@ function's bytes came from our C.
 `_dsd_gap@main_7.o` into `_dsd_gap@main_8.o` (everything before) and `_dsd_gap@main_1.o`
 (everything after), and the generated lcf placed them back-to-back around ours:
 
-```
+```sh
 _dsd_gap@main_8.o(.text)
 AngleDiff.o(.text)
 _dsd_gap@main_1.o(.text)
@@ -592,7 +592,7 @@ Why the rest are not source-built yet:
 The largest remaining bucket was 711 files whose object defined a different symbol than
 their filename. They turned out to share an annotation pair:
 
-```
+```sh
 // @symbol func_ov091_02132a0c        <- the symbol at this ROM address
 // @emits  daDsn_c_OnAimedAtWithEgg   <- what the C actually defines
 ```

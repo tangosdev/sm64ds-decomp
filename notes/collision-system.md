@@ -75,7 +75,7 @@ while the `_ZTV` beside them carries a coined one — a contradiction inside a s
 symbol table. Read straight out of the cartridge (`extracted/arm9_dec.bin`, load base
 **0x02004000**, confirmed three independent ways):
 
-```
+```sh
 file 0x952f8  "12dBgCh_SphCrr\0"      file 0x95291  "9dBgCh_Lin\0"
 file 0x951ee  "10dBgCh_Actr\0"        file 0x95225  "9dBgCh_Gnd\0"
 file 0x95476  "14dBgW_KcMbgSclY\0"    file 0x8a669  "7dCcAc_c\0"
@@ -100,23 +100,23 @@ The tree already adopted this convention on the actor side (`Platform` → `dBgA
 
 ### 3.1 Three families
 
-```
-dBgW      dBgW   the collidable world  ─┐ registered in a
- └ dBgW_Kc      dBgW_Kc       static KCL mesh  │ 24-slot global table
-    └ dBgW_KcMbg   dBgW_KcMbg  + transform  │ data_020a0c80
-       └ dBgW_KcMbgSclY  dBgW_KcMbgSclY     ─┘
+```sh
+dBgW      dBgW   # the collidable world  ─┐ registered in a
+ └ dBgW_Kc      dBgW_Kc       static KCL mesh # │ 24-slot global table
+    └ dBgW_KcMbg   dBgW_KcMbg  + transform # │ data_020a0c80
+       └ dBgW_KcMbgSclY  dBgW_KcMbgSclY    # ─┘
 
-dBgCh     dBgCh               a query against it    ─┐ each embeds a
- ├ dBgCh_Gnd    dBgCh_Gnd   "what is under me"  │ dBgPi (dBgPi)
- ├ dBgCh_Lin    dBgCh_Lin     swept segment       │ at +0x10
- ├ dBgCh_SphCrr dBgCh_SphCrr      penetration + push  │
- └ dBgCh_Actr   dBgCh_Actr    an actor's response ─┘ (no dBgPi; owns a
+dBgCh     dBgCh              # a query against it    ─┐ each embeds a
+ ├ dBgCh_Gnd    dBgCh_Gnd  # "what is under me"  │ dBgPi (dBgPi)
+ ├ dBgCh_Lin    dBgCh_Lin    # swept segment       │ at +0x10
+ ├ dBgCh_SphCrr dBgCh_SphCrr     # penetration + push  │
+ └ dBgCh_Actr   dBgCh_Actr    # an actor's response ─┘ (no dBgPi; owns a
                                                         dBgCh_SphCrr + dBgCh_Lin)
 
-dCc_c     CylinderClsn       actor-vs-actor volume ─┐ intrusive list head
- ├ dCcPos_c    CylinderClsnWithPos                  │ data_0209cee8, swept
- ├ dCcAc_c     MovingCylinderClsn (actor-attached)  │ once per frame from
- └ dCcAcPos_c  MovingCylinderClsnWithPos           ─┘ Stage::Render
+dCc_c     CylinderClsn       # actor-vs-actor volume ─┐ intrusive list head
+ ├ dCcPos_c    CylinderClsnWithPos                 # │ data_0209cee8, swept
+ ├ dCcAc_c     MovingCylinderClsn (actor-attached) # │ once per frame from
+ └ dCcAcPos_c  MovingCylinderClsnWithPos          # ─┘ Stage::Render
 ```
 
 **The query family is multiple inheritance, and the old note says it is not.**
@@ -124,7 +124,7 @@ dCc_c     CylinderClsn       actor-vs-actor volume ─┐ intrusive list head
 inheritance depth". The RTTI records are `__vmi_class_type_info` with public non-virtual
 bases: **[P]**
 
-```
+```arm
 dBgCh_Gnd    -> dBgCh @0, dBgPi @0x10
 dBgCh_Lin    -> dBgCh @0, dBgPi @0x10, dM3dGLin @0x38
 dBgCh_SphCrr -> dBgCh @0, dBgPi @0x10, dM3dGSph @0x38
@@ -142,7 +142,7 @@ read as ruling inheritance out is in fact its signature.
 Shared prefix, proven three ways (RTTI offsets, the three destructors, the thunk
 adjustments):
 
-```
+```arm
 0x00  dBgCh   0x10 B   vptr, u8 detectMask@0x04, s32 ownerID@0x08, dActor_c* owner@0x0c
 0x10  dBgPi   0x28 B   the dBgPi the hit is written into — SECOND vptr
 0x38  dM3dGLin (0x18) / dM3dGSph (0x14)  — THIRD vptr, SphCrr only
@@ -619,7 +619,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   stack offsets and will read flat across real gains. `mismatches=N/M` is frozen at 999
   until the sizes match.
 
-  ```
+  ```sh
   python tools/fdiff.py --c notes/drafts-sphereclsn-detectclsn.cpp \
     --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
     --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
@@ -656,7 +656,7 @@ One of the two reported divergences is not real — `fdiff` labels `+0x3c0` **`r
 `data_02082214`, which an isolated compile leaves as zero. The whole residual is a single
 scheduling swap of two independent instructions:
 
-```
+```arm
 ROM   ldrh r7,[r0,#0x8e]   then   add r1,r6,#0x5c
 ours  add r1,r6,#0x5c      then   ldrh r7,[r0,#0x8e]
 ```

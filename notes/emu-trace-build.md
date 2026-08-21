@@ -46,7 +46,7 @@ JIT off is non-negotiable — the stub needs the interpreter core.
 
 ## 2. File layout (all new code under `tools/trace/`)
 
-```
+```sh
 tools/trace/
   README.md            # exact melonDS setup, register-packet layout, run recipes
   rsp.py               # RSP socket client: connect, set/clear bp, read regs/mem, continue

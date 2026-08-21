@@ -141,7 +141,7 @@ Corrected to 4.** Reproduced on a clean baseline before touching it, so it was
 pre-existing rather than caused by anything else in this note, and the map was never
 wrong. ov080 really does have 5 TUs, of which 4 carry a class label:
 
-```
+```sh
 0x2123740  MontyMole, MontyMoleRock, daChoropu_c
 0x2124a20  CrazedCrate, daBttBk_c
 0x2125404  Painting

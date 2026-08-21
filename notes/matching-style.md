@@ -195,7 +195,7 @@ readable straight off the disassembly before you write any C, and it tells you e
 need laundering.
 
 ROM shape for an RMW at a non-encodable offset:
-```
+```arm
 ldr  r2, [pc]  ; = 0x4c21
 add  r3, r0, r2
 ldrb r2, [r3]

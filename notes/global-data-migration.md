@@ -57,7 +57,7 @@ reasoned about — an isolated copy of `config/arm9` in a scratch directory, rea
 
 Appending these to `config/arm9/delinks.txt` in the isolated copy:
 
-```
+```sh
 src/testbss.c:
     .bss start:0x0209b000 end:0x0209b004
 
@@ -70,7 +70,7 @@ src/testrodata.c:
 
 `dsd delink` exits 0 and emits three carved objects with exactly the right shape:
 
-```
+```python
 == testbss.o ==     .bss     SHT_NOBITS   size=0x4   sym data_0209b000 size=0x4 GLOBAL/OBJECT
 == testdata.o ==    .data    SHT_PROGBITS size=0x8   + .rela.data (1 reloc)
 == testrodata.o ==  .rodata  SHT_PROGBITS size=0x8
@@ -81,7 +81,7 @@ src/testrodata.c:
 Before: a single monolithic fragment per data section — `_dsd_gap@main_40.o(.rodata)`,
 `(.ctor)`, `(.data)`, `(.bss)`. After adding the entries, `dsd lcf` regenerates:
 
-```
+```arm
 ARM9_RODATA_START = .;   testrodata.o(.rodata)   _dsd_gap@main_37.o(.rodata)
 ARM9_DATA_START   = .;   testdata.o(.data)       _dsd_gap@main_39.o(.data)
 ARM9_BSS_START    = .;   testbss.o(.bss)         _dsd_gap@main_40.o(.bss)
@@ -89,12 +89,12 @@ ARM9_BSS_START    = .;   testbss.o(.bss)         _dsd_gap@main_40.o(.bss)
 
 A **mid-section** carve splits the gap in two, exactly as it already does for `.text`:
 
-```
+```sh
 src/testbssmid.c:
     complete
     .bss start:0x0209b038 end:0x0209b048
 ```
-```
+```arm
 ARM9_BSS_START = .;
     testbss.o(.bss)
     _dsd_gap@main_0.o(.bss)      <- new fragment, before
@@ -109,7 +109,7 @@ and `complete` redirects `objects.txt` from `delinks/src/testbssmid.o` to
 
 This is the decisive one. A single file entry with two section lines:
 
-```
+```sh
 src/testmulti.c:
     complete
     .text start:0x02005098 end:0x020050dc
@@ -118,7 +118,7 @@ src/testmulti.c:
 
 produces **two** lcf selectors from **one** object:
 
-```
+```sh
 line  242:  testmulti.o(.text)     (inside the .text run)
 line 3330:  testmulti.o(.bss)      (inside the .bss run)
 ```
@@ -229,7 +229,7 @@ Three concrete asymmetries:
 `symbols.txt` gives data and bss symbols an address and nothing else. The only
 available size is the delta to the next symbol. Measured over all 4,973 bss symbols:
 
-```
+```sh
 bss symbols inside a declared .bss section : 4973  (all of them)
   address NOT 4-byte aligned               :   65   <- unplaceable, like the thumb stubs
   implied size 0 (duplicate address/alias)  :   44
@@ -282,7 +282,7 @@ deliberately mis-sizing one bss entry and checking that the build goes red.
 
 Funnel over all 4,973 bss symbols (script: throwaway, run read-only, not committed):
 
-```
+```sh
 4973  all bss symbols
 2824  referenced by exactly one src/ file
 2824  ...and that sole reference is a .c/.cpp (not a src/ header)
@@ -295,7 +295,7 @@ Funnel over all 4,973 bss symbols (script: throwaway, run read-only, not committ
 **2,652 looks like the answer. It is not.** Splitting that set by *what kind of file*
 the sole reference is:
 
-```
+```sh
 2421  sole reference is a __sinit_*.c file  (253 files)
  231  sole reference is an ordinary function file  (124 files)
 ```
@@ -319,7 +319,7 @@ cannot disambiguate, so those need `objisolate` work first.
 Sizes are small and tractable (0x4 / 0xc / 0x14 / 0x20, one outlier at 0x600).
 Examples:
 
-```
+```sh
 data_ov002_0211114c  0x0211114c  size 0x04  src/_ZN7Minimap8BehaviorEv.cpp
 data_ov016_02114d4c  0x02114d4c  size 0x0c  src/_ZN5Unagi13InitResourcesEv.cpp
 data_ov026_02113f4c  0x02113f4c  size 0x0c  src/_ZN12WaterSuction13InitResourcesEv.cpp
@@ -395,7 +395,7 @@ All experiments ran against a **copy** of `config/arm9` in a scratch directory w
 `build_path` / `delinks_path` / `rom_config` repointed; the real `config/` and
 `build/` were never written to (`git status` clean for `config/`). Commands:
 
-```
+```sh
 dsd.exe delink -c <scratch>/arm9/config.yaml
 dsd.exe lcf    -c <scratch>/arm9/config.yaml
 ```

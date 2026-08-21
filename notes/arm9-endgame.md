@@ -31,7 +31,7 @@ split below.
 
 Still unmatched across all 25 builds, and these are the real arm9 endgame:
 
-```
+```sh
 _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii     _ZN5Stage13InitResourcesEv
 func_0202ffec                                   func_02009e70
 ```
@@ -99,7 +99,7 @@ It has been swept.
 `_ZN5Stage13InitResourcesEv` is the worked example, and its evidence is the template for
 judging the others. All four of its divergences sit in one five-instruction window:
 
-```
+```arm
 ROM:  mov r2,#0x36 ... mul r2,r7,r1 / ldr r1,[pc] / ldrb r2,[r1,r2] / mov r1,r2
 ours: mov r1,#0x36 ... mul r2,r7,r1 / ldr r1,[pc] / and r2,r2,#0xff / ldrb r1,[r1,r2]
 ```
@@ -160,7 +160,7 @@ C.
 
 It diverges at instruction **two**, and everything after follows from that:
 
-```
+```arm
 ROM:  push {r4,r5,r6,r7,r8,sb,sl,lr}      sub sp,#0x48
 ours: push {r4,r5,r6,r7,r8,sb,sl,fp,lr}   sub sp,#0x44
 ```
@@ -239,7 +239,7 @@ duplicate-file artifact (below), which makes it **5**.
 
 ## The 9 stale markers — reproduce today, just mislabelled
 
-```
+```sh
 func_02059d8c  func_020610fc  func_0206470c  func_02068398  func_02071644
 func_020729e8  func_020732e8  func_0207335c  func_02073584
 ```
@@ -305,7 +305,7 @@ without ever establishing it. These are shared exit stubs the symbol table split
 Recorded because it is the evidence that the primitives resist conversion, not just an
 assertion. It is the NitroSDK `OS_ReleaseLockID` sibling of `func_02057020`.
 
-```
+```arm
 ROM:  ldr r3,=tbl / cmp r0,#0x60 / addpl r3,r3,#4 / subpl r0,r0,#0x60
       submi r0,r0,#0x40 / mov r1,#0x80000000 / lsr r1,r1,r0
       ldr r2,[r3] / orr r2,r2,r1 / str r2,[r3] / bx lr      (11 insns + pool)

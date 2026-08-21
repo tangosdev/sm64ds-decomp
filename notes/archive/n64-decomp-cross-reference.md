@@ -47,7 +47,7 @@ constants came back exact.
 
 `data_ov002_0210a59c`, file offset `0x5CF3C` in `overlay_0002.bin`, raw words:
 
-```
+```arm
 0x5cf3c: 0002a000  ->  42.0
 0x5cf40: 00034000  ->  52.0
 0x5cf44: 00045000  ->  69.0
@@ -63,7 +63,7 @@ This is a data table in the ROM image. It cannot be a hallucination.
 
 `Player::ChangeState` (0x020e30a0) resets the pair on every transition:
 
-```
+```arm
 020e31c0  mov r2, #0x4000     ; 4.0
 020e31cc  mov r3, #0x4b000    ; 75.0
 020e3208  rsb r4, r2, #0      ; -4.0
@@ -142,7 +142,7 @@ cross-check. Low confidence on its own (round numbers), but useful.
 
 Repo-wide grep over `src/` + `include/`, **zero hits** for all of:
 
-```
+```sh
 SURFACE_  TERRAIN  CAMERA_MODE_  LEVEL_  COURSE_  WARP_NODE_
 find_floor  findFloor  find_wall  gMarioState  marioObj
 atan2s  sins(  coss(  mtxf_  vec3f_  approach_s32
@@ -222,7 +222,7 @@ let `ChangeState` and every `St_*_Main` drop their per-file local `struct State`
 An earlier pass claimed the camera behaviour table at `0x0209b008` had **exactly 15** entries at
 0x10 stride, "matching N64's 15 populated camera modes." **This is wrong.** The relocs continue:
 
-```
+```arm
 0x0209b000 0x0209b004 0x0209b008 0x0209b018 ... 0x0209b0e8 0x0209b0f8
 0x0209b108 0x0209b118 0x0209b128 0x0209b138
 ```
@@ -363,7 +363,7 @@ slipperiness per-triangle instead of deriving it.
 `Player::SetFloorSurfaceInfo` @ `0x020c16ec` unpacks CLPS into the Player; the class lands at
 `+0x658`. `Player::GetFloorClass` @ `0x020c031c` then applies **N64's crawl override, exactly**:
 
-```
+```c
 if (IsState(0x02110514 /* St_Crawl */) && floorNormalY > 0x800 /* 0.5f */ && class == 0) class = 2;
 ```
 
@@ -439,7 +439,7 @@ the `32.0`/`24.0` targets, the `0.95` `normal.y` gate.
 
 DS substitutes a constant-rate approach toward a banded stick-magnitude target:
 
-```
+```c
 walk band (stickMag 0.28–0.58) -> quantized ramp 0 .. 8.0
 run band  (stickMag > 0.58)    -> max(40.0 * charFactor * stickMag, 10.0 * charFactor)
 integrate: ApproachLinear(forwardVel, target, rate)  // rate 1.0, or 30.0 on the dash boost

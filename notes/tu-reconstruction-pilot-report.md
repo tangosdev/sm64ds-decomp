@@ -23,7 +23,7 @@ candidate the answer is unambiguous. It cost one deliberate source-level change
 (§5) and surfaced one structural obstacle that per-function compilation had been
 hiding (§6).
 
-```text
+```python
 TU ov045/PoleLift
 
 MATCH  PoleLift::~PoleLift [D1]      0x0211150c  size 0x04c
@@ -46,7 +46,7 @@ Before and after, the seven untouched legacy files were re-verified with
 `build_pin.verify` under their pinned compiler, so a green merged result cannot be
 an environment artefact:
 
-```text
+```python
 OK    src/_ZN8PoleLiftD1Ev.cpp                       2004/b56
 OK    src/_ZN8PoleLiftD0Ev.cpp                       2004/b56
 OK    src/_ZN8PoleLift16CleanupResourcesEv.cpp       2004/b56
@@ -114,7 +114,7 @@ extern "C" int probe_B(void) { return 0x22222222; }
 extern "C" int probe_C(void) { return 0x33333333; }
 ```
 
-```text
+```python
 [5] '.text'  size 0xc   <- probe_C   (LAST in source)
 [6] '.text'  size 0xc   <- probe_B
 [7] '.text'  size 0xc   <- probe_A   (FIRST in source)
@@ -260,7 +260,7 @@ eight bytes. This is invisible to every byte gate, because a relocated word is a
 wildcard — the naive merge reports **7/7 MATCH** with a vptr store eight bytes
 low. What caught it was `objisolate.plan`:
 
-```text
+```python
 PoleLift_Spawn   error='_ZTV8PoleLift: unexpected reloc type=2 addend=0'
 ```
 
@@ -270,7 +270,7 @@ file that had already been declared matching. Writing `(int)(_ZTV8PoleLift + 2)`
 compiler generates for itself. Bytes unchanged (7/7 before and after), and
 `objisolate` then accepts all seven:
 
-```text
+```python
 _ZN8PoleLiftD1Ev                   error=None  externalise=['_ZTV8Platform', '_ZTV8PoleLift']
 _ZN8PoleLiftD0Ev                   error=None  externalise=['_ZTV8Platform', '_ZTV8PoleLift']
 _ZN8PoleLift16CleanupResourcesEv   error=None  externalise=[]

@@ -43,7 +43,7 @@ python tools/skeleton_conform.py --report        # -> build/skeleton_conform.jso
 
 `python tools/skeleton_conform.py --report`:
 
-```
+```python
 checked 423: conform=420, bases_only=3
 skipped 6: no vtable slots (dBgPc, dM3dGLin, dMg3DHeyhoObjAdapter_c, daDemo_c::param_c)
 ```
@@ -73,7 +73,7 @@ literal. Under Itanium a non-virtual base sits at the next available offset, so
 consecutive starts state how much room the earlier base occupies. This is the one place
 the ROM states layout outright.
 
-```
+```sh
 dBgCh_SphCrr (SphereClsn)   dBgCh@0   dBgPi@16   dM3dGSph@56
 dBgCh_Lin    (RaycastLine)  dBgCh@0   dBgPi@16   dM3dGLin@56
 dBgCh_Gnd                   dBgCh@0   dBgPi@16
