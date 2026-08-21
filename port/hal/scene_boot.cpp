@@ -447,6 +447,9 @@ int hal_sub_screen_stacked_obj_shift(void);
 int IsMinigameActorID(unsigned int id);
 void port_message_composite_engine_a(void *fb);
 void sdat_host_tick(void);           /* hal/sdat/consumer.cpp */
+void out_set_volume_pct(int);        /* hal/sdat/out_win.cpp */
+int host_settings_poll(void);        /* hal/host_settings.cpp, the live re-read */
+int host_setting_volume(void);       /* same */
 void port_scene_mg_seat_sound(int scene_id); /* hal/scene_mg_sound.cpp */
 
 extern int data_020a4b6c[8];         /* the scene tree: head, callback, 0 */
@@ -2734,6 +2737,15 @@ extern "C" void port_scene_tick(int frame, int tick_game)
     ntr::Framebuffer &fb = scn_fb;
     const int no_render = scn_no_render;
     const int trace = scn_trace;
+    /* settings.json, watched while running: every scene path -- the player's
+       windowed session and the harness's headless one -- ticks through here,
+       so this one call is the whole of the live re-read for scenes. The walk
+       loop in tests/walk_window.cpp has its own. The gap keys need no push:
+       the layout latch reads host_settings_gen itself. */
+    if (host_settings_poll()) {
+        const int v = host_setting_volume();
+        if (v >= 0) out_set_volume_pct(v);
+    }
     /* The brace is the `for` that used to be here, kept so the body below is
        the old body at the old indentation and the diff says "the loop became a
        function" rather than reflowing three dozen lines nobody changed. */

@@ -335,6 +335,7 @@ static bool winapi_load(void)
 #include "fault_probe.h"
 #include "overlay_font.h"
 #include "hal/host_settings.h"   /* settings.json, the launcher's file */
+extern "C" void out_set_volume_pct(int);  /* hal/sdat/out_win.cpp */
 
 /* The run-mode half of settings.json (hal/host_settings.cpp). Declared here
    rather than in hal/host_settings.h because the header belongs to another
@@ -5434,6 +5435,16 @@ int main(void)
             if (msg.message == WM_QUIT) return 0;
             W.TranslateMessage_(&msg);
             W.DispatchMessageA_(&msg);
+        }
+        /* settings.json, watched while running: the launcher's dialog writes
+           the file on every change, so the gap and the volume follow the
+           player's hand without a relaunch. The poll is a counter compare on
+           29 frames out of 30 and says 1 only when an answer moved; the gap
+           side needs no push here because the layout latch reads
+           host_settings_gen itself. */
+        if (host_settings_poll()) {
+            const int v = host_setting_volume();
+            if (v >= 0) out_set_volume_pct(v);
         }
         ph_begin(&t_frame);
         ph_begin(&t_phase);

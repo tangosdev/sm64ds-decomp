@@ -7,10 +7,16 @@
    overridden and never reaches the game. The file next to the exe is the
    only channel that works.
 
-   Read once, on first use. A change takes effect the next time the player
-   presses Play, which is how the volume setting already behaves. A missing,
-   unreadable or malformed file falls back to the defaults in silence, the
-   same way the launcher's own loader does. */
+   Read once, on first use, and then WATCHED: host_settings_poll below
+   re-reads the file when it changes on disk, so the launcher's dialog can
+   adjust the gap and the volume while the game is running. Only the four
+   screen-gap keys and Volume reload live; everything else keeps its boot
+   value, because the dialog's own Mods panel promises a restart for those.
+   A missing, unreadable or malformed file falls back to the defaults in
+   silence at boot, and a reload that cannot read the file keeps the values
+   it has rather than falling back -- the launcher swaps the file in with a
+   rename, but a reader that punished a torn write with the defaults would
+   flash the player's picture black for a frame. */
 #ifndef PORT_HOST_SETTINGS_H
 #define PORT_HOST_SETTINGS_H
 
@@ -124,6 +130,26 @@ int host_setting_gap_peek(void);
    there is no band, and a band that does not exist cannot be filled, drawn
    on, or peeked into. */
 int host_setting_gapless_minigames(void);
+
+/* ---- THE LIVE RE-READ -------------------------------------------------
+   host_settings_poll: call once per frame from the host loop. Internally it
+   looks at the file's write time only every 30th call, so its steady-state
+   cost is a counter compare. When the file HAS changed it re-reads the four
+   screen-gap keys and Volume, and returns 1 exactly when one of them now
+   answers differently; every other return is 0. Nothing else reloads: the
+   Mods panel tells the player those need a restart, and making the file
+   watcher agree with the dialog is the whole contract.
+
+   host_settings_gen steps once per poll that returned 1. hal/screen_gap.cpp
+   folds it into its layout latch key, which is how a fill-mode or colour
+   change rebuilds a layout whose every other input is unchanged.
+
+   host_setting_volume is the file's Volume key, 0..100, or -1 when the file
+   has never named one. -1 means the boot-time SM64DS_VOLUME environment
+   value (the launcher passes the same number both ways) stays in charge. */
+int host_settings_poll(void);
+int host_settings_gen(void);
+int host_setting_volume(void);
 
 #ifdef __cplusplus
 }

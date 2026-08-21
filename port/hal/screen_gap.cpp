@@ -40,6 +40,10 @@ int g_raw = -1;              /* the last G read out of the game */
 int g_scene = -2;            /* the scene the last latch was for */
 int g_head = -1;             /* the headroom the last layout was built with */
 int g_shift = -1;            /* the OBJ display shift the last layout used */
+int g_setgen_l = -1;         /* host_settings_gen at the last latch: the live
+                                re-read steps it when fill/colour/peek move,
+                                which changes the layout while every other
+                                key input stays equal */
 /* G_rom: the G THE SCENE'S OWN InitResources WROTE, captured by the gapless
    latch below at the instant before it stores zero over it, because that is the
    only moment the number exists. Everything after the latch reads zero, and the
@@ -406,8 +410,9 @@ const ntr::StackLayout *hal_screen_layout(void)
        not exist. Zero in the per-entry default, which is every run that does
        not ask for the falsified arm. */
     const int raster = obj_layer_shift_ds();
+    const int setgen = host_settings_gen();
     if (g_have && want == g_raw && scene == g_scene && head == g_head &&
-        shift == g_shift) {
+        shift == g_shift && setgen == g_setgen_l) {
         g_lay.seam = seam;
         g_lay.world_band = (hal_gapless_world() || hal_gapless_world_rows()) ? 1 : 0;
         g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
@@ -419,6 +424,7 @@ const ntr::StackLayout *hal_screen_layout(void)
     g_scene = scene;
     g_head = head;
     g_shift = shift;
+    g_setgen_l = setgen;
 
     const int mode = host_setting_gap_fill_mode();
     /* PEEK IS OFF IN THE SHIFTED MODE, decided here so that the layout every

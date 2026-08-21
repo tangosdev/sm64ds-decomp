@@ -484,6 +484,15 @@ int g_gap_peek;                      /* default 0 */
    except that file. */
 int g_gapless_minigames;             /* default 0, and 0 is the ROM */
 
+/* Volume, 0..100, or -1 while the file has never named one. The launcher owns
+   this key and also passes it as SM64DS_VOLUME at launch; the file copy exists
+   so the live re-read below can move it while the game is running. */
+int g_volume = -1;
+
+/* Steps once per live re-read that changed an answer. hal/screen_gap.cpp
+   latches on it. */
+int g_setgen;
+
 /* "#RRGGBB" to 0xFFRRGGBB. Returns dflt for anything that is not exactly six
    hex digits after an optional '#', so a half-typed colour is the default
    rather than a colour nobody chose. Case insensitive, because a player
@@ -574,6 +583,10 @@ void load_once(void)
             if (json_str(text, "GapColor", col, sizeof col))
                 g_gap_color = parse_hex_color(col, 0xFF000000u);
         }
+        {
+            const int v = json_int(text, "Volume", -1);
+            if (v >= 0) g_volume = v > 100 ? 100 : v;
+        }
     }
     free(text);
 
@@ -604,6 +617,60 @@ void load_once(void)
                         "not just the picture. Objects cross the seam sooner "
                         "than they do on a DS. This is a mod, not the game. "
                         "(%s)\n", path);
+}
+
+/* ---- the live re-read -----------------------------------------------------
+   What the file's write time was when it was last read, so a poll can tell
+   "changed" from "looked at". Zero until the first poll finds the file. */
+#ifdef _WIN32
+unsigned long long g_watch_time;
+unsigned long long g_watch_size;
+#endif
+
+/* Re-read ONLY the keys the header promises reload live: the four screen-gap
+   keys and Volume. Returns 1 when an answer changed. Each key lands on the
+   value it already has rather than its default when the file no longer names
+   it, because "the launcher stopped writing a key" and "the player turned a
+   key off" are different sentences and only the second one has a picture. */
+int reload_live(const char *text)
+{
+    int changed = 0;
+    const int gap = json_bool(text, "MinigameGap", g_gap_on);
+    const int peek = json_bool(text, "GapPeek", g_gap_peek);
+    int fill = g_gap_fill;
+    unsigned color = g_gap_color;
+    int vol = g_volume;
+    {
+        char mode[16];
+        if (json_str(text, "GapFillMode", mode, sizeof mode)) {
+            if (strlen(mode) == 5 && ieq(mode, "solid", 5)) fill = 0;
+            else if (strlen(mode) == 7 && ieq(mode, "ambient", 7)) fill = 1;
+            else if (strlen(mode) == 6 && ieq(mode, "custom", 6)) fill = 2;
+        }
+        char col[16];
+        if (json_str(text, "GapColor", col, sizeof col))
+            color = parse_hex_color(col, g_gap_color);
+    }
+    {
+        const int v = json_int(text, "Volume", -1);
+        if (v >= 0) vol = v > 100 ? 100 : v;
+    }
+    if (gap != g_gap_on || peek != g_gap_peek || fill != g_gap_fill ||
+        color != g_gap_color || vol != g_volume) {
+        g_gap_on = gap;
+        g_gap_peek = peek;
+        g_gap_fill = fill;
+        g_gap_color = color;
+        g_volume = vol;
+        changed = 1;
+        fprintf(stderr, "[settings] live re-read: MinigameGap %s, fill %s "
+                "#%06x, peek %s, volume %d\n", g_gap_on ? "on" : "OFF",
+                g_gap_fill == 0   ? "solid"
+                : g_gap_fill == 2 ? "custom"
+                                  : "ambient",
+                g_gap_color & 0xffffffu, g_gap_peek ? "ON" : "off", g_volume);
+    }
+    return changed;
 }
 
 }  /* namespace */
@@ -675,6 +742,55 @@ extern "C" int host_setting_gapless_minigames(void)
 {
     load_once();
     return g_gapless_minigames;
+}
+
+extern "C" int host_setting_volume(void)
+{
+    load_once();
+    return g_volume;
+}
+
+extern "C" int host_settings_gen(void)
+{
+    return g_setgen;
+}
+
+/* See the header. The steady-state cost is one counter compare; the file's
+   write time is asked for every 30th call, and the file is read only when
+   that time (or the size) moved. A read that fails or parses as garbage
+   changes NOTHING -- the next poll simply tries again -- so a torn write
+   can delay a change but never invent one. */
+extern "C" int host_settings_poll(void)
+{
+#ifdef _WIN32
+    static int tick;
+    if (++tick < 30) return 0;
+    tick = 0;
+    load_once();
+
+    char path[1024];
+    if (!find_settings(path, sizeof path)) return 0;
+    WIN32_FILE_ATTRIBUTE_DATA fa;
+    if (!GetFileAttributesExA(path, GetFileExInfoStandard, &fa)) return 0;
+    const unsigned long long t =
+        ((unsigned long long)fa.ftLastWriteTime.dwHighDateTime << 32) |
+        fa.ftLastWriteTime.dwLowDateTime;
+    const unsigned long long sz =
+        ((unsigned long long)fa.nFileSizeHigh << 32) | fa.nFileSizeLow;
+    if (t == g_watch_time && sz == g_watch_size) return 0;
+    g_watch_time = t;
+    g_watch_size = sz;
+
+    char *text = slurp(path);
+    if (!text) return 0;
+    int changed = 0;
+    if (looks_like_json_object(text)) changed = reload_live(text);
+    free(text);
+    if (changed) ++g_setgen;
+    return changed;
+#else
+    return 0;
+#endif
 }
 
 /* Take the three values and PERSIST them, so a choice made in the debug menu

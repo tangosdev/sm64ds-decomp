@@ -154,6 +154,18 @@ int out_volume_pct(void)
     return g_volPct;
 }
 
+// The live half of the same knob: the settings.json watcher pushes the file's
+// Volume here whenever it moves, and the next mixed buffer wears it. Same
+// clamp, same meaning, still only the host output stage.
+extern "C" void out_set_volume_pct(int pct)
+{
+    const int v = pct < 0 ? 0 : (pct > 100 ? 100 : pct);
+    if (g_volPct == v) return;
+    g_volPct = v;
+    fprintf(stderr, "[audio] master volume now %d%%%s\n", v,
+            v == 0 ? " (silent)" : "");
+}
+
 // ---- wav ----------------------------------------------------------------
 
 void sd_wav_open(const char *path)
