@@ -98,9 +98,17 @@ MANIFEST = REPO / "port" / "kit_assets.txt"
 # are worse than one.
 ROM_CLEAN_MARK = b"build/assets/romdata.bin"
 
-# What a kit directory has to hold before any of this is worth trying.
+# What a kit directory has to hold before any of this is worth trying. Two
+# shapes exist and each has its own entry point: the bare kit's play.bat, and
+# the launcher bundle's SM64DSLauncher.exe (assemble_bundle.ps1's flat zip,
+# which ships version.json and launcher_config.json beside it and no play.bat
+# at all). Which shape this kit is decides which list applies and whether the
+# play.bat freshness check below has a file to read.
 KIT_REQUIRED = ("play.bat", "extract_assets.ps1", "romdata.recipe.tsv",
                 "romdata.manifest")
+KIT_REQUIRED_LAUNCHER = ("SM64DSLauncher.exe", "extract_assets.ps1",
+                         "romdata.recipe.tsv", "romdata.manifest",
+                         "version.json", "launcher_config.json")
 
 ASSET_STRING = re.compile(rb"build/assets/([A-Za-z0-9_.\-]+)")
 
@@ -134,9 +142,16 @@ def read_manifest() -> list[str]:
 
 
 def find_exe(kit: pathlib.Path) -> pathlib.Path:
-    exes = sorted(p for p in kit.glob("*.exe"))
+    """The GAME exe. The launcher-era bundle legitimately ships two exes --
+    SM64DSLauncher.exe beside the game -- and the launcher is not the thing
+    this smoke runs: it is a .NET UI that would sit waiting for a person.
+    So the launcher is excused BY ITS EXACT NAME and nothing else is; a third
+    exe of any name still dies, because a stray exe in a kit is still the
+    defect this check exists to catch."""
+    exes = sorted(p for p in kit.glob("*.exe")
+                  if p.name != "SM64DSLauncher.exe")
     if len(exes) != 1:
-        die(f"expected exactly one .exe in {kit}, found {len(exes)}")
+        die(f"expected exactly one game .exe in {kit}, found {len(exes)}")
     return exes[0]
 
 
@@ -390,9 +405,13 @@ def main() -> int:
     print("1. the kit directory")
     exe = find_exe(kit)
     say(True, f"exe: {exe.name} ({exe.stat().st_size:,} bytes)")
-    for name in KIT_REQUIRED:
+    launcher_shape = (kit / "SM64DSLauncher.exe").is_file()
+    required = KIT_REQUIRED_LAUNCHER if launcher_shape else KIT_REQUIRED
+    say(True, "shape: " + ("launcher bundle (assemble_bundle.ps1)"
+                           if launcher_shape else "bare kit (package_kit.ps1)"))
+    for name in required:
         if not say((kit / name).is_file(), f"ships {name}"):
-            die("the kit is incomplete; package_kit.ps1 did not finish")
+            die("the kit is incomplete; its packaging script did not finish")
 
     print("\n2. the exe is a shipping (PORT_ROM_CLEAN) build")
     blob = exe.read_bytes()
@@ -403,8 +422,16 @@ def main() -> int:
     print("\n3. kit_assets.txt agrees with the shipped exe")
     check_manifest_against_exe(exe, wanted)
 
-    print("\n3b. kit_assets.txt agrees with the shipped play.bat")
-    check_play_bat(kit, wanted)
+    if launcher_shape:
+        # play.bat's unpack-freshness list lives in GameRunner.Launch in the
+        # launcher bundle, compiled C# this text check cannot read. Said out
+        # loud rather than silently skipped, so a RED-vs-GREEN diff between
+        # the two shapes never hides which checks each one actually ran.
+        print("\n3b. play.bat freshness list: not in this shape "
+              "(the launcher's GameRunner owns it)")
+    else:
+        print("\n3b. kit_assets.txt agrees with the shipped play.bat")
+        check_play_bat(kit, wanted)
 
     if FAILED:
         print("\nkit_smoke: RED")
