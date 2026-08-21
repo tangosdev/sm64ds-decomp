@@ -607,27 +607,34 @@ unsigned hal_screen_layout_generation(void)
  * shows the object arriving on the adjacent row. */
 namespace {
 
+enum {
+    GL_VISUAL = 0,   /* G untouched; the picture just loses the band */
+    GL_ZERO_G = 1,   /* G -> 0: the world compresses, crossings continuous */
+    GL_SPLICE = 2,   /* G untouched, band gone, objects TELEPORT across the
+                        hidden rows (hal_gapless_splice). For a game whose
+                        top screen is REGISTERED art: zeroing G lifts every
+                        world sprite off the artwork (Slots Shot's star,
+                        ramps and peg hitboxes rode 48 rows high), while
+                        this keeps the ROM's own registration everywhere
+                        and costs one small single-tick hop at the seam. */
+};
+
 struct GaplessScene {
     int scene_id;
-    /* 1 = FULL: zero the game's G and the halves go edge to edge -- objects
-       genuinely cross the seam. 0 = VISUAL: the game's G is NOT touched; the
-       picture just loses the band, which is all "gapless" can mean for a
-       game where nothing travels between the screens. */
-    int full;
+    int mode;
     const char *what;
 };
 
-/* The rows and their modes are the owner's 2026-08-20 spec: full gapless for
-   the four games where things cross the seam, visual-only for the two where
-   nothing does. Each row still owes the audit the table's note above
-   describes; the captures for tonight's rows are in runs/mg5/out/bandless/. */
+/* The rows and their modes are the owner's per-game verdicts, played and
+   judged one at a time. Each row still owes the audit the table's note
+   above describes. */
 const GaplessScene kGaplessScenes[] = {
-    {368, 1, "dScMgPachinko_c, Bob-omb Squad"},
-    {374, 1, "dScMgCurling_c, Shuffle Shell"},
-    {376, 1, "dScMgSmartball_c, Slots Shot"},
-    {378, 1, "MgCoincentration, Coincentration"},
-    {366, 0, "dScMgLuigi_c, Wanted!"},
-    {390, 0, "dScMgFlower_c, Loves Me...?"},
+    {368, GL_ZERO_G, "dScMgPachinko_c, Bob-omb Squad"},
+    {374, GL_ZERO_G, "dScMgCurling_c, Shuffle Shell"},
+    {376, GL_SPLICE, "dScMgSmartball_c, Slots Shot"},
+    {378, GL_ZERO_G, "MgCoincentration, Coincentration"},
+    {366, GL_VISUAL, "dScMgLuigi_c, Wanted!"},
+    {390, GL_VISUAL, "dScMgFlower_c, Loves Me...?"},
 };
 
 int g_gapless_on;        /* 1 once the write has engaged for the scene running */
@@ -677,7 +684,7 @@ void hal_gapless_minigames_latch(void)
         return;
     }
 
-    if (!row->full) {
+    if (row->mode == GL_VISUAL) {
         /* THE VISUAL HALF OF THE TABLE. The game's G word is not touched:
            nothing in this minigame travels between the screens, so zeroing G
            would change gameplay math for no visible gain, and the owner's
@@ -714,23 +721,17 @@ void hal_gapless_minigames_latch(void)
        SM64DS_GAPLESS_ZERO_G=1 restores the old G write for measurement. */
     const int was = read_raw();
     g_gapless_head_ds = was;
-    /* ZERO-G IS THE SHIPPED MODE, restored by the owner's order after one
-       night of playing every alternative. The record, so the next lane does
-       not walk this ring again: G -> 0 with no band, no strip and no
-       correction gives seamless crossings everywhere -- every visible row of
-       an object's path is on screen, both engine copies agree -- at the cost
-       of world-anchored sprites sitting G rows above screen-anchored art
-       (Coincentration's Wario; Slots Shot's ball against its pegs). The
-       owner has played both trades and prefers this one. The splice arm
-       (v4), which keeps the ROM registration and teleports objects across
-       the hidden rows instead, stays behind SM64DS_GAPLESS_SPLICE=1; the
-       per-sprite handoff hop it costs at the seam read as broken in play. */
-    static int splice = -1;
-    if (splice < 0) {
-        const char *s = std::getenv("SM64DS_GAPLESS_SPLICE");
-        splice = s && *s && *s != '0';
-    }
-    if (!splice) {
+    /* THE MODE IS THE ROW'S, one game at a time, each played and judged by
+       the owner. ZERO-G compresses the world: seamless crossings, at the
+       cost of world sprites riding G rows above screen-anchored art --
+       right for the sky games, visibly wrong for a registered playfield.
+       SPLICE keeps the ROM's own registration on both screens and instead
+       teleports crossers over the hidden rows (hal_gapless_splice), costing
+       one small single-tick hop at the seam -- right for Slots Shot, whose
+       spinning star, ramps and peg hitboxes all rode 48 rows above the
+       board under zero-G. Neither is globally correct; that lesson cost a
+       whole night. */
+    if (row->mode == GL_ZERO_G) {
         data_ov004_020beb6c[0] = 0;
         data_ov004_020beb6c[1] = 0;
         data_ov004_020beb6c[2] = 0;
