@@ -89,7 +89,7 @@ The matching compiler is pinned to **mwccarm 2004/b56** with these flags (the 1.
 `base`/`sp2`/`sp2p3` trio remains available for version sweeps; the linker is still
 1.2/sp2p3 `mwldarm`, because b56 ships no linker):
 
-```
+```sh
 -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
 ```
 
@@ -168,7 +168,7 @@ is in [CONTRIBUTING.md](CONTRIBUTING.md) and
 
 Short version:
 
-```
+```sh
 pip install ndspy capstone pyelftools
 # get mwccarm per notes/setup-mwccarm.md, then:
 python tools/unpack.py "path/to/your-own-sm64ds.nds"

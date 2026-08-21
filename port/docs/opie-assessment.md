@@ -230,7 +230,7 @@ mirrored 1:1. And use `-fno-strict-aliasing` regardless.)
 
 **All five `cybervisi0n` repos are GitHub forks of `ntrtwl/*`**, verified via the API:
 
-```
+```sh
 libntr        fork=true  parent=ntrtwl/NitroSDK     license=none
 libntrsystem  fork=true  parent=ntrtwl/NitroSystem  license=none
 libntrwifi    fork=true  parent=ntrtwl/NitroWiFi    license=none

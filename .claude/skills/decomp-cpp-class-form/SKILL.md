@@ -10,7 +10,7 @@ Byte-matching a real C++ class is a question about **source form**, not about be
 
 ## Ask the compiler, don't hand-mangle
 
-```
+```sh
 python tools/mangle.py candidate.cpp
 python tools/mangle.py candidate.cpp --expect _ZN5Actor8BehaviorEv
 python tools/mangle.py candidate.cpp --mangled-only --json

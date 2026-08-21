@@ -26,7 +26,7 @@ the ROM. Green = byte-verified = mergeable. Red means at least one file either:
 
 Do not open a PR expecting a maintainer to "fix it up." Verify locally first:
 
-```
+```sh
 python tools/match.py --c yourfile.c --func <name> --addr 0x<addr> --size 0x<size> --version 2004/b56
 ```
 
@@ -58,7 +58,7 @@ Most files are in `src/` itself, but that is a fact about the tree, not a rule. 
 it are grouped (`src/engine/fader/`, `src/actors/daTrs_c/`, `src/unnamed/ov063/`), and more
 will be. **Do not compose the path yourself** — ask:
 
-```
+```sh
 python tools/srcpath.py <symbol>              # where it lives now, if it exists
 ```
 
@@ -78,7 +78,7 @@ deliberate, separate, **rename-only** PR (see #970 and #975).
 **Banking a near-miss** (do this instead of committing it to `src/`): write your draft
 to a one-line-per-entry seeds file `{"name": "<symbol>", "c_source": "<the C>"}` and run
 
-```
+```sh
 python tools/nearmiss_db.py ingest --seeds my_seeds.jsonl --label <your-handle>
 ```
 
@@ -97,7 +97,7 @@ moves the codegen of every file that includes it, including files your diff neve
 So:
 
 - Before pushing a header edit, list what it touches and verify all of it:
-  ```
+  ```sh
   python tools/affected_src.py include/types.h        # who consumes it
   python tools/prepush_linkcheck.py --range origin/main..HEAD   # verifies consumers too
   ```
@@ -119,7 +119,7 @@ and `extern "C"`. None of that is compiled by the normal decomp toolchain or `to
 so a rename, a `.c`-to-`.cpp` migration, or a file move can silently strand a `port/`
 reference. Before pushing anything that renames or moves a `src/`/`include/` file, run:
 
-```
+```sh
 python tools/port_refcheck.py
 ```
 

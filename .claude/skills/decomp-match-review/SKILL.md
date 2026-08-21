@@ -152,7 +152,7 @@ Report each hit; do not editorialize.
    `clang-format --dry-run -Werror <changed files>`. Where none exists, do not propose one.
 
 2. **Magic addresses.** Grep changed files for hardware-map literals used inline:
-   ```
+   ```sh
    grep -nE '\b0x0?[4-7][0-9a-fA-F]{6}\b' <changed files>
    grep -n 'reinterpret_cast<volatile' <changed files>
    ```
@@ -206,7 +206,7 @@ Report each hit; do not editorialize.
 
 9. **Signature changes in shared headers.** Diff headers *alone* first — this is where scope
    creep hides and where tree-wide regressions originate:
-   ```
+   ```sh
    gh api repos/<r>/pulls/<n>/files --paginate \
      --jq '.[] | select(.filename|test("\\.hp?p?$")) | .filename, .patch'
    ```
@@ -228,7 +228,7 @@ Report each hit; do not editorialize.
 12. **Port reference integrity — blocking, and the maintainer's own written rule.** If the diff
     contains *any* rename, file move, or `.c`→`.cpp` migration
     (`git diff --name-status origin/main | grep -E '^[RD]'`), run:
-    ```
+    ```sh
     python tools/port_refcheck.py
     ```
     sm64ds's in-tree `port/` references `src/` by literal path and symbol name — the
@@ -401,7 +401,7 @@ The one greppable hazard hostgen cannot absorb, because it transforms text and l
 addresses alone — a **write** through a computed `0x04…` address. Reads still work through the
 mapped latch window; write-triggered side effects silently do not fire:
 
-```
+```sh
 grep -nE '\*\s*\(\s*(volatile\s+)?(u8|u16|u32|unsigned)[a-z ]*\*\s*\)\s*\(\s*0x0?4' <changed files>
 ```
 
@@ -478,7 +478,7 @@ Genuinely unbuilt, and still worth proposing:
 
 Order by what blocks the merge, not by file. Suggested shape:
 
-```
+```markdown
 ## Verification        (what you rebuilt, with which compiler, and what you could not check)
 ## Blocking
 ## Should fix

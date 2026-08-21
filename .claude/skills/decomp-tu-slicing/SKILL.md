@@ -12,7 +12,7 @@ on it.
 
 ## 0. Regenerate the map, in this order
 
-```
+```sh
 python tools/rtti_extract.py     # -> build/rtti.json
 python tools/rtti_vtables.py     # -> build/rtti_vtables.json
 python tools/tu_map.py           # -> build/tu_map.json
@@ -56,7 +56,7 @@ boundaries `{low: 68, medium: 110, high: 280}`, 400/532 carrying a class.
 methods interleaved in source order, so they look like many alternating blocks and are
 in fact one TU. Never slice on "the class name changed."
 
-```
+```sh
 python tools/tu_map.py --module ov080
 ov080: 86 functions -> 5 TUs (4 with a class), 3 sinits / 3 ctor entries [ok]
   0x2123740-0x2124a20    26 fn  MontyMole, MontyMoleRock, daChoropu_c   <- ONE TU

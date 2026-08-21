@@ -12,7 +12,7 @@ the merge and proving it**. For deciding *which* functions belong together, read
 
 ## 0. Prerequisites, in this exact order
 
-```
+```sh
 python tools/rtti_extract.py     # -> build/rtti.json
 python tools/rtti_vtables.py     # -> build/rtti_vtables.json
 python tools/tu_map.py           # -> build/tu_map.json
@@ -41,7 +41,7 @@ Measured on `main` at `343eab070` with the full chain: **74 modules, 11,091 func
 
 ## 1. The loop
 
-```
+```sh
 python tools/tubuild.py list                      # candidate worklist
 python tools/tubuild.py inspect ov045/PoleLift    # one candidate, full detail
 python tools/tubuild.py create  ov062/Chuckya     # generate a shadow .cpp
@@ -119,7 +119,7 @@ reported MATCH.
 
 **Always confirm the run reported all three.** `verify` prints the first two as labelled
 lines and folds the third into its verdict line:
-```
+```sh
 byte comparison   : 7/7 MATCH  (tools/match.py extract_func + compare, relocation-aware)
 objisolate check  : clean  (tools/objisolate.py plan() -- relocation type/addend ...)
 ...
@@ -158,7 +158,7 @@ produced.
 Once a root exists, one ordering constraint on it is absolute: **`dsd delink` must run
 before `dsd objdiff`**, because objdiff consumes what delink wrote.
 
-```
+```sh
 tools/bin/dsd.exe delink  -c config_tu/arm9/config.yaml
 tools/bin/dsd.exe objdiff -c config_tu/arm9/config.yaml -o build/tu/objdiff
 ```

@@ -48,14 +48,14 @@ You bring your own copy of the game. Nothing copyrighted lives in this repo.
    binary for your platform from the releases page and put it at `tools/bin/dsd.exe`
    (`tools/bin/` is git-ignored).
 4. **Python 3** plus a few packages:
-   ```
+   ```sh
    pip install ndspy capstone pyelftools    # core
    pip install py7zr pefile                # only for tools/recover_cw2004.py
    ```
 
 ## First-time setup
 
-```
+```sh
 git clone https://github.com/tangosdev/sm64ds-decomp
 cd sm64ds-decomp
 pip install ndspy capstone pyelftools py7zr pefile
@@ -76,7 +76,7 @@ accept `2004/b56`, so a sweep hit under another version is iteration, never a ve
 The pinned matching compiler is **mwccarm `2004/b56`** (reproduces more of this
 corpus than the 1.2 service packs; see `notes/rom-build.md`). Flags:
 
-```
+```sh
 -O4,p -enum int -lang c99 -char signed -interworking -proc arm946e -gccext,on -msgstyle gcc
 ```
 
@@ -85,12 +85,12 @@ sweeps. The ROM **linker** is still 1.2/sp2p3 `mwldarm` (b56 ships no linker).
 
 1. **Pick an unmatched function.** Ask in Discord or claim it on an issue.
 2. **Disassemble it** to see what you're matching:
-   ```
+   ```sh
    python tools/disasm.py extracted/arm9.bin --offset 0x... --length 0x...
    ```
 3. **Write C** for it (scratch first is fine).
 4. **Compile + byte-diff**, relocation-aware:
-   ```
+   ```sh
    python tools/match.py --c yourfile.c --func name --addr 0x020xxxxx --size 0x.. \
        --version 2004/b56
    ```
@@ -118,14 +118,14 @@ to matching but not exact - many are only 1-4 instructions off. Each record carr
 function name, address, the candidate C, and how many instructions diverge. These are the
 best-value functions to finish by hand:
 
-```
+```sh
 python tools/nearmiss_db.py list --max-div 4
 ```
 
 then take the stored `c_source` as your starting point and iterate with
 `tools/fdiff.py` (prints exactly which instructions differ, relocation-aware):
 
-```
+```sh
 python tools/fdiff.py --c yourfile.c --name FUNC --module ov0xx --addr 0x... --size 0x...
 ```
 
@@ -193,7 +193,7 @@ push to main and records both stores for whatever landed, so the only thing it n
 from you is a statement of method it can trust. Put one line in a commit message or the
 PR description:
 
-```
+```sh
 Provenance: ai model=grok-4.5 reasoning=high harness=grok-build
 Provenance: human
 ```

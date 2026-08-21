@@ -297,7 +297,7 @@ Stated so nobody reads more into this than it carries.
 
 ## 8. How to reproduce
 
-```
+```sh
 python tools/chaos_db_ci.py --out chaos-db.json      # emits the enrollment field
 python tools/linkcheck.py --module ov006 -j 10       # the byte gate, per module
 python tools/eligible.py -j 16                       # drop-in eligibility, per file
