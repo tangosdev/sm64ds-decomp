@@ -226,6 +226,22 @@
 //        blocks, `do { } while (0)` wrappers, adjacent goto/label splits, hoisted
 //        extra definitions (all DCE'd -- which is why re-bind count never mattered).
 //
+//        ONE THING DOES MOVE THE HEAD, and it is a regression, but it is worth
+//        recording because it is positive evidence for the draft.  Drop the
+//        `origin` pointer and read `f->origin.x/y/z` at each use, and words 2,3,4,5
+//        come RIGHT -- the parameter moves land in the cartridge's order and the c
+//        store follows them.  It costs 57 elsewhere, and not as allocation noise:
+//        without the pointer mwcc folds the offset into the load (`ldr r3,[r1,#0x14]`)
+//        where the cartridge materialises the address first (`add r2,r0,#0x14` then
+//        `ldr r4,[r2]`), and 59 of the 68 resulting words differ in SHAPE, not just
+//        in registers.  So the cartridge really does hold an `origin` pointer and
+//        the draft is right to.  Any form that routes the y/z reads through the
+//        member does this -- pointer-for-x/member-for-y-z included; the mirror image
+//        (member for x, pointer for y/z) loses an instruction instead.
+//
+//        The remaining head defect is therefore NOT reachable by removing work from
+//        the block; the `add r2` has to exist and merely be scheduled later.
+//
 // ==================== MEASURED AND DEAD -- DO NOT RE-DERIVE =================
 //   * A PRAGMA.  `#pragma opt_common_subs off` costs 140 INSTRUCTIONS here, even
 //     though a byte-matched sibling calls it "original and load-bearing" and 158

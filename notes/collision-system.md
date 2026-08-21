@@ -1092,6 +1092,16 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   permutations were byte-neutral before it, and now XYZ is the only one that scores 15.
   That is `dead-levers-are-scoped-to-structure` in one line.
 
+  One further probe, negative but informative. Dropping the `origin` pointer and reading
+  `f->origin.x/y/z` at each use makes words 2,3,4,5 come RIGHT -- the parameter moves land
+  in the cartridge's order and the c store follows them -- at a cost of 57 elsewhere. The
+  cost is not allocation noise: without the pointer mwcc folds the offset into the load
+  (`ldr r3,[r1,#0x14]`) where the cartridge materialises the address first
+  (`add r2,r0,#0x14` then `ldr r4,[r2]`), and 59 of the resulting 68 words differ in
+  SHAPE rather than in registers. **So the cartridge really does hold an `origin`
+  pointer, and the draft is right to.** The head defect is not reachable by removing work
+  from the block; the `add r2` has to exist and merely be scheduled later.
+
 
   ### A metric defect that hid work
 
