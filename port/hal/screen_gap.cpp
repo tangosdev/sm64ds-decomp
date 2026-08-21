@@ -53,6 +53,7 @@ int obj_shift_ds(void);
 int obj_layer_shift_ds(void);
 int headroom_ds(void);
 int main_shadow_is_e674(void);
+extern int g_gapless_tall;   /* defined beside the mode table below */
 
 int read_raw(void)
 {
@@ -132,12 +133,13 @@ int headroom_ds(void)
        world's top G rows go undisplayed, exactly as they do on a DS whose
        player is not inside the hinge. SM64DS_GAPLESS_HEADROOM=1 brings the
        strip back for measurement. */
-    static int on = -1;
-    if (on < 0) {
-        const char *s = std::getenv("SM64DS_GAPLESS_HEADROOM");
-        on = s && *s && *s != '0';
-    }
-    if (!on || !hal_gapless_engaged()) return 0;
+    /* ROW-DRIVEN now: a GL_ZERO_G_TALL scene carries the strip, everything
+       else does not, and the env is gone with the rest of the arm switches.
+       The strip's earlier retirement was about its use as a universal
+       answer; as a per-game mode for a scene whose upper strip carries real
+       content, it is exactly the owner's ask: 'the screen needs to be
+       taller so the score and Wario can sit properly'. */
+    if (!g_gapless_tall || !hal_gapless_engaged()) return 0;
     /* AND NEVER WITH THE OBJECT SHIFT ON. Both are opt-in and both are wrong,
        so nothing turns either on; what this refuses is the ONE combination
        whose picture could not be attributed afterwards. The strip fills rows
@@ -610,6 +612,12 @@ namespace {
 enum {
     GL_VISUAL = 0,   /* G untouched; the picture just loses the band */
     GL_ZERO_G = 1,   /* G -> 0: the world compresses, crossings continuous */
+    GL_ZERO_G_TALL = 3, /* zero-G plus the headroom strip: the picture gains
+                        G rows above the top screen showing the world's own
+                        top rows. For a game whose upper strip carries real
+                        content (Coincentration's Wario and score line) the
+                        compressed window cuts it; the taller picture gives
+                        it back without touching registration below. */
     GL_SPLICE = 2,   /* G untouched, band gone, objects TELEPORT across the
                         hidden rows (hal_gapless_splice). For a game whose
                         top screen is REGISTERED art: zeroing G lifts every
@@ -642,7 +650,7 @@ const GaplessScene kGaplessScenes[] = {
        below the visible board would have to be painted. Until someone
        paints them, the honest answer is the one the latch already gives an
        unlisted scene: gap simulated, said out loud. */
-    {378, GL_ZERO_G, "MgCoincentration, Coincentration"},
+    {378, GL_ZERO_G_TALL, "MgCoincentration, Coincentration"},
     {366, GL_VISUAL, "dScMgLuigi_c, Wanted!"},
     {390, GL_VISUAL, "dScMgFlower_c, Loves Me...?"},
 };
@@ -650,6 +658,7 @@ const GaplessScene kGaplessScenes[] = {
 int g_gapless_on;        /* 1 once the write has engaged for the scene running */
 int g_gapless_visual;    /* 1 for a VISUAL row: band gone, simulation untouched */
 int g_gapless_world;     /* 1 for a FULL row: ROM sim, hinge rows drawn as world */
+int g_gapless_tall;      /* 1 for a TALL row: the headroom strip is on */
 int g_gapless_scene = -2;
 
 const GaplessScene *gapless_row(int scene)
@@ -671,6 +680,7 @@ void hal_gapless_minigames_latch(void)
     g_gapless_on = 0;
     g_gapless_visual = 0;
     g_gapless_world = 0;
+    g_gapless_tall = 0;
     g_gapless_scene = scene;
     /* AND THE HEADROOM IS DROPPED WITH IT, for the reason the two lines above
        exist: a scene must never inherit the last one's answer, and a stale
@@ -741,7 +751,8 @@ void hal_gapless_minigames_latch(void)
        spinning star, ramps and peg hitboxes all rode 48 rows above the
        board under zero-G. Neither is globally correct; that lesson cost a
        whole night. */
-    if (row->mode == GL_ZERO_G) {
+    if (row->mode == GL_ZERO_G || row->mode == GL_ZERO_G_TALL) {
+        g_gapless_tall = row->mode == GL_ZERO_G_TALL;
         data_ov004_020beb6c[0] = 0;
         data_ov004_020beb6c[1] = 0;
         data_ov004_020beb6c[2] = 0;
