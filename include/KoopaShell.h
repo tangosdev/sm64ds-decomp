@@ -52,6 +52,10 @@ struct KoopaShell : dEnemyBase_c {
     s32 unk_3cc;            /* 0x3cc */
     s32 unk_3d0;            /* 0x3d0 */
     s32 unk_3d4;            /* 0x3d4 */
+    /* Trailing remainder, 8 bytes. Every sub-object is typed and every field
+       the eight recovered functions touch ends at 0x3d8; KoopaShell_Spawn
+       allocates 0x3e0. */
+    u8  pad_3d8[0x8];
 
     virtual ~KoopaShell();
 
@@ -130,8 +134,14 @@ struct KoopaShell {
     s32 unk_3cc;            /* 0x3cc */
     s32 unk_3d0;            /* 0x3d0 */
     s32 unk_3d4;            /* 0x3d4 */
+    /* Trailing remainder, 8 bytes. Every sub-object is typed and every field
+       the eight recovered functions touch ends at 0x3d8; KoopaShell_Spawn
+       allocates 0x3e0. */
+    u8  pad_3d8[0x8];
 };
 
 #endif /* __cplusplus */
+
+typedef char KoopaShell_size_must_be_0x3e0[sizeof(struct KoopaShell) == 0x3e0 ? 1 : -1];
 
 #endif /* KOOPASHELL_H */

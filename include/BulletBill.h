@@ -35,6 +35,10 @@ struct BulletBill : dEnemyBase_c {
     ShadowModel mShadowModel;                              /* 0x3ac */
     s32 mState;            /* 0x3d4 */
     s32 unk_3d8;            /* 0x3d8 */
+    /* Trailing remainder, 4 bytes. Every sub-object is typed and every field
+       the seven recovered functions touch ends at 0x3dc; BulletBill_Spawn
+       allocates 0x3e0. */
+    u8  pad_3dc[0x4];
 
     virtual ~BulletBill();
 
@@ -97,8 +101,14 @@ struct BulletBill {
     u8  mShadowModel[0x28];            /* 0x3ac */
     s32 mState;            /* 0x3d4 */
     s32 unk_3d8;            /* 0x3d8 */
+    /* Trailing remainder, 4 bytes. Every sub-object is typed and every field
+       the seven recovered functions touch ends at 0x3dc; BulletBill_Spawn
+       allocates 0x3e0. */
+    u8  pad_3dc[0x4];
 };
 
 #endif /* __cplusplus */
+
+typedef char BulletBill_size_must_be_0x3e0[sizeof(struct BulletBill) == 0x3e0 ? 1 : -1];
 
 #endif /* BULLETBILL_H */

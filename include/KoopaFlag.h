@@ -18,6 +18,12 @@ struct KoopaFlag {
     ModelAnim mModelAnim;            /* 0x108 */
     u16 mVictoryTimer;            /* 0x16c */
     u8  mHasTouchedFlag;            /* 0x16e */
+    /* Trailing remainder, 5 bytes. Both markers were already typed and every
+       field the three recovered functions touch ends at 0x16f, but
+       KoopaFlag_Spawn allocates 0x174. The reference proposes an unused u8 at
+       0x16f and an unused u32 at 0x170; nothing in this tree reads either, so
+       they stay padding. */
+    u8  pad_16f[0x5];
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -25,5 +31,7 @@ struct KoopaFlag {
     int Render();
 #endif
 };
+
+typedef char KoopaFlag_size_must_be_0x174[sizeof(struct KoopaFlag) == 0x174 ? 1 : -1];
 
 #endif

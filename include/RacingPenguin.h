@@ -9,6 +9,8 @@
 #include "TextureSequence.h"
 #include "ShadowModel.h"
 #include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
+#include "PathPtr.h"
 
 struct RacingPenguin {
     u8  pad_000[0x80];
@@ -57,7 +59,22 @@ struct RacingPenguin {
        dCcAc_c's D1 at +0x174 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN13RacingPenguinD0Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x174 */
-    u8  mWithMeshClsn;            /* 0x1a8 */
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x1a8 -- a relocation the ROM build
+       checks. Was a u8 marker. [_ZN13RacingPenguinD0Ev.c] */
+    dBgCh_Actr mWithMeshClsn;            /* 0x1a8 */
+    /* PathPtr: InitResources calls PathPtr::FromID on +0x364 and then
+       PathPtr::GetNode on it -- both take the address, so this is the object
+       and not a word inside one. */
+    PathPtr mPath;            /* 0x364 */
+    /* The node index GetNode is handed, by value, from +0x36c -- so it is a
+       field of the penguin and not part of the two-word PathPtr above. */
+    s32 mPathNodeIndex;            /* 0x36c */
+    u8  pad_370[0x26];
+    /* InitResources stores dActor_c::TrackStar's result here. It is the last
+       byte of the object: 0x397 rounds to the 0x398 RacingPenguin_Spawn
+       allocates. */
+    u8  unk_396;            /* 0x396 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -65,5 +82,7 @@ struct RacingPenguin {
     int Render();
 #endif
 };
+
+typedef char RacingPenguin_size_must_be_0x398[sizeof(struct RacingPenguin) == 0x398 ? 1 : -1];
 
 #endif

@@ -7,6 +7,7 @@
 #include "types.h"
 #include "Model.h"
 #include "ShadowModel.h"
+#include "dBgW_KcMbg.h"
 
 struct SpinningPlatform {
     u8  pad_000[0x5c];
@@ -21,16 +22,26 @@ struct SpinningPlatform {
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1c7];
-    u8  unk_2ec;            /* 0x2ec */
-    u8  pad_2ed[0x31];
+    /* dBgW_KcMbg member, named by the class's own destructor calling
+       dBgW_KcMbg's D1 at +0x124 -- a relocation the ROM build
+       checks. Was a u8 marker. [_ZN16SpinningPlatformD1Ev.c] */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    /* The collider's transform: InitResources hands +0x2ec to
+       dBgW_KcMbg::SetFile as its `const Matrix4x3 &`. Was a u8 marker
+       plus its pad. */
+    Matrix4x3 mClsnMat;            /* 0x2ec */
+    u8  pad_31c[0x2];
     s8  mRandDirection;            /* 0x31e */
     u8  pad_31f[0x1];
     u16 mRandTimer;            /* 0x320 */
     u16 mRandFrames;            /* 0x322 */
     s32 mFloorPosY;            /* 0x324 */
     ShadowModel mShadowModel; /* 0x328 */
+    /* The shadow's transform. ShadowModel + Matrix4x3 is the same pair
+       HauntedChair evidences by byte (a 48-byte identity block-copied over
+       +0x14c, which lands exactly on the next member), and 0x350 + 0x30 closes
+       on the 0x380 SpinningPlatform_Spawn allocates. */
+    Matrix4x3 mShadowMat;            /* 0x350 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -39,5 +50,8 @@ struct SpinningPlatform {
     int Render();
 #endif
 };
+
+typedef char SpinningPlatform_size_must_be_0x380[
+    sizeof(struct SpinningPlatform) == 0x380 ? 1 : -1];
 
 #endif

@@ -6,6 +6,7 @@
 #define MANSIONSTEPS_H
 #include "types.h"
 #include "Model.h"
+#include "dBgW_KcMbg.h"
 
 struct MansionSteps {
     u8  pad_000[0xd4];
@@ -20,7 +21,18 @@ struct MansionSteps {
     u8  pad_151[0x5];
     u8  unk_156;            /* 0x156 */
     u8  pad_157[0x5];
-    u8  mMovingMeshCollider;            /* 0x15c */
+    /* dBgW_KcMbg member, named by the class's own destructor calling
+       dBgW_KcMbg's D1 at +0x15c -- a relocation the ROM build
+       checks. Was a u8 marker. [_ZN12MansionStepsD0Ev.c] */
+    dBgW_KcMbg mMovingMeshCollider;            /* 0x15c */
+    /* The collider's transform, the second half of the dBgW_KcMbg + Matrix4x3
+       pair this tree carries everywhere a moving mesh collider appears
+       (dBgActor_c 0x124/0x2ec, SpinningPlatform and TtcRotatingCube the same,
+       both of which hand `this + 0x2ec` to dBgW_KcMbg::SetFile as a
+       `const Matrix4x3 &`). 0x15c + 0x1c8 = 0x324, and 0x324 + 0x30 closes on
+       the 0x354 MansionSteps_Spawn allocates. InitResources, which is where
+       the SetFile call would be, is still a near miss and not in the tree. */
+    Matrix4x3 mClsnMat;            /* 0x324 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -28,5 +40,7 @@ struct MansionSteps {
     int Render();
 #endif
 };
+
+typedef char MansionSteps_size_must_be_0x354[sizeof(struct MansionSteps) == 0x354 ? 1 : -1];
 
 #endif

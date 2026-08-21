@@ -41,7 +41,7 @@ int SpinningPlatform::InitResources()
     void *kf = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(&data_ov035_02112cb8);
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         (char *)&mMeshCollider, (KCL_File*)kf,
-        *(Matrix4x3*)((char *)&unk_2ec), 0x1000, mAngleY, data_ov035_02112238);
+        mClsnMat, 0x1000, mAngleY, data_ov035_02112238);
     func_020393d4(((char *)this) + 0x124, (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020396c0(((char *)this) + 0x124, 0);
     V3 v;

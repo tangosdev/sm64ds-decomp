@@ -51,6 +51,11 @@ struct MotherPenguin {
     s32 unk_36c;            /* 0x36c */
     u8  pad_370[0x4];
     s32 unk_374;            /* 0x374 */
+    /* Trailing remainder, 0x14 bytes. Every marker is already typed and the
+       last field the five recovered functions touch ends at 0x378;
+       MotherPenguin_Spawn allocates 0x38c. The reference does not document
+       this class's members. */
+    u8  pad_378[0x14];
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -58,5 +63,7 @@ struct MotherPenguin {
     int Render();
 #endif
 };
+
+typedef char MotherPenguin_size_must_be_0x38c[sizeof(struct MotherPenguin) == 0x38c ? 1 : -1];
 
 #endif

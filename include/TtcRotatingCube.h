@@ -6,6 +6,8 @@
 #define TTCROTATINGCUBE_H
 #include "types.h"
 #include "Model.h"
+#include "ShadowModel.h"
+#include "dBgW_KcMbg.h"
 
 struct TtcRotatingCube {
     u8  pad_000[0x90];
@@ -26,8 +28,14 @@ struct TtcRotatingCube {
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel1;            /* 0x0d4 */
-    u8  mMovingMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
+    /* dBgW_KcMbg member, named by the class's own destructor calling
+       dBgW_KcMbg's D1 at +0x124 -- a relocation the ROM build
+       checks. Was a u8 marker. [_ZN15TtcRotatingCubeD1Ev.c] */
+    dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
+    /* The collider's transform: InitResources hands +0x2ec to
+       dBgW_KcMbg::SetFile as its `const Matrix4x3 &`. */
+    Matrix4x3 mClsnMat;            /* 0x2ec */
+    u8  pad_31c[0x4];
     /* Model member, named by _ZN5ModelD1Ev at +0x320 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel2;            /* 0x320 */
@@ -36,8 +44,19 @@ struct TtcRotatingCube {
     u8  unk_376;            /* 0x376 */
     u8  unk_377;            /* 0x377 */
     s16 unk_378;            /* 0x378 */
-    u8  pad_37a[0x6];
-    u8  mShadowModel;            /* 0x380 */
+    /* Set to 1 by InitResources when the two ground probes disagree. */
+    u8  unk_37a;            /* 0x37a */
+    u8  pad_37b[0x1];
+    /* The floor height under the cube, from a dBgCh_Gnd probe. */
+    s32 unk_37c;            /* 0x37c */
+    /* ShadowModel member, named by the class's own destructor calling
+       ShadowModel's D1 at +0x380 -- a relocation the ROM build
+       checks. Was a u8 marker. [_ZN15TtcRotatingCubeD1Ev.c] */
+    ShadowModel mShadowModel;            /* 0x380 */
+    /* The shadow's transform, the same ShadowModel + Matrix4x3 pair
+       HauntedChair evidences by byte. 0x3a8 + 0x30 closes on the 0x3d8
+       TtcRotatingCube_Spawn allocates. */
+    Matrix4x3 mShadowMat;            /* 0x3a8 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -46,5 +65,8 @@ struct TtcRotatingCube {
     int Render();
 #endif
 };
+
+typedef char TtcRotatingCube_size_must_be_0x3d8[
+    sizeof(struct TtcRotatingCube) == 0x3d8 ? 1 : -1];
 
 #endif

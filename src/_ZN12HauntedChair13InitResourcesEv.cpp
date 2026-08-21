@@ -30,6 +30,6 @@ int HauntedChair::InitResources()
     unk_380 = mPosX;
     unk_384 = mPosY;
     unk_388 = mPosZ;
-    *(struct M48*)((char*)&unk_14c) = data_02082128;
+    *(struct M48*)((char*)&mShadowMat) = data_02082128;
     return 1;
 }

@@ -7,8 +7,7 @@
 extern "C" void _ZN9Animation8LoadFileER13SharedFilePtr(void*);
 extern "C" void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 struct BMD_File; struct dActor_c; struct Vector3_16;
-/* ModelBase is the real class now, through PrincessPeach.h. */
-struct ShadowModel { int InitCylinder(); };
+/* ModelBase and ShadowModel are the real classes now, through PrincessPeach.h. */
 /* Declared by final name, not as members: both take Fix12<int> where these calls pass
    int literals, and Fix12<int> is an aggregate with no converting constructor from int.
    dBgCh_Actr::Init's last parameter is a Vector3_16* as well -- the S5_ in
@@ -26,7 +25,7 @@ int PrincessPeach::InitResources()
     ((ModelBase*)(s + 0xd4))->SetFile((BMD_File*)f, 1, -1);
     for (int i = 0; i < 7; i++)
         _ZN9Animation8LoadFileER13SharedFilePtr((void*)data_ov085_0212f280[i]);
-    if (((ShadowModel*)(s + 0x138))->InitCylinder() == 0)
+    if (mShadowModel.InitCylinder() == 0)
         return 0;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         s + 0x160, ((dActor_c *)this), 0x90000, 0xc0000, 0x4800004, 0);

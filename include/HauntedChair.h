@@ -23,8 +23,11 @@ struct HauntedChair {
        ShadowModel's D1 at +0x124 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN12HauntedChairD0Ev.c] */
     ShadowModel mShadowModel;            /* 0x124 */
-    u8  unk_14c;            /* 0x14c */
-    u8  pad_14d[0x2f];
+    /* Matrix4x3: InitResources block-copies the 48-byte identity at
+       data_02082128 over this range in one go, and 0x14c + 0x30 lands exactly
+       on the dCcAcPos_c below -- the ShadowModel + shadow matrix pair this
+       family uses everywhere. Was a u8 marker plus its pad. */
+    Matrix4x3 mShadowMat;            /* 0x14c */
     /* dCcAcPos_c member, named by the class's own destructor calling
        dCcAcPos_c's D1 at +0x17c -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN12HauntedChairD0Ev.c] */
@@ -41,6 +44,10 @@ struct HauntedChair {
     s32 unk_38c;            /* 0x38c */
     s32 unk_390;            /* 0x390 */
     s32 unk_394;            /* 0x394 */
+    /* Trailing remainder, 0x10 bytes. Every marker is typed and the last field
+       the five recovered functions touch ends at 0x398; HauntedChair_Spawn
+       allocates 0x3a8. The reference does not document this class's members. */
+    u8  pad_398[0x10];
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -48,5 +55,7 @@ struct HauntedChair {
     int Render();
 #endif
 };
+
+typedef char HauntedChair_size_must_be_0x3a8[sizeof(struct HauntedChair) == 0x3a8 ? 1 : -1];
 
 #endif
