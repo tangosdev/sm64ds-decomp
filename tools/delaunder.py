@@ -5,7 +5,8 @@ Five idioms were pasted through the tree as matching crutches:
 
     (EXPR & 0xFFFFFFFFFFFFFFFFULL)      MASK       -- the u64 identity mask
     (long long)(int)(EXPR)              ROUNDTRIP  -- widen-then-narrow cast pair
-    (unsigned long long)(EXPR)          WIDEN      -- a lone 64-bit widening cast
+    (unsigned long long)(EXPR)          WIDEN      -- a lone 64-bit widening cast,
+                                                     EXCEPT a fixed-point multiply
     (s32)(volatile s32)EXPR             CVCAST     -- cv round-trip on a scalar rvalue
     ((const T *)p)->m, p declared volatile
                                         CVSTRIP    -- volatile declared, cast off at use
@@ -236,6 +237,46 @@ def _cv_strip_sites(text, keep):
     return sites
 
 
+
+def _is_fixed_point_widen(text, end, keep):
+    """True when the widened value is an operand of a multiply that is shifted back down.
+
+    That is a Q-format multiply -- `(s64)(a) * (b) >> 12` -- and the cast is REQUIRED:
+    without it the product is 32x32->32 and overflows, so the cast changes the value, not
+    merely the codegen. A crutch does not change the value; that is the whole difference,
+    and it is why this shape is excluded from the launder count rather than merely
+    annotated.
+
+    Scans forward from the end of the cast to the end of the enclosing expression. A `;`
+    or `{` ends it, and so does a `,` once the scan is back outside the group the cast
+    opened -- otherwise `f((u64)(x), y >> 2)` would read the shift from the NEXT
+    argument and excuse itself.
+    """
+    depth, seen_mul, i, n = 0, False, end, len(text)
+    while i < n:
+        if not keep[i]:
+            i += 1
+            continue
+        ch = text[i]
+        if ch in ";{}":
+            return False
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth < -4:                       # far outside; stop looking
+                return False
+        elif ch == ",":
+            if depth <= 0:
+                return False
+        elif ch == "*":
+            seen_mul = True
+        elif text.startswith(">>", i):
+            return seen_mul
+        i += 1
+    return False
+
+
 def find_sites(text, kinds=KINDS):
     """Every removable launder site, as (kind, start, end, replacement), left to right."""
     keep = code_mask(text)
@@ -261,8 +302,14 @@ def find_sites(text, kinds=KINDS):
         if kind not in kinds:
             continue
         for m in rx.finditer(text):
-            if keep[m.start()]:
-                out.append((kind, m.start(), m.end(), ""))
+            if not keep[m.start()]:
+                continue
+            # A widening cast that feeds a multiply which is then shifted back down is a
+            # fixed-point multiply, not a crutch: it changes the value. See
+            # _is_fixed_point_widen.
+            if kind == "WIDEN" and _is_fixed_point_widen(text, m.end(), keep):
+                continue
+            out.append((kind, m.start(), m.end(), ""))
 
     if "CVSTRIP" in kinds:
         out.extend(_cv_strip_sites(text, keep))

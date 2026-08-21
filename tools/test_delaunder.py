@@ -95,17 +95,57 @@ class ProseIsNotCode(unittest.TestCase):
         self.assertEqual(kinds(t), [])
 
 
-class ExistingKindsUnaffected(unittest.TestCase):
-    """The three older idioms must count exactly as before -- a Q12 multiply is still a
-    WIDEN, and the cv kinds must not silently fold into that number."""
+class FixedPointIsNotALaunder(unittest.TestCase):
+    """A widening cast that feeds a multiply narrowed by a shift is a Q-format multiply.
 
-    def test_widen_still_found(self):
+    Without it the product is 32x32->32 and overflows, so the cast changes the VALUE.
+    A crutch does not change the value; that is the whole distinction. 128 of the tree's
+    489 WIDEN sites were this shape, which is why the number was mostly noise.
+    """
+
+    def test_q12_multiply_not_counted(self):
         t = "#define FX12(a, b) ((s32)((((s64)(a) * (b)) + 0x800) >> 12))\n"
+        self.assertEqual(kinds(t, delaunder.LAUNDER_KINDS), [])
+
+    def test_q10_multiply_not_counted(self):
+        t = "#define MUL10(a, b) ((s32)(((s64)(a) * (b)) >> 10))\n"
+        self.assertEqual(kinds(t, delaunder.LAUNDER_KINDS), [])
+
+    def test_lone_widening_cast_still_counted(self):
+        # No multiply, no shift -- nothing about the value changes.
+        t = "f((u64)(x), y);\n"
         self.assertEqual(kinds(t, delaunder.LAUNDER_KINDS), ["WIDEN"])
+
+    def test_widen_over_a_sum_of_products_still_counted(self):
+        # A signedness cast for an API, not a Q-format narrowing: no shift follows.
+        t = "SqrtStart((u64)((s64)fh * fh + (s64)dh * dh), zval, k1);\n"
+        self.assertEqual(kinds(t, delaunder.LAUNDER_KINDS), ["WIDEN"])
+
+    def test_shift_in_a_later_argument_does_not_excuse_it(self):
+        # The comma at depth 0 must stop the scan, or the next argument's `>>` would
+        # launder this site by accident.
+        t = "f((u64)(a * b), c >> 2);\n"
+        self.assertEqual(kinds(t, delaunder.LAUNDER_KINDS), ["WIDEN"])
+
+    def test_multiply_without_a_narrowing_shift_still_counted(self):
+        t = "total = (s64)(a) * (b);\n"
+        self.assertEqual(kinds(t, delaunder.LAUNDER_KINDS), ["WIDEN"])
+
+
+class ExistingKindsUnaffected(unittest.TestCase):
+    """The cv kinds must not silently fold into the older number."""
 
     def test_widen_is_not_a_cv_site(self):
         t = "#define FX12(a, b) ((s32)((((s64)(a) * (b)) + 0x800) >> 12))\n"
         self.assertEqual(kinds(t, CV), [])
+
+    def test_mask_still_found(self):
+        t = "x = (y & 0xFFFFFFFFFFFFFFFFULL);\n"
+        self.assertEqual(kinds(t, delaunder.LAUNDER_KINDS), ["MASK"])
+
+    def test_roundtrip_still_found(self):
+        t = "x = (long long)(int)(y);\n"
+        self.assertEqual(kinds(t, delaunder.LAUNDER_KINDS), ["ROUNDTRIP"])
 
     def test_families_are_disjoint(self):
         self.assertEqual(set(delaunder.LAUNDER_KINDS) & set(CV), set())

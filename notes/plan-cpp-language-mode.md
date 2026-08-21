@@ -147,11 +147,29 @@ work must be **a class**, not a file.
    Taking it away again at the point of use is the tell.
 
    Counted as `codegen_hacks.cv_launder` / `cv_launder_sites`, deliberately **separate**
-   from `launder_or_forced` / `launder_sites`. Those three older idioms are sometimes
-   legitimate — `(s64)a * b >> 12` is how a Q12 multiply is written, and the metric
-   cannot tell that from a crutch. These two can be told apart, so mixing them would
-   make a number that is already hard to read worse. Tree-wide at introduction: 3 files,
-   6 sites. Detectors and their negative controls: `tools/test_delaunder.py`.
+   from `launder_or_forced` / `launder_sites`. The older kinds are a coarser instrument —
+   principle 7 below had to carve the Q-format multiply out of `WIDEN` by hand, and what
+   is left may still be over-broad. These two can be told apart from legitimate code by
+   construction, so mixing them would make a number that is already hard to read worse.
+   Tree-wide at introduction: 3 files, 6 sites. Detectors and their negative controls:
+   `tools/test_delaunder.py`.
+
+7. **A widening cast that changes the VALUE is not a launder.** `WIDEN` used to count
+   every lone 64-bit cast, including `(s64)(a) * (b) >> 12` — a Q12 multiply, where
+   without the cast the product is 32x32→32 and overflows. The cast is required for the
+   arithmetic to be correct, which is the exact opposite of a codegen crutch: **a crutch
+   does not change the value.** So a widening cast whose operand feeds a multiply that is
+   then narrowed by a right shift is excluded.
+
+   This was 128 of 489 WIDEN sites — the metric was roughly a quarter noise, and it
+   tripped the ratchet on a function match whose only sin was moving a file from `notes/`
+   into `src/`. Refined 2026-08-21: `launder_or_forced` 280 → 214, `launder_sites`
+   563 → 445. A fall, so the ratchet accepts it and no baseline override was needed.
+
+   Still counted, because none of them change a value: a lone `(u64)(x)` with no
+   arithmetic, a widened product with no narrowing shift, and a shift belonging to a
+   *later argument* (`f((u64)(a * b), c >> 2)` — the scan stops at the comma, or the site
+   would launder itself by accident). All six cases are in `tools/test_delaunder.py`.
 
 ## 4. Phases
 
