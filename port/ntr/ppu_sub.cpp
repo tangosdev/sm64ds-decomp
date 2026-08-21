@@ -2966,6 +2966,7 @@ SnowFlake g_snow[SNOW_MAX];
 GhostAttrFn g_ghost_attr_fn;
 GhostTickFn g_ghost_tick_fn;
 unsigned g_snow_last_ticks;
+int g_snow_warm;      /* the field has been pre-seeded for this engagement */
 unsigned g_snow_lcg = 0x12345u;
 
 unsigned snow_rand(void)
@@ -2982,7 +2983,25 @@ void seam_snow(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
     const unsigned short *attrs = g_ghost_attr_fn ? g_ghost_attr_fn(&n_attr) : 0;
     if (!attrs || n_attr <= 0) {
         for (int i = 0; i < SNOW_MAX; ++i) g_snow[i].active = 0;
+        g_snow_warm = 0;
         return;
+    }
+    /* PRE-SEEDED, owner's spec: the sky is already mid-snowfall when the
+       player first sees it. An empty field filling at one flake per tick
+       reads as a pile forming at the top and marching down; seeding the
+       same population at random heights over the whole span is the steady
+       state the spawner would reach anyway, delivered before frame one. */
+    if (!g_snow_warm) {
+        g_snow_warm = 1;
+        for (int i = 0; i < 90 && i < SNOW_MAX; ++i) {
+            SnowFlake &f = g_snow[i];
+            f.active = 1;
+            f.x = (int)(snow_rand() % 249) << 4;
+            f.wy = (-224 + (int)(snow_rand() % 416)) << 4;
+            f.vx = (int)(snow_rand() % 9) - 4;
+            f.vy = 5 + (int)(snow_rand() % 6);
+            f.kind = n_attr > 0 ? (int)(snow_rand() % (unsigned)n_attr) : 0;
+        }
     }
     unsigned steps = 0;
     if (g_ghost_tick_fn) {
@@ -3187,6 +3206,7 @@ void ppu_seam_ghost_attrs(GhostAttrFn fn)
 {
     g_ghost_attr_fn = fn;
     for (int i = 0; i < SNOW_MAX; ++i) g_snow[i].active = 0;
+    g_snow_warm = 0;
 }
 
 /* The rasters' question: does the overlay own this sprite identity right
