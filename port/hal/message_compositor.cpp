@@ -362,6 +362,7 @@ void build_objwin(uint32_t dispcnt) {
         const uint16_t a0 = rd16(oam_a() + i * 8u);
         const uint16_t a1 = rd16(oam_a() + i * 8u + 2);
         const uint16_t a2 = rd16(oam_a() + i * 8u + 4);
+        if (ntr::ppu_seam_snow_owns(a2)) continue;   /* seam-snow owns it */
         const bool affine = a0 & 0x100;
         if (!affine && (a0 & 0x200)) continue;          // disabled
         if (((a0 >> 10) & 3) != 2) continue;            // not an OBJ-window sprite
@@ -926,6 +927,8 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
     ++g_obj_frame;
 
     for (int i = 127; i >= 0; --i) {
+        if (ntr::ppu_seam_snow_owns(rd16(oam_a() + i * 8u + 4)))
+            continue;   /* the seam-snow overlay owns these while engaged */
         /* SM64DS_OAMAGE_TRACE: the top screen's half of the age probe. */
         {
             static int tget = -1;

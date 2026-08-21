@@ -361,6 +361,8 @@ void raster_obj(uint32_t dispcnt) {
         const uint16_t a0 = rd16(oam_b + i * 8u);
         const uint16_t a1 = rd16(oam_b + i * 8u + 2);
         const uint16_t a2 = rd16(oam_b + i * 8u + 4);
+        /* the seam-snow overlay owns these while engaged; see seam_snow */
+        if (ppu_seam_snow_owns(a2)) continue;
         /* SM64DS_OAMAGE_TRACE: engine B's half of the probe in ppu.cpp. */
         {
             static int bget = -1;
@@ -2934,162 +2936,107 @@ void seam_complete(uint32_t *dst, int dst_w, const StackLayout &lay,
     }
 }
 
-/* ---- SEAM GHOSTS: objects the game despawns at the seam, continued --------
+/* ---- SEAM SNOW: the mod's own weather, one field for both screens ----------
  *
- * Owner's spec, Shuffle Shell: the top screen's snow dies at the screen's
- * bottom edge while the bottom screen runs its own, so the fall is not
- * continuous. The game's snow lives in shared effect code nobody has walked;
- * this pass needs none of it. It watches the SHOWN main OAM for entries whose
- * attr2 is on the scene's ghost list (hal_gapless_ghost_attrs), follows each
- * by nearest-neighbour across frames to learn its drift, and when one
- * vanishes near the bottom edge it keeps FALLING as a ghost -- the same attr
- * triple out of the same VRAM, drawn by seam_draw_entry at the continued
- * position -- until it leaves the bottom screen. The game's own bottom snow
- * is untouched; the owner asked for the top snow to keep going, not for the
- * bottom's to change. Gated on lay.seam and an empty list stands the whole
- * pass down. */
-struct SeamGhost {
-    int active;         /* 0 free, 1 tracking, 2 falling as ghost */
-    int x, y;           /* engine-A rows/cols, <<4 for sub-pixel drift */
-    int vx, vy;         /* per frame, <<4 */
-    int sx, sy;         /* where tracking began, for the velocity baseline */
-    int age;            /* frames tracked */
-    int miss;
-    uint16_t a0, a1, a2;
+ * Owner's spec, third and FINAL architecture for Shuffle Shell's snow, in
+ * his words: new code that uses the top snow as an overlay and makes it go
+ * down the whole length -- no spawning at the gap, and the normal game
+ * untouched. The two tracking designs before this both died of the same
+ * disease: they inferred game state from OAM diffing, and a save-state
+ * capture (F5) churns that table into fake deaths and fake motion -- the
+ * spammed-F5 report was the churn minting extra flakes at the seam. This
+ * pass infers NOTHING from the game. While the mod is engaged for a scene
+ * with a registered attribute list, the OBJ rasters hide the game's own
+ * flake sprites (ppu_seam_snow_owns; visuals only, the simulation runs
+ * untouched) and this draws a synthetic field of the same flakes -- the
+ * game's own attr words, tiles and palette out of its own VRAM -- spawned
+ * only above the top screen, falling the full joined height, paced by the
+ * game's registered tick counter so any pause freezes it with the game.
+ * Deterministic LCG, so captures reproduce. An empty list stands both the
+ * pass and the suppression down, which is every scene and every mode
+ * except an engaged 374. */
+struct SnowFlake {
+    int active;
+    int x, wy;          /* x in DS cols <<4; wy in world rows <<4, -192 top */
+    int vx, vy;         /* per game tick, <<4 */
+    int kind;
 };
-enum { GHOST_MAX = 96 };
-SeamGhost g_ghost[GHOST_MAX];
+enum { SNOW_MAX = 128 };
+SnowFlake g_snow[SNOW_MAX];
 GhostAttrFn g_ghost_attr_fn;
 GhostTickFn g_ghost_tick_fn;
-int g_ghost_field_moved;
-unsigned g_ghost_last_ticks;
+unsigned g_snow_last_ticks;
+unsigned g_snow_lcg = 0x12345u;
 
-void seam_ghosts(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
-                 int to_white)
+unsigned snow_rand(void)
+{
+    g_snow_lcg = g_snow_lcg * 1664525u + 1013904223u;
+    return g_snow_lcg >> 16;
+}
+
+void seam_snow(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
+               int to_white)
 {
     if (!lay.seam) return;
     int n_attr = 0;
     const unsigned short *attrs = g_ghost_attr_fn ? g_ghost_attr_fn(&n_attr) : 0;
     if (!attrs || n_attr <= 0) {
-        for (int i = 0; i < GHOST_MAX; ++i) g_ghost[i].active = 0;
+        for (int i = 0; i < SNOW_MAX; ++i) g_snow[i].active = 0;
         return;
     }
-    if (!g_oam_a_have) return;
-    g_ghost_field_moved = 0;
-    /* mark all trackers unseen */
-    for (int i = 0; i < GHOST_MAX; ++i)
-        if (g_ghost[i].active == 1) g_ghost[i].miss = 1;
-    /* walk the shown table for listed entries */
-    for (int i = 127; i >= 0; --i) {
-        const uint16_t a0 = shown_rd16(i * 8);
-        const uint16_t a1 = shown_rd16(i * 8 + 2);
-        const uint16_t a2 = shown_rd16(i * 8 + 4);
-        int listed = 0;
-        for (int k = 0; k < n_attr; ++k)
-            if (a2 == attrs[k]) { listed = 1; break; }
-        if (!listed) continue;
-        if (a0 & 0x100) continue;                  /* affine flakes: none */
-        if (!(a0 & 0x100) && (a0 & 0x200)) continue;   /* disabled */
-        int y = a0 & 0xff;
-        if (y >= 192) y -= 256;
-        int x = a1 & 0x1ff;
-        if (x >= 256) x -= 512;
-        const int fy = y << 4, fx = x << 4;
-        /* nearest live tracker within 6 rows/cols */
-        int best = -1, best_d = 6 * 16 * 2 + 1;
-        for (int g = 0; g < GHOST_MAX; ++g) {
-            if (g_ghost[g].active != 1) continue;
-            int dy = fy - g_ghost[g].y, dx = fx - g_ghost[g].x;
-            if (dy < 0) dy = -dy;
-            if (dx < 0) dx = -dx;
-            if (dy > 6 * 16 || dx > 6 * 16) continue;
-            if (dy + dx < best_d) { best_d = dy + dx; best = g; }
-        }
-        if (best >= 0) {
-            SeamGhost &t = g_ghost[best];
-            /* THE VELOCITY IS A BASELINE, NOT A SMOOTHING. Snow moves less
-               than a pixel per frame, so on most frames the observed step is
-               ZERO; an average that folds those zeroes in decays to nothing
-               and the ghost stalls the moment it is born -- the owner's
-               'loses all momentum'. Position-at-birth over frames-tracked
-               measures the true sub-pixel rate exactly. */
-            if (fx != t.x || fy != t.y) g_ghost_field_moved = 1;
-            t.x = fx;
-            t.y = fy;
-            t.age++;
-            t.a0 = a0; t.a1 = a1; t.a2 = a2;
-            t.miss = 0;
-        } else {
-            for (int g = 0; g < GHOST_MAX; ++g)
-                if (!g_ghost[g].active) {
-                    g_ghost[g] =
-                        SeamGhost{1, fx, fy, 0, 8, fx, fy, 0, 0, a0, a1, a2};
-                    break;
-                }
-        }
-    }
-    /* trackers that vanished AT the edge become falling ghosts; the rest
-       that vanished anywhere else just die (melted, popped, culled high).
-       Two guards make this solid rather than heuristic. The edge window is
-       tight -- the flake's box top must have reached the last six rows, so
-       the handoff happens where the game itself would have clipped it and a
-       ghost can never pop in above the seam. And a BATCH of simultaneous
-       vanishes is a discontinuity, not weather: a save-state capture or a
-       scene reset shuffles the whole table in one frame, and ghosting that
-       churn is exactly how frozen snow grew moving stragglers. Weather
-       loses at most a flake or two per tick; more than four at once and
-       every one of them is dropped. */
-    int vanished = 0;
-    for (int g = 0; g < GHOST_MAX; ++g)
-        if (g_ghost[g].active == 1 && g_ghost[g].miss &&
-            g_ghost[g].y >= 186 * 16)
-            ++vanished;
-    for (int g = 0; g < GHOST_MAX; ++g) {
-        SeamGhost &t = g_ghost[g];
-        if (t.active == 1 && t.miss) {
-            if (t.y >= 186 * 16 && t.age >= 8 && vanished <= 4) {
-                t.vx = (t.x - t.sx) / t.age;
-                t.vy = (t.y - t.sy) / t.age;
-                t.active = t.vy > 0 ? 2 : 0;
-            } else {
-                t.active = 0;
-            }
-        }
-    }
-    /* advance and draw the ghosts -- paced by the GAME'S OWN TICKS, not by
-       composed frames. The registered tick counter advances once per
-       behavior tick of the engaged scene and stops the instant the game
-       stops simulating, so a host-side pause (F5's capture) freezes ghosts
-       with everything else by construction. The field-moved condition rides
-       along as the second belt: an in-game pause can tick the class while
-       the world holds still, and frozen snow with sailing ghosts is the
-       exact report this pass is being reworked for. */
     unsigned steps = 0;
     if (g_ghost_tick_fn) {
         const unsigned now = g_ghost_tick_fn();
-        steps = now - g_ghost_last_ticks;
-        if (steps > 4) steps = 4;      /* a long stall is not four frames of
-                                          catch-up sail; it is a resume */
-        g_ghost_last_ticks = now;
+        steps = now - g_snow_last_ticks;
+        if (steps > 4) steps = 4;   /* a resume is a resume, not a catch-up */
+        g_snow_last_ticks = now;
     }
-    if (!g_ghost_field_moved) steps = 0;
-    for (int g = 0; g < GHOST_MAX; ++g) {
-        SeamGhost &t = g_ghost[g];
-        if (t.active != 2) continue;
-        for (unsigned st = 0; st < steps; ++st) {
-            t.x += t.vx;
-            t.y += t.vy;
+    int live = 0;
+    for (int i = 0; i < SNOW_MAX; ++i)
+        if (g_snow[i].active) ++live;
+    for (unsigned st = 0; st < steps; ++st) {
+        /* ~90 flakes over the 384-row field reads like the game's own
+           density doubled for the doubled height; one spawn per tick fills
+           gradually rather than as a curtain, and every spawn is ABOVE the
+           top screen -- nothing ever pops in at the seam. */
+        if (live < 90) {
+            for (int i = 0; i < SNOW_MAX; ++i)
+                if (!g_snow[i].active) {
+                    SnowFlake &f = g_snow[i];
+                    f.active = 1;
+                    f.x = (int)(snow_rand() % 249) << 4;
+                    f.wy = (-192 - 8 - (int)(snow_rand() % 24)) << 4;
+                    f.vx = (int)(snow_rand() % 9) - 4;
+                    f.vy = 5 + (int)(snow_rand() % 6);
+                    f.kind = (int)(snow_rand() % (unsigned)n_attr);
+                    ++live;
+                    break;
+                }
         }
-        const int wy = (t.y >> 4) - 192;      /* world row of the flake top */
-        if (wy > 192 || t.vy <= 0) { t.active = 0; continue; }
+        for (int i = 0; i < SNOW_MAX; ++i) {
+            SnowFlake &f = g_snow[i];
+            if (!f.active) continue;
+            f.x += f.vx;
+            f.wy += f.vy;
+            if (f.wy > (192 << 4) || f.x < 0 || f.x >= (249 << 4))
+                f.active = 0;
+        }
+    }
+    const BandEngine ea = {kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                           0, 0, "A", 0};
+    for (int i = 0; i < SNOW_MAX; ++i) {
+        SnowFlake &f = g_snow[i];
+        if (!f.active) continue;
         BandCache c;
         c.have = 1;
-        c.a0 = t.a0; c.a1 = t.a1; c.a2 = t.a2;
-        c.eng = BandEngine{kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
-                           -192, 0, "A", 0};
+        c.a0 = 0x0000;
+        c.a1 = 0x0000;
+        c.a2 = attrs[f.kind];
+        c.eng = ea;
         BandEntry d;
-        if (!band_decode(c.a0, c.a1, c.a2, d)) { t.active = 0; continue; }
-        seam_draw_entry(dst, dst_w, lay, c, d, wy, t.x >> 4, wy, wy + d.bh,
+        if (!band_decode(c.a0, c.a1, c.a2, d)) continue;
+        const int wy = f.wy >> 4;
+        seam_draw_entry(dst, dst_w, lay, c, d, wy, f.x >> 4, wy, wy + d.bh,
                         evy, to_white);
     }
 }
@@ -3239,7 +3186,20 @@ void ppu_band_continuity(BandTrackFn fn)
 void ppu_seam_ghost_attrs(GhostAttrFn fn)
 {
     g_ghost_attr_fn = fn;
-    for (int i = 0; i < GHOST_MAX; ++i) g_ghost[i].active = 0;
+    for (int i = 0; i < SNOW_MAX; ++i) g_snow[i].active = 0;
+}
+
+/* The rasters' question: does the overlay own this sprite identity right
+   now? Engine-side suppression of the game's own flakes, gated on the same
+   registration everything else here rides. */
+int ppu_seam_snow_owns(uint16_t a2)
+{
+    if (!g_ghost_attr_fn) return 0;
+    int n = 0;
+    const unsigned short *attrs = g_ghost_attr_fn(&n);
+    for (int k = 0; k < n; ++k)
+        if (attrs[k] == a2) return 1;
+    return 0;
 }
 
 void ppu_seam_ghost_ticks(GhostTickFn fn) { g_ghost_tick_fn = fn; }
@@ -3433,8 +3393,8 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
        and the other needs none. With the mod off it returns on its first test,
        so a gapless image is byte-for-byte what it was before this existed. */
     seam_straddle(dst, dst_w, lay, evy, to_white);
-    /* and the despawned-at-the-seam continuations; see seam_ghosts */
-    seam_ghosts(dst, dst_w, lay, evy, to_white);
+    /* and the mod's own snow field; see seam_snow */
+    seam_snow(dst, dst_w, lay, evy, to_white);
 }
 
 }  // namespace ntr

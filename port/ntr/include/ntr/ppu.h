@@ -386,6 +386,11 @@ void ppu_seam_ghost_attrs(GhostAttrFn fn);
    engaged-scene behavior tick and freezes when the game does. */
 typedef unsigned (*GhostTickFn)(void);
 void ppu_seam_ghost_ticks(GhostTickFn fn);
+/* True while the seam-snow overlay owns this sprite identity: the OBJ
+   rasters skip such entries so the game's own flakes are hidden while the
+   overlay draws the one unified field. Always false with no list registered,
+   which is every scene and every mode except an engaged snow scene. */
+int ppu_seam_snow_owns(uint16_t a2);
 
 // ---- THE SEAM STRADDLE, and it is the same hook read at gap_ds == 0 ---------
 //
