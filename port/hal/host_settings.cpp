@@ -486,19 +486,21 @@ int g_gapless_minigames;             /* default 0, and 0 is the ROM */
 
 /* ---- LovesMeCharacter, the second Mods-panel key that changes the GAME ----
    Which character stars in the Loves Me...? petal minigame (scene 390).
-   The ROM's answer is Yoshi and that is the default:
-
-     ""        (or the key absent) Yoshi, the ROM        0
-     "mario"   the minigame archive's own Mario model    1
+   The ROM's answer is Yoshi and that is the default. The value is one of
+   the spellings in LOVESME_KEY below (1-based into that table); "" or an
+   absent key is Yoshi, the ROM.
 
    The swap itself lives in hal/fs_mods.cpp, at the file seam: the minigame
-   asks for Yoshi's model and animations by file id and is served Mario's
-   instead, re-rigged in flight. Nothing about it reloads live -- the file
-   layer caches what it serves -- so like every Mods key this one keeps its
-   boot value and the launcher's dialog promises the restart. Anything that
-   is not a spelling this build knows reads as the default, so a settings.json
-   from a LATER launcher that offers more characters degrades to Yoshi here
-   rather than to a guess. */
+   asks for Yoshi's model by file id and is served a model composed from
+   the player's own extraction instead. Nothing about it reloads live --
+   the file layer caches what it serves -- so like every Mods key this one
+   keeps its boot value and the launcher's dialog promises the restart.
+   Anything that is not a spelling this build knows reads as the default,
+   so a settings.json from a LATER launcher that offers more characters
+   degrades to Yoshi here rather than to a guess. */
+const char *const LOVESME_KEY[6] = {
+    "mario", "yoshi_red", "yoshi_blue", "yoshi_yellow", "luigi", "wario",
+};
 int g_lovesme_character;             /* default 0, and 0 is the ROM */
 
 /* Volume, 0..100, or -1 while the file has never named one. The launcher owns
@@ -588,10 +590,12 @@ void load_once(void)
            off -- which is the ROM */
         g_gapless_minigames = json_bool(text, "GaplessMinigames", 0);
         {
-            char who[16];
-            if (json_str(text, "LovesMeCharacter", who, sizeof who) &&
-                strlen(who) == 5 && ieq(who, "mario", 5))
-                g_lovesme_character = 1;
+            char who[24];
+            if (json_str(text, "LovesMeCharacter", who, sizeof who))
+                for (int i = 0; i < 6; ++i)
+                    if (strlen(who) == strlen(LOVESME_KEY[i]) &&
+                        ieq(who, LOVESME_KEY[i], strlen(who)))
+                        g_lovesme_character = i + 1;
             /* "", an absent key and any other spelling are all Yoshi */
         }
         {
@@ -645,10 +649,10 @@ void load_once(void)
     /* The same plain-words rule as GaplessMinigames: a support log carrying
        this key should say what the player is looking at. */
     if (g_lovesme_character)
-        fprintf(stderr, "[settings] LovesMeCharacter mario -- the Loves "
-                        "Me...? minigame's Yoshi is replaced with Mario at "
-                        "the file layer. This is a mod, not the game. (%s)\n",
-                path);
+        fprintf(stderr, "[settings] LovesMeCharacter %s -- the Loves "
+                        "Me...? minigame's Yoshi is replaced at the file "
+                        "layer. This is a mod, not the game. (%s)\n",
+                LOVESME_KEY[g_lovesme_character - 1], path);
 }
 
 /* ---- the live re-read -----------------------------------------------------

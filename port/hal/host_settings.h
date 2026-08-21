@@ -137,12 +137,14 @@ int host_setting_gapless_minigames(void);
    minigame archive's own Mario model, asked for by the file's "mario".
 
    Unlike GaplessMinigames this one changes only what the scene LOOKS like,
-   but it is a mod all the same -- the ROM never shows Mario there -- so it
-   rides the same rules: default off, boot-latched (the file layer caches
-   what it serves, so the launcher's Mods panel promises a restart), and
-   announced in plain words on stderr when on. The mechanism is a file-layer
-   substitution owned by hal/fs_mods.cpp; that file's header carries the rig
-   comparison that makes the swap safe and the one byte transform it makes. */
+   but it is a mod all the same -- the ROM never shows anyone but Yoshi
+   there -- so it rides the same rules: default off, boot-latched (the file
+   layer caches what it serves, so the launcher's Mods panel promises a
+   restart), and announced in plain words on stderr when on. Returns 0 for
+   Yoshi/off, else a 1-based index into host_settings.cpp's LOVESME_KEY
+   spellings (mario, the three VS Yoshi colors, luigi, wario, metal_wario).
+   The mechanism is a file-layer substitution owned by hal/fs_mods.cpp;
+   that file's header carries the derivation that makes the swaps safe. */
 int host_setting_lovesme_character(void);
 
 /* ---- THE LIVE RE-READ -------------------------------------------------
