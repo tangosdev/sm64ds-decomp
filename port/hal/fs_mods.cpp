@@ -44,11 +44,6 @@
 // f_game1..3) baked into the character file because the ROM only ever stars
 // Yoshi here. Two serving modes follow from that:
 //
-//   OVERRIDE -- build/assets/mods/lovesme_mario.bmd, when present, is served
-//   verbatim for the model id. Nothing generates this file in a normal
-//   install; it exists so a custom model can be dropped in by hand and so
-//   tools/lovesme_weave.py's output can be tested against the build below.
-//
 //   PREFERRED -- the WOVEN MODEL, built IN MEMORY on first ask from the two
 //   catalog files themselves: yoshi_model.bmd with the wall kept and the
 //   character display lists, materials, textures, palettes and bone rest
@@ -532,36 +527,16 @@ refuse:
 
 void woven_load(void)
 {
-    char path[520];
-    FILE *f;
     if (g_woven_state)
         return;
     g_woven_state = -1;
 
-    /* 1. the drop-in override file, when someone has made one */
-    snprintf(path, sizeof path, "%s/build/assets/mods/lovesme_mario.bmd",
-             mods_root());
-    f = fopen(path, "rb");
-    if (f) {
-        fseek(f, 0, SEEK_END);
-        g_woven_len = ftell(f);
-        fseek(f, 0, SEEK_SET);
-        g_woven = (u8 *)malloc(g_woven_len ? (size_t)g_woven_len : 1);
-        if (g_woven && (long)fread(g_woven, 1, (size_t)g_woven_len, f)
-                       == g_woven_len) {
-            fclose(f);
-            g_woven_state = 1;
-            fprintf(stderr, "[mods] LovesMeCharacter mario: override model "
-                            "%s (%ld bytes, wall kept, animations "
-                            "untouched)\n", path, g_woven_len);
-            return;
-        }
-        fclose(f);
-        free(g_woven);
-        g_woven = 0;
-    }
-
-    /* 2. the in-memory weave from the player's own extraction */
+    /* the in-memory weave from the player's own extraction. There is
+       deliberately NO file override here: a "build/assets/<name>" literal in
+       the exe is a promise kit_smoke holds the extractor to (see
+       port/kit_assets.txt), and an optional path the extractor never writes
+       would break that contract. A custom model goes in by rebuilding, or by
+       a future mods story that carries its own gate. */
     {
         u32 len = 0;
         u8 *built = weave_build(&len);
