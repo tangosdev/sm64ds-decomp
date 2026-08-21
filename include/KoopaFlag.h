@@ -6,13 +6,11 @@
 #define KOOPAFLAG_H
 #include "types.h"
 #include "ModelAnim.h"
+#include "dCcAc_c.h"
 
 struct KoopaFlag {
     u8  pad_000[0xd4];
-    u8  mdCcAc_c;            /* 0x0d4 */
-    u8  pad_0d5[0x23];
-    u32 unk_0f8;            /* 0x0f8 */
-    u8  pad_0fc[0xc];
+    dCcAc_c mdCcAc_c;         /* 0x0d4 */
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x108 -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
        stopped short of the object, so the member also takes over mAnimation (+0x50 = the

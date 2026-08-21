@@ -27,7 +27,8 @@ struct MovingBar : dBgActor_c {
        and MovingBarSmall_Spawn -- call fBase_c::operator new(0x338). They agree, so
        they are two spawn-info variants of one actor, and 0x330 was the field span
        rather than the size. */
-    u8 pad_330[0x8];                  /* 0x330, to the ROM's 0x338 */
+    u32 unk_330;              /* 0x330 */
+    u8  pad_334[0x4];
 
     /* --- vtable --- */
     virtual ~MovingBar();

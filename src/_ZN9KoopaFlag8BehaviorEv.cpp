@@ -21,7 +21,7 @@ int KoopaFlag::Behavior()
     int b;
 
     if (unk_16e == 0) {
-        id = unk_0f8;
+        id = mdCcAc_c.otherOwner;
         if (id != 0) {
             a = _ZN8dActor_c10FindWithIDEj(id);
             if (a != 0) {

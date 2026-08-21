@@ -5,6 +5,7 @@
 #ifndef DBGCH_SPHCRR_H
 #define DBGCH_SPHCRR_H
 #include "types.h"
+#include "dBgPi.h"
 
 /* fwd */
 struct dBgPi;
@@ -28,21 +29,9 @@ struct dBgCh_SphCrr {
        copying the matching dBgPi below it. */
     u8  flags;              /* 0x070 */
     u8  pad_071[0x3];
-    u8  mClsnResult1;            /* 0x074 */
-    u8  pad_075[0x3];
-    s64 unk_078;            /* 0x078 */
-    s32 unk_080;            /* 0x080 */
-    s32 unk_084;            /* 0x084 */
-    s32 unk_088;            /* 0x088 */
-    u16 unk_08c;            /* 0x08c */
-    u16 unk_08e;            /* 0x08e */
-    s32 unk_090;            /* 0x090 */
-    s32 unk_094;            /* 0x094 */
-    s32 unk_098;            /* 0x098 */
-    u8  mClsnResult2;            /* 0x09c */
-    u8  pad_09d[0x27];
-    u8  mClsnResult3;            /* 0x0c4 */
-    u8  pad_0c5[0x27];
+    dBgPi mClsnResult1; /* 0x074 */
+    dBgPi mClsnResult2; /* 0x09c */
+    dBgPi mClsnResult3; /* 0x0c4 */
     s32 unk_0ec;            /* 0x0ec */
     u8  pad_0f0[0xc];
     /* An adjacent pair, kept unnamed. All that is evidenced is the shape of

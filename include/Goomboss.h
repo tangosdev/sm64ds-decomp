@@ -2,6 +2,8 @@
 #define GOOMBOSS_H
 
 #include "types.h"
+#include "ModelAnim.h"
+#include "dBgCh_Actr.h"
 
 /* The Goomboss. Its destructor is the layout, and eight boundaries close on
  * sizes other headers assert:
@@ -106,8 +108,8 @@ struct Goomboss {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x16c];
-    u8  mModelAnim;            /* 0x210 */
-    u8  pad_211[0x1a7];
+    ModelAnim mModelAnim;     /* 0x210 */
+    u8  pad_274[0x144];
     s32 unk_3b8;            /* 0x3b8 */
     s32 unk_3bc;            /* 0x3bc */
     s32 unk_3c0;            /* 0x3c0 */
@@ -124,8 +126,8 @@ struct Goomboss {
     u8  pad_3f4[0x4];
     u8  mTextureTransformer;            /* 0x3f8 */
     u8  pad_3f9[0x13];
-    u8  mWithMeshClsn;            /* 0x40c */
-    u8  pad_40d[0x1bf];
+    struct dBgCh_Actr mWithMeshClsn; /* 0x40c */
+    u8  pad_5c8[0x4];
     s32 unk_5cc;            /* 0x5cc */
     s32 unk_5d0;            /* 0x5d0 */
     s32 unk_5d4;            /* 0x5d4 */

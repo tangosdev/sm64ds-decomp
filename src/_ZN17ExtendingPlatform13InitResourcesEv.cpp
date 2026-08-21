@@ -5,12 +5,11 @@
 /* recovered: named members + shared header, real C++ method */
 #include "ExtendingPlatform.h"
 #include "dBgW.h"
-typedef int Fix12;
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
-extern int _ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, Fix12, short, void*);
+extern int _ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*, void*, void*, int, short, void*);
 }
 
 int ExtendingPlatform::InitResources()
@@ -24,7 +23,7 @@ int ExtendingPlatform::InitResources()
   kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov045_021131d0);
   _ZN14dBgW_KcMbgSclY7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(((char*)this)+0x158, kcl, ((char*)this)+0x128, 0x1000, unk_08e, data_ov045_021125b0);
   func_020396c0(((char*)this)+0x158, 4);
-  unk_1a5 = 1;
+  mCollider.unk_4d = 1;
   ((dBgW *)(((char*)this)+0x158))->Enable((dActor_c *)(((char*)this)));
   unk_0d4 = 1;
   return 1;

@@ -20,7 +20,7 @@ void Stage::LoadFog()
     a += 4;
     b += 2;
   }
-  *((unsigned char *) ((char *)&unk_98c)) = 0;
+  *((unsigned char *) ((char *)&unk_96c.unk_020)) = 0;
   *((unsigned char *) ((char *)&unk_9b4)) = 1;
   *((unsigned char *) ((char *)&unk_9b5)) = 6;
   *((unsigned short *) ((char *)&unk_9b6)) = 0;

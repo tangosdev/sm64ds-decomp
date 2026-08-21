@@ -10,13 +10,12 @@ typedef unsigned int u32;
 typedef unsigned short u16;
 typedef signed char s8;
 
-typedef s32 Fix12;
 
 extern s8 data_0209f2f8;
 
 extern "C" {
 extern void _ZN8dActor_c8PoofDustEv(char* c);
-extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(char* c, Fix12 f);
+extern int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(char* c, int f);
 extern int _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_ActrR9ModelAnimj(char* c, void* w, void* m, u32 j);
 extern void func_ov084_02129498(char* c);
 extern void _ZN11dCapEnemy_c10ReleaseCapERK7Vector3(char* c, Vector3* v);
@@ -26,7 +25,7 @@ extern int _ZN4cstd4fdivEii(int a, int b);
 extern void _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(char* c, void* cyl);
 extern void _ZN9Animation7AdvanceEv(void* c);
 extern void _ZN8dActor_c9UpdatePosEP5dCc_c(char* c, void* cyl);
-extern int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(char* c, void* w, Fix12 f, int s, int b1, int b2, Fix12 g);
+extern int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(char* c, void* w, int f, int s, int b1, int b2, int g);
 extern void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(char* c, void* w, u32 j);
 extern void _ZN5dCc_c5ClearEv(void* c);
 extern void _ZN5dCc_c6UpdateEv(void* c);
@@ -87,21 +86,21 @@ int daKrb_c::Behavior()
         return 1;
 
     if (mState >= 3 ||
-        (mGoombaType == 3 && unk_3d0 == data_ov084_02130cc8[1]))
+        (mGoombaType == 3 && (int)mModelAnim.file == data_ov084_02130cc8[1]))
     {
-        unk_3cc = 0x1000;
+        mModelAnim.speed = 0x1000;
     } else {
         int v = _ZN4cstd4fdivEii(mHorzSpeed, mScaleX * 2);
         if (v > 0x3000)
             v = 0x3000;
-        unk_3cc = v;
+        mModelAnim.speed = v;
     }
 
     _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c(((char*)this), ((char*)this) + 0x180);
 
     if (mState != 2) {
         func_ov084_0212934c(((char*)this));
-        _ZN9Animation7AdvanceEv((char*)&mAnimation);
+        _ZN9Animation7AdvanceEv((char*)(Animation*)&mModelAnim);
     }
 
     st = mState;

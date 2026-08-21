@@ -2,6 +2,7 @@
 #define TTC_MOVINGBEAM_H
 
 #include "types.h"
+#include "math/Matrix.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
@@ -37,7 +38,7 @@ struct TTC_MovingBeam : dBgActor_c {
     /* Tail padding. The field span stops short of the real size: TTC_MovingBeam_Spawn
        calls fBase_c::operator new(0x38c), read off the retail
        instruction. A span is only a LOWER BOUND. */
-    u8 pad_35c[0x30];      /* 0x35c, to the ROM's 0x38c */
+    Matrix4x3 pad_35c;        /* 0x35c */
 };
 
 typedef char TTC_MovingBeam_size_must_be_0x38c[sizeof(TTC_MovingBeam) == 0x38c ? 1 : -1];
@@ -75,7 +76,7 @@ struct TTC_MovingBeam {
     u8  unk_328;            /* 0x328 */
     u8  pad_329[0x7];
     s32 unk_330;            /* 0x330 */
-    u8  mShadowModel;            /* 0x334 */
+    ShadowModel mShadowModel; /* 0x334 */
 };
 
 #endif /* __cplusplus */

@@ -23,4 +23,9 @@ struct dBgPi {
 #endif
 };
 
+/* Size is the dBgPi's own span AND the stride of the three consecutive results
+   dBgCh_SphCrr holds at 0x74/0x9c/0xc4 -- notes/collision-system.md 3.2. */
+typedef char dBgPi_size_must_be_0x28[sizeof(struct dBgPi) == 0x28 ? 1 : -1];
+typedef struct dBgPi dBgPi;
+
 #endif

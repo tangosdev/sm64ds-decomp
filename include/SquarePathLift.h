@@ -2,6 +2,7 @@
 #define SQUAREPATHLIFT_H
 
 #include "types.h"
+#include "PathPtr.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
@@ -19,8 +20,7 @@
 
 struct SquarePathLift : dBgActor_c {
     u8  pad_31e[0x2];
-    u8 mPath;                         /* 0x320 */
-    u8  pad_321[0x7];
+    PathPtr mPath;            /* 0x320 */
     s32 mNodeIndex;                   /* 0x328 */
     s32 mPathDir;                     /* 0x32c */
 
@@ -57,8 +57,7 @@ struct SquarePathLift {
     Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mPath;            /* 0x320 */
-    u8  pad_321[0x7];
+    PathPtr mPath;            /* 0x320 */
     s32 mNodeIndex;            /* 0x328 */
     s32 mPathDir;            /* 0x32c */
 };

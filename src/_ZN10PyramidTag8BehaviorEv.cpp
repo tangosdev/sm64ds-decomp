@@ -11,7 +11,7 @@ extern void _ZN5dCc_c6UpdateEv(void* a);
 
 int PyramidTag::Behavior()
 {
-  if(unk_0f8 != 0){
+  if(mdCcAc_c.otherOwner != 0){
     unsigned int id = unk_108;
     if(id == 0){
       _ZN7fBase_c18MarkForDestructionEv(((char*)this));

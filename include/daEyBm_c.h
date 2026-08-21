@@ -5,6 +5,7 @@
 #include "ShadowModel.h"
 #include "dBgCh_Actr.h"
 #include "dActor_c.h"
+#include "math/Matrix.h"
 
 /* daEyBm_c is the ROM's own RTTI name for this class (this tree once coined it
  * MrI_Projectile): the typeinfo at ov071
@@ -34,8 +35,7 @@ struct daEyBm_c : dActor_c {
     ShadowModel               mShadowModel;                  /* 0x0d4 */
     dCcAcPos_c mdCcAcPos_c;    /* 0x0fc */
     dBgCh_Actr              mWithMeshClsn;                 /* 0x13c */
-    u8                        unk_2f8;                       /* 0x2f8 */
-    u8                        pad_2f9[0x2f];
+    Matrix4x3 unk_2f8;        /* 0x2f8 */
     s32                       unk_328;                       /* 0x328 */
     s32                       unk_32c;                       /* 0x32c */
     s16                       unk_330;                       /* 0x330 */

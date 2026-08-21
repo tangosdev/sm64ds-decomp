@@ -6,6 +6,7 @@
 #define EXTENDINGPLATFORM_H
 #include "types.h"
 #include "Model.h"
+#include "dBgW_KcMbgSclY.h"
 
 struct ExtendingPlatform {
     u8  pad_000[0x8e];
@@ -19,9 +20,7 @@ struct ExtendingPlatform {
        padding rather than being folded into the member. */
     Model mModel;            /* 0x0d8 */
     u8  pad_128[0x30];
-    u8  mCollider;            /* 0x158 */
-    u8  pad_159[0x4c];
-    u8  unk_1a5;            /* 0x1a5 */
+    dBgW_KcMbgSclY mCollider; /* 0x158 */
 #ifdef __cplusplus
     /* methods */
     int CleanupResources();

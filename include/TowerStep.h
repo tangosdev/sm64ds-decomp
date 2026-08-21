@@ -75,8 +75,8 @@ struct TowerStep {
     Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mShadowModel;            /* 0x320 */
-    u8  pad_321[0x57];
+    ShadowModel mShadowModel; /* 0x320 */
+    u8  pad_348[0x30];
     s32 unk_378;            /* 0x378 */
     s32 unk_37c;            /* 0x37c */
     s32 unk_380;            /* 0x380 */

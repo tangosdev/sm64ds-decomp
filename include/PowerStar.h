@@ -47,8 +47,8 @@ struct PowerStar : dEnemyBase_c {
     u8  pad_49e[0x1];
     u8                           unk_49f;               /* 0x49f */
     u8  pad_4a0[0x2];
-    u8                           unk_4a2;               /* 0x4a2 */
-    u8  pad_4a3[0x5];
+    u16 unk_4a2;              /* 0x4a2 */
+    u8  pad_4a4[0x4];
     s32                          unk_4a8;               /* 0x4a8 */
     s32                          unk_4ac;               /* 0x4ac */
     s32                          unk_4b0;               /* 0x4b0 */

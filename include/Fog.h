@@ -14,4 +14,6 @@ struct Fog {
     u16 unk_024;            /* 0x024 */
 };
 
+typedef struct Fog Fog;
+
 #endif

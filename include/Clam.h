@@ -6,6 +6,7 @@
 #define CLAM_H
 #include "types.h"
 #include "ModelAnim.h"
+#include "dCcAc_c.h"
 
 struct Clam {
     u8  pad_000[0x5c];
@@ -22,12 +23,7 @@ struct Clam {
        stopped short of the object, so the member also takes over mAnimation (+0x50 = the
        Animation base), which the header declared separately inside it. */
     ModelAnim mModelAnim;            /* 0x0d4 */
-    u8  mdCcAc_c;            /* 0x138 */
-    u8  pad_139[0x17];
-    u8  unk_150;            /* 0x150 */
-    u8  pad_151[0xb];
-    s32 unk_15c;            /* 0x15c */
-    u8  pad_160[0xc];
+    dCcAc_c mdCcAc_c;         /* 0x138 */
     /* 0 shut, 1 lunging -- the only two values Behavior's switch has arms
        for, and InitResources sets it to 0. */
     u8  mState;            /* 0x16c */

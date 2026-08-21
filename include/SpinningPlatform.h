@@ -6,6 +6,7 @@
 #define SPINNINGPLATFORM_H
 #include "types.h"
 #include "Model.h"
+#include "ShadowModel.h"
 
 struct SpinningPlatform {
     u8  pad_000[0x5c];
@@ -29,7 +30,7 @@ struct SpinningPlatform {
     u16 unk_320;            /* 0x320 */
     u16 unk_322;            /* 0x322 */
     s32 unk_324;            /* 0x324 */
-    u8  mShadowModel;            /* 0x328 */
+    ShadowModel mShadowModel; /* 0x328 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

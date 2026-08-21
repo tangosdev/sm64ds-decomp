@@ -5,13 +5,11 @@
 #ifndef PYRAMIDTAG_H
 #define PYRAMIDTAG_H
 #include "types.h"
+#include "dCcAc_c.h"
 
 struct PyramidTag {
     u8  pad_000[0xd4];
-    u8  mdCcAc_c;            /* 0x0d4 */
-    u8  pad_0d5[0x23];
-    s32 unk_0f8;            /* 0x0f8 */
-    u8  pad_0fc[0xc];
+    dCcAc_c mdCcAc_c;         /* 0x0d4 */
     s32 unk_108;            /* 0x108 */
 #ifdef __cplusplus
     /* methods */
