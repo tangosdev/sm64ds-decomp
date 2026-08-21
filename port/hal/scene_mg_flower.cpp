@@ -249,7 +249,19 @@ static void *__fastcall flw_d2(void *s, void *)
 { FLW(16); return func_ov006_0212a554((char *)s); }
 static void *__fastcall flw_d0(void *s, void *)
 { FLW(17); return func_ov006_0212a5c8((char *)s); }
-static int  __fastcall flw_reset(void *s, void *)
+/* THE RIDE-THROUGH IS LOAD-BEARING. Every slot-18 dispatch in both overlay
+   images passes one argument (the 22-site census in hal/scene_mg.cpp's
+   mg_reset block and runs/mg5/out/baseset/slot18_19_scan.txt), and
+   func_ov004_020b29a0 -- the round teardown's dispatcher -- pushes it as a
+   __thiscall caller that cleans nothing. A thunk declared (void*, void*)
+   compiles to a bare ret, leaks those four bytes, and the dispatcher's own
+   `pop ebp; ret` then takes its saved frame pointer as a return address: the
+   scene-390 replay tap died exactly there, a wild execute at a stack address
+   that moved with the build. Lane BASESET repaired every other seat's slot-18
+   thunk; this one predates that pass and missed it. The parameter exists so
+   __fastcall cleans four bytes; the ROM body ignores its r1 and is called
+   without it, same as mg_reset. */
+static int  __fastcall flw_reset(void *s, void *, int /*ridethrough*/)
 { FLW(18); func_ov006_0212aa74((char *)s); return 1; }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics the ov003,
