@@ -1,11 +1,11 @@
 //cpp
-// NONMATCHING: size 0x1bc8.  mismatches 39/1778, ratio 0.9781.
+// NONMATCHING: size 0x1bc8.  mismatches 36/1778, ratio 0.9798.
 //              1778 instructions, a 0x1b4 frame, every call-gap length AND the
 //              whole-function instruction multiset, all exactly the ROM's, and
-//              every stack slot but two.  (One of the 39 is not an instruction at
-//              all: a literal-pool word capstone renders as `andeq`.)
+//              every stack slot but ONE SWAPPED PAIR.  (One of the 36 is not an
+//              instruction at all: a literal-pool word rendered as `andeq`.)
 //
-// 2026-08-20.  1493 -> 125 -> 39 mismatching words.  Every change is a SPELLING;
+// 2026-08-20.  1493 -> 125 -> 36 mismatching words.  Every change is a SPELLING;
 // none changes what the function computes.  The whole step came from asking
 // mwccarm for its own frame map instead of inferring it -- see the DWARF section.
 //
@@ -157,37 +157,39 @@
 // follows it in the frame also follows it in the block.  That is the order the
 // draft now uses, and it is why `fn` onwards sits below `en3`.
 //
-// ======================== WHAT IS LEFT: 39 ==================================
+// ======================== WHAT IS LEFT: 36 ==================================
 //
-//    19  ONE SLOT SWAP.  `c` and `rsc` are exactly exchanged: the cartridge has c
-//        in the chain at 0xc4 and rsc in the spill pool at 0x104, and we have rsc
-//        at 0xc4 and c at 0x104.  Everything else in the frame is exact.
+//    19  ONE SLOT SWAP, and it is the whole remaining slot defect.  `c` and `rsc`
+//        are exactly exchanged: the cartridge has c in the chain at 0xc4 and rsc
+//        in the spill pool at 0x104; we have rsc at 0xc4 and c at 0x104.
 //
-//        This is a consequence of the lever below, and it is the whole remaining
-//        slot defect.  A SECOND DEFINITION moves a local out of the declaration
-//        chain and into the spill pool -- that is what `c = &sphere.pos;` does,
-//        and it is worth +24 because the chain then ends at 0xd4 instead of 0xd8
-//        and the whole spill pool lands on the ROM's addresses.  But it moves the
-//        WRONG variable.  Aimed at rsc the lever does not fire: a duplicate
-//        assignment, `rsc = rsc`, and `rsc |= k0` / `+= k0` / `-= k0` / `^= k0`
-//        were tried at every statement site in the function -- 1,810 compiles --
-//        and none of them shortens the chain.  The difference is probably that
-//        `&sphere.pos` is one instruction to rematerialise and `radius << 4` is
-//        two, but that is a guess, not a measurement.
+//        The lever is the re-bind above -- a second definition moves a local out
+//        of the chain -- and it fires on `c` and not on `rsc`.  Characterised:
+//        it moves `c` (`&sphere.pos`, one `add` from fp) and does NOT move `f`
+//        (`this->kclFile`, a load) or `rsc` (a load and a shift), so it needs a
+//        value that rematerialises WITHOUT touching memory.  Aimed at rsc:
+//        duplicate assignment, `= rsc`, `|= k0`, `+= k0`, `-= k0`, `^= k0`,
+//        `&= ~k0`, `*= k1` at every statement site the variable reaches -- 1,810
+//        compiles -- and none of them shortens the chain.  Naming the radius
+//        first, so `rsc = rad << 4` is one shift from a register, does not help
+//        either (another 181).
 //
-//        WARNING: a variable can lose its DW_AT_location entry and keep its slot.
-//        Ten placements looked like wins on the DWARF test and were byte-identical.
-//        Judge pool membership by `strict`, or by where the chain ends -- never by
-//        the absence of a DWARF entry.
+//        rsc is also NOT reachable as a plain CSE.  Spelled inline the chain and
+//        pool land exactly right, but the temp first-fits into the 4-byte
+//        alignment gap at 0xd4 -- which the ROM leaves EMPTY -- and `sphere` goes
+//        hot enough to move fp -> sb with the frame at 0x1bc.
 //
-//    12  prologue scheduling, indices 2-17: same 17 instructions, same registers,
-//        different order.  Statement order (f before c, all six raw* orders) and
-//        further re-binds are byte-neutral or worse.
-//     4  commutative `add` operand order at indices 34, 57, 83, 1502.  Read by
-//        ROLE the ROM is consistent -- `add Rd, <difference>, <rad6 + 0x40>` at all
-//        three bounds sites -- but writing the source in that order changes
-//        nothing: all seven subsets of the hi* flips are byte-identical, so mwcc
-//        normalises the operands and the source cannot reach them.
+//    15  prologue scheduling, indices 2-17: the same 17 instructions in the same
+//        registers, differently ordered.  The cartridge issues the three centre
+//        loads as y, x, z and never reads through the pointer the `add` just
+//        produced; we read x from it directly.  Statement order, both orders of
+//        c and f, all six raw* orders, splitting the loads from the shifts,
+//        loading into temps first, reading x via sphere.pos, and a volatile
+//        pointer are all byte-neutral or worse.
+//     1  index 1502, a commutative `add`.  The other three went away by NAMING
+//        THE DIFFERENCE (`s32 dX = rawX - origin->x;`), which also reads better.
+//        This one resists: flipping the source terms swaps the two LOADS instead
+//        and costs three.
 //     1  index 1046 is a literal-pool word, not an instruction.
 //
 // ==================== MEASURED AND DEAD -- DO NOT RE-DERIVE =================
@@ -520,30 +522,39 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
         const Vector3 *origin = &f->origin;
 
         rawX = c->x >> 6;
-        /* A no-op re-bind, and load-bearing: the cartridge RELOADS `c` from
-           its home here rather than reusing the pointer the `add` above just
-           produced, and re-assigning it to the value it already holds is what
-           re-issues that load.  Worth +24.  Reading sphere.pos directly, or
-           through `&sphere.pos`, changes the instruction count instead. */
+        /* A no-op re-bind, and load-bearing -- but NOT for the reason it looks
+           like.  It does not force the reload: delete it and the prologue emits
+           exactly the same two reloads.  What it does is give `c` a SECOND
+           DEFINITION, which moves it out of the declaration chain and into the
+           spill pool.  The chain is then one word shorter, and every slot in the
+           spill pool lands on the cartridge's address instead of four bytes
+           high -- 44 references from one word.  Worth +24 net.
+
+           The cost is that `c` then sits at 0x104 where the ROM has it at 0xc4,
+           and `rsc` takes 0xc4 where the ROM has it at 0x104.  Those two are the
+           only misplaced locals left; see WHAT IS LEFT. */
         c = &sphere.pos;
         rawY = c->y >> 6;
         rawZ = c->z >> 6;
 
-        loX = (rawX - origin->x - (rad6 + 0x40)) >> 6;
+        s32 dX = rawX - origin->x;
+        loX = (dX - (rad6 + 0x40)) >> 6;
         if (loX < 0) loX = 0;
-        hiX = (rawX - origin->x + (rad6 + 0x40)) >> 6;
+        hiX = (dX + (rad6 + 0x40)) >> 6;
         if (hiX > (s32)~f->xMask) hiX = ~f->xMask;
         if (loX >= hiX) return 0;
 
-        loY = (rawY - origin->y - (rad6 + 0x40)) >> 6;
+        s32 dY = rawY - origin->y;
+        loY = (dY - (rad6 + 0x40)) >> 6;
         if (loY < 0) loY = 0;
-        hiY = (rawY - origin->y + (rad6 + 0x40)) >> 6;
+        hiY = (dY + (rad6 + 0x40)) >> 6;
         if (hiY > (s32)~f->yMask) hiY = ~f->yMask;
         if (loY >= hiY) return 0;
 
-        loZ = (rawZ - origin->z - (rad6 + 0x40)) >> 6;
+        s32 dZ = rawZ - origin->z;
+        loZ = (dZ - (rad6 + 0x40)) >> 6;
         if (loZ < 0) loZ = 0;
-        hiZ = (rawZ - origin->z + (rad6 + 0x40)) >> 6;
+        hiZ = (dZ + (rad6 + 0x40)) >> 6;
         if (hiZ > (s32)~f->zMask) hiZ = ~f->zMask;
         if (loZ >= hiZ) return 0;
     }

@@ -907,10 +907,10 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   `rawX` (+25), `c` just after `den31` (+15), `rad6` before `origin` (+10), `cy`
   before `cz` (+8), `-(radius + unk_0ec)` (+3).
 
-  ### 125 -> 39: ask the compiler for the frame map
+  ### 125 -> 36: ask the compiler for the frame map
 
   ```
-  ratio 0.9781   mismatches 39/1778
+  ratio 0.9798   mismatches 36/1778
   ```
 
   Bank `divergences` 120 -> 34. Every declared local now sits at the cartridge's own
@@ -966,26 +966,51 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   * "the one lever that moves a variable between pools is reducing its DEFINITION
     COUNT" is backwards. A second definition moves a local OUT of the chain.
 
-  ### What is left: 39
+  ### What the re-bind actually does
 
-  * **19 -- one slot swap.** The ROM has `c` in the chain at 0xc4 and `rsc` in the pool
-    at 0x104; we have the reverse. The second-definition lever fires on `c` and not on
-    `rsc`: duplicate assignment, `= rsc`, `|= k0`, `+= k0`, `-= k0`, `^= k0` at every
-    statement site in the function -- 1,810 compiles -- and none shortens the chain.
-    Probably because `&sphere.pos` is one instruction to rematerialise and
-    `radius << 4` is two -- a guess, not a measurement.
-  * **12 -- prologue scheduling**, indices 2-17: same 17 instructions, same registers,
-    different order.
-  * **4 -- commutative `add` operand order** at 34, 57, 83, 1502. The ROM is consistent
-    when read by role (`add Rd, <difference>, <rad6 + 0x40>`), but all seven subsets of
-    the source flip are byte-identical: mwcc normalises the operands.
+  `c = &sphere.pos;` written a second time is worth +24, and the obvious reading --
+  that it forces the cartridge's reload of `c` -- is **false**. Delete it and the
+  prologue emits exactly the same two reloads. What it does is give `c` a SECOND
+  DEFINITION, which moves it out of the declaration chain into the spill pool; the
+  chain is then one word shorter and every spill slot lands on the ROM's address
+  instead of four bytes high. Forty-four references from one word.
+
+  The lever is fussy in a way that is itself informative. It moves `c`
+  (`&sphere.pos`, one `add` from fp). It does NOT move `f` (`this->kclFile`, a load)
+  or `rsc` (`sphere.radius << 4`, a load and a shift). **It needs a value that
+  rematerialises without touching memory.**
+
+  ### What is left: 36
+
+  * **19 -- one slot swap, and it is the whole remaining slot defect.** The ROM has
+    `c` in the chain at 0xc4 and `rsc` in the pool at 0x104; we have the reverse.
+    Aimed at rsc the lever never fires: duplicate assignment, `= rsc`, `|= k0`,
+    `+= k0`, `-= k0`, `^= k0`, `&= ~k0`, `*= k1` at every statement site it reaches
+    (1,810 compiles), and naming the radius first so `rsc = rad << 4` is one shift
+    from a register (another 181). rsc is not reachable as a plain CSE either:
+    spelled inline the chain and pool land exactly right, but the temp first-fits
+    into the 4-byte alignment gap at 0xd4 -- which the ROM leaves EMPTY -- and
+    `sphere` goes hot enough to move fp -> sb with the frame at 0x1bc.
+  * **15 -- prologue scheduling**, indices 2-17: same 17 instructions, same
+    registers, different order. The cartridge issues the three centre loads as
+    y, x, z and never reads through the pointer the `add` just produced. Statement
+    order, both orders of c and f, all six raw* orders, splitting the loads from the
+    shifts, loading into temps first, reading x via sphere.pos and a volatile
+    pointer are all byte-neutral or worse.
+  * **1 -- index 1502**, a commutative add. The other three went away by NAMING THE
+    DIFFERENCE (`s32 dX = rawX - origin->x;`), which reads better than repeating the
+    subtraction. This one resists: flipping the source terms swaps the two LOADS
+    instead and costs three.
   * **1 -- index 1046 is a literal-pool word**, not an instruction.
 
-  Dead this session, measured: naming the sqrt results at function scope (every
-  position), block scope, an out-parameter helper, the edge test as a `static inline`
-  function, `register`, `volatile` on the declaration (works, +3 instructions), `rsc` as
-  a CSE (right structure -- pool lands on 0xd8 -- but `sphere` moves fp -> sb and the
-  frame grows to 0x1bc), and seven pragmas.
+  ### A metric defect that hid work
+
+  `fdiff.norm` pushes operands through `swarm.squash`, which normalises immediates --
+  so two instructions writing DIFFERENT stack slots compare EQUAL under it. Every
+  sweep in the previous session was ranked on that metric, which means any lever whose
+  whole effect is a changed slot number was invisible. `scratchpad/perm/gscore.py`
+  compares operands verbatim. Re-running the earlier sweeps on it found no missed
+  wins, but the metric had to be fixed before that could be known.
 
 
   ### A CV-QUALIFIER CHANGE is what re-issues a CSE'd load. Not volatile.
