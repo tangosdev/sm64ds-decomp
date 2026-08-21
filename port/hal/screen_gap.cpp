@@ -9,6 +9,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 /* THE GAME'S OWN WORD, and it is read through the mount rather than hosted a
    second time. build/port/host-src/ov004_syms.c defines data_ov004_020beb6c as
@@ -332,7 +333,7 @@ const ntr::StackLayout *hal_screen_layout(void)
        the same mechanism: layout only. The word is untouched, the game still
        submits at a2 + 0xc0 + G, and nothing crosses in these games, so no
        object is ever in the rows that stopped being displayed. */
-    if (hal_gapless_visual()) want_gap = 0;
+    if (hal_gapless_visual() || hal_gapless_world()) want_gap = 0;
     /* THE SHIFT, AND THE BAND IT NEEDS. See obj_shift_ds above. With the mode
        engaged the game's own G reads zero, so `want_gap` is zero and there is
        no band; the shifted objects need one, because the rows they are pushed
@@ -717,12 +718,12 @@ void hal_gapless_minigames_latch(void)
         return;
     }
     g_gapless_world = 1;
-    std::fprintf(stderr, "[gapless] scene %d: WORLD-BAND for %s -- the "
-                 "simulation is untouched, G stays %d, the top screen is the "
-                 "ROM's picture, and the %d hinge rows between the screens are "
-                 "drawn as real world rows: backdrop behind, the game's own "
-                 "crossing sprites in front. Nothing vanishes at the seam.\n",
-                 scene, row->what, was, was);
+    std::fprintf(stderr, "[gapless] scene %d: SPLICE for %s -- no band, both "
+                 "screens keep the ROM's own picture, and an object entering "
+                 "the %d hidden hinge rows is carried straight across them in "
+                 "its direction of travel (hal_gapless_splice). It arrives %d "
+                 "rows sooner than a DS delivers it; nothing else in the game "
+                 "is touched.\n", scene, row->what, was, was);
 }
 
 /* THE VISUAL FLAG, scene-checked the way hal_gapless_engaged is and for the
@@ -733,12 +734,108 @@ int hal_gapless_visual(void)
     return g_gapless_visual && g_gapless_scene == hal_gap_scene_id();
 }
 
-/* THE WORLD-BAND FLAG, same scene check. The layout keeps the band and marks
-   it as world rows; the band painters read the mark off the layout. */
+/* THE WORLD-BAND FLAG, same scene check. */
 int hal_gapless_world(void)
 {
     return g_gapless_world && g_gapless_scene == hal_gap_scene_id();
 }
+
+/* ---- THE SPLICE: the rows the mod removed, removed from trajectories too ---
+ *
+ * The mod's whole meaning, in the owner's words: the gap physically does not
+ * exist in the minigame any more. The picture side of that is the bandless
+ * layout (the halves edge to edge). This is the world side: an object whose
+ * anchor enters the G rows a DS hides inside its hinge is carried straight
+ * across them, in its direction of travel, so it leaves one screen and
+ * continues on the other with no hidden dwell -- it genuinely arrives G rows
+ * sooner than a DS delivers it. Nothing else in the game is touched: the G
+ * word keeps the ROM's value, every screen keeps the ROM's registration, and
+ * an object that never enters the zone never feels the mod at all.
+ *
+ * PER GAME, PER ARRAY, BY THE SAME OFFSETS THE GAME'S OWN RENDER LOOPS READ
+ * (each row cites its loop). Direction comes from the object's own motion --
+ * this frame's y against last frame's, tracked here -- because the arrays do
+ * not agree on where they keep a velocity, and a derived sign is true for
+ * all of them. A slot with no history yet, or one that has not moved, is
+ * left alone this frame and spliced the next; at minigame speeds the zone is
+ * crossed in a handful of frames and one frame of grace is invisible. */
+namespace {
+
+struct SpliceArray {
+    int scene;
+    int base, stride, count;   /* the object array, bytes off the scene */
+    int live1, live2;          /* in-slot flag offsets; -1 = only one flag */
+    const char *what;
+};
+
+const SpliceArray kSplice[] = {
+    /* func_ov006_020fc8c0 renders these 30; live flag abs +0x468d is checked
+       there, spawn sets +0x468c -- both must be up before a slot is real */
+    {368, 0x4660, 0x38, 30, 0x2c, 0x2d, "Bob-omb Squad parachute drops"},
+    /* func_ov006_020fe1d0 renders these 48; hal/gap_continuity.cpp already
+       documents the base, the stride and the +0x4f0e visible flag */
+    {368, 0x4ed8, 0x38, 48, 0x36, -1, "Bob-omb Squad slingshot balls"},
+    /* func_ov006_020e1c68 renders these 5, gated on both bytes */
+    {374, 0x4660, 0x2c, 5, 0x29, 0x2a, "Shuffle Shell shells"},
+    /* func_ov006_02102de4 renders these 48 */
+    {376, 0x4660, 0x40, 48, 0x3a, -1, "Slots Shot balls"},
+    /* func_ov006_020dd594 renders these 40 */
+    {378, 0x4660, 0x1c, 40, 0x16, -1, "Coincentration coin stacks"},
+};
+
+enum { SPLICE_ROWS = sizeof kSplice / sizeof *kSplice, SPLICE_SLOTS = 48 };
+int g_splice_prev[SPLICE_ROWS][SPLICE_SLOTS];
+unsigned char g_splice_have[SPLICE_ROWS][SPLICE_SLOTS];
+int g_splice_scene_seen = -2;   /* history dies with the scene */
+unsigned g_splice_hops;
+
+}  // namespace
+
+void hal_gapless_splice(void)
+{
+    if (!hal_gapless_world()) return;
+    unsigned char *scene = hal_gap_scene();
+    if (!scene) return;
+    if (g_splice_scene_seen != g_gapless_scene) {
+        g_splice_scene_seen = g_gapless_scene;
+        std::memset(g_splice_have, 0, sizeof g_splice_have);
+        g_splice_hops = 0;
+    }
+    const int g = g_gapless_head_ds;
+    if (g <= 0) return;
+    const int zone = g << 12;
+    for (unsigned r = 0; r < SPLICE_ROWS; ++r) {
+        const SpliceArray &a = kSplice[r];
+        if (a.scene != g_gapless_scene) continue;
+        for (int i = 0; i < a.count && i < SPLICE_SLOTS; ++i) {
+            unsigned char *slot = scene + a.base + i * a.stride;
+            const int live = *(slot + a.live1) &&
+                             (a.live2 < 0 || *(slot + a.live2));
+            if (!live) {
+                g_splice_have[r][i] = 0;
+                continue;
+            }
+            int *py = (int *)(slot + 4);
+            const int y = *py;
+            if (g_splice_have[r][i] && y > -zone && y < 0) {
+                const int dy = y - g_splice_prev[r][i];
+                if (dy > 0) { *py = y + zone; ++g_splice_hops; }
+                else if (dy < 0) { *py = y - zone; ++g_splice_hops; }
+                /* the first carry of a run announces itself, so any log can
+                   say whether the splice ever fired without a per-scene
+                   report having to know about it */
+                if (g_splice_hops == 1 && (dy > 0 || dy < 0))
+                    std::fprintf(stderr, "[gapless] first splice carry: %s "
+                                 "slot %d, world %d -> %d\n", a.what, i,
+                                 y >> 12, *py >> 12);
+            }
+            g_splice_prev[r][i] = *py;
+            g_splice_have[r][i] = 1;
+        }
+    }
+}
+
+unsigned hal_gapless_splice_hops(void) { return g_splice_hops; }
 
 /* THE SCENE IS PART OF THE ANSWER. The flag alone would keep reading 1 after
    the minigame that engaged it has ended, and a run report that says "gapless"

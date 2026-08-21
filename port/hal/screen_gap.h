@@ -93,6 +93,17 @@ void hal_gapless_minigames_latch(void);
  * program's own answer to "is this run the ROM's timing or not". */
 int hal_gapless_engaged(void);
 
+/* The bandless modes. VISUAL: the band leaves the picture, nothing else.
+   SPLICE (hal_gapless_world): additionally, an object entering the hidden
+   hinge rows is carried straight across them -- call hal_gapless_splice once
+   per behavior tick from the scene's own thunk; it is a no-op unless the
+   running scene is an engaged FULL row. hal_gapless_splice_hops counts the
+   carries, for run reports. */
+int hal_gapless_visual(void);
+int hal_gapless_world(void);
+void hal_gapless_splice(void);
+unsigned hal_gapless_splice_hops(void);
+
 /* ---- THE OBJECT SHIFT, the display half of the mod above -------------------
  *
  * THE DS ROWS THE TOP ENGINE'S OBJ LAYER IS DRAWN LOWER THAN THE ENGINE PUTS

@@ -443,7 +443,7 @@ static int  __fastcall mg_init(void *s, void *)
 { MG_SLOT(0);  const int r = func_ov006_020e3578(s);
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall mg_beh(void *s, void *)
-{ MG_SLOT(6);  return func_ov006_020e3528(s); }
+{ MG_SLOT(6);  const int r = func_ov006_020e3528(s); hal_gapless_splice(); return r; }
 static int  __fastcall mg_render(void *s, void *)
 { MG_SLOT(9);  return func_ov006_020e34ec(s); }
 static void *__fastcall mg_d2(void *s, void *)
@@ -1874,7 +1874,9 @@ static int  __fastcall pch_beh(void *s, void *)
             }
         }
     }
-    return func_ov006_020fee24(s);
+    const int r = func_ov006_020fee24(s);
+    hal_gapless_splice();
+    return r;
 }
 static int  __fastcall pch_render(void *s, void *)
 {
@@ -2047,9 +2049,16 @@ extern "C" void port_scene_mg_pachinko_report(void)
        reader takes numbers out of has to say which of the two it is rather
        than leaving it to be found in the settings line further up. */
     std::printf("[scene] dScMgPachinko_c screen gap: %s\n",
-                hal_gapless_engaged()
+                hal_gapless_world()
+                    ? "SPLICED (GaplessMinigames -- objects skip the hinge "
+                      "rows, NOT the ROM's timing)"
+                    : hal_gapless_engaged()
                     ? "GAPLESS (GaplessMinigames engaged -- NOT the ROM's timing)"
                     : "simulated, as the ROM does it");
+    if (hal_gapless_world())
+        std::printf("[scene] gapless splice: %u carr%s across the hinge rows "
+                    "this run\n", hal_gapless_splice_hops(),
+                    hal_gapless_splice_hops() == 1 ? "y" : "ies");
     std::printf("[scene] dScMgPachinko_c 36-slot table, %u total slot "
                 "entries; slots entered:", total);
     for (int i = 0; i < 36; ++i)
@@ -2215,7 +2224,11 @@ static int  __fastcall smb_beh(void *s, void *)
             std::fflush(stdout);
         }
     }
-    return func_ov006_02118488(s);
+    {
+        const int r = func_ov006_02118488(s);
+        hal_gapless_splice();
+        return r;
+    }
 }
 static int  __fastcall smb_render(void *s, void *)
 { MG_SLOT(9);  return func_ov006_021173c8(s); }
@@ -2724,7 +2737,7 @@ static void mc_slots_dump(void *s, unsigned beh)
     }
 }
 static int  __fastcall mc_beh(void *s, void *)
-{ MG_SLOT(6);  mc_slots_dump(s, g_mg_hits[6]); return func_ov006_020de69c(s); }
+{ MG_SLOT(6);  mc_slots_dump(s, g_mg_hits[6]); const int r = func_ov006_020de69c(s); hal_gapless_splice(); return r; }
 static int  __fastcall mc_render(void *s, void *)
 { MG_SLOT(9);  return func_ov006_020de63c(s); }
 static void *__fastcall mc_d2(void *s, void *)
