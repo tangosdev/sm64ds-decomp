@@ -30,12 +30,12 @@
  */
 #include "decl_common.h"
 #include "decl_ActorBase.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_Platform.h"
 
 #include "PoleLift.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 /* Reconciled from the six per-function copies. Every one of these is a ROM
  * symbol spelled by its final mangled name, so it needs C linkage: seen as C++
@@ -44,17 +44,17 @@
  * files; UpdateModelPosAndRotY and UpdateClsnPosAndRot appeared twice each with
  * identical signatures, so nothing was in conflict -- only repeated. */
 extern "C" {
-extern void  _ZN12CylinderClsn5ClearEv(void *self);
-extern void  _ZN12CylinderClsn6UpdateEv(void *self);
+extern void  _ZN5dCc_c5ClearEv(void *self);
+extern void  _ZN5dCc_c6UpdateEv(void *self);
 extern void  _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 extern int   _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void *self, int a, int b);
 extern void  _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern void  _ZN9ModelBase7SetFileEP8BMD_Fileii(void *thiz, void *f, int a, int b);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *fp);
-extern void  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
+extern void  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         void *thiz, void *kcl, void *mtx, int fix, short s, void *clps);
-extern void  _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+extern void  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         void *thiz, void *act, int fix, int t, unsigned int a, unsigned int b);
 
 /* Not in any decl_*.h; the Behavior file declared it locally. A plain global's
@@ -92,7 +92,7 @@ extern "C" int *PoleLift_Spawn(void)
     if (p) {
         _ZN10dBgActor_cC2Ev(p);
         p[0] = (int)(_ZTV8PoleLift + 2);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x320);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x320);
     }
     return p;
 }
@@ -111,10 +111,10 @@ int PoleLift::InitResources()
     }
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
-    void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov045_021131a8);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void* mc = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov045_021131a8);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         ((char*)this) + 0x124, mc, ((char*)this) + 0x2ec, 0x199, mAngleY, data_ov045_02112510);
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
         ((char*)this) + 0x320, ((char*)this), 0x35555, 0x258000, 0x280000c, 0);
     return 1;
 }
@@ -125,8 +125,8 @@ int PoleLift::InitResources()
 /* recovered: named members + shared header, real C++ method */
 int PoleLift::Behavior()
 {
-    _ZN12CylinderClsn5ClearEv((char *)&mMovingCylinderClsn);
-    _ZN12CylinderClsn6UpdateEv((char *)&mMovingCylinderClsn);
+    _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
+    _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
     if ((*(s32 *)&param1) != 0xffff) {
         int idx = unk_354 >> 4;
         int s = *(short*)((char*)data_02082214 + (idx << 2));
@@ -171,10 +171,10 @@ int PoleLift::Render()
 /* recovered: named members + shared header, real C++ method
  *
  * The per-function file reached the collider through
- * `((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))`, which laundered a
+ * `((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))`, which laundered a
  * `u8` marker back into a class pointer. dBgActor_c's C++ half types that member
- * as a real MovingMeshCollider, and MovingMeshCollider : MeshCollider :
- * MeshColliderBase, so the cast chain was describing an inheritance the headers
+ * as a real dBgW_KcMbg, and dBgW_KcMbg : dBgW_Kc :
+ * dBgW, so the cast chain was describing an inheritance the headers
  * already know about. Reconciled onto the member call: byte-identical, measured.
  */
 int PoleLift::CleanupResources()
@@ -195,7 +195,7 @@ int PoleLift::CleanupResources()
  * Two vtable stores and three destructor calls, every one a consequence of
  * `struct PoleLift : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
  * because dBgActor_c's destructor is defined in its class body -- then dBgActor_c's
- * Model and MovingMeshCollider, then dActor_c. This class adds no member with a
+ * Model and dBgW_KcMbg, then dActor_c. This class adds no member with a
  * destructor of its own. D0 additionally returns the object to its heap through
  * the inline operator delete it inherits, which is why nothing here mentions a
  * heap.

@@ -44,7 +44,7 @@
 extern "C" {
 void* _ZN7fBase_cnwEj(unsigned int);
 void _ZN12dEnemyBase_cC2Ev(void*);
-int _ZN25MovingCylinderClsnWithPosC1Ev(void*);
+int _ZN10dCcAcPos_cC1Ev(void*);
 int _ZN9ModelAnimC1Ev(void*);
 int _ZN11ShadowModelC1Ev(void*);
 int func_020733a8(void*, int, int, void*, void*);
@@ -59,7 +59,7 @@ void* ChainChomp_Spawn(void){
   if(c){
     _ZN12dEnemyBase_cC2Ev(c);
     *(int**)c = &_ZTV10ChainChomp[2]; /* +8: this TU defines the vtable */
-    _ZN25MovingCylinderClsnWithPosC1Ev(c+0x110);
+    _ZN10dCcAcPos_cC1Ev(c+0x110);
     _ZN9ModelAnimC1Ev(c+0x150);
     _ZN11ShadowModelC1Ev(c+0x1b4);
     func_020733a8(c+0x1dc, 7, 0x50, (void*)_ZN5ModelC1Ev, (void*)_ZN5ModelD1Ev);
@@ -83,7 +83,7 @@ extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, void *bmd, int a, int b);
 extern "C" void *_ZN9Animation8LoadFileER13SharedFilePtr(void *fp);
 extern "C" void _ZN11ShadowModel12InitCylinderEv(void *self);
-extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, void *pos, int fix, int t, unsigned int a, unsigned int b);
+extern "C" void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, void *actor, void *pos, int fix, int t, unsigned int a, unsigned int b);
 extern "C" void *_ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(unsigned int a, unsigned int b, void *pos, void *v16, int e, int f);
 
 extern char data_ov014_02114980;
@@ -135,7 +135,7 @@ int ChainChomp::InitResources()
         v[0] = data_ov014_02114700[0];
         v[1] = data_ov014_02114700[1];
         v[2] = data_ov014_02114700[2];
-        _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
+        _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(
             c + 0x110, c, v, 0x96000, 0x12c000, 0x200004, 0x26ff0);
     }
 
@@ -191,17 +191,17 @@ extern "C" {
 int func_ov014_02111fb8(char* c);
 char* _ZN8dActor_c15FindWithActorIDEjPS_(unsigned int a, void* b);
 void func_ov014_02111f08(void* c);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* cc);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* cc);
 void func_ov014_02112114(void* c);
 void func_ov014_02111fe0(char* c);
 void func_ov014_0211250c(char* c);
 void func_ov014_0211236c(char* c);
 void func_ov014_021122dc(char* c);
 void func_ov014_02112788(char* c);
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void* self, void* v);
-void _ZN12CylinderClsn5ClearEv(void* self);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void* self, void* v);
+void _ZN5dCc_c5ClearEv(void* self);
 char* _ZN8dActor_c13ClosestPlayerEv(char* self);
-void _ZN12CylinderClsn6UpdateEv(void* self);
+void _ZN5dCc_c6UpdateEv(void* self);
 }
 
 int ChainChomp::Behavior()
@@ -223,7 +223,7 @@ int ChainChomp::Behavior()
         unk_60c = *(int*)(r + 4);
     }
     func_ov014_02111f08(((char*)this));
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char*)this), ((char*)this) + 0x110);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), ((char*)this) + 0x110);
     func_ov014_02112114(((char*)this));
     if (unk_605 == 0) {
         func_ov014_02111fe0(((char*)this));
@@ -239,11 +239,11 @@ int ChainChomp::Behavior()
         v[0] = data_ov014_02114700[0];
         v[1] = data_ov014_02114700[1];
         v[2] = data_ov014_02114700[2];
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x110, v);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(((char*)this) + 0x110, v);
     }
-    _ZN12CylinderClsn5ClearEv((char*)&mMovingCylinderClsnWithPos);
+    _ZN5dCc_c5ClearEv((char*)&mdCcAcPos_c);
     if (*(unsigned char*)(_ZN8dActor_c13ClosestPlayerEv(((char*)this)) + 0x6fb) == 0) {
-        _ZN12CylinderClsn6UpdateEv((char*)&mMovingCylinderClsnWithPos);
+        _ZN5dCc_c6UpdateEv((char*)&mdCcAcPos_c);
     }
     return 1;
 }

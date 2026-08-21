@@ -31,13 +31,13 @@
  * common.h-before-X rule) -- watch for new compile errors after this. */
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingMeshCollider.h"
+#include "decl_dBgW_KcMbg.h"
 #include "decl_TextureTransformer.h"
 #include "decl_common.h"
 #include "common.h"
 #include "CastleWater.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 
@@ -82,8 +82,8 @@ void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void* bmd, struct BTA_
 void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void* self, struct BTA_File& bta, int a, int b, unsigned int c);
 void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *self);
 void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *self);
-struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+struct KCL_File *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 void *self, struct KCL_File *k, Matrix4x3 &m, int fx, short s, struct CLPS_Block &c);
 void func_ov009_02111b1c(char* thiz);
 extern struct DataPtr data_ov009_02113c68;
@@ -149,11 +149,11 @@ int CastleWater::InitResources()
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(self);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(self);
     {
-        struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov009_02113c70);
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        struct KCL_File *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov009_02113c70);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             &mMeshCollider, kcl, mMatrix, 0x1000, mAngleY, data_ov009_02112c38);
     }
-    ((MeshColliderBase *)&mMeshCollider)->Enable((dActor_c *)(self));
+    ((dBgW *)&mMeshCollider)->Enable((dActor_c *)(self));
     {
         int v = mPosY - 0x64000;
         if (data_0209f32c > v) data_0209f32c = v;
@@ -211,8 +211,8 @@ int CastleWater::CleanupResources()
 {
     ((SharedFilePtr *)((void*)&data_ov009_02113c68))->Release();
     ((SharedFilePtr *)((void*)&data_ov009_02113c70))->Release();
-    if (((MeshColliderBase *)&mMeshCollider)->IsEnabled())
-        ((MeshColliderBase *)&mMeshCollider)->Disable();
+    if (((dBgW *)&mMeshCollider)->IsEnabled())
+        ((dBgW *)&mMeshCollider)->Disable();
     return 1;
 }
 
@@ -255,7 +255,7 @@ extern "C" int *_ZN11CastleWaterD0Ev(int *t)
     t[0] = (int)_ZTV11CastleWater;
     _ZN18TextureTransformerD1Ev((char *)t + 0x320);
     t[0] = (int)_ZTV10dBgActor_c;
-    _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
+    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
@@ -274,7 +274,7 @@ extern "C" int *_ZN11CastleWaterD1Ev(int *t)
     t[0] = (int)_ZTV14daObjMcWater_c;
     _ZN18TextureTransformerD1Ev((char *)t + 0x320);
     t[0] = (int)_ZTV10dBgActor_c;
-    _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
+    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     return t;

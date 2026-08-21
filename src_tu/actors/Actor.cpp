@@ -35,7 +35,7 @@
  * the byte gate: 97/97 members reproduce the cartridge.
  *
  *  - Shadow types dropped for the real header's: dActor_c, Vector3, Vector3_16,
- *    Matrix4x3, CylinderClsn, Player, Sound, Heap, and `typedef int Fix12`
+ *    Matrix4x3, dCc_c, Player, Sound, Heap, and `typedef int Fix12`
  *    (types.h has a Fix12<T> TEMPLATE, so that typedef is not even legal here).
  *    Field names follow: deathTableId -> unk_0ce, flags -> mFlags, camSpacePos
  *    -> mCamSpacePosX, pos -> mPosX, speed -> unk_0a4, areaID -> mAreaId.
@@ -51,7 +51,7 @@
  *    the result cannot both be wrong about it while six that discard it are
  *    right. dActor_c::ClosestPlayer is DEFINED here, so the three disagreeing
  *    extern "C" guesses at its prototype are simply gone.
- *  - 12/18's RaycastGround is renamed RaycastGroundPod. It and 14/16's describe
+ *  - 12/18's dBgCh_Gnd is renamed RaycastGroundPod. It and 14/16's describe
  *    the same 0x50 bytes of stack, but one is a POD constructed by explicit
  *    mangled call and the other a class whose ctor/dtor the compiler calls;
  *    one C++ type cannot be both. Nothing spells it by an unmangled symbol, so
@@ -82,7 +82,7 @@
 #include "dActor_c.h"
 #include "Player.h"
 #include "common.h"
-#include "CylinderClsn.h"
+#include "dCc_c.h"
 #include "Sound.h"
 
 /* -------------------------------------------------------------------------- */
@@ -525,15 +525,15 @@ extern "C" void func_02010da4(int* p)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 75 -- _ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn
- * 0x02010d40  size 0x64   legacy src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP12CylinderClsn.cpp */
+/* ROM ordinal 75 -- _ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c
+ * 0x02010d40  size 0x64   legacy src/_ZN8dActor_c22UpdatePosWithOnlySpeedEP5dCc_c.cpp */
 typedef int s32;
 struct Vec3 { s32 x, y, z; };
 extern "C" {
 void AddVec3(Vec3 *a, Vec3 *b, Vec3 *c);
 void func_02010da4(int *p);
 }
-void dActor_c::UpdatePosWithOnlySpeed(CylinderClsn *clsn) {
+void dActor_c::UpdatePosWithOnlySpeed(dCc_c *clsn) {
     AddVec3((Vec3 *)&mPosX, (Vec3 *)&unk_0a4, (Vec3 *)&mPosX);
     if (clsn != 0) {
         *(s32 *)(&mPosX) += clsn->pushback.x;
@@ -591,9 +591,9 @@ void dActor_c::UpdatePosWithHorzSpeedAndAng(){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 73 -- _ZN8dActor_c9UpdatePosEP12CylinderClsn
- * 0x02010c30  size 0x2c   legacy src/_ZN8dActor_c9UpdatePosEP12CylinderClsn.cpp */
-void dActor_c::UpdatePos(CylinderClsn *clsn)
+/* ROM ordinal 73 -- _ZN8dActor_c9UpdatePosEP5dCc_c
+ * 0x02010c30  size 0x2c   legacy src/_ZN8dActor_c9UpdatePosEP5dCc_c.cpp */
+void dActor_c::UpdatePos(dCc_c *clsn)
 {
     UpdatePosWithHorzSpeedAndAng();
     UpdatePosWithOnlySpeed(clsn);
@@ -909,9 +909,9 @@ extern "C" void func_020105cc(struct dActor_c *thiz, u32 flags)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 58 -- _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player
- * 0x0201054c  size 0x80   legacy src/_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player.cpp */
-int dActor_c::JumpedOnByPlayer(CylinderClsn &clsn, Player &player)
+/* ROM ordinal 58 -- _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player
+ * 0x0201054c  size 0x80   legacy src/_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player.cpp */
+int dActor_c::JumpedOnByPlayer(dCc_c &clsn, Player &player)
 {
     volatile s32 pad[4];
     s32 vel = player.mVertSpeed;
@@ -996,9 +996,9 @@ return d;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 51 -- _ZN8dActor_c7FindEggER12CylinderClsn
- * 0x020103b4  size 0x40   legacy src/_ZN8dActor_c7FindEggER12CylinderClsn.cpp */
-dActor_c *dActor_c::FindEgg(CylinderClsn &clsn)
+/* ROM ordinal 51 -- _ZN8dActor_c7FindEggER5dCc_c
+ * 0x020103b4  size 0x40   legacy src/_ZN8dActor_c7FindEggER5dCc_c.cpp */
+dActor_c *dActor_c::FindEgg(dCc_c &clsn)
 {
     u32 id = clsn.otherOwner;
     u32 flags;
@@ -1012,9 +1012,9 @@ dActor_c *dActor_c::FindEgg(CylinderClsn &clsn)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 50 -- _ZN8dActor_c18FindExplosionActorER12CylinderClsn
- * 0x02010374  size 0x40   legacy src/_ZN8dActor_c18FindExplosionActorER12CylinderClsn.cpp */
-dActor_c *dActor_c::FindExplosionActor(CylinderClsn &clsn)
+/* ROM ordinal 50 -- _ZN8dActor_c18FindExplosionActorER5dCc_c
+ * 0x02010374  size 0x40   legacy src/_ZN8dActor_c18FindExplosionActorER5dCc_c.cpp */
+dActor_c *dActor_c::FindExplosionActor(dCc_c &clsn)
 {
     u32 id = clsn.otherOwner;
     u32 flags;
@@ -1436,21 +1436,21 @@ return func_0200fc44((int)s,(Vector3 *)&t,r1);
  * 0x0200fc44  size 0x88   legacy src/func_0200fc44.c */
 typedef struct RaycastGroundPod { int filler[17]; int resultY; int pad[2]; } RaycastGroundPod;
 extern "C" {
-extern void _ZN13RaycastGroundC1Ev(RaycastGroundPod* c);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGroundPod* c, Vector3* pos, void* actor);
-extern int _ZN13RaycastGround10DetectClsnEv(RaycastGroundPod* c);
-extern void _ZN13RaycastGroundD1Ev(RaycastGroundPod* c);
+extern void _ZN9dBgCh_GndC1Ev(RaycastGroundPod* c);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(RaycastGroundPod* c, Vector3* pos, void* actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(RaycastGroundPod* c);
+extern void _ZN9dBgCh_GndD1Ev(RaycastGroundPod* c);
 }
 extern "C" int func_0200fc44(int a, Vector3* pos, int flag) {
     if (flag) {
         RaycastGroundPod rg;
-        _ZN13RaycastGroundC1Ev(&rg);
+        _ZN9dBgCh_GndC1Ev(&rg);
         int* yp = (int*)((int)pos + 4);
         *yp += 0x32000;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, pos, 0);
-        if (_ZN13RaycastGround10DetectClsnEv(&rg))
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, pos, 0);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg))
             pos->y = rg.resultY;
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
     }
     int* yp2 = (int*)((int)pos + 4);
     *yp2 += 0x19000;
@@ -1472,10 +1472,10 @@ void dActor_c::LandingDust(bool doRaycast)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 16 -- _ZN8dActor_c17HugeLandingDustAtER7Vector3b
  * 0x0200fb84  size 0x88   legacy src/_ZN8dActor_c17HugeLandingDustAtER7Vector3b.cpp */
-struct RaycastGround {
+struct dBgCh_Gnd {
     char buf[0x50];
-    RaycastGround();
-    ~RaycastGround();
+    dBgCh_Gnd();
+    ~dBgCh_Gnd();
     void SetObjAndPos(const Vector3 &pos, dActor_c *actor);
     int DetectClsn();
 };
@@ -1491,7 +1491,7 @@ extern "C" int _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int id, F
 extern "C" void _ZN8dActor_c17HugeLandingDustAtER7Vector3b(dActor_c *self, Vector3 *pos, bool b)
 {
     if (b) {
-        RaycastGround rc;
+        dBgCh_Gnd rc;
         *(Fix12i*)((int)pos + 4) += 0x32000;
         rc.SetObjAndPos(*pos, 0);
         if (rc.DetectClsn())
@@ -1519,7 +1519,7 @@ void dActor_c::HugeLandingDust(bool doRaycast)
 extern "C" void _ZN8dActor_c13LandingDustAtER7Vector3b(dActor_c *self, Vector3 *pos, bool b)
 {
     if (b) {
-        RaycastGround rc;
+        dBgCh_Gnd rc;
         *(Fix12i*)((int)pos + 4) += 0x32000;
         rc.SetObjAndPos(*pos, 0);
         if (rc.DetectClsn())
@@ -1552,12 +1552,12 @@ extern "C" int func_0200fa04(int a, Vector3* pos, int flag)
 {
     RaycastGroundPod rc;
     if (flag) {
-        _ZN13RaycastGroundC1Ev(&rc);
+        _ZN9dBgCh_GndC1Ev(&rc);
         *(int*)(((int)pos + 4)) += 0x32000;
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rc, pos, 0);
-        if (_ZN13RaycastGround10DetectClsnEv(&rc))
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rc, pos, 0);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rc))
             pos->y = rc.resultY;
-        _ZN13RaycastGroundD1Ev(&rc);
+        _ZN9dBgCh_GndD1Ev(&rc);
     }
     *(int*)(((int)pos + 4)) += 0x78000;
     return _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(0x1b, pos->x, pos->y, pos->z);
@@ -1682,9 +1682,9 @@ done:
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn
- * 0x0200f7a8  size 0x48   legacy src/_ZN8dActor_c19MakeVanishLuigiWorkER12CylinderClsn.cpp */
-void dActor_c::MakeVanishLuigiWork(CylinderClsn &clsn)
+/* ROM ordinal 3 -- _ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c
+ * 0x0200f7a8  size 0x48   legacy src/_ZN8dActor_c19MakeVanishLuigiWorkER5dCc_c.cpp */
+void dActor_c::MakeVanishLuigiWork(dCc_c &clsn)
 {
     Player *player;
 
@@ -1734,20 +1734,20 @@ extern "C" int _ZN8dActor_c22IsTooFarAwayFromPlayerE5Fix12IiE(dActor_c *self, in
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 0 -- _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b
  * 0x0200f658  size 0xb4   legacy src/_ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b.cpp */
-struct RaycastLine { char data[0x78]; };
+struct dBgCh_Lin { char data[0x78]; };
 extern "C" {
-extern void _ZN11RaycastLineC1Ev(RaycastLine*);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(RaycastLine*, const Vector3*, const Vector3*, dActor_c*);
-extern int _ZN11RaycastLine10DetectClsnEv(RaycastLine*);
+extern void _ZN9dBgCh_LinC1Ev(dBgCh_Lin*);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(dBgCh_Lin*, const Vector3*, const Vector3*, dActor_c*);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(dBgCh_Lin*);
 extern Vector3* func_02037dc4(void*);
-extern void _ZN11RaycastLineD1Ev(RaycastLine*);
+extern void _ZN9dBgCh_LinD1Ev(dBgCh_Lin*);
 }
 extern "C" {
 int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(dActor_c *self, Vector3 *a, Vector3 *out, int doStore){
-  RaycastLine rl;
-  _ZN11RaycastLineC1Ev(&rl);
-  _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&rl, a, (const Vector3*)out, 0);
-  if(_ZN11RaycastLine10DetectClsnEv(&rl)){
+  dBgCh_Lin rl;
+  _ZN9dBgCh_LinC1Ev(&rl);
+  _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&rl, a, (const Vector3*)out, 0);
+  if(_ZN9dBgCh_Lin10DetectClsnEv(&rl)){
     if(doStore){
       Vector3 *p = (Vector3*)(rl.data + 0x54);
       Vector3 *q = func_02037dc4(rl.data + 0x14);
@@ -1758,10 +1758,10 @@ int _ZN8dActor_c17DetectRaycastClsnER7Vector3S1_b(dActor_c *self, Vector3 *a, Ve
       out->y = y;
       out->z = z;
     }
-    _ZN11RaycastLineD1Ev(&rl);
+    _ZN9dBgCh_LinD1Ev(&rl);
     return 1;
   }
-  _ZN11RaycastLineD1Ev(&rl);
+  _ZN9dBgCh_LinD1Ev(&rl);
   return 0;
 }
 }

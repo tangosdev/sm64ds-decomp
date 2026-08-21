@@ -38,11 +38,11 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsnWithPos.h"
+#include "decl_dCcAcPos_c.h"
 #include "decl_ShadowModel.h"
 #include "decl_TextureSequence.h"
 #include "decl_TextureTransformer.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV3Amp */
@@ -57,8 +57,8 @@ int *Amp_Spawn(void)
         _ZN15TextureSequenceC1Ev((char *)p + 0x188);
         _ZN18TextureTransformerC1Ev((char *)p + 0x19c);
         _ZN11ShadowModelC1Ev((char *)p + 0x1b0);
-        _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x1d8);
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x218);
+        _ZN10dCcAcPos_cC1Ev((char *)p + 0x1d8);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x218);
     }
     return p;
 }
@@ -79,8 +79,8 @@ struct Vector3;
 struct Vector3_16;
 
 extern "C" void _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(dActor_c *self, int a, int b, int c, int d);
-extern "C" void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, dActor_c *a, Vector3 const &b, int c, int d, unsigned int e, unsigned int f);
-extern "C" void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
+extern "C" void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void *self, dActor_c *a, Vector3 const &b, int c, int d, unsigned int e, unsigned int f);
+extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void *self, dActor_c *a, int b, int c, Vector3_16 *d, Vector3_16 *e);
 extern "C" void func_ov070_02120da8(char *c, int a);
 extern "C" void func_ov070_02120724(char *c);
 
@@ -123,8 +123,8 @@ int Amp::InitResources()
         _ZN8dActor_c9SetRangesE5Fix12IiES1_S1_S1_(this, 0, 0x2c1000, 0x1000000, 0xa28000);
     }
 
-    _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mMovingCylinderClsnWithPos, this, data_ov070_0212365c, 0x2d000, 0x50000, 0x200002, 0x8000);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x2d000, 0x2d000, 0, 0);
+    _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(&mdCcAcPos_c, this, data_ov070_0212365c, 0x2d000, 0x50000, 0x200002, 0x8000);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(&mWithMeshClsn, this, 0x2d000, 0x2d000, 0, 0);
 
     mVertAccel = 0;
     mTerminalVelocity = 0;
@@ -151,9 +151,9 @@ int Amp::Behavior()
 {
     func_ov070_02120d34(this);
     mCylinderOffset.y += data_ov070_0212365c.y;  /* was int[] view's [1]; same word */
-    mMovingCylinderClsnWithPos.SetPosRelativeToActor(mCylinderOffset);
-    mMovingCylinderClsnWithPos.Clear();
-    mMovingCylinderClsnWithPos.Update();
+    mdCcAcPos_c.SetPosRelativeToActor(mCylinderOffset);
+    mdCcAcPos_c.Clear();
+    mdCcAcPos_c.Update();
     func_ov070_02120724((char *)this);
     return 1;
 }
@@ -430,18 +430,18 @@ int func_ov070_02120910(char* c)
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 extern int _ZN9Animation7AdvanceEv(void *);
-extern int _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *, void *);
-extern int WithMeshClsn_UpdateDiscreteNoLava_veneer(void *);
-extern int _ZNK12WithMeshClsn13JustHitGroundEv(void *);
+extern int _ZN8dActor_c9UpdatePosEP5dCc_c(void *, void *);
+extern int dBgCh_Actr_UpdateDiscreteNoLava_veneer(void *);
+extern int _ZNK10dBgCh_Actr13JustHitGroundEv(void *);
 extern unsigned char DecIfAbove0_Byte(unsigned char *);
 extern int _ZN8dActor_c8PoofDustEv(void *);
 extern int _ZN7fBase_c18MarkForDestructionEv(void *);
 int func_ov070_021208a4(char *c){
  *(short*)(c+0x8c)=*(short*)(c+0x8c)-0x1000;
  _ZN9Animation7AdvanceEv((char*)c+0x124);
- _ZN8dActor_c9UpdatePosEP12CylinderClsn(c,(char*)c+0x1d8);
- WithMeshClsn_UpdateDiscreteNoLava_veneer((char*)c+0x218);
- if(_ZNK12WithMeshClsn13JustHitGroundEv((char*)c+0x218)==0){
+ _ZN8dActor_c9UpdatePosEP5dCc_c(c,(char*)c+0x1d8);
+ dBgCh_Actr_UpdateDiscreteNoLava_veneer((char*)c+0x218);
+ if(_ZNK10dBgCh_Actr13JustHitGroundEv((char*)c+0x218)==0){
    if(DecIfAbove0_Byte((unsigned char*)c+0x430)!=0) goto end;
  }
  _ZN8dActor_c8PoofDustEv(c);
@@ -465,10 +465,10 @@ typedef short s16;
 
 
 
-extern void _ZN13RaycastGroundC1Ev(void *rg);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(void *rg, struct Vector3 *pos, void *actor);
-extern int _ZN13RaycastGround10DetectClsnEv(void *rg);
-extern void _ZN13RaycastGroundD1Ev(void *rg);
+extern void _ZN9dBgCh_GndC1Ev(void *rg);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(void *rg, struct Vector3 *pos, void *actor);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(void *rg);
+extern void _ZN9dBgCh_GndD1Ev(void *rg);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(
     void *c, void *sm, void *mtx, int h, int g, unsigned int u);
 extern signed char data_0209f2f8[];
@@ -508,12 +508,12 @@ void func_ov070_02120724(char *c)
         pos.y = y;
         pos.z = *(int*)(c + 0x64);
         pos.y = y - 0xa000;
-        _ZN13RaycastGroundC1Ev(&rg);
-        _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, 0);
-        if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0) {
+        _ZN9dBgCh_GndC1Ev(&rg);
+        _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &pos, 0);
+        if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0) {
             g = (*(int*)(c + 0x60) - rg.ground) + 0x28000;
         }
-        _ZN13RaycastGroundD1Ev(&rg);
+        _ZN9dBgCh_GndD1Ev(&rg);
     }
 
     _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(

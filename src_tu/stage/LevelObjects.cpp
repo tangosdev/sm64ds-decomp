@@ -44,7 +44,7 @@
 
 #include "LVL_Overlay.h"
 #include "Stage.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 /* ------------------------------------------------------------------------- *
  * Reconciled declarations.
@@ -117,12 +117,12 @@ void StartEntranceFaderWipe(void);
 struct KCL_File;
 struct CLPS_Block;
 KCL_File *LoadFile(int handle);
-void _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(KCL_File *f);
-void _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(MeshCollider *thiz,
+void _ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File(KCL_File *f);
+void _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(dBgW_Kc *thiz,
                                                        KCL_File *f,
                                                        CLPS_Block *clps);
-int  _ZNK12MeshCollider16GetOctreeOriginYEv(MeshCollider *thiz);
-int  _ZNK12MeshCollider13GetUnkOctreeYEv(MeshCollider *thiz);
+int  _ZNK7dBgW_Kc16GetOctreeOriginYEv(dBgW_Kc *thiz);
+int  _ZNK7dBgW_Kc13GetUnkOctreeYEv(dBgW_Kc *thiz);
 
 /* The handler table LoadObjects dispatches through. Believed to belong to this
  * TU (its fifteen entries are exactly the fifteen loaders below and nothing
@@ -560,10 +560,10 @@ void LoadObjects(LVL_Overlay::ObjTable& t, int areaID, u32 param)
  * function in the same TU, so it is called by name -- and the hand-spelled
  * extern had to go, since an `extern "C"` declaration of that literal name and
  * the C++ definition that mangles to it are the same linker symbol. */
-void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
+void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, dBgW_Kc &mcRef)
 {
     LVL_Overlay_Layout *ovl = (LVL_Overlay_Layout *)&ovlRef;
-    MeshCollider *mc = (MeshCollider *)&mcRef;
+    dBgW_Kc *mc = (dBgW_Kc *)&mcRef;
     KCL_File* f;
     LVL_Overlay_Layout::SubTbl* e;
     signed char i;
@@ -578,10 +578,10 @@ void Stage::LoadClsnAndObjects(LVL_Overlay &ovlRef, u32 p, MeshCollider &mcRef)
 
     if (ovl->kclFileId != 0) {
         f = LoadFile(ovl->kclFileId);
-        _ZN12MeshCollider17UpdateFileOffsetsER8KCL_File(f);
-        _ZN12MeshCollider7SetFileEP8KCL_FileR10CLPS_Block(mc, f, ovl->clps);
-        func_0202a850(_ZNK12MeshCollider16GetOctreeOriginYEv(mc), _ZNK12MeshCollider13GetUnkOctreeYEv(mc));
-        ((MeshColliderBase *)(mc))->Enable((dActor_c *)(0));
+        _ZN7dBgW_Kc17UpdateFileOffsetsER8KCL_File(f);
+        _ZN7dBgW_Kc7SetFileEP8KCL_FileR10CLPS_Block(mc, f, ovl->clps);
+        func_0202a850(_ZNK7dBgW_Kc16GetOctreeOriginYEv(mc), _ZNK7dBgW_Kc13GetUnkOctreeYEv(mc));
+        ((dBgW *)(mc))->Enable((dActor_c *)(0));
     }
 
     data_ov002_0211118c = 0;

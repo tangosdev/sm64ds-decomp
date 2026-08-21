@@ -53,20 +53,20 @@ int *SwitchActivatedPlank_Spawn(void)
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 /* Model and ModelBase are the real classes now, through this actor's header. */
-struct MeshCollider { int d; };
-struct MovingMeshCollider { int d; };
+struct dBgW_Kc { int d; };
+struct dBgW_KcMbg { int d; };
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);
-extern "C" KCL_File* _ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr&);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-    MovingMeshCollider*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
+extern "C" KCL_File* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr&);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    dBgW_KcMbg*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
 extern "C" void func_020393d4(int* p, int v);
 
 extern SharedFilePtr data_ov029_0211432c;
 extern SharedFilePtr data_ov029_02114324;
 extern CLPS_Block data_ov029_0211304c;
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 
 int SwitchActivatedPlank::InitResources()
 {
@@ -76,12 +76,12 @@ int SwitchActivatedPlank::InitResources()
     func_ov029_02112710(c);
     func_ov029_021126dc(c);
     {
-        KCL_File* kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov029_02114324);
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            (MovingMeshCollider*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x370),
+        KCL_File* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov029_02114324);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            (dBgW_KcMbg*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x370),
             0x199, *(short*)(c + 0x8e), data_ov029_0211304c);
     }
-    func_020393d4((int*)(c + 0x124), (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4((int*)(c + 0x124), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     *(unsigned char*)(c + 0x3a2) = 0;
     *(short*)(c + 0x3a0) = 0;
     *(unsigned char*)(c + 0x3a3) = 0;
@@ -95,12 +95,12 @@ int SwitchActivatedPlank::InitResources()
 // @symbol _ZN20SwitchActivatedPlank8BehaviorEv
 /* recovered: named members + shared header */
 #include "SwitchActivatedPlank.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 void func_020393a4(void* p, int v);
 int _ZN5Event6GetBitEj(unsigned int);
 void func_ov029_021126dc(char* c);
-int _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(void*, void*, int);
+int _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(void*, void*, int);
 
 #pragma optimize_for_size on
 
@@ -119,9 +119,9 @@ int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
         *(short*)(((char*)self) + 0x300 + 0xa0) = 0;
         self->unk_3a3 = 1;
 
-        ((MeshColliderBase *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
+        ((dBgW *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
         func_ov029_021126dc(((char*)self));
-        _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(((char*)self)+0x124, ((char*)self)+0x370, self->unk_08e);
+        _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(((char*)self)+0x124, ((char*)self)+0x370, self->unk_08e);
         break;
 
     case 1: {
@@ -131,7 +131,7 @@ int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
         }
         *p = *p + 1;
         if (_ZN5Event6GetBitEj(self->unk_3a4) != 0) break;
-        ((MeshColliderBase *)((char*)&self->mMovingMeshCollider))->Disable();
+        ((dBgW *)((char*)&self->mMovingMeshCollider))->Disable();
         self->unk_3a2 = 0;
         self->unk_3a3 = 0;
         break;
@@ -168,12 +168,12 @@ int SwitchActivatedPlank::Render()
 /* recovered: named members + shared header, real C++ method */
 #include "SwitchActivatedPlank.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 int SwitchActivatedPlank::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMovingMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
     }
     ((SharedFilePtr *)&data_ov029_0211432c)->Release();
     ((SharedFilePtr *)&data_ov029_02114324)->Release();
@@ -216,7 +216,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingMeshCollider.h"
+#include "decl_dBgW_KcMbg.h"
 #include "decl_common.h"
 extern int _ZTV10dBgActor_c[];
 /* recovered: named members + shared header, vtable identified */
@@ -227,7 +227,7 @@ int *_ZN20SwitchActivatedPlankD0Ev(int *t)
     t[0] = (int)_ZTV15daObjWc_Obj04_c;
     _ZN5ModelD1Ev((char *)t + 0x320);
     t[0] = (int)_ZTV10dBgActor_c;
-    _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
+    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
@@ -243,7 +243,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingMeshCollider.h"
+#include "decl_dBgW_KcMbg.h"
 #include "decl_common.h"
 extern int _ZTV10dBgActor_c[];
 /* recovered: named members + shared header, vtable identified */
@@ -253,7 +253,7 @@ int *_ZN20SwitchActivatedPlankD1Ev(int *t)
     t[0] = (int)_ZTV15daObjWc_Obj04_c;
     _ZN5ModelD1Ev((char *)t + 0x320);
     t[0] = (int)_ZTV10dBgActor_c;
-    _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
+    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     return t;

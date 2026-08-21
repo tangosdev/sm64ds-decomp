@@ -3,7 +3,7 @@
  *
  * .text span 0x020ad838..0x020aedbc, 31 functions in build/tu_map.json.
  * THIRTY of them are assembled here; ordinal 4,
- * _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn (0x020ade78, 0x3cc), has no source
+ * _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr (0x020ade78, 0x3cc), has no source
  * anywhere under src/ and is the module's one unmatched member, so it is a hole
  * in the middle of this run. That is why the manifest declares 30 functions and
  * why this TU can never be link-verified as it stands.
@@ -48,7 +48,7 @@
  * `tubuild.py verify` -- their correctness is NOT claimed here.
  */
 #include "dEnemyBase_c.h"
-#include "decl_ClsnResult.h"
+#include "decl_dBgPi.h"
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 30 -- _ZN12dEnemyBase_cC2Ev, 0x020aed98, size 0x24                      */
@@ -85,7 +85,7 @@ dEnemyBase_c::~dEnemyBase_c()
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 26 -- _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj, 0x020aebf8, 0x120 */
+/* ROM ordinal 26 -- _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj, 0x020aebf8, 0x120 */
 /* -------------------------------------------------------------------------- */
 /* Runs the mesh collision (sel picks which of four update flavours), then caches
    whichever surface normals came back: the floor result's into mFloorNormal*,
@@ -97,33 +97,33 @@ dEnemyBase_c::~dEnemyBase_c()
 struct SurfaceInfo { s32 pad; };
 
 extern "C" {
-extern void func_020383f0(WithMeshClsn *);
-extern void WithMeshClsn_UpdateDiscreteNoLava_veneer(WithMeshClsn *);
-extern void func_02038414(WithMeshClsn *);
-extern void WithMeshClsn_UpdateContinuous_Veneer(WithMeshClsn *);
-extern int _ZNK12WithMeshClsn10IsOnGroundEv(void *);
-extern struct SurfaceInfo *_ZNK12WithMeshClsn14GetFloorResultEv(WithMeshClsn *);
+extern void func_020383f0(dBgCh_Actr *);
+extern void dBgCh_Actr_UpdateDiscreteNoLava_veneer(dBgCh_Actr *);
+extern void func_02038414(dBgCh_Actr *);
+extern void dBgCh_Actr_UpdateContinuous_Veneer(dBgCh_Actr *);
+extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void *);
+extern struct SurfaceInfo *_ZNK10dBgCh_Actr14GetFloorResultEv(dBgCh_Actr *);
 extern void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *, Vector3 *);
-extern int _ZNK12WithMeshClsn13GetLimMovFlagEv(WithMeshClsn *);
+extern int _ZNK10dBgCh_Actr13GetLimMovFlagEv(dBgCh_Actr *);
 extern int _ZN4cstd4fdivEii(int, int);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *);
-extern struct SurfaceInfo *_ZNK12WithMeshClsn13GetWallResultEv(WithMeshClsn *);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *);
+extern struct SurfaceInfo *_ZNK10dBgCh_Actr13GetWallResultEv(dBgCh_Actr *);
 }
 
-void dEnemyBase_c::UpdateWMClsn(WithMeshClsn & clsn_, unsigned int sel)
+void dEnemyBase_c::UpdateWMClsn(dBgCh_Actr & clsn_, unsigned int sel)
 {
-    WithMeshClsn *clsn = &clsn_;
+    dBgCh_Actr *clsn = &clsn_;
 
     switch (sel) {
     case 1: func_020383f0(clsn); break;
-    case 2: WithMeshClsn_UpdateDiscreteNoLava_veneer(clsn); break;
+    case 2: dBgCh_Actr_UpdateDiscreteNoLava_veneer(clsn); break;
     case 3: func_02038414(clsn); break;
-    default: WithMeshClsn_UpdateContinuous_Veneer(clsn); break;
+    default: dBgCh_Actr_UpdateContinuous_Veneer(clsn); break;
     }
-    if (_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
 
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK12WithMeshClsn14GetFloorResultEv(clsn)+4, (Vector3*)&mFloorNormalX);
-        if (_ZNK12WithMeshClsn13GetLimMovFlagEv(clsn) == 0) {
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn)+4, (Vector3*)&mFloorNormalX);
+        if (_ZNK10dBgCh_Actr13GetLimMovFlagEv(clsn) == 0) {
             int dz = mFloorNormalY;
             if (dz != 0) {
                 int nx = mFloorNormalX;
@@ -138,8 +138,8 @@ void dEnemyBase_c::UpdateWMClsn(WithMeshClsn & clsn_, unsigned int sel)
             }
         }
     }
-    if (_ZNK12WithMeshClsn8IsOnWallEv(clsn)) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK12WithMeshClsn13GetWallResultEv(clsn)+4, (Vector3*)&mWallNormalX);
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char*)_ZNK10dBgCh_Actr13GetWallResultEv(clsn)+4, (Vector3*)&mWallNormalX);
     }
 
 }
@@ -393,26 +393,26 @@ extern "C" void func_ov002_020ae73c(char* c, char* arg)
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 12 -- _ZN12dEnemyBase_c11UpdateDeathER12WithMeshClsn, 0x020ae6a8, 0x94  */
+/* ROM ordinal 12 -- _ZN12dEnemyBase_c11UpdateDeathER10dBgCh_Actr, 0x020ae6a8, 0x94  */
 /* -------------------------------------------------------------------------- */
 /* unk_10c selects which death handler from a table of POINTERS TO MEMBER
    FUNCTION, then the position and mesh collision are updated regardless. */
-extern int (dEnemyBase_c::*data_ov002_0210dbc0[])(WithMeshClsn &);
+extern int (dEnemyBase_c::*data_ov002_0210dbc0[])(dBgCh_Actr &);
 
 extern "C" {
 extern void DecIfAbove0_Short(unsigned short *p);
-extern int _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *thiz, void *clsn);
+extern int _ZN8dActor_c9UpdatePosEP5dCc_c(void *thiz, void *clsn);
 }
 
-int dEnemyBase_c::UpdateDeath(WithMeshClsn & clsn_)
+int dEnemyBase_c::UpdateDeath(dBgCh_Actr & clsn_)
 {
-    WithMeshClsn *clsn = &clsn_;
+    dBgCh_Actr *clsn = &clsn_;
     int ret;
     if (mDeathState == 0)
         return 0;
     DecIfAbove0_Short(&mDeathTimer);
     ret = (this->*data_ov002_0210dbc0[mDeathState - 1])(*clsn);
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(this, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
     UpdateWMClsn(*clsn, 0);
     return ret;
 }
@@ -448,7 +448,7 @@ extern "C" int func_ov002_020ae64c(char* c, int x){
 /* ROM ordinal 10 -- func_ov002_020ae608, 0x020ae608, size 0x44               */
 /* -------------------------------------------------------------------------- */
 extern "C" int func_ov002_020ae608(void* c, void* a){
-  if(_ZNK12WithMeshClsn10IsOnGroundEv(a)==0) return 0;
+  if(_ZNK10dBgCh_Actr10IsOnGroundEv(a)==0) return 0;
   ((dEnemyBase_c *)c)->SpawnCoin();
   ((dEnemyBase_c *)c)->KillAndTrackInDeathTable();
   *(int*)((char*)c+0x10c)=0;
@@ -496,7 +496,7 @@ extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
     v[1] = y;
     v[2] = z;
   }
-  if (_ZNK12WithMeshClsn10IsOnGroundEv(clsn)) {
+  if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn)) {
     ((dEnemyBase_c *)self)->SpawnCoin();
     ((dEnemyBase_c *)self)->KillAndTrackInDeathTable();
     *(int*)(self+0x10c) = 0;
@@ -513,7 +513,7 @@ extern "C" int func_ov002_020ae4cc(char* self, char* clsn){
 /* ROM ordinal 7 -- func_ov002_020ae454, 0x020ae454, size 0x78               */
 /* -------------------------------------------------------------------------- */
 extern "C" int func_ov002_020ae454(char* c, void* a){
-  if(*(unsigned short*)(c+0x102)==0 || _ZNK12WithMeshClsn10IsOnGroundEv(a)!=0 || _ZNK12WithMeshClsn8IsOnWallEv(a)!=0){
+  if(*(unsigned short*)(c+0x102)==0 || _ZNK10dBgCh_Actr10IsOnGroundEv(a)!=0 || _ZNK10dBgCh_Actr8IsOnWallEv(a)!=0){
     ((dEnemyBase_c *)c)->SpawnCoin();
     ((dEnemyBase_c *)c)->KillAndTrackInDeathTable();
     *(int*)(c+0x10c)=0;
@@ -523,32 +523,32 @@ extern "C" int func_ov002_020ae454(char* c, void* a){
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 6 -- _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_ */
+/* ROM ordinal 6 -- _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_ */
 /* 0x020ae2b8, size 0x19c                                                     */
 /* -------------------------------------------------------------------------- */
 /* Stays an extern "C" free function under its mangled name: the symbol claims
    two by-value Fix12<int> parameters, which is the mwccarm 6az wall. */
 extern "C" {
-extern void _ZN11RaycastLineC1Ev(void* self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
-extern void _ZN4BgCh19StartDetectingWaterEv(void* self);
-extern int _ZN11RaycastLine10DetectClsnEv(void* self);
-extern void _ZN10ClsnResultC1Ev(void* self);
-extern void _ZNK10ClsnResult6CopyToERS_(void* self, void* other);
-extern void _ZN10ClsnResultD1Ev(void* self);
-extern void _ZN11RaycastLineD1Ev(void* self);
+extern void _ZN9dBgCh_LinC1Ev(void* self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void* self, void* a, void* b, void* act);
+extern void _ZN5dBgCh19StartDetectingWaterEv(void* self);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void* self);
+extern void _ZN5dBgPiC1Ev(void* self);
+extern void _ZNK5dBgPi6CopyToERS_(void* self, void* other);
+extern void _ZN5dBgPiD1Ev(void* self);
+extern void _ZN9dBgCh_LinD1Ev(void* self);
 extern short data_02082214[];
 }
 
-extern "C" int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(struct dEnemyBase_c *self, void* clsn, int fix2, short a3, unsigned char a4, unsigned char a5, int fix6) {
+extern "C" int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(struct dEnemyBase_c *self, void* clsn, int fix2, short a3, unsigned char a4, unsigned char a5, int fix6) {
   Vector3 v1;
   Vector3 v2;
   char cr[0x28];
   Vector3 normal;
   char rl[0x7c];
   ((char*)self)[0x106] = 0;
-  if (_ZNK12WithMeshClsn10IsOnGroundEv(clsn) != 0) {
-    _ZN11RaycastLineC1Ev(rl);
+  if (_ZNK10dBgCh_Actr10IsOnGroundEv(clsn) != 0) {
+    _ZN9dBgCh_LinC1Ev(rl);
     v1.x = self->mPosX;
     v1.y = self->mPosY;
     v1.z = self->mPosZ;
@@ -557,22 +557,22 @@ extern "C" int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_
     v2.y = self->mPosY;
     v2.z = self->mPosZ;
     v2.y -= fix2;
-    _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, ((char*)self));
+    _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &v1, &v2, ((char*)self));
     if (a4 != 0)
-      _ZN4BgCh19StartDetectingWaterEv(rl);
-    if (_ZN11RaycastLine10DetectClsnEv(rl) != 0) {
+      _ZN5dBgCh19StartDetectingWaterEv(rl);
+    if (_ZN9dBgCh_Lin10DetectClsnEv(rl) != 0) {
       if (*(int*)(rl + 0x60) - fix6 >= fix2)
         ((char*)self)[0x106] = 1;
       if (a5 == 0) {
-        _ZN10ClsnResultC1Ev(cr);
-        _ZNK10ClsnResult6CopyToERS_(rl + 0x10, cr);
-        if (_ZNK10ClsnResult9GetClsnIDEv(cr) != -1) {
+        _ZN5dBgPiC1Ev(cr);
+        _ZNK5dBgPi6CopyToERS_(rl + 0x10, cr);
+        if (_ZNK5dBgPi9GetClsnIDEv(cr) != -1) {
           ((char*)self)[0x106] = 1;
-          _ZN10ClsnResultD1Ev(cr);
-          _ZN11RaycastLineD1Ev(rl);
+          _ZN5dBgPiD1Ev(cr);
+          _ZN9dBgCh_LinD1Ev(rl);
           return 1;
         }
-        _ZN10ClsnResultD1Ev(cr);
+        _ZN5dBgPiD1Ev(cr);
       }
       _ZNK11SurfaceInfo12CopyNormalToER7Vector3(rl + 0x14, &normal);
       int idx = ((unsigned short)a3 >> 4) * 2;
@@ -582,13 +582,13 @@ extern "C" int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_
     } else {
       ((char*)self)[0x106] = 1;
     }
-    _ZN11RaycastLineD1Ev(rl);
+    _ZN9dBgCh_LinD1Ev(rl);
   }
   return self->unk_106 != 0;
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 5 -- _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER12WithMeshClsnRs      */
+/* ROM ordinal 5 -- _ZN12dEnemyBase_c24AngleAwayFromWallOrCliffER10dBgCh_ActrRs      */
 /* 0x020ae244, size 0x74                                                      */
 /* -------------------------------------------------------------------------- */
 /* On a wall, reflect the heading off it; on a cliff edge (unk_106), turn
@@ -599,11 +599,11 @@ extern "C" {
 extern short _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(void *actor, int a, int b, short c);
 }
 
-int dEnemyBase_c::AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngle_)
+int dEnemyBase_c::AngleAwayFromWallOrCliff(dBgCh_Actr & clsn_, short & outAngle_)
 {
     void *clsn = &clsn_;
     short *outAngle = &outAngle_;
-    if (_ZNK12WithMeshClsn8IsOnWallEv(clsn)) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn)) {
         *outAngle = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(this,
             mWallNormalX, mWallNormalZ, *outAngle);
     } else if (unk_106) {
@@ -615,14 +615,14 @@ int dEnemyBase_c::AngleAwayFromWallOrCliff(WithMeshClsn & clsn_, short & outAngl
 }
 
 /* ========================================================================== */
-/* HOLE: ROM ordinal 4 -- _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn,          */
+/* HOLE: ROM ordinal 4 -- _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr,          */
 /* 0x020ade78, size 0x3cc. No source exists anywhere under src/; this is      */
 /* ov002's one unmatched member inside the span. Nothing is written for it,    */
 /* which is why this TU cannot be link-verified.                              */
 /* ========================================================================== */
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 3 -- _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER12CylinderClsn     */
+/* ROM ordinal 3 -- _ZN12dEnemyBase_c27SpawnParticlesIfHitOtherObjER5dCc_c     */
 /* 0x020addc0, size 0xb8                                                      */
 /* -------------------------------------------------------------------------- */
 /* While unk_107 is set, a cylinder collision against anything other than actor
@@ -632,7 +632,7 @@ extern "C" {
 extern void* _ZN8dActor_c10FindWithIDEj(unsigned int);
 }
 
-int dEnemyBase_c::SpawnParticlesIfHitOtherObj(CylinderClsn & clsn_)
+int dEnemyBase_c::SpawnParticlesIfHitOtherObj(dCc_c & clsn_)
 {
     char* clsn = (char*)&clsn_;
     int* f;
@@ -820,7 +820,7 @@ extern "C" void func_ov002_020ada40(A40Player* r0, short* r1, void* r2) {
 }
 
 /* -------------------------------------------------------------------------- */
-/* ROM ordinal 0 -- _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER12WithMeshClsn      */
+/* ROM ordinal 0 -- _ZN12dEnemyBase_c26UpdateKillByInvincibleCharER10dBgCh_Actr      */
 /*                  R9ModelAnimj, 0x020ad838, size 0x208                      */
 /* -------------------------------------------------------------------------- */
 /* One frame of the death an invincible (mega) character inflicts. `flags` is a
@@ -879,9 +879,9 @@ struct KbicM48 { int w[12]; };
 
 #define LAUNDER(p) ((int)(p))
 
-int dEnemyBase_c::UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_, unsigned int flags)
+int dEnemyBase_c::UpdateKillByInvincibleChar(dBgCh_Actr & ww_, ModelAnim & mm_, unsigned int flags)
 {
-    WithMeshClsn *clsn = &ww_;
+    dBgCh_Actr *clsn = &ww_;
     ModelAnim *anim = &mm_;
     int v[3];
 
@@ -892,7 +892,7 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_
         *(unsigned short *)LAUNDER(&mDeathTimer) -= 1;
 
     if (mDeathTimer == 0 ||
-        (clsn != 0 && _ZNK12WithMeshClsn10IsOnGroundEv(clsn) != 0 && mVertSpeed < 0)) {
+        (clsn != 0 && _ZNK10dBgCh_Actr10IsOnGroundEv(clsn) != 0 && mVertSpeed < 0)) {
         if (flags & 1)
             SpawnCoin();
         if (flags & 2)
@@ -901,10 +901,10 @@ int dEnemyBase_c::UpdateKillByInvincibleChar(WithMeshClsn & ww_, ModelAnim & mm_
         return 2;
     }
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(this, 0);
+    _ZN8dActor_c9UpdatePosEP5dCc_c(this, 0);
     if (clsn != 0) {
         UpdateWMClsn(*clsn, 0);
-        if (_ZNK12WithMeshClsn8IsOnWallEv(clsn) != 0)
+        if (_ZNK10dBgCh_Actr8IsOnWallEv(clsn) != 0)
             mPrevAngleY = _ZN8dActor_c12ReflectAngleE5Fix12IiES1_s(
                 this, mWallNormalX, mWallNormalZ, mPrevAngleY);
     }

@@ -63,7 +63,7 @@
  * hits the same homing rule. Left in legacy form.
  */
 #include "dBgActor_c.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 
 /* ------------------------------------------------------------------------- */
 /* ROM ordinal 10 -- _ZN10dBgActor_cC2Ev, 0x020eea50, size 0x34                  */
@@ -83,14 +83,14 @@ extern "C" {
 extern int   _ZTV10dBgActor_c[];
 extern int  *_ZN8dActor_cC2Ev(int *thiz);
 extern void  _ZN5ModelC1Ev(void *thiz);
-extern void  _ZN18MovingMeshColliderC1Ev(void *thiz);
+extern void  _ZN10dBgW_KcMbgC1Ev(void *thiz);
 
 int *_ZN10dBgActor_cC2Ev(int *t)
 {
     _ZN8dActor_cC2Ev(t);
     t[0] = (int)(_ZTV10dBgActor_c + 2);
     _ZN5ModelC1Ev((char *)t + 0xd4);
-    _ZN18MovingMeshColliderC1Ev((char *)t + 0x124);
+    _ZN10dBgW_KcMbgC1Ev((char *)t + 0x124);
     return t;
 }
 }
@@ -107,13 +107,13 @@ int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self,
 {
     int on = (self->mFlags & 8) != 0;
     if (on) {
-        if (((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
-            ((MeshColliderBase *)((char *)&self->mMeshCollider))->Disable();
+        if (((dBgW *)((char *)&self->mMeshCollider))->IsEnabled())
+            ((dBgW *)((char *)&self->mMeshCollider))->Disable();
         return 0;
     }
     if (a == 0) {
-        if (!((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
-            ((MeshColliderBase *)(((char *)self) + 0x124))->Enable((dActor_c *)(((char *)self)));
+        if (!((dBgW *)((char *)&self->mMeshCollider))->IsEnabled())
+            ((dBgW *)(((char *)self) + 0x124))->Enable((dActor_c *)(((char *)self)));
         goto done;
     }
     {
@@ -126,12 +126,12 @@ int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(struct dBgActor_c *self,
     void *p = _ZN8dActor_c13ClosestPlayerEv(((char *)self));
     int d = Vec3_Dist(&v, (char *)p + 0x5c);
     if (d > a) {
-        if (((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
-            ((MeshColliderBase *)((char *)&self->mMeshCollider))->Disable();
+        if (((dBgW *)((char *)&self->mMeshCollider))->IsEnabled())
+            ((dBgW *)((char *)&self->mMeshCollider))->Disable();
         return 0;
     }
-    if (!((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
-        ((MeshColliderBase *)(((char *)self) + 0x124))->Enable((dActor_c *)(((char *)self)));
+    if (!((dBgW *)((char *)&self->mMeshCollider))->IsEnabled())
+        ((dBgW *)(((char *)self) + 0x124))->Enable((dActor_c *)(((char *)self)));
     }
 done:
     return 1;
@@ -154,12 +154,12 @@ int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(struct dBgActor_c *self, int a, 
     void *p = _ZN8dActor_c13ClosestPlayerEv(((char *)self));
     int d = Vec3_Dist(&v, (char *)p + 0x5c);
     if (d > a) {
-        if (((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
-            ((MeshColliderBase *)((char *)&self->mMeshCollider))->Disable();
+        if (((dBgW *)((char *)&self->mMeshCollider))->IsEnabled())
+            ((dBgW *)((char *)&self->mMeshCollider))->Disable();
         return 0;
     }
-    if (!((MeshColliderBase *)((char *)&self->mMeshCollider))->IsEnabled())
-        ((MeshColliderBase *)(((char *)self) + 0x124))->Enable((dActor_c *)(((char *)self)));
+    if (!((dBgW *)((char *)&self->mMeshCollider))->IsEnabled())
+        ((dBgW *)(((char *)self) + 0x124))->Enable((dActor_c *)(((char *)self)));
     return 1;
 }
 }
@@ -198,8 +198,8 @@ void dBgActor_c::UpdateModelPosAndRotY()
  * Vector3 t;}` spelling copies the two members separately, 9 words then 3, and
  * this function comes out 0x74 against the ROM's 0x64.
  */
-extern "C" int _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(
-    MovingMeshCollider *self, const Matrix4x3 &mat, short angleY);
+extern "C" int _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(
+    dBgW_KcMbg *self, const Matrix4x3 &mat, short angleY);
 
 void dBgActor_c::UpdateClsnPosAndRot()
 {
@@ -207,7 +207,7 @@ void dBgActor_c::UpdateClsnPosAndRot()
     mClsnMat.m[9]  = mPosX;
     mClsnMat.m[10] = mPosY;
     mClsnMat.m[11] = mPosZ;
-    _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(&mMeshCollider, mClsnMat, mAngleY);
+    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(&mMeshCollider, mClsnMat, mAngleY);
 }
 
 /* ------------------------------------------------------------------------- */
@@ -228,11 +228,11 @@ void dBgActor_c::UpdateClsnPosAndRot()
  * to the shadow `{ T v; }` the legacy file used and matched with. This one is
  * measured. The IsClsnInRange* names' Fix12<int> claims are not.
  *
- * RaycastLine IS DECLARED LOCALLY AND AT 0x78, WHICH CONTRADICTS
- * include/RaycastLine.h. That header's last field is unk_064 at 0x064, so it
+ * dBgCh_Lin IS DECLARED LOCALLY AND AT 0x78, WHICH CONTRADICTS
+ * include/dBgCh_Lin.h. That header's last field is unk_064 at 0x064, so it
  * describes a 0x68-byte object; the legacy body that reproduces these bytes
  * declares 0x78, and `ray` is a stack local whose size sets the frame. 0x78 is
- * what matches. include/RaycastLine.h is not included here (it is not in
+ * what matches. include/dBgCh_Lin.h is not included here (it is not in
  * dBgActor_c.h's include closure, so there is no clash), and it is NOT edited --
  * that header is shared and re-sizing it is a separate, measured change. Filed
  * as a finding.
@@ -246,9 +246,9 @@ extern Matrix4x3 data_020a0e68;
 }
 
 /* Local, deliberately -- see the note above. Non-virtual, so sizeof is 0x78. */
-struct RaycastLine {
-    RaycastLine();
-    ~RaycastLine();
+struct dBgCh_Lin {
+    dBgCh_Lin();
+    ~dBgCh_Lin();
     void SetObjAndLine(Vector3 const &a, Vector3 const &b, dActor_c *c);
     int  DetectClsn();
     char buf[0x78];
@@ -273,7 +273,7 @@ int dBgActor_c::UpdateKillByMegaChar(short a, short b, short c, Fix12<int> d)
     Vec3_Add(&vout, (Vector3 *)&mPosX, &vmid);
     vmid = vout;
 
-    RaycastLine ray;
+    dBgCh_Lin ray;
     ray.SetObjAndLine(*(Vector3 *)&mPosX, vmid, this);
     /* THESE FOUR STAY RAW CASTS, and the byte gate is the only thing that could
        have told us so. Written as the named members they are --
@@ -386,8 +386,8 @@ void dBgActor_c::Kill()
 extern "C" {
 extern void _ZN8dActor_c10EarthquakeERK7Vector35Fix12IiE(void *thiz, struct Vector3 *v, int f);
 extern short Vec3_HorzAngle(struct Vector3 *a, struct Vector3 *b);
-extern int _ZN16MeshColliderBase9IsEnabledEv(void *c);
-extern void _ZN16MeshColliderBase7DisableEv(void *c);
+extern int _ZN4dBgW9IsEnabledEv(void *c);
+extern void _ZN4dBgW7DisableEv(void *c);
 
 void _ZN10dBgActor_c14KillByMegaCharER6Player(char *c, char *player)
 {
@@ -404,8 +404,8 @@ void _ZN10dBgActor_c14KillByMegaCharER6Player(char *c, char *player)
     *(short *)(c + 0x94) = Vec3_HorzAngle((struct Vector3 *)(player + 0x5c),
                                           (struct Vector3 *)(c + 0x5c));
     *(unsigned char *)(c + 0x31d) = 0x1e;
-    if (_ZN16MeshColliderBase9IsEnabledEv(c + 0x124) == 0) return;
-    _ZN16MeshColliderBase7DisableEv(c + 0x124);
+    if (_ZN4dBgW9IsEnabledEv(c + 0x124) == 0) return;
+    _ZN4dBgW7DisableEv(c + 0x124);
 }
 }
 

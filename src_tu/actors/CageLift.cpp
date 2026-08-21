@@ -73,11 +73,11 @@ extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* fp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* thiz, void* f, int a, int b);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* thiz);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* thiz);
-extern void* _ZN12MeshCollider8LoadFileER13SharedFilePtr(void* fp);
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
+extern void* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void* fp);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* thiz, void* kcl, void* mtx, int fix, short s, void* clps);
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
-extern void _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_(void);
+extern void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_(void);
 
 s32 CageLift::InitResources() {
     char* c = (char*)this;
@@ -86,10 +86,10 @@ s32 CageLift::InitResources() {
     _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0xd4, f, 1, -1);
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
-    void* mc = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov029_02114284);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    void* mc = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov029_02114284);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         c + 0x124, mc, c + 0x2ec, 0x1000, self->unk_08e, data_ov029_0211306c);
-    func_020393d4(c + 0x124, (void*)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_);
+    func_020393d4(c + 0x124, (void*)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
     func_020393c4(c + 0x124, (void*)&func_ov029_02111e60);
     self->unk_32b = 0;
     self->unk_32a = self->unk_32b;
@@ -120,7 +120,7 @@ extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c,
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
 extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void* self, int a, int b);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
-extern void _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(void* self, void* mat, s16 s);
+extern void _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(void* self, void* mat, s16 s);
 }
 
 s32 CageLift::Behavior() {
@@ -192,7 +192,7 @@ s32 CageLift::Behavior() {
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(thiz, 0, 0)) {
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(thiz);
     }
-    _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(
+    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(
         thiz + 0x124, thiz + 0x2ec, self->unk_08e);
     thiz[0x32a] = 0;
     return 1;
@@ -228,8 +228,8 @@ extern int data_ov029_0211428c[];
 
 s32 CageLift::CleanupResources() {
     void * t = (void *)this;
-    if (_ZN16MeshColliderBase9IsEnabledEv((char *)t + 0x124)) {
-        _ZN16MeshColliderBase7DisableEv((char *)t + 0x124);
+    if (_ZN4dBgW9IsEnabledEv((char *)t + 0x124)) {
+        _ZN4dBgW7DisableEv((char *)t + 0x124);
     }
     _ZN13SharedFilePtr7ReleaseEv(data_ov029_0211428c);
     _ZN13SharedFilePtr7ReleaseEv(data_ov029_02114284);
@@ -244,7 +244,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* recovered: vtable identified, renamed to Class_Method, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingMeshCollider.h"
+#include "decl_dBgW_KcMbg.h"
 #include "decl_common.h"
 extern int _ZTV8CageLift[];
 extern int _ZTV10dBgActor_c[];

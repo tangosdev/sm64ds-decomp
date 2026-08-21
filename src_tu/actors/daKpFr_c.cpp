@@ -38,9 +38,9 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV8daKpFr_c */
@@ -51,8 +51,8 @@ int *daKpFr_c_Spawn(void)
         _ZN8dActor_cC2Ev(p);
         p[0] = (int)&_ZTV8daKpFr_c[2]; /* +8: this TU defines the vtable */
         _ZN11ShadowModelC1Ev((char *)p + 0xd4);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0xfc);
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x130);
+        _ZN7dCcAc_cC1Ev((char *)p + 0xfc);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x130);
     }
     return p;
 }
@@ -69,8 +69,8 @@ int *daKpFr_c_Spawn(void)
 struct M48 { int w[12]; };
 extern "C" {
 extern int _ZN11ShadowModel12InitCylinderEv(void* thiz);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, int fix12, int t, unsigned int a, unsigned int b);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int fix12, int t, void* vec, int last);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* thiz, void* actor, int fix12, int t, unsigned int a, unsigned int b);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* thiz, void* actor, int fix12, int t, void* vec, int last);
 extern int data_02082128[];
 }
 
@@ -78,8 +78,8 @@ int daKpFr_c::InitResources()
 {
     if (_ZN11ShadowModel12InitCylinderEv((char*)&mShadowModel) == 0)
         return 0;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0xfc, ((char*)this), 0x37000, 0x78000, 0x200002, 0x8000);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x130, ((char*)this), 0x32000, 0x32000, 0, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0xfc, ((char*)this), 0x37000, 0x78000, 0x200002, 0x8000);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x130, ((char*)this), 0x32000, 0x32000, 0, 0);
     mVertAccel = -0x400;
     mTerminalVelocity = -0x5000;
     mScaleX = 0x1000;
@@ -206,12 +206,12 @@ extern void func_ov070_02121c8c(void* c);
 extern void* _ZN8dActor_c22ClosestNonVanishPlayerEv(void* c);
 extern short Vec3_HorzAngle(void* v0, void* v1);
 extern void _Z14ApproachLinearRsss(short* p, short t, short step);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* c, void* cc);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* c, void* cc);
 extern void func_ov070_02121be4(void* c);
 extern void func_ov070_02121d50(void* c, void* p);
 extern void func_ov070_02121cbc(char* c);
-extern void _ZN12CylinderClsn5ClearEv(void* cc);
-extern void _ZN12CylinderClsn6UpdateEv(void* cc);
+extern void _ZN5dCc_c5ClearEv(void* cc);
+extern void _ZN5dCc_c6UpdateEv(void* cc);
 int func_ov070_02121f18(char* c) {
   char* p;
   if (DecIfAbove0_Byte((unsigned char*)(c + 0x32c)) == 0)
@@ -222,12 +222,12 @@ int func_ov070_02121f18(char* c) {
     _Z14ApproachLinearRsss((short*)(c + 0x8e), ang, 0x180);
     *(short*)(c + 0x94) = *(short*)(c + 0x8e);
   }
-  _ZN8dActor_c9UpdatePosEP12CylinderClsn(c, c + 0xfc);
+  _ZN8dActor_c9UpdatePosEP5dCc_c(c, c + 0xfc);
   func_ov070_02121be4(c);
   func_ov070_02121d50(c, c + 0x130);
   func_ov070_02121cbc(c);
-  _ZN12CylinderClsn5ClearEv(c + 0xfc);
-  _ZN12CylinderClsn6UpdateEv(c + 0xfc);
+  _ZN5dCc_c5ClearEv(c + 0xfc);
+  _ZN5dCc_c6UpdateEv(c + 0xfc);
   return 1;
 }
 }
@@ -236,10 +236,10 @@ int func_ov070_02121f18(char* c) {
 /* ROM ordinal 9 -- func_ov070_02121ef8, 0x02121ef8, size 0x20 */
 /* -------------------------------------------------------------------------- */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-extern void _ZN12CylinderClsn5ClearEv(void *);
+extern void _ZN5dCc_c5ClearEv(void *);
 int func_ov070_02121ef8(char *c)
 {
-    _ZN12CylinderClsn5ClearEv((char *)c + 0xfc);
+    _ZN5dCc_c5ClearEv((char *)c + 0xfc);
     *(int *)(c + 0x320) = 1;
     return 1;
 }
@@ -265,27 +265,27 @@ int func_ov070_02121eb0(void *c) {
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 7 -- func_ov070_02121e14, 0x02121e14, size 0x9c */
 /* -------------------------------------------------------------------------- */
-struct RaycastGround { char pad[0x44]; int hit; char pad2[0x8]; };
+struct dBgCh_Gnd { char pad[0x44]; int hit; char pad2[0x8]; };
 extern "C" {
-extern void _ZN13RaycastGroundC1Ev(RaycastGround* r);
-extern void _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(RaycastGround* r, void* v, void* a);
-extern int _ZN13RaycastGround10DetectClsnEv(RaycastGround* r);
+extern void _ZN9dBgCh_GndC1Ev(dBgCh_Gnd* r);
+extern void _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(dBgCh_Gnd* r, void* v, void* a);
+extern int _ZN9dBgCh_Gnd10DetectClsnEv(dBgCh_Gnd* r);
 extern void _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(void* a, void* sm, void* m, int f1, int f2, unsigned int j);
-extern void _ZN13RaycastGroundD1Ev(RaycastGround* r);
+extern void _ZN9dBgCh_GndD1Ev(dBgCh_Gnd* r);
 void func_ov070_02121e14(char* c) {
-  RaycastGround rg;
+  dBgCh_Gnd rg;
   int f;
   *(int*)(c + 0x310) = *(int*)(c + 0x5c) >> 3;
   *(int*)(c + 0x314) = *(int*)(c + 0x60) >> 3;
   *(int*)(c + 0x318) = *(int*)(c + 0x64) >> 3;
-  _ZN13RaycastGroundC1Ev(&rg);
-  _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, c + 0x5c, c);
-  if (_ZN13RaycastGround10DetectClsnEv(&rg) != 0)
+  _ZN9dBgCh_GndC1Ev(&rg);
+  _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, c + 0x5c, c);
+  if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0)
     f = (*(int*)(c + 0x60) - rg.hit) + 0x1e000;
   else
     f = 0x12c000;
   _ZN8dActor_c19DropShadowRadHeightER11ShadowModelR9Matrix4x35Fix12IiES5_j(c, c + 0xd4, c + 0x2ec, 0x64000, f, 0xf);
-  _ZN13RaycastGroundD1Ev(&rg);
+  _ZN9dBgCh_GndD1Ev(&rg);
 }
 }
 
@@ -298,22 +298,22 @@ void func_ov070_02121e14(char* c) {
 /* recovered: shared common types */
 #include "common.h"
 
-/* (WithMeshClsn: real header type in scope; the legacy shadow's extra methods
+/* (dBgCh_Actr: real header type in scope; the legacy shadow's extra methods
  * are spelled by their mangled names below, same symbols, same calls) */
 struct SurfaceInfo;
 namespace cstd { int fdiv(int a, int b); }
 
-extern "C" void WithMeshClsn_UpdateContinuous_Veneer(void* c);
-extern "C" SurfaceInfo* _ZNK12WithMeshClsn14GetFloorResultEv(const void*);
+extern "C" void dBgCh_Actr_UpdateContinuous_Veneer(void* c);
+extern "C" SurfaceInfo* _ZNK10dBgCh_Actr14GetFloorResultEv(const void*);
 extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(const SurfaceInfo*, Vector3&);
 
 extern "C" void func_ov070_02121d50(void* vself, void* vclsn) {
     int* self = (int*)vself;
-    WithMeshClsn* clsn = (WithMeshClsn*)vclsn;
+    dBgCh_Actr* clsn = (dBgCh_Actr*)vclsn;
     Vector3 n;
-    WithMeshClsn_UpdateContinuous_Veneer(clsn);
+    dBgCh_Actr_UpdateContinuous_Veneer(clsn);
     if (clsn->IsOnGround()) {
-        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((SurfaceInfo*)((char*)_ZNK12WithMeshClsn14GetFloorResultEv(clsn) + 4), n);
+        _ZNK11SurfaceInfo12CopyNormalToER7Vector3((SurfaceInfo*)((char*)_ZNK10dBgCh_Actr14GetFloorResultEv(clsn) + 4), n);
         if (n.y != 0) {
             int a = (int)(((long long)n.x * self[0x29] + 0x800) >> 12);
             int b = (int)(((long long)n.z * self[0x2b] + 0x800) >> 12);
@@ -375,19 +375,19 @@ void func_ov070_02121c8c(void *c)
 /* recovered: shared common types */
 #include "common.h"
 
-/* (RaycastGround: defined once at ordinal 7 above; declarations below match
+/* (dBgCh_Gnd: defined once at ordinal 7 above; declarations below match
  * that block's extern "C" signatures exactly -- C linkage cannot overload) */
-extern "C" int _ZNK12WithMeshClsn10IsOnGroundEv(void *thiz);
+extern "C" int _ZNK10dBgCh_Actr10IsOnGroundEv(void *thiz);
 
 extern "C" void func_ov070_02121be4(void *thiz)
 {
     unsigned char *c = (unsigned char *)thiz;
-    struct RaycastGround rg;
+    struct dBgCh_Gnd rg;
     struct Vector3 v;
 
-    if (!_ZNK12WithMeshClsn10IsOnGroundEv(c + 0x130)) return;
+    if (!_ZNK10dBgCh_Actr10IsOnGroundEv(c + 0x130)) return;
 
-    _ZN13RaycastGroundC1Ev(&rg);
+    _ZN9dBgCh_GndC1Ev(&rg);
     {
         int z = *(int *)(c + 0x64);
         int y = *(int *)(c + 0x60) + 0x1e000;
@@ -396,14 +396,14 @@ extern "C" void func_ov070_02121be4(void *thiz)
         v.y = y;
         v.z = z;
     }
-    _ZN13RaycastGround12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (void *)c);
-    if (_ZN13RaycastGround10DetectClsnEv(&rg) == 0 ||
+    _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &v, (void *)c);
+    if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) == 0 ||
         *(int *)((char *)&rg + 0x44) < *(int *)(c + 0x60) - 0x32000) {
         *(int *)(c + 0x5c) = *(int *)(c + 0x68);
         *(int *)(c + 0x60) = *(int *)(c + 0x6c);
         *(int *)(c + 0x64) = *(int *)(c + 0x70);
     }
-    _ZN13RaycastGroundD1Ev(&rg);
+    _ZN9dBgCh_GndD1Ev(&rg);
 }
 
 /* -------------------------------------------------------------------------- */

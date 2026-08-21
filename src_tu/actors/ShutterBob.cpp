@@ -39,9 +39,9 @@
 #include "ShutterBob.h"
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingMeshCollider.h"
+#include "decl_dBgW_KcMbg.h"
 #include "decl_common.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 
@@ -84,20 +84,20 @@ extern "C" int *ShutterBob_Spawn(void)
  *
  * THE TWO LOCAL SHADOW CLASSES ARE GONE, and they had to go rather than be
  * renamed. This file used to carry `class dActor_c {};` and
- * `class MeshColliderBase { void Enable(dActor_c *); };`. ShutterBob.h now reaches
- * the real dActor_c and the real MeshColliderBase through dBgActor_c, and a second
+ * `class dBgW { void Enable(dActor_c *); };`. ShutterBob.h now reaches
+ * the real dActor_c and the real dBgW through dBgActor_c, and a second
  * definition of either name in the same translation unit makes mwccarm 2004/b56
  * die with an internal compiler error rather than a diagnostic. Renaming them
  * compiles and byte-matches and is still wrong: the call mangles to
  * _ZN10ClsnEnable6EnableEP9ClsnOwner, which nothing defines, so the relocation
  * lands nowhere. The byte gate cannot see that -- it wildcards relocation slots --
  * and tools/check_references.py reported it as newly unresolvable. Using the real
- * declarations mangles to _ZN16MeshColliderBase6EnableEP8dActor_c, which resolves.
+ * declarations mangles to _ZN4dBgW6EnableEP8dActor_c, which resolves.
  */
 int ShutterBob::InitResources()
 {
     int r4 = func_ov002_020bad10(((char *)this), (void **)&data_ov014_021145c4);
-    ((MeshColliderBase *)((char *)&mMeshCollider))->Enable((dActor_c *)((char *)this));
+    ((dBgW *)((char *)&mMeshCollider))->Enable((dActor_c *)((char *)this));
     return r4;
 }
 
@@ -157,7 +157,7 @@ int ShutterBob::CleanupResources()
  * THREE vtable stores, and the middle one is the finding. `struct ShutterBob :
  * daObjSwdoor_c : dBgActor_c` emits its own vptr, then daObjSwdoor_c's --
  * inlined, because that destructor is defined in its class body -- then dBgActor_c's,
- * then dBgActor_c's MovingMeshCollider and Model, then dActor_c. Nothing in the chain
+ * then dBgActor_c's dBgW_KcMbg and Model, then dActor_c. Nothing in the chain
  * adds a member with a destructor, so the body is empty.
  */
 ShutterBob::~ShutterBob()

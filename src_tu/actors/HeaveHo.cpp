@@ -40,10 +40,10 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
-#include "decl_MovingCylinderClsnWithPos.h"
+#include "decl_dCcAc_c.h"
+#include "decl_dCcAcPos_c.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV7HeaveHo */
@@ -53,9 +53,9 @@ int *HeaveHo_Spawn(void)
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)&_ZTV7HeaveHo[2]; /* +8: this TU defines the vtable */
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x110);
-        _ZN25MovingCylinderClsnWithPosC1Ev((char *)p + 0x144);
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x184);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x110);
+        _ZN10dCcAcPos_cC1Ev((char *)p + 0x144);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x184);
         _ZN9ModelAnimC1Ev((char *)p + 0x340);
         _ZN11ShadowModelC1Ev((char *)p + 0x3a4);
     }
@@ -75,9 +75,9 @@ extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void*, void*, int, int);
 extern void _ZN9Animation8LoadFileER13SharedFilePtr(void*);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void*, void*, int, int, unsigned int, unsigned int);
-extern void _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void*, void*, void*, int, int, unsigned int, unsigned int);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void*, void*, int, int, void*, int);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void*, void*, int, int, unsigned int, unsigned int);
+extern void _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(void*, void*, void*, int, int, unsigned int, unsigned int);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void*, void*, int, int, void*, int);
 extern int func_ov077_02126d5c(void*, void*);
 struct V3 { int x, y, z; };
 extern struct V3 data_ov077_02127a5c;
@@ -94,13 +94,13 @@ int HeaveHo::InitResources()
   _ZN9Animation8LoadFileER13SharedFilePtr(&data_ov077_02127c98);
   mVertAccel = -0x1000;
   mTerminalVelocity = -0x1e000;
-  _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x52000, 0x52000, 0x800004, 0);
+  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x110, ((char*)this), 0x52000, 0x52000, 0x800004, 0);
   v.x = data_ov077_02127a5c.x;
   v.y = data_ov077_02127a5c.y;
   v.z = data_ov077_02127a5c.z;
-  _ZN25MovingCylinderClsnWithPos4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this) + 0x144, ((char*)this), &v, 0x54000, 0x32000, 0x200004, 0);
+  _ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj(((char*)this) + 0x144, ((char*)this), &v, 0x54000, 0x32000, 0x200004, 0);
   mAngleY = mPrevAngleY;
-  _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x184, ((char*)this), 0x64000, 0x64000, 0, 0);
+  _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x184, ((char*)this), 0x64000, 0x64000, 0, 0);
   unk_400 = 0;
   unk_404 = mPosX;
   unk_408 = mPosY;
@@ -124,21 +124,21 @@ int HeaveHo::InitResources()
 #include "HeaveHo.h"
 struct Klass; typedef void (Klass::*PMF)();
 struct M { char pad[8]; PMF pmf; };
-struct CylinderClsn;
-struct WithMeshClsn;
+struct dCc_c;
+struct dBgCh_Actr;
 extern "C" {
 unsigned short DecIfAbove0_Short(unsigned short *p);
-void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void *self, CylinderClsn *cc);
-int _ZNK12WithMeshClsn10IsOnGroundEv(void *self);
-void *_ZNK12WithMeshClsn14GetFloorResultEv(void *self);
+void _ZN8dActor_c9UpdatePosEP5dCc_c(void *self, dCc_c *cc);
+int _ZNK10dBgCh_Actr10IsOnGroundEv(void *self);
+void *_ZNK10dBgCh_Actr14GetFloorResultEv(void *self);
 void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(void *self, Vector3 *v);
 int func_02010844(void *unused, Vector3 *v, s16 angle);
-int _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(void *self, WithMeshClsn *wm, Fix12i a, s16 b, int c, int d, void *e);
-void _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(void *self, WithMeshClsn *wm, unsigned int j);
+int _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(void *self, dBgCh_Actr *wm, Fix12i a, s16 b, int c, int d, void *e);
+void _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(void *self, dBgCh_Actr *wm, unsigned int j);
 void func_ov077_02126dac(char *t);
 void func_ov077_02126528(char *c);
-void _ZN12CylinderClsn5ClearEv(CylinderClsn *self);
-void _ZN12CylinderClsn6UpdateEv(CylinderClsn *self);
+void _ZN5dCc_c5ClearEv(dCc_c *self);
+void _ZN5dCc_c6UpdateEv(dCc_c *self);
 void _ZN9Animation7AdvanceEv(void *self);
 extern int data_0209f32c;
 }
@@ -164,16 +164,16 @@ int HeaveHo::Behavior()
     if (m->pmf != 0)
         (((Klass *)((char *)this))->*(m->pmf))();
 
-    _ZN8dActor_c9UpdatePosEP12CylinderClsn(((char *)this), (CylinderClsn *)((char *)&mMovingCylinderClsnWithPos));
+    _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), (dCc_c *)((char *)&mdCcAcPos_c));
 
     r5 = 0;
-    if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn)) {
-        void *fr = _ZNK12WithMeshClsn14GetFloorResultEv((char *)&mWithMeshClsn);
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn)) {
+        void *fr = _ZNK10dBgCh_Actr14GetFloorResultEv((char *)&mWithMeshClsn);
         _ZNK11SurfaceInfo12CopyNormalToER7Vector3((char *)fr + 4, &v);
         r5 = func_02010844(((char *)this), &v, mAngleY);
     }
 
-    b = _ZN12dEnemyBase_c15IsGoingOffCliffER12WithMeshClsn5Fix12IiEsbbS3_(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
+    b = _ZN12dEnemyBase_c15IsGoingOffCliffER10dBgCh_Actr5Fix12IiEsbbS3_(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 0x3c000, (s16)0x2888, 0, 1, (void *)0x32000);
     if (b == 0) {
         if (r5 < 0)
             r5 = (s16)-r5;
@@ -187,18 +187,18 @@ writeback:
     unk_410 = mPosX;
     unk_414 = mPosY;
     unk_418 = mPosZ;
-    _ZN12dEnemyBase_c12UpdateWMClsnER12WithMeshClsnj(((char *)this), (WithMeshClsn *)((char *)&mWithMeshClsn), 2);
+    _ZN12dEnemyBase_c12UpdateWMClsnER10dBgCh_Actrj(((char *)this), (dBgCh_Actr *)((char *)&mWithMeshClsn), 2);
 
     mAngleY = mPrevAngleY;
     func_ov077_02126dac(((char *)this));
 
-    if (_ZNK12WithMeshClsn10IsOnGroundEv((char *)&mWithMeshClsn) && *(void **)((char *)&unk_3fc) != (void *)data_ov077_02127cd8) {
+    if (_ZNK10dBgCh_Actr10IsOnGroundEv((char *)&mWithMeshClsn) && *(void **)((char *)&unk_3fc) != (void *)data_ov077_02127cd8) {
         func_ov077_02126528(((char *)this));
     }
-    _ZN12CylinderClsn5ClearEv((CylinderClsn *)((char *)&mMovingCylinderClsn));
-    _ZN12CylinderClsn6UpdateEv((CylinderClsn *)((char *)&mMovingCylinderClsn));
-    _ZN12CylinderClsn5ClearEv((CylinderClsn *)((char *)&mMovingCylinderClsnWithPos));
-    _ZN12CylinderClsn6UpdateEv((CylinderClsn *)((char *)&mMovingCylinderClsnWithPos));
+    _ZN5dCc_c5ClearEv((dCc_c *)((char *)&mdCcAc_c));
+    _ZN5dCc_c6UpdateEv((dCc_c *)((char *)&mdCcAc_c));
+    _ZN5dCc_c5ClearEv((dCc_c *)((char *)&mdCcAcPos_c));
+    _ZN5dCc_c6UpdateEv((dCc_c *)((char *)&mdCcAcPos_c));
 
     mModelAnim.Advance();
     return 1;
@@ -322,7 +322,7 @@ extern int Vec3_Dist(void* a, void* b);
 extern unsigned int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned int a, unsigned int b, unsigned int cc, void* v, unsigned int d);
 extern int func_ov077_02126300(void* c);
 extern int func_ov077_02126d5c(void* c, void* p);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* p);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* p);
 extern short Vec3_HorzAngle(void* a, void* b);
 extern void _Z14ApproachLinearRsss(short* a, short b, short cc);
 extern void* _ZN8dActor_c13ClosestPlayerEv(void* c);
@@ -343,7 +343,7 @@ int func_ov077_02126ad0(char* c)
         return 1;
     }
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x184) != 0) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x184) != 0) {
         *(int*)(c + 0x5c) = *(int*)(c + 0x410);
         *(int*)(c + 0x60) = *(int*)(c + 0x414);
         *(int*)(c + 0x64) = *(int*)(c + 0x418);
@@ -478,7 +478,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 extern int Vec3_Dist(void *a, void *b);
 extern int func_ov077_02126300(void *c);
 extern int func_ov077_02126d5c(void *c, void *p);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *thiz);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *thiz);
 extern void* _ZN8dActor_c13ClosestPlayerEv(void* thiz);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void _Z14ApproachLinearRsss(short *r, short a, short b);
@@ -500,7 +500,7 @@ int func_ov077_0212679c(char *c)
         return 1;
     }
 
-    if (_ZNK12WithMeshClsn8IsOnWallEv(c + 0x184) != 0) {
+    if (_ZNK10dBgCh_Actr8IsOnWallEv(c + 0x184) != 0) {
         *(int *)(c + 0x5c) = *(int *)(c + 0x410);
         *(int *)(c + 0x60) = *(int *)(c + 0x414);
         *(int *)(c + 0x64) = *(int *)(c + 0x418);
@@ -556,7 +556,7 @@ int func_ov077_02126758(char* c){
 /* daTgz_c::Kill - recovered from vtable slot identity */
 /* (Vector3: real header type in scope) */
 extern "C" {
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *thiz, const Vector3 &v);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *thiz, const Vector3 &v);
 void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 int _ZN6Player12GetHurtStateEv(void *p);
 int func_ov002_020db674(void *c, int a1, int a2, int a3);
@@ -575,7 +575,7 @@ extern "C" int func_ov077_02126640(char *c)
         v.x = data_ov077_02127a5c.x;
         v.y = data_ov077_02127a5c.y;
         v.z = data_ov077_02127a5c.z;
-        _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x144, v);
+        _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x144, v);
         if (*(int *)(c + 0x168) != 0) {
             a = (char *)_ZN8dActor_c10FindWithIDEj(*(int *)(c + 0x168));
             if (a != 0) {
@@ -609,7 +609,7 @@ extern "C" int func_ov077_02126640(char *c)
 /* -------------------------------------------------------------------------- */
 /* (Vector3: real header type in scope) */
 extern "C" {
-void _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(void *thiz, const Vector3 &v);
+void _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(void *thiz, const Vector3 &v);
 void *_ZN8dActor_c10FindWithIDEj(unsigned int id);
 int _ZN6Player12GetHurtStateEv(void *p);
 int _ZN6Player15IsCollectingCapEv(void *p);
@@ -625,7 +625,7 @@ extern "C" void func_ov077_02126528(char *c)
     v.x = data_ov077_02127a5c.x;
     v.y = data_ov077_02127a5c.y;
     v.z = data_ov077_02127a5c.z;
-    _ZN25MovingCylinderClsnWithPos21SetPosRelativeToActorERK7Vector3(c + 0x144, v);
+    _ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3(c + 0x144, v);
     if (*(int *)(c + 0x168) == 0) return;
     a = (char *)_ZN8dActor_c10FindWithIDEj(*(int *)(c + 0x168));
     if (a == 0) return;
@@ -647,18 +647,18 @@ extern "C" void func_ov077_02126528(char *c)
 extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* (Vector3: real header type in scope) */
 
-typedef struct RaycastLine {
+typedef struct dBgCh_Lin {
     char pad[0x78];
-} RaycastLine;
+} dBgCh_Lin;
 
 extern signed char data_0209f2f8;
 extern char data_020a0e68[];
 
-extern void _ZN11RaycastLineC1Ev(void *self);
-extern void _ZN11RaycastLineD1Ev(void *self);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(
+extern void _ZN9dBgCh_LinC1Ev(void *self);
+extern void _ZN9dBgCh_LinD1Ev(void *self);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(
     void *self, Vector3 *a, Vector3 *b, void *actor);
-extern int _ZN11RaycastLine10DetectClsnEv(void *self);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void *self);
 extern void Matrix4x3_FromRotationY(void *m, int angle);
 extern void Matrix4x3_ApplyInPlaceToRotationX(void *m, int angle);
 extern void MulVec3Mat4x3(void *in, void *m, void *out);
@@ -666,8 +666,8 @@ extern void MulVec3Mat4x3(void *in, void *m, void *out);
 int func_ov077_02126300(void *vc)
 {
     char *c = (char *)vc;
-    RaycastLine ray1;
-    RaycastLine ray2;
+    dBgCh_Lin ray1;
+    dBgCh_Lin ray2;
     Vector3 start;
     Vector3 end;
     Vector3 dir;
@@ -675,8 +675,8 @@ int func_ov077_02126300(void *vc)
     int y;
 
     if (data_0209f2f8 == 0x2a) {
-        _ZN11RaycastLineC1Ev(&ray1);
-        _ZN11RaycastLineC1Ev(&ray2);
+        _ZN9dBgCh_LinC1Ev(&ray1);
+        _ZN9dBgCh_LinC1Ev(&ray2);
 
         start.x = 0;
         start.y = 0;
@@ -715,7 +715,7 @@ int func_ov077_02126300(void *vc)
             end.z = sz;
             end.z = sz + oz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray1, &start, &end, c);
+        _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray1, &start, &end, c);
 
         start.x = *(int *)(c + 0x5c);
         y = *(int *)(c + 0x60);
@@ -744,20 +744,20 @@ int func_ov077_02126300(void *vc)
             end.z = sz;
             end.z = sz + oz;
         }
-        _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray2, &start, &end, c);
+        _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(&ray2, &start, &end, c);
 
-        if (_ZN11RaycastLine10DetectClsnEv(&ray1) != 0 ||
-            _ZN11RaycastLine10DetectClsnEv(&ray2) == 0) {
+        if (_ZN9dBgCh_Lin10DetectClsnEv(&ray1) != 0 ||
+            _ZN9dBgCh_Lin10DetectClsnEv(&ray2) == 0) {
             *(int *)(c + 0x5c) = *(int *)(c + 0x410);
             *(int *)(c + 0x60) = *(int *)(c + 0x414);
             *(int *)(c + 0x64) = *(int *)(c + 0x418);
             *(int *)(c + 0x98) = 0;
-            _ZN11RaycastLineD1Ev(&ray2);
-            _ZN11RaycastLineD1Ev(&ray1);
+            _ZN9dBgCh_LinD1Ev(&ray2);
+            _ZN9dBgCh_LinD1Ev(&ray1);
             return 1;
         }
-        _ZN11RaycastLineD1Ev(&ray2);
-        _ZN11RaycastLineD1Ev(&ray1);
+        _ZN9dBgCh_LinD1Ev(&ray2);
+        _ZN9dBgCh_LinD1Ev(&ray1);
     }
     return 0;
 }

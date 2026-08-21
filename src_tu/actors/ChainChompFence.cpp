@@ -33,7 +33,7 @@
 #include "common.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 
@@ -53,7 +53,7 @@ namespace Particle { struct System { static void *NewSimple(unsigned int t, int 
 extern "C" void * _ZN8Particle6System9NewSimpleEj5Fix12IiES2_S2_(unsigned int t, int x, int y, int z);
  }
 
-/* (MeshColliderBase: real header type in scope) */
+/* (dBgW: real header type in scope) */
 
 /* shadow struct 'ActorS' */
 struct ActorS {
@@ -62,7 +62,7 @@ struct ActorS {
     char pad1[0x74 - 0x68];
     Vector3 v74;
     char pad2[0x124 - 0x80];
-    char col[4];  /* MeshColliderBase slot; the real class is abstract and cannot be a by-value member */
+    char col[4];  /* dBgW slot; the real class is abstract and cannot be a by-value member */
     char pad3[0x31e - 0x128];
     unsigned char flag;
     void PoofDustAt(const Vector3 &v);
@@ -93,8 +93,8 @@ extern int _ZN5Model8LoadFileER13SharedFilePtr(void*);
 extern int _ZN9ModelBase7SetFileEP8BMD_Fileii(void*,int,int,int);
 extern int _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*);
 extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*);
-extern int _ZN12MeshCollider8LoadFileER13SharedFilePtr(void*);
-extern int _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,int,void*);
+extern int _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void*);
+extern int _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void*,int,void*,int,int,void*);
 extern int data_ov014_02114558[];
 }
 
@@ -128,8 +128,8 @@ int ChainChompFence::InitResources()
   _ZN9ModelBase7SetFileEP8BMD_Fileii((char*)&mModel, m, 1, -1);
   _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
   _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
-  int k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov014_021149b8);
-  _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char*)&mMeshCollider, k, (char*)&mClsnMat, 0x1000, mAngleY, (void*)data_ov014_02114558);
+  int k = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov014_021149b8);
+  _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block((char*)&mMeshCollider, k, (char*)&mClsnMat, 0x1000, mAngleY, (void*)data_ov014_02114558);
   return 1;
 }
 
@@ -165,8 +165,8 @@ int ChainChompFence::Render()
 /* recovered: named members + shared header, real C++ method */
 int ChainChompFence::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
+    if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(data_ov014_021149c0))->Release();
     ((SharedFilePtr *)(data_ov014_021149b8))->Release();
@@ -200,8 +200,8 @@ extern "C" void func_ov014_02112ea8(ActorS *a)
     v[1].z = v[0].z;
     _ZN8dActor_c10PoofDustAtERK7Vector3(a, v[1]);
     a->flag = 1;
-    if (((MeshColliderBase *)a->col)->IsEnabled())
-        ((MeshColliderBase *)a->col)->Disable();
+    if (((dBgW *)a->col)->IsEnabled())
+        ((dBgW *)a->col)->Disable();
 }
 
 /* -------------------------------------------------------------------------- */
@@ -231,7 +231,7 @@ extern "C" void func_ov014_02112ea8(ActorS *a)
  * Two vtable stores and three destructor calls, every one a consequence of
  * `struct ChainChompFence : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
  * because dBgActor_c's destructor is defined in its class body -- then
- * dBgActor_c's Model and MovingMeshCollider, then dActor_c. This class adds no
+ * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds no
  * member with a destructor of its own.
  */
 ChainChompFence::~ChainChompFence()

@@ -51,7 +51,7 @@ int *WDW_Water_Spawn(void)
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "WDW_Water.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern void *_ZN5Model8LoadFileER13SharedFilePtr(void *sfp);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *m, void *f, int a, int b);
@@ -59,10 +59,10 @@ extern void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(void *bmd, void
 extern void _ZN18TextureTransformer7SetFileER8BTA_Filei5Fix12IiEj(void *tt, void *bta, int a, int fix, unsigned int b);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *c);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *c);
-extern void *_ZN12MeshCollider8LoadFileER13SharedFilePtr(void *sfp);
+extern void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *sfp);
 }
 extern "C" {
-extern void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
     void *mc, void *kcl, void *mtx, int fix, short s, void *clps);
 }
 
@@ -91,10 +91,10 @@ int WDW_Water::InitResources()
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char *)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char *)this));
 
-    k = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov029_02114304);
-    _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+    k = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov029_02114304);
+    _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
         &mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, &data_ov029_02112fec);
-    ((MeshColliderBase *)(&mMeshCollider))->Enable((dActor_c *)(((char *)this)));
+    ((dBgW *)(&mMeshCollider))->Enable((dActor_c *)(((char *)this)));
 
     unk_340 = (u8)mAreaId;
     mAreaId = -1;
@@ -112,7 +112,7 @@ int WDW_Water::InitResources()
 #include "decl_common.h"
 /* recovered: named members + shared header, real C++ method */
 #include "WDW_Water.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern "C" {
 extern int IsAreaShowing(int idx);
 extern int _ZN5Sound8PlayLongEjjjRK7Vector3s(unsigned a, unsigned b, unsigned c, void *pos, unsigned e);
@@ -132,12 +132,12 @@ int WDW_Water::Behavior()
     /* area id at 0x340: ROM does add r0,r4,#0x300; ldrsb r0,[r0,#0x40] */
     if (IsAreaShowing(*(s8 *)((u8 *)(((int)((u8 *)this) + 0x300)) + 0x40)) == 0) {
         mAreaId = *(s8 *)((u8 *)(((unsigned)((u8 *)this) + 0x300)) + 0x40);
-        if (((MeshColliderBase *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) {
-            ((MeshColliderBase *)((u8 *)&(*(u8 *)&mMeshCollider)))->Disable();
+        if (((dBgW *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() != 0) {
+            ((dBgW *)((u8 *)&(*(u8 *)&mMeshCollider)))->Disable();
         }
     } else {
-        if (((MeshColliderBase *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() == 0) {
-            ((MeshColliderBase *)(((u8 *)this) + 0x124))->Enable((dActor_c *)(((u8 *)this)));
+        if (((dBgW *)((u8 *)&(*(u8 *)&mMeshCollider)))->IsEnabled() == 0) {
+            ((dBgW *)(((u8 *)this) + 0x124))->Enable((dActor_c *)(((u8 *)this)));
         }
     }
 
@@ -201,14 +201,14 @@ int WDW_Water::Render()
 /* recovered: named members + shared header, real C++ method */
 #include "WDW_Water.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 extern int RotatingPlatformWdw_ClsnFile[];
 extern int RotatingPlatformWdw_ModelFile[];
 
 int WDW_Water::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
+    if (((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->IsEnabled()) {
+        ((dBgW *)((char *)&(*(u8 *)&mMeshCollider)))->Disable();
     }
     ((SharedFilePtr *)(RotatingPlatformWdw_ModelFile))->Release();
     ((SharedFilePtr *)(RotatingPlatformWdw_ClsnFile))->Release();
@@ -238,7 +238,7 @@ extern "C" {
 
 struct MMC { char p[0x124]; };
 struct Obj { char p[0x2ec]; Matrix4x3 m; };
-int _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(MMC*, Matrix4x3&, short);
+int _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s(MMC*, Matrix4x3&, short);
 void func_ov029_02112250(void* vself){
     char* self = (char*)vself;
     Obj* o = (Obj*)self;
@@ -246,7 +246,7 @@ void func_ov029_02112250(void* vself){
     *(int*)(self+0x310) = *(int*)(self+0x5c);
     *(int*)(self+0x314) = *(int*)(self+0x344);
     *(int*)(self+0x318) = *(int*)(self+0x64);
-    _ZN18MovingMeshCollider9TransformERK9Matrix4x3s((MMC*)(self+0x124), o->m, *(short*)(self+0x8e));
+    _ZN10dBgW_KcMbg9TransformERK9Matrix4x3s((MMC*)(self+0x124), o->m, *(short*)(self+0x8e));
 }
 }
 
@@ -279,7 +279,7 @@ void func_ov029_02112250(void* vself){
  * Two vtable stores and three destructor calls, every one a consequence of
  * `struct WDW_Water : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
  * because dBgActor_c's destructor is defined in its class body -- then
- * dBgActor_c's Model and MovingMeshCollider, then dActor_c. This class adds no
+ * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds no
  * member with a destructor of its own.
  */
 #include "WDW_Water.h"

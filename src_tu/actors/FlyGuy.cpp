@@ -48,9 +48,9 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 #include "decl_ActorBase.h"
 #include "decl_Enemy.h"
 #include "decl_ModelAnim.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_ShadowModel.h"
-#include "decl_WithMeshClsn.h"
+#include "decl_dBgCh_Actr.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV6FlyGuy */
@@ -60,8 +60,8 @@ int *FlyGuy_Spawn(void)
     if (p) {
         _ZN12dEnemyBase_cC2Ev(p);
         p[0] = (int)&_ZTV6FlyGuy[2]; /* +8: this TU defines the vtable */
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x110);
-        _ZN12WithMeshClsnC1Ev((char *)p + 0x144);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x110);
+        _ZN10dBgCh_ActrC1Ev((char *)p + 0x144);
         _ZN9ModelAnimC1Ev((char *)p + 0x300);
         _ZN11ShadowModelC1Ev((char *)p + 0x364);
     }
@@ -130,8 +130,8 @@ extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern void _ZN11ShadowModel12InitCylinderEv(void* self);
 extern void* _ZN9Animation8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
-extern void _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, Vector3_16* q);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, dActor_c* a, int r, int h, unsigned int e, unsigned int g);
+extern void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(void* self, dActor_c* a, int r, int h, Vector3_16* p, Vector3_16* q);
 extern int FlyGuy_ChangeState(void* c, void* p);
 }
 
@@ -148,8 +148,8 @@ int FlyGuy::InitResources()
     unk_3e0 = param1 & 0xff;
     if (unk_3e0 == 0xff) unk_3e0 = 0;
     mTerminalVelocity = -0x1e000;
-    _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0x110, (dActor_c*)((char*)this), 0x3c000, 0x32000, 0x200000, 0x7eff0);
-    _ZN12WithMeshClsn4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x144, (dActor_c*)((char*)this), 0x50000, 0x3c000, 0, 0);
+    _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0x110, (dActor_c*)((char*)this), 0x3c000, 0x32000, 0x200000, 0x7eff0);
+    _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this)+0x144, (dActor_c*)((char*)this), 0x50000, 0x3c000, 0, 0);
     unk_108 = 1;
     unk_10a = 1;
     unk_3c0 = mPosX;
@@ -176,17 +176,17 @@ int FlyGuy::InitResources()
  * UpdateDeath and UpdateWMClsn, it is not declared in dEnemyBase_c.h yet.
  */
 extern "C" {
-extern int _ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(dEnemyBase_c *thiz, WithMeshClsn *c);
+extern int _ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(dEnemyBase_c *thiz, dBgCh_Actr *c);
 extern unsigned short DecIfAbove0_Short(unsigned short *p);
 }
 
 int FlyGuy::Behavior()
 {
-    if (_ZN12dEnemyBase_c14UpdateYoshiEatER12WithMeshClsn(this, &mWithMeshClsn) != 0) {
-        mMovingCylinderClsn.Clear();
+    if (_ZN12dEnemyBase_c14UpdateYoshiEatER10dBgCh_Actr(this, &mWithMeshClsn) != 0) {
+        mdCcAc_c.Clear();
         if (unk_107 != 0) {
             if (unk_104 == 0) {
-                mMovingCylinderClsn.Update();
+                mdCcAc_c.Update();
             }
         }
         func_ov070_02120070((char *)this);
@@ -227,7 +227,7 @@ int FlyGuy::Behavior()
         unk_0ac = tmp;
     }
 
-    UpdatePosWithOnlySpeed(&mMovingCylinderClsn);
+    UpdatePosWithOnlySpeed(&mdCcAc_c);
     UpdateWMClsn(mWithMeshClsn, 0);
 
     if (mCurrentState != (State *)data_ov070_021235bc) {
@@ -241,11 +241,11 @@ int FlyGuy::Behavior()
         func_ov070_0211f100((char *)this);
     }
 
-    mMovingCylinderClsn.Clear();
+    mdCcAc_c.Clear();
     {
         char *p = (char *)ClosestPlayer();
         if (p != 0 && *(unsigned char *)(p + 0x6fb) == 0) {
-            mMovingCylinderClsn.Update();
+            mdCcAc_c.Update();
         }
     }
 
@@ -380,7 +380,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 typedef short s16;
 
 extern int Vec3_Dist(void *a, void *b);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void *p);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void *p);
 extern short Vec3_HorzAngle(void *a, void *b);
 extern void ApproachAngle(s16 *dst, s16 target, int a, int b, int c);
 extern short Vec3_VertAngle(void *a, void *b);
@@ -407,7 +407,7 @@ int func_ov070_0211fd98(char *c)
     out[0] = 0; out[1] = 0; out[2] = 0;
 
     if (Vec3_Dist(c + 0x5c, c + 0x3c0) > 0x1f4000 ||
-        _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144)) {
+        _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144)) {
         *(s16 *)(c + 0x300 + 0xe6) = Vec3_HorzAngle(c + 0x5c, c + 0x3c0);
         if (*(unsigned short *)(c + 0x100) < 0x14)
             *(unsigned short *)(c + 0x100) = 0x14;
@@ -610,7 +610,7 @@ extern int data_020a0e68[];
 extern int _ZN9Animation8FinishedEv(void* thiz);
 extern void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void* self, void* bca, int a, int fix, unsigned int j);
 extern int FlyGuy_ChangeState(void* c, void* p);
-extern int _ZNK12WithMeshClsn8IsOnWallEv(void* thiz);
+extern int _ZNK10dBgCh_Actr8IsOnWallEv(void* thiz);
 extern void* _ZN8dActor_c22ClosestNonVanishPlayerEv(void* thiz);
 extern short Vec3_VertAngle(void* v1, void* v0);
 extern int Vec3_Dist(void* a, void* b);
@@ -648,7 +648,7 @@ int func_ov070_0211f6e0(char* c)
         }
     }
 
-    if (*(u16*)(c + 0x100) == 0 || _ZNK12WithMeshClsn8IsOnWallEv(c + 0x144)) {
+    if (*(u16*)(c + 0x100) == 0 || _ZNK10dBgCh_Actr8IsOnWallEv(c + 0x144)) {
         if (data_0209f2f8 != 0x16) {
             *(s32*)(c + 0x3c0) = *(s32*)(c + 0x5c);
             *(s32*)(c + 0x3c4) = *(s32*)(c + 0x60);
@@ -921,7 +921,7 @@ extern "C" {
 extern void* _ZN8dActor_c10FindWithIDEj(u32 id);
 extern int FlyGuy_ChangeState(void* c, void* p);
 extern int func_ov002_020aea30(void* c, void* p, int a, int b);
-extern int _ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(void* c, void* clsn, void* player);
+extern int _ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(void* c, void* clsn, void* player);
 extern void _ZN6Player10SpinBounceE5Fix12IiE(void* p, s32 f);
 extern void _ZN12dEnemyBase_c22SpawnMegaCharParticlesER8dActor_cPc(void* enemy, void* actor, char* s);
 extern void _ZN6Player16IncMegaKillCountEv(void* p);
@@ -967,7 +967,7 @@ extern "C" void func_ov070_0211f100(char* c)
     if (*(u8*)((char*)r5 + 0x6fb) != 0)
         return;
 
-    if (_ZN8dActor_c16JumpedOnByPlayerER12CylinderClsnR6Player(c, c + 0x110, r5)) {
+    if (_ZN8dActor_c16JumpedOnByPlayerER5dCc_cR6Player(c, c + 0x110, r5)) {
         _ZN6Player10SpinBounceE5Fix12IiE(r5, 0x28000);
         *(s32*)(c + 0x10c) = 1;
         func_ov002_020aea30(c, r5, 0, 1);

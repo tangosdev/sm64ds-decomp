@@ -28,7 +28,7 @@
 #include "FloatOnWaterPlatformWdwRectangle.h"
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingMeshCollider.h"
+#include "decl_dBgW_KcMbg.h"
 #include "decl_common.h"
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
@@ -40,11 +40,11 @@ extern int _ZTV10dBgActor_c[];
 extern void *data_020a0eac;
 extern int func_ov002_020b5e58(char* c, char* d); /* decl_common's view */
 extern int _ZN8dActor_c17GetWaterHeightWDWEv(void* c);
-extern void _ZN11RaycastLineC1Ev(void*);
-extern void _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(void*, void*, void*, void*);
-extern int _ZN11RaycastLine10DetectClsnEv(void*);
-extern void _ZN11RaycastLine10GetClsnPosEv(void*, void*);
-extern void _ZN11RaycastLineD1Ev(void*);
+extern void _ZN9dBgCh_LinC1Ev(void*);
+extern void _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(void*, void*, void*, void*);
+extern int _ZN9dBgCh_Lin10DetectClsnEv(void*);
+extern void _ZN9dBgCh_Lin10GetClsnPosEv(void*, void*);
+extern void _ZN9dBgCh_LinD1Ev(void*);
 extern int data_ov029_02113f00[];
 }
 
@@ -87,7 +87,7 @@ int FloatOnWaterPlatformWdwRectangle::InitResources()
     if (func_ov002_020b5e58((char*)c, (char*)data_ov029_02113f00) != 0) {
         wh = _ZN8dActor_c17GetWaterHeightWDWEv(c);
         if (mPosY > wh) {
-            _ZN11RaycastLineC1Ev(rl);
+            _ZN9dBgCh_LinC1Ev(rl);
             x = mPosX;
             sppad[3] = x;
             y = mPosY;
@@ -99,14 +99,14 @@ int FloatOnWaterPlatformWdwRectangle::InitResources()
             sppad[2] = z;
             sppad[1] = y + 0x14000;
             sppad[4] = wh;
-            _ZN11RaycastLine13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &sppad[0], &sppad[3], c);
-            if (_ZN11RaycastLine10DetectClsnEv(rl) == 0) {
+            _ZN9dBgCh_Lin13SetObjAndLineERK7Vector3S2_P8dActor_c(rl, &sppad[0], &sppad[3], c);
+            if (_ZN9dBgCh_Lin10DetectClsnEv(rl) == 0) {
                 mPosY = wh;
             } else {
-                _ZN11RaycastLine10GetClsnPosEv(pos, rl);
+                _ZN9dBgCh_Lin10GetClsnPosEv(pos, rl);
                 mPosY = pos[1];
             }
-            _ZN11RaycastLineD1Ev(rl);
+            _ZN9dBgCh_LinD1Ev(rl);
         }
         *(int*)(c + 0x320) = mPosX;
         mWaterY = mPosY;
@@ -139,7 +139,7 @@ int FloatOnWaterPlatformWdwRectangle::InitResources()
  * THREE vtable stores, and the middle one is the finding. `struct FloatOnWaterPlatformWdwRectangle :
  * daObjFloatBoard_c : dBgActor_c` emits its own vptr, then daObjFloatBoard_c's --
  * inlined, because that destructor is defined in its class body -- then dBgActor_c's,
- * then dBgActor_c's MovingMeshCollider and Model, then dActor_c. Nothing in the chain
+ * then dBgActor_c's dBgW_KcMbg and Model, then dActor_c. Nothing in the chain
  * adds a member with a destructor, so the body is empty.
  */
 FloatOnWaterPlatformWdwRectangle::~FloatOnWaterPlatformWdwRectangle()

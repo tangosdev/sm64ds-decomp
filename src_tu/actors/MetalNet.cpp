@@ -32,7 +32,7 @@
 #include "MetalNet.h"
 #include "decl_common.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
 
@@ -58,8 +58,8 @@ extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void*, int, int);
 extern unsigned char data_0209f2d8;
 struct BMD_File *_ZN5Model8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
 void _ZN9ModelBase7SetFileEP8BMD_Fileii(void *self, struct BMD_File *f, int a, int b);
-struct KCL_File *_ZN12MeshCollider8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
-void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+struct KCL_File *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(struct SharedFilePtr &f);
+void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
 void *self, struct KCL_File *k, struct Matrix4x3 &m, int fx, short s, struct CLPS_Block &c);
 unsigned char NumStars(void);
 extern struct SharedFilePtr data_ov009_02113e90;
@@ -96,8 +96,8 @@ int MetalNet::InitResources()
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((unsigned char *)this));
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((unsigned char *)this));
     {
-        struct KCL_File *kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov009_02113e88);
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+        struct KCL_File *kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov009_02113e88);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
             ((unsigned char *)this) + 0x124, kcl, *(struct Matrix4x3 *)((unsigned char *)&(*(u8 *)&mClsnMat)), 0x1000,
             mAngleY, data_ov009_02112bf8);
     }
@@ -128,8 +128,8 @@ int MetalNet::Behavior()
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((void*)this));
     b = (int)(data_0209f2d8 == 1);
     if (b != 0) {
-        if (((MeshColliderBase *)((char*)&mMeshCollider))->IsEnabled() == 0)
-            ((MeshColliderBase *)((char*)((void*)this)+0x124))->Enable((dActor_c *)(((void*)this)));
+        if (((dBgW *)((char*)&mMeshCollider))->IsEnabled() == 0)
+            ((dBgW *)((char*)((void*)this)+0x124))->Enable((dActor_c *)(((void*)this)));
     } else {
         _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((void*)this), 0, 0);
     }
@@ -161,8 +161,8 @@ extern "C" void _ZN8MetalNet16OnPendingDestroyEv(void)
 /* recovered: named members + shared header, real C++ method */
 int MetalNet::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMeshCollider))->Disable();
     }
     ((SharedFilePtr *)(&data_ov009_02113e90))->Release();
     ((SharedFilePtr *)(&data_ov009_02113e88))->Release();
@@ -196,7 +196,7 @@ int MetalNet::CleanupResources()
  * Two vtable stores and three destructor calls, every one a consequence of
  * `struct MetalNet : dBgActor_c`: its own vptr, then dBgActor_c's -- inlined,
  * because dBgActor_c's destructor is defined in its class body -- then
- * dBgActor_c's Model and MovingMeshCollider, then dActor_c. This class adds no
+ * dBgActor_c's Model and dBgW_KcMbg, then dActor_c. This class adds no
  * member with a destructor of its own.
  */
 MetalNet::~MetalNet()

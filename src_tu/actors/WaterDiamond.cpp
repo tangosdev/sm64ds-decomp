@@ -27,7 +27,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* recovered: vtable identified, globals resolved, declarations from a shared header */
 #define WATERDIAMOND_H  /* suppress include/WaterDiamond.h: its WaterDiamond is the flat C view without the destructor; the TU-local class below is the C++ view, same evidenced offsets */
 #include "Model.h"
-#include "MovingCylinderClsn.h"
+#include "dCcAc_c.h"
 
 extern "C" void _ZN6Memory10DeallocateEPvP4Heap(void *, void *);
 extern "C" void *data_020a0eac;
@@ -48,7 +48,7 @@ struct dActor_c {   /* shadow base: vptr at 0, evidenced dActor_c fields, size 0
 };
 struct WaterDiamond : dActor_c {
     Model mModel;                            /* 0x0d4 */
-    MovingCylinderClsn mMovingCylinderClsn;  /* 0x124 */
+    dCcAc_c mdCcAc_c;  /* 0x124 */
     s32 unk_158;                             /* 0x158 */
     s8  unk_15c;
     u8  unk_15d;
@@ -60,7 +60,7 @@ struct WaterDiamond : dActor_c {
 #include "decl_Actor.h"
 #include "decl_ActorBase.h"
 #include "decl_Model.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_common.h"
 /* recovered: vtable identified, globals resolved */
 /* resolved: VT0 = _ZTV12WaterDiamond */
@@ -71,7 +71,7 @@ int *WaterDiamond_Spawn(void)
         _ZN8dActor_cC2Ev(p);
         p[0] = (int)&_ZTV12WaterDiamond[2]; /* +8: this TU defines the vtable */
         _ZN5ModelC1Ev((char *)p + 0xd4);
-        _ZN18MovingCylinderClsnC1Ev((char *)p + 0x124);
+        _ZN7dCcAc_cC1Ev((char *)p + 0x124);
     }
     return p;
 }
@@ -88,14 +88,14 @@ int *WaterDiamond_Spawn(void)
 extern "C" {
 extern void* _ZN5Model8LoadFileER13SharedFilePtr(void* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, void* bmd, int a, int b);
-extern void _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int fix, int t, unsigned int u, unsigned int v);
+extern void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(void* self, void* actor, int fix, int t, unsigned int u, unsigned int v);
 }
 
 int WaterDiamond::InitResources()
 {
   void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_02114270);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, m, 1, -1);
-  _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0x124, ((char*)this), 0x32000, 0x64000, 0x800002, 0);
+  _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0x124, ((char*)this), 0x32000, 0x64000, 0x800002, 0);
   unk_158 = 0;
   unk_15c = mParam & 1;
   unk_15d = 0;
@@ -114,8 +114,8 @@ int WaterDiamond::InitResources()
 typedef short s16;
 extern "C" {
 extern char* _ZN8dActor_c10FindWithIDEj(unsigned int id);
-extern void _ZN12CylinderClsn5ClearEv(void* self);
-extern void _ZN12CylinderClsn6UpdateEv(void* self);
+extern void _ZN5dCc_c5ClearEv(void* self);
+extern void _ZN5dCc_c6UpdateEv(void* self);
 }
 
 int WaterDiamond::Behavior()
@@ -139,8 +139,8 @@ int WaterDiamond::Behavior()
         }
     }
     func_ov029_021118c8(((char*)this));
-    _ZN12CylinderClsn5ClearEv((void*)((char*)&mMovingCylinderClsn));
-    _ZN12CylinderClsn6UpdateEv((void*)((char*)&mMovingCylinderClsn));
+    _ZN5dCc_c5ClearEv((void*)((char*)&mdCcAc_c));
+    _ZN5dCc_c6UpdateEv((void*)((char*)&mdCcAc_c));
     return 1;
 }
 
@@ -246,7 +246,7 @@ extern "C" {  /* .c-derived member: C linkage for the whole block */
 /* recovered: named members + shared header, vtable identified, declarations from a shared header */
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingCylinderClsn.h"
+#include "decl_dCcAc_c.h"
 #include "decl_common.h"
 /* recovered: named members + shared header, vtable identified */
 /* vtable identified: VT0 = _ZTV15daObjWc_Obj03_c */
@@ -262,7 +262,7 @@ extern void *data_020a0eac;
 // @symbol _ZN12WaterDiamondD1Ev
 
 /* (the TU-local WaterDiamond at the top of this file replaces the legacy
- * shadow world; real Model/MovingCylinderClsn members, evidenced offsets) */
+ * shadow world; real Model/dCcAc_c members, evidenced offsets) */
 
 WaterDiamond::~WaterDiamond()
 {

@@ -41,11 +41,11 @@
  * common.h-before-X rule) -- watch for new compile errors after this. */
 #include "decl_Actor.h"
 #include "decl_Model.h"
-#include "decl_MovingMeshCollider.h"
+#include "decl_dBgW_KcMbg.h"
 #include "decl_common.h"
 #include "ArrowLift.h"
 #include "SharedFilePtr.h"
-#include "MeshColliderBase.h"
+#include "dBgW.h"
 #include "types.h"
 #include "decl_ActorBase.h"
 #include "decl_Platform.h"
@@ -65,31 +65,31 @@ typedef int Fix12i;
 /* shadow struct 'SharedFilePtr' */
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
 
-/* shadow struct 'MeshCollider' */
-struct MeshCollider { int d; };
+/* shadow struct 'dBgW_Kc' */
+struct dBgW_Kc { int d; };
 
-/* shadow struct 'MovingMeshCollider' */
-struct MovingMeshCollider { int d; };
+/* shadow struct 'dBgW_KcMbg' */
+struct dBgW_KcMbg { int d; };
 
 extern "C" {
 extern int _ZTV9ArrowLift[];
 extern int _ZTV10dBgActor_c[];
 extern void *data_020a0eac;
 extern void func_02012694(int a, void* p);
-extern void _ZN8dActor_c9UpdatePosEP12CylinderClsn(void* self, void* clsn);
+extern void _ZN8dActor_c9UpdatePosEP5dCc_c(void* self, void* clsn);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void* self);
 extern int _ZN10dBgActor_c21IsClsnInRangeOnScreenE5Fix12IiES1_(void* self, int a, int b);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);
-extern "C" KCL_File* _ZN12MeshCollider8LoadFileER13SharedFilePtr(SharedFilePtr&);
-extern "C" void _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block( MovingMeshCollider*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
+extern "C" KCL_File* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr&);
+extern "C" void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block( dBgW_KcMbg*, KCL_File*, const Matrix4x3&, Fix12i, short, CLPS_Block&);
 extern "C" void func_020393d4(int* p, int v);
 extern "C" void func_020393c4(int* p, int v);
 extern SharedFilePtr data_ov029_02114250;
 extern SharedFilePtr data_ov029_02114248;
 extern CLPS_Block data_ov029_0211302c;
-extern int _ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+extern int _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
 /* TUBUILD CONFLICT -- alternate declaration of _ZN10dBgActor_c21UpdateModelPosAndRotYEv, from the legacy file for _ZN9ArrowLift13InitResourcesEv, NOT applied: extern "C" void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void*); */
 /* TUBUILD CONFLICT -- alternate declaration of _ZN10dBgActor_c19UpdateClsnPosAndRotEv, from the legacy file for _ZN9ArrowLift13InitResourcesEv, NOT applied: extern "C" void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void*); */
 }
@@ -149,16 +149,16 @@ int ArrowLift::InitResources()
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(c);
     _ZN10dBgActor_c19UpdateClsnPosAndRotEv(c);
     {
-        KCL_File* kcl = _ZN12MeshCollider8LoadFileER13SharedFilePtr(data_ov029_02114248);
-        _ZN18MovingMeshCollider7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
-            (MovingMeshCollider*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x2ec),
+        KCL_File* kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov029_02114248);
+        _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
+            (dBgW_KcMbg*)(c + 0x124), kcl, *(const Matrix4x3*)(c + 0x2ec),
             0x199, *(short*)(c + 0x8e), data_ov029_0211302c);
     }
     {
         short* p = (short*)((unsigned long long)((int)c + 0x94));
         short val = *p;
         int* arg0_1 = (int*)(c + 0x124);
-        int arg1_1 = (int)&_ZN16MeshColliderBase22UpdatePosWithTransformERS_P8dActor_cR10ClsnResultR7Vector3P10Vector3_16S8_;
+        int arg1_1 = (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_;
         *p = (short)(val + 0x4000);
         func_020393d4(arg0_1, arg1_1);
     }
@@ -194,7 +194,7 @@ int ArrowLift::Behavior()
         break;
     case 1:
     case 3:
-        _ZN8dActor_c9UpdatePosEP12CylinderClsn(((u8*)this), 0);
+        _ZN8dActor_c9UpdatePosEP5dCc_c(((u8*)this), 0);
         {
             int* p = (int*)(((int)((u8*)this) + 0x320));
             *p = *p + unk_098;
@@ -264,8 +264,8 @@ int ArrowLift::Render()
 /* recovered: named members + shared header, real C++ method */
 int ArrowLift::CleanupResources()
 {
-    if (((MeshColliderBase *)((char *)&mMovingMeshCollider))->IsEnabled()) {
-        ((MeshColliderBase *)((char *)&mMovingMeshCollider))->Disable();
+    if (((dBgW *)((char *)&mMovingMeshCollider))->IsEnabled()) {
+        ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
     }
     ((SharedFilePtr *)&data_ov029_02114250)->Release();
     ((SharedFilePtr *)&data_ov029_02114248)->Release();
@@ -283,7 +283,7 @@ extern "C" int *_ZN9ArrowLiftD0Ev(int *t)
 {
     t[0] = (int)_ZTV9ArrowLift;
     t[0] = (int)_ZTV10dBgActor_c;
-    _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
+    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     _ZN6Memory10DeallocateEPvP4Heap(t, data_020a0eac);
@@ -301,7 +301,7 @@ extern "C" int *_ZN9ArrowLiftD1Ev(int *t)
 {
     t[0] = (int)_ZTV9ArrowLift;
     t[0] = (int)_ZTV10dBgActor_c;
-    _ZN18MovingMeshColliderD1Ev((char *)t + 0x124);
+    _ZN10dBgW_KcMbgD1Ev((char *)t + 0x124);
     _ZN5ModelD1Ev((char *)t + 0xd4);
     _ZN8dActor_cD2Ev(t);
     return t;
