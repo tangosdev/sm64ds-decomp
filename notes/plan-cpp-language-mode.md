@@ -124,6 +124,52 @@ work must be **a class**, not a file.
 4. **Order by blast radius, not by file count.** Layout-free work first.
 5. **Same width unless a width change is intended and stated.** Equal width is necessary,
    not sufficient (`s16`→`u16` flips `ldrsh`/`ldrh`).
+6. **A cast that adds `volatile` and then takes it straight back is a codegen hack, and
+   it is now counted.** Two shapes, both added to the metric on 2026-08-21:
+
+   ```c
+   rsc = (s32)(volatile s32)rsc;          /* CVCAST  */
+   rawX = ((const Vector3 *)c)->x >> 6;   /* CVSTRIP, where c is declared volatile */
+   ```
+
+   `CVCAST` is a cast of a *prvalue* to a cv-qualified non-class type. The language
+   discards the qualifier, so the statement emits nothing and means nothing — it can
+   only be there to move the compiler. On `dBgW_Kc::DetectClsn(dBgCh_SphCrr&)` it is
+   what demotes a local out of the declaration chain into the temp pool.
+   `CVSTRIP` is its partner: declare a pointee `volatile` so the loads are not CSEd,
+   then cast the `volatile` off at every read so the object does not actually behave
+   volatile.
+
+   Genuine hardware `volatile` is **not** counted, and must never be. `CVCAST` requires
+   a non-pointer type, so `(volatile u16 *)0x4000208` is invisible to it; `CVSTRIP`
+   fires only when the same file declared that name `volatile` and then casts it
+   un-volatile, so an ordinary pointer cast is invisible too. Adding `volatile` is real.
+   Taking it away again at the point of use is the tell.
+
+   Counted as `codegen_hacks.cv_launder` / `cv_launder_sites`, deliberately **separate**
+   from `launder_or_forced` / `launder_sites`. The older kinds are a coarser instrument —
+   principle 7 below had to carve the Q-format multiply out of `WIDEN` by hand, and what
+   is left may still be over-broad. These two can be told apart from legitimate code by
+   construction, so mixing them would make a number that is already hard to read worse.
+   Tree-wide at introduction: 3 files, 6 sites. Detectors and their negative controls:
+   `tools/test_delaunder.py`.
+
+7. **A widening cast that changes the VALUE is not a launder.** `WIDEN` used to count
+   every lone 64-bit cast, including `(s64)(a) * (b) >> 12` — a Q12 multiply, where
+   without the cast the product is 32x32→32 and overflows. The cast is required for the
+   arithmetic to be correct, which is the exact opposite of a codegen crutch: **a crutch
+   does not change the value.** So a widening cast whose operand feeds a multiply that is
+   then narrowed by a right shift is excluded.
+
+   This was 128 of 489 WIDEN sites — the metric was roughly a quarter noise, and it
+   tripped the ratchet on a function match whose only sin was moving a file from `notes/`
+   into `src/`. Refined 2026-08-21: `launder_or_forced` 280 → 214, `launder_sites`
+   563 → 445. A fall, so the ratchet accepts it and no baseline override was needed.
+
+   Still counted, because none of them change a value: a lone `(u64)(x)` with no
+   arithmetic, a widened product with no narrowing shift, and a shift belonging to a
+   *later argument* (`f((u64)(a * b), c >> 2)` — the scan stops at the comma, or the site
+   would launder itself by accident). All six cases are in `tools/test_delaunder.py`.
 
 ## 4. Phases
 

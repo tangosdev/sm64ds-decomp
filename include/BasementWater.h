@@ -23,8 +23,7 @@ struct BasementWater : dBgActor_c {
     TextureTransformer mTextureTransformer;/* 0x320 */
     s32 mLoweredY;                    /* 0x334 */
     u32 unk_338;                      /* 0x338 */
-    u8 unk_33c;                       /* 0x33c */
-    u8  pad_33d[0x1];
+    u16 unk_33c;              /* 0x33c */
     u8 unk_33e;                       /* 0x33e */
 
     /* --- vtable --- */
@@ -65,14 +64,10 @@ struct BasementWater {
     Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mTextureTransformer;            /* 0x320 */
-    u8  pad_321[0xb];
-    s32 unk_32c;            /* 0x32c */
-    u8  pad_330[0x4];
+    TextureTransformer mTextureTransformer; /* 0x320 */
     s32 mLoweredY;            /* 0x334 */
     u32 unk_338;            /* 0x338 */
-    u8  unk_33c;            /* 0x33c */
-    u8  pad_33d[0x1];
+    u16 unk_33c;              /* 0x33c */
     u8  unk_33e;            /* 0x33e */
 };
 

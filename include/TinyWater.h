@@ -23,7 +23,7 @@ struct TinyWater : dBgActor_c {
     TextureTransformer mTextureTransformer;/* 0x320 */
     s32 unk_334;                      /* 0x334 */
     u8  pad_338[0x4];
-    u8 unk_33c;                       /* 0x33c */
+    u16 unk_33c;              /* 0x33c */
 
     /* --- vtable --- */
     virtual ~TinyWater();
@@ -60,7 +60,7 @@ struct TinyWater {
     TextureTransformer mTextureTransformer;            /* 0x320 */
     s32 unk_334;            /* 0x334 */
     u8  pad_338[0x4];
-    u8  unk_33c;            /* 0x33c */
+    u16 unk_33c;              /* 0x33c */
 };
 
 #endif /* __cplusplus */

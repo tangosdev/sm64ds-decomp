@@ -10,7 +10,6 @@ extern "C" void _ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P1
 struct BMD_File; struct KCL_File; struct dActor_c; struct Vector3; struct Matrix4x3;
 struct CLPS_Block; struct SharedFilePtr;
 /* ModelBase is the real class now, through this actor's header. */
-struct ShadowModel { void InitCuboid(); };
 struct dBgActor_c { void UpdateClsnPosAndRot(); };
 /* Declared by final name, not as a member: the ROM's SetFile takes Fix12<int> where
    this call passes 0x1000, and Fix12<int> is an aggregate with no converting

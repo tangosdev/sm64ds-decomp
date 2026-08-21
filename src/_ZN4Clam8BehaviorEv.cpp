@@ -66,7 +66,7 @@ int Clam::Behavior()
                 u.shutPuff[0], u.shutPuff[1], u.shutPuff[2]);
             unk_170 = 0xa;
             mStateTimer = 0;
-            *(int *)&unk_150 &= ~1;
+            *(int *)&mdCcAc_c.flags &= ~1;
         } else {
             if (mStateTimer > 0x96 &&
                 _ZN8dActor_c13DistToCPlayerEv((char *)this) < 0x1f4000) {
@@ -96,7 +96,7 @@ int Clam::Behavior()
         } else {
             if (!mModelAnim.WillHitFrame(8)) {
                 if (mModelAnim.WillHitFrame(0xf))
-                    *(int *)&unk_150 |= 1;
+                    *(int *)&mdCcAc_c.flags |= 1;
             }
         }
         break;
@@ -104,8 +104,8 @@ int Clam::Behavior()
 
     mStateTimer++;
 
-    if (unk_15c != 0) {
-        char *touched = _ZN8dActor_c10FindWithIDEj(unk_15c);
+    if (mdCcAc_c.otherOwner != 0) {
+        char *touched = _ZN8dActor_c10FindWithIDEj(mdCcAc_c.otherOwner);
         if (touched != 0) {
             int isPlayer = (int)(*(u16 *)(touched + 0xc) == 0xbf);
             if (isPlayer != 0) {

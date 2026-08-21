@@ -2,6 +2,7 @@
 #define SQUASHER_H
 
 #include "types.h"
+#include "math/Matrix.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
@@ -35,7 +36,7 @@ struct Squasher : dBgActor_c {
     /* Tail padding. The field span stops short of the real size: Squasher_Spawn
        calls fBase_c::operator new(0x37c), read off the retail
        instruction. A span is only a LOWER BOUND. */
-    u8 pad_34c[0x30];      /* 0x34c, to the ROM's 0x37c */
+    Matrix4x3 pad_34c;        /* 0x34c */
 };
 
 typedef char Squasher_size_must_be_0x37c[sizeof(Squasher) == 0x37c ? 1 : -1];
@@ -75,7 +76,7 @@ struct Squasher {
     s16 unk_320;            /* 0x320 */
     u8  unk_322;            /* 0x322 */
     u8  pad_323[0x1];
-    u8  mShadowModel;            /* 0x324 */
+    ShadowModel mShadowModel; /* 0x324 */
 };
 
 #endif /* __cplusplus */

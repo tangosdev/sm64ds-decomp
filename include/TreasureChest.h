@@ -6,6 +6,7 @@
 #define TREASURECHEST_H
 #include "types.h"
 #include "ModelAnim.h"
+#include "dCcAc_c.h"
 
 struct TreasureChest {
     u8  pad_000[0x8];
@@ -14,8 +15,8 @@ struct TreasureChest {
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     ModelAnim mModelAnim;            /* 0x0d4 */
-    u8  mdCcAc_c;            /* 0x138 */
-    u8  pad_139[0x39];
+    dCcAc_c mdCcAc_c;         /* 0x138 */
+    u8  pad_16c[0x6];
     u8  unk_172;            /* 0x172 */
     u8  pad_173[0x1];
     u8  unk_174;            /* 0x174 */

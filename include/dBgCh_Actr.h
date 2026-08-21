@@ -4,6 +4,10 @@
 #include "types.h"
 #include "dBgCh.h"
 
+/* Only a pointer to it is stored, so a forward declaration is enough -- and
+   this header reaches 826 translation units. */
+struct dActor_c;
+
 /* An dActor_c's mesh-collision query, vtable at 0x02099204 (still unnamed in
  * symbols.txt).
  *
@@ -155,10 +159,8 @@ typedef char dBgCh_Actr_size_must_be_0x1bc[
    converted, not before. */
 struct dBgCh_Actr {
     u8  pad_000[0x10];      /* dBgCh base */
-    u8  mFlags;             /* 0x010 - u32 on the C++ side; see above */
-    u8  pad_011[0x3];
-    u8  mActor;             /* 0x014 */
-    u8  pad_015[0x3];
+    u32 mFlags;               /* 0x010 */
+    struct dActor_c * mActor; /* 0x014 */
     s32 unk_018;            /* 0x018 */
     s32 unk_01c;            /* 0x01c */
     u8  mSphereClsn;        /* 0x020 */

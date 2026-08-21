@@ -4,6 +4,7 @@
 #include "dScene_c.h"
 #include "Model.h"
 #include "dBgW_Kc.h"
+#include "Fog.h"
 
 struct SceneRelated;
 struct LVL_Overlay;
@@ -152,10 +153,8 @@ struct Stage : dScene_c {
     Model mModel;             /* 0x86c */
     u8  pad_8bc[0x60];       /* Model ends 0x8bc; dBgW_Kc does not start until 0x91c */
     dBgW_Kc mMeshCollider; /* 0x91c */
-    u8  unk_96c;            /* 0x96c */
-    u8  pad_96d[0x1f];
-    u8  unk_98c;            /* 0x98c */
-    u8  pad_98d[0x7];
+    Fog unk_96c;       /* 0x96c */
+    u8  pad_992[0x2];
     u8  unk_994;            /* 0x994 */
     u8  pad_995[0x1f];
     u8  unk_9b4;            /* 0x9b4 */

@@ -60,6 +60,10 @@ src/_ZNK7dBgW_Kc16GetOctreeOriginYEv.cpp:
     complete
     .text start:0x01ffb0ec end:0x01ffb0fc
 
+src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp:
+    complete
+    .text start:0x01ffb830 end:0x01ffd3f8
+
 src/_ZN7dBgW_Kc10DetectClsnER9dBgCh_Gnd.cpp:
     complete
     .text start:0x01ffd3f8 end:0x01ffd890

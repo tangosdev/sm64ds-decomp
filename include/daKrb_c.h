@@ -2,6 +2,11 @@
 #define DAKRB_C_H
 #include "types.h"
 #include "dCapEnemy_c.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
+#include "ModelAnim.h"
+#include "ShadowModel.h"
+#include "MaterialChanger.h"
 
 /* The ROM's RTTI names this class daKrb_c and derives it from dCapEnemy_c, not from
  * dEnemyBase_c directly -- the tree used to believe `Goomba : Enemy`, which skipped the
@@ -64,20 +69,11 @@
  * All other slots hold dCapEnemy_c's (or an ancestor's) word and are inherited.
  */
 struct daKrb_c : dCapEnemy_c {
-    u8  mdCcAc_c;            /* 0x180 -- dCcAc_c, 0x34 bytes */
-    u8  pad_181[0x33];
-    u8  mWithMeshClsn;            /* 0x1b4 -- dBgCh_Actr, 0x1bc bytes */
-    u8  pad_1b5[0x1bb];
-    u8  mModelAnim;            /* 0x370 -- ModelAnim, 0x64 bytes */
-    u8  pad_371[0x4f];
-    u8  mAnimation;            /* 0x3c0 -- ModelAnim's Animation base, +0x50 */
-    u8  pad_3c1[0xb];
-    s32 unk_3cc;            /* 0x3cc -- ModelAnim's own field, +0x5c */
-    s32 unk_3d0;            /* 0x3d0 -- ModelAnim's own field, +0x60 */
-    u8  mShadowModel;            /* 0x3d4 -- ShadowModel, 0x28 bytes */
-    u8  pad_3d5[0x27];
-    u8  mMaterialChanger;            /* 0x3fc -- MaterialChanger, 0x14 bytes */
-    u8  pad_3fd[0x13];
+    dCcAc_c mdCcAc_c;         /* 0x180 */
+    dBgCh_Actr mWithMeshClsn; /* 0x1b4 */
+    ModelAnim mModelAnim;     /* 0x370 */
+    ShadowModel mShadowModel; /* 0x3d4 */
+    MaterialChanger mMaterialChanger; /* 0x3fc */
     s32 unk_410;            /* 0x410 */
     s32 unk_414;            /* 0x414 */
     s32 unk_418;            /* 0x418 */

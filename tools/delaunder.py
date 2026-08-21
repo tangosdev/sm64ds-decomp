@@ -1,11 +1,34 @@
 #!/usr/bin/env python3
 """Delete launder idioms that cost nothing, one site at a time, verified against the ROM.
 
-Three idioms were pasted through the tree as matching crutches:
+Five idioms were pasted through the tree as matching crutches:
 
     (EXPR & 0xFFFFFFFFFFFFFFFFULL)      MASK       -- the u64 identity mask
     (long long)(int)(EXPR)              ROUNDTRIP  -- widen-then-narrow cast pair
-    (unsigned long long)(EXPR)          WIDEN      -- a lone 64-bit widening cast
+    (unsigned long long)(EXPR)          WIDEN      -- a lone 64-bit widening cast,
+                                                     EXCEPT a fixed-point multiply
+    (s32)(volatile s32)EXPR             CVCAST     -- cv round-trip on a scalar rvalue
+    ((const T *)p)->m, p declared volatile
+                                        CVSTRIP    -- volatile declared, cast off at use
+
+The last two were added 2026-08-21, after `dBgW_Kc::DetectClsn(dBgCh_SphCrr&)` was
+matched using both and NO gate in the tree could see either. They are the cv-qualifier
+family, and they are worth separating from the first three because their status is not
+in doubt the way a widening cast's is:
+
+  * CVCAST is provably semantic dead weight. Casting a prvalue to a cv-qualified
+    non-class type discards the qualifier -- `(s32)(volatile s32)x` and `(s32)x` mean
+    exactly the same thing to the language. It emits no code. So it cannot be there for
+    any reason except to perturb the compiler, and on that function it is what demotes a
+    local out of the declaration chain into the temp pool.
+  * CVSTRIP is the matching pair to it: declare a pointee `volatile` so the compiler
+    will not CSE the loads, then cast the `volatile` straight back off at every read so
+    the object does not actually behave volatile. `sphere.pos` is ordinary RAM.
+
+Genuine hardware volatile is NOT counted. `(volatile u16 *)0x4000208` is a pointer cast
+to volatile -- CVCAST requires a non-pointer type, and CVSTRIP only fires on a name the
+same file declares volatile and then casts un-volatile. Adding volatile is real; taking
+it away again at the point of use is the tell.
 
 Most of them do nothing: the compiler emits the same bytes without them. Some are
 load-bearing, and no amount of reading tells you which -- one site in
@@ -83,7 +106,29 @@ ROUNDTRIP_RE = re.compile(
 )
 WIDEN_RE = re.compile(r"\(\s*(?:long\s+long|s64|u64|unsigned\s+long\s+long)\s*\)(?=\s*\()")
 
-KINDS = ("MASK", "ROUNDTRIP", "WIDEN", "PARENS")
+# The cv-qualifier family. `_CV` deliberately does not match a bare `const`: casting to
+# `const T` on an rvalue is idiomatic and harmless, and it is `volatile` that steers the
+# allocator. `_SCALAR` has no `*` in it, which is what keeps genuine MMIO casts
+# (`(volatile u16 *)0x4000208`) out of the count -- those are pointers to volatile, and
+# they are real.
+_CV = r"(?:const\s+volatile|volatile\s+const|volatile)"
+_SCALAR = (r"(?:signed\s+|unsigned\s+)?"
+           r"(?:s8|u8|s16|u16|s32|u32|s64|u64|Fix12i|bool|char|short|int|float|double"
+           r"|long(?:\s+long)?)")
+CVCAST_RE = re.compile(r"\(\s*" + _CV + r"\s+" + _SCALAR + r"\s*\)")
+
+# A pointer-to-volatile declared in this file, so CVSTRIP can tell "cast the volatile
+# off something that was declared volatile here" from an ordinary pointer cast.
+VOLATILE_DECL_RE = re.compile(
+    r"\b(?:const\s+)?volatile\s+([A-Za-z_]\w*)\s*\*\s*(?:volatile\s*)?([A-Za-z_]\w*)\s*[;,)=]")
+
+KINDS = ("MASK", "ROUNDTRIP", "WIDEN", "CVCAST", "CVSTRIP", "PARENS")
+
+# The kinds langmode_audit counts as codegen hacks. PARENS is a cosmetic tidy, not a
+# hack, and is excluded there; keeping the list here means the audit and the sweep
+# cannot drift apart.
+LAUNDER_KINDS = ("MASK", "ROUNDTRIP", "WIDEN")
+CV_KINDS = ("CVCAST", "CVSTRIP")
 
 # Removing a cast or a mask leaves its parentheses behind: `(((self + 0xb0)))`. That is
 # not much of a readability win, so PARENS collapses a group whose entire content is
@@ -163,6 +208,75 @@ def _balanced(s):
     return depth == 0
 
 
+def _cv_strip_sites(text, keep):
+    """`((const T *)p)->m` where THIS file declares `p` as a pointer to volatile.
+
+    Adding volatile is a real thing to do; taking it away again at the point of use is
+    the laundering. Requiring the declaration keeps ordinary pointer casts out -- a cast
+    to `(const T *)` only counts when the name it is applied to was declared
+    `volatile T *` a few lines up, so the cast provably strips a qualifier the same
+    author just added.
+
+    The site is the cast tokens alone, so deleting it leaves `(p)->m`, which parses the
+    same. Whether the bytes survive is the sweep's problem, not this function's.
+    """
+    volatiles = {}
+    for m in VOLATILE_DECL_RE.finditer(text):
+        if keep[m.start()]:
+            volatiles[m.group(2)] = m.group(1)
+    if not volatiles:
+        return []
+    sites = []
+    for name, ty in volatiles.items():
+        # a cast to the same pointee type WITHOUT volatile, applied to that name
+        rx = re.compile(r"\(\s*(?:const\s+)?" + re.escape(ty) + r"\s*\*\s*\)\s*(?=" +
+                        re.escape(name) + r"\b)")
+        for m in rx.finditer(text):
+            if keep[m.start()] and "volatile" not in text[m.start():m.end()]:
+                sites.append(("CVSTRIP", m.start(), m.end(), ""))
+    return sites
+
+
+
+def _is_fixed_point_widen(text, end, keep):
+    """True when the widened value is an operand of a multiply that is shifted back down.
+
+    That is a Q-format multiply -- `(s64)(a) * (b) >> 12` -- and the cast is REQUIRED:
+    without it the product is 32x32->32 and overflows, so the cast changes the value, not
+    merely the codegen. A crutch does not change the value; that is the whole difference,
+    and it is why this shape is excluded from the launder count rather than merely
+    annotated.
+
+    Scans forward from the end of the cast to the end of the enclosing expression. A `;`
+    or `{` ends it, and so does a `,` once the scan is back outside the group the cast
+    opened -- otherwise `f((u64)(x), y >> 2)` would read the shift from the NEXT
+    argument and excuse itself.
+    """
+    depth, seen_mul, i, n = 0, False, end, len(text)
+    while i < n:
+        if not keep[i]:
+            i += 1
+            continue
+        ch = text[i]
+        if ch in ";{}":
+            return False
+        if ch == "(":
+            depth += 1
+        elif ch == ")":
+            depth -= 1
+            if depth < -4:                       # far outside; stop looking
+                return False
+        elif ch == ",":
+            if depth <= 0:
+                return False
+        elif ch == "*":
+            seen_mul = True
+        elif text.startswith(">>", i):
+            return seen_mul
+        i += 1
+    return False
+
+
 def find_sites(text, kinds=KINDS):
     """Every removable launder site, as (kind, start, end, replacement), left to right."""
     keep = code_mask(text)
@@ -183,12 +297,22 @@ def find_sites(text, kinds=KINDS):
                 continue
             out.append(("MASK", o, c + 1, inner if _balanced(inner) else f"({inner})"))
 
-    for kind, rx in (("ROUNDTRIP", ROUNDTRIP_RE), ("WIDEN", WIDEN_RE)):
+    for kind, rx in (("ROUNDTRIP", ROUNDTRIP_RE), ("WIDEN", WIDEN_RE),
+                     ("CVCAST", CVCAST_RE)):
         if kind not in kinds:
             continue
         for m in rx.finditer(text):
-            if keep[m.start()]:
-                out.append((kind, m.start(), m.end(), ""))
+            if not keep[m.start()]:
+                continue
+            # A widening cast that feeds a multiply which is then shifted back down is a
+            # fixed-point multiply, not a crutch: it changes the value. See
+            # _is_fixed_point_widen.
+            if kind == "WIDEN" and _is_fixed_point_widen(text, m.end(), keep):
+                continue
+            out.append((kind, m.start(), m.end(), ""))
+
+    if "CVSTRIP" in kinds:
+        out.extend(_cv_strip_sites(text, keep))
 
     if "PARENS" in kinds:
         for o, ch in enumerate(text):

@@ -6,6 +6,7 @@
 #define BIGMOVINGICEBLOCK_H
 #include "types.h"
 #include "Model.h"
+#include "PathPtr.h"
 
 struct BigMovingIceBlock {
     u8  pad_000[0x8];
@@ -24,8 +25,7 @@ struct BigMovingIceBlock {
     Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mPath;            /* 0x320 */
-    u8  pad_321[0x7];
+    PathPtr mPath;            /* 0x320 */
     s32 mPathNodeIdx;            /* 0x328 */
     s32 mPathDir;            /* 0x32c */
 #ifdef __cplusplus

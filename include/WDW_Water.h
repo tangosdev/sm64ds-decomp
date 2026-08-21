@@ -64,10 +64,7 @@ struct WDW_Water {
     Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    u8  mTextureTransformer;            /* 0x320 */
-    u8  pad_321[0xb];
-    s32 unk_32c;            /* 0x32c */
-    u8  pad_330[0x4];
+    TextureTransformer mTextureTransformer; /* 0x320 */
     s32 mTargetPosY;            /* 0x334 */
     u8  unk_338;            /* 0x338 */
     u8  pad_339[0x3];

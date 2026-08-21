@@ -49,7 +49,7 @@ struct FaderWipe {
     Fix12i speed;       /* 0x08 (from Fader) */
     u16    unk_00c;     /* 0x0c (from FaderColor) */
     u8     pad_00e[0x2];
-    u8     model[0x50]; /* 0x10 */
+    Model model;              /* 0x010 */
 };
 #endif
 

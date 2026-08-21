@@ -37,3 +37,7 @@ CLAIMS.md         merge=union
 # two PRs touch this file's tail concurrently -- land PRs that append here one at a time,
 # same as the other union-merged ledgers above.
 config/converted-backslide-exceptions.jsonl merge=union
+
+# A patch file must keep LF endings: core.autocrlf=true would give the working copy
+# CRLF, and `git apply` of a CRLF patch against LF sources fails every hunk.
+*.patch -text

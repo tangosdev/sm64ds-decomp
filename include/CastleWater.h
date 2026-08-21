@@ -20,6 +20,7 @@
 #define CASTLEWATER_H
 #include "types.h"
 #include "math/Matrix.h"
+#include "TextureTransformer.h"
 
 struct CastleWater {
     u8  pad_000[0x5c];
@@ -45,12 +46,7 @@ struct CastleWater {
        dBgW_KcMbg::SetFile through an explicit `Matrix4x3&` cast. */
     Matrix4x3 mMatrix;            /* 0x2ec */
     u8  pad_31c[0x4];
-    u8  mTexTransformer;            /* 0x320 */
-    u8  pad_321[0xb];
-    /* Inside the TextureTransformer at its +0xc. Behavior rewrites it to
-       0x1000 EVERY frame before advancing the animation, so the scroll runs at
-       a fixed rate no matter what else touched it. */
-    s32 unk_32c;            /* 0x32c */
+    TextureTransformer mTexTransformer; /* 0x320 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

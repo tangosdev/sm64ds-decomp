@@ -5,10 +5,11 @@
 #ifndef VOLCANOFIRE_H
 #define VOLCANOFIRE_H
 #include "types.h"
+#include "dCcAc_c.h"
 
 struct VolcanoFire {
     u8  pad_000[0xd4];
-    u8  mdCcAc_c;            /* 0x0d4 */
+    dCcAc_c mdCcAc_c;         /* 0x0d4 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

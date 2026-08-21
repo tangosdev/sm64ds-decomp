@@ -1,45 +1,62 @@
 //cpp
-// NONMATCHING: size 0x1b64 vs 0x1bc8 (25 insn short), align equal=601 ratio=0.340
-//
-// PROVENANCE. Restored 2026-08-19 from nearmiss/db.jsonl, attempt
-// 8273344dc1434a9e86882b88eebf7ffa (divergences 1213, parent 1332).
-// This body was banked but never committed back to notes/, so the file that lived
-// here was the WORSE, earlier draft. Both were re-scored on one worktree at
-// 2004/b56 before the swap:
-//
-//     this body          cand=1750  equal=565  ratio=0.3203  delete=159  (28 insn short)
-//     what it replaced   cand=1725  equal=366  ratio=0.2090  delete=182  (53 insn short)
-//
-// The replaced file's banner claimed "first draft -- head/AABB only, the walk and
-// prism tests are stubs". That was false: it was 618 lines with every mechanism
-// written. Do not reinstate it.
-//
-// Levers already swept and DEAD (#1197, positive controls on each): nineteen
-// declaration-level variants across hoist / permutation / re-scoping / folding /
-// en1-en2 placement, all byte-neutral; frame-size chasing (the surplus is register
-// pressure from structural difference); loop rotation (mwccarm rotates this loop
-// unprompted and always did). "Declaration order IS the stack layout" holds for the
-// 0x498 dBgCh_Gnd twin and NOT for this 0x1bc8 function.
-//
-// What is left: source-shape change that reduces simultaneous liveness across the
-// prism body. This draft reloads edge normals (ldr [sp,#0xc4] three times in ten
-// instructions) where the ROM keeps en1 in r5, en2 in r4 and spills only en3.
-//
-// Score with plain --align; --align-shape normalises away stack offsets and reads
-// flat across real gains. mismatches=N/M is frozen at 999 until the sizes match.
-// Map and status: notes/collision-system.md.
-//
+/* The ROM builds C++ with -Cpp_exceptions off (rombuild.CFLAGS); the verify
+   tools compile with swarm.CPP_FLAGS, which leaves exceptions ON, and this is
+   the one file in the tree where that difference reaches codegen (a
+   literal-pool word and the order of four zero-init stores -- 4/1778 words).
+   The pragma pins exceptions off from inside the file so BOTH regimes produce
+   the cartridge's bytes; under the build flags it is redundant and
+   byte-neutral.  Do not remove it without checking linkcheck's verdict. */
+#pragma exceptions off
 // @symbol _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr
-/* dBgW_Kc::DetectClsn(dBgCh_SphCrr &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
+/* dBgW_Kc::DetectClsn(dBgCh_SphCrr &) at 0x01ffb830 (ITCM), 0x1bc8 bytes.
+ *
+ * The sphere-vs-mesh collision query -- the ROM's largest formerly-unmatched
+ * function, 1,778 instructions.  Walks the KCL octree over the sphere's AABB,
+ * rejects prisms by the three edge-normal dots and the face dot, classifies
+ * the accepted contact by Voronoi region (face / edge / vertex), takes the
+ * true distance through the DS hardware sqrt for edge and vertex contacts,
+ * runs the wall-slab filter over the reconstructed triangle, and accumulates
+ * the pushback extents per contact class.  The matched dBgCh_Gnd overload next
+ * door is the single-column version of the same walk.
+ *
+ * MATCHING NOTES -- the spellings below are load-bearing; measured, not lore.
+ * The full story is in notes/collision-system.md (Phase 3 and the dated
+ * sections), notes/ask-the-compiler.md, and notes/mwccarm-codegen.md 6bj/6bk.
+ *
+ *   - DECLARATION ORDER is the frame: chain slots and callee-saved registers
+ *     both follow it (the six hottest locals win r9..r4; the seventh, en3,
+ *     loses and spills at sp+0x94).  Do not tidy the declaration block.
+ *   - The three centre reads go through per-site (const Vector3 *) casts of
+ *     `c`, ABOVE the rad6/origin declarations: the cast is its own CSE class,
+ *     which stops the just-computed &sphere.pos add being consumed directly
+ *     (the ROM never reads through it) and lets y/z share one pointer reload.
+ *   - `rsc = (s32)(volatile s32)rsc;` is a zero-code volatile round-trip that
+ *     demotes rsc from the declaration chain into the pool's coalesced band
+ *     at sp+0x104, the cartridge's slot.  It is a MATCHING HACK, not a
+ *     reconstruction -- no 2004 author wrote that cast; the original source
+ *     reached the same allocator state some other way, and finding that
+ *     spelling is open work.  Likewise `const volatile Vector3 *c` -- the
+ *     pointee is not really volatile; the qualifier drives the slab block's
+ *     per-use reloads.  These are the only two untrue constructs in the file.
+ *   - `s32 ext = sphere.unk_0ec;` before the slab test: mwccarm emits a
+ *     two-leaf sum right-load-first and never commutes the add, so the
+ *     cartridge's operand order needs one leaf named into a register.
+ *   - tp/vb/vc must be Vector3 (user-declared empty dtor) or mwccarm
+ *     scalarizes them; cr must be Vector3s for the same reason.  The sqrt
+ *     sum must read `fh*fh + dh*dh` (smull takes the right addend).  The
+ *     slab bounds stay inline -- naming a bound kills the ROM's lazy
+ *     add/rsb/cmp/blt/sub materialisation.
+ */
 #include "dBgW_Kc.h"
 #include "dBgCh_SphCrr.h"
 #include "dBgPi.h"
+#include "SurfaceInfo.h"   /* for the real CopyNormalTo call below */
 
 extern "C" void func_02037a6c(dBgCh_SphCrr *self, s32 loX, s32 loY, s32 loZ,
                               s32 hiX, s32 hiY, s32 hiZ);
 extern "C" s32 DotVec3(const s32 *a, const Vector3 *b);
 extern "C" s16 func_020396dc(dBgW_Kc *self, KCL_Tri *tri);
-extern "C" void _ZNK11SurfaceInfo12CopyNormalToER7Vector3(SurfaceInfo *self, Vector3 *out);
+/* SurfaceInfo::CopyNormalTo is declared in include/SurfaceInfo.h. */
 extern "C" s32 func_02039794(s32 normalY);
 extern SurfaceInfo data_020a0cec;
 extern "C" void func_02037fd4(dBgPi *res, s16 triID, SurfaceInfo *info);
@@ -51,7 +68,7 @@ extern "C" int _ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(void *self, Surfa
                                                               dBgCh_SphCrr *q, int flag);
 extern "C" int func_020397dc(int x);
 extern "C" int func_02037e58(unsigned int *p);
-extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
+namespace cstd { int fdiv(int a, int b); }
 
 /* The ROM inlines a RAW hardware sqrt at four sites -- NOT cstd::sqrt(u64)
    (0x0203d744), which pre-shifts `x << 2` and rounds its result `(r + 1) >> 1`.
@@ -59,6 +76,28 @@ extern "C" Fix12i _ZN4cstd4fdivEii(Fix12i a, Fix12i b);
    inline helper, and the `0` and `1` it writes are loaded from frame slots
    (sp+0x118, sp+0x10c) rather than immediates -- which is what four expansions
    of one inline function look like on this compiler. */
+/* The sqrt unit's result register.  Read through a CONST pointer, not a volatile
+   one, and that is load-bearing rather than sloppy: mwccarm coalesces a local that is
+   assigned straight from a volatile lvalue into a compiler temporary, so a volatile
+   read here puts the three hypotenuses in the spill pool at 0x110/0x118/0x120.  The
+   cartridge has them at 0xac/0xb0/0xb4 -- packed inside the declaration chain, which
+   is where an ordinary local goes.  The busy-wait in SqrtStart is the synchronisation;
+   by the time this is read the value is already settled. */
+#define SQRT_RESULT (*(const s32 *)0x40002b4)
+
+static inline void SqrtStart(u64 x, s32 zval, s32 one)
+{
+    volatile u16 *ime = (volatile u16 *)0x4000208;
+    u16 saved = *ime;
+    *ime = (u16)zval;
+    *(volatile u16 *)0x40002b0 = (u16)one;
+    *(volatile u64 *)0x40002b8 = x;
+    *ime;
+    *ime = saved;
+    while (*(volatile u16 *)0x40002b0 & 0x8000)
+        ;
+}
+
 static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
 {
     volatile u16 *ime = (volatile u16 *)0x4000208;
@@ -93,22 +132,25 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    `pos + cross(fn, ea) * (length / dot(cross(fn, ea), en3))`. The cross goes
    through a 6-byte s16 scratch (sp+0x16c, reused by both rounds), so it really
    does truncate to 16 bits. The quotient's `>> 2` and the product's `>> 14` are
-   fdiv's Fix12 result reconciled with the 0x400 normal scale. */
-#define KCL_VERTEX(out, ea)                                                   \
-    cr[0] = (s16)(MUL10(fn[1], (ea)[2]) - MUL10(fn[2], (ea)[1]));             \
-    cr[1] = (s16)(MUL10(fn[2], (ea)[0]) - MUL10(fn[0], (ea)[2]));             \
-    cr[2] = (s16)(MUL10(fn[0], (ea)[1]) - MUL10(fn[1], (ea)[0]));             \
-    t = MUL10(cr[0], en3[0]) + MUL10(cr[1], en3[1]) + MUL10(cr[2], en3[2]);   \
-    if (func_020397dc(t)) continue;                                           \
-    u = _ZN4cstd4fdivEii(tri->length, t) >> 2;                                \
-    (out)[0] = tp[0] + (s32)(((s64)cr[0] * u) >> 14);                         \
-    (out)[1] = tp[1] + (s32)(((s64)cr[1] * u) >> 14);                         \
-    (out)[2] = tp[2] + (s32)(((s64)cr[2] * u) >> 14);
+   fdiv's Fix12 result reconciled with the 0x400 normal scale.
 
-/* That vertex's offset from the sphere centre, projected on the collider axis. */
-#define AXIS_DOT(v) (FX12((v)[0] - c->x, unk_28)                              \
-                   + FX12((v)[1] - c->y, unk_2c)                              \
-                   + FX12((v)[2] - c->z, unk_30))
+   `cr` being a Vector3s rather than an `s16[3]` is load-bearing and is why nothing
+   here needs a cast -- see its declaration. */
+#define KCL_VERTEX(out, ea, o0, o1, o2)                                                   \
+    cr.x = (s16)(MUL10(fn[1], (ea)[2]) - MUL10(fn[2], (ea)[1]));             \
+    cr.y = (s16)(MUL10(fn[2], (ea)[0]) - MUL10(fn[0], (ea)[2]));             \
+    cr.z = (s16)(MUL10(fn[0], (ea)[1]) - MUL10(fn[1], (ea)[0]));             \
+    t = MUL10(cr.x, en3[0]) + MUL10(cr.y, en3[1]) + MUL10(cr.z, en3[2]);   \
+    if (func_020397dc(t)) continue;                                           \
+    u = cstd::fdiv(tri->length, t) >> 2;                                \
+    (out)[0] = (o0) + (s32)(((s64)cr.x * u) >> 14);                         \
+    (out)[1] = (o1) + (s32)(((s64)cr.y * u) >> 14);                         \
+    (out)[2] = (o2) + (s32)(((s64)cr.z * u) >> 14);
+
+/* Post-subtraction form: components already relative to the centre. */
+#define AXIS_DOT0(v) (FX12(unk_28, (v).x) \
+                    + FX12(unk_2c, (v).y) \
+                    + FX12(unk_30, (v).z))
 
 /* A vertex region: the closest point is where edge normals `ea` and `eb` meet.
    `nn` is their cosine, already formed by the dispatch. Solve the 2x2 for the
@@ -121,7 +163,7 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
     den = MUL10(nn, nn) - 0x400;                                              \
     den += (nnh) - (nnh);                                                     \
     if (func_020397dc(den)) continue;                                         \
-    t = _ZN4cstd4fdivEii(MUL10(nn, dotJ) - (dotI), den) >> 2;                  \
+    t = cstd::fdiv(MUL10(nn, dotJ) - (dotI), den) >> 2;                  \
     u = (dotJ) - MUL10(t, nn);                                                \
     vx = MUL10(t, (ea)[0]) + MUL10(u, (eb)[0]);                               \
     vy = MUL10(t, (ea)[1]) + MUL10(u, (eb)[1]);                               \
@@ -136,11 +178,9 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
    path -- a real hypotenuse through the hardware sqrt, then the contact angle
    through cstd::fdiv, compared against the collider's stored axis at +0x28.
    func_020397dc guards the divisor: |x| <= 8 means near-zero, so bail. */
-#define EDGE_FILTER(d, zval)                                                  \
-    if (sphere.flags & 2) {                                                   \
-        if (cls == 1) { if ((d) > faceDot) continue; }                        \
-        else if ((d) > (faceDot >> unk_48)) continue;                         \
-    } else if (cls == 1) {                                                    \
+#define EDGE_FILTER(d, zval, armA, dsqL, hypv)                                      \
+    if (sphere.flags & 2) goto armA;                                          \
+    if (cls == 1) {                                                           \
         if (func_02037e58((unsigned int *)&data_020a0cec) == 1) {             \
             if ((d) > (faceDot >> unk_48)) continue;                          \
         } else if (unk_4d) {                                                  \
@@ -149,108 +189,226 @@ static inline s32 SqrtRaw(u64 x, s32 zval, s32 one)
             if ((d) > faceDot) continue;                                      \
         }                                                                     \
     } else if ((d) > (faceDot >> unk_48)) {                                   \
-        s32 hyp;                                                              \
-        if (cls != 0) continue;                                               \
-        if (sphere.flags & 0x20) continue;                                    \
-        hyp = SqrtRaw((u64)((s64)((d) >> 4) * ((d) >> 4)                       \
-                          + (s64)(faceDot >> 4) * (faceDot >> 4)), zval, k1); \
-        if (func_020397dc(hyp)) continue;                                     \
-        if (DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28)               \
-                > _ZN4cstd4fdivEii(faceDot >> 4, hyp)) continue;              \
-    }
+        s32 axisDot;                                                      \
+        s32 dh;                                                           \
+        s32 fh;                                                           \
+        if (cls != 0) continue;                                           \
+        if (((const dBgCh_SphCrr &)sphere).flags & 0x20) continue;        \
+        dh = (d) >> 4;                                                    \
+        fh = faceDot >> 4;                                                \
+        axisDot = DotVec3((const s32 *)&sn, (const Vector3 *)&unk_28);    \
+        SqrtStart((u64)((s64)fh * fh + (s64)dh * dh), zval, k1);        \
+        hypv = SQRT_RESULT;      \
+        if (func_020397dc(hypv)) continue;                                 \
+        if (axisDot > cstd::fdiv(fh, hypv)) continue;                      \
+    }                                                                         \
+    goto dsqL;                                                                \
+    armA:                                                                     \
+    if (cls == 1) {                                                           \
+        if ((d) > faceDot) continue;                                          \
+    } else if ((d) > (faceDot >> unk_48)) continue;                           \
+    dsqL:;
 
 s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 {
+    /* DECLARATION ORDER BELOW IS LOAD-BEARING -- do not tidy it.
+       Two mwccarm rules constrain it, and together they fix the whole frame:
+
+         * The six hottest locals win callee-saved registers, numbered r9 down to r4
+           in declaration order, and the SEVENTH loses and takes a stack slot.  So
+           faceDot, dot1, dot2, dot3, en1, en2 must be declared in that order and en3
+           after them, or every callee-saved register rotates.
+         * The stack slots are handed out in declaration order too, but only over the
+           locals that HAVE slots.  en1/en2 and the dot* group take none, so en3 can
+           be declared after them and still be the 34th slot -- which is where the
+           cartridge has it, at 0x94.
+
+       That is why everything from fn onwards is declared after en3: it has to follow
+       en3 in the frame, so it has to follow en3 here.  Reordering this block back into
+       a natural reading order costs 58 instructions. */
     KCL_File *f;
-    s32 loX, hiX;
-    s32 loY, hiY;
-    s32 loZ, hiZ;
-    s32 loPX, hiPX;
-    s32 loPY, hiPY;
-    s32 loPZ, hiPZ;
+    s32 loX;
+    s32 hiX;
+    s32 loY;
+    s32 hiY;
+    s32 loZ;
+    s32 hiZ;
+    s32 loPX;
+    s32 hiPX;
+    s32 loPY;
+    s32 hiPY;
+    s32 loPZ;
+    s32 hiPZ;
     s32 hitFlags;
     s32 hitFlags2;
-    u16 *prev1, *prev2, *prev3;
-    u16 *p1, *p2, *p3;
+    u16 *prev1;
+    u16 *prev2;
+    u16 *prev3;
+    u16 *p1;
+    u16 *p2;
+    u16 *p3;
     s64 rsq;
     s32 stepX;
-    s32 stepY, stepZ;
-    s32 s1, s2, s3;
-    u32 y, x;
+    s32 stepY;
+    s32 stepZ;
+    s32 s1;
+    s32 s2;
+    s32 s3;
+    u32 y;
+    u32 x;
     u16 *leaf;
     KCL_Tri *tri;
     s32 *vtx;
-    s16 *en3;
-    s16 *fn;
-    s32 depth;
-    s16 triID;
-    s32 cls;
-    s32 contactKind;
-    s32 den12, den23, den31;
-    const Vector3 *c;
-    s32 rawX, rawY, rawZ;
-    s32 d1h, d2h, d3h;
-    s32 nn12, n12h;
-    s32 nn23, n23h;
-    s32 nn31, n31h;
-    s32 rsc;
+    /* volatile POINTEE, not a volatile pointer.  The ROM loads `c` from its stack
+       home before almost every component read -- twice for the three `raw` reads in
+       the prologue alone -- and mwcc will otherwise keep it in a register and read
+       through it once.  `const volatile` is worth 290 instructions back onto their
+       correct index and is what brings the count to exactly 1778.  A plain
+       `(const Vector3 *)c` cast does nothing here: `c` is already const, so it
+       changes no qualifier, and it is the QUALIFIER CHANGE that re-issues a load.
+       Making the POINTER volatile instead (`const Vector3 *volatile c`) is -57 shape. */
+    s32 d1h;
+    s32 d2h;
+    s32 d3h;
+    s32 nn;
+    s32 nnh;
     s32 z108;
     s32 k1;
     s32 k0;
-    s32 z118, z11c, z120, z154;
+    s32 z118;
+    s32 z11c;
+    s32 z120;
+    s32 z154;
     s32 k3;
     s32 z15c;
     s32 k2;
     s32 tlen;
     s32 passArg;
     u32 z;
-    s16 *en1, *en2;
     u32 shift;
     u32 *node;
     u32 idx;
     s32 word;
-    s32 size, mask, cy, cz;
+    s32 size;
+    s32 mask;
+    s32 cy;
+    s32 cz;
     s64 dsq;
-    s32 t, u;
-    s32 vx, vy, vz;
+    s32 t;
+    s32 u;
+    s32 vx;
+    s32 vy;
+    s32 vz;
     s32 faceDot;
     s32 v;
-    s32 dot1, dot2, dot3;
-    s16 cr[3];
+    s32 dot1;
+    s32 dot2;
+    s32 dot3;
+    /* The cross product of two normals, and therefore a vector -- not a scratch
+       array.  It has to be a NON-POD type: as a plain three-element s16 array with
+       plain reads, mwccarm scalarizes it and shares the loads, which is strict 0,
+       anchored -676, and a frame of 0x1dc instead of 0x1b4.  Vector3s carries the
+       same empty destructor Vector3 does, for the same reason, and fixes it with no
+       cast anywhere -- the `(const s16 *)` view this used to need was treating the
+       symptom. */
+    Vector3s cr;
     s32 nrm[3];
+    s16 *en1;
+    s16 *en2;
+    s16 *en3;
+    s16 *fn;
+    s32 depth;
+    s16 triID;
+    s32 cls;
+    s32 contactKind;
+    s32 hyp1;
+    s32 hyp2;
+    s32 hyp3;
+    s32 den12;
+    s32 den23;
+    s32 den31;
+    const volatile Vector3 *c;
+    s32 rsc;
+    s32 rawX;
+    s32 rawY;
+    s32 rawZ;
     Vector3 sn;
-    s32 tp[3], vb[3], vc[3];
+    /* These three MUST be a type with a user-declared destructor.  mwccarm
+       scalarizes a plain `s32[3]` local into loose stack slots; the ROM keeps all
+       three as three-word objects, and the empty `~Vector3()` in include/types.h is
+       what blocks the scalarization.  It is the difference between a 0x1bc frame with
+       105 slots and the ROM's 0x1b4 with 102.  Do not "simplify" this to s32[3]. */
+    Vector3 tp;
+    Vector3 vb;
+    Vector3 vc;
 
     c = &sphere.pos;
     f = kclFile;
     {
+        /* Per-site (const Vector3 *) casts, ABOVE the rad6/origin declarations,
+           in x, y, z statement order.  The cast expression is its own CSE class:
+           it stops the `add r0,fp,#0x3c` result being consumed by the first read
+           (the ROM never reads through that add -- f's load clobbers it first)
+           and lets y and z share one pointer reload while x takes its own.  The
+           ROM's y-before-x LOAD order is scheduler freedom, not source order.
+           Win conditions, from a 2,520-variant positional sweep: x,y,z statement
+           order, reads above BOTH rad6 and origin, rad6 declared before origin,
+           and at least two of the three reads cast-spelled.  This is what closes
+           prologue indices 2..17, and it is qualifier-honest -- the volatile
+           pointee is no longer read bare here.
+
+           No re-bind here any more, and do not re-add one: a second definition
+           of `c` demotes it into the pool and undoes the slot fix below. */
+        rawX = ((const Vector3 *)c)->x >> 6;
+        rawY = ((const Vector3 *)c)->y >> 6;
+        rawZ = ((const Vector3 *)c)->z >> 6;
+        s32 rad6 = sphere.radius >> 6;
         const Vector3 *origin = &f->origin;
-        s32 slack = (sphere.radius >> 6) + 0x40;
 
-        rawX = c->x >> 6;
-        rawY = c->y >> 6;
-        rawZ = c->z >> 6;
-
-        loX = (rawX - origin->x - slack) >> 6;
+        s32 dX = rawX - origin->x;
+        loX = (dX - (rad6 + 0x40)) >> 6;
         if (loX < 0) loX = 0;
-        hiX = (rawX - origin->x + slack) >> 6;
+        hiX = (dX + (rad6 + 0x40)) >> 6;
         if (hiX > (s32)~f->xMask) hiX = ~f->xMask;
         if (loX >= hiX) return 0;
 
-        loY = (rawY - origin->y - slack) >> 6;
+        s32 dY = rawY - origin->y;
+        loY = (dY - (rad6 + 0x40)) >> 6;
         if (loY < 0) loY = 0;
-        hiY = (rawY - origin->y + slack) >> 6;
+        hiY = (dY + (rad6 + 0x40)) >> 6;
         if (hiY > (s32)~f->yMask) hiY = ~f->yMask;
         if (loY >= hiY) return 0;
 
-        loZ = (rawZ - origin->z - slack) >> 6;
+        s32 dZ = rawZ - origin->z;
+        loZ = (dZ - (rad6 + 0x40)) >> 6;
         if (loZ < 0) loZ = 0;
-        hiZ = (rawZ - origin->z + slack) >> 6;
+        hiZ = (dZ + (rad6 + 0x40)) >> 6;
         if (hiZ > (s32)~f->zMask) hiZ = ~f->zMask;
         if (loZ >= hiZ) return 0;
     }
 
     rsc = sphere.radius << 4;
+    /* A volatile round-trip, and it costs ZERO instructions -- casting a prvalue to
+       a cv-qualified scalar type discards the qualifier, so the statement generates
+       nothing at all and the count stays 1778.  What it does is mark the value
+       volatile inside mwcc's front end, which demotes `rsc` out of the declaration
+       CHAIN into the coalesced-locals band of the temp POOL, landing it on 0x104 --
+       the cartridge's own slot.  That is the whole 16-word slot defect.
+
+       The flavour of the demotion picks the landing zone, which is why nothing else
+       worked.  `rsc * k1` (k1 == 1) also demotes, but only to the annex right after
+       the last chained local at 0xd4, and since the pool always begins at chain
+       end + 8 that still shifts every temp by four.  `rsc + k0` (k0 == 0) folds and
+       forgets, demoting nothing.  Only the volatile round-trip reaches the pool --
+       the same family as the volatile pointee that used to demote `c`.
+
+       This is a MATCHING HACK, not a reconstruction: no 2004 author wrote this.  The
+       real source almost certainly reached the same allocator state some other way,
+       and finding it is open work.  What is established is the mechanism and the
+       fact that the cartridge's rsc is a demoted named local, not an inline
+       subexpression -- spelled inline, mwcc recomputes instead of building the
+       0x104 temp, and the count goes to 1779. */
+    rsc = (s32)(volatile s32)rsc;
 
     hiPX = loPX = 0;
     hiPY = loPY = 0;
@@ -277,7 +435,7 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
         y = loY;
         do {
             stepY = 1000000;
-            s1 = s2 = s3 = z108;
+            s1 = z108; s2 = z108; s3 = z108;
             x = loX;
             do {
                 shift = f->coordShift;
@@ -301,8 +459,8 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                 size = k1 << shift;
                 mask = size - 1;
                 stepX = size - (x & mask);
-                cz = size - (z & mask);
                 cy = size - (y & mask);
+                cz = size - (z & mask);
                 if (cz < stepZ) stepZ = cz;
                 if (cy < stepY) stepY = cy;
 
@@ -393,15 +551,14 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            mwccarm's dispatch reads `this` from r0, a hand-rolled
                            one reads it from the callee-saved copy. */
                         GetSurfaceInfo(triID, data_020a0cec);
-                        _ZNK11SurfaceInfo12CopyNormalToER7Vector3(&data_020a0cec, &sn);
+                        data_020a0cec.CopyNormalTo(sn);
 
                         /* 0 = floor, 1 = wall, 2 = underside -- and those select
                            the 0x74 / 0x9c / 0xc4 result slots and the 4 / 8 / 0x10
                            flag bits respectively. */
                         cls = func_02039794(sn.y);
                         contactKind = k0;
-                        passArg = k1;
-                        if (cls != 1) passArg = k0;
+                        if (cls == 1) passArg = k1; else passArg = k0;
                         if (_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b(
                                 this, &data_020a0cec, &sphere, passArg))
                             continue;
@@ -432,35 +589,46 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                            instead of falling through, and why gotos are the
                            faithful spelling here. */
                         if (dot1 > dot2) {
-                            if (dot1 <= dot3) goto feat3;
+                            if (dot1 > dot3) goto feat1;
+                            goto feat3;
+                        } else {
+                            if (dot2 > dot3) goto feat2;
+                            goto feat3;
+                        }
+                    feat1:
+                        {
                             if (dot1 <= 0) goto face;
                             if (!unk_4c) continue;
                             if (dot2 > dot3) {
-                                nn12 = EDGENORMAL_DOT(en1, en2);
+                                nn = EDGENORMAL_DOT(en1, en2);
                                 d1h = dot1 >> 31;
-                                n12h = nn12 >> 31;
-                                if (MUL10(nn12, dot1) <= dot2) goto v12;
+                                nnh = nn >> 31;
+                                if (MUL10(nn, dot1) > dot2) goto edge1;
+                                goto v12;
                             } else {
-                                nn31 = EDGENORMAL_DOT(en1, en3);
+                                nn = EDGENORMAL_DOT(en1, en3);
                                 d1h = dot1 >> 31;
-                                n31h = nn31 >> 31;
-                                if (MUL10(nn31, dot1) <= dot3) goto v31;
+                                nnh = nn >> 31;
+                                if (MUL10(nn, dot1) > dot3) goto edge1;
+                                goto v31;
                             }
                             goto edge1;
                         }
-                        if (dot2 <= dot3) goto feat3;
+                    feat2:
                         if (dot2 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot3 > dot1) {
-                            nn23 = EDGENORMAL_DOT(en2, en3);
+                            nn = EDGENORMAL_DOT(en2, en3);
                             d2h = dot2 >> 31;
-                            n23h = nn23 >> 31;
-                            if (MUL10(nn23, dot2) <= dot3) goto v23;
+                            nnh = nn >> 31;
+                            if (MUL10(nn, dot2) > dot3) goto edge2;
+                            goto v23;
                         } else {
-                            nn12 = EDGENORMAL_DOT(en2, en1);
+                            nn = EDGENORMAL_DOT(en2, en1);
                             d2h = dot2 >> 31;
-                            n12h = nn12 >> 31;
-                            if (MUL10(nn12, dot2) <= dot1) goto v12;
+                            nnh = nn >> 31;
+                            if (MUL10(nn, dot2) > dot1) goto edge2;
+                            goto v12;
                         }
                         goto edge2;
 
@@ -468,43 +636,44 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         if (dot3 <= 0) goto face;
                         if (!unk_4c) continue;
                         if (dot1 > dot2) {
-                            nn31 = EDGENORMAL_DOT(en3, en1);
+                            nn = EDGENORMAL_DOT(en3, en1);
                             d3h = dot3 >> 31;
-                            n31h = nn31 >> 31;
-                            if (MUL10(nn31, dot3) <= dot1) goto v31;
+                            nnh = nn >> 31;
+                            if (MUL10(nn, dot3) > dot1) goto edge3;
+                            goto v31;
                         } else {
-                            nn23 = EDGENORMAL_DOT(en3, en2);
+                            nn = EDGENORMAL_DOT(en3, en2);
                             d3h = dot3 >> 31;
-                            n23h = nn23 >> 31;
-                            if (MUL10(nn23, dot3) <= dot2) goto v23;
+                            nnh = nn >> 31;
+                            if (MUL10(nn, dot3) > dot2) goto edge3;
+                            goto v23;
                         }
                         goto edge3;
 
                     edge1:
-                        EDGE_FILTER(dot1, z118)
+                        EDGE_FILTER(dot1, z118, arm1_, dsq1_, hyp1)
                         d1h = dot1 >> 31;
                         dsq = rsq - (s64)dot1 * dot1;
                         goto tail;
 
                     edge2:
-                        EDGE_FILTER(dot2, z11c)
+                        EDGE_FILTER(dot2, z11c, arm2_, dsq2_, hyp2)
                         d2h = dot2 >> 31;
                         dsq = rsq - (s64)dot2 * dot2;
                         goto tail;
 
                     edge3:
-                        EDGE_FILTER(dot3, z120)
+                        EDGE_FILTER(dot3, z120, arm3_, dsq3_, hyp3)
                         d3h = dot3 >> 31;
                         dsq = rsq - (s64)dot3 * dot3;
                         goto tail;
 
-                    v12:  VERTEX_BLOCK(nn12, n12h, den12, en1, en2, dot1, dot2)
-                    v23:  VERTEX_BLOCK(nn23, n23h, den23, en2, en3, dot2, dot3)
-                    v31:  VERTEX_BLOCK(nn31, n31h, den31, en3, en1, dot3, dot1)
+                    v12:  VERTEX_BLOCK(nn, nnh, den12, en1, en2, dot1, dot2)
+                    v23:  VERTEX_BLOCK(nn, nnh, den23, en2, en3, dot2, dot3)
+                    v31:  VERTEX_BLOCK(nn, nnh, den31, en3, en1, dot3, dot1)
 
                     vtail:
-                        v = k1;
-                        if (sphere.flags & 0x40) v = z154;
+                        if (sphere.flags & 0x40) v = z154; else v = k1;
                         if (!v) continue;
                         dsq = (s64)vx * vx + (s64)vy * vy + (s64)vz * vz;
                         if (faceDot < 0) continue;
@@ -539,20 +708,58 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                         if (sphere.unk_0ec > 0 && cls == 1
                                 && !(tri->length & 0xf0000000)) {
 
-                            tp[0] = vtx[0] << 6;
-                            tp[1] = vtx[1] << 6;
-                            tp[2] = vtx[2] << 6;
+                            tp.x = vtx[0] << 6;
+                            tp.y = vtx[1] << 6;
+                            tp.z = vtx[2] << 6;
+                            KCL_VERTEX(&vb.x, en2, tp.x, tp.y, tp.z)
+                            /* There used to be an `en3 = f->normals[tri->edgeNormal3Idx];`
+                               re-read here, worth +153 when `cr` was volatile.  It is
+                               deleted: the ROM reloads the POINTER from its home in one
+                               instruction (`ldr r0,[sp,#0x98]`) and the recompute costs
+                               seven.  With `cr` read through a const view instead, mwcc
+                               no longer shares the en3 loads across the two rounds and
+                               the recompute is pure cost -- +71 anchored to remove it,
+                               and gap 26 went from 60 missed instructions to 4.
+                               Do not put it back without re-measuring BOTH. */
+                            KCL_VERTEX(&vc.x, en1, tp.x, tp.y, tp.z)
 
-                            KCL_VERTEX(vb, en2)
-                            KCL_VERTEX(vc, en1)
-
-                            t = -(sphere.unk_0ec + sphere.radius);
-                            u =   sphere.unk_0ec - sphere.radius;
-
-                            if (AXIS_DOT(tp) >= t && AXIS_DOT(tp) <= u
-                             && AXIS_DOT(vb) >= t && AXIS_DOT(vb) <= u
-                             && AXIS_DOT(vc) >= t && AXIS_DOT(vc) <= u)
+                            {
+                            s32 da, db, dc;
+                            /* `c` being a volatile pointee already forces most of the
+                               reloads the ROM makes (ldr [sp,#0xc4], nine times in this
+                               block).  These two re-binds are what is left: without them
+                               mwcc folds `c` back to `sphere.pos` and addresses the
+                               component straight off the object.  Each is a no-op --
+                               `c` already holds &sphere.pos.  All 64 site subsets were
+                               swept individually; four of the original six are
+                               unnecessary and are gone.  One fold survives even so:
+                               `vc.z -= c->z` still compiles to `ldr r8,[fp,#0x44]`
+                               where the ROM goes through the pointer. */
+                            tp.x -= c->x;
+                            tp.y -= c->y;
+                            tp.z -= c->z;
+                            da = AXIS_DOT0(tp);
+                            vb.x -= c->x;
+                            vb.y -= c->y;
+                            vb.z -= c->z;
+                            db = AXIS_DOT0(vb);
+                            vc.x -= c->x;
+                            vc.y -= c->y;
+                            vc.z -= c->z;
+                            dc = AXIS_DOT0(vc);
+                            /* The two loads and the add have to be spelled apart.  The cartridge
+                               loads unk_0ec first and radius second, then adds them in that same
+                               order; written as one expression those two orders are welded together
+                               and mwcc picks the operand order from the source, so flipping the sum
+                               re-orders the LOADS instead and costs three.  Naming the two reads
+                               makes them independent knobs, and then both land. */
+                            s32 ext = sphere.unk_0ec;
+                            s32 rad = sphere.radius;
+                            if (da >= -(ext + rad) && da <= ext - rad
+                             && db >= -(ext + rad) && db <= ext - rad
+                             && dc >= -(ext + rad) && dc <= ext - rad)
                                 continue;
+                            }
                         }
                         if (!contactKind) contactKind = k1;
 
@@ -573,14 +780,19 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
                             sphere.flags |= 8;
                             func_020379c0(&sphere, triID, &data_020a0cec);
                             hitFlags |= 2;
-                            v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
-                            if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
-                            if (contactKind != 1) {
+                            if (contactKind == 1) {
+                                v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
+                                if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
+                                v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
+                                if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
+                            } else {
+                                v = (s32)(((s64)depth * sn.x) >> 14) >> 2;
+                                if (v > hiPX) hiPX = v; else if (v < loPX) loPX = v;
                                 v = (s32)(((s64)depth * sn.y) >> 14) >> 2;
                                 if (v > hiPY) hiPY = v; else if (v < loPY) loPY = v;
+                                v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
+                                if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
                             }
-                            v = (s32)(((s64)depth * sn.z) >> 14) >> 2;
-                            if (v > hiPZ) hiPZ = v; else if (v < loPZ) loPZ = v;
                         } else {
                             sphere.flags |= 0x10;
                             func_0203798c(&sphere, triID, &data_020a0cec);
@@ -605,7 +817,9 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
 
     /* The accumulated extent goes back as two corners; the flags word is the
        return value. func_02037a6c (0x02037a6c, 0xb0) is still unnamed. */
-    if (!hitFlags && !hitFlags2) return 0;
+    if (!hitFlags && !hitFlags2) goto ret0;
     func_02037a6c(&sphere, loPX, loPY, loPZ, hiPX, hiPY, hiPZ);
     return hitFlags;
+ret0:
+    return 0;
 }

@@ -6,6 +6,7 @@
 #include "ShadowModel.h"
 #include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
+#include "math/Matrix.h"
 
 /* THREE WITNESSES:
  *
@@ -60,8 +61,7 @@ struct Coin : dActor_c {
        dBgCh_Actr's D1 at +0x1ac -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN4CoinD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x1ac */
-    u8  unk_368;            /* 0x368 */
-    u8  pad_369[0x2f];
+    Matrix4x3 unk_368;        /* 0x368 */
     s32 unk_398;            /* 0x398 */
     u8  pad_39c[0x4];
     s32 mCoinType;            /* 0x3a0 */

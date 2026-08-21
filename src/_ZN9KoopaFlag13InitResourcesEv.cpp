@@ -15,9 +15,6 @@ struct dActor_c;
    types breaks the byte match. See notes/mwccarm-codegen.md 6az. */
 extern "C" void _ZN9ModelAnim7SetAnimEP8BCA_Filei5Fix12IiEj(void *, BCA_File* f, int a, Fix12i b, unsigned int c);
 
-struct dCcAc_c {
-    void Init(dActor_c* a, Fix12i b, Fix12i c, unsigned int d, unsigned int e);
-};
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
