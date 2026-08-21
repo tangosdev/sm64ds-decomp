@@ -1,11 +1,13 @@
 {
   "_note": "ratchet baseline; regenerate with `python tools/langmode_audit.py --json <this file>`. Use --full for per-class detail and file lists.",
   "codegen_hacks": {
+    "cv_launder": 3,
+    "cv_launder_sites": 6,
     "extern_vtable": 347,
     "extern_vtable_classes": 188,
     "inline_asm": 13,
-    "launder_or_forced": 279,
-    "launder_sites": 560
+    "launder_or_forced": 214,
+    "launder_sites": 445
   },
   "exclusions": {
     "by_value_class_param": 56
@@ -44,14 +46,14 @@
       },
       "method": {
         "draft": 11,
-        "migrated": 2107,
+        "migrated": 2108,
         "unmigrated": 381
       }
     },
     "cpp_still_handspelled": 192,
     "mangled_c": 529,
-    "mangled_cpp": 2788,
-    "mangled_total": 3317,
+    "mangled_cpp": 2789,
+    "mangled_total": 3318,
     "nonmatching_drafts": 14,
     "unmigrated_total": 721
   },
@@ -64,7 +66,7 @@
   },
   "totals": {
     "c_extension": 7075,
-    "cpp_extension": 4227,
-    "src_files": 11302
+    "cpp_extension": 4228,
+    "src_files": 11303
   }
 }
