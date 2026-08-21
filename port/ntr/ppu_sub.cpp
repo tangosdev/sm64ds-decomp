@@ -1351,6 +1351,17 @@ struct BandPixel {
  * output, at the boundary a player is watching an object cross. */
 uint8_t g_oam_a_shown[1024];
 int g_oam_a_have;
+/* engine B's copy of the same moment, for the seam pass's bottom-side
+   lookup: since the upload moved below the bottom scanout, the LIVE sub OAM
+   at seam time is one frame ahead of what either screen displays. */
+uint8_t g_oam_b_shown[1024];
+int g_oam_b_have;
+
+uint16_t shown_rd16_b(int off)
+{
+    return (uint16_t)((unsigned)g_oam_b_shown[off] |
+                      ((unsigned)g_oam_b_shown[off + 1] << 8));
+}
 
 uint16_t shown_rd16(int off)
 {
@@ -2495,6 +2506,51 @@ unsigned g_seam_frame;
    position would put it beside the half it is completing. */
 const int kSeamLag = 32;
 
+/* The bottom half's lookup, against ITS shown snapshot and with the same
+   tolerant match seam_shown_a uses: the tracker's position is this tick's
+   and the snapshot is the displayed upload, so an exact-row equality drops
+   every fast mover -- the cannonball's half-drawn crossing frames. Engine
+   B's rows ARE world rows (bias 0), so the returned row needs no bias. */
+int seam_shown_b(const BandEngine &eb, const BandTrack &t, BandCache &out,
+                 int &row, int &col)
+{
+    if (!g_oam_b_have) return 0;
+    int found = 0, best = 0, bestx = 0, best_d = 0;
+    uint16_t b0 = 0, b1 = 0, b2 = 0;
+    for (int i = 127; i >= 0; --i) {
+        const uint16_t a0 = shown_rd16_b(i * 8);
+        const uint16_t a1 = shown_rd16_b(i * 8 + 2);
+        const uint16_t a2 = shown_rd16_b(i * 8 + 4);
+        BandEntry d;
+        if (!band_decode(a0, a1, a2, d)) continue;
+        if (d.w != t.w || d.h != t.h) continue;
+        const int r = band_row_of(eb, i, d.y);
+        int dy = r - t.y, dx = d.x - t.x;
+        if (dy < 0) dy = -dy;
+        if (dx < 0) dx = -dx;
+        if (dy > kSeamLag || dx > kSeamLag) continue;
+        const int dist = dy + dx;
+        if (!found || dist < best_d) {
+            found = 1;
+            best = r;
+            bestx = d.x;
+            best_d = dist;
+            b0 = a0;
+            b1 = a1;
+            b2 = a2;
+        }
+    }
+    if (!found) return 0;
+    out.have = 1;
+    out.a0 = b0;
+    out.a1 = b1;
+    out.a2 = b2;
+    out.eng = eb;
+    row = best;
+    col = bestx;
+    return 1;
+}
+
 int seam_shown_a(const BandEngine &ea, const BandTrack &t, BandCache &out,
                  int &row, int &col)
 {
@@ -2770,8 +2826,8 @@ void seam_complete(uint32_t *dst, int dst_w, const StackLayout &lay,
            an object in both; see kSeamLag. */
         BandCache cb, ca;
         cb.have = ca.have = 0;
-        int ra = 0, xa = 0;
-        const int has_bot = band_find_live(eb, t, cb);
+        int ra = 0, xa = 0, rb = 0, xb = 0;
+        const int has_bot = seam_shown_b(eb, t, cb, rb, xb);
         const int has_top = seam_shown_a(ea, t, ca, ra, xa);
 
         /* BOTH DIRECTIONS ARE ONE TEST. A box that starts above the seam and
@@ -2782,7 +2838,7 @@ void seam_complete(uint32_t *dst, int dst_w, const StackLayout &lay,
         BandEntry db, da, dk;
         const int ok_b = has_bot && band_decode(cb.a0, cb.a1, cb.a2, db);
         const int ok_a = has_top && band_decode(ca.a0, ca.a1, ca.a2, da);
-        const int str_b = ok_b && t.y < 0 && t.y + db.bh > 0;
+        const int str_b = ok_b && rb < 0 && rb + db.bh > 0;
         const int str_a = ok_a && ra < 0 && ra + da.bh > 0;
 
         /* REMEMBER THE ENTRY WHILE AN ENGINE HAS IT. g_track is the same
@@ -2803,9 +2859,13 @@ void seam_complete(uint32_t *dst, int dst_w, const StackLayout &lay,
         } else if (str_b) {
             use = &cb;
             ud = &db;
-            rtop = t.y;
-            xtop = t.x;
-            rlo = t.y;
+            /* THE SNAPSHOT'S OWN POSITION, exactly as the top case below
+               uses ra/xa: the drawn halves are the shown upload, and drawing
+               the completion at the tracker's newer position split a fast
+               ball across the seam for the frames of its crossing. */
+            rtop = rb;
+            xtop = xb;
+            rlo = rb;
             rhi = 0;            /* the rows the bottom screen cannot address */
             why = "bottom half only";
         } else if (str_a) {
@@ -3025,6 +3085,9 @@ void ppu_seam_oam_mark(void)
     for (int i = 0; i < 1024; ++i)
         g_oam_a_shown[i] = rd8(kOamBaseA + (unsigned)i);
     g_oam_a_have = 1;
+    for (int i = 0; i < 1024; ++i)
+        g_oam_b_shown[i] = rd8(kOamBase + (unsigned)i);
+    g_oam_b_have = 1;
     /* AND THE ROUTED MARKS ROTATE IN THE SAME BREATH, which is the only reason
        they are stored in this file. The copy above is upload N-1, the block the
        engine A compositor rasterised from a few lines earlier; the marks that
