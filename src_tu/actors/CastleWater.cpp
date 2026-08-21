@@ -56,12 +56,6 @@ struct D0209caa0 { int a, b, c; };
 /* shadow struct 'Sub' */
 struct Sub { virtual void v0(); virtual void v1(); virtual void v2(); virtual void v3(); virtual void v4(); virtual void m(int); };
 
-/* shadow class 'Animation' */
-class Animation {
-public:
-    void Advance();
-};
-
 /* shadow struct 'BMD_File' */
 struct BMD_File; struct BTA_File; struct KCL_File; struct CLPS_Block;
 
@@ -170,12 +164,12 @@ int CastleWater::InitResources()
  *
  * The whole frame: force the scroll rate, advance the texture animation.
  *
- * unk_32c is rewritten to 0x1000 EVERY frame rather than once at init, so the
+ * mTexTransformer.speed is rewritten to 0x1000 EVERY frame rather than once at init, so the
  * scroll runs at a fixed rate regardless of what else touched it.
  */
 int CastleWater::Behavior()
 {
-    unk_32c = 0x1000;
+    mTexTransformer.speed = 0x1000;
     ((Animation *)&mTexTransformer)->Advance();
     return 1;
 }

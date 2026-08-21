@@ -1154,7 +1154,7 @@ int dActor_c::Virtual50()
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 42 -- _ZN8dActor_c15OnGroundPoundedERS_
  * 0x02010148  size 0x4   legacy src/_ZN8dActor_c15OnGroundPoundedERS_.cpp */
-int dActor_c::OnGroundPounded(dActor_c &pounder)
+void dActor_c::OnGroundPounded(dActor_c &pounder)
 {
 }
 
@@ -1175,7 +1175,7 @@ int dActor_c::OnAttacked2(dActor_c &attacker)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 39 -- _ZN8dActor_c8OnKickedERS_
  * 0x0201013c  size 0x4   legacy src/_ZN8dActor_c8OnKickedERS_.cpp */
-int dActor_c::OnKicked(dActor_c &kicker)
+void dActor_c::OnKicked(dActor_c &kicker)
 {
 }
 
@@ -1196,7 +1196,7 @@ int dActor_c::OnHitByCannonBlastedChar(dActor_c &attacker)
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 36 -- _ZN8dActor_c15OnHitByMegaCharER6Player
  * 0x02010130  size 0x4   legacy src/_ZN8dActor_c15OnHitByMegaCharER6Player.cpp */
-int dActor_c::OnHitByMegaChar(Player &player)
+void dActor_c::OnHitByMegaChar(Player &player)
 {
 }
 
