@@ -60,6 +60,8 @@ struct Unagi : dEnemyBase_c {
     s32 unk_444;                                            /* 0x444 */
     Vector3 unk_448[7];                                     /* 0x448 */
     s32 mStarUniqueID;                                      /* 0x49c */
+    /* trailing extent the ROM's `new Unagi` literal proves; see tools/opnew_sizes.py */
+    u8 pad_4a0[0x10];
 
     virtual ~Unagi();
 
@@ -69,6 +71,8 @@ struct Unagi : dEnemyBase_c {
     virtual s32 Render();
     void OnPendingDestroy();
 };
+
+typedef char Unagi_size_must_be_0x4b0[sizeof(struct Unagi) == 0x4b0 ? 1 : -1];
 
 #else
 
@@ -134,6 +138,8 @@ struct Unagi {
     s32 unk_444;            /* 0x444 */
     u8  pad_448[0x54];
     s32 mStarUniqueID;            /* 0x49c */
+    /* trailing extent the ROM's `new Unagi` literal proves; see tools/opnew_sizes.py */
+    u8 pad_4a0[0x10];
 };
 
 #endif /* __cplusplus */

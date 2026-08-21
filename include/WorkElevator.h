@@ -35,11 +35,15 @@ struct WorkElevator {
     s32 unk_c6c;            /* 0xc6c */
     u8  pad_c70[0xa];
     s8  unk_c7a;            /* 0xc7a */
+    /* trailing extent the ROM's `new WorkElevator` literal proves; see tools/opnew_sizes.py */
+    u8 pad_c7c[0x4];
 #ifdef __cplusplus
     /* methods */
     int CleanupResources();
     int Render();
 #endif
 };
+
+typedef char WorkElevator_size_must_be_0xc80[sizeof(struct WorkElevator) == 0xc80 ? 1 : -1];
 
 #endif

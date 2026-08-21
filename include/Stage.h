@@ -235,8 +235,12 @@ struct Stage : dScene_c {
        of Stage only as the family's legacy scope for dScStage_c; non-static
        because slot 2 needs `this`, non-virtual to keep their TUs from
        emitting a vtable the delink ranges do not own. */
+    /* trailing extent the ROM's `new Stage` literal proves; see tools/opnew_sizes.py */
+    u8 pad_9c0[0x8];
     int  GraphCallback1();
     int  GraphCallback2();
 };
+
+typedef char Stage_size_must_be_0x9c8[sizeof(struct Stage) == 0x9c8 ? 1 : -1];
 
 #endif

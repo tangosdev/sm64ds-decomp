@@ -1,3 +1,4 @@
+#include "ArrowLift.h"
 // @symbol ArrowLift_Spawn
 /* recovered: globals resolved, declarations from a shared header */
 #include "decl_ActorBase.h"
@@ -7,7 +8,7 @@
 /* resolved: VT = _ZTV9ArrowLift */
 int *ArrowLift_Spawn(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(808);
+    int *p = (int *)_ZN7fBase_cnwEj(sizeof(struct ArrowLift));
     if (p) { _ZN10dBgActor_cC2Ev(p); p[0] = (int)_ZTV9ArrowLift; }
     return p;
 }

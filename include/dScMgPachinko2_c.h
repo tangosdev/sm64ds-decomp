@@ -24,6 +24,10 @@ struct dScMgPachinko2_c : dScMgBase_c {
     u8  pad_5664[0x8];
     u16 unk_566c;            /* 0x566c */
     u16 unk_566e;            /* 0x566e */
+    /* trailing extent the ROM's `new dScMgPachinko2_c` literal proves; see tools/opnew_sizes.py */
+    u8 pad_5670[0xc];
 };
+
+typedef char dScMgPachinko2_c_size_must_be_0x567c[sizeof(struct dScMgPachinko2_c) == 0x567c ? 1 : -1];
 
 #endif

@@ -37,6 +37,8 @@ struct MirrorLuigi {
     s32 unk_1cc;            /* 0x1cc */
     u8  pad_1d0[0x8];
     u8  unk_1d8;            /* 0x1d8 */
+    /* trailing extent the ROM's `new MirrorLuigi` literal proves; see tools/opnew_sizes.py */
+    u8 pad_1dc[0x30];
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -44,5 +46,7 @@ struct MirrorLuigi {
     int Render();
 #endif
 };
+
+typedef char MirrorLuigi_size_must_be_0x20c[sizeof(struct MirrorLuigi) == 0x20c ? 1 : -1];
 
 #endif

@@ -47,11 +47,15 @@ struct ToxBox {
     s32 unk_57c;            /* 0x57c */
     u8  pad_580[0xc];
     u8  mPathPtr;            /* 0x58c */
+    /* trailing extent the ROM's `new ToxBox` literal proves; see tools/opnew_sizes.py */
+    u8 pad_590[0x4];
 #ifdef __cplusplus
     /* methods */
     int CleanupResources();
     int Render();
 #endif
 };
+
+typedef char ToxBox_size_must_be_0x594[sizeof(struct ToxBox) == 0x594 ? 1 : -1];
 
 #endif

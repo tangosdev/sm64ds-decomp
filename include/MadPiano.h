@@ -41,6 +41,8 @@ struct MadPiano {
     s32 unk_6d4;            /* 0x6d4 */
     s32 unk_6d8;            /* 0x6d8 */
     s32 unk_6dc;            /* 0x6dc */
+    /* trailing extent the ROM's `new MadPiano` literal proves; see tools/opnew_sizes.py */
+    u8 pad_6e0[0x4];
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -49,5 +51,7 @@ struct MadPiano {
     int Render();
 #endif
 };
+
+typedef char MadPiano_size_must_be_0x6e4[sizeof(struct MadPiano) == 0x6e4 ? 1 : -1];
 
 #endif

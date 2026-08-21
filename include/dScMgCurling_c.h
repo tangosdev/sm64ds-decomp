@@ -38,6 +38,10 @@ struct dScMgCurling_c : dScMgBase_c {
     u16 unk_4ee2;            /* 0x4ee2 */
     u8  pad_4ee4[0x3];
     u8  unk_4ee7;            /* 0x4ee7 */
+    /* trailing extent the ROM's `new dScMgCurling_c` literal proves; see tools/opnew_sizes.py */
+    u8 pad_4ee8[0x4];
 };
+
+typedef char dScMgCurling_c_size_must_be_0x4eec[sizeof(struct dScMgCurling_c) == 0x4eec ? 1 : -1];
 
 #endif

@@ -1,3 +1,4 @@
+#include "Wiggler.h"
 extern void* _ZN7fBase_cnwEj(unsigned int sz);
 extern void _ZN12dEnemyBase_cC2Ev(void *p);
 extern int func_020733a8(void *p, int a, int b, void *ctor, void *dtor);
@@ -17,7 +18,7 @@ extern int _ZN9ModelAnimD1Ev(void *p);
 extern int _ZTV7Wiggler[];
 
 void *Wiggler_Spawn(void){
-  char *c = (char *)_ZN7fBase_cnwEj(0x8e8);
+  char *c = (char *)_ZN7fBase_cnwEj(sizeof(struct Wiggler));
   if(c){
     _ZN12dEnemyBase_cC2Ev(c);
     *(int**)(c) = _ZTV7Wiggler;

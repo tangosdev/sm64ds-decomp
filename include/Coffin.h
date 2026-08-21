@@ -24,6 +24,8 @@ struct Coffin {
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1c7];
     u8  unk_2ec;            /* 0x2ec */
+    /* trailing extent the ROM's `new Coffin` literal proves; see tools/opnew_sizes.py */
+    u8 pad_2f0[0x3c];
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -32,5 +34,7 @@ struct Coffin {
     int Render();
 #endif
 };
+
+typedef char Coffin_size_must_be_0x32c[sizeof(struct Coffin) == 0x32c ? 1 : -1];
 
 #endif

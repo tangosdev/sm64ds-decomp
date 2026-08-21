@@ -60,6 +60,8 @@ struct ChiefChilly : dEnemyBase_c {
     s32 unk_4ec;                                           /* 0x4ec */
     s32 unk_4f0;                                           /* 0x4f0 */
     s32 unk_4f4;                                           /* 0x4f4 */
+    /* trailing extent the ROM's `new ChiefChilly` literal proves; see tools/opnew_sizes.py */
+    u8 pad_4f8[0xc];
 
     virtual ~ChiefChilly();
 
@@ -71,6 +73,8 @@ struct ChiefChilly : dEnemyBase_c {
     virtual s32 Render();
     virtual void OnPendingDestroy();
 };
+
+typedef char ChiefChilly_size_must_be_0x504[sizeof(struct ChiefChilly) == 0x504 ? 1 : -1];
 
 #endif /* __cplusplus */
 
