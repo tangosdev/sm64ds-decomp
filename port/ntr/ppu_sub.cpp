@@ -83,6 +83,8 @@ constexpr uint32_t kPlttBase = 0x05000400u;  // engine B BG palette
 constexpr uint32_t kObjVram = 0x06600000u;   // engine B OBJ VRAM
 constexpr uint32_t kObjPltt = 0x05000600u;   // engine B OBJ palette
 constexpr uint32_t kOamBase = 0x07000400u;   // engine B OAM
+/* see the note over oam_b in the sub OBJ raster */
+uint32_t g_oam_src_b;
 
 /* ENGINE A's four, for the gap band's peek pass alone -- nothing else in this
    file reads engine A. Named with the engine in them so a later reader cannot
@@ -345,10 +347,33 @@ void raster_obj(uint32_t dispcnt) {
     // wrong colour while leaving its shape and its position exactly right.
     const uint32_t objext = ((dispcnt >> 31) & 1) ? kObjExtPltt : 0;
 
+    /* THE SEAM'S FRAME ALIGNMENT, engine B's half. In the minigames' dual-OAM
+       mode OAM::Load uploads ONLY the main bank and returns, so the sub OAM
+       at 0x07000400 is filled on a different beat with a different age: the
+       owner measured a straddling bob-omb's two halves stepping on ALTERNATE
+       frames -- the top ticking while the bottom held and vice versa. When
+       the mod is engaged, hal points this at engine B's own working shadow
+       (data_0209ea74), the same cure ppu.cpp's engine A raster got, so both
+       halves draw one frame. Zero everywhere else. */
+    const uint32_t oam_b = g_oam_src_b ? g_oam_src_b : kOamBase;
+
     for (int i = 127; i >= 0; --i) {
-        const uint16_t a0 = rd16(kOamBase + i * 8u);
-        const uint16_t a1 = rd16(kOamBase + i * 8u + 2);
-        const uint16_t a2 = rd16(kOamBase + i * 8u + 4);
+        const uint16_t a0 = rd16(oam_b + i * 8u);
+        const uint16_t a1 = rd16(oam_b + i * 8u + 2);
+        const uint16_t a2 = rd16(oam_b + i * 8u + 4);
+        /* SM64DS_OAMAGE_TRACE: engine B's half of the probe in ppu.cpp. */
+        {
+            static int bget = -1;
+            if (bget < 0) {
+                const char *e = std::getenv("SM64DS_OAMAGE_TRACE");
+                bget = e && *e && *e != '0';
+            }
+            static unsigned bf;
+            if (bget && i == 127) ++bf;
+            if (bget && a2 == 0x1010)
+                std::fprintf(stderr, "[oamage] B f%u src=%08x slot%d y=%d\n",
+                             bf, (unsigned)oam_b, i, (int)(a0 & 0xff));
+        }
         const bool affine = a0 & 0x100;
         if (!affine && (a0 & 0x200)) continue;          // disabled
         // OBJ MODE, attribute 0 bits 10-11: 0 normal, 1 semi-transparent,
@@ -379,10 +404,10 @@ void raster_obj(uint32_t dispcnt) {
         int pa = 256, pb = 0, pc = 0, pd = 256;
         if (affine) {
             const int grp = (a1 >> 9) & 0x1F;
-            pa = (int16_t)rd16(kOamBase + (grp * 4 + 0) * 8u + 6);
-            pb = (int16_t)rd16(kOamBase + (grp * 4 + 1) * 8u + 6);
-            pc = (int16_t)rd16(kOamBase + (grp * 4 + 2) * 8u + 6);
-            pd = (int16_t)rd16(kOamBase + (grp * 4 + 3) * 8u + 6);
+            pa = (int16_t)rd16(oam_b + (grp * 4 + 0) * 8u + 6);
+            pb = (int16_t)rd16(oam_b + (grp * 4 + 1) * 8u + 6);
+            pc = (int16_t)rd16(oam_b + (grp * 4 + 2) * 8u + 6);
+            pd = (int16_t)rd16(oam_b + (grp * 4 + 3) * 8u + 6);
         }
 
         for (int sy = 0; sy < bh; ++sy) {
@@ -2988,6 +3013,9 @@ void ppu_band_continuity(BandTrackFn fn)
     g_track_fn = fn;
     for (int i = 0; i < BAND_TRACK_MAX; ++i) g_track[i].have = 0;
 }
+
+/* Engine B's OAM source override; ppu.h documents it beside engine A's. */
+void ppu_obj_oam_source_b(uint32_t addr) { g_oam_src_b = addr; }
 
 /* The engine A OAM copy the seam straddle pass reads as "what the top screen is
    showing". See the note over g_oam_a_shown for why it exists and why the

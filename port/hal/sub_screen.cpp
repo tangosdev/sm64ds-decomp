@@ -1122,8 +1122,15 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
            INSIDE the run_tail branch because that is what makes it true: with
            no upload the OAM does not change, and a mark taken anyway would
            advance a snapshot the picture had not moved past. */
-        ntr::ppu_seam_oam_mark();
-        _ZN3OAM4LoadEv();
+        /* THE UPLOAD MOVED BELOW THE SCANOUT, and that one reorder is the
+           whole cure for the split-sprite stutter the owner filmed: the top
+           screen's rasters run before this function and read the OAM the
+           PREVIOUS Load uploaded, while the bottom screen used to scan out
+           after THIS frame's Load -- one frame apart, so a sprite straddling
+           the gapless seam ticked on alternate halves. Both banks upload in
+           one Load, so scanning the bottom first puts both screens on the
+           same upload, every scene, with no source-swapping and no special
+           case. The seam mark stays glued to the Load it describes. */
 
         /* func_02019144's EIGHT BG-OFFSET PUBLISHES, the last of its beats the
            port was still skipping. SetBgNOffset (src) writes SHADOW words, and
@@ -1168,8 +1175,16 @@ void hal_sub_screen_present(unsigned int *dst, int w, int h)
         *(volatile unsigned *)0x0400101c =
             (data_0209d474 & 0x1ff) | (0x1ff0000u & (data_0209d488 << 16));
     }
+    if (run_tail) {
+        /* nothing scanned when the panel is off, but the upload and its mark
+           still have to happen -- they are the frame's, not the panel's */
+    }
+    if (g_on) ntr::ppu_scanout_sub(g_sub);
+    if (run_tail) {
+        ntr::ppu_seam_oam_mark();
+        _ZN3OAM4LoadEv();
+    }
     if (!g_on) return;
-    ntr::ppu_scanout_sub(g_sub);
     /* THE STACKED LAYOUT WRITES NOTHING INTO dst HERE, and that is the whole
        trick. dst is the framebuffer, the scan-out above is everything the
        bottom screen needs, and the stacked image is built downstream by

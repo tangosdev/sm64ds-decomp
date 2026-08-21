@@ -48,6 +48,7 @@ void ppu_scanout_obj(Engine eng, Framebuffer &fb);
    uploaded hardware OAM (the default, one frame behind the bottom screen).
    Set per frame by hal/screen_gap.cpp; see the note over the definition. */
 void ppu_obj_oam_source_a(uint32_t addr);
+void ppu_obj_oam_source_b(uint32_t addr);
 
 // Debug output, so a frame can be inspected without a window yet.
 bool ppu_write_bmp(const char *path, const Framebuffer &fb);

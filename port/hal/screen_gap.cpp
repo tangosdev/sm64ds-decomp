@@ -28,6 +28,11 @@
    here. */
 extern "C" unsigned char data_ov004_020beb6c[4];
 
+/* the dual-OAM flag and the compositor's seam hook; see the layout below */
+extern "C" unsigned char data_0209e660;
+extern "C" void hal_oam_source_a_live(unsigned addr);
+static inline int data_0209e660_ref(void) { return data_0209e660 != 0; }
+
 namespace {
 
 int g_have;
@@ -388,8 +393,6 @@ const ntr::StackLayout *hal_screen_layout(void)
        hardware OAM it uploaded last frame; otherwise a falling object is one
        frame short exactly at the join. Everywhere else this is zero and the
        top screen draws what it always drew. */
-    ntr::ppu_obj_oam_source_a(
-        seam && main_shadow_is_e674() ? 0x0209e674u : 0u);
     /* AND THE SHIFT IS PART OF THE LATCH, for the reason the headroom is: it
        cannot move without `want` moving today, and a cache whose key is a
        subset of its inputs is one edit away from serving a stale answer. */
@@ -867,6 +870,26 @@ unsigned hal_gapless_splice_hops(void) { return g_splice_hops; }
 int hal_gapless_engaged(void)
 {
     return g_gapless_on && hal_gap_scene_id() == g_gapless_scene;
+}
+
+/* THE TOP SCREEN'S OAM SOURCE, pulled by hal/message_compositor.cpp's two
+   OBJ rasters at read time. Those rasters run BEFORE the frame's OAM::Load
+   while the bottom screen scans out after it, so with the mod engaged the
+   top half of a straddling sprite was one frame of travel behind the bottom
+   half -- the owner filmed a crossing bob-omb's halves ticking on alternate
+   frames. While the mod is engaged for the running scene this returns the
+   working shadow OAM::Load is about to upload, picked by Load's own bank
+   mapping; everywhere else it returns 0 and the rasters read the uploaded
+   OAM exactly as they always have. A PULL rather than a push, because the
+   first push lived in the stacked-compose path, which a headless capture
+   runs once at exit and the window runs after the composite -- the value
+   arrived after every read that needed it. */
+unsigned hal_gapless_oam_src_a(void)
+{
+    if (!hal_gapless_engaged()) return 0;
+    if (data_0209e660) return 0x0209e674u;
+    return (*(volatile unsigned short *)0x04000304 & 0x8000) ? 0x0209e674u
+                                                             : 0x0209ea74u;
 }
 
 /* ---- THE ROUTER HOOK: which OAM entries were placed in WORLD coordinates ----

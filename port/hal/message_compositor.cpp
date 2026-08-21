@@ -104,6 +104,9 @@
  * -- the per-entry correction stands down when the layer arm is on, so that an
  * A/B is one mechanism against the other and not one on top of the other. */
 int hal_gapless_obj_raster_shift_ds(void);
+/* the top screen's OAM source while the gapless mod is engaged; see the note
+   over oam_a below and the definition in hal/screen_gap.cpp */
+unsigned hal_gapless_oam_src_a(void);
 
 namespace {
 
@@ -112,6 +115,18 @@ constexpr uint32_t kRegBase  = 0x04000000u;
 constexpr uint32_t kVramBase = 0x06000000u;
 constexpr uint32_t kPlttBase = 0x05000000u;
 constexpr uint32_t kOamBase  = 0x07000000u;
+
+/* THE SEAM'S FRAME ALIGNMENT. This file's two OBJ rasters ARE the top
+   screen's sprite drawing, and they run BEFORE the frame's OAM::Load while
+   the sub screen scans out AFTER it, so the two halves of a straddling
+   sprite are one frame of travel apart -- the owner measured a crossing
+   bob-omb's halves ticking on alternate frames. With the gapless mod
+   engaged, hal/screen_gap.cpp points this at the working shadow OAM::Load
+   is about to upload for engine A, so both halves draw one frame. Zero
+   everywhere else. */
+inline uint32_t oam_a(void) { return kOamBase; }  /* see hal/sub_screen.cpp:
+    the two screens are aligned by upload order now, not by a source swap --
+    the shadow is empty at this raster's moment, measured 2026-08-20 */
 constexpr uint32_t kObjVram  = 0x06400000u;
 
 inline uint16_t rd16(uint32_t a) { return *reinterpret_cast<volatile uint16_t *>(a); }
@@ -344,9 +359,9 @@ void build_objwin(uint32_t dispcnt) {
     const int layer = hal_gapless_obj_raster_shift_ds();
 
     for (int i = 127; i >= 0; --i) {
-        const uint16_t a0 = rd16(kOamBase + i * 8u);
-        const uint16_t a1 = rd16(kOamBase + i * 8u + 2);
-        const uint16_t a2 = rd16(kOamBase + i * 8u + 4);
+        const uint16_t a0 = rd16(oam_a() + i * 8u);
+        const uint16_t a1 = rd16(oam_a() + i * 8u + 2);
+        const uint16_t a2 = rd16(oam_a() + i * 8u + 4);
         const bool affine = a0 & 0x100;
         if (!affine && (a0 & 0x200)) continue;          // disabled
         if (((a0 >> 10) & 3) != 2) continue;            // not an OBJ-window sprite
@@ -373,10 +388,10 @@ void build_objwin(uint32_t dispcnt) {
         int pa = 256, pb = 0, pc = 0, pd = 256;
         if (affine) {
             const int grp = (a1 >> 9) & 0x1F;
-            pa = (int16_t)rd16(kOamBase + (grp * 4 + 0) * 8u + 6);
-            pb = (int16_t)rd16(kOamBase + (grp * 4 + 1) * 8u + 6);
-            pc = (int16_t)rd16(kOamBase + (grp * 4 + 2) * 8u + 6);
-            pd = (int16_t)rd16(kOamBase + (grp * 4 + 3) * 8u + 6);
+            pa = (int16_t)rd16(oam_a() + (grp * 4 + 0) * 8u + 6);
+            pb = (int16_t)rd16(oam_a() + (grp * 4 + 1) * 8u + 6);
+            pc = (int16_t)rd16(oam_a() + (grp * 4 + 2) * 8u + 6);
+            pd = (int16_t)rd16(oam_a() + (grp * 4 + 3) * 8u + 6);
         }
 
         for (int sy = 0; sy < bh; ++sy) {
@@ -911,9 +926,21 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
     ++g_obj_frame;
 
     for (int i = 127; i >= 0; --i) {
-        const uint16_t a0 = rd16(kOamBase + i * 8u);
-        const uint16_t a1 = rd16(kOamBase + i * 8u + 2);
-        const uint16_t a2 = rd16(kOamBase + i * 8u + 4);
+        /* SM64DS_OAMAGE_TRACE: the top screen's half of the age probe. */
+        {
+            static int tget = -1;
+            if (tget < 0) {
+                const char *e = std::getenv("SM64DS_OAMAGE_TRACE");
+                tget = e && *e && *e != '0';
+            }
+            if (tget && rd16(oam_a() + i * 8u + 4) == 0x1010)
+                std::fprintf(stderr, "[oamage] T f%u src=%08x slot%d y=%d\n",
+                             g_obj_frame, (unsigned)oam_a(), i,
+                             (int)(rd16(oam_a() + i * 8u) & 0xff));
+        }
+        const uint16_t a0 = rd16(oam_a() + i * 8u);
+        const uint16_t a1 = rd16(oam_a() + i * 8u + 2);
+        const uint16_t a2 = rd16(oam_a() + i * 8u + 4);
         const bool affine = a0 & 0x100;
         if (!affine && (a0 & 0x200)) continue;
         // OBJ MODE (attribute 0 bits 10-11): 0 normal, 1 semi-transparent,
@@ -980,10 +1007,10 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
         int pa = 256, pb = 0, pc = 0, pd = 256;
         if (affine) {
             const int grp = (a1 >> 9) & 0x1F;
-            pa = (int16_t)rd16(kOamBase + (grp * 4 + 0) * 8u + 6);
-            pb = (int16_t)rd16(kOamBase + (grp * 4 + 1) * 8u + 6);
-            pc = (int16_t)rd16(kOamBase + (grp * 4 + 2) * 8u + 6);
-            pd = (int16_t)rd16(kOamBase + (grp * 4 + 3) * 8u + 6);
+            pa = (int16_t)rd16(oam_a() + (grp * 4 + 0) * 8u + 6);
+            pb = (int16_t)rd16(oam_a() + (grp * 4 + 1) * 8u + 6);
+            pc = (int16_t)rd16(oam_a() + (grp * 4 + 2) * 8u + 6);
+            pd = (int16_t)rd16(oam_a() + (grp * 4 + 3) * 8u + 6);
         }
 
         for (int sy = 0; sy < bh; ++sy) {

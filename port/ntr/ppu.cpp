@@ -14,6 +14,7 @@
 #include "ntr/mmio.h"
 
 #include <cstdio>
+#include <cstdlib>
 #include <cstring>
 
 namespace ntr {
@@ -229,6 +230,20 @@ void ppu_scanout_obj(Engine eng, Framebuffer &fb) {
         const uint16_t a0 = rd16(oam_base + i * 8u);
         const uint16_t a1 = rd16(oam_base + i * 8u + 2);
         const uint16_t a2 = rd16(oam_base + i * 8u + 4);
+        /* SM64DS_OAMAGE_TRACE=1: one line per bob-omb entry, naming the table
+           this raster read and the row it held. Temporary owner-pass probe. */
+        {
+            static int aget = -1;
+            if (aget < 0) {
+                const char *e = std::getenv("SM64DS_OAMAGE_TRACE");
+                aget = e && *e && *e != '0';
+            }
+            static unsigned af;
+            if (aget && i == 127) ++af;
+            if (aget && a2 == 0x1010)
+                std::fprintf(stderr, "[oamage] A f%u src=%08x slot%d y=%d\n",
+                             af, (unsigned)oam_base, i, (int)(a0 & 0xff));
+        }
         const bool affine = a0 & 0x100;
         if (!affine && (a0 & 0x200)) continue;             // disabled
         const unsigned objmode = (a0 >> 10) & 3;
