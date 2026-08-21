@@ -484,6 +484,23 @@ int g_gap_peek;                      /* default 0 */
    except that file. */
 int g_gapless_minigames;             /* default 0, and 0 is the ROM */
 
+/* ---- LovesMeCharacter, the second Mods-panel key that changes the GAME ----
+   Which character stars in the Loves Me...? petal minigame (scene 390).
+   The ROM's answer is Yoshi and that is the default:
+
+     ""        (or the key absent) Yoshi, the ROM        0
+     "mario"   the minigame archive's own Mario model    1
+
+   The swap itself lives in hal/fs_mods.cpp, at the file seam: the minigame
+   asks for Yoshi's model and animations by file id and is served Mario's
+   instead, re-rigged in flight. Nothing about it reloads live -- the file
+   layer caches what it serves -- so like every Mods key this one keeps its
+   boot value and the launcher's dialog promises the restart. Anything that
+   is not a spelling this build knows reads as the default, so a settings.json
+   from a LATER launcher that offers more characters degrades to Yoshi here
+   rather than to a guess. */
+int g_lovesme_character;             /* default 0, and 0 is the ROM */
+
 /* Volume, 0..100, or -1 while the file has never named one. The launcher owns
    this key and also passes it as SM64DS_VOLUME at launch; the file copy exists
    so the live re-read below can move it while the game is running. */
@@ -529,6 +546,7 @@ void load_once(void)
     g_gap_color = 0xFF000000u;
     g_gap_peek = 0;
     g_gapless_minigames = 0;
+    g_lovesme_character = 0;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -569,6 +587,13 @@ void load_once(void)
            written before this key existed reads as a file that turned it
            off -- which is the ROM */
         g_gapless_minigames = json_bool(text, "GaplessMinigames", 0);
+        {
+            char who[16];
+            if (json_str(text, "LovesMeCharacter", who, sizeof who) &&
+                strlen(who) == 5 && ieq(who, "mario", 5))
+                g_lovesme_character = 1;
+            /* "", an absent key and any other spelling are all Yoshi */
+        }
         {
             char mode[16];
             if (json_str(text, "GapFillMode", mode, sizeof mode)) {
@@ -617,6 +642,13 @@ void load_once(void)
                         "not just the picture. Objects cross the seam sooner "
                         "than they do on a DS. This is a mod, not the game. "
                         "(%s)\n", path);
+    /* The same plain-words rule as GaplessMinigames: a support log carrying
+       this key should say what the player is looking at. */
+    if (g_lovesme_character)
+        fprintf(stderr, "[settings] LovesMeCharacter mario -- the Loves "
+                        "Me...? minigame's Yoshi is replaced with Mario at "
+                        "the file layer. This is a mod, not the game. (%s)\n",
+                path);
 }
 
 /* ---- the live re-read -----------------------------------------------------
@@ -742,6 +774,14 @@ extern "C" int host_setting_gapless_minigames(void)
 {
     load_once();
     return g_gapless_minigames;
+}
+
+/* LovesMeCharacter: 0 Yoshi (the ROM), 1 Mario. Boot-latched like every Mods
+   key; hal/fs_mods.cpp is the only reader. */
+extern "C" int host_setting_lovesme_character(void)
+{
+    load_once();
+    return g_lovesme_character;
 }
 
 extern "C" int host_setting_volume(void)

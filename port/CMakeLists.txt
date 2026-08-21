@@ -5602,6 +5602,10 @@ add_executable(walk_window tests/walk_window.cpp tests/io_pressure.cpp "${OV002D
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # the Mods panel's file-layer half: installs hal/fs.cpp's mod hooks
+    # (LovesMeCharacter). Game-shaped targets only; every smoke keeps the
+    # null hooks and stock file serving.
+    hal/fs_mods.cpp
     # the scene's hand-drawn gap band and the band's per-scene continuity
     # table, both asked for at the same latch hal/screen_gap.cpp does
     hal/gap_art.cpp hal/gap_continuity.cpp
@@ -5788,6 +5792,10 @@ add_executable(walk_window_hires tests/walk_window.cpp "${OV002DATA_C}" ${LEVEL_
     # the launcher's settings.json, read by the game (camera turn direction,
     # and the four screen-gap keys hal/screen_gap.cpp reads)
     hal/host_settings.cpp hal/screen_gap.cpp
+    # the Mods panel's file-layer half: installs hal/fs.cpp's mod hooks
+    # (LovesMeCharacter). Game-shaped targets only; every smoke keeps the
+    # null hooks and stock file serving.
+    hal/fs_mods.cpp
     # the scene's hand-drawn gap band and the band's per-scene continuity
     # table, both asked for at the same latch hal/screen_gap.cpp does
     hal/gap_art.cpp hal/gap_continuity.cpp

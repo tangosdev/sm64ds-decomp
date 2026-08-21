@@ -131,6 +131,20 @@ int host_setting_gap_peek(void);
    on, or peeked into. */
 int host_setting_gapless_minigames(void);
 
+/* ---- LovesMeCharacter: the second Mods key ------------------------------
+   Default 0, and the default is the only setting that is the ROM. Which
+   character stars in the Loves Me...? petal minigame: 0 is Yoshi, 1 is the
+   minigame archive's own Mario model, asked for by the file's "mario".
+
+   Unlike GaplessMinigames this one changes only what the scene LOOKS like,
+   but it is a mod all the same -- the ROM never shows Mario there -- so it
+   rides the same rules: default off, boot-latched (the file layer caches
+   what it serves, so the launcher's Mods panel promises a restart), and
+   announced in plain words on stderr when on. The mechanism is a file-layer
+   substitution owned by hal/fs_mods.cpp; that file's header carries the rig
+   comparison that makes the swap safe and the one byte transform it makes. */
+int host_setting_lovesme_character(void);
+
 /* ---- THE LIVE RE-READ -------------------------------------------------
    host_settings_poll: call once per frame from the host loop. Internally it
    looks at the file's write time only every 30th call, so its steady-state

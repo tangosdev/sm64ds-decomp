@@ -103,6 +103,22 @@ static void catalog_load(void)
     fclose(f);
 }
 
+/* ---- the mod hooks (hal/fs_mods.cpp) -------------------------------------
+   Null in every target that does not link fs_mods.cpp, which is every smoke
+   target; fs.cpp itself cannot name a settings accessor without dragging
+   host_settings.cpp into fifteen link lines. When installed: map may return
+   a DIFFERENT file id to serve in place of the asked-for one, and filter may
+   rewrite a loose file's decompressed master in place, returning its new
+   (never larger) size. Both run under the seam, so the game sees only the
+   served bytes -- see fs_mods.cpp for what a mod is and is not allowed to do. */
+extern "C" {
+unsigned (*port_fs_mod_map)(unsigned fileID);
+/* May rewrite *data in place (returning the new, never larger, size) or
+   REPLACE it: free the old master and point *data at a fresh malloc'd one,
+   returning the new size. Either way the caller keeps ownership of *data. */
+u32 (*port_fs_mod_filter)(unsigned fileID, u8 **data, u32 size);
+}
+
 /* Read-only: the catalog's path for a FAT file id, or 0.
    Run link60 lane NFS. hal/fs_names.cpp owns the open-by-name seam and shares
    THIS table rather than reading files.tsv a second time, so the two seams
@@ -421,6 +437,10 @@ static int fs_cache_fill(struct fs_cache_entry *e, unsigned fileID)
     fclose(f);
     ok = fs_entry_store(e, raw, (u32)fsize);
     free(raw);
+    /* mod filter, on the decompressed master and before anyone caches or
+       copies it, so a rewritten file is rewritten exactly once */
+    if (ok && port_fs_mod_filter)
+        e->size = port_fs_mod_filter(fileID, &e->data, e->size);
     return ok;
 }
 
@@ -443,7 +463,8 @@ struct SharedFilePtrC { u16 fileID; u8 numRefs; void *filePtr; };
 void *_ZN13SharedFilePtr4LoadEv(struct SharedFilePtrC *self)
 {
     struct fs_cache_entry *e, tmp;
-    const int archive = self->fileID >= 0x8000;
+    unsigned fid = self->fileID;
+    int archive;
     const char *src;
     int cached, admit, ok;
     u32 tsize;
@@ -452,15 +473,19 @@ void *_ZN13SharedFilePtr4LoadEv(struct SharedFilePtrC *self)
 
     port_fs_loads++;
     catalog_load();
+    /* The breadcrumb keeps the id the GAME asked for: it is dsstate, and the
+       mod hook below is a host substitution the game never learns about. */
     data_0209d3bc = self->fileID;
-    if (!archive && (self->fileID >= MAX_FILES ||
-                     g_paths[self->fileID][0] == 0)) {
+    if (port_fs_mod_map)
+        fid = port_fs_mod_map(fid);
+    archive = fid >= 0x8000;
+    if (!archive && (fid >= MAX_FILES || g_paths[fid][0] == 0)) {
         fprintf(stderr, "FATAL: fs fileID %u not in catalog (fileptr %p)\n",
-                self->fileID, (void *)self);
+                fid, (void *)self);
         abort();
     }
 
-    e = fs_slot(self->fileID);
+    e = fs_slot(fid);
     cached = e && e->valid;
     if (cached) {
         g_fs_hits++;
@@ -472,8 +497,8 @@ void *_ZN13SharedFilePtr4LoadEv(struct SharedFilePtrC *self)
         admit = e && !fs_cache_off() && g_fcache_bytes < fs_cache_max();
         slot = admit ? e : &tmp;
         memset(slot, 0, sizeof *slot);
-        ok = archive ? port_fs_archive_fill(slot, self->fileID)
-                     : fs_cache_fill(slot, self->fileID);
+        ok = archive ? port_fs_archive_fill(slot, fid)
+                     : fs_cache_fill(slot, fid);
         if (!ok) {
             if (slot->data) { free(slot->data); slot->data = 0; }
             return 0;
@@ -500,8 +525,9 @@ void *_ZN13SharedFilePtr4LoadEv(struct SharedFilePtrC *self)
     port_fs_bytes += tsize;
     port_fs_ms += fs_now_ms() - t0;
     if (fs_trace_on())
-        fprintf(stderr, "fs: load id=%u size=%u source=%s\n",
-                self->fileID, tsize, src);
+        fprintf(stderr, "fs: load id=%u%s size=%u source=%s\n",
+                self->fileID, fid != self->fileID ? " (modded)" : "",
+                tsize, src);
     if (dst)
         self->filePtr = dst;
     return dst;
@@ -563,6 +589,19 @@ static u8 *port_fs_read_raw(u32 handle, long *len_out)
     u32 fileID;
     catalog_load();
     fileID = func_02018a24(handle);
+    /* Same substitution the Load seam makes. This path serves bytes still
+       compressed, so only the map hook applies here, never the filter --
+       the one mod that rewrites bytes rides files that load through
+       SharedFilePtr, and fs_mods.cpp says so. */
+    if (port_fs_mod_map) {
+        unsigned mapped = port_fs_mod_map(fileID);
+        if (fs_trace_on())
+            fprintf(stderr, "fs: load-at handle=0x%x id=%u%s\n", handle,
+                    fileID, mapped != fileID ? " (modded)" : "");
+        fileID = mapped;
+    } else if (fs_trace_on()) {
+        fprintf(stderr, "fs: load-at handle=0x%x id=%u\n", handle, fileID);
+    }
     /* Handles at or past 0x8000 are archive-interior ids -- the ones
        Stage::LoadGraphics2D uses for every one of its own files -- and they
        are not in the plain FAT catalog at all. */
