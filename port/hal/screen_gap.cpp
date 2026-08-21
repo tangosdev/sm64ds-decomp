@@ -672,6 +672,16 @@ int g_gapless_scene = -2;
 
 const GaplessScene *gapless_row(int scene)
 {
+    /* THE MOD IS ON HOLD, owner's order 2026-08-21: every mode above is
+       played, judged and kept, and none of them ships until the seam-band
+       art exists (Slots Shot's note has the recipe; 378's WORLD-ROWS wants
+       painted band rows for the same reason). Returning no row here sends
+       every scene down the honest UNSUPPORTED path -- GaplessMinigames on
+       means a message and the ROM's own simulated gap, nothing else. To
+       resurrect the mod, delete this return; the table and every mode
+       behind it are intact and each row's verdict is written beside it. */
+    return 0;
+
     for (unsigned i = 0; i < sizeof kGaplessScenes / sizeof *kGaplessScenes; ++i)
         if (kGaplessScenes[i].scene_id == scene) return &kGaplessScenes[i];
     return 0;
