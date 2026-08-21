@@ -2754,11 +2754,20 @@ void seam_complete(uint32_t *dst, int dst_w, const StackLayout &lay,
            is rising or falling: the rows that are missing are the ones on the
            side its own half cannot address, and which side that is follows
            from which half has it. */
-        BandEntry db, da;
+        BandEntry db, da, dk;
         const int ok_b = has_bot && band_decode(cb.a0, cb.a1, cb.a2, db);
         const int ok_a = has_top && band_decode(ca.a0, ca.a1, ca.a2, da);
         const int str_b = ok_b && t.y < 0 && t.y + db.bh > 0;
         const int str_a = ok_a && ra < 0 && ra + da.bh > 0;
+
+        /* REMEMBER THE ENTRY WHILE AN ENGINE HAS IT. g_track is the same
+           per-slot store the peek band's continuity pass keeps, refreshed
+           here too because in the bandless mod nothing else runs to fill it.
+           The fold rule holds by the readers' own contract: every object a
+           reader folds onto one slot shares one attribute template, so the
+           cached triple is the vanished object's own. */
+        if (ok_b) g_track[t.slot] = cb;
+        else if (ok_a) g_track[t.slot] = ca;
 
         const BandCache *use = 0;
         const BandEntry *ud = 0;
@@ -2783,7 +2792,28 @@ void seam_complete(uint32_t *dst, int dst_w, const StackLayout &lay,
             rhi = ra + da.bh;   /* the rows the top screen cannot address */
             why = "top half only";
         } else if (!has_top && !has_bot) {
-            why = "neither half has it, drawing nothing";
+            /* THE OWNER'S BUG 2 ON SCENE 368: the slingshot ball's router
+               gives it to ONE engine and the cull refuses both near the
+               seam, so for a few world rows of the crossing NO OAM anywhere
+               holds the ball and the live lookups above come back empty.
+               The tracker still knows exactly where it is, and the store
+               above still holds the entry an engine last submitted for this
+               slot, so the whole box is drawn at the tracker's position --
+               rows either side of the seam alike, since neither half can
+               contribute anything to double it. */
+            BandCache &kc = g_track[t.slot];
+            if (kc.have && band_decode(kc.a0, kc.a1, kc.a2, dk)) {
+                use = &kc;
+                ud = &dk;
+                rtop = t.y;
+                xtop = t.x;
+                rlo = t.y;
+                rhi = t.y + dk.bh;
+                why = "neither half has it, drawn whole from the slot's "
+                      "last entry";
+            } else {
+                why = "neither half has it, drawing nothing";
+            }
         } else {
             why = "in one half and not across the seam";
         }
@@ -2931,6 +2961,10 @@ StackLayout stack_layout(int gap_ds, int head_ds, int obj_shift_ds,
        note in ntr/ppu.h. A layout built and never touched again is a layout
        with the pass off, which is the behaviour this shipped with. */
     l.seam = 0;
+    /* world_band is hal's too, set beside the seam flag, and zero here for
+       the same reason -- an uninitialized field in a struct built on the
+       stack is garbage, and this one gates band passes. */
+    l.world_band = 0;
     /* NOT AN INPUT HERE EITHER, for the reason the seam flag is not: this is
        told the BAND's height and the layer shift is a separate question about
        the same rows. It is zero unless the falsified layer arm is asked for,
