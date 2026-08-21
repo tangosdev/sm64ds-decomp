@@ -56,7 +56,7 @@ low  [outgoing args][chain][spill pool][aggregates]  high
 
 **The lever: a second definition moves a local out of the chain.** Writing `c = &sphere.pos;` a second time, in a different block, moves `c` from the chain to the pool. Worth +24 references. It must be a *different block* — on the next line it's a dead store, the compiler folds it, nothing moves.
 
-And it's fussy. It fires on `c` and on nothing else I've tried — `rsc` (`radius << 4`) resists roughly 500 compiles across eight different mechanisms. For a long time I explained that as *"the lever needs a value that rematerialises without touching memory"*; that was a guess, and §7 has the measured answer, which is different.
+And it's fussy about *how* you write it. It fires on `c` immediately; on `rsc` (`radius << 4`) it resisted roughly 500 compiles across eight mechanisms. For a long time I explained that as *"the lever needs a value that rematerialises without touching memory"*. That was a guess, and it was wrong — §9 has the measured answer, and the fix.
 
 Callee-saved registers are declaration-ordered too: the six hottest locals get `r9, r8, r7, r6, r5, r4`, earliest-declared gets `r9`, and **the seventh loses** and takes a chain slot.
 
@@ -131,16 +131,16 @@ The raw word-by-word diff against the cartridge is 65. Thirty-four of those are 
 
 The data word is the instructive one. An earlier version of my own notes described it as *"a literal-pool word, not an instruction"* and filed it under unfixable. It's a relocation — the source already references the right symbol. I had classified it once, written the classification down, and then trusted the note instead of the bytes.
 
-So the honest count was 31, and it's now 31 after one more fix. Two defects remain, and they are independent of each other:
+So the honest count was 31, and after two more fixes it is 15. At the time I wrote this section, two defects remained and they were independent of each other:
 
-| # | What | Status |
+| # | What | Status then |
 |---|---|---|
-| 16 | `c` and `rsc` occupy each other's stack slots: the cartridge chains `c` at `0xc4` and pools `rsc` at `0x104`; we have it the other way | ~500 compiles across eight mechanism families say `rsc` cannot be made pool-resident |
-| 15 | Prologue instruction scheduling | Same 17 instructions, same registers, different order; every source-level reordering is byte-neutral |
+| 16 | `c` and `rsc` occupy each other's stack slots: the cartridge chains `c` at `0xc4` and pools `rsc` at `0x104`; we had it the other way | ~500 compiles across eight mechanism families said `rsc` could not be made pool-resident — **§9 shows that conclusion was wrong** |
+| 15 | Prologue instruction scheduling | Same 17 instructions, same registers, different order; still open |
 
-Two things worth recording about that first one. All 99 stack slots the two streams touch agree on both address and reference count *except* those two, exactly exchanged — which is why it's worth calling a single defect rather than sixteen. And I finally measured *why* the one lever I have works: re-binding `c` moves it out of the declaration chain only because **`c`'s pointee is `volatile`**, which stops the compiler folding the second assignment into the first. My previous explanation ("it needs a value that rematerialises without touching memory") was a guess that fit the data and was wrong — the same mistake as §4, caught faster this time.
+One thing worth recording about the first. All 99 stack slots the two streams touch agreed on both address and reference count *except* those two, exactly exchanged — which is why it was a single defect and not sixteen. And I measured *why* the one lever I had works: re-binding `c` moves it out of the declaration chain only because **`c`'s pointee is `volatile`**, which stops the compiler folding the second assignment into the first. My previous explanation ("it needs a value that rematerialises without touching memory") was a guess that fit the data and was wrong — the same mistake as §4, caught faster.
 
-The distinction between "didn't work" and "characterised" matters for whoever picks this up. "Didn't work" invites re-derivation. "There is no analogue of a volatile pointee for a scalar, because you cannot make reads of a plain local volatile without taking its address, which forces it into memory anyway" tells them what would have to change.
+That volatile observation turned out to be the thread to pull; §9 is where it goes.
 
 ## 8. When one expression carries two orderings, name the operands
 
