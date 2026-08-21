@@ -1,0 +1,70 @@
+# Does every name a merged translation unit writes down still exist?
+#
+# PR #1643 renamed fourteen collision classes to the cartridge's own RTTI names and
+# deleted the headers that held the old ones. It swept src/ and include/ and did not
+# sweep src_tu/: 26 of the tree's 41 merged translation units stopped compiling, nine
+# of them on a `#include` of a header that no longer existed.
+#
+# EVERY BYTE GATE STAYED GREEN. An unbuildable source file is not a failing file, it
+# is an ABSENT one -- it produces no object, so it produces no mismatch, and
+# rombuild.py went on reporting 106/106 exact with the file simply gone from coverage
+# (notes: unbuildable-files-invisible). port_refcheck.py passed too: it audits port/'s
+# references into src/ and has never looked at src_tu/. The only thing that noticed was
+# `pytest tools/test_tubuild.py`, which compiles one TU and had been red for two days.
+#
+# THIS CANNOT BE A COMPILE. mwccarm and the extracted ROM are not on the GitHub runner;
+# they live on the private build box that pr-validate.yml relays to. So the gate works
+# at the level a runner can reach -- do the includes resolve, and does every mangled
+# symbol a TU references appear in config/**/symbols.txt -- which is exactly the level
+# a rename breaks. Types and signatures are out of its reach and are not claimed.
+#
+# AN EMPTY CHECK IS NOT A PASS. check_src_tu.py fails if it finds no translation units,
+# no includes, or no references, rather than exiting 0 the way check_references.py
+# ("skipping") and check_header_offsets.py --changed do on an empty work list.
+#
+# Costs nothing: stdlib Python over git-tracked files, no compiler and no ROM, about a
+# second over 41 translation units and 31,782 ROM symbols. That is why it lives here
+# rather than on the build box.
+#
+# WHOLE-TREE, not scoped to changed files, and that is the point: the PR that breaks
+# src_tu is the one that touches include/ or config/ and never opens src_tu at all.
+# A `paths:` filter listing src_tu/** would have let #1643 through untouched.
+name: src_tu references
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: src-tu-refs-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  refs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # No history needed: the check reads the working tree and config/.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Every src_tu include and mangled reference resolves
+        run: python tools/check_src_tu.py --json build/src_tu_refs.json
+
+      - name: The gate's own tests
+        if: always()
+        run: python -m pytest tools/test_check_src_tu.py -q
+
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: src-tu-refs
+          path: build/src_tu_refs.json
+          if-no-files-found: ignore

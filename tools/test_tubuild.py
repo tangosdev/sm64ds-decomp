@@ -149,22 +149,37 @@ def test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate():
     # emits D2/D0/D1 in a fixed order that puts D0 before D1, opposite the ROM.
     assert "1 ordinal pair(s) NOT in ROM order: [(0, 1)]" in out
     assert "Result: 7/7 MATCH, objisolate clean, reloc-destinations clean -> TEXT-VERIFIED" in out
-    # 3 unlicensed .text (D2 + Platform's two out-of-line vague-linkage dtors) +
-    # 12 unlicensed .data (the vtable + RTTI records) = 15, exactly the pilot's
-    # sec 4 inventory -- present and correctly refusing promotion, not silently
-    # dropped.
-    assert "15 unlicensed section/symbol(s) present -> PROMOTION REFUSED" in out
+    # 1 unlicensed .text (D2) + 11 unlicensed .data (the vtable + the RTTI records)
+    # = 12 -- present and correctly refusing promotion, not silently dropped.
+    #
+    # THE PILOT'S SEC 4 INVENTORY SAID 15, AND SO DID THIS LINE UNTIL IT WAS MEASURED.
+    # The extra three were Platform's: two out-of-line vague-linkage destructors and
+    # _ZTV8Platform, emitted here because Platform had no key function to anchor them.
+    # #1555 ("Give Platform its 32nd vtable slot: Platform::Kill") gave it one, and
+    # they moved to Platform's own TU. Compiling this file's own historical forms
+    # against their own include/ trees reads 43 sections / 15 unlicensed at dedaa139e^
+    # and 37 / 12 at dedaa139e -- so this expectation went stale at #1555, 116 pull
+    # requests before the collision rename (#1643) that later stopped the file
+    # compiling at all and hid the staleness behind a compile error.
+    assert "12 unlicensed section/symbol(s) present -> PROMOTION REFUSED" in out
     assert "_ZN8PoleLiftD2Ev" in out and "_ZTV8PoleLift" in out
 
 
 def test_compile_report_matches_the_pilots_object_inventory():
-    """43 sections, 10 .text, 12 .data -- notes/tu-reconstruction-pilot-report.md
-    sec 4, reproduced independently by tubuild.py's own ELF walk."""
+    """37 sections, 8 .text, 11 .data, reproduced independently by tubuild.py's own
+    ELF walk.
+
+    notes/tu-reconstruction-pilot-report.md sec 4 records 43/10/12, which is what this
+    file emitted until #1555 anchored Platform's vtable and its two out-of-line
+    destructors in Platform's own TU -- three fewer vague-linkage symbols here, and
+    six fewer sections because each brings its own relocation section. The measurement
+    is in test_verify_reproduces_pilot_1s_7_of_7_and_clean_objisolate above.
+    """
     if not _toolchain():
         return
     code, out = _run("compile", "ov045/PoleLift")
     assert code == 0, out
-    assert "sections (43):" in out
+    assert "sections (37):" in out
     # Anchored to the section-LISTING line shape ("[ NN] .text  type=SHT_..."), not
     # a bare substring: "-> section[N] .text  size=..." in the function-mapping
     # block below it also contains the text "] .text ", which a plain count()
@@ -172,10 +187,10 @@ def test_compile_report_matches_the_pilots_object_inventory():
     import re
     n_text = len(re.findall(r"\[\s*\d+\] \.text\s+type=SHT_", out))
     n_data = len(re.findall(r"\[\s*\d+\] \.data\s+type=SHT_", out))
-    assert n_text == 10, f"expected 10 .text sections, counted {n_text}"
-    assert n_data == 12, f"expected 12 .data sections, counted {n_data}"
-    assert "UNLICENSED function symbols (3)" in out
-    assert "UNLICENSED object/data symbols (12)" in out
+    assert n_text == 8, f"expected 8 .text sections, counted {n_text}"
+    assert n_data == 11, f"expected 11 .data sections, counted {n_data}"
+    assert "UNLICENSED function symbols (1)" in out
+    assert "UNLICENSED object/data symbols (11)" in out
     assert (REPO / "build" / "tu" / "ov045-PoleLift" / "inventory.txt").is_file()
     assert (REPO / "build" / "tu" / "ov045-PoleLift" / "PoleLift.o").is_file()
 
@@ -239,16 +254,52 @@ def test_promote_dry_run_refuses_a_tu_that_is_not_link_verified_but_still_explai
     assert (REPO / "src" / "_ZN8PoleLift6RenderEv.cpp").is_file()
 
 
-def test_linkcheck_refuses_a_tu_whose_legacy_entries_are_not_complete():
-    """ov045/FallBlockBfs is text-verified but NONE of its five delinks entries carries
-    `complete`, so dsd serves that whole range from ROM bytes today. Substituting a TU
-    there would enroll five ranges and consolidate them in one step, and a green result
-    would not say which change earned it. This must refuse before it links -- and it is
-    the cheap half of linkcheck, so it is the part a test suite can afford to run."""
-    code, out = _run("linkcheck", "ov045/FallBlockBfs", timeout=600)
-    assert code != 0
-    assert "REFUSED" in out
-    assert "NOT `complete` today" in out
+def test_splice_refuses_a_span_whose_legacy_entries_are_not_complete():
+    """A delinks entry without `complete` is served from retail ROM bytes, so
+    substituting a TU across one would enroll that range and consolidate it in the same
+    step, and a green result would not say which change earned it. The substitution has
+    to refuse before anything links.
+
+    This used to run `linkcheck ov045/FallBlockBfs` and assert the refusal, because none
+    of that TU's five entries carried `complete`. #1527 ("Phantom references: find the
+    cause, clear two seams, +98 functions") marked all five, so the premise is gone: the
+    command now gets past the splice and spends ninety seconds reaching a link that
+    fails on the key-function wall instead. Re-pointing it at some other TU would only
+    re-arm the same trap, so the invariant is checked directly, on a scratch COPY of the
+    real file, the way its sibling test below does.
+    """
+    import json
+    sys.path.insert(0, str(TOOLS))
+    import tubuild as T
+
+    manifest = json.loads((REPO / "config" / "tu_manifest.json").read_text(encoding="utf-8"))
+    entry = next(e for e in manifest["entries"] if e["id"] == "ov045/FallBlockBfs")
+    sec = next(s for s in entry["sections"] if s["name"] == ".text")
+    start, end = int(sec["start"], 16), int(sec["end"], 16)
+    legacy = [f["legacy_source"] for f in entry["functions"]]
+    real = REPO / "config" / "arm9" / "overlays" / "ov045" / "delinks.txt"
+
+    with tempfile.TemporaryDirectory() as td:
+        # As committed, every entry in the span is `complete`, so the splice is allowed.
+        good = pathlib.Path(td) / "good.txt"
+        shutil.copyfile(real, good)
+        replaced, reasons = T.splice_tu_entry(good, start, end, entry["source"], legacy)
+        assert reasons == [], reasons
+        assert len(replaced) == len(legacy)
+
+        # Take `complete` away from one of them and the splice must refuse, untouched.
+        stripped = pathlib.Path(td) / "stripped.txt"
+        text = real.read_text(encoding="utf-8")
+        victim = legacy[0]
+        head, sep, tail = text.partition(f"{victim}:\n")
+        assert sep, victim
+        stripped.write_text(head + sep + tail.replace("    complete\n", "", 1),
+                            encoding="utf-8")
+        before = stripped.read_bytes()
+        replaced, reasons = T.splice_tu_entry(stripped, start, end, entry["source"], legacy)
+        assert replaced is None
+        assert any("NOT `complete` today" in r for r in reasons), reasons
+        assert stripped.read_bytes() == before, "a refusal must not edit the file"
 
 
 def test_splice_refuses_a_span_it_cannot_tile_exactly():
