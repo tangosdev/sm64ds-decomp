@@ -185,13 +185,27 @@ void ppu_scanout(Engine eng, Framebuffer &fb) {
 // This file has no window unit, so a mode-2 sprite cannot contribute its mask
 // here. Not drawing it is still the closer answer of the two: on hardware it
 // does not appear in the image either way.
+/* ENGINE A's OAM SOURCE OVERRIDE, for the gapless seam. The port composites
+   the top screen BEFORE this frame's OAM::Load and scans the bottom screen
+   after it, so the two screens are one frame apart -- a deliberate trade
+   everywhere else, but with the screens butted edge to edge a falling object
+   loses one frame of travel at the seam and reads one pixel short while it
+   straddles. When the mod is engaged, hal/screen_gap.cpp points this at the
+   game's own working shadow (the block Load is ABOUT to upload), so the top
+   screen draws the same frame the bottom will. Zero everywhere else, which
+   is the hardware OAM and the behaviour every level has always had. */
+static uint32_t g_oam_src_a;
+void ppu_obj_oam_source_a(uint32_t addr) { g_oam_src_a = addr; }
+
 void ppu_scanout_obj(Engine eng, Framebuffer &fb) {
     static const int kSizes[3][4][2] = {
         {{8, 8}, {16, 16}, {32, 32}, {64, 64}},    // square
         {{16, 8}, {32, 8}, {32, 16}, {64, 32}},    // wide
         {{8, 16}, {8, 32}, {16, 32}, {32, 64}},    // tall
     };
-    const uint32_t oam_base = eng == ENGINE_A ? 0x07000000u : 0x07000400u;
+    const uint32_t oam_base =
+        eng == ENGINE_A ? (g_oam_src_a ? g_oam_src_a : 0x07000000u)
+                        : 0x07000400u;
     const uint32_t obj_vram = eng == ENGINE_A ? 0x06400000u : 0x06600000u;
     const uint32_t obj_pltt = kEngines[eng].pltt_base + 0x200u;
     // DISPCNT bit 4: OBJ 1D mapping; bits 20-21: tile-index boundary shift.

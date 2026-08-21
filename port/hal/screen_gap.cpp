@@ -47,6 +47,7 @@ ntr::StackLayout g_lay;
 int obj_shift_ds(void);
 int obj_layer_shift_ds(void);
 int headroom_ds(void);
+int main_shadow_is_e674(void);
 
 int read_raw(void)
 {
@@ -380,6 +381,15 @@ const ntr::StackLayout *hal_screen_layout(void)
        shape of defect a "latch it with everything else" reading produces and
        nothing downstream would report. It is one int and it costs a call. */
     const int seam = hal_gapless_engaged() ? 1 : 0;
+    /* THE SEAM'S FRAME ALIGNMENT, set every frame for the same reason the
+       seam flag is: it must die with the scene. With the mod engaged the two
+       screens are one picture, so the top screen reads the game's WORKING
+       shadow -- the block OAM::Load is about to upload -- instead of the
+       hardware OAM it uploaded last frame; otherwise a falling object is one
+       frame short exactly at the join. Everywhere else this is zero and the
+       top screen draws what it always drew. */
+    ntr::ppu_obj_oam_source_a(
+        seam && main_shadow_is_e674() ? 0x0209e674u : 0u);
     /* AND THE SHIFT IS PART OF THE LATCH, for the reason the headroom is: it
        cannot move without `want` moving today, and a cache whose key is a
        subset of its inputs is one edit away from serving a stale answer. */

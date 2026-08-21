@@ -43,6 +43,11 @@ void ppu_scanout(Engine eng, Framebuffer &fb);
 // tiles, 1D mapping; bitmap OBJs, mosaic, windows and blending are not
 // implemented. Transparent color-0 texels leave fb untouched.
 void ppu_scanout_obj(Engine eng, Framebuffer &fb);
+/* Engine A OAM source override for the gapless seam: the address of the
+   game's working shadow to draw the CURRENT frame's sprites, or 0 for the
+   uploaded hardware OAM (the default, one frame behind the bottom screen).
+   Set per frame by hal/screen_gap.cpp; see the note over the definition. */
+void ppu_obj_oam_source_a(uint32_t addr);
 
 // Debug output, so a frame can be inspected without a window yet.
 bool ppu_write_bmp(const char *path, const Framebuffer &fb);
