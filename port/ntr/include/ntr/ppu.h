@@ -377,6 +377,11 @@ enum { BAND_TRACK_MAX = 8 };
 // the hook, and no hook is the behaviour this shipped with.
 typedef int (*BandTrackFn)(BandTrack *out, int max, int gap_ds);
 void ppu_band_continuity(BandTrackFn fn);
+/* The seam-ghost pass's attribute list: which sprite identities to continue
+   across the seam when the game despawns them at the top screen's edge. Same
+   registration idiom as the continuity reader above. */
+typedef const unsigned short *(*GhostAttrFn)(int *count);
+void ppu_seam_ghost_attrs(GhostAttrFn fn);
 
 // ---- THE SEAM STRADDLE, and it is the same hook read at gap_ds == 0 ---------
 //

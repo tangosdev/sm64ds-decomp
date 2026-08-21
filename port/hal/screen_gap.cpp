@@ -892,6 +892,23 @@ unsigned hal_gapless_oam_src_a(void)
                                                              : 0x0209ea74u;
 }
 
+/* GHOST ATTRIBUTES: the sprite identities (attr2 words) whose objects the
+   compositor should CONTINUE across the seam when the game despawns them at
+   the top screen's bottom edge. Owner's spec for Shuffle Shell: "make the
+   top snow not despawn and just keep going all the way down". Per scene,
+   because an identity is only meaningful inside one game's tile set; empty
+   everywhere else and the whole ghost pass stands down. */
+const unsigned short *hal_gapless_ghost_attrs(int *count)
+{
+    static const unsigned short kSnow374[] = {0x2048, 0x2049, 0x204a,
+                                              0x204b, 0x204c};
+    *count = 0;
+    if (!hal_gapless_engaged()) return 0;
+    if (hal_gap_scene_id() != 374) return 0;
+    *count = (int)(sizeof kSnow374 / sizeof *kSnow374);
+    return kSnow374;
+}
+
 /* ---- THE ROUTER HOOK: which OAM entries were placed in WORLD coordinates ----
  *
  * WHY THERE IS A HOOK AT ALL. The per-entry correction has to be applied to the

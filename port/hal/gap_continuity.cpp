@@ -25,6 +25,7 @@
  */
 
 #include "hal/gap_continuity.h"
+#include "hal/screen_gap.h"
 
 #include "hal/gap_art.h"
 #include "ntr/ppu.h"
@@ -198,4 +199,6 @@ void hal_band_continuity_latch(int scene_id)
        scene's cached OAM entry in place would let a tile from the last minigame
        be re-rendered into this one's band. Null is a clean uninstall. */
     ntr::ppu_band_continuity(g_read ? continuity_hook : 0);
+    /* and the ghost list, latched with the same scene discipline */
+    ntr::ppu_seam_ghost_attrs(hal_gapless_ghost_attrs);
 }

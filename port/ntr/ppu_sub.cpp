@@ -2934,6 +2934,117 @@ void seam_complete(uint32_t *dst, int dst_w, const StackLayout &lay,
     }
 }
 
+/* ---- SEAM GHOSTS: objects the game despawns at the seam, continued --------
+ *
+ * Owner's spec, Shuffle Shell: the top screen's snow dies at the screen's
+ * bottom edge while the bottom screen runs its own, so the fall is not
+ * continuous. The game's snow lives in shared effect code nobody has walked;
+ * this pass needs none of it. It watches the SHOWN main OAM for entries whose
+ * attr2 is on the scene's ghost list (hal_gapless_ghost_attrs), follows each
+ * by nearest-neighbour across frames to learn its drift, and when one
+ * vanishes near the bottom edge it keeps FALLING as a ghost -- the same attr
+ * triple out of the same VRAM, drawn by seam_draw_entry at the continued
+ * position -- until it leaves the bottom screen. The game's own bottom snow
+ * is untouched; the owner asked for the top snow to keep going, not for the
+ * bottom's to change. Gated on lay.seam and an empty list stands the whole
+ * pass down. */
+struct SeamGhost {
+    int active;         /* 0 free, 1 tracking, 2 falling as ghost */
+    int x, y;           /* engine-A rows/cols, <<4 for sub-pixel drift */
+    int vx, vy;         /* per frame, <<4 */
+    int miss;
+    uint16_t a0, a1, a2;
+};
+enum { GHOST_MAX = 96 };
+SeamGhost g_ghost[GHOST_MAX];
+GhostAttrFn g_ghost_attr_fn;
+
+void seam_ghosts(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
+                 int to_white)
+{
+    if (!lay.seam) return;
+    int n_attr = 0;
+    const unsigned short *attrs = g_ghost_attr_fn ? g_ghost_attr_fn(&n_attr) : 0;
+    if (!attrs || n_attr <= 0) {
+        for (int i = 0; i < GHOST_MAX; ++i) g_ghost[i].active = 0;
+        return;
+    }
+    if (!g_oam_a_have) return;
+    /* mark all trackers unseen */
+    for (int i = 0; i < GHOST_MAX; ++i)
+        if (g_ghost[i].active == 1) g_ghost[i].miss = 1;
+    /* walk the shown table for listed entries */
+    for (int i = 127; i >= 0; --i) {
+        const uint16_t a0 = shown_rd16(i * 8);
+        const uint16_t a1 = shown_rd16(i * 8 + 2);
+        const uint16_t a2 = shown_rd16(i * 8 + 4);
+        int listed = 0;
+        for (int k = 0; k < n_attr; ++k)
+            if (a2 == attrs[k]) { listed = 1; break; }
+        if (!listed) continue;
+        if (a0 & 0x100) continue;                  /* affine flakes: none */
+        if (!(a0 & 0x100) && (a0 & 0x200)) continue;   /* disabled */
+        int y = a0 & 0xff;
+        if (y >= 192) y -= 256;
+        int x = a1 & 0x1ff;
+        if (x >= 256) x -= 512;
+        const int fy = y << 4, fx = x << 4;
+        /* nearest live tracker within 6 rows/cols */
+        int best = -1, best_d = 6 * 16 * 2 + 1;
+        for (int g = 0; g < GHOST_MAX; ++g) {
+            if (g_ghost[g].active != 1) continue;
+            int dy = fy - g_ghost[g].y, dx = fx - g_ghost[g].x;
+            if (dy < 0) dy = -dy;
+            if (dx < 0) dx = -dx;
+            if (dy > 6 * 16 || dx > 6 * 16) continue;
+            if (dy + dx < best_d) { best_d = dy + dx; best = g; }
+        }
+        if (best >= 0) {
+            SeamGhost &t = g_ghost[best];
+            /* smoothed drift: half old, half observed */
+            t.vx = (t.vx + (fx - t.x)) / 2;
+            t.vy = (t.vy + (fy - t.y)) / 2;
+            t.x = fx;
+            t.y = fy;
+            t.a0 = a0; t.a1 = a1; t.a2 = a2;
+            t.miss = 0;
+        } else {
+            for (int g = 0; g < GHOST_MAX; ++g)
+                if (!g_ghost[g].active) {
+                    g_ghost[g] = SeamGhost{1, fx, fy, 0, 16, 0, a0, a1, a2};
+                    break;
+                }
+        }
+    }
+    /* trackers that vanished near the edge become falling ghosts; the rest
+       that vanished anywhere else just die (melted, popped, culled high) */
+    for (int g = 0; g < GHOST_MAX; ++g) {
+        SeamGhost &t = g_ghost[g];
+        if (t.active == 1 && t.miss) {
+            if (t.y >= 176 * 16 && t.vy > 0) t.active = 2;
+            else t.active = 0;
+        }
+    }
+    /* advance and draw the ghosts */
+    for (int g = 0; g < GHOST_MAX; ++g) {
+        SeamGhost &t = g_ghost[g];
+        if (t.active != 2) continue;
+        t.x += t.vx;
+        t.y += t.vy;
+        const int wy = (t.y >> 4) - 192;      /* world row of the flake top */
+        if (wy > 192 || t.vy <= 0) { t.active = 0; continue; }
+        BandCache c;
+        c.have = 1;
+        c.a0 = t.a0; c.a1 = t.a1; c.a2 = t.a2;
+        c.eng = BandEngine{kRegBaseA, kOamBaseA, kObjVramA, kObjPlttA, 0,
+                           -192, 0, "A", 0};
+        BandEntry d;
+        if (!band_decode(c.a0, c.a1, c.a2, d)) { t.active = 0; continue; }
+        seam_draw_entry(dst, dst_w, lay, c, d, wy, t.x >> 4, wy, wy + d.bh,
+                        evy, to_white);
+    }
+}
+
 void seam_straddle(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
                    int to_white)
 {
@@ -3072,6 +3183,14 @@ void ppu_band_continuity(BandTrackFn fn)
 {
     g_track_fn = fn;
     for (int i = 0; i < BAND_TRACK_MAX; ++i) g_track[i].have = 0;
+}
+
+/* Registered beside the continuity reader, cleared the same way: a scene
+   change must not let one game's ghosts snow into the next. */
+void ppu_seam_ghost_attrs(GhostAttrFn fn)
+{
+    g_ghost_attr_fn = fn;
+    for (int i = 0; i < GHOST_MAX; ++i) g_ghost[i].active = 0;
 }
 
 /* Engine B's OAM source override; ppu.h documents it beside engine A's. */
@@ -3263,6 +3382,8 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
        and the other needs none. With the mod off it returns on its first test,
        so a gapless image is byte-for-byte what it was before this existed. */
     seam_straddle(dst, dst_w, lay, evy, to_white);
+    /* and the despawned-at-the-seam continuations; see seam_ghosts */
+    seam_ghosts(dst, dst_w, lay, evy, to_white);
 }
 
 }  // namespace ntr

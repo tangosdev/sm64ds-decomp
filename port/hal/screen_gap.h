@@ -93,6 +93,7 @@ void hal_gapless_minigames_latch(void);
  * program's own answer to "is this run the ROM's timing or not". */
 int hal_gapless_engaged(void);
 unsigned hal_gapless_oam_src_a(void);
+const unsigned short *hal_gapless_ghost_attrs(int *count);
 
 /* The bandless modes. VISUAL: the band leaves the picture, nothing else.
    SPLICE (hal_gapless_world): additionally, an object entering the hidden
