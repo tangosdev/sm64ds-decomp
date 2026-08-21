@@ -225,7 +225,15 @@ def stage(kit: pathlib.Path, rom: pathlib.Path, work: pathlib.Path) -> pathlib.P
     # gigabytes and then test an extraction this run did not perform -- which is
     # the same "it worked on a machine that already had the data" mistake in
     # miniature.
-    for stale in ("build", "extracted"):
+    #
+    # "Run in place" is detected by EXTRACTION PRODUCTS, not by the bare
+    # existence of build/: the launcher bundle SHIPS build/assets/
+    # romdata.manifest (BUNDLE.md's contract -- the exe reads its assets
+    # through that path), so a fresh bundle owns a build directory the moment
+    # it is unzipped. What a fresh kit can never own is a file the extractor
+    # makes from ROM bytes.
+    for stale in ("extracted", "build/assets/romdata.bin",
+                  "build/assets/nitrofs.tsv"):
         if (kit / stale).exists():
             die(f"{kit / stale} exists: this kit has been run in place, so it is "
                 f"not a clean kit. Package a fresh one with -Output <a new dir>.")
@@ -443,8 +451,13 @@ def main() -> int:
     print(f"\n4. staging a clean player machine at {work}")
     bundle = stage(kit, rom, work)
     say(True, f"bundle: {bundle}")
-    say(not (bundle / "build").exists(),
-        "the staged bundle starts with no build/assets of its own")
+    # Same rule as stage()'s refusal: what a fresh bundle can never hold is a
+    # file the extractor makes from ROM bytes. The launcher bundle legitimately
+    # ships build/assets/romdata.manifest, so "no build/ at all" is the wrong
+    # assertion for that shape.
+    say(not (bundle / "build/assets/romdata.bin").exists()
+        and not (bundle / "build/assets/nitrofs.tsv").exists(),
+        "the staged bundle starts with no extracted ROM data of its own")
 
     print("\n5. running the kit's own extractor, as play.bat runs it")
     rc = run_extractor(bundle)
