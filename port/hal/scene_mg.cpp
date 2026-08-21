@@ -443,7 +443,49 @@ static int  __fastcall mg_init(void *s, void *)
 { MG_SLOT(0);  const int r = func_ov006_020e3578(s);
   hal_gapless_minigames_latch(); return r; }
 static int  __fastcall mg_beh(void *s, void *)
-{ MG_SLOT(6);  const int r = func_ov006_020e3528(s); hal_gapless_splice(); return r; }
+{
+    MG_SLOT(6);
+    /* SM64DS_CUR_SHELL_FORCE="x,y": park a shell at a world position without
+       the game ever seeing it. The flags are cleared BEFORE the tick so the
+       game's own physics never runs on the slot, and set after so only the
+       render pass reads it. Probe for the owner's straddle-layering report. */
+    static int sforce = -1;
+    static int sfx, sfy;
+    if (sforce < 0) {
+        const char *e = std::getenv("SM64DS_CUR_SHELL_FORCE");
+        sforce = (e && std::sscanf(e, "%d,%d", &sfx, &sfy) == 2) ? 1 : 0;
+    }
+    unsigned char *sc = (unsigned char *)s;
+    if (sforce) { *(sc + 0x4689) = 0; *(sc + 0x468a) = 0; }
+    const int r = func_ov006_020e3528(s);
+    if (sforce) {
+        *(sc + 0x4689) = 1;
+        *(sc + 0x468a) = 1;
+        *(int *)(sc + 0x4660) = sfx << 12;
+        *(int *)(sc + 0x4664) = sfy << 12;
+    }
+    hal_gapless_splice();
+    /* SM64DS_CUR_SHELL_TRACE=1: the five shell slots whenever one is near
+       the seam, for the owner's straddle-layering report. */
+    static int strace = -1;
+    if (strace < 0) {
+        const char *e = std::getenv("SM64DS_CUR_SHELL_TRACE");
+        strace = (e && e[0] && e[0] != '0') ? 1 : 0;
+    }
+    if (strace) {
+        unsigned char *c = (unsigned char *)s;
+        for (int i = 0; i < 5; i++) {
+            unsigned char *p = c + i * 0x2c;
+            if (!*(p + 0x4689) || !*(p + 0x468a)) continue;
+            const int wy = *(int *)(p + 0x4664) >> 12;
+            if (wy > -80 && wy < 40)
+                std::fprintf(stderr, "[shell] beh%u slot%d x=%d wy=%d\n",
+                             g_mg_hits[6], i,
+                             *(int *)(p + 0x4660) >> 12, wy);
+        }
+    }
+    return r;
+}
 static int  __fastcall mg_render(void *s, void *)
 { MG_SLOT(9);  return func_ov006_020e34ec(s); }
 static void *__fastcall mg_d2(void *s, void *)

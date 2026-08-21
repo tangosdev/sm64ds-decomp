@@ -1672,17 +1672,24 @@ int band_draw_entry(BandPixel *band, int gap_ds, const BandEngine &e,
             if (split >= 0 && k >= split && n_below) ++*n_below;
             /* WITHIN one engine, OBJ priority resolves and the 127 -> 0
                walk breaks ties toward the lower index, exactly as
-               raster_obj above. ACROSS the two engines it does not, and
-               the test says so by comparing the engine tag first: engine A
-               runs first and engine B second, so the only cross-engine
-               case here is B arriving over an A pixel, and B takes it
-               whatever the two priority numbers are. Priorities are per
-               engine on the hardware -- they order layers inside one 2D
-               unit and have no meaning between units -- so comparing them
-               across the seam would be arithmetic on two different
-               scales, and it would make which engine wins depend on scene
-               content rather than on a rule anyone can state. */
-            if (bp.hit && bp.eng == e.id && prio > bp.prio) continue;
+               raster_obj above. ACROSS the two engines the priority test
+               holds too, and only the TIE rule differs: engine A runs
+               first and engine B second, so on equal priority B takes the
+               pixel -- B's upload is the fresher half of the seam, and for
+               a routed object both engines' copies are the same pixels
+               anyway. What B may NOT do any more is erase a better
+               priority with a worse one. The routed minigames put both
+               engines' entries on ONE priority scale, because both copies
+               of every world object come from the same RenderOamBothScreens
+               call with the same priority argument -- and OAM::Render's
+               off-screen cull makes partial sets routine: measured on
+               Shuffle Shell's two-sprite stack crossing at world row -20,
+               the body (prio 1) was culled from engine B while the base
+               (prio 2) wrapped in, and the unconditional cross-engine
+               overwrite let that lone base paint over engine A's complete
+               body -- the owner's "bottom layer of the shell goes in
+               front of the top at the transition line". */
+            if (bp.hit && prio > bp.prio) continue;
             bp.color = color;
             bp.prio = prio;
             bp.hit = 1;
