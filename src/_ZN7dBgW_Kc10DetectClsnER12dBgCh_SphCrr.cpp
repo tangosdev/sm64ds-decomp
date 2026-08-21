@@ -1,4 +1,12 @@
 //cpp
+/* The ROM builds C++ with -Cpp_exceptions off (rombuild.CFLAGS); the verify
+   tools compile with swarm.CPP_FLAGS, which leaves exceptions ON, and this is
+   the one file in the tree where that difference reaches codegen (a
+   literal-pool word and the order of four zero-init stores -- 4/1778 words).
+   The pragma pins exceptions off from inside the file so BOTH regimes produce
+   the cartridge's bytes; under the build flags it is redundant and
+   byte-neutral.  Do not remove it without checking linkcheck's verdict. */
+#pragma exceptions off
 // @symbol _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr
 /* dBgW_Kc::DetectClsn(dBgCh_SphCrr &) at 0x01ffb830 (ITCM), 0x1bc8 bytes.
  *
