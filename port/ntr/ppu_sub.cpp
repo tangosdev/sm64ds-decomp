@@ -1216,6 +1216,21 @@ void band_art(uint32_t *dst, int dst_w, const StackLayout &lay)
 void band_fill(uint32_t *dst, int dst_w, const StackLayout &lay)
 {
     if (lay.band_h <= 0) return;
+    /* THE WORLD-BAND: the GaplessMinigames mode. These rows are playfield,
+       not decoration. The engine's own backdrop colour was tried first and
+       measured wrong by eye on scene 368 -- palette entry zero is WHITE
+       there, a stark stripe between two skies. The background-only ambient
+       wash is what actually reads as the scenery continuing through the
+       hinge (it is built from the two adjacent background rows and nothing
+       else, see amb_avg_bg), so it is the world-band's backdrop, and the
+       crossing objects go over it CRISP via the peek raster in the compose
+       -- not blurred: these rows are world, and the thing crossing them is
+       really there. The chosen fill mode, the scene art and the flat colour
+       all stand down: this band is not the player's decoration. */
+    if (lay.world_band) {
+        band_fill_ambient(dst, dst_w, lay);
+        return;
+    }
     if (lay.peek) {
         band_flat(dst, dst_w, lay, 0xFF000000u);
         if (lay.art) band_art(dst, dst_w, lay);
@@ -3102,12 +3117,14 @@ void ppu_compose_stacked(const uint32_t *top, const SubFramebuffer &sub,
        binding whose engine-B bias assumes a gap that is not there. The layout
        already carries peek 0 in this mode (hal/screen_gap.cpp forces it, and
        says so), so this test is the belt beside that brace. */
-    if (lay.peek && !lay.obj_shift_ds) band_peek(dst, dst_w, lay);
+    if ((lay.peek || lay.world_band) && !lay.obj_shift_ds)
+        band_peek(dst, dst_w, lay);
     /* and the ghost when peek is OFF: whatever is really crossing the gap
        shows as a blurred shape behind the glow instead of vanishing or
-       flooding the wash. Peek keeps the crisp honest view; the hinge mode
-       draws those rows itself. */
-    if (!lay.peek && !lay.obj_shift_ds) band_ghost(dst, dst_w, lay);
+       flooding the wash. Peek keeps the crisp honest view; the world-band
+       just ran the crisp raster above; the hinge mode draws its own rows. */
+    if (!lay.peek && !lay.world_band && !lay.obj_shift_ds)
+        band_ghost(dst, dst_w, lay);
     /* AND THE BAND'S OWN CONTENT, when the band has any: engine A's texels for
        the world rows the shift moved into it, over the fill that was just laid
        down. Returns immediately with no shift, so a gap-on band is byte-for-byte

@@ -290,6 +290,14 @@ struct StackLayout {
     // after the first latch for that scene, and a cached 0 would leave the
     // pass off for the whole game.
     int seam;
+    // WORLD-BAND: the GaplessMinigames mode. The band's rows are the world
+    // rows a DS hides inside its hinge, drawn as real rows -- the scene's
+    // backdrop colour behind, the engines' own crossing sprites crisp in
+    // front (band_peek's raster plus the continuity pass). Set by the layout
+    // from hal_gapless_world(); the band painters read it here. The fill
+    // modes, the art, the ghost and peek's black backdrop all stand down
+    // for it: this band is not decoration, it is playfield.
+    int world_band;
     // THE SCENE'S HAND-DRAWN BAND, or null. 256 * gap_ds DS pixels, row
     // major, top row first, 0xAARRGGBB, and alpha 0 means the magenta key:
     // the artist's "leave this pixel to whatever is behind me".

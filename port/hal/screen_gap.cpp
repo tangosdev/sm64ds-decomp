@@ -317,6 +317,7 @@ int hal_gapless_per_entry_ds(void) { return per_entry_ds(); }
 int hal_screen_gap_raw(void) { return read_raw(); }
 
 int hal_gapless_visual(void);   /* defined beside the latch below */
+int hal_gapless_world(void);    /* same */
 
 const ntr::StackLayout *hal_screen_layout(void)
 {
@@ -391,6 +392,7 @@ const ntr::StackLayout *hal_screen_layout(void)
     if (g_have && want == g_raw && scene == g_scene && head == g_head &&
         shift == g_shift) {
         g_lay.seam = seam;
+        g_lay.world_band = hal_gapless_world() ? 1 : 0;
         g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
         return &g_lay;
     }
@@ -424,6 +426,7 @@ const ntr::StackLayout *hal_screen_layout(void)
     g_lay = ntr::stack_layout(want, head, shift, mode,
                               host_setting_gap_color(), peek, art);
     g_lay.seam = seam;
+    g_lay.world_band = hal_gapless_world() ? 1 : 0;
     g_lay.obj_raster_ds = raster ? g_lay.obj_shift_ds : 0;
     /* and the band's per-scene continuity reader, installed at the same moment
        for the same reason: it is per scene, and installing clears the cached
@@ -592,11 +595,10 @@ namespace {
 
 struct GaplessScene {
     int scene_id;
-    /* 1 = FULL: zero the game's G, the halves go edge to edge and the strip
-       above the top screen keeps the world's top rows -- objects genuinely
-       cross the seam. 0 = VISUAL: the game's G is NOT touched; the picture
-       just loses the band, which is all "gapless" can mean for a game where
-       nothing travels between the screens. */
+    /* 1 = FULL: zero the game's G and the halves go edge to edge -- objects
+       genuinely cross the seam. 0 = VISUAL: the game's G is NOT touched; the
+       picture just loses the band, which is all "gapless" can mean for a
+       game where nothing travels between the screens. */
     int full;
     const char *what;
 };
@@ -608,15 +610,7 @@ struct GaplessScene {
 const GaplessScene kGaplessScenes[] = {
     {368, 1, "dScMgPachinko_c, Bob-omb Squad"},
     {374, 1, "dScMgCurling_c, Shuffle Shell"},
-    /* 376 is VISUAL, and it was FULL for one evening. Its pegboard art is
-       ANCHORED top-screen art: the ball (routed, follows G) and the board
-       (BG, does not) disagree the moment G reads zero, and the owner's play
-       report named it exactly -- "the pegs hitbox is higher than the pegs
-       are drawn". A game whose playfield art registers against physics
-       cannot compress its world; the honest gapless for it is the band gone
-       and the ball blinking across the seam the way the DS's own hinge hides
-       it. */
-    {376, 0, "dScMgSmartball_c, Slots Shot"},
+    {376, 1, "dScMgSmartball_c, Slots Shot"},
     {378, 1, "MgCoincentration, Coincentration"},
     {366, 0, "dScMgLuigi_c, Wanted!"},
     {390, 0, "dScMgFlower_c, Loves Me...?"},
@@ -624,6 +618,7 @@ const GaplessScene kGaplessScenes[] = {
 
 int g_gapless_on;        /* 1 once the write has engaged for the scene running */
 int g_gapless_visual;    /* 1 for a VISUAL row: band gone, simulation untouched */
+int g_gapless_world;     /* 1 for a FULL row: ROM sim, hinge rows drawn as world */
 int g_gapless_scene = -2;
 
 const GaplessScene *gapless_row(int scene)
@@ -644,6 +639,7 @@ void hal_gapless_minigames_latch(void)
     /* A scene must never inherit the last one's answer. */
     g_gapless_on = 0;
     g_gapless_visual = 0;
+    g_gapless_world = 0;
     g_gapless_scene = scene;
     /* AND THE HEADROOM IS DROPPED WITH IT, for the reason the two lines above
        exist: a scene must never inherit the last one's answer, and a stale
@@ -682,56 +678,51 @@ void hal_gapless_minigames_latch(void)
         return;
     }
 
-    const int was = read_raw();
-    /* CAPTURED HERE BECAUSE HERE IS THE ONLY PLACE IT EXISTS. This is the G the
-       scene's own InitResources wrote, one statement before the store below
-       replaces it with zero, and after that store nothing in the program can
-       recover it -- the word reads zero and no other copy is kept. The display
-       headroom is exactly this many DS rows. */
-    g_gapless_head_ds = was;
-    /* WRITTEN AS FOUR BYTES rather than through a declared `int`, for the
-       reason the block over data_ov004_020beb6c gives: the mount owns this
-       storage as u8[4] and a second declaration of it as an int would be an
-       opinion about the storage rather than a use of it. Four zero bytes is
-       the integer zero on either endianness, so nothing is being assumed. */
-    data_ov004_020beb6c[0] = 0;
-    data_ov004_020beb6c[1] = 0;
-    data_ov004_020beb6c[2] = 0;
-    data_ov004_020beb6c[3] = 0;
-    g_gapless_on = 1;
+    /* THE FULL HALF, third architecture, and this one starts from the owner's
+       sentence rather than from the word's: "a seamless transition from top
+       screen to bottom". Zeroing G never delivered that -- it SLIDES the top
+       window down G rows to expose the crossing, which detaches every
+       world-anchored sprite from the screen-anchored art it stands on
+       (Wario off his platform, the ball above its pegs) and pushes the
+       world's top G rows off the picture. The owner played every variant of
+       that regime and named the defect exactly: "you shifted the whole
+       screen down".
 
-    /* SAID EVERY TIME IT ENGAGES, and said as a warning rather than as a
-       status. A capture or a bug report from a run with this on is not a
-       report about this game, and the line is how that is told apart later.
-       It also states the display consequence, because the layout reads the
-       same word this just zeroed: no band, so the fill, the art and the peek
-       have nothing to act on for this scene. */
-    std::fprintf(stderr, "[gapless] scene %d: ENGAGED for %s -- G %d -> 0. The "
-                 "screen gap is now gone from the SIMULATION: objects cross the "
-                 "seam directly and arrive %d rows sooner than a DS delivers "
-                 "them. THIS IS NOT THE ROM'S BEHAVIOUR. The PICTURE: %s\n",
-                 scene, row->what, was, was,
-                 /* WHICH ARM IS ACTUALLY RUNNING, asked of each for itself --
-                    the default is now the bandless regime (headroom strip, no
-                    correction), and the two measured-wrong arms stay behind
-                    their switches. */
-                 headroom_ds()
-                     ? "the halves sit edge to edge with no band, and the "
-                       "strip above the top screen keeps the world's top rows "
-                       "on screen"
-                     : per_entry_ds()
-                     ? "the framework's routed sprites are corrected at their "
-                       "own submissions and the band between the halves "
-                       "carries what runs off the top screen's bottom edge "
-                       "(SM64DS_GAPLESS_HEADROOM=0 arm)"
-                     : obj_layer_shift_ds()
-                     ? "the OBJ display shift is ON, which is opt-in and "
-                       "MEASURED WRONG: it moves the whole top engine OBJ "
-                       "layer, and only the framework-routed sprites are "
-                       "displaced. Read obj_shift_ds in hal/screen_gap.cpp"
-                     : "the halves are edge to edge, and the sprites the "
-                       "framework's OAM router placed sit G rows above the "
-                       "artwork they were drawn against");
+       So the game's G word is NOT TOUCHED ANY MORE. The top screen stays the
+       ROM's picture to the pixel, and the G rows between the screens -- the
+       world rows a DS physically hides inside its hinge -- are rendered as
+       REAL ROWS: the scene's own backdrop colour behind, the engines' own
+       submissions plus the continuity pass's dead-zone entries in front,
+       crisp. An object falls through the seam in one unbroken line because
+       every row of its path is now on screen. Nothing is displaced, so
+       there is nothing to correct.
+
+       SM64DS_GAPLESS_ZERO_G=1 restores the old G write for measurement. */
+    const int was = read_raw();
+    g_gapless_head_ds = was;
+    static int zero_g = -1;
+    if (zero_g < 0) {
+        const char *s = std::getenv("SM64DS_GAPLESS_ZERO_G");
+        zero_g = s && *s && *s != '0';
+    }
+    if (zero_g) {
+        data_ov004_020beb6c[0] = 0;
+        data_ov004_020beb6c[1] = 0;
+        data_ov004_020beb6c[2] = 0;
+        data_ov004_020beb6c[3] = 0;
+        g_gapless_on = 1;
+        std::fprintf(stderr, "[gapless] scene %d: ZERO-G measurement arm for "
+                     "%s -- G %d -> 0. THIS IS NOT THE ROM'S BEHAVIOUR and it "
+                     "is not the shipped mode.\n", scene, row->what, was);
+        return;
+    }
+    g_gapless_world = 1;
+    std::fprintf(stderr, "[gapless] scene %d: WORLD-BAND for %s -- the "
+                 "simulation is untouched, G stays %d, the top screen is the "
+                 "ROM's picture, and the %d hinge rows between the screens are "
+                 "drawn as real world rows: backdrop behind, the game's own "
+                 "crossing sprites in front. Nothing vanishes at the seam.\n",
+                 scene, row->what, was, was);
 }
 
 /* THE VISUAL FLAG, scene-checked the way hal_gapless_engaged is and for the
@@ -740,6 +731,13 @@ void hal_gapless_minigames_latch(void)
 int hal_gapless_visual(void)
 {
     return g_gapless_visual && g_gapless_scene == hal_gap_scene_id();
+}
+
+/* THE WORLD-BAND FLAG, same scene check. The layout keeps the band and marks
+   it as world rows; the band painters read the mark off the layout. */
+int hal_gapless_world(void)
+{
+    return g_gapless_world && g_gapless_scene == hal_gap_scene_id();
 }
 
 /* THE SCENE IS PART OF THE ANSWER. The flag alone would keep reading 1 after
@@ -894,31 +892,19 @@ int routed_adjust(int py)
 {
     if (g_route_depth <= 0 || g_route_depth > ROUTE_MAX) return 0;
     if (py != g_route_a2[g_route_depth - 1] + 0xc0 + read_raw()) return 0;
-    /* The banded measurement arm keeps its constant correction. */
-    const int adj = per_entry_ds();
-    if (adj) return adj;
-    /* THE RAMP, and it is the bandless default's whole correction policy.
-       Two truths collide in a bandless picture: top-screen art does not move
-       when G reads zero, so a routed sprite needs +G back to register with
-       it (Coincentration's Wario, the parachute drops against the ROM's own
-       spawn heights); and a sprite CROSSING the seam needs no correction at
-       all, because the G=0 row is the one that lines up with its bottom
-       screen copy. A constant does one and breaks the other -- corrected
-       crossers vanish into rows 192..192+G that no screen shows.
-
-       So the correction fades over the 2G rows above the seam: full G high
-       on the screen, zero at row 192. The drawn row py + adj(py) stays
-       strictly increasing (slope of the ramp is -1/2), so a falling object
-       never pops -- it covers the squeeze zone at 1.5x apparent speed and
-       meets its bottom-screen copy exactly at the seam. */
-    if (!hal_gapless_engaged()) return 0;
-    if (obj_layer_shift_ds()) return 0;
-    const int g = g_gapless_head_ds;
-    if (g <= 0) return 0;
-    const int zone = 2 * g;
-    if (py <= 0xc0 - zone) return g;
-    if (py >= 0xc0) return 0;
-    return g * (0xc0 - py) / zone;
+    /* The banded measurement arm keeps its constant correction. Nothing else
+       corrects ANYTHING any more. A ramp that eased the correction out
+       toward the seam was tried for one evening and measured wrong by the
+       owner's own play: the routers submit a crossing object to BOTH engines,
+       and any correction applied to the top copy and not the bottom one
+       opens a gap of exactly that many sprite rows between the two halves at
+       the seam -- the object hits a line, vanishes, and reappears below it.
+       The two copies must agree everywhere, so the correction is zero
+       everywhere. What a world-anchored sprite standing on screen-anchored
+       art needs is its WORLD constant moved, per game, at that game's own
+       latch -- the audit the gapless table's note has demanded all along --
+       not a display-side nudge. */
+    return per_entry_ds();
 }
 
 /* IS THE MAIN SHADOW THE BLOCK ENGINE A WILL BE SHOWING? OAM::Load's own test,

@@ -111,6 +111,51 @@ int pachinko_balls(unsigned char *scene, ntr::BandTrack *out, int max,
     return n;
 }
 
+/* ---- scene 378, dScMgCoin_c (Coincentration) -------------------------------
+ *
+ * THE FALLING COIN STACKS, the reader the header's own note has asked for
+ * since the file was written. The scene's one object array: 40 slots at
+ * +0x4660, stride 0x1c, X at +0 and Y at +4 (both Fix12), the render loop's
+ * visible flag at +0x4676 (func_ov006_020dd594 tests it and draws through
+ * RenderOamBothScreens). A stack's OamAttr pieces are 8x32 verticals with a
+ * -16 y offset and x offsets down to -12 (data_ov006_0213bf0c via
+ * data_ov006_0212e314), so the box handed to the matcher is 24 wide and 32
+ * tall at (px - 12, py - 16).
+ *
+ * THE FOLD IS BY KIND, NOT BY INDEX. Forty slots share eight cache slots, and
+ * pachinko's rule holds -- a fold is only exact when everything folded to one
+ * slot shares one attribute template. Here the template is the stack height,
+ * +0x4678, values 0..3, so kind IS the template id and the fold is kind
+ * itself: at most four of the eight cache slots used, every re-render drawn
+ * from an attr triple that is byte-identical to the one the vanished coin
+ * was submitted with. */
+const int kCoinBase = 0x4660;
+const int kCoinStride = 0x1c;
+const int kCoinCount = 0x28;
+const int kCoinVisible = 0x4676;
+const int kCoinKind = 0x4678;
+
+int coin_stacks(unsigned char *scene, ntr::BandTrack *out, int max,
+                int gap_ds)
+{
+    int n = 0;
+    for (int i = 0; i < kCoinCount && n < max; ++i) {
+        const int at = i * kCoinStride;
+        if (!*(unsigned char *)(scene + kCoinVisible + at)) continue;
+        const int px = *(int *)(scene + kCoinBase + at) >> 12;
+        const int py = *(int *)(scene + kCoinBase + 4 + at) >> 12;
+        ntr::BandTrack &t = out[n];
+        t.slot = *(unsigned char *)(scene + kCoinKind + at) &
+                 (ntr::BAND_TRACK_MAX - 1);
+        t.x = px - 12;
+        t.y = py - 16 + gap_ds;
+        t.w = 24;
+        t.h = 32;
+        ++n;
+    }
+    return n;
+}
+
 /* ---- the table ------------------------------------------------------------ */
 struct ContinuityRow {
     int scene_id;
@@ -121,6 +166,7 @@ struct ContinuityRow {
 
 const ContinuityRow kRows[] = {
     {368, pachinko_balls, "dScMgPachinko_c, the 48 slingshot balls at +0x4ed8"},
+    {378, coin_stacks, "dScMgCoin_c, the 40 coin stacks at +0x4660"},
 };
 
 int (*g_read)(unsigned char *, ntr::BandTrack *, int, int);

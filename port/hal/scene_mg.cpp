@@ -2703,8 +2703,28 @@ unsigned port_mg_coin_trap_hits(void);
 static int  __fastcall mc_init(void *s, void *)
 { MG_SLOT(0);  const int r = func_ov006_020de704(s);
   hal_gapless_minigames_latch(); return r; }
+/* SM64DS_CCN_TRACE=1: dScMgCoin_c's 40-slot object array, once at beh 200. */
+static void mc_slots_dump(void *s, unsigned beh)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_CCN_TRACE");
+        on = (e && e[0] && e[0] != '0') ? 1 : 0;
+    }
+    if (!on || beh != 200) return;
+    unsigned char *c = (unsigned char *)s;
+    for (int i = 0; i < 0x28; i++) {
+        unsigned char *p = c + i * 0x1c;
+        if (!*(p + 0x4676)) continue;
+        std::fprintf(stderr, "[ccn] slot%02d kind=%u x=%d y=%d st=%u f15=%u "
+                     "vx=%d vy=%d\n", i, (unsigned)*(p + 0x4678),
+                     *(int *)(p + 0x4660) >> 12, *(int *)(p + 0x4664) >> 12,
+                     (unsigned)*(p + 0x4675), (unsigned)*(p + 0x4677),
+                     *(int *)(p + 0x4668) >> 12, *(int *)(p + 0x466c) >> 12);
+    }
+}
 static int  __fastcall mc_beh(void *s, void *)
-{ MG_SLOT(6);  return func_ov006_020de69c(s); }
+{ MG_SLOT(6);  mc_slots_dump(s, g_mg_hits[6]); return func_ov006_020de69c(s); }
 static int  __fastcall mc_render(void *s, void *)
 { MG_SLOT(9);  return func_ov006_020de63c(s); }
 static void *__fastcall mc_d2(void *s, void *)
