@@ -27,7 +27,7 @@ int LavaPlank::InitResources()
   kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov022_02114618);
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, data_ov064_0211ba6c);
   func_020393d4(&mMeshCollider, &_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
-  unk_320 = mPosY;
+  mOriginalPosY = mPosY;
   unk_324 = mAngleX;
   return 1;
 }

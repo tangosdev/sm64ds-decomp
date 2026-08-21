@@ -91,8 +91,8 @@ int Minimap::InitResources()
             || SublevelToLevel(data_0209f2f8) == -1)
         {
             *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x4010));
-            unk_1d8 = 0x100;
-            unk_1dc = 0x80;
+            mMapWidth = 0x100;
+            mMapCenterOffset = 0x80;
 
             if (SublevelToLevel(data_0209f2f8) == 4) {
                 unk_1e0 = 0x258000;
@@ -108,22 +108,22 @@ int Minimap::InitResources()
                 unk_1e4 = 0;
                 unk_1e8 = 0;
             }
-            unk_251 = 1;
+            mArrowType = 1;
         } else {
             *(volatile u16*)0x400100e = (u16)(((0x1f - data_ov002_02111148) << 8) | ((*(volatile u16*)0x400100e & 0x43) | 0x10));
-            unk_1d8 = 0x80;
-            unk_1dc = 0x40;
+            mMapWidth = 0x80;
+            mMapCenterOffset = 0x40;
             unk_1e0 = 0;
             unk_1e4 = 0;
             unk_1e8 = 0;
-            unk_251 = 2;
+            mArrowType = 2;
         }
         data_0209d454 |= 8;
     } else {
         data_0209d454 &= ~8;
     }
 
-    unk_214 = GetMinimapScale(data_ov002_02111148);
+    mTargetInvScale = GetMinimapScale(data_ov002_02111148);
 
     {
         int b1 = (data_0209f2d8 == 0);
@@ -131,15 +131,15 @@ int Minimap::InitResources()
             if (!(data_0209caa0[2] & 0x80)) {
                 int b3 = (data_0209fc48 != 0);
                 if (!b3) {
-                    unk_218 = (unk_214) << 1;
-                    unk_21c = 0;
-                    unk_255 = 1;
+                    mInvScale = (mTargetInvScale) << 1;
+                    mAngle = 0;
+                    mInIntroCutscene = 1;
                     goto unk218_done;
                 }
             }
         }
-        unk_218 = unk_214;
-        unk_255 = 0;
+        mInvScale = mTargetInvScale;
+        mInIntroCutscene = 0;
     unk218_done:;
     }
 
@@ -153,14 +153,14 @@ int Minimap::InitResources()
     unk_208 = 0;
     unk_20c = 0x1000;
     unk_1ec = 0;
-    unk_210 = 0x1000;
+    mArrowScale = 0x1000;
     unk_090 = 0;
     unk_094 = 0;
     unk_098 = 0;
     unk_09c = 0;
 
-    unk_1d4 = func_0202a958();
-    unk_1d4 = ((unk_1d8) << 12) / (unk_1d4) / 10;
+    mScale = func_0202a958();
+    mScale = ((mMapWidth) << 12) / (mScale) / 10;
 
     return 1;
 }

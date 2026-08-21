@@ -23,10 +23,10 @@ struct SwitchActivatedPlank {
        padding rather than being folded into the member. */
     Model mModel2;            /* 0x320 */
     u8  pad_370[0x30];
-    s16 unk_3a0;            /* 0x3a0 */
-    u8  unk_3a2;            /* 0x3a2 */
-    u8  unk_3a3;            /* 0x3a3 */
-    u8  unk_3a4;            /* 0x3a4 */
+    s16 mStateTimer;            /* 0x3a0 */
+    u8  mState;            /* 0x3a2 */
+    u8  mVisible;            /* 0x3a3 */
+    u8  mEventID;            /* 0x3a4 */
 #ifdef __cplusplus
     /* methods */
     int CleanupResources();

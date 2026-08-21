@@ -35,8 +35,8 @@ struct PyramidLift {
     u8  pad_37c[0x78];
     u16 mShakeTimer;            /* 0x3f4 */
     u8  mState;            /* 0x3f6 */
-    u8  unk_3f7;            /* 0x3f7 */
-    u8  unk_3f8;            /* 0x3f8 */
+    u8  mHadClsn;            /* 0x3f7 */
+    u8  mNextBullet;            /* 0x3f8 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

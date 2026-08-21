@@ -16,8 +16,8 @@ extern void *_ZTV6Dorrie[];
 extern void *data_020a0eac;
 void *_ZN6DorrieD0Ev(struct Dorrie *self) {
     *(void ***)((char *)self) = _ZTV6Dorrie;
-    _ZN10dCcAcPos_cD1Ev((char *)&self->unk_1140);
-    _ZN7dCcAc_cD1Ev((char *)&self->unk_110c);
+    _ZN10dCcAcPos_cD1Ev((char *)&self->mCylClsn2);
+    _ZN7dCcAc_cD1Ev((char *)&self->mCylClsn1);
     _ZN10dBgCh_ActrD1Ev((char *)&self->mWithMeshClsn);
     __destroy_arr(((char *)self) + 0x150, 7, 0x200, (void*)&func_ov065_021180b8);
     _ZN9ModelAnimD1Ev((char *)&self->mModelAnim);

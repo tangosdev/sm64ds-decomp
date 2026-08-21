@@ -31,6 +31,6 @@ int FloatOnLavaPlatform::InitResources()
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x199, mAngleY, data_ov064_0211bb0c);
   func_020393d4(&mMeshCollider, &_ZN4dBgW21UpdatePosWithVelocityERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
   func_020393c4(&mMeshCollider, &func_ov022_0211193c);
-  unk_320 = mPosY;
+  mMaxPosY = mPosY;
   return 1;
 }

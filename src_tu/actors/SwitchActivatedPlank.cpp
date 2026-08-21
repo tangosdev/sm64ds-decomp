@@ -107,9 +107,9 @@ int _ZN18MovingMeshCollider9TransformERK9Matrix4x3s(void*, void*, int);
 int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
     func_020393a4(((char*)self)+0x124, 0x100000);
 
-    switch(self->unk_3a2){
+    switch(self->mState){
     case 0:
-        if(_ZN5Event6GetBitEj(self->unk_3a4) == 0) break;
+        if(_ZN5Event6GetBitEj(self->mEventID) == 0) break;
 
         {
             unsigned char* st_ptr = (unsigned char*)(((int)((char*)self) + 0x3a2));
@@ -117,7 +117,7 @@ int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
         }
 
         *(short*)(((char*)self) + 0x300 + 0xa0) = 0;
-        self->unk_3a3 = 1;
+        self->mVisible = 1;
 
         ((MeshColliderBase *)(((char*)self)+0x124))->Enable((dActor_c *)(((char*)self)));
         func_ov029_021126dc(((char*)self));
@@ -125,15 +125,15 @@ int _ZN20SwitchActivatedPlank8BehaviorEv(struct SwitchActivatedPlank *self) {
         break;
 
     case 1: {
-        unsigned short* p = (unsigned short*)((char*)&self->unk_3a0);
+        unsigned short* p = (unsigned short*)((char*)&self->mStateTimer);
         if (*(unsigned short*)(((char*)self) + 0x300 + 0xa0) > 0x168) {
-            self->unk_3a3 = *(unsigned short*)(((char*)self) + 0x300 + 0xa0) & 1;
+            self->mVisible = *(unsigned short*)(((char*)self) + 0x300 + 0xa0) & 1;
         }
         *p = *p + 1;
-        if (_ZN5Event6GetBitEj(self->unk_3a4) != 0) break;
+        if (_ZN5Event6GetBitEj(self->mEventID) != 0) break;
         ((MeshColliderBase *)((char*)&self->mMovingMeshCollider))->Disable();
-        self->unk_3a2 = 0;
-        self->unk_3a3 = 0;
+        self->mState = 0;
+        self->mVisible = 0;
         break;
     }
     }
@@ -152,7 +152,7 @@ struct Sub { virtual void v0(); virtual void v1(); virtual void v2(); virtual vo
 
 int SwitchActivatedPlank::Render()
 {
-  if (unk_3a3 != 0) {
+  if (mVisible != 0) {
     Sub *s = (Sub*)((char *)&mModel2);
     s->v5(0);
   }

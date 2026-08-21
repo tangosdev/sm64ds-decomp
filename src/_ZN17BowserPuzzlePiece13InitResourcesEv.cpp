@@ -23,9 +23,9 @@ extern CLPS_Block data_ov064_0211baac;
 
 void BowserPuzzlePiece::InitResources()
 {
-    unk_337 = unk_008 & 0xf;
+    mType = unk_008 & 0xf;
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0xd4,
-        _ZN5Model8LoadFileER13SharedFilePtr(*data_ov064_0211adc8[unk_337]), 1, -1);
+        _ZN5Model8LoadFileER13SharedFilePtr(*data_ov064_0211adc8[mType]), 1, -1);
     func_ov064_02119010(((char*)this));
     func_ov064_02118fa4(((char*)this));
     _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(
@@ -33,12 +33,12 @@ void BowserPuzzlePiece::InitResources()
         _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov064_0211c800),
         *(const Matrix4x3*)((char*)&unk_2ec), 0x1000, unk_08e, data_ov064_0211baac);
     func_020393c4((int*)((char*)&mMovingMeshCollider), (int)&func_ov064_021192bc);
-    unk_324 = data_ov064_0211c198[unk_337];
-    unk_328 = 0;
+    mStateInfo = data_ov064_0211c198[mType];
+    mStateIndex = 0;
     unk_32c = 0;
-    unk_334 = 0;
-    unk_338 = 0;
-    unk_339 = 1;
-    unk_336 = 0;
-    unk_33a = 1;
+    mMoveTimer = 0;
+    mHadClsn = 0;
+    mFreezeState = 1;
+    mState = 0;
+    mCanSpawnCoin = 1;
 }

@@ -27,7 +27,7 @@ int ArmedRotatingPlatform::InitResources()
   kcl = _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(data_ov036_02113d78[1]);
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, &mClsnMat, 0x1000, mAngleY, data_ov036_02113d78[2]);
   func_020393d4(&mMeshCollider, &_ZN4dBgW16UpdatePosAndAngsERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
-  unk_31e = -0x80;
-  if (mAngleZ != 0) unk_31e = mAngleZ;
+  mAngVelY = -0x80;
+  if (mAngleZ != 0) mAngVelY = mAngleZ;
   return 1;
 }

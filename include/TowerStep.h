@@ -22,15 +22,15 @@ struct TowerStep : dBgActor_c {
     u8  pad_31e[0x2];
     ShadowModel mShadowModel;         /* 0x320 */
     u8  pad_348[0x30];
-    s32 unk_378;                      /* 0x378 */
-    s32 unk_37c;                      /* 0x37c */
-    s32 unk_380;                      /* 0x380 */
-    s32 unk_384;                      /* 0x384 */
-    s32 unk_388;                      /* 0x388 */
-    s32 unk_38c;                      /* 0x38c */
-    u8 unk_390;                       /* 0x390 */
-    u8 unk_391;                       /* 0x391 */
-    u8 unk_392;                       /* 0x392 */
+    s32 mFloorPosY;                      /* 0x378 */
+    s32 mMinPosY;                      /* 0x37c */
+    s32 mMaxPosY;                      /* 0x380 */
+    s32 mShadowOffsetX;                      /* 0x384 */
+    s32 mShadowOffsetY;                      /* 0x388 */
+    s32 mSoundID;                      /* 0x38c */
+    u8 mMoveTimer;                       /* 0x390 */
+    u8 mJustSteppedOn;                       /* 0x391 */
+    u8 mMove;                       /* 0x392 */
 
     /* --- vtable --- */
     virtual ~TowerStep();
@@ -77,15 +77,15 @@ struct TowerStep {
     u8  pad_125[0x1fb];
     ShadowModel mShadowModel; /* 0x320 */
     u8  pad_348[0x30];
-    s32 unk_378;            /* 0x378 */
-    s32 unk_37c;            /* 0x37c */
-    s32 unk_380;            /* 0x380 */
-    s32 unk_384;            /* 0x384 */
-    s32 unk_388;            /* 0x388 */
-    s32 unk_38c;            /* 0x38c */
-    u8  unk_390;            /* 0x390 */
-    u8  unk_391;            /* 0x391 */
-    u8  unk_392;            /* 0x392 */
+    s32 mFloorPosY;            /* 0x378 */
+    s32 mMinPosY;            /* 0x37c */
+    s32 mMaxPosY;            /* 0x380 */
+    s32 mShadowOffsetX;            /* 0x384 */
+    s32 mShadowOffsetY;            /* 0x388 */
+    s32 mSoundID;            /* 0x38c */
+    u8  mMoveTimer;            /* 0x390 */
+    u8  mJustSteppedOn;            /* 0x391 */
+    u8  mMove;            /* 0x392 */
 };
 
 #endif /* __cplusplus */

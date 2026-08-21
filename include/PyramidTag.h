@@ -10,7 +10,7 @@
 struct PyramidTag {
     u8  pad_000[0xd4];
     dCcAc_c mdCcAc_c;         /* 0x0d4 */
-    s32 unk_108;            /* 0x108 */
+    s32 mPyramidTopID;            /* 0x108 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

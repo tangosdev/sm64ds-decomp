@@ -14,7 +14,7 @@ extern int _ZNK10dBgCh_Actr10IsOnGroundEv(void* c);
 
 int BigBully::Behavior()
 {
-    u8 s = unk_3fe;
+    u8 s = mNumBulliesKilled;
     if (s >= 4) {
         if (mSecretSoundCounter != 0) {
             if (_ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (u16*)((char*)&mSecretSoundCounter)) != 0)

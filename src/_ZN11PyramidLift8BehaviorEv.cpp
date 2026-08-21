@@ -13,7 +13,7 @@ int PyramidLift::Behavior()
 {
     switch (mState) {
     case 0:
-        if (unk_3f7 != 0) {
+        if (mHadClsn != 0) {
             mState = 1;
             mShakeTimer = 0;
         }
@@ -37,7 +37,7 @@ int PyramidLift::Behavior()
     }
     case 2: {
         int v = mPosY;
-        int idx = unk_3f8;
+        int idx = mNextBullet;
         int* p = (int*)(((char*)this) + idx * 0xc + 0x380);
         int lim = *p + 0x14000;
         if (v <= lim) {
@@ -77,6 +77,6 @@ int PyramidLift::Behavior()
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));
     if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(((char*)this), 0, 0))
         _ZN10dBgActor_c19UpdateClsnPosAndRotEv(((char*)this));
-    unk_3f7 = 0;
+    mHadClsn = 0;
     return 1;
 }

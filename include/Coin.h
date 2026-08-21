@@ -18,7 +18,7 @@
  * All three Spawn entry points build the SAME class (same vtable, same
  * size) -- Coin is the coin actor shared by yellow/blue/red spawn paths.
  *
- * SIZE 0x3b4 is the factory's own literal; the last member (unk_3b0, 1 byte)
+ * SIZE 0x3b4 is the factory's own literal; the last member (mInBrickBlock, 1 byte)
  * closes at 0x3b1 and rounds up to 0x3b4 under 4-byte alignment.
  *
  * Everything below 0x0d0 duplicated dActor_c's own fields under placeholder
@@ -40,7 +40,7 @@
  */
 struct Coin : dActor_c {
     s32 mEatingPlayer;            /* 0x0d0 */
-    s32 unk_0d4;            /* 0x0d4 */
+    s32 mPuzzleManagerID;            /* 0x0d4 */
     /* CommonModel member, named by the class's own destructor calling
        CommonModel's D1 at +0x0d8 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN4CoinD0Ev.c] */
@@ -61,19 +61,19 @@ struct Coin : dActor_c {
        dBgCh_Actr's D1 at +0x1ac -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN4CoinD0Ev.c] */
     dBgCh_Actr mWithMeshClsn;            /* 0x1ac */
-    Matrix4x3 unk_368;        /* 0x368 */
-    s32 unk_398;            /* 0x398 */
+    Matrix4x3 mShadowMat;        /* 0x368 */
+    s32 mFloorPosY;            /* 0x398 */
     u8  pad_39c[0x4];
     s32 mCoinType;            /* 0x3a0 */
     s32 mBehaviorType;            /* 0x3a4 */
-    s16 unk_3a8;            /* 0x3a8 */
-    u8  unk_3aa;            /* 0x3aa */
+    s16 mDisappearTimer;            /* 0x3a8 */
+    u8  mNoClsnTimer;            /* 0x3aa */
     u8  unk_3ab;            /* 0x3ab */
-    s8  unk_3ac;            /* 0x3ac */
+    s8  mTrackStarID;            /* 0x3ac */
     u8  pad_3ad[0x1];
     u8  unk_3ae;            /* 0x3ae */
     u8  pad_3af[0x1];
-    u8  unk_3b0;            /* 0x3b0 */
+    u8  mInBrickBlock;            /* 0x3b0 */
 
     virtual ~Coin();            /* slots 16 (D1), 17 (D0) */
 

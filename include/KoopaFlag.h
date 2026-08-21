@@ -17,7 +17,7 @@ struct KoopaFlag {
        Animation base), which the header declared separately inside it. */
     ModelAnim mModelAnim;            /* 0x108 */
     u16 mVictoryTimer;            /* 0x16c */
-    u8  unk_16e;            /* 0x16e */
+    u8  mHasTouchedFlag;            /* 0x16e */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

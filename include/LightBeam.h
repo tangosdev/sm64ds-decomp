@@ -15,7 +15,7 @@ struct LightBeam {
     Model mModel;            /* 0x0d4 */
     dCcAcPos_c mdCcAcPos_c;   /* 0x124 */
     u8  pad_164[0x4];
-    u16 unk_168;              /* 0x168 */
+    u16 mSoundTimer;              /* 0x168 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

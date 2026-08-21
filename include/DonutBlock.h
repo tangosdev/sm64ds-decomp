@@ -24,8 +24,8 @@ struct DonutBlock : dBgActor_c {
     s32 unk_4dc;                      /* 0x4dc */
     s32 unk_4e0;                      /* 0x4e0 */
     s32 unk_4e4;                      /* 0x4e4 */
-    u8 unk_4e8;                       /* 0x4e8 */
-    u8 unk_4e9;                       /* 0x4e9 */
+    u8 mHadClsn;                       /* 0x4e8 */
+    u8 mClsnTimer;                       /* 0x4e9 */
     u8 mState;                        /* 0x4ea */
 
     /* --- vtable --- */
@@ -69,8 +69,8 @@ struct DonutBlock {
     s32 unk_4dc;            /* 0x4dc */
     s32 unk_4e0;            /* 0x4e0 */
     s32 unk_4e4;            /* 0x4e4 */
-    u8  unk_4e8;            /* 0x4e8 */
-    u8  unk_4e9;            /* 0x4e9 */
+    u8  mHadClsn;            /* 0x4e8 */
+    u8  mClsnTimer;            /* 0x4e9 */
     u8  mState;            /* 0x4ea */
 };
 

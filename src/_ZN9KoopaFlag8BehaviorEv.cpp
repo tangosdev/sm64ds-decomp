@@ -20,7 +20,7 @@ int KoopaFlag::Behavior()
     char *a;
     int b;
 
-    if (unk_16e == 0) {
+    if (mHasTouchedFlag == 0) {
         id = mdCcAc_c.otherOwner;
         if (id != 0) {
             a = _ZN8dActor_c10FindWithIDEj(id);
@@ -28,7 +28,7 @@ int KoopaFlag::Behavior()
                 b = *(unsigned short *)(a + 0xC);
                 b = b == 0xBF;
                 if (b) {
-                    unk_16e = 1;
+                    mHasTouchedFlag = 1;
                     _ZN5Timer9StopTimerEv(data_0209d4c8);
                     mVictoryTimer = 1;
                     _ZN5Sound7PlaySubEjjj5Fix12IiEb(0x1F, 0x14, 0x7F, 0x6B000, 0);

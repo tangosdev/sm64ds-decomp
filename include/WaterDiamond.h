@@ -23,9 +23,9 @@ struct WaterDiamond {
        dCcAc_c's D1 at +0x124 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN12WaterDiamondD0Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x124 */
-    s32 unk_158;            /* 0x158 */
-    s8  unk_15c;            /* 0x15c */
-    u8  unk_15d;            /* 0x15d */
+    s32 mWaterID;            /* 0x158 */
+    s8  mWaterParam;            /* 0x15c */
+    u8  mActive;            /* 0x15d */
 #ifdef __cplusplus
     /* methods */
     int Behavior();

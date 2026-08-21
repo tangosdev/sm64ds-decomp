@@ -19,10 +19,10 @@
 
 struct SlidingIce : dBgActor_c {
     s16 unk_31e;                      /* 0x31e */
-    s8 unk_320;                       /* 0x320 */
+    s8 mNumToBigIce;                       /* 0x320 */
     u8  pad_321[0x3];
-    s32 unk_324;                      /* 0x324 */
-    s32 unk_328;                      /* 0x328 */
+    s32 mMinPosY;                      /* 0x324 */
+    s32 mSoundID;                      /* 0x328 */
 
     /* --- vtable --- */
     virtual ~SlidingIce();
@@ -65,10 +65,10 @@ struct SlidingIce {
     s8  unk_170;            /* 0x170 */
     u8  pad_171[0x1ad];
     s16 unk_31e;            /* 0x31e */
-    s8  unk_320;            /* 0x320 */
+    s8  mNumToBigIce;            /* 0x320 */
     u8  pad_321[0x3];
-    s32 unk_324;            /* 0x324 */
-    s32 unk_328;            /* 0x328 */
+    s32 mMinPosY;            /* 0x324 */
+    s32 mSoundID;            /* 0x328 */
 };
 
 #endif /* __cplusplus */

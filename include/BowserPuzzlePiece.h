@@ -23,17 +23,17 @@ struct BowserPuzzlePiece {
     dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x37];
-    s32 unk_324;            /* 0x324 */
-    u8  unk_328;            /* 0x328 */
+    s32 mStateInfo;            /* 0x324 */
+    u8  mStateIndex;            /* 0x328 */
     u8  pad_329[0x3];
     s32 unk_32c;            /* 0x32c */
     u8  pad_330[0x4];
-    s16 unk_334;            /* 0x334 */
-    u8  unk_336;            /* 0x336 */
-    u8  unk_337;            /* 0x337 */
-    u8  unk_338;            /* 0x338 */
-    u8  unk_339;            /* 0x339 */
-    u8  unk_33a;            /* 0x33a */
+    s16 mMoveTimer;            /* 0x334 */
+    u8  mState;            /* 0x336 */
+    u8  mType;            /* 0x337 */
+    u8  mHadClsn;            /* 0x338 */
+    u8  mFreezeState;            /* 0x339 */
+    u8  mCanSpawnCoin;            /* 0x33a */
 #ifdef __cplusplus
     /* methods */
     int CleanupResources();

@@ -25,8 +25,8 @@ int BigBully::InitResources()
 
     *(void**)((char*)&mFileTable) = &data_ov064_0211b93c;
     saved = func_ov064_02116ec0(((char*)this));
-    unk_3fc = param1 & 0xf;
-    unk_3fd = (u8)_ZN8dActor_c9TrackStarEjj((dActor_c*)((char*)this), unk_3fc, 2);
+    mStarID = param1 & 0xf;
+    unk_3fd = (u8)_ZN8dActor_c9TrackStarEjj((dActor_c*)((char*)this), mStarID, 2);
     mSecretSoundCounter = 0;
 
     if ((param1 & 0xff00) == 0x100) {
@@ -36,7 +36,7 @@ int BigBully::InitResources()
         int i;
         int ang;
 
-        unk_3fe = 0;
+        mNumBulliesKilled = 0;
         _ZN9dBgCh_GndC1Ev(&rg);
 
         {
@@ -78,7 +78,7 @@ int BigBully::InitResources()
         goto done;
     }
 
-    unk_3fe = 0xff;
+    mNumBulliesKilled = 0xff;
 done:
     return saved;
 }

@@ -22,12 +22,12 @@ struct Dorrie {
     u8  pad_090[0x3c];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
-    s32 unk_0d4;            /* 0x0d4 */
+    s32 mCap;            /* 0x0d4 */
     s32 unk_0d8;            /* 0x0d8 */
     s32 unk_0dc;            /* 0x0dc */
     s32 unk_0e0;            /* 0x0e0 */
     u8  pad_0e4[0x4];
-    u8  unk_0e8;            /* 0x0e8 */
+    u8  mHasCap;            /* 0x0e8 */
     u8  pad_0e9[0x3];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0xec -- a relocation the ROM build
        checks. D1 and not D2, so it is this type and not an inlined base. The marker's pad
@@ -45,26 +45,26 @@ struct Dorrie {
     /* dCcAc_c member, named by the class's own destructor calling
        dCcAc_c's D1 at +0x110c -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN6DorrieD1Ev.cpp] */
-    dCcAc_c unk_110c;           /* 0x110c */
+    dCcAc_c mCylClsn1;           /* 0x110c */
     /* dCcAcPos_c member, named by the class's own destructor calling
        dCcAcPos_c's D1 at +0x1140 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN6DorrieD1Ev.cpp] */
-    dCcAcPos_c unk_1140;           /* 0x1140 */
+    dCcAcPos_c mCylClsn2;           /* 0x1140 */
     s32 unk_1180;           /* 0x1180 */
     s32 unk_1184;           /* 0x1184 */
     s32 unk_1188;           /* 0x1188 */
-    s32 unk_118c;           /* 0x118c */
-    s32 unk_1190;           /* 0x1190 */
+    s32 mClsnPlayer;           /* 0x118c */
+    s32 mRider;           /* 0x1190 */
     s32 unk_1194;           /* 0x1194 */
     s32 unk_1198;           /* 0x1198 */
     s32 unk_119c;           /* 0x119c */
     u8  pad_11a0[0x8];
-    s32 unk_11a8;           /* 0x11a8 */
-    s32 unk_11ac;           /* 0x11ac */
+    s32 mPushDownHeight;           /* 0x11a8 */
+    s32 mSinkHeight;           /* 0x11ac */
     u8  pad_11b0[0x2];
-    s16 unk_11b2;           /* 0x11b2 */
+    s16 mStateTimer;           /* 0x11b2 */
     u8  pad_11b4[0x1];
-    u8  unk_11b5;           /* 0x11b5 */
+    u8  mClsnState;           /* 0x11b5 */
 #ifdef __cplusplus
     /* methods */
     int CleanupResources();

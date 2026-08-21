@@ -18,14 +18,14 @@ int DonutBlock::Behavior()
 {
     switch (mState) {
     case 0:
-        if (unk_4e8 == 0) {
-            unk_4e9 = 0;
+        if (mHadClsn == 0) {
+            mClsnTimer = 0;
         } else {
             unsigned char* pc9 = (unsigned char*)(((int)((char*)this) + 0x4e9));
             *pc9 = *pc9 + 1;
-            unk_4e8 = 0;
+            mHadClsn = 0;
         }
-        if (unk_4e9 >= 0xf) mState = 1;
+        if (mClsnTimer >= 0xf) mState = 1;
         break;
     case 1:
         _ZN8dActor_c9UpdatePosEP5dCc_c(((char*)this), 0);
@@ -45,8 +45,8 @@ int DonutBlock::Behavior()
         if (d <= 0x3e8000) break;
         if (d < 0x7d0000) {
             mVertSpeed = 0;
-            unk_4e9 = 0;
-            unk_4e8 = 0;
+            mClsnTimer = 0;
+            mHadClsn = 0;
             mState = 0;
         }
         break;

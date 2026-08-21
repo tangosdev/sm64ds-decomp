@@ -88,7 +88,7 @@ int LightBeam::Behavior()
                         if (*(s32*)((char*)o + 0x664) == 0xd) {
                             if (_ZN6Player9StartTalkER7fBase_cb(o, ((Obj*)this), 0)) {
                                 ((Obj*)this)->f164 = (s32)o;
-                                *(s16*)((char*)&unk_168) = 0;
+                                *(s16*)((char*)&mSoundTimer) = 0;
                             }
                         }
                     }

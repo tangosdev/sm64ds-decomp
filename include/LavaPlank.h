@@ -19,7 +19,7 @@
 
 struct LavaPlank : dBgActor_c {
     u8  pad_31e[0x2];
-    s32 unk_320;                      /* 0x320 */
+    s32 mOriginalPosY;                      /* 0x320 */
     s16 unk_324;                      /* 0x324 */
 
     /* --- vtable --- */
@@ -49,7 +49,7 @@ struct LavaPlank {
     Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    s32 unk_320;            /* 0x320 */
+    s32 mOriginalPosY;            /* 0x320 */
     s16 unk_324;            /* 0x324 */
 };
 

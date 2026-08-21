@@ -21,8 +21,8 @@
 struct PyramidStep : dBgActor_c {
     u8  pad_31e[0x2];
     Model mModel;                     /* 0x320 */
-    s16 unk_370;                      /* 0x370 */
-    u8 unk_372;                       /* 0x372 */
+    s16 mStateTimer;                      /* 0x370 */
+    u8 mState;                       /* 0x372 */
     u8  pad_373[0x1];
     u8 unk_374;                       /* 0x374 */
 
@@ -64,8 +64,8 @@ struct PyramidStep {
     /* Model member, named by _ZN5ModelD1Ev at +0x320 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel2;            /* 0x320 */
-    s16 unk_370;            /* 0x370 */
-    u8  unk_372;            /* 0x372 */
+    s16 mStateTimer;            /* 0x370 */
+    u8  mState;            /* 0x372 */
     u8  pad_373[0x1];
     u8  unk_374;            /* 0x374 */
 };

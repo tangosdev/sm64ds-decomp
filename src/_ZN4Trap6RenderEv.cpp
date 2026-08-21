@@ -10,14 +10,14 @@
  * body is the same virtual-dispatch-through-a-shadow-vtable trick the file
  * used before the rename (Model's own Render, called through the Model
  * sub-object at +0x320), unconverted. include/Trap.h is included for the
- * `struct Trap` cast that reads unk_3ab by hand offset. */
+ * `struct Trap` cast that reads mIsSpawner by hand offset. */
 #include "Trap.h"
 extern "C" {
 struct A { char pad[0x320]; };
 struct B { virtual void m0(); virtual void m1(); virtual void m2(); virtual void m3(); virtual void m4(); virtual void m5(bool); };
 int _ZN4Trap6RenderEv(char* c){
     struct Trap *self = (struct Trap *)(void *)c;
-  if(self->unk_3ab == 0){
+  if(self->mIsSpawner == 0){
     ((B*)(c+0x320))->m5(false);
   }
   return 1;

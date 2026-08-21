@@ -28,8 +28,8 @@ int SlidingBox::InitResources()
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char*)this) + 0x324, ((char*)this), 0x14000, 0x14000, 0, 0);
     unk_09c = -0x2000;
     unk_0a0 = -0x14000;
-    unk_320 = 0;
-    unk_4f4 = 0;
-    unk_4f0 = 0;
+    mShip = 0;
+    mState = 0;
+    mSoundID = 0;
     return 1;
 }

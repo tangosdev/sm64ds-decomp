@@ -21,9 +21,9 @@
 
 struct TTC_MovingBeam : dBgActor_c {
     u8  pad_31e[0x2];
-    s32 unk_320;                      /* 0x320 */
-    s32 unk_324;                      /* 0x324 */
-    u8 unk_328;                       /* 0x328 */
+    s32 mStartPosY;                      /* 0x320 */
+    s32 mEndPosY;                      /* 0x324 */
+    u8 mDirection;                       /* 0x328 */
     u8  pad_329[0x7];
     s32 unk_330;                      /* 0x330 */
     ShadowModel mShadowModel;         /* 0x334 */
@@ -38,7 +38,7 @@ struct TTC_MovingBeam : dBgActor_c {
     /* Tail padding. The field span stops short of the real size: TTC_MovingBeam_Spawn
        calls fBase_c::operator new(0x38c), read off the retail
        instruction. A span is only a LOWER BOUND. */
-    Matrix4x3 pad_35c;        /* 0x35c */
+    Matrix4x3 mShadowMat;        /* 0x35c */
 };
 
 typedef char TTC_MovingBeam_size_must_be_0x38c[sizeof(TTC_MovingBeam) == 0x38c ? 1 : -1];
@@ -71,9 +71,9 @@ struct TTC_MovingBeam {
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x33];
-    s32 unk_320;            /* 0x320 */
-    s32 unk_324;            /* 0x324 */
-    u8  unk_328;            /* 0x328 */
+    s32 mStartPosY;            /* 0x320 */
+    s32 mEndPosY;            /* 0x324 */
+    u8  mDirection;            /* 0x328 */
     u8  pad_329[0x7];
     s32 unk_330;            /* 0x330 */
     ShadowModel mShadowModel; /* 0x334 */

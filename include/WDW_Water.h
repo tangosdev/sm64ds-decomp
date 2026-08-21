@@ -24,10 +24,10 @@ struct WDW_Water : dBgActor_c {
     s32 mTargetPosY;                  /* 0x334 */
     u8 unk_338;                       /* 0x338 */
     u8  pad_339[0x3];
-    s32 unk_33c;                      /* 0x33c */
-    u8 unk_340;                       /* 0x340 */
+    s32 mSoundID;                      /* 0x33c */
+    u8 mTrueAreaID;                       /* 0x340 */
     u8  pad_341[0x3];
-    s32 unk_344;                      /* 0x344 */
+    s32 mWaterHeight;                      /* 0x344 */
 
     /* --- vtable --- */
     virtual ~WDW_Water();
@@ -68,10 +68,10 @@ struct WDW_Water {
     s32 mTargetPosY;            /* 0x334 */
     u8  unk_338;            /* 0x338 */
     u8  pad_339[0x3];
-    s32 unk_33c;            /* 0x33c */
-    u8  unk_340;            /* 0x340 */
+    s32 mSoundID;            /* 0x33c */
+    u8  mTrueAreaID;            /* 0x340 */
     u8  pad_341[0x3];
-    s32 unk_344;            /* 0x344 */
+    s32 mWaterHeight;            /* 0x344 */
 };
 
 #endif /* __cplusplus */

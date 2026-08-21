@@ -51,7 +51,7 @@ int PyramidLift::InitResources()
         ip = ((char*)this);
         unk_378 = mPosZ;
         mState = (unsigned char)n;
-        unk_3f7 = (unsigned char)n;
+        mHadClsn = (unsigned char)n;
         k = 0x1cc000;
         do {
             int *py;

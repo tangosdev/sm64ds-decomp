@@ -61,9 +61,9 @@ int KnockDownPlank::InitResources()
     c.y += 0x14000;
     _ZN9dBgCh_GndC1Ev(&rg);
     _ZN9dBgCh_Gnd12SetObjAndPosERK7Vector3P8dActor_c(&rg, &c, 0);
-    unk_384 = c.y;
+    mFrontFloorY = c.y;
     if (_ZN9dBgCh_Gnd10DetectClsnEv(&rg) != 0)
-        unk_384 = rg.clsnY;
+        mFrontFloorY = rg.clsnY;
 
     zero = 0;
     a.z = 0x32000; a.x = zero; a.y = zero; b.x = zero; b.y = zero; b.z = zero;
@@ -76,8 +76,8 @@ int KnockDownPlank::InitResources()
     unk_378 = d.x;
     unk_37c = d.y;
     unk_380 = d.z;
-    unk_388 = mPosY;
-    unk_396 = (s8)one;
+    mOriginalPosY = mPosY;
+    mKnockDir = (s8)one;
 
     if (data_0209f2f8 == 7 && (data_0209f220 == 1 || IsStarCollectedInCurLevel(one) == 0)
         && mPosY >= 0xdac000)

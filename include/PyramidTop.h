@@ -25,12 +25,12 @@ struct PyramidTop : dBgActor_c {
     s32 unk_3a0;                      /* 0x3a0 */
     s32 unk_3a4;                      /* 0x3a4 */
     s32 unk_3a8;                      /* 0x3a8 */
-    s32 unk_3ac;                      /* 0x3ac */
-    s16 unk_3b0;                      /* 0x3b0 */
-    u16 unk_3b2;                      /* 0x3b2 */
-    s16 unk_3b4;                      /* 0x3b4 */
-    u8 unk_3b6;                       /* 0x3b6 */
-    u8 unk_3b7;                       /* 0x3b7 */
+    s32 mSpinParticleID;                      /* 0x3ac */
+    s16 mAngVelY;                      /* 0x3b0 */
+    u16 mStateTimer;                      /* 0x3b2 */
+    s16 mSoundTimer;                      /* 0x3b4 */
+    u8 mNumTagsTriggered;                       /* 0x3b6 */
+    u8 mState;                       /* 0x3b7 */
 
     /* --- vtable --- */
     virtual ~PyramidTop();
@@ -80,12 +80,12 @@ struct PyramidTop {
     s32 unk_3a0;            /* 0x3a0 */
     s32 unk_3a4;            /* 0x3a4 */
     s32 unk_3a8;            /* 0x3a8 */
-    s32 unk_3ac;            /* 0x3ac */
-    s16 unk_3b0;            /* 0x3b0 */
-    u16 unk_3b2;            /* 0x3b2 */
-    s16 unk_3b4;            /* 0x3b4 */
-    u8  unk_3b6;            /* 0x3b6 */
-    u8  unk_3b7;            /* 0x3b7 */
+    s32 mSpinParticleID;            /* 0x3ac */
+    s16 mAngVelY;            /* 0x3b0 */
+    u16 mStateTimer;            /* 0x3b2 */
+    s16 mSoundTimer;            /* 0x3b4 */
+    u8  mNumTagsTriggered;            /* 0x3b6 */
+    u8  mState;            /* 0x3b7 */
 };
 
 #endif /* __cplusplus */

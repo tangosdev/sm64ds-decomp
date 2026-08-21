@@ -20,9 +20,9 @@
 #include "ShadowModel.h"
 
 struct Squasher : dBgActor_c {
-    s16 unk_31e;                      /* 0x31e */
-    s16 unk_320;                      /* 0x320 */
-    u8 unk_322;                       /* 0x322 */
+    s16 mAngVelX;                      /* 0x31e */
+    s16 mStateTimer;                      /* 0x320 */
+    u8 mState;                       /* 0x322 */
     u8  pad_323[0x1];
     ShadowModel mShadowModel;         /* 0x324 */
 
@@ -36,7 +36,7 @@ struct Squasher : dBgActor_c {
     /* Tail padding. The field span stops short of the real size: Squasher_Spawn
        calls fBase_c::operator new(0x37c), read off the retail
        instruction. A span is only a LOWER BOUND. */
-    Matrix4x3 pad_34c;        /* 0x34c */
+    Matrix4x3 mShadowMat;        /* 0x34c */
 };
 
 typedef char Squasher_size_must_be_0x37c[sizeof(Squasher) == 0x37c ? 1 : -1];
@@ -72,9 +72,9 @@ struct Squasher {
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x31];
-    s16 unk_31e;            /* 0x31e */
-    s16 unk_320;            /* 0x320 */
-    u8  unk_322;            /* 0x322 */
+    s16 mAngVelX;            /* 0x31e */
+    s16 mStateTimer;            /* 0x320 */
+    u8  mState;            /* 0x322 */
     u8  pad_323[0x1];
     ShadowModel mShadowModel; /* 0x324 */
 };

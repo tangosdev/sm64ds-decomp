@@ -32,7 +32,7 @@ struct SlidingBox {
     Model mModel;            /* 0x0d4 */
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
-    s32 unk_320;            /* 0x320 */
+    s32 mShip;            /* 0x320 */
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x324 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN10SlidingBoxD1Ev.c] */
@@ -40,9 +40,9 @@ struct SlidingBox {
     s32 unk_4e0;            /* 0x4e0 */
     s32 unk_4e4;            /* 0x4e4 */
     s32 unk_4e8;            /* 0x4e8 */
-    s32 unk_4ec;            /* 0x4ec */
-    s32 unk_4f0;            /* 0x4f0 */
-    u8  unk_4f4;            /* 0x4f4 */
+    s32 mHorzPos;            /* 0x4ec */
+    s32 mSoundID;            /* 0x4f0 */
+    u8  mState;            /* 0x4f4 */
 #ifdef __cplusplus
     /* methods */
     int CleanupResources();

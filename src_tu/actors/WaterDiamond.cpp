@@ -49,9 +49,9 @@ struct dActor_c {   /* shadow base: vptr at 0, evidenced dActor_c fields, size 0
 struct WaterDiamond : dActor_c {
     Model mModel;                            /* 0x0d4 */
     MovingCylinderClsn mMovingCylinderClsn;  /* 0x124 */
-    s32 unk_158;                             /* 0x158 */
-    s8  unk_15c;
-    u8  unk_15d;
+    s32 mWaterID;                             /* 0x158 */
+    s8  mWaterParam;
+    u8  mActive;
     virtual ~WaterDiamond();
     int Behavior();
     int InitResources();
@@ -96,9 +96,9 @@ int WaterDiamond::InitResources()
   void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_02114270);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, m, 1, -1);
   _ZN18MovingCylinderClsn4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0x124, ((char*)this), 0x32000, 0x64000, 0x800002, 0);
-  unk_158 = 0;
-  unk_15c = mParam & 1;
-  unk_15d = 0;
+  mWaterID = 0;
+  mWaterParam = mParam & 1;
+  mActive = 0;
   mAngleY = 0;
   return 1;
 }
@@ -121,19 +121,19 @@ extern void _ZN12CylinderClsn6UpdateEv(void* self);
 int WaterDiamond::Behavior()
 {
     func_ov029_02111850(((char*)this));
-    if (unk_158 == 0) return 1;
+    if (mWaterID == 0) return 1;
     func_ov029_021117ac(((char*)this));
-    if (unk_15d != 0) {
+    if (mActive != 0) {
         char* p;
         s16* a = (s16*)(((int)((char*)this) + 0x8e));
         *a = *a + 0x400;
-        p = _ZN8dActor_c10FindWithIDEj(unk_158);
+        p = _ZN8dActor_c10FindWithIDEj(mWaterID);
         if (p != 0) {
             if (mPosY == *(int*)(p+0x60)) {
-                if (mAngleY == 0) unk_15d = 0;
+                if (mAngleY == 0) mActive = 0;
             }
             if (mPosY != *(int*)(p+0x334)) {
-                unk_15d = 0;
+                mActive = 0;
                 mAngleY = 0;
             }
         }

@@ -51,8 +51,8 @@ int SpinningPlatform::InitResources()
     v.y = v.y - 0xa000;
     dBgCh_Gnd rg;
     rg.SetObjAndPos(*(Vector3*)&v, (dActor_c*)0);
-    unk_324 = v.y;
+    mFloorPosY = v.y;
     if (rg.DetectClsn() != 0)
-        unk_324 = rg.result;
+        mFloorPosY = rg.result;
     return 1;
 }

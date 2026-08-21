@@ -14,7 +14,7 @@ extern void _ZN5dCc_c6UpdateEv(void* p);
 
 int KoopaTheQuick::Behavior()
 {
-  int idx = unk_38c;
+  int idx = mState;
   char* ent = (char*)&data_ov062_0211e0a4[idx*2];
   int adj = *(int*)(ent+4);
   char* self = ((char*)this) + (adj>>1);

@@ -28,8 +28,8 @@ int Squasher::InitResources()
   _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(&mMeshCollider, kcl, (struct Matrix4x3*)((char*)&(*(u8 *)&mClsnMat)), 0x1000, (*(u16 *)&mAngleY), &data_ov064_0211ba4c);
   func_020393d4((int*)((char*)&mMeshCollider), (int)&_ZN4dBgW22UpdatePosWithTransformERS_P8dActor_cR5dBgPiR7Vector3P10Vector3_16S8_);
   ((dBgW *)(&mMeshCollider))->Enable((dActor_c *)(((char*)this)));
-  unk_31e = 0;
-  unk_320 = 0;
-  unk_322 = 0;
+  mAngVelX = 0;
+  mStateTimer = 0;
+  mState = 0;
   return 1;
 }

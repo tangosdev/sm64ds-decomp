@@ -11,7 +11,7 @@
  * itself, facing its own heading turned 0x8000 (180 degrees) plus a random
  * 10-bit spread, then gives the coin an upward launch: 0xa000 of vertical
  * speed and 0x50000 of terminal velocity, with the two acceleration slots
- * zeroed. Finally it looks up the actor whose unique ID sits in unk_3fc and
+ * zeroed. Finally it looks up the actor whose unique ID sits in mBigBullyID and
  * bumps the byte at +0x3fe of it. The field is left unnamed on purpose: what
  * the bytes establish is that it holds an actor ID, not what that actor is.
  *
@@ -69,7 +69,7 @@ int Bully::Behavior()
                 *(int *)(coin + 0xa8) = 0x50000;
                 *(int *)(coin + 0xac) = 0;
             }
-            char *spawner = _ZN8dActor_c10FindWithIDEj(unk_3fc);
+            char *spawner = _ZN8dActor_c10FindWithIDEj(mBigBullyID);
             if (spawner) {
                 (*(u8 *)(spawner + 0x3fe))++;
             }

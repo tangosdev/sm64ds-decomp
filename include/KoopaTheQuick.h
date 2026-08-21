@@ -36,28 +36,28 @@ struct KoopaTheQuick : dEnemyBase_c {
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     ModelAnim                    mModelAnim;            /* 0x300 */
     ShadowModel                  mShadowModel;          /* 0x364 */
-    s32                          unk_38c;               /* 0x38c */
+    s32                          mState;               /* 0x38c */
     u8  pad_390[0x4];
-    s32                          unk_394;               /* 0x394 */
-    s32                          unk_398;               /* 0x398 */
+    s32                          mFlagID;               /* 0x394 */
+    s32                          mPlayer;               /* 0x398 */
     s32                          unk_39c;               /* 0x39c */
     s32                          unk_3a0;               /* 0x3a0 */
     u8                           unk_3a4;               /* 0x3a4 */
     u8  pad_3a5[0x5];
     s16                          unk_3aa;               /* 0x3aa */
-    u8                           unk_3ac;               /* 0x3ac */
-    u8                           unk_3ad;               /* 0x3ad */
-    u8                           unk_3ae;               /* 0x3ae */
+    u8                           mHasPlayerUsedCannon;               /* 0x3ac */
+    u8                           mPathPtToJumpAt1;               /* 0x3ad */
+    u8                           mPathPtToJumpAt2;               /* 0x3ae */
     u8  pad_3af[0x1];
-    u8                           unk_3b0;               /* 0x3b0 */
-    u8                           unk_3b1;               /* 0x3b1 */
+    u8                           mTrackedStar;               /* 0x3b0 */
+    u8                           mStarID;               /* 0x3b1 */
     u8  pad_3b2[0x2];
-    u8                           unk_3b4;               /* 0x3b4 */
-    u8                           unk_3b5;               /* 0x3b5 */
-    u8                           unk_3b6;               /* 0x3b6 */
+    u8                           mHasFinished;               /* 0x3b4 */
+    u8                           mIsRacing;               /* 0x3b5 */
+    u8                           mIsTalkingToMario;               /* 0x3b6 */
     u8  pad_3b7[0x1];
-    s32                          unk_3b8;               /* 0x3b8 */
-    s32                          unk_3bc;               /* 0x3bc */
+    s32                          mNumPathPts;               /* 0x3b8 */
+    s32                          mCurPathPt;               /* 0x3bc */
     s32                          unk_3c0;               /* 0x3c0 */
     s32                          unk_3c4;               /* 0x3c4 */
     u8                           unk_3c8;               /* 0x3c8 */

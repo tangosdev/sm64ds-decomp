@@ -29,8 +29,8 @@ extern short data_02082214[];
 int _ZN4Trap13InitResourcesEv(char* c)
 {
     struct Trap *self = (struct Trap *)(void *)c;
-    self->unk_3aa = 0;
-    self->unk_3ac = 0;
+    self->mTrapActive = 0;
+    self->mSpawnerID = 0;
 
     if ((*(int*)(c + 8) & 0xff) == 0xff) {
         struct Vector3 v;
@@ -39,8 +39,8 @@ int _ZN4Trap13InitResourcesEv(char* c)
         int x, y, z;
         void* sp;
 
-        self->unk_3ab = 1;
-        self->unk_3a4 = 0;
+        self->mIsSpawner = 1;
+        self->mPlayerDist = 0;
 
         idx = ((int)(self->unk_08e) >> 4) * 2;
         sx = data_02082214[idx + 1];
@@ -69,7 +69,7 @@ int _ZN4Trap13InitResourcesEv(char* c)
         return 1;
     }
 
-    self->unk_3ab = 0;
+    self->mIsSpawner = 0;
     {
         void* f = _ZN5Model8LoadFileER13SharedFilePtr(&data_ov010_02112d08);
         _ZN9ModelBase7SetFileEP8BMD_Fileii(c + 0x320, f, 1, -1);
@@ -82,8 +82,8 @@ int _ZN4Trap13InitResourcesEv(char* c)
     }
     func_020393c4((int*)(c + 0x124), (int)func_ov010_02111984);
     _ZN4dBgW6EnableEP8dActor_c(c + 0x124, c);
-    self->unk_3a8 = 0;
-    self->unk_3a0 = 0;
+    self->mOpenSpeed = 0;
+    self->mState = 0;
 
     if ((*(int*)(c + 8) & 0xff) == 1) {
         short* pa = (short*)(((int)c + 0x8e));

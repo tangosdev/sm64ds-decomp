@@ -50,8 +50,8 @@ int WDW_Water::Behavior()
     }
 
     if (mPosY != unk_06c) {
-        unk_33c = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-            *(unsigned *)((u8 *)&unk_33c), 3, 0x96, ((u8 *)this) + 0x74, 0);
+        mSoundID = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+            *(unsigned *)((u8 *)&mSoundID), 3, 0x96, ((u8 *)this) + 0x74, 0);
     }
 
     {
@@ -60,9 +60,9 @@ int WDW_Water::Behavior()
         *q = (s16)(*q + 0x200);
         /* index from (u16)angle at 0x342 via 0x300+0x42 */
         i = *(u16 *)((u8 *)(((unsigned)((u8 *)this) + 0x300)) + 0x42) >> 4;
-        unk_344 = (int)data_02082214[i * 2] * 0xf + mPosY;
+        mWaterHeight = (int)data_02082214[i * 2] * 0xf + mPosY;
     }
-    data_0209f32c = unk_344;
+    data_0209f32c = mWaterHeight;
     func_ov029_021122b4(((u8 *)this));
     func_ov029_02112250(((u8 *)this));
     (*(s32 *)((char *)&mTextureTransformer + 0xc)) = 0x1000;

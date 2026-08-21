@@ -50,7 +50,7 @@ int WDW_Water::InitResources()
         &mMeshCollider, k, &mClsnMat, 0x1000, mAngleY, &data_ov029_02112fec);
     ((dBgW *)(&mMeshCollider))->Enable((dActor_c *)(((char *)this)));
 
-    unk_340 = (u8)mAreaId;
+    mTrueAreaID = (u8)mAreaId;
     mAreaId = -1;
     *(s16*)(((char *)this) + 0x300 + 0x42) = 0;
 

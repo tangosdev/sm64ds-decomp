@@ -21,7 +21,7 @@
 struct PoleLift : dBgActor_c {
     u8  pad_31e[0x2];
     dCcAc_c mdCcAc_c;/* 0x320 */
-    u16 unk_354;                      /* 0x354 */
+    u16 mHeightAng;                      /* 0x354 */
 
     /* --- vtable --- */
     virtual ~PoleLift();
@@ -54,7 +54,7 @@ struct PoleLift {
        dCcAc_c's D1 at +0x320 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN8PoleLiftD1Ev.c] */
     dCcAc_c mdCcAc_c;            /* 0x320 */
-    u16 unk_354;            /* 0x354 */
+    u16 mHeightAng;            /* 0x354 */
 };
 
 #endif /* __cplusplus */

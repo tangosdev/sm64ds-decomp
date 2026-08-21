@@ -11,7 +11,7 @@
  * then destroys the dBgW_KcMbg at 0x124 and the Model at 0xd4 and
  * chains to dActor_c. Those three are dBgActor_c's own.
  *
- * unk_31e sits at 0x31e, in dBgActor_c's TAIL PADDING: dBgActor_c's last field
+ * mAngVelY sits at 0x31e, in dBgActor_c's TAIL PADDING: dBgActor_c's last field
  * ends at 0x31e and its size rounds to 0x320, and the Itanium ABI lets a
  * derived class place members in a non-POD base's tail padding. Behavior reads
  * this+0x31e and reproduces the ROM, which is what confirms the placement.
@@ -22,7 +22,7 @@
 #include "dBgActor_c.h"
 
 struct ArmedRotatingPlatform : dBgActor_c {
-    s16 unk_31e;            /* 0x31e - per-frame yaw step; see InitResources */
+    s16 mAngVelY;            /* 0x31e - per-frame yaw step; see InitResources */
 
     /* --- vtable --- */
     virtual ~ArmedRotatingPlatform();

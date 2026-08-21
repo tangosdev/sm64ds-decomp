@@ -22,9 +22,9 @@ struct BasementWater : dBgActor_c {
     u8  pad_31e[0x2];
     TextureTransformer mTextureTransformer;/* 0x320 */
     s32 mLoweredY;                    /* 0x334 */
-    u32 unk_338;                      /* 0x338 */
-    u16 unk_33c;              /* 0x33c */
-    u8 unk_33e;                       /* 0x33e */
+    u32 mSoundID;                      /* 0x338 */
+    u16 mSoundTimer;              /* 0x33c */
+    u8 mWasJustDrained;                       /* 0x33e */
 
     /* --- vtable --- */
     virtual ~BasementWater();
@@ -66,9 +66,9 @@ struct BasementWater {
     u8  pad_125[0x1fb];
     TextureTransformer mTextureTransformer; /* 0x320 */
     s32 mLoweredY;            /* 0x334 */
-    u32 unk_338;            /* 0x338 */
-    u16 unk_33c;              /* 0x33c */
-    u8  unk_33e;            /* 0x33e */
+    u32 mSoundID;            /* 0x338 */
+    u16 mSoundTimer;              /* 0x33c */
+    u8  mWasJustDrained;            /* 0x33e */
 };
 
 #endif /* __cplusplus */

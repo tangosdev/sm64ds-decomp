@@ -46,7 +46,7 @@ int Koopa::InitResources()
     if (isSpecial)
     {
         mKoopaVariant = 2;
-        unk_3bc = 0x2000;
+        mAnimSpeed = 0x2000;
         mScaleX = 0x599;
         mScaleY = 0x599;
         mScaleZ = 0x599;
@@ -56,7 +56,7 @@ int Koopa::InitResources()
     else
     {
         mKoopaVariant = 0;
-        unk_3bc = 0x1000;
+        mAnimSpeed = 0x1000;
         mScaleX = 0xa66;
         mScaleY = 0xa66;
         mScaleZ = 0xa66;

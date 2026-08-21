@@ -80,7 +80,7 @@ struct ClockPaintingPendulum : dActor_c {
        +0xd4 -- a relocation the ROM build checks. */
     Model mModel;             /* 0x0d4 */
 
-    s16 unk_124;               /* 0x124 -- swing angle/phase, see SIZE above */
+    s16 mAngSpeed;               /* 0x124 -- swing angle/phase, see SIZE above */
     u8  pad_126[0x2];
 
     /* --- vtable. Declared first, deliberately -- it is already the key

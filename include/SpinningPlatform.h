@@ -25,11 +25,11 @@ struct SpinningPlatform {
     u8  pad_125[0x1c7];
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x31];
-    s8  unk_31e;            /* 0x31e */
+    s8  mRandDirection;            /* 0x31e */
     u8  pad_31f[0x1];
-    u16 unk_320;            /* 0x320 */
-    u16 unk_322;            /* 0x322 */
-    s32 unk_324;            /* 0x324 */
+    u16 mRandTimer;            /* 0x320 */
+    u16 mRandFrames;            /* 0x322 */
+    s32 mFloorPosY;            /* 0x324 */
     ShadowModel mShadowModel; /* 0x328 */
 #ifdef __cplusplus
     /* methods */

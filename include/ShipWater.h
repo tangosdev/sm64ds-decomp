@@ -21,10 +21,10 @@
 struct ShipWater : dBgActor_c {
     u8  pad_31e[0x2];
     TextureTransformer mTextureTransformer;/* 0x320 */
-    s32 unk_334;                      /* 0x334 */
-    u8 unk_338;                       /* 0x338 */
+    s32 mOriginalPosY;                      /* 0x334 */
+    u8 mChestsOpen;                       /* 0x338 */
     u8  pad_339[0x3];
-    s32 unk_33c;                      /* 0x33c */
+    s32 mSoundID;                      /* 0x33c */
 
     /* --- vtable --- */
     virtual ~ShipWater();
@@ -78,10 +78,10 @@ struct ShipWater {
     u8  mMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
     TextureTransformer mTextureTransformer; /* 0x320 */
-    s32 unk_334;            /* 0x334 */
-    u8  unk_338;            /* 0x338 */
+    s32 mOriginalPosY;            /* 0x334 */
+    u8  mChestsOpen;            /* 0x338 */
     u8  pad_339[0x3];
-    s32 unk_33c;            /* 0x33c */
+    s32 mSoundID;            /* 0x33c */
 };
 
 #endif /* __cplusplus */
