@@ -20,14 +20,13 @@ all of them.** The subsystem was compiled with RTTI on. A `_ZTS` string is not m
 `dBgCh_SphCrr` cannot produce the bytes `12dBgCh_SphCrr`. Until the family is renamed, no
 collision class can become a key-function TU. See §2.
 
-**2. The best draft of the biggest unmatched function is not the one the notes point
-at.** Both notes send you to `notes/drafts-sphereclsn-detectclsn.cpp`. A materially
-better draft is already banked in `nearmiss/db.jsonl`:
-
-| | `notes/drafts-…cpp` | `nearmiss/db.jsonl` |
-|---|---|---|
-| size vs 0x1bc8 | 0x1af4 — **53 instructions short** | 0x1b58 — **28 short** |
-| divergences | 1412 | **1213** |
+**2. SUPERSEDED -- the biggest unmatched function is unmatched no more.**
+`DetectClsn(dBgCh_SphCrr&)` byte-matches as of 2026-08-21 and lives at
+`src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`, enrolled complete. The
+notes draft it pointed at is deleted; its history is this file's Phase 3b
+sections and git. (The original fact, kept for the record: the notes draft
+and the nearmiss bank disagreed, and the bank was better -- check both before
+starting work on any function.)
 | exactly-equal (`--align`) | 366 | **565** |
 | ratio | 0.209 | **0.320** |
 
@@ -538,9 +537,12 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   it shares the octree walk verbatim with the already-matched `dBgCh_Gnd` twin, so it
   is the calibration run for 3b. Its recorded floor is a `this` register allocation
   (r7 vs r8) at 2004/b56.
-- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **Draft now at 404 divergences /
-  1374 equal / ratio 0.7728. The INSTRUCTION COUNT is exact (1,778) and so is the
-  STACK FRAME** (`sub sp,#0x1b4`, 102 slots). It began the previous session at
+- **3b. `DetectClsn(dBgCh_SphCrr&)`**, 7,112 B. **MATCHED 2026-08-21 --
+  0/1778 under the build flags, enrolled at
+  `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`.** The dated sections
+  below are the full campaign record (1493 -> 978 -> 253 -> 125 -> 36 -> 31 ->
+  15 -> 0); read them before touching the file, and note two flagged untrue
+  constructs remain as open readability work. It began the campaign at
   1213 / 565 / 0.3203.
 
   Progression: 565 -> 601 (block layout) -> 816 (declaration order) -> 825 (edge
@@ -773,7 +775,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   read flat across real gains. `mismatches=N/M` is frozen at 999 until the sizes match.
 
   ```
-  python tools/fdiff.py --c notes/drafts-sphereclsn-detectclsn.cpp \
+  python tools/fdiff.py --c src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp \
     --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
     --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
   ```
@@ -1102,6 +1104,45 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   pointer, and the draft is right to.** The head defect is not reachable by removing work
   from the block; the `add r2` has to exist and merely be scheduled later.
 
+  ### 15 -> 0. MATCHED, and promoted to src/
+
+  ```
+  RESULT match=True mismatches=0/1778   build_pin.verify -> (True, '2004/b56')
+  ```
+
+  The prologue fell to a spelling outside the canonicalised set: **per-site
+  `(const Vector3 *)` casts on the three centre reads, moved ABOVE the
+  `rad6`/`origin` declarations.** The "one allocator decision" invariant above
+  held across ~350 statement-level rewrites because mwcc canonicalises those to
+  the same IR -- but a per-site cv-qualifier cast is its OWN CSE class, so it
+  never reaches that IR: the `add r0,fp,#0x3c` result is not forwarded into the
+  first read, x takes its own reload, and y/z share the second, exactly the
+  cartridge's shape. And unlike the two basin-flipping spellings above, the
+  casts want nothing from `c` -- it stays chained at 0xc4, so the prologue
+  lever and the slot fix stop fighting. Win conditions from a 2,520-variant
+  positional sweep (measured before the slot fix landed, on a split-def
+  structure; they compose unchanged with the round-trip): reads in x,y,z
+  statement order, above BOTH `rad6` and `origin`, `rad6` declared before
+  `origin`, and at least two of the three reads cast-spelled.
+
+  The two parallel efforts converged on the same residues independently -- the
+  slot swap on one side, the prologue and the index-1502 add on the other (the
+  1502 fix is the same name-the-tolerance edit in both trees) -- and the two
+  halves composed to zero on the first compile.
+
+  The file now lives at `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`,
+  enrolled complete in `config/arm9/itcm/delinks.txt` (0x01ffb830-0x01ffd3f8,
+  butted against the matched Gnd twin). Two untrue constructs ship in it,
+  both flagged in the file header: the volatile round-trip on rsc and the
+  `const volatile` pointee on `c`. Finding the author's true spellings for
+  both is open readability work; every other construct in the file is honest.
+
+  Scoring note for whoever touches it next: the byte gate that matters is the
+  BUILD-flag one (`-Cpp_exceptions off`, what rombuild/build_pin/CI compile
+  with). `fdiff`'s default regime (`-w illpragmas`) reads this same file as
+  4/1778 -- a literal-pool word and the order of the four hoisted zero-init
+  stores are flag artifacts, which is also why the earlier bucket arithmetic
+  said 36 where the build gate said 32.
 
   ### A metric defect that hid work
 
@@ -1613,7 +1654,7 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   until the sizes match.
 
   ```
-  python tools/fdiff.py --c notes/drafts-sphereclsn-detectclsn.cpp \
+  python tools/fdiff.py --c src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp \
     --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
     --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
   ```
@@ -1714,7 +1755,7 @@ grep -c complete config/arm9/delinks.txt
 python -c "import json;[print(json.loads(l)['name'],json.loads(l)['divergences']) for l in open('nearmiss/db.jsonl',encoding='utf-8')]"
 grep -n dBgCh_SphCrr config/match_attempts.jsonl
 # score a draft (module itcm, never arm9/itcm)
-python tools/fdiff.py --c notes/drafts-sphereclsn-detectclsn.cpp \
+python tools/fdiff.py --c src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp \
   --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
   --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56 --align
 # the port line

@@ -194,6 +194,18 @@ Two structural facts fell out alongside it. The pool always begins at chain-end 
 
 One caveat I want to keep attached to this: `(s32)(volatile s32)rsc` is a **matching hack, not a reconstruction**. No human wrote that. It proves the allocator state is reachable and it isolates the mechanism, but the spelling the original author used is still an open question. Those are different claims and it's worth not letting the byte count blur them — which is the §4 lesson again, in a happier register.
 
+## 10. Coda: 15 → 0, from the other side of the fork
+
+The prologue's fifteen fell in a parallel workstream the same day, and the shape of the fix is §9's lesson again from a different angle. ~350 statement-level rewrites of the head block were byte-neutral because the compiler canonicalises them to the same IR before allocation — but a **per-site cv-qualifier cast is its own CSE class**, so `((const Vector3 *)c)->x` never reaches that IR. Three casts, moved above the `rad6`/`origin` declarations, and the add result stops being forwarded into the first read; x takes its own reload, y and z share the second; indices 2..17 come out instruction-for-instruction the cartridge's. Crucially the casts want nothing from `c` itself — it stays chained — so the prologue lever and §9's slot fix compose instead of fighting, and the first compile of the two halves together read:
+
+```
+RESULT match=True mismatches=0/1778
+```
+
+The function is enrolled at `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`. Two flagged untrue constructs ship in it (§9's round-trip, and the `const volatile` pointee) — finding the author's true spellings is open work, and this document's own §4 rule applies to any story anyone tells about them.
+
+The measurement footnote that nearly hid the finish line: the byte gate that ships is the build-flag one (`-Cpp_exceptions off`). fdiff's default regime reads the matched file as 4/1778 — a literal-pool word and the zero-init store order are flag artifacts. Score with the build flags.
+
 ## The one-line takeaway
 
 Every one of these is the same shape: **I was inferring something the toolchain would have told me, and I trusted a measurement I hadn't validated.** The frame map, the metric defect, the false comment, the untimed loop, the miscounted relocations, the twice-rejected flip, the one-flavour lever — seven instances of guessing where asking was available. Ask first; it is nearly always cheaper than the inference, and it doesn't quietly return the wrong answer.

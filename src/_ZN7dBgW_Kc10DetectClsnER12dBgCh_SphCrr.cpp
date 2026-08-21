@@ -1,275 +1,44 @@
 //cpp
-// NONMATCHING: size 0x1bc8.  15 mismatching words / 1778, ratio 0.9916.
-//              1778 instructions, a 0x1b4 frame, every call-gap length, the
-//              whole-function instruction multiset, and EVERY ONE OF THE 99 STACK
-//              SLOTS -- address and reference count -- all exactly the ROM's.
-//              What is left is fifteen words of instruction SCHEDULING in the
-//              prologue, indices 2..17, and nothing else anywhere in the function.
-//
-// 2026-08-21.  1493 -> 125 -> 36 -> 31 -> 15.  Every change is a SPELLING; none
-// changes what the function computes.  The 125 -> 36 step came from asking mwccarm
-// for its own frame map instead of inferring it -- see the DWARF section.
-//
-// COUNT THE RELOCATIONS OUT.  The raw word diff is 65, of which 34 are link-time
-// wildcards: 33 `bl` targets and ONE DATA WORD -- index 1046, ROM 0x020a0cec, ours
-// 0x00000000, which is the unrelocated `&data_020a0cec` the source already passes to
-// func_02037fd4.  An earlier revision of this banner called that one "a literal-pool
-// word, not an instruction", i.e. counted it as an unfixable defect.  It is neither
-// unfixable nor a defect; it is a reloc, and the honest remaining count is 31.
-//
-// ==================== HOW TO MEASURE, AND HOW IT MISLEADS ===================
-//
-//   equal     difflib LCS.  Rises when instructions are DELETED, and once missed
-//             a +290 gain.  Never rank on it.
-//   anchored  call sites as anchors, position-for-position inside each gap.
-//             Use only while the instruction count is still wrong.
-//   shape     registers and stack slots erased.  "Is the CODE wrong, or only the
-//             allocation?"
-//   strict    instruction i vs instruction i across all 1778.  Reads 0 unless
-//             cand == 1778.  **Once the count is right, rank on this** -- or just
-//             on the gate's `mismatches`, which it tracks exactly.
-//
-// TWO TRAPS THAT EACH COST A WRONG, COMMITTED CONCLUSION:
-//
-//   * `cand == 1778` IS NOT AN INVARIANT while any gap length is wrong.  The
-//     draft's earlier 1778 was a COINCIDENCE -- the sqrt region was three words
-//     short and gap 28 three words long, and they cancelled.  Check per-gap
-//     lengths (`shapegap.py`), never the total.
-//
-//   * IDENTIFY A VARIABLE'S SLOT FROM ITS FULL DEFINING SEQUENCE.  Not by
-//     matching reference counts between the streams (that pairs two different
-//     variables that happen to share a count), and not by "the first store after
-//     the index load" either.  At 0x01ffbcfc the ROM reads `tri->edgeNormal3Idx`,
-//     then `ldr r6,[r6]` reads `tri->length` and stores IT first:
-//
-//         ldrh r1,[r1,#0xc]   ; edgeNormal3Idx
-//         ldr  r6,[r6]        ; tri->length      <-- intervenes
-//         str  r6,[sp,#0x110] ; tlen             <-- NOT en3
-//         mul  r6,r1,r0
-//         add  r1,r2,r6
-//         str  r1,[sp,#0x94]  ; en3
-//
-//     `en3` is ROM 0x94 / draft 0xc4; 0x110 is `tlen`.  A detector that stopped at
-//     the first store reported 0x110, that went into a commit as a correction to
-//     a note that had been RIGHT, and a 91-position reachability sweep built on it
-//     was measuring tlen -- whose slot naturally does not move when you move en3.
-//
-// ============================== THE GAINS ===================================
-//
-//   THE SQRT REGION was the SUM OPERAND ORDER.  mwccarm evaluates a two-term
-//   64-bit sum RIGHT TO LEFT -- the `smull` takes the right addend, the `smlal`
-//   accumulates the left -- so the source must read `fh*fh + dh*dh`.  Written the
-//   other way, hoisting the two `>> 4` shifts makes `axisDot` spill instead of
-//   staying in a callee-saved register, which is exactly the failure that got the
-//   hoist rejected four times.  Closed gaps 7/8, 11/12, 15/16 outright.
-//
-//   GAP 28's THREE SURPLUS WORDS, the last gap-length mismatch in the function.
-//   Two came from the `tpv` alias (deleted; the ROM has zero `add r,sp,#0x18c`)
-//   and one from the slab bounds.  978 -> 302.
-//
-//   THE SLAB BOUNDS ARE CSE'd REPEATED EXPRESSIONS, NOT LOCALS.  The ROM
-//   materialises the upper bound lazily, BETWEEN the first and second compare:
-//       add r1,r6,r3 / rsb r2,r1,#0 / cmp / blt reject / sub r1,r6,r3 / cmp
-//   A named local forces both to be emitted together.  Both earlier tests here
-//   used named locals and so could not have found it.
-//
-//   `AXIS_DOT0` IN NATURAL x, y, z ORDER **TOGETHER WITH** DELETING BOTH
-//   `c = &sphere.pos;` RE-BINDS.  +67, and it erases the whole 64-instruction
-//   shape run in gap 28.  Neither half works alone: the natural term order takes
-//   shape 1747 -> 1768 but costs one instruction, and deleting the re-binds saves
-//   that instruction but is -29 by itself.  An earlier sweep recorded "multiply
-//   operand order in AXIS_DOT0, all 8" -- that was operand order INSIDE `FX12`.
-//   TERM order is a different axis and had never been swept.
-//
-//   DECLARATION ORDER, once the above landed: `fn` and `depth` just after `rawX`
-//   (+25), `rad6` before `origin` in the prologue block (+10), `cy` before `cz`
-//   in the leaf-step block (+8), `-(radius + unk_0ec)` (+3), and `c` moved to
-//   just after `den31` (+15).
-//
-//   THE VORONOI DISPATCH BRANCH POLARITY, +2.  Counter-intuitive: writing
-//   `if (dotN > dotM) goto featN; goto feat3;` is what makes mwcc emit the ROM's
-//   `ble`, because mwcc inverts.  ble/bgt counts 38/17 -> 40/15, exactly the ROM's.
-//
-//   `sphere.flags & 0x20` re-read through a CONST reference cast, three sites.
-//   The CV-QUALIFIER CHANGE is what defeats the CSE, not volatile.
-//
-//   THE PROLOGUE reads the sphere centre through a VOLATILE POINTEE.
-//   `(const Vector3 *)c` does nothing -- `c` is already const, so it changes no
-//   qualifier.
-//
-//   DELETING the `en3 = f->normals[...]` re-read that was worth +153 the previous
-//   session.  The lever reversed once `cr` became non-POD.
-//
-// ==================== FIVE INVENTED CONSTRUCTS RETIRED ======================
-// All byte-neutral or better.  The file contains no untrue construct.
-//   * `struct Vtx3` -> `Vector3` (types.h already had it, same empty destructor).
-//   * `volatile s16 cr[3]` + casts -> `Vector3s cr` read as `cr.x/.y/.z`, no cast.
-//     For a LOCAL AGGREGATE the lever is NON-POD-NESS, not the qualifier.
-//   * the `s32 *tpv` alias, worth +42 then +36 in earlier sessions.
-//   * all six no-op `c = &sphere.pos;` re-binds -- and deleting the last two is
-//     what promoted `c` from a compiler temporary to a declared-chain member.
-//   * the slab bounds as `t`/`u` locals.
-//
-// ============ ASK THE COMPILER FOR THE FRAME MAP -- DO NOT INFER IT =========
-//
-// `-g` makes mwccarm emit DWARF, and its DW_AT_location entries give the frame
-// offset of every declared local BY NAME.  It is byte-neutral, so the map applies
-// to the shipping build unchanged.  And because the two instruction streams are
-// position-aligned at 1778, the ROM slot referenced at position k holds whatever
-// our slot at position k holds -- so naming ours names the CARTRIDGE'S frame too.
-//
-//     python scratchpad/perm/frame2.py     -> per-name ours/ROM/delta
-//
-// Two sessions were spent identifying `en3`'s slot by hand and it came out wrong
-// twice, in opposite directions, once into a commit.  The compiler knew all along.
-// DWARF also splits the two pools cleanly: exactly the declaration chain and the
-// aggregates get DW_AT_location entries, and nothing in the temp pool does.
-//
-// ===================== TWO SLOT POOLS -- THE FRAME MODEL ====================
-//
-// The frame is [chain][temps][aggregates].  The CHAIN holds declared locals that
-// mwcc kept in memory, in DECLARATION ORDER; the temp pool holds compiler
-// temporaries; the aggregates go last, above both.
-//
-// **What decides which pool a declared local lands in is the cv-qualifier on the
-// lvalue its value is READ FROM.**  A local assigned straight from a VOLATILE
-// lvalue is coalesced with the temporary that read it and lives in the temp pool;
-// read the same address through a plain or `const` pointer and the same local
-// takes a chain slot.  That one qualifier moved the three hypotenuses from
-// 0x110/0x118/0x120 to the cartridge's 0xac/0xb0/0xb4 and was worth 54 references.
-// Only a bare read counts -- `x + 0` and `x | 0` fold away and still coalesce,
-// while `x * k1` does not fold and does not coalesce.
-//
-// The previous version of this section said membership "is derived from USE" and
-// that the only lever is definition count.  Both are wrong.  Re-measured here:
-// declaration position (all placements), block scope, an out-parameter helper, a
-// second no-op assignment in five spellings, and turning the whole test into a
-// static inline function are ALL byte-identical and none of them move a variable
-// between pools.  `volatile` on the declaration does move it, and costs three
-// instructions; the qualifier on the SOURCE does it for free.
-//
-// ================== DECLARATION ORDER IS LOAD-BEARING =======================
-//
-// Two rules, and they look like they conflict:
-//
-//   * the six hottest locals win callee-saved registers, numbered r9 DOWN TO r4 in
-//     declaration order, and the SEVENTH loses and takes a stack slot;
-//   * slots are handed out in declaration order too -- but only across the locals
-//     that HAVE slots.
-//
-// So `en3` has to be declared after en1/en2 or it wins a register and en2 loses
-// instead (measured over all six orderings), and moving the group early rotates
-// every callee-saved register by two (strict 1652 -> 1308).  But en1/en2 and the
-// dot* group occupy no slots, so en3 can be declared after them and still be the
-// 34th SLOT -- 0x94, where the cartridge has it -- provided everything that
-// follows it in the frame also follows it in the block.  That is the order the
-// draft now uses, and it is why `fn` onwards sits below `en3`.
-//
-// ======================== WHAT IS LEFT: 15 ==================================
-//
-//    15  PROLOGUE SCHEDULING, indices 2-17, and it is the only defect left in the
-//        function.  The same 17 instructions, in the same registers, differently
-//        ordered.  The cartridge does both parameter moves first, then computes and
-//        stores `c`, and only THEN loads `f` -- so `ldr r0,[sl,#0x20]` clobbers the
-//        add result and all three centre reads must come from reloads, {y,z} off one
-//        and {x} off a second.  We load f between the two moves, the add result
-//        survives, and it serves `c->x` directly.
-//
-//          ROM                        ours
-//          2  mov fp, r1              mov sl, r0
-//          3  mov sl, r0              ldr r0, [sl, #0x20]     <- f, hoisted
-//          4  add r0, fp, #0x3c       mov fp, r1
-//          5  str r0, [sp, #0xc4]     str r0, [sp, #0xc]
-//          6  ldr r0, [sl, #0x20]     add r0, fp, #0x3c
-//          7  ldr r1, [sp, #0xc4]     str r0, [sp, #0xc4]
-//          8  str r0, [sp, #0xc]      ldr r5, [r0]            <- x off the add
-//          9  ldr r0, [sp, #0xc4]     ldr r0, [sp, #0xc]
-//         10  ldr r7, [r1, #4]  y     ldr r1, [sp, #0xc4]
-//         11  ldr r5, [r0]      x     add r2, r0, #0x14
-//         12  ldr r0, [sp, #0xc]      ldr r0, [sp, #0xc4]
-//         13  ldr r6, [r1, #8]  z     ldr r4, [r2]
-//         14  add r2, r0, #0x14       ldr r7, [r0, #4]   y
-//         16  asr r1, r5, #6          ldr r6, [r1, #8]   z
-//         17  ldr r4, [r2]            asr r1, r5, #6
-//
-//        Swept and byte-neutral ON THIS STRUCTURE: both orders of the c and f
-//        assignments; either or both moved inside the block; origin taken from
-//        kclFile so f is assigned last; rad6 hoisted out; a volatile view on the f
-//        load.  Costly: rad6 after origin (+10), centre reads in any order but XYZ
-//        (XZY +2, YXZ/ZXY +69, YZX/ZYX change the count), a struct copy of the
-//        centre (+1), either pointer qualified volatile.
-//
-//        NOTE the read order now MATTERS.  Before the slot fix all six orders were
-//        byte-neutral.  That is dead-levers-are-scoped-to-structure in one line:
-//        re-run the sweep after any structural change, because a lever that was
-//        inert can become load-bearing and vice versa.
-//
-//        The defect is downstream of ONE allocator decision, not of statement order:
-//        whether the `add` result is forwarded to the first centre read.  "First read
-//        gets the add result" held across every size-preserving variant of ~350
-//        compiles -- mwcc canonicalises all these local rewrites to the same IR before
-//        allocation, which is why statement-level sweeps cannot reach it.
-//
-//        Two spellings DO flip the basin and give an instantly ROM-shaped prologue,
-//        and both are dead here.  Measured on the old structure they cost c its slot
-//        (`const volatile Vector3 *volatile c` shrank the frame to 0x1ac and moved c
-//        to 0x16c; a volatile-home store through
-//        `*(const volatile Vector3 *volatile *)&c` moved c to the addressed pool at
-//        0x174 and cost the loop tail its reload-per-read idiom).  Re-run on THIS
-//        structure, where c is a plain chain local and there is no re-bind, they no
-//        longer preserve the instruction count at all: 1772, 1766, 1772, 1771.  And
-//        the volatile round-trip that demotes rsc demotes c too if aimed at it,
-//        undoing the slot fix.  The prologue's lever and the slot fix want opposite
-//        things from `c`.
-//
-//        Also transparent, i.e. NOT scheduling barriers in b56: empty `asm { }`
-//        blocks, `do { } while (0)` wrappers, adjacent goto/label splits, hoisted
-//        extra definitions (all DCE'd -- which is why re-bind count never mattered).
-//
-//        ONE THING DOES MOVE THE HEAD, and it is a regression, but it is worth
-//        recording because it is positive evidence for the draft.  Drop the
-//        `origin` pointer and read `f->origin.x/y/z` at each use, and words 2,3,4,5
-//        come RIGHT -- the parameter moves land in the cartridge's order and the c
-//        store follows them.  It costs 57 elsewhere, and not as allocation noise:
-//        without the pointer mwcc folds the offset into the load (`ldr r3,[r1,#0x14]`)
-//        where the cartridge materialises the address first (`add r2,r0,#0x14` then
-//        `ldr r4,[r2]`), and 59 of the 68 resulting words differ in SHAPE, not just
-//        in registers.  So the cartridge really does hold an `origin` pointer and
-//        the draft is right to.  Any form that routes the y/z reads through the
-//        member does this -- pointer-for-x/member-for-y-z included; the mirror image
-//        (member for x, pointer for y/z) loses an instruction instead.
-//
-//        The remaining head defect is therefore NOT reachable by removing work from
-//        the block; the `add r2` has to exist and merely be scheduled later.
-//
-// ==================== MEASURED AND DEAD -- DO NOT RE-DERIVE =================
-//   * A PRAGMA.  `#pragma opt_common_subs off` costs 140 INSTRUCTIONS here, even
-//     though a byte-matched sibling calls it "original and load-bearing" and 158
-//     files in the tree use it.  **This TU was compiled with CSE ON.**
-//   * A HEADER RETYPE of dBgW_Kc.h's mis-declared Vector3 members: byte-identical.
-//   * The vertex tail as a loop: mwcc unrolls then CSEs the address, six short.
-//   * `cr`'s address count (14 vs 15): 390 spellings, all byte-identical.  For a
-//     STACK object mwcc knows the exact address, so no cast can force a
-//     re-materialisation -- unlike `sphere.flags`, a reference parameter.
-//   * Declaration order: full-resolution single moves (8,464), 2,000 pair swaps,
-//     all 91 adjacent swaps.  Re-run after ANY structural change -- that rule has
-//     paid nine times, and change #2 above came from exactly such a re-run.
-//   * The 36 non-degenerate (cross, denominator) pairings of the KCL vertex
-//     formula.  Several score higher; every one wins by being degenerate or by
-//     reusing a denominator, i.e. by removing arithmetic rather than being right.
-//
-// PROVENANCE.  The body descends from lunavyqo's PR #1549 tip, restored
-// 2026-08-19 from nearmiss/db.jsonl at align equal 565 / size 0x1b58.  All six
-// levers documented there are still present.
-//
-// SCORING.  Use the flags that BUILD the ROM -- `rombuild.CFLAGS` with the
-// language swapped carries `-Cpp_exceptions off` where `swarm.CPP_FLAGS` carries
-// `-w illpragmas`.  Across 550 enrolled //cpp files the two are byte-identical;
-// on this draft they differ by one instruction, in the build's favour.
-// Map and status: notes/collision-system.md.
-//
 // @symbol _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr
-/* dBgW_Kc::DetectClsn(dBgCh_SphCrr &) at 0x01ffb830 (ITCM), 0x1bc8 bytes. */
+/* dBgW_Kc::DetectClsn(dBgCh_SphCrr &) at 0x01ffb830 (ITCM), 0x1bc8 bytes.
+ *
+ * The sphere-vs-mesh collision query -- the ROM's largest formerly-unmatched
+ * function, 1,778 instructions.  Walks the KCL octree over the sphere's AABB,
+ * rejects prisms by the three edge-normal dots and the face dot, classifies
+ * the accepted contact by Voronoi region (face / edge / vertex), takes the
+ * true distance through the DS hardware sqrt for edge and vertex contacts,
+ * runs the wall-slab filter over the reconstructed triangle, and accumulates
+ * the pushback extents per contact class.  The matched dBgCh_Gnd overload next
+ * door is the single-column version of the same walk.
+ *
+ * MATCHING NOTES -- the spellings below are load-bearing; measured, not lore.
+ * The full story is in notes/collision-system.md (Phase 3 and the dated
+ * sections), notes/ask-the-compiler.md, and notes/mwccarm-codegen.md 6bj/6bk.
+ *
+ *   - DECLARATION ORDER is the frame: chain slots and callee-saved registers
+ *     both follow it (the six hottest locals win r9..r4; the seventh, en3,
+ *     loses and spills at sp+0x94).  Do not tidy the declaration block.
+ *   - The three centre reads go through per-site (const Vector3 *) casts of
+ *     `c`, ABOVE the rad6/origin declarations: the cast is its own CSE class,
+ *     which stops the just-computed &sphere.pos add being consumed directly
+ *     (the ROM never reads through it) and lets y/z share one pointer reload.
+ *   - `rsc = (s32)(volatile s32)rsc;` is a zero-code volatile round-trip that
+ *     demotes rsc from the declaration chain into the pool's coalesced band
+ *     at sp+0x104, the cartridge's slot.  It is a MATCHING HACK, not a
+ *     reconstruction -- no 2004 author wrote that cast; the original source
+ *     reached the same allocator state some other way, and finding that
+ *     spelling is open work.  Likewise `const volatile Vector3 *c` -- the
+ *     pointee is not really volatile; the qualifier drives the slab block's
+ *     per-use reloads.  These are the only two untrue constructs in the file.
+ *   - `s32 ext = sphere.unk_0ec;` before the slab test: mwccarm emits a
+ *     two-leaf sum right-load-first and never commutes the add, so the
+ *     cartridge's operand order needs one leaf named into a register.
+ *   - tp/vb/vc must be Vector3 (user-declared empty dtor) or mwccarm
+ *     scalarizes them; cr must be Vector3s for the same reason.  The sqrt
+ *     sum must read `fh*fh + dh*dh` (smull takes the right addend).  The
+ *     slab bounds stay inline -- naming a bound kills the ROM's lazy
+ *     add/rsb/cmp/blt/sub materialisation.
+ */
 #include "dBgW_Kc.h"
 #include "dBgCh_SphCrr.h"
 #include "dBgPi.h"
@@ -568,20 +337,25 @@ s32 dBgW_Kc::DetectClsn(dBgCh_SphCrr &sphere)
     c = &sphere.pos;
     f = kclFile;
     {
+        /* Per-site (const Vector3 *) casts, ABOVE the rad6/origin declarations,
+           in x, y, z statement order.  The cast expression is its own CSE class:
+           it stops the `add r0,fp,#0x3c` result being consumed by the first read
+           (the ROM never reads through that add -- f's load clobbers it first)
+           and lets y and z share one pointer reload while x takes its own.  The
+           ROM's y-before-x LOAD order is scheduler freedom, not source order.
+           Win conditions, from a 2,520-variant positional sweep: x,y,z statement
+           order, reads above BOTH rad6 and origin, rad6 declared before origin,
+           and at least two of the three reads cast-spelled.  This is what closes
+           prologue indices 2..17, and it is qualifier-honest -- the volatile
+           pointee is no longer read bare here.
+
+           No re-bind here any more, and do not re-add one: a second definition
+           of `c` demotes it into the pool and undoes the slot fix below. */
+        rawX = ((const Vector3 *)c)->x >> 6;
+        rawY = ((const Vector3 *)c)->y >> 6;
+        rawZ = ((const Vector3 *)c)->z >> 6;
         s32 rad6 = sphere.radius >> 6;
         const Vector3 *origin = &f->origin;
-
-        rawX = c->x >> 6;
-        /* No re-bind here any more.  It used to be load-bearing: a second
-           definition demoted `c` out of the declaration chain, which shortened the
-           chain by a word and put the whole temp pool on the cartridge's addresses.
-           But it demoted the WRONG variable -- the cartridge chains `c` at 0xc4 and
-           pools `rsc`.  Demote rsc instead (see below) and `c` belongs here in the
-           chain, unre-bound, exactly as the ROM has it.
-
-           Do not re-add a re-bind: it puts c back in the pool and undoes the fix. */
-        rawY = c->y >> 6;
-        rawZ = c->z >> 6;
 
         s32 dX = rawX - origin->x;
         loX = (dX - (rad6 + 0x40)) >> 6;
