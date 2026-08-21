@@ -1,6 +1,6 @@
 # Ask the Compiler
 
-*What matching the ROM's largest unmatched function taught me — `dBgW_Kc::DetectClsn(dBgCh_SphCrr&)`, 1,778 instructions, 1493 → 36 mismatching words.*
+*What matching the ROM's largest unmatched function taught me — `dBgW_Kc::DetectClsn(dBgCh_SphCrr&)`, 1,778 instructions, 1493 → 31 mismatching words.*
 
 ---
 
@@ -14,9 +14,9 @@ I'd spent two prior sessions trying to work out which slot held which variable b
 
 The unlock was embarrassingly simple: **instead of reverse-engineering where the compiler puts each variable, I asked it.** There's a debug flag that makes it just tell you, and — this is the part that makes it usable — turning it on doesn't change the generated code at all. So I can ask, get a map of every variable's stack slot by name, then throw the debug info away and ship the identical bytes.
 
-That one change took the function from 125 wrong instructions to 36 in a single session.
+That one change took the function from 125 wrong instructions to 36 in a single session, and later work took it to 31.
 
-The rest of this doc is the detail, plus four other things that cost me real time.
+The rest of this doc is the detail, plus seven other things that cost me real time.
 
 ---
 
@@ -56,7 +56,7 @@ low  [outgoing args][chain][spill pool][aggregates]  high
 
 **The lever: a second definition moves a local out of the chain.** Writing `c = &sphere.pos;` a second time, in a different block, moves `c` from the chain to the pool. Worth +24 references. It must be a *different block* — on the next line it's a dead store, the compiler folds it, nothing moves.
 
-And it's fussy in a way that's itself informative. It fires on `c` (`&sphere.pos` — one `add` from the frame pointer). It does **not** fire on `f` (`this->kclFile` — a load) or on `rsc` (`radius << 4` — a load and a shift). Aimed at `rsc` I tried duplicate assignment, `= rsc`, `|= k0`, `+= k0`, `-= k0`, `^= k0`, `&= ~k0`, `*= k1`, at every statement site the variable reaches — 1,810 compiles — and nothing moved. **The lever needs a value that rematerialises without touching memory.**
+And it's fussy. It fires on `c` and on nothing else I've tried — `rsc` (`radius << 4`) resists roughly 500 compiles across eight different mechanisms. For a long time I explained that as *"the lever needs a value that rematerialises without touching memory"*; that was a guess, and §7 has the measured answer, which is different.
 
 Callee-saved registers are declaration-ordered too: the six hottest locals get `r9, r8, r7, r6, r5, r4`, earliest-declared gets `r9`, and **the seventh loses** and takes a chain slot.
 
@@ -79,7 +79,7 @@ def norm(ins):
 
 **That is the wrong metric for allocation work, which is exactly the situation that makes you reach for it.** It cost a real sweep: 24 permutations over four slots the byte gate reported as wrong, every one reading "no change," because the score literally could not distinguish them.
 
-The tell was a three-way gap — the gate said 39, my scorer said 36 — and I nearly explained it away. The fix was a scorer that compares operands verbatim and wildcards only what the linker fills in.
+The tell was a three-way gap — the gate said 39, my scorer said 36 — and I nearly explained it away. (Both numbers were also inflated by uncounted relocations; see §7.) The fix was a scorer that compares operands verbatim and wildcards only what the linker fills in.
 
 > **Rule:** when the remaining defect is register or stack allocation, cross-check the scorer against the byte gate's own count before believing a null result. A sweep that reports "all byte-identical" on a metric that cannot see your lever is not evidence of anything.
 
@@ -123,21 +123,48 @@ Fixed three mismatches — and it's better code than the version that repeated t
 
 ---
 
-## 7. Stop at characterised walls, not at "didn't work"
+## 7. Count the wildcards out before you quote a number
 
-36 mismatches remain, and I stopped. But "stopped" means something specific here — each remainder has a measured mechanism, not a shrug:
+I reported "36 remaining" and it was wrong — not by a rounding error, but because I had never audited what the 36 *were*.
 
-| # | What | Why it resists |
+The raw word-by-word diff against the cartridge is 65. Thirty-four of those are **link-time relocations**: 33 `bl` targets, whose destination the linker fills in, plus one data word that holds a pointer. Our object file has zeros there because it hasn't been linked. They are wildcards, not defects.
+
+The data word is the instructive one. An earlier version of my own notes described it as *"a literal-pool word, not an instruction"* and filed it under unfixable. It's a relocation — the source already references the right symbol. I had classified it once, written the classification down, and then trusted the note instead of the bytes.
+
+So the honest count was 31, and it's now 31 after one more fix. Two defects remain, and they are independent of each other:
+
+| # | What | Status |
 |---|---|---|
-| 19 | `c` and `rsc` are exactly swapped: ROM has `c` in the chain at `0xc4` and `rsc` in the pool at `0x104`; we have the reverse | The second-definition lever needs a value that rematerialises without touching memory. `rsc` is a load and a shift. 1,991 compiles say so. |
-| 15 | Prologue scheduling, indices 2–17 | Same 17 instructions, same registers, different order. The cartridge issues the centre loads y, x, z and never reads through the pointer the `add` just produced. 11 restructurings, all neutral or worse. |
-| 1 | Index 1502, a commutative add | Flipping the source terms swaps the two *loads* instead, and costs three. |
-| 1 | Index 1046 | Not an instruction — a literal-pool word that the disassembler renders as `andeq`. |
+| 16 | `c` and `rsc` occupy each other's stack slots: the cartridge chains `c` at `0xc4` and pools `rsc` at `0x104`; we have it the other way | ~500 compiles across eight mechanism families say `rsc` cannot be made pool-resident |
+| 15 | Prologue instruction scheduling | Same 17 instructions, same registers, different order; every source-level reordering is byte-neutral |
 
-The difference matters for whoever picks this up. "Didn't work" invites re-derivation; "the lever needs a value that rematerialises without touching memory, and here is the 1,991-compile sweep that establishes `rsc` isn't one" tells them what would have to change for it to become reachable.
+Two things worth recording about that first one. All 99 stack slots the two streams touch agree on both address and reference count *except* those two, exactly exchanged — which is why it's worth calling a single defect rather than sixteen. And I finally measured *why* the one lever I have works: re-binding `c` moves it out of the declaration chain only because **`c`'s pointee is `volatile`**, which stops the compiler folding the second assignment into the first. My previous explanation ("it needs a value that rematerialises without touching memory") was a guess that fit the data and was wrong — the same mistake as §4, caught faster this time.
 
----
+The distinction between "didn't work" and "characterised" matters for whoever picks this up. "Didn't work" invites re-derivation. "There is no analogue of a volatile pointee for a scalar, because you cannot make reads of a plain local volatile without taking its address, which forces it into memory anyway" tells them what would have to change.
+
+## 8. When one expression carries two orderings, name the operands
+
+The last fix, and the one I'd have found sooner with better habits.
+
+One instruction differed by operand order — the ROM computes `unk_0ec + radius`, we computed `radius + unk_0ec`. The obvious move is to flip the source terms. I measured that flip in two separate sessions and rejected it both times, because it fixes nothing and *breaks three*: the two loads feeding the add swap places, and a nearby subtraction goes with them.
+
+The reason is that a single expression was carrying two different orderings, and the compiler reads both off the same token order:
+
+- which operand gets **loaded** first
+- which operand is the add's **first source register**
+
+Flip the tokens and you flip both. Give them names and they come apart:
+
+```c
+s32 ext = sphere.unk_0ec;      /* fixes the load order   */
+s32 rad = sphere.radius;
+if (da >= -(ext + rad) && da <= ext - rad && ...)   /* fixes the operand order */
+```
+
+Loads in the cartridge's order, add in the cartridge's order, nothing else moved.
+
+This is the second instance of the same shape — §6's `s32 dX = rawX - origin->x;` took three commutative adds that no permutation of the original expression could reach. Two independent hits makes it a rule rather than a coincidence, and it retires a belief I'd been carrying: *"naming a subexpression is byte-neutral, so it can't be the lever."* It's byte-neutral when the expression is pinned by one thing. When it's pinned by two, naming is the only way to separate them.
 
 ## The one-line takeaway
 
-Every one of these is the same shape: **I was inferring something the toolchain would have told me, and I trusted a measurement I hadn't validated.** The frame map, the metric defect, the false comment, the untimed loop — four instances of guessing where asking was available. Ask first; it is nearly always cheaper than the inference, and it doesn't quietly return the wrong answer.
+Every one of these is the same shape: **I was inferring something the toolchain would have told me, and I trusted a measurement I hadn't validated.** The frame map, the metric defect, the false comment, the untimed loop, the miscounted relocations, the twice-rejected flip — six instances of guessing where asking was available. Ask first; it is nearly always cheaper than the inference, and it doesn't quietly return the wrong answer.
