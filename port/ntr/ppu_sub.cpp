@@ -2960,7 +2960,9 @@ struct SeamGhost {
 enum { GHOST_MAX = 96 };
 SeamGhost g_ghost[GHOST_MAX];
 GhostAttrFn g_ghost_attr_fn;
+GhostTickFn g_ghost_tick_fn;
 int g_ghost_field_moved;
+unsigned g_ghost_last_ticks;
 
 void seam_ghosts(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
                  int to_white)
@@ -3026,12 +3028,26 @@ void seam_ghosts(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
                 }
         }
     }
-    /* trackers that vanished near the edge become falling ghosts; the rest
-       that vanished anywhere else just die (melted, popped, culled high) */
+    /* trackers that vanished AT the edge become falling ghosts; the rest
+       that vanished anywhere else just die (melted, popped, culled high).
+       Two guards make this solid rather than heuristic. The edge window is
+       tight -- the flake's box top must have reached the last six rows, so
+       the handoff happens where the game itself would have clipped it and a
+       ghost can never pop in above the seam. And a BATCH of simultaneous
+       vanishes is a discontinuity, not weather: a save-state capture or a
+       scene reset shuffles the whole table in one frame, and ghosting that
+       churn is exactly how frozen snow grew moving stragglers. Weather
+       loses at most a flake or two per tick; more than four at once and
+       every one of them is dropped. */
+    int vanished = 0;
+    for (int g = 0; g < GHOST_MAX; ++g)
+        if (g_ghost[g].active == 1 && g_ghost[g].miss &&
+            g_ghost[g].y >= 186 * 16)
+            ++vanished;
     for (int g = 0; g < GHOST_MAX; ++g) {
         SeamGhost &t = g_ghost[g];
         if (t.active == 1 && t.miss) {
-            if (t.y >= 176 * 16 && t.age >= 8) {
+            if (t.y >= 186 * 16 && t.age >= 8 && vanished <= 4) {
                 t.vx = (t.x - t.sx) / t.age;
                 t.vy = (t.y - t.sy) / t.age;
                 t.active = t.vy > 0 ? 2 : 0;
@@ -3040,17 +3056,27 @@ void seam_ghosts(uint32_t *dst, int dst_w, const StackLayout &lay, int evy,
             }
         }
     }
-    /* advance and draw the ghosts -- advance ONLY when the live snow field
-       itself moved this frame. The compose runs whether or not the game
-       ticks, and a paused game (the owner pressed F5) froze every real
-       flake while the ghosts sailed on. With ~50 live flakes stepping every
-       couple of frames, "did any tracked flake move" is a faithful proxy
-       for "did the game simulate", with no reach into the game's own
-       pause state. */
+    /* advance and draw the ghosts -- paced by the GAME'S OWN TICKS, not by
+       composed frames. The registered tick counter advances once per
+       behavior tick of the engaged scene and stops the instant the game
+       stops simulating, so a host-side pause (F5's capture) freezes ghosts
+       with everything else by construction. The field-moved condition rides
+       along as the second belt: an in-game pause can tick the class while
+       the world holds still, and frozen snow with sailing ghosts is the
+       exact report this pass is being reworked for. */
+    unsigned steps = 0;
+    if (g_ghost_tick_fn) {
+        const unsigned now = g_ghost_tick_fn();
+        steps = now - g_ghost_last_ticks;
+        if (steps > 4) steps = 4;      /* a long stall is not four frames of
+                                          catch-up sail; it is a resume */
+        g_ghost_last_ticks = now;
+    }
+    if (!g_ghost_field_moved) steps = 0;
     for (int g = 0; g < GHOST_MAX; ++g) {
         SeamGhost &t = g_ghost[g];
         if (t.active != 2) continue;
-        if (g_ghost_field_moved) {
+        for (unsigned st = 0; st < steps; ++st) {
             t.x += t.vx;
             t.y += t.vy;
         }
@@ -3215,6 +3241,8 @@ void ppu_seam_ghost_attrs(GhostAttrFn fn)
     g_ghost_attr_fn = fn;
     for (int i = 0; i < GHOST_MAX; ++i) g_ghost[i].active = 0;
 }
+
+void ppu_seam_ghost_ticks(GhostTickFn fn) { g_ghost_tick_fn = fn; }
 
 /* Engine B's OAM source override; ppu.h documents it beside engine A's. */
 void ppu_obj_oam_source_b(uint32_t addr) { g_oam_src_b = addr; }

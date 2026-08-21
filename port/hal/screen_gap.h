@@ -105,6 +105,7 @@ int hal_gapless_visual(void);
 int hal_gapless_world(void);
 void hal_gapless_splice(void);
 unsigned hal_gapless_splice_hops(void);
+unsigned hal_gapless_ticks(void);
 
 /* ---- THE OBJECT SHIFT, the display half of the mod above -------------------
  *

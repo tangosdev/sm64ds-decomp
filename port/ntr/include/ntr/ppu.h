@@ -382,6 +382,10 @@ void ppu_band_continuity(BandTrackFn fn);
    registration idiom as the continuity reader above. */
 typedef const unsigned short *(*GhostAttrFn)(int *count);
 void ppu_seam_ghost_attrs(GhostAttrFn fn);
+/* The game-tick pacer for the ghosts: a counter that advances once per
+   engaged-scene behavior tick and freezes when the game does. */
+typedef unsigned (*GhostTickFn)(void);
+void ppu_seam_ghost_ticks(GhostTickFn fn);
 
 // ---- THE SEAM STRADDLE, and it is the same hook read at gap_ds == 0 ---------
 //

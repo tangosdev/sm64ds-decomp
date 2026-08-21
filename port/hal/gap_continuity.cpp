@@ -201,4 +201,5 @@ void hal_band_continuity_latch(int scene_id)
     ntr::ppu_band_continuity(g_read ? continuity_hook : 0);
     /* and the ghost list, latched with the same scene discipline */
     ntr::ppu_seam_ghost_attrs(hal_gapless_ghost_attrs);
+    ntr::ppu_seam_ghost_ticks(hal_gapless_ticks);
 }

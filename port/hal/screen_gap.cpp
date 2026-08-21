@@ -815,11 +815,19 @@ int g_splice_prev[SPLICE_ROWS][SPLICE_SLOTS];
 unsigned char g_splice_have[SPLICE_ROWS][SPLICE_SLOTS];
 int g_splice_scene_seen = -2;   /* history dies with the scene */
 unsigned g_splice_hops;
+unsigned g_gapless_ticks;
 
 }  // namespace
 
 void hal_gapless_splice(void)
 {
+    /* THE GAME'S OWN HEARTBEAT, counted before any early-out: the four
+       engaged scenes' behavior thunks call this once per game tick and call
+       it from nowhere else, so this counter advances exactly when the game
+       simulates and freezes exactly when it does not -- a host-side pause
+       (F5's save-state capture) stops the thunks and therefore stops this.
+       The seam-ghost pass paces itself off it; see hal_gapless_ticks. */
+    ++g_gapless_ticks;
     if (!hal_gapless_world()) return;
     unsigned char *scene = hal_gap_scene();
     if (!scene) return;
@@ -863,6 +871,8 @@ void hal_gapless_splice(void)
 }
 
 unsigned hal_gapless_splice_hops(void) { return g_splice_hops; }
+
+unsigned hal_gapless_ticks(void) { return g_gapless_ticks; }
 
 /* THE SCENE IS PART OF THE ANSWER. The flag alone would keep reading 1 after
    the minigame that engaged it has ended, and a run report that says "gapless"
