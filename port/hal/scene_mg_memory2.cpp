@@ -484,5 +484,53 @@ extern "C" void port_scene_memory2_hits(void)
                     (void *)g_mem_self,
                     *(int *)(g_mem_self + 0x53d4),
                     *(int *)(g_mem_self + 0x53d8));
+
+    /* THE CARD RECORDS, because a run that renders no cards and a run that has
+       no cards to render read the same on every other line.
+       func_ov006_020f5b98 walks TWENTY records at +0x51a8 with stride 0x18 and
+       draws one sprite per record whose +0x12 (i.e. +0x51ba) byte is nonzero.
+       The fields are read off the ROM: +0x00/+0x04 are the 20.12 screen x/y
+       the draw shifts down by 12, +0x10 is the card identity (the row of the
+       twelve-by-five halfword table at 0x0213d45c), +0x15 is the flip frame
+       (its column) and +0x14 is the per-card state func_ov006_020f6088 sets to
+       1 when a dealt card reaches its slot.  src/func_ov006_020f6c90.c is what
+       populates them: 16, 18 or 20 records depending on +0x540a, each with a
+       type in 1..8/9/10 twice over, x = 128.0 and y = -128.0 -- off the top of
+       the screen, which is where the deal animates them in from.  So a count
+       here is the difference between "the deal never happened" and "the deal
+       happened and nothing drew it". */
+    if (g_mem_self) {
+        int live = 0, on_screen = 0, placed = 0;
+        int minx = 0x7fffffff, maxx = -0x7fffffff;
+        int miny = 0x7fffffff, maxy = -0x7fffffff;
+        for (int i = 0; i < 20; ++i) {
+            const char *r = g_mem_self + 0x51a8 + i * 0x18;
+            if (*(const unsigned char *)(r + 0x12) == 0) continue;
+            ++live;
+            int x = *(const int *)(r + 0x00) >> 12;
+            int y = *(const int *)(r + 0x04) >> 12;
+            if (x < minx) minx = x;
+            if (x > maxx) maxx = x;
+            if (y < miny) miny = y;
+            if (y > maxy) maxy = y;
+            if (x > -32 && x < 288 && y > -44 && y < 236) ++on_screen;
+            if (*(const unsigned char *)(r + 0x14) == 1) ++placed;
+        }
+        std::printf("[scene] dScMgMemory2_c cards: %d of 20 record(s) live, "
+                    "%d inside the screen box, %d settled on a slot", live,
+                    on_screen, placed);
+        if (live)
+            std::printf(", x %d..%d y %d..%d", minx, maxx, miny, maxy);
+        std::printf("  (difficulty byte +0x540a = %u)\n",
+                    *(const unsigned char *)(g_mem_self + 0x540a));
+        std::printf("[scene] dScMgMemory2_c card types/frames:");
+        for (int i = 0; i < 20; ++i) {
+            const char *r = g_mem_self + 0x51a8 + i * 0x18;
+            if (*(const unsigned char *)(r + 0x12) == 0) continue;
+            std::printf(" %u.%u", *(const unsigned char *)(r + 0x10),
+                        *(const unsigned char *)(r + 0x15));
+        }
+        std::printf("\n");
+    }
     std::fflush(stdout);
 }
