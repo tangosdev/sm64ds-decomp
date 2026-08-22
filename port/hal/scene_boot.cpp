@@ -2375,7 +2375,10 @@ static const PortSceneClass port_scene_classes[] = {
        fill keeps claiming the middle table and both earlier witnesses keep
        counting exactly what they counted before this seat existed.
        hal/scene_mg_mcarlo.cpp section 3 measures it: this seat's middle copy
-       reports 0 claimed slots and its derived copy reports 15.
+       reports 0 claimed slots and its derived copy reports 13 -- this class's
+       own seven plus six of the middle base's eight, the other two being that
+       base's D2 and D0, which slots 16 and 17 of the derived table override
+       with bodies of this class's own. Measured on a 300-frame boot.
 
        The section-11 hazard is measured ABSENT here rather than assumed: zero
        relocations leave ov006's .init code (0x0212f4c4..0x02133600) for this

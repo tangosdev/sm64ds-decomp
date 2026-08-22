@@ -574,7 +574,14 @@ extern "C" void port_scene_mcarlo_hits(void)
 
     /* Section 3's claim, measured rather than asserted: on a tree carrying the
        flower and memory2 rows this seat's middle copy should claim ZERO slots
-       and its derived copy should claim all fifteen. */
+       and its derived copy should claim THIRTEEN of the fifteen face rows --
+       this class's own seven plus six of the middle base's eight. The two
+       that do not land are the middle base's own D2 and D0 (0x0210a4b0 and
+       0x0210a4e8): this class overrides slots 16 and 17 with bodies of its
+       own, so those two words are not in the derived table to be claimed.
+       13 + 8 + 2 = 23 host writes across the three tables, and the fill
+       report below prints all three. Measured on a 300-frame scene-381 boot:
+       middle 0, derived 13, card 2 of 2. */
     std::printf("[scene] dScMgMCarlo_c fill claims: middle table %u slot(s), "
                 "derived table %u slot(s) (of 8 + 7 face rows), card table %u "
                 "of 2\n",
