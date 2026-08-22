@@ -59,11 +59,11 @@ src/_ZN19RickshawPlatformBdwD0Ev.c:
     complete
     .text start:0x02111568 end:0x021115cc
 
-src/_ZN19RickshawPlatformBdw16CleanupResourcesEv.c:
+src/_ZN19RickshawPlatformBdw16CleanupResourcesEv.cpp:
     complete
     .text start:0x021115cc end:0x021115e0
 
-src/_ZN19RickshawPlatformBdw13InitResourcesEv.c:
+src/_ZN19RickshawPlatformBdw13InitResourcesEv.cpp:
     complete
     .text start:0x021115e0 end:0x021115f4
 

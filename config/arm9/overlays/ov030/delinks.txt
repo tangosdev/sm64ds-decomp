@@ -44,15 +44,15 @@ src/_ZN13RollingLogTtmD0Ev.c:
     complete
     .text start:0x021115ac end:0x02111610
 
-src/_ZN13RollingLogTtm16CleanupResourcesEv.c:
+src/_ZN13RollingLogTtm16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111610 end:0x02111624
 
-src/_ZN13RollingLogTtm8BehaviorEv.c:
+src/_ZN13RollingLogTtm8BehaviorEv.cpp:
     complete
     .text start:0x02111624 end:0x02111638
 
-src/_ZN13RollingLogTtm13InitResourcesEv.c:
+src/_ZN13RollingLogTtm13InitResourcesEv.cpp:
     complete
     .text start:0x02111638 end:0x0211164c
 

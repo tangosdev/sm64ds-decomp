@@ -156,11 +156,11 @@ src/_ZN19RotatingPlatformWdwD0Ev.c:
     complete
     .text start:0x021120d0 end:0x02112134
 
-src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.c:
+src/_ZN19RotatingPlatformWdw16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112134 end:0x02112148
 
-src/_ZN19RotatingPlatformWdw13InitResourcesEv.c:
+src/_ZN19RotatingPlatformWdw13InitResourcesEv.cpp:
     complete
     .text start:0x02112148 end:0x02112168
 

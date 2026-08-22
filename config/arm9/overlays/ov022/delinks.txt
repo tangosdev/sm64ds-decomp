@@ -168,11 +168,11 @@ src/_ZN21FloatingFloorLllSmallD0Ev.c:
     complete
     .text start:0x02111fbc end:0x02112020
 
-src/_ZN21FloatingFloorLllSmall16CleanupResourcesEv.c:
+src/_ZN21FloatingFloorLllSmall16CleanupResourcesEv.cpp:
     complete
     .text start:0x02112020 end:0x02112040
 
-src/_ZN21FloatingFloorLllSmall13InitResourcesEv.c:
+src/_ZN21FloatingFloorLllSmall13InitResourcesEv.cpp:
     complete
     .text start:0x02112040 end:0x021120b8
 

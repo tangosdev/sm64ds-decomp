@@ -1,3 +1,12 @@
+// NOT MIGRATED to a real PushBlock:: method, measured 2026-08-22. The body
+// converts cleanly (every instruction matches with `this` and named members --
+// mPrevAngleY 0x94, mHorzSpeed 0x98), but the C++ form emits TWO EXTRA LITERAL
+// POOL WORDS: 133 words against the ROM's 131, and every mismatch is a
+// pc-relative pool offset or a branch displacement shifted by exactly 8 bytes,
+// never an opcode. Ruled out by test: naming mPosX vs a raw (char*)this+0x5c,
+// mPrevAngleY raw, mHorzSpeed raw -- all three still 133. Whatever adds the two
+// constants is not the member naming. Its siblings CleanupResources and
+// OnPushed migrated fine, so this is specific to this body.
 // @symbol _ZN9PushBlock8BehaviorEv
 /* recovered: renamed to Class_Method, RTTI class fields named, declarations from a shared header
  *

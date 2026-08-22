@@ -1235,11 +1235,11 @@ src/_ZN9PushBlock15OnHitByMegaCharER6Player.cpp:
     complete
     .text start:0x020b8d14 end:0x020b8d3c
 
-src/_ZN9PushBlock8OnPushedER8dActor_c.c:
+src/_ZN9PushBlock8OnPushedER8dActor_c.cpp:
     complete
     .text start:0x020b8d3c end:0x020b8d68
 
-src/_ZN9PushBlock16CleanupResourcesEv.c:
+src/_ZN9PushBlock16CleanupResourcesEv.cpp:
     complete
     .text start:0x020b8d68 end:0x020b8dac
 
