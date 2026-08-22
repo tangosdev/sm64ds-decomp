@@ -2218,6 +2218,19 @@ void port_scene_fill_curling2(void);
 extern unsigned char MgPuzzlePanelPuzzlePanic_SpawnInfo[];
 void *port_mg_panel_spawn(void);
 void port_scene_fill_panel(void);
+/* run mg9 lane CUP: dScMgCup_c, actor id 0x169 = scene 361, the shell game.
+   The ROM gives this id no Mg*_Spawn symbol, so the SpawnInfo is spelled as
+   the raw config symbol the way the 375 and 390 rows are; the doubled-id word
+   0x01690169 sits at 0x0213c024 and occurs exactly once in the overlay. The
+   class name is the ROM's own RTTI, "10dScMgCup_c" at 0x0213c054, reached
+   through the type_info the word before the vtable points at -- the lane PPP
+   chain, whose every edge is a relocation. port/slice_cup.txt carries the
+   derivation and hal/scene_mg_cup.cpp is the seat. Same reads_sublevel
+   reasoning as the rows above, re-checked for this class: no relocation in
+   ov006 lands on data_02092110 and no TU in this class's closure names it. */
+extern unsigned char data_ov006_0213c020[];
+void *port_mg_cup_spawn(void);
+void port_scene_fill_cup(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2344,6 +2357,40 @@ static const PortSceneClass port_scene_classes[] = {
        so appending is a rule this lane obeys rather than a hazard it needs. */
     {380, "SCENE_MG_PANEL", MgPuzzlePanelPuzzlePanic_SpawnInfo,
      port_mg_panel_spawn, port_scene_fill_panel, 0},
+    /* 361 is 0x169, spelled in decimal for the two reasons every row above
+       gives: the others are, and port/tools/battery.py reads its hosted-scene
+       set out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg9 lane
+       CUP, and for this class the ordering rule is load-bearing TWICE rather
+       than once.
+
+       ONE: it is the latent-safe direction port/mg_fanout_costs.txt section 11
+       derives from the once-per-process constructor gate --
+       port_scene_registry_install walks this table in order and calls every
+       row's fill on every boot, while port_scene_mg_overlay_load runs the
+       thirty-five overlay constructors ONCE PER PROCESS at the tail of the
+       FIRST minigame row's fill, so a row placed earlier would have its fill
+       run before those constructors read the mounted .data. Section 11's
+       hazard is dScMgCup_c's OWN: the word past the end of its vtable is the
+       mwcc pair src/__sinit_ov006_021304ac.c copies into curling's state table
+       0x02141930 slot 2. This seat writes 36 words, the span to the next
+       config symbol is exactly 36 words and slot 35 holds the family's
+       terminal 0x020ad660, so the fill cannot reach past its own table -- the
+       rule is obeyed rather than relied on, and the lane's scene-374 canary is
+       the check.
+
+       TWO: this class shares the dScMgSingle3DBase_c table at 0x0213e448 with
+       the 390 row AND the 363 row above it. mg_apply keys on a DS address, so
+       whichever fill runs first claims that table; running after both means
+       the flower keeps it and BOTH existing witnesses keep counting exactly
+       what they counted before this seat existed. hal/scene_mg_cup.cpp
+       section 3 is the measurement, and this lane boots 390 and 363 after
+       seating to prove the two censuses did not move.
+
+       reads_sublevel is 0 for the curling row's reason, re-derived rather than
+       copied: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {361, "SCENE_MG_CUP", data_ov006_0213c020, port_mg_cup_spawn,
+     port_scene_fill_cup, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
