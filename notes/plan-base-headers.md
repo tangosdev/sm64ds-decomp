@@ -2,7 +2,7 @@
 
 **Status:** in progress. First change in the gen_header programme that touches `include/`.
 **Depends on:** #1118 (the evidence passes and the differential that found this).
-**Scope:** `include/Enemy.h` and `include/CapEnemy.h`, six field declarations.
+**Scope:** `include/dEnemyBase_c.h` and `include/dCapEnemy_c.h`, six field declarations.
 
 ---
 
@@ -30,8 +30,8 @@ generator's marker for *"something starts here and I do not know what"* -- and t
 descendants declare a real type. **The base is the wrong one.** The descendants already
 recovered these fields correctly; the base is masking them.
 
-Note what this does *not* mean. `Enemy.h` has **3** includers and `CapEnemy.h` has **4**;
-the 27 descendants carry their own flat headers and never include `Enemy.h`. So this
+Note what this does *not* mean. `dEnemyBase_c.h` has **3** includers and `dCapEnemy_c.h` has **4**;
+the 27 descendants carry their own flat headers and never include `dEnemyBase_c.h`. So this
 change does not propagate a fix to them. It removes 49 false conflicts and makes the two
 headers usable as references, which is what unblocks the rest of the programme.
 
@@ -39,7 +39,7 @@ headers usable as references, which is what unblocks the rest of the programme.
 
 Neither pass was told what the headers claim.
 
-| site | history | ROM | `Actor.h` says |
+| site | history | ROM | `dActor_c.h` says |
 |---|---|---|---|
 | `Enemy` 0x094 | 3 x width 2 | 1 x width 2, **signed load** | `s16 mPrevAngleY` (:93) |
 | `Enemy` 0x0a8 | 2 x width 4 | 1 x width 4 | `s32 mVertSpeed` (:99) |
@@ -48,14 +48,14 @@ Neither pass was told what the headers claim.
 | `CapEnemy` 0x05c | address taken x2, **no width** | -- | `s32 mPosX` (:65) |
 | `CapEnemy` 0x08c | address taken x2, **no width** | -- | `s16 mAngleX` (:89) |
 
-Two of the four `Enemy` sites are Actor fields that `Enemy.h` re-declared as markers, and
-`Actor.h` is de-bannered -- hand-reconstructed, the strongest reference in the tree. The
+Two of the four `Enemy` sites are Actor fields that `dEnemyBase_c.h` re-declared as markers, and
+`dActor_c.h` is de-bannered -- hand-reconstructed, the strongest reference in the tree. The
 ROM independently proves 0x094 is **signed**, which no source pass can settle.
 
 ## 3. The two sites in CapEnemy are a different thing, and are NOT being retyped
 
 `CapEnemy` 0x05c and 0x08c have **address-only** evidence: the code takes their address
-and never loads a scalar from them. Against `Actor.h`, 0x05c is the start of the position
+and never loads a scalar from them. Against `dActor_c.h`, 0x05c is the start of the position
 triple (`mPosX/mPosY/mPosZ`) and 0x08c the start of the rotation triple
 (`mAngleX/mAngleY/mAngleZ`).
 
@@ -98,7 +98,7 @@ python tools/eligible.py                     # BEFORE, on a clean tree
 # build_pin.py's positional args only REPORT the pin; --verify is not a flag.
 # The verify path is the library call:
 #   import build_pin as BP; BP.verify(src, symbol, addr, size, module)
-python tools/check_header_offsets.py include/Enemy.h include/CapEnemy.h
+python tools/check_header_offsets.py include/dEnemyBase_c.h include/dCapEnemy_c.h
 python tools/rombuild.py                     # 106/106 exact, PASS
 python tools/eligible.py                     # AFTER -- diff against BEFORE
 python tools/prepush_attribution.py          # credit must not move
@@ -110,7 +110,7 @@ mode this change is most likely to produce, and it is the one the ROM build cann
 
 ## 6. Definition of done
 
-- [ ] 4 retypes in `Enemy.h`, spans and alignment preserved
+- [ ] 4 retypes in `dEnemyBase_c.h`, spans and alignment preserved
 - [ ] 2 `CapEnemy` markers left as markers, comments corrected
 - [ ] `ROM-build analysis: PASS`, module fidelity 106/106 exact
 - [ ] `eligible.py` before/after: no file lost its match
@@ -120,11 +120,11 @@ mode this change is most likely to produce, and it is the one the ROM build cann
 
 ## 7. What this deliberately does not do
 
-- **No restructuring to real inheritance.** `Enemy.h` and `CapEnemy.h` duplicate Actor's
+- **No restructuring to real inheritance.** `dEnemyBase_c.h` and `dCapEnemy_c.h` duplicate Actor's
   layout flat rather than inheriting it. Fixing that is the right end state and a much
   larger change with codegen risk in every includer. Retyping six fields is testable in
   one batch; rebuilding two class hierarchies is not.
-- **No renaming.** `unk_094` stays `unk_094` even though `Actor.h` calls it
+- **No renaming.** `unk_094` stays `unk_094` even though `dActor_c.h` calls it
   `mPrevAngleY`. Renaming is free and cannot change codegen, which is exactly why it
   belongs in a separate commit -- mixing it in here would make the byte gate's signal
   unreadable.

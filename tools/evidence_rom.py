@@ -6,7 +6,7 @@ and stores whose base register provably still holds the entry `this` (r0, AAPCS)
 
 It does not lead. Measured over the corpus it reaches well under half the fields, and
 it is blind by construction to an inherited field a derived class never touches --
-see notes/plan-gen-header.md 3. It verifies, and it breaks ties, and it is the only
+see notes/archive/plan-gen-header.md 3. It verifies, and it breaks ties, and it is the only
 pass that can speak to signedness.
 
     python tools/evidence_rom.py --report

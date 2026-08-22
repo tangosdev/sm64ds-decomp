@@ -1,7 +1,7 @@
 """Differential between the committed struct headers and the evidence for them.
 
 241 headers in include/ say "AUTO-GENERATED from matched-function evidence". No
-generator has ever existed in this repo (notes/plan-gen-header.md 1), so nothing has
+generator has ever existed in this repo (notes/archive/plan-gen-header.md 1), so nothing has
 ever checked them. This does.
 
 It does not write headers. Phase 1 of the plan is a worklist, not a code change:
@@ -57,7 +57,7 @@ def next_meaningful(lines, i, cur):
     """The next line that is not blank and not inside a comment.
 
     Checking only the immediately-following line missed every marker whose pad is
-    separated from it by an explanatory comment. `include/RaycastGround.h` documents
+    separated from it by an explanatory comment. `include/dBgCh_Gnd.h` documents
     its own idiom across three lines, and the continuation lines start with prose --
     not `*` -- so matching comment-looking prefixes is not enough. Track whether the
     field's own trailing `/*` ever closed.
@@ -201,7 +201,7 @@ def main():
             target[key] = c
 
     # Ancestor lookup, over ALL headers -- the reference (de-bannered) ones like
-    # Actor.h are exactly the ancestors that matter and are not in `headers`.
+    # dActor_c.h are exactly the ancestors that matter and are not in `headers`.
     chain_of = {k: v.get("base") for k, v in hier.get("hierarchy", {}).items()}
     any_fields_cache = {}
 

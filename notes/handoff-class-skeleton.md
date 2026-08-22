@@ -86,15 +86,15 @@ implied:  sizeof(dBgCh) 16   dBgPi 40   dExtSimpleModel_c 80   dExtAnmModel_c 10
 
 Each is corroborated by two or three independent records; none conflicts.
 
-**Two confirmations that were not inputs.** `include/BgCh.h`, hand-reconstructed from the
+**Two confirmations that were not inputs.** `include/dBgCh.h`, hand-reconstructed from the
 constructor's stores, says *"LAYOUT is 0x10 bytes"* -- 16, derived here from a different
-structure entirely. And `include/SphereClsn.h`, a generated flat header, declares fields
+structure entirely. And `include/dBgCh_SphCrr.h`, a generated flat header, declares fields
 starting at `0x010` and `0x038`; the record puts dBgPi at 16 and dM3dGSph at 56, and
 16 + 40 = 56. **Both subobject boundaries land exactly on a field that generator already
 found**, knowing nothing about any of this.
 
 > **If you are matching `DetectClsn(SphereClsn&)`:** everything below `0x38` in
-> `include/SphereClsn.h` belongs to a base, not to SphereClsn. The ROM says that class
+> `include/dBgCh_SphCrr.h` belongs to a base, not to SphereClsn. The ROM says that class
 > has three bases; `include/` models one. See `notes/rtti-reconciliation.md` §4.
 
 **Honest about the circularity.** Taking offsets from the ROM and checking they come back

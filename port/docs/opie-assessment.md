@@ -119,7 +119,8 @@ register the host layer leaves inert is a deadlock in the boot path.
 two sample files. Measured over the whole tree:
 
 - **317 files** contain real MMIO accesses — **1,959 references** (measured by
-  `tools/mmio_inventory.py`; an earlier "~670" was a regex artifact, see the appendix).
+  `port/tools/mmio_inventory.py` on the unlanded branch `port/salvage-port-repo-tools`;
+an earlier "~670" was a regex artifact, see the appendix).
 - **3 files** — `func_0204af3c.c`, `func_ov007_020c1448.c`, `func_ov007_020ca86c.c` —
   define *any* named `G3_`/`GX_`/`G2_` inline. Not "overwhelmingly." Three.
 - The norm is a bare store, sometimes not even volatile:
@@ -265,7 +266,7 @@ That reframes the question. Three distinct bodies of material, three answers:
 
 | Material | What it is | Our position |
 |---|---|---|
-| **1. SDK/NNS API surface** — names, signatures, register offsets, struct layouts | Facts / interface | **Already permitted.** `CREDITS.md`: *"import knowledge, write code."* Same category as the leaked licensee docs `notes/nds-software-stack.md` already credits. |
+| **1. SDK/NNS API surface** — names, signatures, register offsets, struct layouts | Facts / interface | **Already permitted.** `CREDITS.md`: *"import knowledge, write code."* Same category as the leaked licensee docs `CREDITS.md` already credits. |
 | **2. SDK/NNS implementations** (`ntrtwl/*`) | Nintendo's code, unlicensed | **Never vendor into `src/`.** A build-time `.wrap` is defensible — it is what pret does, and it mirrors our own "supply your own ROM locally" model. |
 | **3. cybervisi0n's port layer** — `libraries/sim/*`, the GL translator, the `SDK_PORT` branches, X86 ioreg generation | **Their** original work, unlicensed | **The real restriction lives here.** Plain copyright, reachable rights holder. Don't copy; ask them to license it. |
 
@@ -459,4 +460,4 @@ pattern `0x0?4[0-9a-f]{6}` lacked a word boundary, so it counted `0x40000000` (a
 flag, 482 occurrences), `0x84400000` (a DMA control word), and even `0x46524d48` —
 which is `'FRMH'`, the NNS heap tag from section 2c — as hardware addresses. With ``
 the figure is 361 files; restricted to real MMIO ranges, **317 files / 1,959 references**,
-now measured properly by `tools/mmio_inventory.py`.
+now measured properly by `port/tools/mmio_inventory.py` (unlanded; see above).

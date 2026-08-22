@@ -180,7 +180,7 @@ are three flat headers that each re-derived the same fields.
     dBgCh_SphCrr  tree:SphereClsn   ROM bases: dBgCh, dBgPi, dM3dGSph   tree said BgCh
     dBgCh_Lin     tree:RaycastLine  ROM bases: dBgCh, dBgPi, dM3dGLin   tree said BgCh
 
-Both are `__vmi_class_type_info` with three bases. `include/BgCh.h` exists, but `dBgCh`'s
+Both are `__vmi_class_type_info` with three bases. `include/dBgCh.h` exists, but `dBgCh`'s
 vtable (`0x020991d8`) is an unnamed `data_` placeholder, so no evidence chain reaches from
 the string "BgCh" to the record `dBgCh`. Calling that a disagreement would be a false
 positive dressed as a finding. Naming that one vtable settles both rows either way.
@@ -280,8 +280,9 @@ The `daObjDorifu_c` family is the clean case. Its three descendants' headers are
         u8 pad_0d5[0x4f];
         u8 mMovingMeshCollider; /* 0x124 */
 
-which looks like strong corroboration of a shared base until you check `Platform.h:41`
-and `:49` — which already declare `mModel` at `0x0d4` and `mMeshCollider` at `0x124`.
+which looks like strong corroboration of a shared base until you check
+`include/dBgActor_c.h:73` and `:74` — which already declare `mModel` at `0x0d4` and
+`mMeshCollider` at `0x124`.
 Both fields belong to an **ancestor**, not to `daObjDorifu_c`. There is nothing in these
 headers that distinguishes `daObjDorifu_c` from `Platform`, so a generated
 `daObjDorifu_c` would be a class whose entire content is inherited.
@@ -316,7 +317,7 @@ admit that same edge as top-rank evidence, is circular.
 | edges backed by the ROM | 0 | **168** of 413 |
 
 The 245 unusable edges have an end whose vtable still carries no `_ZTV` symbol. RTTI
-overruled two prior conclusions, both cases of shim flattening that `include/Actor.h`
+overruled two prior conclusions, both cases of shim flattening that `include/dActor_c.h`
 already had right: `Actor : ActorBase` → `Actor : ActorDerived`, and
 `Platform : ActorBase` → `Platform : Actor`.
 

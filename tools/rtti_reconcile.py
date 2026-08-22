@@ -281,7 +281,7 @@ def build(rtti_path, eh_path):
                     proven_by = "uncorroborated_alias"
                 elif believed not in translatable:
                     # No evidence chain reaches from the tree's name to any ROM
-                    # class.  `SphereClsn : BgCh` lands here -- include/BgCh.h
+                    # class.  `SphereClsn : BgCh` lands here -- include/dBgCh.h
                     # exists, but dBgCh's vtable (0x020991d8) was an unnamed
                     # placeholder when this rule was written.  Calling that a
                     # disagreement would be a false positive dressed as a finding.

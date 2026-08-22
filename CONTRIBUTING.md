@@ -108,7 +108,7 @@ Before you start writing C, skim [`notes/mwccarm-codegen.md`](notes/mwccarm-code
 documents how this exact compiler turns C into bytes (struct copies, bitfield shifts, C++
 virtual/PMF dispatch, the register-allocation wall, and the common idiom families). Writing
 with those habits in mind gets your first draft close and cuts iterations.
-[`notes/pret-idioms.md`](notes/pret-idioms.md) collects the matching idioms the pret DS
+[`notes/archive/pret-idioms.md`](notes/archive/pret-idioms.md) collects the matching idioms the pret DS
 decomps use for the same compiler (declaration order controls register allocation, etc.).
 
 ## Easy pickings: the near-miss database

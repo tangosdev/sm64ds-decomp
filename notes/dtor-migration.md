@@ -65,7 +65,7 @@ bl  ActorBase::~ActorBase
 
 With `virtual ~ActorDerived();` merely *declared*, the compiler cannot inline it and
 emits `bl _ZN12ActorDerivedD2Ev` instead -- one store where the ROM has two. Change the
-declaration in `include/ActorDerived.h` to a definition:
+declaration in `include/dBase_c.h` to a definition:
 
 ```cpp
 virtual ~ActorDerived() {}
@@ -82,7 +82,7 @@ out-of-line copy -- an explicit destructor call in a throwaway function does it,
 verifies:
 
 ```cpp
-#include "ActorDerived.h"
+#include "dBase_c.h"
 void _force(void *p) { ((ActorDerived *)p)->~ActorDerived(); }   // (True, '2004/b56')
 ```
 

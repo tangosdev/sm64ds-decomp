@@ -50,7 +50,7 @@ edges             derives from dScMgBase_c in ov004, and so on.  A resolver that
 
 Recall
 ------
-Section 2 of notes/plan-gen-header.md: a pass that silently matches nothing reports a
+Section 2 of notes/archive/plan-gen-header.md: a pass that silently matches nothing reports a
 clean, confident, wrong answer.  Every population is counted, including rejects and
 why.  `--report` prints all of it before any finding.
 

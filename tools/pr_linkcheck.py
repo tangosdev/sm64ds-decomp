@@ -174,7 +174,8 @@ def check_file(path, idx, ledger):
     compiler-emitted passengers (this-adjusting thunks, weak dtor/ctor copies, local
     helpers) -- not just the filename stem, and not just ledger rows.
 
-    Every emitted function symbol that resolves to a ROM slot (via config/ledger) is
+    Every emitted function symbol that resolves to a ROM slot (via config/**/symbols.txt,
+    falling back to progress/matched.jsonl for module disambiguation) is
     checked against that slot. This is the class the
     ledger-scoped checks miss -- e.g. PR #86's `_ZThn80_N9AnimationD1Ev` thunk, whose
     tail branch relocated to the wrong dtor. Emitted symbols with no ROM slot (inline
@@ -182,7 +183,7 @@ def check_file(path, idx, ledger):
 
     WHICH SYMBOLS THE FILE OWNS is `srcpath.symbols_for`, not `Path.stem`. For the
     11,289 one-function files those are the same string. For a merged translation unit
-    they are not: `src/actors/ActorBase_SceneNode.cpp` holds two functions and is named
+    they are not: `src_tu/actors/ActorBase_SceneNode.cpp` holds two functions and is named
     after neither, so the stem resolved to nothing and the whole file was reported
     `unresolved` with `0` slots checked -- a file the PR comment listed as examined and
     that nothing had looked at. It could not fall through to the passenger loop either,

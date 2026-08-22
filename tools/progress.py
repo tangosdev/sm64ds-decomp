@@ -10,12 +10,12 @@ Usage:
     python tools/progress.py --write-readme  # rewrite that block in place in README.md
 
 --bar and --write-readme deliberately do NOT use progress/matched.jsonl: that
-ledger is git-ignored (local-only, per-contributor, and known to drift stale -
-see notes/agent-decomp-knowledge-base.md). Instead they derive the matched set
+ledger is git-ignored (local-only, per-contributor, and known to drift stale).
+Instead they derive the matched set
 from committed data alone (config/**/symbols.txt cross-referenced against which
 functions have a src/<name>.c[pp] file), so the number is reproducible on a
 fresh checkout with no ROM and no local state - which is what the hosted
-update-progress.yml workflow needs.
+update-chaos-data.yml workflow needs.
 """
 import json
 import asm_policy  # noqa: E402

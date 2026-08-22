@@ -1069,7 +1069,7 @@ def gap(root, doc, probe=True):
 # --------------------------------------------------------------------------
 
 # The frozen census.  A pass that silently matches nothing reports a clean, confident,
-# wrong answer -- notes/plan-gen-header.md 2.  These are the numbers this file produced
+# wrong answer -- notes/archive/plan-gen-header.md 2.  These are the numbers this file produced
 # when it landed; a change to any of them is a finding, not a detail.
 GATE = {
     "call_sites": 391,

@@ -136,7 +136,7 @@ them as unresolved rather than as TUs.
 ```
 python tools/tu_map.py                    # all modules -> build/tu_map.json
 python tools/tu_map.py --module ov062     # one module, printed
-python tools/tu_map.py --module ov080 -v  # with per-function detail
+python tools/tu_map.py --module ov080 --verbose  # with per-function detail
 python tools/tu_map.py --check            # gates V1-V3 + the negative control
 ```
 

@@ -11,7 +11,7 @@ found. This is that candidate.
 **What it is not:** a build change. `src_tu/stage/LevelObjects.cpp` is not
 enrolled, `config/**/delinks.txt` is untouched, and the seventeen one-function
 sources under `src/` remain the sole enrolled owners of
-`0x020fe190..0x020fea4c`. No `rombuild.py`, no `eligible.py --apply`, no link.
+`0x020fe190..0x020fea4c`. No `rombuild.py`, no `eligible.py`, no link.
 
 ---
 

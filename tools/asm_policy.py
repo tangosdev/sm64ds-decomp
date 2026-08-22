@@ -35,8 +35,8 @@ The banner search runs over the WHOLE file, never a head window: a banner is onl
 ever exculpatory here, so a deep mention can excuse a file but can never flip a
 real C match into a fake one.
 
-The asm detection is lifted from tools/dataset/eval_match.py's passthrough
-detector (the training-side guard against the same reward hack) rather than
+The asm detection is lifted from the training-side `eval_match.py` passthrough
+detector (that tool lives in a separate dataset repo, NOT in this tree) rather than
 invented fresh, so the two gates agree on what "asm" looks like.
 """
 import re
@@ -86,7 +86,7 @@ _DCD_RE = re.compile(r"\bdcd\s+0x[0-9a-fA-F]")
 # High-precision ARM assembly "tells" that essentially never appear in real decompiled C.
 # A passthrough carries dozens; real C carries ~0. Used as a keyword-independent backstop so
 # an asm transcription is caught even if it isn't wrapped in a form the `asm` keyword regex
-# sees. (Lifted from tools/dataset/eval_match.py.)
+# sees. (Lifted from the same training-side `eval_match.py`, which is not a file here.)
 #
 # The register-list tell must accept real STM/PUSH lists -- ``{r4,r5,lr}``, ``{ r0 - r3 }``,
 # ``{r4-r11,lr}`` -- while rejecting C blocks whose first statement assigns to a local that

@@ -201,7 +201,7 @@ Do not open the PR with near-misses in `src/` expecting the maintainer to split 
   first: 6aa (pragma crutch rotates coloring), 6ab (dropped call args, shift respells),
   6ac (launder tree position, escape aliasing, rank classes); older: u64-mask laundering,
   decl/statement order, `//cpp` dummy-vtable dispatch, struct-copy interleave.
-- [`notes/pret-idioms.md`](notes/pret-idioms.md) — mwccarm idioms mined from pret decomps.
+- [`notes/archive/pret-idioms.md`](notes/archive/pret-idioms.md) — mwccarm idioms mined from pret decomps.
 - [`notes/matching-style.md`](notes/matching-style.md) "Known walls" — patterns proven
   unreachable from source. If your **only** divergence is one of those, it's a wall:
   store the near-miss and hand it to the permuter instead of grinding.

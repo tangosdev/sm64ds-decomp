@@ -1,6 +1,11 @@
 # Handoff: `dBgW_Kc::DetectClsn(dBgCh_SphCrr&)`
 
-> **STALE IN ITS TOP HALF (checked 2026-08-19). Use `notes/collision-system.md`.**
+> **SUPERSEDED (2026-08-21). The function MATCHED in #1655** -- byte-exact and enrolled
+> `complete` at 0x01ffb830, 0/1778, in `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`.
+> Everything below is a record of the search, not a live worklist, and the draft file it
+> points at (`notes/drafts-sphereclsn-detectclsn.cpp`) was deleted by that same PR.
+>
+> **Previously flagged STALE IN ITS TOP HALF (checked 2026-08-19). Use `notes/collision-system.md`.**
 >
 > - **The numbers below are wrong.** The draft in `notes/` was replaced on 2026-08-19 with the
 >   better body banked in `nearmiss/db.jsonl`. Measured on one worktree at 2004/b56:
@@ -51,8 +56,10 @@ python tools/fdiff.py --c <draft>.cpp \
 
 ## 1. Where the draft is
 
-`notes/drafts-sphereclsn-detectclsn.cpp`, currently **0x1b40** against `0x1bc8` — 34
+It *was* `notes/drafts-sphereclsn-detectclsn.cpp`, then **0x1b40** against `0x1bc8` — 34
 instructions short (shape-alignment 0.5968, 1051 shape-equal; was 0x8cc / 0.3494 / 409).
+That file no longer exists: #1655 finished the function and replaced it with the matched
+`src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`.
 
 Score intermediate drafts with `--align`, not the summary count: `fdiff.py` prints
 `mismatches=999/1778` for every draft of this function regardless of change, because the

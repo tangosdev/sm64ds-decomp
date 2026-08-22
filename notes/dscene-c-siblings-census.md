@@ -16,7 +16,7 @@ below -- the file was rewritten from scratch, not patched. Its 15 direct / 32
 transitive descendants are NOT yet named; that's still open, see §2's own note
 on scope. `tools/check_header_offsets.py` gained a real fix in the same PR:
 it had never seen a header that declares its destructor/overrides BEFORE its
-fields (Scene.h's own convention) and silently reported "0 commented fields"
+fields (dScene_c.h's own convention) and silently reported "0 commented fields"
 for exactly that shape -- dScMgBase_c.h's ~30 real fields were invisible to it
 until fixed.
 
@@ -25,7 +25,7 @@ until fixed.
 ## 0. The ten, and where each one stands
 
 `dScene_c` has exactly ten direct RTTI-confirmed children (`tools/rtti_extract.py`,
-cross-checked against `include/Scene.h`'s own census comment):
+cross-checked against `include/dScene_c.h`'s own census comment):
 
 | class | vtable addr | module | status |
 |---|---|---|---|
@@ -54,9 +54,10 @@ that differ from Scene's own implementation (a real override, not an inherited
 pointer). Full detail (per-slot addresses beyond what's listed, plus the raw
 `rtti_vtables.json` this was read from) lived in a now-torn-down worktree's
 `build/rtti_vtables.json` — regenerate with
-`python tools/rtti_vtables.py --class dScMB_c dScTitle_c dScStarSel_c
-dScGameOver_c dScMiniGm_c dScDSMT_c dScEntry_c dScMgBase_c` (or equivalent; check
-the tool's current flags) rather than trusting this table's addresses blindly
+`python tools/rtti_vtables.py --own <CLASS>` for each of dScMB_c, dScTitle_c,
+dScStarSel_c, dScGameOver_c, dScMiniGm_c, dScDSMT_c, dScEntry_c, dScMgBase_c (the
+flag takes one class at a time; check the tool's current flags) rather than
+trusting this table's addresses blindly
 for anything but orientation.
 
 | class | module | overridden slots | example target |
@@ -72,13 +73,13 @@ for anything but orientation.
 
 Slot numbers match Scene's own table (0=InitResources, 1=BeforeInitResources,
 3=CleanupResources, 6=Behavior, 9=Render, 12=OnPendingDestroy, 16=D1, 17=D0) —
-same convention `include/Scene.h`/`include/Stage.h` document.
+same convention `include/dScene_c.h`/`include/Stage.h` document.
 
 ## 2. dScMgBase_c is not a plain sibling -- it's a second hierarchy root
 
 Its vtable is **36 slots**, not 18: it overrides 8 of Scene's own plus D1/D0,
 then adds **18 brand-new slots (18-35)** beyond what Scene/ActorBase declare --
-the same shape `include/Actor.h` documents for Actor's own 13 new slots
+the same shape `include/dActor_c.h` documents for Actor's own 13 new slots
 (`OnYoshiTryEat`, `OnTurnIntoEgg`, etc.). All 28 override/new-slot targets are
 already matched source. ~24 of them carry `// recovered name: dScMgBase_c_X`
 comments from an earlier, untooled vtable-identity pass -- **trust the D1 (slot
@@ -236,7 +237,7 @@ comments on the same files are accurate.
 
 `dScMgBase_c`'s own instance of this is now moot, incidentally rather than by
 design: PR #1396 rewrote its D0 file from scratch as a forcing-TU stub (see
-`include/Scene.h`'s own D0/D1 files for the pattern), which carries no
+`include/dScene_c.h`'s own D0/D1 files for the pattern), which carries no
 "recovered name" comment at all. The other seven still have the mislabel.
 
 This is almost certainly not scoped to just these eight -- the "recovered

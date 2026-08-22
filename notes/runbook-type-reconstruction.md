@@ -68,11 +68,16 @@ division.** Genuinely inert changes: renaming a field, a typedef alias (`Fix12i`
 ### "Observed" is not "correct"
 
 The generated width is the width of the access matched code happened to make, not the
-field's real width. `include/ChainChomp.h:13` declares `u8 mScaleX; /* 0x080 */` where
-`include/Actor.h:86` -- de-bannered, hand-reconstructed -- declares `s32 mScaleX` at the
+field's real width. `include/ChainChomp.h` *used to* declare `u8 mScaleX; /* 0x080 */` where
+`include/dActor_c.h:106` -- de-bannered, hand-reconstructed -- declares `s32 mScaleX` at the
 same offset, and `src/_ZN10ChainChomp13InitResourcesEv.cpp` settles it by writing
-`*(int *)(c + 0x80) = 0x1000;`. The derived header is the wrong one, and it is one of
-**87** base-conflicts `tools/gen_header.py --report` still lists. Treat generated offsets
+`*(int *)(c + 0x80) = 0x1000;`. The derived header was the wrong one.
+
+*(Re-checked 2026-08-21: this particular conflict has since been fixed -- `ChainChomp.h:68`
+now says `s32 mScaleX` and its own comment records the retype. The "**87** base-conflicts
+`tools/gen_header.py --report` still lists" figure is also stale: `--report` no longer
+emits a base-conflict count unless the history/hierarchy/rom passes have been run first,
+so re-measure before quoting a number. The lesson below stands; the example is history.)* Treat generated offsets
 as strong evidence, then reconcile across the whole hierarchy -- which is what pass 2
 below does for you.
 
@@ -92,7 +97,7 @@ A tool of that name exists now, but it is **not** a regenerator. `tools/gen_head
 --report` emits a *differential* between what these headers declare and what three
 independent evidence passes can prove, bucketed per field; it writes nothing to
 `include/`. Headers are still edited by hand -- but now against a report instead of
-against nothing. See `notes/plan-gen-header.md`.
+against nothing. See `notes/archive/plan-gen-header.md`.
 
 **There is a second banner family, and it has no report.** 59 further headers -- the
 `d*_c.h` set, `include/dWipe_c.h` among them -- carry a different fabricated attribution:
@@ -138,7 +143,7 @@ without checking it names anything visible from the header* -- in three disguise
 |---|---|---|
 | `ExpandingHeapAllocator.h` | `forwards void* Allocate(u32, int);` | a fragment of the parameter name spilled into the return type (#1211) |
 | `SolidHeapAllocator.h` | `call ResetEnd void Reset(u32);` | scraped out of the comment on `Reset`'s body, *"bit 0: call ResetStart; bit 1: call ResetEnd"* (#1215) |
-| `Scene.h` | `Bool BeforeInitResources();` | a `typedef int Bool;` that is file-local to `src/_ZN5Scene19BeforeInitResourcesEv.c` (#1215) |
+| `dScene_c.h` | `Bool BeforeInitResources();` | a `typedef int Bool;` that is file-local to `src/_ZN5Scene19BeforeInitResourcesEv.c` (#1215) |
 
 **No gate found any of them.** Each surfaced by migrating a method, which compiles the
 block for the first time -- one slice per defect. `tools/header_cpp_sweep.py` finds them
@@ -180,7 +185,7 @@ and `u32/u16` alike, control diverging as expected.
 **A/B proves harmlessness, not correctness.** It cannot confirm a width -- that rests on
 the evidence passes -- and it cannot confirm signedness at all, because what it has just
 shown is that nothing depends on it. "The gate proved the width" is the overclaim this
-method invites, and `notes/plan-scalar-markers.md` §3 is the retraction of exactly that.
+method invites, and `notes/archive/plan-scalar-markers.md` §3 is the retraction of exactly that.
 Write **byte-unobservable**, not *verified*.
 
 ## 3. The ladder, with the tree's own before/after
@@ -332,7 +337,7 @@ python tools/check_references.py --update    # bank the starting point
    cross-check an earlier revision of this runbook told you to do by hand *is* pass 2.
 
    **Read the recall line before concluding anything from a zero.** A pass that could not
-   see your class says so; `notes/plan-scalar-markers.md` §3a is what happens when that
+   see your class says so; `notes/archive/plan-scalar-markers.md` §3a is what happens when that
    distinction is ignored -- a class the hierarchy could not place was reported as
    "no ancestor declares this offset", and it was wrong.
 3. **Name and type the fields.** Same width unless you intend a codegen change. Write
@@ -405,12 +410,12 @@ the check the ROM build cannot report**, and it is why the baseline is step 0.
   destructor. Those already exist as delinked ROM data, so `eligible.py` rejects the
   file with **"extra sections: .data"** and the enrolled count falls.
 
-  **`include/Actor.h` already states this rule, and the arrangement is deliberate:**
+  **`include/dActor_c.h` already states this rule, and the arrangement is deliberate:**
   *"The key function -- the first non-inline virtual declared -- must never be defined
   as a real method in any translation unit. Declaring the destructor first pins that
-  role to TUs which by construction never will."* `include/MeshCollider.h` reaches the
+  role to TUs which by construction never will."* `include/dBgW_Kc.h` reaches the
   same end as a rule of thumb (*"The structors stay C files"*), and
-  `include/ActorBase.h` differently again — it declares `InitResources` (slot 0)
+  `include/fBase_c.h` differently again — it declares `InitResources` (slot 0)
   in-class but defines it as an `extern "C"` free function on purpose.
 
   **There is a second, independent blocker**, and it is the one that actually binds:
@@ -437,7 +442,7 @@ the check the ROM build cannot report**, and it is why the baseline is step 0.
 
   **Two escapes were measured and both fail. Do not re-derive them.**
 
-  *Move the key-function role to another virtual.* `include/Actor.h` notes that an
+  *Move the key-function role to another virtual.* `include/dActor_c.h` notes that an
   **override** takes its base's slot wherever it is declared, so for a *derived*
   class the declaration order is free and the role can be moved. For a **root**
   class it cannot: with no base to inherit slots from, vtable slot order **is**

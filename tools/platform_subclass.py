@@ -39,9 +39,9 @@ CAST_MEMBERS = [False]
 
 
 def inherited_names():
-    """offset -> (name, type) Actor.h / dBgActor_c.h gives that offset."""
+    """offset -> (name, type) dActor_c.h / dBgActor_c.h gives that offset."""
     out, ty_out = {}, {}
-    for h, lo, hi in (("include/Actor.h", 0, 0xd0), ("include/dBgActor_c.h", 0xd0, 0x31e)):
+    for h, lo, hi in (("include/dActor_c.h", 0, 0xd0), ("include/dBgActor_c.h", 0xd0, 0x31e)):
         for ty, star, name, arr, off in FIELD.findall((REPO / h).read_text(errors="replace")):
             o = int(off, 16)
             if lo <= o < hi and not name.startswith("pad_"):

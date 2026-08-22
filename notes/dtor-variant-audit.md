@@ -9,7 +9,7 @@ and finding its `D2` is not a D2 and not Scene's.
 
 ## 0. The rule is not new; mechanising it is
 
-`include/MeshColliderBase.h` already states it, calls it **the #774 rule** — *"a
+`include/dBgW.h` already states it, calls it **the #774 rule** — *"a
 class vtable carries [D1, D0] and never D2; D2 is reached by direct call alone"* —
 applies it correctly to that one class, concludes *"the symbol names are on the
 wrong bodies"*, and deliberately defers the fix: *"Correcting that pair is a
@@ -155,7 +155,7 @@ here names the wrong symbol.
 
 **`Scene` was picked as the Phase-2 pilot on two claims, both false.** The plan
 says *"Its header is already mostly named, so the slice tests the migration rather
-than migration plus field reconstruction at once."* `include/Scene.h` declares
+than migration plus field reconstruction at once."* `include/dScene_c.h` declares
 **one** field (`u8 unk_013`) behind `0x13` bytes of padding, under the fabricated
 `gen_header.py` banner that `runbook-type-reconstruction.md` §2 documents. And all
 three Scene destructors are shadow-struct files that do not include it. The pilot
@@ -192,7 +192,7 @@ class's vptr.
 
     11 D2 candidates    9 C2 candidates    33 undecided
 
-It reproduces both of `include/MeshColliderBase.h`'s hand-derived claims exactly —
+It reproduces both of `include/dBgW.h`'s hand-derived claims exactly —
 `func_02039658` is `MeshColliderBase`'s D2, `func_020397fc` is `MeshCollider`'s —
 and the tree-name join gets `dBgW_Kc` → `MeshCollider` on its own. Nine more D2s
 follow that nothing in the tree had named: `dBgCh`, `dBgPi`, `dM3dGSph`,
@@ -260,7 +260,7 @@ So the two causes are separable, and **neither alone is the whole story**:
 Tree-wide today: **85** files are rejected with `extra sections: .data` and **13** with
 `N .text sections (multi-function TU)`.
 
-**None of this is new to the tree, and `include/Actor.h:42-49` states it exactly:**
+**None of this is new to the tree, and `include/dActor_c.h:42-49` states it exactly:**
 
 > The rule, stated precisely: the key function -- the first non-inline virtual
 > declared -- must never be defined as a real method in any translation unit.
@@ -269,10 +269,10 @@ Tree-wide today: **85** files are rejected with `extra sections: .data` and **13
 
 It also records *why* the choice is free: *"An override takes its base's slot wherever
 it is declared, so putting `~Actor` first costs nothing and makes it the key
-function."* `include/MeshColliderBase.h` and `include/ModelBase.h` name the same
+function."* `include/dBgW.h` and `include/ModelBase.h` name the same
 arrangement (*"THE DESTRUCTOR IS DECLARED FIRST AND NEVER DEFINED AS A METHOD"*),
-`include/MeshCollider.h` states it as *"The structors stay C files"*, and
-`include/ActorBase.h` reaches it a third way — declaring `InitResources` (slot 0)
+`include/dBgW_Kc.h` states it as *"The structors stay C files"*, and
+`include/fBase_c.h` reaches it a third way — declaring `InitResources` (slot 0)
 in-class but defining it as an `extern "C"` free function on purpose.
 
 So the convention is deliberate and well documented. What is **not** written down
@@ -280,7 +280,7 @@ anywhere is its consequence for `notes/plan-cpp-language-mode.md`, whose Phase 2
 schedules **463 destructor files** that this convention makes unmigratable — and
 which nominates pilots on the assumption that destructors are the tractable part.
 
-Confirmed empirically on `2004/b56` (Actor.h cites CW 1.2), by compiling three probes
+Confirmed empirically on `2004/b56` (dActor_c.h cites CW 1.2), by compiling three probes
 against the real `Fader.h`:
 
     Fader::~Fader() {}          (declared first)  -> emits _ZTV5Fader _ZTI5Fader _ZTS5Fader

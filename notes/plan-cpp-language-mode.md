@@ -304,7 +304,7 @@ Pilot targets — highest unmigrated count *and* an existing reconstructed heade
 each dtor variant — exactly the `D0`/`D2` evidence Phase 2 is missing — without dragging in
 a constructor.~~
 
-**Retracted; both claims were false.** `include/Scene.h` declares **one** field
+**Retracted; both claims were false.** `include/dScene_c.h` declares **one** field
 (`u8 unk_013` behind `0x13` of padding) under the fabricated `gen_header.py` banner — it is
 a rung-0 skeleton, not a named header — and all three Scene destructors are shadow-struct
 files that do not include it. Nor does Scene carry one of each variant: `_ZN5SceneD2Ev` is

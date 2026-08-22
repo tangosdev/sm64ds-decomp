@@ -4,7 +4,7 @@
 Scope: the `marker: object, extent unknown` bucket of `tools/gen_header.py --report`
 (180 fields at the time of writing).  Each is a lone `u8 name; /* 0xNN */` followed by
 padding, where the `u8` is the generator's "an object of unknown type starts here"
-marker -- NOT a width claim (notes/plan-scalar-markers.md 1; misreading it as one
+marker -- NOT a width claim (notes/archive/plan-scalar-markers.md 1; misreading it as one
 produced 229 false positives earlier in this programme).  Spans of 4 bytes or less
 were already retyped as scalars; these are the ones with room for a real object.
 
@@ -60,7 +60,7 @@ TWO TRAPS THIS TOOL IS BUILT AROUND
    argument 0 is a `this` at all.
 
 Recall is reported at every stage: a pass that silently matches nothing prints a clean,
-confident, wrong answer (notes/plan-gen-header.md 2).
+confident, wrong answer (notes/archive/plan-gen-header.md 2).
 
     python build/marker_types.py                       # report to stdout
     python build/marker_types.py --json build/marker_types.json

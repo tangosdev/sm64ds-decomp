@@ -1,0 +1,537 @@
+{
+ "_comment": "Dead path references in prose that are known and accepted: synthetic example paths in tests, paths belonging to other repositories, paths that exist only on an unlanded branch, and prose that deliberately names something historical. tools/check_dead_references.py fails on any dead reference NOT listed here. Regenerate with --update, but read the diff: a new entry is usually a rename someone forgot to follow through into the docs.",
+ "known": [
+  {
+   "file": "AGENTS.md",
+   "ref": "tools/CI/docs"
+  },
+  {
+   "file": "AGENTS.md",
+   "ref": "tools/claims_key.txt"
+  },
+  {
+   "file": "CONTRIBUTING.md",
+   "ref": "tools/claims_key.txt"
+  },
+  {
+   "file": "notes/actor-naming.md",
+   "ref": "include/List/ActorList.h"
+  },
+  {
+   "file": "notes/actor-naming.md",
+   "ref": "include/object_fields.h"
+  },
+  {
+   "file": "notes/actor-naming.md",
+   "ref": "include/sm64.h"
+  },
+  {
+   "file": "notes/actor-naming.md",
+   "ref": "src/Bases"
+  },
+  {
+   "file": "notes/actor-naming.md",
+   "ref": "src/game/behaviors"
+  },
+  {
+   "file": "notes/actor-naming.md",
+   "ref": "src/game/mario_step.c"
+  },
+  {
+   "file": "notes/actor-naming.md",
+   "ref": "src/objectid.hpp"
+  },
+  {
+   "file": "notes/actor-vtables.md",
+   "ref": "src/_ZN12ActorDerivedD1Ev.c"
+  },
+  {
+   "file": "notes/actor-vtables.md",
+   "ref": "src/_ZN5ActorC2Ev.cpp"
+  },
+  {
+   "file": "notes/actor-vtables.md",
+   "ref": "src/_ZN8PlatformD0Ev.cpp"
+  },
+  {
+   "file": "notes/archive/crack-loop-runbook.md",
+   "ref": "notes/pret-idioms.md"
+  },
+  {
+   "file": "notes/archive/crack-loop-runbook.md",
+   "ref": "tools/claims_key.txt"
+  },
+  {
+   "file": "notes/archive/func_02059d8c-asm-origin.md",
+   "ref": "src/dst"
+  },
+  {
+   "file": "notes/archive/n64-decomp-cross-reference.md",
+   "ref": "include/trig_tables.inc.c"
+  },
+  {
+   "file": "notes/archive/n64-decomp-cross-reference.md",
+   "ref": "src/game/mario.c"
+  },
+  {
+   "file": "notes/archive/n64-decomp-cross-reference.md",
+   "ref": "src/game/mario_step.c"
+  },
+  {
+   "file": "notes/archive/plan-gen-header.md",
+   "ref": "include/Actor.h"
+  },
+  {
+   "file": "notes/archive/plan-gen-header.md",
+   "ref": "include/decl_"
+  },
+  {
+   "file": "notes/archive/plan-gen-header.md",
+   "ref": "tools/decl_headers.py"
+  },
+  {
+   "file": "notes/archive/plan-scalar-markers.md",
+   "ref": "src/_ZN9FaderWipeC1Ev.c"
+  },
+  {
+   "file": "notes/collision-query-classes.md",
+   "ref": "notes/drafts-sphereclsn-detectclsn.cpp"
+  },
+  {
+   "file": "notes/collision-query-classes.md",
+   "ref": "src/_ZN12MeshCollider10DetectClsnER13RaycastGround.cpp"
+  },
+  {
+   "file": "notes/collision-system.md",
+   "ref": "notes/drafts-sphereclsn-detectclsn.cpp"
+  },
+  {
+   "file": "notes/collision-system.md",
+   "ref": "port/unmatched/MeshCollider_DetectClsn_Sphere.cpp"
+  },
+  {
+   "file": "notes/declaration-centralization.md",
+   "ref": "include/decl_"
+  },
+  {
+   "file": "notes/dscene-c-siblings-census.md",
+   "ref": "tools/deepen_rtti.py"
+  },
+  {
+   "file": "notes/dtor-migration.md",
+   "ref": "src/_ZN5EnemyD0Ev.c"
+  },
+  {
+   "file": "notes/dtor-migration.md",
+   "ref": "src/_ZN5ModelD1Ev.cpp"
+  },
+  {
+   "file": "notes/emu-trace-build.md",
+   "ref": "asm/target_hex"
+  },
+  {
+   "file": "notes/emu-trace-build.md",
+   "ref": "nearmiss/ledger"
+  },
+  {
+   "file": "notes/ghidra-dsd-landscape.md",
+   "ref": "assets/signatures"
+  },
+  {
+   "file": "notes/ghidra-dsd-landscape.md",
+   "ref": "lib/dsd-ghidra-src.zip"
+  },
+  {
+   "file": "notes/global-data-migration.md",
+   "ref": "src/testbss.c"
+  },
+  {
+   "file": "notes/global-data-migration.md",
+   "ref": "src/testbssmid.c"
+  },
+  {
+   "file": "notes/global-data-migration.md",
+   "ref": "src/testbssmid.o"
+  },
+  {
+   "file": "notes/global-data-migration.md",
+   "ref": "src/testdata.c"
+  },
+  {
+   "file": "notes/global-data-migration.md",
+   "ref": "src/testmulti.c"
+  },
+  {
+   "file": "notes/global-data-migration.md",
+   "ref": "src/testrodata.c"
+  },
+  {
+   "file": "notes/handoff-class-skeleton.md",
+   "ref": "docs/class-reference-confidence"
+  },
+  {
+   "file": "notes/handoff-marker-typing.md",
+   "ref": "src/_ZN10FlameChomp13InitResourcesEv.cpp"
+  },
+  {
+   "file": "notes/handoff-marker-typing.md",
+   "ref": "src/_ZN3AmpD0Ev.c"
+  },
+  {
+   "file": "notes/handoff-sphereclsn-detectclsn.md",
+   "ref": "notes/drafts-sphereclsn-detectclsn.cpp"
+  },
+  {
+   "file": "notes/handoff-validator-and-tests.md",
+   "ref": "tools/test_"
+  },
+  {
+   "file": "notes/match-attempts.md",
+   "ref": "notes/adopting-match-conventions.md"
+  },
+  {
+   "file": "notes/match-provenance.md",
+   "ref": "src/NAME.c"
+  },
+  {
+   "file": "notes/matching-style.md",
+   "ref": "src/func_ov006_020e0068.c"
+  },
+  {
+   "file": "notes/matching-style.md",
+   "ref": "src/func_ov006_02110a20.c"
+  },
+  {
+   "file": "notes/mwccarm-codegen.md",
+   "ref": "docs/_private/CodeWarrior/mwccarm.help.txt"
+  },
+  {
+   "file": "notes/mwccarm-codegen.md",
+   "ref": "src/dst"
+  },
+  {
+   "file": "notes/overlay-residency.md",
+   "ref": "src/_ZN8CapEnemy6AddCapEj.c"
+  },
+  {
+   "file": "notes/overlay-residency.md",
+   "ref": "src/func_ov007_020cc2cc.c"
+  },
+  {
+   "file": "notes/plan-cpp-language-mode.md",
+   "ref": "src/_ZN9ActorBaseC1Ev.cpp"
+  },
+  {
+   "file": "notes/port-selftest-bmp-gate.md",
+   "ref": "port/hal/host_settings.cpp"
+  },
+  {
+   "file": "notes/port-selftest-bmp-gate.md",
+   "ref": "port/ov009_syms.txt"
+  },
+  {
+   "file": "notes/research-matching-levers.md",
+   "ref": "src/randomizer.py"
+  },
+  {
+   "file": "notes/rom-build.md",
+   "ref": "src/config"
+  },
+  {
+   "file": "notes/rom-build.md",
+   "ref": "src/func_ov091_02132a0c.c"
+  },
+  {
+   "file": "notes/rtti-reconciliation.md",
+   "ref": "src/func_ov002_020b4bfc.c"
+  },
+  {
+   "file": "notes/runbook-type-reconstruction.md",
+   "ref": "src/_ZN5Scene19BeforeInitResourcesEv.c"
+  },
+  {
+   "file": "notes/runbook-type-reconstruction.md",
+   "ref": "tools/deepen_rtti.py"
+  },
+  {
+   "file": "notes/translation-unit-reconstruction-plan.md",
+   "ref": "src/actors/Chuckya.cpp"
+  },
+  {
+   "file": "notes/translation-unit-reconstruction-plan.md",
+   "ref": "src_tu/actors/Chuckya.cpp"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-2-report.md",
+   "ref": "include/Actor.h"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-2-report.md",
+   "ref": "include/ActorDerived.h"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-2-report.md",
+   "ref": "tools/reloc_audit.check_destinations"
+  },
+  {
+   "file": "notes/tu-reconstruction-pilot-report.md",
+   "ref": "include/Platform.h"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "port/salvage-port-repo-tools"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "port/tools/mmio_inventory.py"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd11fdiv_resultEv.c"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd11ldiv_resultEv.c"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd3divEii.c"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd3modEii.c"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd4ldivEii.c"
+  },
+  {
+   "file": "port/docs/mmio-inventory.md",
+   "ref": "src/_ZN4cstd4sqrtEy.c"
+  },
+  {
+   "file": "port/docs/opie-assessment.md",
+   "ref": "include/nitro/gx/g3imm.h"
+  },
+  {
+   "file": "port/docs/opie-assessment.md",
+   "ref": "include/nitro/hw/X86/ioreg_G3.h"
+  },
+  {
+   "file": "port/docs/opie-assessment.md",
+   "ref": "include/nitro/hw/X86/mmap_global.h"
+  },
+  {
+   "file": "port/docs/opie-assessment.md",
+   "ref": "port/salvage-port-repo-tools"
+  },
+  {
+   "file": "port/docs/opie-assessment.md",
+   "ref": "port/tools/mmio_inventory.py"
+  },
+  {
+   "file": "port/docs/opie-assessment.md",
+   "ref": "src/func_02034da4.c"
+  },
+  {
+   "file": "port/docs/opie-assessment.md",
+   "ref": "src/port"
+  },
+  {
+   "file": "tools/chaos_db_ci.py",
+   "ref": "src/F.c"
+  },
+  {
+   "file": "tools/chaos_db_ci.py",
+   "ref": "src/F.cpp"
+  },
+  {
+   "file": "tools/chaos_db_ci.py",
+   "ref": "src/name.c"
+  },
+  {
+   "file": "tools/chaos_db_ci.py",
+   "ref": "src/name.ext"
+  },
+  {
+   "file": "tools/chaos_db_ci.py",
+   "ref": "src/x.c"
+  },
+  {
+   "file": "tools/check_dead_references.py",
+   "ref": "src/f.c"
+  },
+  {
+   "file": "tools/check_dead_references.py",
+   "ref": "src/game/mario.c"
+  },
+  {
+   "file": "tools/check_dead_references.py",
+   "ref": "tools/foo.py"
+  },
+  {
+   "file": "tools/check_header_offsets.py",
+   "ref": "include/ClsnResult.h"
+  },
+  {
+   "file": "tools/check_header_offsets.py",
+   "ref": "include/Enemy.h"
+  },
+  {
+   "file": "tools/claims.py",
+   "ref": "tools/claims_handle.txt"
+  },
+  {
+   "file": "tools/claims.py",
+   "ref": "tools/claims_key.txt"
+  },
+  {
+   "file": "tools/d0_migrate.py",
+   "ref": "src/_ZN5EnemyD0Ev.c"
+  },
+  {
+   "file": "tools/evidence_history.py",
+   "ref": "src/_ZN5EnemyC2Ev.cpp"
+  },
+  {
+   "file": "tools/fieldmap.py",
+   "ref": "src/x.cpp"
+  },
+  {
+   "file": "tools/langmode_audit.py",
+   "ref": "include/ClipCallback.h"
+  },
+  {
+   "file": "tools/langmode_audit.py",
+   "ref": "src/_ZN5ActorD2Ev.cpp"
+  },
+  {
+   "file": "tools/layout_check.py",
+   "ref": "src/X"
+  },
+  {
+   "file": "tools/ledger.py",
+   "ref": "nearmiss/.lock"
+  },
+  {
+   "file": "tools/m2c_draft.py",
+   "ref": "symbols/relocs"
+  },
+  {
+   "file": "tools/match.py",
+   "ref": "config/reloc"
+  },
+  {
+   "file": "tools/match_provenance.py",
+   "ref": "src/x.c"
+  },
+  {
+   "file": "tools/nearmiss_db.py",
+   "ref": "nearmiss/.lock"
+  },
+  {
+   "file": "tools/ovsweep.py",
+   "ref": "src/FOO.c"
+  },
+  {
+   "file": "tools/ovsweep.py",
+   "ref": "src/PATH"
+  },
+  {
+   "file": "tools/permuter/batch.py",
+   "ref": "tools/permuter/import_func.setup_dir"
+  },
+  {
+   "file": "tools/pgate.py",
+   "ref": "src/a.c"
+  },
+  {
+   "file": "tools/pgate.py",
+   "ref": "src/b.cpp"
+  },
+  {
+   "file": "tools/port_refcheck.py",
+   "ref": "port/slice_gate"
+  },
+  {
+   "file": "tools/pr_linkcheck.py",
+   "ref": "src/a.c"
+  },
+  {
+   "file": "tools/pr_linkcheck.py",
+   "ref": "src/b.cpp"
+  },
+  {
+   "file": "tools/prepush_attribution.py",
+   "ref": "src/F.c"
+  },
+  {
+   "file": "tools/prepush_attribution.py",
+   "ref": "src/F.cpp"
+  },
+  {
+   "file": "tools/prepush_linkcheck.py",
+   "ref": "src/a.c"
+  },
+  {
+   "file": "tools/prepush_linkcheck.py",
+   "ref": "src/b.cpp"
+  },
+  {
+   "file": "tools/rebuild_ledger.py",
+   "ref": "src/NAME.c"
+  },
+  {
+   "file": "tools/rebuild_ledger.py",
+   "ref": "tools/rebuild_ledger"
+  },
+  {
+   "file": "tools/romdata_check.py",
+   "ref": "src/a.cpp"
+  },
+  {
+   "file": "tools/rtti_vtables.py",
+   "ref": "src/_ZN12CylinderClsn7ProcessEv.cpp"
+  },
+  {
+   "file": "tools/srcpath.py",
+   "ref": "src/actors/ActorBase_SceneNode.cpp"
+  },
+  {
+   "file": "tools/srcpath.py",
+   "ref": "src/unnamed/ov006"
+  },
+  {
+   "file": "tools/stamp_provenance.py",
+   "ref": "src/arm9/func_02001b44.c"
+  },
+  {
+   "file": "tools/stamp_provenance.py",
+   "ref": "src/arm9/func_0200abcd.c"
+  },
+  {
+   "file": "tools/test_demember_calls.py",
+   "ref": "src/func_ov022_02111bdc.cpp"
+  },
+  {
+   "file": "tools/test_srcpath.py",
+   "ref": "mods/X.c"
+  },
+  {
+   "file": "tools/test_srcpath.py",
+   "ref": "src/unnamed/ov006"
+  },
+  {
+   "file": "tools/trace/actors.py",
+   "ref": "include/Actor/ActorBase.h"
+  },
+  {
+   "file": "tools/trace/actors.py",
+   "ref": "src/_ZN5ActorC2Ev.cpp"
+  },
+  {
+   "file": "tools/tubuild.py",
+   "ref": "symbols/sections"
+  }
+ ]
+}

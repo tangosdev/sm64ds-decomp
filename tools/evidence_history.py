@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pass 1 of notes/plan-gen-header.md: recover per-class field evidence from history.
+"""Pass 1 of notes/archive/plan-gen-header.md: recover per-class field evidence from history.
 
 The 241 headers in include/ that carry
 

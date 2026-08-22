@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pass 2 of notes/plan-gen-header.md -- the *hierarchy* evidence pass.
+"""Pass 2 of notes/archive/plan-gen-header.md -- the *hierarchy* evidence pass.
 
 Two jobs, one output file (build/evidence_hierarchy.json):
 
@@ -16,7 +16,7 @@ Two jobs, one output file (build/evidence_hierarchy.json):
       instead of inheriting them, and the copies often disagree on width.
 
 Nothing is written outside build/.  This pass never proposes a change to a
-de-bannered header: those (include/Actor.h, include/Fader.h, ...) were
+de-bannered header: those (include/dActor_c.h, include/Fader.h, ...) were
 hand-reconstructed with real inheritance and are the *reference*, read-only.
 
 Evidence sources for an inheritance edge, strongest first
@@ -48,7 +48,7 @@ ctor_chain         Mirror image in `_ZN<D>C1Ev`/`C2Ev`: the base constructor is
 cpp_shim           `struct D : B` inside a src/*.cpp.  Weak, and deliberately
                    ranked below the ROM-shaped evidence: these are local compile
                    shims and routinely *flatten* the chain.  src carries
-                   `struct Actor : ActorBase`, while the ROM and include/Actor.h
+                   `struct Actor : ActorBase`, while the ROM and include/dActor_c.h
                    both say Actor : ActorDerived : ActorBase.
 
 seed_hier_json     build/hier.json, a partial map from an earlier session.
@@ -281,7 +281,7 @@ def cpp_view(lines, cplusplus=True):
     """Lines visible with __cplusplus defined (or not), as (lineno, text).
 
     Only __cplusplus-dependent conditionals are evaluated; every other #if is
-    treated as taken (include guards, mostly).  This is what selects Actor.h's
+    treated as taken (include guards, mostly).  This is what selects dActor_c.h's
     inheriting C++ struct over its flat C twin; `cplusplus=False` selects the
     other half, which the cross-check matrix needs.
     """
@@ -999,7 +999,7 @@ def build(root, seed_path):
     # IS the destructor of D's base.  When D's base is fixed independently by a
     # de-bannered reference header, that names the unnamed function.
     # `func_020354d0` is reached this way: WithMeshClsn's dtor calls it at offset
-    # 0 and include/WithMeshClsn.h says `struct WithMeshClsn : BgCh`, so the
+    # 0 and include/dBgCh_Actr.h says `struct dBgCh_Actr : dBgCh`, so the
     # function is BgCh's D1.  Only accepted when every reference-header caller
     # agrees.
     ref_base = {c: headers[c].base for c in reference if headers[c].base}
@@ -1472,7 +1472,7 @@ def build(root, seed_path):
                        stats["symbols_zti"]),
                     "cpp_shim ranks last on purpose: src shims flatten chains "
                     "(src says `struct Actor : ActorBase`; the ROM and "
-                    "include/Actor.h say Actor : ActorDerived : ActorBase).",
+                    "include/dActor_c.h say Actor : ActorDerived : ActorBase).",
                     "Fields whose type this pass cannot size (struct-typed members) "
                     "are compared as kind=unknown_width, never as agreement.",
                 ],
@@ -1654,7 +1654,7 @@ def report(doc, stream=sys.stdout):
 
 def main(argv=None):
     ap = argparse.ArgumentParser(
-        description="Pass 2 (hierarchy) of notes/plan-gen-header.md.")
+        description="Pass 2 (hierarchy) of notes/archive/plan-gen-header.md.")
     here = os.path.dirname(os.path.abspath(__file__))
     ap.add_argument("--root", default=os.path.dirname(here),
                     help="repo root (default: the parent of tools/)")

@@ -1354,8 +1354,9 @@ neighbours, and `check_header_offsets` is blinded by span-form padding.
   - Hoisting `t/u/vx/vy/vz` to the block tail: inert.
 
   **3c is done, and it moved 3b.** The cross-read (below) found the shortfall was *block
-  layout*, not missing code. Both `nearmiss/db.jsonl` and
-  `notes/drafts-sphereclsn-detectclsn.cpp` carry the improved body.
+  layout*, not missing code. `nearmiss/db.jsonl` carried the improved body, as did
+  `notes/drafts-sphereclsn-detectclsn.cpp` until #1655 matched the function and deleted it;
+  the finished body is `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`.
 
   ### What the cross-read established
 

@@ -7,7 +7,7 @@ nothing else in the build would notice -- a header is not compiled on its own, a
 the byte gate cannot see a field no source file happens to read.
 
 This walks the declarations, applies natural alignment, and compares. Used as the
-first gate on any header edit; see notes/plan-scalar-markers.md 4.
+first gate on any header edit; see notes/archive/plan-scalar-markers.md 4.
 
     python tools/check_header_offsets.py include/Enemy.h include/Camera.h
     python tools/check_header_offsets.py --changed              # vs origin/main
@@ -43,7 +43,7 @@ def learn_aggregates(*paths):
     Without this a `Vector3 pos;` field is unrecognised, and the tool's own rule --
     an unrecognised declaration leaves the running offset short, so every later
     field silently matches at the wrong place -- means it cannot gate ANY header
-    that uses one. include/RaycastGround.h has carried `Vector3 pos;` since it was
+    that uses one. include/dBgCh_Gnd.h has carried `Vector3 pos;` since it was
     hand-extended and has been unparseable that whole time.
 
     Deliberately narrow: only brace-free bodies whose members are already-known
@@ -227,7 +227,7 @@ for path in _resolve_paths(sys.argv[1:]):
     for lineno, line in enumerate(txt.splitlines(), 1):
         if not started:
             # A struct-with-body BEFORE the file's own class is a helper type
-            # (ActorBase_SceneNode in ActorBase.h, KCL_Tri in MeshCollider.h,
+            # (ActorBase_SceneNode in fBase_c.h, KCL_Tri in dBgW_Kc.h,
             # Particle::SysTracker's namespace-nested body in Stage.h), not the
             # struct this file is named for. Without this check the FIRST
             # struct-with-body wins regardless of name, and the tool silently
@@ -340,7 +340,7 @@ for path in _resolve_paths(sys.argv[1:]):
                 unmodelled = True
                 break
             # A derived class can ALSO declare its destructor/overrides FIRST
-            # (Scene.h's KEY FUNCTION convention -- "the destructor is declared
+            # (dScene_c.h's KEY FUNCTION convention -- "the destructor is declared
             # first, which is safe for a derived class"). Before any real field
             # has been seen, a method line doesn't end the list, it's still the
             # header's front matter -- without this, dScMgBase_c.h (destructor +

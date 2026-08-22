@@ -248,7 +248,7 @@ def discover():
 
     The audit above can only judge symbols that already claim to be a destructor.
     A genuine D2 sitting under a `func_*` name is invisible to it, and those exist:
-    `include/MeshColliderBase.h` names two by hand, and the Fader family holds two
+    `include/dBgW.h` names two by hand, and the Fader family holds two
     more. This is the discovery direction.
 
     A base-object destructor has a signature no other function shares:

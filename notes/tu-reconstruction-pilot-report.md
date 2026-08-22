@@ -9,7 +9,7 @@ function-by-function against the ROM.
 **What it is not:** a build change. `src_tu/actors/PoleLift.cpp` is not enrolled,
 `config/**/delinks.txt` is untouched, and the seven one-function sources under
 `src/` remain the sole enrolled owners of `0x0211150c..0x02111840`. No
-`rombuild.py`, no `eligible.py --apply`, no link.
+`rombuild.py`, no `eligible.py`, no link.
 
 ---
 

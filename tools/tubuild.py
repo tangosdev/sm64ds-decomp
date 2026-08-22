@@ -22,7 +22,7 @@ Subcommands:
     python tools/tubuild.py promote   ...             # only --dry-run (plan sec 7.7)
 
 This tool never touches src/, config/**/delinks.txt, or runs real
-`eligible.py --apply` / `rombuild.py`. It only reads production state (the
+`eligible.py` / `rombuild.py`. It only reads production state (the
 committed config/, the extracted ROM, the pinned mwccarm) and writes to
 src_tu/, config/tu_manifest.json, and build/tu/ (gitignored, see .gitignore's
 bare `build/` entry).
@@ -843,11 +843,11 @@ def assemble_shadow_source(tu_id, ord_rows, parsed):
         if cpp_needed and not p["cpp"]:
             # A legacy .c file's identifier is unmangled by construction; giving the
             # merged C++ TU the same text without linkage protection would let the
-            # compiler mangle it a second time (notes/double-mangling-defect.md).
+            # compiler mangle it a second time (the double-mangling defect).
             # The linkage goes on a BLOCK around the member's whole text: prefixing
             # the first line lands it on a preamble declaration and the definition
             # is emitted mangled -- the TU then silently fails to define its own
-            # ROM symbol (notes/tubuild-defects, defect 2).
+            # ROM symbol (tubuild defect 2).
             out.append('extern "C" {  /* .c-derived member: C linkage for the whole block */')
             out.append(func_text.rstrip("\n"))
             out.append("}")
@@ -916,7 +916,7 @@ def cmd_create(args):
         raise SystemExit(f"{args.id}: tu_map lists no symbols.txt-resolvable functions")
 
     # Neither a sourceless member nor an unsplittable file refuses the whole
-    # candidate any more (notes/tubuild-defects, defect 4): the largest TUs were
+    # candidate any more (tubuild defect 4): the largest TUs were
     # only reachable by hand-assembly because one member's shape aborted create.
     # A sourceless member becomes a banner (verify reports it MISSING, honestly);
     # an unsplittable file is carried VERBATIM -- raw concatenation is exactly
@@ -1321,7 +1321,7 @@ def cmd_verify(args):
         """A curated criteria value often carries evidence prose ('PASS --
         reloc_audit.check_destinations(): 57 relocations, 57 OK, 0 WRONG-DEST').
         Overwriting it with a bare verdict destroys strictly more informative
-        text every run (notes/tubuild-defects, defect 1). Keep the existing
+        text every run (tubuild defect 1). Keep the existing
         text whenever it already states the SAME verdict and says more; replace
         it only when this run's verdict differs."""
         old = criteria.get(key)
@@ -1476,7 +1476,7 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy)
     scratch config, because every failure mode here is silent downstream: dsd fills any
     range it has no object for with retail ROM bytes, so a mis-spliced delinks tree
     links clean and compares green while contributing nothing (see
-    notes/unbuildable-files-invisible.md and layout_check's L1). `span_entries` holds
+    "unbuildable files are invisible to every gate", and layout_check's L1). `span_entries` holds
     the checks; this adds the rewrite.
     """
     header, entries, inside, reasons = span_entries(delinks_path, span_start, span_end,
@@ -1991,7 +1991,7 @@ def cmd_partial(args):
     # Contribution equivalence says nothing about ENROLLMENT, and the two are easy to
     # confuse: a TU whose legacy entries are not `complete` today has production objects
     # that compile fine and are never linked, because dsd serves those ranges from ROM
-    # bytes (notes/eligible-is-not-enrolled.md). Comparing against them is still
+    # bytes ("eligible is not enrolled"). Comparing against them is still
     # meaningful -- it is what the pipeline WOULD produce -- but a reader must not read
     # it as "this range is source-built". Stated rather than left implicit.
     n_complete = sum(1 for f in entry["functions"]
@@ -2475,7 +2475,7 @@ def cmd_linkcheck(args):
     # rombuild.py has never run this check, and the baseline control shows why: it does
     # not pass on an untouched tree. So the gate that can mean something for a TU is
     # "no error this run that the baseline did not already have" -- the same
-    # reproduce-on-main discipline notes/stale-baseline-gates.md insists on.
+    # reproduce-on-main discipline this tree insists on for every stale-baseline gate.
     base_errors, symbols_new = None, None
     if not baseline:
         base = BASELINE_LINK / "linkcheck.json"
@@ -2854,7 +2854,7 @@ def cmd_promote(args):
     print("   Related, and NOT triggered by this TU but by any key-function TU: dsd "
           "derives vtable/typeinfo ownership from the mangled class name in the "
           "delinks.txt PATH, so replacing src/_ZN<Class>D1Ev.cpp with src/<dir>/<Class>.cpp "
-          "changes that derivation (see notes/vtable-rename-must-move-atomically.md).")
+          "changes that derivation -- a vtable rename must move atomically with it.")
 
     print("\n-- 5. manifest")
     print(f"   {MANIFEST.relative_to(REPO).as_posix()}: entry {entry['id']} "

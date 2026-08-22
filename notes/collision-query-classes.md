@@ -62,7 +62,7 @@ and its destructor calls `_ZN10ClsnResultD1Ev` on each. So `ClsnResult` is 0x28 
 independent derivation of the same boundary the three headers show, from a different
 function.
 
-`RaycastGround.h`'s hand-extended comment already called 0x10 "the 0x28-byte ClsnResult the
+`dBgCh_Gnd.h`'s hand-extended comment already called 0x10 "the 0x28-byte ClsnResult the
 hit is written into"; this generalises it to the whole family and pins the width from the
 stride rather than from one call site.
 
@@ -96,12 +96,12 @@ is what produces the correct `add r6,r1,#0x38` / `[r6]`, `[r6,#4]`, `[r6,#8]` lo
 destructor proves something *destructible* lives at 0x38. Both hold only if that sub-object
 **begins with** a Vector3.
 
-So do not promote `Vector3 lineStart;` at 0x38 into `include/RaycastLine.h`. It is right for
+So do not promote `Vector3 lineStart;` at 0x38 into `include/dBgCh_Lin.h`. It is right for
 the three loads and wrong as a description of the member, which is exactly the trade
 `notes/plan-cpp-language-mode.md` §3 warns against. Settle the 0x38 type from
 `func_ov002_020feab8` first.
 
-`include/RaycastLine.h` does carry two names that the ITCM evidence contradicts outright, and
+`include/dBgCh_Lin.h` does carry two names that the ITCM evidence contradicts outright, and
 those are safe to fix independently of 0x38:
 
 | field | header says | ROM says |
@@ -110,12 +110,12 @@ those are safe to fix independently of 0x38:
 | 0x60 | `mPosY` | `clsnDist` — `ldr r1,[r0,#0x60]` on entry, `str r1,[r0,#0x60]` on exit |
 
 0x50 is also unnamed in the header but is written `strb r0,[r1,#0x50]` with `r0 = 1` on the
-hit path, i.e. a `hasClsn` byte, the same role `RaycastGround.h` already names at its 0x48.
+hit path, i.e. a `hasClsn` byte, the same role `dBgCh_Gnd.h` already names at its 0x48.
 
 ## SphereClsn: the shape sub-object at 0x38 has contents (2026-08-06)
 
 `MeshCollider::DetectClsn(SphereClsn&)` (ITCM 0x01ffb830, 0x1bc8) reads two fields that
-`include/SphereClsn.h` does not have — both fall inside its `pad_039[0x3b]`, and both land
+`include/dBgCh_SphCrr.h` does not have — both fall inside its `pad_039[0x3b]`, and both land
 inside the polymorphic sub-object at 0x38 identified above. Straight off the entry code:
 
 ```arm
@@ -145,9 +145,11 @@ type first, then the centre/radius belong to it, not to `SphereClsn`.
 Line overload applies to its segment bounds, so the sphere is bounded by an AABB inflated by
 its radius plus one cell.
 
-A first draft carrying the head and the three-axis AABB is banked at
-`notes/drafts-sphereclsn-detectclsn.cpp`. It is a **stub** — the walk and the prism tests are
-not written — so it cannot match; what it establishes is that the AABB arithmetic is right,
+A first draft carrying the head and the three-axis AABB was banked at
+`notes/drafts-sphereclsn-detectclsn.cpp`. It was a **stub** — the walk and the prism tests
+were not written — so it could not match. (#1655 has since finished the function: it is
+byte-exact in `src/_ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr.cpp`, and the draft file is gone.)
+What that draft established is that the AABB arithmetic is right,
 emitting the ROM's own sequence (`sub` origin, `sub`/`add` the slack, `asrs` + `movmi #0` low
 clamp, `mvn` for `~mask`, `movgt` high clamp, `cmp` and early-out) per axis. Build it at
 **2004/b56** — the twin `DetectClsn(RaycastGround&)` matched there and so does the Line
@@ -502,7 +504,7 @@ set/clear accessors were among **the original eleven ITCM matches**: `func_01ffb
 Those five were matched a batch ago as bare one-line accessors with no known purpose.
 **This is the purpose.** They are a normal filter on the face test — a face-angle cutoff
 (`unk_34`) and a preferred-direction test against a stored axis (`unk_35` + `unk_38`) — which
-is what a one-way or slope-limited collider needs. `include/MeshCollider.h` can now say so
+is what a one-way or slope-limited collider needs. `include/dBgW_Kc.h` can now say so
 instead of calling them `unk_`.
 
 Draft is **0x4f8** against 0x1bc8. It only started growing once a call gave the prism loop a
@@ -784,7 +786,7 @@ else if (d > (faceDot >> unk_48)) {
   expressed as a fraction of the penetration.
 * **`unk_4d`** (init 0) selects the tolerant form of that test for walls.
 * **`unk_28`/`unk_2c`/`unk_30` are one `Vector3`**, not three scalars: `DotVec3` is handed
-  `sl+0x28` as a vector. `include/MeshCollider.h` types them as separate `Fix12i`/`s32`.
+  `sl+0x28` as a vector. `include/dBgW_Kc.h` types them as separate `Fix12i`/`s32`.
 * **`SphereClsn` flags bit 2 and bit 0x20** gate the filter and the slow path.
 * **`SphereClsn+0x108`** is a `normal.y` floor the hit must clear, checked at the face label.
 

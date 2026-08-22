@@ -1,7 +1,7 @@
 """Export the closest FIXABLE near-misses from nearmiss/db.jsonl into a fan-out
 worklist for the refine specialist (tools/refine_run.js).
 
-Routing (validated, see notes/crack-loop-runbook.md): structural miss categories go
+Routing (validated, see notes/archive/crack-loop-runbook.md): structural miss categories go
 to the refine agents; "register allocation" / "instruction reorder" go to the
 permuter; "base materialization / addressing" is the compiler floor and is skipped.
 Entries carrying a "floor" mark (nearmiss_db.py mark-floor: verified compiler-internal

@@ -8,7 +8,7 @@ declared 1-byte width at that offset -- which is true, and which quietly removes
 from the marker bucket. So the markers with the BEST evidence fell off the worklist
 precisely because the evidence was good. `daKrb_c.mModelAnim @0x370` is the case that
 proves it: `src/_ZN7daKrb_cD1Ev.c` D1-calls `_ZN9ModelAnimD1Ev((char *)t + 0x370)` --
-the very relocation notes/plan-gen-header.md 3 uses as its worked example -- and the
+the very relocation notes/archive/plan-gen-header.md 3 uses as its worked example -- and the
 field is still a bare `u8`.
 
 This counts the tree directly rather than a report's bucket, and asks one question

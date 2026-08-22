@@ -1,0 +1,72 @@
+# Does the tree's PROSE still name files that exist?
+#
+# Renames here are heavy and mechanical -- Actor -> dActor_c, MeshCollider -> dBgW_Kc,
+# ClsnResult -> dBgPi, Scene -> dScene_c -- and every one of them moves a FILE while
+# leaving untouched every docstring, comment and note that cites it. Nothing in the
+# build reads a docstring, so `Enemy.h` stayed in `check_header_offsets.py`'s usage
+# line for months after that header stopped existing, and a whole family of
+# `plan-gen-header.md` citations outlived that note's move into the archive. Three such
+# were found by hand in two days, and each had already been repeated as fact by someone
+# who trusted the docstring. This job is the reason that stops being a hand search.
+#
+# RATCHET, NOT A SWEEP. `config/dead-reference-baseline.json` banks the references that
+# are dead today and accepted -- synthetic example paths in test fixtures, paths owned
+# by other repositories, paths that live only on an unlanded branch, and prose that
+# deliberately names something historical. The job fails only on a reference that is
+# dead AND not banked, which is exactly the shape a fresh rename makes.
+#
+# IT CANNOT PASS BY DOING NOTHING. The tool counts the prose files and path references
+# it actually inspected and exits non-zero with SCAN TOO SMALL below a floor, rather
+# than announcing a clean tree. That guard exists because this repo has already shipped
+# a gate that reported a pass after a reformat took its match count to zero.
+#
+# Costs nothing: static analysis over the working tree, no compiler and no ROM.
+name: dead references
+
+on:
+  pull_request:
+    paths:
+      - "**.py"
+      - "**.md"
+      - "include/**"
+      - "src/**"
+      - "src_tu/**"
+      - "config/dead-reference-baseline.json"
+      - ".github/workflows/dead-references.yml"
+  push:
+    branches: [main]
+    paths:
+      - "**.py"
+      - "**.md"
+      - "include/**"
+      - "src/**"
+      - "src_tu/**"
+      - "config/dead-reference-baseline.json"
+      - ".github/workflows/dead-references.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: dead-references-${{ github.event.pull_request.head.sha || github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  references:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        # The tool resolves against the working tree, so no history is needed -- but a
+        # shallow checkout must still contain every file, which actions/checkout does.
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Prose references that name a path which is not in the tree
+        run: python tools/check_dead_references.py
+      - name: The gate's own tests
+        # Positive controls first: a docstring naming a missing header MUST be reported,
+        # and an empty scan MUST exit non-zero. A reference-integrity gate that quietly
+        # finds nothing is worse than no gate, so those two are what these tests defend.
+        # stdlib unittest -- this runner installs nothing.
+        run: python -m unittest tools.test_check_dead_references -v

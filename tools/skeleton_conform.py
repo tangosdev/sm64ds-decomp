@@ -335,7 +335,7 @@ def probe_source(chain, slots_by_class):
         # not redeclaring leaves the slot pure and the probe emits a literal zero against
         # a real pointer in the ROM -- dMgTrmpln2Mario_c and dMgTrmpln3DMario_c failed
         # exactly that way. An override takes its base's slot and adds none, so
-        # redeclaring is free; include/Actor.h states the same property.
+        # redeclaring is free; include/dActor_c.h states the same property.
         for i in slots_by_class[cls].get("overrides", ()):
             if i < n_inherited:
                 out.append("    virtual void s%d();" % i)

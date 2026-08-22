@@ -44,7 +44,7 @@ def chain_ranges():
     """(header, lo, hi) for each class in the base's chain, ROOT FIRST.
 
     Each class owns the offsets between where its parent ends and where its own
-    last field ends -- Actor.h covers 0x00..0xd0 and Enemy.h 0xd0..0x110, not
+    last field ends -- dActor_c.h covers 0x00..0xd0 and dEnemyBase_c.h 0xd0..0x110, not
     both covering everything. Getting this wrong drops the fields a level does
     not declare instead of repointing them, which shows up as a pile of
     "undefined identifier" on names the chain really does provide.
@@ -121,7 +121,7 @@ BASE_MEMBER_OFFSETS = [set()]
 
 
 def inherited_names():
-    """offset -> (name, type) Actor.h / dBgActor_c.h gives that offset."""
+    """offset -> (name, type) dActor_c.h / dBgActor_c.h gives that offset."""
     out, ty_out = {}, {}
     for h, lo, hi in chain_ranges():
         for ty, star, name, arr, off in FIELD.findall((REPO / h).read_text(errors="replace")):
@@ -289,7 +289,7 @@ def build_header(cls, old, sizes=None):
 /* THE BASE INCLUDE BELONGS INSIDE THIS GUARD. A subclass's D0 is a C
    translation unit that includes this header for the flat struct below, and
    pulling the base in unconditionally hands a C compiler `extern "C"` and
-   `struct X : Y` -- include/Enemy.h carries both and has no guard of its own,
+   `struct X : Y` -- include/dEnemyBase_c.h carries both and has no guard of its own,
    so it answered with "declaration syntax error" on four lines at once. The C
    side needs no base: it spells the whole layout flat. */
 #include "{base}.h"

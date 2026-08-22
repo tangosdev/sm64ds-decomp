@@ -2,7 +2,7 @@
 
 COMMITTED DELIBERATELY. An earlier run of this transform lived only in build/, so
 the "131 of 180" it produced could not be reproduced or audited -- the same defect
-notes/plan-gen-header.md 1 identifies as the corpus's original sin, where a
+notes/archive/plan-gen-header.md 1 identifies as the corpus's original sin, where a
 generator ran outside the repo and left 241 headers nobody could regenerate. The
 universe a worklist covers is part of its result.
 

@@ -180,7 +180,7 @@ one. Its table is Actor's 31 slots with three differences:
 
 ### The 32nd slot, and how long it was missing
 
-`include/Platform.h` declared nothing but `virtual ~Platform() {}` until 2026-08-16, so
+`include/dBgActor_c.h` declared nothing but `virtual ~Platform() {}` until 2026-08-16, so
 every translation unit that included it emitted a **31-slot** table against the cartridge's
 32. Nothing caught it: no source file delivers `_ZTV8Platform` — the ROM's gap object does
 — and `objisolate.py` drops the vtable a key-function TU emits before any byte gate sees

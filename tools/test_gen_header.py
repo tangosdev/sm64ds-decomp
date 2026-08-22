@@ -110,7 +110,7 @@ def test_stores_never_prove_signedness():
 # ------------------------------------------------------------------ gen_header
 
 def test_marker_pad_is_found_across_a_comment_block():
-    """include/RaycastGround.h documents its own idiom over three lines, and the
+    """include/dBgCh_Gnd.h documents its own idiom over three lines, and the
     continuation lines start with prose -- not `*` -- so skipping comment-LOOKING
     prefixes is not enough."""
     lines = [
@@ -323,7 +323,7 @@ def test_an_elaborated_unknown_tag_is_still_unparsed():
 
 def test_long_long_is_four_aligned_on_this_target():
     """mwccarm 2004/b56 -proc arm946e: `struct { char c; long long v; }` is 12 bytes,
-    not 16. Self-aligning s64 to 8 invented padding and reported include/ClsnResult.h
+    not 16. Self-aligning s64 to 8 invented padding and reported include/dBgPi.h
     as broken when it is correct."""
     with tempfile.TemporaryDirectory() as td:
         out = _check(td, "struct H {\n"

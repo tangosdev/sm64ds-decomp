@@ -1,25 +1,51 @@
 # Handoff: the validator runs no tests
 
+> **PARTLY OVERTAKEN BY EVENTS -- re-measured 2026-08-21. Read this box before quoting
+> any number below.**
+>
+> - **Section 1's headline is no longer true.** Three workflows invoke tests now:
+>   `.github/workflows/python-names.yml` runs `python -m unittest tools.test_check_python_names -v`,
+>   `.github/workflows/src-tu-refs.yml` runs `python tools/test_check_src_tu.py`, and
+>   `.github/workflows/dead-references.yml` runs
+>   `python -m unittest tools.test_check_dead_references -v`.
+>   The count is **39** test files in `tools/`, not 21. What is still true: those three
+>   workflows cover three test files, the other 36 are run by nothing, and
+>   `tools/hooks/pre-push` still invokes no tests at all.
+> - **Section 2's ask has landed.** `.github/workflows/header-offsets.yml` exists and runs
+>   `check_header_offsets.py` on PRs touching `include/`, and `tools/hooks/pre-push` gained
+>   `check_duplicate_sources.py`.
+> - **Section 2's tree-wide numbers are stale.** Re-run on 2026-08-21:
+>   `python tools/check_header_offsets.py include/*.h` checks 475 headers and reports
+>   **0 mismatched, 0 unparsed**, 8 skipped as polymorphic C++ structs, exit 0 -- not the
+>   "19 pre-existing mismatches and 25 unparsed lines ... not clean tree-wide yet" recorded
+>   below. (PR #1669 rewrites that tool, so re-measure again after it lands.)
+
 **For:** whoever owns the validator / CI configuration.
 **Ask:** three changes, in priority order. Nothing here is urgent-broken; all of it is
 a gate that exists but is never pulled.
 
 ---
 
-## 1. `tools/test_*.py` is never executed by anything
+## 1. Almost all of `tools/test_*.py` is executed by nothing
 
-There are **21** test files in `tools/`. No GitHub workflow invokes them, and neither
-does `tools/hooks/pre-push`:
+*(Originally written as "never executed by anything"; corrected 2026-08-21 -- three of
+the 39 now run in CI. The numbers in this section are the 2026-08-21 re-measurement.)*
+
+There are **39** test files in `tools/`. Exactly three are invoked by a GitHub workflow,
+and `tools/hooks/pre-push` still invokes none:
 
 ```sh
-ls tools/test_*.py | wc -l                       # 21
-grep -rnE "test_|pytest|unittest" .github/workflows/*.yml   # no output
+ls tools/test_*.py | wc -l                       # 39
+grep -rlE "test_|pytest|unittest" .github/workflows/*.yml
+#   .github/workflows/dead-references.yml -> python -m unittest tools.test_check_dead_references -v
+#   .github/workflows/python-names.yml    -> python -m unittest tools.test_check_python_names -v
+#   .github/workflows/src-tu-refs.yml     -> python tools/test_check_src_tu.py
 grep -oE "python tools/[a-z_]+\.py" tools/hooks/pre-push | sort -u
-#   check_references.py  eligible.py  port_refcheck.py
-#   prepush_attribution.py  prepush_linkcheck.py
+#   check_duplicate_sources.py  check_references.py  eligible.py
+#   port_refcheck.py  prepush_attribution.py  prepush_linkcheck.py
 ```
 
-So the tests are documentation that happens to be executable. They pass today -- I ran
+So 36 of the 39 are documentation that happens to be executable. They pass today -- I ran
 all of them -- but nothing would notice when one stops.
 
 Each file is self-running and exits non-zero on failure, so no test framework is
@@ -41,6 +67,9 @@ green on a bare checkout before making it blocking, or the first result will be 
 false alarm and the gate will get switched off again.
 
 ## 2. `tools/check_header_offsets.py` should run on any PR touching `include/`
+
+*(**Done.** `.github/workflows/header-offsets.yml` now does exactly this. Kept for the
+rationale; the tree-wide counts at the end of this section are stale -- see the banner.)*
 
 A generated struct header encodes its layout twice -- once as a sequence of
 declarations and pads, once as a `/* 0x0a4 */` comment per field. Retyping a field

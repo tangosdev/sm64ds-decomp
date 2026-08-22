@@ -364,7 +364,7 @@ hand-written soft-float library. Do not route cold C matching at it.
 
 None of this was guessed; each line names what pins it.
 
-**`KCL_File`** (extended in `include/MeshCollider.h`, where #989 already defines it). The four pointers at 0x00..0x0c are pinned by the
+**`KCL_File`** (extended in `include/dBgW_Kc.h`, where #989 already defines it). The four pointers at 0x00..0x0c are pinned by the
 already-matched `MeshCollider::UpdateFileOffsets`, which relocates exactly those four words
 and nothing else. Strides are pinned by the accessors: `mul #0xc` into [0x00] (12-byte
 `Vector3`), `mul #6` into [0x04] (6-byte `Vector3_16`), `lsl #4` into [0x08] (16-byte
@@ -381,7 +381,7 @@ read); face normals at **1.0 == 0x400** (`lsl #2`). The raw fields are therefore
 so in this game the KCL attribute word *is* the CLPS index.
 
 **The vtable.** `_ZTV12MeshCollider` at 0x020993dc, 13 slots, every one resolving to a named
-function — the full map is in the `include/MeshCollider.h` header comment. The important
+function — the full map is in the `include/dBgW_Kc.h` header comment. The important
 structural read: slots 3/4/5 are **NULL in `_ZTV16MeshColliderBase`** (0x02099388), so the
 base declares `GetSurfaceInfo` / `GetNormal` / `GetTriangleOrigin` pure virtual, and slots
 9-12 of `MeshCollider` still point at `MeshColliderBase`'s implementations. That is the
@@ -415,7 +415,7 @@ the header — matched byte-for-byte immediately.
 
 Declaration order, hoisting the prism pointer, caching the attribute in a local, `KCL_File`
 temporaries and the whole version sweep were all inert against that word. Recorded in
-`notes/pret-idioms.md` as idiom 11.
+`notes/archive/pret-idioms.md` as idiom 11.
 
 ## The octree walks (updated 2026-08-03)
 
