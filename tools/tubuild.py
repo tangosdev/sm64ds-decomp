@@ -1026,8 +1026,7 @@ def unlicensed_inventory(entry, inv):
     compiled object defines that the manifest does not license. Shared by `compile`
     and `verify` so the two report the same thing."""
     licensed_funcs = {f["symbol"] for f in entry["functions"]}
-    licensed_data = ({d["symbol"] for d in entry.get("data", [])}
-                     | {d["symbol"] for d in entry.get("bss", [])})
+    licensed_data = {row["symbol"] for _sec, row in manifest_owned_symbol_rows(entry)}
     # ARM EABI mapping symbols ($a/$t/$d) are a normal, expected artefact of every
     # mwccarm object -- they mark ARM/Thumb/data spans for the disassembler, not
     # real functions, and are emitted STT_FUNC/STB_LOCAL even in a single-function
@@ -1356,6 +1355,7 @@ def cmd_verify(args):
 # ========================================================== `linkcheck` -- scratch delinks
 
 _SEC_LINE_RE = re.compile(r'^\s+(\.\S+)\s+start:0x([0-9a-fA-F]+)\s+end:0x([0-9a-fA-F]+)')
+_TU_SECTION_NAMES = (".text", ".rodata", ".init", ".ctor", ".data", ".bss")
 
 
 def parse_delinks_file(path):
@@ -1394,6 +1394,91 @@ def entry_sections(body_lines):
 
 def entry_is_complete(body_lines):
     return any(l.strip() == "complete" for l in body_lines)
+
+
+def manifest_section_claims(entry):
+    """Return normalized manifest section claims and structural refusal reasons.
+
+    A claim is the exact range one compiler input section may replace in one
+    loadable module output section.  ``name`` is the ELF input section and the
+    optional ``module_section`` is the delinks/module section containing its retail
+    range (defaulting to ``name``).  Keeping those identities separate is necessary
+    for ordinary linker mappings such as input ``.rodata`` being placed in output
+    ``.data``; it does not weaken the byte, symbol, or relocation checks on the input.
+
+    One claim per input section name is deliberate for this first data phase:
+    mwldarm concatenates a TU's repeated input sections of the same name into one
+    contribution, while two disjoint ranges would need an explicit input-section
+    partition the manifest cannot yet express.  Refusing that ambiguity is safer than
+    assigning output by list position.
+    """
+    rows, reasons, seen = [], [], set()
+    raw = entry.get("sections")
+    if not isinstance(raw, list) or not raw:
+        return [], ["manifest has no section claims"]
+    for i, claim in enumerate(raw):
+        if not isinstance(claim, dict):
+            reasons.append(f"sections[{i}] is not an object")
+            continue
+        name = claim.get("name")
+        if name not in _TU_SECTION_NAMES:
+            reasons.append(f"sections[{i}] has unsupported name {name!r}; expected one "
+                           f"of {list(_TU_SECTION_NAMES)}")
+            continue
+        module_section = claim.get("module_section", name)
+        if module_section not in _TU_SECTION_NAMES:
+            reasons.append(f"sections[{i}] has unsupported module_section "
+                           f"{module_section!r}; expected one of "
+                           f"{list(_TU_SECTION_NAMES)}")
+            continue
+        if name in seen:
+            reasons.append(f"duplicate {name} claim; this schema supports one contiguous "
+                           f"contribution per section name")
+            continue
+        seen.add(name)
+        try:
+            start = int(claim["start"], 0) if isinstance(claim["start"], str) \
+                else int(claim["start"])
+            end = int(claim["end"], 0) if isinstance(claim["end"], str) \
+                else int(claim["end"])
+        except (KeyError, TypeError, ValueError):
+            reasons.append(f"sections[{i}] {name} needs integer/hex start and end")
+            continue
+        if start >= end:
+            reasons.append(f"sections[{i}] {name} is empty/reversed: "
+                           f"0x{start:08x}..0x{end:08x}")
+            continue
+        rows.append({"name": name, "module_section": module_section,
+                     "start": start, "end": end})
+
+    if sum(1 for r in rows if r["name"] == ".text") != 1:
+        reasons.append("manifest must claim exactly one .text contribution")
+    ordered = sorted(rows, key=lambda r: (r["start"], r["end"], r["name"]))
+    for left, right in zip(ordered, ordered[1:]):
+        if left["end"] > right["start"]:
+            reasons.append(f"manifest section claims overlap: {left['name']} "
+                           f"0x{left['start']:08x}..0x{left['end']:08x} and "
+                           f"{right['name']} 0x{right['start']:08x}..0x{right['end']:08x}")
+    return rows, reasons
+
+
+def validate_claims_in_module(delinks_path, claims):
+    """Every claim must be wholly inside its declared module output section."""
+    header, _entries = parse_delinks_file(delinks_path)
+    containers = collections.defaultdict(list)
+    for name, start, end in EN.sections(header):
+        containers[name].append((start, end))
+    reasons = []
+    for c in claims:
+        output_name = c.get("module_section", c["name"])
+        homes = [(a, b) for a, b in containers.get(output_name, [])
+                 if a <= c["start"] and c["end"] <= b]
+        if len(homes) != 1:
+            mapping = (c["name"] if output_name == c["name"] else
+                       f"{c['name']} -> {output_name}")
+            reasons.append(f"{mapping} claim 0x{c['start']:08x}..0x{c['end']:08x} is "
+                           f"not wholly inside exactly one declared module section")
+    return reasons
 
 
 def span_entries(delinks_path, span_start, span_end, expected_legacy):
@@ -1469,7 +1554,8 @@ def span_entries(delinks_path, span_start, span_end, expected_legacy):
     return header, entries, inside, reasons
 
 
-def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy):
+def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
+                    section_claims=None):
     """Replace the per-function entries tiling [span_start, span_end) with ONE TU entry.
 
     Refuses -- returns (None, [reasons]) -- rather than producing a plausible-looking
@@ -1481,6 +1567,26 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy)
     """
     header, entries, inside, reasons = span_entries(delinks_path, span_start, span_end,
                                                     expected_legacy)
+    claims = list(section_claims or
+                  ({"name": ".text", "start": span_start, "end": span_end},))
+    text = [c for c in claims if c["name"] == ".text"]
+    if len(text) != 1 or (text[0]["start"], text[0]["end"]) != (span_start, span_end):
+        reasons.append("section claims must contain exactly the .text span passed to the "
+                       "legacy tiling check")
+    reasons.extend(validate_claims_in_module(delinks_path, claims))
+
+    # Non-text ranges must currently be pure gap ownership.  If any existing file
+    # entry touches one, silently adding the TU would create two owners; deciding how
+    # to retire a future data-source entry is promotion policy, not scratch plumbing.
+    drop_indices = {i for i, _r, _s in inside}
+    for claim in (c for c in claims if c["name"] != ".text"):
+        for idx, (rel, body) in enumerate(entries):
+            for name, start, end in entry_sections(body):
+                if idx not in drop_indices and max(start, claim["start"]) < min(end, claim["end"]):
+                    reasons.append(f"{claim['name']} claim 0x{claim['start']:08x}.."
+                                   f"0x{claim['end']:08x} overlaps existing entry {rel}'s "
+                                   f"{name} 0x{start:08x}..0x{end:08x}; it is not pure "
+                                   f"gap ownership")
     if reasons:
         return None, reasons
 
@@ -1491,7 +1597,10 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy)
         if idx == first:
             out.append(f"{tu_rel}:")
             out.append("    complete")
-            out.append(f"    .text start:0x{span_start:08x} end:0x{span_end:08x}")
+            for claim in claims:
+                output_name = claim.get("module_section", claim["name"])
+                out.append(f"    {output_name} start:0x{claim['start']:08x} "
+                           f"end:0x{claim['end']:08x}")
             out.append("")
             continue
         if idx in drop:
@@ -1562,8 +1671,7 @@ def audit_tu_object(obj_bytes, entry, span_start, span_end, ranges=None):
     inv = elf_inventory(obj_bytes)
     homes = all_symbol_homes()
     licensed = {f["symbol"] for f in entry["functions"]}
-    licensed |= {d["symbol"] for d in entry.get("data", [])}
-    licensed |= {d["symbol"] for d in entry.get("bss", [])}
+    licensed |= {row["symbol"] for _sec, row in manifest_owned_symbol_rows(entry)}
     secname = {s["index"]: s["name"] for s in inv["sections"]}
     rows = []
     for s in inv["symbols"]:
@@ -1583,8 +1691,14 @@ def audit_tu_object(obj_bytes, entry, span_start, span_end, ranges=None):
         rows.append({"name": name, "bind": s["bind"], "type": s["type"], "size": s["size"],
                      "section": secname.get(s["shndx"], "?"), "verdict": verdict,
                      "homes": [f"{m}:0x{a:08x}" for m, a in outside]})
+    licensed_sections = {s["name"] for s in entry.get("sections", [])
+                         if isinstance(s, dict) and s.get("name")}
+    # Return only genuinely unclaimed content.  Repeated same-name sections are one
+    # aggregate contribution and are checked for exact size/bytes by
+    # verify_owned_sections; their individual defined symbols are still audited above.
     extra_secs = [s for s in inv["sections"]
-                  if s["size"] and s["type"] in OI.CONTENT and s["name"] != ".text"
+                  if s["size"] and s["type"] in OI.CONTENT
+                  and s["name"] not in licensed_sections
                   and not any(s["name"].startswith(p) for p in OI.IGNORE)]
     # Emission order: the licensed functions' .text sections must come out in ROM
     # address order, because the LCF selects `<stem>.o(.text)` and mwldarm lays those
@@ -1602,7 +1716,7 @@ def print_object_audit(rows, extra_secs, emitted, order_ok, entry):
     print(f"      defined symbols: {buckets['LICENSED']} LICENSED, "
           f"{buckets['COLLIDES-GAP']} COLLIDES-GAP (fatal: the other definition is a dsd "
           f"gap object's, which is STB_GLOBAL), {buckets['COLLIDES-SRC']} COLLIDES-SRC "
-          f"(tolerated only while BOTH definitions are vague-linkage), "
+          f"(fatal until vague-linkage coalescing has an explicit verified policy), "
           f"{buckets['HOMELESS']} HOMELESS")
     for r in sorted(rows, key=lambda r: (r["verdict"], r["name"])):
         if r["verdict"] == "LICENSED":
@@ -1611,18 +1725,817 @@ def print_object_audit(rows, extra_secs, emitted, order_ok, entry):
                   else "  no symbols.txt anywhere names it")
         print(f"      {r['verdict']:12} {r['name']:38} {r['bind']:10} {r['section']:8} "
               f"size 0x{r['size']:x}{detail}")
-    unlicensed_secs = [s for s in extra_secs
-                       if s["name"] not in {x["name"] for x in entry.get("sections", [])}]
-    if unlicensed_secs:
-        total = sum(s["size"] for s in unlicensed_secs)
-        kinds = collections.Counter(s["name"] for s in unlicensed_secs)
-        print(f"      unlicensed content sections: {len(unlicensed_secs)} "
+    if extra_secs:
+        total = sum(s["size"] for s in extra_secs)
+        kinds = collections.Counter(s["name"] for s in extra_secs)
+        print(f"      unlicensed content sections: {len(extra_secs)} "
               f"({dict(kinds)}), {total} bytes total")
     print(f"      emitted .text order of the licensed functions: "
           f"{'ROM-ascending, as required' if order_ok else 'NOT ROM-ascending'}")
     if not order_ok:
         print(f"        emitted: {[n for _i, n in emitted]}")
     return buckets
+
+
+def object_audit_refusals(rows, extra_secs, order_ok):
+    """Fatal pre-link findings after exact compiler-only policy has run.
+
+    No linker behavior is an ownership policy.  In particular, an STB_LOPROC RTTI
+    copy that mwldarm happens to coalesce is still an unlicensed definition until the
+    manifest has an exact, separately implemented coalescing convention.
+    """
+    reasons = [f"unlicensed defined symbol {r['name']} ({r['verdict']}, "
+               f"{r['section']}, {r['bind']})"
+               for r in rows if r["verdict"] != "LICENSED"]
+    reasons.extend(f"unlicensed content section {s['name']} size 0x{s['size']:x}"
+                   for s in extra_secs)
+    if not order_ok:
+        reasons.append("licensed .text functions are not emitted in ROM address order")
+    return reasons
+
+
+# ========================================= whole-TU non-text ownership (phases E/F)
+
+_SECTION_SYMBOL_FIELDS = {
+    ".rodata": "rodata", ".init": "init", ".ctor": "ctor",
+    ".data": "data", ".bss": "bss",
+}
+
+
+def manifest_owned_symbol_rows(entry):
+    """All manifest-licensed non-text symbols, annotated with their section name."""
+    out = []
+    for section, field in _SECTION_SYMBOL_FIELDS.items():
+        rows = entry.get(field, [])
+        if not isinstance(rows, list):
+            continue
+        for row in rows:
+            if isinstance(row, dict) and row.get("symbol"):
+                out.append((section, row))
+    return out
+
+
+def _manifest_addr(row):
+    """Configured/public symbol address (a vtable's address point, not its storage)."""
+    value = row.get("address", row.get("rom_symbol_address"))
+    if value is None:
+        return None
+    try:
+        return int(value, 0) if isinstance(value, str) else int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _manifest_emitted_addr(row):
+    """(object-symbol address, error) with an explicit address-point convention.
+
+    Most ELF symbols are emitted at their configured address.  A CodeWarrior vtable
+    is the important exception: its ELF symbol names the storage object while the
+    checked-in ``_ZTV`` symbol names the public address point eight bytes later.  The
+    manifest must spell both facts; recognizing ``_ZTV`` and subtracting eight here
+    would silently reinterpret every existing symbol table.
+
+    Example::
+
+        {"symbol": "_ZTV5Thing", "address": "0x02001008",
+         "emitted_storage_address": "0x02001000", "address_point_bias": "0x8"}
+    """
+    public = _manifest_addr(row)
+    has_storage = "emitted_storage_address" in row
+    has_bias = "address_point_bias" in row
+    if has_storage != has_bias:
+        return None, ("emitted_storage_address and address_point_bias must be supplied "
+                      "together")
+    if not has_storage:
+        return public, None
+    if public is None:
+        return None, "explicit emitted storage needs a valid public address"
+    try:
+        raw_storage = row["emitted_storage_address"]
+        raw_bias = row["address_point_bias"]
+        storage = int(raw_storage, 0) if isinstance(raw_storage, str) else int(raw_storage)
+        bias = int(raw_bias, 0) if isinstance(raw_bias, str) else int(raw_bias)
+    except (TypeError, ValueError):
+        return None, "emitted_storage_address/address_point_bias must be integers"
+    if storage + bias != public:
+        return None, (f"emitted storage 0x{storage:08x} + address-point bias 0x{bias:x} "
+                      f"does not equal public address 0x{public:08x}")
+    return storage, None
+
+
+def apply_compiler_only_policy(obj_bytes, entry, homes=None):
+    """Apply exact-symbol historical dead stripping, or refuse with named reasons.
+
+    ``compiler_only_output`` is an allow-list, not a pattern language::
+
+        {"symbol": "_ZN1DD2Ev", "disposition": "deadstrip",
+         "reason": "compiler-generated D2; no ROM symbol or caller"}
+
+    A policy cannot hide a configured ROM symbol, a licensed function, a non-function,
+    a shared section, or anything a surviving relocation references.  objisolate owns
+    the ELF surgery; this layer owns the manifest/config facts.  With no policy, any
+    unlicensed function is an explicit refusal rather than linker-dependent behaviour.
+    """
+    inv = elf_inventory(obj_bytes)
+    licensed = {f["symbol"] for f in entry.get("functions", [])}
+    licensed |= {row["symbol"] for _sec, row in manifest_owned_symbol_rows(entry)}
+    extras = {s["name"]: s for s in inv["symbols"]
+              if s["type"] == "STT_FUNC" and not s["name"].startswith("$")
+              and s["name"] not in licensed}
+    policy = entry.get("compiler_only_output", [])
+    reasons, wanted = [], []
+    if policy is None:
+        policy = []
+    if not isinstance(policy, list):
+        return None, {}, ["compiler_only_output must be a list"]
+    for i, row in enumerate(policy):
+        if not isinstance(row, dict):
+            reasons.append(f"compiler_only_output[{i}] is not an object")
+            continue
+        sym = row.get("symbol")
+        if not sym:
+            reasons.append(f"compiler_only_output[{i}] has no symbol")
+            continue
+        if row.get("disposition") != "deadstrip":
+            reasons.append(f"compiler_only_output {sym} has unsupported disposition "
+                           f"{row.get('disposition')!r}; only exact deadstrip is implemented")
+            continue
+        if not str(row.get("reason", "")).strip():
+            reasons.append(f"compiler_only_output {sym} needs a non-empty reason")
+        if sym in licensed:
+            reasons.append(f"compiler_only_output {sym} is also licensed by the manifest")
+        if sym not in extras:
+            reasons.append(f"compiler_only_output {sym} is not an emitted unlicensed function")
+        if sym in wanted:
+            reasons.append(f"duplicate compiler_only_output policy for {sym}")
+        wanted.append(sym)
+
+    unhandled = sorted(set(extras) - set(wanted))
+    for sym in unhandled:
+        reasons.append(f"unlicensed function {sym} has no compiler_only_output policy")
+    homes = all_symbol_homes() if homes is None else homes
+    for sym in wanted:
+        if homes.get(sym):
+            reasons.append(f"compiler_only_output {sym} has configured ROM home(s) "
+                           f"{homes[sym]}; it is not compiler-only")
+    if reasons:
+        return None, {"requested": wanted, "unhandled": unhandled}, reasons
+    if not wanted:
+        return obj_bytes, {"requested": [], "deadstripped": []}, []
+
+    out, plan = OI.derive_deadstrip(obj_bytes, wanted)
+    if out is None:
+        return None, {"requested": wanted, "objisolate": plan}, \
+            [f"compiler-only deadstrip refused: {plan.get('error')}"]
+    return out, {"requested": wanted, "deadstripped": plan.get("dead", []),
+                 "droppedSections": plan.get("drop", [])}, []
+
+
+def manifest_externalized_output(entry):
+    """Normalize exact vague-RTTI imports declared by a TU manifest entry.
+
+    This schema intentionally describes individual definitions, not a linkage class.
+    It cannot say "all vague symbols" and it cannot externalize vtables.  Each row
+    names one dedicated ``_ZTI``/``_ZTS`` section, its unique configured canonical
+    home, and every relocation in the canonical copy::
+
+        {"symbol": "_ZTI4Base", "disposition": "canonical-import",
+         "section": ".data", "binding": "STB_LOPROC", "size": "0x8",
+         "canonical_module": "arm9", "canonical_address": "0x02001000",
+         "reason": "inherited RTTI copy",
+         "relocations": [{"offset": 0, "type": "R_ARM_ABS32", "kind": "load",
+                           "symbol": "_ZTVN3abi17__class_type_infoE", "addend": 8,
+                           "target_module": "arm9",
+                           "target_address": "0x02002000"}]}
+
+    The nested relocation rows are evidence, not linker aliases.  This scratch-only
+    pass drops their sections before linking, so ABI-vtable address-point rewriting
+    remains outside its scope and any surviving instance still fails closed.
+    """
+    raw = entry.get("externalized_output", [])
+    if raw is None:
+        raw = []
+    if not isinstance(raw, list):
+        return [], ["externalized_output must be a list"]
+
+    rows, reasons, seen = [], [], set()
+    for i, item in enumerate(raw):
+        label = f"externalized_output[{i}]"
+        if not isinstance(item, dict):
+            reasons.append(f"{label} is not an object")
+            continue
+        symbol = item.get("symbol")
+        if not symbol:
+            reasons.append(f"{label} has no symbol")
+            continue
+        if symbol in seen:
+            reasons.append(f"duplicate externalized_output policy for {symbol}")
+            continue
+        seen.add(symbol)
+        if not symbol.startswith(("_ZTI", "_ZTS")):
+            reasons.append(f"{label} {symbol} is not an _ZTI/_ZTS RTTI object")
+        if item.get("disposition") != "canonical-import":
+            reasons.append(f"{label} {symbol} has unsupported disposition "
+                           f"{item.get('disposition')!r}")
+        if item.get("section") != ".data":
+            reasons.append(f"{label} {symbol} must name a .data definition")
+        if item.get("binding") != "STB_LOPROC":
+            reasons.append(f"{label} {symbol} must require STB_LOPROC binding")
+        if not str(item.get("reason", "")).strip():
+            reasons.append(f"{label} {symbol} needs a non-empty reason")
+
+        try:
+            size = int(item["size"], 0) if isinstance(item["size"], str) \
+                else int(item["size"])
+            address = int(item["canonical_address"], 0) \
+                if isinstance(item["canonical_address"], str) \
+                else int(item["canonical_address"])
+        except (KeyError, TypeError, ValueError):
+            reasons.append(f"{label} {symbol} needs valid size and canonical_address")
+            continue
+        if size <= 0:
+            reasons.append(f"{label} {symbol} has non-positive size 0x{size:x}")
+        module = item.get("canonical_module")
+        if not isinstance(module, str) or not module:
+            reasons.append(f"{label} {symbol} needs canonical_module")
+            continue
+        module = RL.normalize_module(module)
+
+        relocs = item.get("relocations")
+        if not isinstance(relocs, list):
+            reasons.append(f"{label} {symbol} relocations must be a list")
+            continue
+        normalized_relocs, offsets = [], set()
+        for j, reloc in enumerate(relocs):
+            rlabel = f"{label}.relocations[{j}]"
+            if not isinstance(reloc, dict):
+                reasons.append(f"{rlabel} is not an object")
+                continue
+            required = ("offset", "type", "kind", "symbol", "addend",
+                        "target_module", "target_address")
+            missing = [key for key in required if key not in reloc]
+            if missing:
+                reasons.append(f"{rlabel} is missing {missing}")
+                continue
+            try:
+                offset = int(reloc["offset"], 0) if isinstance(reloc["offset"], str) \
+                    else int(reloc["offset"])
+                addend = int(reloc["addend"], 0) if isinstance(reloc["addend"], str) \
+                    else int(reloc["addend"])
+                target = int(reloc["target_address"], 0) \
+                    if isinstance(reloc["target_address"], str) \
+                    else int(reloc["target_address"])
+            except (TypeError, ValueError):
+                reasons.append(f"{rlabel} has an invalid offset/addend/target_address")
+                continue
+            if offset in offsets:
+                reasons.append(f"{label} {symbol} has duplicate relocation offset "
+                               f"0x{offset:x}")
+                continue
+            offsets.add(offset)
+            if offset < 0 or offset + 4 > size or offset & 3:
+                reasons.append(f"{rlabel} offset 0x{offset:x} is not one aligned word "
+                               f"inside size 0x{size:x}")
+            if reloc["type"] != "R_ARM_ABS32" or reloc["kind"] != "load":
+                reasons.append(f"{rlabel} must be R_ARM_ABS32/load")
+            if not reloc["symbol"]:
+                reasons.append(f"{rlabel} has an empty symbol")
+            normalized = dict(reloc)
+            normalized.update({"offset": offset, "addend": addend,
+                               "target_address": target,
+                               "target_module": RL.normalize_module(
+                                   reloc["target_module"])})
+            normalized_relocs.append(normalized)
+
+        row = dict(item)
+        row.update({"size": size, "canonical_address": address,
+                    "canonical_module": module, "relocations": normalized_relocs})
+        rows.append(row)
+    return rows, reasons
+
+
+def verify_externalized_output(obj_bytes, entry, policies=None, homes=None,
+                               config_relocs=None, target_reader=None,
+                               name_index=None):
+    """Prove exact manifest-listed RTTI copies equal their configured homes."""
+    if policies is None:
+        policies, structural = manifest_externalized_output(entry)
+    else:
+        structural = []
+    if structural:
+        return {"ok": False, "rows": [], "errors": structural}
+    if not policies:
+        return {"ok": True, "rows": [], "errors": []}
+
+    homes = all_symbol_homes() if homes is None else homes
+    config_relocs = RA.build_config_relocs() if config_relocs is None else config_relocs
+    target_reader = BP.target_bytes if target_reader is None else target_reader
+    name_index = RA.build_name_index() if name_index is None else name_index
+    elf = ELFFile(io.BytesIO(obj_bytes))
+    secs = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return {"ok": False, "rows": [], "errors": ["no .symtab"]}
+    syms = list(symtab.iter_symbols())
+    licensed = {f["symbol"] for f in entry.get("functions", [])}
+    licensed |= {row["symbol"] for _sec, row in manifest_owned_symbol_rows(entry)}
+
+    report_rows, reasons, used_sections = [], [], set()
+    for policy in policies:
+        name = policy["symbol"]
+        prefix = f"externalized_output {name}"
+        row_reasons = []
+        matches = [s for s in syms if s.name == name
+                   and s["st_shndx"] not in ("SHN_UNDEF", "SHN_ABS")]
+        if name in licensed:
+            row_reasons.append("is also licensed by the TU manifest")
+        configured = {(RL.normalize_module(mod), addr)
+                      for mod, addr in homes.get(name, [])}
+        canonical = (policy["canonical_module"], policy["canonical_address"])
+        if configured != {canonical}:
+            row_reasons.append(f"configured homes are {sorted(configured)}, expected the "
+                               f"unique canonical home {canonical}")
+        if len(matches) != 1:
+            row_reasons.append(f"has {len(matches)} defined ELF symbols, expected one")
+            reasons.extend(f"{prefix}: {reason}" for reason in row_reasons)
+            report_rows.append({"symbol": name, "ok": False,
+                                "errors": row_reasons})
+            continue
+
+        sym = matches[0]
+        shndx = sym["st_shndx"]
+        sec = secs[shndx] if isinstance(shndx, int) and shndx < len(secs) else None
+        if sym["st_info"]["bind"] != "STB_LOPROC" \
+                or sym["st_info"]["type"] != "STT_OBJECT":
+            row_reasons.append(f"ELF binding/type is {sym['st_info']['bind']}/"
+                               f"{sym['st_info']['type']}, expected STB_LOPROC/STT_OBJECT")
+        if sec is None or sec.name != ".data" \
+                or sec.header["sh_type"] != "SHT_PROGBITS" \
+                or not sec.header["sh_size"]:
+            row_reasons.append("definition is not in a non-empty .data/SHT_PROGBITS section")
+        if sec is not None:
+            occupants = sorted(s.name for s in syms
+                               if s.name and not s.name.startswith("$")
+                               and s["st_shndx"] == shndx
+                               and s["st_info"]["type"] != "STT_SECTION")
+            if occupants != [name]:
+                row_reasons.append(f"section[{shndx}] also defines "
+                                   f"{[n for n in occupants if n != name]}")
+            if shndx in used_sections:
+                row_reasons.append(f"shares section[{shndx}] with another policy row")
+            used_sections.add(shndx)
+            if sym["st_value"] != 0 or sym["st_size"] != policy["size"] \
+                    or sec.header["sh_size"] != policy["size"]:
+                row_reasons.append(f"value/sizes are value=0x{sym['st_value']:x}, "
+                                   f"symbol=0x{sym['st_size']:x}, "
+                                   f"section=0x{sec.header['sh_size']:x}, manifest="
+                                   f"0x{policy['size']:x}")
+
+        emitted_relocs = {}
+        if sec is not None:
+            for relsec in secs:
+                if not isinstance(relsec, RelocationSection) \
+                        or relsec.header["sh_info"] != shndx:
+                    continue
+                if not relsec.is_RELA():
+                    row_reasons.append(f"section[{shndx}] uses REL, not RELA")
+                    continue
+                for reloc in relsec.iter_relocations():
+                    offset = reloc["r_offset"]
+                    if offset in emitted_relocs:
+                        row_reasons.append(f"duplicate emitted relocation at 0x{offset:x}")
+                    target = symtab.get_symbol(reloc["r_info_sym"])
+                    emitted_relocs[offset] = {
+                        "offset": offset,
+                        "type": _ELF_RELOC_NAME.get(reloc["r_info_type"],
+                                                    reloc["r_info_type"]),
+                        "kind": _NON_TEXT_RELOC_KIND.get(reloc["r_info_type"]),
+                        "symbol": target.name, "addend": reloc["r_addend"],
+                    }
+        expected_relocs = {reloc["offset"]: reloc for reloc in policy["relocations"]}
+        if set(emitted_relocs) != set(expected_relocs):
+            row_reasons.append(f"relocation offsets are {sorted(emitted_relocs)}, expected "
+                               f"{sorted(expected_relocs)}")
+        cfgmap = config_relocs.get(policy["canonical_module"], {})
+        for offset, expected in sorted(expected_relocs.items()):
+            emitted = emitted_relocs.get(offset)
+            if emitted is not None:
+                for field in ("type", "kind", "symbol", "addend"):
+                    if emitted[field] != expected[field]:
+                        row_reasons.append(f"relocation +0x{offset:x} {field} is "
+                                           f"{emitted[field]!r}, expected "
+                                           f"{expected[field]!r}")
+                resolved = RA.resolve_candidate(emitted["symbol"], name_index)
+                if resolved is None:
+                    row_reasons.append(f"relocation +0x{offset:x} symbol "
+                                       f"{emitted['symbol']} is unresolved")
+                else:
+                    candidate_module = (RL.normalize_module(resolved[0])
+                                        if resolved[0] is not None else None)
+                    candidate_address = resolved[1] + emitted["addend"]
+                    if (candidate_module, candidate_address) != \
+                            (expected["target_module"], expected["target_address"]):
+                        row_reasons.append(f"relocation +0x{offset:x} resolves to "
+                                           f"{candidate_module}:0x{candidate_address:08x}, "
+                                           f"expected {expected['target_module']}:"
+                                           f"0x{expected['target_address']:08x}")
+            cfg = cfgmap.get(policy["canonical_address"] + offset)
+            want_cfg = (expected["kind"], expected["target_address"],
+                        expected["target_module"])
+            got_cfg = ((cfg[0], cfg[1], RL.normalize_module(cfg[2])) if cfg else None)
+            if got_cfg != want_cfg:
+                row_reasons.append(f"canonical relocation +0x{offset:x} is {got_cfg}, "
+                                   f"expected {want_cfg}")
+        configured_offsets = {source - policy["canonical_address"] for source in cfgmap
+                              if policy["canonical_address"] <= source
+                              < policy["canonical_address"] + policy["size"]}
+        if configured_offsets != set(expected_relocs):
+            row_reasons.append(f"configured relocation offsets are "
+                               f"{sorted(configured_offsets)}, expected "
+                               f"{sorted(expected_relocs)}")
+
+        target = target_reader(policy["canonical_module"],
+                               policy["canonical_address"], policy["size"])
+        if target is None or len(target) != policy["size"]:
+            row_reasons.append("canonical target bytes are unavailable or short")
+            differing = policy["size"]
+        elif sec is None:
+            differing = policy["size"]
+        else:
+            wildcard = {byte for offset in emitted_relocs for byte in range(offset, offset + 4)}
+            differing = sum(1 for i, (left, right) in enumerate(zip(sec.data(), target))
+                            if i not in wildcard and left != right)
+            if differing:
+                row_reasons.append(f"has {differing} non-relocated byte(s) different "
+                                   "from its canonical home")
+
+        reasons.extend(f"{prefix}: {reason}" for reason in row_reasons)
+        report_rows.append({"symbol": name,
+                            "canonicalModule": policy["canonical_module"],
+                            "canonicalAddress": f"0x{policy['canonical_address']:08x}",
+                            "size": policy["size"], "relocCount": len(emitted_relocs),
+                            "differingBytes": differing, "ok": not row_reasons,
+                            "errors": row_reasons})
+    return {"ok": not reasons, "rows": report_rows, "errors": reasons}
+
+
+def apply_externalized_output_policy(obj_bytes, entry, homes=None,
+                                     config_relocs=None, target_reader=None,
+                                     name_index=None):
+    """Verify then externalize exact RTTI definitions in a scratch TU object."""
+    policies, structural = manifest_externalized_output(entry)
+    if structural:
+        return None, {"requested": [row.get("symbol") for row in policies],
+                      "verification": {"ok": False, "rows": [],
+                                       "errors": structural}}, structural
+    if not policies:
+        return obj_bytes, {"requested": [], "externalized": [],
+                           "verification": {"ok": True, "rows": [], "errors": []}}, []
+    verification = verify_externalized_output(
+        obj_bytes, entry, policies=policies, homes=homes,
+        config_relocs=config_relocs, target_reader=target_reader,
+        name_index=name_index)
+    if not verification["ok"]:
+        return None, {"requested": [row["symbol"] for row in policies],
+                      "verification": verification}, verification["errors"]
+    wanted = [row["symbol"] for row in policies]
+    out, plan = OI.derive_externalized(obj_bytes, wanted)
+    if out is None:
+        reason = f"exact RTTI externalization refused: {plan.get('error')}"
+        return None, {"requested": wanted, "verification": verification,
+                      "objisolate": plan}, [reason]
+    return out, {"requested": wanted, "externalized": plan.get("externalise", []),
+                 "droppedSections": plan.get("drop", []),
+                 "verification": verification}, []
+
+
+def _align_up(value, alignment):
+    alignment = max(1, int(alignment or 1))
+    return (value + alignment - 1) & ~(alignment - 1)
+
+
+def section_contribution(obj_bytes, section_name, start):
+    """Lay out one object's repeated input sections as mwldarm's wildcard sees them.
+
+    Returns bytes (zeroes for NOBITS), relocation records with contribution-relative
+    offsets, and linked addresses for every symbol in those sections.  Section order,
+    alignment, and ``sh_info`` are read from the real ELF rather than inferred from
+    section names -- mwccarm emits many identically named `.data` sections in one TU.
+    """
+    elf = ELFFile(io.BytesIO(obj_bytes))
+    secs = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return None, "no .symtab"
+    selected = [(i, s) for i, s in enumerate(secs)
+                if s.name == section_name and s.header["sh_type"] in OI.CONTENT
+                and s.header["sh_size"]]
+    if not selected:
+        return None, f"object emits no non-empty {section_name} section"
+
+    image = bytearray()
+    offsets = {}
+    for shndx, sec in selected:
+        absolute = _align_up(start + len(image), sec.header["sh_addralign"])
+        image.extend(b"\0" * (absolute - (start + len(image))))
+        offsets[shndx] = len(image)
+        size = sec.header["sh_size"]
+        image.extend(b"\0" * size if sec.header["sh_type"] == "SHT_NOBITS"
+                     else sec.data())
+
+    symbols = {}
+    syms = list(symtab.iter_symbols())
+    for sym in syms:
+        shndx = sym["st_shndx"]
+        if sym.name and shndx in offsets:
+            symbols[sym.name] = {
+                "address": start + offsets[shndx] + sym["st_value"],
+                "size": sym["st_size"], "bind": sym["st_info"]["bind"],
+                "type": sym["st_info"]["type"], "sectionIndex": shndx,
+            }
+
+    relocs = []
+    for rel in secs:
+        shndx = rel.header["sh_info"] if isinstance(rel, RelocationSection) else None
+        if shndx not in offsets:
+            continue
+        if not rel.is_RELA():
+            return None, f"section[{shndx}] {section_name} uses REL, not RELA"
+        for r in rel.iter_relocations():
+            sym = symtab.get_symbol(r["r_info_sym"])
+            relocs.append({
+                "offset": offsets[shndx] + r["r_offset"],
+                "type": r["r_info_type"], "symbol": sym.name,
+                "addend": r["r_addend"], "targetSection": sym["st_shndx"],
+            })
+    return {"bytes": bytes(image), "relocs": relocs, "symbols": symbols,
+            "inputSections": [i for i, _s in selected]}, None
+
+
+_NON_TEXT_RELOC_KIND = {
+    1: "arm_call",  # R_ARM_PC24
+    2: "load",  # R_ARM_ABS32
+    10: "thumb_call",  # R_ARM_THM_CALL (fail closed unless config says the same)
+    28: "arm_call",  # R_ARM_CALL
+    29: "arm_call",  # R_ARM_JUMP24
+}
+_ELF_RELOC_NAME = {
+    1: "R_ARM_PC24", 2: "R_ARM_ABS32", 10: "R_ARM_THM_CALL",
+    28: "R_ARM_CALL", 29: "R_ARM_JUMP24",
+}
+
+
+def manifest_relocation_claims(entry):
+    """Exact per-word non-text relocation licenses keyed by absolute source address."""
+    out, reasons = {}, []
+    raw = entry.get("relocations", [])
+    if not isinstance(raw, list):
+        return {}, ["relocations must be a list"]
+    required = ("section", "source", "type", "kind", "symbol", "addend",
+                "target_module", "target_address")
+    for i, row in enumerate(raw):
+        if not isinstance(row, dict):
+            reasons.append(f"relocations[{i}] is not an object")
+            continue
+        missing = [key for key in required if key not in row]
+        if missing:
+            reasons.append(f"relocations[{i}] is missing {missing}")
+            continue
+        try:
+            source = int(row["source"], 0) if isinstance(row["source"], str) \
+                else int(row["source"])
+            addend = int(row["addend"], 0) if isinstance(row["addend"], str) \
+                else int(row["addend"])
+            target = int(row["target_address"], 0) \
+                if isinstance(row["target_address"], str) else int(row["target_address"])
+        except (TypeError, ValueError):
+            reasons.append(f"relocations[{i}] has an invalid source/addend/target_address")
+            continue
+        if source in out:
+            reasons.append(f"duplicate relocation claim at 0x{source:08x}")
+            continue
+        normalized = dict(row)
+        normalized.update({"source": source, "addend": addend,
+                           "target_address": target,
+                           "target_module": RL.normalize_module(row["target_module"])})
+        out[source] = normalized
+    return out, reasons
+
+
+def _configured_bss_boundaries(module, homes):
+    """Independent addresses that may delimit an owned BSS contribution."""
+    normalized = RL.normalize_module(module)
+    out = {addr for locations in homes.values() for mod, addr in locations
+           if RL.normalize_module(mod) == normalized}
+    path = module_config_dir(normalized) / "delinks.txt"
+    if path.is_file():
+        header, _entries = parse_delinks_file(path)
+        for name, start, end in EN.sections(header):
+            if name == ".bss":
+                out.update((start, end))
+    return out
+
+
+def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
+                          config_relocs=None, sym_index=None, target_reader=None,
+                          symbol_homes=None, bss_boundaries=None):
+    """Verify licensed non-text layout, bytes, symbols, and relocation destinations.
+
+    Relocated words are wildcarded only after every relocation is independently tied
+    to the module's configured source/destination pair.  Candidate addends participate
+    in the destination address; this is stricter than the historical function helper,
+    which compares only a symbol's base address.  BSS has no ROM bytes, so its proof is
+    exact contribution size plus symbol addresses here and the scratch ELF symbol/module
+    checks later in ``linkcheck``.
+    """
+    nontext = [c for c in claims if c["name"] != ".text"]
+    if not nontext:
+        return {"ok": True, "claimed": 0, "rows": [], "symbolErrors": []}
+    name_index = RA.build_name_index() if name_index is None else name_index
+    config_relocs = RA.build_config_relocs() if config_relocs is None else config_relocs
+    sym_index = RL.load_all_syms() if sym_index is None else sym_index
+    target_reader = BP.target_bytes if target_reader is None else target_reader
+    cfgmap = config_relocs.get(RL.normalize_module(entry["module"]), {})
+    owner_module = RL.normalize_module(entry["module"])
+    symbol_homes = all_symbol_homes() if symbol_homes is None else symbol_homes
+    bss_boundaries = (_configured_bss_boundaries(owner_module, symbol_homes)
+                      if bss_boundaries is None else set(bss_boundaries))
+
+    layouts, rows, reasons = {}, [], []
+    expected_relocs, relocation_claim_errors = manifest_relocation_claims(entry)
+    reasons.extend(relocation_claim_errors)
+    for claim in nontext:
+        layout, error = section_contribution(obj_bytes, claim["name"], claim["start"])
+        if error:
+            reasons.append(error)
+            rows.append({"section": claim["name"], "ok": False, "error": error})
+            continue
+        layouts[claim["name"]] = layout
+        want = claim["end"] - claim["start"]
+        size_ok = len(layout["bytes"]) == want
+        byte_ok, ndiff = True, 0
+        if claim["name"] != ".bss" and size_ok:
+            target = target_reader(entry["module"], claim["start"], want)
+            if target is None or len(target) != want:
+                byte_ok, ndiff = False, want
+            else:
+                wildcard = {r["offset"] & ~3 for r in layout["relocs"]}
+                byte_ok, ndiff = M.compare(target, layout["bytes"], wildcard, verbose=False)
+        elif not size_ok:
+            byte_ok, ndiff = False, 999
+        rows.append({"section": claim["name"], "start": f"0x{claim['start']:08x}",
+                     "end": f"0x{claim['end']:08x}", "emittedBytes": len(layout["bytes"]),
+                     "sizeOk": size_ok, "bytesOk": byte_ok,
+                     "differingWords": ndiff, "relocCount": len(layout["relocs"])})
+        if not size_ok:
+            reasons.append(f"{claim['name']} emits 0x{len(layout['bytes']):x} bytes, "
+                           f"manifest claims 0x{want:x}")
+        if not byte_ok and size_ok:
+            reasons.append(f"{claim['name']} has {ndiff} non-relocated word(s) different")
+
+    linked_symbols = {name: row for layout in layouts.values()
+                      for name, row in layout["symbols"].items()}
+    expected_rows = manifest_owned_symbol_rows(entry)
+    expected_names = {r["symbol"] for _sec, r in expected_rows}
+    emitted_names = {name for layout in layouts.values() for name, row in layout["symbols"].items()
+                     if row["type"] in ("STT_FUNC", "STT_OBJECT") and not name.startswith("$")}
+    for name in sorted(emitted_names - expected_names):
+        reasons.append(f"emitted non-text symbol {name} is not licensed by data/bss/"
+                       f"rodata/init/ctor")
+    for section, expected in expected_rows:
+        name = expected["symbol"]
+        got = layouts.get(section, {}).get("symbols", {}).get(name)
+        public_addr = _manifest_addr(expected)
+        want_addr, address_error = _manifest_emitted_addr(expected)
+        if got is None:
+            reasons.append(f"licensed {section} symbol {name} is not emitted there")
+            continue
+        if address_error:
+            reasons.append(f"licensed {section} symbol {name}: {address_error}")
+        elif want_addr is None:
+            reasons.append(f"licensed {section} symbol {name} has no valid address")
+        elif got["address"] != want_addr:
+            reasons.append(f"licensed {section} symbol {name} links at "
+                           f"0x{got['address']:08x}, manifest emitted address says "
+                           f"0x{want_addr:08x}")
+        if section == ".bss" and public_addr is not None:
+            configured = {(RL.normalize_module(mod), addr)
+                          for mod, addr in symbol_homes.get(name, [])}
+            if (owner_module, public_addr) not in configured:
+                reasons.append(f"licensed .bss symbol {name} at 0x{public_addr:08x} has no "
+                               f"independent {owner_module} symbols.txt home")
+        if expected.get("size") is not None:
+            try:
+                want_size = int(expected["size"], 0) if isinstance(expected["size"], str) \
+                    else int(expected["size"])
+            except (TypeError, ValueError):
+                reasons.append(f"licensed {section} symbol {name} has invalid size")
+            else:
+                if got["size"] != want_size:
+                    reasons.append(f"licensed {section} symbol {name} size 0x{got['size']:x}, "
+                                   f"manifest says 0x{want_size:x}")
+
+    for claim in (c for c in nontext if c["name"] == ".bss"):
+        if claim["start"] not in bss_boundaries or claim["end"] not in bss_boundaries:
+            reasons.append(f".bss claim 0x{claim['start']:08x}..0x{claim['end']:08x} "
+                           "does not have independently configured boundary anchors")
+
+    # All owned symbols are now resolvable even when symbols.txt has not named one yet.
+    # Relocations use the ELF symbol's storage address; the public address-point bias is
+    # carried in the relocation addend and checked below.
+    manifest_addrs = {}
+    for _sec, row in expected_rows:
+        emitted_addr, _error = _manifest_emitted_addr(row)
+        manifest_addrs[row["symbol"]] = emitted_addr
+    manifest_addrs.update({f["symbol"]: int(f["address"], 0)
+                           for f in entry.get("functions", [])})
+    reloc_rows = []
+    for claim in nontext:
+        layout = layouts.get(claim["name"])
+        if layout is None:
+            continue
+        candidate_offsets = set()
+        for rel in layout["relocs"]:
+            source = claim["start"] + rel["offset"]
+            candidate_offsets.add(source)
+            base = None
+            candidate_module = None
+            if rel["symbol"] in linked_symbols:
+                base = linked_symbols[rel["symbol"]]["address"]
+                candidate_module = owner_module
+            elif manifest_addrs.get(rel["symbol"]) is not None:
+                base = manifest_addrs[rel["symbol"]]
+                candidate_module = owner_module
+            else:
+                resolved = RA.resolve_candidate(rel["symbol"], name_index)
+                if resolved:
+                    candidate_module = (RL.normalize_module(resolved[0])
+                                        if resolved[0] is not None else None)
+                    base = resolved[1]
+            cand_addr = base + rel["addend"] if base is not None else None
+            cfg = cfgmap.get(source)
+            expected = expected_relocs.get(source)
+            configured_module = RL.normalize_module(cfg[2]) if cfg else None
+            candidate_kind = _NON_TEXT_RELOC_KIND.get(rel["type"])
+            if cfg is None:
+                verdict = "EXTRA"
+            elif expected is None:
+                verdict = "UNLICENSED-RELOC"
+            elif cand_addr is None:
+                verdict = "UNRESOLVED"
+            elif expected["section"] != claim["name"]:
+                verdict = "WRONG-SECTION"
+            elif _ELF_RELOC_NAME.get(rel["type"], rel["type"]) != expected["type"]:
+                verdict = "WRONG-TYPE"
+            elif rel["symbol"] != expected["symbol"]:
+                verdict = "WRONG-SYMBOL"
+            elif rel["addend"] != expected["addend"]:
+                verdict = "WRONG-ADDEND"
+            elif candidate_kind != expected["kind"] or expected["kind"] != cfg[0]:
+                verdict = "WRONG-KIND"
+            elif candidate_module != expected["target_module"] \
+                    or expected["target_module"] != configured_module:
+                verdict = "WRONG-MODULE"
+            elif cand_addr != expected["target_address"] \
+                    or expected["target_address"] != cfg[1]:
+                verdict = "WRONG-DEST"
+            else:
+                verdict = "OK"
+            reloc_rows.append({"section": claim["name"], "source": f"0x{source:08x}",
+                               "type": rel["type"], "symbol": rel["symbol"],
+                               "kind": candidate_kind, "addend": rel["addend"],
+                               "expectedType": expected.get("type") if expected else None,
+                               "expectedSymbol": expected.get("symbol") if expected else None,
+                               "expectedAddend": expected.get("addend") if expected else None,
+                               "candidateModule": candidate_module,
+                               "candidate": f"0x{cand_addr:08x}" if cand_addr is not None else None,
+                               "configuredKind": cfg[0] if cfg else None,
+                               "configuredModule": configured_module,
+                               "configured": f"0x{cfg[1]:08x}" if cfg else None,
+                               "verdict": verdict})
+        for source in sorted(a for a in cfgmap
+                             if claim["start"] <= a < claim["end"]
+                             and a not in candidate_offsets):
+            reloc_rows.append({"section": claim["name"], "source": f"0x{source:08x}",
+                               "verdict": "MISSING", "configured": f"0x{cfgmap[source][1]:08x}"})
+    claimed_ranges = [(c["start"], c["end"]) for c in nontext]
+    for source, expected in sorted(expected_relocs.items()):
+        if not any(start <= source < end for start, end in claimed_ranges):
+            reasons.append(f"relocation claim 0x{source:08x} is outside every owned "
+                           "non-.text section")
+        elif not any(r["source"] == f"0x{source:08x}" for r in reloc_rows):
+            reloc_rows.append({"section": expected["section"],
+                               "source": f"0x{source:08x}", "verdict": "MISSING-OBJECT",
+                               "configured": f"0x{expected['target_address']:08x}"})
+    bad_relocs = [r for r in reloc_rows if r["verdict"] != "OK"]
+    for r in bad_relocs:
+        reasons.append(f"{r['section']} relocation {r['source']} {r['verdict']}"
+                       + (f" ({r.get('symbol')} -> {r.get('candidate')}, expected "
+                          f"{r.get('configured')})" if r.get("symbol") else ""))
+
+    return {"ok": not reasons, "claimed": len(nontext), "rows": rows,
+            "symbolErrors": [r for r in reasons if "symbol" in r],
+            "relocations": reloc_rows, "errors": reasons}
 
 
 # ====================================== partial TU isolation (plan sec 9, phase D)
@@ -2171,14 +3084,18 @@ def cmd_linkcheck(args):
           f"rombuild_profile.prepare_profile, the same stock semantics as a real build)")
 
     span_start = span_end = None
+    claims = []
     replaced = []
+    scratch_rewrite = False
     if not baseline:
-        text_secs = [s for s in entry.get("sections", []) if s["name"] == ".text"]
-        if len(text_secs) != 1:
-            raise SystemExit(f"{tu_id}: expected exactly one licensed .text section, "
-                             f"got {len(text_secs)}")
-        span_start = int(text_secs[0]["start"], 16)
-        span_end = int(text_secs[0]["end"], 16)
+        claims, claim_reasons = manifest_section_claims(entry)
+        if claim_reasons:
+            print("\nREFUSED -- invalid manifest section ownership:")
+            for reason in claim_reasons:
+                print(f"  {reason}")
+            return 1
+        text_sec = next(s for s in claims if s["name"] == ".text")
+        span_start, span_end = text_sec["start"], text_sec["end"]
         dl = module_dir_in(cfg_root, module) / "delinks.txt"
         if not dl.is_file():
             raise SystemExit(f"no delinks.txt for module {module} at {dl}")
@@ -2203,7 +3120,8 @@ def cmd_linkcheck(args):
                   f"level in [4b] below.")
         else:
             replaced, reasons = splice_tu_entry(
-                dl, span_start, span_end, entry["source"], legacy_rels)
+                dl, span_start, span_end, entry["source"], legacy_rels,
+                section_claims=claims)
             if reasons:
                 print("\nREFUSED -- the scratch delinks substitution is not safe:")
                 for r in reasons:
@@ -2211,8 +3129,14 @@ def cmd_linkcheck(args):
                 return 1
             print(f"      spliced {len(replaced)} per-function entr(y/ies) in "
                   f"{module}/delinks.txt into one:")
-            print(f"        {entry['source']}:  .text start:0x{span_start:08x} "
-                  f"end:0x{span_end:08x}  complete")
+            print(f"        {entry['source']}: complete")
+            for claim in claims:
+                source = "legacy entries" if claim["name"] == ".text" else "ROM gap"
+                output_name = claim.get("module_section", claim["name"])
+                label = (claim["name"] if output_name == claim["name"] else
+                         f"{claim['name']} -> {output_name}")
+                print(f"          {label:16} 0x{claim['start']:08x}.."
+                      f"0x{claim['end']:08x}  relinquished from {source}")
 
     # dsd's linker script selects contributions by object BASENAME, so a shadow TU
     # whose stem collides with any other enrolled or delinked object would be
@@ -2365,8 +3289,61 @@ def cmd_linkcheck(args):
         if not tu_obj.is_file():
             print(f"      !! no object at {tu_obj}")
             return 1
+        raw_tu = tu_obj.read_bytes()
+        linked_tu, compiler_only, policy_reasons = apply_compiler_only_policy(raw_tu, entry)
+        report["compilerOnlyOutput"] = compiler_only
+        if policy_reasons:
+            print("      REFUSED -- unlicensed/compiler-only output policy:")
+            for reason in policy_reasons:
+                print(f"        {reason}")
+            report["compilerOnlyOutput"]["errors"] = policy_reasons
+            report["result"] = "policy-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+        if linked_tu != raw_tu:
+            scratch_rewrite = True
+            tu_obj.write_bytes(linked_tu)
+            print(f"      explicitly deadstripped {compiler_only['deadstripped']} from the "
+                  f"SCRATCH object only (production source/config untouched)")
+
+        externalized_tu, externalized, externalized_reasons = \
+            apply_externalized_output_policy(linked_tu, entry)
+        report["externalizedOutput"] = externalized
+        if externalized_reasons:
+            print("      REFUSED -- exact vague RTTI externalization policy:")
+            for reason in externalized_reasons:
+                print(f"        {reason}")
+            report["externalizedOutput"]["errors"] = externalized_reasons
+            report["result"] = "externalization-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+        if externalized_tu != linked_tu:
+            linked_tu = externalized_tu
+            scratch_rewrite = True
+            tu_obj.write_bytes(linked_tu)
+            print(f"      externalized {externalized['externalized']} to their exact "
+                  "configured canonical homes in the SCRATCH object only")
+
+        owned = verify_owned_sections(linked_tu, entry, claims)
+        report["ownedSections"] = owned
+        for row in owned["rows"]:
+            print(f"      {row['section']:8} {row.get('start', '-')}..{row.get('end', '-')} "
+                  f"emitted 0x{row.get('emittedBytes', 0):x}  "
+                  f"{'VERIFIED' if row.get('sizeOk') and row.get('bytesOk') else 'DIFF'}  "
+                  f"{row.get('relocCount', 0)} reloc(s)")
+        if not owned["ok"]:
+            print("      REFUSED -- licensed non-text contribution is not exact:")
+            for reason in owned.get("errors", []):
+                print(f"        {reason}")
+            report["result"] = "data-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
+
         rows, extra_secs, emitted, order_ok = audit_tu_object(
-            tu_obj.read_bytes(), entry, span_start, span_end, complete_ranges(cfg_root))
+            linked_tu, entry, span_start, span_end, complete_ranges(cfg_root))
         buckets = print_object_audit(rows, extra_secs, emitted, order_ok, entry)
         report["objectAudit"] = {
             "counts": dict(buckets), "orderOk": order_ok,
@@ -2374,6 +3351,16 @@ def cmd_linkcheck(args):
             "unlicensedSections": [{"name": s["name"], "size": s["size"]}
                                    for s in extra_secs],
         }
+        audit_reasons = object_audit_refusals(rows, extra_secs, order_ok)
+        if audit_reasons:
+            print("      REFUSED -- object contains output not licensed after exact policy:")
+            for reason in audit_reasons:
+                print(f"        {reason}")
+            report["objectAudit"]["errors"] = audit_reasons
+            report["result"] = "object-audit-refused"
+            _write_link_report(scratch, report)
+            _record_linkcheck(data, entry, report, baseline)
+            return 1
         homeless_strong = [r for r in rows
                            if r["verdict"] == "HOMELESS" and r["bind"] == "STB_GLOBAL"]
         if buckets["COLLIDES-GAP"]:
@@ -2428,11 +3415,28 @@ def cmd_linkcheck(args):
         print(f"      module {module}: built {len(built)} bytes, retail {len(retail)} bytes, "
               f"base 0x{base:08x}")
         if not baseline:
-            range_ok, ndiff, first = compare_range(built, retail, base, span_start,
-                                                   span_end, f"TU range {tu_id}")
-            report["tuRange"] = {"start": f"0x{span_start:08x}", "end": f"0x{span_end:08x}",
-                                 "differingBytes": ndiff,
-                                 "firstDiff": f"0x{first:08x}" if first else None}
+            range_reports = []
+            for claim in claims:
+                if claim["name"] == ".bss":
+                    range_reports.append({"section": ".bss",
+                                          "start": f"0x{claim['start']:08x}",
+                                          "end": f"0x{claim['end']:08x}",
+                                          "comparison": "NOBITS -- symbol/module gates"})
+                    continue
+                ok_claim, ndiff, first = compare_range(
+                    built, retail, base, claim["start"], claim["end"],
+                    f"TU {claim['name']} range {tu_id}")
+                range_ok = range_ok and ok_claim
+                record = {"section": claim["name"],
+                          "start": f"0x{claim['start']:08x}",
+                          "end": f"0x{claim['end']:08x}",
+                          "differingBytes": ndiff,
+                          "firstDiff": f"0x{first:08x}" if first else None}
+                range_reports.append(record)
+                if claim["name"] == ".text":
+                    report["tuRange"] = {k: v for k, v in record.items()
+                                         if k != "section"}
+            report["tuRanges"] = range_reports
             print("      per-declared-function, inside the linked range:")
             for f in sorted(entry["functions"], key=lambda x: int(x["address"], 16)):
                 a, s = int(f["address"], 16), int(f["size"], 16)
@@ -2550,7 +3554,9 @@ def cmd_linkcheck(args):
         verified = bool(verified and equivalent and partial_rows)
         report["result"] = "partial-link-verified" if verified else "failed"
     else:
-        report["result"] = "link-verified" if verified else "failed"
+        has_nontext = bool(not baseline and any(c["name"] != ".text" for c in claims))
+        report["result"] = classify_link_result(
+            has_nontext, verified, rom_ok, scratch_rewrite)
     print()
     if partial:
         n_ok = sum(1 for _o, _s, v in partial_rows if v["identical"])
@@ -2588,8 +3594,11 @@ def cmd_linkcheck(args):
                           f"NOT green and cannot be reported as such)")
         else:
             sym_phrase = "dsd check symbols --fail FAILED with no baseline to compare to"
-        print(f"Result: LINK-VERIFIED. The whole {tu_id} .text range "
-              f"0x{span_start:08x}..0x{span_end:08x} reproduces from one object, every "
+        level = report["result"].upper()
+        owned_phrase = (f"all {len(claims)} licensed section ranges"
+                        if has_nontext else
+                        f"the whole .text range 0x{span_start:08x}..0x{span_end:08x}")
+        print(f"Result: {level}. {owned_phrase} reproduce from one object, every "
               f"module is byte-exact, {sym_phrase}"
               f"{', and the full ROM builds' if rom_ok else ''}.")
     else:
@@ -2625,6 +3634,18 @@ def cmd_linkcheck(args):
     return 0 if verified else 1
 
 
+def classify_link_result(has_nontext, pipeline_ok, rom_ok, scratch_rewrite=False):
+    """Name a linkcheck result without turning research evidence into promotion state."""
+    if not pipeline_ok:
+        return "failed"
+    base = "data-verified" if has_nontext else "link-verified"
+    if rom_ok is not True:
+        return "module-" + base
+    if scratch_rewrite:
+        return "scratch-" + base
+    return base
+
+
 def _write_link_report(scratch, report):
     path = scratch / "linkcheck.json"
     path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n")
@@ -2657,10 +3678,14 @@ def _record_linkcheck(data, entry, report, baseline):
             "unlicensedSections": audit.get("unlicensedSections"),
         },
         "symbolCheckNewVsBaseline": report.get("symbolsNew"),
+        "rom": report.get("rom"),
         "linkerOutput": report["phases"].get("link", {}).get("output"),
     }
     if report["result"] == "link-verified" and entry.get("status") == "text-verified":
         entry["status"] = "link-verified"
+    elif report["result"] == "data-verified" and entry.get("status") in (
+            "text-verified", "link-verified"):
+        entry["status"] = "data-verified"
     save_manifest(data)
 
 
@@ -2684,6 +3709,29 @@ _PROMOTE_TRACKERS_HISTORY = (
 )
 
 
+def promotion_refusals(entry):
+    """Reasons the current production build cannot consume this verified shadow TU."""
+    reasons = []
+    status = entry.get("status")
+    if status not in ("link-verified", "data-verified"):
+        reasons.append("manifest status is not link-verified or data-verified")
+    if any(s.get("name") != ".text" for s in entry.get("sections", [])
+           if isinstance(s, dict)):
+        reasons.append("production promotion does not yet install non-.text delinks claims")
+    if entry.get("compiler_only_output"):
+        reasons.append("production rombuild does not apply compiler_only_output policy")
+    if entry.get("externalized_output"):
+        reasons.append("production rombuild does not apply externalized_output policy")
+    linkcheck = entry.get("verification", {}).get("linkcheck", {})
+    if linkcheck.get("phases", {}).get("rom") is not True:
+        reasons.append("the recorded full-ROM phase is not green")
+    if linkcheck.get("rom", {}).get("matchesStockRom") is not True:
+        reasons.append("the recorded full ROM is not proven identical to the stock build")
+    if linkcheck.get("result") != status:
+        reasons.append("the promotion-ready status is not the recorded linkcheck result")
+    return reasons
+
+
 def cmd_promote(args):
     if not args.dry_run:
         print("tools/tubuild.py promote: only --dry-run is implemented.\n"
@@ -2699,7 +3747,8 @@ def cmd_promote(args):
         raise SystemExit(f"no manifest entry for {args.id!r}")
 
     status = entry.get("status")
-    ok_status = status in ("link-verified", "data-verified")
+    promotion_blocks = promotion_refusals(entry)
+    ok_status = not promotion_blocks
     module = entry["module"]
     src = REPO / entry["source"]
     dest_rel = entry.get("promoted_source")
@@ -2711,7 +3760,9 @@ def cmd_promote(args):
     print(f"=== tubuild promote --dry-run {entry['id']} ===")
     print("NOTHING IS WRITTEN BY THIS COMMAND.\n")
     print(f"manifest status        : {status}"
-          f"{'' if ok_status else '   <<< promotion would be REFUSED (plan sec 7.7 requires link-verified or better)'}")
+          f"{'' if ok_status else '   <<< promotion would be REFUSED'}")
+    for reason in promotion_blocks:
+        print(f"                          - {reason}")
     print(f"module                 : {module}")
     if span:
         print(f"licensed .text         : 0x{span[0]:08x}..0x{span[1]:08x} "
