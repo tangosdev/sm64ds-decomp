@@ -48,23 +48,39 @@
 // take out this class's state 4 on the same boot. The sibling's fill is
 // called with 36.
 //
-// STATEGEN REFUSED FOUR OF THE TWENTY-EIGHT AND THE REFUSALS ARE CARRIED, NOT
-// GUESSED. All four are genuine decomp holes -- a config symbol, no delink
-// block in config/arm9/overlays/ov006/delinks.txt, and no src file in either
-// extension:
+// STATEGEN REFUSED FOUR OF THE TWENTY-EIGHT, AND RUN mg7 LANE L369 CLOSED ALL
+// FOUR. They were genuine decomp holes -- a config symbol, no delink block in
+// config/arm9/overlays/ov006/delinks.txt, and no src file in either extension:
 //
-//   0x020ffb54  slot 2 of data_ov006_021426cc   0x290 bytes
-//   0x020ff8c8  slot 3 of data_ov006_021426cc   0x28c bytes
-//   0x02102274  slot 0 of data_ov006_02142734   0x1f8 bytes
-//   0x02102fe8  slot 1 of data_ov006_021426f4   0x378 bytes
+//   0x020ffb54  slot 2 of data_ov006_021426cc   0x290   MATCHED  1.2/sp2p3
+//   0x020ff8c8  slot 3 of data_ov006_021426cc   0x28c   MATCHED  1.2/sp2p3
+//   0x02102274  slot 0 of data_ov006_02142734   0x1f8   MATCHED  1.2/sp2p3
+//   0x02102fe8  slot 1 of data_ov006_021426f4   0x378   NONMATCHING 2004/b56
 //
-// Each is the func_ov006_020e1854 shape as it stood BEFORE run link60 lane CT1
-// hosted it: the case below reports which state was wanted, by address, and
-// calls nothing. No symbol is invented for any of them -- inventing a
-// definition for a body with no source is the guess
-// port/tools/inferred_stub_guard exists to refuse -- and no port_ body is
-// transcribed here either, because transcribing four ROM bodies is a second
-// lane's work and not this seat's.
+// All four are src TUs on port/slice_lkt.txt now and all four are CALLED by
+// the switch below, so this file no longer reports a single address. The three
+// matched ones carry delink blocks; 0x02102fe8 ships with the honest banner
+// and its per-instruction diff pasted in the source, which is what the tree
+// already does for src/func_ov006_02103ac0.c in this same class.
+//
+// WHAT DID NOT CHANGE: no symbol is invented for anything here. The four
+// definitions are decompilations of the ROM's own bodies under their real
+// func_ov006_ names, not port_ host copies, which is why they are slice lines
+// and not another file in this directory.
+//
+// THE MISSING COUNTER STAYS, AND READS ZERO ON PURPOSE. lkt_no_body is gone,
+// but g_pachinko2_state_missing is kept and still printed by
+// hal/scene_mg.cpp: a run that states the zero is evidence, and a report that
+// stopped counting is not.
+//
+// THE NUMBERS THIS WAVE MOVED, scene 369 under SM64DS_FAULTS_FATAL=1:
+//   3000 frames  BEFORE  12367 routed, 5714 of them bodiless
+//                AFTER   12321 routed, 0 bodiless, 0 UNHANDLED
+//    300 frames  BEFORE   1480 routed,  598 of them bodiless
+//                AFTER    1480 routed, 0 bodiless, 0 UNHANDLED
+// The routed total moves because the real bodies advance the machine
+// differently from a reporting case that returned without doing anything --
+// which is the point of the wave, not noise in it.
 //
 // ---- WHY ALL THREE DISPATCHERS ARE HOSTED --------------------------------
 //
@@ -154,15 +170,20 @@ extern "C" {
 /* the framework's entry point; see unmatched/MgBase_StateDispatch.cpp */
 void port_mg_call1(void *self, unsigned code, int adj, int a);
 
-/* ---- the twenty-four state bodies that have one, in address order --------
-   All twenty-four take (self, index) in their own src -- checked one by one,
+/* ---- ALL TWENTY-EIGHT state bodies, in address order ---------------------
+   Twenty-four of these were here from the seat; the four run mg7 lane L369
+   decompiled (0x020ff8c8, 0x020ffb54, 0x02102274, 0x02102fe8) are marked
+   below. All twenty-eight take (self, index) in their own src -- checked one
+   by one,
    not assumed from the table's arity -- so none of them is the ARM
    ride-through curling met at func_ov006_020e2eb8. They are declared with
    void* here rather than with each src's own struct type: these are C-linkage
    symbols, the declaration cannot change the mangling, and a host copy that
    repeated two dozen private struct definitions would be two dozen more places
    for a layout to drift. */
+void func_ov006_020ff8c8(void *c, int i);   /* mg7 lane L369 */
 void func_ov006_020ff690(void *c, int i);
+void func_ov006_020ffb54(void *c, int i);   /* mg7 lane L369 */
 void func_ov006_020ffde4(void *c, int i);
 void func_ov006_020fff54(void *c, int i);
 void func_ov006_021009b8(void *c, int i);
@@ -179,7 +200,9 @@ void func_ov006_021019e0(void *c, int i);
 void func_ov006_02101af0(void *c, int i);
 void func_ov006_02101e88(void *c, int i);
 void func_ov006_021020c4(void *c, int i);
+void func_ov006_02102274(void *c, int i);   /* mg7 lane L369 */
 void func_ov006_02102f3c(void *c, int i);
+void func_ov006_02102fe8(void *c, int i);   /* mg7 lane L369 */
 void func_ov006_02103360(void *c, int i);
 void func_ov006_02103608(void *c, int i);
 void func_ov006_0210371c(void *c, int i);
@@ -193,9 +216,11 @@ extern MgPmf data_ov006_021426cc[];
 extern MgPmf data_ov006_021426f4[];
 extern MgPmf data_ov006_02142734[];
 
-/* the one ordinary callee a host copy below keeps, from its own src. It has NO
-   BODY -- no delink block and no src file -- and is the named self-reporting
-   trap in unmatched/MgPachinko2_Traps.cpp. */
+/* the one ordinary callee a host copy below keeps, from its own src. Run mg7
+   lane L369 decompiled it (0x24c, NONMATCHING at 2004/b56 with the diff pasted
+   in src/func_ov006_0210076c.c), so unmatched/MgPachinko2_Traps.cpp -- which
+   existed for this one symbol and nothing else -- is DELETED. A trap standing
+   beside a real definition is a duplicate symbol, not a safety net. */
 void func_ov006_0210076c(void *c, int i);
 
 }  /* extern "C" */
@@ -205,23 +230,26 @@ void func_ov006_0210076c(void *c, int i);
 static unsigned g_pachinko2_state_hits;
 static unsigned g_pachinko2_state_missing;
 
-/* One line per DISTINCT missing address, so a state that is wanted every frame
-   does not bury the report. Four addresses can reach this, and which four is
-   named in the header. */
-static void lkt_no_body(unsigned code)
+/* g_pachinko2_state_missing is write-never as of run mg7 lane L369: every one
+   of the twenty-eight addresses below calls a real body, so lkt_no_body is
+   gone. The counter is kept, and kept printed by hal/scene_mg.cpp, because a
+   run that states the zero is evidence and a report that stopped counting is
+   not.
+
+   THE PER-ADDRESS CENSUS is the other half of that evidence and it is new with
+   the same wave. A total says a machine dispatched; only a per-slot breakdown
+   says a machine MOVED. Before this wave data_ov006_02142734 spent every tick
+   of every live entry in slot 0 -- the reporting case that returned without
+   doing anything -- and a run that printed 1480 routed looked exactly like a
+   run that worked. The three rows below are printed in slot order, so a table
+   sitting on one slot is visible at a glance. */
+static unsigned g_lkt_cc[5];      /* data_ov006_021426cc, 2-entry loop  */
+static unsigned g_lkt_f4[8];      /* data_ov006_021426f4, 0x30-entry    */
+static unsigned g_lkt_34[15];     /* data_ov006_02142734, 3-entry loop  */
+
+static void lkt_census(unsigned *row, unsigned n, unsigned i)
 {
-    static unsigned seen[8];
-    static unsigned n;
-    ++g_pachinko2_state_missing;
-    for (unsigned i = 0; i < n; ++i)
-        if (seen[i] == code)
-            return;
-    if (n < sizeof seen / sizeof seen[0])
-        seen[n++] = code;
-    std::fprintf(stderr, "  [mg] dScMgPachinko2_c state 0x%08x has NO "
-                 "DECOMPILED BODY (no delink block, no src TU). Reported, "
-                 "never called.\n", code);
-    std::fflush(stderr);
+    if (i < n) ++row[i];
 }
 
 extern "C" int port_mg_try_pachinko2_1(void *self, unsigned code, int a)
@@ -229,43 +257,46 @@ extern "C" int port_mg_try_pachinko2_1(void *self, unsigned code, int a)
     ++g_pachinko2_state_hits;
     switch (code) {
     /* data_ov006_021426cc, the 2-entry loop at +0x5634 */
-    case 0x020fff54u: func_ov006_020fff54(self, a); return 1;
-    case 0x020ffde4u: func_ov006_020ffde4(self, a); return 1;
-    /* slots 2 and 3 have no source at all; see the header */
-    case 0x020ffb54u: lkt_no_body(0x020ffb54u); return 1;
-    case 0x020ff8c8u: lkt_no_body(0x020ff8c8u); return 1;
-    case 0x020ff690u: func_ov006_020ff690(self, a); return 1;
+    case 0x020fff54u: func_ov006_020fff54(self, a); lkt_census(g_lkt_cc, 5, 0); return 1;
+    case 0x020ffde4u: func_ov006_020ffde4(self, a); lkt_census(g_lkt_cc, 5, 1); return 1;
+    /* slots 2 and 3, the two Lakitu carriers. Run mg7 lane L369, both
+       byte-matched at 1.2/sp2p3. */
+    case 0x020ffb54u: func_ov006_020ffb54(self, a); lkt_census(g_lkt_cc, 5, 2); return 1;
+    case 0x020ff8c8u: func_ov006_020ff8c8(self, a); lkt_census(g_lkt_cc, 5, 3); return 1;
+    case 0x020ff690u: func_ov006_020ff690(self, a); lkt_census(g_lkt_cc, 5, 4); return 1;
 
     /* data_ov006_021426f4, the 0x30-entry loop at +0x4698 */
-    case 0x02102f3cu: func_ov006_02102f3c(self, a); return 1;
-    /* slot 1 has no source at all */
-    case 0x02102fe8u: lkt_no_body(0x02102fe8u); return 1;
-    case 0x02103360u: func_ov006_02103360(self, a); return 1;
-    case 0x02103608u: func_ov006_02103608(self, a); return 1;
-    case 0x0210371cu: func_ov006_0210371c(self, a); return 1;
-    case 0x02103870u: func_ov006_02103870(self, a); return 1;
-    case 0x0210397cu: func_ov006_0210397c(self, a); return 1;
-    case 0x02103994u: func_ov006_02103994(self, a); return 1;
+    case 0x02102f3cu: func_ov006_02102f3c(self, a); lkt_census(g_lkt_f4, 8, 0); return 1;
+    /* slot 1, the stylus driver. Run mg7 lane L369, NONMATCHING at 2004/b56
+       (register naming only; the diff is pasted in the source). */
+    case 0x02102fe8u: func_ov006_02102fe8(self, a); lkt_census(g_lkt_f4, 8, 1); return 1;
+    case 0x02103360u: func_ov006_02103360(self, a); lkt_census(g_lkt_f4, 8, 2); return 1;
+    case 0x02103608u: func_ov006_02103608(self, a); lkt_census(g_lkt_f4, 8, 3); return 1;
+    case 0x0210371cu: func_ov006_0210371c(self, a); lkt_census(g_lkt_f4, 8, 4); return 1;
+    case 0x02103870u: func_ov006_02103870(self, a); lkt_census(g_lkt_f4, 8, 5); return 1;
+    case 0x0210397cu: func_ov006_0210397c(self, a); lkt_census(g_lkt_f4, 8, 6); return 1;
+    case 0x02103994u: func_ov006_02103994(self, a); lkt_census(g_lkt_f4, 8, 7); return 1;
 
     /* data_ov006_02142734, the 3-entry loop at +0x5294 */
-    /* slot 0 has no source at all */
-    case 0x02102274u: lkt_no_body(0x02102274u); return 1;
-    case 0x021020c4u: func_ov006_021020c4(self, a); return 1;
-    case 0x02101e88u: func_ov006_02101e88(self, a); return 1;
-    case 0x02101af0u: func_ov006_02101af0(self, a); return 1;
+    /* slot 0, selected on EVERY tick of every live entry: the respawn timer
+       and the launch setup. Run mg7 lane L369, byte-matched at 1.2/sp2p3. */
+    case 0x02102274u: func_ov006_02102274(self, a); lkt_census(g_lkt_34, 15, 0); return 1;
+    case 0x021020c4u: func_ov006_021020c4(self, a); lkt_census(g_lkt_34, 15, 1); return 1;
+    case 0x02101e88u: func_ov006_02101e88(self, a); lkt_census(g_lkt_34, 15, 2); return 1;
+    case 0x02101af0u: func_ov006_02101af0(self, a); lkt_census(g_lkt_34, 15, 3); return 1;
     /* slot 4, the word the sibling class's phantom slot 36 would have
        clobbered. See the header. */
-    case 0x021019e0u: func_ov006_021019e0(self, a); return 1;
-    case 0x021016ecu: func_ov006_021016ec(self, a); return 1;
-    case 0x021012ccu: func_ov006_021012cc(self, a); return 1;
-    case 0x02101224u: func_ov006_02101224(self, a); return 1;
-    case 0x02101088u: func_ov006_02101088(self, a); return 1;
-    case 0x02100f7cu: func_ov006_02100f7c(self, a); return 1;
-    case 0x02100e3cu: func_ov006_02100e3c(self, a); return 1;
-    case 0x02100d90u: func_ov006_02100d90(self, a); return 1;
-    case 0x02100bacu: func_ov006_02100bac(self, a); return 1;
-    case 0x02100b08u: func_ov006_02100b08(self, a); return 1;
-    case 0x021009b8u: func_ov006_021009b8(self, a); return 1;
+    case 0x021019e0u: func_ov006_021019e0(self, a); lkt_census(g_lkt_34, 15, 4); return 1;
+    case 0x021016ecu: func_ov006_021016ec(self, a); lkt_census(g_lkt_34, 15, 5); return 1;
+    case 0x021012ccu: func_ov006_021012cc(self, a); lkt_census(g_lkt_34, 15, 6); return 1;
+    case 0x02101224u: func_ov006_02101224(self, a); lkt_census(g_lkt_34, 15, 7); return 1;
+    case 0x02101088u: func_ov006_02101088(self, a); lkt_census(g_lkt_34, 15, 8); return 1;
+    case 0x02100f7cu: func_ov006_02100f7c(self, a); lkt_census(g_lkt_34, 15, 9); return 1;
+    case 0x02100e3cu: func_ov006_02100e3c(self, a); lkt_census(g_lkt_34, 15, 10); return 1;
+    case 0x02100d90u: func_ov006_02100d90(self, a); lkt_census(g_lkt_34, 15, 11); return 1;
+    case 0x02100bacu: func_ov006_02100bac(self, a); lkt_census(g_lkt_34, 15, 12); return 1;
+    case 0x02100b08u: func_ov006_02100b08(self, a); lkt_census(g_lkt_34, 15, 13); return 1;
+    case 0x021009b8u: func_ov006_021009b8(self, a); lkt_census(g_lkt_34, 15, 14); return 1;
 
     default: --g_pachinko2_state_hits;          return 0;
     }
@@ -280,6 +311,28 @@ static void lkt_call1(void *self, unsigned code, int adj, int a)
     if (adj == 0 && port_mg_try_pachinko2_1(self, code, a))
         return;
     port_mg_call1(self, code, adj, a);
+}
+
+/* One line per table, in slot order. Run mg7 lane L369. */
+extern "C" void port_mg_pachinko2_state_census(void)
+{
+    static const struct { const char *name; const unsigned *row; unsigned n; } rows[] = {
+        { "data_ov006_021426cc", g_lkt_cc, 5  },
+        { "data_ov006_021426f4", g_lkt_f4, 8  },
+        { "data_ov006_02142734", g_lkt_34, 15 },
+    };
+    for (unsigned r = 0; r < 3; ++r) {
+        unsigned total = 0, live = 0;
+        for (unsigned i = 0; i < rows[r].n; ++i) {
+            total += rows[r].row[i];
+            live  += (rows[r].row[i] != 0);
+        }
+        std::printf("[scene] dScMgPachinko2_c %s: %u dispatch(es) over %u of "
+                    "%u slots  [", rows[r].name, total, live, rows[r].n);
+        for (unsigned i = 0; i < rows[r].n; ++i)
+            std::printf("%s%u", i ? " " : "", rows[r].row[i]);
+        std::printf("]\n");
+    }
 }
 
 extern "C" void port_mg_pachinko2_state_counts(unsigned *hits, unsigned *missing)

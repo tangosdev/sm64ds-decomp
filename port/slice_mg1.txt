@@ -625,3 +625,19 @@ src/func_ov004_020b4ff0.c
 src/func_ov004_020b5288.cpp
 src/func_ov004_020b5334.c
 src/func_ov004_020b51e4.c
+# Run mg7, lane L369, WAVE 4. THE FIFTH OF THE SIX GENUINELY-UNMATCHED BODIES
+# THIS FILE'S HEADER NAMES IS NOT UNMATCHED ANY MORE, and unlike the four host
+# copies the amendment above records, this one is a real decompilation:
+# src/func_ov004_020b1710.c byte-matches at mwccarm 1.2/base, 1.2/sp2 and
+# 1.2/sp2p3 and carries its own delink block in
+# config/arm9/overlays/ov004/delinks.txt, so it is an ordinary slice line and
+# not a port_ host copy.
+#
+# It is the minigame HUD's mode-aware value drawer: the timer layout for game
+# mode 5 (minutes, the language-table separator sprite, hundredths), the
+# two-sprite label at x 0x58/0x68 for modes 1, 2 and 4, and the four-pixel
+# shift plus the other drawer for mode 3. hal/scene_mg_faces.cpp's trap for it
+# is DELETED in the same commit, which is why this line is not optional on any
+# target that compiles the faces: the symbol is no longer defined anywhere
+# else. A 3000-frame boot of scene 369 alone entered that trap 5657 times.
+src/func_ov004_020b1710.c

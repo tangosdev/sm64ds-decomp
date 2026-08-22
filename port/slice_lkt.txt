@@ -259,3 +259,40 @@ src/func_ov006_02103ac0.c
 # names it. It is the framework's language-indexed sprite drawer, reached from
 # this class's HUD path.
 src/func_ov004_020b1e44.c
+
+# ---- wave 2, run mg7 lane L369: the five bodies that had no source ---------
+#
+# All five of the addresses the header's "WHAT HAS NO SOURCE AT ALL" block
+# names are decompiled as of this wave, so that block is history rather than a
+# description of the tree. Three of the five byte-match and two ship with the
+# NONMATCHING banner and their per-instruction diff pasted. The one that
+# mattered most is 0x02102274: this class selected it on EVERY tick of every
+# live entry, which is why the launch machine never armed.
+#
+#   src/func_ov006_02102274.c   0x1f8   MATCHED 1.2/sp2p3   state 0 of 02142734
+#   src/func_ov006_020ffb54.c   0x290   MATCHED 1.2/sp2p3   state 2 of 021426cc
+#   src/func_ov006_020ff8c8.c   0x28c   MATCHED 1.2/sp2p3   state 3 of 021426cc
+#   src/func_ov006_02102fe8.c   0x378   NONMATCHING 2004/b56, 18 words, all
+#                                       register naming; state 1 of 021426f4
+#   src/func_ov006_0210076c.c   0x24c   NONMATCHING 2004/b56, one induction
+#                                       variable; the per-entry follow-up
+#
+# THE TRAP FILE LOSES ITS ONLY BODY WITH THIS WAVE.
+# unmatched/MgPachinko2_Traps.cpp existed for exactly one symbol,
+# func_ov006_0210076c, and a trap standing beside a real definition is a
+# duplicate symbol rather than a safety net, so the file is deleted here
+# rather than emptied.
+src/func_ov006_02102274.c
+src/func_ov006_020ffb54.c
+src/func_ov006_020ff8c8.c
+src/func_ov006_02102fe8.c
+src/func_ov006_0210076c.c
+
+# THE TWO TUs THE HEADER PARKED BEHIND 0x0210076c. Its own block says
+# "func_ov006_02100408 and func_ov006_02101148 are reached from nothing in this
+# closure except 0x0210076c, which has no body ... They come in with whoever
+# decompiles 0x0210076c." That is this wave. 0x02100408 is the catch effect
+# seeder (a 0x18-stride table at +0x5320) and 0x02101148 is the carrier's own
+# catch bookkeeping; both already had matched src TUs and only wanted a caller.
+src/func_ov006_02100408.c
+src/func_ov006_02101148.c

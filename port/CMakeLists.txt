@@ -3503,12 +3503,16 @@ set(SCENE_MG_SOURCES
     # comments above give: this class's THREE dispatching TUs are EXCLUDED from
     # slice_lkt.txt and defined only in MgPachinko2_StateDispatch.cpp, so a
     # target that takes the slice and not the dispatch fails the link on
-    # func_ov006_020fff84, _0210246c and _02102e8c. The trap file is not
-    # optional for the same reason at one remove: the dispatch host copy calls
-    # func_ov006_0210076c by name and no src TU defines it.
+    # func_ov006_020fff84, _0210246c and _02102e8c.
+    #
+    # THE TRAP FILE IS GONE, run mg7 lane L369. unmatched/MgPachinko2_Traps.cpp
+    # existed for exactly one symbol -- func_ov006_0210076c, the per-entry
+    # follow-up the fifteen-state dispatcher calls after every dispatch it
+    # makes -- and that address is decompiled now and rides slice_lkt.txt as an
+    # ordinary src TU. A trap standing beside a real definition is a duplicate
+    # symbol rather than a safety net, so the file is deleted, not emptied.
     unmatched/MgPachinko2_StateDispatch.cpp
     unmatched/MgPachinko2_Dtor.cpp
-    unmatched/MgPachinko2_Traps.cpp
     # The class-vtable name face. src/MgLakituLaunch_Spawn.c writes
     # _ZTV16dScMgPachinko2_c, which no config defines, so the slice does not
     # link without this file's one /alternatename row.
