@@ -131,7 +131,28 @@
 
    The fifth argument is the object's main state index at +0x5314 -- the one
    vtable slot 6 dispatches on and slot 18 zeroes -- as a flag: every state but
-   2 passes 1. */
+   2 passes 1.
+
+   EVERY FIELD THIS BODY READS IS WRITTEN BY AN ALREADY-MATCHED src TU WITH THE
+   SAME MEANING, so the field reading above closes against src rather than
+   against a comment:
+
+     +0x12  src/func_ov006_020f4cd8.c writes `*(u8 *)(p + 0x51ba) = 1` in each
+            of its three board arms, and src/func_ov006_020f4f94.c zeroes it in
+            the per-round clear.  In play, exactly as read.
+     +0x10  the same dealer writes `*(u8 *)(p + 0x51b8) = slot`, where slot is
+            RandomIntInternal scaled into 1..4, 1..5 or 1..6 and refused until
+            that identity has been dealt fewer than twice.  Six identities is
+            the table's six non-zero rows.
+     +0x15  the clear zeroes +0x51bd beside the other two.  The three bytes
+            this body reads are the three that file resets.
+     count  func_ov006_020f3f10, the arity-1 per-card dispatcher, walks the SAME
+            records with `cmp r6,#0xc` and `add r5,r5,#0x18` off the same
+            +0x5000 base -- a second body in this class agreeing that there are
+            twelve of them, reached without going through this one.  It gates on
+            +0x13 and dispatches on +0x14, two bytes this body never touches.
+     x/y    the dealer starts every card at 0x80000 / -0x80000, which is
+            128.0 / -128.0 in the 20.12 this body shifts down by 12. */
 
 extern void Hud_RenderSprite(void *a0, int a1, int a2, int a3, int a4);
 extern unsigned short data_ov006_0213d168[];
