@@ -1230,6 +1230,14 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
    reader, its store would land on the Enemy's objects. */
 #pragma comment(linker, "/alternatename:_VT=_data_ov002_021081e4")
 #pragma comment(linker, "/alternatename:_HEAP=_data_020a0eac")
+/* TWO VT-SPELLING TUs ARE EXEMPTED FROM THE ROW ABOVE, each by a per-source -D
+   in port/CMakeLists.txt onto its own table rather than by a change here, so
+   the Enemy binding stays intact for its one reader:
+   src/func_ov006_020efc30.c (dScMgLuigi_c slot 17) and
+   src/func_ov006_020e065c.c (dScMgCurling_c slot 17, run mg6 lane VTF). Both
+   are D0s whose own ROM literal pool names their class's table, so bare VT
+   would have stored the Enemy base table into a minigame scene object. HEAP is
+   not renamed for either -- both pools hold 020A0EAC, the row above. */
 /* ---- run linkw wave C: THREE LINKED TUs THAT COLLIDE ON THOSE THREE NAMES.
    port/tools/alias_audit.py found them and each one is ROM-verified below by
    disassembling the body out of extracted/overlays/ and reading its literal

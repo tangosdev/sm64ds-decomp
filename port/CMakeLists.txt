@@ -3493,6 +3493,35 @@ set(SCENE_MG_SOURCES
     # link on that symbol. Replaces no src TU, because there is none.
     unmatched/MgHud_ScaledNumber.cpp)
 
+# THE DELETING DESTRUCTOR SPELLS ITS OWN TABLE AS THE SHARED PLACEHOLDER `VT`.
+# src/func_ov006_020e065c.c is dScMgCurling_c's slot 17 and its body is
+# `t[0] = (int)VT;`, but hal/cxx_aliases.cpp binds bare VT to
+# _data_ov002_021081e4 -- the ENEMY base table, a whole class wrong for a
+# minigame scene object. unmatched/MgPachinko_Dtor.cpp found this on curling's
+# seat while repairing the identical defect on pachinko's slot 17 and reported
+# it rather than touching another lane's file ("THE SAME DEFECT IS LIVE ON
+# CURLING'S SEAT TODAY and this lane did not fix it"). Run mg6, lane VTF, is
+# that repair, and it takes the same rename dScMgLuigi_c's slot 17 takes below.
+#
+# THE ADDRESS IS THE BODY'S OWN LITERAL POOL, disassembled out of
+# extracted/overlays/overlay_0006.bin at that overlay's 0x020bfec0 base rather
+# than read off a name. The two-word pool sits at the end of the 0x38 body:
+#   0x020e0660  E59F1024  ldr r1,[pc,#0x24] -> 0x020e068c
+#   0x020e0668  E5841000  str r1,[r4]          the vptr store
+#   0x020e068c  0213C304  <- THIS, dScMgCurling_c's own table
+#   0x020e0690  020A0EAC  <- the game heap word, loaded BY VALUE at 0x020e0678
+# config/arm9/overlays/ov006/relocs.txt agrees on both words
+# (from:0x020e068c kind:load to:0x0213c304, from:0x020e0690 to:0x020a0eac), and
+# the unmarked D2 sibling func_ov006_020e0638 pools the same 0213C304 at
+# 0x020e0658, which confirms the table without going through this body at all.
+#
+# HEAP IS DELIBERATELY NOT RENAMED. The second pool word is 020A0EAC, exactly
+# what cxx_aliases.cpp already binds _HEAP to, so that half is right as it
+# stands and only VT was wrong.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020e065c.c"
+    PROPERTIES COMPILE_DEFINITIONS "VT=data_ov006_0213c304")
+
 # Run mg5, lane PCH. dScMgPachinko_c's own closure, the second minigame class.
 # 65 src TUs in wave 1: 59 ov006 and 6 ov004. The arm9 half is deliberately not
 # listed -- port/mg_fanout_costs.txt section 5's /OPT:REF argument -- and the
