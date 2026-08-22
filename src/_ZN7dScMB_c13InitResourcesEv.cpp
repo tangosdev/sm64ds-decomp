@@ -1,23 +1,29 @@
-#include "types.h"
+//cpp
 // @symbol _ZN7dScMB_c13InitResourcesEv
-/* dScMB_c::InitResources -- recovered from vtable slot identity */
-#include "decl_Scene.h"
+/* recovered: named members + real C++ method */
+/* dScMB_c::InitResources() -- vtable slot 0. Brings both engines up for the
+ * Multi-Boot download screen, registers the GLOBAL graphCallback_c object at
+ * data_020a0c68 with `this` as its context, then zeroes the state machine
+ * Behavior() drives and hands its own FaderColor member to dScene_c. */
+#include "dScMB_c.h"
 #include "decl_common.h"
-extern void MultiStore16(u16 val, char *dst, int nbytes);
-extern void DecompressLZ16(int src, void *dst);
-extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern int func_0201a244(int a0, int a1, int a2, int a3, int a4);
+
+extern "C" {
+void MultiStore16(u16 val, char *dst, int nbytes);
+void DecompressLZ16(int src, void *dst);
+void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+int func_0201a244(int a0, int a1, int a2, int a3, int a4);
 
 extern u8 data_0209d45c[];
 extern u8 data_0209d454[];
 extern u8 data_0209d4a8[];
 extern u8 data_0208ee44[];
 extern u8 func_0201a2f8[];
+}
 
-int _ZN7dScMB_c13InitResourcesEv(void *arg0)
+s32 dScMB_c::InitResources()
 {
-    void *self = arg0;
     volatile u16 sp4;
     volatile u16 sp6;
 
@@ -59,14 +65,14 @@ int _ZN7dScMB_c13InitResourcesEv(void *arg0)
     _ZN2GX6DispOnEv();
 
     *(volatile u32 *)0x4001000 |= 0x10000;
-    func_02034b1c((void *)&data_020a0c68, (int)self);
+    func_02034b1c((void *)&data_020a0c68, (int)this);
 
     *(void **)&data_0209d4a8 = (void *)&data_020a0c68;
-    *(int *)((char *)self + 0x60) = 0;
-    *(int *)((char *)self + 0x64) = 0;
-    _ZN8dScene_c9SetFadersEP15FaderBrightness((void *)((char *)self + 0x50));
+    unk_060 = 0;
+    unk_064 = 0;
+    dScene_c::SetFaders(&fader);
 
-    *(u16 *)((char *)self + 0x5c) = 0x7fff;
+    fader.color = 0x7fff;
     *(int *)&data_0208ee44 = 1;
     *(int *)&data_020a0c64 = func_0201a244((int)&func_0201a2f8, 0, 0xf, 0, 0x1000);
 

@@ -4700,22 +4700,22 @@ src/func_02034d34.cpp:
     complete
     .text start:0x02034d34 end:0x02034d70
 
-src/_ZN7dScMB_c16CleanupResourcesEv.c:
+src/_ZN7dScMB_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02034d70 end:0x02034d9c
 
-src/_ZN7dScMB_c6RenderEv.c:
+src/_ZN7dScMB_c6RenderEv.cpp:
     complete
     .text start:0x02034d9c end:0x02034da4
 
-src/_ZN7dScMB_c8BehaviorEv.c:
+src/_ZN7dScMB_c8BehaviorEv.cpp:
     complete
     .text start:0x02034da4 end:0x02034fbc
 
 src/func_02034fbc.c:
     .text start:0x02034fbc end:0x0203506c
 
-src/_ZN7dScMB_c13InitResourcesEv.c:
+src/_ZN7dScMB_c13InitResourcesEv.cpp:
     complete
     .text start:0x0203506c end:0x020352b4
 

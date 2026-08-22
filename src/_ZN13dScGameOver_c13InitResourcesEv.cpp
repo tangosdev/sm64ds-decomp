@@ -1,36 +1,38 @@
-#include "types.h"
+//cpp
 // @symbol _ZN13dScGameOver_c13InitResourcesEv
-/* recovered: renamed to Class_Method, declarations from a shared header */
+/* recovered: named members + real C++ method */
+/* dScGameOver_c::InitResources() -- vtable slot 0. Brings both engines up for
+ * the game-over screen, loads the language-specific "GAME OVER" art (five
+ * language variants on both screens), then zeroes the cursor FSM and lays the
+ * eight glyphs out along unk_050/unk_060 with a fixed scale and no rotation. */
+#include "dScGameOver_c.h"
 #include "decl_common.h"
-/* dScGameOver_c::InitResources() -- vtable slot 0. Plain C carries the
- * literal mangled name with no mangling needed -- see
- * include/dScGameOver_c.h. Field writes below stay raw pointer offsets
- * (this is a plain-C TU, so it cannot include the C++ header); they line
- * up with unk_050/unk_060/unk_070/unk_080 and unk_090..unk_094 there. */
-extern void _ZN2GX12SetBankForBGEt(u16 v);
-extern void _ZN2GX13SetBankForOBJEt(u16 v);
-extern void _ZN2GX15SetBankForSubBGEt(u16 v);
-extern void _ZN2GX16SetBankForSubOBJEt(u16 v);
-extern int LoadFile(int handle);
-extern void *_ZN2G213GetBG2CharPtrEv(void);
-extern void *_ZN2G212GetBG2ScrPtrEv(void);
-extern void *_ZN2G212GetBG0ScrPtrEv(void);
-extern void *_ZN3G2S12GetBG1ScrPtrEv(void);
-extern void *_ZN3G2S12GetBG2ScrPtrEv(void);
-extern u32 _ZN3G2S13GetBG1CharPtrEv(void);
-extern void DecompressLZ16(int src, void *dst);
-extern void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-extern void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+
+extern "C" {
+void _ZN2GX12SetBankForBGEt(u16 v);
+void _ZN2GX13SetBankForOBJEt(u16 v);
+void _ZN2GX15SetBankForSubBGEt(u16 v);
+void _ZN2GX16SetBankForSubOBJEt(u16 v);
+int LoadFile(int handle);
+void *_ZN2G213GetBG2CharPtrEv(void);
+void *_ZN2G212GetBG2ScrPtrEv(void);
+void *_ZN2G212GetBG0ScrPtrEv(void);
+void *_ZN3G2S12GetBG1ScrPtrEv(void);
+void *_ZN3G2S12GetBG2ScrPtrEv(void);
+u32 _ZN3G2S13GetBG1CharPtrEv(void);
+void DecompressLZ16(int src, void *dst);
+void _ZN2GX10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN2GX11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
+void _ZN3GXS10LoadBGPlttEPKvjj(const void *p, u32 a, u32 b);
 
 extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern u8 data_0209f204;
 extern int data_0208ee44;
+}
 
-int _ZN13dScGameOver_c13InitResourcesEv(void *arg)
+s32 dScGameOver_c::InitResources()
 {
-    char *c = (char *)arg;
     int f;
 
     func_02019028();
@@ -151,18 +153,18 @@ int _ZN13dScGameOver_c13InitResourcesEv(void *arg)
     Deallocate((void *)f);
 
     func_0201cebc(0x27d);
-    func_ov003_020b0730(c, 1);
+    func_ov003_020b0730(this, 1);
 
-    *(u8 *)(c + 0x90) = 0;
-    *(u8 *)(c + 0x91) = 0;
-    *(u8 *)(c + 0x92) = 0;
-    *(u8 *)(c + 0x93) = 0;
-    *(u8 *)(c + 0x94) = 0;
+    unk_090 = 0;
+    unk_091 = 0;
+    unk_092 = 0;
+    unk_093 = 0;
+    unk_094 = 0;
     for (f = 0; f < 8; f++) {
-        ((short *)(c + 0x50))[f] = data_ov003_020b1764[f];
-        ((short *)(c + 0x60))[f] = 0x60;
-        ((short *)(c + 0x70))[f] = 0x30;
-        ((short *)(c + 0x80))[f] = 0;
+        unk_050[f] = data_ov003_020b1764[f];
+        unk_060[f] = 0x60;
+        unk_070[f] = 0x30;
+        unk_080[f] = 0;
     }
 
     data_0209d454 = 0x14;
