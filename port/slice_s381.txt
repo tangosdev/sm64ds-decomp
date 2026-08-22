@@ -41,6 +41,22 @@
 #      The same table gives 382 name-text 25 -> message 573 -> "Pair-a-Gone
 #      And On", which is the sequel the RTTI pair predicted.
 #
+#      THIS ROW RESOLVES TO THE PLAIN STRING AND THE SEQUEL IS A DIFFERENT ID,
+#      which is worth stating rather than leaving to be inferred, because the
+#      two titles differ by three words and the config names only the sequel.
+#      Scene 381 is ov005 ROW 5 and its ONLY row, text index 13, message 561,
+#      "Pair-a-Gone". MgPairAGoneAndOn is actor 0x17e, ov005 row 25, text 25,
+#      message 573, and is NOT seated by this lane.
+#
+#      WHY NO EARLIER SWEEP FOUND THESE STRINGS. The banks are LZ77-compressed
+#      BMG in the game's own GLYPH encoding rather than ASCII or UTF-16 --
+#      'A' is 0x0a, 'a' is 0x2d, space is 0x4d -- so a byte sweep for the title
+#      over the ROM returns nothing. tools/message_bank.py already decodes it
+#      (its BASIC_CHARS table is exactly that mapping), which is what made this
+#      a five-minute derivation rather than a hand decode. Run mg9's lane S371
+#      reached the same chain independently and controlled it on 25 of 25 ids;
+#      this lane's reading of row 5 agrees with it.
+#
 # SO THE TITLE IS "Pair-a-Gone" AND IT IS NOT PROVISIONAL. The config-wide
 # address sweep the Shell Smash lesson prescribes was run first and found one
 # hit -- symbols/actor_renames_report.txt line 855, "UNRESOLVED actor 381
@@ -243,6 +259,22 @@
 # 16's "the zeros that are honest and the zeros that are not" is the reading:
 # this zero says the round cannot END without a pick, not that the code is
 # unreachable. Nothing here drives one.
+#
+# SLOT 34 IS NOT DISPATCHED BY THIS CLASS, and the run mg9 coordinator's
+# standing watch on it is answered here with a measurement rather than left
+# open. hal/scene_mg.cpp's shared mb_v34 thunk is declared (void*, void*)
+# while func_ov004_020ae3b4 takes FIVE parameters at every ROM dispatch site,
+# so a class that dispatched slot 34 would owe the five-parameter repair the
+# way lane BASESET owed slots 18 and 19. This one does not: the framework
+# census reads `framework slots entered: 1(x1) 21(x1) 31(x1) 32(x1)` on scene
+# 381 at BOTH 300 and 1200 frames, with no slot 34 at all. The same sweep over
+# every other run this lane took -- 374 and the twelve other hosted scenes --
+# finds slot 34 at zero on all of them, so the defect stays unexercised and
+# the repair stays with whichever lane first witnesses it.
+#
+# READ THAT AS A ZERO OF THE HONEST KIND section 16 distinguishes. It says
+# slot 34 is not on this class's BOOT path. It does not say the class never
+# reaches it in play, and nothing here drives a stylus.
 #
 # THE FLOWER KEEPS THE MIDDLE TABLE, measured rather than argued. This seat's
 # own dScMgSingle3DBase_c copy claims 0 slots, and scene 390's witness still
