@@ -3803,7 +3803,23 @@ set(SCENE_MG_FLOWER_SOURCES
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mem.txt" SLICE_MEM_LINES)
 set(SLICE_MEM_SOURCES hal/scene_mg_memory2.cpp
                       unmatched/MgMemory2_StateDispatch.cpp
-                      unmatched/MgMemory2_FieldPmf.cpp)
+                      unmatched/MgMemory2_FieldPmf.cpp
+                      # The aliases the link asked for, two __thiscall method
+                      # faces, and the class's one named trap
+                      # (func_ov006_020f5b98, a Render callee with a config
+                      # symbol, no delink block and no src).
+                      unmatched/MgMemory2_Faces.cpp
+                      # REPLACES src/func_ov006_020c0a48.c, which is out of the
+                      # slice: its three SharedFilePtr file ids are spelled as
+                      # three globals that exist in no config, and the ROM
+                      # loads 0x205/0x206/0x207 out of its own literal pool.
+                      unmatched/MgMemory2_SubObjCtor.cpp
+                      # REPLACES src/func_ov006_020c1804.cpp, which is out of
+                      # the slice: the local-shadow-class model draw (two call
+                      # sites) plus two LIGHT_VECTOR stores that a plain src
+                      # build lands in the I/O window. Same pair
+                      # unmatched/MgFlower_ModelRender_020c3bf4.cpp carries.
+                      unmatched/MgMemory2_ModelRender_020c1804.cpp)
 foreach(line IN LISTS SLICE_MEM_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

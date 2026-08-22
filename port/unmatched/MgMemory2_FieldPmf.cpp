@@ -131,15 +131,15 @@
 // ---- 5. THE MODEL SUB-OBJECT'S PMF UNIVERSE, BOUNDED THE SAME WAY ---------
 //
 // The pairs 020c19d0 and 020c07e8 dispatch come from one contiguous run of
-// ov006 .data, 0x0213ac50..0x0213acb8, every one {code, 0}:
+// ov006 .data, 0x0213ac48..0x0213acb8, every one {code, 0}:
 //
+//     0213ac48 {020c11c0,0}   0213ac60 {020c14bc,0}   0213ac78 {020c0364,0}
 //     0213ac50 {020c1760,0}   0213ac68 {020c0364,0}   0213ac80 {020c0b74,0}
 //     0213ac58 {020c1760,0}   0213ac70 {020c0264,0}   0213ac88 {020c0364,0}
-//     0213ac60 {020c14bc,0}   0213ac78 {020c0364,0}   0213ac90 {020c1760,0}
-//     0213ac98 {020c0ce8,0}   0213aca0 {020c0df0,0}   0213aca8 {020c0f9c,0}
-//     0213acb0 {020c11c0,0}   0213acb8 {020c0f9c,0}
+//     0213ac90 {020c1760,0}   0213ac98 {020c0ce8,0}   0213aca0 {020c0df0,0}
+//     0213aca8 {020c0f9c,0}   0213acb0 {020c11c0,0}   0213acb8 {020c0f9c,0}
 //
-// Fourteen pairs, NINE distinct code words, all with a matched src TU.  The
+// Fifteen pairs, NINE distinct code words, all with a matched src TU.  The
 // writers are the ordinary ones -- func_ov006_020c0304 and _020c0264 write
 // +0xb4, func_ov006_020c0e8c and _020c1164 write offset 0 -- and 0213ac78 is
 // the by-value sentinel section 3 names.  0x0213acc0 is where the run stops
@@ -164,6 +164,10 @@
    machines.  The same struct MgMemory2_StateDispatch.cpp uses; each TU declares
    its own because neither is a header. */
 struct MgPmf { unsigned code; int adj; };
+
+/* src/func_ov006_020c07e8.cpp's own Vector3, kept so the two Vec3_HorzAngle
+   arguments are the shapes that file passes. */
+struct MemVector3 { int x, y, z; };
 
 extern "C" {
 
@@ -199,17 +203,17 @@ short Vec3_HorzAngle(const void *a, const void *b);
 void _Z11UpdateAngleRssis(short *p, short d, int n, short lim);
 extern short data_ov006_0212b89c[];
 extern int   data_ov006_0213ac78[2];
+/* src/func_ov006_020c07e8.cpp declares this one OUTSIDE its extern "C" block,
+   so it mangles as a C++ global and the ov006 mount's plain C definition does
+   not satisfy it -- the ordinary name-spelling defect this port carries
+   /alternatename rows for. The host copy declares it at C linkage instead,
+   which is the same fix without an alias. */
+extern struct MemVector3 data_ov006_0212b890;
 
 /* host-copied below and called from above its own definition */
 void func_ov006_020c07e8(void *x);
 
 }  /* extern "C" */
-
-/* src/func_ov006_020c07e8.cpp's own Vector3, kept so the two Vec3_HorzAngle
-   arguments are the shapes that file passes. */
-struct MemVector3 { int x, y, z; };
-
-extern struct MemVector3 data_ov006_0212b890;
 
 // ---- the field switch -------------------------------------------------------
 

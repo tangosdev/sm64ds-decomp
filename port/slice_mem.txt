@@ -156,13 +156,17 @@
 # ---- ov006: dScMgMemory2_c's own closure, plus the model sub-object -------
 src/MgMemoryMaster_Spawn.c
 src/func_ov006_020c0264.cpp
+src/func_ov006_020c0304.c
 src/func_ov006_020c0364.c
 src/func_ov006_020c057c.cpp
 src/func_ov006_020c06dc.cpp
 src/func_ov006_020c07a0.c
 src/func_ov006_020c092c.cpp
 src/func_ov006_020c09f8.c
-src/func_ov006_020c0a48.c
+# HOST-COPIED (mg6 lane MEM): src/func_ov006_020c0a48.c -- its three
+#   SharedFilePtr file ids are spelled `extern int g0[], g1[], g2[]`, three
+#   globals that exist in no config. The ROM loads 0x205, 0x206 and 0x207 out
+#   of its own literal pool. See port/unmatched/MgMemory2_SubObjCtor.cpp.
 src/func_ov006_020c0aa8.c
 src/func_ov006_020c0af8.c
 src/func_ov006_020c0b74.c
@@ -172,12 +176,24 @@ src/func_ov006_020c0d68.cpp
 src/func_ov006_020c0df0.cpp
 src/func_ov006_020c0f9c.cpp
 src/func_ov006_020c11c0.cpp
+src/func_ov006_020c1420.cpp
 src/func_ov006_020c14bc.cpp
 src/func_ov006_020c1604.c
 src/func_ov006_020c1718.c
 src/func_ov006_020c1760.c
 src/func_ov006_020c1764.cpp
-src/func_ov006_020c1804.cpp
+# HOST-COPIED (mg6 lane MEM): src/func_ov006_020c1804.cpp -- TWO defects in
+#   one TU, both the host's rather than the decomp's. It draws the model
+#   sub-object through a LOCAL SHADOW CLASS at two call sites, so its `f5(0)`
+#   counts in the ROM's vtable numbering (byte +0x14 = the sixth word =
+#   Render) while the host's model vtables are MSVC-shaped, where that byte is
+#   Virtual18 -- the call handed Virtual18 a null matrix and Model::Virtual10
+#   read address 0, which is exactly the fault this lane's first boot took.
+#   And it stores two packed light vectors to 0x040004c8 (LIGHT_VECTOR), which
+#   from a plain src build lands in the I/O window and never reaches the
+#   geometry engine. See port/unmatched/MgMemory2_ModelRender_020c1804.cpp;
+#   the same pair port/unmatched/MgFlower_ModelRender_020c3bf4.cpp carries for
+#   the flower's sub-object.
 src/func_ov006_020c1a88.c
 src/func_ov006_020c1c64.c
 src/func_ov006_020c1d80.c
@@ -228,6 +244,13 @@ src/func_ov006_020f7394.c
 src/func_ov006_020f73f4.c
 src/func_ov006_020f74b4.cpp
 src/func_ov006_0210a534.cpp
+# NOT HERE, AND IT IS THIS CLASS'S ONE HARD FLOOR: func_ov006_020f5b98, the
+#   sixth call vtable slot 9 (Render) makes. config/arm9/overlays/ov006/
+#   symbols.txt names it and sizes it 0xa8; there is NO delink block covering
+#   it and NO src file in either extension. src/func_ov002_020f5b98.c is a
+#   DIFFERENT function at the same address in a different overlay -- the
+#   module-residency trap -- and is not a substitute. It gets a named trap in
+#   port/unmatched/MgMemory2_Faces.cpp and deliberately not a plausible body.
 # HOST-COPIED (mg6 lane MEM): src/func_ov006_020c07e8.cpp -- object-FIELD member
 #   pointer, and its src struct pads for eight bytes
 # HOST-COPIED (mg6 lane MEM): src/func_ov006_020c19d0.cpp -- object-FIELD
@@ -280,3 +303,12 @@ src/func_ov004_020b682c.c
 #   pointer-to-member dispatcher, found by the sweep and by no link
 # NOT HERE: src/func_ov004_020ad8b8.c, defined by
 #   port/unmatched/MgFlower_InitScore.cpp
+
+# ---- arm9: the two the link asked for -------------------------------------
+# The arm9 half of the closure comes back through /OPT:REF and is not listed
+# (port/slice_mg1.txt's rule). These two had no other caller in the build, so
+# /OPT:REF had already dropped them -- the same exception curling's wave 2 hit
+# for twenty of them.
+src/func_020169d8.c
+src/func_02045ec4.c
+src/func_0203d680.c

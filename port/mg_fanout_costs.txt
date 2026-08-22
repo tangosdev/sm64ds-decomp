@@ -191,6 +191,13 @@ matched src TU at all and will need a named trap or a decomp.
 
 0x16b IS DERIVED IN FULL AND NOT SEATED, run link60 lane MGB
 --------------------------------------------------------------
+  SEATED, run mg6 lane MEM. The paragraph below said "nothing here is wired,
+  the class does not boot and this file does not claim it does", and that is
+  no longer true: port/slice_mem.txt, port/hal/scene_mg_memory2.cpp, four
+  port/unmatched/MgMemory2_*.cpp files and a scene-363 registry row are in the
+  tree. What the derivation below GOT WRONG is worth more to the next lane than
+  what it got right, and there are three corrections, in section 13.
+
 Everything a seating lane would otherwise re-derive, so it starts at the seat.
 Nothing below is wired: no slice, no registry row, no face array, no host
 copy. The class does not boot and this file does not claim it does.
