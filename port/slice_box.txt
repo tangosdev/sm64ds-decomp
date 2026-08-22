@@ -317,21 +317,21 @@
 #
 # ---- LINKAGE, MEASURED ON BOTH ENDS OF THIS TREE -------------------------
 #
-#     6665 / 11283 (59.1%)  ->  6752 / 11283 (59.8%)     +87
+#     6665 / 11283 (59.1%)  ->  6751 / 11283 (59.8%)     +86
 #
 #   module   before        after
-#   ov006    737 (39.5%)   821 (44.0%)   +84   both ends measured
+#   ov006    737 (39.5%)   820 (43.9%)   +83   both ends measured
 #   arm9     1879          1880          +1    both ends measured
 #   ov004    not measured  242 (86.7%)   +2    see below
 #
 # THE ov004 BEFORE COLUMN IS ARITHMETIC, NOT A MEASUREMENT, and it is written
 # that way for section 10's reason -- that section records citing a before
 # column as a gap in its own report. The two headline totals are measured on
-# both ends, ov006 and arm9 are measured on both ends, and 87 - 84 - 1 = 2 is
+# both ends, ov006 and arm9 are measured on both ends, and 86 - 83 - 1 = 2 is
 # what is left for ov004. It agrees with the two ov004 slice lines at the foot
 # of this file, which is a cross-check and not the source of the number.
 #
-# +87 IS 89 SLICE LINES MINUS TWO, AND THE TWO ARE THE FLOOR'S OWN CALLEES.
+# +86 IS 88 SLICE LINES MINUS TWO, AND THE TWO ARE THE FLOOR'S OWN CALLEES.
 # Section 14 says every slice line moves the headline by one, banner or no
 # banner. Two of this seat's do not, and the reason is the run law's warning
 # that "a trap-shaped floor HIDES its callees from static closure":
