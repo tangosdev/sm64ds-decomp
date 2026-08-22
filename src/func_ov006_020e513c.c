@@ -4,9 +4,32 @@
 // (umull / mla / mla / adds / adc / lsr / orr) for the x26 separation step --
 // and the residue is the ROM's extra address materialisations and stack
 // reloads: the ROM spills SEVEN words (sub sp,#0x1c) including the constant
-// 0x800 itself, where this candidate spills three. Logic verified
-// instruction-for-instruction against extracted/overlays/overlay_0006.bin at
-// base 0x020bfec0. Counts as decompiled, not matched.
+// 0x800 itself, where this candidate spills three.
+//
+// THE OBVIOUS LEVER IS A TRAP HERE AND THE MEASUREMENT IS WORTH KEEPING.
+// Walking the eleven records with a POINTER instead of an index -- the lever
+// that closed most of func_ov006_020e5450's gap -- narrows the word COUNT from
+// 181 to 189, but it costs on the aligned diff the repository actually scores
+// with: tools/nearmiss_db.py's difflib oracle reads the pointer version at 258
+// divergences and this one at 192, because the pointer form makes mwcc spill
+// `idx` and keep `m` in a register, which is the opposite of the ROM's frame
+// (`mov fp,r1` and `str r1,[sp,#0x10]`). Re-deriving the idx address in the
+// placement step instead of reusing the pointer moves nothing at all; mwcc
+// common-subexpressions the address either way. A raw word count is not the
+// score. Logic verified instruction-for-instruction against
+// extracted/overlays/overlay_0006.bin at base 0x020bfec0. Counts as
+// decompiled, not matched.
+//
+// AND AN EARLIER FAN-OUT ALREADY HAD A CLOSER CANDIDATE, which is worth more
+// as a CROSS-CHECK than as a diff. nearmiss/db.jsonl carries a candidate for
+// this address from before this lane (source: fable-subagent); re-scored with
+// the repository's own difflib oracle it reads 175 divergences against this file's 192. Its logic and
+// this transcription agree statement for statement -- same guards in the same
+// order, same field offsets, same returns, same call at the end -- which is two
+// independent derivations of the ROM agreeing, one of them made without seeing
+// the other. The DB row is deliberately left alone so a later matching lane
+// starts from the closer one; this file is the one whose every instruction was
+// read off the image by hand, which is what the banner above claims.
 //
 // func_ov006_020e513c @ 0x020e513c, size 0x314. dScMgCurling2_c ("Shell Smash",
 // actor id 0x177, scene 375). Reached from state slot 0 of table

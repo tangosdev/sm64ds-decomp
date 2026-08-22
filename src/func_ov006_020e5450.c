@@ -8,6 +8,17 @@
 // extracted/overlays/overlay_0006.bin at base 0x020bfec0. Counts as
 // decompiled, not matched.
 //
+// AND AN EARLIER FAN-OUT ALREADY HAD A CLOSER CANDIDATE, which is worth more
+// as a CROSS-CHECK than as a diff. nearmiss/db.jsonl carries a candidate for
+// this address from before this lane (source: fanout-sonnet); re-scored with
+// the repository's own difflib oracle it reads 324 divergences against this file's 340. Its logic and
+// this transcription agree statement for statement -- same guards in the same
+// order, same field offsets, same returns, same call at the end -- which is two
+// independent derivations of the ROM agreeing, one of them made without seeing
+// the other. The DB row is deliberately left alone so a later matching lane
+// starts from the closer one; this file is the one whose every instruction was
+// read off the image by hand, which is what the banner above claims.
+//
 // func_ov006_020e5450 @ 0x020e5450, size 0x560. dScMgCurling2_c ("Shell Smash",
 // actor id 0x177, scene 375). THE ROUND-END WORKHORSE: state slot 1 of table
 // data_ov006_021419d8 (src/func_ov006_020e5b7c.c) calls it once per moving

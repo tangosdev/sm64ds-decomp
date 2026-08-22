@@ -194,11 +194,24 @@
 # sequence in plain ints -- lane FLW's third shape, which neither the link nor
 # a `::*` sweep can see and only a run convicts.
 #
-# ---- THE 47 LINES -----------------------------------------------------------
+# ONE LINE THE mg6 CLOSURE COULD NOT HAVE PREDICTED: src/func_ov006_020e39e0.c.
+# It is the contact-effect spawner, and BOTH of the newly decompiled collision
+# bodies end their hit path with func_ov006_020e39e0(c, idx, i). Nothing in the
+# mg6 seat referenced it, because the two things that would have were the port
+# traps and a trap calls nothing -- so the first link after the real bodies
+# landed closed to LNK1120 on exactly this one symbol, in all three targets that
+# host the slice. Its own callees (func_ov004_020adb1c, func_ov004_020adbc0) are
+# already linked through port/slice_mg1.txt, so the line costs one TU. THE
+# GENERAL POINT IS WORTH MORE THAN THE LINE: a trap-shaped floor hides its
+# callees from every static closure the port has, so retiring a floor can widen
+# the slice, and the widening only shows up at link time.
+#
+# ---- THE 48 LINES -----------------------------------------------------------
 src/func_ov006_020e3854.c
 src/func_ov006_020e3878.c
 src/func_ov006_020e38b0.c
 src/func_ov006_020e3948.c
+src/func_ov006_020e39e0.c
 src/func_ov006_020e3b9c.c
 src/func_ov006_020e3bc4.c
 src/func_ov006_020e3c4c.c

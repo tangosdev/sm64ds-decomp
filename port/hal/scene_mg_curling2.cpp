@@ -371,6 +371,42 @@ extern "C" void port_scene_curling2_hits(void)
                 port_mg_curling2_d8_hits(0), port_mg_curling2_d8_hits(1),
                 port_mg_curling2_d8_hits(2), port_mg_curling2_d8_hits(3),
                 port_mg_curling2_state_4bd4());
+
+    /* THE ELEVEN RECORDS THEMSELVES, at the end of the run. The two collision
+       bodies this lane decompiled are pure functions of this array, so "the
+       machine did something" is a statement about these numbers and nothing
+       else -- reading it off a frame capture is guesswork, reading it here is
+       not. The record is 0x30 bytes at object+0x4660 and the field offsets are
+       the ones every body in the class uses:
+
+           +0x00 x (Fix12)   +0x04 y (Fix12)   +0x08 speed (Fix12)
+           +0x26 angle (u16) +0x28 state       +0x29 active   +0x2b loud
+
+       Printed unconditionally and in full: a row that is all zeroes is the
+       evidence that nothing armed the shells, which is a different result from
+       the machine not running and has to be told apart from it. */
+    if (g_c2_self) {
+        const char *rec = (const char *)g_c2_self + 0x4660;
+        unsigned live = 0, moving = 0;
+        std::printf("[scene] curling2 shell records (11 x 0x30 at +0x4660):\n");
+        for (int i = 0; i < 11; ++i) {
+            const char *r = rec + i * 0x30;
+            const int x = *(const int *)(r + 0x00);
+            const int y = *(const int *)(r + 0x04);
+            const int v = *(const int *)(r + 0x08);
+            const unsigned st = *(const unsigned char *)(r + 0x28);
+            const unsigned ac = *(const unsigned char *)(r + 0x29);
+            if (ac) ++live;
+            if (v) ++moving;
+            std::printf("          [%2d] act=%u st=%u x=%d y=%d spd=%d ang=%u loud=%u\n",
+                        i, ac, st, x >> 12, y >> 12, v,
+                        *(const unsigned short *)(r + 0x26),
+                        *(const unsigned char *)(r + 0x2b));
+        }
+        std::printf("[scene] curling2 shells: %u active, %u with nonzero speed\n",
+                    live, moving);
+    }
+
     std::fflush(stdout);
 }
 

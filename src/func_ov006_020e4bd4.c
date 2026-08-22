@@ -1,12 +1,22 @@
-// NONMATCHING: register colouring only. SIZE IS EXACT (192/192 words = 0x300/4:
-// 186 instructions + 6 pool words) and the schedule is the ROM's; 72 words differ
-// and every one of them is the same permutation -- the ROM colours the receiver
-// sb and this candidate colours it r4, which walks the other five callee-saved
-// registers one seat over. mwccarm 1.2/sp2p3; tools/match.py --all finds no
-// version that closes it, and four declaration-order permutations move the count
-// by at most one. Logic verified instruction-for-instruction against
-// extracted/overlays/overlay_0006.bin at base 0x020bfec0. Counts as decompiled,
-// not matched. See notes/mwccarm-codegen.md 6aa (the coloring wall).
+// NONMATCHING: SIZE IS EXACT -- 192/192 words = 0x300/4, 186 instructions plus
+// six pool words, and the pool words are in the ROM's order. 72 of the 192
+// differ and they are two things and nothing else: 33 differ ONLY in their
+// register fields (the ROM colours the receiver sb, this candidate colours it
+// r4, which walks the other five callee-saved registers one seat over), and 39
+// are a one-word local schedule shift inside two windows -- the touch-record
+// load block at +0x2c, where the ROM pools both stylus pointers before either
+// byte read, and the angle-average block at +0x1c0, where the ROM rematerialises
+// `dx >> 1` after the atan2 call instead of keeping it live across.
+//
+// THE 72 IS A FLOOR AND WAS MEASURED AS ONE. Eight independent levers return
+// exactly 72: four declaration-order permutations, an unsigned touch index, a
+// local alias for the receiver, dropping the i4 temp for `i * 4` at every site,
+// hoisting both stylus bytes into locals before the first store, and a named
+// temp for `dx >> 1` assigned after the call. tools/match.py --all closes on no
+// mwccarm version. This is notes/mwccarm-codegen.md 6aa's coloring wall with a
+// two-window schedule residue on top. Logic verified instruction-for-instruction
+// against extracted/overlays/overlay_0006.bin at base 0x020bfec0. Counts as
+// decompiled, not matched.
 //
 // func_ov006_020e4bd4 @ 0x020e4bd4, size 0x300. dScMgCurling2_c ("Shell Smash",
 // actor id 0x177, scene 375), slot 1 of state table data_ov006_02141978 -- the
