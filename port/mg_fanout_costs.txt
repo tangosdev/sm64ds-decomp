@@ -162,7 +162,7 @@ matched src TU at all and will need a named trap or a decomp.
   0x176  MgShuffleShell (curling)    0213c304      36    6     5      0   DONE
   0x177  (data_ov006_0213c434)       0213c510      36    6     5      0
   0x17a  MgCoincentration            0213bf50      36    6     5      0
-  0x17c  MgPuzzlePanelPuzzlePanic    0213e24c      36    6     5      0
+  0x17c  MgPuzzlePanelPuzzlePanic    0213e24c      36    6     5      0   DONE
   0x16e  MgWanted                    0213cf10      36    7     6      0
   0x182  MgWhichWiggler              0213cab8      36    7     6      0
   0x16c  (data_ov006_0213e560)       0213eb40      36    8     5      1
@@ -1307,3 +1307,207 @@ seven tables, twenty-five slots and one hard floor. And exactly one TU
 dispatches it, src/func_ov006_020e0204.cpp (Behavior, slot 6), against
 curling's five host copies. So the per-class cost is not one number: 0x169 is
 roughly twice curling on the vtable axis and a third of it on the wall axis.
+
+
+13. dScMgPanel_c, id 0x17c, AND THE WALL COLUMN IS LOW BY TWO, run mg6 lane PPP
+--------------------------------------------------------------------------------
+
+Worktree C:/tmp/m6p, branch mg6-ppp, base a65c871a3, private build
+C:/tmp/m6p/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/m6p/port.
+Baseline gate on that tree: 6308/11269 (56.0%), battery ALL GREEN, skips [],
+vtablerows reconstruction EXACT 29/29, curling canary 32557/32557/0.
+
+THE CLASS. dScMgPanel_c, and the name comes out of the ROM's own type_info
+rather than out of a src spelling, which is a chain no earlier lane in this
+file used and which every later lane should prefer:
+
+    relocs.txt  from:0x0213e248 kind:load to:0x0213dd40 module:overlay(6)
+    relocs.txt  from:0x0213dd44 kind:load to:0x0213dd84 module:overlay(6)
+
+The word IMMEDIATELY BEFORE a class's vtable is its type_info, and that
+record's second word is the name pointer. 0x0213dd84 reads "12dScMgPanel_c" in
+extracted/overlays/overlay_0006.bin. The src spelling (_ZTV12dScMgPanel_c in
+src/MgPuzzlePanelPuzzlePanic_Spawn.c) agrees and is the weaker witness, because
+a per-TU placeholder can be wrong and a relocation cannot.
+
+  SpawnInfo 0x0213dc64   factory 0x02107858   vtable 0x0213e24c   width 36
+  overrides 6 (slots 0, 6, 9, 16, 17, 18)   markers 5   nosrc 0
+  .init ctor __sinit_ov006_02131fa4, whose copied .data span 0x0213dc4c..
+  0x0213dd2c brackets the SpawnInfo and does not copy it
+
+Section 3's row was right on every column and, exactly as section 10 says of
+curling's, did not predict the cost.
+
+ONE ACTOR ID, TWO PLAYER TITLES, AND THE SELECTOR IS A MODE BYTE ON ONE CLASS.
+The doubled-id scan over the whole image finds thirty records and exactly one
+for 0x17c; the arm9 spawn table at 0x02090e54 holds one row for it, in id order
+between 0x17b's and 0x17d's. So "Puzzle Panel" and "Puzzle Panic" are not two
+ids and not two classes. What the ROM has is a gate on VTABLE SLOT 35 --
+dScMgBase_c's func_ov004_020ad660, `return (this[2] & 0xff) != 0` -- read at
+two sites: func_ov006_021057f0 skips its entire data_ov006_02142820 state
+dispatch when it answers nonzero (0x021057f4: ldr r1,[r0]; ldr r1,[r1,#0x8c];
+blx r1), and func_ov006_02106168 picks the board layout from
+data_ov006_0213dd4c or data_ov006_0213dd58 on the same answer. WHICH VALUE IS
+WHICH TITLE IS NOT DERIVED and this lane does not guess it; on the port's
+direct scene boot the byte reads 0.
+
+THE WALL COLUMN IS LOW BY TWO FOR THIS CLASS AND THE REASON GENERALISES.
+Section 4 costs the wall at "five dispatching TUs to host-copy" per minigame.
+This class has TEN, because its state machine is TWO LEVELS DEEP:
+
+    level 1  data_ov006_02142888  8 slots  arity 0  <- slot 6, the Behavior
+    level 2  data_ov006_02142840  4 slots  arity 1  <- five level-1 states
+             data_ov006_02142820  4 slots  arity 0
+             data_ov006_02142860  5 slots  arity 0
+             data_ov006_021427ec  3 slots  arity 0
+             data_ov006_021427bc  3 slots  arity 1
+
+Five of the eight states the Behavior dispatches are THEMSELVES dispatchers of
+the second table. A lane that host-copied the Behavior alone would link, boot
+and jump to a raw DS address on the first frame the outer state advanced. THE
+COST QUESTION A FAN-OUT LANE SHOULD ASK IS NOT "how many TUs name the table"
+BUT "how deep is the machine", and the cheap way to ask it is to run stategen
+and then check whether any of the state ADDRESSES it prints is also in the
+dispatcher list.
+
+TWO OF THE TEN ARE THE THIRD SHAPE, AND ONE OF THEM IS A VTABLE SLOT. Section
+4's FLW amendment names func_ov006_020c3d18 as the one TU in the tree that
+open-codes the ARM Itanium sequence in plain ints and says treat twelve as a
+floor rather than a census. It was a floor. This class adds two:
+
+    src/func_ov006_02107358.cpp   table 02142888, arity 0, VTABLE SLOT 6
+    src/func_ov006_02106bc0.c     table 02142840, arity 1
+
+The first is the more serious finding, because it is not a state body a lane
+might overlook -- it is the Behavior, the slot every seat wires by name. A lane
+that ran both prescribed detectors over this class would have seated
+src/func_ov006_02107358.cpp straight into the face array and read clean on the
+link, on the `::*` sweep and on the compile. The ROM at 0x02107358 carries the
+five-instruction sequence one for one with what the src spells.
+
+    THE PRACTICAL RULE THIS ADDS: before wiring slot 6 by name, read the src.
+    A Behavior that indexes an EXTERNAL array with an eight-byte stride and
+    then does its own `>> 1` / `& 1` decode is the wall wearing plain ints,
+    whatever its declarations say.
+
+SLOT 35 WAS A LIVE HOST-ABI DEFECT AND NOTHING HAD EVER DISPATCHED IT.
+hal/scene_mg.cpp's mb_v35 read
+
+    static int __fastcall mb_v35(void *, void *)
+    { MG_SLOT(35); func_ov004_020ad660(); return 0; }
+
+against a declaration of `void func_ov004_020ad660(void);`, while
+src/func_ov004_020ad660.c defines `int func_ov004_020ad660(int *r0) { return
+(r0[2] & 0xff) != 0; }`. Both halves are wrong on the host: the callee read the
+stack in place of `this`, and the thunk returned a constant 0 instead of the
+answer. It is the family lane BASESET's slot-18/19 repair and lane FDR2's
+Scene::BeforeBehavior repair belong to, and it survived six seated classes
+because none of them dispatches slot 35. THIS ONE DOES, every boot, as the gate
+on a whole state table. FIXED in hal/scene_mg.cpp; the curling canary
+reproduces 32557/32557/0 across the repair, which is the check that says the
+fix touched nobody else.
+
+THE TWO STATE FLOORS ARE ONE STORY, AND IT IS THE MOST USEFUL THING THIS LANE
+FOUND ABOUT WHAT "SEATED" MEANS. The class has three bodies with a config
+symbol, no delink block and no src file:
+
+    func_ov006_02106168  0x238, the PANEL LAYOUT BUILDER. Not a state --
+        vtable slot 0 (InitResources) and slot 18 (state reset) both call it
+        directly. It is the sole writer of the object's two panel arrays,
+        karr at +0x4f1e and parr at +0x4f42 (0x0210620c strb [r0,#0xf1e] and
+        0x02106218 strb [r0,#0xf42], off r0 = self+0x4000).
+    func_ov006_02106ca4  slot 6 of data_ov006_02142888, the Behavior's OWN
+        table -- the ROUND-END state.
+    func_ov006_021053a8  slot 2 of data_ov006_02142820, a sub-state.
+
+func_ov006_021067a4 ZEROES both arrays immediately before the layout builder
+runs, and src/func_ov006_02105c88.c declares the round over when every cell of
+karr equals the same cell of parr. So with the builder trapped, both arrays
+stay all-zero, the solved test passes without a single move, and the class
+advances to the round-end state -- which is the second floor. ONE MISSING BODY
+MANUFACTURES THE ENTRY INTO THE OTHER. A run reports it exactly:
+951 asks for 0x02106ca4 in 1200 frames, all of them after the class settled at
+state index 6, and zero asks for 0x021053a8 because the class never gets far
+enough to need it.
+
+    THE READING FOR A LATER LANE: a large floor count is not necessarily a
+    large amount of missing game. Here it is ONE dead end, entered once and
+    re-asked every frame, and the fix for both is one decomp job --
+    func_ov006_02106168 wants a delink block and a src TU.
+
+WHAT IT COST, against section 10's eight-wave shape:
+
+    item                              predicted   measured
+    -------------------------------   ---------   --------------------------
+    link waves                                8   1, plus one alias row
+    unresolved externals                     36   1  (_ZTV12dScMgPanel_c)
+    ov004 delta over what is seated           -   0
+    dispatching TUs to host-copy              5   10
+    state entries to route                   25   27 across six tables
+    of those with no matched body             1   2
+    ordinary slice lines                      -   53
+    named traps stood                         -   1  (func_ov006_02106168)
+    registry rows                             1   1
+    per-source -D rows                        -   1  (VT on slot 17)
+
+ONE WAVE, NOT EIGHT, AND THAT IS THE FAN-OUT'S DIVIDEND RATHER THAN THIS
+LANE'S SKILL. Section 10's eight waves were the framework half being paid for
+the first time. Every one of this class's ov004 blocks was already linked, and
+the only symbol the first link asked for was the class vtable's Itanium name,
+which is the ordinary /alternatename row section 4 counts twenty-two of. A
+seventh-class lane should budget ONE wave plus its own alias row, and should
+treat a second wave as evidence it missed a dispatcher rather than as normal.
+
+LINKAGE, measured on both ends on this tree:
+
+    6308 / 11269 (56.0%)  ->  6361 / 11269 (56.4%)     +53
+
+  by module, the only row that moved:
+
+    module   total  linked  unlinked   linked
+    ov006     1854     467      1387    25.2%     (was 414, 22.3%)
+
+  arm9 1876, ov004 209, ov001 11, ov002 1129 and itcm 6 are unchanged on both
+  ends, which is section 5's "the arm9 half comes back for free" and section
+  2's "paid once, for all thirty" both holding: this class added no ov004 line
+  at all.
+
+THE BOOT. SM64DS_SCENE=380 with SM64DS_FAULTS_FATAL=1 and
+SM64DS_SCENE_NO_RENDER=1, at 60 and at 1200 frames, both CLEAN.
+
+    60 frames    init 1, behavior 13, slot35 gate 1
+                 39 routed, 0 unknown, 0 floor asks
+    1200 frames  init 1, behavior 1153, slot35 gate 1
+                 1557 routed, 0 unknown, 951 floor asks (all 0x02106ca4)
+                 state index 6 at exit, mode byte 0
+
+  Slot 7 is entered 1200 times and slot 6 only 1153, so the framework's own
+  BeforeBehavior gates the first 47 frames; that is the ROM's, not a defect.
+  ZERO UNHANDLED ADDRESSES ON BOTH RUNS, which is what says the ten host copies
+  are the whole set for this class rather than the set a link happened to name.
+
+THE FRAMEWORK CENSUS IS ZERO AND THE ROUTING WAS THEREFORE NOT TAKEN.
+runs/mg5/out/fwk/framework_unrouted_22.txt lists twenty-two open framework
+holes, and the rule is to route what fires. On scene 380 NOTHING fires:
+MgBase_StateSetter reports 0 calls into func_ov004_020b87e0, "framework message
+indices asked for: none", and the framework switch sees 1 call with 0 UNHANDLED
+addresses. Routing any of the twenty-two from this lane would have been wiring
+with no witness.
+
+  READ THAT AS A LOWER BOUND, NOT A RESULT. The census is taken on a run that
+  dead-ends in a decomp gap at state 6, so it says what an unattended boot
+  reaches and not what the class reaches. The day func_ov006_02106168 is
+  decompiled, the census is worth re-taking before anyone concludes this class
+  never uses the framework's state machine.
+
+WHAT THIS SECTION DOES NOT KNOW.
+  - NO FRAME HAS BEEN RENDERED. Every run was SM64DS_SCENE_NO_RENDER=1 and the
+    render slot count is 0 on both. Section 9's note that nobody has looked at
+    a frame stands for this class too.
+  - TOUCH IS UNMEASURED, and for this class it is the live question rather than
+    a formality: the board is a touch panel, the mode gate reads 0, and the
+    class reaches its round-end state without a single input. Whether it would
+    behave differently with touch is not something a headless run can say.
+  - WHICH MODE BYTE IS WHICH TITLE. Both readers of slot 35 are identified and
+    the byte reads 0 on the port's direct boot. Nothing here says what sets it
+    or what the other value plays like.
