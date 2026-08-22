@@ -102,11 +102,18 @@
 #      the CODE half of an mwcc pair and is therefore relocated too, so the
 #      36th gap is table-to-pair rather than slot-to-slot. The middle base
 #      reads thirty-five because ITS next word (0x050a0a0f) is not relocated.
-#      Same width, two different answers. So the stride is a sound NECESSARY
-#      condition -- the run must be at least width-1, and a shorter run refuses
-#      a width outright -- and it cannot GRANT one, for exactly the reason
-#      section 11 gives for the span check. Read as a granting check it would
-#      have said 37 here, which is the phantom width section 11 corrected.
+#      Same width, two different answers. So the stride can only REFUSE, and
+#      only when the run is shorter than width-1; it can never GRANT a width,
+#      for exactly the reason section 11 gives for the span check. Read as a
+#      granting check it would have said 37 here, which is the phantom width
+#      section 11 corrected.
+#
+#      RUN mg9 LANE CUP HIT THAT PREDICTION, which is why this is written as a
+#      correction and not as a preference: the coordinator reports the stride
+#      check reading 37 on dScMgCup_c where the true width is 36, the same
+#      relocated-word-past-the-end mechanism, in the granting direction. Two
+#      lanes, two classes, one cause. The check is CONFIRMATION ONLY and the
+#      SPAN check remains the refusing authority.
 #
 # port/tools/vtablerows.py --vtable 0x0213f844 --width 36 answers
 # ovr 13, mark 11, nosrc 0, which is section 3's row exactly.

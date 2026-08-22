@@ -2,12 +2,15 @@
 // Run mg9, lane BOX. The TWELFTH ov006 minigame class the port seats and the
 // FOURTH with a three-deep hierarchy.
 //
-// Read port/slice_box.txt for the identity derivation, the four width checks
+// Read port/slice_box.txt for the identity derivation, the FIVE width checks
 // and the closure; port/unmatched/MgSound_StateDispatch.cpp for the sixteen
-// pointer-to-member host copies and the fifty-seven state addresses; and
-// port/unmatched/MgSound_ShadowSlot35.cpp for the one state body that reaches
-// the port broken three ways. This file is the seat: the two face arrays, the
-// fill, the factory forwarder and the run census.
+// pointer-to-member host copies and the fifty-seven state addresses; and the
+// three ABI host copies for the same disease in three disguises --
+// MgSound_ShadowSlot35.cpp (a vtable word read with no receiver at all),
+// MgSound_ModelRender_020c29dc.cpp (a shadow class at the wrong host slot)
+// and MgSound_ShadowFader_020c2924.cpp (an object pushed where the host body
+// reads ecx). This file is the seat: the two face arrays, the fill, the
+// factory forwarder and the run census.
 //
 // THE FILE IS NAMED FOR THE MINIGAME, NOT FOR THE CLASS, and that is the one
 // place this seat departs from the flower/memory2 naming. hal/scene_mg_sound.cpp
