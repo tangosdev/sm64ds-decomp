@@ -1419,6 +1419,11 @@ half matters more than the first.
   trap in unmatched/MgMemory2_Faces.cpp that counts itself: 900 entries on a
   900-frame run, one per Render.
 
+  CLOSED, run mg7 lane MEMCARDS. src/func_ov006_020f5b98.c defines it now,
+  bannered NONMATCHING against the codegen floor section 15 measures, and the
+  named trap in unmatched/MgMemory2_Faces.cpp is deleted with it. This class's
+  floor count is ZERO. Section 15 is the measurement; section 16 is the ledger.
+
   AND 0x020f6904 IS NOT A FLOOR EITHER, exactly as the block says: the slice
   carries the NONMATCHING src TU, the switch arm is hand-written, and the run
   reports 39 entries into it over 900 frames. The block was right about that
@@ -1563,6 +1568,17 @@ NOT a fifth: its word at 0x02106a0c is e59f208c, `ldr r2,[pc,#0x8c]`, fetching
 the constant 0x4e30 -- the exact false positive the Rn filter exists to drop,
 recorded here so nobody re-finds it as a site.
 
+  TWO CORRECTIONS FROM run mg7 lane L380, both from reading the body rather
+  than its call sites. THREE of the four are in a body the port compiles now,
+  not two: src/func_ov006_02106168.cpp is MATCHED. AND THE PAIR OF TABLES NAMED
+  IN THE 0x021061ec ROW IS WRONG. data_ov006_0213dd4c and _0213dd58 are loaded
+  UNCONDITIONALLY, both indexed by [this+0x4cbc]-4, and they hold the panel x
+  and y positions the body shifts left twelve into +0x4cc4+i*4 and +0x4d54+i*4.
+  They have nothing to do with the mode. The gate picks between the FACE SETS
+  data_ov006_0213ded0 when it answers nonzero and data_ov006_0213e070 when it
+  answers zero. Only func_ov006_021053a8 is still bodiless, and it is never
+  entered.
+
 WHICH VALUE IS WHICH TITLE IS NOT DERIVED and this lane does not guess it; on
 the port's direct scene boot the byte reads 0.
 
@@ -1667,6 +1683,19 @@ enough to need it.
     re-asked every frame, and the fix for both is one decomp job --
     func_ov006_02106168 wants a delink block and a src TU.
 
+    IT GOT BOTH, run mg7 lane L380, AND SO DID THE OTHER FLOOR:
+
+      func_ov006_02106168  src/func_ov006_02106168.cpp  MATCHED, delink block
+                           .text start:0x02106168 end:0x021063a0
+      func_ov006_02106ca4  src/func_ov006_02106ca4.c    MATCHED, delink block
+                           .text start:0x02106ca4 end:0x02106eb8
+
+    The prediction above held exactly: one decomp job on the layout builder,
+    and the round-end state stopped being reachable as a dead end.
+    func_ov006_021053a8 REMAINS and is this class's only floor now.
+    THE 951 IN THE 1200-FRAME ROW BELOW IS RETIRED MEASUREMENT, not a standing
+    number: 0x02106ca4 is a routed state now and can only appear in `routed`.
+
 WHAT IT COST, against section 10's eight-wave shape:
 
     item                              predicted   measured
@@ -1681,6 +1710,15 @@ WHAT IT COST, against section 10's eight-wave shape:
     named traps stood                         -   1  (func_ov006_02106168)
     registry rows                             1   1
     per-source -D rows                        -   1  (VT on slot 17)
+
+  TWO ROWS OF THAT TABLE MOVED IN run mg7 lane L380 and the mg6 numbers are
+  kept above as the measurement they were. "named traps stood" is now ZERO --
+  the trap went with its body's arrival and unmatched/MgPanel_Faces.cpp is only
+  the vtable face. "of those with no matched body" is now 1 rather than 2,
+  func_ov006_021053a8 alone. "dispatching TUs to host-copy" is 11 rather than
+  10: func_ov006_02106ca4 turned out to dispatch data_ov006_02142840 as well as
+  being slot 6 of the Behavior's own table, which is a host copy the mg6 count
+  could not see because the body it lives in had no source.
 
 ONE WAVE, NOT EIGHT, AND THAT IS THE FAN-OUT'S DIVIDEND RATHER THAN THIS
 LANE'S SKILL. Section 10's eight waves were the framework half being paid for
@@ -1742,6 +1780,12 @@ with no witness.
   reaches and not what the class reaches. The day func_ov006_02106168 is
   decompiled, the census is worth re-taking before anyone concludes this class
   never uses the framework's state machine.
+
+  THAT DAY IS run mg7 lane L380. The gap at state 6 is closed and the board is
+  dealt, so the dead-end half of the caveat no longer applies: an mg7 boot gets
+  past state 6 and its slot-35 census is no longer 1. THE LOWER-BOUND HALF
+  STILL BINDS: no framework re-census on a PLAYER-DRIVEN run has been taken,
+  and nothing here says what this class reaches with touch.
 
 WHAT THIS SECTION DOES NOT KNOW.
   - NO FRAME HAS BEEN RENDERED. Every run was SM64DS_SCENE_NO_RENDER=1 and the
@@ -1962,3 +2006,101 @@ WHAT THIS SECTION DOES NOT KNOW.
   - WHETHER A MATCHED PAIR ENDS THE ROUND. The touch probe turns one card over.
     func_ov006_020f5a64 is the comparison and it needs two picks; nothing here
     drives a second one.
+
+
+16. THE FIVE FLOOR CLOSURES, run mg7 lanes MEMCARDS, L369, L370, L375, L380
+--------------------------------------------------------------------------------
+
+Five lane branches merged in scene order onto port-mount-noseat-cluster at base
+2a1ecc015. Each lane's own measurement lives in its branch notes, and for
+MEMCARDS in section 15 above. This section is the LEDGER ONLY: a later lane
+should be able to read one table and know which of this family's floors are
+gone and which are still standing, without re-deriving any of it.
+
+MATCH STATUS HERE IS THE BYTE GATE'S, NOT A BANNER'S. Every row marked MATCHED
+was re-run through tools/match.py on the merged tree, strict relocs on, against
+extracted/overlays/overlay_0006.bin at base 0x020bfec0 (the ov004 row against
+overlay_0004.bin at base 0x020ad660). All seven answer 2004/b56 MATCH. Rows
+marked NONMATCHING carry the banner their lane wrote.
+
+  scene 363, dScMgMemory2_c (0x16b), lane MEMCARDS
+    CLOSED   func_ov006_020f5b98  src/func_ov006_020f5b98.c    NONMATCHING
+             The render-path floor of section 13's CORRECTION 3: the card draw,
+             sixth call of vtable slot 9. Its named trap in
+             unmatched/MgMemory2_Faces.cpp is deleted.
+    REMAINS  nothing. This class's floor count is ZERO.
+
+  scene 369, dScMgPachinko2_c, lane L369
+    CLOSED   func_ov006_020ff8c8  src/func_ov006_020ff8c8.c    MATCHED
+    CLOSED   func_ov006_020ffb54  src/func_ov006_020ffb54.c    MATCHED
+    CLOSED   func_ov006_02102274  src/func_ov006_02102274.c    MATCHED
+    CLOSED   func_ov006_02102fe8  src/func_ov006_02102fe8.c    NONMATCHING
+    CLOSED   func_ov006_0210076c  src/func_ov006_0210076c.c    NONMATCHING
+             The per-entry follow-up the fifteen-state dispatcher calls after
+             every dispatch it makes. unmatched/MgPachinko2_Traps.cpp existed
+             for this one symbol and is DELETED rather than emptied: a trap
+             standing beside a real definition is a duplicate symbol, not a
+             safety net.
+    ALSO     func_ov004_020b1710  src/func_ov004_020b1710.c    MATCHED
+             ov004, and the trap line in hal/scene_mg_faces.cpp goes with it.
+    REMAINS  nothing bodiless among this class's 28 states. The scene line
+             prints `missing` as proof now rather than as a warning.
+
+  scene 370, dScMgBomroom_c, lane L370
+    CLOSED   func_ov006_020d7c4c  src/func_ov006_020d7c4c.c    MATCHED
+    CLOSED   func_ov006_020d8408  src/func_ov006_020d8408.c    NONMATCHING
+             unmatched/MgBomroom_Traps.cpp held the trap for the second and is
+             DELETED. The largest pointer-to-member bill any seated class has
+             run up now stands with seven host copies and no trap.
+    REMAINS  nothing.
+    ONE GAP THIS MERGE FOUND AND DID NOT FIX. func_ov006_020d7c4c is byte-
+             matched, re-confirmed by the byte gate on the merged tree, but it
+             is the ONLY matched body in this wave with no delink block in
+             config/arm9/overlays/ov006/delinks.txt. L369 and L380 both added a
+             block for every matched body they landed. Left exactly as the lane
+             wrote it, recorded here so it is not re-derived as a mystery.
+
+  scene 375, dScMgCurling2_c, lane L375
+    CLOSED   func_ov006_020e4bd4  src/func_ov006_020e4bd4.c    NONMATCHING
+    CLOSED   func_ov006_020e513c  src/func_ov006_020e513c.c    NONMATCHING
+    CLOSED   func_ov006_020e5450  src/func_ov006_020e5450.c    NONMATCHING
+             unmatched/MgCurling2_Traps.cpp stood in for the middle two and is
+             DELETED. Its counters are replaced by a per-slot census taken at
+             the DISPATCH SITE rather than inside a ROM body, which is the
+             better shape and the one a later lane should copy: a census at the
+             dispatch site survives its body being decompiled, a counter inside
+             the body has to be deleted to make room for it.
+    REMAINS  nothing.
+    NOT THE SAME CLASS AS SECTION 4's FLOOR. func_ov006_020e1854, the hard
+             floor section 4 records for dScMgCurling_c, is UNTOUCHED by this
+             lane and still stands. The curling canary on scene 374 is the
+             check that says this lane did not reach across into it.
+
+  scene 380, dScMgPanel_c (0x17c), lane L380
+    CLOSED   func_ov006_02106168  src/func_ov006_02106168.cpp  MATCHED
+             The layout picker slot 0 and slot 18 both call directly, and the
+             sole writer of the two panel arrays at +0x4f1e and +0x4f42.
+    CLOSED   func_ov006_02106ca4  src/func_ov006_02106ca4.c    MATCHED
+             Slot 6 of the Behavior's own table, and it dispatches
+             data_ov006_02142840 as well -- an ELEVENTH host copy, not a tenth.
+             unmatched/MgPanel_Faces.cpp is now only the vtable face.
+    REMAINS  func_ov006_021053a8, slot 2 of data_ov006_02142820. A sub-state
+             that costs one tick and carries on, and this class's only floor.
+
+THE ZEROS THAT ARE HONEST AND THE ZEROS THAT ARE NOT. Several numbers this
+family reports read zero for a reason that is not "nothing is missing", and no
+later lane should bank any of them as coverage:
+
+  - func_ov006_021053a8's zero asks, measured zero on every run so far, mg6 and
+    mg7 alike. The class has never been driven far enough by an unattended boot
+    to need that sub-state. The zero says the floor is not in the way of a
+    BOOT. It does not say the floor is unreachable in play, and the sub-state
+    is the one place on this class where that distinction still costs
+    something.
+  - The framework census on 380. Section 14's LOWER BOUND note keeps half its
+    force: the run no longer dead-ends in a decomp gap, but it is still not a
+    player-driven run, and twenty-two open framework holes stay unrouted
+    because nothing on this scene fires them.
+  - Every render and touch zero in sections 14, 15 and here. Nobody has held
+    any of these five next to a DS. A headless run can say the numbers behind
+    a picture are the ROM's; it cannot say the picture is right.
