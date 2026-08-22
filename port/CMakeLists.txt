@@ -4211,7 +4211,23 @@ set(SLICE_BOO_SOURCES hal/scene_mg_booseek.cpp
                       # route their sources through is not a fan-out lane's
                       # change to make. The copy is verbatim minus that one
                       # statement, checked against the ROM's own 235 words.
-                      unmatched/MgTeresa_InitResources.cpp)
+                      unmatched/MgTeresa_InitResources.cpp
+                      # REPLACES src/func_ov004_020b6b40.c and
+                      # src/func_ov004_020b6c9c.c, both commented out of
+                      # slice_mg1.txt in the same commit. THIS IS THE FAMILY'S
+                      # DEFECT AND NOT THIS CLASS'S: both bodies call vtable
+                      # slot 19 through a shadow array with a plain C function
+                      # pointer, so MSVC cleans eight bytes at the call while
+                      # hal/scene_mg.cpp's __fastcall mb_v19 cleans four of
+                      # them itself, and the body's own epilogue then returns
+                      # to a stack word that is not a return address. It rides
+                      # THIS variable rather than slice_mg1's because the two
+                      # lists reach the same three targets and this lane
+                      # derived it; a later lane may want to move it. Scene
+                      # 387 is the first seated scene whose FRAMEWORK state
+                      # machine runs at all, which is why nothing had reached
+                      # these two before.
+                      unmatched/MgBase_ShadowSlot19.cpp)
 foreach(line IN LISTS SLICE_BOO_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

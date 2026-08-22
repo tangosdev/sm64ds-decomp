@@ -379,9 +379,27 @@ src/func_ov004_020b42c0.c
 src/func_ov004_020b68e8.c
 src/func_ov004_020b6948.c
 src/func_ov004_020b6ad8.c
-src/func_ov004_020b6b40.c
+# HOST-COPIED (run mg9 lane BOO): src/func_ov004_020b6b40.c and
+# src/func_ov004_020b6c9c.c. Both call VTABLE SLOT 19 through a shadow array
+# with a plain C function pointer, so MSVC compiles the call __cdecl and
+# cleans eight bytes, while hal/scene_mg.cpp's mb_v19 is __fastcall with one
+# stack parameter and cleans four of them itself -- `ret 4` in the image. Four
+# bytes are cleaned twice on every call, and the body's own `pop esi / pop ebp
+# / ret` then reads one slot too high and returns to whatever the next stack
+# word is. On scene 387 that word was inside the live scene object and the
+# process executed it. THE THUNK IS RIGHT: run mg5 lane BASESET added that
+# parameter after a 14-site census of offset 0x4c found an argument count of
+# ONE everywhere, and the ROM at 0x020b6cf4 passes the object in r0 and the
+# int in r1. See port/unmatched/MgBase_ShadowSlot19.cpp, which is these two
+# bodies verbatim with the pointer spelled __fastcall.
+#
+# NOTHING HAD REACHED THEM BEFORE. They are per-frame ticks the FRAMEWORK
+# state machine installs, and no seated scene had ever entered
+# func_ov004_020b87e0 -- section 13 reports zero framework calls on 363 and
+# section 14 the same on 380. Scene 387 is the first that does.
+#src/func_ov004_020b6b40.c
 src/func_ov004_020b6c10.c
-src/func_ov004_020b6c9c.c
+#src/func_ov004_020b6c9c.c
 src/func_ov004_020b6d6c.c
 src/func_ov004_020b6ddc.c
 src/func_ov004_020b6f14.c
