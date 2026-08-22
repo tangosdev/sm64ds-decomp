@@ -184,9 +184,24 @@
 // coordinates, and nothing on screen.  The card-record census below stays,
 // because it is the reading that made the absence visible and it is still the
 // cheapest way to tell a run that renders no cards from a run that has no cards
-// to render.  THE SUB-OAM CENSUS IS THE OTHER HALF and it is the one that moved:
-// a scene-362 boot with the floor open placed a handful of sprites, and the same
-// boot with this body in place places two per live card.
+// to render.  THE SUB-OAM CENSUS IS THE OTHER HALF and it is the one that moved.
+// Measured on two builds of this tree that differ only by this body, both at 900
+// frames with everything else held constant:
+//
+//   sub OAM 07000400   136/1024 bytes nonzero  ->  184/1024
+//   OAM engine B       126 parked,  2 placed   ->  110 parked, 18 placed
+//
+// +16 placed is eight live cards at two OAM entries each, and parked falls by
+// the same sixteen, so the 128 entries reconcile.  Every other line the seat
+// prints is identical across the pair: the same eight records at the same
+// coordinates, 6524 routed dispatches, 18766 field dispatches, 0 UNHANDLED,
+// init 1 / behavior 853 / render 900, and a byte-identical TOP screen.
+//
+// AND THE SEAT'S dScMgSingle3DBase_c SLOT-26 COUNTER IS A SECOND WITNESS, which
+// was not planned and is worth the line.  Hud_RenderSprite dispatches vtable
+// slot 0x1a on the live dScMgBase_c to ask which screen mode is up, so it ticks
+// once per draw call: 8640 -> 20264 at 1500 frames, and the delta reconciles at
+// three frame counts as 8 x (N - 47), 47 being the frame the deal lands on.
 //
 // ---- 9. WHAT THIS SEAT DOES NOT CLAIM -------------------------------------
 //
