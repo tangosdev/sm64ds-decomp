@@ -89,7 +89,7 @@
 //
 // THIS FILE IS NOT THE WHOLE OF THIS CLASS'S WALL. There is a SECOND
 // dispatcher, func_ov006_020c2b8c, reached from the tail of the Behavior
-// below; unmatched/MgCup_SubDispatch.cpp carries it and its derivation.
+// below; unmatched/MgShared4f38_SubDispatch.cpp carries it and its derivation.
 // port/mg_fanout_costs.txt section 12 says 0x020e0204 is "the class ONLY
 // pointer-to-member dispatch site" and that is wrong -- see that file.
 
@@ -126,7 +126,7 @@ extern MgPmf data_ov006_02141870[];
    TU spells it */
 void func_ov006_020dedfc(char *r7, int r6, int r5, int r4);
 void func_ov006_020debfc(char *c);
-void func_ov006_020c2b8c(char *c);      /* host copy, MgCup_SubDispatch.cpp */
+void func_ov006_020c2b8c(char *c);      /* host copy, MgShared4f38_SubDispatch.cpp */
 
 /* src/func_ov006_020e0204.cpp's own animation-frame table: an array of
    POINTERS to {advance, hold} pairs. All seven words carry a relocation in

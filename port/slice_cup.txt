@@ -163,7 +163,8 @@
 # -- section 4's SECOND silent shape, a member pointer held in a FIELD of the
 # object, which emits no global for any link to name. The ROM at 0x020c2b8c is
 # the five-instruction Itanium sequence verbatim with the null guard in front
-# of it (the disassembly is in port/unmatched/MgCup_SubDispatch.cpp's header).
+# of it (the disassembly is in
+# port/unmatched/MgShared4f38_SubDispatch.cpp's header).
 # On MSVC c->pmf is a four-byte read of word 0 of the mounted sub-object -- a
 # raw DS code address -- and the first frame the Behavior runs it jumps there.
 #
@@ -210,7 +211,7 @@
 #       in port/unmatched/MgCup_StateDispatch.cpp. (MGA had already removed it,
 #       so it is not one of the sixty-eight.)
 #   src/func_ov006_020c2b8c.cpp  the SUB-OBJECT dispatcher, section 4 above.
-#       Host-copied in port/unmatched/MgCup_SubDispatch.cpp.
+#       Host-copied in port/unmatched/MgShared4f38_SubDispatch.cpp.
 #   src/func_ov006_0210a6e4.cpp  vtable slot 2, the argument ride-through.
 #       port/unmatched/MgFlower_Slot2.cpp host-copies it as
 #       port_mg_flower_after_init and this seat CALLS that rather than writing
@@ -264,7 +265,15 @@ src/func_ov006_020c263c.c
 src/func_ov006_020c2664.c
 src/func_ov006_020c27c4.cpp
 src/func_ov006_020c2848.cpp
-src/func_ov006_020c2924.cpp
+# HOST-COPIED (mg9 adjudication): src/func_ov006_020c2924.cpp -- a RECEIVER
+#   DROP at a host C++ virtual. The src spells the byte +0x18 call as
+#   `int (**vt)(void*)`, a __cdecl pointer that PUSHES the object, against
+#   HalFaderWipe::IsAtEnd, a __thiscall virtual that reads `this` out of ecx.
+#   The stack balances so nothing faults; the garbage answer gates seven
+#   stores. Found by lane BOX on dScMgSound_c; this class calls the same body
+#   from vtable slot 18 (func_ov006_020dfeec @ 0x020e0018), so scene 361 was
+#   running the defect too. The fix is
+#   port/unmatched/MgShared4f38_ShadowFader_020c2924.cpp and src/ is untouched.
 src/func_ov006_020c2984.c
 src/func_ov006_020c2994.c
 src/func_ov006_020c2be8.c

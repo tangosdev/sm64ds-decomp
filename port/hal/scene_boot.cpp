@@ -2263,6 +2263,16 @@ void port_scene_fill_memory1(void);
 extern unsigned char data_ov006_0213e560[];
 void *port_mg_slot1_spawn(void);
 void port_scene_fill_slot1(void);
+/* run mg9 lane BOX: dScMgSound_c, actor id 0x16f = scene 367, the "Boom Box"
+   minigame. The spawn symbol is MgBoomBox and the class name is the ROM's own
+   RTTI, reached through the type_info the word BEFORE the vtable points at:
+   data_ov006_0213f844[-1] is 0x0213f6e4, whose name pointer is 0x0213f708,
+   which reads "12dScMgSound_c". Same reads_sublevel reasoning as the rows
+   above, re-checked for this class: no relocation in ov006 lands on
+   data_02092110 and no TU in this class's closure names it. */
+extern unsigned char MgBoomBox_SpawnInfo[];
+void *port_mg_boombox_spawn(void);
+void port_scene_fill_boombox(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2482,6 +2492,29 @@ static const PortSceneClass port_scene_classes[] = {
        in this class's closure names it. A minigame is not about a course. */
     {364, "SCENE_MG_SLOT1", data_ov006_0213e560, port_mg_slot1_spawn,
      port_scene_fill_slot1, 0},
+    /* 367 is 0x16f, spelled in decimal for the same two reasons every row
+       above is: the others are, and port/tools/battery.py reads its
+       hosted-scene set out of this table. APPENDED AFTER EVERY EXISTING ROW,
+       run mg9 lane BOX, and the position matters twice for this class rather
+       than once.
+
+       It is the latent-safe direction port/mg_fanout_costs.txt section 11
+       derives from the once-per-process constructor gate; and this class is
+       the THIRD seated under dScMgSingle3DBase_c (0x0213e448), after the
+       flower row and the memory2 row, so running after both means the earlier
+       fill keeps the middle table and its witness is unchanged. This seat's
+       middle-table counters read zero by design and are printed anyway --
+       hal/scene_mg_boombox.cpp section 3 is the measurement and the argument
+       for promoting kSingle3DFaces to a seam when a FOURTH class is seated.
+
+       Nothing in this class's fill writes outside its own 36-slot table. The
+       width is checked FIVE ways in port/slice_box.txt, and for this class the
+       fourth check has a named victim: index 36 of 0x0213f844 is an mwcc
+       {code, 0} member pointer that __sinit_ov006_02132f68 copies into
+       dScMgTeresa_c's state table, so a 37-slot fill would corrupt a
+       DIFFERENT minigame's state. */
+    {367, "SCENE_MG_BOOMBOX", MgBoomBox_SpawnInfo, port_mg_boombox_spawn,
+     port_scene_fill_boombox, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

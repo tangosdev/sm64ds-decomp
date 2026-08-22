@@ -237,8 +237,9 @@
 // ---- 7. THE WALL IS THIS CLASS'S AND IT IS TWO TUs, NOT ONE ---------------
 //
 // port/unmatched/MgCup_StateDispatch.cpp carries the Behavior and the eight
-// state addresses of data_ov006_02141870. port/unmatched/MgCup_SubDispatch.cpp
-// carries func_ov006_020c2b8c, which dispatches a member pointer held in a
+// state addresses of data_ov006_02141870.
+// port/unmatched/MgShared4f38_SubDispatch.cpp carries func_ov006_020c2b8c,
+// which dispatches a member pointer held in a
 // FIELD of the sub-object at +0x4f38 and which section 12 and
 // port/slice_mga361.txt both missed -- section 12's adjudication row for
 // 0x020e0204 calls it "the class ONLY pointer-to-member dispatch site" and
@@ -257,12 +258,13 @@
 // 0x020e0634 = e12fff1e, and the arm9 func_0203d738, both size 0x4 in
 // config), so no element gets a vtable word. The +0x4f38 sub-object's word 0
 // is not a vtable either: it is the mwcc {code, adjustment} pair
-// unmatched/MgCup_SubDispatch.cpp routes.
+// unmatched/MgShared4f38_SubDispatch.cpp routes.
 //
 // LOCAL SHADOW CLASSES: FOUR IN THIS CLOSURE, ONE WRONG AND FIXED. Section
 // 13's test is which kind of table the shadowed object carries.
 //   func_ov006_020c29dc  WRONG -- Model and BlendModelAnim carry HOST tables
-//       in MSVC order. Host-copied, unmatched/MgCup_ModelRender_020c29dc.cpp.
+//       in MSVC order. Host-copied,
+//       unmatched/MgShared4f38_ModelRender_020c29dc.cpp.
 //   func_ov006_020e0308  CORRECT -- it shadows `this`, whose vptr is the
 //       MOUNTED ROM table this file fills in ROM word order, and its
 //       `((VtObj *)c)->m18(3)` is ROM slot 18. Exercised (init 1) and clean,
@@ -358,10 +360,10 @@ void *func_ov006_020e0574(void);
 unsigned port_mg_cup_state_hits(void);
 unsigned port_mg_cup_floor_hits(void);
 void     port_mg_cup_state_slots(unsigned *out8);
-unsigned port_mg_cup_sub_calls(void);
-unsigned port_mg_cup_sub_routed(void);
-unsigned port_mg_cup_sub_idle(void);
-unsigned port_mg_cup_sub_unknown(void);
+unsigned port_mg_sub4f38_calls(void);
+unsigned port_mg_sub4f38_routed(void);
+unsigned port_mg_sub4f38_idle(void);
+unsigned port_mg_sub4f38_unknown(void);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
@@ -688,8 +690,8 @@ extern "C" void port_scene_cup_hits(void)
     std::printf("[scene] dScMgCup_c sub-object dispatch (+0x4f38, "
                 "func_ov006_020c2b8c): %u call(s), %u routed, %u idle "
                 "(null pmf), %u UNHANDLED address(es)\n",
-                port_mg_cup_sub_calls(), port_mg_cup_sub_routed(),
-                port_mg_cup_sub_idle(), port_mg_cup_sub_unknown());
+                port_mg_sub4f38_calls(), port_mg_sub4f38_routed(),
+                port_mg_sub4f38_idle(), port_mg_sub4f38_unknown());
 
     /* The state index the ROM's own dispatcher reads, at the offset
        disassembled in unmatched/MgCup_StateDispatch.cpp: +0x5418, which
