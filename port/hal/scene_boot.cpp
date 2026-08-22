@@ -2247,6 +2247,22 @@ void port_scene_fill_cup(void);
 extern unsigned char MgMemoryMatch_SpawnInfo[];
 void *port_mg_memory1_spawn(void);
 void port_scene_fill_memory1(void);
+/* run mg9 lane S364: dScMgSlot1_c, actor id 0x16c = scene 364. The SpawnInfo
+   is spelled as the raw config symbol because the ROM gives this id no spawn
+   symbol -- the same reason the 375 and 390 rows above do -- and the row is
+   named for the ROM's own RTTI at 0x0213e5bc, "12dScMgSlot1_c", reached
+   through the type_info the word BEFORE the vtable points at. No naming
+   import has ever named this address. The class is a three-reel slot machine
+   and it serves TWO menu entries, read out of the ROM's BMG bank: ov005 row
+   17 is message 565 "Mario Slot" and row 33 is message 587 "Super Mario
+   Slot". The row keeps the CLASS name for the reason the 380 row does --
+   0x17c is SCENE_MG_PANEL and not SCENE_MG_PUZZLE_PANIC. Same reads_sublevel
+   reasoning
+   as the rows above, re-checked for this class: no relocation in ov006 lands
+   on data_02092110 and no TU in this class's closure names it. */
+extern unsigned char data_ov006_0213e560[];
+void *port_mg_slot1_spawn(void);
+void port_scene_fill_slot1(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2434,6 +2450,38 @@ static const PortSceneClass port_scene_classes[] = {
        36, and port/slice_mmt.txt has all four checks that say 36. */
     {362, "SCENE_MG_MEMORY1", MgMemoryMatch_SpawnInfo, port_mg_memory1_spawn,
      port_scene_fill_memory1, 0},
+    /* 364 is 0x16c, spelled in decimal for the two reasons every row above
+       gives: the others are, and port/tools/battery.py reads its hosted-scene
+       set out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg9 lane
+       S364.
+
+       THE POSITION IS THE FILL-ORDER RULE AND FOR THIS CLASS IT IS WORTH
+       RESTATING RATHER THAN CROSS-REFERENCING, because this is the class
+       port/mg_fanout_costs.txt section 11 uses as its second worked example.
+       port_scene_registry_install walks this table in TABLE ORDER and calls
+       every row's fill on every boot, while port_scene_mg_overlay_load runs
+       the thirty-five overlay constructors ONCE PER PROCESS at the tail of the
+       FIRST minigame row's fill. Appending means the constructors have already
+       run against clean ROM words when this fill starts, which is the
+       latent-safe direction.
+
+       AND SECTION 11's HAZARD IS THE ONE THIS ROW WOULD HAVE CAUSED. Index 36
+       of data_ov006_0213eb40 is MgBingoBallSlotsShot_SpawnInfo's factory word
+       0x02119824, followed by the doubled id 0x01780178 -- so a 37-slot fill
+       here writes a host thunk over the factory pointer of SCENE 376, which
+       is the SCENE_MG_SMARTBALL row eleven lines above and ships today. The
+       fill is called with 36 and four independent checks agree on that width
+       (span to the next config symbol is exactly 36 words, slot 35 holds the
+       family terminal 0x020ad660, the word past the end is a SpawnInfo record
+       and not a slot, and the relocation count inside the span is 36 with
+       indices 0..35 complete). port/slice_s364.txt section 3 is the
+       derivation and this lane's sibling canary is a scene-376 boot.
+
+       reads_sublevel is 0 for the curling row's reason, re-derived rather than
+       copied: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {364, "SCENE_MG_SLOT1", data_ov006_0213e560, port_mg_slot1_spawn,
+     port_scene_fill_slot1, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

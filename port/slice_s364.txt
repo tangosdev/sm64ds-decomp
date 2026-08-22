@@ -1,0 +1,493 @@
+# Gate S364: dScMgSlot1_c, actor id 0x16c = scene 364. The ROM gives this id
+# NO Mg*_SpawnInfo symbol, so everything below is read out of the image. Run
+# mg9, lane S364.
+#
+# ---- 1. THE CLASS, RE-DERIVED FROM THE ROM --------------------------------
+#
+# Read out of extracted/overlays/overlay_0006.bin at base 0x020bfec0 and out of
+# config/arm9/overlays/ov006/, not out of port/mg_fanout_costs.txt:
+#
+#   SpawnInfo      0x0213e560  data_ov006_0213e560. The doubled id word
+#                  0x016c016c sits at 0x0213e564 and occurs EXACTLY ONCE in
+#                  the whole overlay; the word before it is 0x0210d6b8. That
+#                  is section 3's mechanical derivation and it reproduces the
+#                  address-shaped name that section already carries for 0x16c.
+#   factory        0x0210d6b8  0x88 bytes, src/func_ov006_0210d6b8.cpp
+#   vtable         0x0213eb40  named by the factory's own load relocation,
+#                  relocs.txt from:0x0213e560 is the SpawnInfo's factory word
+#                  and the factory stores 0x0213eb40 into [this] at 0x0210d6e0
+#   class          dScMgSlot1_c
+#   width          36          FOUR checks, section 3 below
+#   overrides      8           slots 0, 6, 9, 16, 17, 18, 27, 28
+#   markers        5           all five ruled REAL_DECOMP before seating
+#   nosrc          1           slot 6, the Behavior -- section 5
+#
+# Section 3's row for 0x16c reads 36 / 8 / 5 / 1 and every column reproduces.
+#
+# ---- 2. THE RTTI NAME AND THE HIERARCHY -----------------------------------
+#
+# The word BEFORE the vtable is the type_info pointer, and it is a relocation
+# rather than a src spelling, which is the stronger chain lane PPP established:
+#
+#   relocs.txt  from:0x0213eb3c kind:load to:0x0213e5a0 module:overlay(6)
+#
+# data_ov006_0213eb40[-1] is the type_info at 0x0213e5a0 -- {0x0209a764 the
+# type_info vptr, 0x0213e5bc the name, 0x020bbf6c the base} -- and 0x0213e5bc
+# reads "12dScMgSlot1_c" in the shipped image. The base record 0x020bbf6c is
+# in ov004 and its name word points at "11dScMgBase_c".
+#
+#     Scene -> dScMgBase_c   data_ov004_020bc0c0  36
+#           -> dScMgSlot1_c  data_ov006_0213eb40  36
+#
+# TWO DEEP, ONE NEW TABLE. Section 13's CORRECTION 1 says to test this off code
+# rather than off the type_info, because an intermediate base shows up on the
+# vtable axis only as "more overrides", and both of its reads agree here:
+#
+#   the FACTORY (0x0210d6b8) stores 0x0213eb40 into [this] and stores NO second
+#   scene table over it -- one `str r2,[r4]` at 0x0210d6e0 and nothing else
+#   into offset 0;
+#   slot 16 (src/func_ov006_0210a8c0.c) and slot 17
+#   (src/func_ov006_0210a900.cpp) each write 0x0213eb40 back and then call
+#   func_ov004_020b29c0, with no intermediate table in between.
+#
+# 0x169, 0x16b and 0x186 all needed a third table under dScMgSingle3DBase_c.
+# This one does not, and the reason is visible in the same relocation set: the
+# six Single3DBase bodies (0x0210a6e4, _a608, _a698, _a664, _a600, _a708) that
+# appear in NINE other ov006 vtables do NOT appear in 0x0213eb40.
+#
+# ---- 3. THE WIDTH IS 36, AND THIS IS THE CLASS SECTION 11 NAMES -----------
+#
+# port/mg_fanout_costs.txt section 11 measured that twelve of twenty-nine
+# widths in section 3's table were phantoms, and it names THIS class as the
+# second worked example: "0x16c IS THE SAME SHAPE FOR A DIFFERENT VICTIM.
+# Index 36 of its table lands exactly on MgBingoBallSlotsShot_SpawnInfo
+# (0x0213ebd0), so a 37-slot fill there overwrites word 0 of id 0x178's
+# SpawnInfo, which is 0x178's factory pointer." Scene 376 is SEATED
+# (SCENE_MG_SMARTBALL). All four checks were re-run rather than inherited:
+#
+#   1. SPAN     data_ov006_0213eb40 to the next config symbol,
+#               MgBingoBallSlotsShot_SpawnInfo at 0x0213ebd0, is 0x90 = 36
+#               words EXACTLY. The next symbol is a NAMED record rather than
+#               unsymbolised padding, so this check is exact here rather than
+#               an upper bound.
+#   2. TERMINAL slot 35 (0x0213ebbc) holds 0x020ad660, the word every
+#               dScMgBase_c-derived table holds there. MATCH.
+#   3. THE WORD index 36 (0x0213ebd0) is 0x02119824 and index 37 is
+#               0x01780178. That pair IS a SpawnInfo record: the factory
+#               MgBingoBallSlotsShot_Spawn and the doubled id 0x178. Reading
+#               the word as a code address is exactly the eye failure check 3
+#               exists to catch -- it IS a code address, it just belongs to a
+#               shipped minigame.
+#   4. RELOCS   36 relocations have from: inside 0x0213eb40 up to 0x0213ebd0, and
+#               their indices are 0..35 with no gap and no duplicate. The very
+#               next relocation is from:0x0213ebd0 to 0x02119824, which is
+#               0x178's, not this table's.
+#
+# SO THE FILL IS CALLED WITH 36 AND THE SIBLING CANARY IS SCENE 376. A 37-wide
+# fill would put a host thunk over a shipped game's factory pointer, and
+# section 11's ordering analysis says the row order only decides whether that
+# announces itself. This row is appended after every existing row anyway.
+#
+# ---- 4. WHAT THE MINIGAME IS, AND WHAT ITS TITLE IS NOT -------------------
+#
+# THE IDENTITY SWEEP CAME BACK EMPTY, which is the honest first result. A grep
+# of the WHOLE config, symbols/, include/, src/ and tangos.json for the
+# SpawnInfo ADDRESS 0x0213e560 finds four rows and not one of them is a name:
+#
+#   config/arm9/overlays/ov006/relocs.txt  from:0x0213e560 -> 0x0210d6b8
+#   config/arm9/overlays/ov006/symbols.txt data_ov006_0213e560 kind:data(any)
+#   config/arm9/overlays/ov099/symbols.txt data_ov099_0213e560 kind:bss
+#   config/arm9/relocs.txt                 from:0x02090e14 -> 0x0213e560
+#
+# The last row is the arm9 spawn table cross-check and it PASSES: data_02090864
+# is one word per id, so entry 0x16c sits at 0x02090864 + 0x16c*4 = 0x02090e14,
+# and it points at this record. (Lane PPP's 0x17c entry at 0x02090e54 is 0x40
+# further on for 0x10 more ids, which is the same stride read a second way.)
+# Twenty-three of the thirty ids carry an Mg*_SpawnInfo name; this is one of
+# the seven that do not.
+#
+# WHAT THE ASSETS SAY, and they are unambiguous about the GAME even though they
+# do not give the title. Every file src/func_ov006_0210d1fc.cpp opens resolves
+# through build/assets/handles.tsv (the ids are HANDLE ids, not raw NitroFS
+# file ids -- a files.tsv lookup returns unrelated enemy animations and is the
+# wrong table):
+#
+#   0x7d  MG/d_2d_mg_bg_slot_up_ncg.bin        0x7e  ..._up_ncl.bin
+#   0x7f  MG/d_2d_mg_bg_slot_up_nsc.bin        0x7b  ..._grade_ncg.bin
+#   0x7c  MG/d_2d_mg_bg_slot_score_up_nsc.bin  0x72  ..._down_ncg.bin
+#   0x73  MG/d_2d_mg_bg_slot_down_ncl.bin      0x74  ..._down_nsc.bin
+#   0x01  MG/d_2d_badwizer_nsc.bin             0x04  MG/d_2d_grade_nsc.bin
+#   0xf1  MG/d_2d_mg_slot_ncl.bin
+#   data_ov006_0213e628[language] = {0xf0, 0xf2, 0xed, 0xee, 0xef}
+#         = MG/d_2d_mg_slot{,_S,_F,_G,_I}_ncg.bin
+#
+# and the class's nested sub-object names itself: the 2-slot vtable at
+# 0x0213e5d4 has its own type_info at 0x0213e594 whose name reads
+# "N12dScMgSlot1_c9betIcon_cE" -- dScMgSlot1_c::betIcon_c.
+#
+# IT IS A THREE-REEL SLOT MACHINE WITH A BET ICON, and the ROM says so four
+# more times:
+#
+#   src/_ZN3OAM7SECONDSE.cpp (slot 9, Render) loops i<3 over reels, indexes a
+#     strip by (position + 0x46c0) with a 0x15 = 21 stride and wraps with
+#     `if (pos < 0) pos += 0x15`;
+#   data_ov006_0213e63c is three {x, y} pairs, {0x38,0x78} {0x80,0x78}
+#     {0xc8,0x78} -- three reels in a row at the same height;
+#   the Behavior's literal pool at 0x0210d19c holds 0x30c30c31 beside the
+#     constant 0x15, which is the reciprocal for a divide by 21;
+#   data_ov006_0213e4d8 is a payout table {15, 10, 10, 5, 5, 20} over six
+#     symbols, and the rarest symbol on both strips pays the 20.
+#
+# ONE CLASS, TWO MENU ENTRIES, AND UNLIKE LANE PPP THE SELECTOR IS DERIVED.
+# Section 14 left "WHICH MODE BYTE IS WHICH TITLE" open for dScMgPanel_c. For
+# this class it closes, because the two ov005 rows and the two reel strips line
+# up one to one. 0x16c is one of the six ids section 17 names as appearing on
+# TWO ov005 rows (data_ov005_020c24d8, stride 0x34, 36 rows), read here out of
+# extracted/overlays/overlay_0005.bin at base 0x020bfec0:
+#
+#   row 17  id 0x016c  param 0x00111100  record 17  text 17  low byte 0
+#   row 33  id 0x016c  param 0x00212101  record 33  text 33  low byte 1
+#
+# and src/func_ov006_0210d1fc.cpp gates on that low byte directly --
+# `ldr r0,[r4,#8]; ands r0,r0,#0xff; beq 0x0210d584` at 0x0210d508 -- picking
+# between two 3 x 21 strips:
+#
+#   low 0  data_ov006_0213e9e0  2 4 3 1 4 3 0 2 4 3 4 2 3 0 1 2 4 4 3 1 5
+#   low 1  data_ov006_0213ea20  2 1 3 5 4 1 0 2 4 3 5 2 1 4 5 2 4 0 3 1 5
+#
+# (the same strip on all three reels in both cases). The low-0 strip carries
+# the top-paying symbol ONCE per reel, the low-1 strip carries it FOUR times,
+# so low 0 is the harder board and low 1 the easier one. The thumbnail assets
+# name the pair the way the ROM's own artists did: MG/d_2d_thum_3_slot_ncg.bin
+# and MG/d_2d_thum_jokyu_3_slot_ncg.bin -- "jokyu" is the Japanese for
+# advanced, and it is the same basic/advanced pairing scenes 374 and 375 carry.
+#
+# THE PORT TAKES ROW 17, first-match-by-id, so this seat runs the LOW-0 strip.
+# Section 17's caveat applies unchanged: nothing here decides which row a real
+# menu selection produces.
+#
+# BOTH TITLES ARE DERIVED, out of the ROM's own BMG message bank, and the
+# chain is ov005 row -> text index -> data_ov004_020bc070 -> message id. The
+# ASCII and UTF-16 sweeps that came back empty missed it because the bank is
+# LZ77-compressed and its text is a GLYPH-INDEX stream, not characters:
+# 'A' = 0x0a, 'a' = 0x2d, space = 0x4d, digits 0x00..0x09, 0xfd newline,
+# 0xff end. (The route was handed over by run mg9 lane S371; the two
+# corrections below are this lane's.)
+#
+#   row 17  text 17  ->  message 565  "Mario Slot"
+#   row 33  text 33  ->  message 587  "Super Mario Slot"
+#
+# and message 565's own body confirms every mechanism derived above without
+# being used to derive any of it:
+#
+#   "Mario Slot / Touch the spinning slots to stop them. Get 3 items in a
+#    row to earn coins! The Superstar is wild."
+#
+# three reels, touch, three-in-a-row, and a wild symbol -- which is symbol 5,
+# the one data_ov006_0213e4d8 pays 20 for and the one the two strips differ
+# on. Message 587 opens "Super Mario Slot", repeats 565's body word for word
+# and adds one line, "Are you feeling super lucky?" -- which is what says the
+# two rows are one game and not two. (Glyphs beyond the Latin run, read off
+# these two: 0x26 is '?', 0x27 is '!', 0x48 is '.'.)
+#
+# THE +0x224 RULE IS WRONG PAST INDEX 23 AND THIS LANE FOUND IT THE HARD WAY.
+# data_ov004_020bc070 looks like a ramp -- indices 0..23 really are
+# 0x0224..0x023b -- and it is NOT one. Read as u16 out of overlay_0004.bin at
+# base 0x020ad660, its last twelve entries are
+#
+#   [24] 588  [25] 573  [26] 586  [27] 575  [28] 576  [29] 577
+#   [30] 585  [31] 589  [32] 580  [33] 587  [34] 582  [35] 583
+#
+# so an index of 24 or more resolved by arithmetic lands on the wrong string.
+# This lane computed 0x0224 + 33 = 581 first and got "Luckiest Stars", a card
+# game that is plainly not this class; the table says 587, "Super Mario Slot",
+# which is. THE TABLE IS 36 ENTRIES: its span to data_ov004_020bc0c0 is 0x50 =
+# 40 u16, and the last four read 0, 0 and then two words of the next object.
+#
+# THE CHAIN IS CONTROLLED ON SEVEN OTHER ROWS, all read the same way and all
+# landing on a title that matches a class somebody else already named:
+#
+#   row  0  text  0  548  "Mario's Slides"      row 10  text  2  550 "Bingo Ball"
+#   row 20  text 28  576  "Bounce and Trounce"  row 21  text 21  569 "Lucky Stars"
+#   row 29  text 29  577  "Memory Master"       row 35  text 35  583 "Puzzle Panic"
+#   row 22  text 34  582  "Slots Shot"
+#
+# The last two are the strongest: 583 is lane PPP's SECOND title for 0x17c,
+# and 582 is the second of the two MgBingoBallSlotsShot names -- so the rule
+# that a class serving two ov005 rows serves two menu entries reproduces on
+# classes other lanes derived independently.
+#
+# WHICH ROW IS WHICH IS READ OFF THE BRANCH, not inferred from the names.
+# src/func_ov006_0210d1fc.cpp's gate at 0x0210d508 is
+# `ldr r0,[r4,#8]; ands r0,r0,#0xff; beq 0x0210d584`, and the two arms load
+# their strip from the body's own literal pool:
+#
+#   0x0210d514 (NONZERO)  ldr r2,[pc,#0x18c] -> 0x0210d6a8 = 0x0213ea20
+#   0x0210d584 (ZERO)     ldr r2,[pc,#0x120] -> 0x0210d6ac = 0x0213e9e0
+#
+# so row 17's low byte 0 gets 0x0213e9e0 and row 33's low byte 1 gets
+# 0x0213ea20. Counting symbol 5 -- the Superstar, the wild, the 20 payout --
+# the Mario Slot strip carries ONE per reel and the Super Mario Slot strip
+# FOUR. That is the whole measurable difference between the two entries in
+# InitResources; whatever else separates them is inside the trapped Behavior
+# and this lane does not claim to know it.
+#
+# THE PORT TAKES ROW 17, first-match-by-id, so this seat boots Mario Slot.
+# Section 17's caveat applies unchanged: nothing here decides which row a real
+# menu selection produces.
+#
+# THE REGISTRY ROW IS STILL NAMED FOR THE CLASS AND NOT FOR A TITLE, which is
+# the rule a two-title class already follows: 0x17c is SCENE_MG_PANEL and not
+# SCENE_MG_PUZZLE_PANIC, and 0x178 is SCENE_MG_SMARTBALL and not
+# SCENE_MG_SLOTS_SHOT. SCENE_MG_SLOT1 is dScMgSlot1_c.
+#
+# AND IT IS NOT dScMgSmartball_c, which is 0x178 and carries "Bingo Ball" and
+# "Slots Shot" -- that class is the ball game, this one is the reels.
+#
+# ---- 5. THE ONE FLOOR IS THE BEHAVIOR, AND IT IS THE WHOLE STATE MACHINE ---
+#
+#   func_ov006_0210c9e0   vtable slot 6, 0x81c bytes
+#
+# It has a config symbol in config/arm9/overlays/ov006/symbols.txt, NO delink
+# block -- the block before it ends at 0x0210c9e0 and the next starts at
+# 0x0210d1fc, which is the body's own size to the byte -- and no src file
+# defines it in either extension anywhere in the tree. It is the ONLY gap in
+# this class's code: a delink walk over 0x0210a8c0..0x0210a954 and
+# 0x0210c180..0x0210d740 finds 23 blocks and exactly one hole, this one.
+#
+# THE NAME-SHAPED LOOKUP WOULD HAVE MISCOUNTED THIS CLASS AT TWO, and the
+# second one is section 13's module/name trap wearing a different hat. Slot 9's
+# body 0x0210c6c0 has NO func_ov006_0210c6c0.c -- its config symbol is
+# _ZN3OAM7SECONDSE, a mangled C++ name that is almost certainly wrong for what
+# the body does, and its src file is src/_ZN3OAM7SECONDSE.cpp. It is present,
+# matched and delinked. nosrc is 1, not 2.
+#
+# WHAT THE FLOOR IS, disassembled rather than guessed at (alignment confirmed
+# first on func_ov006_0210c674, whose disassembly reproduces its src call for
+# call). The body is a JUMP-TABLE SWITCH, not a pointer-to-member table:
+#
+#     0x0210c9ec  add   r2, r4, #0x4000
+#     0x0210c9f0  ldr   r1, [r2, #0x6b4]      the state index, self+0x46b4
+#     0x0210c9f4  cmp   r1, #0xd
+#     0x0210c9f8  addls pc, pc, r1, lsl #2
+#     0x0210c9fc  b ... x 14 arms
+#
+# FOURTEEN states, 0..0xd, and src/func_ov006_0210c674.c (slot 18, the state
+# reset) writes self->unk_46b4 = 0, which is the same field. So this class's
+# whole state machine is inside the missing body and there is no state table,
+# no stategen output and no address switch to write:
+#
+#   * no .data pair table anywhere in the overlay holds a code word in
+#     0x0210c180..0x0210d740 -- checked over every relocation whose from: is
+#     at or past 0x02130000, and the only hits in the class's code range are
+#     the two vtables, the SpawnInfo and the sub-object table;
+#   * a `::*` sweep over all 23 TUs is CLEAN, and the one `>> 1`-shaped hit in
+#     src/_ZN3OAM7SECONDSE.cpp is a `>> 12` fixed-point shift, not the
+#     open-coded Itanium sequence section 4's FLW amendment describes;
+#   * stategen has no constructor of this class's to read. __sinit_ov006_
+#     02132894 DOES build an 8-slot table, data_ov006_02142bdc, out of pairs
+#     that sit in the address neighbourhood -- and it is NOT this class's.
+#     src/func_ov006_0210bcb0.cpp dispatches it, and 0x0210bcb0 is a slot of
+#     data_ov006_0213eaa8, which is id 0x16d's vtable. ATTRIBUTING BY THE SINIT
+#     ALONE WOULD HAVE OVER-ATTRIBUTED, which is section 9's warning firing on
+#     a different pair of classes than the one it was written about.
+#
+# WHAT THE TRAP COSTS, measured off the ROM rather than left mysterious. The
+# body has a SINGLE exit at 0x0210d148..0x0210d18c which always returns 1, so
+# the trap's return value is read rather than invented. Its eighteen distinct
+# direct callees are:
+#
+#   ov006 (7)  0x0210c180 0x0210c1a8 0x0210c218 0x0210c278 0x0210c2c0
+#              0x0210c2d4 0x0210c500
+#   ov004 (3)  0x020ad79c 0x020adb1c 0x020ae274
+#   arm9  (8)  0x020124c4 Sound_PlayIfNotActive, 0x02012718, 0x02012754
+#              Sound::PlayBank2_2D, 0x02012790, 0x0202e1e0 Scene::SetFaders,
+#              0x0202e348 Scene::StartSceneFade, 0x0202ec9c, 0x0203add4
+#              DecIfAbove0_Byte
+#   indirect   own vtable slot 18 with argument 4 and with argument 5
+#              (0x0210cf48, 0x0210cf80), and the betIcon sub-object's slot 0
+#              at 0x0210d158
+#
+# THE RUN LAW SAYS A TRAP-SHAPED FLOOR HIDES ITS CALLEES FROM STATIC CLOSURE,
+# AND HERE IT HIDES NONE. All seven ov006 callees are already in the 23-TU
+# slice below because they are reached from other slots too, so retiring this
+# floor later costs a decomp and zero extra slice lines. The ov004 and arm9
+# halves are section 5's "comes back for free".
+#
+# WHAT THE TRAP MEANS ON SCREEN, stated so nobody reads a clean boot as a
+# working game: with slot 6 trapped the state index never leaves 0, the reels
+# never spin, the per-frame tail the body runs after every arm -- the betIcon
+# slot-0 update at 0x0210d158, two calls to func_ov006_0210c278 and one to
+# func_ov006_0210c1a8 -- never runs, and no sound or fade is ever started. The
+# class boots, InitResources lays out the strips and the bet icon, Render draws
+# three static reels every frame, and nothing moves. That is a decomp gap, not
+# a port one, and retiring it is one transcription of a 0x81c body.
+#
+# ---- 6. THE FIVE ROM ADJUDICATIONS ----------------------------------------
+#
+# Five of the eight override bodies carry the "recovered from vtable slot
+# identity" marker. All five were disassembled out of
+# extracted/overlays/overlay_0006.bin at base 0x020bfec0 and compared with src
+# before a word of seat code was written. RESULT: 5 REAL_DECOMP, 0 guesses. The
+# per-body evidence is appended to port/tools/inferred_stub_adjudicated.txt.
+# Slot 16 (func_ov006_0210a8c0) and slot 9 (_ZN3OAM7SECONDSE) carry no marker
+# and need no ruling.
+#
+# ---- 7. THE SECOND TABLE: dScMgSlot1_c::betIcon_c -------------------------
+#
+# THIS IS THE FINDING THAT A VTABLE-AXIS READ CANNOT REACH, and it is not the
+# section-13 intermediate-base shape. The object has a NESTED SUB-OBJECT at
+# self+0x4660 with its own two-slot vtable:
+#
+#   data_ov006_0213e5d4  slot 0 -> 0x0210c410   slot 1 -> 0x0210c374
+#   type_info 0x0213e594, name 0x0213e66c = "N12dScMgSlot1_c9betIcon_cE"
+#   span to the next config symbol data_ov006_0213e5dc is 8 bytes = 2 words
+#
+# The factory writes it (`str r2,[ip]` at 0x0210d6f4 with ip = this+0x4660) and
+# both destructors unwrite it. AND IT IS DISPATCHED FROM A BODY THE SEAT DOES
+# NOT TRAP: src/_ZN3OAM7SECONDSE.cpp, vtable slot 9, the Render, ends with
+#
+#     ((UnkVtbl*)(t + 0x4660))->Virtual4();
+#
+# which is slot 1 of that table. So leaving those two words raw is a wild call
+# on the FIRST RENDERED FRAME, not a latent one. hal/scene_mg_slot1.cpp fills
+# both tables and the FILL INCOMPLETE line counts both.
+#
+# THE SHADOW-CLASS TEST PASSES FOR BOTH SHADOWS IN THIS SLICE, which is section
+# 13's "same construct, opposite verdict" rule applied rather than quoted. Both
+# objects a shadow class is laid over here carry a MOUNTED ROM TABLE that the
+# fill writes by ROM word and therefore leaves in ROM word order:
+#
+#   src/func_ov006_0210d1fc.cpp's 19-virtual `struct Obj` over the SCENE object
+#     calls m48(3), which is offset 0x48 = slot 18 = this class's own
+#     0x0210c674. The ROM at 0x0210d61c..0x0210d628 is
+#     `ldr r2,[r0]; mov r1,#3; ldr r2,[r2,#0x48]; blx r2` -- the same slot.
+#   src/_ZN3OAM7SECONDSE.cpp's 2-virtual `struct UnkVtbl` over the betIcon
+#     sub-object calls Virtual4, offset 4 = slot 1 = 0x0210c374.
+#
+# Neither is a shadow over a HOST C++ vtable, which is the case section 13 says
+# is wrong.
+#
+# ---- 8. THE CLOSURE -------------------------------------------------------
+#
+# 23 TUs and the ov006 half is CLOSED at 23. A direct-call walk from the 23
+# class blocks, following every bl/blx inside each body and every arm_call
+# relocation out of the class's code range, reaches no further ov006 function.
+# Nothing was pruned to make that true: the walk simply does not leave the
+# class. What it does leave for are 16 ov004 targets, 4 ov001 targets and 28
+# arm9 targets, and those are section 5's free half plus whatever the link
+# still wants.
+#
+# HALF-OPEN INTERVALS ARE SPELLED WITH .. IN THIS FILE ON PURPOSE, and the
+# reason is a real defect this lane hit rather than a style choice. CMake's
+# file(STRINGS) treats an UNMATCHED open-square-bracket as the start of a
+# bracket argument and swallows every following line into ONE list element.
+# One half-open interval written the usual way in a COMMENT therefore
+# collapsed this whole slice from 321 entries to 81, and the only thing that
+# caught it was CMakeLists' own hostgen substitution assertion. Every
+# open-square-bracket in this file is closed; ranges use two dots.
+#
+# The list is exactly the delink blocks of 0x0210a8c0..0x0210a954 and
+# 0x0210c180..0x0210d740. 0x0210c120 is id 0x16d's factory and is NOT in it;
+# the 6188 bytes between 0x0210a954 and 0x0210c180 are 0x16d's class and are
+# that lane's problem, not this one's.
+
+# ---- 9. WHAT THE SEAT COST, MEASURED ON BOTH ENDS -------------------------
+#
+#   link waves                          3   7 externals, then a dsstate
+#                                           refusal, then clean
+#   unresolved externals                7   ALL name-spelling defects; six
+#                                           ov004 window words and one
+#                                           two-overlay adjudication
+#   dispatching TUs to host-copy        0   no pointer-to-member wall
+#   state entries to route              0   the machine is a switch
+#   of those with no matched body       0
+#   named traps stood                   1   the Behavior
+#   ordinary slice lines               23
+#   per-source -D rows                  4   one TU x six words, three TUs x
+#                                           one word
+#   hosted words                        1   dThIcon_c's 2-slot table
+#   registry rows                       1
+#   ov004 delta                         0
+#
+# LINKAGE, measured on both ends on this tree:
+#
+#     6665 / 11288 (59.1%)  ->  6684 / 11288 (59.2%)     +19
+#
+# AND +19 IS NOT 23, WHICH IS THE FLOOR SHOWING UP IN A COLUMN NOBODY EXPECTS
+# IT IN. Section 14's rule is that every slice line moves the headline by one.
+# It holds per COMPILED-AND-LINKED body, and /OPT:REF drops a body with no
+# reference edge. The decomposition, from a DIFF OF TWO MAPS -- the base commit
+# c693e8952 built in this same tree with port/ reverted, against the tip -- and
+# not from a reading of one map plus an assumption about the other:
+#
+#   SEVENTEEN of the 23 slice TUs are in the tip map and in NEITHER case in the
+#      base map, so the slice contributes 17;
+#   SIX are in NEITHER map -- func_ov006_0210c180, _0210c1a8, _0210c218,
+#      _0210c278, _0210c2c0 and _0210c500 -- and they are EXACTLY the six ov006
+#      bodies whose only caller in the whole binary is the trapped Behavior.
+#      Nothing references them, so the linker discards them;
+#   TWO ov001 bodies join, func_ov001_020ab550 and _020ab54c, both through the
+#      hosted dThIcon_c table. func_ov001_020ab3f0 and _020ab5b0 are in the
+#      BASE map already and are not this seat's; _020ab450 is in neither.
+#
+#   17 + 2 = 19, measured on both maps, and the six are a STANDING CREDIT: the
+#   day func_ov006_0210c9e0 is decompiled the headline moves another six
+#   without a slice line being added.
+#
+# THIS PARAGRAPH WAS WRONG IN ITS FIRST COMMITTED FORM AND THE WAY IT WAS WRONG
+# IS THE PART WORTH KEEPING. It said 16 + 3, on the reasoning that
+# src/func_ov006_0210c374.cpp "was already linked through slice_flw.txt and
+# slice_pch.txt". BEING LISTED IN ANOTHER SLICE MAKES A TU COMPILED, NOT
+# LINKED. That file is in no base map line at all: the other two slices hand it
+# to the compiler and nothing in that build referenced it, so /OPT:REF dropped
+# it, and this seat's face array is the first reference edge it has ever had.
+# The same paragraph then credited two ov001 bodies to this seat that the base
+# map already holds. Both halves are the identical error -- a proxy for the
+# question standing in for the question -- and the six dropped bodies three
+# lines above are the same distinction, applied correctly, in the same
+# paragraph. THE ONLY INSTRUMENT THAT ANSWERS "was it linked before" IS THE
+# BASE MAP. Build the base.
+#
+# THE .dsstate SECTION MOVED A FULL PAGE AND A CROSS-BUILD BMP COMPARE IS
+# THEREFORE INVALID, which matters to anyone diffing pictures against
+# c693e8952. Both perturbation classes notes/port-selftest-bmp-gate.md and
+# port/tools/battery.py name are in play at once:
+#
+#   base c693e8952   .dsstate 0xc3e000..0xd283c8   959432 bytes  11726 symbols
+#   this tip         .dsstate 0xc3f000..0xd293d0   959440 bytes  11727 symbols
+#   walk_window.exe  4284416 bytes -> 4289536, +5120
+#
+# the INTERIOR grows by 8 bytes and one symbol (the hosted dThIcon_c table,
+# which every hosted DS symbol must be inside .dsstate for), and the BASE moves
+# 0x1000 because the seat's ~5 KB of port code and data pushes the preceding
+# sections past a page boundary. Either one alone invalidates a byte-exact BMP
+# comparison against the base; a comparison that means something has to pad the
+# smaller build in 4 KB steps first. NOTHING WAS MIS-PASSED BY THIS: battery.py's
+# level and scene steps check exit codes, and this lane's own BMP evidence is
+# byte-identity across three frame counts WITHIN ONE BUILD, which the section
+# move cannot touch.
+
+src/func_ov006_0210a8c0.c
+src/func_ov006_0210a900.cpp
+src/func_ov006_0210c180.c
+src/func_ov006_0210c1a8.c
+src/func_ov006_0210c208.c
+src/func_ov006_0210c218.c
+src/func_ov006_0210c234.c
+src/func_ov006_0210c278.c
+src/func_ov006_0210c2b0.c
+src/func_ov006_0210c2c0.c
+src/func_ov006_0210c2d4.c
+src/func_ov006_0210c354.c
+src/func_ov006_0210c374.cpp
+src/func_ov006_0210c410.c
+src/func_ov006_0210c478.c
+src/func_ov006_0210c4b8.c
+src/func_ov006_0210c4dc.c
+src/func_ov006_0210c500.c
+src/func_ov006_0210c638.c
+src/func_ov006_0210c674.c
+src/_ZN3OAM7SECONDSE.cpp
+src/func_ov006_0210d1fc.cpp
+src/func_ov006_0210d6b8.cpp
