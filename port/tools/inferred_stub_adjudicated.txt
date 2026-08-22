@@ -720,3 +720,84 @@ func_ov006_02107358  REAL_DECOMP  port/slice_ppp.txt  lane PPP. slot 6 Behavior,
 func_ov006_0210730c  REAL_DECOMP  port/slice_ppp.txt  lane PPP. slot 9 Render, 0x4c, 19 instructions, no literal pool. func_ov004_020b1e34(this, 0xe0, 0x14, 1) with the three constants as ARM immediates (mov r1,#0xe0 / mov r2,#0x14 / mov r3,#1), then five calls with the receiver reloaded from r4 before each: 02104d44, 02104d94, 021042e8, 02104b5c, 02105ab4, then mov r0,#1 and return. src lists the same six in the same order and nothing else. NOTE the argument triple is the same 0xe0/0x14/1 lane WTIMER closed as PROVABLY DEAD in the func_ov004_020b1e34 veneer for dScMgLuigi_c; this class reaches the same veneer with the same three, so that finding carries and no veneer repair is owed here either
 func_ov006_021042b0  REAL_DECOMP  port/slice_ppp.txt  lane PPP. slot 17 D0, 0x38, 12 instructions plus a two-word pool. str data_ov006_0213e24c into [this] -- this class's OWN vtable, which is the strongest single confirmation that 0x0213e24c is the right table for id 0x17c -- then func_ov004_020b29c0(this), then Memory::Deallocate(this, the word at data_020a0eac loaded BY VALUE), return this. src spells the first as VT and the heap as HEAP, both per-TU PLACEHOLDERS out of include/decl_common.h that exist in no config, and the ROM literal pool resolves them to exactly those two: 0x021042e0 = 0213E24C and 0x021042e4 = 020A0EAC. Its unmarked D2 sibling 0210428c stores the SAME vtable word and cross-confirms the resolution the way curling's 020e0638 does for 020e065c. The recovered NAME says OnYoshiTryEat and is wrong; the body is the deleting destructor
 func_ov006_021071fc  REAL_DECOMP  port/slice_ppp.txt  lane PPP. slot 18 state reset, 0x110, 65 instructions plus a three-word pool holding 0x0000270e, 0x020beb68 and 0x0209d454. IT TAKES A REAL SECOND ARGUMENT, not a ride-through: cmp r1,#0 at 0x02107208 branches to two different arms, which is why the seat's thunk declares the parameter and forwards it rather than only cleaning it. The flag==0 arm increments +0xbc and clamps it at 0x270e; the flag!=0 arm zeroes +0x4fea and +0xbc, applies the same clamp, and then does the data_ov004_020beb68 pair -- if the pointer is non-null zero its +0xb4, then call func_ov004_020adb1c with that +0xb4 or 0 -- which src spells with the ov004 data symbol under the bare name func_020beb68, a name-spelling defect of section 6's fourth kind that the pool word 020BEB68 resolves. Both arms then join: bl 0x020b0aa0 with r0 = 0x1d (FreeGfxSlotsById), func_ov006_021067a4, _021063a0, _02106168, _02104b24, +0x4fe2 = 3, +0x4ca8 = 0 -- the SAME state index slot 6 dispatches on and slot 0 sets, which cross-confirms all three -- then func_ov004_020b0cac(0xd,0x80,0x40,0,-1,0xd) with -1 and 0xd pushed, SetSubBg0Offset(0,0), and data_0209d454 with bit 0 cleared as a byte bic. Void return. The recovered NAME says OnYoshiTryEat_021071fc and is wrong; the body is the state reset
+# run mg9, lane S381, 2026-08-22. dScMgMCarlo_c, actor id 0x17d (scene 381),
+# the "Pair-a-Gone" card minigame. The spawn record has no named symbol in any
+# config -- section 3's table calls it (data_ov006_0213d580) -- so the identity
+# was read out of the ROM before a word was seated, and every step of it is
+# reproducible:
+#
+#   arm9 ACTOR_SPAWN_TABLE[381], 0x02090864 + 381*4 = 0x02090e58, holds
+#     0x0213d580 in extracted/arm9_dec.bin, and config/arm9/relocs.txt carries
+#     the same edge as from:0x02090e58 to:0x0213d580 module:overlays(6,99)
+#   SpawnInfo 0x0213d580 = {factory 0x020f8e44, 0x017d017d}, the doubled id
+#   typeinfo 0x0213d588 = {0x0209a764, name 0x0213d594, base 0x0213bc64}
+#   RTTI string 0x0213d594 reads "13dScMgMCarlo_c"; the base word 0x0213bc64
+#     is dScMgSingle3DBase_c's OWN typeinfo, so the ROM states the hierarchy
+#   vtable 0x0213d664, whose word at 0x0213d660 is that typeinfo record back
+#
+# WIDTH 36, FOUR WAYS (section 11's three plus the relocation count):
+#   1. SPAN. data_ov006_0213d664 -> next symbol data_ov006_0213d6f4 is 0x90
+#      bytes = 36 words exactly, so a 37th slot cannot exist inside the table.
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, the family terminal.
+#   3. WHAT THE WORD PAST THE END IS. Index 36 reads 0x00000028 -- a small
+#      integer with its own config symbol, not a code address.
+#   4. RELOCATION COUNT. Exactly 36 load relocations fall inside
+#      [0x0213d664, 0x0213d6f4) and none lands on index 36.
+#   Section 3's row (36 / 13 / 11 / 0) is confirmed: the 13 overrides against
+#   data_ov004_020bc0c0 are slots 0, 2, 5, 6, 7, 9, 10, 16, 17, 18, 19, 26 and
+#   33; slots 16 and 33 carry no marker, which is the 11.
+#
+# EVERY COUNT BELOW CARRIES ITS ARITHMETIC, per the mg6 lane PPP correction:
+# instructions + pool words = words = size/4 on every row, computed by
+# splitting each body at the LOWEST pc-relative literal address its own
+# instructions reference rather than by inferring the instruction count from
+# the total.
+#
+# AND THAT ARITHMETIC CORRECTS TWO EARLIER ROWS IN THIS FILE. The MGA and MGB
+# rulings for func_ov006_0210a608 read "0x5c, 17 instructions plus a four-word
+# pool" (17+4 = 21, not 23) and for func_ov006_0210a698 "0x4c, 16 instructions
+# plus a two-word pool" (16+2 = 18, not 19). Re-derived here the two are 19+4
+# and 17+2, which sum to 23 and 19 = 0x5c/4 and 0x4c/4. The per-body EVIDENCE
+# in both rows -- the constants, the pool words, the call order, the branch
+# polarity -- is unaffected and re-confirms exactly; only the instruction
+# counts were low, in the same way and for the same reason lane PPP records.
+#
+# FIVE OF THE ELEVEN ARE THE 0x0210a6xx FAMILY, ruled before by lanes MGA
+# (dScMgCup_c), MGB (dScMgMemory2_c) and FLW (dScMgFlower_c). They are
+# re-derived here rather than inherited, because this lane is seating them into
+# a FOURTH table, and they are not re-listed as rows: the guard already has
+# them and a duplicate line would add nothing. The re-derivation agrees with
+# all three earlier ones instruction for instruction (0210a6e4 8+1=9 of 0x24;
+# 0210a608 19+4=23 of 0x5c; 0210a698 17+2=19 of 0x4c; 0210a664 13+0=13 of
+# 0x34; 0210a600 2+0=2 of 0x8), and the two count corrections above are the
+# only difference.
+#
+# THE RECOVERED NAMES ARE WRONG ON THREE OF THIS CLASS'S OWN SIX, the way lane
+# CCN's, lane FLW's and lane PPP's were: func_ov006_020f76a8 is named
+# dScMgMCarlo_c_OnYoshiTryEat and is the deleting destructor,
+# func_ov006_020f8c68 is dScMgMCarlo_c_OnYoshiTryEat_020f8c68 and is the state
+# reset, and func_ov006_020f8a3c is dScMgMCarlo_c_OnTurnIntoEgg and is the
+# second half of the state machine. All three bodies are exact.
+#
+# THE UNMARKED TWO WERE READ WITH THEM and need no rows here; they are named
+# because a reader of this block will look for them.
+#   func_ov006_020f7634 (slot 16, D2) 23+6=29 of 0x74: stores 0x0213d664,
+#     __destroy_arr(this+0x51a8, 0x50, 0x30, func_ov006_020f7730),
+#     func_ov006_020c1c64(this+0x4f38), stores 0x0213e448, Particle SysTracker
+#     D1 at this+0x471c, func_ov004_020b29c0(this), return this. It is slot
+#     17's body without the Deallocate, which is the D2/D0 difference, and its
+#     store of the same two vtable words is half the cross-confirmation of the
+#     hierarchy that slot 17's is the other half.
+#   func_ov006_0210a708 (slot 33) 98+12=110 of 0x1b8: dScMgSingle3DBase_c's
+#     once-per-boot 3D setup, already hostgen'd for the flower slice because
+#     its last two stores reach LIGHT_COLOR at 0x040004cc. This class inherits
+#     that body and that substitution unchanged.
+#
+# Full ROM/src pairing for all thirteen bodies:
+# runs/mg9/out/S381/adj_own.txt and runs/mg9/out/S381/adj_mid.txt.
+func_ov006_020f8d08  REAL_DECOMP  port/slice_s381.txt  lane S381. slot 0 InitResources, 0x13c, 71 instructions plus an 8-word literal pool (71+8=79=0x13c/4) and src names every pool word: 0x0213d5b4, 0x0209d45c, 0x0209d454, 0x04000008, 0x00004660, 0x0400100a, 0x00004f38, 0x020beb68. Call order matches src call for call: func_ov004_020b04d0(0x20); func_ov006_0210a534(this); GetGameLanguage at 0x020ad674 then a scaled-index load off the pool word 0x0213d5b4 into LoadFile (0x0201816c); LoadFile(0xbb); DecompressLZ16 (0x0205a754) to 0x06600000; GXS::LoadOBJPltt (0x02056738) with (0, 0x100); two Deallocate (0x02018144). Then the byte stores data_0209d45c = 0x11 and data_0209d454 = 0x18; the halfword read-modify-write on 0x04000008 as bic #3 / orr #1 and on 0x0400100a as bic #3; func_ov006_020c0aa8(this+0x4660); func_ov006_020c1a88(this+0x4f38) with the moveq/popeq/bxeq early return 0. Tail: func_ov004_020b682c; +0xa8 = func_ov004_020ad8b8(); +0xac = +0xa8; func_ov004_020ad878() stored to func_020beb68's +0xb4 only when the pointer is non-null (ldr/cmp/strne, the bare-name spelling of data_ov004_020beb68 that the pool word 020BEB68 resolves); then ldr r2,[r0] / mvn r1,#0 / ldr r2,[r2,#0x48] / blx r2 -- a VIRTUAL SLOT 18 call with -1, which is where this class's slot-18 ride-through comes from; +0x60aa = 0; return 1. THE LANGUAGE TABLE IS THE IDENTITY EVIDENCE AS WELL AS THE BODY'S: data_ov006_0213d5b4 = {0xba, 0xbc, 0xb7, 0xb8, 0xb9}, which the NitroFS handle table resolves to MG/d_2d_mg_card_ncg.bin and its S/F/G/I siblings, and 0xbb is MG/d_2d_mg_card_ncl.bin, the card palette
+func_ov006_020f869c  REAL_DECOMP  port/slice_s381.txt  lane S381. slot 6 Behavior, 0x3a0, 220 instructions plus a 12-word pool (220+12=232=0x3a0/4). THE ROW THAT SAYS THIS CLASS HAS NO POINTER-TO-MEMBER WALL: at 0x020f86a8 it reads the s16 at this+0x6000+0xa8 and does cmp #1 / beq, cmp #2 / beq, cmp #3 / beq, b default -- a plain compiled switch, not the five-instruction ARM Itanium sequence curling's 020e3528, dScMgCup_c's 020e0204 and dScMgPanel_c's 02107358 all carry, and there is no shift-by-one / and-with-one pair decode anywhere in the body either. Case 1 increments +0x60a8 and, under the c[0xc4] == 0 test, writes 1 to the bytes at +0xc3 and +0xc4 and 0 to the HALFWORD at +0xc0 (strheq), then FALLS THROUGH to case 2 exactly as src spells it. Case 2 writes data_ov006_0213d574 = +0x60ae * 5 << 12 (mov #5 / smulbb / lsl #0xc) and advances on +0x60ae == 4 and func_ov006_020f7b10() == 0. Case 3 is the round decision and its two arms are the ROM's way round. Call census matches src target for target and count for count: func_ov006_020f7b10, _020f7a90, _020c1718, _020c1164, _020f7b90, _020c16b4, _020c0d68, _020c0c80, _020c19d0, _020f7740 once each, func_ov004_020b0a54 twice, func_ov004_020ad79c twice, func_ov004_020adb1c once, func_ov004_020b65e4 once. Every pool word is named by src: 0x000060a8, 0x0213d574, 0x0213d564, 0x0213d56c, 0x00004f38, 0x000060ae, 0x021424fc, 0x02142508, 0x0213d570, 0x020beb68, 0x0000270f, 0x0213d568 -- and 0x270f is the same clear-count clamp section 17 disassembles for Memory Master, on the same data_ov004_020beb68 +0xb4/+0xb8 pair, which is what says this class carries the family's saved-progress ramp
+func_ov006_020f85b0  REAL_DECOMP  port/slice_s381.txt  lane S381. slot 9 Render, 0xec, 56 instructions plus a 3-word pool (56+3=59=0xec/4) holding 0x00004660, 0x02142504 and 0x00004f38, all three named by src. func_ov006_020c0aa8(this+0x4660); func_ov004_020b1bc8(this, 0xc, 0xc, 0) with the three as ARM immediates; func_ov004_020b6430(); func_ov004_020b1e34(this, 0xe0, 0x14, 1) -- the same argument triple lane WTIMER closed as PROVABLY DEAD in that veneer for dScMgLuigi_c and lane PPP re-met on dScMgPanel_c, so no veneer repair is owed here either. Then TWO 0x14-bounded walks of the data_ov006_02142504 list, identical in shape and opposite in predicate: the first calls the node's slot 0 through ldr r1,[r0] / ldr r1,[r1] / blx r1 when its +0x20 is greater than 0 (ble skips), the second when its +0x20 is zero (bne skips), each advancing through +4 and breaking on a null node or on i reaching 0x14. Those two blx are ordinary VIRTUAL calls through a node's own vtable, not member pointers. Tail func_ov006_020f8540(this), func_ov006_020c1804(this+0x4f38), return 1 -- and 020c1804 is the local-shadow-class model draw run mg6 lane MEM host-copied as unmatched/MgMemory2_ModelRender_020c1804.cpp, so this class reaches that repair rather than needing its own
+func_ov006_020f76a8  REAL_DECOMP  port/slice_s381.txt  lane S381. slot 17, the deleting destructor, 0x88, 27 instructions plus a 7-word pool (27+7=34=0x88/4) every word of which resolves: 0x000051a8, 0x0213d664, 0x020f7730, 0x00004f38, 0x0000471c, 0x0213e448, 0x020a0eac. THE ROW THAT NAMES THE WHOLE HIERARCHY: it stores data_ov006_0213d664 -- this class's OWN vtable, the strongest single confirmation that 0x0213d664 is the right table for id 0x17d -- then __destroy_arr(this+0x51a8, 0x50, 0x30, func_ov006_020f7730) with the count, stride and element destructor in r1, r2 and r3, then func_ov006_020c1c64(this+0x4f38), then stores data_ov006_0213e448, THE INTERMEDIATE BASE, which is the same word the factory writes on the way up and the same one dScMgFlower_c's 0212a5c8 and dScMgSingle3DBase_c's own 0210a4e8 write; then Particle SysTracker D1 at this+0x471c, func_ov004_020b29c0(this), Memory::Deallocate(this, the word at data_020a0eac loaded BY VALUE), return this. Its unmarked D2 sibling 020f7634 writes the same two vtable words and cross-confirms both resolutions. The 0x50 by 0x30 array is the card array the factory builds at this+0x51a8, whose element vtable 0x0213d5ac carries the RTTI string 18dMgMCarloCardObj_c. The recovered NAME says OnYoshiTryEat and is wrong; the body is the D0
+func_ov006_020f8c68  REAL_DECOMP  port/slice_s381.txt  lane S381. slot 18, the state reset, 0xa0, 35 instructions plus a 5-word pool (35+5=40=0xa0/4) holding 0x000051a8, 0x0213d564, 0x00004f38, 0x000060ae and 0x020bc7d4, all five named by src. func_ov006_020f7c10(this+0x51a8) -- the card array again; data_ov006_0213d564 = 0; +0x60ae = 0; +0x511e = 1 written through an add ip,r4,#0x5100 base; func_ov006_020c1604(this+0x4f38, 4, 4, this+0x60ae) with the fourth argument an INTERIOR POINTER into the object rather than a value; +0x4f52 = 1 through an add r0,r4,#0x4f00 base; +0x60aa = 0; +0x60a8 = 1, which is the state index slot 6 dispatches on and slot 19 continues, cross-confirming all three; func_ov004_020b66d4(this+0x6000); func_020bc7d4 = 1. IT IS A RIDE-THROUGH AND NOT A REAL SECOND ARGUMENT: r1 is overwritten by mov r1,#4 at 0x020f8c80 before anything reads it, while slot 0's own dispatch of this slot at 0x020f8e08 passes -1 in r1, so the seat's thunk declares the parameter to keep the host calling convention cleaning four bytes and the body ignores it -- the shape lane BASESET repaired across the family and the flower seat's flw_reset carries. The recovered NAME says OnYoshiTryEat_020f8c68 and is wrong; the body is the state reset
+func_ov006_020f8a3c  REAL_DECOMP  port/slice_s381.txt  lane S381. slot 19, 0x22c, 129 instructions plus a 10-word pool (129+10=139=0x22c/4). THE SECOND HALF OF THE STATE MACHINE, and it is a jump table rather than a compare chain: cmp r0,#8 then addls pc,pc,r0,lsl #2 at 0x020f8a50 over nine entries at 0x020f8a58..0x020f8a78, of which indices 0..3 branch to the exit and 4, 5, 6, 7 and 8 branch to 0x020f8a7c, 0x020f8a9c, 0x020f8b04, 0x020f8bc4 and 0x020f8c10 -- exactly the five cases src writes and no others, with the pre-table b 0x020f8c34 at 0x020f8a54 as the out-of-range arm. It dispatches on the SAME s16 at +0x60a8 slot 6 does and slot 18 sets to 1. Case 4 is FreeGfxSlotsById(0x1d) (bl 0x020b0aa0 with r0 = 0x1d) then the state advance. Case 5 gates on func_ov006_020c1718(this+0x4f38) and picks between func_ov004_020b5e40(data_ov006_0213d570) with +0x60aa = -1 (mvn) and func_ov004_020b56c8(data_ov006_0213d568). Case 6 reads data_ov006_02142500 and its byte +0x2e, calls ApproachLinear2 (0x0203aed8) on the s16 at +0x60aa toward 0 by 1, then walks the data_ov006_02142504 list +0x60ae links and clears the reached node's +0x2e; its else arm advances the state when data_ov004_020bf9e4 is 1 or less. Case 7 returns early while func_020beb68's +0xa8 is non-zero, else func_ov006_020f7994() and +0x60aa = 0x1e. Case 8 is the second ApproachLinear2. All ten pool words are named by src: 0x000060a8, 0x00004f38, 0x0213d570, 0x0213d568, 0x02142500, 0x000060aa, 0x02142504, 0x000060ae, 0x020bf9e4, 0x020beb68 -- and the pool carrying BOTH 0x02142500 and 0x02142504 is what says src is right to read the gate off one and the list off the other. The recovered NAME says OnTurnIntoEgg and is wrong
