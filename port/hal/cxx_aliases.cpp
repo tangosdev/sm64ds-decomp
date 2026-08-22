@@ -250,6 +250,23 @@ int SharedFilePtr_Construct_TexSeq(void *self, unsigned id)
    here, all of which already spell both arguments, which is why eleven classes
    booted over this hole.
 
+   THE BLAST RADIUS IS EVERY ov006 SCENE, NOT JUST 389, and that is the part
+   worth stating plainly rather than leaving to be inferred from "one veneer".
+   The seven call sites are all in ov006 STATIC INITIALISERS -- one each in
+   __sinit_ov006_0212f52c, _0212f6b4 and _0213322c, and four in
+   __sinit_ov006_02130a08 -- and port_scene_mg_overlay_load runs all
+   thirty-five ov006 constructors ONCE PER PROCESS at the tail of the first
+   minigame row's fill. So this line runs on EVERY ov006 scene boot, and it was
+   handing four SharedFilePtrs outside scene 389 a garbage id too. Nothing
+   faulted on them because nothing had loaded through them yet, which is the
+   same reason the hole survived eleven seats.
+
+   WHICH IS WHY THE NET IS THE FULL BATTERY AND NOT SCENE 389. A change that
+   runs in every ov006 constructor cannot be proved by the one scene that
+   exposed it. port/tools/battery.py's fourteen hosted scenes and fifty-one
+   levels are the check that matters here, and they are ALL GREEN across this
+   repair; the curling canary reproducing 32557/32557/0 is the second.
+
    port/tools/aritycheck.py's census NAMED IT and nobody had read it: the JSON
    carries `func_02017a24 def_n 1 / decl_n 2 INVENTS` twice, once for
    __sinit_ov006_0212f6b4 and once for __sinit_ov006_02130a08. That census is

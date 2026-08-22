@@ -4183,11 +4183,12 @@ endforeach()
 #   Scene -> dScMgBase_c (ov004 0x020bc0c0) -> dScMgSingle3DBase_c
 #         (ov006 0x0213e448) -> dScMg3DEsp_c (ov006 0x0213c8c4)
 #
-# all three tables 36 slots wide, and the derived one checked FOUR ways before a
+# all three tables 36 slots wide, and the derived one checked FIVE ways before a
 # word was written (port/slice_psy.txt): span, terminal slot, what the word past
-# the end is, and the relocation count -- the fourth being this lane's addition,
-# because a vtable slot is a relocated code pointer and word 36 carries no
-# relocation at all.
+# the end is, the relocation COUNT -- this lane's addition, because a vtable
+# slot is a relocated code pointer and word 36 carries no relocation at all --
+# and the relocation STRIDE, run mg9 lane LKY's check, which needs no config
+# symbol: 4 bytes for thirty-five consecutive steps and then twelve.
 #
 # THE CLASS NAME IS THE ROM'S OWN type_info, reached through the word before the
 # vtable: data_ov006_0213c8c4[-1] is 0x0213c7c8, whose name pointer is

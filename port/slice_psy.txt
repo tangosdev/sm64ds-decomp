@@ -65,7 +65,7 @@
 # measured safe, and this row is appended after both of theirs so neither
 # witness moves.
 #
-# ---- THE WIDTH IS 36, CHECKED FOUR WAYS ------------------------------------
+# ---- THE WIDTH IS 36, CHECKED FIVE WAYS ------------------------------------
 #
 # port/mg_fanout_costs.txt section 11 measured that twelve of twenty-nine
 # widths in that file's own section 3 table were phantoms and that a 37-slot
@@ -107,6 +107,18 @@
 #      A scan of every slice in the tree finds this the only one that ever had
 #      the defect.
 #
+#      AND A SECOND READER TRAP IN THE SAME FILE, which this header did not
+#      carry until the mg9 reviewer noticed it was only ever written down in a
+#      commit message. CMake's foreach skips a line only when it STARTS with a
+#      '#', so a TRAILING INLINE COMMENT on a src line does not get stripped:
+#      the path becomes "src/func_ov006_020e9e70.cpp      # slot 0 ..." and
+#      resolves to nothing. That kills one path per commented line rather than
+#      the whole tail, so it is quieter than the bracket, and it produced this
+#      lane's very first LNK2019 wall. Every annotation in this file therefore
+#      sits on its OWN line above the path it describes. No other slice in the
+#      tree uses inline comments, which is why the convention was invisible
+#      until it was broken.
+#
 # The middle table's own width was re-read the same way rather than cited from
 # port/slice_mem.txt or port/slice_flw.txt: 0x0213e448 -> data_ov006_0213e4d8
 # is 0x90 = 36 words, slot 35 is 0x020ad660, and index 36 is 0x050a0a0f.
@@ -141,16 +153,39 @@
 # are the open-coded-int third shape that neither the link nor a `::*` sweep can
 # see, and one of those two is reached only through the other.
 #
-# ---- ONE PER-SOURCE RENAME, AND IT IS NOT OPTIONAL -------------------------
+# ---- ZERO PER-SOURCE RENAMES, AND THE REASON IS THE REUSABLE PART ----------
 #
-# src/func_ov006_020e9cec.c (slot 3, CleanupResources) releases two
-# SharedFilePtrs spelled G0 and G1 -- shared placeholder names for globals that
-# exist in no config. hal/cxx_aliases.cpp binds bare G0 to _data_020a0eac (the
-# game heap) and bare G1 to _data_ov002_0210e05c, and BOTH ARE WRONG FOR THIS
-# TU. The body's own literal pool says what they are, read out of the overlay
-# image at 0x020e9d14 and 0x020e9d18: 0x02141e9c and 0x02141e74, which are two
-# of the eleven SharedFilePtrs __sinit_ov006_02130a08 constructs (file ids
-# 0x1ef and 0x202). port/CMakeLists.txt carries the two -D rows.
+# THIS SLICE CARRIES NO -D ROW AT ALL. An earlier draft of this section said
+# "ONE PER-SOURCE RENAME, AND IT IS NOT OPTIONAL" and ended "port/
+# CMakeLists.txt carries the two -D rows", and BOTH SENTENCES WERE FALSE: no -D
+# row for this class exists, port/CMakeLists.txt's own block says so in its
+# heading ("NO PER-SOURCE -D ROW FOR THIS CLASS, AND THE REASON IS REUSABLE"),
+# and the wave-1 list below this contradicted it a hundred lines further down.
+# It survived because it was written before the repair was attempted and never
+# revisited after the attempt failed. It is corrected here rather than deleted,
+# because a later lane looking for the per-source-rename precedent would look
+# at exactly this heading and take the wrong lesson from it.
+#
+# WHAT ACTUALLY HAPPENED. src/func_ov006_020e9cec.c (slot 3, CleanupResources)
+# releases two SharedFilePtrs spelled G0 and G1 -- shared placeholder names for
+# globals that exist in no config. hal/cxx_aliases.cpp binds bare G0 to
+# _data_020a0eac (the game heap) and bare G1 to _data_ov002_0210e05c, and BOTH
+# ARE WRONG FOR THIS TU. The body's own literal pool says what they are, read
+# out of the overlay image at 0x020e9d14 and 0x020e9d18: 0x02141e9c and
+# 0x02141e74, which are two of the eleven SharedFilePtrs
+# __sinit_ov006_02130a08 constructs (file ids 0x1ef and 0x202).
+#
+# THE STANDING -D REPAIR CANNOT REACH THIS ONE, which is the finding. It works
+# when the placeholder is declared in the TU and the target is not declared
+# anywhere the TU can see. G1 AND ITS TARGET ARE BOTH IN include/decl_common.h
+# -- line 396 is `extern int G1[];` and line 3041 is
+# `extern void*data_ov006_02141e74;` -- so -DG1=data_ov006_02141e74 rewrites
+# line 396 into a redefinition of line 3041 with a different type of
+# indirection. Measured, not predicted: error C2372. A lane reaching for the -D
+# repair should CHECK decl_common.h FOR THE TARGET FIRST; if it is there, the
+# repair is a host copy. This one is
+# port/unmatched/Mg3DEsp_Cleanup.cpp, and src/func_ov006_020e9cec.c is out of
+# the list below.
 #
 # A scan of every TU in this slice for the shared placeholder names (VT, VT0,
 # HEAP, G0, G1, G2, R0, R1, R2) returns this ONE file and no other.
