@@ -3,25 +3,48 @@
 // mwccarm 1.2/sp2p3 (see notes/matching-style.md). Counts as decompiled, not
 // matched.
 //
-// CLOSEST APPROACH: 176 of the ROM's 319 words byte-identical under an
-// alignment-aware diff, candidate 3 instructions long (322 vs 319). The whole
-// control-flow skeleton -- the timer arm, the thirteen-step ladder, all three
-// toggle blocks, the loop preheader's ten hoisted constants and the entity
-// initialisation -- reproduces exactly; what will not close is which register
-// holds `lvl` and `step` (the ROM swaps sb/r8 against every candidate), three
-// rematerialisations of `c + i * 0x40`, and one shared zero where the ROM
-// spends two `mov`s on `mode = 0; step = 0;`.
+// CLOSEST APPROACH: 188 of the ROM's 319 words byte-identical on the best
+// word alignment, and 195 counting the seven relocation slots that hold a
+// placeholder in the object and would carry the ROM's word once linked
+// (0x020d86a0, _87d4, _8814, _8844, _8884 and the two pool loads at _88ec and
+// _8900; the reloc destinations themselves are checked, so those seven are a
+// real ceiling and not a wildcard being waved through). Candidate 3
+// instructions long, 322 versus 319.
+//
+// COUNT IT ON THE RAW WORDS. An earlier revision of this banner said 176,
+// which was measured with the alignment keyed on REGISTER-NORMALISED
+// mnemonics -- the right key for reading the shape of the residue, the wrong
+// one for this number, because it throws away every byte-identical word that
+// falls outside a shape-aligned block. Align on the words themselves.
+//
+// The whole control-flow skeleton -- the timer arm, the thirteen-step ladder,
+// all three toggle blocks, the loop preheader's ten hoisted constants and the
+// entity initialisation -- reproduces exactly; what will not close is which
+// register holds `lvl` and `step` (the ROM swaps sb/r8 against every
+// candidate), three rematerialisations of `c + i * 0x40`, and one shared zero
+// where the ROM spends two `mov`s on `mode = 0; step = 0;`.
 //
 // WHAT WAS TRIED, so the next lane does not repeat it: all 25 installed
-// mwccarm builds (every one differs on SIZE, so none is closer); the
-// opt_common_subs / opt_loop_invariants / opt_moveinvariantsinaddressexpr /
-// opt_strength_reduction pragmas in every combination; 61 declaration orders
-// of the eight locals (the pret regalloc lever -- flat at 176); pointer-local
-// versus inline spelling of the two entity read-modify-writes; `i * 0x40`
-// versus `(i << 6)`; `* 2 >> 15` versus `<< 1 >> 15` on the random range;
-// accum initialised before the loop, first in the for-init and second in it;
-// and -O1/-O2/-O3/-O4 in p and s variants. -O2,p reaches 179 identical at
-// delta -1 but still does not close, and is not this repo's flag set.
+// mwccarm builds. DO NOT GO BACK HOPEFULLY TO 1.2/sp3 AND 1.2/sp4 -- they are
+// the two that look promising and are not. They land at 320 words, delta +1,
+// the closest SIZE any build reaches, but they score 184 identical against
+// 1.2/sp2p3's 188, so they are further away where it counts and the "none is
+// closer" conclusion holds. 1.2/base, 1.2/sp2, 1.2/sp2p3 and 2004/b56 all sit
+// together at 322 words and 188 identical; 2.0/base collapses to 271 words and
+// 59. Also tried: the opt_common_subs / opt_loop_invariants /
+// opt_moveinvariantsinaddressexpr / opt_strength_reduction pragmas in every
+// combination; 61 declaration orders of the eight locals (the pret regalloc
+// lever -- flat); pointer-local versus inline spelling of the two entity
+// read-modify-writes; `i * 0x40` versus `(i << 6)`; `* 2 >> 15` versus
+// `<< 1 >> 15` on the random range; accum initialised before the loop, first
+// in the for-init and second in it; and -O1/-O2/-O3/-O4 in p and s variants.
+//
+// THE ONE RESULT WORTH REVISITING IS -O2,p: 318 words, delta -1, and 192
+// identical -- better than -O4,p on BOTH counts, and the best any flag set
+// reaches here. It still does not close, and -O4,p is what tools/match.py
+// compiles with, so this file is written for -O4,p; but a lane that is allowed
+// to move the flag set has 4 more words there than this banner's headline.
+// (-O4,s and -O2 both collapse to 308 words and 117 identical.)
 //
 // WHAT DID MOVE IT, and these are the load-bearing parts of the source below:
 // the u64 no-op mask launder L() on the five read-modify-write sites, which is
