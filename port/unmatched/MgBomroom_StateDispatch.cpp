@@ -400,7 +400,16 @@ extern "C" void func_ov006_020d8f98(unsigned char *c)
    This body is the per-bomb tick and during top-level state 3 it has exactly
    one caller -- 020d8cc4 -- so the whole bin-full sweep waited forever for
    bombs nothing was ticking. hal/scene_mg_bomroom.cpp section 9 carries the
-   measurement. Any new caller spells the receiver. */
+   measurement. Any new caller spells the receiver.
+
+   THE HANG WAS THE LUCKY HALF OF IT. Read the body below with a garbage `c`:
+   the head writes 0xff at c+0x62f6 whenever the stylus is up, which on a
+   headless run is EVERY FRAME, and the loop then reads 0x70 bytes at
+   c+0x4698 with stride 0x40. Every frame of the wedge did one wild write and
+   a hundred and twelve wild reads into whatever the caller's saved edi
+   pointed at. On the build that shipped they landed somewhere harmless and
+   the symptom was a freeze; nothing about the defect guaranteed that, and the
+   same source would have been a fault on a different frame layout. */
 extern "C" void func_ov006_020d836c(char *c)
 {
     if (*(unsigned char *)(data_020a0de8 + data_020a0e40) == 0)
