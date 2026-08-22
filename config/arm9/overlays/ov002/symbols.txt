@@ -1732,6 +1732,7 @@ _ZTV11daFeather_c kind:data(any) addr:0x021088a8
 _ZTI12daObjAbuku_c kind:data(any) addr:0x02108924
 _ZTS12daObjAbuku_c kind:data(any) addr:0x02108930
 Bubble_SpawnInfo kind:data(any) addr:0x02108940
+data_ov002_0210895c kind:data(any) addr:0x0210895c
 _ZTV12daObjAbuku_c kind:data(any) addr:0x02108964
 data_ov002_021089e0 kind:data(any) addr:0x021089e0
 _ZTI10dBgActor_c kind:data(any) addr:0x021089ec

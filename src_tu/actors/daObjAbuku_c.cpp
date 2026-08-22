@@ -44,6 +44,25 @@ struct RG { char a[0x14]; int detect[16]; };
  * has no licensed range in this candidate. */
 struct AbukuVector3 { int x, y, z; };
 
+/* Actor factory descriptor at ov002:0x02108940.  The ROM stores one of these
+ * behind each actor-table entry: a factory, two scheduling priorities, flags,
+ * and three fixed-point culling ranges.  Kept TU-local until the common actor
+ * headers recover the shared type without widening this shadow's dependency
+ * surface. */
+struct AbukuSpawnInfo {
+    daObjAbuku_c *(*spawn)();
+    s16 behaviorPriority;
+    s16 renderPriority;
+    u32 flags;
+    Fix12i rangeOffsetY;
+    Fix12i range;
+    Fix12i drawDistance;
+    u32 unk_18;
+};
+
+typedef char AbukuSpawnInfo_size_must_be_0x1c[
+    sizeof(AbukuSpawnInfo) == 0x1c ? 1 : -1];
+
 /* shadow typedef 's64' */
 typedef long long s64;
 
@@ -72,6 +91,8 @@ extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_
     unsigned int, unsigned int, Fix12i, Fix12i, Fix12i, const Vector3_16 *, void *);
 }
 
+extern "C" daObjAbuku_c *daObjAbuku_c_Spawn();
+
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 6 -- daObjAbuku_c_Spawn, 0x020b3568, size 0x38 */
 /* -------------------------------------------------------------------------- */
@@ -81,19 +102,31 @@ extern unsigned int _ZN8Particle6System3NewEjj5Fix12IiES2_S2_PK11Vector3_16fPNS_
  * (_ZTS12daObjAbuku_c), see include/daObjAbuku_c.h. */
 /* vtable identified: VT0 = _ZTV12daObjAbuku_c */
 extern "C" {  /* .c-derived member: C linkage for the whole block */
-int *daObjAbuku_c_Spawn(void)
+daObjAbuku_c *daObjAbuku_c_Spawn(void)
 {
-    int *p = (int *)_ZN7fBase_cnwEj(276);
+    daObjAbuku_c *p = (daObjAbuku_c *)_ZN7fBase_cnwEj(276);
     if (p) {
         _ZN8dActor_cC2Ev(p);
         /* A compiler-emitted Itanium vtable names its -2/-1 preamble at
          * _ZTV; the object vptr is the first function slot, +8 bytes. */
-        p[0] = (int)&_ZTV12daObjAbuku_c[2];
+        *(int *)p = (int)&_ZTV12daObjAbuku_c[2];
         _ZN7dCcAc_cC1Ev((char *)p + 0xd4);
     }
     return p;
 }
 }
+
+/* 0x02108940..0x0210895c, immediately before the vtable object. */
+extern "C" AbukuSpawnInfo Bubble_SpawnInfo = {
+    daObjAbuku_c_Spawn,
+    0x0123,
+    0x00a1,
+    0,
+    0x00060000,
+    0x00200000,
+    0x01000000,
+    0
+};
 
 /* -------------------------------------------------------------------------- */
 /* ROM ordinal 5 -- _ZN12daObjAbuku_c13InitResourcesEv, 0x020b3518, size 0x50 */
