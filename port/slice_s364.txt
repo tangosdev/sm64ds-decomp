@@ -181,12 +181,14 @@
 # being used to derive any of it:
 #
 #   "Mario Slot / Touch the spinning slots to stop them. Get 3 items in a
-#    row to earn coins. The Superstar is wild."
+#    row to earn coins! The Superstar is wild."
 #
 # three reels, touch, three-in-a-row, and a wild symbol -- which is symbol 5,
 # the one data_ov006_0213e4d8 pays 20 for and the one the two strips differ
-# on. Message 587 opens "Super Mario Slot" and then repeats 565's body, which
-# is what says the two rows are one game and not two.
+# on. Message 587 opens "Super Mario Slot", repeats 565's body word for word
+# and adds one line, "Are you feeling super lucky?" -- which is what says the
+# two rows are one game and not two. (Glyphs beyond the Latin run, read off
+# these two: 0x26 is '?', 0x27 is '!', 0x48 is '.'.)
 #
 # THE +0x224 RULE IS WRONG PAST INDEX 23 AND THIS LANE FOUND IT THE HARD WAY.
 # data_ov004_020bc070 looks like a ramp -- indices 0..23 really are
@@ -414,25 +416,57 @@
 #
 # AND +19 IS NOT 23, WHICH IS THE FLOOR SHOWING UP IN A COLUMN NOBODY EXPECTS
 # IT IN. Section 14's rule is that every slice line moves the headline by one.
-# It holds per COMPILED-AND-KEPT body, and /OPT:REF drops a body with no
-# reference edge. The decomposition, read off walk_window.map one symbol at a
-# time:
+# It holds per COMPILED-AND-LINKED body, and /OPT:REF drops a body with no
+# reference edge. The decomposition, from a DIFF OF TWO MAPS -- the base commit
+# c693e8952 built in this same tree with port/ reverted, against the tip -- and
+# not from a reading of one map plus an assumption about the other:
 #
-#   17 of the 23 slice TUs are in the map; ONE of those 17
-#      (src/func_ov006_0210c374.cpp) was already linked through slice_flw.txt
-#      and slice_pch.txt, so the slice contributes 16;
-#   SIX are DROPPED -- func_ov006_0210c180, _0210c1a8, _0210c218, _0210c278,
-#      _0210c2c0 and _0210c500 -- and they are EXACTLY the six ov006 bodies
-#      whose only caller in the whole binary is the trapped Behavior. Nothing
-#      references them, so the linker discards them;
-#   THREE ov001 bodies join that were already compiled and were being dropped
-#      for want of a reference edge, until this seat gave them one:
-#      func_ov001_020ab550 and _020ab54c through the hosted dThIcon_c table,
-#      and _020ab3f0 / _020ab5b0 through the class's own TUs.
+#   SEVENTEEN of the 23 slice TUs are in the tip map and in NEITHER case in the
+#      base map, so the slice contributes 17;
+#   SIX are in NEITHER map -- func_ov006_0210c180, _0210c1a8, _0210c218,
+#      _0210c278, _0210c2c0 and _0210c500 -- and they are EXACTLY the six ov006
+#      bodies whose only caller in the whole binary is the trapped Behavior.
+#      Nothing references them, so the linker discards them;
+#   TWO ov001 bodies join, func_ov001_020ab550 and _020ab54c, both through the
+#      hosted dThIcon_c table. func_ov001_020ab3f0 and _020ab5b0 are in the
+#      BASE map already and are not this seat's; _020ab450 is in neither.
 #
-#   16 + 3 = 19, measured, and the six are a STANDING CREDIT: the day
-#   func_ov006_0210c9e0 is decompiled the headline moves another six without
-#   a slice line being added.
+#   17 + 2 = 19, measured on both maps, and the six are a STANDING CREDIT: the
+#   day func_ov006_0210c9e0 is decompiled the headline moves another six
+#   without a slice line being added.
+#
+# THIS PARAGRAPH WAS WRONG IN ITS FIRST COMMITTED FORM AND THE WAY IT WAS WRONG
+# IS THE PART WORTH KEEPING. It said 16 + 3, on the reasoning that
+# src/func_ov006_0210c374.cpp "was already linked through slice_flw.txt and
+# slice_pch.txt". BEING LISTED IN ANOTHER SLICE MAKES A TU COMPILED, NOT
+# LINKED. That file is in no base map line at all: the other two slices hand it
+# to the compiler and nothing in that build referenced it, so /OPT:REF dropped
+# it, and this seat's face array is the first reference edge it has ever had.
+# The same paragraph then credited two ov001 bodies to this seat that the base
+# map already holds. Both halves are the identical error -- a proxy for the
+# question standing in for the question -- and the six dropped bodies three
+# lines above are the same distinction, applied correctly, in the same
+# paragraph. THE ONLY INSTRUMENT THAT ANSWERS "was it linked before" IS THE
+# BASE MAP. Build the base.
+#
+# THE .dsstate SECTION MOVED A FULL PAGE AND A CROSS-BUILD BMP COMPARE IS
+# THEREFORE INVALID, which matters to anyone diffing pictures against
+# c693e8952. Both perturbation classes notes/port-selftest-bmp-gate.md and
+# port/tools/battery.py name are in play at once:
+#
+#   base c693e8952   .dsstate 0xc3e000..0xd283c8   959432 bytes  11726 symbols
+#   this tip         .dsstate 0xc3f000..0xd293d0   959440 bytes  11727 symbols
+#   walk_window.exe  4284416 bytes -> 4289536, +5120
+#
+# the INTERIOR grows by 8 bytes and one symbol (the hosted dThIcon_c table,
+# which every hosted DS symbol must be inside .dsstate for), and the BASE moves
+# 0x1000 because the seat's ~5 KB of port code and data pushes the preceding
+# sections past a page boundary. Either one alone invalidates a byte-exact BMP
+# comparison against the base; a comparison that means something has to pad the
+# smaller build in 4 KB steps first. NOTHING WAS MIS-PASSED BY THIS: battery.py's
+# level and scene steps check exit codes, and this lane's own BMP evidence is
+# byte-identity across three frame counts WITHIN ONE BUILD, which the section
+# move cannot touch.
 
 src/func_ov006_0210a8c0.c
 src/func_ov006_0210a900.cpp

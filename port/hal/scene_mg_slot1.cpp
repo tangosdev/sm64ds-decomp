@@ -34,8 +34,9 @@
 // The bank is LZ77-compressed and its text is a glyph-index stream rather than
 // characters, which is why an ASCII or UTF-16 sweep of the ROM finds no
 // minigame titles at all. Message 565's body -- "Touch the spinning slots to
-// stop them. Get 3 items in a row to earn coins. The Superstar is wild." --
+// stop them. Get 3 items in a row to earn coins! The Superstar is wild." --
 // confirms every mechanism derived above and was used to confirm none of it.
+// 587 repeats that body and adds "Are you feeling super lucky?".
 //
 // THE INDEX-TO-MESSAGE STEP IS A TABLE AND NOT ARITHMETIC. data_ov004_020bc070
 // is 0x0224 + n for indices 0..23 and then stops being: index 24 is 588, 33 is
