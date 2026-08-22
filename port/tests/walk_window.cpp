@@ -2382,7 +2382,11 @@ static void menu_draw(ntr::Framebuffer &fb)
     int ex = 0, ey = 0, ez = 0, eyaw = 0;
     const int n_ent = port_entrance_count();
     const int have = port_entrance_record(menu_entrance, &ex, &ey, &ez, &eyaw);
-    const char *title = "DEBUG MENU   F5/BACK/B close   "
+    /* Esc named FIRST of the four closers, because it is the one a player
+       arrives with: it is now what opened this menu in most sessions, and the
+       row has to say so or the key that got them here looks like it has no way
+       back. */
+    const char *title = "DEBUG MENU   Esc/F5/BACK/B close   "
                         "WASD or arrows or d-pad move   enter/right/A act";
 
     if (have)
