@@ -1059,10 +1059,20 @@ void gx_reset() {
        what says it is one defect and not two.
 
        AFTER: 361 and 367 both go PROJ_IDENTITY 1 -> 0 and drawable -> 1806 of
-       1806, and 361's top screen goes from 21 distinct colours to 7082. Every
-       other hosted scene is byte-identical and so is the level-1 selftest, at
-       md5 5b783a29d753ce4dfbd35c79a7b2850f -- the scenes that reload the
-       projection every frame cannot notice a carry, which is most of them.
+       1806, and 361's top screen goes from 21 distinct colours to 7082.
+
+       AND NOTHING ELSE MOVES, swept rather than assumed, on one binary against
+       SM64DS_PROJ_CARRY_OFF=1: the other 21 hosted scenes byte-identical, and
+       ALL 46 MOUNTED LEVELS' selftest BMPs byte-identical too, 46 of 46, level
+       1 at md5 5b783a29d753ce4dfbd35c79a7b2850f. The level sweep is the one
+       this change owes and the scene sweep does not cover -- a level is a 3D
+       scene as much as a minigame is. The scenes and levels that reload the
+       projection every frame cannot notice a carry, which is nearly all of
+       them, and that is why the blast radius is two.
+
+       SCENE 387 (dScMgBooSeek_c) READS PROJ_IDENTITY 1 TOO AND IS NOT FIXED BY
+       THIS. It submits ZERO triangles, so it is a different defect that shares
+       one row of that census; named here so the row is not read as closed.
 
        SM64DS_PROJ_CARRY_OFF=1 puts the old wipe back on the same binary.
 
