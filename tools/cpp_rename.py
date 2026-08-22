@@ -1,4 +1,4 @@
-"""cpp_rename.py — Rename func_ADDR files to demangled C++ symbol names safely.
+"""cpp_rename.py: rename func_ADDR files to demangled C++ symbol names safely.
 
 Renames single-function `func_ADDR.c|cpp` files to demangled `_ZN...` symbol names
 when the symbol is verified/known, using `git mv` to preserve git history.
@@ -7,6 +7,13 @@ Usage:
     python tools/cpp_rename.py --dry-run          # preview proposed renames
     python tools/cpp_rename.py --apply            # apply renames + git mv
     python tools/cpp_rename.py --addr 0x020b00e8  # rename specific function
+
+Every applied rename is re-verified with tools/match.py against the function's own
+module image. A rename that fails verification is rolled back in full (provenance,
+content, git mv) and the batch stops there: a failure at this step means either the
+checkout cannot verify at all (no extracted/, no compiler) or the rename map is
+wrong, and both conditions poison every rename that would follow. Nothing stays
+renamed that did not verify.
 """
 import argparse
 import json
@@ -20,6 +27,7 @@ sys.path.insert(0, str(REPO / "tools"))
 
 import demangle as DM
 import srcpath as SP
+from stamp_provenance import FUNC_RE, matching_versions, module_target
 
 def load_verified_symbols():
     """Load map of addr -> symbol_name from verified.tsv, actor_renames.tsv, and symbols.txt."""
@@ -149,24 +157,106 @@ def update_match_provenance(old_rel_path, new_rel_path):
         prov_file.write_text("".join(new_lines), encoding="utf-8")
     return updated
 
-def verify_match(rel_path, symbol, addr_str):
-    """Run tools/match.py to verify that the renamed file still byte-matches."""
-    cmd = [
-        sys.executable,
-        str(REPO / "tools" / "match.py"),
-        "--c", rel_path,
-        "--func", symbol,
-        "--addr", addr_str,
-        "--version", "2004/b56"
-    ]
-    r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO))
-    return "MATCHING VERSIONS: 2004/b56" in r.stdout
+VERSION = "2004/b56"  # canonical matching compiler (match.py CANONICAL)
+
+_size_cache = {}
+
+
+def _sizes(module):
+    """addr to size for every function in the module's config symbols.txt.
+
+    The same file and line shape stamp_provenance.load_symbol reads, but keyed by
+    address instead of name: right after a rename the file name and the symbols.txt
+    name can legitimately disagree, while the address never does.
+    """
+    if module not in _size_cache:
+        if module in ("arm9", "arm7"):
+            sym = REPO / "config" / module / "symbols.txt"
+        else:
+            sym = REPO / "config" / "arm9" / "overlays" / module / "symbols.txt"
+        table = {}
+        if sym.is_file():
+            for line in sym.read_text(errors="ignore").splitlines():
+                m = FUNC_RE.match(line)
+                if m:
+                    table[int(m.group(3), 16)] = int(m.group(2), 16)
+        _size_cache[module] = table
+    return _size_cache[module]
+
+
+def verify_match(rel_path, func_names, module, addr):
+    """Whether rel_path still reproduces the ROM bytes at (module, addr).
+
+    Returns (ok, reason); reason is "" on success. match.py requires --size, and the
+    target image must be the symbol's own module (--module/--bin/--base), resolved
+    through the same registry stamp_provenance.run_match uses. The previous version
+    of this function passed none of that, so match.py exited 2 on argparse before
+    compiling anything and every verification failed (see test_cpp_rename_verify.py).
+
+    func_names are tried in order. Renaming the file does not rename the function
+    inside it, so the compiled object usually still defines the old address name,
+    while a file already migrated to a real C++ definition defines the mangled one.
+    """
+    size = _sizes(module).get(addr)
+    if size is None:
+        return False, f"no function size for {module}:{addr:#x} in config symbols.txt"
+    target = module_target(module)
+    if target is None:
+        return False, f"no target binary for module {module!r} (needs extracted/)"
+    bin_path, base = target
+    if not bin_path.is_file():
+        return False, f"module {module} binary missing: {bin_path}"
+    reason = "no candidate function name"
+    for func in func_names:
+        cmd = [
+            sys.executable,
+            str(REPO / "tools" / "match.py"),
+            "--c", rel_path,
+            "--func", func,
+            "--addr", hex(addr),
+            "--size", hex(size),
+            "--module", module,
+            "--bin", str(bin_path),
+            "--base", hex(base),
+            "--version", VERSION,
+            "--brief",
+        ]
+        try:
+            r = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO),
+                               timeout=180)
+        except subprocess.TimeoutExpired:
+            return False, f"match.py timed out on {func}"
+        out = (r.stdout or "") + (r.stderr or "")
+        if r.returncode != 0:
+            return False, f"match.py exited {r.returncode}"
+        versions = matching_versions(out)
+        if versions is None:
+            return False, "match.py printed no MATCHING VERSIONS verdict"
+        if VERSION in versions:
+            return True, ""
+        if f"symbol '{func}' not found in object" in out:
+            reason = f"object defines none of: {', '.join(func_names)}"
+            continue
+        return False, f"{func} does not reproduce the target under {VERSION}"
+    return False, reason
+
 
 def apply_rename(item):
+    """git mv, //cpp header, provenance rewrite, then verify. Returns (ok, reason).
+
+    Verification runs last because it must judge the file's final state: the //cpp
+    header flips match.py's compile mode from c99 to c++, so verifying the old path
+    first would grade the wrong compile. On failure the whole rename is rolled back
+    (provenance, content, git mv), so a failed apply leaves the tree as it was.
+    """
     old_p = item["old_path"]
     new_p = item["new_path"]
     sym = item["symbol"]
-    addr = item["addr"]
+    addr = int(item["addr"], 16)
+    old_stem = old_p.stem
+    module = SP.module_of(old_stem)
+    if module is None:
+        return False, f"cannot derive a module from {old_stem!r}"
 
     old_rel = str(old_p.relative_to(REPO)).replace("\\", "/")
     new_rel = str(new_p.relative_to(REPO)).replace("\\", "/")
@@ -176,17 +266,59 @@ def apply_rename(item):
     SP.invalidate()
 
     # 2. Ensure //cpp header if it's a C++ file
+    original = None
     if item["is_cpp"]:
         content = new_p.read_text(encoding="utf-8", errors="ignore")
         if not content.startswith("//cpp"):
+            original = content
             new_p.write_text("//cpp\n" + content, encoding="utf-8")
 
     # 3. Update match_provenance.jsonl
-    update_match_provenance(old_rel, new_rel)
+    prov_updated = update_match_provenance(old_rel, new_rel)
 
-    # 4. Verify match
-    ok = verify_match(new_rel, sym, addr)
-    return ok
+    # 4. Verify match; roll back 3, 2, 1 in reverse order if it does not hold
+    ok, reason = verify_match(new_rel, [old_stem, sym], module, addr)
+    if not ok:
+        if prov_updated:
+            update_match_provenance(new_rel, old_rel)
+        if original is not None:
+            new_p.write_text(original, encoding="utf-8")
+        subprocess.run(["git", "mv", str(new_p), str(old_p)], check=True, cwd=str(REPO))
+        SP.invalidate()
+    return ok, reason
+
+
+def apply_all(renames):
+    """Apply renames in order, stopping at the first verification failure.
+
+    The failed rename is already rolled back by apply_rename; the rest are left
+    un-attempted so a re-run after the investigation starts from a clean tree.
+    A non-verification error (git mv refusing a rename, say a destination that
+    already exists) touches nothing beyond its own file, so the batch continues.
+
+    Returns (successful, failed, skipped).
+    """
+    successful = failed = 0
+    for i, item in enumerate(renames):
+        old_rel = str(item["old_path"].relative_to(REPO))
+        new_rel = str(item["new_path"].relative_to(REPO))
+        try:
+            ok, reason = apply_rename(item)
+        except Exception as e:
+            print(f"  [X] Failed to rename {old_rel}: {e}")
+            failed += 1
+            continue
+        if ok:
+            print(f"  [OK] Renamed {old_rel} -> {new_rel}")
+            successful += 1
+        else:
+            failed += 1
+            print(f"  [!] {old_rel}: verification failed ({reason}); rename rolled back")
+            skipped = len(renames) - i - 1
+            if skipped:
+                print(f"      Stopping here: {skipped} remaining rename(s) not attempted.")
+            return successful, failed, skipped
+    return successful, failed, 0
 
 def main():
     parser = argparse.ArgumentParser(description="Rename func_ADDR files to demangled symbol names")
@@ -214,25 +346,12 @@ def main():
         return
 
     print("\nApplying renames...")
-    successful = 0
-    failed = 0
+    successful, failed, skipped = apply_all(renames)
 
-    for item in renames:
-        old_rel = str(item["old_path"].relative_to(REPO))
-        new_rel = str(item["new_path"].relative_to(REPO))
-        try:
-            ok = apply_rename(item)
-            if ok:
-                print(f"  [OK] Renamed {old_rel} -> {new_rel}")
-                successful += 1
-            else:
-                print(f"  [!] Renamed {old_rel} -> {new_rel} (VERIFICATION FAILED!)")
-                failed += 1
-        except Exception as e:
-            print(f"  [X] Failed to rename {old_rel}: {e}")
-            failed += 1
-
-    print(f"\nFinished: {successful} successful, {failed} failed.")
+    line = f"\nFinished: {successful} successful, {failed} failed"
+    if skipped:
+        line += f", {skipped} skipped"
+    print(line + ".")
 
 if __name__ == "__main__":
     main()
