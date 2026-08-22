@@ -494,7 +494,7 @@ src/func_ov100_0214700c.c:
     complete
     .text start:0x0214700c end:0x02147054
 
-src/_ZN15daObjPathLift_c16CleanupResourcesEv.c:
+src/_ZN15daObjPathLift_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02147054 end:0x021470a4
 
