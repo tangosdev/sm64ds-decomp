@@ -64,6 +64,7 @@ import json
 import os
 import pathlib
 import re
+import subprocess
 import sys
 import tokenize
 
@@ -92,6 +93,10 @@ PATH_RE = re.compile(r"(?<![\w./\\-])((?:[A-Za-z0-9_.\-]+/)+[A-Za-z0-9_.\-]+)(?!
 GLOBBY = re.compile(r"[*?\[\]{}<>]|\.\.\.|%s|\$\(|::")
 TRAILING = ".,;:)\"'`!?"
 HELP_KWARGS = {"help", "epilog", "description", "usage"}
+
+# NUL separator for `git ... -z` pipes; spelled this way so no editor or heredoc
+# can turn it into a literal control byte in this source file.
+NUL = bytes([0])
 
 
 # --------------------------------------------------------------------------- scan
@@ -188,6 +193,7 @@ def collect(root=REPO):
 
 
 def _tree_paths(root=REPO):
+    """Paths PRESENT ON DISK. Worktree-dependent -- see `_git_ignored`."""
     paths = set()
     for base, dirs, names in os.walk(root):
         dirs[:] = [d for d in dirs if d not in SKIP_DIRS]
@@ -199,17 +205,95 @@ def _tree_paths(root=REPO):
     return paths
 
 
+def _git_tracked(root=REPO):
+    """Paths git TRACKS, plus every ancestor directory of one.
+
+    Deterministic where `_tree_paths` is not: identical in a wired worktree, a bare
+    CI checkout and a `git archive` extraction.
+    """
+    out = subprocess.run(["git", "ls-files", "-z"], cwd=root,
+                         capture_output=True)
+    if out.returncode != 0:
+        return set()
+    paths = set()
+    for raw in out.stdout.split(NUL):
+        rel = raw.decode("utf-8", "replace").strip()
+        if not rel:
+            continue
+        paths.add(rel)
+        parts = rel.split("/")
+        for i in range(1, len(parts)):
+            paths.add("/".join(parts[:i]))
+    return paths
+
+
+def _git_ignored(candidates, root=REPO):
+    """Which of `candidates` .gitignore covers -- ONE `git check-ignore` process.
+
+    This is the load-bearing distinction. `tools/mwccarm/` (the pinned compiler),
+    `tools/bin/` (dsd.exe) and `extracted/` (the ROM dump) are gitignored inputs that
+    every wired worktree junctions in. Prose naming them is CORRECT -- the tools really
+    do read those paths -- but git does not track them and a clean CI checkout does not
+    have them on disk. Resolving against the filesystem alone therefore passes locally
+    and fails in CI, which is exactly how this gate broke on its own first PR.
+
+    Each candidate is asked TWICE, bare and with a trailing slash. `.gitignore` spells
+    these rules `tools/mwccarm/`, and a directory-only pattern matches only when git
+    knows the path is a directory -- which it infers from the filesystem. On a wired
+    worktree the junction exists, so the bare form matches; on a clean CI checkout it
+    does not, so the bare form MISSES and only `tools/mwccarm/` matches. Asking both is
+    what makes the answer independent of whether the input happens to be present.
+
+    LIMIT, stated rather than papered over: `git check-ignore` answers from the ignore
+    RULES, not from the filesystem, so it reports a path under `tools/mwccarm/` as
+    ignored whether or not that file exists. A genuinely dead reference INSIDE an
+    ignored directory is therefore invisible to this gate. That is not a fixable
+    oversight: on a clean checkout there is no ground truth for what should exist under
+    a directory whose contents were never committed. Checking the disk when it happens
+    to be populated would restore the worktree-dependence this function exists to remove.
+    """
+    cands = sorted(set(candidates))
+    if not cands:
+        return set()
+    probes = [c for c in cands] + [c + "/" for c in cands]
+    # BYTES, and -z on both sides. With text=True Python rewrites \\n to \\r\\n
+    # on Windows, git takes the CR as part of the filename, and every answer
+    # comes back quoted with a stray carriage return -- so nothing matches and every
+    # gitignored input looks dead again. -z sidesteps the newline question entirely.
+    out = subprocess.run(["git", "check-ignore", "-z", "--stdin"], cwd=root,
+                         input=NUL.join(c.encode("utf-8") for c in probes),
+                         capture_output=True)
+    # exit 0 = at least one ignored, 1 = none ignored; both are normal. Anything
+    # else (128: not a repo) means we could not classify, so claim nothing.
+    if out.returncode not in (0, 1):
+        return set()
+    hits = set()
+    for raw in out.stdout.split(NUL):
+        name = raw.decode("utf-8", "replace").strip().replace("\\", "/")
+        if name:
+            hits.add(name.rstrip("/"))
+    return hits
+
+
 def dead_references(root=REPO):
-    """(files_scanned, refs_seen, sorted [(file, ref)] that do not resolve)."""
+    """(files_scanned, refs_seen, sorted [(file, ref)] that do not resolve).
+
+    A reference is ALIVE when it is tracked by git, OR present on disk, OR gitignored.
+    The three cover different ground: tracked is deterministic across checkouts, on-disk
+    catches untracked-but-real files, and gitignored covers the junctioned build inputs
+    that are legitimately absent from a clean clone.
+    """
     files, refs = collect(root)
-    paths = _tree_paths(root)
-    dead = set()
+    paths = _tree_paths(root) | _git_tracked(root)
+    unresolved = set()
     for rel, _lineno, ref in refs:
         if ref in paths:
             continue
         if any(p.endswith("/" + ref) for p in paths):
             continue
-        dead.add((rel, ref))
+        unresolved.add((rel, ref))
+    ignored = _git_ignored({ref for _rel, ref in unresolved}, root)
+    dead = {(rel, ref) for rel, ref in unresolved if ref not in ignored}
     return files, refs, sorted(dead)
 
 
