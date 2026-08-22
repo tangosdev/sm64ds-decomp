@@ -6017,3 +6017,15 @@ else()
     message(WARNING "python not found: the port ABI check targets were not "
                     "created")
 endif()
+
+# Windows identity resources: version info + icon for the game-shaped exes a
+# player can meet (the bundle ships walk_window; hires is its sibling build of
+# the same sources). Resources land in .rsrc and move nothing in .text, so the
+# map-reading guards are untouched. The smokes stay bare on purpose: they are
+# dev tools, not shipped artifacts. Version numbers live in res/walk_window.rc
+# and are bumped by the release lane next to version.json.
+if(WIN32)
+    enable_language(RC)
+    target_sources(walk_window PRIVATE res/walk_window.rc)
+    target_sources(walk_window_hires PRIVATE res/walk_window.rc)
+endif()

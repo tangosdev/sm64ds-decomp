@@ -1,0 +1,46 @@
+// Windows identity resources for the shipped game exe.
+//
+// A bare exe with no publisher, product, version, or icon is one of the
+// signals antivirus heuristics and SmartScreen weigh against an unsigned
+// download, so the exe declares what it is. Nothing here is code: resources
+// land in their own .rsrc section and do not move a byte of .text, so the
+// map-reading guards (alternatename, gxband, tailjump) see the same world.
+//
+// RELEASE LANE: the four version numbers below name the RELEASE and are
+// bumped by hand as part of assembling a bundle, next to version.json.
+// BUNDLE.md's release steps carry the reminder; a shipped exe whose file
+// properties disagree with version.json is the drift this comment exists
+// to prevent.
+
+#include <windows.h>
+
+1 ICON "walk_window.ico"
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 0,2,12,0
+ PRODUCTVERSION 0,2,12,0
+ FILEFLAGSMASK VS_FFI_FILEFLAGSMASK
+ FILEFLAGS 0x0L
+ FILEOS VOS_NT_WINDOWS32
+ FILETYPE VFT_APP
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040904b0"
+        BEGIN
+            VALUE "CompanyName", "Tango"
+            VALUE "FileDescription", "SM64DS PC Port"
+            VALUE "FileVersion", "0.2.12"
+            VALUE "InternalName", "walk_window"
+            VALUE "LegalCopyright", "Fan decompilation project. Not affiliated with or endorsed by Nintendo."
+            VALUE "OriginalFilename", "walk_window.exe"
+            VALUE "ProductName", "SM64DS Port"
+            VALUE "ProductVersion", "0.2.12"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x409, 1200
+    END
+END
