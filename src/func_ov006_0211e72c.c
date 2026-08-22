@@ -11,12 +11,21 @@
      +0x1a  the RENDER gate. Zero means the Boo is not drawn at all, and it is
             the byte func_ov006_0211ebdc clears when a Boo has finished fading.
      +0x00  x, 20.12; +0x04 y, 20.12. Shifted down by 12 for the sprite.
-     +0x16  the fade level. Nonzero picks 1 for OAM::Render's last argument and
-            zero picks -1, which is the same two-hoisted-constants shape
+     +0x16  the fade level. Nonzero picks 1 for OAM::Render's mode and zero
+            picks -1, which is the same two-hoisted-constants shape
             src/func_ov006_020f5b98.c's card draw uses for its flag.
-     +0x1b  passed through as the sixth argument.
+     +0x1b  the sprite priority.
      +0x1d  the animation frame and +0x1e the facing, together the index into
             data_ov006_0213a964.
+
+   THESE GO ON THE SUB SCREEN. OAM::Render's first parameter is `bool sub` --
+   src/_ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii.cpp names it -- and this loop
+   passes 1 where every other caller in the tree passes 0. So a capture of the
+   TOP screen alone cannot show this body running, however many Boos are live;
+   SM64DS_SCENE_BMP_STACKED is the artifact that can. The rest of the argument
+   list is unremarkable and is written out because a reader should not have to
+   count commas: palette -1, priority from the record, unity scale on both
+   axes, no rotation.
 
    THE SPRITE TABLE IS TWO ROWS OF SEVEN and the ROM says so twice. The symbol
    span 0x0213a964..0x0213a99c is 0x38 = fourteen words, and
@@ -37,16 +46,16 @@
    on an address for the same class of reason. */
 
 extern void _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-    int sub, void *attr, int x, int y, int a, int cc,
-    int fx, int fy, int rot, int mode);
+    int sub, void *attr, int xOff, int yOff, int palette, int priority,
+    int scaleX, int scaleY, int rotation, int mode);
 extern void *data_ov006_0213a964[];
 
 void func_ov006_0211e72c(char *c)
 {
-    int cc;
     int i;
     int idx;
     int mode;
+    int prio;
     int x;
     int y;
 
@@ -55,13 +64,13 @@ void func_ov006_0211e72c(char *c)
             x = *(int *)(c + 0x4660) >> 12;
             idx = *(unsigned char *)(c + 0x467d) +
                   *(unsigned char *)(c + 0x467e) * 7;
-            cc = *(unsigned char *)(c + 0x467b);
+            prio = *(unsigned char *)(c + 0x467b);
             mode = -1;
             y = *(int *)(c + 0x4664) >> 12;
             if (*(unsigned char *)(c + 0x4676) != 0)
                 mode = 1;
             _ZN3OAM6RenderEbP7OamAttriiii5Fix12IiES3_ii(
-                1, data_ov006_0213a964[idx], x, y, -1, cc,
+                1, data_ov006_0213a964[idx], x, y, -1, prio,
                 0x1000, 0x1000, (int)(long long)0, mode);
         }
         c += 0x24;
