@@ -1815,6 +1815,16 @@ reproduces src/func_ov006_020f73f4.c call for call):
   the fifth argument is the state index at +0x53d4 as a flag: every state but 2
   passes 1.
 
+  AND THAT SEAM GIVES THE THIRD WITNESS, the cheapest of the three and the one
+  to reach for next time. ov006's relocs.txt has THIRTY-TWO arm_call
+  relocations to 0x020af68c and exactly TWO of them are inside this class's
+  code block: 0x020f5c18, which is this function, and 0x020f7ec8, which is
+  inside func_ov006_020f7e2c -- a body that reads +0x2d/+0x2e of a different
+  object through data_ov006_0213d600 and data_ov006_0214250c, is in no slice
+  of this class, and belongs to the next class in the overlay. So the count of
+  card draws in dScMgMemory2_c is one, measured off the relocation set rather
+  than off a reading of the class.
+
 THE MODULE-RESIDENCY TRAP IS REAL AND IT ALMOST CLOSED THIS FLOOR TWICE.
 src/func_ov002_020f5b98.c EXISTS, is thirteen instructions, takes a
 `struct Ent *`, and belongs to ov002. Section 13 warned about it; the warning
