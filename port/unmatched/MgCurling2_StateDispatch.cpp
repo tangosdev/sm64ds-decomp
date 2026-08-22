@@ -90,13 +90,15 @@
  * receiver alone (or nothing), and every body in a 1-arity table takes
  * (receiver, index). Two independent derivations, no disagreement.
  *
- * ---- ONE HARD FLOOR -------------------------------------------------------
+ * ---- THE FLOOR IS GONE ----------------------------------------------------
  *
- * 0x020e4bd4, slot 1 of data_ov006_02141978. config/arm9/overlays/ov006/
- * symbols.txt names it func_ov006_020e4bd4; ov006's delinks.txt has no block
- * covering it and no src file defines it. It is this class's analogue of
- * curling's func_ov006_020e1854 and it is a DECOMP gap, not a port one. It gets
- * a reported case and deliberately not a plausible body.
+ * 0x020e4bd4, slot 1 of data_ov006_02141978, was this class's analogue of
+ * curling's func_ov006_020e1854: a config symbol with no delink block and no
+ * src, reported here rather than called. Run mg7 lane L375 decompiled it
+ * (src/func_ov006_020e4bd4.c, NONMATCHING-bannered, size exact, register
+ * colouring only) together with func_ov006_020e513c and func_ov006_020e5450, so
+ * all twenty-five of this class's states now have a body and the address
+ * switches below have no reported case left.
  *
  * ---- THE STORED WORDS ARE DELIBERATELY NOT REWRITTEN ----------------------
  *
@@ -149,11 +151,12 @@ void func_ov006_020e628c(char *c);
 void func_ov006_020e61c4(char *c);
 void func_ov006_020e61c0(void);
 void func_ov006_020e4ed4(char *c);
+void func_ov006_020e4bd4(char *c);
 
 /* the 1-arity state bodies */
 void func_ov006_020e5e3c(char *c, int i);
 void func_ov006_020e5b7c(char *c, int i);
-void func_ov006_020e5b70(void);
+void func_ov006_020e5b70(char *c, int i);
 void func_ov006_020e5a0c(char *c, int i);
 void func_ov006_020e4794(char *c, int i);
 void func_ov006_020e4630(char *c, int i);
@@ -185,14 +188,31 @@ int  func_ov006_020e683c(char *c);
 unsigned port_mg_curling2_state_calls(void);
 unsigned port_mg_curling2_state_unknown(void);
 unsigned port_mg_curling2_state_floor(void);
+unsigned port_mg_curling2_state_4bd4(void);
+unsigned port_mg_curling2_d8_hits(int slot);
 
 }  /* extern "C" */
 
 static unsigned g_calls, g_unknown, g_floor;
 
+/* THE ROUND-END MACHINE'S OWN CENSUS. Table data_ov006_021419d8's four states
+   are the ones run mg7 lane L375 unblocked, so they are counted per SLOT rather
+   than folded into g_calls: the four addresses in slot order are 020e5e3c,
+   020e5b7c, 020e5b70 (the veneer onto 020e5450) and 020e5a0c, and a run where
+   the machine advances shows all four moving. They are counted HERE and not in
+   the bodies on purpose -- the bodies are decomp transcriptions, and a port
+   counter inside one would be a port edit to ROM code. */
+static unsigned g_d8[4];
+static unsigned g_4bd4;
+
 extern "C" unsigned port_mg_curling2_state_calls(void)   { return g_calls; }
 extern "C" unsigned port_mg_curling2_state_unknown(void) { return g_unknown; }
 extern "C" unsigned port_mg_curling2_state_floor(void)   { return g_floor; }
+extern "C" unsigned port_mg_curling2_state_4bd4(void)    { return g_4bd4; }
+extern "C" unsigned port_mg_curling2_d8_hits(int slot)
+{
+    return (slot >= 0 && slot < 4) ? g_d8[slot] : 0u;
+}
 
 static void c2_unhandled(const char *why, unsigned code, int adj)
 {
@@ -208,24 +228,14 @@ static void c2_unhandled(const char *why, unsigned code, int adj)
     }
 }
 
-/* THE FLOOR IS COUNTED SEPARATELY FROM THE UNKNOWNS, and that distinction is
-   the whole reason this file can report an honest census. An UNKNOWN is a code
-   word nobody derived and is a defect in this file; the FLOOR is a code word
-   this file knows the name of and the decomp has no body for. Folding them
-   together would make retiring the floor look like fixing a bug. */
-static void c2_floor(unsigned code)
-{
-    static int said;
-    ++g_floor;
-    if (!said) {
-        said = 1;
-        std::fprintf(stderr, "  [scene] dScMgCurling2_c state %08x is "
-                     "func_ov006_020e4bd4: config symbol, NO delink block, NO "
-                     "src. Undecompiled, so it is reported and not called.\n",
-                     code);
-        std::fflush(stderr);
-    }
-}
+/* THE FLOOR IS RETIRED AND ITS COUNTER IS KEPT AT ZERO ON PURPOSE. Run mg6 read
+   0x020e4bd4 as "config symbol, no delink block, no src" and reported it here
+   instead of calling it; run mg7 lane L375 decompiled it, so the case below
+   calls the real body and g_floor can no longer move. The counter and the line
+   the scene prints from it stay, because "0 to the floor" is the measurement
+   that says the retirement held -- deleting the counter would turn a proof into
+   an assumption. Any address this file has no body for still goes through
+   c2_unhandled, which is what an underived code word is. */
 
 /* ---- the two address switches -------------------------------------------
  *
@@ -251,7 +261,7 @@ static void c2_call0(void *p, const MgC2Pair &e)
     case 0x020e61c4u: func_ov006_020e61c4((char *)p);       return;
     case 0x020e61c0u: func_ov006_020e61c0();                return;
     case 0x020e4ed4u: func_ov006_020e4ed4((char *)p);       return;
-    case 0x020e4bd4u: c2_floor(0x020e4bd4u);                return;
+    case 0x020e4bd4u: ++g_4bd4; func_ov006_020e4bd4((char *)p); return;
     default: break;
     }
     c2_unhandled("UNHANDLED at a zero-argument site", (unsigned)e.code, e.adj);
@@ -260,6 +270,13 @@ static void c2_call0(void *p, const MgC2Pair &e)
 static void c2_call1(void *p, const MgC2Pair &e, int i)
 {
     ++g_calls;
+    switch ((unsigned)e.code) {          /* the 021419d8 four, per slot */
+    case 0x020e5e3cu: ++g_d8[0]; break;
+    case 0x020e5b7cu: ++g_d8[1]; break;
+    case 0x020e5b70u: ++g_d8[2]; break;
+    case 0x020e5a0cu: ++g_d8[3]; break;
+    default: break;
+    }
     if (e.code == 0)
         return;
     if (e.adj != 0) {
@@ -270,7 +287,13 @@ static void c2_call1(void *p, const MgC2Pair &e, int i)
     switch ((unsigned)e.code) {
     case 0x020e5e3cu: func_ov006_020e5e3c((char *)p, i);    return;
     case 0x020e5b7cu: func_ov006_020e5b7c((char *)p, i);    return;
-    case 0x020e5b70u: func_ov006_020e5b70();                return;
+    /* THE VENEER TAKES ITS ARGUMENTS. func_ov006_020e5b70 is `ldr ip,[pc];
+       bx ip; .word 0x020e5450` in the image -- a tail jump, so r0 and r1 ride
+       through untouched -- and both this site and src/func_ov006_020e5b70.c
+       used to drop them. That was harmless only while 0x020e5450 was a trap
+       that ignored its parameters; it now strides an eleven-entry 0x30-byte
+       record array by that index. Both halves are fixed. */
+    case 0x020e5b70u: func_ov006_020e5b70((char *)p, i);   return;
     case 0x020e5a0cu: func_ov006_020e5a0c((char *)p, i);    return;
     case 0x020e4794u: func_ov006_020e4794((char *)p, i);    return;
     case 0x020e4744u: func_ov006_020e4744((char *)p, i);    return;

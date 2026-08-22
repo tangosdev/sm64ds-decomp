@@ -3848,8 +3848,13 @@ endforeach()
 # symbol, and listing neither would drop the dispatch silently. The slice file
 # names the five in its header so the trade is readable from either end.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_s75.txt" SLICE_S75_LINES)
-set(SLICE_S75_SOURCES unmatched/MgCurling2_StateDispatch.cpp
-                      unmatched/MgCurling2_Traps.cpp)
+# unmatched/MgCurling2_Traps.cpp IS GONE, run mg7 lane L375. It stood in for
+# func_ov006_020e513c and func_ov006_020e5450 while both were decomp gaps, and
+# both now have src bodies that slice_s75.txt lists, so keeping the file would
+# be two duplicate symbols. Its counters are replaced by the per-slot census in
+# MgCurling2_StateDispatch.cpp, which counts at the DISPATCH SITE rather than
+# inside a ROM body.
+set(SLICE_S75_SOURCES unmatched/MgCurling2_StateDispatch.cpp)
 foreach(line IN LISTS SLICE_S75_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
