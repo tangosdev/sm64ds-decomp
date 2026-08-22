@@ -437,10 +437,6 @@ static int fs_cache_fill(struct fs_cache_entry *e, unsigned fileID)
     fclose(f);
     ok = fs_entry_store(e, raw, (u32)fsize);
     free(raw);
-    /* mod filter, on the decompressed master and before anyone caches or
-       copies it, so a rewritten file is rewritten exactly once */
-    if (ok && port_fs_mod_filter)
-        e->size = port_fs_mod_filter(fileID, &e->data, e->size);
     return ok;
 }
 
@@ -499,6 +495,13 @@ void *_ZN13SharedFilePtr4LoadEv(struct SharedFilePtrC *self)
         memset(slot, 0, sizeof *slot);
         ok = archive ? port_fs_archive_fill(slot, fid)
                      : fs_cache_fill(slot, fid);
+        /* mod filter, on the decompressed master and before anyone caches or
+           copies it, so a rewritten file is rewritten exactly once -- and
+           HERE, after both fills, so the two id namespaces cannot disagree
+           about whether mods exist (the character models are archive
+           interiors). */
+        if (ok && port_fs_mod_filter)
+            slot->size = port_fs_mod_filter(fid, &slot->data, slot->size);
         if (!ok) {
             if (slot->data) { free(slot->data); slot->data = 0; }
             return 0;
