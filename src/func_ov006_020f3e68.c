@@ -25,7 +25,17 @@
 // difference anywhere in it is the bl's target, which is the wildcarded
 // relocation. Every differing word differs by a register number or a schedule
 // slot. The permuter's base score is 1395 here, the same figure section 15
-// records for the sibling.
+// records for the sibling, and 12,919 iterations over two seeds (9,781 from
+// seed 7 and 3,138 from seed 424242) never left the 1390 plateau. That is on
+// top of the 30,452 iterations run mg7 spent on the byte-identical residue at
+// the sibling's address, and the two searches agree.
+//
+// AND THE PERMUTER'S OWN BEST OUTPUT IS SEMANTICALLY WRONG, which is worth one
+// line because a future lane will find these files. Its 1390 candidate reaches
+// that score by reusing `i` -- the live loop counter -- as the scratch for the
+// table index, so the loop would run once and exit. A permuter score below zero
+// is a lead, never a body: nothing but a score of 0, re-verified through
+// tools/match.py, may be adopted.
 //
 // THE RESIDUE IS ONE REGISTER ROTATION, exactly as section 15 describes it: the
 // ROM colours (i, base, -1, table) into r4..r7 with the constant zero in sb,
@@ -34,26 +44,33 @@
 // eight long-lived values are held in the same eight callee-saved registers,
 // rotated by one.
 //
-// WHAT THIS LANE TRIED, ON TOP OF WHAT SECTION 15 ALREADY PAID FOR: forty-five
-// source shapes (all six declaration orders, five loop forms, six counter
-// types, six spellings of the flag, struct-typed and unsigned-char record
-// walks, the state hoisted to a local and to a pointer, extra locals for the
-// index and the coordinates, the mla operands both ways round, and the
-// `register` keyword on each local in turn) crossed with twenty-five
-// optimisation settings on each of the four capable builds. The answer is 24
-// on every combination that produces a 0xa8 body, and the settings that move it
-// move it by changing the SIZE.
+// WHAT THIS LANE TRIED, ON TOP OF WHAT SECTION 15 ALREADY PAID FOR: FORTY
+// source shapes -- all six declaration orders, five loop forms (for, while,
+// do/while, comma-increment, and the initialisation split across the header),
+// five counter types, six spellings of the flag, two struct-typed record walks
+// and an unsigned-char one, the state hoisted to a local and to a pointer,
+// extra locals for the index and for the coordinates, the record address
+// recomputed from the counter instead of walked, a `continue` early-out, a
+// local loop bound, the mla operands both ways round, and the `register`
+// keyword on each local in turn. Every shape that produces a 0xa8 body at all
+// answers 24 on all four capable builds; the struct walks answer 36. The
+// shipped shape was then crossed with TWENTY-FIVE optimisation settings on
+// each of the four builds -- that cross was run on the shipped shape only, not
+// on all forty -- and 24 does not move: every setting that changes the number
+// changes it by changing the SIZE.
 //
-// THREE SHAPES REACH 23 AND NONE IS SHIPPED, which is the sibling's finding
-// reproduced independently at this address. Writing the fifth argument as the
-// bare comparison `*(int *)(c + 0x5314) != 2`, or as an if/else, compiles the
-// flag as a movne/moveq PAIR where the ROM emits an unconditional mov of a
-// hoisted zero followed by a movne of a hoisted one -- which is the
-// if-statement below. Writing it inverted (`flag = 1; if (... == 2) flag = 0;`)
-// keeps the unconditional-then-conditional construct but emits moveq where the
-// ROM emits movne, so it buys its word by flipping a condition code, which is
-// an opcode-shape difference and not a colouring one. A word closer to the
-// bytes is the wrong trade for either.
+// FIVE SHAPES REACH 23 AND NONE IS SHIPPED, which is the sibling's finding
+// reproduced independently at this address. Four of them -- the bare comparison
+// as the fifth argument, the same comparison assigned to the flag, an if/else,
+// and a ternary -- compile the flag as a movne/moveq PAIR, where the ROM emits
+// an unconditional mov of a hoisted zero followed by a movne of a hoisted one,
+// which is the if-statement below. The fifth, the inverted form
+// `flag = 1; if (*(int *)(c + 0x5314) == 2) flag = 0;`, DOES keep the
+// unconditional-then-conditional construct, and is rejected for a different
+// reason: it emits moveq where the ROM emits movne, so it buys its word by
+// flipping a condition code. That is an opcode-shape difference, not a
+// colouring one, and it would falsify the sentence at the top of this banner.
+// The 23 is recorded in nearmiss/db.jsonl as the seed for the next attempt.
 //
 // THE RELOCATION DESTINATIONS ARE VERIFIED, AND match.py DID NOT DO IT.
 // tools/match.py runs its --strict-relocs destination check only inside
