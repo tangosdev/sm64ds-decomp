@@ -380,6 +380,29 @@
 #
 # ---- LINKAGE, MEASURED ON BOTH ENDS OF THIS TREE -------------------------
 #
+# RUN mg10 LANE F367, the floor's own row, measured on both ends against two
+# builds of this repository rather than derived:
+#
+#     7101 / 11283 (62.9%)  ->  7104 / 11284 (63.0%)     +3
+#
+# base c941e1855 built in a throwaway worktree, tip 2b8090c24 built in the
+# lane's own. THE +3 IS NAMED, and each was confirmed absent from the base map
+# and present in the tip map, one row per object:
+#
+#     func_ov006_0211bc8c   the new matched TU, which is also the +1 on the
+#                           denominator
+#     func_ov006_0211b654   /OPT:REF dropped it -- its only code reference in
+#     func_ov006_020c2300   the whole tree is the floor, so neither had a
+#                           caller until the floor existed
+#
+# func_02012790 and Sound::PlayBank2_2D do NOT move the number and the reason
+# is measured rather than assumed: both already have many other live callers
+# (src/func_ov006_0211b80c.c is one, and it is in this very slice), so they
+# were in the base map already.
+#
+# RUN mg9's ROW, kept because the denominators are the cross-check: mg9's after
+# column reads 11283, which is exactly what the base build measures here.
+#
 #     6665 / 11283 (59.1%)  ->  6751 / 11283 (59.8%)     +86
 #
 #   module   before        after
