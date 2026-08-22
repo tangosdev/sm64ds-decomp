@@ -2223,7 +2223,7 @@ void port_scene_fill_panel(void);
    at 0x0213ca88 -- reached through the type_info the word BEFORE the vtable
    points at -- reads "15dScMgHanachan_c", so the row below is named for the
    class the way SCENE_MG_CURLING, SCENE_MG_LUIGI and SCENE_MG_BOMROOM are.
-   port/slice_wig.txt carries the derivation, the four width checks and the two
+   port/slice_wig.txt carries the derivation, the five width checks and the two
    floors; hal/scene_mg_wiggler.cpp is the seat. */
 extern unsigned char MgWhichWiggler_SpawnInfo[];
 void *port_mg_wiggler_spawn(void);
@@ -2369,9 +2369,10 @@ static const PortSceneClass port_scene_classes[] = {
        CONSTRUCTOR. Not one relocation in ov006 whose source lies in a __sinit
        block lands anywhere in [0x0213c98c, 0x0213cab8], this class's whole
        .data, so there is no constructor of its own for a fill to race. Its
-       fill also cannot reach past its own table: the width is 36 by four
+       fill also cannot reach past its own table: the width is 36 by five
        independent checks, the fourth being that exactly 36 relocation rows have
-       a source inside the table and there is none at index 36.
+       a source inside the table and there is none at index 36, and the fifth
+       that those sources step by 4 for exactly 36 words and then jump to 8.
 
        reads_sublevel is 0 for the curling row's reason, re-derived rather than
        copied: no relocation anywhere in ov006 lands on data_02092110 and no TU

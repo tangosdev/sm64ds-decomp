@@ -1,7 +1,7 @@
 // PORT_HOST_ABI. The mwcc POINTER-TO-MEMBER WALL for dScMgHanachan_c, actor id
 // 0x182, scene 386 -- the "Which Wiggler" minigame. Run mg9, lane WIG.
 //
-// Read port/slice_wig.txt for the identity derivation, the four width checks and
+// Read port/slice_wig.txt for the identity derivation, the five width checks and
 // the closure. Read unmatched/MgBase_StateDispatch.cpp's header first for the
 // ROM's dispatch sequence and for port_mg_call0, which every chain in this
 // family ends at. This file is the whole of this class's dispatch half.

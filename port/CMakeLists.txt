@@ -4181,15 +4181,18 @@ endforeach()
 # Wiggler" minigame.
 #
 # ONE TABLE, TWO DEEP. Scene -> dScMgBase_c (ov004 0x020bc0c0) ->
-# dScMgHanachan_c (ov006 0x0213cab8), 36 slots, checked FOUR ways before a word
+# dScMgHanachan_c (ov006 0x0213cab8), 36 slots, checked FIVE ways before a word
 # was written (port/slice_wig.txt): the span, the terminal slot, what the word
-# past it is, and -- this lane's addition -- the relocation count inside the
-# table, which is exactly 36 with no row at index 36. No intermediate table, so
-# there is one face array and no hostgen substitution.
+# past it is, this lane's own addition of the relocation COUNT inside the table
+# (exactly 36, with no row at index 36), and run mg9 lane LKY's relocation
+# STRIDE (4 for exactly 36 words from 0x0213cab8, then 8 to 0x0213cb4c, the jump
+# being the table ending). No intermediate table, so there is one face array and
+# no hostgen substitution.
 #
 # THE WALL IS THE FIELD FORM AND THE LINK IS BLIND TO ALL OF IT. This class has
-# NO overlay constructor and NO state table: twenty-nine {code, 0} pairs sit in
-# .data and are installed by name into member-pointer FIELDS of two different
+# NO overlay constructor and NO state table: THIRTY-FIVE {code, 0} pairs sit in
+# .data at 0x0213c95c..0x0213ca74, holding fifteen distinct code words, and are
+# installed by name into member-pointer FIELDS of two different
 # objects. Five TUs dispatch them and not one emits a symbol a link could fail
 # on. Four are findable by a `::*` source sweep; the fifth, func_ov006_020eb610,
 # open-codes the ARM Itanium sequence in plain ints and is findable by neither
@@ -4207,10 +4210,22 @@ endforeach()
 # port_scene_fill_wiggler by name -- the same coupling every other scene row
 # has.
 #
-# unmatched/MgWiggler_Faces.cpp carries NO alias row. It is only the two named
-# traps: func_ov006_020ea914 (slot 9 Render's only call) and func_ov006_020ec4dc
-# (wiggler set-up variant 3 of 4). Both have a config symbol, no delink block
-# and no src file in any module.
+# unmatched/MgWiggler_Faces.cpp CARRIES THREE /alternatename ROWS, ONE ARGUMENT
+# FACE AND THE TWO NAMED TRAPS, and its own header enumerates all six. The three
+# alias rows are the .data pairs src/func_ov006_020eb8f0.cpp declares outside its
+# extern "C" block (0x0213c96c, 0x0213c9bc, 0x0213c9c4), alias-safe because that
+# TU spells them as two ints; the face is func_0203adec, which is arm9's
+# _Z14ApproachLinearRsss under an address-shaped name. The traps are
+# func_ov006_020ea914 -- the sole call SITE of which is inside slot 9 Render, at
+# 0x020ed0c8, and it is the only arm_call relocation reaching that body anywhere
+# in ov006 -- and func_ov006_020ec4dc, wiggler set-up variant 3 of 4. Both traps
+# have a config symbol, no delink block and no src file in any module.
+#
+# NO VT OR HEAP RENAME IS OWED, which is why this block sets no per-source
+# COMPILE_DEFINITIONS the way the SOS and S75 blocks above do: both of this
+# class's destructors spell data_ov006_0213cab8 by its config name, and a COFF
+# short-name scan for _VT and _HEAP over all 180 of this seat's built objects
+# finds nothing.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_wig.txt" SLICE_WIG_LINES)
 set(SLICE_WIG_SOURCES hal/scene_mg_wiggler.cpp
                       unmatched/MgWiggler_StateDispatch.cpp
