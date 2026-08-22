@@ -76,15 +76,18 @@
 #   0x02105480  func_ov006_021053a8   NO SRC, NO DELINK -- never entered
 #   0x021057fc  func_ov006_021057f0   compiled; skips the whole 02142820 state
 #                                     dispatch when the gate answers nonzero
-#   0x021061ec  func_ov006_02106168   NO SRC, NO DELINK -- trapped; this is the
-#                                     site that picks the board layout from
-#                                     data_ov006_0213dd4c or _0213dd58
+#   0x021061ec  func_ov006_02106168   compiled since run mg7 lane L380; this is
+#                                     the site that picks the FACE SET, from
+#                                     data_ov006_0213ded0 or _0213e070
 #   0x021063b0  func_ov006_021063a0   compiled; called only from slot 0
 #                                     (0x0210779c) and slot 18 (0x02107294)
 #
-# So only TWO of the four sit in a body the port compiles, and on a boot the
-# gate fires exactly ONCE, from 021063a0 on the init path -- see the mb_v35
-# block in hal/scene_mg.cpp for the arithmetic that pins it.
+# So THREE of the four now sit in a body the port compiles. The mb_v35 block in
+# hal/scene_mg.cpp used to pin the per-boot count at exactly ONE, from 021063a0
+# on the init path, and that arithmetic held only while 02106168 was a trap:
+# the layout picker dispatches the gate ONCE PER PANEL inside its deal loop and
+# re-deals until the board passes its three tests, so the count is now
+# (panels x deals) + 1.
 #
 # ONE NEAR MISS IS RECORDED SO IT IS NOT RE-FOUND. func_ov006_02106a08 looks
 # like a fifth site to a scan that does not filter Rn: its word at 0x02106a0c
@@ -131,7 +134,9 @@
 # commented out below rather than deleted, with a pointer back there.
 #
 # port/mg_fanout_costs.txt section 4 costs the wall at five dispatching TUs per
-# minigame. THIS CLASS HAS TEN, and the reason is structural: dScMgPanel_c runs
+# minigame. THIS CLASS HAS ELEVEN -- ten when lane PPP seated it, and an
+# eleventh the day run mg7 lane L380 decompiled func_ov006_02106ca4 and found
+# it was a dispatcher as well as a state. The reason is structural: dScMgPanel_c runs
 # a TWO-LEVEL state machine. Slot 6 dispatches data_ov006_02142888, and five of
 # that table's own eight states are themselves dispatchers of a second table,
 # data_ov006_02142840. A lane that host-copied the Behavior alone would link,
@@ -155,26 +160,40 @@
 # over the 53 lines below and returns nothing, which is exactly what it would
 # return if the two int-spelled ones had been left in.
 #
-# ---- 4. THREE ov006 BODIES IN THE CLOSURE HAVE NO SOURCE -------------------
+# ---- 4. ONE ov006 BODY IN THE CLOSURE STILL HAS NO SOURCE ------------------
 #
-# None has a delink block in config/arm9/overlays/ov006/delinks.txt and no src
-# file defines any of them in either extension. The nosrc column in section 3's
-# table is about the six OVERRIDE bodies and is a correct zero; these three are
-# closure holes, the same class of floor curling met six of.
+# THIS SECTION USED TO SAY THREE. Run mg7 lane L380 decompiled two of them and
+# both byte-match at mwccarm 1.2/sp2p3, so what is left is one:
 #
-#   func_ov006_021053a8  A STATE. Slot 2 of data_ov006_02142820.
-#       port/tools/stategen.py reports it under REFUSALS as "HAS NO DECOMPILED
-#       BODY". The address switch reports which state was wanted rather than
-#       inventing a body.
-#   func_ov006_02106ca4  A STATE. Slot 6 of data_ov006_02142888, so it is one
-#       of the eight the Behavior itself dispatches. Same treatment.
+#   func_ov006_021053a8  A STATE. Slot 2 of data_ov006_02142820. No delink
+#       block in config/arm9/overlays/ov006/delinks.txt and no src file in
+#       either extension. port/tools/stategen.py reports it under REFUSALS as
+#       "HAS NO DECOMPILED BODY". The address switch reports which state was
+#       wanted rather than inventing a body.
+#
+# THE TWO THAT CLOSED, and they did not close the same way:
+#
+#   func_ov006_02106ca4  0x214, A STATE -- slot 6 of data_ov006_02142888, one
+#       of the eight the Behavior itself dispatches, and the one a 1200-frame
+#       mg6 run asked for 951 times. 124 instructions + 9 pool = 133 = 0x214/4.
+#       IT IS NOT A SLICE LINE. It dispatches data_ov006_02142840 at arity 1
+#       with the open-coded Itanium decode, so it is the ELEVENTH host copy in
+#       port/unmatched/MgPanel_StateDispatch.cpp and section 3's count of ten
+#       is now eleven.
 #   func_ov006_02106168  0x238, AND IT IS NOT A STATE -- it is the panel LAYOUT
-#       BUILDER, and vtable slot 0 (InitResources) and slot 18 (state reset)
-#       both call it DIRECTLY. Its own two literals are the pair of three-entry
-#       mode tables named in section 1. It stands as a named trap in
-#       port/unmatched/MgPanel_Faces.cpp, taking the one argument its two ROM
-#       callers pass. Standing in for it would draw a plausible wrong board,
-#       which is the guess port/tools/inferred_stub_guard exists to refuse.
+#       PICKER, and vtable slot 0 (InitResources) and slot 18 (state reset)
+#       both call it DIRECTLY. 135 instructions + 7 pool = 142 = 0x238/4. It IS
+#       an ordinary slice line, because it holds no member pointer; its one
+#       indirect call is vtable slot 35 through the seated table, the same
+#       shape src/func_ov006_021063a0.cpp already ships.
+#       SECTION 1 NAMED THE WRONG PAIR OF TABLES FOR THE MODE GATE and this
+#       correction is the lane's main finding. data_ov006_0213dd4c and
+#       data_ov006_0213dd58 are read UNCONDITIONALLY, both indexed by
+#       [this+0x4cbc]-4, and they are the panel x and y position tables (u16,
+#       shifted left twelve into +0x4cc4+i*4 and +0x4d54+i*4). The gate picks
+#       between data_ov006_0213ded0 (nonzero) and data_ov006_0213e070 (zero),
+#       indexed by the face-set number at +0x4cb4, and those feed BOTH panel
+#       arrays -- the current face at +0x4f1e and the target face at +0x4f42.
 #
 # TWO MORE WERE STATEGEN JOIN MISSES AND ARE NOT FLOORS, which is the
 # distinction lane MGB's amendment to the tool exists to make:
@@ -224,7 +243,27 @@
 # second pool word at 0x021042e4 is 020A0EAC, the game heap cxx_aliases.cpp
 # already binds it to.
 #
-# ---- 7. ov006: THE CLASS ---------------------------------------------------
+# ---- 8. SIX LINES THE TWO CLOSED FLOORS BROUGHT WITH THEM ------------------
+#
+# Run mg7 lane L380. A closure walk from code edges cannot see past a body with
+# no source, so while func_ov006_02106168 and func_ov006_02106ca4 were floors
+# their callees were outside this slice. They are inside it now, and the link
+# is what proved it: walk_window came back with exactly five unresolved
+# externals, one per directly-called body, and the sixth (func_ov006_0210446c)
+# is func_ov006_02104580's own callee one level down.
+#
+#   from func_ov006_02106168   02106080 (the flip move), 02106664 (the
+#                              repeat-shuffle check)
+#   from func_ov006_02106ca4   02104580, 02104870, 021068d8
+#   from func_ov006_02104580   0210446c
+#
+# Their ov004 and arm9 callees needed nothing: func_ov004_020adb1c,
+# _020adafc, _020adc00, _020adc1c and _020b0a54 are all in slice_mg1.txt
+# already, and RandomIntInternal, SetBg2Offset and SetSubBg2Offset are matched
+# arm9 TUs the build has had all along. That is section 2's "the ov004 delta of
+# this class is ZERO" holding across the two new bodies as well.
+#
+# ---- 9. ov006: THE CLASS ---------------------------------------------------
 # In address order, which is the order the closure walk emits.
 # HOST-COPIED (PPP), in port/unmatched/MgPanel_StateDispatch.cpp:
 #   src/func_ov006_02104ac4.cpp   table 021427bc, arity 1 with a literal 0
@@ -232,6 +271,8 @@
 #   src/func_ov006_021050bc.cpp   table 02142860, arity 0
 #   src/func_ov006_021057f0.cpp   table 02142820, arity 0, mode-gated on slot 35
 #   src/func_ov006_02106bc0.c     table 02142840, arity 1, THIRD SHAPE
+#   src/func_ov006_02106ca4.c     table 02142840, arity 1, THIRD SHAPE, AND A
+#                                 STATE -- slot 6 of data_ov006_02142888
 #   src/func_ov006_02106eb8.cpp   table 02142840, arity 1
 #   src/func_ov006_02106f44.cpp   table 02142840, arity 1
 #   src/func_ov006_02106fdc.c     table 02142840, arity 1, and a join-miss state
@@ -243,7 +284,10 @@ src/func_ov006_0210428c.c
 src/func_ov006_021042b0.c
 src/func_ov006_021042e8.c
 src/func_ov006_02104354.c
+src/func_ov006_0210446c.c
 src/func_ov006_02104558.c
+src/func_ov006_02104580.c
+src/func_ov006_02104870.c
 src/func_ov006_021048b0.c
 src/func_ov006_021048e4.c
 src/func_ov006_02104920.c
@@ -279,9 +323,13 @@ src/func_ov006_02105c88.c
 src/func_ov006_02105d20.c
 src/func_ov006_02105de4.c
 src/func_ov006_02106048.c
+src/func_ov006_02106080.c
+src/func_ov006_02106168.cpp
 src/func_ov006_021063a0.cpp
+src/func_ov006_02106664.c
 src/func_ov006_02106758.c
 src/func_ov006_021067a4.c
+src/func_ov006_021068d8.c
 src/func_ov006_02106910.c
 src/func_ov006_02106a08.c
 # THE JOIN MISS, section 4. Outside the delinks join and bannered NONMATCHING,

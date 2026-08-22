@@ -92,16 +92,24 @@
 //
 // ---- WHAT THIS CLASS CANNOT REACH -----------------------------------------
 //
-// TWO HARD FLOORS, both states, both named by ov006's symbols.txt and covered
-// by no delink block and defined by no src file in either extension:
+// ONE HARD FLOOR IS LEFT, and it used to be two. Run mg7 lane L380 decompiled
+// 0x02106ca4 -- slot 6 of data_ov006_02142888, the round-end state that a
+// 1200-frame mg6 run asked for 951 times -- and src/func_ov006_02106ca4.c
+// byte-matches at mwccarm 1.2/sp2p3. What remains:
 //
 //   0x021053a8   slot 2 of data_ov006_02142820
-//   0x02106ca4   slot 6 of data_ov006_02142888
 //
-// port/tools/stategen.py reports both under REFUSALS as "HAS NO DECOMPILED
-// BODY". They are emitted below as REPORTING cases and never as calls, and no
-// symbol is invented for either. That is curling's func_ov006_020e1854 shape
+// port/tools/stategen.py still reports it under REFUSALS as "HAS NO DECOMPILED
+// BODY". It is emitted below as a REPORTING case and never as a call, and no
+// symbol is invented for it. That is curling's func_ov006_020e1854 shape
 // before lane CT1 transcribed it; this lane does NOT transcribe, and says so.
+//
+// DECOMPILING 02106ca4 DID NOT PRODUCE A SLICE LINE, IT PRODUCED AN ELEVENTH
+// HOST COPY. The matched body dispatches data_ov006_02142840 at arity 1 with
+// the open-coded Itanium decode -- the same third shape as 02107358 and
+// 02106bc0 -- so the src TU links and both prescribed detectors read clean
+// over it while its first dispatch would jump to a raw DS address. It is
+// carried below, and it is NOT a line in port/slice_ppp.txt.
 //
 // TWO MORE WERE STATEGEN JOIN MISSES AND ARE NOT FLOORS: 0x02106aa8 and
 // 0x02106fdc are outside the delinks join but src/func_ov006_02106aa8.c and
@@ -177,9 +185,19 @@ void func_ov006_02104354(void *c);
 void func_ov006_02104ac4(void *c);
 void func_ov006_02104ea8(char *c);
 void func_ov004_020b0a54(int c);
+/* the round-end state's own callees, run mg7 lane L380 */
+void func_ov006_02104580(char *c);
+void func_ov006_02104870(char *c);
+void func_ov006_021068d8(char *c);
+void func_ov004_020adb1c(int n);
+extern unsigned char data_020a0e40;
+extern unsigned char data_020a0de8[];
+extern unsigned char data_020a0de9[];
+extern char *data_ov004_020beb68;
 
-/* the ten host copies this file DEFINES, so the seat can name them */
+/* the eleven host copies this file DEFINES, so the seat can name them */
 int  func_ov006_02107358(char *c);
+void func_ov006_02106ca4(char *c);
 void func_ov006_02106bc0(char *c);
 void func_ov006_02106eb8(char *c);
 void func_ov006_02106f44(char *c);
@@ -187,7 +205,6 @@ void func_ov006_02106fdc(void *c);
 void func_ov006_0210709c(void *c);
 
 void port_mg_panel_counts(unsigned *hits, unsigned *floor, unsigned *unknown);
-void port_mg_panel_floor_split(unsigned *t2820, unsigned *t2888);
 
 }  /* extern "C" */
 
@@ -200,7 +217,6 @@ void port_mg_panel_floor_split(unsigned *t2820, unsigned *t2888);
    floor now, and only +1 counts as a hit. */
 static unsigned g_panel_hits;
 static unsigned g_panel_floor_2820;
-static unsigned g_panel_floor_2888;
 static unsigned g_panel_unknown;
 
 static int panel_try_0(void *self, unsigned code)
@@ -214,6 +230,7 @@ static int panel_try_0(void *self, unsigned code)
     case 0x02106fdcu: func_ov006_02106fdc(c);       return 1;
     case 0x02106f44u: func_ov006_02106f44(c);       return 1;
     case 0x02106eb8u: func_ov006_02106eb8(c);       return 1;
+    case 0x02106ca4u: func_ov006_02106ca4(c);       return 1;
     case 0x02106bc0u: func_ov006_02106bc0(c);       return 1;
     /* data_ov006_02142820 */
     case 0x02105730u: func_ov006_02105730(c);       return 1;
@@ -230,15 +247,16 @@ static int panel_try_0(void *self, unsigned code)
     case 0x02104bb0u: func_ov006_02104bb0(c);       return 1;
     case 0x02104bacu: func_ov006_02104bac();        return 1;
 
-    /* ---- THE TWO FLOORS, REPORTED AND NEVER CALLED ----------------------
+    /* ---- THE ONE REMAINING FLOOR, REPORTED AND NEVER CALLED -------------
      *
-     * REPORTED ONCE EACH, not once per entry, and the first run is why: this
-     * class does not pass through its floors, it STOPS in one. 0x02106ca4 is
-     * slot 6 of the Behavior's OWN table, so once the outer state index
-     * reaches 6 the class asks for it on every frame afterwards -- 951 times
-     * in a 1200-frame run. A per-entry line puts nine hundred identical rows
-     * in the shipped playlog and says nothing the count does not. The count is
-     * the witness; this is the name. */
+     * REPORTED ONCE, not once per entry. 0x021053a8 is a SUB-state: a class
+     * that asks for it loses one tick and carries on, so a per-entry line
+     * would put identical rows in the shipped playlog and say nothing the
+     * count does not. The count is the witness; this is the name.
+     *
+     * ITS SIBLING IS GONE. The 951-ask entry this switch used to carry for
+     * 0x02106ca4 was the other half of that pair, and it is retired: run mg7
+     * lane L380 decompiled the body, and it is a real case above. */
     case 0x021053a8u:
         if (++g_panel_floor_2820 == 1)
             std::fprintf(stderr, "  [scene] dScMgPanel_c FLOOR: state "
@@ -246,16 +264,6 @@ static int panel_try_0(void *self, unsigned code)
                          "delink block and no src file. The state is not "
                          "entered. (Reported once; the count is in the run "
                          "report.)\n");
-        return -1;
-    case 0x02106ca4u:
-        if (++g_panel_floor_2888 == 1)
-            std::fprintf(stderr, "  [scene] dScMgPanel_c FLOOR: state "
-                         "0x02106ca4 (slot 6 of data_ov006_02142888, the "
-                         "Behavior's own table) has no delink block and no src "
-                         "file. The state is not entered, and because it is a "
-                         "TOP-LEVEL state the class stops here rather than "
-                         "passing through. (Reported once; the count is in the "
-                         "run report.)\n");
         return -1;
     default:
         return 0;
@@ -312,20 +320,11 @@ extern "C" void port_mg_panel_counts(unsigned *hits, unsigned *floor,
                                      unsigned *unknown)
 {
     if (hits)    *hits    = g_panel_hits;
-    if (floor)   *floor   = g_panel_floor_2820 + g_panel_floor_2888;
+    if (floor)   *floor   = g_panel_floor_2820;
     if (unknown) *unknown = g_panel_unknown;
 }
 
-/* The two floors reported apart, because they are not the same fact: one is a
-   sub-state a passing class steps over and the other is a top-level state a
-   class stops in. hal/scene_mg.cpp prints both. */
-extern "C" void port_mg_panel_floor_split(unsigned *t2820, unsigned *t2888)
-{
-    if (t2820) *t2820 = g_panel_floor_2820;
-    if (t2888) *t2888 = g_panel_floor_2888;
-}
-
-// ---- the ten host copies ---------------------------------------------------
+// ---- the eleven host copies ------------------------------------------------
 //
 // Each is its src TU with the pair declaration replaced by MgPmf and the
 // dispatch replaced by port_mg_panel_call0/1. Everything else is verbatim.
@@ -345,6 +344,75 @@ extern "C" int func_ov006_02107358(char *c)
     func_ov006_02104ac4(c);
     func_ov006_02104354(c);
     return 1;
+}
+
+/* src/func_ov006_02106ca4.c, table 02142840, arity 1, AND A STATE AS WELL --
+   slot 6 of data_ov006_02142888, the ROUND-END state. Run mg7 lane L380.
+   THE THIRD THIRD-SHAPE TU, and the first one this class gained by decompiling
+   a floor rather than by inheriting a src file. ROM 0x02106ca4, 0x214 bytes:
+   bl 0x021050bc; sl = self+0x4000; count = [sl,#0xcb8]; the per-panel index
+   byte at self+i+0x4efa held in r5 ACROSS the dispatch and re-read at
+   0x02106d04, which is what the `busy` counter below is; mov r1,r6 -- the
+   loop counter is the argument.
+   The tail is the round-over decision and it is transcribed one branch at a
+   time: the u16 at +0x4ec0 is the hold-off timer; the byte at +0x4fe6 says
+   whether this was the LAST round; 0x020a0de8[touch*4] and 0x020a0de9[touch*4]
+   are the stylus record's held/edge bytes, and a touch cancels the hold-off.
+   On the last round it plays the finish (0x02104870), clears the two flags and
+   bumps the score at +0xb4 of the ov004 singleton under a 9999 clamp, keeping
+   +0xb8 as its high-water mark; otherwise it re-arms for 0x10 frames, drops
+   the outer state to 7 and re-seeds every panel through 0x021068d8. */
+extern "C" void func_ov006_02106ca4(char *c)
+{
+    int busy = 0;
+    int i;
+    char *g;
+
+    func_ov006_021050bc(c);
+    for (i = 0; i < *(int *)(c + 0x4cb8); i++) {
+        unsigned char *slot = (unsigned char *)(c + i + 0x4efa);
+        const MgPmf *e = &data_ov006_02142840[*slot];
+        port_mg_panel_call1(c, e->code, e->adj, i);
+        if (*slot != 0)
+            busy++;
+    }
+    if (busy != 0)
+        return;
+    if (*(unsigned short *)(c + 0x4ec0) == 0) {
+        func_ov006_02104580(c);
+        *(unsigned short *)(c + 0x4ec6) += 1;
+        return;
+    }
+    *(unsigned short *)(c + 0x4ec0) -= 1;
+    if (*(unsigned char *)(c + 0x4fe6) == 0) {
+        if (data_020a0de8[data_020a0e40 * 4] != 0
+            && data_020a0de9[data_020a0e40 * 4] != 0)
+            *(unsigned short *)(c + 0x4ec0) = 0;
+    }
+    if (*(short *)(c + 0x4ec0) > 0)
+        return;
+    *(unsigned short *)(c + 0x4ec0) = 0;
+    if (*(unsigned char *)(c + 0x4fe6) == 0) {
+        *(unsigned short *)(c + 0x4ec0) = 0x10;
+        *(int *)(c + 0x4ca8) = 7;
+        func_ov006_021068d8(c);
+        return;
+    }
+    func_ov006_02104870(c);
+    func_ov004_020b0a54(0);
+    func_ov006_02104ea8(c);
+    *(unsigned char *)(c + 0x4fe3) = 0;
+    *(unsigned char *)(c + 0xc3) = 0;
+    g = data_ov004_020beb68;
+    if (g != 0) {
+        if (*(int *)(g + 0xb4) < 9999)
+            *(int *)(g + 0xb4) += 1;
+        if (*(int *)(g + 0xb4) > *(int *)(g + 0xb8))
+            *(int *)(g + 0xb8) = *(int *)(g + 0xb4);
+    }
+    func_ov004_020adb1c(data_ov004_020beb68 != 0
+                            ? *(int *)(data_ov004_020beb68 + 0xb4)
+                            : 0);
 }
 
 /* src/func_ov006_02106bc0.c, table 02142840, arity 1. THE SECOND THIRD-SHAPE

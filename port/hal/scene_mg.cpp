@@ -597,9 +597,9 @@ static int  __fastcall mb_v34(void *s, void *)     { MG_SLOT(34); func_ov004_020
  * func_ov006_021057f0. THE RUN SAYS ONCE, and says which caller. Four bodies in
  * dScMgPanel_c's closure hold a genuine `ldr rN,[rM,#0x8c]` dispatch --
  * func_ov006_021053a8 (0x02105480), _021057f0 (0x021057fc), _02106168
- * (0x021061ec) and _021063a0 (0x021063b0) -- and only two of the four have a
- * compiled body: 021053a8 and 02106168 have no delink block and no src, so
- * 02106168 is a trap and 021053a8 is never entered. Of the two that remain,
+ * (0x021061ec) and _021063a0 (0x021063b0). THREE of the four now have a
+ * compiled body: run mg7 lane L380 decompiled 02106168, so only 021053a8 is
+ * still bodiless, and it is never entered. Of the three that remain,
  * func_ov006_021063a0 has exactly TWO callers in the whole of ov006 (relocs
  * from:0x0210779c inside slot 0 and from:0x02107294 inside slot 18) and
  * func_ov006_021057f0 has exactly one (from:0x02106ecc, inside
@@ -609,13 +609,21 @@ static int  __fastcall mb_v34(void *s, void *)     { MG_SLOT(34); func_ov004_020
  * a run in which no state 5 is dispatched is a run in which 021057f0 cannot
  * execute.
  *
- * So on a 1200-frame boot with init 1, state-reset 0 and a slot-35 count of
- * exactly 1, the single dispatch is slot 0 -> 021063a0 on the INIT PATH, and
- * 021057f0 never runs at all -- the class settles in its top-level bodiless
- * state long before state 5 comes round again. THE REPAIR IS STILL NECESSARY
- * AND ITS REASON MOVES: it is not that a constant 0 would misfire every frame,
- * it is that the one call that does happen decides which of the two board
- * layouts InitResources builds. */
+ * So on the mg6 1200-frame boot, with init 1, state-reset 0 and a slot-35
+ * count of exactly 1, the single dispatch was slot 0 -> 021063a0 on the INIT
+ * PATH, and 021057f0 never ran at all -- the class settled in its top-level
+ * bodiless state long before state 5 came round again. THE REPAIR IS STILL
+ * NECESSARY AND ITS REASON MOVES: it is not that a constant 0 would misfire
+ * every frame, it is that the calls that do happen decide which FACE SET
+ * InitResources deals.
+ *
+ * THE COUNT IS NOT 1 ANY MORE, run mg7 lane L380, and the reason is the third
+ * dispatch site gaining a body. func_ov006_02106168 dispatches slot 35 ONCE
+ * PER PANEL, inside its deal loop, and it re-deals until the board passes
+ * three tests -- so the per-boot count is now (panels x deals) + 1 rather than
+ * 1, and a run that re-deals reads a multiple of the panel count plus one.
+ * A slot-35 census of exactly 1 on scene 380 is now the signature of a layout
+ * picker that did not run. */
 static int  __fastcall mb_v35(void *s, void *)
 { MG_SLOT(35); return func_ov004_020ad660((int *)s); }
 
@@ -3276,13 +3284,21 @@ extern "C" void port_scene_mg_pachinko2_hits(void)
 // the arm9 spawn table at 0x02090e54 has one row for it, in id order between
 // 0x17b's and 0x17d's. So "Puzzle Panel" and "Puzzle Panic" are not two ids.
 // What the ROM does have is a two-way branch inside the class:
-// func_ov006_02106168 builds its layout from ONE OF TWO three-entry tables,
-// data_ov006_0213dd4c or data_ov006_0213dd58, and func_ov006_021057f0 skips
-// its whole state dispatch when vtable SLOT 35 answers nonzero. Slot 35 is
+// func_ov006_02106168 deals each panel's pair of faces from ONE OF TWO
+// face-set tables, data_ov006_0213ded0 when the gate answers nonzero and
+// data_ov006_0213e070 when it answers zero, and func_ov006_021057f0 skips its
+// whole state dispatch when vtable SLOT 35 answers nonzero. Slot 35 is
 // dScMgBase_c's func_ov004_020ad660, `return (this[2] & 0xff) != 0` -- a mode
 // byte the framework puts in the object's third word. WHICH VALUE IS WHICH
 // TITLE IS NOT DERIVED HERE and this block does not guess it; what is derived
 // is that the split is a mode flag on one class and not two classes.
+//
+// AN EARLIER VERSION OF THIS PARAGRAPH NAMED THE WRONG PAIR OF TABLES. It said
+// the gate chose between data_ov006_0213dd4c and data_ov006_0213dd58. Run mg7
+// lane L380 read the body: those two are loaded UNCONDITIONALLY, both indexed
+// by [this+0x4cbc]-4, and they hold the panel x and y positions as u16 that
+// the body shifts left twelve into +0x4cc4+i*4 and +0x4d54+i*4. They have
+// nothing to do with the mode.
 //
 //   SpawnInfo      0x0213dc64  MgPuzzlePanelPuzzlePanic_SpawnInfo. The doubled
 //                  id word 0x017c017c sits at 0x0213dc68 and the word before
@@ -3379,9 +3395,6 @@ int  *MgPuzzlePanelPuzzlePanic_Spawn(void);
 
 /* the state machine's witness, from unmatched/MgPanel_StateDispatch.cpp */
 void port_mg_panel_counts(unsigned *hits, unsigned *floor, unsigned *unknown);
-void port_mg_panel_floor_split(unsigned *t2820, unsigned *t2888);
-/* the one nosrc body on the init and reset paths, from MgPanel_Faces.cpp */
-unsigned port_mg_panel_02106168_hits(void);
 
 void port_scene_mg_panel_hits(void);
 }
@@ -3497,43 +3510,60 @@ extern "C" void port_scene_mg_panel_hits(void)
            neither of its switches knows, and a nonzero one is the number that
            says a dispatching TU was missed rather than that a state is
            missing. Printed together on purpose. */
-        unsigned f2820 = 0, f2888 = 0;
-        port_mg_panel_floor_split(&f2820, &f2888);
         std::printf("[scene] dScMgPanel_c state dispatch: %u routed to one of "
-                    "its 25 reachable states across six tables, %u code "
+                    "its 26 reachable states across six tables, %u code "
                     "word(s) this class did not know; the framework switch saw "
                     "%u call(s) and %u UNHANDLED address(es)\n",
                     hits, unknown, calls, fwk);
-        /* THE TWO FLOORS ARE NOT THE SAME FACT AND ARE NOT SUMMED. 0x021053a8
-           is a SUB-state: a class that asks for it loses one tick and carries
-           on. 0x02106ca4 is slot 6 of the Behavior's OWN table, so the outer
-           state index that reaches it never leaves, and a large count there is
-           one dead-end rather than many missed ticks. Neither is counted as a
-           routed hit -- the switches return -1 for a floor, so `routed` above
-           is states that reached a real body. */
-        std::printf("[scene] dScMgPanel_c floors: %u ask(s) for the sub-state "
-                    "0x021053a8 (slot 2 of data_ov006_02142820), %u for the "
-                    "TOP-LEVEL state 0x02106ca4 (slot 6 of "
-                    "data_ov006_02142888) -- a nonzero second number is the "
-                    "class stopped there, not passing through. Total bodiless "
-                    "asks %u; both addresses have a config symbol, no delink "
-                    "block and no src file, so neither is entered\n",
-                    f2820, f2888, floor);
+        /* ONE FLOOR IS LEFT AND IT IS A SUB-STATE. 0x021053a8 is slot 2 of
+           data_ov006_02142820: a class that asks for it loses one tick and
+           carries on. It is not counted as a routed hit -- the switch returns
+           -1 for a floor, so `routed` above is states that reached a real
+           body.
+           THE SECOND FLOOR IS RETIRED. This line used to carry 0x02106ca4 as
+           well, and on the mg6 1200-frame run that number was 951 -- the
+           class had settled in a TOP-LEVEL state with no body and asked for it
+           every frame afterwards. Run mg7 lane L380 decompiled it; it is a
+           real case in the address switch now, so it can only appear in
+           `routed`. */
+        std::printf("[scene] dScMgPanel_c floor: %u ask(s) for the sub-state "
+                    "0x021053a8 (slot 2 of data_ov006_02142820), which has a "
+                    "config symbol, no delink block and no src file, so it is "
+                    "not entered (total bodiless asks %u)\n",
+                    floor, floor);
     }
-    /* THE THIRD FLOOR, AND IT IS NOT A STATE. func_ov006_02106168 (0x238) is
-       named by ov006's symbols.txt, is covered by no delink block and has no
-       src file in either extension, and slot 0 AND slot 18 both call it
-       DIRECTLY. It is the layout builder that reads the two three-entry mode
-       tables named in this block's header, so what a nonzero count here means
-       is that the class wanted its board laid out and could not. */
-    std::printf("[scene] dScMgPanel_c layout floor: %u entry(ies) into the "
-                "func_ov006_02106168 trap (no delink block, no src; reached "
-                "from slot 0 and slot 18)\n",
-                port_mg_panel_02106168_hits());
-    if (g_mg_panel_self)
+    /* THE LAYOUT IS THE PROOF LINE. func_ov006_02106168 is the sole writer of
+       the two panel arrays -- the CURRENT face at +0x4f1e and the TARGET face
+       at +0x4f42 -- and func_ov006_021067a4 zeroes both just before it runs.
+       Before it had a body they stayed zero, so the round-over test compared
+       zero to zero and passed on the first frame. The first bytes of each are
+       printed so a run says whether a board was actually dealt. */
+    if (g_mg_panel_self) {
+        const int n = *(int *)(g_mg_panel_self + 0x4cb8);
+        const unsigned char *cur = (const unsigned char *)(g_mg_panel_self + 0x4f1e);
+        const unsigned char *tgt = (const unsigned char *)(g_mg_panel_self + 0x4f42);
+        int i;
+        int lim = n;
+        int differ = 0;
+        if (lim < 0)  lim = 0;
+        if (lim > 36) lim = 36;
+        std::printf("[scene] dScMgPanel_c board: %d panel(s), side %d, moves "
+                    "%d, face set %d\n",
+                    n, *(int *)(g_mg_panel_self + 0x4cbc),
+                    *(int *)(g_mg_panel_self + 0x4cc0),
+                    *(int *)(g_mg_panel_self + 0x4cb4));
+        std::printf("[scene]   +0x4f1e:");
+        for (i = 0; i < lim; i++) std::printf(" %02x", cur[i]);
+        std::printf("\n[scene]   +0x4f42:");
+        for (i = 0; i < lim; i++) std::printf(" %02x", tgt[i]);
+        for (i = 0; i < lim; i++) if (cur[i] != tgt[i]) differ++;
+        std::printf("\n[scene]   %d of %d panel(s) differ -- a zero here on a "
+                    "dealt board is the round-over test comparing zero to "
+                    "zero\n", differ, lim);
         std::printf("[scene] dScMgPanel_c object at %p, state index %d, "
                     "mode byte %u\n", (void *)g_mg_panel_self,
                     *(int *)(g_mg_panel_self + 0x4ca8),
                     (unsigned)(*(unsigned char *)(g_mg_panel_self + 8)));
+    }
     std::fflush(stdout);
 }
