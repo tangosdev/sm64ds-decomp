@@ -164,11 +164,11 @@ src/func_ov080_0212513c.c:
     complete
     .text start:0x0212513c end:0x02125158
 
-src/_ZN11CrazedCrate16CleanupResourcesEv.c:
+src/_ZN11CrazedCrate16CleanupResourcesEv.cpp:
     complete
     .text start:0x02125158 end:0x0212517c
 
-src/_ZN11CrazedCrate16OnPendingDestroyEv.c:
+src/_ZN11CrazedCrate16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0212517c end:0x02125180
 
