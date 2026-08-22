@@ -209,6 +209,52 @@
 # every callee of every override as well (section 13's CORRECTION 3 method,
 # which is where dScMgMemory2_c's real floor was hiding) and it is clean.
 #
+# ---- WHAT THE SEAT MEASURED, on this tree, both ends ----------------------
+#
+# LINKAGE  6665 / 11283 (59.1%)  ->  6697 / 11283 (59.4%)   +32
+#   which is the slice's line count EXACTLY, all 32 of them, and is lane PPP's
+#   rule holding: every slice line moves the headline by one. By module,
+#   arm9 1879 -> 1880 (+1), ov004 240 -> 244 (+4), ov006 737 -> 764 (+27),
+#   and nothing else moved.
+#
+# THE BOOT, SM64DS_FAULTS_FATAL=1 with nothing switched off:
+#
+#     300 frames    clean, exit 0. init 1, behavior 253, render 300,
+#                   state-reset 1, slot19 0
+#     1200 frames   clean, exit 0. init 1, behavior 1153, render 1200,
+#                   state-reset 1, slot19 0
+#     fill claims   middle table 0, derived table 13, card table 2 of 2
+#     card draws    6000 at 300 frames, 24000 at 1200 -- twenty a frame, which
+#                   is the render's own 0x14 bound on each of its two list
+#                   walks with each node taking exactly one of the two
+#                   predicates
+#     card updates  1280 at 300 frames, 19280 at 1200
+#     card array    80 of 80 records hold a vptr
+#     state index   +0x60a8 goes 1 (slot 18 sets it) -> 3 (slot 6 advances it)
+#                   and settles there
+#     UNHANDLED     0 on both runs
+#     spawn param   0x000d0500 -> save record 5, name text 13, which is what
+#                   the ov005 table above says and is the row this seat
+#                   verified rather than assumed
+#
+# SLOT 19 IS NEVER ENTERED ON AN UNATTENDED BOOT AND THAT IS HONEST RATHER
+# THAN A GAP. It handles states 4 to 8, and the class settles in state 3
+# waiting on the stylus -- message 561 is "Touch 2 identical cards". Section
+# 16's "the zeros that are honest and the zeros that are not" is the reading:
+# this zero says the round cannot END without a pick, not that the code is
+# unreachable. Nothing here drives one.
+#
+# THE FLOWER KEEPS THE MIDDLE TABLE, measured rather than argued. This seat's
+# own dScMgSingle3DBase_c copy claims 0 slots, and scene 390's witness still
+# reports 2(x1) 7(x300) 10(x300) 26(x4082) 33(x1) with this row in the table.
+#
+# NO BARE VT/HEAP ROW IS OWED, unlike lane PPP's. No TU in this slice spells
+# the include/decl_common.h placeholders: the destructors name
+# data_ov006_0213d664 and data_020a0eac directly. A COFF short-name scan over
+# all 32 of this slice's objects finds no external name of six characters or
+# fewer at all -- only the compiler's own $LNnn labels -- so the slice adds
+# nothing to that closure.
+#
 # ---- WHAT IS NOT IN THIS SLICE AND WHY ------------------------------------
 #
 # HOST-COPIED ELSEWHERE, and listing any of them here would be an LNK2005
