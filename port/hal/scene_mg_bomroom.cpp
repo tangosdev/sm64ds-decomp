@@ -126,6 +126,58 @@
 // comes back. Gapless behaviour is decided per minigame, by playing it; this
 // lane has not played it and does not get to vote. hal/scene_mg_flower.cpp
 // makes the same call for the same reason.
+//
+// ---- 9. THE BIN-FULL SOFTLOCK, AND WHAT IT WAS (run mg8, lane SBN) --------
+//
+// REPORTED AS: "when the bomb sorting areas got full it softlocked when trying
+// to move them to the top screen." A softlock leaves no dump, so the report is
+// the whole of the evidence and the first job was making the thing happen on
+// purpose. SM64DS_SOS_FILL below is that; the sequence it drives is the ROM's:
+//
+//   func_ov006_020d6784, called from top-level state 2, counts bombs that are
+//   LIVE (+0x4698) and PARKED IN A BIN (+0x4697 == 5), split by the colour
+//   byte +0x4696. At 0x28 = FORTY of one colour it sets the top-level index
+//   +0x62d0 to 3, the sub-index +0x62d4 to 0, +0x62f5 to the colour, and bumps
+//   the score at +0xbc. That is "the sorting area got full".
+//
+//   sub 0  020d8d84  those bombs go to state 6 substate 0
+//   sub 1  020d8cc4  WAITS. Counts state-6 bombs not at substate 2 (c2) and
+//                    not at substate 4 (c4). c2 == 0 calls 020d7604, which
+//                    assigns each bomb its slot in the line-up and sets
+//                    substate 3. c4 != 0 returns and waits.
+//   sub 2  020d8af8  one bomb every four frames, flag +0x4698 1 -> 2: THE
+//                    MOVE TO THE TOP SCREEN the report names
+//   sub 3  020d89c4  clears them, back to state 2 (or 4, game over)
+//
+// THE PORT HUNG IN sub 1 FOREVER, and the trace says it in one line: forty
+// bombs entered state 6 at substate 0 and 2876 frames later all forty were
+// still at substate 0. Nothing was ticking them.
+//
+// THE CAUSE WAS ONE DROPPED RECEIVER IN src/func_ov006_020d8cc4.cpp. That TU
+// declared `extern "C" int func_ov006_020d836c(void);` and called it with no
+// argument. The ROM passes `this`:
+//
+//     020d8cc4  push {r4, r5, lr}
+//     020d8cc8  sub  sp, sp, #4
+//     020d8ccc  mov  r5, r0          r0 is still the receiver here
+//     020d8cd0  bl   0x020d836c
+//
+// and MSVC compiled the src exactly as written -- `call` with nothing pushed,
+// then `mov ebx,[ebp+8]` to load `this` AFTERWARDS -- so the host copy of
+// 020d836c read its receiver out of the caller's saved edi. 020d836c is the
+// per-bomb tick, and during top-level state 3 it is the ONLY caller of it:
+// 020d8f98's other three tail calls are the bin and banner machines. So the
+// body the sweep is waiting on was ticking a garbage object while the real
+// bombs stood still. Four of the five call sites of 020d836c pass the
+// receiver; this was the fifth. port/tools/aritycheck.py's gate is scoped to
+// _ZN-mangled member names, so it never looked at this one.
+//
+// THE FIX IS IN src/ AND STILL BYTE-MATCHES. The declaration takes char* and
+// the call passes r5; mwccarm 1.2/base, 1.2/sp2 and 1.2/sp2p3 all still
+// produce the ROM's 0xc0 bytes with strict relocs, because on ARM r0 already
+// held the value and naming it changes no instruction. The defect was only
+// ever a host-ABI one, which is why the byte gate was green over it for two
+// runs.
 
 #include "hal/screen_gap.h"
 
@@ -221,10 +273,10 @@ static int  __fastcall sos_init(void *s, void *)
    body reads it, which is the same word slot 0 and slot 18 both write. */
 /* SM64DS_SOS_FILL=<n>[:<side>] and SM64DS_SOS_TRACE=1: THE BIN-FULL PROBE.
    Run mg8, lane SBN. Both off unless set, both write nothing on an ordinary
-   run, and the reason they exist is in port/scene_sos_binfull.txt: the whole
-   end-of-round sweep -- the thing the player sees as "the bins filled and the
-   bombs went up to the top screen" -- is behind a counter no headless run can
-   move. func_ov006_020d6784 fires it at 0x28 = 40 bombs of ONE colour parked
+   run, and the reason they exist is section 9 below: the whole end-of-round
+   sweep -- the thing the player sees as "the bins filled and the bombs went up
+   to the top screen" -- is behind a counter no headless run can move.
+   func_ov006_020d6784 fires it at 0x28 = 40 bombs of ONE colour parked
    in a bin, and the ROM's only way to park one is a player drag ending inside
    the bin box. Forty drags is not a thing a touch script can do: the stylus
    probe holds 32 entries total and each drag needs several.
