@@ -157,10 +157,10 @@ matched src TU at all and will need a named trap or a decomp.
 
   id     spawn symbol                vtable     width  ovr  mark  nosrc
   0x170  MgBobOmbSquad               0213d9cc      36    6     4      0
-  0x171  MgLakituLaunch              0213dbbc      36    6     4      0
-  0x172  MgSortOrSplode              0213bbb4      36    6     5      0
+  0x171  MgLakituLaunch              0213dbbc      36    6     4      0   DONE
+  0x172  MgSortOrSplode              0213bbb4      36    6     5      0   DONE
   0x176  MgShuffleShell (curling)    0213c304      36    6     5      0   DONE
-  0x177  (data_ov006_0213c434)       0213c510      36    6     5      0
+  0x177  (data_ov006_0213c434)       0213c510      36    6     5      0   DONE
   0x17a  MgCoincentration            0213bf50      36    6     5      0
   0x17c  MgPuzzlePanelPuzzlePanic    0213e24c      36    6     5      0   DONE
   0x16e  MgWanted                    0213cf10      36    7     6      0
@@ -176,7 +176,7 @@ matched src TU at all and will need a named trap or a decomp.
   0x17e  MgPairAGoneAndOn            0213d7e8      36   14    11      1
   0x17f  MgMushroomRoulette          0213e39c      36   14    11      0
   0x16a  MgMemoryMatch               0213d1b8      36   14    12      0
-  0x16b  MgMemoryMaster              0213d4d4      36   14    12      0
+  0x16b  MgMemoryMaster              0213d4d4      36   14    12      0   DONE
   0x184  MgLuckyStars                0213fec8      36   14    12      0
   0x185  MgPsycheOut                 0213c8c4      36   14    12      0
   0x16d  (data_ov006_0213e508)       0213eaa8      36   15    13      0
