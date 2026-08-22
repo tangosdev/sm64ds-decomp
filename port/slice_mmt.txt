@@ -157,8 +157,20 @@
 #
 # ---- THE BOARD LADDER, VERIFIED AGAINST THIS CLASS'S OWN CODE -------------
 #
-# func_ov006_020f51f0 (0x4c = 19 words: 18 instructions + 1 pool) is the whole
-# of the decision and it reads exactly one int:
+# func_ov006_020f51f0 (0x4c = 19 words: NINETEEN instructions and NO literal
+# pool) is the whole of the decision and it reads exactly one int.
+#
+# THE COUNT WAS WRONG HERE AND READ "18 instructions + 1 pool", and the way it
+# went wrong is worth one line because two other rows in this file are the same
+# arithmetic. func_ov006_020f5164, the second table dispatcher, is ALSO 0x4c and
+# IS 18 instructions plus one pool word (0x02142304 at 0x020f51ac); the two sit
+# one function apart in the same block -- 0x020f5164, 0x020f51b0, 0x020f51f0 --
+# and the same-size split was carried across. The ladder has no
+# pc-relative load at all: every constant in it is an ARM immediate -- #0x5000,
+# #0, #0x5300, #4, #0xa, #2, #6, #5, #1 -- so there is nothing for a pool to
+# hold, and the body runs 0x020f51f0..0x020f5238 inclusive, which is
+# (0x5238 - 0x51f0)/4 + 1 = 19. Same size, different split. (Run mg9
+# coordinator spot-check.)
 #
 #     add r1,r0,#0x5000 / mov r2,#0 / strb r2,[r1,#0x33c]    +0x533c = 0
 #     add r2,r0,#0x5300 / mov r3,#4 / strh r3,[r2,#0x2a]     +0x532a = 4 pairs
@@ -295,11 +307,22 @@
 #
 #   func_ov006_020f52c4 (slot 18).  push {r4,r5,lr} / sub sp,#4 / mov r5,r0 /
 #     bl 0x020f4f94, and then `ldr r1,[pc,#0x40]` at 0x020f52d4. r1's first
-#     appearance in the body is a WRITE, so nothing can have read the incoming
-#     value.
+#     appearance in the body is a WRITE, so nothing IN THIS BODY can have read
+#     the incoming value.
+#     AND THAT ARGUMENT HAD A HOLE IN IT, WHICH THE RUN mg9 REVIEWER CLOSED.
+#     There is a CALL between the entry and the write, and r1 is an argument
+#     register: func_ov006_020f4f94 could have read the incoming r1 and the
+#     "first appearance is a write" test would not have seen it. It does not.
+#     Its own first mention of r1 is `add r1,r3,#0x5100` at 0x020f4fb4, its
+#     ninth instruction, computed off r3 = the receiver -- a WRITE again, and
+#     the eight instructions before it (stmdb / sub sp / mov r3,r0 / mov ip,#0 /
+#     mov lr,ip / add r2,r3,#0x5000 / str lr,[r2,#0x1a8] / str lr,[r2,#0x1ac])
+#     never name r1. It is the only call before the write, so the chain is
+#     closed and the conclusion stands.
 #   func_ov006_020f5250 (slot 19).  push {r4,lr} / mov r4,r0 /
 #     add r0,r4,#0x5000, and then `ldr r1,[r0,#0x314]` at 0x020f525c. Again a
-#     WRITE, three instructions in.
+#     WRITE, three instructions in, and this one has NO call before it, so the
+#     hole above cannot exist here.
 #
 # So the thunks in hal/scene_mg_memory1.cpp declare the parameter to CLEAN four
 # bytes under __fastcall and forward nothing, which is the run mg5 lane BASESET

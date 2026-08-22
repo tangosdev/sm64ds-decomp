@@ -328,6 +328,16 @@ static void *__fastcall mem1_d0(void *s, void *)
    r1 is `ldr r1,[pc,#0x40]` after four instructions, and
    func_ov006_020f5250's is `ldr r1,[r0,#0x314]` after three -- both WRITES, so
    neither body can have read the incoming value and cleaning is enough.
+
+   THE FIRST HALF OF THAT NEEDED ONE MORE STEP AND THE RUN mg9 REVIEWER FOUND
+   IT MISSING.  020f52c4's four instructions include a CALL, `bl 0x020f4f94`,
+   and r1 is an argument register -- so the callee could have read the incoming
+   r1 and a test that only looks at this body would never see it.  It does not:
+   func_ov006_020f4f94's own first mention of r1 is `add r1,r3,#0x5100` at
+   0x020f4fb4, its ninth instruction and a WRITE, and the eight before it never
+   name r1.  It is the only call before the write, so the chain is closed.
+   020f5250 has no call before its write and never had the hole.
+
    NOTHING WITNESSES EITHER WAY: both slots read zero hits on every run this
    lane made, at 300, 900 and 1500 frames. */
 static int  __fastcall mem1_reset(void *s, void *, int /*ridethrough*/)
