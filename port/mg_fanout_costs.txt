@@ -1761,9 +1761,14 @@ WHAT THIS SECTION DOES NOT KNOW.
 
 Worktree C:/tmp/m7c, branch mg7-memcards, base 2a1ecc015, private build
 C:/tmp/m7c/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/m7c/port.
-Baseline gate on that tree before a line was edited: scene 363 boots clean at
-120, 300, 600, 900 and 1500 frames under SM64DS_FAULTS_FATAL=1, 0 UNHANDLED
-addresses on every one, and the floor trap firing once per render frame.
+Baseline on that tree: scene 363 boots clean at 300 frames under
+SM64DS_FAULTS_FATAL=1 before a line was edited, and clean at 120, 300, 600, 900
+and 1500 frames once the card census below was added and while the card draw was
+still trapped -- 0 UNHANDLED addresses on every one of them, and the floor trap
+firing exactly once per render frame. No battery was run on the base commit:
+2a1ecc015 is the merged mg6 tip and the merge gate already validated it, so the
+regression evidence here is the battery on the tip plus the linkage headline
+measured on BOTH ends by two rebuilds of this same tree.
 
 SECTION 13 CLOSED ON "NO FRAME HAS BEEN LOOKED AT ... AND THE RENDER PATH HAS A
 TRAP IN IT". Somebody looked. Memory Master reached the deal and dealt sixteen
