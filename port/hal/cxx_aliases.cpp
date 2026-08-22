@@ -1230,6 +1230,39 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
    reader, its store would land on the Enemy's objects. */
 #pragma comment(linker, "/alternatename:_VT=_data_ov002_021081e4")
 #pragma comment(linker, "/alternatename:_HEAP=_data_020a0eac")
+/* THE "ONE LINKED READER" CLAIM ABOVE IS HISTORICAL AND MUST NOT BE READ AS A
+   STANDING FACT. THREE VT-spelling TUs have joined this build since, each a
+   slot 17 deleting destructor of a minigame scene class whose own ROM literal
+   pool names its own table, so bare VT would have stored the ov002 Enemy base
+   table into a minigame scene object. All three are exempted by a per-source -D
+   in port/CMakeLists.txt onto their own table rather than by a change here, so
+   the row above keeps serving src/_ZN5EnemyD0Ev.c untouched:
+     src/func_ov006_020efc30.c  dScMgLuigi_c    -> data_ov006_0213cf10
+     src/func_ov006_020e065c.c  dScMgCurling_c  -> data_ov006_0213c304
+     src/func_ov006_020dbe64.c  dScMgCoin_c     -> data_ov006_0213bf50
+   HEAP is renamed for none of them: all three pools hold 020A0EAC, which is
+   the row below, so that binding is right for every reader it has.
+
+   HOW TO CHECK THE CLOSURE, because the sentence above got it wrong once. The
+   question "who still spells this name" is answered by a COFF census over the
+   BUILT OBJECTS -- scan every .obj for an UNDEFINED external named _VT (short
+   name, inline in the 18-byte symbol record; there is no mangled ?VT@@3PAHA
+   decoration anywhere in this build, so the cdecl spelling is the whole set).
+   That is a measurement of what actually reaches the linker.
+
+   port/tools/alias_audit.py is a DIFFERENT and complementary instrument and is
+   not a substitute. It scans SOURCE TEXT for the identifier and then reads each
+   TU's ROM body, which lets it say a binding is WRONG for a TU that has one. It
+   now discounts the three ways a TU can reuse a spelling without meaning the
+   placeholder -- typedef, struct/union/enum tag, and #define -- and lists them
+   as SHADOW rows rather than findings, so `struct VT` in
+   src/func_ov004_020b75e4.c and `#define G1` in src/func_ov007_020be0dc.c are
+   no longer reported. What it still cannot see is who reaches the LINKER: it
+   reports TUs that are in no target, and it can only ever discuss names it
+   finds in source. Use the audit to decide whether a reader is WRONG; use the
+   census to decide whether the list of readers is COMPLETE. Neither answers
+   the other's question, and lane VTF got one wrong in each direction before
+   this note existed. */
 /* ---- run linkw wave C: THREE LINKED TUs THAT COLLIDE ON THOSE THREE NAMES.
    port/tools/alias_audit.py found them and each one is ROM-verified below by
    disassembling the body out of extracted/overlays/ and reading its literal
