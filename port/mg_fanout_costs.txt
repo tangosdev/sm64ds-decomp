@@ -191,6 +191,13 @@ matched src TU at all and will need a named trap or a decomp.
 
 0x16b IS DERIVED IN FULL AND NOT SEATED, run link60 lane MGB
 --------------------------------------------------------------
+  SEATED, run mg6 lane MEM. The paragraph below said "nothing here is wired,
+  the class does not boot and this file does not claim it does", and that is
+  no longer true: port/slice_mem.txt, port/hal/scene_mg_memory2.cpp, four
+  port/unmatched/MgMemory2_*.cpp files and a scene-363 registry row are in the
+  tree. What the derivation below GOT WRONG is worth more to the next lane than
+  what it got right, and there are three corrections, in section 13.
+
 Everything a seating lane would otherwise re-derive, so it starts at the seat.
 Nothing below is wired: no slice, no registry row, no face array, no host
 copy. The class does not boot and this file does not claim it does.
@@ -1307,3 +1314,183 @@ seven tables, twenty-five slots and one hard floor. And exactly one TU
 dispatches it, src/func_ov006_020e0204.cpp (Behavior, slot 6), against
 curling's five host copies. So the per-class cost is not one number: 0x169 is
 roughly twice curling on the vtable axis and a third of it on the wall axis.
+
+
+13. WHAT THE 0x16b DERIVATION GOT WRONG, run mg6 lane MEM
+----------------------------------------------------------
+
+Worktree C:/tmp/m6m, branch mg6-mem, base a65c871a3, private build
+C:/tmp/m6m/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/m6m/port.
+Baseline gate on that tree before a line was edited: battery ALL GREEN, eight
+hosted scenes and no skips, linkage 6308/11269 (56.0%), and the curling canary
+reproducing 32557 call(s) / 32557 routed / 0 UNHANDLED exactly.
+
+dScMgMemory2_c is SEATED and scene 363 boots. Section 3's own block for this
+class is the most complete handover any fan-out lane has had, and it was right
+about everything it measured. THIS SECTION IS THE THREE THINGS IT DID NOT
+MEASURE, because those are what the next lane inherits.
+
+CORRECTION 1: THE HIERARCHY IS THREE DEEP AND THE BLOCK NAMES ONE TABLE.
+
+    Scene -> dScMgBase_c         data_ov004_020bc0c0  36
+          -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8,  mark 6
+          -> dScMgMemory2_c      data_ov006_0213d4d4  36  ovr 14, mark 12
+
+Six of this class's fourteen overrides -- slots 2, 5, 7, 10, 26 and 33 -- are
+the MIDDLE base's bodies rather than its own, so a seat that filled one derived
+table would have left six raw DS words in a table the factory installs. Both
+edges are read off code: src/MgMemoryMaster_Spawn.c writes 0x0213e448 into the
+object and then 0x0213d4d4 over it, and slot 17 (src/func_ov006_020f55b8.cpp)
+unwinds them in the opposite order.
+
+THE VTABLE AXIS CANNOT SPOT THIS, which is the general lesson. A row's ovr and
+mark columns are computed against dScMgBase_c's table, so an intermediate base
+shows up only as "more overrides", never as "another table". The cheap test is
+the one this lane used and it is two reads: the FACTORY, for a second vtable
+store, and slot 16/17, for a second one on the way down. 0x169 and 0x186 sit
+under this same middle table, so the fan-out should expect it to fire again.
+
+    THE MIDDLE TABLE IS SHARED WITH hal/scene_mg_flower.cpp AND THAT IS SAFE.
+    Both files define their own eight-row face array over the same eight DS
+    words, and both fills run on every boot. mg_apply keys on a DS address, so
+    the fill that runs FIRST claims the table and the second finds nothing left
+    to write. This class's registry row is appended after the flower's, so the
+    flower keeps the middle table and its witness is unchanged; this seat owns
+    only its own derived table. Measured on a scene-363 run: this seat's copy
+    reports 8998 slot entries and the flower's copy reports 0. If a THIRD class
+    under this base is ever seated, promoting kSingle3DFaces to an exported
+    seam the way scene_mg.cpp exports port_scene_mg_fill_shared is the right
+    move, and this paragraph is the argument for it.
+
+CORRECTION 2: THE PMF TU LIST IS SEVEN, NOT SIX, AND THE SEVENTH IS ov004's.
+The block names six ov006 TUs and says "func_ov004_020b87e0 is the framework
+one and is already trapped". A source sweep for a member-pointer dispatch over
+this class's whole 869-file closure finds FOURTEEN: those six, seven ov004 TUs
+MG1/MG2/BASESET already host-copied, and
+
+    src/func_ov004_020b52fc.cpp
+
+which is six lines, is in NO wired slice and in no lane's host-copy set, and is
+reached TWENTY TIMES PER FRAME on this class's live path:
+
+    func_ov006_020f7458 (vtable slot 6) -> func_ov004_020b65e4
+      -> for i in 0..0x13: func_ov004_020b52fc(&data_ov004_020bfa34[i*0x24])
+
+It is not in unmatched/MgBase_StateSetter.cpp's eighty-address universe because
+that file bounds ov004's TABLE member pointers and this one is a FIELD of a
+.bss record array. Its twenty records draw from ten pairs at
+data_ov004_020bc7d8..0x020bc820, eight distinct code words, every adjustment
+zero; all eight are routed in unmatched/MgMemory2_FieldPmf.cpp. THE ROM HAS NO
+NULL GUARD AT 0x020b52fc, so a record whose pair is still the .bss zero would
+branch to zero on the DS; the port's port_mg_call0 returns on code 0, which is
+a divergence in the safe direction and is visible in the call-versus-routed
+counts.
+
+CORRECTION 3: THE HARD FLOOR IS REAL AND IT IS NOT WHERE THE BLOCK LOOKED.
+The block's own correction to itself concludes "0x16b has ONE hard floor, not
+two -- the table with no dispatcher". That is wrong twice over, and the second
+half matters more than the first.
+
+  data_ov006_021423a8 IS NOT A FLOOR. All three of its code words -- 0x020f58d0,
+  0x020f5744 and 0x020f5740 -- have matched src TUs. What it has is no
+  DISPATCHER, which is a different thing: the states are reachable in principle
+  and nothing in ov006 asks for them. This seat slices all three and routes
+  none, and the framework's UNHANDLED line is the detector if a computed
+  dispatch ever reaches one.
+
+  THE FLOOR IS ON THE RENDER PATH. func_ov006_020f5b98 is the sixth call vtable
+  slot 9 makes (src/func_ov006_020f73f4.c line 16). ov006/symbols.txt names it
+  and sizes it 0xa8, there is no delink block covering it, and no src file
+  defines it in either extension. src/func_ov002_020f5b98.c EXISTS and is a
+  different function in a different overlay -- the module-residency trap -- so
+  a name-shaped lookup would call this class's floor closed. It gets a named
+  trap in unmatched/MgMemory2_Faces.cpp that counts itself: 900 entries on a
+  900-frame run, one per Render.
+
+  AND 0x020f6904 IS NOT A FLOOR EITHER, exactly as the block says: the slice
+  carries the NONMATCHING src TU, the switch arm is hand-written, and the run
+  reports 39 entries into it over 900 frames. The block was right about that
+  one; the correction is only to the COUNT of floors, which is one, and to
+  WHICH one it is.
+
+READ CORRECTION 3 AS A METHOD RATHER THAN A FACT. Both of this class's "is it a
+floor" questions were answered wrong by looking at the STATE tables, which is
+where section 4 points a reader, and the real floor is in a vtable body's own
+callees. The check that finds it is a delinks join over every callee of every
+override, not over the state addresses.
+
+WHAT THE SEAT COST, against section 10's shape:
+
+  item                              curling   0x16b   note
+  -------------------------------   -------   -----   -----------------------
+  link waves to close                     8       3   41 symbols, then 2,
+                                                      then none
+  ordinary /alternatename faces          22      29   19 generated, 10 hand
+  __thiscall faces                        1       2   BlendModelAnim::SetAnim,
+                                                      SysTracker::~SysTracker
+  pointer-to-member TUs                  12       7   4 table, 3 field
+  host copies for other defects           5       3   two shadow classes and
+                                                      the g0/g1/g2 file ids
+  named traps standing                    1       1   the render callee
+  slice lines                           276     113   the delta only
+  registry rows                           1       1
+
+THREE HOST COPIES ARE NOT WALL WORK, AND THAT IS THE COST MODEL'S BLIND SPOT.
+None of the three was predictable from the vtable axis, the marker column or
+the state tables, and each was found by a different instrument:
+
+  src/func_ov006_020c0a48.c passes three SharedFilePtr file ids by the names
+    g0, g1 and g2, which exist in no config. THE LINK found it, as three
+    unresolved externals. The ROM loads 0x205, 0x206 and 0x207 out of its own
+    literal pool at 0x020c0a9c.
+  src/func_ov006_020c1804.cpp draws the model sub-object through a local shadow
+    class at TWO sites and stores two light vectors straight at 0x040004c8. A
+    RUN found it, as the Y3D chain one class over: Virtual18 got a null matrix
+    and Model::Virtual10 read address zero.
+  src/func_ov006_020c06dc.cpp does the same at a DIFFERENT slot, and that one
+    also unbalances the stack. The ROM's byte +0xc is UpdateVerts and MSVC's
+    fourth word is Virtual10, which is __thiscall with one stack parameter and
+    so returns with `ret 4`, eating four bytes the caller never pushed. Every
+    frame above it shifted by a word and func_ov006_020c07a0's own `ret` jumped
+    into the DS heap at its caller's argument. NOTHING IN THE FAULT DUMP NAMED
+    IT: the nearest symbol was two frames up.
+
+  THE SHADOW-CLASS TEST, because a sweep that flags every one of them is wrong
+  in the expensive direction. src/func_ov006_020c14bc.cpp is in the same slice,
+  models the live dScMgBase_c object with a 22-virtual shadow and calls v21(),
+  and is CORRECT: that object's vptr is the MOUNTED ROM TABLE, which the fill
+  writes by ROM word and therefore leaves in ROM word order. A shadow class
+  over a HOST C++ vtable -- Model, ModelAnim, BlendModelAnim, built by
+  hal/cxxname_bridge.cpp in MSVC order -- is the one that is wrong. Same
+  construct, opposite verdict; the test is which kind of table the object
+  carries.
+
+THE BOOT, on the tip, SM64DS_FAULTS_FATAL=1 with nothing switched off:
+
+  900 frames of scene 363, exit 0, clean, no FILL INCOMPLETE line
+  slot hits          init 1, behavior 853, render 900, slot 21 x1
+  middle base        2(x1) 7(x900) 10(x900) 26(x7196) 33(x1)
+  state dispatch     11821 routed to this class's own states, 39 of them into
+                     the NONMATCHING 0x020f6904, 0 bodiless wants
+  field dispatch     18766 call(s), 18766 routed
+  UNHANDLED          0
+  state index        +0x53d4 moves from 1 to 2 across the run
+
+WHICH IS THE THING SECTION 10 LEFT UNPROVEN. That section closes on "the
+address switch is wired and reports its own call count, and on every run so far
+that count is zero ... That is the largest unproven thing this lane leaves."
+It is proven now, on a different class: a minigame's own pointer-to-member
+state machine dispatches, routes every address it meets, and advances its state
+index.
+
+WHAT THIS SECTION DOES NOT KNOW.
+  - NO FRAME HAS BEEN LOOKED AT. The runs render -- slot 9 enters 900 times and
+    the sub-screen census reports real BG and OBJ VRAM -- but nobody has seen a
+    picture, and the render path has a trap in it.
+  - THE FRAMEWORK STATE MACHINE NEVER RAN on this scene. Both runs report zero
+    calls into func_ov004_020b87e0 and zero framework state dispatches, so none
+    of the 22 open rows in runs/mg5/out/fwk/framework_unrouted_22.txt is
+    exercised here and none was routed. Routing an address no run touches buys
+    no evidence.
+  - TOUCH IS UNMEASURED, for section 9's reason. The class ticks without input;
+    whether it can leave its first state without a stylus is not known.

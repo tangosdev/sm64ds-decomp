@@ -2171,6 +2171,13 @@ void port_scene_fill_coin(void);
 extern unsigned char data_ov006_02140114[];
 void *port_mg_flower_spawn(void);
 void port_scene_fill_flower(void);
+/* run mg6 lane MEM: dScMgMemory2_c, the "Memory Master" minigame. Same
+   reads_sublevel reasoning and the same appended-row rule as above, both
+   re-checked for this class: no relocation anywhere in ov006 lands on
+   data_02092110 and no TU in this class's closure names it. */
+extern unsigned char MgMemoryMaster_SpawnInfo[];
+void *port_mg_memory2_spawn(void);
+void port_scene_fill_memory2(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2215,6 +2222,18 @@ static const PortSceneClass port_scene_classes[] = {
        set out of this table. APPENDED LAST, on purpose; see the header. */
     {390, "SCENE_MG_FLOWER", data_ov006_02140114, port_mg_flower_spawn,
      port_scene_fill_flower, 0},
+    /* APPENDED AFTER EVERY EXISTING ROW, run mg6 lane MEM. 363 is 0x16b,
+       spelled in decimal for the two reasons the rows above are: the others
+       are, and port/tools/battery.py reads its hosted-scene set out of this
+       table. Appending matters twice for this class rather than once. It is
+       the latent-safe direction port/mg_fanout_costs.txt section 11 derives
+       from the once-per-process constructor gate; and this class shares the
+       dScMgSingle3DBase_c table at 0x0213e448 with the flower row above, so
+       running after that row means the flower's fill claims the middle table
+       first and its witness keeps counting exactly what it counted before this
+       seat existed. hal/scene_mg_memory2.cpp section 3 is the measurement. */
+    {363, "SCENE_MG_MEMORY2", MgMemoryMaster_SpawnInfo, port_mg_memory2_spawn,
+     port_scene_fill_memory2, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
