@@ -342,6 +342,77 @@
 # targets and the image already carries every one of them that has a body; the
 # only ov004 name the probe could not resolve is the floor, which has no src to
 # list. That is section 2's "paid once, for all thirty" holding.
+# ---- WHAT THE TWO RETIRED FLOORS CHANGED, MEASURED (run mg10, lane F387) ---
+#
+# Two builds one commit apart, each in its own private build dir: the BEFORE at
+# c941e1855 in C:/tmp/mAdB and the AFTER in C:/tmp/mAd. Same machine, same
+# toolchain, same asset catalog, so the only difference between them is the two
+# src files above.
+#
+# THE ROUTING ARITHMETIC CLOSES EXACTLY AT 700 FRAMES:
+#
+#   before   1824 routed + 39 ask(s) for the floor 0x0211ebdc   = 1863
+#   after    1863 routed, no floor column                       = 1863
+#
+# and mg9's headline number reproduces on the nose: the BEFORE build at 1200
+# frames reports 539 asks for the floor, which is what the run brief carried.
+#
+# AT 1200 FRAMES THE TWO BUILDS DO NOT AGREE, AND THAT IS THE POINT rather than
+# a discrepancy to reconcile. Before, 2824 routed plus 539 floor asks; after,
+# 3016 routed. The difference is not bookkeeping: 0x0211ebdc is the state that
+# RETIRES a Boo, so with it trapped the record enters state 7 and never leaves.
+# The BEFORE build's census at 1200 frames reads "0:s7 (1 of 16 live)" -- one
+# Boo stuck forever in the dead end -- and the AFTER build reads "0 of 16 live",
+# because the fade ran, reached 0x10 and cleared both gates. The trapped build
+# was dispatching a no-op every frame for the rest of the run; the real one
+# stops having anything to dispatch.
+#
+# THE PICTURE. Headless, SM64DS_FAULTS_FATAL=1, exit 0 at every frame count
+# tried. One Boo is live from frame 100 to about 850. Its sprite index over the
+# sweep is row/column into the fourteen-pointer table:
+#
+#   f100 r1c0=7   f200 r1c1=8   f300 r1c1=8   f400 r0c2=2   f500 r1c0=7
+#   f600 r1c3=10  f700 r1c4=11  f800 r0c6=6   f900 none     f1200 none
+#
+# The column walks (the animation), THE ROW FLIPS BETWEEN 0 AND 1 (0211ebdc
+# writing the facing off the sine table's sign, which is the byte 0211e72c
+# picks the row with), the index never leaves 0..13, and the ed8 state reaches
+# s7, which IS 0x0211ebdc. Four independent things agreeing.
+#
+# THE CAPTURES, and read the two lines together rather than either alone:
+#
+#   TOP SCREEN, before vs after, at 300 and at 700 frames: BYTE IDENTICAL over
+#     all 196608 pixels, both times. That is not a null result. It says nothing
+#     else in the port moved, and it also disposes of
+#     notes/port-selftest-bmp-gate.md's layout caveat for this comparison: a
+#     .dsstate base shift would have shown up here too, and it did not.
+#   STACKED, the same two runs: ONE compact box differs, and nothing else.
+#     700 frames: 924 of 425984 pixels, x 272..315, y 558..591, max channel
+#                 delta 190
+#     300 frames: 908 of 425984 pixels, x 240..283, y 506..537, max channel
+#                 delta 90
+#     Both boxes are about 44 by 33 and both are on the BOTTOM half, which is
+#     where OAM::Render's sub = 1 puts them. THE BOX MOVES between the two
+#     frame counts -- right 32, down 52 -- which is func_ov006_0211f454 walking
+#     the Boo along its angle, and a static artifact could not do that.
+#
+# NEITHER NUMBER IS THE PROOF ON ITS OWN. A pixel count cannot say the picture
+# is RIGHT, only that it changed in one place of the right size, in the right
+# half, and that it moves. Whether the sprite reads as a Boo is a judgment this
+# lane does not make; the crops are at runs/mg10/out/387_PROOF_300 and _700
+# before_vs_after.bmp, left half trapped and right half decompiled.
+#
+# THE REST OF THE GATES, on the AFTER build:
+#   battery ALL GREEN -- every mounted level, 23 hosted scenes including 387,
+#     linkage 7103 (62.9%), ptr_audit 0 unhosted code pointers, exit 0
+#   canary scene 374 EXACT -- 32557 call(s), 32557 routed, 0 UNHANDLED, the
+#     number section 16 of port/mg_fanout_costs.txt records
+#   387's own census -- 0 UNHANDLED at every frame count, framework 0 UNHANDLED
+#   aritycheck rc 0; aliascheck PASSED with 0 NEW receiver crossings and 0 new
+#     pop mismatches; alternatename_guard rc 0; inferred_stub_guard OK, no new
+#     guessed vtable body seated
+#   post-link -- gxband_guard layout OK, tailjump_guard forms OK
+#
 src/MgHideAndBooSeek_Spawn.c
 src/func_ov006_0211cbd0.c
 src/func_ov006_0211cbf4.c
