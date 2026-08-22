@@ -3709,10 +3709,16 @@ static void fullscreen_toggle(HWND h)
    off wherever the pointer is really a pen: the whole SCENE path, which is
    where the minigames run; any STACKED window, where the bottom half of the
    picture IS the bottom screen; and DS-exact, where the mouse steers nothing
-   and taking it would be pure cost. In a plain inset adventure window the
-   corner panel is not reachable while the capture is on, and escape is how
-   you reach it -- said here because it is the one thing this mode takes away
-   that a player might miss. */
+   and taking it would be pure cost.
+
+   WHAT IT TAKES AWAY, said plainly because a player meets both of these before
+   they meet anything else. The fence is the CLIENT AREA, so while the capture
+   is on the pointer cannot reach the corner stylus panel, the title bar, the
+   sizing border or the close button: the window cannot be dragged, resized or
+   closed with the mouse until it lets go. Escape is how it lets go, alt+F4
+   still closes and alt-tab still leaves. That is the same bargain every game
+   with a captured pointer makes, and it is the reason the release is a key
+   players already reach for rather than one this file invented. */
 static int mo_look;              /* right button down */
 static POINT mo_anchor;          /* screen point the drag springs back to */
 static int mo_dx, mo_dy;         /* accumulated since the loop last drained */
@@ -3793,15 +3799,53 @@ static int mo_client_center(HWND h, POINT *p)
     return W.ClientToScreen_(h, p) ? 1 : 0;
 }
 
+/* THE FENCE. Pens the pointer inside the client area, so a fast flick between
+   two spring-backs cannot land it on another window and click something there.
+   A null ClipCursor_ leaves a capture that still hides and re-centres, which is
+   a worse capture and not a broken one -- hence no refusal here. */
+static void mo_capture_clip(HWND h)
+{
+    RECT rc, s;
+    POINT tl, br;
+    if (!W.ClipCursor_ || !W.GetClientRect_ || !W.ClientToScreen_) return;
+    if (!W.GetClientRect_(h, &rc)) return;
+    tl.x = rc.left;  tl.y = rc.top;
+    br.x = rc.right; br.y = rc.bottom;
+    if (!W.ClientToScreen_(h, &tl) || !W.ClientToScreen_(h, &br)) return;
+    s.left = tl.x; s.top = tl.y; s.right = br.x; s.bottom = br.y;
+    W.ClipCursor_(&s);
+}
+
+/* RE-AIM A HELD POINTER AT THE WINDOW IT IS ON. The anchor and the fence are
+   both derived from the client rectangle, so a window that moves or resizes
+   under a capture leaves both of them describing where the window USED to be:
+   the pointer springs back to a point off the picture and the fence pens it
+   somewhere the player is not looking. Called from WM_SIZE and WM_MOVE, which
+   between them are every way a client rectangle can change -- a border drag, a
+   maximise, and this program's own F12 fullscreen toggle. */
+static void mo_capture_refresh(HWND h)
+{
+    POINT c;
+    if (!mo_captured) return;
+    if (!mo_client_center(h, &c)) return;
+    mo_anchor = c;
+    if (W.SetCursorPos_) W.SetCursorPos_(c.x, c.y);
+    mo_dx = mo_dy = 0;          /* a re-aim is not a look */
+    mo_capture_clip(h);
+}
+
 /* TAKE OR HAND BACK THE POINTER. Idempotent on purpose: the frame loop calls
    this every frame with the answer it wants, so the transitions live here
-   rather than at each of the six places that can change the answer. */
+   rather than at each of the seven places that can change the answer. */
 static void mo_capture_set(HWND h, int on)
 {
     if (!!on == mo_captured) return;
     if (on) {
         POINT c;
         if (!W.GetCursorPos_ || !W.SetCursorPos_) return;
+        /* A ZERO-SIZE CLIENT AREA HAS NO MIDDLE, and this is the honest
+           refusal for it rather than a capture centred on a corner: the
+           harness opens windows like that. */
         if (!mo_client_center(h, &c)) return;
         /* remembered BEFORE the pointer is moved, which is the whole point of
            remembering it */
@@ -3812,22 +3856,9 @@ static void mo_capture_set(HWND h, int on)
         /* WHATEVER THE POINTER DID ON THE WAY IN IS NOT A LOOK. Moving it to
            the centre is this program's own move and the WM_MOUSEMOVE it
            generates would otherwise be drained as a delta and snap the camera
-           by however far across the desk the pointer had been. */
+           by however far across the desk the pointer had been standing. */
         mo_dx = mo_dy = 0;
-        if (W.ClipCursor_) {
-            RECT rc;
-            POINT tl, br;
-            if (W.GetClientRect_ && W.ClientToScreen_ && W.GetClientRect_(h, &rc)) {
-                tl.x = rc.left;  tl.y = rc.top;
-                br.x = rc.right; br.y = rc.bottom;
-                if (W.ClientToScreen_(h, &tl) && W.ClientToScreen_(h, &br)) {
-                    RECT s;
-                    s.left = tl.x; s.top = tl.y;
-                    s.right = br.x; s.bottom = br.y;
-                    W.ClipCursor_(&s);
-                }
-            }
-        }
+        mo_capture_clip(h);
     } else {
         mo_captured = 0;
         if (W.ClipCursor_) W.ClipCursor_(0);
@@ -4031,8 +4062,18 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
            SIZE_RESTORED from this program's own SetWindowPos is NOT: that path
            is stack_present_arm and it sets nothing. */
         if (w == 2) g_user_sized = 1;
+        /* a held pointer is aimed at a client rectangle that has just moved */
+        mo_capture_refresh(h);
         present();
         return 0;
+    /* ONLY EVER FOR THE CAPTURE. The window has never needed to know that it
+       moved -- the picture is drawn in client coordinates -- but a held
+       pointer's anchor and fence are in SCREEN coordinates, so a drag of the
+       title bar is exactly the case that strands them. Falls through to the
+       default handler either way, because moving is still the system's. */
+    case WM_MOVE:
+        mo_capture_refresh(h);
+        break;
     /* THE PLAYER'S HAND ON THE SIZING BORDER, which is the edge the stacked
        layout has to stop growing at. WM_SIZING arrives only from a border
        drag -- SetWindowPos does not send it -- so it is the one message that
