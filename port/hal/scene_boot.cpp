@@ -2218,6 +2218,16 @@ void port_scene_fill_curling2(void);
 extern unsigned char MgPuzzlePanelPuzzlePanic_SpawnInfo[];
 void *port_mg_panel_spawn(void);
 void port_scene_fill_panel(void);
+/* run mg9 lane LKY: dScMgBSC_c, actor id 0x184. The spawn symbol is
+   MgLuckyStars and the ROM's own RTTI -- reached through the type_info the word
+   BEFORE the vtable points at, 0x0213fec4 -> 0x0213fd8c -> 0x0213fd98 -- reads
+   "10dScMgBSC_c", so the row is named for the class the way SCENE_MG_CURLING,
+   SCENE_MG_LUIGI and SCENE_MG_PANEL are. Same reads_sublevel reasoning as the
+   rows above, re-checked for this class: no relocation in ov006 lands on
+   data_02092110 and no TU in this class's closure names it. */
+extern unsigned char MgLuckyStars_SpawnInfo[];
+void *port_mg_luckystars_spawn(void);
+void port_scene_fill_luckystars(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2344,6 +2354,35 @@ static const PortSceneClass port_scene_classes[] = {
        so appending is a rule this lane obeys rather than a hazard it needs. */
     {380, "SCENE_MG_PANEL", MgPuzzlePanelPuzzlePanic_SpawnInfo,
      port_mg_panel_spawn, port_scene_fill_panel, 0},
+    /* 388 is 0x184, spelled in decimal for the same two reasons every row above
+       is: the others are, and port/tools/battery.py reads its hosted-scene set
+       out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg9 lane LKY,
+       and for this class the ordering rule earns its keep TWICE rather than
+       once, which is the dScMgMemory2_c case one class further on.
+
+       FIRST, the rule itself: port_scene_registry_install walks this table in
+       order and calls every row's fill on every boot, while
+       port_scene_mg_overlay_load runs the thirty-five overlay constructors ONCE
+       PER PROCESS at the tail of the FIRST minigame row's fill. Appending means
+       the constructors have already run against clean ROM words when this fill
+       starts, which is the latent-safe direction port/mg_fanout_costs.txt
+       section 11 derives. Nothing in this class's fill writes outside its own
+       36-slot table -- the width is checked FOUR ways in port/slice_lky.txt --
+       so this row obeys the rule rather than relying on it.
+
+       SECOND, this class is the THIRD to sit under dScMgSingle3DBase_c
+       (data_ov006_0213e448), after the flower row and the memory2 row above.
+       All three files define their own face array over the same eight DS words
+       and the fill keys on a DS address, so the row that runs FIRST claims the
+       middle table and the later ones find nothing left to write. Appending
+       means the flower keeps it and BOTH earlier witnesses keep counting
+       exactly what they counted before this seat existed;
+       hal/scene_mg_luckystars.cpp section 3 prints this seat's own middle-table
+       claim count so the zero is measured rather than assumed. That file also
+       records the seam promotion scene_mg_memory2.cpp says is due at the third
+       class, and why this lane did not take it mid-fan-out. */
+    {388, "SCENE_MG_LUCKYSTARS", MgLuckyStars_SpawnInfo,
+     port_mg_luckystars_spawn, port_scene_fill_luckystars, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
