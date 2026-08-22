@@ -87,6 +87,17 @@
 // answer false. Row 24's low byte is 0x02, the only 0x02 in the entire
 // 36-row table.
 //
+// WHICH MODE IS WHICH TITLE IS DERIVED HERE, and section 14 explicitly could
+// not do that for dScMgPanel_c. InitResources branches on slot 36 and loads a
+// different file set on each arm: the TRUE arm takes the two face_up and
+// face_down boards and FIVE localised sheets of CHARACTER FACES (F/G/I/S plus
+// the plain English one, off a GetOwnerLanguage ladder), and the FALSE arm
+// takes the amida1 and amida2 boards with one plain sprite sheet, no faces and
+// no ladder. A board of character heads needs localising; a board of slides
+// does not. So slot 36 true is "Connect the Characters" and slot 36 false is
+// "Mario's Slides". port/slice_s371.txt section 2 has all twenty-one file ids
+// and the control on dScMgPanel_c that fixes the MG-relative base.
+//
 // THE WITNESS COUNTS THE TWO PREDICATES SEPARATELY for exactly that reason. A
 // run of this scene should show slot 36 asked many times and answering 0 every
 // time, and slot 35 asked never. Anything else is news.

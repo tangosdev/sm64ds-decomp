@@ -776,6 +776,18 @@ set_source_files_properties(
     # `class`, rather than this one being found by a compile error and the rest
     # left to luck; it is the only hit.
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020dd880.c"
+    # run mg9 lane S371: THREE .c files in dScMgAmida_c's 29-TU slice are
+    # really C++ -- a //cpp marker, top-level `extern "C"` blocks and, in all
+    # three, a dummy virtual struct they dispatch a slot through. That struct
+    # is THIRTY-SEVEN virtuals wide in these, not thirty-six, because this
+    # class is the one true width-37 class of the minigame family and the slot
+    # they reach is its 37th (port/slice_s371.txt section 3). The whole slice
+    # was swept for the marker AND for `extern "C"`, `virtual` and `class`, the
+    # way lane CCN's entry above prescribes, rather than these being found one
+    # at a time by compile errors; these three are the only hits.
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d122c.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d3ba0.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d4b7c.c"
     PROPERTIES LANGUAGE CXX)
 
 # Wave-5 close surgery (w5b_review.md R1/R2): two /alternatename routes died

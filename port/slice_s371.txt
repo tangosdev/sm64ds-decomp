@@ -113,6 +113,56 @@
 # rather than deleted, because the METHOD it recommends -- search the config
 # harder -- is what found the ov005 table in the first place.
 #
+# AND THE ASSETS SAY WHICH MODE IS WHICH TITLE, which section 14 could not do
+# for dScMgPanel_c ("WHICH VALUE IS WHICH TITLE IS NOT DERIVED and this lane
+# does not guess it"). It is derivable here because this class's InitResources
+# branches on slot 36 and loads a DIFFERENT FILE SET on each arm, and every id
+# it loads resolves to a NitroFS name.
+#
+# THE FILE IDS ARE MG-DIRECTORY RELATIVE, base 1626, and the base is not
+# assumed -- it is fixed by a control on a class this port already ships. The
+# ledger records dScMgPanel_c's slot 0 loading 0x6a, 0x6b, 0x6c, then the
+# language ladder 0xe5 / 0xe7 / 0xe4 / 0xe3 / 0xe2 and 0xe6, and at base 1626
+# those are exactly
+#     MG/d_2d_mg_bg_pazzle_panel_ncg.bin   _ncl   _up_nsc
+#     MG/d_2d_mg_pazzle_panel_ncg.bin  _S_  _I_  _G_  _F_   and _ncl
+# -- the right minigame and a five-language sheet, on a class whose title is
+# already known. Twenty-one of twenty-one of this class's ids then resolve to
+# amida files and nothing else:
+#
+#   SLOT 36 ANSWERS TRUE (mode 2, ov005 row 24, "Connect the Characters")
+#     0x1f 0x20 0x21   MG/d_2d_mg_bg_amida_face_up_{ncg,ncl,nsc}.bin
+#     0x1c 0x1d 0x1e   MG/d_2d_mg_bg_amida_face_down_{ncg,ncl,nsc}.bin
+#     the GetOwnerLanguage ladder, five sheets of CHARACTER FACES:
+#       lang 5 -> 0x0f  MG/d_2d_mg_amida_face_S_ncg.bin   (Spanish)
+#       lang 4 -> 0x0c  MG/d_2d_mg_amida_face_I_ncg.bin   (Italian)
+#       lang 3 -> 0x0b  MG/d_2d_mg_amida_face_G_ncg.bin   (German)
+#       lang 2 -> 0x0a  MG/d_2d_mg_amida_face_F_ncg.bin   (French)
+#       default -> 0x0d MG/d_2d_mg_amida_face_ncg.bin     (English)
+#     0x0e             MG/d_2d_mg_amida_face_ncl.bin      (shared palette)
+#
+#   SLOT 36 ANSWERS FALSE (mode 0 or 1, ov005 row 0, "Mario's Slides")
+#     0x15 0x16 0x17   MG/d_2d_mg_bg_amida1_{ncg,ncl,nsc}.bin
+#     0x1a 0x1b        MG/d_2d_mg_bg_amida2_{ncg,ncl}.bin
+#     0x18 0x19        MG/d_2d_mg_bg_amida2_{1,2}_nsc.bin
+#     0x10 0x11        MG/d_2d_mg_amida_{ncg,ncl}.bin
+#     NO FACE SHEETS AT ALL, and no language ladder: one plain sprite sheet.
+#
+# THE FACE/NO-FACE SPLIT IS THE ANSWER. The mode that loads five localised
+# sheets of character faces is the one whose message text reads "Draw lines to
+# match the characters' heads to their bodies"; the mode that loads none is the
+# one that reads "Guide Mario down the slides to the Star". The language ladder
+# is the corroborating half: a board of character heads needs localising and a
+# board of slides does not, and the ROM only builds a ladder for the first.
+# The GetOwnerLanguage values line up with the game's own order -- 0 Japanese,
+# 1 English, 2 French, 3 German, 4 Italian, 5 Spanish -- against the F/G/I/S
+# filename suffixes with no gaps and no leftovers.
+#
+# SLOT 31's OWN TABLE IS THE SAME SHAPE. func_ov006_020d11a0 loads
+# data_ov006_0213b838[GetGameLanguage()] into the sub-engine BG1 char base and
+# then the fixed id 0x5b, which is MG/d_2d_mg_bg_option_nsc.bin -- the shared
+# options banner, not an amida file, which is why it is the same on both modes.
+#
 # THE PORT BOOTS ROW 0. hal/scene_mg_sound.cpp's port_mg_scene_spawn_param takes
 # the FIRST row whose id matches, and for this id that is row 0, whose param is
 # literally zero. So on the port this scene is "Mario's Slides" with save record
