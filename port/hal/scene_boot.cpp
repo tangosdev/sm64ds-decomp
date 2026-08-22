@@ -249,6 +249,10 @@ extern signed char SUBLEVEL_LEVEL_TABLE[];       /* arm9 0x02075298 */
 extern unsigned char data_02092660;              /* "a scene has spawned";
                                                     defined below, in .dsstate */
 
+/* the ov005 launch row's +0x04 word, from hal/scene_mg_sound.cpp -- the param
+   the Rec Room hands Scene::SetSceneToSpawn. 0 for a non-minigame scene. */
+unsigned port_mg_scene_spawn_param(int scene_id);
+
 /* the mounted SpawnInfo record (port/ov003_syms.txt) */
 extern unsigned char StarSelect_SpawnInfo[];     /* dScStarSel_c  id 4 */
 
@@ -2436,10 +2440,41 @@ extern "C" void *port_scene_boot(int id)
     }
     std::printf("[scene] %d = %s\n", id, port_scene_class_name((unsigned)id));
 
+    /* THE SPAWN PARAMETER, and why it was 0 for six waves of minigame lanes.
+       Run mg8, lane MMD.
+
+       This call used to pass 0. On the DS nothing ever spawns a minigame scene
+       with 0 unless the player picked the first row of the Rec Room: the launch
+       path is func_ov005_020c0378's
+
+           Scene::StartSceneFade(row->id, row->unk4, 0)
+             -> Scene::SetSceneToSpawn(id, param)
+
+       and dScMgBase_c's constructor unpacks that param into TWO indices --
+       (param>>8)&0xff picks the row of data_0209caf4, the persistent
+       per-minigame save record, and (param>>16)&0xff picks the row of
+       data_ov004_020bc070, the name-text id it parks at +0x465e. With 0 all
+       thirty minigames shared record 0 and asked for text 0.
+
+       THE RECORD IS NOT COSMETIC ON THIS FAMILY. func_ov004_020ad878 reads
+       field 1 of it, dScMgMemory2_c's InitResources copies that into +0xb4, and
+       func_ov006_020f72c0 turns +0xb4 into the board size: 16 cards under 5,
+       18 at 5, 20 at 10. Memory Master keeping its clear count in Bob-omb
+       Squad's slot is the shape of that defect.
+
+       The value is the ov005 row's own +0x04 word, read out of the verbatim
+       table hal/scene_mg_sound.cpp already carries -- the same table, the same
+       first-match-by-id rule, and 0 for anything that is not a minigame scene,
+       which leaves scenes 1 and 4 exactly where they were. */
+    const unsigned param = port_mg_scene_spawn_param(id);
+    if (param)
+        std::printf("[scene] spawn param %08x: save record %u, name text %u\n",
+                    param, (param >> 8) & 0xffu, (param >> 16) & 0xffu);
+
     /* THE ROM'S OWN TWO CALLS. SetSceneToSpawn parks the id; SpawnIfNecessary
        runs the spine. data_02092660 is the "already spawned" latch and starts
        zeroed, so the second call takes its spawning branch. */
-    _ZN5Scene15SetSceneToSpawnEjj((unsigned)id, 0);
+    _ZN5Scene15SetSceneToSpawnEjj((unsigned)id, param);
     const int r = _ZN5Scene16SpawnIfNecessaryEv();
     if (!r) {
         std::fprintf(stderr, "  [scene] Scene::SpawnIfNecessary declined "
