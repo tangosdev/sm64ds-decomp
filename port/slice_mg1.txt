@@ -484,7 +484,14 @@ src/func_02012e78.c
 src/func_02013568.c
 src/func_02013580.c
 src/func_02017a0c.c
-src/func_02017a24.c
+# src/func_02017a24.c IS OUT, run mg9 lane PSY. It is the fifth member of the
+# SharedFilePtr construct-veneer catalogue in hal/cxx_aliases.cpp and the only
+# one that was still compiled from src, where it spells one parameter and drops
+# the fileID the ROM rides through in r1. Three more one-argument forwarders sit
+# under it before anything stores the id, so what reached the file system was a
+# return address. Its four siblings -- func_02017acc, func_02017b4c,
+# func_020178cc and SharedFilePtr_Construct_TexSeq -- were already host veneers
+# there; this one now is too, and hal/cxx_aliases.cpp carries the measurement.
 src/func_020182bc.c
 src/func_02019028.c
 src/func_0202ec9c.cpp
