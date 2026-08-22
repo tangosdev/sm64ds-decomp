@@ -690,6 +690,11 @@ def rebias_object_symbols(raw, symbol_policies):
     if symtab is None:
         return None, {"rebased": [], "aliases": [], "error": "no .symtab"}
     syms = list(symtab.iter_symbols())
+    protected_sections = {
+        i: sec.data() for i, sec in enumerate(elf.iter_sections())
+        if ((sec.header["sh_type"] in CONTENT and sec.header["sh_size"])
+            or (isinstance(sec, RelocationSection) and sec.header["sh_size"]))
+    }
     by_name = {name: [(i, sym) for i, sym in enumerate(syms)
                       if sym.name == name and sym["st_shndx"] not in
                       ("SHN_UNDEF", "SHN_ABS")]
@@ -772,7 +777,8 @@ def rebias_object_symbols(raw, symbol_policies):
         if donor["st_shndx"] not in ("SHN_UNDEF", SHN_UNDEF) \
                 or donor["st_value"] != 0 or donor["st_size"] != 0 \
                 or donor["st_info"]["bind"] != "STB_GLOBAL" \
-                or donor["st_info"]["type"] != "STT_FUNC":
+                or donor["st_info"]["type"] != "STT_FUNC" \
+                or donor["st_other"]["visibility"] != "STV_DEFAULT":
             return None, {"rebased": [], "aliases": [],
                           "error": f"storage alias donor {donor_name} is not an exact "
                                    "deadstripped GLOBAL/FUNC import"}
@@ -804,6 +810,10 @@ def rebias_object_symbols(raw, symbol_policies):
                                    f"substring string-table users {overlapping}"}
         string_table = elf.get_section(symtab.header["sh_link"])
         string_offset = string_table.header["sh_offset"] + donor_name_offset
+        if donor_name_offset == 0 or raw_out[string_offset - 1] != 0:
+            return None, {"rebased": [], "aliases": [],
+                          "error": f"storage alias donor {donor_name} does not start at "
+                                   "an exclusive string-table boundary"}
         if bytes(raw_out[string_offset:string_offset + len(donor_bytes) + 1]) \
                 != donor_bytes + b"\0":
             return None, {"rebased": [], "aliases": [],
@@ -814,6 +824,16 @@ def rebias_object_symbols(raw, symbol_policies):
                                 "stringOffset": string_offset,
                                 "donorBytes": donor_bytes, "aliasBytes": alias_bytes}
         used_donors.add(donor_name)
+
+    mutable_symbol_indices = {index for index, _sym in
+                              (by_name[name][0] for name in requested)}
+    mutable_symbol_indices.update(alias["index"] for alias in aliases.values())
+    protected_symbols = {
+        i: (sym.name, sym["st_name"], sym["st_value"], sym["st_size"],
+            sym["st_info"]["bind"], sym["st_info"]["type"],
+            sym["st_other"]["visibility"], sym["st_shndx"])
+        for i, sym in enumerate(syms) if i not in mutable_symbol_indices
+    }
 
     import struct
     endian = "<" if elf.little_endian else ">"
@@ -848,10 +868,27 @@ def rebias_object_symbols(raw, symbol_policies):
     out = bytes(raw_out)
     checked = ELFFile(io.BytesIO(out))
     checked_symtab = checked.get_section_by_name(".symtab")
+    checked_symbols = list(checked_symtab.iter_symbols())
+    checked_protected = {
+        i: (sym.name, sym["st_name"], sym["st_value"], sym["st_size"],
+            sym["st_info"]["bind"], sym["st_info"]["type"],
+            sym["st_other"]["visibility"], sym["st_shndx"])
+        for i, sym in enumerate(checked_symbols) if i not in mutable_symbol_indices
+    }
+    if checked_protected != protected_symbols:
+        return None, {"rebased": rows, "aliases": alias_rows,
+                      "error": "storage rewrite changed a non-policy symbol"}
+    checked_sections = {
+        i: sec.data() for i, sec in enumerate(checked.iter_sections())
+        if i in protected_sections
+    }
+    if checked_sections != protected_sections:
+        return None, {"rebased": rows, "aliases": alias_rows,
+                      "error": "storage rewrite changed content or relocation bytes"}
     for name, alias in aliases.items():
-        matches = [sym for sym in checked_symtab.iter_symbols()
+        matches = [sym for sym in checked_symbols
                    if sym.name == alias["symbol"]]
-        vtables = [sym for sym in checked_symtab.iter_symbols() if sym.name == name]
+        vtables = [sym for sym in checked_symbols if sym.name == name]
         if len(matches) != 1 or len(vtables) != 1:
             return None, {"rebased": rows, "aliases": alias_rows,
                           "error": f"post-rewrite alias/vtable uniqueness failed for "

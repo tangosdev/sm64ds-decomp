@@ -423,6 +423,23 @@ class Isolate(unittest.TestCase):
         self.assertIsNone(refused)
         self.assertIn("does not fit donor", why["error"])
 
+        # A second symbol may point at a longer name beginning immediately before
+        # the donor while the donor itself points at that name's suffix.  Checking
+        # only offsets inside the donor span misses this overlap.
+        string_table = elf.get_section(symtab.header["sh_link"])
+        donor_string = string_table.header["sh_offset"] + donor["st_name"]
+        suffix_other_index = next(i for i, sym in enumerate(symbols)
+                                  if i not in (index, donor_index) and sym.name)
+        suffix_endian = "<" if elf.little_endian else ">"
+        suffix_shared = bytearray(raw)
+        suffix_shared[donor_string - 1] = ord("X")
+        struct.pack_into(suffix_endian + "I", suffix_shared,
+                         symtab.header["sh_offset"] + suffix_other_index * 16,
+                         donor["st_name"] - 1)
+        refused, why = OI.rebias_object_symbols(bytes(suffix_shared), policy)
+        self.assertIsNone(refused)
+        self.assertIn("string-table boundary", why["error"])
+
         live_donor = {"_ZTV1P": {**policy["_ZTV1P"],
                                   "storageAlias": {"symbol": "data_2000", "size": 8,
                                                    "donor": "_ZTI1P"}}}

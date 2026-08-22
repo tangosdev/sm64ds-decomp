@@ -2773,8 +2773,60 @@ def linked_symbol_rows(path, names):
         rows[sym.name].append({"address": sym["st_value"], "size": sym["st_size"],
                                "binding": sym["st_info"]["bind"],
                                "type": sym["st_info"]["type"],
+                               "visibility": sym["st_other"]["visibility"],
                                "sectionIndex": shndx, "section": section_name})
     return {name: rows.get(name, []) for name in wanted}, None
+
+
+def content_tree_sha256(root):
+    """Hash relative paths, lengths, and bytes for a deterministic config snapshot."""
+    root = pathlib.Path(root)
+    digest = hashlib.sha256()
+    for path in sorted((path for path in root.rglob("*") if path.is_file()),
+                       key=lambda path: path.relative_to(root).as_posix()):
+        rel = path.relative_to(root).as_posix().encode("utf-8")
+        raw = path.read_bytes()
+        digest.update(len(rel).to_bytes(4, "big"))
+        digest.update(rel)
+        digest.update(len(raw).to_bytes(8, "big"))
+        digest.update(raw)
+    return digest.hexdigest()
+
+
+def partition_baseline_fingerprints(linked_elf, config_root=CFG_ARM9,
+                                    dsd_path=None, linker_path=None):
+    """Content identities that bind a baseline report to its actual inputs/output."""
+    linked_elf = pathlib.Path(linked_elf)
+    dsd_path = pathlib.Path(dsd_path or RB.DSD)
+    linker_path = pathlib.Path(linker_path or (RB.MW / RB.LD_VERSION / "mwldarm.exe"))
+    required = [linked_elf, dsd_path, linker_path]
+    missing = [str(path) for path in required if not path.is_file()]
+    if missing:
+        raise FileNotFoundError(f"baseline fingerprint input(s) missing: {missing}")
+    return {
+        "configArm9Sha256": content_tree_sha256(config_root),
+        "linkedElfSha256": hashlib.sha256(linked_elf.read_bytes()).hexdigest(),
+        "linkedElfBytes": linked_elf.stat().st_size,
+        "dsdSha256": hashlib.sha256(dsd_path.read_bytes()).hexdigest(),
+        "mwldarmSha256": hashlib.sha256(linker_path.read_bytes()).hexdigest(),
+    }
+
+
+def validate_partition_baseline_evidence(report, linked_elf, config_root=CFG_ARM9,
+                                         dsd_path=None, linker_path=None):
+    """Refuse a baseline whose report is detached from current bytes or tools."""
+    evidence = report.get("baselineEvidence")
+    if not isinstance(evidence, dict):
+        return None, "baseline report has no content-bound evidence"
+    try:
+        current = partition_baseline_fingerprints(
+            linked_elf, config_root, dsd_path=dsd_path, linker_path=linker_path)
+    except (OSError, ValueError) as exc:
+        return None, f"cannot fingerprint baseline: {exc}"
+    mismatched = [key for key, value in current.items() if evidence.get(key) != value]
+    if mismatched:
+        return None, f"baseline content fingerprint differs for {mismatched}"
+    return current["linkedElfSha256"], None
 
 
 def _baseline_partition_symbols(names):
@@ -2791,17 +2843,13 @@ def _baseline_partition_symbols(names):
             or (report.get("phases", {}).get("link") or {}).get("ok") is not True \
             or (report.get("analysis") or {}).get("passed") is not True:
         return None, None, "baseline report does not prove a successful stock module link"
-    # The baseline linker consumes config/arm9.  tu_manifest.json is deliberately
-    # excluded: recording a failed partition attempt updates it and must not create
-    # an impossible "rerun baseline, then immediately become stale" loop.
-    config_files = [path for path in CFG_ARM9.rglob("*") if path.is_file()]
-    latest_config = max((path.stat().st_mtime_ns for path in config_files), default=0)
-    if elf_path.stat().st_mtime_ns < latest_config:
-        return None, None, "baseline linked ELF is older than the checked-in config tree"
+    baseline_sha256, error = validate_partition_baseline_evidence(report, elf_path)
+    if error:
+        return None, None, error
     rows, error = linked_symbol_rows(elf_path, names)
     if error:
         return None, None, error
-    return rows, hashlib.sha256(elf_path.read_bytes()).hexdigest(), None
+    return rows, baseline_sha256, None
 
 
 def partition_vtable_rebiases(entry, claims, baseline_symbols=None,
@@ -2875,8 +2923,9 @@ def partition_vtable_rebiases(entry, claims, baseline_symbols=None,
             if alias_address != storage or alias_size != bias:
                 reasons.append(f"{label} must exactly cover the preamble "
                                f"0x{storage:08x}..0x{public:08x}")
-            if alias.get("binding") != "STB_GLOBAL" or alias.get("type") != "STT_OBJECT":
-                reasons.append(f"{label} must require STB_GLOBAL/STT_OBJECT")
+            if alias.get("binding") != "STB_GLOBAL" or alias.get("type") != "STT_OBJECT" \
+                    or alias.get("visibility") != "STV_DEFAULT":
+                reasons.append(f"{label} must require GLOBAL/OBJECT/DEFAULT visibility")
             donor_row = compiler_only.get(donor)
             if not donor_row or donor_row.get("disposition") != "deadstrip":
                 reasons.append(f"{label} donor {donor} is not an explicit compiler-only "
@@ -2891,7 +2940,8 @@ def partition_vtable_rebiases(entry, claims, baseline_symbols=None,
                                f"{rendered or 'none'}")
             policy["storageAlias"] = {
                 "symbol": alias_name, "address": alias_address, "size": alias_size,
-                "binding": "STB_GLOBAL", "type": "STT_OBJECT", "donor": donor,
+                "binding": "STB_GLOBAL", "type": "STT_OBJECT",
+                "visibility": "STV_DEFAULT", "donor": donor,
             }
         biases[name] = policy
 
@@ -2914,14 +2964,16 @@ def partition_vtable_rebiases(entry, claims, baseline_symbols=None,
                 continue
             got_alias, got_vtable = base_alias[0], base_vtable[0]
             expected_alias = (alias["address"], alias["size"], alias["binding"],
-                              alias["type"])
+                              alias["type"], alias["visibility"])
             actual_alias = (got_alias["address"], got_alias["size"],
-                            got_alias["binding"], got_alias["type"])
+                            got_alias["binding"], got_alias["type"],
+                            got_alias["visibility"])
             expected_vtable = (biases[name]["publicAddress"],
                                biases[name]["size"] - biases[name]["bias"],
-                               "STB_GLOBAL", "STT_OBJECT")
+                               "STB_GLOBAL", "STT_OBJECT", "STV_DEFAULT")
             actual_vtable = (got_vtable["address"], got_vtable["size"],
-                             got_vtable["binding"], got_vtable["type"])
+                             got_vtable["binding"], got_vtable["type"],
+                             got_vtable["visibility"])
             if actual_alias != expected_alias or actual_vtable != expected_vtable \
                     or got_alias["sectionIndex"] != got_vtable["sectionIndex"]:
                 reasons.append(f"storage alias baseline metadata differs for "
@@ -4024,6 +4076,10 @@ def cmd_linkcheck(args):
             _record_linkcheck(data, entry, report, baseline)
         return 1
     print(f"      ok ({dt:.1f}s) -> {(scratch / 'final_link.o').relative_to(REPO).as_posix()}")
+
+    if baseline:
+        report["baselineEvidence"] = partition_baseline_fingerprints(
+            scratch / "final_link.o")
 
     if partitioned:
         linked_aliases = verify_linked_storage_aliases(

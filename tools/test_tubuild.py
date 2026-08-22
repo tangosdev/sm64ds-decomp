@@ -12,6 +12,7 @@ extracted ROM is not present, the same guard tools/test_build_pin.py uses.
 Usage:
     python tools/test_tubuild.py
 """
+import os
 import pathlib
 import shutil
 import subprocess
@@ -1065,14 +1066,16 @@ def test_partitioned_vtable_rebias_needs_one_unique_configured_public_home():
                            "storage_alias": {
                                "symbol": "data_2000", "address": "0x2000",
                                "size": "0x8", "binding": "STB_GLOBAL",
-                               "type": "STT_OBJECT",
+                               "type": "STT_OBJECT", "visibility": "STV_DEFAULT",
                                "reuse_compiler_only_symbol": "_ZN1PD2Ev"}}], "bss": []}
         baseline = {
             "data_2000": [{"address": 0x2000, "size": 8,
                            "binding": "STB_GLOBAL", "type": "STT_OBJECT",
+                           "visibility": "STV_DEFAULT",
                            "sectionIndex": 4, "section": ".data"}],
             "_ZTV1P": [{"address": 0x2008, "size": 0x18,
                         "binding": "STB_GLOBAL", "type": "STT_OBJECT",
+                        "visibility": "STV_DEFAULT",
                         "sectionIndex": 4, "section": ".data"}],
         }
         tubuild.all_symbol_homes = lambda: {
@@ -1103,6 +1106,40 @@ def test_partitioned_vtable_rebias_needs_one_unique_configured_public_home():
             tubuild.linked_symbol_rows = original_linked
     finally:
         tubuild.all_symbol_homes = original
+
+
+def test_partition_baseline_evidence_is_content_bound_not_mtime_bound():
+    with tempfile.TemporaryDirectory() as td:
+        root = pathlib.Path(td)
+        config = root / "config"
+        config.mkdir()
+        cfg = config / "symbols.txt"
+        linked, dsd, linker = root / "base.o", root / "dsd.exe", root / "mwld.exe"
+        cfg.write_bytes(b"one")
+        linked.write_bytes(b"ELF")
+        dsd.write_bytes(b"DSD")
+        linker.write_bytes(b"MWL")
+        evidence = tubuild.partition_baseline_fingerprints(
+            linked, config, dsd_path=dsd, linker_path=linker)
+        report = {"baselineEvidence": evidence}
+        digest, error = tubuild.validate_partition_baseline_evidence(
+            report, linked, config, dsd_path=dsd, linker_path=linker)
+        assert error is None and digest == evidence["linkedElfSha256"]
+
+        stamp = cfg.stat().st_mtime_ns
+        cfg.write_bytes(b"two")
+        os.utime(cfg, ns=(stamp, stamp))
+        _digest, error = tubuild.validate_partition_baseline_evidence(
+            report, linked, config, dsd_path=dsd, linker_path=linker)
+        assert "configArm9Sha256" in error
+
+        cfg.write_bytes(b"one")
+        linked_stamp = linked.stat().st_mtime_ns
+        linked.write_bytes(b"BAD")
+        os.utime(linked, ns=(linked_stamp, linked_stamp))
+        _digest, error = tubuild.validate_partition_baseline_evidence(
+            report, linked, config, dsd_path=dsd, linker_path=linker)
+        assert "linkedElfSha256" in error
 
 
 def test_partitioned_result_gate_requires_every_full_rom_proof():
