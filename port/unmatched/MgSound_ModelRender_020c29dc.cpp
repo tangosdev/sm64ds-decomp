@@ -68,6 +68,16 @@
  * include/BlendModelAnim.h both list `virtual void Render(const Vector3 *)` at
  * slot 5 independently of this reading.
  *
+ * AND THE SLOT-5 CLAIM IS READ FIRST-HAND HERE rather than inherited, out of
+ * extracted/arm9_dec.bin at base 0x02004000 -- the two ROM vtables, word 5:
+ *
+ *   _ZTV5Model            0x0208e90c  word 5 = 0x02016b78
+ *   _ZTV14BlendModelAnim  0x0208e94c  word 5 = 0x020164e4
+ *
+ * and config/arm9/symbols.txt names those two _ZN5Model6RenderEPK7Vector3 and
+ * _ZN14BlendModelAnim6RenderEPK7Vector3. So byte +0x14 is Render on both, and
+ * that is a ROM reading and not a citation of MgMemory2_ModelRender's header.
+ *
  * THE DISPATCH STAYS VIRTUAL rather than qualified, for
  * MgFlower_ModelRender_020c3bf4.cpp's reason: the ROM's is
  * (ldr vptr / ldr [vptr,#0x14] / blx) and a qualified call would silently

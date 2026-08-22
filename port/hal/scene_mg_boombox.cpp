@@ -502,14 +502,21 @@ extern "C" void port_scene_boombox_hits(void)
         if (g_snd_hits[i]) std::printf(" %d(x%u)", i, g_snd_hits[i]);
     std::printf("   (%u total)\n", total);
 
-    /* THE MIDDLE TABLE'S WITNESS, AND ITS EXPECTED VALUE IS ZERO. This class's
-       registry row is appended after the flower's and memory2's, so whichever
-       of those fills first claims data_ov006_0213e448 and this copy finds no
-       DS word left in it. A NONZERO number here would mean the row order
-       changed, which is the fact section 3's sharing argument rests on. The
-       claimed counts say the same thing at fill time rather than at tick
-       time. */
-    std::printf("[scene] dScMgSingle3DBase_c slots entered (this seat's copy):");
+    /* THE MIDDLE BASE'S BODIES, COUNTED WHERE THIS SEAT OWNS THEM. Read this
+       line as "entries into a dScMgSingle3DBase_c BODY through a thunk this
+       file installed", not as "entries into the middle TABLE": the two are
+       different and the claimed counts below say which is which.
+
+       kSingle3DFaces is applied to BOTH tables and lands in only one of them.
+       This class's registry row is appended after the flower's and memory2's,
+       so whichever of those fills first claims data_ov006_0213e448 and this
+       copy finds no DS word left there -- the middle-table claim reads 0 by
+       design, and a NONZERO one would mean the row order changed, which is the
+       fact section 3's sharing argument rests on. The DERIVED table is a
+       different matter: six of its thirteen overrides ARE the middle base's
+       bodies and nobody else fills that table, so this seat's own claim is
+       13 = 6 inherited + 7 of its own, and the hits below are those six. */
+    std::printf("[scene] dScMgSingle3DBase_c bodies entered (this seat's thunks):");
     for (int i = 0; i < 36; ++i)
         if (g_snd_mid_hits[i]) std::printf(" %d(x%u)", i, g_snd_mid_hits[i]);
     std::printf("   (%u total; this fill claimed %u middle-table slot(s) and "
