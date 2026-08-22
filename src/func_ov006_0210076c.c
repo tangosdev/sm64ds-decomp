@@ -58,116 +58,140 @@
 // unsigned j, -inline off and every -proc. The best of all of them is the
 // spelling below.
 //
-// The full diff, ROM on the left and candidate on the right:
+// THE DIFF, COMPLETE: every one of the 118 words that differ, ROM on the left
+// and candidate on the right. Nothing is elided.
 //
-//   02100770 | sub      sp, sp, #0x1c                   | sub      sp, sp, #0x24
-//   0210078C | addeq    sp, sp, #0x1c                   | addeq    sp, sp, #0x24
-//   0210079C | addhs    sp, sp, #0x1c                   | addhs    sp, sp, #0x24
-//   021007B4 | str      r0, [sp, #4]                    | str      r0, [sp, #8]
-//   021007BC | ldr      r2, [pc, #0x1d4]                | str      r0, [sp, #0xc]
-//   021007C0 | str      r0, [sp, #8]                    | mov      r0, #0x1800
-//   021007C4 | mov      r0, #0x1800                     | str      r0, [sp, #0x14]
-//   021007C8 | str      r0, [sp, #0x10]                 | mov      r0, #0x2800
-//   021007D0 | ldr      r3, [pc, #0x1c4]                | ldr      r2, [pc, #0x1c0]
-//   021007D4 | add      r7, r4, r2                      | ldr      r3, [pc, #0x1c0]
-//   021007D8 | mov      r1, #0x2800                     | mov      r8, #0
-//   021007DC | str      r0, [sp, #0x14]                 | mov      r1, #0x2000
-//   021007E0 | rsb      r0, r1, #0                      | str      r0, [sp, #0x1c]
-//   021007E4 | mov      r2, #0x2000                     | rsb      r0, r1, #0
-//   021007E8 | str      r0, [sp, #0x18]                 | str      r0, [sp, #0x10]
-//   021007EC | rsb      r0, r2, #0                      | ldr      r0, [sp, #0x14]
-//   021007F0 | mov      r8, #0                          | str      r8, [sp, #4]
-//   021007F4 | add      r6, r4, r3                      | rsb      r0, r0, #0
-//   021007F8 | mov      r4, r8                          | add      r7, r4, r2
-//   021007FC | str      r0, [sp, #0xc]                  | add      r6, r4, r3
-//   02100800 | ldr      r0, [pc, #0x198]                | mov      r4, r8
-//   02100804 | add      r5, sb, r8, lsl #6              | str      r0, [sp, #0x18]
-//   02100808 | add      fp, r5, r0                      | ldr      r0, [pc, #0x190]
-//   0210080C | ldrb     r0, [fp]                        | add      r5, sb, r8
-//   02100810 | cmp      r0, #0                          | add      fp, r5, r0
-//   02100814 | beq      #0x2100978                      | ldrb     r0, [fp]
-//   02100818 | add      r1, r5, #0x4000                 | cmp      r0, #0
-//   0210081C | ldrb     r0, [r1, #0x699]                | beq      #0x210096c
-//   02100820 | cmp      r0, #2                          | add      r1, r5, #0x4000
-//   02100824 | blo      #0x2100978                      | ldrb     r0, [r1, #0x699]
-//   02100828 | ldr      r0, [pc, #0x174]                | cmp      r0, #2
-//   0210082C | add      lr, r5, r0                      | blo      #0x210096c
-//   02100830 | ldr      r0, [lr]                        | ldr      r0, [pc, #0x16c]
-//   02100834 | cmp      r0, #0x2000                     | add      lr, r5, r0
-//   02100838 | ble      #0x2100978                      | ldr      r0, [lr]
-//   0210083C | ldr      r0, [sp, #4]                    | cmp      r0, #0x2000
-//   02100840 | ldr      r2, [r1, #0x660]                | ble      #0x210096c
-//   02100844 | ldr      r3, [r0]                        | ldr      r0, [sp, #8]
-//   02100848 | ldr      r0, [pc, #0x158]                | ldr      r2, [r1, #0x660]
-//   0210084C | add      ip, r5, r0                      | ldr      r3, [r0]
-//   02100850 | sub      r0, r3, r2                      | ldr      r0, [pc, #0x150]
-//   02100854 | asr      sl, r0, #0xc                    | add      ip, r5, r0
-//   02100858 | ldr      r0, [sp, #8]                    | sub      r0, r3, r2
-//   0210085C | ldr      r2, [ip]                        | asr      sl, r0, #0xc
-//   02100860 | ldr      r3, [r0]                        | ldr      r0, [sp, #0xc]
-//   02100864 | mvn      r0, #0x2f                       | ldr      r2, [ip]
-//   02100868 | sub      r2, r3, r2                      | ldr      r3, [r0]
-//   0210086C | cmp      sl, r0                          | mvn      r0, #0x2f
-//   02100870 | asr      r0, r2, #0xc                    | sub      r2, r3, r2
-//   02100874 | blt      #0x2100978                      | cmp      sl, r0
-//   02100878 | cmp      sl, #0x30                       | asr      r0, r2, #0xc
-//   0210087C | bgt      #0x2100978                      | blt      #0x210096c
-//   02100880 | cmp      r0, #0                          | cmp      sl, #0x30
-//   02100884 | blt      #0x2100978                      | bgt      #0x210096c
-//   02100888 | cmp      r0, #8                          | cmp      r0, #0
-//   0210088C | bgt      #0x2100978                      | blt      #0x210096c
-//   02100890 | mvn      r0, #0xf                        | cmp      r0, #8
-//   02100894 | cmp      sl, r0                          | bgt      #0x210096c
-//   02100898 | blt      #0x21008ec                      | mvn      r0, #0xf
-//   0210089C | cmp      sl, #0x10                       | cmp      sl, r0
-//   021008A0 | bgt      #0x21008ec                      | blt      #0x21008f4
-//   021008A4 | ldrb     r2, [r7]                        | cmp      sl, #0x10
-//   021008A8 | ldr      r0, [pc, #0xfc]                 | bgt      #0x21008f4
-//   021008AC | add      r2, r2, #1                      | ldrb     r2, [r7]
-//   021008B0 | strb     r2, [r7]                        | ldr      r0, [pc, #0xf4]
-//   021008B4 | strb     r4, [r1, #0x69a]                | add      r2, r2, #1
-//   021008B8 | add      r5, r5, r0                      | strb     r2, [r7]
-//   021008BC | strb     r4, [fp]                        | strb     r4, [r1, #0x69a]
-//   021008C0 | ldr      r2, [ip]                        | add      r5, r5, r0
-//   021008C4 | ldr      r1, [r5]                        | strb     r4, [fp]
-//   021008C8 | mov      r0, sb                          | ldr      r2, [ip]
-//   021008D0 | ldr      r1, [r5]                        | mov      r0, sb
-//   021008DC | ldr      r1, [sp]                        | ldr      r0, [pc, #0xcc]
-//   021008E8 | b        #0x2100978                      | mov      r0, sb
-//   021008F0 | cmp      sl, r0                          | b        #0x210096c
-//   021008F4 | blt      #0x2100944                      | mvn      r0, #0x1f
-//   021008F8 | cmp      sl, #0x20                       | cmp      sl, r0
-//   021008FC | bgt      #0x2100944                      | blt      #0x2100940
-//   02100900 | cmp      sl, #0                          | cmp      sl, #0x20
-//   02100904 | ldrge    r1, [r6]                        | bgt      #0x2100940
-//   02100908 | addge    r0, sb, r8, lsl #6              | cmp      sl, #0
-//   0210090C | addge    r1, r1, #0x1800                 | ldrge    r1, [r6]
-//   02100910 | addge    r0, r0, #0x4000                 | addge    r0, r5, #0x4000
-//   02100914 | strge    r1, [r0, #0x668]                | addge    r1, r1, #0x1800
-//   02100918 | bge      #0x2100930                      | strge    r1, [r0, #0x668]
-//   0210091C | ldr      r1, [r6]                        | ldrlt    r1, [r6]
-//   02100920 | add      r0, sb, r8, lsl #6              | addlt    r0, r5, #0x4000
-//   02100924 | sub      r1, r1, #0x1800                 | sublt    r1, r1, #0x1800
-//   02100928 | add      r0, r0, #0x4000                 | strlt    r1, [r0, #0x668]
-//   0210092C | str      r1, [r0, #0x668]                | ldr      r0, [sp, #0x10]
-//   02100930 | ldr      r0, [sp, #0xc]                  | str      r0, [lr]
-//   02100934 | str      r0, [lr]                        | ldr      r0, [pc, #0x78]
-//   02100940 | b        #0x2100978                      | cmp      sl, #0
-//   02100944 | cmp      sl, #0                          | ldrlt    r0, [sp, #0x14]
-//   02100948 | addlt    r0, sb, r8, lsl #6              | addlt    r1, r5, #0x4000
-//   0210094C | addlt    r1, r0, #0x4000                 | strlt    r0, [r1, #0x668]
-//   02100950 | ldrlt    r0, [sp, #0x10]                 | ldrge    r0, [sp, #0x18]
-//   02100954 | strlt    r0, [r1, #0x668]                | addge    r1, r5, #0x4000
-//   02100958 | addge    r0, sb, r8, lsl #6              | strge    r0, [r1, #0x668]
-//   0210095C | addge    r1, r0, #0x4000                 | ldr      r0, [sp, #0x1c]
-//   02100960 | ldrge    r0, [sp, #0x14]                 | str      r0, [lr]
-//   02100964 | strge    r0, [r1, #0x668]                | ldr      r0, [pc, #0x48]
-//   0210096C | str      r0, [lr]                        | ldr      r0, [sp, #4]
-//   02100970 | ldr      r0, [pc, #0x3c]                 | add      r8, r8, #0x40
-//   02100978 | add      r8, r8, #1                      | str      r0, [sp, #4]
-//   0210097C | cmp      r8, #0x30                       | cmp      r0, #0x30
-//   02100980 | blt      #0x2100800                      | blt      #0x2100808
-//   02100984 | add      sp, sp, #0x1c                   | add      sp, sp, #0x24
+// The 5 rows flagged R in the left margin are the ones tools/match.py
+// WILDCARDS, because the candidate object carries a relocation at that offset
+// and an unlinked reloc slot can never equal the ROM's linked word. That
+// wildcard is why the tool's divergence figure for this body is 113 and not
+// 118, and it is worth saying plainly that HERE THE WILDCARD IS NOT BENIGN:
+// the wildcard exists for the case where both sides hold the same instruction
+// and only the branch target differs, and these five do not. The candidate is
+// shifted against the ROM, so each of the five reloc slots lands on a ROM
+// offset holding an ordinary instruction -- ldr, mov, mvn -- rather than on
+// the ROM's own bl. Five real differences are being masked by a mechanism
+// designed to mask relocation targets, and they are printed below with the
+// rest rather than left to the tool's count.
+//
+//     02100770 | sub      sp, sp, #0x1c                   | sub      sp, sp, #0x24
+//     0210078C | addeq    sp, sp, #0x1c                   | addeq    sp, sp, #0x24
+//     0210079C | addhs    sp, sp, #0x1c                   | addhs    sp, sp, #0x24
+//     021007B4 | str      r0, [sp, #4]                    | str      r0, [sp, #8]
+//     021007BC | ldr      r2, [pc, #0x1d4]                | str      r0, [sp, #0xc]
+//     021007C0 | str      r0, [sp, #8]                    | mov      r0, #0x1800
+//     021007C4 | mov      r0, #0x1800                     | str      r0, [sp, #0x14]
+//     021007C8 | str      r0, [sp, #0x10]                 | mov      r0, #0x2800
+//     021007D0 | ldr      r3, [pc, #0x1c4]                | ldr      r2, [pc, #0x1c0]
+//     021007D4 | add      r7, r4, r2                      | ldr      r3, [pc, #0x1c0]
+//     021007D8 | mov      r1, #0x2800                     | mov      r8, #0
+//     021007DC | str      r0, [sp, #0x14]                 | mov      r1, #0x2000
+//     021007E0 | rsb      r0, r1, #0                      | str      r0, [sp, #0x1c]
+//     021007E4 | mov      r2, #0x2000                     | rsb      r0, r1, #0
+//     021007E8 | str      r0, [sp, #0x18]                 | str      r0, [sp, #0x10]
+//     021007EC | rsb      r0, r2, #0                      | ldr      r0, [sp, #0x14]
+//     021007F0 | mov      r8, #0                          | str      r8, [sp, #4]
+//     021007F4 | add      r6, r4, r3                      | rsb      r0, r0, #0
+//     021007F8 | mov      r4, r8                          | add      r7, r4, r2
+//     021007FC | str      r0, [sp, #0xc]                  | add      r6, r4, r3
+//     02100800 | ldr      r0, [pc, #0x198]                | mov      r4, r8
+//     02100804 | add      r5, sb, r8, lsl #6              | str      r0, [sp, #0x18]
+//     02100808 | add      fp, r5, r0                      | ldr      r0, [pc, #0x190]
+//     0210080C | ldrb     r0, [fp]                        | add      r5, sb, r8
+//     02100810 | cmp      r0, #0                          | add      fp, r5, r0
+//     02100814 | beq      #0x2100978                      | ldrb     r0, [fp]
+//     02100818 | add      r1, r5, #0x4000                 | cmp      r0, #0
+//     0210081C | ldrb     r0, [r1, #0x699]                | beq      #0x210096c
+//     02100820 | cmp      r0, #2                          | add      r1, r5, #0x4000
+//     02100824 | blo      #0x2100978                      | ldrb     r0, [r1, #0x699]
+//     02100828 | ldr      r0, [pc, #0x174]                | cmp      r0, #2
+//     0210082C | add      lr, r5, r0                      | blo      #0x210096c
+//     02100830 | ldr      r0, [lr]                        | ldr      r0, [pc, #0x16c]
+//     02100834 | cmp      r0, #0x2000                     | add      lr, r5, r0
+//     02100838 | ble      #0x2100978                      | ldr      r0, [lr]
+//     0210083C | ldr      r0, [sp, #4]                    | cmp      r0, #0x2000
+//     02100840 | ldr      r2, [r1, #0x660]                | ble      #0x210096c
+//     02100844 | ldr      r3, [r0]                        | ldr      r0, [sp, #8]
+//     02100848 | ldr      r0, [pc, #0x158]                | ldr      r2, [r1, #0x660]
+//     0210084C | add      ip, r5, r0                      | ldr      r3, [r0]
+//     02100850 | sub      r0, r3, r2                      | ldr      r0, [pc, #0x150]
+//     02100854 | asr      sl, r0, #0xc                    | add      ip, r5, r0
+//     02100858 | ldr      r0, [sp, #8]                    | sub      r0, r3, r2
+//     0210085C | ldr      r2, [ip]                        | asr      sl, r0, #0xc
+//     02100860 | ldr      r3, [r0]                        | ldr      r0, [sp, #0xc]
+//     02100864 | mvn      r0, #0x2f                       | ldr      r2, [ip]
+//     02100868 | sub      r2, r3, r2                      | ldr      r3, [r0]
+//     0210086C | cmp      sl, r0                          | mvn      r0, #0x2f
+//     02100870 | asr      r0, r2, #0xc                    | sub      r2, r3, r2
+//     02100874 | blt      #0x2100978                      | cmp      sl, r0
+//     02100878 | cmp      sl, #0x30                       | asr      r0, r2, #0xc
+//     0210087C | bgt      #0x2100978                      | blt      #0x210096c
+//     02100880 | cmp      r0, #0                          | cmp      sl, #0x30
+//     02100884 | blt      #0x2100978                      | bgt      #0x210096c
+//     02100888 | cmp      r0, #8                          | cmp      r0, #0
+//     0210088C | bgt      #0x2100978                      | blt      #0x210096c
+//     02100890 | mvn      r0, #0xf                        | cmp      r0, #8
+//     02100894 | cmp      sl, r0                          | bgt      #0x210096c
+//     02100898 | blt      #0x21008ec                      | mvn      r0, #0xf
+//     0210089C | cmp      sl, #0x10                       | cmp      sl, r0
+//     021008A0 | bgt      #0x21008ec                      | blt      #0x21008f4
+//     021008A4 | ldrb     r2, [r7]                        | cmp      sl, #0x10
+//     021008A8 | ldr      r0, [pc, #0xfc]                 | bgt      #0x21008f4
+//     021008AC | add      r2, r2, #1                      | ldrb     r2, [r7]
+//     021008B0 | strb     r2, [r7]                        | ldr      r0, [pc, #0xf4]
+//     021008B4 | strb     r4, [r1, #0x69a]                | add      r2, r2, #1
+//     021008B8 | add      r5, r5, r0                      | strb     r2, [r7]
+//     021008BC | strb     r4, [fp]                        | strb     r4, [r1, #0x69a]
+//     021008C0 | ldr      r2, [ip]                        | add      r5, r5, r0
+//     021008C4 | ldr      r1, [r5]                        | strb     r4, [fp]
+//     021008C8 | mov      r0, sb                          | ldr      r2, [ip]
+//     021008CC | bl       #0x2100408                      | ldr      r1, [r5]
+//     021008D0 | ldr      r1, [r5]                        | mov      r0, sb
+//   R 021008D4 | ldr      r0, [pc, #0xd4]                 | bl       #0x21008dc
+//     021008D8 | bl       #0x2012718                      | ldr      r1, [r5]
+//     021008DC | ldr      r1, [sp]                        | ldr      r0, [pc, #0xcc]
+//   R 021008E0 | mov      r0, sb                          | bl       #0x21008e8
+//     021008E4 | bl       #0x2101148                      | ldr      r1, [sp]
+//     021008E8 | b        #0x2100978                      | mov      r0, sb
+//   R 021008EC | mvn      r0, #0x1f                       | bl       #0x21008f4
+//     021008F0 | cmp      sl, r0                          | b        #0x210096c
+//     021008F4 | blt      #0x2100944                      | mvn      r0, #0x1f
+//     021008F8 | cmp      sl, #0x20                       | cmp      sl, r0
+//     021008FC | bgt      #0x2100944                      | blt      #0x2100940
+//     02100900 | cmp      sl, #0                          | cmp      sl, #0x20
+//     02100904 | ldrge    r1, [r6]                        | bgt      #0x2100940
+//     02100908 | addge    r0, sb, r8, lsl #6              | cmp      sl, #0
+//     0210090C | addge    r1, r1, #0x1800                 | ldrge    r1, [r6]
+//     02100910 | addge    r0, r0, #0x4000                 | addge    r0, r5, #0x4000
+//     02100914 | strge    r1, [r0, #0x668]                | addge    r1, r1, #0x1800
+//     02100918 | bge      #0x2100930                      | strge    r1, [r0, #0x668]
+//     0210091C | ldr      r1, [r6]                        | ldrlt    r1, [r6]
+//     02100920 | add      r0, sb, r8, lsl #6              | addlt    r0, r5, #0x4000
+//     02100924 | sub      r1, r1, #0x1800                 | sublt    r1, r1, #0x1800
+//     02100928 | add      r0, r0, #0x4000                 | strlt    r1, [r0, #0x668]
+//     0210092C | str      r1, [r0, #0x668]                | ldr      r0, [sp, #0x10]
+//     02100930 | ldr      r0, [sp, #0xc]                  | str      r0, [lr]
+//     02100934 | str      r0, [lr]                        | ldr      r0, [pc, #0x78]
+//   R 02100938 | ldr      r0, [pc, #0x74]                 | bl       #0x2100940
+//     0210093C | bl       #0x2012754                      | b        #0x210096c
+//     02100940 | b        #0x2100978                      | cmp      sl, #0
+//     02100944 | cmp      sl, #0                          | ldrlt    r0, [sp, #0x14]
+//     02100948 | addlt    r0, sb, r8, lsl #6              | addlt    r1, r5, #0x4000
+//     0210094C | addlt    r1, r0, #0x4000                 | strlt    r0, [r1, #0x668]
+//     02100950 | ldrlt    r0, [sp, #0x10]                 | ldrge    r0, [sp, #0x18]
+//     02100954 | strlt    r0, [r1, #0x668]                | addge    r1, r5, #0x4000
+//     02100958 | addge    r0, sb, r8, lsl #6              | strge    r0, [r1, #0x668]
+//     0210095C | addge    r1, r0, #0x4000                 | ldr      r0, [sp, #0x1c]
+//     02100960 | ldrge    r0, [sp, #0x14]                 | str      r0, [lr]
+//     02100964 | strge    r0, [r1, #0x668]                | ldr      r0, [pc, #0x48]
+//   R 02100968 | ldr      r0, [sp, #0x18]                 | bl       #0x2100970
+//     0210096C | str      r0, [lr]                        | ldr      r0, [sp, #4]
+//     02100970 | ldr      r0, [pc, #0x3c]                 | add      r8, r8, #0x40
+//     02100974 | bl       #0x2012754                      | add      r0, r0, #1
+//     02100978 | add      r8, r8, #1                      | str      r0, [sp, #4]
+//     0210097C | cmp      r8, #0x30                       | cmp      r0, #0x30
+//     02100980 | blt      #0x2100800                      | blt      #0x2100808
+//     02100984 | add      sp, sp, #0x1c                   | add      sp, sp, #0x24
 
 #include "types.h"
 extern void func_ov006_02100408(char* p, int x, int y);
