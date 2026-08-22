@@ -98,7 +98,57 @@
 // FLW_HOSTGEN_SYMS already emits, and src/func_ov006_0210a708.c is out of this
 // slice for the same reason.
 //
-// ---- 5. THE WIDTH IS 36 ON BOTH TABLES, CHECKED FOUR WAYS -----------------
+// ---- 4b. THERE IS A THIRD TABLE, AND IT IS THE CARD DRAW ------------------
+//
+// THE SINGLE MOST IMPORTANT THING THIS SEAT DOES THAT THE VTABLE AXIS CANNOT
+// SEE. The factory builds an array of 0x50 records of 0x30 bytes at
+// this+0x51a8 through func_020733a8 with the element constructor
+// func_ov006_020f8ed8, and that constructor's whole body is
+//
+//     p[0] = (int)&data_ov006_0213d5ac;  p[1] = 0;  p[2] = 0;
+//
+// so every one of the eighty records carries a MOUNTED ROM TABLE as its vptr.
+// data_ov006_0213d5ac is dMgMCarloCardObj_c's vtable -- the typeinfo pointer
+// at 0x0213d5a8 reads 0x0213d578, whose name string is "18dMgMCarloCardObj_c"
+// -- and it is TWO slots wide:
+//
+//     [0]  0x020f7e2c   the card DRAW
+//     [1]  0x020f7ee4   the card's per-frame update, which takes an event
+//
+// AND SLOT 9 DISPATCHES SLOT 0 THROUGH IT. src/func_ov006_020f85b0.cpp walks
+// the list at data_ov006_02142504 twice and calls `n->f0()` on each node --
+// `ldr r1,[r0] / ldr r1,[r1] / blx r1` at 0x020f8614 and 0x020f8654 in the
+// ROM -- and those nodes are the card records: src/func_ov006_020f7c10.c
+// links `c` (which slot 18 passes as this+0x51a8) into a doubly-linked list
+// through +4 and +8 and parks the head in data_ov006_02142500. Nothing else in
+// ov006 ever constructs an object with this vptr: the only two relocations
+// naming data_ov006_0213d5ac in the whole overlay are this class's element
+// constructor and element destructor.
+//
+// SO A SEAT THAT FILLED ONLY THE TWO SCENE TABLES WOULD LINK, BOOT AND JUMP TO
+// A RAW DS ADDRESS ON THE FIRST RENDERED FRAME. It is the same class of hole
+// port/mg_fanout_costs.txt section 15 measured for Memory Master from the other
+// end -- there the body existed and was never called, and the card grid
+// rendered onto an empty table with every dispatch counter green -- and it is
+// found here BEFORE the run rather than after, by asking what the ROM parks in
+// an object's first word.
+//
+// THE WIDTH IS 2, CHECKED THE SAME WAY THE 36s ARE: the span from
+// data_ov006_0213d5ac to the next config symbol data_ov006_0213d5b4 is 8 bytes
+// = 2 words; exactly 2 load relocations fall inside that span; and the word
+// past the end is 0x000000ba, the first entry of the language file-id table
+// slot 0 reads, not a code address.
+//
+// THE CARD DRAW ITSELF is func_ov006_020f7e2c, which gates on the record's
+// +0x2e, indexes data_ov006_0213d600 by (identity + 1) * 5 + flip-frame and
+// hands the sprite from data_ov006_0214250c to Hud_RenderSprite at
+// 0x020af68c -- the same HUD sprite seam eight other ov006 minigames draw
+// through, and the same shape section 15 disassembles for Memory Master's
+// twenty cards. The census at the foot of this file prints the live record
+// count for the reason that section gives: a census that measures only
+// DISPATCH cannot see a board that was never dealt.
+//
+// ---- 5. THE WIDTH IS 36 ON BOTH SCENE TABLES, CHECKED FOUR WAYS -----------
 //
 // port/mg_fanout_costs.txt section 11 measured that twelve of twenty-nine
 // widths in its own table were phantoms, and that a 37-slot fill writes a host
@@ -194,6 +244,7 @@ int      IsMinigameActorID(unsigned int id);
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,         36 */
 extern unsigned char data_ov006_0213e448[];   /* dScMgSingle3DBase_c, 36 */
 extern unsigned char data_ov006_0213d664[];   /* dScMgMCarlo_c,       36 */
+extern unsigned char data_ov006_0213d5ac[];   /* dMgMCarloCardObj_c,   2 */
 extern unsigned char data_ov006_0213d580[];   /* the SpawnInfo record     */
 
 /* dScMgSingle3DBase_c's eight overrides. Slot 2 is NOT src's body and slot 33
@@ -215,6 +266,10 @@ void *func_ov006_020f7634(char *c);           /* slot 16 D2            */
 void *func_ov006_020f76a8(char *c);           /* slot 17 D0            */
 void  func_ov006_020f8c68(char *c);           /* slot 18 state reset   */
 int   func_ov006_020f8a3c(char *c);           /* slot 19               */
+
+/* dMgMCarloCardObj_c's two, section 4b */
+void  func_ov006_020f7e2c(char *thiz);        /* slot  0 the card draw */
+void  func_ov006_020f7ee4(char *thiz, int event);  /* slot  1 the update */
 
 /* the factory */
 void *func_ov006_020f8e44(void);
@@ -305,6 +360,20 @@ static int  __fastcall mca_reset(void *s, void *, int /*ridethrough*/)
 static int  __fastcall mca_v19(void *s, void *, int /*ridethrough*/)
 { MCA(19); return func_ov006_020f8a3c((char *)s); }
 
+/* ---- dMgMCarloCardObj_c's two, section 4b ------------------------------- */
+/* These are NOT __fastcall thunks over a Scene slot: the ROM dispatches them
+   through the card record's own two-slot vtable with `this` in r0 and nothing
+   else, so the host shape is __thiscall -- one hidden receiver, and for slot 1
+   one stack argument the ROM passes in r1. The counters are here for section
+   15's reason and not for symmetry: the draw is the only code in this class
+   that puts a card pixel anywhere, so a run that ticks the board and never
+   enters it looks identical from every other census line in this file. */
+static unsigned g_mca_card_draws, g_mca_card_updates;
+static void __fastcall card_draw(void *s, void *)
+{ ++g_mca_card_draws; func_ov006_020f7e2c((char *)s); }
+static void __fastcall card_update(void *s, void *, int event)
+{ ++g_mca_card_updates; func_ov006_020f7ee4((char *)s, event); }
+
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics every scene
    seat in this port carries, counted separately so a run can never read a
    no-op as the real body having run. */
@@ -321,6 +390,15 @@ static const McaFace kSingle3DFaces[] = {
     {0x0210a698u, (void *)s3_bbeh},   {0x0210a664u, (void *)s3_bren},
     {0x0210a4b0u, (void *)s3_d2},     {0x0210a4e8u, (void *)s3_d0},
     {0x0210a600u, (void *)s3_v26},    {0x0210a708u, (void *)s3_v33},
+};
+
+/* dMgMCarloCardObj_c's two, section 4b. A SEPARATE ARRAY rather than two more
+   rows in kMCarloFaces, because it is applied to a DIFFERENT table and the
+   address-keyed fill would otherwise be free to write a card body into a scene
+   table if the ROM ever parked one there. Keeping the arrays per-table is what
+   makes "this array wrote n slots" a checkable number. */
+static const McaFace kCardFaces[] = {
+    {0x020f7e2cu, (void *)card_draw},  {0x020f7ee4u, (void *)card_update},
 };
 
 static const McaFace kMCarloFaces[] = {
@@ -357,7 +435,7 @@ static unsigned mca_raw_left(void **vt, unsigned n)
 
 /* How many slots this seat's own copies actually claimed, so section 3's
    "the first fill wins" is a measured statement rather than an assertion. */
-static unsigned g_mca_mid_claimed, g_mca_vt_claimed;
+static unsigned g_mca_mid_claimed, g_mca_vt_claimed, g_mca_card_claimed;
 
 extern "C" void port_scene_mcarlo_hits(void);
 
@@ -400,6 +478,21 @@ extern "C" void port_scene_fill_mcarlo(void)
       + mca_apply(vt, 36, kMCarloFaces,
                   sizeof kMCarloFaces / sizeof kMCarloFaces[0]);
 
+    /* THE CARD TABLE, section 4b. Two slots, and it is not a Scene table: no
+       arm9 or dScMgBase_c word appears in it, so port_scene_mg_fill_shared is
+       NOT called over it -- only this class's own two rows can land, and if
+       either fails to the mounted table keeps a raw DS word that the check
+       below reports by name. Filling it here rather than at spawn time is
+       correct because the element constructor writes the table's ADDRESS into
+       each of the eighty records, not its contents, so records built later
+       pick the host pointers up on their own. */
+    {
+        void **card = (void **)data_ov006_0213d5ac;
+        g_mca_card_claimed =
+            mca_apply(card, 2, kCardFaces,
+                      sizeof kCardFaces / sizeof kCardFaces[0]);
+    }
+
     /* the two diagnostics, applied after the fill so they override it */
     {
         const char *s0 = std::getenv("SM64DS_SCENE_SLOT0");
@@ -412,12 +505,14 @@ extern "C" void port_scene_fill_mcarlo(void)
         const unsigned lb = mca_raw_left(base, 36);
         const unsigned lm = mca_raw_left(mid, 36);
         const unsigned lv = mca_raw_left(vt, 36);
-        if (lb || lm || lv) {
+        const unsigned lc = mca_raw_left((void **)data_ov006_0213d5ac, 2);
+        if (lb || lm || lv || lc) {
             std::fprintf(stderr, "  [scene] MCARLO FILL INCOMPLETE: "
                          "dScMgBase_c leaves %u of 36 raw DS words, "
-                         "dScMgSingle3DBase_c %u, dScMgMCarlo_c %u. A dispatch "
-                         "of any of them jumps to a DS address as a host one.\n",
-                         lb, lm, lv);
+                         "dScMgSingle3DBase_c %u, dScMgMCarlo_c %u, "
+                         "dMgMCarloCardObj_c %u of 2. A dispatch of any of "
+                         "them jumps to a DS address as a host one.\n",
+                         lb, lm, lv, lc);
             std::fflush(stderr);
         }
     }
@@ -481,8 +576,16 @@ extern "C" void port_scene_mcarlo_hits(void)
        flower and memory2 rows this seat's middle copy should claim ZERO slots
        and its derived copy should claim all fifteen. */
     std::printf("[scene] dScMgMCarlo_c fill claims: middle table %u slot(s), "
-                "derived table %u slot(s) (of 8 + 7 face rows)\n",
-                g_mca_mid_claimed, g_mca_vt_claimed);
+                "derived table %u slot(s) (of 8 + 7 face rows), card table %u "
+                "of 2\n",
+                g_mca_mid_claimed, g_mca_vt_claimed, g_mca_card_claimed);
+
+    /* THE CARD TABLE'S OWN WITNESS, section 4b. The draw is the only code in
+       this class that puts a card pixel anywhere, so this pair of numbers is
+       the difference between "the board ticked" and "the board was drawn". */
+    std::printf("[scene] dMgMCarloCardObj_c dispatches: %u draw(s) through "
+                "slot 0, %u update(s) through slot 1\n",
+                g_mca_card_draws, g_mca_card_updates);
 
     /* THE STATE MACHINE'S OWN WITNESS. This class dispatches its states through
        a plain compiled switch on the s16 at +0x60a8 rather than through a
@@ -547,3 +650,45 @@ extern "C" void port_scene_mcarlo_hits(void)
     }
     std::fflush(stdout);
 }
+
+/* ---- THE NAME-SPELLING ALIASES -------------------------------------------
+ *
+ * The "C-named symbols declared at C++ linkage" case hal/scene_boot.cpp
+ * section 1 carries twenty-three of for the star select and
+ * port/mg_fanout_costs.txt section 4 counts twenty-two of in the family's own
+ * wall. Three TUs in this slice reach a mounted DS data symbol through a
+ * namespace-scope `extern` rather than through an extern "C" block, so MSVC
+ * puts the TYPE into the symbol name and the mount's plain C definition can
+ * never satisfy it. Each row below is the mangling of one such declaration.
+ *
+ * THEY ARE ALIASES AND NOT FACES, and the test is section 4's rulebook
+ * corollary rather than habit: an alias is safe when the two spellings
+ * describe the same eight-or-four bytes at the same address, and unsafe when
+ * one of them is a member-pointer type (where mwcc's eight-byte pair and
+ * MSVC's four-byte one disagree on stride). None of these three is a member
+ * pointer: 0x0213d664 and 0x0213e448 are vtables the factory stores by
+ * address, and 0x02142504 is a single mounted WORD holding a pointer to a card
+ * record, which src/func_ov006_020f85b0.cpp reads exactly as the ROM's
+ * `ldr r6,[r0]` does.
+ *
+ * ?data_ov006_02142504@@3PAUNode@@A IS THE SPELLING SECTION 10's TOOL FINDING
+ * 1 WARNS ABOUT, and it is worth saying why it is still an alias here. That
+ * finding is about @@3PAU hiding a member-pointer TABLE behind a struct
+ * wrapper -- `struct Entry { PMF pmf[1]; } []` -- and the refusal exists
+ * because such a table strides by 8 in the ROM and by 4 on the host. `Node` is
+ * an ordinary object type with a vptr, a next pointer and an int at +0x20;
+ * every one of those offsets is the same width on both machines, and the
+ * disassembly at 0x020f85f0 reads the same three fields. The guard's shape
+ * matches and its reason does not.
+ *
+ * TWO SPELLINGS THIS SLICE ALSO NEEDS ARE ALREADY IN THE IMAGE and are NOT
+ * repeated here, because a second /alternatename for the same LHS is noise
+ * a reader has to diff: ?data_ov006_0213e448@@3HA is in
+ * hal/scene_mg_flower.cpp, ?data_ov006_0213e448@@3PAXA is in
+ * port/unmatched/MgMemory2_Faces.cpp, and the bare-name rows _func_020beb68
+ * and _func_020bc7d4 that this class's slot 6, slot 18 and slot 19 reach are
+ * in port/unmatched/MgCoin_Faces.cpp and MgMemory2_Faces.cpp.
+ */
+#pragma comment(linker, "/alternatename:?data_ov006_0213d664@@3HA=_data_ov006_0213d664")
+#pragma comment(linker, "/alternatename:?data_ov006_0213d664@@3PAXA=_data_ov006_0213d664")
+#pragma comment(linker, "/alternatename:?data_ov006_02142504@@3PAUNode@@A=_data_ov006_02142504")

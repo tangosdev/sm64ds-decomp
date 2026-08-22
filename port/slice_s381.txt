@@ -144,6 +144,39 @@
 # unmatched/MgBase_StateSetter.cpp's eighty routed addresses are inherited
 # unchanged.
 #
+# ---- THERE IS A THIRD TABLE AND THE VTABLE AXIS CANNOT SEE IT -------------
+#
+# The factory builds 0x50 records of 0x30 bytes at this+0x51a8, and their
+# element constructor func_ov006_020f8ed8 writes data_ov006_0213d5ac into each
+# record's first word. That is dMgMCarloCardObj_c's own vtable, two slots wide
+# ({0x020f7e2c, 0x020f7ee4}, span to the next config symbol 8 bytes, exactly 2
+# load relocations inside it, and the word past the end is 0x000000ba -- the
+# first entry of the language file-id table, not a code address).
+#
+# SLOT 9 DISPATCHES SLOT 0 OF IT. src/func_ov006_020f85b0.cpp walks the list at
+# data_ov006_02142504 and calls the node's slot 0 through
+# `ldr r1,[r0] / ldr r1,[r1] / blx r1`; the nodes are those card records, which
+# src/func_ov006_020f7c10.c links through +4 and +8 with the head in
+# data_ov006_02142500. func_ov006_020f7e2c is the card DRAW: it gates on the
+# record's +0x2e, indexes data_ov006_0213d600 by (identity + 1) * 5 +
+# flip-frame, and hands the sprite from data_ov006_0214250c to Hud_RenderSprite
+# at 0x020af68c -- the same HUD sprite seam section 15 disassembles for Memory
+# Master's twenty cards.
+#
+# SO A SEAT THAT FILLED ONLY THE TWO SCENE TABLES WOULD HAVE LINKED, BOOTED AND
+# JUMPED TO A RAW DS ADDRESS ON THE FIRST RENDERED FRAME. Nothing in section
+# 3's ovr/mark/nosrc columns can see this, because they are computed over the
+# SCENE vtable and this table belongs to an element class. The question that
+# finds it is "what does the ROM park in this object's first word", asked of
+# every object the factory builds -- and it is worth adding to the fan-out's
+# checklist beside the factory's second-vtable-store test.
+#
+# THE BOARD LADDER FALLS OUT OF THE SAME BODY. src/func_ov006_020f7c10.c reads
+# data_ov004_020beb68's own object at +0xb4, the same saved clear
+# count section 17 disassembles for Memory Master, and picks
+# 6x6 / 8x7 / 10x8 on `< 5`, `< 10`, else -- 36, 56 or 80 cards, which is why
+# the record array is 0x50 long and the object is 0x60b0 bytes.
+#
 # ---- ZERO FLOORS ----------------------------------------------------------
 #
 # Every one of the 25 bodies in this class's code block [0x020f7634,
