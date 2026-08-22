@@ -187,14 +187,20 @@ void func_ov006_02106fdc(void *c);
 void func_ov006_0210709c(void *c);
 
 void port_mg_panel_counts(unsigned *hits, unsigned *floor, unsigned *unknown);
+void port_mg_panel_floor_split(unsigned *t2820, unsigned *t2888);
 
 }  /* extern "C" */
 
-/* THE WITNESS. A hit is a state this class routed; a floor entry is one of the
-   two addresses with no decompiled body; unknown is a code word neither switch
-   knows, which is the number that convicts a missed dispatcher. */
+/* THE WITNESS, AND THE THREE COUNTS ARE DISJOINT ON PURPOSE. A hit is a state
+   this class ROUTED TO A REAL BODY; a floor entry is one of the two addresses
+   with no decompiled body; unknown is a code word neither switch knows, which
+   is the number that convicts a missed dispatcher. The first version of this
+   counted a floor entry as a hit as well, so a 1200-frame run read "2508
+   routed" when 951 of those had gone nowhere -- the switches return -1 for a
+   floor now, and only +1 counts as a hit. */
 static unsigned g_panel_hits;
-static unsigned g_panel_floor;
+static unsigned g_panel_floor_2820;
+static unsigned g_panel_floor_2888;
 static unsigned g_panel_unknown;
 
 static int panel_try_0(void *self, unsigned code)
@@ -224,19 +230,33 @@ static int panel_try_0(void *self, unsigned code)
     case 0x02104bb0u: func_ov006_02104bb0(c);       return 1;
     case 0x02104bacu: func_ov006_02104bac();        return 1;
 
-    /* ---- THE TWO FLOORS, REPORTED AND NEVER CALLED --------------------- */
+    /* ---- THE TWO FLOORS, REPORTED AND NEVER CALLED ----------------------
+     *
+     * REPORTED ONCE EACH, not once per entry, and the first run is why: this
+     * class does not pass through its floors, it STOPS in one. 0x02106ca4 is
+     * slot 6 of the Behavior's OWN table, so once the outer state index
+     * reaches 6 the class asks for it on every frame afterwards -- 951 times
+     * in a 1200-frame run. A per-entry line puts nine hundred identical rows
+     * in the shipped playlog and says nothing the count does not. The count is
+     * the witness; this is the name. */
     case 0x021053a8u:
-        ++g_panel_floor;
-        std::fprintf(stderr, "  [scene] dScMgPanel_c FLOOR: state 0x021053a8 "
-                     "(slot 2 of data_ov006_02142820) has no delink block and "
-                     "no src file. The state is not entered.\n");
-        return 1;
+        if (++g_panel_floor_2820 == 1)
+            std::fprintf(stderr, "  [scene] dScMgPanel_c FLOOR: state "
+                         "0x021053a8 (slot 2 of data_ov006_02142820) has no "
+                         "delink block and no src file. The state is not "
+                         "entered. (Reported once; the count is in the run "
+                         "report.)\n");
+        return -1;
     case 0x02106ca4u:
-        ++g_panel_floor;
-        std::fprintf(stderr, "  [scene] dScMgPanel_c FLOOR: state 0x02106ca4 "
-                     "(slot 6 of data_ov006_02142888) has no delink block and "
-                     "no src file. The state is not entered.\n");
-        return 1;
+        if (++g_panel_floor_2888 == 1)
+            std::fprintf(stderr, "  [scene] dScMgPanel_c FLOOR: state "
+                         "0x02106ca4 (slot 6 of data_ov006_02142888, the "
+                         "Behavior's own table) has no delink block and no src "
+                         "file. The state is not entered, and because it is a "
+                         "TOP-LEVEL state the class stops here rather than "
+                         "passing through. (Reported once; the count is in the "
+                         "run report.)\n");
+        return -1;
     default:
         return 0;
     }
@@ -266,9 +286,10 @@ static int panel_try_1(void *self, unsigned code, int a)
    that says a dispatcher was missed. */
 extern "C" void port_mg_panel_call0(void *self, unsigned code, int adj)
 {
-    if (code != 0 && adj == 0 && panel_try_0(self, code)) {
-        ++g_panel_hits;
-        return;
+    if (code != 0 && adj == 0) {
+        const int r = panel_try_0(self, code);
+        if (r > 0) { ++g_panel_hits; return; }
+        if (r < 0) { return; }            /* a named floor, already counted */
     }
     if (code != 0)
         ++g_panel_unknown;
@@ -277,9 +298,10 @@ extern "C" void port_mg_panel_call0(void *self, unsigned code, int adj)
 
 extern "C" void port_mg_panel_call1(void *self, unsigned code, int adj, int a)
 {
-    if (code != 0 && adj == 0 && panel_try_1(self, code, a)) {
-        ++g_panel_hits;
-        return;
+    if (code != 0 && adj == 0) {
+        const int r = panel_try_1(self, code, a);
+        if (r > 0) { ++g_panel_hits; return; }
+        if (r < 0) { return; }
     }
     if (code != 0)
         ++g_panel_unknown;
@@ -290,8 +312,17 @@ extern "C" void port_mg_panel_counts(unsigned *hits, unsigned *floor,
                                      unsigned *unknown)
 {
     if (hits)    *hits    = g_panel_hits;
-    if (floor)   *floor   = g_panel_floor;
+    if (floor)   *floor   = g_panel_floor_2820 + g_panel_floor_2888;
     if (unknown) *unknown = g_panel_unknown;
+}
+
+/* The two floors reported apart, because they are not the same fact: one is a
+   sub-state a passing class steps over and the other is a top-level state a
+   class stops in. hal/scene_mg.cpp prints both. */
+extern "C" void port_mg_panel_floor_split(unsigned *t2820, unsigned *t2888)
+{
+    if (t2820) *t2820 = g_panel_floor_2820;
+    if (t2888) *t2888 = g_panel_floor_2888;
 }
 
 // ---- the ten host copies ---------------------------------------------------

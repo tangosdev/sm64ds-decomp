@@ -3079,6 +3079,7 @@ int  *MgPuzzlePanelPuzzlePanic_Spawn(void);
 
 /* the state machine's witness, from unmatched/MgPanel_StateDispatch.cpp */
 void port_mg_panel_counts(unsigned *hits, unsigned *floor, unsigned *unknown);
+void port_mg_panel_floor_split(unsigned *t2820, unsigned *t2888);
 /* the one nosrc body on the init and reset paths, from MgPanel_Faces.cpp */
 unsigned port_mg_panel_02106168_hits(void);
 
@@ -3196,13 +3197,28 @@ extern "C" void port_scene_mg_panel_hits(void)
            neither of its switches knows, and a nonzero one is the number that
            says a dispatching TU was missed rather than that a state is
            missing. Printed together on purpose. */
+        unsigned f2820 = 0, f2888 = 0;
+        port_mg_panel_floor_split(&f2820, &f2888);
         std::printf("[scene] dScMgPanel_c state dispatch: %u routed to one of "
-                    "its 25 reachable states across six tables, %u entry(ies) "
-                    "into its two bodiless states (0x021053a8 and 0x02106ca4, "
-                    "both no delink block and no src file), %u code word(s) "
-                    "this class did not know; the framework switch saw %u "
-                    "call(s) and %u UNHANDLED address(es)\n",
-                    hits, floor, unknown, calls, fwk);
+                    "its 25 reachable states across six tables, %u code "
+                    "word(s) this class did not know; the framework switch saw "
+                    "%u call(s) and %u UNHANDLED address(es)\n",
+                    hits, unknown, calls, fwk);
+        /* THE TWO FLOORS ARE NOT THE SAME FACT AND ARE NOT SUMMED. 0x021053a8
+           is a SUB-state: a class that asks for it loses one tick and carries
+           on. 0x02106ca4 is slot 6 of the Behavior's OWN table, so the outer
+           state index that reaches it never leaves, and a large count there is
+           one dead-end rather than many missed ticks. Neither is counted as a
+           routed hit -- the switches return -1 for a floor, so `routed` above
+           is states that reached a real body. */
+        std::printf("[scene] dScMgPanel_c floors: %u ask(s) for the sub-state "
+                    "0x021053a8 (slot 2 of data_ov006_02142820), %u for the "
+                    "TOP-LEVEL state 0x02106ca4 (slot 6 of "
+                    "data_ov006_02142888) -- a nonzero second number is the "
+                    "class stopped there, not passing through. Total bodiless "
+                    "asks %u; both addresses have a config symbol, no delink "
+                    "block and no src file, so neither is entered\n",
+                    f2820, f2888, floor);
     }
     /* THE THIRD FLOOR, AND IT IS NOT A STATE. func_ov006_02106168 (0x238) is
        named by ov006's symbols.txt, is covered by no delink block and has no

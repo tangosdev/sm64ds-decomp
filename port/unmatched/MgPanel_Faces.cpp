@@ -43,6 +43,29 @@
 // config/arm9/overlays/ov006/delinks.txt and a src TU. Nothing in this lane
 // can do either without leaving the port.
 
+// ---- 1. THE CLASS VTABLE'S ITANIUM NAME -----------------------------------
+//
+// src/MgPuzzlePanelPuzzlePanic_Spawn.c writes the class vtable into the new
+// object as `_ZTV12dScMgPanel_c`, which is the ROM's own class name -- the
+// type_info the word before the table points at reads "12dScMgPanel_c" -- and
+// is not a config symbol name, so it needs a face onto the mounted table. The
+// address is settled by the ROM twice over:
+//   config/arm9/overlays/ov006/relocs.txt
+//   from:0x02107888 kind:load to:0x0213e24c module:overlay(6)
+// and 0x02107888 is inside MgPuzzlePanelPuzzlePanic_Spawn (0x02107858, 0x34
+// bytes); and slot 17's own literal pool at 0x021042e0 stores the same word
+// into the object, as does slot 16's at 0x021042e4's sibling. This is exactly
+// the shape hal/scene_mg_faces.cpp section 2 carries for _ZTV14dScMgCurling_c
+// and MgLuigi_Faces.cpp section 1 for _ZTV12dScMgLuigi_c.
+//
+// IT IS THE ONLY SYMBOL THE FIRST LINK WAVE ASKED FOR, which is worth
+// recording against port/mg_fanout_costs.txt section 10's eight-wave shape:
+// the whole framework half of that account is already paid, so this class's
+// closure converged in ONE wave plus this row.
+#pragma comment(linker, "/alternatename:__ZTV12dScMgPanel_c=_data_ov006_0213e24c")
+
+// ---- 2. THE TRAP ----------------------------------------------------------
+
 #include <cstdio>
 
 static unsigned g_panel_02106168_hits;
