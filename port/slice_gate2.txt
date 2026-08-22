@@ -26,7 +26,7 @@ src/_ZN10MemoryNode6TargetC1EP10MemoryNode.cpp
 # in the global nesting registry, so the iterator family rides along.
 src/_ZN18NestedHeapIteratorC1Ej.c
 src/_ZN18NestedHeapIterator10FindNestedEPv.c
-src/_ZN18NestedHeapIterator19RecursiveFindNestedEPv.c
+src/_ZN18NestedHeapIterator19RecursiveFindNestedEPv.cpp
 src/_ZN18NestedHeapIterator7AddLastEP13HeapAllocator.cpp
 src/_ZN18NestedHeapIterator5AddAtEP13HeapAllocatorS1_.c
 src/_ZN18NestedHeapIterator4InitEP13HeapAllocator.cpp

@@ -24,7 +24,7 @@ src/func_020381cc.c
 src/func_02037eb0.c
 src/Vec3_Dist.c
 src/_ZN5dBgCh21ShouldPassThroughImplEPvRK4CLPSRKS_b.c
-src/_ZNK11SurfaceInfo12CopyNormalToER7Vector3.c
+src/_ZNK11SurfaceInfo12CopyNormalToER7Vector3.cpp
 src/_ZN4dBgWC2Ev.c
 src/func_02038228.c
 src/SurfaceInfo_TestFlag0x20.c
