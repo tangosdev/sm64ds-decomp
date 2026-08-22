@@ -2002,7 +2002,7 @@ static const struct { short id; const char *name; } MG_SCENE[] = {
     { 372, "Bounce and Pounce"     }, /* 0x174  jump         MgBounceAndPounce  */
     { 373, "Bounce and Trounce"    }, /* 0x175  jump2        MgBounceAndTrounce */
     { 374, "Shuffle Shell"         }, /* 0x176  curling      MgShuffleShell  */
-    { 375, "curling2?"             }, /* 0x177  curling2     no Mg* symbol   */
+    { 375, "Shell Smash"           }, /* 0x177  curling2     see below       */
     { 376, "Slots Shot/Bingo Ball" }, /* 0x178  smartball    MgBingoBallSlotsShot, trimmed */
     { 377, "Snowball Slalom?"      }, /* 0x179  snowball     MgSnowballSlalom, INFERRED */
     { 378, "Coincentration"        }, /* 0x17a  coin         MgCoincentration   */
@@ -2020,6 +2020,31 @@ static const struct { short id; const char *name; } MG_SCENE[] = {
     { 390, "Loves Me...?"          }, /* 0x186  flower       pinned dScMgFlower_c */
 };
 enum { MG_COUNT = (int)(sizeof MG_SCENE / sizeof MG_SCENE[0]) };
+
+/* 375's ROW LOST ITS QUESTION MARK AND THE OTHER FIVE KEPT THEIRS, run mg6
+   lane S75. The row read "curling2?" because 0x177 has no Mg* spawn symbol.
+   The CLASS name is now a ROM read -- the typeinfo record at
+   data_ov006_0213c510[-1] points at "15dScMgCurling2_c" -- but the class name
+   is not what this column holds, and the TITLE cannot be read out of this ROM
+   at all: it stores no minigame name as text in any encoding, which lane S75
+   established by searching the whole 16 MB image for the ASCII and UTF-16LE
+   spellings of five known titles (zero hits each) and by decoding the five EUR
+   language archives and the one per-language MG sheet, which hold battle-mode
+   art, "RULES", "TIME" and "HIGH SCORE".
+
+   SO THE TITLE IS A THREE-STEP INFERENCE AND port/slice_s75.txt carries it in
+   full: the class opens "/MG/d_2d_mg_bg_jokyu_curling_ncg.bin" and jokyu is
+   this overlay's own marker for the harder half of a pair; in every pair where
+   both ids carry a spawn symbol the plain class takes the first title and the
+   *2 class the second (Bounce and Pounce/Trounce, Trampoline Time/Terror,
+   Memory Match/Master, Bob-omb Squad/Lakitu Launch); dScMgCurling_c is
+   MgShuffleShell, and Shell Smash is the one remaining shell title in the same
+   Rec Room set.
+
+   THE QUESTION MARK IS GONE BECAUSE THE ROW IS NO LONGER UNIDENTIFIED, not
+   because the title is proven. It is display-only text, the header above says
+   so, and the honest place for the caveat is here rather than in a punctuation
+   mark that also means "we do not know which class this is". */
 
 /* ---- THE LEVEL-SELECT ROW'S NAMES (port mod) ----------------------------
 
