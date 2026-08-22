@@ -4524,14 +4524,20 @@ foreach(line IN LISTS SLICE_S371_LINES)
     endif()
     list(APPEND SLICE_S371_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
-# The two floors must stay out of the slice. A slice line that came back (a
-# decomp landing, a rename, a merge) would define the same symbol twice and the
-# link would say so -- but it would say so as a duplicate-symbol wall far from
-# its cause, so the assertion is here instead. When either body IS decompiled,
-# the fix is to delete its trap from unmatched/MgAmida_Faces.cpp and its name
-# from this list in the same commit, the way lane L380 retired MgPanel's.
-foreach(dup IN ITEMS src/func_ov006_020d27dc.c src/func_ov006_020d27dc.cpp
-                     src/func_ov006_020d36a4.c src/func_ov006_020d36a4.cpp)
+# ONE FLOOR MUST STAY OUT OF THE SLICE, and it was two until run mg10 lane
+# F371. A slice line that came back (a decomp landing, a rename, a merge) would
+# define the same symbol twice and the link would say so -- but it would say so
+# as a duplicate-symbol wall far from its cause, so the assertion is here
+# instead. When the remaining body IS decompiled, the fix is to delete its trap
+# from unmatched/MgAmida_Faces.cpp and its name from this list in the same
+# commit, the way lane L380 retired MgPanel's.
+#
+# THE 020d36a4 ROWS ARE GONE FROM THIS LIST BECAUSE THE PROCEDURE ABOVE WAS
+# FOLLOWED, not because the assertion was in the way: src/func_ov006_020d36a4.c
+# is a real decompilation in the slice now and its trap is deleted, so a guard
+# naming it would refuse the very landing it was written to sequence. That is
+# the whole point of retiring the pair together.
+foreach(dup IN ITEMS src/func_ov006_020d27dc.c src/func_ov006_020d27dc.cpp)
     if(dup IN_LIST SLICE_S371_LINES)
         message(FATAL_ERROR "slice_s371.txt lists ${dup}, which "
                 "unmatched/MgAmida_Faces.cpp traps. Taking both is a duplicate "
@@ -4548,6 +4554,21 @@ if("src/func_ov006_020d3ba0.c" IN_LIST SLICE_S371_LINES)
             "duplicate symbol; taking the src one puts a second definition of "
             "the arm9 RNG seed data_0209d4b8 back in an ov006 object")
 endif()
+# ONE .c IN THIS SLICE IS REALLY C++, run mg10 lane F371, and the whole slice
+# was swept for the //cpp marker and for extern "C", virtual, class and
+# namespace rather than the file being found by a compile error.
+# src/func_ov006_020d36a4.c is the only hit that is IN the slice: it dispatches
+# vtable slot 36 through a dummy 37-virtual struct, which is how
+# src/func_ov006_020d3ba0.c spells the same dispatch in the same class. That
+# file is also //cpp and is host-copied instead, so it is not a second row.
+#
+# AND IT IS DECLARED extern "C" INSIDE, which is the half hostgen cannot do for
+# it: tools/hostgen.py wraps every .c in extern "C" unconditionally, and a
+# //cpp file's struct-with-virtuals inside that wrap is not what is wanted. The
+# TU spells its own linkage.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d36a4.c"
+    PROPERTIES LANGUAGE CXX)
 
 # Run mg9 lane S381: dScMgMCarlo_c, the "Pair-a-Gone" card minigame, actor id
 # 0x17d = scene 381, and the FOURTH class the port seats under
