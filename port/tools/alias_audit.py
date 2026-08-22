@@ -440,6 +440,32 @@ def code_only(text):
 
 
 _TYPEDEF = re.compile(r"\btypedef\b")
+
+
+def tag_only(name, code):
+    """True when every mention of `name` is a struct/union/enum TAG.
+
+    C keeps tag names in their own namespace, so `struct VT { ... }` and the
+    placeholder object VT can coexist in one TU -- but a TU that only ever
+    writes `struct VT` never references the object, and reporting it is a false
+    finding. src/func_ov004_020b75e4.c and its two siblings are exactly that:
+    they declare `struct VT` for a vtable shape and were reported as MISMATCH
+    rows against the VT binding for as long as this tool has run, while their
+    objects carry no undefined _VT at all.
+
+    Conservative in the safe direction: one mention that is NOT preceded by a
+    tag keyword and the TU is treated as a real user, so the worst case is the
+    old behaviour.
+    """
+    word = re.compile(r"\b%s\b" % re.escape(name))
+    tagged = re.compile(r"\b(?:struct|union|enum)\s+%s\b" % re.escape(name))
+    spans = {m.start() for m in tagged.finditer(code)}
+    for m in word.finditer(code):
+        # the tag match starts at the keyword, so the name sits further in
+        if not any(s <= m.start() < s + len(m.group(0)) + 16 and
+                   code[s:m.end()].split()[-1] == name for s in spans):
+            return False
+    return True
 # The two declarator shapes a typedef name can end in: a plain identifier
 # (with optional array suffix), or a function/array-pointer's `(*name)`.
 _TD_PLAIN = re.compile(r"(\w+)\s*(?:\[[^\]]*\])*\s*$")
@@ -566,6 +592,7 @@ def main():
 
     flagged = 0
     audited = 0
+    live_defects = []
     for name in sorted(bindings):
         word = re.compile(r"\b%s\b" % re.escape(name))
         users = []
@@ -584,6 +611,12 @@ def main():
             # object name share C's ordinary identifier namespace, so the two
             # cannot both be live in one TU. Recorded, not silently dropped.
             if name in typedef_names(code):
+                shadowed.append(stem)
+                continue
+            # ...and the same for a TU that only ever uses the name as a
+            # struct/union/enum tag. Recorded next to the typedef shadows
+            # rather than silently dropped, for the same reason.
+            if tag_only(name, code):
                 shadowed.append(stem)
                 continue
             users.append((stem, path, body))
@@ -644,6 +677,18 @@ def main():
         defining = [r for r in rows if r[4] == "definition"]
         mismatched += renamed_bad
 
+        # THE LIVE HALF, collected across every name and reprinted at the end.
+        # A MISMATCH row on a TU that does not reach the linker is a note about
+        # a file that is not in the binary; a MISMATCH row on a LINKED TU is a
+        # wrong pointer in the shipping build today. Run mg6 lane VTF lost a
+        # defect in the gap between those two: the VT section prints nineteen
+        # MISMATCH rows and exactly one of them was live and unrepaired
+        # (src/func_ov006_020dbe64.c, dScMgCoin_c's slot 17). Burying it in
+        # nineteen is the same as not reporting it, so it gets its own list.
+        for r in mismatched:
+            if r[0] in linked:
+                live_defects.append((name, r))
+
         # A collision needs two TUs that cannot both be right about one name.
         collide = bool(mismatched) and bool(consistent or len(mismatched) > 1)
         if not collide and not show_all and not verbose:
@@ -699,11 +744,36 @@ def main():
     print("audited %d spelled name(s) that at least one src TU references"
           % audited)
     print("%d collision(s)" % flagged)
+
+    # THE HEADLINE, printed last so a log tail carries it.
+    print()
+    if live_defects:
+        print("LIVE: %d LINKED TU(s) whose ROM body contradicts the binding "
+              "they compile against." % len(live_defects))
+        print("Each one is a wrong pointer in the shipping build. A per-source "
+              "-D in port/CMakeLists.txt")
+        print("onto the address the body actually loads is the established "
+              "repair.")
+        for name, (stem, mod, addr, loads, _v, _x) in sorted(live_defects):
+            print("    %-6s %-36s %-6s 0x%08x" % (name, stem, mod or "?",
+                                                  addr or 0))
+            if loads:
+                print("           loads %s"
+                      % " ".join("0x%08x" % v for v in loads))
+    else:
+        print("LIVE: no LINKED TU contradicts its binding.")
+        print("That is not a clean bill of health in either direction. This "
+              "tool reads SOURCE TEXT for")
+        print("who spells a name and cannot see who reaches the linker; the "
+              "closure question -- have ALL")
+        print("readers been found -- is answered by a COFF census for the "
+              "UNDEFINED external over the built")
+        print("objects. `consistent` only means the bound address appears "
+              "among the ones the body loads.")
+
     if not flagged:
         print("No spelled name has a TU whose ROM body contradicts its binding.")
-        print("That is not a clean bill of health: `consistent` only means the")
-        print("bound address appears among the addresses the body references.")
-    return 1 if flagged else 0
+    return 1 if (flagged or live_defects) else 0
 
 
 PLACEHOLDER_N = re.compile(r"^[A-Za-z]+(\d+)$")

@@ -3687,6 +3687,31 @@ foreach(line IN LISTS SLICE_CCN_LINES)
     list(APPEND SLICE_CCN_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# THE THIRD `VT`-SPELLING DELETING DESTRUCTOR, and the last one live in this
+# build. src/func_ov006_020dbe64.c is dScMgCoin_c's slot 17 D0 and its body is
+# the same four statements curling's and luigi's are, so bare VT sent it to
+# _data_ov002_021081e4, the ov002 Enemy base table, a whole class wrong for a
+# minigame scene object.
+#
+# THE ADDRESS IS THE BODY'S OWN LITERAL POOL, disassembled out of
+# extracted/overlays/overlay_0006.bin at that overlay's 0x020bfec0 base:
+#   0x020dbe68  E59F1024  ldr r1,[pc,#0x24] -> 0x020dbe94
+#   0x020dbe70  E5841000  str r1,[r4]          the vptr store
+#   0x020dbe94  0213BF50  <- THIS, dScMgCoin_c's own table
+#   0x020dbe98  020A0EAC  <- the game heap word, loaded BY VALUE at 0x020dbe80
+# config/arm9/overlays/ov006/relocs.txt agrees on both
+# (from:0x020dbe94 kind:load to:0x0213bf50, from:0x020dbe98 to:0x020a0eac); the
+# D2 sibling func_ov006_020dbe40 pools the same 0213BF50 at 0x020dbe60; and
+# slice_ccn.txt line 29 already named data_ov006_0213bf50 as this class's table
+# when the seat was derived. HEAP is right and is not renamed.
+#
+# FOUND BY THE COFF CENSUS, not by this lane's reading of the alias comment.
+# The census is the closure check and it is described at the VT row in
+# hal/cxx_aliases.cpp.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020dbe64.c"
+    PROPERTIES COMPILE_DEFINITIONS "VT=data_ov006_0213bf50")
+
 # run mg5 lane FLW: THE SECOND MINIGAME CLASS, and the first with a
 # three-deep hierarchy.
 #

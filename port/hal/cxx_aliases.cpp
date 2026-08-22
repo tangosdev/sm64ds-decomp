@@ -1230,14 +1230,33 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
    reader, its store would land on the Enemy's objects. */
 #pragma comment(linker, "/alternatename:_VT=_data_ov002_021081e4")
 #pragma comment(linker, "/alternatename:_HEAP=_data_020a0eac")
-/* TWO VT-SPELLING TUs ARE EXEMPTED FROM THE ROW ABOVE, each by a per-source -D
-   in port/CMakeLists.txt onto its own table rather than by a change here, so
-   the Enemy binding stays intact for its one reader:
-   src/func_ov006_020efc30.c (dScMgLuigi_c slot 17) and
-   src/func_ov006_020e065c.c (dScMgCurling_c slot 17, run mg6 lane VTF). Both
-   are D0s whose own ROM literal pool names their class's table, so bare VT
-   would have stored the Enemy base table into a minigame scene object. HEAP is
-   not renamed for either -- both pools hold 020A0EAC, the row above. */
+/* THE "ONE LINKED READER" CLAIM ABOVE IS HISTORICAL AND MUST NOT BE READ AS A
+   STANDING FACT. THREE VT-spelling TUs have joined this build since, each a
+   slot 17 deleting destructor of a minigame scene class whose own ROM literal
+   pool names its own table, so bare VT would have stored the ov002 Enemy base
+   table into a minigame scene object. All three are exempted by a per-source -D
+   in port/CMakeLists.txt onto their own table rather than by a change here, so
+   the row above keeps serving src/_ZN5EnemyD0Ev.c untouched:
+     src/func_ov006_020efc30.c  dScMgLuigi_c    -> data_ov006_0213cf10
+     src/func_ov006_020e065c.c  dScMgCurling_c  -> data_ov006_0213c304
+     src/func_ov006_020dbe64.c  dScMgCoin_c     -> data_ov006_0213bf50
+   HEAP is renamed for none of them: all three pools hold 020A0EAC, which is
+   the row below, so that binding is right for every reader it has.
+
+   HOW TO CHECK THE CLOSURE, because the sentence above got it wrong once. The
+   question "who still spells this name" is answered by a COFF census over the
+   BUILT OBJECTS -- scan every .obj for an UNDEFINED external named _VT (short
+   name, inline in the 18-byte symbol record; there is no mangled ?VT@@3PAHA
+   decoration anywhere in this build, so the cdecl spelling is the whole set).
+   That is a measurement of what actually reaches the linker.
+
+   port/tools/alias_audit.py is a DIFFERENT and complementary instrument and is
+   not a substitute. It scans SOURCE TEXT for the identifier and then reads each
+   TU's ROM body, which lets it say a binding is wrong for a TU -- but it also
+   reports TUs that never reach the linker at all, and TUs that merely reuse the
+   spelling (src/func_ov004_020b75e4.c and its two siblings declare a `struct
+   VT`, which is not this name). Use the audit to decide whether a reader is
+   WRONG; use the census to decide whether the list of readers is COMPLETE. */
 /* ---- run linkw wave C: THREE LINKED TUs THAT COLLIDE ON THOSE THREE NAMES.
    port/tools/alias_audit.py found them and each one is ROM-verified below by
    disassembling the body out of extracted/overlays/ and reading its literal
