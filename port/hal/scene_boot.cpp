@@ -2218,6 +2218,16 @@ void port_scene_fill_curling2(void);
 extern unsigned char MgPuzzlePanelPuzzlePanic_SpawnInfo[];
 void *port_mg_panel_spawn(void);
 void port_scene_fill_panel(void);
+/* run mg9 lane PSY: dScMg3DEsp_c, actor id 0x185, the "Psyche Out!" minigame.
+   The class name is the ROM's own type_info, reached the way the panel row
+   above reaches its: the word BEFORE data_ov006_0213c8c4 points at 0x0213c7c8
+   and that record's name pointer is 0x0213c7d4, which reads "12dScMg3DEsp_c".
+   Same reads_sublevel reasoning as the rows above, re-checked for this class:
+   no relocation in ov006 lands on data_02092110 and no TU in this class's
+   closure names it. */
+extern unsigned char MgPsycheOut_SpawnInfo[];
+void *port_mg_esp3d_spawn(void);
+void port_scene_fill_esp3d(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2344,6 +2354,37 @@ static const PortSceneClass port_scene_classes[] = {
        so appending is a rule this lane obeys rather than a hazard it needs. */
     {380, "SCENE_MG_PANEL", MgPuzzlePanelPuzzlePanic_SpawnInfo,
      port_mg_panel_spawn, port_scene_fill_panel, 0},
+    /* 389 is 0x185, spelled in decimal for the same two reasons every row above
+       is: the others are, and port/tools/battery.py reads its hosted-scene set
+       out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg9 lane PSY,
+       and for this class the ordering rule carries the SECOND reason as well as
+       the first.
+
+       The first is the once-per-process constructor gate
+       port/mg_fanout_costs.txt section 11 derives: this function walks the
+       table in order and calls every row's fill on every boot, while
+       port_scene_mg_overlay_load runs the thirty-five overlay constructors ONCE
+       PER PROCESS at the tail of the FIRST minigame row's fill, so a row placed
+       earlier would have its fill run before those constructors read the
+       mounted .data. Nothing in this class's fill writes outside its own
+       36-slot table -- the width is checked FOUR ways in port/slice_psy.txt --
+       so appending is a rule this lane obeys rather than a hazard it needs.
+
+       The second is dScMgSingle3DBase_c. This is the THIRD class the port seats
+       under data_ov006_0213e448, after the flower row and the memory2 row, and
+       all three define their own face array over the same eight DS words.
+       psy_apply keys on a DS address, so the fill that runs first claims the
+       middle table and the ones after it write nothing there. Appending after
+       both means the flower keeps that table and its witness is unchanged, and
+       this seat owns only its own derived table.
+       hal/scene_mg_psycheout.cpp section 3 is the argument, and the seat prints
+       the claimed counts so the split is measured rather than assumed.
+
+       reads_sublevel is 0 for the curling row's reason, re-derived rather than
+       copied: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {389, "SCENE_MG_ESP3D", MgPsycheOut_SpawnInfo, port_mg_esp3d_spawn,
+     port_scene_fill_esp3d, 0},
     {0, 0, 0, 0, 0, 0},
 };
 

@@ -1,0 +1,195 @@
+# Lane PSY of run mg9: dScMg3DEsp_c, the "Psyche Out!" minigame.
+#
+# actor id 0x185 (scene 389), spawn symbol MgPsycheOut_Spawn (0x020ea1f0,
+# 0x90), SpawnInfo 0x0213c78c, vtable data_ov006_0213c8c4. Every one of those
+# was read out of the ROM by this lane rather than taken from the brief:
+# scanning extracted/overlays/overlay_0006.bin (base 0x020bfec0) for the
+# doubled-id word 0x01850185 returns EXACTLY ONE hit, at 0x0213c790, which puts
+# the record at 0x0213c78c with the factory in the word before it:
+#
+#     0213c78c  f0 a1 0e 02   0x020ea1f0   the factory
+#               85 01 85 01   389, 389     the id, twice
+#
+# ---- THE CLASS NAME COMES OUT OF THE ROM'S OWN type_info -------------------
+#
+# port/mg_fanout_costs.txt section 14's chain, which is stronger than a src
+# spelling because a per-TU placeholder can be wrong and a relocation cannot.
+# The word IMMEDIATELY BEFORE a class's vtable points at its type_info, and
+# that record's second word is the name:
+#
+#     relocs.txt  from:0x0213c8c0 kind:load to:0x0213c7c8 module:overlay(6)
+#     relocs.txt  from:0x0213c7cc kind:load to:0x0213c7d4 module:overlay(6)
+#
+# and 0x0213c7d4 reads "12dScMg3DEsp_c" in the overlay image. The type_info's
+# THIRD word is the base's, from:0x0213c7d0 to:0x0213bc64, whose own name at
+# 0x0213bd00 reads "19dScMgSingle3DBase_c" and whose base is ov004's
+# 0x020bbf6c. So the hierarchy is stated by the ROM twice over before a line of
+# code is read.
+#
+# ---- THE HIERARCHY IS THREE DEEP, AND THE CODE SAYS SO IN BOTH DIRECTIONS --
+#
+#     Scene -> dScMgBase_c         data_ov004_020bc0c0  36  (the framework's)
+#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8, mark 6
+#           -> dScMg3DEsp_c        data_ov006_0213c8c4  36  ovr 14, mark 12, nosrc 0
+#
+# port/mg_fanout_costs.txt section 3's row for 0x185 lists one vtable and says
+# nothing about an intermediate base, which is the same gap run mg6 lane MEM
+# found for 0x16b and section 13's CORRECTION 1 warns will fire again. It fires
+# here. Both edges are read off code:
+#
+#   src/MgPsycheOut_Spawn.cpp (the factory) calls func_ov004_020b2adc(o),
+#   writes data_ov006_0213e448 into o[0], constructs the Particle::SysTracker
+#   at +0x471c, writes data_ov006_0213c8c4 over it, then constructs two Models
+#   at +0x4f38 and +0x4f88, func_ov006_020e814c(+0x4fd8) and a
+#   TextureTransformer at +0x51f4. Object size 0x5558.
+#
+#   src/func_ov006_020e76e4.c (slot 17, D0) unwinds them in the OPPOSITE order:
+#   0x0213c8c4 first, the four sub-objects down, then 0x0213e448, then
+#   Particle::SysTracker::~SysTracker(+0x471c), func_ov004_020b29c0 and
+#   Memory::Deallocate. src/func_ov006_020e7660.cpp (slot 16, D2) does the same
+#   without the Deallocate.
+#
+# So SIX of this class's fourteen overrides -- slots 2, 5, 7, 10, 26 and 33 --
+# are the MIDDLE base's bodies, exactly the same six as 0x16b, and a seat that
+# filled one derived table would leave six raw DS words in a table the factory
+# installs.
+#
+# THIS IS THE THIRD CLASS UNDER THAT MIDDLE TABLE and hal/scene_mg_memory2.cpp
+# section 3 predicted it: "If a THIRD class under this base is ever seated,
+# promoting kSingle3DFaces to an exported seam ... is the right move." This
+# lane does NOT take that move, and says why in hal/scene_mg_psycheout.cpp
+# section 3 rather than leaving it implied: promoting the array means editing
+# hal/scene_mg_flower.cpp and hal/scene_mg_memory2.cpp, which are two other
+# lanes' files, in a fan-out where nine other lanes are cutting against the
+# same base. The per-file copy is the shape both existing seats use, it is
+# measured safe, and this row is appended after both of theirs so neither
+# witness moves.
+#
+# ---- THE WIDTH IS 36, CHECKED FOUR WAYS ------------------------------------
+#
+# port/mg_fanout_costs.txt section 11 measured that twelve of twenty-nine
+# widths in that file's own section 3 table were phantoms and that a 37-slot
+# fill writes a host thunk over live ROM data belonging to another class. All
+# three of its checks, plus a fourth this lane adds:
+#
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol after
+#      data_ov006_0213c8c4 at data_ov006_0213c954, exactly 0x90 = 36 words on,
+#      so a 37th slot cannot exist inside the table.
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, the word every dScMgBase_c-
+#      derived table holds there.
+#   3. WHAT THE WORD PAST IT IS. Index 36 reads 0x0000000a -- decimal ten, not
+#      an address in any module -- and it is the FIRST WORD of the next config
+#      symbol, data_ov006_0213c954, whose second word is 0x00000003.
+#   4. RELOCATION COUNT. config/arm9/overlays/ov006/relocs.txt has exactly 36
+#      relocations inside [0x0213c8c4, +36 words), and STILL 36 inside
+#      [0x0213c8c4, +37 words). A vtable slot is a relocated code pointer; word
+#      36 carries no relocation, so it cannot be one. Check 3 says what the
+#      word is and check 4 says what it is not, from a different file.
+#
+# The middle table's own width was re-read the same way rather than cited from
+# port/slice_mem.txt or port/slice_flw.txt: 0x0213e448 -> data_ov006_0213e4d8
+# is 0x90 = 36 words, slot 35 is 0x020ad660, and index 36 is 0x050a0a0f.
+#
+# ---- FOURTEEN OVERRIDES, TWELVE MARKERS, ZERO WITHOUT A SOURCE -------------
+#
+# Read out of the overlay image against dScMgBase_c's table at 0x020bc0c0 in
+# extracted/overlays/overlay_0004.bin (base 0x020ad660):
+#
+#   OWN, eight     slots 0, 3, 6, 9, 16, 17, 18, 20
+#   MIDDLE, six    slots 2, 5, 7, 10, 26, 33
+#   UNMARKED, two  slot 16 (func_ov006_020e7660) and slot 33
+#                  (func_ov006_0210a708); the other twelve carry the
+#                  "recovered from vtable slot identity" marker
+#   nosrc          ZERO. All fourteen resolve to a real src TU.
+#
+# ALL TWELVE MARKERS WERE ADJUDICATED AGAINST THE ROM BY THIS LANE, with the
+# instruction-plus-pool arithmetic on every one, and appended to
+# port/tools/inferred_stub_adjudicated.txt. Five of the twelve are the middle
+# base's and already carried rows from run link60 lane MGB and run mg6 lane
+# MEM; they were re-derived rather than inherited, and this lane's rows agree
+# with theirs.
+#
+# ---- THE STATE MACHINE IS SEVEN TABLES AND THREE LEVELS DEEP ---------------
+#
+# port/unmatched/Mg3DEsp_StateDispatch.cpp is the derivation: twenty-two pairs
+# out of src/__sinit_ov006_02130a08.c read assignment by assignment, twenty-two
+# DISTINCT code words, every adjustment zero, every table with exactly two
+# relocations (the constructor's and its dispatcher's pool) so none is orphaned,
+# and every arity hand-read off the ROM rather than taken from src. Seven
+# dispatching TUs are host-copied and are OUT of this slice; TWO of the seven
+# are the open-coded-int third shape that neither the link nor a `::*` sweep can
+# see, and one of those two is reached only through the other.
+#
+# ---- ONE PER-SOURCE RENAME, AND IT IS NOT OPTIONAL -------------------------
+#
+# src/func_ov006_020e9cec.c (slot 3, CleanupResources) releases two
+# SharedFilePtrs spelled G0 and G1 -- shared placeholder names for globals that
+# exist in no config. hal/cxx_aliases.cpp binds bare G0 to _data_020a0eac (the
+# game heap) and bare G1 to _data_ov002_0210e05c, and BOTH ARE WRONG FOR THIS
+# TU. The body's own literal pool says what they are, read out of the overlay
+# image at 0x020e9d14 and 0x020e9d18: 0x02141e9c and 0x02141e74, which are two
+# of the eleven SharedFilePtrs __sinit_ov006_02130a08 constructs (file ids
+# 0x1ef and 0x202). port/CMakeLists.txt carries the two -D rows.
+#
+# A scan of every TU in this slice for the shared placeholder names (VT, VT0,
+# HEAP, G0, G1, G2, R0, R1, R2) returns this ONE file and no other.
+#
+# func_020beb68 in src/func_ov006_020e9c20.c needs NO row: it is
+# data_ov004_020beb68 under a name that exists in no config, and
+# port/unmatched/MgCoin_Faces.cpp already aliases it.
+#
+# ---- HOW THIS LIST WAS DERIVED ---------------------------------------------
+#
+# The delta only. port/slice_mg1.txt already carries the ov004 framework, the
+# thirty-five overlay constructors (including this class's,
+# src/__sinit_ov006_02130a08.c) and the arm9 waves under them, and
+# port/slice_flw.txt and port/slice_mem.txt already carry all six of the middle
+# base's bodies. CMake appends every list to the same targets and dedupes
+# identical absolute paths, so nothing here is compiled twice and nothing
+# already sliced is repeated.
+#
+# Seeded from the class's own code -- the eight own override bodies, the
+# factory and the twenty routed state bodies -- and then closed by the link,
+# wave by wave. Each wave is marked below.
+
+# ---- wave 1: the class's own code -----------------------------------------
+
+# the factory
+src/MgPsycheOut_Spawn.cpp
+
+# the eight own overrides, less slot 6.
+# SLOT 6 IS NOT HERE ON PURPOSE. src/func_ov006_020e9e00.cpp is the Behavior
+# and it is a pointer-to-member dispatcher declared inside extern "C", which is
+# one of the two shapes a link cannot see. port/mg_fanout_costs.txt section
+# 14's practical rule is to read the src before wiring slot 6 by name; this is
+# the class that rule is for. port/unmatched/Mg3DEsp_StateDispatch.cpp has it.
+src/func_ov006_020e9e70.cpp      # slot 0  InitResources, 0x380
+src/func_ov006_020e9cec.c        # slot 3  CleanupResources (the G0/G1 rename)
+src/func_ov006_020e9d1c.cpp      # slot 9  Render, 0xe4
+src/func_ov006_020e7660.cpp      # slot 16 D2, unmarked
+src/func_ov006_020e76e4.c        # slot 17 D0
+src/func_ov006_020e9c20.c        # slot 18 state reset -- READS ITS ARGUMENT
+src/func_ov006_020e9c10.c        # slot 20
+
+# the twenty routed state bodies, less the two that are also dispatchers
+# (func_ov006_020e9b70 and func_ov006_020e8830, both host-copied).
+src/func_ov006_020e9bbc.c        # f2c 0
+src/func_ov006_020e989c.cpp      # f2c 2
+src/func_ov006_020e97b0.c        # fac 0
+src/func_ov006_020e96f4.cpp      # fac 1
+src/func_ov006_020e968c.c        # fac 2
+src/func_ov006_020e9670.c        # fac 3
+src/func_ov006_020e9318.c        # f5c 0
+src/func_ov006_020e91a0.c        # f5c 1
+src/func_ov006_020e8f14.c        # f5c 2
+src/func_ov006_020e8cb0.c        # f74 0
+src/func_ov006_020e8c74.c        # f74 1
+src/func_ov006_020e8bd0.c        # f74 2
+src/func_ov006_020e8928.c        # f1c 0
+src/func_ov006_020e8728.c        # f8c 0
+src/func_ov006_020e85f0.c        # f8c 1
+src/func_ov006_020e84b8.c        # f8c 2
+src/func_ov006_020e83bc.c        # f8c 3
+src/func_ov006_020e82c8.c        # f44 0
+src/func_ov006_020e8214.c        # f44 1
+src/func_ov006_020e81e0.c        # f44 2
