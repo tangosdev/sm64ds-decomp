@@ -486,6 +486,262 @@ def derive_externalized(raw, symbol_names):
     return _apply(raw, p, None), p
 
 
+def section_partition_plan(raw, keep_section_names, licensed_symbols, deferred_outputs):
+    """Plan a scratch object containing only explicitly licensed input sections.
+
+    This is the non-text half of TU partitioned linking.  It is deliberately narrower
+    than a general linker garbage collector: callers name exact ELF input-section
+    names and every non-mapping symbol those surviving sections may define.  All
+    other content is removed, while named references from a survivor into removed
+    content become imports so separately-derived text objects can satisfy them.
+
+    Repeated input sections are kept as a group because an LCF ``file.o(.data)``
+    selector consumes every section with that name in compiler order.  Consequently
+    one foreign definition in any same-named section is fatal; retaining it would
+    silently widen the manifest's ownership claim.  A relocation through an unnamed
+    section symbol into removed content is also fatal because no named import can
+    preserve that address.
+    """
+    names = [str(name) for name in keep_section_names if str(name)]
+    allowed = {str(name) for name in licensed_symbols if str(name)}
+    if not names:
+        return {"error": "no input section names were requested"}
+    if len(names) != len(set(names)):
+        return {"error": "duplicate input section name was requested"}
+
+    elf = ELFFile(io.BytesIO(bytes(raw)))
+    secs = list(elf.iter_sections())
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return {"error": "no .symtab"}
+    syms = list(symtab.iter_symbols())
+
+    keep = {i for i, sec in enumerate(secs)
+            if sec.name in set(names) and sec.header["sh_type"] in CONTENT
+            and sec.header["sh_size"]}
+    missing = sorted(name for name in names
+                     if not any(secs[i].name == name for i in keep))
+    if missing:
+        return {"error": f"requested input section(s) are not emitted: {missing}"}
+
+    occupants = sorted({sym.name for sym in syms
+                        if sym.name and not sym.name.startswith("$")
+                        and sym["st_info"]["type"] != "STT_SECTION"
+                        and sym["st_shndx"] in keep})
+    foreign = sorted(set(occupants) - allowed)
+    missing_licensed = sorted(allowed - set(occupants))
+    if foreign:
+        return {"error": f"kept input section(s) also define unlicensed symbol(s): "
+                          f"{foreign}"}
+    if missing_licensed:
+        return {"error": f"licensed symbol(s) are not defined in kept input sections: "
+                          f"{missing_licensed}"}
+
+    drop_content = {i for i, sec in enumerate(secs)
+                    if sec.header["sh_type"] in CONTENT and sec.header["sh_size"]
+                    and i not in keep
+                    and not any(sec.name.startswith(p) for p in IGNORE)}
+
+    # Every other live byte must be one exact, declared text contribution that the
+    # caller has already proved contribution-equivalent.  Policies applied before
+    # this helper have zero-sized compiler-only/externally-owned sections, so they do
+    # not appear here.  This inventory prevents an unexpected helper/global or an
+    # anonymous padding section from being silently discarded by the partition.
+    deferred = []
+    for index, row in enumerate(deferred_outputs or []):
+        if not isinstance(row, dict) or not row.get("symbol") \
+                or not row.get("section") or "size" not in row:
+            return {"error": f"deferred_outputs[{index}] needs symbol/section/size"}
+        try:
+            size = int(row["size"], 0) if isinstance(row["size"], str) \
+                else int(row["size"])
+        except (TypeError, ValueError):
+            return {"error": f"deferred_outputs[{index}] has invalid size"}
+        if size <= 0:
+            return {"error": f"deferred_outputs[{index}] has non-positive size"}
+        deferred.append({"symbol": str(row["symbol"]),
+                         "section": str(row["section"]), "size": size})
+    deferred_by_name = {row["symbol"]: row for row in deferred}
+    if len(deferred_by_name) != len(deferred):
+        return {"error": "duplicate deferred-output symbol was requested"}
+
+    seen_deferred = set()
+    for shndx in sorted(drop_content):
+        sec = secs[shndx]
+        sec_occupants = [sym for sym in syms
+                         if sym.name and not sym.name.startswith("$")
+                         and sym["st_info"]["type"] != "STT_SECTION"
+                         and sym["st_shndx"] == shndx]
+        names_here = sorted(sym.name for sym in sec_occupants)
+        if len(sec_occupants) != 1 or names_here[0] not in deferred_by_name:
+            return {"error": f"foreign content section[{shndx}] {sec.name} size "
+                    f"0x{sec.header['sh_size']:x} has occupants {names_here}; expected "
+                    "one exact deferred output"}
+        sym = sec_occupants[0]
+        expected = deferred_by_name[sym.name]
+        if sec.name != expected["section"] or sec.header["sh_type"] != "SHT_PROGBITS":
+            return {"error": f"deferred {sym.name} is in {sec.name}/"
+                    f"{sec.header['sh_type']}, expected "
+                    f"{expected['section']}/SHT_PROGBITS"}
+        if sym["st_info"]["type"] != "STT_FUNC" or sym["st_value"] != 0 \
+                or sym["st_size"] != expected["size"] \
+                or sec.header["sh_size"] != expected["size"]:
+            return {"error": f"deferred {sym.name} does not exactly cover section"
+                    f"[{shndx}] (type={sym['st_info']['type']}, value="
+                    f"0x{sym['st_value']:x}, symbol=0x{sym['st_size']:x}, section="
+                    f"0x{sec.header['sh_size']:x}, expected=0x{expected['size']:x})"}
+        seen_deferred.add(sym.name)
+    missing_deferred = sorted(set(deferred_by_name) - seen_deferred)
+    if missing_deferred:
+        return {"error": f"declared deferred output(s) are not exact live sections: "
+                          f"{missing_deferred}"}
+
+    drop = set(drop_content)
+    drop.update(i for i, sec in enumerate(secs)
+                if isinstance(sec, RelocationSection) and sec.header["sh_size"]
+                and sec.header["sh_info"] in drop_content)
+
+    referenced = set()
+    for relsec in secs:
+        if not isinstance(relsec, RelocationSection) \
+                or relsec.header["sh_info"] not in keep:
+            continue
+        for reloc in relsec.iter_relocations():
+            target = symtab.get_symbol(reloc["r_info_sym"])
+            if not target.name and target["st_shndx"] in drop_content:
+                return {"error": f"surviving section[{relsec.header['sh_info']}] "
+                        f"{secs[relsec.header['sh_info']].name} references unnamed "
+                        f"section[{target['st_shndx']}] at 0x{reloc['r_offset']:x}"}
+            if target.name and target["st_shndx"] in drop_content:
+                if target["st_info"]["bind"] == "STB_LOCAL":
+                    return {"error": f"surviving section[{relsec.header['sh_info']}] "
+                            f"{secs[relsec.header['sh_info']].name} references local "
+                            f"symbol {target.name} in dropped section"
+                            f"[{target['st_shndx']}]"}
+                referenced.add(target.name)
+
+    dead = sorted(sym.name for sym in syms
+                  if sym.name and sym["st_shndx"] in drop_content
+                  and sym.name not in referenced)
+    return {"keep": None, "keeps": sorted(keep), "drop": sorted(drop),
+            "externalise": sorted(referenced), "dead": dead,
+            "referenced": sorted(referenced), "keptSectionNames": names,
+            "licensedSymbols": sorted(allowed), "deferredOutputs": deferred,
+            "error": None}
+
+
+def derive_section_partition(raw, keep_section_names, licensed_symbols,
+                             deferred_outputs):
+    """Return a scratch object reduced to exact licensed input-section groups."""
+    p = section_partition_plan(raw, keep_section_names, licensed_symbols,
+                               deferred_outputs)
+    if p.get("error"):
+        return None, p
+    return _apply(raw, p, None), p
+
+
+def rebias_object_symbols(raw, symbol_policies):
+    """Move exact retained object symbols from storage start to public address point.
+
+    C++ vtable definitions are the motivating case.  mwcc's symbol covers the full
+    object including its two-word ABI preamble, while this repository's configured
+    ``_ZTV`` symbol names the slot-array address eight bytes later.  Function
+    isolation already rewrites imports to that public convention; a separately linked
+    data partition must therefore expose its strong definition at the same point.
+
+    Only the ELF symbol value/size change.  Content and relocations are deliberately
+    untouched, and every requested symbol must be one unique, defined STT_OBJECT with
+    a positive bias smaller than its size.
+    """
+    requested = {}
+    for name, policy in dict(symbol_policies).items():
+        if not isinstance(policy, dict):
+            return None, {"rebased": [], "error": f"{name} rebias policy is not an object"}
+        try:
+            requested[str(name)] = {
+                "bias": int(policy["bias"]), "size": int(policy["size"]),
+                "section": str(policy["section"]),
+            }
+        except (KeyError, TypeError, ValueError):
+            return None, {"rebased": [], "error": f"{name} needs bias/size/section"}
+    if not requested:
+        return bytes(raw), {"rebased": [], "error": None}
+    bad_bias = sorted(name for name, policy in requested.items()
+                      if policy["bias"] <= 0 or policy["bias"] >= policy["size"])
+    if bad_bias:
+        return None, {"rebased": [],
+                      "error": f"symbol rebias must be positive: {bad_bias}"}
+
+    raw_out = bytearray(raw)
+    elf = ELFFile(io.BytesIO(bytes(raw_out)))
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return None, {"rebased": [], "error": "no .symtab"}
+    syms = list(symtab.iter_symbols())
+    by_name = {name: [(i, sym) for i, sym in enumerate(syms)
+                      if sym.name == name and sym["st_shndx"] not in
+                      ("SHN_UNDEF", "SHN_ABS")]
+               for name in requested}
+    for name, matches in by_name.items():
+        if len(matches) != 1:
+            return None, {"rebased": [], "error": f"{name} has {len(matches)} defined "
+                          "symbols, expected one"}
+        _index, sym = matches[0]
+        if not name.startswith("_ZTV"):
+            return None, {"rebased": [], "error": f"{name} is not an exact _ZTV symbol"}
+        if sym["st_info"]["bind"] != "STB_GLOBAL" \
+                or sym["st_info"]["type"] != "STT_OBJECT":
+            return None, {"rebased": [], "error": f"{name} is "
+                          f"{sym['st_info']['bind']}/{sym['st_info']['type']}, expected "
+                          "STB_GLOBAL/STT_OBJECT"}
+        shndx = sym["st_shndx"]
+        sec = elf.get_section(shndx) if isinstance(shndx, int) else None
+        if sec is None or sec.name != requested[name]["section"] \
+                or sec.header["sh_type"] != "SHT_PROGBITS" or not sec.header["sh_size"]:
+            return None, {"rebased": [], "error": f"{name} is not in retained "
+                          f"{requested[name]['section']}/SHT_PROGBITS content"}
+        if sym["st_value"] != 0 or sym["st_size"] != sec.header["sh_size"] \
+                or sym["st_size"] != requested[name]["size"]:
+            return None, {"rebased": [], "error": f"{name} does not exactly cover its "
+                          f"preverified storage section (value=0x{sym['st_value']:x}, "
+                          f"symbol=0x{sym['st_size']:x}, section="
+                          f"0x{sec.header['sh_size']:x}, manifest="
+                          f"0x{requested[name]['size']:x})"}
+
+    # Rebiasing changes what a relocation to this definition means. No current owned
+    # data needs such a self-reference, so refuse it rather than guessing whether its
+    # addend used storage-start or public-address-point convention.
+    for relsec in elf.iter_sections():
+        if not isinstance(relsec, RelocationSection):
+            continue
+        source = elf.get_section(relsec.header["sh_info"])
+        if source.header["sh_type"] not in CONTENT or not source.header["sh_size"]:
+            continue
+        for reloc in relsec.iter_relocations():
+            target = symtab.get_symbol(reloc["r_info_sym"])
+            if target.name in requested:
+                return None, {"rebased": [], "error": f"surviving {source.name} "
+                              f"relocation at 0x{reloc['r_offset']:x} targets rebased "
+                              f"symbol {target.name}"}
+
+    import struct
+    endian = "<" if elf.little_endian else ">"
+    base = symtab.header["sh_offset"]
+    rows = []
+    for name in sorted(requested):
+        index, sym = by_name[name][0]
+        bias = requested[name]["bias"]
+        ent = base + index * 16
+        new_value = sym["st_value"] + bias
+        new_size = sym["st_size"] - bias
+        struct.pack_into(endian + "I", raw_out, ent + 4, new_value)
+        struct.pack_into(endian + "I", raw_out, ent + 8, new_size)
+        rows.append({"symbol": name, "bias": bias,
+                     "oldValue": sym["st_value"], "newValue": new_value,
+                     "oldSize": sym["st_size"], "newSize": new_size})
+    return bytes(raw_out), {"rebased": rows, "error": None}
+
+
 def isolate(obj, keep_symbol):
     """Apply `plan` to the object file in place. Returns the plan.
 
@@ -576,8 +832,14 @@ def _apply(raw, p, keep_symbol):
     # inline-base-destructor case, where the store comes from a body inlined out of
     # a header, so the symbol is UNDEF from the start and is not in `externalise`.
     ext = set(p["externalise"])
+    # The -8 address-point rewrite is a legacy *function-isolation* rule.  A retained
+    # data section may itself describe an ABI vtable object whose relocation addend 8
+    # is part of the verified ROM data (for example an _ZTI record's ABI-vtable link).
+    # Section partitioning therefore never opts into this rewrite: it must preserve
+    # the already-verified data relocation stream byte-for-byte.
+    keeps = {p["keep"]} if isinstance(p.get("keep"), int) else set()
     for s in elf.iter_sections():
-        if not isinstance(s, RelocationSection) or s.header["sh_info"] != p["keep"]:
+        if not isinstance(s, RelocationSection) or s.header["sh_info"] not in keeps:
             continue
         if not s.is_RELA():
             continue

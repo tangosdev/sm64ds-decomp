@@ -1611,6 +1611,149 @@ def splice_tu_entry(delinks_path, span_start, span_end, tu_rel, expected_legacy,
     return sorted(rel for _i, rel, _s in inside), []
 
 
+def add_partitioned_tu_entry(delinks_path, span_start, span_end, tu_rel,
+                             expected_legacy, section_claims):
+    """Add one scratch-only non-text owner while retaining legacy text entries.
+
+    Partitioned linking needs dsd to keep the existing N text selectors (and their ROM
+    order), but to carve one separately reduced TU object into exact data/BSS gaps.
+    This helper performs only that additive scratch rewrite.  It refuses before writing
+    unless the legacy text entries still tile the manifest span, every non-text claim
+    is inside its declared module output section and pure gap ownership, and the TU
+    path is not already present.
+
+    The tracked delinks tree is never passed here; ``cmd_linkcheck`` supplies the copy
+    below ``build/tu/<id>/link-partitioned/config``.
+    """
+    _header, entries, inside, reasons = span_entries(
+        delinks_path, span_start, span_end, expected_legacy)
+    claims = list(section_claims or [])
+    text = [c for c in claims if c["name"] == ".text"]
+    nontext = [c for c in claims if c["name"] != ".text"]
+    if len(text) != 1 or (text[0]["start"], text[0]["end"]) != (span_start, span_end):
+        reasons.append("section claims must contain exactly the .text span passed to the "
+                       "legacy tiling check")
+    if not nontext:
+        reasons.append("partitioned linking needs at least one non-.text section claim; "
+                       "use --partial for text-only TUs")
+    reasons.extend(validate_claims_in_module(delinks_path, claims))
+
+    existing_paths = [rel for rel, _body in entries]
+    if tu_rel in existing_paths:
+        reasons.append(f"partitioned TU path {tu_rel} is already a delinks entry")
+
+    # Only module output section names reach dsd's LCF selectors.  A compiler input
+    # name that differs would require verified section retargeting; merely writing the
+    # output name here would make `TU.o(.data)` silently omit an input `.rodata`.
+    for claim in nontext:
+        output_name = claim.get("module_section", claim["name"])
+        if output_name != claim["name"]:
+            reasons.append(f"partitioned claim {claim['name']} -> {output_name} needs "
+                           "input-section retargeting, which is not implemented")
+    output_names = [claim.get("module_section", claim["name"]) for claim in nontext]
+    if len(output_names) != len(set(output_names)):
+        reasons.append("partitioned linking supports one contribution per module output "
+                       f"section, got {output_names}")
+
+    for claim in nontext:
+        for _idx, (rel, body) in enumerate(entries):
+            for name, start, end in entry_sections(body):
+                if max(start, claim["start"]) < min(end, claim["end"]):
+                    reasons.append(f"{claim['name']} claim 0x{claim['start']:08x}.."
+                                   f"0x{claim['end']:08x} overlaps existing entry "
+                                   f"{rel}'s {name} 0x{start:08x}..0x{end:08x}; it is "
+                                   f"not pure gap ownership")
+    if reasons:
+        return None, reasons
+
+    original = delinks_path.read_text(encoding="utf-8").rstrip("\r\n")
+    out = [original, "", f"{tu_rel}:", "    complete"]
+    for claim in nontext:
+        output_name = claim.get("module_section", claim["name"])
+        out.append(f"    {output_name} start:0x{claim['start']:08x} "
+                   f"end:0x{claim['end']:08x}")
+    delinks_path.write_text("\n".join(out) + "\n", encoding="utf-8", newline="\n")
+    return sorted(rel for _i, rel, _s in inside), []
+
+
+def validate_partitioned_link_artifacts(lcf_path, objects_path, entry, claims):
+    """Prove dsd generated the intended N-text-plus-one-data linker surface."""
+    if not pathlib.Path(lcf_path).is_file() or not pathlib.Path(objects_path).is_file():
+        return {"ok": False, "errors": [
+            "dsd did not generate both arm9.lcf and objects.txt"],
+            "expectedTuSelectors": [], "observedTuSelectors": [],
+            "observedSelectors": [], "expectedObjects": [], "observedObjects": [],
+            "selectorCount": 0, "objectCount": 0,
+            "selectorListSha256": None, "objectListSha256": None}
+    lcf_lines = [line.strip() for line in pathlib.Path(lcf_path).read_text(
+        encoding="utf-8", errors="replace").splitlines()]
+    objects = [line.strip() for line in pathlib.Path(objects_path).read_text(
+        encoding="utf-8", errors="replace").splitlines() if line.strip()]
+    object_paths = [str(pathlib.Path(line).resolve()) for line in objects]
+    object_basenames = [pathlib.Path(path).name for path in object_paths]
+    root = pathlib.Path(objects_path).parent.resolve()
+    reasons = []
+
+    legacy = [f["legacy_source"] for f in entry.get("functions", [])]
+    legacy_stems = [pathlib.PurePosixPath(rel).stem for rel in legacy]
+    if len(legacy_stems) != len(set(legacy_stems)):
+        reasons.append(f"legacy object basenames are not unique: {legacy_stems}")
+    for rel, stem in zip(legacy, legacy_stems):
+        selector = f"{stem}.o(.text)"
+        count = lcf_lines.count(selector)
+        if count != 1:
+            reasons.append(f"LCF contains {count} exact lines {selector}, "
+                           "expected one")
+        expected_obj = str((root / pathlib.Path(rel).with_suffix(".o")).resolve())
+        count = object_paths.count(expected_obj)
+        if count != 1:
+            reasons.append(f"objects.txt contains {count} exact paths {expected_obj} for "
+                           f"{rel}, expected one")
+        basename = f"{stem}.o"
+        count = object_basenames.count(basename)
+        if count != 1:
+            reasons.append(f"objects.txt contains {count} objects named {basename} for "
+                           f"{rel}, expected one linker-visible basename")
+
+    tu_stem = pathlib.PurePosixPath(entry["source"]).stem
+    tu_name = f"{tu_stem}.o"
+    expected_tu_obj = str((root / pathlib.Path(entry["source"]).with_suffix(".o")).resolve())
+    count = object_paths.count(expected_tu_obj)
+    if count != 1:
+        reasons.append(f"objects.txt contains {count} exact paths {expected_tu_obj}, "
+                       "expected one")
+    count = object_basenames.count(tu_name)
+    if count != 1:
+        reasons.append(f"objects.txt contains {count} objects named {tu_name}, expected "
+                       "one linker-visible basename")
+    tu_selector_re = re.compile(rf"^{re.escape(tu_name)}\(([^)]+)\)$")
+    observed_tu = [line for line in lcf_lines if tu_selector_re.match(line)]
+    expected_tu = [f"{tu_name}({c.get('module_section', c['name'])})"
+                   for c in claims if c["name"] != ".text"]
+    if sorted(observed_tu) != sorted(expected_tu):
+        reasons.append(f"TU selector set is {observed_tu}, expected exactly {expected_tu}")
+    observed_selectors = [line for line in lcf_lines
+                          if re.match(r"^[^\s()]+\.o\([^()]+\)$", line)]
+    normalized_selectors = sorted(observed_selectors)
+    normalized_objects = sorted(object_paths)
+    selector_hash = hashlib.sha256(
+        ("\n".join(normalized_selectors) + "\n").encode("utf-8")).hexdigest()
+    object_hash = hashlib.sha256(
+        ("\n".join(normalized_objects) + "\n").encode("utf-8")).hexdigest()
+    return {"ok": not reasons, "errors": reasons,
+            "expectedTuSelectors": expected_tu,
+            "observedTuSelectors": observed_tu,
+            "observedSelectors": observed_selectors,
+            "expectedObjects": [str((root / pathlib.Path(rel).with_suffix(".o")).resolve())
+                                for rel in legacy] + [expected_tu_obj],
+            "observedObjects": object_paths,
+            "expectedLegacyCount": len(legacy),
+            "selectorCount": len(observed_selectors),
+            "objectCount": len(object_paths),
+            "selectorListSha256": selector_hash,
+            "objectListSha256": object_hash}
+
+
 _all_syms_index = None
 
 
@@ -2338,7 +2481,8 @@ def _configured_bss_boundaries(module, homes):
 
 def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
                           config_relocs=None, sym_index=None, target_reader=None,
-                          symbol_homes=None, bss_boundaries=None):
+                          symbol_homes=None, bss_boundaries=None,
+                          public_address_points=False):
     """Verify licensed non-text layout, bytes, symbols, and relocation destinations.
 
     Relocated words are wildcarded only after every relocation is independently tied
@@ -2407,6 +2551,17 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
         got = layouts.get(section, {}).get("symbols", {}).get(name)
         public_addr = _manifest_addr(expected)
         want_addr, address_error = _manifest_emitted_addr(expected)
+        address_bias = 0
+        if public_address_points and name.startswith("_ZTV") \
+                and expected.get("emitted_storage_address") is not None:
+            try:
+                address_bias = (int(expected["address_point_bias"], 0)
+                                if isinstance(expected["address_point_bias"], str)
+                                else int(expected["address_point_bias"]))
+            except (KeyError, TypeError, ValueError):
+                address_error = "public-address-point verification needs a valid bias"
+            else:
+                want_addr = public_addr
         if got is None:
             reasons.append(f"licensed {section} symbol {name} is not emitted there")
             continue
@@ -2431,7 +2586,12 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
             except (TypeError, ValueError):
                 reasons.append(f"licensed {section} symbol {name} has invalid size")
             else:
-                if got["size"] != want_size:
+                if public_address_points and address_bias:
+                    want_size -= address_bias
+                if want_size <= 0:
+                    reasons.append(f"licensed {section} symbol {name} has no bytes after "
+                                   f"address-point bias 0x{address_bias:x}")
+                elif got["size"] != want_size:
                     reasons.append(f"licensed {section} symbol {name} size 0x{got['size']:x}, "
                                    f"manifest says 0x{want_size:x}")
 
@@ -2446,6 +2606,9 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
     manifest_addrs = {}
     for _sec, row in expected_rows:
         emitted_addr, _error = _manifest_emitted_addr(row)
+        if public_address_points and row["symbol"].startswith("_ZTV") \
+                and row.get("emitted_storage_address") is not None:
+            emitted_addr = _manifest_addr(row)
         manifest_addrs[row["symbol"]] = emitted_addr
     manifest_addrs.update({f["symbol"]: int(f["address"], 0)
                            for f in entry.get("functions", [])})
@@ -2536,6 +2699,92 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
     return {"ok": not reasons, "claimed": len(nontext), "rows": rows,
             "symbolErrors": [r for r in reasons if "symbol" in r],
             "relocations": reloc_rows, "errors": reasons}
+
+
+def derive_owned_nontext_object(obj_bytes, entry, claims):
+    """Reduce a post-policy TU object to its exact manifest-owned non-text surface.
+
+    ``verify_owned_sections`` is the byte/symbol/relocation license.  This helper
+    supplies the mechanical partition after that license exists: it keeps every
+    repeated compiler input section named by a non-text claim, permits only symbols
+    listed in the matching manifest fields, and delegates all ELF surgery and
+    dropped-text import handling to :func:`objisolate.derive_section_partition`.
+    """
+    nontext = [claim for claim in claims if claim["name"] != ".text"]
+    names = [claim["name"] for claim in nontext]
+    licensed = sorted(row["symbol"] for section, row in manifest_owned_symbol_rows(entry)
+                      if section in set(names))
+    deferred = [{"symbol": f["symbol"], "section": ".text", "size": f["size"]}
+                for f in entry.get("functions", [])]
+    if not names:
+        return None, {"requestedSections": [], "licensedSymbols": licensed,
+                      "deferredOutputs": deferred}, \
+            ["partitioned non-text object needs at least one non-.text claim"]
+
+    out, plan = OI.derive_section_partition(obj_bytes, names, licensed, deferred)
+    report = {"requestedSections": names, "licensedSymbols": licensed,
+              "deferredOutputs": deferred, "objisolate": plan}
+    if out is None:
+        return None, report, [f"non-text object partition refused: {plan.get('error')}"]
+
+    inv = elf_inventory(out)
+    live = [section for section in inv["sections"]
+            if section["size"] and section["type"] in OI.CONTENT
+            and not any(section["name"].startswith(p) for p in OI.IGNORE)]
+    foreign = [section for section in live if section["name"] not in set(names)]
+    report["liveSections"] = live
+    if foreign:
+        detail = [f"{row['name']}[0x{row['size']:x}]" for row in foreign]
+        return None, report, [f"partition retained foreign content section(s): {detail}"]
+    return out, report, []
+
+
+def partition_vtable_rebiases(entry, claims):
+    """Exact public-address-point biases required by retained vtable definitions."""
+    claimed = {claim["name"] for claim in claims if claim["name"] != ".text"}
+    owner_module = RL.normalize_module(entry["module"])
+    homes = all_symbol_homes()
+    biases, reasons = {}, []
+    for section, row in manifest_owned_symbol_rows(entry):
+        name = row["symbol"]
+        if section not in claimed or not name.startswith("_ZTV"):
+            continue
+        storage, error = _manifest_emitted_addr(row)
+        if error or row.get("emitted_storage_address") is None:
+            reasons.append(f"retained vtable {name} needs explicit, consistent "
+                           f"emitted_storage_address/address_point_bias: {error or 'missing'}")
+            continue
+        try:
+            bias = (int(row["address_point_bias"], 0)
+                    if isinstance(row["address_point_bias"], str)
+                    else int(row["address_point_bias"]))
+            size = int(row["size"], 0) if isinstance(row.get("size"), str) \
+                else int(row["size"])
+        except (KeyError, TypeError, ValueError):
+            reasons.append(f"retained vtable {name} needs valid bias and size")
+            continue
+        if bias <= 0 or bias >= size:
+            reasons.append(f"retained vtable {name} bias 0x{bias:x} is not inside "
+                           f"storage size 0x{size:x}")
+            continue
+        if name in biases:
+            reasons.append(f"duplicate retained vtable row for {name}")
+            continue
+        public = _manifest_addr(row)
+        configured = {(RL.normalize_module(module), address)
+                      for module, address in homes.get(name, [])}
+        expected_home = (owner_module, public)
+        if public is None or configured != {expected_home}:
+            rendered = [f"{module}:0x{address:08x}"
+                        for module, address in sorted(configured)]
+            reasons.append(f"retained vtable {name} needs one unique configured public "
+                           f"home {owner_module}:"
+                           f"{f'0x{public:08x}' if public is not None else 'invalid'}; "
+                           f"found {rendered or 'none'}")
+            continue
+        biases[name] = {"bias": bias, "size": size, "section": section,
+                        "storageAddress": storage, "publicAddress": public}
+    return biases, reasons
 
 
 # ====================================== partial TU isolation (plan sec 9, phase D)
@@ -3030,6 +3279,13 @@ def compare_range(built, retail, base, start, end, label, rows=None):
     return False, len(diffs), base + lo + diffs[0]
 
 
+def shared_build_bin_snapshot():
+    """Hash shared build/*.bin outputs so scratch redirection leaks are detectable."""
+    return {path.name: {"bytes": path.stat().st_size,
+                        "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
+            for path in sorted((REPO / "build").glob("*.bin")) if path.is_file()}
+
+
 def cmd_linkcheck(args):
     data = load_manifest()
     entry = manifest_entry(data, args.id) if args.id else None
@@ -3038,12 +3294,12 @@ def cmd_linkcheck(args):
                          f"{MANIFEST.relative_to(REPO).as_posix()}")
     baseline = bool(args.baseline)
     partial = bool(getattr(args, "partial", False))
+    partitioned = bool(getattr(args, "partitioned", False))
     if entry is None and not baseline:
         raise SystemExit("linkcheck needs a TU id (or --baseline for the control run)")
-    if partial and baseline:
-        raise SystemExit("--partial and --baseline are different runs: the baseline "
-                         "control substitutes nothing at all, so there is no partial "
-                         "variant of it. Run them separately.")
+    if sum(bool(mode) for mode in (baseline, partial, partitioned)) > 1:
+        raise SystemExit("--baseline, --partial, and --partitioned are mutually "
+                         "exclusive link experiments")
 
     module = entry["module"] if entry else (args.module or "ov002")
     tu_id = entry["id"] if entry else "_baseline"
@@ -3052,15 +3308,18 @@ def cmd_linkcheck(args):
     # TU run diffs against the same artefact. The partial run gets its own tree beside
     # the whole-range one so a TU can hold both results at once -- they are different
     # experiments on the same source and neither supersedes the other.
-    scratch = (BASELINE_LINK if baseline
-               else BUILD_TU / sanitize_id(tu_id) / ("link-partial" if partial else "link"))
+    scratch = (BASELINE_LINK if baseline else BUILD_TU / sanitize_id(tu_id) /
+               ("link-partitioned" if partitioned else "link-partial" if partial else "link"))
     cfg_root = scratch / "config" / "arm9"
-    report = {"id": tu_id, "baseline": baseline, "partial": partial, "module": module,
+    report = {"id": tu_id, "baseline": baseline, "partial": partial,
+              "partitioned": partitioned, "module": module,
               "scratch": scratch.relative_to(REPO).as_posix(), "phases": {}}
+    shared_bins_before = shared_build_bin_snapshot() if partitioned else {}
 
     print(f"=== tubuild linkcheck {tu_id}"
           f"{'  [BASELINE CONTROL -- no TU substitution]' if baseline else ''}"
-          f"{'  [PARTIAL -- N derived per-function objects, delinks.txt UNCHANGED]' if partial else ''} ===")
+          f"{'  [PARTIAL -- N derived per-function objects, delinks.txt UNCHANGED]' if partial else ''}"
+          f"{'  [PARTITIONED -- N derived text objects + one owned non-text object]' if partitioned else ''} ===")
     print(f"scratch tree: {scratch.relative_to(REPO).as_posix()}")
     print("real config/ and the shared build/ outputs are read-only for this command; "
           "everything written below lives under that scratch tree (build/ is gitignored).\n")
@@ -3118,6 +3377,34 @@ def cmd_linkcheck(args):
                   f"tile 0x{span_start:08x}..0x{span_end:08x}, all `complete`, and each "
                   f"keeps its own object path; the substitution happens at the OBJECT "
                   f"level in [4b] below.")
+        elif partitioned:
+            # A data-only TU entry adds a new LCF basename while deliberately keeping
+            # every legacy text entry. Check the global basename surface before even
+            # changing the disposable config: dsd selectors are basename-only.
+            stem = pathlib.Path(entry["source"]).stem
+            clash = [p for p in RB.enrolled(cfg_root, extra_roots=("src_tu",))
+                     if pathlib.PurePosixPath(p).stem == stem
+                     and p != entry["source"]]
+            if clash:
+                print(f"\nREFUSED -- object basename {stem}.o is already claimed by "
+                      f"{clash}")
+                return 1
+            replaced, reasons = add_partitioned_tu_entry(
+                dl, span_start, span_end, entry["source"], legacy_rels, claims)
+            if reasons:
+                print("\nREFUSED -- the partitioned scratch delinks addition is not safe:")
+                for r in reasons:
+                    print(f"  {r}")
+                return 1
+            print(f"      retained {len(replaced)} legacy .text entries, in their existing "
+                  f"ROM order, and added one SCRATCH-ONLY non-text entry:")
+            print(f"        {entry['source']}: complete")
+            for claim in (c for c in claims if c["name"] != ".text"):
+                output_name = claim.get("module_section", claim["name"])
+                print(f"          {output_name:16} 0x{claim['start']:08x}.."
+                      f"0x{claim['end']:08x}  relinquished from ROM gap")
+            print("      tracked config/**/delinks.txt remains untouched; dsd will now "
+                  "generate N legacy .text selectors plus one TU non-text selector.")
         else:
             replaced, reasons = splice_tu_entry(
                 dl, span_start, span_end, entry["source"], legacy_rels,
@@ -3168,6 +3455,21 @@ def cmd_linkcheck(args):
         return 1
     print(f"      ok ({dt:.1f}s) -> {(scratch / 'arm9.lcf').relative_to(REPO).as_posix()}, "
           f"{(scratch / 'objects.txt').relative_to(REPO).as_posix()}")
+    if partitioned:
+        artifact_report = validate_partitioned_link_artifacts(
+            scratch / "arm9.lcf", scratch / "objects.txt", entry, claims)
+        report["partitionedArtifacts"] = artifact_report
+        if not artifact_report["ok"]:
+            print("\nREFUSED -- dsd did not generate the exact partitioned selector "
+                  "surface:")
+            for reason in artifact_report["errors"]:
+                print(f"  {reason}")
+            report["result"] = "partition-artifact-refused"
+            _write_link_report(scratch, report)
+            _record_partitioned(data, entry, report)
+            return 1
+        print("      partitioned LCF/object audit: exactly N legacy .text selectors, "
+              "one TU non-text selector/object, no TU .text selector")
 
     # ------------------------------------------------------------------------ compile
     srcs = RB.enrolled(cfg_root, extra_roots=("src_tu",))
@@ -3219,14 +3521,28 @@ def cmd_linkcheck(args):
             print(f"      FAIL {rel}: {err}")
         return 1
 
-    # ------------------------------- partial isolation: derive, compare, substitute
+    # -------------------- partial/partitioned isolation: derive, compare, substitute
     partial_rows = []
-    if partial:
-        print("[4b/8] partial isolation: one TU compile -> N derived objects, substituted "
-              "for the N objects [4/8] just produced")
-        obj_bytes, version, tu_flags, _bd, tu_obj_path = _compile_tu(entry)
+    partition_data_ok = False
+    if partial or partitioned:
+        label = "partitioned" if partitioned else "partial"
+        print(f"[4b/8] {label} isolation: one TU compile -> N derived text objects, "
+              "substituted for the N legacy objects [4/8] just produced")
+        if partitioned:
+            # The additive scratch delinks entry made rombuild compile this exact TU
+            # once in [4].  Recompiling it here would make the claimed one-compile
+            # partition untrue, so consume that untouched raw object directly.
+            tu_obj_path = scratch / pathlib.Path(entry["source"]).with_suffix(".o")
+            if not tu_obj_path.is_file():
+                print(f"      !! the build produced no TU object at {tu_obj_path}")
+                return 1
+            obj_bytes = tu_obj_path.read_bytes()
+            version = vers.get(pathlib.Path(entry["source"]).stem, RB.VERSION)
+            tu_flags = BP.flags_for(REPO / entry["source"])
+        else:
+            obj_bytes, version, tu_flags, _bd, tu_obj_path = _compile_tu(entry)
         derived = derive_function_objects(obj_bytes, entry)
-        keep = scratch / "partial"
+        keep = scratch / ("partitioned" if partitioned else "partial")
         (keep / "production").mkdir(parents=True, exist_ok=True)
         (keep / "derived").mkdir(parents=True, exist_ok=True)
         prod_paths, substituted = {}, []
@@ -3282,8 +3598,138 @@ def cmd_linkcheck(args):
             print("      PREDICTION: an import with no definition anywhere can make "
                   "mwldarm refuse the link. Running it so the verdict is measured.")
 
+        if partitioned and (n_ok != len(partial_rows)
+                            or len(substituted) != len(entry["functions"])):
+            reasons = [f"partitioned text substitution is not exact: {n_ok}/"
+                       f"{len(partial_rows)} contribution-equivalent, "
+                       f"{len(substituted)}/{len(entry['functions'])} substituted"]
+            print("      REFUSED -- " + reasons[0])
+            report["result"] = "partitioned-text-refused"
+            report["partitionedErrors"] = reasons
+            _write_link_report(scratch, report)
+            _record_partitioned(data, entry, report)
+            return 1
+
+        if partitioned:
+            print("\n[4c/8] partitioned non-text object: exact policies, ownership "
+                  "verification, then content reduction")
+            report["partitionedObjects"] = {
+                "rawTuSha256": hashlib.sha256(obj_bytes).hexdigest(),
+                "rawTuBytes": len(obj_bytes),
+                "tuObjectPath": tu_obj_path.relative_to(REPO).as_posix(),
+            }
+            linked_tu, compiler_only, policy_reasons = \
+                apply_compiler_only_policy(obj_bytes, entry)
+            report["compilerOnlyOutput"] = compiler_only
+            if policy_reasons:
+                print("      REFUSED -- unlicensed/compiler-only output policy:")
+                for reason in policy_reasons:
+                    print(f"        {reason}")
+                report["compilerOnlyOutput"]["errors"] = policy_reasons
+                report["result"] = "policy-refused"
+                _write_link_report(scratch, report)
+                _record_partitioned(data, entry, report)
+                return 1
+            if linked_tu != obj_bytes:
+                scratch_rewrite = True
+                print(f"      explicitly deadstripped {compiler_only['deadstripped']} "
+                      "from the data-source copy")
+
+            externalized_tu, externalized, externalized_reasons = \
+                apply_externalized_output_policy(linked_tu, entry)
+            report["externalizedOutput"] = externalized
+            if externalized_reasons:
+                print("      REFUSED -- exact vague RTTI externalization policy:")
+                for reason in externalized_reasons:
+                    print(f"        {reason}")
+                report["externalizedOutput"]["errors"] = externalized_reasons
+                report["result"] = "externalization-refused"
+                _write_link_report(scratch, report)
+                _record_partitioned(data, entry, report)
+                return 1
+            linked_tu = externalized_tu
+            report["partitionedObjects"]["postPolicySha256"] = \
+                hashlib.sha256(linked_tu).hexdigest()
+            if linked_tu != obj_bytes:
+                scratch_rewrite = True
+            if externalized.get("externalized"):
+                print(f"      externalized {externalized['externalized']} to exact "
+                      "configured canonical homes")
+
+            owned_before = verify_owned_sections(linked_tu, entry, claims)
+            report["ownedSectionsBeforePartition"] = owned_before
+            if not owned_before["ok"]:
+                print("      REFUSED -- licensed non-text contribution is not exact:")
+                for reason in owned_before.get("errors", []):
+                    print(f"        {reason}")
+                report["result"] = "data-refused"
+                _write_link_report(scratch, report)
+                _record_partitioned(data, entry, report)
+                return 1
+
+            data_tu, partition_report, partition_reasons = \
+                derive_owned_nontext_object(linked_tu, entry, claims)
+            report["nontextPartition"] = partition_report
+            if partition_reasons:
+                print("      REFUSED -- non-text partition is not safe:")
+                for reason in partition_reasons:
+                    print(f"        {reason}")
+                report["nontextPartition"]["errors"] = partition_reasons
+                report["result"] = "partition-refused"
+                _write_link_report(scratch, report)
+                _record_partitioned(data, entry, report)
+                return 1
+
+            report["partitionedObjects"]["reducedStorageSha256"] = \
+                hashlib.sha256(data_tu).hexdigest()
+            biases, bias_reasons = partition_vtable_rebiases(entry, claims)
+            if bias_reasons:
+                print("      REFUSED -- retained vtable address point is not explicit:")
+                for reason in bias_reasons:
+                    print(f"        {reason}")
+                report["result"] = "vtable-rebias-refused"
+                report["vtableRebias"] = {"requested": biases,
+                                           "errors": bias_reasons}
+                _write_link_report(scratch, report)
+                _record_partitioned(data, entry, report)
+                return 1
+            data_tu, bias_report = OI.rebias_object_symbols(data_tu, biases)
+            report["vtableRebias"] = bias_report
+            if data_tu is None:
+                print(f"      REFUSED -- vtable symbol rebias: {bias_report.get('error')}")
+                report["result"] = "vtable-rebias-refused"
+                _write_link_report(scratch, report)
+                _record_partitioned(data, entry, report)
+                return 1
+            report["partitionedObjects"]["linkedDataSha256"] = \
+                hashlib.sha256(data_tu).hexdigest()
+
+            owned = verify_owned_sections(data_tu, entry, claims,
+                                           public_address_points=True)
+            report["ownedSections"] = owned
+            for row in owned["rows"]:
+                print(f"      {row['section']:8} {row.get('start', '-')}.."
+                      f"{row.get('end', '-')} emitted 0x{row.get('emittedBytes', 0):x}  "
+                      f"{'VERIFIED' if row.get('sizeOk') and row.get('bytesOk') else 'DIFF'}  "
+                      f"{row.get('relocCount', 0)} reloc(s)")
+            if not owned["ok"]:
+                print("      REFUSED -- reduction changed the licensed non-text "
+                      "contribution:")
+                for reason in owned.get("errors", []):
+                    print(f"        {reason}")
+                report["result"] = "partition-data-refused"
+                _write_link_report(scratch, report)
+                _record_partitioned(data, entry, report)
+                return 1
+
+            tu_obj_path.write_bytes(data_tu)
+            scratch_rewrite = True
+            partition_data_ok = True
+            print(f"      wrote one reduced non-text object at "
+                  f"{tu_obj_path.relative_to(REPO).as_posix()}; no live .text remains")
+
     # ------------------------------------------------- pre-link licensing audit
-    if not baseline and not partial:
+    if not baseline and not partial and not partitioned:
         print("[4b/8] licensing audit of the shadow object (plan sec 4.5), before the link")
         tu_obj = scratch / pathlib.Path(entry["source"]).with_suffix(".o")
         if not tu_obj.is_file():
@@ -3391,15 +3837,12 @@ def cmd_linkcheck(args):
         report["phases"]["link"]["output"] = out[:4000]
         report["result"] = "link-failed"
         _write_link_report(scratch, report)
-        _record_linkcheck(data, entry, report, baseline)
+        if partitioned:
+            _record_partitioned(data, entry, report)
+        else:
+            _record_linkcheck(data, entry, report, baseline)
         return 1
     print(f"      ok ({dt:.1f}s) -> {(scratch / 'final_link.o').relative_to(REPO).as_posix()}")
-
-    stray = sorted(p.name for p in (REPO / "build").glob("*.bin"))
-    if stray:
-        print(f"      !! module images appeared at build/*.bin: {stray} -- the scratch "
-              f"redirection leaked; investigate before trusting this run")
-        report["strayOutputs"] = stray
 
     # ------------------------------------------------------- linked-range comparison
     print("[6/8] linked range + module byte comparison")
@@ -3459,6 +3902,7 @@ def cmd_linkcheck(args):
     ok, out, dt = _run_dsd([str(RB.DSD), "check", "modules", "-c",
                             str(profile["configYaml"]), "-f"], "dsd check modules")
     report["phases"]["checkModules"] = {"ok": ok, "seconds": round(dt, 1)}
+    modules_check_ok = ok
     print(f"      dsd check modules --fail: {'PASS' if ok else 'FAIL'}")
     if not ok:
         print("      " + "\n      ".join(out.splitlines()[-12:]))
@@ -3539,6 +3983,20 @@ def cmd_linkcheck(args):
             print(f"      FAILED ({dt:.1f}s)")
             print("      " + "\n      ".join(out.splitlines()[-15:]))
 
+    if partitioned:
+        shared_bins_after = shared_build_bin_snapshot()
+        changed_shared = sorted(name for name in set(shared_bins_before) |
+                                set(shared_bins_after)
+                                if shared_bins_before.get(name) != shared_bins_after.get(name))
+        report["sharedBuildOutputs"] = {
+            "before": shared_bins_before, "after": shared_bins_after,
+            "changed": changed_shared,
+        }
+        if changed_shared:
+            print(f"      !! shared build/*.bin changed during the scratch pipeline: "
+                  f"{changed_shared} -- investigate before trusting this run")
+            report["strayOutputs"] = changed_shared
+
     # ------------------------------------------------------------------------ verdict
     if baseline:
         symbols_verdict = symbols_ok
@@ -3548,7 +4006,16 @@ def cmd_linkcheck(args):
         symbols_verdict = symbols_ok
     equivalent = all(v["identical"] for _o, _s, v in partial_rows) if partial_rows else False
     verified = bool(module_ok and symbols_verdict and (rom_ok is not False))
-    if partial:
+    if partitioned:
+        verified = partitioned_link_ready(
+            equivalent=bool(equivalent and partial_rows), data_ok=partition_data_ok,
+            artifacts_ok=report.get("partitionedArtifacts", {}).get("ok") is True,
+            module_ok=module_ok, modules_check_ok=modules_check_ok,
+            symbols_ok=symbols_verdict, rom_ok=rom_ok,
+            rom_identical=report.get("rom", {}).get("matchesStockRom") is True,
+            no_stray_outputs=not report.get("strayOutputs"))
+        report["result"] = "partitioned-link-verified" if verified else "failed"
+    elif partial:
         # A partial run's claim is narrower than link-verified's and must not borrow its
         # name: the TU's whole .text range still comes from N objects, not one.
         verified = bool(verified and equivalent and partial_rows)
@@ -3558,7 +4025,23 @@ def cmd_linkcheck(args):
         report["result"] = classify_link_result(
             has_nontext, verified, rom_ok, scratch_rewrite)
     print()
-    if partial:
+    if partitioned:
+        n_ok = sum(1 for _o, _s, v in partial_rows if v["identical"])
+        if verified:
+            print(f"Result: PARTITIONED-LINK-VERIFIED. {entry['source']} was compiled "
+                  f"once; {n_ok}/{len(partial_rows)} derived .text objects reproduce at "
+                  "the legacy ROM-ordered selectors, the reduced non-text object owns "
+                  "only exact manifest ranges, all modules/symbol deltas pass, and the "
+                  "full ROM is identical to the stock build.")
+            print("        This is scratch-only evidence on an orthogonal axis. Tracked "
+                  "src/ and config/**/delinks.txt were not changed, and this result is "
+                  "never promotion-ready.")
+        else:
+            print(f"Result: NOT partitioned-link-verified ({n_ok}/"
+                  f"{len(partial_rows)} text contributions; data_ok="
+                  f"{partition_data_ok}; full ROM exact="
+                  f"{report.get('rom', {}).get('matchesStockRom') is True}).")
+    elif partial:
         n_ok = sum(1 for _o, _s, v in partial_rows if v["identical"])
         if verified:
             print(f"Result: PARTIAL-LINK-VERIFIED. {entry['source']} was compiled ONCE; "
@@ -3604,7 +4087,9 @@ def cmd_linkcheck(args):
     else:
         print("Result: NOT link-verified (see the phases above).")
     _write_link_report(scratch, report)
-    if partial:
+    if partitioned:
+        _record_partitioned(data, entry, report)
+    elif partial:
         p = report["partial"]
         _record_partial(data, entry, {
             "round": "tools/tubuild.py linkcheck --partial -- one compile of the "
@@ -3634,6 +4119,14 @@ def cmd_linkcheck(args):
     return 0 if verified else 1
 
 
+def partitioned_link_ready(*, equivalent, data_ok, artifacts_ok, module_ok,
+                           modules_check_ok, symbols_ok, rom_ok, rom_identical,
+                           no_stray_outputs):
+    """The deliberately strict, full-ROM-only partitioned-link result gate."""
+    return all((equivalent, data_ok, artifacts_ok, module_ok, modules_check_ok,
+                symbols_ok, rom_ok is True, rom_identical, no_stray_outputs))
+
+
 def classify_link_result(has_nontext, pipeline_ok, rom_ok, scratch_rewrite=False):
     """Name a linkcheck result without turning research evidence into promotion state."""
     if not pipeline_ok:
@@ -3650,6 +4143,113 @@ def _write_link_report(scratch, report):
     path = scratch / "linkcheck.json"
     path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8", newline="\n")
     print(f"report -> {path.relative_to(REPO).as_posix()} (gitignored)")
+
+
+def _compact_partition_artifact(report):
+    """Keep the tracked proof small; full linker inventories stay in linkcheck.json."""
+    artifact = report.get("partitionedArtifacts") or {}
+    return {key: artifact.get(key) for key in (
+        "ok", "errors", "expectedTuSelectors", "observedTuSelectors",
+        "expectedLegacyCount", "selectorCount", "objectCount",
+        "selectorListSha256", "objectListSha256",
+    )}
+
+
+def _partition_attempt_record(report):
+    """Concise, reviewable evidence for one scratch partition attempt."""
+    partial_report = report.get("partial") or {}
+    owned_before = report.get("ownedSectionsBeforePartition") or {}
+    owned = report.get("ownedSections") or {}
+    partition = report.get("nontextPartition") or {}
+    plan = partition.get("objisolate") or {}
+    compiler = report.get("compilerOnlyOutput") or {}
+    externalized = report.get("externalizedOutput") or {}
+    external_verify = externalized.get("verification") or {}
+    return {
+        "result": report.get("result", "failed"),
+        "round": "tools/tubuild.py linkcheck --partitioned -- scratch-only additive "
+                 "non-text delinks entry, objisolate-derived per-function text objects, "
+                 "exact compiler-only/RTTI policies, exact data partition and vtable "
+                 "address-point rebias, whole-tree link and full-ROM comparison",
+        "trackedDelinksChanged": False,
+        "text": {
+            "toolchain": partial_report.get("toolchain"),
+            "flags": partial_report.get("flags"),
+            "mergedBytes": partial_report.get("mergedBytes"),
+            "contributionEquivalent": partial_report.get("contributionEquivalent"),
+            "substitutedObjectPaths": partial_report.get("substituted"),
+            "rows": [{key: row.get(key) for key in (
+                "ordinal", "symbol", "identical", "relocCount", "differences")}
+                for row in partial_report.get("rows", [])],
+        },
+        "compilerOnlyPolicy": {
+            "requested": compiler.get("requested"),
+            "deadstripped": compiler.get("deadstripped"),
+            "droppedSections": compiler.get("droppedSections"),
+            "errors": compiler.get("errors"),
+        },
+        "externalizedPolicy": {
+            "requested": externalized.get("requested"),
+            "externalized": externalized.get("externalized"),
+            "droppedSections": externalized.get("droppedSections"),
+            "verificationOk": external_verify.get("ok"),
+            "errors": externalized.get("errors") or external_verify.get("errors"),
+        },
+        "nontextPartition": {
+            "requestedSections": partition.get("requestedSections"),
+            "licensedSymbols": partition.get("licensedSymbols"),
+            "deferredOutputs": partition.get("deferredOutputs"),
+            "keptSectionIndices": plan.get("keeps"),
+            "droppedSectionIndices": plan.get("drop"),
+            "externalizedTextSymbols": plan.get("externalise"),
+            "deadTextSymbols": plan.get("dead"),
+            "liveSections": partition.get("liveSections"),
+            "error": plan.get("error"),
+        },
+        "ownedBeforePartition": {
+            "ok": owned_before.get("ok"), "rows": owned_before.get("rows"),
+            "errors": owned_before.get("errors"),
+        },
+        "ownedAfterRebias": {
+            "ok": owned.get("ok"), "rows": owned.get("rows"),
+            "errors": owned.get("errors"),
+        },
+        "vtableRebias": report.get("vtableRebias"),
+        "objectHashes": report.get("partitionedObjects"),
+        "artifactAudit": _compact_partition_artifact(report),
+        "ranges": report.get("tuRanges"),
+        "phases": {key: value.get("ok")
+                   for key, value in report.get("phases", {}).items()},
+        "moduleFidelityPassed": bool((report.get("analysis") or {}).get("passed")),
+        "symbolCheckNewVsBaseline": report.get("symbolsNew"),
+        "rom": report.get("rom"),
+        "strayOutputs": report.get("strayOutputs"),
+        "scratch": report.get("scratch", "") + " (gitignored)",
+    }
+
+
+def _record_partitioned(data, entry, report):
+    """Record an orthogonal attempt, preserving any earlier full-ROM proof."""
+    if entry is None:
+        return
+    block = entry.setdefault("partitioned_link", {})
+    attempt = _partition_attempt_record(report)
+    block["lastAttempt"] = attempt
+    if attempt["result"] == "partitioned-link-verified":
+        block["lastVerified"] = attempt
+    if block.get("lastVerified"):
+        block["state"] = "partitioned-link-verified"
+        block["stateMeaning"] = (
+            "At least one scratch-only attempt compiled one shadow TU into exact "
+            "ROM-ordered text partitions plus exact owned non-text data and reproduced "
+            "the stock ROM. The latest attempt is recorded separately; this is never a "
+            "production enrollment or promotion state.")
+    else:
+        block["state"] = attempt["result"]
+        block["stateMeaning"] = (
+            "The latest scratch-only partition attempt did not earn full-ROM verification. "
+            "It is evidence only and never a production enrollment or promotion state.")
+    save_manifest(data)
 
 
 def _record_linkcheck(data, entry, report, baseline):
@@ -3713,6 +4313,9 @@ def promotion_refusals(entry):
     """Reasons the current production build cannot consume this verified shadow TU."""
     reasons = []
     status = entry.get("status")
+    if status == "partitioned-link-verified":
+        reasons.append("partitioned-link-verified is scratch-only and never a production "
+                       "promotion status")
     if status not in ("link-verified", "data-verified"):
         reasons.append("manifest status is not link-verified or data-verified")
     if any(s.get("name") != ".text" for s in entry.get("sections", [])
@@ -3977,15 +4580,18 @@ def main():
                                          "linked-range/module comparison, dsd check "
                                          "symbols --fail, ROM build (plan sec 7.6)")
     p.add_argument("id", nargs="?")
-    p.add_argument("--baseline", action="store_true",
-                   help="run the identical scratch pipeline with NO TU substitution -- the "
-                        "control that says whether a failure belongs to the TU or the harness")
-    p.add_argument("--partial", action="store_true",
-                   help="plan sec 9: leave delinks.txt alone and substitute N derived "
-                        "per-function objects (one TU compile, objisolate.derive per "
-                        "function) for the N objects the build produces, at their own "
-                        "existing paths -- instead of replacing the whole range with one "
-                        "object")
+    modes = p.add_mutually_exclusive_group()
+    modes.add_argument("--baseline", action="store_true",
+                       help="run the identical scratch pipeline with NO TU substitution -- "
+                            "the control that says whether a failure belongs to the TU or "
+                            "the harness")
+    modes.add_argument("--partial", action="store_true",
+                       help="plan sec 9: leave delinks.txt alone and substitute N derived "
+                            "per-function objects at their existing paths")
+    modes.add_argument("--partitioned", action="store_true",
+                       help="scratch-only: retain N ROM-ordered legacy text entries, add "
+                            "one TU non-text gap owner, then link N derived text objects "
+                            "plus one exact reduced data object")
     p.add_argument("--module", default=None, help="module for --baseline without an id")
     p.add_argument("-j", "--jobs", type=int, default=RB.default_jobs())
     p.add_argument("--no-cache", action="store_true",
