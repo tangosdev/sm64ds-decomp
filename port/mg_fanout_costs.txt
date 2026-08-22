@@ -2458,17 +2458,32 @@ All three trapped and counted in unmatched/MgAmida_Faces.cpp. Six of the 25
 slot-36 dispatch sites are inside the first two, so the mode branch in those
 bodies is code this seat cannot run.
 
-AND THE THIRD FLOOR EXPLAINS A LIVE HOST-ABI DEFECT NOBODY HAS BEEN ABLE TO
-HIT. func_ov004_020ae5c4 is the FAMILY'S SLOT-34 DISPATCHER: eight of the ten
-`ldr Rd,[Rn,#0x88]` sites in the two overlay images are inside it, each with
-one word pushed before the blx, so slot 34 takes FIVE arguments and
-src/func_ov004_020ae3b4.c (the base's own slot-34 body) declares five to match.
-hal/scene_mg.cpp's shared mb_v34 is declared (void *, void *) and calls that
-five-parameter body with ONE argument. It has never fired, and now the reason
-is written down: the only two dispatchers in the tree are this bodiless one and
-func_ov006_020ce108, which is in no slice. THE DEFECT IS UNEXERCISED RATHER
-THAN ABSENT, and it is the lane-BASESET slot-18/19 shape. Not repaired here:
-a repair with no dispatch to witness it is wiring without evidence.
+AND THE THIRD FLOOR EXPLAINS A LIVE HOST-ABI DEFECT NOBODY CAN HIT.
+func_ov004_020ae5c4 is the FAMILY'S ONLY SLOT-34 DISPATCHER: a scan of both
+overlay images for `ldr Rd,[Rn,#0x88]` with Rn neither pc nor sp returns ten
+offset matches and EIGHT are inside it, each with one word pushed before the
+blx, so slot 34 takes FIVE arguments and src/func_ov004_020ae3b4.c (the base's
+own slot-34 body) declares five to match. hal/scene_mg.cpp's shared mb_v34 is
+declared (void *, void *) and calls that five-parameter body with ONE argument.
+
+  THE OTHER TWO MATCHES ARE FIELD READS AND THIS LANE FIRST MISCOUNTED THEM,
+  which is worth the correction because the offset scan is the instrument
+  section 14 hands the fan-out. 0x020ce2a4 and 0x020ce318, in
+  func_ov006_020ce108, are `ldr r2,[sl,#0x88]` whose loaded word goes out as
+  the third argument of `bl 0x0203d290` and is never branched to. Section 14's
+  Rn filter drops pc and sp; NOTHING in it distinguishes an object field at
+  +0x88 from vtable slot 34, and the only tell is whether the loaded word is
+  used as a branch target. The same trap is recorded for slot 36 at
+  func_ov006_020c1f4c, whose +0x8c / +0x90 / +0x94 are three consecutive
+  fields, so this is the second instance in one lane and the general rule is:
+  AN OFFSET MATCH IS A CANDIDATE, A blx ON THE LOADED WORD IS THE FINDING.
+
+THE CORRECTION STRENGTHENS THE CONCLUSION. There is exactly ONE body in the
+tree that dispatches slot 34, it has no src file in any overlay, and it is
+trapped. So slot 34 is UNREACHABLE on every scene rather than merely unreached
+on the ones anybody has booted, and the mb_v34 mismatch has no potential
+witness at all. It is the lane-BASESET slot-18/19 shape. Not repaired here: a
+repair with no dispatch to witness it is wiring without evidence.
 
 ONE ID, TWO PLAYER TITLES, AND THIS TIME WHICH IS WHICH IS DERIVED. Section 14
 found the shape on dScMgPanel_c and closed on "WHICH VALUE IS WHICH TITLE IS

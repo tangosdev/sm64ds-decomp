@@ -262,24 +262,37 @@ static int __fastcall am_reset(void *s, void *, int flag)
    overwrites r0 before reading it. src declares it (void) and agrees. */
 static int __fastcall am_v31(void *, void *)
 { AM(31); func_ov006_020d11a0(); return 0; }
-/* SLOT 34 IS DECLARED WITH ITS FULL ROM SHAPE AND IS NOT DISPATCHED TODAY.
+/* SLOT 34 IS DECLARED WITH ITS FULL ROM SHAPE AND IS NOT DISPATCHED AT ALL.
    Both halves are worth stating because the second explains why the first is
    free. Every slot-34 dispatch site in either overlay image passes FIVE
-   arguments -- r0..r3 plus one pushed word (the eight sites in
-   func_ov004_020ae5c4 all do `str r7,[sp]` before `ldr r4,[r4,#0x88]; blx r4`,
-   and the two in func_ov006_020ce108 match) -- and src/func_ov004_020ae3b4.c,
-   the BASE's own slot-34 body, declares five parameters to match. This class's
-   override reads only four of them (mov r6,r0 / mov r5,r1 / mov r4,r2 /
-   mov r8,r3, and src declares four), so the fifth is dropped here on purpose
-   and the parameter exists so __fastcall cleans the right number of bytes.
-   NEITHER DISPATCHER IS IN A WIRED SLICE: src/func_ov004_020ae5c4.* does not
-   exist at all and src/func_ov006_020ce108.cpp belongs to another class and is
-   in no slice_*.txt, so nothing in this tree can reach slot 34 on any scene
-   today. hal/scene_mg.cpp's shared mb_v34 declares (void *, void *) and calls
-   the five-parameter base body with one argument, which is the lane-BASESET
-   slot-18/19 defect unexercised rather than absent; it is recorded in this
-   lane's report and NOT changed here, because a repair with no dispatch to
-   witness it is wiring without evidence. */
+   arguments -- r0..r3 plus one pushed word -- and all EIGHT of them are inside
+   func_ov004_020ae5c4, each doing `str r7,[sp]` before
+   `ldr r4,[r4,#0x88]; blx r4`. src/func_ov004_020ae3b4.c, the BASE's own
+   slot-34 body, declares five parameters to match. This class's override reads
+   only four of them (mov r6,r0 / mov r5,r1 / mov r4,r2 / mov r8,r3, and src
+   declares four), so the fifth is dropped here on purpose and the parameter
+   exists so __fastcall cleans the right number of bytes.
+
+   AN EARLIER VERSION OF THIS COMMENT COUNTED TWO MORE SITES IN
+   func_ov006_020ce108 AND THEY ARE NOT DISPATCHES. 0x020ce2a4 and 0x020ce318
+   are `ldr r2,[sl,#0x88]`, and the loaded word goes straight out as the THIRD
+   ARGUMENT of `bl 0x0203d290` -- it is never branched to. That is the same
+   false positive this file's own slot-36 note records for func_ov006_020c1f4c,
+   whose +0x8c / +0x90 / +0x94 are three consecutive object fields: the Rn
+   filter drops pc and sp but cannot tell a field from a slot, and the tell is
+   whether the loaded word is branched to.
+
+   THE CORRECTION MAKES THE CONCLUSION STRONGER RATHER THAN WEAKER, which is
+   why it is written out instead of quietly edited. The tree has exactly ONE
+   body that dispatches slot 34, func_ov004_020ae5c4, and it has no src file in
+   any overlay -- it is one of this lane's three floors and it is trapped in
+   unmatched/MgAmida_Faces.cpp. So slot 34 is unreachable on every scene, not
+   merely unreached on the ones anybody has run. hal/scene_mg.cpp's shared
+   mb_v34 declares (void *, void *) and calls the five-parameter base body with
+   one argument, which is the lane-BASESET slot-18/19 defect with NO potential
+   witness at all; it is recorded in this lane's report and NOT changed here,
+   because a repair with no dispatch to witness it is wiring without
+   evidence. */
 static int __fastcall am_v34(void *s, void *, int a1, int a2, int a3, int /*a4*/)
 { AM(34); func_ov006_020d14c0(s, a1, a2, a3); return 0; }
 /* THE TWO MODE PREDICATES. Both return their answer, which is the repair lane

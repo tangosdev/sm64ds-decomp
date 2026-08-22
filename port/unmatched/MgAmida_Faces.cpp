@@ -124,15 +124,27 @@ void func_ov006_020d36a4(void *sb)
  * seven arguments with four in r0..r3. The declaration is repeated here rather
  * than invented, which is also what keeps the plain-name arity gate quiet.
  *
- * IT IS ALSO THE FAMILY's SLOT-34 DISPATCHER, which is worth recording because
- * it is the other half of a defect this lane reports and does not fix. Eight of
- * the ten `ldr Rd,[Rn,#0x88]` sites in the two overlay images are inside this
- * body, each with one word pushed before a `blx` -- five arguments to slot 34 --
- * while hal/scene_mg.cpp's shared mb_v34 thunk is declared (void *, void *) and
- * calls the five-parameter src/func_ov004_020ae3b4.c with one argument. Nothing
- * has ever dispatched slot 34 on any scene because this body has no code and the
- * only other dispatcher, func_ov006_020ce108, is in no slice. So the mismatch is
- * unexercised rather than absent, and this trap is why it stays that way here.
+ * IT IS THE FAMILY's ONLY SLOT-34 DISPATCHER, which is worth recording because
+ * it is the other half of a defect this lane reports and does not fix. A scan
+ * of both overlay images for `ldr Rd,[Rn,#0x88]` with Rn neither pc nor sp
+ * returns ten offset matches, and EIGHT of them are inside this body, each with
+ * one word pushed before a `blx` -- five arguments to slot 34 -- while
+ * hal/scene_mg.cpp's shared mb_v34 thunk is declared (void *, void *) and calls
+ * the five-parameter src/func_ov004_020ae3b4.c with one argument.
+ *
+ * THE OTHER TWO MATCHES ARE NOT DISPATCHES, and an earlier version of this
+ * comment treated them as a second dispatcher. 0x020ce2a4 and 0x020ce318, in
+ * func_ov006_020ce108, are `ldr r2,[sl,#0x88]` whose loaded word is handed
+ * straight to `bl 0x0203d290` as its third argument and is never branched to --
+ * an object FIELD read, the same false positive port/slice_s371.txt records for
+ * func_ov006_020c1f4c's +0x8c / +0x90 / +0x94. The Rn filter drops pc and sp; it
+ * cannot tell a field from a slot, and the tell is whether the word is branched
+ * to.
+ *
+ * SO NOTHING IN THE TREE CAN DISPATCH SLOT 34 AT ALL, which is a stronger
+ * statement than the one it replaces. The single dispatcher is this bodiless
+ * function, and this trap is what stands in its place, so the mb_v34 mismatch
+ * has no potential witness rather than merely no observed one.
  *
  * ITS SINGLE EXIT SETS NO RETURN VALUE (0x020ae84c: add sp / pop / bx lr, with
  * no `mov r0,#N` in front of it), and every one of the ten call sites in this
