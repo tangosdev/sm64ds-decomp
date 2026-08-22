@@ -18,6 +18,12 @@
 # symbol a TU references appear in config/**/symbols.txt -- which is exactly the level
 # a rename breaks. Types and signatures are out of its reach and are not claimed.
 #
+# The compile half is tools/check_src_tu_compiles.py, which runs where the compiler is:
+# tools/hooks/pre-push and the build box. It is what catches the #1583 shape -- a header
+# retyping a virtual, with nothing renamed and every include still resolving -- and it
+# found ov029/SwitchActivatedPlank stranded by #1643 in exactly that way, after this
+# workflow had already reported the tree clean.
+#
 # AN EMPTY CHECK IS NOT A PASS. check_src_tu.py fails if it finds no translation units,
 # no includes, or no references, rather than exiting 0 the way check_references.py
 # ("skipping") and check_header_offsets.py --changed do on an empty work list.

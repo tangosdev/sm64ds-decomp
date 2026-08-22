@@ -80,6 +80,33 @@ if ! python tools/check_duplicate_sources.py; then
   exit 1
 fi
 
+# Does every merged translation unit still COMPILE? tools/check_src_tu.py (run in CI)
+# proves every include and mangled symbol resolves; it cannot see a type. #1583 retyped
+# three dActor_c virtuals int -> void, swept only src/, and stranded a src_tu TU --
+# and #1643's collision rename left ov029/SwitchActivatedPlank with a placeholder
+# `struct dBgW_Kc` that the real class then collided with. Neither showed up anywhere:
+# an unbuildable source file is an ABSENT one, so rombuild kept reporting 106/106 with
+# the file simply gone from coverage.
+#
+# It needs mwccarm but NOT the ROM, and it is about three seconds for all 41 TUs, so it
+# runs on every push rather than only main-targeted ones.
+#
+# The gate itself never returns 0 without a compiler -- that is deliberate, see its
+# docstring. Deciding what an unwired worktree should do is the HOOK's call, not the
+# gate's, so the compiler is tested here and its absence is printed as NOT CHECKED
+# rather than either refusing the push or being passed over in silence.
+if [ -f tools/mwccarm/2004/b56/mwccarm.exe ]; then
+  if ! python tools/check_src_tu_compiles.py --quiet; then
+    echo "pre-push: REFUSING to push (see above). Override with --no-verify if you are certain." >&2
+    exit 1
+  fi
+else
+  echo "pre-push: src_tu COMPILE GATE NOT CHECKED -- no tools/mwccarm/2004/b56/mwccarm.exe"
+  echo "          in this worktree. This is not a pass: type drift in src_tu/ is invisible"
+  echo "          to every other gate. Wire the worktree up and re-run"
+  echo "          'python tools/check_src_tu_compiles.py' before trusting this push."
+fi
+
 # Reference resolvability needs tools/eligible.py, which compiles ~11,100 files and
 # takes minutes -- far too slow for a hook. So this checks only when a report for
 # THIS commit already exists, and otherwise says nothing was checked rather than

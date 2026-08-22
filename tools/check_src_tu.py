@@ -43,12 +43,22 @@ WHAT IT DOES NOT CHECK
 ----------------------
 Types, signatures and layout. A TU can pass this gate and still not compile, because
 a header can retype a field or change a virtual's return type without renaming
-anything -- src_tu/actors/Actor.cpp and src_tu/actors/CastleWater.cpp are in that
-state today and are NOT this gate's business. Catching those needs mwccarm, and
-mwccarm is not on the GitHub runner: it lives on the private build box that
-pr-validate.yml relays to. This check is stdlib-only over the working tree -- no
-compiler, no ROM, about a second over 41 files -- which is why it can gate every PR
-the way header-offsets.yml and python-names.yml do.
+anything. Catching those needs mwccarm, and mwccarm is not on the GitHub runner: it
+lives on the private build box that pr-validate.yml relays to. This check is
+stdlib-only over the working tree -- no compiler, no ROM, about a second over 41
+files -- which is why it can gate every PR the way header-offsets.yml and
+python-names.yml do.
+
+tools/check_src_tu_compiles.py is the other half: it runs the compiler, so it runs
+where the compiler is (tools/hooks/pre-push, the build box) and not here.
+
+This section used to name src_tu/actors/Actor.cpp and src_tu/actors/CastleWater.cpp
+as being in that state. They were not: both compile, and neither they nor any header
+has changed since this file landed, so the claim was wrong when it was written. The
+one translation unit that really did not compile -- ov029/SwitchActivatedPlank, whose
+placeholder `struct dBgW_Kc { int d; };` collided with the real class #1643 gave it --
+went unnamed, because nothing had run a compiler over src_tu to find out which was
+which. That is the whole argument for the compile gate in one sentence.
 
 AN EMPTY CHECK IS NOT A PASS
 ----------------------------
