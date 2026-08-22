@@ -112,10 +112,15 @@
    halfword in it is 0x0e = 14 -- which is what makes the FIFTEEN words
    __sinit_ov006_021311c8 copies out of data_ov006_02133810 into
    data_ov006_0214236c the right count. THE CODE BELOW NEVER DEPENDS ON THE ROW
-   COUNT: the array is declared unsized and indexed identity*5 + frame, the
-   dealer caps the identity at 6 and the flip clamps the frame at 4, so the
-   highest index the game can produce is 34 -- 0x0213d1ac, the last halfword of
-   row 6, one short of the pad.
+   COUNT: the array is declared unsized and indexed identity*5 + frame. The
+   dealer caps the identity at 6 (src/func_ov006_020f4cd8.c's widest arm draws
+   1..6) and THIS CLASS'S OWN flip driver clamps the frame at 4 --
+   src/func_ov006_020f41b0.c ends `if (*st > 4) { *st = 4; ... }` and
+   src/func_ov006_020f411c.c is the other direction, decrementing it back
+   toward zero. Both are matched TUs of this class, so the bound is not
+   inherited from the sibling's equivalent. The highest index the game can
+   produce is therefore 6*5 + 4 = 34 -- 0x0213d1ac, the last halfword of row 6,
+   one short of the pad.
 
    BOTH POOL WORDS ARE THIS FUNCTION'S ONLY READER. ov006's relocs.txt has
    exactly one load to 0x0213d168 in the whole overlay (from:0x020f3f08, this
