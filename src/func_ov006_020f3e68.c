@@ -55,6 +55,18 @@
 // an opcode-shape difference and not a colouring one. A word closer to the
 // bytes is the wrong trade for either.
 //
+// THE RELOCATION DESTINATIONS ARE VERIFIED, AND match.py DID NOT DO IT.
+// tools/match.py runs its --strict-relocs destination check only inside
+// `if ok`, so on a NONMATCHING body it never fires: a wrong callee would be
+// reported as "reloc (wildcard)" exactly like the right one, and the file
+// would read as verified having had nothing verified. Run directly instead --
+// tools/reloc_audit.check_destinations over this file's own object -- all
+// three slots answer OK: +0x80 -> Hud_RenderSprite 0x020af68c (ov004), +0xa0
+// -> data_ov006_0213d168, +0xa4 -> data_ov006_0214236c, each against
+// config/arm9/overlays/ov006/relocs.txt. The check is not vacuous: a control
+// with the bl spelled func_ov004_020b1bc8 answers WRONG-DEST at +0x80 and OK
+// at the other two.
+//
 // @symbol func_ov006_020f3e68
 // recovered name: dScMgMemory_c_DrawCards
 /* dScMgMemory_c's card draw: the sixth call vtable slot 9 (Render) makes, from
