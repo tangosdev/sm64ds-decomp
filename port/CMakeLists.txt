@@ -4177,8 +4177,9 @@ foreach(line IN LISTS SLICE_MEM_LINES)
     list(APPEND SLICE_MEM_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-# Run mg9 lane CUP: dScMgCup_c (the shell game), actor id 0x169 = scene 361,
-# and the THIRD class the port seats under dScMgSingle3DBase_c.
+# Run mg9 lane CUP: dScMgCup_c -- the minigame the ROM calls "Tox Box Shuffle"
+# -- actor id 0x169 = scene 361, and the THIRD class the port seats under
+# dScMgSingle3DBase_c.
 #
 #   Scene -> dScMgBase_c (ov004 0x020bc0c0) -> dScMgSingle3DBase_c
 #         (ov006 0x0213e448) -> dScMgCup_c (ov006 0x0213c154)
@@ -4236,7 +4237,17 @@ set(SLICE_CUP_SOURCES hal/scene_mg_cup.cpp
                       # frame of scene 361 wrote two zero words four gigabytes
                       # out of range. Invisible to the byte gate, to the link
                       # and to a member-pointer sweep -- only a run convicts it.
-                      unmatched/MgCup_UninitEpilogue_020def80.cpp)
+                      unmatched/MgCup_UninitEpilogue_020def80.cpp
+                      # REPLACES src/func_ov006_020c29dc.cpp, out of the slice:
+                      # the local-shadow-class model draw at TWO call sites
+                      # (byte +0x14 of the Itanium table is Render; the sixth
+                      # MSVC word is Virtual18 on BlendModelAnim and nothing on
+                      # Model), plus the two LIGHT_COLOR / LIGHT_VECTOR stores
+                      # that a host copy must route through NTR_MMIO because
+                      # tools/hostgen.py never sees this file. Same pair
+                      # unmatched/MgFlower_ModelRender_020c3bf4.cpp and
+                      # unmatched/MgMemory2_ModelRender_020c1804.cpp carry.
+                      unmatched/MgCup_ModelRender_020c29dc.cpp)
 foreach(line IN LISTS SLICE_CUP_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

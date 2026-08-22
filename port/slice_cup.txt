@@ -1,5 +1,18 @@
-# Gate CUP: dScMgCup_c, the shell-game minigame. Actor id 0x169 = scene 361.
-# Run mg9, lane CUP.
+# Gate CUP: dScMgCup_c -- the minigame the ROM calls "TOX BOX SHUFFLE".
+# Actor id 0x169 = scene 361. Run mg9, lane CUP.
+#
+# THE TITLE IS DERIVED, by run mg9 lane S371's method, and CONTROLLED. The
+# chain: scene 361 = id 0x169 -> ov005 ROW 23 (the only row of the thirty-six
+# carrying this id, so no menu-position ambiguity here) -> that row's +0x04
+# word, param 0x000b1700 -> (param >> 16) & 0xff = 11 -> data_ov004_020bc070[11]
+# = 559 -> message 559 of data/message/msg_data_eng.bin (LZ77 type 0x10, 91712
+# bytes; MESGbmg1 / INF1 711 entries of 64 / DAT1) = "Tox Box Shuffle", "Oh,
+# no! Yoshi's trapped in a Tox Box!". The 559 is cross-checked against the LIVE
+# object's +0x465e on a running scene-361 boot, which reads 559 too. The same
+# chain over every ALREADY-SEATED id reproduces its known title exactly,
+# including both rows of the three duplicated ids -- that control is what makes
+# this a derivation. The text is a glyph-index stream, not ASCII ('A' = 0x0a,
+# 'a' = 0x2d, space = 0x4d), which is why ASCII sweeps never found these names.
 #
 # THE PREDECESSOR ARTIFACT IS port/slice_mga361.txt AND IT IS SUPERSEDED BY
 # THIS FILE, not deleted. Run link60 lane MGA derived that closure against a
@@ -86,6 +99,23 @@
 #      extracted/overlays/overlay_0006.bin at base 0x020bfec0 and re-checked
 #      against that sinit line by this lane rather than cited from section 11.
 #      A 37-slot fill here corrupts the minigame that has shipped longest.
+#
+#   A PROPOSED FIFTH CHECK FAILS ON THIS CLASS, IN THE GRANTING DIRECTION.
+#   Run mg9 lane LKY offered one that "needs no symbols and no judgment": the
+#   vtable's relocation stride runs at 4 bytes for exactly the table width and
+#   then jumps to 8. Read off config/arm9/overlays/ov006/relocs.txt:
+#
+#     dScMgFlower_c       0x02140140   36 consecutive 4-byte relocs   -> 36 ok
+#     dScMgSingle3DBase_c 0x0213e448   36, then a gap of 12           -> 36 ok
+#     dScMgCup_c          0x0213c154   37, then a gap of 8            -> 37 WRONG
+#
+#   The run does not stop at the end of this table because the word past the
+#   end IS ITSELF A RELOCATED CODE WORD at the next four-byte boundary --
+#   0x0213c1e4 is the mwcc pair's code half -- so its relocation continues the
+#   stride, and the 8-byte gap the check looks for arrives one slot late, after
+#   the pair's zero adjustment. The check therefore reads 37 on exactly the
+#   class section 11's hazard was found on. Fine as a confirmation when it
+#   agrees with the span; never a substitute for it.
 #
 # ---- 3. THE STATE MACHINE IS ONE TABLE AND ONE LEVEL DEEP -----------------
 #
@@ -237,7 +267,6 @@ src/func_ov006_020c2848.cpp
 src/func_ov006_020c2924.cpp
 src/func_ov006_020c2984.c
 src/func_ov006_020c2994.c
-src/func_ov006_020c29dc.cpp
 src/func_ov006_020c2be8.c
 src/func_ov006_020c3050.c
 src/func_ov006_020c3288.c

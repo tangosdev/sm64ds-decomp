@@ -2218,7 +2218,12 @@ void port_scene_fill_curling2(void);
 extern unsigned char MgPuzzlePanelPuzzlePanic_SpawnInfo[];
 void *port_mg_panel_spawn(void);
 void port_scene_fill_panel(void);
-/* run mg9 lane CUP: dScMgCup_c, actor id 0x169 = scene 361, the shell game.
+/* run mg9 lane CUP: dScMgCup_c, actor id 0x169 = scene 361 -- the minigame the
+   ROM calls "TOX BOX SHUFFLE" (message 559, reached from ov005 row 23's param
+   0x000b1700 through data_ov004_020bc070[11]; hal/scene_mg_cup.cpp section 0
+   has the chain and the control against every seated id's known title). The
+   row keeps its class-derived NAME for the reason every row above does:
+   port/tools/battery.py reads the hosted-scene set out of this table.
    The ROM gives this id no Mg*_Spawn symbol, so the SpawnInfo is spelled as
    the raw config symbol the way the 375 and 390 rows are; the doubled-id word
    0x01690169 sits at 0x0213c024 and occurs exactly once in the overlay. The

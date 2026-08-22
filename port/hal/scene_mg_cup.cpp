@@ -1,5 +1,43 @@
-// dScMgCup_c, actor id 0x169, scene 361. Run mg9, lane CUP. The twelfth ov006
-// minigame class the port seats and the THIRD under dScMgSingle3DBase_c.
+// dScMgCup_c, actor id 0x169, scene 361 -- the minigame the ROM calls
+// "TOX BOX SHUFFLE". Run mg9, lane CUP. The twelfth ov006 minigame class the
+// port seats and the THIRD under dScMgSingle3DBase_c.
+//
+// ---- 0. THE PLAYER TITLE, DERIVED RATHER THAN GUESSED ---------------------
+//
+// The class name is the ROM's C++ one and says nothing a player would
+// recognise. The title comes off a four-link chain, every link read out of the
+// ROM, using the method run mg9 lane S371 published:
+//
+//   scene 361 = id 0x169
+//     -> ov005 row 23, the ONLY row in the thirty-six that carries this id, so
+//        this class has none of the menu-position ambiguity six other ids have
+//     -> that row's own +0x04 word, param 0x000b1700
+//     -> (param >> 16) & 0xff = 11, the name-text index
+//     -> data_ov004_020bc070[11] = 559, the BMG message id. Cross-checked
+//        against the LIVE object: this file's census prints +0x465e, which
+//        src/func_ov004_020af094.cpp reads, and it also reads 559.
+//     -> data/message/msg_data_eng.bin, LZ77 type 0x10, 91712 bytes,
+//        MESGbmg1 / INF1 (711 messages, entry size 64) / DAT1, message 559:
+//
+//          "Tox Box Shuffle
+//           Oh, no! Yoshi's trapped in a Tox Box!
+//           Find which one he's in to..."
+//
+// THE CHAIN IS CONTROLLED, which is what makes it a derivation rather than a
+// plausible reading. Run over every id this port has ALREADY seated it
+// reproduces each one's known title exactly: 0x170 Bob-omb Squad, 0x16e
+// Wanted!, 0x186 Loves me...?, 0x172 Sort or 'Splode, 0x17a Coincentration,
+// 0x17c Puzzle Panel, 0x176 Shuffle Shell, 0x171 Lakitu Launch, 0x16b Memory
+// Master -- and it reproduces BOTH rows of the duplicated ids, 0x178 as Bingo
+// Ball (row 10) and Slots Shot (row 22), 0x17c as Puzzle Panel (row 15) and
+// Puzzle Panic (row 35). The text is a GLYPH-INDEX stream and not ASCII, which
+// is why earlier sweeps for these names missed them: 'A' is 0x0a, 'a' is 0x2d
+// and space is 0x4d (hal/message_boot.cpp's decoder).
+//
+// THE REGISTRY ROW KEEPS ITS CLASS-DERIVED NAME, SCENE_MG_CUP, for the reason
+// every other row does -- port/tools/battery.py reads the hosted-scene set out
+// of that table and the family names its rows after the ROM's classes. The
+// player title belongs in the prose, here.
 //
 // Read port/slice_cup.txt for the identity derivation, the three width checks
 // and the closure. Read port/mg_fanout_costs.txt section 12 for the ten ROM
@@ -113,6 +151,14 @@
 // lands in. A fourth class under this base should do the promotion rather than
 // add a fourth copy, and this paragraph is the second argument for it.
 //
+// AND THE FOURTH CLASS IS NAMED NOW. Run mg9 lane LKY found that
+// MgSnowballSlalom (0x179) -- the one id of the thirty whose vtable
+// port/mg_fanout_costs.txt section 3 could not resolve at all -- sits under
+// this same middle base: its table is 0x0214000c and its factory tail-calls
+// func_ov006_021295ac, which writes 0x0213e448 and then 0x0214000c. So the
+// promotion is no longer hypothetical, and whoever seats 0x179 is the lane
+// these two paragraphs are addressed to.
+//
 // ---- 4. SLOT 2 IS NOT src's BODY, AND IT IS NOT THIS LANE'S HOST COPY -----
 //
 // func_ov006_0210a6e4 (AfterInitResources) drops the framework's second
@@ -159,6 +205,25 @@
 // longest. Re-read out of extracted/overlays/overlay_0006.bin and re-verified
 // against that sinit line by this lane rather than cited.
 //
+// A PROPOSED FIFTH CHECK FAILS ON THIS CLASS, AND THAT IS WORTH MORE THAN A
+// FIFTH CHECK WOULD HAVE BEEN. Run mg9 lane LKY offered one that "needs no
+// symbols and no judgment": read the RELOCATION STRIDE out of relocs.txt,
+// which runs at 4 bytes for exactly the table width and then jumps to 8.
+// Measured on three tables of this family:
+//
+//   dScMgFlower_c       0x02140140   36 consecutive 4-byte relocs   -> 36  ok
+//   dScMgSingle3DBase_c 0x0213e448   36, then a gap of 12           -> 36  ok
+//   dScMgCup_c          0x0213c154   37, then a gap of 8            -> 37  WRONG
+//
+// The run does not stop at the end of the table here, because the word past
+// the end IS A RELOCATED CODE WORD sitting at the next four-byte boundary --
+// 0x0213c1e4 is the {code, adjustment} pair's code half, and its relocation
+// continues the stride. The 8-byte gap the check looks for arrives one slot
+// LATE, after the pair's zero adjustment word. So the check reads 37 on
+// exactly the class section 11's whole hazard was found on, and reads it in
+// the GRANTING direction. It is a fine confirmation when it agrees with the
+// span; it cannot be a substitute for it, and no lane should adopt it as one.
+//
 // ---- 6. THE ROW GOES LAST, AND THE ORDER IS LOAD-BEARING TWICE ------------
 //
 // port_scene_registry_install walks port_scene_classes[] in table order and
@@ -181,13 +246,63 @@
 // Both headers are the derivation. Nothing in THIS file dispatches a member
 // pointer.
 //
-// ---- 8. WHAT THIS SEAT DOES NOT CLAIM -------------------------------------
+// ---- 8. THE THREE SWEEPS THIS LANE OWED, AND WHAT THEY FOUND -------------
+//
+// ELEMENT VTABLES: NONE, and it was checked rather than assumed. Run mg9 lane
+// S381 found a class whose factory builds eighty card records each carrying
+// its OWN two-slot vtable in word 0, which nothing in the ovr/mark/nosrc
+// columns can see. This factory builds two arrays through func_020733a8 --
+// 0x20 elements of 0x18 at +0x50e8 and 3 of 8 at +0x53e8 -- and BOTH element
+// constructors are four-byte `bx lr` bodies in the ROM (func_ov006_020e0634 at
+// 0x020e0634 = e12fff1e, and the arm9 func_0203d738, both size 0x4 in
+// config), so no element gets a vtable word. The +0x4f38 sub-object's word 0
+// is not a vtable either: it is the mwcc {code, adjustment} pair
+// unmatched/MgCup_SubDispatch.cpp routes.
+//
+// LOCAL SHADOW CLASSES: FOUR IN THIS CLOSURE, ONE WRONG AND FIXED. Section
+// 13's test is which kind of table the shadowed object carries.
+//   func_ov006_020c29dc  WRONG -- Model and BlendModelAnim carry HOST tables
+//       in MSVC order. Host-copied, unmatched/MgCup_ModelRender_020c29dc.cpp.
+//   func_ov006_020e0308  CORRECT -- it shadows `this`, whose vptr is the
+//       MOUNTED ROM table this file fills in ROM word order, and its
+//       `((VtObj *)c)->m18(3)` is ROM slot 18. Exercised (init 1) and clean,
+//       and it is the WITNESS for the slot-18 argument decision below.
+//   func_ov006_020df1c0  CORRECT, same shape, `((Obj *)c)->v18(-1)`. NOT
+//       exercised: it is state slot 6 and no unattended boot reaches it.
+//       Reported rather than claimed.
+//   func_ov006_020c2848  CORRECT -- it shadows the arm9 object at
+//       data_0209f5bc, whose table is hal/fdr_arm9_fader_seat.cpp's ROM-shaped
+//       fill. Exercised through func_ov006_020c2924 on the slot-18 path and
+//       clean.
+//
+// SLOT 34 IS NOT DISPATCHED BY THIS CLASS. Run mg9 lane S371 reported that
+// hal/scene_mg.cpp's shared mb_v34 thunk is declared (void *, void *) while
+// func_ov004_020ae3b4 takes five parameters at every ROM dispatch site, and
+// asked whichever lane witnesses a slot-34 dispatch to take the repair. This
+// class does not: every run's framework census reads `framework slots entered:
+// 1(x1) 31(x1) 32(x1)`, this class's own slots are 0, 6, 9 and 18, and the
+// middle base's are 2, 7, 10, 26 and 33. Nothing here would have been evidence
+// for a repair, so none was made.
+//
+// ---- 9. WHAT THIS SEAT DOES NOT CLAIM -------------------------------------
 //
 // The state machine is proven to run by the census this file prints, not by
 // this comment. A run that reports slot hits and zero routed dispatches has
 // ticked an object without entering its state machine, and that reads as a
 // success unless it is printed -- which is why every number below is printed
 // whether it is zero or not.
+//
+// NO FRAME HAS BEEN LOOKED AT. The render path runs -- slot 9 enters on every
+// frame of every run, SM64DS_MAT_LOG reports 2575 NORMALs under two live
+// POLYGON_ATTR words in sixty frames, and SM64DS_TRI_LOG shows fifteen
+// textured batches -- but nobody has held this next to a DS. Section 9's note
+// stands for this class too, and the BMP captures exist so it can be judged by
+// someone who can.
+//
+// TOUCH IS UNMEASURED, and on this class it is the live question rather than a
+// formality: it is a shell game, the state index reaches 4 of 8 on a
+// 1200-frame unattended boot and stops there, and states 5, 6 and 7 are never
+// entered. Whether they need a stylus is not something a headless run can say.
 
 #include "hal/screen_gap.h"
 
@@ -326,7 +441,31 @@ static void *__fastcall cup_d0(void *s, void *)
    half is `if (msg == 3 || msg == 0x12) ... else if (msg == 0) ...`, three
    different resets. Declaring the parameter and dropping it on the floor would
    have compiled, linked, cleaned the stack correctly and silently taken the
-   msg == 0 arm every time. The face passes it. */
+   msg == 0 arm every time. The face passes it.
+
+   THE ROM SAYS IT IN FOUR INSTRUCTIONS, so this is a reading and not a guess:
+
+       020dfeec  push {r4, lr} / sub sp, sp, #8 / mov r4, r0
+       020dfef8  cmp  r1, #3
+       020dfefc  beq  #0x20dff08
+       020dff00  cmp  r1, #0x12
+       020dff04  bne  #0x20dff6c
+
+   r1 is compared twice before anything else happens.
+
+   AND IT IS WITNESSED RATHER THAN ASSERTED. src/func_ov006_020e0308.cpp
+   (InitResources, slot 0) ends with `((VtObj *)c)->m18(3)` -- ROM slot 18 with
+   mode 3 -- and every run of this scene reports state-reset 1, one dispatch,
+   on the init path. The observable consequence is in the census: with mode 3
+   the reset writes set = 3 into +0x5434+i*4 for each cup whose +0x5462+i flag
+   is nonzero and 0 for the others, and the run reports flags f1/f0/f0 and
+   cups 4/1/1 after func_ov006_020def80's own branches ran on top -- which is
+   the pairing those two bodies produce only for that flag pattern.
+
+   SLOT 19 IS NOT THIS CLASS'S. dScMgCup_c holds dScMgBase_c's own 0x020b2994
+   at slot 19, so hal/scene_mg.cpp's mb_v19 serves it and already declares the
+   ride-through. Run mg9 lane LKY's slot-18/19 warning applies to slot 18 here
+   and to nothing else. */
 static int  __fastcall cup_reset(void *s, void *, int msg)
 { CUP(18); func_ov006_020dfeec((char *)s, msg); return 1; }
 /* Slot 20 takes the receiver and nothing else, the same shape as the base's
