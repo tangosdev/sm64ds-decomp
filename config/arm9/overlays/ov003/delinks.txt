@@ -15,7 +15,7 @@ src/func_ov003_020ad6ec.c:
     complete
     .text start:0x020ad6ec end:0x020ad7a0
 
-src/_ZN10dScTitle_c16OnPendingDestroyEv.c:
+src/_ZN10dScTitle_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x020ad7a0 end:0x020ad7a4
 
@@ -27,7 +27,7 @@ src/_ZN10dScTitle_c8BehaviorEv.cpp:
     complete
     .text start:0x020ad814 end:0x020ada80
 
-src/_ZN10dScTitle_c16CleanupResourcesEv.c:
+src/_ZN10dScTitle_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x020ada80 end:0x020ada9c
 

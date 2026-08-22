@@ -451,11 +451,11 @@ src/func_ov075_0211a194.cpp:
     complete
     .text start:0x0211a194 end:0x0211a210
 
-src/_ZN10dScEntry_c16CleanupResourcesEv.c:
+src/_ZN10dScEntry_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211a210 end:0x0211a268
 
-src/_ZN10dScEntry_c16OnPendingDestroyEv.c:
+src/_ZN10dScEntry_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211a268 end:0x0211a26c
 
@@ -471,7 +471,7 @@ src/_ZN10dScEntry_c13InitResourcesEv.cpp:
     complete
     .text start:0x0211a410 end:0x0211a734
 
-src/_ZN10dScEntry_c19BeforeInitResourcesEv.c:
+src/_ZN10dScEntry_c19BeforeInitResourcesEv.cpp:
     complete
     .text start:0x0211a734 end:0x0211a740
 
