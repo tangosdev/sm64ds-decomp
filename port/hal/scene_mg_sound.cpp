@@ -153,6 +153,59 @@ static const unsigned char port_mg_sound_rows[36 * 0x34] = {
 
 extern "C" int IsMinigameActorID(unsigned id);   /* src/IsMinigameActorID.c */
 
+// ---- THE ROW'S OTHER HALF: THE SPAWN PARAMETER (run mg8, lane MMD) --------
+//
+// The rows above are not only a sound table. func_ov005_020c0378 -- the Rec
+// Room's launch path, the same body that copies the 0x34 bytes into
+// data_0209b308 -- ends with
+//
+//     Scene::StartSceneFade(*(u16*)(data_ov005_020c24d8 + m),      the scene id
+//                           *(int*)(data_ov005_020c24dc + m),      THE PARAM
+//                           0);
+//
+// and data_ov005_020c24dc is data_ov005_020c24d8 + 4, so the SECOND argument is
+// the row's own +0x04 word. Scene::StartSceneFade hands it to
+// Scene::SetSceneToSpawn(id, param) and the spine lands it on the actor at +8.
+//
+// dScMgBase_c's constructor (src/func_ov004_020b2adc.c) is what unpacks it:
+//
+//     *(short*)(self+0x465e) = data_ov004_020bc070[(*(u32*)(self+8) >> 0x10) & 0xff];
+//     *(int*)(self+8)        = *(u32*)(self+8) & 0xffff;
+//
+// and func_ov004_020adc3c reads (self->field_8 & 0xff00) >> 8 -- which the mask
+// above deliberately keeps. So ONE word carries two indices:
+//
+//     (param >> 8)  & 0xff   the row of data_0209caf4, the PERSISTENT
+//                            per-minigame save record. func_ov004_020ad878
+//                            reads field 1 of it and dScMgMemory2_c's
+//                            InitResources copies that into +0xb4, which is
+//                            the only input func_ov006_020f6c90 has for
+//                            dealing 16, 18 or 20 cards.
+//     (param >> 16) & 0xff   the row of data_ov004_020bc070, the minigame's
+//                            name-text id, read back at +0x465e by
+//                            src/func_ov004_020af094.cpp.
+//
+// hal/scene_boot.cpp used to pass 0 here, so every minigame in the port shared
+// save record 0 and every one of them asked for name text index 0. Memory
+// Master is row 29, param 0x001d1d01: record 29, text 29.
+//
+// FIRST MATCH BY ID, the same rule and the same caveat as the sound seat above
+// -- six ids appear on two rows because the ROM's menu selects by POSITION.
+// 0x016b is not one of them.
+extern "C" unsigned port_mg_scene_spawn_param(int scene_id)
+{
+    if (scene_id < 0 || !IsMinigameActorID((unsigned)scene_id))
+        return 0;
+    for (int i = 0; i < 36; ++i) {
+        const unsigned char *row = port_mg_sound_rows + i * 0x34;
+        unsigned id = (unsigned)row[0] | ((unsigned)row[1] << 8);
+        if ((int)id == scene_id)
+            return (unsigned)row[4] | ((unsigned)row[5] << 8)
+                 | ((unsigned)row[6] << 16) | ((unsigned)row[7] << 24);
+    }
+    return 0;
+}
+
 // Seed the record with the ov005 row for scene_id, before the scene's base
 // ctor reads it. A no-op for non-minigame scenes (the record stays at its DS
 // boot value, zero). Called from hal/scene_boot.cpp's port_scene_begin, after

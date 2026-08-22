@@ -208,7 +208,24 @@ void     port_mg_memory2_field_counts(unsigned *calls, unsigned *hits);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
+/* the persistent minigame record the difficulty is READ FROM, and the two
+   framework bodies that address it. Nothing new is defined here: the storage
+   is hal/level_boot.cpp's .dsstate$savblk0004 and the index function is
+   src/func_ov004_020adc3c.c. Named so the census can print the record the
+   board size was seeded from rather than leave it to be inferred. */
+extern void         *data_ov004_020beb68;     /* the live dScMgBase_c `this` */
+extern unsigned char data_0209caf4[];         /* 36 records x 20 bytes       */
+int  func_ov004_020adc3c(void *c);            /* (self->field_8 >> 8) & 0xff */
+
 }  /* extern "C" */
+
+/* The record row this class's object is keyed to, or -1 with no live base.
+   func_ov004_020ad878 -- the ONLY writer of +0xb4 goes through it -- computes
+   the same index from the same pointer. */
+static int port_mg_record_index(void)
+{
+    return data_ov004_020beb68 ? func_ov004_020adc3c(data_ov004_020beb68) : -1;
+}
 
 // ---- the tick witness ------------------------------------------------------
 //
@@ -543,6 +560,70 @@ extern "C" void port_scene_memory2_hits(void)
                     tappable, *(const unsigned char *)(g_mem_self + 0x5406),
                     *(const unsigned char *)(g_mem_self + 0x53f0),
                     *(const unsigned char *)(g_mem_self + 0x53f1));
+
+        /* WHERE EACH RECORD IS, in DS pixels, so a lane that wants to TAP one
+           does not have to infer the record-to-slot mapping from a picture.
+           The dealer hands records out in deal order and the slot walk in
+           func_ov006_020f6088 decides which slot each one lands on, so record
+           index and grid position are unrelated -- run mg7 measured the
+           top-left slot holding record 12. Same >>12 the draw does. */
+        std::printf("[scene] dScMgMemory2_c card slots (rec:type@x,y):");
+        for (int i = 0; i < 20; ++i) {
+            const char *r = g_mem_self + 0x51a8 + i * 0x18;
+            if (*(const unsigned char *)(r + 0x12) == 0) continue;
+            std::printf(" %d:%u@%d,%d", i, *(const unsigned char *)(r + 0x10),
+                        *(const int *)(r + 0x00) >> 12,
+                        *(const int *)(r + 0x04) >> 12);
+        }
+        std::printf("\n");
+    }
+
+    /* ---- THE DIFFICULTY, AND WHERE IT COMES FROM -------------------------
+       The card count is not a property of the scene. func_ov006_020f72c0 reads
+       ONE int -- the object's +0xb4 -- and picks 16/18/20:
+
+           ldr r0,[r0,#0xb4] / cmp r0,#0xa / movge r0,#2  strbge [+0x540a]
+                                             movge r0,#0xa strhge [+0x53ea]
+                            / cmp r0,#5     / movge r0,#1  strbge [+0x540a]
+                                             movge r0,#9   strhge [+0x53ea]
+           default 0 / 8
+
+       and +0xb4 is written in exactly ONE place, InitResources
+       (src/func_ov006_020f74b4.cpp):  *(int*)(self+0xb4) = func_ov004_020ad878()
+       which is data_0209caf4[minigame index][1] -- the PERSISTENT per-minigame
+       record. So the board size is saved progress, and a fresh record (zero,
+       what SaveData::SetDefaultValuesMg leaves) is the sixteen-card board.
+
+       The round end writes it back: func_ov006_020f59c0 calls
+       func_ov004_020ad79c(score, +0xb4 +/- 1) and func_ov006_020f6538 mirrors
+       the same +/-1 onto the live +0xb4. This block prints both ends so a run
+       can say which of them moved. */
+    if (g_mem_self) {
+        const int idx = port_mg_record_index();
+        std::printf("[scene] dScMgMemory2_c difficulty: +0xb4 LEVEL = %d, "
+                    "+0xb8 best = %d, +0xa8 score = %d  ->  +0x540a = %u, "
+                    "+0x53ea pairs needed = %u (%u cards)\n",
+                    *(const int *)(g_mem_self + 0xb4),
+                    *(const int *)(g_mem_self + 0xb8),
+                    *(const int *)(g_mem_self + 0xa8),
+                    *(const unsigned char *)(g_mem_self + 0x540a),
+                    *(const unsigned short *)(g_mem_self + 0x53ea),
+                    *(const unsigned short *)(g_mem_self + 0x53ea) * 2u);
+        std::printf("[scene] dScMgMemory2_c progress: %u pair(s) found "
+                    "(+0x5405), %u miss(es) of %u (+0x5408/+0x5409)\n",
+                    *(const unsigned char *)(g_mem_self + 0x5405),
+                    *(const unsigned char *)(g_mem_self + 0x5408),
+                    *(const unsigned char *)(g_mem_self + 0x5409));
+        if (idx >= 0 && idx < 36) {
+            const int *rec = (const int *)(data_0209caf4 + idx * 20);
+            std::printf("[scene] dScMgMemory2_c save record data_0209caf4[%d] "
+                        "= { %d, %d, %d, %d, %d }  (field 1 IS the level "
+                        "+0xb4 was seeded from)\n", idx,
+                        rec[0], rec[1], rec[2], rec[3], rec[4]);
+        } else {
+            std::printf("[scene] dScMgMemory2_c save record: NO minigame index "
+                        "(data_ov004_020beb68 = %p)\n", data_ov004_020beb68);
+        }
     }
     std::fflush(stdout);
 }
