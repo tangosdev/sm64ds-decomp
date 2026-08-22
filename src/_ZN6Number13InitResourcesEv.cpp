@@ -31,7 +31,10 @@ int Number::InitResources()
                                  *(BTP_File*)data_ov002_0210da08.file);
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
             ((char*)this) + 0x124, data_ov002_0210da08.file, 0x40000000, 0, 0);
-        unk_12c = (int)((((unsigned int)(mParam & 0xf) % 10) << 16) >> 4);
+        /* 0x12c is +0x8 inside the TextureSequence at 0x124 -- its Animation base's
+           currFrame. The cartridge's own ~Number proves the extent; see
+           tools/dtor_members.py. */
+        mTextureSequence.currFrame = (int)((((unsigned int)(mParam & 0xf) % 10) << 16) >> 4);
     } else {
         _ZN15TextureSequence8LoadFileER13SharedFilePtr(data_ov002_0210d9e8);
         void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov002_0210d9a8);
@@ -41,7 +44,7 @@ int Number::InitResources()
                                  *(BTP_File*)data_ov002_0210d9e8.file);
         _ZN15TextureSequence7SetFileER8BTP_Filei5Fix12IiEj(
             ((char*)this) + 0x124, data_ov002_0210d9e8.file, 0x40000000, 0, 0);
-        unk_12c = (int)((((unsigned int)(mParam & 0xf) % 10) << 16) >> 4);
+        mTextureSequence.currFrame = (int)((((unsigned int)(mParam & 0xf) % 10) << 16) >> 4);
     }
 
     unk_14e = 0;

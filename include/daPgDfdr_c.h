@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "dBgW_KcMbg.h"
+#include "Model.h"
 
 #ifdef __cplusplus
 
@@ -130,14 +131,13 @@ struct daPgDfdr_c {
     s32 unk_0b4;                 /* 0x0b4 */
     s32 unk_0b8;                 /* 0x0b8 */
     u8  pad_0bc[0x18];
-    u8  mModel;                  /* 0x0d4 */
-    u8  pad_0d5[0x1b];
-    u8  unk_0f0;                 /* 0x0f0 */
-    u8  pad_0f1[0x23];
-    s32 unk_114;                 /* 0x114 */
-    s32 unk_118;                 /* 0x118 */
-    s32 unk_11c;                 /* 0x11c */
-    u8  pad_120[0x4];
+    /* Model member. The cartridge's own ~daPgDfdr_c calls _ZN5ModelD1Ev at +0x0d4
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       of the object, so the member also takes over unk_0f0 (+0x1c = mat4x3) and
+       unk_114/unk_118/unk_11c (+0x40/+0x44/+0x48 = mat4x3.t.x/.y/.z), which the
+       header declared separately inside it. */
+    Model mModel;            /* 0x0d4 */
     /* dBgW_KcMbg member. The cartridge's own ~daPgDfdr_c calls _ZN10dBgW_KcMbgD1Ev at
        +0x124 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */

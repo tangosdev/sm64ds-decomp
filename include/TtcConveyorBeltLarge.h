@@ -8,6 +8,7 @@
 #include "Model.h"
 #include "dBgW_KcMbg.h"
 #include "ShadowModel.h"
+#include "TextureTransformer.h"
 
 struct TtcConveyorBeltLarge {
     u8  pad_000[0xc];
@@ -33,10 +34,11 @@ struct TtcConveyorBeltLarge {
     dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x33];
-    u8  mTextureTransformer;            /* 0x320 */
-    u8  pad_321[0xb];
-    s32 unk_32c;            /* 0x32c */
-    u8  pad_330[0x4];
+    /* TextureTransformer member. The cartridge's own ~TtcConveyorBeltLarge calls
+       _ZN18TextureTransformerD1Ev at +0x320 (D0/D1), a relocation the ROM build checks;
+       recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
+       inlined base. */
+    TextureTransformer mTextureTransformer;            /* 0x320 */
     /* ShadowModel member. The cartridge's own ~TtcConveyorBeltLarge calls
        _ZN11ShadowModelD1Ev at +0x334 (D0/D1), a relocation the ROM build checks;
        recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an

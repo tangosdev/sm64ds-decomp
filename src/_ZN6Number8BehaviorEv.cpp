@@ -53,6 +53,8 @@ int Number::Behavior()
             pos.y = oy + (unk_148 + (mPosY - mStartPosY));
         }
     }
-    Matrix4x3_FromTranslation((void *)((char *)&unk_0f0), pos.x >> 3, pos.y >> 3, (*(volatile int *)&pos.z) >> 3);
+    /* 0x0f0 is +0x1c inside the Model at 0x0d4 -- its mat4x3. The cartridge's own
+       ~Number proves the Model's extent; see tools/dtor_members.py. */
+    Matrix4x3_FromTranslation((void *)((char *)&mModel.mat4x3), pos.x >> 3, pos.y >> 3, (*(volatile int *)&pos.z) >> 3);
     return 1;
 }

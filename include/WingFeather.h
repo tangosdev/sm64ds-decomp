@@ -7,6 +7,8 @@
 #include "types.h"
 #include "Model.h"
 #include "ShadowModel.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 
 struct WingFeather {
     u8  pad_000[0x5c];
@@ -28,14 +30,14 @@ struct WingFeather {
        Model's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN11WingFeatherD0Ev.c] */
     Model mModel;            /* 0x0d4 */
-    u8  mdCcAc_c;            /* 0x124 */
-    u8  pad_125[0x23];
-    u32 unk_148;            /* 0x148 */
-    u8  pad_14c[0xc];
-    u8  mWithMeshClsn;            /* 0x158 */
-    u8  pad_159[0x1a7];
-    u8  unk_300;            /* 0x300 */
-    u8  pad_301[0x13];
+    /* dCcAc_c member. The cartridge's own ~WingFeather calls _ZN7dCcAc_cD1Ev at +0x124
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    dCcAc_c mdCcAc_c;            /* 0x124 */
+    /* dBgCh_Actr member. The cartridge's own ~WingFeather calls _ZN10dBgCh_ActrD1Ev at
+       +0x158 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgCh_Actr mWithMeshClsn;            /* 0x158 */
     /* ShadowModel member. The cartridge's own ~WingFeather calls _ZN11ShadowModelD1Ev
        at +0x314 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */

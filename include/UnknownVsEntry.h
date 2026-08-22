@@ -5,6 +5,8 @@
 #ifndef UNKNOWNVSENTRY_H
 #define UNKNOWNVSENTRY_H
 #include "types.h"
+#include "Model.h"
+#include "ModelAnim.h"
 
 struct UnknownVsEntry {
     u8  pad_000[0x8];
@@ -12,14 +14,15 @@ struct UnknownVsEntry {
     u8  pad_00c[0x44];
     u8  mParticle;            /* 0x050 */
     u8  pad_051[0x81b];
-    u8  mModel;            /* 0x86c */
-    u8  pad_86d[0x1b];
-    u8  unk_888;            /* 0x888 */
-    u8  pad_889[0x33];
-    u8  mModelAnim;            /* 0x8bc */
-    u8  pad_8bd[0x4f];
-    u8  mAnimation;            /* 0x90c */
-    u8  pad_90d[0x573];
+    /* Model member. The cartridge's own ~UnknownVsEntry calls _ZN5ModelD1Ev at +0x86c
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    Model mModel;            /* 0x86c */
+    /* ModelAnim member. The cartridge's own ~UnknownVsEntry calls _ZN9ModelAnimD1Ev at
+       +0x8bc (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    ModelAnim mModelAnim;            /* 0x8bc */
+    u8  pad_920[0x560];
     u8  unk_e80;            /* 0xe80 */
     u8  pad_e81[0xa7];
     s32 unk_f28;            /* 0xf28 */

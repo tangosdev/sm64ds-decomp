@@ -82,7 +82,9 @@ int UnknownVsEntry::InitResources()
     _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x86c, *(void**)(&data_ov075_0211d3fc + 4), 1, -1);
 
     func_0203c178(&data_020a0e68, 0x7d000, 0x7d000, 0x7d000);
-    *(struct M48*)((char*)&unk_888) = *(struct M48*)&data_020a0e68;
+    /* 0x888 is +0x1c inside the Model at 0x86c -- its mat4x3. The cartridge's own
+       ~UnknownVsEntry proves the extent; see tools/dtor_members.py. */
+    *(struct M48*)((char*)&mModel.mat4x3) = *(struct M48*)&data_020a0e68;
 
     if (mParam != 1) {
         _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this) + 0x8bc, *(void**)(&data_ov075_0211d3bc + 4), 1, -1);

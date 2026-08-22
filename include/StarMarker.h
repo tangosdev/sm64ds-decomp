@@ -7,6 +7,7 @@
 #include "types.h"
 #include "Model.h"
 #include "ShadowModel.h"
+#include "dCcAcPos_c.h"
 
 struct StarMarker {
     u8  pad_000[0x4];
@@ -21,11 +22,10 @@ struct StarMarker {
     u8  pad_090[0x3c];
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
-    u8  mdCcAcPos_c;            /* 0x0d4 */
-    u8  pad_0d5[0x1f];
-    s32 unk_0f4;            /* 0x0f4 */
-    s32 unk_0f8;            /* 0x0f8 */
-    u8  pad_0fc[0x18];
+    /* dCcAcPos_c member. The cartridge's own ~StarMarker calls _ZN10dCcAcPos_cD1Ev at
+       +0x0d4 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dCcAcPos_c mdCcAcPos_c;            /* 0x0d4 */
     /* Model member, named by _ZN5ModelD1Ev at +0x114 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. The marker's pad stopped
        short of the object, so the member also takes over unk_154 (+0x40 = mat4x3.t.x),

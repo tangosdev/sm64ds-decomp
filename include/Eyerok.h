@@ -143,7 +143,10 @@ struct Eyerok {
     s16 unk_4d2;            /* 0x4d2 */
     u16 unk_4d4;            /* 0x4d4 */
     u8  pad_4d6[0x19e];
-    u8  unk_674;            /* 0x674 */
+    /* dBgW_KcMbg member. The cartridge's own ~Eyerok calls _ZN10dBgW_KcMbgD1Ev at
+       +0x674 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg unk_674;            /* 0x674 */
 };
 
 #endif /* __cplusplus */

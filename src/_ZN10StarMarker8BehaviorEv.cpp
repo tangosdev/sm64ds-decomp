@@ -76,10 +76,13 @@ int StarMarker::Behavior()
     }
     if (mState != 0) {
         if ((unsigned int)(mFlags << 0x1e) >> 0x1f) {
-            if (mState != 2 && unk_0f8 != 0) {
-                char *a = _ZN8dActor_c10FindWithIDEj(unk_0f8);
+            /* Both are fields of the dCcAcPos_c at 0x0d4, which the cartridge's own
+               ~StarMarker names (tools/dtor_members.py): 0x0f8 is +0x24,
+               dCc_c::otherOwner, and 0x0f4 is +0x20, dCc_c::hitFlags. */
+            if (mState != 2 && mdCcAcPos_c.otherOwner != 0) {
+                char *a = _ZN8dActor_c10FindWithIDEj(mdCcAcPos_c.otherOwner);
                 if (a != 0) {
-                    if ((unk_0f4 & 0x408000) != 0) {
+                    if ((mdCcAcPos_c.hitFlags & 0x408000) != 0) {
                         unk_1d0 = (int)a;
                         func_ov002_020e7d84(((char *)this));
                         return 1;

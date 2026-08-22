@@ -3,8 +3,10 @@
 /* recovered: named members + shared header, real C++ method
  *
  * Pushes the texture transform into the model's components, then draws through
- * the model's own vtable slot 5. The transformer and the components are
- * separate sub-objects (0x320 and 0x0dc) and this is the only place they meet.
+ * the model's own vtable slot 5. The components are not a separate sub-object:
+ * 0x0dc is Model::data, +0x8 inside the Model at 0x0d4 -- the cartridge's own
+ * ~CastleWater proves the Model's extent (tools/dtor_members.py), so the header
+ * no longer declares a marker there and this is the model's own field.
  */
 #include "CastleWater.h"
 
@@ -14,7 +16,7 @@ extern "C" void _ZN18TextureTransformer6UpdateER15ModelComponents(void *, void *
 
 int CastleWater::Render()
 {
-    _ZN18TextureTransformer6UpdateER15ModelComponents(&mTexTransformer, &mModelComponents);
+    _ZN18TextureTransformer6UpdateER15ModelComponents(&mTexTransformer, &mModel.data);
     Sub *b = (Sub *)&mModel;
     b->m(0);
     return 1;

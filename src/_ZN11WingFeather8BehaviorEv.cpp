@@ -60,7 +60,10 @@ int WingFeather::Behavior()
         short* angp = (short*)((((s64)((char*)&unk_37c))));
         short old_ang = *angp;
         *angp = old_ang + 0x400;
-        u16 newv = *(u16*)((char*)((char*)&unk_300) + 0x7c);
+        /* 0x300 is +0x1a8 inside the dBgCh_Actr at 0x158, which the cartridge's own
+           ~WingFeather names (tools/dtor_members.py). It is unnamed there -- inside
+           dBgCh_Actr's pad_135 -- so the offset is spelled out. */
+        u16 newv = *(u16*)((char*)((char*)&mWithMeshClsn + 0x1a8) + 0x7c);
         int idx = ((newv >> 4) << 1) + 1;
         unk_098 = (int)(((s64)unk_378 * data_02082214[idx] + 0x800) >> 12);
     }
@@ -81,7 +84,8 @@ int WingFeather::Behavior()
         }
     }
 
-    u32 id = unk_148;
+    /* +0x24 inside the dCcAc_c at 0x124: dCc_c::otherOwner. */
+    u32 id = mdCcAc_c.otherOwner;
     if (id != 0) {
         void* a = _ZN8dActor_c10FindWithIDEj(id);
         if (a != 0) {

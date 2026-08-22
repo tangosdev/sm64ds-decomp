@@ -6,6 +6,8 @@
 #define MIRRORLUIGI_H
 #include "types.h"
 #include "ShadowModel.h"
+#include "ModelAnim.h"
+#include "Model.h"
 
 struct MirrorLuigi {
     u8  pad_000[0x5c];
@@ -13,20 +15,14 @@ struct MirrorLuigi {
     s32 mPosY;            /* 0x060 */
     s32 mPosZ;            /* 0x064 */
     u8  pad_068[0x6c];
-    u8  mModelAnim;            /* 0x0d4 */
-    u8  pad_0d5[0x7];
-    u8  unk_0dc;            /* 0x0dc */
-    u8  pad_0dd[0xb];
-    u8  unk_0e8;            /* 0x0e8 */
-    u8  pad_0e9[0x4f];
-    u8  mModel;            /* 0x138 */
-    u8  pad_139[0x7];
-    u8  unk_140;            /* 0x140 */
-    u8  pad_141[0xb];
-    u8  unk_14c;            /* 0x14c */
-    u8  pad_14d[0x7];
-    u8  unk_154;            /* 0x154 */
-    u8  pad_155[0x33];
+    /* ModelAnim member. The cartridge's own ~MirrorLuigi calls _ZN9ModelAnimD1Ev at
+       +0x0d4 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    ModelAnim mModelAnim;            /* 0x0d4 */
+    /* Model member. The cartridge's own ~MirrorLuigi calls _ZN5ModelD1Ev at +0x138
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    Model mModel;            /* 0x138 */
     /* ShadowModel member. The cartridge's own ~MirrorLuigi calls _ZN11ShadowModelD1Ev
        at +0x188 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */

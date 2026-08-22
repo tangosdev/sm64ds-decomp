@@ -50,7 +50,8 @@ int TtcConveyorBeltLarge::Behavior()
                 mBeltSpeed = data_ov065_0211c0b8[data_0209f2c0];
             }
 
-            unk_32c = mBeltSpeed;
+            /* +0xc inside the TextureTransformer at 0x320: its Animation base's speed. */
+            mTextureTransformer.speed = mBeltSpeed;
             _ZN9Animation7AdvanceEv((char*)&mTextureTransformer);
             if (mBeltSpeed != 0) {
                 unk_398 = (int)_ZN5Sound8PlayLongEjjjRK7Vector3s(unk_398, 3, 0x88, ((char*)this) + 0x74, 0);

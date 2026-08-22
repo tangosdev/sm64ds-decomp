@@ -22,9 +22,10 @@ extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 extern "C" void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(
     BMD_File &f, BTA_File &b);
 
-struct TextureTransformer {
-    void SetFile(BTA_File &f, int a, int fix, unsigned int u);
-};
+/* TextureTransformer is the real class now, through this actor's header, which
+   types mTextureTransformer. Redefining it ICEs mwccarm (CClass.c:3328); SetFile
+   is still reached by its mangled symbol below, because the real one takes
+   Fix12<int> BY VALUE and mwccarm passes that differently at the call site. */
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true
@@ -130,7 +131,10 @@ int TtcConveyorBeltLarge::InitResources()
         data_ov065_0211c0b8[data_0209f2c0];
     *(void **)((char *)&mBeltSpeed) =
         *(void **)((char *)&mTargetBeltSpeed);
-    *(void **)((char *)&unk_32c) =
+    /* 0x32c is +0xc inside the TextureTransformer at 0x320 -- its Animation base's
+       speed. The cartridge's own ~TtcConveyorBeltLarge proves the extent; see
+       tools/dtor_members.py. */
+    *(void **)((char *)&mTextureTransformer.speed) =
         *(void **)((char *)&mBeltSpeed);
 
     v.x = mPosX;

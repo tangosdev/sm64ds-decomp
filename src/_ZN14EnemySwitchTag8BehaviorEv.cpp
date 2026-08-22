@@ -20,8 +20,11 @@ int EnemySwitchTag::Behavior()
             _ZN5Event8ClearBitEj(mEventID);
         }
     }
-    if (unk_0f8 != 0) {
-        *(u32*)((char*)&unk_0ec) |= 1;
+    /* Both of these are fields of the dCcAc_c at 0x0d4, which the cartridge's own
+       ~EnemySwitchTag names (tools/dtor_members.py): 0x0f8 is +0x24, dCc_c::otherOwner,
+       and 0x0ec is +0x18, dCc_c::flags. */
+    if (mdCcAc_c.otherOwner != 0) {
+        *(u32*)((char*)&mdCcAc_c.flags) |= 1;
         _ZN5Event6SetBitEj(mEventID);
         if (unk_10c != 0) {
             unk_10a = unk_108;

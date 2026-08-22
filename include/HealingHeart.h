@@ -6,6 +6,7 @@
 #define HEALINGHEART_H
 #include "types.h"
 #include "ModelAnim.h"
+#include "dCcAc_c.h"
 
 struct HealingHeart {
     u8  pad_000[0x74];
@@ -46,10 +47,12 @@ struct HealingHeart {
        Animation base), unk_130 (+0x5c = speed), which the header declared separately
        inside it. */
     ModelAnim mModelAnim;            /* 0x0d4 */
-    u8  mdCcAc_c;            /* 0x138 */
-    u8  pad_139[0x23];
-    s32 unk_15c;            /* 0x15c */
-    u8  pad_160[0xc];
+    /* dCcAc_c member. The cartridge's own ~HealingHeart calls _ZN7dCcAc_cD1Ev at +0x138
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. The marker's pad
+       stopped short of the object, so the member also takes over unk_15c
+       (+0x24 = dCc_c::otherOwner), which the header declared separately inside it. */
+    dCcAc_c mdCcAc_c;            /* 0x138 */
     s32 unk_16c;            /* 0x16c */
     u8  mHealTimer;            /* 0x170 */
     u8  unk_171;            /* 0x171 */

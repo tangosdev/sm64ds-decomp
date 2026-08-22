@@ -59,7 +59,11 @@ int UnknownVsEntry::Behavior()
         if (unk_f40) {
             int r = func_0203da9c();
             func_ov075_021151b4(((char*)this), r);
-            _ZN9Animation7AdvanceEv((char*)&mAnimation);
+            /* 0x90c is +0x50 inside the ModelAnim at 0x8bc -- its Animation base,
+               which the cartridge's own ~UnknownVsEntry proves is there
+               (tools/dtor_members.py). Advance is non-virtual, so this is the same
+               direct bl to _ZN9Animation7AdvanceEv with this adjusted by +0x50. */
+            mModelAnim.Advance();
         }
         func_ov075_0211b418((char*)&unk_e80);
     }

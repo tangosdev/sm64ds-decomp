@@ -5,15 +5,14 @@
 #ifndef ENEMYSWITCHTAG_H
 #define ENEMYSWITCHTAG_H
 #include "types.h"
+#include "dCcAc_c.h"
 
 struct EnemySwitchTag {
     u8  pad_000[0xd4];
-    u8  mdCcAc_c;            /* 0x0d4 */
-    u8  pad_0d5[0x17];
-    u8  unk_0ec;            /* 0x0ec */
-    u8  pad_0ed[0xb];
-    s32 unk_0f8;            /* 0x0f8 */
-    u8  pad_0fc[0xc];
+    /* dCcAc_c member. The cartridge's own ~EnemySwitchTag calls _ZN7dCcAc_cD1Ev at
+       +0x0d4 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dCcAc_c mdCcAc_c;            /* 0x0d4 */
     u16 unk_108;            /* 0x108 */
     u16 unk_10a;            /* 0x10a */
     u8  unk_10c;            /* 0x10c */

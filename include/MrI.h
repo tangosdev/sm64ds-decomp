@@ -8,6 +8,7 @@
 #include "ModelAnim.h"
 #include "ShadowModel.h"
 #include "dCcAcPos_c.h"
+#include "TextureSequence.h"
 
 struct MrI {
     u8  pad_000[0x8];
@@ -32,10 +33,13 @@ struct MrI {
        stopped short of the object, so the member also takes over unk_130 (+0x5c = speed),
        which the header declared separately inside it. */
     ModelAnim mModelAnim;            /* 0x0d4 */
-    u8  mTextureSequence;            /* 0x138 */
-    u8  pad_139[0xb];
-    s32 unk_144;            /* 0x144 */
-    u8  pad_148[0x4];
+    /* TextureSequence member. The cartridge's own ~MrI calls _ZN15TextureSequenceD1Ev
+       at +0x138 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base.
+       The marker's pad stopped short of the object, so the member also takes over
+       unk_144 (+0xc = the Animation base's speed), which the header declared
+       separately inside it. */
+    TextureSequence mTextureSequence;            /* 0x138 */
     /* ShadowModel member. The cartridge's own ~MrI calls _ZN11ShadowModelD1Ev at +0x14c
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */

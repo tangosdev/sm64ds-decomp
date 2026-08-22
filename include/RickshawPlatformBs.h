@@ -3,6 +3,7 @@
 
 #include "types.h"
 #include "Model.h"
+#include "dBgW_KcMbg.h"
 
 /* The Bowser-in-the-Sky drifting platform. ROM name daObjKm3_Dorifu_c.
  *
@@ -54,7 +55,11 @@ struct RickshawPlatformBs {
        +0x0d4 (D0/D1), a relocation the ROM build checks; recovered by
        tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
     Model mModel;            /* 0x0d4 */
-    u8  mMovingMeshCollider;            /* 0x124 */
+    /* dBgW_KcMbg member. The cartridge's own ~RickshawPlatformBs calls
+       _ZN10dBgW_KcMbgD1Ev at +0x124 (D0/D1), a relocation the ROM build checks;
+       recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
+       inlined base. */
+    dBgW_KcMbg mMovingMeshCollider;            /* 0x124 */
 };
 
 #endif /* __cplusplus */

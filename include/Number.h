@@ -5,6 +5,8 @@
 #ifndef NUMBER_H
 #define NUMBER_H
 #include "types.h"
+#include "Model.h"
+#include "TextureSequence.h"
 
 struct Number {
     u8  pad_000[0x8];
@@ -19,14 +21,15 @@ struct Number {
     u8  pad_0a4[0x4];
     s32 mVertSpeed;            /* 0x0a8 */
     u8  pad_0ac[0x28];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x1b];
-    u8  unk_0f0;            /* 0x0f0 */
-    u8  pad_0f1[0x33];
-    u8  mTextureSequence;            /* 0x124 */
-    u8  pad_125[0x7];
-    s32 unk_12c;            /* 0x12c */
-    u8  pad_130[0x8];
+    /* Model member. The cartridge's own ~Number calls _ZN5ModelD1Ev at +0x0d4 (D0/D1),
+       a relocation the ROM build checks; recovered by tools/dtor_members.py. D1 and not
+       D2, so it is this type and not an inlined base. */
+    Model mModel;            /* 0x0d4 */
+    /* TextureSequence member. The cartridge's own ~Number calls
+       _ZN15TextureSequenceD1Ev at +0x124 (D0/D1), a relocation the ROM build checks;
+       recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
+       inlined base. */
+    TextureSequence mTextureSequence;            /* 0x124 */
     s32 unk_138;            /* 0x138 */
     s32 unk_13c;            /* 0x13c */
     s32 mStartPosY;            /* 0x140 */
