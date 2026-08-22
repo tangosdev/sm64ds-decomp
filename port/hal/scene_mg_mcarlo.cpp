@@ -692,3 +692,11 @@ extern "C" void port_scene_mcarlo_hits(void)
 #pragma comment(linker, "/alternatename:?data_ov006_0213d664@@3HA=_data_ov006_0213d664")
 #pragma comment(linker, "/alternatename:?data_ov006_0213d664@@3PAXA=_data_ov006_0213d664")
 #pragma comment(linker, "/alternatename:?data_ov006_02142504@@3PAUNode@@A=_data_ov006_02142504")
+/* AND ONE FROM THE ov004 TALLY CHAIN. src/func_ov004_020b58c4.cpp declares
+ * `extern int data_ov004_020bfa0c;` outside its extern "C" block; the mount
+ * defines the plain C name for the ov004 bss word at 0x020bfa0c. It is the
+ * ONLY one of that TU's nine namespace-scope externs the link asked for --
+ * the other eight already have alias rows in the image, which is what a
+ * ninth-minigame lane inheriting eight seats' worth of alias work looks
+ * like. */
+#pragma comment(linker, "/alternatename:?data_ov004_020bfa0c@@3HA=_data_ov004_020bfa0c")

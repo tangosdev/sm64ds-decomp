@@ -238,8 +238,54 @@
 #
 # ---- THE DELTA -------------------------------------------------------------
 #
-# Two Single3D helpers no earlier minigame slice reached, then this class's
-# own 25 bodies in address order.
+# The two bodies the first link asked for, two Single3D helpers no earlier
+# minigame slice reached, then this class's own 25 bodies in address order.
+#
+# THE LINK WAVE IS TWO ROWS AND THAT IS THE WHOLE OF IT, which is the ONE WAVE
+# the mg6 lane PPP precedent says a late minigame lane should budget rather
+# than section 10's eight:
+#
+#   src/func_0203d5dc.c        the arm9 2D distance helper, 0x38, called once
+#                              from the card update. NOT a name-spelling
+#                              defect -- func_0203d5dc IS the config symbol at
+#                              0x0203d5dc -- so it is an ordinary slice line
+#                              and not an alias.
+#   src/func_ov004_020b5e40.c  the ov004 ROUND-TALLY ARMER slot 19 case 5
+#                              calls with data_ov006_0213d570, the cards left.
+#                              It writes the tally target and installs
+#                              func_ov004_020b58c4 as data_ov004_020bfa20, the
+#                              framework's per-frame tally step.
+#
+# AND ITS OWN CLOSURE IS TWO MORE ov004 ROWS, waves 2 and 3, both of them the
+# body the row above installs and the body that one installs in turn:
+#
+#   src/func_ov004_020b58c4.cpp  the tally STEP. It walks the score down one a
+#                                frame, plays 0x14b or 0x14c depending on
+#                                whether the player beat the target, and hands
+#                                over to func_ov004_020b586c when the tally
+#                                runs out.
+#   src/func_ov004_020b586c.cpp  the tally END, which clears
+#                                data_ov004_020bfa20 so nothing is installed.
+#   src/func_ov004_020b4e78.c    the per-digit draw the STEP calls with
+#                                &data_ov004_020bfa34[i * 0x24] -- the SAME
+#                                twenty-record array run mg6 lane MEM found
+#                                dScMgMemory2_c dispatching a FIELD member
+#                                pointer out of (section 13, CORRECTION 2).
+#                                This class reaches the array's draw rather
+#                                than its dispatch, so no host copy is owed
+#                                here; MgMemory2_FieldPmf.cpp already carries
+#                                the dispatch half for the whole family.
+#
+# FOUR ov004 ROWS IS THE FIRST TIME A MINIGAME LANE HAS ADDED ANY SINCE THE
+# FRAMEWORK WAS PAID FOR. Section 2's "paid once, for all thirty" and lane
+# PPP's measured "ov004 delta over what is seated: 0" both hold as statements
+# about the FRAMEWORK; what this class reaches past it is one self-contained
+# score-tally state machine that no seated class had a caller for.
+src/func_0203d5dc.c
+src/func_ov004_020b4e78.c
+src/func_ov004_020b586c.cpp
+src/func_ov004_020b58c4.cpp
+src/func_ov004_020b5e40.c
 src/func_ov006_020c1164.c
 src/func_ov006_020c16b4.c
 src/func_ov006_020f7634.cpp
