@@ -1,0 +1,393 @@
+# Gate S381: dScMgMCarlo_c, the "Pair-a-Gone" card minigame. Actor id 0x17d
+# (scene 381). Run mg9, lane S381.
+#
+# THE IDENTITY WAS DERIVED FROM THE ROM, and it had to be: section 3's table
+# has no spawn symbol for this id and calls the record (data_ov006_0213d580).
+# Six independent witnesses, every one reproducible in a minute:
+#
+#   1. THE SPAWN TABLE. arm9's ACTOR_SPAWN_TABLE is 0x02090864 (391 entries),
+#      so entry 381 is at 0x02090864 + 381*4 = 0x02090e58, and that word reads
+#      0x0213d580 in extracted/arm9_dec.bin. config/arm9/relocs.txt carries
+#      the same edge: from:0x02090e58 kind:load to:0x0213d580.
+#   2. THE DOUBLED ID. data_ov006_0213d580 = {factory 0x020f8e44, 0x017d017d},
+#      which is the mechanical SpawnInfo shape section 3 prescribes.
+#   3. THE RTTI. The word before the vtable, 0x0213d660, points at the
+#      typeinfo record 0x0213d588 = {0x0209a764, name 0x0213d594, base
+#      0x0213bc64}, and 0x0213d594 reads "13dScMgMCarlo_c". The class is
+#      dScMgMCarlo_c. Its SIBLING id 0x17e reads "14dScMgMCarlo2_c" and the
+#      config already names that one MgPairAGoneAndOn -- so the ROM's own
+#      class-name pair is base/sequel exactly where the config's title pair is.
+#   4. THE ELEMENT CLASS. The factory builds an array of 0x50 records of 0x30
+#      bytes at this+0x51a8 whose element vtable is 0x0213d5ac, and THAT
+#      table's typeinfo names it "18dMgMCarloCardObj_c". A card object.
+#   5. WHAT THE CLASS OPENS. slot 0 reads GetGameLanguage() and indexes
+#      data_ov006_0213d5b4 = {0xba, 0xbc, 0xb7, 0xb8, 0xb9}, which the ROM's
+#      own NitroFS handle table resolves to MG/d_2d_mg_card_ncg.bin and its
+#      _S/_F/_G/_I siblings; the palette it loads beside them, handle 0xbb, is
+#      MG/d_2d_mg_card_ncl.bin.
+#   6. THE PLAYER TITLE, END TO END AND OUT OF THE ROM. The ov005 launch table
+#      (overlay_0005.bin file offset 0x2618, data_ov005_020c24d8, 36 rows of
+#      0x34) has EXACTLY ONE row for scene 381 -- row 5, param 0x000d0500, so
+#      record 5, name-text 13, mode byte 0. dScMgBase_c's constructor turns
+#      the name-text index into a message id through data_ov004_020bc070[13] =
+#      561, and message 561 of data/message/msg_data_eng.bin reads
+#
+#          "Pair-a-Gone
+#
+#           Touch 2 identical cards that are connected vertically,
+#           horizontally, or diagonally to make them disappear.
+#           Clear them all to win!"
+#
+#      The same table gives 382 name-text 25 -> message 573 -> "Pair-a-Gone
+#      And On", which is the sequel the RTTI pair predicted.
+#
+#      THIS ROW RESOLVES TO THE PLAIN STRING AND THE SEQUEL IS A DIFFERENT ID,
+#      which is worth stating rather than leaving to be inferred, because the
+#      two titles differ by three words and the config names only the sequel.
+#      Scene 381 is ov005 ROW 5 and its ONLY row, text index 13, message 561,
+#      "Pair-a-Gone". MgPairAGoneAndOn is actor 0x17e, ov005 row 25, text 25,
+#      message 573, and is NOT seated by this lane.
+#
+#      WHY NO EARLIER SWEEP FOUND THESE STRINGS. The banks are LZ77-compressed
+#      BMG in the game's own GLYPH encoding rather than ASCII or UTF-16 --
+#      'A' is 0x0a, 'a' is 0x2d, space is 0x4d -- so a byte sweep for the title
+#      over the ROM returns nothing. tools/message_bank.py already decodes it
+#      (its BASIC_CHARS table is exactly that mapping), which is what made this
+#      a five-minute derivation rather than a hand decode. Run mg9's lane S371
+#      reached the same chain independently and controlled it on 25 of 25 ids;
+#      this lane's reading of row 5 agrees with it.
+#
+# SO THE TITLE IS "Pair-a-Gone" AND IT IS NOT PROVISIONAL. The config-wide
+# address sweep the Shell Smash lesson prescribes was run first and found one
+# hit -- symbols/actor_renames_report.txt line 855, "UNRESOLVED actor 381
+# MG_PAIR_A_GONE: spawninfo 0x213d580" -- which is the community ActorList.h
+# name for the id, agreeing with the ROM. It is corroboration and not the
+# derivation: witnesses 1 to 6 are all the ROM's own bytes.
+#
+# AND "MCarlo" IS NOT A SEPARATE NAME. Monte Carlo is the card solitaire in
+# which matching adjacent cards are removed in pairs until the board clears,
+# which is the game message 561 describes. The class name is the mechanic and
+# the title is the marketing; they are the same minigame.
+#
+# ---- THE HIERARCHY IS THREE DEEP, AND THE ROM SAYS SO THREE TIMES ---------
+#
+#     Scene -> dScMgBase_c         0x020bc0c0  36  (ov004, curling's fill)
+#           -> dScMgSingle3DBase_c 0x0213e448  36  ovr 8,  mark 6,  nosrc 0
+#           -> dScMgMCarlo_c       0x0213d664  36  ovr 13, mark 11, nosrc 0
+#
+# The middle edge is stated three ways rather than inferred from names, which
+# is one more than the flower and memory2 lanes had:
+#   - the TYPEINFO's base word is 0x0213bc64, which is dScMgSingle3DBase_c's
+#     own typeinfo record. The ROM states the inheritance directly.
+#   - the FACTORY func_ov006_020f8e44 writes 0x0213e448 into the object's
+#     first word and then 0x0213d664 over it (str r1,[r4] at 0x020f8e6c and
+#     again at 0x020f8e80, the two pool words at 0x020f8ec0 and 0x020f8ec8).
+#   - the DESTRUCTORS unwind them in the opposite order: slot 17
+#     (func_ov006_020f76a8) and its unmarked D2 sibling slot 16
+#     (func_ov006_020f7634) both store 0x0213d664 first and 0x0213e448 last.
+#
+# The middle table is the SAME OBJECT dScMgFlower_c (0x186), dScMgMemory2_c
+# (0x16b) and dScMgCup_c (0x169) sit under. This seat is the FOURTH into it;
+# hal/scene_mg_mcarlo.cpp section 3 is why that is safe and which fill claims
+# it.
+#
+# ---- THE WIDTH IS 36, CHECKED FOUR WAYS -----------------------------------
+#
+# Section 11's three, re-run rather than inherited because twelve of the
+# twenty-nine widths in section 3's own table were phantoms, plus a fourth the
+# relocation set gives for free:
+#
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt: data_ov006_0213d664 ->
+#      next symbol data_ov006_0213d6f4. 0x90 bytes = 36 words. A 37th slot
+#      cannot exist inside the table. (An UPPER bound only, so it refuses a
+#      width and never grants one.)
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, which every dScMgBase_c-derived
+#      table holds. Both tables this seat fills do.
+#   3. WHAT THE WORD PAST THE END IS. Index 36 reads 0x00000028 -- a small
+#      integer that has its own config symbol (data_ov006_0213d6f4), not a
+#      code address. Index 37 is another 0x00000028.
+#   4. RELOCATION COUNT. Exactly 36 load relocations fall inside
+#      0x0213d664..0x0213d6f4 in ov006's relocs.txt and NONE lands on index
+#      36. A vtable slot is a relocated word by construction, so a 37th slot
+#      with no relocation is not a slot.
+#
+# ---- ONE PLUMBING TRAP THIS FILE WALKED INTO, WRITTEN DOWN BECAUSE THE
+#      SYMPTOM POINTS SOMEWHERE ELSE ENTIRELY -----------------------------
+#
+# The four lines above used to open the range with a square bracket and close
+# it on the NEXT line. CMake's file(STRINGS) is what reads this file, and an
+# UNMATCHED open bracket in any line swallows every line after it into that
+# one list element -- so the twenty-seven source lines at the foot of this
+# file silently stopped being sources. Measured: the list came back 94 long
+# for a 246-line file, and every kept line was a comment.
+#
+# THE SYMPTOM IS A LINK ERROR THAT NAMES THE SEAT. Nothing complains about
+# the slice; the build reports ten unresolved externals in
+# hal/scene_mg_mcarlo.cpp -- every one of them a body this slice was supposed
+# to bring -- which reads as "the seat is wrong" rather than "the slice was
+# not read". A lane that chased the seat instead of the slice would have gone
+# a long way in the wrong direction.
+#
+# A BRACKET PAIR THAT OPENS AND CLOSES ON THE SAME LINE IS FINE, which is why
+# this file's four `ldr r1,[r0]` quotations and the twenty-odd in the other
+# slices are harmless, and why a scan over every slice_*.txt in the tree finds
+# this file was the only one that ever had an unmatched one before its source
+# lines. Ranges in these files are spelled 0xAAAA..0xBBBB for this reason.
+#
+# All four agree on 36, and section 3's row for 0x17d (36 / 13 / 11 / 0) is
+# confirmed exactly: the 13 overrides against data_ov004_020bc0c0 are slots
+# 0, 2, 5, 6, 7, 9, 10, 16, 17, 18, 19, 26 and 33, of which slots 16 and 33
+# carry no marker.
+#
+# AND THE SECTION-11 HAZARD IS MEASURED ABSENT RATHER THAN ASSUMED. Its
+# mechanism is a fill writing into a word an overlay CONSTRUCTOR later copies
+# into a .bss dispatch table. ZERO relocations leave ov006's .init code
+# (0x0212f4c4..0x02133600) for this class's code block (0x020f7634..0x020f8ef4)
+# or for its data span (0x0213d564..0x0213d6f4). No constructor reads either,
+# so the row-order question cannot arise here -- and the row still goes last,
+# because obeying the rule costs nothing.
+#
+# ---- THIS CLASS HAS NO POINTER-TO-MEMBER STATE MACHINE --------------------
+#
+# All three of section 4's prescribed detectors were run and all three are
+# clean, which is what licenses the word rather than any one of them:
+#
+#   - THE SOURCE. src/func_ov006_020f869c.c, vtable slot 6, the Behavior, is a
+#     plain `switch (*(s16*)(c + 0x60a8))` with cases 1, 2 and 3. Slot 19
+#     (src/func_ov006_020f8a3c.c) continues the same index with cases 4 to 8.
+#     Neither spells a member-pointer call. THE SLOT-6 SRC WAS READ BEFORE THE
+#     FACE ARRAY WAS WIRED, which is the practical rule section 14 adds after
+#     dScMgPanel_c's Behavior turned out to open-code the Itanium sequence in
+#     plain ints.
+#   - THE ROM. 0x020f86a8 is add r0,r4,#0x6000 / ldrsh r0,[r0,#0xa8] / cmp #1
+#     beq / cmp #2 beq / cmp #3 beq / b default, and 0x020f8a50 is cmp r0,#8 /
+#     addls pc,pc,r0,lsl #2 over a nine-entry branch table. Neither is the
+#     five-instruction ARM Itanium sequence, and there is no `>> 1` / `& 1`
+#     pair decode anywhere in the 25 bodies of this class's code block -- which
+#     is the third shape, the one neither a link nor a `::*` sweep can see.
+#   - THE SWEEP. A `::*` sweep over every TU in this slice is clean. The three
+#     hits in the neighbouring address range (func_ov006_020f71c8, _020f7234,
+#     _020f7458) all belong to dScMgMemory2_c and are already host-copied by
+#     run mg6 lane MEM.
+#   - AND THE RUN CONVICTS NOTHING. Scene 381 boots under
+#     SM64DS_FAULTS_FATAL=1 at 300 and 1200 frames with zero UNHANDLED
+#     addresses and no eip on a DS address. The run is the detector section 4
+#     says the other two cannot replace.
+#
+# So there is no address switch, no MgMCarlo_StateDispatch.cpp and no stategen
+# output on this lane -- stategen has no constructor of this class's to read,
+# and the relocation measurement above is why.
+#
+# THE FRAMEWORK's WALL IS STILL THE FRAMEWORK's AND IS STILL PAID. This class
+# reaches func_ov004_020b87e0 through dScMgBase_c exactly as curling does, and
+# unmatched/MgBase_StateSetter.cpp's eighty routed addresses are inherited
+# unchanged.
+#
+# ---- THERE IS A THIRD TABLE AND THE VTABLE AXIS CANNOT SEE IT -------------
+#
+# The factory builds 0x50 records of 0x30 bytes at this+0x51a8, and their
+# element constructor func_ov006_020f8ed8 writes data_ov006_0213d5ac into each
+# record's first word. That is dMgMCarloCardObj_c's own vtable, two slots wide
+# ({0x020f7e2c, 0x020f7ee4}, span to the next config symbol 8 bytes, exactly 2
+# load relocations inside it, and the word past the end is 0x000000ba -- the
+# first entry of the language file-id table, not a code address).
+#
+# SLOT 9 DISPATCHES SLOT 0 OF IT. src/func_ov006_020f85b0.cpp walks the list at
+# data_ov006_02142504 and calls the node's slot 0 through
+# `ldr r1,[r0] / ldr r1,[r1] / blx r1`; the nodes are those card records, which
+# src/func_ov006_020f7c10.c links through +4 and +8 with the head in
+# data_ov006_02142500. func_ov006_020f7e2c is the card DRAW: it gates on the
+# record's +0x2e, indexes data_ov006_0213d600 by (identity + 1) * 5 +
+# flip-frame, and hands the sprite from data_ov006_0214250c to Hud_RenderSprite
+# at 0x020af68c -- the same HUD sprite seam section 15 disassembles for Memory
+# Master's twenty cards.
+#
+# SO A SEAT THAT FILLED ONLY THE TWO SCENE TABLES WOULD HAVE LINKED, BOOTED AND
+# JUMPED TO A RAW DS ADDRESS ON THE FIRST RENDERED FRAME. Nothing in section
+# 3's ovr/mark/nosrc columns can see this, because they are computed over the
+# SCENE vtable and this table belongs to an element class. The question that
+# finds it is "what does the ROM park in this object's first word", asked of
+# every object the factory builds -- and it is worth adding to the fan-out's
+# checklist beside the factory's second-vtable-store test.
+#
+# THE BOARD LADDER FALLS OUT OF THE SAME BODY. src/func_ov006_020f7c10.c reads
+# data_ov004_020beb68's own object at +0xb4, the same saved clear
+# count section 17 disassembles for Memory Master, and picks
+# 6x6 / 8x7 / 10x8 on `< 5`, `< 10`, else -- 36, 56 or 80 cards, which is why
+# the record array is 0x50 long and the object is 0x60b0 bytes.
+#
+# ---- ZERO FLOORS ----------------------------------------------------------
+#
+# Every one of the 25 bodies in this class's code block 0x020f7634..0x020f8ef4
+# has a src TU, which is section 3's nosrc column reading 0 and
+# is stronger than that column claims: the column is computed over the VTABLE
+# and this is computed over the whole block. The delinks join was run over
+# every callee of every override as well (section 13's CORRECTION 3 method,
+# which is where dScMgMemory2_c's real floor was hiding) and it is clean.
+#
+# ---- WHAT THE SEAT MEASURED, on this tree, both ends ----------------------
+#
+# LINKAGE  6665 / 11283 (59.1%)  ->  6697 / 11283 (59.4%)   +32
+#   which is the slice's line count EXACTLY, all 32 of them, and is lane PPP's
+#   rule holding: every slice line moves the headline by one. By module,
+#   arm9 1879 -> 1880 (+1), ov004 240 -> 244 (+4), ov006 737 -> 764 (+27),
+#   and nothing else moved.
+#
+# THE BOOT, SM64DS_FAULTS_FATAL=1 with nothing switched off:
+#
+#     300 frames    clean, exit 0. init 1, behavior 253, render 300,
+#                   state-reset 1, slot19 0
+#     1200 frames   clean, exit 0. init 1, behavior 1153, render 1200,
+#                   state-reset 1, slot19 0
+#     fill claims   middle table 0, derived table 13, card table 2 of 2
+#     card draws    6000 at 300 frames, 24000 at 1200 -- twenty a frame, which
+#                   is the render's own 0x14 bound on each of its two list
+#                   walks with each node taking exactly one of the two
+#                   predicates
+#     card updates  1280 at 300 frames, 19280 at 1200
+#     card array    80 of 80 records hold a vptr
+#     state index   +0x60a8 goes 1 (slot 18 sets it) -> 3 (slot 6 advances it)
+#                   and settles there
+#     UNHANDLED     0 on both runs
+#     spawn param   0x000d0500 -> save record 5, name text 13, which is what
+#                   the ov005 table above says and is the row this seat
+#                   verified rather than assumed
+#
+# SLOT 19 IS NEVER ENTERED ON AN UNATTENDED BOOT AND THAT IS HONEST RATHER
+# THAN A GAP. It handles states 4 to 8, and the class settles in state 3
+# waiting on the stylus -- message 561 is "Touch 2 identical cards". Section
+# 16's "the zeros that are honest and the zeros that are not" is the reading:
+# this zero says the round cannot END without a pick, not that the code is
+# unreachable. Nothing here drives one.
+#
+# SLOT 34 IS NOT DISPATCHED BY THIS CLASS, and the run mg9 coordinator's
+# standing watch on it is answered here with a measurement rather than left
+# open. hal/scene_mg.cpp's shared mb_v34 thunk is declared (void*, void*)
+# while func_ov004_020ae3b4 takes FIVE parameters at every ROM dispatch site,
+# so a class that dispatched slot 34 would owe the five-parameter repair the
+# way lane BASESET owed slots 18 and 19. This one does not: the framework
+# census reads `framework slots entered: 1(x1) 21(x1) 31(x1) 32(x1)` on scene
+# 381 at BOTH 300 and 1200 frames, with no slot 34 at all. The same sweep over
+# every other run this lane took -- 374 and the twelve other hosted scenes --
+# finds slot 34 at zero on all of them, so the defect stays unexercised and
+# the repair stays with whichever lane first witnesses it.
+#
+# READ THAT AS A ZERO OF THE HONEST KIND section 16 distinguishes. It says
+# slot 34 is not on this class's BOOT path. It does not say the class never
+# reaches it in play, and nothing here drives a stylus.
+#
+# THE FLOWER KEEPS THE MIDDLE TABLE, measured rather than argued. This seat's
+# own dScMgSingle3DBase_c copy claims 0 slots, and scene 390's witness still
+# reports 2(x1) 7(x300) 10(x300) 26(x4082) 33(x1) with this row in the table.
+#
+# NO BARE VT/HEAP ROW IS OWED, unlike lane PPP's. No TU in this slice spells
+# the include/decl_common.h placeholders: the destructors name
+# data_ov006_0213d664 and data_020a0eac directly. A COFF short-name scan over
+# all 32 of this slice's objects finds no external name of six characters or
+# fewer at all -- only the compiler's own $LNnn labels -- so the slice adds
+# nothing to that closure.
+#
+# ---- WHAT IS NOT IN THIS SLICE AND WHY ------------------------------------
+#
+# HOST-COPIED ELSEWHERE, and listing any of them here would be an LNK2005
+# against a file already on every target:
+#   src/func_ov006_0210a6e4.cpp  slot 2 of the middle base. It drops the
+#     framework's second argument (the ROM rides it through r1). The repair is
+#     port_mg_flower_after_init in port/unmatched/MgFlower_Slot2.cpp, whose
+#     header asks the next lane to call it rather than write a second; this is
+#     the third lane to do so.
+#   src/func_ov006_0210a708.c   slot 33 of the middle base. Its last two
+#     stores reach LIGHT_COLOR at 0x040004cc, so it builds from the FLW
+#     hostgen'd copy. This class inherits that substitution unchanged.
+#   src/func_ov006_020c1804.cpp  the local-shadow-class model draw this
+#     class's Render reaches at this+0x4f38. Host-copied by run mg6 lane MEM
+#     as port/unmatched/MgMemory2_ModelRender_020c1804.cpp. This class meets
+#     the SAME defect through the SAME body and therefore needs no copy of its
+#     own -- which is the fan-out dividend section 14 predicts.
+#   src/func_ov006_020c06dc.cpp, src/func_ov006_020c0a48.c  the other two
+#     lane MEM host copies in the same sub-object family.
+#
+# ALREADY SLICED, so the delta below does not repeat them: the whole
+# 0x020c0xxx / 0x020c1xxx Single3D sub-object family and func_ov006_0210a534
+# come in through port/slice_mem.txt, and the ov004 framework, the thirty-five
+# overlay constructors and the arm9 waves under them come in through
+# port/slice_mg1.txt. CMake appends every list to the same targets and dedupes
+# identical absolute paths, so nothing is compiled twice.
+#
+# ---- THE DELTA -------------------------------------------------------------
+#
+# The two bodies the first link asked for, two Single3D helpers no earlier
+# minigame slice reached, then this class's own 25 bodies in address order.
+#
+# THE LINK WAVE IS TWO ROWS AND THAT IS THE WHOLE OF IT, which is the ONE WAVE
+# the mg6 lane PPP precedent says a late minigame lane should budget rather
+# than section 10's eight:
+#
+#   src/func_0203d5dc.c        the arm9 2D distance helper, 0x38, called once
+#                              from the card update. NOT a name-spelling
+#                              defect -- func_0203d5dc IS the config symbol at
+#                              0x0203d5dc -- so it is an ordinary slice line
+#                              and not an alias.
+#   src/func_ov004_020b5e40.c  the ov004 ROUND-TALLY ARMER slot 19 case 5
+#                              calls with data_ov006_0213d570, the cards left.
+#                              It writes the tally target and installs
+#                              func_ov004_020b58c4 as data_ov004_020bfa20, the
+#                              framework's per-frame tally step.
+#
+# AND ITS OWN CLOSURE IS TWO MORE ov004 ROWS, waves 2 and 3, both of them the
+# body the row above installs and the body that one installs in turn:
+#
+#   src/func_ov004_020b58c4.cpp  the tally STEP. It walks the score down one a
+#                                frame, plays 0x14b or 0x14c depending on
+#                                whether the player beat the target, and hands
+#                                over to func_ov004_020b586c when the tally
+#                                runs out.
+#   src/func_ov004_020b586c.cpp  the tally END, which clears
+#                                data_ov004_020bfa20 so nothing is installed.
+#   src/func_ov004_020b4e78.c    the per-digit draw the STEP calls with
+#                                &data_ov004_020bfa34[i * 0x24] -- the SAME
+#                                twenty-record array run mg6 lane MEM found
+#                                dScMgMemory2_c dispatching a FIELD member
+#                                pointer out of (section 13, CORRECTION 2).
+#                                This class reaches the array's draw rather
+#                                than its dispatch, so no host copy is owed
+#                                here; MgMemory2_FieldPmf.cpp already carries
+#                                the dispatch half for the whole family.
+#
+# FOUR ov004 ROWS IS THE FIRST TIME A MINIGAME LANE HAS ADDED ANY SINCE THE
+# FRAMEWORK WAS PAID FOR. Section 2's "paid once, for all thirty" and lane
+# PPP's measured "ov004 delta over what is seated: 0" both hold as statements
+# about the FRAMEWORK; what this class reaches past it is one self-contained
+# score-tally state machine that no seated class had a caller for.
+src/func_0203d5dc.c
+src/func_ov004_020b4e78.c
+src/func_ov004_020b586c.cpp
+src/func_ov004_020b58c4.cpp
+src/func_ov004_020b5e40.c
+src/func_ov006_020c1164.c
+src/func_ov006_020c16b4.c
+src/func_ov006_020f7634.cpp
+src/func_ov006_020f76a8.cpp
+src/func_ov006_020f7730.c
+src/func_ov006_020f7740.cpp
+src/func_ov006_020f7994.c
+src/func_ov006_020f7a00.c
+src/func_ov006_020f7a90.c
+src/func_ov006_020f7b10.c
+src/func_ov006_020f7b90.c
+src/func_ov006_020f7c10.c
+src/func_ov006_020f7e2c.c
+src/func_ov006_020f7ee4.cpp
+src/func_ov006_020f8154.c
+src/func_ov006_020f8224.c
+src/func_ov006_020f82d0.c
+src/func_ov006_020f8320.c
+src/func_ov006_020f84a8.c
+src/func_ov006_020f8540.c
+src/func_ov006_020f85b0.cpp
+src/func_ov006_020f869c.c
+src/func_ov006_020f8a3c.c
+src/func_ov006_020f8c68.c
+src/func_ov006_020f8d08.cpp
+src/func_ov006_020f8e44.cpp
+src/func_ov006_020f8ed8.c

@@ -2291,6 +2291,22 @@ void port_scene_fill_boombox(void);
 extern unsigned char data_ov006_0213b814[];
 void *port_mg_amida_spawn(void);
 void port_scene_fill_amida(void);
+/* run mg9 lane S381: dScMgMCarlo_c, actor id 0x17d = scene 381, the
+   "Pair-a-Gone" card minigame. Its SpawnInfo is spelled as the raw config
+   symbol because the ROM gives this id no spawn symbol -- no naming pass has
+   ever resolved it, and a config-wide sweep for the address finds only
+   symbols/actor_renames_report.txt's own "UNRESOLVED actor 381" line. The
+   class name comes out of the ROM's type_info at 0x0213d588, reached through
+   the word before the vtable, whose name pointer reads "13dScMgMCarlo_c"; the
+   player title comes out of the ov005 launch table's only row for this scene
+   (name-text 13 -> data_ov004_020bc070[13] = message 561 = "Pair-a-Gone").
+   port/slice_s381.txt carries both derivations and the four width checks;
+   hal/scene_mg_mcarlo.cpp is the seat. Same reads_sublevel reasoning as the
+   rows above, re-derived rather than copied: no relocation anywhere in ov006
+   lands on data_02092110 and no TU in this class's closure names it. */
+extern unsigned char data_ov006_0213d580[];
+void *port_mg_mcarlo_spawn(void);
+void port_scene_fill_mcarlo(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2558,6 +2574,35 @@ static const PortSceneClass port_scene_classes[] = {
        value 0x00000100, no relocation -- is untouched. */
     {371, "SCENE_MG_AMIDA", data_ov006_0213b814, port_mg_amida_spawn,
      port_scene_fill_amida, 0},
+    /* 381 is 0x17d, spelled in decimal for the two reasons every row above
+       gives: the others are, and port/tools/battery.py reads its hosted-scene
+       set out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg9 lane
+       S381, and appending matters twice for this class rather than once.
+
+       It is the latent-safe direction port/mg_fanout_costs.txt section 11
+       derives from the once-per-process constructor gate: this function walks
+       the table in order and calls every row's fill on every boot, while
+       port_scene_mg_overlay_load runs the thirty-five overlay constructors
+       ONCE PER PROCESS at the tail of the FIRST minigame row's fill. And this
+       class shares the dScMgSingle3DBase_c table at 0x0213e448 with the
+       flower and memory2 rows above, so running after them means the flower's
+       fill keeps claiming the middle table and both earlier witnesses keep
+       counting exactly what they counted before this seat existed.
+       hal/scene_mg_mcarlo.cpp section 3 measures it: this seat's middle copy
+       reports 0 claimed slots and its derived copy reports 13 -- this class's
+       own seven plus six of the middle base's eight, the other two being that
+       base's D2 and D0, which slots 16 and 17 of the derived table override
+       with bodies of this class's own. Measured on a 300-frame boot.
+
+       The section-11 hazard is measured ABSENT here rather than assumed: zero
+       relocations leave ov006's .init code (0x0212f4c4..0x02133600) for this
+       class's code block (0x020f7634..0x020f8ef4) or its data span
+       (0x0213d564..0x0213d6f4), so no constructor reads a word this fill
+       writes. The width is 36 by four independent checks in
+       port/slice_s381.txt, so the fill cannot reach past its own table
+       either. */
+    {381, "SCENE_MG_MCARLO", data_ov006_0213d580, port_mg_mcarlo_spawn,
+     port_scene_fill_mcarlo, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
