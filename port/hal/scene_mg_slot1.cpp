@@ -1,10 +1,12 @@
 // dScMgSlot1_c, actor id 0x16c = scene 364. The ROM gives this id no
 // Mg*_SpawnInfo symbol and no naming import has ever named it, so the class
-// name here is the ROM's own RTTI. Run mg9, lane S364.
+// name here is the ROM's own RTTI. Run mg9, lane S364; its one floor, the
+// Behavior, was decompiled and seated by run mg10, lane F364, so this class
+// now has no floor at all.
 //
 // Read port/slice_s364.txt for the identity derivation, the four width checks,
-// the ROM adjudications and the floor. This file is the seat: two vtables'
-// faces, the fill, the factory forwarder, the one named trap and the census.
+// the ROM adjudications and the retired floor. This file is the seat: two
+// vtables' faces, the fill, the factory forwarder and the census.
 //
 // ---- 1. WHY THIS IS A SEPARATE FILE FROM hal/scene_mg.cpp -----------------
 //
@@ -100,45 +102,52 @@
 // member-pointer table. So there is no address switch here, no
 // MgSlot1_StateDispatch.cpp and no stategen output.
 //
-// SECTION 14'S PRACTICAL RULE WAS FOLLOWED AND COULD NOT BE OBEYED: "before
-// wiring slot 6 by name, read the src". Slot 6 HAS no src -- it is this class's
-// one floor -- so the read was done on the ROM instead, and what it found is
-// the switch above. That is also the answer to the third PMF shape: an
-// open-coded Itanium decode would show as `>> 1` / `& 1` on two words read out
-// of an object, and the body's only shift-by-one is the jump table's own
-// `lsl #2`.
+// SECTION 14'S PRACTICAL RULE COULD NOT BE OBEYED WHEN THIS FILE WAS WRITTEN:
+// "before wiring slot 6 by name, read the src". Slot 6 HAD no src -- it was
+// this class's one floor -- so the read was done on the ROM instead, and what
+// it found is the switch above. src/func_ov006_0210c9e0.cpp is that read written
+// out as C, so the rule is obeyable now. That is also the answer to the third
+// PMF shape: an open-coded Itanium decode would show as `>> 1` / `& 1` on two
+// words read out of an object, and the body's only shift-by-one is the jump
+// table's own `lsl #2`. The decompiled body has one more, `(state - 9) >> 1`
+// in case 9/11, and that one is a reel index rather than a member pointer.
 //
 // The FRAMEWORK's wall is still the framework's and is still paid once:
 // unmatched/MgBase_StateSetter.cpp and MgBase_StateDispatch.cpp are inherited
 // unchanged.
 //
-// ---- 6. THE ONE FLOOR, AND WHAT THE TRAP COSTS ---------------------------
+// ---- 6. THE ONE FLOOR IS RETIRED. Run mg10, lane F364 --------------------
 //
 //     func_ov006_0210c9e0   vtable slot 6, the Behavior, 0x81c bytes
 //
-// Config symbol, NO delink block (the block before it ends at 0x0210c9e0 and
-// the next starts at 0x0210d1fc, which is its size to the byte), no src file
-// in either extension. It is the only hole in the class's code.
+// It is decompiled and seated. src/func_ov006_0210c9e0.cpp, slice line 24, and
+// slot 6 above is a forwarder into it rather than a counting trap.
 //
-// It gets a named counting trap and deliberately not a plausible body:
-// port/tools/inferred_stub_guard.py exists to refuse the invention that would
-// go there. THE RETURN VALUE IS READ, NOT INVENTED -- the body has a single
-// exit at 0x0210d148..0x0210d18c which always `mov r0, #1`.
+// THE BODY IS NONMATCHING AND ITS BANNER SAYS HOW FAR IT GOT: size exact at
+// 519 words against the ROM's 519, 431 of them byte-identical at their own
+// offset, a further 42 relocation slots whose destinations were checked one at
+// a time against config/arm9/overlays/ov006/relocs.txt and all 42 agree, and 46
+// residual words that are register allocation and nothing else. That is 473 of
+// 519, 91.1%. The relocation check is the half that matters to this file: it
+// says every one of the eighteen distinct callees and both indirect dispatches
+// are wired to the address the ROM wires them to, so nothing in the residue is
+// a wrong callee hiding behind a byte wildcard.
 //
-// WHAT IT COSTS ON SCREEN, so nobody reads a clean boot as a working game:
-// with slot 6 trapped the state index at +0x46b4 never leaves 0, the reels
-// never spin, the per-frame tail the ROM body runs after every arm (the
-// betIcon slot-0 update at 0x0210d158, two calls to func_ov006_0210c278 and
-// one to func_ov006_0210c1a8) never runs, and no sound or fade is ever
-// started. The class boots, InitResources lays out the strips and the bet
-// icon, Render draws three static reels every frame, and nothing moves.
+// WHAT THE SCREEN DOES NOW is the negation of what the trap cost. The state
+// index at +0x46b4 leaves 0 on the first tick, the reels scroll by
+// data_ov006_0213e600 indexed by the speed step, a touch inside a reel's
+// 0x40 by 0x40 box around data_ov006_0213e63c stops that reel, all three
+// stopping runs func_ov006_0210c500 over the line, the payout table
+// data_ov006_0213e4d8 and the wild bonus are added and paid, and the per-frame
+// tail the ROM body runs after every arm -- the betIcon slot-0 update, two
+// func_ov006_0210c278 calls and one func_ov006_0210c1a8 -- runs every frame.
 //
-// AND THE RUN LAW'S WARNING DOES NOT BITE HERE. A trap-shaped floor hides its
-// callees from static closure, so they have to be budgeted by hand; this one
-// hides NONE. Its seven ov006 callees -- 0x0210c180, _c1a8, _c218, _c278,
-// _c2c0, _c2d4, _c500 -- are all reached from other slots as well and are
-// already in port/slice_s364.txt. Retiring this floor later costs a decomp and
-// zero extra slice lines.
+// AND THE SIX DROPPED BODIES CAME BACK. Section 9 of port/slice_s364.txt left
+// a standing credit: func_ov006_0210c180, _c1a8, _c218, _c278, _c2c0 and _c500
+// were in the slice, compiled, and in NO map, because their only caller in the
+// whole binary was the trap and /OPT:REF discards a body with no reference
+// edge. The seated Behavior calls all six. They cost zero extra slice lines,
+// exactly as the trap-era note predicted.
 //
 // ---- 7. THE ROW GOES LAST ------------------------------------------------
 //
@@ -176,11 +185,13 @@ extern unsigned char data_ov006_0213e5d4[];   /* dScMgSlot1_c::betIcon_c,  2 */
 extern unsigned char data_ov004_020bc0c0[];   /* dScMgBase_c,             36 */
 extern unsigned char data_ov006_0213e560[];   /* the SpawnInfo record        */
 
-/* the class's eight overrides, less the floor. Every signature below is the
-   src TU's own, not a guess: slot 18 really does take the ride-through int,
-   and slot 9's symbol really is the mangled name its config symbol carries. */
+/* the class's eight overrides, ALL EIGHT now that slot 6 has a body. Every
+   signature below is the src TU's own, not a guess: slot 18 really does take
+   the ride-through int, slot 9's symbol really is the mangled name its config
+   symbol carries, and slot 6 takes the object as a char* and returns the 1 the
+   ROM's single exit returns. */
 int   func_ov006_0210d1fc(void *c);           /* slot  0 InitResources */
-/*    func_ov006_0210c9e0                        slot  6 -- THE FLOOR   */
+int   func_ov006_0210c9e0(char *c);           /* slot  6 Behavior      */
 int   _ZN3OAM7SECONDSE(unsigned char *c);     /* slot  9 Render        */
 void *func_ov006_0210a8c0(char *c);           /* slot 16 D2            */
 void *func_ov006_0210a900(char *c);           /* slot 17 D0            */
@@ -214,7 +225,7 @@ void port_scene_slot1_hits(void);
 // registers because 364 is an id IsMinigameActorID accepts.
 static unsigned g_s1_hits[36];
 static unsigned g_s1_bet_hits[2];      /* the betIcon sub-object's two slots */
-static unsigned g_s1_floor_asks;       /* slot 6, the trap below             */
+static unsigned g_s1_beh_calls;        /* slot 6, the seated Behavior       */
 static void    *g_s1_self;
 
 #define S1(n)   (++g_s1_hits[(n)])
@@ -227,20 +238,22 @@ static int __fastcall s1_init(void *s, void *)
      "unsupported" instead of doing nothing quietly. */
   hal_gapless_minigames_latch(); return r; }
 
-/* ---- THE FLOOR ------------------------------------------------------------
+/* ---- THE FLOOR, RETIRED. Run mg10, lane F364 -----------------------------
  *
- * func_ov006_0210c9e0, vtable slot 6, 0x81c bytes, no delink block and no src
- * file. COUNT AND RETURN ONLY. The 1 is the ROM's own single-exit return value
- * (0x0210d180 `mov r0, #1`) and not a convenient choice; nothing else about
- * the body is reproduced here, and port/tools/inferred_stub_guard.py is the
- * reason a plausible-looking one is not.
+ * func_ov006_0210c9e0, vtable slot 6, 0x81c bytes, is decompiled and seated.
+ * src/func_ov006_0210c9e0.cpp is NONMATCHING and its banner says how far it
+ * got: size exact at 519 words, 431 byte-identical, 42 relocation slots whose
+ * destinations all agree with config/arm9/overlays/ov006/relocs.txt, and 46
+ * residual words that are register allocation only.
  *
- * The census below prints the ask count and the state index side by side,
- * because the two together are the honest statement: N asks with the index
- * pinned at 0 says the tick reached the state machine and the state machine is
- * missing, which is a different claim from either number alone. */
-static int __fastcall s1_beh_floor(void *, void *)
-{ S1(6); ++g_s1_floor_asks; return 1; }
+ * THE ASK COUNTER STAYS and it is not ceremony. It was the instrument that
+ * measured the trap, and it is the instrument that measures the seat: the
+ * census prints the call count and the state index side by side, so N calls
+ * with +0x46b4 still pinned at 0 would say the tick reaches the state machine
+ * and the state machine is not moving. That is a different failure from either
+ * number alone, and it is the one this seat has to disprove. */
+static int __fastcall s1_beh(void *s, void *)
+{ S1(6); ++g_s1_beh_calls; return func_ov006_0210c9e0((char *)s); }
 
 static int __fastcall s1_render(void *s, void *)
 { S1(9);  return _ZN3OAM7SECONDSE((unsigned char *)s); }
@@ -341,7 +354,7 @@ static int __fastcall s1_render_noop(void *, void *)
 struct S1Face { unsigned ds; void *host; };
 
 static const S1Face kSlot1Faces[] = {
-    {0x0210d1fcu, (void *)s1_init},       {0x0210c9e0u, (void *)s1_beh_floor},
+    {0x0210d1fcu, (void *)s1_init},       {0x0210c9e0u, (void *)s1_beh},
     {0x0210c6c0u, (void *)s1_render},     {0x0210a8c0u, (void *)s1_d2},
     {0x0210a900u, (void *)s1_d0},         {0x0210c674u, (void *)s1_reset},
     {0x0210c4dcu, (void *)s1_v27},        {0x0210c4b8u, (void *)s1_v28},
@@ -477,18 +490,20 @@ extern "C" void port_scene_slot1_hits(void)
     std::printf("   (%u total)\n", total);
 
     std::printf("[scene] dScMgSlot1_c::betIcon_c slots entered: 0(x%u) 1(x%u)"
-                "  -- slot 0 is the Behavior's per-frame update and is "
-                "unreachable while slot 6 is trapped; slot 1 is the Render's "
-                "and is not\n", g_s1_bet_hits[0], g_s1_bet_hits[1]);
+                "  -- slot 0 is the Behavior's own per-frame tail and is "
+                "reached once per seated tick; slot 1 is the Render's\n",
+                g_s1_bet_hits[0], g_s1_bet_hits[1]);
 
-    /* ---- THE FLOOR, REPORTED AS A PAIR ----------------------------------
+    /* ---- THE SEATED BEHAVIOR, REPORTED AS A PAIR ------------------------
      *
-     * The ask count alone reads like an instrument; the state index alone
+     * The call count alone reads like an instrument; the state index alone
      * reads like a stuck game. Printed together they are the measurement:
-     * N asks with +0x46b4 pinned at 0 says the tick reaches the state machine
-     * every frame and the state machine is the missing body. */
-    std::printf("[scene] dScMgSlot1_c FLOOR func_ov006_0210c9e0 (slot 6, "
-                "0x81c, no src): %u ask(s)\n", g_s1_floor_asks);
+     * N calls with +0x46b4 pinned at 0 would say the tick reaches the state
+     * machine every frame and the state machine is not moving. This line was
+     * the trap's headline and it is kept as the seat's, unchanged in shape so
+     * a run against an older build compares directly. */
+    std::printf("[scene] dScMgSlot1_c BEHAVIOR func_ov006_0210c9e0 (slot 6, "
+                "0x81c, src seated): %u call(s)\n", g_s1_beh_calls);
 
     /* THE SLOT-18 SECOND ARGUMENT, CENSUSED RATHER THAN ASSUMED. Run mg9 lane
        LKY found a class whose slot-18 body READS its second argument where
@@ -497,9 +512,12 @@ extern "C" void port_scene_slot1_hits(void)
        dispatches the slot with 4 at 0x0210cf48 and with 5 at 0x0210cf80 -- so
        the thunk FORWARDS it rather than only cleaning it. Printing the
        distribution is what turns "forwarded" into a measurement: a run where
-       every dispatch carries the same value has not exercised the branch, and
-       on this class the two values that would are behind the trapped slot 6.
-       This class does NOT override slot 19; that one is dScMgBase_c's. */
+       every dispatch carries the same value has not exercised the branch. On
+       this class the two values that would were behind the trapped slot 6 and
+       are now reachable: the seated Behavior dispatches this slot with 4 from
+       state 6 and with 5 from state 7, so a run that plays a round to the end
+       prints them. This class does NOT override slot 19; that one is
+       dScMgBase_c's. */
     std::printf("[scene] dScMgSlot1_c slot-18 second argument:");
     for (int i = 0; i < 8; ++i)
         if (g_s1_reset_args[i])

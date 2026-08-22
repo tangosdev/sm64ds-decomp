@@ -1,3 +1,4 @@
+//cpp
 // NONMATCHING: register allocation only. Logic verified against the ROM
 // instruction for instruction; not byte-matchable from C at mwccarm 2004/b56.
 // Counts as decompiled, not matched.
@@ -9,14 +10,14 @@
 // port/slice_s364.txt section 5 is the floor documentation this retires.
 //
 // CLOSEST APPROACH: SIZE EXACT -- 519 words against the ROM's 519, 0x81c to
-// the byte. 397 of those words are byte-identical at their own offset and the
-// remaining 42 are relocation slots which hold a placeholder in the object and
-// carry the ROM's word once linked. That is 439 of 519 (84.6%). The 80 residual
+// the byte. 431 of those words are byte-identical at their own offset and a
+// further 42 are relocation slots which hold a placeholder in the object and
+// carry the ROM's word once linked. That is 473 of 519 (91.1%). The 46 residual
 // words are ALL register allocation: the same instruction, the same operands,
 // a different register number. The dominant one is the prologue's r1/r2 swap --
 // the ROM puts `self + 0x4000` in r2 and the state index in r1, this build the
-// other way round -- and it propagates into arms 6, 9/11 and 13, which read
-// that base again before the first call clobbers it.
+// other way round -- and it propagates into arms 6 and 13, which read that base
+// again before the first call clobbers it.
 //
 // THE RELOCATIONS ARE CHECKED AND EXACT, which is the part a byte count does
 // not tell you. The object emits 42 relocations, config/arm9/overlays/ov006/
@@ -32,13 +33,38 @@
 // 2.0 family collapses to 496 words / 215, and the dsi family to 474 / 124.
 // -O2,p -- the mg7 lead -- is WORSE here, not better: 527 words and 246. -O3,p
 // reaches 520 / 401; -O4 and -O2 without ,p collapse to 509 / 291 and
-// 516 / 269. All six declaration orders of the three locals
-// are FLAT at 432, so the pret regalloc lever does not move this one. Also flat:
-// switching on the memory read instead of a local, splitting 0x46b4 into
-// 0x4000 + 0x6b4, an unsigned touch index, a separate declaration and
-// assignment for the spin counter, and hoisting the vtable word into its own
-// local before the indirect call. The decomp-permuter was run on this seed
-// (base score 1245) and did not improve it.
+// 516 / 269. All six declaration orders of the three locals are FLAT at 432, so
+// the pret regalloc lever does not move this one. Also flat: switching on the
+// memory read instead of a local, splitting 0x46b4 into 0x4000 + 0x6b4, an
+// unsigned touch index, a separate declaration and assignment for the spin
+// counter, and hoisting the vtable word into its own local before the indirect
+// call.
+//
+// THE decomp-permuter DID EARN ITS RUN, which is worth recording because the
+// last two heavyweight lanes reported it flat. Seeded with the hand draft at
+// score 1245 it reached 1215 and then 1055 inside the first four minutes and
+// then did NOT improve on 1055 over the remaining run, which reached iteration
+// 8677 before it was stopped -- one continuous process, one "base score" line
+// in its log. So the honest headline is "the whole gain arrived early", not
+// "eight thousand iterations of hill climbing". The whole difference is one
+// respelling: case 9/11 keeps its `r` local for the
+// read-modify-write and then uses the EXPRESSION `(state - 9) >> 1` again for
+// the three uses after it, so mwcc rematerialises the index instead of keeping
+// r live across func_02012718. That is 26 words, from 432 aligned-identical to
+// 458 and from 397 positional to 423. Nothing else it found survived review,
+// and the one thing that did was re-derived by hand and re-scored through
+// tools/match.py rather than trusted out of the permuter's own output dir.
+//
+// AND THE LAST EIGHT WORDS CAME FROM A HOST BUG, not from a matching idea. The
+// two vtable dispatches and the betIcon tail call were first written as plain C
+// function-pointer calls. That is 8 words away from the ROM, which reads `this`
+// into r0 FIRST and loads the table out of r0 -- and on the host it is a
+// crash, because the port's thunks are __fastcall-with-a-dummy and a __cdecl
+// indirect call gives them `this` on the stack. Rewriting all three as C++
+// virtual calls through shadow structs fixed the crash AND closed the eight
+// words, 423 positional to 431. The lesson generalises: on this port a
+// function-pointer call into a filled vtable is wrong twice over, and the
+// byte gate sees only one of the two.
 //
 // WHAT DID MOVE IT, and these are the load-bearing parts of the source below:
 //
@@ -80,6 +106,7 @@ typedef unsigned int u32;
 
 struct Pt { int x; int y; };
 
+extern "C" {
 extern u8   DecIfAbove0_Byte(u8 *p);
 extern void _ZN5Sound12PlayBank2_2DEj(u32 id);
 extern int  Sound_PlayIfNotActive(int a, int b, int c, int d);
@@ -110,6 +137,36 @@ extern u8   data_020a0e40;
 extern u8   data_020a0de8[];
 extern u8   data_020a0de9[];
 extern int  data_0209f61c;
+}  /* extern "C" */
+
+
+/* THE TWO INDIRECT DISPATCHES ARE C++ VIRTUAL CALLS AND THAT IS NOT A STYLE
+   CHOICE. The ROM enters both through the object's own table with `this` in
+   r0 -- `mov r0, r4; ldr r2, [r0]; ldr r2, [r2, #0x48]; blx r2` for slot 18
+   and `add r0, r4, r0; ldr r1, [r0]; ldr r1, [r1]; blx r1` for the betIcon --
+   and a plain C function-pointer call reproduces neither. On the HOST it is
+   worse than a byte difference: port/hal/scene_mg_slot1.cpp's thunks are
+   __fastcall with the dummy second parameter that makes them __thiscall-
+   compatible, so a __cdecl indirect call hands them `this` on the stack and
+   they read whatever is in ecx. That crashed inside func_ov006_0210c354 with
+   `this` reading self+0x470c -- caught by a scripted-touch run, not by any
+   compile-time check. A shadow struct with virtuals is the shape
+   src/func_ov006_0210d1fc.cpp already uses over this same object, and
+   port/slice_s364.txt section 7's shadow-class test passes for it: the table
+   under it is a MOUNTED ROM table that the seat's fill writes by ROM word, so
+   the slot indices below are the ROM's own. */
+struct Obj {
+    virtual void v0();  virtual void v1();  virtual void v2();  virtual void v3();
+    virtual void v4();  virtual void v5();  virtual void v6();  virtual void v7();
+    virtual void v8();  virtual void v9();  virtual void v10(); virtual void v11();
+    virtual void v12(); virtual void v13(); virtual void v14(); virtual void v15();
+    virtual void v16(); virtual void v17();
+    virtual void m48(int a);          /* vtable offset 0x48 = slot 18 */
+};
+
+struct BetIcon {
+    virtual void Update();            /* betIcon_c slot 0, the per-frame tail */
+};
 
 /* Every read-modify-write below materialises its address through a pool
    constant in the ROM while every single-use access folds onto the 12-bit
@@ -164,7 +221,7 @@ extern int  data_0209f61c;
  * The emission order below -- 0..7, then 9/11, 13, 8, 10/12 -- is the ROM's
  * own: it is what makes the jump table's fourteen entries land on the same
  * offsets the ROM's do. */
-int func_ov006_0210c9e0(char *c)
+extern "C" int func_ov006_0210c9e0(char *c)
 {
     int i;
     int state;
@@ -332,8 +389,7 @@ int func_ov006_0210c9e0(char *c)
         if (idle != 0) {
             func_ov004_020adb1c(*(int *)(c + 0xa8));
             if (DecIfAbove0_Byte((u8 *)(c + 0x470c)) == 0) {
-                char *self = c;
-                (*(void (**)(char *, int))(*(char ***)self + 18))(self, 4);
+                ((Obj *)(void *)c)->m48(4);
             }
         }
         break;
@@ -342,8 +398,7 @@ int func_ov006_0210c9e0(char *c)
     case 7:
         if (DecIfAbove0_Byte((u8 *)(c + 0x470c)) == 0) {
             if (*(int *)(c + 0xa8) > 0) {
-                char *self = c;
-                (*(void (**)(char *, int))(*(char ***)self + 18))(self, 5);
+                ((Obj *)(void *)c)->m48(5);
             } else {
                 u8 *s = (u8 *)c;
                 for (i = 0; i < 3; i++) {
@@ -365,12 +420,18 @@ int func_ov006_0210c9e0(char *c)
         int r = (state - 9) >> 1;
         int *s = (int *)(c + 0x46a4);
         s[r] = s[r] - 0x2000;
+        /* r IS DELIBERATELY NOT REUSED PAST THIS TEST, and that is the
+           decomp-permuter's finding rather than a style choice: respelling the
+           three uses below as the expression itself, so mwcc rematerialises
+           `(state - 9) >> 1` instead of keeping r live across the call, is
+           worth 26 words. */
         if (*(int *)(c + r * 4 + 0x46a4) < 0) {
-            *(int *)(c + r * 4 + 0x46a4) = 0;
+            *(int *)(c + ((state - 9) >> 1) * 4 + 0x46a4) = 0;
             *(u8 *)(c + 0x470c) = 0xa;
             *(int *)(c + 0x46b4) = *(int *)(c + 0x46b4) + 1;
-            func_02012718(0x164, data_ov006_0213e63c[r].x << 12);
-            if (r == 0) {
+            func_02012718(0x164,
+                          data_ov006_0213e63c[(state - 9) >> 1].x << 12);
+            if (((state - 9) >> 1) == 0) {
                 func_ov004_020ae274(2);
             }
         }
@@ -405,10 +466,7 @@ int func_ov006_0210c9e0(char *c)
         break;
     }
 
-    {
-        char *b = c + 0x4660;
-        (*(void (**)(char *))(*(char ***)b))(b);
-    }
+    ((BetIcon *)(void *)(c + 0x4660))->Update();
     func_ov006_0210c278((u8 *)(c + 0x4684));
     func_ov006_0210c278((u8 *)(c + 0x4690));
     func_ov006_0210c1a8((int *)(c + 0x469c));
