@@ -4916,6 +4916,10 @@ src/func_ov006_02106080.c:
     complete
     .text start:0x02106080 end:0x02106168
 
+src/func_ov006_02106168.cpp:
+    complete
+    .text start:0x02106168 end:0x021063a0
+
 src/func_ov006_021063a0.cpp:
     complete
     .text start:0x021063a0 end:0x02106664
@@ -4951,6 +4955,10 @@ src/func_ov006_02106bac.c:
 src/func_ov006_02106bc0.c:
     complete
     .text start:0x02106bc0 end:0x02106ca4
+
+src/func_ov006_02106ca4.c:
+    complete
+    .text start:0x02106ca4 end:0x02106eb8
 
 src/func_ov006_02106eb8.cpp:
     complete
