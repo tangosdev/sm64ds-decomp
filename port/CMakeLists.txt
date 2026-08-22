@@ -4214,7 +4214,10 @@ endforeach()
 # and dedupes identical absolute paths, so nothing is compiled twice.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_psy.txt" SLICE_PSY_LINES)
 set(SLICE_PSY_SOURCES hal/scene_mg_psycheout.cpp
-                      unmatched/Mg3DEsp_StateDispatch.cpp)
+                      unmatched/Mg3DEsp_StateDispatch.cpp
+                      # REPLACES src/func_ov006_020e9cec.c, which is out of
+                      # the slice: see the block below this one.
+                      unmatched/Mg3DEsp_Cleanup.cpp)
 foreach(line IN LISTS SLICE_PSY_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -4223,24 +4226,40 @@ foreach(line IN LISTS SLICE_PSY_LINES)
     list(APPEND SLICE_PSY_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
-# CleanupResources RELEASES TWO SharedFilePtrs SPELLED AS THE SHARED
-# PLACEHOLDERS G0 AND G1, and hal/cxx_aliases.cpp binds bare G0 to
-# _data_020a0eac (the game heap) and bare G1 to _data_ov002_0210e05c. Both are
-# wrong for this TU, and neither would have failed a link. The body's OWN
-# literal pool says what they are, read out of
-# extracted/overlays/overlay_0006.bin at 0x020e9d14 and 0x020e9d18: 0x02141e9c
-# and 0x02141e74, which are two of the eleven SharedFilePtrs
-# src/__sinit_ov006_02130a08.c constructs (file ids 0x1ef and 0x202) and are the
-# same two words the factory's own pool holds at 0x020ea1bc and 0x020ea1d0.
-#
-# A scan of every TU in port/slice_psy.txt for VT, VT0, HEAP, G0, G1, G2, R0, R1
-# and R2 returns this ONE file. func_020beb68 in src/func_ov006_020e9c20.c needs
-# no row: unmatched/MgCoin_Faces.cpp already aliases it onto
-# data_ov004_020beb68.
+# ONE .c IN THIS SLICE IS REALLY C++, and all twenty-seven were swept for it
+# rather than one being found by a compile error and the rest left to luck.
+# src/func_ov006_020e8bd0.c opens with a //cpp marker and declares both its
+# callee and itself inside `extern "C"`, which is invalid C. The sweep was for
+# the marker and for extern "C", virtual, class and namespace across every .c
+# path in port/slice_psy.txt; it is the only hit. Same repair the ov006 smartball
+# block above uses for src/func_ov006_02110a20.c.
 set_source_files_properties(
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020e9cec.c"
-    PROPERTIES COMPILE_DEFINITIONS
-    "G0=data_ov006_02141e9c;G1=data_ov006_02141e74")
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020e8bd0.c"
+    PROPERTIES LANGUAGE CXX)
+
+# NO PER-SOURCE -D ROW FOR THIS CLASS, AND THE REASON IS REUSABLE.
+# src/func_ov006_020e9cec.c (slot 3, CleanupResources) releases two
+# SharedFilePtrs spelled as the shared placeholders G0 and G1, and
+# hal/cxx_aliases.cpp binds bare G0 to _data_020a0eac (the game heap) and bare
+# G1 to _data_ov002_0210e05c -- both wrong for this TU, and neither would fail
+# a link. The body's OWN literal pool says what they are, read out of
+# extracted/overlays/overlay_0006.bin at 0x020e9d14 and 0x020e9d18: 0x02141e9c
+# and 0x02141e74, the two SharedFilePtrs src/__sinit_ov006_02130a08.c
+# constructs for file ids 0x1ef and 0x202.
+#
+# THE STANDING REPAIR IS A PER-SOURCE RENAME AND IT CANNOT BE USED HERE. The
+# two rows above this block do it (VT and VT0), and it works when the
+# placeholder is declared in the TU and the target is not declared anywhere the
+# TU can see. G1 and its target are BOTH in include/decl_common.h -- line 396
+# is `extern int G1[];` and line 3041 is `extern void*data_ov006_02141e74;` --
+# so `-DG1=data_ov006_02141e74` rewrites line 396 into a redefinition of line
+# 3041 with a different type of indirection. Measured: error C2372. Host-copied
+# in unmatched/Mg3DEsp_Cleanup.cpp instead, and the src TU is out of the slice.
+#
+# A scan of every TU in port/slice_psy.txt for VT, VT0, HEAP, G0, G1, G2, R0,
+# R1 and R2 returns that ONE file. func_020beb68 in src/func_ov006_020e9c20.c
+# needs no row: unmatched/MgCoin_Faces.cpp already aliases it onto
+# data_ov004_020beb68.
 
 # Lane FDR: the arm9 wipe fader's own static initialiser, and the dWipe_c
 # vtable it installs. Rides the SAME three targets as the scene seats above,

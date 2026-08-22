@@ -81,10 +81,23 @@
 #      an address in any module -- and it is the FIRST WORD of the next config
 #      symbol, data_ov006_0213c954, whose second word is 0x00000003.
 #   4. RELOCATION COUNT. config/arm9/overlays/ov006/relocs.txt has exactly 36
-#      relocations inside [0x0213c8c4, +36 words), and STILL 36 inside
-#      [0x0213c8c4, +37 words). A vtable slot is a relocated code pointer; word
-#      36 carries no relocation, so it cannot be one. Check 3 says what the
-#      word is and check 4 says what it is not, from a different file.
+#      relocations inside the 36-word span from 0x0213c8c4, and STILL 36 inside
+#      a 37-word span from the same address. A vtable slot is a relocated code
+#      pointer, so word 36 carrying none means it cannot be one. Check 3 says
+#      what the word is and check 4 says what it is not, from a different file.
+#
+#      NOTHING IN THIS FILE MAY CONTAIN AN UNBALANCED SQUARE BRACKET, and this
+#      paragraph is where the first draft had two of them. CMake reads a slice
+#      with file(STRINGS), and an unmatched opening square bracket makes that
+#      reader swallow EVERY FOLLOWING LINE into a single list element -- so
+#      every path below it silently leaves the build. The failure does not look
+#      like a slice failure: the hal and unmatched files still compile, and the
+#      link then reports a wall of LNK2019s that reads exactly like an unclosed
+#      closure. Measured on this tree with cmake -P: a four-line file whose
+#      second line opens a square bracket and never closes it comes back as TWO
+#      elements, and the same file with the bracket closed comes back as four.
+#      A scan of every slice in the tree finds this the only one that ever had
+#      the defect.
 #
 # The middle table's own width was re-read the same way rather than cited from
 # port/slice_mem.txt or port/slice_flw.txt: 0x0213e448 -> data_ov006_0213e4d8
@@ -163,33 +176,64 @@ src/MgPsycheOut_Spawn.cpp
 # one of the two shapes a link cannot see. port/mg_fanout_costs.txt section
 # 14's practical rule is to read the src before wiring slot 6 by name; this is
 # the class that rule is for. port/unmatched/Mg3DEsp_StateDispatch.cpp has it.
-src/func_ov006_020e9e70.cpp      # slot 0  InitResources, 0x380
-src/func_ov006_020e9cec.c        # slot 3  CleanupResources (the G0/G1 rename)
-src/func_ov006_020e9d1c.cpp      # slot 9  Render, 0xe4
-src/func_ov006_020e7660.cpp      # slot 16 D2, unmarked
-src/func_ov006_020e76e4.c        # slot 17 D0
-src/func_ov006_020e9c20.c        # slot 18 state reset -- READS ITS ARGUMENT
-src/func_ov006_020e9c10.c        # slot 20
+# slot 0  InitResources, 0x380
+src/func_ov006_020e9e70.cpp
+# SLOT 3 IS NOT HERE ON PURPOSE EITHER. src/func_ov006_020e9cec.c releases two
+# SharedFilePtrs spelled as the shared placeholders G0 and G1, and the standing
+# per-source -D repair CANNOT be used: G1 and its target are BOTH declared in
+# include/decl_common.h (lines 396 and 3041), so the define turns one of them
+# into a redefinition with a different type of indirection. Host-copied in
+# port/unmatched/Mg3DEsp_Cleanup.cpp, which carries the derivation.
+# slot 9  Render, 0xe4
+src/func_ov006_020e9d1c.cpp
+# slot 16 D2, unmarked
+src/func_ov006_020e7660.cpp
+# slot 17 D0
+src/func_ov006_020e76e4.c
+# slot 18 state reset -- READS ITS ARGUMENT
+src/func_ov006_020e9c20.c
+# slot 20
+src/func_ov006_020e9c10.c
 
 # the twenty routed state bodies, less the two that are also dispatchers
 # (func_ov006_020e9b70 and func_ov006_020e8830, both host-copied).
-src/func_ov006_020e9bbc.c        # f2c 0
-src/func_ov006_020e989c.cpp      # f2c 2
-src/func_ov006_020e97b0.c        # fac 0
-src/func_ov006_020e96f4.cpp      # fac 1
-src/func_ov006_020e968c.c        # fac 2
-src/func_ov006_020e9670.c        # fac 3
-src/func_ov006_020e9318.c        # f5c 0
-src/func_ov006_020e91a0.c        # f5c 1
-src/func_ov006_020e8f14.c        # f5c 2
-src/func_ov006_020e8cb0.c        # f74 0
-src/func_ov006_020e8c74.c        # f74 1
-src/func_ov006_020e8bd0.c        # f74 2
-src/func_ov006_020e8928.c        # f1c 0
-src/func_ov006_020e8728.c        # f8c 0
-src/func_ov006_020e85f0.c        # f8c 1
-src/func_ov006_020e84b8.c        # f8c 2
-src/func_ov006_020e83bc.c        # f8c 3
-src/func_ov006_020e82c8.c        # f44 0
-src/func_ov006_020e8214.c        # f44 1
-src/func_ov006_020e81e0.c        # f44 2
+# f2c 0
+src/func_ov006_020e9bbc.c
+# f2c 2
+src/func_ov006_020e989c.cpp
+# fac 0
+src/func_ov006_020e97b0.c
+# fac 1
+src/func_ov006_020e96f4.cpp
+# fac 2
+src/func_ov006_020e968c.c
+# fac 3
+src/func_ov006_020e9670.c
+# f5c 0
+src/func_ov006_020e9318.c
+# f5c 1
+src/func_ov006_020e91a0.c
+# f5c 2
+src/func_ov006_020e8f14.c
+# f74 0
+src/func_ov006_020e8cb0.c
+# f74 1
+src/func_ov006_020e8c74.c
+# f74 2
+src/func_ov006_020e8bd0.c
+# f1c 0
+src/func_ov006_020e8928.c
+# f8c 0
+src/func_ov006_020e8728.c
+# f8c 1
+src/func_ov006_020e85f0.c
+# f8c 2
+src/func_ov006_020e84b8.c
+# f8c 3
+src/func_ov006_020e83bc.c
+# f44 0
+src/func_ov006_020e82c8.c
+# f44 1
+src/func_ov006_020e8214.c
+# f44 2
+src/func_ov006_020e81e0.c
