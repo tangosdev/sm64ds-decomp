@@ -1,0 +1,297 @@
+# Gate PPP: dScMgPanel_c, actor id 0x17c = scene 380. The minigame the spawn
+# symbol names MgPuzzlePanelPuzzlePanic. Run mg6, lane PPP.
+#
+# ---- 1. THE CLASS, RE-DERIVED FROM THE ROM --------------------------------
+#
+# Everything below was read out of extracted/overlays/overlay_0006.bin at base
+# 0x020bfec0 and out of config/arm9/overlays/ov006/, not out of the cost file:
+#
+#   SpawnInfo      0x0213dc64  MgPuzzlePanelPuzzlePanic_SpawnInfo. The doubled
+#                  id word 0x017c017c sits at 0x0213dc68 and the word before it
+#                  is 0x02107858 -- the mechanical derivation
+#                  port/mg_fanout_costs.txt section 3 prescribes. Run over the
+#                  whole image it reproduces all thirty rows of that section's
+#                  table, including its address-shaped names (0x169 to
+#                  0x0213c020, 0x16c to 0x0213e560, 0x173 to 0x0213b814,
+#                  0x177 to 0x0213c434, 0x17d to 0x0213d580, 0x186 to
+#                  0x02140114).
+#   factory        0x02107858  MgPuzzlePanelPuzzlePanic_Spawn, 0x34 bytes
+#   vtable         0x0213e24c  named by the factory's OWN load relocation,
+#                  relocs.txt from:0x02107888 kind:load to:0x0213e24c
+#   class          dScMgPanel_c
+#   .init ctor     __sinit_ov006_02131fa4
+#   width          36          all three of section 11's checks, below
+#   overrides      6           slots 0, 6, 9, 16, 17, 18
+#   markers        5           all five ruled REAL_DECOMP before seating
+#   nosrc          0           among the override bodies
+#
+# THE RTTI NAME IS PROVED BY THE VTABLE'S OWN -4 WORD, which is a stronger
+# chain than the src spelling every earlier lane quoted:
+#
+#   relocs.txt  from:0x0213e248 kind:load to:0x0213dd40 module:overlay(6)
+#   relocs.txt  from:0x0213dd44 kind:load to:0x0213dd84 module:overlay(6)
+#
+# data_ov006_0213e24c[-1] is the type_info at 0x0213dd40 -- {0x0209a764 the
+# type_info vptr, 0x0213dd84 the name, 0x020bbf6c the base} -- and 0x0213dd84
+# reads "12dScMgPanel_c" in the shipped image.
+# src/MgPuzzlePanelPuzzlePanic_Spawn.c independently spells _ZTV12dScMgPanel_c.
+#
+# THE WIDTH CHECKS, section 11's three, re-run rather than inherited:
+#
+#   1. SPAN     data_ov006_0213e24c to data_ov006_0213e2dc is 0x90 = 36 words.
+#               An UPPER bound only, and here it is exactly 36, so a 37th slot
+#               cannot exist inside the table.
+#   2. TERMINAL slot 35 (0x0213e2d8) holds 0x020ad660, the word every
+#               dScMgBase_c-derived table holds there. MATCH.
+#   3. THE WORD index 36 (0x0213e2dc) is 0xffffffff, an address in no module --
+#               and it is its OWN config symbol, data_ov006_0213e2dc, which is
+#               what makes check 1 exact here rather than an upper bound.
+#
+# ONE DERIVED TABLE, NOT THREE. Slot 16 (func_ov006_0210428c) and slot 17
+# (func_ov006_021042b0) both store data_ov006_0213e24c into [this] and then
+# call func_ov004_020b29c0 with nothing in between -- relocs.txt from
+# 0x021042ac and 0x021042e0 both name 0x0213e24c -- so the chain is
+# Scene to dScMgBase_c to dScMgPanel_c and the fill does the base's table and
+# this one. dScMgCup_c needed a third because its destructors write an
+# intermediate base's.
+#
+# NO DISPLACEMENT RULING IS NEEDED. src/MgPuzzlePanelPuzzlePanic_Spawn.c calls
+# func_ov004_020b2adc(p) WITH the pointer, where dScMgCup_c's factory calls the
+# same base constructor with none and rides r0 through. The ROM agrees:
+# relocs.txt from:0x0210786c kind:arm_call to:0x020b2adc, with r0 = p live.
+#
+# ONE ACTOR ID, TWO PLAYER TITLES. The doubled-id scan finds exactly one record
+# for 0x17c and the arm9 spawn table at 0x02090e54 has one row for it, in id
+# order between 0x17b's and 0x17d's, so "Puzzle Panel" and "Puzzle Panic" are
+# not two ids. The class carries a MODE GATE instead: vtable slot 35 is
+# dScMgBase_c's func_ov004_020ad660, `return (this[2] & 0xff) != 0`.
+#
+# FOUR SITES READ IT, not two. An earlier version of this paragraph named only
+# func_ov006_021057f0 and _02106168; review found the count low and the whole
+# set was re-derived by scanning extracted/overlays/overlay_0006.bin for
+# `ldr Rd,[Rn,#0x8c]` with Rn NEITHER pc NOR sp -- that filter is the whole
+# trick, because the same encoding with Rn = pc is an ordinary literal-pool
+# load and an unfiltered scan returns 92 hits in ov006 against 14 real ones.
+#
+#   0x02105480  func_ov006_021053a8   NO SRC, NO DELINK -- never entered
+#   0x021057fc  func_ov006_021057f0   compiled; skips the whole 02142820 state
+#                                     dispatch when the gate answers nonzero
+#   0x021061ec  func_ov006_02106168   NO SRC, NO DELINK -- trapped; this is the
+#                                     site that picks the board layout from
+#                                     data_ov006_0213dd4c or _0213dd58
+#   0x021063b0  func_ov006_021063a0   compiled; called only from slot 0
+#                                     (0x0210779c) and slot 18 (0x02107294)
+#
+# So only TWO of the four sit in a body the port compiles, and on a boot the
+# gate fires exactly ONCE, from 021063a0 on the init path -- see the mb_v35
+# block in hal/scene_mg.cpp for the arithmetic that pins it.
+#
+# ONE NEAR MISS IS RECORDED SO IT IS NOT RE-FOUND. func_ov006_02106a08 looks
+# like a fifth site to a scan that does not filter Rn: its word at 0x02106a0c
+# is e59f208c, which is `ldr r2,[pc,#0x8c]` fetching the constant 0x4e30 from
+# 0x02106aa0 -- an object field offset, not a virtual dispatch.
+#
+# WHICH MODE IS WHICH TITLE IS NOT DERIVED HERE and this file does not guess it.
+#
+# ---- 2. HOW THE LIST WAS DERIVED ------------------------------------------
+#
+# A relocation closure over config/arm9/{,overlays/ov00{1,4,6}/}relocs.txt with
+# blocks joined through delinks.txt, from THIRTY-FIVE roots: the factory, the
+# class's own overlay constructor __sinit_ov006_02131fa4, the six vtable
+# override bodies and the twenty-seven state code words. That is lane LUI's
+# root set and lane MGA's method: CODE EDGES ONLY, from explicit roots. A walk
+# that also follows DATA symbol spans over-reaches, because a data symbol's
+# span runs to the next config symbol and sweeps up relocations belonging to
+# whatever sits after it.
+#
+#     ov006  62 blocks   ov004  36   ov001  1   arm9 259
+#
+# THE arm9 HALF IS NOT LISTED, section 5's rule: all 259 already have matched
+# TUs compiled into the build and come back through /OPT:REF the moment ov004
+# or ov006 references them.
+#
+# WHAT IS ALREADY LINKED IS NOT LISTED EITHER, measured against this lane's own
+# baseline map rather than assumed: 1 of the 62 ov006 blocks, 34 of the 36
+# ov004 and the 1 ov001 are already objects in build/port/walk_window.map at
+# a65c871a3, because the curling, Wanted, Bob-omb Squad, Slots Shot,
+# Coincentration and Loves-Me slices and the framework seat brought them in.
+#
+# THE TWO ov004 BLOCKS THAT ARE NOT LINKED ARE NOT SLICE LINES EITHER, because
+# the framework already owns both: src/func_ov004_020b3278.cpp is host-copied
+# in port/unmatched/MgBase_StateDispatch.cpp and src/func_ov004_020b87e0.cpp in
+# port/unmatched/MgBase_StateSetter.cpp. This lane inherits both and adds
+# neither. So the ov004 delta of this class over what is already seated is
+# ZERO, which is section 2's "paid once, by this lane, for all thirty" holding
+# on a seventh class.
+#
+# ---- 3. THE POINTER-TO-MEMBER WALL, AND THIS CLASS HAS TWICE CURLING'S -----
+#
+# TEN ov006 TUs dispatch through an mwcc member pointer and every one of them
+# is host-copied in port/unmatched/MgPanel_StateDispatch.cpp. They are
+# commented out below rather than deleted, with a pointer back there.
+#
+# port/mg_fanout_costs.txt section 4 costs the wall at five dispatching TUs per
+# minigame. THIS CLASS HAS TEN, and the reason is structural: dScMgPanel_c runs
+# a TWO-LEVEL state machine. Slot 6 dispatches data_ov006_02142888, and five of
+# that table's own eight states are themselves dispatchers of a second table,
+# data_ov006_02142840. A lane that host-copied the Behavior alone would link,
+# boot, and jump to a raw DS address on the first frame the outer state moved.
+#
+# A LINK NAMES AT MOST EIGHT OF THE TEN, and the two it cannot name are the
+# THIRD SHAPE lane FLW found -- and one of them is vtable slot 6:
+#
+#   src/func_ov006_02107358.cpp   table 02142888, arity 0, VTABLE SLOT 6
+#   src/func_ov006_02106bc0.c     table 02142840, arity 1
+#
+# Both declare the pair as two plain ints (`struct Ent { int a; int b; }` and
+# `struct Pmf { int off; int adj; }`), read it as two ordinary ints and
+# open-code the ARM Itanium decode, so there is no `::*` for a source sweep to
+# match and no mangled global for a link to fail on. The ROM at 0x02107358
+# carries the five-instruction sequence one for one with what the src spells;
+# the disassembly is in this lane's adjudication of slot 6.
+#
+# THE `::*` SWEEP OVER THIS SLICE IS CLEAN, and that is the point rather than a
+# reassurance: it is clean because all ten dispatchers are EXCLUDED. It was run
+# over the 53 lines below and returns nothing, which is exactly what it would
+# return if the two int-spelled ones had been left in.
+#
+# ---- 4. THREE ov006 BODIES IN THE CLOSURE HAVE NO SOURCE -------------------
+#
+# None has a delink block in config/arm9/overlays/ov006/delinks.txt and no src
+# file defines any of them in either extension. The nosrc column in section 3's
+# table is about the six OVERRIDE bodies and is a correct zero; these three are
+# closure holes, the same class of floor curling met six of.
+#
+#   func_ov006_021053a8  A STATE. Slot 2 of data_ov006_02142820.
+#       port/tools/stategen.py reports it under REFUSALS as "HAS NO DECOMPILED
+#       BODY". The address switch reports which state was wanted rather than
+#       inventing a body.
+#   func_ov006_02106ca4  A STATE. Slot 6 of data_ov006_02142888, so it is one
+#       of the eight the Behavior itself dispatches. Same treatment.
+#   func_ov006_02106168  0x238, AND IT IS NOT A STATE -- it is the panel LAYOUT
+#       BUILDER, and vtable slot 0 (InitResources) and slot 18 (state reset)
+#       both call it DIRECTLY. Its own two literals are the pair of three-entry
+#       mode tables named in section 1. It stands as a named trap in
+#       port/unmatched/MgPanel_Faces.cpp, taking the one argument its two ROM
+#       callers pass. Standing in for it would draw a plausible wrong board,
+#       which is the guess port/tools/inferred_stub_guard exists to refuse.
+#
+# TWO MORE WERE STATEGEN JOIN MISSES AND ARE NOT FLOORS, which is the
+# distinction lane MGB's amendment to the tool exists to make:
+#   func_ov006_02106aa8  slot 1 of data_ov006_02142840. Outside the delinks
+#       join, and src/func_ov006_02106aa8.c EXISTS, bannered NONMATCHING
+#       (different op / idiom, div=35). NONMATCHING TUs are routinely sliced
+#       and built by this port, so the state is reachable: the TU is a slice
+#       line below and the address switch has its case.
+#       IT DOES MOVE THE LINKAGE HEADLINE, and an earlier version of this note
+#       said the opposite -- "linkage.py counts matched TUs and a bannered one
+#       is decompiled rather than matched". THAT IS FALSE and a later lane
+#       predicting from it would come out one short. port/tools/linkage.py's
+#       matched_index() walks src/ with os.walk, keys every .c and .cpp by its
+#       FILENAME STEM, and never opens a file -- so it cannot see a banner, and
+#       a bannered TU is in its universe exactly like any other. This lane's
+#       own +53 is the proof: the slice is 53 lines, one of them bannered, and
+#       ov006 moved 414 -> 467. Had the note been right the number would have
+#       been 52.
+#       THE RULE FOR A LATER LANE: every slice line moves the headline by one,
+#       banner or no banner. The banner is a statement about byte-matching, and
+#       linkage is a statement about what the linker kept; the two do not meet.
+#   func_ov006_02106fdc  slot 3 of data_ov006_02142888. Same shape, bannered
+#       NONMATCHING (div=28) -- and it is ALSO one of the ten dispatchers, so
+#       it is host-copied rather than sliced.
+#
+# ---- 5. DUPLICATE LINES, AND WHY THERE ARE NONE ---------------------------
+#
+# Every line below is a block this lane's closure reaches that no earlier slice
+# compiles, measured against build/port/walk_window.map at a65c871a3 rather
+# than assumed. If a later lane finds one of these on its own closure it should
+# list it anyway, for the reason slice_lui.txt section 5 and slice_mg1.txt's
+# header both give: a slice is a statement about what a class REACHES, and
+# CMake dedupes identical absolute paths so nothing compiles twice.
+#
+# ---- 6. ONE SHARED-HEADER PLACEHOLDER MUST BE RENAMED ---------------------
+#
+# src/func_ov006_021042b0.c, the deleting destructor, spells its own vtable as
+# the shared-header placeholder `VT` -- `t[0] = (int)VT;` -- and its heap
+# argument as `HEAP`. include/decl_common.h declares `extern int VT[];` and
+# hal/cxx_aliases.cpp binds bare VT to _data_ov002_021081e4, the ENEMY base
+# table. THE REMEDY IS THE LUI ONE, a per-source -D in port/CMakeLists.txt:
+#
+#     VT=data_ov006_0213e24c
+#
+# and the address is the body's OWN literal pool, read out of the shipped
+# image: 0x021042e0 holds 0213E24C. HEAP is deliberately NOT renamed -- the
+# second pool word at 0x021042e4 is 020A0EAC, the game heap cxx_aliases.cpp
+# already binds it to.
+#
+# ---- 7. ov006: THE CLASS ---------------------------------------------------
+# In address order, which is the order the closure walk emits.
+# HOST-COPIED (PPP), in port/unmatched/MgPanel_StateDispatch.cpp:
+#   src/func_ov006_02104ac4.cpp   table 021427bc, arity 1 with a literal 0
+#   src/func_ov006_02104c60.cpp   table 021427ec, arity 0
+#   src/func_ov006_021050bc.cpp   table 02142860, arity 0
+#   src/func_ov006_021057f0.cpp   table 02142820, arity 0, mode-gated on slot 35
+#   src/func_ov006_02106bc0.c     table 02142840, arity 1, THIRD SHAPE
+#   src/func_ov006_02106eb8.cpp   table 02142840, arity 1
+#   src/func_ov006_02106f44.cpp   table 02142840, arity 1
+#   src/func_ov006_02106fdc.c     table 02142840, arity 1, and a join-miss state
+#   src/func_ov006_0210709c.cpp   table 02142840, arity 1
+#   src/func_ov006_02107358.cpp   table 02142888, arity 0, THIRD SHAPE, SLOT 6
+# NEEDS A PER-SOURCE -DVT, see section 6 at the head of this file:
+#   src/func_ov006_021042b0.c
+src/func_ov006_0210428c.c
+src/func_ov006_021042b0.c
+src/func_ov006_021042e8.c
+src/func_ov006_02104354.c
+src/func_ov006_02104558.c
+src/func_ov006_021048b0.c
+src/func_ov006_021048e4.c
+src/func_ov006_02104920.c
+src/func_ov006_02104a10.cpp
+src/func_ov006_02104ac0.c
+src/func_ov006_02104b24.c
+src/func_ov006_02104b4c.c
+src/func_ov006_02104b5c.c
+src/func_ov006_02104bac.c
+src/func_ov006_02104bb0.c
+src/func_ov006_02104c08.c
+src/func_ov006_02104cfc.c
+src/func_ov006_02104d44.c
+src/func_ov006_02104d94.c
+src/func_ov006_02104e70.c
+src/func_ov006_02104e80.c
+src/func_ov006_02104ea8.c
+src/func_ov006_02104eb8.c
+src/func_ov006_02104ec8.c
+src/func_ov006_02104ecc.cpp
+src/func_ov006_02104fb4.c
+src/func_ov006_0210500c.c
+src/func_ov006_0210508c.c
+src/func_ov006_02105118.c
+src/func_ov006_02105134.c
+src/func_ov006_021051dc.c
+src/func_ov006_02105670.c
+src/func_ov006_02105730.c
+src/func_ov006_02105854.c
+src/func_ov006_02105ab4.c
+src/func_ov006_02105c1c.c
+src/func_ov006_02105c88.c
+src/func_ov006_02105d20.c
+src/func_ov006_02105de4.c
+src/func_ov006_02106048.c
+src/func_ov006_021063a0.cpp
+src/func_ov006_02106758.c
+src/func_ov006_021067a4.c
+src/func_ov006_02106910.c
+src/func_ov006_02106a08.c
+# THE JOIN MISS, section 4. Outside the delinks join and bannered NONMATCHING,
+# so the closure walk could not reach it and stategen could not emit its case;
+# both are boundaries of a tool rather than floors for the port.
+src/func_ov006_02106aa8.c
+src/func_ov006_02106bac.c
+src/func_ov006_0210713c.cpp
+src/func_ov006_021071d4.c
+src/func_ov006_021071fc.c
+src/func_ov006_0210730c.c
+src/func_ov006_021073b0.c
+src/MgPuzzlePanelPuzzlePanic_Spawn.c

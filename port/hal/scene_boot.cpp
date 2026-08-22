@@ -2203,6 +2203,17 @@ void port_scene_fill_bomroom(void);
 extern unsigned char data_ov006_0213c434[];
 void *port_mg_curling2_spawn(void);
 void port_scene_fill_curling2(void);
+/* run mg6 lane PPP: dScMgPanel_c, actor id 0x17c. The spawn symbol carries
+   both localised titles the naming pipeline found for the one id, and the
+   ROM's own RTTI at 0x0213dd84 -- reached through the type_info the word
+   BEFORE the vtable points at -- reads "12dScMgPanel_c", so the row is named
+   for the class the way SCENE_MG_CURLING and SCENE_MG_LUIGI are. Same
+   reads_sublevel reasoning as the rows above, re-checked for this class: no
+   relocation in ov006 lands on data_02092110 and no TU in this class's
+   closure names it. */
+extern unsigned char MgPuzzlePanelPuzzlePanic_SpawnInfo[];
+void *port_mg_panel_spawn(void);
+void port_scene_fill_panel(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2316,6 +2327,19 @@ static const PortSceneClass port_scene_classes[] = {
        relying on it, and the lane's scene-374 canary is the check. */
     {375, "SCENE_MG_CURLING2", data_ov006_0213c434, port_mg_curling2_spawn,
      port_scene_fill_curling2, 0},
+    /* 380 is 0x17c, spelled in decimal for the same two reasons the rows above
+       are: the others are, and port/tools/battery.py reads its hosted-scene set
+       out of this table. APPENDED AFTER EVERY EXISTING ROW, which is the rule
+       port/mg_fanout_costs.txt section 11 derives from the once-per-process
+       constructor gate: port_scene_registry_install walks this table in order
+       and port_scene_mg_overlay_load runs the thirty-five constructors at the
+       tail of the FIRST minigame row's fill, so a row placed before an earlier
+       class's would have its fill run before those constructors read the
+       mounted .data. Nothing in this class's fill writes outside its own
+       36-slot table -- the width is checked three ways in port/slice_ppp.txt --
+       so appending is a rule this lane obeys rather than a hazard it needs. */
+    {380, "SCENE_MG_PANEL", MgPuzzlePanelPuzzlePanic_SpawnInfo,
+     port_mg_panel_spawn, port_scene_fill_panel, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
