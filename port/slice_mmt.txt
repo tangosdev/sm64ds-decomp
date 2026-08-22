@@ -273,14 +273,34 @@
 # reading above is the evidence; there is no run behind it, and this paragraph
 # says so rather than letting a green census imply one.
 #
-# ---- SLOT 34 IS NOT WITNESSED BY THIS CLASS -------------------------------
+# ---- THREE FRAMEWORK HAZARDS, ALL UNWITNESSED BY THIS CLASS ---------------
 #
-# Run mg9 lane S371 reported that hal/scene_mg.cpp's shared thunk for slot 34
-# is declared (void*, void*) while func_ov004_020ae3b4 takes five parameters at
-# every ROM dispatch site. A 900-frame scene-362 boot reports
-# "framework slots entered: 1(x1) 31(x1) 32(x1)" -- slot 34 is not entered at
-# all, so this class witnesses nothing and the repair is not this lane's to
-# make. Recorded so a later lane knows the question was asked here.
+# Three lanes of run mg9 reported framework-side defects and asked every other
+# lane to check its own class rather than assume. All three come back NEGATIVE
+# here, and the measurement is the same 900-frame scene-362 boot in each case.
+#
+#   SLOT 34 (lane S371). hal/scene_mg.cpp's shared thunk is declared
+#   (void*, void*) while func_ov004_020ae3b4 takes five parameters at every ROM
+#   dispatch site. The run reports "framework slots entered: 1(x1) 31(x1)
+#   32(x1)" -- slot 34 is not entered at all, so this class witnesses nothing
+#   and the repair is not this lane's to make.
+#
+#   THE SHADOW-SLOT-19 CALLING CONVENTION (lane BOO). src/func_ov004_020b6b40.c
+#   and _020b6c9c.c call vtable slot 19 through a shadow array with a plain
+#   cdecl pointer while mb_v19 is __fastcall and cleans four bytes itself. It
+#   bites only once the FRAMEWORK state machine runs, and it does not run here:
+#   the census reads "0 framework call(s), 0 UNHANDLED address(es)" and
+#   "framework state setter: 0 call(s) into func_ov004_020b87e0". Same reading
+#   port/mg_fanout_costs.txt section 13 records for the sibling. Nothing to
+#   replicate; BOO's fix stands alone.
+#
+#   THE SHARED ov004 FLOOR func_ov004_020ae5c4 (lanes S371 and BOO). NOT IN
+#   THIS CLASS'S CLOSURE AT ALL -- zero hits over the 103 ov004 functions the
+#   two-root walk reaches -- so this lane owes no trap and takes no dependency
+#   on theirs. This class's ONE ov004 body without a source is
+#   func_ov004_020ae858, which hal/scene_mg_faces.cpp has trapped since run
+#   link60, and the run reports all seven of that file's trapping sites entered
+#   zero times.
 
 # ---- ov006: dScMgMemory_c's own code block, 0x020f3834..0x020f5564 -------
 #
