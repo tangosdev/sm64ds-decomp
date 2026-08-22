@@ -265,8 +265,60 @@ static int  __fastcall mem_init(void *s, void *)
      minigame calls it so the ones the gapless table does not name can say
      "unsupported" instead of doing nothing quietly. */
   hal_gapless_minigames_latch(); return r; }
+/* ---- SM64DS_MEM_TRACE: the round, frame by frame (run mg8, lane MMD) ------
+   Off unless the variable is set, so no battery run changes shape.
+
+   The exit census is a snapshot and a board is a SEQUENCE: it deals, it is
+   tapped, it clears, the level moves and it deals again. Driving one from a
+   scripted stylus means knowing WHEN each of those happened, and the only
+   alternative to this is bisecting SM64DS_SCENE_FRAMES a run at a time.
+
+   One line per CHANGE of any of the seven words the round is made of, stamped
+   with the render count -- which is the frame number SM64DS_TOUCH_PROBE
+   counts, because vtable slot 9 runs exactly once per scene frame (measured:
+   render 600 of 600 frames, 1400 of 1400). */
+static void mem_trace(const char *self)
+{
+    static int on = -1;
+    if (on < 0) {
+        const char *e = std::getenv("SM64DS_MEM_TRACE");
+        on = (e && e[0] && e[0] != '0') ? 1 : 0;
+    }
+    if (!on || !self) return;
+
+    struct Snap { int st, sub, lvl; unsigned pairs, need, miss, picks; };
+    static Snap prev;
+    static int have;
+    Snap now;
+    now.st    = *(const int *)(self + 0x53d4);
+    now.sub   = *(const int *)(self + 0x53d8);
+    now.lvl   = *(const int *)(self + 0xb4);
+    now.pairs = *(const unsigned char *)(self + 0x5405);
+    now.need  = *(const unsigned short *)(self + 0x53ea);
+    now.miss  = *(const unsigned char *)(self + 0x5408);
+    now.picks = *(const unsigned char *)(self + 0x5406);
+
+    if (have && now.st == prev.st && now.sub == prev.sub &&
+        now.lvl == prev.lvl && now.pairs == prev.pairs &&
+        now.need == prev.need && now.miss == prev.miss &&
+        now.picks == prev.picks)
+        return;
+    prev = now; have = 1;
+
+    int live = 0;
+    for (int i = 0; i < 20; ++i)
+        if (*(const unsigned char *)(self + 0x51a8 + i * 0x18 + 0x12)) ++live;
+
+    std::fprintf(stderr, "[mem] f%u state %d.%d  level %d  pairs %u/%u  "
+                 "misses %u  picks %u  live cards %d\n",
+                 g_mem_hits[9], now.st, now.sub, now.lvl, now.pairs, now.need,
+                 now.miss, now.picks, live);
+    std::fflush(stderr);
+}
+
 static int  __fastcall mem_beh(void *s, void *)
-{ MEM(6);  const int r = func_ov006_020f7458(s); hal_gapless_splice(); return r; }
+{ MEM(6);  const int r = func_ov006_020f7458(s); hal_gapless_splice();
+  mem_trace((const char *)s); return r; }
 static int  __fastcall mem_render(void *s, void *)
 { MEM(9);  return func_ov006_020f73f4((char *)s); }
 static void *__fastcall mem_d2(void *s, void *)
