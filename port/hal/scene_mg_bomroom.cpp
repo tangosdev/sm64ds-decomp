@@ -180,8 +180,43 @@ static unsigned g_sos_hits[36];
 static int  __fastcall sos_init(void *s, void *)
 { SOS(0);  const int r = func_ov006_020d9244(s);
   hal_gapless_minigames_latch(); return r; }
-static int  __fastcall sos_beh(void *s, void *)
-{ SOS(6);  return func_ov006_020d91b0((char *)s); }
+/* SM64DS_SOS_STATE=<n>: pin the top-level state index at +0x62d0 before every
+   Behavior tick. A DIAGNOSTIC, off unless the variable is set, and it exists
+   for one reason that the ordinary run cannot supply.
+
+   THE CLASS CANNOT REACH FOUR OF ITS OWN FIVE TOP-LEVEL STATES. Slot 0 sets
+   the index to 1 and the game walks to 2, where it stays: state 2
+   (func_ov006_020d8ff4) calls func_ov006_020d8408, the 0x4fc body with no
+   delink block and no src, and that body is what advances the index. So the
+   decomp floor pins the state machine, and state 3 -- which is
+   func_ov006_020d8f98, the dispatcher that open-codes the ARM Itanium
+   sequence in plain ints -- is unreachable on any headless run.
+
+   THAT MATTERS BECAUSE THAT SHAPE IS CONVICTED ONLY BY A RUN. Neither a link
+   nor a member-pointer source sweep can see it, so "the build is clean" says
+   nothing about it, and a census reading zero is not evidence that the host
+   copy works. Pinning the index drives the dispatch and lets the census answer
+   the question the static detectors cannot.
+
+   IT PINS RATHER THAN POKES ONCE, because a state body may write the index
+   back; and it writes only this one word of the scene object, before the ROM
+   body reads it, which is the same word slot 0 and slot 18 both write. */
+static int __fastcall sos_beh(void *s, void *)
+{
+    SOS(6);
+    static int pin = -2;
+    if (pin == -2) {
+        const char *e = std::getenv("SM64DS_SOS_STATE");
+        pin = (e && e[0]) ? std::atoi(e) : -1;
+        if (pin >= 0)
+            std::fprintf(stderr, "  [scene] SM64DS_SOS_STATE=%d: pinning "
+                         "dScMgBomroom_c's state index at +0x62d0. This is a "
+                         "diagnostic and not how the game runs.\n", pin);
+    }
+    if (pin >= 0)
+        *(int *)((char *)s + 0x62d0) = pin;
+    return func_ov006_020d91b0((char *)s);
+}
 static int  __fastcall sos_render(void *s, void *)
 { SOS(9);  return func_ov006_020d9160(s); }
 static void *__fastcall sos_d2(void *s, void *)
