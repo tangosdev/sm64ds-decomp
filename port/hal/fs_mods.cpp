@@ -93,6 +93,7 @@ typedef unsigned int u32;
 extern "C" int host_setting_lovesme_character(void);   /* hal/host_settings.cpp */
 extern "C" int host_setting_custom_palette(void);      /* hal/host_settings.cpp */
 extern "C" const char *port_fs_catalog_path(unsigned); /* hal/fs.cpp */
+extern "C" unsigned port_fs_interior_id(const char *); /* hal/fs.cpp */
 
 extern "C" {
 extern unsigned (*port_fs_mod_map)(unsigned fileID);
@@ -1307,13 +1308,20 @@ void woven_load(void)
    colors in a readable spec and palmod compiles it to this blob, so the
    parser here stays a dozen dumb lines. Format, little-endian throughout:
 
-       "PALM"  u16 version=1  u16 record count, then per record:
-       u16 fileID   u16 palette index   u16 color count
-       char palName[16]      NUL-padded, advisory: checked as a prefix
-                             against the BMD's own palette name when
-                             present, so a stale id refuses instead of
-                             recoloring a stranger
-       u16 colors[count]     RGB555 as the DS stores palettes
+       "PALM"  u16 version=2  u16 record count, then per record:
+       u8 pathLen  u8 nameLen  u16 color count
+       char path[pathLen]    the target FILE, by name: a NARC interior
+                             path ("data/player/mario_model.bmd") or the
+                             tail of a catalog path for a loose file.
+                             Named, never numbered, because files.tsv and
+                             the mount bases are generated from the
+                             player's own dump -- the same reason
+                             resolve_ids() above works by path. Resolved
+                             once, when the combo loads.
+       char name[nameLen]    the palette inside that BMD, by its own name
+                             in the palette table
+       u16 colors[count]     RGB555 as the DS stores palettes; count must
+                             equal the palette's, whole sets only
 
    WHY PALETTE ENTRIES ONLY. Character textures are format 5, 4x4-compressed,
    whose index data maps texels to palette slots -- but the COLORS all live in
@@ -1334,9 +1342,11 @@ int palette_combo(void)
 }
 
 struct PalPatch {
-    u16 file_id, pal_index, count;
-    char name[17];      /* the spec's advisory palette name, NUL-terminated */
-    const u8 *colors;   /* count*2 bytes into g_pal_blob */
+    unsigned file_id;   /* resolved at load; 0 = not in this dump, disabled */
+    u16 count;
+    char path[128];     /* the spec's target file path */
+    char name[64];      /* the spec's palette name */
+    const u8 *colors;   /* count*2 bytes into g_pal_blob, LE, any alignment */
     int said;           /* each record reports once, patched or refused */
 };
 
@@ -1428,7 +1438,7 @@ void palette_load(void)
         goto refuse_close;
     fclose(f);
     f = 0;
-    if (memcmp(g_pal_blob, "PALM", 4) != 0 || rd16(g_pal_blob, 4) != 1)
+    if (memcmp(g_pal_blob, "PALM", 4) != 0 || rd16(g_pal_blob, 4) != 2)
         goto refuse;
     nrec = rd16(g_pal_blob, 6);
     if (nrec == 0 || nrec > 512)
@@ -1439,19 +1449,37 @@ void palette_load(void)
     cur = 8;
     for (u32 r = 0; r < nrec; ++r) {
         struct PalPatch *p = &g_pal_patch[r];
-        if (cur + 22 > (u32)len)
+        u32 pl, nl;
+        if (cur + 4 > (u32)len)
             goto refuse;
-        p->file_id = rd16(g_pal_blob, cur);
-        p->pal_index = rd16(g_pal_blob, cur + 2);
-        p->count = rd16(g_pal_blob, cur + 4);
-        memcpy(p->name, g_pal_blob + cur + 6, 16);
-        p->name[16] = '\0';
-        if (p->count == 0 || p->count > 4096 ||
-            cur + 22 + (u32)p->count * 2 > (u32)len)
+        pl = g_pal_blob[cur];
+        nl = g_pal_blob[cur + 1];
+        p->count = rd16(g_pal_blob, cur + 2);
+        if (pl == 0 || pl >= sizeof p->path || nl == 0 ||
+            nl >= sizeof p->name || p->count == 0 || p->count > 4096 ||
+            cur + 4 + pl + nl + (u32)p->count * 2 > (u32)len)
             goto refuse;
-        p->colors = g_pal_blob + cur + 22;
-        cur += 22 + (u32)p->count * 2;
+        memcpy(p->path, g_pal_blob + cur + 4, pl);
+        memcpy(p->name, g_pal_blob + cur + 4 + pl, nl);
+        p->colors = g_pal_blob + cur + 4 + pl + nl;
+        cur += 4 + pl + nl + (u32)p->count * 2;
         ++g_pal_npatch;
+    }
+    /* resolve every record's file NAME to this dump's id: the loose catalog
+       first (the resolve_ids scan), then the archives' own name tables */
+    for (u32 r = 0; r < g_pal_npatch; ++r) {
+        struct PalPatch *p = &g_pal_patch[r];
+        for (unsigned id = 0; id < CATALOG_SCAN_MAX && !p->file_id; ++id) {
+            const char *cp = port_fs_catalog_path(id);
+            if (cp && path_ends_with(cp, p->path))
+                p->file_id = id;
+        }
+        if (!p->file_id)
+            p->file_id = port_fs_interior_id(p->path);
+        if (!p->file_id)
+            fprintf(stderr, "[mods] CustomPalette %d: %s is not in this "
+                            "dump; that record is off for this run\n",
+                    combo, p->path);
     }
     g_pal_state = 1;
     fprintf(stderr, "[mods] CustomPalette %d: %u palette patch record(s) "
@@ -1466,32 +1494,43 @@ refuse:
             combo, shown);
 }
 
-/* One record against one served file: 0 on success, else the refusal. */
+/* Exact NUL-terminated string at offset `at` in a bounded buffer. */
+int str_at_is(const u8 *d, u32 size, u32 at, const char *want)
+{
+    u32 j = 0;
+    for (; want[j]; ++j)
+        if (at + j >= size || (char)d[at + j] != want[j])
+            return 0;
+    return at + j < size && d[at + j] == '\0';
+}
+
+/* One record against one served file: 0 on success, else the refusal. The
+   palette is found by ITS name in the file's own table, so the record and
+   the file agree on identity or nothing is written. */
 const char *palette_try(const struct PalPatch *p, u8 *d, u32 size)
 {
-    u32 npal, palo, nm, dp, sz;
-    const u8 *rec;
+    u32 npal, palo, dp, sz;
+    const u8 *rec = 0;
     if (size < 0x3c)
         return "file too small for a BMD header";
     npal = rd32(d, 0x1c);
     palo = rd32(d, 0x20);
-    if (p->pal_index >= npal)
-        return "palette index out of range";
-    if (palo > size || ((u32)p->pal_index + 1) * 0x10 > size - palo)
+    if (npal > 64)
+        return "palette count is not a BMD's";
+    if (palo > size || npal * 0x10 > size - palo)
         return "palette table past end of file";
-    rec = d + palo + (u32)p->pal_index * 0x10;
-    nm = rd32(rec, 0);
+    for (u32 i = 0; i < npal; ++i) {
+        const u8 *r = d + palo + i * 0x10;
+        u32 nm = rd32(r, 0);
+        if (nm < size && str_at_is(d, size, nm, p->name)) {
+            rec = r;
+            break;
+        }
+    }
+    if (!rec)
+        return "no palette of that name in the file";
     dp = rd32(rec, 4);
     sz = rd32(rec, 8);
-    if (nm >= size)
-        return "palette name past end of file";
-    if (p->name[0]) {
-        /* prefix compare: the spec name is capped at 16 chars, the BMD's is
-           NUL-terminated in the file */
-        for (u32 j = 0; p->name[j]; ++j)
-            if (nm + j >= size || (char)d[nm + j] != p->name[j])
-                return "palette name disagrees with the BMD";
-    }
     if (sz != (u32)p->count * 2)
         return "color count disagrees with the BMD";
     if (dp > size || sz > size - dp)
@@ -1510,25 +1549,19 @@ u32 palette_filter(unsigned fileID, u8 **data, u32 size)
     for (unsigned i = 0; i < g_pal_npatch; ++i) {
         struct PalPatch *p = &g_pal_patch[i];
         const char *why;
-        const char *path;
-        if (p->file_id != fileID)
+        if (!p->file_id || p->file_id != fileID)
             continue;
         why = palette_try(p, *data, size);
         if (p->said++)
             continue;
-        path = port_fs_catalog_path(fileID);
         if (why)
-            fprintf(stderr, "[mods] CustomPalette %d: id 0x%x (%s) palette "
-                            "%u '%s' REFUSED: %s; served as the ROM has "
-                            "it\n", palette_combo(), fileID,
-                    path ? path : "archive interior", p->pal_index, p->name,
-                    why);
+            fprintf(stderr, "[mods] CustomPalette %d: %s '%s' REFUSED: %s; "
+                            "served as the ROM has it\n",
+                    palette_combo(), p->path, p->name, why);
         else
-            fprintf(stderr, "[mods] CustomPalette %d: id 0x%x (%s) palette "
-                            "%u '%s' recolored, %u colors\n",
-                    palette_combo(), fileID,
-                    path ? path : "archive interior", p->pal_index, p->name,
-                    p->count);
+            fprintf(stderr, "[mods] CustomPalette %d: %s '%s' recolored, "
+                            "%u colors\n",
+                    palette_combo(), p->path, p->name, p->count);
     }
     return size;
 }

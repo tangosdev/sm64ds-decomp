@@ -508,8 +508,8 @@ int g_lovesme_character;             /* default 0, and 0 is the ROM */
    are the default and 0 is the ROM. 1..3 name a combo FILE,
    palettes/combo<N>.pal beside settings.json, holding replacement color
    sets the file seam writes into the characters' model palettes as they
-   load. The key only picks the file; every file id and color comes out of
-   the file itself, so this build never learns who is recolored what.
+   load. The key only picks the file; every target name and color comes out
+   of the file itself, so this build never learns who is recolored what.
 
    Like LovesMeCharacter the mechanism is hal/fs_mods.cpp's and is
    boot-latched -- the file layer caches what it serves. A value outside
