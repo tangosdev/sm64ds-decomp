@@ -3699,6 +3699,33 @@ foreach(dup IN ITEMS src/func_ov006_020e683c.cpp src/func_ov006_020e6354.cpp
     endif()
 endforeach()
 
+# THE DELETING DESTRUCTOR SPELLS ITS OWN TABLE AS THE SHARED PLACEHOLDER `VT`,
+# and this is the third minigame class to need the rename. src/func_ov006_
+# 020e3878.c line 9 is `t[0] = (int)VT;` and hal/cxx_aliases.cpp:1231 binds
+# bare VT to _data_ov002_021081e4, the ov002 ENEMY base table. Without the line
+# below this class's slot-17 D0 writes the ENEMY vtable into the object on
+# teardown.
+#
+# THE ADDRESS IS THIS BODY'S OWN LITERAL POOL, read out of
+# extracted/overlays/overlay_0006.bin at base 0x020bfec0: 0x020e38a8 holds
+# 0213C510, which is this class's table. Its unmarked D2 sibling
+# func_ov006_020e3854 stores the same word from its own pool at 0x020e3874 and
+# is spelled with the symbol rather than the placeholder, so the two halves of
+# the destructor pair cross-confirm the binding.
+#
+# HEAP IS DELIBERATELY NOT RENAMED. The second pool word at 0x020e38ac is
+# 020A0EAC, which is the game heap cxx_aliases.cpp:1232 already binds bare HEAP
+# to, so the global alias is correct for this TU and a rename would be noise.
+#
+# AND THE LINK IS NOT A DETECTOR FOR THIS. The wrong binding resolves cleanly,
+# and so does a run: slot 17 is the deleting destructor, so a scene that boots
+# and ticks never enters it. This lane's 60-frame and 1200-frame runs of scene
+# 375 both entered slots 0, 6 and 9 only. The check that works is reading the
+# TU and the body's own pool, which is what the paragraph above is.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020e3878.c"
+    PROPERTIES COMPILE_DEFINITIONS "VT=data_ov006_0213c510")
+
 set(SCENE_MG_CURLING2_SOURCES hal/scene_mg_curling2.cpp)
 
 # run mg5 lane FLW: THE SECOND MINIGAME CLASS, and the first with a
