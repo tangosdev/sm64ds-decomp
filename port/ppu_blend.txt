@@ -734,3 +734,81 @@ WHAT IS STILL OPEN. Scene 387 (dScMgBooSeek_c) reports PROJ_IDENTITY 1 as well
 and is NOT fixed by this, because it submits ZERO triangles -- a different
 defect that happens to share one row of this table. Named so the table is not
 read as closing it.
+
+
+================================================================================
+SCENE 370's BOMB MARCH: THE COMPOSITOR IS NOT WHY IT DOES NOT DRAW
+(run mg10, lane RGX)
+================================================================================
+
+hal/scene_mg_bomroom.cpp section 9 records, from run mg8, that the seeded
+bin-full repro reaches the carry with the counter advancing while "the central
+play field is BLACK and no bombs are drawn in it", and that lane SGX's engine-A
+OBJ priority fix was the plausible cure and was not the cure. This lane put the
+OBJ-vs-BG rule in as well, re-ran the same repro, and it is still not the cure.
+What follows is where it actually is, so the next lane does not spend another
+run on the raster.
+
+THE ARMS FIRST. SM64DS_SOS_FILL=40 + SM64DS_SOS_TRACE=1, top capture, ON vs
+SM64DS_OBJBG_OFF=1: f380 1708 px, f450 4908 px, f560 1720 px -- and the black
+field is IDENTICAL in both arms. The rule does not touch it. The trace says the
+march is running: t374 top=3 sub=2, all forty bombs at state 6 substate 4.
+
+1. THE BOMBS ARE OBJ, ON BOTH ENGINES. src/func_ov004_020afdd0.cpp is the
+   framework plotter -- OAM::Render at y + 0xc0 + G for the top engine and
+   OAM::RenderSub at y for the bottom, the RenderOamBothScreens shape.
+
+2. THEY ARE NOT IN ENGINE A's OAM IN THAT REPRO, AND THE SEED IS WHY.
+   src/func_ov006_020d7524.c is the bomb renderer, reached from Render slot 9,
+   and it opens `if (self->e[i].b699 == 0) continue;` -- byte +0x4699. The ROM
+   sets that byte in func_ov006_020d8324, the spawn-delay state, which counts
+   +0x4690 down and then writes +0x4699 = 1, +0x4694 = 1, +0x4697 = 1.
+
+   sos_binfill writes +0x698, +0x697, +0x69b, +0x69c, +0x69d, +0x690, +0x692,
+   +0x696, +0x670, +0x688, +0x68c, +0x660 and +0x664 -- every field
+   func_ov006_020d8408 writes, which is exactly what its header promises -- and
+   then calls the ROM's drop handler, which parks the bomb at +0x697 == 5. The
+   delay state never runs, so +0x4699 is never set, so no seeded bomb is ever
+   submitted. The seed jumps a bomb from "just spawned" straight to "parked in a
+   bin" and skips the state that turns its drawing on.
+
+   MEASURED, by a temporary edit made, read and reverted: adding +0x699 = 1 and
+   +0x694 = 1 to the seed takes engine A's OBJ ownership at f380 from 2956 px to
+   13475 px. The bombs draw. Nothing in the compositor changed.
+
+   THE ONE-LINE HANDBACK, for whoever owns hal/scene_mg_bomroom.cpp: in
+   sos_binfill, beside the existing +0x698/+0x697 writes, add
+       *(unsigned char *)(b + 0x699) = 1;
+       *(unsigned char *)(b + 0x694) = 1;
+   which is what func_ov006_020d8324 writes when the delay it seeds expires.
+   NOT taken here: that file is not this lane's.
+
+3. THE BLACK FIELD IS BG2 SCROLLING OFF, AND THE ROM DRIVES IT.
+   src/func_ov006_020d5b10.c state 1 does `+0x62dc += 0x3000` per frame and
+   `SetBg2Offset(0, +0x62dc >> 12)`, up to 0xc0 = 192, then clamps. BG2CNT 0x9411
+   is a 32x64 map -- 256x512 px -- whose content ENDS at map row 191. Read off
+   the strip probe across the whole ramp:
+
+     rows  24..191   5120/8192 opaque      (flat, the field)
+     rows 189..220    480/8192 opaque      (the last of it leaving)
+     rows 192..223      0/8192 opaque      (empty map)
+
+   so at vofs 192 BG2 owns 0 px and BG3 -- priority 2, 8192/8192 opaque, 74.5%
+   near-black there -- is what shows. Probed at DS(150,100):
+
+     f380  BG loop left BG2 prio 1 colour cecece
+     f560  BG loop left BG3 prio 2 colour 000000
+
+   The compositor draws what the registers and VRAM say, on both frames.
+
+4. AND THE ROM ITSELF STOPS DRAWING THE MARCHING BOMBS. At the clamp,
+   func_ov006_020d5b10 calls func_ov006_020d8904, which writes +0x699 = 0 on
+   every bomb in state 6. With the seed corrected, engine A's OBJ ownership runs
+   13275..14290 px through f442 and falls to 2956 px by f506, centred on that
+   clamp.
+
+STILL OPEN, AND IT IS A CARTRIDGE-DATA QUESTION RATHER THAN A RASTER ONE:
+whether BG3's near-black centre is what a real DS shows once the field slides
+off. That is scene 366's shape -- compare BG3's tiles and palette against the
+ROM's own files, the way run mg5 lane WREND settled the Luigi curtain -- and it
+is not answerable from this side of the compositor.
