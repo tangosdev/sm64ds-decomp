@@ -160,7 +160,19 @@ int   func_ov006_0211cbd0(int *self);         /* slot 16  D2 */
 int  *func_ov006_0211cbf4(int *self);         /* slot 17  D0 */
 void  func_ov006_02120248(char *self, int r); /* slot 18  state reset */
 int   func_ov006_02120238(void);              /* slot 20  FreeGfxSlotsById(8) */
-void  func_ov006_021200dc(char *self);        /* slot 34 */
+/* SLOT 34 TAKES FIVE ARGUMENTS, and the declaration says so rather than
+   dropping four. The ROM's prologue at 0x021200dc is
+       push {r4,r5,r6,r7,r8,sb,sl,fp,lr} / sub sp,sp,#0x1c / ldr sl,[sp,#0x40]
+   where 0x40 = 0x24 + 0x1c is the first word above the frame, so it reads
+   r0..r3 plus one stack word; src/func_ov006_021200dc.c defines it the same
+   way. The dScMgBase_c body it overrides, func_ov004_020ae3b4, has the same
+   five-argument shape (ldr fp,[sp,#0x38] after push{9}+sub#0x14).
+
+   A ONE-ARGUMENT DECLARATION HERE WOULD BE THE bin-softlock DISEASE, which is
+   why port/tools/aritycheck.py's plain-name ratchet refused it: on ARM the
+   dropped words ride registers that are still live and the byte gate stays
+   green, while on the host the callee reads stack slots nobody wrote. */
+void  func_ov006_021200dc(int self, int cx, int cy, int val, int n);
 
 /* the factory */
 void *MgHideAndBooSeek_Spawn(void);
@@ -240,8 +252,26 @@ static int __fastcall boo_reset(void *s, void *, int reset)
 { BOO(18); func_ov006_02120248((char *)s, reset); return 1; }
 static int __fastcall boo_v20(void *, void *)
 { BOO(20); return func_ov006_02120238(); }
-static int __fastcall boo_v34(void *s, void *)
-{ BOO(34); func_ov006_021200dc((char *)s); return 0; }
+/* THE FOUR RIDE-THROUGH PARAMETERS ARE THE ROM'S, and the shape is
+   mb_reset_base's in hal/scene_mg.cpp: `this` in ecx, the unused edx word,
+   then the stack arguments. NOTHING IN THE PORT DISPATCHES THIS SLOT TODAY and
+   the run reports v34 zero, which is a measurement rather than a hope: a scan
+   of both overlay images for `ldr rX,[rY,#0x88]` with Rn neither pc nor sp --
+   section 14's filter, 0x88 being slot 34 -- finds EIGHT sites in ov004 and
+   NONE in ov006, and all eight are inside func_ov004_020ae5c4, which is the
+   ov004 floor this lane traps in hal/scene_mg_faces.cpp. So the only caller of
+   slot 34 in the whole family is a body the port does not have.
+
+   THE DAY THAT FLOOR IS DECOMPILED, READ THIS PARAGRAPH BEFORE WIRING IT. If
+   the new TU spells the dispatch as a plain C five-argument pointer it will be
+   __cdecl and clean twenty bytes while this thunk cleans sixteen, which is the
+   slot-19 defect port/unmatched/MgBase_ShadowSlot19.cpp exists for, arriving
+   at a different slot. hal/scene_mg.cpp's mb_v34 has the one-argument
+   declaration this thunk used to have and is on aritycheck's baseline as
+   pre-existing debt; it is left alone here because the same measurement says
+   nothing reaches it either. */
+static int __fastcall boo_v34(void *s, void *, int cx, int cy, int val, int n)
+{ BOO(34); func_ov006_021200dc((int)(size_t)s, cx, cy, val, n); return 0; }
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics the ov003,
    ov007 and every minigame seat carry, counted separately so a run can never
