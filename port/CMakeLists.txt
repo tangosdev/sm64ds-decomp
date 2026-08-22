@@ -3918,19 +3918,24 @@ set(SCENE_MG_CURLING2_SOURCES hal/scene_mg_curling2.cpp)
 # every target that compiles scene_boot.cpp references port_mg_panel_spawn and
 # port_scene_fill_panel by name -- the same coupling every minigame row has.
 #
-# TEN DISPATCHER HOST COPIES, NOT FIVE, and the two extra files here are the
-# whole shape of it: this class runs a TWO-LEVEL state machine, so
-# unmatched/MgPanel_StateDispatch.cpp carries ten bodies rather than curling's
-# five, and unmatched/MgPanel_Faces.cpp carries the one trap for
-# func_ov006_02106168, which slot 0 and slot 18 both call and which has no
-# delink block and no src file.
+# ELEVEN DISPATCHER HOST COPIES, NOT FIVE: this class runs a TWO-LEVEL state
+# machine, so unmatched/MgPanel_StateDispatch.cpp carries eleven bodies rather
+# than curling's five. Ten of them came with lane PPP's seat; the eleventh is
+# func_ov006_02106ca4, which run mg7 lane L380 decompiled and which turned out
+# to dispatch data_ov006_02142840 as well as being slot 6 of the Behavior's own
+# table.
+#
+# unmatched/MgPanel_Faces.cpp IS NOW ONLY THE VTABLE FACE. It used to carry a
+# counting trap for func_ov006_02106168, the layout picker slot 0 and slot 18
+# both call; that body is decompiled too and joins the slice as an ordinary
+# line, so nothing in this seat stands in for a ROM body any more.
 #
 # THE SLICE IS THE DELTA ONLY. slice_mg1.txt already carries the ov004
 # framework, the thirty-five overlay constructors and the arm9 waves under
 # them; this class's ov004 delta is measured ZERO. CMake appends both lists to
 # the same target and dedupes identical absolute paths, so nothing is compiled
-# twice. port/slice_ppp.txt says what it reaches and records the class's three
-# hard floors and two stategen join misses.
+# twice. port/slice_ppp.txt says what it reaches and records the class's ONE
+# remaining hard floor (func_ov006_021053a8) and two stategen join misses.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_ppp.txt" SLICE_PPP_LINES)
 set(SLICE_PPP_SOURCES unmatched/MgPanel_StateDispatch.cpp
                       unmatched/MgPanel_Faces.cpp)
