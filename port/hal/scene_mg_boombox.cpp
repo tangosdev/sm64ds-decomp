@@ -218,7 +218,8 @@ void *MgBoomBox_Spawn(void);
 
 /* the dispatch file's witness */
 void port_mg_sound_counts(unsigned *hits, unsigned *floor, unsigned *unknown,
-                          unsigned *field_calls, unsigned *field_routed);
+                          unsigned *field_calls, unsigned *field_routed,
+                          unsigned *field_unknown);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
@@ -229,6 +230,15 @@ void port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 extern void         *data_ov004_020beb68;     /* the live dScMgBase_c `this` */
 extern unsigned char data_0209caf4[];         /* 36 records x 20 bytes       */
 int  func_ov004_020adc3c(void *c);            /* (self->field_8 >> 8) & 0xff */
+
+/* THE STYLUS RECORD, the four names src/func_ov006_0211bf44.c reads. Four DS
+   symbols over one 16-byte block, hal/auto_bss.cpp carries the layout and its
+   evidence; nothing is defined here. */
+extern unsigned char data_020a0e40;           /* which player's record       */
+extern unsigned char data_020a0de8[];         /* held                        */
+extern unsigned char data_020a0de9[];         /* the touch-XOR-previous edge */
+extern unsigned char data_020a0dea[];         /* x                           */
+extern unsigned char data_020a0deb[];         /* y                           */
 
 }  /* extern "C" */
 
@@ -489,17 +499,17 @@ extern "C" void port_scene_boombox_hits(void)
        entering its state machine, and that reads as a success unless it is
        said out loud. */
     {
-        unsigned hits = 0, floor = 0, unknown = 0, fc = 0, fr = 0;
+        unsigned hits = 0, floor = 0, unknown = 0, fc = 0, fr = 0, fu = 0;
         unsigned calls = 0, fwunk = 0;
-        port_mg_sound_counts(&hits, &floor, &unknown, &fc, &fr);
+        port_mg_sound_counts(&hits, &floor, &unknown, &fc, &fr, &fu);
         port_mg_dispatch_counts(&calls, &fwunk);
         std::printf("[scene] dScMgSound_c state dispatch: %u routed to one of "
                     "the class's 56 reachable table states across 15 tables, "
                     "%u ask(s) for the floor 0x0211bc8c, %u UNHANDLED by this "
                     "class's switch; sub-object FIELD dispatch %u call(s), %u "
-                    "with a nonzero code word; %u framework call(s), %u "
-                    "UNHANDLED address(es)\n",
-                    hits, floor, unknown, fc, fr, calls, fwunk);
+                    "routed to one of its six states, %u UNHANDLED; %u "
+                    "framework call(s), %u UNHANDLED address(es)\n",
+                    hits, floor, unknown, fc, fr, fu, calls, fwunk);
     }
 
     /* THE OBJECT, AND THE FIELDS THE ROM'S OWN SLOT 6 READS. Every offset here
@@ -538,15 +548,35 @@ extern "C" void port_scene_boombox_hits(void)
                               thirteen sub-dispatchers reads */
     if (g_snd_self) {
         int live10 = 0;
-        std::printf("[scene] dScMgSound_c 10-array (idx:state@y):");
+        /* x and y BOTH, and which word is which comes off the state-0 body
+           rather than off a guess: src/func_ov006_0211bf44.c compares
+           data_020a0dea[player*4] against (+0xe8 >> 12) and
+           data_020a0deb[player*4] against (+0xec >> 12), so +0x50e8 is the
+           stylus X and +0x50ec is the stylus Y, in 20.12. A lane that wants to
+           TAP a pad reads its coordinates off this line. */
+        std::printf("[scene] dScMgSound_c 10-array (idx:state@x,y):");
         for (int i = 0; i < 10; ++i) {
             const char *r = g_snd_self + 0x50e8 + i * 0x14;
             if (*(const unsigned char *)(r + 0x0d) == 0) continue;
             ++live10;
-            std::printf(" %d:%u@%d", i, *(const unsigned char *)(r + 0x0c),
-                        *(const int *)(r + 0x00) >> 12);
+            std::printf(" %d:%u@%d,%d", i, *(const unsigned char *)(r + 0x0c),
+                        *(const int *)(r + 0x00) >> 12,
+                        *(const int *)(r + 0x04) >> 12);
         }
         std::printf("   (%d of 10 in play)\n", live10);
+        /* THE HIT-TEST GATE, printed because a run that never leaves state 0
+           and a run with no pads to hit read the same on every other line.
+           +0x5624 is the per-round tap counter state 0 increments and its own
+           early-out at 2; the three bytes after it are the stylus record the
+           hit test reads. */
+        std::printf("[scene] dScMgSound_c touch: taps this round +0x5624 = %u "
+                    "(state 0 stops answering at 2), stylus record "
+                    "de8=%u de9=%u dea=%u deb=%u\n",
+                    *(const unsigned char *)(g_snd_self + 0x5624),
+                    data_020a0de8[data_020a0e40 * 4],
+                    data_020a0de9[data_020a0e40 * 4],
+                    data_020a0dea[data_020a0e40 * 4],
+                    data_020a0deb[data_020a0e40 * 4]);
 
         int live30 = 0;
         std::printf("[scene] dScMgSound_c 30-array (idx:lvl1.lvl2):");

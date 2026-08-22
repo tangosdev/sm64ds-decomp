@@ -247,12 +247,49 @@ int  func_ov006_020c2290(void *c);
 void _ZN9Animation7AdvanceEv(void *a);
 void _ZN14BlendModelAnim7AdvanceEv(void *b);
 
+/* ---- the SIX sub-object states, the FIELD member pointer's own universe ---
+   Bounded from the ROM rather than from a run, the way MgBase_StateSetter.cpp
+   bounds ov004's eighty. The field is the first eight bytes of the sub-object
+   at this+0x4f38 and no overlay constructor writes it: each state installs its
+   SUCCESSOR out of its own literal pool, which is why a relocation scan finds
+   the installs at the END of each body. Every load from inside the family's
+   code span 0x020c2200..0x020c3400 whose target is an {code, 0} pair:
+
+     pair 0x0213add0 = {020c22d8, 0}   installed from 0x020c23a4
+     pair 0x0213adf8 = {020c23a8, 0}   installed from 0x020c24e0
+     pair 0x0213adc0 = {020c24e4, 0}   installed from 0x020c2638
+     pair 0x0213adf0 = {020c263c, 0}   installed from 0x020c26f0
+     pair 0x0213ade0 = {020c26f4, 0}   installed from 0x020c27c0
+     pair 0x0213adb8 = {020c27c4, 0}   installed from 0x020c29d8
+     pair 0x0213adc8 = {020c27c4, 0}   installed from 0x020c2920
+
+   Seven pairs, SIX distinct code words -- 020c27c4 is installed from two
+   different places -- and every adjustment reads zero. All six have a src TU
+   and all six are in port/slice_box.txt.
+
+   A RUN IS WHAT FOUND THIS AND THAT IS THE POINT. The first wired boot of
+   scene 367 reported "sub-object FIELD dispatch 253 call(s), 253 with a
+   nonzero code word" beside "253 UNHANDLED address(es)", and the framework's
+   own report named exactly one: DS address 0x020c27c4, adjustment 0. Neither
+   prescribed detector could have said so -- the field emits no symbol for a
+   link and the host copy above is what turned a jump-to-a-DS-address into a
+   line of log. The other five are added from the ROM, not from the run,
+   because routing only what fires would leave five states one frame of play
+   away from the same fault. */
+int  func_ov006_020c22d8(char *c);
+void func_ov006_020c23a8(void *c);
+void func_ov006_020c24e4(void *c);
+int  func_ov006_020c263c(char *c);
+int  func_ov006_020c26f4(char *c);
+void func_ov006_020c27c4(char *c);
+
 /* what this file DEFINES, so the seat can name it */
 void func_ov006_0211b954(char *c);
 void func_ov006_0211b5e0(char *c);
 void func_ov006_020c2b8c(void *c);
 void port_mg_sound_counts(unsigned *hits, unsigned *floor, unsigned *unknown,
-                          unsigned *field_calls, unsigned *field_routed);
+                          unsigned *field_calls, unsigned *field_routed,
+                          unsigned *field_unknown);
 
 }  /* extern "C" */
 
@@ -270,6 +307,7 @@ static unsigned g_snd_unknown;
    state are different failures and a single number cannot say which fired. */
 static unsigned g_snd_field_calls;
 static unsigned g_snd_field_routed;
+static unsigned g_snd_field_unknown;
 
 static int sound_try_1(void *self, unsigned code, int a)
 {
@@ -386,31 +424,52 @@ extern "C" void port_mg_sound_call1(void *self, unsigned code, int adj, int a)
     port_mg_call1(self, code, adj, a);
 }
 
-/* AND THE ZERO-ARGUMENT ONE, for the sub-object's FIELD pointer only. This
-   class contributes no arity-0 TABLE, so there is nothing to switch on here
-   and nothing is invented: the call goes straight to the framework, which
-   knows the ov004 and ov006 addresses other seats routed and reports anything
-   else by name. What the field holds has never been observed -- no TU in this
-   class's closure writes it, and the ROM's own `cmp r2,#0 / beq` guard at
-   0x020c2b9c means a .bss zero is a legal state. The two counters below are
-   how a run says which of those happened. */
+/* THE ZERO-ARGUMENT SWITCH, for the sub-object's FIELD pointer only. This
+   class contributes no arity-0 TABLE; these six are the field's whole
+   universe, derived above. The `this` a field dispatch carries is the
+   SUB-OBJECT at the class's +0x4f38, not the scene object, which is why the
+   host copy passes its own `c` and never the outer one. */
+static int sound_try_field(void *self, unsigned code)
+{
+    char *c = (char *)self;
+    switch (code) {
+    case 0x020c22d8u: func_ov006_020c22d8(c);   return 1;
+    case 0x020c23a8u: func_ov006_020c23a8(c);   return 1;
+    case 0x020c24e4u: func_ov006_020c24e4(c);   return 1;
+    case 0x020c263cu: func_ov006_020c263c(c);   return 1;
+    case 0x020c26f4u: func_ov006_020c26f4(c);   return 1;
+    case 0x020c27c4u: func_ov006_020c27c4(c);   return 1;
+    default:          return 0;
+    }
+}
+
 extern "C" void port_mg_sound_call0(void *self, unsigned code, int adj)
 {
     ++g_snd_field_calls;
-    if (code != 0)
+    if (code == 0)
+        return;                       /* the ROM's own null guard, kept */
+    if (adj == 0 && sound_try_field(self, code)) {
         ++g_snd_field_routed;
+        return;
+    }
+    /* Anything else falls to the framework, which owns the report. A nonzero
+       count on the line below is the number that says the field universe is
+       larger than the seven pairs the ROM's own literal pools name. */
+    ++g_snd_field_unknown;
     port_mg_call0(self, code, adj);
 }
 
 extern "C" void port_mg_sound_counts(unsigned *hits, unsigned *floor,
                                      unsigned *unknown, unsigned *field_calls,
-                                     unsigned *field_routed)
+                                     unsigned *field_routed,
+                                     unsigned *field_unknown)
 {
-    if (hits)         *hits         = g_snd_hits;
-    if (floor)        *floor        = g_snd_floor_02142df8;
-    if (unknown)      *unknown      = g_snd_unknown;
-    if (field_calls)  *field_calls  = g_snd_field_calls;
-    if (field_routed) *field_routed = g_snd_field_routed;
+    if (hits)          *hits          = g_snd_hits;
+    if (floor)         *floor         = g_snd_floor_02142df8;
+    if (unknown)       *unknown       = g_snd_unknown;
+    if (field_calls)   *field_calls   = g_snd_field_calls;
+    if (field_routed)  *field_routed  = g_snd_field_routed;
+    if (field_unknown) *field_unknown = g_snd_field_unknown;
 }
 
 // ---- the sixteen host copies -----------------------------------------------

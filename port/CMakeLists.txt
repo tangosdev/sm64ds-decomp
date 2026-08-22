@@ -4233,7 +4233,10 @@ set(SLICE_BOX_SOURCES hal/scene_mg_boombox.cpp
                       unmatched/MgSound_StateDispatch.cpp
                       # REPLACES src/func_ov006_0211ba88.c, which is out of the
                       # slice and is a delinks join miss besides.
-                      unmatched/MgSound_ShadowSlot35.cpp)
+                      unmatched/MgSound_ShadowSlot35.cpp
+                      # The four ordinary /alternatename rows the first link
+                      # wave asked for. No trap and no stand-in body.
+                      unmatched/MgSound_Faces.cpp)
 foreach(line IN LISTS SLICE_BOX_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -4241,6 +4244,21 @@ foreach(line IN LISTS SLICE_BOX_LINES)
     endif()
     list(APPEND SLICE_BOX_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
+
+# THE STATE RESET SPELLS THE ov004 SINGLETON AS A BARE PLACEHOLDER.
+# src/func_ov006_0211c5d0.c reads `g_020beb68`, which include/decl_common.h
+# declares as `extern int *g_020beb68` and which exists in NO config -- the
+# same per-TU placeholder defect the LUI and PPP blocks above rename VT and
+# HEAP for. THE ADDRESS IS THE BODY'S OWN LITERAL POOL, read out of
+# extracted/overlays/overlay_0006.bin: 0x0211c6c0 holds 020BEB68, which is
+# data_ov004_020beb68, the live dScMgBase_c the framework keeps. The ROM loads
+# the POINTER STORED THERE (`ldr r0,[pc,...]` then `ldr r1,[r0]`), which is
+# what the src's `int *` spelling means, so the rename is the whole fix.
+# ONE SOURCE, ONE SYMBOL: this is the only TU in the tree that names
+# g_020beb68, and the -D is scoped to it rather than made repo-global.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_0211c5d0.c"
+    PROPERTIES COMPILE_DEFINITIONS "g_020beb68=data_ov004_020beb68")
 
 # Lane FDR: the arm9 wipe fader's own static initialiser, and the dWipe_c
 # vtable it installs. Rides the SAME three targets as the scene seats above,

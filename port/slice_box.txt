@@ -326,3 +326,25 @@ src/func_ov006_0211c984.c
 # target, so this seat is the first to build them.
 src/func_ov004_020b2574.c
 src/func_ov004_020b6808.c
+
+# ---- WAVE 2: the one arm9 line the closure listing did not print ----------
+#
+# THE arm9 HALF IS REPORTED AS A COUNT AND NOT A LIST, which is MG1's rule and
+# is right for 827 of the 828 blocks this closure reaches: those TUs are
+# already compiled into the build and come back through /OPT:REF the moment
+# ov006 references them. func_02012174 is the one that is not, and the LINK is
+# what found it -- one LNK2019 from src/func_ov006_020c2300.c plus two LNK2001
+# rows from _020c2594 and _020c271c, which is section 10's "link.exe emits
+# LNK2019 once per SYMBOL and LNK2001 for every further object" shape read
+# correctly rather than as three symbols. src/func_02012174.c exists and is
+# matched, so the cost is this one line.
+#
+# THE WHOLE WAVE-1 BILL, for section 10's eight-wave shape: SIX unresolved
+# externals in ONE wave. Four are ordinary /alternatename rows
+# (port/unmatched/MgSound_Faces.cpp), one is this slice line, and one is a
+# per-source name rename recorded in port/CMakeLists.txt (src/
+# func_ov006_0211c5d0.c spells data_ov004_020beb68 as the bare placeholder
+# g_020beb68, which include/decl_common.h declares and no config defines). The
+# framework half being already paid is why this is one wave and not eight, and
+# a lane taking a thirteenth class should budget the same.
+src/func_02012174.c
