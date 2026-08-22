@@ -2171,6 +2171,15 @@ void port_scene_fill_coin(void);
 extern unsigned char data_ov006_02140114[];
 void *port_mg_flower_spawn(void);
 void port_scene_fill_flower(void);
+/* run mg6 lane SOS: dScMgBomroom_c, actor id 0x172 = scene 370, the
+   "Sort or 'Splode" minigame. The spawn symbol is MgSortOrSplode and the ROM's
+   own RTTI string at 0x0213bb38 reads "14dScMgBomroom_c", so the row below is
+   named for the class the way SCENE_MG_CURLING and SCENE_MG_COIN are.
+   port/slice_sos.txt carries the derivation, the three width checks and the
+   two floors; hal/scene_mg_bomroom.cpp is the seat. */
+extern unsigned char MgSortOrSplode_SpawnInfo[];
+void *port_mg_bomroom_spawn(void);
+void port_scene_fill_bomroom(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2215,6 +2224,28 @@ static const PortSceneClass port_scene_classes[] = {
        set out of this table. APPENDED LAST, on purpose; see the header. */
     {390, "SCENE_MG_FLOWER", data_ov006_02140114, port_mg_flower_spawn,
      port_scene_fill_flower, 0},
+    /* APPENDED AT THE END, run mg6 lane SOS. 370 is 0x172, spelled in decimal
+       for the two reasons the rows above are: the others are, and
+       port/tools/battery.py reads its hosted-scene set out of this table.
+
+       THE POSITION IS THE FILL-ORDER RULE AND NOT TIDINESS.
+       port_scene_registry_install walks this table in TABLE ORDER and calls
+       every row's fill on every boot, while port_scene_mg_overlay_load runs
+       the thirty-five overlay constructors ONCE PER PROCESS at the tail of the
+       FIRST minigame row's fill. Appending means the constructors have already
+       run against clean ROM words when this fill starts, which is the
+       latent-safe direction port/mg_fanout_costs.txt section 11 argues for.
+       Section 11's actual hazard -- a fill writing a word a constructor later
+       copies -- cannot arise here anyway: this seat writes 36 words, the span
+       to the next config symbol is exactly 36 words, and slot 35 holds the
+       family's terminal word, so the fill cannot reach past its own table.
+       All three checks are in port/slice_sos.txt.
+
+       reads_sublevel is 0 for the curling row's reason, re-derived rather than
+       copied: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {370, "SCENE_MG_BOMROOM", MgSortOrSplode_SpawnInfo, port_mg_bomroom_spawn,
+     port_scene_fill_bomroom, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
