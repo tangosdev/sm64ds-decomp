@@ -4236,7 +4236,16 @@ set(SLICE_BOX_SOURCES hal/scene_mg_boombox.cpp
                       unmatched/MgSound_ShadowSlot35.cpp
                       # The four ordinary /alternatename rows the first link
                       # wave asked for. No trap and no stand-in body.
-                      unmatched/MgSound_Faces.cpp)
+                      unmatched/MgSound_Faces.cpp
+                      # REPLACES src/func_ov006_020c29dc.cpp, out of the slice:
+                      # the sub-object's model draw, with the same PAIR of
+                      # defects MgMemory2_ModelRender_020c1804.cpp and
+                      # MgFlower_ModelRender_020c3bf4.cpp carry -- a local
+                      # shadow class calling ROM vtable byte +0x14 at two
+                      # sites, and four I/O-window stores that need the
+                      # geometry proxy. Found by the BATTERY, which renders;
+                      # this lane's own NO_RENDER boots were clean over it.
+                      unmatched/MgSound_ModelRender_020c29dc.cpp)
 foreach(line IN LISTS SLICE_BOX_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

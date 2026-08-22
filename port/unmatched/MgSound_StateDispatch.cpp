@@ -129,6 +129,19 @@
 // one axis. It is emitted below as a REPORTING case and never as a call, and
 // no symbol is invented for it.
 //
+// AND IT IS THE FIRST STATE A TAP PRODUCES, WHICH MAKES ITS BOOT-TIME ZERO A
+// LIE OF THE KIND section 16 warns about. An unattended 1200-frame boot asks
+// for it ZERO times, and that zero says only that the floor is not in the way
+// of a BOOT. Driven: SM64DS_TOUCH_PROBE="100-104:64:32,160-164:128:32" pokes
+// two of the six pads, both records move from state 0 to state 1, the per-round
+// tap counter at +0x5624 reaches its own early-out of 2, and the SAME 300-frame
+// run reports 338 asks for 0x0211bc8c where the untouched one reported none.
+// So slot 1 of data_ov006_02142df8 is what a TAPPED PAD runs, and this class
+// cannot be played past its first tap until that body is decompiled. It is
+// dScMgPanel_c's "ONE MISSING BODY MANUFACTURES THE ENTRY INTO THE OTHER"
+// (section 14) with the entry manufactured by the PLAYER instead of by a
+// second gap.
+//
 // ---- ONE STATE IS A JOIN MISS AND IS NOT A FLOOR --------------------------
 //
 //   func_ov006_0211ba88   slot 4 of data_ov006_02142df8, 0x158 bytes

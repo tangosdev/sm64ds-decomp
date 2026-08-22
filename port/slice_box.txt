@@ -51,7 +51,7 @@
 # shared-array-versus-seam question is now due and why this lane did not take
 # it.
 #
-# ---- THE WIDTH IS 36, CHECKED FOUR WAYS ----------------------------------
+# ---- THE WIDTH IS 36, CHECKED FIVE WAYS ----------------------------------
 #
 #   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol after
 #      data_ov006_0213f844 at data_ov006_0213f8d4, exactly 0x90 = 36 words on.
@@ -70,9 +70,40 @@
 #      end. This is a fourth check section 11 does not list, and it is the only
 #      one of the four that neither unsymbolised padding can inflate nor a word
 #      that happens to look like an address can fool.
+#   5. RELOCATION STRIDE, run mg9 lane LKY's check, run here and CORRECTED.
+#      The strides between consecutive `from` addresses starting at the table:
+#        0x0213f844  4 x36 then 8 8 8 8 ...
+#        0x0213e448  4 x35 then 12 40 24 8 ...
+#      LKY states it as "the stride runs at 4 for exactly the table width then
+#      jumps to 8". IT COUNTS GAPS, NOT RELOCATIONS, AND IT IS NOT
+#      SELF-CALIBRATING: a 36-word table has 35 internal gaps, and this class
+#      reads THIRTY-SIX fours because the word immediately after its table is
+#      the CODE half of an mwcc pair and is therefore relocated too, so the
+#      36th gap is table-to-pair rather than slot-to-slot. The middle base
+#      reads thirty-five because ITS next word (0x050a0a0f) is not relocated.
+#      Same width, two different answers. So the stride is a sound NECESSARY
+#      condition -- the run must be at least width-1, and a shorter run refuses
+#      a width outright -- and it cannot GRANT one, for exactly the reason
+#      section 11 gives for the span check. Read as a granting check it would
+#      have said 37 here, which is the phantom width section 11 corrected.
 #
 # port/tools/vtablerows.py --vtable 0x0213f844 --width 36 answers
 # ovr 13, mark 11, nosrc 0, which is section 3's row exactly.
+#
+# ---- SLOTS 18 AND 19, run mg9 lane LKY's check ---------------------------
+#
+# SLOT 18 READS ITS SECOND ARGUMENT AND THIS SEAT FORWARDS IT. The ROM at
+# 0x0211c5e8 is `cmp r1,#0 / bne 0x0211c614`, and the two arms differ in
+# whether +0xbc is incremented under a 0x270e clamp or zeroed with the save
+# record's +0xb4 reset alongside it -- the whole difference between "one more
+# round" and "start again". hal/scene_mg_boombox.cpp's snd_reset is declared
+# (void *, void *, int flag) and passes flag through; the adjudication ledger
+# entry for func_ov006_0211c5d0 carries the disassembly.
+# IT IS UNEXERCISED, HONESTLY: slot 18 is entered ZERO times on every run this
+# lane took -- 300 frames, 1200 frames and the touch-driven 300 -- so the
+# forwarding is proven to COMPILE and is NOT witnessed. Nothing here claims it.
+# SLOT 19 IS NOT THIS CLASS'S: dScMgSound_c does not override it (the table
+# holds dScMgBase_c's 0x020b2994) and it is entered zero times as well.
 #
 # ---- ELEVEN MARKERS, ALL RULED BY THIS LANE ------------------------------
 #
@@ -173,6 +204,20 @@
 # computed over VTABLE slots and this floor is a STATE. It gets a reporting
 # case in the address switch and no invented symbol.
 #
+# AND IT IS THE FIRST STATE A TAP PRODUCES. An unattended 1200-frame boot asks
+# for it zero times, and that zero is one of the dishonest ones section 16
+# lists. src/func_ov006_0211bf44.c -- slot 0 of the same table, and what all
+# six pads sit in on a boot -- is a STYLUS HIT TEST: it compares
+# data_020a0dea/deb against the record's own x/y in a +-0x18 box and, on a hit,
+# writes state 1 into the record and plays Sound::PlayBank2_2D(0x201). State 1
+# is 0x0211bc8c. Driven with SM64DS_TOUCH_PROBE="100-104:64:32,160-164:128:32"
+# the two poked records move 0 -> 1, the per-round tap counter at +0x5624
+# reaches its own early-out of 2, and the same 300-frame run reports 338 asks
+# for the floor where the untouched run reported none. So this class boots and
+# ticks, and it cannot be PLAYED past its first tap until 0x0211bc8c is
+# decompiled. That is one decomp job and it is the whole of what stands between
+# this seat and a playable Boom Box.
+#
 # ---- ONE STATE IS A JOIN MISS, AND IT IS ALSO BROKEN THREE WAYS ----------
 #
 #   func_ov006_0211ba88   slot 4 of data_ov006_02142df8, 0x158 bytes
@@ -204,6 +249,38 @@
 # below either: it reaches a geometry register and the FLW block in
 # port/CMakeLists.txt already builds it from a hostgen-emitted copy, so listing
 # it here would compile the register writes into the real memory map instead.
+#
+# ---- ELEMENT VTABLES: NONE, MEASURED -------------------------------------
+#
+# Run mg9 lane S381 found dScMgMCarlo_c's factory building 80 card objects
+# whose element class parks its OWN 2-slot vtable in each record's word 0, and
+# nothing in the ovr/mark/nosrc columns can see it. Asked of this class, of
+# every object its factory and that factory's helpers construct:
+#
+#   the scene object          word 0 = data_ov006_0213f844, filled by the seat
+#   Particle::SysTracker      at +0x471c, an arm9 host class, already hosted
+#   the sub-object at +0x4f38 word 0 is NOT a vptr: it is the CODE half of the
+#                             object's own member pointer, which
+#                             func_ov006_020c2b8c reads as `ldr r2,[r4]` and
+#                             then COMPARES AGAINST ZERO before decoding it
+#                             with `asr #1`. Routed by this seat.
+#     its members             +8 BlendModelAnim, +0x78 Model, +0xc8
+#                             TextureSequence, +0xdc TextureTransformer -- all
+#                             four arm9 host classes with host vtables, and the
+#                             one place the port dispatches through them is
+#                             repaired in
+#                             port/unmatched/MgSound_ModelRender_020c29dc.cpp
+#   the TEN-record array      at +0x50e8, stride 0x14: word 0 is a 20.12 x
+#                             coordinate (src/func_ov006_0211bf44.c compares it
+#                             against the stylus)
+#   the THIRTY-record array   at +0x51cc, stride 0x24: word 0 holds the in-play
+#                             gate BYTE func_ov006_0211b5e0 reads as
+#                             `ldrb r1,[r0,#0x1cc]`
+#
+# And mechanically rather than by reading: of the 93 addresses this class's own
+# code and its sub-object's code LOAD, exactly TWO have their first two words
+# inside a real .text delink block -- 0x0213e448 and 0x0213f844, the two
+# vtables this seat fills. There is no third table and no element vtable.
 #
 # ---- BARE VT / HEAP EXTERNS: ZERO, MEASURED ------------------------------
 #
@@ -247,7 +324,15 @@ src/func_ov006_020c2848.cpp
 src/func_ov006_020c2924.cpp
 src/func_ov006_020c2984.c
 src/func_ov006_020c2994.c
-src/func_ov006_020c29dc.cpp
+# HOST-COPIED (mg9 lane BOX): src/func_ov006_020c29dc.cpp -- the sub-object's
+#   per-frame model draw, and the SAME PAIR of defects run mg6 lane MEM
+#   recorded for 020c1804 and run mg5 lane Y3D for 020c3bf4: a local shadow
+#   class calling ROM vtable byte +0x14 at TWO sites, which on the host's
+#   MSVC-ordered model tables is BlendModelAnim::Virtual18 instead of
+#   Render; and FOUR I/O-window stores (0x040004cc twice, 0x040004c8 twice)
+#   that need the geometry proxy. A NO_RENDER boot cannot see either -- this
+#   one was found by port/tools/battery.py, which renders. See
+#   port/unmatched/MgSound_ModelRender_020c29dc.cpp.
 src/func_ov006_020c2be8.c
 src/func_ov006_020c3050.c
 src/func_ov006_020c3288.c

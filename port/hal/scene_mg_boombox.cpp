@@ -166,6 +166,27 @@
 // show the machine ticking, the entities advancing and the countdowns
 // counting; it cannot show that the right note played at the right frame. The
 // census below says which of those it is measuring.
+//
+// ---- 8. WHAT A TAP DOES, AND THE FLOOR IT LANDS ON ------------------------
+//
+// Six pads, read off a run rather than off a picture: the ten-record array at
+// +0x50e8 holds SIX live records at (64,32) (128,32) (192,32) (64,112)
+// (128,112) (192,112), and all six sit in state 0 forever on an unattended
+// boot. src/func_ov006_0211bf44.c IS state 0, and it is a STYLUS HIT TEST --
+// data_020a0dea/deb against the record's own x/y in a +-0x18 box, and on a hit
+// it writes state 1 into the record, zeroes the record's +0x50f0 and +0x50f7,
+// increments the per-round tap counter at +0x5624 and plays
+// Sound::PlayBank2_2D(0x201).
+//
+// STATE 1 IS func_ov006_0211bc8c, WHICH IS THIS CLASS'S ONE HARD FLOOR. So the
+// class's zero floor asks on an unattended boot is one of the dishonest zeros
+// port/mg_fanout_costs.txt section 16 lists, and this seat says so out loud
+// rather than banking it: SM64DS_TOUCH_PROBE="100-104:64:32,160-164:128:32"
+// moves two records to state 1, drives +0x5624 to its own early-out of 2, and
+// turns 0 floor asks into 338 over the same 300 frames.
+//
+// The census below therefore prints the pad coordinates and the tap counter,
+// so the next reader can drive it without re-deriving either.
 
 #include "hal/screen_gap.h"
 
