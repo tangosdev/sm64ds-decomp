@@ -2307,6 +2307,16 @@ void port_scene_fill_amida(void);
 extern unsigned char data_ov006_0213d580[];
 void *port_mg_mcarlo_spawn(void);
 void port_scene_fill_mcarlo(void);
+/* run mg9 lane WIG: dScMgHanachan_c, actor id 0x182 = scene 386, the "Which
+   Wiggler" minigame. The spawn symbol is MgWhichWiggler and the ROM's own RTTI
+   at 0x0213ca88 -- reached through the type_info the word BEFORE the vtable
+   points at -- reads "15dScMgHanachan_c", so the row below is named for the
+   class the way SCENE_MG_CURLING, SCENE_MG_LUIGI and SCENE_MG_BOMROOM are.
+   port/slice_wig.txt carries the derivation, the five width checks and the two
+   floors; hal/scene_mg_wiggler.cpp is the seat. */
+extern unsigned char MgWhichWiggler_SpawnInfo[];
+void *port_mg_wiggler_spawn(void);
+void port_scene_fill_wiggler(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2603,6 +2613,31 @@ static const PortSceneClass port_scene_classes[] = {
        either. */
     {381, "SCENE_MG_MCARLO", data_ov006_0213d580, port_mg_mcarlo_spawn,
      port_scene_fill_mcarlo, 0},
+    /* 386 is 0x182, spelled in decimal for the same two reasons every row above
+       is: the others are, and port/tools/battery.py reads its hosted-scene set
+       out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg9 lane WIG,
+       which is the rule port/mg_fanout_costs.txt section 11 derives from the
+       once-per-process constructor gate: port_scene_registry_install walks this
+       table in order and port_scene_mg_overlay_load runs the thirty-five
+       constructors at the tail of the FIRST minigame row's fill, so a row placed
+       before an earlier class's would have its fill run before those
+       constructors read the mounted .data.
+
+       FOR THIS CLASS THE ORDERING IS BELT AND BRACES RATHER THAN A REMEDY, and
+       for a reason no earlier row could give: dScMgHanachan_c HAS NO OVERLAY
+       CONSTRUCTOR. Not one relocation in ov006 whose source lies in a __sinit
+       block lands anywhere in [0x0213c98c, 0x0213cab8], this class's whole
+       .data, so there is no constructor of its own for a fill to race. Its
+       fill also cannot reach past its own table: the width is 36 by five
+       independent checks, the fourth being that exactly 36 relocation rows have
+       a source inside the table and there is none at index 36, and the fifth
+       that those sources step by 4 for exactly 36 words and then jump to 8.
+
+       reads_sublevel is 0 for the curling row's reason, re-derived rather than
+       copied: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {386, "SCENE_MG_WIGGLER", MgWhichWiggler_SpawnInfo, port_mg_wiggler_spawn,
+     port_scene_fill_wiggler, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
