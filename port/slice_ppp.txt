@@ -129,36 +129,40 @@
 #
 # ---- 3. THE POINTER-TO-MEMBER WALL, AND THIS CLASS HAS TWICE CURLING'S -----
 #
-# TEN ov006 TUs dispatch through an mwcc member pointer and every one of them
-# is host-copied in port/unmatched/MgPanel_StateDispatch.cpp. They are
+# ELEVEN ov006 TUs dispatch through an mwcc member pointer and every one of
+# them is host-copied in port/unmatched/MgPanel_StateDispatch.cpp. They are
 # commented out below rather than deleted, with a pointer back there.
 #
 # port/mg_fanout_costs.txt section 4 costs the wall at five dispatching TUs per
 # minigame. THIS CLASS HAS ELEVEN -- ten when lane PPP seated it, and an
 # eleventh the day run mg7 lane L380 decompiled func_ov006_02106ca4 and found
-# it was a dispatcher as well as a state. The reason is structural: dScMgPanel_c runs
-# a TWO-LEVEL state machine. Slot 6 dispatches data_ov006_02142888, and five of
-# that table's own eight states are themselves dispatchers of a second table,
+# it was a dispatcher as well as a state. The reason is structural:
+# dScMgPanel_c runs a TWO-LEVEL state machine. Slot 6 dispatches
+# data_ov006_02142888, and five of that table's own eight states are
+# themselves dispatchers of a second table,
 # data_ov006_02142840. A lane that host-copied the Behavior alone would link,
 # boot, and jump to a raw DS address on the first frame the outer state moved.
 #
-# A LINK NAMES AT MOST EIGHT OF THE TEN, and the two it cannot name are the
-# THIRD SHAPE lane FLW found -- and one of them is vtable slot 6:
+# A LINK NAMES AT MOST EIGHT OF THE ELEVEN, and the three it cannot name are
+# the THIRD SHAPE lane FLW found -- and one of them is vtable slot 6:
 #
 #   src/func_ov006_02107358.cpp   table 02142888, arity 0, VTABLE SLOT 6
 #   src/func_ov006_02106bc0.c     table 02142840, arity 1
+#   src/func_ov006_02106ca4.c     table 02142840, arity 1, and slot 6 of
+#                                 data_ov006_02142888 as well -- run mg7
+#                                 lane L380, which is why this said TWO
 #
-# Both declare the pair as two plain ints (`struct Ent { int a; int b; }` and
-# `struct Pmf { int off; int adj; }`), read it as two ordinary ints and
+# All three declare the pair as two plain ints (`struct Ent { int a; int b; }`
+# and `struct Pmf { int off; int adj; }`), read it as two ordinary ints and
 # open-code the ARM Itanium decode, so there is no `::*` for a source sweep to
 # match and no mangled global for a link to fail on. The ROM at 0x02107358
 # carries the five-instruction sequence one for one with what the src spells;
 # the disassembly is in this lane's adjudication of slot 6.
 #
 # THE `::*` SWEEP OVER THIS SLICE IS CLEAN, and that is the point rather than a
-# reassurance: it is clean because all ten dispatchers are EXCLUDED. It was run
-# over the 53 lines below and returns nothing, which is exactly what it would
-# return if the two int-spelled ones had been left in.
+# reassurance: it is clean because all eleven dispatchers are EXCLUDED. It was
+# run over the 60 lines below and returns nothing, which is exactly what it
+# would return if the three int-spelled ones had been left in.
 #
 # ---- 4. ONE ov006 BODY IN THE CLOSURE STILL HAS NO SOURCE ------------------
 #
@@ -178,8 +182,8 @@
 #       mg6 run asked for 951 times. 124 instructions + 9 pool = 133 = 0x214/4.
 #       IT IS NOT A SLICE LINE. It dispatches data_ov006_02142840 at arity 1
 #       with the open-coded Itanium decode, so it is the ELEVENTH host copy in
-#       port/unmatched/MgPanel_StateDispatch.cpp and section 3's count of ten
-#       is now eleven.
+#       port/unmatched/MgPanel_StateDispatch.cpp, and the ten dispatchers lane
+#       PPP seated are now eleven.
 #   func_ov006_02106168  0x238, AND IT IS NOT A STATE -- it is the panel LAYOUT
 #       PICKER, and vtable slot 0 (InitResources) and slot 18 (state reset)
 #       both call it DIRECTLY. 135 instructions + 7 pool = 142 = 0x238/4. It IS
@@ -209,14 +213,15 @@
 #       matched_index() walks src/ with os.walk, keys every .c and .cpp by its
 #       FILENAME STEM, and never opens a file -- so it cannot see a banner, and
 #       a bannered TU is in its universe exactly like any other. This lane's
-#       own +53 is the proof: the slice is 53 lines, one of them bannered, and
-#       ov006 moved 414 -> 467. Had the note been right the number would have
-#       been 52.
+#       own +53 is the proof: the slice WAS 53 lines when lane PPP measured it,
+#       one of them bannered, and ov006 moved 414 -> 467. Had the note been
+#       right the number would have been 52. (It is 60 lines now; run mg7 lane
+#       L380 added seven, and section 7 says which.)
 #       THE RULE FOR A LATER LANE: every slice line moves the headline by one,
 #       banner or no banner. The banner is a statement about byte-matching, and
 #       linkage is a statement about what the linker kept; the two do not meet.
 #   func_ov006_02106fdc  slot 3 of data_ov006_02142888. Same shape, bannered
-#       NONMATCHING (div=28) -- and it is ALSO one of the ten dispatchers, so
+#       NONMATCHING (div=28) -- and it is ALSO one of the eleven dispatchers, so
 #       it is host-copied rather than sliced.
 #
 # ---- 5. DUPLICATE LINES, AND WHY THERE ARE NONE ---------------------------
@@ -243,7 +248,7 @@
 # second pool word at 0x021042e4 is 020A0EAC, the game heap cxx_aliases.cpp
 # already binds it to.
 #
-# ---- 8. SIX LINES THE TWO CLOSED FLOORS BROUGHT WITH THEM ------------------
+# ---- 7. SIX LINES THE TWO CLOSED FLOORS BROUGHT WITH THEM ------------------
 #
 # Run mg7 lane L380. A closure walk from code edges cannot see past a body with
 # no source, so while func_ov006_02106168 and func_ov006_02106ca4 were floors
@@ -263,7 +268,7 @@
 # arm9 TUs the build has had all along. That is section 2's "the ov004 delta of
 # this class is ZERO" holding across the two new bodies as well.
 #
-# ---- 9. ov006: THE CLASS ---------------------------------------------------
+# ---- 8. ov006: THE CLASS ---------------------------------------------------
 # In address order, which is the order the closure walk emits.
 # HOST-COPIED (PPP), in port/unmatched/MgPanel_StateDispatch.cpp:
 #   src/func_ov006_02104ac4.cpp   table 021427bc, arity 1 with a literal 0

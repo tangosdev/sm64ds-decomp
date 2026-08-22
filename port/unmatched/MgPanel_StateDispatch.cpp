@@ -4,9 +4,11 @@
 // ---- WHY THIS FILE IS TWICE THE SIZE OF CURLING'S -------------------------
 //
 // port/mg_fanout_costs.txt section 4 costs the wall at "five dispatching TUs
-// to host-copy" per minigame, measured on dScMgCurling_c. THIS CLASS HAS TEN,
-// and the reason is structural rather than incidental: dScMgPanel_c runs a
-// TWO-LEVEL state machine. Its Behavior (vtable slot 6) dispatches
+// to host-copy" per minigame, measured on dScMgCurling_c. THIS CLASS HAS
+// ELEVEN -- ten when run mg6 lane PPP seated it, and an eleventh the day run
+// mg7 lane L380 decompiled func_ov006_02106ca4 and found it was a dispatcher
+// as well as a state -- and the reason is structural rather than incidental:
+// dScMgPanel_c runs a TWO-LEVEL state machine. Its Behavior (slot 6) dispatches
 // data_ov006_02142888, and FIVE of that table's own eight states are
 // themselves dispatchers of a second table, data_ov006_02142840. So the
 // closure walk reaches the second level only THROUGH the first, and a lane
@@ -28,22 +30,25 @@
 // MgPuzzlePanelPuzzlePanic_SpawnInfo itself, which is exactly the phantom
 // section 4 warns a sweep manufactures.
 //
-// ---- TWO OF THE TEN ARE THE THIRD SHAPE, AND ONE OF THEM IS THE BEHAVIOR --
+// ---- THREE OF THE ELEVEN ARE THE THIRD SHAPE, AND ONE IS THE BEHAVIOR -----
 //
 // port/mg_fanout_costs.txt section 4's FLW amendment names one TU in the whole
 // tree that open-codes the ARM Itanium sequence in plain ints,
 // func_ov006_020c3d18, and says the pair of prescribed detectors -- the link
-// and a `::*` source sweep -- both read clean over it. THIS CLASS HAS TWO MORE
-// OF THEM, and one is vtable slot 6:
+// and a `::*` source sweep -- both read clean over it. THIS CLASS HAS THREE
+// MORE OF THEM, and one is vtable slot 6:
 //
 //   src/func_ov006_02107358.cpp   table 02142888, arity 0, VTABLE SLOT 6
 //   src/func_ov006_02106bc0.c     table 02142840, arity 1
+//   src/func_ov006_02106ca4.c     table 02142840, arity 1, AND A STATE --
+//                                 slot 6 of data_ov006_02142888. Run mg7 lane
+//                                 L380; the header said TWO before it landed.
 //
-// Both declare `struct Ent { int a; int b; }` / `struct Pmf { int off; int
-// adj; }`, read the pair as two ordinary ints and do their own decoding, so
-// there is no member-pointer type for a source sweep to match and no mangled
-// global for a link to fail on. The ROM at 0x02107358, read out of the shipped
-// overlay image:
+// All three declare `struct Ent { int a; int b; }` / `struct Pmf { int off;
+// int adj; }`, read the pair as two ordinary ints and do their own decoding,
+// so there is no member-pointer type for a source sweep to match and no
+// mangled global for a link to fail on. The ROM at 0x02107358, read out of the
+// shipped overlay image:
 //
 //     ldr   r1,[r3,#4]        the adjustment
 //     add   r0,r4,r1,asr#1    this, advanced, arithmetic shift
@@ -52,8 +57,8 @@
 //     ldreq r1,[r3]
 //     blx   r1
 //
-// one for one with what the src spells. THE STRIDE IS ALREADY RIGHT in both of
-// them -- eight bytes on MSVC is eight bytes in the ROM, which is section 4's
+// one for one with what the src spells. THE STRIDE IS ALREADY RIGHT in all
+// three -- eight bytes on MSVC is eight bytes in the ROM, which is section 4's
 // rulebook corollary -- so what is wrong is only the CODE WORD, which is a DS
 // address. That is why the aliases onto the six tables stay ordinary aliases
 // and only the DECODE is replaced here.
@@ -83,12 +88,12 @@
 //   src/func_ov006_02106fdc.c     bare PMF (//cpp)       02142840  arity 1
 //   src/func_ov006_0210709c.cpp   bare PMF               02142840  arity 1
 //
-// NONE OF THE TEN HOLDS A MEMBER POINTER AS AN OBJECT FIELD -- all six tables
-// are external -- so the four-byte-versus-eight-byte layout shift that makes
-// section 4's ov004 group read the wrong field does not apply, and the src
-// offsets and the ROM's agree. EVERY OFFSET BELOW WAS STILL READ OFF THE ROM
-// DISASSEMBLY rather than off the src struct, and each body's comment states
-// the instructions it came from so the check is visible rather than asserted.
+// NONE OF THE ELEVEN HOLDS A MEMBER POINTER AS AN OBJECT FIELD -- all six
+// tables are external -- so the four-byte-versus-eight-byte layout shift that
+// makes section 4's ov004 group read the wrong field does not apply, and the
+// src offsets and the ROM's agree. EVERY OFFSET BELOW WAS STILL READ OFF THE
+// ROM DISASSEMBLY rather than off the src struct, and each body's comment
+// states the instructions it came from so the check is visible, not asserted.
 //
 // ---- WHAT THIS CLASS CANNOT REACH -----------------------------------------
 //
@@ -114,7 +119,7 @@
 // TWO MORE WERE STATEGEN JOIN MISSES AND ARE NOT FLOORS: 0x02106aa8 and
 // 0x02106fdc are outside the delinks join but src/func_ov006_02106aa8.c and
 // src/func_ov006_02106fdc.c both exist, so both are reachable. 02106aa8 joins
-// port/slice_ppp.txt as an ordinary line; 02106fdc is one of the ten host
+// port/slice_ppp.txt as an ordinary line; 02106fdc is one of the eleven host
 // copies below, because it is a dispatcher as well as a state.
 
 #include <cstdio>
@@ -172,7 +177,7 @@ void func_ov006_02104ac0(void);          /* empty body, no argument */
 void func_ov006_02104a10(char *c, int i);
 void func_ov006_02104920(char *c, int i);
 
-/* the non-dispatching callees the ten host copies below reach */
+/* the non-dispatching callees the eleven host copies below reach */
 void func_ov006_02104c60(void *c);
 void func_ov006_021050bc(void *c);
 void func_ov006_021057f0(void *c);
