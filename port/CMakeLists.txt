@@ -3535,8 +3535,9 @@ foreach(line IN LISTS SLICE_PCH_LINES)
 endforeach()
 
 # Run mg6, lane LKT. dScMgPachinko2_c's own closure, the SIBLING of the class
-# above in both name and ROM data adjacency. 63 src TUs in wave 1: 62 ov006 and
-# 1 ov004. The arm9 half is deliberately not listed -- port/mg_fanout_costs.txt
+# above in both name and ROM data adjacency. 64 src TUs: 63 ov006 (62 in wave 1
+# plus the one delinks join miss, src/func_ov006_02103ac0.c) and 1 ov004.
+# The arm9 half is deliberately not listed -- port/mg_fanout_costs.txt
 # section 5's /OPT:REF argument -- and the waves the linker asks for are
 # appended to slice_lkt.txt with the wave they arrived in named, which is
 # section 10's method.
