@@ -382,7 +382,13 @@ src/func_ov006_020d2580.c
 src/func_ov006_020d25fc.c
 src/func_ov006_020d3624.cpp
 src/func_ov006_020d3668.cpp
-src/func_ov006_020d3ba0.c
+# src/func_ov006_020d3ba0.c IS DELIBERATELY ABSENT and host-copied in
+# port/unmatched/MgAmida_Slot3ba0.cpp. Its extern "C" block writes a bare
+# `int data_0209d4b8;`, which mwccarm takes as a tentative definition and MSVC
+# takes as a strong one, so it collides with hal/scene_mg_faces.cpp's hosted
+# arm9 RNG seed. Listing both would be a duplicate symbol and listing neither
+# would drop the body. The copy is mechanical and its header carries the sed
+# line that reproduces it.
 src/func_ov006_020d452c.c
 src/func_ov006_020d47f4.c
 src/func_ov006_020d48dc.cpp
@@ -390,4 +396,9 @@ src/func_ov006_020d4b7c.c
 src/func_ov006_020d52f0.c
 src/func_ov006_020d5384.cpp
 src/func_ov006_020d5924.cpp
+# WAVE 2. The factory registers func_ov006_020d5a50 as an array element
+# destructor (its pool word at 0x020d5a4c), and 0x020d5a50 is the first
+# function AFTER this class's code block rather than inside it, so the block
+# walk did not reach it. It is a two-line empty body.
+src/func_ov006_020d5a50.c
 src/func_ov006_020d5974.cpp

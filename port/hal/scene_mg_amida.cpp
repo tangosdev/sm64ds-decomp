@@ -4,7 +4,7 @@
 //
 // Read port/slice_s371.txt for the identity derivation, the three width checks
 // written out one at a time, the two player titles and their control set, the
-// proof that this class has no pointer-to-member wall, and the two floors.
+// proof that this class has no pointer-to-member wall, and the three floors.
 // Read port/mg_fanout_costs.txt sections 3, 4 and 11 for what the family costs
 // and for why the width column was wrong twelve times. This file is the seat:
 // eleven faces, the fill, the factory forwarder and the witness.
@@ -117,16 +117,25 @@
 //
 // THE RUN IS STILL THE DETECTOR and the Behavior counter below is it.
 //
-// ---- 6. TWO FLOORS, AND THEY ARE ON THE PATH ----------------------------
+// ---- 6. THREE FLOORS, AND THEY ARE ALL ON THE PATH -----------------------
 //
 // func_ov006_020d27dc (0xe48) and func_ov006_020d36a4 (0x4fc) have config
 // symbols, no delink block and no src file in any overlay. Slot 6 calls both;
 // func_ov006_020d3ba0 -- which slot 0 and slot 18 both end on -- calls the
-// second. port/unmatched/MgAmida_Faces.cpp holds their counting traps and the
-// derivation. Six of this class's 25 slot-36 dispatch sites are inside them,
-// so the mode branch inside those two bodies is code this seat cannot run, and
-// the witness prints their counters beside the green ones rather than only
-// when they are nonzero.
+// second. Six of this class's 25 slot-36 dispatch sites are inside them, so
+// the mode branch in those two bodies is code this seat cannot run.
+//
+// THE THIRD IS ov004's AND THE LINK FOUND IT, not the delinks walk: this
+// class's own block walk cannot see a hole one overlay over.
+// func_ov004_020ae5c4 (0x294) is named in ov004's symbols.txt, covered by no
+// delink block and defined by no src file, and three of this class's TUs call
+// it at ten sites between them. It is also the FAMILY'S SLOT-34 DISPATCHER,
+// which is why section 5's am_v34 note can say slot 34 is unreachable on every
+// scene today.
+//
+// port/unmatched/MgAmida_Faces.cpp holds all three counting traps and the
+// derivation, and the witness prints their counters beside the green ones
+// rather than only when they are nonzero.
 //
 // ---- 7. THE ROW GOES LAST -------------------------------------------------
 //
@@ -185,9 +194,10 @@ int   func_ov006_020d1188(void *c);           /* slot 36 mode == 2         */
 /* the factory */
 void *func_ov006_020d5974(void);
 
-/* the two floors, from unmatched/MgAmida_Faces.cpp */
+/* the three floors, from unmatched/MgAmida_Faces.cpp */
 unsigned port_mg_amida_floor_27dc(void);
 unsigned port_mg_amida_floor_36a4(void);
+unsigned port_mg_amida_floor_ae5c4(void);
 
 void port_scene_amida_hits(void);
 
@@ -447,8 +457,11 @@ extern "C" void port_scene_amida_hits(void)
        make. */
     std::printf("[scene] dScMgAmida_c floor asks: func_ov006_020d27dc %u "
                 "(0xe48, one caller, vtable slot 6), func_ov006_020d36a4 %u "
-                "(0x4fc, two callers, slot 6 and the init tail)\n",
-                port_mg_amida_floor_27dc(), port_mg_amida_floor_36a4());
+                "(0x4fc, two callers, slot 6 and the init tail), "
+                "func_ov004_020ae5c4 %u (0x294, ov004, ten call sites in this "
+                "class and the family's slot-34 dispatcher)\n",
+                port_mg_amida_floor_27dc(), port_mg_amida_floor_36a4(),
+                port_mg_amida_floor_ae5c4());
 
     /* THE STATE INDEX IS PRINTED BECAUSE IT IS THE ONLY THING THAT SEPARATES
        "the behavior slot ran" from "the state machine ran". Slot 6 is a
@@ -476,3 +489,85 @@ extern "C" void port_scene_amida_hits(void)
 
     std::fflush(stdout);
 }
+
+/* ---- THE NAME-SPELLING FACES --------------------------------------------
+ *
+ * SEVEN ROWS, all /alternatename, none a stand-in for a body. Every one was
+ * checked against port/mg_fanout_costs.txt section 10 finding 1 FIRST -- the
+ * facegen failure that aliased curling's twenty-five-entry pointer-to-member
+ * STATE TABLE because its wall test is `"P8" in sym` and a struct wrapper
+ * hides the P8, and whose refusal path misses the @@3PAU array spelling too.
+ * TWO OF THE SEVEN ARE EXACTLY THAT SHAPE ON THE SURFACE and both are ruled
+ * safe on evidence rather than on the guard's silence.
+ *
+ * THE COMMON HALF. All five data rows are the same defect: a TU spells a
+ * mounted DS symbol under a C++ type, so MSVC mangles the TYPE into the name
+ * and the ov006 / arm9 mount's plain C symbol cannot satisfy it. The ADDRESS
+ * is the same either way, no storage is involved, and an alias is exact.
+ *
+ * ROW 1 and 2 -- THE STYLUS RECORD, from src/func_ov006_020d1958.cpp, which
+ * declares `extern unsigned char data_020a0dea[][4];` and reads
+ * data_020a0dea[slot][0]. That is an ARRAY of 4-byte records, not a pointer,
+ * and MSVC spells an unknown-bound array of unsigned char[4] as @@3PAY03EA.
+ * hal/auto_bss.cpp lays the four stylus names out CONTIGUOUSLY in
+ * .dsstate$touch0000..0003 precisely so a stride-4 read through any one of
+ * them lands on the right byte of the right record, so the alias is not only
+ * name-correct, it is the layout that file exists to provide.
+ * hal/cxx_aliases.cpp:627 already carries the @@3PAEA spelling of the same
+ * symbol, which is a DIFFERENT LHS and therefore not a duplicate directive:
+ * port/tools/alternatename_guard.py counts pragmas per LHS, and two spellings
+ * of one symbol from two different declarations are two rows by construction.
+ *
+ * ROW 3 -- G2S::GetBG0CharPtr. src/func_ov006_020d3624.cpp, _020d3668.cpp and
+ * the host copy of _020d3ba0 all declare it inside `namespace G2S`, so MSVC
+ * emits ?GetBG0CharPtr@G2S@@YAPADXZ. The Y and the A in that mangling say
+ * __cdecl FREE FUNCTION IN A NAMESPACE, not a method -- which is section 10
+ * finding 4's case, the one facegen classifies as a reverse face and refuses
+ * for the wrong reason. Both sides are __cdecl with zero arguments and the
+ * arm9 body is _ZN3G2S13GetBG0CharPtrEv at 0x02054edc, so a plain alias is
+ * correct and no argument-landing face is owed.
+ *
+ * ROW 4 -- data_ov006_0213b8b8, AND THIS IS THE ONE THAT LOOKS LIKE THE WALL.
+ * src/func_ov006_020d3ba0.c declares `typedef struct { int a; int b; } Pair;`
+ * and `extern Pair data_ov006_0213b8b8[11]`, which mangles @@3PAUPair@@A --
+ * the exact array-of-struct spelling that slipped both of facegen's guards on
+ * curling's state table. IT IS NOT A MEMBER-POINTER TABLE and there are two
+ * independent witnesses:
+ *   1. THE RELOCATION SET. config/arm9/overlays/ov006/relocs.txt has NO row at
+ *      all in 0x0213b8b8..0x0213b910. A {code, adjustment} table would carry
+ *      eleven load relocations on its code words, one per pair; a table with
+ *      zero relocations contains no pointers.
+ *   2. THE BYTES. Read out of extracted/overlays/overlay_0006.bin at base
+ *      0x020bfec0 the eleven pairs are {0x20,-0x87} {0xa0,-0x87} {0x60,-0x5a}
+ *      {0x20,-0x2d} {0xa0,-0x2d} {0x60,-0x78} {0x20,-0x69} {0xa0,-0x69}
+ *      {0x20,-0x4b} {0xa0,-0x4b} {0x60,-0x3c} -- small signed screen
+ *      coordinates, not code addresses.
+ * And section 4's rulebook corollary keys on the SPELLING as well as the use:
+ * "A PAIR WHOSE CONSUMER SPELLS IT AS TWO INTS IS SAFE AS AN ALIAS." This
+ * consumer spells two ints, `struct { int a; int b; }` is eight bytes on both
+ * machines, and the only thing it does with the table is copy the block.
+ *
+ * ROW 5 -- data_ov006_0213b880, the BY-VALUE struct spelling @@3UBuf14@@A that
+ * facegen does refuse. Same treatment and the same two witnesses:
+ * src/func_ov006_020d48dc.cpp declares `typedef struct { int v[14]; } Buf14;`
+ * and copies it whole into a local, the fourteen words read
+ * {2,1,1,1,2,2,2,2,2,2,2,1,1,1}, and no relocation lands anywhere in
+ * 0x0213b880..0x0213b8b4. Fourteen ints are 56 bytes on both machines.
+ *
+ * ROWS 6 and 7 -- data_ov006_0213a458 and _0213a4b0, declared `extern void*
+ * data_ov006_0213a458[]` and indexed by a per-slot number before being handed
+ * to func_ov004_020afdd0. These ARE pointer tables, and that is why the alias
+ * is right rather than in spite of it: every word in them carries a load
+ * relocation (from:0x0213a458 -> 0x0213a450, ..45c -> ..448, ..460 -> ..440
+ * and so on), so tools/ovdata.py emits them with their interior pointers
+ * REBASED into the mount. Aliasing the C++ spelling onto the mount's cell is
+ * what hands the callee a host address; a private host array would hand it a
+ * DS one.
+ */
+#pragma comment(linker, "/alternatename:?data_020a0dea@@3PAY03EA=_data_020a0dea")
+#pragma comment(linker, "/alternatename:?data_020a0deb@@3PAY03EA=_data_020a0deb")
+#pragma comment(linker, "/alternatename:?GetBG0CharPtr@G2S@@YAPADXZ=__ZN3G2S13GetBG0CharPtrEv")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b8b8@@3PAUPair@@A=_data_ov006_0213b8b8")
+#pragma comment(linker, "/alternatename:?data_ov006_0213b880@@3UBuf14@@A=_data_ov006_0213b880")
+#pragma comment(linker, "/alternatename:?data_ov006_0213a458@@3PAPAXA=_data_ov006_0213a458")
+#pragma comment(linker, "/alternatename:?data_ov006_0213a4b0@@3PAPAXA=_data_ov006_0213a4b0")

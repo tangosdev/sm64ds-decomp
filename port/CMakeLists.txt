@@ -785,8 +785,15 @@ set_source_files_properties(
     # was swept for the marker AND for `extern "C"`, `virtual` and `class`, the
     # way lane CCN's entry above prescribes, rather than these being found one
     # at a time by compile errors; these three are the only hits.
+    # func_ov006_020d3ba0.c IS THE THIRD HIT AND IT IS NOT HERE. It needs C++
+    # for the same reason as the two above -- a 37-virtual dummy struct and a
+    # namespace -- but its extern "C" block also writes a bare
+    # `int data_0209d4b8;`, which C++ makes a strong definition of an arm9
+    # global hal/scene_mg_faces.cpp already owns inside DSSTATE. It is
+    # host-copied in unmatched/MgAmida_Slot3ba0.cpp instead, one token changed,
+    # and that file's header carries the ruling and the sed line that
+    # reproduces it.
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d122c.c"
-    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d3ba0.c"
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020d4b7c.c"
     PROPERTIES LANGUAGE CXX)
 
@@ -4216,7 +4223,11 @@ endforeach()
 # Behavior's slice line linkable.
 file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_s371.txt" SLICE_S371_LINES)
 set(SLICE_S371_SOURCES hal/scene_mg_amida.cpp
-                       unmatched/MgAmida_Faces.cpp)
+                       unmatched/MgAmida_Faces.cpp
+                       # REPLACES src/func_ov006_020d3ba0.c, which is out of
+                       # the slice: a //cpp-marked TU whose extern "C" block
+                       # tentatively defines the arm9 RNG seed. One token.
+                       unmatched/MgAmida_Slot3ba0.cpp)
 foreach(line IN LISTS SLICE_S371_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")
@@ -4238,6 +4249,16 @@ foreach(dup IN ITEMS src/func_ov006_020d27dc.c src/func_ov006_020d27dc.cpp
                 "symbol; retire the trap in the same commit as the body")
     endif()
 endforeach()
+# And the one host-copied body, for the same reason the S75 block asserts its
+# five: a slice line that came back would be a duplicate symbol far from its
+# cause, and taking the src one instead would put the arm9 RNG seed's second
+# definition back.
+if("src/func_ov006_020d3ba0.c" IN_LIST SLICE_S371_LINES)
+    message(FATAL_ERROR "slice_s371.txt lists src/func_ov006_020d3ba0.c, which "
+            "unmatched/MgAmida_Slot3ba0.cpp host-copies. Taking both is a "
+            "duplicate symbol; taking the src one puts a second definition of "
+            "the arm9 RNG seed data_0209d4b8 back in an ov006 object")
+endif()
 
 # Lane FDR: the arm9 wipe fader's own static initialiser, and the dWipe_c
 # vtable it installs. Rides the SAME three targets as the scene seats above,

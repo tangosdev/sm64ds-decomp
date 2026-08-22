@@ -1,4 +1,6 @@
-/* PORT_HOST_ABI. TWO NAMED TRAPS for dScMgAmida_c, actor id 0x173 (scene 371).
+/* PORT_HOST_ABI. THREE NAMED TRAPS for dScMgAmida_c, actor id 0x173 (scene
+ * 371) -- two in ov006, found by a delinks join over the callees, and one in
+ * ov004, found by the link.
  * Run mg9, lane S371.
  *
  * THE PRECEDENT IS func_ov006_020e1854, dScMgCurling_c's twenty-fifth state:
@@ -85,6 +87,7 @@ extern "C" {
 
 static unsigned g_amida_floor_27dc;
 static unsigned g_amida_floor_36a4;
+static unsigned g_amida_floor_ae5c4;
 
 /* THE HOLE IN THE BEHAVIOR'S OWN CALL LIST. 0xe48 bytes, one caller. */
 void func_ov006_020d27dc(char *c);
@@ -102,7 +105,49 @@ void func_ov006_020d36a4(void *sb)
     ++g_amida_floor_36a4;
 }
 
-unsigned port_mg_amida_floor_27dc(void) { return g_amida_floor_27dc; }
-unsigned port_mg_amida_floor_36a4(void) { return g_amida_floor_36a4; }
+/* ---- THE THIRD FLOOR, AND IT IS ov004's ---------------------------------
+ *
+ * func_ov004_020ae5c4, 0x294. Found by the LINK rather than by the delinks
+ * walk over this class's own block, because it is one overlay over:
+ * config/arm9/overlays/ov004/symbols.txt names it, delinks.txt stops at
+ * `end:0x020ae5c4` and no block resumes over it, and no src file defines it in
+ * either extension anywhere in src/.
+ *
+ * THREE OF THIS CLASS's TUs CALL IT -- src/func_ov006_020d1ba0.c (seven sites),
+ * _020d2580.c and _020d3ba0.c -- and all three declare it identically:
+ *
+ *     int func_ov004_020ae5c4(void *a, int b, int c, int d, int e, int f, int g);
+ *
+ * SEVEN PARAMETERS, AND THE ROM AGREES. Its prologue pushes nine registers and
+ * subtracts 0x14, then reads [sp, #0x3c] at 0x020ae5d8 -- 0x38 past the new sp
+ * is the FIRST incoming stack word, so 0x3c is the second of three, which is
+ * seven arguments with four in r0..r3. The declaration is repeated here rather
+ * than invented, which is also what keeps the plain-name arity gate quiet.
+ *
+ * IT IS ALSO THE FAMILY's SLOT-34 DISPATCHER, which is worth recording because
+ * it is the other half of a defect this lane reports and does not fix. Eight of
+ * the ten `ldr Rd,[Rn,#0x88]` sites in the two overlay images are inside this
+ * body, each with one word pushed before a `blx` -- five arguments to slot 34 --
+ * while hal/scene_mg.cpp's shared mb_v34 thunk is declared (void *, void *) and
+ * calls the five-parameter src/func_ov004_020ae3b4.c with one argument. Nothing
+ * has ever dispatched slot 34 on any scene because this body has no code and the
+ * only other dispatcher, func_ov006_020ce108, is in no slice. So the mismatch is
+ * unexercised rather than absent, and this trap is why it stays that way here.
+ *
+ * ITS SINGLE EXIT SETS NO RETURN VALUE (0x020ae84c: add sp / pop / bx lr, with
+ * no `mov r0,#N` in front of it), and every one of the ten call sites in this
+ * class discards the result, so the trap returns 0 and asserts nothing.
+ */
+int func_ov004_020ae5c4(void *a, int b, int c, int d, int e, int f, int g);
+int func_ov004_020ae5c4(void *a, int b, int c, int d, int e, int f, int g)
+{
+    (void)a; (void)b; (void)c; (void)d; (void)e; (void)f; (void)g;
+    ++g_amida_floor_ae5c4;
+    return 0;
+}
+
+unsigned port_mg_amida_floor_27dc(void)  { return g_amida_floor_27dc; }
+unsigned port_mg_amida_floor_36a4(void)  { return g_amida_floor_36a4; }
+unsigned port_mg_amida_floor_ae5c4(void) { return g_amida_floor_ae5c4; }
 
 }  /* extern "C" */
