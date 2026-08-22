@@ -44,10 +44,14 @@
 # "Hanachan" is the Japanese name for the Wiggler; the localised title is the
 # guessing game.
 #
-# THE PLAYER-FACING TITLE IS "WHICH WIGGLER" and it comes from the config, not
-# from the image. port/slice_s75.txt establishes that no minigame title text is
-# stored anywhere in the 16 MB ROM; this lane re-checked nothing there and takes
-# that finding as it stands. The spawn symbol IS the config's title.
+# THE PLAYER-FACING TITLE IS "WHICH WIGGLER" and this lane takes it from the
+# config's own spawn symbol, MgWhichWiggler. It does NOT need to be derived: the
+# ROM gives this id a named spawn symbol, unlike the four classes in this family
+# that have only an address-shaped one. Run mg9 lane S371 has since shown that
+# minigame titles ARE derivable from the ROM's BMG message files through their
+# glyph encoding, which supersedes the older "no title text is stored anywhere
+# in the image" reading; that correction belongs to S371's branch and is cited
+# here rather than restated. Nothing in this seat depends on either answer.
 #
 # ---- THE ov005 ROW, RECORD AND TEXT ---------------------------------------
 #
@@ -288,6 +292,20 @@
 # port/unmatched/MgWiggler_StateDispatch.cpp, each verbatim but for the
 # member-pointer declaration and the dispatch site. Listing both copies would be
 # a duplicate symbol; listing neither would drop the dispatch silently.
+#
+# THE COMMENTS IN THIS FILE CARRY NO UNMATCHED SQUARE BRACKET, AND THAT IS A
+# BUILD REQUIREMENT RATHER THAN A STYLE. CMake's file(STRINGS) hands its result
+# to list parsing, which treats `[` ... `]` as a bracket group and will not split
+# on the separator inside one. An unmatched `[` in a comment therefore swallows
+# EVERY line after it into a single element, the foreach's `^#` test skips that
+# one element, and the whole source list comes out empty -- which reads at the
+# link as every TU in the seat unresolved, i.e. as a wrong seat rather than as a
+# text bug. This lane shipped that bug and spent a build finding it: one comment
+# wrote a half-open range as an interval with a bracket and a parenthesis, and it
+# ate the other 256 lines. Run mg9 lane S381 hit the identical trap
+# independently. WRITE RANGES AS 0xAAAA..0xBBBB. A same-line matched pair is
+# safe; port/slice_gate21.txt has one that spans two lines and survives only
+# because both lines are comments.
 #
 # ONE WAVE, FIVE UNRESOLVED EXTERNALS, FOUR OBJECTS. Which is the shape lane PPP
 # predicts for a seat after the framework half is paid: "budget ONE wave plus

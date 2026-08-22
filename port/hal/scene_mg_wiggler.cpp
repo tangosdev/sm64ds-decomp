@@ -147,7 +147,67 @@
 // below whether or not they fire, because a silent zero and an absent
 // instrument look the same in a log -- and the two zeros mean different things.
 //
-// ---- 9. THE GAPLESS LATCH IS CALLED AND THE SPLICE IS NOT ----------------
+// ---- 9. THE ELEMENT-VTABLE CHECK, AND IT COMES BACK CLEAN ----------------
+//
+// Run mg9 lane S381 found dScMgMCarlo_c's factory building eighty card objects
+// whose ELEMENT CLASS carries its own two-slot vtable in each record's word 0,
+// and nothing in the ovr/mark/nosrc columns or in any scene-table derivation can
+// see that: a seat that misses it links, boots, and jumps to a raw DS address on
+// the first RENDERED frame. The coordinator made the check mandatory for every
+// lane. This class's answer is that its element has no vtable, and here is the
+// evidence rather than the assertion.
+//
+// THE ONLY OBJECT THIS FACTORY CONSTRUCTS is the array of FIFTEEN 0x98-byte
+// wigglers at this+0x4678, built by func_020733a8 with func_ov006_020ede80 as
+// the element constructor and func_ov006_020ea324 as the element destructor.
+// InitResources constructs nothing; it loads files and pokes registers.
+//
+// func_ov006_020ede80, 0x40 = 64 bytes = 16 words, 14 instructions plus a
+// two-word pool holding 0x0203D47C and 0x0203D738, disassembled out of
+// extracted/overlays/overlay_0006.bin at base 0x020bfec0:
+//
+//     push {r4,lr} / sub sp,#8 / mov r4,r0
+//     ldr ip,[pc,#0x24] / ldr r3,[pc,#0x24]
+//     add r0,r4,#0x18 / mov r1,#5 / mov r2,#8
+//     str ip,[sp]          <- the ONLY store in the body, and it is the fifth
+//                             argument going onto the stack, not a field
+//     bl 0x020733a8 / mov r0,r4 / epilogue
+//
+// THERE IS NO `str` TO [r4] ANYWHERE IN IT. The element's word 0 is left as the
+// allocator found it, and what later writes it is func_ov006_020eb8f0 and
+// func_ov006_020ecdb8, writing a {code, adj} MEMBER-POINTER PAIR -- the +0x00
+// field func_ov006_020eb610 dispatches. That is a routed pair, not a virtual
+// call, and it needs no fill and no face.
+//
+// THE NESTED ARRAY IS CLEAN TOO, because the check has to follow the helpers.
+// The element constructor builds five 8-byte elements at element+0x18 with
+// func_0203d738 as THEIR constructor, and src/func_0203d738.c is an empty body
+// (4 bytes in the ROM, `bx lr`); the destructor side is
+// NullDestructor_0203d47c, also 4 bytes. Neither writes a word 0.
+//
+// AND THE RUN AGREES, which is the check S381's symptom actually fails. The
+// fill reports zero raw DS words in both tables and prints no FILL INCOMPLETE
+// line, and scene 386 runs 1200 RENDERED frames clean under
+// SM64DS_FAULTS_FATAL=1 with 0 UNHANDLED addresses. A missing element vtable is
+// a fault on the first rendered frame; slot 9 entered 1200 times.
+//
+// ---- 10. SLOT 34 IS NOT DISPATCHED BY THIS CLASS -------------------------
+//
+// Run mg9 lane S371 reported that hal/scene_mg.cpp's shared thunk mb_v34 is
+// declared (void *, void *) while the real body func_ov004_020ae3b4 takes five
+// parameters at every ROM dispatch site in both overlay images, and the
+// coordinator's rule is that the repair belongs to whichever lane can WITNESS a
+// slot-34 dispatch. This class cannot. scene_mg.cpp's own framework census on
+// scene 386 reads, on three runs:
+//
+//     300 frames headless   1(x1) 2(x1) 7(x300)  26(x2)     31 32 33
+//     1200 frames rendered  1(x1) 2(x1) 7(x1200) 10(x1200) 26(x4084)  31 32 33
+//     1200 frames, level 8  1(x1) 2(x1) 7(x1200) 10(x1200) 26(x10113) 31 32 33
+//
+// Slot 34 does not appear on any of them, so this lane has no witness and does
+// not touch the thunk. Recorded as the negative rather than as silence.
+//
+// ---- 11. THE GAPLESS LATCH IS CALLED AND THE SPLICE IS NOT ---------------
 //
 // hal_gapless_minigames_latch() runs from slot 0 the way every seated
 // minigame's does, because a scene that does not latch inherits the previous
