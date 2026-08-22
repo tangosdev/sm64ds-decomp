@@ -38,12 +38,12 @@
  * (InitResources) and slot 6 (Behavior) differ, both still fBase_c's own
  * slots in dActor_c -- CleanupResources, Render, OnPendingDestroy,
  * OnYoshiTryEat and OnTurnIntoEgg are all still the base's own words.
- * InitResources and Behavior are extern "C" free functions under their
- * mangled names (the same idiom fBase_c.h itself uses for its own slot 0),
- * and the destructor is declared but never defined out of line -- like
- * dActor_c's own _ZTV8dActor_c, this class's vtable stays ROM-supplied data
- * (kind:data(any) in symbols.txt), not compiler-emitted; D1/D0 stay the
- * pre-existing extern "C" free functions.
+ * The readable src_tu shadow defines InitResources and Behavior as real member
+ * functions and defines one ordinary destructor, from which mwccarm emits D1,
+ * D0, D2, RTTI, and the vtable. Only the seven licensed text contributions are
+ * currently used for verification. Production still keeps the pre-existing
+ * one-function sources and ROM-supplied vtable/data until whole-TU ownership is
+ * proven safe.
  */
 struct daObjAbuku_c : dActor_c {
     u8  pad_0d0[0x4];

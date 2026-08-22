@@ -144,7 +144,7 @@ src/func_ov098_02138e6c.cpp:
     complete
     .text start:0x02138e6c end:0x02139070
 
-src/_ZN5Crate4KillEv.c:
+src/_ZN5Crate4KillEv.cpp:
     complete
     .text start:0x02139070 end:0x021390ec
 
@@ -188,11 +188,11 @@ src/_ZN5Crate15OnGroundPoundedER8dActor_c.cpp:
     complete
     .text start:0x02139e44 end:0x02139e64
 
-src/_ZN5Crate13OnYoshiTryEatEv.c:
+src/_ZN5Crate13OnYoshiTryEatEv.cpp:
     complete
     .text start:0x02139e64 end:0x02139e78
 
-src/_ZN5Crate13OnTurnIntoEggER6Player.c:
+src/_ZN5Crate13OnTurnIntoEggER6Player.cpp:
     complete
     .text start:0x02139e78 end:0x02139f04
 

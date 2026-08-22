@@ -212,11 +212,11 @@ src/func_ov072_021208d8.cpp:
     complete
     .text start:0x021208d8 end:0x02120980
 
-src/_ZN11daBgSnwmn_c16CleanupResourcesEv.c:
+src/_ZN11daBgSnwmn_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02120980 end:0x021209bc
 
-src/_ZN11daBgSnwmn_c16OnPendingDestroyEv.c:
+src/_ZN11daBgSnwmn_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021209bc end:0x021209c0
 
@@ -228,7 +228,7 @@ src/_ZN11daBgSnwmn_c8BehaviorEv.cpp:
     complete
     .text start:0x02120a08 end:0x02120a44
 
-src/_ZN11daBgSnwmn_c13InitResourcesEv.c:
+src/_ZN11daBgSnwmn_c13InitResourcesEv.cpp:
     complete
     .text start:0x02120a44 end:0x02120c00
 
