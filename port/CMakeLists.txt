@@ -4214,12 +4214,23 @@ endforeach()
 # invisible to BOTH prescribed detectors. Both sweeps were run over the whole
 # closure rather than over an LNK1120.
 #
-# ONE MORE HOST COPY IS NOT WALL WORK. unmatched/MgSound_ShadowSlot35.cpp
-# replaces src/func_ov006_0211ba88.c, a state body that is a delinks join miss
-# AND drops its receiver at a vtable slot 35 call AND approximates the ROM's
-# modulo loop AND writes an int where the ROM writes a byte over a live
-# neighbouring gate. Its banner claims "Logic verified correct vs ROM"; that
-# file's header is the evidence it is not. src/ is untouched.
+# THREE MORE HOST COPIES ARE NOT WALL WORK, and they are one disease in three
+# disguises -- a call that reaches the right code with the wrong ABI. None is
+# findable by either prescribed detector, and each was found by a different
+# instrument, which is the part worth carrying forward:
+#   unmatched/MgSound_ShadowSlot35.cpp replaces src/func_ov006_0211ba88.c, a
+#     state body that is a delinks join miss AND drops its receiver at a
+#     vtable slot 35 call AND approximates the ROM's modulo loop AND writes an
+#     int where the ROM writes a byte over a live neighbouring gate. Its
+#     banner claims "Logic verified correct vs ROM"; that file's header is the
+#     evidence it is not. Found by READING the body against the ROM.
+#   unmatched/MgSound_ModelRender_020c29dc.cpp -- found by the BATTERY, which
+#     renders where this lane's own boots did not.
+#   unmatched/MgSound_ShadowFader_020c2924.cpp -- found by a WORD-BY-WORD
+#     sweep for `blx Rm` through a register loaded from an object. Nothing
+#     else could have: no unresolved symbol, no `::*`, no shadow class in the
+#     source to grep for, and every boot clean over it.
+# src/ is untouched by all three; the defects are the host's.
 #
 # THE SLICE IS THE DELTA ONLY. slice_mg1.txt already carries the ov004
 # framework, the thirty-five overlay constructors and the arm9 waves under
