@@ -147,6 +147,19 @@ int host_setting_gapless_minigames(void);
    that file's header carries the derivation that makes the swaps safe. */
 int host_setting_lovesme_character(void);
 
+/* ---- CustomPalette: the third Mods key ---------------------------------
+   Default 0, and the default is the only setting that is the ROM. 1..3
+   pick a palette combo file, palettes/combo<N>.pal in the same folder
+   settings.json is looked for, whose color sets are written into the
+   playable characters' model palettes as their files load. The key picks
+   the FILE and nothing else: every file id, palette index and color comes
+   out of the combo file, so newer combos need no new build. Out-of-range
+   values read as 0. Boot-latched (the file layer caches what it serves,
+   so the launcher's Mods panel promises a restart), announced in plain
+   words on stderr when on. The file format and the patching live in
+   hal/fs_mods.cpp. */
+int host_setting_custom_palette(void);
+
 /* ---- THE LIVE RE-READ -------------------------------------------------
    host_settings_poll: call once per frame from the host loop. Internally it
    looks at the file's write time only every 30th call, so its steady-state
