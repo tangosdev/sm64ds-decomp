@@ -386,7 +386,14 @@ void  func_ov004_020aeed8(void *c);
 void  func_ov004_020b2880(void);
 void  func_ov004_020b27f4(void);
 void  func_ov004_020b265c(void *c);
-void  func_ov004_020ae3b4(void *c);
+/* SLOT 34 IS THE BOARD'S BRUSH AND TAKES FIVE PARAMETERS. Run mg10, lane F371.
+   This line used to read `void func_ov004_020ae3b4(void *c);` while
+   src/func_ov004_020ae3b4.c defines
+       void func_ov004_020ae3b4(char* obj, int cx, int cy, int val, int n)
+   -- an n-by-n block of `val` written at (cx,cy) through MultiCopy_Int. See
+   mb_v34 below for what the one-parameter spelling cost and why nothing could
+   convict it until this run. */
+void  func_ov004_020ae3b4(void *c, int cx, int cy, int val, int n);
 /* SLOT 35 IS A PREDICATE ON `this` AND WAS DECLARED AS NEITHER. Run mg6, lane
    PPP. This line used to read `void func_ov004_020ad660(void);` while
    src/func_ov004_020ad660.c defines `int func_ov004_020ad660(int *r0)
@@ -570,7 +577,36 @@ static int  __fastcall mb_v30(void *s, void *)     { MG_SLOT(30); func_ov004_020
 static int  __fastcall mb_v31(void *, void *)      { MG_SLOT(31); func_ov004_020b2880(); return 0; }
 static int  __fastcall mb_v32(void *, void *)      { MG_SLOT(32); func_ov004_020b27f4(); return 0; }
 static int  __fastcall mb_v33(void *s, void *)     { MG_SLOT(33); func_ov004_020b265c(s); return 0; }
-static int  __fastcall mb_v34(void *s, void *)     { MG_SLOT(34); func_ov004_020ae3b4(s); return 0; }
+/* SLOT 34 DROPPED FOUR ARGUMENTS AND HAD NO POSSIBLE WITNESS. Run mg10, lane
+ * F371, and it is mb_v35's defect one slot over with one extra twist.
+ *
+ * This thunk used to read
+ *
+ *     static int __fastcall mb_v34(void *s, void *)
+ *     { MG_SLOT(34); func_ov004_020ae3b4(s); return 0; }
+ *
+ * against a ROM body that takes FIVE. Every slot-34 dispatch site in either
+ * overlay image passes five -- r0..r3 plus one word stored at [sp] before the
+ * blx -- so a two-parameter __fastcall thunk both fed the brush garbage
+ * coordinates and cleaned the wrong number of bytes off the stack.
+ *
+ * WHY IT SAT THROUGH TWO RUNS UNCONVICTED, which is the part worth keeping.
+ * The tree has exactly ONE body that dispatches slot 34, func_ov004_020ae5c4,
+ * and until run mg10 that body was TRAPPED in hal/scene_mg_faces.cpp. So slot
+ * 34 was unreachable on every scene rather than merely unreached on the ones
+ * anybody had booted, and run mg9 lane S371 recorded the mismatch and
+ * deliberately did not repair it, on the rule that a repair with no dispatch to
+ * witness it is wiring without evidence. Seating the dispatcher is what turned
+ * the witness on, and the repair lands with it rather than before it.
+ *
+ * THE FIVE ARE READ OFF THE DISPATCH SITES, not off the callee. At all eight
+ * sites inside 0x020ae5c4 the shape is
+ *     str r7,[sp] / ldr Rd,[r0] / ldr r3,[sp,#0x3c] / ldr Rd,[Rd,#0x88]
+ *     / mov r1,sb / mov r2,r8 / blx Rd
+ * so r1 and r2 are the walked coordinates, r3 is the caller's `val` and the
+ * pushed word is its `n`. src/func_ov004_020ae3b4.c declares the same five. */
+static int  __fastcall mb_v34(void *s, void *, int cx, int cy, int val, int n)
+{ MG_SLOT(34); func_ov004_020ae3b4(s, cx, cy, val, n); return 0; }
 /* SLOT 35 DROPPED `this` AND THREW THE ANSWER AWAY. Run mg6, lane PPP.
  *
  * This thunk used to read

@@ -471,30 +471,29 @@ void port_mg_hud_scaled_number_020b2220(int x, int y, int num, int a3, int a4,
 /* no delink block and no src in their own overlay's config */
 int func_ov004_020ae858(void *)             { mg_trap("func_ov004_020ae858"); return 0; }
 
-/* ---- run mg9 lane BOO: a SECOND ov004 floor, and it lives here rather than
- * in that lane's own hal file because it is the FAMILY's and not one class's.
- * config/arm9/overlays/ov004/symbols.txt names func_ov004_020ae5c4 and sizes
- * it 0x294; delinks.txt's block before it runs .text 0x020ae3b4..0x020ae5c4
- * and covers no part of it; and no src file defines it in either extension or
- * in any other module. SEVEN ov006 TUs across the family call it --
- * func_ov006_020d1ba0, _020d2580, _020d3ba0, _0211f9fc, _0212157c, _02121d64
- * and _02124088 -- so a per-lane copy of this line would become a duplicate
- * symbol the day a second seat reaches one of them. dScMgTeresa_c reaches it
- * through src/func_ov006_0211f9fc.c.
+/* ---- SEATED, run mg10 lane F371 ----------------------------------------
  *
- * THE SIGNATURE IS THE ROM'S, WHICH IS THE WHOLE POINT OF THE LINE ABOVE IT
- * BEING WRONG FOR TWO RUNS. func_ov004_020b1710 and func_ov004_020b2220 both
- * stood here taking (void *) while the ROM took four and seven arguments, and
- * both silently dropped every one of them. This body takes SEVEN: r0..r3 plus
- * three stack words, read off its own prologue --
- *     push {r4,r5,r6,r7,r8,sb,sl,fp,lr} / sub sp,sp,#0x14
- *     mov sb,r1 / str r3,[sp,#8] / mov r8,r2 / str r0,[sp,#4]
- *     ldr r3,[sp,#0x3c] / ldr r7,[sp,#0x40] / ldr r3,[sp,#0x38]
- * where 0x38, 0x3c and 0x40 are the first three words above the 0x24+0x14
- * frame. src/func_ov006_0211f9fc.c declares it the same way and passes seven,
- * so the count agrees from both ends. */
-int func_ov004_020ae5c4(int, int, int, int, int, int, int)
-{ mg_trap("func_ov004_020ae5c4"); return 0; }
+ * func_ov004_020ae5c4 IS NOT A TRAP ANY MORE, and it was the family's LINE
+ * RASTERISER. Run mg9 lane BOO stood the trap here rather than in a lane's own
+ * hal file because the body is the FAMILY's: seven ov006 TUs across the family
+ * call it (func_ov006_020d1ba0, _020d2580, _020d3ba0, _0211f9fc, _0212157c,
+ * _02121d64 and _02124088), so a per-lane copy would have become a duplicate
+ * symbol. That reasoning was right and it is why this single line is simply
+ * deleted rather than moved.
+ *
+ * IT IS A REAL DECOMPILATION. src/func_ov004_020ae5c4.c is a Bresenham walk
+ * from (x0,y0) to (x1,y1) that stamps vtable slot 34 at every lattice point it
+ * visits, and the symbol comes from port/slice_mg1.txt. The seven parameters
+ * lane BOO derived off the prologue were correct and the new body spells the
+ * same seven.
+ *
+ * AND DELETING IT IS WHAT MAKES SLOT 34 REACHABLE. This body is the tree's
+ * ONLY slot-34 dispatcher -- eight `ldr Rd,[Rn,#0x88]` sites, every one of them
+ * inside it, each storing one word at [sp] before the blx. While it was
+ * trapped, slot 34 was unreachable on every scene rather than merely unreached,
+ * and mb_v34 below could carry a five-argument defect with no potential witness.
+ * That is repaired in the same commit and the witness is a run of scene 371.
+ */
 
 /* ---- SEATED, run mg7 lane L369 -----------------------------------------
  *

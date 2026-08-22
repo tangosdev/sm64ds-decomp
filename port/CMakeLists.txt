@@ -3420,6 +3420,17 @@ foreach(line IN LISTS SLICE_MG1_LINES)
     list(APPEND SLICE_MG1_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/../${line}")
 endforeach()
 
+# ONE .c IN THIS SLICE IS REALLY C++, run mg10 lane F371. Lane CCN's rule was
+# followed rather than waited on: the whole slice was swept for the //cpp
+# marker and for extern "C", virtual, class and namespace before the first
+# build, and src/func_ov004_020ae5c4.c is the only hit. It needs C++ for real
+# -- the tree's only slot-34 dispatch is spelled through a dummy 35-virtual
+# struct, which is how src/func_ov006_020d3ba0.c spells its slot-36 dispatch in
+# the same class. Same repair as the psy and smartball blocks below.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov004_020ae5c4.c"
+    PROPERTIES LANGUAGE CXX)
+
 # The seat's own files, on the same three targets the scene-1 and ov007 seats
 # ride. They are not optional on any of the three: hal/scene_boot.cpp's
 # port_scene_classes table now carries the curling row, so every target that
