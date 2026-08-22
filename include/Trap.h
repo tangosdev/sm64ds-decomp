@@ -47,7 +47,12 @@ struct Trap : dBgActor_c {
        restate dBgActor_c's fields, calls the two "mModel1"/"mModel2" -- the
        numbered pair is a flat-struct-only convention). */
     Model mModel;                     /* 0x320 */
-    u8  pad_370[0x30];
+    /* A Matrix4x3, and the fit is exact from both sides: mModel above ends at
+       0x370 and mState below starts at 0x3a0, which is 0x30 -- sizeof(Matrix4x3)
+       -- and InitResources hands this address to dBgW_KcMbg::SetFile, whose
+       second parameter is `const Matrix4x3 &'. dBgActor_c's own mClsnMat at
+       0x2ec is inherited and separate; this is the trap doors' own. */
+    Matrix4x3 mDoorMat;               /* 0x370 */
     s32 mState;                      /* 0x3a0 */
     s32 mPlayerDist;                      /* 0x3a4 */
     u16 mOpenSpeed;                      /* 0x3a8 */

@@ -55,7 +55,7 @@ src/_ZN4Trap8BehaviorEv.cpp:
     complete
     .text start:0x021115e0 end:0x02111654
 
-src/_ZN4Trap13InitResourcesEv.c:
+src/_ZN4Trap13InitResourcesEv.cpp:
     complete
     .text start:0x02111654 end:0x0211184c
 

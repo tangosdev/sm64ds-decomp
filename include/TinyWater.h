@@ -23,7 +23,12 @@ struct TinyWater : dBgActor_c {
     u8  pad_31e[0x2];
     TextureTransformer mTextureTransformer;/* 0x320 */
     s32 mMinPosY;                      /* 0x334 */
-    u8  pad_338[0x4];
+    /* Named out of the padding by this class's own Behavior, which stores
+       Sound::PlayLong's handle here and passes it back as that call's first
+       argument on the next frame -- the same field the sibling ShipWater
+       already calls mSoundID. Four bytes of pad became four bytes of s32, so
+       nothing below it moves. */
+    s32 mSoundID;                      /* 0x338 */
     u16 mSoundTimer;              /* 0x33c */
 
     /* --- vtable --- */
@@ -63,7 +68,7 @@ struct TinyWater {
        checks. Was a u8 marker. [_ZN9TinyWaterD1Ev.c] */
     TextureTransformer mTextureTransformer;            /* 0x320 */
     s32 mMinPosY;            /* 0x334 */
-    u8  pad_338[0x4];
+    s32 mSoundID;            /* 0x338 */
     u16 mSoundTimer;              /* 0x33c */
 };
 

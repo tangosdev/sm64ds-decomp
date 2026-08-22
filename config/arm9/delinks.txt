@@ -2555,7 +2555,7 @@ src/SharedFilePtr_Destruct_Anim.c:
     complete
     .text start:0x02017984 end:0x0201799c
 
-src/_ZN13SharedFilePtr9ConstructEj.c:
+src/_ZN13SharedFilePtr9ConstructEj.cpp:
     complete
     .text start:0x0201799c end:0x020179b4
 
@@ -2607,11 +2607,11 @@ src/func_02017b4c.c:
     complete
     .text start:0x02017b4c end:0x02017b64
 
-src/_ZN13SharedFilePtr7ReleaseEv.c:
+src/_ZN13SharedFilePtr7ReleaseEv.cpp:
     complete
     .text start:0x02017b64 end:0x02017bc4
 
-src/_ZN13SharedFilePtr8LoadFileEv.c:
+src/_ZN13SharedFilePtr8LoadFileEv.cpp:
     complete
     .text start:0x02017bc4 end:0x02017c24
 
@@ -5211,7 +5211,7 @@ src/func_02037dc4.c:
     complete
     .text start:0x02037dc4 end:0x02037dcc
 
-src/_ZNK11SurfaceInfo12CopyNormalToER7Vector3.c:
+src/_ZNK11SurfaceInfo12CopyNormalToER7Vector3.cpp:
     complete
     .text start:0x02037dcc end:0x02037de8
 
@@ -5731,7 +5731,7 @@ src/_ZN14dBgW_KcMbgSclY9GetNormalEsR7Vector3.cpp:
     complete
     .text start:0x0203a4dc end:0x0203a594
 
-src/_ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Lin.c:
+src/_ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Lin.cpp:
     complete
     .text start:0x0203a594 end:0x0203a660
 
@@ -5831,7 +5831,7 @@ src/func_0203accc.c:
     complete
     .text start:0x0203accc end:0x0203acdc
 
-src/_ZNK7PathPtr7GetNodeER7Vector3j.c:
+src/_ZNK7PathPtr7GetNodeER7Vector3j.cpp:
     complete
     .text start:0x0203acdc end:0x0203ad34
 
@@ -7854,7 +7854,7 @@ src/_ZN18NestedHeapIterator10FindNestedEPv.c:
     complete
     .text start:0x0204dfe8 end:0x0204e014
 
-src/_ZN18NestedHeapIterator19RecursiveFindNestedEPv.c:
+src/_ZN18NestedHeapIterator19RecursiveFindNestedEPv.cpp:
     complete
     .text start:0x0204e014 end:0x0204e084
 

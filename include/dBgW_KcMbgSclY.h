@@ -15,9 +15,16 @@
  * include/ModelBase.h for the key-function rule and the objisolate exemption
  * to it. D0 stays a C file.
  *
- * SetScaleY's mangled name carries Fix12<int> (wall 6az), and SetFile and
- * the DetectClsn triple are launder-heavy, so those definitions stay
- * extern-C free functions; the declarations here are the real ones.
+ * SetScaleY's mangled name carries Fix12<int>, and SetFile's does too (wall
+ * 6az), so those two definitions stay extern-C free functions; the declarations
+ * here are the real ones.
+ *
+ * THE "DetectClsn triple is launder-heavy" CLAIM IS RETIRED for slot 7.
+ * src/_ZN14dBgW_KcMbgSclY10DetectClsnER9dBgCh_Lin.cpp is a real method as of
+ * 2026-08-22 and needs no launder at all -- every access is a named dBgCh_Lin
+ * member and the base call is the ordinary qualified `dBgW_Kc::DetectClsn'.
+ * Slots 6 and 8 have not been retried; the claim was never measured per slot,
+ * so treat it as untested there rather than as a finding.
  */
 
 #ifdef __cplusplus

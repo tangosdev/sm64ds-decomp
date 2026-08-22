@@ -508,7 +508,7 @@ src/_ZN15TtcRotatingGear6RenderEv.cpp:
     complete
     .text start:0x0211b8d0 end:0x0211b8f8
 
-src/_ZN15TtcRotatingGear8BehaviorEv.c:
+src/_ZN15TtcRotatingGear8BehaviorEv.cpp:
     complete
     .text start:0x0211b8f8 end:0x0211ba88
 

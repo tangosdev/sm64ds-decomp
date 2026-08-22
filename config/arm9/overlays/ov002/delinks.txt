@@ -656,7 +656,7 @@ src/_ZN13BigBrickBlock8BehaviorEv.cpp:
     complete
     .text start:0x020b3c0c end:0x020b3d78
 
-src/_ZN13BigBrickBlock13InitResourcesEv.c:
+src/_ZN13BigBrickBlock13InitResourcesEv.cpp:
     complete
     .text start:0x020b3d78 end:0x020b406c
 
@@ -1619,7 +1619,7 @@ src/_ZN12HealingHeart6RenderEv.cpp:
     complete
     .text start:0x020bc6d4 end:0x020bc6fc
 
-src/_ZN12HealingHeart8BehaviorEv.c:
+src/_ZN12HealingHeart8BehaviorEv.cpp:
     complete
     .text start:0x020bc6fc end:0x020bc81c
 
@@ -4663,7 +4663,7 @@ src/_ZN10dBgActor_cD0Ev.cpp:
     complete
     .text start:0x020ee464 end:0x020ee4b0
 
-src/_ZN10dBgActor_c14KillByMegaCharER6Player.c:
+src/_ZN10dBgActor_c14KillByMegaCharER6Player.cpp:
     complete
     .text start:0x020ee4b0 end:0x020ee55c
 

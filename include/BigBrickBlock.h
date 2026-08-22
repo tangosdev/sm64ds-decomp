@@ -57,8 +57,13 @@ struct BigBrickBlock : dBgActor_c {
        and reads actorID at +0xc off it, then writes +0x3b0 or +0xd6. Kill only
        tests it against null. */
     dActor_c *unk_328;                   /* 0x328 */
-    /* 0x32c is a u8 variant index; see the header comment. */
-    u8  pad_32c[0x4];
+    /* THE VARIANT INDEX, out of the padding at last. InitResources derives it
+       from actorID (0xf/0x10/0x13 -> 0, 0x11 -> 1, 0x2e -> 2, 0x12 leaves it),
+       and then uses it as the row index into all three 0xc-stride resource
+       tables at 0x02108ab0/ab4/ab8. One byte of pad became one u8, so nothing
+       below it moves. */
+    u8  mVariant;                     /* 0x32c */
+    u8  pad_32d[0x3];
 
     /* --- vtable --- */
     virtual ~BigBrickBlock();

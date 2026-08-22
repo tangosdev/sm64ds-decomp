@@ -1,3 +1,26 @@
+// NOT MIGRATED to a real RollingRock:: method, measured 2026-08-22. Every
+// offset here has a named member and the body converts, but it settles at
+// THREE WORDS and they are one register-allocation choice:
+//
+//   ROM   ldrh r2,[r4,#0x92] / ldrh r1,[r4,#0x94] / strh r2,[sp,#8]
+//   C++   ldrh r1,[r4,#0x92] / strh r1,[sp,#8]    / ldrh r1,[r4,#0x94]
+//
+// i.e. the ROM batches both loads into two registers before the first store and
+// the C++ form reuses r1. Same opcodes, same offsets, same stack slots.
+//
+// GETTING THAT FAR NEEDED ONE REAL FINDING, worth keeping: `v16 =
+// *(struct Vector3_16 *)(c + 0x92)' is a blind byte move in C and emits ldrh,
+// but in C++ a struct copy SCALARISES to the members' own types -- Vector3_16's
+// are s16 -- so the identical line becomes three LDRSH and misses by four. A
+// copy through a `struct { u16 x, y, z; }' restores the unsigned loads and takes
+// the miss from 4 words to 3.
+//
+// Ruled out by test, all still 3 (or worse): a named temp, a pointer deref, a
+// const reference, laundering the source address through an int, splitting the
+// copy into an {x,y} pair plus z (either order), three separate assignments,
+// declaring the local as the unsigned struct end to end, declaring it last, and
+// moving the copy above the unk_3bf increment. Re-open only with a lever that
+// changes pressure at the copy -- spelling alone does not reach it.
 typedef unsigned char u8;
 typedef unsigned short u16;
 typedef unsigned int u32;

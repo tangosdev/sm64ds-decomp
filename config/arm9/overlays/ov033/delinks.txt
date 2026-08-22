@@ -52,7 +52,7 @@ src/_ZN9TinyWater6RenderEv.cpp:
     complete
     .text start:0x021114c4 end:0x021114f8
 
-src/_ZN9TinyWater8BehaviorEv.c:
+src/_ZN9TinyWater8BehaviorEv.cpp:
     complete
     .text start:0x021114f8 end:0x021115bc
 
