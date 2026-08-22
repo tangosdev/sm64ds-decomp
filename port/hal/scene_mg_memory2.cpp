@@ -487,7 +487,7 @@ extern "C" void port_scene_memory2_hits(void)
        draws one sprite per record whose +0x12 (i.e. +0x51ba) byte is nonzero.
        The fields are read off the ROM: +0x00/+0x04 are the 20.12 screen x/y
        the draw shifts down by 12, +0x10 is the card identity (the row of the
-       twelve-by-five halfword table at 0x0213d45c), +0x15 is the flip frame
+       eleven-by-five halfword table at 0x0213d45c), +0x15 is the flip frame
        (its column) and +0x14 is the per-card state func_ov006_020f6088 sets to
        1 when a dealt card reaches its slot.  src/func_ov006_020f6c90.c is what
        populates them: 16, 18 or 20 records depending on +0x540a, each with a

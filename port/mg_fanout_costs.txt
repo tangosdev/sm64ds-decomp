@@ -1801,14 +1801,30 @@ reproduces src/func_ov006_020f73f4.c call for call):
   +0x13 the gate func_ov006_020f5c40's per-card dispatch reads, +0x14 the
   per-card state it dispatches ON, +0x15 the flip frame.
 
-  data_ov006_0213d45c is TWELVE ROWS OF FIVE HALFWORDS -- 0x78 to the next
-  symbol, which is the class vtable. Row = card identity, column = flip frame.
-  Row 0 and row 11 are all zero; rows 1..10 read {0, 1, 2, 2k+2, 2k+1}, so ten
-  card types over sprite indices 0..0x16, which is exactly the twenty-three
-  words __sinit_ov006_021314e4 copies from data_ov006_02133810 into
-  data_ov006_02142490. Ten types dealt twice is twenty cards, and
-  src/func_ov006_020f6c90.c deals 16, 18 or 20 of them on the difficulty byte
-  at +0x540a.
+  data_ov006_0213d45c is ELEVEN ROWS OF FIVE HALFWORDS. Row = card identity,
+  column = flip frame. Row 0 is all zero and rows 1..10 read
+  {0, 1, 2, 2k+2, 2k+1}, so ten card types over sprite indices 0..0x16, which
+  is exactly the twenty-three words __sinit_ov006_021314e4 copies from
+  data_ov006_02133810 into data_ov006_02142490. Ten types dealt twice is twenty
+  cards, and src/func_ov006_020f6c90.c deals 16, 18 or 20 of them on the
+  difficulty byte at +0x540a.
+
+  AN EARLIER VERSION OF THIS PARAGRAPH SAID TWELVE ROWS AND CALLED ROW 11 ALL
+  ZERO, AND BOTH HALVES WERE AN OVER-READ. It came from dividing the 0x78 to
+  the next symbol by ten, which is exactly the trap a span check invites when
+  the span ends in padding. Rows 0..10 are 110 bytes and end at 0x0213d4ca;
+  what follows is six pad bytes and then a RELOCATED POINTER at 0x0213d4d0 ->
+  0x0213d350 (ov006 relocs.txt, from:0x0213d4d0), and only then the vtable at
+  0x0213d4d4. There is no row 11, and the bytes a row 12 would occupy are a
+  live pointer rather than zero.
+
+  NOTHING DEPENDED ON THE WRONG NUMBER, which is why it survived a review. The
+  ROM indexes this table as identity*5 + frame with no bound, and the seated C
+  declares it unsized and does the same. func_ov006_020f6c90 caps the identity
+  at 10 and func_ov006_020f5e74 clamps the frame at 4, so the highest index the
+  game can produce is 54 -- 0x0213d4c8, the last halfword of row 10, one short
+  of the pad. The row count was only ever a sentence about the table, and the
+  sentence was wrong.
 
   BOTH TABLES HAVE EXACTLY ONE LOAD RELOCATION OUTSIDE THAT CONSTRUCTOR AND IT
   IS THIS FUNCTION'S OWN LITERAL POOL (from:0x020f5c38 and from:0x020f5c3c).
@@ -1887,12 +1903,22 @@ reads high:
     opcode-shape difference in the whole body is the bl's target, which is the
     wildcarded relocation. Twenty-four words differ, every one of them by a
     register number or a schedule slot.
-  - ONE SHAPE REACHES 23 AND IS NOT THE ONE SHIPPED. Writing the fifth argument
-    as the bare comparison costs a word less but compiles the flag as a
-    movne/moveq pair, where the ROM emits an unconditional mov of a hoisted
-    zero and then a movne of a hoisted one -- which is an if-statement. A word
-    closer to the bytes and a step further from the construct is the wrong
-    trade for a file that will be read as the ROM's logic.
+  - TWO SHAPES REACH 23 AND NEITHER IS SHIPPED, for two different reasons.
+    Writing the fifth argument as the bare comparison costs a word less but
+    compiles the flag as a movne/moveq pair, where the ROM emits an
+    unconditional mov of a hoisted zero and then a movne of a hoisted one --
+    which is an if-statement.
+    THE JULY NEAR-MISS ROW ALSO REACHES 23 AND DOES KEEP THE CONSTRUCT, so the
+    trade is not "a word for the construct" and this paragraph used to imply it
+    was. Its cost is the declaration: nearmiss/db.jsonl's row for this address
+    declares an Obj with a twenty-element recs[] array, then walks the loop by
+    striding the Obj* itself by 0x18 and reading recs[0] every time. The array
+    it declares is never indexed and the type it advances is not 0x18 wide, so
+    the layout the file states and the layout it walks are different fictions.
+    A word closer to the bytes and a source a reader has to disbelieve is the
+    wrong trade for a file that will be read as the ROM's logic. The row stays
+    in the DB, and it is the right seed for anyone who takes another run at
+    this address.
   - The residue is one rotation. The ROM colours (i, base, -1, table1) into
     r4..r7 with the constant 0 in sb; every candidate colours (base, -1,
     table1, 0) into r4..r7 with i in sb -- the same five values in the same

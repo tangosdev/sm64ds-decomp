@@ -18,13 +18,22 @@
 // seeds) and the src/func_ov006_020f6904.c precedent in this same class at
 // div=29.
 //
-// ONE SHAPE REACHES 23 AND IS NOT THE ONE SHIPPED. Writing the fifth argument
-// as the bare comparison `*(int *)(c + 0x53d4) != 2` costs one word less, but
-// it compiles the flag as a movne/moveq PAIR where the ROM emits an
-// unconditional mov of a hoisted zero followed by a movne of a hoisted one --
-// which is the if-statement below. A word closer to the bytes and a step
-// further from the construct is the wrong trade for a file that is going to be
-// read as the ROM's logic.
+// TWO SHAPES REACH 23 AND NEITHER IS SHIPPED, for two different reasons.
+// Writing the fifth argument as the bare comparison `*(int *)(c + 0x53d4) != 2`
+// costs one word less, but it compiles the flag as a movne/moveq PAIR where the
+// ROM emits an unconditional mov of a hoisted zero followed by a movne of a
+// hoisted one -- which is the if-statement below.
+//
+// THE JULY NEAR-MISS ROW ALSO REACHES 23 AND DOES KEEP THAT CONSTRUCT, so the
+// trade is not "one word for the construct" and an earlier version of this note
+// implied it was. Its cost is the declaration instead: nearmiss/db.jsonl's row
+// for this address declares an Obj carrying a twenty-element recs[] array, then
+// walks the loop by striding the Obj* itself by 0x18 and reading recs[0] every
+// time -- so the array it declares is never indexed and the type it advances is
+// not 0x18 wide. A word closer to the bytes and a source a reader has to
+// disbelieve is the wrong trade for a file that is going to be read as the
+// ROM's logic. The row stays in the DB and is the right seed for the next
+// attempt at this address.
 //
 // @symbol func_ov006_020f5b98
 // recovered name: dScMgMemory2_c_DrawCards
@@ -41,9 +50,21 @@
      +0x12  nonzero when the card is in play (this loop's whole gate)
      +0x00  screen x, 20.12, shifted down by 12 for the sprite
      +0x04  screen y, 20.12
-     +0x10  card identity, the ROW of the twelve-by-five halfword table at
+     +0x10  card identity, the ROW of the halfword table at
             data_ov006_0213d45c
      +0x15  flip frame 0..4, its COLUMN
+
+   THE TABLE IS ELEVEN ROWS OF FIVE, not twelve. 0x78 to the next symbol
+   divides by ten, but the last ten bytes are not a row: rows 0..10 end at
+   0x0213d4ca, then six pad bytes, then a RELOCATED pointer at 0x0213d4d0 ->
+   0x0213d350 (ov006 relocs.txt, from:0x0213d4d0). Row 0 is all zero and rows
+   1..10 read {0, 1, 2, 2k+2, 2k+1}, so the highest halfword in it is 0x16 = 22
+   -- which is what makes data_ov006_02142490's twenty-three entries the right
+   size. THE CODE BELOW NEVER DEPENDED ON THE ROW COUNT: the array is declared
+   unsized and indexed identity*5 + frame, func_ov006_020f6c90 caps the
+   identity at 10 and func_ov006_020f5e74 clamps the frame at 4, so the highest
+   index the game can produce is 54 -- 0x0213d4c8, the last halfword of row 10,
+   one short of the pad.
 
    The halfword the table yields indexes data_ov006_02142490, the twenty-three
    OAM pointers __sinit_ov006_021314e4 copies out of data_ov006_02133810.
