@@ -1,0 +1,454 @@
+# Lane MMT of run mg9: dScMgMemory_c, the "Memory Match" minigame.
+#
+# actor id 0x16a (scene 362), spawn symbol MgMemoryMatch_Spawn (0x020f5504),
+# SpawnInfo 0x0213cfd8, vtable data_ov006_0213d1b8.  Every one of those was
+# re-read out of the ROM by this lane rather than taken from the handover or
+# from the sibling: scanning extracted/overlays/overlay_0006.bin (base
+# 0x020bfec0) for the doubled-id word 0x016a016a finds exactly ONE hit, at
+# 0x0213cfdc, which puts the record at 0x0213cfd8 with the factory in the word
+# before it, and the record reads
+#
+#     0213cfd8  04 55 0f 02   0x020f5504   the factory
+#               6a 01 6a 01   362, 362     the id, twice
+#
+# The class name is the ROM's own RTTI: the string at 0x0213d0b4 reads
+# "13dScMgMemory_c", and the record that names it, data_ov006_0213d090 =
+# {0x0209a764, 0x0213d0b4, 0x0213bc64}, is what the relocated word at
+# 0x0213d1b4 -- immediately before the vtable -- loads.  It agrees with what the
+# destructors write: slot 17 (src/func_ov006_020f3888.cpp) stores
+# data_ov006_0213d1b8 into the object's first word before unwinding.
+#
+# ---- THE ATTRIBUTION WARNING, AND WHAT THIS LANE DID ABOUT IT -------------
+#
+# port/mg_fanout_costs.txt section 9 names THIS CLASS in its own caveat: the
+# only per-id attribution that file implemented is address containment, and it
+# "OVER-ATTRIBUTES where one constructor serves two classes, which the run
+# showed it doing for at least 0x16a and 0x16b".  The two constructors are
+# adjacent and so are their pair runs, so a lane that took the neighbour would
+# get a seat that compiles, links and dispatches the class next door's states.
+#
+# THE CONSTRUCTOR SOURCE IS THE GROUND TRUTH AND IT IS __sinit_ov006_021311c8.
+# src/__sinit_ov006_021311c8.c copies twenty-five pairs from
+# 0x0213cfc0..0x0213d088 into five .bss tables and fifteen sprite words from
+# data_ov006_02133810 into data_ov006_0214236c.  src/__sinit_ov006_021314e4.c
+# -- the one section 3 names for 0x16b -- copies twenty-nine pairs from
+# 0x0213d248..0x0213d330 and twenty-three sprite words, and is Memory Master's.
+# The containment test was ALSO run rather than skipped: exactly one doubled-id
+# word lies inside 0x0213cfc0..0x0213d088 and it is 0x016a016a at 0x0213cfdc,
+# so on this class the two methods agree and the source is what says so.
+#
+# ---- THE HIERARCHY IS THREE DEEP -----------------------------------------
+#
+#     Scene -> dScMgBase_c         data_ov004_020bc0c0  36  (the framework's)
+#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8,  mark 6
+#           -> dScMgMemory_c       data_ov006_0213d1b8  36  ovr 14, mark 12
+#
+# port/mg_fanout_costs.txt section 3's row lists one vtable and says nothing
+# about an intermediate base, exactly as it did for 0x16b before section 13's
+# CORRECTION 1.  Both edges are read off THIS class's code:
+#
+#   MgMemoryMatch_Spawn (0x020f5504, 0x60, disassembled) allocates 0x5340,
+#   calls func_ov004_020b2adc(p) WITH its argument, writes data_ov006_0213e448
+#   into p[0], constructs Particle::SysTracker at +0x471c, then writes
+#   data_ov006_0213d1b8 over it and constructs the model sub-object at +0x4f38.
+#   src/MgMemoryMatch_Spawn.c reproduces that instruction for instruction.
+#   src/func_ov006_020f3888.cpp (slot 17, D0) unwinds in the opposite order,
+#   0x0213d1b8 first and 0x0213e448 second, then the SysTracker, then
+#   func_ov004_020b29c0 and Memory::Deallocate.
+#   src/func_ov006_020f3834.cpp (slot 16, D2) is the same without the
+#   Deallocate, which is what says slot 16 is D2 and slot 17 is D0 rather than
+#   the other way round.
+#
+# It is the SAME middle table dScMgFlower_c (0x186), dScMgCup_c (0x169) and
+# dScMgMemory2_c (0x16b) sit under; port/slice_flw.txt, port/slice_mga361.txt
+# and port/slice_mem.txt derived it independently and this lane's read agrees
+# with all three word for word.  This is the THIRD SEATED class under it, which
+# makes hal/scene_mg_memory2.cpp's promotion note DUE; see that file's section 3
+# and hal/scene_mg_memory1.cpp section 3 for why this lane recorded it instead
+# of taking it.
+#
+# ---- THE WIDTH IS 36, CHECKED THREE WAYS PLUS THE RELOCATION COUNT --------
+#
+# 0x16a IS ONE OF THE TWELVE ROWS port/mg_fanout_costs.txt section 11 CORRECTED
+# from 37 to 36, so the checks are not ceremony here:
+#
+#   1. SPAN.  config/arm9/overlays/ov006/symbols.txt puts the next symbol after
+#      data_ov006_0213d1b8 at data_ov006_0213d248, exactly 0x90 = 36 words on,
+#      so a 37th slot cannot exist inside the table.
+#   2. TERMINAL SLOT.  Slot 35 holds 0x020ad660, the word every
+#      dScMgBase_c-derived table holds there.
+#   3. WHAT THE WORD PAST IT IS.  Index 36 reads 0x020f6538 and index 37 reads
+#      0x00000000.  That is an mwcc PAIR {code, adjustment}, and the code word
+#      is func_ov006_020f6538 -- MEMORY MASTER's round-end state, which
+#      src/__sinit_ov006_021314e4.c copies into slot 0 of its
+#      data_ov006_021423c0.  A 37-slot fill of this class would write a host
+#      thunk over a live state of the class next door, on a tree where scene
+#      363 is seated and green.  This is section 11's hazard with a name on it.
+#   4. RELOCATION COUNT (this lane's own fourth check).  Exactly THREE loads in
+#      the whole overlay target 0x0213d1b8: from:0x020f387c (D2's literal
+#      pool), from:0x020f38e0 (D0's) and from:0x020f5560 (the factory's).  A
+#      37th slot would need a consumer for its extra word and has none.
+#
+# A FIFTH CHECK WAS OFFERED THIS RUN AND IT IS AN UPPER BOUND, NOT A DECIDER.
+# Run mg9 lane LKY proposed reading the width off the RELOCATION STRIDE out of
+# the table -- 4 bytes for exactly the table width, then 8 once the mwcc pairs
+# start -- and called it a check needing no symbols and no judgment.  Measured
+# on six tables in this overlay it is right three times and WRONG ON THE THREE
+# THAT MATTER, always in the dangerous direction:
+#
+#   table                      stride-4 run   true width   verdict
+#   ------------------------   ------------   ----------   ---------------
+#   0x0213d1b8  0x16a (this)        37             36      OVER-READS BY 1
+#   0x0213c154  0x169                37             36      OVER-READS BY 1
+#   0x0213eb40  0x16c                37             36      OVER-READS BY 1
+#   0x0213b918  0x173                37             37      agrees
+#   0x0213d4d4  0x16b                36             36      agrees
+#   0x0213c304  0x176 curling        36             36      agrees
+#
+# WHY, and it is one sentence: the 4-stride does not stop at the table, it
+# stops at the first UNRELOCATED word, and when the object right after the
+# table opens with a relocated CODE word the run continues through it.  All
+# three over-reads are that case -- 0x0213d248 is the code half of a pair whose
+# body is dScMgMemory2_c's round-end state, 0x0213c1e4 is the pair section 11
+# opens with, and 0x0213ebd0 is MgBingoBallSlotsShot_SpawnInfo's factory word.
+# The 8-stride only begins on the SECOND pair.
+#
+# SO IT CANNOT TELL 0x173 FROM 0x169, 0x16a AND 0x16c: it returns 37 for all
+# four, which is exactly the set section 11 corrected and exactly the mistake
+# that writes a host thunk into another class's live data.  Like check 1 it can
+# REFUSE a width and never GRANT one.  A stride run of 36 is real evidence --
+# it means the next word is unrelocated, so the table cannot be longer -- and a
+# run of 37 means nothing on its own.  Kept as check 5 on that footing.
+#
+# ---- FOURTEEN OVERRIDES, TWELVE MARKERS, ZERO WITHOUT A SOURCE ------------
+#
+# port/tools/vtablerows.py --vtable 0x0213d1b8 --width 36 prints ovr 14,
+# mark 12, nosrc 0, which is what section 3's row predicts.  Six of the fourteen
+# -- slots 2, 5, 7, 10, 26 and 33 -- are the MIDDLE base's bodies, and five of
+# those six markers were already ruled REAL_DECOMP against the ROM by the flower
+# and memory2 lanes.  THE FRESH BILL IS SEVEN, NOT TWELVE, and all seven were
+# disassembled out of extracted/overlays/overlay_0006.bin at base 0x020bfec0 and
+# compared instruction for instruction against src/ before a word of seat code
+# was written.  Every one carries the inline arithmetic the fan-out law asks for
+# (instructions + pool words = size/4).  The rulings are in
+# port/tools/inferred_stub_adjudicated.txt.
+#
+# ---- THE STATE MACHINE ----------------------------------------------------
+#
+# FIVE tables, 25 pairs, every adjustment word zero, 25 distinct addresses, all
+# inside the class's own code block 0x020f3834..0x020f5564, and ALL TWENTY-FIVE
+# have a matched src TU with a delink block.  This class has NO state floor.
+#
+#   table                n  arity  dispatched by
+#   -------------------  -  -----  ------------------------------------------
+#   data_ov006_021422dc  5    0    func_ov006_020f5388  (vtable slot 6)
+#   data_ov006_02142304  6    0    func_ov006_020f5164
+#   data_ov006_021422bc  4    0    func_ov006_020f50f8
+#   data_ov006_02142334  7    1    func_ov006_020f3f10
+#   data_ov006_021422a4  3    ?    NOTHING
+#
+# The four dispatchers are host copies (the pointer-to-member wall); the fifth
+# table has exactly ONE relocation in the whole overlay, from:0x021314e0 inside
+# this class's own .init block, so no code names it and its arity is derivable
+# from nothing.  port/tools/stategen.py refuses the constructor at the arity
+# step for exactly that table, which is the tool agreeing rather than being
+# quoted.  Its three bodies ARE in this slice; only the switch arm is missing.
+# unmatched/MgMemory1_StateDispatch.cpp is the derivation.
+#
+# ---- THE BOARD LADDER, VERIFIED AGAINST THIS CLASS'S OWN CODE -------------
+#
+# func_ov006_020f51f0 (0x4c = 19 words: NINETEEN instructions and NO literal
+# pool) is the whole of the decision and it reads exactly one int.
+#
+# THE COUNT WAS WRONG HERE AND READ "18 instructions + 1 pool", and the way it
+# went wrong is worth one line because two other rows in this file are the same
+# arithmetic. func_ov006_020f5164, the second table dispatcher, is ALSO 0x4c and
+# IS 18 instructions plus one pool word (0x02142304 at 0x020f51ac); the two sit
+# one function apart in the same block -- 0x020f5164, 0x020f51b0, 0x020f51f0 --
+# and the same-size split was carried across. The ladder has no
+# pc-relative load at all: every constant in it is an ARM immediate -- #0x5000,
+# #0, #0x5300, #4, #0xa, #2, #6, #5, #1 -- so there is nothing for a pool to
+# hold, and the body runs 0x020f51f0..0x020f5238 inclusive, which is
+# (0x5238 - 0x51f0)/4 + 1 = 19. Same size, different split. (Run mg9
+# coordinator spot-check.)
+#
+#     add r1,r0,#0x5000 / mov r2,#0 / strb r2,[r1,#0x33c]    +0x533c = 0
+#     add r2,r0,#0x5300 / mov r3,#4 / strh r3,[r2,#0x2a]     +0x532a = 4 pairs
+#     ldr r0,[r0,#0xb4]                                      THE ONLY INPUT
+#     cmp r0,#0xa / movge #2 -> +0x533c / movge #6 -> +0x532a   >= 10: 12 cards
+#     cmp r0,#5   / movge #1 -> +0x533c / movge #5 -> +0x532a   >=  5: 10 cards
+#
+# so EIGHT cards by default, TEN at save level 5 and TWELVE at save level 10 --
+# the same two thresholds and the same +0xb4 save-record mechanism Memory Master
+# uses for 16/18/20 (port/mg_fanout_costs.txt section 17), on a board half the
+# size.  +0x533c indexes data_ov006_0213d09c = {0x0213d0d8, 0x0213d108,
+# 0x0213d138}, three twelve-entry {u16 x, u16 y} tables, and the boards are the
+# LAST N entries of each:
+#
+#   board 0, 8 cards   grid0[4..11]   4 x 2 at x 32/96/160/224, y 136 and 64
+#   board 1, 10 cards  grid1[2..11]   5 x 2 at x 32/80/128/176/224, y 136 and 64
+#   board 2, 12 cards  grid2[0..11]   4 x 3 at x 47/101/155/209, y 160/104/48
+#
+# src/func_ov006_020f4cd8.c is the dealer and agrees exactly: records 4..11 with
+# identities 1..4 for board 0, 2..11 with 1..5 for board 1, 0..11 with 1..6 for
+# board 2, every card starting at x = 128.0, y = -128.0 off the top of the
+# screen.  src/func_ov006_020f456c.c agrees a second time from a different
+# angle: it walks cars[j*5 + k + 2] for board 1 and cars[j*4 + k] otherwise.
+#
+# ---- THE ONE FLOOR IS THE CARD DRAW ---------------------------------------
+#
+# func_ov006_020f3e68, 0xa8, the sixth call vtable slot 9 (Render) makes, has NO
+# src TU in any overlay and NO delink block.  It is the ONLY code in the class
+# that draws a card -- ov006's relocs.txt has thirty-two arm_call relocations to
+# Hud_RenderSprite (0x020af68c) and exactly ONE of them, 0x020f3ee8, is inside
+# this class's code block.  It is the exact analogue of the sibling's
+# func_ov006_020f5b98, which cost run mg7 lane MEMCARDS a whole lane to close.
+# THIS LANE TRAPS IT: port/unmatched/MgMemory1_Faces.cpp holds a named counting
+# trap and the ROM read of the body, and hal/scene_mg_memory1.cpp prints the
+# count on every run.  THE SEAT DOES NOT DRAW CARDS.
+#
+# It is the only function without a src TU in the class's forty-seven; the other
+# forty-six are all below, minus the four host copies.
+#
+# ---- THE TITLE, OFF THE ROM'S OWN MESSAGE FILE ----------------------------
+#
+# The spawn parameter derivation says scene 362 asks for NAME TEXT 1, and the
+# chain from there to a string is four hops, all of them in the ROM:
+#
+#   ov005 row 1, param 0x00010100 -> (param >> 16) & 0xff = 1
+#   -> data_ov004_020bc070[1] = 0x225, a u16 table of 36 message ids
+#   -> data/message/msg_data_eng.bin, NitroFS file 643, "LZ77" + an LZ10
+#      stream that decompresses to 91712 bytes of MESGbmg1 (the magic and the
+#      section tags are stored word-reversed: "GSEM1gmb", "1FNI", "1TAD")
+#   -> INF1 holds 711 eight-byte entries {u32 offset, u32 attributes} and DAT1
+#      holds the glyph stream: 0x00..0x09 are '0'..'9', 0x0a..0x23 are
+#      'A'..'Z', 0x2d..0x46 are 'a'..'z', 0x4d is a space and 0xfd is a line
+#      break.
+#
+# Message 0x225 reads "Memory Match / Pick two matching cards to make them
+# disappear. Clear al[l]...", which is the title this seat's row is named for.
+#
+# THE TABLE WAS READ, NOT COMPUTED, which run mg9 lane S364 asked every lane to
+# confirm: data_ov004_020bc070 is 0x0224+n only for indices 0..23, and 24..35
+# are the explicit list 588, 573, 586, 575, 576, 577, 585, 589, 580, 587, 582,
+# 583. This lane's dump of all thirty-six u16 out of overlay_0004.bin agrees
+# with that list entry for entry. This class's index is 1, inside the
+# arithmetic range, and the sibling's is 29, inside the explicit one -- so the
+# cross-check above would have named the wrong game had it been computed.
+#
+# AND THE NEIGHBOUR'S ENTRY CONFIRMS THE PAIR FROM THE OTHER SIDE. Memory
+# Master is name text 29, data_ov004_020bc070[29] = 0x241, and message 0x241
+# reads "Memory Master / If Memory Match was a piece of cake for you, try
+# out...". The ROM's own text names this class inside the sibling's
+# description, which is a stronger confirmation of the 0x16a/0x16b split than
+# either derivation alone. (Chain method: run mg9 lane S371.)
+#
+# ---- THE CARDS ARE FLAT RECORDS, NOT ELEMENT OBJECTS ----------------------
+#
+# Run mg9 lane S381 found dScMgMCarlo_c building eighty card objects whose
+# element class parks its OWN two-slot vtable in word 0 of each record, and
+# warned that a card game seat which misses one links, boots and jumps to a raw
+# DS address on the first rendered frame. CHECKED HERE AND ABSENT, three ways:
+#
+#   - THE FACTORY. MgMemoryMatch_Spawn is 0x60 and constructs exactly two
+#     sub-objects after the base constructor: Particle::SysTracker at +0x471c
+#     and the model at +0x4f38 (func_ov006_020c1d80). There is no third `bl`
+#     and no loop; nothing builds a card object.
+#   - THE CLEAR. src/func_ov006_020f4f94.c zeroes all twelve records field by
+#     field and every field is a plain int, short or char -- word 0 of a record
+#     is `*(int*)(p + 0x51a8) = 0`, the 20.12 screen x. A vptr is not something
+#     a per-round reset writes zero over.
+#   - THE RUN. The seat's card census prints word 0 of every live record,
+#     shifted down by 12, and reads x 32..224 on a scene-362 boot. Those words
+#     are 0x00020000..0x000e0000, which are coordinates and not addresses in
+#     any module.
+#
+# The draw itself is a HUD SPRITE seam (Hud_RenderSprite, ov004 0x020af68c),
+# not a virtual call, which is the same shape the sibling uses.
+#
+# THE NESTED CASE WAS CHECKED TOO, because run mg9 lane S364 found its own
+# element vtable one level down, in a sub-object of a sub-object. This class
+# constructs exactly two sub-objects and NEITHER IS ITS OWN: the framework's
+# Particle::SysTracker at +0x471c, and the shared model at +0x4f38, which is
+# the same func_ov006_020c1d80 the sibling constructs at the same offset and
+# which run mg6 lane MEM seated in full (three host copies, all shipping, scene
+# 363 green and rendering cards). And a source sweep of all forty-two of this
+# class's own TUs finds NO `virtual` anywhere, so there is no local shadow
+# class in this class's code to get a slot number wrong in either.
+#
+# ---- TWO MORE NEGATIVES, BOTH CHECKED RATHER THAN ASSUMED -----------------
+#
+# THE AMBIGUOUS-ADDRESS MODULE HAZARD (lane S364). This class walks straight
+# into it on paper: config/arm9/overlays/ov006/symbols.txt marks
+# MgMemoryMatch_SpawnInfo `ambiguous`, and config/arm9/overlays/ov099/
+# symbols.txt claims the same address 0x0213cfd8 as data_ov099_0213cfd8, a bss
+# symbol. The port hosts the RIGHT one, proved two ways:
+#   - walk_window.map defines _MgMemoryMatch_SpawnInfo exactly once, out of
+#     ov006_syms.c.obj, and defines no data_ov099_0213cfd8 at all.
+#   - hal/scene_boot.cpp's port_scene_registry_install reads the record's +4
+#     halfword and refuses any row whose value is not the row's own id. A
+#     scene-362 boot registers 14 classes with no WRONG RECORD line, which
+#     means those bytes read 0x016a. ov099's bss cannot read 362 at +4.
+#
+# THE ARM9 SharedFilePtr VENEER (lane PSY). func_02017a24 drops the file id in
+# r1 through three forwarders, with the symptom "FATAL: fs fileID <garbage>"
+# during InitResources. This class loads files in slot 0 (the language table
+# at data_ov006_0213d0c4 plus 0xbb) and through the shared model sub-object's
+# 0x205/0x206/0x207, and NO run this lane made prints any fs, fileID or FATAL
+# line at any frame count. Not witnessed; PSY's fix is not inherited here.
+#
+# ---- SLOTS 18 AND 19 DO NOT READ THEIR SECOND ARGUMENT --------------------
+#
+# Run mg9 lane LKY found dScMgLuckyStars_c's slot-18 and slot-19 bodies READING
+# the second argument and branching on it, where every previously seated class
+# ignored it, and asked every lane to disassemble its own pair rather than
+# inherit the ignore. DONE, and this class ignores it -- established by where
+# r1 is first TOUCHED in each body, which is the only thing that settles it:
+#
+#   func_ov006_020f52c4 (slot 18).  push {r4,r5,lr} / sub sp,#4 / mov r5,r0 /
+#     bl 0x020f4f94, and then `ldr r1,[pc,#0x40]` at 0x020f52d4. r1's first
+#     appearance in the body is a WRITE, so nothing IN THIS BODY can have read
+#     the incoming value.
+#     AND THAT ARGUMENT HAD A HOLE IN IT, WHICH THE RUN mg9 REVIEWER CLOSED.
+#     There is a CALL between the entry and the write, and r1 is an argument
+#     register: func_ov006_020f4f94 could have read the incoming r1 and the
+#     "first appearance is a write" test would not have seen it. It does not.
+#     Its own first mention of r1 is `add r1,r3,#0x5100` at 0x020f4fb4, its
+#     ninth instruction, computed off r3 = the receiver -- a WRITE again, and
+#     the eight instructions before it (stmdb / sub sp / mov r3,r0 / mov ip,#0 /
+#     mov lr,ip / add r2,r3,#0x5000 / str lr,[r2,#0x1a8] / str lr,[r2,#0x1ac])
+#     never name r1. It is the only call before the write, so the chain is
+#     closed and the conclusion stands.
+#   func_ov006_020f5250 (slot 19).  push {r4,lr} / mov r4,r0 /
+#     add r0,r4,#0x5000, and then `ldr r1,[r0,#0x314]` at 0x020f525c. Again a
+#     WRITE, three instructions in, and this one has NO call before it, so the
+#     hole above cannot exist here.
+#
+# So the thunks in hal/scene_mg_memory1.cpp declare the parameter to CLEAN four
+# bytes under __fastcall and forward nothing, which is the run mg5 lane BASESET
+# treatment and is correct HERE for a reason that is this class's own rather
+# than a precedent.
+#
+# AND IT IS UNEXERCISED IN BOTH DIRECTIONS ON EVERY RUN THIS LANE MADE. The
+# census reports slots 18 and 19 entered ZERO times at 300, 900 and 1500
+# frames: an unattended boot never leaves the class's own state 2. The static
+# reading above is the evidence; there is no run behind it, and this paragraph
+# says so rather than letting a green census imply one.
+#
+# RUN mg9 LANE PSY ASKS FOR THE ARGUMENT TO BE FORWARDED ANYWAY, its own
+# witness value having been -1 and matching neither branch arm. THAT ADVICE IS
+# DECLINED HERE AND THE REASON IS THE ARITY GATE, not confidence.
+# src/func_ov006_020f52c4.c DEFINES a one-parameter function, so a thunk that
+# forwarded a second one would be a declaration disagreeing with a definition
+# across a C-linkage symbol -- the exact shape port/tools/aritycheck.py exists
+# to catch, and the disease its header calls the bin-softlock. PSY's classes
+# READ the argument, so their bodies take two and forwarding is right there.
+# Forwarding into a body that takes one is not the safe direction, it is a
+# different bug. Both aritycheck ratchets pass on this tree with 0 NEW rows.
+#
+# ---- THREE FRAMEWORK HAZARDS, ALL UNWITNESSED BY THIS CLASS ---------------
+#
+# Three lanes of run mg9 reported framework-side defects and asked every other
+# lane to check its own class rather than assume. All three come back NEGATIVE
+# here, and the measurement is the same 900-frame scene-362 boot in each case.
+#
+#   SLOT 34 (lane S371). hal/scene_mg.cpp's shared thunk is declared
+#   (void*, void*) while func_ov004_020ae3b4 takes five parameters at every ROM
+#   dispatch site. The run reports "framework slots entered: 1(x1) 31(x1)
+#   32(x1)" -- slot 34 is not entered at all, so this class witnesses nothing
+#   and the repair is not this lane's to make.
+#
+#   THE SHADOW-SLOT-19 CALLING CONVENTION (lane BOO). src/func_ov004_020b6b40.c
+#   and _020b6c9c.c call vtable slot 19 through a shadow array with a plain
+#   cdecl pointer while mb_v19 is __fastcall and cleans four bytes itself. It
+#   bites only once the FRAMEWORK state machine runs, and it does not run here:
+#   the census reads "0 framework call(s), 0 UNHANDLED address(es)" and
+#   "framework state setter: 0 call(s) into func_ov004_020b87e0". Same reading
+#   port/mg_fanout_costs.txt section 13 records for the sibling. Nothing to
+#   replicate; BOO's fix stands alone.
+#
+#   THE SHARED ov004 FLOOR func_ov004_020ae5c4 (lanes S371 and BOO). NOT IN
+#   THIS CLASS'S CLOSURE AT ALL -- zero hits over the 103 ov004 functions the
+#   two-root walk reaches -- so this lane owes no trap and takes no dependency
+#   on theirs. This class's ONE ov004 body without a source is
+#   func_ov004_020ae858, which hal/scene_mg_faces.cpp has trapped since run
+#   link60, and the run reports all seven of that file's trapping sites entered
+#   zero times.
+
+# ---- ov006: dScMgMemory_c's own code block, 0x020f3834..0x020f5564 -------
+#
+# THE SLICE IS THE DELTA ONLY.  slice_mg1.txt carries the ov004 framework, the
+# thirty-five overlay constructors and the arm9 waves under them; slice_mem.txt
+# and slice_flw.txt carry the shared model sub-object family at
+# 0x020c0264..0x020c1d80 and the dScMgSingle3DBase_c bodies at 0x0210a5xx and
+# 0x0210a6xx.  This lane's ov004 delta is ZERO new lines: every ov004 body in
+# its 103-function closure is already carried or already host-copied.
+src/MgMemoryMatch_Spawn.c
+src/func_ov006_020f3834.cpp
+src/func_ov006_020f3888.cpp
+src/func_ov006_020f38f0.c
+src/func_ov006_020f392c.c
+src/func_ov006_020f3964.c
+src/func_ov006_020f39c8.c
+src/func_ov006_020f39fc.c
+src/func_ov006_020f3a10.c
+src/func_ov006_020f3a14.c
+src/func_ov006_020f3ba0.c
+src/func_ov006_020f3c0c.c
+src/func_ov006_020f3c90.c
+src/func_ov006_020f3d34.cpp
+src/func_ov006_020f3f84.c
+src/func_ov006_020f411c.c
+src/func_ov006_020f41ac.c
+src/func_ov006_020f41b0.c
+src/func_ov006_020f4248.c
+src/func_ov006_020f43c0.c
+src/func_ov006_020f43c4.c
+src/func_ov006_020f456c.c
+src/func_ov006_020f46ec.cpp
+src/func_ov006_020f47d8.c
+src/func_ov006_020f4888.c
+src/func_ov006_020f49ac.c
+src/func_ov006_020f4a40.c
+src/func_ov006_020f4ad4.c
+src/func_ov006_020f4b30.c
+src/func_ov006_020f4bbc.c
+src/func_ov006_020f4c38.c
+src/func_ov006_020f4cd8.c
+src/func_ov006_020f4f94.c
+src/func_ov006_020f50c0.c
+src/func_ov006_020f5140.c
+src/func_ov006_020f51b0.c
+src/func_ov006_020f51f0.c
+src/func_ov006_020f523c.c
+src/func_ov006_020f5250.c
+src/func_ov006_020f52c4.c
+src/func_ov006_020f5324.c
+src/func_ov006_020f53e4.cpp
+# HOST-COPIED (mg9 lane MMT): src/func_ov006_020f5388.cpp -- vtable slot 6,
+#   the class's Behavior.  Its table is declared inside extern "C", so the link
+#   never complains and MSVC strides the eight-byte table by four.
+# HOST-COPIED (mg9 lane MMT): src/func_ov006_020f5164.cpp -- the second table
+#   dispatcher, AND slot 1 of the first table.  Its table is at C++ linkage, so
+#   this one IS link-visible as ?data_ov006_02142304@@3PAUEntry@@A.
+# HOST-COPIED (mg9 lane MMT): src/func_ov006_020f50f8.cpp -- the third table
+#   dispatcher, AND slot 3 of the first table.  extern "C" table, silent.
+# HOST-COPIED (mg9 lane MMT): src/func_ov006_020f3f10.cpp -- the arity-1
+#   per-record dispatcher, twelve records at +0x51a8 stride 0x18.
+# TRAPPED, NO SOURCE ANYWHERE (mg9 lane MMT): func_ov006_020f3e68 -- the card
+#   draw.  See port/unmatched/MgMemory1_Faces.cpp section 1.
+# NOT HERE: src/func_ov006_0210a6e4.cpp, defined by
+#   port/unmatched/MgFlower_Slot2.cpp as port_mg_flower_after_init.
+# NOT HERE: src/func_ov006_020c0a48.c, src/func_ov006_020c1804.cpp,
+#   src/func_ov006_020c06dc.cpp, src/func_ov006_020c07e8.cpp and
+#   src/func_ov006_020c19d0.cpp -- the shared model sub-object at +0x4f38, all
+#   five already host-copied by run mg6 lane MEM in port/unmatched/MgMemory2_*.
+#   This class reaches the same sub-object at the same offset through the same
+#   constructor (func_ov006_020c1d80), so nothing here is re-hosted.
+
+# ---- ov004 and arm9 -------------------------------------------------------
+# NOTHING.  The 103-function ov004 closure and the 599-function arm9 closure
+# are already carried by slice_mg1.txt, slice_mem.txt and slice_flw.txt, or are
+# host copies (MgBase_StateSetter.cpp, MgBase_StateDispatch.cpp,
+# MgMemory2_FieldPmf.cpp, MgFlower_InitScore.cpp).  The arm9 half comes back
+# through /OPT:REF and is not listed, per slice_mg1.txt's rule.
