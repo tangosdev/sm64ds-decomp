@@ -187,7 +187,17 @@ matched src TU at all and will need a named trap or a decomp.
   0x180  MgTrampolineTime            0213fb34      36   25    16      0
   0x179  MgSnowballSlalom            NOT FOUND -- see below
 
-    totals   353 override slots, 263 of them marker-carrying, 6 with no src
+    totals   353 override slots, 264 of them marker-carrying, 4 with no src
+
+  THE TOTALS LINE USED TO READ 263 AND 6, run mg6 merge. It disagreed with the
+  twenty-nine rows directly above it, which sum to 353/264/4, and with
+  port/tools/vtablerows.py --reconstruct, which reads the same three columns
+  out of extracted/overlays/overlay_0006.bin and reports 353/264/4 while
+  reconstructing all 29 rows EXACT. The table won because the tool and the
+  table agree against the summary, not because the tool is the newer artifact.
+  The nosrc column is the whole of the difference: exactly four rows carry one
+  each (0x16c, 0x178, 0x17e, 0x174) and the stale 6 is where the paragraph
+  below got its retired "0x170 carries one nosrc body" from.
 
 0x16b IS DERIVED IN FULL AND NOT SEATED, run link60 lane MGB
 --------------------------------------------------------------
@@ -305,12 +315,14 @@ claims. Whoever takes 0x179 derives it by hand first; the row is left blank
 rather than guessed, and the totals above exclude it.
 
 SEVEN CLASSES ARE AT SIX OVERRIDES, and after lane MGA's width correction
-(section 11) TWO OF THEM ARE CHEAPER THAN THE PATHFINDER WAS. 0x170 needs three
+(section 11) TWO OF THEM ARE CHEAPER THAN THE PATHFINDER WAS. 0x170 needs four
 ROM adjudications and 0x171 four, against curling's five; 0x172, 0x177, 0x17a
 and 0x17c sit level with curling at five and share its exact shape. Their
 marginal cost over what MG2 landed is their adjudications, one face array, one
-registry row and their own ov006 closure, and nothing else. 0x170 carries one
-nosrc body and 0x171 none, so 0x171 IS THE CHEAPEST WHOLE CLASS ON THE BOARD.
+registry row and their own ov006 closure, and nothing else. Neither 0x170 nor
+0x171 carries a nosrc body, so the two are level on every column of the table,
+and 0x171 WAS THE CHEAPEST WHOLE CLASS LEFT ON THE BOARD because 0x170 was
+already seated by run mg5 lane PCH.
 
 This paragraph used to read "FIVE CLASSES ARE JOINT-CHEAPEST at six overrides
 and five adjudications" and name 0x172, 0x177 and 0x17a as the next three
@@ -1494,7 +1506,7 @@ WHAT THIS SECTION DOES NOT KNOW.
     no evidence.
   - TOUCH IS UNMEASURED, for section 9's reason. The class ticks without input;
     whether it can leave its first state without a stylus is not known.
-13. dScMgPanel_c, id 0x17c, AND THE WALL COLUMN IS LOW BY TWO, run mg6 lane PPP
+14. dScMgPanel_c, id 0x17c, AND THE WALL COLUMN IS LOW BY TWO, run mg6 lane PPP
 --------------------------------------------------------------------------------
 
 Worktree C:/tmp/m6p, branch mg6-ppp, base a65c871a3, private build

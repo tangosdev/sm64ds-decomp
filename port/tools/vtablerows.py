@@ -13,9 +13,12 @@ after their symbol, and review re-derived it by hand through the delink
 records. This tool does the delink-keyed join from the start, and its
 acceptance was a RECONSTRUCTION: run over all twenty-nine resolved
 vtables, it reproduces section 3's reviewed ovr/mark/nosrc columns
-row for row and the totals 353/263/6 exactly (the one divergence in the
-first reconstruction run was a transcription typo in the CHECKER's own
-copy of the hand table, which is the point of the exercise).
+row for row, 29 of 29, and those rows sum to 353/264/4 (the one
+divergence in the first reconstruction run was a transcription typo in
+the CHECKER's own copy of the hand table, which is the point of the
+exercise). This line and the totals print used to quote 353/263/6,
+which was section 3's SUMMARY LINE and never the sum of its own rows;
+run mg6's merge corrected both ends to the rows.
 
 WHAT IT READS, all of it produced by something that is not this tool:
 
@@ -474,7 +477,7 @@ def cmd_reconstruct(root):
             diverged.append(cid)
         print("  0x%03x  vt 0x%08x  w%d  ovr %2d  mark %2d  nosrc %d%s"
               % (cid, vt, width, n_ovr, n_mark, n_nosrc, tag))
-    print("totals ovr/mark/nosrc: %d/%d/%d (section 3: 353/263/6)"
+    print("totals ovr/mark/nosrc: %d/%d/%d (section 3's table: 353/264/4)"
           % tuple(tot))
     if diverged:
         print("vtablerows: %d row(s) DIVERGE. A divergence is a "
