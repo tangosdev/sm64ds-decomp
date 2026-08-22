@@ -1901,7 +1901,8 @@ reads high:
     the index and the coordinates as locals, for/while/do loop forms, char*,
     unsigned char*, void* and struct-typed record walks, int/unsigned/long
     counters), ten compiler builds crossed with twelve optimisation settings,
-    and roughly 20,000 decomp-permuter iterations from two different seeds.
+    and 30,452 decomp-permuter iterations over three runs from two different
+    seeds (best score 440 against a base of 1395, never 0).
     The floor is 23 differing words for the closest shape, 24 for the one
     shipped, and it does not move.
   - config/match_attempts.jsonl already carries a near_miss row for

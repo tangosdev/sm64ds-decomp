@@ -14,8 +14,9 @@
 // 0xa8 body at all; the other twenty-one installed builds come out a different
 // size. port/mg_fanout_costs.txt section 15 has the residue, what was tried
 // against it (about thirty source shapes, ten compilers x twelve optimisation
-// settings, ~20k decomp-permuter iterations from two seeds) and the
-// src/func_ov006_020f6904.c precedent in this same class at div=29.
+// settings, 30,452 decomp-permuter iterations over three runs from two
+// seeds) and the src/func_ov006_020f6904.c precedent in this same class at
+// div=29.
 //
 // ONE SHAPE REACHES 23 AND IS NOT THE ONE SHIPPED. Writing the fifth argument
 // as the bare comparison `*(int *)(c + 0x53d4) != 2` costs one word less, but
