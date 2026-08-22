@@ -64,12 +64,17 @@ typedef int Fix12i;
 
 /* shadow struct 'SharedFilePtr' */
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
-
-/* shadow struct 'dBgW_Kc' */
-struct dBgW_Kc { int d; };
-
-/* shadow struct 'dBgW_KcMbg' */
-struct dBgW_KcMbg { int d; };
+/* Model and ModelBase are the real classes now, through this actor's header --
+ * and since #1643 so are dBgW_Kc and dBgW_KcMbg, which arrive via
+ * ArrowLift.h -> include/dBgW_Kc.h / include/dBgW_KcMbg.h. The two one-int
+ * placeholder definitions that used to stand in for them here made the whole TU
+ * fail to compile ("class 'dBgW_Kc' redefined", then an internal compiler error
+ * in the D1 body), and nothing noticed: an unbuildable source file is an ABSENT
+ * one, so every byte gate stayed green over a TU that produced no object at all.
+ * Only the references were repaired in #1667; this is the type-level half the
+ * reference gate cannot see. All functions byte-match the ROM again with the
+ * placeholders gone.
+ */
 
 extern "C" {
 extern int _ZTV9ArrowLift[];
