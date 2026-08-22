@@ -1024,14 +1024,61 @@ void gx_reset() {
        colour 0,0,0 at frame 0, because the reset between the setup and the
        draw had already thrown them away.
 
-       Only the lights are carried. DIF_AMB, SPE_EMI, POLYGON_ATTR and the
-       vertex colour are re-issued per material per frame by every path in
-       this port, so what the reset does with them is unobservable and is
-       left exactly as it was. */
+       DIF_AMB, SPE_EMI, POLYGON_ATTR and the vertex colour are re-issued per
+       material per frame by every path in this port, so what the reset does
+       with them is unobservable and is left exactly as it was. */
     State::Light lights[4];
     for (int i = 0; i < 4; ++i) lights[i] = g.lights[i];
     const uint32_t light_mask = g.light_mask;
+    /* AND KEEP THE PROJECTION MATRIX, for the light table's reason, one class
+       of state over. Added run mg10 lane RGX.
+
+       THIS FUNCTION MODELS NO ROM INSTRUCTION. Nothing in the game calls it:
+       hal/scene_boot.cpp's frame loop calls it, once per frame, as the host's
+       own "begin a frame's command stream". The DS has no such boundary -- the
+       projection matrix is a latched register bank that holds whatever the
+       last MTX_LOAD in mode 0 put there until somebody loads another one -- so
+       a scene that programs its camera ONCE and never touches it again is
+       correct on hardware and was losing its projection here on the next
+       vblank.
+
+       MEASURED, scene 361 (dScMgCup_c, "Tox Box Shuffle") and scene 367
+       (dScMgSound_c, "Boom Box"), which are the two hosted scenes that do
+       exactly that. SM64DS_MTX_LOG resolved through walk_window.map:
+
+         363, EVERY FRAME  mem_render -> func_ov006_020f73f4
+                           -> Camera_UpdateMatrices -> G3i_PerspectiveW_
+         361, ONCE AT INIT cup_init -> func_ov006_020e0308
+                           -> Camera_UpdateMatrices
+
+       so MTX_LOAD_4x4 runs 1 per frame on 363 and 0 per frame on 361 after
+       boot. ppu_audit's PROJ_IDENTITY row read 1 on all 300 samples of 361 and
+       367 and 0 on 362, 363, 381, 388, 389 and 390, and only 311 of 361's 1806
+       triangles survived as drawable against 1163 of 363's 1783. The two
+       broken scenes' top captures are BYTE-IDENTICAL to each other, which is
+       what says it is one defect and not two.
+
+       AFTER: 361 and 367 both go PROJ_IDENTITY 1 -> 0 and drawable -> 1806 of
+       1806, and 361's top screen goes from 21 distinct colours to 7082. Every
+       other hosted scene is byte-identical and so is the level-1 selftest, at
+       md5 5b783a29d753ce4dfbd35c79a7b2850f -- the scenes that reload the
+       projection every frame cannot notice a carry, which is most of them.
+
+       SM64DS_PROJ_CARRY_OFF=1 puts the old wipe back on the same binary.
+
+       THE PROJECTION STACK IS NOT CARRIED, deliberately. The line below sets
+       both its slots to identity and carries its own derivation about display
+       lists opening with MTX_RESTORE; carrying the stack too is a second
+       change with a second blast radius, nothing measured here needs it, and
+       nothing in the sweep moved without it. Named rather than folded in. */
+    static int proj_carry_off = -1;
+    if (proj_carry_off < 0) {
+        const char *e = getenv("SM64DS_PROJ_CARRY_OFF");
+        proj_carry_off = (e && *e && *e != '0') ? 1 : 0;
+    }
+    const Mat proj_keep = g.proj;
     g = State{};
+    if (!proj_carry_off) g.proj = proj_keep;
     g.strip = std::move(strip);
     g.tris = std::move(tris);
     for (int i = 0; i < 4; ++i) g.lights[i] = lights[i];
