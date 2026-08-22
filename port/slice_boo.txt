@@ -1,0 +1,383 @@
+# Gate BOO: dScMgTeresa_c, "Hide and Boo Seek". Actor id 0x183 (387).
+# Run mg9, lane BOO.
+#
+# THE IDENTITY IS READ OUT OF THE ROM AND NOT OUT OF THE CONFIG'S NAMES, and
+# every number below is reproducible from extracted/overlays/overlay_0006.bin
+# at base 0x020bfec0 in about a minute:
+#
+#   doubled-id word   0x01830183 at 0x0213f978, the ONLY occurrence in the
+#                     whole overlay image
+#   SpawnInfo         0x0213f974 = {factory 0x021207a8, id 0x0183 twice}, which
+#                     config/arm9/overlays/ov006/symbols.txt names
+#                     MgHideAndBooSeek_SpawnInfo
+#   factory           MgHideAndBooSeek_Spawn, 0x021207a8, size 0x34
+#   type_info         0x0213f9b4 {0x0209a764, name 0x0213f9c0, base 0x020bbf6c}
+#                     reached through the word BEFORE the vtable: relocs.txt
+#                     has from:0x0213fa08 kind:load to:0x0213f9b4
+#   RTTI string       0x0213f9c0 reads "13dScMgTeresa_c"
+#   vtable            0x0213fa0c, 36 slots
+#
+# THE ROM'S NAME IS dScMgTeresa_c AND THE PLAYER TITLE IS "Hide and Boo Seek".
+# Teresa is Boo's Japanese name, so the two agree about what the class is; the
+# spawn symbol MgHideAndBooSeek is the WEAKER witness (a per-TU spelling can be
+# wrong, a relocation cannot), and this seat is named for the class the way
+# SCENE_MG_PANEL and SCENE_MG_LUIGI are.
+#
+# ---- THE HIERARCHY IS TWO DEEP, AND THE FACTORY SAYS SO --------------------
+#
+#     Scene -> dScMgBase_c    data_ov004_020bc0c0  36  (ov004, curling's fill)
+#           -> dScMgTeresa_c  data_ov006_0213fa0c  36  ovr 8, mark 6, nosrc 0
+#
+# port/mg_fanout_costs.txt section 13 CORRECTION 1 says the vtable axis cannot
+# spot an intermediate base and prescribes two reads. Both were taken:
+#
+#   THE FACTORY. 0x021207a8 disassembles to ONE vtable store, not two:
+#       ldr r0,[pc,#0x20]   -> pool 0x021207d4 = 0x00004c28, the object size
+#       bl  0x02043444      -> ActorBase::operator new
+#       bl  0x020b2adc      -> dScMgBase_c's constructor
+#       ldr r0,[pc,#0x10]   -> pool 0x021207d8 = 0x0213fa0c
+#       str r0,[r4]
+#   src/MgHideAndBooSeek_Spawn.c agrees word for word: operator new(19496),
+#   19496 == 0x4c28, then p[0] = _ZTV13dScMgTeresa_c.
+#
+#   SLOT 16 / SLOT 17, the destructor pair, unwind ONE table and not two.
+#   src/func_ov006_0211cbd0.c writes data_ov006_0213fa0c and calls
+#   func_ov004_020b29c0 (the base's), and src/func_ov006_0211cbf4.c does the
+#   same and then Memory::Deallocate. No second vtable address appears in
+#   either body or in either literal pool (0x0211cc24 = 0213fa0c,
+#   0x0211cc28 = 020a0eac, the game heap).
+#
+# So this class fills ONE new table and this seat has one face array. It is
+# the flower's and 0x16b's shape MINUS the middle base, not plus one.
+#
+# ---- THE THREE WIDTH CHECKS (port/mg_fanout_costs.txt section 11) ----------
+#
+# Re-run rather than inherited, because twelve of twenty-nine widths in that
+# file's section 3 table were phantoms and a 37-slot fill writes a host thunk
+# over live ROM data belonging to another class:
+#
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt: data_ov006_0213fa0c ->
+#      next symbol data_ov006_0213fa9c. 0x90 bytes = 36 words, so a 37th slot
+#      cannot exist inside the table. (An UPPER bound only: it can refuse a
+#      width, never grant one.)
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, which every dScMgBase_c-derived
+#      table in the family holds.
+#   3. WHAT THE WORD PAST THE END IS. Index 36 reads 0x00000001. Not a code
+#      address, not a pair, not a file path -- the first word of the next
+#      object, exactly as 0x16b's control reads.
+#
+# All three agree on 36. RELOC COUNT, the fourth: zero relocations in ov006
+# land anywhere in 0x0213fa0c..0x0213fa9c except the vtable's own type_info
+# word, so nothing else in the overlay reaches into this span.
+#
+# AND A FIFTH, run mg9 lane LKY's, which needs no symbol table and no judgment
+# at all: a vtable's relocations come out of relocs.txt at a STRIDE OF FOUR for
+# exactly the table's width and then jump. Read for this table:
+#
+#   from:0x0213fa0c  then +4, +4, ... unbroken to from:0x0213fa98
+#   then from:0x0213faa0, a stride of EIGHT
+#
+# Thirty-six rows at four bytes and the thirty-seventh is not there. This is
+# the strongest of the five because it cannot be fooled by an unsymbolised gap
+# the way the span check can, and it does not depend on knowing what the
+# family's terminal word is. All five agree.
+#
+# Section 3's row for 0x183 (36 / 8 / 6 / 0) is CONFIRMED EXACTLY by
+# port/tools/vtablerows.py --vtable 0x0213fa0c --width 36, whose whole-table
+# reconstruction on this tree is EXACT 29/29 with totals 353/264/4.
+#
+# ---- THE SIX ROM ADJUDICATIONS --------------------------------------------
+#
+# Six of the eight override bodies carry the "recovered from vtable slot
+# identity" marker, so each was disassembled out of the overlay image and
+# compared with its src/ body BEFORE the fill was written. All six rule
+# REAL_DECOMP and the evidence is in port/tools/inferred_stub_adjudicated.txt.
+# EVERY ONE CLOSES ITS OWN SPAN -- instructions plus literal-pool words equals
+# size/4 -- which is the arithmetic port/mg_fanout_costs.txt asks a lane to
+# show rather than assert:
+#
+#   slot  symbol                size    instructions + pool = words
+#   ----  --------------------  ------  ---------------------------
+#     0   func_ov006_021203fc   0x3ac   217 + 18 = 235
+#     6   func_ov006_021203ac   0x50     19 +  1 =  20
+#     9   func_ov006_02120348   0x64     25 +  0 =  25
+#    17   func_ov006_0211cbf4   0x38     12 +  2 =  14
+#    18   func_ov006_02120248   0x100    61 +  3 =  64
+#    20   func_ov006_02120238   0x10      3 +  1 =   4
+#
+# Slots 16 (func_ov006_0211cbd0, 8+1=9) and 34 (func_ov006_021200dc, 85+2=87)
+# carry no marker and needed no ruling; both were counted anyway and both close.
+#
+# ---- THE STATE MACHINE IS TWO LEVELS DEEP ---------------------------------
+#
+# port/mg_fanout_costs.txt section 14 says the cost question is not "how many
+# TUs name the table" but "how deep is the machine", and prescribes the check:
+# run stategen, then ask whether any state address is also a dispatcher. This
+# class answers YES, in the shape dScMgPanel_c answered it.
+#
+#   L1  data_ov006_02142eb0  5 slots  arity 0  <- vtable slot 6, 021203ac
+#   L2  data_ov006_02142e88  5 slots  arity 1  <- func_ov006_0211dd0c
+#       data_ov006_02142ed8  8 slots  arity 1  <- func_ov006_0211f6fc
+#       data_ov006_02142f18  9 slots  arity 1  <- func_ov006_0211d5a8
+#
+# The L2 dispatchers are not themselves states; FOUR OF THE FIVE L1 STATES CALL
+# THEM BY NAME, which is how the second level is reached at all:
+#
+#   021200a8 (L1 slot 1) -> 0211dd0c, 0211f6fc
+#   02120008 (L1 slot 2) -> 0211d5a8, 0211f6fc
+#   0211fe78 (L1 slot 3) -> 0211d5a8, 0211f6fc
+#   0211fd44 (L1 slot 4) -> 0211d5a8, 0211f6fc
+#   021200cc (L1 slot 0) -> neither
+#
+# TWENTY-SEVEN PAIRS, READ ONE ASSIGNMENT AT A TIME OUT OF
+# src/__sinit_ov006_02132f68.c AND NOT BY SWEEPING THE .data SPAN. That warning
+# is not decorative here: the pair addresses run 0x0213f8d4..0x0213f9ac and
+# MgHideAndBooSeek_SpawnInfo itself sits at 0x0213f974, inside that range. A
+# sweep would have manufactured this class's own SpawnInfo as a state pair.
+# The constructor is already in port/slice_mg1.txt (all 31 ov006 sinits are),
+# so the tables are built on every boot and nothing new is wired for them.
+#
+# THE ARITIES ARE HAND-READ OFF THE ROM'S r1 AND THEY AGREE WITH stategen 4/4:
+#
+#   021203ac  blx r1 with r1 = the code word and r0 = this. No argument.  0
+#   0211dd0c  mov r1,#0 immediately before blx r2.                       1
+#   0211d5a8  mov r1,#0 immediately before blx r2.                       1
+#   0211f6fc  mov r1,r6 where r6 is the 0..0xf loop counter.             1
+#
+# 0211f6fc is worth naming: it walks SIXTEEN records at stride 0x24, reads the
+# gate byte at (this + i*0x24) + 0x4677 and the state index at +0x4678, and
+# dispatches with the RECEIVER always the base object (r7) while r5 walks. The
+# floor at 0x0211ebdc below is one of its states and its ROM prologue confirms
+# the arity from the other end: mov r6,r1 / mul r4,r6,#0x24.
+#
+# ---- FOUR DISPATCHING TUs, ALL FOUR PMF-TYPED, ALL FOUR HOST-COPIED --------
+#
+# port/mg_fanout_costs.txt section 4's rulebook keys on the SPELLING: a pair
+# whose consumer spells it as two ints is safe as an alias; a pair whose
+# consumer names a member-pointer type needs a host copy, whether it is called
+# or only copied. All four name one, so all four are copied:
+#
+#   src/func_ov006_021203ac.cpp   Entry { PMF pmf; }   02142eb0  arity 0
+#   src/func_ov006_0211dd0c.cpp   bare PMF             02142e88  arity 1
+#   src/func_ov006_0211f6fc.cpp   bare PMF             02142ed8  arity 1
+#   src/func_ov006_0211d5a8.cpp   bare PMF             02142f18  arity 1
+#
+# THE FIRST IS THE DANGEROUS ONE AND IT IS VTABLE SLOT 6. Its table is declared
+# through a struct wrapper, so it mangles ?data_ov006_02142eb0@@3PAUEntry@@A --
+# the @@3PAU spelling port/tools/facegen.py does NOT refuse (section 10, tool
+# finding 1). A lane that wired slot 6 by name would have read clean on the
+# link, on the `::*` sweep and on the compile, and then strided an eight-byte
+# table by four. The run law's "READ SLOT-6 SRC BEFORE WIRING BY NAME" is what
+# caught it here.
+#
+# THE `::*` SWEEP over all 80 src TUs in this class's closure finds exactly
+# these four and NOTHING ELSE, and a scan for section 4's THIRD SHAPE -- a TU
+# holding both a `>> 1` and an `& 1`, which is how func_ov006_020c3d18 and
+# dScMgPanel_c's three open-code the ARM Itanium decode in plain ints --
+# returns EMPTY over the same 80. Neither detector licenses the word "none";
+# the run does, and the run is FAULTS_FATAL=1 with eip on a DS address as the
+# tell.
+#
+# ROUTED AT THE DISPATCH SITE, NEVER BY REWRITING THE STORED PAIR. See
+# port/unmatched/MgTeresa_StateDispatch.cpp; the mounted .data keeps the ROM's
+# own words for the same reason section 4 gives.
+#
+# ---- THREE FLOORS, AND ONE OF THEM IS ov004'S -----------------------------
+#
+# Bodies with a config symbol, no delink block, and no src file in EITHER
+# extension and in NO other module (the module-residency trap section 13's
+# CORRECTION 3 records was checked for all three):
+#
+#   func_ov006_0211e72c  0xac   THE RENDER FLOOR. It is the sixth call vtable
+#       slot 9 makes (src/func_ov006_02120348.c, after func_ov004_020b1e34 and
+#       four ov006 bodies). Delink blocks run .text 0x0211e658..0x0211e72c and
+#       resume at 0x0211e7d8, so the gap is exactly this function. It reads
+#       self+0x467a and takes the receiver only. This is section 13 CORRECTION
+#       3's shape one class over: the floor is in a vtable body's own callees,
+#       not in the state tables, and the check that finds it is a delinks join
+#       over every callee of every override.
+#   func_ov006_0211ebdc  0x258  slot 7 of data_ov006_02142ed8. stategen refuses
+#       it under REFUSALS. Signature confirmed from its own prologue:
+#       mov r6,r1 / mul r4,r6,#0x24, so (this, int i).
+#   func_ov004_020ae5c4  0x294  ov004, and the family's rather than this
+#       class's. Reached from src/func_ov006_0211f9fc.c, which declares it with
+#       SEVEN arguments; the ROM agrees -- r0..r3 plus [sp,#0x38], [sp,#0x3c],
+#       [sp,#0x40] after push{9}+sub#0x14. Its trap goes in
+#       hal/scene_mg_faces.cpp beside func_ov004_020ae858 because that is where
+#       this family's ov004 traps live, NOT in this lane's own hal file.
+#
+# ---- NO ELEMENT VTABLES, AND THAT IS MEASURED THREE WAYS ------------------
+#
+# Run mg9 lane S381 found that dScMgMCarlo_c's factory builds eighty card
+# objects whose ELEMENT class has its own two-slot vtable parked in each
+# record's word 0, that the scene's Render dispatches through it, and that
+# nothing in the ovr/mark/nosrc columns or in any scene-table derivation can
+# see it -- a seat that misses one links, boots, and jumps to a raw DS address
+# on the first RENDERED frame. This class has none, and the claim is three
+# measurements rather than an absence of evidence:
+#
+#   1. ALLOCATIONS. A sweep of all 80 src TUs in the closure for
+#      ActorBase::operator new, Memory::Allocate and the raw allocator
+#      addresses finds exactly ONE hit in the whole class:
+#      src/MgHideAndBooSeek_Spawn.c's own 19496-byte scene object. Nothing else
+#      this class reaches allocates anything, so there is no second object for
+#      a second vtable to sit in. Its sixteen 0x24-stride records at +0x4600
+#      and its twenty at +0x4660 are FIELDS OF THE SCENE OBJECT, not separate
+#      allocations.
+#   2. WHAT THE POOL WORDS POINT AT. Every literal-pool word in the closure
+#      (115 distinct) was tested for the vtable shape -- does it point at three
+#      or more consecutive words that look like DS addresses -- and eight
+#      pass. Seven of the eight fail the decisive test, which is the one
+#      section 14 uses to name a class: NO relocation lands on the word BEFORE
+#      them, so none has a type_info and none is a vtable. Their contents are
+#      ov006 DATA addresses (0x02134xxx..0x0213axxx), not code. The eighth is
+#      data_ov006_0213fa0c, this class's own table, whose word before DOES
+#      carry from:0x0213fa08 to:0x0213f9b4 and whose name reads
+#      "13dScMgTeresa_c".
+#   3. THE RENDER PATH RAN. S381's hazard bites on the first rendered frame,
+#      and every run in this lane's proof set until then had
+#      SM64DS_SCENE_NO_RENDER=1, which is exactly the blindness section 15
+#      records. Scene 387 was re-run WITH render under SM64DS_FAULTS_FATAL=1 at
+#      300 and at 1200 frames: vtable slot 9 is entered 300 and 1200 times, both
+#      runs exit 0, and no dispatch leaves the host.
+#
+# ---- ONE TU IS HOST-COPIED FOR A COMPILE DEFECT, NOT FOR THE WALL ---------
+#
+# src/func_ov006_021203fc.c is vtable slot 0 (InitResources) and MSVC refuses
+# it with C2036 "'void *': unknown size" at its line 69, `f2 += 0;` on a
+# `void *f2`. That is a no-op the ROM does not contain (the two instructions
+# either side of it are the LoadFile(0x102) return and func_ov004_020af2f8),
+# and it is in the src because mwcc needed it. port/tools/hostgen.py's
+# VOIDPP_ARITH rewrite does NOT cover this shape -- it retypes `*(void**)(x)+n`
+# derefs, not a `void*` compound assignment -- and widening a shared generator
+# that nine other seats route through is not a fan-out lane's change to make.
+# So the body is host-copied verbatim in
+# port/unmatched/MgTeresa_InitResources.cpp with that one statement dropped,
+# and its transcription is checked against the same 235-word disassembly the
+# adjudication above rests on. THE COST IS ONE SLICE LINE: this file is not
+# listed below.
+#
+# ---- WHAT THE LINK ASKED FOR ----------------------------------------------
+#
+# ONE WAVE, which is section 14's dividend rather than this lane's skill: every
+# ov004 block this class reaches was already linked, and the closure probe run
+# against the baseline map (39446 symbols, COPIED ASIDE FIRST per section 10
+# finding 3) named seven symbols and no more.
+#
+#   __ZTV13dScMgTeresa_c            the vtable's Itanium spelling; an ordinary
+#                                   /alternatename row onto _data_ov006_0213fa0c
+#   ?GetBG0CharPtr@G2S@@SAPADXZ     src/func_ov006_02120248.cpp declares it as
+#                                   a static member; both sides are __cdecl
+#                                   with no arguments, so a plain alias onto
+#                                   __ZN3G2S13GetBG0CharPtrEv is correct and no
+#                                   argument-landing face is involved
+#   _func_ov004_020ae5c4            the ov004 floor above
+#   _func_ov006_0211e72c            the render floor above
+#   _func_ov006_0211d5a8 _0211dd0c _0211f6fc   the three host-copied dispatchers
+#
+# ZERO dup-def candidates, and zero of the 75 lines below appears in any other
+# port/slice_*.txt -- checked against all of them, because CMake dedupes only
+# identical absolute paths and a second copy becomes a second object (the
+# LNK2005 the flower slice records for _ZN8Particle10SysTrackerD1Ev).
+#
+# AND THE BRACKET TRAP IS CHECKED RATHER THAN AVOIDED BY HABIT. Run mg9 lane
+# S381 found that an unmatched open square bracket anywhere in a slice comment
+# makes CMake's file(STRINGS) swallow every source line after it, and that the
+# symptom is a wave of unresolved externals that reads like a wrong seat rather
+# than like a parse.
+#
+# THIS PARAGRAPH PROVED IT ON ITSELF. Its first draft quoted the character
+# instead of naming it, and the very next build failed with LNK2019 on
+# func_ov006_02120348 and func_ov006_0211cbd0 -- the two slice lines whose
+# names happen to sort after the comment -- while every static check over the
+# file still counted 75 source lines. THAT IS THE WHOLE HAZARD IN ONE
+# OBSERVATION: the file reads correct to every reader except the one that
+# matters. The character is named in words here, brackets balance line by line
+# (7 and 7, none unbalanced), and address ranges are written 0xAAAA..0xBBBB.
+#
+# ---- THE ov006 LINES -------------------------------------------------------
+#
+# 75 lines. The closure walk from 39 roots -- the factory, the eight override
+# bodies, the four dispatchers and the 27 state addresses -- reaches 82 ov006
+# functions; 80 have src, four of those are host-copied dispatchers, one is the
+# host-copied InitResources, and two are the ov006 floors. 82 - 2 - 4 - 1 = 75.
+#
+# NO arm9 AND NO ov004 LINES. The closure reaches 27 arm9 and 17 ov004 call
+# targets and the image already carries every one of them that has a body; the
+# only ov004 name the probe could not resolve is the floor, which has no src to
+# list. That is section 2's "paid once, for all thirty" holding.
+src/MgHideAndBooSeek_Spawn.c
+src/func_ov006_0211cbd0.c
+src/func_ov006_0211cbf4.c
+src/func_ov006_0211cc2c.c
+src/func_ov006_0211cc90.c
+src/func_ov006_0211cca8.c
+src/func_ov006_0211cd24.c
+src/func_ov006_0211ce90.c
+src/func_ov006_0211ce94.c
+src/func_ov006_0211cef4.c
+src/func_ov006_0211d018.c
+src/func_ov006_0211d0f8.c
+src/func_ov006_0211d224.c
+src/func_ov006_0211d368.c
+src/func_ov006_0211d4e8.c
+src/func_ov006_0211d608.c
+src/func_ov006_0211d688.c
+src/func_ov006_0211d69c.c
+src/func_ov006_0211d75c.c
+src/func_ov006_0211d7b0.c
+src/func_ov006_0211d7b4.c
+src/func_ov006_0211d7d8.c
+src/func_ov006_0211d7ec.c
+src/func_ov006_0211d86c.cpp
+src/func_ov006_0211d924.c
+src/func_ov006_0211dad0.c
+src/func_ov006_0211db7c.c
+src/func_ov006_0211dce0.c
+src/func_ov006_0211dd6c.c
+src/func_ov006_0211ddb8.c
+src/func_ov006_0211ddcc.c
+src/func_ov006_0211de54.c
+src/func_ov006_0211de7c.c
+src/func_ov006_0211dec0.c
+src/func_ov006_0211e020.c
+src/func_ov006_0211e0c8.cpp
+src/func_ov006_0211e118.c
+src/func_ov006_0211e184.c
+src/func_ov006_0211e220.c
+src/func_ov006_0211e29c.c
+src/func_ov006_0211e318.c
+src/func_ov006_0211e3e0.c
+src/func_ov006_0211e460.c
+src/func_ov006_0211e4e0.c
+src/func_ov006_0211e55c.c
+src/func_ov006_0211e5cc.c
+src/func_ov006_0211e658.c
+src/func_ov006_0211e7d8.c
+src/func_ov006_0211e8a8.c
+src/func_ov006_0211ea70.c
+src/func_ov006_0211eb90.c
+src/func_ov006_0211ee34.c
+src/func_ov006_0211f040.cpp
+src/func_ov006_0211f0d0.c
+src/func_ov006_0211f1a4.c
+src/func_ov006_0211f224.c
+src/func_ov006_0211f34c.c
+src/func_ov006_0211f454.c
+src/func_ov006_0211f51c.c
+src/func_ov006_0211f554.c
+src/func_ov006_0211f5d4.c
+src/func_ov006_0211f664.c
+src/func_ov006_0211f77c.c
+src/func_ov006_0211f9fc.c
+src/func_ov006_0211fb1c.c
+src/func_ov006_0211fbf8.c
+src/func_ov006_0211fd44.c
+src/func_ov006_0211fe78.c
+src/func_ov006_02120008.c
+src/func_ov006_021200a8.c
+src/func_ov006_021200cc.c
+src/func_ov006_021200dc.c
+src/func_ov006_02120238.c
+src/func_ov006_02120248.cpp
+src/func_ov006_02120348.c

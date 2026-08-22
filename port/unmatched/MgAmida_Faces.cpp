@@ -87,7 +87,6 @@ extern "C" {
 
 static unsigned g_amida_floor_27dc;
 static unsigned g_amida_floor_36a4;
-static unsigned g_amida_floor_ae5c4;
 
 /* THE HOLE IN THE BEHAVIOR'S OWN CALL LIST. 0xe48 bytes, one caller. */
 void func_ov006_020d27dc(char *c);
@@ -105,7 +104,20 @@ void func_ov006_020d36a4(void *sb)
     ++g_amida_floor_36a4;
 }
 
-/* ---- THE THIRD FLOOR, AND IT IS ov004's ---------------------------------
+/* ---- THE THIRD FLOOR, AND IT IS ov004's -- TRAPPED IN THE FAMILY FILE ----
+ *
+ * THE TRAP FOR THIS BODY IS NOT HERE. It is hal/scene_mg_faces.cpp's, because
+ * the body is the FAMILY's and not this class's: seven ov006 TUs across the
+ * family call func_ov004_020ae5c4, so a per-lane copy becomes a duplicate
+ * symbol the day a second seat reaches one of them -- which is exactly what
+ * happened when run mg9 merged this lane and lane BOO together, and is why
+ * this definition is gone and that one stands. Both lanes derived the same
+ * SEVEN parameters independently and off different evidence, which is the
+ * cross-check that made the choice safe rather than arbitrary.
+ *
+ * THE ANALYSIS BELOW IS THIS LANE'S AND IS KEPT, because it is not in the
+ * family file and it is the stronger half of the finding: it is what says
+ * nothing in the tree can dispatch slot 34 at all.
  *
  * func_ov004_020ae5c4, 0x294. Found by the LINK rather than by the delinks
  * walk over this class's own block, because it is one overlay over:
@@ -150,16 +162,7 @@ void func_ov006_020d36a4(void *sb)
  * no `mov r0,#N` in front of it), and every one of the ten call sites in this
  * class discards the result, so the trap returns 0 and asserts nothing.
  */
-int func_ov004_020ae5c4(void *a, int b, int c, int d, int e, int f, int g);
-int func_ov004_020ae5c4(void *a, int b, int c, int d, int e, int f, int g)
-{
-    (void)a; (void)b; (void)c; (void)d; (void)e; (void)f; (void)g;
-    ++g_amida_floor_ae5c4;
-    return 0;
-}
-
 unsigned port_mg_amida_floor_27dc(void)  { return g_amida_floor_27dc; }
 unsigned port_mg_amida_floor_36a4(void)  { return g_amida_floor_36a4; }
-unsigned port_mg_amida_floor_ae5c4(void) { return g_amida_floor_ae5c4; }
 
 }  /* extern "C" */

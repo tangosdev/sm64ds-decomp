@@ -194,10 +194,13 @@ int   func_ov006_020d1188(void *c);           /* slot 36 mode == 2         */
 /* the factory */
 void *func_ov006_020d5974(void);
 
-/* the three floors, from unmatched/MgAmida_Faces.cpp */
+/* the two floors this class owns, from unmatched/MgAmida_Faces.cpp. The third,
+   func_ov004_020ae5c4, is the FAMILY's and is trapped in hal/scene_mg_faces.cpp
+   -- seven ov006 TUs across the family call it -- so it has no per-class
+   counter to read. Run mg9 merged this lane with lane BOO, which owns that
+   trap; entries into it report themselves on stderr from the family file. */
 unsigned port_mg_amida_floor_27dc(void);
 unsigned port_mg_amida_floor_36a4(void);
-unsigned port_mg_amida_floor_ae5c4(void);
 
 void port_scene_amida_hits(void);
 
@@ -494,11 +497,11 @@ extern "C" void port_scene_amida_hits(void)
        make. */
     std::printf("[scene] dScMgAmida_c floor asks: func_ov006_020d27dc %u "
                 "(0xe48, one caller, vtable slot 6), func_ov006_020d36a4 %u "
-                "(0x4fc, two callers, slot 6 and the init tail), "
-                "func_ov004_020ae5c4 %u (0x294, ov004, ten call sites in this "
-                "class and the family's slot-34 dispatcher)\n",
-                port_mg_amida_floor_27dc(), port_mg_amida_floor_36a4(),
-                port_mg_amida_floor_ae5c4());
+                "(0x4fc, two callers, slot 6 and the init tail); the third "
+                "floor func_ov004_020ae5c4 (0x294, ov004, ten call sites in "
+                "this class and the family's slot-34 dispatcher) is the "
+                "family's and reports from hal/scene_mg_faces.cpp\n",
+                port_mg_amida_floor_27dc(), port_mg_amida_floor_36a4());
 
     /* THE STATE INDEX IS PRINTED BECAUSE IT IS THE ONLY THING THAT SEPARATES
        "the behavior slot ran" from "the state machine ran". Slot 6 is a
