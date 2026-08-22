@@ -136,33 +136,31 @@
 //     name _ZN8Particle10SysTrackerD1Ev, which is why only one of the two
 //     destructors produced a symbol. The face is one line and lands `this`.
 //
-// ---- 3. THE ONE TRAP, AND IT IS A DECOMP FLOOR -----------------------------
+// ---- 3. THE TRAP THAT USED TO BE HERE, AND WHAT REPLACED IT ----------------
 //
 // func_ov006_020f5b98 is the sixth call vtable slot 9 (Render) makes:
 // src/func_ov006_020f73f4.c line 16 calls it on `this`.
 // config/arm9/overlays/ov006/symbols.txt names it and sizes it 0xa8, there is
 // NO delink block covering it -- the block before it ends exactly at
-// 0x020f5b98 and the next starts after -- and NO src file in either extension.
+// 0x020f5b98 and the next starts after -- and, until run mg7 lane MEMCARDS,
+// no src file in either extension.
 // src/func_ov002_020f5b98.c exists and is a DIFFERENT function: ov002 and ov006
 // share an address window, which is the module-residency trap
 // port/slice_ccn.txt names, and that file's body takes a `struct Ent *` and
-// belongs to another overlay entirely.
+// belongs to another overlay entirely. IT IS STILL NOT A SUBSTITUTE and must
+// never be the file that satisfies this symbol.
 //
-// So dScMgMemory2_c cannot render everything it renders, however the seat is
-// written. It gets a trap rather than a transcription for the reason
-// hal/scene_mg_faces.cpp's traps do: a body that returns and says so is honest,
-// and a plausible one is the guess port/tools/inferred_stub_guard exists to
-// refuse. Transcribing it from the ROM is a follow-up of the shape lane CT1 did
-// for curling's 0x020e1854 and lane CUR2 did for its collision bodies, and it
-// is deliberately not this lane's: the host body would have to carry a port_
-// name so the decomp's own accounting is unchanged, and nothing would then
-// satisfy the src caller.
+// The trap that stood here counted itself and returned 0, which is the honest
+// thing for a body nobody has read. Reading it out of the overlay image ended
+// that: it is the ONLY code in dScMgMemory2_c that draws a card, and with it
+// stubbed the whole minigame deals sixteen cards into an empty green table.
+// src/func_ov006_020f5b98.c is the decompilation and port/slice_mem.txt carries
+// it, so this file no longer defines the symbol at all.
 //
-// WHAT THE TRAP COSTS IS REPORTED RATHER THAN GUESSED AT. It is counted, and
-// hal/scene_mg_memory2.cpp prints the count on every scene-363 run, so "the
-// render path is complete" can never be inferred from a silent run.
-
-#include <cstdio>
+// hal/scene_mg_memory2.cpp reports the card records themselves now, which is
+// the measurement the trap count was standing in for: sixteen live records
+// spread over x 80..176 and y 24..168 with three sprites in sub OAM was the
+// whole bug, stated in numbers.
 
 extern "C" {
 void _ZN14BlendModelAnim7SetAnimER8BCA_Fileii5Fix12IiEt(void *self, void *, int,
@@ -237,21 +235,8 @@ SysTracker::~SysTracker() { _ZN8Particle10SysTrackerD1Ev(this); }
    what makes this a spelling defect rather than a convention. */
 #pragma comment(linker, "/alternatename:_func_020bc7d4=_data_ov004_020bc7d4")
 
-// ---- the trap, section 3 ---------------------------------------------------
-
-static unsigned g_mem2_trap_hits;
-
-extern "C" int func_ov006_020f5b98(void *c)
-{
-    ++g_mem2_trap_hits;
-    if (g_mem2_trap_hits == 1) {
-        std::fprintf(stderr, "  [scene] TRAP func_ov006_020f5b98(%p): NO SOURCE "
-                     "AND NO DELINK BLOCK. dScMgMemory2_c slot 9 Render calls "
-                     "it; the ROM sizes it 0xa8 and nothing decompiles it, so "
-                     "this returns 0 rather than guessing a body.\n", c);
-        std::fflush(stderr);
-    }
-    return 0;
-}
-
-extern "C" unsigned port_mg_memory2_trap_hits(void) { return g_mem2_trap_hits; }
+// ---- section 3: the card draw is a real body now ---------------------------
+//
+// Nothing is defined here for 0x020f5b98 any more. src/func_ov006_020f5b98.c
+// defines it and port/slice_mem.txt compiles it, so a tree that loses that
+// slice line fails to LINK rather than quietly drawing nothing.

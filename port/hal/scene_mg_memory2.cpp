@@ -205,10 +205,6 @@ unsigned port_mg_memory2_state_hits(void);
 unsigned port_mg_memory2_floor_hits(void);
 unsigned port_mg_memory2_nonmatching(void);
 void     port_mg_memory2_field_counts(unsigned *calls, unsigned *hits);
-/* the named trap in unmatched/MgMemory2_Faces.cpp, section 3 there: this
-   class's ONE hard floor, on the Render path. Printed whether or not it
-   fired, so "the render path is complete" is never inferred from silence. */
-unsigned port_mg_memory2_trap_hits(void);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
@@ -466,14 +462,14 @@ extern "C" void port_scene_memory2_hits(void)
                     fcalls, fhits, calls, unknown);
     }
 
-    /* THE ONE HARD FLOOR, REPORTED WHETHER OR NOT IT FIRED. func_ov006_020f5b98
-       is the sixth call vtable slot 9 (Render) makes, and it has a config
-       symbol, no delink block and no src in either extension. A zero here means
-       Render never got that far on this run, not that the render path is
-       complete. */
-    std::printf("[scene] dScMgMemory2_c floor: the Render callee "
-                "0x020f5b98 (NO SOURCE) trapped %u time(s)\n",
-                port_mg_memory2_trap_hits());
+    /* THE FLOOR THAT USED TO BE HERE. func_ov006_020f5b98 is the sixth call
+       vtable slot 9 (Render) makes, and it is the only code in this class that
+       draws a card. It has a config symbol, still no delink block, and now a
+       src TU: src/func_ov006_020f5b98.c, carried by port/slice_mem.txt. The
+       line stays so a reader of an old log and a reader of a new one are
+       looking at the same place. */
+    std::printf("[scene] dScMgMemory2_c floor: the Render callee 0x020f5b98 is "
+                "DECOMPILED (src/func_ov006_020f5b98.c) and no longer trapped\n");
 
     /* The two state indexes the ROM's own dispatchers read, at the offsets
        disassembled in unmatched/MgMemory2_StateDispatch.cpp section 2. +0x53d4
@@ -484,5 +480,69 @@ extern "C" void port_scene_memory2_hits(void)
                     (void *)g_mem_self,
                     *(int *)(g_mem_self + 0x53d4),
                     *(int *)(g_mem_self + 0x53d8));
+
+    /* THE CARD RECORDS, because a run that renders no cards and a run that has
+       no cards to render read the same on every other line.
+       func_ov006_020f5b98 walks TWENTY records at +0x51a8 with stride 0x18 and
+       draws one sprite per record whose +0x12 (i.e. +0x51ba) byte is nonzero.
+       The fields are read off the ROM: +0x00/+0x04 are the 20.12 screen x/y
+       the draw shifts down by 12, +0x10 is the card identity (the row of the
+       eleven-by-five halfword table at 0x0213d45c), +0x15 is the flip frame
+       (its column) and +0x14 is the per-card state func_ov006_020f6088 sets to
+       1 when a dealt card reaches its slot.  src/func_ov006_020f6c90.c is what
+       populates them: 16, 18 or 20 records depending on +0x540a, each with a
+       type in 1..8/9/10 twice over, x = 128.0 and y = -128.0 -- off the top of
+       the screen, which is where the deal animates them in from.  So a count
+       here is the difference between "the deal never happened" and "the deal
+       happened and nothing drew it". */
+    if (g_mem_self) {
+        int live = 0, on_screen = 0, placed = 0;
+        int minx = 0x7fffffff, maxx = -0x7fffffff;
+        int miny = 0x7fffffff, maxy = -0x7fffffff;
+        for (int i = 0; i < 20; ++i) {
+            const char *r = g_mem_self + 0x51a8 + i * 0x18;
+            if (*(const unsigned char *)(r + 0x12) == 0) continue;
+            ++live;
+            int x = *(const int *)(r + 0x00) >> 12;
+            int y = *(const int *)(r + 0x04) >> 12;
+            if (x < minx) minx = x;
+            if (x > maxx) maxx = x;
+            if (y < miny) miny = y;
+            if (y > maxy) maxy = y;
+            if (x > -32 && x < 288 && y > -44 && y < 236) ++on_screen;
+            if (*(const unsigned char *)(r + 0x14) == 1) ++placed;
+        }
+        std::printf("[scene] dScMgMemory2_c cards: %d of 20 record(s) live, "
+                    "%d inside the screen box, %d settled on a slot", live,
+                    on_screen, placed);
+        if (live)
+            std::printf(", x %d..%d y %d..%d", minx, maxx, miny, maxy);
+        std::printf("  (difficulty byte +0x540a = %u)\n",
+                    *(const unsigned char *)(g_mem_self + 0x540a));
+        /* type.frame.state per live card, and the two bytes the TOUCH path
+           turns on. +0x13 is the in-play gate func_ov006_020f5c40's per-card
+           dispatch reads before it dispatches at all, +0x14 is the per-card
+           state it dispatches ON: state 2 is func_ov006_020f5f0c, the hit test
+           that compares the stylus in data_020a0dea/deb against this record's
+           x/y with a +-0x10 by +-0x16 box. +0x5406 is how many cards the
+           player has turned over and is the hit test's own early-out at 2. */
+        int tappable = 0;
+        std::printf("[scene] dScMgMemory2_c card type.frame.state:");
+        for (int i = 0; i < 20; ++i) {
+            const char *r = g_mem_self + 0x51a8 + i * 0x18;
+            if (*(const unsigned char *)(r + 0x12) == 0) continue;
+            std::printf(" %u.%u.%u", *(const unsigned char *)(r + 0x10),
+                        *(const unsigned char *)(r + 0x15),
+                        *(const unsigned char *)(r + 0x14));
+            if (*(const unsigned char *)(r + 0x13) != 0 &&
+                *(const unsigned char *)(r + 0x14) == 2)
+                ++tappable;
+        }
+        std::printf("\n[scene] dScMgMemory2_c touch: %d card(s) in the hit-test "
+                    "state, %u turned over (+0x5406), picks +0x53f0/f1 = %u/%u\n",
+                    tappable, *(const unsigned char *)(g_mem_self + 0x5406),
+                    *(const unsigned char *)(g_mem_self + 0x53f0),
+                    *(const unsigned char *)(g_mem_self + 0x53f1));
+    }
     std::fflush(stdout);
 }

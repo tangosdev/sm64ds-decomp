@@ -250,13 +250,15 @@ src/func_ov006_020f7394.c
 src/func_ov006_020f73f4.c
 src/func_ov006_020f74b4.cpp
 src/func_ov006_0210a534.cpp
-# NOT HERE, AND IT IS THIS CLASS'S ONE HARD FLOOR: func_ov006_020f5b98, the
-#   sixth call vtable slot 9 (Render) makes. config/arm9/overlays/ov006/
-#   symbols.txt names it and sizes it 0xa8; there is NO delink block covering
-#   it and NO src file in either extension. src/func_ov002_020f5b98.c is a
-#   DIFFERENT function at the same address in a different overlay -- the
-#   module-residency trap -- and is not a substitute. It gets a named trap in
-#   port/unmatched/MgMemory2_Faces.cpp and deliberately not a plausible body.
+# THE CLASS'S ONE HARD FLOOR, DECOMPILED (run mg7 lane MEMCARDS). It is the
+#   sixth call vtable slot 9 (Render) makes, and it is the ONLY thing in the
+#   whole class that draws a card. config/arm9/overlays/ov006/symbols.txt names
+#   it and sizes it 0xa8, and there is still NO delink block covering it, so
+#   the ROM build does not carve it out; the port compiles the src TU.
+#   src/func_ov002_020f5b98.c is a DIFFERENT function at the same address in a
+#   different overlay -- the module-residency trap -- and is NOT a substitute
+#   and must never be the file that satisfies this symbol.
+src/func_ov006_020f5b98.c
 # HOST-COPIED (mg6 lane MEM): src/func_ov006_020c07e8.cpp -- object-FIELD member
 #   pointer, and its src struct pads for eight bytes
 # HOST-COPIED (mg6 lane MEM): src/func_ov006_020c19d0.cpp -- object-FIELD

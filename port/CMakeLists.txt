@@ -4090,10 +4090,11 @@ file(STRINGS "${CMAKE_CURRENT_SOURCE_DIR}/slice_mem.txt" SLICE_MEM_LINES)
 set(SLICE_MEM_SOURCES hal/scene_mg_memory2.cpp
                       unmatched/MgMemory2_StateDispatch.cpp
                       unmatched/MgMemory2_FieldPmf.cpp
-                      # The aliases the link asked for, two __thiscall method
-                      # faces, and the class's one named trap
-                      # (func_ov006_020f5b98, a Render callee with a config
-                      # symbol, no delink block and no src).
+                      # The aliases the link asked for and two __thiscall
+                      # method faces. Its named trap for func_ov006_020f5b98
+                      # is GONE: run mg7 lane MEMCARDS decompiled that body
+                      # (the card draw) into src/func_ov006_020f5b98.c and
+                      # slice_mem.txt carries it.
                       unmatched/MgMemory2_Faces.cpp
                       # REPLACES src/func_ov006_020c0a48.c, which is out of the
                       # slice: its three SharedFilePtr file ids are spelled as
