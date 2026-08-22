@@ -3334,3 +3334,95 @@ cause.** Type them and the length falls out; no coloring lever is involved.
 
 Same family as 6ar (a hoisted address local colors by its declared type) seen from
 the layout side rather than the register side.
+
+## 6bj. LICM level is set by WHERE the address local is ASSIGNED, and the launder does not stop it (func_ov006_02106168 MATCHED, 2026-08-22)
+
+Three levers closed the panel layout picker, 0x238 with two nested loop nests and a
+retry loop around all of them. Every one of them is about *placement*, not about
+arithmetic, and the first is the reusable one.
+
+**1. An address-valued local is hoisted to the OUTERMOST loop it is invariant in, and
+the only thing that moves it is the statement's own position.** The ROM computes the
+write cursor `c + 0x4fde` in the *second* loop's preheader:
+
+```
+02106264  ble  <past the loop>
+02106268  ldr  r0, [pc, #0x124]     ; 0x00004fde
+0210626c  add  r4, sl, r0
+```
+
+Written before the loop (`p = (u8 *)(c + 0x4fde); for (j = ...) { ... *p += 1; }`) it
+comes out at the **top of the function**, because it is invariant in the retry loop as
+well; that costs a callee-saved register for the whole body and rotates the entire
+colouring. Written as the first statement *inside* the loop body it lands exactly
+where the ROM has it. Divergence 24 -> 8 on that one move, with no other change.
+
+`#pragma opt_moveinvariantsinaddressexpr off` does **not** get you there and neither
+does `opt_loop_invariants off`: the first leaves the placement alone and the second
+pushes the computation into the loop body and grows the function by two words. Nor
+does the 6-series `(long long)(int)` launder — laundering the address makes it opaque
+enough to force the pool-loaded base, but the hoist still goes all the way to the
+prologue. Under the launder this function sat at 94; with the plain cast and the
+in-body assignment it sat at 8. **The launder controls the ADDRESSING MODE; the
+statement position controls the LICM LEVEL. They are separate knobs.**
+
+**2. A block-local base pointer, duplicated per branch, stops the store base from
+reusing the value register.** The two arms of the mode branch each do
+
+```
+ldr   r0, [r5, r4, lsl #2]   ; the face table row
+add   r2, sl, r7             ; c + i, in its OWN register
+ldrb  r1, [r0, r7]
+add   r0, r2, #0x4000        ; the store base, reusing r0
+```
+
+`*(u8 *)(c + i + 0x4f1e) = tbl[fs][i];` compiles to the same five instructions with
+`c + i` and the store base sharing one register and the table row taking the other —
+correct, one register cheaper, and not what the ROM does. Writing `char *o = c + i;`
+as a block-local **inside each arm** reproduces the ROM exactly (8 -> 0). Hoisting the
+same assignment above the `if` instead makes mwcc compute it once and the function
+comes out one word SHORT, so the duplication is load-bearing: it is what tells mwcc
+the two arms each own a copy.
+
+**3. A loop bound reloaded at the loop tail is a live variable, and that live variable
+is what spills the constant zero.** The ROM's first loop reloads `[c+0x4cb8]` on its
+back edge and then *uses that register* in the next loop's multiply, across a call:
+
+```
+02106244  ldr  r6, [r0, #0xcb8]     ; the back-edge reload
+...
+02106280  mul  r0, r6, r0           ; still r6, after a bl to RandomIntInternal
+```
+
+Written as `for (i = 0; i < *(int *)(c + 0x4cb8); i++)` the reload happens but the
+value is dead at the loop exit, so the multiply reloads and the function has one fewer
+long-lived value — and with `opt_common_subs off` no CSE will bridge the call. The
+shape that reproduces it is an explicit bound variable assigned before the loop and
+**re-assigned as the last statement of the body**:
+
+```c
+n = *(int *)(c + 0x4cb8);
+for (i = 0; i < n; i++) { ...; n = *(int *)(c + 0x4cb8); }
+```
+
+That ninth long-lived value is what pushes the constant `0` out of the register file
+and onto the stack slot at 0x02106180 (`str r0, [sp]` once in the preheader, `ldr r0,
+[sp]` at each of its five uses). **Do not chase a `str rN, [sp]` of a constant as a
+source construct.** It is a spilled shared constant, and the way to reproduce it is to
+find the extra live value the ROM is carrying, not to invent a `zero` variable — an
+explicit `int zero = 0;` used for all five initialisations is constant-propagated away
+and changes nothing.
+
+### Order of attack that worked
+
+Structure first (same instruction at every offset, any registers), then placement, then
+declaration order. Pairwise-transposition climbing on the declaration list (6bf) took
+54 -> 24 and then stalled hard at 24 across three extern orderings and four random
+restarts; the placement lever above broke the stall in one move. **A decl-order plateau
+that survives restarts is evidence of a placement problem, not of a coloring floor.**
+
+### Tooling trap, again
+
+Two independent sweeps writing the same scratch `cand.cpp` fabricated a stable-looking
+"floor": scores for one process were read off the other's file. It reads exactly like a
+real plateau. Per-process temp names, or one sweep at a time.
