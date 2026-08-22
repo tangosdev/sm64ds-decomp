@@ -519,14 +519,30 @@ extern "C" void port_scene_memory2_hits(void)
             std::printf(", x %d..%d y %d..%d", minx, maxx, miny, maxy);
         std::printf("  (difficulty byte +0x540a = %u)\n",
                     *(const unsigned char *)(g_mem_self + 0x540a));
-        std::printf("[scene] dScMgMemory2_c card types/frames:");
+        /* type.frame.state per live card, and the two bytes the TOUCH path
+           turns on. +0x13 is the in-play gate func_ov006_020f5c40's per-card
+           dispatch reads before it dispatches at all, +0x14 is the per-card
+           state it dispatches ON: state 2 is func_ov006_020f5f0c, the hit test
+           that compares the stylus in data_020a0dea/deb against this record's
+           x/y with a +-0x10 by +-0x16 box. +0x5406 is how many cards the
+           player has turned over and is the hit test's own early-out at 2. */
+        int tappable = 0;
+        std::printf("[scene] dScMgMemory2_c card type.frame.state:");
         for (int i = 0; i < 20; ++i) {
             const char *r = g_mem_self + 0x51a8 + i * 0x18;
             if (*(const unsigned char *)(r + 0x12) == 0) continue;
-            std::printf(" %u.%u", *(const unsigned char *)(r + 0x10),
-                        *(const unsigned char *)(r + 0x15));
+            std::printf(" %u.%u.%u", *(const unsigned char *)(r + 0x10),
+                        *(const unsigned char *)(r + 0x15),
+                        *(const unsigned char *)(r + 0x14));
+            if (*(const unsigned char *)(r + 0x13) != 0 &&
+                *(const unsigned char *)(r + 0x14) == 2)
+                ++tappable;
         }
-        std::printf("\n");
+        std::printf("\n[scene] dScMgMemory2_c touch: %d card(s) in the hit-test "
+                    "state, %u turned over (+0x5406), picks +0x53f0/f1 = %u/%u\n",
+                    tappable, *(const unsigned char *)(g_mem_self + 0x5406),
+                    *(const unsigned char *)(g_mem_self + 0x53f0),
+                    *(const unsigned char *)(g_mem_self + 0x53f1));
     }
     std::fflush(stdout);
 }
