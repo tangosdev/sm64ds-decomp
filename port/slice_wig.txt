@@ -82,7 +82,8 @@
 #   4. RELOCATION COUNT, which is this lane's addition and which is the check
 #      that cannot be argued with. A vtable word is a code address and is
 #      therefore ALWAYS relocated. Exactly THIRTY-SIX relocation rows have a
-#      source inside [0x0213cab8, 0x0213cb48), one per slot, running
+#      source at or after 0x0213cab8 and before 0x0213cb48, one per slot,
+#      running
 #      0x0213cab8, 0x0213cabc, ... 0x0213cb44 with no gaps -- and there is NO
 #      row at 0x0213cb48. A 37th slot would have a 37th row. Check 3 is the one
 #      section 11 warns is easiest to wave through; this one is not.
@@ -134,18 +135,30 @@
 # honest answer is that the tool has no input rather than that it found no
 # tables.
 #
-# WHAT THE ROM HAS INSTEAD is TWENTY-NINE individually symbolised {code, adj}
-# pairs laid end to end in .data at 0x0213c994..0x0213ca74, stride 8, EVERY
+# WHAT THE ROM HAS INSTEAD is THIRTY-FIVE individually symbolised {code, adj}
+# pairs laid end to end in .data at 0x0213c95c..0x0213ca74, stride 8, EVERY
 # ADJUSTMENT WORD ZERO, each with exactly ONE load relocation reaching it and
 # that one from a code literal pool inside this class's own block. They hold
-# FOURTEEN distinct code words and ALL FOURTEEN HAVE A MATCHED src TU, so this
+# FIFTEEN distinct code words and ALL FIFTEEN HAVE A MATCHED src TU, so this
 # class has ZERO bodiless state wants. The full pair-to-loader table is in
 # port/unmatched/MgWiggler_StateDispatch.cpp's header.
 #
-# TWO OBJECTS, THREE FIELDS. The scene object holds its state pair at +0x4660;
+# THE SPAWNINFO SITS INSIDE THAT RUN, which is section 4's sweep hazard exactly,
+# and this lane walked into it. 0x0213c98c is not a pair -- it is the factory
+# word and the doubled id -- and it sits between the pair at 0x0213c984 and the
+# pair at 0x0213c994. The first pass derived the SpawnInfo, started the pair
+# scan at the word after it, and reported 29 pairs and 14 code words, missing
+# the six below it and the fifteenth code word 0x020eb3e4 entirely. THE LINK IS
+# WHAT CAUGHT IT: src/func_ov006_020eb8f0.cpp asks for three .data pairs by
+# their C++ spellings and one of the three, 0x0213c96c, is below the SpawnInfo.
+# The lesson for the next lane is to anchor a pair scan on the RELOCATION SET
+# rather than on an address the SpawnInfo happens to bound.
+#
+# TWO OBJECTS, FOUR FIELDS. The scene object holds its state pair at +0x4660;
 # each of the FIFTEEN wiggler sub-objects at scene+0x4678 (stride 0x98, and the
-# factory's own __destroy_arr call spells 0xf and 0x98) holds one at +0x10 and a
-# SECOND at +0x00. Six code words are the scene's, eight the wigglers'.
+# factory's own __destroy_arr call spells 0xf and 0x98) holds one at +0x10, a
+# SECOND at +0x00 and a THIRD at +0x08 that src/func_ov006_020eb8f0.cpp copies
+# into +0x10. Six code words are the scene's, nine the wigglers'.
 #
 # ---- FIVE DISPATCHERS, AND A THIRD DETECTOR THIS LANE RECOMMENDS ----------
 #
@@ -275,6 +288,23 @@
 # port/unmatched/MgWiggler_StateDispatch.cpp, each verbatim but for the
 # member-pointer declaration and the dispatch site. Listing both copies would be
 # a duplicate symbol; listing neither would drop the dispatch silently.
+#
+# ONE WAVE, FIVE UNRESOLVED EXTERNALS, FOUR OBJECTS. Which is the shape lane PPP
+# predicts for a seat after the framework half is paid: "budget ONE wave plus
+# its own alias row, and treat a second wave as evidence it missed a
+# dispatcher". Four of the five are name-spelling defects and are answered in
+# port/unmatched/MgWiggler_Faces.cpp with three /alternatename rows and one
+# argument face. The fifth, _func_0203d5dc, is not a spelling defect at all: it
+# is a real matched arm9 body that was in no slice, and it is the one arm9 line
+# below.
+#
+# THE arm9 LINE IS THE WHOLE arm9 DELTA. Section 5's "the arm9 half comes back
+# for free" holds for the other 613 functions the closure reaches in main: every
+# one is already linked or already hosted. src/func_0203d5dc.c is the one that
+# was neither.
+
+# ---- arm9: the one line the framework half did not already carry -----------
+src/func_0203d5dc.c
 
 # ---- ov006: the class's own closure, minus the five host copies ------------
 src/MgWhichWiggler_Spawn.cpp

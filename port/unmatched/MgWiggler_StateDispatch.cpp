@@ -16,8 +16,8 @@
 // source lies in any __sinit block lands anywhere in
 // [0x0213c98c, 0x0213cab8], the whole of this class's .data.
 //
-// What it has instead is TWENTY-NINE INDIVIDUALLY SYMBOLISED {code, adj} PAIRS
-// laid end to end in .data at 0x0213c994..0x0213ca74, stride 8, EVERY
+// What it has instead is THIRTY-FIVE INDIVIDUALLY SYMBOLISED {code, adj} PAIRS
+// laid end to end in .data at 0x0213c95c..0x0213ca74, stride 8, EVERY
 // ADJUSTMENT WORD ZERO, each with exactly ONE load relocation reaching it and
 // that one from a code literal pool inside this class's own block. So the ROM
 // does not index a table; each state-setting site names the one pair it
@@ -26,27 +26,44 @@
 // the two, and the reason applies here in full: a link can never name any of
 // this, because there is no table global to be unresolved.
 //
-// THE TWENTY-NINE PAIRS HOLD FOURTEEN DISTINCT CODE WORDS, and all fourteen are
+// THE SPAWNINFO SITS INSIDE THE PAIR RUN, AND THAT IS SECTION 4's SWEEP HAZARD
+// IN ITS PUREST FORM. 0x0213c98c is not a pair: it is {0x020ede18, 0x01820182},
+// the factory word and the doubled id. It sits between the pair at 0x0213c984
+// and the pair at 0x0213c994, so the run is 0x0213c95c..0x0213ca74 MINUS that
+// one record. THIS LANE GOT IT WRONG FIRST TIME and the way it got it wrong is
+// worth keeping: the SpawnInfo was derived first, and the pair scan was then
+// started at the word AFTER it, which found 29 pairs and 14 code words and
+// missed the six below. What corrected it was a link -- the three unresolved
+// Pair symbols src/func_ov006_020eb8f0.cpp asks for include 0x0213c96c, which
+// is below the SpawnInfo -- and the fifteenth code word, 0x020eb3e4, was
+// installed by a pair no scan had looked at. Anchor a pair scan on the
+// RELOCATION SET, not on an address the SpawnInfo happens to bound.
+//
+// THE THIRTY-FIVE PAIRS HOLD FIFTEEN DISTINCT CODE WORDS, and all fifteen are
 // routed below. Read out of extracted/overlays/overlay_0006.bin at base
 // 0x020bfec0, with the loading function named from the relocation's own source
 // address:
 //
 //   pair        code      loaded by                pair        code      loaded by
-//   0213c994  020ed34c  020ecee4 (Render)        0213ca04  020eb31c  020ebb40
-//   0213c99c  020eb1e0  020eb7f8                 0213ca0c  020ec93c  020ec9c0
-//   0213c9a4  020eb31c  020eb7f8                 0213ca14  020ec6e8  020ec84c
-//   0213c9ac  020ed494  020ecee4 (Render)        0213ca1c  020ecb80  020eb558
-//   0213c9b4  020ecb80  020eb7f8                 0213ca24  020ec458  020ec4dc *
-//   0213c9bc  020eb018  020eb8f0                 0213ca2c  020ed844  020ecee4
-//   0213c9c4  020eb1e0  020eb8f0                 0213ca34  020ed274  020ecee4
-//   0213c9cc  020ed494  020ed81c                 0213ca3c  020ed328  020ecee4
-//   0213c9d4  020eb0c8  020ebb40                 0213ca44  020ecb80  020eb3e4
-//   0213c9dc  020ecb80  020ecba4                 0213ca4c  020ecb80  020ed494
-//   0213c9e4  020ec6e8  020eb9dc                 0213ca54  020ed270  020ed274
-//   0213c9ec  020ecb80  020eb9dc                 0213ca5c  020ed274  020ed300
-//   0213c9f4  020ecb80  020eb9dc                 0213ca64  020ed328  020ed32c
-//   0213c9fc  020eb0c8  020eb7f8                 0213ca6c  020ed34c  020ed40c
-//                                                0213ca74  020ecb80  020ed494
+//   0213c95c  020eb31c  020eb9dc                 0213c9fc  020eb0c8  020eb7f8
+//   0213c964  020ed844  020ed8a4                 0213ca04  020eb31c  020ebb40
+//   0213c96c  020ecb80  020eb8f0  (the sentinel) 0213ca0c  020ec93c  020ec9c0
+//   0213c974  020eb3e4  020eb9dc                 0213ca14  020ec6e8  020ec84c
+//   0213c97c  020eb31c  020eac38                 0213ca1c  020ecb80  020eb558
+//   0213c984  020ecb80  020eb1e0                 0213ca24  020ec458  020ec4dc *
+//   0213c994  020ed34c  020ecee4 (Render)        0213ca2c  020ed844  020ecee4
+//   0213c99c  020eb1e0  020eb7f8                 0213ca34  020ed274  020ecee4
+//   0213c9a4  020eb31c  020eb7f8                 0213ca3c  020ed328  020ecee4
+//   0213c9ac  020ed494  020ecee4 (Render)        0213ca44  020ecb80  020eb3e4
+//   0213c9b4  020ecb80  020eb7f8                 0213ca4c  020ecb80  020ed494
+//   0213c9bc  020eb018  020eb8f0                 0213ca54  020ed270  020ed274
+//   0213c9c4  020eb1e0  020eb8f0                 0213ca5c  020ed274  020ed300
+//   0213c9cc  020ed494  020ed81c                 0213ca64  020ed328  020ed32c
+//   0213c9d4  020eb0c8  020ebb40                 0213ca6c  020ed34c  020ed40c
+//   0213c9dc  020ecb80  020ecba4                 0213ca74  020ecb80  020ed494
+//   0213c9e4  020ec6e8  020eb9dc
+//   0213c9ec  020ecb80  020eb9dc
+//   0213c9f4  020ecb80  020eb9dc
 //
 //   * func_ov006_020ec4dc is one of this class's two FLOORS -- a config symbol
 //     with no delink block and no src file. It is the sole loader of the pair
@@ -55,12 +72,13 @@
 //     the loader (unmatched/MgWiggler_Faces.cpp) is what fires instead, and a
 //     routed address that is never asked for costs one switch arm.
 //
-// TWO OBJECTS, TWO FIELDS, THREE OFFSETS. The SCENE object holds its own state
-// pair at +0x4660 and the six 020ed2xx..020ed8xx code words are its states. Each
-// of the FIFTEEN wiggler sub-objects at scene+0x4678 (stride 0x98, and the
-// factory's own __destroy_arr call says 0xf and 0x98 in as many words) holds a
-// state pair at +0x10 and a SECOND pair at +0x00; the eight 020eb0xx..020ecbxx
-// code words are theirs. 6 + 8 = 14, which is the whole set.
+// TWO OBJECTS, THREE FIELDS. The SCENE object holds its own state pair at
+// +0x4660 and the six 020ed2xx..020ed8xx code words are its states. Each of the
+// FIFTEEN wiggler sub-objects at scene+0x4678 (stride 0x98, and the factory's
+// own __destroy_arr call says 0xf and 0x98 in as many words) holds a state pair
+// at +0x10, a SECOND at +0x00 and a THIRD at +0x08 that
+// src/func_ov006_020eb8f0.cpp copies to +0x10; the nine 020eb0xx..020ecbxx code
+// words are theirs. 6 + 9 = 15, which is the whole set.
 //
 // ---- 2. FIVE DISPATCHERS, AND THE FIFTH IS THE THIRD SHAPE -----------------
 //
@@ -145,8 +163,9 @@ void func_ov006_020ed34c(char *p);
 void func_ov006_020ed494(char *c);
 void func_ov006_020ed844(char *c);
 
-/* ---- the eight WIGGLER sub-object states, +0x10 and +0x00 --------------- */
+/* ---- the nine WIGGLER sub-object states, +0x00, +0x08 and +0x10 --------- */
 void func_ov006_020eb1e0(char *c);
+void func_ov006_020eb3e4(char *c);
 void func_ov006_020ec458(void *self);
 void func_ov006_020ec6e8(char *c);
 void func_ov006_020ec93c(void *self);
@@ -208,11 +227,12 @@ static int wig_try(void *self, unsigned code)
     case 0x020ed34cu: func_ov006_020ed34c(c); ++g_wig_scene_hits; return 1;
     case 0x020ed494u: func_ov006_020ed494(c); ++g_wig_scene_hits; return 1;
     case 0x020ed844u: func_ov006_020ed844(c); ++g_wig_scene_hits; return 1;
-    /* the wiggler sub-object's eight, +0x10 and +0x00 */
+    /* the wiggler sub-object's nine, +0x00, +0x08 and +0x10 */
     case 0x020eb018u: func_ov006_020eb018(c); return 1;
     case 0x020eb0c8u: func_ov006_020eb0c8(c); return 1;
     case 0x020eb1e0u: func_ov006_020eb1e0(c); return 1;
     case 0x020eb31cu: func_ov006_020eb31c(c); return 1;
+    case 0x020eb3e4u: func_ov006_020eb3e4(c); return 1;
     case 0x020ec458u: func_ov006_020ec458(c); return 1;
     case 0x020ec6e8u: func_ov006_020ec6e8(c); return 1;
     case 0x020ec93cu: func_ov006_020ec93c(c); return 1;
