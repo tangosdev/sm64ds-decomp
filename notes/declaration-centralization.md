@@ -18,7 +18,7 @@ linker later fills in the address.
 There is no rule saying two files must agree about it. Each file carries its own copy,
 written by whoever recovered that file. So the tree contains:
 
-```
+```text
 5,768  files carrying local `extern` declarations
 8,523  distinct names declared
 18,497 declaration lines

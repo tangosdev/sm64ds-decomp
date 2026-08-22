@@ -110,7 +110,7 @@ one less space than `u8`.
 
 ## 5. The one left for a person
 
-```
+```c
 G2x.unk_004 @0x4  span=2  observed widths [2, 4]   include/G2x.h:13
 ```
 

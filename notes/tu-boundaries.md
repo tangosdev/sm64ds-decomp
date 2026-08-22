@@ -31,7 +31,7 @@ KoopaTheQuick, KoopaFlag and Klepto really do sit in five contiguous runs.
 ov062 is the lucky case. Where two classes share a file, mwcc emits their methods
 **interleaved in source order**, not grouped by class:
 
-```
+```sh
 _ZN9MontyMoleD1Ev                 _ZN9MontyMoleD0Ev
 _ZN13MontyMoleRockD1Ev            _ZN13MontyMoleRockD0Ev
 _ZN9MontyMole16CleanupResourcesEv _ZN13MontyMoleRock16CleanupResourcesEv
@@ -67,7 +67,7 @@ and Koopa apart, with no "how interleaved is too interleaved" threshold to tune.
 **RTTI may extend or create a cluster; it may never bridge two symbol clusters.**
 Gate V2b found this rather than foresight. ov081:
 
-```
+```sh
 MrBlizzard    0x2124090-0x2125f14
 Snowball      0x2125f14-0x2126504   abuts exactly — two TUs
 daSnowman_c   0x2125eb8-0x21261d4   RTTI span straddles the boundary
@@ -133,7 +133,7 @@ them as unresolved rather than as TUs.
 
 ## Usage
 
-```
+```sh
 python tools/tu_map.py                    # all modules -> build/tu_map.json
 python tools/tu_map.py --module ov062     # one module, printed
 python tools/tu_map.py --module ov080 --verbose  # with per-function detail

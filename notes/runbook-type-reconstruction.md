@@ -280,7 +280,7 @@ declaration.
 
 Nothing merges and nothing accumulates. The binding is one line in a generated file:
 
-```
+```sh
 src/engine/fader/_ZN5Fader13AdvanceInterpEv.cpp:
     complete
     .text start:0x020175e8 end:0x02017610
@@ -472,7 +472,7 @@ the check the ROM build cannot report**, and it is why the baseline is step 0.
 OR YOU WILL GET A DIFFERENT NUMBER.** The definition used here is a ROM property:
 a symbol declared `kind:function(arm,size=0xc)` whose first two words are
 
-```
+```arm
 ldr ip, [pc, #N]
 bx  ip
 ```
@@ -508,7 +508,7 @@ EOF
 
 Each is a three-word thunk of the shape
 
-```
+```arm
 ldr ip, [pc]
 bx  ip
 .word <target>

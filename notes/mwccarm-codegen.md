@@ -1054,7 +1054,7 @@ a predicated return.
 RESIDUAL FLOOR (why `func_02068398` still floors in plain C): two sequential guards that both
 branch to a SHARED tail with a one-instruction reassignment before it. The ROM branches BOTH
 guards --
-```
+```arm
     beq done          ; if p == 0
     ldr r0,[r0,#0x4b4]
     cmp r0,#0
@@ -1803,7 +1803,7 @@ them sends you hunting the wrong thing. The CLI banner of the Dec-2003 compiler,
 `docs/_private/CodeWarrior/mwccarm.help.txt` in `irisSDK-20031203.tar.gz` (verified
 directly, not secondhand):
 
-```
+```text
 Metrowerks C/C++ for Embedded ARM.
 Copyright c 2003, Metrowerks Corporation
 Version 2.0 build 36 (build 0036)
@@ -1991,7 +1991,7 @@ a fork: the same mwccarm core shipped in Metrowerks' public, non-NDA "CodeWarrio
 ARM ISA Edition", and Metrowerks' own FTP is preserved on archive.org. Its October 2004
 update carries the compiler.
 
-```
+```text
 Metrowerks C/C++ for Embedded ARM.
 Copyright (c) 2004, Metrowerks Corporation
 Version 2.0 build 56 (build 0056)
@@ -2007,7 +2007,7 @@ sha1 `8eb0b9653ea1c9a589c3a4399e37e2780059a818`. Install it as `2004/b56`.
 
 **The wall falls.** On the exact probe 6ag called shape-blocked, plain C, no launder:
 
-```
+```arm
 add r1, r0, #0x154 / ldr r0, [r1] / orr r0, r0, #0x40 / str r0, [r1] / bx lr
 ```
 
@@ -2077,7 +2077,7 @@ and 0072. Findings, so nobody re-spends this search:
 
 Remaining routes are all non-public: a CodeWarrior for NITRO V0.5-V0.6.1 SDK leak
 surfacing, or NDA-era Nintendo/Metrowerks archives. Until one appears, the five arm9
-floors (InitResources 4, OAM::Render 2, 0202ffec 2, LoadTex 5, func_02009e70 96) are
+floors (InitResources 4, OAM::Render 2, 0202ffec 2, LoadTex 5, `func_02009e70` 96) are
 at their true resting state: every source-side axis is closed with evidence in the
 near-miss DB.
 
@@ -2253,7 +2253,7 @@ What this one adds is the diagnostic, because here the by-value struct was **not
 advance** - the banked draft modelled the arguments as five ints forwarded through `&a0`,
 and read as a "stale draft" that merely needed re-deriving. The tell is in the call setup:
 
-```
+```arm
 sub r2, sp, #4      str r1, [r2]      str r0, [r2, #4]      ldm r2, {r3}
 add r1, sp, #0x1c   ldm r1, {r1, r2}
 ```
@@ -2296,7 +2296,7 @@ it**, while plain comparisons in the same translation unit still fold normally.
 
 So a materialized bool sitting inside an `&&` chain is a tell about two things at once:
 the file is C++, and the condition came from an inlined accessor rather than being written
-out. Found on func_02009e70 (Camera::Update); it was worth ~1300 divergences on its own.
+out. Found on `func_02009e70` `(Camera::Update)`; it was worth ~1300 divergences on its own.
 
 ### The TYPE of a named local selects its callee-saved rank
 
@@ -2345,7 +2345,7 @@ what keeps the sites distinct.
 The pragma then costs three CSEs the ROM *does* have - restore those with named temps.
 Pragma off plus selective named temps is the general shape, not pragma off alone.
 
-Second launder note, from func_020316d8: **the launder defeats mwcc's range-folder.**
+Second launder note, from `func_020316d8`: **the launder defeats mwcc's range-folder.**
 `short w = <byte-valued expr>;` gets range-folded and both shifts of the `lsl #16 / asr #16`
 pair vanish; `(short)(int)LAUNDER(expr)` restores the packed form and the correct size. It
 did not pay off there on divergence, but the range-folder is beatable and that is worth
@@ -2353,11 +2353,11 @@ knowing.
 
 ### Read register ROLES, not the divergence count, to order two residues
 
-func_020316d8 looked like two independent residue classes. Mapping which web owns which
+`func_020316d8` looked like two independent residue classes. Mapping which web owns which
 register showed one is downstream of the other: the free-register *pools* differ only
 because `rowstep` lands in `lr` for us and `r3` for the ROM, and everything in the second
 cluster is a cascade of that. A divergence count cannot see this; a role map can. Same
-technique found that on func_02009e70 a single assignment (`self -> r8`) accounts for 145
+technique found that on `func_02009e70` a single assignment (`self -> r8`) accounts for 145
 of 282 differing words, which turns "302 divergences" into "one 4-cycle on
 {r6,r8,sb,sl}".
 
@@ -2901,9 +2901,11 @@ ROM leads A,B,A,B with the RMW-pool chain, mwcc leads B,A,B,A with the plain-loa
 fell to the exact INVERSE of the matching-style.md RMW rule: launder the plain single-use
 field_f4 READ with the u64 no-op mask and leave the RMW site alone.
 
+```c
     field_b0 = *(int *)(((long long)(int)&field_f4) & 0xFFFFFFFFFFFFFFFFLL);
+```
 
-Instruction selection is unchanged (the load still folds to ldr r1,[r4,#0xf4]) -- the mask
+Instruction selection is unchanged (the load still folds to `ldr r1,[r4,#0xf4])` -- the mask
 only demotes the load out of its default value-numbering/scheduling class, and that demotion
 alone flips which chain leads. Every documented spelling of the RMW side (naming, casting,
 block-scoping, splitting, comma-fusing, 22 probes re-verified 2026-08-01) is inert or
@@ -2917,19 +2919,19 @@ the chain that must YIELD, not the one that must lead.
 ## 6ay. Four new axes tested on the arm9 floors, all closed (2026-08-01, post-#960 theory sweep)
 
 After #960 landed the last two matchable arm9 functions, four genuinely untried axes were
-run against the five remaining floors (InitResources 4, OAM::Render 2, 0202ffec 2,
-LoadTex 5, func_02009e70 96). All four came back negative with real controls. Recorded so
+run against the five remaining floors (`InitResources` 4, `OAM::Render` 2, `0202ffec` 2,
+`LoadTex` 5, `func_02009e70` 96). All four came back negative with real controls. Recorded so
 none of them is ever re-spent.
 
 **(1) TU composition is DEAD.** Nintendo compiled multi-function TUs, we compile
 single-function ones -- tested whether any allocator tie-break rides on TU-level state.
 Non-static DCE-safe control functions before AND after the target, then REAL ROM-adjacent
-neighbor merges (CleanupResources + InitResources in ROM order, six conflicting extern
+neighbor merges (``CleanupResources`` + ``InitResources`` in ROM order, six conflicting extern
 types reconciled, the neighbor re-verified byte-matching its own extent from inside the
 merged TU): zero bytes moved, byte- and reloc-level identical, on both floor classes
 tested. TRAP FOUND on the way: mwccarm does NOT finalize a function's codegen at its
 closing brace -- a `#pragma opt_*` toggle AFTER the function retroactively changes its
-bytes (OAM::Render shrank 8 bytes when a restore line alone was appended). Consequence
+bytes (`OAM::Render` shrank 8 bytes when a restore line alone was appended). Consequence
 for the readable-tree migration: a matched draft that relies on unscoped
 `#pragma opt_* off` cannot be folded into a multi-function TU as-is; the required restore
 changes its own output. Audit pragma-carrying drafts before any TU consolidation.
@@ -2955,21 +2957,22 @@ ALL body-level restructuring (6 variants byte-identical) -- it is a pre-body,
 parameter-count-driven filler-zip decision, a true build discriminator. The real
 decomp-permuter (first actual run on this residue, 6,512 candidates, 8 min, -j8) never
 improved func_0202ffec's smull-operand score: the smull field and its operand's physical
-register are one joint allocation decision. func_02009e70's RC4 cluster narrowed:
+register are one joint allocation decision. `func_02009e70`'s RC4 cluster narrowed:
 pragma-toggle/named-CSE/temp-split/block-boundary all byte-inert, reorder regresses;
 same coloring-priority class as 0202ffec.
 
 Permuter operational note (Windows): --quiet or --stop-on-zero stall permuter.py with
 stdout-flush OSErrors; run plain with output redirected (~14 cand/sec at -j8).
 
-## 6ba. The 4a8-pack rank-pin: a partial decouple, and a canonicalization split from its ov075 twin (2026-08-02, Fable on func_ov080_02125460, ~330 compiles, still div 5)
+## 6ba. The 4a8-pack rank-pin: a partial decouple, and a canonicalization split from its *ov075* twin (2026-08-02, Fable on `func_ov080_02125460`, ~330 compiles, still div 5)
 
-func_ov080_02125460 (TEXIMAGE_PARAM pack, div 5) is the same two-attractor rank-pin
-as func_ov075_0211a948 (6ab/2114): ROM wants A's selection (b>>3 materialized, lsl#26
+
+`func_ov080_02125460` (TEXIMAGE_PARAM pack, div 5) is the same two-attractor rank-pin
+as `func_ov075_0211a948` (6ab/2114): ROM wants A's selection (b>>3 materialized, lsl#26
 folded into the first orr) with B's coloring (b=r2 coalescing the dying pointer,
 t26=r3). Three findings extend the class record:
 
-- **The 120-perm result does NOT transfer between twins.** On ov075 every or-chain
+- **The 120-perm result does NOT transfer between twins.** On *ov075* every or-chain
   permutation returned exactly 5; here the baseline order is the UNIQUE minimum at 5
   and all 119 others are 7-10. Same residue class, different canonicalization
   landscape - re-run the perm sweep per function before importing a twin's negative.
@@ -3001,7 +3004,7 @@ canonical A-tree, and the only rerank construct drags the a-family with it. The 
 angle narrows to: a substitution barrier that does NOT perturb sibling-web coloring,
 or any construct that makes the orr folder commute.
 
-## 6bb. 4a8-pack rank-pin, second full-angle sweep: the phase-order boundaries (2026-08-05, Fable on func_ov080_02125460, +55 compiles, still div 5)
+## 6bb. 4a8-pack rank-pin, second full-angle sweep: the phase-order boundaries (2026-08-05, Fable on `func_ov080_02125460`, +55 compiles, still div 5)
 
 A fresh session re-attacked 6ba's wall with the post-6ba lever families (6y boosters,
 6aq caller-saved inversion, dead-use priority, fold-commute probes). Nothing beat 5;

@@ -35,7 +35,7 @@ The compiler and ROM remain on the private worker. For each relay job:
    or a base that predates the tool, simply reports no port row.
 6. Run:
 
-   ```
+   ```sh
    python tools/validate_merge.py --base <baseSha> --head HEAD \
      --require-merge-commit --expected-pr-head <headSha> \
      --base-rom-report build/base-rom.json \

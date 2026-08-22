@@ -18,10 +18,10 @@ written. That is the pattern worth internalising.
 
 ## The short version
 
-```
+```sh
 _ZN22ExpandingHeapAllocator12AllocateNodeEP10MemoryNodeS1_Pvjt
-   ^class name          ^method name    ^parameter types
-   RTTI-checkable       a label         WEAKEST LINK
+   # ^class name          ^method name    ^parameter types
+   # RTTI-checkable       a label         WEAKEST LINK
 ```
 
 | part of the name | who could have proven it wrong | trust |
@@ -186,7 +186,7 @@ name, and `--check` keeps a new one from landing.
 
 `tools/langmode_audit.py` measures exactly this gap:
 
-```
+```python
 NOT MIGRATED   1219  of 2525 mangled-symbol files (48.3%)
     .c extension              943
     .cpp, symbol hand-spelt   276   renamed, never migrated

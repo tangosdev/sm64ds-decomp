@@ -22,7 +22,7 @@ one or the other. On Linux/macOS a symlink is fine.
 
 Measured and reproduced twice on Windows junctions:
 
-```
+```text
 decoy before: 2 files
 git worktree remove --force
 decoy after : 0 files          <- the link TARGET was emptied

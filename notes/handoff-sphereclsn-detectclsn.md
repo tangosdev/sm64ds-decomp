@@ -46,7 +46,7 @@ An exact size is evidence about the *build*, not only about the source. Derive t
 the twin that already matched (`DetectClsn(dBgCh_Gnd&)` matched on 2004/b56), and
 re-derive it from size when a function is unmatched.
 
-```
+```sh
 python tools/fdiff.py --c <draft>.cpp \
   --name _ZN7dBgW_Kc10DetectClsnER12dBgCh_SphCrr \
   --module itcm --addr 0x01ffb830 --size 0x1bc8 --version 2004/b56
@@ -92,11 +92,11 @@ constant-hoisting block — the frame slots the four inlined sqrt expansions sha
 
 ## 2. Per-prism body, in ROM order
 
-```
-1  three edge-normal rejects (tri+0x8, +0xa, +0xc), then the face reject (tri+0x6)
-2  depth = rsc - faceDot
-3  triID via func_020396dc; GetSurfaceInfo (REAL virtual call); CopyNormalTo; classify
-4  dBgCh::ShouldPassThroughImpl -> reject
+```text
+1  three edge-normal rejects (`tri+0x8`, `+0xa`, `+0xc`), then the *face reject* (`tri+0x6`)
+2  `depth = rsc - faceDot`
+3  triID via `func_020396dc`; `GetSurfaceInfo` (REAL virtual call); `CopyNormalTo`; classify
+4  `dBgCh::ShouldPassThroughImpl` -> reject
 5  Voronoi dispatch: face, or the edge/vertex distance -- sqrt'd, not compared
 6  record into the class slot, set the class bit, accumulate depth x normal
 ```

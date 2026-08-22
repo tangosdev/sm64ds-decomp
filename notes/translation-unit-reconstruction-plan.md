@@ -113,7 +113,7 @@ A compiled object is eligible only when every defined function, object, content 
 
 Add a small staging tree rather than copying all of `src/`:
 
-```text
+```sh
 sm64ds-decomp/
 ├── src/                         # Current production source and promoted TUs
 ├── src_tu/                      # Temporary shadow TUs; not enrolled by default
@@ -216,7 +216,7 @@ Suggested lifecycle states:
 
 One entry point should orchestrate the existing lower-level tools rather than create several competing workflows.
 
-```text
+```sh
 python tools/tubuild.py list
 python tools/tubuild.py inspect ov062/Chuckya
 python tools/tubuild.py create ov062/Chuckya
@@ -292,7 +292,7 @@ Reuse the existing `match.py`, `fdiff.py`, relocation, and ELF-parsing logic rat
 
 Example report:
 
-```text
+```python
 TU ov062/Chuckya
 
 MATCH  Chuckya::~Chuckya          0x021xxxxx  size 0x0xx

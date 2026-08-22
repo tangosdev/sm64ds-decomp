@@ -42,7 +42,7 @@ All five ITCM sources present at the time went `NONE` -> `ok` (eleven now do); t
 
 ## Verifying an ITCM function today
 
-```
+```sh
 python tools/match.py --c src/<sym>.cpp --func <sym> --addr 0x01ff…  --size 0x…  \
     --bin build/build/itcm.bin --base 0x01ff8000 --module itcm --strict-relocs
 ```
@@ -193,7 +193,7 @@ still had 1,476 bytes of unattributed gaps, and the shortfall stayed larger than
 moment the gap-closing in this file's "Count, settled by coverage" section landed, the slack fell
 to 36 bytes and the link died:
 
-```
+```sh
 mwldarm.exe: In section .text in file _dsd_gap@itcm_0.o ,
 mwldarm.exe: the sum of all symbol sizes exceed section size.
 ```
@@ -328,7 +328,7 @@ carved into its own delink object.
 learn. `dsd delink` analyses every function symbol and refuses one whose entry is not a
 prologue, so declaring 0x01ff8df8 a function fails the whole build at step 1 of 6:
 
-```
+```sh
 Error: function func_01ff8df8 could not be analyzed:
   InvalidStart { address: 1ff8df8, ins: Arm(Ins { code: e0211003, op: Eor }) }
 ```
@@ -403,9 +403,9 @@ layout pinned by `SurfaceInfo::CopyNormalTo` at 0x02037dcc). Both are still `fun
 `GetSurfaceInfo` sat at exactly one divergent word through five source variants and a full
 version sweep:
 
-```
-ROM:  ldr r3,[r0]     <- vtable read from the incoming argument register
-ours: ldr r3,[r6]     <- read from the callee-saved copy
+```arm
+ROM:  ldr r3,[r0]    ; <- vtable read from the incoming argument register
+ours: ldr r3,[r6]    ; <- read from the callee-saved copy
 ```
 
 It calls `GetNormal` through the vtable. A hand-rolled `(*(fn**)this)[4](...)` reads `this`
@@ -567,14 +567,14 @@ axes, every one byte-identical to base or worse.** This route is closed; do not 
 **The defect, stated exactly.** The ROM materialises the `lineStart` base *before* its first
 load; we fold the offset into that load and pay for it three instructions later:
 
-```
+```arm
 ROM                        ours
-add r6,r1,#0x38            ldr r2,[r1,#0x38]     <- folded, r1 dies here
+add r6,r1,#0x38            ldr r2,[r1,#0x38]     ;<- folded, r1 dies here
 ldr r2,[r6]                str r1,[sp]
-str r1,[sp]                add r6,r1,#0x38       <- base materialised too late
-asr r4,r2,#6               asr r1,r2,#6          <- s.x steals the freed r1
+str r1,[sp]                add r6,r1,#0x38       ;<- base materialised too late
+asr r4,r2,#6               asr r1,r2,#6          ;<- s.x steals the freed r1
 add r5,r1,#0x54            ...
-                           ldr r2,[sp]           <- ray must be RELOADED for lineEnd
+                           ldr r2,[sp]           ;<- ray must be RELOADED for lineEnd
 ```
 
 Everything downstream in the head follows from that one fold: `r1` dies early, so `s.x`
@@ -635,10 +635,10 @@ before `ldr r2,[r6]` while we folded the offset and let `s.x` steal r1 — **is 
 artifact and does not exist at 2004/b56.** At the right build the head is byte-correct with no
 source change at all:
 
-```
+```arm
 +0x08  add r6,r1,#0x38   OK        +0x1c  add r5,r1,#0x54   OK
 +0x0c  ldr r2,[r6]       OK        +0x20  ldr r1,[r6,#4]    OK
-+0x14  asr r4,r2,#6      OK   <- s.x colours r4, the thing 21 variants could not reach
++0x14  asr r4,r2,#6      OK   ;<- s.x colours r4, the thing 21 variants could not reach
 ```
 
 So the 21 inert variants were chasing a phantom, and "entry-block web ordering is upstream of

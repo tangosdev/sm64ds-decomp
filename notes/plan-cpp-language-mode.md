@@ -206,7 +206,7 @@ ruleset carries `bypass_actors: null` and the deploy key it authenticates with i
 exempt. Fixing that needs repo **admin**. Pushes to `chaos-data` are unaffected, so the baseline
 is banked where CI can actually keep it current. To read it:
 
-```
+```sh
 git show origin/chaos-data:langmode-baseline.json > /tmp/base.json
 python tools/langmode_audit.py --check /tmp/base.json
 ```

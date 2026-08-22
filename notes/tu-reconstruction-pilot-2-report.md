@@ -21,7 +21,7 @@ sources under `src/` remain the sole enrolled owners of
 > together in their candidate original TU context — and this time the merged
 > object emits no vtable, no RTTI, and no destructor of any class it defines.**
 
-```text
+```python
 TU ov002/LevelObjects
 
 MATCH  Stage::LoadClsnAndObjects   0x020fe190  size 0x1ac  relocs 19
@@ -161,7 +161,7 @@ all** and one identical parameter list,
 
 The decisive evidence is a `.data` table this TU owns:
 
-```text
+```python
 data_ov002_0210cbb8   fifteen function pointers
   [ 0] -> 0x020fe8ac  LoadStandardObjects        [ 8] -> 0x020fe5cc  LoadFogObjects
   [ 1] -> 0x020fe6c8  LoadEntranceObjects        [ 9] -> 0x020fe4f0  LoadDoorObjects
@@ -235,7 +235,7 @@ Not inherited from pilot #1. Four trivial functions, this compiler, these flags:
 extern "C" int probe_A(void) { return 0x11111111; }   /* ... B, C, D */
 ```
 
-```text
+```python
 [5] '.text' 0xc  <- probe_D   (LAST in source)
 [6] '.text' 0xc  <- probe_C
 [7] '.text' 0xc  <- probe_B
@@ -333,7 +333,7 @@ merely *uses* a value type with an inline destructor emits one.
 It is not, however, caused by consolidation, and that was checked rather than
 assumed — each legacy object was compiled alone and inventoried:
 
-```text
+```sh
 LoadExitObjects            .text x3   _ZN7Vector3D1Ev, _ZN8Vector3sD1Ev
 LoadTeleportSourceObjects  .text x2   _ZN7Vector3D1Ev
 LoadEntranceObjects        .text x2   _ZN7Vector3D1Ev
@@ -362,7 +362,7 @@ arity cannot coexist in a translation unit, and no cast reconciles them.
 
 The ROM settles it. Disassembling both call sites:
 
-```text
+```arm
 Stage::LoadClsnAndObjects        LoadPathNodeObjects (0x10, the whole function)
   mov r0, #0                       ldr ip, [pc, #4]
   bl  func_0203accc                ldr r0, [r0, #4]

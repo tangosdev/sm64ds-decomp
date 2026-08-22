@@ -15,7 +15,7 @@ Tooling has taken this as far as it can. `tools/resolve_placeholders.py` resolve
 reference by joining the call site's own relocation to the owning module and then to
 that module's symbol table:
 
-```
+```sh
 from:0x021111e8 kind:load to:0x021099e4 module:overlay(2)
 ```
 
@@ -60,7 +60,7 @@ Any of these, per case:
 
 ## Reproducing the list
 
-```
+```sh
 python tools/eligible.py
 python tools/resolve_placeholders.py          # report only; nothing is written
 ```

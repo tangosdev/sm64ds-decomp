@@ -8,12 +8,12 @@ between "it compiles" and 106/106.
 A C++ destructor cannot be compiled alone. `Coin::~Coin()` yields an object with
 **eight** content sections:
 
-```
+```arm
 .text 0x58   _ZN4CoinD0Ev
-.text 0x50   _ZN4CoinD1Ev      <- the only one this file declares
+.text 0x50   _ZN4CoinD1Ev     ; <- the only one this file declares
 .text 0x50   _ZN4CoinD2Ev
 .data 0x10   _ZTV4Coin
-.data 0x6 0x7 0x8 0xc          RTTI record + type-name strings
+.data 0x6 0x7 0x8 0xc         ; RTTI record + type-name strings
 ```
 
 Under the Itanium ABI the class vtable is emitted into the TU defining its key
@@ -53,7 +53,7 @@ later change to the transformation now needs no bump at all.
 **3. The vtable pointer landed 8 bytes high** — 76 functions, 34 modules, and only
 the byte compare could see it:
 
-```
+```c
 Coin::~Coin       +0x4c   rom 021087ec   built 021087f4
 CameraTag::~...   +0x20   rom 021085f8   built 02108600
 ```
@@ -169,7 +169,7 @@ carry both an English and an RTTI name (`_ZTV4Coin` / `_ZTV8daCoin_c`).
 It was wrong. The build went to 101/106 with exactly those 16 files mismatching.
 dsd's own reloc table says why:
 
-```
+```sh
 from:0x021125d8 kind:load to:0x02128338 module:overlays(79,80)
 from:0x02112490 kind:load to:0x0213c5bc module:overlays(6,98)
 ```
