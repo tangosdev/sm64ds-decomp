@@ -59,7 +59,7 @@ struct LightBeam : dActor_c {   /* real member types at the evidenced offsets */
     Model mModel;            /* 0x0d4 */
     dCcAcPos_c mdCcAcPos_c;  /* 0x124 */
     u8  pad_125[0x43];
-    u8  unk_168;             /* 0x168 */
+    u8  mSoundTimer;             /* 0x168 */
     virtual ~LightBeam();
     int Behavior();
     int InitResources();
@@ -209,7 +209,7 @@ int LightBeam::Behavior()
                         if (*(s32*)((char*)o + 0x664) == 0xd) {
                             if (_ZN6Player9StartTalkER7fBase_cb(o, ((Obj*)this), 0)) {
                                 ((Obj*)this)->f164 = (s32)o;
-                                *(s16*)((char*)&unk_168) = 0;
+                                *(s16*)((char*)&mSoundTimer) = 0;
                             }
                         }
                     }

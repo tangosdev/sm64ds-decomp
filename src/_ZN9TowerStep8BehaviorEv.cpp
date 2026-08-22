@@ -20,46 +20,46 @@ int TowerStep::Behavior()
     int kind = param1 & 0xff;
 
     if (kind == 1) {
-        if (DecIfAbove0_Byte(&unk_390) == 0) {
+        if (DecIfAbove0_Byte(&mMoveTimer) == 0) {
             s16 *p = &mPrevAngleY;
             s16 v = *p;
             u8 b = 0x87;
             v = (s16)(v + 0x8000);
             *p = v;
-            unk_390 = b;
+            mMoveTimer = b;
         }
         _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
         UpdateModelPosAndRotY();
         if (_ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000) != 0)
             UpdateClsnPosAndRot();
     } else if (kind == 2) {
-        if (DecIfAbove0_Byte(&unk_390) == 0) {
-            if (unk_392 != 0) {
+        if (DecIfAbove0_Byte(&mMoveTimer) == 0) {
+            if (mMove != 0) {
                 int flag;
                 int bound;
                 int y;
 
                 _ZN8dActor_c9UpdatePosEP5dCc_c(self, 0);
-                bound = unk_37c;
+                bound = mMinPosY;
                 y = mPosY;
                 flag = (y >= bound);
                 if (flag != 0)
                     goto c2_hi;
                 mPosY = (y < bound) ? bound : y;
                 mVertSpeed = 0xa000;
-                if (unk_391 == 0) {
+                if (mJustSteppedOn == 0) {
                     flag = 0;
-                    unk_392 = (u8)flag;
+                    mMove = (u8)flag;
                 }
                 goto c2_after;
             c2_hi:
-                bound = unk_380;
+                bound = mMaxPosY;
                 flag = (y <= bound);
                 if (flag != 0)
                     goto c2_after;
                 mPosY = (y > bound) ? bound : y;
                 mVertSpeed = -0xa000;
-                unk_390 = 0x5a;
+                mMoveTimer = 0x5a;
             }
         }
     c2_after:
@@ -69,10 +69,10 @@ int TowerStep::Behavior()
         if (Vec3_Dist(&mPosX, &unk_068) != 0) {
             unsigned z = 0;
             unsigned r = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-                (unsigned)unk_38c, 3, 0x82, &mCamSpacePosX, (s16)z);
-            unk_38c = (s32)r;
+                (unsigned)mSoundID, 3, 0x82, &mCamSpacePosX, (s16)z);
+            mSoundID = (s32)r;
         }
-        unk_391 = 0;
+        mJustSteppedOn = 0;
     } else {
         _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(self, 0x150000, 0x1000);
     }

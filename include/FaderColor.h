@@ -29,11 +29,12 @@
  */
 #ifdef __cplusplus
 struct FaderColor : FaderBrightness {
-    /* 0x0c. Only its zero/non-zero-ness is observed: AdvanceFade picks a blend
-       step of +0x10 when it is set and -0x10 when it is clear. Kept as unk_00c
-       rather than renamed, because a rename cannot change codegen and belongs in
-       its own commit -- and src/_ZN8dScene_c14StartSceneFadeEjjt.* names it. */
-    u16 unk_00c;
+    /* 0x0c. Only its zero/non-zero-ness is observed here: AdvanceFade picks a
+       blend step of +0x10 when it is set and -0x10 when it is clear. What
+       writes it is src/_ZN8dScene_c14StartSceneFadeEjjt.*, whose parameter is
+       the fade colour -- which is also the name the upstream reference header
+       gives this field, so it is named for that now. */
+    u16 color;
 
     virtual ~FaderColor();          /* key function; see above */
     virtual void AdvanceFade();     /* slot 2 -- the only override */
@@ -47,7 +48,7 @@ struct FaderColor {
     void*  vtable;      /* 0x00 */
     Fix12i currInterp;  /* 0x04 (from Fader) */
     Fix12i speed;       /* 0x08 (from Fader) */
-    u16    unk_00c;     /* 0x0c */
+    u16    color;     /* 0x0c */
 };
 #endif
 

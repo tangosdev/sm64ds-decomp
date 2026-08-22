@@ -24,7 +24,7 @@ int PyramidLift::Render()
         Sub* s = (Sub*)((char*)&mModel1);
         s->m(0);
     }
-    int i = unk_3f8;
+    int i = mNextBullet;
     if (i < 0xa) {
         Elem* e = (Elem*)(((char*)this) + i * 0xc);
         do {

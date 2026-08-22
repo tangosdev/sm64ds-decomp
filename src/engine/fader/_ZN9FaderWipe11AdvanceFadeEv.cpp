@@ -36,7 +36,7 @@ void FaderWipe::AdvanceFade()
     }
     if (*(Fix12i*)((char*)&currInterp) == old) return;
     {
-        u16 color = unk_00c;
+        u16 color = this->color;
         int m = color ? 0x10 : -0x10;
         int prod = *(Fix12i*)((char*)&currInterp) * m;
         int r = prod >> 12;

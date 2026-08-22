@@ -39,4 +39,7 @@ struct ClockPaintingHandShort {
 #endif
 };
 
+typedef char ClockPaintingHandShort_size_must_be_0x128[
+    sizeof(struct ClockPaintingHandShort) == 0x128 ? 1 : -1];
+
 #endif

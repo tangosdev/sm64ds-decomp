@@ -24,6 +24,10 @@ struct dScMgBomroom_c : dScMgBase_c {
     u8  pad_62d4[0x1a];
     u16 unk_62ee;            /* 0x62ee */
     u16 unk_62f0;            /* 0x62f0 */
+    /* trailing extent the ROM's `new dScMgBomroom_c` literal proves; see tools/opnew_sizes.py */
+    u8 pad_62f4[0xc];
 };
+
+typedef char dScMgBomroom_c_size_must_be_0x6300[sizeof(struct dScMgBomroom_c) == 0x6300 ? 1 : -1];
 
 #endif

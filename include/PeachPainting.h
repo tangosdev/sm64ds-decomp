@@ -21,4 +21,6 @@ struct PeachPainting {
 #endif
 };
 
+typedef char PeachPainting_size_must_be_0x128[sizeof(struct PeachPainting) == 0x128 ? 1 : -1];
+
 #endif

@@ -38,6 +38,9 @@
 #ifndef SIGNPOST_H
 #define SIGNPOST_H
 #include "types.h"
+#include "Model.h"
+#include "dBgW_KcMbg.h"
+#include "dBgCh_Actr.h"
 
 /* Player is only ever pointed at from here, so a declaration is enough --
  * no definition is pulled in. The typedef keeps the member spelled the
@@ -66,8 +69,11 @@ struct SignPost : dBgActor_c {
     s16 unk_3be;                /* 0x3be */
     s16 unk_3c0;                /* 0x3c0 */
     u8  pad_3c2[0x6];
-    u8  mWithMeshClsn;          /* 0x3c8 */
-    u8  pad_3c9[0x1c5];
+    /* dBgCh_Actr member. The cartridge's own ~SignPost calls _ZN10dBgCh_ActrD1Ev at
+       +0x3c8 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgCh_Actr mWithMeshClsn;            /* 0x3c8 */
+    u8  pad_584[0xa];
     u8  unk_58e;                /* 0x58e */
     u8  unk_58f;                /* 0x58f */
     u8  unk_590;                /* 0x590 */
@@ -136,10 +142,14 @@ struct SignPost {
     u8  pad_0a4[0xc];
     s32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x20];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1c7];
+    /* Model member. The cartridge's own ~SignPost calls _ZN5ModelD1Ev at +0x0d4
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    Model mModel;            /* 0x0d4 */
+    /* dBgW_KcMbg member. The cartridge's own ~SignPost calls _ZN10dBgW_KcMbgD1Ev at
+       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
     u8  unk_2ec;            /* 0x2ec */
     u8  pad_2ed[0x33];
     u8  mdCcAc_c;            /* 0x320 */
@@ -153,8 +163,11 @@ struct SignPost {
     s16 unk_3be;            /* 0x3be */
     s16 unk_3c0;            /* 0x3c0 */
     u8  pad_3c2[0x6];
-    u8  mWithMeshClsn;            /* 0x3c8 */
-    u8  pad_3c9[0x1c5];
+    /* dBgCh_Actr member. The cartridge's own ~SignPost calls _ZN10dBgCh_ActrD1Ev at
+       +0x3c8 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgCh_Actr mWithMeshClsn;            /* 0x3c8 */
+    u8  pad_584[0xa];
     u8  unk_58e;            /* 0x58e */
     u8  unk_58f;            /* 0x58f */
     u8  unk_590;            /* 0x590 */

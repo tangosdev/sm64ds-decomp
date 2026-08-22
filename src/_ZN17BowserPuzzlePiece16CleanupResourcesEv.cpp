@@ -13,7 +13,7 @@ int BowserPuzzlePiece::CleanupResources()
 {
     unsigned char idx;
     ((dBgW *)((char *)&mMovingMeshCollider))->Disable();
-    idx = *(unsigned char *)((char *)&unk_337);
+    idx = *(unsigned char *)((char *)&mType);
     ((SharedFilePtr *)(data_ov064_0211adc8[idx]))->Release();
     ((SharedFilePtr *)(&data_ov064_0211c800))->Release();
     return 1;

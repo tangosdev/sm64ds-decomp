@@ -14,19 +14,19 @@ extern void _ZN5dCc_c6UpdateEv(void* self);
 int WaterDiamond::Behavior()
 {
     func_ov029_02111850(((char*)this));
-    if (unk_158 == 0) return 1;
+    if (mWaterID == 0) return 1;
     func_ov029_021117ac(((char*)this));
-    if (unk_15d != 0) {
+    if (mActive != 0) {
         char* p;
         s16* a = (s16*)(((int)((char*)this) + 0x8e));
         *a = *a + 0x400;
-        p = _ZN8dActor_c10FindWithIDEj(unk_158);
+        p = _ZN8dActor_c10FindWithIDEj(mWaterID);
         if (p != 0) {
             if (mPosY == *(int*)(p+0x60)) {
-                if (mAngleY == 0) unk_15d = 0;
+                if (mAngleY == 0) mActive = 0;
             }
             if (mPosY != *(int*)(p+0x334)) {
-                unk_15d = 0;
+                mActive = 0;
                 mAngleY = 0;
             }
         }

@@ -2,6 +2,7 @@
 #define KNOCKDOWNPLANK_H
 
 #include "types.h"
+#include "dBgW_KcMbg.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
@@ -25,14 +26,14 @@ struct KnockDownPlank : dBgActor_c {
     s32 unk_378;                      /* 0x378 */
     s32 unk_37c;                      /* 0x37c */
     s32 unk_380;                      /* 0x380 */
-    s32 unk_384;                      /* 0x384 */
-    s32 unk_388;                      /* 0x388 */
-    s32 unk_38c;                      /* 0x38c */
-    u16 unk_390;                      /* 0x390 */
-    s16 unk_392;                      /* 0x392 */
-    s16 unk_394;                      /* 0x394 */
-    s8 unk_396;                       /* 0x396 */
-    u8 unk_397;                       /* 0x397 */
+    s32 mFrontFloorY;                      /* 0x384 */
+    s32 mOriginalPosY;                      /* 0x388 */
+    s32 mJumpSpeed;                      /* 0x38c */
+    u16 mWobbleAng;                      /* 0x390 */
+    s16 mFallAngVel;                      /* 0x392 */
+    s16 mWobbleTimer;                      /* 0x394 */
+    s8 mKnockDir;                       /* 0x396 */
+    u8 mState;                       /* 0x397 */
     /* KnockDownPlank_Spawn, the one factory storing _ZTV14KnockDownPlank
        (ov015:0x02114420), calls fBase_c::operator new(0x39c). The field span
        stopping at 0x398 is a lower bound, not the size. */
@@ -69,21 +70,24 @@ struct KnockDownPlank {
     /* Model member, named by _ZN5ModelD1Ev at +0xd4 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
+    /* dBgW_KcMbg member. The cartridge's own ~KnockDownPlank calls _ZN10dBgW_KcMbgD1Ev
+       at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x34];
     ShadowModel mShadowModel; /* 0x320 */
     u8  pad_348[0x30];
     s32 unk_378;            /* 0x378 */
     s32 unk_37c;            /* 0x37c */
     s32 unk_380;            /* 0x380 */
-    s32 unk_384;            /* 0x384 */
-    s32 unk_388;            /* 0x388 */
-    s32 unk_38c;            /* 0x38c */
-    u16 unk_390;            /* 0x390 */
-    s16 unk_392;            /* 0x392 */
-    s16 unk_394;            /* 0x394 */
-    s8  unk_396;            /* 0x396 */
-    u8  unk_397;            /* 0x397 */
+    s32 mFrontFloorY;            /* 0x384 */
+    s32 mOriginalPosY;            /* 0x388 */
+    s32 mJumpSpeed;            /* 0x38c */
+    u16 mWobbleAng;            /* 0x390 */
+    s16 mFallAngVel;            /* 0x392 */
+    s16 mWobbleTimer;            /* 0x394 */
+    s8  mKnockDir;            /* 0x396 */
+    u8  mState;            /* 0x397 */
 };
 
 #endif /* __cplusplus */

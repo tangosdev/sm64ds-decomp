@@ -20,16 +20,16 @@ int SpinningPlatform::Behavior()
     unsigned char idx = data_0209f2c0[0];
     mPrevAngleX = data_ov035_02112b80[idx];
     if (idx == 2) {
-        if (DecIfAbove0_Short((char *)&unk_320) == 0) {
+        if (DecIfAbove0_Short((char *)&mRandTimer) == 0) {
             int r = (unsigned short)((unsigned)RandomIntInternal((char*)data_0209e650) >> 16);
-            if ((unsigned)r >= 0x7fff) unk_31e = 1;
-            else unk_31e = -1;
-            unk_320 = (short)((r % 4 + 1) * 0x1e);
-            unk_322 = unk_320;
+            if ((unsigned)r >= 0x7fff) mRandDirection = 1;
+            else mRandDirection = -1;
+            mRandTimer = (short)((r % 4 + 1) * 0x1e);
+            mRandFrames = mRandTimer;
         } else {
-            if ((int)unk_320 < (int)unk_322 - 5) {
+            if ((int)mRandTimer < (int)mRandFrames - 5) {
                 short *q = (short*)(((int)((char *)this) + 0x92));
-                *q = (short)(*q * unk_31e);
+                *q = (short)(*q * mRandDirection);
             } else {
                 mPrevAngleX = 0;
             }

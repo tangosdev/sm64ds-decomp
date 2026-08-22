@@ -75,4 +75,6 @@ struct Camera {
 #endif
 };
 
+typedef char Camera_size_must_be_0x1a8[sizeof(struct Camera) == 0x1a8 ? 1 : -1];
+
 #endif

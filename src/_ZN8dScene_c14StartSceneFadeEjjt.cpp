@@ -16,5 +16,5 @@ extern FaderColor data_0209f5e8;
 void dScene_c::StartSceneFade(u32 sceneID, u32 param, u16 fadeColor)
 {
     if (SetSceneToSpawn(sceneID, param))
-        data_0209f5e8.unk_00c = fadeColor;
+        data_0209f5e8.color = fadeColor;
 }

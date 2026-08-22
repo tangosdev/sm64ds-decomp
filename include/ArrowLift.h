@@ -17,6 +17,8 @@ struct ArrowLift {
     u8  mMovingMeshCollider;            /* 0x124 */
     u8  pad_125[0x1fb];
     s32 unk_320;            /* 0x320 */
+    /* trailing extent the ROM's `new ArrowLift` literal proves; see tools/opnew_sizes.py */
+    u8 pad_324[0x4];
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -25,5 +27,7 @@ struct ArrowLift {
     int Render();
 #endif
 };
+
+typedef char ArrowLift_size_must_be_0x328[sizeof(struct ArrowLift) == 0x328 ? 1 : -1];
 
 #endif

@@ -25,6 +25,6 @@ int ExtendingPlatform::InitResources()
   func_020396c0(((char*)this)+0x158, 4);
   mCollider.unk_4d = 1;
   ((dBgW *)(((char*)this)+0x158))->Enable((dActor_c *)(((char*)this)));
-  unk_0d4 = 1;
+  mGrowing = 1;
   return 1;
 }

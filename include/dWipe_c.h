@@ -25,7 +25,7 @@
  *     (func_0202ed14, dWipe_c's own field-init helper called from the
  *     constructor), and 0x29 rounds up to the 4-byte-aligned 0x2c.
  *
- * MEMBERS. FaderColor's own dsize (vptr+currInterp+speed+unk_00c) is 0xe;
+ * MEMBERS. FaderColor's own dsize (vptr+currInterp+speed+color) is 0xe;
  * its sizeof of 0x10 leaves a 2-byte tail-padding gap at 0xe..0xf that the
  * Itanium ABI lets a derived class reuse, and dWipe_c's constructor helper
  * (func_0202ed14) does: it writes single bytes at both 0xe and 0xf before
@@ -94,7 +94,7 @@ struct dWipe_c {
     void*  vtable;      /* 0x00 */
     Fix12i currInterp;  /* 0x04 (from Fader) */
     Fix12i speed;       /* 0x08 (from Fader) */
-    u16    unk_00c;     /* 0x0c (from FaderColor) */
+    u16    color;       /* 0x0c (from FaderColor) */
     u8     unk_00e;     /* 0x0e */
     s8     unk_00f;     /* 0x0f */
     s32    unk_010;     /* 0x10 */

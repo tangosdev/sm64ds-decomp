@@ -51,9 +51,9 @@ int KoopaTheQuick::InitResources()
     *(int *)((char *)&mScaleZ) = 0x14cc;
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj((char *)((void *)this) + 0x110, ((void *)this), 0x78000, 0x12c000, 0x800004, 0);
     zero = 0;
-    *(int *)((char *)&unk_38c) = zero;
+    *(int *)((char *)&mState) = zero;
     *(s16 *)((char *)&unk_3aa) = (s16)zero;
-    *(unsigned char *)((char *)&unk_3b4) = (unsigned char)zero;
+    *(unsigned char *)((char *)&mHasFinished) = (unsigned char)zero;
     *(int *)((char *)&unk_39c) = *(int *)((char *)&mPosX);
     *(int *)((char *)&unk_3a0) = *(int *)((char *)&mPosY);
     *(int *)((char *)&unk_3a4) = *(int *)((char *)&mPosZ);
@@ -61,27 +61,27 @@ int KoopaTheQuick::InitResources()
     *(int *)((char *)&mTerminalVelocity) = -0x3c000;
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_((char *)((void *)this) + 0x144, ((void *)this), 0x78000, 0x78000, 0, 0);
     _ZN7PathPtr6FromIDEj((char *)((void *)this) + 0x3d8, *(unsigned int *)((char *)&param1) & 0xf);
-    *(int *)((char *)&unk_3b8) = _ZNK7PathPtr8NumNodesEv((char *)&mPathPtr);
-    *(int *)((char *)&unk_3bc) = zero;
+    *(int *)((char *)&mNumPathPts) = _ZNK7PathPtr8NumNodesEv((char *)&mPathPtr);
+    *(int *)((char *)&mCurPathPt) = zero;
     *(int *)((char *)&unk_3c0) = *(int *)((char *)&mPosX);
     *(int *)((char *)&unk_3c4) = *(int *)((char *)&mPosY);
     *(int *)((char *)&unk_3c8) = *(int *)((char *)&mPosZ);
-    _ZNK7PathPtr7GetNodeER7Vector3j((char *)((void *)this) + 0x3d8, (char *)((void *)this) + 0x3cc, *(unsigned int *)((char *)&unk_3bc));
-    *(unsigned char *)((char *)&unk_3ac) = (unsigned char)zero;
+    _ZNK7PathPtr7GetNodeER7Vector3j((char *)((void *)this) + 0x3d8, (char *)((void *)this) + 0x3cc, *(unsigned int *)((char *)&mCurPathPt));
+    *(unsigned char *)((char *)&mHasPlayerUsedCannon) = (unsigned char)zero;
     b = (unsigned char)((((unsigned int)*(int *)((char *)&param1) >> 4) + 1) & 0x3f);
-    *(unsigned char *)((char *)&unk_3ad) = b;
+    *(unsigned char *)((char *)&mPathPtToJumpAt1) = b;
     b = (unsigned char)((((unsigned int)*(int *)((char *)&param1) >> 10) + 1) & 0x3f);
-    *(unsigned char *)((char *)&unk_3ae) = b;
-    if (*(unsigned char *)((char *)&unk_3ad) <= 1)
-        *(unsigned char *)((char *)&unk_3ad) = 0xff;
-    if (*(unsigned char *)((char *)&unk_3ae) <= 1)
-        *(unsigned char *)((char *)&unk_3ae) = 0xff;
-    *(unsigned char *)((char *)&unk_3b1) = (unsigned char)(*(s16 *)((char *)&mAngleX) & 0xf);
-    b = *(unsigned char *)((char *)&unk_3b1);
-    *(unsigned char *)((char *)&unk_3b0) = _ZN8dActor_c9TrackStarEjj(((void *)this), b, 2);
-    *(int *)((char *)&unk_394) = zero;
-    *(int *)((char *)&unk_398) = zero;
-    *(unsigned char *)((char *)&unk_3b5) = (unsigned char)zero;
-    *(unsigned char *)((char *)&unk_3b6) = (unsigned char)zero;
+    *(unsigned char *)((char *)&mPathPtToJumpAt2) = b;
+    if (*(unsigned char *)((char *)&mPathPtToJumpAt1) <= 1)
+        *(unsigned char *)((char *)&mPathPtToJumpAt1) = 0xff;
+    if (*(unsigned char *)((char *)&mPathPtToJumpAt2) <= 1)
+        *(unsigned char *)((char *)&mPathPtToJumpAt2) = 0xff;
+    *(unsigned char *)((char *)&mStarID) = (unsigned char)(*(s16 *)((char *)&mAngleX) & 0xf);
+    b = *(unsigned char *)((char *)&mStarID);
+    *(unsigned char *)((char *)&mTrackedStar) = _ZN8dActor_c9TrackStarEjj(((void *)this), b, 2);
+    *(int *)((char *)&mFlagID) = zero;
+    *(int *)((char *)&mPlayer) = zero;
+    *(unsigned char *)((char *)&mIsRacing) = (unsigned char)zero;
+    *(unsigned char *)((char *)&mIsTalkingToMario) = (unsigned char)zero;
     return 1;
 }

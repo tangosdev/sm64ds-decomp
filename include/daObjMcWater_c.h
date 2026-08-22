@@ -12,6 +12,10 @@ struct daObjMcWater_c {
     s16 unk_08e;            /* 0x08e */
     u8  pad_090[0x29c];
     s32 unk_32c;            /* 0x32c */
+    /* trailing extent the ROM's `new daObjMcWater_c` literal proves; see tools/opnew_sizes.py */
+    u8 pad_330[0x8];
 };
+
+typedef char daObjMcWater_c_size_must_be_0x338[sizeof(struct daObjMcWater_c) == 0x338 ? 1 : -1];
 
 #endif

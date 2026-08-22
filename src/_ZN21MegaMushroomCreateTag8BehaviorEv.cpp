@@ -8,11 +8,6 @@ typedef int Fix12i;
 
 extern "C" Fix12i Vec3_Dist(const Vector3 *a, const Vector3 *b);
 
-struct dCc_c {
-    void Clear();
-    void Update();
-};
-
 struct fBase_c {
     void MarkForDestruction();
 };
@@ -22,9 +17,7 @@ struct dActor_c : fBase_c {
     unsigned short actorID;   /* 0xc */
     char pad1[0x5c - 0xe];
     Vector3 pos;              /* 0x5c */
-    char pad2[0xd4 - 0x68];
-    dCc_c clsn;        /* 0xd4 */
-    char pad2b[0x108 - 0xd5];
+    char pad2[0x108 - 0x68];
     unsigned char b108;       /* 0x108 */
     unsigned char b109;       /* 0x109 */
     unsigned char b10a;       /* 0x10a */
@@ -71,7 +64,7 @@ int MegaMushroomCreateTag::Behavior()
             func_ov002_020b47ec(((dActor_c *)this));
         }
     }
-    ((dActor_c *)this)->clsn.Clear();
-    ((dActor_c *)this)->clsn.Update();
+    mdCcAc_c.Clear();
+    mdCcAc_c.Update();
     return 1;
 }

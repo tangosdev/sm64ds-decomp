@@ -1,4 +1,5 @@
 //cpp
+#include "WorkElevator.h"
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned);
 extern void _ZN10dBgActor_cC2Ev(void*);
@@ -9,7 +10,7 @@ extern void _ZN5ModelC1Ev(void*);
 extern void _ZN10dBgW_KcMbgD1Ev(void*);
 extern void _ZN10dBgW_KcMbgC1Ev(void*);
 void* WorkElevator_Spawn(void){
-  char* c = (char*)_ZN7fBase_cnwEj(0xc80);
+  char* c = (char*)_ZN7fBase_cnwEj(sizeof(struct WorkElevator));
   if(c){
     _ZN10dBgActor_cC2Ev(c);
     *(int*)c = (int)_ZTV12WorkElevator;

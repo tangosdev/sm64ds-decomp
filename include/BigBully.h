@@ -15,9 +15,9 @@
 struct BigBully : daOts_c {
     u8  pad_398[0x62];
     u16 mSecretSoundCounter;        /* 0x3fa */
-    u8  unk_3fc;                    /* 0x3fc */
+    u8  mStarID;                    /* 0x3fc */
     u8  unk_3fd;                    /* 0x3fd */
-    u8  unk_3fe;                    /* 0x3fe */
+    u8  mNumBulliesKilled;                    /* 0x3fe */
     u8  pad_3ff[0x1];
 
     virtual ~BigBully();

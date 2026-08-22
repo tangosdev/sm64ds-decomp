@@ -12,7 +12,7 @@ extern void _ZN5dCc_c6UpdateEv(void* a);
 int PyramidTag::Behavior()
 {
   if(mdCcAc_c.otherOwner != 0){
-    unsigned int id = unk_108;
+    unsigned int id = mPyramidTopID;
     if(id == 0){
       _ZN7fBase_c18MarkForDestructionEv(((char*)this));
       return 1;

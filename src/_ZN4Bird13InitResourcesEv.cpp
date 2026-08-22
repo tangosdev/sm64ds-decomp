@@ -24,7 +24,7 @@ int Bird::InitResources()
         *p60 = y + 0xa000;
         mVertAccel = zero;
         mTerminalVelocity = -0x32000;
-        unk_180 = 1;
+        mIsLeader = 1;
         mOwnerID = uniqueID;
         mHomePos.x = mPosX;
         mHomePos.y = mPosY;

@@ -19,7 +19,7 @@ struct Bird : dActor_c {
     u8          pad_16c[0xc];
     u32         mOwnerID;        /* 0x178 */
     s32         mState;          /* 0x17c */
-    u8          unk_180;         /* 0x180 */
+    u8          mIsLeader;         /* 0x180 */
     u8          pad_181[0x3];
 
     virtual ~Bird();

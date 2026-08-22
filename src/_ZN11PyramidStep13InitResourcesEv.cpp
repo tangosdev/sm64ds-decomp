@@ -36,8 +36,8 @@ int PyramidStep::InitResources()
         int v = 0x5000;
         int k = (*(s32 *)&param1) & 3;
         mVertSpeed = -v;
-        unk_372 = 0;
-        unk_370 = 0;
+        mState = 0;
+        mStateTimer = 0;
         switch (k) {
         case 0:
             break;
@@ -47,7 +47,7 @@ int PyramidStep::InitResources()
             break;
         case 2:
             *(int*)(((int)((char *)this) + 0x60)) -= 0x1f4000;
-            unk_372 = 1;
+            mState = 1;
             mVertSpeed = v;
             break;
         }

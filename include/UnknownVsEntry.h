@@ -42,4 +42,6 @@ struct UnknownVsEntry {
 #endif
 };
 
+typedef char UnknownVsEntry_size_must_be_0xf48[sizeof(struct UnknownVsEntry) == 0xf48 ? 1 : -1];
+
 #endif

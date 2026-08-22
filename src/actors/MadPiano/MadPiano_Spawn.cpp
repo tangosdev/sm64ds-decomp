@@ -1,4 +1,5 @@
 //cpp
+#include "MadPiano.h"
 extern "C" {
 void* _ZN7fBase_cnwEj(unsigned int);
 void _ZN10dBgActor_cC2Ev(void*);
@@ -10,7 +11,7 @@ void _ZN10dCcAcPos_cD1Ev(void*);
 void _ZN10dBgCh_ActrC1Ev(void*);
 extern int _ZTV8MadPiano[];
 void* MadPiano_Spawn(void) {
-  char* r4 = (char*)_ZN7fBase_cnwEj(0x6e4);
+  char* r4 = (char*)_ZN7fBase_cnwEj(sizeof(struct MadPiano));
   if (r4) {
     _ZN10dBgActor_cC2Ev(r4);
     *(int*)r4 = (int)_ZTV8MadPiano;

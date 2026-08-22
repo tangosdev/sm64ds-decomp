@@ -6,6 +6,9 @@
 #define PRINCESSPEACH_H
 #include "types.h"
 #include "ModelAnim.h"
+#include "ShadowModel.h"
+#include "dCcAc_c.h"
+#include "dBgCh_Actr.h"
 
 struct PrincessPeach {
     u8  pad_000[0xd4];
@@ -14,13 +17,25 @@ struct PrincessPeach {
        stopped short of the object, so the member also takes over mAnimation (+0x50 = the
        Animation base), which the header declared separately inside it. */
     ModelAnim mModelAnim;            /* 0x0d4 */
-    u8  mShadowModel;            /* 0x138 */
-    u8  pad_139[0x27];
-    u8  mdCcAc_c;            /* 0x160 */
-    u8  pad_161[0x33];
-    u8  mWithMeshClsn;            /* 0x194 */
-    u8  pad_195[0x1bf];
+    /* ShadowModel member, named by the class's own destructor calling
+       ShadowModel's D1 at +0x138 -- a relocation the ROM build
+       checks. Was a u8 marker. [_ZN13PrincessPeachD0Ev.c] */
+    ShadowModel mShadowModel;            /* 0x138 */
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x160 -- a relocation the ROM build
+       checks. Was a u8 marker. [_ZN13PrincessPeachD0Ev.c] */
+    dCcAc_c mdCcAc_c;            /* 0x160 */
+    /* dBgCh_Actr member, named by the class's own destructor calling
+       dBgCh_Actr's D1 at +0x194 -- a relocation the ROM build
+       checks. Was a u8 marker. [_ZN13PrincessPeachD0Ev.c] */
+    dBgCh_Actr mWithMeshClsn;            /* 0x194 */
+    u8  pad_350[0x4];
     s32 unk_354;            /* 0x354 */
+    /* Trailing remainder, 0x14 bytes. All three markers are typed and the last
+       field the five recovered functions touch ends at 0x358;
+       PrincessPeach_Spawn allocates 0x36c. The reference does not document
+       this class's members. */
+    u8  pad_358[0x14];
 #ifdef __cplusplus
     /* methods */
     int Render();
@@ -30,5 +45,7 @@ struct PrincessPeach {
     int InitResources();
 #endif
 };
+
+typedef char PrincessPeach_size_must_be_0x36c[sizeof(struct PrincessPeach) == 0x36c ? 1 : -1];
 
 #endif

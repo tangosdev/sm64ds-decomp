@@ -86,19 +86,19 @@ int Dorrie::InitResources()
         unk_1180 = mPosX;
         unk_1184 = mPosY;
         unk_1188 = mPosZ;
-        unk_11b2 = 0;
-        unk_11b5 = 0;
-        unk_118c = 0;
-        unk_1190 = 0;
-        unk_11ac = 0;
-        unk_11a8 = unk_11ac;
+        mStateTimer = 0;
+        mClsnState = 0;
+        mClsnPlayer = 0;
+        mRider = 0;
+        mSinkHeight = 0;
+        mPushDownHeight = mSinkHeight;
     }
     if ((mParam & 0xff) == 1)
-        unk_0e8 = 1;
+        mHasCap = 1;
     else
-        unk_0e8 = 0;
-    unk_0d4 = 0;
-    if (unk_0e8 != 0) {
+        mHasCap = 0;
+    mCap = 0;
+    if (mHasCap != 0) {
         unk_0d8 = 0;
         unk_0dc = 0;
         unk_0e0 = 0;
@@ -107,10 +107,10 @@ int Dorrie::InitResources()
             void* a = _ZN8dActor_c5SpawnEjjRK7Vector3PK10Vector3_16as(
                 0xa9, 0, ((char*)this) + 0x5c, ((char*)this) + 0x8c, mAreaId, -1);
             if (a != 0) {
-                unk_0d4 = (int)a;
+                mCap = (int)a;
                 *(int*)((char*)a + 0x174) = (int)((char*)this);
             } else {
-                unk_0e8 = 0;
+                mHasCap = 0;
             }
         }
     }

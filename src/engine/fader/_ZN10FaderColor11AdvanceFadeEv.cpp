@@ -14,7 +14,7 @@ void FaderColor::AdvanceFade()
     _ZN5Fader13AdvanceInterpEv(((char*)this));
     if (currInterp == old) return;
     {
-        unsigned short color = unk_00c;
+        unsigned short color = this->color;
         int m = color ? 0x10 : -0x10;
         int r = (currInterp * m) >> 12;
         if (r != 0) {

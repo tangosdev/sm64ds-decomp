@@ -10,7 +10,7 @@ extern void func_ov064_02116ec0(char* c);
 
 int Bully::InitResources()
 {
-    unk_3fc = 0;
+    mBigBullyID = 0;
     mFileTable = (int)&data_ov064_0211b834;
     func_ov064_02116ec0(((char*)this));
 }

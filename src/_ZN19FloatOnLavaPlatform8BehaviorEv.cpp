@@ -12,16 +12,16 @@ extern "C" void func_020393a4(int* p, int v);
 int FloatOnLavaPlatform::Behavior()
 {
     func_020393a4((int*)((char*)&(*(u8 *)&mMeshCollider)), 0x150000);
-    if (unk_324) {
+    if (mHadClsn) {
         int* py = (int*)(((int)((char*)this) + 0x60));
         *py = *py - 0x2000;
-        int lim = unk_320 - 0xc8000;
+        int lim = mMaxPosY - 0xc8000;
         if (mPosY < lim) mPosY = lim;
-        unk_324 = 0;
+        mHadClsn = 0;
     } else {
         int* py = (int*)(((int)((char*)this) + 0x60));
         *py = *py + 0x2000;
-        int lim = unk_320;
+        int lim = mMaxPosY;
         if (mPosY > lim) mPosY = lim;
     }
     _ZN10dBgActor_c21UpdateModelPosAndRotYEv(((char*)this));

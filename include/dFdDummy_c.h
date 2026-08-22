@@ -62,7 +62,7 @@ struct dFdDummy_c {
     void*  vtable;      /* 0x00 */
     Fix12i currInterp;  /* 0x04 (from Fader) */
     Fix12i speed;       /* 0x08 (from Fader) */
-    u16    unk_00c;     /* 0x0c (from FaderColor) */
+    u16    color;       /* 0x0c (from FaderColor) */
 };
 #endif
 

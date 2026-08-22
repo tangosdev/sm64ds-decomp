@@ -2,14 +2,14 @@
 // @symbol _ZN21ArmedRotatingPlatform8BehaviorEv
 /* recovered: named members + shared header, real C++ method
  *
- * Spin by unk_31e a frame; stop and switch the collider off once the actor is
+ * Spin by mAngVelY a frame; stop and switch the collider off once the actor is
  * flagged; otherwise follow the model and, when the player is close enough to
  * matter, the collision mesh too.
  *
  * Three shadow declarations are gone -- a `typedef int Fix12` and stand-in
  * `dBgW` and `dBgActor_c` structs -- along with the raw offsets they
  * served. `this + 0x8e` is dActor_c::mAngleY, and the `t[0x1e/2]` read off
- * `this + 0x300` was this class's own unk_31e reached the long way round.
+ * `this + 0x300` was this class's own mAngVelY reached the long way round.
  *
  * IsClsnInRange keeps its mangled spelling: the name carries Fix12<int> by
  * value, wall 6az, so a real call would not reproduce the call site.
@@ -24,7 +24,7 @@ int ArmedRotatingPlatform::Behavior()
        address into a register and reuses it for the load and the store, which
        is what the ROM does here. That is a per-SITE fact -- the expanded
        spelling is the matching one in Player::St_WallJump_Init. */
-    mAngleY += unk_31e;
+    mAngleY += mAngVelY;
 
     /* The temporary is load-bearing: the ROM materialises the predicate with
        movne/moveq and then tests it, where a direct `if` folds the two. */

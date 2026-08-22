@@ -2,6 +2,8 @@
 #define BLUECOINSWITCH_H
 
 #include "types.h"
+#include "Model.h"
+#include "dBgW_KcMbg.h"
 
 /* Derives from dBgActor_c: the destructor stores this class's vtable, then
  * dBgActor_c's -- inlined -- then destroys the dBgW_KcMbg at 0x124 and
@@ -64,10 +66,14 @@ struct BlueCoinSwitch {
        after the switch stops claiming membership. */
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1c7];
+    /* Model member. The cartridge's own ~BlueCoinSwitch calls _ZN5ModelD1Ev at +0x0d4
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    Model mModel;            /* 0x0d4 */
+    /* dBgW_KcMbg member. The cartridge's own ~BlueCoinSwitch calls _ZN10dBgW_KcMbgD1Ev
+       at +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
     /* Real type, not a marker: InitResources hands it to
        dBgW_KcMbg::SetFile as the collider's transform. */
     Matrix4x3 mMatrix;            /* 0x2ec */

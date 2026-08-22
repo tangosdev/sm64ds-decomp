@@ -71,4 +71,6 @@ struct Exit {
 #endif
 };
 
+typedef char Exit_size_must_be_0x104[sizeof(struct Exit) == 0x104 ? 1 : -1];
+
 #endif

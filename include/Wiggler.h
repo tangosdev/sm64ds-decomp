@@ -41,6 +41,8 @@ struct Wiggler : dEnemyBase_c {
     dCcAcPos_c mdCc_cs2[5];    /* 0x5b8 */
     u8  pad_6f8[0x10];
     dBgCh_Actr mWithMeshClsn;                      /* 0x708 */
+    /* trailing extent the ROM's `new Wiggler` literal proves; see tools/opnew_sizes.py */
+    u8 pad_8c4[0x24];
 
     virtual ~Wiggler();
 
@@ -49,12 +51,16 @@ struct Wiggler : dEnemyBase_c {
     int Render();
 };
 
+typedef char Wiggler_size_must_be_0x8e8[sizeof(struct Wiggler) == 0x8e8 ? 1 : -1];
+
 #else
 
 /* The same object for a C translation unit, flat. */
 struct Wiggler {
     u8  pad_000[0x708];
     u8  mWithMeshClsn[0x1bc];      /* 0x708 */
+    /* trailing extent the ROM's `new Wiggler` literal proves; see tools/opnew_sizes.py */
+    u8 pad_8c4[0x24];
 };
 
 #endif /* __cplusplus */

@@ -17,10 +17,10 @@ struct TreasureChest {
     ModelAnim mModelAnim;            /* 0x0d4 */
     dCcAc_c mdCcAc_c;         /* 0x138 */
     u8  pad_16c[0x6];
-    u8  unk_172;            /* 0x172 */
+    u8  mOrder;            /* 0x172 */
     u8  pad_173[0x1];
-    u8  unk_174;            /* 0x174 */
-    u8  unk_175;            /* 0x175 */
+    u8  mStarID;            /* 0x174 */
+    u8  mTrackedStarID;            /* 0x175 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -29,5 +29,7 @@ struct TreasureChest {
     int Render();
 #endif
 };
+
+typedef char TreasureChest_size_must_be_0x178[sizeof(struct TreasureChest) == 0x178 ? 1 : -1];
 
 #endif

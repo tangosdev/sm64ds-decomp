@@ -29,11 +29,11 @@ int PyramidTop::InitResources()
     unk_3a0 = mPosX;
     unk_3a4 = mPosY;
     unk_3a8 = mPosZ;
-    unk_3b0 = 0;
-    unk_3b6 = 0;
-    unk_3b7 = 0;
-    unk_3ac = 0;
-    unk_3b4 = 0;
+    mAngVelY = 0;
+    mNumTagsTriggered = 0;
+    mState = 0;
+    mSpinParticleID = 0;
+    mSoundTimer = 0;
     _ZN5Event8ClearBitEj(0xe);
     return 1;
 }

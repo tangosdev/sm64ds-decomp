@@ -48,12 +48,12 @@ struct Trap : dBgActor_c {
        numbered pair is a flat-struct-only convention). */
     Model mModel;                     /* 0x320 */
     u8  pad_370[0x30];
-    s32 unk_3a0;                      /* 0x3a0 */
-    s32 unk_3a4;                      /* 0x3a4 */
-    u16 unk_3a8;                      /* 0x3a8 */
-    u8  unk_3aa;                      /* 0x3aa */
-    u8  unk_3ab;                      /* 0x3ab */
-    s32 unk_3ac;                      /* 0x3ac */
+    s32 mState;                      /* 0x3a0 */
+    s32 mPlayerDist;                      /* 0x3a4 */
+    u16 mOpenSpeed;                      /* 0x3a8 */
+    u8  mTrapActive;                      /* 0x3aa */
+    u8  mIsSpawner;                      /* 0x3ab */
+    s32 mSpawnerID;                      /* 0x3ac */
 
     /* --- vtable --- */
     virtual ~Trap();
@@ -82,12 +82,12 @@ struct Trap {
     u8  pad_090[0x3c];
     s8  unk_0cc;            /* 0x0cc */
     u8  pad_0cd[0x2d3];
-    s32 unk_3a0;            /* 0x3a0 */
-    s32 unk_3a4;            /* 0x3a4 */
-    u16 unk_3a8;            /* 0x3a8 */
-    u8  unk_3aa;            /* 0x3aa */
-    u8  unk_3ab;            /* 0x3ab */
-    s32 unk_3ac;            /* 0x3ac */
+    s32 mState;            /* 0x3a0 */
+    s32 mPlayerDist;            /* 0x3a4 */
+    u16 mOpenSpeed;            /* 0x3a8 */
+    u8  mTrapActive;            /* 0x3aa */
+    u8  mIsSpawner;            /* 0x3ab */
+    s32 mSpawnerID;            /* 0x3ac */
 };
 
 #endif /* __cplusplus */

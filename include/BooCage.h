@@ -40,8 +40,8 @@ struct BooCage : dEnemyBase_c {
     dBgCh_Actr                 mWithMeshClsn;         /* 0x144 */
     Model                        mModel;                /* 0x300 */
     ShadowModel                  mShadowModel;          /* 0x350 */
-    s32                          unk_378;               /* 0x378 */
-    s16                          unk_37c;               /* 0x37c */
+    s32                          mParticleID;               /* 0x378 */
+    s16                          mSoundTimer;               /* 0x37c */
     u8                           unk_37e;               /* 0x37e */
     u8  pad_37f[0x1];
 

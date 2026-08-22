@@ -8,10 +8,10 @@ extern "C" {
     void func_ov071_02120c90(void *c);
 }
 
-struct dCc_c {
-    void Clear();
-    void Update();
-};
+/* dCc_c comes from the real dCcAc_c chain now that MrI.h types mdCcAcPos_c;
+   the ad-hoc redeclaration that used to stand in for it ICEd mwccarm
+   (CClass.c:3328) once the real class was visible. Clear and Update are
+   non-virtual there, so the direct bl is unchanged. */
 
 int MrI::Behavior()
 {

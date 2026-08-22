@@ -29,4 +29,6 @@ struct Flag {
 #endif
 };
 
+typedef char Flag_size_must_be_0x138[sizeof(struct Flag) == 0x138 ? 1 : -1];
+
 #endif

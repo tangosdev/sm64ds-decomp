@@ -1,4 +1,5 @@
 //cpp
+#include "MirrorLuigi.h"
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int sz);
 extern void _ZN8dActor_cC2Ev(void* c);
@@ -10,7 +11,7 @@ extern int _ZTV11MirrorLuigi[];
 extern void _ZN15TextureSequenceD1Ev(void*);
 extern void _ZN15TextureSequenceC1Ev(void*);
 void* MirrorLuigi_Spawn(void){
-  char* c = (char*)_ZN7fBase_cnwEj(0x20c);
+  char* c = (char*)_ZN7fBase_cnwEj(sizeof(struct MirrorLuigi));
   if (c) {
     _ZN8dActor_cC2Ev(c);
     *(int**)c = _ZTV11MirrorLuigi;

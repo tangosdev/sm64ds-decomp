@@ -23,8 +23,8 @@ int BooCage::InitResources()
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char *)this) + 0x110, ((char *)this), 0x64000, 0x64000, 0x200004, 0);
     _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(((char *)this) + 0x144, ((char *)this), 0x64000, 0x64000, 0, 0);
     _ZN10dBgCh_Actr13SetLimMovFlagEv((char *)&mWithMeshClsn);
-    unk_378 = 0;
-    unk_37c = 0;
+    mParticleID = 0;
+    mSoundTimer = 0;
     unk_37e = 0;
     return 1;
 }

@@ -1,4 +1,5 @@
 //cpp
+#include "Flamethrower.h"
 extern "C" {
 extern void* _ZN7fBase_cnwEj(unsigned int);
 extern void _ZN8dActor_cC2Ev(void*);
@@ -10,7 +11,7 @@ extern void func_020733a8(void* arr, int count, int size, void(*ctor)(void*), vo
 extern void* _ZTV12Flamethrower[];
 
 int* Flamethrower_Spawn(void){
-  int* p = (int*)_ZN7fBase_cnwEj(0x46c);
+  int* p = (int*)_ZN7fBase_cnwEj(sizeof(struct Flamethrower));
   if(p){
     _ZN8dActor_cC2Ev(p);
     *(void***)p = (void**)_ZTV12Flamethrower;

@@ -15,15 +15,15 @@ extern int data_0209f32c;
 
 int BasementWater::Behavior()
 {
-    if (unk_33e != 0)
-        _ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (unsigned short*)((char*)&unk_33c));
+    if (mWasJustDrained != 0)
+        _ZN5Sound15PlaySecretSoundEP8dActor_cPt(((char*)this), (unsigned short*)((char*)&mSoundTimer));
     if (mPosY <= mLoweredY) {
         mPosY = mLoweredY;
     } else if (*(int*)((char*)data_0209caa0 + 8) & 0x80000) {
-        unk_338 = _ZN5Sound8PlayLongEjjjRK7Vector3s(
-            unk_338, 3, 0x96, (void*)((char*)&mCamSpacePosX), 0);
+        mSoundID = _ZN5Sound8PlayLongEjjjRK7Vector3s(
+            mSoundID, 3, 0x96, (void*)((char*)&mCamSpacePosX), 0);
         *(int*)((char*)&mPosY) -= 0x5000;
-        unk_33e = 1;
+        mWasJustDrained = 1;
         if (mPosY <= mLoweredY) {
             mPosY = mLoweredY;
             _ZN7Minimap19UpdateLevelSpecificEv();

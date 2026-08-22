@@ -15,6 +15,7 @@
 #ifndef ROTATINGUPDOWNPLATFORMUTM_H
 #define ROTATINGUPDOWNPLATFORMUTM_H
 #include "types.h"
+#include "dBgW_KcMbg.h"
 
 #ifdef __cplusplus
 
@@ -103,8 +104,12 @@ struct RotatingUpDownPlatformUtm {
     s8  mAreaId;            /* 0x0cc */
     u8  pad_0cd[0x7];
     Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1db];
+    /* dBgW_KcMbg member. The cartridge's own ~RotatingUpDownPlatformUtm calls
+       _ZN10dBgW_KcMbgD1Ev at +0x124 (D0/D1), a relocation the ROM build checks;
+       recovered by tools/dtor_members.py. D1 and not D2, so it is this type and not an
+       inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x14];
     u8  unk_300;            /* 0x300 */
     u8  pad_301[0x1f];
     u8  mShadowModel;            /* 0x320 */

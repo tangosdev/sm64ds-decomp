@@ -16,12 +16,12 @@ int PoleLift::Behavior()
     _ZN5dCc_c5ClearEv((char *)&mdCcAc_c);
     _ZN5dCc_c6UpdateEv((char *)&mdCcAc_c);
     if ((*(s32 *)&param1) != 0xffff) {
-        int idx = unk_354 >> 4;
+        int idx = mHeightAng >> 4;
         int s = *(short*)((char*)data_02082214 + (idx << 2));
         *(int*)(((int)((char *)this) + 0x60)) =
             *(int*)(((int)((char *)this) + 0x60)) + (int)(((long long)s * 0x7000 + 0x800) >> 12);
     } else {
-        int idx = unk_354 >> 4;
+        int idx = mHeightAng >> 4;
         int s = *(short*)((char*)data_02082214 + (idx << 2));
         *(int*)(((int)((char *)this) + 0x60)) =
             *(int*)(((int)((char *)this) + 0x60)) - (int)(((long long)s * 0x3000 + 0x800) >> 12);

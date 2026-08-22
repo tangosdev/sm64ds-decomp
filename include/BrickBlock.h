@@ -23,4 +23,6 @@ struct BrickBlock {
 #endif
 };
 
+typedef char BrickBlock_size_must_be_0xdc[sizeof(struct BrickBlock) == 0xdc ? 1 : -1];
+
 #endif

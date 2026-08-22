@@ -28,8 +28,8 @@ int Tornado::Behavior()
         unk_350 = 0;
         unk_360 = 0;
     }
-    unsigned int id = unk_0f8;
-    if (id != 0 && (unk_0f4 & 0x400000) != 0) {
+    unsigned int id = mdCcAc_c.otherOwner;
+    if (id != 0 && (mdCcAc_c.hitFlags & 0x400000) != 0) {
         void *o = _ZN8dActor_c10FindWithIDEj(id);
         if (o != 0) {
             void *closest = _ZN8dActor_c18ClosestWithActorIDEj(((char *)this), 0x135);

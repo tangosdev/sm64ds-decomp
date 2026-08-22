@@ -10,12 +10,14 @@
 struct PyramidTag {
     u8  pad_000[0xd4];
     dCcAc_c mdCcAc_c;         /* 0x0d4 */
-    s32 unk_108;            /* 0x108 */
+    s32 mPyramidTopID;            /* 0x108 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();
     int InitResources();
 #endif
 };
+
+typedef char PyramidTag_size_must_be_0x10c[sizeof(struct PyramidTag) == 0x10c ? 1 : -1];
 
 #endif

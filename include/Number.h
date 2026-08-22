@@ -43,4 +43,6 @@ struct Number {
 #endif
 };
 
+typedef char Number_size_must_be_0x150[sizeof(struct Number) == 0x150 ? 1 : -1];
+
 #endif

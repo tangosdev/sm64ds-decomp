@@ -16,9 +16,8 @@ extern "C" void *_ZN5Model8LoadFileER13SharedFilePtr(void *fp);
 
 /* ModelBase is the real class now, through TtcConveyorBeltLarge.h. */
 
-struct ShadowModel {
-    void InitCuboid();
-};
+/* ShadowModel is the real class now, through this actor's header, and it
+   declares InitCuboid itself. */
 
 extern "C" void _ZN18TextureTransformer7PrepareER8BMD_FileR8BTA_File(
     BMD_File &f, BTA_File &b);
@@ -40,10 +39,9 @@ struct dBgActor_c {
 
 extern "C" void *_ZN7dBgW_Kc8LoadFileER13SharedFilePtr(void *fp);
 
-struct dBgW_KcMbg {
-    void SetFile(KCL_File *f, const Matrix4x3 &m, int fix, short sh,
-                 CLPS_Block &b);
-};
+/* dBgW_KcMbg is the real class now, through this actor's header. Only the
+   cast below needs the name; SetFile is already reached by its mangled
+   symbol because the real one takes Fix12<int> by value. */
 /* Signature deliberately copied from the local declaration above: the
    ROM name carries by-value class parameters (e.g. Fix12<int>), which
    mwccarm passes differently at the call site, so declaring the true

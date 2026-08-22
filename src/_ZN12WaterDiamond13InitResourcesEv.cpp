@@ -15,9 +15,9 @@ int WaterDiamond::InitResources()
   void* m = _ZN5Model8LoadFileER13SharedFilePtr(data_ov029_02114270);
   _ZN9ModelBase7SetFileEP8BMD_Fileii(((char*)this)+0xd4, m, 1, -1);
   _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this)+0x124, ((char*)this), 0x32000, 0x64000, 0x800002, 0);
-  unk_158 = 0;
-  unk_15c = mParam & 1;
-  unk_15d = 0;
+  mWaterID = 0;
+  mWaterParam = mParam & 1;
+  mActive = 0;
   mAngleY = 0;
   return 1;
 }

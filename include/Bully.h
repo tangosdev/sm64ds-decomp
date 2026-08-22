@@ -19,7 +19,7 @@ struct Bully : daOts_c {
        Left unnamed because that is as far as the bytes go -- BigBully's u8 at the
        same offset is a different field with a different use, so the offset is no
        guide. */
-    s32 unk_3fc;                    /* 0x3fc */
+    s32 mBigBullyID;                    /* 0x3fc */
 
     virtual ~Bully();
 

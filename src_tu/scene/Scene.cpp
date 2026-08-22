@@ -408,7 +408,7 @@ extern fBase_c *data_0209f5c0;
 /* RECONCILED. Three of this TU's legacy files declared 0x0209f5e8 three
    different ways -- `FaderBrightness` (SetAndStopColorFader, which uses
    ::speed, and ResetFadersAndSound, which takes its address), `FaderColor`
-   (StartSceneFade, which uses ::unk_00c) and a local one-field shadow
+   (StartSceneFade, which uses ::color) and a local one-field shadow
    (BeforeBehavior, which dispatches through its vptr with the wrong arity;
    see there). FaderColor is the most complete of the three and is what the
    object really is -- __sinit_02074edc constructs it up the chain and leaves
@@ -722,7 +722,7 @@ int dScene_c::SetSceneToSpawn(u32 sceneID, u32 param)
 void dScene_c::StartSceneFade(u32 sceneID, u32 param, u16 fadeColor)
 {
     if (SetSceneToSpawn(sceneID, param))
-        data_0209f5e8.unk_00c = fadeColor;
+        data_0209f5e8.color = fadeColor;
 }
 
 /* ------------------------------------------------------------------------- */

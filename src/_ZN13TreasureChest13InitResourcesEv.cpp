@@ -30,10 +30,10 @@ int TreasureChest::InitResources()
         _ZN9Animation8LoadFileER13SharedFilePtr(data_ov064_0211c964), 0x40000000, 0x1000, 0);
     _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(((char*)this) + 0x138, (dActor_c*)((char*)this), 0x96000, 0x96000, 0x200004, 0);
     func_ov064_0211a284(((char*)this));
-    unk_172 = unk_008;
-    unk_174 = (unsigned int)unk_008 >> 8;
-    if (unk_174 != 0xff) {
-        unk_175 = _ZN8dActor_c9TrackStarEjj(((char*)this), unk_174, 2);
+    mOrder = unk_008;
+    mStarID = (unsigned int)unk_008 >> 8;
+    if (mStarID != 0xff) {
+        mTrackedStarID = _ZN8dActor_c9TrackStarEjj(((char*)this), mStarID, 2);
     }
     return 1;
 }

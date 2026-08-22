@@ -6,7 +6,7 @@ struct Sub { virtual void v0(); virtual void v1(); virtual void v2(); virtual vo
 
 int SwitchActivatedPlank::Render()
 {
-  if (unk_3a3 != 0) {
+  if (mVisible != 0) {
     Sub *s = (Sub*)((char *)&mModel2);
     s->v5(0);
   }

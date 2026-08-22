@@ -4,7 +4,9 @@
 #include "decl_PathPtr.h"
 /* recovered: named members + shared header, real C++ method */
 #include "BigMovingIceBlock.h"
-typedef int Fix12;
+/* Not `Fix12`: this actor's header now reaches math/Fix12.h, where Fix12 is a
+   class template. Only the raw word matters at this call. */
+typedef int Fix12Raw;
 extern "C" {
 extern void _ZNK7PathPtr7GetNodeER7Vector3j(void *p, void *out, unsigned idx);
 extern void Vec3_Sub(void *out, void *a, void *b);
@@ -14,7 +16,7 @@ extern void Vec3_MulScalar(void *out, void *v, int s);
 extern void SubVec3(void *a, void *b, void *c);
 extern void _ZN10dBgActor_c21UpdateModelPosAndRotYEv(void *p);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void *p);
-extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *p, Fix12 a, int b);
+extern int _ZN10dBgActor_c13IsClsnInRangeE5Fix12IiES1_(void *p, Fix12Raw a, int b);
 }
 
 struct V3 { int x, y, z; };

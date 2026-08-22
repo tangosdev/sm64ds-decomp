@@ -30,11 +30,15 @@ struct Flamethrower {
        Vector3 mPartPos[12] at 0x3a4 (stride 0xc),
        Matrix4x3 at 0x434, then u8 state 0x464 / u8 active 0x465 /
        u16 timer 0x466 / u32 sound handle 0x468. */
+    /* trailing extent the ROM's `new Flamethrower` literal proves; see tools/opnew_sizes.py */
+    u8 pad_094[0x3d8];
 #ifdef __cplusplus
     /* methods */
     int InitResources();
     int Behavior();
 #endif
 };
+
+typedef char Flamethrower_size_must_be_0x46c[sizeof(struct Flamethrower) == 0x46c ? 1 : -1];
 
 #endif

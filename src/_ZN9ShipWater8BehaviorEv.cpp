@@ -12,7 +12,7 @@ extern int _ZN10dBgActor_c19UpdateClsnPosAndRotEv(char* t);
 
 int ShipWater::Behavior()
 {
-    if (unk_338 == 0) {
+    if (mChestsOpen == 0) {
         int ok = 1;
         char* p = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, 0);
         while (p != 0) {
@@ -24,13 +24,13 @@ int ShipWater::Behavior()
             if (cond == 0) ok = 0;
             p = _ZN8dActor_c15FindWithActorIDEjPS_(0xd, p);
         }
-        if (ok != 0) unk_338 = 1;
+        if (ok != 0) mChestsOpen = 1;
     } else {
-        int d = unk_334 - mPosY;
+        int d = mOriginalPosY - mPosY;
         if (d < 0) d = -d;
         if (d < 0x92e000) {
             int* q;
-            unk_33c = _ZN5Sound8PlayLongEjjjRK7Vector3s(unk_33c, 3, 0x96, ((char*)this)+0x74, 0);
+            mSoundID = _ZN5Sound8PlayLongEjjjRK7Vector3s(mSoundID, 3, 0x96, ((char*)this)+0x74, 0);
             q = (int*)((char*)&mPosY);
             *q -= 0x5000;
         }

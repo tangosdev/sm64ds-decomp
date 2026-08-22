@@ -42,9 +42,8 @@ extern "C" void _ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj(
     void *self, dActor_c *a, s32 radius, s32 height, u32 u0, u32 u1);
 extern "C" void _ZN10dBgCh_Actr4InitEP8dActor_c5Fix12IiES3_P10Vector3_16S5_(
     void *self, dActor_c *a, s32 radius, s32 height, Vector3_16 *v, Vector3_16 *v2);
-struct dBgCh_Actr {
-    void StartDetectingWater();
-};
+/* dBgCh_Actr is the real class now, through this actor's header, and it
+   declares StartDetectingWater itself. */
 struct dBgCh_Gnd {
     int pad[0x11];
     int result;       // offset 0x44

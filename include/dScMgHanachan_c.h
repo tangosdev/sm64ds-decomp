@@ -60,4 +60,6 @@ struct dScMgHanachan_c : dScMgBase_c {
     u8  unk_4f64;            /* 0x4f64 */
 };
 
+typedef char dScMgHanachan_c_size_must_be_0x4f68[sizeof(dScMgHanachan_c) == 0x4f68 ? 1 : -1];
+
 #endif

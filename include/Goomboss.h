@@ -41,32 +41,32 @@ struct Goomboss : dEnemyBase_c {
     ModelAnim mModelAnim;                         /* 0x210 */
     ShadowModel mShadowModels[3];                 /* 0x274 */
     u8  pad_2ec[0xc0];
-    Vector3 unk_3ac[3];                           /* 0x3ac */
+    Vector3 mCylClsnPos[3];                           /* 0x3ac */
     MaterialChanger mMaterialChanger;             /* 0x3d0 */
     TextureSequence mTextureSequence;             /* 0x3e4 */
     TextureTransformer mTextureTransformer;       /* 0x3f8 */
     dBgCh_Actr mWithMeshClsn;                   /* 0x40c */
     u8  pad_5c8[0x4];
-    s32 unk_5cc;            /* 0x5cc */
+    s32 mState;            /* 0x5cc */
     s32 unk_5d0;            /* 0x5d0 */
     s32 unk_5d4;            /* 0x5d4 */
     s32 unk_5d8;            /* 0x5d8 */
-    s32 unk_5dc;            /* 0x5dc */
+    s32 mMegaMushroomID;            /* 0x5dc */
     u8  pad_5e0[0x4];
-    s32 unk_5e4;            /* 0x5e4 */
-    s32 unk_5e8;            /* 0x5e8 */
+    s32 mCurrentScale;            /* 0x5e4 */
+    s32 mGoombaTargetSpeed;            /* 0x5e8 */
     u8  pad_5ec[0x4];
-    s32 unk_5f0;            /* 0x5f0 */
-    u16 unk_5f4;            /* 0x5f4 */
-    s16 unk_5f6;            /* 0x5f6 */
-    s16 unk_5f8;            /* 0x5f8 */
+    s32 mDirection;            /* 0x5f0 */
+    u16 mWalkAngle;            /* 0x5f4 */
+    s16 mWalkSpeed;            /* 0x5f6 */
+    s16 mMaxWalkSpeed;            /* 0x5f8 */
     u8  pad_5fa[0x4];
-    u8  unk_5fe;            /* 0x5fe */
-    u8  unk_5ff;            /* 0x5ff */
+    u8  mLeftFootSteppedOnGround;            /* 0x5fe */
+    u8  mRightFootSteppedOnGround;            /* 0x5ff */
     u8  pad_600[0x4];
     u8  mSizeIndex;            /* 0x604 */
     u8  pad_605[0x5];
-    u8  unk_60a;            /* 0x60a */
+    u8  mShouldRender;            /* 0x60a */
     /* The field span ends at 0x60b, but a span is only a LOWER BOUND. Both factories
        that store _ZTV8Goomboss (ov074:0x02122eb8) -- Goomboss_Spawn and
        ExplosionGoomba_Spawn -- call fBase_c::operator new(0x610). Two factories
@@ -128,26 +128,26 @@ struct Goomboss {
     u8  pad_3f9[0x13];
     struct dBgCh_Actr mWithMeshClsn; /* 0x40c */
     u8  pad_5c8[0x4];
-    s32 unk_5cc;            /* 0x5cc */
+    s32 mState;            /* 0x5cc */
     s32 unk_5d0;            /* 0x5d0 */
     s32 unk_5d4;            /* 0x5d4 */
     s32 unk_5d8;            /* 0x5d8 */
-    s32 unk_5dc;            /* 0x5dc */
+    s32 mMegaMushroomID;            /* 0x5dc */
     u8  pad_5e0[0x4];
-    s32 unk_5e4;            /* 0x5e4 */
-    s32 unk_5e8;            /* 0x5e8 */
+    s32 mCurrentScale;            /* 0x5e4 */
+    s32 mGoombaTargetSpeed;            /* 0x5e8 */
     u8  pad_5ec[0x4];
-    s32 unk_5f0;            /* 0x5f0 */
-    u16 unk_5f4;            /* 0x5f4 */
-    s16 unk_5f6;            /* 0x5f6 */
-    s16 unk_5f8;            /* 0x5f8 */
+    s32 mDirection;            /* 0x5f0 */
+    u16 mWalkAngle;            /* 0x5f4 */
+    s16 mWalkSpeed;            /* 0x5f6 */
+    s16 mMaxWalkSpeed;            /* 0x5f8 */
     u8  pad_5fa[0x4];
-    u8  unk_5fe;            /* 0x5fe */
-    u8  unk_5ff;            /* 0x5ff */
+    u8  mLeftFootSteppedOnGround;            /* 0x5fe */
+    u8  mRightFootSteppedOnGround;            /* 0x5ff */
     u8  pad_600[0x4];
     u8  mSizeIndex;            /* 0x604 */
     u8  pad_605[0x5];
-    u8  unk_60a;            /* 0x60a */
+    u8  mShouldRender;            /* 0x60a */
 };
 
 #endif /* __cplusplus */

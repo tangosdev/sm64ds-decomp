@@ -6,6 +6,7 @@
 #define TORNADO_H
 #include "types.h"
 #include "ModelAnim.h"
+#include "dCcAc_c.h"
 #include "dBgCh_Actr.h"
 #include "TextureTransformer.h"
 
@@ -32,11 +33,12 @@ struct Tornado {
     s32 unk_09c;            /* 0x09c */
     s32 unk_0a0;            /* 0x0a0 */
     u8  pad_0a4[0x30];
-    u8  mdCcAc_c;            /* 0x0d4 */
-    u8  pad_0d5[0x1f];
-    s32 unk_0f4;            /* 0x0f4 */
-    u32 unk_0f8;            /* 0x0f8 */
-    u8  pad_0fc[0xc];
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x0d4 -- a relocation the ROM build
+       checks. Was a u8 marker whose pad stopped short of the object, so the
+       member also takes over unk_0f4 (+0x20 = dCc_c::hitFlags) and unk_0f8
+       (+0x24 = dCc_c::otherOwner), which Behavior reads as exactly those two. */
+    dCcAc_c mdCcAc_c;            /* 0x0d4 */
     /* dBgCh_Actr member, named by the class's own destructor calling
        dBgCh_Actr's D1 at +0x108 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN7TornadoD0Ev.c] */
@@ -63,11 +65,17 @@ struct Tornado {
     u8  pad_361[0x3];
     s32 unk_364;            /* 0x364 */
     s32 unk_368;            /* 0x368 */
+    /* Trailing remainder, 4 bytes. The one marker is typed and the last field
+       the five recovered functions touch ends at 0x36c; Tornado_Spawn
+       allocates 0x370. */
+    u8  pad_36c[0x4];
 #ifdef __cplusplus
     /* methods */
     int Behavior();
     int InitResources();
 #endif
 };
+
+typedef char Tornado_size_must_be_0x370[sizeof(struct Tornado) == 0x370 ? 1 : -1];
 
 #endif

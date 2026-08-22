@@ -14,7 +14,7 @@ int Coin::Render()
   b = (f & 0x40000) != 0;
   if (b) return 1;
   {
-    unsigned short x = unk_3a8;
+    unsigned short x = mDisappearTimer;
     if (x < 0x2d && (x & 1)) return 1;
   }
   if (!(f & 0x10))

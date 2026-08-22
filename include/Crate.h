@@ -23,6 +23,8 @@
 #ifndef CRATE_H
 #define CRATE_H
 #include "types.h"
+#include "Model.h"
+#include "dBgW_KcMbg.h"
 
 /* Player is only ever pointed at from here, so a declaration is enough --
  * no definition is pulled in. The typedef keeps the member spelled the
@@ -109,10 +111,15 @@ struct Crate {
     u32 unk_0b0;            /* 0x0b0 */
     u8  pad_0b4[0x1c];
     s32 mEatingPlayer;            /* 0x0d0 */
-    u8  mModel;            /* 0x0d4 */
-    u8  pad_0d5[0x4f];
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
+    /* Model member. The cartridge's own ~Crate calls _ZN5ModelD1Ev at +0x0d4 (D0/D1), a
+       relocation the ROM build checks; recovered by tools/dtor_members.py. D1 and not
+       D2, so it is this type and not an inlined base. */
+    Model mModel;            /* 0x0d4 */
+    /* dBgW_KcMbg member. The cartridge's own ~Crate calls _ZN10dBgW_KcMbgD1Ev at +0x124
+       (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
+       D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x34];
     u8  mWithMeshClsn;            /* 0x320 */
     u8  pad_321[0x1c7];
     s32 unk_4e8;            /* 0x4e8 */

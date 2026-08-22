@@ -65,8 +65,8 @@ int Koopa::Behavior()
 
         {
             int *pb0 = (int *)((char *)&mFlags);
-            if (unk_3ce != 0)
-                *(u8 *)((char *)&unk_3ce) -= 1;
+            if (mLandingDustTimer != 0)
+                *(u8 *)((char *)&mLandingDustTimer) -= 1;
             *pb0 = *pb0 | 0x10000000;
         }
         func_ov062_02118258(((char *)this), 0x3e8000);
@@ -96,7 +96,7 @@ int Koopa::Behavior()
         }
         if (state != mState || kind != mKoopaVariant) {
             unk_100 = 0;
-            unk_3c4 = 0;
+            mWalkState = 0;
         }
         func_ov062_02117c98(((char *)this));
         _ZN8dActor_c9UpdatePosEP5dCc_c(((char *)this), ((char *)this) + 0x110);
@@ -118,10 +118,10 @@ int Koopa::Behavior()
         func_ov062_02117570(((char *)this));
         _ZN5dCc_c5ClearEv((char *)&mdCc_c);
         if (mDeathState == 0) {
-            if (unk_3ca == 0) {
+            if (mInvincibleTimer == 0) {
                 _ZN5dCc_c6UpdateEv((char *)&mdCc_c);
             } else {
-                *(u16 *)((char *)&unk_3ca) -= 1;
+                *(u16 *)((char *)&mInvincibleTimer) -= 1;
             }
         }
     } else {

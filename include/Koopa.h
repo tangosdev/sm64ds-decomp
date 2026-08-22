@@ -45,13 +45,13 @@ struct Koopa : dEnemyBase_c {
     s32                          unk_3ac;               /* 0x3ac */
     s32                          unk_3b0;               /* 0x3b0 */
     u8  pad_3b4[0x8];
-    s32                          unk_3bc;               /* 0x3bc */
+    s32                          mAnimSpeed;               /* 0x3bc */
     u8  pad_3c0[0x4];
-    u16                          unk_3c4;               /* 0x3c4 */
+    u16                          mWalkState;               /* 0x3c4 */
     u8  pad_3c6[0x4];
-    u16                          unk_3ca;               /* 0x3ca */
+    u16                          mInvincibleTimer;               /* 0x3ca */
     u8  pad_3cc[0x2];
-    u8                           unk_3ce;               /* 0x3ce */
+    u8                           mLandingDustTimer;               /* 0x3ce */
     u8  pad_3cf[0x1];
 
     /* --- vtable --- */

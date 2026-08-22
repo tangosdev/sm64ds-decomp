@@ -26,6 +26,10 @@ struct dScMgTeresa_c : dScMgBase_c {
     s16 unk_4c16;            /* 0x4c16 */
     u8  pad_4c18[0xb];
     u8  unk_4c23;            /* 0x4c23 */
+    /* trailing extent the ROM's `new dScMgTeresa_c` literal proves; see tools/opnew_sizes.py */
+    u8 pad_4c24[0x4];
 };
+
+typedef char dScMgTeresa_c_size_must_be_0x4c28[sizeof(struct dScMgTeresa_c) == 0x4c28 ? 1 : -1];
 
 #endif

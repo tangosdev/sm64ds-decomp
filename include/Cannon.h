@@ -6,6 +6,7 @@
 #define CANNON_H
 #include "types.h"
 #include "Model.h"
+#include "dCcAc_c.h"
 
 struct Cannon {
     u8  pad_000[0xd4];
@@ -13,11 +14,32 @@ struct Cannon {
        Model's D1 at +0x0d4 -- a relocation the ROM build
        checks. Was a u8 marker. [_ZN6CannonD0Ev.c] */
     Model mModel;            /* 0x0d4 */
-    u8  mdCcAc_c;            /* 0x124 */
-    u8  pad_125[0x5b];
+    /* dCcAc_c member, named by the class's own destructor calling
+       dCcAc_c's D1 at +0x124 -- a relocation the ROM build
+       checks. Was a u8 marker. [_ZN6CannonD0Ev.c] */
+    dCcAc_c mdCcAc_c;            /* 0x124 */
+    u8  pad_158[0x4];
+    /* Where the cannon was placed: InitResources copies mPos here verbatim
+       after lowering mPosY by 0x50000. */
+    s32 mSpawnPosX;            /* 0x15c */
+    s32 mSpawnPosY;            /* 0x160 */
+    s32 mSpawnPosZ;            /* 0x164 */
+    u8  pad_168[0xc];
+    s32 unk_174;            /* 0x174 */
+    s16 unk_178;            /* 0x178 */
+    s16 unk_17a;            /* 0x17a */
+    s16 unk_17c;            /* 0x17c */
+    u8  pad_17e[0x2];
+    /* State index. Behavior calls data_ov098_0213c8fc[unk_180] as a
+       pointer-to-member on `this`. */
     s32 unk_180;            /* 0x180 */
-    u8  pad_184[0x1];
+    /* Cannon variant, the low two bits of the spawn word. */
+    u8  unk_184;            /* 0x184 */
     u8  unk_185;            /* 0x185 */
+    u8  pad_186[0xe];
+    /* Read out of *(*(this + 0xe4) + 0x58) by InitResources -- the last field
+       of the object, and what closes the 0x198 Cannon_Spawn allocates. */
+    s32 unk_194;            /* 0x194 */
 #ifdef __cplusplus
     /* methods */
     int Behavior();
@@ -25,5 +47,7 @@ struct Cannon {
     int Render();
 #endif
 };
+
+typedef char Cannon_size_must_be_0x198[sizeof(struct Cannon) == 0x198 ? 1 : -1];
 
 #endif
