@@ -277,13 +277,14 @@ int env_flag(const char *name, int dflt)
 struct TouchProbeEnt {
     int f0, f1, x, y, poke;
 };
-/* 128, not 32 (run mg8, lane MMD). The parser silently STOPS at the cap, so a
+/* 256, not 32 (run mg8, lane MMD). The parser silently STOPS at the cap, so a
    script that overruns it loses its tail without saying so. Thirty-two held
-   three or four gestures; driving a minigame round to its end is sixteen taps
-   for one Memory Master board and eighty for the five clears its difficulty
-   step needs. The array is 2KB of host bookkeeping and no run reads past
-   g_tp_n. */
-TouchProbeEnt g_tp[128];
+   three or four gestures; driving a minigame ROUND to its end is sixteen taps
+   for one Memory Master board, eighty for the five clears that take its board
+   from sixteen cards to eighteen, and a hundred and seventy for the ten that
+   take it to twenty. The array is 5KB of host bookkeeping and no run reads
+   past g_tp_n. */
+TouchProbeEnt g_tp[256];
 int g_tp_n = -1;            /* -1 = env not read yet, 0 = probe off */
 int g_tp_frame;             /* polls since the first one */
 int g_tp_cur = -1;          /* the frame being polled, for the camera log */

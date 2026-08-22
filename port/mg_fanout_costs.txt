@@ -2104,3 +2104,140 @@ later lane should bank any of them as coverage:
   - Every render and touch zero in sections 14, 15 and here. Nobody has held
     any of these five next to a DS. A headless run can say the numbers behind
     a picture are the ROM's; it cannot say the picture is right.
+
+17. WHERE MEMORY MASTER'S CARD COUNT COMES FROM, run mg8 lane MMD
+--------------------------------------------------------------------------------
+
+Worktree C:/tmp/m8m, branch mg8-mmdiff, base e79a92c2b, private build
+C:/tmp/m8m/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/m8m/port.
+
+THE REPORT WAS "it should go up slowly in difficulty but it always starts at 16
+cards already". SIXTEEN IS THE ROM'S OWN FIRST BOARD and the port's ramp works;
+what the port had wrong is WHICH SAVE SLOT the ramp is kept in.
+
+THE RULE, DISASSEMBLED. func_ov006_020f72c0 is the whole of the decision and it
+reads exactly one int:
+
+    add   r1, r0, #0x5000        \  the two defaults, written first and
+    mov   r2, #0                  |  overwritten by whichever compare hits
+    strb  r2, [r1, #0x40a]        |  +0x540a = 0
+    add   r2, r0, #0x5300         |
+    mov   r3, #8                  |
+    strh  r3, [r2, #0xea]        /   +0x53ea = 8      -> SIXTEEN cards
+    ldr   r0, [r0, #0xb4]            THE ONLY INPUT
+    cmp   r0, #0xa
+    movge r0, #2  / strbge r0, [r1, #0x40a]
+    movge r0, #0xa/ strhge r0, [r2, #0xea]   >= 10    -> TWENTY cards
+    bxge  lr
+    cmp   r0, #5
+    movge r0, #1  / strbge r0, [r1, #0x40a]
+    movge r0, #9  / strhge r0, [r2, #0xea]   >=  5    -> EIGHTEEN cards
+
++0x53ea is pairs-needed and +0x540a indexes the two grid tables:
+data_ov006_0212e8e8 = {4,3,4} rows and data_ov006_0212e8f4 = {4,6,5} columns,
+so 4x4, 3x6 and 4x5. func_ov006_020f6c90 deals 16, 18 or 20 records off the same
+byte with the identity capped at 8, 9 or 10.
+
+WHERE +0xb4 COMES FROM, AND IT IS BOTH MECHANISMS AT ONCE.
+
+  SEEDED ONCE, FROM THE SAVE. src/func_ov006_020f74b4.cpp (InitResources) is the
+  only writer:  *(int*)(self + 0xb4) = func_ov004_020ad878();  and that body
+  disassembles to func_02013580(func_ov004_020adc3c(data_ov004_020beb68), 1),
+  i.e. data_0209caf4[minigame index][1]. A fresh record is ZERO --
+  SaveData::ReadMinigameData calls SetDefaultValuesMg on every failure path and
+  that memsets 0x2e4 bytes to 0 -- so the ROM's own first-ever board is sixteen
+  cards. There is no smaller board and no menu argument that makes one.
+
+  RAISED PER CLEARED BOARD, IN SESSION. func_ov006_020f6538 (state 3 substate 0)
+  after its 0x40-frame countdown:
+      won   if (+0xb4 < 0x270f) ++(+0xb4);  +0xb8 = max(+0xb8, +0xb4)
+      lost  if (+0xb4 > 0)      --(+0xb4)
+  and func_ov006_020f59c0 (which runs every frame of state 2) writes the same
+  +/-1 through to the record:  func_ov004_020ad79c((5 - misses)*5 + score,
+  +0xb4 + 1)  on a clear and  func_ov004_020ad79c(score, +0xb4 - 1)  on the
+  fifth miss. State 3 ends at state 4 and state 4 goes back to state 0, so the
+  class DEALS AGAIN with the new count, and the record carries it to the next
+  play. +0xb4 is what func_ov004_020adb1c draws as the star badge on the top
+  screen.
+
+  So the answer to "menu argument, in-session ramp, or saved progress" is the
+  last two, and they are the same counter seen at two lifetimes.
+
+THE PORT DIVERGENCE, AND IT IS NOT THE CARD COUNT.
+hal/scene_boot.cpp's port_scene_boot called Scene::SetSceneToSpawn(id, 0) for
+every scene. On the DS a minigame is only ever launched by
+src/func_ov005_020c0378.c, whose last act is
+
+    Scene::StartSceneFade(*(u16*)(data_ov005_020c24d8 + m),
+                          *(int *)(data_ov005_020c24dc + m), 0);
+
+with data_ov005_020c24dc = data_ov005_020c24d8 + 4, so the second argument is
+the picked row's own +0x04 word, and StartSceneFade hands it to
+SetSceneToSpawn(id, param). dScMgBase_c's constructor unpacks it:
+
+    *(short*)(self+0x465e) = data_ov004_020bc070[(*(u32*)(self+8) >> 0x10) & 0xff];
+    *(int*)(self+8)        = *(u32*)(self+8) & 0xffff;
+
+and func_ov004_020adc3c reads (field_8 & 0xff00) >> 8 -- which that mask keeps.
+ONE WORD, TWO INDICES: (param>>8)&0xff is the row of data_0209caf4 and
+(param>>16)&0xff is the row of data_ov004_020bc070, the minigame's name-text id.
+With 0 all thirty minigames shared save record 0 and asked for name text 0, so
+Memory Master kept its clear count in the first minigame's slot and every other
+minigame could move it. Memory Master is ov005 row 29, param 0x001d1d01:
+record 29, text 29.
+
+FIXED by reading the word out of the verbatim ov005 table
+hal/scene_mg_sound.cpp already carries (port_mg_scene_spawn_param), by the same
+first-match-by-id rule, 0 for anything that is not a minigame scene. Measured
+after: 374 -> record 16 text 16, 369 -> 26/26, 370 -> 8/20, 375 -> 31/31,
+380 -> 15/22, 363 -> 29/29.
+
+THE SECOND DIVERGENCE IS DELIBERATE AND IS NOT THIS LANE'S TO FIX. The port has
+no backup cart, so hal/scene_boot.cpp's SaveData::ReadDataFromCart face returns
+1 (the ROM's own no-media answer) and SetDefaultValuesMg zeroes the record on
+every boot. A DS with a save resumes at whatever board size it had reached; the
+port restarts at sixteen every launch, and the debug menu's minigame picker goes
+through port_menu_relaunch, which is a NEW PROCESS, so nothing survives even
+between two minigames in one sitting. That is a save-medium gap, not a
+minigame gap.
+
+TEN BOARDS CLEARED BACK TO BACK, 170 SCRIPTED TAPS, ZERO MISSES. Driven through
+SM64DS_TOUCH_PROBE, timed off SM64DS_MEM_TRACE (the new per-frame round trace in
+hal/scene_mg_memory2.cpp), all in ONE 15,500-frame run of scene 363:
+
+    board  tappable  cleared  level after   board size
+      1      f431     f1112      0 -> 1     16   4x4  x 80..176  y 24..168
+      2      f1825    f2506      1 -> 2     16
+      3      f3218    f3899      2 -> 3     16
+      4      f4635    f5316      3 -> 4     16
+      5      f6054    f6735      4 -> 5     16
+      6      f7540    f8301      5 -> 6     18   6x3  x 48..208  y 48..144
+      7      f9037    f9798      6 -> 7     18
+      8      f10535   f11296     7 -> 8     18
+      9      f12035   f12796     8 -> 9     18
+     10      f13535   f14296     9 -> 10    18
+     11      f15140     --         10       20   5x4  x 64..192  y 24..168
+
+The step lands exactly where the compares say: the board dealt at f7156 is the
+first with level 5 and it is the first with 18 cards and pairs needed 9; the
+board dealt at f14717 is the first with level 10 and it is the first with 20 and
+pairs needed 10. The exit census reads
+data_0209caf4[29] = { 215, 10, 0, 0, 0 } -- score 215, level 10 -- and the top
+screen draws a star badge reading 10.
+
+The deal is REPRODUCIBLE: three separate runs of the same script produced the
+same sixteen card identities in the same slots, and extending a run or adding
+taps after a board did not move an earlier board's deal, which is what made the
+board-by-board scripting possible at all.
+
+WHAT THIS SECTION DOES NOT KNOW.
+  - WHETHER 16/18/20 IS WHAT A DS PLAYER SEES AT THOSE CLEAR COUNTS. The rule is
+    read off the ROM and the port obeys it; nobody has held a DS next to this.
+  - THE OTHER TWENTY-NINE MINIGAMES' PARAMS ARE NOW NON-ZERO and only their
+    boots were checked. Six ids appear on two ov005 rows (0x0173, 0x0178,
+    0x0179, 0x017a, 0x017c, 0x016c) because the ROM's menu selects by POSITION;
+    the port takes the first row, which is the same caveat and the same rule the
+    sound seat above it has carried since run link60.
+  - WHAT +0x465e's NEW VALUE CHANGES ON SCREEN. It is a name-text id read by
+    src/func_ov004_020af094.cpp; the five scenes booted clean with it and no
+    lane has compared the banner to a DS.
