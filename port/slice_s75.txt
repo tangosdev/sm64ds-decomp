@@ -206,6 +206,67 @@
 # callees from every static closure the port has, so retiring a floor can widen
 # the slice, and the widening only shows up at link time.
 #
+# ---- THE PADDLE DREW FROM ANOTHER OVERLAY'S BYTES (run mg8, lane SGX) --------
+#
+# The owner played this scene on the mg7 build and reported "I cant see the
+# paddle if im suposed to". He is supposed to: it is the cue bar the aim state
+# moves, and it was never being drawn.
+#
+# WHAT DRAWS IT. Slot 9 Render (func_ov006_020e67f0) calls six bodies and the
+# last is src/func_ov006_020e4b78.c, eight lines: gate on the cue-visible byte
+# at +0x55b9, read the cue's x at +0x5584 and y at +0x5588 -- the two fields
+# func_ov006_020e4bd4, the stylus aim state this file's floor section named,
+# writes -- and hand ONE OamAttr template to func_ov004_020afdd0 at
+# (x >> 12) - 0x20, (y >> 12) - 8. The -0x20 is half of 64, which is the first
+# thing that says the template is a 64-wide pair.
+#
+# THE TEMPLATE IT NAMES IS data_ov098_0213c4f0 AND THAT IS THE WRONG OVERLAY.
+# 0x0213c4f0 has two occupants and both configs are right about their own image:
+#
+#   config/arm9/overlays/ov006/relocs.txt:3577
+#     from:0x020e4bd0 kind:load to:0x0213c4f0 module:overlay(6)
+#   config/arm9/overlays/ov098/relocs.txt:143
+#     from:0x021388b4 kind:load to:0x0213c4f0 module:overlay(98)
+#
+# 0x020e4bd0 is func_ov006_020e4b78's OWN literal pool word -- the body runs
+# 0x020e4b78..0x020e4bd4 -- so the load is internal to ov006 and dsd tagged it
+# overlay(6) with no ambiguity flag. This is the same shape as the SpawnInfo
+# trap at the top of this file: a symbol filed under ov098 for an address that
+# is ov006's when ov006 is the overlay running. Sweep the config for the
+# ADDRESS, not one overlay for the name.
+#
+# THE BYTES, read at each overlay's own OVT base out of extracted/overlays/:
+#   ov006 (base 0x020bfec0)  80004000 00001008 80204000 0000100c
+#     two OAM entries {0x4000,0x8000,0x1008} and {0x4000,0x8020,0x100c}: 32x16,
+#     16-colour, palette 1, PRIORITY 0, tiles 0x008 and 0x00c, at x = 0 and
+#     x = 0x20. A 64x16 bar. Scene 374's bumper is the same pair -- 32x16,
+#     palette 1, priority 0, tiles 8 and 12 -- in its engine-B OAM, measured
+#     with SM64DS_PPU_AUDIT, so a second scene corroborates the shape.
+#   ov098 (base 0x02137be0)  00014000 00014000 00014000 0000f000
+#     ov098's cannon data. Its first entry reads as a 16x8 sprite on TILE 0,
+#     and tile 0 in this scene's OBJ VRAM is entirely transparent, which is why
+#     the symptom was a missing paddle rather than a garbled one.
+#
+# WHY THE PORT LINKED THE WRONG ONE. ov098 is in PORT_ACTOR_OVERLAYS and is
+# mounted, so data_ov098_0213c4f0 is a real host global and the reference
+# resolved cleanly. Nothing in the link, the map or the byte gate can see it:
+# both names exist, both are defined, and the wrong one is a quiet frame.
+#
+# FIXED port-side with a per-source COMPILE_DEFINITIONS in port/CMakeLists.txt,
+# following run link60 lane A2's ov002/ov004 precedent -- and a -D rather than
+# an /alternatename for A2's reason, that the ov098 name is DEFINED in this
+# binary and an alias with a defined symbol on the left is defeated silently.
+# Proof: scene 375's stacked capture gains 3736 host pixels at DS y 168,
+# x 96..159, which is the bar, and no other scene moves.
+#
+# THE SRC TU'S OWN SPELLING IS A DECOMP DEFECT AND IS NOT FIXED HERE.
+# src/func_ov006_020e4b78.c should name data_ov006_0213c4f0; the reloc row above
+# is the whole argument and the two names share an address so no byte moves.
+# ROUTED, because this is a port lane. A sweep of the other ov006 sources found
+# five more files carrying a non-ov006 data name -- func_ov006_020cb16c,
+# 020cd12c, 020cd6f4, 020d5e5c and 0210a708 -- none of them on a curling path,
+# none of them checked by this lane, all of them the same question.
+#
 # ---- THE 48 LINES -----------------------------------------------------------
 src/func_ov006_020e3854.c
 src/func_ov006_020e3878.c

@@ -266,3 +266,190 @@ VERIFICATION
   * Shell collision (CUR2's fix) untouched: only ntr/ppu_sub.cpp changed.
   * gate.py GREEN, delta 0 (linked 5831/11250, battery ALL GREEN, skips []),
     host raster only.
+
+
+================================================================================
+ENGINE A HAD THE SAME OBJ-VS-OBJ DEFECT, AND BOTH SHELL GAMES SHOW IT
+(run mg8, lane SGX)
+================================================================================
+
+BLND2 above fixed OBJ-vs-OBJ priority on ENGINE B and said in as many words that
+engine A "is not involved and was not touched", because curling's playfield is on
+the bottom screen. That was true of scene 374 AT IDLE and false of the pair. The
+owner played both halves of the curling family on the mg7 build and reported:
+
+  375 "I cant see the paddle if im suposed to"
+  both "there is a bug in all the shell games with the reflection and the ice
+       filter over it. When snow or other shells pass over ones reflection the
+       layers mess up and it changes the color of the things passing it or it
+       draws overtop of them"
+
+TWO DEFECTS, AND THEY DO NOT SHARE A CAUSE. The layering one is this file's; the
+paddle is a wrong-overlay data crossing and is written up in port/slice_s75.txt.
+
+
+1. WHERE EACH GAME'S PLAYFIELD ACTUALLY IS
+------------------------------------------
+
+Measured with SM64DS_PPU_AUDIT, 300 headless frames, both engines:
+
+  scene 374 (dScMgCurling_c, Shuffle Shell)
+    engine A  DISPCNT 00001400 (BG2+OBJ), BG2CNT 1222 prio 2, BLDCNT 0d40,
+              BLDALPHA 1002. mode-1 OBJ count 0 in 0/300. HUD and snow only.
+    engine B  DISPCNT 00011400 (BG2+OBJ), BG2CNT 0816 prio 2, BLDCNT 0440,
+              BLDALPHA 1002. 5 shells 32x32 mode 0 prio 1, 5 reflections 32x32
+              mode 1 prio 2, the bumper as TWO 32x16 prio-0 entries on tiles 8
+              and 12, snow 8x8 prio 0.
+  scene 375 (dScMgCurling2_c, Shell Smash)
+    engine A  DISPCNT 00001c00 (BG2+BG3+OBJ), BG2CNT 5422 prio 2, BG3CNT 1222
+              prio 2, BLDCNT 0d40, BLDALPHA 1002. 6 shells mode 0 prio 1, 6
+              reflections mode 1 prio 2 (1794 semi entries over 299/300
+              samples), snow prio 0. THE WHOLE PLAYFIELD IS ON THE TOP SCREEN.
+    engine B  one shell and one reflection (the one being aimed), HUD, snow.
+
+SO THE IDLE MEASUREMENT IS NOT THE SCENE. 374's shells and reflections are drawn
+by src/func_ov006_020e1c68 through RenderOamBothScreens, and
+src/RenderOamBothScreens.cpp submits EVERY entry to both engines -- the sub
+engine at y, the top engine at y + 0xc0 + G. At idle 374's shells sit low enough
+that the top copies are culled by OAM::Render's own "y + h < 0" test, which is
+why engine A reads 0 mode-1 entries over 300 idle frames. Drive a shot and they
+arrive: 74 mode-1 entries in 74 of 240 sampled frames, one per frame, the
+travelling shell's reflection on the top screen.
+
+BLDCNT_A 0x0d40 decoded, since the fix turns on what its bits mean:
+  bits 0-5   1st target  0x00   NONE
+  bits 6-7   mode        01     alpha
+  bits 8-13  2nd target  0x0d   BG0 | BG2 | BG3   (OBJ, bit 4, is NOT set)
+  BLDALPHA 0x1002        eva 2/16, evb 16/16
+so the only thing that blends on engine A is a mode-1 sprite over one of those
+three backgrounds, and a mode-1 sprite over ANOTHER SPRITE draws opaque.
+
+
+2. THE DIVERGENCE
+-----------------
+
+hal/message_compositor.cpp's raster_obj walked OAM 127 -> 0 and wrote
+g_a[py][px] UNCONDITIONALLY for every opaque texel, so the lowest OAM index won
+whatever the priorities were. Its own comment recorded the gap
+("raster_obj still draws sprites over every BG regardless of priority, which is
+a separate gap and not this lane's") and so did
+port/ov004_ov007_2d_map.txt section 7 h and i.
+
+The DS resolves OBJ-vs-OBJ by PRIORITY first -- attribute 2 bits 10-11, lowest
+number in front -- and uses the OAM index only to break a tie. One OBJ pixel
+exists per screen pixel, so a sprite that loses contributes nothing: not a
+colour, not a semi-transparent flag. Both shell games put the SNOW at priority 0
+and the HIGHEST OAM indices, the shells at priority 1 and the reflections at
+priority 2 on the LOWEST indices, so index order inverted the whole stack.
+
+THE SECOND HALF OF THE DEFECT IS THE ONE THE OWNER'S WORDS NAME. When the
+reflection won a pixel it also BLENDED against whatever was in g_a at that
+moment, and that was the sprite it had just covered. The test
+"bl.second & (1u << owner)" with owner = kOwnerObj reads BLDCNT bit 4, which
+0x0d does not set, so the blend did not fire and the reflection's own texel was
+written OPAQUE over the snow. That is "it changes the color of the things
+passing it" literally: the snow's white became the reflection's outline colour.
+
+
+3. THE FIX (hal/message_compositor.cpp, raster_obj, one test)
+-------------------------------------------------------------
+
+    if (!objprio_off && g_a[py][px].hit
+        && g_a[py][px].owner == kOwnerObj
+        && prio > g_a[py][px].prio)
+        continue;
+
+ntr/ppu_sub.cpp's line for the 127 -> 0 walk, with ONE addition: the owner test.
+g_a is a shared buffer that already holds background pixels with their own
+priorities, and a sprite must not lose to a background here. OBJ-vs-BG is a
+different hardware rule (a sprite beats a background at EQUAL priority and loses
+only to a strictly better number), it is still not implemented in this file, and
+folding it into this test by dropping the owner check would move every scene in
+the game instead of the ordering this fixes. It stays in the gap list.
+
+SM64DS_OBJPRIO_A_OFF=1 restores the unconditional write on the same binary.
+
+ONE DIVERGENCE REMAINS AND IS NAMED IN THE CODE: a semi sprite that WINS this
+test over an already-written sprite pixel still blends against that loser's
+colour rather than against the 2nd-target layer below the whole OBJ layer, which
+this file does not keep. It needs a semi OBJ whose priority is at least as good
+as a normal OBJ it overlaps; in both shell games the reflections carry priority
+2, the worst number any sprite in either scene has, so no frame here reaches it.
+Closing it means resolving OBJ into its own buffer the way ntr/ppu_sub.cpp does.
+
+
+4. THE PIXELS, PROBED RATHER THAN ARGUED
+----------------------------------------
+
+A temporary per-pixel probe in raster_obj printed every OAM entry that touched
+one DS pixel on the last frame of scene 375, in both arms of the same binary.
+Three shapes, and every one of the 66 changed DS pixels is one of them:
+
+  DS(134,70)  snow oam65 mode0 prio0 texel ffffff over BG3
+              OLD: reflection oam13 mode1 prio2 texel f7d694 WRITE over it
+                   (cell owner 4 = OBJ, so no blend, opaque), then shell oam12
+                   mode0 prio1 texel 7b3100 WRITE over that. Final: brown.
+              NEW: oam13 SKIP (2 > 0), oam12 SKIP (1 > 0). Final: ffffff.
+              Snow buried under a shell -> snow stays snow.
+
+  DS(121,80)  snow oam43 mode0 prio0 texel efefe7 over BG3
+              OLD: reflection oam13 mode1 prio2 texel 181810 -- its dark outline
+                   -- WRITE, opaque. Final (24,24,16), near black.
+              NEW: SKIP. Final (239,239,231).
+              "it changes the color of the things passing it", exactly.
+
+  DS(119,84)  shell oam16 mode0 prio1 texel 429cbd over BG3 colour 63d6ff
+              OLD: reflection oam13 mode1 prio2 texel 52bde7 WRITE over it.
+              NEW: SKIP. Final 429cbd.
+              "or it draws overtop of them": a reflection over a shell body.
+
+Scene 374's shot phase, same three shapes on the TOP screen: 68 DS pixels where
+the travelling green shell's own greens ((115,255,140) down to (0,57,8)) become
+snow whites ((255,255,255), (239,239,231), (214,214,206)).
+
+
+5. THE SWEEP
+------------
+
+A/B on ONE BINARY (SM64DS_OBJPRIO_A_OFF=1 vs default), 300 headless frames,
+every hosted scene, top capture and stacked capture, md5 over each:
+
+  scene 4, 363, 366, 368, 369, 370, 374, 376, 378, 380, 390   IDENTICAL
+  level 1 selftest    IDENTICAL, md5 5b783a29d753ce4dfbd35c79a7b2850f, the
+                      value notes/port-selftest-bmp-gate.md records
+  scene 375           DIFFERS, 264 host px, bbox (176,136)-(304,284), the shell
+                      cluster and nothing else
+  scene 1  (title)    DIFFERS, 368 host px, bbox (0,2)-(38,94)
+
+The .dsstate section lands at the same base (0x83B000, size 0xEA3C9) before and
+after this change, so notes/port-selftest-bmp-gate.md permits the cross-binary
+byte compares as well as the one-binary A/B.
+
+SCENE 1'S 368 PIXELS ARE INSIDE THE TITLE SCREEN'S PRE-EXISTING GARBLED TOP-LEFT
+BLOCK and are FLAGGED rather than explained away. BLND2 saw the same region move
+by 156 px for the same reason and called it garbage before and after; that is
+still what it is -- the block is red/black noise in both arms and the star and
+"TOUCH TO START" outside it do not move by a pixel. What changed inside it is
+that a yellow star element that used to draw whole is now partly covered, which
+is priority correctness applied where index and priority disagree in an already
+broken region. It is not a working element in either arm, and the owner should
+look at it rather than take this paragraph's word for it.
+
+374 AT IDLE DOES NOT MOVE AT ALL (byte-identical in both arms), which is the
+same measurement that made BLND2 believe engine A was uninvolved. The shot
+phase is the arm that shows it, and a windowed scripted-stylus run is the only
+way to reach it: SM64DS_SCENE=374 SM64DS_SCENE_WINDOW=1 SM64DS_SCENE_FRAMES=n
+SM64DS_CLICK_TEST="256,724>256,584@100-119".
+
+AND A WINDOWED SHOT IS NOT BIT-DETERMINISTIC, which is worth carrying forward
+because it will fool a lane that A/Bs across two of them. The scripted stylus
+goes through SendInput, so a press can land a frame late and the whole shot
+diverges. Every shot A/B above therefore carries a CONTROL -- the same arm run
+twice -- and a row is evidence only when the control is 0:
+
+  f240  ON-vs-OFF 11567 px   control 11535 px   DISCARDED, the run diverged
+  f260  ON-vs-OFF    52 px   control     0 px   kept
+  f280  ON-vs-OFF    64 px   control     0 px   kept
+  f300  ON-vs-OFF   272 px   control     0 px   kept
+
+All three kept rows are top-screen-only and are the snow-under-the-shell shape.

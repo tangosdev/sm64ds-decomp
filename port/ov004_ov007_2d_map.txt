@@ -552,7 +552,10 @@ Gaps, per cluster, from what the two overlays actually poke:
 
      WHAT IS STILL OPEN AFTER h, so the next lane does not read it as done:
      raster_obj still draws every sprite over every BG regardless of the
-     sprite's priority; only the 3D comparison reads that field. And a
+     sprite's priority; only the 3D comparison reads that field. (READ THAT
+     AS OBJ-VS-BG ONLY. It was written before OBJ-vs-OBJ was resolved on this
+     engine at all, so it covered both halves; j below closed the sprite-
+     against-sprite half and the background half is what is left.) And a
      1st-target BG alpha-blending over the 3D layer is still the follow-up
      hal/message_compositor.cpp's own header records -- the coverage mask this
      lane adds is what such a blend would need, but the BG loop still resolves
@@ -679,10 +682,52 @@ Gaps, per cluster, from what the two overlays actually poke:
      but the 3D-priority half of h and the OBJ half of this one do not meet:
      raster_obj still draws every sprite over every BG regardless of the
      sprite's own priority, so the window's OBJ bit is honoured for whether a
-     sprite draws and its priority is still not honoured for where. And
+     sprite draws and its priority is still not honoured for where. (Again,
+     OBJ-VS-BG; j below closed OBJ-vs-OBJ.) And
      tests/smoke_objwin.cpp still programs engine B by hand only; engine A's
      copy of the contract is pinned by scene 366 in the battery rather than by
      a test that needs no ROM.
+
+  j. ENGINE A ORDERED SPRITE AGAINST SPRITE BY OAM INDEX ALONE. Closed by run
+     mg8 lane SGX, opened on the owner's report that "in all the shell games...
+     when snow or other shells pass over ones reflection the layers mess up and
+     it changes the color of the things passing it or it draws overtop of
+     them".
+
+     hal/message_compositor.cpp's raster_obj wrote its hit buffer
+     unconditionally on the OAM 127 -> 0 walk, so the lowest OAM index won
+     whatever the priorities said. The DS orders sprites by attribute 2 bits
+     10-11, lowest number in front, and uses the index only to break a tie --
+     the rule run link60 lane BLND2 put into ntr/ppu_sub.cpp for engine B, and
+     the half h and i above left open here. One OBJ pixel exists per screen
+     pixel, so a sprite that loses contributes nothing at all, and the losing
+     sprite's colour was also what the semi-transparent reflections were
+     blending against: BLDCNT_A 0x0d40 does not name OBJ as a 2nd target, so
+     the blend did not fire and the reflection wrote itself OPAQUE over the
+     snow it had just covered. That second half is the "changes the color"
+     in the report.
+
+     THE MEASUREMENT THAT FOUND IT IS WHERE THE PLAYFIELD IS. Scene 375
+     (dScMgCurling2_c, Shell Smash) runs its whole board on ENGINE A: six
+     shells at priority 1, six semi-transparent reflections at priority 2 and
+     the snow at priority 0, with the snow on the HIGHEST OAM indices, so index
+     order inverted the stack. Scene 374's board is on engine B and looks
+     innocent for 300 idle frames, but src/RenderOamBothScreens.cpp submits
+     every entry to BOTH engines and its travelling shell arrives on engine A
+     during a shot -- 74 mode-1 entries in 74 of 240 sampled frames -- so it is
+     the same defect on both games and an idle capture cannot see it.
+
+     THE TEST IS OWNER-GATED, which is the part not to copy from ppu_sub.cpp
+     blind: g_a holds background pixels too, and OBJ-vs-BG is a different rule
+     that is still not implemented. Dropping the owner check to fold the two
+     together would move every scene in the game.
+
+     Full derivation, the BLDCNT decode, the per-pixel probe and the
+     whole-battery A/B sweep (SM64DS_OBJPRIO_A_OFF=1) are in
+     port/ppu_blend.txt's mg8 section. Every hosted scene and the level 1
+     selftest are byte-identical across the arms except scene 375 (264 px, the
+     shell cluster) and scene 1's pre-existing garbled top-left block (368 px,
+     garbage in both arms, flagged for the owner).
 
 None of a..f blocks LINKING either overlay. They block the overlay doing
 anything visible once linked. That distinction is the whole shape of this
