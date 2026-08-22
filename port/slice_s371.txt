@@ -1,0 +1,343 @@
+# Lane S371, run mg9: dScMgAmida_c, actor id 0x173 (scene 371) -- THE ONE TRUE
+# WIDTH-37 CLASS of the twenty-nine, and the twelfth ov006 minigame the port
+# seats.
+#
+# port/mg_fanout_costs.txt section 11 corrected the width column for twelve of
+# thirteen classes and left exactly one survivor. This is it. Everything below
+# is the survivor's evidence, and it is written so the next reader can check it
+# rather than believe it.
+#
+# ---- 1. THE IDENTITY -------------------------------------------------------
+#
+# THE CLASS NAME IS THE ROM'S, through the type_info chain section 14 prefers
+# over a src spelling. The word IMMEDIATELY BEFORE the vtable is a relocated
+# pointer to the class's type_info record, and that record's second word is the
+# name:
+#
+#   relocs.txt  from:0x0213b914 kind:load to:0x0213b81c module:overlay(6)
+#   relocs.txt  from:0x0213b820 kind:load to:0x0213b828 module:overlay(6)
+#
+# and 0x0213b828 reads "12dScMgAmida_c" in extracted/overlays/overlay_0006.bin.
+# The record at 0x0213b81c is the ordinary mwcc __si_class_type_info triple
+# {0x0209a764 the type_info vptr, 0x0213b828 the name, 0x020bbf6c the base},
+# and 0x020bbf6c is ov004's -- the SAME base word dScMgCurling2_c's and
+# dScMgPanel_c's records carry. So the hierarchy is TWO deep:
+#
+#     Scene -> dScMgBase_c (data_ov004_020bc0c0) -> dScMgAmida_c (0213b918)
+#
+# THREE INDEPENDENT WITNESSES SAY THERE IS NO INTERMEDIATE TABLE, which is
+# section 13 CORRECTION 1's cheap test run in both directions and once more:
+#   the FACTORY func_ov006_020d5974 does exactly one vtable store, `str r1,[r4]`
+#     at 0x020d599c with r1 = 0x0213b918 off its own pool at 0x020d5a2c;
+#   SLOT 17 (the D0, func_ov006_020d10b8) does exactly one, `str ip,[r4]` at
+#     0x020d10d8 with ip = 0x0213b918 off its pool at 0x020d1150;
+#   SLOT 16 (the D2, func_ov006_020d1018) writes the same word.
+# One face array, not two.
+#
+# THE SPAWNINFO IS data_ov006_0213b814 AND THE FACTORY IS 0x020d5974, by
+# section 3's mechanical recipe: the doubled-id word 0x01730173 occurs in the
+# overlay at 0x0213b818 and the word before it is the factory. The arm9 spawn
+# table confirms the record from the other end, by RELOCATION rather than by
+# arithmetic:
+#
+#   config/arm9/relocs.txt  from:0x02090e30 kind:load to:0x0213b814
+#                                                       module:overlay(6)
+#
+# and 0x02090e30 is data_02090864 + 0x173*4 exactly.
+#
+# THE ROM GIVES THIS ID NO SPAWN SYMBOL, and that is a measured absence rather
+# than a lane that did not look. port/slice_s75.txt's SHELL SMASH LESSON is
+# "sweep the whole config for the ADDRESS, not one overlay for the name" -- a
+# spawn symbol can be filed under a DIFFERENT overlay with an `ambiguous` flag.
+# The sweep was run: `grep -rn 0213b814 config/ symbols/` returns three rows and
+# only three -- ov006's own data_ov006_0213b814, the arm9 spawn-table relocation
+# above, and an unrelated ov098 relocation whose `from` happens to be the same
+# number in a different module. No Mg*_SpawnInfo names this record anywhere.
+#
+# ---- 2. THE TWO PLAYER TITLES, AND THE CHAIN THAT PROVES THEM --------------
+#
+# THIS ID CARRIES TWO PLAYER-FACING TITLES ON ONE ACTOR ID, which is exactly
+# the shape section 14 found for dScMgPanel_c ("Puzzle Panel" / "Puzzle Panic").
+# The ov005 launch table has TWO rows for 0x173:
+#
+#   row  0   param 0x00000000   record  0   text  0   low byte 0x00
+#   row 24   param 0x00181802   record 24   text 24   low byte 0x02
+#
+#     text 0  -> data_ov004_020bc070[0]  = message 548  "Mario's Slides"
+#     text 24 -> data_ov004_020bc070[24] = message 588  "Connect the Characters"
+#
+# and their body text says both are the same game seen twice:
+#     548  "Guide Mario down the slides to the Star. Draw lines on the Touch
+#           Screen to create new routes for him. Collect [N] Stars to move up a
+#           stage."
+#     588  "Draw lines to match the characters' heads to their bodies. Press GO
+#           when you're finished to see how you fared."
+# Both are amidakuji -- the Japanese ladder lottery the RTTI name is short for.
+#
+# THE TITLES ARE NOT PROVISIONAL AND THE CHAIN IS CONTROLLED 25 TIMES OVER.
+# Decoding every one of the 36 ov005 rows through the same three steps and
+# comparing the result against the config's OWN spawn symbol name gives 25
+# exact agreements and no disagreements:
+#
+#   MgMemoryMatch/"Memory Match"      MgBobOmbSquad/"Bob-omb Squad"
+#   MgWanted/"Wanted!"                MgBounceAndPounce/"Bounce and Pounce"
+#   MgSnowballSlalom/"Snowball Slalom"  MgSortOrSplode/"Sort or 'Splode"
+#   MgPicturePoker/"Picture Poker"    MgHideAndBooSeek/"Hide and Boo Seek"
+#   MgTrampolineTime/"Trampoline Time"  MgMushroomRoulette/"Mushroom Roulette"
+#   MgShuffleShell/"Shuffle Shell"    MgPsycheOut/"Psyche Out!"
+#   MgBoomBox/"Boom Box"              MgBounceAndTrounce/"Bounce and Trounce"
+#   MgLuckyStars/"Lucky Stars"        MgPairAGoneAndOn/"Pair-a-Gone And On"
+#   MgLakituLaunch/"Lakitu Launch"    MgWhichWiggler/"Which Wiggler?"
+#   MgShellSmash/"Shell Smash"        MgMemoryMaster/"Memory Master"
+#   MgTrampolineTerror/"Trampoline Terror"
+#
+# and the three COMPOUND config names decode to their two halves on their two
+# rows, which is the strongest control of the set because it is a prediction
+# the chain could have failed:
+#   MgBingoBallSlotsShot        -> row 10 "Bingo Ball"  / row 22 "Slots Shot"
+#   MgPuzzlePanelPuzzlePanic    -> row 15 "Puzzle Panel"/ row 35 "Puzzle Panic"
+#   MgCoincentration            -> row 14 "Coincentration"
+#                                  row 30 "Intense Coincentration"
+# One more control lands on a class this port already ships: id 0x186, seated as
+# SCENE_MG_FLOWER, decodes to "Loves me...?" -- the title the tree already knows
+# it by.
+#
+# port/slice_s75.txt SAYS "THE ROM ITSELF STORES NO TITLE TEXT AT ALL" AND THAT
+# IS THE ONE THING IN IT THAT IS WRONG. The ROM stores every title. What defeats
+# a search is TWO layers, not one: data/message/msg_data_eng.bin (NitroFS file
+# id 643) is LZ77-compressed, and the BMG inside it is not ASCII -- it is a
+# GLYPH INDEX, 'A'..'Z' at 0x0a..0x23 and 'a'..'z' at 0x2d..0x46, with space
+# 0x4d, '-' 0x47, '.' 0x48, apostrophe 0x49, '?' 0x26, '!' 0x27 and 0xfd as the
+# line break. So an ASCII or a UTF-16 sweep of the image returns zero hits for
+# "Shuffle" while the word is sitting in the file. The lesson stands corrected
+# rather than deleted, because the METHOD it recommends -- search the config
+# harder -- is what found the ov005 table in the first place.
+#
+# THE PORT BOOTS ROW 0. hal/scene_mg_sound.cpp's port_mg_scene_spawn_param takes
+# the FIRST row whose id matches, and for this id that is row 0, whose param is
+# literally zero. So on the port this scene is "Mario's Slides" with save record
+# 0 and name text 0, and section 17's own caveat about the six twice-listed ids
+# applies here in its sharpest form: the OTHER row is the one that changes the
+# game, and the port has no menu position to read.
+#
+# ---- 3. THE WIDTH IS 37, AND HERE IS HOW EACH CHECK ANSWERS ----------------
+#
+# port/mg_fanout_costs.txt section 11's three checks are written to REFUSE a
+# width. Every sibling in the family fails at least one of them at 37. This
+# class passes all three, and the way each one reads is the point:
+#
+#   1. SPAN -- an UPPER bound only, so it can refuse a width and never grant
+#      one. config/arm9/overlays/ov006/symbols.txt runs
+#          data_ov006_0213b918   (the vtable)
+#          data_ov006_0213b9ac   (the next symbol)
+#      and 0x0213b9ac - 0x0213b918 = 0x94 = 37 words. For the twelve classes
+#      section 11 corrected the same subtraction gave 36, which is what refused
+#      them. Here it gives 37, so the check DECLINES TO REFUSE. That is all a
+#      span can ever do and this file does not pretend it is more.
+#
+#   2. TERMINAL SLOT -- the check that actually decides. Every dScMgBase_c-
+#      derived table holds ov004's 0x020ad660 at slot 35, because every one of
+#      them INHERITS that body. This one does not: slot 35 is 0x020d1170, an
+#      ov006 address inside this class's own code block. The base table
+#      data_ov004_020bc0c0 holds 0x020ad660 at index 35 and this table holds
+#      0x020d1170 there, so the slot is an OVERRIDE and the terminator argument
+#      does not apply to it.
+#
+#   3. WHAT THE WORD IS -- and for this class the honest answer is that the word
+#      is a RELOCATED CODE POINTER, which no phantom slot has ever been:
+#          relocs.txt  from:0x0213b9a8 kind:load to:0x020d1188 module:overlay(6)
+#      0x0213b9a8 is 0x0213b918 + 36*4. A slot-36 word that is live data
+#      belonging to something else -- section 11's whole failure mode -- has no
+#      load relocation of its own, because it is not a pointer. This one has
+#      one, and 0x020d1188 is func_ov006_020d1188 in symbols.txt, sized 0x18,
+#      immediately after func_ov006_020d1170.
+#      The word at index 37, 0x0213b9ac, is the next config symbol, reads
+#      0x00000100, and has NO relocation. The table ends exactly where the span
+#      says it does.
+#
+# A FOURTH CHECK, WHICH IS THE ONE THAT WOULD HAVE SURVIVED ALONE. Slot 36 is
+# DISPATCHED, twenty-five times over. A scan of the overlay image for
+# `ldr Rd,[Rn,#0x90]` with Rn neither pc nor sp finds 26 sites, and 25 of them
+# are inside this class's own code block:
+#     func_ov006_020d122c 1, _020d1958 1, _020d1a3c 1, _020d27dc 3,
+#     _020d36a4 3, _020d3ba0 6, _020d48dc 2, _020d4b7c 4, _020d5384 4
+# The 26th, 0x020c1f5c in func_ov006_020c1f4c, is a FALSE POSITIVE of the
+# offset scan and is recorded so nobody re-finds it: that body reads +0x8c,
+# +0x90 and +0x94 as three consecutive OBJECT FIELDS and passes them to a
+# formatter at 0x0203bf44. The Rn filter section 14 prescribes drops pc and sp;
+# it does not know a field from a slot. The tell is whether the loaded word is
+# then branched to.
+#
+# WHY THE CLASS NEEDED A 37th VIRTUAL AT ALL, in six instructions each. The
+# family's slot 35 is a boolean over the spawn param's low byte, and this class
+# needed to tell THREE values apart, so it split the boolean into two
+# predicates and put the second in a new slot:
+#
+#   ov004 0x020ad660 (what every sibling inherits, 0x14, 5 instructions)
+#       ldr r0,[r0,#8] / ands r0,r0,#0xff / movne r0,#1 / moveq r0,#0 / bx lr
+#           -- return (field_8 & 0xff) != 0
+#   ov006 0x020d1170 (THIS class's slot 35, 0x18, 6 instructions)
+#       ldr r0,[r0,#8] / and r0,r0,#0xff / cmp r0,#1 /
+#       moveq r0,#1 / movne r0,#0 / bx lr
+#           -- return (field_8 & 0xff) == 1
+#   ov006 0x020d1188 (THIS class's slot 36, 0x18, 6 instructions)
+#       ldr r0,[r0,#8] / and r0,r0,#0xff / cmp r0,#2 /
+#       moveq r0,#1 / movne r0,#0 / bx lr
+#           -- return (field_8 & 0xff) == 2
+#
+# and field_8 is the low half of the spawn param, which section 17's third
+# field is exactly. The two ov005 rows above carry low bytes 0x00 and 0x02, and
+# 0x02 is the ONLY 0x02 in the whole 36-row table -- every other non-zero low
+# byte in it is 0x01. So the class the family's width column was wrong about
+# twelve times is the class whose mode selector needed more than a boolean, and
+# the two facts are the same fact.
+#
+# MODE 1 HAS NO ov005 ROW, and this file states that as a measurement rather
+# than a conclusion. Slot 35 answers true only when the low byte is 1; no row
+# of the launch table gives THIS id a low byte of 1; and a scan of ov004 and
+# ov006 for `ldr Rd,[Rn,#0x8c]` finds fourteen sites in ov006 and ZERO in ov004,
+# none of the fourteen inside this class's code block. So on every path this
+# tree can see, slot 35 is never dispatched and mode 1 is never selected. What
+# that does NOT say is that mode 1 is dead: nothing here enumerates every writer
+# of field_8, and a dispatch through a computed vtable offset would leave no
+# `ldr #0x8c` for the scan to find. The seat counts slot 35 separately from slot
+# 36 for exactly this reason.
+#
+# THE FILL IS CALLED WITH 37, AND THAT IS WHERE THE 37 LIVES.
+# hal/scene_mg_amida.cpp calls port_scene_mg_fill_shared(vt, 37) and
+# am_raw_left(vt, 37), and its face array kAmidaFaces has ELEVEN rows, one per
+# override. The fill itself is address-keyed and handles any width; the COUNT is
+# the parameter section 11 says is the thing to get right, and for this class
+# alone it is 37. The dScMgBase_c table is still filled with 36, because that
+# table really is 36 words.
+#
+# ---- 4. THE ELEVEN OVERRIDES ----------------------------------------------
+#
+# Slot-by-slot against data_ov004_020bc0c0. FIVE carry the "recovered from
+# vtable slot identity" marker and all five are ruled REAL_DECOMP in
+# port/tools/inferred_stub_adjudicated.txt, disassembled before a word of this
+# seat was written.
+#
+#   slot  address     size   src                              marker
+#     0   0x020d5384  0x5a0  func_ov006_020d5384.cpp          yes  InitResources
+#     5   0x020d5924  0x050  func_ov006_020d5924.cpp          yes  AfterCleanup
+#     6   0x020d4b7c  0x774  func_ov006_020d4b7c.c            no   Behavior
+#     9   0x020d48dc  0x2a0  func_ov006_020d48dc.cpp          no   Render
+#    16   0x020d1018  0x0a0  func_ov006_020d1018.c            no   D2
+#    17   0x020d10b8  0x0b4  func_ov006_020d10b8.cpp          yes  D0
+#    18   0x020d52f0  0x094  func_ov006_020d52f0.c            yes  state reset
+#    31   0x020d11a0  0x08c  func_ov006_020d11a0.cpp          yes  sub BG1 load
+#    34   0x020d14c0  0x498  func_ov006_020d14c0.c            no
+#    35   0x020d1170  0x018  func_ov006_020d1170.c            no   mode == 1
+#    36   0x020d1188  0x018  func_ov006_020d1188.c            no   mode == 2
+#
+# THE OTHER 26 SLOTS NEED NO ROW HERE and the arithmetic closes: 7 hold arm9
+# words that hal/scene_mg.cpp's port_scene_fill_rom already keys (slots 3, 4, 8,
+# 11, 13, 14, 15) and 19 hold ov004 words kMgBaseFaces already keys (1, 2, 7,
+# 10, 12, 19..30 except 31, 32, 33). 7 + 19 + 11 = 37.
+#
+# SLOT 18 TAKES A REAL SECOND ARGUMENT and the thunk forwards it rather than
+# only cleaning it. `cmp r1,#0` at 0x020d52f8 branches to two different arms --
+# this is dScMgPanel_c's shape, not curling's ride-through -- so a thunk that
+# dropped it would silently take the increment arm every time.
+#
+# ---- 5. THE WALL: THIS CLASS DOES NOT HAVE ONE, AND HERE IS THE PROOF ------
+#
+# port/mg_fanout_costs.txt section 4 costs every minigame at five dispatching
+# TUs to host-copy, and section 14 raised that to ten for a two-level machine.
+# This class has ZERO, and because "none" is the word section 4 says no static
+# evidence may license, it is established three ways and then left to the run.
+#
+#   1. THE CONSTRUCTOR. This class's overlay constructor is
+#      src/__sinit_ov006_0212fc7c.c and it builds no pair table at all: three
+#      SharedFilePtr registrations (file ids 0x21a, 0x21b, 0x21c) and one
+#      static array constructor over data_ov006_02140990. port/tools/stategen.py
+#      refuses it at the struct step, which is the refusal it gives a
+#      constructor that declares no pair type.
+#   2. THE SOURCE SWEEP. No `::*` and no member-pointer type in any of this
+#      class's 28 own TUs, and no bare VT or HEAP placeholder either.
+#   3. THE RELOCATION SET, which is the one that makes it a measurement rather
+#      than two absences. Ninety-three relocations in ov006 land inside this
+#      class's code block 0x020d0fe4..0x020d5a50. TWELVE of them come from a
+#      DATA word rather than from inside a function, and the twelve are:
+#      the SpawnInfo's factory word, and the ELEVEN vtable override slots.
+#      Nothing else in the whole overlay image stores a pointer to this class's
+#      code. There is no state table to stride at four bytes, because there is
+#      no state table.
+#
+#   AND THE THIRD SHAPE IS CHECKED BY READING, because lane FLW's open-coded
+#   int decode is invisible to 1 and 2 alike. Slot 6 (src/func_ov006_020d4b7c.c)
+#   was read for section 14's practical rule -- an eight-byte stride into an
+#   external array followed by `>> 1` and `& 1`. It does none of that: it
+#   declares a 37-virtual shadow class over the mounted table, dispatches slot
+#   36 four times through it, and branches on plain ints. Its `>>` uses are
+#   Fix12 arithmetic and a 0x8000 angle table index.
+#
+#   SO THE STATE MACHINE IS A SWITCH, AND THE RUN IS STILL THE DETECTOR. The
+#   seat prints slot hits and the two mode counters; a run with a climbing
+#   Behavior counter is a run whose state machine ran, because there is no other
+#   dispatch for it to be hiding in.
+#
+# ---- 6. TWO HARD FLOORS, BOTH ON THE TICK PATH ----------------------------
+#
+# The cost table's nosrc column reads 0 for this class and that column counts
+# only vtable BODIES. Section 13 CORRECTION 3's method -- a delinks join over
+# every CALLEE of every override, not over the state addresses -- finds two:
+#
+#   func_ov006_020d27dc  size 0xe48. config/arm9/overlays/ov006/symbols.txt
+#       names it; delinks.txt stops at `end:0x020d27dc` and resumes elsewhere,
+#       so no block covers it; and no src file defines it in either extension,
+#       in any overlay -- the module-residency trap section 13 warns about was
+#       checked and there is no func_ov00X_020d27dc.c anywhere in src/.
+#       ONE caller, `from:0x020d4d78 kind:arm_call`, which is inside slot 6.
+#       Dispatches slot 36 three times.
+#   func_ov006_020d36a4  size 0x4fc. Same shape: named, delinks stops at
+#       `end:0x020d36a4`, no src anywhere. TWO callers, 0x020d3da0 (inside
+#       func_ov006_020d3ba0, which slot 0 and slot 18 both tail-call) and
+#       0x020d4bd4 (inside slot 6). Dispatches slot 36 three times, the first
+#       of them in its own fourth instruction.
+#
+# BOTH GET NAMED COUNTING TRAPS in port/unmatched/MgAmida_Faces.cpp and neither
+# gets a body. The signatures are read rather than chosen: both take self in r0
+# (`mov sb, r0` in each prologue), both have a single exit that sets no return
+# value, and both of their decompiled callers declare them void -- slot 6
+# declares both, and func_ov006_020d3ba0 independently declares 020d36a4 as
+# `void func_ov006_020d36a4(void *sb)`. The traps are therefore void, count
+# themselves, and assert nothing about what the bodies do.
+#
+# ---- 7. THE CLOSURE --------------------------------------------------------
+#
+# The class's own code block holds 30 functions; 28 have src and are listed
+# below, and the two floors above are the other two. The rest of the list is
+# the link's own waves. Nothing here is host-copied, so no line is excluded and
+# there is no duplicate-symbol assertion for this slice to carry.
+
+src/__sinit_ov006_0212fc7c.c
+src/func_ov006_020d0fe4.c
+src/func_ov006_020d1008.c
+src/func_ov006_020d100c.c
+src/func_ov006_020d1018.c
+src/func_ov006_020d10b8.cpp
+src/func_ov006_020d116c.c
+src/func_ov006_020d1170.c
+src/func_ov006_020d1188.c
+src/func_ov006_020d11a0.cpp
+src/func_ov006_020d122c.c
+src/func_ov006_020d1450.c
+src/func_ov006_020d14c0.c
+src/func_ov006_020d1958.cpp
+src/func_ov006_020d1a3c.cpp
+src/func_ov006_020d1ba0.c
+src/func_ov006_020d2580.c
+src/func_ov006_020d25fc.c
+src/func_ov006_020d3624.cpp
+src/func_ov006_020d3668.cpp
+src/func_ov006_020d3ba0.c
+src/func_ov006_020d452c.c
+src/func_ov006_020d47f4.c
+src/func_ov006_020d48dc.cpp
+src/func_ov006_020d4b7c.c
+src/func_ov006_020d52f0.c
+src/func_ov006_020d5384.cpp
+src/func_ov006_020d5924.cpp
+src/func_ov006_020d5974.cpp
