@@ -246,6 +246,31 @@
 // reaches -- so there is no third trap to avoid adding and no dependency to
 // carry at the merge.
 //
+// LANE PSY'S SharedFilePtr VENEER IS NOT THIS CLASS'S. func_02017a24, which
+// drops the file id in r1 through three forwarders and shows up as a fatal
+// garbage fileID inside InitResources, is not in this closure either -- zero
+// hits -- and this class's InitResources loads its two files through LoadFile
+// (0x0201816c) directly. No boot of scene 386 has produced that symptom.
+//
+// LANE S364'S TITLE-TABLE CORRECTION DOES NOT BITE HERE, AND IT WAS CHECKED
+// RATHER THAN ASSUMED. data_ov004_020bc070 maps a text index to a message id as
+// 0x0224 + n only for indices 0..23; 24..35 are an explicit list that the
+// arithmetic gets wrong. THIS CLASS'S TEXT INDEX IS 15, inside the arithmetic-
+// safe range, and the table was read anyway: index 15 holds 563, which is what
+// 0x0224 + 15 gives. The tail of the same read reproduces S364's list exactly
+// -- 588, 573, 586, 575, 576, 577, 585, 589, 580, 587, 582, 583 -- so that
+// correction is independently confirmed here even though this seat does not
+// depend on it.
+//
+// LANE S364'S AMBIGUOUS-ADDRESS HAZARD WAS SWEPT AND COMES BACK CLEAN. Of the
+// 161 relocation targets this class's code block reaches, exactly ONE lands on
+// an address more than one overlay claims: 0x020beb68, module overlays(0,4),
+// which ov000 names data_ov000_020beb68 and ov004 names data_ov004_020beb68.
+// The port hosts it from ov004_syms.c.obj -- ov004's own mount -- and ov004's
+// is the reading this class needs, since it is dScMgBase_c's scene tracker,
+// written by the base constructor func_ov004_020b2adc and read by slot 18 here.
+// Right module, so no per-source rename is owed.
+//
 // ---- 11. THE GAPLESS LATCH IS CALLED AND THE SPLICE IS NOT ---------------
 //
 // hal_gapless_minigames_latch() runs from slot 0 the way every seated

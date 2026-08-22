@@ -185,6 +185,11 @@
 #     func_ov006_020eb610   sub-object +0x00, OPEN-CODED IN PLAIN INTS
 #
 # THE FIFTH WAS FOUND BY A ROM SWEEP, and the method is the transferable part.
+# SWEEP WORD BY WORD, which run mg9 lane PSY independently arrived at: a linear
+# disassembler stops at the first literal pool it cannot decode, and an ov006
+# text section is full of them. This lane's first sweep was linear and returned
+# FOUR of the five sites; decoding each word on its own and joining the pairs
+# afterwards returns 114 across the whole overlay and all five here.
 # Decode every word of ov006's text and look for `add Rd,Rn,Rm,asr #1`
 # immediately followed by `ands Rm,Rm,#1`. That pair is the ARM Itanium
 # member-pointer sequence's own fingerprint and no source-level disguise can
