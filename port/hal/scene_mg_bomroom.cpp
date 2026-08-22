@@ -178,6 +178,40 @@
 // held the value and naming it changes no instruction. The defect was only
 // ever a host-ABI one, which is why the byte gate was green over it for two
 // runs.
+//
+// STILL OPEN AFTER THE FIX: THE TOP SCREEN GOES BLACK PART-WAY THROUGH THE
+// CARRY, AND THE FORTY BOMBS ARE NOT DRAWN MARCHING UP THERE.
+//
+// This is a RENDERING question, not a state-machine one, and it is recorded
+// here rather than in a run status file so it travels with the code. The state
+// machine is correct: the sweep completes, the bins clear and play resumes.
+//
+// MEASURED ON THE mg8 MERGE TIP, i.e. WITH lane SGX's engine-A OBJ priority
+// fix already in. That fix was the plausible cure and it is NOT the cure --
+// the black field survives it. Same seeded repro, SM64DS_SOS_FILL=40, stacked
+// capture (top screen is rows 0..383 of the 512x832 image):
+//
+//   f380  sub 1, waiting     top screen normal: grey hazard-bordered field,
+//                            two green plaques, no counter
+//   f450  sub 2, early carry top screen still normal, field grey, counter
+//                            plaque reads 0
+//   f560  sub 2, late carry  COUNTER READS 26 -- so the march IS running and
+//                            being counted -- but the central play field is
+//                            BLACK and no bombs are drawn in it. The room art
+//                            around it (conveyor, pipes, crates, SCORE,
+//                            RULES) still draws.
+//
+// So the blackout appears DURING sub 2, between f450 and f560, and it takes
+// the field and the bombs with it while leaving the surrounding layers alone.
+// A layer that stops being composited part-way through the carry fits that
+// shape; nobody has proved which one, and nobody has held a DS next to it to
+// say whether the retail game blacks this field out on purpose.
+//
+// WHAT SGX's FIX DID CHANGE on this screen, so the two are not confused: the
+// counter plaque. Before it, that plaque drew a Bowser emblem over the live
+// count; after it the count draws in front where it belongs (0 at f450, 26 at
+// f560). 652 pixels at f450, all inside DS rows 0..31. Real, and unrelated to
+// the black field below it.
 
 #include "hal/screen_gap.h"
 

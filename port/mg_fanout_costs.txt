@@ -2141,7 +2141,15 @@ byte with the identity capped at 8, 9 or 10.
 WHERE +0xb4 COMES FROM, AND IT IS BOTH MECHANISMS AT ONCE.
 
   SEEDED ONCE, FROM THE SAVE. src/func_ov006_020f74b4.cpp (InitResources) is the
-  only writer:  *(int*)(self + 0xb4) = func_ov004_020ad878();  and that body
+  only writer OF THE SEED -- and "nothing else writes +0xb4" would be false said
+  plainly, which is the run mg8 reviewer's correction and is kept here because
+  the difference is one line of disassembly away. func_ov004_020b0930, vtable
+  slot 1 (BeforeInitResources, INHERITED unchanged by dScMgMemory2_c), zeroes
+  +0xb4 along with +0xb8 and +0x465c. It runs BEFORE slot 0, so it clears the
+  field and InitResources then seeds it; the ordering is what makes the seed the
+  value that survives, and THE CONCLUSION BELOW IS UNCHANGED. Say "the only
+  writer of the seed" or name slot 1 too; do not say "no other writer".
+  The seed itself:  *(int*)(self + 0xb4) = func_ov004_020ad878();  and that body
   disassembles to func_02013580(func_ov004_020adc3c(data_ov004_020beb68), 1),
   i.e. data_0209caf4[minigame index][1]. A fresh record is ZERO --
   SaveData::ReadMinigameData calls SetDefaultValuesMg on every failure path and
@@ -2238,6 +2246,98 @@ WHAT THIS SECTION DOES NOT KNOW.
     0x0179, 0x017a, 0x017c, 0x016c) because the ROM's menu selects by POSITION;
     the port takes the first row, which is the same caveat and the same rule the
     sound seat above it has carried since run link60.
+
+    SCENE 380 IS ONE OF THE SIX, and it is worth naming because 380 is a scene
+    this run booted and censused rather than an id in a list. 380 is 0x017c.
+    The port takes ROW 15, which carries record 15 and text 22; the ROM's menu
+    can land on ROW 35 instead, which carries record 35 and text 35. Nothing
+    here decides which row a real menu selection produces -- the port has no
+    menu position to read -- so 380's censuses in this section are row 15's.
+    Re-read them before comparing 380 against a DS. (Run mg8 reviewer.)
+
+  - THE PARAM'S LOW BYTE IS A THIRD FIELD AND THIS SECTION DID NOT NAME IT.
+    The packed param was described here as two fields; it is three. The LOW
+    byte is read by func_ov004_020ad660, which is VTABLE SLOT 35, as the
+    boolean (field_8 & 0xff) != 0. Seating the real param flips that boolean
+    0 -> 1 for scenes 363, 369 and 375.
+
+    NO MEASURED CHANGE, AND UNCENSUSED, which is the honest state of it. Slot
+    35 was not entered at all in those three scenes' 300-frame boots, so
+    nothing observed could have moved; it IS entered 17 times in 380, where the
+    value is unchanged. The flip is a FIDELITY GAIN -- the port now hands slot
+    35 the byte the ROM hands it -- and it is recorded rather than claimed:
+    no run in this section has watched slot 35 act on a 1. (Run mg8 reviewer,
+    adversarial finding.)
   - WHAT +0x465e's NEW VALUE CHANGES ON SCREEN. It is a name-text id read by
     src/func_ov004_020af094.cpp; the five scenes booted clean with it and no
     lane has compared the banner to a DS.
+
+
+18. WHY vtspan --fills CALLS EVERY MINIGAME SEAT SHORT, AND WHY IT IS WRONG
+---------------------------------------------------------------------------
+Run mg8, adjudicated at the merge.
+
+THE RED. `python port/tools/vtspan.py . --fills` reports ten seats leaving
+every slot of data_ov004_020bc0c0 unwritten:
+
+    port_scene_fill_bomroom, _coin, _curling2, _flower, _luigi, _memory2,
+    _pachinko, _pachinko2, _panel, _smartball
+        ROM has 36 slots; never written: 0,1,2,3,4,5,6,7,8,9,10,11,...
+
+run_checks.py ratchets that list against tools/vtspan_fills_baseline.txt, which
+was frozen on 2026-08-17 when only port_scene_fill_curling existed, so all ten
+read as NEW and run_checks FAILS. It fails on the BASE too -- this is not a
+regression from any lane, it is nine more seats having copied curling's shape
+since the freeze, plus bomroom.
+
+IT IS A CHECKER MISREADING. The slots ARE written. The seats fill
+ADDRESS-KEYED, not index-keyed: mg_apply() in hal/scene_mg.cpp walks the table
+and swaps any word whose VALUE is a known DS address for the host pointer.
+vtspan's written() models three shapes and this defeats all three:
+
+  * its CALL regex only follows a SINGLE-argument helper call, `fn(var);`.
+    The seats call `port_scene_mg_fill_shared(vt, 36)` -- two arguments -- so
+    the helper is never followed at all;
+  * its LOOP regex needs a bound it can eval against a #define table.
+    mg_apply's bound is the parameter `n`; eval raises NameError and the loop
+    is dropped by `except Exception: continue`;
+  * its WRITE regex needs a LITERAL index, `vt[<digits>] =`. An address-keyed
+    fill writes `vt[i]`, never a literal.
+
+written() therefore returns the empty set, missing becomes range(36), and the
+tool prints "never written: 0,1,2,...". It is reporting "I found no indexed
+writes", not "the slots are null".
+
+THE RUNTIME SAYS THE OPPOSITE AND THE RUNTIME IS RIGHT. Every seat calls
+mg_raw_left / sos_raw_left, which counts words still holding a DS address
+(0x02000000..0x02400000). A slot that was genuinely never written would still
+hold the mounted ROM image's own DS address and would be counted. Every boot
+reports zero raw DS words and FILL INCOMPLETE 0. All 36 slots hold host
+pointers. The two readings reconcile only one way: the fill completes, the
+source scan cannot see how.
+
+NOTHING WAS CHANGED TO CLEAR IT. The baseline was NOT appended to -- its own
+header says the rows are frozen and "the list may only shrink", so growing it
+would paper over a red the file forbids growing -- and vtspan.py was not
+edited at the merge. The fix belongs to whoever owns the checker:
+
+  1. CALL must accept multi-argument helper calls: match the callee, then scan
+     the argument list for the bound variable, instead of demanding `fn(var);`.
+  2. written() must either model the address-keyed shape or vtspan must report
+     "binds a table, writes nothing this scan can see" as UNRESOLVED -- which
+     it already treats as a stated gap rather than a pass. Printing a fill that
+     writes all 36 slots as missing all 36 is the worst of both: a false red
+     that also buries a real short fill in the noise.
+  3. SEPARATE LATENT BUG, spotted while reading written():
+
+         im = re.search(r"\(\s*void\s*\*\*\s*(\w+)\s*\)", inner[:0])
+
+     `inner[:0]` is the EMPTY STRING, so this search is dead code and `im` is
+     never used; the line below it recurses with the parameter name hardcoded
+     to "vt". Any single-argument helper whose parameter is named anything else
+     has its writes silently invisible. Presumably meant to be inner[:200] or
+     the helper's own signature.
+
+The curling row already in the baseline is this same pattern, and the
+baseline's note calls it "plausible, unverified". This section is the
+verification it was waiting for: the pattern is sound, the checker is not.

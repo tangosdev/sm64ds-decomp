@@ -1134,11 +1134,22 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                 // a semi sprite WINS this test over an already-written sprite
                 // pixel, it blends against that loser's colour instead of
                 // against the 2nd-target layer below the whole OBJ layer, which
-                // this file no longer holds. It needs a semi OBJ whose priority
-                // is at least as good as a normal OBJ it overlaps; neither
-                // shell game has one (reflections are priority 2, the worst
-                // number any sprite in either scene carries), so no frame here
-                // reaches it. Closing it means resolving OBJ into its own
+                // this file no longer holds.
+                //
+                // TWO SHAPES REACH IT, not the one this comment used to name
+                // (run mg8 reviewer, and ppu_blend.txt section 3 carries the
+                // long form):
+                //   * a semi OBJ whose priority is at least as good as a
+                //     NORMAL OBJ it overlaps -- neither shell game has one,
+                //     reflections are priority 2, the worst number any sprite
+                //     in either scene carries;
+                //   * TWO SEMI OBJs AT EQUAL PRIORITY overlapping each other.
+                //     The lower-index one wins the tie, finds an OBJ pixel
+                //     underneath, and since BLDCNT_A names no OBJ second
+                //     target it writes opaque. The reflections ARE this shape.
+                // Both are PRE-EXISTING -- the old unconditional path did the
+                // same thing -- so this fix makes neither worse nor more
+                // frequent. Closing it means resolving OBJ into its own
                 // buffer the way ntr/ppu_sub.cpp does.
                 if (!bl.off && objmode == 1
                     && (window_mask(win, px, py) & 0x20)) {

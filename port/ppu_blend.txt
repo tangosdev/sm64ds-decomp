@@ -372,10 +372,23 @@ SM64DS_OBJPRIO_A_OFF=1 restores the unconditional write on the same binary.
 ONE DIVERGENCE REMAINS AND IS NAMED IN THE CODE: a semi sprite that WINS this
 test over an already-written sprite pixel still blends against that loser's
 colour rather than against the 2nd-target layer below the whole OBJ layer, which
-this file does not keep. It needs a semi OBJ whose priority is at least as good
-as a normal OBJ it overlaps; in both shell games the reflections carry priority
-2, the worst number any sprite in either scene has, so no frame here reaches it.
-Closing it means resolving OBJ into its own buffer the way ntr/ppu_sub.cpp does.
+this file does not keep.
+
+TWO SHAPES REACH IT, NOT ONE. This paragraph used to name only the first, and
+run mg8's reviewer was right that the scope was too narrow:
+
+  * a semi OBJ whose priority is at least as good as a NORMAL OBJ it overlaps;
+  * TWO SEMI-TRANSPARENT OBJs AT EQUAL PRIORITY overlapping each other. The
+    lower-index one wins the tie, finds an OBJ pixel already written
+    underneath, and since BLDCNT_A names no OBJ second target it writes
+    opaque. The shell games' reflections are all priority 2, so the first
+    shape never fires here -- but they are semi-transparent and they do
+    overlap, which is exactly the second shape.
+
+NEITHER IS A REGRESSION. The old unconditional path did the same thing in both
+cases, so this fix does not make either one worse or more frequent; the wording
+above was narrow, the behaviour was not. Closing it means resolving OBJ into its
+own buffer the way ntr/ppu_sub.cpp does.
 
 
 4. THE PIXELS, PROBED RATHER THAN ARGUED
@@ -425,15 +438,48 @@ The .dsstate section lands at the same base (0x83B000, size 0xEA3C9) before and
 after this change, so notes/port-selftest-bmp-gate.md permits the cross-binary
 byte compares as well as the one-binary A/B.
 
+TWO NUMBERS DESCRIBE THIS SECTION AND THEY DIFFER BY ONE. Run mg8's reviewer
+read the span as 0xEA3C8 and filed the digit above as an off-by-one; the merge
+checked it and the digit above is RIGHT. Both numbers are correct measurements
+of different things, so the next reader gets them both rather than re-deriving:
+
+  0xEA3C9  the PE section's VIRTUAL SIZE, which is what dumpbin /headers prints
+           for .dsstate and what the parenthetical above quotes alongside the
+           section's virtual address;
+  0xEA3C8  &dsstate_hi - &dsstate_lo, the CAPTURED PAYLOAD SPAN, which is what
+           tools/dsstate_guard.py prints as "[lo, hi)" and what lk6_savestate
+           copies.
+
+The difference is the fence itself. hal/dsstate_seg.cpp declares both sentinels
+as `char` -- one byte each -- with dsstate_lo in .dsstate$aaa and dsstate_hi in
+.dsstate$zzz, so dsstate_hi is the section's LAST BYTE and sits one byte inside
+the section's end. This build's map:
+
+    0004:00000000  _dsstate_lo  00c3e000
+    0004:000ea3c8  _dsstate_hi  00d283c8      section virtual size 0xEA3C9
+
+Quote whichever you mean and say which; do not "fix" one into the other.
+
+AND THE BASE ABOVE IS THIS LANE'S BUILD, NOT THE MERGED TREE'S. On the mg8
+merge tip .dsstate is at RVA 0x83E000, moved 0x3000 by the OTHER two lanes'
+code, and the SIZE is unchanged at 0xEA3C9. That does not weaken the sentence:
+its load-bearing claim is that the base and span are the SAME before and after
+THIS change, measured in the A/B that produced the numbers, and they were.
+Re-derive the absolute from your own build before reusing it in a new compare.
+
 SCENE 1'S 368 PIXELS ARE INSIDE THE TITLE SCREEN'S PRE-EXISTING GARBLED TOP-LEFT
 BLOCK and are FLAGGED rather than explained away. BLND2 saw the same region move
 by 156 px for the same reason and called it garbage before and after; that is
 still what it is -- the block is red/black noise in both arms and the star and
 "TOUCH TO START" outside it do not move by a pixel. What changed inside it is
-that a yellow star element that used to draw whole is now partly covered, which
-is priority correctness applied where index and priority disagree in an already
-broken region. It is not a working element in either arm, and the owner should
-look at it rather than take this paragraph's word for it.
+that a yellow star element that used to draw whole is now MOSTLY COVERED --
+"partly covered" is what this paragraph said first and run mg8's reviewer
+measured it as an understatement: in the OFF arm the small star inside the
+garbled block draws whole, in the ON arm only a small cross of it survives.
+That is priority correctness applied where index and priority disagree in an
+already broken region. It is not a working element in either arm, and the
+owner should look at the pictures rather than take this paragraph's word for
+it.
 
 374 AT IDLE DOES NOT MOVE AT ALL (byte-identical in both arms), which is the
 same measurement that made BLND2 believe engine A was uninvolved. The shot
