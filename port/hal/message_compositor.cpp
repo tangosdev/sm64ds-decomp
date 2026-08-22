@@ -73,10 +73,39 @@
 //     crossed. See the test in raster_obj for the rule and the one divergence
 //     that remains. SM64DS_OBJPRIO_A_OFF=1 restores the unconditional write for
 //     A/B on one binary.
-//   - OBJ-vs-BG priority is STILL NOT DONE: a sprite draws over every
-//     background here regardless of either priority. That is a separate rule
-//     (a sprite beats a background at equal priority, and loses to one with a
-//     strictly better number) and a separate, whole-game change.
+//
+// WHAT IT IMPLEMENTS (OBJ-vs-BG PRIORITY), added run mg10 lane RGX:
+//   - a sprite is ordered against the BACKGROUNDS by the same attribute 2 bits
+//     10-11, and the tie goes to the SPRITE. GBATEK's OAM attribute 2 calls the
+//     field "Priority relative to BG (0-3; 0=Highest)" and states the tie
+//     outright: when a sprite's priority equals a background layer's, the
+//     sprite "becomes higher priority and is displayed on top of that BG
+//     layer". GBATEK's BGxCNT says the same about the number itself ("BG
+//     Priority (0-3, 0=Highest)") and settles BG-vs-BG ties by index ("BG0 is
+//     having the highest, and BG3 the lowest priority"), which is the order the
+//     BG loop below already walks. So a sprite loses to a background only when
+//     the background's priority NUMBER is strictly smaller. That is the whole
+//     rule, and mg8 lane SGX left it open on purpose: SGX's test is owner-gated
+//     to OBJ so it could fix OBJ-vs-OBJ without moving every scene in the game.
+//     This lane moves them, and names each one.
+//   - THE 3D LAYER IS THE SAME RULE AND WAS ALREADY RIGHT. With DISPCNT bit 3
+//     set, BG0 IS the 3D engine's output (see bg0_is_3d below, pinned on the
+//     decomp's own GX::SetGraphicsMode), so "OBJ vs the 3D layer" is "OBJ vs
+//     BG0" and the tie still goes to the sprite. read_bg disables BG0 exactly
+//     then, so no g_a cell is ever owned by it and the test added here cannot
+//     see it; the comparison happens instead at the final blit, in
+//     layer_behind_3d, whose OBJ arm is `prio > p3d` -- strictly worse loses,
+//     equal wins -- which is this same GBATEK sentence written for that layer.
+//     Nothing about the 3D layer changes in this lane. It is stated here
+//     because a reader who finds the new test and not that one would conclude
+//     the 3D case is missing.
+//   - SM64DS_OBJBG_OFF=1 restores the old "sprites beat every background"
+//     write for A/B on one binary, the shape SM64DS_OBJPRIO_A_OFF and
+//     SM64DS_3D_PRIORITY_OFF already have.
+//   - SM64DS_OBJBG_PROBE=x,y prints every OAM entry that touches one DS pixel
+//     and what each of the two OBJ tests decided about it. That is the probe
+//     port/ppu_blend.txt section 4 took by hand-patching raster_obj for mg8;
+//     keeping it means the next lane's per-pixel transcript needs no patch.
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -247,6 +276,43 @@ inline bool objprio_off_env() {
         v = (e && *e && *e != '0') ? 1 : 0;
     }
     return v != 0;
+}
+
+// SM64DS_OBJBG_OFF=1 does the same for run mg10's OBJ-vs-BG test: it puts back
+// the write that let every sprite cover every background whatever the two
+// priorities said. Separate from SM64DS_OBJPRIO_A_OFF on purpose -- the two
+// tests are two different hardware rules and a lane bisecting a changed frame
+// has to be able to switch off one without the other.
+inline bool objbg_off_env() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_OBJBG_OFF");
+        v = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return v != 0;
+}
+
+/* SM64DS_OBJBG_PROBE=x,y -- the per-pixel transcript, at DS coordinates.
+   Off unless set, and then it prints one line per OAM entry whose opaque texel
+   lands on that pixel, with what g_a held when the entry arrived and what each
+   OBJ test decided. Returns -1,-1 when unset. */
+inline void objbg_probe_pixel(int &px, int &py) {
+    static int x = -2, y = -2;
+    if (x == -2) {
+        x = y = -1;
+        const char *e = std::getenv("SM64DS_OBJBG_PROBE");
+        if (e && *e) {
+            char *end = nullptr;
+            const long vx = std::strtol(e, &end, 10);
+            if (end && *end == ',') {
+                const long vy = std::strtol(end + 1, nullptr, 10);
+                if (vx >= 0 && vx < 256 && vy >= 0 && vy < 192) {
+                    x = (int)vx; y = (int)vy;
+                }
+            }
+        }
+    }
+    px = x; py = y;
 }
 
 BgConfig read_bg(int bg, uint32_t dispcnt) {
@@ -954,7 +1020,23 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
     const int trace = objshift_trace_on();
     /* Read once for the walk: the A/B arm for the OBJ-vs-OBJ priority test. */
     const bool objprio_off = objprio_off_env();
+    /* and for the OBJ-vs-BG one, plus the DS pixel the transcript follows */
+    const bool objbg_off = objbg_off_env();
+    int probe_x, probe_y;
+    objbg_probe_pixel(probe_x, probe_y);
     ++g_obj_frame;
+    /* the transcript's first line: what the BACKGROUNDS left at the probed
+       pixel, before a single sprite is read. Without it a reader cannot tell a
+       sprite that lost from a sprite that never covered the pixel. */
+    if (probe_x >= 0) {
+        const Cell &c0 = g_a[probe_y][probe_x];
+        std::fprintf(stderr, "[objbg] f%u (%d,%d) BG loop left %s prio %u "
+                     "colour %06x  [objprio_off=%d objbg_off=%d]\n",
+                     g_obj_frame, probe_x, probe_y,
+                     c0.hit ? kOwnerName[c0.owner] : "(nothing)",
+                     c0.hit ? c0.prio : 0u, c0.hit ? (c0.color & 0xFFFFFFu) : 0u,
+                     objprio_off ? 1 : 0, objbg_off ? 1 : 0);
+    }
 
     for (int i = 127; i >= 0; --i) {
         if (ntr::ppu_seam_snow_owns(rd16(oam_a() + i * 8u + 4)))
@@ -1114,16 +1196,77 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                    THE OWNER TEST IS PART OF THE RULE AND NOT AN OPTIMISATION.
                    g_a is a shared buffer: the BG loop has already written
                    background pixels into it with their own priorities, and a
-                   sprite must not lose to a BG here. OBJ-vs-BG has its own
-                   hardware rule (a sprite beats a background at EQUAL
-                   priority), it is not implemented in this file, and folding
-                   it into this test by dropping the owner check would change
-                   every scene in the game rather than the ordering this fixes.
-                   Left where it was, in the gap list. */
+                   sprite must not lose to a BG under THIS test, whose tie rule
+                   is the sprite-vs-sprite one. OBJ-vs-BG is a different
+                   hardware rule with a different tie, and it is the test
+                   immediately below. Run mg8 lane SGX left that one out
+                   deliberately because folding the two together -- by dropping
+                   this owner check -- would have applied the WRONG tie to
+                   backgrounds and moved every scene in the game inside a lane
+                   scoped to sprite ordering. The two are separate tests here
+                   for exactly that reason, and they have separate kill
+                   switches. */
                 if (!objprio_off && g_a[py][px].hit
                     && g_a[py][px].owner == kOwnerObj
-                    && prio > g_a[py][px].prio)
+                    && prio > g_a[py][px].prio) {
+                    if (px == probe_x && py == probe_y)
+                        std::fprintf(stderr, "[objbg] f%u (%d,%d) oam%3d "
+                                     "mode%u prio%u texel %06x: SKIP, OBJ prio "
+                                     "%u is in front\n", g_obj_frame, px, py, i,
+                                     objmode, prio, color & 0xFFFFFFu,
+                                     g_a[py][px].prio);
                     continue;
+                }
+                /* OBJ-vs-BG, run mg10 lane RGX. GBATEK, OAM attribute 2 bits
+                   10-11: the field is the sprite's "Priority relative to BG
+                   (0-3; 0=Highest)", and where it equals a background layer's
+                   priority the sprite "becomes higher priority and is
+                   displayed on top of that BG layer". So the sprite loses ONLY
+                   to a background whose priority NUMBER is strictly smaller,
+                   and the test is `<` rather than `<=`.
+
+                   g_a's owner is the FRONTMOST background at this pixel, not
+                   an arbitrary one: the BG loop walks prio 3 -> 0 and, within a
+                   priority, BG3 -> BG0, so the last background to write is the
+                   one GBATEK's BGxCNT note puts in front ("In case that some or
+                   all BGs are set to same priority then BG0 is having the
+                   highest, and BG3 the lowest priority"). Comparing against
+                   that one cell answers the whole layer: if the sprite loses to
+                   the frontmost background it is hidden, and if it wins it is
+                   in front of every background at this pixel.
+
+                   WHAT THIS ALSO FIXES, WITHOUT BEING ABOUT BLENDING. The
+                   semi-transparent path below blends against g_a's colour, and
+                   before this test that colour could be a background IN FRONT
+                   of the sprite -- a blend against a layer the hardware would
+                   never have put underneath it. Those pixels are now skipped
+                   outright, which is the same answer the hardware gives.
+
+                   THE 3D LAYER IS NOT IN THIS TEST AND DOES NOT NEED TO BE:
+                   read_bg disables BG0 whenever it is the 3D layer, so no g_a
+                   cell is owned by it, and OBJ-vs-3D is resolved at the final
+                   blit by layer_behind_3d -- `prio > p3d` for a sprite, which
+                   is this same GBATEK tie written for that layer. */
+                if (!objbg_off && g_a[py][px].hit
+                    && g_a[py][px].owner != kOwnerObj
+                    && g_a[py][px].prio < prio) {
+                    if (px == probe_x && py == probe_y)
+                        std::fprintf(stderr, "[objbg] f%u (%d,%d) oam%3d "
+                                     "mode%u prio%u texel %06x: SKIP, %s prio "
+                                     "%u is in front\n", g_obj_frame, px, py, i,
+                                     objmode, prio, color & 0xFFFFFFu,
+                                     kOwnerName[g_a[py][px].owner],
+                                     g_a[py][px].prio);
+                    continue;
+                }
+                if (px == probe_x && py == probe_y)
+                    std::fprintf(stderr, "[objbg] f%u (%d,%d) oam%3d mode%u "
+                                 "prio%u texel %06x: WRITE over %s%u\n",
+                                 g_obj_frame, px, py, i, objmode, prio,
+                                 color & 0xFFFFFFu,
+                                 g_a[py][px].hit
+                                     ? kOwnerName[g_a[py][px].owner] : "(none)",
+                                 g_a[py][px].hit ? g_a[py][px].prio : 0);
                 // OBJ mode 1 (semi-transparent) alpha-blends with the layer
                 // directly below it -- the BG already composited into g_a here,
                 // or the 3D framebuffer (BG0 in 3D mode) where no 2D covers the
@@ -1172,6 +1315,18 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                 g_a[py][px].prio = prio;
             }
         }
+    }
+    /* and the transcript's last line: what the whole 2D unit resolved to. The
+       final blit still gets a say (layer_behind_3d), so this is the 2D answer
+       and not necessarily the pixel on screen -- said here rather than left for
+       a reader to assume. */
+    if (probe_x >= 0) {
+        const Cell &c1 = g_a[probe_y][probe_x];
+        std::fprintf(stderr, "[objbg] f%u (%d,%d) 2D result: %s prio %u colour "
+                     "%06x (the 3D layer's priority is resolved at the blit)\n",
+                     g_obj_frame, probe_x, probe_y,
+                     c1.hit ? kOwnerName[c1.owner] : "(nothing)",
+                     c1.hit ? c1.prio : 0u, c1.hit ? (c1.color & 0xFFFFFFu) : 0u);
     }
 }
 
