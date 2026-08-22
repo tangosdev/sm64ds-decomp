@@ -5,6 +5,8 @@
 [discord]: https://discord.gg/YpReERF4e3
 [discord-badge]: https://img.shields.io/discord/1520811338568569112?color=7289DA&logo=discord&logoColor=ffffff
 
+> **Looking for the PC port?** [Download it here.](https://tangos.dev/downloads)
+
 A from-scratch decompilation (decomp) of **Super Mario 64 DS** into matching C.
 
 This repo holds source code and tooling. It contains no ROM and no Nintendo assets.
