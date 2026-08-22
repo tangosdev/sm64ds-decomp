@@ -26,6 +26,7 @@ Usage:
   python tools/nearmiss_db.py prune-matched     # drop ghosts already matched in committed src/
   python tools/nearmiss_db.py mark-floor --name <func> --class ordering --evidence "levers tried ..."
   python tools/nearmiss_db.py unmark-floor --name <func>
+  python tools/nearmiss_db.py dedupe --check    # exit 1 if any (module, addr) holds 2+ rows
 """
 import argparse
 import json
@@ -96,6 +97,14 @@ def evaluate(src, name, target):
     return div, False
 
 
+def _rank(r):
+    """Collapse order for duplicate rows of one (module, addr): lower divergences wins;
+    a floor mark breaks a divergence tie (the more-informed verdict). Unscored rows
+    rank last."""
+    div = r.get("divergences")
+    return (div if isinstance(div, int) else 1 << 30, 0 if r.get("floor") else 1)
+
+
 def load_db():
     db = {}
     for r in L.read_records(DB):        # corrupt lines are reported, not swallowed
@@ -107,7 +116,14 @@ def load_db():
             print(f"nearmiss_db: skipping unkeyable row (no addr/module): "
                   f"{r.get('name') or '<unnamed>'}", file=sys.stderr)
             continue
-        db[L.key_of(r)] = r             # normalized: addr is stored as both hex str and int
+        key = L.key_of(r)               # normalized: addr is stored as both hex str and int
+        cur = db.get(key)
+        # merge=union (and a since-fixed raw-key ingest) can leave two rows for one key.
+        # Keep the BEST, never the last read: last-wins meant the next save_db() silently
+        # discarded whichever row happened to sort earlier in the file -- ov006 0x020d7c4c
+        # lost its lower-divergence attempt exactly that way.
+        if cur is None or _rank(r) < _rank(cur):
+            db[key] = r
     return db
 
 
@@ -183,8 +199,13 @@ def ingest(args):
             if not ex:
                 continue
             addr, size, mod, thex = ex["addr"], ex["size"], ex["module"], ex["target_hex"]
-        key = (mod, addr)
-        if L.make_key(mod, addr) in done:   # already matched -- not a pending near-miss
+        # Key with the SAME normalization load_db uses (ledger.make_key): addr arrives
+        # here as a hex string but existing rows may store it as an int, and a raw
+        # (mod, addr) tuple misses the loaded row, so the merge below APPENDED a
+        # duplicate instead of replacing (two rows each for ov006 0x02102fe8 /
+        # 0x0210076c on 2026-08-22). Same for drops: an unnormalized key never popped.
+        key = L.make_key(mod, addr)
+        if key in done:                     # already matched -- not a pending near-miss
             drops.append(key)
             continue
         # Resolve the CURRENT symbol name at (mod, addr): the seed's `name` may be a
@@ -377,9 +398,11 @@ def dedupe(args):
     functions both sides touched. This is the automatic cleanup: for each (module, addr) keep
     the row with the LOWEST divergence (a floored entry outranks a same-div non-floored one,
     since the floor mark is the more-informed verdict), drop the rest. A merge never regresses
-    a tip anyone improved. Idempotent; run in CI after every push to main."""
-    seen, best, kept = {}, {}, []
-    dups = 0
+    a tip anyone improved. Idempotent; run in CI after every push to main.
+
+    --check is the regression-gate form: writes nothing, lists each duplicated key,
+    and exits 1 if any normalized (module, addr) holds more than one row."""
+    seen, best, order, unkeyable, dup_keys = {}, {}, [], [], {}
     for r in L.read_records(DB):                    # RAW rows, incl. union duplicates
         try:
             key = L.key_of(r)                       # int/hex-str addr forms must collide
@@ -389,30 +412,40 @@ def dedupe(args):
             # crash the whole progress refresh (it did -- a row saved with name+label but
             # no addr froze the public percent until repaired).
             sys.stderr.write(f"nearmiss dedupe: skipping unkeyable row {r.get('name') or r.get('label') or '?'}\n")
-            kept.append(r)
+            unkeyable.append(r)
             continue
-        div = r.get("divergences")
-        div = div if isinstance(div, int) else 1 << 30
-        floored = 1 if r.get("floor") else 0
-        rank = (div, -floored)                       # lower div wins; floor breaks a div tie
         if key not in seen:
-            seen[key] = rank
+            seen[key] = _rank(r)                    # lower div wins; floor breaks a div tie
             best[key] = r
-            kept.append(key)
+            order.append(key)
         else:
-            dups += 1
-            if rank < seen[key]:
-                seen[key] = rank
+            dup_keys[key] = dup_keys.get(key, 0) + 1
+            if _rank(r) < seen[key]:
+                seen[key] = _rank(r)
                 best[key] = r
+    dups = sum(dup_keys.values())
+    unique = len(order) + len(unkeyable)
+    if getattr(args, "check", False):
+        for key, extra in sorted(dup_keys.items()):
+            print(f"  DUP {key[0]} 0x{key[1]:08x}: {extra + 1} rows ({best[key].get('name')})")
+        if dups:
+            print(f"CHECK FAILED: {dups} extra row(s) across {len(dup_keys)} duplicated "
+                  f"(module, addr) key(s) in {DB}")
+            sys.exit(1)
+        print(f"check ok: no duplicate (module, addr) rows; DB has {unique} entries")
+        return
     if dups == 0:
-        print(f"no duplicate (module, addr) rows; DB has {len(kept)} entries")
+        print(f"no duplicate (module, addr) rows; DB has {unique} entries")
         return
     if args.dry_run:
-        print(f"would collapse {dups} duplicate row(s) -> {len(kept)} unique entries")
+        print(f"would collapse {dups} duplicate row(s) -> {unique} unique entries")
         return
+    out = {k: best[k] for k in order}
+    # unkeyable rows survive the rewrite under synthetic keys save_db never serializes
+    out.update({("__unkeyable__", i): r for i, r in enumerate(unkeyable)})
     with locked():
-        save_db({k: best[k] for k in kept})
-    print(f"collapsed {dups} duplicate row(s); DB now {len(kept)} unique entries")
+        save_db(out)
+    print(f"collapsed {dups} duplicate row(s); DB now {unique} unique entries")
 
 
 def resync_names(args):
@@ -532,6 +565,9 @@ def main():
     p = sub.add_parser("dedupe")
     p.add_argument("--dry-run", action="store_true",
                    help="report duplicate rows without collapsing them")
+    p.add_argument("--check", action="store_true",
+                   help="regression gate: write nothing, exit 1 if any normalized "
+                        "(module, addr) holds more than one row")
     p.set_defaults(fn=dedupe)
     args = ap.parse_args()
     args.fn(args)
