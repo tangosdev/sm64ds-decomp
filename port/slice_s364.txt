@@ -78,7 +78,7 @@
 #               the word as a code address is exactly the eye failure check 3
 #               exists to catch -- it IS a code address, it just belongs to a
 #               shipped minigame.
-#   4. RELOCS   36 relocations have from: inside [0x0213eb40, 0x0213ebd0), and
+#   4. RELOCS   36 relocations have from: inside 0x0213eb40 up to 0x0213ebd0, and
 #               their indices are 0..35 with no gap and no duplicate. The very
 #               next relocation is from:0x0213ebd0 to 0x02119824, which is
 #               0x178's, not this table's.
@@ -166,22 +166,81 @@
 # Section 17's caveat applies unchanged: nothing here decides which row a real
 # menu selection produces.
 #
-# THE PLAYER-FACING TITLE IS PROVISIONAL AND THIS LANE DOES NOT GUESS IT. Both
-# titles are message-bank ids -- data_ov004_020bc070 is u16 {0x0224 + n}, so
-# text 17 is message 0x0235 and text 33 is message 0x0245 -- and the strings
-# are not stored as ASCII or UTF-16 anywhere in the ROM (searched; "Slots
-# Shot", "Bob-omb Squad", "Wanted" and three more all miss in both encodings,
-# so the bank is encoded and this lane did not decode it). The registry row is
-# therefore named SCENE_MG_SLOT1 after the ROM's own RTTI, which is the rule
-# SCENE_MG_CURLING2, SCENE_MG_BOMROOM and SCENE_MG_FLOWER already follow. What
-# is DERIVED and can be handed on:
+# BOTH TITLES ARE DERIVED, out of the ROM's own BMG message bank, and the
+# chain is ov005 row -> text index -> data_ov004_020bc070 -> message id. The
+# ASCII and UTF-16 sweeps that came back empty missed it because the bank is
+# LZ77-compressed and its text is a GLYPH-INDEX stream, not characters:
+# 'A' = 0x0a, 'a' = 0x2d, space = 0x4d, digits 0x00..0x09, 0xfd newline,
+# 0xff end. (The route was handed over by run mg9 lane S371; the two
+# corrections below are this lane's.)
 #
-#   the class is a three-reel 21-stop slot machine with six symbols, a payout
-#   table and a touch-driven bet icon;
-#   it serves two menu entries, basic (ov005 row 17) and advanced (row 33);
-#   it is NOT dScMgSmartball_c, which is 0x178 and carries the two titles
-#   "Bingo Ball" and "Slots Shot" -- that class is the ball game, this one is
-#   the reels.
+#   row 17  text 17  ->  message 565  "Mario Slot"
+#   row 33  text 33  ->  message 587  "Super Mario Slot"
+#
+# and message 565's own body confirms every mechanism derived above without
+# being used to derive any of it:
+#
+#   "Mario Slot / Touch the spinning slots to stop them. Get 3 items in a
+#    row to earn coins. The Superstar is wild."
+#
+# three reels, touch, three-in-a-row, and a wild symbol -- which is symbol 5,
+# the one data_ov006_0213e4d8 pays 20 for and the one the two strips differ
+# on. Message 587 opens "Super Mario Slot" and then repeats 565's body, which
+# is what says the two rows are one game and not two.
+#
+# THE +0x224 RULE IS WRONG PAST INDEX 23 AND THIS LANE FOUND IT THE HARD WAY.
+# data_ov004_020bc070 looks like a ramp -- indices 0..23 really are
+# 0x0224..0x023b -- and it is NOT one. Read as u16 out of overlay_0004.bin at
+# base 0x020ad660, its last twelve entries are
+#
+#   [24] 588  [25] 573  [26] 586  [27] 575  [28] 576  [29] 577
+#   [30] 585  [31] 589  [32] 580  [33] 587  [34] 582  [35] 583
+#
+# so an index of 24 or more resolved by arithmetic lands on the wrong string.
+# This lane computed 0x0224 + 33 = 581 first and got "Luckiest Stars", a card
+# game that is plainly not this class; the table says 587, "Super Mario Slot",
+# which is. THE TABLE IS 36 ENTRIES: its span to data_ov004_020bc0c0 is 0x50 =
+# 40 u16, and the last four read 0, 0 and then two words of the next object.
+#
+# THE CHAIN IS CONTROLLED ON SEVEN OTHER ROWS, all read the same way and all
+# landing on a title that matches a class somebody else already named:
+#
+#   row  0  text  0  548  "Mario's Slides"      row 10  text  2  550 "Bingo Ball"
+#   row 20  text 28  576  "Bounce and Trounce"  row 21  text 21  569 "Lucky Stars"
+#   row 29  text 29  577  "Memory Master"       row 35  text 35  583 "Puzzle Panic"
+#   row 22  text 34  582  "Slots Shot"
+#
+# The last two are the strongest: 583 is lane PPP's SECOND title for 0x17c,
+# and 582 is the second of the two MgBingoBallSlotsShot names -- so the rule
+# that a class serving two ov005 rows serves two menu entries reproduces on
+# classes other lanes derived independently.
+#
+# WHICH ROW IS WHICH IS READ OFF THE BRANCH, not inferred from the names.
+# src/func_ov006_0210d1fc.cpp's gate at 0x0210d508 is
+# `ldr r0,[r4,#8]; ands r0,r0,#0xff; beq 0x0210d584`, and the two arms load
+# their strip from the body's own literal pool:
+#
+#   0x0210d514 (NONZERO)  ldr r2,[pc,#0x18c] -> 0x0210d6a8 = 0x0213ea20
+#   0x0210d584 (ZERO)     ldr r2,[pc,#0x120] -> 0x0210d6ac = 0x0213e9e0
+#
+# so row 17's low byte 0 gets 0x0213e9e0 and row 33's low byte 1 gets
+# 0x0213ea20. Counting symbol 5 -- the Superstar, the wild, the 20 payout --
+# the Mario Slot strip carries ONE per reel and the Super Mario Slot strip
+# FOUR. That is the whole measurable difference between the two entries in
+# InitResources; whatever else separates them is inside the trapped Behavior
+# and this lane does not claim to know it.
+#
+# THE PORT TAKES ROW 17, first-match-by-id, so this seat boots Mario Slot.
+# Section 17's caveat applies unchanged: nothing here decides which row a real
+# menu selection produces.
+#
+# THE REGISTRY ROW IS STILL NAMED FOR THE CLASS AND NOT FOR A TITLE, which is
+# the rule a two-title class already follows: 0x17c is SCENE_MG_PANEL and not
+# SCENE_MG_PUZZLE_PANIC, and 0x178 is SCENE_MG_SMARTBALL and not
+# SCENE_MG_SLOTS_SHOT. SCENE_MG_SLOT1 is dScMgSlot1_c.
+#
+# AND IT IS NOT dScMgSmartball_c, which is 0x178 and carries "Bingo Ball" and
+# "Slots Shot" -- that class is the ball game, this one is the reels.
 #
 # ---- 5. THE ONE FLOOR IS THE BEHAVIOR, AND IT IS THE WHOLE STATE MACHINE ---
 #
@@ -191,8 +250,8 @@
 # block -- the block before it ends at 0x0210c9e0 and the next starts at
 # 0x0210d1fc, which is the body's own size to the byte -- and no src file
 # defines it in either extension anywhere in the tree. It is the ONLY gap in
-# this class's code: a delink walk over [0x0210a8c0, 0x0210a954) and
-# [0x0210c180, 0x0210d740) finds 23 blocks and exactly one hole, this one.
+# this class's code: a delink walk over 0x0210a8c0..0x0210a954 and
+# 0x0210c180..0x0210d740 finds 23 blocks and exactly one hole, this one.
 #
 # THE NAME-SHAPED LOOKUP WOULD HAVE MISCOUNTED THIS CLASS AT TWO, and the
 # second one is section 13's module/name trap wearing a different hat. Slot 9's
@@ -217,7 +276,7 @@
 # no stategen output and no address switch to write:
 #
 #   * no .data pair table anywhere in the overlay holds a code word in
-#     [0x0210c180, 0x0210d740) -- checked over every relocation whose from: is
+#     0x0210c180..0x0210d740 -- checked over every relocation whose from: is
 #     at or past 0x02130000, and the only hits in the class's code range are
 #     the two vtables, the SpawnInfo and the sub-object table;
 #   * a `::*` sweep over all 23 TUs is CLEAN, and the one `>> 1`-shaped hit in
@@ -317,10 +376,63 @@
 # arm9 targets, and those are section 5's free half plus whatever the link
 # still wants.
 #
-# The list is exactly the delink blocks of [0x0210a8c0, 0x0210a954) and
-# [0x0210c180, 0x0210d740). 0x0210c120 is id 0x16d's factory and is NOT in it;
+# HALF-OPEN INTERVALS ARE SPELLED WITH .. IN THIS FILE ON PURPOSE, and the
+# reason is a real defect this lane hit rather than a style choice. CMake's
+# file(STRINGS) treats an UNMATCHED open-square-bracket as the start of a
+# bracket argument and swallows every following line into ONE list element.
+# One half-open interval written the usual way in a COMMENT therefore
+# collapsed this whole slice from 321 entries to 81, and the only thing that
+# caught it was CMakeLists' own hostgen substitution assertion. Every
+# open-square-bracket in this file is closed; ranges use two dots.
+#
+# The list is exactly the delink blocks of 0x0210a8c0..0x0210a954 and
+# 0x0210c180..0x0210d740. 0x0210c120 is id 0x16d's factory and is NOT in it;
 # the 6188 bytes between 0x0210a954 and 0x0210c180 are 0x16d's class and are
 # that lane's problem, not this one's.
+
+# ---- 9. WHAT THE SEAT COST, MEASURED ON BOTH ENDS -------------------------
+#
+#   link waves                          3   7 externals, then a dsstate
+#                                           refusal, then clean
+#   unresolved externals                7   ALL name-spelling defects; six
+#                                           ov004 window words and one
+#                                           two-overlay adjudication
+#   dispatching TUs to host-copy        0   no pointer-to-member wall
+#   state entries to route              0   the machine is a switch
+#   of those with no matched body       0
+#   named traps stood                   1   the Behavior
+#   ordinary slice lines               23
+#   per-source -D rows                  4   one TU x six words, three TUs x
+#                                           one word
+#   hosted words                        1   dThIcon_c's 2-slot table
+#   registry rows                       1
+#   ov004 delta                         0
+#
+# LINKAGE, measured on both ends on this tree:
+#
+#     6665 / 11288 (59.1%)  ->  6684 / 11288 (59.2%)     +19
+#
+# AND +19 IS NOT 23, WHICH IS THE FLOOR SHOWING UP IN A COLUMN NOBODY EXPECTS
+# IT IN. Section 14's rule is that every slice line moves the headline by one.
+# It holds per COMPILED-AND-KEPT body, and /OPT:REF drops a body with no
+# reference edge. The decomposition, read off walk_window.map one symbol at a
+# time:
+#
+#   17 of the 23 slice TUs are in the map; ONE of those 17
+#      (src/func_ov006_0210c374.cpp) was already linked through slice_flw.txt
+#      and slice_pch.txt, so the slice contributes 16;
+#   SIX are DROPPED -- func_ov006_0210c180, _0210c1a8, _0210c218, _0210c278,
+#      _0210c2c0 and _0210c500 -- and they are EXACTLY the six ov006 bodies
+#      whose only caller in the whole binary is the trapped Behavior. Nothing
+#      references them, so the linker discards them;
+#   THREE ov001 bodies join that were already compiled and were being dropped
+#      for want of a reference edge, until this seat gave them one:
+#      func_ov001_020ab550 and _020ab54c through the hosted dThIcon_c table,
+#      and _020ab3f0 / _020ab5b0 through the class's own TUs.
+#
+#   16 + 3 = 19, measured, and the six are a STANDING CREDIT: the day
+#   func_ov006_0210c9e0 is decompiled the headline moves another six without
+#   a slice line being added.
 
 src/func_ov006_0210a8c0.c
 src/func_ov006_0210a900.cpp

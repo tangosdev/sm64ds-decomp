@@ -26,13 +26,26 @@
 // x = 0x38 / 0x80 / 0xc8 on one row, and the Behavior's literal pool carries
 // 0x30c30c31 beside the constant 0x15 -- the reciprocal for a divide by 21.
 //
-// THE PLAYER-FACING TITLE IS NOT DERIVED AND IS NOT GUESSED. Both of this
-// class's menu entries name their title through a message-bank id
-// (data_ov004_020bc070 is u16 {0x0224 + n}, so its two rows are messages
-// 0x0235 and 0x0245), and the bank is not stored as ASCII or UTF-16 anywhere
-// in the ROM. The row below is therefore named SCENE_MG_SLOT1 after the RTTI,
-// which is what SCENE_MG_CURLING2, SCENE_MG_BOMROOM and SCENE_MG_FLOWER
-// already do for ids with no spawn symbol.
+// TWO PLAYER-FACING TITLES, BOTH READ OUT OF THE ROM'S BMG BANK:
+//
+//     ov005 row 17  text 17  message 565  "Mario Slot"
+//     ov005 row 33  text 33  message 587  "Super Mario Slot"
+//
+// The bank is LZ77-compressed and its text is a glyph-index stream rather than
+// characters, which is why an ASCII or UTF-16 sweep of the ROM finds no
+// minigame titles at all. Message 565's body -- "Touch the spinning slots to
+// stop them. Get 3 items in a row to earn coins. The Superstar is wild." --
+// confirms every mechanism derived above and was used to confirm none of it.
+//
+// THE INDEX-TO-MESSAGE STEP IS A TABLE AND NOT ARITHMETIC. data_ov004_020bc070
+// is 0x0224 + n for indices 0..23 and then stops being: index 24 is 588, 33 is
+// 587, 35 is 583. Computing this class's second title instead of reading it
+// gives 581, "Luckiest Stars", a card game that is not this one.
+// port/slice_s364.txt section 4 has the whole chain and its seven controls.
+//
+// THE ROW IS STILL NAMED FOR THE CLASS, which is what a two-title class
+// already does here: 0x17c is SCENE_MG_PANEL and not SCENE_MG_PUZZLE_PANIC,
+// and 0x178 is SCENE_MG_SMARTBALL and not SCENE_MG_SLOTS_SHOT.
 //
 // ---- 3. TWO TABLES, AND THE SECOND ONE IS NOT AN INHERITANCE EDGE --------
 //
@@ -138,6 +151,7 @@
 // a table whose span is 36 words, so it cannot reach the neighbour at all.
 
 #include "hal/screen_gap.h"
+#include "dsstate_seg.h"
 
 #include <cstdio>
 #include <cstdlib>
@@ -176,6 +190,11 @@ void  func_ov006_0210c4b8(void *c);           /* slot 28               */
 /* dScMgSlot1_c::betIcon_c's two */
 void  func_ov006_0210c410(char *c);           /* betIcon slot 0 Update */
 void  func_ov006_0210c374(char *c);           /* betIcon slot 1 Render */
+
+/* and dThIcon_c's two, the sub-object's BASE class in ov001 -- see the hosted
+   table at the foot of this file */
+void  func_ov001_020ab550(char *c);           /* dThIcon_c slot 0 */
+void  func_ov001_020ab54c(void);              /* dThIcon_c slot 1, empty */
 
 /* the factory */
 void *func_ov006_0210d6b8(void);
@@ -240,8 +259,11 @@ static void *__fastcall s1_d0(void *s, void *)
    +0x4706, 3 calls func_ov006_0210c638), and the ROM Behavior dispatches this
    slot with r1 = 4 at 0x0210cf48 and r1 = 5 at 0x0210cf80. So the parameter is
    forwarded, not just absorbed. */
+static unsigned g_s1_reset_args[8];   /* 0..6 seen as themselves, 7 = higher */
 static int __fastcall s1_reset(void *s, void *, int ridethrough)
-{ S1(18); func_ov006_0210c674((char *)s, ridethrough); return 1; }
+{ S1(18);
+  ++g_s1_reset_args[(unsigned)ridethrough < 7u ? (unsigned)ridethrough : 7u];
+  func_ov006_0210c674((char *)s, ridethrough); return 1; }
 static int __fastcall s1_v27(void *s, void *)
 { S1(27); func_ov006_0210c4dc(s); return 0; }
 static int __fastcall s1_v28(void *s, void *)
@@ -252,6 +274,59 @@ static void __fastcall s1_bet_update(void *s, void *)
 { BET(0); func_ov006_0210c410((char *)s); }
 static void __fastcall s1_bet_render(void *s, void *)
 { BET(1); func_ov006_0210c374((char *)s); }
+
+/* ---- dThIcon_c, the betIcon sub-object's BASE class, hosted --------------
+ *
+ * The factory (0x0210d6ec) and both destructors store 0x020ad494 into
+ * this+0x4660 and then store the betIcon table 0x0213e5d4 over it: a
+ * base-then-derived vptr pair, which is the second half of the evidence that
+ * betIcon_c is a class and not a struct.
+ *
+ * 0x020ad494 IS AMBIGUOUS IN CONFIG AND THE ROM RESOLVES IT. ov000 and ov001
+ * share the base 0x020aa420 and both name a symbol at that address.
+ * hal/scene_mg_faces.cpp hosts the ov000 reading -- a 24-byte filename string
+ * "thum_shinkei_ncg.bin" -- and that is the WRONG module here. In
+ * overlay_0001.bin the address is the second word of a vtable:
+ *
+ *   0x020ad478  {0x0209a774, 0x020ad480}  a type_info, whose name reads
+ *                                         "9dThIcon_c"
+ *   0x020ad490  0x020ad478                that type_info, the word before
+ *   0x020ad494  0x020ab550                slot 0
+ *   0x020ad498  0x020ab54c                slot 1
+ *   0x020ad49c  the next config symbol, so the table is exactly 2 words
+ *
+ * and src/func_ov006_0210c410.c -- the DERIVED betIcon slot 0 -- calls
+ * func_ov001_020ab550 directly, which is the base showing through the
+ * override. In overlay_0000.bin the same address is the middle of the string
+ * ".../togezo.bmd", which is neither a type_info nor a table.
+ *
+ * WHY IT IS HOSTED AND NOT MOUNTED: the ov001 per-symbol mount is the
+ * 0x020ab800..0x020abb00 sprite-template run only (port/ov001_syms.txt says
+ * why it is that span and not more), and widening it for two words would still
+ * leave two raw DS code addresses in the table, because ovdata rebases data
+ * pointers and not code. This is the same treatment and the same argument
+ * hal/scene_mg_faces.cpp gives for the ov000 reading of this very address.
+ *
+ * NOTHING DISPATCHES IT ON THIS CLASS'S PATH -- all three writers overwrite it
+ * with the derived table on the next store, so the base vptr is never live
+ * across a call. The faces are here anyway, because a table of raw DS words
+ * that is currently dead is a wild call the day someone makes it live, and
+ * both bodies are already in this binary. */
+static void __fastcall s1_thicon_update(void *s, void *)
+{ func_ov001_020ab550((char *)s); }
+static void __fastcall s1_thicon_render(void *, void *)
+{ func_ov001_020ab54c(); }
+
+/* DSSTATE_BEGIN/END because this is HOSTED DS STORAGE and not host bookkeeping:
+   port/tools/dsstate_guard.py failed the link over it until the segment was
+   opened, which is the check working. A hosted DS symbol outside .dsstate is
+   not captured by a save state, and a save state that restores the object but
+   not its vtable word is the half-rollback class the guard exists to stop. */
+DSSTATE_BEGIN
+extern "C" void *data_ov001_020ad494[2] = {
+    (void *)s1_thicon_update, (void *)s1_thicon_render,
+};
+DSSTATE_END
 
 /* SM64DS_SCENE_SLOT0=0 and SM64DS_SCENE_SLOT9=0, the diagnostics the ov003,
    ov007, curling, flower and curling2 seats all carry, counted separately so a
@@ -413,6 +488,24 @@ extern "C" void port_scene_slot1_hits(void)
      * every frame and the state machine is the missing body. */
     std::printf("[scene] dScMgSlot1_c FLOOR func_ov006_0210c9e0 (slot 6, "
                 "0x81c, no src): %u ask(s)\n", g_s1_floor_asks);
+
+    /* THE SLOT-18 SECOND ARGUMENT, CENSUSED RATHER THAN ASSUMED. Run mg9 lane
+       LKY found a class whose slot-18 body READS its second argument where
+       every earlier seated class ignored it. This one reads it too --
+       src/func_ov006_0210c674.c branches on 4 and on 3, and the ROM Behavior
+       dispatches the slot with 4 at 0x0210cf48 and with 5 at 0x0210cf80 -- so
+       the thunk FORWARDS it rather than only cleaning it. Printing the
+       distribution is what turns "forwarded" into a measurement: a run where
+       every dispatch carries the same value has not exercised the branch, and
+       on this class the two values that would are behind the trapped slot 6.
+       This class does NOT override slot 19; that one is dScMgBase_c's. */
+    std::printf("[scene] dScMgSlot1_c slot-18 second argument:");
+    for (int i = 0; i < 8; ++i)
+        if (g_s1_reset_args[i])
+            std::printf(" %s%d(x%u)", i == 7 ? ">=" : "", i,
+                        g_s1_reset_args[i]);
+    if (!g_s1_hits[18]) std::printf(" (never dispatched)");
+    std::printf("\n");
 
     /* ---- THE REEL CENSUS -------------------------------------------------
      *
