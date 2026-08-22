@@ -15,10 +15,10 @@ struct dActor_c {
   void UpdatePos(struct dCc_c*);
   struct dActor_c* ClosestPlayer();
 };
-struct dBgW {
-  int IsEnabled();
-  void Disable();
-};
+/* dBgW is the real class now, through this actor's header, which types
+   mMeshCollider as its dBgW_KcMbg derived class. IsEnabled and Disable are
+   non-virtual there, so the two direct `bl`s are unchanged; redefining the real
+   class ICEs mwccarm (CClass.c:3328). */
 struct dBgActor_c {
   int IsClsnInRange(int, int);
 };

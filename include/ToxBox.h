@@ -6,6 +6,9 @@
 #define TOXBOX_H
 #include "types.h"
 #include "Model.h"
+#include "dBgW_KcMbg.h"
+#include "dBgCh_Actr.h"
+#include "dCcAcPos_c.h"
 
 struct ToxBox {
     u8  pad_000[0x8];
@@ -24,13 +27,21 @@ struct ToxBox {
        short of the object, so the member also takes over unk_0f0 (+0x1c = mat4x3), which
        the header declared separately inside it. */
     Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
+    /* dBgW_KcMbg member. The cartridge's own ~ToxBox calls _ZN10dBgW_KcMbgD1Ev at
+       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x34];
     s32 unk_320;            /* 0x320 */
-    u8  mWithMeshClsn;            /* 0x324 */
-    u8  pad_325[0x1c3];
-    u8  mdCcAcPos_c;            /* 0x4e8 */
-    u8  pad_4e9[0x3f];
+    /* dBgCh_Actr member. The cartridge's own ~ToxBox calls _ZN10dBgCh_ActrD1Ev at
+       +0x324 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgCh_Actr mWithMeshClsn;            /* 0x324 */
+    u8  pad_4e0[0x8];
+    /* dCcAcPos_c member. The cartridge's own ~ToxBox calls _ZN10dCcAcPos_cD1Ev at
+       +0x4e8 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dCcAcPos_c mdCcAcPos_c;            /* 0x4e8 */
     u8  unk_528;            /* 0x528 */
     u8  pad_529[0x2f];
     s32 unk_558;            /* 0x558 */

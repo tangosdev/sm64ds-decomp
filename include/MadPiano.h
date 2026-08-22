@@ -7,6 +7,9 @@
 #include "types.h"
 #include "ModelAnim.h"
 #include "Model.h"
+#include "dBgW_KcMbg.h"
+#include "ShadowModel.h"
+#include "dBgCh_Actr.h"
 
 struct MadPiano {
     u8  pad_000[0x5c];
@@ -26,19 +29,32 @@ struct MadPiano {
        (D0/D1), a relocation the ROM build checks; recovered by tools/dtor_members.py.
        D1 and not D2, so it is this type and not an inlined base. */
     Model mModel;            /* 0x0d4 */
-    u8  mMeshCollider;            /* 0x124 */
-    u8  pad_125[0x1fb];
+    /* dBgW_KcMbg member. The cartridge's own ~MadPiano calls _ZN10dBgW_KcMbgD1Ev at
+       +0x124 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgW_KcMbg mMeshCollider;            /* 0x124 */
+    u8  pad_2ec[0x34];
     /* ModelAnim member, named by _ZN9ModelAnimD1Ev at +0x320 -- a relocation the ROM build checks.
        D1 and not D2, so it is this type and not an inlined base. Was a u8 marker. */
     ModelAnim mModelAnim;            /* 0x320 */
-    u8  mShadowModel1;            /* 0x384 */
-    u8  pad_385[0x27];
-    u8  mShadowModel2;            /* 0x3ac */
-    u8  pad_3ad[0x27];
-    u8  mShadowModel3;            /* 0x3d4 */
-    u8  pad_3d5[0x137];
-    u8  mWithMeshClsn;            /* 0x50c */
-    u8  pad_50d[0x1bf];
+    /* ShadowModel member. The cartridge's own ~MadPiano calls _ZN11ShadowModelD1Ev at
+       +0x384 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    ShadowModel mShadowModel1;            /* 0x384 */
+    /* ShadowModel member. The cartridge's own ~MadPiano calls _ZN11ShadowModelD1Ev at
+       +0x3ac (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    ShadowModel mShadowModel2;            /* 0x3ac */
+    /* ShadowModel member. The cartridge's own ~MadPiano calls _ZN11ShadowModelD1Ev at
+       +0x3d4 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    ShadowModel mShadowModel3;            /* 0x3d4 */
+    u8  pad_3fc[0x110];
+    /* dBgCh_Actr member. The cartridge's own ~MadPiano calls _ZN10dBgCh_ActrD1Ev at
+       +0x50c (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    dBgCh_Actr mWithMeshClsn;            /* 0x50c */
+    u8  pad_6c8[0x4];
     s32 unk_6cc;            /* 0x6cc */
     u8  pad_6d0[0x4];
     s32 unk_6d4;            /* 0x6d4 */

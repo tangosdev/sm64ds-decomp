@@ -91,6 +91,19 @@ struct ShadowModel {
     struct ShadowModel *next;          /* 0x24 */
 };
 
+/* In C the tag alone is not a type name, so an owner header that embeds a
+   ShadowModel BY VALUE -- which several of the cartridge's own destructors prove
+   it does, see tools/dtor_members.py -- cannot spell the member without this.
+   The definition and the typedef have to travel together: with the definition
+   and no typedef the embed gets `undefined identifier', and then the owner's
+   size assert gets `illegal constant expression' on top of it. */
+typedef struct ShadowModel ShadowModel;
+
+/* The C view substitutes for the C++ class only while it is the SAME SIZE. Once
+   an owner embeds one by value the two branches lay that owner out differently if
+   they ever disagree, and nothing else in the build compares them. */
+typedef char ShadowModel_size_must_be_0x28[sizeof(struct ShadowModel) == 0x28 ? 1 : -1];
+
 #endif /* __cplusplus */
 
 #endif /* SHADOWMODEL_H */

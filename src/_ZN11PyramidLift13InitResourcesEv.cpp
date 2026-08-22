@@ -5,7 +5,9 @@
 /* recovered: named members + shared header, real C++ method */
 #include "PyramidLift.h"
 #pragma opt_strength_reduction off
-typedef int Fix12;
+/* Not `Fix12`: this actor's header now reaches math/Fix12.h, where Fix12 is a
+   class template. Only the raw word matters at this call. */
+typedef int Fix12Raw;
 /* SharedFilePtr stays incomplete: Model.h forward-declares it and its layout is
    deliberately not recovered (include/SharedFilePtr.h). Used only by address here. */
 typedef struct BMD_File BMD_File;
@@ -22,7 +24,7 @@ extern BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr* f);
 extern void _ZN9ModelBase7SetFileEP8BMD_Fileii(void* self, BMD_File* f, int a, int b);
 extern void _ZN10dBgActor_c19UpdateClsnPosAndRotEv(void* self);
 extern KCL_File* _ZN7dBgW_Kc8LoadFileER13SharedFilePtr(SharedFilePtr* f);
-extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, KCL_File* k, Matrix4x3* m, Fix12 f, short s, CLPS_Block* b);
+extern void _ZN10dBgW_KcMbg7SetFileEP8KCL_FileRK9Matrix4x35Fix12IiEsR10CLPS_Block(void* self, KCL_File* k, Matrix4x3* m, Fix12Raw f, short s, CLPS_Block* b);
 extern void func_020393d4(void* p, void* v);
 extern void func_020393c4(void* p, void* v);
 }

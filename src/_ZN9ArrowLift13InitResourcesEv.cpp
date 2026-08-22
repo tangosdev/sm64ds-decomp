@@ -6,8 +6,9 @@
 #include "ArrowLift.h"
 typedef int Fix12i;
 struct SharedFilePtr; struct BMD_File; struct KCL_File; struct Matrix4x3; struct CLPS_Block;
-struct dBgW_Kc { int d; };
-struct dBgW_KcMbg { int d; };
+/* dBgW_Kc and dBgW_KcMbg are the real classes now, through this actor's header,
+   which types mMovingMeshCollider. The placeholders `{ int d; }` were only ever
+   cast targets and redefining the real ones ICEs mwccarm (CClass.c:3328). */
 
 extern "C" BMD_File* _ZN5Model8LoadFileER13SharedFilePtr(SharedFilePtr&);
 extern "C" void _ZN9ModelBase7SetFileEP8BMD_Fileii(ModelBase*, BMD_File*, int, int);

@@ -74,6 +74,19 @@ struct dCcAc_c {
     struct dActor_c *owner;      /* 0x30 */
 };
 
+/* In C the tag alone is not a type name, so an owner header that embeds a
+   dCcAc_c BY VALUE -- which the cartridge's own destructors prove several do,
+   see tools/dtor_members.py -- cannot spell the member without this. The
+   definition and the typedef have to travel together: with the definition and no
+   typedef the embed gets `undefined identifier', and then the owner's size assert
+   gets `illegal constant expression' on top of it. */
+typedef struct dCcAc_c dCcAc_c;
+
+/* The C view substitutes for the C++ class only while it is the SAME SIZE. Once
+   an owner embeds one by value the two branches lay that owner out differently if
+   they ever disagree, and nothing else in the build compares them. */
+typedef char dCcAc_c_size_must_be_0x34[sizeof(struct dCcAc_c) == 0x34 ? 1 : -1];
+
 #endif /* __cplusplus */
 
 #endif /* DCCAC_C_H */

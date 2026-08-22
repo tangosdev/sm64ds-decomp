@@ -5,6 +5,7 @@
 #ifndef MIRRORLUIGI_H
 #define MIRRORLUIGI_H
 #include "types.h"
+#include "ShadowModel.h"
 
 struct MirrorLuigi {
     u8  pad_000[0x5c];
@@ -26,8 +27,10 @@ struct MirrorLuigi {
     u8  pad_14d[0x7];
     u8  unk_154;            /* 0x154 */
     u8  pad_155[0x33];
-    u8  mShadowModel;            /* 0x188 */
-    u8  pad_189[0x27];
+    /* ShadowModel member. The cartridge's own ~MirrorLuigi calls _ZN11ShadowModelD1Ev
+       at +0x188 (D0/D1), a relocation the ROM build checks; recovered by
+       tools/dtor_members.py. D1 and not D2, so it is this type and not an inlined base. */
+    ShadowModel mShadowModel;            /* 0x188 */
     u8  unk_1b0;            /* 0x1b0 */
     u8  pad_1b1[0x7];
     s32 unk_1b8;            /* 0x1b8 */
