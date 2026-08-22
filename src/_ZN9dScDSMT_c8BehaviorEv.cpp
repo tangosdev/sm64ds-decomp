@@ -1,21 +1,27 @@
-#include "types.h"
+//cpp
 // @symbol _ZN9dScDSMT_c8BehaviorEv
-/* dScDSMT_c::Behavior() -- vtable slot 6. See include/dScDSMT_c.h. The
- * SetFaders(c+0x54) call reaches into the same opaque unk_050 range the
- * header documents. */
+/* recovered: named members + real C++ method */
+/* dScDSMT_c::Behavior() -- vtable slot 6. Pumps the download-play state
+ * machine and dispatches on its return code: 3..5 load one of three saved
+ * files, 6 pulls in the minigame overlays and fades out, 7 opens the minigame
+ * menu, 2 fades back. Ends by handing its own `fader` member to dScene_c. */
+#include "dScDSMT_c.h"
 #include "decl_Heap.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
-extern unsigned short DecIfAbove0_Short(unsigned short* p);
-extern int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
-extern int _ZN4Heap10SetDefaultEv(int heap);
-extern void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int a, unsigned int b, u16 c);
-extern void StartMinigameMenu(u8 returnToRecRoom);
 
-extern char* data_0209b33c;
+extern "C" {
+unsigned short DecIfAbove0_Short(unsigned short *p);
+int func_ov007_020b7090(u16 a0, u16 a1, u16 a2, u16 a3, int arg4);
+int _ZN4Heap10SetDefaultEv(int heap);
+void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int a, unsigned int b, u16 c);
+void StartMinigameMenu(u8 returnToRecRoom);
+
+extern char *data_0209b33c;
 extern char data_0209caa0;
+}
 
-int _ZN9dScDSMT_c8BehaviorEv(char* c)
+s32 dScDSMT_c::Behavior()
 {
     int result;
 
@@ -26,7 +32,7 @@ int _ZN9dScDSMT_c8BehaviorEv(char* c)
 
     func_0203da9c();
     {
-        u16* p = func_0203dabc();
+        u16 *p = func_0203dabc();
         int arg4;
         func_0203da9c();
         arg4 = func_0203dae4();
@@ -60,6 +66,6 @@ int _ZN9dScDSMT_c8BehaviorEv(char* c)
         _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0x7fff);
     }
 
-    _ZN8dScene_c9SetFadersEP15FaderBrightness(c + 0x54);
+    dScene_c::SetFaders(&fader);
     return 1;
 }

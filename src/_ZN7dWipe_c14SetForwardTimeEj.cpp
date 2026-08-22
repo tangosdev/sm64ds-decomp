@@ -1,0 +1,83 @@
+//cpp
+// @symbol _ZN7dWipe_c14SetForwardTimeEj
+/* recovered: named members + real C++ method */
+/* dWipe_c::SetForwardTime(u32 frames) -- vtable slot 4. Starts the closing
+ * half of a wipe. Only meaningful from a resting state (0 or 2); type 1 is the
+ * plain brightness fade and the base owns it. Loads the wipe's palette on both
+ * engines, arms the blend registers, then hands the per-scanline work to an
+ * H-blank IRQ (func_0202f2c4) with IME briefly masked around the install. */
+#include "dWipe_c.h"
+#include "decl_common.h"
+
+extern "C" {
+void _ZN4CP1527FlushAndInvalidateDataCacheEjj(unsigned int addr, unsigned int len);
+void _ZN2GX10LoadBGPlttEPKvjj(const void *data, unsigned int offset, unsigned int size);
+void _ZN3GXS10LoadBGPlttEPKvjj(const void *data, unsigned int offset, unsigned int size);
+void func_0202f58c(void *self);
+void _ZN3IRQ13SetIRQHandlerEjPFvvE(unsigned int irq, void (*handler)(void));
+void _ZN3IRQ10EnableIRQsEj(unsigned int irq);
+}
+
+int dWipe_c::SetForwardTime(u32 frames)
+{
+    if (unk_010 == 0 || unk_010 == 2) {
+        int t;
+        u16 saved;
+
+        if (unk_014 == 1) {
+            return FaderBrightness::SetForwardTime(frames);
+        }
+
+        if (frames == 0) {
+            unk_020 = -0x200000;
+            unk_024 = 0;
+        } else {
+            t = (unk_014 == 0) ? 0x2d : 0x3c;
+            unk_020 = -0x200000 / t;
+            unk_024 = (-unk_020 << 1) / t;
+            unk_020 = unk_020 << 1;
+        }
+
+        if (unk_014 == 2) {
+            _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_0209f600, 2);
+            _ZN2GX10LoadBGPlttEPKvjj(data_0209f600, 0, 2);
+            _ZN3GXS10LoadBGPlttEPKvjj(data_0209f600, 0, 2);
+        } else {
+            _ZN4CP1527FlushAndInvalidateDataCacheEjj((u32)data_020926c8, 2);
+            _ZN2GX10LoadBGPlttEPKvjj(data_020926c8, 0, 2);
+            _ZN3GXS10LoadBGPlttEPKvjj(data_020926c8, 0, 2);
+        }
+
+        unk_01c = 0x200000;
+        *(volatile u16 *)0x4000040 = 0x7f;
+        *(volatile u16 *)0x4000044 = 0xc0;
+        *(volatile u16 *)0x4001040 = 0x7f;
+        *(volatile u16 *)0x4001044 = 0xc0;
+        *(volatile u16 *)0x4000042 = 0x80ff;
+        *(volatile u16 *)0x4000046 = 0xc0;
+        *(volatile u16 *)0x4001042 = 0x80ff;
+        *(volatile u16 *)0x4001046 = 0xc0;
+
+        unk_010 = 3;
+        func_0202f58c(this);
+
+        saved = *(volatile u16 *)0x4000208;
+        *(volatile u16 *)0x4000208 = 0;
+        _ZN3IRQ13SetIRQHandlerEjPFvvE(2, func_0202f2c4);
+        _ZN3IRQ10EnableIRQsEj(2);
+        func_02053c10(1);
+        if (saved != 0) {
+            u16 tmp = *(volatile u16 *)0x4000208;
+            *(volatile u16 *)0x4000208 = 1;
+        }
+
+        unk_00f = 1;
+        return 0;
+    } else {
+        if (unk_010 == 4) {
+            return 1;
+        }
+        unk_010 = 3;
+        return 0;
+    }
+}

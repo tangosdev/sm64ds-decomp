@@ -898,7 +898,6 @@ def test_exact_vague_externalization_rejects_wrong_binding_and_vtables():
     if not _toolchain():
         return
     import io
-    import struct
     from elftools.elf.elffile import ELFFile
 
     obj, entry, homes, cfg, _targets, reader, name_index = \

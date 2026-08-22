@@ -9,7 +9,19 @@
 /* The third parameter (param_2) is load-bearing: it arrives in r2 and is
  * forwarded to the guard call with zero instructions, which keeps r2 live
  * from entry to the call and forces the cached `type` into r3 as in the ROM.
- * Without it every spelling colors `type` to r2 (3-word regperm miss). */
+ * Without it every spelling colors `type` to r2 (3-word regperm miss).
+ *
+ * THIS IS WHY THE FILE IS STILL PLAIN C while its six siblings became real
+ * dWipe_c:: methods. As a real method the mangled name fixes the arity at one
+ * (`Ej`), so the r2-holding parameter cannot exist, and the miss is exactly the
+ * three words this note predicts: `ldr r3,[r4,#0x14]` / `cmp r3,#1` / `cmp r3,#0`
+ * become r2. Measured 2026-08-22, eleven spellings, all 3 words: declaration
+ * order (both ways), separate vs combined decls, init-at-decl, int vs s32 vs
+ * u32, a third unused local, no `type` local at all, and reading `unk_010`
+ * directly. `const s32 type` does not compile (assigned later). The rest of the
+ * function is byte-identical in every variant -- only the colouring differs.
+ * Re-open this only with a lever that makes r2 live at ENTRY without emitting
+ * an instruction; source spelling alone does not reach it. */
 struct FaderBrightness;
 extern int _ZN15FaderBrightness15SetBackwardTimeEj(struct FaderBrightness *self, u32 time, u32 c);
 extern void _ZN4CP1527FlushAndInvalidateDataCacheEjj(u32 a, u32 b);

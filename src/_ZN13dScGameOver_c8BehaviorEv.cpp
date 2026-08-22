@@ -1,19 +1,25 @@
+//cpp
 // @symbol _ZN13dScGameOver_c8BehaviorEv
-/* dScGameOver_c::Behavior() -- vtable slot 6. Plain C carries the literal
- * mangled name with no mangling needed -- see include/dScGameOver_c.h.
- * `self[0x90..0x94]` here are unk_090..unk_094 there. */
+/* recovered: named members + real C++ method */
+/* dScGameOver_c::Behavior() -- vtable slot 6. A two-state cursor FSM over the
+ * yes/no prompt: state 0 reads the stylus box and the button, state 1 runs the
+ * two countdowns down and commits -- continue (func_0202ae74) on "yes", or a
+ * scene fade back out on "no". unk_094 gates all of it until the intro is in. */
+#include "dScGameOver_c.h"
+
 struct VT { void *v0, *v1, *v2, *v3, *v4; int (*m_14)(void *); };
-struct Obj { struct VT *vt; };
+struct Obj { VT *vt; };
 
-extern struct Obj *data_0209f5bc;
+extern "C" {
+extern Obj *data_0209f5bc;
 
-extern void func_ov003_020b060c(void *self);
-extern int IsButtonInputValid(void);
-extern void func_ov003_020b0730(void *self, int flag);
-extern void func_02012790(int se);
-extern void func_0202ae74(void);
-extern void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int, unsigned int, unsigned short);
-extern void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int);
+void func_ov003_020b060c(void *self);
+int IsButtonInputValid(void);
+void func_ov003_020b0730(void *self, int flag);
+void func_02012790(int se);
+void func_0202ae74(void);
+void _ZN8dScene_c14StartSceneFadeEjjt(unsigned int, unsigned int, unsigned short);
+void _ZN5Sound22StopLoadedMusic_Layer1Ej(unsigned int);
 
 extern unsigned char data_020a0e40;
 extern unsigned char data_020a0de8[];
@@ -21,20 +27,21 @@ extern unsigned char data_020a0de9[];
 extern unsigned char data_020a0dea[];
 extern unsigned char data_020a0deb[];
 extern int data_0208ee44;
+}
 
-int _ZN13dScGameOver_c8BehaviorEv(unsigned char *self)
+s32 dScGameOver_c::Behavior()
 {
-    struct Obj *o = data_0209f5bc;
+    Obj *o = data_0209f5bc;
 
     if (o->vt->m_14(o) == 0)
         goto end;
 
-    func_ov003_020b060c(self);
+    func_ov003_020b060c(this);
 
-    if (self[0x94] < 2)
+    if (unk_094 < 2)
         return 1;
 
-    switch (self[0x90]) {
+    switch (unk_090) {
         case 0: goto state0;
         case 1: goto state1;
         default: goto end;
@@ -58,18 +65,18 @@ state0:
                     goto left;
             }
         }
-        if (self[0x91] != 0)
+        if (unk_091 != 0)
             goto right_check;
         if (!IsButtonInputValid())
             goto right_check;
     left:
-        if (self[0x91] == 0)
-            self[0x93] = (unsigned char)(data_0208ee44 << 3);
-        self[0x91] = 0;
-        func_ov003_020b0730(self, 0);
-        self[0x92] = (unsigned char)(data_0208ee44 << 4);
+        if (unk_091 == 0)
+            unk_093 = (unsigned char)(data_0208ee44 << 3);
+        unk_091 = 0;
+        func_ov003_020b0730(this, 0);
+        unk_092 = (unsigned char)(data_0208ee44 << 4);
         func_02012790(0x9a);
-        self[0x90] = 1;
+        unk_090 = 1;
         goto end;
 
     right_check:
@@ -80,30 +87,30 @@ state0:
                     goto right;
             }
         }
-        if (self[0x91] != 1)
+        if (unk_091 != 1)
             goto end;
         if (!IsButtonInputValid())
             goto end;
     right:
-        if (self[0x91] == 1)
-            self[0x93] = (unsigned char)(data_0208ee44 << 3);
-        self[0x91] = 1;
-        func_ov003_020b0730(self, 0);
-        self[0x92] = (unsigned char)(data_0208ee44 << 4);
+        if (unk_091 == 1)
+            unk_093 = (unsigned char)(data_0208ee44 << 3);
+        unk_091 = 1;
+        func_ov003_020b0730(this, 0);
+        unk_092 = (unsigned char)(data_0208ee44 << 4);
         func_02012790(0x9b);
-        self[0x90] = 1;
+        unk_090 = 1;
         goto end;
 
 state1:
-        if (self[0x93] != 0) {
-            self[0x93] -= data_0208ee44;
-            if (self[0x93] == 0)
-                func_ov003_020b0730(self, 0);
+        if (unk_093 != 0) {
+            unk_093 -= data_0208ee44;
+            if (unk_093 == 0)
+                func_ov003_020b0730(this, 0);
         }
-        if (self[0x92] != 0) {
-            self[0x92] -= data_0208ee44;
-            if (self[0x92] == 0) {
-                if (self[0x91] == 0)
+        if (unk_092 != 0) {
+            unk_092 -= data_0208ee44;
+            if (unk_092 == 0) {
+                if (unk_091 == 0)
                     func_0202ae74();
                 else
                     _ZN8dScene_c14StartSceneFadeEjjt(1, 0, 0);

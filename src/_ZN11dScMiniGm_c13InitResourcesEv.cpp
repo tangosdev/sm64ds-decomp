@@ -1,10 +1,15 @@
-#include "types.h"
+//cpp
 // @symbol _ZN11dScMiniGm_c13InitResourcesEv
-/* dScMiniGm_c::InitResources() -- vtable slot 0. See include/dScMiniGm_c.h.
- * Writes c+0x50, c+0x64, and the c+0x54..0xac field block the header now
- * declares. */
+/* recovered: named members + real C++ method */
+/* dScMiniGm_c::InitResources() -- vtable slot 0. Builds the minigame menu:
+ * loads the per-language art onto both engines, walks the two minigame tables
+ * to seed each entry's unlock state, then zeroes the whole unk_054..unk_0ac
+ * field block Behavior() and Render() drive. */
+#include "dScMiniGm_c.h"
 #include "decl_Scene.h"
 #include "decl_common.h"
+
+extern "C" {
 extern void _ZN2GX12SetBankForBGEt(u16 v);
 extern void _ZN2GX15SetBankForSubBGEt(u16 v);
 extern void _ZN2GX16SetBankForSubOBJEt(u16 v);
@@ -22,7 +27,6 @@ extern void *_ZN3G2S13GetBG0CharPtrEv(void);
 extern void MultiStore16(u16 val, char *dst, int nbytes);
 extern void *_ZN3G2S12GetBG0ScrPtrEv(void);
 extern void _ZN3GXS11LoadOBJPlttEPKvjj(const void *p, u32 a, u32 b);
-
 extern u8 data_0209f5f8;
 extern u32 data_0209caa0[];
 extern u8 data_0209b300;
@@ -31,7 +35,6 @@ extern u8 data_0209d45c;
 extern u8 data_0209d454;
 extern int data_0208ee44;
 extern char data_0209f61c;
-
 typedef struct Entry {
     int pad0[3];
     int unkC;
@@ -39,12 +42,11 @@ typedef struct Entry {
     int arr[5];
     int pad28[3];
 } Entry;
-
 extern Entry data_ov005_020c24d8[];
+}
 
-int _ZN11dScMiniGm_c13InitResourcesEv(void *arg0)
+s32 dScMiniGm_c::InitResources()
 {
-    char *c = (char *)arg0;
     int i, j;
     Entry *tbl;
     int i2;
@@ -66,7 +68,7 @@ int _ZN11dScMiniGm_c13InitResourcesEv(void *arg0)
         tbl = data_ov005_020c24d8;
         for (i = 0; i < 0x24; i++) {
             for (j = 0; j < 5; j++) {
-                func_ov005_020bffc8(c, i, j, tbl->arr[j]);
+                func_ov005_020bffc8((char *)this, i, j, tbl->arr[j]);
             }
             tbl++;
         }
@@ -79,12 +81,12 @@ int _ZN11dScMiniGm_c13InitResourcesEv(void *arg0)
         flag = 0;
         if (tbl2->unkC != 0) {
             if (tbl2->unk10 == 1) {
-                if ((u32)func_ov005_020bfff4(c, i2, 0) > (u32)tbl2->unkC) {
+                if ((u32)func_ov005_020bfff4((char *)this, i2, 0) > (u32)tbl2->unkC) {
                     flag = 1;
                 }
             } else {
                 for (j2 = 0; j2 < 5; j2++) {
-                    if ((u32)func_ov005_020bfff4(c, i2, j2) > (u32)tbl2->unkC) {
+                    if ((u32)func_ov005_020bfff4((char *)this, i2, j2) > (u32)tbl2->unkC) {
                         flag = 1;
                     }
                 }
@@ -92,7 +94,7 @@ int _ZN11dScMiniGm_c13InitResourcesEv(void *arg0)
         }
         if (flag != 0) {
             for (j3 = 0; j3 < 5; j3++) {
-                func_ov005_020bffc8(c, i2, j3, tbl2->arr[j3]);
+                func_ov005_020bffc8((char *)this, i2, j3, tbl2->arr[j3]);
             }
             data_0209b300 = 1;
         }
@@ -100,11 +102,11 @@ int _ZN11dScMiniGm_c13InitResourcesEv(void *arg0)
     }
 
     if (data_0209b304 == 1) {
-        *(int *)(c + 0x50) = 0xb0;
+        unk_050 = 0xb0;
     } else {
-        *(int *)(c + 0x50) = 0;
+        unk_050 = 0;
     }
-    *(int *)(c + 0x64) = 0;
+    unk_064 = 0;
 
     _ZN2GX15DisableAllBanksEv();
     *(volatile u16 *)0x4000304 |= 0x8000;
@@ -181,8 +183,8 @@ int _ZN11dScMiniGm_c13InitResourcesEv(void *arg0)
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & ~3) | 3;
     *(volatile u16 *)0x400100e = (*(volatile u16 *)0x400100e & 0x43) | 0x4604;
     *(volatile u16 *)0x400100e &= ~0x40;
-    *(volatile u32 *)0x400101c = *(int *)(c + 0x50) & 0x1ff;
-    SetSubBg3Offset(*(int *)(c + 0x50), 0);
+    *(volatile u32 *)0x400101c = unk_050 & 0x1ff;
+    SetSubBg3Offset(unk_050, 0);
 
     f = LoadFile(0x53);
     DecompressLZ16(f, _ZN3G2S13GetBG2CharPtrEv());
@@ -196,8 +198,8 @@ int _ZN11dScMiniGm_c13InitResourcesEv(void *arg0)
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & ~3) | 2;
     *(volatile u16 *)0x4001008 = (*(volatile u16 *)0x4001008 & 0x43) | 0x6010;
     *(volatile u16 *)0x4001008 &= ~0x40;
-    *(volatile u32 *)0x4001010 = *(int *)(c + 0x50) & 0x1ff;
-    SetSubBg0Offset(*(int *)(c + 0x50), 0);
+    *(volatile u32 *)0x4001010 = unk_050 & 0x1ff;
+    SetSubBg0Offset(unk_050, 0);
 
     dst = (char *)_ZN3G2S13GetBG0CharPtrEv();
     sp0 = 0;
@@ -206,7 +208,7 @@ int _ZN11dScMiniGm_c13InitResourcesEv(void *arg0)
     sp2 = 0x1f;
     MultiStore16(sp2, dst, 0x1000);
 
-    func_ov005_020c16e4(c);
+    func_ov005_020c16e4((char *)this);
 
     if (GetOwnerLanguage() == 5) {
         f = LoadFile(0xda);
@@ -227,19 +229,19 @@ int _ZN11dScMiniGm_c13InitResourcesEv(void *arg0)
     _ZN3GXS11LoadOBJPlttEPKvjj((const void *)f, 0, 0x100);
     Deallocate((void *)f);
 
-    *(u8 *)(c + 0x54) = 0;
-    *(int *)(c + 0x8c) = 0;
-    *(int *)(c + 0x90) = 0;
-    *(int *)(c + 0x94) = 0;
-    *(int *)(c + 0x98) = 0;
-    *(int *)(c + 0x9c) = 0;
-    *(int *)(c + 0x5c) = 0;
-    *(int *)(c + 0x60) = 0;
-    *(int *)(c + 0xa4) = 0;
-    *(int *)(c + 0xa8) = 0;
-    *(int *)(c + 0xa0) = 0;
-    *(int *)(c + 0x58) = data_0208a170;
-    *(u8 *)(c + 0xac) = 0;
+    unk_054 = 0;
+    unk_08c = 0;
+    unk_090 = 0;
+    unk_094 = 0;
+    unk_098 = 0;
+    unk_09c = 0;
+    unk_05c = 0;
+    unk_060 = 0;
+    unk_0a4 = 0;
+    unk_0a8 = 0;
+    unk_0a0 = 0;
+    unk_058 = data_0208a170;
+    unk_0ac = 0;
 
     if (data_0209b300 == 1) {
         data_0209f1d8 = 1;
