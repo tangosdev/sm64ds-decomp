@@ -195,20 +195,25 @@
 # screen.  src/func_ov006_020f456c.c agrees a second time from a different
 # angle: it walks cars[j*5 + k + 2] for board 1 and cars[j*4 + k] otherwise.
 #
-# ---- THE ONE FLOOR IS THE CARD DRAW ---------------------------------------
+# ---- THE ONE FLOOR WAS THE CARD DRAW, AND RUN mg10 LANE F362 CLOSED IT -----
 #
-# func_ov006_020f3e68, 0xa8, the sixth call vtable slot 9 (Render) makes, has NO
-# src TU in any overlay and NO delink block.  It is the ONLY code in the class
-# that draws a card -- ov006's relocs.txt has thirty-two arm_call relocations to
-# Hud_RenderSprite (0x020af68c) and exactly ONE of them, 0x020f3ee8, is inside
-# this class's code block.  It is the exact analogue of the sibling's
-# func_ov006_020f5b98, which cost run mg7 lane MEMCARDS a whole lane to close.
-# THIS LANE TRAPS IT: port/unmatched/MgMemory1_Faces.cpp holds a named counting
-# trap and the ROM read of the body, and hal/scene_mg_memory1.cpp prints the
-# count on every run.  THE SEAT DOES NOT DRAW CARDS.
+# func_ov006_020f3e68, 0xa8, the sixth call vtable slot 9 (Render) makes, had NO
+# src TU in any overlay and has NO delink block.  It is the ONLY code in the
+# class that draws a card -- ov006's relocs.txt has thirty-two arm_call
+# relocations to Hud_RenderSprite (0x020af68c) and exactly ONE of them,
+# 0x020f3ee8, is inside this class's code block.  It is the exact analogue of
+# the sibling's func_ov006_020f5b98, which cost run mg7 lane MEMCARDS a whole
+# lane to close.
 #
-# It is the only function without a src TU in the class's forty-seven; the other
-# forty-six are all below, minus the four host copies.
+# RUN mg9 LANE MMT TRAPPED IT AND RUN mg10 LANE F362 DECOMPILED IT.
+# src/func_ov006_020f3e68.c is the body and this slice carries it, so a tree
+# that loses that line fails to LINK rather than quietly drawing nothing.  The
+# named trap in port/unmatched/MgMemory1_Faces.cpp is DELETED, not emptied.
+# THE SEAT DRAWS CARDS.
+#
+# It was the only function without a src TU in the class's forty-seven; all
+# forty-seven have one now, and the other forty-six are below minus the four
+# host copies.
 #
 # ---- THE TITLE, OFF THE ROM'S OWN MESSAGE FILE ----------------------------
 #
@@ -435,8 +440,20 @@ src/func_ov006_020f53e4.cpp
 #   dispatcher, AND slot 3 of the first table.  extern "C" table, silent.
 # HOST-COPIED (mg9 lane MMT): src/func_ov006_020f3f10.cpp -- the arity-1
 #   per-record dispatcher, twelve records at +0x51a8 stride 0x18.
-# TRAPPED, NO SOURCE ANYWHERE (mg9 lane MMT): func_ov006_020f3e68 -- the card
-#   draw.  See port/unmatched/MgMemory1_Faces.cpp section 1.
+# THE CLASS'S ONE HARD FLOOR, DECOMPILED (run mg10 lane F362).  It is the sixth
+#   call vtable slot 9 (Render) makes, and it is the ONLY thing in the whole
+#   class that draws a card -- ov006's relocs.txt has thirty-two arm_call
+#   relocations to Hud_RenderSprite and exactly one of them, 0x020f3ee8, is
+#   inside this class's code block.  config/arm9/overlays/ov006/symbols.txt
+#   names it and sizes it 0xa8, and there is still NO delink block covering it
+#   (the block before ends at 0x020f3e68 and the next starts at 0x020f3f10), so
+#   the ROM build does not carve it out; the port compiles the src TU.  It is
+#   NONMATCHING at 24 of 42 words, colouring and schedule only -- the ROM body
+#   is the sibling's 0x020f5b98 with four constants changed and the residue is
+#   the sibling's too.  NO src/func_ovNNN_020f3e68.* exists in any other
+#   overlay, so the module-residency trap that almost closed the sibling's
+#   floor twice cannot fire here; the check was run, not assumed.
+src/func_ov006_020f3e68.c
 # NOT HERE: src/func_ov006_0210a6e4.cpp, defined by
 #   port/unmatched/MgFlower_Slot2.cpp as port_mg_flower_after_init.
 # NOT HERE: src/func_ov006_020c0a48.c, src/func_ov006_020c1804.cpp,

@@ -167,21 +167,26 @@
 // func_ov006_020c19d0, func_ov004_020b52fc) already cover them and are shared
 // rather than duplicated.  Nothing in this file dispatches a member pointer.
 //
-// ---- 8. THE CARD DRAW IS A FLOOR AND THIS SEAT DOES NOT DRAW CARDS --------
+// ---- 8. THE CARD DRAW WAS A FLOOR AND RUN mg10 LANE F362 CLOSED IT --------
 //
 // func_ov006_020f3e68 -- the sixth call vtable slot 9 (Render) makes, 0xa8, the
-// only code in the class that puts a card pixel anywhere -- has NO src TU in
-// any overlay and NO delink block.  port/unmatched/MgMemory1_Faces.cpp holds a
-// named counting trap for it and carries the ROM read of what it does, and the
-// census below prints the trap's count on every run.
+// only code in the class that puts a card pixel anywhere -- had NO src TU in
+// any overlay and has NO delink block.  Run mg9 lane MMT put a named counting
+// trap in port/unmatched/MgMemory1_Faces.cpp with the ROM read of what it does;
+// run mg10 lane F362 wrote the body from that read and DELETED the trap.
+// src/func_ov006_020f3e68.c is the TU and port/slice_mmt.txt carries it.
 //
-// SO A GREEN RUN OF THIS SCENE MEANS "the board is dealt and the machine runs",
-// NOT "the game looks right".  The sibling's identical floor was exactly this
-// shape until run mg7 lane MEMCARDS decompiled it, and section 15 of
+// SO A GREEN RUN OF THIS SCENE USED TO MEAN "the board is dealt and the machine
+// runs", NOT "the game looks right".  The sibling's identical floor was exactly
+// this shape until run mg7 lane MEMCARDS decompiled it, and section 15 of
 // port/mg_fanout_costs.txt records the symptom it produced: every dispatch
 // census green, every state count right, a whole board laid out at real screen
-// coordinates, and nothing on screen.  The card-record census below is here so
-// that reading is available from the numbers instead of from a screenshot.
+// coordinates, and nothing on screen.  The card-record census below stays,
+// because it is the reading that made the absence visible and it is still the
+// cheapest way to tell a run that renders no cards from a run that has no cards
+// to render.  THE SUB-OAM CENSUS IS THE OTHER HALF and it is the one that moved:
+// a scene-362 boot with the floor open placed a handful of sprites, and the same
+// boot with this body in place places two per live card.
 //
 // ---- 9. WHAT THIS SEAT DOES NOT CLAIM -------------------------------------
 //
@@ -239,10 +244,11 @@ int   func_ov006_020f523c(char *c);           /* slot 21 */
 /* the factory */
 int  *MgMemoryMatch_Spawn(void);
 
-/* this seat's own witnesses */
+/* this seat's own witnesses.  There is no card-draw counter any more: run mg10
+   lane F362 decompiled func_ov006_020f3e68 into src/func_ov006_020f3e68.c and
+   deleted the trap that counted itself. */
 unsigned port_mg_memory1_state_hits(void);
 unsigned port_mg_memory1_floor_hits(void);
-unsigned port_mg_memory1_carddraw_hits(void);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 /* the sibling's field dispatcher, shared through the model sub-object */
@@ -542,15 +548,15 @@ extern "C" void port_scene_memory1_hits(void)
                     fcalls, fhits, calls, unknown);
     }
 
-    /* THE FLOOR, PRINTED AS A NUMBER.  func_ov006_020f3e68 is the sixth call
-       vtable slot 9 (Render) makes and the only card draw in the class; it has
-       no src TU and no delink block, so unmatched/MgMemory1_Faces.cpp holds a
-       counting trap in its place.  One entry per render frame is the reading
-       that says the seat REACHED the draw and the draw is the hole. */
-    std::printf("[scene] dScMgMemory_c CARD DRAW FLOOR: the Render callee "
-                "0x020f3e68 is TRAPPED (no src TU, no delink block) and was "
-                "entered %u time(s). NO CARD IS DRAWN ON ANY FRAME.\n",
-                port_mg_memory1_carddraw_hits());
+    /* THE FLOOR THAT USED TO BE HERE.  func_ov006_020f3e68 is the sixth call
+       vtable slot 9 (Render) makes and the only card draw in the class.  It
+       had no src TU and a counting trap stood in for it until run mg10 lane
+       F362 read it out of the overlay: the body is now a real src TU,
+       src/func_ov006_020f3e68.c, carried by port/slice_mmt.txt.  The card
+       census below is what the trap count was standing in for. */
+    std::printf("[scene] dScMgMemory_c card draw: the Render callee 0x020f3e68 "
+                "is DECOMPILED (src/func_ov006_020f3e68.c, NONMATCHING at 24 of "
+                "42 words, colouring and schedule only) and no longer trapped\n");
 
     /* The two state indexes the ROM's own dispatchers read, at the offsets
        disassembled in unmatched/MgMemory1_StateDispatch.cpp section 2. +0x5314
