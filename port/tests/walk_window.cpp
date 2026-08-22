@@ -22,11 +22,22 @@
 //   zooms. Both work in analog and in freecam and do nothing in DS-exact.
 //   The last left click is published in framebuffer pixels for the touch
 //   bridge; see g_mouse_click_x.
-//   F5  the debug menu: warp to any of the level's own entrances, the level
-//   select, the minigame picker, the fake-snap A/B, the overlay, the camera
-//   mode, how running works, and the recorder's filename.
-//   WASD, the arrows or the d-pad move, enter or A acts, F5 or BACK or B
-//   closes. It PAUSES THE GAME TICK while it is open and keeps rendering, so
+//   MOUSE CAPTURE  settings.json's MouseCapture, off by default. On, an
+//   ordinary adventure window HOLDS the pointer -- hidden, parked in the
+//   middle of the picture, clipped to the window -- and bare movement turns
+//   the camera with no button held. ESCAPE HANDS THE POINTER BACK, because
+//   escape opens the debug menu and the capture is never on while the menu
+//   is open; closing the menu takes it again. Alt-tab hands it back too. It
+//   never engages where the mouse is really the DS's stylus: the whole scene
+//   path (the minigames), any stacked window, and DS-exact. The setting
+//   reloads live, so the launcher can flip it mid-play. See the MOUSE banner
+//   above mo_look for the derivation and for what it takes away.
+//   F5 or ESC  the debug menu: warp to any of the level's own entrances, the
+//   level select, the minigame picker, the fake-snap A/B, the overlay, the
+//   camera mode, how running works, and the recorder's filename.
+//   WASD, the arrows or the d-pad move, enter or A acts, F5 or ESC or BACK or
+//   B closes. ESCAPE DOES NOT CLOSE THE GAME. The window's close button and
+//   alt+F4 do, and they are the only things that do. It PAUSES THE GAME TICK while it is open and keeps rendering, so
 //   the scene freezes and the view does not. The walk keys are aliases of the
 //   arrows here and are taken off the game for as long as it is open, so
 //   nothing that reads the menu also walks.
@@ -191,6 +202,11 @@ struct WinApi {
     BOOL(WINAPI *GetCursorPos_)(POINT *);
     BOOL(WINAPI *SetCursorPos_)(int, int);
     int(WINAPI *ShowCursor_)(BOOL);
+    /* MouseCapture's fence. NOT one of the click-test drivers below and not
+       compiled out with them: this one is a PLAYER setting on the shipping
+       path, and a null here is simply a capture that hides and re-centres the
+       pointer without also penning it in. */
+    BOOL(WINAPI *ClipCursor_)(const RECT *);
 #ifndef PORT_ROM_CLEAN
     /* SM64DS_CLICK_TEST's three (click_test_apply below): a client point to a
        screen point, the pointer put there, and a REAL button edge through the
@@ -280,6 +296,7 @@ static bool winapi_load(void)
     W.GetCursorPos_ = (decltype(W.GetCursorPos_))GetProcAddress(u, "GetCursorPos");
     W.SetCursorPos_ = (decltype(W.SetCursorPos_))GetProcAddress(u, "SetCursorPos");
     W.ShowCursor_ = (decltype(W.ShowCursor_))GetProcAddress(u, "ShowCursor");
+    W.ClipCursor_ = (decltype(W.ClipCursor_))GetProcAddress(u, "ClipCursor");
 #ifndef PORT_ROM_CLEAN
     /* SM64DS_CLICK_TEST's synthetic-click seams. Their GetProcAddress lookups
        -- and the "SendInput"/"SetForegroundWindow"/... name strings with them
@@ -1683,12 +1700,18 @@ static int g_run_pad = 0x4000;        /* settings.json RunButtonPad, pad X */
 
 /* THE REBIND CAPTURE, armed from the menu's rebind row and read by the window
    procedure. A capture has to swallow the press it is capturing, or binding
-   run to F3 would also toggle the overlay on the way past and binding it to
-   escape would close the game -- and escape is the one key the window
-   procedure, not the frame loop, acts on. So the capture lives where the
-   presses arrive: while it is armed, WM_KEYDOWN never reaches the escape
-   branch and never reaches the window at all, and the key it saw is handed
-   to the frame loop through g_rebind_key.
+   run to F3 would also toggle the overlay on the way past. So the capture
+   lives where the presses arrive: while it is armed, WM_KEYDOWN never reaches
+   the window at all, and the key it saw is handed to the frame loop through
+   g_rebind_key.
+
+   THE ESCAPE HALF OF THAT ARGUMENT IS GONE (run mg10, lane ESC). It used to
+   read "and binding it to escape would close the game -- and escape is the one
+   key the window procedure, not the frame loop, acts on", which was the whole
+   reason the swallow had to be up there rather than in key_live. Escape is an
+   ordinary frame-loop key now, gated by key_live like every other, so the
+   capture no longer needs to protect it from anything. The swallow stays for
+   the F3 reason above, which was always the load-bearing one.
 
    Level key reads are gated too, one line inside key_live, so nothing that
    was already held keeps steering while a person is picking a button. */
@@ -1755,12 +1778,12 @@ static int key_live(int vk)
 
 /* Keys and pad buttons this program has already spoken for. Binding run to
    one of them would not produce a conflict a player could see and undo; it
-   would produce a menu that cannot be closed, or a game that quits when you
+   would produce a menu that cannot be closed, or one that opens every time you
    start running. So the capture refuses them and says so, which is the one
    case where refusing is friendlier than obeying. */
 static int run_key_reserved(int vk)
 {
-    if (vk == VK_ESCAPE || vk == VK_RETURN) return 1;   /* quit, menu act */
+    if (vk == VK_ESCAPE || vk == VK_RETURN) return 1;   /* menu open, menu act */
     /* the port's own row. F10 is in it because Windows itself takes F10 as
        the menu-bar activator, so a run bound to it would open the system
        menu on every step; F11 and F12 are the fullscreen toggle. */
@@ -2561,7 +2584,29 @@ static void menu_input(int pad_live, const XPad *pad)
        focus gate and the stale-key latch with everything else. Under a
        selftest this block never runs at all, so routing it here changes
        nothing an automated run sees. */
-    if (key_live(VK_F5))     held |= 1u << 0;
+    /* ESCAPE IS AN ALIAS OF F5 (Tango's ask, run mg10 lane ESC), and this line
+       is the whole of it. Escape used to close the game outright, from the
+       window procedure -- the one key in this program that acted without
+       passing the three gates key_live carries. Quitting by accident is the
+       cheapest bug a play session has: the F-row keys sit next to each other
+       and the one a person reaches for to back out of anything took the
+       session with it.
+
+       AN ALIAS AND NOT A SECOND ENTRY POINT, on purpose. Sharing bit 0 with F5
+       and pad BACK means escape inherits, with no code of its own, every rule
+       the toggle already follows: the selftest gate (a comparator run reads
+       every key released, so nothing an automated run does can press this), the
+       rebind-capture gate, the focus gate, the stale-key latch across an
+       alt-tab, and the one-step-per-press edge. It also means escape CLOSES the
+       menu as well as opening it, which is the half of the ask that matters --
+       the key that opens the picker is the key that puts it away.
+
+       QUITTING IS THE WINDOW'S CLOSE BUTTON now, and alt+F4, both of which
+       arrive as WM_DESTROY and leave through the same PostQuitMessage escape
+       always did. Nothing else in this file quits: the only other
+       PostQuitMessage calls are that one and the two relaunch rows, which quit
+       because they have just started a replacement process. */
+    if (key_live(VK_F5) || key_live(VK_ESCAPE)) held |= 1u << 0;
     /* WASD NAVIGATES TOO, as plain aliases of the arrows (Tango's ask). Same
        key_live call, so they arrive behind the focus gate, the stale-key latch
        and the rebind-capture gate with everything else; same held-mask bit, so
@@ -3611,11 +3656,82 @@ static void fullscreen_toggle(HWND h)
    leaves the pointer exactly where it was picked up.
 
    The wheel zooms the rig. Both act in ANALOG and FREECAM; in DS-exact the
-   camera is the game's and the mouse does not touch it. */
+   camera is the game's and the mouse does not touch it.
+
+   ---- AND THE CAPTURE MODE IS BACK, BEHIND A SETTING (run mg10, lane ESC)
+
+   What stands above is still the DEFAULT and still the whole program with the
+   setting off. But Tango asked for the other half -- "hold my mouse in the
+   game and let me just move to turn" -- so settings.json's MouseCapture turns
+   it on, and the three objections written above are answered rather than
+   ignored, because they were all correct:
+
+   "IT FIGHTS THE DEBUG MENU." It does, so it is not on while the menu is
+   open: mo_capture_want below has menu_on in it. That is also what makes
+   ESCAPE the release, which is the convention every game with a captured
+   pointer already teaches -- escape opens the menu (lane ESC's other half),
+   the menu drops the capture, and the pointer is back in one press. Escape
+   again closes the menu and takes it again. There is no second key to learn
+   and no third state to be stuck in.
+
+   "IT FIGHTS ALT-TABBING OUT OF A PLAY SESSION." It did, so focus is in the
+   same test: the frame the window stops being foreground is the frame the
+   pointer is handed back, unclipped and visible, and coming back takes it
+   again. This is the same edge key_live already reads for the keyboard, so
+   the mouse and the keys let go together.
+
+   "IT LEAVES A HIDDEN CURSOR BEHIND IF THE PROGRAM DIES WITH IT ON -- and the
+   flight recorder exists because this program does sometimes die." This is
+   the one that needed a mechanism rather than a test, and the answer is that
+   both halves of the capture are PER-PROCESS state that Windows unwinds for
+   us. ShowCursor's counter belongs to this process's own input queue and dies
+   with it; ClipCursor's fence is released when the thread that set it goes
+   away. A crash therefore ends with a visible, free pointer without this
+   program running a single line of cleanup -- which is the only kind of
+   cleanup a crash can be relied on to do. The tidy paths (WM_KILLFOCUS,
+   WM_DESTROY, the frame test) are belt and braces on top of that, not the
+   thing being relied on.
+
+   HOW IT STEERS, and it is deliberately not a new input path: the capture
+   simply makes the anchor-and-spring-back above run without a button held.
+   The anchor is the middle of the client area rather than wherever the
+   pointer happened to be, because there is no pick-up point when there is no
+   pick-up; every move still reports its delta and is put straight back, so
+   the same mo_dx/mo_dy reach the same rig at the same 48 and 24 binangs a
+   pixel. Nothing downstream of these two variables can tell the two modes
+   apart, which is why turning the setting on cannot change how the camera
+   feels, only what your hand has to do.
+
+   WHAT THE POINTER IS FOR WHEN IT IS NOT STEERING is the reason for the rest
+   of mo_capture_want's list. The mouse in this program is also the DS's
+   stylus (poll_touch, hal/sub_screen.cpp), and a stylus that is pinned to the
+   middle of the picture and invisible is not a stylus. So the capture stays
+   off wherever the pointer is really a pen: the whole SCENE path, which is
+   where the minigames run; any STACKED window, where the bottom half of the
+   picture IS the bottom screen; and DS-exact, where the mouse steers nothing
+   and taking it would be pure cost. In a plain inset adventure window the
+   corner panel is not reachable while the capture is on, and escape is how
+   you reach it -- said here because it is the one thing this mode takes away
+   that a player might miss. */
 static int mo_look;              /* right button down */
 static POINT mo_anchor;          /* screen point the drag springs back to */
 static int mo_dx, mo_dy;         /* accumulated since the loop last drained */
 static int mo_wheel;             /* accumulated notches, forward positive */
+
+/* THE CAPTURE'S OWN THREE. mo_capture_opt is settings.json's MouseCapture,
+   re-read live beside the volume; mo_captured is whether the pointer is
+   actually held THIS FRAME, which is the option and the six refusals together;
+   mo_capture_home is where the pointer was standing when it was taken, so
+   letting go puts it back rather than leaving it in the middle of the picture.
+
+   mo_capture_opt is a file-scope copy rather than a call to
+   host_setting_mouse_capture() at each reader, for the reason the run-mode
+   keys are: the frame loop asks this question every frame and the answer may
+   only move when the watcher says the file moved. */
+static int mo_capture_opt;
+static int mo_captured;
+static POINT mo_capture_home;
+static int mo_capture_home_ok;
 
 /* THE TOUCH BRIDGE'S HANDOFF. The DS has a touchscreen and this program has a
    mouse, and the last left click is where the two meet. Position is in
@@ -3639,12 +3755,109 @@ int g_mouse_click_x, g_mouse_click_y;
 int g_mouse_click_new;
 int g_mouse_left_down;
 
+/* THE CURSOR IS HIDDEN IFF SOMETHING IS STEERING WITH IT, and this is the one
+   function that decides it. ShowCursor is a COUNTER and not a flag, so two
+   independent hiders that each pushed and popped it would drift the moment
+   they overlapped -- let go of the right button during a capture and the
+   pointer would reappear in the middle of a look. Both loops drive the counter
+   to a target instead of stepping it, so calling this at any time from
+   anywhere leaves it in the state these two variables describe. */
+static void mo_cursor_sync(void)
+{
+    if (!W.ShowCursor_) return;
+    if (mo_look || mo_captured) while (W.ShowCursor_(FALSE) >= 0) {}
+    else                        while (W.ShowCursor_(TRUE) < 0) {}
+}
+
 static void mo_release(void)
 {
     if (!mo_look) return;
     mo_look = 0;
     if (W.ReleaseCapture_) W.ReleaseCapture_();
-    if (W.ShowCursor_) while (W.ShowCursor_(TRUE) < 0) {}
+    mo_cursor_sync();
+}
+
+/* The middle of the client area in SCREEN coordinates -- the point a captured
+   pointer is parked on and springs back to. The client area and not the window
+   rect, so the title bar and the sizing border do not pull the anchor off
+   centre, and re-asked on every engage so a resized or moved window re-centres
+   without anything having to notice that it moved. */
+static int mo_client_center(HWND h, POINT *p)
+{
+    RECT rc;
+    if (!W.GetClientRect_ || !W.ClientToScreen_) return 0;
+    if (!W.GetClientRect_(h, &rc)) return 0;
+    if (rc.right <= rc.left || rc.bottom <= rc.top) return 0;  /* zero-size */
+    p->x = (rc.right - rc.left) / 2;
+    p->y = (rc.bottom - rc.top) / 2;
+    return W.ClientToScreen_(h, p) ? 1 : 0;
+}
+
+/* TAKE OR HAND BACK THE POINTER. Idempotent on purpose: the frame loop calls
+   this every frame with the answer it wants, so the transitions live here
+   rather than at each of the six places that can change the answer. */
+static void mo_capture_set(HWND h, int on)
+{
+    if (!!on == mo_captured) return;
+    if (on) {
+        POINT c;
+        if (!W.GetCursorPos_ || !W.SetCursorPos_) return;
+        if (!mo_client_center(h, &c)) return;
+        /* remembered BEFORE the pointer is moved, which is the whole point of
+           remembering it */
+        mo_capture_home_ok = W.GetCursorPos_(&mo_capture_home) ? 1 : 0;
+        mo_captured = 1;
+        mo_anchor = c;
+        W.SetCursorPos_(c.x, c.y);
+        /* WHATEVER THE POINTER DID ON THE WAY IN IS NOT A LOOK. Moving it to
+           the centre is this program's own move and the WM_MOUSEMOVE it
+           generates would otherwise be drained as a delta and snap the camera
+           by however far across the desk the pointer had been. */
+        mo_dx = mo_dy = 0;
+        if (W.ClipCursor_) {
+            RECT rc;
+            POINT tl, br;
+            if (W.GetClientRect_ && W.ClientToScreen_ && W.GetClientRect_(h, &rc)) {
+                tl.x = rc.left;  tl.y = rc.top;
+                br.x = rc.right; br.y = rc.bottom;
+                if (W.ClientToScreen_(h, &tl) && W.ClientToScreen_(h, &br)) {
+                    RECT s;
+                    s.left = tl.x; s.top = tl.y;
+                    s.right = br.x; s.bottom = br.y;
+                    W.ClipCursor_(&s);
+                }
+            }
+        }
+    } else {
+        mo_captured = 0;
+        if (W.ClipCursor_) W.ClipCursor_(0);
+        if (mo_capture_home_ok && W.SetCursorPos_)
+            W.SetCursorPos_(mo_capture_home.x, mo_capture_home.y);
+        mo_capture_home_ok = 0;
+        /* and the move BACK is not a look either, for the same reason */
+        mo_dx = mo_dy = 0;
+    }
+    mo_cursor_sync();
+    fprintf(stderr, "[mouse] capture %s\n", on ? "ENGAGED" : "released");
+}
+
+/* MAY THE POINTER BE HELD THIS FRAME? Every term is a release the player would
+   otherwise have to go and find, and the reasons are in the MOUSE banner
+   above. Written as one function with one caller so the answer cannot be half
+   true anywhere: the loop asks, mo_capture_set does.
+
+   `stacked` is passed rather than asked, because this is a header-free file
+   scope and the loops already hold the answer their window was built for. */
+static int mo_capture_want(int selftest, int stacked)
+{
+    if (!mo_capture_opt) return 0;      /* the setting, and it is off by default */
+    if (selftest) return 0;             /* no player, no pointer */
+    if (stacked) return 0;              /* the bottom half is a touchscreen */
+    if (cam_mode == CAM_DS) return 0;   /* the mouse steers nothing there */
+    if (menu_on) return 0;              /* escape is the release */
+    if (g_rebind_capture) return 0;     /* a key is being chosen */
+    if (!hal_window_focused()) return 0;/* alt-tab hands it back */
+    return 1;
 }
 
 /* The player has chosen a window size, by dragging the border or by
@@ -3655,7 +3868,14 @@ static int g_user_sized;
 
 static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
 {
-    if (m == WM_DESTROY) { mo_release(); W.PostQuitMessage_(0); return 0; }
+    /* the capture is dropped here as well as on the frame test, because a
+       window being destroyed has no more frames to test on */
+    if (m == WM_DESTROY) {
+        mo_capture_set(h, 0);
+        mo_release();
+        W.PostQuitMessage_(0);
+        return 0;
+    }
     /* AHEAD OF THE ESCAPE BRANCH, deliberately: while the rebind row is
        capturing, a press is a BINDING and nothing else, escape included --
        otherwise the one key a player would reach for to back out would close
@@ -3668,7 +3888,21 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
         if (!(l & (1 << 30))) g_rebind_key = (int)w;
         return 0;
     }
-    if (m == WM_KEYDOWN && w == VK_ESCAPE) { mo_release(); W.PostQuitMessage_(0); return 0; }
+    /* THERE IS NO ESCAPE BRANCH HERE ANY MORE (run mg10, lane ESC), and its
+       absence is the feature. It read
+           if (m == WM_KEYDOWN && w == VK_ESCAPE) { mo_release(); quit; }
+       so escape closed the game. It is now an alias of F5 -- it opens and
+       closes the debug menu -- and it is read where F5 is read, in menu_input's
+       held-mask, so it passes the selftest gate, the rebind-capture gate, the
+       focus gate and the stale-key latch that a branch up here would each have
+       had to re-solve. The rebind capture above still swallows it before
+       anything else sees it, for the reason it always did.
+
+       Escape now falls through to DefWindowProcA with every other key, which
+       does nothing with it. THE WINDOW'S CLOSE BUTTON AND ALT+F4 ARE THE QUIT,
+       and they were always the other way out: they arrive as WM_CLOSE, the
+       default handler destroys the window, and WM_DESTROY above posts the quit
+       message escape used to post directly. */
     switch (m) {
     case WM_RBUTTONDOWN:
         if (W.GetCursorPos_ && W.GetCursorPos_(&mo_anchor)) {
@@ -3682,11 +3916,22 @@ static LRESULT CALLBACK wndproc(HWND h, UINT m, WPARAM w, LPARAM l)
         mo_release();
         return 0;
     case WM_KILLFOCUS:
+        /* AHEAD OF THE FRAME TEST AND NOT INSTEAD OF IT. mo_capture_want has
+           hal_window_focused() in it, so the next frame would drop the capture
+           anyway -- but "the next frame" is a promise a stalled loop does not
+           keep, and the one moment a player must not have to wait for a frame
+           is the moment they have alt-tabbed away and want their pointer. */
+        mo_capture_set(h, 0);
+        mo_release();
+        return 0;
     case WM_CAPTURECHANGED:
+        /* NOT a capture drop: this is win32's mouse capture (SetCapture), a
+           different thing that happens to share the word. Losing it ends a
+           right-button drag and says nothing about the pointer lock. */
         mo_release();
         return 0;
     case WM_MOUSEMOVE:
-        if (mo_look && W.GetCursorPos_) {
+        if ((mo_look || mo_captured) && W.GetCursorPos_) {
             POINT p;
             if (W.GetCursorPos_(&p)) {
                 mo_dx += p.x - mo_anchor.x;
@@ -4332,7 +4577,7 @@ static int scene_window_run(void)
         stacked, &hdc,
         "SM64DS   |   stylus = left mouse drag   Space jump   X punch"
         "   Ctrl crouch   |   arrows / d-pad   Enter start"
-        "   |   F5 menu   F12 fullscreen   Esc quit");
+        "   |   F5 or Esc menu   F12 fullscreen");
     if (!hwnd) {
         /* A window that will not open is not a reason to lose the run: the
            scene still boots, still ticks and still writes whatever capture it
@@ -5309,8 +5554,8 @@ int main(void)
         stacked, &hdc,
         "SM64DS   |   WASD move   Shift dash   Space jump"
         "   X punch   Ctrl crouch   |   Q/E turn   R/F"
-        " tilt   |   F1 camera   F3 stats   F5 menu"
-        "   F12 fullscreen   Tab panel   Esc quit");
+        " tilt   |   F1 camera   F3 stats   F5 or Esc menu"
+        "   F12 fullscreen   Tab panel");
     if (!hwnd) {
         fprintf(stderr, "the window did not open (win32 %lu)\n",
                 (unsigned long)GetLastError());
@@ -5365,6 +5610,10 @@ int main(void)
     g_run_mode = host_setting_run_mode();
     g_run_key = host_setting_run_key();
     g_run_pad = host_setting_run_pad();
+    /* MouseCapture's boot value. Re-read live below beside the volume, and
+       needing no selftest pin of its own: mo_capture_want refuses a selftest
+       outright, which is the same belt-and-braces shape the run mode has. */
+    mo_capture_opt = host_setting_mouse_capture();
     auto run_mode = [&]() -> int { return selftest ? RUN_BUTTON : g_run_mode; };
     /* said once at boot whatever it is, unlike the settings loader's
        off-default-only line: "which run mode was this player in" is the first
@@ -5474,6 +5723,13 @@ int main(void)
         if (host_settings_poll()) {
             const int v = host_setting_volume();
             if (v >= 0) out_set_volume_pct(v);
+            /* MouseCapture is PUSHED like the volume rather than pulled like
+               the gap keys: the frame loop asks mo_capture_want every frame and
+               a per-frame settings call would turn a counter compare into a
+               file question. The engage and the release still happen on the
+               frame test below, so flipping the key mid-play is not a special
+               path -- it just changes what that test answers. */
+            mo_capture_opt = host_setting_mouse_capture();
         }
         ph_begin(&t_frame);
         ph_begin(&t_phase);
@@ -5812,7 +6068,10 @@ int main(void)
         int mouse_dyaw = 0, mouse_dpitch = 0, mouse_wheel = 0;
         {
             const int MOUSE_YAW = 48, MOUSE_PITCH = 24;
-            if (mo_look && !selftest) {
+            /* mo_captured reads exactly like mo_look here, which is the whole
+               of MouseCapture as far as the camera is concerned: same
+               variables, same constants, same rig. */
+            if ((mo_look || mo_captured) && !selftest) {
                 mouse_dyaw = mo_dx * MOUSE_YAW;
                 mouse_dpitch = mo_dy * MOUSE_PITCH;
             }
@@ -5947,6 +6206,15 @@ int main(void)
         g_menu_host.real_camera = real_camera;
         menu_input(pad_live, &pad);
         menu_b_swallow_spend(pad_live, &pad);
+        /* MouseCapture, asked and acted on ONCE A FRAME and deliberately right
+           here: after menu_input, so a menu opened by this frame's escape has
+           already handed the pointer back before anything draws, and before the
+           mouse deltas are drained further down, so a frame never steers on a
+           delta collected while the capture was not on. mo_capture_set is
+           idempotent, so the steady state is one comparison. The scene loop
+           does NOT have this line and must not: the mouse is the stylus there.
+           See the MOUSE banner for the whole list. */
+        mo_capture_set(hwnd, mo_capture_want(selftest, stacked));
         /* the right stick's X, from the pad or from the selftest ramp:
            SM64DS_SELFTEST_STICK=<pct> holds it at pct% of full deflection
            from frame 20 (negative for the other way), and =0 ramps it from

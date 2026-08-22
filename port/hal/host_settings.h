@@ -10,8 +10,9 @@
    Read once, on first use, and then WATCHED: host_settings_poll below
    re-reads the file when it changes on disk, so the launcher's dialog can
    adjust the gap and the volume while the game is running. Only the four
-   screen-gap keys and Volume reload live; everything else keeps its boot
-   value, because the dialog's own Mods panel promises a restart for those.
+   screen-gap keys, Volume and MouseCapture reload live; everything else keeps
+   its boot value, because the dialog's own Mods panel promises a restart for
+   those.
    A missing, unreadable or malformed file falls back to the defaults in
    silence at boot, and a reload that cannot read the file keeps the values
    it has rather than falling back -- the launcher swaps the file in with a
@@ -147,14 +148,47 @@ int host_setting_gapless_minigames(void);
    that file's header carries the derivation that makes the swaps safe. */
 int host_setting_lovesme_character(void);
 
+/* ---- MouseCapture: HOLD THE POINTER AND STEER WITH IT --------------------
+   Default 0, which is exactly what this program has always done: the mouse is
+   a stylus, and the camera only follows it while the RIGHT BUTTON IS HELD (see
+   the MOUSE banner in tests/walk_window.cpp). With this key on, an ordinary
+   adventure window HOLDS the pointer -- hidden, pinned to the middle of the
+   picture and clipped to the window -- and bare mouse movement turns the
+   camera with no button at all, the way a modern third-person game does.
+
+   THIS IS A HOST PREFERENCE AND NOT A MOD. Nothing about the game changes:
+   the deltas land on the same two variables the right-button drag has always
+   fed, at the same 48-and-24 binangs a pixel, through the same
+   host_camera_turn_sign. With the key off not one win32 call is made and the
+   two extra tests read false, so off is the old program.
+
+   WHERE IT DOES NOT ENGAGE, and every one of these is a pointer the player
+   would otherwise have to go and find:
+     * while the debug menu is open -- which is what makes ESCAPE the release,
+       since escape opens the menu;
+     * while the window is not the foreground one, so alt-tab hands the
+       pointer back and coming back takes it again;
+     * on the SCENE path at all (the minigames), where the mouse IS the
+       stylus and taking it would take the game;
+     * in a STACKED window, where the bottom half of the picture is a live
+       touchscreen for the same reason;
+     * in the DS-EXACT camera mode, where the mouse does not steer anything,
+       so holding the pointer would cost the player something and buy nothing;
+     * while the run-button rebind row is capturing;
+     * in a selftest, which has no pointer and no player.
+
+   It reloads live like the gap and the volume, so the launcher's dialog can
+   turn it on and off with the game already running. */
+int host_setting_mouse_capture(void);
+
 /* ---- THE LIVE RE-READ -------------------------------------------------
    host_settings_poll: call once per frame from the host loop. Internally it
    looks at the file's write time only every 30th call, so its steady-state
    cost is a counter compare. When the file HAS changed it re-reads the four
-   screen-gap keys and Volume, and returns 1 exactly when one of them now
-   answers differently; every other return is 0. Nothing else reloads: the
-   Mods panel tells the player those need a restart, and making the file
-   watcher agree with the dialog is the whole contract.
+   screen-gap keys, Volume and MouseCapture, and returns 1 exactly when one of
+   them now answers differently; every other return is 0. Nothing else
+   reloads: the Mods panel tells the player those need a restart, and making
+   the file watcher agree with the dialog is the whole contract.
 
    host_settings_gen steps once per poll that returned 1. hal/screen_gap.cpp
    folds it into its layout latch key, which is how a fill-mode or colour

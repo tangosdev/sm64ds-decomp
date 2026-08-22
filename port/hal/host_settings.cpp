@@ -508,6 +508,14 @@ int g_lovesme_character;             /* default 0, and 0 is the ROM */
    so the live re-read below can move it while the game is running. */
 int g_volume = -1;
 
+/* MouseCapture: 1 when the player asked the window to hold the pointer and
+   steer the camera with bare movement instead of a right-button drag. Default
+   0, and 0 is what this program has always done. See the header for the list
+   of places it deliberately does not engage; every one of them is enforced in
+   tests/walk_window.cpp, because whether a pointer may be taken is a question
+   about the window and not about this file. */
+int g_mouse_capture;
+
 /* Steps once per live re-read that changed an answer. hal/screen_gap.cpp
    latches on it. */
 int g_setgen;
@@ -549,6 +557,7 @@ void load_once(void)
     g_gap_peek = 0;
     g_gapless_minigames = 0;
     g_lovesme_character = 0;
+    g_mouse_capture = 0;
 
     char path[1024];
     if (!find_settings(path, sizeof path)) return;
@@ -616,6 +625,10 @@ void load_once(void)
             const int v = json_int(text, "Volume", -1);
             if (v >= 0) g_volume = v > 100 ? 100 : v;
         }
+        /* read against its own default beside the gap keys, for the same
+           reason they are: a settings.json written before this key existed
+           reads exactly as one that turned it off, which is the old program */
+        g_mouse_capture = json_bool(text, "MouseCapture", 0);
     }
     free(text);
 
@@ -648,6 +661,14 @@ void load_once(void)
                         "(%s)\n", path);
     /* The same plain-words rule as GaplessMinigames: a support log carrying
        this key should say what the player is looking at. */
+    /* Off its default, so it is said; and said in plain words because a
+       support log where the player reports "the game stole my mouse" should
+       carry the reason on one line. */
+    if (g_mouse_capture)
+        fprintf(stderr, "[settings] MouseCapture on -- an adventure window "
+                        "holds the pointer and bare mouse movement turns the "
+                        "camera, with no right button held. Escape hands the "
+                        "pointer back (it opens the debug menu). (%s)\n", path);
     if (g_lovesme_character)
         fprintf(stderr, "[settings] LovesMeCharacter %s -- the Loves "
                         "Me...? minigame's Yoshi is replaced at the file "
@@ -664,15 +685,17 @@ unsigned long long g_watch_size;
 #endif
 
 /* Re-read ONLY the keys the header promises reload live: the four screen-gap
-   keys and Volume. Returns 1 when an answer changed. Each key lands on the
-   value it already has rather than its default when the file no longer names
-   it, because "the launcher stopped writing a key" and "the player turned a
-   key off" are different sentences and only the second one has a picture. */
+   keys, Volume and MouseCapture. Returns 1 when an answer changed. Each key
+   lands on the value it already has rather than its default when the file no
+   longer names it, because "the launcher stopped writing a key" and "the
+   player turned a key off" are different sentences and only the second one has
+   a picture. */
 int reload_live(const char *text)
 {
     int changed = 0;
     const int gap = json_bool(text, "MinigameGap", g_gap_on);
     const int peek = json_bool(text, "GapPeek", g_gap_peek);
+    const int mcap = json_bool(text, "MouseCapture", g_mouse_capture);
     int fill = g_gap_fill;
     unsigned color = g_gap_color;
     int vol = g_volume;
@@ -692,19 +715,22 @@ int reload_live(const char *text)
         if (v >= 0) vol = v > 100 ? 100 : v;
     }
     if (gap != g_gap_on || peek != g_gap_peek || fill != g_gap_fill ||
-        color != g_gap_color || vol != g_volume) {
+        color != g_gap_color || vol != g_volume || mcap != g_mouse_capture) {
         g_gap_on = gap;
         g_gap_peek = peek;
         g_gap_fill = fill;
         g_gap_color = color;
         g_volume = vol;
+        g_mouse_capture = mcap;
         changed = 1;
         fprintf(stderr, "[settings] live re-read: MinigameGap %s, fill %s "
-                "#%06x, peek %s, volume %d\n", g_gap_on ? "on" : "OFF",
+                "#%06x, peek %s, volume %d, mouse capture %s\n",
+                g_gap_on ? "on" : "OFF",
                 g_gap_fill == 0   ? "solid"
                 : g_gap_fill == 2 ? "custom"
                                   : "ambient",
-                g_gap_color & 0xffffffu, g_gap_peek ? "ON" : "off", g_volume);
+                g_gap_color & 0xffffffu, g_gap_peek ? "ON" : "off", g_volume,
+                g_mouse_capture ? "ON" : "off");
     }
     return changed;
 }
@@ -792,6 +818,15 @@ extern "C" int host_setting_volume(void)
 {
     load_once();
     return g_volume;
+}
+
+/* MouseCapture: 1 when the window may hold the pointer. Only ever a
+   PERMISSION -- the window decides whether to take it this frame, and the
+   header lists the seven places where the answer is no however this reads. */
+extern "C" int host_setting_mouse_capture(void)
+{
+    load_once();
+    return g_mouse_capture;
 }
 
 extern "C" int host_settings_gen(void)
