@@ -1,10 +1,10 @@
 //cpp
-extern "C" int func_ov006_020d836c(void);
+extern "C" void func_ov006_020d836c(char* c);
 extern "C" void func_ov006_020d7604(void*);
 extern "C" void func_ov006_020d5e1c(void*);
 #pragma opt_strength_reduction off
 extern "C" void func_ov006_020d8cc4(char* r5){
-  func_ov006_020d836c();
+  func_ov006_020d836c(r5);
   int c4 = 0;
   int c2 = 0;
   int i = 0;

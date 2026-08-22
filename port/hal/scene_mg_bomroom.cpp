@@ -126,11 +126,64 @@
 // comes back. Gapless behaviour is decided per minigame, by playing it; this
 // lane has not played it and does not get to vote. hal/scene_mg_flower.cpp
 // makes the same call for the same reason.
+//
+// ---- 9. THE BIN-FULL SOFTLOCK, AND WHAT IT WAS (run mg8, lane SBN) --------
+//
+// REPORTED AS: "when the bomb sorting areas got full it softlocked when trying
+// to move them to the top screen." A softlock leaves no dump, so the report is
+// the whole of the evidence and the first job was making the thing happen on
+// purpose. SM64DS_SOS_FILL below is that; the sequence it drives is the ROM's:
+//
+//   func_ov006_020d6784, called from top-level state 2, counts bombs that are
+//   LIVE (+0x4698) and PARKED IN A BIN (+0x4697 == 5), split by the colour
+//   byte +0x4696. At 0x28 = FORTY of one colour it sets the top-level index
+//   +0x62d0 to 3, the sub-index +0x62d4 to 0, +0x62f5 to the colour, and bumps
+//   the score at +0xbc. That is "the sorting area got full".
+//
+//   sub 0  020d8d84  those bombs go to state 6 substate 0
+//   sub 1  020d8cc4  WAITS. Counts state-6 bombs not at substate 2 (c2) and
+//                    not at substate 4 (c4). c2 == 0 calls 020d7604, which
+//                    assigns each bomb its slot in the line-up and sets
+//                    substate 3. c4 != 0 returns and waits.
+//   sub 2  020d8af8  one bomb every four frames, flag +0x4698 1 -> 2: THE
+//                    MOVE TO THE TOP SCREEN the report names
+//   sub 3  020d89c4  clears them, back to state 2 (or 4, game over)
+//
+// THE PORT HUNG IN sub 1 FOREVER, and the trace says it in one line: forty
+// bombs entered state 6 at substate 0 and 2876 frames later all forty were
+// still at substate 0. Nothing was ticking them.
+//
+// THE CAUSE WAS ONE DROPPED RECEIVER IN src/func_ov006_020d8cc4.cpp. That TU
+// declared `extern "C" int func_ov006_020d836c(void);` and called it with no
+// argument. The ROM passes `this`:
+//
+//     020d8cc4  push {r4, r5, lr}
+//     020d8cc8  sub  sp, sp, #4
+//     020d8ccc  mov  r5, r0          r0 is still the receiver here
+//     020d8cd0  bl   0x020d836c
+//
+// and MSVC compiled the src exactly as written -- `call` with nothing pushed,
+// then `mov ebx,[ebp+8]` to load `this` AFTERWARDS -- so the host copy of
+// 020d836c read its receiver out of the caller's saved edi. 020d836c is the
+// per-bomb tick, and during top-level state 3 it is the ONLY caller of it:
+// 020d8f98's other three tail calls are the bin and banner machines. So the
+// body the sweep is waiting on was ticking a garbage object while the real
+// bombs stood still. Four of the five call sites of 020d836c pass the
+// receiver; this was the fifth. port/tools/aritycheck.py's gate is scoped to
+// _ZN-mangled member names, so it never looked at this one.
+//
+// THE FIX IS IN src/ AND STILL BYTE-MATCHES. The declaration takes char* and
+// the call passes r5; mwccarm 1.2/base, 1.2/sp2 and 1.2/sp2p3 all still
+// produce the ROM's 0xc0 bytes with strict relocs, because on ARM r0 already
+// held the value and naming it changes no instruction. The defect was only
+// ever a host-ABI one, which is why the byte gate was green over it for two
+// runs.
 
 #include "hal/screen_gap.h"
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 extern "C" {
 
@@ -161,6 +214,9 @@ int   func_ov006_020d9160(void *self);          /* slot 9  Render */
 int   func_ov006_020d5a54(int *self);           /* slot 16 D2 */
 int  *func_ov006_020d5a78(int *self);           /* slot 17 D0 */
 void  func_ov006_020d9104(unsigned char *self); /* slot 18 state reset */
+
+/* the ROM's own drop-inside-a-bin handler, for the bin-full probe below */
+void  func_ov006_020d6b88(void *self, int idx);
 
 /* the factory */
 void *MgSortOrSplode_Spawn(void);
@@ -215,6 +271,93 @@ static int  __fastcall sos_init(void *s, void *)
    IT PINS RATHER THAN POKES ONCE, because a state body may write the index
    back; and it writes only this one word of the scene object, before the ROM
    body reads it, which is the same word slot 0 and slot 18 both write. */
+/* SM64DS_SOS_FILL=<n>[:<side>] and SM64DS_SOS_TRACE=1: THE BIN-FULL PROBE.
+   Run mg8, lane SBN. Both off unless set, both write nothing on an ordinary
+   run, and the reason they exist is section 9 below: the whole end-of-round
+   sweep -- the thing the player sees as "the bins filled and the bombs went up
+   to the top screen" -- is behind a counter no headless run can move.
+   func_ov006_020d6784 fires it at 0x28 = 40 bombs of ONE colour parked
+   in a bin, and the ROM's only way to park one is a player drag ending inside
+   the bin box. Forty drags is not a thing a touch script can do: the stylus
+   probe holds 32 entries total and each drag needs several.
+
+   SO THE PROBE SEEDS THE STATE AND SAYS SO. This is NOT an input-driven
+   repro and no claim below pretends it is. What it does do is refuse to
+   shortcut the game logic: every field it writes is a field
+   func_ov006_020d8408 (the ROM's own spawner) writes with the value that body
+   writes, and the DROP itself is func_ov006_020d6b88 -- the ROM's own
+   drop-inside-a-bin handler, called with the bomb positioned inside the bin
+   box the way a released stylus positions it. Nothing here writes a state
+   byte the ROM would not have written from the same inputs, and the trigger
+   that follows is the ROM's own count.
+
+   THE TRACE IS THE OTHER HALF. A softlock produces no dump and no fault, so
+   "the run was clean" and "the run was wedged" are the same log. The trace
+   prints the two state indices and the substate histogram of the bombs the
+   sweep is waiting on, which is what tells a spin from a sequence. */
+static void sos_binfill(char *s, int n, int side)
+{
+    int placed = 0;
+    for (int i = 0; i < 0x70 && placed < n; ++i) {
+        char *b = s + i * 0x40 + 0x4000;
+        if (*(unsigned char *)(b + 0x698) != 0)
+            continue;
+        /* func_ov006_020d8408's spawn block, verbatim, minus the difficulty
+           ladder that only picks the angle and the release pattern. */
+        *(unsigned char *)(b + 0x698) = 1;
+        *(unsigned char *)(b + 0x697) = 0;
+        *(unsigned char *)(b + 0x69b) = 0;
+        *(unsigned char *)(b + 0x69c) = 0;
+        *(unsigned char *)(b + 0x69d) = 0;
+        *(unsigned short *)(b + 0x690) = 4;
+        *(unsigned short *)(b + 0x692) = 0x200;
+        *(unsigned char *)(b + 0x696) = (unsigned char)side;
+        *(int *)(b + 0x670) = 0x999;
+        *(int *)(b + 0x688) = 0;
+        *(unsigned short *)(b + 0x68c) = 0x2000;
+        /* inside the bin box func_ov006_020d6b88 tests for this side: the
+           right box is x in (0xc0,0x100] and the left is x in [0,0x40), both
+           y in (0x40,0x80). Fixed-point 20.12, the same as the spawner's. */
+        *(int *)(b + 0x660) = (side ? 0xe0 : 0x20) << 12;
+        *(int *)(b + 0x664) = 0x60 << 12;
+        func_ov006_020d6b88(s, i);
+        ++placed;
+    }
+    std::fprintf(stderr, "  [scene] SM64DS_SOS_FILL: parked %d bomb(s) of "
+                 "side %d inside the bin through func_ov006_020d6b88, the "
+                 "ROM's own drop handler. STATE-SEEDED, not input-driven: "
+                 "func_ov006_020d6784 wants 0x28 of them and forty stylus "
+                 "drags do not fit in a touch script.\n", placed, side);
+    std::fflush(stderr);
+}
+
+static void sos_trace(char *s, int tick)
+{
+    static int last_top = -99, last_sub = -99;
+    const int top = *(int *)(s + 0x62d0);
+    const int sub = *(int *)(s + 0x62d4);
+    int st[8] = {0,0,0,0,0,0,0,0};
+    int six = 0, parked = 0;
+    for (int i = 0; i < 0x70; ++i) {
+        const char *b = s + i * 0x40 + 0x4000;
+        if (*(const unsigned char *)(b + 0x698) == 0) continue;
+        const unsigned st5 = *(const unsigned char *)(b + 0x697);
+        if (st5 == 5) ++parked;
+        if (st5 != 6) continue;
+        ++six;
+        const unsigned v = *(const unsigned char *)(b + 0x69b);
+        if (v < 8) ++st[v];
+    }
+    if (top != last_top || sub != last_sub || (tick % 120) == 0) {
+        last_top = top; last_sub = sub;
+        std::fprintf(stderr, "  [sos] t%-5d top=%d sub=%d  parked(st5)=%-3d "
+                     "st6=%-3d substates 0:%d 1:%d 2:%d 3:%d 4:%d\n",
+                     tick, top, sub, parked, six,
+                     st[0], st[1], st[2], st[3], st[4]);
+        std::fflush(stderr);
+    }
+}
+
 static int __fastcall sos_beh(void *s, void *)
 {
     SOS(6);
@@ -229,6 +372,25 @@ static int __fastcall sos_beh(void *s, void *)
     }
     if (pin >= 0)
         *(int *)((char *)s + 0x62d0) = pin;
+
+    static int tick;
+    static int fill_n = -2, fill_side, trace = -2;
+    if (fill_n == -2) {
+        const char *e = std::getenv("SM64DS_SOS_FILL");
+        fill_n = (e && e[0]) ? std::atoi(e) : -1;
+        fill_side = 0;
+        if (e) { const char *c = std::strchr(e, ':'); if (c) fill_side = std::atoi(c + 1); }
+        trace = std::getenv("SM64DS_SOS_TRACE") ? 1 : 0;
+    }
+    /* seeded in the spawner state, which is where func_ov006_020d6784 -- the
+       body that counts the parked bombs -- actually runs. Once. */
+    if (fill_n > 0 && *(int *)((char *)s + 0x62d0) == 2) {
+        sos_binfill((char *)s, fill_n, fill_side);
+        fill_n = -1;
+    }
+    ++tick;
+    if (trace > 0)
+        sos_trace((char *)s, tick);
     return func_ov006_020d91b0((char *)s);
 }
 static int  __fastcall sos_render(void *s, void *)

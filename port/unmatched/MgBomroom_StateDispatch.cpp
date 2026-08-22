@@ -387,7 +387,29 @@ extern "C" void func_ov006_020d8f98(unsigned char *c)
    passed as the argument. The head is the ROM's own guard: if the byte
    data_020a0de8[data_020a0e40] is zero, +0x62f6 takes 0xff. `this` is the
    CLASS BASE at every iteration -- the element cursor is only used to fetch
-   the two bytes -- which the ROM says with `add r0,r6,r1,asr#1` off r6. */
+   the two bytes -- which the ROM says with `add r0,r6,r1,asr#1` off r6.
+
+   ITS RECEIVER IS THE ONE THIS CLASS ALREADY GOT WRONG ONCE, run mg8 lane
+   SBN, and the note is here rather than only in the seat because this is the
+   definition every caller has to agree with. Five bodies call it -- 020d8ff4,
+   020d8d84, 020d8cc4, 020d8af8, 020d89c4 -- and src/func_ov006_020d8cc4.cpp
+   declared it `(void)` and called it with nothing. On ARM that costs no
+   instruction, because the ROM's `mov r5,r0` leaves r0 holding the receiver
+   across the bl, so the byte gate was green over it for two runs. On MSVC the
+   call pushes nothing and the receiver arrives as the caller's saved edi.
+   This body is the per-bomb tick and during top-level state 3 it has exactly
+   one caller -- 020d8cc4 -- so the whole bin-full sweep waited forever for
+   bombs nothing was ticking. hal/scene_mg_bomroom.cpp section 9 carries the
+   measurement. Any new caller spells the receiver.
+
+   THE HANG WAS THE LUCKY HALF OF IT. Read the body below with a garbage `c`:
+   the head writes 0xff at c+0x62f6 whenever the stylus is up, which on a
+   headless run is EVERY FRAME, and the loop then reads 0x70 bytes at
+   c+0x4698 with stride 0x40. Every frame of the wedge did one wild write and
+   a hundred and twelve wild reads into whatever the caller's saved edi
+   pointed at. On the build that shipped they landed somewhere harmless and
+   the symptom was a freeze; nothing about the defect guaranteed that, and the
+   same source would have been a fault on a different frame layout. */
 extern "C" void func_ov006_020d836c(char *c)
 {
     if (*(unsigned char *)(data_020a0de8 + data_020a0e40) == 0)
