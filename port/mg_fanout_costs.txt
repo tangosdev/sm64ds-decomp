@@ -14,6 +14,9 @@ CMAKE_HOME_DIRECTORY verified C:/tmp/g1/port.
 AMENDED BY run link60 lane MG2, WHICH CLOSED THE LINK AND BOOTED THE CLASS.
 Section 4's MEASUREMENT IN PROGRESS badge is gone and its numbers are now
 measured rather than inherited; section 8's "no minigame has booted" is gone;
+SECTION 19 IS NEW: the one true width-37 class is seated and its section adds a
+FOURTH width check, the relocation set, which is cheaper than the three in
+section 11 and cannot be fooled by a word that looks like a code address.
 SECTION 10 IS NEW and is the one to read first if you are costing a fan-out
 lane, because it corrects two numbers in section 2 that a link cannot produce.
 Sections 1, 3, 5, 6, 7 and 9 are MG1's and are unchanged except where section
@@ -344,6 +347,9 @@ of a small one, not a different kind of thing. Rank them on ovr and mark, which
 is what the table does.
 
 THERE IS ONE WIDTH-37 CLASS, NOT THIRTEEN, AND THE CORRECTION IS SECTION 11.
+IT IS 0x173 AND IT IS SEATED, run mg9 lane S371; section 19 is its measurement,
+including the six instructions that say WHY the class needed a 37th virtual and
+a fourth width check (the relocation set) that section 11 did not have.
 This paragraph used to open "THE WIDTH-37 CLASSES ARE WHY THE FILL IS
 ADDRESS-KEYED. THIRTEEN of the twenty-nine add one virtual of their own past
 dScMgBase_c's thirty-six -- count the width column above, which was right while
@@ -2341,3 +2347,317 @@ edited at the merge. The fix belongs to whoever owns the checker:
 The curling row already in the baseline is this same pattern, and the
 baseline's note calls it "plausible, unverified". This section is the
 verification it was waiting for: the pattern is sound, the checker is not.
+
+
+19. THE ONE TRUE WIDTH-37 CLASS, SEATED, run mg9 lane S371
+--------------------------------------------------------------------------------
+
+Worktree C:/tmp/m9e, branch mg9-s371, base c693e8952, private build
+C:/tmp/m9e/build/port with CMAKE_HOME_DIRECTORY verified C:/tmp/m9e/port.
+Baseline gate on that tree before a line was edited: build green, linkage
+6665/11283 (59.1%), vtablerows reconstruction EXACT 29/29, both aritycheck
+ratchets 0 NEW.
+
+Section 11 corrected the width column for twelve of thirteen classes and left
+exactly one survivor. THIS IS IT, AND IT IS SEATED. Scene 371, actor id 0x173,
+dScMgAmida_c, port/slice_s371.txt and hal/scene_mg_amida.cpp.
+
+SECTION 11'S THREE CHECKS EACH ANSWER DIFFERENTLY HERE, AND THAT IS THE POINT.
+Every sibling fails at least one of them at 37. This class passes all three,
+and a reader should know what "passes" means for each:
+
+  1. SPAN. data_ov006_0213b918 -> data_ov006_0213b9ac is 0x94 = 37 words. The
+     span is an UPPER bound, so it can refuse a width and never grant one; for
+     the twelve section 11 corrected it read 36 and REFUSED 37. Here it reads
+     37 and DECLINES TO REFUSE. That is the whole of what it says.
+  2. TERMINAL SLOT. Section 11 checked 0x020ad660 at slot 35 on five classes
+     and found all five. This one is the exception it already names: slot 35 is
+     0x020d1170, an ov006 address in the class's own code block, so the slot is
+     an OVERRIDE and the terminator argument does not reach it.
+  3. WHAT THE WORD IS. Section 11 says this is the check where the eye fails.
+     It does not have to be an eye. Slot 36 carries a LOAD RELOCATION of its
+     own -- `from:0x0213b9a8 kind:load to:0x020d1188 module:overlay(6)` -- and
+     a phantom slot never can, because live data belonging to the next object
+     is not a pointer. The word at index 37 (0x0213b9ac, the next config
+     symbol) reads 0x00000100 and carries no relocation at all.
+
+     THAT IS A FOURTH CHECK AND IT IS THE CHEAPEST OF THE FOUR. Ask the
+     relocation set whether slot N is a pointer. It answers yes or no on every
+     class in the family in one pass and it cannot be fooled by a word that
+     happens to look like a code address, which is the exact failure mode
+     section 11 says checks 1 and 2 exist to cover.
+
+AND A FIFTH, WHICH IS THE ONE THAT WOULD HAVE SURVIVED ALONE. SLOT 36 IS
+DISPATCHED. A scan of overlay_0006.bin for `ldr Rd,[Rn,#0x90]` with Rn neither
+pc nor sp finds 26 sites and 25 are inside this class's own code:
+func_ov006_020d122c 1, _020d1958 1, _020d1a3c 1, _020d27dc 3, _020d36a4 3,
+_020d3ba0 6, _020d48dc 2, _020d4b7c 4, _020d5384 4. The 26th (0x020c1f5c, in
+func_ov006_020c1f4c) is a FALSE POSITIVE recorded so nobody re-finds it: that
+body reads +0x8c, +0x90 and +0x94 as three consecutive OBJECT FIELDS and hands
+them to a formatter. Section 14's Rn filter drops pc and sp; it does not know a
+field from a slot, and the tell is whether the loaded word is branched to.
+
+WHY THE CLASS NEEDED A 37th VIRTUAL, IN SIX INSTRUCTIONS EACH, and this is the
+finding the whole width story was pointing at without knowing it:
+
+    ov004 0x020ad660  ldr r0,[r0,#8] / ands r0,r0,#0xff / movne 1 / moveq 0
+                      -- return (field_8 & 0xff) != 0     EVERY SIBLING
+    ov006 0x020d1170  ldr r0,[r0,#8] / and r0,r0,#0xff / cmp r0,#1 / moveq 1
+                      -- return (field_8 & 0xff) == 1     slot 35 here
+    ov006 0x020d1188  ldr r0,[r0,#8] / and r0,r0,#0xff / cmp r0,#2 / moveq 1
+                      -- return (field_8 & 0xff) == 2     slot 36 here
+
+field_8 is the spawn param's low half, and its LOW BYTE is the third field
+section 17 identifies. The family's slot 35 answers one boolean about it. This
+class had to tell THREE values apart, so it split the boolean into two
+predicates and put the second in a new slot. The one class the width column was
+wrong about twelve times over is the one class whose mode selector outgrew a
+boolean, and those are the same fact.
+
+WHERE THE 37 LIVES IN THE SEAT, since section 3 says the fill is address-keyed
+but is CALLED WITH A COUNT. hal/scene_mg_amida.cpp calls
+port_scene_mg_fill_shared(vt, 37) and am_raw_left(vt, 37), sizes its slot-hit
+array [37], and its kAmidaFaces has ELEVEN rows. The dScMgBase_c table is
+still filled with 36. The run prints the arithmetic rather than the file
+claiming it:
+
+    [scene] AMIDA FILL CENSUS, 37 slots: 37 raw DS words before, 11 after the
+    shared arm9+dScMgBase_c pass (claimed 26), 11 own faces applied, 0 raw
+    left. dScMgBase_c's own 36-slot table: 0 raw left.
+
+26 + 11 = 37, and the 26 is 7 arm9 words port_scene_fill_rom keys plus 19 ov004
+words kMgBaseFaces keys.
+
+THE CLASS HAS NO POINTER-TO-MEMBER WALL, AND THAT IS A MEASUREMENT RATHER THAN
+TWO ABSENCES. Section 4 says no static evidence licenses the word "none", so
+three things were done and the third is the one worth reusing:
+  1. The overlay constructor (src/__sinit_ov006_0212fc7c.c) builds no pair
+     table -- three SharedFilePtr registrations and one static array ctor.
+  2. No `::*` and no member-pointer type in any of the class's 28 own TUs.
+  3. THE RELOCATION SET. Ninety-three relocations land inside the class's code
+     block 0x020d0fe4..0x020d5a50. TWELVE come from a DATA word rather than
+     from inside a function, and the twelve are the SpawnInfo's factory word
+     and the ELEVEN vtable override slots. Nothing else in the overlay stores a
+     pointer to this class's code, so there is no eight-byte table for MSVC to
+     stride by four. That is a census, not an absence, and it is one grep.
+Slot 6 was also READ for section 14's practical rule and is a four-case switch
+on the int at +0x46d0, not the Itanium sequence in plain ints.
+
+THREE FLOORS, AND THE COST TABLE'S nosrc COLUMN SEES NONE OF THEM. That column
+counts vtable BODIES and all eleven of this class's have src. These are
+callees, found by section 13 CORRECTION 3's method:
+
+    func_ov006_020d27dc  0xe48  one caller, inside vtable slot 6
+    func_ov006_020d36a4  0x4fc  two callers, slot 6 and the init tail
+    func_ov004_020ae5c4  0x294  ov004, ten call sites across three of this
+                                class's TUs -- and the LINK found this one,
+                                because a block walk over the class's own code
+                                cannot see a hole one overlay over
+
+All three trapped and counted in unmatched/MgAmida_Faces.cpp. Six of the 25
+slot-36 dispatch sites are inside the first two, so the mode branch in those
+bodies is code this seat cannot run.
+
+AND THE THIRD FLOOR EXPLAINS A LIVE HOST-ABI DEFECT NOBODY CAN HIT.
+func_ov004_020ae5c4 is the FAMILY'S ONLY SLOT-34 DISPATCHER: a scan of both
+overlay images for `ldr Rd,[Rn,#0x88]` with Rn neither pc nor sp returns ten
+offset matches and EIGHT are inside it, each with one word pushed before the
+blx, so slot 34 takes FIVE arguments and src/func_ov004_020ae3b4.c (the base's
+own slot-34 body) declares five to match. hal/scene_mg.cpp's shared mb_v34 is
+declared (void *, void *) and calls that five-parameter body with ONE argument.
+
+  THE OTHER TWO MATCHES ARE FIELD READS AND THIS LANE FIRST MISCOUNTED THEM,
+  which is worth the correction because the offset scan is the instrument
+  section 14 hands the fan-out. 0x020ce2a4 and 0x020ce318, in
+  func_ov006_020ce108, are `ldr r2,[sl,#0x88]` whose loaded word goes out as
+  the third argument of `bl 0x0203d290` and is never branched to. Section 14's
+  Rn filter drops pc and sp; NOTHING in it distinguishes an object field at
+  +0x88 from vtable slot 34, and the only tell is whether the loaded word is
+  used as a branch target. The same trap is recorded for slot 36 at
+  func_ov006_020c1f4c, whose +0x8c / +0x90 / +0x94 are three consecutive
+  fields, so this is the second instance in one lane and the general rule is:
+  AN OFFSET MATCH IS A CANDIDATE, A blx ON THE LOADED WORD IS THE FINDING.
+
+THE CORRECTION STRENGTHENS THE CONCLUSION. There is exactly ONE body in the
+tree that dispatches slot 34, it has no src file in any overlay, and it is
+trapped. So slot 34 is UNREACHABLE on every scene rather than merely unreached
+on the ones anybody has booted, and the mb_v34 mismatch has no potential
+witness at all. It is the lane-BASESET slot-18/19 shape. Not repaired here: a
+repair with no dispatch to witness it is wiring without evidence.
+
+ONE ID, TWO PLAYER TITLES, AND THIS TIME WHICH IS WHICH IS DERIVED. Section 14
+found the shape on dScMgPanel_c and closed on "WHICH VALUE IS WHICH TITLE IS
+NOT DERIVED and this lane does not guess it". It is derivable, and the
+instrument is the class's own InitResources: it branches on slot 36 four times
+and loads a DIFFERENT FILE SET on each arm.
+
+    ov005 row  0  param 0x00000000  record  0  text  0  low byte 0x00
+    ov005 row 24  param 0x00181802  record 24  text 24  low byte 0x02
+    text 0  -> data_ov004_020bc070[0]  -> BMG msg 548  "Mario's Slides"
+    text 24 -> data_ov004_020bc070[24] -> BMG msg 588  "Connect the Characters"
+
+    slot 36 TRUE   face_up and face_down boards, and FIVE localised sheets of
+                   CHARACTER FACES off a GetOwnerLanguage ladder (5 -> _S_,
+                   4 -> _I_, 3 -> _G_, 2 -> _F_, default -> the plain English
+                   one), plus their shared palette
+    slot 36 FALSE  the amida1 and amida2 boards and ONE plain sprite sheet.
+                   No faces. No ladder.
+
+A board of character heads needs localising and a board of slides does not, so
+slot 36 true is "Connect the Characters" and slot 36 false is "Mario's Slides".
+0x02 is the ONLY 0x02 in the whole 36-row ov005 table; every other non-zero low
+byte in it is 0x01.
+
+SECTION 11's OWN CAVEAT ABOUT ROW ORDER APPLIES HERE IN ITS SHARPEST FORM. The
+port takes the FIRST ov005 row matching the id, and for 0x173 that is ROW 0,
+whose param is literally zero. So the port boots this scene as "Mario's
+Slides", record 0, text 0, mode 0, and the run confirms it from the object:
+mode byte 0, slot 36 asked 5822 times and answering true 0 times, layout
++0x4700 = 0x98 which is the mode-0 arm of the first slot-36 branch.
+
+MODE 1 HAS NO ov005 ROW, stated as a measurement and not as a conclusion. No
+row gives THIS id a low byte of 1; a scan of both overlay images for
+`ldr Rd,[Rn,#0x8c]` finds fourteen sites in ov006 and ZERO in ov004, none of
+the fourteen inside this class's code; and the run reports slot 35 asked ZERO
+times. What that does not say is that mode 1 is dead: nothing here enumerates
+every writer of field_8. The seat counts slot 35 separately from slot 36 for
+exactly that reason.
+
+port/slice_s75.txt's "THE ROM ITSELF STORES NO TITLE TEXT AT ALL" IS THE ONE
+WRONG SENTENCE IN THAT FILE and it is corrected in place there rather than only
+here, because a later lane will read it before it reads this. The ROM stores
+every title. TWO layers defeat a search, not one: data/message/msg_data_eng.bin
+(NitroFS file id 643) is LZ77-compressed, and the BMG inside it is a GLYPH
+INDEX rather than any text encoding -- 'A'..'Z' at 0x0a..0x23, 'a'..'z' at
+0x2d..0x46, space 0x4d, '-' 0x47, '.' 0x48, apostrophe 0x49, '?' 0x26, '!'
+0x27, 0xfd a line break and 0xff an end of message. An ASCII or UTF-16 sweep of
+the image returns zero hits for "Shuffle" with the word sitting in the file.
+
+THE CHAIN IS CONTROLLED 25 TIMES OVER, which is what makes the seven names it
+produces usable rather than plausible. Decoded across all 36 ov005 rows it
+agrees EXACTLY with the config's own spawn symbol on every one of the 25 rows
+that has one, and the three COMPOUND config names split across their two rows,
+which is a prediction the chain could have failed:
+
+    MgBingoBallSlotsShot      -> row 10 "Bingo Ball"   row 22 "Slots Shot"
+    MgPuzzlePanelPuzzlePanic  -> row 15 "Puzzle Panel" row 35 "Puzzle Panic"
+    MgCoincentration          -> row 14 "Coincentration"
+                                 row 30 "Intense Coincentration"
+
+and a twenty-sixth control lands on a class this port already ships: id 0x186,
+seated as SCENE_MG_FLOWER, decodes to "Loves me...?", the title the tree
+already knows it by. THE SEVEN IDS WITH NO CONFIG SYMBOL, named:
+
+    0x169  row 23  "Tox Box Shuffle"
+    0x16c  row 17  "Mario Slot"          row 33  "Super Mario Slot"
+    0x16d  row 31  "Mix-a-Mug"
+    0x173  row  0  "Mario's Slides"      row 24  "Connect the Characters"
+    0x17d  row  5  "Pair-a-Gone"
+    0x186  row  7  "Loves me...?"
+
+WHAT IT COST, against section 14's one-wave shape:
+
+    item                              predicted   measured
+    -------------------------------   ---------   --------------------------
+    link waves                                1   1, plus one host copy
+    unresolved externals                      1   9 in one wave, 0 in the next
+    ordinary /alternatename faces             -   7
+    dispatching TUs to host-copy              5   0
+    host copies for other defects             -   1 (a tentative definition)
+    named traps stood                         -   3
+    ordinary slice lines                      -   29
+    registry rows                             1   1
+    per-source -D rows                        -   0 (no bare VT or HEAP in any
+                                                  of the class's 28 TUs; the
+                                                  COFF short-name census over
+                                                  32 built objects finds none)
+
+THE ONE HOST COPY IS NOT WALL WORK AND IS WORTH THE NEXT LANE'S ATTENTION.
+src/func_ov006_020d3ba0.c is //cpp-marked and needs C++ for real -- a
+37-virtual dummy struct it dispatches slot 36 through, and a namespace -- and
+its extern "C" block writes a bare `int data_0209d4b8;`. mwccarm takes that as
+a TENTATIVE DEFINITION and merges it; C++ has none, so MSVC makes it a strong
+definition of the arm9 RNG seed hal/scene_mg_faces.cpp owns inside DSSTATE, and
+the class's own Behavior declares the same symbol `extern int` and calls
+RandomIntInternal against it. Two TUs of one class would have advanced two
+different seeds. The link caught it as an LNK2005, which is the lucky outcome.
+
+    AND hostgen --extern-data IS THE WRONG TOOL FOR A //cpp FILE, which is the
+    part to carry forward. That transform is what port/CMakeLists.txt uses on
+    Actor::BeforeBehavior for this exact defect and it produces the right
+    `extern` line here too, but tools/hostgen.py's emit() wraps EVERY .c source
+    in `extern "C" { }` unconditionally, and a //cpp file's namespace inside
+    that wrap takes C linkage. port/CMakeLists.txt's LANGUAGE CXX block already
+    says so in words -- "the wrap is wrong for them" -- and the two facts had
+    never been put side by side.
+
+SWEEP THE WHOLE SLICE FOR THE //cpp MARKER, AND FOR `extern "C"`, `virtual` AND
+`class`, BEFORE THE FIRST BUILD. Lane CCN's entry in port/CMakeLists.txt
+prescribes it and this lane followed it: three of the 29 TUs are really C++
+(func_ov006_020d122c, _020d3ba0, _020d4b7c) and all three were found in one
+pass rather than one compile error at a time.
+
+LINKAGE, measured on both ends on this tree:
+
+    6665 / 11283 (59.1%)  ->  6689 / 11283 (59.3%)     +24
+
+  by module, the only row that moved:
+
+    module   total  linked  unlinked   linked
+    ov006     1867     761      1106    40.8%     (was 737, 39.5%)
+
+  arm9 1879, ov002 1129 and ov004 240 are unchanged on both ends, which is
+  section 5's "the arm9 half comes back for free" holding again: this class
+  added no ov004 line at all.
+
+  +24 AGAINST 29 SLICE LINES, AND THE FIVE ARE ACCOUNTED FOR rather than waved
+  at. FOUR were already in the base map -- __sinit_ov006_0212fc7c and its three
+  static-array helpers 020d0fe4 / 020d1008 / 020d100c, because the mount
+  already runs all thirty-five overlay constructors. The FIFTH,
+  src/func_ov006_020d25fc.c, is compiled and then DROPPED by the linker as
+  unreferenced: every one of its 42 call sites is inside func_ov006_020d27dc,
+  which is a trap. Section 4 warns that "a trap-shaped floor HIDES its callees
+  from static closure"; this is the same fact from the other end, a trap making
+  a real slice line unreachable, and the linkage headline is where it shows.
+
+THE BOOT. SM64DS_SCENE=371 with SM64DS_FAULTS_FATAL=1 and nothing switched off,
+at 300 and at 1200 frames, both CLEAN, exit 0.
+
+    300 frames    init 1, behavior 253, render 300, state-reset 0
+                  slot 36 asked 1322, answered true 0; slot 35 asked 0
+                  floors 020d27dc 173, 020d36a4 1, 020ae5c4 9
+                  state +0x46d0 = 1, mode byte 0, layout +0x4700 = 0x98
+    1200 frames   init 1, behavior 1153, render 1200, state-reset 0
+                  slot 36 asked 5822, answered true 0; slot 35 asked 0
+                  floors 020d27dc 792, 020d36a4 1, 020ae5c4 9
+                  FILL CENSUS 0 raw DS words left on both tables
+
+  Slot 9 is entered on every frame and slot 6 on 253 of 300 and 1153 of 1200,
+  so the framework's BeforeBehavior gates the first 47 frames on this class
+  exactly as it does on scene 380. That is the ROM's, not a defect.
+
+  THE FLOOR COUNTER CLIMBS WITH THE BEHAVIOR AND THAT IS THE HONEST READING.
+  func_ov006_020d27dc is entered on roughly two thirds of the frames the
+  Behavior runs, so the class is ticking INTO a 3656-byte hole most frames. The
+  seat prints that number beside the green ones on every run rather than only
+  when it is nonzero, which is section 16's rule.
+
+  THE CURLING CANARY REPRODUCES EXACTLY across the whole lane: scene 374 at 300
+  frames reports 32557 call(s) / 32557 routed / 0 UNHANDLED, which is what says
+  a 37-slot fill in the registry did not reach into anybody else's data.
+
+WHAT THIS SECTION DOES NOT KNOW.
+  - WHAT MODE 2 LOOKS LIKE. Everything above about "Connect the Characters" is
+    read off the ROM's file loads and its message text. The port has no menu
+    position, takes ov005 row 0, and has never run this class with a low byte
+    of 2. Nothing here has watched slot 36 answer true.
+  - WHAT THE TWO ov006 FLOORS DO. 0xe48 and 0x4fc bytes with no source, both
+    branching on the mode predicate in their first few instructions, both on
+    the tick path. The class boots and ticks and renders without them; whether
+    it PLAYS without them is not something this lane can say.
+  - WHETHER THE PICTURE IS RIGHT. The runs render -- slot 9 enters on every
+    frame and the sub-screen census reports real BG and OBJ VRAM -- and BMPs
+    are captured for this lane's report, but nobody has held one next to a DS.
+  - TOUCH IS UNMEASURED, and for an amidakuji it is the live question rather
+    than a formality: both titles' rules text says "draw lines on the Touch
+    Screen", and the class settles at state 1 without an input.

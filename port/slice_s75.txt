@@ -62,6 +62,38 @@
 # of this image, and every title in this port comes from the config. The right
 # move when a title is missing is to search the config harder, not the ROM.
 #
+# THE HEADLINE OF THAT PARAGRAPH IS WRONG AND THE ADVICE IN IT IS RIGHT, run
+# mg9 lane S371. The ROM stores every one of the thirty-six titles, and what
+# defeated the search was TWO layers rather than one:
+#
+#   1. data/message/msg_data_eng.bin (NitroFS file id 643) is LZ77-COMPRESSED,
+#      so no plaintext of any kind survives a raw image sweep.
+#   2. The BMG inside it is not ASCII and not UTF-16. It is a GLYPH INDEX:
+#      'A'..'Z' at 0x0a..0x23, 'a'..'z' at 0x2d..0x46, space 0x4d, '-' 0x47,
+#      '.' 0x48, apostrophe 0x49, '?' 0x26, '!' 0x27, ',' 0x24, 0xfd a line
+#      break and 0xff an end of message.
+#
+# So a sweep for the ASCII and the UTF-16LE spelling of "Shuffle" returns zero
+# hits with the word sitting in the file, which is exactly what this paragraph
+# measured and exactly why it drew the wrong conclusion from it.
+#
+# THE CHAIN, so it can be redone: the ov005 launch table row for the id gives a
+# packed param; (param >> 0x10) & 0xff indexes data_ov004_020bc070, a table of
+# 36 shorts in ov004, which gives a BMG message id; the message's first line is
+# the title and the rest is its rules text. Decoded over all 36 rows it agrees
+# EXACTLY with the config's own spawn symbol on all 25 rows that have one --
+# including all three COMPOUND names splitting across their two rows
+# (MgBingoBallSlotsShot -> "Bingo Ball" and "Slots Shot",
+# MgPuzzlePanelPuzzlePanic -> "Puzzle Panel" and "Puzzle Panic",
+# MgCoincentration -> "Coincentration" and "Intense Coincentration") -- and it
+# names the seven ids that have no config symbol at all. This class's own
+# "Shell Smash" comes back out of it, which is the control that matters here.
+#
+# THE ADVICE STANDS. The config is still the cheaper place to look and the
+# ADDRESS sweep this file prescribes is still the right first move; the ROM is
+# now a second source rather than a dead end. port/slice_s371.txt has the full
+# derivation and the 25-way control.
+#
 # THE ASSET EVIDENCE CORROBORATES THE NAME AND IS KEPT FOR THAT REASON:
 #
 #   1. The class loads "/MG/d_2d_mg_bg_jokyu_curling_ncg.bin" -- the literal at

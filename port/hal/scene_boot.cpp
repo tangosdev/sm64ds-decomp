@@ -2273,6 +2273,24 @@ void port_scene_fill_slot1(void);
 extern unsigned char MgBoomBox_SpawnInfo[];
 void *port_mg_boombox_spawn(void);
 void port_scene_fill_boombox(void);
+/* run mg9 lane S371: dScMgAmida_c, actor id 0x173 = scene 371, and THE ONE
+   TRUE WIDTH-37 CLASS of the twenty-nine (port/mg_fanout_costs.txt section 11).
+   The ROM gives this id NO spawn symbol anywhere in config -- the whole-config
+   ADDRESS sweep port/slice_s75.txt's Shell Smash lesson prescribes was run and
+   returns nothing -- so the SpawnInfo is spelled as its raw config symbol, the
+   way the 375 and 390 rows are. The ROM's own RTTI at 0x0213b828, reached
+   through the type_info the word BEFORE the vtable points at, reads
+   "12dScMgAmida_c", so the row is named for the class.
+   TWO PLAYER TITLES ON ONE ID, the dScMgPanel_c shape: ov005 row 0 is
+   "Mario's Slides" and row 24 is "Connect the Characters", both amidakuji.
+   port_mg_scene_spawn_param takes the first matching row, so this row boots as
+   row 0 with record 0 and text 0. port/slice_s371.txt carries the derivation
+   and the 25-way control that proves the title chain. Same reads_sublevel
+   reasoning as every row above, re-checked for this class: no relocation in
+   ov006 lands on data_02092110 and no TU in this class's closure names it. */
+extern unsigned char data_ov006_0213b814[];
+void *port_mg_amida_spawn(void);
+void port_scene_fill_amida(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2515,6 +2533,31 @@ static const PortSceneClass port_scene_classes[] = {
        DIFFERENT minigame's state. */
     {367, "SCENE_MG_BOOMBOX", MgBoomBox_SpawnInfo, port_mg_boombox_spawn,
      port_scene_fill_boombox, 0},
+    /* 371 is 0x173, spelled in decimal for the same two reasons every row above
+       is: the others are, and port/tools/battery.py reads its hosted-scene set
+       out of this table. APPENDED AFTER EVERY EXISTING ROW, run mg9 lane S371,
+       and for THIS row the rule is load-bearing rather than inherited, because
+       this is the only fill in the tree that writes a THIRTY-SEVENTH word.
+
+       port_scene_registry_install walks this table in order and calls every
+       row's fill on every boot; port_scene_mg_overlay_load runs the thirty-five
+       overlay constructors ONCE PER PROCESS at the tail of the FIRST minigame
+       row's fill. Appending means the constructors have already read clean ROM
+       words before this fill starts, which is the latent-safe direction
+       port/mg_fanout_costs.txt section 11 derives.
+
+       AND THE 37th WORD IS THIS TABLE'S OWN, checked three ways before the
+       count was written (port/slice_s371.txt section 3): the span from
+       data_ov006_0213b918 to the next config symbol data_ov006_0213b9ac is
+       exactly 37 words; slot 35 is this class's own func_ov006_020d1170 and
+       NOT the family terminator ov004 0x020ad660, so the terminator check does
+       not refuse it; and slot 36 carries a load relocation of its own,
+       from:0x0213b9a8 to:0x020d1188, which is what a live pointer has and a
+       phantom slot never does. Section 11's hazard is a fill reaching into
+       another object's data, and the word after this table -- 0x0213b9ac,
+       value 0x00000100, no relocation -- is untouched. */
+    {371, "SCENE_MG_AMIDA", data_ov006_0213b814, port_mg_amida_spawn,
+     port_scene_fill_amida, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
