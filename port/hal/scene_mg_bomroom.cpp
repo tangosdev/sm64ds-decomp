@@ -91,16 +91,26 @@
 // evidence that the seventh copy is doing its job. A zero-dispatch clean run
 // proves nothing about this class and the report says which zero it is.
 //
-// ---- 7. TWO FLOORS, BOTH DECOMP GAPS -------------------------------------
+// ---- 7. THE TWO FLOORS ARE CLOSED (run mg7, lane L370) -------------------
 //
-//   func_ov006_020d7c4c  0x230  STATE slot 5 of data_ov006_02141730. No delink
-//                               block, no src. Counted at the dispatch site.
+//   func_ov006_020d7c4c  0x230  STATE slot 5 of data_ov006_02141730, the bomb
+//                               free-flight state. BYTE-MATCHED at mwccarm
+//                               1.2/base, 1.2/sp2 and 1.2/sp2p3. Dispatched
+//                               for real; the count says it ran.
 //   func_ov006_020d8408  0x4fc  the second call of state 2 of
-//                               data_ov006_021416e0. No delink block, no src.
-//                               A named trap in unmatched/MgBomroom_Traps.cpp.
+//                               data_ov006_021416e0, the bomb spawner and the
+//                               body that MOVES THE STATE INDEX. Decompiled
+//                               NONMATCHING (register allocation and
+//                               scheduling only, logic verified against the
+//                               ROM instruction for instruction). The trap
+//                               that stood in unmatched/MgBomroom_Traps.cpp is
+//                               retired and that file is gone.
 //
 // Both are reported below whether or not they fire, because a silent zero and
-// an absent instrument look the same in a log.
+// an absent instrument look the same in a log. Seating the spawner also links
+// src/func_ov006_020d66c4.cpp for the first time -- every relocation reaching
+// 0x020d66c4 anywhere in ov006 comes from inside that body -- so the slice's
+// linkage delta is now the full 74 rather than slice_sos.txt's original +71.
 //
 // ---- 8. THE GAPLESS LATCH IS CALLED AND THE SPLICE IS NOT ----------------
 //
@@ -157,10 +167,8 @@ void *MgSortOrSplode_Spawn(void);
 
 /* the state machine's witnesses, from unmatched/MgBomroom_StateDispatch.cpp */
 unsigned port_mg_bomroom_state_hits(void);
-unsigned port_mg_bomroom_floor_hits(void);
+unsigned port_mg_bomroom_flight_calls(void);
 unsigned port_mg_bomroom_opencoded_calls(void);
-/* the undecompiled callee's witness, from unmatched/MgBomroom_Traps.cpp */
-unsigned port_mg_bomroom_trap_hits(void);
 
 }  /* extern "C" */
 
@@ -184,13 +192,19 @@ static int  __fastcall sos_init(void *s, void *)
    Behavior tick. A DIAGNOSTIC, off unless the variable is set, and it exists
    for one reason that the ordinary run cannot supply.
 
-   THE CLASS CANNOT REACH FOUR OF ITS OWN FIVE TOP-LEVEL STATES. Slot 0 sets
-   the index to 1 and the game walks to 2, where it stays: state 2
-   (func_ov006_020d8ff4) calls func_ov006_020d8408, the 0x4fc body with no
-   delink block and no src, and that body is what advances the index. So the
-   decomp floor pins the state machine, and state 3 -- which is
+   IT WAS BUILT WHEN THE CLASS COULD NOT REACH FOUR OF ITS OWN FIVE TOP-LEVEL
+   STATES. Slot 0 set the index to 1, the game walked to 2 and stayed: state 2
+   (func_ov006_020d8ff4) calls func_ov006_020d8408, which then had no delink
+   block and no src, and that body is what advances the index. Run mg7 lane
+   L370 decompiled it, so the machine now advances on its own and state 3 --
    func_ov006_020d8f98, the dispatcher that open-codes the ARM Itanium
-   sequence in plain ints -- is unreachable on any headless run.
+   sequence in plain ints -- is reachable on an unaided headless run.
+
+   THE PROBE IS KEPT ANYWAY and is deliberately still wired. An unaided run
+   reaches a state when the game decides to, which makes "state N was clean"
+   a statement about this run's timing rather than about state N; pinning is
+   how each state is exercised on purpose. It is also the only way to hold a
+   state still long enough to compare captures.
 
    THAT MATTERS BECAUSE THAT SHAPE IS CONVICTED ONLY BY A RUN. Neither a link
    nor a member-pointer source sweep can see it, so "the build is clean" says
@@ -396,17 +410,24 @@ extern "C" void port_scene_bomroom_hits(void)
                 "(func_ov006_020d8f98, table data_ov006_021416a0): %u "
                 "dispatch(es) through the host decode\n",
                 port_mg_bomroom_opencoded_calls());
-    /* THE TWO FLOORS, REPORTED WHETHER OR NOT THEY FIRED. Both are decomp gaps
-       and neither is a port one; a zero has to say WHICH zero it is. */
-    std::printf("[scene] dScMgBomroom_c floors: state 0x020d7c4c (slot 5 of "
-                "data_ov006_02141730, no delink block and no src) wanted %u "
+    /* THE TWO FORMER FLOORS, REPORTED WHETHER OR NOT THEY FIRED. Run mg7 lane
+       L370 decompiled both, so these are no longer decomp gaps and the line
+       says what RAN rather than what was missing. A zero still has to say
+       which zero it is: 0x020d7c4c reading zero means no bomb was in flight,
+       not that the body is absent. */
+    std::printf("[scene] dScMgBomroom_c former floors: state 0x020d7c4c "
+                "(slot 5 of data_ov006_02141730, byte-matched) ran %u "
                 "time(s); callee 0x020d8408 (0x4fc, called by state 2 of "
-                "data_ov006_021416e0) entered %u time(s)\n",
-                port_mg_bomroom_floor_hits(), port_mg_bomroom_trap_hits());
+                "data_ov006_021416e0) is linked and its spawn counter is the "
+                "line below\n",
+                port_mg_bomroom_flight_calls());
     if (g_sos_self)
         std::printf("[scene] dScMgBomroom_c object at %p, state index %d, "
-                    "sub-state index %d\n", (void *)g_sos_self,
+                    "sub-state index %d, spawn count %d, respawn timer %u\n",
+                    (void *)g_sos_self,
                     *(int *)(g_sos_self + 0x62d0),
-                    *(int *)(g_sos_self + 0x62d4));
+                    *(int *)(g_sos_self + 0x62d4),
+                    *(int *)(g_sos_self + 0x62d8),
+                    *(unsigned short *)(g_sos_self + 0x62e2));
     std::fflush(stdout);
 }
