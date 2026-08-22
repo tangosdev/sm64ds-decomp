@@ -91,9 +91,32 @@
 #      integer that has its own config symbol (data_ov006_0213d6f4), not a
 #      code address. Index 37 is another 0x00000028.
 #   4. RELOCATION COUNT. Exactly 36 load relocations fall inside
-#      [0x0213d664, 0x0213d6f4) in ov006's relocs.txt and NONE lands on index
+#      0x0213d664..0x0213d6f4 in ov006's relocs.txt and NONE lands on index
 #      36. A vtable slot is a relocated word by construction, so a 37th slot
 #      with no relocation is not a slot.
+#
+# ---- ONE PLUMBING TRAP THIS FILE WALKED INTO, WRITTEN DOWN BECAUSE THE
+#      SYMPTOM POINTS SOMEWHERE ELSE ENTIRELY -----------------------------
+#
+# The four lines above used to open the range with a square bracket and close
+# it on the NEXT line. CMake's file(STRINGS) is what reads this file, and an
+# UNMATCHED open bracket in any line swallows every line after it into that
+# one list element -- so the twenty-seven source lines at the foot of this
+# file silently stopped being sources. Measured: the list came back 94 long
+# for a 246-line file, and every kept line was a comment.
+#
+# THE SYMPTOM IS A LINK ERROR THAT NAMES THE SEAT. Nothing complains about
+# the slice; the build reports ten unresolved externals in
+# hal/scene_mg_mcarlo.cpp -- every one of them a body this slice was supposed
+# to bring -- which reads as "the seat is wrong" rather than "the slice was
+# not read". A lane that chased the seat instead of the slice would have gone
+# a long way in the wrong direction.
+#
+# A BRACKET PAIR THAT OPENS AND CLOSES ON THE SAME LINE IS FINE, which is why
+# this file's four `ldr r1,[r0]` quotations and the twenty-odd in the other
+# slices are harmless, and why a scan over every slice_*.txt in the tree finds
+# this file was the only one that ever had an unmatched one before its source
+# lines. Ranges in these files are spelled 0xAAAA..0xBBBB for this reason.
 #
 # All four agree on 36, and section 3's row for 0x17d (36 / 13 / 11 / 0) is
 # confirmed exactly: the 13 overrides against data_ov004_020bc0c0 are slots
@@ -179,8 +202,8 @@
 #
 # ---- ZERO FLOORS ----------------------------------------------------------
 #
-# Every one of the 25 bodies in this class's code block [0x020f7634,
-# 0x020f8ef4) has a src TU, which is section 3's nosrc column reading 0 and
+# Every one of the 25 bodies in this class's code block 0x020f7634..0x020f8ef4
+# has a src TU, which is section 3's nosrc column reading 0 and
 # is stronger than that column claims: the column is computed over the VTABLE
 # and this is computed over the whole block. The delinks join was run over
 # every callee of every override as well (section 13's CORRECTION 3 method,
