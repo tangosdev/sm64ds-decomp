@@ -356,9 +356,34 @@ extern "C" void port_scene_fill_amida(void)
        dScMgBase_c words first, then this class's eleven. The two key sets are
        disjoint because a word is one address, and the arithmetic closes: 7
        arm9 words, 19 ov004 words, 11 here, 7 + 19 + 11 = 37. */
+    const unsigned before = am_raw_left(vt, 37);
     port_scene_mg_fill_shared(vt, 37);
-    am_apply(vt, 37, kAmidaFaces,
-             sizeof kAmidaFaces / sizeof kAmidaFaces[0]);
+    const unsigned after_shared = am_raw_left(vt, 37);
+    const unsigned own = am_apply(vt, 37, kAmidaFaces,
+                                  sizeof kAmidaFaces / sizeof kAmidaFaces[0]);
+    const unsigned after_own = am_raw_left(vt, 37);
+
+    /* THE FILL CENSUS, PRINTED ON EVERY BOOT AND NOT ONLY WHEN IT FAILS.
+       Section 16's rule: a zero that is only printed when it is false is not a
+       measurement. This is the one number this lane exists to produce -- the
+       family's fill is called with a COUNT, and for this class alone that
+       count is 37 -- so the three stages are printed separately and they have
+       to add up to 37 in front of the reader:
+
+         before        every slot still holds its mounted ROM word
+         after shared  what port_scene_fill_rom (arm9) + kMgBaseFaces (ov004)
+                       between them could claim, address-keyed
+         own           the eleven this file's own array claims, INCLUDING
+                       slots 35 and 36, which no sibling class has
+         after own     must be ZERO, or a dispatch of the remainder jumps to a
+                       DS address as a host one */
+    std::printf("[scene] AMIDA FILL CENSUS, 37 slots: %u raw DS words before, "
+                "%u after the shared arm9+dScMgBase_c pass (claimed %u), "
+                "%u own faces applied, %u raw left. "
+                "dScMgBase_c's own 36-slot table: %u raw left.
+",
+                before, after_shared, before - after_shared, own, after_own,
+                am_raw_left(base, 36));
 
     /* the two diagnostics, applied after the fill so they override it */
     {
@@ -370,7 +395,7 @@ extern "C" void port_scene_fill_amida(void)
 
     {
         const unsigned lb = am_raw_left(base, 36);
-        const unsigned lv = am_raw_left(vt, 37);
+        const unsigned lv = after_own;
         if (lb || lv) {
             std::fprintf(stderr, "  [scene] AMIDA FILL INCOMPLETE: "
                          "dScMgBase_c leaves %u of 36 raw DS words, "
