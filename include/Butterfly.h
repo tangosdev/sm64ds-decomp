@@ -63,7 +63,9 @@ struct Butterfly {
     u8  unk_3f1;            /* 0x3f1 */
 #ifdef __cplusplus
     /* methods */
+    int CleanupResources();                  /* slot  3 */
     int InitResources();
+    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 #endif
 };

@@ -44,11 +44,11 @@ src/func_ov100_02141848.c:
     complete
     .text start:0x02141848 end:0x02141988
 
-src/_ZN9Butterfly16CleanupResourcesEv.c:
+src/_ZN9Butterfly16CleanupResourcesEv.cpp:
     complete
     .text start:0x02141988 end:0x021419d0
 
-src/_ZN9Butterfly16OnPendingDestroyEv.c:
+src/_ZN9Butterfly16OnPendingDestroyEv.cpp:
     complete
     .text start:0x021419d0 end:0x021419d4
 

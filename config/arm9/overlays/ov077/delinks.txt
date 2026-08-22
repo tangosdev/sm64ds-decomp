@@ -240,11 +240,11 @@ src/func_ov077_02125e94.c:
     complete
     .text start:0x02125e94 end:0x02125eb0
 
-src/_ZN5Spiny16CleanupResourcesEv.c:
+src/_ZN5Spiny16CleanupResourcesEv.cpp:
     complete
     .text start:0x02125eb0 end:0x02125eec
 
-src/_ZN5Spiny16OnPendingDestroyEv.c:
+src/_ZN5Spiny16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02125eec end:0x02125ef0
 

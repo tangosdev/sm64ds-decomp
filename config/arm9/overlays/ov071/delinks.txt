@@ -124,11 +124,11 @@ src/Scuttlebug_SetState.c:
     complete
     .text start:0x021202ec end:0x02120308
 
-src/_ZN10Scuttlebug16CleanupResourcesEv.c:
+src/_ZN10Scuttlebug16CleanupResourcesEv.cpp:
     complete
     .text start:0x02120308 end:0x02120338
 
-src/_ZN10Scuttlebug16OnPendingDestroyEv.c:
+src/_ZN10Scuttlebug16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02120338 end:0x0212033c
 

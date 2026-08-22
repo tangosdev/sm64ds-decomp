@@ -99,7 +99,7 @@ src/_ZN10DonutBlock16CleanupResourcesEv.cpp:
     complete
     .text start:0x021119e8 end:0x02111a2c
 
-src/_ZN10DonutBlock16OnPendingDestroyEv.c:
+src/_ZN10DonutBlock16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02111a2c end:0x02111a30
 

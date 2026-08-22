@@ -96,11 +96,11 @@ src/func_ov072_0211fcb0.c:
     complete
     .text start:0x0211fcb0 end:0x0211fccc
 
-src/_ZN11SnowmanBody16CleanupResourcesEv.c:
+src/_ZN11SnowmanBody16CleanupResourcesEv.cpp:
     complete
     .text start:0x0211fccc end:0x0211fcf0
 
-src/_ZN11SnowmanBody16OnPendingDestroyEv.c:
+src/_ZN11SnowmanBody16OnPendingDestroyEv.cpp:
     complete
     .text start:0x0211fcf0 end:0x0211fcf4
 
@@ -176,11 +176,11 @@ src/func_ov072_021205d4.c:
     complete
     .text start:0x021205d4 end:0x021205f0
 
-src/_ZN11SnowmanHead16CleanupResourcesEv.c:
+src/_ZN11SnowmanHead16CleanupResourcesEv.cpp:
     complete
     .text start:0x021205f0 end:0x02120634
 
-src/_ZN11SnowmanHead16OnPendingDestroyEv.c:
+src/_ZN11SnowmanHead16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02120634 end:0x02120638
 

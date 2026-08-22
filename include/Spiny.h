@@ -42,7 +42,9 @@ struct Spiny : dActor_c {
     virtual int   OnAimedAtWithEgg();            /* slot 29 */
 
     int Behavior();
+    int CleanupResources();                  /* slot  3 */
     int InitResources();
+    void OnPendingDestroy();                 /* slot 12 -- empty body in the ROM */
     int Render();
 };
 
