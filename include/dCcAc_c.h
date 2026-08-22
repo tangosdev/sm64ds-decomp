@@ -34,6 +34,8 @@
 
 #ifdef __cplusplus
 
+#include "math/Fix12.h"
+
 struct dActor_c;
 
 extern "C" void _ZN6Memory16operator_delete2EPv(void *);
@@ -45,6 +47,9 @@ struct dCcAc_c : dCc_c {
     virtual ~dCcAc_c();      /* slots 0 (D1), 1 (D0) */
     virtual Vector3 &GetPos();          /* slot 2 - the owner's pos, not ours */
     virtual u32 GetOwnerID();           /* slot 3 - owner->uniqueID */
+
+    /* --- non-virtual --- */
+    void Init(dActor_c *actor, Fix12<int> radius, Fix12<int> height, u32 flags, u32 vulnFlags);
 
     /* WHAT LETS A REAL `~Class()` REPRODUCE THE ROM'S DELETING DESTRUCTOR.
        The compiler generates D0 as "run the destructor body, then call operator

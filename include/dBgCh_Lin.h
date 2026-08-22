@@ -80,6 +80,10 @@ struct dBgCh_Lin {
                                check_header_offsets cannot size a struct-typed
                                member and goes UNPARSED, which blinds it to the
                                rest of the header. */
+#ifdef __cplusplus
+    /* methods */
+    Vector3 GetClsnPos();
+#endif
 };
 
 /* NO SIZE ASSERT ON PURPOSE. 0x78 is the proven floor, not the settled end.

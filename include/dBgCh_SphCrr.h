@@ -7,9 +7,14 @@
 #include "types.h"
 #include "dBgPi.h"
 
+#ifdef __cplusplus
+#include "math/Fix12.h"
+#endif
+
 /* fwd */
 struct dBgPi;
 struct src_;
+struct dActor_c;
 struct dBgCh_SphCrr {
     u8  pad_000[0x10];
     u8  unk_010;            /* 0x010 */
@@ -46,6 +51,7 @@ struct dBgCh_SphCrr {
 #ifdef __cplusplus
     /* methods */
     void SetFloorResult(const dBgPi & src_);
+    void SetObjAndSphere(const Vector3 &pos, Fix12<int> radius, dActor_c *actor);
 #endif
 };
 

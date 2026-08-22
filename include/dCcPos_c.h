@@ -32,6 +32,8 @@
 
 #ifdef __cplusplus
 
+#include "math/Fix12.h"
+
 struct dCcPos_c : dCc_c {
     Vector3 pos;            /* 0x30 */
 
@@ -39,6 +41,9 @@ struct dCcPos_c : dCc_c {
     virtual ~dCcPos_c();     /* slots 0 (D1), 1 (D0) */
     virtual Vector3 &GetPos();          /* slot 2 */
     virtual u32 GetOwnerID();           /* slot 3 - always 0 */
+
+    /* --- non-virtual --- */
+    void Init(const Vector3 &pos, Fix12<int> radius, Fix12<int> height, u32 flags, u32 vulnFlags);
 };
 
 typedef char dCcPos_c_size_must_be_0x3c[

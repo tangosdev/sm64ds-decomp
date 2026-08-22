@@ -1812,7 +1812,7 @@ src/func_020147bc.c:
     complete
     .text start:0x020147bc end:0x020147d4
 
-src/_ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj.c:
+src/_ZN8dCcPos_c4InitERK7Vector35Fix12IiES4_jj.cpp:
     complete
     .text start:0x020147d4 end:0x02014818
 
@@ -1840,11 +1840,11 @@ src/_ZN10dCcAcPos_c21SetPosRelativeToActorERK7Vector3.c:
     complete
     .text start:0x0201489c end:0x020148c8
 
-src/_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.c:
+src/_ZN10dCcAcPos_c4InitEP8dActor_cRK7Vector35Fix12IiES6_jj.cpp:
     complete
     .text start:0x020148c8 end:0x0201490c
 
-src/_ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj.c:
+src/_ZN7dCcAc_c4InitEP8dActor_c5Fix12IiES3_jj.cpp:
     complete
     .text start:0x0201490c end:0x0201493c
 
@@ -5078,7 +5078,7 @@ src/_ZN9dBgCh_GndC1Ev.c:
 src/func_020375b0.cpp:
     .text start:0x020375b0 end:0x020375c0
 
-src/_ZN9dBgCh_Lin10GetClsnPosEv.c:
+src/_ZN9dBgCh_Lin10GetClsnPosEv.cpp:
     complete
     .text start:0x020375d0 end:0x020375ec
 
@@ -5185,7 +5185,7 @@ src/func_02037b5c.c:
     complete
     .text start:0x02037b5c end:0x02037c00
 
-src/_ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c.c:
+src/_ZN12dBgCh_SphCrr15SetObjAndSphereERK7Vector35Fix12IiEP8dActor_c.cpp:
     complete
     .text start:0x02037c00 end:0x02037c40
 
