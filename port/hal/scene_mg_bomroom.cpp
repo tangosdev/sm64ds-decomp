@@ -131,6 +131,7 @@
 
 #include <cstdio>
 #include <cstdlib>
+#include <cstring>
 
 extern "C" {
 
@@ -161,6 +162,9 @@ int   func_ov006_020d9160(void *self);          /* slot 9  Render */
 int   func_ov006_020d5a54(int *self);           /* slot 16 D2 */
 int  *func_ov006_020d5a78(int *self);           /* slot 17 D0 */
 void  func_ov006_020d9104(unsigned char *self); /* slot 18 state reset */
+
+/* the ROM's own drop-inside-a-bin handler, for the bin-full probe below */
+void  func_ov006_020d6b88(void *self, int idx);
 
 /* the factory */
 void *MgSortOrSplode_Spawn(void);
@@ -215,6 +219,93 @@ static int  __fastcall sos_init(void *s, void *)
    IT PINS RATHER THAN POKES ONCE, because a state body may write the index
    back; and it writes only this one word of the scene object, before the ROM
    body reads it, which is the same word slot 0 and slot 18 both write. */
+/* SM64DS_SOS_FILL=<n>[:<side>] and SM64DS_SOS_TRACE=1: THE BIN-FULL PROBE.
+   Run mg8, lane SBN. Both off unless set, both write nothing on an ordinary
+   run, and the reason they exist is in port/scene_sos_binfull.txt: the whole
+   end-of-round sweep -- the thing the player sees as "the bins filled and the
+   bombs went up to the top screen" -- is behind a counter no headless run can
+   move. func_ov006_020d6784 fires it at 0x28 = 40 bombs of ONE colour parked
+   in a bin, and the ROM's only way to park one is a player drag ending inside
+   the bin box. Forty drags is not a thing a touch script can do: the stylus
+   probe holds 32 entries total and each drag needs several.
+
+   SO THE PROBE SEEDS THE STATE AND SAYS SO. This is NOT an input-driven
+   repro and no claim below pretends it is. What it does do is refuse to
+   shortcut the game logic: every field it writes is a field
+   func_ov006_020d8408 (the ROM's own spawner) writes with the value that body
+   writes, and the DROP itself is func_ov006_020d6b88 -- the ROM's own
+   drop-inside-a-bin handler, called with the bomb positioned inside the bin
+   box the way a released stylus positions it. Nothing here writes a state
+   byte the ROM would not have written from the same inputs, and the trigger
+   that follows is the ROM's own count.
+
+   THE TRACE IS THE OTHER HALF. A softlock produces no dump and no fault, so
+   "the run was clean" and "the run was wedged" are the same log. The trace
+   prints the two state indices and the substate histogram of the bombs the
+   sweep is waiting on, which is what tells a spin from a sequence. */
+static void sos_binfill(char *s, int n, int side)
+{
+    int placed = 0;
+    for (int i = 0; i < 0x70 && placed < n; ++i) {
+        char *b = s + i * 0x40 + 0x4000;
+        if (*(unsigned char *)(b + 0x698) != 0)
+            continue;
+        /* func_ov006_020d8408's spawn block, verbatim, minus the difficulty
+           ladder that only picks the angle and the release pattern. */
+        *(unsigned char *)(b + 0x698) = 1;
+        *(unsigned char *)(b + 0x697) = 0;
+        *(unsigned char *)(b + 0x69b) = 0;
+        *(unsigned char *)(b + 0x69c) = 0;
+        *(unsigned char *)(b + 0x69d) = 0;
+        *(unsigned short *)(b + 0x690) = 4;
+        *(unsigned short *)(b + 0x692) = 0x200;
+        *(unsigned char *)(b + 0x696) = (unsigned char)side;
+        *(int *)(b + 0x670) = 0x999;
+        *(int *)(b + 0x688) = 0;
+        *(unsigned short *)(b + 0x68c) = 0x2000;
+        /* inside the bin box func_ov006_020d6b88 tests for this side: the
+           right box is x in (0xc0,0x100] and the left is x in [0,0x40), both
+           y in (0x40,0x80). Fixed-point 20.12, the same as the spawner's. */
+        *(int *)(b + 0x660) = (side ? 0xe0 : 0x20) << 12;
+        *(int *)(b + 0x664) = 0x60 << 12;
+        func_ov006_020d6b88(s, i);
+        ++placed;
+    }
+    std::fprintf(stderr, "  [scene] SM64DS_SOS_FILL: parked %d bomb(s) of "
+                 "side %d inside the bin through func_ov006_020d6b88, the "
+                 "ROM's own drop handler. STATE-SEEDED, not input-driven: "
+                 "func_ov006_020d6784 wants 0x28 of them and forty stylus "
+                 "drags do not fit in a touch script.\n", placed, side);
+    std::fflush(stderr);
+}
+
+static void sos_trace(char *s, int tick)
+{
+    static int last_top = -99, last_sub = -99;
+    const int top = *(int *)(s + 0x62d0);
+    const int sub = *(int *)(s + 0x62d4);
+    int st[8] = {0,0,0,0,0,0,0,0};
+    int six = 0, parked = 0;
+    for (int i = 0; i < 0x70; ++i) {
+        const char *b = s + i * 0x40 + 0x4000;
+        if (*(const unsigned char *)(b + 0x698) == 0) continue;
+        const unsigned st5 = *(const unsigned char *)(b + 0x697);
+        if (st5 == 5) ++parked;
+        if (st5 != 6) continue;
+        ++six;
+        const unsigned v = *(const unsigned char *)(b + 0x69b);
+        if (v < 8) ++st[v];
+    }
+    if (top != last_top || sub != last_sub || (tick % 120) == 0) {
+        last_top = top; last_sub = sub;
+        std::fprintf(stderr, "  [sos] t%-5d top=%d sub=%d  parked(st5)=%-3d "
+                     "st6=%-3d substates 0:%d 1:%d 2:%d 3:%d 4:%d\n",
+                     tick, top, sub, parked, six,
+                     st[0], st[1], st[2], st[3], st[4]);
+        std::fflush(stderr);
+    }
+}
+
 static int __fastcall sos_beh(void *s, void *)
 {
     SOS(6);
@@ -229,6 +320,25 @@ static int __fastcall sos_beh(void *s, void *)
     }
     if (pin >= 0)
         *(int *)((char *)s + 0x62d0) = pin;
+
+    static int tick;
+    static int fill_n = -2, fill_side, trace = -2;
+    if (fill_n == -2) {
+        const char *e = std::getenv("SM64DS_SOS_FILL");
+        fill_n = (e && e[0]) ? std::atoi(e) : -1;
+        fill_side = 0;
+        if (e) { const char *c = std::strchr(e, ':'); if (c) fill_side = std::atoi(c + 1); }
+        trace = std::getenv("SM64DS_SOS_TRACE") ? 1 : 0;
+    }
+    /* seeded in the spawner state, which is where func_ov006_020d6784 -- the
+       body that counts the parked bombs -- actually runs. Once. */
+    if (fill_n > 0 && *(int *)((char *)s + 0x62d0) == 2) {
+        sos_binfill((char *)s, fill_n, fill_side);
+        fill_n = -1;
+    }
+    ++tick;
+    if (trace > 0)
+        sos_trace((char *)s, tick);
     return func_ov006_020d91b0((char *)s);
 }
 static int  __fastcall sos_render(void *s, void *)
