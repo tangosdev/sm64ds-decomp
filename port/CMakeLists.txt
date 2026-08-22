@@ -4242,6 +4242,17 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_0211cbf4.c"
     PROPERTIES COMPILE_DEFINITIONS "VT=data_ov006_0213fa0c")
 
+# TWO OF THE SEVENTY-ONE .c FILES IN THIS SLICE ARE REALLY C++ -- a //cpp
+# marker and a top-level `extern "C"` block, which is invalid C. All 71 were
+# SWEPT for the marker and for `extern "C"`, `virtual`, `class`, `namespace`,
+# `bool` and `new`/`delete` rather than these two being found by a compile
+# error and the other sixty-nine left to luck, which is the sweep the SMB block
+# above records doing for its thirty-seven. These are the only hits.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_0211ea70.c"
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_0211f9fc.c"
+    PROPERTIES LANGUAGE CXX)
+
 # Lane FDR: the arm9 wipe fader's own static initialiser, and the dWipe_c
 # vtable it installs. Rides the SAME three targets as the scene seats above,
 # and for a stronger reason than symmetry: hal/fdr_arm9_fader_seat.cpp defines
