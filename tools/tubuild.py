@@ -2540,6 +2540,8 @@ def verify_owned_sections(obj_bytes, entry, claims, name_index=None,
     linked_symbols = {name: row for layout in layouts.values()
                       for name, row in layout["symbols"].items()}
     expected_rows = manifest_owned_symbol_rows(entry)
+    if public_address_points:
+        expected_rows += manifest_storage_alias_rows(entry)
     expected_names = {r["symbol"] for _sec, r in expected_rows}
     emitted_names = {name for layout in layouts.values() for name, row in layout["symbols"].items()
                      if row["type"] in ("STT_FUNC", "STT_OBJECT") and not name.startswith("$")}
@@ -2739,12 +2741,78 @@ def derive_owned_nontext_object(obj_bytes, entry, claims):
     return out, report, []
 
 
-def partition_vtable_rebiases(entry, claims):
+def manifest_storage_alias_rows(entry):
+    """Nested storage-prefix aliases licensed only after vtable rebias."""
+    rows = []
+    for section, row in manifest_owned_symbol_rows(entry):
+        alias = row.get("storage_alias")
+        if isinstance(alias, dict):
+            rows.append((section, {"symbol": alias.get("symbol"),
+                                   "address": alias.get("address"),
+                                   "size": alias.get("size")}))
+    return rows
+
+
+def linked_symbol_rows(path, names):
+    """Exact linked-ELF metadata for the requested names, including output section."""
+    path = pathlib.Path(path)
+    if not path.is_file():
+        return None, f"linked ELF does not exist: {path}"
+    raw = path.read_bytes()
+    elf = ELFFile(io.BytesIO(raw))
+    symtab = elf.get_section_by_name(".symtab")
+    if symtab is None:
+        return None, f"linked ELF has no .symtab: {path}"
+    wanted = set(names)
+    rows = collections.defaultdict(list)
+    for sym in symtab.iter_symbols():
+        if sym.name not in wanted:
+            continue
+        shndx = sym["st_shndx"]
+        section_name = elf.get_section(shndx).name if isinstance(shndx, int) else str(shndx)
+        rows[sym.name].append({"address": sym["st_value"], "size": sym["st_size"],
+                               "binding": sym["st_info"]["bind"],
+                               "type": sym["st_info"]["type"],
+                               "sectionIndex": shndx, "section": section_name})
+    return {name: rows.get(name, []) for name in wanted}, None
+
+
+def _baseline_partition_symbols(names):
+    """Load a successful, config-current baseline ELF as independent alias evidence."""
+    report_path = BASELINE_LINK / "linkcheck.json"
+    elf_path = BASELINE_LINK / "final_link.o"
+    if not report_path.is_file() or not elf_path.is_file():
+        return None, None, "run `tubuild.py linkcheck --baseline` first"
+    try:
+        report = json.loads(report_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return None, None, f"baseline linkcheck report is unreadable: {exc}"
+    if report.get("baseline") is not True \
+            or (report.get("phases", {}).get("link") or {}).get("ok") is not True \
+            or (report.get("analysis") or {}).get("passed") is not True:
+        return None, None, "baseline report does not prove a successful stock module link"
+    # The baseline linker consumes config/arm9.  tu_manifest.json is deliberately
+    # excluded: recording a failed partition attempt updates it and must not create
+    # an impossible "rerun baseline, then immediately become stale" loop.
+    config_files = [path for path in CFG_ARM9.rglob("*") if path.is_file()]
+    latest_config = max((path.stat().st_mtime_ns for path in config_files), default=0)
+    if elf_path.stat().st_mtime_ns < latest_config:
+        return None, None, "baseline linked ELF is older than the checked-in config tree"
+    rows, error = linked_symbol_rows(elf_path, names)
+    if error:
+        return None, None, error
+    return rows, hashlib.sha256(elf_path.read_bytes()).hexdigest(), None
+
+
+def partition_vtable_rebiases(entry, claims, baseline_symbols=None,
+                               baseline_sha256=None):
     """Exact public-address-point biases required by retained vtable definitions."""
     claimed = {claim["name"] for claim in claims if claim["name"] != ".text"}
     owner_module = RL.normalize_module(entry["module"])
     homes = all_symbol_homes()
     biases, reasons = {}, []
+    compiler_only = {row.get("symbol"): row for row in
+                     entry.get("compiler_only_output", []) if isinstance(row, dict)}
     for section, row in manifest_owned_symbol_rows(entry):
         name = row["symbol"]
         if section not in claimed or not name.startswith("_ZTV"):
@@ -2782,9 +2850,119 @@ def partition_vtable_rebiases(entry, claims):
                            f"{f'0x{public:08x}' if public is not None else 'invalid'}; "
                            f"found {rendered or 'none'}")
             continue
-        biases[name] = {"bias": bias, "size": size, "section": section,
-                        "storageAddress": storage, "publicAddress": public}
+        policy = {"bias": bias, "size": size, "section": section,
+                  "storageAddress": storage, "publicAddress": public}
+        alias = row.get("storage_alias")
+        if alias is not None:
+            label = f"retained vtable {name} storage_alias"
+            if not isinstance(alias, dict):
+                reasons.append(f"{label} must be an object")
+                continue
+            try:
+                alias_name = str(alias["symbol"])
+                alias_address = (int(alias["address"], 0)
+                                 if isinstance(alias["address"], str)
+                                 else int(alias["address"]))
+                alias_size = int(alias["size"], 0) if isinstance(alias["size"], str) \
+                    else int(alias["size"])
+                donor = str(alias["reuse_compiler_only_symbol"])
+            except (KeyError, TypeError, ValueError):
+                reasons.append(f"{label} needs symbol/address/size/"
+                               "reuse_compiler_only_symbol")
+                continue
+            if not alias_name or alias_name.startswith("_ZTV"):
+                reasons.append(f"{label} has invalid symbol {alias_name!r}")
+            if alias_address != storage or alias_size != bias:
+                reasons.append(f"{label} must exactly cover the preamble "
+                               f"0x{storage:08x}..0x{public:08x}")
+            if alias.get("binding") != "STB_GLOBAL" or alias.get("type") != "STT_OBJECT":
+                reasons.append(f"{label} must require STB_GLOBAL/STT_OBJECT")
+            donor_row = compiler_only.get(donor)
+            if not donor_row or donor_row.get("disposition") != "deadstrip":
+                reasons.append(f"{label} donor {donor} is not an explicit compiler-only "
+                               "deadstrip policy")
+            alias_homes = {(RL.normalize_module(module), address)
+                           for module, address in homes.get(alias_name, [])}
+            if alias_homes != {(owner_module, storage)}:
+                rendered = [f"{module}:0x{address:08x}"
+                            for module, address in sorted(alias_homes)]
+                reasons.append(f"{label} needs one unique configured storage home "
+                               f"{owner_module}:0x{storage:08x}; found "
+                               f"{rendered or 'none'}")
+            policy["storageAlias"] = {
+                "symbol": alias_name, "address": alias_address, "size": alias_size,
+                "binding": "STB_GLOBAL", "type": "STT_OBJECT", "donor": donor,
+            }
+        biases[name] = policy
+
+    aliases = [(name, policy["storageAlias"]) for name, policy in biases.items()
+               if policy.get("storageAlias")]
+    if aliases:
+        wanted = {name for name, _alias in aliases} | \
+                 {alias["symbol"] for _name, alias in aliases}
+        if baseline_symbols is None:
+            baseline_symbols, baseline_sha256, error = _baseline_partition_symbols(wanted)
+            if error:
+                reasons.append(f"storage alias baseline proof unavailable: {error}")
+                baseline_symbols = {}
+        for name, alias in aliases:
+            base_alias = (baseline_symbols or {}).get(alias["symbol"], [])
+            base_vtable = (baseline_symbols or {}).get(name, [])
+            if len(base_alias) != 1 or len(base_vtable) != 1:
+                reasons.append(f"storage alias baseline needs one {alias['symbol']} and one "
+                               f"{name}; found {len(base_alias)}/{len(base_vtable)}")
+                continue
+            got_alias, got_vtable = base_alias[0], base_vtable[0]
+            expected_alias = (alias["address"], alias["size"], alias["binding"],
+                              alias["type"])
+            actual_alias = (got_alias["address"], got_alias["size"],
+                            got_alias["binding"], got_alias["type"])
+            expected_vtable = (biases[name]["publicAddress"],
+                               biases[name]["size"] - biases[name]["bias"],
+                               "STB_GLOBAL", "STT_OBJECT")
+            actual_vtable = (got_vtable["address"], got_vtable["size"],
+                             got_vtable["binding"], got_vtable["type"])
+            if actual_alias != expected_alias or actual_vtable != expected_vtable \
+                    or got_alias["sectionIndex"] != got_vtable["sectionIndex"]:
+                reasons.append(f"storage alias baseline metadata differs for "
+                               f"{alias['symbol']}/{name}")
+                continue
+            biases[name]["storageAlias"]["baseline"] = {
+                "elfSha256": baseline_sha256, "alias": got_alias,
+                "vtable": got_vtable,
+            }
     return biases, reasons
+
+
+def verify_linked_storage_aliases(linked_elf, biases):
+    """Require final-link alias/vtable metadata to reproduce the baseline pair."""
+    pairs = [(name, policy["storageAlias"]) for name, policy in biases.items()
+             if policy.get("storageAlias")]
+    if not pairs:
+        return {"ok": True, "rows": [], "errors": []}
+    wanted = {name for name, _alias in pairs} | {alias["symbol"] for _name, alias in pairs}
+    symbols, error = linked_symbol_rows(linked_elf, wanted)
+    if error:
+        return {"ok": False, "rows": [], "errors": [error]}
+    rows, reasons = [], []
+    for name, alias in pairs:
+        got_alias = symbols.get(alias["symbol"], [])
+        got_vtable = symbols.get(name, [])
+        baseline = alias.get("baseline") or {}
+        if len(got_alias) != 1 or len(got_vtable) != 1:
+            reasons.append(f"linked storage split {alias['symbol']}/{name} occurs "
+                           f"{len(got_alias)}/{len(got_vtable)} times")
+            continue
+        same = (got_alias[0] == baseline.get("alias")
+                and got_vtable[0] == baseline.get("vtable")
+                and got_alias[0]["sectionIndex"] == got_vtable[0]["sectionIndex"])
+        rows.append({"alias": alias["symbol"], "vtable": name,
+                     "aliasMetadata": got_alias[0], "vtableMetadata": got_vtable[0],
+                     "baselineElfSha256": baseline.get("elfSha256"), "exact": same})
+        if not same:
+            reasons.append(f"linked storage split {alias['symbol']}/{name} does not "
+                           "match baseline metadata")
+    return {"ok": not reasons, "rows": rows, "errors": reasons}
 
 
 # ====================================== partial TU isolation (plan sec 9, phase D)
@@ -3524,6 +3702,8 @@ def cmd_linkcheck(args):
     # -------------------- partial/partitioned isolation: derive, compare, substitute
     partial_rows = []
     partition_data_ok = False
+    storage_aliases_ok = not partitioned
+    vtable_policies = {}
     if partial or partitioned:
         label = "partitioned" if partitioned else "partial"
         print(f"[4b/8] {label} isolation: one TU compile -> N derived text objects, "
@@ -3683,6 +3863,7 @@ def cmd_linkcheck(args):
             report["partitionedObjects"]["reducedStorageSha256"] = \
                 hashlib.sha256(data_tu).hexdigest()
             biases, bias_reasons = partition_vtable_rebiases(entry, claims)
+            vtable_policies = biases
             if bias_reasons:
                 print("      REFUSED -- retained vtable address point is not explicit:")
                 for reason in bias_reasons:
@@ -3843,6 +4024,19 @@ def cmd_linkcheck(args):
             _record_linkcheck(data, entry, report, baseline)
         return 1
     print(f"      ok ({dt:.1f}s) -> {(scratch / 'final_link.o').relative_to(REPO).as_posix()}")
+
+    if partitioned:
+        linked_aliases = verify_linked_storage_aliases(
+            scratch / "final_link.o", vtable_policies)
+        report["linkedStorageAliases"] = linked_aliases
+        storage_aliases_ok = linked_aliases["ok"]
+        if linked_aliases["ok"]:
+            count = len(linked_aliases["rows"])
+            print(f"      storage-prefix alias fidelity: {count}/{count} exact vs baseline")
+        else:
+            print("      storage-prefix alias fidelity: FAIL")
+            for reason in linked_aliases["errors"]:
+                print(f"        {reason}")
 
     # ------------------------------------------------------- linked-range comparison
     print("[6/8] linked range + module byte comparison")
@@ -4009,6 +4203,7 @@ def cmd_linkcheck(args):
     if partitioned:
         verified = partitioned_link_ready(
             equivalent=bool(equivalent and partial_rows), data_ok=partition_data_ok,
+            storage_aliases_ok=storage_aliases_ok,
             artifacts_ok=report.get("partitionedArtifacts", {}).get("ok") is True,
             module_ok=module_ok, modules_check_ok=modules_check_ok,
             symbols_ok=symbols_verdict, rom_ok=rom_ok,
@@ -4039,7 +4234,8 @@ def cmd_linkcheck(args):
         else:
             print(f"Result: NOT partitioned-link-verified ({n_ok}/"
                   f"{len(partial_rows)} text contributions; data_ok="
-                  f"{partition_data_ok}; full ROM exact="
+                  f"{partition_data_ok}; storage aliases exact={storage_aliases_ok}; "
+                  "full ROM exact="
                   f"{report.get('rom', {}).get('matchesStockRom') is True}).")
     elif partial:
         n_ok = sum(1 for _o, _s, v in partial_rows if v["identical"])
@@ -4119,11 +4315,13 @@ def cmd_linkcheck(args):
     return 0 if verified else 1
 
 
-def partitioned_link_ready(*, equivalent, data_ok, artifacts_ok, module_ok,
+def partitioned_link_ready(*, equivalent, data_ok, storage_aliases_ok, artifacts_ok,
+                           module_ok,
                            modules_check_ok, symbols_ok, rom_ok, rom_identical,
                            no_stray_outputs):
     """The deliberately strict, full-ROM-only partitioned-link result gate."""
-    return all((equivalent, data_ok, artifacts_ok, module_ok, modules_check_ok,
+    return all((equivalent, data_ok, storage_aliases_ok, artifacts_ok, module_ok,
+                modules_check_ok,
                 symbols_ok, rom_ok is True, rom_identical, no_stray_outputs))
 
 
@@ -4215,6 +4413,7 @@ def _partition_attempt_record(report):
             "errors": owned.get("errors"),
         },
         "vtableRebias": report.get("vtableRebias"),
+        "linkedStorageAliases": report.get("linkedStorageAliases"),
         "objectHashes": report.get("partitionedObjects"),
         "artifactAudit": _compact_partition_artifact(report),
         "ranges": report.get("tuRanges"),

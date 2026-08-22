@@ -384,8 +384,14 @@ class Isolate(unittest.TestCase):
         symbols = list(symtab.iter_symbols())
         index, vtable = next((i, s) for i, s in enumerate(symbols) if s.name == "_ZTV1P")
         section = elf.get_section(vtable["st_shndx"])
+        donor_name = "_ZN1PD2Ev"
+        donor_index, donor = next((i, s) for i, s in enumerate(symbols)
+                                  if s.name == donor_name)
+        self.assertEqual(donor["st_shndx"], "SHN_UNDEF")
         policy = {"_ZTV1P": {"bias": 8, "size": vtable["st_size"],
-                              "section": section.name}}
+                              "section": section.name,
+                              "storageAlias": {"symbol": "data_2000", "size": 8,
+                                               "donor": donor_name}}}
         out, report = OI.rebias_object_symbols(raw, policy)
         self.assertIsNone(report["error"])
         rebased = ELFFile(io.BytesIO(out))
@@ -393,7 +399,36 @@ class Isolate(unittest.TestCase):
                    if s.name == "_ZTV1P")
         self.assertEqual(got["st_value"], 8)
         self.assertEqual(got["st_size"], vtable["st_size"] - 8)
+        alias = next(s for s in rebased.get_section_by_name(".symtab").iter_symbols()
+                     if s.name == "data_2000")
+        self.assertEqual((alias["st_value"], alias["st_size"], alias["st_shndx"]),
+                         (0, 8, got["st_shndx"]))
+        self.assertEqual((alias["st_info"]["bind"], alias["st_info"]["type"]),
+                         ("STB_GLOBAL", "STT_OBJECT"))
+        self.assertFalse(any(s.name == donor_name for s in
+                             rebased.get_section_by_name(".symtab").iter_symbols()))
         self.assertEqual(section.data(), rebased.get_section(got["st_shndx"]).data())
+
+        missing_donor = {"_ZTV1P": {**policy["_ZTV1P"],
+                                     "storageAlias": {"symbol": "data_2000", "size": 8,
+                                                      "donor": "missing"}}}
+        refused, why = OI.rebias_object_symbols(raw, missing_donor)
+        self.assertIsNone(refused)
+        self.assertIn("has 0 symbol-table slots", why["error"])
+
+        long_alias = {"_ZTV1P": {**policy["_ZTV1P"],
+                                  "storageAlias": {"symbol": "data_name_that_is_too_long",
+                                                   "size": 8, "donor": donor_name}}}
+        refused, why = OI.rebias_object_symbols(raw, long_alias)
+        self.assertIsNone(refused)
+        self.assertIn("does not fit donor", why["error"])
+
+        live_donor = {"_ZTV1P": {**policy["_ZTV1P"],
+                                  "storageAlias": {"symbol": "data_2000", "size": 8,
+                                                   "donor": "_ZTI1P"}}}
+        refused, why = OI.rebias_object_symbols(raw, live_donor)
+        self.assertIsNone(refused)
+        self.assertIn("not an exact deadstripped", why["error"])
 
         endian = "<" if elf.little_endian else ">"
         entry = symtab.header["sh_offset"] + index * 16
@@ -448,6 +483,24 @@ class Isolate(unittest.TestCase):
         refused, why = OI.rebias_object_symbols(bytes(bad), policy)
         self.assertIsNone(refused)
         self.assertIn("targets rebased symbol", why["error"])
+
+        bad = bytearray(raw)
+        patched = False
+        for relsec in elf.iter_sections():
+            if not isinstance(relsec, RelocationSection) \
+                    or relsec.header["sh_info"] != vtable["st_shndx"]:
+                continue
+            reloc = next(iter(relsec.iter_relocations()), None)
+            if reloc is None:
+                continue
+            r_info = (donor_index << 8) | reloc["r_info_type"]
+            struct.pack_into(endian + "I", bad, relsec.header["sh_offset"] + 4, r_info)
+            patched = True
+            break
+        self.assertTrue(patched)
+        refused, why = OI.rebias_object_symbols(bytes(bad), policy)
+        self.assertIsNone(refused)
+        self.assertIn("still referenced", why["error"])
 
     def test_vtable_addend_is_corrected_to_zero(self):
         """8 -> 0, because the ROM symbol is already past the preamble."""

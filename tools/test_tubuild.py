@@ -1053,12 +1053,61 @@ def test_partitioned_vtable_rebias_needs_one_unique_configured_public_home():
             "_ZTV1P": [("ov999", 0x2008), ("arm9", 0x2008)]}
         _policies, reasons = tubuild.partition_vtable_rebiases(entry, claims)
         assert any("one unique configured public home" in reason for reason in reasons)
+
+        alias_entry = {"module": "ov999", "functions": [],
+                       "compiler_only_output": [{"symbol": "_ZN1PD2Ev",
+                                                  "disposition": "deadstrip",
+                                                  "reason": "compiler-only D2"}],
+                       "data": [{
+                           "symbol": "_ZTV1P", "address": "0x2008",
+                           "emitted_storage_address": "0x2000",
+                           "address_point_bias": "0x8", "size": "0x20",
+                           "storage_alias": {
+                               "symbol": "data_2000", "address": "0x2000",
+                               "size": "0x8", "binding": "STB_GLOBAL",
+                               "type": "STT_OBJECT",
+                               "reuse_compiler_only_symbol": "_ZN1PD2Ev"}}], "bss": []}
+        baseline = {
+            "data_2000": [{"address": 0x2000, "size": 8,
+                           "binding": "STB_GLOBAL", "type": "STT_OBJECT",
+                           "sectionIndex": 4, "section": ".data"}],
+            "_ZTV1P": [{"address": 0x2008, "size": 0x18,
+                        "binding": "STB_GLOBAL", "type": "STT_OBJECT",
+                        "sectionIndex": 4, "section": ".data"}],
+        }
+        tubuild.all_symbol_homes = lambda: {
+            "_ZTV1P": [("ov999", 0x2008)], "data_2000": [("ov999", 0x2000)]}
+        policies, reasons = tubuild.partition_vtable_rebiases(
+            alias_entry, claims, baseline_symbols=baseline, baseline_sha256="a" * 64)
+        assert reasons == []
+        alias = policies["_ZTV1P"]["storageAlias"]
+        assert alias["donor"] == "_ZN1PD2Ev"
+        assert alias["baseline"]["elfSha256"] == "a" * 64
+        assert tubuild.manifest_storage_alias_rows(alias_entry)[0][1]["size"] == "0x8"
+
+        wrong = {key: [dict(row) for row in value] for key, value in baseline.items()}
+        wrong["data_2000"][0]["size"] = 0
+        _policies, reasons = tubuild.partition_vtable_rebiases(
+            alias_entry, claims, baseline_symbols=wrong, baseline_sha256="b" * 64)
+        assert any("baseline metadata differs" in reason for reason in reasons)
+
+        original_linked = tubuild.linked_symbol_rows
+        try:
+            tubuild.linked_symbol_rows = lambda _path, _names: (baseline, None)
+            proof = tubuild.verify_linked_storage_aliases("ignored.o", policies)
+            assert proof["ok"] and proof["rows"][0]["exact"]
+            tubuild.linked_symbol_rows = lambda _path, _names: (wrong, None)
+            proof = tubuild.verify_linked_storage_aliases("ignored.o", policies)
+            assert not proof["ok"]
+        finally:
+            tubuild.linked_symbol_rows = original_linked
     finally:
         tubuild.all_symbol_homes = original
 
 
 def test_partitioned_result_gate_requires_every_full_rom_proof():
-    good = dict(equivalent=True, data_ok=True, artifacts_ok=True, module_ok=True,
+    good = dict(equivalent=True, data_ok=True, storage_aliases_ok=True,
+                artifacts_ok=True, module_ok=True,
                 modules_check_ok=True, symbols_ok=True, rom_ok=True,
                 rom_identical=True, no_stray_outputs=True)
     assert tubuild.partitioned_link_ready(**good)
