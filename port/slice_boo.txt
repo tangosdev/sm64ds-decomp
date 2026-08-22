@@ -194,6 +194,41 @@
 #       hal/scene_mg_faces.cpp beside func_ov004_020ae858 because that is where
 #       this family's ov004 traps live, NOT in this lane's own hal file.
 #
+# ---- NO ELEMENT VTABLES, AND THAT IS MEASURED THREE WAYS ------------------
+#
+# Run mg9 lane S381 found that dScMgMCarlo_c's factory builds eighty card
+# objects whose ELEMENT class has its own two-slot vtable parked in each
+# record's word 0, that the scene's Render dispatches through it, and that
+# nothing in the ovr/mark/nosrc columns or in any scene-table derivation can
+# see it -- a seat that misses one links, boots, and jumps to a raw DS address
+# on the first RENDERED frame. This class has none, and the claim is three
+# measurements rather than an absence of evidence:
+#
+#   1. ALLOCATIONS. A sweep of all 80 src TUs in the closure for
+#      ActorBase::operator new, Memory::Allocate and the raw allocator
+#      addresses finds exactly ONE hit in the whole class:
+#      src/MgHideAndBooSeek_Spawn.c's own 19496-byte scene object. Nothing else
+#      this class reaches allocates anything, so there is no second object for
+#      a second vtable to sit in. Its sixteen 0x24-stride records at +0x4600
+#      and its twenty at +0x4660 are FIELDS OF THE SCENE OBJECT, not separate
+#      allocations.
+#   2. WHAT THE POOL WORDS POINT AT. Every literal-pool word in the closure
+#      (115 distinct) was tested for the vtable shape -- does it point at three
+#      or more consecutive words that look like DS addresses -- and eight
+#      pass. Seven of the eight fail the decisive test, which is the one
+#      section 14 uses to name a class: NO relocation lands on the word BEFORE
+#      them, so none has a type_info and none is a vtable. Their contents are
+#      ov006 DATA addresses (0x02134xxx..0x0213axxx), not code. The eighth is
+#      data_ov006_0213fa0c, this class's own table, whose word before DOES
+#      carry from:0x0213fa08 to:0x0213f9b4 and whose name reads
+#      "13dScMgTeresa_c".
+#   3. THE RENDER PATH RAN. S381's hazard bites on the first rendered frame,
+#      and every run in this lane's proof set until then had
+#      SM64DS_SCENE_NO_RENDER=1, which is exactly the blindness section 15
+#      records. Scene 387 was re-run WITH render under SM64DS_FAULTS_FATAL=1 at
+#      300 and at 1200 frames: vtable slot 9 is entered 300 and 1200 times, both
+#      runs exit 0, and no dispatch leaves the host.
+#
 # ---- ONE TU IS HOST-COPIED FOR A COMPILE DEFECT, NOT FOR THE WALL ---------
 #
 # src/func_ov006_021203fc.c is vtable slot 0 (InitResources) and MSVC refuses
@@ -232,6 +267,21 @@
 # port/slice_*.txt -- checked against all of them, because CMake dedupes only
 # identical absolute paths and a second copy becomes a second object (the
 # LNK2005 the flower slice records for _ZN8Particle10SysTrackerD1Ev).
+#
+# AND THE BRACKET TRAP IS CHECKED RATHER THAN AVOIDED BY HABIT. Run mg9 lane
+# S381 found that an unmatched open square bracket anywhere in a slice comment
+# makes CMake's file(STRINGS) swallow every source line after it, and that the
+# symptom is a wave of unresolved externals that reads like a wrong seat rather
+# than like a parse.
+#
+# THIS PARAGRAPH PROVED IT ON ITSELF. Its first draft quoted the character
+# instead of naming it, and the very next build failed with LNK2019 on
+# func_ov006_02120348 and func_ov006_0211cbd0 -- the two slice lines whose
+# names happen to sort after the comment -- while every static check over the
+# file still counted 75 source lines. THAT IS THE WHOLE HAZARD IN ONE
+# OBSERVATION: the file reads correct to every reader except the one that
+# matters. The character is named in words here, brackets balance line by line
+# (7 and 7, none unbalanced), and address ranges are written 0xAAAA..0xBBBB.
 #
 # ---- THE ov006 LINES -------------------------------------------------------
 #

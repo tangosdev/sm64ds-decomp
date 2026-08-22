@@ -268,8 +268,12 @@ static int __fastcall boo_v20(void *, void *)
    slot-19 defect port/unmatched/MgBase_ShadowSlot19.cpp exists for, arriving
    at a different slot. hal/scene_mg.cpp's mb_v34 has the one-argument
    declaration this thunk used to have and is on aritycheck's baseline as
-   pre-existing debt; it is left alone here because the same measurement says
-   nothing reaches it either. */
+   pre-existing debt. RUN mg9 LANE S371 REPORTED THAT DEFECT and the run's
+   standing rule is that the repair belongs to whichever lane can WITNESS a
+   slot-34 dispatch. THIS LANE CANNOT: its census reads v34 zero on every run,
+   at 300 and at 1200 frames, with and without render. So mb_v34 is left
+   exactly as S371 reported it and only this class's own declaration is made
+   honest, which is what the plain-name ratchet asked for. */
 static int __fastcall boo_v34(void *s, void *, int cx, int cy, int val, int n)
 { BOO(34); func_ov006_021200dc((int)(size_t)s, cx, cy, val, n); return 0; }
 
