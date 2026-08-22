@@ -590,10 +590,32 @@ static int  __fastcall mb_v34(void *s, void *)     { MG_SLOT(34); func_ov004_020
  *
  * NOTHING HAD EVER CALLED IT, which is why it stood. None of the six classes
  * seated before dScMgPanel_c dispatches slot 35, and the curling canary (scene
- * 374, 300 frames) reproduces its 32557/32557/0 across this repair. This class
- * dispatches it every frame: func_ov006_021057f0 gates its entire
- * data_ov006_02142820 state table on the answer, so a constant 0 would have
- * run that dispatch on every frame the ROM skips it. */
+ * 374, 300 frames) reproduces its 32557/32557/0 across this repair.
+ *
+ * WHAT DISPATCHES IT HERE, MEASURED RATHER THAN ASSUMED. An earlier version of
+ * this block said "this class dispatches it every frame" through
+ * func_ov006_021057f0. THE RUN SAYS ONCE, and says which caller. Four bodies in
+ * dScMgPanel_c's closure hold a genuine `ldr rN,[rM,#0x8c]` dispatch --
+ * func_ov006_021053a8 (0x02105480), _021057f0 (0x021057fc), _02106168
+ * (0x021061ec) and _021063a0 (0x021063b0) -- and only two of the four have a
+ * compiled body: 021053a8 and 02106168 have no delink block and no src, so
+ * 02106168 is a trap and 021053a8 is never entered. Of the two that remain,
+ * func_ov006_021063a0 has exactly TWO callers in the whole of ov006 (relocs
+ * from:0x0210779c inside slot 0 and from:0x02107294 inside slot 18) and
+ * func_ov006_021057f0 has exactly one (from:0x02106ecc, inside
+ * func_ov006_02106eb8). And func_ov006_02106eb8 has NO arm_call anywhere in
+ * the overlay at all -- its single reference is a LOAD from 0x0213dc6c, which
+ * is pair p5 of data_ov006_02142888 -- so it is reachable only as a state, and
+ * a run in which no state 5 is dispatched is a run in which 021057f0 cannot
+ * execute.
+ *
+ * So on a 1200-frame boot with init 1, state-reset 0 and a slot-35 count of
+ * exactly 1, the single dispatch is slot 0 -> 021063a0 on the INIT PATH, and
+ * 021057f0 never runs at all -- the class settles in its top-level bodiless
+ * state long before state 5 comes round again. THE REPAIR IS STILL NECESSARY
+ * AND ITS REASON MOVES: it is not that a constant 0 would misfire every frame,
+ * it is that the one call that does happen decides which of the two board
+ * layouts InitResources builds. */
 static int  __fastcall mb_v35(void *s, void *)
 { MG_SLOT(35); return func_ov004_020ad660((int *)s); }
 
@@ -3056,10 +3078,13 @@ extern "C" void port_scene_mg_coin_hits(void)
 //
 // NOTHING HAD EVER CALLED IT, which is why it survived: the six classes seated
 // before this one never dispatch slot 35, and the curling canary (scene 374)
-// reproduces byte for byte across the repair. dScMgPanel_c dispatches it every
-// frame, through func_ov006_021057f0, as the gate on its whole 02142820 state
-// table -- `ldr r1,[r0]; ldr r1,[r1,#0x8c]; blx r1` at 0x021057f4 -- so a
-// constant 0 would have run that dispatch on every frame the ROM skips it.
+// reproduces byte for byte across the repair. dScMgPanel_c dispatches it ONCE
+// PER BOOT, from func_ov006_021063a0 on the init path -- an earlier version of
+// this paragraph said "every frame, through func_ov006_021057f0" and the run
+// refutes both halves; the mb_v35 block above carries the measurement and the
+// four dispatch sites. The gate decides WHICH OF TWO BOARD LAYOUTS
+// InitResources builds, so a constant 0 silently picked one, which is a worse
+// failure to own than a per-frame predicate because no slot census shows it.
 
 extern "C" {
 /* the class's own vtable, in the ov006 mount. 36 slots, span-checked. */

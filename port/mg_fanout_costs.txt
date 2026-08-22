@@ -1344,12 +1344,30 @@ for 0x17c; the arm9 spawn table at 0x02090e54 holds one row for it, in id order
 between 0x17b's and 0x17d's. So "Puzzle Panel" and "Puzzle Panic" are not two
 ids and not two classes. What the ROM has is a gate on VTABLE SLOT 35 --
 dScMgBase_c's func_ov004_020ad660, `return (this[2] & 0xff) != 0` -- read at
-two sites: func_ov006_021057f0 skips its entire data_ov006_02142820 state
-dispatch when it answers nonzero (0x021057f4: ldr r1,[r0]; ldr r1,[r1,#0x8c];
-blx r1), and func_ov006_02106168 picks the board layout from
-data_ov006_0213dd4c or data_ov006_0213dd58 on the same answer. WHICH VALUE IS
-WHICH TITLE IS NOT DERIVED and this lane does not guess it; on the port's
-direct scene boot the byte reads 0.
+FOUR sites, and the way to find all four is the reusable part. An earlier
+version of this paragraph said "two sites" and named func_ov006_021057f0 and
+_02106168; review found it low. Scan the overlay image for `ldr Rd,[Rn,#0x8c]`
+WITH Rn NEITHER pc NOR sp -- that filter is the whole trick, because the same
+encoding with Rn = pc is an ordinary literal-pool load, and an unfiltered scan
+returns 92 hits in ov006 against 14 real ones. This class's four:
+
+    0x02105480  func_ov006_021053a8   NO SRC, NO DELINK -- never entered
+    0x021057fc  func_ov006_021057f0   compiled; skips the whole 02142820 state
+                                      dispatch when the gate answers nonzero
+    0x021061ec  func_ov006_02106168   NO SRC, NO DELINK -- trapped; the site
+                                      that picks the board layout from
+                                      data_ov006_0213dd4c or _0213dd58
+    0x021063b0  func_ov006_021063a0   compiled; two callers in all of ov006,
+                                      slot 0 (0x0210779c) and slot 18
+                                      (0x02107294)
+
+Only TWO of the four are in a body the port compiles. func_ov006_02106a08 is
+NOT a fifth: its word at 0x02106a0c is e59f208c, `ldr r2,[pc,#0x8c]`, fetching
+the constant 0x4e30 -- the exact false positive the Rn filter exists to drop,
+recorded here so nobody re-finds it as a site.
+
+WHICH VALUE IS WHICH TITLE IS NOT DERIVED and this lane does not guess it; on
+the port's direct scene boot the byte reads 0.
 
 THE WALL COLUMN IS LOW BY TWO FOR THIS CLASS AND THE REASON GENERALISES.
 Section 4 costs the wall at "five dispatching TUs to host-copy" per minigame.
@@ -1402,10 +1420,27 @@ src/func_ov004_020ad660.c defines `int func_ov004_020ad660(int *r0) { return
 stack in place of `this`, and the thunk returned a constant 0 instead of the
 answer. It is the family lane BASESET's slot-18/19 repair and lane FDR2's
 Scene::BeforeBehavior repair belong to, and it survived six seated classes
-because none of them dispatches slot 35. THIS ONE DOES, every boot, as the gate
-on a whole state table. FIXED in hal/scene_mg.cpp; the curling canary
-reproduces 32557/32557/0 across the repair, which is the check that says the
-fix touched nobody else.
+because none of them dispatches slot 35. THIS ONE DOES. FIXED in
+hal/scene_mg.cpp; the curling canary reproduces 32557/32557/0 across the
+repair, which is the check that says the fix touched nobody else.
+
+  HOW OFTEN IT FIRES IS MEASURED, AND IT IS NOT "every frame". This section
+  first said the class dispatches slot 35 every frame through
+  func_ov006_021057f0. The run says ONCE in 1200 frames, and the arithmetic
+  pins the caller without instrumenting anything: func_ov006_021063a0 is
+  reached only from slot 0 and slot 18, the run reports init 1 and state-reset
+  0, and the slot-35 counter reads exactly 1 -- so the single dispatch is slot
+  0 -> 021063a0 on the INIT PATH. func_ov006_021057f0's only caller is
+  func_ov006_02106eb8, state slot 5 of the Behavior's table, and the class
+  settles in its top-level bodiless state before that state comes round again,
+  so 021057f0 never runs at all on an unattended boot.
+
+  THE REPAIR IS NO LESS NECESSARY AND ITS REASON MOVES, which is the useful
+  correction rather than the number. A once-per-boot gate that decides WHICH OF
+  TWO BOARD LAYOUTS InitResources builds is a worse thing to get wrong than a
+  per-frame predicate: it is unobservable in a slot-hit census, it fires before
+  any state runs, and a constant 0 silently picks a layout. A fan-out lane
+  should not read a low dispatch count as a low-stakes seat.
 
 THE TWO STATE FLOORS ARE ONE STORY, AND IT IS THE MOST USEFUL THING THIS LANE
 FOUND ABOUT WHAT "SEATED" MEANS. The class has three bodies with a config
@@ -1466,6 +1501,17 @@ LINKAGE, measured on both ends on this tree:
 
     module   total  linked  unlinked   linked
     ov006     1854     467      1387    25.2%     (was 414, 22.3%)
+
+  +53 IS THE SLICE LINE COUNT EXACTLY, all 53 of them, and that is worth
+  stating because it settles a question a later lane will ask. ONE of the 53 is
+  bannered NONMATCHING (src/func_ov006_02106aa8.c) and it still counts:
+  port/tools/linkage.py's matched_index() walks src/ with os.walk, keys each
+  .c/.cpp by its filename stem and NEVER OPENS THE FILE, so no banner is ever
+  read and a bannered TU is in the universe like any other. An earlier version
+  of port/slice_ppp.txt asserted the opposite and is corrected there. THE RULE:
+  every slice line moves the headline by one, banner or no banner -- the banner
+  is a statement about byte-matching and linkage is a statement about what the
+  linker kept, and the two never meet.
 
   arm9 1876, ov004 209, ov001 11, ov002 1129 and itcm 6 are unchanged on both
   ends, which is section 5's "the arm9 half comes back for free" and section

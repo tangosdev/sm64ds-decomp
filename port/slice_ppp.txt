@@ -64,12 +64,34 @@
 # for 0x17c and the arm9 spawn table at 0x02090e54 has one row for it, in id
 # order between 0x17b's and 0x17d's, so "Puzzle Panel" and "Puzzle Panic" are
 # not two ids. The class carries a MODE GATE instead: vtable slot 35 is
-# dScMgBase_c's func_ov004_020ad660, `return (this[2] & 0xff) != 0`, and two
-# sites read it -- func_ov006_021057f0 skips its whole 02142820 state dispatch
-# when it answers nonzero (0x021057f4: ldr r1,[r0]; ldr r1,[r1,#0x8c]; blx r1)
-# and func_ov006_02106168 picks its board layout from data_ov006_0213dd4c or
-# data_ov006_0213dd58 on the same answer. WHICH MODE IS WHICH TITLE IS NOT
-# DERIVED HERE and this file does not guess it.
+# dScMgBase_c's func_ov004_020ad660, `return (this[2] & 0xff) != 0`.
+#
+# FOUR SITES READ IT, not two. An earlier version of this paragraph named only
+# func_ov006_021057f0 and _02106168; review found the count low and the whole
+# set was re-derived by scanning extracted/overlays/overlay_0006.bin for
+# `ldr Rd,[Rn,#0x8c]` with Rn NEITHER pc NOR sp -- that filter is the whole
+# trick, because the same encoding with Rn = pc is an ordinary literal-pool
+# load and an unfiltered scan returns 92 hits in ov006 against 14 real ones.
+#
+#   0x02105480  func_ov006_021053a8   NO SRC, NO DELINK -- never entered
+#   0x021057fc  func_ov006_021057f0   compiled; skips the whole 02142820 state
+#                                     dispatch when the gate answers nonzero
+#   0x021061ec  func_ov006_02106168   NO SRC, NO DELINK -- trapped; this is the
+#                                     site that picks the board layout from
+#                                     data_ov006_0213dd4c or _0213dd58
+#   0x021063b0  func_ov006_021063a0   compiled; called only from slot 0
+#                                     (0x0210779c) and slot 18 (0x02107294)
+#
+# So only TWO of the four sit in a body the port compiles, and on a boot the
+# gate fires exactly ONCE, from 021063a0 on the init path -- see the mb_v35
+# block in hal/scene_mg.cpp for the arithmetic that pins it.
+#
+# ONE NEAR MISS IS RECORDED SO IT IS NOT RE-FOUND. func_ov006_02106a08 looks
+# like a fifth site to a scan that does not filter Rn: its word at 0x02106a0c
+# is e59f208c, which is `ldr r2,[pc,#0x8c]` fetching the constant 0x4e30 from
+# 0x02106aa0 -- an object field offset, not a virtual dispatch.
+#
+# WHICH MODE IS WHICH TITLE IS NOT DERIVED HERE and this file does not guess it.
 #
 # ---- 2. HOW THE LIST WAS DERIVED ------------------------------------------
 #
@@ -160,9 +182,20 @@
 #       join, and src/func_ov006_02106aa8.c EXISTS, bannered NONMATCHING
 #       (different op / idiom, div=35). NONMATCHING TUs are routinely sliced
 #       and built by this port, so the state is reachable: the TU is a slice
-#       line below and the address switch has its case. It does NOT move the
-#       linkage headline, because linkage.py counts matched TUs and a bannered
-#       one is decompiled rather than matched.
+#       line below and the address switch has its case.
+#       IT DOES MOVE THE LINKAGE HEADLINE, and an earlier version of this note
+#       said the opposite -- "linkage.py counts matched TUs and a bannered one
+#       is decompiled rather than matched". THAT IS FALSE and a later lane
+#       predicting from it would come out one short. port/tools/linkage.py's
+#       matched_index() walks src/ with os.walk, keys every .c and .cpp by its
+#       FILENAME STEM, and never opens a file -- so it cannot see a banner, and
+#       a bannered TU is in its universe exactly like any other. This lane's
+#       own +53 is the proof: the slice is 53 lines, one of them bannered, and
+#       ov006 moved 414 -> 467. Had the note been right the number would have
+#       been 52.
+#       THE RULE FOR A LATER LANE: every slice line moves the headline by one,
+#       banner or no banner. The banner is a statement about byte-matching, and
+#       linkage is a statement about what the linker kept; the two do not meet.
 #   func_ov006_02106fdc  slot 3 of data_ov006_02142888. Same shape, bannered
 #       NONMATCHING (div=28) -- and it is ALSO one of the ten dispatchers, so
 #       it is host-copied rather than sliced.

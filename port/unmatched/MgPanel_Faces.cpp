@@ -11,10 +11,16 @@
 // is NOT one of this class's twenty-seven states.
 //
 // IT IS WORSE PLACED THAN A STATE WOULD BE. Two vtable slots call it directly,
-// both adjudicated out of the ROM by this lane:
+// both adjudicated out of the ROM by this lane, and the two call sites are
+// DIFFERENT addresses in different bodies:
 //
-//   slot 0  InitResources  0x0210729c  mov r0,r4 ; bl #0x2106168
-//   slot 18 state reset    0x0210729c  (the same call, in the shared tail)
+//   slot 0  InitResources  func_ov006_021073b0, bl #0x2106168 at 0x021077a4
+//   slot 18 state reset    func_ov006_021071fc, bl #0x2106168 at 0x0210729c
+//
+// An earlier version of this comment gave 0x0210729c for BOTH, which is slot
+// 18's site printed twice; slot 0's is 0x021077a4. Corrected on review. The two
+// tails are near-identical -- each runs func_ov006_021067a4, then this body,
+// then _02104b24 -- which is how one address came to stand in for the other.
 //
 // and its own two literals are the pair of three-entry tables the class picks
 // its board layout from:
