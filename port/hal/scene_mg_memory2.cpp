@@ -205,6 +205,10 @@ unsigned port_mg_memory2_state_hits(void);
 unsigned port_mg_memory2_floor_hits(void);
 unsigned port_mg_memory2_nonmatching(void);
 void     port_mg_memory2_field_counts(unsigned *calls, unsigned *hits);
+/* the named trap in unmatched/MgMemory2_Faces.cpp, section 3 there: this
+   class's ONE hard floor, on the Render path. Printed whether or not it
+   fired, so "the render path is complete" is never inferred from silence. */
+unsigned port_mg_memory2_trap_hits(void);
 /* the framework's, from unmatched/MgBase_StateDispatch.cpp */
 void     port_mg_dispatch_counts(unsigned *calls, unsigned *unknown);
 
@@ -461,6 +465,15 @@ extern "C" void port_scene_memory2_hits(void)
                     port_mg_memory2_floor_hits(),
                     fcalls, fhits, calls, unknown);
     }
+
+    /* THE ONE HARD FLOOR, REPORTED WHETHER OR NOT IT FIRED. func_ov006_020f5b98
+       is the sixth call vtable slot 9 (Render) makes, and it has a config
+       symbol, no delink block and no src in either extension. A zero here means
+       Render never got that far on this run, not that the render path is
+       complete. */
+    std::printf("[scene] dScMgMemory2_c floor: the Render callee "
+                "0x020f5b98 (NO SOURCE) trapped %u time(s)\n",
+                port_mg_memory2_trap_hits());
 
     /* The two state indexes the ROM's own dispatchers read, at the offsets
        disassembled in unmatched/MgMemory2_StateDispatch.cpp section 2. +0x53d4

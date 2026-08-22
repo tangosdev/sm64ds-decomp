@@ -3819,7 +3819,12 @@ set(SLICE_MEM_SOURCES hal/scene_mg_memory2.cpp
                       # sites) plus two LIGHT_VECTOR stores that a plain src
                       # build lands in the I/O window. Same pair
                       # unmatched/MgFlower_ModelRender_020c3bf4.cpp carries.
-                      unmatched/MgMemory2_ModelRender_020c1804.cpp)
+                      unmatched/MgMemory2_ModelRender_020c1804.cpp
+                      # REPLACES src/func_ov006_020c06dc.cpp, out of the slice:
+                      # the same shadow-class defect one call deeper, at the
+                      # slot where the wrong body ALSO `ret 4`s and unbalances
+                      # the stack.
+                      unmatched/MgMemory2_ShadowSlot_020c06dc.cpp)
 foreach(line IN LISTS SLICE_MEM_LINES)
     string(STRIP "${line}" line)
     if(line MATCHES "^#" OR line STREQUAL "")

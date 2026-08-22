@@ -159,7 +159,13 @@ src/func_ov006_020c0264.cpp
 src/func_ov006_020c0304.c
 src/func_ov006_020c0364.c
 src/func_ov006_020c057c.cpp
-src/func_ov006_020c06dc.cpp
+# HOST-COPIED (mg6 lane MEM): src/func_ov006_020c06dc.cpp -- the same
+#   local-shadow-class defect as 020c1804 one call deeper, and the worse one:
+#   its `->m()` is the ROM's vtable byte +0xc (UpdateVerts) and MSVC's fourth
+#   word (Virtual10), which is __thiscall with ONE stack parameter and so
+#   `ret 4`s four bytes the caller never pushed. The stack imbalance shifted
+#   every frame above it and func_ov006_020c07a0's own ret jumped into the DS
+#   heap. See port/unmatched/MgMemory2_ShadowSlot_020c06dc.cpp.
 src/func_ov006_020c07a0.c
 src/func_ov006_020c092c.cpp
 src/func_ov006_020c09f8.c
