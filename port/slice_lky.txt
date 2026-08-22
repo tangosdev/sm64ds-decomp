@@ -1,0 +1,326 @@
+# Lane LKY of run mg9: dScMgBSC_c, the "Lucky Stars" minigame.
+#
+# actor id 0x184 (scene 388), spawn symbol MgLuckyStars_Spawn (0x021255f8),
+# SpawnInfo 0x0213fd6c, vtable data_ov006_0213fec8. Every one of those was
+# re-read out of the ROM by this lane rather than taken from the handover.
+# The doubled-id word 0x01840184 occurs EXACTLY ONCE in
+# extracted/overlays/overlay_0006.bin (base 0x020bfec0), at 0x0213fd70, which
+# puts the record at 0x0213fd6c with the factory in the word before it:
+#
+#     0213fd6c  f8 55 12 02   0x021255f8   the factory
+#               84 01 84 01   388, 388     the id, twice
+#
+# ---- 1. THE CLASS NAME IS THE ROM'S OWN RTTI, NOT A src SPELLING ----------
+#
+# The word IMMEDIATELY BEFORE a class's vtable is its type_info, that record's
+# second word is the name pointer and its THIRD is the base's type_info. Read
+# out of the overlay image:
+#
+#     0x0213fec4 -> 0x0213fd8c              the type_info
+#     0x0213fd8c +4 -> 0x0213fd98           "10dScMgBSC_c"
+#     0x0213fd8c +8 -> 0x0213bc64 +4 ->     "19dScMgSingle3DBase_c"
+#
+# So the class is dScMgBSC_c and the spawn symbol is MgLuckyStars -- the same
+# spawn-symbol/class-name split port/mg_fanout_costs.txt section 2 records for
+# curling (MgShuffleShell / dScMgCurling_c) and port/slice_lui.txt for 0x16e.
+# The src spelling agrees (src/func_ov006_021254c0.cpp's recovered header reads
+# dScMgBSC_c) and is the weaker witness, because a per-TU placeholder can be
+# wrong and a relocation cannot.
+#
+# ---- 2. THE HIERARCHY IS THREE DEEP, AND THE HANDOVER DID NOT SAY SO ------
+#
+#     Scene -> dScMgBase_c         data_ov004_020bc0c0  36  (the framework's)
+#           -> dScMgSingle3DBase_c data_ov006_0213e448  36  ovr 8,  mark 6
+#           -> dScMgBSC_c          data_ov006_0213fec8  36  ovr 14, mark 12
+#
+# port/mg_fanout_costs.txt section 3 lists one vtable for 0x184 and says nothing
+# about an intermediate base, so a lane that filled one derived table would have
+# left SIX of its own slots (2, 5, 7, 10, 26, 33) holding raw DS words. Section
+# 13's CORRECTION 1 predicted this would fire again and it does. Both edges are
+# read off code, and the RTTI base link above is a third witness the earlier
+# lanes did not have:
+#
+#   src/MgLuckyStars_Spawn.cpp calls func_ov004_020b2adc(p), writes
+#   data_ov006_0213e448 into p[0], constructs Particle::SysTracker at +0x471c,
+#   then writes data_ov006_0213fec8 over it.
+#   src/func_ov006_0212497c.cpp (slot 17, D0) unwinds in the opposite order,
+#   0x0213fec8 first and 0x0213e448 second; src/func_ov006_02124908.c (slot 16,
+#   D2) does the same without the Deallocate.
+#
+# THE OVERRIDE SPLIT, computed word by word against both base tables:
+#
+#   14 overrides vs dScMgBase_c  =  8 OWN + 6 MIDDLE-BASE
+#     own     slots 0, 6, 9, 16, 17, 18, 19, 21
+#     middle  slots 2, 5, 7, 10, 26, 33
+#
+# which is the SAME middle-slot set dScMgMemory2_c has, because both classes
+# override 16 and 17 with their own destructors and inherit the other six.
+#
+# ---- 3. THE WIDTH IS 36, CHECKED FOUR WAYS -------------------------------
+#
+# port/mg_fanout_costs.txt section 11 measured that twelve of twenty-nine widths
+# in its own section 3 table were phantoms. 0x184 IS ONE OF THE TWELVE. All
+# three of its checks were redone here, plus a fourth this lane adds:
+#
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol after
+#      data_ov006_0213fec8 at data_ov006_0213ff58, exactly 0x90 = 36 words on,
+#      so a 37th slot cannot exist inside the table. The middle table's next
+#      symbol is data_ov006_0213e4d8, also exactly 0x90 on.
+#   2. TERMINAL SLOT. Slot 35 of both tables holds 0x020ad660, the word every
+#      dScMgBase_c-derived table holds there.
+#   3. WHAT THE WORD PAST IT IS. Index 36 of 0x0213fec8 reads 0x0212992c, which
+#      IS a live ov006 code address -- section 11's "where the word happens to
+#      look like a code address is exactly where the eye fails". Section 4
+#      below says whose it is. Index 36 of 0x0213e448 reads 0x050a0a0f.
+#   4. RELOCATION STRIDE, which this lane adds because it needs no symbol and
+#      no judgment. ov006's relocs.txt carries 36 CONTIGUOUS load relocations at
+#      a FOUR-byte stride from 0x0213fec8 to 0x0213ff54 -- one per slot -- and
+#      then the stride JUMPS TO EIGHT from 0x0213ff58 on. A vtable is relocated
+#      every word; an mwcc member-pointer table is relocated every other word.
+#      The stride change is where the table ends.
+#
+# ---- 4. WHOSE BYTES A 37TH SLOT WOULD TAKE, NAMED --------------------------
+#
+# Section 11 asks a lane to say WHICH class owns the bytes past its table, and
+# for this class the chain is complete and it leads somewhere useful.
+#
+#   data_ov006_0213ff58 is an mwcc pair {code 0x0212992c, adj 0}.
+#   src/__sinit_ov006_021333e0.c line 50 copies it:
+#       data_ov006_02143070.p3 = data_ov006_0213ff58;
+#
+# That constructor is NOT this class's. The .init delink blocks separate them
+# cleanly -- __sinit_ov006_0213326c owns 0x0213326c..0x021333e0 and
+# __sinit_ov006_021333e0 owns 0x021333e0..0x0213356c -- and the relocation that
+# reaches THIS class's only table (data_ov006_02142f94) comes from 0x021333a8,
+# inside the FIRST block. The four tables the second block builds
+# (data_ov006_02143020/38/50/70) are reached only from literal pools at
+# 0x02129e20, 0x02129e24, 0x0212a270 and 0x0212a3b4.
+#
+# THIS LANE FIRST ATTRIBUTED ALL FIVE TABLES TO THIS CLASS AND THAT WAS WRONG.
+# The four arity-1 tables' source pairs (0x0213ff58..0x0213ffc8) sit immediately
+# after this class's vtable, their dispatchers sit inside the address range that
+# looks like a continuation of this class's code, and stategen reads either
+# constructor happily. What separates them is the relocation set and the .init
+# block boundary, which is the run law's "sinit source is slot-number ground
+# truth" doing exactly the job it is there for. A lane that trusted the address
+# neighbourhood would have host-copied three of another class's dispatchers and
+# routed fourteen of its states.
+#
+# AND THE OWNER RESOLVES SECTION 3's ONE BLANK ROW. The four tables belong to
+# the class whose vtable is data_ov006_0214000c: it carries the ActorBase
+# signature at slots 13/14/15 (0x0204357c, 0x0204349c, 0x02043494 at
+# 0x02140040/44/48), its slot 35 is 0x020ad660, and its slot 6 is
+# func_ov006_021283a4, which is the only caller of func_ov006_0212a2e0, which is
+# the only reader of data_ov006_02143038. Its .data pairs bracket
+# MgSnowballSlalom_SpawnInfo at 0x0213ffb8 and skip it, exactly the way this
+# class's pairs bracket MgLuckyStars_SpawnInfo at 0x0213fd6c and skip it.
+#
+# So data_ov006_0214000c is MgSnowballSlalom's vtable -- the row section 3
+# leaves blank with "no load relocation inside that factory points at any of the
+# thirty-two signature tables". THAT IS TRUE AND IT IS NOT THE WHOLE STORY:
+# src/MgSnowballSlalom_Spawn.cpp does not write a vtable at all. It allocates
+# 0xc59c and tail-calls func_ov006_021295ac(p), and THAT body writes
+# data_ov006_0213e448 and then data_ov006_0214000c -- so 0x179 is a fourth class
+# under the same middle base, and the indirection section 3 hypothesised ("its
+# factory reaches its vtable through an indirection the other twenty-nine do not
+# use") is one delegated constructor. THIS LANE DOES NOT SEAT 0x179 and has not
+# derived its width, its markers or its closure; the row is reported so whoever
+# takes it starts from a resolved vtable rather than a blank.
+#
+# ---- 5. FOURTEEN OVERRIDES, TWELVE MARKERS, ZERO WITHOUT A SOURCE ---------
+#
+# port/tools/vtablerows.py --vtable 0x0213fec8 --width 36 prints ovr 14,
+# mark 12, nosrc 0, which is exactly what section 3's row predicts. ALL TWELVE
+# MARKERS WERE DISASSEMBLED AND RULED BY THIS LANE before a word was seated,
+# out of extracted/overlays/overlay_0006.bin at base 0x020bfec0 (the shipped
+# image, not a dsd export), with the evidence appended to
+# port/tools/inferred_stub_adjudicated.txt. RESULT: 12 REAL_DECOMP, 0 guesses.
+#
+# Five of the twelve are the middle base's shared glue and were already ruled by
+# run link60 lanes MGA and MGB; they are re-read here rather than cited, and
+# this lane's reading agrees with both earlier ones.
+#
+# TWO OF THE TWELVE CARRY A LIVE ARGUMENT AND THE SEAT MUST FORWARD IT.
+# Slots 18 (func_ov006_02125364) and 19 (func_ov006_0212527c) both BRANCH on
+# their second argument -- 0x02125364 compares it against 4, 5 and 3, and
+# 0x0212527c against 4 and 5. Every seated class before this one had a slot-18
+# body that ignored the value, so its thunk existed only so __fastcall would
+# clean four bytes off the stack. A thunk of that shape here would hand both
+# bodies stack litter and let the 4/5 arms fire at random, and nothing would
+# diagnose it. hal/scene_mg_luckystars.cpp forwards both and prints them.
+#
+# ---- 6. THE WALL IS ONE TU, AND THE DETECTOR IS THE ROM -------------------
+#
+# EXCLUDED and host-copied in port/unmatched/MgBSC_StateDispatch.cpp:
+#
+#     src/func_ov006_021254c0.cpp   vtable SLOT 6, the Behavior
+#
+# Its src declares the pair table inside extern "C", so it mangles as the plain
+# C name the ov006 mount already defines: the link is satisfied, the compile is
+# clean, and MSVC strides an eight-byte table by four from slot 1 on. It is one
+# of the two SILENT shapes port/mg_fanout_costs.txt section 4 names, and it is
+# ALSO vtable slot 6 -- the slot every seat wires by name -- which is section
+# 14's practical rule firing a second time.
+#
+# THE CLAIM THAT ONE TU IS THE WHOLE WALL RESTS ON THE IMAGE. Section 4 says the
+# two prescribed detectors (a link, a `::*` sweep) are a floor rather than a
+# census because the plain-int third shape defeats both. This lane scanned the
+# OVERLAY for the five-instruction encoding itself --
+#     add Rd,Rn,Rm,asr #1   then   ands Rx,Ry,#1
+# -- which is blind to spelling. Over all of ov006 it returns 114 sites; over
+# this class's code span (0x02124908..0x0212a3c0) it returns exactly ONE, at
+# 0x021254dc. The `::*` sweep over this slice's closure agrees and adds nothing.
+# Details in MgBSC_StateDispatch.cpp section 3.
+#
+# ALSO EXCLUDED, both against existing host copies rather than against this
+# class:
+#     src/func_ov006_0210a6e4.cpp   slot 2, the argument ride-through. Defined
+#                                   by unmatched/MgFlower_Slot2.cpp as
+#                                   port_mg_flower_after_init; listing it would
+#                                   be an LNK2005. Same call slice_mem.txt makes.
+#     src/func_ov004_020b0620.cpp   dScMgBase_c slot 7, host-copied in
+#                                   unmatched/MgBase_Slot7.cpp since run link60.
+#
+# ---- 7. ONE STATE TABLE, ONE LEVEL DEEP ----------------------------------
+#
+#   table                n  arity  dispatched by
+#   -------------------  -  -----  -------------------------------------------
+#   data_ov006_02142f94  14   0    func_ov006_021254c0  (vtable slot 6)
+#
+# Fourteen slots, ELEVEN distinct code words (slots 7/8, 9/10 and 12/13 share a
+# body), every adjustment word zero, and every one of the eleven has a matched
+# src TU with no NONMATCHING banner. THIS CLASS HAS NO STATE FLOOR.
+#
+# The arity is HAND-READ off the ROM and not taken from the tool: slot 6's
+# dispatch is `blx r1` with nothing written to r1..r3 between the table load and
+# the call, so the states are called with `this` alone. stategen agrees.
+#
+# THE DEPTH QUESTION section 14 tells a lane to ask is answered NO. None of the
+# eleven state addresses is itself a dispatcher -- the ROM scan in section 6
+# finds one site in the whole class and it is slot 6's -- so there is no second
+# level and no host copy beyond the one.
+#
+# ---- 8. THE STATE ADDRESSES CAME FROM THE CONSTRUCTOR, NOT A SWEEP --------
+#
+# The fourteen source pairs run 0x0213fd0c..0x0213fd84 and the constructor does
+# NOT copy them in address order: slot 0 comes from 0x0213fd7c and slot 10 from
+# 0x0213fd0c. Two words inside that span are not pairs at all:
+#
+#     0x0213fd44  an INT ARRAY. src/func_ov006_02124ec4.c and
+#                 src/func_ov006_02124fd8.c both index it and neither calls it.
+#     0x0213fd6c  MgLuckyStars_SpawnInfo, the factory word and the doubled id.
+#
+# A sweep would have produced sixteen "pairs" and routed two addresses that are
+# not code. This is section 4's curling trap and section 13's Memory Master trap
+# in one class, and the constructor's own list skips both.
+#
+# ---- 9. THE SLICE IS THE DELTA ONLY --------------------------------------
+#
+# The closure was walked over the ROM's arm_call relocation graph from this
+# class's fourteen override bodies, its factory and its eleven state bodies:
+# 539 TUs reached, of which the great majority are already carried by a WIRED
+# slice, 17 are replaced by existing host copies, and 3 are excluded per
+# section 6. That leaves the 87 lines below.
+#
+# THE "WIRED" QUALIFIER IS LOAD-BEARING AND COST THIS LANE ONE PASS. The first
+# delta was taken against every port/slice_*.txt on disk, and eight of those
+# files are not read by port/CMakeLists.txt at all -- port/slice_mga361.txt
+# among them, the 0x169 derivation that was never seated. Counting an unwired
+# slice as coverage hid two TUs this seat genuinely needs
+# (src/func_ov004_020b0620.cpp and src/func_ov006_0210a6e4.cpp, both of which
+# then turned out to be host-copy exclusions rather than slice lines -- but the
+# check is what surfaced them).
+#
+# Both of this class's overlay constructors are already in port/slice_mg1.txt
+# (lines 155 and 156) as part of the thirty-five, so neither is listed here.
+# port/slice_mg1.txt also carries the ov004 framework and the arm9 waves under
+# it; CMake appends every list to the same targets and dedupes identical
+# absolute paths, so nothing is compiled twice.
+
+src/ARMProcessorMode.c
+src/ARMRestoreContext.c
+src/ARMSaveContext.c
+src/Crash.c
+src/DecompressLZ16.c
+src/Geometry_MatrixMultiply3x3.c
+src/LoadFile.c
+src/MgLuckyStars_Spawn.cpp
+src/MultiCopyHalf.c
+src/MultiCopy_Int.c
+src/MultiStore_Int.c
+src/NormalizeVec3.c
+src/SharedFilePtr_Destruct_Anim.c
+src/_ZN13SharedFilePtr19ReallocateModelFileEv.cpp
+src/_ZN13SharedFilePtr4LoadEv.cpp
+src/_ZN13SharedFilePtr9ConstructEj.c
+src/_ZN15ModelComponents6RenderEP9Matrix4x3P7Vector3.cpp
+src/_ZN2GX10EndLoadTexEv.c
+src/_ZN2GX12BeginLoadTexEv.c
+src/_ZN2GX14EndLoadTexPlttEv.c
+src/_ZN2GX16BeginLoadTexPlttEv.c
+src/_ZN3IRQ10EnableIRQsEj.c
+src/_ZN3IRQ11DisableIRQsEj.c
+src/_ZN3IRQ13GetIRQHandlerEj.c
+src/_ZN3IRQ13SetIRQHandlerEjPFvvE.c
+src/_ZN3IRQ15ClearInterruptsEj.c
+src/_ZN3IRQ7DisableEv.cpp
+src/_ZN3IRQ7RestoreEj.cpp
+src/_ZN4CP1514FlushDataCacheEjj.c
+src/_ZN4CP1516WaitForInterruptEv.c
+src/_ZN4CP1519InvalidateDataCacheEjj.c
+src/_ZN4CP1527FlushAndInvalidateDataCacheEjj.c
+src/_ZN4Heap7_SizeofEPv.cpp
+src/_ZN4Heap9_AllocateEji.cpp
+src/_ZN4cstd11fdiv_resultEv.c
+src/_ZN4cstd4fdivEii.c
+src/_ZN5Scene18AfterInitResourcesEj.cpp
+src/_ZN5Scene21AfterCleanupResourcesEj.cpp
+src/_ZN6Memory13operator_new2Ej.cpp
+src/_ZN9ActorBaseC1Ev.cpp
+src/func_02017ab4.c
+src/func_02017acc.c
+src/func_02017e34.c
+src/func_0201817c.c
+src/func_02018598.c
+src/func_020185c0.c
+src/func_020186c0.c
+src/func_02018908.c
+src/func_02018934.c
+src/func_02018a24.c
+src/func_02018d98.c
+src/func_02044534.c
+src/func_0204488c.c
+src/func_02044b30.c
+src/func_0204eda4.c
+src/func_0204ede8.c
+src/func_0204ee10.c
+src/func_02055388.c
+src/func_020553a4.c
+src/func_02055998.c
+src/func_02056e98.c
+src/func_02059fa8.c
+src/func_0205a290.c
+src/func_0205a358.cpp
+src/func_0205c864.c
+src/func_0205caa8.c
+src/func_0206e2f8.c
+src/func_ov004_020b0a38.c
+src/func_ov004_020b5ed0.c
+src/func_ov006_02124908.c
+src/func_ov006_0212497c.cpp
+src/func_ov006_02124a04.c
+src/func_ov006_02124a08.c
+src/func_ov006_02124ae4.c
+src/func_ov006_02124b58.c
+src/func_ov006_02124bb4.c
+src/func_ov006_02124cb4.c
+src/func_ov006_02124dc0.c
+src/func_ov006_02124e1c.cpp
+src/func_ov006_02124ec4.c
+src/func_ov006_02124fd8.c
+src/func_ov006_021250e4.c
+src/func_ov006_02125248.c
+src/func_ov006_0212527c.cpp
+src/func_ov006_02125364.c
+src/func_ov006_021253bc.c
+src/func_ov006_0212551c.cpp
