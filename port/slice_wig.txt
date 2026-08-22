@@ -327,6 +327,22 @@
 # for free" holds for the other 613 functions the closure reaches in main: every
 # one is already linked or already hosted. src/func_0203d5dc.c is the one that
 # was neither.
+#
+# LINKAGE, MEASURED ON BOTH ENDS BY TWO BUILDS OF THIS SAME TREE:
+#
+#     6665 / 11283 (59.1%)  ->  6722 / 11283 (59.6%)     +57
+#
+#     module   base  tip  delta
+#     ov006     737  793   +56    this list's 56 ov006 lines
+#     arm9     1879 1880    +1    src/func_0203d5dc.c
+#     ov004     240  240     0    the measured zero above
+#     ov001      11   11     0
+#     itcm        6    6     0
+#
+# 56 + 1 = 57, WHICH IS THIS FILE'S ACTIVE LINE COUNT EXACTLY. Lane PPP's rule
+# holds here as it did there: every active slice line moves the headline by one,
+# banner or no banner, because port/tools/linkage.py keys on a filename stem and
+# never opens the file.
 
 # ---- arm9: the one line the framework half did not already carry -----------
 src/func_0203d5dc.c

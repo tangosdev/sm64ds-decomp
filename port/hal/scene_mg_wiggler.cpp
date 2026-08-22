@@ -222,6 +222,30 @@
 // Slot 34 does not appear on any of them, so this lane has no witness and does
 // not touch the thunk. Recorded as the negative rather than as silence.
 //
+// NEITHER DOES SLOT 19, WHICH SETTLES lane BOO's CHECK TOO. Scene 387 is the
+// first seated scene whose framework state machine runs, and it exposed a
+// pre-existing crash: src/func_ov004_020b6b40.c and _020b6c9c.c reach vtable
+// slot 19 through a shadow array typed as a plain C pointer, so the caller
+// cleans eight bytes while __fastcall mb_v19 has already cleaned four. BOTH OF
+// THOSE TUs ARE IN THIS CLASS'S ov004 CLOSURE and both are already wired by
+// port/slice_mg1.txt, so the defect is reachable here in principle. IT IS NOT
+// REACHED. On scene 386 the whole framework state machine is idle:
+//
+//     framework state setter: 0 call(s) into func_ov004_020b87e0, 0 dispatched
+//     framework message indices asked for: none
+//     slot 19: absent from the census on every run
+//
+// and every run is clean under SM64DS_FAULTS_FATAL=1 with exit 0, so BOO's
+// signature -- a return address inside the scene object -- does not appear.
+// This lane therefore does NOT replicate BOO's host copy; the fix is BOO's and
+// this is the negative that says so.
+//
+// AND THE SHARED ov004 FLOOR IS NOT THIS CLASS'S EITHER. func_ov004_020ae5c4,
+// which lanes S371 and BOO have both trapped, is NOT in this class's
+// relocation closure at all -- zero hits over the 160 ov004 functions it
+// reaches -- so there is no third trap to avoid adding and no dependency to
+// carry at the merge.
+//
 // ---- 11. THE GAPLESS LATCH IS CALLED AND THE SPLICE IS NOT ---------------
 //
 // hal_gapless_minigames_latch() runs from slot 0 the way every seated
