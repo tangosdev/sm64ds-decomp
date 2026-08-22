@@ -210,6 +210,97 @@ def test_both_definitions_of_a_dual_header_are_read(tmp_path):
     assert idx["Wiggler"]["assert"] == 0x8E8
 
 
+def test_an_offset_comment_may_carry_prose_after_the_number(tmp_path):
+    """`/* 0x501c -- 0x50, destroyed last */` is the same evidence as `/* 0x501c */`.
+
+    The field reader demanded `*/` immediately after the offset, so every field whose
+    comment said anything at all was invisible -- which is most hand-written ones.
+    Four already-typed members read as missing on that alone (dScMgJump_c's `Model`,
+    dScMgSnowball_c's, dScMB_c's `FaderColor`, ModelAnim2's `Animation`), and six more
+    `u8` array markers were hidden with them.  `check_header_offsets.DECL`, the gate
+    this file has to agree with, has always stopped at the number; now so does this.
+    """
+    idx = _index(tmp_path, "dScMgJump_c.h", """\
+        struct dScMgJump_c : dScMgD3DBase_c {
+            s16   unk_5014;        /* 0x5014 */
+            Model mModel;          /* 0x501c -- 0x50, destroyed last, see banner */
+        };
+        typedef char dScMgJump_c_size_must_be_0x5834[sizeof(dScMgJump_c) == 0x5834 ? 1 : -1];
+        """)
+    assert idx["dScMgJump_c"]["fields"][0x5014] == [("s16", "unk_5014")]
+    assert idx["dScMgJump_c"]["fields"][0x501C] == [("Model", "mModel")]
+
+
+def test_a_nested_struct_does_not_swallow_the_fields_below_it(tmp_path):
+    """`struct State { ... };` opened before the first real field took the class with it.
+
+    The reader closed a definition on a `}` in column zero, and a nested block's `};`
+    is indented -- so it entered `State` and never came back out.  Bullet, FlyGuy,
+    HootTheOwl, Player, Snufit and Swoop each read as having ZERO declared fields, and
+    all 26 of their already-typed members were reported as outstanding work.
+    """
+    idx = _index(tmp_path, "Bullet.h", """\
+        struct Bullet : dEnemyBase_c {
+            struct State {
+                u8  pad_00[0x8];
+                void (Bullet::*mMain)();      /* 0x08 */
+            };
+
+            dCcAc_c    mdCcAc_c;        /* 0x110 */
+            dBgCh_Actr mWithMeshClsn;   /* 0x144 */
+            Model      mModel;          /* 0x300 */
+        };
+        typedef char Bullet_size_must_be_0x35c[sizeof(Bullet) == 0x35c ? 1 : -1];
+        """)
+    assert idx["Bullet"]["fields"][0x110] == [("dCcAc_c", "mdCcAc_c")]
+    assert idx["Bullet"]["fields"][0x300] == [("Model", "mModel")]
+    # the nested type's own 0x08 is not one of Bullet's offsets
+    assert 0x08 not in idx["Bullet"]["fields"]
+    assert idx["Bullet"]["bases"] == ["dEnemyBase_c"]
+
+
+def test_a_member_the_base_declares_is_inherited_not_missing(tmp_path):
+    """mwccarm INLINES a base destructor into the derived one.
+
+    So the cartridge shows `~ArmedRotatingPlatform` destroying the `Model` at +0xd4 and
+    the `dBgW_KcMbg` at +0x124 -- both of them dBgActor_c's own members, declared in
+    dBgActor_c's header.  Reading only the derived class's own field list called every
+    one of those an untyped hole; 144 of the 181 findings in the first census were
+    exactly this, across the dBgActor_c and dEnemyBase_c families.
+    """
+    idx = _index(tmp_path, "family.h", """\
+        struct dBgActor_c : dActor_c {
+            Model      mModel;          /* 0x0d4 */
+            dBgW_KcMbg mMeshCollider;   /* 0x124 */
+        };
+        typedef char dBgActor_c_size_must_be_0x320[sizeof(dBgActor_c) == 0x320 ? 1 : -1];
+        struct ArmedRotatingPlatform : dBgActor_c {
+            s16 mAngVelY;               /* 0x31e */
+        };
+        typedef char ArmedRotatingPlatform_size_must_be_0x320[1];
+        """)
+    own, inh = D.declared_at(idx, "ArmedRotatingPlatform", 0x0D4)
+    assert own == [] and inh == [("Model", "mModel")]
+    # and the class's own field is still its own, not the base's
+    own, inh = D.declared_at(idx, "ArmedRotatingPlatform", 0x31E)
+    assert own == [("s16", "mAngVelY")] and inh == []
+
+
+def test_the_base_walk_survives_a_cycle(tmp_path):
+    """Two headers naming each other as bases must not recurse forever."""
+    idx = _index(tmp_path, "cycle.h", """\
+        struct A : B {
+            s32 unk_004;   /* 0x004 */
+        };
+        typedef char A_size_must_be_0x8[1];
+        struct B : A {
+            s32 unk_000;   /* 0x000 */
+        };
+        typedef char B_size_must_be_0x8[1];
+        """)
+    assert D.declared_at(idx, "A", 0x000) == ([], [("s32", "unk_000")])
+
+
 def test_only_an_unconditional_include_counts_as_visible():
     """`#include "Model.h"` inside the `#ifdef __cplusplus` branch is textually above
     the flat C definition and invisible to it.  Three headers were typed against an

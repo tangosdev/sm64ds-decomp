@@ -1,6 +1,7 @@
 #ifndef DSCDSMT_C_H
 #define DSCDSMT_C_H
 #include "dScene_c.h"
+#include "dFdDummy_c.h"
 
 /* One of dScene_c's ten direct children (see the census in dScene_c.h) --
  * the DS Multi-Play scene, per its own coinage (DSMT = "DS MulTi"). It had
@@ -32,18 +33,26 @@
  * with func_02017254(t + 0x54) before calling fBase_c's D2.
  *
  * That range (0x50..0x64, the entire 0x14 bytes dScDSMT_c adds over
- * dScene_c's own 0x50) lines up with the nested RTTI class the ROM's type
+ * dScene_c's own 0x50) opens with the nested RTTI class the ROM's type
  * graph records under this class, dScDSMT_c::graphCallback_c (base
  * dGraph_c::callback_c -- config/arm9/overlays/ov007/symbols.txt has
  * _ZTIN9dScDSMT_c15graphCallback_cE / _ZTSN9dScDSMT_c15graphCallback_cE
  * right next to dScDSMT_c's own RTTI). Two of its slots are independently
  * resolvable (GraphCallback0/2 at slots 0/2 of dGraph_c::callback_c's own
  * table) but recovering graphCallback_c's own internal layout is a
- * separate, later pass -- this header only needs to hold the byte range it
- * occupies, which it does as opaque storage below. (dScDSMT_c::Behavior
- * calls dScene_c::SetFaders with an argument built from this same range,
- * which is consistent with a Fader-shaped member living here without
- * pinning its exact sub-offset.)
+ * separate, later pass, so it stays opaque storage below.
+ *
+ * IT IS NOT THE WHOLE RANGE, though this header used to say it was. The
+ * constructor writes graphCallback_c's base-then-derived vptr pair at 0x50
+ * and NOTHING ELSE below 0x54, and the 0x10 bytes from 0x54 are a
+ * dFdDummy_c: `_ZN9dScDSMT_cD1Ev` calls `_ZN10dFdDummy_cD1Ev` at +0x54,
+ * an arm_call relocation the ROM build checks (arm9 0x02017254; both D1 and
+ * D0 carry the call). tools/dtor_members.py recovers it; D1 and not D2, so
+ * it is a member and not an inlined base. include/dFdDummy_c.h reached the
+ * same placement from the other side -- its own construction note already
+ * said "an embedded member of dScDSMT_c (ov007) at offset 0x54" -- and
+ * dScDSMT_c::Behavior's `SetFaders(c + 0x54)` takes its address. 0x54 +
+ * 0x10 == 0x64 closes the class exactly.
  *
  * VTABLE ORDER follows dScene_c's; dScDSMT_c adds no new virtual. The
  * destructor pair is at slots 16/17 (the fBase_c/dScene_c convention),
@@ -51,10 +60,18 @@
  * _ZN8dScene_cD1Ev / _ZN8dScene_cD0Ev.
  */
 struct dScDSMT_c : dScene_c {
-    u8  unk_050[0x14]; /* 0x050 -- opaque; holds the graphCallback_c
-                                    member constructed by func_02017278 and
-                                    torn down by func_02017254 -- see the
-                                    derivation note above */
+    u8  unk_050[0x4];  /* 0x050 -- opaque; the graphCallback_c sub-object,
+                                    whose own layout is a later pass. The
+                                    constructor writes a base-then-derived
+                                    vptr pair here and touches nothing else
+                                    below 0x54 -- see the note above */
+    dFdDummy_c fader;  /* 0x054 -- member. The cartridge's own ~dScDSMT_c
+                                    calls _ZN10dFdDummy_cD1Ev at +0x054
+                                    (D0/D1), a relocation the ROM build
+                                    checks; recovered by
+                                    tools/dtor_members.py. D1 and not D2, so
+                                    it is this type and not an inlined base.
+                                    Behavior passes &fader to SetFaders. */
 
     /* Declared first -- key function; see the family convention discussed
        in dScene_c.h. Never defined as a real method in any TU: both D1 and

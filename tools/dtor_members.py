@@ -44,6 +44,36 @@ entry; the lattice is (this + k), (sp + k), (imm k) or unknown, with stack slots
 so a spilled `this` survives and the literal pool read so an offset with no ARM
 immediate encoding is still recovered.  Every one of the 2,358 sites yields an offset.
 
+What the header side has to get right
+-------------------------------------
+The cartridge side of this file was right from the start; the HEADER side is what
+lied.  The first census bucketed 181 pairs `NO FIELD AT OFFSET` -- read as "181 pad
+splits waiting to be written" -- and 180 of them were this reader's own defects:
+
+  144  the member is declared in a BASE.  mwccarm inlines a base destructor into the
+       derived one, so `~ArmedRotatingPlatform` destroys dBgActor_c's `Model` at +0xd4
+       itself, and reading only the derived class's own field list called that a hole.
+       `declared_at` walks the chain; those now bucket `INHERITED` and are no work.
+   26  a NAMED NESTED definition swallowed the rest of the class.  The reader closed a
+       definition on a `}` in column zero and a nested `};` is indented, so the
+       `struct State { ... };` these six open before their first real field took `cur`
+       and never gave it back: Bullet, FlyGuy, HootTheOwl, Player, Snufit and Swoop
+       each read as having ZERO declared fields.
+    6  the offset comment carried prose AND the field is a `u8` ARRAY marker.  Now
+       visible, now `DECIDABLE` -- and still held: `apply` refuses them because
+       retyping `u8 mModel1[0x50]` rewrites every consumer that spells it as an array,
+       and their owners' recovered C++ destructors call the member's D1 explicitly in
+       an order Itanium auto-destruction cannot reproduce (their headers say so).
+    4  the offset comment carried prose.  `Model mModel; /* 0x501c -- destroyed last */`
+       did not match a reader that demanded `*/` right after the number.  Now it stops
+       at the number, which is what `check_header_offsets.DECL` -- the gate this file
+       must agree with -- always did.
+    1  a real pad split: dScDSMT_c's dFdDummy_c at +0x54, inside `u8 unk_050[0x14]`.
+
+`test_dtor_members.py` pins all of them.  The lesson generalises: a bucket named for what
+the HEADERS say is only as good as the reader, and a census that is not cross-checked
+against the gate's own parser will invent work.
+
 Five things this file refuses to do
 -----------------------------------
 join on names     An earlier survey in this tree reported "127 classes with no header";
@@ -119,9 +149,17 @@ SIZE_ASSERT = re.compile(r"(\w+)_size_must_be_(0x[0-9a-fA-F]+)")
 # `u8 mFoo;   /* 0x124 */`  -- the original generator's "an object starts here" marker.
 MARKER = re.compile(r"^(\s*)u8(\s+)(\w+)\s*;\s*/\*\s*(0x[0-9a-fA-F]+)\s*\*/\s*$")
 PAD = re.compile(r"^(\s*)u8\s+(pad_[0-9a-fA-F]+)\s*\[\s*(0x[0-9a-fA-F]+|\d+)\s*\]\s*;\s*$")
+# `dCcAc_c mdCcAc_c;   /* 0x110 */`, and also
+# `Model mModel;        /* 0x501c -- 0x50, destroyed last, see banner */`.
+# The offset comment is NOT required to end right after the offset.  It used to be,
+# and every field whose comment carried a word of prose after the number was invisible
+# -- which is most of the hand-written ones.  `check_header_offsets.DECL`, the gate
+# this file has to agree with, has always stopped at the offset; now so does this.
 ANY_FIELD = re.compile(r"^\s*([A-Za-z_]\w*)\s+(\w+)\s*(\[[^\]]*\])?\s*;\s*/\*\s*"
-                       r"(0x[0-9a-fA-F]+)\s*\*/")
+                       r"(0x[0-9a-fA-F]+)")
 OPEN_DEF = re.compile(r"^[ \t]*(?:class|struct)[ \t]+(\w+)\b")
+BASE_CLAUSE = re.compile(r"^[ \t]*(?:class|struct)[ \t]+\w+[ \t]*:([^{;]+)")
+BASE_NOISE = re.compile(r"\b(?:public|protected|private|virtual)\b")
 SKIPPABLE = re.compile(r"^\s*($|/\*|\*|//)")
 
 # An offset above this is a literal-pool word that is really an ADDRESS folded into
@@ -563,7 +601,7 @@ def harvest(root, ext):
 # --------------------------------------------------------------------------
 
 def header_index(root):
-    """class -> {"header": path, "assert": size|None, "fields": {offset: [(type, name)]}}.
+    """class -> {"header", "assert", "fields": {offset: [(type, name)]}, "bases": [...]}.
 
     A header in this tree routinely defines the SAME class twice -- a real C++ layout
     under `#ifdef __cplusplus` and a flat `u8`-array stand-in for C translation units
@@ -572,38 +610,89 @@ def header_index(root):
     made 15 already-typed members read as untyped work, purely on which block came
     last in the file, so every block's declaration is kept and a member counts as
     typed when ANY of them types it.
+
+    Base classes are recorded too.  A member declared in a BASE is not missing from
+    the derived class -- mwccarm inlines the base destructor into the derived one, so
+    the cartridge shows `~Bullet` destroying dEnemyBase_c's members at their own
+    offsets, and reading only the derived class's own field list called every one of
+    them an untyped hole.  144 of the 181 findings in the first census were that.
     """
     out = {}
+
+    def entry(name, h):
+        return out.setdefault(name, {"header": h, "assert": None, "fields": {},
+                                     "bases": []})
+
     for h in sorted((root / "include").rglob("*.h")):
         txt = h.read_text(errors="replace")
         for m in O.DEFINITION.finditer(txt):
-            out.setdefault(m.group(1), {"header": h, "assert": None, "fields": {}})
+            entry(m.group(1), h)
         for m in SIZE_ASSERT.finditer(txt):
-            e = out.setdefault(m.group(1), {"header": h, "assert": None, "fields": {}})
+            e = entry(m.group(1), h)
             if e["assert"] is None:
                 e["assert"] = int(m.group(2), 16)
                 e["header"] = h
     # fields, per definition block, so a header holding two structs is not merged.
-    # A definition ends at a `}` in column zero, which is how every header in this
-    # tree is written; a nested block is indented and so cannot close the outer one.
+    #
+    # Brace depth, not "a `}` in column zero".  A NESTED definition -- the
+    # `struct State { ... };` five enemy headers open before their first real field --
+    # matched OPEN_DEF just as well as the outer one and took `cur` with it, and its
+    # own `};` is indented so nothing ever gave `cur` back.  Every field below the
+    # nested block was then dropped: Bullet, FlyGuy, HootTheOwl, Snufit and Swoop each
+    # read as having ZERO declared fields, and all 20 of their already-typed members
+    # were reported as work.  An ANONYMOUS `union {` is not a definition and its
+    # members are the enclosing class's own, so only a NAMED nested one suppresses.
     for h in sorted((root / "include").rglob("*.h")):
-        cur = None
+        cur = cur_depth = nested_from = None
+        depth = 0
         for line in h.read_text(errors="replace").splitlines():
-            if line.startswith("}"):
-                cur = None
-                continue
             m = OPEN_DEF.match(line)
-            if m and not line.rstrip().endswith(";"):
-                cur = m.group(1)
-                continue
-            if cur and out.get(cur, {}).get("header") == h:
+            is_def = bool(m) and not line.rstrip().endswith(";")
+            if cur is None:
+                if is_def:
+                    cur, cur_depth = m.group(1), depth
+                    b = BASE_CLAUSE.match(line)
+                    if b and out.get(cur, {}).get("header") == h:
+                        for x in BASE_NOISE.sub(" ", b.group(1)).split(","):
+                            x = x.strip()
+                            if re.fullmatch(r"\w+", x) and x not in out[cur]["bases"]:
+                                out[cur]["bases"].append(x)
+            elif is_def:
+                if nested_from is None:
+                    nested_from = depth
+            elif nested_from is None and out.get(cur, {}).get("header") == h:
                 f = ANY_FIELD.match(line)
                 if f:
                     at = out[cur]["fields"].setdefault(int(f.group(4), 16), [])
                     d = (f.group(1), f.group(2) + (f.group(3) or ""))
                     if d not in at:
                         at.append(d)
+            depth += line.count("{") - line.count("}")
+            if nested_from is not None and depth <= nested_from:
+                nested_from = None
+            if cur is not None and depth <= cur_depth:
+                cur = cur_depth = None
     return out
+
+
+def declared_at(hdr, cls, off):
+    """(own declarations, inherited declarations) at `off` for `cls`.
+
+    Walks the base chain header_index recorded.  Cycle-guarded: a header pair that
+    names each other as bases would otherwise recurse forever.
+    """
+    own = list(hdr.get(cls, {}).get("fields", {}).get(off, ()))
+    inh, seen, stack = [], {cls}, list(hdr.get(cls, {}).get("bases", ()))
+    while stack:
+        b = stack.pop(0)
+        if b in seen or b not in hdr:
+            continue
+        seen.add(b)
+        for d in hdr[b]["fields"].get(off, ()):
+            if d not in inh:
+                inh.append(d)
+        stack += hdr[b]["bases"]
+    return own, inh
 
 
 INCLUDE = re.compile(r'^[ \t]*#[ \t]*include[ \t]+"([^"]+)"', re.M)
@@ -726,14 +815,24 @@ def gap(root, doc, mods, stats):
             buckets["NO OWNER HEADER"].append(rec)
             continue
         rec["header_path"] = str(hdr[own]["header"].relative_to(root)).replace("\\", "/")
-        cur = hdr[own]["fields"].get(off)
+        cur, inh = declared_at(hdr, own, off)
+        cur = cur or None
         rec["declared"] = None if cur is None else "; ".join("%s %s" % d for d in cur)
+        rec["inherited"] = "; ".join("%s %s" % d for d in inh) or None
         if cur and any(t == mem for t, _ in cur):
             buckets["ALREADY TYPED"].append(rec)
+        elif not cur and inh and any(t == mem for t, _ in inh):
+            # the base owns it; the derived destructor destroys it because mwccarm
+            # inlined the base destructor, not because the class repeats the member.
+            buckets["INHERITED"].append(rec)
         elif mem is None or mem not in sizes:
             buckets["NO ASSERT"].append(rec)
         elif cur and any(t != "u8" for t, _ in cur):
             buckets["DECLARED OTHERWISE"].append(rec)
+        elif not cur and inh:
+            # a base declares SOMETHING ELSE here.  Either the base is wrong or the
+            # derived class is; the ROM says a `mem` starts at this offset.
+            buckets["INHERITED OTHERWISE"].append(rec)
         elif cur is None:
             buckets["NO FIELD AT OFFSET"].append(rec)
         elif hdr[own]["header"] in from_c and mem not in in_c:
@@ -744,8 +843,9 @@ def gap(root, doc, mods, stats):
     return buckets, hdr, aliases, sizes
 
 
-BUCKETS = ("DECIDABLE", "ALREADY TYPED", "NO ASSERT", "DECLARED OTHERWISE",
-           "NO FIELD AT OFFSET", "MEMBER TYPE IS C++ ONLY", "NO OWNER HEADER",
+BUCKETS = ("DECIDABLE", "ALREADY TYPED", "INHERITED", "NO ASSERT",
+           "DECLARED OTHERWISE", "INHERITED OTHERWISE", "NO FIELD AT OFFSET",
+           "MEMBER TYPE IS C++ ONLY", "NO OWNER HEADER",
            "BASE-AT-0", "SECONDARY-BASE", "AMBIGUOUS VARIANT")
 
 
@@ -884,7 +984,21 @@ def apply(root, picked, sizes, write=False):
             hits = [n for n, line in enumerate(lines)
                     if MARKER.match(line) and int(MARKER.match(line).group(4), 16) == off]
             if not hits:
-                refused.append((rec, "no bare u8 marker at that offset"))
+                # Diagnose, don't just decline.  Since header_index learned to read an
+                # offset comment that carries prose, six findings arrive here declared
+                # as `u8 mModel1[0x50]; /* 0x4f38 -- Model, raw bytes */`.  There IS a
+                # marker; it is an ARRAY, and "no marker" sent the last reader looking
+                # in the wrong place.
+                arr = [line.strip() for line in lines
+                       if ANY_FIELD.match(line)
+                       and int(ANY_FIELD.match(line).group(4), 16) == off
+                       and ANY_FIELD.match(line).group(1) == "u8"
+                       and ANY_FIELD.match(line).group(3)]
+                refused.append((rec, ("declared as a u8 ARRAY (%s): retyping it also "
+                                      "rewrites every consumer that spells it as an "
+                                      "array, so it is not a header-only edit"
+                                      % arr[0]) if arr else
+                                "no u8 marker at that offset"))
                 continue
             need = sizes[rec["member"]]
             ok = []
@@ -1007,13 +1121,13 @@ def main(argv=None):
         print("\n== pairs vs the headers ==")
         for b in BUCKETS:
             print("  %-20s %d" % (b, len(buckets[b])))
-        for b in ("DECIDABLE", "NO ASSERT", "DECLARED OTHERWISE", "NO FIELD AT OFFSET",
-                  "NO OWNER HEADER"):
+        for b in ("DECIDABLE", "NO ASSERT", "DECLARED OTHERWISE", "INHERITED OTHERWISE",
+                  "NO FIELD AT OFFSET", "NO OWNER HEADER"):
             print("\n-- %s (%d) --" % (b, len(buckets[b])))
             for r in sorted(buckets[b], key=lambda r: (r["owner"], r["offset"])):
                 print("  %-34s @%s -> %-22s %s"
                       % ((r.get("owner_header") or r["owner"]), r["offset"], r["member"],
-                         r.get("declared") or ""))
+                         r.get("declared") or r.get("inherited") or ""))
 
     if a.adjacency:
         res, detail = adjacency(doc, hdr, sizes, _al)
