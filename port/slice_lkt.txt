@@ -1,0 +1,261 @@
+# Gate LKT: dScMgPachinko2_c, actor id 0x171 (scene 369), the "Lakitu Launch"
+# minigame. Run mg6, lane LKT.
+#
+# EVERY ADDRESS BELOW WAS RE-DERIVED FROM THE ROM BY THIS LANE rather than
+# taken from the brief. The doubled-id word 0x01710171 occurs exactly once in
+# extracted/overlays/overlay_0006.bin, at 0x0213da68, so the SpawnInfo record
+# is MgLakituLaunch_SpawnInfo at 0x0213da64 and its first word is the factory
+# MgLakituLaunch_Spawn at 0x02104258; config/arm9/overlays/ov006/relocs.txt
+# has exactly one ov006 load out of that factory,
+#
+#     from:0x02104288 kind:load to:0x0213dbbc module:overlay(6)
+#
+# which is how the vtable is tied to the id rather than by name. The class
+# name is the factory's own: src/MgLakituLaunch_Spawn.c writes
+# _ZTV16dScMgPachinko2_c into the object's first word.
+#
+# THE CLOSURE IS THE FIVE-ROOT WALK slice_pch.txt describes, run against the
+# config's own delinks and relocs with no build in the loop:
+#
+#     root 1   the factory at 0x02104258, from the SpawnInfo's first word
+#     root 2   the class's .init constructor, __sinit_ov006_02131cd0,
+#              attributed by address containment: its copied pairs run
+#              0x0213da5c..0x0213db4c and that range brackets the SpawnInfo at
+#              0x0213da64
+#     root 3   the 36 vtable slots, because the seat fills them
+#     root 4   the 28 state addresses stategen resolves out of root 2
+#     root 5   the three dispatching TUs that read those three tables
+#
+#     reached   ov006 67   ov004 90   ov001 4   arm9 489
+#     in no existing slice_*.txt   ov006 66   ov004 14   arm9 68
+#
+# THE arm9 HALF IS NOT LISTED, for port/mg_fanout_costs.txt section 5's reason:
+# the matched arm9 TUs come back through /OPT:REF once ov004/ov006 references
+# them. The 68 arm9 lines the walk found in no slice are left for the LINKER to
+# ask for -- section 10's wave method -- rather than guessed into this file.
+#
+# ---- THE WIDTH IS 36, AND THE NEIGHBOUR IT IS PROVED AGAINST ALREADY SHIPS --
+#
+# dScMgPachinko2_c was one of the twelve classes port/mg_fanout_costs.txt
+# section 11 corrected from 37 to 36, so all three of that section's checks
+# were re-run here before a line of seat code was written, and a fourth is
+# added because this table happens to carry it:
+#
+#   1. SPAN. config/arm9/overlays/ov006/symbols.txt has data_ov006_0213dbbc
+#      followed by data_ov006_0213dc4c. That is 0x90 bytes = 36 words. A 37th
+#      slot cannot exist inside this symbol; index 36 IS the next symbol.
+#   2. TERMINAL SLOT. Slot 35 holds 0x020ad660, the word every
+#      dScMgBase_c-derived table in the family holds at slot 35.
+#   3. WHAT THE WORD IS. Index 36 is 0x0210713c and index 37 is 0x00000000 --
+#      an mwcc pointer-to-member pair {code, adj} and not a vtable slot.
+#   4. THE RELOCATION COUNT, which this lane adds because the ROM supplies it
+#      free. relocs.txt carries exactly 36 load relocations inside
+#      0x0213dbbc..0x0213dc4c, one per slot, and the next one is at
+#      0x0213dc4c itself pointing at 0x0210713c -- the pair's own code word,
+#      not a 37th slot's body.
+#
+# AND THE ADJACENCY RUNS BOTH WAYS, WHICH IS THIS CLASS'S PARTICULAR HAZARD.
+# hal/scene_mg.cpp section 8 records that a 37-slot fill of the SIBLING class
+# dScMgPachinko_c (0x170, scene 368, already seated) would have written a host
+# thunk over data_ov006_0213da5c, which src/__sinit_ov006_02131cd0.c line 89
+# copies into data_ov006_02142734.p4 -- THIS class's state 4, 0x021019e0. That
+# hazard was latent while 0x171 was unseated and is live from this commit on,
+# and it is measured absent: the sibling's fill is called with 36 and its
+# mg_raw_left checks 36.
+#
+# THE REVERSE IS THE ONE THIS LANE OWES, and it has a different victim.
+# This table's span ends at 0x0213dc4c. The symbol that starts there,
+# data_ov006_0213dc4c, is the pair {code 0x0210713c, adj 0}, and
+# src/__sinit_ov006_02131fa4.c line 64 copies it:
+#
+#     data_ov006_02142888.p1 = data_ov006_0213dc4c;
+#
+# __sinit_ov006_02131fa4 is NOT this class's constructor -- its copied range
+# brackets MgPuzzlePanelPuzzlePanic_SpawnInfo at 0x0213dc64, id 0x17c -- so a
+# 37-slot fill HERE would corrupt state 1 of a THIRD class, one no lane has
+# seated yet. port_scene_fill_rom is called with 36 in this seat and
+# mg_raw_left checks 36, so the fill writes 0x0213dbbc..0x0213dc4b and no more.
+#
+# ---- WHAT IS EXCLUDED, AND WHY EACH ONE IS -------------------------------
+#
+# THE THREE DISPATCHING TUs. This class has three state tables and each is
+# read by exactly one TU -- measured, not assumed: a grep of src/ for each
+# table name returns the constructor and one reader and nothing else. All
+# three are host-copied in port/unmatched/MgPachinko2_StateDispatch.cpp:
+#
+#     src/func_ov006_020fff84.cpp   data_ov006_021426cc    5 states
+#     src/func_ov006_0210246c.cpp   data_ov006_02142734   15 states
+#     src/func_ov006_02102e8c.cpp   data_ov006_021426f4    8 states
+#
+# ALL THREE ARE THE POINTER-TO-MEMBER WALL, which is the whole of this class's
+# ::* sweep. The sweep was run over the entire closure, per
+# port/mg_fanout_costs.txt section 4's rule that "a link is not a complete
+# detector for this wall", and it returns exactly ten TUs: these three, and
+# the seven ov004 framework ones that MG2 and mg5 lane BASESET already
+# host-copied in unmatched/MgBase_StateDispatch.cpp, MgBase_Slot7.cpp and
+# MgBase_StateSetter.cpp. None of the three is on the corollary's safe side --
+# every one of them names a member-pointer type -- and the split inside the
+# three is the one section 4 describes:
+#
+#     func_ov006_020fff84  struct Entry { PMF pmf; } declared at file scope
+#          OUTSIDE extern "C", so MSVC mangles the member-pointer type into
+#          the symbol and a link would name it.
+#     func_ov006_02102e8c  the same shape, same spelling, same visibility.
+#     func_ov006_0210246c  extern "C" PMF data_ov006_02142734[]; INSIDE
+#          extern "C", so the global mangles to the plain C name the mount
+#          already defines and THE LINK IS SATISFIED -- section 4's silent
+#          extern-"C" class, the one no link can surface. sizeof is 4 on MSVC
+#          where the ROM strides 8, so index 1 would read half of pair 0 and
+#          half of pair 1.
+#
+# NEITHER DETECTOR LICENSES THE WORD "none" and this file does not use it. The
+# third shape lane FLW found -- a TU that open-codes the ARM Itanium sequence
+# in plain ints, with no member-pointer type and no PMF global -- is invisible
+# to both the link and the sweep, and only a run convicts it.
+# func_ov006_020c3d18, the one known instance, is not in this closure; the boot
+# under SM64DS_FAULTS_FATAL=1 is what stands behind the claim, not this list.
+#
+# THE DELETING DESTRUCTOR, src/func_ov006_020ff444.c, vtable slot 17. It spells
+# the two shared decl_common.h placeholders -- t[0] = (int)VT and
+# Memory::Deallocate(t, HEAP) -- and hal/cxx_aliases.cpp binds bare VT to
+# _data_ov002_021081e4, the ENEMY base table. Its ROM literal pool at
+# 0x020ff474 and 0x020ff478 holds 0x0213dbbc (this class's own vtable) and
+# 0x020a0eac (the game heap), so slicing it would install the Enemy vtable into
+# a dScMgPachinko2_c. Host-copied in unmatched/MgPachinko2_Dtor.cpp with both
+# addresses spelled, exactly as lane PCH did for the sibling class.
+#
+# ITS D2 SIBLING IS AN ORDINARY SLICE LINE and the difference is worth naming:
+# src/func_ov006_020ff420.c spells the same store as
+# x[0] = (int)data_ov006_0213dbbc, by the real config symbol, so nothing about
+# it needs a host copy. It is also the cross-check on the D0's ruling.
+#
+# THE FRAMEWORK'S OWN ov004 TUs. Thirteen ov004 TUs in this closure are in no
+# slice because a port host copy already defines them -- the seven pointer-to-
+# member ones above plus func_ov004_020aeed8, _020af094 (MgBase_DeclConflict),
+# _020b0930 (MgBase_Slot1), _020b0840 (MgBase_Slot5), _020b2cb8
+# (MgBase_LangTable) and _020b19f0 (MgHud_HighScore). Adding any of them here
+# would be a duplicate definition, not a link win.
+#
+# ---- WHAT HAS NO SOURCE AT ALL --------------------------------------------
+#
+# FIVE ov006 addresses in this closure have a config symbol, NO delink block in
+# config/arm9/overlays/ov006/delinks.txt and NO src file in either extension.
+# Four of the five are LIVE STATE TARGETS, which stategen.py reports under
+# REFUSALS and the address switch carries as reporting cases:
+#
+#     0x020ffb54   state 2 of data_ov006_021426cc   (0x290)
+#     0x020ff8c8   state 3 of data_ov006_021426cc   (0x28c)
+#     0x02102274   state 0 of data_ov006_02142734   (0x1f8)
+#     0x02102fe8   state 1 of data_ov006_021426f4   (0x378)
+#
+# and the fifth is a callee of a dispatcher rather than a state:
+#
+#     0x0210076c   called by func_ov006_0210246c immediately after every
+#                  dispatch it makes. It is the ONE symbol the whole slice
+#                  references with no definition anywhere, so it is a named
+#                  self-reporting trap in unmatched/MgPachinko2_Traps.cpp --
+#                  the curling func_ov006_020e1854 precedent as it stood
+#                  BEFORE lane CT1 hosted it.
+#
+# NONE of the five is given an invented body. Inventing a definition for a body
+# with no source is the guess port/tools/inferred_stub_guard exists to refuse,
+# and transcribing four ROM bodies is a second lane's work, not this seat's.
+#
+# NOTE WHAT THIS DOES AND DOES NOT COST. The fan-out table's nosrc column for
+# 0x171 is ZERO and that is still right: it counts VTABLE bodies, and all six
+# of this class's overrides have a matched src TU. These five are the state and
+# dispatcher layer, which the vtable axis cannot see -- the same thing
+# port/mg_fanout_costs.txt section 10 says about the pathfinder's own row.
+#
+# TWO MORE ov006 TUs SIT BEHIND ONE OF THE FIVE AND ARE DELIBERATELY ABSENT.
+# func_ov006_02100408 and func_ov006_02101148 are reached from nothing in this
+# closure except 0x0210076c, which has no body, so slicing them would add two
+# TUs no code can call. They come in with whoever decompiles 0x0210076c.
+#
+# ONE ADDRESS HAS A src FILE BUT NO DELINK BLOCK, which is a join miss and not
+# a floor -- the distinction stategen.py started making after lane MGB. It is
+# an ordinary slice line and is IN the list below:
+#
+#     0x02103ac0   src/func_ov006_02103ac0.c, bannered NONMATCHING
+#                  (different op / idiom, div=34). Called by vtable slot 6 in
+#                  its case 1, so this class reaches it on the first tick.
+#                  NONMATCHING TUs are routinely sliced and built by this port.
+
+# ---- ov006, dScMgPachinko2_c's own closure, wave 1 -----------------------
+
+src/MgLakituLaunch_Spawn.c
+src/func_ov006_020ff420.c
+src/func_ov006_020ff47c.c
+src/func_ov006_020ff4ec.c
+src/func_ov006_020ff534.c
+src/func_ov006_020ff690.c
+src/func_ov006_020ffde4.c
+src/func_ov006_020fff54.c
+src/func_ov006_020fffec.c
+src/func_ov006_02100058.c
+src/func_ov006_02100084.c
+src/func_ov006_02100140.c
+src/func_ov006_021001ac.c
+src/func_ov006_02100278.c
+src/func_ov006_02100314.c
+src/func_ov006_02100380.c
+src/func_ov006_02100488.cpp
+src/func_ov006_021004c0.c
+src/func_ov006_021004f4.c
+src/func_ov006_02100554.c
+src/func_ov006_0210068c.c
+src/func_ov006_021006f4.c
+src/func_ov006_02100734.c
+src/func_ov006_021009b8.c
+src/func_ov006_02100b08.c
+src/func_ov006_02100bac.c
+src/func_ov006_02100d90.c
+src/func_ov006_02100e3c.c
+src/func_ov006_02100f7c.c
+src/func_ov006_02101088.c
+src/func_ov006_02101224.c
+src/func_ov006_021012cc.c
+src/func_ov006_021016ec.c
+src/func_ov006_021019e0.c
+src/func_ov006_02101af0.c
+src/func_ov006_02101e88.c
+src/func_ov006_021020c4.c
+src/func_ov006_021024e0.c
+src/func_ov006_02102564.c
+src/func_ov006_0210258c.cpp
+src/func_ov006_02102624.c
+src/func_ov006_0210265c.c
+src/func_ov006_02102718.c
+src/func_ov006_021027e4.c
+src/func_ov006_02102864.c
+src/func_ov006_02102c3c.c
+src/func_ov006_02102d6c.c
+src/func_ov006_02102dbc.c
+src/func_ov006_02102de4.c
+src/func_ov006_02102ef4.c
+src/func_ov006_02102f3c.c
+src/func_ov006_02103360.c
+src/func_ov006_02103608.c
+src/func_ov006_0210371c.c
+src/func_ov006_02103870.c
+src/func_ov006_0210397c.c
+src/func_ov006_02103994.c
+src/func_ov006_02103bfc.c
+src/func_ov006_02103cbc.c
+src/func_ov006_02103d28.c
+src/func_ov006_02103d78.c
+src/func_ov006_02103ed0.c
+# THE DELINKS JOIN MISS. src/func_ov006_02103ac0.c exists and is bannered
+# NONMATCHING; only config/arm9/overlays/ov006/delinks.txt misses it, which is
+# why the closure walk reached it as an unresolved address rather than as a
+# block. Slot 6's case 1 calls it, so it is a real line.
+src/func_ov006_02103ac0.c
+
+# ---- ov004, the one framework TU this class adds ------------------------
+#
+# Every other ov004 TU in this closure is either already in slice_mg1.txt or
+# already host-copied; see the exclusion block in the header. This one is
+# neither: nothing in port/ defines func_ov004_020b1e44 and no existing slice
+# names it. It is the framework's language-indexed sprite drawer, reached from
+# this class's HUD path.
+src/func_ov004_020b1e44.c

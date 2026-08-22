@@ -2178,6 +2178,13 @@ void port_scene_fill_flower(void);
 extern unsigned char MgMemoryMaster_SpawnInfo[];
 void *port_mg_memory2_spawn(void);
 void port_scene_fill_memory2(void);
+/* run mg6 lane LKT: dScMgPachinko2_c, the "Lakitu Launch" minigame and the
+   SIBLING of the 368 row above in both the class name and the ROM's own data
+   adjacency. hal/scene_mg.cpp's "RUN mg6, LANE LKT" banner carries the
+   derivation. */
+extern unsigned char MgLakituLaunch_SpawnInfo[];
+void *port_mg_pachinko2_spawn(void);
+void port_scene_fill_pachinko2(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2234,6 +2241,29 @@ static const PortSceneClass port_scene_classes[] = {
        seat existed. hal/scene_mg_memory2.cpp section 3 is the measurement. */
     {363, "SCENE_MG_MEMORY2", MgMemoryMaster_SpawnInfo, port_mg_memory2_spawn,
      port_scene_fill_memory2, 0},
+    /* 369 is 0x171, spelled in decimal for the reason every row above gives.
+       APPENDED AFTER ALL OF THEM, run mg6 lane LKT, and the position is
+       load-bearing in the direction port/mg_fanout_costs.txt section 11 calls
+       latent-safe: this function walks the table in order and calls every
+       row's fill on every boot, while port_scene_mg_overlay_load runs the
+       thirty-five overlay constructors ONCE PER PROCESS at the tail of the
+       FIRST minigame row's fill. Appending means the constructors have already
+       run against clean ROM words when this fill starts.
+
+       THIS ROW'S CLASS IS THE ONE SECTION 11's HAZARD WOULD HAVE HIT, which
+       is why the ordering argument is worth restating here rather than
+       cross-referencing. hal/scene_mg.cpp section 8 records that a 37-slot
+       fill of the 368 row would write a host thunk over data_ov006_0213da5c,
+       the code word of THIS class's state 4. That fill is called with 36. And
+       the reverse is measured in that file's LKT banner: this table is 36 words
+       by four independent checks, so it cannot reach into id 0x17c's state
+       table the way a 37th slot would.
+
+       reads_sublevel is 0 for the curling row's reason, re-checked for this
+       class: no relocation anywhere in ov006 lands on data_02092110 and no TU
+       in this class's closure names it. A minigame is not about a course. */
+    {369, "SCENE_MG_PACHINKO2", MgLakituLaunch_SpawnInfo,
+     port_mg_pachinko2_spawn, port_scene_fill_pachinko2, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
