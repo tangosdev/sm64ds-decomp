@@ -12,6 +12,16 @@
 # invoked `tools/check_header_offsets.py`, and run with no arguments it checked zero
 # files, printed nothing, and exited 0. Its first whole-tree run found four problems.
 #
+# AN EMPTY WORK LIST IS NOT AUTOMATICALLY A PASS. `--changed` used to exit 0 on any
+# empty diff, which collapsed "this pull request touches no header" (true of most of
+# them, and fine) together with "the base ref resolved to nothing" (a shallow clone, an
+# unfetched origin/main -- the failure that makes every other guarantee here worthless).
+# It now separates them and prints the count of files the diff DID contain as the
+# evidence, and it folds in uncommitted working-tree changes so a local pre-commit run
+# cannot report a pass over a header it never opened. `fetch-depth: 0` below is what
+# keeps the merge base reachable; without it this job now fails loudly instead of
+# passing vacuously.
+#
 # SCOPED TO CHANGED HEADERS on purpose. 441 of 445 headers pass; the four that do not
 # are written down in config/header-offset-known-issues.txt rather than silently
 # allowed, so this job is a ratchet on NEW breakage and cannot go red on debt a pull
@@ -54,6 +64,15 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+      # unittest, not pytest: pytest is not installed on this runner, and the point of
+      # this step is that the gate's own FAILURE branches still work -- so it must not
+      # be the step that needs a dependency. Same reasoning as src-tu-refs.yml.
+      #
+      # It runs BEFORE the gate, and always: the resolution tests are what say the step
+      # below looked at anything at all.
+      - name: The work-list resolution's own tests
+        run: python tools/test_check_header_offsets.py
+
       - name: Offsets agree with their comments
         env:
           BASE: ${{ github.event.pull_request.base.sha }}

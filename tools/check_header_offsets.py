@@ -9,11 +9,15 @@ the byte gate cannot see a field no source file happens to read.
 This walks the declarations, applies natural alignment, and compares. Used as the
 first gate on any header edit; see notes/archive/plan-scalar-markers.md 4.
 
-    python tools/check_header_offsets.py include/Enemy.h include/Camera.h
+    python tools/check_header_offsets.py include/Amp.h include/Camera.h
     python tools/check_header_offsets.py --changed              # vs origin/main
     python tools/check_header_offsets.py --changed main
+    python tools/check_header_offsets.py --changed --committed-only   # what CI sees
 
 Running it with no arguments is an error, not a pass -- see _resolve_paths.
+An empty --changed work list is an error too, EXCEPT in the one case where it is
+honest: the diff contained files and none of them was under include/. That
+distinction is computed and printed rather than assumed -- see changed_paths.
 """
 import re, subprocess, sys, pathlib
 SZ = {"u8":1,"s8":1,"char":1,"u16":2,"s16":2,"short":2,"u32":4,"s32":4,"int":4,
@@ -27,7 +31,8 @@ SZ = {"u8":1,"s8":1,"char":1,"u16":2,"s16":2,"short":2,"u32":4,"s32":4,"int":4,
 #     struct { char c; long long v; };   /* sizeof == 12, not 16 */
 #     struct { char c; double d; };      /* sizeof == 12, not 16 */
 # (Asserting 16 instead is rejected by the compiler, so the probe discriminates.)
-# This is what lets `s64 unk_004;` sit at 0x004 in include/ClsnResult.h.
+# This is what lets `s64 unk_004;` sit at 0x004 in include/dBgPi.h (the struct
+# include/ClsnResult.h used to hold, before #1643 renamed the collision classes).
 ALIGN = {t: min(w, 4) for t, w in SZ.items()}
 
 REPO = pathlib.Path(__file__).resolve().parent.parent
@@ -177,8 +182,173 @@ def _known_issues():
             if line.split("#", 1)[0].strip()}
 
 
-def _resolve_paths(argv):
-    """The headers to check, or exit non-zero having said why.
+HEADER_SUFFIXES = (".h", ".hpp")
+
+
+def _git_lines(args, repo=None):
+    """(lines, error). A git failure is an error string, never a traceback.
+
+    Split on newlines, not on whitespace: `git diff --name-only` quotes and escapes a
+    path containing a space, but the old `proc.stdout.split()` tore any such path into
+    two nonexistent ones, and a nonexistent path here reads as "no header changed".
+    """
+    proc = subprocess.run(["git", *args], cwd=str(repo or REPO),
+                          capture_output=True, text=True)
+    if proc.returncode != 0:
+        return None, f"git {' '.join(args)} failed: {proc.stderr.strip()}"
+    return [ln.strip() for ln in proc.stdout.splitlines() if ln.strip()], None
+
+
+def changed_paths(base, committed_only=False, repo=None, head="HEAD"):
+    """What this branch changed, in the three buckets the empty-list decision needs.
+
+    Returns ``(buckets, error)``. ``buckets`` is a dict of sorted, de-duplicated
+    repo-relative paths::
+
+        total     every added/modified file, ANY directory -- the proof the diff
+                  machinery ran at all
+        include   the subset under include/, ANY extension
+        headers   the subset of those that is a .h/.hpp -- the actual work list
+        worktree  the subset of `headers` that is NOT in the commits (see below)
+        dropped   include/ paths the extension filter discarded
+
+    THREE SOURCES, unioned:
+
+    1. ``{base}...HEAD`` -- the commits. This was the only source the tool had, and it
+       is why a local pre-commit run reported a pass on work it had never opened: a
+       header edited and not yet committed is not in this diff, so `--changed` printed
+       "no include/ header added or modified" and exited 0 over a dirty tree.
+    2. ``HEAD`` vs the working tree -- staged and unstaged edits both. Empty on a CI
+       checkout, and the entire work list when a developer runs this before committing.
+    3. untracked files -- a brand-new header that has never been `git add`ed is in
+       neither of the above, and a brand-new header is precisely the one whose offsets
+       have never been checked by anything.
+
+    ``committed_only=True`` uses source 1 alone, which is exactly what CI sees; the
+    other two are still computed so the caller can say out loud that they were ignored.
+
+    ``head`` is for pointing this at history other than the current branch -- the tests
+    aim it at real merge commits and assert the headers those pull requests edited still
+    come back. Sources 2 and 3 are relative to the working tree by definition, so they
+    are only consulted when ``head`` is the working tree's own HEAD.
+
+    Renames arrive as an add because ``-M`` is deliberately not passed -- a header that
+    moved still has to have its offsets agree.
+    """
+    commits, err = _git_lines(["diff", "--name-only", "--diff-filter=AM",
+                               f"{base}...{head}"], repo)
+    if err:
+        return None, err
+    if head == "HEAD":
+        dirty, err = _git_lines(["diff", "--name-only", "--diff-filter=AM", "HEAD"], repo)
+        if err:
+            return None, err
+        untracked, err = _git_lines(["ls-files", "--others", "--exclude-standard"], repo)
+        if err:
+            return None, err
+    else:
+        dirty = untracked = []
+
+    local = set(dirty) | set(untracked)
+    total = set(commits) if committed_only else set(commits) | local
+    inc = {p for p in total if p.startswith("include/")}
+    heads = {p for p in inc if p.endswith(HEADER_SUFFIXES)}
+    return {
+        "total": sorted(total),
+        "include": sorted(inc),
+        "headers": sorted(heads),
+        "dropped": sorted(inc - heads),
+        # Reported even under --committed-only, where it is what is being IGNORED.
+        "worktree": sorted(p for p in local
+                           if p.startswith("include/")
+                           and p.endswith(HEADER_SUFFIXES)
+                           and p not in set(commits)),
+    }, None
+
+
+def _resolve_changed(base, committed_only=False, repo=None):
+    """(paths, exit_code). ``paths`` is None when the caller should exit immediately.
+
+    AN EMPTY WORK LIST IS NOT AUTOMATICALLY A PASS, AND NOT AUTOMATICALLY A FAILURE.
+    The old code exited 0 on any empty diff, which collapsed four different situations
+    into one green line. They are not the same and this pulls them apart:
+
+    * The diff named files and none of them is under include/. This is the ONE honest
+      empty: most pull requests touch no header, the gate has genuinely nothing to do,
+      and saying so is not a hollow pass because the count of files it DID see is
+      printed as evidence the diff resolved to something.
+    * The diff named nothing at all. On a pull request that cannot happen -- a pull
+      request always changes a file -- so this is a base ref that resolved to the wrong
+      commit (an unfetched `origin/main`, a shallow clone with no merge base, HEAD equal
+      to base). The old code called it a pass. It is the failure mode that makes every
+      other guarantee in this file worthless, so it now fails.
+    * include/ changed but the .h/.hpp filter discarded every one of those paths. The
+      filter existed to skip `include/`'s non-headers; when it eats the whole work list
+      it is no longer skipping noise, it is skipping the job.
+    * The headers are only in the working tree. Included by default now; under
+      --committed-only they are reported loudly rather than silently dropped.
+    """
+    root = pathlib.Path(repo) if repo else REPO
+    buckets, err = changed_paths(base, committed_only, root)
+    if buckets is None:
+        print(f"check_header_offsets: {err}", file=sys.stderr)
+        return None, 1
+
+    if committed_only and buckets["worktree"]:
+        # Not folded in, so say so at the top of the log where it cannot be missed.
+        print(f"check_header_offsets: WARNING -- --committed-only, so "
+              f"{len(buckets['worktree'])} uncommitted header(s) are NOT being checked:")
+        for p in buckets["worktree"]:
+            print(f"    {p}")
+
+    if not buckets["total"]:
+        print(f"check_header_offsets: the diff against {base} is EMPTY -- no file added "
+              f"or modified anywhere in the tree, not merely no header.", file=sys.stderr)
+        print(f"check_header_offsets: that is not 'a change that touches no header', it "
+              f"is a base ref that resolved to nothing. Check that {base} exists and is "
+              f"fetched (a shallow clone has no merge base), or pass the header paths "
+              f"explicitly.", file=sys.stderr)
+        return None, 1
+
+    if buckets["dropped"] and not buckets["headers"]:
+        print(f"check_header_offsets: {len(buckets['dropped'])} include/ path(s) changed "
+              f"and NONE is a {'/'.join(HEADER_SUFFIXES)} -- the extension filter "
+              f"discarded this gate's entire work list:", file=sys.stderr)
+        for p in buckets["dropped"]:
+            print(f"    {p}", file=sys.stderr)
+        return None, 1
+
+    if not buckets["headers"]:
+        # The honest empty. The evidence is the count, and it is printed.
+        print(f"check_header_offsets: {len(buckets['total'])} file(s) added or modified "
+              f"vs {base}, 0 of them under include/ -- nothing for this gate to check.")
+        return None, 0
+
+    if buckets["dropped"]:
+        print(f"check_header_offsets: ignoring {len(buckets['dropped'])} non-header "
+              f"include/ path(s): {', '.join(buckets['dropped'])}")
+    if buckets["worktree"] and not committed_only:
+        print(f"check_header_offsets: {len(buckets['worktree'])} of these are "
+              f"UNCOMMITTED working-tree changes: {', '.join(buckets['worktree'])}")
+    print(f"check_header_offsets: {len(buckets['headers'])} changed header(s) vs {base}")
+
+    # A path the commit range names can have been deleted in the working tree since.
+    # Dropping it silently would shrink the work list back towards the empty pass this
+    # whole function exists to refuse, so it is named.
+    live = [p for p in buckets["headers"] if (root / p).is_file()]
+    gone = [p for p in buckets["headers"] if p not in live]
+    if gone:
+        print(f"check_header_offsets: {len(gone)} changed header(s) no longer on disk, "
+              f"skipping: {', '.join(gone)}")
+    if not live:
+        print("check_header_offsets: every changed header has since been deleted -- "
+              "nothing left to check, and that is not a pass", file=sys.stderr)
+        return None, 1
+    return live, 0
+
+
+def _resolve_paths(argv, repo=None):
+    """The headers to check, or (None, code) having said why.
 
     This tool fed ``sys.argv[1:]`` straight into the loop below, so running it bare
     checked nothing, printed nothing, and exited 0 -- a clean pass over zero files.
@@ -186,244 +356,270 @@ def _resolve_paths(argv):
     vacuous pass was, in practice, its only behaviour. Refusing an empty list is what
     makes wiring it into CI mean anything.
 
-    ``--changed [base]`` is the CI form: the added and modified headers of this branch.
-    Renames arrive as an add because ``-M`` is deliberately not passed -- a header that
-    moved still has to have its offsets agree.
+    ``--changed [base]`` is the CI form: the added and modified headers of this branch,
+    working tree included unless ``--committed-only`` is given.
     """
+    argv = list(argv)
+    committed_only = False
+    if "--committed-only" in argv:
+        argv.remove("--committed-only")
+        committed_only = True
     if argv and argv[0] == "--changed":
         base = argv[1] if len(argv) > 1 else "origin/main"
-        proc = subprocess.run(
-            ["git", "diff", "--name-only", "--diff-filter=AM", f"{base}...HEAD",
-             "--", "include/"],
-            cwd=REPO, capture_output=True, text=True)
-        if proc.returncode != 0:
-            sys.exit(f"check_header_offsets: git diff against {base} failed: "
-                     f"{proc.stderr.strip()}")
-        argv = [p for p in proc.stdout.split() if p.endswith((".h", ".hpp"))]
-        if not argv:
-            print(f"check_header_offsets: no include/ header added or modified "
-                  f"against {base}")
-            sys.exit(0)
-        print(f"check_header_offsets: {len(argv)} changed header(s) vs {base}")
+        return _resolve_changed(base, committed_only, repo)
+    if committed_only:
+        print("check_header_offsets: --committed-only only means anything with --changed",
+              file=sys.stderr)
+        return None, 1
     if not argv:
-        sys.exit("usage: check_header_offsets.py <header>... | --changed [base]\n"
-                 "refusing to run with no headers: an empty check is not a pass")
-    return argv
+        print("usage: check_header_offsets.py <header>... | "
+              "--changed [base] [--committed-only]\n"
+              "refusing to run with no headers: an empty check is not a pass",
+              file=sys.stderr)
+        return None, 1
+    # A named header that is not there was a bare FileNotFoundError traceback out of
+    # the walk below -- loud, but it never said WHICH argument was wrong, and this
+    # file's own usage line named two headers that renames had since deleted
+    # (include/Enemy.h in #1574, include/ClsnResult.h in #1643).
+    root = pathlib.Path(repo) if repo else REPO
+    missing = [a for a in argv
+               if not pathlib.Path(a).is_file() and not (root / a).is_file()]
+    if missing:
+        print(f"check_header_offsets: {len(missing)} named header(s) do not exist: "
+              f"{', '.join(missing)}", file=sys.stderr)
+        return None, 1
+    return argv, 0
 
 
-rc = 0
-WAIVED = _known_issues()
-for path in _resolve_paths(sys.argv[1:]):
-    if pathlib.PurePath(path).as_posix() in WAIVED:
-        print(f"{path}: WAIVED -- config/header-offset-known-issues.txt")
-        continue
-    txt = pathlib.Path(path).read_text(errors="replace")
-    off, bad, n, skipped, pending = 0, 0, 0, [], []
-    trusted = True
-    started = in_comment = unmodelled = nested = skip_other = False
-    skip_body = 0
-    unknown_base = derived_from = None
-    expected = pathlib.Path(path).stem
-    for lineno, line in enumerate(txt.splitlines(), 1):
-        if not started:
-            # A struct-with-body BEFORE the file's own class is a helper type
-            # (ActorBase_SceneNode in fBase_c.h, KCL_Tri in dBgW_Kc.h,
-            # Particle::SysTracker's namespace-nested body in Stage.h), not the
-            # struct this file is named for. Without this check the FIRST
-            # struct-with-body wins regardless of name, and the tool silently
-            # checks the helper instead of the class the header exists to
-            # verify -- confirmed tree-wide: 13 headers had this shape, most
-            # already reporting a false "0 unparsed" pass on the wrong struct.
-            if skip_other:
-                if re.match(r"^\s*\};", line):
-                    skip_other = False
-                continue
-            # `struct X {` or `struct X : Base {`. Without the second form this
-            # tool never started on a derived struct at all, and reported
-            # "0 commented fields ... struct spans 0x0" -- which reads exactly
-            # like a pass. Every class this repo reconstructs from here on is a
-            # derived struct, so that silence covered the growing majority.
-            m0 = re.match(r"^\s*struct (\w+)\s*(?::\s*(?:public\s+)?(\w+)\s*)?\{", line)
-            if m0:
-                if m0.group(1) != expected:
-                    # `struct BMA_File { u16 numFrames; };` -- opens AND closes on
-                    # the same line. Setting skip_other here and never checking
-                    # THIS line for the closing brace left it permanently stuck:
-                    # the real target struct's own opening line was then read
-                    # while still "skipping", so it was silently swallowed whole
-                    # -- MaterialChanger.h and TextureTransformer.h went from an
-                    # honest UNPARSED failure to a hollow "0 fields, 0 unparsed"
-                    # pass, checking nothing at all. Only skip forward if this
-                    # line's own body does NOT already close it.
-                    if not re.search(r"\};", line):
-                        skip_other = True
+def main(argv, repo=None):
+    """Check every header `argv` resolves to. Exit code is the gate's verdict."""
+    root = pathlib.Path(repo) if repo else REPO
+    paths, code = _resolve_paths(argv, root)
+    if paths is None:
+        return code
+    rc = 0
+    WAIVED = _known_issues()
+    for path in paths:
+        if pathlib.PurePath(path).as_posix() in WAIVED:
+            print(f"{path}: WAIVED -- config/header-offset-known-issues.txt")
+            continue
+        # Resolve against the repo root, not the process cwd: `--changed` yields
+        # repo-relative paths and the gate must not depend on where it was run
+        # from. An explicit argument that resolves from cwd still wins.
+        fp = pathlib.Path(path)
+        if not fp.is_absolute() and not fp.is_file():
+            fp = root / path
+        txt = fp.read_text(errors="replace")
+        off, bad, n, skipped, pending = 0, 0, 0, [], []
+        trusted = True
+        started = in_comment = unmodelled = nested = skip_other = False
+        skip_body = 0
+        unknown_base = derived_from = None
+        expected = fp.stem
+        for lineno, line in enumerate(txt.splitlines(), 1):
+            if not started:
+                # A struct-with-body BEFORE the file's own class is a helper type
+                # (ActorBase_SceneNode in fBase_c.h, KCL_Tri in dBgW_Kc.h,
+                # Particle::SysTracker's namespace-nested body in Stage.h), not the
+                # struct this file is named for. Without this check the FIRST
+                # struct-with-body wins regardless of name, and the tool silently
+                # checks the helper instead of the class the header exists to
+                # verify -- confirmed tree-wide: 13 headers had this shape, most
+                # already reporting a false "0 unparsed" pass on the wrong struct.
+                if skip_other:
+                    if re.match(r"^\s*\};", line):
+                        skip_other = False
                     continue
-                started = True
-                base = m0.group(2)
-                if base is not None:
-                    # A derived struct's own fields do NOT start at 0 -- the base
-                    # sub-object is there. Guessing 0 would mismatch every field,
-                    # so refuse unless the base states its own size.
-                    if base not in SZ:
-                        unknown_base = base
-                        break
-                    # Data size, not sizeof -- see DATA_SIZE above. Each field is
-                    # aligned below, so a base whose padding is unused still puts
-                    # the first own field exactly where sizeof would have.
-                    off = DATA_SIZE.get(base, SZ[base])
-                    derived_from = base
-            continue
-        if in_comment:
-            if "*/" in line:
-                in_comment = False
-            continue
-        # An inline method BODY (`virtual ~dScMgBase_c() { ...; }`), being
-        # skipped over by the methods-declared-first branch below. Track brace
-        # depth across lines the same way `nested`/`in_comment` already do,
-        # rather than assuming a method is always one line -- an unbalanced
-        # line here would otherwise fall through to DECL parsing and get
-        # reported UNPARSED against the tool's own skipped-method text.
-        if skip_body:
-            skip_body += line.count("{") - line.count("}")
-            continue
-        # A NESTED type definition -- `struct State { ... };` inside Player -- is a
-        # type, not a field: it occupies no space and advances no offset. Consume it
-        # whole, before the checks below can misread it.
-        #
-        # Two of those checks would, and both fail silently. Its closing `};` matches
-        # the outer-struct terminator on the next line, and a pointer-to-member
-        # declaration (`int (Player::*mInit)();`) matches the member-function pattern
-        # that ends the field list. Either way the walk stopped at the nested type,
-        # and for Player.h that meant "0 commented fields ... struct spans 0xd0" --
-        # the base's size, no fields checked, exit status 0. A header with 177
-        # checkable fields reported exactly like a clean pass.
-        if nested:
-            if re.match(r"^\s*\};", line):
-                nested = False
-            continue
-        # A nested FORWARD declaration -- `struct State;` inside Camera -- is a type
-        # too, and occupies no space either. It shows up when a class handles its
-        # nested type ONLY by pointer: `Camera::ChangeState` is mangled `PNS_5StateE`,
-        # which is what forces State to be nested, while nothing in the tree
-        # dereferences one, so there is no layout to write down.
-        #
-        # DECL wants two identifiers (`struct X y;`), so a bare tag matched nothing
-        # and fell through to UNPARSED -- and per the note above, ONE unparsed line
-        # suppresses the mismatch check for the whole header. That is the same
-        # silent-no-op shape this gate has already been bitten by twice, arriving a
-        # third way; here it at least exits non-zero rather than reporting a pass.
-        if re.match(r"^\s*(?:struct|union|class)\s+\w+\s*;\s*$", line):
-            continue
-        if re.match(r"^\s*struct \w+\s*(?::\s*(?:public\s+)?\w+\s*)?\{", line):
-            nested = True
-            continue
-        if re.match(r"^\s*(#|\}|/\* methods)", line):
-            break
-        if IGNORABLE.match(line):
-            if "/*" in line and "*/" not in line:
-                in_comment = True
-            continue
-        # A polymorphic C++ struct carries an implicit vptr at offset 0 that no
-        # declaration mentions, so the running offset cannot be derived from the text.
-        # Say the struct is unmodelled rather than emit a mismatch per field.
-        #
-        # `~Name(...)` (a bare, non-virtual destructor declaration -- Particle::
-        # SysTracker in include/Stage.h is the first instance) starts with `~`,
-        # which the type-name alternative below never matches (`~` is not in
-        # `[A-Za-z_]`), so without this alternative it fell through to UNPARSED.
-        if re.match(r"^\s*(virtual\b|~\w+\s*\([^;]*\)\s*;|[A-Za-z_][\w:<>, &*]*\([^;]*\)\s*(const)?\s*;)", line):
-            # ...unless we started from a base whose size is asserted. A derived
-            # class places no vptr of its own -- it inherits the base's, and the
-            # base's asserted size already counts it. The running offset is sound,
-            # so the member functions merely end the field list.
-            if derived_from is None:
-                unmodelled = True
-                break
-            # A derived class can ALSO declare its destructor/overrides FIRST
-            # (dScene_c.h's KEY FUNCTION convention -- "the destructor is declared
-            # first, which is safe for a derived class"). Before any real field
-            # has been seen, a method line doesn't end the list, it's still the
-            # header's front matter -- without this, dScMgBase_c.h (destructor +
-            # 8 overrides, THEN ~30 fields) reported "0 commented fields ...
-            # struct spans 0x50", the exact same silent-no-op shape as every
-            # other bug this file documents, just arrived at from the opposite
-            # direction. Once a field HAS been seen, a method line ends the
-            # list as before -- that's the generated-header convention
-            # (Stage.h: fields, then methods).
-            if n == 0:
-                depth = line.count("{") - line.count("}")
-                if depth > 0:
-                    skip_body = depth
+                # `struct X {` or `struct X : Base {`. Without the second form this
+                # tool never started on a derived struct at all, and reported
+                # "0 commented fields ... struct spans 0x0" -- which reads exactly
+                # like a pass. Every class this repo reconstructs from here on is a
+                # derived struct, so that silence covered the growing majority.
+                m0 = re.match(r"^\s*struct (\w+)\s*(?::\s*(?:public\s+)?(\w+)\s*)?\{", line)
+                if m0:
+                    if m0.group(1) != expected:
+                        # `struct BMA_File { u16 numFrames; };` -- opens AND closes on
+                        # the same line. Setting skip_other here and never checking
+                        # THIS line for the closing brace left it permanently stuck:
+                        # the real target struct's own opening line was then read
+                        # while still "skipping", so it was silently swallowed whole
+                        # -- MaterialChanger.h and TextureTransformer.h went from an
+                        # honest UNPARSED failure to a hollow "0 fields, 0 unparsed"
+                        # pass, checking nothing at all. Only skip forward if this
+                        # line's own body does NOT already close it.
+                        if not re.search(r"\};", line):
+                            skip_other = True
+                        continue
+                    started = True
+                    base = m0.group(2)
+                    if base is not None:
+                        # A derived struct's own fields do NOT start at 0 -- the base
+                        # sub-object is there. Guessing 0 would mismatch every field,
+                        # so refuse unless the base states its own size.
+                        if base not in SZ:
+                            unknown_base = base
+                            break
+                        # Data size, not sizeof -- see DATA_SIZE above. Each field is
+                        # aligned below, so a base whose padding is unused still puts
+                        # the first own field exactly where sizeof would have.
+                        off = DATA_SIZE.get(base, SZ[base])
+                        derived_from = base
                 continue
-            break
-        # A declaration can carry a trailing comment that runs onto later lines:
-        #     u8 unk_010;   /* 0x010 - first byte of the 0x28-byte ClsnResult
-        #                              the hit is written into ... */
-        # Those continuation lines are prose, not declarations. Without this they
-        # were reported UNPARSED and the header failed the gate on its own comments.
-        if line.count("/*") > line.count("*/"):
-            in_comment = True
-        m = DECL.match(line)
-        typ = m.group(1).rsplit("::", 1)[-1] if m else None
-        w = 4 if (m and m.group(2)) else SZ.get(typ)
-        if w is None:
-            # An unrecognised declaration is NOT harmless: skipping it leaves the
-            # running offset short, so every later field silently "matches" at the
-            # wrong place. Say so rather than quietly carrying on.
-            skipped.append(f"{lineno}: {line.strip()}")
-            # ...and stop claiming MISMATCH from here on. The running offset is now
-            # known-wrong, so every later comparison is against a meaningless number:
-            # `struct CylinderClsn base;` is unparseable, which made the very next
-            # field report "comment 0x30, computed 0x000". Those are artifacts of the
-            # skip, not defects in the header. UNPARSED already fails the gate, so
-            # nothing is being hidden -- the difference is that what it prints is true.
-            trusted = False
+            if in_comment:
+                if "*/" in line:
+                    in_comment = False
+                continue
+            # An inline method BODY (`virtual ~dScMgBase_c() { ...; }`), being
+            # skipped over by the methods-declared-first branch below. Track brace
+            # depth across lines the same way `nested`/`in_comment` already do,
+            # rather than assuming a method is always one line -- an unbalanced
+            # line here would otherwise fall through to DECL parsing and get
+            # reported UNPARSED against the tool's own skipped-method text.
+            if skip_body:
+                skip_body += line.count("{") - line.count("}")
+                continue
+            # A NESTED type definition -- `struct State { ... };` inside Player -- is a
+            # type, not a field: it occupies no space and advances no offset. Consume it
+            # whole, before the checks below can misread it.
+            #
+            # Two of those checks would, and both fail silently. Its closing `};` matches
+            # the outer-struct terminator on the next line, and a pointer-to-member
+            # declaration (`int (Player::*mInit)();`) matches the member-function pattern
+            # that ends the field list. Either way the walk stopped at the nested type,
+            # and for Player.h that meant "0 commented fields ... struct spans 0xd0" --
+            # the base's size, no fields checked, exit status 0. A header with 177
+            # checkable fields reported exactly like a clean pass.
+            if nested:
+                if re.match(r"^\s*\};", line):
+                    nested = False
+                continue
+            # A nested FORWARD declaration -- `struct State;` inside Camera -- is a type
+            # too, and occupies no space either. It shows up when a class handles its
+            # nested type ONLY by pointer: `Camera::ChangeState` is mangled `PNS_5StateE`,
+            # which is what forces State to be nested, while nothing in the tree
+            # dereferences one, so there is no layout to write down.
+            #
+            # DECL wants two identifiers (`struct X y;`), so a bare tag matched nothing
+            # and fell through to UNPARSED -- and per the note above, ONE unparsed line
+            # suppresses the mismatch check for the whole header. That is the same
+            # silent-no-op shape this gate has already been bitten by twice, arriving a
+            # third way; here it at least exits non-zero rather than reporting a pass.
+            if re.match(r"^\s*(?:struct|union|class)\s+\w+\s*;\s*$", line):
+                continue
+            if re.match(r"^\s*struct \w+\s*(?::\s*(?:public\s+)?\w+\s*)?\{", line):
+                nested = True
+                continue
+            if re.match(r"^\s*(#|\}|/\* methods)", line):
+                break
+            if IGNORABLE.match(line):
+                if "/*" in line and "*/" not in line:
+                    in_comment = True
+                continue
+            # A polymorphic C++ struct carries an implicit vptr at offset 0 that no
+            # declaration mentions, so the running offset cannot be derived from the text.
+            # Say the struct is unmodelled rather than emit a mismatch per field.
+            #
+            # `~Name(...)` (a bare, non-virtual destructor declaration -- Particle::
+            # SysTracker in include/Stage.h is the first instance) starts with `~`,
+            # which the type-name alternative below never matches (`~` is not in
+            # `[A-Za-z_]`), so without this alternative it fell through to UNPARSED.
+            if re.match(r"^\s*(virtual\b|~\w+\s*\([^;]*\)\s*;|[A-Za-z_][\w:<>, &*]*\([^;]*\)\s*(const)?\s*;)", line):
+                # ...unless we started from a base whose size is asserted. A derived
+                # class places no vptr of its own -- it inherits the base's, and the
+                # base's asserted size already counts it. The running offset is sound,
+                # so the member functions merely end the field list.
+                if derived_from is None:
+                    unmodelled = True
+                    break
+                # A derived class can ALSO declare its destructor/overrides FIRST
+                # (dScene_c.h's KEY FUNCTION convention -- "the destructor is declared
+                # first, which is safe for a derived class"). Before any real field
+                # has been seen, a method line doesn't end the list, it's still the
+                # header's front matter -- without this, dScMgBase_c.h (destructor +
+                # 8 overrides, THEN ~30 fields) reported "0 commented fields ...
+                # struct spans 0x50", the exact same silent-no-op shape as every
+                # other bug this file documents, just arrived at from the opposite
+                # direction. Once a field HAS been seen, a method line ends the
+                # list as before -- that's the generated-header convention
+                # (Stage.h: fields, then methods).
+                if n == 0:
+                    depth = line.count("{") - line.count("}")
+                    if depth > 0:
+                        skip_body = depth
+                    continue
+                break
+            # A declaration can carry a trailing comment that runs onto later lines:
+            #     u8 unk_010;   /* 0x010 - first byte of the 0x28-byte ClsnResult
+            #                              the hit is written into ... */
+            # Those continuation lines are prose, not declarations. Without this they
+            # were reported UNPARSED and the header failed the gate on its own comments.
+            if line.count("/*") > line.count("*/"):
+                in_comment = True
+            m = DECL.match(line)
+            typ = m.group(1).rsplit("::", 1)[-1] if m else None
+            w = 4 if (m and m.group(2)) else SZ.get(typ)
+            if w is None:
+                # An unrecognised declaration is NOT harmless: skipping it leaves the
+                # running offset short, so every later field silently "matches" at the
+                # wrong place. Say so rather than quietly carrying on.
+                skipped.append(f"{lineno}: {line.strip()}")
+                # ...and stop claiming MISMATCH from here on. The running offset is now
+                # known-wrong, so every later comparison is against a meaningless number:
+                # `struct CylinderClsn base;` is unparseable, which made the very next
+                # field report "comment 0x30, computed 0x000". Those are artifacts of the
+                # skip, not defects in the header. UNPARSED already fails the gate, so
+                # nothing is being hidden -- the difference is that what it prints is true.
+                trusted = False
+                continue
+            _, _, name, arr, decl = m.groups()
+            # Alignment is the strictest MEMBER alignment, never the type's size: a
+            # 100-byte ModelAnim aligns to 4, not to 100. Aligning to size padded 0xd4
+            # out to 0x12c and made every later field in the header mismatch.
+            #
+            # Prefer a computed alignment when we have one: learn_aggregates knows a
+            # Vector3 is 4-aligned because its members are. Fall back to min(w, 4) for
+            # a type known only by its `_size_must_be_` assertion -- the size alone
+            # cannot give the alignment, and no member of any struct here exceeds 4.
+            a = 4 if (m and m.group(2)) else ALIGN.get(typ, min(w, 4))
+            if off % a:                       # compiler would insert padding here
+                off += a - (off % a)
+            if decl is not None and trusted:
+                n += 1
+                if int(decl, 16) != off:
+                    # Buffered, not printed: a polymorphic struct declares its virtuals
+                    # AFTER its fields, so we only learn the layout is unmodelled once
+                    # every field has already been compared against an offset that is
+                    # short by the implicit vptr. Printing as we went emitted a screen of
+                    # MISMATCHes for a header the tool then correctly skipped.
+                    pending.append(f"  MISMATCH {path}:{lineno} {name}: comment {decl}, "
+                                   f"computed 0x{off:03x}")
+                    bad += 1
+            arr_n = 1
+            for d in ARR_DIMS.findall(arr):
+                arr_n *= int(d, 0)
+            off += w * arr_n
+        if unknown_base:
+            # Not a pass and not a failure: a statement of what is missing. Adding
+            # `typedef char X_size_must_be_0xN[sizeof(X) == 0xN ? 1 : -1];` to the
+            # base's header makes this header checkable AND makes the base's own size
+            # a claim the compiler enforces.
+            print(f"{path}: skipped -- derives from {unknown_base}, whose size is asserted "
+                  f"nowhere (add {unknown_base}_size_must_be_0x.. to its header)")
             continue
-        _, _, name, arr, decl = m.groups()
-        # Alignment is the strictest MEMBER alignment, never the type's size: a
-        # 100-byte ModelAnim aligns to 4, not to 100. Aligning to size padded 0xd4
-        # out to 0x12c and made every later field in the header mismatch.
-        #
-        # Prefer a computed alignment when we have one: learn_aggregates knows a
-        # Vector3 is 4-aligned because its members are. Fall back to min(w, 4) for
-        # a type known only by its `_size_must_be_` assertion -- the size alone
-        # cannot give the alignment, and no member of any struct here exceeds 4.
-        a = 4 if (m and m.group(2)) else ALIGN.get(typ, min(w, 4))
-        if off % a:                       # compiler would insert padding here
-            off += a - (off % a)
-        if decl is not None and trusted:
-            n += 1
-            if int(decl, 16) != off:
-                # Buffered, not printed: a polymorphic struct declares its virtuals
-                # AFTER its fields, so we only learn the layout is unmodelled once
-                # every field has already been compared against an offset that is
-                # short by the implicit vptr. Printing as we went emitted a screen of
-                # MISMATCHes for a header the tool then correctly skipped.
-                pending.append(f"  MISMATCH {path}:{lineno} {name}: comment {decl}, "
-                               f"computed 0x{off:03x}")
-                bad += 1
-        arr_n = 1
-        for d in ARR_DIMS.findall(arr):
-            arr_n *= int(d, 0)
-        off += w * arr_n
-    if unknown_base:
-        # Not a pass and not a failure: a statement of what is missing. Adding
-        # `typedef char X_size_must_be_0xN[sizeof(X) == 0xN ? 1 : -1];` to the
-        # base's header makes this header checkable AND makes the base's own size
-        # a claim the compiler enforces.
-        print(f"{path}: skipped -- derives from {unknown_base}, whose size is asserted "
-              f"nowhere (add {unknown_base}_size_must_be_0x.. to its header)")
-        continue
-    if unmodelled:
-        # not a failure: this gate is for the generated flat headers, and a
-        # hand-written polymorphic one has layout the text does not determine
-        print(f"{path}: skipped -- polymorphic C++ struct, implicit vptr not modelled")
-        continue
-    for msg in pending:
-        print(msg)
-    for s in skipped:
-        print(f"  UNPARSED {path}:{s}")
-    print(f"{path}: {n} commented fields, {bad} mismatched, "
-          f"{len(skipped)} unparsed, struct spans 0x{off:x}")
-    rc |= bool(bad or skipped)
-sys.exit(rc)
+        if unmodelled:
+            # not a failure: this gate is for the generated flat headers, and a
+            # hand-written polymorphic one has layout the text does not determine
+            print(f"{path}: skipped -- polymorphic C++ struct, implicit vptr not modelled")
+            continue
+        for msg in pending:
+            print(msg)
+        for s in skipped:
+            print(f"  UNPARSED {path}:{s}")
+        print(f"{path}: {n} commented fields, {bad} mismatched, "
+              f"{len(skipped)} unparsed, struct spans 0x{off:x}")
+        rc |= bool(bad or skipped)
+    return rc
+
+
+if __name__ == "__main__":
+    sys.exit(main(sys.argv[1:]))
