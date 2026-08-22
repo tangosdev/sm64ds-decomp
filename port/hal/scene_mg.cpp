@@ -387,7 +387,11 @@ void  func_ov004_020b2880(void);
 void  func_ov004_020b27f4(void);
 void  func_ov004_020b265c(void *c);
 void  func_ov004_020ae3b4(void *c);
-void  func_ov004_020ad660(void);
+/* SLOT 35 IS A PREDICATE ON `this` AND WAS DECLARED AS NEITHER. Run mg6, lane
+   PPP. This line used to read `void func_ov004_020ad660(void);` while
+   src/func_ov004_020ad660.c defines `int func_ov004_020ad660(int *r0)
+   { return (r0[2] & 0xff) != 0; }`. See mb_v35 below for what that cost. */
+int   func_ov004_020ad660(int *c);
 
 /* dScMgBase_c's OWN versions of the five slots a derived class overrides.
    Added by run link60 lane MG2; see kMgBaseFaces for why they were missing. */
@@ -567,7 +571,31 @@ static int  __fastcall mb_v31(void *, void *)      { MG_SLOT(31); func_ov004_020
 static int  __fastcall mb_v32(void *, void *)      { MG_SLOT(32); func_ov004_020b27f4(); return 0; }
 static int  __fastcall mb_v33(void *s, void *)     { MG_SLOT(33); func_ov004_020b265c(s); return 0; }
 static int  __fastcall mb_v34(void *s, void *)     { MG_SLOT(34); func_ov004_020ae3b4(s); return 0; }
-static int  __fastcall mb_v35(void *, void *)      { MG_SLOT(35); func_ov004_020ad660(); return 0; }
+/* SLOT 35 DROPPED `this` AND THREW THE ANSWER AWAY. Run mg6, lane PPP.
+ *
+ * This thunk used to read
+ *
+ *     static int __fastcall mb_v35(void *, void *)
+ *     { MG_SLOT(35); func_ov004_020ad660(); return 0; }
+ *
+ * against a declaration of `void func_ov004_020ad660(void);` -- while the
+ * matched body is `int func_ov004_020ad660(int *r0) { return (r0[2] & 0xff)
+ * != 0; }`. So the callee read whatever was on the stack in place of `this`,
+ * AND the thunk returned a hardcoded 0 instead of the answer. On ARM both
+ * halves ride through and are correct, because r0 already holds `this` and the
+ * callee's own return value is the caller's; on the host neither is. It is the
+ * same family as lane BASESET's slot-18/19 stack repair and lane FDR2's
+ * Scene::BeforeBehavior repair, and like both of those it is invisible to the
+ * byte gate.
+ *
+ * NOTHING HAD EVER CALLED IT, which is why it stood. None of the six classes
+ * seated before dScMgPanel_c dispatches slot 35, and the curling canary (scene
+ * 374, 300 frames) reproduces its 32557/32557/0 across this repair. This class
+ * dispatches it every frame: func_ov006_021057f0 gates its entire
+ * data_ov006_02142820 state table on the answer, so a constant 0 would have
+ * run that dispatch on every frame the ROM skips it. */
+static int  __fastcall mb_v35(void *s, void *)
+{ MG_SLOT(35); return func_ov004_020ad660((int *)s); }
 
 /* dScMgBase_c's OWN five, and they are the five the first wired boot found
    missing. Run link60 lane MG2.
@@ -2916,5 +2944,280 @@ extern "C" void port_scene_mg_coin_hits(void)
         std::printf("[scene] dScMgCoin_c object at %p, state index %d\n",
                     (void *)g_mg_coin_self,
                     *(int *)(g_mg_coin_self + 0x51c8));
+    std::fflush(stdout);
+}
+
+// ============================================================================
+// RUN mg6, LANE PPP: dScMgPanel_c, actor id 0x17c = scene 380
+// ============================================================================
+//
+// APPENDED AT THE END OF THE FILE, the shape every mg5 lane used and for the
+// reason they gave: several lanes append one of these blocks at once and
+// appending is what concatenates. Everything above is reused unchanged --
+// kMgBaseFaces, mg_apply, mg_raw_left, port_scene_mg_mounts,
+// port_scene_mg_prepare, port_scene_fill_rom and the g_mg_hits counters.
+//
+// ---- THE CLASS, RE-DERIVED FROM THE ROM AND NOT FROM THE COST FILE --------
+//
+// THE RTTI CHAIN IS COMPLETE AND IT IS BETTER EVIDENCE THAN THE SRC SPELLING.
+// The word immediately BEFORE the vtable is the type_info pointer:
+//
+//     config/arm9/overlays/ov006/relocs.txt
+//       from:0x0213dd44 kind:load to:0x0213dd84 module:overlay(6)
+//       from:0x0213e248 kind:load to:0x0213dd40 module:overlay(6)
+//
+// so data_ov006_0213e24c[-1] = 0x0213dd40, whose second word points at
+// 0x0213dd84, which reads "12dScMgPanel_c" in the shipped image. The class is
+// dScMgPanel_c and the two player-facing titles the spawn symbol carries are
+// localised names, exactly the MgShuffleShell / dScMgCurling_c and MgWanted /
+// dScMgLuigi_c shape. src/MgPuzzlePanelPuzzlePanic_Spawn.c spelling
+// _ZTV12dScMgPanel_c agrees, and is the weaker of the two witnesses.
+//
+// ONE ACTOR ID, TWO PLAYER TITLES, AND THE SELECTOR IS INSIDE THE CLASS. A
+// scan of extracted/overlays/overlay_0006.bin for every doubled-id word
+// 0xNNNN NNNN in 0x169..0x186 finds THIRTY records and exactly one for 0x17c;
+// the arm9 spawn table at 0x02090e54 has one row for it, in id order between
+// 0x17b's and 0x17d's. So "Puzzle Panel" and "Puzzle Panic" are not two ids.
+// What the ROM does have is a two-way branch inside the class:
+// func_ov006_02106168 builds its layout from ONE OF TWO three-entry tables,
+// data_ov006_0213dd4c or data_ov006_0213dd58, and func_ov006_021057f0 skips
+// its whole state dispatch when vtable SLOT 35 answers nonzero. Slot 35 is
+// dScMgBase_c's func_ov004_020ad660, `return (this[2] & 0xff) != 0` -- a mode
+// byte the framework puts in the object's third word. WHICH VALUE IS WHICH
+// TITLE IS NOT DERIVED HERE and this block does not guess it; what is derived
+// is that the split is a mode flag on one class and not two classes.
+//
+//   SpawnInfo      0x0213dc64  MgPuzzlePanelPuzzlePanic_SpawnInfo. The doubled
+//                  id word 0x017c017c sits at 0x0213dc68 and the word before
+//                  it is 0x02107858, which is the factory -- the mechanical
+//                  derivation port/mg_fanout_costs.txt section 3 prescribes.
+//   factory        0x02107858  MgPuzzlePanelPuzzlePanic_Spawn, 0x34 bytes
+//   vtable         0x0213e24c  named by the factory's OWN load relocation,
+//                  relocs.txt from:0x02107888 kind:load to:0x0213e24c
+//   width          36          all three of section 11's checks; see
+//                              port/slice_ppp.txt section 1
+//   overrides      6           slots 0, 6, 9, 16, 17, 18
+//   markers        5           all five ruled REAL_DECOMP before seating
+//   nosrc          0           among the override bodies
+//
+// TWO TABLES, NOT THREE. Slot 16 (func_ov006_0210428c) and slot 17
+// (func_ov006_021042b0) BOTH store data_ov006_0213e24c into [this] and then
+// call func_ov004_020b29c0 with nothing in between, so the chain is
+// Scene -> dScMgBase_c -> dScMgPanel_c and this fill does the base's table and
+// this one. dScMgCup_c needed a third because its destructors write an
+// intermediate base's.
+//
+// ALL SIX OVERRIDE SLOTS. "ruled" means the body was disassembled out of
+// extracted/overlays/overlay_0006.bin at base 0x020bfec0 with
+// port/tools/w13_dump.py and compared instruction for instruction with src/
+// BEFORE it was seated; the per-body evidence is in
+// port/tools/inferred_stub_adjudicated.txt.
+//
+//   slot  ROM word    module  body
+//    0   021073b0    ov006   InitResources            ruled REAL_DECOMP
+//    6   02107358    ov006   Behavior, HOST COPY      ruled REAL_DECOMP
+//    9   0210730c    ov006   Render                   ruled REAL_DECOMP
+//   16   0210428c    ov006   D2                       (no marker, checked)
+//   17   021042b0    ov006   D0                       ruled REAL_DECOMP
+//   18   021071fc    ov006   state reset              ruled REAL_DECOMP
+//   --   the other thirty are dScMgBase_c's or arm9's and are already keyed by
+//        address in kMgBaseFaces and port_scene_fill_rom
+//   --   word 36 reads ffffffff, which is its own config symbol
+//        data_ov006_0213e2dc and not a code address
+//
+// SLOT 18 TAKES AN ARGUMENT AND THE THUNK CLEANS IT, the repair lane BASESET
+// audited twenty-two slot-18 sites for. src/func_ov006_021071fc.c declares
+// `(char *self, int flag)` and the ROM branches on r1 at 0x02107208, so the
+// argument is real here rather than a ride-through, and mp_reset declares it.
+//
+// SLOT 6 IS A HOST COPY AND THE REASON IS NEW. It is the third pointer-to-
+// member shape port/mg_fanout_costs.txt section 4's FLW amendment describes:
+// the src reads the pair as two plain ints and open-codes the ARM Itanium
+// decode, so it compiles, it links, and both prescribed detectors read clean
+// over it. THE ONLY THING THAT CONVICTS IT IS A RUN, and the symptom is eip on
+// a raw DS address. port/unmatched/MgPanel_StateDispatch.cpp carries it and
+// nine more; this class has TEN dispatching TUs against curling's five,
+// because its state machine is two levels deep.
+//
+// ---- ONE SHARED FACE WAS REPAIRED, AND IT IS NOT COSMETIC ------------------
+//
+// mb_v35 above used to read
+//
+//     static int __fastcall mb_v35(void *, void *)
+//     { MG_SLOT(35); func_ov004_020ad660(); return 0; }
+//
+// against a declaration of `void func_ov004_020ad660(void);` -- while
+// src/func_ov004_020ad660.c defines `int func_ov004_020ad660(int *r0)
+// { return (r0[2] & 0xff) != 0; }`. So the thunk dropped `this` (the callee
+// read whatever was on the stack) AND discarded the answer, returning a
+// constant 0. On ARM both halves ride through and are correct; on the host
+// neither is. It is the same family as the slot-18/19 stack repair lane
+// BASESET made and the Scene::BeforeBehavior repair lane FDR2 made.
+//
+// NOTHING HAD EVER CALLED IT, which is why it survived: the six classes seated
+// before this one never dispatch slot 35, and the curling canary (scene 374)
+// reproduces byte for byte across the repair. dScMgPanel_c dispatches it every
+// frame, through func_ov006_021057f0, as the gate on its whole 02142820 state
+// table -- `ldr r1,[r0]; ldr r1,[r1,#0x8c]; blx r1` at 0x021057f4 -- so a
+// constant 0 would have run that dispatch on every frame the ROM skips it.
+
+extern "C" {
+/* the class's own vtable, in the ov006 mount. 36 slots, span-checked. */
+extern unsigned char data_ov006_0213e24c[];   /* dScMgPanel_c,   36 slots */
+extern unsigned char MgPuzzlePanelPuzzlePanic_SpawnInfo[];
+
+/* the class's own six vtable bodies. func_ov006_02107358 is the HOST COPY in
+   unmatched/MgPanel_StateDispatch.cpp, not the src TU. */
+int   func_ov006_021073b0(void *self);          /* slot 0  InitResources */
+int   func_ov006_02107358(char *self);          /* slot 6  Behavior, host copy */
+int   func_ov006_0210730c(void *self);          /* slot 9  Render */
+int   func_ov006_0210428c(int *self);           /* slot 16 D2 */
+int  *func_ov006_021042b0(int *self);           /* slot 17 D0 */
+void  func_ov006_021071fc(char *self, int flag);/* slot 18 state reset */
+
+int  *MgPuzzlePanelPuzzlePanic_Spawn(void);
+
+/* the state machine's witness, from unmatched/MgPanel_StateDispatch.cpp */
+void port_mg_panel_counts(unsigned *hits, unsigned *floor, unsigned *unknown);
+/* the one nosrc body on the init and reset paths, from MgPanel_Faces.cpp */
+unsigned port_mg_panel_02106168_hits(void);
+
+void port_scene_mg_panel_hits(void);
+}
+
+static int  __fastcall mp_init(void *s, void *)
+{ MG_SLOT(0);  const int r = func_ov006_021073b0(s);
+  hal_gapless_minigames_latch(); return r; }
+static int  __fastcall mp_beh(void *s, void *)
+{ MG_SLOT(6);  const int r = func_ov006_02107358((char *)s);
+  hal_gapless_splice(); return r; }
+static int  __fastcall mp_render(void *s, void *)
+{ MG_SLOT(9);  return func_ov006_0210730c(s); }
+static void *__fastcall mp_d2(void *s, void *)
+{ MG_SLOT(16); return (void *)(size_t)func_ov006_0210428c((int *)s); }
+static void *__fastcall mp_d0(void *s, void *)
+{ MG_SLOT(17); return (void *)func_ov006_021042b0((int *)s); }
+static int  __fastcall mp_reset(void *s, void *, int flag)
+{ MG_SLOT(18); func_ov006_021071fc((char *)s, flag); return 1; }
+
+/* dScMgPanel_c's own six, keyed on the ROM word each slot holds. None of the
+   six appears in kMgBaseFaces or in any earlier class's array -- a word is one
+   address -- so the key sets stay disjoint by construction. */
+static const MgFace kPanelFaces[] = {
+    {0x021073b0u, (void *)mp_init},   {0x02107358u, (void *)mp_beh},
+    {0x0210730cu, (void *)mp_render}, {0x0210428cu, (void *)mp_d2},
+    {0x021042b0u, (void *)mp_d0},     {0x021071fcu, (void *)mp_reset},
+};
+
+/* The scene object, for the run report below. Nothing else reads it. */
+static char *g_mg_panel_self;
+
+/* The registry's factory column is void *(*)(void) and the matched factory
+   returns int *. One typed forwarder, the shape port_mg_curling_spawn has.
+   NO DISPLACEMENT RULING IS NEEDED: src/MgPuzzlePanelPuzzlePanic_Spawn.c calls
+   func_ov004_020b2adc(p) WITH the object pointer, where dScMgCup_c's factory
+   calls the same base constructor with none and rides r0 through. Confirmed
+   against the ROM at 0x0210786c (arm_call to 0x020b2adc) with r0 = p live. */
+extern "C" void *port_mg_panel_spawn(void)
+{
+    void *p = (void *)MgPuzzlePanelPuzzlePanic_Spawn();
+    g_mg_panel_self = (char *)p;
+    return p;
+}
+
+extern "C" void port_scene_fill_panel(void)
+{
+    /* mounts before the fill, for port_scene_fill_curling's reason; both are
+       idempotent behind their own static guards. */
+    port_scene_mg_mounts();
+
+    void **base = (void **)data_ov004_020bc0c0;
+    void **vt   = (void **)data_ov006_0213e24c;
+
+    /* The base table again, idempotent for the reason the coin fill states:
+       mg_apply keys on the ROM word and a slot already holding a host thunk
+       matches nothing, so an earlier row's fill costs this one nothing and
+       this fill is correct read on its own. */
+    port_scene_fill_rom(base, 36);
+    mg_apply(base, 36, kMgBaseFaces,
+             sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
+
+    port_scene_fill_rom(vt, 36);
+    mg_apply(vt, 36, kMgBaseFaces,
+             sizeof kMgBaseFaces / sizeof kMgBaseFaces[0]);
+    mg_apply(vt, 36, kPanelFaces,
+             sizeof kPanelFaces / sizeof kPanelFaces[0]);
+
+    {
+        const char *s0 = std::getenv("SM64DS_SCENE_SLOT0");
+        const char *s9 = std::getenv("SM64DS_SCENE_SLOT9");
+        if (s0 && s0[0] == '0') vt[0] = (void *)mg_init_noop;
+        if (s9 && s9[0] == '0') vt[9] = (void *)mg_render_noop;
+    }
+
+    {
+        const unsigned lv = mg_raw_left(vt, 36);
+        if (lv) {
+            std::fprintf(stderr, "  [scene] MINIGAME FILL INCOMPLETE: "
+                         "dScMgPanel_c leaves %u of 36 raw DS words. A "
+                         "dispatch of any of them jumps to a DS address as a "
+                         "host one.\n", lv);
+            std::fflush(stderr);
+        }
+    }
+
+    port_scene_mg_prepare(port_scene_env_want());
+
+    if (port_scene_env_want() == 380) {
+        static int armed;
+        if (!armed) {
+            armed = 1;
+            std::atexit(port_scene_mg_panel_hits);
+        }
+    }
+}
+
+/* This class's own witness, registered only when scene 380 is the requested
+   one, so a curling or level run prints nothing extra. hal/scene_boot.cpp's
+   end-of-run block still has no third branch and is still not this lane's
+   region to widen, which is why this is an atexit and not a line there. */
+extern "C" void port_scene_mg_panel_hits(void)
+{
+    std::printf("[scene] dScMgPanel_c slot hits: init %u, behavior %u, "
+                "render %u, D0 %u, state-reset %u, slot35 gate %u\n",
+                g_mg_hits[0], g_mg_hits[6], g_mg_hits[9], g_mg_hits[17],
+                g_mg_hits[18], g_mg_hits[35]);
+    {
+        unsigned hits = 0, floor = 0, unknown = 0, calls = 0, fwk = 0;
+        port_mg_panel_counts(&hits, &floor, &unknown);
+        port_mg_dispatch_counts(&calls, &fwk);
+        /* THE TWO NUMBERS THAT READ ALIKE AND ARE NOT THE SAME. `routed` is
+           this class's own two-level machine; `UNHANDLED` is a code word
+           neither of its switches knows, and a nonzero one is the number that
+           says a dispatching TU was missed rather than that a state is
+           missing. Printed together on purpose. */
+        std::printf("[scene] dScMgPanel_c state dispatch: %u routed to one of "
+                    "its 25 reachable states across six tables, %u entry(ies) "
+                    "into its two bodiless states (0x021053a8 and 0x02106ca4, "
+                    "both no delink block and no src file), %u code word(s) "
+                    "this class did not know; the framework switch saw %u "
+                    "call(s) and %u UNHANDLED address(es)\n",
+                    hits, floor, unknown, calls, fwk);
+    }
+    /* THE THIRD FLOOR, AND IT IS NOT A STATE. func_ov006_02106168 (0x238) is
+       named by ov006's symbols.txt, is covered by no delink block and has no
+       src file in either extension, and slot 0 AND slot 18 both call it
+       DIRECTLY. It is the layout builder that reads the two three-entry mode
+       tables named in this block's header, so what a nonzero count here means
+       is that the class wanted its board laid out and could not. */
+    std::printf("[scene] dScMgPanel_c layout floor: %u entry(ies) into the "
+                "func_ov006_02106168 trap (no delink block, no src; reached "
+                "from slot 0 and slot 18)\n",
+                port_mg_panel_02106168_hits());
+    if (g_mg_panel_self)
+        std::printf("[scene] dScMgPanel_c object at %p, state index %d, "
+                    "mode byte %u\n", (void *)g_mg_panel_self,
+                    *(int *)(g_mg_panel_self + 0x4ca8),
+                    (unsigned)(*(unsigned char *)(g_mg_panel_self + 8)));
     std::fflush(stdout);
 }
