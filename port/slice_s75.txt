@@ -25,17 +25,44 @@
 # so the record is 0x0213c434 = {0x020e6bf4, 0x01770177} and there is no second
 # candidate to choose between.
 #
-# THE PLAYER-FACING TITLE IS "SHELL SMASH", AND IT IS THE ONLY PART OF THE
-# IDENTITY THAT IS NOT A ROM READ. It cannot be: this ROM stores no minigame
-# title as text in any encoding. A search of the whole 16 MB image for the
-# ASCII and the UTF-16LE spelling of "Shuffle", "Trampoline", "Wiggler",
-# "Bob-omb" and "Memory Ma" returns ZERO hits each; the five EUR language
-# archives (ARCHIVE/cee|cef|ceg|cei|ces.narc) hold only battle-mode and
-# option-screen tile sheets; data/DSMT/EUR/texBank_E.bmd holds the title and
-# file-menu textures and nothing minigame-shaped; and MG/d_2d_mg_common_*
-# (the one per-language MG sheet) decodes to "RULES", "TIME" and "HIGH SCORE".
-# So the title is baked into art nobody has located and the derivation below is
-# the honest one:
+# THE PLAYER-FACING TITLE IS "SHELL SMASH", AND THE TREE ALREADY NAMED IT.
+# The arm9 spawn table data_02090864 holds one record pointer per actor id;
+# entry 0x177 sits at 0x02090e40 and holds 0x0213c434, which is this class's
+# SpawnInfo, and config/arm9/overlays/ov098/symbols.txt:113 names that record
+#
+#     MgShellSmash_SpawnInfo kind:data(any) addr:0x0213c434 ambiguous
+#
+# It predates this lane -- it arrived with the 2026-07-10 spawn-table naming
+# import (#211) -- and it is filed under ov098 rather than ov006 because the
+# two overlays OVERLAP that address, which is what the `ambiguous` flag on the
+# row records. THAT IS WHY THIS LANE DID NOT FIND IT AT FIRST and it is the
+# method correction worth carrying forward: a sweep of ov006's own symbols.txt
+# for Mg* spawn names cannot find a symbol filed under another overlay. Sweep
+# the whole config for the ADDRESS, not one overlay for the name.
+#
+# THE ADDRESSING IS CHECKED RATHER THAN ASSUMED, and by controls rather than by
+# arithmetic. The two neighbouring entries in the same table are
+#
+#     entry 0x176 at 0x02090e3c -> 0x0213c214   MgShuffleShell_SpawnInfo
+#     entry 0x178 at 0x02090e44 -> 0x0213ebd0   MgBingoBallSlotsShot_SpawnInfo
+#
+# and both are exactly the addresses port/mg_fanout_costs.txt section 4 and
+# section 11 independently give those two classes. Two known-good neighbours
+# either side is a stronger check on the indexing than the multiplication is.
+#
+# AND THE ROM ITSELF STORES NO TITLE TEXT AT ALL. That is a separate finding
+# and it survives the citation above rather than being replaced by it: a search
+# of the whole 16 MB image for the ASCII and the UTF-16LE spelling of
+# "Shuffle", "Trampoline", "Wiggler", "Bob-omb" and "Memory Ma" returns ZERO
+# hits each; the five EUR language archives (ARCHIVE/cee|cef|ceg|cei|ces.narc)
+# hold only battle-mode and option-screen tile sheets; data/DSMT/EUR/
+# texBank_E.bmd holds the title and file-menu textures and nothing
+# minigame-shaped; and MG/d_2d_mg_common_* (the one per-language MG sheet)
+# decodes to "RULES", "TIME" and "HIGH SCORE". So NO lane can read a title out
+# of this image, and every title in this port comes from the config. The right
+# move when a title is missing is to search the config harder, not the ROM.
+#
+# THE ASSET EVIDENCE CORROBORATES THE NAME AND IS KEPT FOR THAT REASON:
 #
 #   1. The class loads "/MG/d_2d_mg_bg_jokyu_curling_ncg.bin" -- the literal at
 #      data_ov006_0213c5a0 that slot 0 hands to func_020adc74. JOKYU is the
@@ -51,13 +78,12 @@
 #        dScMgMemory_c/dScMgMemory2_c         Memory Match / Memory Master
 #        dScMgPachinko_c/dScMgPachinko2_c     Bob-omb Squad / Lakitu Launch
 #        dScMgMCarlo_c/dScMgMCarlo2_c         (Pair-a-Gone) / Pair-a-Gone and On
-#      dScMgCurling_c is MgShuffleShell, so dScMgCurling2_c is the other half.
-#   3. Mario's Rec Room set contains exactly one other shell-sliding title and
-#      it is Shell Smash, which is the only unassigned name the pair can take.
+#      dScMgCurling_c is MgShuffleShell, so dScMgCurling2_c is the other half,
+#      and MgShellSmash_SpawnInfo says which half by name.
 #
-# READ THAT AS A THREE-STEP INFERENCE, NOT A READ. Steps 1 and 2 are measured
-# in this image; step 3 is retail naming and this lane did not find it in the
-# ROM. Everything else in this file is a ROM read.
+# So the title is a CONFIG READ reached by ROM-verified addressing, with the
+# asset naming agreeing independently. Everything else in this file is a
+# straight ROM read.
 #
 # ---- THE WIDTH IS 36, ALL THREE CHECKS ------------------------------------
 #

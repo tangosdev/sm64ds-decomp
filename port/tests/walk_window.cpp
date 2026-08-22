@@ -2022,29 +2022,33 @@ static const struct { short id; const char *name; } MG_SCENE[] = {
 enum { MG_COUNT = (int)(sizeof MG_SCENE / sizeof MG_SCENE[0]) };
 
 /* 375's ROW LOST ITS QUESTION MARK AND THE OTHER FIVE KEPT THEIRS, run mg6
-   lane S75. The row read "curling2?" because 0x177 has no Mg* spawn symbol.
-   The CLASS name is now a ROM read -- the typeinfo record at
-   data_ov006_0213c510[-1] points at "15dScMgCurling2_c" -- but the class name
-   is not what this column holds, and the TITLE cannot be read out of this ROM
-   at all: it stores no minigame name as text in any encoding, which lane S75
-   established by searching the whole 16 MB image for the ASCII and UTF-16LE
-   spellings of five known titles (zero hits each) and by decoding the five EUR
-   language archives and the one per-language MG sheet, which hold battle-mode
-   art, "RULES", "TIME" and "HIGH SCORE".
+   lane S75. The row read "curling2?" because 0x177 has no Mg* spawn symbol IN
+   ov006. The CLASS name is a ROM read -- the typeinfo record at
+   data_ov006_0213c510[-1] points at "15dScMgCurling2_c" -- and the TITLE is
+   named by the tree, at an address the ROM verifies:
 
-   SO THE TITLE IS A THREE-STEP INFERENCE AND port/slice_s75.txt carries it in
-   full: the class opens "/MG/d_2d_mg_bg_jokyu_curling_ncg.bin" and jokyu is
-   this overlay's own marker for the harder half of a pair; in every pair where
-   both ids carry a spawn symbol the plain class takes the first title and the
-   *2 class the second (Bounce and Pounce/Trounce, Trampoline Time/Terror,
-   Memory Match/Master, Bob-omb Squad/Lakitu Launch); dScMgCurling_c is
-   MgShuffleShell, and Shell Smash is the one remaining shell title in the same
-   Rec Room set.
+     the arm9 spawn table data_02090864, entry 0x177 at 0x02090e40, holds
+     0x0213c434, and config/arm9/overlays/ov098/symbols.txt:113 names that
+     record MgShellSmash_SpawnInfo.
 
-   THE QUESTION MARK IS GONE BECAUSE THE ROW IS NO LONGER UNIDENTIFIED, not
-   because the title is proven. It is display-only text, the header above says
-   so, and the honest place for the caveat is here rather than in a punctuation
-   mark that also means "we do not know which class this is". */
+   IT IS FILED UNDER ov098 BECAUSE ov006 AND ov098 OVERLAP THAT ADDRESS -- the
+   row is marked `ambiguous` -- which is why a sweep of ov006's own symbol file
+   does not find it. It predates this lane: it came in with the 2026-07-10
+   spawn-table naming import (#211). THE ADDRESSING IS CHECKED RATHER THAN
+   ASSUMED, by its two neighbours in the same table: entry 0x176 holds
+   0x0213c214 and entry 0x178 holds 0x0213ebd0, which are MgShuffleShell_
+   SpawnInfo and MgBingoBallSlotsShot_SpawnInfo at exactly the addresses
+   port/mg_fanout_costs.txt sections 4 and 11 give them.
+
+   WHAT STAYS TRUE IS THAT THE ROM ITSELF STORES NO TITLE TEXT, and that is a
+   finding rather than a caveat about this row: searching the whole 16 MB image
+   for the ASCII and UTF-16LE spellings of five known titles returns zero hits
+   each, the five EUR language archives hold battle-mode art, and the one
+   per-language MG sheet decodes to "RULES", "TIME" and "HIGH SCORE". So no
+   lane can read a title off the ROM; a title comes from the config, and this
+   one has one. port/slice_s75.txt carries the corroborating asset evidence
+   (the class opens ".../jokyu_curling..." and jokyu marks the harder half of a
+   pair) as support for the name rather than as a substitute for it. */
 
 /* ---- THE LEVEL-SELECT ROW'S NAMES (port mod) ----------------------------
 
