@@ -89,6 +89,37 @@
 #      pool), from:0x020f38e0 (D0's) and from:0x020f5560 (the factory's).  A
 #      37th slot would need a consumer for its extra word and has none.
 #
+# A FIFTH CHECK WAS OFFERED THIS RUN AND IT IS AN UPPER BOUND, NOT A DECIDER.
+# Run mg9 lane LKY proposed reading the width off the RELOCATION STRIDE out of
+# the table -- 4 bytes for exactly the table width, then 8 once the mwcc pairs
+# start -- and called it a check needing no symbols and no judgment.  Measured
+# on six tables in this overlay it is right three times and WRONG ON THE THREE
+# THAT MATTER, always in the dangerous direction:
+#
+#   table                      stride-4 run   true width   verdict
+#   ------------------------   ------------   ----------   ---------------
+#   0x0213d1b8  0x16a (this)        37             36      OVER-READS BY 1
+#   0x0213c154  0x169                37             36      OVER-READS BY 1
+#   0x0213eb40  0x16c                37             36      OVER-READS BY 1
+#   0x0213b918  0x173                37             37      agrees
+#   0x0213d4d4  0x16b                36             36      agrees
+#   0x0213c304  0x176 curling        36             36      agrees
+#
+# WHY, and it is one sentence: the 4-stride does not stop at the table, it
+# stops at the first UNRELOCATED word, and when the object right after the
+# table opens with a relocated CODE word the run continues through it.  All
+# three over-reads are that case -- 0x0213d248 is the code half of a pair whose
+# body is dScMgMemory2_c's round-end state, 0x0213c1e4 is the pair section 11
+# opens with, and 0x0213ebd0 is MgBingoBallSlotsShot_SpawnInfo's factory word.
+# The 8-stride only begins on the SECOND pair.
+#
+# SO IT CANNOT TELL 0x173 FROM 0x169, 0x16a AND 0x16c: it returns 37 for all
+# four, which is exactly the set section 11 corrected and exactly the mistake
+# that writes a host thunk into another class's live data.  Like check 1 it can
+# REFUSE a width and never GRANT one.  A stride run of 36 is real evidence --
+# it means the next word is unrelocated, so the table cannot be longer -- and a
+# run of 37 means nothing on its own.  Kept as check 5 on that footing.
+#
 # ---- FOURTEEN OVERRIDES, TWELVE MARKERS, ZERO WITHOUT A SOURCE ------------
 #
 # port/tools/vtablerows.py --vtable 0x0213d1b8 --width 36 prints ovr 14,
@@ -166,6 +197,90 @@
 #
 # It is the only function without a src TU in the class's forty-seven; the other
 # forty-six are all below, minus the four host copies.
+#
+# ---- THE TITLE, OFF THE ROM'S OWN MESSAGE FILE ----------------------------
+#
+# The spawn parameter derivation says scene 362 asks for NAME TEXT 1, and the
+# chain from there to a string is four hops, all of them in the ROM:
+#
+#   ov005 row 1, param 0x00010100 -> (param >> 16) & 0xff = 1
+#   -> data_ov004_020bc070[1] = 0x225, a u16 table of 36 message ids
+#   -> data/message/msg_data_eng.bin, NitroFS file 643, "LZ77" + an LZ10
+#      stream that decompresses to 91712 bytes of MESGbmg1 (the magic and the
+#      section tags are stored word-reversed: "GSEM1gmb", "1FNI", "1TAD")
+#   -> INF1 holds 711 eight-byte entries {u32 offset, u32 attributes} and DAT1
+#      holds the glyph stream: 0x00..0x09 are '0'..'9', 0x0a..0x23 are
+#      'A'..'Z', 0x2d..0x46 are 'a'..'z', 0x4d is a space and 0xfd is a line
+#      break.
+#
+# Message 0x225 reads "Memory Match / Pick two matching cards to make them
+# disappear. Clear al[l]...", which is the title this seat's row is named for.
+#
+# AND THE NEIGHBOUR'S ENTRY CONFIRMS THE PAIR FROM THE OTHER SIDE. Memory
+# Master is name text 29, data_ov004_020bc070[29] = 0x241, and message 0x241
+# reads "Memory Master / If Memory Match was a piece of cake for you, try
+# out...". The ROM's own text names this class inside the sibling's
+# description, which is a stronger confirmation of the 0x16a/0x16b split than
+# either derivation alone. (Chain method: run mg9 lane S371.)
+#
+# ---- THE CARDS ARE FLAT RECORDS, NOT ELEMENT OBJECTS ----------------------
+#
+# Run mg9 lane S381 found dScMgMCarlo_c building eighty card objects whose
+# element class parks its OWN two-slot vtable in word 0 of each record, and
+# warned that a card game seat which misses one links, boots and jumps to a raw
+# DS address on the first rendered frame. CHECKED HERE AND ABSENT, three ways:
+#
+#   - THE FACTORY. MgMemoryMatch_Spawn is 0x60 and constructs exactly two
+#     sub-objects after the base constructor: Particle::SysTracker at +0x471c
+#     and the model at +0x4f38 (func_ov006_020c1d80). There is no third `bl`
+#     and no loop; nothing builds a card object.
+#   - THE CLEAR. src/func_ov006_020f4f94.c zeroes all twelve records field by
+#     field and every field is a plain int, short or char -- word 0 of a record
+#     is `*(int*)(p + 0x51a8) = 0`, the 20.12 screen x. A vptr is not something
+#     a per-round reset writes zero over.
+#   - THE RUN. The seat's card census prints word 0 of every live record,
+#     shifted down by 12, and reads x 32..224 on a scene-362 boot. Those words
+#     are 0x00020000..0x000e0000, which are coordinates and not addresses in
+#     any module.
+#
+# The draw itself is a HUD SPRITE seam (Hud_RenderSprite, ov004 0x020af68c),
+# not a virtual call, which is the same shape the sibling uses.
+#
+# ---- SLOTS 18 AND 19 DO NOT READ THEIR SECOND ARGUMENT --------------------
+#
+# Run mg9 lane LKY found dScMgLuckyStars_c's slot-18 and slot-19 bodies READING
+# the second argument and branching on it, where every previously seated class
+# ignored it, and asked every lane to disassemble its own pair rather than
+# inherit the ignore. DONE, and this class ignores it -- established by where
+# r1 is first TOUCHED in each body, which is the only thing that settles it:
+#
+#   func_ov006_020f52c4 (slot 18).  push {r4,r5,lr} / sub sp,#4 / mov r5,r0 /
+#     bl 0x020f4f94, and then `ldr r1,[pc,#0x40]` at 0x020f52d4. r1's first
+#     appearance in the body is a WRITE, so nothing can have read the incoming
+#     value.
+#   func_ov006_020f5250 (slot 19).  push {r4,lr} / mov r4,r0 /
+#     add r0,r4,#0x5000, and then `ldr r1,[r0,#0x314]` at 0x020f525c. Again a
+#     WRITE, three instructions in.
+#
+# So the thunks in hal/scene_mg_memory1.cpp declare the parameter to CLEAN four
+# bytes under __fastcall and forward nothing, which is the run mg5 lane BASESET
+# treatment and is correct HERE for a reason that is this class's own rather
+# than a precedent.
+#
+# AND IT IS UNEXERCISED IN BOTH DIRECTIONS ON EVERY RUN THIS LANE MADE. The
+# census reports slots 18 and 19 entered ZERO times at 300, 900 and 1500
+# frames: an unattended boot never leaves the class's own state 2. The static
+# reading above is the evidence; there is no run behind it, and this paragraph
+# says so rather than letting a green census imply one.
+#
+# ---- SLOT 34 IS NOT WITNESSED BY THIS CLASS -------------------------------
+#
+# Run mg9 lane S371 reported that hal/scene_mg.cpp's shared thunk for slot 34
+# is declared (void*, void*) while func_ov004_020ae3b4 takes five parameters at
+# every ROM dispatch site. A 900-frame scene-362 boot reports
+# "framework slots entered: 1(x1) 31(x1) 32(x1)" -- slot 34 is not entered at
+# all, so this class witnesses nothing and the repair is not this lane's to
+# make. Recorded so a later lane knows the question was asked here.
 
 # ---- ov006: dScMgMemory_c's own code block, 0x020f3834..0x020f5564 -------
 #

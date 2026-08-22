@@ -319,9 +319,17 @@ static void *__fastcall mem1_d0(void *s, void *)
    0x4c is 14, and the argument count is ONE at every one of them.  A __fastcall
    thunk declared (void*, void*) compiles to a bare `ret`, leaks the caller's
    four bytes, and a later `ret` takes a garbage return address at a fault that
-   MOVES WITH THE BUILD.  The parameter exists so __fastcall cleans four bytes;
-   neither ROM body reads its r1 and neither is called with it -- re-checked on
-   this class: func_ov006_020f52c4 and func_ov006_020f5250 both use r0 only. */
+   MOVES WITH THE BUILD.  The parameter exists so __fastcall cleans four bytes.
+
+   WHETHER IT MUST ALSO FORWARD IT IS A PER-CLASS QUESTION and run mg9 lane LKY
+   is why: dScMgLuckyStars_c's slot-18 and slot-19 bodies READ the second
+   argument and branch on it.  Disassembled here rather than inherited, and the
+   test is where r1 is first TOUCHED.  func_ov006_020f52c4's first mention of
+   r1 is `ldr r1,[pc,#0x40]` after four instructions, and
+   func_ov006_020f5250's is `ldr r1,[r0,#0x314]` after three -- both WRITES, so
+   neither body can have read the incoming value and cleaning is enough.
+   NOTHING WITNESSES EITHER WAY: both slots read zero hits on every run this
+   lane made, at 300, 900 and 1500 frames. */
 static int  __fastcall mem1_reset(void *s, void *, int /*ridethrough*/)
 { MEM1(18); func_ov006_020f52c4((char *)s); return 1; }
 static int  __fastcall mem1_v19(void *s, void *, int /*ridethrough*/)
