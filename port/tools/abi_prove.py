@@ -199,6 +199,24 @@ ARITY_FIXTURES = [
 ]
 
 # --------------------------------------------------------------------------
+# plain-name fixtures, for aritycheck --gate-plainfunc: the same re-break
+# mechanics as ARITY_FIXTURES against the other ratchet. The founding row:
+# the receiver gate was scoped to _ZN member names, and this defect SHIPPED
+# through that scoping.
+# --------------------------------------------------------------------------
+PLAIN_FIXTURES = [
+    ("Sort or 'Splode per-bomb tick", "src/func_ov006_020d8cc4.cpp",
+     'extern "C" void func_ov006_020d836c(void);',
+     'extern "C" void func_ov006_020d836c(char* c);',
+     "the bin-full sweep waits on the per-bomb tick; declared (void) the "
+     "host call pushes nothing, 020d836c reads a garbage receiver out of "
+     "the caller's saved registers, and scene 370 softlocks the first time "
+     "a sorting bin fills. On ARM r0 already held the receiver, so the "
+     "byte gate was green over it for two runs",
+     "ba2224f88, run mg8 lane SBN, 2026-08-22"),
+]
+
+# --------------------------------------------------------------------------
 # vtable-form fixtures: thunk substring, slot, what a player does to reach it
 # --------------------------------------------------------------------------
 VTABLE_FIXTURES = [
@@ -319,37 +337,40 @@ def prove_alias(root, scratch, results):
 
 def prove_arity(root, scratch, results):
     print("\n" + "=" * 74)
-    print("## aritycheck --gate-receiver -- %d arity-form fixtures"
-          % len(ARITY_FIXTURES))
+    print("## aritycheck ratchets -- %d arity-form fixtures"
+          % (len(ARITY_FIXTURES) + len(PLAIN_FIXTURES)))
     print("=" * 74)
 
     rc, out = run([PY, os.path.join(HERE, "aritycheck.py"), root,
-                   "--gate-receiver"])
+                   "--gate-receiver", "--gate-plainfunc"])
     green = rc == 0
-    print("\n  GREEN on the real tree: aritycheck --gate-receiver exit %d  %s"
-          % (rc, "PASS" if green else "FAIL"))
+    print("\n  GREEN on the real tree: aritycheck --gate-receiver "
+          "--gate-plainfunc exit %d  %s" % (rc, "PASS" if green else "FAIL"))
     for ln in out.splitlines():
         if "RATCHET" in ln or "baselined," in ln:
             print("      %s" % ln.strip())
     results.append(("aritycheck GREEN on cons", green))
 
-    for name, rel, broken, fixed, why, fixed_in in ARITY_FIXTURES:
-        ok_break, msg = rebreak_arity(scratch, rel, fixed, broken)
-        if not ok_break:
-            results.append(("aritycheck RED: %s" % name, False))
-            print("\n  FAIL %s\n       %s" % (name, msg))
-            continue
-        rc1, out1 = run([PY, os.path.join(HERE, "aritycheck.py"), scratch,
-                         "--gate-receiver"])
-        restore_arity(scratch, root, rel)
-        caught = rc1 == 1 and "NEW RECEIVER-SHAPE" in out1
-        results.append(("aritycheck RED: %s" % name, caught))
-        print("\n  %-4s %s" % ("PASS" if caught else "FAIL", name))
-        print("       fixed in %s; %s" % (fixed_in, msg))
-        print("       re-broken: aritycheck --gate-receiver exit %d, new "
-              "row(s) reported: %s" % (rc1,
-                                       "yes" if caught else "NO"))
-        print("       cost when live: %s" % why)
+    for gate, marker, fixtures in (
+            ("--gate-receiver", "NEW RECEIVER-SHAPE", ARITY_FIXTURES),
+            ("--gate-plainfunc", "NEW PLAIN-NAME", PLAIN_FIXTURES)):
+        for name, rel, broken, fixed, why, fixed_in in fixtures:
+            ok_break, msg = rebreak_arity(scratch, rel, fixed, broken)
+            if not ok_break:
+                results.append(("aritycheck RED: %s" % name, False))
+                print("\n  FAIL %s\n       %s" % (name, msg))
+                continue
+            rc1, out1 = run([PY, os.path.join(HERE, "aritycheck.py"),
+                             scratch, gate])
+            restore_arity(scratch, root, rel)
+            caught = rc1 == 1 and marker in out1
+            results.append(("aritycheck RED: %s" % name, caught))
+            print("\n  %-4s %s" % ("PASS" if caught else "FAIL", name))
+            print("       fixed in %s; %s" % (fixed_in, msg))
+            print("       re-broken: aritycheck %s exit %d, new "
+                  "row(s) reported: %s" % (gate, rc1,
+                                           "yes" if caught else "NO"))
+            print("       cost when live: %s" % why)
 
 
 def prove_nsdecl(root, scratch, results):

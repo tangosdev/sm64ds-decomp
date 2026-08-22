@@ -40,7 +40,7 @@ declarations, C++ overloads that share an Itanium prefix, and method
 definitions inside class bodies. A gate at that number would be switched off
 within a day, and a gate with a two-thousand-row baseline is not a gate.
 
-ONE SUBSET DOES GATE, AND IT IS THE ONE THAT KEEPS RECURRING.
+TWO SUBSETS DO GATE. THE FIRST IS THE ONE THAT KEPT RECURRING.
 
     THE RECEIVER SHAPE: a declaration with NO parameters at all, against a
     definition of an Itanium-mangled MEMBER name (_ZN...) that takes at least
@@ -68,6 +68,65 @@ ONE SUBSET DOES GATE, AND IT IS THE ONE THAT KEEPS RECURRING.
     some will be parser artefacts. The ratchet's claim is narrow and true: the
     tree does not grow a NEW one without somebody seeing it.
 
+    THE PLAIN-NAME SHAPE (--gate-plainfunc): the same dropped-argument class
+    for the address-named C symbols, func_XXXXXXXX and func_ovNNN_XXXXXXXX.
+    The receiver ratchet is scoped to _ZN member names, and that scoping let
+    a shipped defect through: src/func_ov006_020d8cc4.cpp declared
+
+        extern "C" int func_ov006_020d836c(void);
+
+    and called it with nothing, while the definition takes the per-bomb
+    receiver. The ROM leaves the receiver in r0 across the call (020d8ccc is
+    `mov r5, r0` and the `bl` follows with r0 untouched), so the byte gate
+    stayed green on ARM; on MSVC the caller pushed no argument, the callee
+    read its receiver out of the caller's saved registers, and scene 370's
+    Sort or 'Splode hung forever the first time a sorting bin filled. Fixed
+    in ba2224f88 (run mg8, lane SBN, 2026-08-22); func_ov006_020d836c is not
+    a _ZN name, so the receiver ratchet never looked at it.
+
+    THE SUBSET IS THREE FILTERS DEEP, and each filter exists because the
+    census without it is mostly noise. Measured on the mg8 tree, 2026-08-22:
+
+      1069  DROPS rows for plain names (rides already out). Most are inert:
+       387  after requiring the declaration to be a PROTOTYPE. In C,
+            `extern int f();` with empty parentheses promises nothing --
+            the calls in that TU pass whatever the transcriber wrote, so
+            the declaration cannot drop anything. Empty parentheses in a
+            .cpp file DO mean zero parameters and stay in.
+       133  after requiring a CALL through the declaration. The __sinit
+            destructor-registration TUs declare a body `(void)` and only
+            ever take its ADDRESS -- 76 rows for func_02017ab4 alone --
+            and an address-take reads no argument slots. A declaration in
+            a HEADER is called through the TUs that #include it, so for
+            header rows the call is looked for there instead.
+       118  after requiring every parameter on BOTH sides to provably be
+            one machine word: a pointer, a reference, or a named scalar
+            type. Struct-by-value spellings (transcribers write `struct P
+            pair` for what another TU spells as two ints), default
+            arguments, variadic definitions, long long and double all make
+            the COUNT diverge from the WORDS, so the other 15 rows are
+            held out and PRINTED, like the RIDE and NS BINDING exclusions.
+            Only for all-scalar signatures does "fewer parameters"
+            literally mean "fewer words pushed" on both calling
+            conventions at once.
+
+    A plain name has exactly one definition in the tree and no C++
+    overloads, so the artefacts that keep the full census non-gating (K&R
+    spellings, shared Itanium prefixes, in-class definitions) do not apply.
+    What survives all three filters is exactly: a call site that pushes
+    fewer words than the callee reads. The live rows are frozen in
+    aritycheck_plainfunc_baseline.txt; the Sort or 'Splode row is ABSENT
+    from it, because it is fixed, which is the same proof-of-usefulness the
+    receiver file carries.
+
+    STATED BLIND SPOT: a call under an UNPROTOTYPED C declaration can still
+    pass fewer words than the definition reads, and declaration-vs-
+    definition comparison cannot see it. Counting arguments at every call
+    site textually drowns in C++ default arguments and struct spellings
+    (measured: 524 short-looking call sites tree-wide, most of them legal
+    calls of defaulted definitions), so that census stays a pointer, not a
+    verdict, until somebody reads push counts out of the emitted code.
+
 WHAT WOULD MAKE THE FULL CENSUS GATE. Not a bigger regex. The honest route is
 to read the arity out of the emitted code -- the callers' push counts, the way
 abicheck reads emitted rets -- rather than out of the text. Until someone does
@@ -76,6 +135,7 @@ that, the two-thousand number is a pointer, not a verdict.
     python port/tools/aritycheck.py [repo-root]        census, always exit 0
     python port/tools/aritycheck.py --drops-only       the receiver subset
     python port/tools/aritycheck.py --gate-receiver    ratchet, exit 1 on new
+    python port/tools/aritycheck.py --gate-plainfunc   ratchet, exit 1 on new
     python port/tools/aritycheck.py --selftest
     python port/tools/aritycheck.py --json out.json
 """
@@ -179,19 +239,32 @@ DEFAULT_ROOT = os.path.dirname(os.path.dirname(HERE))
 DIRS = ('src', 'include', os.path.join('port', 'unmatched'),
         os.path.join('port', 'hal'))
 RECEIVER_BASELINE = os.path.join(HERE, 'aritycheck_receiver_baseline.txt')
+PLAINFUNC_BASELINE = os.path.join(HERE, 'aritycheck_plainfunc_baseline.txt')
+
+KEYWORDS = {'if', 'for', 'while', 'switch', 'return', 'else', 'sizeof', 'do'}
+
+# The return-type position must not be a statement keyword. Without this,
+#     return func_X(a, b);
+# and an `else` line followed by an indented call both parse as DECLARATIONS
+# of func_X whose "parameters" are the call's arguments -- 501 phantom
+# declarations and 33 phantom census rows on the mg8 tree, none of them in
+# the receiver subset (measured before the fix landed: 166 receiver keys
+# before and after, so the receiver baseline is untouched by this).
+_NOT_KW = r'(?!(?:%s)\b)' % '|'.join(sorted(KEYWORDS))
 
 # a definition: <ret> name(params) {
 DEFN = re.compile(
     r'^[ \t]*(?:extern\s+"C"\s+)?(?:static\s+)?'
-    r'(?:const\s+)?[A-Za-z_]\w*(?:\s*\*)*[\s*]+'
+    r'(?:const\s+)?' + _NOT_KW + r'[A-Za-z_]\w*(?:\s*\*)*[\s*]+'
     r'(?P<name>_ZN\w+|func_\w+|[A-Za-z_]\w*)\s*\((?P<p>[^;{)]*)\)\s*\{', re.M)
 # a declaration: <ret> name(params) ;
 DECL = re.compile(
     r'^[ \t]*(?:extern\s+(?:"C"\s+)?)?'
-    r'(?:const\s+)?[A-Za-z_]\w*(?:\s*\*)*[\s*]+'
+    r'(?:const\s+)?' + _NOT_KW + r'[A-Za-z_]\w*(?:\s*\*)*[\s*]+'
     r'(?P<name>_ZN\w+|func_\w+)\s*\((?P<p>[^;{)]*)\)\s*;', re.M)
 
-KEYWORDS = {'if', 'for', 'while', 'switch', 'return', 'else', 'sizeof', 'do'}
+# the address-named C symbols the plain-name ratchet is scoped to
+PLAIN = re.compile(r'^func_(?:ov\d+_)?[0-9a-f]{8}$')
 
 # A declaration written in C++ rather than as a flat Itanium name:
 #
@@ -226,10 +299,11 @@ def itanium_nullary(ns, name):
     return '_ZN%d%s%d%sEv' % (len(ns), ns, len(name), name)
 
 
-def nparams(p):
+def split_params(p):
+    """The individual parameter texts of a parameter list."""
     p = p.strip()
     if p in ('', 'void'):
-        return 0
+        return []
     depth, cur, out = 0, '', []
     for ch in p:
         if ch in '(<[':
@@ -242,7 +316,11 @@ def nparams(p):
         else:
             cur += ch
     out.append(cur)
-    return len([x for x in out if x.strip()])
+    return [x.strip() for x in out if x.strip()]
+
+
+def nparams(p):
+    return len(split_params(p))
 
 
 def strip_comments(src):
@@ -250,10 +328,89 @@ def strip_comments(src):
     return re.sub(r'//[^\n]*', '', src)
 
 
+def strip_strings(src):
+    """String and char literals emptied, so a comma or parenthesis inside a
+    literal cannot masquerade as an argument separator to the call reader.
+    The literal "C" survives, because emptying it turns `extern "C"` into
+    `extern ""`, at which point DECL no longer recognises the declaration in
+    the stripped text and the declaration's own parenthesis reads as a
+    call -- the selftest's never-called fixture caught exactly that."""
+    src = re.sub(r'"(?:[^"\\\n]|\\.)*"',
+                 lambda m: m.group(0) if m.group(0) == '"C"' else '""', src)
+    return re.sub(r"'(?:[^'\\\n]|\\.)*'", "''", src)
+
+
+# WHAT "PROVABLY ONE WORD" MEANS, for the plain-name ratchet. The census
+# compares parameter COUNTS, but the defect is about WORDS: the slots a
+# caller writes versus the slots a callee reads. For a pointer, a reference,
+# or a named scalar type the two are the same on ARM AAPCS and x86 __cdecl
+# alike. For everything else they can diverge -- a struct passed by value
+# spans several words (transcribers legitimately spell `int a, int b` as one
+# `struct Pair p`), long long and double span two, a defaulted C++ parameter
+# need not be passed at all, and a variadic definition reads whatever the
+# caller felt like. None of those spellings is a defect, so none of them may
+# trip a ratchet; rows carrying one are HELD OUT and printed instead.
+ONE_WORD_TYPES = frozenset((
+    'int', 'char', 'short', 'long', 'bool', 'float', 'unsigned', 'signed',
+    'size_t', 'u8', 's8', 'u16', 's16', 'u32', 's32', 'uint', 'BOOL',
+    'int8_t', 'uint8_t', 'int16_t', 'uint16_t', 'int32_t', 'uint32_t'))
+_PARAM_SHAPE = re.compile(r'^[A-Za-z_][\w\s*&]*(?:\[\s*\d*\s*\])?$')
+
+
+def words_provable(ptext):
+    """True when EVERY parameter in this list provably occupies one word."""
+    for param in split_params(ptext):
+        if '=' in param or not _PARAM_SHAPE.match(param):
+            return False        # a default argument, `...`, or a misparse
+        if '*' in param or '&' in param or '[' in param:
+            continue            # pointers, references, decayed arrays
+        toks = param.replace('const', ' ').split()
+        if toks.count('long') > 1 or 'double' in toks:
+            return False        # two words
+        if len(toks) > 1:
+            toks = toks[:-1]    # drop the parameter's name
+        if not toks or not all(t in ONE_WORD_TYPES for t in toks):
+            return False        # a by-value type this reader cannot size
+    return True
+
+
+def calls_symbol(rel, texts, name, memo):
+    """Does this TU CALL name -- not declare it, not define it, not merely
+    take its address? A declaration whose symbol is only ever address-taken
+    (the __sinit destructor-registration shape passes &func_020178b4 into
+    the teardown chain) constrains no call, so its arity is inert.
+
+    `memo` is scan-local on purpose: its keys are root-relative paths, and a
+    cache that outlives one scan would bleed one tree's answers into the
+    next tree's rows (the selftest scans several scratch trees in a row)."""
+    spankey = ('#spans', rel)
+    if spankey not in memo:
+        s = strip_strings(texts[rel])
+        spans = [(m.start(), m.end()) for m in DECL.finditer(s)]
+        spans += [(m.start(), m.end()) for m in DEFN.finditer(s)]
+        memo[spankey] = (s, spans)
+    s, spans = memo[spankey]
+    key = (rel, name)
+    if key not in memo:
+        hit = False
+        for m in re.finditer(r'\b%s\s*\(' % re.escape(name), s):
+            if not any(a <= m.start() < b for a, b in spans):
+                hit = True
+                break
+        memo[key] = hit
+    return memo[key]
+
+
+def _includes(src, header_base):
+    return re.search(r'#\s*include\s*[<"][^">]*\b%s[">]'
+                     % re.escape(header_base), src) is not None
+
+
 def scan(root):
     defs, decls = {}, defaultdict(list)
     bound = ns_bindings(root)
     ns_skipped = []
+    texts = {}
     for d in DIRS:
         for dirpath, _, files in os.walk(os.path.join(root, d)):
             for fn in sorted(files):
@@ -266,18 +423,21 @@ def scan(root):
                     continue
                 rel = os.path.relpath(p, root).replace(os.sep, '/')
                 src = strip_comments(src)
+                texts[rel] = src
                 for m in DEFN.finditer(src):
                     n = m.group('name')
                     if n in KEYWORDS:
                         continue
                     defs.setdefault(n, (nparams(m.group('p')), rel,
-                                        src.count('\n', 0, m.start()) + 1))
+                                        src.count('\n', 0, m.start()) + 1,
+                                        m.group('p').strip()))
                 for m in DECL.finditer(src):
                     n = m.group('name')
                     if n in KEYWORDS:
                         continue
                     decls[n].append((nparams(m.group('p')), rel,
-                                     src.count('\n', 0, m.start()) + 1))
+                                     src.count('\n', 0, m.start()) + 1,
+                                     m.group('p').strip()))
                 for m in NS_DECL.finditer(src):
                     n = itanium_nullary(m.group('ns'), m.group('name'))
                     line = src.count('\n', 0, m.start()) + 1
@@ -287,15 +447,16 @@ def scan(root):
                         # NS BINDING at the top of this file.
                         ns_skipped.append((n, rel, line))
                         continue
-                    decls[n].append((0, rel, line))
+                    decls[n].append((0, rel, line, 'void'))
     rows = []
-    for name, (dn, dfile, dline) in sorted(defs.items()):
-        for cn, cfile, cline in decls.get(name, []):
+    for name, (dn, dfile, dline, dtext) in sorted(defs.items()):
+        for cn, cfile, cline, ctext in decls.get(name, []):
             if cn == dn:
                 continue
             rows.append(dict(sym=name, def_n=dn, def_file=dfile,
-                             def_line=dline, decl_n=cn, decl_file=cfile,
-                             decl_line=cline,
+                             def_line=dline, def_text=dtext, decl_n=cn,
+                             decl_file=cfile, decl_line=cline,
+                             decl_text=ctext,
                              kind='DROPS' if cn < dn else 'INVENTS',
                              # a DECLARED TAIL-JUMP RIDE: the frame reuses its
                              # caller's argument frame, so the slot the callee
@@ -308,6 +469,42 @@ def scan(root):
                              receiver=(cn == 0 and dn >= 1
                                        and name.startswith('_ZN')
                                        and (cfile, name) not in RIDES)))
+
+    # THE PLAIN-NAME SUBSET, classified over the finished rows because it
+    # needs what a single declaration match cannot see: whether the
+    # declaring TU actually calls the symbol. See the header for the three
+    # filters and the measured reason each exists.
+    memo = {}
+    for r in rows:
+        r['plainfunc'] = False
+        r['plainheld'] = False
+        if r['kind'] != 'DROPS' or not PLAIN.match(r['sym']) or r['ride']:
+            continue
+        ext = r['decl_file'].rsplit('.', 1)[-1]
+        # A PROTOTYPE constrains the calls in its TU; C's empty parentheses
+        # do not (the calls still pass whatever the transcriber wrote).
+        # In C++ an empty list IS a zero-parameter prototype.
+        if not (r['decl_n'] >= 1 or r['decl_text'] == 'void'
+                or (r['decl_text'] == '' and ext == 'cpp')):
+            continue
+        if ext == 'h':
+            # a header calls nothing itself; its prototype constrains the
+            # TUs that include it, so the call is looked for there
+            base = r['decl_file'].rsplit('/', 1)[-1]
+            called = any(
+                rel2.rsplit('.', 1)[-1] in ('c', 'cpp')
+                and r['sym'] in txt2 and _includes(txt2, base)
+                and calls_symbol(rel2, texts, r['sym'], memo)
+                for rel2, txt2 in texts.items())
+        else:
+            called = calls_symbol(r['decl_file'], texts, r['sym'], memo)
+        if not called:
+            continue
+        if (words_provable(r['decl_text'])
+                and words_provable(r['def_text'])):
+            r['plainfunc'] = True
+        else:
+            r['plainheld'] = True
     return defs, decls, rows, ns_skipped
 
 
@@ -457,6 +654,121 @@ def selftest():
         bad += 0 if ok else 1
         print('    %-4s ride=%-5s %s' % ('ok' if ok else 'FAIL', got, note))
 
+    print('\n  STATEMENTS ARE NOT DECLARATIONS (the else/return misparse)')
+    stmt_cases = [
+        ('return func_02aaaa04(a, b);', [],
+         'a return-call is a call, not a declaration'),
+        ('else\n    func_02aaaa04(a, b);', [],
+         'an else line then an indented call is not a declaration'),
+        ('extern int func_02aaaa04(void);', ['func_02aaaa04'],
+         'a real declaration still is'),
+    ]
+    for text, want, note in stmt_cases:
+        got = [m.group('name') for m in DECL.finditer(text)]
+        ok = got == want
+        bad += 0 if ok else 1
+        print('    %-4s decls=%-18s %s'
+              % ('ok' if ok else 'FAIL', got or ['(nothing)'], note))
+
+    print('\n  ONE-WORD PROVABILITY (the plain-name ratchet\'s word test)')
+    word_cases = [
+        ('char *c', True, 'a pointer is one word'),
+        ('int a, int b, int c', True, 'named scalars'),
+        ('void', True, 'no parameters at all'),
+        ('unsigned int size', True, 'a multi-token scalar'),
+        ('int a, struct Pair p', False,
+         'a struct by value cannot be sized here'),
+        ('Pair p', False, 'nor an unknown type by value'),
+        ('int a, int b = 7', False, 'a default need not be passed'),
+        ('int w0, ...', False, 'a variadic definition reads anything'),
+        ('long long x', False, 'two words'),
+        ('double x', False, 'two words'),
+    ]
+    for text, want, note in word_cases:
+        got = words_provable(text)
+        ok = got == want
+        bad += 0 if ok else 1
+        print('    %-4s provable=%-5s (%s)  %s'
+              % ('ok' if ok else 'FAIL', got, text, note))
+
+    print('\n  PLAIN-NAME SUBSET -- a prototype, a call through it, and '
+          'provable words')
+
+    def plain_tree(files):
+        tmp = tempfile.mkdtemp(prefix='aritycheck_plain_')
+        try:
+            for rel, body in files.items():
+                path = os.path.join(tmp, rel.replace('/', os.sep))
+                os.makedirs(os.path.dirname(path), exist_ok=True)
+                with open(path, 'w', encoding='utf-8') as f:
+                    f.write(body)
+            _, _, prows, _ = scan(tmp)
+            return {(r['sym'], r['decl_file']):
+                    (r['plainfunc'], r['plainheld']) for r in prows}
+        finally:
+            shutil.rmtree(tmp, ignore_errors=True)
+
+    DEF1 = 'int func_02aaaa04(char *c) { return 0; }\n'
+    plain_cases = [
+        ({'src/def.c': DEF1,
+          'src/use.cpp': 'extern "C" int func_02aaaa04(void);\n'
+                         'int use(void) { return func_02aaaa04(); }\n'},
+         ('func_02aaaa04', 'src/use.cpp'), (True, False),
+         "the Sort or 'Splode shape: (void) decl in a .cpp, called"),
+        ({'src/def.c': DEF1,
+          'src/use.cpp': 'extern "C" int func_02aaaa04(void);\n'},
+         ('func_02aaaa04', 'src/use.cpp'), (False, False),
+         'same declaration, never called: inert'),
+        ({'src/def.c': DEF1,
+          'src/use.c': 'extern int func_02aaaa04();\n'
+                       'int use(void) { return func_02aaaa04(); }\n'},
+         ('func_02aaaa04', 'src/use.c'), (False, False),
+         'C empty parentheses are not a prototype'),
+        ({'src/def.c': DEF1,
+          'src/use.c': 'extern int func_02aaaa04(void);\n'
+                       'int use(void) { return func_02aaaa04(); }\n'},
+         ('func_02aaaa04', 'src/use.c'), (True, False),
+         'explicit (void) in C is'),
+        ({'src/def.c': DEF1,
+          'src/use.c': 'extern void func_02aaaa04(void);\n'
+                       'extern void func_020731dc();\n'
+                       'void use(void) '
+                       '{ func_020731dc(&func_02aaaa04); }\n'},
+         ('func_02aaaa04', 'src/use.c'), (False, False),
+         'address-taken only (the __sinit shape): inert'),
+        ({'src/def4.c': 'int func_02bbbb08(int a, int b, int c, int d) '
+                        '{ return a; }\n',
+          'src/use.c': 'struct Pair { int a, b; };\n'
+                       'extern int func_02bbbb08(int a, struct Pair p);\n'
+                       'int use(struct Pair q) '
+                       '{ return func_02bbbb08(1, q); }\n'},
+         ('func_02bbbb08', 'src/use.c'), (False, True),
+         'a struct-by-value spelling drops the COUNT, not the words: HELD'),
+        ({'src/defd.cpp': 'extern "C" int func_02cccc0c(int a, int b = 7) '
+                          '{ return a + b; }\n',
+          'src/use.cpp': 'extern "C" int func_02cccc0c(int a);\n'
+                         'int use(void) { return func_02cccc0c(3); }\n'},
+         ('func_02cccc0c', 'src/use.cpp'), (False, True),
+         'a defaulted definition makes short calls legal: HELD'),
+        ({'src/def.c': DEF1,
+          'include/decl_x.h': 'extern int func_02aaaa04(void);\n',
+          'src/use.c': '#include "decl_x.h"\n'
+                       'int use(void) { return func_02aaaa04(); }\n'},
+         ('func_02aaaa04', 'include/decl_x.h'), (True, False),
+         'a header prototype is called through the TU that includes it'),
+        ({'src/def.c': DEF1,
+          'include/decl_x.h': 'extern int func_02aaaa04(void);\n',
+          'src/use.c': 'int use(void) { return 0; }\n'},
+         ('func_02aaaa04', 'include/decl_x.h'), (False, False),
+         'the same header with no calling includer: inert'),
+    ]
+    for files, key, want, note in plain_cases:
+        got = plain_tree(files).get(key, ('(no row)', '(no row)'))
+        ok = got == want
+        bad += 0 if ok else 1
+        print('    %-4s gate=%-5s held=%-5s  %s'
+              % ('ok' if ok else 'FAIL', got[0], got[1], note))
+
     print('\n  DEMANGLER (shared, port/tools/msvc_undname.py)')
     rc = mu.selftest()
     if rc == 1:
@@ -477,9 +789,16 @@ def main(argv):
     ap.add_argument('--gate-receiver', action='store_true',
                     help='exit 1 on a RECEIVER-shape row that is not in '
                          'aritycheck_receiver_baseline.txt')
+    ap.add_argument('--gate-plainfunc', action='store_true',
+                    help='exit 1 on a PLAIN-NAME row that is not in '
+                         'aritycheck_plainfunc_baseline.txt')
     ap.add_argument('--write-receiver-baseline', action='store_true',
                     help='rewrite the baseline body from this tree. Only ever '
                          'correct when the rows have been looked at.')
+    ap.add_argument('--write-plainfunc-baseline', action='store_true',
+                    help='append this tree\'s plain-name rows to the '
+                         'baseline. Only ever correct when the rows have '
+                         'been looked at.')
     ap.add_argument('--selftest', action='store_true')
     ap.add_argument('--json', metavar='PATH')
     ap.add_argument('--limit', type=int, default=40,
@@ -496,6 +815,8 @@ def main(argv):
     invents = [r for r in rows if r['kind'] == 'INVENTS']
     recv = [r for r in rows if r['receiver']]
     rides = [r for r in rows if r['ride']]
+    plain = [r for r in rows if r['plainfunc']]
+    plainheld = [r for r in rows if r['plainheld']]
 
     if args.write_receiver_baseline:
         keys = sorted({receiver_key(r) for r in recv})
@@ -504,6 +825,15 @@ def main(argv):
                 f.write(k + '\n')
         print('appended %d receiver-shape keys to %s'
               % (len(keys), RECEIVER_BASELINE))
+        return 0
+
+    if args.write_plainfunc_baseline:
+        keys = sorted({receiver_key(r) for r in plain})
+        with open(PLAINFUNC_BASELINE, 'a', encoding='utf-8') as f:
+            for k in keys:
+                f.write(k + '\n')
+        print('appended %d plain-name keys to %s'
+              % (len(keys), PLAINFUNC_BASELINE))
         return 0
 
     print('aritycheck -- cross-TU arity disagreement census')
@@ -527,8 +857,17 @@ def main(argv):
           'that body is not what they call' % len(ns_skipped))
     for sym, rel, line in sorted(ns_skipped):
         print('      unbound: %s  %s:%d' % (sym, rel, line))
+    print('  %d of the DROPS are the PLAIN-NAME shape (a prototyped '
+          'declaration of a plain func_* symbol, called through, short of '
+          'the definition); %d more match that shape but are HELD OUT '
+          'because a parameter is not provably one word (struct-by-value '
+          'spellings, default arguments, variadic definitions)'
+          % (len(plain), len(plainheld)))
+    for r in sorted(plainheld, key=lambda x: receiver_key(x)):
+        print('      held: %s' % receiver_key(r))
     print('  The full census is REPORT ONLY. See the header for why.')
 
+    failed = 0
     if args.gate_receiver:
         base = load_receiver_baseline()
         keys = {receiver_key(r) for r in recv}
@@ -554,14 +893,53 @@ def main(argv):
                   'member\'s receiver rides r0 on ARM like any other first '
                   'argument; declare it and pass it, the way #1539 and #1543 '
                   'did on 2026-08-16.' % len(new))
-            return 1
-        print('\nARITYCHECK RECEIVER RATCHET PASSED: no new receiver-shape '
-              'row. The %d baselined rows are unadjudicated DEBT, not '
-              'clearance.' % len(base))
+            failed += 1
+        else:
+            print('\nARITYCHECK RECEIVER RATCHET PASSED: no new '
+                  'receiver-shape row. The %d baselined rows are '
+                  'unadjudicated DEBT, not clearance.' % len(base))
+
+    if args.gate_plainfunc:
+        base = load_receiver_baseline(PLAINFUNC_BASELINE)
+        keys = {receiver_key(r) for r in plain}
+        new = sorted(keys - base)
+        gone = sorted(base - keys)
+        print('\n--- PLAIN-NAME RATCHET (%s) ---'
+              % os.path.basename(PLAINFUNC_BASELINE))
+        print('  %d baselined, %d live, %d NEW, %d retired'
+              % (len(base), len(keys), len(new), len(gone)))
+        for k in gone:
+            print('  retired (delete the row): %s' % k)
+        if new:
+            print('\n  NEW PLAIN-NAME ROWS -- a prototyped declaration '
+                  'drops argument words the definition reads, and the '
+                  'declaring TU calls through it:')
+            for r in sorted(plain, key=lambda r: receiver_key(r)):
+                if receiver_key(r) not in base:
+                    print('    %s' % r['sym'])
+                    print('        declared (%s) at %s:%d'
+                          % (r['decl_text'], r['decl_file'], r['decl_line']))
+                    print('        DEFINED  (%s) at %s:%d'
+                          % (r['def_text'], r['def_file'], r['def_line']))
+            print('\nARITYCHECK PLAIN-NAME RATCHET FAILED: %d new row(s). '
+                  'On ARM the dropped argument can ride a register that is '
+                  'still live, so the byte gate stays green over the '
+                  'defect; on the host the callee reads a stack slot '
+                  'nobody wrote. Declare the full signature and pass it, '
+                  'the way ba2224f88 did for the Sort or \'Splode bin-full '
+                  'softlock.' % len(new))
+            failed += 1
+        else:
+            print('\nARITYCHECK PLAIN-NAME RATCHET PASSED: no new '
+                  'plain-name row. The %d baselined rows are unadjudicated '
+                  'DEBT, not clearance.' % len(base))
+
+    if failed:
+        return 1
 
     show = (recv if args.drops_only else rows)
     lim = len(show) if args.limit == 0 else min(args.limit, len(show))
-    if args.gate_receiver:
+    if args.gate_receiver or args.gate_plainfunc:
         # A green ratchet has already said everything worth saying; dumping
         # the frozen rows behind it turns a one-line pass into 500 lines of
         # scroll nobody reads, and a gate nobody reads is not a gate.

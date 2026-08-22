@@ -39,6 +39,28 @@ with a probe), and item 6's blast radius depended on what
 data_ov007_02103254 points at, which nobody had resolved -- it is a teardown
 trampoline, so the callers were splicing a return address out of two lists.
 
+AMENDED AGAIN 2026-08-22 by run mg8 lane SBN's follow-up, after the receiver
+ratchet's own scoping shipped a softlock: src/func_ov006_020d8cc4.cpp declared
+`extern "C" int func_ov006_020d836c(void);` where the definition takes the
+per-bomb receiver, and scene 370's Sort or 'Splode hung forever at the first
+full sorting bin (fixed in ba2224f88; the byte gate was green over it because
+the ROM leaves the receiver in r0 across the call). func_ov006_020d836c is not
+a _ZN name, so --gate-receiver never looked at it. What changed here:
+  * aritycheck gained a SECOND ratchet, --gate-plainfunc, for the plain
+    func_XXXXXXXX / func_ovNNN_XXXXXXXX names: a PROTOTYPED declaration that
+    drops, in a TU that CALLS the symbol (for a header declaration, in a TU
+    that includes it), with every parameter on both sides provably one word.
+    118 rows frozen in port/tools/aritycheck_plainfunc_baseline.txt; the
+    measured ladder that scoped those three filters (1069 raw -> 387
+    prototyped -> 133 called -> 118 provably-one-word, 15 held out and
+    printed) is in aritycheck.py's header.
+  * aritycheck's DECL/DEFN readers no longer parse `return f(a);` or an
+    `else` line followed by an indented call as DECLARATIONS of f -- 501
+    phantom declarations and 33 phantom census rows on this tree, zero of
+    them in the receiver subset (166 keys before and after, measured).
+  * run_checks runs both ratchets in one aritycheck invocation; abi_prove
+    gained the Sort or 'Splode declaration as a re-break fixture.
+
 
 0. WHY THIS EXISTS, AND WHY IT IS A RECOVERY
 --------------------------------------------
@@ -145,17 +167,28 @@ aritycheck.py -- no build required
                slot the caller never wrote.
       INVENTS  the declaration has MORE. Under __cdecl the caller cleans up,
                so the extra push is wasted rather than fatal.
-  THE FULL CENSUS DOES NOT GATE. It reports 2105 disagreements on this tree
-  and an unknown but large fraction are parser artefacts; a gate at that
-  number would be switched off within a day. Section 7 says what would have to
-  change.
-  ONE SUBSET GATES: the RECEIVER SHAPE, a declaration with no parameters at
-  all against a definition of an Itanium-mangled member (_ZN...) that takes at
-  least one. 166 live rows are frozen in
-  port/tools/aritycheck_receiver_baseline.txt and a NEW one fails
-  --gate-receiver. That subset is exactly what PR #1539 and PR #1543 fixed on
-  2026-08-16, and it is where the sixth live defect of section 6 surfaced once
-  the reader learned the namespaced C++ declaration spelling.
+  THE FULL CENSUS DOES NOT GATE. It reports 2075 disagreements on this tree
+  (2105 when this section was first written; the difference is the
+  else/return misparse fix of 2026-08-22, not tree movement) and an unknown
+  but large fraction are parser artefacts; a gate at that number would be
+  switched off within a day. Section 7 says what would have to change.
+  TWO SUBSETS GATE:
+    the RECEIVER SHAPE (--gate-receiver): a declaration with no parameters
+    at all against a definition of an Itanium-mangled member (_ZN...) that
+    takes at least one. 166 live rows are frozen in
+    port/tools/aritycheck_receiver_baseline.txt and a NEW one fails the
+    gate. That subset is exactly what PR #1539 and PR #1543 fixed on
+    2026-08-16, and it is where the sixth live defect of section 6 surfaced
+    once the reader learned the namespaced C++ declaration spelling.
+    the PLAIN-NAME SHAPE (--gate-plainfunc, added 2026-08-22 after the Sort
+    or 'Splode softlock shipped through the receiver gate's scoping): a
+    PROTOTYPED declaration of a plain func_* symbol that drops, in a TU
+    that CALLS the symbol (for a header declaration, in a TU that includes
+    it), with every parameter on both sides provably one machine word.
+    118 rows frozen in port/tools/aritycheck_plainfunc_baseline.txt; the
+    rows that match the shape but fail the one-word proof (struct-by-value
+    spellings, default arguments, variadic definitions) are HELD OUT and
+    printed on every run, 15 today.
 
   TWO THINGS ARE HELD OUT OF THAT SUBSET, both decided from another checker's
   artefact rather than from a judgement made here, and both PRINTED on every
@@ -170,7 +203,10 @@ aritycheck.py -- no build required
                   HAND-DECLARED jump rows are consulted: the 22 derived veneer
                   rows need the extracted ROM and this checker must keep
                   running without one. Rows stay in the CENSUS; only the
-                  ratchet subset drops them. 7 rows today.
+                  ratchet subsets drop them. 8 rows today (7 when this was
+                  written; the 8th arrived with mg8's merges, and five of
+                  the 8 are plain-name rows the second ratchet also holds
+                  out).
       NS BINDING  a namespaced C++ declaration only reaches the flat Itanium
                   definition through an /alternatename that binds its MSVC
                   decoration to that flat name. With no such directive the
@@ -380,6 +416,8 @@ faces and nothing else; the fill count is 2310 at both ends.
 
   $ python port/tools/aliascheck.py .            exit 0
   $ python port/tools/aritycheck.py . --gate-receiver    exit 0
+    (since 2026-08-22 the wired form is --gate-receiver --gate-plainfunc in
+     one invocation, still no MSVC and no ROM, still exit 0)
 
 
 3. RED ON DEMAND -- THE PROOF HARNESS
@@ -416,6 +454,9 @@ halves for every fixture:
     PASS aritycheck GREEN on cons
     PASS aritycheck RED: FaderColor::AdvanceFade
     PASS aritycheck RED: Enemy base ctor
+    ---- added 2026-08-22 with the plain-name ratchet: the shipped Sort or
+    ---- 'Splode declaration, re-broken, must fail --gate-plainfunc
+    PASS aritycheck RED: Sort or 'Splode per-bomb tick
     PASS aritycheck RED: namespaced C++ declaration
     PASS aritycheck GREEN again once the fixture is removed
     ---- three more from lane RF1. The first is the regression proof for the
@@ -524,9 +565,16 @@ ALIAS FORM (15) -- aliascheck must catch each when re-injected
   "NEW  <<<<<<" for the rest, so neither rule can be credited with the other's
   catch.
 
-ARITY FORM (7) -- aritycheck --gate-receiver must catch each when re-broken
+ARITY FORM (8) -- an aritycheck ratchet must catch each when re-broken
   FaderColor::AdvanceFade  PR #1539, cons ba1b0a670, include/decl_FaderColor.h
   Enemy base ctor          PR #1543, cons b74cf657d
+  Sort or 'Splode per-bomb tick   ba2224f88, run mg8 lane SBN, 2026-08-22.
+                               The founding fixture of --gate-plainfunc: the
+                               declaration in src/func_ov006_020d8cc4.cpp is
+                               rewritten back to (void) and the plain-name
+                               ratchet must name it. The other seven arms run
+                               against --gate-receiver; this one proves the
+                               ratchet the receiver scoping did not have.
 
   namespaced C++ declaration   the SPELLING, proved on a scratch file
   and green again once removed  the ratchet must also go quiet
@@ -574,8 +622,14 @@ SELFTEST BATTERIES (run first by run_checks stage 0)
       the ACTOR31 classification; that PLAIN /disasm yields zero parseable
       stores; and four pop-from-signature cases.
   aritycheck --selftest   parameter counting including a function-pointer
-      parameter and a template argument list, and decl/defn recognition with
-      a commented-out prototype ignored.
+      parameter and a template argument list; decl/defn recognition with a
+      commented-out prototype ignored and with `return f(a);` / an `else`
+      line refused as declarations; the one-word provability table (structs,
+      defaults, variadics, long long and double all refused); and nine
+      scratch-tree fixtures for the plain-name subset covering the prototype
+      rule, the call requirement, the address-take (__sinit) shape, the two
+      HELD-OUT classes, and the header-include path, with the Sort or
+      'Splode shape as the first fixture.
 
 
 5. THE DRIFT, AND HOW IT WAS RESOLVED
@@ -1145,10 +1199,18 @@ Ranked by blast radius.
     Itanium body carrying no parameter list in its spelling, so no demangler
     closes them; the fix is to read the pop out of the target's own emitted
     `ret`, which means disassembling beyond the hal objects.
-  * aritycheck's full census (2106 rows) does not gate and its parser is a
-    regex over C and C++ text. The honest route to gating it is to read arity
-    out of the emitted code -- the callers' push counts, the way abicheck
-    reads emitted rets -- not a bigger regex.
+  * aritycheck's full census (2075 rows since the else/return misparse fix;
+    2106 when this was written) does not gate and its parser is a regex over
+    C and C++ text. The honest route to gating it is to read arity out of
+    the emitted code -- the callers' push counts, the way abicheck reads
+    emitted rets -- not a bigger regex.
+  * THE PLAIN-NAME RATCHET COMPARES DECLARATIONS, NOT CALLS. A call under an
+    UNPROTOTYPED C declaration (`extern int f();`) can still pass fewer
+    words than the definition reads, and no declaration-vs-definition
+    comparison can see it. Counting arguments at every call site textually
+    was measured and rejected: 524 short-looking sites tree-wide, most of
+    them legal C++ calls of defaulted definitions, which is exactly the
+    switched-off-within-a-day shape. Same honest route as above.
   * aritycheck reads ONE C++ declaration spelling beyond the flat names:
     `namespace X { T f(); }`, single level, no arguments, AND ONLY WHEN an
     /alternatename binds its decoration to the flat Itanium name. Templates,
@@ -1174,9 +1236,10 @@ Ranked by blast radius.
     one -- so the baseline still carries rows for veneers that are in fact
     rides, and nobody should read the 166 as adjudicated. Closing that gap
     means giving the guard a ROM-free way to publish its derived set.
-  * The 166 frozen receiver-shape rows, the 11 INERT crossings and the 6
-    frozen vtspan fills are DEBT. The ratchets' claim is deliberately narrow
-    and true: the tree does not grow a new one without somebody seeing it.
+  * The 166 frozen receiver-shape rows, the 118 frozen plain-name rows, the
+    11 INERT crossings and the 6 frozen vtspan fills are DEBT. The ratchets'
+    claim is deliberately narrow and true: the tree does not grow a new one
+    without somebody seeing it.
   * aliascheck reads the DIRECTIVE, not the call sites. It says a crossing
     exists; whether the crossing bites depends on what the callers do, which
     is why every baseline row carries a hand adjudication rather than a

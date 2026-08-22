@@ -169,8 +169,10 @@
 // 020d8f98's other three tail calls are the bin and banner machines. So the
 // body the sweep is waiting on was ticking a garbage object while the real
 // bombs stood still. Four of the five call sites of 020d836c pass the
-// receiver; this was the fifth. port/tools/aritycheck.py's gate is scoped to
-// _ZN-mangled member names, so it never looked at this one.
+// receiver; this was the fifth. port/tools/aritycheck.py's gate WAS scoped to
+// _ZN-mangled member names at the time, so it never looked at this one; the
+// plain-name ratchet (--gate-plainfunc) has since closed that scoping, and
+// this declaration is its founding abi_prove fixture.
 //
 // THE FIX IS IN src/ AND STILL BYTE-MATCHES. The declaration takes char* and
 // the call passes r5; mwccarm 1.2/base, 1.2/sp2 and 1.2/sp2p3 all still

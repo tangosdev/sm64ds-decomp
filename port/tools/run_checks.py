@@ -19,8 +19,10 @@ WHY A WRAPPER EXISTS AT ALL
                         build.  GATES.
       aritycheck        a declaration and a definition of the same extern "C"
                         symbol that disagree about how many parameters it
-                        takes.  No build.  CENSUS ONLY, never fails -- see its
-                        header for the measured reason.
+                        takes.  No build.  The full census never fails (see
+                        its header for the measured reason); TWO subsets are
+                        RATCHETED and do gate: the _ZN receiver shape and the
+                        plain-name (func_*) called-prototype shape.
       abicheck          a vtable thunk whose emitted `ret <n>` does not match
                         the pop its Actor slot demands.  Needs a build and a
                         `dumpbin /disasm:nobytes` of the hal objects.  GATES.
@@ -227,15 +229,19 @@ def main(argv):
               "the rows: %s" % ", ".join(sorted(retired)))
 
     # aritycheck: the full census never fails (its parser is a regex over C
-    # and C++ text and it reports two thousand rows), but the RECEIVER SHAPE
-    # subset is ratcheted and does gate. That subset is exactly what PR #1539
-    # and PR #1543 fixed on 2026-08-16.
-    rc, _ = run("aritycheck --gate-receiver (no build; full census is "
-                "report-only, the receiver subset is a ratchet)",
+    # and C++ text and it reports two thousand rows), but TWO subsets are
+    # ratcheted and do gate. The RECEIVER SHAPE is exactly what PR #1539 and
+    # PR #1543 fixed on 2026-08-16; the PLAIN-NAME shape is exactly what
+    # shipped the Sort or 'Splode bin-full softlock that ba2224f88 fixed on
+    # 2026-08-22 (run mg8, lane SBN), which the receiver scoping could not
+    # see. One invocation runs both; the output names whichever failed.
+    rc, _ = run("aritycheck --gate-receiver --gate-plainfunc (no build; "
+                "full census is report-only, the two subsets are ratchets)",
                 [PY, os.path.join(HERE, "aritycheck.py"), root,
-                 "--gate-receiver"], root)
+                 "--gate-receiver", "--gate-plainfunc"], root)
     if rc != 0:
-        failures.append("aritycheck --gate-receiver exit %d" % rc)
+        failures.append("aritycheck --gate-receiver/--gate-plainfunc "
+                        "exit %d" % rc)
 
     # ---- stage 2: the build-requiring checker ------------------------------
     if want_abicheck:

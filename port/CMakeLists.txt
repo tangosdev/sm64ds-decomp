@@ -6354,7 +6354,8 @@ endif()
 #   vtspan --fills        a fill loop that leaves a ROM slot unwritten
 #   aritycheck            a declaration and a definition of one extern "C"
 #                         symbol that disagree about how many parameters it
-#                         takes (census, plus a ratchet on the receiver shape)
+#                         takes (census, plus ratchets on the receiver shape
+#                         and the plain-name func_* shape)
 #   abicheck              a vtable thunk whose emitted `ret` breaks its slot's
 #                         frame contract (needs this build's hal objects)
 #
