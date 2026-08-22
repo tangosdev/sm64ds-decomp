@@ -1252,11 +1252,17 @@ extern "C" int _ZN13RaycastGround10DetectClsnEv(void *self)
 
    port/tools/alias_audit.py is a DIFFERENT and complementary instrument and is
    not a substitute. It scans SOURCE TEXT for the identifier and then reads each
-   TU's ROM body, which lets it say a binding is wrong for a TU -- but it also
-   reports TUs that never reach the linker at all, and TUs that merely reuse the
-   spelling (src/func_ov004_020b75e4.c and its two siblings declare a `struct
-   VT`, which is not this name). Use the audit to decide whether a reader is
-   WRONG; use the census to decide whether the list of readers is COMPLETE. */
+   TU's ROM body, which lets it say a binding is WRONG for a TU that has one. It
+   now discounts the three ways a TU can reuse a spelling without meaning the
+   placeholder -- typedef, struct/union/enum tag, and #define -- and lists them
+   as SHADOW rows rather than findings, so `struct VT` in
+   src/func_ov004_020b75e4.c and `#define G1` in src/func_ov007_020be0dc.c are
+   no longer reported. What it still cannot see is who reaches the LINKER: it
+   reports TUs that are in no target, and it can only ever discuss names it
+   finds in source. Use the audit to decide whether a reader is WRONG; use the
+   census to decide whether the list of readers is COMPLETE. Neither answers
+   the other's question, and lane VTF got one wrong in each direction before
+   this note existed. */
 /* ---- run linkw wave C: THREE LINKED TUs THAT COLLIDE ON THOSE THREE NAMES.
    port/tools/alias_audit.py found them and each one is ROM-verified below by
    disassembling the body out of extracted/overlays/ and reading its literal

@@ -441,6 +441,32 @@ def code_only(text):
 
 _TYPEDEF = re.compile(r"\btypedef\b")
 
+_DEFINE = re.compile(r"^[ \t]*#[ \t]*define[ \t]+([A-Za-z_]\w*)", re.M)
+
+
+def defined_names(code):
+    """Every identifier this TU introduces with `#define`.
+
+    THE THIRD SHADOW, and the one that cost run mg6 lane VTF a false report.
+    src/func_ov007_020be0dc.c line 16 is
+
+        #define G1 (*data_ov007_02104bc0)
+
+    so after preprocessing there is no G1 in that TU at all: it reaches its own
+    ov007 pointer by name and the ?G1@@3PAHA binding cannot touch it. The audit
+    nonetheless read the spelled identifier, found the bound G1 address absent
+    from the body's loads, and reported a LIVE MISMATCH on a TU that is correct.
+    A census over the built objects settles it -- _G1 and ?G1@@3PAHA appear in
+    ZERO of this build's 22476 objects, so that binding has no readers whatever
+    -- and this predicate is what stops the tool inventing one.
+
+    Both macro forms are caught, object-like and function-like, because the
+    name token sits in the same place in each. A later #undef is not tracked:
+    the safe direction here is to treat a locally defined name as shadowed, and
+    no TU in this tree redefines a bound placeholder that way.
+    """
+    return {m.group(1) for m in _DEFINE.finditer(code)}
+
 
 def tag_only(name, code):
     """True when every mention of `name` is a struct/union/enum TAG.
@@ -456,6 +482,14 @@ def tag_only(name, code):
     Conservative in the safe direction: one mention that is NOT preceded by a
     tag keyword and the TU is treated as a real user, so the worst case is the
     old behaviour.
+
+    KNOWN FALSE NEGATIVE, theoretical today. A TU that writes both the tag and
+    an object of the same name -- `struct X { ... }; extern int X[];`, which C
+    allows because the two namespaces are separate -- has a non-tag mention, so
+    this returns False and the TU is audited as a real user. That is the safe
+    answer and the reason it is not "fixed": the opposite error would hide a
+    live reader. No TU in this tree does it; if one ever does, it will show up
+    as an ordinary row rather than a silent omission.
     """
     word = re.compile(r"\b%s\b" % re.escape(name))
     tagged = re.compile(r"\b(?:struct|union|enum)\s+%s\b" % re.escape(name))
@@ -619,6 +653,13 @@ def main():
             if tag_only(name, code):
                 shadowed.append(stem)
                 continue
+            # ...and for a TU that #defines the name, where the preprocessor
+            # removes it before the compiler ever sees an identifier. See
+            # defined_names(): this is the shadow that produced lane VTF's
+            # phantom G1 report.
+            if name in defined_names(code):
+                shadowed.append(stem)
+                continue
             users.append((stem, path, body))
         if not users:
             continue
@@ -707,10 +748,10 @@ def main():
               % (len(rows), len(mismatched), len(consistent), len(defining),
                  len(renamed_ok), len(unresolved)))
         if shadowed:
-            print("    %d TU(s) typedef this name and mean their own type, so "
-                  "they are" % len(shadowed))
-            print("    not users of the placeholder: %s"
-                  % ", ".join(sorted(shadowed)))
+            print("    %d TU(s) SHADOW this name -- typedef it, use it only as "
+                  "a struct/union/enum" % len(shadowed))
+            print("    tag, or #define it -- so they are not users of the "
+                  "placeholder: %s" % ", ".join(sorted(shadowed)))
 
         def show(rs, label):
             for stem, mod, addr, loads, _v, extra in rs:
@@ -773,7 +814,17 @@ def main():
 
     if not flagged:
         print("No spelled name has a TU whose ROM body contradicts its binding.")
-    return 1 if (flagged or live_defects) else 0
+
+    # THE EXIT CODE TRACKS THE LIVE ROWS ONLY, and that is a narrowing of what
+    # it used to mean. `flagged` counts a collision even when every mismatched
+    # TU in it is one the linker never sees, and three such collisions (G0, G1,
+    # VT) have stood in this tree for as long as the tool has run -- so the old
+    # `return 1 if flagged` was red on a clean tree and had been for its whole
+    # life, which is the same as having no exit code at all. A not-linked
+    # mismatch is a note about a file that is not in the binary; it becomes an
+    # error the moment something links it, and the LIVE pass catches it then.
+    # The collisions are still printed in full above, and still say 3.
+    return 1 if live_defects else 0
 
 
 PLACEHOLDER_N = re.compile(r"^[A-Za-z]+(\d+)$")
