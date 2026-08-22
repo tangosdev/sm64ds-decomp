@@ -2171,6 +2171,15 @@ void port_scene_fill_coin(void);
 extern unsigned char data_ov006_02140114[];
 void *port_mg_flower_spawn(void);
 void port_scene_fill_flower(void);
+/* run mg6 lane S75: dScMgCurling2_c, the advanced half of the curling pair
+   whose basic half is scene 374. Its SpawnInfo is spelled as the raw config
+   symbol because the ROM gives this id no spawn symbol either;
+   hal/scene_mg_curling2.cpp and port/slice_s75.txt carry the derivation from
+   the doubled-id word 0x01770177 at 0x0213c438, which occurs exactly once in
+   the overlay. */
+extern unsigned char data_ov006_0213c434[];
+void *port_mg_curling2_spawn(void);
+void port_scene_fill_curling2(void);
 }
 
 static const PortSceneClass port_scene_classes[] = {
@@ -2215,6 +2224,18 @@ static const PortSceneClass port_scene_classes[] = {
        set out of this table. APPENDED LAST, on purpose; see the header. */
     {390, "SCENE_MG_FLOWER", data_ov006_02140114, port_mg_flower_spawn,
      port_scene_fill_flower, 0},
+    /* 375 is 0x177, spelled in decimal for the two reasons every row above
+       gives. APPENDED AFTER EVERY EXISTING ROW, run mg6 lane S75, and for this
+       class the ordering rule is worth naming rather than inheriting: its
+       vtable at 0x0213c510 is the closest any seated table sits to curling's
+       live data. port/mg_fanout_costs.txt section 11's hazard is a fill that
+       writes into a word an overlay constructor later copies into a .bss
+       dispatch table, and appending is the latent-safe direction. It is also
+       measured absent in both directions here -- hal/scene_mg_curling2.cpp
+       section 3 has the four spans -- so this row obeys the rule rather than
+       relying on it, and the lane's scene-374 canary is the check. */
+    {375, "SCENE_MG_CURLING2", data_ov006_0213c434, port_mg_curling2_spawn,
+     port_scene_fill_curling2, 0},
     {0, 0, 0, 0, 0, 0},
 };
 
