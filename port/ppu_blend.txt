@@ -642,3 +642,95 @@ composited, and BLDCNT naming OBJ as a 2nd target under a BG 1st target cannot
 fire. Pre-existing, unchanged by this lane, and it needs the same fix the
 remaining semi-OBJ divergence needs: resolving OBJ into its own buffer the way
 ntr/ppu_sub.cpp does.
+
+
+================================================================================
+THE 3D LAYER'S PROJECTION MATRIX DID NOT SURVIVE THE HOST'S FRAME BOUNDARY
+(run mg10, lane RGX)
+================================================================================
+
+Not a blend and not a priority, and it is in this file because it was found
+INSIDE a compositor investigation and the first three measurements a reader will
+reach for all point at the compositor and are all wrong.
+
+THE REPORT was scene 361 (dScMgCup_c, "Tox Box Shuffle"): the top screen shows
+essentially nothing. Run mg9's CUP review localized it to "between triangle
+rasterization and engine A's BG0 composite" and recorded that DISPCNT is
+byte-identical to shipped scene 363, which works.
+
+THE COMPOSITOR IS EXONERATED WITH A NUMBER, which is the half this file owes.
+hal/message_compositor.cpp's attribution on 361, last frame of 300:
+
+  BG0 0 px   BG1 0 px   BG2 0 px   BG3 0 px   OBJ 795 px
+  3D  193428 px kept, 3180 px buried under a 2D layer in front of it
+      (host 512x384 = 196608 px)
+
+DISPCNT 0x00001108: bit 3 set, BG0 enabled, so the 3D layer IS in the picture
+and the compositor keeps 98.4% of it. What it keeps is a nearly flat blue field
+-- 21 distinct colours over the whole capture, against 8985 on 363.
+
+  scene            PROJ_IDENTITY   triangles   drawable
+  361 CUP                1            1806        311
+  367 BOOMBOX            1            1806        177
+  387 BOOSEEK            1               0          0
+  362 MEMORY1            0            1783       1219
+  363 MEMORY2            0            1783       1163
+  381 MCARLO             0            1783       1219
+  388 LUCKYSTARS         0            1783       1219
+  389 PSYCHEOUT          0             383        181
+  390 FLOWER             0             878        760
+
+361 and 367 are the two scenes with an identity projection AND their top
+captures are BYTE-IDENTICAL to each other, which is the check that says one
+defect rather than two.
+
+THE CAUSE. SM64DS_MTX_LOG's call stacks, resolved through walk_window.map:
+
+  363, EVERY FRAME   port_scene_run -> port_actor_render -> func_02043fdc
+                     -> port_dispatch_guarded -> func_0204322c -> mem_render
+                     -> func_ov006_020f73f4 -> Camera_UpdateMatrices
+                     -> G3i_PerspectiveW_ -> gx_write_port
+  361, ONCE AT INIT  port_scene_run -> Scene::SpawnIfNecessary -> ...
+                     -> cup_init -> func_ov006_020e0308 -> Camera_UpdateMatrices
+
+MTX_LOAD_4x4 runs 1 per frame on 363 and 0 per frame on 361 after boot. 361
+programs its camera once, which for a fixed-camera shell game is the ROM's
+intent and is correct on a DS -- the projection matrix is a latched register
+bank with no frame boundary. The PORT threw it away: hal/scene_boot.cpp's frame
+loop calls ntr::gx_reset() once a frame and gx_reset did `g = State{}`.
+
+gx_reset MODELS NO ROM INSTRUCTION. Nothing in the game calls it; it is the
+host's own begin-frame. That is the same argument its own comment already makes
+about the light table -- "it is not per-frame state ... nothing on a DS clears
+them at a frame boundary" -- which run mg5 lane YTEX had to carry across for
+exactly this reason. The projection matrix is the same class of state.
+
+THE FIX is three lines in ntr/gx.cpp: keep g.proj across the assignment.
+SM64DS_PROJ_CARRY_OFF=1 restores the wipe on the same binary. The projection
+STACK is deliberately not carried; the line that identities it has its own
+derivation about display lists opening with MTX_RESTORE, nothing measured needs
+it, and nothing in the sweeps moved without it.
+
+AFTER:
+  361  PROJ_IDENTITY 1 -> 0, drawable 311 -> 1806 of 1806, top screen 21
+       distinct colours -> 7082
+  367  PROJ_IDENTITY 1 -> 0, drawable 177 -> 1806 of 1806, 21 -> 7073
+  363  unchanged; it reloads every frame, so a carry cannot reach it
+
+THE SWEEPS. .dsstate does not move, [0xc5c000, 0xd463d0), 959440 bytes.
+
+  23 hosted scenes + level-1 selftest, SM64DS_PROJ_CARRY_OFF=1 vs default:
+      DIFFERS 361 and 367 ONLY
+  the SM64DS_PROJ_CARRY_OFF arm vs the tip that predates this change:
+      byte-identical on all 24 rows -- the switch is honest
+  ALL 46 MOUNTED LEVELS' selftest BMPs, same A/B on one binary:
+      46 of 46 BYTE-IDENTICAL, level 1 at 5b783a29d753ce4dfbd35c79a7b2850f
+  canary 374: 12a97fbf4fe0c12573dbf8a56eb32aed, EXACT in every arm
+
+The level sweep is here because a geometry-engine change owes it: a level is a
+3D scene too, and the 23 hosted scenes are not the whole regression surface.
+
+WHAT IS STILL OPEN. Scene 387 (dScMgBooSeek_c) reports PROJ_IDENTITY 1 as well
+and is NOT fixed by this, because it submits ZERO triangles -- a different
+defect that happens to share one row of this table. Named so the table is not
+read as closing it.
