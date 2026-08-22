@@ -260,7 +260,10 @@ func_0202f708  REAL_DECOMP  fader_boot_map.txt  slot 0x10 SetForwardTime, 0x220,
 # run link60 lane MGA, 2026-08-16. dScMgCup_c (scene 361 = id 0x169) AND ITS
 # INTERMEDIATE BASE dScMgSingle3DBase_c.
 #
-# Sixteen distinct override bodies across the two tables the 0x169 seat fills
+# FIFTEEN distinct override bodies across the two tables the 0x169 seat fills
+# (this line read "Sixteen" until the run mg9 amendment; 8 from the middle
+# table plus 7 from this class, no body in both sets. The TEN below is exact
+# and unaffected, and it is the number this file is about)
 # (data_ov006_0213c154 and data_ov006_0213e448, both width 36 -- see
 # port/mg_fanout_costs.txt section 11, which corrects the width column these
 # tables were read from). Ten carry the marker. All ten disassembled out of

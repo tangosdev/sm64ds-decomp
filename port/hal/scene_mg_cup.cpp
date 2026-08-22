@@ -17,7 +17,13 @@
 //        against the LIVE object: this file's census prints +0x465e, which
 //        src/func_ov004_020af094.cpp reads, and it also reads 559.
 //     -> data/message/msg_data_eng.bin, LZ77 type 0x10, 91712 bytes,
-//        MESGbmg1 / INF1 (711 messages, entry size 64) / DAT1, message 559:
+//        MESGbmg1 / INF1 (711 messages; the header field at +0x0a reads
+//        0x0040, which is 64 BITS -- an EIGHT-byte entry stride, not a
+//        64-byte one: 711 entries at 64 bytes would need 45504 and the
+//        section is 0x1660 = 5728. hal/message_boot.cpp indexes it as
+//        `entries + id * 8` and include/MessageBank.h documents the same
+//        8-byte stride. Corrected in the run mg9 amendment) / DAT1,
+//        message 559:
 //
 //          "Tox Box Shuffle
 //           Oh, no! Yoshi's trapped in a Tox Box!
@@ -28,7 +34,8 @@
 // reproduces each one's known title exactly: 0x170 Bob-omb Squad, 0x16e
 // Wanted!, 0x186 Loves me...?, 0x172 Sort or 'Splode, 0x17a Coincentration,
 // 0x17c Puzzle Panel, 0x176 Shuffle Shell, 0x171 Lakitu Launch, 0x16b Memory
-// Master -- and it reproduces BOTH rows of the duplicated ids, 0x178 as Bingo
+// Master, 0x177 Shell Smash -- and it reproduces BOTH rows of the duplicated
+// ids, 0x178 as Bingo
 // Ball (row 10) and Slots Shot (row 22), 0x17c as Puzzle Panel (row 15) and
 // Puzzle Panic (row 35). The text is a GLYPH-INDEX stream and not ASCII, which
 // is why earlier sweeps for these names missed them: 'A' is 0x0a, 'a' is 0x2d

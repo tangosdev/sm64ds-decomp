@@ -1192,6 +1192,39 @@ something else, and for 0x169 the chain is complete:
 So a 37-slot fill of dScMgCup_c writes a host thunk pointer over the code word
 of a state belonging to the one minigame that already ships.
 
+A FIFTH CHECK WAS OFFERED IN run mg9 AND IT IS AN UPPER BOUND, NOT A DECIDER --
+recalibrated here because it was published as "needs no symbols and no
+judgment" and it fails in the GRANTING direction, which is the only direction
+that can corrupt anything. Lane LKY read the width off the RELOCATION STRIDE in
+ov006's relocs.txt: four bytes per slot for exactly the table width, then eight
+once the mwcc member-pointer pairs start, so the stride change is where the
+table ends. On that lane's own table (0x0213fec8) it agrees. Measured across
+six tables it is right three times and wrong on the three that matter:
+
+    table                     stride-4 run   true width   verdict
+    -----------------------   ------------   ----------   ---------------
+    0x0213c154  0x169              37             36      OVER-READS BY 1
+    0x0213d1b8  0x16a              37             36      OVER-READS BY 1
+    0x0213eb40  0x16c              37             36      OVER-READS BY 1
+    0x0213b918  0x173              37             37      agrees
+    0x0213d4d4  0x16b              36             36      agrees
+    0x0213c304  0x176 curling      36             36      agrees
+
+WHY, in one sentence: the four-byte run does not stop at the end of the table,
+because the word past the end is ITSELF a relocated code word at the next
+four-byte boundary -- for 0x169 that is 0x0213c1e4, the mwcc pair's code half
+named above -- so its relocation continues the stride and the eight-byte gap
+the check looks for arrives one slot late, after the pair's zero adjustment.
+The check therefore reads 37 on exactly the three classes this section
+corrected from 37 to 36, and on the very class whose 37th word is curling's.
+
+Three lanes hit it independently while seating those three ids (lanes CUP,
+MMT and S364; port/slice_mmt.txt carries the six-table measurement and
+port/slice_cup.txt the single-class derivation). USE IT AS A CONFIRMATION WHEN
+IT AGREES WITH THE SPAN, never as a substitute for it. The span check refuses a
+width and never grants one, which is the property that makes it safe and this
+one unsafe.
+
 WHAT DECIDES WHETHER THAT IS FATAL OR MERELY WILD IS REGISTRY ROW ORDER, WITHIN
 ONE PROCESS. An earlier draft of this section said "the corrupted word is what
 curling's constructor copies on the next curling boot", and that mechanism does
@@ -1289,8 +1322,18 @@ and the middle name is the ROM's: src/func_ov006_0210a4e8.cpp's recovered name
 is dScMgSingle3DBase_c and "19dScMgSingle3DBase_c" is at 0x0213bd00. A seat for
 this class therefore fills THREE tables, all width 36.
 
-Sixteen distinct override bodies across the two new tables, ten carrying the
-"recovered from vtable slot identity" marker. All ten were disassembled out of
+Fifteen distinct override bodies across the two new tables, ten carrying the
+"recovered from vtable slot identity" marker. THE FIRST NUMBER READ SIXTEEN
+UNTIL run mg9, and it was high by one: the middle table dScMgSingle3DBase_c
+contributes 8 (0210a6e4, 0210a608, 0210a698, 0210a664, 0210a4b0, 0210a4e8,
+0210a600, 0210a708) and dScMgCup_c contributes 7 (020e0308, 020e0204, 020e0068,
+020de988, 020dea1c, 020dfeec, 020dfed4), no body is in both sets, and 8 + 7 is
+15. Lane CUP recounted it while seating the class and the lane reviewer
+recounted it independently; port/slice_cup.txt carries the derivation. THE TEN
+IS EXACT and is the number that costs anything, so nothing below this line
+changes: this class's own marker count is 4 and the six slots it inherits
+contribute 5, which is why the derived table reads mark 9 and the middle table
+mark 6, while the union of distinct marker BODIES is 4 + 6 = 10. All ten were disassembled out of
 extracted/overlays/overlay_0006.bin at base 0x020bfec0 (the shipped image, not
 a dsd export) and compared instruction for instruction with src before any
 seating. RESULT: 10 REAL DECOMP, 0 guesses, consistent with lane w13's 43/43
@@ -2661,3 +2704,60 @@ WHAT THIS SECTION DOES NOT KNOW.
   - TOUCH IS UNMEASURED, and for an amidakuji it is the live question rather
     than a formality: both titles' rules text says "draw lines on the Touch
     Screen", and the class settles at state 1 without an input.
+
+20. THE DECOMP-SIDE ROUTING LIST, run mg9 amendment
+---------------------------------------------------
+
+ONE PLACE THE DECOMP LANE READS. Every entry below is a correction owed on the
+BYTE-GATED side, found by a port lane that could not take the fix itself: the
+port routes around each one in a host copy, and the src TU and its banner stay
+exactly as they are until someone on the decomp side rules on them. Scattering
+these across nine lane headers is how three of them sat unread for two runs.
+
+The rule they share is section 10(a)'s: a byte-exact TU can still be wrong, and
+the byte gate cannot see it. A banner is a claim about LOGIC, and no gate in
+this repo checks a banner.
+
+  1. src/func_ov006_0211ba88.c -- THE BANNER IS FALSE AND ALL FOUR DEFECTS MUST
+     GO IN ONE PASS. The TU is bannered "Logic verified correct vs ROM" and is
+     not. The full list, re-derived from the ROM by run mg9 lane BOX and
+     written out in port/unmatched/MgSound_ShadowSlot35.cpp section 4:
+       (1) pass the receiver at the slot-35 call
+       (2) make the modulo a loop
+       (3) make the +0x50f4 store a BYTE
+       (4) hoist the `n == 0` test out of the `if (idx >= limit)`
+     ALL FOUR OR THE BANNER IS STILL FALSE. Only (1) is a port problem; the
+     other three are decomp problems the port must not inherit. A routing note
+     listing three of four would send someone to fix three and re-bless a
+     banner that is still wrong, which is why the count is stated here.
+     A fifth observation is NOT a divergence and is recorded so nobody counts
+     it as one: the ROM sets no meaningful return value on any path and every
+     caller discards it.
+
+  2. src/func_ov006_020def80.c -- MATCHED, BYTE-EXACT, AND IT READS AN
+     UNINITIALISED LOCAL on two of its three paths. It is byte-exact by
+     REGALLOC LUCK and nothing more: mwccarm happened to put the variable in
+     r1, which already holds the parameter the ROM's epilogue uses, so the
+     emitted bytes are right while the source is not. MSVC gave it a register
+     holding the object pointer and the first frame of scene 361 wrote two zero
+     words four gigabytes out of range, every boot. Invisible to the byte gate,
+     to the link and to a member-pointer sweep -- only a RUN convicts it.
+     Routed by port/unmatched/MgCup_UninitEpilogue_020def80.cpp (run mg9 lane
+     CUP). This is the cleanest example in the tree of why byte-exactness and
+     correctness are different properties.
+
+  3. THE FABRICATED INITIALIZER, section 10(a) above. Listed here so this
+     section is the whole set rather than most of it; the derivation stays at
+     10(a) and is not repeated. Already carries "THE DECOMP-SIDE FIX IS ROUTED,
+     NOT TAKEN".
+
+  4. THE LANGUAGE TABLE, the same block at section 10(a).
+     port/unmatched/MgBase_LangTable.cpp performs the copy the ROM performs;
+     the src TU does not, and the byte gate is content either way.
+
+HOW TO RETIRE A ROW. Correct the src TU and its banner on the decomp side,
+then delete the port's host copy and put the src line back in its slice. Each
+of these costs the port one LINKED function today, so retiring them moves the
+headline in the right direction as well as the honest one. Nothing here is a
+port defect that a port lane can close alone -- that is the whole point of the
+list, and it is why none of these were fixed in the run that found them.

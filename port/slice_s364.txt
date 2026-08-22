@@ -429,7 +429,19 @@
 #      Nothing references them, so the linker discards them;
 #   TWO ov001 bodies join, func_ov001_020ab550 and _020ab54c, both through the
 #      hosted dThIcon_c table. func_ov001_020ab3f0 and _020ab5b0 are in the
-#      BASE map already and are not this seat's; _020ab450 is in neither.
+#      BASE map already and are not this seat's.
+#
+#      "_020ab450 IS IN NEITHER" WAS WRONG, corrected in the run mg9 amendment.
+#      It is in BOTH maps, and the reason the sweep missed it is the credit
+#      rename trap: config/arm9/overlays/ov001/symbols.txt names 0x020ab450
+#      TouchArea_Update, so it links as _TouchArea_Update out of
+#      TouchArea_Update.c.obj and an ADDRESS grep for func_ov001_020ab450
+#      returns nothing while the body is sitting in the image. Checked against
+#      the merged walk_window.map, where that line is present. It is not this
+#      seat's either way, so the 17 + 2 = 19 below is unaffected -- the defect
+#      is in the method, not the arithmetic, and the method is what the next
+#      lane will reuse: grep a map for the NAME a symbol was renamed to, never
+#      only for its address spelling.
 #
 #   17 + 2 = 19, measured on both maps, and the six are a STANDING CREDIT: the
 #   day func_ov006_0210c9e0 is decompiled the headline moves another six

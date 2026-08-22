@@ -6,7 +6,8 @@
 # carrying this id, so no menu-position ambiguity here) -> that row's +0x04
 # word, param 0x000b1700 -> (param >> 16) & 0xff = 11 -> data_ov004_020bc070[11]
 # = 559 -> message 559 of data/message/msg_data_eng.bin (LZ77 type 0x10, 91712
-# bytes; MESGbmg1 / INF1 711 entries of 64 / DAT1) = "Tox Box Shuffle", "Oh,
+# bytes; MESGbmg1 / INF1 711 entries, header field 0x0040 = 64 BITS = an
+# EIGHT-byte stride / DAT1) = "Tox Box Shuffle", "Oh,
 # no! Yoshi's trapped in a Tox Box!". The 559 is cross-checked against the LIVE
 # object's +0x465e on a running scene-361 boot, which reads 559 too. The same
 # chain over every ALREADY-SEATED id reproduces its known title exactly,
@@ -62,9 +63,12 @@
 # reads ovr 13 / mark 9 / nosrc 0 out of the ROM independently, which is
 # section 3's row exactly.
 #
-# DISTINCT OVERRIDE BODIES ACROSS THE TWO NEW TABLES IS FIFTEEN, NOT SIXTEEN,
-# and section 12's "Sixteen distinct override bodies ... ten carrying the
-# marker" is high by one on the first number. The middle table contributes 8
+# DISTINCT OVERRIDE BODIES ACROSS THE TWO NEW TABLES IS FIFTEEN, NOT SIXTEEN.
+# Section 12 read "Sixteen distinct override bodies ... ten carrying the
+# marker" and was high by one on the first number; the run mg9 amendment
+# CORRECTED IT IN PLACE, so section 12 now reads fifteen and this paragraph is
+# the derivation behind that edit rather than an outstanding complaint about
+# it. The middle table contributes 8
 # (0210a6e4, 0210a608, 0210a698, 0210a664, 0210a4b0, 0210a4e8, 0210a600,
 # 0210a708) and this class contributes 7 (020e0308, 020e0204, 020e0068,
 # 020de988, 020dea1c, 020dfeec, 020dfed4); 8 + 7 = 15 and no body is in both
