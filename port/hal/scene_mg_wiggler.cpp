@@ -1,7 +1,7 @@
 // dScMgHanachan_c, the "Which Wiggler" minigame -- actor id 0x182, scene 386.
 // Run mg9, lane WIG.
 //
-// Read port/slice_wig.txt for the identity derivation, the four width checks,
+// Read port/slice_wig.txt for the identity derivation, the five width checks,
 // the closure and the two floors. Read
 // port/unmatched/MgWiggler_StateDispatch.cpp for the state machine, which is a
 // shape no seated class has had before. This file is the seat: one face array,
@@ -53,7 +53,7 @@
 // dScMgSingle3DBase_c-shaped middle table here and this seat fills ONE derived
 // table plus the shared base one.
 //
-// ---- 4. THE WIDTH IS 36, CHECKED FOUR WAYS -------------------------------
+// ---- 4. THE WIDTH IS 36, CHECKED FIVE WAYS -------------------------------
 //
 //   1. SPAN. The next config symbol after data_ov006_0213cab8 is
 //      data_ov006_0213cb48, exactly 0x90 = 36 words on, so a 37th slot cannot
@@ -65,9 +65,18 @@
 //   4. RELOCATION COUNT, which section 11's three checks do not include and
 //      which is the one that cannot be argued with. Exactly THIRTY-SIX
 //      relocation rows in config/arm9/overlays/ov006/relocs.txt have a source
-//      inside [0x0213cab8, 0x0213cb48), one per slot, the last at 0x0213cb44;
-//      there is NO row at 0x0213cb48. A vtable word is a code address and is
-//      therefore always relocated, so a 37th slot would have a 37th row.
+//      at or after 0x0213cab8 and before 0x0213cb48, one per slot, the last at
+//      0x0213cb44; there is NO row at 0x0213cb48. A vtable word is a code
+//      address and is therefore always relocated, so a 37th slot would have a
+//      37th row.
+//   5. RELOCATION STRIDE, run mg9 lane LKY's check, taken here as the fifth and
+//      confirming this class independently of the count. The reloc sources step
+//      by exactly 4 from 0x0213cab8 for THIRTY-SIX words -- 0x0213cab8,
+//      0x0213cabc, ... 0x0213cb44, no gaps -- and the very next source is
+//      0x0213cb4c, a stride of EIGHT. The jump is the table ending: 0x0213cb48
+//      is skipped because it is the unrelocated 0xffffffff, and 0x0213cb4c is
+//      the next object's own relocated word. It needs no symbol table and no
+//      judgment about what a word looks like.
 //
 // A 37-slot fill here would have written a host thunk over 0xffffffff's word,
 // which is the failure port/mg_fanout_costs.txt section 11 exists to prevent.
@@ -107,11 +116,17 @@
 // Every seated minigame before this one dispatches an INDEXED table its overlay
 // constructor builds in .bss. This class has neither: no overlay constructor
 // (measured -- zero relocations from any __sinit block land anywhere in this
-// class's .data) and no table. It has twenty-nine individually symbolised
+// class's .data) and no table. It has THIRTY-FIVE individually symbolised
 // {code, 0} pairs in .data, each installed by name into a member-pointer FIELD,
-// and three fields across two objects read them: the scene's own +0x4660 and
-// each wiggler sub-object's +0x10 and +0x00. Fourteen distinct code words, all
-// fourteen routed, all fourteen with a matched src TU.
+// and four fields across two objects read or feed them: the scene's own +0x4660
+// and each wiggler sub-object's +0x00, +0x08 and +0x10. FIFTEEN distinct code
+// words, all fifteen routed, all fifteen with a matched src TU.
+//
+// THE SPAWNINFO SITS INSIDE THAT PAIR RUN and this lane's first pass walked
+// straight into section 4's sweep hazard because of it: the scan was started
+// after the SpawnInfo and reported 29 pairs and 14 code words. The link caught
+// it. unmatched/MgWiggler_StateDispatch.cpp's header has the full table and the
+// correction.
 //
 // FIVE DISPATCHERS, AND THE FIFTH IS INVISIBLE TO BOTH PRESCRIBED DETECTORS.
 // func_ov006_020eb610 open-codes the ARM Itanium sequence in plain ints inside
@@ -367,13 +382,27 @@ static void *__fastcall wig_d2(void *s, void *)
 { WIG(16); return func_ov006_020ea280((char *)s); }
 static void *__fastcall wig_d0(void *s, void *)
 { WIG(17); return func_ov006_020ea2c8(s); }
-/* THE RIDE-THROUGH IS LOAD-BEARING AND THIS BODY ACTUALLY USES IT. Lane
+/* THE RIDE-THROUGH IS LOAD-BEARING AND THIS BODY ACTUALLY READS IT. Lane
    BASESET's census says every slot-18 dispatch site in both overlay images
    passes one argument, and a thunk declared (void*, void*) compiles to a bare
    ret, leaks four bytes and hands the caller's epilogue a garbage return
-   address. On most classes the ROM body then ignores its r1. NOT HERE:
-   0x020eda48 opens `cmp r1,#1` and `cmp r1,#0x12` and branches three ways on
-   it, so the parameter is forwarded rather than only cleaned. */
+   address. On most seated classes the ROM body then ignores its r1. NOT HERE,
+   and run mg9 lane LKY's note makes this a per-lane check rather than an
+   inherited assumption: 0x020eda48 opens `cmp r1,#1` at 0x020eda50 and
+   `cmp r1,#0x12` at 0x020eda78 and branches THREE ways on the value, so this
+   thunk FORWARDS the argument rather than only popping it.
+
+   IT IS WITNESSED, not merely disassembled. Every proof run of scene 386
+   reports slot 18 entered once with st = -1, which is the `mvn r1,#0` shape
+   BASESET's census finds at fifteen of the twenty-two sites. -1 is neither 1
+   nor 0x12, so the third arm runs, +0xbc is left alone and the round is dealt
+   off whatever it holds -- which is what makes SM64DS_WIG_LEVEL's seed survive.
+   A thunk that only popped would have handed this body a garbage r1 and picked
+   an arm at random.
+
+   SLOT 19 IS NOT THIS CLASS'S. dScMgHanachan_c does not override it; the
+   framework keeps func_ov004_020b2994 there and hal/scene_mg.cpp's mb_v19
+   already declares the ride-through. */
 /* SM64DS_WIG_LEVEL=<n>: seed the clear count at +0xbc before slot 18's ROM body
    deals the round. A DIAGNOSTIC, off unless the variable is set, and it seeds
    the ROM'S OWN INPUT rather than an outcome, which is the shape run mg8 lane

@@ -71,11 +71,11 @@
 # 380's censuses. 0x182 is not one of the six, so the port's row and the ROM's
 # are the same row and no such caveat applies here.
 #
-# ---- THE WIDTH IS 36 AND IT WAS CHECKED FOUR WAYS -------------------------
+# ---- THE WIDTH IS 36 AND IT WAS CHECKED FIVE WAYS -------------------------
 #
 # port/mg_fanout_costs.txt section 11 gives three checks because twelve of the
-# widths in that file's section 3 table were phantoms. This lane took all three
-# and added a fourth.
+# widths in that file's section 3 table were phantoms. This lane took all three,
+# added a fourth of its own, and took run mg9 lane LKY's as a fifth.
 #   1. SPAN. config/arm9/overlays/ov006/symbols.txt puts the next symbol
 #      (data_ov006_0213cb48) exactly 0x90 bytes past the vtable, so 36 words is
 #      an upper bound and a 37th slot cannot exist inside the table.
@@ -91,6 +91,12 @@
 #      0x0213cab8, 0x0213cabc, ... 0x0213cb44 with no gaps -- and there is NO
 #      row at 0x0213cb48. A 37th slot would have a 37th row. Check 3 is the one
 #      section 11 warns is easiest to wave through; this one is not.
+#   5. RELOCATION STRIDE, run mg9 lane LKY's check, taken here as a fifth. The
+#      reloc sources step by exactly 4 for THIRTY-SIX words from 0x0213cab8 and
+#      the very next source is 0x0213cb4c, a stride of EIGHT. The jump IS the
+#      table ending: 0x0213cb48 is skipped because it is the unrelocated
+#      0xffffffff, and 0x0213cb4c is the next object's own relocated word. It
+#      needs no symbol table and no judgment about what a word looks like.
 #
 # ---- SEVEN OVERRIDES, SIX MARKERS, ZERO nosrc -----------------------------
 #
