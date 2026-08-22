@@ -569,3 +569,44 @@ func_ov006_02103cbc  REAL_DECOMP  port/slice_lkt.txt  lane LKT. slot 18 state re
 # symbol (`x[0] = (int)data_ov006_0213dbbc;`) rather than through the shared VT
 # placeholder, which is exactly why it is an ordinary slice line where its D0
 # sibling needs a host copy.
+#
+# ---------------------------------------------------------------------------
+# run mg6 lane SOS, 2026-08-21: dScMgBomroom_c, actor id 0x172 = scene 370,
+# spawn symbol MgSortOrSplode ("Sort or 'Splode").
+#
+# RTTI "14dScMgBomroom_c" at 0x0213bb38 (a config symbol in its own right,
+# data_ov006_0213bb38, and the second symbol before the vtable), vtable
+# data_ov006_0213bbb4, width 36, six override bodies of which FIVE carry the
+# "recovered from vtable slot identity" marker. The sixth, func_ov006_020d5a54,
+# is a two-line unmarked TU and needs no line here; it is named at the foot of
+# this block because a reader of it will look for it.
+#
+# All five disassembled with port/tools/w13_dump.py out of
+# extracted/overlays/overlay_0006.bin at base 0x020bfec0 -- the shipped image,
+# deliberately not a dsd export, whose relocated words would make literals read
+# as live pointers -- and compared instruction for instruction with src/ BEFORE
+# any seating. RESULT: 5 REAL DECOMP, 0 genuine guesses, 0 unverifiable. No
+# constant, offset, literal, branch target or instruction count differs on any
+# of the five.
+#
+# FOUR OF THE FIVE CARRY A WRONG RECOVERED NAME and the wrongness is the same
+# shape lane FLW recorded: the recoverer wrote dScMgBomroom_c_OnYoshiTryEat on
+# both destructors' worth of bodies and on the state reset. The class name half
+# is RIGHT here -- it is the ROM's own RTTI string -- and the METHOD half is
+# invented, which is exactly what the marker records and why a name is not
+# evidence. Every one was read out of the ROM anyway.
+#
+# ---- dScMgBomroom_c's own five ----
+func_ov006_020d9244  REAL_DECOMP  port/slice_sos.txt  slot 0 InitResources, 0x330, 193 instructions plus an 11-word literal pool (0x330 = 204 words, last instruction bx lr at 0x020d9544, pool 0x020d9548..0x020d9570; 193 + 11 = 204 = size/4) every word of which src names. data_0209d45c |= 8/4/1 and data_0209d454 |= 8 in src's order, each followed by its own bic-3 / orr / and-0x43 / orr pair on 0x400000e (orr 2, then 0x1210), 0x400000c (orr 1, then 0x9410), 0x4000008 (bic 3 only, then 0x5610) and 0x400100e (orr 1, then 0x210). Then the file ids in src's order: LoadFile(0x23) decompressed to func_02054d88()+0x4000, LoadFile(0x24) into GX::LoadBGPltt(0x180,0x80), LoadFile(0x25) into func_02056314(0,0x800), LoadFile(3) with G2::GetBG2ScrPtr and MultiStore16(0xf23f,b,0x1000) off the stack slot then func_020563d4(0,0x800), LoadFile(2) and LoadFile(7) into func_02056554 at offsets 0 and 0x800, G2x::SetBlendAlpha(0x4000050,1,0x1c,4,3) with the fifth argument on the stack, LoadFile(0xb5) kept in r5 and LoadFile(0xb6) in r4, DecompressLZ16(r5,0x6400000), GX::LoadOBJPltt(f,0,0x100), then the sub-engine half -- LoadFile(0x23) to G2S::GetBG3CharPtr()+0x4000, LoadFile(0x24) to GXS::LoadBGPltt(0x180,0x80), LoadFile(0x22) to func_020562b4(0,0x800), DecompressLZ16(r5,0x6600000), GXS::LoadOBJPltt(f,0,0x100) -- with a Deallocate after every one src has one after. Tail: func_ov006_020d907c, _020d6630, _020d62e0, _020d604c, the state index 1 written to +0x62d0, the halfword at +0x62ee zeroed, func_ov004_020b04d0(0x20), func_ov004_020adb1c(0), return 1. The NAME says InitResources and is right
+func_ov006_020d91b0  REAL_DECOMP  port/slice_sos.txt  slot 6 Behavior, 0x94, 35 instructions plus a two-word pool (0x94 = 37 words, last instruction bx lr at 0x020d9238, pool 0x020d923c..0x020d9240; 35 + 2 = 37 = size/4), and the class's own half of the pointer-to-member wall. The timer arm matches exactly: the halfword at +0x62f0 tested nonzero, decremented through the pool word 0x000062f0 (a rematerialised offset, present in the image), then re-read SIGNED (ldrsh) and clamped to 0 when <= 0 -- src's `*(short*)(c+0x6200+0xf0) <= 0` with the movle/strhle predication the ROM uses. The else arm is the five-instruction ARM Itanium sequence at 0x020d9200: ldr r1,[r3,#4] / add r0,r4,r1,asr#1 / ands r1,r1,#1 / ldrne r2,[r0] + ldrne r1,[r3] + ldrne r1,[r2,r1] / ldreq r1,[r3] / blx r1, over data_ov006_021416e0 strided by 8 (add r3,r1,r0,lsl#3) at index *(int*)(c+0x62d0). Then func_ov006_020d5d08(c), func_ov006_020d5b10(c), return 1. Both pool words and both call targets match. This body is HOST-COPIED in port/unmatched/MgBomroom_StateDispatch.cpp -- the src TU is faithful and the port cannot compile the dispatch -- and the ruling is what lets the copy be seated at all
+func_ov006_020d9160  REAL_DECOMP  port/slice_sos.txt  slot 9 Render, 0x50, 20 instructions, no literal pool (0x50 = 20 words, last instruction bx lr at 0x020d91ac is the last word of the body; 20 + 0 = 20 = size/4). Eight tail calls in src's exact order, each with `mov r0,r4` in front of it: func_ov006_020d5dfc, _020d6098, _020d5e5c, _020d672c, _020d7524, _020d63d4, _020d5c88, _020d5ab0, then mov r0,#1 and return. Nothing else in the body. The NAME says Render and is right
+func_ov006_020d5a78  REAL_DECOMP  port/slice_sos.txt  slot 17, the DELETING destructor, 0x38, 12 instructions plus a two-word pool that both resolve (0x38 = 14 words, last instruction bx lr at 0x020d5aa4, pool 0x020d5aa8..0x020d5aac; 12 + 2 = 14 = size/4). THE ROW THAT SETTLES THE HIERARCHY: it stores data_ov006_0213bbb4 -- this class's OWN vtable, from the pool at 0x020d5aa8 -- into [this] and then calls func_ov004_020b29c0 with NOTHING in between, so there is no intermediate base of the dScMgSingle3DBase_c kind and the seat fills two tables and not three. Then Memory::Deallocate(this, the word at data_020a0eac loaded BY VALUE -- ldr r1,[r1] off the pool) and return this. Its unmarked D2 sibling 0x020d5a54 writes the same vtable word and cross-confirms the resolution. The recovered NAME says OnYoshiTryEat and is wrong; the body is the D0
+func_ov006_020d9104  REAL_DECOMP  port/slice_sos.txt  slot 18, the state reset, 0x5c, 22 instructions plus a one-word pool holding 0x04000050 (0x5c = 23 words, last instruction bx lr at 0x020d9158, pool 0x020d915c; 22 + 1 = 23 = size/4). func_ov006_020d907c(c) first; then the halfword at +0x62ee zeroed and the state index at +0x62d0 zeroed off the SAME zero register the ROM reuses (mov r2,#0 once, strh then str), which is the pair slot 0 writes 0 and 1 into; then G2x::SetBlendAlpha(0x4000050, 1, 0x1c, 4, 3) with the fifth argument 3 on the stack, and SetBg0Offset(0,0) off one zero register in r0 and r1. Every constant and both call targets match src. The recovered NAME says OnYoshiTryEat_020d9104 and is wrong; the body is the state reset, and the +0x62d0 it zeroes is the index slot 6 dispatches through and slot 0 sets to 1
+# ---- and the one unmarked override body read with them ----
+# func_ov006_020d5a54 carries NO marker and needs no line here. It is the D2
+# beside 020d5a78's D0 and it was disassembled with the other five: 0x24, 8
+# instructions plus one pool word (0x24 = 9 words, last instruction bx lr at
+# 0x020d5a70, pool 0x020d5a74; 8 + 1 = 9 = size/4), stores data_ov006_0213bbb4
+# from that pool word, calls
+# func_ov004_020b29c0, returns this -- 020d5a78 without the Deallocate, which
+# is the D2/D0 difference and is what its two-line src spells.
