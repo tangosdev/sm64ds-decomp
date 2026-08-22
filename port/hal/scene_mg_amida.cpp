@@ -380,8 +380,7 @@ extern "C" void port_scene_fill_amida(void)
     std::printf("[scene] AMIDA FILL CENSUS, 37 slots: %u raw DS words before, "
                 "%u after the shared arm9+dScMgBase_c pass (claimed %u), "
                 "%u own faces applied, %u raw left. "
-                "dScMgBase_c's own 36-slot table: %u raw left.
-",
+                "dScMgBase_c's own 36-slot table: %u raw left.\n",
                 before, after_shared, before - after_shared, own, after_own,
                 am_raw_left(base, 36));
 
