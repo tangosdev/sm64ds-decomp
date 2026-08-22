@@ -3426,3 +3426,97 @@ that survives restarts is evidence of a placement problem, not of a coloring flo
 Two independent sweeps writing the same scratch `cand.cpp` fabricated a stable-looking
 "floor": scores for one process were read off the other's file. It reads exactly like a
 real plateau. Per-process temp names, or one sweep at a time.
+
+## 6bk. Two CSE/colouring levers off scene 387's Boo pair (both MATCHED, 2026-08-22)
+
+Run mg10 lane F387. Two ov006 bodies that had no source at all -- the sprite loop
+`func_ov006_0211e72c` (0xac) and the state `func_ov006_0211ebdc` (0x258) -- both went
+from "every instruction identical, only register numbers differ" to byte-exact under
+2004/b56, and the two levers are different faces of the same fact: **mwcc's CSE web is
+keyed on the EXPRESSION, and the launder is a web splitter, not only an addressing-mode
+knob.** 6bj established the launder controls addressing mode and statement position
+controls LICM level; this is the third knob on the same axis.
+
+### 1. Three spellings of one address make mwcc rematerialise instead of commoning it
+
+`0211ebdc` reads `this + i*0x24 + K` in four separate places, two of them on opposite
+sides of two `bl`s. The ROM recomputes the base **four times**:
+
+```
+0211ebf4  add r0, r7, r4        ; and again at 0211eca8, 0211ece8, 0211edec
+0211ebf8  add r0, r0, #0x4600
+0211ebfc  ldrh r0, [r0, #0x74]
+```
+
+Written with ONE spelling (`c + m + K` everywhere, `int m = i * 0x24`) mwcc commons
+`c + m` into a **fifth callee-saved register**, keeps it live across both calls, and the
+body comes out **two words short with a six-register push against the ROM's five**. It
+is not a placement problem -- there is no loop here for 6bj's LICM lever to bite on --
+and no declaration order moves it, because the value being commoned is a compiler temp,
+not a local.
+
+What moves it is spelling the three groups three different ways:
+
+```c
+*(u16 *)(c + k + 0x4674)                     /* k = i * 0x24 */
+*(u16 *)(c + i * 0x24 + 0x466c)              /* the same value, a different tree */
+*(u16 *)((char *)((int)c + k) + 0x4672)      /* one launder, and only one */
+```
+
+Each is a distinct expression to the CSE pass, so it rebuilds the address at each group
+exactly as the ROM does. **Two spellings are not enough for three groups** -- reusing
+`c + i * 0x24` for two of them collapses those two back together and the body is one
+word short again -- and the count of distinct spellings you need is the count of times
+the ROM recomputes it, minus the one it rematerialises for free inside a conditional.
+
+Cost accounting, so the shape is recognisable next time: one commoned address is
+`-(N-1)` words against N recomputations, and it also **buys a register**, which rotates
+the whole colouring. A body that is short by a couple of words AND pushes one more
+register than the ROM is this, not a missing statement.
+
+### 2. A wider-typed constant zero changes its RANK in the hoisted-invariant list
+
+`0211e72c`'s loop hoists five constants. The ROM's assignment, r4 upwards, is
+
+```
+[-1, i, this, 0, 0x1000, 1]
+```
+
+and a plain-C source gives
+
+```
+[i, this, 0, 0x1000, 1, -1]
+```
+
+-- the same list **rotated by one**, every instruction otherwise identical, 17 of 43
+words differing by a register number and nothing else. Declaration order moved it 22 ->
+17 and then stalled; statement order (all 120 permutations of the five in-loop
+assignments) did not move it at all; all 25 installed mwccarm builds agree.
+
+The fix is one token, on the argument that is a plain `0`:
+
+```c
+OAM::Render(1, tbl[idx], x, y, -1, prio, 0x1000, 0x1000, (int)(long long)0, mode);
+```
+
+`0 & 0xFFFFFFFFFFFFFFFF`, `(long long)0` and `(int)0LL` all work identically, so it is
+the WIDER TYPE and not the operator. It promotes `-1` to the front of the invariant
+list and the rotation disappears. This is the 6-series launder acting on a **value**
+rather than on an address, and the effect is a rank change, not a materialisation
+change: the constant still ends up in a register, just a different one, and everything
+else follows it.
+
+**The general rule these two share:** when the residue is a pure permutation of the
+register file with the schedule already exact, stop looking at the statements and start
+looking at what mwcc thinks is the SAME expression. Merging or splitting one web
+renumbers everything downstream of it.
+
+### The permuter found both, and the hand pass was still worth it
+
+Both levers came out of `tools/permuter` (score 0 at iteration 188 and 430 respectively,
+minutes each) buried in the usual mutation noise -- `>> ((0, 12))`, `if (1) {}`, and the
+tail of `0211ebdc` rewritten to use `i * 0x24` where the head uses `k`. Reducing each
+output by hand to the smallest spelling that still matches is what turned a mutation
+into a lever: the `i * 0x24` tail was ALSO load-bearing on its own (it settles an r4/r5
+swap worth 33 words) and would have read as noise if it had been cleaned away with the
+rest. **Reduce, do not just tidy.**
