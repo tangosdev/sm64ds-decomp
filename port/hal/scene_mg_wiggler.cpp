@@ -150,17 +150,28 @@
 // way, and it is measured at the seat rather than inferred from dispatch
 // counts.
 //
-// ---- 8. THE TWO FLOORS -----------------------------------------------------
+// ---- 8. THE TWO FLOORS, BOTH CLOSED (run mg10, lane F386) ------------------
 //
 //   func_ov006_020ea914  0x324  ON THE RENDER PATH. Slot 9 calls it
 //       unconditionally and is its only caller in all of ov006.
+//       -> src/func_ov006_020ea914.c, NONMATCHING (165 of 201 words identical,
+//       one register-allocation cause, written up in the file). It draws the
+//       QUESTION PICTURE: one wiggler at a fixed pose, five body segments
+//       through OAM::Render and the face sprite on segment 0. Run mg9 left it
+//       trapped, and the trap's 1200-of-1200 was the whole picture missing.
 //   func_ov006_020ec4dc  0x20c  wiggler set-up variant 3 of 4, selected by
 //       data_ov006_02141fd8 in src/func_ov006_020ecdb8.c's switch. Variants
 //       0, 1 and 2 are matched.
+//       -> src/func_ov006_020ec4dc.c, MATCHED at mwccarm 2004/b56 with strict
+//       relocs, delink block added. It is the fifteen-wiggler grid the ladder
+//       in section 7's tables reaches at clear count 8.
 //
-// Both are trapped in port/unmatched/MgWiggler_Faces.cpp and both are reported
-// below whether or not they fire, because a silent zero and an absent
-// instrument look the same in a log -- and the two zeros mean different things.
+// NEITHER IS A TRAP COUNT ANY MORE. A trap counts itself because a trapped
+// body cannot be observed any other way; a seated one can, so the report below
+// uses what the run already measures instead of a weaker replacement
+// instrument. 020ea914 is Render's unconditional and only callee, so slot 9's
+// hit count IS its call count; 020ec4dc runs when and only when the dealt kind
+// is 3, which the round line already prints.
 //
 // ---- 9. THE ELEMENT-VTABLE CHECK, AND IT COMES BACK CLEAN ----------------
 //
@@ -328,7 +339,6 @@ void *MgWhichWiggler_Spawn(void);
 /* this class's own witnesses */
 void port_mg_wiggler_counts(unsigned *calls, unsigned *hits, unsigned *scene,
                             unsigned *opencoded);
-void port_mg_wiggler_trap_counts(unsigned *render, unsigned *setup);
 unsigned port_mg_wiggler_state_count(void);
 unsigned port_mg_wiggler_state_addr(unsigned i);
 unsigned port_mg_wiggler_state_hit(unsigned i);
@@ -715,20 +725,26 @@ extern "C" void port_scene_wiggler_hits(void)
         }
         std::printf("\n");
     }
-    /* THE TWO FLOORS, REPORTED WHETHER OR NOT THEY FIRED, and the two zeros
-       mean different things. */
-    {
-        unsigned render = 0, setup = 0;
-        port_mg_wiggler_trap_counts(&render, &setup);
-        std::printf("[scene] dScMgHanachan_c floors: func_ov006_020ea914 "
-                    "(0x324, slot 9 Render's only call, and the only caller it "
-                    "has in ov006) entered %u time(s) -- a zero here means "
-                    "Render never ran; func_ov006_020ec4dc (0x20c, wiggler "
-                    "set-up variant 3 of 4, selected by data_ov006_02141fd8 = "
-                    "%d) entered %u time(s) -- a zero here means the selector "
-                    "never read 3, and variants 0, 1 and 2 are matched\n",
-                    render, (int)data_ov006_02141fd8, setup);
-    }
+    /* THE TWO FORMER FLOORS, run mg10 lane F386, and NEITHER IS A TRAP COUNT
+       ANY MORE. Both bodies are seated -- src/func_ov006_020ea914.c and
+       src/func_ov006_020ec4dc.c -- so a self-counting stub would be reporting
+       on itself instead of on the ROM. What is printed instead is what a run
+       already measures and what each fact actually rests on:
+
+         020ea914 is slot 9 Render's UNCONDITIONAL call and its only caller in
+         all of ov006 (one arm_call relocation reaches it), so g_wig_hits[9] is
+         its call count exactly, not an estimate.
+
+         020ec4dc runs when and only when the selector data_ov006_02141fd8
+         reads 3, which src/func_ov006_020ecdb8.c's four-way switch decides and
+         which the round line below already prints as the dealt kind. */
+    std::printf("[scene] dScMgHanachan_c former floors, both now seated: "
+                "func_ov006_020ea914 (0x324, the question picture) ran %u "
+                "time(s) -- Render's only callee, so this is slot 9's own "
+                "count; func_ov006_020ec4dc (0x20c, the fifteen-wiggler board) "
+                "ran on this round if the dealt kind is 3, and the selector "
+                "data_ov006_02141fd8 reads %d\n",
+                g_wig_hits[9], (int)data_ov006_02141fd8);
     /* THE ROUND THE ROM DEALT, and its one input. func_ov006_020ed8a4 reads the
        clear count at +0xbc and nothing else; the two tables it indexes are in
        wig_reset's block above. */
