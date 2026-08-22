@@ -2370,7 +2370,7 @@ static const PortSceneClass port_scene_classes[] = {
        for promoting kSingle3DFaces to a seam when a FOURTH class is seated.
 
        Nothing in this class's fill writes outside its own 36-slot table. The
-       width is checked FOUR ways in port/slice_box.txt, and for this class the
+       width is checked FIVE ways in port/slice_box.txt, and for this class the
        fourth check has a named victim: index 36 of 0x0213f844 is an mwcc
        {code, 0} member pointer that __sinit_ov006_02132f68 copies into
        dScMgTeresa_c's state table, so a 37-slot fill would corrupt a

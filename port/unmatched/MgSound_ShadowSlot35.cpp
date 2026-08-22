@@ -2,14 +2,22 @@
 //
 // dScMgSound_c (actor id 0x16f, scene 367). This body is slot 4 of
 // data_ov006_02142df8, one of the ten per-entity states the 0x14-stride array
-// runs, and it reaches the port THREE ways broken. All three were found by
+// runs, and it reaches the port FOUR ways broken. All four were found by
 // disassembling 0x0211ba88 out of extracted/overlays/overlay_0006.bin at base
 // 0x020bfec0 and reading it against src/func_ov006_0211ba88.c line by line.
 //
 // THE SRC TU IS BANNERED "Logic verified correct vs ROM" AND IT IS NOT. That
 // sentence is the reason this file exists rather than a slice line, and the
-// three defects are stated separately because only the first is a port
-// problem; the other two are decomp problems this port must not inherit.
+// four defects are stated separately because only the first is a port
+// problem; the other three are decomp problems this port must not inherit.
+//
+// THE FOURTH WAS FOUND BY THE run mg9 REVIEWER, not by this lane, and it is
+// recorded here rather than only in the review because THIS HEADER IS THE
+// ROUTING NOTE the decomp side will read when it comes to correct the banner.
+// A routing note that lists three of four defects would send someone to fix
+// three of them and re-bless a banner that is still false. It is section 4
+// below, and this lane re-derived it from its own disassembly rather than
+// taking it on report.
 //
 // ---- 1. THE RECEIVER IS DROPPED AT A VTABLE SLOT 35 CALL ------------------
 //
@@ -73,6 +81,42 @@
 // of the machine, which is a silent stop rather than a crash. The store below
 // is a byte.
 //
+// ---- 4. THE `n == 0` TEST IS NESTED WHERE THE ROM'S IS NOT ---------------
+//
+// Found by the run mg9 reviewer. The ROM's `cmp r3,#0` at 0x0211bb14 is the
+// BRANCH TARGET of the `blt` at 0x0211bb04, so it runs on BOTH paths -- the
+// one that went round the subtraction loop and the one that skipped it:
+//
+//     0211bafc  mov r3,r4        n = idx
+//     0211bb00  cmp r4,r2
+//     0211bb04  blt 0x0211bb14   <-- idx < limit jumps STRAIGHT to the test
+//     0211bb08  sub r3,r3,r2
+//     0211bb0c  cmp r3,r2 / bge 0x0211bb08
+//     0211bb14  cmp r3,#0        <-- reached from both
+//     0211bb18  moveq r0,#1 / strbeq r0,[r1] / popeq / bxeq lr
+//
+// src puts that test INSIDE `if (idx >= limit)`, so an entity whose idx is 0
+// never reaches it and never gets its flag set, where the ROM sets it. idx 0
+// is the FIRST of the ten records the dispatcher walks, so this is not a
+// corner: it is the one entity that is wrong on every tick.
+//
+// The fix is free once the loop from section 2 is written the ROM's way: the
+// `if (n == 0)` below sits at the same level the ROM's `cmp r3,#0` does, so
+// hoisting it out of the `if (n >= limit)` closes divergences 2 and 4 with
+// one shape.
+//
+// ---- AND A FIFTH THING THAT IS NOT A DIVERGENCE, stated so nobody counts it
+//
+// The ROM sets no meaningful return value on any path. It leaves r0 = 1 after
+// the flag store, r0 = -0x18 after the `popgt` early-out, and
+// `base + idx*0x14 + 0x5000` on the fall-through -- three different values,
+// none of them computed to be returned. The dispatcher's `blx` discards it,
+// src types the function `int` and returns 0, and this file does the same. An
+// earlier version of the note below called r0 "the stored 1 rather than a
+// returned one", which is wrong as stated -- on ARM it is both -- and is
+// corrected here. Nothing reads it, so it is a typing artefact and not a
+// fifth defect.
+//
 // ---- WHAT IS AND IS NOT CHANGED IN src/ -----------------------------------
 //
 // NOTHING. THE DECOMP-SIDE FIX IS ROUTED, NOT TAKEN, which is the ruling
@@ -81,6 +125,12 @@
 // under mwccarm is a byte-gated-tree question and this is not a byte-gated
 // tree. src/func_ov006_0211ba88.c is UNTOUCHED and is excluded from
 // port/slice_box.txt; this file defines the symbol.
+//
+// THE FULL LIST THE DECOMP SIDE OWES, so the banner can be corrected in one
+// pass rather than three: (1) pass the receiver at the slot-35 call, (2) make
+// the modulo a loop, (3) make the +0x50f4 store a BYTE, (4) hoist the
+// `n == 0` test out of the `if (idx >= limit)`. All four, or the banner is
+// still false.
 
 extern "C" {
 typedef unsigned char u8;
@@ -112,10 +162,11 @@ struct MgSoundVt {
    walks down by 0x10000 (== 16.0) per tick, +0x50f4 the state index, +0x50f5
    the in-play gate, +0x50f6 a second flag cleared with it, +0x50f9 the
    "already handled" flag this body sets.
-   The return value is 0 on every path (`b` to the shared tail or an early
-   `pop / bx lr` after `moveq r0,#1 / strbeq r0,[r1]`, where r0 is the stored
-   1 rather than a returned one); nothing reads it -- the dispatcher's blx
-   discards it -- and src types it int, so it is kept int here. */
+   THE RETURN VALUE IS 0 ON EVERY PATH HERE AND IS NOT THE ROM'S, and the
+   paragraph above explains why that is a typing artefact rather than a fifth
+   divergence: the ROM leaves three different uncomputed values in r0 and the
+   dispatcher's blx discards all of them. src types the function int, so it is
+   kept int here. */
 extern "C" int func_ov006_0211ba88(char *base, int idx)
 {
     int *cur  = (int *)(base + 0x50e8 + idx * 0x14);

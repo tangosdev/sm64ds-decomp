@@ -4221,9 +4221,12 @@ endforeach()
 #   unmatched/MgSound_ShadowSlot35.cpp replaces src/func_ov006_0211ba88.c, a
 #     state body that is a delinks join miss AND drops its receiver at a
 #     vtable slot 35 call AND approximates the ROM's modulo loop AND writes an
-#     int where the ROM writes a byte over a live neighbouring gate. Its
-#     banner claims "Logic verified correct vs ROM"; that file's header is the
-#     evidence it is not. Found by READING the body against the ROM.
+#     int where the ROM writes a byte over a live neighbouring gate AND nests
+#     the `n == 0` test where the ROM's is unconditional, so the first of the
+#     ten records never gets its flag set. FOUR divergences; its banner claims
+#     "Logic verified correct vs ROM" and that file's header is the evidence
+#     it is not, and is the ROUTING NOTE that lists all four. Found by READING
+#     the body against the ROM; the fourth by the run mg9 reviewer.
 #   unmatched/MgSound_ModelRender_020c29dc.cpp -- found by the BATTERY, which
 #     renders where this lane's own boots did not.
 #   unmatched/MgSound_ShadowFader_020c2924.cpp -- found by a WORD-BY-WORD

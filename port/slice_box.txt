@@ -290,14 +290,14 @@
 # decompiled. That is one decomp job and it is the whole of what stands between
 # this seat and a playable Boom Box.
 #
-# ---- ONE STATE IS A JOIN MISS, AND IT IS ALSO BROKEN THREE WAYS ----------
+# ---- ONE STATE IS A JOIN MISS, AND IT IS ALSO BROKEN FOUR WAYS -----------
 #
 #   func_ov006_0211ba88   slot 4 of data_ov006_02142df8, 0x158 bytes
 #
 # Outside the delinks join, but src/func_ov006_0211ba88.c EXISTS, bannered
 # NONMATCHING. That is section 13's 0x020f6904 shape and would normally cost a
 # slice line plus a switch arm. It costs a HOST COPY instead, because reading
-# it against the ROM found three divergences and the banner claims none:
+# it against the ROM found FOUR divergences and the banner claims none:
 #   (1) it calls vtable slot 35 as `(*(int(***)(void))base)[0x8c/4]()`, which
 #       passes no receiver where the ROM's `ldr r1,[r0] / ldr r1,[r1,#0x8c] /
 #       blx r1` passes `this` in r0;
@@ -307,10 +307,22 @@
 #       {3,4,4,4,4,4,5,5};
 #   (3) it writes `*(int *)(e + 0x5000 + 0xf4) = 4` where the ROM writes
 #       `strb`, and +0x50f5 -- the byte the int store would zero -- is the
-#       IN-PLAY GATE the dispatcher tests before dispatching at all.
-# port/unmatched/MgSound_ShadowSlot35.cpp is the copy and the evidence. src/ is
-# UNTOUCHED: the decomp-side fix is ROUTED, not taken, which is the ruling
-# section 10 records for the fabricated ov004 language table.
+#       IN-PLAY GATE the dispatcher tests before dispatching at all;
+#   (4) it NESTS the `n == 0` test inside `if (idx >= limit)`, where the ROM's
+#       `cmp r3,#0` at 0x0211bb14 is the BRANCH TARGET of the `blt` at
+#       0x0211bb04 and therefore runs on both paths. An entity at idx 0 never
+#       reaches the test and never gets its flag set. idx 0 is the FIRST of
+#       the ten records the dispatcher walks, so it is not a corner.
+#       FOUND BY THE run mg9 REVIEWER, re-derived here, and folded into the
+#       host copy's header because THAT HEADER IS THE ROUTING NOTE -- a note
+#       listing three of four defects would send the decomp side to fix three
+#       and re-bless a banner that is still false.
+# port/unmatched/MgSound_ShadowSlot35.cpp is the copy and the evidence, and it
+# also records the one thing that LOOKS like a fifth and is not: the ROM sets
+# no meaningful return value on any path (r0 is 1, then -0x18, then a pointer)
+# and the dispatcher discards it. src/ is UNTOUCHED: the decomp-side fix is
+# ROUTED, not taken, which is the ruling section 10 records for the fabricated
+# ov004 language table.
 #
 # ---- ONE SHARED HOST COPY IS REUSED RATHER THAN REWRITTEN ----------------
 #
