@@ -216,6 +216,14 @@
 # Message 0x225 reads "Memory Match / Pick two matching cards to make them
 # disappear. Clear al[l]...", which is the title this seat's row is named for.
 #
+# THE TABLE WAS READ, NOT COMPUTED, which run mg9 lane S364 asked every lane to
+# confirm: data_ov004_020bc070 is 0x0224+n only for indices 0..23, and 24..35
+# are the explicit list 588, 573, 586, 575, 576, 577, 585, 589, 580, 587, 582,
+# 583. This lane's dump of all thirty-six u16 out of overlay_0004.bin agrees
+# with that list entry for entry. This class's index is 1, inside the
+# arithmetic range, and the sibling's is 29, inside the explicit one -- so the
+# cross-check above would have named the wrong game had it been computed.
+#
 # AND THE NEIGHBOUR'S ENTRY CONFIRMS THE PAIR FROM THE OTHER SIDE. Memory
 # Master is name text 29, data_ov004_020bc070[29] = 0x241, and message 0x241
 # reads "Memory Master / If Memory Match was a piece of cake for you, try
@@ -246,6 +254,37 @@
 # The draw itself is a HUD SPRITE seam (Hud_RenderSprite, ov004 0x020af68c),
 # not a virtual call, which is the same shape the sibling uses.
 #
+# THE NESTED CASE WAS CHECKED TOO, because run mg9 lane S364 found its own
+# element vtable one level down, in a sub-object of a sub-object. This class
+# constructs exactly two sub-objects and NEITHER IS ITS OWN: the framework's
+# Particle::SysTracker at +0x471c, and the shared model at +0x4f38, which is
+# the same func_ov006_020c1d80 the sibling constructs at the same offset and
+# which run mg6 lane MEM seated in full (three host copies, all shipping, scene
+# 363 green and rendering cards). And a source sweep of all forty-two of this
+# class's own TUs finds NO `virtual` anywhere, so there is no local shadow
+# class in this class's code to get a slot number wrong in either.
+#
+# ---- TWO MORE NEGATIVES, BOTH CHECKED RATHER THAN ASSUMED -----------------
+#
+# THE AMBIGUOUS-ADDRESS MODULE HAZARD (lane S364). This class walks straight
+# into it on paper: config/arm9/overlays/ov006/symbols.txt marks
+# MgMemoryMatch_SpawnInfo `ambiguous`, and config/arm9/overlays/ov099/
+# symbols.txt claims the same address 0x0213cfd8 as data_ov099_0213cfd8, a bss
+# symbol. The port hosts the RIGHT one, proved two ways:
+#   - walk_window.map defines _MgMemoryMatch_SpawnInfo exactly once, out of
+#     ov006_syms.c.obj, and defines no data_ov099_0213cfd8 at all.
+#   - hal/scene_boot.cpp's port_scene_registry_install reads the record's +4
+#     halfword and refuses any row whose value is not the row's own id. A
+#     scene-362 boot registers 14 classes with no WRONG RECORD line, which
+#     means those bytes read 0x016a. ov099's bss cannot read 362 at +4.
+#
+# THE ARM9 SharedFilePtr VENEER (lane PSY). func_02017a24 drops the file id in
+# r1 through three forwarders, with the symptom "FATAL: fs fileID <garbage>"
+# during InitResources. This class loads files in slot 0 (the language table
+# at data_ov006_0213d0c4 plus 0xbb) and through the shared model sub-object's
+# 0x205/0x206/0x207, and NO run this lane made prints any fs, fileID or FATAL
+# line at any frame count. Not witnessed; PSY's fix is not inherited here.
+#
 # ---- SLOTS 18 AND 19 DO NOT READ THEIR SECOND ARGUMENT --------------------
 #
 # Run mg9 lane LKY found dScMgLuckyStars_c's slot-18 and slot-19 bodies READING
@@ -272,6 +311,17 @@
 # frames: an unattended boot never leaves the class's own state 2. The static
 # reading above is the evidence; there is no run behind it, and this paragraph
 # says so rather than letting a green census imply one.
+#
+# RUN mg9 LANE PSY ASKS FOR THE ARGUMENT TO BE FORWARDED ANYWAY, its own
+# witness value having been -1 and matching neither branch arm. THAT ADVICE IS
+# DECLINED HERE AND THE REASON IS THE ARITY GATE, not confidence.
+# src/func_ov006_020f52c4.c DEFINES a one-parameter function, so a thunk that
+# forwarded a second one would be a declaration disagreeing with a definition
+# across a C-linkage symbol -- the exact shape port/tools/aritycheck.py exists
+# to catch, and the disease its header calls the bin-softlock. PSY's classes
+# READ the argument, so their bodies take two and forwarding is right there.
+# Forwarding into a body that takes one is not the safe direction, it is a
+# different bug. Both aritycheck ratchets pass on this tree with 0 NEW rows.
 #
 # ---- THREE FRAMEWORK HAZARDS, ALL UNWITNESSED BY THIS CLASS ---------------
 #
