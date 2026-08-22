@@ -61,6 +61,22 @@
 //     here" is a recorded fact rather than a colour comparison against the
 //     clear. SM64DS_3D_PRIORITY_OFF=1 restores the unconditional overwrite for
 //     A/B on one binary.
+//
+// WHAT IT IMPLEMENTS (OBJ-vs-OBJ PRIORITY), added run mg8 lane SGX:
+//   - a sprite is ordered against other sprites by attribute 2 bits 10-11,
+//     lowest number in front, and the OAM index only breaks a tie. raster_obj
+//     wrote g_a unconditionally on its 127 -> 0 walk, which was pure
+//     lowest-index order and is the defect run link60 lane BLND2 fixed on
+//     engine B and left open here. Scene 375's playfield is on THIS engine, so
+//     its snow (priority 0, OAM indices 13 and up) lost to every shell
+//     (priority 1) and every semi-transparent reflection (priority 2) it
+//     crossed. See the test in raster_obj for the rule and the one divergence
+//     that remains. SM64DS_OBJPRIO_A_OFF=1 restores the unconditional write for
+//     A/B on one binary.
+//   - OBJ-vs-BG priority is STILL NOT DONE: a sprite draws over every
+//     background here regardless of either priority. That is a separate rule
+//     (a sprite beats a background at equal priority, and loses to one with a
+//     strictly better number) and a separate, whole-game change.
 #include <cstdint>
 #include <cstdio>
 #include <cstdlib>
@@ -216,6 +232,18 @@ inline bool prio3d_off_env() {
     static int v = -1;
     if (v < 0) {
         const char *e = std::getenv("SM64DS_3D_PRIORITY_OFF");
+        v = (e && *e && *e != '0') ? 1 : 0;
+    }
+    return v != 0;
+}
+
+// SM64DS_OBJPRIO_A_OFF=1 does the same for run mg8's OBJ-vs-OBJ priority test
+// in raster_obj: it puts the old unconditional lowest-index write back, on this
+// same binary, so every scene's before/after is one build at one .dsstate base.
+inline bool objprio_off_env() {
+    static int v = -1;
+    if (v < 0) {
+        const char *e = std::getenv("SM64DS_OBJPRIO_A_OFF");
         v = (e && *e && *e != '0') ? 1 : 0;
     }
     return v != 0;
@@ -924,6 +952,8 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
        these lines and compares them frame for frame. Off, this loop is the loop
        it was. */
     const int trace = objshift_trace_on();
+    /* Read once for the walk: the A/B arm for the OBJ-vs-OBJ priority test. */
+    const bool objprio_off = objprio_off_env();
     ++g_obj_frame;
 
     for (int i = 127; i >= 0; --i) {
@@ -983,6 +1013,10 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
         const bool vflip = !affine && (a1 & 0x2000);
         const uint32_t tile = a2 & 0x3FF;
         const uint32_t pal = (a2 >> 12) & 0xF;
+        /* attribute 2 bits 10-11, this sprite's own priority. Read here rather
+           than at the store because the OBJ-vs-OBJ test below needs it before
+           a texel is written. */
+        const uint8_t prio = (uint8_t)((a2 >> 10) & 3);
 
         /* ONE LINE PER DRAWABLE ENTRY, before a texel is read, so it is the
            SUBMISSION and the clip rather than a count of what survived. `at`
@@ -1053,11 +1087,59 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                     if (!index) continue;
                     color = bgr555(rd16(obj_pltt + (pal * 16u + index) * 2u));
                 }
+                /* OBJ-vs-OBJ IS RESOLVED BY PRIORITY, NOT BY OAM INDEX, and
+                   this test is what makes that true on engine A. GBATEK's OAM
+                   notes: attribute 2 bits 10-11 order a sprite against the
+                   other sprites, and the OAM index only breaks a tie between
+                   equal priorities. The DS shows ONE OBJ pixel per screen
+                   pixel, so a sprite that loses here contributes nothing at
+                   all -- not a colour, not a semi-transparent flag.
+
+                   The walk above is 127 -> 0, so the overwrite test is
+                   "empty, or a different layer, or new prio <= old prio":
+                   `<=` keeps the LAST writer on a tie, which on this walk is
+                   the lowest OAM index, and a strictly better priority number
+                   wins whatever the index. This is ntr/ppu_sub.cpp's
+                   raster_obj line for line -- run link60 lane BLND2 landed it
+                   on engine B and the comment that stood here said engine A's
+                   half was "a separate gap and not this lane's". Run mg8 lane
+                   SGX is that lane: scene 375 (dScMgCurling2_c, Shell Smash)
+                   puts its whole playfield on ENGINE A -- six shells at
+                   priority 1, their six semi-transparent reflections at
+                   priority 2, and the falling snow at priority 0, measured
+                   with SM64DS_PPU_AUDIT -- and the snow carries the HIGHEST
+                   OAM indices, so index order drew every shell and every
+                   reflection over it.
+
+                   THE OWNER TEST IS PART OF THE RULE AND NOT AN OPTIMISATION.
+                   g_a is a shared buffer: the BG loop has already written
+                   background pixels into it with their own priorities, and a
+                   sprite must not lose to a BG here. OBJ-vs-BG has its own
+                   hardware rule (a sprite beats a background at EQUAL
+                   priority), it is not implemented in this file, and folding
+                   it into this test by dropping the owner check would change
+                   every scene in the game rather than the ordering this fixes.
+                   Left where it was, in the gap list. */
+                if (!objprio_off && g_a[py][px].hit
+                    && g_a[py][px].owner == kOwnerObj
+                    && prio > g_a[py][px].prio)
+                    continue;
                 // OBJ mode 1 (semi-transparent) alpha-blends with the layer
                 // directly below it -- the BG already composited into g_a here,
                 // or the 3D framebuffer (BG0 in 3D mode) where no 2D covers the
                 // pixel -- whatever BLDCNT's first-target bits say. Window bit 5
                 // gates the effect. No 2nd target below: drawn opaque (hardware).
+                //
+                // ONE DIVERGENCE REMAINS AND IS NAMED RATHER THAN HIDDEN: when
+                // a semi sprite WINS this test over an already-written sprite
+                // pixel, it blends against that loser's colour instead of
+                // against the 2nd-target layer below the whole OBJ layer, which
+                // this file no longer holds. It needs a semi OBJ whose priority
+                // is at least as good as a normal OBJ it overlaps; neither
+                // shell game has one (reflections are priority 2, the worst
+                // number any sprite in either scene carries), so no frame here
+                // reaches it. Closing it means resolving OBJ into its own
+                // buffer the way ntr/ppu_sub.cpp does.
                 if (!bl.off && objmode == 1
                     && (window_mask(win, px, py) & 0x20)) {
                     if (g_a[py][px].hit) {
@@ -1072,12 +1154,11 @@ void raster_obj(uint32_t dispcnt, const Blend &bl, const Windows &win,
                 g_a[py][px].color = color;
                 g_a[py][px].hit = true;
                 g_a[py][px].owner = kOwnerObj;
-                /* attribute 2 bits 10-11, this sprite's own priority. It is
-                   read here rather than assumed because the 3D layer's test
-                   below is the only thing in this file that depends on it:
-                   raster_obj still draws sprites over every BG regardless of
-                   priority, which is a separate gap and not this lane's. */
-                g_a[py][px].prio = (uint8_t)((a2 >> 10) & 3);
+                /* The priority the OBJ-vs-OBJ test above and the 3D layer's
+                   test in the final blit both read. raster_obj still draws
+                   sprites over every BG regardless of priority; that half of
+                   the gap is untouched here. */
+                g_a[py][px].prio = prio;
             }
         }
     }

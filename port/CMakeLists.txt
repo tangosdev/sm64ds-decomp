@@ -3904,6 +3904,48 @@ set_source_files_properties(
     "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020e3878.c"
     PROPERTIES COMPILE_DEFINITIONS "VT=data_ov006_0213c510")
 
+# RUN MG8 lane SGX: THE PADDLE DRAWS FROM ANOTHER OVERLAY'S BYTES.
+# Tango's lap-2 report on scene 375 is "I cant see the paddle if im suposed to".
+# src/func_ov006_020e4b78.c is the paddle draw -- slot 9 Render calls it last,
+# it is gated on the cue-visible flag at +0x55b9, and it hands ONE OamAttr
+# template to func_ov004_020afdd0 at the cue's own (x,y) less (0x20,8), the
+# half-size offset of a 64x16 sprite pair. The template it names is
+# data_ov098_0213c4f0. THAT IS THE WRONG OVERLAY.
+#
+# 0x0213c4f0 is one address with two occupants, exactly the ov002/ov004 shape
+# lane A2 fixed above. Both name it and both are right about their own image:
+#   config/arm9/overlays/ov006/relocs.txt:3577
+#     from:0x020e4bd0 kind:load to:0x0213c4f0 module:overlay(6)
+#   config/arm9/overlays/ov098/relocs.txt:143
+#     from:0x021388b4 kind:load to:0x0213c4f0 module:overlay(98)
+# 0x020e4bd0 is func_ov006_020e4b78's OWN literal pool word (the body is
+# 0x020e4b78..0x020e4bd4), so the load is INTERNAL to ov006 and dsd tagged it
+# overlay(6) with no ambiguity. The src TU spells the ov098 name, ov098 is
+# mounted (PORT_ACTOR_OVERLAYS), so the port links ov098's bytes into a
+# dScMgCurling2_c frame -- and ov098 is a castle-grounds actor overlay that can
+# never be co-resident with ov006.
+#
+# THE BYTES ARE NOT THE SAME AND ARE NOT COMPATIBLE, read out of
+# extracted/overlays/ at each overlay's own OVT base:
+#   ov006 (base 0x020bfec0)  80004000 00001008 80204000 0000100c
+#     = attr {0x4000,0x8000,0x1008} and {0x4000,0x8020,0x100c}: two 32x16
+#       sprites, 16-colour, palette 1, priority 0, tiles 0x008 and 0x00c, at
+#       x=0 and x=0x20 -- a 64x16 paddle, which is what the -0x20 in the draw
+#       centres. Scene 374's own bumper is the SAME pair (32x16 tiles 8 and 12,
+#       palette 1, priority 0) in its engine-B OAM, measured with
+#       SM64DS_PPU_AUDIT, so the shape is corroborated from a second scene.
+#   ov098 (base 0x02137be0)  00014000 00014000 00014000 0000f000
+#     = ov098's cannon data. As OAM attributes it is a 16x8 entry at x=1 on
+#       tile 0 followed by garbage.
+# A -D and not an /alternatename, for lane A2's reason: data_ov098_0213c4f0 is
+# DEFINED in this binary by the ov098 mount, and an alias with a defined symbol
+# on the left is defeated silently. This is a port-side binding fix; the src
+# TU's own spelling is a decomp naming defect and is ROUTED, not taken here.
+set_source_files_properties(
+    "${CMAKE_CURRENT_SOURCE_DIR}/../src/func_ov006_020e4b78.c"
+    PROPERTIES COMPILE_DEFINITIONS
+    "data_ov098_0213c4f0=data_ov006_0213c4f0")
+
 set(SCENE_MG_CURLING2_SOURCES hal/scene_mg_curling2.cpp)
 # Run mg6 lane PPP: THE SEVENTH SEATED MINIGAME CLASS, dScMgPanel_c, actor id
 # 0x17c = scene 380 -- the minigame the spawn symbol names
