@@ -109,6 +109,25 @@
 #                                 named trap in unmatched/MgBomroom_Traps.cpp,
 #                                 the func_ov006_020dbe9c precedent.
 #
+# THE SECOND FLOOR COSTS A LINKED FUNCTION AS WELL AS A BODY, and the seat
+# measured it rather than assuming the arithmetic. This list has 72 active
+# lines and the seat's linkage delta is +71, not +72. The one TU /OPT:REF
+# dropped is src/func_ov006_020d66c4.cpp, and the reason is the floor: every
+# relocation that reaches 0x020d66c4 anywhere in ov006 comes from inside
+# func_ov006_020d8408 (five call sites, 0x020d86e8, _8768, _8794, _8814,
+# _8884), so with that body undecompiled the TU has no caller in the build.
+# It is left in the list rather than removed -- it IS in the class's closure,
+# it compiles, and it links itself the day 0x020d8408 lands.
+#
+# THE FLOOR ALSO PINS THE STATE MACHINE, which is the bigger consequence. Slot
+# 0 sets the top-level index at +0x62d0 to 1 and the game walks to 2 and stays
+# there, because state 2 (func_ov006_020d8ff4) calls 0x020d8408 and that body
+# is what advances the index. Measured: 1200 frames of scene 370 leaves the
+# index at 2 with the trap entered 1152 times. So four of the five top-level
+# states are unreachable on any headless run, including state 3, which is the
+# open-coded dispatcher. hal/scene_mg_bomroom.cpp's SM64DS_SOS_STATE probe is
+# how this lane reached them.
+#
 # SEVEN TUs ARE HOST-COPIED AND ARE COMMENTED OUT BELOW, and this class is the
 # first seat to carry ALL THREE of the shapes port/mg_fanout_costs.txt section
 # 4 enumerates in one closure:
