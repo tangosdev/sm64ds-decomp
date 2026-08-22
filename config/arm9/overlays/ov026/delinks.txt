@@ -20,7 +20,7 @@ src/func_ov026_021112a4.c:
     complete
     .text start:0x021112a4 end:0x021112e4
 
-src/_ZN17daObjWlPolelift_c16CleanupResourcesEv.c:
+src/_ZN17daObjWlPolelift_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021112e4 end:0x02111308
 

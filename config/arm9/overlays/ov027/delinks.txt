@@ -108,11 +108,11 @@ src/func_ov027_02111d70.c:
     complete
     .text start:0x02111d70 end:0x02111d8c
 
-src/_ZN10daPgDfdr_c16CleanupResourcesEv.c:
+src/_ZN10daPgDfdr_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111d8c end:0x02111dfc
 
-src/_ZN10daPgDfdr_c16OnPendingDestroyEv.c:
+src/_ZN10daPgDfdr_c16OnPendingDestroyEv.cpp:
     complete
     .text start:0x02111dfc end:0x02111e00
 

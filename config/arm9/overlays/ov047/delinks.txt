@@ -11,11 +11,11 @@ src/_ZN21daObjKm3_Kurumajiku_cD0Ev.c:
     complete
     .text start:0x021111f0 end:0x02111254
 
-src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.c:
+src/_ZN21daObjKm3_Kurumajiku_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111254 end:0x02111268
 
-src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.c:
+src/_ZN21daObjKm3_Kurumajiku_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111268 end:0x02111280
 
@@ -31,11 +31,11 @@ src/_ZN20daObjKm3_Kaitendai_cD0Ev.c:
     complete
     .text start:0x0211130c end:0x02111370
 
-src/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.c:
+src/_ZN20daObjKm3_Kaitendai_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x02111370 end:0x02111384
 
-src/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.c:
+src/_ZN20daObjKm3_Kaitendai_c13InitResourcesEv.cpp:
     complete
     .text start:0x02111384 end:0x021113bc
 
@@ -51,11 +51,11 @@ src/_ZN17daObjKm3_Kuruma_cD0Ev.c:
     complete
     .text start:0x02111448 end:0x021114ac
 
-src/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.c:
+src/_ZN17daObjKm3_Kuruma_c16CleanupResourcesEv.cpp:
     complete
     .text start:0x021114ac end:0x021114c0
 
-src/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.c:
+src/_ZN17daObjKm3_Kuruma_c13InitResourcesEv.cpp:
     complete
     .text start:0x021114c0 end:0x021114d4
 
